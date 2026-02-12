@@ -83,6 +83,27 @@ Seeds：`[42, 123, 7]`
 - `/opt/dfrope/results/350m_final/run.log`
 - `/opt/dfrope/results/350m_final/results.json`（每个配置结束会写）
 
+## 5. GitHub 同步（只同步非权重）
+
+本仓库提供脚本用于从 A100 拉取 350M 的运行日志/结果到本地并推送到 GitHub（不含权重，不含 memmap cache）。
+
+脚本：
+
+- `scripts/pull_a100_350m_artifacts.sh`
+- `scripts/commit_and_push.sh`
+
+使用方式（仓库根目录）：
+
+```bash
+scripts/pull_a100_350m_artifacts.sh
+scripts/commit_and_push.sh "Update 350M artifacts"
+```
+
+认证说明：
+
+- 优先使用 SSH key/ssh-agent
+- 若必须用密码，可临时设置环境变量 `A100_SSH_PASS`（脚本会用 `sshpass`，仓库不保存密码）
+
 ## 4. 常见问题（FAQ）
 
 ### Q1：`nvidia-smi` 显示 GPU 0%，是不是挂了？
@@ -96,4 +117,3 @@ Seeds：`[42, 123, 7]`
 ### Q2：为什么 A100 / A800 的数会差一点？
 
 streaming 拉取、缓存、tokenize 的细微差异会导致样本流不完全一致；这是我们做 3-seed 汇总的原因。重要结论应以 mean±std 为准。
-
