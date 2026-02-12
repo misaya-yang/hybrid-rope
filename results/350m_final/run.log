@@ -1,0 +1,21 @@
+======================================================================
+  350M FINAL VALIDATION
+  Hybrid(alpha=0.2, theta=100k) vs Geo(theta=500k)
+======================================================================
+  Loading TinyStories train (500M tokens) -> memmap...
+    10M tokens written (0.5 min)
+    20M tokens written (0.8 min)
+    30M tokens written (1.2 min)
+    40M tokens written (1.6 min)
+    50M tokens written (1.9 min)
+    60M tokens written (2.3 min)
+    70M tokens written (2.6 min)
+    80M tokens written (3.0 min)
+    90M tokens written (3.4 min)
+    100M tokens written (3.7 min)
+    110M tokens written (4.1 min)
+    120M tokens written (4.5 min)
+    130M tokens written (4.9 min)
+    140M tokens written (5.3 min)
+    150M tokens written (5.7 min)
+    160M tokens written (6.0 min)

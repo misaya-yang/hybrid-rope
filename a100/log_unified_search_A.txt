@@ -1,0 +1,246 @@
+Running split: A
+  Loading TinyStories (50M tokens)...
+  Loading validation data...
+
+============================================================
+  geo_10k_ALIGN
+  freq range: [1.33e-04, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9607  lr=0.00e+00  ETA=8min
+    step 100/762  loss=3.9575  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0922  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6294  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4415  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2525  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2257  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2087  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.860
+    L=4096: PPL=7.039
+    L=8192: PPL=10.837
+    L=16384: PPL=33.234
+
+============================================================
+  geo_500k_ALIGN
+  freq range: [3.01e-06, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9601  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9058  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0787  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6290  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4356  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2499  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2137  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2018  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.804
+    L=4096: PPL=7.019
+    L=8192: PPL=8.918
+    L=16384: PPL=16.991
+
+  *** WINNER FOUND: geo_500k_ALIGN = 16.991 < 26.48 ***
+
+
+============================================================
+  sig_s6_m0.5_omf0.3_t10k
+  freq range: [6.47e-05, 0.6186]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9601  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.8735  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0625  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6113  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4280  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2435  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2140  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2009  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.742
+    L=4096: PPL=7.662
+    L=8192: PPL=13.089
+    L=16384: PPL=32.149
+
+============================================================
+  sig_s7_m0.5_omf0.3_t10k
+  freq range: [5.38e-05, 0.7432]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9601  lr=0.00e+00  ETA=6min
+    step 100/762  loss=3.8918  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0983  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6320  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4384  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2458  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2204  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2067  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.790
+    L=4096: PPL=7.366
+    L=8192: PPL=10.956
+    L=16384: PPL=26.588
+
+============================================================
+  sig_s9_m0.5_omf0.3_t10k
+  freq range: [4.47e-05, 0.8947]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9602  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9019  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0796  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6242  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4343  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2446  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2121  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.1987  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.786
+    L=4096: PPL=8.132
+    L=8192: PPL=14.391
+    L=16384: PPL=33.486
+
+============================================================
+  sig_s10_m0.5_omf0.3_t10k
+  freq range: [4.28e-05, 0.9345]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9599  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9143  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0924  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6358  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4521  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2565  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2275  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2150  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.900
+    L=4096: PPL=9.633
+    L=8192: PPL=18.638
+    L=16384: PPL=39.566
+
+============================================================
+  sig_s8_m0.4_omf0.3_t10k
+  freq range: [4.35e-05, 0.6726]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9599  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.8957  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0719  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6255  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4387  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2528  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2201  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2051  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.762
+    L=4096: PPL=7.706
+    L=8192: PPL=13.446
+    L=16384: PPL=31.985
+
+============================================================
+  sig_s8_m0.6_omf0.3_t10k
+  freq range: [5.95e-05, 0.9207]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9605  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9242  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0898  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6264  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4305  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2402  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2121  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.1956  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.717
+    L=4096: PPL=7.402
+    L=8192: PPL=11.663
+    L=16384: PPL=25.610
+
+  *** WINNER FOUND: sig_s8_m0.6_omf0.3_t10k = 25.61 < 26.48 ***
+
+
+============================================================
+  sig_s8_m0.5_omf0.3_t30k
+  freq range: [1.69e-05, 0.8177]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9600  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9006  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0707  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6274  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4333  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2412  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2133  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.1973  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.776
+    L=4096: PPL=7.384
+    L=8192: PPL=13.764
+    L=16384: PPL=28.997
+
+============================================================
+  sig_s8_m0.5_omf0.3_t50k
+  freq range: [1.04e-05, 0.8104]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9599  lr=0.00e+00  ETA=6min
+    step 100/762  loss=3.9181  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.1044  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6455  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4511  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2566  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2249  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2106  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.878
+    L=4096: PPL=8.525
+    L=8192: PPL=16.215
+    L=16384: PPL=34.112
+
+============================================================
+  anchpoly_p3.9_omf0.3_t100k
+  freq range: [4.30e-06, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9598  lr=0.00e+00  ETA=6min
+    step 100/762  loss=4.0391  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0865  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6077  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4175  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2259  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.1932  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.1764  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.633
+    L=4096: PPL=8.671
+    L=8192: PPL=13.732
+    L=16384: PPL=28.787
+
+============================================================
+  anchpoly_p3.9_omf0.3_t500k
+  freq range: [9.04e-07, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9602  lr=0.00e+00  ETA=6min
+    step 100/762  loss=3.9614  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0486  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.5921  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4030  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2193  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.1873  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.1702  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.578
+    L=4096: PPL=6.551
+    L=8192: PPL=8.815
+    L=16384: PPL=16.459
+
+  *** WINNER FOUND: anchpoly_p3.9_omf0.3_t500k = 16.459 < 26.48 ***
+
+
+============================================================
+  LEADERBOARD (Split A)
+============================================================
+  Rank  Config                              PPL@2048   PPL@16384 
+  -----------------------------------------------------------------
+  1     anchpoly_p3.9_omf0.3_t500k          6.578      16.459     ***
+  2     geo_500k_ALIGN                      6.804      16.991     ***
+  3     sig_s8_m0.6_omf0.3_t10k             6.717      25.61      ***
+  4     sig_s7_m0.5_omf0.3_t10k             6.79       26.588    
+  5     anchpoly_p3.9_omf0.3_t100k          6.633      28.787    
+  6     sig_s8_m0.5_omf0.3_t30k             6.776      28.997    
+  7     sig_s8_m0.4_omf0.3_t10k             6.762      31.985    
+  8     sig_s6_m0.5_omf0.3_t10k             6.742      32.149    
+  9     geo_10k_ALIGN                       6.86       33.234    
+  10    sig_s9_m0.5_omf0.3_t10k             6.786      33.486    
+  11    sig_s8_m0.5_omf0.3_t50k             6.878      34.112    
+  12    sig_s10_m0.5_omf0.3_t10k            6.9        39.566    
