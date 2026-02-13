@@ -26,9 +26,19 @@
   - `results.json`: 3 小时窗口下 6 个高价值候选的重训+稳健性复评汇总
   - `summary.md`: 16K 排名、collapse ratio、多长度曲线摘要
   - `variants/*/result.json`: 单候选训练与复评结果
+- `results/h800_3h_poly_followup/`
+  - `results.json`: poly 频谱补充实验（th100k/th500k）重训+稳健性复评
+  - `summary.md`: poly 对照结果摘要
+  - `variants/*/result.json`: 单候选训练与复评结果
+- `results/mechanism_p2_framework/`
+  - `results.json`: 统一机制框架聚合结果（频谱/2x2/loss/attention/collision/LoRA）
+  - `summary.md`: P2 框架总览结论
+  - `figures/`: 统一可视化输出
 - `scripts/`
   - `eval_hybrid_lora_vs_base.py`: 本次对比评测脚本
   - `h800_3h_followup_train_eval.py`: 3h follow-up 一体化脚本（训练+双切片多 seed 评测）
+  - `h800_poly_followup_train_eval.py`: poly 补充实验脚本（训练+双切片多 seed 评测）
+  - `build_mechanism_p2_framework.py`: 统一框架聚合与可视化脚本
 
 ## 关键信号
 
