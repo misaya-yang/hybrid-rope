@@ -1,0 +1,408 @@
+==============================================================================
+  50M FACTORIAL: theta x shape FAIRNESS SWEEP
+  configs: geo_100k/200k/300k/500k + hybrid_t100k/t500k
+  seeds: [42, 123, 7]
+==============================================================================
+  torch=2.9.1+cu130
+  Loading TinyStories train (50M tokens)...
+  Got 24414 chunks
+  Loading validation data...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+  Got 4.8M validation tokens
+
+==============================================================================
+  geo_100k | seed=42
+  freq range: [1.43e-05, 1.0000]
+==============================================================================
+  Params: 50.9M
+  Training: 762 steps (micro=32, accum=1, eff=32)
+    step 0/762 loss=10.9601 lr=0.00e+00 mem=53.5GB ETA=8min
+    step 100/762 loss=4.0976 lr=2.91e-04 mem=53.9GB ETA=3min
+    step 200/762 loss=3.1566 lr=2.57e-04 mem=53.9GB ETA=3min
+    step 300/762 loss=2.7587 lr=2.05e-04 mem=53.9GB ETA=2min
+    step 400/762 loss=2.6074 lr=1.43e-04 mem=53.9GB ETA=2min
+    step 500/762 loss=2.4471 lr=8.22e-05 mem=53.9GB ETA=1min
+    step 600/762 loss=2.4279 lr=3.35e-05 mem=53.9GB ETA=1min
+    step 700/762 loss=2.4232 lr=5.07e-06 mem=53.9GB ETA=0min
+    L=2048: PPL=8.447
+    L=4096: PPL=8.500
+    L=8192: PPL=9.081
+    L=12288: PPL=10.763
+    L=16384: PPL=11.631
+
+==============================================================================
+  geo_200k | seed=42
+  freq range: [7.32e-06, 1.0000]
+==============================================================================
+  Params: 50.9M
+  Training: 762 steps (micro=32, accum=1, eff=32)
+    step 0/762 loss=10.9600 lr=0.00e+00 mem=53.9GB ETA=8min
+    step 100/762 loss=4.1668 lr=2.91e-04 mem=53.9GB ETA=3min
+    step 200/762 loss=3.2078 lr=2.57e-04 mem=53.9GB ETA=3min
+    step 300/762 loss=2.7787 lr=2.05e-04 mem=53.9GB ETA=2min
+    step 400/762 loss=2.6266 lr=1.43e-04 mem=53.9GB ETA=2min
+    step 500/762 loss=2.4671 lr=8.22e-05 mem=53.9GB ETA=1min
+    step 600/762 loss=2.4468 lr=3.35e-05 mem=53.9GB ETA=1min
+    step 700/762 loss=2.4410 lr=5.07e-06 mem=53.9GB ETA=0min
+    L=2048: PPL=8.657
+    L=4096: PPL=9.766
+    L=8192: PPL=13.614
+    L=12288: PPL=19.464
+    L=16384: PPL=23.183
+
+==============================================================================
+  geo_300k | seed=42
+  freq range: [4.94e-06, 1.0000]
+==============================================================================
+  Params: 50.9M
+  Training: 762 steps (micro=32, accum=1, eff=32)
+    step 0/762 loss=10.9600 lr=0.00e+00 mem=53.9GB ETA=8min
+    step 100/762 loss=4.1242 lr=2.91e-04 mem=53.9GB ETA=3min
+    step 200/762 loss=3.1859 lr=2.57e-04 mem=53.9GB ETA=3min
+    step 300/762 loss=2.7769 lr=2.05e-04 mem=53.9GB ETA=2min
+    step 400/762 loss=2.6328 lr=1.43e-04 mem=53.9GB ETA=2min
+    step 500/762 loss=2.4680 lr=8.22e-05 mem=53.9GB ETA=1min
+    step 600/762 loss=2.4482 lr=3.35e-05 mem=53.9GB ETA=1min
+    step 700/762 loss=2.4505 lr=5.07e-06 mem=53.9GB ETA=0min
+    L=2048: PPL=8.664
+    L=4096: PPL=8.813
+    L=8192: PPL=10.461
+    L=12288: PPL=13.361
+    L=16384: PPL=15.370
+
+==============================================================================
+  geo_500k | seed=42
+  freq range: [3.01e-06, 1.0000]
+==============================================================================
+  Params: 50.9M
+  Training: 762 steps (micro=32, accum=1, eff=32)
+    step 0/762 loss=10.9601 lr=0.00e+00 mem=53.9GB ETA=8min
+    step 100/762 loss=4.1270 lr=2.91e-04 mem=53.9GB ETA=3min
+    step 200/762 loss=3.2054 lr=2.57e-04 mem=53.9GB ETA=3min
+    step 300/762 loss=2.7887 lr=2.05e-04 mem=53.9GB ETA=2min
+    step 400/762 loss=2.6334 lr=1.43e-04 mem=53.9GB ETA=2min
+    step 500/762 loss=2.4660 lr=8.22e-05 mem=53.9GB ETA=1min
+    step 600/762 loss=2.4476 lr=3.35e-05 mem=53.9GB ETA=1min
+    step 700/762 loss=2.4468 lr=5.07e-06 mem=53.9GB ETA=0min
+    L=2048: PPL=8.651
+    L=4096: PPL=8.724
+    L=8192: PPL=9.715
+    L=12288: PPL=11.918
+    L=16384: PPL=13.291
+
+==============================================================================
+  hybrid_a0.2_t100k | seed=42
+  freq range: [1.23e-05, 1.0000]
+==============================================================================
+  Params: 50.9M
+  Training: 762 steps (micro=32, accum=1, eff=32)
+    step 0/762 loss=10.9610 lr=0.00e+00 mem=53.9GB ETA=8min
+    step 100/762 loss=4.1195 lr=2.91e-04 mem=53.9GB ETA=3min
+    step 200/762 loss=3.1186 lr=2.57e-04 mem=53.9GB ETA=3min
+    step 300/762 loss=2.7272 lr=2.05e-04 mem=53.9GB ETA=2min
+    step 400/762 loss=2.5929 lr=1.43e-04 mem=53.9GB ETA=2min
+    step 500/762 loss=2.4356 lr=8.22e-05 mem=53.9GB ETA=1min
+    step 600/762 loss=2.4189 lr=3.35e-05 mem=53.9GB ETA=1min
+    step 700/762 loss=2.4175 lr=5.07e-06 mem=53.9GB ETA=0min
+    L=2048: PPL=8.459
+    L=4096: PPL=8.626
+    L=8192: PPL=10.206
+    L=12288: PPL=13.376
+    L=16384: PPL=15.063
+
+==============================================================================
+  hybrid_a0.2_t500k | seed=42
+  freq range: [2.59e-06, 1.0000]
+==============================================================================
+  Params: 50.9M
+  Training: 762 steps (micro=32, accum=1, eff=32)
+    step 0/762 loss=10.9607 lr=0.00e+00 mem=53.9GB ETA=8min
+    step 100/762 loss=4.1085 lr=2.91e-04 mem=53.9GB ETA=3min
+    step 200/762 loss=3.1243 lr=2.57e-04 mem=53.9GB ETA=3min
+    step 300/762 loss=2.7314 lr=2.05e-04 mem=53.9GB ETA=2min
+    step 400/762 loss=2.6000 lr=1.43e-04 mem=53.9GB ETA=2min
+    step 500/762 loss=2.4398 lr=8.22e-05 mem=53.9GB ETA=1min
+    step 600/762 loss=2.4250 lr=3.35e-05 mem=53.9GB ETA=1min
+    step 700/762 loss=2.4196 lr=5.07e-06 mem=53.9GB ETA=0min
+    L=2048: PPL=8.548
+    L=4096: PPL=8.537
+    L=8192: PPL=10.433
+    L=12288: PPL=13.632
+    L=16384: PPL=14.911
+
+==============================================================================
+  geo_100k | seed=123
+  freq range: [1.43e-05, 1.0000]
+==============================================================================
+  Params: 50.9M
+  Training: 762 steps (micro=32, accum=1, eff=32)
+    step 0/762 loss=10.9263 lr=0.00e+00 mem=53.9GB ETA=8min
+    step 100/762 loss=4.1796 lr=2.91e-04 mem=53.9GB ETA=3min
+    step 200/762 loss=3.2842 lr=2.57e-04 mem=53.9GB ETA=3min
+    step 300/762 loss=2.8270 lr=2.05e-04 mem=53.9GB ETA=2min
+    step 400/762 loss=2.6385 lr=1.43e-04 mem=53.9GB ETA=2min
+    step 500/762 loss=2.5338 lr=8.22e-05 mem=53.9GB ETA=1min
+    step 600/762 loss=2.4714 lr=3.35e-05 mem=53.9GB ETA=1min
+    step 700/762 loss=2.4399 lr=5.07e-06 mem=53.9GB ETA=0min
+    L=2048: PPL=8.486
+    L=4096: PPL=8.545
+    L=8192: PPL=9.378
+    L=12288: PPL=11.448
+    L=16384: PPL=12.570
+
+==============================================================================
+  geo_200k | seed=123
+  freq range: [7.32e-06, 1.0000]
+==============================================================================
+  Params: 50.9M
+  Training: 762 steps (micro=32, accum=1, eff=32)
+    step 0/762 loss=10.9263 lr=0.00e+00 mem=53.9GB ETA=8min
+    step 100/762 loss=4.1688 lr=2.91e-04 mem=53.9GB ETA=3min
+    step 200/762 loss=3.3075 lr=2.57e-04 mem=53.9GB ETA=3min
+    step 300/762 loss=2.8440 lr=2.05e-04 mem=53.9GB ETA=2min
+    step 400/762 loss=2.6517 lr=1.43e-04 mem=53.9GB ETA=2min
+    step 500/762 loss=2.5497 lr=8.22e-05 mem=53.9GB ETA=1min
+    step 600/762 loss=2.4864 lr=3.35e-05 mem=53.9GB ETA=1min
+    step 700/762 loss=2.4554 lr=5.07e-06 mem=53.9GB ETA=0min
+    L=2048: PPL=8.597
+    L=4096: PPL=9.063
+    L=8192: PPL=10.637
+    L=12288: PPL=14.266
+    L=16384: PPL=16.390
+
+==============================================================================
+  geo_300k | seed=123
+  freq range: [4.94e-06, 1.0000]
+==============================================================================
+  Params: 50.9M
+  Training: 762 steps (micro=32, accum=1, eff=32)
+    step 0/762 loss=10.9264 lr=0.00e+00 mem=53.9GB ETA=8min
+    step 100/762 loss=4.1248 lr=2.91e-04 mem=53.9GB ETA=3min
+    step 200/762 loss=3.2909 lr=2.57e-04 mem=53.9GB ETA=3min
+    step 300/762 loss=2.8295 lr=2.05e-04 mem=53.9GB ETA=2min
+    step 400/762 loss=2.6405 lr=1.43e-04 mem=53.9GB ETA=2min
+    step 500/762 loss=2.5388 lr=8.22e-05 mem=53.9GB ETA=1min
+    step 600/762 loss=2.4788 lr=3.35e-05 mem=53.9GB ETA=1min
+    step 700/762 loss=2.4463 lr=5.07e-06 mem=53.9GB ETA=0min
+    L=2048: PPL=8.493
+    L=4096: PPL=8.594
+    L=8192: PPL=9.580
+    L=12288: PPL=11.718
+    L=16384: PPL=12.788
+
+==============================================================================
+  geo_500k | seed=123
+  freq range: [3.01e-06, 1.0000]
+==============================================================================
+  Params: 50.9M
+  Training: 762 steps (micro=32, accum=1, eff=32)
+    step 0/762 loss=10.9264 lr=0.00e+00 mem=53.9GB ETA=8min
+    step 100/762 loss=4.1779 lr=2.91e-04 mem=53.9GB ETA=3min
+    step 200/762 loss=3.3163 lr=2.57e-04 mem=53.9GB ETA=3min
+    step 300/762 loss=2.8476 lr=2.05e-04 mem=53.9GB ETA=2min
+    step 400/762 loss=2.6571 lr=1.43e-04 mem=53.9GB ETA=2min
+    step 500/762 loss=2.5560 lr=8.22e-05 mem=53.9GB ETA=1min
+    step 600/762 loss=2.4914 lr=3.35e-05 mem=53.9GB ETA=1min
+    step 700/762 loss=2.4604 lr=5.07e-06 mem=53.9GB ETA=0min
+    L=2048: PPL=8.665
+    L=4096: PPL=8.967
+    L=8192: PPL=10.210
+    L=12288: PPL=12.719
+    L=16384: PPL=14.129
+
+==============================================================================
+  hybrid_a0.2_t100k | seed=123
+  freq range: [1.23e-05, 1.0000]
+==============================================================================
+  Params: 50.9M
+  Training: 762 steps (micro=32, accum=1, eff=32)
+    step 0/762 loss=10.9260 lr=0.00e+00 mem=53.9GB ETA=8min
+    step 100/762 loss=4.1110 lr=2.91e-04 mem=53.9GB ETA=3min
+    step 200/762 loss=3.2354 lr=2.57e-04 mem=53.9GB ETA=3min
+    step 300/762 loss=2.7985 lr=2.05e-04 mem=53.9GB ETA=2min
+    step 400/762 loss=2.6293 lr=1.43e-04 mem=53.9GB ETA=2min
+    step 500/762 loss=2.5375 lr=8.22e-05 mem=53.9GB ETA=1min
+    step 600/762 loss=2.4747 lr=3.35e-05 mem=53.9GB ETA=1min
+    step 700/762 loss=2.4398 lr=5.07e-06 mem=53.9GB ETA=0min
+    L=2048: PPL=8.557
+    L=4096: PPL=8.599
+    L=8192: PPL=9.641
+    L=12288: PPL=11.930
+    L=16384: PPL=12.748
+
+==============================================================================
+  hybrid_a0.2_t500k | seed=123
+  freq range: [2.59e-06, 1.0000]
+==============================================================================
+  Params: 50.9M
+  Training: 762 steps (micro=32, accum=1, eff=32)
+    step 0/762 loss=10.9263 lr=0.00e+00 mem=53.9GB ETA=8min
+    step 100/762 loss=4.1344 lr=2.91e-04 mem=53.9GB ETA=3min
+    step 200/762 loss=3.2530 lr=2.57e-04 mem=53.9GB ETA=3min
+    step 300/762 loss=2.8076 lr=2.05e-04 mem=53.9GB ETA=2min
+    step 400/762 loss=2.6375 lr=1.43e-04 mem=53.9GB ETA=2min
+    step 500/762 loss=2.5485 lr=8.22e-05 mem=53.9GB ETA=1min
+    step 600/762 loss=2.4865 lr=3.35e-05 mem=53.9GB ETA=1min
+    step 700/762 loss=2.4549 lr=5.07e-06 mem=53.9GB ETA=0min
+    L=2048: PPL=8.750
+    L=4096: PPL=8.682
+    L=8192: PPL=9.757
+    L=12288: PPL=12.017
+    L=16384: PPL=12.683
+
+==============================================================================
+  geo_100k | seed=7
+  freq range: [1.43e-05, 1.0000]
+==============================================================================
+  Params: 50.9M
+  Training: 762 steps (micro=32, accum=1, eff=32)
+    step 0/762 loss=10.8711 lr=0.00e+00 mem=53.9GB ETA=8min
+    step 100/762 loss=4.1430 lr=2.91e-04 mem=53.9GB ETA=3min
+    step 200/762 loss=3.2152 lr=2.57e-04 mem=53.9GB ETA=3min
+    step 300/762 loss=2.8159 lr=2.05e-04 mem=53.9GB ETA=2min
+    step 400/762 loss=2.6123 lr=1.43e-04 mem=53.9GB ETA=2min
+    step 500/762 loss=2.4001 lr=8.22e-05 mem=53.9GB ETA=1min
+    step 600/762 loss=2.3628 lr=3.35e-05 mem=53.9GB ETA=1min
+    step 700/762 loss=2.3312 lr=5.07e-06 mem=53.9GB ETA=0min
+    L=2048: PPL=8.275
+    L=4096: PPL=8.334
+    L=8192: PPL=9.061
+    L=12288: PPL=10.748
+    L=16384: PPL=11.512
+
+==============================================================================
+  geo_200k | seed=7
+  freq range: [7.32e-06, 1.0000]
+==============================================================================
+  Params: 50.9M
+  Training: 762 steps (micro=32, accum=1, eff=32)
+    step 0/762 loss=10.8710 lr=0.00e+00 mem=53.9GB ETA=8min
+    step 100/762 loss=4.1196 lr=2.91e-04 mem=53.9GB ETA=3min
+    step 200/762 loss=3.2171 lr=2.57e-04 mem=53.9GB ETA=3min
+    step 300/762 loss=2.8214 lr=2.05e-04 mem=53.9GB ETA=2min
+    step 400/762 loss=2.6195 lr=1.43e-04 mem=53.9GB ETA=2min
+    step 500/762 loss=2.4075 lr=8.22e-05 mem=53.9GB ETA=1min
+    step 600/762 loss=2.3681 lr=3.35e-05 mem=53.9GB ETA=1min
+    step 700/762 loss=2.3393 lr=5.07e-06 mem=53.9GB ETA=0min
+    L=2048: PPL=8.305
+    L=4096: PPL=8.741
+    L=8192: PPL=10.243
+    L=12288: PPL=14.103
+    L=16384: PPL=16.000
+
+==============================================================================
+  geo_300k | seed=7
+  freq range: [4.94e-06, 1.0000]
+==============================================================================
+  Params: 50.9M
+  Training: 762 steps (micro=32, accum=1, eff=32)
+    step 0/762 loss=10.8709 lr=0.00e+00 mem=53.9GB ETA=8min
+    step 100/762 loss=4.1614 lr=2.91e-04 mem=53.9GB ETA=3min
+    step 200/762 loss=3.2469 lr=2.57e-04 mem=53.9GB ETA=3min
+    step 300/762 loss=2.8362 lr=2.05e-04 mem=53.9GB ETA=2min
+    step 400/762 loss=2.6286 lr=1.43e-04 mem=53.9GB ETA=2min
+    step 500/762 loss=2.4144 lr=8.22e-05 mem=53.9GB ETA=1min
+    step 600/762 loss=2.3757 lr=3.35e-05 mem=53.9GB ETA=1min
+    step 700/762 loss=2.3475 lr=5.07e-06 mem=53.9GB ETA=0min
+    L=2048: PPL=8.420
+    L=4096: PPL=8.657
+    L=8192: PPL=9.563
+    L=12288: PPL=12.032
+    L=16384: PPL=13.234
+
+==============================================================================
+  geo_500k | seed=7
+  freq range: [3.01e-06, 1.0000]
+==============================================================================
+  Params: 50.9M
+  Training: 762 steps (micro=32, accum=1, eff=32)
+    step 0/762 loss=10.8711 lr=0.00e+00 mem=53.9GB ETA=8min
+    step 100/762 loss=4.1241 lr=2.91e-04 mem=53.9GB ETA=3min
+    step 200/762 loss=3.2099 lr=2.57e-04 mem=53.9GB ETA=3min
+    step 300/762 loss=2.8254 lr=2.05e-04 mem=53.9GB ETA=2min
+    step 400/762 loss=2.6205 lr=1.43e-04 mem=53.9GB ETA=2min
+    step 500/762 loss=2.4084 lr=8.22e-05 mem=53.9GB ETA=1min
+    step 600/762 loss=2.3644 lr=3.35e-05 mem=53.9GB ETA=1min
+    step 700/762 loss=2.3374 lr=5.07e-06 mem=53.9GB ETA=0min
+    L=2048: PPL=8.236
+    L=4096: PPL=8.510
+    L=8192: PPL=9.788
+    L=12288: PPL=12.370
+    L=16384: PPL=13.850
+
+==============================================================================
+  hybrid_a0.2_t100k | seed=7
+  freq range: [1.23e-05, 1.0000]
+==============================================================================
+  Params: 50.9M
+  Training: 762 steps (micro=32, accum=1, eff=32)
+    step 0/762 loss=10.8720 lr=0.00e+00 mem=53.9GB ETA=8min
+    step 100/762 loss=4.0568 lr=2.91e-04 mem=53.9GB ETA=3min
+    step 200/762 loss=3.1072 lr=2.57e-04 mem=53.9GB ETA=3min
+    step 300/762 loss=2.7742 lr=2.05e-04 mem=53.9GB ETA=2min
+    step 400/762 loss=2.5868 lr=1.43e-04 mem=53.9GB ETA=2min
+    step 500/762 loss=2.3878 lr=8.22e-05 mem=53.9GB ETA=1min
+    step 600/762 loss=2.3457 lr=3.35e-05 mem=53.9GB ETA=1min
+    step 700/762 loss=2.3198 lr=5.07e-06 mem=53.9GB ETA=0min
+    L=2048: PPL=8.136
+    L=4096: PPL=8.222
+    L=8192: PPL=9.275
+    L=12288: PPL=11.757
+    L=16384: PPL=12.713
+
+==============================================================================
+  hybrid_a0.2_t500k | seed=7
+  freq range: [2.59e-06, 1.0000]
+==============================================================================
+  Params: 50.9M
+  Training: 762 steps (micro=32, accum=1, eff=32)
+    step 0/762 loss=10.8720 lr=0.00e+00 mem=53.9GB ETA=8min
+    step 100/762 loss=4.0524 lr=2.91e-04 mem=53.9GB ETA=3min
+    step 200/762 loss=3.1119 lr=2.57e-04 mem=53.9GB ETA=3min
+    step 300/762 loss=2.7670 lr=2.05e-04 mem=53.9GB ETA=2min
+    step 400/762 loss=2.5785 lr=1.43e-04 mem=53.9GB ETA=2min
+    step 500/762 loss=2.3815 lr=8.22e-05 mem=53.9GB ETA=1min
+    step 600/762 loss=2.3375 lr=3.35e-05 mem=53.9GB ETA=1min
+    step 700/762 loss=2.3105 lr=5.07e-06 mem=53.9GB ETA=0min
+    L=2048: PPL=8.063
+    L=4096: PPL=8.101
+    L=8192: PPL=9.417
+    L=12288: PPL=11.954
+    L=16384: PPL=12.892
+
+==============================================================================
+  PER-SEED TABLE (PPL@2048, PPL@16384)
+==============================================================================
+Config                     | Seed     | PPL@2048   | PPL@16384 
+------------------------------------------------------------------------------
+geo_100k                   | seed42   | 8.447      | 11.631    
+geo_100k                   | seed123  | 8.486      | 12.57     
+geo_100k                   | seed7    | 8.275      | 11.512    
+geo_200k                   | seed42   | 8.657      | 23.183    
+geo_200k                   | seed123  | 8.597      | 16.39     
+geo_200k                   | seed7    | 8.305      | 16.0      
+geo_300k                   | seed42   | 8.664      | 15.37     
+geo_300k                   | seed123  | 8.493      | 12.788    
+geo_300k                   | seed7    | 8.42       | 13.234    
+geo_500k                   | seed42   | 8.651      | 13.291    
+geo_500k                   | seed123  | 8.665      | 14.129    
+geo_500k                   | seed7    | 8.236      | 13.85     
+hybrid_a0.2_t100k          | seed42   | 8.459      | 15.063    
+hybrid_a0.2_t100k          | seed123  | 8.557      | 12.748    
+hybrid_a0.2_t100k          | seed7    | 8.136      | 12.713    
+hybrid_a0.2_t500k          | seed42   | 8.548      | 14.911    
+hybrid_a0.2_t500k          | seed123  | 8.75       | 12.683    
+hybrid_a0.2_t500k          | seed7    | 8.063      | 12.892    
+
+==============================================================================
+  AGGREGATE TABLE (mean±std)
+==============================================================================
+Config                     | PPL@2048             | PPL@16384           
+------------------------------------------------------------------------------
+geo_100k                   | 8.403 ± 0.092        | 11.904 ± 0.473      
+geo_200k                   | 8.52 ± 0.154         | 18.524 ± 3.298      
+geo_300k                   | 8.526 ± 0.102        | 13.797 ± 1.127      
+geo_500k                   | 8.517 ± 0.199        | 13.757 ± 0.348      
+hybrid_a0.2_t100k          | 8.384 ± 0.18         | 13.508 ± 1.1        
+hybrid_a0.2_t500k          | 8.454 ± 0.288        | 13.495 ± 1.005      
+[W213 04:56:08.633483407 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())

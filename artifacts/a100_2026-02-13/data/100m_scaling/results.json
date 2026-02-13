@@ -1,0 +1,49 @@
+{
+  "timestamp": "2026-02-13_024834",
+  "seed": 42,
+  "model_cfg": {
+    "vocab_size": 50304,
+    "hidden_size": 768,
+    "num_layers": 12,
+    "num_heads": 12,
+    "head_dim": 64,
+    "intermediate_size": 3072,
+    "max_position_embeddings": 2048
+  },
+  "train_cfg": {
+    "train_tokens": 50000000,
+    "seq_len": 2048,
+    "micro_batch": 8,
+    "grad_accum": 4,
+    "lr": 0.0003
+  },
+  "eval_cfg": {
+    "lengths": [
+      2048,
+      16384
+    ],
+    "chunks": 5
+  },
+  "experiments": {
+    "geo_500k": {
+      "train": {
+        "steps": 762,
+        "mean_loss": 2.9122100332434098
+      },
+      "eval": {
+        "2048": 6.457,
+        "16384": 10.888
+      }
+    },
+    "hybrid_a0.2_t100k": {
+      "train": {
+        "steps": 762,
+        "mean_loss": 2.908337732117007
+      },
+      "eval": {
+        "2048": 6.382,
+        "16384": 9.417
+      }
+    }
+  }
+}

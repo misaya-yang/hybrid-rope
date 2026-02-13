@@ -1,0 +1,25 @@
+{
+  "name": "geo_10k_align",
+  "group": "baseline",
+  "rope": {
+    "kind": "standard",
+    "theta": 10000.0
+  },
+  "train": {
+    "steps": 762,
+    "final_loss": 3.4150253981351852,
+    "checkpoint": "/opt/dfrope/results/a100_aligned/variants/geo_10k_align/geo_10k_align_final.pt"
+  },
+  "ppl": {
+    "2048": {
+      "mean": 36.472794605834565,
+      "std": 11.57408313419261,
+      "n_chunks": 5
+    },
+    "16384": {
+      "mean": 57.731495268155534,
+      "std": 16.35948769227236,
+      "n_chunks": 5
+    }
+  }
+}

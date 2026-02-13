@@ -1,0 +1,13 @@
+{
+  "dataset": "roneneldan/TinyStories",
+  "split": "validation",
+  "tokenizer": "EleutherAI/gpt-neox-20b",
+  "target_tokens": 5000000,
+  "seq_len": 1,
+  "written_tokens": 4753217,
+  "usable_tokens": 4753217,
+  "usable_chunks": 4753217,
+  "path": "/opt/dfrope/results/350m_final/cache/validation_5000000.tokens.u16",
+  "dtype": "uint16",
+  "created_at": "2026-02-12_115806"
+}

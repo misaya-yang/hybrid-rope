@@ -1,0 +1,71 @@
+====================================================================
+  50M QUICK RETRAIN + YaRN COMPARE
+====================================================================
+  Loading TinyStories train (50M tokens)...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+  Got 24414 chunks
+  Loading validation data...
+
+[1/3] Train geo_500k
+  Params: 50.9M
+    step 0/762  loss=10.9601  lr=0.00e+00  ETA=8min
+    step 100/762  loss=3.9278  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0930  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6337  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4502  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2564  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2186  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2095  lr=1.01e-05  ETA=0min
+  saved /opt/dfrope/results/50m_yarn_compare/geo_model.pt
+
+[2/3] Train hybrid_a0.2_t100k
+  Params: 50.9M
+    step 0/762  loss=10.9610  lr=0.00e+00  ETA=0min
+    step 100/762  loss=3.9286  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0386  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.5893  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4065  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2191  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.1945  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.1844  lr=1.01e-05  ETA=0min
+  saved /opt/dfrope/results/50m_yarn_compare/hybrid_model.pt
+
+[3/3] Evaluate
+  Hybrid @16K (native)
+    L=2048: PPL=6.672
+    L=4096: PPL=6.748
+    L=8192: PPL=8.688
+    L=12288: PPL=13.333
+    L=16384: PPL=16.861
+
+  Geo @16K (native)
+    L=2048: PPL=6.839
+    L=4096: PPL=7.045
+    L=8192: PPL=8.833
+    L=12288: PPL=13.588
+    L=16384: PPL=17.966
+
+  Geo @16K (YaRN-style scale=8)
+    L=2048: PPL=33.516
+    L=4096: PPL=32.821
+    L=8192: PPL=34.358
+    L=12288: PPL=38.477
+    L=16384: PPL=39.479
+
+====================================================================
+  TABLE: Hybrid vs Geo vs Geo+YaRN
+====================================================================
+Length   | Hybrid     | Geo        | Geo+YaRN(8) 
+--------------------------------------------------------------------
+2048     | 6.672      | 6.839      | 33.516      
+4096     | 6.748      | 7.045      | 32.821      
+8192     | 8.688      | 8.833      | 34.358      
+12288    | 13.333     | 13.588     | 38.477      
+16384    | 16.861     | 17.966     | 39.479      
+
+16K summary:
+  Hybrid(native): 16.861
+  Geo(native): 17.966
+  Geo+YaRN(s=8): 39.479
+
+Saved: /opt/dfrope/results/50m_yarn_compare/results.json

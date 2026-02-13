@@ -1,0 +1,39 @@
+[prep] Building/loading token cache...
+[cache] loading from /opt/dfrope/results/a100_aligned/cache/tokens_EleutherAI_pythia-70m_t50000000_v2500000_s42.pt
+[setup] Running 14 configurations
+
+============================================================
+Running: geo_10k_align
+============================================================
+/opt/dfrope/run_a100_aligned_search.py:402: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  scaler = torch.cuda.amp.GradScaler(enabled=use_amp and amp_dtype == torch.float16)
+[geo_10k_align] Step 100/762 | Loss: 4.7336 | LR: 5.32e-04 | 290737 tok/s
+[geo_10k_align] Step 200/762 | Loss: 4.0566 | LR: 4.51e-04 | 293611 tok/s
+[geo_10k_align] Step 300/762 | Loss: 3.9743 | LR: 3.71e-04 | 294075 tok/s
+[geo_10k_align] Step 400/762 | Loss: 3.6952 | LR: 2.91e-04 | 293934 tok/s
+[geo_10k_align] Step 500/762 | Loss: 3.5862 | LR: 2.10e-04 | 293774 tok/s
+[geo_10k_align] Step 600/762 | Loss: 3.5680 | LR: 1.30e-04 | 293536 tok/s
+[geo_10k_align] Step 700/762 | Loss: 3.4012 | LR: 4.98e-05 | 293459 tok/s
+[eval] Length 2048: PPL = 36.47
+[eval] Length 16384: PPL = 57.73
+[done] geo_10k_align: PPL@16384 = 57.731
+
+============================================================
+Running: sigmoid_t10k_s6_m0.4_omf0.2
+============================================================
+[sigmoid_t10k_s6_m0.4_omf0.2] Step 100/762 | Loss: 4.6709 | LR: 5.32e-04 | 292189 tok/s
+[sigmoid_t10k_s6_m0.4_omf0.2] Step 200/762 | Loss: 4.0771 | LR: 4.51e-04 | 290523 tok/s
+[sigmoid_t10k_s6_m0.4_omf0.2] Step 300/762 | Loss: 4.0180 | LR: 3.71e-04 | 292270 tok/s
+[sigmoid_t10k_s6_m0.4_omf0.2] Step 400/762 | Loss: 3.7558 | LR: 2.91e-04 | 293052 tok/s
+[sigmoid_t10k_s6_m0.4_omf0.2] Step 500/762 | Loss: 3.6622 | LR: 2.10e-04 | 292857 tok/s
+[sigmoid_t10k_s6_m0.4_omf0.2] Step 600/762 | Loss: 3.6509 | LR: 1.30e-04 | 293393 tok/s
+[sigmoid_t10k_s6_m0.4_omf0.2] Step 700/762 | Loss: 3.4881 | LR: 4.98e-05 | 293441 tok/s
+[eval] Length 2048: PPL = 39.30
+[eval] Length 16384: PPL = 48.89
+[done] sigmoid_t10k_s6_m0.4_omf0.2: PPL@16384 = 48.889
+
+============================================================
+Running: sigmoid_t10k_s6_m0.5_omf0.3
+============================================================
+[sigmoid_t10k_s6_m0.5_omf0.3] Step 100/762 | Loss: 4.6828 | LR: 5.32e-04 | 293800 tok/s
+[sigmoid_t10k_s6_m0.5_omf0.3] Step 200/762 | Loss: 4.1030 | LR: 4.51e-04 | 294116 tok/s
