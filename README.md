@@ -1,50 +1,55 @@
-# RoPE 频谱优化实验（DF-RoPE Pivot）
+# Hybrid RoPE 实验仓库
 
-这个目录是“可上传 GitHub 的整理包”，包含我们从 DF-RoPE pivot 到 **RoPE 频率分布优化** 之后的代码与结果（不含权重）。
+这是一个“**代码 + 结果 + 文档**”一体化实验仓库，覆盖：
 
-## 目录结构
+- 50M/100M/350M from-scratch 训练与外推评测
+- Llama-3-8B / Qwen2.5-7B 的 Hybrid-LoRA 实验
+- 频率分布搜索（geometric / hybrid / sigmoid / anchored polynomial）
+- H100 1.5B 规模化计划包
 
-- `a100/`
-  - `unified_search.py`: 50M 模型小规模候选扫描（unified search）
-  - `unified_search_3cfg_3seed.py`: 50M 模型 3 配置 × 3 seed 稳健性验证
-  - `run_50m_theta_shape_factorial.py`: 50M 因子分离公平对照（geo θ 扫描 + hybrid 对照）
-  - `run_350m_final.py`: 350M 最终验证（运行中）
+说明：仓库默认**不包含模型权重**，只保留可复核结论所需代码与产物。
 
-- `h100_advanced_experiments/`
-  - 2xH100 / 1.5B 实验作战包（计划、runbook、配置、环境检查、自动汇总作图脚本）
-  - 可直接迁移到 H100/H200 新环境执行
+## 5 分钟上手
 
-- `server_artifacts_2026-02-13/`
-  - 双机（A100/A800）最新同步归档（不含权重）
-  - 已按 `scripts/results/logs/meta` 分层，可直接用于复核与上传
-  - 包含 A100 100M scaling/因子实验中间产物、A800 LoRA 运行日志
-  - 详见 `server_artifacts_2026-02-13/README.md`
+1. 看结论：`docs/RESULTS.md`
+2. 看方法口径：`docs/METHODOLOGY.md`
+3. 看实验索引：`docs/EXPERIMENT_INDEX_CN.md`
+4. 看机器产物：`artifacts/`
+5. 需要复现时：`docs/REPRODUCE.md`
 
-- `artifacts/a800_2026-02-13/`
-  - A800 上 `Llama-3-8B Hybrid-LoRA` 的训练与对比评测入库（不含权重）
-  - 包含原始 `run.log/results.json`、评测脚本与导师汇报摘要
-  - 详见 `artifacts/a800_2026-02-13/README.md`
+## 主目录说明
 
+- `artifacts/`
+  - 按机器归档的主入口（A100/A800/R6000），包含脚本、结果、日志、图表
 - `docs/`
-  - `DFROPE_EXPERIMENTS_ROPE_FREQ_SUMMARY.md`: 全过程叙事总结（较长）
-  - `METHODOLOGY.md`: 不允许变动的定义（频率函数/数据/评测 slicing）
-  - `RESULTS.md`: 关键表格与“论文口径”结论
-  - `REPRODUCE.md`: 复现指南（中文）
-  - `SERVER_SYNC_2026-02-13.md`: 本次双机同步记录、排除规则与状态快照
-
+  - 方法、结果、复现文档，以及实验索引表
 - `results/`
-  - `unified_search/`: unified 扫描的 JSON + log
-  - `unified_search_3cfg_3seed/`: 3cfg×3seed 的 JSON + log
-  - `350m_final/`: 350M 的 run.log / results.json（不含权重，不含 memmap cache）
+  - 聚合后的核心结果快照（便于快速查阅）
+- `h100_advanced_experiments/`
+  - H100/H200 执行包（计划、配置、runbook、脚本）
+- `server_artifacts_2026-02-13/`
+  - A100/A800 服务器原样镜像归档（复核用途）
+- `a100/`
+  - 早期历史兼容目录（与 `artifacts/a100_2026-02-13/` 有重叠）
+- `scripts/`
+  - 仓库级工具脚本（拉取、作图、提交辅助）
 
-## 约定与说明
+## 机器入口
 
-- 不上传权重：体积大且不必要，我们关心可复现的对比结论。
-- 350M 实验会把 streaming tokenization 写成磁盘 memmap cache（体积极大），该 cache 不同步到 GitHub。
+- A100 主线：`artifacts/a100_2026-02-13/README.md`
+- A800 LoRA：`artifacts/a800_2026-02-13/README.md`
+- R6000 Qwen：`artifacts/r6000_2026-02-13/README.md`
 
-## 推荐阅读顺序
+## 关键约定
+
+- 不上传权重文件（`*.pt`, `*.bin`, `*.safetensors` 等）
+- 仅同步可复现和可审阅所需产物（脚本、JSON、日志、图表）
+- 每个主要目录都有 `README.md` 说明用途和入口
+
+## 推荐阅读顺序（对导师/审稿友好）
 
 1. `docs/RESULTS.md`
 2. `docs/METHODOLOGY.md`
-3. `docs/REPRODUCE.md`
-4. `docs/DFROPE_EXPERIMENTS_ROPE_FREQ_SUMMARY.md`
+3. `docs/EXPERIMENT_INDEX_CN.md`
+4. `docs/REPRODUCE.md`
+5. `artifacts/a100_2026-02-13/A100_RESULTS_SUMMARY_FOR_ADVISOR_2026-02-13.md`

@@ -1,0 +1,19 @@
+[prep] building/loading token cache ...
+[setup] cuda_device_count=1 max_parallel=1 -> parallel=1
+[resume] skipping already completed geo_10k_baseline
+[resume] skipping already completed geo_20k
+[resume] skipping already completed geo_50k
+[resume] skipping already completed geo_100k
+[resume] skipping already completed geo_200k
+[resume] skipping already completed geo_500k
+[resume] skipping already completed hybrid_alpha0.15
+[resume] skipping already completed hybrid_alpha0.25
+[resume] skipping already completed sigmoid_steep5_mid0.5_omf0.3
+[resume] skipping already completed sigmoid_steep8_mid0.5_omf0.3
+[launch] sigmoid_th100k_steep8_mid0.5_omf0.3 on gpu=0 pid=3176
+[done] sigmoid_th100k_steep8_mid0.5_omf0.3 ppl@16384=24.690
+[launch] hybrid_basegeo100k_alpha0.2 on gpu=0 pid=3350
+[done] hybrid_basegeo100k_alpha0.2 ppl@16384=29.552
+[launch] sigmoid_th500k_steep8_mid0.5_omf0.3 on gpu=0 pid=3495
+[done] sigmoid_th500k_steep8_mid0.5_omf0.3 ppl@16384=24.541
+[launch] hybrid_basegeo500k_alpha0.2 on gpu=0 pid=3605

@@ -1,0 +1,28 @@
+# Python cache
+**/__pycache__/
+**/*.pyc
+
+# Runtime PID/temp
+**/*.pid
+
+# Large model/checkpoint binaries (do not commit)
+**/*.safetensors
+**/optimizer.pt
+**/scheduler.pt
+**/rng_state.pth
+**/training_args.bin
+**/c4_val_tokens_*.pt
+**/cache/*.pt
+**/cache/*.u16
+**/cache/*.tokens*
+
+# A800 LoRA checkpoint/full adapter artifacts (keep only README markers)
+artifacts/a800_2026-02-13/results/llama3_hybrid_lora/checkpoint-500/*
+!artifacts/a800_2026-02-13/results/llama3_hybrid_lora/checkpoint-500/README.md
+artifacts/a800_2026-02-13/results/llama3_hybrid_lora/checkpoint-600/*
+!artifacts/a800_2026-02-13/results/llama3_hybrid_lora/checkpoint-600/README.md
+artifacts/a800_2026-02-13/results/llama3_hybrid_lora/final_lora/*
+!artifacts/a800_2026-02-13/results/llama3_hybrid_lora/final_lora/README.md
+
+# Packaging artifacts
+**/*.tar.gz

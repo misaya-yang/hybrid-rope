@@ -1,0 +1,2 @@
+[train:hybrid_basegeo500k_alpha0.2] n_seq=24,414 total_steps=382/382 micro_batch=64 grad_accum=1
+[train:hybrid_basegeo500k_alpha0.2] step=1/382 loss=10.9519 lr=0.000e+00 tokens=131,072

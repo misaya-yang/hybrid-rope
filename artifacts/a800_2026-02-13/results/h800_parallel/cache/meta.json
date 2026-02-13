@@ -1,0 +1,8 @@
+{
+  "dataset": "roneneldan/TinyStories",
+  "tokenizer": "EleutherAI/pythia-70m",
+  "train_tokens": 50000000,
+  "val_tokens": 2500000,
+  "seq_len": 2048,
+  "seed": 42
+}

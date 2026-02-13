@@ -1,0 +1,803 @@
+{
+  "ts": "2026-02-12_090619",
+  "queue_meta": {
+    "K": 32,
+    "geo10k_min": 0.0001333521432163324,
+    "omega_min_for_omf0.3": 4.000564296489972e-05,
+    "anchpoly_ref": {
+      "p": 3.9,
+      "omega_min_factor": 0.3
+    }
+  },
+  "prep": {
+    "data_meta": {
+      "dataset": "roneneldan/TinyStories",
+      "tokenizer": "EleutherAI/pythia-70m",
+      "train_tokens": 50000000,
+      "val_tokens": 2500000,
+      "seq_len": 2048,
+      "seed": 42
+    },
+    "n_seq": 24414,
+    "order_file": "/opt/dfrope/results/h800_parallel/cache/train_order_seed42.pt"
+  },
+  "baseline_geo_10k_ppl_16384": 79.48522104662203,
+  "summary": [
+    {
+      "name": "geo_100k",
+      "group": "theta_scaling",
+      "ppl_2048": 17.689505943773725,
+      "ppl_16384": 30.236203925566787,
+      "vs_geo_10k_delta": -49.249017121055246
+    },
+    {
+      "name": "geo_10k_baseline",
+      "group": "baseline",
+      "ppl_2048": 18.080182994961202,
+      "ppl_16384": 79.48522104662203,
+      "vs_geo_10k_delta": 0.0
+    },
+    {
+      "name": "geo_200k",
+      "group": "theta_scaling",
+      "ppl_2048": 17.57654887073768,
+      "ppl_16384": 29.879500651935246,
+      "vs_geo_10k_delta": -49.605720394686784
+    },
+    {
+      "name": "geo_20k",
+      "group": "theta_scaling",
+      "ppl_2048": 17.505137275008604,
+      "ppl_16384": 53.63119874719725,
+      "vs_geo_10k_delta": -25.854022299424777
+    },
+    {
+      "name": "geo_500k",
+      "group": "theta_scaling",
+      "ppl_2048": 18.270725519834137,
+      "ppl_16384": 26.481570628407013,
+      "vs_geo_10k_delta": -53.00365041821502
+    },
+    {
+      "name": "geo_50k",
+      "group": "theta_scaling",
+      "ppl_2048": 17.116100596950115,
+      "ppl_16384": 36.129439492546446,
+      "vs_geo_10k_delta": -43.355781554075584
+    },
+    {
+      "name": "hybrid_alpha0.15",
+      "group": "hybrid",
+      "ppl_2048": 18.0673790834939,
+      "ppl_16384": 60.33377413759333,
+      "vs_geo_10k_delta": -19.1514469090287
+    },
+    {
+      "name": "hybrid_alpha0.25",
+      "group": "hybrid",
+      "ppl_2048": 18.382485366827716,
+      "ppl_16384": 63.35272942881662,
+      "vs_geo_10k_delta": -16.132491617805407
+    },
+    {
+      "name": "sigmoid_steep5_mid0.5_omf0.3",
+      "group": "sigmoid",
+      "ppl_2048": 17.374991669569404,
+      "ppl_16384": 45.668104885564176,
+      "vs_geo_10k_delta": -33.817116161057854
+    },
+    {
+      "name": "sigmoid_steep8_mid0.5_omf0.3",
+      "group": "sigmoid",
+      "ppl_2048": 16.950553865051287,
+      "ppl_16384": 27.204592197003723,
+      "vs_geo_10k_delta": -52.28062884961831
+    }
+  ],
+  "results": {
+    "geo_10k_baseline": {
+      "ts": "2026-02-12_083443",
+      "name": "geo_10k_baseline",
+      "group": "baseline",
+      "rope": {
+        "kind": "standard",
+        "theta": 10000.0
+      },
+      "data": {
+        "dataset": "roneneldan/TinyStories",
+        "tokenizer": "EleutherAI/pythia-70m",
+        "train_tokens": 50000000,
+        "val_tokens": 2500000,
+        "seq_len": 2048,
+        "seed": 42
+      },
+      "train": {
+        "total_steps": 382,
+        "full_steps": 382,
+        "micro_batch": 64,
+        "grad_accum": 1,
+        "effective_batch": 64,
+        "loss_curve": [
+          {
+            "step": 100,
+            "loss": 4.511018753051758
+          },
+          {
+            "step": 200,
+            "loss": 3.388566493988037
+          },
+          {
+            "step": 300,
+            "loss": 3.047659158706665
+          },
+          {
+            "step": 382,
+            "loss": 3.0373919010162354
+          }
+        ],
+        "checkpoint": "/opt/dfrope/results/h800_parallel/variants/geo_10k_baseline/geo_10k_baseline_model.pt"
+      },
+      "ppl": {
+        "2048": {
+          "mean": 18.080182994961202,
+          "std": 2.1591747081542776,
+          "n_chunks": 5
+        },
+        "16384": {
+          "mean": 79.48522104662203,
+          "std": 8.26944234890137,
+          "n_chunks": 5
+        }
+      }
+    },
+    "geo_20k": {
+      "ts": "2026-02-12_083814",
+      "name": "geo_20k",
+      "group": "theta_scaling",
+      "rope": {
+        "kind": "standard",
+        "theta": 20000.0
+      },
+      "data": {
+        "dataset": "roneneldan/TinyStories",
+        "tokenizer": "EleutherAI/pythia-70m",
+        "train_tokens": 50000000,
+        "val_tokens": 2500000,
+        "seq_len": 2048,
+        "seed": 42
+      },
+      "train": {
+        "total_steps": 382,
+        "full_steps": 382,
+        "micro_batch": 64,
+        "grad_accum": 1,
+        "effective_batch": 64,
+        "loss_curve": [
+          {
+            "step": 100,
+            "loss": 4.418442726135254
+          },
+          {
+            "step": 200,
+            "loss": 3.3516814708709717
+          },
+          {
+            "step": 300,
+            "loss": 3.0124921798706055
+          },
+          {
+            "step": 382,
+            "loss": 3.0016751289367676
+          }
+        ],
+        "checkpoint": "/opt/dfrope/results/h800_parallel/variants/geo_20k/geo_20k_model.pt"
+      },
+      "ppl": {
+        "2048": {
+          "mean": 17.505137275008604,
+          "std": 2.133749594210804,
+          "n_chunks": 5
+        },
+        "16384": {
+          "mean": 53.63119874719725,
+          "std": 4.007413543672009,
+          "n_chunks": 5
+        }
+      }
+    },
+    "geo_50k": {
+      "ts": "2026-02-12_084144",
+      "name": "geo_50k",
+      "group": "theta_scaling",
+      "rope": {
+        "kind": "standard",
+        "theta": 50000.0
+      },
+      "data": {
+        "dataset": "roneneldan/TinyStories",
+        "tokenizer": "EleutherAI/pythia-70m",
+        "train_tokens": 50000000,
+        "val_tokens": 2500000,
+        "seq_len": 2048,
+        "seed": 42
+      },
+      "train": {
+        "total_steps": 382,
+        "full_steps": 382,
+        "micro_batch": 64,
+        "grad_accum": 1,
+        "effective_batch": 64,
+        "loss_curve": [
+          {
+            "step": 100,
+            "loss": 4.353044033050537
+          },
+          {
+            "step": 200,
+            "loss": 3.3302879333496094
+          },
+          {
+            "step": 300,
+            "loss": 2.99005389213562
+          },
+          {
+            "step": 382,
+            "loss": 2.9820237159729004
+          }
+        ],
+        "checkpoint": "/opt/dfrope/results/h800_parallel/variants/geo_50k/geo_50k_model.pt"
+      },
+      "ppl": {
+        "2048": {
+          "mean": 17.116100596950115,
+          "std": 2.113865861830872,
+          "n_chunks": 5
+        },
+        "16384": {
+          "mean": 36.129439492546446,
+          "std": 3.3262447120212997,
+          "n_chunks": 5
+        }
+      }
+    },
+    "geo_100k": {
+      "ts": "2026-02-12_084514",
+      "name": "geo_100k",
+      "group": "theta_scaling",
+      "rope": {
+        "kind": "standard",
+        "theta": 100000.0
+      },
+      "data": {
+        "dataset": "roneneldan/TinyStories",
+        "tokenizer": "EleutherAI/pythia-70m",
+        "train_tokens": 50000000,
+        "val_tokens": 2500000,
+        "seq_len": 2048,
+        "seed": 42
+      },
+      "train": {
+        "total_steps": 382,
+        "full_steps": 382,
+        "micro_batch": 64,
+        "grad_accum": 1,
+        "effective_batch": 64,
+        "loss_curve": [
+          {
+            "step": 100,
+            "loss": 4.421332359313965
+          },
+          {
+            "step": 200,
+            "loss": 3.362053155899048
+          },
+          {
+            "step": 300,
+            "loss": 3.024132251739502
+          },
+          {
+            "step": 382,
+            "loss": 3.015209197998047
+          }
+        ],
+        "checkpoint": "/opt/dfrope/results/h800_parallel/variants/geo_100k/geo_100k_model.pt"
+      },
+      "ppl": {
+        "2048": {
+          "mean": 17.689505943773725,
+          "std": 2.152935574080902,
+          "n_chunks": 5
+        },
+        "16384": {
+          "mean": 30.236203925566787,
+          "std": 2.8012432239948257,
+          "n_chunks": 5
+        }
+      }
+    },
+    "geo_200k": {
+      "ts": "2026-02-12_084844",
+      "name": "geo_200k",
+      "group": "theta_scaling",
+      "rope": {
+        "kind": "standard",
+        "theta": 200000.0
+      },
+      "data": {
+        "dataset": "roneneldan/TinyStories",
+        "tokenizer": "EleutherAI/pythia-70m",
+        "train_tokens": 50000000,
+        "val_tokens": 2500000,
+        "seq_len": 2048,
+        "seed": 42
+      },
+      "train": {
+        "total_steps": 382,
+        "full_steps": 382,
+        "micro_batch": 64,
+        "grad_accum": 1,
+        "effective_batch": 64,
+        "loss_curve": [
+          {
+            "step": 100,
+            "loss": 4.350776672363281
+          },
+          {
+            "step": 200,
+            "loss": 3.3439552783966064
+          },
+          {
+            "step": 300,
+            "loss": 3.0101146697998047
+          },
+          {
+            "step": 382,
+            "loss": 2.9987118244171143
+          }
+        ],
+        "checkpoint": "/opt/dfrope/results/h800_parallel/variants/geo_200k/geo_200k_model.pt"
+      },
+      "ppl": {
+        "2048": {
+          "mean": 17.57654887073768,
+          "std": 2.153782543500803,
+          "n_chunks": 5
+        },
+        "16384": {
+          "mean": 29.879500651935246,
+          "std": 2.8722312867995745,
+          "n_chunks": 5
+        }
+      }
+    },
+    "geo_500k": {
+      "ts": "2026-02-12_085214",
+      "name": "geo_500k",
+      "group": "theta_scaling",
+      "rope": {
+        "kind": "standard",
+        "theta": 500000.0
+      },
+      "data": {
+        "dataset": "roneneldan/TinyStories",
+        "tokenizer": "EleutherAI/pythia-70m",
+        "train_tokens": 50000000,
+        "val_tokens": 2500000,
+        "seq_len": 2048,
+        "seed": 42
+      },
+      "train": {
+        "total_steps": 382,
+        "full_steps": 382,
+        "micro_batch": 64,
+        "grad_accum": 1,
+        "effective_batch": 64,
+        "loss_curve": [
+          {
+            "step": 100,
+            "loss": 4.393522262573242
+          },
+          {
+            "step": 200,
+            "loss": 3.375572681427002
+          },
+          {
+            "step": 300,
+            "loss": 3.049180746078491
+          },
+          {
+            "step": 382,
+            "loss": 3.0339772701263428
+          }
+        ],
+        "checkpoint": "/opt/dfrope/results/h800_parallel/variants/geo_500k/geo_500k_model.pt"
+      },
+      "ppl": {
+        "2048": {
+          "mean": 18.270725519834137,
+          "std": 2.1747363325967064,
+          "n_chunks": 5
+        },
+        "16384": {
+          "mean": 26.481570628407013,
+          "std": 2.401180141878617,
+          "n_chunks": 5
+        }
+      }
+    },
+    "hybrid_alpha0.15": {
+      "ts": "2026-02-12_085544",
+      "name": "hybrid_alpha0.15",
+      "group": "hybrid",
+      "rope": {
+        "kind": "custom",
+        "custom_omega": [
+          1.0,
+          0.9624709923517533,
+          0.9341550732467332,
+          0.9123014674474326,
+          0.8945109995648911,
+          0.8786081011730303,
+          0.8625577365268383,
+          0.8444268369837068,
+          0.8223912662021667,
+          0.7947893283968633,
+          0.7602202078543846,
+          0.7176799057059635,
+          0.6667182955894166,
+          0.6075900658397975,
+          0.5413623237566536,
+          0.4699368210956826,
+          0.39595009910903145,
+          0.32253402840684536,
+          0.25295189755503705,
+          0.19016472504313398,
+          0.13641579622201946,
+          0.09293290851647473,
+          0.05982651709500405,
+          0.03620950510545406,
+          0.020497822208501645,
+          0.010797720062006043,
+          0.005268155146127951,
+          0.002372395182455427,
+          0.0009859356719376356,
+          0.00038131431490799004,
+          0.00014134880331117408,
+          5.400761800261462e-05
+        ],
+        "recipe": {
+          "geo_theta": 10000.0,
+          "anchpoly_p": 3.9,
+          "omega_min_factor": 0.3,
+          "alpha_geo": 0.15
+        }
+      },
+      "data": {
+        "dataset": "roneneldan/TinyStories",
+        "tokenizer": "EleutherAI/pythia-70m",
+        "train_tokens": 50000000,
+        "val_tokens": 2500000,
+        "seq_len": 2048,
+        "seed": 42
+      },
+      "train": {
+        "total_steps": 382,
+        "full_steps": 382,
+        "micro_batch": 64,
+        "grad_accum": 1,
+        "effective_batch": 64,
+        "loss_curve": [
+          {
+            "step": 100,
+            "loss": 4.50945520401001
+          },
+          {
+            "step": 200,
+            "loss": 3.378908395767212
+          },
+          {
+            "step": 300,
+            "loss": 3.039370059967041
+          },
+          {
+            "step": 382,
+            "loss": 3.0276756286621094
+          }
+        ],
+        "checkpoint": "/opt/dfrope/results/h800_parallel/variants/hybrid_alpha0.15/hybrid_alpha0.15_model.pt"
+      },
+      "ppl": {
+        "2048": {
+          "mean": 18.0673790834939,
+          "std": 2.2675058768540284,
+          "n_chunks": 5
+        },
+        "16384": {
+          "mean": 60.33377413759333,
+          "std": 4.499171543546483,
+          "n_chunks": 5
+        }
+      }
+    },
+    "hybrid_alpha0.25": {
+      "ts": "2026-02-12_085914",
+      "name": "hybrid_alpha0.25",
+      "group": "hybrid",
+      "rope": {
+        "kind": "custom",
+        "custom_omega": [
+          1.0,
+          0.9374619590553654,
+          0.8904122793577469,
+          0.8545832363863914,
+          0.8264776779710025,
+          0.8031409563957521,
+          0.7820012899947271,
+          0.7607709906581335,
+          0.7374040584136765,
+          0.7101069863423201,
+          0.6773983166384611,
+          0.6382081109573629,
+          0.592001175708507,
+          0.5388987330417762,
+          0.4797647320323872,
+          0.4162189850046179,
+          0.35054420509620426,
+          0.28547107707584285,
+          0.2238544288134919,
+          0.1682885179832695,
+          0.12073891168533109,
+          0.0822786103034379,
+          0.05299731266147874,
+          0.03210644820271398,
+          0.01820396077220733,
+          0.009615622902867974,
+          0.004714529990723527,
+          0.002142901220216975,
+          0.0009071465065351887,
+          0.0003643523214560107,
+          0.00014564046656914093,
+          6.334226802775788e-05
+        ],
+        "recipe": {
+          "geo_theta": 10000.0,
+          "anchpoly_p": 3.9,
+          "omega_min_factor": 0.3,
+          "alpha_geo": 0.25
+        }
+      },
+      "data": {
+        "dataset": "roneneldan/TinyStories",
+        "tokenizer": "EleutherAI/pythia-70m",
+        "train_tokens": 50000000,
+        "val_tokens": 2500000,
+        "seq_len": 2048,
+        "seed": 42
+      },
+      "train": {
+        "total_steps": 382,
+        "full_steps": 382,
+        "micro_batch": 64,
+        "grad_accum": 1,
+        "effective_batch": 64,
+        "loss_curve": [
+          {
+            "step": 100,
+            "loss": 4.5344624519348145
+          },
+          {
+            "step": 200,
+            "loss": 3.3906641006469727
+          },
+          {
+            "step": 300,
+            "loss": 3.0504069328308105
+          },
+          {
+            "step": 382,
+            "loss": 3.0378353595733643
+          }
+        ],
+        "checkpoint": "/opt/dfrope/results/h800_parallel/variants/hybrid_alpha0.25/hybrid_alpha0.25_model.pt"
+      },
+      "ppl": {
+        "2048": {
+          "mean": 18.382485366827716,
+          "std": 2.3192845727134315,
+          "n_chunks": 5
+        },
+        "16384": {
+          "mean": 63.35272942881662,
+          "std": 3.671397964177297,
+          "n_chunks": 5
+        }
+      }
+    },
+    "sigmoid_steep5_mid0.5_omf0.3": {
+      "ts": "2026-02-12_090244",
+      "name": "sigmoid_steep5_mid0.5_omf0.3",
+      "group": "sigmoid",
+      "rope": {
+        "kind": "custom",
+        "custom_omega": [
+          0.4638578625419808,
+          0.4103270271288323,
+          0.35670623526539674,
+          0.30420191658133106,
+          0.25406310267619703,
+          0.20747534559158992,
+          0.16544638230240014,
+          0.1287033670706587,
+          0.09762287442384195,
+          0.07220990797860939,
+          0.05213121009633307,
+          0.036794502047156515,
+          0.025453942453483643,
+          0.017317468684474414,
+          0.011635135023767357,
+          0.0077567449918529135,
+          0.00515752973791436,
+          0.003438347976467765,
+          0.002310132253957291,
+          0.0015716874915549495,
+          0.0010872723026290117,
+          0.0007674029221837255,
+          0.0005540187501242975,
+          0.00040979783888774025,
+          0.00031083602453800963,
+          0.00024180427766488143,
+          0.00019282118967354245,
+          0.00015746341181972765,
+          0.00013151016079875289,
+          0.00011215291186355269,
+          9.749697270694029e-05,
+          8.624547775403723e-05
+        ],
+        "recipe": {
+          "steepness": 5.0,
+          "midpoint": 0.5,
+          "omega_min_factor": 0.3
+        }
+      },
+      "data": {
+        "dataset": "roneneldan/TinyStories",
+        "tokenizer": "EleutherAI/pythia-70m",
+        "train_tokens": 50000000,
+        "val_tokens": 2500000,
+        "seq_len": 2048,
+        "seed": 42
+      },
+      "train": {
+        "total_steps": 382,
+        "full_steps": 382,
+        "micro_batch": 64,
+        "grad_accum": 1,
+        "effective_batch": 64,
+        "loss_curve": [
+          {
+            "step": 100,
+            "loss": 4.3481903076171875
+          },
+          {
+            "step": 200,
+            "loss": 3.3281242847442627
+          },
+          {
+            "step": 300,
+            "loss": 3.001336097717285
+          },
+          {
+            "step": 382,
+            "loss": 2.991508960723877
+          }
+        ],
+        "checkpoint": "/opt/dfrope/results/h800_parallel/variants/sigmoid_steep5_mid0.5_omf0.3/sigmoid_steep5_mid0.5_omf0.3_model.pt"
+      },
+      "ppl": {
+        "2048": {
+          "mean": 17.374991669569404,
+          "std": 2.0653294712219123,
+          "n_chunks": 5
+        },
+        "16384": {
+          "mean": 45.668104885564176,
+          "std": 4.0426351460698,
+          "n_chunks": 5
+        }
+      }
+    },
+    "sigmoid_steep8_mid0.5_omf0.3": {
+      "ts": "2026-02-12_090614",
+      "name": "sigmoid_steep8_mid0.5_omf0.3",
+      "group": "sigmoid",
+      "rope": {
+        "kind": "custom",
+        "custom_omega": [
+          0.8334869981337142,
+          0.7909500081298368,
+          0.7396984268019906,
+          0.6791636595973597,
+          0.6094292567615038,
+          0.5315591459575826,
+          0.4478754571113112,
+          0.36203863168110073,
+          0.2787598932569889,
+          0.20305280966569605,
+          0.1391416233125443,
+          0.08941306678523474,
+          0.053914346891549614,
+          0.03067429251720002,
+          0.01665044183367699,
+          0.008764581388575977,
+          0.004564467051106881,
+          0.0024026775604227366,
+          0.0013042075197811744,
+          0.0007420222124803319,
+          0.0004474250174305179,
+          0.0002875174373597599,
+          0.00019702087861165056,
+          0.00014351290817871882,
+          0.00011050103349229966,
+          8.932314180135356e-05,
+          7.526094371460987e-05,
+          6.56444411242889e-05,
+          5.8904274985232505e-05,
+          5.4083720493850424e-05,
+          5.057923073986821e-05,
+          4.799792084876858e-05
+        ],
+        "recipe": {
+          "steepness": 8.0,
+          "midpoint": 0.5,
+          "omega_min_factor": 0.3
+        }
+      },
+      "data": {
+        "dataset": "roneneldan/TinyStories",
+        "tokenizer": "EleutherAI/pythia-70m",
+        "train_tokens": 50000000,
+        "val_tokens": 2500000,
+        "seq_len": 2048,
+        "seed": 42
+      },
+      "train": {
+        "total_steps": 382,
+        "full_steps": 382,
+        "micro_batch": 64,
+        "grad_accum": 1,
+        "effective_batch": 64,
+        "loss_curve": [
+          {
+            "step": 100,
+            "loss": 4.330376148223877
+          },
+          {
+            "step": 200,
+            "loss": 3.27970814704895
+          },
+          {
+            "step": 300,
+            "loss": 2.9723901748657227
+          },
+          {
+            "step": 382,
+            "loss": 2.962578535079956
+          }
+        ],
+        "checkpoint": "/opt/dfrope/results/h800_parallel/variants/sigmoid_steep8_mid0.5_omf0.3/sigmoid_steep8_mid0.5_omf0.3_model.pt"
+      },
+      "ppl": {
+        "2048": {
+          "mean": 16.950553865051287,
+          "std": 2.1162591181731853,
+          "n_chunks": 5
+        },
+        "16384": {
+          "mean": 27.204592197003723,
+          "std": 2.5431896736885706,
+          "n_chunks": 5
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+[train:sigmoid_steep8_mid0.5_omf0.3] n_seq=24,414 total_steps=382/382 micro_batch=64 grad_accum=1
+[train:sigmoid_steep8_mid0.5_omf0.3] step=1/382 loss=10.9515 lr=0.000e+00 tokens=131,072
+[train:sigmoid_steep8_mid0.5_omf0.3] step=20/382 loss=6.0728 lr=5.985e-04 tokens=131,072
+[train:sigmoid_steep8_mid0.5_omf0.3] step=40/382 loss=5.6216 lr=5.893e-04 tokens=131,072
+[train:sigmoid_steep8_mid0.5_omf0.3] step=60/382 loss=5.2264 lr=5.720e-04 tokens=131,072
+[train:sigmoid_steep8_mid0.5_omf0.3] step=80/382 loss=4.6855 lr=5.471e-04 tokens=131,072
+[train:sigmoid_steep8_mid0.5_omf0.3] step=100/382 loss=4.3304 lr=5.152e-04 tokens=131,072
+[train:sigmoid_steep8_mid0.5_omf0.3] step=120/382 loss=4.0125 lr=4.774e-04 tokens=131,072
+[train:sigmoid_steep8_mid0.5_omf0.3] step=140/382 loss=3.7908 lr=4.345e-04 tokens=131,072
+[train:sigmoid_steep8_mid0.5_omf0.3] step=160/382 loss=3.6382 lr=3.879e-04 tokens=131,072
+[train:sigmoid_steep8_mid0.5_omf0.3] step=180/382 loss=3.4650 lr=3.388e-04 tokens=131,072
+[train:sigmoid_steep8_mid0.5_omf0.3] step=200/382 loss=3.2797 lr=2.887e-04 tokens=131,072
+[train:sigmoid_steep8_mid0.5_omf0.3] step=220/382 loss=3.1785 lr=2.389e-04 tokens=131,072
+[train:sigmoid_steep8_mid0.5_omf0.3] step=240/382 loss=3.1298 lr=1.907e-04 tokens=131,072
+[train:sigmoid_steep8_mid0.5_omf0.3] step=260/382 loss=3.0717 lr=1.457e-04 tokens=131,072
+[train:sigmoid_steep8_mid0.5_omf0.3] step=280/382 loss=3.0615 lr=1.049e-04 tokens=131,072
+[train:sigmoid_steep8_mid0.5_omf0.3] step=300/382 loss=2.9724 lr=6.965e-05 tokens=131,072
+[train:sigmoid_steep8_mid0.5_omf0.3] step=320/382 loss=2.9063 lr=4.082e-05 tokens=131,072
+[train:sigmoid_steep8_mid0.5_omf0.3] step=340/382 loss=2.8829 lr=1.926e-05 tokens=131,072
+[train:sigmoid_steep8_mid0.5_omf0.3] step=360/382 loss=2.9062 lr=5.552e-06 tokens=131,072
+[train:sigmoid_steep8_mid0.5_omf0.3] step=380/382 loss=2.8605 lr=9.474e-08 tokens=131,072
+[eval] L= 2048 PPL=16.951 ± 2.116
+[eval] L=16384 PPL=27.205 ± 2.543
+{
+  "name": "sigmoid_steep8_mid0.5_omf0.3",
+  "ppl@16384": 27.204592197003723
+}

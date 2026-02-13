@@ -1,0 +1,563 @@
+[monitor] start 2026-02-12T10:06:43+00:00
+--- 2026-02-12T10:06:43+00:00 pid=307
+NVIDIA A800-SXM4-80GB, 100, 72, 64315, 81920
+results_bytes 209
+    step 400/762  loss=2.4455  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2566  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2219  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2092  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.852
+    L=4096: PPL=7.099
+    L=8192: PPL=9.086
+    L=16384: PPL=17.947
+
+  *** WINNER FOUND: geo_500k_ALIGN = 17.947 < 26.48 ***
+
+
+============================================================
+  sig_s8_m0.5_omf0.3_t100k
+  freq range: [5.37e-06, 0.8007]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9598  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9400  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.1105  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6531  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4645  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2755  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2440  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2316  lr=1.01e-05  ETA=0min
+--- 2026-02-12T10:08:23+00:00 pid=307
+NVIDIA A800-SXM4-80GB, 100, 74, 64315, 81920
+results_bytes 324
+  freq range: [5.37e-06, 0.8007]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9598  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9400  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.1105  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6531  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4645  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2755  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2440  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2316  lr=1.01e-05  ETA=0min
+    L=2048: PPL=7.032
+    L=4096: PPL=7.329
+    L=8192: PPL=11.263
+    L=16384: PPL=27.258
+
+============================================================
+  sig_s8_m0.5_omf0.3_t500k
+  freq range: [1.16e-06, 0.7786]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9600  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9342  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0895  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6525  lr=4.09e-04  ETA=2min
+--- 2026-02-12T10:10:03+00:00 pid=307
+NVIDIA A800-SXM4-80GB, 100, 70, 64315, 81920
+results_bytes 324
+    step 100/762  loss=3.9400  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.1105  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6531  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4645  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2755  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2440  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2316  lr=1.01e-05  ETA=0min
+    L=2048: PPL=7.032
+    L=4096: PPL=7.329
+    L=8192: PPL=11.263
+    L=16384: PPL=27.258
+
+============================================================
+  sig_s8_m0.5_omf0.3_t500k
+  freq range: [1.16e-06, 0.7786]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9600  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9342  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0895  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6525  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4606  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2713  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2408  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2313  lr=1.01e-05  ETA=0min
+--- 2026-02-12T10:11:44+00:00 pid=307
+NVIDIA A800-SXM4-80GB, 100, 73, 64315, 81920
+results_bytes 439
+  freq range: [1.16e-06, 0.7786]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9600  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9342  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0895  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6525  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4606  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2713  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2408  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2313  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.988
+    L=4096: PPL=8.518
+    L=8192: PPL=14.799
+    L=16384: PPL=30.109
+
+============================================================
+  sig_s5_m0.5_omf0.3_t100k
+  freq range: [1.10e-05, 0.3916]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9597  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9277  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.1106  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6515  lr=4.09e-04  ETA=2min
+--- 2026-02-12T10:13:24+00:00 pid=307
+NVIDIA A800-SXM4-80GB, 100, 69, 64315, 81920
+results_bytes 439
+    step 100/762  loss=3.9342  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0895  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6525  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4606  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2713  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2408  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2313  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.988
+    L=4096: PPL=8.518
+    L=8192: PPL=14.799
+    L=16384: PPL=30.109
+
+============================================================
+  sig_s5_m0.5_omf0.3_t100k
+  freq range: [1.10e-05, 0.3916]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9597  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9277  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.1106  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6515  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4580  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2670  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2311  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2197  lr=1.01e-05  ETA=0min
+--- 2026-02-12T10:15:04+00:00 pid=307
+NVIDIA A800-SXM4-80GB, 100, 72, 64315, 81920
+results_bytes 553
+    step 0/762  loss=10.9597  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9277  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.1106  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6515  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4580  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2670  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2311  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2197  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.912
+    L=4096: PPL=7.571
+    L=8192: PPL=11.427
+    L=16384: PPL=26.340
+
+  *** WINNER FOUND: sig_s5_m0.5_omf0.3_t100k = 26.34 < 26.48 ***
+
+
+============================================================
+  sig_s5_m0.5_omf0.3_t500k
+  freq range: [2.60e-06, 0.3480]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9600  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.8774  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0950  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6439  lr=4.09e-04  ETA=2min
+--- 2026-02-12T10:16:44+00:00 pid=307
+NVIDIA A800-SXM4-80GB, 100, 75, 64315, 81920
+results_bytes 553
+    step 300/762  loss=2.6515  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4580  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2670  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2311  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2197  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.912
+    L=4096: PPL=7.571
+    L=8192: PPL=11.427
+    L=16384: PPL=26.340
+
+  *** WINNER FOUND: sig_s5_m0.5_omf0.3_t100k = 26.34 < 26.48 ***
+
+
+============================================================
+  sig_s5_m0.5_omf0.3_t500k
+  freq range: [2.60e-06, 0.3480]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9600  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.8774  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0950  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6439  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4542  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2615  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2290  lr=6.70e-05  ETA=1min
+--- 2026-02-12T10:18:24+00:00 pid=307
+NVIDIA A800-SXM4-80GB, 100, 65, 64315, 81920
+results_bytes 667
+  sig_s5_m0.5_omf0.3_t500k
+  freq range: [2.60e-06, 0.3480]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9600  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.8774  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0950  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6439  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4542  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2615  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2290  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2131  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.840
+    L=4096: PPL=7.991
+    L=8192: PPL=13.508
+    L=16384: PPL=28.918
+
+============================================================
+  hybrid_a0.2_t100k
+  freq range: [1.23e-05, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9610  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9116  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0496  lr=5.14e-04  ETA=3min
+--- 2026-02-12T10:20:04+00:00 pid=307
+NVIDIA A800-SXM4-80GB, 100, 73, 64315, 81920
+results_bytes 667
+    step 0/762  loss=10.9600  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.8774  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0950  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6439  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4542  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2615  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2290  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2131  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.840
+    L=4096: PPL=7.991
+    L=8192: PPL=13.508
+    L=16384: PPL=28.918
+
+============================================================
+  hybrid_a0.2_t100k
+  freq range: [1.23e-05, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9610  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9116  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0496  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.5967  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4082  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2191  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.1934  lr=6.70e-05  ETA=1min
+--- 2026-02-12T10:21:44+00:00 pid=307
+NVIDIA A800-SXM4-80GB, 100, 73, 64315, 81920
+results_bytes 774
+  Params: 50.9M
+    step 0/762  loss=10.9610  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9116  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0496  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.5967  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4082  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2191  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.1934  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.1761  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.658
+    L=4096: PPL=6.754
+    L=8192: PPL=8.619
+    L=16384: PPL=16.316
+
+  *** WINNER FOUND: hybrid_a0.2_t100k = 16.316 < 26.48 ***
+
+
+============================================================
+  hybrid_a0.2_t500k
+  freq range: [2.59e-06, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9607  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9186  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0636  lr=5.14e-04  ETA=3min
+--- 2026-02-12T10:23:24+00:00 pid=307
+NVIDIA A800-SXM4-80GB, 100, 74, 64315, 81920
+results_bytes 774
+    step 300/762  loss=2.5967  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4082  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2191  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.1934  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.1761  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.658
+    L=4096: PPL=6.754
+    L=8192: PPL=8.619
+    L=16384: PPL=16.316
+
+  *** WINNER FOUND: hybrid_a0.2_t100k = 16.316 < 26.48 ***
+
+
+============================================================
+  hybrid_a0.2_t500k
+  freq range: [2.59e-06, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9607  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9186  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0636  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6176  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4312  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2467  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2197  lr=6.70e-05  ETA=1min
+--- 2026-02-12T10:25:04+00:00 pid=307
+NVIDIA A800-SXM4-80GB, 100, 72, 64315, 81920
+results_bytes 880
+  Params: 50.9M
+    step 0/762  loss=10.9607  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9186  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0636  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6176  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4312  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2467  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2197  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2034  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.817
+    L=4096: PPL=6.953
+    L=8192: PPL=9.771
+    L=16384: PPL=17.980
+
+  *** WINNER FOUND: hybrid_a0.2_t500k = 17.98 < 26.48 ***
+
+
+============================================================
+  mix_sig8t10k_geo500k_a0.2
+  freq range: [1.20e-05, 0.9667]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9599  lr=0.00e+00  ETA=6min
+    step 100/762  loss=3.8867  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0819  lr=5.14e-04  ETA=3min
+--- 2026-02-12T10:26:44+00:00 pid=307
+NVIDIA A800-SXM4-80GB, 100, 73, 64315, 81920
+results_bytes 880
+    step 200/762  loss=3.0636  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6176  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4312  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2467  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2197  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2034  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.817
+    L=4096: PPL=6.953
+    L=8192: PPL=9.771
+    L=16384: PPL=17.980
+
+  *** WINNER FOUND: hybrid_a0.2_t500k = 17.98 < 26.48 ***
+
+
+============================================================
+  mix_sig8t10k_geo500k_a0.2
+  freq range: [1.20e-05, 0.9667]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9599  lr=0.00e+00  ETA=6min
+    step 100/762  loss=3.8867  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0819  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6319  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4514  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2664  lr=1.64e-04  ETA=1min
+--- 2026-02-12T10:28:24+00:00 pid=307
+NVIDIA A800-SXM4-80GB, 100, 73, 64315, 81920
+results_bytes 994
+  Params: 50.9M
+    step 0/762  loss=10.9599  lr=0.00e+00  ETA=6min
+    step 100/762  loss=3.8867  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0819  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6319  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4514  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2664  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2351  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2223  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.895
+    L=4096: PPL=7.380
+    L=8192: PPL=10.520
+    L=16384: PPL=24.638
+
+  *** WINNER FOUND: mix_sig8t10k_geo500k_a0.2 = 24.638 < 26.48 ***
+
+
+============================================================
+  mix_sig8t10k_geo500k_a0.5
+  freq range: [2.55e-05, 0.9167]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9600  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.8775  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0794  lr=5.14e-04  ETA=3min
+--- 2026-02-12T10:30:04+00:00 pid=307
+NVIDIA A800-SXM4-80GB, 100, 74, 64315, 81920
+results_bytes 994
+    step 200/762  loss=3.0819  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6319  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4514  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2664  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2351  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2223  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.895
+    L=4096: PPL=7.380
+    L=8192: PPL=10.520
+    L=16384: PPL=24.638
+
+  *** WINNER FOUND: mix_sig8t10k_geo500k_a0.2 = 24.638 < 26.48 ***
+
+
+============================================================
+  mix_sig8t10k_geo500k_a0.5
+  freq range: [2.55e-05, 0.9167]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9600  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.8775  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0794  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6185  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4254  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2384  lr=1.64e-04  ETA=1min
+--- 2026-02-12T10:31:44+00:00 pid=307
+NVIDIA A800-SXM4-80GB, 100, 73, 64315, 81920
+results_bytes 1109
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9600  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.8775  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0794  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6185  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4254  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2384  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2102  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.1968  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.756
+    L=4096: PPL=7.005
+    L=8192: PPL=9.156
+    L=16384: PPL=19.355
+
+  *** WINNER FOUND: mix_sig8t10k_geo500k_a0.5 = 19.355 < 26.48 ***
+
+
+============================================================
+  sig_s8_m0.5_omf0.1_t100k
+  freq range: [1.83e-06, 0.7850]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9599  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9163  lr=5.81e-04  ETA=3min
+--- 2026-02-12T10:33:24+00:00 pid=307
+NVIDIA A800-SXM4-80GB, 100, 72, 64315, 81920
+results_bytes 1109
+    step 200/762  loss=3.0794  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6185  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4254  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2384  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2102  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.1968  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.756
+    L=4096: PPL=7.005
+    L=8192: PPL=9.156
+    L=16384: PPL=19.355
+
+  *** WINNER FOUND: mix_sig8t10k_geo500k_a0.5 = 19.355 < 26.48 ***
+
+
+============================================================
+  sig_s8_m0.5_omf0.1_t100k
+  freq range: [1.83e-06, 0.7850]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9599  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9163  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0787  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6465  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4648  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2728  lr=1.64e-04  ETA=1min
+--- 2026-02-12T10:35:04+00:00 pid=307
+NVIDIA A800-SXM4-80GB, 100, 73, 64315, 81920
+results_bytes 1224
+============================================================
+  sig_s8_m0.5_omf0.1_t100k
+  freq range: [1.83e-06, 0.7850]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9599  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9163  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0787  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6465  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4648  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2728  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2399  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2263  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.959
+    L=4096: PPL=8.876
+    L=8192: PPL=16.941
+    L=16384: PPL=36.955
+
+============================================================
+  sig_s8_m0.5_omf0.5_t100k
+  freq range: [8.87e-06, 0.8081]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9599  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9162  lr=5.81e-04  ETA=3min
+--- 2026-02-12T10:36:44+00:00 pid=307
+NVIDIA A800-SXM4-80GB, 100, 73, 64315, 81920
+results_bytes 1224
+  Params: 50.9M
+    step 0/762  loss=10.9599  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9163  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0787  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6465  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4648  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2728  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2399  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2263  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.959
+    L=4096: PPL=8.876
+    L=8192: PPL=16.941
+    L=16384: PPL=36.955
+
+============================================================
+  sig_s8_m0.5_omf0.5_t100k
+  freq range: [8.87e-06, 0.8081]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9599  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9162  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0934  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6456  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4489  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2516  lr=1.64e-04  ETA=1min
+--- 2026-02-12T10:38:24+00:00 pid=NONE
+NVIDIA A800-SXM4-80GB, 24, 0, 0, 81920
+results_bytes 1339
+    step 500/762  loss=2.2516  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2231  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2084  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.838
+    L=4096: PPL=7.996
+    L=8192: PPL=14.694
+    L=16384: PPL=32.736
+
+============================================================
+  LEADERBOARD (Split B)
+============================================================
+  Rank  Config                              PPL@2048   PPL@16384 
+  -----------------------------------------------------------------
+  1     hybrid_a0.2_t100k                   6.658      16.316     ***
+  2     geo_500k_ALIGN                      6.852      17.947     ***
+  3     hybrid_a0.2_t500k                   6.817      17.98      ***
+  4     mix_sig8t10k_geo500k_a0.5           6.756      19.355     ***
+  5     mix_sig8t10k_geo500k_a0.2           6.895      24.638     ***
+  6     sig_s5_m0.5_omf0.3_t100k            6.912      26.34      ***
+  7     sig_s8_m0.5_omf0.3_t100k            7.032      27.258    
+  8     sig_s5_m0.5_omf0.3_t500k            6.84       28.918    
+  9     geo_10k_ALIGN                       6.884      29.079    
+  10    sig_s8_m0.5_omf0.3_t500k            6.988      30.109    
+  11    sig_s8_m0.5_omf0.5_t100k            6.838      32.736    
+  12    sig_s8_m0.5_omf0.1_t100k            6.959      36.955    
+[monitor] PROCESS EXITED, stopping.
+[monitor] end 2026-02-12T10:38:26+00:00

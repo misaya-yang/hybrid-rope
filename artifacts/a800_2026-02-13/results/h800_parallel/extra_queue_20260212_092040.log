@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/opt/dfrope/run_h800_parallel_rope.py", line 36, in <module>
+    import numpy as np
+ModuleNotFoundError: No module named 'numpy'

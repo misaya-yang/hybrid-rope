@@ -1,0 +1,52 @@
+nohup: ignoring input
+[prep] building/loading token cache ...
+[data] Loading dataset roneneldan/TinyStories ...
+Generating train split:   0%|          | 0/2119719 [00:00<?, ? examples/s]Generating train split:   2%|▏         | 38000/2119719 [00:00<00:05, 374760.88 examples/s]Generating train split:   4%|▍         | 85000/2119719 [00:00<00:04, 427710.43 examples/s]Generating train split:   7%|▋         | 143000/2119719 [00:00<00:04, 490980.15 examples/s]Generating train split:  10%|█         | 214000/2119719 [00:00<00:04, 463769.06 examples/s]Generating train split:  13%|█▎        | 270000/2119719 [00:00<00:03, 490486.63 examples/s]Generating train split:  16%|█▋        | 346000/2119719 [00:00<00:03, 494647.96 examples/s]Generating train split:  20%|█▉        | 420000/2119719 [00:00<00:03, 492163.99 examples/s]Generating train split:  23%|██▎       | 494000/2119719 [00:01<00:03, 490061.00 examples/s]Generating train split:  27%|██▋       | 561930/2119719 [00:01<00:03, 475440.59 examples/s]Generating train split:  29%|██▉       | 611930/2119719 [00:01<00:03, 478827.18 examples/s]Generating train split:  32%|███▏      | 667930/2119719 [00:01<00:02, 496235.24 examples/s]Generating train split:  35%|███▌      | 741930/2119719 [00:01<00:02, 478588.57 examples/s]Generating train split:  38%|███▊      | 800930/2119719 [00:01<00:02, 503641.23 examples/s]Generating train split:  40%|████      | 852930/2119719 [00:01<00:02, 505899.69 examples/s]Generating train split:  44%|████▎     | 924930/2119719 [00:01<00:02, 495499.05 examples/s]Generating train split:  47%|████▋     | 1000930/2119719 [00:02<00:02, 494642.98 examples/s]Generating train split:  50%|████▉     | 1058930/2119719 [00:02<00:02, 503123.33 examples/s]Generating train split:  53%|█████▎    | 1132860/2119719 [00:02<00:02, 491931.86 examples/s]Generating train split:  56%|█████▋    | 1194860/2119719 [00:02<00:01, 520592.42 examples/s]Generating train split:  60%|██████    | 1271860/2119719 [00:02<00:01, 516945.69 examples/s]Generating train split:  64%|██████▎   | 1347860/2119719 [00:02<00:01, 495623.48 examples/s]Generating train split:  66%|██████▋   | 1405860/2119719 [00:02<00:01, 513758.30 examples/s]Generating train split:  70%|███████   | 1484860/2119719 [00:02<00:01, 515978.11 examples/s]Generating train split:  74%|███████▍  | 1564860/2119719 [00:03<00:01, 512954.42 examples/s]Generating train split:  76%|███████▋  | 1619790/2119719 [00:03<00:00, 507152.31 examples/s]Generating train split:  79%|███████▉  | 1674790/2119719 [00:03<00:00, 514608.96 examples/s]Generating train split:  82%|████████▏ | 1731790/2119719 [00:03<00:00, 527634.85 examples/s]Generating train split:  85%|████████▍ | 1798790/2119719 [00:03<00:00, 495134.00 examples/s]Generating train split:  89%|████████▊ | 1876790/2119719 [00:03<00:00, 479828.09 examples/s]Generating train split:  91%|█████████▏| 1935790/2119719 [00:03<00:00, 503404.21 examples/s]Generating train split:  95%|█████████▌| 2013790/2119719 [00:04<00:00, 506482.49 examples/s]Generating train split:  99%|█████████▊| 2092790/2119719 [00:04<00:00, 501846.32 examples/s]Generating train split: 100%|██████████| 2119719/2119719 [00:04<00:00, 497559.30 examples/s]
+Generating validation split:   0%|          | 0/21990 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 21990/21990 [00:00<00:00, 515099.83 examples/s]
+[data] scanned=20,000 train_tok=4,253,343 val_tok=222,589
+[data] scanned=40,000 train_tok=8,539,640 val_tok=448,865
+[data] scanned=60,000 train_tok=12,685,228 val_tok=666,101
+[data] scanned=80,000 train_tok=16,829,587 val_tok=885,404
+[data] scanned=100,000 train_tok=20,892,278 val_tok=1,101,625
+[data] scanned=120,000 train_tok=25,244,767 val_tok=1,328,917
+[data] scanned=140,000 train_tok=29,597,071 val_tok=1,559,344
+[data] scanned=160,000 train_tok=34,032,510 val_tok=1,794,780
+[data] scanned=180,000 train_tok=38,457,929 val_tok=2,030,133
+[data] scanned=200,000 train_tok=42,805,749 val_tok=2,261,706
+[data] scanned=220,000 train_tok=47,101,417 val_tok=2,489,126
+[data] cached train=50,000,000 val=2,500,000 at /opt/dfrope/results/h800_parallel/cache
+[setup] cuda_device_count=1 max_parallel=5 -> parallel=1
+[launch] geo_10k_baseline on gpu=0 pid=2385
+[done] geo_10k_baseline ppl@16384=79.485
+[launch] geo_20k on gpu=0 pid=2412
+[done] geo_20k ppl@16384=53.631
+[launch] geo_50k on gpu=0 pid=2440
+[done] geo_50k ppl@16384=36.129
+[launch] geo_100k on gpu=0 pid=2467
+[done] geo_100k ppl@16384=30.236
+[launch] geo_200k on gpu=0 pid=2496
+[done] geo_200k ppl@16384=29.880
+[launch] geo_500k on gpu=0 pid=2527
+[done] geo_500k ppl@16384=26.482
+[launch] hybrid_alpha0.15 on gpu=0 pid=2582
+[done] hybrid_alpha0.15 ppl@16384=60.334
+[launch] hybrid_alpha0.25 on gpu=0 pid=2609
+[done] hybrid_alpha0.25 ppl@16384=63.353
+[launch] sigmoid_steep5_mid0.5_omf0.3 on gpu=0 pid=2637
+[done] sigmoid_steep5_mid0.5_omf0.3 ppl@16384=45.668
+[launch] sigmoid_steep8_mid0.5_omf0.3 on gpu=0 pid=2702
+[done] sigmoid_steep8_mid0.5_omf0.3 ppl@16384=27.205
+
+PPL@16384 leaderboard (lower is better):
+  geo_500k                     26.482  (delta vs geo_10k: -53.004)
+  sigmoid_steep8_mid0.5_omf0.3 27.205  (delta vs geo_10k: -52.281)
+  geo_200k                     29.880  (delta vs geo_10k: -49.606)
+  geo_100k                     30.236  (delta vs geo_10k: -49.249)
+  geo_50k                      36.129  (delta vs geo_10k: -43.356)
+  sigmoid_steep5_mid0.5_omf0.3 45.668  (delta vs geo_10k: -33.817)
+  geo_20k                      53.631  (delta vs geo_10k: -25.854)
+  hybrid_alpha0.15             60.334  (delta vs geo_10k: -19.151)
+  hybrid_alpha0.25             63.353  (delta vs geo_10k: -16.132)
+  geo_10k_baseline             79.485  (delta vs geo_10k: +0.000)
+
+[done] wrote /opt/dfrope/results/h800_parallel/results_h800.json
