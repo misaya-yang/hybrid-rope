@@ -1,0 +1,211 @@
+{
+  "timestamp": "2026-02-13_193301",
+  "protocol": {
+    "dataset": "wikitext-103-raw-v1:validation",
+    "lengths": [
+      2048,
+      16384
+    ],
+    "seeds": [
+      42,
+      123,
+      777
+    ],
+    "windows_per_seed": 10,
+    "max_eval_tokens": 280000,
+    "random_start": true,
+    "train_or_lora": "none (base-only)"
+  },
+  "models": [
+    {
+      "name": "llama_geo_10k",
+      "family": "llama",
+      "resolved_model_path": "/root/autodl-tmp/dfrope/ms_models/LLM-Research/Meta-Llama-3-8B-Instruct",
+      "freq_type": "geometric",
+      "patch_info": {
+        "patched_count": 1,
+        "patched_examples": [
+          "model.model.rotary_emb"
+        ],
+        "inv_min": 0.00011547819303814322,
+        "inv_max": 1.0
+      },
+      "eval_dataset": "wikitext-103-raw-v1:validation",
+      "token_count_used": 252725,
+      "lengths": {
+        "2048": {
+          "ppl_by_seed": {
+            "42": 518.012825,
+            "123": 603.728745,
+            "777": 527.817194
+          },
+          "loss_mean_by_seed": {
+            "42": 6.25,
+            "123": 6.403125,
+            "777": 6.26875
+          },
+          "mean_ppl": 549.852921,
+          "std_ppl": 38.305654,
+          "windows_per_seed": 10
+        },
+        "16384": {
+          "ppl_by_seed": {
+            "42": 11214.916483,
+            "123": 12088.38073,
+            "777": 13029.873999
+          },
+          "loss_mean_by_seed": {
+            "42": 9.325,
+            "123": 9.4,
+            "777": 9.475
+          },
+          "mean_ppl": 12111.057071,
+          "std_ppl": 741.126781,
+          "windows_per_seed": 10
+        }
+      },
+      "collapse_ratio_16k_over_2k": 22.025994
+    },
+    {
+      "name": "llama_sigmoid_best_t100k",
+      "family": "llama",
+      "resolved_model_path": "/root/autodl-tmp/dfrope/ms_models/LLM-Research/Meta-Llama-3-8B-Instruct",
+      "freq_type": "sigmoid",
+      "patch_info": {
+        "patched_count": 1,
+        "patched_examples": [
+          "model.model.rotary_emb"
+        ],
+        "inv_min": 4.499628175835824e-06,
+        "inv_max": 0.7981224060058594
+      },
+      "eval_dataset": "wikitext-103-raw-v1:validation",
+      "token_count_used": 252725,
+      "lengths": {
+        "2048": {
+          "ppl_by_seed": {
+            "42": 10.371509,
+            "123": 12.968197,
+            "777": 11.679235
+          },
+          "loss_mean_by_seed": {
+            "42": 2.339062,
+            "123": 2.5625,
+            "777": 2.457813
+          },
+          "mean_ppl": 11.67298,
+          "std_ppl": 1.060103,
+          "windows_per_seed": 10
+        },
+        "16384": {
+          "ppl_by_seed": {
+            "42": 12.510428,
+            "123": 12.94795,
+            "777": 12.258873
+          },
+          "loss_mean_by_seed": {
+            "42": 2.526562,
+            "123": 2.560938,
+            "777": 2.50625
+          },
+          "mean_ppl": 12.572417,
+          "std_ppl": 0.284709,
+          "windows_per_seed": 10
+        }
+      },
+      "collapse_ratio_16k_over_2k": 1.077053
+    },
+    {
+      "name": "qwen_orig_theta",
+      "family": "qwen",
+      "resolved_model_path": "/root/autodl-tmp/dfrope/ms_models/Qwen/Qwen2___5-7B-Instruct",
+      "freq_type": "orig",
+      "patch_info": null,
+      "eval_dataset": "wikitext-103-raw-v1:validation",
+      "token_count_used": 262210,
+      "lengths": {
+        "2048": {
+          "ppl_by_seed": {
+            "42": 8.591568,
+            "123": 8.366359,
+            "777": 8.431977
+          },
+          "loss_mean_by_seed": {
+            "42": 2.150781,
+            "123": 2.124219,
+            "777": 2.132031
+          },
+          "mean_ppl": 8.463301,
+          "std_ppl": 0.094572,
+          "windows_per_seed": 10
+        },
+        "16384": {
+          "ppl_by_seed": {
+            "42": 7.12266,
+            "123": 6.764706,
+            "777": 7.039678
+          },
+          "loss_mean_by_seed": {
+            "42": 1.963281,
+            "123": 1.911719,
+            "777": 1.951563
+          },
+          "mean_ppl": 6.975681,
+          "std_ppl": 0.152981,
+          "windows_per_seed": 10
+        }
+      },
+      "collapse_ratio_16k_over_2k": 0.824227
+    },
+    {
+      "name": "qwen_geo_100k",
+      "family": "qwen",
+      "resolved_model_path": "/root/autodl-tmp/dfrope/ms_models/Qwen/Qwen2___5-7B-Instruct",
+      "freq_type": "geometric",
+      "patch_info": {
+        "patched_count": 1,
+        "patched_examples": [
+          "model.model.rotary_emb"
+        ],
+        "inv_min": 1.197085020976374e-05,
+        "inv_max": 1.0
+      },
+      "eval_dataset": "wikitext-103-raw-v1:validation",
+      "token_count_used": 262210,
+      "lengths": {
+        "2048": {
+          "ppl_by_seed": {
+            "42": 8.706436,
+            "123": 8.484842,
+            "777": 8.551389
+          },
+          "loss_mean_by_seed": {
+            "42": 2.164062,
+            "123": 2.138281,
+            "777": 2.146094
+          },
+          "mean_ppl": 8.580889,
+          "std_ppl": 0.092839,
+          "windows_per_seed": 10
+        },
+        "16384": {
+          "ppl_by_seed": {
+            "42": 7.285875,
+            "123": 6.941376,
+            "777": 7.24048
+          },
+          "loss_mean_by_seed": {
+            "42": 1.985937,
+            "123": 1.9375,
+            "777": 1.979688
+          },
+          "mean_ppl": 7.15591,
+          "std_ppl": 0.152826,
+          "windows_per_seed": 10
+        }
+      },
+      "collapse_ratio_16k_over_2k": 0.833936
+    }
+  ],
+  "elapsed_minutes": 14.132
+}
