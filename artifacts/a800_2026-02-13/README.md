@@ -22,8 +22,13 @@
   - `lora_weight_diff.json`: LoRA 在 Q/K 上的低中高频能量分布
   - `summary.md`: 机制验证阶段（P1）结论汇总
   - `figures/`: 上述指标对应可视化图（含 caption）
+- `results/h800_3h_followup/`
+  - `results.json`: 3 小时窗口下 6 个高价值候选的重训+稳健性复评汇总
+  - `summary.md`: 16K 排名、collapse ratio、多长度曲线摘要
+  - `variants/*/result.json`: 单候选训练与复评结果
 - `scripts/`
   - `eval_hybrid_lora_vs_base.py`: 本次对比评测脚本
+  - `h800_3h_followup_train_eval.py`: 3h follow-up 一体化脚本（训练+双切片多 seed 评测）
 
 ## 关键信号
 
