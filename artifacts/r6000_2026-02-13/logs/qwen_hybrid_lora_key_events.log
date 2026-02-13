@@ -26,3 +26,4 @@ trainable params: 10,092,544 || all params: 7,625,709,056 || trainable%: 0.1323
 [Data] roneneldan/TinyStories tokens=40.0M
 [Data] source=roneneldan/TinyStories cfg=None chunks=4882 usable_tokens=39993344 time=1.5min
 {'loss': '3.64', 'grad_norm': '2.266', 'learning_rate': '6e-05', 'epoch': '0.01639'}
+{'loss': '2.971', 'grad_norm': '1.042', 'learning_rate': '0.0001267', 'epoch': '0.03277'}

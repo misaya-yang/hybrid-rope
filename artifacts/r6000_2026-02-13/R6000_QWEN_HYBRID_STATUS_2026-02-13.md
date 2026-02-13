@@ -15,11 +15,11 @@
 - Data build finished: `39,993,344` usable tokens (`4882` chunks)
 - Trainer has entered optimization loop
 - Latest logged record:
-  - `loss=3.64`
-  - `grad_norm=2.266`
-  - `learning_rate=6e-05`
-  - `epoch=0.01639`
-- Rough progress in progress-bar stream: `~3%`
+  - `loss=2.971`
+  - `grad_norm=1.042`
+  - `learning_rate=1.267e-4`
+  - `epoch=0.03277`
+- Rough progress in progress-bar stream: `~4.6% (23/500)`
 - GPU (snapshot): `~31.7GB / 97.9GB`, util `~92-100%`
 
 ## Scripts Synced Into This Repo
@@ -28,6 +28,7 @@
 
 ## Logs Synced Into This Repo
 - `artifacts/r6000_2026-02-13/logs/qwen_hybrid_lora_run_live.log`
+- `artifacts/r6000_2026-02-13/logs/qwen_hybrid_lora_key_events.log`
 
 ## Planned Evaluation (after LoRA finishes)
 `run_qwen_eval_suite.py` compares 3 variants:
