@@ -1,0 +1,28 @@
+[Env] HF_ENDPOINT= https://hf-mirror.com
+[Cfg] seq_len=8192, target_tokens=40000000, max_steps=500, mode=tinystories
+[RoPE] patched model.model.rotary_emb, shape=(64,)
+[RoPE] patched=1, head_dim=128, inv_range=(1.029e-05,1.000e+00)
+trainable params: 10,092,544 || all params: 7,625,709,056 || trainable%: 0.1323
+[Data] mode=tinystories, target=40M tokens
+[Data] roneneldan/TinyStories tokens=2.0M
+[Data] roneneldan/TinyStories tokens=4.0M
+[Data] roneneldan/TinyStories tokens=6.0M
+[Data] roneneldan/TinyStories tokens=8.0M
+[Data] roneneldan/TinyStories tokens=10.0M
+[Data] roneneldan/TinyStories tokens=12.0M
+[Data] roneneldan/TinyStories tokens=14.0M
+[Data] roneneldan/TinyStories tokens=16.0M
+[Data] roneneldan/TinyStories tokens=18.0M
+[Data] roneneldan/TinyStories tokens=20.0M
+[Data] roneneldan/TinyStories tokens=22.0M
+[Data] roneneldan/TinyStories tokens=24.0M
+[Data] roneneldan/TinyStories tokens=26.0M
+[Data] roneneldan/TinyStories tokens=28.0M
+[Data] roneneldan/TinyStories tokens=30.0M
+[Data] roneneldan/TinyStories tokens=32.0M
+[Data] roneneldan/TinyStories tokens=34.0M
+[Data] roneneldan/TinyStories tokens=36.0M
+[Data] roneneldan/TinyStories tokens=38.0M
+[Data] roneneldan/TinyStories tokens=40.0M
+[Data] source=roneneldan/TinyStories cfg=None chunks=4882 usable_tokens=39993344 time=1.5min
+{'loss': '3.64', 'grad_norm': '2.266', 'learning_rate': '6e-05', 'epoch': '0.01639'}
