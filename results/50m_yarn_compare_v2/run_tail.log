@@ -1,0 +1,25 @@
+Loading validation data...
+[Eval] hybrid_native
+  native L=2048 ppl=6.672
+  native L=4096 ppl=6.748
+  native L=8192 ppl=8.688
+  native L=12288 ppl=13.333
+  native L=16384 ppl=16.861
+[Eval] geo_native
+  native L=2048 ppl=6.839
+  native L=4096 ppl=7.045
+  native L=8192 ppl=8.833
+  native L=12288 ppl=13.588
+  native L=16384 ppl=17.966
+[Eval] geo_yarn_progressive
+  progressive_yarn L=2048 scale=1.00 ppl=6.839
+  progressive_yarn L=4096 scale=2.00 ppl=8.640
+  progressive_yarn L=8192 scale=4.00 ppl=16.899
+  progressive_yarn L=12288 scale=6.00 ppl=29.352
+  progressive_yarn L=16384 scale=8.00 ppl=39.479
+
+=== SUMMARY @16384 ===
+hybrid_native: 16.861
+geo_native: 17.966
+geo_yarn_progressive: 39.479
+saved: /opt/dfrope/results/50m_yarn_compare_v2/results.json
