@@ -1,0 +1,135 @@
+{
+  "timestamp": "2026-02-12_115806",
+  "seed": 42,
+  "model_cfg": {
+    "vocab_size": 50304,
+    "hidden_size": 1024,
+    "num_layers": 24,
+    "num_heads": 16,
+    "head_dim": 64,
+    "intermediate_size": 4096,
+    "max_position_embeddings": 2048
+  },
+  "train_cfg": {
+    "seq_len": 2048,
+    "total_tokens": 500000000,
+    "micro_batch": 8,
+    "grad_accum": 4,
+    "lr": 0.0003,
+    "weight_decay": 0.1,
+    "warmup_frac": 0.02,
+    "max_grad_norm": 1.0
+  },
+  "train_meta": {
+    "dataset": "roneneldan/TinyStories",
+    "split": "train",
+    "tokenizer": "EleutherAI/gpt-neox-20b",
+    "target_tokens": 500000000,
+    "seq_len": 2048,
+    "written_tokens": 472770254,
+    "usable_tokens": 472768512,
+    "usable_chunks": 230844,
+    "path": "/opt/dfrope/results/350m_final/cache/train_500000000.tokens.u16",
+    "dtype": "uint16",
+    "created_at": "2026-02-12_115747"
+  },
+  "val_meta": {
+    "dataset": "roneneldan/TinyStories",
+    "split": "validation",
+    "tokenizer": "EleutherAI/gpt-neox-20b",
+    "target_tokens": 5000000,
+    "seq_len": 1,
+    "written_tokens": 4753217,
+    "usable_tokens": 4753217,
+    "usable_chunks": 4753217,
+    "path": "/opt/dfrope/results/350m_final/cache/validation_5000000.tokens.u16",
+    "dtype": "uint16",
+    "created_at": "2026-02-12_115806"
+  },
+  "experiments": {
+    "geo_500k": {
+      "2048": {
+        "ppl": 2.477,
+        "std": 0.131,
+        "n": 10
+      },
+      "3072": {
+        "ppl": 2.511,
+        "std": 0.106,
+        "n": 10
+      },
+      "4096": {
+        "ppl": 2.784,
+        "std": 0.12,
+        "n": 10
+      },
+      "5120": {
+        "ppl": 3.213,
+        "std": 0.125,
+        "n": 10
+      },
+      "6144": {
+        "ppl": 3.92,
+        "std": 0.123,
+        "n": 10
+      },
+      "8192": {
+        "ppl": 5.452,
+        "std": 0.182,
+        "n": 10
+      },
+      "12288": {
+        "ppl": 10.37,
+        "std": 2.662,
+        "n": 10
+      },
+      "16384": {
+        "ppl": 14.653,
+        "std": 3.851,
+        "n": 10
+      }
+    },
+    "hybrid_a0.2_t100k": {
+      "2048": {
+        "ppl": 2.467,
+        "std": 0.126,
+        "n": 10
+      },
+      "3072": {
+        "ppl": 2.489,
+        "std": 0.097,
+        "n": 10
+      },
+      "4096": {
+        "ppl": 2.606,
+        "std": 0.112,
+        "n": 10
+      },
+      "5120": {
+        "ppl": 2.808,
+        "std": 0.124,
+        "n": 10
+      },
+      "6144": {
+        "ppl": 3.349,
+        "std": 0.132,
+        "n": 10
+      },
+      "8192": {
+        "ppl": 4.726,
+        "std": 0.232,
+        "n": 10
+      },
+      "12288": {
+        "ppl": 8.814,
+        "std": 1.984,
+        "n": 10
+      },
+      "16384": {
+        "ppl": 12.646,
+        "std": 3.093,
+        "n": 10
+      }
+    }
+  }
+}
