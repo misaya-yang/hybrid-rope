@@ -1,0 +1,55 @@
+{
+  "ts": "2026-02-12_083443",
+  "name": "geo_10k_baseline",
+  "group": "baseline",
+  "rope": {
+    "kind": "standard",
+    "theta": 10000.0
+  },
+  "data": {
+    "dataset": "roneneldan/TinyStories",
+    "tokenizer": "EleutherAI/pythia-70m",
+    "train_tokens": 50000000,
+    "val_tokens": 2500000,
+    "seq_len": 2048,
+    "seed": 42
+  },
+  "train": {
+    "total_steps": 382,
+    "full_steps": 382,
+    "micro_batch": 64,
+    "grad_accum": 1,
+    "effective_batch": 64,
+    "loss_curve": [
+      {
+        "step": 100,
+        "loss": 4.511018753051758
+      },
+      {
+        "step": 200,
+        "loss": 3.388566493988037
+      },
+      {
+        "step": 300,
+        "loss": 3.047659158706665
+      },
+      {
+        "step": 382,
+        "loss": 3.0373919010162354
+      }
+    ],
+    "checkpoint": "/opt/dfrope/results/h800_parallel/variants/geo_10k_baseline/geo_10k_baseline_model.pt"
+  },
+  "ppl": {
+    "2048": {
+      "mean": 18.080182994961202,
+      "std": 2.1591747081542776,
+      "n_chunks": 5
+    },
+    "16384": {
+      "mean": 79.48522104662203,
+      "std": 8.26944234890137,
+      "n_chunks": 5
+    }
+  }
+}

@@ -1,0 +1,414 @@
+[multiseed] seeds=[42, 123, 7, 17, 97, 2024, 2025, 999, 2718, 31415]
+[multiseed] work_dir=/opt/dfrope/results/unified_search_2cfg_10seed
+  Loading TinyStories (50M tokens)...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+  Loading validation data...
+[multiseed] restrict configs=['geo_500k', 'hybrid_a0.2_t100k']
+
+============================================================
+  geo_500k_seed42
+  seed=42
+  freq range: [3.01e-06, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9601  lr=0.00e+00  ETA=8min
+    step 100/762  loss=3.9175  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0858  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6209  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4395  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2454  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2131  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.1991  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.767
+    L=4096: PPL=6.958
+    L=8192: PPL=8.649
+    L=16384: PPL=16.791
+
+============================================================
+  geo_500k_seed123
+  seed=123
+  freq range: [3.01e-06, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9264  lr=0.00e+00  ETA=6min
+    step 100/762  loss=3.9137  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.2030  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.7095  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4829  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.3496  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2761  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2361  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.911
+    L=4096: PPL=7.712
+    L=8192: PPL=10.206
+    L=16384: PPL=19.683
+
+============================================================
+  geo_500k_seed7
+  seed=7
+  freq range: [3.01e-06, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.8711  lr=0.00e+00  ETA=10min
+    step 100/762  loss=4.0012  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.1568  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.7125  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4734  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2395  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.1787  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.1395  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.778
+    L=4096: PPL=7.079
+    L=8192: PPL=9.541
+    L=16384: PPL=19.289
+
+============================================================
+  geo_500k_seed17
+  seed=17
+  freq range: [3.01e-06, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9092  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9582  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0277  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.7034  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4376  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2710  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.1548  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2471  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.620
+    L=4096: PPL=7.085
+    L=8192: PPL=9.923
+    L=16384: PPL=19.976
+
+============================================================
+  geo_500k_seed97
+  seed=97
+  freq range: [3.01e-06, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.8840  lr=0.00e+00  ETA=6min
+    step 100/762  loss=3.9815  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0121  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6176  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4016  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2585  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2837  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.1004  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.971
+    L=4096: PPL=7.052
+    L=8192: PPL=9.192
+    L=16384: PPL=17.763
+
+============================================================
+  geo_500k_seed2024
+  seed=2024
+  freq range: [3.01e-06, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9413  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.8932  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0177  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.5840  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4457  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2650  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2005  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2084  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.554
+    L=4096: PPL=7.091
+    L=8192: PPL=10.076
+    L=16384: PPL=21.327
+
+============================================================
+  geo_500k_seed2025
+  seed=2025
+  freq range: [3.01e-06, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9237  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9874  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.1753  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.7733  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.5247  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.4694  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2361  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2746  lr=1.01e-05  ETA=0min
+    L=2048: PPL=7.194
+    L=4096: PPL=7.570
+    L=8192: PPL=9.806
+    L=16384: PPL=18.843
+
+============================================================
+  geo_500k_seed999
+  seed=999
+  freq range: [3.01e-06, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.8733  lr=0.00e+00  ETA=6min
+    step 100/762  loss=4.2209  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.1685  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.7356  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.5142  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2944  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2527  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2101  lr=1.01e-05  ETA=0min
+    L=2048: PPL=7.197
+    L=4096: PPL=8.029
+    L=8192: PPL=11.218
+    L=16384: PPL=20.598
+
+============================================================
+  geo_500k_seed2718
+  seed=2718
+  freq range: [3.01e-06, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9538  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9737  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.2029  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6638  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.5205  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.3288  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.3118  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2233  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.877
+    L=4096: PPL=7.110
+    L=8192: PPL=9.368
+    L=16384: PPL=17.921
+
+============================================================
+  geo_500k_seed31415
+  seed=31415
+  freq range: [3.01e-06, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.8877  lr=0.00e+00  ETA=6min
+    step 100/762  loss=4.1586  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.1848  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.8161  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.5139  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.3472  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2891  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2172  lr=1.01e-05  ETA=0min
+    L=2048: PPL=7.163
+    L=4096: PPL=7.418
+    L=8192: PPL=9.215
+    L=16384: PPL=15.788
+
+============================================================
+  hybrid_a0.2_t100k_seed42
+  seed=42
+  freq range: [1.23e-05, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9610  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.8947  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0464  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.5764  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.3994  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2132  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.1911  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.1757  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.592
+    L=4096: PPL=6.750
+    L=8192: PPL=8.736
+    L=16384: PPL=16.763
+
+============================================================
+  hybrid_a0.2_t100k_seed123
+  seed=123
+  freq range: [1.23e-05, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9260  lr=0.00e+00  ETA=6min
+    step 100/762  loss=3.9709  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.2068  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.7184  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.5040  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.3675  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2886  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2458  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.996
+    L=4096: PPL=7.274
+    L=8192: PPL=9.608
+    L=16384: PPL=19.275
+
+============================================================
+  hybrid_a0.2_t100k_seed7
+  seed=7
+  freq range: [1.23e-05, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.8720  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.8928  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0397  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6465  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4273  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.1922  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.1427  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.0980  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.537
+    L=4096: PPL=6.739
+    L=8192: PPL=9.407
+    L=16384: PPL=18.582
+
+============================================================
+  hybrid_a0.2_t100k_seed17
+  seed=17
+  freq range: [1.23e-05, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9095  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9045  lr=5.81e-04  ETA=3min
+    step 200/762  loss=2.9265  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6296  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.3876  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2228  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.1061  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2071  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.374
+    L=4096: PPL=6.622
+    L=8192: PPL=10.591
+    L=16384: PPL=22.647
+
+============================================================
+  hybrid_a0.2_t100k_seed97
+  seed=97
+  freq range: [1.23e-05, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.8826  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9041  lr=5.81e-04  ETA=3min
+    step 200/762  loss=2.9738  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.5807  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.3709  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2292  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2584  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.0780  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.823
+    L=4096: PPL=6.903
+    L=8192: PPL=8.771
+    L=16384: PPL=16.172
+
+============================================================
+  hybrid_a0.2_t100k_seed2024
+  seed=2024
+  freq range: [1.23e-05, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9400  lr=0.00e+00  ETA=10min
+    step 100/762  loss=4.0183  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.1455  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6853  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.5312  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.3378  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2692  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2748  lr=1.01e-05  ETA=0min
+    L=2048: PPL=7.012
+    L=4096: PPL=7.416
+    L=8192: PPL=11.423
+    L=16384: PPL=22.614
+
+============================================================
+  hybrid_a0.2_t100k_seed2025
+  seed=2025
+  freq range: [1.23e-05, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9237  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9951  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.1779  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.7502  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4830  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.4249  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.1899  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2250  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.836
+    L=4096: PPL=6.952
+    L=8192: PPL=8.766
+    L=16384: PPL=17.012
+
+============================================================
+  hybrid_a0.2_t100k_seed999
+  seed=999
+  freq range: [1.23e-05, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.8732  lr=0.00e+00  ETA=6min
+    step 100/762  loss=4.2183  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.1257  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6815  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4584  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2479  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2083  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.1675  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.863
+    L=4096: PPL=7.012
+    L=8192: PPL=8.664
+    L=16384: PPL=15.097
+
+============================================================
+  hybrid_a0.2_t100k_seed2718
+  seed=2718
+  freq range: [1.23e-05, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.9532  lr=0.00e+00  ETA=10min
+    step 100/762  loss=3.9463  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.1540  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6300  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.4997  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.3150  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.2997  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.2094  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.756
+    L=4096: PPL=6.827
+    L=8192: PPL=8.190
+    L=16384: PPL=14.224
+
+============================================================
+  hybrid_a0.2_t100k_seed31415
+  seed=31415
+  freq range: [1.23e-05, 1.0000]
+============================================================
+  Params: 50.9M
+    step 0/762  loss=10.8867  lr=0.00e+00  ETA=6min
+    step 100/762  loss=4.0476  lr=5.81e-04  ETA=3min
+    step 200/762  loss=3.0296  lr=5.14e-04  ETA=3min
+    step 300/762  loss=2.6894  lr=4.09e-04  ETA=2min
+    step 400/762  loss=2.3990  lr=2.85e-04  ETA=2min
+    step 500/762  loss=2.2342  lr=1.64e-04  ETA=1min
+    step 600/762  loss=2.1896  lr=6.70e-05  ETA=1min
+    step 700/762  loss=2.1226  lr=1.01e-05  ETA=0min
+    L=2048: PPL=6.489
+    L=4096: PPL=6.695
+    L=8192: PPL=8.573
+    L=16384: PPL=15.385
+
+Config              | Seed | PPL@2048 | PPL@16384
+geo_500k            |   42 |    6.767 |    16.791
+geo_500k            |  123 |    6.911 |    19.683
+geo_500k            |    7 |    6.778 |    19.289
+geo_500k            |   17 |     6.62 |    19.976
+geo_500k            |   97 |    6.971 |    17.763
+geo_500k            | 2024 |    6.554 |    21.327
+geo_500k            | 2025 |    7.194 |    18.843
+geo_500k            |  999 |    7.197 |    20.598
+geo_500k            | 2718 |    6.877 |    17.921
+geo_500k            | 31415 |    7.163 |    15.788
+hybrid_a0.2_t100k   |   42 |    6.592 |    16.763
+hybrid_a0.2_t100k   |  123 |    6.996 |    19.275
+hybrid_a0.2_t100k   |    7 |    6.537 |    18.582
+hybrid_a0.2_t100k   |   17 |    6.374 |    22.647
+hybrid_a0.2_t100k   |   97 |    6.823 |    16.172
+hybrid_a0.2_t100k   | 2024 |    7.012 |    22.614
+hybrid_a0.2_t100k   | 2025 |    6.836 |    17.012
+hybrid_a0.2_t100k   |  999 |    6.863 |    15.097
+hybrid_a0.2_t100k   | 2718 |    6.756 |    14.224
+hybrid_a0.2_t100k   | 31415 |    6.489 |    15.385
+
+Config              | PPL@2048 (mean±std) | PPL@16384 (mean±std)
+geo_500k            | 6.903 ± 0.219       | 18.798 ± 1.643     
+hybrid_a0.2_t100k   | 6.728 ± 0.207       | 17.777 ± 2.824     
+
+[done] wrote /opt/dfrope/results/unified_search_2cfg_10seed/results.json

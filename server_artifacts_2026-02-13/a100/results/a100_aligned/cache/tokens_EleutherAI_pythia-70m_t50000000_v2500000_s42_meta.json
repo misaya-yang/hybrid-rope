@@ -1,0 +1,7 @@
+{
+  "dataset": "roneneldan/TinyStories",
+  "tokenizer": "EleutherAI/pythia-70m",
+  "train_tokens": 50000000,
+  "val_tokens": 2500000,
+  "vocab_size": 50277
+}

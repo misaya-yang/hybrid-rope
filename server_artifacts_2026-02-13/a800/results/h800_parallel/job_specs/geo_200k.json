@@ -1,0 +1,8 @@
+{
+  "name": "geo_200k",
+  "group": "theta_scaling",
+  "rope": {
+    "kind": "standard",
+    "theta": 200000.0
+  }
+}

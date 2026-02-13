@@ -9,11 +9,17 @@
   - `unified_search_3cfg_3seed.py`: 50M 模型 3 配置 × 3 seed 稳健性验证
   - `run_350m_final.py`: 350M 最终验证（运行中）
 
+- `server_artifacts_2026-02-13/`
+  - 双机（A100/A800）同步归档（不含权重）
+  - 已按 `scripts/results/logs/meta` 分层，可直接用于复核与上传
+  - 包含 A100 100M scaling 运行中间结果、A800 LoRA 运行日志
+
 - `docs/`
   - `DFROPE_EXPERIMENTS_ROPE_FREQ_SUMMARY.md`: 全过程叙事总结（较长）
   - `METHODOLOGY.md`: 不允许变动的定义（频率函数/数据/评测 slicing）
   - `RESULTS.md`: 关键表格与“论文口径”结论
   - `REPRODUCE.md`: 复现指南（中文）
+  - `SERVER_SYNC_2026-02-13.md`: 双机同步记录与排除规则
 
 - `results/`
   - `unified_search/`: unified 扫描的 JSON + log

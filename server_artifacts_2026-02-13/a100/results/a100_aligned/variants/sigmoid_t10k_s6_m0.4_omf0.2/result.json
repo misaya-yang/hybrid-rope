@@ -1,0 +1,25 @@
+{
+  "name": "sigmoid_t10k_s6_m0.4_omf0.2",
+  "group": "sigmoid",
+  "rope": {
+    "kind": "custom",
+    "theta": 10000.0
+  },
+  "train": {
+    "steps": 762,
+    "final_loss": 3.498416170477867,
+    "checkpoint": "/opt/dfrope/results/a100_aligned/variants/sigmoid_t10k_s6_m0.4_omf0.2/sigmoid_t10k_s6_m0.4_omf0.2_final.pt"
+  },
+  "ppl": {
+    "2048": {
+      "mean": 39.3017345435572,
+      "std": 12.027138067558756,
+      "n_chunks": 5
+    },
+    "16384": {
+      "mean": 48.88853279217664,
+      "std": 12.122313918980204,
+      "n_chunks": 5
+    }
+  }
+}

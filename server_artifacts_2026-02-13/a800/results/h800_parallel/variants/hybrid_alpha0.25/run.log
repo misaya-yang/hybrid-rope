@@ -1,0 +1,27 @@
+[train:hybrid_alpha0.25] n_seq=24,414 total_steps=382/382 micro_batch=64 grad_accum=1
+[train:hybrid_alpha0.25] step=1/382 loss=10.9519 lr=0.000e+00 tokens=131,072
+[train:hybrid_alpha0.25] step=20/382 loss=6.1409 lr=5.985e-04 tokens=131,072
+[train:hybrid_alpha0.25] step=40/382 loss=5.7070 lr=5.893e-04 tokens=131,072
+[train:hybrid_alpha0.25] step=60/382 loss=5.3968 lr=5.720e-04 tokens=131,072
+[train:hybrid_alpha0.25] step=80/382 loss=4.9180 lr=5.471e-04 tokens=131,072
+[train:hybrid_alpha0.25] step=100/382 loss=4.5345 lr=5.152e-04 tokens=131,072
+[train:hybrid_alpha0.25] step=120/382 loss=4.1770 lr=4.774e-04 tokens=131,072
+[train:hybrid_alpha0.25] step=140/382 loss=3.9261 lr=4.345e-04 tokens=131,072
+[train:hybrid_alpha0.25] step=160/382 loss=3.7868 lr=3.879e-04 tokens=131,072
+[train:hybrid_alpha0.25] step=180/382 loss=3.5813 lr=3.388e-04 tokens=131,072
+[train:hybrid_alpha0.25] step=200/382 loss=3.3907 lr=2.887e-04 tokens=131,072
+[train:hybrid_alpha0.25] step=220/382 loss=3.2830 lr=2.389e-04 tokens=131,072
+[train:hybrid_alpha0.25] step=240/382 loss=3.2305 lr=1.907e-04 tokens=131,072
+[train:hybrid_alpha0.25] step=260/382 loss=3.1665 lr=1.457e-04 tokens=131,072
+[train:hybrid_alpha0.25] step=280/382 loss=3.1473 lr=1.049e-04 tokens=131,072
+[train:hybrid_alpha0.25] step=300/382 loss=3.0504 lr=6.965e-05 tokens=131,072
+[train:hybrid_alpha0.25] step=320/382 loss=2.9837 lr=4.082e-05 tokens=131,072
+[train:hybrid_alpha0.25] step=340/382 loss=2.9542 lr=1.926e-05 tokens=131,072
+[train:hybrid_alpha0.25] step=360/382 loss=2.9836 lr=5.552e-06 tokens=131,072
+[train:hybrid_alpha0.25] step=380/382 loss=2.9344 lr=9.474e-08 tokens=131,072
+[eval] L= 2048 PPL=18.382 ± 2.319
+[eval] L=16384 PPL=63.353 ± 3.671
+{
+  "name": "hybrid_alpha0.25",
+  "ppl@16384": 63.35272942881662
+}

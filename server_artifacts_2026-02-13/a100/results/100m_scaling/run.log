@@ -1,0 +1,49 @@
+======================================================================
+  100M SCALING SPRINT: geo_500k vs hybrid_a0.2_t100k
+======================================================================
+  torch=2.9.1+cu130
+  Loading TinyStories train (50M tokens)...
+  Got 24414 chunks
+  Loading validation data...
+  Got 4.8M validation tokens
+
+======================================================================
+  geo_500k
+  freq range: [3.01e-06, 1.0000]
+======================================================================
+  Params: 151.9M
+  Training: 762 steps (micro=8, accum=4, eff=32)
+    step 0/762 loss=10.9348 lr=0.00e+00 mem=21.5GB ETA=13min
+    step 50/762 loss=4.9649 lr=2.98e-04 mem=22.7GB ETA=8min
+    step 100/762 loss=3.7738 lr=2.91e-04 mem=22.7GB ETA=8min
+    step 150/762 loss=3.2512 lr=2.76e-04 mem=22.7GB ETA=7min
+    step 200/762 loss=3.0467 lr=2.57e-04 mem=22.7GB ETA=7min
+    step 250/762 loss=2.7218 lr=2.33e-04 mem=22.7GB ETA=6min
+    step 300/762 loss=2.6337 lr=2.05e-04 mem=22.7GB ETA=5min
+    step 350/762 loss=2.4641 lr=1.74e-04 mem=22.7GB ETA=5min
+    step 400/762 loss=2.4920 lr=1.43e-04 mem=22.7GB ETA=4min
+    step 450/762 loss=2.2286 lr=1.12e-04 mem=22.7GB ETA=4min
+    step 500/762 loss=2.1358 lr=8.22e-05 mem=22.7GB ETA=3min
+    step 550/762 loss=2.1260 lr=5.58e-05 mem=22.7GB ETA=3min
+    step 600/762 loss=2.2487 lr=3.35e-05 mem=22.7GB ETA=2min
+    step 650/762 loss=2.0967 lr=1.63e-05 mem=22.7GB ETA=1min
+    step 700/762 loss=2.0672 lr=5.07e-06 mem=22.7GB ETA=1min
+    step 750/762 loss=2.1363 lr=1.91e-07 mem=22.7GB ETA=0min
+    L=2048: PPL=6.457
+    L=16384: PPL=10.888
+
+======================================================================
+  hybrid_a0.2_t100k
+  freq range: [1.23e-05, 1.0000]
+======================================================================
+  Params: 151.9M
+  Training: 762 steps (micro=8, accum=4, eff=32)
+    step 0/762 loss=10.9374 lr=0.00e+00 mem=22.7GB ETA=9min
+    step 50/762 loss=5.0709 lr=2.98e-04 mem=22.7GB ETA=8min
+    step 100/762 loss=3.7611 lr=2.91e-04 mem=22.7GB ETA=8min
+    step 150/762 loss=3.1951 lr=2.76e-04 mem=22.7GB ETA=7min
+    step 200/762 loss=2.9999 lr=2.57e-04 mem=22.7GB ETA=7min
+    step 250/762 loss=2.6946 lr=2.33e-04 mem=22.7GB ETA=6min
+    step 300/762 loss=2.6280 lr=2.05e-04 mem=22.7GB ETA=5min
+    step 350/762 loss=2.4507 lr=1.74e-04 mem=22.7GB ETA=5min
+    step 400/762 loss=2.4861 lr=1.43e-04 mem=22.7GB ETA=4min

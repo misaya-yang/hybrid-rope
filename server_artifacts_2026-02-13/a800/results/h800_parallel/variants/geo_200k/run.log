@@ -1,0 +1,27 @@
+[train:geo_200k] n_seq=24,414 total_steps=382/382 micro_batch=64 grad_accum=1
+[train:geo_200k] step=1/382 loss=10.9514 lr=0.000e+00 tokens=131,072
+[train:geo_200k] step=20/382 loss=6.0571 lr=5.985e-04 tokens=131,072
+[train:geo_200k] step=40/382 loss=5.6071 lr=5.893e-04 tokens=131,072
+[train:geo_200k] step=60/382 loss=5.2024 lr=5.720e-04 tokens=131,072
+[train:geo_200k] step=80/382 loss=4.7409 lr=5.471e-04 tokens=131,072
+[train:geo_200k] step=100/382 loss=4.3508 lr=5.152e-04 tokens=131,072
+[train:geo_200k] step=120/382 loss=4.0368 lr=4.774e-04 tokens=131,072
+[train:geo_200k] step=140/382 loss=3.8314 lr=4.345e-04 tokens=131,072
+[train:geo_200k] step=160/382 loss=3.7113 lr=3.879e-04 tokens=131,072
+[train:geo_200k] step=180/382 loss=3.5559 lr=3.388e-04 tokens=131,072
+[train:geo_200k] step=200/382 loss=3.3440 lr=2.887e-04 tokens=131,072
+[train:geo_200k] step=220/382 loss=3.2395 lr=2.389e-04 tokens=131,072
+[train:geo_200k] step=240/382 loss=3.1763 lr=1.907e-04 tokens=131,072
+[train:geo_200k] step=260/382 loss=3.1176 lr=1.457e-04 tokens=131,072
+[train:geo_200k] step=280/382 loss=3.1037 lr=1.049e-04 tokens=131,072
+[train:geo_200k] step=300/382 loss=3.0101 lr=6.965e-05 tokens=131,072
+[train:geo_200k] step=320/382 loss=2.9458 lr=4.082e-05 tokens=131,072
+[train:geo_200k] step=340/382 loss=2.9222 lr=1.926e-05 tokens=131,072
+[train:geo_200k] step=360/382 loss=2.9427 lr=5.552e-06 tokens=131,072
+[train:geo_200k] step=380/382 loss=2.8960 lr=9.474e-08 tokens=131,072
+[eval] L= 2048 PPL=17.577 ± 2.154
+[eval] L=16384 PPL=29.880 ± 2.872
+{
+  "name": "geo_200k",
+  "ppl@16384": 29.879500651935246
+}

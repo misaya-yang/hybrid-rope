@@ -1,0 +1,59 @@
+======================================================================
+  350M Model Validation: Polynomial vs Geometric RoPE
+======================================================================
+  Loading TinyStories (train)...
+    Tokenized 440M tokens...
+  Got 230844 chunks of 2048 tokens (472.8M total)
+  Loading TinyStories (validation)...
+  Got 290 chunks of 16384 tokens (4.8M total)
+
+======================================================================
+  EXPERIMENT: geo_1k
+======================================================================
+  inv_freq range: [1.240938e-03, 1.000000e+00]
+  Dynamic range: 805.8
+  Model parameters: 454.2M
+  Training: 7213 steps, warmup=144
+Traceback (most recent call last):
+  File "/opt/dfrope/run_350m_validation.py", line 433, in <module>
+    main()
+  File "/opt/dfrope/run_350m_validation.py", line 404, in main
+    result = run_one_experiment(name, inv_freq, train_data, eval_data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/dfrope/run_350m_validation.py", line 349, in run_one_experiment
+    losses = train(model, train_data, TRAIN_CFG, save_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/dfrope/run_350m_validation.py", line 271, in train
+    logits = model(batch[:, :-1])
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/miniconda3/envs/py312/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1775, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/miniconda3/envs/py312/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1786, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/dfrope/run_350m_validation.py", line 198, in forward
+    x = layer(x)
+        ^^^^^^^^
+  File "/usr/local/miniconda3/envs/py312/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1775, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/miniconda3/envs/py312/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1786, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/dfrope/run_350m_validation.py", line 161, in forward
+    x = x + self.attn(self.ln1(x), mask)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/miniconda3/envs/py312/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1775, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/miniconda3/envs/py312/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1786, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/dfrope/run_350m_validation.py", line 135, in forward
+    q = apply_rotary_emb(q, cos, sin)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/dfrope/run_350m_validation.py", line 99, in apply_rotary_emb
+    return x * cos + rotate_half(x) * sin
+           ~~^~~~~
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 256.00 MiB. GPU 0 has a total capacity of 79.25 GiB of which 128.31 MiB is free. Process 11054 has 62.90 GiB memory in use. Process 11052 has 16.21 GiB memory in use. Of the allocated memory 15.69 GiB is allocated by PyTorch, and 27.93 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
