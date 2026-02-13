@@ -7,19 +7,25 @@
 - `a100/`
   - `unified_search.py`: 50M 模型小规模候选扫描（unified search）
   - `unified_search_3cfg_3seed.py`: 50M 模型 3 配置 × 3 seed 稳健性验证
+  - `run_50m_theta_shape_factorial.py`: 50M 因子分离公平对照（geo θ 扫描 + hybrid 对照）
   - `run_350m_final.py`: 350M 最终验证（运行中）
 
+- `h100_advanced_experiments/`
+  - 2xH100 / 1.5B 实验作战包（计划、runbook、配置、环境检查、自动汇总作图脚本）
+  - 可直接迁移到 H100/H200 新环境执行
+
 - `server_artifacts_2026-02-13/`
-  - 双机（A100/A800）同步归档（不含权重）
+  - 双机（A100/A800）最新同步归档（不含权重）
   - 已按 `scripts/results/logs/meta` 分层，可直接用于复核与上传
-  - 包含 A100 100M scaling 运行中间结果、A800 LoRA 运行日志
+  - 包含 A100 100M scaling/因子实验中间产物、A800 LoRA 运行日志
+  - 详见 `server_artifacts_2026-02-13/README.md`
 
 - `docs/`
   - `DFROPE_EXPERIMENTS_ROPE_FREQ_SUMMARY.md`: 全过程叙事总结（较长）
   - `METHODOLOGY.md`: 不允许变动的定义（频率函数/数据/评测 slicing）
   - `RESULTS.md`: 关键表格与“论文口径”结论
   - `REPRODUCE.md`: 复现指南（中文）
-  - `SERVER_SYNC_2026-02-13.md`: 双机同步记录与排除规则
+  - `SERVER_SYNC_2026-02-13.md`: 本次双机同步记录、排除规则与状态快照
 
 - `results/`
   - `unified_search/`: unified 扫描的 JSON + log

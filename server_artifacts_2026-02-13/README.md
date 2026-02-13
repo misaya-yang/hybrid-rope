@@ -28,6 +28,13 @@
   - `geo_500k`: `PPL@2048=6.457`, `PPL@16384=10.888`
 - A800：`run_llama3_hybrid_lora_v3.py` 仅保留单进程运行（已去重），LoRA 训练持续推进。
 
+## 补充（同日后续）
+
+- A100 已新增 `run_50m_theta_shape_factorial.py`（位于 `a100/scripts/`）：
+  - 目标：做 theta 与 shape 的因子分离公平对照；
+  - 组合：`geo_100k/200k/300k/500k` + `hybrid_a0.2_t100k/t500k`；
+  - seeds：`[42, 123, 7]`。
+
 ## 建议上传方式
 
 优先上传本目录下：

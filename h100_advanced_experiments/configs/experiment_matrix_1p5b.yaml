@@ -1,0 +1,88 @@
+meta:
+  experiment_name: "h100_1p5b_final_validation"
+  objective: "Validate whether hybrid_a0.2_t100k can replace high-theta geometric RoPE."
+  output_root: "/opt/dfrope/results/h100_1p5b"
+  save_weights: false
+
+environment:
+  precision: "bf16"
+  distributed: "fsdp"
+  gradient_checkpointing: true
+  seed_list: [42, 123, 7]
+
+model:
+  vocab_size: 50304
+  hidden_size: 2048
+  num_layers: 24
+  num_heads: 16
+  head_dim: 128
+  intermediate_size: 5632
+  max_position_embeddings: 2048
+  dropout: 0.0
+
+training:
+  train_seq_len: 2048
+  train_tokens_budget:
+    pilot: 2000000000     # 2B
+    main: 20000000000     # 20B
+  micro_batch_size: 4
+  grad_accum: 8
+  effective_batch_size: 32
+  optimizer:
+    type: "adamw"
+    lr: 3.0e-4
+    betas: [0.9, 0.95]
+    weight_decay: 0.1
+  scheduler:
+    type: "cosine"
+    warmup_frac: 0.02
+  max_grad_norm: 1.0
+  log_every_steps: 20
+  save_every_steps: 200
+
+data:
+  tokenizer: "EleutherAI/gpt-neox-20b"
+  train_mix:
+    - name: "HuggingFaceFW/fineweb"
+      weight: 0.70
+      split: "train"
+    - name: "cerebras/SlimPajama-627B"
+      weight: 0.25
+      split: "train"
+    - name: "pg19"
+      weight: 0.05
+      split: "train"
+  validation_sets:
+    - name: "roneneldan/TinyStories"
+      split: "validation"
+      max_tokens: 5000000
+
+evaluation:
+  ppl_lengths: [2048, 4096, 8192, 12288, 16384, 32768]
+  eval_chunks: 10
+  extra_benchmarks:
+    - "longbench"
+    - "ruler"
+    - "lm-eval:hellaswag,piqa,arc_easy,arc_challenge,winogrande"
+
+frequency_variants:
+  - name: "geo_500k"
+    type: "geometric"
+    theta: 500000
+  - name: "hybrid_a0.2_t100k"
+    type: "hybrid"
+    alpha: 0.2
+    base_geo_theta: 100000
+    poly:
+      p: 3.9
+      omf: 0.3
+  - name: "anchpoly_p3.9_omf0.3_t500k"
+    type: "anchored_poly"
+    theta_base: 500000
+    p: 3.9
+    omf: 0.3
+
+success_criteria:
+  - "hybrid_a0.2_t100k mean PPL@16384 < geo_500k mean PPL@16384"
+  - "hybrid_a0.2_t100k mean PPL@32768 <= geo_500k mean PPL@32768"
+  - "hybrid_a0.2_t100k PPL@2048 degradation <= 5% vs best config"

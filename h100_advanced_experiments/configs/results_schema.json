@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "H100 RoPE Experiment Result",
+  "type": "object",
+  "required": ["meta", "experiments"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["model", "seed"],
+      "properties": {
+        "model": { "type": "string" },
+        "seed": { "type": "integer" },
+        "train_tokens": { "type": "integer" },
+        "timestamp": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "experiments": {
+      "type": "object",
+      "patternProperties": {
+        "^[A-Za-z0-9_.-]+$": {
+          "type": "object",
+          "patternProperties": {
+            "^[0-9]+$": {
+              "type": "object",
+              "required": ["ppl"],
+              "properties": {
+                "ppl": { "type": "number" },
+                "std": { "type": "number" },
+                "n": { "type": "integer" }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
