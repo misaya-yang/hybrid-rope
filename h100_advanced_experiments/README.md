@@ -21,12 +21,16 @@ on 2xH100 (or larger clusters), focused on:
    - `results/raw/`
 5. Generate charts/tables:
    - `python scripts/plot_h100_results.py --input-dir results/raw --output-dir results/processed`
+6. Run passkey benchmark (length x depth):
+   - `bash scripts/run_passkey_h100.sh`
+   - or directly use `python scripts/run_passkey_h100.py --help`
 
 ## Structure
 
 - `configs/`: experiment matrix and schema
 - `docs/`: protocol, runbook, AI operator prompt
 - `scripts/`: environment checks and result plotting
+  - includes `run_passkey_h100.py` for passkey retrieval with logprob/MCQ/generation scoring
 - `results/`: raw and processed outputs
 - `figures/`: exported paper figures (optional mirror of processed figures)
 - `logs/`: runtime logs
