@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-02-13_175716",
+  "model_path": "Qwen/Qwen2.5-7B-Instruct",
+  "adapter_path": "/opt/dfrope/results/qwen_hybrid_lora/final_lora",
+  "lengths": [8192, 16384, 24576, 32768],
+  "seed": 42,
+  "metrics": {
+    "base": {
+      "ppl": {
+        "8192": {"ppl": 3.1369, "loss_mean": 1.143229, "n": 3},
+        "16384": {"ppl": 3.0642, "loss_mean": 1.119792, "n": 3},
+        "24576": {"ppl": 3.0404, "loss_mean": 1.111979, "n": 3},
+        "32768": {"ppl": 3.2449, "loss_mean": 1.177083, "n": 3}
+      },
+      "passkey_mc": {
+        "8192": {"acc": 1.0, "n": 6},
+        "16384": {"acc": 1.0, "n": 6},
+        "24576": {"acc": 1.0, "n": 6},
+        "32768": {"acc": 1.0, "n": 6}
+      },
+      "kv_mc": {
+        "8192": {"acc": 1.0, "n": 6},
+        "16384": {"acc": 0.8333, "n": 6},
+        "24576": {"acc": 1.0, "n": 6},
+        "32768": {"acc": 1.0, "n": 6}
+      }
+    },
+    "hybrid_lora": {
+      "ppl": {
+        "8192": {"ppl": 8.8666, "loss_mean": 2.182292, "n": 3},
+        "16384": {"ppl": 9.6371, "loss_mean": 2.265625, "n": 3},
+        "24576": {"ppl": 11.0923, "loss_mean": 2.40625, "n": 3},
+        "32768": {"ppl": 10.4202, "loss_mean": 2.34375, "n": 3}
+      },
+      "passkey_mc": {
+        "8192": {"acc": 1.0, "n": 6},
+        "16384": {"acc": 1.0, "n": 6},
+        "24576": {"acc": 1.0, "n": 6},
+        "32768": {"acc": 1.0, "n": 6}
+      },
+      "kv_mc": {
+        "8192": {"acc": 1.0, "n": 6},
+        "16384": {"acc": 1.0, "n": 6},
+        "24576": {"acc": 1.0, "n": 6},
+        "32768": {"acc": 0.8333, "n": 6}
+      }
+    }
+  },
+  "analysis": {
+    "ppl_increase_after_lora": "Hybrid LoRA increases PPL significantly (3.1 -> 8.9 at 8k)",
+    "long_context_retention": "Passkey accuracy remains 100% at all lengths after LoRA",
+    "base_model_strength": "Base Qwen has excellent long-context capability (PPL decreases from 8k to 24k)"
+  }
+}

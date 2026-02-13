@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "model": "/root/autodl-tmp/dfrope/ms_models/LLM-Research/Meta-Llama-3-8B-Instruct",
+    "data": "wikitext/wikitext-103-raw-v1/validation",
+    "commit": "eb0b7b0",
+    "timestamp": "2026-02-13T23:56:45.257668",
+    "configs": {
+      "anchored_x10_anchor16": {
+        "type": "anchored",
+        "theta": 100000,
+        "anchor_dim": 16,
+        "anchor_factor": 10,
+        "slope": 0.5
+      },
+      "anchored_x10_anchor0": {
+        "type": "anchored",
+        "theta": 100000,
+        "anchor_dim": 0,
+        "anchor_factor": 10,
+        "slope": 0.5
+      }
+    }
+  },
+  "data": {
+    "anchored_x10_anchor16": {
+      "by_seed": {
+        "seed42": {
+          "2048_random_start": {
+            "ppl": 11.086,
+            "status": "ok"
+          },
+          "16384_random_start": {
+            "ppl": 25.115,
+            "status": "ok"
+          }
+        }
+      },
+      "summary": {
+        "2048": {
+          "random_start": {
+            "mean": 11.086,
+            "std": 0.0,
+            "n_valid": 1,
+            "n_total": 1
+          }
+        },
+        "16384": {
+          "random_start": {
+            "mean": 25.115,
+            "std": 0.0,
+            "n_valid": 1,
+            "n_total": 1
+          }
+        },
+        "collapse_random_start": 2.265
+      }
+    },
+    "anchored_x10_anchor0": {
+      "by_seed": {
+        "seed42": {
+          "2048_random_start": {
+            "ppl": 11.095,
+            "status": "ok"
+          },
+          "16384_random_start": {
+            "ppl": 25.438,
+            "status": "ok"
+          }
+        }
+      },
+      "summary": {
+        "2048": {
+          "random_start": {
+            "mean": 11.095,
+            "std": 0.0,
+            "n_valid": 1,
+            "n_total": 1
+          }
+        },
+        "16384": {
+          "random_start": {
+            "mean": 25.438,
+            "std": 0.0,
+            "n_valid": 1,
+            "n_total": 1
+          }
+        },
+        "collapse_random_start": 2.293
+      }
+    }
+  }
+}
