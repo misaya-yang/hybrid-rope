@@ -20,6 +20,11 @@
   - 包含 A100 100M scaling/因子实验中间产物、A800 LoRA 运行日志
   - 详见 `server_artifacts_2026-02-13/README.md`
 
+- `artifacts/a800_2026-02-13/`
+  - A800 上 `Llama-3-8B Hybrid-LoRA` 的训练与对比评测入库（不含权重）
+  - 包含原始 `run.log/results.json`、评测脚本与导师汇报摘要
+  - 详见 `artifacts/a800_2026-02-13/README.md`
+
 - `docs/`
   - `DFROPE_EXPERIMENTS_ROPE_FREQ_SUMMARY.md`: 全过程叙事总结（较长）
   - `METHODOLOGY.md`: 不允许变动的定义（频率函数/数据/评测 slicing）

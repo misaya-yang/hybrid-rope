@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-02-13_063805",
+  "model_path": "/opt/dfrope/models_alt/LLM-Research/Meta-Llama-3-8B-Instruct",
+  "seq_len": 8192,
+  "target_tokens": 40000000,
+  "max_steps": 600,
+  "data_source": "allenai/c4:en",
+  "train_hours": 3.883,
+  "rope": {
+    "type": "hybrid_a0.2_t100k",
+    "inv_min": 1.0294930689269677e-05,
+    "inv_max": 1.0
+  }
+}
