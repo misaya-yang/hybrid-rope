@@ -1,0 +1,298 @@
+{
+  "M00_base_orig": {
+    "2048": {
+      "sequential": {
+        "ppl": 15.888967,
+        "mean_nll": 2.765625,
+        "median_nll": 2.734375
+      },
+      "random_start": {
+        "ppl": 14.46707,
+        "mean_nll": 2.671875,
+        "median_nll": 2.671875
+      }
+    },
+    "4096": {
+      "sequential": {
+        "ppl": 13.978214,
+        "mean_nll": 2.6375,
+        "median_nll": 2.75
+      },
+      "random_start": {
+        "ppl": 13.934601,
+        "mean_nll": 2.634375,
+        "median_nll": 2.578125
+      }
+    },
+    "8192": {
+      "sequential": {
+        "ppl": 13.633091,
+        "mean_nll": 2.6125,
+        "median_nll": 2.640625
+      },
+      "random_start": {
+        "ppl": 16.291199,
+        "mean_nll": 2.790625,
+        "median_nll": 2.75
+      }
+    },
+    "12288": {
+      "sequential": {
+        "ppl": 53.250117,
+        "mean_nll": 3.975,
+        "median_nll": 4.0
+      },
+      "random_start": {
+        "ppl": 55.805643,
+        "mean_nll": 4.021875,
+        "median_nll": 4.03125
+      }
+    },
+    "14336": {
+      "sequential": {
+        "ppl": 127.74039,
+        "mean_nll": 4.85,
+        "median_nll": 4.875
+      },
+      "random_start": {
+        "ppl": 113.43727,
+        "mean_nll": 4.73125,
+        "median_nll": 4.71875
+      }
+    },
+    "16384": {
+      "sequential": {
+        "ppl": 190.566268,
+        "mean_nll": 5.25,
+        "median_nll": 5.21875
+      },
+      "random_start": {
+        "ppl": 192.963297,
+        "mean_nll": 5.2625,
+        "median_nll": 5.21875
+      }
+    }
+  },
+  "M10_base_hybridfreq": {
+    "2048": {
+      "sequential": {
+        "ppl": 6310.688108,
+        "mean_nll": 8.75,
+        "median_nll": 8.75
+      },
+      "random_start": {
+        "ppl": 5854.699787,
+        "mean_nll": 8.675,
+        "median_nll": 8.625
+      }
+    },
+    "4096": {
+      "sequential": {
+        "ppl": 7062.115984,
+        "mean_nll": 8.8625,
+        "median_nll": 8.8125
+      },
+      "random_start": {
+        "ppl": 8625.687941,
+        "mean_nll": 9.0625,
+        "median_nll": 9.0625
+      }
+    },
+    "8192": {
+      "sequential": {
+        "ppl": 7517.583333,
+        "mean_nll": 8.925,
+        "median_nll": 8.9375
+      },
+      "random_start": {
+        "ppl": 6802.190693,
+        "mean_nll": 8.825,
+        "median_nll": 8.875
+      }
+    },
+    "12288": {
+      "sequential": {
+        "ppl": 6974.38897,
+        "mean_nll": 8.85,
+        "median_nll": 8.8125
+      },
+      "random_start": {
+        "ppl": 6802.190693,
+        "mean_nll": 8.825,
+        "median_nll": 8.8125
+      }
+    },
+    "14336": {
+      "sequential": {
+        "ppl": 7517.583333,
+        "mean_nll": 8.925,
+        "median_nll": 8.8125
+      },
+      "random_start": {
+        "ppl": 8518.537925,
+        "mean_nll": 9.05,
+        "median_nll": 8.9375
+      }
+    },
+    "16384": {
+      "sequential": {
+        "ppl": 7612.142891,
+        "mean_nll": 8.9375,
+        "median_nll": 9.0
+      },
+      "random_start": {
+        "ppl": 7517.583333,
+        "mean_nll": 8.925,
+        "median_nll": 8.875
+      }
+    }
+  },
+  "M01_lora_origfreq": {
+    "2048": {
+      "sequential": {
+        "ppl": 80.943388,
+        "mean_nll": 4.39375,
+        "median_nll": 4.28125
+      },
+      "random_start": {
+        "ppl": 83.774193,
+        "mean_nll": 4.428125,
+        "median_nll": 4.5
+      }
+    },
+    "4096": {
+      "sequential": {
+        "ppl": 101.684512,
+        "mean_nll": 4.621875,
+        "median_nll": 4.6875
+      },
+      "random_start": {
+        "ppl": 114.148473,
+        "mean_nll": 4.7375,
+        "median_nll": 4.6875
+      }
+    },
+    "8192": {
+      "sequential": {
+        "ppl": 157.000659,
+        "mean_nll": 5.05625,
+        "median_nll": 5.03125
+      },
+      "random_start": {
+        "ppl": 174.600411,
+        "mean_nll": 5.1625,
+        "median_nll": 5.1875
+      }
+    },
+    "12288": {
+      "sequential": {
+        "ppl": 189.378944,
+        "mean_nll": 5.24375,
+        "median_nll": 5.21875
+      },
+      "random_start": {
+        "ppl": 202.856737,
+        "mean_nll": 5.3125,
+        "median_nll": 5.28125
+      }
+    },
+    "14336": {
+      "sequential": {
+        "ppl": 231.307964,
+        "mean_nll": 5.44375,
+        "median_nll": 5.5
+      },
+      "random_start": {
+        "ppl": 196.615491,
+        "mean_nll": 5.28125,
+        "median_nll": 5.1875
+      }
+    },
+    "16384": {
+      "sequential": {
+        "ppl": 231.307964,
+        "mean_nll": 5.44375,
+        "median_nll": 5.40625
+      },
+      "random_start": {
+        "ppl": 217.293723,
+        "mean_nll": 5.38125,
+        "median_nll": 5.4375
+      }
+    }
+  },
+  "M11_lora_hybridfreq": {
+    "2048": {
+      "sequential": {
+        "ppl": 15.352065,
+        "mean_nll": 2.73125,
+        "median_nll": 2.703125
+      },
+      "random_start": {
+        "ppl": 14.198339,
+        "mean_nll": 2.653125,
+        "median_nll": 2.625
+      }
+    },
+    "4096": {
+      "sequential": {
+        "ppl": 13.505878,
+        "mean_nll": 2.603125,
+        "median_nll": 2.6875
+      },
+      "random_start": {
+        "ppl": 14.740886,
+        "mean_nll": 2.690625,
+        "median_nll": 2.671875
+      }
+    },
+    "8192": {
+      "sequential": {
+        "ppl": 13.505878,
+        "mean_nll": 2.603125,
+        "median_nll": 2.625
+      },
+      "random_start": {
+        "ppl": 17.450617,
+        "mean_nll": 2.859375,
+        "median_nll": 2.828125
+      }
+    },
+    "12288": {
+      "sequential": {
+        "ppl": 14.198339,
+        "mean_nll": 2.653125,
+        "median_nll": 2.625
+      },
+      "random_start": {
+        "ppl": 14.603336,
+        "mean_nll": 2.68125,
+        "median_nll": 2.75
+      }
+    },
+    "14336": {
+      "sequential": {
+        "ppl": 14.973021,
+        "mean_nll": 2.70625,
+        "median_nll": 2.75
+      },
+      "random_start": {
+        "ppl": 16.088826,
+        "mean_nll": 2.778125,
+        "median_nll": 2.78125
+      }
+    },
+    "16384": {
+      "sequential": {
+        "ppl": 15.400115,
+        "mean_nll": 2.734375,
+        "median_nll": 2.765625
+      },
+      "random_start": {
+        "ppl": 14.46707,
+        "mean_nll": 2.671875,
+        "median_nll": 2.703125
+      }
+    }
+  }
+}

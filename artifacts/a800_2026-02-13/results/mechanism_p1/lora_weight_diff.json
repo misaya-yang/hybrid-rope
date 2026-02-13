@@ -1,0 +1,386 @@
+{
+  "0": {
+    "Q_proj": {
+      "low_freq_energy": 12.918214311927967,
+      "mid_freq_energy": 20.03529792757999,
+      "high_freq_energy": 18.730908735618257
+    },
+    "K_proj": {
+      "low_freq_energy": 5.355039980570771,
+      "mid_freq_energy": 5.685474954793186,
+      "high_freq_energy": 6.78458666791348
+    }
+  },
+  "1": {
+    "Q_proj": {
+      "low_freq_energy": 4.63963092118753,
+      "mid_freq_energy": 7.341638647972298,
+      "high_freq_energy": 7.197640336681719
+    },
+    "K_proj": {
+      "low_freq_energy": 4.625455690382081,
+      "mid_freq_energy": 7.302648874968044,
+      "high_freq_energy": 8.605290031107138
+    }
+  },
+  "2": {
+    "Q_proj": {
+      "low_freq_energy": 3.9345539999212265,
+      "mid_freq_energy": 6.000920602488847,
+      "high_freq_energy": 5.331857602627163
+    },
+    "K_proj": {
+      "low_freq_energy": 3.0173483990383505,
+      "mid_freq_energy": 3.5664152057447436,
+      "high_freq_energy": 4.310958171111599
+    }
+  },
+  "3": {
+    "Q_proj": {
+      "low_freq_energy": 2.9837161942187054,
+      "mid_freq_energy": 3.7746112079874052,
+      "high_freq_energy": 4.497614422620036
+    },
+    "K_proj": {
+      "low_freq_energy": 2.854564282233396,
+      "mid_freq_energy": 4.198079124018567,
+      "high_freq_energy": 7.475744085870623
+    }
+  },
+  "4": {
+    "Q_proj": {
+      "low_freq_energy": 3.53183507545077,
+      "mid_freq_energy": 5.002049584054955,
+      "high_freq_energy": 5.353012822787605
+    },
+    "K_proj": {
+      "low_freq_energy": 3.1288359308440854,
+      "mid_freq_energy": 4.490699312496035,
+      "high_freq_energy": 7.241612511596099
+    }
+  },
+  "5": {
+    "Q_proj": {
+      "low_freq_energy": 2.614215601141155,
+      "mid_freq_energy": 3.6129972569506177,
+      "high_freq_energy": 3.9012501470340575
+    },
+    "K_proj": {
+      "low_freq_energy": 2.13722869196451,
+      "mid_freq_energy": 4.002036468028012,
+      "high_freq_energy": 5.915807163978342
+    }
+  },
+  "6": {
+    "Q_proj": {
+      "low_freq_energy": 2.965110094096855,
+      "mid_freq_energy": 3.9539490522430176,
+      "high_freq_energy": 4.089781439038006
+    },
+    "K_proj": {
+      "low_freq_energy": 2.149533846096976,
+      "mid_freq_energy": 3.3507905133487714,
+      "high_freq_energy": 4.156320935549743
+    }
+  },
+  "7": {
+    "Q_proj": {
+      "low_freq_energy": 2.355167750118824,
+      "mid_freq_energy": 3.6814492369104674,
+      "high_freq_energy": 3.348182720884404
+    },
+    "K_proj": {
+      "low_freq_energy": 2.329796725954672,
+      "mid_freq_energy": 4.097829351978263,
+      "high_freq_energy": 4.979096402740021
+    }
+  },
+  "8": {
+    "Q_proj": {
+      "low_freq_energy": 1.9302682747100879,
+      "mid_freq_energy": 2.807423316319954,
+      "high_freq_energy": 2.7641900231828624
+    },
+    "K_proj": {
+      "low_freq_energy": 1.8022392937935134,
+      "mid_freq_energy": 4.101396113502461,
+      "high_freq_energy": 5.50349013116794
+    }
+  },
+  "9": {
+    "Q_proj": {
+      "low_freq_energy": 2.2389411175205804,
+      "mid_freq_energy": 3.2046429698454344,
+      "high_freq_energy": 3.1196993835986957
+    },
+    "K_proj": {
+      "low_freq_energy": 1.7315362369961156,
+      "mid_freq_energy": 3.5478053582090237,
+      "high_freq_energy": 5.0293687548404415
+    }
+  },
+  "10": {
+    "Q_proj": {
+      "low_freq_energy": 1.851913092822273,
+      "mid_freq_energy": 2.3615631993253094,
+      "high_freq_energy": 2.5463931788264667
+    },
+    "K_proj": {
+      "low_freq_energy": 1.753880183236548,
+      "mid_freq_energy": 3.0808683866759172,
+      "high_freq_energy": 4.4390699796458195
+    }
+  },
+  "11": {
+    "Q_proj": {
+      "low_freq_energy": 1.9099218234065407,
+      "mid_freq_energy": 2.2860441804072673,
+      "high_freq_energy": 2.314061404926329
+    },
+    "K_proj": {
+      "low_freq_energy": 1.7730114402519859,
+      "mid_freq_energy": 3.125145129261587,
+      "high_freq_energy": 4.637435176321251
+    }
+  },
+  "12": {
+    "Q_proj": {
+      "low_freq_energy": 2.4280716510957068,
+      "mid_freq_energy": 3.652247368356852,
+      "high_freq_energy": 2.8415975621355334
+    },
+    "K_proj": {
+      "low_freq_energy": 1.7171501117150663,
+      "mid_freq_energy": 4.026497817749134,
+      "high_freq_energy": 5.397964599850223
+    }
+  },
+  "13": {
+    "Q_proj": {
+      "low_freq_energy": 1.7186166798148192,
+      "mid_freq_energy": 2.0716270807351194,
+      "high_freq_energy": 2.177721786202034
+    },
+    "K_proj": {
+      "low_freq_energy": 1.4292442570482464,
+      "mid_freq_energy": 2.479404934135273,
+      "high_freq_energy": 4.386708952915942
+    }
+  },
+  "14": {
+    "Q_proj": {
+      "low_freq_energy": 1.9168764440902508,
+      "mid_freq_energy": 2.7566001221983316,
+      "high_freq_energy": 2.5261983248287194
+    },
+    "K_proj": {
+      "low_freq_energy": 1.5845556153123508,
+      "mid_freq_energy": 2.4213933885040575,
+      "high_freq_energy": 4.23079007301089
+    }
+  },
+  "15": {
+    "Q_proj": {
+      "low_freq_energy": 2.2776668647571405,
+      "mid_freq_energy": 2.9922483943960483,
+      "high_freq_energy": 3.1506014065963766
+    },
+    "K_proj": {
+      "low_freq_energy": 1.5586535713573804,
+      "mid_freq_energy": 3.084252763436274,
+      "high_freq_energy": 4.783729337418195
+    }
+  },
+  "16": {
+    "Q_proj": {
+      "low_freq_energy": 2.529464177099272,
+      "mid_freq_energy": 3.2784805554644207,
+      "high_freq_energy": 3.8534608668633976
+    },
+    "K_proj": {
+      "low_freq_energy": 2.219228742460991,
+      "mid_freq_energy": 2.856739992686946,
+      "high_freq_energy": 5.82527718216524
+    }
+  },
+  "17": {
+    "Q_proj": {
+      "low_freq_energy": 2.5271203653377694,
+      "mid_freq_energy": 3.6772347896609916,
+      "high_freq_energy": 4.531554636020998
+    },
+    "K_proj": {
+      "low_freq_energy": 1.8615943261416488,
+      "mid_freq_energy": 3.0789678386805215,
+      "high_freq_energy": 6.251587836154306
+    }
+  },
+  "18": {
+    "Q_proj": {
+      "low_freq_energy": 2.6468210401635655,
+      "mid_freq_energy": 3.728915883908054,
+      "high_freq_energy": 4.70201490582885
+    },
+    "K_proj": {
+      "low_freq_energy": 2.122858300679373,
+      "mid_freq_energy": 3.237854426477413,
+      "high_freq_energy": 6.734551556601785
+    }
+  },
+  "19": {
+    "Q_proj": {
+      "low_freq_energy": 2.7455264839635216,
+      "mid_freq_energy": 3.635949303203721,
+      "high_freq_energy": 4.535368283410593
+    },
+    "K_proj": {
+      "low_freq_energy": 2.0239725214971704,
+      "mid_freq_energy": 3.209528591624796,
+      "high_freq_energy": 6.718223703948598
+    }
+  },
+  "20": {
+    "Q_proj": {
+      "low_freq_energy": 2.91624291957784,
+      "mid_freq_energy": 3.534757230505134,
+      "high_freq_energy": 4.734888357315047
+    },
+    "K_proj": {
+      "low_freq_energy": 2.2320144431305944,
+      "mid_freq_energy": 2.6652288459109785,
+      "high_freq_energy": 5.572726331373435
+    }
+  },
+  "21": {
+    "Q_proj": {
+      "low_freq_energy": 2.9644071985967044,
+      "mid_freq_energy": 3.4333156238160494,
+      "high_freq_energy": 4.949766588959536
+    },
+    "K_proj": {
+      "low_freq_energy": 2.1281351387232754,
+      "mid_freq_energy": 3.2020419214806584,
+      "high_freq_energy": 5.732558596807451
+    }
+  },
+  "22": {
+    "Q_proj": {
+      "low_freq_energy": 2.70996534822284,
+      "mid_freq_energy": 3.0943173243640185,
+      "high_freq_energy": 3.9152155303645446
+    },
+    "K_proj": {
+      "low_freq_energy": 2.0591476925563628,
+      "mid_freq_energy": 2.494763673346138,
+      "high_freq_energy": 5.728006906939589
+    }
+  },
+  "23": {
+    "Q_proj": {
+      "low_freq_energy": 2.8079823605664593,
+      "mid_freq_energy": 3.3825068658271555,
+      "high_freq_energy": 5.122479245370562
+    },
+    "K_proj": {
+      "low_freq_energy": 2.052960063717168,
+      "mid_freq_energy": 2.5260033411084435,
+      "high_freq_energy": 6.64230498480573
+    }
+  },
+  "24": {
+    "Q_proj": {
+      "low_freq_energy": 2.7295677229028397,
+      "mid_freq_energy": 3.474880791147668,
+      "high_freq_energy": 5.027316871990939
+    },
+    "K_proj": {
+      "low_freq_energy": 2.191971206546048,
+      "mid_freq_energy": 2.744794680415733,
+      "high_freq_energy": 7.243648559187046
+    }
+  },
+  "25": {
+    "Q_proj": {
+      "low_freq_energy": 2.629625654891468,
+      "mid_freq_energy": 3.3699060534228815,
+      "high_freq_energy": 5.147875318656192
+    },
+    "K_proj": {
+      "low_freq_energy": 2.424280513426213,
+      "mid_freq_energy": 2.771908324839767,
+      "high_freq_energy": 6.506490083774901
+    }
+  },
+  "26": {
+    "Q_proj": {
+      "low_freq_energy": 2.970260426822958,
+      "mid_freq_energy": 3.4485574191439654,
+      "high_freq_energy": 4.577793481383525
+    },
+    "K_proj": {
+      "low_freq_energy": 2.2721708849448574,
+      "mid_freq_energy": 2.8015241924081336,
+      "high_freq_energy": 6.266528327542748
+    }
+  },
+  "27": {
+    "Q_proj": {
+      "low_freq_energy": 2.641200696661255,
+      "mid_freq_energy": 3.1559141108570583,
+      "high_freq_energy": 4.27794193159166
+    },
+    "K_proj": {
+      "low_freq_energy": 1.7940047191445971,
+      "mid_freq_energy": 2.5274894973921405,
+      "high_freq_energy": 5.530278613521369
+    }
+  },
+  "28": {
+    "Q_proj": {
+      "low_freq_energy": 2.828440161267789,
+      "mid_freq_energy": 3.332623563783426,
+      "high_freq_energy": 4.132872180455226
+    },
+    "K_proj": {
+      "low_freq_energy": 1.966847273949141,
+      "mid_freq_energy": 2.2819098949284102,
+      "high_freq_energy": 4.258911151476003
+    }
+  },
+  "29": {
+    "Q_proj": {
+      "low_freq_energy": 2.2606050268031472,
+      "mid_freq_energy": 2.7572198050554597,
+      "high_freq_energy": 4.700063726928293
+    },
+    "K_proj": {
+      "low_freq_energy": 2.4134776115777195,
+      "mid_freq_energy": 2.5597033546932635,
+      "high_freq_energy": 5.962772042887641
+    }
+  },
+  "30": {
+    "Q_proj": {
+      "low_freq_energy": 2.6150138899894766,
+      "mid_freq_energy": 2.854046587052291,
+      "high_freq_energy": 4.0904057534814555
+    },
+    "K_proj": {
+      "low_freq_energy": 1.7813666818277814,
+      "mid_freq_energy": 2.3666054129891094,
+      "high_freq_energy": 4.901188152267238
+    }
+  },
+  "31": {
+    "Q_proj": {
+      "low_freq_energy": 2.829801310317472,
+      "mid_freq_energy": 4.305996351721872,
+      "high_freq_energy": 4.2081607827894025
+    },
+    "K_proj": {
+      "low_freq_energy": 1.9597141950682468,
+      "mid_freq_energy": 3.7590519448806377,
+      "high_freq_energy": 4.099535353813392
+    }
+  }
+}
