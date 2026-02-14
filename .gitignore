@@ -27,6 +27,14 @@ artifacts/a800_2026-02-13/results/llama3_hybrid_lora/final_lora/*
 # Packaging artifacts
 **/*.tar.gz
 
+# Local sync/cache folders
+.tmp_sync/
+logs/
+
+# Keep quarantined weights out of version control
+results/_weights_quarantine/**
+!results/_weights_quarantine/README.md
+
 # Local secrets (never commit)
 .env
 .env.*

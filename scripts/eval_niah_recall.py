@@ -1,0 +1,527 @@
+#!/usr/bin/env python3
+"""
+Needle-In-A-Haystack recall evaluation (single-needle + multi-needle) for long contexts.
+
+Highlights:
+- Supports base model or base + LoRA adapter.
+- Supports single needle (`--needles_per_prompt 1`) and multi needle (`>1`) in one unified script.
+- Builds a depth x context-length accuracy matrix and saves a red-green heatmap.
+"""
+
+from __future__ import annotations
+
+import argparse
+import gc
+import json
+import logging
+import os
+import random
+import re
+import time
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
+
+import matplotlib
+import numpy as np
+import pandas as pd
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt  # noqa: E402
+
+try:
+    import seaborn as sns  # type: ignore
+except Exception:
+    sns = None
+
+try:
+    from peft import PeftModel
+except Exception:
+    PeftModel = None
+
+
+LOG = logging.getLogger("eval_niah_recall")
+
+
+def parse_int_list(text: str) -> List[int]:
+    return [int(x.strip()) for x in text.split(",") if x.strip()]
+
+
+def enforce_offline_mode() -> None:
+    os.environ.setdefault("HF_HUB_OFFLINE", "1")
+    os.environ.setdefault("HF_DATASETS_OFFLINE", "1")
+    os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+    os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+
+
+def setup_logging(log_path: Path) -> None:
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    LOG.setLevel(logging.INFO)
+    LOG.handlers.clear()
+
+    fmt = logging.Formatter(
+        fmt="%(asctime)s | %(levelname)s | %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+    sh = logging.StreamHandler()
+    sh.setFormatter(fmt)
+    LOG.addHandler(sh)
+    fh = logging.FileHandler(log_path, encoding="utf-8")
+    fh.setFormatter(fmt)
+    LOG.addHandler(fh)
+
+
+def build_parser() -> argparse.ArgumentParser:
+    ap = argparse.ArgumentParser(description="Evaluate NIAH single/multi needle recall and draw heatmap.")
+    ap.add_argument(
+        "--base_model_path",
+        type=str,
+        default="/root/autodl-tmp/dfrope/ms_models/LLM-Research/Meta-Llama-3-8B-Instruct",
+    )
+    ap.add_argument(
+        "--adapter_path",
+        type=str,
+        default="",
+        help="Optional LoRA adapter path. Ignored when --base_only is set.",
+    )
+    ap.add_argument("--base_only", action="store_true", help="Use base model without LoRA adapter.")
+    ap.add_argument("--merge_lora", action="store_true", help="Merge LoRA into base model if adapter is loaded.")
+    ap.add_argument("--output_dir", type=str, required=True)
+    ap.add_argument("--lengths", type=str, default="4096,8192,16384,32768")
+    ap.add_argument("--depths", type=str, default="0,10,20,30,40,50,60,70,80,90,100")
+    ap.add_argument("--trials_per_cell", type=int, default=1)
+    ap.add_argument("--needles_per_prompt", type=int, default=1)
+    ap.add_argument("--max_new_tokens", type=int, default=24)
+    ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument(
+        "--attn_implementation",
+        type=str,
+        default="auto",
+        choices=["auto", "flash_attention_2", "sdpa", "eager"],
+    )
+    ap.add_argument("--device_map", type=str, default="auto")
+    ap.add_argument("--trust_remote_code", action="store_true", default=True)
+    return ap
+
+
+def attn_candidates(mode: str) -> List[Optional[str]]:
+    if mode == "auto":
+        return ["flash_attention_2", "sdpa", None]
+    return [mode]
+
+
+def load_model_and_tokenizer(args: argparse.Namespace) -> Tuple[torch.nn.Module, AutoTokenizer, str]:
+    tokenizer = AutoTokenizer.from_pretrained(
+        args.base_model_path,
+        trust_remote_code=args.trust_remote_code,
+        local_files_only=True,
+    )
+    if tokenizer.pad_token_id is None:
+        if tokenizer.eos_token_id is not None:
+            tokenizer.pad_token = tokenizer.eos_token
+        else:
+            tokenizer.add_special_tokens({"pad_token": "<|pad|>"})
+    tokenizer.model_max_length = 10_000_000
+
+    model = None
+    used_attn = "default"
+    errs: List[str] = []
+    for attn in attn_candidates(args.attn_implementation):
+        try:
+            kwargs = dict(
+                torch_dtype=torch.bfloat16,
+                device_map=args.device_map,
+                trust_remote_code=args.trust_remote_code,
+                local_files_only=True,
+            )
+            if attn is not None:
+                kwargs["attn_implementation"] = attn
+            model = AutoModelForCausalLM.from_pretrained(args.base_model_path, **kwargs)
+            used_attn = attn or "default"
+            break
+        except Exception as e:
+            errs.append(f"attn={attn}: {type(e).__name__}: {e}")
+            gc.collect()
+            torch.cuda.empty_cache()
+
+    if model is None:
+        raise RuntimeError("Failed to load base model:\n" + "\n".join(errs))
+
+    if args.base_only:
+        LOG.info("Running in base-only mode.")
+    else:
+        if not args.adapter_path:
+            raise ValueError("adapter_path is empty but base_only is False.")
+        if PeftModel is None:
+            raise RuntimeError("peft is not installed in this environment.")
+        adapter_path = Path(args.adapter_path)
+        if not adapter_path.exists():
+            raise FileNotFoundError(f"Adapter path not found: {adapter_path}")
+        has_weight = (adapter_path / "adapter_model.safetensors").exists() or (adapter_path / "adapter_model.bin").exists()
+        if not has_weight:
+            raise FileNotFoundError(
+                f"Adapter path exists but no weights found in {adapter_path}. "
+                "Expected adapter_model.safetensors or adapter_model.bin."
+            )
+        LOG.info("Loading adapter: %s", adapter_path)
+        model = PeftModel.from_pretrained(model, str(adapter_path), is_trainable=False)
+        if args.merge_lora:
+            LOG.info("Merging adapter into base model.")
+            model = model.merge_and_unload()
+
+    model.eval()
+    return model, tokenizer, used_attn
+
+
+def model_main_device(model: torch.nn.Module) -> torch.device:
+    try:
+        return next(model.parameters()).device
+    except Exception:
+        return torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+
+def random_passkey(rng: random.Random) -> str:
+    return str(rng.randint(100000, 999999))
+
+
+def build_needle_sentence(needle_id: int, value: str) -> str:
+    return f" [Fact {needle_id}] The secret code for id {needle_id} is {value}. "
+
+
+def build_prompt_ids(
+    tokenizer: AutoTokenizer,
+    context_len: int,
+    depth_percent: int,
+    needles_per_prompt: int,
+    rng: random.Random,
+) -> Tuple[List[int], str, Dict]:
+    if needles_per_prompt < 1:
+        raise ValueError("needles_per_prompt must be >= 1")
+
+    target_id = rng.randint(1, needles_per_prompt)
+    facts = []
+    fact_ids = []
+    for i in range(1, needles_per_prompt + 1):
+        val = random_passkey(rng)
+        fact_ids.append((i, val))
+        facts.append(tokenizer.encode(build_needle_sentence(i, val), add_special_tokens=False))
+
+    target_value = next(v for i, v in fact_ids if i == target_id)
+    instruction = (
+        "Read the long context carefully.\n"
+        "It contains secret codes for different ids.\n"
+        "Return only the code for the asked id.\n\n"
+    )
+    question = f"\nQuestion: What is the secret code for id {target_id}?\nAnswer:"
+
+    prefix_ids = tokenizer.encode(instruction, add_special_tokens=False)
+    suffix_ids = tokenizer.encode(question, add_special_tokens=False)
+    bos = [tokenizer.bos_token_id] if tokenizer.bos_token_id is not None else []
+
+    needle_token_total = sum(len(x) for x in facts)
+    non_filler = len(bos) + len(prefix_ids) + len(suffix_ids) + needle_token_total
+    if non_filler >= context_len:
+        raise ValueError(
+            f"context_len={context_len} too small for prompt template and {needles_per_prompt} needles "
+            f"(non_filler_tokens={non_filler})"
+        )
+
+    filler_budget = context_len - non_filler
+    filler_unit = tokenizer.encode(
+        " This is generic background content without useful codes.",
+        add_special_tokens=False,
+    )
+    if not filler_unit:
+        filler_unit = [tokenizer.eos_token_id or 0]
+    filler = (filler_unit * (filler_budget // len(filler_unit) + 1))[:filler_budget]
+
+    target_pos = int(round((depth_percent / 100.0) * max(0, filler_budget - 1)))
+    all_positions = []
+    for idx in range(needles_per_prompt):
+        if idx + 1 == target_id:
+            all_positions.append(target_pos)
+        else:
+            all_positions.append(rng.randint(0, max(0, filler_budget - 1)))
+
+    merged: List[int] = []
+    cursor = 0
+    insert_plan = sorted([(all_positions[i], i) for i in range(len(facts))], key=lambda x: x[0])
+    for pos, fact_idx in insert_plan:
+        pos = max(0, min(pos, len(filler)))
+        merged.extend(filler[cursor:pos])
+        merged.extend(facts[fact_idx])
+        cursor = pos
+    merged.extend(filler[cursor:])
+
+    prompt_ids = bos + prefix_ids + merged + suffix_ids
+    if len(prompt_ids) > context_len:
+        prompt_ids = prompt_ids[:context_len]
+    elif len(prompt_ids) < context_len:
+        pad_id = tokenizer.eos_token_id if tokenizer.eos_token_id is not None else 0
+        prompt_ids = prompt_ids + [pad_id] * (context_len - len(prompt_ids))
+
+    meta = {
+        "target_id": target_id,
+        "target_value": target_value,
+        "facts": fact_ids,
+        "target_depth_percent": depth_percent,
+    }
+    return prompt_ids, target_value, meta
+
+
+def extract_candidate_codes(text: str) -> List[str]:
+    return re.findall(r"\d{5,10}", text)
+
+
+@torch.no_grad()
+def run_trial(
+    model: torch.nn.Module,
+    tokenizer: AutoTokenizer,
+    context_len: int,
+    depth_percent: int,
+    needles_per_prompt: int,
+    max_new_tokens: int,
+    rng: random.Random,
+) -> Dict:
+    prompt_ids, target_value, meta = build_prompt_ids(
+        tokenizer=tokenizer,
+        context_len=context_len,
+        depth_percent=depth_percent,
+        needles_per_prompt=needles_per_prompt,
+        rng=rng,
+    )
+    device = model_main_device(model)
+    x = torch.tensor(prompt_ids, dtype=torch.long, device=device).unsqueeze(0)
+    mask = torch.ones_like(x, dtype=torch.long)
+
+    out = model.generate(
+        input_ids=x,
+        attention_mask=mask,
+        max_new_tokens=max_new_tokens,
+        do_sample=False,
+        temperature=None,
+        top_p=None,
+        pad_token_id=tokenizer.eos_token_id,
+        eos_token_id=tokenizer.eos_token_id,
+        use_cache=True,
+    )
+    gen_ids = out[0, x.shape[1] :]
+    text = tokenizer.decode(gen_ids, skip_special_tokens=True)
+    codes = extract_candidate_codes(text)
+    pred = codes[0] if codes else None
+    correct = target_value in codes
+    return {
+        "context_len": context_len,
+        "depth_percent": depth_percent,
+        "needles_per_prompt": needles_per_prompt,
+        "target_value": target_value,
+        "pred": pred,
+        "all_codes": codes,
+        "generation": text,
+        "correct": correct,
+        "meta": meta,
+    }
+
+
+@torch.no_grad()
+def evaluate_matrix(
+    model: torch.nn.Module,
+    tokenizer: AutoTokenizer,
+    lengths: List[int],
+    depths: List[int],
+    trials_per_cell: int,
+    needles_per_prompt: int,
+    max_new_tokens: int,
+    seed: int,
+) -> Tuple[pd.DataFrame, Dict]:
+    matrix = np.full((len(depths), len(lengths)), np.nan, dtype=np.float32)
+    raw: Dict = {
+        "meta": {
+            "lengths": lengths,
+            "depths": depths,
+            "trials_per_cell": trials_per_cell,
+            "needles_per_prompt": needles_per_prompt,
+            "max_new_tokens": max_new_tokens,
+            "seed": seed,
+        },
+        "cells": {},
+    }
+
+    rng = random.Random(seed)
+    skip_len = False
+    for col, L in enumerate(lengths):
+        key_len = str(L)
+        raw["cells"][key_len] = {}
+        if skip_len:
+            for d in depths:
+                raw["cells"][key_len][str(d)] = {"status": "skipped_due_to_oom", "accuracy": None, "trials": []}
+            continue
+
+        for row, d in enumerate(depths):
+            key_depth = str(d)
+            raw["cells"][key_len][key_depth] = {"trials": []}
+            correct = 0
+            total = 0
+            status = "ok"
+            LOG.info("Cell start: length=%d depth=%d%% needles=%d", L, d, needles_per_prompt)
+
+            for t in range(trials_per_cell):
+                try:
+                    rec = run_trial(
+                        model=model,
+                        tokenizer=tokenizer,
+                        context_len=L,
+                        depth_percent=d,
+                        needles_per_prompt=needles_per_prompt,
+                        max_new_tokens=max_new_tokens,
+                        rng=rng,
+                    )
+                    raw["cells"][key_len][key_depth]["trials"].append(rec)
+                    total += 1
+                    if rec["correct"]:
+                        correct += 1
+                except RuntimeError as e:
+                    if "out of memory" in str(e).lower():
+                        status = "oom"
+                        LOG.warning("OOM at length=%d depth=%d%% trial=%d", L, d, t)
+                        torch.cuda.empty_cache()
+                        skip_len = True
+                        break
+                    status = "error"
+                    raw["cells"][key_len][key_depth]["error"] = f"{type(e).__name__}: {e}"
+                    LOG.exception("RuntimeError at length=%d depth=%d%% trial=%d", L, d, t)
+                    break
+                except Exception as e:
+                    status = "error"
+                    raw["cells"][key_len][key_depth]["error"] = f"{type(e).__name__}: {e}"
+                    LOG.exception("Error at length=%d depth=%d%% trial=%d", L, d, t)
+                    break
+
+            raw["cells"][key_len][key_depth]["status"] = status
+            raw["cells"][key_len][key_depth]["correct"] = correct
+            raw["cells"][key_len][key_depth]["total"] = total
+            if total > 0:
+                acc = correct / total
+                raw["cells"][key_len][key_depth]["accuracy"] = acc
+                matrix[row, col] = acc
+                LOG.info("Cell done: length=%d depth=%d%% acc=%.3f (%d/%d)", L, d, acc, correct, total)
+            else:
+                raw["cells"][key_len][key_depth]["accuracy"] = None
+
+    df = pd.DataFrame(
+        matrix,
+        index=[f"{d}%" for d in depths],
+        columns=[str(l) for l in lengths],
+    )
+    return df, raw
+
+
+def save_heatmap(df: pd.DataFrame, pdf_path: Path, png_path: Path, title: str) -> None:
+    plt.figure(figsize=(10, 7))
+    if sns is not None:
+        sns.heatmap(
+            df,
+            cmap="RdYlGn",
+            vmin=0.0,
+            vmax=1.0,
+            annot=True,
+            fmt=".2f",
+            linewidths=0.4,
+            linecolor="white",
+            cbar_kws={"label": "Recall / Accuracy"},
+        )
+    else:
+        ax = plt.gca()
+        arr = df.values.astype(np.float32)
+        im = ax.imshow(arr, cmap="RdYlGn", vmin=0.0, vmax=1.0, aspect="auto")
+        ax.set_xticks(np.arange(len(df.columns)))
+        ax.set_xticklabels(df.columns)
+        ax.set_yticks(np.arange(len(df.index)))
+        ax.set_yticklabels(df.index)
+        for r in range(arr.shape[0]):
+            for c in range(arr.shape[1]):
+                v = arr[r, c]
+                text = "nan" if np.isnan(v) else f"{v:.2f}"
+                ax.text(c, r, text, ha="center", va="center", fontsize=8)
+        plt.colorbar(im, ax=ax, label="Recall / Accuracy")
+        LOG.warning("seaborn unavailable; used matplotlib fallback.")
+
+    plt.title(title, fontsize=13)
+    plt.xlabel("Context Length")
+    plt.ylabel("Target Needle Depth")
+    plt.tight_layout()
+    plt.savefig(pdf_path, dpi=300)
+    plt.savefig(png_path, dpi=300)
+    plt.close()
+
+
+def main() -> None:
+    args = build_parser().parse_args()
+    enforce_offline_mode()
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    setup_logging(output_dir / "niah_recall.log")
+
+    lengths = sorted(set(parse_int_list(args.lengths)))
+    depths = sorted(set(parse_int_list(args.depths)))
+    if any(x <= 0 for x in lengths):
+        raise ValueError("All lengths must be > 0")
+    if any(d < 0 or d > 100 for d in depths):
+        raise ValueError("Depths must be in [0, 100]")
+    if args.needles_per_prompt < 1:
+        raise ValueError("needles_per_prompt must be >= 1")
+
+    LOG.info("Loading model...")
+    model, tokenizer, attn_used = load_model_and_tokenizer(args)
+    LOG.info("Model ready. attn=%s", attn_used)
+    LOG.info("Lengths=%s Depths=%s", lengths, depths)
+
+    df, raw = evaluate_matrix(
+        model=model,
+        tokenizer=tokenizer,
+        lengths=lengths,
+        depths=depths,
+        trials_per_cell=args.trials_per_cell,
+        needles_per_prompt=args.needles_per_prompt,
+        max_new_tokens=args.max_new_tokens,
+        seed=args.seed,
+    )
+
+    title = f"NIAH Recall (needles={args.needles_per_prompt})"
+    pdf_path = output_dir / "niah_recall_heatmap.pdf"
+    png_path = output_dir / "niah_recall_heatmap.png"
+    save_heatmap(df, pdf_path, png_path, title=title)
+
+    payload = {
+        "meta": {
+            "timestamp": time.strftime("%Y-%m-%d_%H:%M:%S"),
+            "base_model_path": args.base_model_path,
+            "adapter_path": None if args.base_only else args.adapter_path,
+            "base_only": args.base_only,
+            "merge_lora": args.merge_lora,
+            "attn_used": attn_used,
+            "lengths": lengths,
+            "depths": depths,
+            "trials_per_cell": args.trials_per_cell,
+            "needles_per_prompt": args.needles_per_prompt,
+            "seed": args.seed,
+        },
+        "accuracy_matrix": df.to_dict(orient="index"),
+        "raw": raw,
+    }
+    (output_dir / "niah_recall_results.json").write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    LOG.info("Saved %s", pdf_path)
+    LOG.info("Saved %s", png_path)
+    LOG.info("Saved %s", output_dir / "niah_recall_results.json")
+
+    gc.collect()
+    torch.cuda.empty_cache()
+
+
+if __name__ == "__main__":
+    main()
+
