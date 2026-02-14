@@ -321,18 +321,19 @@ def main():
     # 加载数据
     train_dataset, tokenizer = load_training_data(args.seq_length, args.max_samples)
     
-    # 训练配置 - 96GB显存优化
-    # 350M@8192: 模型~5GB + 每样本~40GB激活
+    # 训练配置 - 96GB显存充分利用
+    # 700M@8192: 模型~2.2GB + 激活~20GB/batch (gradient_checkpointing)
+    # 有效batch=16 (4*4), max_steps=800
     training_args = TrainingArguments(
         output_dir=str(output_dir),
         max_steps=args.max_steps,
-        per_device_train_batch_size=2,  # 96GB显存支持batch=2
+        per_device_train_batch_size=4,  # 96GB显存支持700M+batch=4
         learning_rate=args.learning_rate,
         logging_steps=50,
         save_steps=1000,
         eval_steps=1000,
         bf16=True,  # 使用bf16替代fp16（与gradient_checkpointing兼容）
-        gradient_accumulation_steps=8,  # 有效batch=16
+        gradient_accumulation_steps=4,  # 有效batch=16
         warmup_steps=100,
         report_to="none",
         gradient_checkpointing=True,  # 启用梯度检查点节省显存
