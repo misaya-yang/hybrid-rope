@@ -341,7 +341,7 @@ def main():
         model=model,
         args=training_args,
         train_dataset=train_dataset,
-        tokenizer=tokenizer,
+        processing_class=tokenizer,  # 新版transformers使用processing_class
         data_collator=DataCollatorForLanguageModeling(tokenizer, mlm=False),
     )
     
