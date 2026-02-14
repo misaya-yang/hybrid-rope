@@ -336,12 +336,11 @@ def main():
         report_to="none",
     )
     
-    # 训练器
+    # 训练器 - 不传tokenizer参数，使用data_collator处理
     trainer = Trainer(
         model=model,
         args=training_args,
         train_dataset=train_dataset,
-        processing_class=tokenizer,  # 新版transformers使用processing_class
         data_collator=DataCollatorForLanguageModeling(tokenizer, mlm=False),
     )
     
