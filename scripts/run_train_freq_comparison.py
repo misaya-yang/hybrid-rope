@@ -122,10 +122,10 @@ def create_model(model_size='350m', freq_type='orig', **freq_kwargs):
     """
     # 模型配置映射 - 基于Qwen2.5架构
     configs = {
-        '125m': {'num_hidden_layers': 12, 'num_attention_heads': 12, 'hidden_size': 768, 'intermediate_size': 2048},
-        '350m': {'num_hidden_layers': 24, 'num_attention_heads': 16, 'hidden_size': 1024, 'intermediate_size': 2816},
-        '500m': {'num_hidden_layers': 24, 'num_attention_heads': 16, 'hidden_size': 1280, 'intermediate_size': 3520},
-        '700m': {'num_hidden_layers': 32, 'num_attention_heads': 16, 'hidden_size': 1536, 'intermediate_size': 4224},
+        '125m': {'num_hidden_layers': 12, 'num_attention_heads': 12, 'hidden_size': 768, 'intermediate_size': 2048, 'num_key_value_heads': 4},
+        '350m': {'num_hidden_layers': 24, 'num_attention_heads': 16, 'hidden_size': 1024, 'intermediate_size': 2816, 'num_key_value_heads': 4},
+        '500m': {'num_hidden_layers': 24, 'num_attention_heads': 16, 'hidden_size': 1280, 'intermediate_size': 3520, 'num_key_value_heads': 4},
+        '700m': {'num_hidden_layers': 28, 'num_attention_heads': 16, 'hidden_size': 1536, 'intermediate_size': 4096, 'num_key_value_heads': 4},
     }
     
     if model_size not in configs:
