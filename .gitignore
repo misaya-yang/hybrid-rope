@@ -26,3 +26,11 @@ artifacts/a800_2026-02-13/results/llama3_hybrid_lora/final_lora/*
 
 # Packaging artifacts
 **/*.tar.gz
+
+# Local secrets (never commit)
+.env
+.env.*
+secrets/
+.secrets/
+*.pw
+*.pw.txt

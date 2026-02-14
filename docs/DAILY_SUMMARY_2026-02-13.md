@@ -117,10 +117,10 @@
 
 ```bash
 # 查看第二轮实验进度
-C:\Users\Admin\.ssh\plink.exe -batch -ssh -P 42581 root@connect.bjb1.seetacloud.com -pw htG0sD63/yG0 "tail -30 /root/autodl-tmp/dfrope/hybrid-rope/results/night_run_9h_extended/run.log"
+C:\Users\Admin\.ssh\plink.exe -batch -ssh -P 42581 root@connect.bjb1.seetacloud.com -pw <REDACTED> "tail -30 /root/autodl-tmp/dfrope/hybrid-rope/results/night_run_9h_extended/run.log"
 
 # 检查进程状态
-C:\Users\Admin\.ssh\plink.exe -batch -ssh -P 42581 root@connect.bjb1.seetacloud.com -pw htG0sD63/yG0 "ps aux | grep 30185"
+C:\Users\Admin\.ssh\plink.exe -batch -ssh -P 42581 root@connect.bjb1.seetacloud.com -pw <REDACTED> "ps aux | grep 30185"
 ```
 
 ---

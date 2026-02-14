@@ -1,23 +1,31 @@
 #!/usr/bin/env python3
-import subprocess
-import base64
+"""
+Upload the current local script to the server copy of this repo.
+
+Default: scripts/run_llama_theta_matched.py
+"""
+
+from __future__ import annotations
+
 import sys
 
-# Read script
-with open(r'e:\rope\hybrid-rope\scripts\run_llama_theta_matched.py', 'rb') as f:
-    data = base64.b64encode(f.read()).decode()
+from seetacloud_plink import upload_file_base64
 
-# Create command without problematic characters
-ssh_cmd = [
-    r'C:\Users\Admin\.ssh\plink.exe',
-    '-batch', '-ssh', '-P', '42581',
-    'root@connect.bjb1.seetacloud.com',
-    '-pw', 'htG0sD63/yG0',
-    f'echo {data} | base64 -d > /root/autodl-tmp/dfrope/hybrid-rope/scripts/run_llama_theta_matched.py'
-]
 
-result = subprocess.run(ssh_cmd, capture_output=True, text=True)
-print(f'stdout: {result.stdout}')
-print(f'stderr: {result.stderr}')
-print(f'returncode: {result.returncode}')
-print('Upload complete')
+def main() -> None:
+    local_path = r"e:\rope\hybrid-rope\scripts\run_llama_theta_matched.py"
+    remote_path = "/root/autodl-tmp/dfrope/hybrid-rope/scripts/run_llama_theta_matched.py"
+
+    if len(sys.argv) == 3:
+        local_path = sys.argv[1]
+        remote_path = sys.argv[2]
+    elif len(sys.argv) != 1:
+        raise SystemExit("Usage: python upload_script.py [local_path remote_path]")
+
+    upload_file_base64(local_path, remote_path)
+    print("Upload complete")
+
+
+if __name__ == "__main__":
+    main()
+

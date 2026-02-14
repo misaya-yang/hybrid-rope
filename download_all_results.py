@@ -1,24 +1,67 @@
-import subprocess
-import os
+#!/usr/bin/env python3
+"""
+Download multiple result directories from the server without pscp/scp.
 
-# 下载所有今天的结果目录
-results_dirs = [
-    'night_run_anchored_x20_9h',
-    'night_run_9h_extended', 
-    'anchored_sigmoid_v3_followup',
-    'advisor_followup_2026-02-14'
+Implementation: tar.gz -> base64 over plink -> extract locally.
+
+Requires:
+  - $env:SEETACLOUD_SSH_PW set (see seetacloud_plink.py)
+"""
+
+from __future__ import annotations
+
+import tarfile
+from pathlib import Path
+
+from seetacloud_plink import download_dir_tar_gz_base64
+
+
+RESULTS_DIRS = [
+    "night_run_anchored_x20_9h",
+    "night_run_9h_extended",
+    "anchored_sigmoid_v3_followup",
+    "advisor_followup_2026-02-14",
+    "qwen_hybrid_lora",
+    "evidence_chain_50m_3cfg3seed",
+    "cross_model_wikitext_v1",
 ]
 
-for dir_name in results_dirs:
-    local_path = f'e:/rope/hybrid-rope/results/{dir_name}'
-    os.makedirs(local_path, exist_ok=True)
-    
-    # 使用pscp下载
-    cmd = f'C:\\Users\\Admin\\.ssh\\pscp.exe -r -P 42581 -pw htG0sD63/yG0 root@connect.bjb1.seetacloud.com:/root/autodl-tmp/dfrope/hybrid-rope/results/{dir_name}/* e:/rope/hybrid-rope/results/{dir_name}/'
-    print(f"Downloading {dir_name}...")
-    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-    print(f"  Return code: {result.returncode}")
-    if result.returncode != 0:
-        print(f"  Error: {result.stderr[:200]}")
 
-print("\nDone! Check e:/rope/hybrid-rope/results/")
+def main() -> None:
+    repo_root = Path(r"e:/rope/hybrid-rope")
+    local_results = repo_root / "results"
+    local_results.mkdir(parents=True, exist_ok=True)
+
+    remote_results_root = "/root/autodl-tmp/dfrope/hybrid-rope/results"
+
+    for d in RESULTS_DIRS:
+        print(f"Downloading {d}...")
+        remote_dir = f"{remote_results_root}/{d}"
+        tar_path = local_results / f"{d}.tar.gz"
+
+        try:
+            download_dir_tar_gz_base64(remote_dir, tar_path)
+        except Exception as exc:
+            print(f"  Failed to download {d}: {exc}")
+            continue
+
+        try:
+            with tarfile.open(tar_path, "r:gz") as tf:
+                # Extract into results/{d}/...
+                out_dir = local_results / d
+                out_dir.mkdir(parents=True, exist_ok=True)
+                tf.extractall(path=out_dir)
+        finally:
+            try:
+                tar_path.unlink()
+            except OSError:
+                pass
+
+        print(f"  Extracted to {local_results / d}")
+
+    print("\nDone!")
+
+
+if __name__ == "__main__":
+    main()
+

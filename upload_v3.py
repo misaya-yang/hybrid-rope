@@ -1,20 +1,14 @@
 #!/usr/bin/env python3
-import subprocess
-import base64
+from seetacloud_plink import upload_file_base64
 
-# Read sigmoid v3 script
-with open(r'e:\rope\hybrid-rope\scripts\run_sigmoid_v3.py', 'rb') as f:
-    data = base64.b64encode(f.read()).decode()
 
-# Upload
-ssh_cmd = [
-    r'C:\Users\Admin\.ssh\plink.exe',
-    '-batch', '-ssh', '-P', '42581',
-    'root@connect.bjb1.seetacloud.com',
-    '-pw', 'htG0sD63/yG0',
-    f'echo {data} | base64 -d > /root/autodl-tmp/dfrope/hybrid-rope/scripts/run_sigmoid_v3.py'
-]
+def main() -> None:
+    local_path = r"e:\rope\hybrid-rope\scripts\run_sigmoid_v3.py"
+    remote_path = "/root/autodl-tmp/dfrope/hybrid-rope/scripts/run_sigmoid_v3.py"
+    upload_file_base64(local_path, remote_path)
+    print("Upload complete")
 
-result = subprocess.run(ssh_cmd, capture_output=True, text=True)
-print(f'returncode: {result.returncode}')
-print('Upload complete')
+
+if __name__ == "__main__":
+    main()
+
