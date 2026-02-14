@@ -321,19 +321,21 @@ def main():
     # 加载数据
     train_dataset, tokenizer = load_training_data(args.seq_length, args.max_samples)
     
-    # 训练配置
+    # 训练配置 - 96GB显存优化
+    # 350M@8192: 模型~5GB + 每样本~40GB激活
     training_args = TrainingArguments(
         output_dir=str(output_dir),
         max_steps=args.max_steps,
-        per_device_train_batch_size=args.batch_size,
+        per_device_train_batch_size=2,  # 96GB显存支持batch=2
         learning_rate=args.learning_rate,
-        logging_steps=100,
+        logging_steps=50,
         save_steps=1000,
         eval_steps=1000,
         fp16=True,
-        gradient_accumulation_steps=4,
-        warmup_steps=500,
+        gradient_accumulation_steps=8,  # 有效batch=16
+        warmup_steps=100,
         report_to="none",
+        gradient_checkpointing=True,  # 启用梯度检查点节省显存
     )
     
     # 训练器 - 不传tokenizer参数，使用data_collator处理
