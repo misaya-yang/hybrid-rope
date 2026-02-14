@@ -331,7 +331,7 @@ def main():
         logging_steps=50,
         save_steps=1000,
         eval_steps=1000,
-        fp16=True,
+        bf16=True,  # 使用bf16替代fp16（与gradient_checkpointing兼容）
         gradient_accumulation_steps=8,  # 有效batch=16
         warmup_steps=100,
         report_to="none",
