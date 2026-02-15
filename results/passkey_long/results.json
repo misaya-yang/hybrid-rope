@@ -1,0 +1,149 @@
+{
+  "1024": {
+    "accuracy": 1.0,
+    "ppl": 2.885,
+    "mem_gb": 17.51,
+    "status": "ok"
+  },
+  "2048": {
+    "accuracy": 1.0,
+    "ppl": 2.272,
+    "mem_gb": 18.87,
+    "status": "ok"
+  },
+  "3072": {
+    "accuracy": 1.0,
+    "ppl": 2.116,
+    "mem_gb": 20.28,
+    "status": "ok"
+  },
+  "4096": {
+    "accuracy": 1.0,
+    "ppl": 2.043,
+    "mem_gb": 21.62,
+    "status": "ok"
+  },
+  "5120": {
+    "accuracy": 1.0,
+    "ppl": 2.004,
+    "mem_gb": 23.01,
+    "status": "ok"
+  },
+  "6144": {
+    "accuracy": 1.0,
+    "ppl": 1.97,
+    "mem_gb": 24.4,
+    "status": "ok"
+  },
+  "7168": {
+    "accuracy": 1.0,
+    "ppl": 1.951,
+    "mem_gb": 25.8,
+    "status": "ok"
+  },
+  "8192": {
+    "accuracy": 1.0,
+    "ppl": 1.93,
+    "mem_gb": 27.18,
+    "status": "ok"
+  },
+  "10240": {
+    "accuracy": 1.0,
+    "ppl": 1.903,
+    "mem_gb": 29.88,
+    "status": "ok"
+  },
+  "12288": {
+    "accuracy": null,
+    "ppl": 1.915,
+    "mem_gb": 32.71,
+    "status": "ok"
+  },
+  "14336": {
+    "accuracy": null,
+    "ppl": 2.297,
+    "mem_gb": 35.37,
+    "status": "ok"
+  },
+  "16384": {
+    "accuracy": null,
+    "ppl": 2.995,
+    "mem_gb": 38.12,
+    "status": "ok"
+  },
+  "18432": {
+    "accuracy": null,
+    "ppl": 4.055,
+    "mem_gb": 40.93,
+    "status": "ok"
+  },
+  "20480": {
+    "accuracy": null,
+    "ppl": 5.514,
+    "mem_gb": 43.54,
+    "status": "ok"
+  },
+  "22528": {
+    "accuracy": null,
+    "ppl": 7.441,
+    "mem_gb": 46.52,
+    "status": "ok"
+  },
+  "24576": {
+    "accuracy": null,
+    "ppl": 9.542,
+    "mem_gb": 49.25,
+    "status": "ok"
+  },
+  "26624": {
+    "accuracy": null,
+    "ppl": 12.678,
+    "mem_gb": 51.87,
+    "status": "ok"
+  },
+  "28672": {
+    "accuracy": null,
+    "ppl": 17.27,
+    "mem_gb": 54.77,
+    "status": "ok"
+  },
+  "30720": {
+    "accuracy": null,
+    "ppl": 24.477,
+    "mem_gb": 57.52,
+    "status": "ok"
+  },
+  "32768": {
+    "accuracy": null,
+    "ppl": 32.533,
+    "mem_gb": 60.14,
+    "status": "ok"
+  },
+  "36864": {
+    "accuracy": null,
+    "ppl": 51.453,
+    "mem_gb": 65.66,
+    "status": "ok"
+  },
+  "40960": {
+    "accuracy": null,
+    "ppl": 69.736,
+    "mem_gb": 71.19,
+    "status": "ok"
+  },
+  "45056": {
+    "accuracy": null,
+    "ppl": 89.684,
+    "mem_gb": 76.74,
+    "status": "ok"
+  },
+  "49152": {
+    "status": "OOM"
+  },
+  "53248": {
+    "accuracy": null,
+    "ppl": 172.527,
+    "mem_gb": 87.77,
+    "status": "ok"
+  }
+}

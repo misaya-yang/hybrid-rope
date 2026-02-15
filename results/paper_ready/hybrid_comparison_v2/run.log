@@ -1,0 +1,54 @@
+[2026-02-14 11:40:32] ============================================================
+[2026-02-14 11:40:32] RoPE Scaling 对比实验 - 修复版
+[2026-02-14 11:40:32] ============================================================
+[2026-02-14 11:40:32] [MODEL] Loading tokenizer...
+[2026-02-14 11:40:33] 
+============================================================
+[2026-02-14 11:40:33] [CONFIG] Testing baseline...
+[2026-02-14 11:40:33] ============================================================
+`torch_dtype` is deprecated! Use `dtype` instead!
+[2026-02-14 11:40:34] [ERROR] Failed to load model with baseline: 'NoneType' object is not subscriptable
+[2026-02-14 11:40:34] 
+============================================================
+[2026-02-14 11:40:34] [CONFIG] Testing linear_2x...
+[2026-02-14 11:40:34]   rope_scaling: {'rope_type': 'linear', 'factor': 2.0}
+[2026-02-14 11:40:34] ============================================================
+[2026-02-14 11:40:34] [ERROR] Failed to load model with linear_2x: unsupported operand type(s) for ** or pow(): 'NoneType' and 'Tensor'
+[2026-02-14 11:40:34] 
+============================================================
+[2026-02-14 11:40:34] [CONFIG] Testing linear_4x...
+[2026-02-14 11:40:34]   rope_scaling: {'rope_type': 'linear', 'factor': 4.0}
+[2026-02-14 11:40:34] ============================================================
+[2026-02-14 11:40:34] [ERROR] Failed to load model with linear_4x: unsupported operand type(s) for ** or pow(): 'NoneType' and 'Tensor'
+[2026-02-14 11:40:34] 
+============================================================
+[2026-02-14 11:40:34] [CONFIG] Testing dynamic_2x...
+[2026-02-14 11:40:34]   rope_scaling: {'rope_type': 'dynamic', 'factor': 2.0}
+[2026-02-14 11:40:34] ============================================================
+[2026-02-14 11:40:34] [ERROR] Failed to load model with dynamic_2x: unsupported operand type(s) for *: 'NoneType' and 'float'
+[2026-02-14 11:40:34] 
+============================================================
+[2026-02-14 11:40:34] [CONFIG] Testing dynamic_4x...
+[2026-02-14 11:40:34]   rope_scaling: {'rope_type': 'dynamic', 'factor': 4.0}
+[2026-02-14 11:40:34] ============================================================
+[2026-02-14 11:40:34] [ERROR] Failed to load model with dynamic_4x: unsupported operand type(s) for *: 'NoneType' and 'float'
+[2026-02-14 11:40:34] 
+============================================================
+[2026-02-14 11:40:34] [CONFIG] Testing yarn_2x...
+[2026-02-14 11:40:34]   rope_scaling: {'rope_type': 'yarn', 'factor': 2.0, 'original_max_position_embeddings': 8192}
+[2026-02-14 11:40:34] ============================================================
+[2026-02-14 11:40:34] [ERROR] Failed to load model with yarn_2x: unsupported operand type(s) for ** or pow(): 'NoneType' and 'Tensor'
+[2026-02-14 11:40:34] 
+============================================================
+[2026-02-14 11:40:34] [CONFIG] Testing yarn_4x...
+[2026-02-14 11:40:34]   rope_scaling: {'rope_type': 'yarn', 'factor': 4.0, 'original_max_position_embeddings': 8192}
+[2026-02-14 11:40:34] ============================================================
+[2026-02-14 11:40:34] [ERROR] Failed to load model with yarn_4x: unsupported operand type(s) for ** or pow(): 'NoneType' and 'Tensor'
+[2026-02-14 11:40:34] 
+============================================================
+[2026-02-14 11:40:34] 生成对比报告...
+[2026-02-14 11:40:34] [TOTAL] 0.0 minutes
+[2026-02-14 11:40:34] [DONE] 结果: /root/autodl-tmp/dfrope/hybrid-rope/results/hybrid_comparison_v2
+[2026-02-14 11:40:34] ============================================================
+-tmp/dfrope/hybrid-rope/results/hybrid_comparison_v2
+[2026-02-14 11:40:34] ============================================================

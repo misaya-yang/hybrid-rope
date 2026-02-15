@@ -52,12 +52,21 @@ def run_cmd(cmd: List[str], cwd: Path, env: Dict[str, str], log_file: Path) -> i
 
 
 def suite_running() -> bool:
+    # Use `pgrep -af` and filter out the probe command itself.
+    # The previous shell-based probe could match its own argv and loop forever.
     p = subprocess.run(
-        ["bash", "-lc", "pgrep -f run_llama8b_fair_suite.py >/dev/null && echo 1 || echo 0"],
+        ["pgrep", "-af", "run_llama8b_fair_suite.py"],
         capture_output=True,
         text=True,
     )
-    return p.stdout.strip() == "1"
+    if p.returncode != 0:
+        return False
+    for line in p.stdout.splitlines():
+        if "pgrep -af run_llama8b_fair_suite.py" in line:
+            continue
+        if "run_llama8b_fair_suite.py" in line:
+            return True
+    return False
 
 
 def main() -> None:
@@ -81,8 +90,8 @@ def main() -> None:
     ap.add_argument("--variants", type=str, default="yarn,pi,hybrid,pi_soft")
     ap.add_argument("--wait_for_suite", action="store_true")
     ap.add_argument("--poll_seconds", type=int, default=120)
-    ap.add_argument("--run_niah", action="store_true", default=True)
-    ap.add_argument("--run_longbench", action="store_true", default=True)
+    ap.add_argument("--skip_niah", action="store_true", help="Skip NIAH evaluations.")
+    ap.add_argument("--skip_longbench", action="store_true", help="Skip LongBench evaluations.")
     ap.add_argument("--niah_lengths", type=str, default="4096,8192,16384,32768")
     ap.add_argument("--niah_depths", type=str, default="0,10,20,30,40,50,60,70,80,90,100")
     ap.add_argument("--niah_trials_per_cell", type=int, default=1)
@@ -134,8 +143,11 @@ def main() -> None:
         "longbench": {},
     }
 
+    run_niah = not args.skip_niah
+    run_longbench = not args.skip_longbench
+
     # NIAH evaluations
-    if args.run_niah:
+    if run_niah:
         # base single/multi
         for needles in [1, args.niah_multi_needles]:
             tag = f"base_needles{needles}"
@@ -195,7 +207,7 @@ def main() -> None:
                 manifest["niah"][tag] = {"rc": rc, "output_dir": str(out_dir), "adapter": str(apath)}
 
     # LongBench comparisons: base vs each adapter
-    if args.run_longbench:
+    if run_longbench:
         for v, apath in adapters.items():
             out_json = post_root / "longbench" / f"longbench_base_vs_{v}.json"
             cmd = [
@@ -227,4 +239,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

@@ -1,0 +1,53 @@
+{
+  "variant": "yarn",
+  "timestamp": "2026-02-14_23:49:54",
+  "base_model_path": "/root/autodl-tmp/dfrope/ms_models/LLM-Research/Meta-Llama-3-8B-Instruct",
+  "data_dir": "/root/autodl-tmp/wikitext_data",
+  "train": {
+    "seq_len": 8192,
+    "max_steps": 600,
+    "batch_size": 4,
+    "grad_accum": 1,
+    "learning_rate": 0.0002,
+    "warmup_steps": 30,
+    "train_hours": 1.4391,
+    "train_loss": 1.7247872638702393,
+    "train_runtime": 5180.3788,
+    "train_steps_per_second": 0.116
+  },
+  "rope": {
+    "factor": 8.0,
+    "orig_ctx": 8192,
+    "rope_scaling_used": {
+      "rope_type": "yarn",
+      "factor": 8.0,
+      "rope_theta": 500000.0,
+      "original_max_position_embeddings": 8192
+    },
+    "attn_used": "sdpa"
+  },
+  "eval_ppl": {
+    "16384": {
+      "mean_loss": 1.8011443138122558,
+      "ppl": 6.05657412194485,
+      "n": 5,
+      "std_loss": 0.06793607195271265
+    },
+    "32768": {
+      "mean_loss": 1.8358088731765747,
+      "ppl": 6.2702038945092005,
+      "n": 5,
+      "std_loss": 0.07493729920160058
+    },
+    "65536": {
+      "mean_loss": NaN,
+      "ppl": NaN,
+      "n": 0
+    }
+  },
+  "paths": {
+    "run_dir": "/root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_lora_suite_20260214/yarn",
+    "adapter_dir": "/root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_lora_suite_20260214/yarn/final_lora",
+    "log": "/root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_lora_suite_20260214/yarn/train.log"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "timestamp": "2026-02-15_10:44:06",
+    "base_model_path": "/root/autodl-tmp/dfrope/ms_models/LLM-Research/Meta-Llama-3-8B-Instruct",
+    "hybrid_adapter_path": "/root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_lora_suite_20260214/yarn/final_lora",
+    "tasks": [
+      "qasper",
+      "hotpotqa",
+      "gov_report"
+    ],
+    "max_samples_per_task": 100,
+    "max_input_tokens": 16384,
+    "attn_implementation": "sdpa"
+  },
+  "models": {
+    "base_unfinetuned": {
+      "attn_used": "sdpa",
+      "tasks": {
+        "qasper": {
+          "task": "qasper",
+          "error": "RuntimeError: Cannot load LongBench task=qasper. Tried configs=['qasper', 'qasper_e'].\ncfg=qasper: OfflineModeIsEnabled: Cannot reach https://huggingface.co/api/datasets/THUDM/LongBench/revision/main: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable.\ncfg=qasper_e: OfflineModeIsEnabled: Cannot reach https://huggingface.co/api/datasets/THUDM/LongBench/revision/main: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable.",
+          "score": null
+        },
+        "hotpotqa": {
+          "task": "hotpotqa",
+          "error": "RuntimeError: Cannot load LongBench task=hotpotqa. Tried configs=['hotpotqa', 'hotpotqa_e'].\ncfg=hotpotqa: OfflineModeIsEnabled: Cannot reach https://huggingface.co/api/datasets/THUDM/LongBench/revision/main: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable.\ncfg=hotpotqa_e: OfflineModeIsEnabled: Cannot reach https://huggingface.co/api/datasets/THUDM/LongBench/revision/main: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable.",
+          "score": null
+        },
+        "gov_report": {
+          "task": "gov_report",
+          "error": "RuntimeError: Cannot load LongBench task=gov_report. Tried configs=['gov_report', 'gov_report_e'].\ncfg=gov_report: OfflineModeIsEnabled: Cannot reach https://huggingface.co/api/datasets/THUDM/LongBench/revision/main: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable.\ncfg=gov_report_e: OfflineModeIsEnabled: Cannot reach https://huggingface.co/api/datasets/THUDM/LongBench/revision/main: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable.",
+          "score": null
+        }
+      }
+    },
+    "hybrid_lora": {
+      "attn_used": "sdpa",
+      "tasks": {
+        "qasper": {
+          "task": "qasper",
+          "error": "RuntimeError: Cannot load LongBench task=qasper. Tried configs=['qasper', 'qasper_e'].\ncfg=qasper: OfflineModeIsEnabled: Cannot reach https://huggingface.co/api/datasets/THUDM/LongBench/revision/main: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable.\ncfg=qasper_e: OfflineModeIsEnabled: Cannot reach https://huggingface.co/api/datasets/THUDM/LongBench/revision/main: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable.",
+          "score": null
+        },
+        "hotpotqa": {
+          "task": "hotpotqa",
+          "error": "RuntimeError: Cannot load LongBench task=hotpotqa. Tried configs=['hotpotqa', 'hotpotqa_e'].\ncfg=hotpotqa: OfflineModeIsEnabled: Cannot reach https://huggingface.co/api/datasets/THUDM/LongBench/revision/main: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable.\ncfg=hotpotqa_e: OfflineModeIsEnabled: Cannot reach https://huggingface.co/api/datasets/THUDM/LongBench/revision/main: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable.",
+          "score": null
+        },
+        "gov_report": {
+          "task": "gov_report",
+          "error": "RuntimeError: Cannot load LongBench task=gov_report. Tried configs=['gov_report', 'gov_report_e'].\ncfg=gov_report: OfflineModeIsEnabled: Cannot reach https://huggingface.co/api/datasets/THUDM/LongBench/revision/main: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable.\ncfg=gov_report_e: OfflineModeIsEnabled: Cannot reach https://huggingface.co/api/datasets/THUDM/LongBench/revision/main: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable.",
+          "score": null
+        }
+      }
+    }
+  },
+  "comparison": {
+    "qasper": {
+      "base_unfinetuned": null,
+      "hybrid_lora": null,
+      "delta_hybrid_minus_base": null
+    },
+    "hotpotqa": {
+      "base_unfinetuned": null,
+      "hybrid_lora": null,
+      "delta_hybrid_minus_base": null
+    },
+    "gov_report": {
+      "base_unfinetuned": null,
+      "hybrid_lora": null,
+      "delta_hybrid_minus_base": null
+    }
+  }
+}

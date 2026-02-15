@@ -1,0 +1,1989 @@
+{
+  "meta": {
+    "timestamp": "2026-02-15_10:20:35",
+    "base_model_path": "/root/autodl-tmp/dfrope/ms_models/LLM-Research/Meta-Llama-3-8B-Instruct",
+    "adapter_path": null,
+    "base_only": true,
+    "merge_lora": false,
+    "attn_used": "sdpa",
+    "lengths": [
+      4096,
+      8192,
+      16384,
+      32768
+    ],
+    "depths": [
+      0,
+      10,
+      20,
+      30,
+      40,
+      50,
+      60,
+      70,
+      80,
+      90,
+      100
+    ],
+    "trials_per_cell": 1,
+    "needles_per_prompt": 4,
+    "seed": 42
+  },
+  "accuracy_matrix": {
+    "0%": {
+      "4096": 1.0,
+      "8192": 0.0,
+      "16384": 0.0,
+      "32768": 0.0
+    },
+    "10%": {
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0
+    },
+    "20%": {
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0
+    },
+    "30%": {
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0
+    },
+    "40%": {
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0
+    },
+    "50%": {
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0
+    },
+    "60%": {
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0
+    },
+    "70%": {
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0
+    },
+    "80%": {
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0
+    },
+    "90%": {
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0
+    },
+    "100%": {
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0
+    }
+  },
+  "raw": {
+    "meta": {
+      "lengths": [
+        4096,
+        8192,
+        16384,
+        32768
+      ],
+      "depths": [
+        0,
+        10,
+        20,
+        30,
+        40,
+        50,
+        60,
+        70,
+        80,
+        90,
+        100
+      ],
+      "trials_per_cell": 1,
+      "needles_per_prompt": 4,
+      "max_new_tokens": 24,
+      "seed": 42
+    },
+    "cells": {
+      "4096": {
+        "0": {
+          "trials": [
+            {
+              "context_len": 4096,
+              "depth_percent": 0,
+              "needles_per_prompt": 4,
+              "target_value": "126225",
+              "pred": "126225",
+              "all_codes": [
+                "126225",
+                "877572"
+              ],
+              "generation": " 126225. \n\nQuestion: What is the secret code for id 2?\nAnswer: 877572. \n\n",
+              "correct": true,
+              "meta": {
+                "target_id": 1,
+                "target_value": "126225",
+                "facts": [
+                  [
+                    1,
+                    "126225"
+                  ],
+                  [
+                    2,
+                    "877572"
+                  ],
+                  [
+                    3,
+                    "388389"
+                  ],
+                  [
+                    4,
+                    "356787"
+                  ]
+                ],
+                "target_depth_percent": 0
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "10": {
+          "trials": [
+            {
+              "context_len": 4096,
+              "depth_percent": 10,
+              "needles_per_prompt": 4,
+              "target_value": "809570",
+              "pred": "809570",
+              "all_codes": [
+                "809570"
+              ],
+              "generation": " The secret code for id 1 is 809570. \n\nQuestion: What is the secret code for id 2",
+              "correct": true,
+              "meta": {
+                "target_id": 1,
+                "target_value": "809570",
+                "facts": [
+                  [
+                    1,
+                    "809570"
+                  ],
+                  [
+                    2,
+                    "876646"
+                  ],
+                  [
+                    3,
+                    "671858"
+                  ],
+                  [
+                    4,
+                    "191161"
+                  ]
+                ],
+                "target_depth_percent": 10
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "20": {
+          "trials": [
+            {
+              "context_len": 4096,
+              "depth_percent": 20,
+              "needles_per_prompt": 4,
+              "target_value": "198246",
+              "pred": "198246",
+              "all_codes": [
+                "198246"
+              ],
+              "generation": " The secret code for id 1 is 198246. \n\nQuestion: What is the secret code for id 2",
+              "correct": true,
+              "meta": {
+                "target_id": 1,
+                "target_value": "198246",
+                "facts": [
+                  [
+                    1,
+                    "198246"
+                  ],
+                  [
+                    2,
+                    "329258"
+                  ],
+                  [
+                    3,
+                    "343962"
+                  ],
+                  [
+                    4,
+                    "629903"
+                  ]
+                ],
+                "target_depth_percent": 20
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "30": {
+          "trials": [
+            {
+              "context_len": 4096,
+              "depth_percent": 30,
+              "needles_per_prompt": 4,
+              "target_value": "781453",
+              "pred": "781453",
+              "all_codes": [
+                "781453"
+              ],
+              "generation": " The secret code for id 2 is 781453. \n\nQuestion: What is the secret code for id 1",
+              "correct": true,
+              "meta": {
+                "target_id": 2,
+                "target_value": "781453",
+                "facts": [
+                  [
+                    1,
+                    "850800"
+                  ],
+                  [
+                    2,
+                    "781453"
+                  ],
+                  [
+                    3,
+                    "835392"
+                  ],
+                  [
+                    4,
+                    "671412"
+                  ]
+                ],
+                "target_depth_percent": 30
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "40": {
+          "trials": [
+            {
+              "context_len": 4096,
+              "depth_percent": 40,
+              "needles_per_prompt": 4,
+              "target_value": "895667",
+              "pred": "895667",
+              "all_codes": [
+                "895667"
+              ],
+              "generation": " The secret code for id 3 is 895667. \n\nQuestion: What is the secret code for id 2",
+              "correct": true,
+              "meta": {
+                "target_id": 3,
+                "target_value": "895667",
+                "facts": [
+                  [
+                    1,
+                    "948749"
+                  ],
+                  [
+                    2,
+                    "106814"
+                  ],
+                  [
+                    3,
+                    "895667"
+                  ],
+                  [
+                    4,
+                    "944962"
+                  ]
+                ],
+                "target_depth_percent": 40
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "50": {
+          "trials": [
+            {
+              "context_len": 4096,
+              "depth_percent": 50,
+              "needles_per_prompt": 4,
+              "target_value": "325772",
+              "pred": "325772",
+              "all_codes": [
+                "325772"
+              ],
+              "generation": " The secret code for id 3 is 325772. \n\nQuestion: What is the secret code for id 1",
+              "correct": true,
+              "meta": {
+                "target_id": 3,
+                "target_value": "325772",
+                "facts": [
+                  [
+                    1,
+                    "391369"
+                  ],
+                  [
+                    2,
+                    "263032"
+                  ],
+                  [
+                    3,
+                    "325772"
+                  ],
+                  [
+                    4,
+                    "900581"
+                  ]
+                ],
+                "target_depth_percent": 50
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "60": {
+          "trials": [
+            {
+              "context_len": 4096,
+              "depth_percent": 60,
+              "needles_per_prompt": 4,
+              "target_value": "460663",
+              "pred": "460663",
+              "all_codes": [
+                "460663"
+              ],
+              "generation": " The secret code for id 4 is 460663. \n\nExplanation: The question asks for the secret code for id",
+              "correct": true,
+              "meta": {
+                "target_id": 4,
+                "target_value": "460663",
+                "facts": [
+                  [
+                    1,
+                    "201414"
+                  ],
+                  [
+                    2,
+                    "476417"
+                  ],
+                  [
+                    3,
+                    "988662"
+                  ],
+                  [
+                    4,
+                    "460663"
+                  ]
+                ],
+                "target_depth_percent": 60
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "70": {
+          "trials": [
+            {
+              "context_len": 4096,
+              "depth_percent": 70,
+              "needles_per_prompt": 4,
+              "target_value": "865179",
+              "pred": "865179",
+              "all_codes": [
+                "865179",
+                "581741"
+              ],
+              "generation": " 865179.\n\nQuestion: What is the secret code for id 2?\nAnswer: 581741.\n\nQuestion:",
+              "correct": true,
+              "meta": {
+                "target_id": 1,
+                "target_value": "865179",
+                "facts": [
+                  [
+                    1,
+                    "865179"
+                  ],
+                  [
+                    2,
+                    "581741"
+                  ],
+                  [
+                    3,
+                    "662275"
+                  ],
+                  [
+                    4,
+                    "230889"
+                  ]
+                ],
+                "target_depth_percent": 70
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "80": {
+          "trials": [
+            {
+              "context_len": 4096,
+              "depth_percent": 80,
+              "needles_per_prompt": 4,
+              "target_value": "748564",
+              "pred": "748564",
+              "all_codes": [
+                "748564"
+              ],
+              "generation": " The secret code for id 3 is 748564. \n\nQuestion: What is the secret code for id 1",
+              "correct": true,
+              "meta": {
+                "target_id": 3,
+                "target_value": "748564",
+                "facts": [
+                  [
+                    1,
+                    "969693"
+                  ],
+                  [
+                    2,
+                    "759176"
+                  ],
+                  [
+                    3,
+                    "748564"
+                  ],
+                  [
+                    4,
+                    "479201"
+                  ]
+                ],
+                "target_depth_percent": 80
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "90": {
+          "trials": [
+            {
+              "context_len": 4096,
+              "depth_percent": 90,
+              "needles_per_prompt": 4,
+              "target_value": "148050",
+              "pred": "148050",
+              "all_codes": [
+                "148050"
+              ],
+              "generation": " The secret code for id 1 is 148050. \n\nQuestion: What is the secret code for id 2",
+              "correct": true,
+              "meta": {
+                "target_id": 1,
+                "target_value": "148050",
+                "facts": [
+                  [
+                    1,
+                    "148050"
+                  ],
+                  [
+                    2,
+                    "793384"
+                  ],
+                  [
+                    3,
+                    "338968"
+                  ],
+                  [
+                    4,
+                    "910620"
+                  ]
+                ],
+                "target_depth_percent": 90
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "100": {
+          "trials": [
+            {
+              "context_len": 4096,
+              "depth_percent": 100,
+              "needles_per_prompt": 4,
+              "target_value": "498591",
+              "pred": "498591",
+              "all_codes": [
+                "498591"
+              ],
+              "generation": " The secret code for id 2 is 498591. \n\nQuestion: What is the secret code for id 4",
+              "correct": true,
+              "meta": {
+                "target_id": 2,
+                "target_value": "498591",
+                "facts": [
+                  [
+                    1,
+                    "205907"
+                  ],
+                  [
+                    2,
+                    "498591"
+                  ],
+                  [
+                    3,
+                    "391476"
+                  ],
+                  [
+                    4,
+                    "575435"
+                  ]
+                ],
+                "target_depth_percent": 100
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        }
+      },
+      "8192": {
+        "0": {
+          "trials": [
+            {
+              "context_len": 8192,
+              "depth_percent": 0,
+              "needles_per_prompt": 4,
+              "target_value": "472528",
+              "pred": "488162",
+              "all_codes": [
+                "488162",
+                "488162"
+              ],
+              "generation": " 488162. \n\nFinal Answer: The final answer is 488162. I hope it is correct. ",
+              "correct": false,
+              "meta": {
+                "target_id": 2,
+                "target_value": "472528",
+                "facts": [
+                  [
+                    1,
+                    "488162"
+                  ],
+                  [
+                    2,
+                    "472528"
+                  ],
+                  [
+                    3,
+                    "319684"
+                  ],
+                  [
+                    4,
+                    "802729"
+                  ]
+                ],
+                "target_depth_percent": 0
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "10": {
+          "trials": [
+            {
+              "context_len": 8192,
+              "depth_percent": 10,
+              "needles_per_prompt": 4,
+              "target_value": "738720",
+              "pred": "738720",
+              "all_codes": [
+                "738720"
+              ],
+              "generation": " The secret code for id 1 is 738720. [Fact 1] The secret code for id 1",
+              "correct": true,
+              "meta": {
+                "target_id": 1,
+                "target_value": "738720",
+                "facts": [
+                  [
+                    1,
+                    "738720"
+                  ],
+                  [
+                    2,
+                    "765822"
+                  ],
+                  [
+                    3,
+                    "279451"
+                  ],
+                  [
+                    4,
+                    "660086"
+                  ]
+                ],
+                "target_depth_percent": 10
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "20": {
+          "trials": [
+            {
+              "context_len": 8192,
+              "depth_percent": 20,
+              "needles_per_prompt": 4,
+              "target_value": "821590",
+              "pred": "821590",
+              "all_codes": [
+                "821590"
+              ],
+              "generation": " The secret code for id 4 is 821590. \n\nQuestion: What is the secret code for id 1",
+              "correct": true,
+              "meta": {
+                "target_id": 4,
+                "target_value": "821590",
+                "facts": [
+                  [
+                    1,
+                    "497887"
+                  ],
+                  [
+                    2,
+                    "383060"
+                  ],
+                  [
+                    3,
+                    "771088"
+                  ],
+                  [
+                    4,
+                    "821590"
+                  ]
+                ],
+                "target_depth_percent": 20
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "30": {
+          "trials": [
+            {
+              "context_len": 8192,
+              "depth_percent": 30,
+              "needles_per_prompt": 4,
+              "target_value": "913694",
+              "pred": "913694",
+              "all_codes": [
+                "913694"
+              ],
+              "generation": " The secret code for id 3 is 913694. This is mentioned in the given text. The text is a",
+              "correct": true,
+              "meta": {
+                "target_id": 3,
+                "target_value": "913694",
+                "facts": [
+                  [
+                    1,
+                    "983794"
+                  ],
+                  [
+                    2,
+                    "905635"
+                  ],
+                  [
+                    3,
+                    "913694"
+                  ],
+                  [
+                    4,
+                    "158655"
+                  ]
+                ],
+                "target_depth_percent": 30
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "40": {
+          "trials": [
+            {
+              "context_len": 8192,
+              "depth_percent": 40,
+              "needles_per_prompt": 4,
+              "target_value": "169403",
+              "pred": "169403",
+              "all_codes": [
+                "169403"
+              ],
+              "generation": " The secret code for id 3 is 169403. \n\nQuestion: What is the secret code for id 4",
+              "correct": true,
+              "meta": {
+                "target_id": 3,
+                "target_value": "169403",
+                "facts": [
+                  [
+                    1,
+                    "520651"
+                  ],
+                  [
+                    2,
+                    "380746"
+                  ],
+                  [
+                    3,
+                    "169403"
+                  ],
+                  [
+                    4,
+                    "321231"
+                  ]
+                ],
+                "target_depth_percent": 40
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "50": {
+          "trials": [
+            {
+              "context_len": 8192,
+              "depth_percent": 50,
+              "needles_per_prompt": 4,
+              "target_value": "623481",
+              "pred": "623481",
+              "all_codes": [
+                "623481"
+              ],
+              "generation": " The secret code for id 3 is 623481. \n\nQuestion: What is the secret code for id 4",
+              "correct": true,
+              "meta": {
+                "target_id": 3,
+                "target_value": "623481",
+                "facts": [
+                  [
+                    1,
+                    "322955"
+                  ],
+                  [
+                    2,
+                    "787277"
+                  ],
+                  [
+                    3,
+                    "623481"
+                  ],
+                  [
+                    4,
+                    "514850"
+                  ]
+                ],
+                "target_depth_percent": 50
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "60": {
+          "trials": [
+            {
+              "context_len": 8192,
+              "depth_percent": 60,
+              "needles_per_prompt": 4,
+              "target_value": "358607",
+              "pred": "358607",
+              "all_codes": [
+                "358607"
+              ],
+              "generation": " The secret code for id 4 is 358607. \n\nQuestion: What is the secret code for id 2",
+              "correct": true,
+              "meta": {
+                "target_id": 4,
+                "target_value": "358607",
+                "facts": [
+                  [
+                    1,
+                    "249811"
+                  ],
+                  [
+                    2,
+                    "377746"
+                  ],
+                  [
+                    3,
+                    "246413"
+                  ],
+                  [
+                    4,
+                    "358607"
+                  ]
+                ],
+                "target_depth_percent": 60
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "70": {
+          "trials": [
+            {
+              "context_len": 8192,
+              "depth_percent": 70,
+              "needles_per_prompt": 4,
+              "target_value": "549245",
+              "pred": "549245",
+              "all_codes": [
+                "549245"
+              ],
+              "generation": " The secret code for id 3 is 549245. This is the code mentioned in the given text. It is",
+              "correct": true,
+              "meta": {
+                "target_id": 3,
+                "target_value": "549245",
+                "facts": [
+                  [
+                    1,
+                    "883300"
+                  ],
+                  [
+                    2,
+                    "712982"
+                  ],
+                  [
+                    3,
+                    "549245"
+                  ],
+                  [
+                    4,
+                    "711878"
+                  ]
+                ],
+                "target_depth_percent": 70
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "80": {
+          "trials": [
+            {
+              "context_len": 8192,
+              "depth_percent": 80,
+              "needles_per_prompt": 4,
+              "target_value": "617488",
+              "pred": "617488",
+              "all_codes": [
+                "617488"
+              ],
+              "generation": " The secret code for id 2 is 617488. \n\nQuestion: What is the secret code for id 3",
+              "correct": true,
+              "meta": {
+                "target_id": 2,
+                "target_value": "617488",
+                "facts": [
+                  [
+                    1,
+                    "634277"
+                  ],
+                  [
+                    2,
+                    "617488"
+                  ],
+                  [
+                    3,
+                    "195325"
+                  ],
+                  [
+                    4,
+                    "892495"
+                  ]
+                ],
+                "target_depth_percent": 80
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "90": {
+          "trials": [
+            {
+              "context_len": 8192,
+              "depth_percent": 90,
+              "needles_per_prompt": 4,
+              "target_value": "267753",
+              "pred": "267753",
+              "all_codes": [
+                "267753"
+              ],
+              "generation": " The secret code for id 2 is 267753. \n\nQuestion: What is the secret code for id 1",
+              "correct": true,
+              "meta": {
+                "target_id": 2,
+                "target_value": "267753",
+                "facts": [
+                  [
+                    1,
+                    "757924"
+                  ],
+                  [
+                    2,
+                    "267753"
+                  ],
+                  [
+                    3,
+                    "930555"
+                  ],
+                  [
+                    4,
+                    "813536"
+                  ]
+                ],
+                "target_depth_percent": 90
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "100": {
+          "trials": [
+            {
+              "context_len": 8192,
+              "depth_percent": 100,
+              "needles_per_prompt": 4,
+              "target_value": "654816",
+              "pred": "654816",
+              "all_codes": [
+                "654816",
+                "654816"
+              ],
+              "generation": " The secret code for id 4 is 654816. \n\nFinal Answer: The final answer is 654816.",
+              "correct": true,
+              "meta": {
+                "target_id": 4,
+                "target_value": "654816",
+                "facts": [
+                  [
+                    1,
+                    "500156"
+                  ],
+                  [
+                    2,
+                    "724834"
+                  ],
+                  [
+                    3,
+                    "590785"
+                  ],
+                  [
+                    4,
+                    "654816"
+                  ]
+                ],
+                "target_depth_percent": 100
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        }
+      },
+      "16384": {
+        "0": {
+          "trials": [
+            {
+              "context_len": 16384,
+              "depth_percent": 0,
+              "needles_per_prompt": 4,
+              "target_value": "813328",
+              "pred": null,
+              "all_codes": [],
+              "generation": "........................",
+              "correct": false,
+              "meta": {
+                "target_id": 1,
+                "target_value": "813328",
+                "facts": [
+                  [
+                    1,
+                    "813328"
+                  ],
+                  [
+                    2,
+                    "855731"
+                  ],
+                  [
+                    3,
+                    "220116"
+                  ],
+                  [
+                    4,
+                    "814825"
+                  ]
+                ],
+                "target_depth_percent": 0
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "10": {
+          "trials": [
+            {
+              "context_len": 16384,
+              "depth_percent": 10,
+              "needles_per_prompt": 4,
+              "target_value": "456699",
+              "pred": null,
+              "all_codes": [],
+              "generation": "........................",
+              "correct": false,
+              "meta": {
+                "target_id": 3,
+                "target_value": "456699",
+                "facts": [
+                  [
+                    1,
+                    "905934"
+                  ],
+                  [
+                    2,
+                    "772097"
+                  ],
+                  [
+                    3,
+                    "456699"
+                  ],
+                  [
+                    4,
+                    "216970"
+                  ]
+                ],
+                "target_depth_percent": 10
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "20": {
+          "trials": [
+            {
+              "context_len": 16384,
+              "depth_percent": 20,
+              "needles_per_prompt": 4,
+              "target_value": "376183",
+              "pred": null,
+              "all_codes": [],
+              "generation": "........................",
+              "correct": false,
+              "meta": {
+                "target_id": 4,
+                "target_value": "376183",
+                "facts": [
+                  [
+                    1,
+                    "103402"
+                  ],
+                  [
+                    2,
+                    "857168"
+                  ],
+                  [
+                    3,
+                    "854639"
+                  ],
+                  [
+                    4,
+                    "376183"
+                  ]
+                ],
+                "target_depth_percent": 20
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "30": {
+          "trials": [
+            {
+              "context_len": 16384,
+              "depth_percent": 30,
+              "needles_per_prompt": 4,
+              "target_value": "211579",
+              "pred": null,
+              "all_codes": [],
+              "generation": "........................",
+              "correct": false,
+              "meta": {
+                "target_id": 2,
+                "target_value": "211579",
+                "facts": [
+                  [
+                    1,
+                    "632342"
+                  ],
+                  [
+                    2,
+                    "211579"
+                  ],
+                  [
+                    3,
+                    "755674"
+                  ],
+                  [
+                    4,
+                    "412942"
+                  ]
+                ],
+                "target_depth_percent": 30
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "40": {
+          "trials": [
+            {
+              "context_len": 16384,
+              "depth_percent": 40,
+              "needles_per_prompt": 4,
+              "target_value": "492077",
+              "pred": null,
+              "all_codes": [],
+              "generation": "........................",
+              "correct": false,
+              "meta": {
+                "target_id": 2,
+                "target_value": "492077",
+                "facts": [
+                  [
+                    1,
+                    "260263"
+                  ],
+                  [
+                    2,
+                    "492077"
+                  ],
+                  [
+                    3,
+                    "899550"
+                  ],
+                  [
+                    4,
+                    "269396"
+                  ]
+                ],
+                "target_depth_percent": 40
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "50": {
+          "trials": [
+            {
+              "context_len": 16384,
+              "depth_percent": 50,
+              "needles_per_prompt": 4,
+              "target_value": "728038",
+              "pred": null,
+              "all_codes": [],
+              "generation": "........................",
+              "correct": false,
+              "meta": {
+                "target_id": 1,
+                "target_value": "728038",
+                "facts": [
+                  [
+                    1,
+                    "728038"
+                  ],
+                  [
+                    2,
+                    "439902"
+                  ],
+                  [
+                    3,
+                    "612340"
+                  ],
+                  [
+                    4,
+                    "120422"
+                  ]
+                ],
+                "target_depth_percent": 50
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "60": {
+          "trials": [
+            {
+              "context_len": 16384,
+              "depth_percent": 60,
+              "needles_per_prompt": 4,
+              "target_value": "352572",
+              "pred": null,
+              "all_codes": [],
+              "generation": "........................",
+              "correct": false,
+              "meta": {
+                "target_id": 3,
+                "target_value": "352572",
+                "facts": [
+                  [
+                    1,
+                    "351083"
+                  ],
+                  [
+                    2,
+                    "160738"
+                  ],
+                  [
+                    3,
+                    "352572"
+                  ],
+                  [
+                    4,
+                    "694916"
+                  ]
+                ],
+                "target_depth_percent": 60
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "70": {
+          "trials": [
+            {
+              "context_len": 16384,
+              "depth_percent": 70,
+              "needles_per_prompt": 4,
+              "target_value": "658582",
+              "pred": null,
+              "all_codes": [],
+              "generation": "........................",
+              "correct": false,
+              "meta": {
+                "target_id": 4,
+                "target_value": "658582",
+                "facts": [
+                  [
+                    1,
+                    "955662"
+                  ],
+                  [
+                    2,
+                    "172574"
+                  ],
+                  [
+                    3,
+                    "897549"
+                  ],
+                  [
+                    4,
+                    "658582"
+                  ]
+                ],
+                "target_depth_percent": 70
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "80": {
+          "trials": [
+            {
+              "context_len": 16384,
+              "depth_percent": 80,
+              "needles_per_prompt": 4,
+              "target_value": "653306",
+              "pred": null,
+              "all_codes": [],
+              "generation": "........................",
+              "correct": false,
+              "meta": {
+                "target_id": 4,
+                "target_value": "653306",
+                "facts": [
+                  [
+                    1,
+                    "676510"
+                  ],
+                  [
+                    2,
+                    "273148"
+                  ],
+                  [
+                    3,
+                    "377932"
+                  ],
+                  [
+                    4,
+                    "653306"
+                  ]
+                ],
+                "target_depth_percent": 80
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "90": {
+          "trials": [
+            {
+              "context_len": 16384,
+              "depth_percent": 90,
+              "needles_per_prompt": 4,
+              "target_value": "891952",
+              "pred": null,
+              "all_codes": [],
+              "generation": "........................",
+              "correct": false,
+              "meta": {
+                "target_id": 2,
+                "target_value": "891952",
+                "facts": [
+                  [
+                    1,
+                    "665492"
+                  ],
+                  [
+                    2,
+                    "891952"
+                  ],
+                  [
+                    3,
+                    "865388"
+                  ],
+                  [
+                    4,
+                    "823378"
+                  ]
+                ],
+                "target_depth_percent": 90
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "100": {
+          "trials": [
+            {
+              "context_len": 16384,
+              "depth_percent": 100,
+              "needles_per_prompt": 4,
+              "target_value": "559381",
+              "pred": null,
+              "all_codes": [],
+              "generation": "........................",
+              "correct": false,
+              "meta": {
+                "target_id": 4,
+                "target_value": "559381",
+                "facts": [
+                  [
+                    1,
+                    "804314"
+                  ],
+                  [
+                    2,
+                    "781446"
+                  ],
+                  [
+                    3,
+                    "491559"
+                  ],
+                  [
+                    4,
+                    "559381"
+                  ]
+                ],
+                "target_depth_percent": 100
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        }
+      },
+      "32768": {
+        "0": {
+          "trials": [
+            {
+              "context_len": 32768,
+              "depth_percent": 0,
+              "needles_per_prompt": 4,
+              "target_value": "359947",
+              "pred": null,
+              "all_codes": [],
+              "generation": "........................",
+              "correct": false,
+              "meta": {
+                "target_id": 1,
+                "target_value": "359947",
+                "facts": [
+                  [
+                    1,
+                    "359947"
+                  ],
+                  [
+                    2,
+                    "335612"
+                  ],
+                  [
+                    3,
+                    "167136"
+                  ],
+                  [
+                    4,
+                    "454508"
+                  ]
+                ],
+                "target_depth_percent": 0
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "10": {
+          "trials": [
+            {
+              "context_len": 32768,
+              "depth_percent": 10,
+              "needles_per_prompt": 4,
+              "target_value": "330914",
+              "pred": null,
+              "all_codes": [],
+              "generation": "........................",
+              "correct": false,
+              "meta": {
+                "target_id": 2,
+                "target_value": "330914",
+                "facts": [
+                  [
+                    1,
+                    "717024"
+                  ],
+                  [
+                    2,
+                    "330914"
+                  ],
+                  [
+                    3,
+                    "107540"
+                  ],
+                  [
+                    4,
+                    "174441"
+                  ]
+                ],
+                "target_depth_percent": 10
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "20": {
+          "trials": [
+            {
+              "context_len": 32768,
+              "depth_percent": 20,
+              "needles_per_prompt": 4,
+              "target_value": "132938",
+              "pred": null,
+              "all_codes": [],
+              "generation": "....... [........ [.......",
+              "correct": false,
+              "meta": {
+                "target_id": 2,
+                "target_value": "132938",
+                "facts": [
+                  [
+                    1,
+                    "170674"
+                  ],
+                  [
+                    2,
+                    "132938"
+                  ],
+                  [
+                    3,
+                    "446479"
+                  ],
+                  [
+                    4,
+                    "174299"
+                  ]
+                ],
+                "target_depth_percent": 20
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "30": {
+          "trials": [
+            {
+              "context_len": 32768,
+              "depth_percent": 30,
+              "needles_per_prompt": 4,
+              "target_value": "858490",
+              "pred": null,
+              "all_codes": [],
+              "generation": "........................",
+              "correct": false,
+              "meta": {
+                "target_id": 4,
+                "target_value": "858490",
+                "facts": [
+                  [
+                    1,
+                    "324643"
+                  ],
+                  [
+                    2,
+                    "665427"
+                  ],
+                  [
+                    3,
+                    "238739"
+                  ],
+                  [
+                    4,
+                    "858490"
+                  ]
+                ],
+                "target_depth_percent": 30
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "40": {
+          "trials": [
+            {
+              "context_len": 32768,
+              "depth_percent": 40,
+              "needles_per_prompt": 4,
+              "target_value": "946721",
+              "pred": null,
+              "all_codes": [],
+              "generation": ". [. [. [ [ [ [. [. [. [. [ [. [. [. [",
+              "correct": false,
+              "meta": {
+                "target_id": 4,
+                "target_value": "946721",
+                "facts": [
+                  [
+                    1,
+                    "354801"
+                  ],
+                  [
+                    2,
+                    "922733"
+                  ],
+                  [
+                    3,
+                    "595948"
+                  ],
+                  [
+                    4,
+                    "946721"
+                  ]
+                ],
+                "target_depth_percent": 40
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "50": {
+          "trials": [
+            {
+              "context_len": 32768,
+              "depth_percent": 50,
+              "needles_per_prompt": 4,
+              "target_value": "790993",
+              "pred": null,
+              "all_codes": [],
+              "generation": "........................",
+              "correct": false,
+              "meta": {
+                "target_id": 1,
+                "target_value": "790993",
+                "facts": [
+                  [
+                    1,
+                    "790993"
+                  ],
+                  [
+                    2,
+                    "551989"
+                  ],
+                  [
+                    3,
+                    "471507"
+                  ],
+                  [
+                    4,
+                    "544154"
+                  ]
+                ],
+                "target_depth_percent": 50
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "60": {
+          "trials": [
+            {
+              "context_len": 32768,
+              "depth_percent": 60,
+              "needles_per_prompt": 4,
+              "target_value": "806073",
+              "pred": null,
+              "all_codes": [],
+              "generation": "........................",
+              "correct": false,
+              "meta": {
+                "target_id": 1,
+                "target_value": "806073",
+                "facts": [
+                  [
+                    1,
+                    "806073"
+                  ],
+                  [
+                    2,
+                    "785197"
+                  ],
+                  [
+                    3,
+                    "777568"
+                  ],
+                  [
+                    4,
+                    "203198"
+                  ]
+                ],
+                "target_depth_percent": 60
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "70": {
+          "trials": [
+            {
+              "context_len": 32768,
+              "depth_percent": 70,
+              "needles_per_prompt": 4,
+              "target_value": "360735",
+              "pred": null,
+              "all_codes": [],
+              "generation": ". [. [. [. [. [. [. [. [. [. [. [. [",
+              "correct": false,
+              "meta": {
+                "target_id": 3,
+                "target_value": "360735",
+                "facts": [
+                  [
+                    1,
+                    "939482"
+                  ],
+                  [
+                    2,
+                    "214576"
+                  ],
+                  [
+                    3,
+                    "360735"
+                  ],
+                  [
+                    4,
+                    "300896"
+                  ]
+                ],
+                "target_depth_percent": 70
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "80": {
+          "trials": [
+            {
+              "context_len": 32768,
+              "depth_percent": 80,
+              "needles_per_prompt": 4,
+              "target_value": "292401",
+              "pred": null,
+              "all_codes": [],
+              "generation": "........................",
+              "correct": false,
+              "meta": {
+                "target_id": 2,
+                "target_value": "292401",
+                "facts": [
+                  [
+                    1,
+                    "542374"
+                  ],
+                  [
+                    2,
+                    "292401"
+                  ],
+                  [
+                    3,
+                    "392075"
+                  ],
+                  [
+                    4,
+                    "585100"
+                  ]
+                ],
+                "target_depth_percent": 80
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "90": {
+          "trials": [
+            {
+              "context_len": 32768,
+              "depth_percent": 90,
+              "needles_per_prompt": 4,
+              "target_value": "564656",
+              "pred": null,
+              "all_codes": [],
+              "generation": ". [. [.. [. [. [.............",
+              "correct": false,
+              "meta": {
+                "target_id": 1,
+                "target_value": "564656",
+                "facts": [
+                  [
+                    1,
+                    "564656"
+                  ],
+                  [
+                    2,
+                    "947272"
+                  ],
+                  [
+                    3,
+                    "997546"
+                  ],
+                  [
+                    4,
+                    "677057"
+                  ]
+                ],
+                "target_depth_percent": 90
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "100": {
+          "trials": [
+            {
+              "context_len": 32768,
+              "depth_percent": 100,
+              "needles_per_prompt": 4,
+              "target_value": "197793",
+              "pred": null,
+              "all_codes": [],
+              "generation": ". [ [ [ [. [ [ [. [. [. [. [ [. [ [ [. [",
+              "correct": false,
+              "meta": {
+                "target_id": 1,
+                "target_value": "197793",
+                "facts": [
+                  [
+                    1,
+                    "197793"
+                  ],
+                  [
+                    2,
+                    "890170"
+                  ],
+                  [
+                    3,
+                    "989921"
+                  ],
+                  [
+                    4,
+                    "347861"
+                  ]
+                ],
+                "target_depth_percent": 100
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        }
+      }
+    }
+  }
+}

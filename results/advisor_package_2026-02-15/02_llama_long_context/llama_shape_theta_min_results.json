@@ -1,0 +1,12 @@
+{
+  "geo_10k": {
+    "ppl_2k": 518.013,
+    "ppl_16k": 11214.916,
+    "collapse_ratio": 22.026
+  },
+  "sigmoid_t100k": {
+    "ppl_2k": 10.372,
+    "ppl_16k": 12.51,
+    "collapse_ratio": 1.077
+  }
+}

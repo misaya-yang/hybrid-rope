@@ -266,23 +266,26 @@ def truncate_prompt(tokenizer: AutoTokenizer, prompt: str, max_tokens: int) -> s
 
 
 def load_task_dataset(task: str):
-    tries = [
-        ("THUDM/LongBench", task),
-        ("THUDM/LongBench", task.lower()),
-        ("THUDM/LongBench", None),
-    ]
-    last_err = None
-    for name, cfg in tries:
+    # LongBench requires a config name. Do not fall back to cfg=None, otherwise
+    # we may silently return a misleading "Config name is missing" error as the
+    # final exception even when earlier attempts failed for a different reason.
+    base = task.strip()
+    candidates: List[str] = []
+    for cfg in (base, base.lower(), f"{base}_e", f"{base.lower()}_e"):
+        if cfg not in candidates:
+            candidates.append(cfg)
+
+    errors: List[str] = []
+    for cfg in candidates:
         try:
-            if cfg is None:
-                ds = load_dataset(name, split="test", trust_remote_code=True)
-            else:
-                ds = load_dataset(name, cfg, split="test", trust_remote_code=True)
-            return ds
+            return load_dataset("THUDM/LongBench", cfg, split="test", trust_remote_code=True)
         except Exception as e:
-            last_err = e
-            continue
-    raise RuntimeError(f"Cannot load LongBench task={task}: {last_err}")
+            errors.append(f"cfg={cfg}: {type(e).__name__}: {e}")
+
+    raise RuntimeError(
+        f"Cannot load LongBench task={task}. Tried configs={candidates}.\n"
+        + "\n".join(errors)
+    )
 
 
 @torch.no_grad()
@@ -483,4 +486,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

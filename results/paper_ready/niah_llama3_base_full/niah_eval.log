@@ -1,0 +1,153 @@
+2026-02-14 21:25:04 | INFO | Starting NIAH evaluation.
+2026-02-14 21:25:04 | INFO | Lengths: [2048, 4096, 8192, 16384, 32768, 65536]
+2026-02-14 21:25:04 | INFO | Depths: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+2026-02-14 21:25:04 | INFO | Trials per cell: 1
+2026-02-14 21:25:04 | INFO | Using torch dtype: bfloat16
+2026-02-14 21:25:04 | INFO | Trying model load with attn_implementation=flash_attention_2
+2026-02-14 21:25:04 | WARNING | Model load failed: attn=flash_attention_2: ImportError: FlashAttention2 has been toggled on, but it cannot be used due to the following error: the package flash_attn seems to be not installed. Please refer to the documentation of https://huggingface.co/docs/transformers/perf_infer_gpu_one#flashattention-2 to install Flash Attention 2.
+2026-02-14 21:25:04 | INFO | Trying model load with attn_implementation=sdpa
+2026-02-14 21:25:07 | INFO | Model loaded. Chosen attention backend: sdpa
+2026-02-14 21:25:07 | INFO | Model max_position_embeddings=8192
+2026-02-14 21:25:07 | INFO | ==== Context length: 2048 ====
+2026-02-14 21:25:07 | INFO | Running cell length=2048, depth=0%
+2026-02-14 21:25:08 | INFO | Cell done length=2048 depth=0% | acc=1.000 (1/1)
+2026-02-14 21:25:08 | INFO | Running cell length=2048, depth=10%
+2026-02-14 21:25:08 | INFO | Cell done length=2048 depth=10% | acc=1.000 (1/1)
+2026-02-14 21:25:08 | INFO | Running cell length=2048, depth=20%
+2026-02-14 21:25:09 | INFO | Cell done length=2048 depth=20% | acc=1.000 (1/1)
+2026-02-14 21:25:09 | INFO | Running cell length=2048, depth=30%
+2026-02-14 21:25:09 | INFO | Cell done length=2048 depth=30% | acc=1.000 (1/1)
+2026-02-14 21:25:09 | INFO | Running cell length=2048, depth=40%
+2026-02-14 21:25:10 | INFO | Cell done length=2048 depth=40% | acc=1.000 (1/1)
+2026-02-14 21:25:10 | INFO | Running cell length=2048, depth=50%
+2026-02-14 21:25:10 | INFO | Cell done length=2048 depth=50% | acc=1.000 (1/1)
+2026-02-14 21:25:10 | INFO | Running cell length=2048, depth=60%
+2026-02-14 21:25:11 | INFO | Cell done length=2048 depth=60% | acc=1.000 (1/1)
+2026-02-14 21:25:11 | INFO | Running cell length=2048, depth=70%
+2026-02-14 21:25:11 | INFO | Cell done length=2048 depth=70% | acc=1.000 (1/1)
+2026-02-14 21:25:11 | INFO | Running cell length=2048, depth=80%
+2026-02-14 21:25:12 | INFO | Cell done length=2048 depth=80% | acc=1.000 (1/1)
+2026-02-14 21:25:12 | INFO | Running cell length=2048, depth=90%
+2026-02-14 21:25:12 | INFO | Cell done length=2048 depth=90% | acc=1.000 (1/1)
+2026-02-14 21:25:12 | INFO | Running cell length=2048, depth=100%
+2026-02-14 21:25:12 | INFO | Cell done length=2048 depth=100% | acc=1.000 (1/1)
+2026-02-14 21:25:12 | INFO | ==== Context length: 4096 ====
+2026-02-14 21:25:12 | INFO | Running cell length=4096, depth=0%
+2026-02-14 21:25:13 | INFO | Cell done length=4096 depth=0% | acc=1.000 (1/1)
+2026-02-14 21:25:13 | INFO | Running cell length=4096, depth=10%
+2026-02-14 21:25:13 | INFO | Cell done length=4096 depth=10% | acc=1.000 (1/1)
+2026-02-14 21:25:14 | INFO | Running cell length=4096, depth=20%
+2026-02-14 21:25:14 | INFO | Cell done length=4096 depth=20% | acc=1.000 (1/1)
+2026-02-14 21:25:14 | INFO | Running cell length=4096, depth=30%
+2026-02-14 21:25:15 | INFO | Cell done length=4096 depth=30% | acc=1.000 (1/1)
+2026-02-14 21:25:15 | INFO | Running cell length=4096, depth=40%
+2026-02-14 21:25:15 | INFO | Cell done length=4096 depth=40% | acc=1.000 (1/1)
+2026-02-14 21:25:15 | INFO | Running cell length=4096, depth=50%
+2026-02-14 21:25:16 | INFO | Cell done length=4096 depth=50% | acc=1.000 (1/1)
+2026-02-14 21:25:16 | INFO | Running cell length=4096, depth=60%
+2026-02-14 21:25:16 | INFO | Cell done length=4096 depth=60% | acc=1.000 (1/1)
+2026-02-14 21:25:16 | INFO | Running cell length=4096, depth=70%
+2026-02-14 21:25:17 | INFO | Cell done length=4096 depth=70% | acc=1.000 (1/1)
+2026-02-14 21:25:17 | INFO | Running cell length=4096, depth=80%
+2026-02-14 21:25:17 | INFO | Cell done length=4096 depth=80% | acc=1.000 (1/1)
+2026-02-14 21:25:17 | INFO | Running cell length=4096, depth=90%
+2026-02-14 21:25:18 | INFO | Cell done length=4096 depth=90% | acc=1.000 (1/1)
+2026-02-14 21:25:18 | INFO | Running cell length=4096, depth=100%
+2026-02-14 21:25:18 | INFO | Cell done length=4096 depth=100% | acc=1.000 (1/1)
+2026-02-14 21:25:19 | INFO | ==== Context length: 8192 ====
+2026-02-14 21:25:19 | INFO | Running cell length=8192, depth=0%
+2026-02-14 21:25:19 | INFO | Cell done length=8192 depth=0% | acc=1.000 (1/1)
+2026-02-14 21:25:19 | INFO | Running cell length=8192, depth=10%
+2026-02-14 21:25:20 | INFO | Cell done length=8192 depth=10% | acc=1.000 (1/1)
+2026-02-14 21:25:20 | INFO | Running cell length=8192, depth=20%
+2026-02-14 21:25:21 | INFO | Cell done length=8192 depth=20% | acc=1.000 (1/1)
+2026-02-14 21:25:21 | INFO | Running cell length=8192, depth=30%
+2026-02-14 21:25:22 | INFO | Cell done length=8192 depth=30% | acc=1.000 (1/1)
+2026-02-14 21:25:22 | INFO | Running cell length=8192, depth=40%
+2026-02-14 21:25:22 | INFO | Cell done length=8192 depth=40% | acc=1.000 (1/1)
+2026-02-14 21:25:22 | INFO | Running cell length=8192, depth=50%
+2026-02-14 21:25:23 | INFO | Cell done length=8192 depth=50% | acc=1.000 (1/1)
+2026-02-14 21:25:23 | INFO | Running cell length=8192, depth=60%
+2026-02-14 21:25:24 | INFO | Cell done length=8192 depth=60% | acc=1.000 (1/1)
+2026-02-14 21:25:24 | INFO | Running cell length=8192, depth=70%
+2026-02-14 21:25:25 | INFO | Cell done length=8192 depth=70% | acc=1.000 (1/1)
+2026-02-14 21:25:25 | INFO | Running cell length=8192, depth=80%
+2026-02-14 21:25:26 | INFO | Cell done length=8192 depth=80% | acc=1.000 (1/1)
+2026-02-14 21:25:26 | INFO | Running cell length=8192, depth=90%
+2026-02-14 21:25:26 | INFO | Cell done length=8192 depth=90% | acc=1.000 (1/1)
+2026-02-14 21:25:26 | INFO | Running cell length=8192, depth=100%
+2026-02-14 21:25:27 | INFO | Cell done length=8192 depth=100% | acc=1.000 (1/1)
+2026-02-14 21:25:27 | INFO | ==== Context length: 16384 ====
+2026-02-14 21:25:27 | INFO | Running cell length=16384, depth=0%
+2026-02-14 21:25:29 | INFO | Cell done length=16384 depth=0% | acc=0.000 (0/1)
+2026-02-14 21:25:29 | INFO | Running cell length=16384, depth=10%
+2026-02-14 21:25:30 | INFO | Cell done length=16384 depth=10% | acc=0.000 (0/1)
+2026-02-14 21:25:30 | INFO | Running cell length=16384, depth=20%
+2026-02-14 21:25:31 | INFO | Cell done length=16384 depth=20% | acc=0.000 (0/1)
+2026-02-14 21:25:31 | INFO | Running cell length=16384, depth=30%
+2026-02-14 21:25:33 | INFO | Cell done length=16384 depth=30% | acc=0.000 (0/1)
+2026-02-14 21:25:33 | INFO | Running cell length=16384, depth=40%
+2026-02-14 21:25:34 | INFO | Cell done length=16384 depth=40% | acc=0.000 (0/1)
+2026-02-14 21:25:34 | INFO | Running cell length=16384, depth=50%
+2026-02-14 21:25:35 | INFO | Cell done length=16384 depth=50% | acc=0.000 (0/1)
+2026-02-14 21:25:35 | INFO | Running cell length=16384, depth=60%
+2026-02-14 21:25:37 | INFO | Cell done length=16384 depth=60% | acc=0.000 (0/1)
+2026-02-14 21:25:37 | INFO | Running cell length=16384, depth=70%
+2026-02-14 21:25:38 | INFO | Cell done length=16384 depth=70% | acc=0.000 (0/1)
+2026-02-14 21:25:38 | INFO | Running cell length=16384, depth=80%
+2026-02-14 21:25:39 | INFO | Cell done length=16384 depth=80% | acc=0.000 (0/1)
+2026-02-14 21:25:40 | INFO | Running cell length=16384, depth=90%
+2026-02-14 21:25:41 | INFO | Cell done length=16384 depth=90% | acc=0.000 (0/1)
+2026-02-14 21:25:41 | INFO | Running cell length=16384, depth=100%
+2026-02-14 21:25:42 | INFO | Cell done length=16384 depth=100% | acc=0.000 (0/1)
+2026-02-14 21:25:42 | INFO | ==== Context length: 32768 ====
+2026-02-14 21:25:42 | INFO | Running cell length=32768, depth=0%
+2026-02-14 21:25:45 | INFO | Cell done length=32768 depth=0% | acc=0.000 (0/1)
+2026-02-14 21:25:45 | INFO | Running cell length=32768, depth=10%
+2026-02-14 21:25:48 | INFO | Cell done length=32768 depth=10% | acc=0.000 (0/1)
+2026-02-14 21:25:48 | INFO | Running cell length=32768, depth=20%
+2026-02-14 21:25:51 | INFO | Cell done length=32768 depth=20% | acc=0.000 (0/1)
+2026-02-14 21:25:51 | INFO | Running cell length=32768, depth=30%
+2026-02-14 21:25:54 | INFO | Cell done length=32768 depth=30% | acc=0.000 (0/1)
+2026-02-14 21:25:54 | INFO | Running cell length=32768, depth=40%
+2026-02-14 21:25:57 | INFO | Cell done length=32768 depth=40% | acc=0.000 (0/1)
+2026-02-14 21:25:57 | INFO | Running cell length=32768, depth=50%
+2026-02-14 21:25:59 | INFO | Cell done length=32768 depth=50% | acc=0.000 (0/1)
+2026-02-14 21:26:00 | INFO | Running cell length=32768, depth=60%
+2026-02-14 21:26:02 | INFO | Cell done length=32768 depth=60% | acc=0.000 (0/1)
+2026-02-14 21:26:02 | INFO | Running cell length=32768, depth=70%
+2026-02-14 21:26:05 | INFO | Cell done length=32768 depth=70% | acc=0.000 (0/1)
+2026-02-14 21:26:05 | INFO | Running cell length=32768, depth=80%
+2026-02-14 21:26:08 | INFO | Cell done length=32768 depth=80% | acc=0.000 (0/1)
+2026-02-14 21:26:08 | INFO | Running cell length=32768, depth=90%
+2026-02-14 21:26:11 | INFO | Cell done length=32768 depth=90% | acc=0.000 (0/1)
+2026-02-14 21:26:11 | INFO | Running cell length=32768, depth=100%
+2026-02-14 21:26:14 | INFO | Cell done length=32768 depth=100% | acc=0.000 (0/1)
+2026-02-14 21:26:14 | INFO | ==== Context length: 65536 ====
+2026-02-14 21:26:14 | INFO | Running cell length=65536, depth=0%
+2026-02-14 21:26:21 | INFO | Cell done length=65536 depth=0% | acc=0.000 (0/1)
+2026-02-14 21:26:21 | INFO | Running cell length=65536, depth=10%
+2026-02-14 21:26:28 | INFO | Cell done length=65536 depth=10% | acc=0.000 (0/1)
+2026-02-14 21:26:28 | INFO | Running cell length=65536, depth=20%
+2026-02-14 21:26:35 | INFO | Cell done length=65536 depth=20% | acc=0.000 (0/1)
+2026-02-14 21:26:35 | INFO | Running cell length=65536, depth=30%
+2026-02-14 21:26:42 | INFO | Cell done length=65536 depth=30% | acc=0.000 (0/1)
+2026-02-14 21:26:42 | INFO | Running cell length=65536, depth=40%
+2026-02-14 21:26:49 | INFO | Cell done length=65536 depth=40% | acc=0.000 (0/1)
+2026-02-14 21:26:49 | INFO | Running cell length=65536, depth=50%
+2026-02-14 21:26:56 | INFO | Cell done length=65536 depth=50% | acc=0.000 (0/1)
+2026-02-14 21:26:56 | INFO | Running cell length=65536, depth=60%
+2026-02-14 21:27:03 | INFO | Cell done length=65536 depth=60% | acc=0.000 (0/1)
+2026-02-14 21:27:03 | INFO | Running cell length=65536, depth=70%
+2026-02-14 21:27:10 | INFO | Cell done length=65536 depth=70% | acc=0.000 (0/1)
+2026-02-14 21:27:10 | INFO | Running cell length=65536, depth=80%
+2026-02-14 21:27:17 | INFO | Cell done length=65536 depth=80% | acc=0.000 (0/1)
+2026-02-14 21:27:17 | INFO | Running cell length=65536, depth=90%
+2026-02-14 21:27:24 | INFO | Cell done length=65536 depth=90% | acc=0.000 (0/1)
+2026-02-14 21:27:24 | INFO | Running cell length=65536, depth=100%
+2026-02-14 21:27:31 | INFO | Cell done length=65536 depth=100% | acc=0.000 (0/1)
+2026-02-14 21:27:32 | WARNING | seaborn is unavailable; used matplotlib fallback for heatmap.
+2026-02-14 21:27:33 | INFO | Saved JSON: /root/autodl-tmp/dfrope/hybrid-rope/results/niah_llama3_base_full/niah_results.json
+2026-02-14 21:27:33 | INFO | Saved heatmap PDF: /root/autodl-tmp/dfrope/hybrid-rope/results/niah_llama3_base_full/niah_heatmap.pdf
+2026-02-14 21:27:33 | INFO | Saved heatmap PNG: /root/autodl-tmp/dfrope/hybrid-rope/results/niah_llama3_base_full/niah_heatmap.png
+2026-02-14 21:27:33 | INFO | Done.

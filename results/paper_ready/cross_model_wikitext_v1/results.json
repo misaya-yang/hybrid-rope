@@ -1,0 +1,103 @@
+{
+  "timestamp": "2026-02-13_193301",
+  "protocol": {
+    "dataset": "wikitext-103-raw-v1:validation",
+    "lengths": [2048, 16384],
+    "seeds": [42, 123, 777],
+    "windows_per_seed": 10,
+    "max_eval_tokens": 280000,
+    "random_start": true,
+    "train_or_lora": "none (base-only)"
+  },
+  "models": [
+    {
+      "name": "llama_geo_10k",
+      "family": "llama",
+      "model": "LLM-Research/Meta-Llama-3-8B-Instruct",
+      "freq_type": "geometric",
+      "inv_min": 0.000115,
+      "inv_max": 1.0,
+      "eval_dataset": "wikitext-103-raw-v1:validation",
+      "token_count_used": 252725,
+      "lengths": {
+        "2048": {
+          "mean_ppl": 549.85,
+          "std_ppl": 38.31
+        },
+        "16384": {
+          "mean_ppl": 12111.06,
+          "std_ppl": 741.13
+        }
+      },
+      "collapse_ratio_16k_over_2k": 22.03
+    },
+    {
+      "name": "llama_sigmoid_best_t100k",
+      "family": "llama",
+      "model": "LLM-Research/Meta-Llama-3-8B-Instruct",
+      "freq_type": "sigmoid",
+      "inv_min": 4.5e-06,
+      "inv_max": 0.798,
+      "eval_dataset": "wikitext-103-raw-v1:validation",
+      "token_count_used": 252725,
+      "lengths": {
+        "2048": {
+          "mean_ppl": 11.67,
+          "std_ppl": 1.06
+        },
+        "16384": {
+          "mean_ppl": 12.57,
+          "std_ppl": 0.28
+        }
+      },
+      "collapse_ratio_16k_over_2k": 1.08
+    },
+    {
+      "name": "qwen_orig_theta",
+      "family": "qwen",
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "freq_type": "orig",
+      "eval_dataset": "wikitext-103-raw-v1:validation",
+      "token_count_used": 262210,
+      "lengths": {
+        "2048": {
+          "mean_ppl": 8.46,
+          "std_ppl": 0.09
+        },
+        "16384": {
+          "mean_ppl": 6.98,
+          "std_ppl": 0.15
+        }
+      },
+      "collapse_ratio_16k_over_2k": 0.82
+    },
+    {
+      "name": "qwen_geo_100k",
+      "family": "qwen",
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "freq_type": "geometric",
+      "inv_min": 1.2e-05,
+      "inv_max": 1.0,
+      "eval_dataset": "wikitext-103-raw-v1:validation",
+      "token_count_used": 262210,
+      "lengths": {
+        "2048": {
+          "mean_ppl": 8.58,
+          "std_ppl": 0.09
+        },
+        "16384": {
+          "mean_ppl": 7.16,
+          "std_ppl": 0.15
+        }
+      },
+      "collapse_ratio_16k_over_2k": 0.83
+    }
+  ],
+  "elapsed_minutes": 14.13,
+  "key_findings": {
+    "llama_geo_collapse": "LLaMA with geometric RoPE collapses at 16k (22x PPL increase)",
+    "llama_sigmoid_stable": "Sigmoid RoPE stabilizes LLaMA (only 1.08x increase)",
+    "qwen_yarn_best": "Qwen original (YARN) achieves best long-context: PPL@16k < PPL@2k",
+    "qwen_geo_similar": "Qwen with geometric shows similar pattern to original"
+  }
+}

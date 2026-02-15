@@ -1,0 +1,1261 @@
+{
+  "meta": {
+    "base_model_path": "/root/autodl-tmp/dfrope/ms_models/LLM-Research/Meta-Llama-3-8B-Instruct",
+    "adapter_path": null,
+    "attn_implementation_requested": "auto",
+    "attn_implementation_used": "sdpa",
+    "dtype": "bfloat16",
+    "lengths": [
+      2048,
+      4096,
+      8192,
+      16384,
+      32768,
+      65536
+    ],
+    "depths": [
+      0,
+      10,
+      20,
+      30,
+      40,
+      50,
+      60,
+      70,
+      80,
+      90,
+      100
+    ],
+    "trials_per_cell": 1,
+    "max_new_tokens": 16,
+    "seed": 42
+  },
+  "accuracy_matrix": {
+    "0%": {
+      "2048": 1.0,
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0,
+      "65536": 0.0
+    },
+    "10%": {
+      "2048": 1.0,
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0,
+      "65536": 0.0
+    },
+    "20%": {
+      "2048": 1.0,
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0,
+      "65536": 0.0
+    },
+    "30%": {
+      "2048": 1.0,
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0,
+      "65536": 0.0
+    },
+    "40%": {
+      "2048": 1.0,
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0,
+      "65536": 0.0
+    },
+    "50%": {
+      "2048": 1.0,
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0,
+      "65536": 0.0
+    },
+    "60%": {
+      "2048": 1.0,
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0,
+      "65536": 0.0
+    },
+    "70%": {
+      "2048": 1.0,
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0,
+      "65536": 0.0
+    },
+    "80%": {
+      "2048": 1.0,
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0,
+      "65536": 0.0
+    },
+    "90%": {
+      "2048": 1.0,
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0,
+      "65536": 0.0
+    },
+    "100%": {
+      "2048": 1.0,
+      "4096": 1.0,
+      "8192": 1.0,
+      "16384": 0.0,
+      "32768": 0.0,
+      "65536": 0.0
+    }
+  },
+  "raw": {
+    "cells": {
+      "2048": {
+        "0": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "680487",
+              "prediction": "680487",
+              "correct": true,
+              "generated_text": "680487\nFinal Answer: The final answer is 680487. I",
+              "elapsed_sec": 0.754
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "10": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "126739",
+              "prediction": "126739",
+              "correct": true,
+              "generated_text": "126739\nFinal Answer: The final answer is 126739. I",
+              "elapsed_sec": 0.342
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "20": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "36225",
+              "prediction": "36225",
+              "correct": true,
+              "generated_text": "36225\nFinal Answer: The final answer is 36225. I",
+              "elapsed_sec": 0.342
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "30": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "787572",
+              "prediction": "787572",
+              "correct": true,
+              "generated_text": "787572\nFinal Answer: The final answer is 787572. I",
+              "elapsed_sec": 0.342
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "40": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "298389",
+              "prediction": "298389",
+              "correct": true,
+              "generated_text": "298389\nFinal Answer: The final answer is 298389. I",
+              "elapsed_sec": 0.342
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "50": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "266787",
+              "prediction": "266787",
+              "correct": true,
+              "generated_text": "266787\nFinal Answer: The final answer is 266787. I",
+              "elapsed_sec": 0.345
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "60": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "244053",
+              "prediction": "244053",
+              "correct": true,
+              "generated_text": "244053\nFinal Answer: The final answer is 244053. I",
+              "elapsed_sec": 0.341
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "70": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "156316",
+              "prediction": "156316",
+              "correct": true,
+              "generated_text": "156316\nFinal Answer: The final answer is 156316. I",
+              "elapsed_sec": 0.341
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "80": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "782246",
+              "prediction": "782246",
+              "correct": true,
+              "generated_text": "782246\nFinal Answer: The final answer is 782246. I",
+              "elapsed_sec": 0.341
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "90": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "117473",
+              "prediction": "117473",
+              "correct": true,
+              "generated_text": "117473\nFinal Answer: The final answer is 117473. I",
+              "elapsed_sec": 0.342
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "100": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "719570",
+              "prediction": "719570",
+              "correct": true,
+              "generated_text": "719570\nFinal Answer: The final answer is 719570. I",
+              "elapsed_sec": 0.341
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        }
+      },
+      "4096": {
+        "0": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "786646",
+              "prediction": "786646",
+              "correct": true,
+              "generated_text": "786646\nFinal Answer: The final answer is 786646. I",
+              "elapsed_sec": 0.444
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "10": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "945518",
+              "prediction": "945518",
+              "correct": true,
+              "generated_text": "945518\nFinal Answer: The final answer is 945518. I",
+              "elapsed_sec": 0.442
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "20": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "581858",
+              "prediction": "581858",
+              "correct": true,
+              "generated_text": "581858\nFinal Answer: The final answer is 581858. I",
+              "elapsed_sec": 0.442
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "30": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "101161",
+              "prediction": "101161",
+              "correct": true,
+              "generated_text": "101161\nFinal Answer: The final answer is 101161. I",
+              "elapsed_sec": 0.443
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "40": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "629176",
+              "prediction": "629176",
+              "correct": true,
+              "generated_text": "629176\nFinal Answer: The final answer is 629176. I",
+              "elapsed_sec": 0.442
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "50": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "452417",
+              "prediction": "452417",
+              "correct": true,
+              "generated_text": "452417\nFinal Answer: The final answer is 452417. I",
+              "elapsed_sec": 0.44
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "60": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "43326",
+              "prediction": "43326",
+              "correct": true,
+              "generated_text": "43326\nFinal Answer: The final answer is 43326. I",
+              "elapsed_sec": 0.442
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "70": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "41244",
+              "prediction": "41244",
+              "correct": true,
+              "generated_text": "41244\nFinal Answer: The final answer is 41244. I",
+              "elapsed_sec": 0.442
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "80": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "108246",
+              "prediction": "108246",
+              "correct": true,
+              "generated_text": "108246\nFinal Answer: The final answer is 108246. I",
+              "elapsed_sec": 0.44
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "90": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "239258",
+              "prediction": "239258",
+              "correct": true,
+              "generated_text": "239258\nFinal Answer: The final answer is 239258. I",
+              "elapsed_sec": 0.44
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "100": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "253962",
+              "prediction": "253962",
+              "correct": true,
+              "generated_text": "253962\nFinal Answer: The final answer is 253962. I",
+              "elapsed_sec": 0.441
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        }
+      },
+      "8192": {
+        "0": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "539903",
+              "prediction": "539903",
+              "correct": true,
+              "generated_text": "539903\nFinal Answer: The final answer is 539903. I",
+              "elapsed_sec": 0.699
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "10": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "641262",
+              "prediction": "641262",
+              "correct": true,
+              "generated_text": "641262\nFinal Answer: The final answer is 641262. I",
+              "elapsed_sec": 0.699
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "20": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "37824",
+              "prediction": "37824",
+              "correct": true,
+              "generated_text": "37824\nFinal Answer: The final answer is 37824. I",
+              "elapsed_sec": 0.698
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "30": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "598508",
+              "prediction": "598508",
+              "correct": true,
+              "generated_text": "598508\nFinal Answer: The final answer is 598508. I",
+              "elapsed_sec": 0.698
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "40": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "218496",
+              "prediction": "218496",
+              "correct": true,
+              "generated_text": "218496\nFinal Answer: The final answer is 218496. I",
+              "elapsed_sec": 0.698
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "50": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "760800",
+              "prediction": "760800",
+              "correct": true,
+              "generated_text": "760800\nFinal Answer: The final answer is 760800. I",
+              "elapsed_sec": 0.698
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "60": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "691453",
+              "prediction": "691453",
+              "correct": true,
+              "generated_text": "691453\nFinal Answer: The final answer is 691453. I",
+              "elapsed_sec": 0.698
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "70": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "745392",
+              "prediction": "745392",
+              "correct": true,
+              "generated_text": "745392\nFinal Answer: The final answer is 745392. I",
+              "elapsed_sec": 0.7
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "80": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "581412",
+              "prediction": "581412",
+              "correct": true,
+              "generated_text": "581412\nFinal Answer: The final answer is 581412. I",
+              "elapsed_sec": 0.698
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "90": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "449898",
+              "prediction": "449898",
+              "correct": true,
+              "generated_text": "449898\nFinal Answer: The final answer is 449898. I",
+              "elapsed_sec": 0.698
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "100": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "241148",
+              "prediction": "241148",
+              "correct": true,
+              "generated_text": "241148\nFinal Answer: The final answer is 241148. I",
+              "elapsed_sec": 0.699
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        }
+      },
+      "16384": {
+        "0": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "481029",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "The. The. The. The. The. The. The. The.",
+              "elapsed_sec": 1.253
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "10": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "627889",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "In. The. The. The. The. The. The. The",
+              "elapsed_sec": 1.261
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "20": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "301704",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "In. The.  In. The. The. The. The.",
+              "elapsed_sec": 1.252
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "30": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "858749",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "The. The. The. The. The. The. The. The.",
+              "elapsed_sec": 1.252
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "40": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "921527",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "The. The. The. The. The. The. The. The.",
+              "elapsed_sec": 1.251
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "50": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "16814",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "The. The. The. The. The. The. The. The.",
+              "elapsed_sec": 1.253
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "60": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "805667",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "The. The. The. The. The. The. The. The.",
+              "elapsed_sec": 1.253
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "70": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "854962",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "The. The. The. The. The. The. The. The.",
+              "elapsed_sec": 1.254
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "80": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "177414",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "The. The. The. The. The. The. The. The.",
+              "elapsed_sec": 1.254
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "90": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "742052",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "The. The. The. The. The. The. The. The.",
+              "elapsed_sec": 1.261
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "100": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "453143",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "The. The. The. The. The. The. The. The.",
+              "elapsed_sec": 1.256
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        }
+      },
+      "32768": {
+        "0": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "366778",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "................",
+              "elapsed_sec": 2.718
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "10": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "301369",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "................",
+              "elapsed_sec": 2.724
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "20": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "173032",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "................",
+              "elapsed_sec": 2.725
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "30": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "235772",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "................",
+              "elapsed_sec": 2.727
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "40": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "810581",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "................",
+              "elapsed_sec": 2.727
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "50": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "362944",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "................",
+              "elapsed_sec": 2.729
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "60": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "117175",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "................",
+              "elapsed_sec": 2.729
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "70": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "107251",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "................",
+              "elapsed_sec": 2.73
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "80": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "408382",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "................",
+              "elapsed_sec": 2.734
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "90": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "111414",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "................",
+              "elapsed_sec": 2.735
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "100": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "386417",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "................",
+              "elapsed_sec": 2.738
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        }
+      },
+      "65536": {
+        "0": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "898662",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "The...............",
+              "elapsed_sec": 6.905
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "10": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "370663",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "The...............",
+              "elapsed_sec": 6.91
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "20": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "643052",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "The...............",
+              "elapsed_sec": 6.928
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "30": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "287370",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "The...............",
+              "elapsed_sec": 6.933
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "40": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "856335",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "The...............",
+              "elapsed_sec": 6.93
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "50": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "55561",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "The...............",
+              "elapsed_sec": 6.936
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "60": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "775179",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "The...............",
+              "elapsed_sec": 6.936
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "70": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "491741",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "The...............",
+              "elapsed_sec": 6.94
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "80": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "572275",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "The...............",
+              "elapsed_sec": 6.935
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "90": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "140889",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "The...............",
+              "elapsed_sec": 6.935
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        },
+        "100": {
+          "trials": [
+            {
+              "status": "ok",
+              "trial": 0,
+              "passkey": "977096",
+              "prediction": null,
+              "correct": false,
+              "generated_text": "The...............",
+              "elapsed_sec": 6.931
+            }
+          ],
+          "status": "ok",
+          "correct": 0,
+          "total": 1,
+          "accuracy": 0.0
+        }
+      }
+    }
+  }
+}

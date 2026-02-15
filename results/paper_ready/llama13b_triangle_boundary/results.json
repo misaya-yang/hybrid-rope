@@ -1,0 +1,62 @@
+{
+  "geo_500k": {
+    "name": "geo_500k",
+    "config": {
+      "type": "geometric",
+      "theta": 500000
+    },
+    "data": {
+      "2048": {"ppl": 11.125, "loss": 2.4092, "elapsed_sec": 0.44, "mem_peak_gb": 17.68, "status": "ok"},
+      "8192": {"ppl": 9.516, "loss": 2.253, "elapsed_sec": 0.52, "mem_peak_gb": 25.81, "status": "ok"},
+      "16384": {"ppl": 262.278, "loss": 5.5694, "elapsed_sec": 1.22, "mem_peak_gb": 36.66, "status": "ok"},
+      "24576": {"ppl": 1375.074, "loss": 7.2263, "elapsed_sec": 1.92, "mem_peak_gb": 47.51, "status": "ok"},
+      "32768": {"ppl": 2345.095, "loss": 7.7601, "elapsed_sec": 2.85, "mem_peak_gb": 58.36, "status": "ok"},
+      "49152": {"ppl": 3810.991, "loss": 8.2456, "elapsed_sec": 4.85, "mem_peak_gb": 80.05, "status": "ok"}
+    },
+    "max_length": 49152,
+    "oom_at": null,
+    "collapse_ratio": {"2048": 1.0, "8192": 0.855, "16384": 23.576, "24576": 123.602, "32768": 210.795, "49152": 342.561},
+    "boundary": 16384
+  },
+  "geo_2M": {
+    "name": "geo_2M",
+    "config": {
+      "type": "geometric",
+      "theta": 2000000
+    },
+    "data": {
+      "2048": {"ppl": 11.115, "loss": 2.4083, "elapsed_sec": 0.12, "mem_peak_gb": 17.68, "status": "ok"},
+      "8192": {"ppl": 9.38, "loss": 2.2386, "elapsed_sec": 0.51, "mem_peak_gb": 25.81, "status": "ok"},
+      "16384": {"ppl": 9.264, "loss": 2.2261, "elapsed_sec": 1.23, "mem_peak_gb": 36.66, "status": "ok"},
+      "24576": {"ppl": 22.068, "loss": 3.0941, "elapsed_sec": 1.94, "mem_peak_gb": 47.51, "status": "ok"},
+      "32768": {"ppl": 95.361, "loss": 4.5577, "elapsed_sec": 2.88, "mem_peak_gb": 58.36, "status": "ok"},
+      "49152": {"ppl": 754.649, "loss": 6.6263, "elapsed_sec": 4.92, "mem_peak_gb": 80.05, "status": "ok"}
+    },
+    "max_length": 49152,
+    "oom_at": null,
+    "collapse_ratio": {"2048": 0.999, "8192": 0.843, "16384": 0.833, "24576": 1.984, "32768": 8.572, "49152": 67.834},
+    "boundary": 32768
+  },
+  "anchored_x20": {
+    "name": "anchored_x20",
+    "config": {
+      "type": "anchored",
+      "theta": 100000,
+      "anchor_factor": 20,
+      "anchor_dim": 16,
+      "slope": 0.5
+    },
+    "data": {
+      "2048": {"ppl": 11.122, "loss": 2.409, "elapsed_sec": 0.12, "mem_peak_gb": 17.68, "status": "ok"},
+      "8192": {"ppl": 9.405, "loss": 2.2412, "elapsed_sec": 0.51, "mem_peak_gb": 25.81, "status": "ok"},
+      "16384": {"ppl": 19.041, "loss": 2.9466, "elapsed_sec": 1.24, "mem_peak_gb": 36.66, "status": "ok"},
+      "24576": {"ppl": 138.325, "loss": 4.9296, "elapsed_sec": 1.96, "mem_peak_gb": 47.51, "status": "ok"},
+      "32768": {"ppl": 636.508, "loss": 6.456, "elapsed_sec": 2.91, "mem_peak_gb": 58.36, "status": "ok"},
+      "49152": {"ppl": 1503.946, "loss": 7.3158, "elapsed_sec": 4.97, "mem_peak_gb": 80.05, "status": "ok"}
+    },
+    "max_length": 49152,
+    "oom_at": null,
+    "collapse_ratio": {"2048": 1.0, "8192": 0.845, "16384": 1.712, "24576": 12.434, "32768": 57.214, "49152": 135.186},
+    "boundary": 24576
+  }
+}

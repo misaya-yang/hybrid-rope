@@ -1,0 +1,40 @@
+2026-02-15 10:32:10 | INFO | Tasks=['qasper', 'hotpotqa', 'gov_report']
+2026-02-15 10:32:10 | INFO | === Evaluate model: base_unfinetuned ===
+2026-02-15 10:32:14 | INFO | === Evaluate model: hybrid_lora ===
+2026-02-15 10:32:17 | INFO | Loading LoRA adapter: /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_lora_suite_20260214/yarn/final_lora
+2026-02-15 10:32:20 | INFO | Saved /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_post_eval_20260214/longbench/longbench_base_vs_yarn.json
+2026-02-15 10:32:25 | INFO | Tasks=['qasper', 'hotpotqa', 'gov_report']
+2026-02-15 10:32:25 | INFO | === Evaluate model: base_unfinetuned ===
+2026-02-15 10:32:29 | INFO | === Evaluate model: hybrid_lora ===
+2026-02-15 10:32:33 | INFO | Loading LoRA adapter: /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_lora_suite_20260214/pi/final_lora
+2026-02-15 10:32:36 | INFO | Saved /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_post_eval_20260214/longbench/longbench_base_vs_pi.json
+2026-02-15 10:32:41 | INFO | Tasks=['qasper', 'hotpotqa', 'gov_report']
+2026-02-15 10:32:41 | INFO | === Evaluate model: base_unfinetuned ===
+2026-02-15 10:32:45 | INFO | === Evaluate model: hybrid_lora ===
+2026-02-15 10:32:48 | INFO | Loading LoRA adapter: /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_lora_suite_20260214/hybrid/final_lora
+2026-02-15 10:32:51 | INFO | Saved /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_post_eval_20260214/longbench/longbench_base_vs_hybrid.json
+2026-02-15 10:32:56 | INFO | Tasks=['qasper', 'hotpotqa', 'gov_report']
+2026-02-15 10:32:56 | INFO | === Evaluate model: base_unfinetuned ===
+2026-02-15 10:33:00 | INFO | === Evaluate model: hybrid_lora ===
+2026-02-15 10:33:04 | INFO | Loading LoRA adapter: /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_lora_suite_20260214/pi_soft/final_lora
+2026-02-15 10:33:06 | INFO | Saved /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_post_eval_20260214/longbench/longbench_base_vs_pi_soft.json
+2026-02-15 10:44:06 | INFO | Tasks=['qasper', 'hotpotqa', 'gov_report']
+2026-02-15 10:44:06 | INFO | === Evaluate model: base_unfinetuned ===
+2026-02-15 10:44:11 | INFO | === Evaluate model: hybrid_lora ===
+2026-02-15 10:44:14 | INFO | Loading LoRA adapter: /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_lora_suite_20260214/yarn/final_lora
+2026-02-15 10:44:17 | INFO | Saved /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_post_eval_20260214/longbench/longbench_base_vs_yarn.json
+2026-02-15 10:44:22 | INFO | Tasks=['qasper', 'hotpotqa', 'gov_report']
+2026-02-15 10:44:22 | INFO | === Evaluate model: base_unfinetuned ===
+2026-02-15 10:44:26 | INFO | === Evaluate model: hybrid_lora ===
+2026-02-15 10:44:30 | INFO | Loading LoRA adapter: /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_lora_suite_20260214/pi/final_lora
+2026-02-15 10:44:32 | INFO | Saved /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_post_eval_20260214/longbench/longbench_base_vs_pi.json
+2026-02-15 10:44:37 | INFO | Tasks=['qasper', 'hotpotqa', 'gov_report']
+2026-02-15 10:44:37 | INFO | === Evaluate model: base_unfinetuned ===
+2026-02-15 10:44:41 | INFO | === Evaluate model: hybrid_lora ===
+2026-02-15 10:44:45 | INFO | Loading LoRA adapter: /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_lora_suite_20260214/hybrid/final_lora
+2026-02-15 10:44:48 | INFO | Saved /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_post_eval_20260214/longbench/longbench_base_vs_hybrid.json
+2026-02-15 10:44:53 | INFO | Tasks=['qasper', 'hotpotqa', 'gov_report']
+2026-02-15 10:44:53 | INFO | === Evaluate model: base_unfinetuned ===
+2026-02-15 10:44:57 | INFO | === Evaluate model: hybrid_lora ===
+2026-02-15 10:45:01 | INFO | Loading LoRA adapter: /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_lora_suite_20260214/pi_soft/final_lora
+2026-02-15 10:45:03 | INFO | Saved /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_post_eval_20260214/longbench/longbench_base_vs_pi_soft.json
