@@ -99,6 +99,12 @@ def main() -> None:
     ap.add_argument("--longbench_tasks", type=str, default="qasper,hotpotqa,gov_report")
     ap.add_argument("--longbench_max_samples", type=int, default=100)
     ap.add_argument("--longbench_max_input_tokens", type=int, default=16384)
+    ap.add_argument(
+        "--longbench_local_data_dir",
+        type=str,
+        default="/root/autodl-tmp/dfrope/ms_datasets/LongBench/data",
+        help="Local LongBench jsonl directory for fully offline evaluation.",
+    )
     ap.add_argument("--seed", type=int, default=42)
     args = ap.parse_args()
 
@@ -223,6 +229,8 @@ def main() -> None:
                 str(args.longbench_max_samples),
                 "--max_input_tokens",
                 str(args.longbench_max_input_tokens),
+                "--longbench_local_data_dir",
+                str(args.longbench_local_data_dir),
                 "--attn_implementation",
                 "sdpa",
                 "--seed",
