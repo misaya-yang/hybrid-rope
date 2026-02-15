@@ -265,7 +265,15 @@ def truncate_prompt(tokenizer: AutoTokenizer, prompt: str, max_tokens: int) -> s
     return tokenizer.decode(ids, skip_special_tokens=False)
 
 
-def load_task_dataset(task: str):
+def load_task_dataset(task: str, local_data_dir: Optional[str] = None):
+    # Prefer local jsonl files when available (fully offline and deterministic).
+    if local_data_dir:
+        data_dir = Path(local_data_dir)
+        if data_dir.exists():
+            p = data_dir / f"{task}.jsonl"
+            if p.exists():
+                return load_dataset("json", data_files=str(p), split="train")
+
     # LongBench requires a config name. Do not fall back to cfg=None, otherwise
     # we may silently return a misleading "Config name is missing" error as the
     # final exception even when earlier attempts failed for a different reason.
@@ -320,8 +328,9 @@ def evaluate_task(
     max_new_tokens_qa: int,
     max_new_tokens_sum: int,
     seed: int,
+    local_data_dir: Optional[str],
 ) -> Dict:
-    ds = load_task_dataset(task)
+    ds = load_task_dataset(task, local_data_dir=local_data_dir)
     n = min(max_samples, len(ds))
     idxs = list(range(len(ds)))
     random.Random(seed).shuffle(idxs)
@@ -398,6 +407,12 @@ def main() -> None:
     ap.add_argument("--max_input_tokens", type=int, default=16384)
     ap.add_argument("--max_new_tokens_qa", type=int, default=64)
     ap.add_argument("--max_new_tokens_sum", type=int, default=256)
+    ap.add_argument(
+        "--longbench_local_data_dir",
+        type=str,
+        default=os.environ.get("LONGBENCH_LOCAL_DATA_DIR", "/root/autodl-tmp/dfrope/ms_datasets/LongBench/data"),
+        help="Directory containing local LongBench jsonl files (e.g. qasper.jsonl).",
+    )
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--output_json", type=str, required=True)
     ap.add_argument("--attn_implementation", type=str, default="auto", choices=["auto", "flash_attention_2", "sdpa", "eager"])
@@ -453,6 +468,7 @@ def main() -> None:
                     max_new_tokens_qa=args.max_new_tokens_qa,
                     max_new_tokens_sum=args.max_new_tokens_sum,
                     seed=args.seed,
+                    local_data_dir=args.longbench_local_data_dir,
                 )
             except Exception as e:
                 tres = {
