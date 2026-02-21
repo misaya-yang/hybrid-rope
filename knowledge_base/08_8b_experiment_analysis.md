@@ -1,180 +1,97 @@
-# 8B LoRA Experiment Analysis
+# 8B LoRA 实验分析
 
-**Date**: 2026-02-21  
-**Purpose**: Analyze why the 8B experiment failed and identify design issues
+> 最后更新：2026-02-22（标记旧问题状态、新增公平实验设计）
 
----
+## 1. 旧实验问题诊断（全部已修复 ✅）
 
-## Current Results
+### Issue 1：不公平比较 → ✅ 已修复
 
-| Method | PPL@16k | PPL@32k | Status |
-|--------|----------|----------|--------|
-| YaRN | 6.057 | 6.270 | ✅ Completed |
-| PI (linear) | 6.137 | 6.310 | ✅ Completed |
-| Hybrid | - | - | ❌ Poor results |
+| 问题 | 旧做法 | 新做法 |
+|------|--------|--------|
+| RoPE 实现 | YaRN/PI 用 `rope_scaling`，Hybrid 用 monkey patch | 统一 `inv_freq.copy_()` buffer 覆写 |
+| Config 污染 | YaRN 修改 `model.config.rope_scaling` | 强制 `rope_scaling=None` |
+| Forward patch | Hybrid 替换 forward 函数 | 禁止任何 forward monkey patch |
 
----
+### Issue 2：超参不一致 → ✅ 已修复
 
-## Issues Identified
+所有方法现在锁定完全相同的训练超参：
 
-### Issue 1: Training Hyperparameters Mismatch
+| 参数 | 值 |
+|------|-----|
+| batch_size × grad_accum | 2 × 2 = 4 |
+| learning_rate | 2e-4 |
+| max_steps | 600 |
+| attention | sdpa（强制） |
+| LoRA rank/alpha | 64/128 |
+| LoRA targets | q,k,v,o_proj |
+| bf16 | True |
+| gradient_checkpointing | True (use_reentrant=False) |
 
-**In `train_llama8b_lora_variant.py` (variant script defaults):**
-```python
---per_device_train_batch_size: 1
---gradient_accumulation_steps: 8
-# Effective batch size = 1 * 8 = 8
-```
+### Issue 3：Hybrid 超参未调优 → ✅ 重新设计
 
-**In `run_llama8b_fair_suite.py` (suite runner overrides):**
-```python
---per_device_train_batch_size: 4
---gradient_accumulation_steps: 1
-# Effective batch size = 4 * 1 = 4
-```
+旧 Hybrid 使用 `compute_hybrid_inv_freq` 的固定参数（split_ratio=0.5, alpha=0.2, p=3.9）。
 
-The suite passes these as arguments, so they should be consistent. But the defaults in the variant script are different, which could cause issues if not passed correctly.
+新方法 `anchored_hybrid` 采用物理更清晰的设计：
+- **rigid_j0=12**：前 12 对高频与 baseline 精确相同（bitwise equal）
+- **tail_base = base × scale²**：低频段使用更大 base（严格 > 原 base）
+- **cosine ramp + alpha blend**：平滑过渡，无硬拼接
 
----
+### Issue 4：Device mismatch → ✅ 已修复
 
-### Issue 2: Attention Implementation Variation
+验证探针使用 `next(model.parameters()).device` 而非硬编码 `cuda:0`。
 
-The code tries multiple attention implementations in order:
-```python
-def attn_candidates(mode: str) -> List[Optional[str]]:
-    if mode == "auto":
-        return ["flash_attention_2", "sdpa", None]
-```
+### Issue 5：BOS token 丢失 → ✅ 已修复
 
-This means different runs might use different attention backends, introducing variability.
+截断逻辑保留 `[BOS] + tail` 而非纯尾截断。
 
-**Found in results:**
-- YaRN: `"attn_used": "sdpa"`
-- PI: `"attn_used": "sdpa"`
+### Issue 6：inv_freq 注入可能失效 → ✅ 已加防御
 
-But there's no guarantee this is consistent across runs.
+运行时探针检测 inv_freq 是否被 forward 真正消费。
 
 ---
 
-### Issue 3: Hybrid Uses Completely Different Implementation
+## 2. 新公平实验设计
 
-**YaRN/PI**: Use HuggingFace's built-in `rope_scaling`:
-```python
-{"rope_type": "yarn", "factor": 8.0, "rope_theta": 500000.0}
-{"rope_type": "linear", "factor": 8.0, "rope_theta": 500000.0}
-```
+### 脚本
 
-**Hybrid**: Uses custom monkey patching:
-```python
-def compute_hybrid_inv_freq(
-    head_dim: int,
-    theta_base: float = 500000.0,
-    split_ratio: float = 0.5,
-    alpha: float = 0.2,
-    p: float = 3.9,
-    min_freq_scale: float = 4.0,
-) -> torch.Tensor
-```
+- 训练：`2026-02-22/scripts/run_llama8b_fair_suite.py`（830 行，含所有安全检查）
+- 流水线：`2026-02-22/scripts/run_overnight_8h.py`（606 行，4-gate 自动化）
 
-This is NOT a fair comparison - the baseline methods use native HF implementation while Hybrid uses custom code.
+### 4 个方法
 
----
+| 方法 | inv_freq 计算方式 | 特点 |
+|------|------------------|------|
+| baseline | 原始几何频率 | 对照组 |
+| PI | `base_inv / scale` | 位置插值 |
+| YaRN | progresssive ramp + temperature | 渐进插值 |
+| anchored_hybrid | rigid core + cosine-ramp blend | **我们的方法** |
 
-### Issue 4: Hybrid Has Multiple Unoptimized Hyperparameters
+### 评测
 
-```python
-hybrid_split_ratio: 0.5     # Not tuned
-hybrid_alpha: 0.2           # Not tuned  
-hybrid_p: 3.9               # Not tuned
-hybrid_min_freq_scale: 4.0   # Not tuned
-```
+- NIAH 热力图：[4K, 8K, 16K, 32K] × 11 depth × 3 trials
+- 训练 loss 曲线
+- 基于 baseline（无 LoRA）的参考线
 
-These values were not grid-searched and may not be optimal.
+### 安全检查链
+
+1. `model.config.rope_scaling == None` 断言
+2. inv_freq shape/dtype 匹配检查
+3. rigid core bitwise equal 验证
+4. 运行时 logit diff 探针
+5. BOS 保留验证
 
 ---
 
-### Issue 5: RoPE Theta Interpretation
+## 3. 旧实验结果存档（仅供参考）
 
-From YaRN result:
-```json
-"rope_theta": 500000.0,
-"original_max_position_embeddings": 8192
-```
+| 方法 | train_loss | PPL@16K | PPL@32K | 状态 |
+|------|-----------|---------|---------|------|
+| YaRN (旧) | 1.7248 | 6.0566 | 6.2702 | ⚠️ 旧协议 |
+| PI (旧) | 1.9493 | 6.1369 | 6.3100 | ⚠️ 旧协议 |
+| Hybrid (旧) | 2.0565 | 11.8753 | 77.1381 | ❌ 不公平比较 |
 
-But this is the **transformers internal** representation. The actual effective theta is:
-- YaRN: rope_theta × factor = 500000 × 8 = 4M effective
-- PI: rope_theta × factor = 500000 × 8 = 4M effective
-
-However, the Hybrid uses:
-- `theta_base: 500000.0` directly in the custom function
-
-This might not be equivalent!
+**这些数据不应在论文中引用**，等待新公平实验结果替代。
 
 ---
 
-### Issue 6:rope_scaling vs Custom Patch Incompatibility
-
-YaRN and PI use `cfg.rope_scaling` which transforms the model's position embeddings internally.
-
-Hybrid uses `patch_hybrid_rope()` which directly modifies `module.inv_freq` after model loading.
-
-These two approaches might interact differently with the LoRA training.
-
----
-
-## Recommendations for Re-design
-
-### 1. Fix Hyperparameters
-Ensure ALL variants use identical:
-- Batch size: 4 × 1 = 4
-- Learning rate: 2e-4
-- Steps: 600
-- Attention implementation: force sdpa for all
-
-### 2. Make Implementation Consistent
-**Option A**: Use custom implementation for ALL methods (like Hybrid)
-**Option B**: Use native HF rope_scaling for ALL methods
-
-Currently mixing:
-- YaRN: native
-- PI: native
-- Hybrid: custom
-
-### 3. Grid Search Hybrid Parameters
-Before comparing, tune:
-- `split_ratio`: [0.3, 0.5, 0.7]
-- `alpha`: [0.1, 0.2, 0.3]
-- `p`: [2.0, 3.9, 5.0]
-
-### 4. Use Same Base Theta
-Ensure all methods start from the same theta and only change the frequency distribution.
-
-### 5. Add Baseline Comparison
-Run a "no-scaling" baseline (standard RoPE at 8K) to understand the baseline PPL.
-
----
-
-## Proposed Fair Comparison Design
-
-| Parameter | All Variants |
-|-----------|---------------|
-| Base Model | LLaMA-3-8B-Instruct |
-| Training Steps | 600 |
-| Seq Len | 8192 |
-| Batch Size | 4 |
-| LR | 2e-4 |
-| Attention | sdpa (forced) |
-| Base Theta | 500000 (same for all) |
-| Factor | 8.0 (for scaling methods) |
-
-**Methods to compare:**
-1. **Baseline**: No scaling (standard RoPE at 8K)
-2. **PI (linear)**: factor=8.0
-3. **YaRN**: factor=8.0
-4. **Anchored-Sigmoid**: Custom implementation with optimal params (anchor_factor=20)
-
-Each uses the same implementation approach (either all native or all custom).
-
----
-
-*Analysis completed: 2026-02-21*
+*分析完成：2026-02-22 01:50*
