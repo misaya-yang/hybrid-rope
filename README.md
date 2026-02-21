@@ -15,12 +15,13 @@ It contains code, experiment evidence, analysis docs, and server snapshots.
 
 ## Read In This Order
 
-1. `AI_HANDOFF.md`
-2. `docs/EXPERIMENT_MASTER_SUMMARY_2026-02-21.md`
-3. `docs/RESEARCH_STORYLINE_2026-02-21.md`
-4. `docs/EXPERIMENT_ENVIRONMENT_2026-02-21.md`
-5. `docs/SERVER_EVIDENCE_SYNC_2026-02-21.md`
-6. `results/advisor_package_2026-02-15/INDEX.md`
+1. `knowledge_base/README.md`
+2. `knowledge_base/ALL_IN_ONE.md`
+3. `knowledge_base/00_项目与结论总览.md`
+4. `AI_HANDOFF.md`
+5. `docs/EXPERIMENT_MASTER_SUMMARY_2026-02-21.md`
+6. `docs/RESEARCH_STORYLINE_2026-02-21.md`
+7. `docs/EXPERIMENT_ENVIRONMENT_2026-02-21.md`
 
 ## Canonical Evidence Locations
 

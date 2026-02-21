@@ -10,6 +10,7 @@ Last update: `2026-02-21`
   2. run controlled experiments
   3. preserve evidence (json/log/figures)
   4. convert to paper claims
+- For fast context loading, read `knowledge_base/` first.
 
 ## 2. Current Ground Truth
 
