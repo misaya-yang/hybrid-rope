@@ -1,0 +1,134 @@
+[env] {'cwd': '/root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments', 'torch_version': '2.8.0+cu128', 'cuda_available': True, 'cuda_device_count': 1, 'cuda_name_0': 'NVIDIA RTX PRO 6000 Blackwell Server Edition'}
+[debug] device: cuda
+[debug] model_path: /root/autodl-tmp/dfrope/ms_models/LLM-Research/Meta-Llama-3-8B-Instruct
+[debug] transformers version: 5.1.0
+[debug] model loaded in 3.61s
+
+=== Step 4: RoPE Architecture Diagnostics ===
+Model config rope_theta: N/A
+Model config rope_scaling: {'rope_theta': 500000.0, 'rope_type': 'default'}
+Model config max_position_embeddings: 8192
+
+=== model.rotary_emb ===
+  Type: <class 'transformers.models.llama.modeling_llama.LlamaRotaryEmbedding'>
+  Attributes(sample): ['T_destination', 'add_module', 'apply', 'attention_scaling', 'bfloat16', 'buffers', 'call_super_init', 'children', 'compile', 'compute_default_rope_parameters', 'config', 'cpu', 'cuda', 'double', 'dump_patches', 'eval', 'extra_repr', 'float', 'forward', 'get_buffer', 'get_extra_state', 'get_parameter', 'get_submodule', 'half', 'inv_freq', 'ipu', 'load_state_dict', 'max_seq_len_cached', 'modules', 'mtia']
+  inv_freq shape=(64,) dtype=torch.float32
+  module.config.rope_theta=N/A
+  forward signature: (x, position_ids)
+
+[debug] rotary modules with inv_freq: 1
+  - model.rotary_emb: shape=(64,) dtype=torch.float32
+[debug] inferred rope_theta(model)=500000.0
+[debug] using base for injected freqs=500000.0
+[debug] k/x0 source: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/data/phase3/summary.json
+[debug] k_formula=0.12534921, x0_formula=61.8228, k_opt=0.12800000, x0_opt=63.0000
+
+=== Step 1: inv_freq Meaning / Direction Check ===
+[orig] model.rotary_emb.inv_freq: shape=(64,) dtype=torch.float32 min=2.4551407e-06 max=1 descending=True
+  first_5=[1.0, 0.8146172165870667, 0.663601279258728, 0.5405809879302979, 0.44036662578582764]
+  last_5=[5.575220257014735e-06, 4.541670477919979e-06, 3.6997230381530244e-06, 3.01385807688348e-06, 2.4551407022954663e-06]
+[cand] standard_reinject: shape=(64,) dtype=torch.float64 min=2.4551407e-06 max=1 descending=True
+  first_5=[1.0, 0.8146172165870667, 0.6636012196540833, 0.5405809879302979, 0.44036659598350525]
+  last_5=[5.575220257014735e-06, 4.541670477919979e-06, 3.6997230381530244e-06, 3.01385807688348e-06, 2.4551407022954663e-06]
+[cand] sigmoid_formula(base=model): shape=(64,) dtype=torch.float64 min=2e-06 max=1 descending=True
+  first_5=[1.0, 0.9985942244529724, 0.9970033168792725, 0.9952032566070557, 0.9931671023368835]
+  last_5=[4.1919960494851694e-05, 1.979394073714502e-05, 9.246342415281106e-06, 4.298024123272626e-06, 1.9999999949504854e-06]
+[cand] sigmoid_grid(base=model): shape=(64,) dtype=torch.float64 min=2e-06 max=1 descending=True
+  first_5=[1.0, 0.9988729953765869, 0.9975937604904175, 0.9961419105529785, 0.9944946765899658]
+  last_5=[5.367946141632274e-05, 2.4135844796546735e-05, 1.0641355402185582e-05, 4.629096110875253e-06, 1.9999999949504854e-06]
+[cand] sigmoid_formula(base=10000): shape=(64,) dtype=torch.float64 min=9.9999997e-05 max=1 descending=True
+  first_5=[1.0, 0.9990131258964539, 0.9978957772254944, 0.996630847454071, 0.9951992034912109]
+  last_5=[0.0008461734978482127, 0.000499717250932008, 0.0002928929461631924, 0.00017107721942011267, 9.999999747378752e-05]
+[compare:orig_vs_standard_reinject] shape_match=True ref_range=[2.4551407e-06,1] cand_range=[2.4551407e-06,1] max_abs_diff=5.9604645e-08
+[compare:orig_vs_sigmoid_formula(base=model)] shape_match=True ref_range=[2.4551407e-06,1] cand_range=[2e-06,1] max_abs_diff=0.89712679
+[compare:orig_vs_sigmoid_formula(base=10000)] shape_match=True ref_range=[2.4551407e-06,1] cand_range=[9.9999997e-05,1] max_abs_diff=0.91612595
+
+=== Step 2: Apply inv_freq + Clear Cache ===
+[debug] force_monkey_patch=True
+[after_apply_standard] model.rotary_emb.inv_freq: shape=(64,) dtype=torch.float32 min=2.4551407e-06 max=1 descending=True
+  first_5=[1.0, 0.8146172165870667, 0.6636012196540833, 0.5405809879302979, 0.44036659598350525]
+  last_5=[5.575220257014735e-06, 4.541670477919979e-06, 3.6997230381530244e-06, 3.01385807688348e-06, 2.4551407022954663e-06]
+[after_restore_orig] model.rotary_emb.inv_freq: shape=(64,) dtype=torch.float32 min=2.4551407e-06 max=1 descending=True
+  first_5=[1.0, 0.8146172165870667, 0.663601279258728, 0.5405809879302979, 0.44036662578582764]
+  last_5=[5.575220257014735e-06, 4.541670477919979e-06, 3.6997230381530244e-06, 3.01385807688348e-06, 2.4551407022954663e-06]
+
+=== Step 5: Probe Actual cos/sin and Hook Shapes ===
+[probe] original rotary outputs: {
+  "model.rotary_emb": {
+    "cos_shape": [
+      1,
+      16,
+      128
+    ],
+    "sin_shape": [
+      1,
+      16,
+      128
+    ],
+    "cos_sample": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "sin_sample": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}
+[probe] sigmoid rotary outputs: {
+  "model.rotary_emb": {
+    "cos_shape": [
+      1,
+      16,
+      128
+    ],
+    "sin_shape": [
+      1,
+      16,
+      128
+    ],
+    "cos_sample": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "sin_sample": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}
+[probe] hook captured modules: ['model.rotary_emb']
+
+=== Step 3: 4-way Control Test + Full Passkey ===
+[debug] passkey supported lengths: [4096, 8192]
+[debug] quick_probe_only enabled: lengths=[4096], repeats=2
+[result] saved: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/data/passkey_results_v3.csv
+
++------------------------+----------+
+| Method                 | Accuracy |
++------------------------+----------+
+| Original               |    1.000 |
+| Standard(re-inject)    |    1.000 |
+| Sigmoid(Formula)       |    0.000 |
+| Sigmoid(Grid-Opt)      |    0.000 |
++------------------------+----------+
+
++------------------------+---------+----------+
+| Method                 | Length  | Accuracy |
++------------------------+---------+----------+
+| Original               |    4096 |    1.000 |
+| Standard(re-inject)    |    4096 |    1.000 |
+| Sigmoid(Formula)       |    4096 |    0.000 |
+| Sigmoid(Grid-Opt)      |    4096 |    0.000 |
++------------------------+---------+----------+
+[result] saved: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/results/passkey_retrieval_v3.pdf
+[result] saved: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/results/passkey_retrieval_by_length_v3.pdf
+[result] saved diagnostics: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/data/passkey_debug_diagnostics.json

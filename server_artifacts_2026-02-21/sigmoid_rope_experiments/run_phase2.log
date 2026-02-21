@@ -1,0 +1,60 @@
+[env] {'cwd': '/root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments', 'torch_version': '2.8.0+cu128', 'cuda_available': True, 'cuda_device_count': 1, 'cuda_name_0': 'NVIDIA RTX PRO 6000 Blackwell Server Edition'}
+[run_phase2] device: cuda
+[phase2] Loaded coarse centers from /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/data/grid_search_results.csv
+[phase2] Fine search done. Saved /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/data/fine_search_results.csv
+
+[phase2] k-model fitting results:
+  k-A: ok=True r2=0.935256 params={'c1': 1.5749084075959594} mean_rel=11.06% max_rel=21.28%
+  k-B: ok=True r2=0.940428 params={'c1': 1.4788451875656683, 'c2': 0.011471367253106761} mean_rel=10.37% max_rel=20.52%
+  k-C: ok=True r2=0.983786 params={'c1': 9.99999999998471, 'c2': 0.04600541500919441} mean_rel=5.98% max_rel=11.89%
+  k-D: ok=True r2=0.975405 params={'c1': 0.9416629348402563, 'c2': 0.0010000000000000054} mean_rel=7.07% max_rel=13.84%
+  k-E: ok=True r2=0.935494 params={'c1': 1.4497745457228213, 'c2': 0.9810043164546718} mean_rel=10.98% max_rel=19.48%
+[phase2] x0-model fitting results:
+  x0-A: ok=True r2=0.998639 params={'c3': 0.47563244047619047} mean_rel=1.85% max_rel=3.36%
+  x0-B: ok=True r2=0.999232 params={'c3': 0.4659334861821938, 'c4': 0.18528176456588083} mean_rel=1.68% max_rel=3.66%
+  x0-C: ok=True r2=0.997871 params={'c3': 0.9611844500371971} mean_rel=2.80% max_rel=3.88%
+
+推荐公式:
+  k-form=C, params={'c1': 9.99999999998471, 'c2': 0.04600541500919441}, R²=0.9838, max_error=11.9%
+  x0-form=A, params={'c3': 0.47563244047619047}, R²=0.9986, max_error=3.4%
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                     Sigmoid-RoPE Experimental Summary                     ║
+╠═════╦════════╦═══════════╦═══════════╦════════════╦═══════════╦═════════╣
+║  d  ║   L    ║ k_optimal ║ k_formula ║ k_error(%) ║ score_std ║ score_σ ║
+╠═════╦════════╦═══════════╦═══════════╦════════════╦═══════════╦═════════╣
+║  64 ║   4096 ║   0.2470 ║   0.2291 ║      7.25 ║   0.1612 ║ 0.0708 ║
+║  64 ║   8192 ║   0.2500 ║   0.2365 ║      5.39 ║   0.1557 ║ 0.0700 ║
+║  64 ║  16384 ║   0.2590 ║   0.2442 ║      5.72 ║   0.2018 ║ 0.1206 ║
+║  64 ║  32768 ║   0.2450 ║   0.2521 ║      2.89 ║   0.2027 ║ 0.1170 ║
+║  64 ║  65536 ║   0.2430 ║   0.2603 ║      7.10 ║   0.2046 ║ 0.1191 ║
+║  64 ║ 131072 ║   0.2570 ║   0.2687 ║      4.55 ║   0.2058 ║ 0.1216 ║
+║ 128 ║   4096 ║   0.1250 ║   0.1145 ║      8.36 ║   0.1631 ║ 0.0629 ║
+║ 128 ║   8192 ║   0.1250 ║   0.1183 ║      5.39 ║   0.1560 ║ 0.0609 ║
+║ 128 ║  16384 ║   0.1300 ║   0.1221 ║      6.09 ║   0.1903 ║ 0.0940 ║
+║ 128 ║  32768 ║   0.1190 ║   0.1260 ║      5.92 ║   0.1895 ║ 0.0938 ║
+║ 128 ║  65536 ║   0.1220 ║   0.1301 ║      6.66 ║   0.1910 ║ 0.0961 ║
+║ 128 ║ 131072 ║   0.1280 ║   0.1343 ║      4.96 ║   0.1917 ║ 0.0954 ║
+║ 256 ║   4096 ║   0.0650 ║   0.0573 ║     11.89 ║   0.1644 ║ 0.0587 ║
+║ 256 ║   8192 ║   0.0660 ║   0.0591 ║     10.41 ║   0.1563 ║ 0.0565 ║
+║ 256 ║  16384 ║   0.0670 ║   0.0610 ║      8.89 ║   0.1843 ║ 0.0823 ║
+║ 256 ║  32768 ║   0.0650 ║   0.0630 ║      3.04 ║   0.1811 ║ 0.0794 ║
+║ 256 ║  65536 ║   0.0660 ║   0.0651 ║      1.42 ║   0.1816 ║ 0.0807 ║
+║ 256 ║ 131072 ║   0.0660 ║   0.0672 ║      1.78 ║   0.1817 ║ 0.0799 ║
+╚═════╩════════╩═══════════╩═══════════╩════════════╩═══════════╩═════════╝
+
+推荐最终公式 (LaTeX):
+  k = form-C params={'c1': 9.99999999998471, 'c2': 0.04600541500919441}, \quad x_0 = 0.4756 \cdot d
+
+拟合质量:
+  k:  R² = 0.9838, 最大相对误差 = 11.9%
+  x₀: R² = 0.9986, 最大相对误差 = 3.4%
+
+相对改善 (Score_standard - Score_sigmoid_v2) / Score_standard:
+  平均: 52.8%
+  最大: 64.3% (at d=256, L=4096)
+  最小: 40.2% (at d=64, L=16384)
+
+[run_phase2] Done in 14.89s
+[run_phase2] data dir: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/data
+[run_phase2] results dir: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/results

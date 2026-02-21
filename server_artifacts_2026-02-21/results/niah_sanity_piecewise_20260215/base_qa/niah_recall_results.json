@@ -1,0 +1,257 @@
+{
+  "meta": {
+    "timestamp": "2026-02-15_13:29:33",
+    "base_model_path": "/root/autodl-tmp/dfrope/ms_models/LLM-Research/Meta-Llama-3-8B-Instruct",
+    "adapter_path": null,
+    "base_only": true,
+    "merge_lora": false,
+    "attn_used": "sdpa",
+    "variant_used": "base",
+    "rope_used": null,
+    "prompt_mode": "qa",
+    "lengths": [
+      4096,
+      8192
+    ],
+    "depths": [
+      10,
+      50,
+      90
+    ],
+    "trials_per_cell": 1,
+    "needles_per_prompt": 1,
+    "seed": 42
+  },
+  "accuracy_matrix": {
+    "10%": {
+      "4096": 1.0,
+      "8192": 1.0
+    },
+    "50%": {
+      "4096": 1.0,
+      "8192": 1.0
+    },
+    "90%": {
+      "4096": 1.0,
+      "8192": 1.0
+    }
+  },
+  "raw": {
+    "meta": {
+      "lengths": [
+        4096,
+        8192
+      ],
+      "depths": [
+        10,
+        50,
+        90
+      ],
+      "trials_per_cell": 1,
+      "needles_per_prompt": 1,
+      "prompt_mode": "qa",
+      "max_new_tokens": 24,
+      "seed": 42
+    },
+    "cells": {
+      "4096": {
+        "10": {
+          "trials": [
+            {
+              "context_len": 4096,
+              "depth_percent": 10,
+              "needles_per_prompt": 1,
+              "target_value": "126225",
+              "pred": "126225",
+              "all_codes": [
+                "126225"
+              ],
+              "generation": " 126225. \n\nPlease provide the id for which you want the secret code. I will return the code. \n\n",
+              "correct": true,
+              "meta": {
+                "target_id": 1,
+                "target_value": "126225",
+                "facts": [
+                  [
+                    1,
+                    "126225"
+                  ]
+                ],
+                "target_depth_percent": 10,
+                "prompt_mode": "qa"
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "50": {
+          "trials": [
+            {
+              "context_len": 4096,
+              "depth_percent": 50,
+              "needles_per_prompt": 1,
+              "target_value": "356787",
+              "pred": "356787",
+              "all_codes": [
+                "356787"
+              ],
+              "generation": " 356787. \n\nThis is a generic background content without useful codes. This is a generic background content without useful codes",
+              "correct": true,
+              "meta": {
+                "target_id": 1,
+                "target_value": "356787",
+                "facts": [
+                  [
+                    1,
+                    "356787"
+                  ]
+                ],
+                "target_depth_percent": 50,
+                "prompt_mode": "qa"
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "90": {
+          "trials": [
+            {
+              "context_len": 4096,
+              "depth_percent": 90,
+              "needles_per_prompt": 1,
+              "target_value": "246316",
+              "pred": "246316",
+              "all_codes": [
+                "246316",
+                "246316"
+              ],
+              "generation": " 246316. \n\nNote: The secret code for id 1 is 246316. The rest of the background",
+              "correct": true,
+              "meta": {
+                "target_id": 1,
+                "target_value": "246316",
+                "facts": [
+                  [
+                    1,
+                    "246316"
+                  ]
+                ],
+                "target_depth_percent": 90,
+                "prompt_mode": "qa"
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        }
+      },
+      "8192": {
+        "10": {
+          "trials": [
+            {
+              "context_len": 8192,
+              "depth_percent": 10,
+              "needles_per_prompt": 1,
+              "target_value": "809570",
+              "pred": "809570",
+              "all_codes": [
+                "809570"
+              ],
+              "generation": " 809570. This is the secret code for id 1. It is a generic background content without useful codes.",
+              "correct": true,
+              "meta": {
+                "target_id": 1,
+                "target_value": "809570",
+                "facts": [
+                  [
+                    1,
+                    "809570"
+                  ]
+                ],
+                "target_depth_percent": 10,
+                "prompt_mode": "qa"
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "50": {
+          "trials": [
+            {
+              "context_len": 8192,
+              "depth_percent": 50,
+              "needles_per_prompt": 1,
+              "target_value": "719176",
+              "pred": "719176",
+              "all_codes": [
+                "719176"
+              ],
+              "generation": " The secret code for id 1 is 719176. [Fact 2] The secret code for id 2",
+              "correct": true,
+              "meta": {
+                "target_id": 1,
+                "target_value": "719176",
+                "facts": [
+                  [
+                    1,
+                    "719176"
+                  ]
+                ],
+                "target_depth_percent": 50,
+                "prompt_mode": "qa"
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        },
+        "90": {
+          "trials": [
+            {
+              "context_len": 8192,
+              "depth_percent": 90,
+              "needles_per_prompt": 1,
+              "target_value": "133326",
+              "pred": "133326",
+              "all_codes": [
+                "133326",
+                "123456"
+              ],
+              "generation": " 133326. [Fact 2] The secret code for id 2 is 123456.  content without",
+              "correct": true,
+              "meta": {
+                "target_id": 1,
+                "target_value": "133326",
+                "facts": [
+                  [
+                    1,
+                    "133326"
+                  ]
+                ],
+                "target_depth_percent": 90,
+                "prompt_mode": "qa"
+              }
+            }
+          ],
+          "status": "ok",
+          "correct": 1,
+          "total": 1,
+          "accuracy": 1.0
+        }
+      }
+    }
+  }
+}

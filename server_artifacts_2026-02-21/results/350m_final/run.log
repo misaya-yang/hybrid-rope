@@ -1,0 +1,410 @@
+======================================================================
+  350M FINAL VALIDATION
+  Hybrid(alpha=0.2, theta=100k) vs Geo(theta=500k)
+======================================================================
+  Loading TinyStories train (500M tokens) -> memmap...
+    10M tokens written (0.5 min)
+    20M tokens written (0.8 min)
+    30M tokens written (1.2 min)
+    40M tokens written (1.6 min)
+    50M tokens written (1.9 min)
+    60M tokens written (2.3 min)
+    70M tokens written (2.6 min)
+    80M tokens written (3.0 min)
+    90M tokens written (3.4 min)
+    100M tokens written (3.7 min)
+    110M tokens written (4.1 min)
+    120M tokens written (4.5 min)
+    130M tokens written (4.9 min)
+    140M tokens written (5.3 min)
+    150M tokens written (5.7 min)
+    160M tokens written (6.0 min)
+    170M tokens written (6.4 min)
+    180M tokens written (6.8 min)
+    190M tokens written (7.1 min)
+    200M tokens written (7.5 min)
+    210M tokens written (7.9 min)
+    220M tokens written (8.2 min)
+    230M tokens written (8.6 min)
+    240M tokens written (9.1 min)
+    250M tokens written (9.4 min)
+    260M tokens written (9.8 min)
+    270M tokens written (10.2 min)
+    280M tokens written (10.5 min)
+    290M tokens written (10.9 min)
+    300M tokens written (11.3 min)
+    310M tokens written (11.6 min)
+    320M tokens written (12.0 min)
+    330M tokens written (12.4 min)
+    340M tokens written (12.7 min)
+    350M tokens written (13.1 min)
+    360M tokens written (13.6 min)
+    370M tokens written (13.9 min)
+    380M tokens written (14.3 min)
+    390M tokens written (14.7 min)
+    400M tokens written (15.0 min)
+    410M tokens written (15.4 min)
+    420M tokens written (15.8 min)
+    430M tokens written (16.1 min)
+    440M tokens written (16.5 min)
+    450M tokens written (16.9 min)
+    460M tokens written (17.2 min)
+    470M tokens written (17.6 min)
+[warn] only wrote 472770254 tokens (target 500000000); usable 472768512
+  Usable train chunks: 230844
+  Loading validation data...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[warn] only wrote 4753217 tokens (target 5000000); usable 4753217
+/opt/dfrope/run_350m_final.py:485: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /pytorch/torch/csrc/utils/tensor_numpy.cpp:206.)
+  val_tokens = torch.from_numpy(np.asarray(val_mm, dtype=np.uint16)).to(torch.long)
+  Validation tokens: 5.0M
+
+======================================================================
+  EXPERIMENT: geo_500k
+  Freq range: [3.01e-06, 1.0000]
+  Dynamic range: 331800.6x
+======================================================================
+  Model: 454.2M parameters
+  Training: 7213 optimizer steps
+  Micro batch: 8, Grad accum: 4, Effective: 32
+    step 1/7213  loss=11.0472  lr=0.00e+00  mem=41.2GB  ETA=237min
+    step 50/7213  loss=6.0213  lr=1.02e-04  mem=44.9GB  ETA=216min
+    step 100/7213  loss=4.1297  lr=2.06e-04  mem=44.9GB  ETA=215min
+    step 150/7213  loss=3.3654  lr=3.00e-04  mem=44.9GB  ETA=214min
+    step 200/7213  loss=2.7632  lr=3.00e-04  mem=44.9GB  ETA=212min
+    step 250/7213  loss=2.5327  lr=3.00e-04  mem=44.9GB  ETA=211min
+    step 300/7213  loss=2.5436  lr=3.00e-04  mem=44.9GB  ETA=209min
+    step 350/7213  loss=2.2917  lr=2.99e-04  mem=44.9GB  ETA=208min
+    step 400/7213  loss=2.2781  lr=2.99e-04  mem=44.9GB  ETA=206min
+    step 450/7213  loss=2.0776  lr=2.99e-04  mem=44.9GB  ETA=205min
+    step 500/7213  loss=2.0007  lr=2.98e-04  mem=44.9GB  ETA=203min
+    step 550/7213  loss=1.9054  lr=2.98e-04  mem=44.9GB  ETA=202min
+    step 600/7213  loss=1.8612  lr=2.97e-04  mem=44.9GB  ETA=200min
+    step 650/7213  loss=1.8277  lr=2.96e-04  mem=44.9GB  ETA=199min
+    step 700/7213  loss=1.8139  lr=2.95e-04  mem=44.9GB  ETA=197min
+    step 750/7213  loss=1.8373  lr=2.95e-04  mem=44.9GB  ETA=196min
+    step 800/7213  loss=1.6204  lr=2.94e-04  mem=44.9GB  ETA=194min
+    step 850/7213  loss=1.8408  lr=2.93e-04  mem=44.9GB  ETA=193min
+    step 900/7213  loss=1.7521  lr=2.92e-04  mem=44.9GB  ETA=191min
+    step 950/7213  loss=1.6027  lr=2.91e-04  mem=44.9GB  ETA=190min
+    step 1000/7213  loss=1.7269  lr=2.89e-04  mem=44.9GB  ETA=188min
+    step 1050/7213  loss=1.5732  lr=2.88e-04  mem=44.9GB  ETA=187min
+    step 1100/7213  loss=1.7238  lr=2.87e-04  mem=44.9GB  ETA=185min
+    step 1150/7213  loss=1.8106  lr=2.85e-04  mem=44.9GB  ETA=184min
+    step 1200/7213  loss=1.4669  lr=2.84e-04  mem=44.9GB  ETA=182min
+    step 1250/7213  loss=1.5268  lr=2.82e-04  mem=44.9GB  ETA=181min
+    step 1300/7213  loss=1.5412  lr=2.81e-04  mem=44.9GB  ETA=179min
+    step 1350/7213  loss=1.5330  lr=2.79e-04  mem=44.9GB  ETA=178min
+    step 1400/7213  loss=1.3586  lr=2.77e-04  mem=44.9GB  ETA=176min
+    step 1450/7213  loss=1.5439  lr=2.75e-04  mem=44.9GB  ETA=175min
+    step 1500/7213  loss=1.6800  lr=2.74e-04  mem=44.9GB  ETA=173min
+    step 1550/7213  loss=1.3855  lr=2.72e-04  mem=44.9GB  ETA=171min
+    step 1600/7213  loss=1.4917  lr=2.70e-04  mem=44.9GB  ETA=170min
+    step 1650/7213  loss=1.5834  lr=2.68e-04  mem=44.9GB  ETA=168min
+    step 1700/7213  loss=1.3714  lr=2.66e-04  mem=44.9GB  ETA=167min
+    step 1750/7213  loss=1.3427  lr=2.63e-04  mem=44.9GB  ETA=165min
+    step 1800/7213  loss=1.3671  lr=2.61e-04  mem=44.9GB  ETA=164min
+    step 1850/7213  loss=1.7207  lr=2.59e-04  mem=44.9GB  ETA=162min
+    step 1900/7213  loss=1.4024  lr=2.57e-04  mem=44.9GB  ETA=161min
+    step 1950/7213  loss=1.5817  lr=2.54e-04  mem=44.9GB  ETA=159min
+    step 2000/7213  loss=1.3384  lr=2.52e-04  mem=44.9GB  ETA=158min
+    step 2050/7213  loss=1.3465  lr=2.49e-04  mem=44.9GB  ETA=156min
+    step 2100/7213  loss=1.3836  lr=2.47e-04  mem=44.9GB  ETA=155min
+    step 2150/7213  loss=1.3741  lr=2.44e-04  mem=44.9GB  ETA=153min
+    step 2200/7213  loss=1.4694  lr=2.42e-04  mem=44.9GB  ETA=152min
+    step 2250/7213  loss=1.5033  lr=2.39e-04  mem=44.9GB  ETA=150min
+    step 2300/7213  loss=1.1806  lr=2.36e-04  mem=44.9GB  ETA=149min
+    step 2350/7213  loss=1.3318  lr=2.34e-04  mem=44.9GB  ETA=147min
+    step 2400/7213  loss=1.6584  lr=2.31e-04  mem=44.9GB  ETA=146min
+    step 2450/7213  loss=1.6627  lr=2.28e-04  mem=44.9GB  ETA=144min
+    step 2500/7213  loss=1.3942  lr=2.25e-04  mem=44.9GB  ETA=143min
+    step 2550/7213  loss=1.1832  lr=2.22e-04  mem=44.9GB  ETA=141min
+    step 2600/7213  loss=1.4397  lr=2.19e-04  mem=44.9GB  ETA=140min
+    step 2650/7213  loss=1.3225  lr=2.16e-04  mem=44.9GB  ETA=138min
+    step 2700/7213  loss=1.3775  lr=2.13e-04  mem=44.9GB  ETA=137min
+    step 2750/7213  loss=1.3712  lr=2.10e-04  mem=44.9GB  ETA=135min
+    step 2800/7213  loss=1.2490  lr=2.07e-04  mem=44.9GB  ETA=134min
+    step 2850/7213  loss=1.2284  lr=2.04e-04  mem=44.9GB  ETA=132min
+    step 2900/7213  loss=1.2195  lr=2.01e-04  mem=44.9GB  ETA=131min
+    step 2950/7213  loss=1.3930  lr=1.98e-04  mem=44.9GB  ETA=129min
+    step 3000/7213  loss=1.4718  lr=1.95e-04  mem=44.9GB  ETA=128min
+    step 3050/7213  loss=1.3839  lr=1.91e-04  mem=44.9GB  ETA=126min
+    step 3100/7213  loss=1.3711  lr=1.88e-04  mem=44.9GB  ETA=125min
+    step 3150/7213  loss=1.3046  lr=1.85e-04  mem=44.9GB  ETA=123min
+    step 3200/7213  loss=1.3978  lr=1.82e-04  mem=44.9GB  ETA=122min
+    step 3250/7213  loss=1.4383  lr=1.78e-04  mem=44.9GB  ETA=120min
+    step 3300/7213  loss=1.3733  lr=1.75e-04  mem=44.9GB  ETA=119min
+    step 3350/7213  loss=1.0601  lr=1.72e-04  mem=44.9GB  ETA=117min
+    step 3400/7213  loss=1.3478  lr=1.69e-04  mem=44.9GB  ETA=115min
+    step 3450/7213  loss=1.3476  lr=1.65e-04  mem=44.9GB  ETA=114min
+    step 3500/7213  loss=1.5127  lr=1.62e-04  mem=44.9GB  ETA=112min
+    step 3550/7213  loss=1.1211  lr=1.59e-04  mem=44.9GB  ETA=111min
+    step 3600/7213  loss=1.4074  lr=1.55e-04  mem=44.9GB  ETA=109min
+    step 3650/7213  loss=1.2660  lr=1.52e-04  mem=44.9GB  ETA=108min
+    step 3700/7213  loss=1.2514  lr=1.49e-04  mem=44.9GB  ETA=106min
+    step 3750/7213  loss=1.4932  lr=1.45e-04  mem=44.9GB  ETA=105min
+    step 3800/7213  loss=1.2744  lr=1.42e-04  mem=44.9GB  ETA=103min
+    step 3850/7213  loss=1.3841  lr=1.39e-04  mem=44.9GB  ETA=102min
+    step 3900/7213  loss=1.2842  lr=1.35e-04  mem=44.9GB  ETA=100min
+    step 3950/7213  loss=1.0627  lr=1.32e-04  mem=44.9GB  ETA=99min
+    step 4000/7213  loss=1.4406  lr=1.29e-04  mem=44.9GB  ETA=97min
+    step 4050/7213  loss=1.0698  lr=1.25e-04  mem=44.9GB  ETA=96min
+    step 4100/7213  loss=1.3039  lr=1.22e-04  mem=44.9GB  ETA=94min
+    step 4150/7213  loss=1.2914  lr=1.19e-04  mem=44.9GB  ETA=93min
+    step 4200/7213  loss=1.3133  lr=1.16e-04  mem=44.9GB  ETA=91min
+    step 4250/7213  loss=1.1902  lr=1.12e-04  mem=44.9GB  ETA=90min
+    step 4300/7213  loss=1.4696  lr=1.09e-04  mem=44.9GB  ETA=88min
+    step 4350/7213  loss=1.4029  lr=1.06e-04  mem=44.9GB  ETA=87min
+    step 4400/7213  loss=1.3896  lr=1.03e-04  mem=44.9GB  ETA=85min
+    step 4450/7213  loss=1.2222  lr=9.96e-05  mem=44.9GB  ETA=84min
+    step 4500/7213  loss=1.2873  lr=9.65e-05  mem=44.9GB  ETA=82min
+    step 4550/7213  loss=0.8967  lr=9.34e-05  mem=44.9GB  ETA=81min
+    step 4600/7213  loss=1.1104  lr=9.03e-05  mem=44.9GB  ETA=79min
+    step 4650/7213  loss=1.3404  lr=8.73e-05  mem=44.9GB  ETA=78min
+    step 4700/7213  loss=1.3049  lr=8.43e-05  mem=44.9GB  ETA=76min
+    step 4750/7213  loss=1.2409  lr=8.13e-05  mem=44.9GB  ETA=75min
+    step 4800/7213  loss=1.2308  lr=7.84e-05  mem=44.9GB  ETA=73min
+    step 4850/7213  loss=1.3521  lr=7.54e-05  mem=44.9GB  ETA=72min
+    step 4900/7213  loss=1.1077  lr=7.26e-05  mem=44.9GB  ETA=70min
+    step 4950/7213  loss=1.1239  lr=6.97e-05  mem=44.9GB  ETA=69min
+    step 5000/7213  loss=1.2423  lr=6.69e-05  mem=44.9GB  ETA=67min
+    step 5050/7213  loss=1.1552  lr=6.42e-05  mem=44.9GB  ETA=66min
+    step 5100/7213  loss=1.0586  lr=6.15e-05  mem=44.9GB  ETA=64min
+    step 5150/7213  loss=1.2897  lr=5.88e-05  mem=44.9GB  ETA=62min
+    step 5200/7213  loss=1.1442  lr=5.62e-05  mem=44.9GB  ETA=61min
+    step 5250/7213  loss=1.1474  lr=5.36e-05  mem=44.9GB  ETA=59min
+    step 5300/7213  loss=1.1679  lr=5.11e-05  mem=44.9GB  ETA=58min
+    step 5350/7213  loss=1.1916  lr=4.86e-05  mem=44.9GB  ETA=56min
+    step 5400/7213  loss=1.2268  lr=4.62e-05  mem=44.9GB  ETA=55min
+    step 5450/7213  loss=1.2411  lr=4.38e-05  mem=44.9GB  ETA=53min
+    step 5500/7213  loss=1.0231  lr=4.15e-05  mem=44.9GB  ETA=52min
+    step 5550/7213  loss=1.1838  lr=3.92e-05  mem=44.9GB  ETA=50min
+    step 5600/7213  loss=1.1109  lr=3.70e-05  mem=44.9GB  ETA=49min
+    step 5650/7213  loss=1.1033  lr=3.48e-05  mem=44.9GB  ETA=47min
+    step 5700/7213  loss=1.1414  lr=3.27e-05  mem=44.9GB  ETA=46min
+    step 5750/7213  loss=1.0977  lr=3.06e-05  mem=44.9GB  ETA=44min
+    step 5800/7213  loss=1.1462  lr=2.87e-05  mem=44.9GB  ETA=43min
+    step 5850/7213  loss=1.2312  lr=2.67e-05  mem=44.9GB  ETA=41min
+    step 5900/7213  loss=1.0665  lr=2.49e-05  mem=44.9GB  ETA=40min
+    step 5950/7213  loss=1.3077  lr=2.31e-05  mem=44.9GB  ETA=38min
+    step 6000/7213  loss=1.1295  lr=2.13e-05  mem=44.9GB  ETA=37min
+    step 6050/7213  loss=1.3556  lr=1.96e-05  mem=44.9GB  ETA=35min
+    step 6100/7213  loss=1.2117  lr=1.80e-05  mem=44.9GB  ETA=34min
+    step 6150/7213  loss=1.1254  lr=1.65e-05  mem=44.9GB  ETA=32min
+    step 6200/7213  loss=1.2813  lr=1.50e-05  mem=44.9GB  ETA=31min
+    step 6250/7213  loss=1.2804  lr=1.36e-05  mem=44.9GB  ETA=29min
+    step 6300/7213  loss=1.3049  lr=1.22e-05  mem=44.9GB  ETA=28min
+    step 6350/7213  loss=1.0778  lr=1.09e-05  mem=44.9GB  ETA=26min
+    step 6400/7213  loss=1.2133  lr=9.71e-06  mem=44.9GB  ETA=25min
+    step 6450/7213  loss=1.1604  lr=8.56e-06  mem=44.9GB  ETA=23min
+    step 6500/7213  loss=1.1943  lr=7.49e-06  mem=44.9GB  ETA=22min
+    step 6550/7213  loss=1.2454  lr=6.48e-06  mem=44.9GB  ETA=20min
+    step 6600/7213  loss=1.1467  lr=5.55e-06  mem=44.9GB  ETA=19min
+    step 6650/7213  loss=1.0899  lr=4.69e-06  mem=44.9GB  ETA=17min
+    step 6700/7213  loss=1.0574  lr=3.90e-06  mem=44.9GB  ETA=16min
+    step 6750/7213  loss=1.0480  lr=3.18e-06  mem=44.9GB  ETA=14min
+    step 6800/7213  loss=1.4656  lr=2.53e-06  mem=44.9GB  ETA=13min
+    step 6850/7213  loss=1.1597  lr=1.96e-06  mem=44.9GB  ETA=11min
+    step 6900/7213  loss=1.0341  lr=1.46e-06  mem=44.9GB  ETA=9min
+    step 6950/7213  loss=0.8796  lr=1.03e-06  mem=44.9GB  ETA=8min
+    step 7000/7213  loss=1.0553  lr=6.78e-07  mem=44.9GB  ETA=6min
+    step 7050/7213  loss=1.1202  lr=3.98e-07  mem=44.9GB  ETA=5min
+    step 7100/7213  loss=1.2594  lr=1.92e-07  mem=44.9GB  ETA=3min
+    step 7150/7213  loss=1.1649  lr=6.07e-08  mem=44.9GB  ETA=2min
+    step 7200/7213  loss=1.1983  lr=2.90e-09  mem=44.9GB  ETA=0min
+  Training complete in 218.4 minutes
+
+  Evaluating geo_500k...
+    L=  2048: PPL = 2.477 ± 0.131 (n=10)
+    L=  3072: PPL = 2.511 ± 0.106 (n=10)
+    L=  4096: PPL = 2.784 ± 0.120 (n=10)
+    L=  5120: PPL = 3.213 ± 0.125 (n=10)
+    L=  6144: PPL = 3.920 ± 0.123 (n=10)
+    L=  8192: PPL = 5.452 ± 0.182 (n=10)
+    L= 12288: PPL = 10.370 ± 2.662 (n=10)
+    L= 16384: PPL = 14.653 ± 3.851 (n=10)
+
+======================================================================
+  EXPERIMENT: hybrid_a0.2_t100k
+  Freq range: [1.23e-05, 1.0000]
+  Dynamic range: 81143.1x
+======================================================================
+  Model: 454.2M parameters
+  Training: 7213 optimizer steps
+  Micro batch: 8, Grad accum: 4, Effective: 32
+    step 1/7213  loss=11.0465  lr=0.00e+00  mem=41.2GB  ETA=220min
+    step 50/7213  loss=6.1913  lr=1.02e-04  mem=44.9GB  ETA=216min
+    step 100/7213  loss=4.1738  lr=2.06e-04  mem=44.9GB  ETA=215min
+    step 150/7213  loss=3.3745  lr=3.00e-04  mem=44.9GB  ETA=214min
+    step 200/7213  loss=2.7349  lr=3.00e-04  mem=44.9GB  ETA=212min
+    step 250/7213  loss=2.5386  lr=3.00e-04  mem=44.9GB  ETA=211min
+    step 300/7213  loss=2.5395  lr=3.00e-04  mem=44.9GB  ETA=209min
+    step 350/7213  loss=2.2952  lr=2.99e-04  mem=44.9GB  ETA=208min
+    step 400/7213  loss=2.2816  lr=2.99e-04  mem=44.9GB  ETA=206min
+    step 450/7213  loss=2.0760  lr=2.99e-04  mem=44.9GB  ETA=205min
+    step 500/7213  loss=2.0054  lr=2.98e-04  mem=44.9GB  ETA=203min
+    step 550/7213  loss=1.9191  lr=2.98e-04  mem=44.9GB  ETA=202min
+    step 600/7213  loss=1.8633  lr=2.97e-04  mem=44.9GB  ETA=200min
+    step 650/7213  loss=1.8190  lr=2.96e-04  mem=44.9GB  ETA=199min
+    step 700/7213  loss=1.8129  lr=2.95e-04  mem=44.9GB  ETA=197min
+    step 750/7213  loss=1.8397  lr=2.95e-04  mem=44.9GB  ETA=196min
+    step 800/7213  loss=1.6167  lr=2.94e-04  mem=44.9GB  ETA=194min
+    step 850/7213  loss=1.8427  lr=2.93e-04  mem=44.9GB  ETA=193min
+    step 900/7213  loss=1.7486  lr=2.92e-04  mem=44.9GB  ETA=191min
+    step 950/7213  loss=1.6046  lr=2.91e-04  mem=44.9GB  ETA=190min
+    step 1000/7213  loss=1.7197  lr=2.89e-04  mem=44.9GB  ETA=188min
+    step 1050/7213  loss=1.5741  lr=2.88e-04  mem=44.9GB  ETA=187min
+    step 1100/7213  loss=1.7231  lr=2.87e-04  mem=44.9GB  ETA=185min
+    step 1150/7213  loss=1.8161  lr=2.85e-04  mem=44.9GB  ETA=184min
+    step 1200/7213  loss=1.4698  lr=2.84e-04  mem=44.9GB  ETA=182min
+    step 1250/7213  loss=1.5273  lr=2.82e-04  mem=44.9GB  ETA=181min
+    step 1300/7213  loss=1.5436  lr=2.81e-04  mem=44.9GB  ETA=179min
+    step 1350/7213  loss=1.5363  lr=2.79e-04  mem=44.9GB  ETA=178min
+    step 1400/7213  loss=1.3564  lr=2.77e-04  mem=44.9GB  ETA=176min
+    step 1450/7213  loss=1.5395  lr=2.75e-04  mem=44.9GB  ETA=175min
+    step 1500/7213  loss=1.6697  lr=2.74e-04  mem=44.9GB  ETA=173min
+    step 1550/7213  loss=1.3954  lr=2.72e-04  mem=44.9GB  ETA=172min
+    step 1600/7213  loss=1.4971  lr=2.70e-04  mem=44.9GB  ETA=170min
+    step 1650/7213  loss=1.5739  lr=2.68e-04  mem=44.9GB  ETA=169min
+    step 1700/7213  loss=1.3795  lr=2.66e-04  mem=44.9GB  ETA=167min
+    step 1750/7213  loss=1.3532  lr=2.63e-04  mem=44.9GB  ETA=166min
+    step 1800/7213  loss=1.3632  lr=2.61e-04  mem=44.9GB  ETA=164min
+    step 1850/7213  loss=1.7243  lr=2.59e-04  mem=44.9GB  ETA=162min
+    step 1900/7213  loss=1.4087  lr=2.57e-04  mem=44.9GB  ETA=161min
+    step 1950/7213  loss=1.5840  lr=2.54e-04  mem=44.9GB  ETA=159min
+    step 2000/7213  loss=1.3371  lr=2.52e-04  mem=44.9GB  ETA=158min
+    step 2050/7213  loss=1.3549  lr=2.49e-04  mem=44.9GB  ETA=156min
+    step 2100/7213  loss=1.3877  lr=2.47e-04  mem=44.9GB  ETA=155min
+    step 2150/7213  loss=1.3778  lr=2.44e-04  mem=44.9GB  ETA=153min
+    step 2200/7213  loss=1.4729  lr=2.42e-04  mem=44.9GB  ETA=152min
+    step 2250/7213  loss=1.5071  lr=2.39e-04  mem=44.9GB  ETA=150min
+    step 2300/7213  loss=1.1756  lr=2.36e-04  mem=44.9GB  ETA=149min
+    step 2350/7213  loss=1.3410  lr=2.34e-04  mem=44.9GB  ETA=147min
+    step 2400/7213  loss=1.6597  lr=2.31e-04  mem=44.9GB  ETA=146min
+    step 2450/7213  loss=1.6573  lr=2.28e-04  mem=44.9GB  ETA=144min
+    step 2500/7213  loss=1.3934  lr=2.25e-04  mem=44.9GB  ETA=143min
+    step 2550/7213  loss=1.1870  lr=2.22e-04  mem=44.9GB  ETA=141min
+    step 2600/7213  loss=1.4399  lr=2.19e-04  mem=44.9GB  ETA=140min
+    step 2650/7213  loss=1.3160  lr=2.16e-04  mem=44.9GB  ETA=138min
+    step 2700/7213  loss=1.3783  lr=2.13e-04  mem=44.9GB  ETA=137min
+    step 2750/7213  loss=1.3748  lr=2.10e-04  mem=44.9GB  ETA=135min
+    step 2800/7213  loss=1.2460  lr=2.07e-04  mem=44.9GB  ETA=134min
+    step 2850/7213  loss=1.2339  lr=2.04e-04  mem=44.9GB  ETA=132min
+    step 2900/7213  loss=1.2173  lr=2.01e-04  mem=44.9GB  ETA=131min
+    step 2950/7213  loss=1.3911  lr=1.98e-04  mem=44.9GB  ETA=129min
+    step 3000/7213  loss=1.4711  lr=1.95e-04  mem=44.9GB  ETA=128min
+    step 3050/7213  loss=1.3818  lr=1.91e-04  mem=44.9GB  ETA=126min
+    step 3100/7213  loss=1.3689  lr=1.88e-04  mem=44.9GB  ETA=125min
+    step 3150/7213  loss=1.3006  lr=1.85e-04  mem=44.9GB  ETA=123min
+    step 3200/7213  loss=1.3978  lr=1.82e-04  mem=44.9GB  ETA=122min
+    step 3250/7213  loss=1.4411  lr=1.78e-04  mem=44.9GB  ETA=120min
+    step 3300/7213  loss=1.3686  lr=1.75e-04  mem=44.9GB  ETA=119min
+    step 3350/7213  loss=1.0530  lr=1.72e-04  mem=44.9GB  ETA=117min
+    step 3400/7213  loss=1.3472  lr=1.69e-04  mem=44.9GB  ETA=116min
+    step 3450/7213  loss=1.3483  lr=1.65e-04  mem=44.9GB  ETA=114min
+    step 3500/7213  loss=1.5146  lr=1.62e-04  mem=44.9GB  ETA=113min
+    step 3550/7213  loss=1.1231  lr=1.59e-04  mem=44.9GB  ETA=111min
+    step 3600/7213  loss=1.4127  lr=1.55e-04  mem=44.9GB  ETA=109min
+    step 3650/7213  loss=1.2701  lr=1.52e-04  mem=44.9GB  ETA=108min
+    step 3700/7213  loss=1.2538  lr=1.49e-04  mem=44.9GB  ETA=106min
+    step 3750/7213  loss=1.4991  lr=1.45e-04  mem=44.9GB  ETA=105min
+    step 3800/7213  loss=1.2750  lr=1.42e-04  mem=44.9GB  ETA=103min
+    step 3850/7213  loss=1.3829  lr=1.39e-04  mem=44.9GB  ETA=102min
+    step 3900/7213  loss=1.2924  lr=1.35e-04  mem=44.9GB  ETA=100min
+    step 3950/7213  loss=1.0629  lr=1.32e-04  mem=44.9GB  ETA=99min
+    step 4000/7213  loss=1.4439  lr=1.29e-04  mem=44.9GB  ETA=97min
+    step 4050/7213  loss=1.0686  lr=1.25e-04  mem=44.9GB  ETA=96min
+    step 4100/7213  loss=1.2988  lr=1.22e-04  mem=44.9GB  ETA=94min
+    step 4150/7213  loss=1.2926  lr=1.19e-04  mem=44.9GB  ETA=93min
+    step 4200/7213  loss=1.3113  lr=1.16e-04  mem=44.9GB  ETA=91min
+    step 4250/7213  loss=1.1922  lr=1.12e-04  mem=44.9GB  ETA=90min
+    step 4300/7213  loss=1.4692  lr=1.09e-04  mem=44.9GB  ETA=88min
+    step 4350/7213  loss=1.4083  lr=1.06e-04  mem=44.9GB  ETA=87min
+    step 4400/7213  loss=1.3934  lr=1.03e-04  mem=44.9GB  ETA=85min
+    step 4450/7213  loss=1.2164  lr=9.96e-05  mem=44.9GB  ETA=84min
+    step 4500/7213  loss=1.2774  lr=9.65e-05  mem=44.9GB  ETA=82min
+    step 4550/7213  loss=0.8968  lr=9.34e-05  mem=44.9GB  ETA=81min
+    step 4600/7213  loss=1.1152  lr=9.03e-05  mem=44.9GB  ETA=79min
+    step 4650/7213  loss=1.3424  lr=8.73e-05  mem=44.9GB  ETA=78min
+    step 4700/7213  loss=1.3055  lr=8.43e-05  mem=44.9GB  ETA=76min
+    step 4750/7213  loss=1.2381  lr=8.13e-05  mem=44.9GB  ETA=75min
+    step 4800/7213  loss=1.2266  lr=7.84e-05  mem=44.9GB  ETA=73min
+    step 4850/7213  loss=1.3500  lr=7.54e-05  mem=44.9GB  ETA=72min
+    step 4900/7213  loss=1.1098  lr=7.26e-05  mem=44.9GB  ETA=70min
+    step 4950/7213  loss=1.1213  lr=6.97e-05  mem=44.9GB  ETA=69min
+    step 5000/7213  loss=1.2437  lr=6.69e-05  mem=44.9GB  ETA=67min
+    step 5050/7213  loss=1.1452  lr=6.42e-05  mem=44.9GB  ETA=66min
+    step 5100/7213  loss=1.0610  lr=6.15e-05  mem=44.9GB  ETA=64min
+    step 5150/7213  loss=1.2945  lr=5.88e-05  mem=44.9GB  ETA=63min
+    step 5200/7213  loss=1.1418  lr=5.62e-05  mem=44.9GB  ETA=61min
+    step 5250/7213  loss=1.1507  lr=5.36e-05  mem=44.9GB  ETA=59min
+    step 5300/7213  loss=1.1730  lr=5.11e-05  mem=44.9GB  ETA=58min
+    step 5350/7213  loss=1.1858  lr=4.86e-05  mem=44.9GB  ETA=56min
+    step 5400/7213  loss=1.2288  lr=4.62e-05  mem=44.9GB  ETA=55min
+    step 5450/7213  loss=1.2381  lr=4.38e-05  mem=44.9GB  ETA=53min
+    step 5500/7213  loss=1.0183  lr=4.15e-05  mem=44.9GB  ETA=52min
+    step 5550/7213  loss=1.1852  lr=3.92e-05  mem=44.9GB  ETA=50min
+    step 5600/7213  loss=1.1126  lr=3.70e-05  mem=44.9GB  ETA=49min
+    step 5650/7213  loss=1.0990  lr=3.48e-05  mem=44.9GB  ETA=47min
+    step 5700/7213  loss=1.1456  lr=3.27e-05  mem=44.9GB  ETA=46min
+    step 5750/7213  loss=1.0932  lr=3.06e-05  mem=44.9GB  ETA=44min
+    step 5800/7213  loss=1.1493  lr=2.87e-05  mem=44.9GB  ETA=43min
+    step 5850/7213  loss=1.2249  lr=2.67e-05  mem=44.9GB  ETA=41min
+    step 5900/7213  loss=1.0597  lr=2.49e-05  mem=44.9GB  ETA=40min
+    step 5950/7213  loss=1.3090  lr=2.31e-05  mem=44.9GB  ETA=38min
+    step 6000/7213  loss=1.1283  lr=2.13e-05  mem=44.9GB  ETA=37min
+    step 6050/7213  loss=1.3537  lr=1.96e-05  mem=44.9GB  ETA=35min
+    step 6100/7213  loss=1.2055  lr=1.80e-05  mem=44.9GB  ETA=34min
+    step 6150/7213  loss=1.1205  lr=1.65e-05  mem=44.9GB  ETA=32min
+    step 6200/7213  loss=1.2804  lr=1.50e-05  mem=44.9GB  ETA=31min
+    step 6250/7213  loss=1.2749  lr=1.36e-05  mem=44.9GB  ETA=29min
+    step 6300/7213  loss=1.3053  lr=1.22e-05  mem=44.9GB  ETA=28min
+    step 6350/7213  loss=1.0788  lr=1.09e-05  mem=44.9GB  ETA=26min
+    step 6400/7213  loss=1.2103  lr=9.71e-06  mem=44.9GB  ETA=25min
+    step 6450/7213  loss=1.1621  lr=8.56e-06  mem=44.9GB  ETA=23min
+    step 6500/7213  loss=1.1925  lr=7.49e-06  mem=44.9GB  ETA=22min
+    step 6550/7213  loss=1.2452  lr=6.48e-06  mem=44.9GB  ETA=20min
+    step 6600/7213  loss=1.1487  lr=5.55e-06  mem=44.9GB  ETA=19min
+    step 6650/7213  loss=1.0897  lr=4.69e-06  mem=44.9GB  ETA=17min
+    step 6700/7213  loss=1.0536  lr=3.90e-06  mem=44.9GB  ETA=16min
+    step 6750/7213  loss=1.0490  lr=3.18e-06  mem=44.9GB  ETA=14min
+    step 6800/7213  loss=1.4618  lr=2.53e-06  mem=44.9GB  ETA=13min
+    step 6850/7213  loss=1.1650  lr=1.96e-06  mem=44.9GB  ETA=11min
+    step 6900/7213  loss=1.0394  lr=1.46e-06  mem=44.9GB  ETA=9min
+    step 6950/7213  loss=0.8769  lr=1.03e-06  mem=44.9GB  ETA=8min
+    step 7000/7213  loss=1.0519  lr=6.78e-07  mem=44.9GB  ETA=6min
+    step 7050/7213  loss=1.1129  lr=3.98e-07  mem=44.9GB  ETA=5min
+    step 7100/7213  loss=1.2619  lr=1.92e-07  mem=44.9GB  ETA=3min
+    step 7150/7213  loss=1.1601  lr=6.07e-08  mem=44.9GB  ETA=2min
+    step 7200/7213  loss=1.1948  lr=2.90e-09  mem=44.9GB  ETA=0min
+  Training complete in 218.5 minutes
+
+  Evaluating hybrid_a0.2_t100k...
+    L=  2048: PPL = 2.467 ± 0.126 (n=10)
+    L=  3072: PPL = 2.489 ± 0.097 (n=10)
+    L=  4096: PPL = 2.606 ± 0.112 (n=10)
+    L=  5120: PPL = 2.808 ± 0.124 (n=10)
+    L=  6144: PPL = 3.349 ± 0.132 (n=10)
+    L=  8192: PPL = 4.726 ± 0.232 (n=10)
+    L= 12288: PPL = 8.814 ± 1.984 (n=10)
+    L= 16384: PPL = 12.646 ± 3.093 (n=10)
+
+======================================================================
+  350M FINAL COMPARISON
+======================================================================
+  Length   | geo_500k               | hybrid_a0.2_t100k     
+  ------------------------------------------------------------
+  2048     | 2.477                  | 2.467                 
+  3072     | 2.511                  | 2.489                 
+  4096     | 2.784                  | 2.606                 
+  5120     | 3.213                  | 2.808                 
+  6144     | 3.920                  | 3.349                 
+  8192     | 5.452                  | 4.726                 
+  12288    | 10.370                 | 8.814                 
+  16384    | 14.653                 | 12.646                
+
+  PPL@16384: geo_500k=14.653, hybrid=12.646
+  *** HYBRID WINS by 13.7% ***
+  *** theta=100k Hybrid > theta=500k Geometric ***
+
+  Results saved: /opt/dfrope/results/350m_final/results.json

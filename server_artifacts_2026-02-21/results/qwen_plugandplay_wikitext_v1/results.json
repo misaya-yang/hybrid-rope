@@ -1,0 +1,105 @@
+{
+  "timestamp": "2026-02-14_122625",
+  "protocol": {
+    "dataset": "wikitext-103-raw-v1:validation",
+    "lengths": [2048, 4096, 8192, 16384, 32768],
+    "seeds": [42, 123, 777],
+    "windows_per_seed": 10,
+    "max_eval_tokens": 400000,
+    "random_start": true,
+    "train_or_lora": "none (base-only)",
+    "load_in_4bit": true
+  },
+  "model_specs": [
+    {"name": "qwen_orig", "freq_type": "orig", "use_yarn": false},
+    {"name": "qwen_yarn8", "freq_type": "orig", "use_yarn": true},
+    {"name": "qwen_geo_100k", "freq_type": "geometric", "theta": 100000},
+    {"name": "qwen_sigmoid_best_t100k", "freq_type": "sigmoid", "theta_base": 100000, "steepness": 8.0, "midpoint": 0.5, "omf": 0.3},
+    {"name": "qwen_hybrid_a0.2_t100k", "freq_type": "hybrid", "theta_base": 100000, "p": 3.9, "omf": 0.3, "alpha": 0.2},
+    {"name": "qwen_random_control", "freq_type": "random_control", "theta": 100000, "seed": 42, "omf": 0.3}
+  ],
+  "models": [
+    {
+      "name": "qwen_orig",
+      "freq_type": "orig",
+      "lengths": {
+        "2048": {"mean_ppl": 8.752402, "std_ppl": 0.09399},
+        "4096": {"mean_ppl": 7.587502, "std_ppl": 0.338961},
+        "8192": {"mean_ppl": 7.204341, "std_ppl": 0.145106},
+        "16384": {"mean_ppl": 7.217594, "std_ppl": 0.150559},
+        "32768": {"mean_ppl": 6.804676, "std_ppl": 0.122922}
+      },
+      "collapse_ratio_32768_over_2048": 0.777464
+    },
+    {
+      "name": "qwen_yarn8",
+      "error": "Failed to load with YaRN: unsupported operand type(s) for ** or pow(): 'NoneType' and 'Tensor'"
+    },
+    {
+      "name": "qwen_geo_100k",
+      "freq_type": "geometric",
+      "lengths": {
+        "2048": {"mean_ppl": 8.860179, "std_ppl": 0.094383},
+        "4096": {"mean_ppl": 7.707327, "std_ppl": 0.352114},
+        "8192": {"mean_ppl": 7.326982, "std_ppl": 0.129494},
+        "16384": {"mean_ppl": 7.381009, "std_ppl": 0.151406},
+        "32768": {"mean_ppl": 10.328598, "std_ppl": 0.110725}
+      },
+      "collapse_ratio_32768_over_2048": 1.165711
+    },
+    {
+      "name": "qwen_sigmoid_best_t100k",
+      "freq_type": "sigmoid",
+      "lengths": {
+        "2048": {"mean_ppl": 12.069022, "std_ppl": 0.214432},
+        "4096": {"mean_ppl": 10.80691, "std_ppl": 0.492468},
+        "8192": {"mean_ppl": 10.526506, "std_ppl": 0.235335},
+        "16384": {"mean_ppl": 12.922789, "std_ppl": 0.214184},
+        "32768": {"mean_ppl": 11.878555, "std_ppl": 0.269854}
+      },
+      "collapse_ratio_32768_over_2048": 0.984349
+    },
+    {
+      "name": "qwen_hybrid_a0.2_t100k",
+      "freq_type": "hybrid",
+      "lengths": {
+        "2048": {"mean_ppl": 26.936017, "std_ppl": 1.859451},
+        "4096": {"mean_ppl": 40.960759, "std_ppl": 3.337758},
+        "8192": {"mean_ppl": 93.685654, "std_ppl": 5.018181},
+        "16384": {"mean_ppl": 252.237686, "std_ppl": 4.552003},
+        "32768": {"mean_ppl": 473.914932, "std_ppl": 16.693564}
+      },
+      "collapse_ratio_32768_over_2048": 17.594098
+    },
+    {
+      "name": "qwen_random_control",
+      "freq_type": "random_control",
+      "lengths": {
+        "2048": {"mean_ppl": 3157.603247, "std_ppl": 214.764502},
+        "4096": {"mean_ppl": 3011.591238, "std_ppl": 124.927865},
+        "8192": {"mean_ppl": 3286.35282, "std_ppl": 120.06556},
+        "16384": {"mean_ppl": 3587.696595, "std_ppl": 152.856935},
+        "32768": {"mean_ppl": 4311.142902, "std_ppl": 87.993962}
+      },
+      "collapse_ratio_32768_over_2048": 1.365321
+    }
+  ],
+  "ppl_ratio_vs_orig": {
+    "qwen_yarn8": {},
+    "qwen_geo_100k": {"2048": 1.0123, "4096": 1.0158, "8192": 1.0170, "16384": 1.0226, "32768": 1.5179},
+    "qwen_sigmoid_best_t100k": {"2048": 1.3788, "4096": 1.4243, "8192": 1.4611, "16384": 1.7905, "32768": 1.7456},
+    "qwen_hybrid_a0.2_t100k": {"2048": 3.0776, "4096": 5.3985, "8192": 13.0041, "16384": 34.9476, "32768": 69.6455},
+    "qwen_random_control": {"2048": 360.7699, "4096": 396.9147, "8192": 456.1629, "16384": 497.0765, "32768": 633.5559}
+  },
+  "summary_table": {
+    "headers": ["Config", "PPL@2048", "PPL@4096", "PPL@8192", "PPL@16384", "PPL@32768", "Collapse"],
+    "rows": [
+      ["qwen_orig", "8.75±0.09", "7.59±0.34", "7.20±0.15", "7.22±0.15", "6.80±0.12", "0.78"],
+      ["qwen_yarn8", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A"],
+      ["qwen_geo_100k", "8.86±0.09", "7.71±0.35", "7.33±0.13", "7.38±0.15", "10.33±0.11", "1.17"],
+      ["qwen_sigmoid_best_t100k", "12.07±0.21", "10.81±0.49", "10.53±0.24", "12.92±0.21", "11.88±0.27", "0.98"],
+      ["qwen_hybrid_a0.2_t100k", "26.94±1.86", "40.96±3.34", "93.69±5.02", "252.24±4.55", "473.91±16.69", "17.59"],
+      ["qwen_random_control", "3157.60±214.76", "3011.59±124.93", "3286.35±120.07", "3587.70±152.86", "4311.14±87.99", "1.37"]
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+2026-02-15 13:29:51 | INFO | Loading model...
+2026-02-15 13:29:54 | INFO | Patched hybrid rotary layers=1
+2026-02-15 13:29:54 | INFO | Loading adapter: /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_lora_suite_20260214/hybrid/final_lora
+2026-02-15 13:29:56 | INFO | Model ready. attn=sdpa variant=hybrid rope=None
+2026-02-15 13:29:56 | INFO | Lengths=[4096, 8192] Depths=[10, 50, 90]
+2026-02-15 13:29:56 | INFO | Cell start: length=4096 depth=10% needles=1
+2026-02-15 13:29:58 | INFO | Cell done: length=4096 depth=10% acc=0.000 (0/1)
+2026-02-15 13:29:58 | INFO | Cell start: length=4096 depth=50% needles=1
+2026-02-15 13:29:58 | INFO | Cell done: length=4096 depth=50% acc=0.000 (0/1)
+2026-02-15 13:29:58 | INFO | Cell start: length=4096 depth=90% needles=1
+2026-02-15 13:29:59 | INFO | Cell done: length=4096 depth=90% acc=0.000 (0/1)
+2026-02-15 13:29:59 | INFO | Cell start: length=8192 depth=10% needles=1
+2026-02-15 13:30:00 | INFO | Cell done: length=8192 depth=10% acc=0.000 (0/1)
+2026-02-15 13:30:00 | INFO | Cell start: length=8192 depth=50% needles=1
+2026-02-15 13:30:01 | INFO | Cell done: length=8192 depth=50% acc=0.000 (0/1)
+2026-02-15 13:30:01 | INFO | Cell start: length=8192 depth=90% needles=1
+2026-02-15 13:30:02 | INFO | Cell done: length=8192 depth=90% acc=0.000 (0/1)
+2026-02-15 13:30:02 | WARNING | seaborn unavailable; used matplotlib fallback.
+2026-02-15 13:30:03 | INFO | Saved /root/autodl-tmp/dfrope/hybrid-rope/results/niah_sanity_piecewise_20260215/hybrid_adapter_qa/niah_recall_heatmap.pdf
+2026-02-15 13:30:03 | INFO | Saved /root/autodl-tmp/dfrope/hybrid-rope/results/niah_sanity_piecewise_20260215/hybrid_adapter_qa/niah_recall_heatmap.png
+2026-02-15 13:30:03 | INFO | Saved /root/autodl-tmp/dfrope/hybrid-rope/results/niah_sanity_piecewise_20260215/hybrid_adapter_qa/niah_recall_results.json

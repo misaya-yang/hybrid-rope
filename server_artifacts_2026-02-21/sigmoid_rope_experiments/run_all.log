@@ -1,0 +1,75 @@
+[env] {'cwd': '/root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments', 'torch_version': '2.8.0+cu128', 'cuda_available': True, 'cuda_device_count': 1, 'cuda_name_0': 'NVIDIA RTX PRO 6000 Blackwell Server Edition'}
+[run] device: cuda
+[run] grid search mode=auto => using coarse for quick trend verification.
+[run] if needed, rerun with --search-mode fine for exhaustive search.
+
+[EXP1] Key results preview:
+  d      L  k_optimal  x0_optimal  k_formula  x0_formula  score_standard  score_formula  score_optimal
+ 64   4096       0.28        29.0   0.596239        15.5        0.170179       0.230935       0.073662
+ 64   8192       0.28        29.0   0.660018        15.5        0.164927       0.223923       0.072674
+ 64  16384       0.28        29.0   0.723797        15.5        0.209553       0.270210       0.119755
+ 64  32768       0.26        29.0   0.787576        15.5        0.211312       0.322824       0.120653
+ 64  65536       0.26        29.0   0.851355        15.5        0.212942       0.329007       0.122239
+ 64 131072       0.26        29.0   0.915134        15.5        0.211524       0.332969       0.124024
+128   4096       0.14        58.0   0.298119        31.5        0.172735       0.229324       0.065908
+128   8192       0.14        58.0   0.330009        31.5        0.165046       0.223361       0.064350
+128  16384       0.14        58.0   0.361898        31.5        0.198074       0.256018       0.096939
+128  32768       0.14        58.0   0.393788        31.5        0.198632       0.318033       0.097175
+128  65536       0.12        58.0   0.425677        31.5        0.199642       0.329616       0.101075
+128 131072       0.14        58.0   0.457567        31.5        0.197215       0.331002       0.099693
+256   4096       0.06       116.0   0.149060        63.5        0.174211       0.229348       0.065872
+256   8192       0.06       116.0   0.165004        63.5        0.165668       0.223651       0.064070
+256  16384       0.06       116.0   0.180949        63.5        0.193056       0.260168       0.087937
+256  32768       0.06       116.0   0.196894        63.5        0.189847       0.315032       0.090143
+256  65536       0.06       116.0   0.212839        63.5        0.189641       0.326816       0.089076
+256 131072       0.06       116.0   0.228783        63.5        0.188288       0.328490       0.089051
+
+[EXP2] Analytical parameters by L:
+  L=  4096 | k=0.298119 | x0=31.500
+  L= 16384 | k=0.361898 | x0=31.500
+  L= 65536 | k=0.425677 | x0=31.500
+  L=131072 | k=0.457567 | x0=31.500
+
+[EXP3] Attention decay summary:
+  mean(diff): -0.064913
+  max(diff):  0.778888
+  min(diff):  -0.752914
+
+[EXP4] Frequency summary:
+  L=131072, d=128, k=0.457567, x0=31.500
+  mean(theta_sigmoid/theta_standard)=4.751060
+
+[EXP5] Scaling law summary:
+     L  score_standard  score_formula  score_optimal  improve_formula  improve_optimal
+  4096        0.172375       0.229869       0.068481        -0.333542         0.602722
+  8192        0.165214       0.223645       0.067031        -0.353670         0.594274
+ 16384        0.200228       0.262132       0.101544        -0.309170         0.492858
+ 32768        0.199930       0.318630       0.102657        -0.593704         0.486536
+ 65536        0.200742       0.328480       0.104130        -0.636329         0.481273
+131072        0.199009       0.330821       0.104256        -0.662339         0.476124
+
+=== ALL EXPERIMENTS COMPLETED ===
+Elapsed: 9.07s
+Outputs:
+- exp1_formula_validation
+  rows: 18
+  csv: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/data/grid_search_results.csv
+  fig_k: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/results/formula_validation_k.pdf
+  fig_x0: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/results/formula_validation_x0.pdf
+  fig_score: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/results/formula_vs_gridsearch_score.pdf
+- exp2_phase_collision
+  csv: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/data/phase_collision_multi_L.csv
+  fig_multi: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/results/phase_collision_multi_L.pdf
+  fig_env: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/results/phase_collision_envelope.pdf
+- exp3_attention_pattern
+  csv: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/data/attention_decay.csv
+  fig_decay: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/results/attention_decay.pdf
+  fig_diff: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/results/attention_decay_difference.pdf
+- exp4_passkey_retrieval
+  csv_main: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/data/frequency_distribution.csv
+  csv_multi: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/data/frequency_distribution_multi_L.csv
+  fig_main: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/results/frequency_distribution.pdf
+  fig_multi: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/results/frequency_distribution_multi_L.pdf
+- exp5_scaling_law
+  csv: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/data/scaling_law_summary.csv
+  fig: /root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/results/scaling_law_summary.pdf

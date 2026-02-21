@@ -1,0 +1,279 @@
+{
+  "meta": {
+    "model": "/root/autodl-tmp/dfrope/ms_models/LLM-Research/Meta-Llama-3-8B-Instruct",
+    "data": "wikitext/wikitext-103-raw-v1/validation",
+    "commit": "eb0b7b0",
+    "timestamp": "2026-02-13T23:56:03.534441",
+    "configs": {
+      "geo_500k": {
+        "type": "geometric",
+        "theta": 500000
+      },
+      "anchored_x10": {
+        "type": "anchored",
+        "theta": 100000,
+        "anchor_dim": 16,
+        "anchor_factor": 10,
+        "slope": 0.5
+      }
+    }
+  },
+  "data": {
+    "geo_500k": {
+      "by_seed": {
+        "seed42": {
+          "2048_random_start": {
+            "ppl": 11.125,
+            "status": "ok"
+          },
+          "2048_sequential": {
+            "ppl": 5.961,
+            "status": "ok"
+          },
+          "8192_random_start": {
+            "ppl": 9.516,
+            "status": "ok"
+          },
+          "8192_sequential": {
+            "ppl": 5.953,
+            "status": "ok"
+          },
+          "16384_random_start": {
+            "ppl": 262.278,
+            "status": "ok"
+          },
+          "16384_sequential": {
+            "ppl": 105.921,
+            "status": "ok"
+          }
+        },
+        "seed123": {
+          "2048_random_start": {
+            "ppl": 9.562,
+            "status": "ok"
+          },
+          "2048_sequential": {
+            "ppl": 5.961,
+            "status": "ok"
+          },
+          "8192_random_start": {
+            "ppl": 7.832,
+            "status": "ok"
+          },
+          "8192_sequential": {
+            "ppl": 5.953,
+            "status": "ok"
+          },
+          "16384_random_start": {
+            "ppl": 171.685,
+            "status": "ok"
+          },
+          "16384_sequential": {
+            "ppl": 105.921,
+            "status": "ok"
+          }
+        },
+        "seed777": {
+          "2048_random_start": {
+            "ppl": 9.46,
+            "status": "ok"
+          },
+          "2048_sequential": {
+            "ppl": 5.961,
+            "status": "ok"
+          },
+          "8192_random_start": {
+            "ppl": 7.636,
+            "status": "ok"
+          },
+          "8192_sequential": {
+            "ppl": 5.953,
+            "status": "ok"
+          },
+          "16384_random_start": {
+            "ppl": 150.929,
+            "status": "ok"
+          },
+          "16384_sequential": {
+            "ppl": 105.921,
+            "status": "ok"
+          }
+        }
+      },
+      "summary": {
+        "2048": {
+          "random_start": {
+            "mean": 10.049,
+            "std": 0.762,
+            "n_valid": 3,
+            "n_total": 3
+          },
+          "sequential": {
+            "mean": 5.961,
+            "std": 0.0,
+            "n_valid": 3,
+            "n_total": 3
+          }
+        },
+        "8192": {
+          "random_start": {
+            "mean": 8.328,
+            "std": 0.844,
+            "n_valid": 3,
+            "n_total": 3
+          },
+          "sequential": {
+            "mean": 5.953,
+            "std": 0.0,
+            "n_valid": 3,
+            "n_total": 3
+          }
+        },
+        "16384": {
+          "random_start": {
+            "mean": 194.964,
+            "std": 48.346,
+            "n_valid": 3,
+            "n_total": 3
+          },
+          "sequential": {
+            "mean": 105.921,
+            "std": 0.0,
+            "n_valid": 3,
+            "n_total": 3
+          }
+        },
+        "collapse_random_start": 19.401,
+        "collapse_sequential": 17.769
+      }
+    },
+    "anchored_x10": {
+      "by_seed": {
+        "seed42": {
+          "2048_random_start": {
+            "ppl": 11.086,
+            "status": "ok"
+          },
+          "2048_sequential": {
+            "ppl": 5.849,
+            "status": "ok"
+          },
+          "8192_random_start": {
+            "ppl": 9.401,
+            "status": "ok"
+          },
+          "8192_sequential": {
+            "ppl": 5.884,
+            "status": "ok"
+          },
+          "16384_random_start": {
+            "ppl": 25.115,
+            "status": "ok"
+          },
+          "16384_sequential": {
+            "ppl": 13.74,
+            "status": "ok"
+          }
+        },
+        "seed123": {
+          "2048_random_start": {
+            "ppl": 9.567,
+            "status": "ok"
+          },
+          "2048_sequential": {
+            "ppl": 5.849,
+            "status": "ok"
+          },
+          "8192_random_start": {
+            "ppl": 7.796,
+            "status": "ok"
+          },
+          "8192_sequential": {
+            "ppl": 5.884,
+            "status": "ok"
+          },
+          "16384_random_start": {
+            "ppl": 19.289,
+            "status": "ok"
+          },
+          "16384_sequential": {
+            "ppl": 13.74,
+            "status": "ok"
+          }
+        },
+        "seed777": {
+          "2048_random_start": {
+            "ppl": 9.361,
+            "status": "ok"
+          },
+          "2048_sequential": {
+            "ppl": 5.849,
+            "status": "ok"
+          },
+          "8192_random_start": {
+            "ppl": 7.487,
+            "status": "ok"
+          },
+          "8192_sequential": {
+            "ppl": 5.884,
+            "status": "ok"
+          },
+          "16384_random_start": {
+            "ppl": 14.538,
+            "status": "ok"
+          },
+          "16384_sequential": {
+            "ppl": 13.74,
+            "status": "ok"
+          }
+        }
+      },
+      "summary": {
+        "2048": {
+          "random_start": {
+            "mean": 10.005,
+            "std": 0.769,
+            "n_valid": 3,
+            "n_total": 3
+          },
+          "sequential": {
+            "mean": 5.849,
+            "std": 0.0,
+            "n_valid": 3,
+            "n_total": 3
+          }
+        },
+        "8192": {
+          "random_start": {
+            "mean": 8.228,
+            "std": 0.839,
+            "n_valid": 3,
+            "n_total": 3
+          },
+          "sequential": {
+            "mean": 5.884,
+            "std": 0.0,
+            "n_valid": 3,
+            "n_total": 3
+          }
+        },
+        "16384": {
+          "random_start": {
+            "mean": 19.647,
+            "std": 4.325,
+            "n_valid": 3,
+            "n_total": 3
+          },
+          "sequential": {
+            "mean": 13.74,
+            "std": 0.0,
+            "n_valid": 3,
+            "n_total": 3
+          }
+        },
+        "collapse_random_start": 1.964,
+        "collapse_sequential": 2.349
+      }
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "task": "short_length_anchor_dim",
+    "lengths": [
+      128,
+      256,
+      512,
+      1024,
+      2048
+    ],
+    "seed": 42
+  },
+  "data": {
+    "anchored_x20_anchor0": {
+      "128": {
+        "ppl": 17.787,
+        "status": "ok"
+      },
+      "256": {
+        "ppl": 13.082,
+        "status": "ok"
+      },
+      "512": {
+        "ppl": 12.059,
+        "status": "ok"
+      },
+      "1024": {
+        "ppl": 12.21,
+        "status": "ok"
+      },
+      "2048": {
+        "ppl": 11.112,
+        "status": "ok"
+      }
+    },
+    "anchored_x20_anchor16": {
+      "128": {
+        "ppl": 17.785,
+        "status": "ok"
+      },
+      "256": {
+        "ppl": 13.081,
+        "status": "ok"
+      },
+      "512": {
+        "ppl": 12.063,
+        "status": "ok"
+      },
+      "1024": {
+        "ppl": 12.208,
+        "status": "ok"
+      },
+      "2048": {
+        "ppl": 11.122,
+        "status": "ok"
+      }
+    }
+  }
+}

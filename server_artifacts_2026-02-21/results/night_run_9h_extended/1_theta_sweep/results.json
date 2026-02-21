@@ -1,0 +1,342 @@
+{
+  "experiment": "theta_sweep",
+  "timestamp": "2026-02-14T01:06:27.881408",
+  "configs": {
+    "geo_500k": {
+      "config": "geo_500k",
+      "params": {
+        "theta": 500000
+      },
+      "data": {
+        "2048": {
+          "ppl": 11.125,
+          "loss": 2.4092,
+          "elapsed_sec": 0.45,
+          "throughput_tps": 4581.8,
+          "mem_peak_gb": 17.68,
+          "status": "ok"
+        },
+        "8192": {
+          "ppl": 9.516,
+          "loss": 2.253,
+          "elapsed_sec": 0.53,
+          "throughput_tps": 15569.4,
+          "mem_peak_gb": 25.81,
+          "status": "ok"
+        },
+        "16384": {
+          "ppl": 262.278,
+          "loss": 5.5694,
+          "elapsed_sec": 1.21,
+          "throughput_tps": 13529.6,
+          "mem_peak_gb": 36.66,
+          "status": "ok"
+        },
+        "24576": {
+          "ppl": 1375.074,
+          "loss": 7.2263,
+          "elapsed_sec": 1.89,
+          "throughput_tps": 12984.1,
+          "mem_peak_gb": 47.51,
+          "status": "ok"
+        },
+        "32768": {
+          "ppl": 2345.095,
+          "loss": 7.7601,
+          "elapsed_sec": 2.81,
+          "throughput_tps": 11650.7,
+          "mem_peak_gb": 58.36,
+          "status": "ok"
+        }
+      }
+    },
+    "geo_800k": {
+      "config": "geo_800k",
+      "params": {
+        "theta": 800000
+      },
+      "data": {
+        "2048": {
+          "ppl": 11.099,
+          "loss": 2.4068,
+          "elapsed_sec": 0.12,
+          "throughput_tps": 16730.9,
+          "mem_peak_gb": 17.68,
+          "status": "ok"
+        },
+        "8192": {
+          "ppl": 9.431,
+          "loss": 2.244,
+          "elapsed_sec": 0.5,
+          "throughput_tps": 16350.9,
+          "mem_peak_gb": 25.81,
+          "status": "ok"
+        },
+        "16384": {
+          "ppl": 51.435,
+          "loss": 3.9403,
+          "elapsed_sec": 1.2,
+          "throughput_tps": 13599.5,
+          "mem_peak_gb": 36.66,
+          "status": "ok"
+        },
+        "24576": {
+          "ppl": 495.772,
+          "loss": 6.2061,
+          "elapsed_sec": 1.9,
+          "throughput_tps": 12945.3,
+          "mem_peak_gb": 47.51,
+          "status": "ok"
+        },
+        "32768": {
+          "ppl": 1230.183,
+          "loss": 7.1149,
+          "elapsed_sec": 2.8,
+          "throughput_tps": 11684.5,
+          "mem_peak_gb": 58.36,
+          "status": "ok"
+        }
+      }
+    },
+    "geo_1000k": {
+      "config": "geo_1000k",
+      "params": {
+        "theta": 1000000
+      },
+      "data": {
+        "2048": {
+          "ppl": 11.118,
+          "loss": 2.4086,
+          "elapsed_sec": 0.12,
+          "throughput_tps": 16545.5,
+          "mem_peak_gb": 17.68,
+          "status": "ok"
+        },
+        "8192": {
+          "ppl": 9.417,
+          "loss": 2.2425,
+          "elapsed_sec": 0.5,
+          "throughput_tps": 16341.6,
+          "mem_peak_gb": 25.81,
+          "status": "ok"
+        },
+        "16384": {
+          "ppl": 25.475,
+          "loss": 3.2377,
+          "elapsed_sec": 1.21,
+          "throughput_tps": 13557.7,
+          "mem_peak_gb": 36.66,
+          "status": "ok"
+        },
+        "24576": {
+          "ppl": 201.594,
+          "loss": 5.3063,
+          "elapsed_sec": 1.91,
+          "throughput_tps": 12895.4,
+          "mem_peak_gb": 47.51,
+          "status": "ok"
+        },
+        "32768": {
+          "ppl": 779.466,
+          "loss": 6.6586,
+          "elapsed_sec": 2.82,
+          "throughput_tps": 11614.7,
+          "mem_peak_gb": 58.36,
+          "status": "ok"
+        }
+      }
+    },
+    "geo_1500k": {
+      "config": "geo_1500k",
+      "params": {
+        "theta": 1500000
+      },
+      "data": {
+        "2048": {
+          "ppl": 11.144,
+          "loss": 2.4109,
+          "elapsed_sec": 0.12,
+          "throughput_tps": 17106.7,
+          "mem_peak_gb": 17.68,
+          "status": "ok"
+        },
+        "8192": {
+          "ppl": 9.385,
+          "loss": 2.2391,
+          "elapsed_sec": 0.5,
+          "throughput_tps": 16283.8,
+          "mem_peak_gb": 25.81,
+          "status": "ok"
+        },
+        "16384": {
+          "ppl": 10.105,
+          "loss": 2.313,
+          "elapsed_sec": 1.21,
+          "throughput_tps": 13505.0,
+          "mem_peak_gb": 36.66,
+          "status": "ok"
+        },
+        "24576": {
+          "ppl": 47.963,
+          "loss": 3.8704,
+          "elapsed_sec": 1.91,
+          "throughput_tps": 12834.4,
+          "mem_peak_gb": 47.51,
+          "status": "ok"
+        },
+        "32768": {
+          "ppl": 254.586,
+          "loss": 5.5396,
+          "elapsed_sec": 2.85,
+          "throughput_tps": 11501.0,
+          "mem_peak_gb": 58.36,
+          "status": "ok"
+        }
+      }
+    },
+    "geo_2000k": {
+      "config": "geo_2000k",
+      "params": {
+        "theta": 2000000
+      },
+      "data": {
+        "2048": {
+          "ppl": 11.115,
+          "loss": 2.4083,
+          "elapsed_sec": 0.12,
+          "throughput_tps": 16576.1,
+          "mem_peak_gb": 17.68,
+          "status": "ok"
+        },
+        "8192": {
+          "ppl": 9.38,
+          "loss": 2.2386,
+          "elapsed_sec": 0.5,
+          "throughput_tps": 16252.1,
+          "mem_peak_gb": 25.81,
+          "status": "ok"
+        },
+        "16384": {
+          "ppl": 9.264,
+          "loss": 2.2261,
+          "elapsed_sec": 1.22,
+          "throughput_tps": 13455.2,
+          "mem_peak_gb": 36.66,
+          "status": "ok"
+        },
+        "24576": {
+          "ppl": 22.068,
+          "loss": 3.0941,
+          "elapsed_sec": 1.93,
+          "throughput_tps": 12717.5,
+          "mem_peak_gb": 47.51,
+          "status": "ok"
+        },
+        "32768": {
+          "ppl": 95.361,
+          "loss": 4.5577,
+          "elapsed_sec": 2.88,
+          "throughput_tps": 11391.0,
+          "mem_peak_gb": 58.36,
+          "status": "ok"
+        }
+      }
+    },
+    "geo_3000k": {
+      "config": "geo_3000k",
+      "params": {
+        "theta": 3000000
+      },
+      "data": {
+        "2048": {
+          "ppl": 11.219,
+          "loss": 2.4176,
+          "elapsed_sec": 0.12,
+          "throughput_tps": 17276.8,
+          "mem_peak_gb": 17.68,
+          "status": "ok"
+        },
+        "8192": {
+          "ppl": 9.388,
+          "loss": 2.2394,
+          "elapsed_sec": 0.51,
+          "throughput_tps": 16117.9,
+          "mem_peak_gb": 25.81,
+          "status": "ok"
+        },
+        "16384": {
+          "ppl": 9.261,
+          "loss": 2.2258,
+          "elapsed_sec": 1.23,
+          "throughput_tps": 13305.9,
+          "mem_peak_gb": 36.66,
+          "status": "ok"
+        },
+        "24576": {
+          "ppl": 9.875,
+          "loss": 2.29,
+          "elapsed_sec": 1.95,
+          "throughput_tps": 12602.7,
+          "mem_peak_gb": 47.51,
+          "status": "ok"
+        },
+        "32768": {
+          "ppl": 28.782,
+          "loss": 3.3598,
+          "elapsed_sec": 2.92,
+          "throughput_tps": 11229.0,
+          "mem_peak_gb": 58.36,
+          "status": "ok"
+        }
+      }
+    },
+    "geo_5000k": {
+      "config": "geo_5000k",
+      "params": {
+        "theta": 5000000
+      },
+      "data": {
+        "2048": {
+          "ppl": 11.27,
+          "loss": 2.4221,
+          "elapsed_sec": 0.12,
+          "throughput_tps": 17191.9,
+          "mem_peak_gb": 17.68,
+          "status": "ok"
+        },
+        "8192": {
+          "ppl": 9.469,
+          "loss": 2.248,
+          "elapsed_sec": 0.51,
+          "throughput_tps": 16056.2,
+          "mem_peak_gb": 25.81,
+          "status": "ok"
+        },
+        "16384": {
+          "ppl": 9.338,
+          "loss": 2.2341,
+          "elapsed_sec": 1.24,
+          "throughput_tps": 13204.5,
+          "mem_peak_gb": 36.66,
+          "status": "ok"
+        },
+        "24576": {
+          "ppl": 9.132,
+          "loss": 2.2117,
+          "elapsed_sec": 1.96,
+          "throughput_tps": 12517.7,
+          "mem_peak_gb": 47.51,
+          "status": "ok"
+        },
+        "32768": {
+          "ppl": 10.227,
+          "loss": 2.325,
+          "elapsed_sec": 2.95,
+          "throughput_tps": 11126.1,
+          "mem_peak_gb": 58.36,
+          "status": "ok"
+        }
+      }
+    }
+  }
+}

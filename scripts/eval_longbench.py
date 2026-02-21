@@ -14,6 +14,7 @@ import argparse
 import gc
 import json
 import logging
+import math
 import os
 import random
 import re
@@ -25,7 +26,7 @@ from typing import Dict, List, Optional, Tuple
 import numpy as np
 import torch
 from datasets import load_dataset
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer
 
 try:
     from peft import PeftModel
@@ -66,13 +67,176 @@ def attn_candidates(mode: str) -> List[Optional[str]]:
     return [mode]
 
 
+def infer_rope_theta(base_model_path: str, trust_remote_code: bool) -> float:
+    theta: Optional[float] = None
+    try:
+        cfg_dict, _ = AutoConfig.get_config_dict(
+            base_model_path,
+            trust_remote_code=trust_remote_code,
+            local_files_only=True,
+        )
+        raw_theta = cfg_dict.get("rope_theta")
+        if raw_theta is not None:
+            theta = float(raw_theta)
+    except Exception:
+        pass
+
+    if theta is None:
+        cfg_json = Path(base_model_path) / "config.json"
+        if cfg_json.exists():
+            try:
+                raw = json.loads(cfg_json.read_text(encoding="utf-8", errors="ignore"))
+                raw_theta = raw.get("rope_theta")
+                if raw_theta is not None:
+                    theta = float(raw_theta)
+            except Exception:
+                pass
+    if theta is None:
+        theta = 10000.0
+    return float(theta)
+
+
+def rope_scaling_candidates(variant: str, factor: float, orig_ctx: int, rope_theta: float) -> List[Optional[dict]]:
+    factor = float(factor)
+    rope_theta = float(rope_theta)
+    if variant == "yarn":
+        return [
+            {
+                "rope_type": "yarn",
+                "factor": factor,
+                "rope_theta": rope_theta,
+                "original_max_position_embeddings": int(orig_ctx),
+            },
+            {"rope_type": "dynamic", "factor": factor, "rope_theta": rope_theta},
+            {"rope_type": "linear", "factor": factor, "rope_theta": rope_theta},
+        ]
+    if variant == "pi":
+        return [
+            {"rope_type": "linear", "factor": factor, "rope_theta": rope_theta},
+            {"rope_type": "dynamic", "factor": factor, "rope_theta": rope_theta},
+        ]
+    if variant == "pi_soft":
+        return [
+            {"rope_type": "dynamic", "factor": factor, "rope_theta": rope_theta},
+            {"rope_type": "linear", "factor": factor, "rope_theta": rope_theta},
+        ]
+    return [None]
+
+
+def compute_hybrid_inv_freq(
+    head_dim: int,
+    theta_base: float = 500000.0,
+    split_ratio: float = 0.5,
+    alpha: float = 0.2,
+    p: float = 3.9,
+    min_freq_scale: float = 4.0,
+) -> torch.Tensor:
+    k = head_dim // 2
+    if k <= 1:
+        raise ValueError(f"Invalid head_dim: {head_dim}")
+    if not (0.0 < split_ratio < 1.0):
+        raise ValueError(f"split_ratio must be in (0,1), got {split_ratio}")
+    if not (0.0 <= alpha <= 1.0):
+        raise ValueError(f"alpha must be in [0,1], got {alpha}")
+    if p <= 0.0:
+        raise ValueError(f"p must be > 0, got {p}")
+    if min_freq_scale <= 0.0:
+        raise ValueError(f"min_freq_scale must be > 0, got {min_freq_scale}")
+
+    idx = torch.arange(0, k, dtype=torch.float32)
+    geo_freq = 1.0 / (float(theta_base) ** (2.0 * idx / float(head_dim)))
+    split_idx = int(k * split_ratio)
+    split_idx = max(1, min(k - 1, split_idx))
+
+    out = geo_freq.clone()
+    tail = k - split_idx
+    if tail <= 0:
+        return out
+
+    if tail == 1:
+        t = torch.zeros(1, dtype=torch.float32)
+    else:
+        t = torch.arange(tail, dtype=torch.float32) / float(tail - 1)
+
+    omega_anchor = float(geo_freq[split_idx].item())
+    omega_min = float(geo_freq[-1].item())
+    omega_min_target = omega_min * float(min_freq_scale)
+    log_w = math.log(omega_anchor) + torch.pow(t, p) * (math.log(omega_min_target) - math.log(omega_anchor))
+    poly_freq = torch.exp(log_w)
+    out[split_idx:] = (1.0 - alpha) * geo_freq[split_idx:] + alpha * poly_freq
+    return out
+
+
+def patch_hybrid_rope(model: torch.nn.Module, inv_freq_cpu: torch.Tensor) -> int:
+    patched = 0
+    for name, module in model.named_modules():
+        if not hasattr(module, "inv_freq"):
+            continue
+        if "rotary_emb" not in name and not name.endswith(".rotary_emb"):
+            continue
+        old = module.inv_freq
+        new = inv_freq_cpu.to(device=old.device, dtype=old.dtype)
+        if isinstance(old, torch.nn.Parameter):
+            module.inv_freq = torch.nn.Parameter(new, requires_grad=False)
+        else:
+            module.inv_freq = new
+        if hasattr(module, "max_seq_len_cached"):
+            module.max_seq_len_cached = 0
+        patched += 1
+    if patched == 0:
+        raise RuntimeError("No rotary modules patched for hybrid variant.")
+    return patched
+
+
+def infer_variant_and_rope_from_adapter(
+    adapter_path: str,
+    fallback_variant: str,
+    fallback_rope_factor: float,
+    fallback_orig_ctx: int,
+) -> Tuple[str, Optional[dict], float, int]:
+    variant = fallback_variant
+    rope_cfg: Optional[dict] = None
+    rope_factor = float(fallback_rope_factor)
+    orig_ctx = int(fallback_orig_ctx)
+
+    summary_path = Path(adapter_path).resolve().parent / "summary.json"
+    if summary_path.exists():
+        try:
+            summary = json.loads(summary_path.read_text(encoding="utf-8", errors="ignore"))
+            sv = str(summary.get("variant", "")).strip().lower()
+            if sv:
+                variant = sv
+            rope = summary.get("rope", {}) if isinstance(summary.get("rope", {}), dict) else {}
+            if isinstance(rope.get("rope_scaling_used"), dict):
+                rope_cfg = dict(rope["rope_scaling_used"])
+            if rope.get("factor") is not None:
+                rope_factor = float(rope.get("factor"))
+            if rope.get("orig_ctx") is not None:
+                orig_ctx = int(rope.get("orig_ctx"))
+        except Exception as e:
+            LOG.warning("Failed to parse adapter summary %s: %s", summary_path, e)
+
+    if variant == "auto":
+        parent_name = Path(adapter_path).resolve().parent.name.strip().lower()
+        variant = parent_name if parent_name in {"hybrid", "yarn", "pi", "pi_soft"} else "base"
+    return variant, rope_cfg, rope_factor, orig_ctx
+
+
 def load_model_and_tokenizer(
     base_model_path: str,
     adapter_path: Optional[str],
     merge_lora: bool,
     attn_mode: str,
     trust_remote_code: bool,
-) -> Tuple[torch.nn.Module, AutoTokenizer, str]:
+    variant: str,
+    rope_factor: float,
+    orig_ctx: int,
+    rope_theta: float,
+    hybrid_split_ratio: float,
+    hybrid_alpha: float,
+    hybrid_p: float,
+    hybrid_min_freq_scale: float,
+) -> Tuple[torch.nn.Module, AutoTokenizer, str, str, Optional[dict]]:
     tokenizer = AutoTokenizer.from_pretrained(
         base_model_path,
         trust_remote_code=trust_remote_code,
@@ -85,12 +249,63 @@ def load_model_and_tokenizer(
             tokenizer.add_special_tokens({"pad_token": "<|pad|>"})
     tokenizer.model_max_length = 10_000_000
 
+    variant_used = variant
+    rope_cfg: Optional[dict] = None
+    rope_factor_used = float(rope_factor)
+    orig_ctx_used = int(orig_ctx)
+
+    if adapter_path:
+        variant_used, inferred_rope_cfg, inferred_factor, inferred_orig_ctx = infer_variant_and_rope_from_adapter(
+            adapter_path=adapter_path,
+            fallback_variant=variant,
+            fallback_rope_factor=rope_factor,
+            fallback_orig_ctx=orig_ctx,
+        )
+        if variant != "auto":
+            variant_used = variant
+        if inferred_rope_cfg is not None:
+            rope_cfg = inferred_rope_cfg
+        rope_factor_used = inferred_factor
+        orig_ctx_used = inferred_orig_ctx
+    elif variant_used == "auto":
+        variant_used = "base"
+
+    if isinstance(rope_cfg, dict) and rope_cfg.get("factor") is not None:
+        try:
+            rope_factor_used = float(rope_cfg.get("factor"))
+        except Exception:
+            pass
+
+    if variant_used in {"yarn", "pi", "pi_soft"} and rope_cfg is None:
+        rope_cfg = rope_scaling_candidates(variant_used, rope_factor_used, orig_ctx_used, rope_theta)[0]
+
     model = None
     used_attn = "default"
     errs: List[str] = []
     for attn in attn_candidates(attn_mode):
         try:
+            cfg = AutoConfig.from_pretrained(
+                base_model_path,
+                trust_remote_code=trust_remote_code,
+                local_files_only=True,
+            )
+
+            if adapter_path and variant_used != "base":
+                target_max_pos = max(
+                    int(getattr(cfg, "max_position_embeddings", orig_ctx_used)),
+                    int(orig_ctx_used * max(1.0, rope_factor_used)),
+                )
+                cfg.max_position_embeddings = target_max_pos
+
+            if rope_cfg is not None:
+                cfg.rope_scaling = dict(rope_cfg)
+                if hasattr(cfg, "rope_parameters"):
+                    cfg.rope_parameters = dict(rope_cfg)
+                if hasattr(cfg, "rope_theta") and getattr(cfg, "rope_theta", None) is None:
+                    cfg.rope_theta = float(rope_theta)
+
             kwargs = dict(
+                config=cfg,
                 torch_dtype=torch.bfloat16,
                 device_map="auto",
                 trust_remote_code=trust_remote_code,
@@ -99,10 +314,22 @@ def load_model_and_tokenizer(
             if attn is not None:
                 kwargs["attn_implementation"] = attn
             model = AutoModelForCausalLM.from_pretrained(base_model_path, **kwargs)
+            if adapter_path and variant_used == "hybrid":
+                head_dim = model.config.hidden_size // model.config.num_attention_heads
+                inv = compute_hybrid_inv_freq(
+                    head_dim=head_dim,
+                    theta_base=rope_theta,
+                    split_ratio=hybrid_split_ratio,
+                    alpha=hybrid_alpha,
+                    p=hybrid_p,
+                    min_freq_scale=hybrid_min_freq_scale,
+                )
+                patched = patch_hybrid_rope(model, inv)
+                LOG.info("Patched hybrid rotary layers=%d", patched)
             used_attn = attn or "default"
             break
         except Exception as e:
-            errs.append(f"attn={attn}: {type(e).__name__}: {e}")
+            errs.append(f"variant={variant_used} rope={rope_cfg} attn={attn}: {type(e).__name__}: {e}")
             gc.collect()
             torch.cuda.empty_cache()
     if model is None:
@@ -124,7 +351,7 @@ def load_model_and_tokenizer(
             model = model.merge_and_unload()
 
     model.eval()
-    return model, tokenizer, used_attn
+    return model, tokenizer, used_attn, variant_used, rope_cfg
 
 
 def normalize_text(text: str) -> str:
@@ -402,6 +629,20 @@ def main() -> None:
         required=True,
         help="Path to hybrid_lora adapter dir (contains adapter_model.safetensors/bin).",
     )
+    ap.add_argument(
+        "--variant",
+        type=str,
+        default="auto",
+        choices=["auto", "base", "hybrid", "yarn", "pi", "pi_soft"],
+        help="RoPE variant used during adapter training. auto=try infer from adapter summary.",
+    )
+    ap.add_argument("--rope_factor", type=float, default=8.0)
+    ap.add_argument("--orig_ctx", type=int, default=8192)
+    ap.add_argument("--rope_theta", type=float, default=0.0, help="<=0 means infer from base config.")
+    ap.add_argument("--hybrid_split_ratio", type=float, default=0.5)
+    ap.add_argument("--hybrid_alpha", type=float, default=0.2)
+    ap.add_argument("--hybrid_p", type=float, default=3.9)
+    ap.add_argument("--hybrid_min_freq_scale", type=float, default=4.0)
     ap.add_argument("--tasks", type=str, default="qasper,hotpotqa,gov_report")
     ap.add_argument("--max_samples_per_task", type=int, default=100)
     ap.add_argument("--max_input_tokens", type=int, default=16384)
@@ -427,6 +668,8 @@ def main() -> None:
 
     tasks = parse_csv(args.tasks)
     LOG.info("Tasks=%s", tasks)
+    rope_theta = float(args.rope_theta) if args.rope_theta > 0 else infer_rope_theta(args.base_model_path, args.trust_remote_code)
+    LOG.info("Resolved rope_theta=%.1f", rope_theta)
 
     results: Dict = {
         "meta": {
@@ -437,25 +680,42 @@ def main() -> None:
             "max_samples_per_task": args.max_samples_per_task,
             "max_input_tokens": args.max_input_tokens,
             "attn_implementation": args.attn_implementation,
+            "variant": args.variant,
+            "rope_factor": args.rope_factor,
+            "orig_ctx": args.orig_ctx,
+            "rope_theta": rope_theta,
         },
         "models": {},
     }
 
     model_specs = [
-        ("base_unfinetuned", None),
-        ("hybrid_lora", args.hybrid_adapter_path),
+        ("base_unfinetuned", None, "base"),
+        ("hybrid_lora", args.hybrid_adapter_path, args.variant),
     ]
 
-    for model_name, adapter_path in model_specs:
+    for model_name, adapter_path, variant_name in model_specs:
         LOG.info("=== Evaluate model: %s ===", model_name)
-        model, tokenizer, attn_used = load_model_and_tokenizer(
+        model, tokenizer, attn_used, variant_used, rope_used = load_model_and_tokenizer(
             base_model_path=args.base_model_path,
             adapter_path=adapter_path,
             merge_lora=args.merge_lora,
             attn_mode=args.attn_implementation,
             trust_remote_code=args.trust_remote_code,
+            variant=variant_name,
+            rope_factor=args.rope_factor,
+            orig_ctx=args.orig_ctx,
+            rope_theta=rope_theta,
+            hybrid_split_ratio=args.hybrid_split_ratio,
+            hybrid_alpha=args.hybrid_alpha,
+            hybrid_p=args.hybrid_p,
+            hybrid_min_freq_scale=args.hybrid_min_freq_scale,
         )
-        mres = {"attn_used": attn_used, "tasks": {}}
+        mres = {
+            "attn_used": attn_used,
+            "variant_used": variant_used,
+            "rope_used": rope_used,
+            "tasks": {},
+        }
 
         for task in tasks:
             try:

@@ -1,0 +1,96 @@
+2026-02-15 10:24:58 | INFO | Loading model...
+2026-02-15 10:25:01 | INFO | Loading adapter: /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_lora_suite_20260214/pi/final_lora
+2026-02-15 10:25:04 | INFO | Model ready. attn=sdpa
+2026-02-15 10:25:04 | INFO | Lengths=[4096, 8192, 16384, 32768] Depths=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+2026-02-15 10:25:04 | INFO | Cell start: length=4096 depth=0% needles=4
+2026-02-15 10:25:05 | INFO | Cell done: length=4096 depth=0% acc=0.000 (0/1)
+2026-02-15 10:25:05 | INFO | Cell start: length=4096 depth=10% needles=4
+2026-02-15 10:25:06 | INFO | Cell done: length=4096 depth=10% acc=0.000 (0/1)
+2026-02-15 10:25:06 | INFO | Cell start: length=4096 depth=20% needles=4
+2026-02-15 10:25:07 | INFO | Cell done: length=4096 depth=20% acc=0.000 (0/1)
+2026-02-15 10:25:07 | INFO | Cell start: length=4096 depth=30% needles=4
+2026-02-15 10:25:07 | INFO | Cell done: length=4096 depth=30% acc=0.000 (0/1)
+2026-02-15 10:25:07 | INFO | Cell start: length=4096 depth=40% needles=4
+2026-02-15 10:25:08 | INFO | Cell done: length=4096 depth=40% acc=0.000 (0/1)
+2026-02-15 10:25:08 | INFO | Cell start: length=4096 depth=50% needles=4
+2026-02-15 10:25:09 | INFO | Cell done: length=4096 depth=50% acc=0.000 (0/1)
+2026-02-15 10:25:09 | INFO | Cell start: length=4096 depth=60% needles=4
+2026-02-15 10:25:09 | INFO | Cell done: length=4096 depth=60% acc=0.000 (0/1)
+2026-02-15 10:25:09 | INFO | Cell start: length=4096 depth=70% needles=4
+2026-02-15 10:25:10 | INFO | Cell done: length=4096 depth=70% acc=0.000 (0/1)
+2026-02-15 10:25:10 | INFO | Cell start: length=4096 depth=80% needles=4
+2026-02-15 10:25:11 | INFO | Cell done: length=4096 depth=80% acc=0.000 (0/1)
+2026-02-15 10:25:11 | INFO | Cell start: length=4096 depth=90% needles=4
+2026-02-15 10:25:11 | INFO | Cell done: length=4096 depth=90% acc=0.000 (0/1)
+2026-02-15 10:25:11 | INFO | Cell start: length=4096 depth=100% needles=4
+2026-02-15 10:25:12 | INFO | Cell done: length=4096 depth=100% acc=0.000 (0/1)
+2026-02-15 10:25:12 | INFO | Cell start: length=8192 depth=0% needles=4
+2026-02-15 10:25:13 | INFO | Cell done: length=8192 depth=0% acc=0.000 (0/1)
+2026-02-15 10:25:13 | INFO | Cell start: length=8192 depth=10% needles=4
+2026-02-15 10:25:14 | INFO | Cell done: length=8192 depth=10% acc=0.000 (0/1)
+2026-02-15 10:25:14 | INFO | Cell start: length=8192 depth=20% needles=4
+2026-02-15 10:25:15 | INFO | Cell done: length=8192 depth=20% acc=0.000 (0/1)
+2026-02-15 10:25:15 | INFO | Cell start: length=8192 depth=30% needles=4
+2026-02-15 10:25:16 | INFO | Cell done: length=8192 depth=30% acc=0.000 (0/1)
+2026-02-15 10:25:16 | INFO | Cell start: length=8192 depth=40% needles=4
+2026-02-15 10:25:17 | INFO | Cell done: length=8192 depth=40% acc=0.000 (0/1)
+2026-02-15 10:25:17 | INFO | Cell start: length=8192 depth=50% needles=4
+2026-02-15 10:25:18 | INFO | Cell done: length=8192 depth=50% acc=0.000 (0/1)
+2026-02-15 10:25:18 | INFO | Cell start: length=8192 depth=60% needles=4
+2026-02-15 10:25:19 | INFO | Cell done: length=8192 depth=60% acc=0.000 (0/1)
+2026-02-15 10:25:19 | INFO | Cell start: length=8192 depth=70% needles=4
+2026-02-15 10:25:20 | INFO | Cell done: length=8192 depth=70% acc=0.000 (0/1)
+2026-02-15 10:25:20 | INFO | Cell start: length=8192 depth=80% needles=4
+2026-02-15 10:25:21 | INFO | Cell done: length=8192 depth=80% acc=0.000 (0/1)
+2026-02-15 10:25:21 | INFO | Cell start: length=8192 depth=90% needles=4
+2026-02-15 10:25:22 | INFO | Cell done: length=8192 depth=90% acc=0.000 (0/1)
+2026-02-15 10:25:22 | INFO | Cell start: length=8192 depth=100% needles=4
+2026-02-15 10:25:23 | INFO | Cell done: length=8192 depth=100% acc=0.000 (0/1)
+2026-02-15 10:25:23 | INFO | Cell start: length=16384 depth=0% needles=4
+2026-02-15 10:25:24 | INFO | Cell done: length=16384 depth=0% acc=0.000 (0/1)
+2026-02-15 10:25:24 | INFO | Cell start: length=16384 depth=10% needles=4
+2026-02-15 10:25:26 | INFO | Cell done: length=16384 depth=10% acc=0.000 (0/1)
+2026-02-15 10:25:26 | INFO | Cell start: length=16384 depth=20% needles=4
+2026-02-15 10:25:28 | INFO | Cell done: length=16384 depth=20% acc=0.000 (0/1)
+2026-02-15 10:25:28 | INFO | Cell start: length=16384 depth=30% needles=4
+2026-02-15 10:25:29 | INFO | Cell done: length=16384 depth=30% acc=0.000 (0/1)
+2026-02-15 10:25:29 | INFO | Cell start: length=16384 depth=40% needles=4
+2026-02-15 10:25:31 | INFO | Cell done: length=16384 depth=40% acc=0.000 (0/1)
+2026-02-15 10:25:31 | INFO | Cell start: length=16384 depth=50% needles=4
+2026-02-15 10:25:32 | INFO | Cell done: length=16384 depth=50% acc=0.000 (0/1)
+2026-02-15 10:25:32 | INFO | Cell start: length=16384 depth=60% needles=4
+2026-02-15 10:25:34 | INFO | Cell done: length=16384 depth=60% acc=0.000 (0/1)
+2026-02-15 10:25:34 | INFO | Cell start: length=16384 depth=70% needles=4
+2026-02-15 10:25:36 | INFO | Cell done: length=16384 depth=70% acc=0.000 (0/1)
+2026-02-15 10:25:36 | INFO | Cell start: length=16384 depth=80% needles=4
+2026-02-15 10:25:37 | INFO | Cell done: length=16384 depth=80% acc=0.000 (0/1)
+2026-02-15 10:25:37 | INFO | Cell start: length=16384 depth=90% needles=4
+2026-02-15 10:25:39 | INFO | Cell done: length=16384 depth=90% acc=0.000 (0/1)
+2026-02-15 10:25:39 | INFO | Cell start: length=16384 depth=100% needles=4
+2026-02-15 10:25:41 | INFO | Cell done: length=16384 depth=100% acc=0.000 (0/1)
+2026-02-15 10:25:41 | INFO | Cell start: length=32768 depth=0% needles=4
+2026-02-15 10:25:44 | INFO | Cell done: length=32768 depth=0% acc=0.000 (0/1)
+2026-02-15 10:25:44 | INFO | Cell start: length=32768 depth=10% needles=4
+2026-02-15 10:25:47 | INFO | Cell done: length=32768 depth=10% acc=0.000 (0/1)
+2026-02-15 10:25:47 | INFO | Cell start: length=32768 depth=20% needles=4
+2026-02-15 10:25:50 | INFO | Cell done: length=32768 depth=20% acc=0.000 (0/1)
+2026-02-15 10:25:50 | INFO | Cell start: length=32768 depth=30% needles=4
+2026-02-15 10:25:54 | INFO | Cell done: length=32768 depth=30% acc=0.000 (0/1)
+2026-02-15 10:25:54 | INFO | Cell start: length=32768 depth=40% needles=4
+2026-02-15 10:25:57 | INFO | Cell done: length=32768 depth=40% acc=0.000 (0/1)
+2026-02-15 10:25:57 | INFO | Cell start: length=32768 depth=50% needles=4
+2026-02-15 10:26:00 | INFO | Cell done: length=32768 depth=50% acc=0.000 (0/1)
+2026-02-15 10:26:00 | INFO | Cell start: length=32768 depth=60% needles=4
+2026-02-15 10:26:04 | INFO | Cell done: length=32768 depth=60% acc=0.000 (0/1)
+2026-02-15 10:26:04 | INFO | Cell start: length=32768 depth=70% needles=4
+2026-02-15 10:26:07 | INFO | Cell done: length=32768 depth=70% acc=0.000 (0/1)
+2026-02-15 10:26:07 | INFO | Cell start: length=32768 depth=80% needles=4
+2026-02-15 10:26:10 | INFO | Cell done: length=32768 depth=80% acc=0.000 (0/1)
+2026-02-15 10:26:10 | INFO | Cell start: length=32768 depth=90% needles=4
+2026-02-15 10:26:13 | INFO | Cell done: length=32768 depth=90% acc=0.000 (0/1)
+2026-02-15 10:26:14 | INFO | Cell start: length=32768 depth=100% needles=4
+2026-02-15 10:26:17 | INFO | Cell done: length=32768 depth=100% acc=0.000 (0/1)
+2026-02-15 10:26:17 | WARNING | seaborn unavailable; used matplotlib fallback.
+2026-02-15 10:26:18 | INFO | Saved /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_post_eval_20260214/niah/pi_needles4/niah_recall_heatmap.pdf
+2026-02-15 10:26:18 | INFO | Saved /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_post_eval_20260214/niah/pi_needles4/niah_recall_heatmap.png
+2026-02-15 10:26:18 | INFO | Saved /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_post_eval_20260214/niah/pi_needles4/niah_recall_results.json

@@ -1,0 +1,29 @@
+{
+  "model_path": "./results/train_freq_comparison/700m_orig_20260214_140024/model",
+  "freq_type": "orig",
+  "freq_kwargs": {
+    "theta_base": 100000,
+    "alpha": 0.2,
+    "p": 3.9,
+    "omf": 0.3,
+    "steepness": 8.0,
+    "midpoint": 0.5
+  },
+  "seq_lengths": {
+    "2048": {
+      "loss": 11.103215217590332,
+      "ppl": 22026.465794806718,
+      "num_samples": 50
+    },
+    "4096": {
+      "loss": 11.041119575500488,
+      "ppl": 22026.465794806718,
+      "num_samples": 50
+    },
+    "8192": {
+      "loss": 11.033212661743164,
+      "ppl": 22026.465794806718,
+      "num_samples": 50
+    }
+  }
+}

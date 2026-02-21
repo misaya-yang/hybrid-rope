@@ -1,0 +1,86 @@
+{
+  "phase": 2,
+  "L_star": 49152,
+  "configs": {
+    "geo_500k": {
+      "config": "geo_500k",
+      "params": {
+        "theta": 500000
+      },
+      "data": {
+        "16384": {
+          "seeds": [
+            42,
+            123,
+            777
+          ],
+          "ppls": [
+            262.278,
+            171.685,
+            150.929
+          ],
+          "mean": 194.964,
+          "std": 48.347,
+          "valid_count": 3
+        },
+        "49152": {
+          "seeds": [
+            42,
+            123,
+            777
+          ],
+          "ppls": [
+            3810.991,
+            null,
+            null
+          ],
+          "mean": 3810.991,
+          "std": 0.0,
+          "valid_count": 1
+        }
+      }
+    },
+    "anchored_x20": {
+      "config": "anchored_x20",
+      "params": {
+        "theta": 100000,
+        "anchor_factor": 20,
+        "anchor_dim": 16,
+        "slope": 0.5
+      },
+      "data": {
+        "16384": {
+          "seeds": [
+            42,
+            123,
+            777
+          ],
+          "ppls": [
+            19.041,
+            15.152,
+            12.112
+          ],
+          "mean": 15.435,
+          "std": 2.836,
+          "valid_count": 3
+        },
+        "49152": {
+          "seeds": [
+            42,
+            123,
+            777
+          ],
+          "ppls": [
+            1503.946,
+            null,
+            null
+          ],
+          "mean": 1503.946,
+          "std": 0.0,
+          "valid_count": 1
+        }
+      }
+    }
+  },
+  "timestamp": "2026-02-14T00:56:10.463381"
+}

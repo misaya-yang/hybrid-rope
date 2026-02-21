@@ -1,0 +1,50 @@
+{
+  "2048": {
+    "accuracy": 1.0,
+    "ppl": 2.554,
+    "mem_gb": 17.94,
+    "status": "ok"
+  },
+  "4096": {
+    "accuracy": 1.0,
+    "ppl": 2.173,
+    "mem_gb": 19.8,
+    "status": "ok"
+  },
+  "6144": {
+    "accuracy": 1.0,
+    "ppl": 2.043,
+    "mem_gb": 21.62,
+    "status": "ok"
+  },
+  "8192": {
+    "accuracy": 1.0,
+    "ppl": 1.983,
+    "mem_gb": 23.43,
+    "status": "ok"
+  },
+  "10240": {
+    "accuracy": 1.0,
+    "ppl": 1.942,
+    "mem_gb": 25.31,
+    "status": "ok"
+  },
+  "12288": {
+    "accuracy": 1.0,
+    "ppl": 1.924,
+    "mem_gb": 27.18,
+    "status": "ok"
+  },
+  "14336": {
+    "accuracy": 1.0,
+    "ppl": 1.911,
+    "mem_gb": 28.93,
+    "status": "ok"
+  },
+  "16384": {
+    "accuracy": 1.0,
+    "ppl": 1.905,
+    "mem_gb": 30.79,
+    "status": "ok"
+  }
+}

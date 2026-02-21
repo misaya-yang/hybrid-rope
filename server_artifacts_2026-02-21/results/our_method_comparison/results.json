@@ -1,0 +1,47 @@
+{
+  "baseline": {
+    "16384": {"accuracy": 0.0, "ppl": 2.151, "mem_gb": 34.41, "status": "ok"},
+    "20480": {"accuracy": 0.0, "ppl": 3.34, "mem_gb": 38.92, "status": "ok"},
+    "24576": {"accuracy": 0.0, "ppl": 5.59, "mem_gb": 43.69, "status": "ok"},
+    "28672": {"accuracy": 0.0, "ppl": 8.633, "mem_gb": 48.16, "status": "ok"},
+    "32768": {"accuracy": 0.0, "ppl": 14.035, "mem_gb": 52.82, "status": "ok"},
+    "40960": {"accuracy": 0.0, "ppl": 37.928, "mem_gb": 61.79, "status": "ok"},
+    "49152": {"accuracy": 0.0, "ppl": 69.794, "mem_gb": 71.04, "status": "ok"}
+  },
+  "ours_cf1.5": {
+    "16384": {"accuracy": 0.0, "ppl": 2.168, "mem_gb": 34.41, "status": "ok"},
+    "20480": {"accuracy": 0.0, "ppl": 3.337, "mem_gb": 38.92, "status": "ok"},
+    "24576": {"accuracy": 0.0, "ppl": 5.555, "mem_gb": 43.69, "status": "ok"},
+    "28672": {"accuracy": 0.0, "ppl": 8.186, "mem_gb": 48.16, "status": "ok"},
+    "32768": {"accuracy": 0.0, "ppl": 12.882, "mem_gb": 52.82, "status": "ok"},
+    "40960": {"accuracy": 0.0, "ppl": 25.238, "mem_gb": 61.79, "status": "ok"},
+    "49152": {"accuracy": 0.0, "ppl": 49.491, "mem_gb": 71.04, "status": "ok"}
+  },
+  "ours_cf2.0": {
+    "16384": {"accuracy": 0.0, "ppl": 2.245, "mem_gb": 50.47, "status": "ok"},
+    "20480": {"accuracy": 0.0, "ppl": 3.758, "mem_gb": 54.99, "status": "ok"},
+    "24576": {"accuracy": 0.0, "ppl": 5.994, "mem_gb": 59.75, "status": "ok"},
+    "28672": {"accuracy": 0.0, "ppl": 9.027, "mem_gb": 64.22, "status": "ok"},
+    "32768": {"accuracy": 0.0, "ppl": 13.081, "mem_gb": 68.88, "status": "ok"},
+    "40960": {"accuracy": 0.0, "ppl": 24.714, "mem_gb": 77.85, "status": "ok"},
+    "49152": {"accuracy": 0.0, "ppl": 41.86, "mem_gb": 87.1, "status": "ok"}
+  },
+  "ours_cf2.5": {
+    "16384": {"accuracy": 0.0, "ppl": 2.36, "mem_gb": 66.53, "status": "ok"},
+    "20480": {"accuracy": 0.0, "ppl": 3.84, "mem_gb": 71.05, "status": "ok"},
+    "24576": {"accuracy": 0.0, "ppl": 5.842, "mem_gb": 75.81, "status": "ok"},
+    "28672": {"accuracy": 0.0, "ppl": 8.646, "mem_gb": 80.28, "status": "ok"},
+    "32768": {"accuracy": 0.0, "ppl": 12.283, "mem_gb": 84.94, "status": "ok"},
+    "40960": {"status": "OOM"},
+    "49152": {"status": "OOM"}
+  },
+  "ours_cf3.0": {
+    "16384": {"accuracy": 0.0, "ppl": 2.541, "mem_gb": 82.59, "status": "ok"},
+    "20480": {"accuracy": 0.0, "ppl": 4.045, "mem_gb": 87.11, "status": "ok"},
+    "24576": {"accuracy": 0.0, "ppl": 6.129, "mem_gb": 91.87, "status": "ok"},
+    "28672": {"status": "OOM"},
+    "32768": {"status": "OOM"},
+    "40960": {"status": "OOM"},
+    "49152": {"status": "OOM"}
+  }
+}

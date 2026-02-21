@@ -67,16 +67,54 @@ def safe_exp(x: float) -> float:
         return float("inf")
 
 
-def compute_hybrid_inv_freq(head_dim: int, theta_base: float = 100000, alpha: float = 0.2, p: float = 3.9, omf: float = 0.3) -> torch.Tensor:
+def compute_hybrid_inv_freq(
+    head_dim: int,
+    theta_base: float = 500000.0,
+    split_ratio: float = 0.5,
+    alpha: float = 0.2,
+    p: float = 3.9,
+    min_freq_scale: float = 4.0,
+) -> torch.Tensor:
+    """
+    Strict Piecewise Anchor:
+    - lock high-frequency channels (front split) to native geometric RoPE
+    - only reshape low-frequency tail to improve long-range phase behavior
+    """
     k = head_dim // 2
-    if k <= 0:
+    if k <= 1:
         raise ValueError(f"Invalid head_dim: {head_dim}")
+    if not (0.0 < split_ratio < 1.0):
+        raise ValueError(f"split_ratio must be in (0,1), got {split_ratio}")
+    if not (0.0 <= alpha <= 1.0):
+        raise ValueError(f"alpha must be in [0,1], got {alpha}")
+    if p <= 0.0:
+        raise ValueError(f"p must be > 0, got {p}")
+    if min_freq_scale <= 0.0:
+        raise ValueError(f"min_freq_scale must be > 0, got {min_freq_scale}")
+
     idx = torch.arange(0, k, dtype=torch.float32)
-    t = idx / max(1, k - 1)
-    poly = torch.pow(t + 1e-8, p)
-    mixed = (1.0 - alpha) * t + alpha * poly
-    inv_freq = omf / (theta_base ** mixed)
-    return inv_freq
+    geo_freq = 1.0 / (float(theta_base) ** (2.0 * idx / float(head_dim)))
+    split_idx = int(k * split_ratio)
+    split_idx = max(1, min(k - 1, split_idx))
+
+    out = geo_freq.clone()
+    tail = k - split_idx
+    if tail <= 0:
+        return out
+
+    if tail == 1:
+        t = torch.zeros(1, dtype=torch.float32)
+    else:
+        t = torch.arange(tail, dtype=torch.float32) / float(tail - 1)
+
+    omega_anchor = float(geo_freq[split_idx].item())
+    omega_min = float(geo_freq[-1].item())
+    omega_min_target = omega_min * float(min_freq_scale)
+
+    log_w = math.log(omega_anchor) + torch.pow(t, p) * (math.log(omega_min_target) - math.log(omega_anchor))
+    poly_freq = torch.exp(log_w)
+    out[split_idx:] = (1.0 - alpha) * geo_freq[split_idx:] + alpha * poly_freq
+    return out
 
 
 def patch_hybrid_rope(model: torch.nn.Module, inv_freq_cpu: torch.Tensor) -> int:
@@ -250,6 +288,10 @@ def load_model_for_variant(
     variant: str,
     rope_factor: float,
     orig_ctx: int,
+    hybrid_split_ratio: float,
+    hybrid_alpha: float,
+    hybrid_p: float,
+    hybrid_min_freq_scale: float,
     attn_mode: str,
     trust_remote_code: bool,
     local_files_only: bool,
@@ -314,7 +356,14 @@ def load_model_for_variant(
 
                 if variant == "hybrid":
                     head_dim = model.config.hidden_size // model.config.num_attention_heads
-                    inv = compute_hybrid_inv_freq(head_dim=head_dim)
+                    inv = compute_hybrid_inv_freq(
+                        head_dim=head_dim,
+                        theta_base=base_rope_theta,
+                        split_ratio=hybrid_split_ratio,
+                        alpha=hybrid_alpha,
+                        p=hybrid_p,
+                        min_freq_scale=hybrid_min_freq_scale,
+                    )
                     patched = patch_hybrid_rope(model, inv)
                     print(f"[rope] patched hybrid rotary layers={patched}", flush=True)
 
@@ -391,6 +440,10 @@ def main() -> None:
     ap.add_argument("--seq_len", type=int, default=8192)
     ap.add_argument("--orig_ctx", type=int, default=8192)
     ap.add_argument("--rope_factor", type=float, default=8.0)
+    ap.add_argument("--hybrid_split_ratio", type=float, default=0.5)
+    ap.add_argument("--hybrid_alpha", type=float, default=0.2)
+    ap.add_argument("--hybrid_p", type=float, default=3.9)
+    ap.add_argument("--hybrid_min_freq_scale", type=float, default=4.0)
     ap.add_argument("--max_steps", type=int, default=600)
     ap.add_argument("--per_device_train_batch_size", type=int, default=1)
     ap.add_argument("--gradient_accumulation_steps", type=int, default=8)
@@ -418,6 +471,10 @@ def main() -> None:
         variant=args.variant,
         rope_factor=args.rope_factor,
         orig_ctx=args.orig_ctx,
+        hybrid_split_ratio=args.hybrid_split_ratio,
+        hybrid_alpha=args.hybrid_alpha,
+        hybrid_p=args.hybrid_p,
+        hybrid_min_freq_scale=args.hybrid_min_freq_scale,
         attn_mode=args.attn_implementation,
         trust_remote_code=args.trust_remote_code,
         local_files_only=True,
@@ -517,6 +574,10 @@ def main() -> None:
         "rope": {
             "factor": args.rope_factor,
             "orig_ctx": args.orig_ctx,
+            "hybrid_split_ratio": args.hybrid_split_ratio,
+            "hybrid_alpha": args.hybrid_alpha,
+            "hybrid_p": args.hybrid_p,
+            "hybrid_min_freq_scale": args.hybrid_min_freq_scale,
             "rope_scaling_used": loaded.rope_used,
             "attn_used": loaded.attn_used,
         },

@@ -1,91 +1,71 @@
-# AI Handoff (Read This First)
+# AI Handoff (Single-File Context)
 
-更新时间：2026-02-15 01:25（本地）
+Last update: `2026-02-21`
 
-## 1. 项目目标
+## 1. Project Intent
 
-- 论文方向：Hybrid-RoPE（长上下文能力）。
-- 当前核心任务：完成 8B 公平 LoRA 对比（YaRN / PI / Hybrid / PI-soft），并产出 NIAH + LongBench + PPL 证据链。
+- This is a paper-first experiment repository for Hybrid-RoPE style long-context research.
+- The target workflow is:
+  1. design method
+  2. run controlled experiments
+  3. preserve evidence (json/log/figures)
+  4. convert to paper claims
 
-## 2. 关键环境约束（必须遵守）
+## 2. Current Ground Truth
 
-- 本地仓库：`e:/rope/hybrid-rope`
-- 远端仓库：`/root/autodl-tmp/dfrope/hybrid-rope`
-- 用户无 HuggingFace 外网权限，不要依赖在线下载。
-- 模型和数据优先使用本地已存在路径（Llama/Qwen/数据集已准备）。
-- 同步结果时只拉数据，不拉权重。
-- 不要删除用户已有实验，只做归档或隔离。
+- `results/advisor_package_2026-02-15/` is the curated baseline evidence pack.
+- `server_artifacts_2026-02-21/` is the latest full server data-only snapshot pulled to local.
+- `sigmoid_rope_experiments/` contains phase-based mechanistic and training-time scripts.
+- `sigmoid_rope_experiments/run_phase4.py` is actively used for training-time validation.
 
-## 3. 当前已完成整理
+## 3. Hard Constraints
 
-- 已把历史 root 杂项远程脚本迁移到：`tools/remote_legacy/`
-- 已做结果分层：
-  - 主结果：`results/`
-  - 低优先级归档：`results/archive_low_priority/`
-  - 论文可读副本：`results/paper_ready/`
-  - 权重隔离区：`results/_weights_quarantine/`
-- 导师汇报包已生成：`results/advisor_package_2026-02-15/`
-  - 入口：`results/advisor_package_2026-02-15/INDEX.md`
-- 数据-only 同步工具已写：`tools/sync_results_data_only.ps1`
+- Do not commit weights/checkpoints.
+- Keep logs, csv/json, and plots for reproducibility.
+- Prefer local/offline datasets and models in server paths.
+- Never assume HuggingFace external internet access.
 
-## 4. 当前训练状态（接管快照）
+## 4. Where To Look For Evidence
 
-- 远端在跑：
-  - `scripts/run_llama8b_fair_suite.py`
-  - `scripts/train_llama8b_lora_variant.py --variant hybrid`
-  - `scripts/run_8b_post_eval.py --wait_for_suite ...`
-- 已完成：`yarn`、`pi`
-- 正在进行：`hybrid`
-- 最新日志（约 01:25）显示 `hybrid` 在 `~66/600`，loss 从 `5.13 -> 2.47`，显存约 `max_reserved_gb=81.66`，训练正常下降。
+- From-scratch and 8B evidence:
+  - `results/advisor_package_2026-02-15/`
+- Raw server mirror (latest):
+  - `server_artifacts_2026-02-21/results/`
+  - `server_artifacts_2026-02-21/logs/`
+- Sigmoid phase outputs:
+  - `sigmoid_rope_experiments/data/`
+  - `sigmoid_rope_experiments/results/`
 
-## 5. 最有价值证据文件（优先读）
+## 5. Storyline For Paper Drafting
 
-- `results/advisor_package_2026-02-15/01_scaling_from_scratch/350m_final_results.json`
-- `results/advisor_package_2026-02-15/01_scaling_from_scratch/unified_search_3cfg_3seed_results.json`
-- `results/advisor_package_2026-02-15/02_llama_long_context/llama_shape_theta_min_results.json`
-- `results/advisor_package_2026-02-15/03_llama8b_fair_lora/yarn_summary.json`
-- `results/advisor_package_2026-02-15/03_llama8b_fair_lora/pi_summary.json`
-- `results/advisor_package_2026-02-15/04_niah_and_retrieval/niah_results_base.json`
-- `results/advisor_package_2026-02-15/05_qwen_and_cross_model/qwen_hybrid_lora_eval_suite.json`
+1. Baseline scaling and long-context collapse diagnosis.
+2. Frequency-shape controls and hybrid/sigmoid mitigation.
+3. Fair 8B LoRA baselines (YaRN/PI/Hybrid/PI-soft) with downstream checks.
+4. Sigmoid phase:
+   - formula validation
+   - model selection/refit
+   - robustness/sensitivity
+   - training-time validation (phase4)
 
-## 6. 下一步该做什么（按优先级）
+Reference: `docs/RESEARCH_STORYLINE_2026-02-21.md`.
 
-1. 等待 8B fair suite 完成 `hybrid` 和 `pi_soft`。
-2. 确认 `run_8b_post_eval.py` 自动启动并产出：
-   - NIAH（单针/多针热力图）
-   - LongBench（qasper/hotpotqa/gov_report）对比 JSON
-3. 将新增结果做 data-only 回传，刷新：
-   - `results/llama8b_fair_lora_suite_20260214`
-   - `results/llama8b_post_eval_20260214`
-4. 更新 `results/advisor_package_2026-02-15/INDEX.md` 的最终数值。
-5. 若要对外汇报，优先从 `results/advisor_package_2026-02-15/` 出图表和表格。
+## 6. Operational Commands
 
-## 7. 常用接管命令
+Server evidence sync (data-only):
 
 ```powershell
-# 看远端训练进程
-C:\Users\Admin\.ssh\plink.exe -batch -ssh -P 42581 root@connect.bjb1.seetacloud.com -pw htG0sD63/yG0 "ps -eo pid,etimes,cmd | grep -E 'run_llama8b_fair_suite.py|train_llama8b_lora_variant.py|run_8b_post_eval.py' | grep -v grep"
-
-# 看 fair suite 日志尾部
-C:\Users\Admin\.ssh\plink.exe -batch -ssh -P 42581 root@connect.bjb1.seetacloud.com -pw htG0sD63/yG0 "tail -n 60 /root/autodl-tmp/dfrope/hybrid-rope/logs/fair_suite_8b_run.log"
-
-# 看 post-eval 等待日志
-C:\Users\Admin\.ssh\plink.exe -batch -ssh -P 42581 root@connect.bjb1.seetacloud.com -pw htG0sD63/yG0 "tail -n 60 /root/autodl-tmp/dfrope/hybrid-rope/logs/post_eval_8b_run.log"
-
-# data-only 同步（不传权重）
-powershell -ExecutionPolicy Bypass -File tools/sync_results_data_only.ps1 `
+powershell -ExecutionPolicy Bypass -File tools/sync_server_evidence_data_only.ps1 `
   -RemoteHost connect.bjb1.seetacloud.com `
   -RemotePort 42581 `
   -RemoteUser root `
-  -RemotePassword "htG0sD63/yG0" `
+  -RemotePassword "<PASSWORD>" `
   -RemoteRepoRoot "/root/autodl-tmp/dfrope/hybrid-rope" `
   -LocalRepoRoot "." `
-  -ResultDirs @("llama8b_fair_lora_suite_20260214","llama8b_post_eval_20260214")
+  -LocalTargetRel "server_artifacts_2026-02-21"
 ```
 
-## 8. 注意事项
+## 7. If You Continue From Here
 
-- `results/350m_final/` 当前有效结果文件名是 `results1.json`（不是 `results.json`）。
-- `results/_weights_quarantine/` 是本地权重隔离区，不用于汇报。
-- 汇报材料优先使用：`results/advisor_package_2026-02-15/`。
-
+1. Check active training status first (`run_phase4.log` and process).
+2. Sync new evidence snapshot before changing conclusions.
+3. Update storyline docs and manifest after any major result change.

@@ -1,0 +1,417 @@
+{
+  "experiment": "boundary_dense_scan",
+  "timestamp": "2026-02-14T01:09:54.073676",
+  "configs": {
+    "geo_500k": {
+      "config": "geo_500k",
+      "params": {
+        "theta": 500000
+      },
+      "data": {
+        "2048": {
+          "ppl": 11.125,
+          "loss": 2.4092,
+          "elapsed_sec": 0.12,
+          "throughput_tps": 16641.8,
+          "mem_peak_gb": 17.68,
+          "status": "ok"
+        },
+        "4096": {
+          "ppl": 9.898,
+          "loss": 2.2924,
+          "elapsed_sec": 0.25,
+          "throughput_tps": 16226.7,
+          "mem_peak_gb": 20.39,
+          "status": "ok"
+        },
+        "6144": {
+          "ppl": 9.732,
+          "loss": 2.2754,
+          "elapsed_sec": 0.37,
+          "throughput_tps": 16420.5,
+          "mem_peak_gb": 23.1,
+          "status": "ok"
+        },
+        "8192": {
+          "ppl": 9.516,
+          "loss": 2.253,
+          "elapsed_sec": 0.51,
+          "throughput_tps": 16070.4,
+          "mem_peak_gb": 25.81,
+          "status": "ok"
+        },
+        "10240": {
+          "ppl": 16.154,
+          "loss": 2.7822,
+          "elapsed_sec": 0.66,
+          "throughput_tps": 15556.0,
+          "mem_peak_gb": 28.53,
+          "status": "ok"
+        },
+        "12288": {
+          "ppl": 40.439,
+          "loss": 3.6998,
+          "elapsed_sec": 0.89,
+          "throughput_tps": 13792.2,
+          "mem_peak_gb": 31.24,
+          "status": "ok"
+        },
+        "14336": {
+          "ppl": 105.492,
+          "loss": 4.6586,
+          "elapsed_sec": 1.07,
+          "throughput_tps": 13438.7,
+          "mem_peak_gb": 33.95,
+          "status": "ok"
+        },
+        "16384": {
+          "ppl": 262.278,
+          "loss": 5.5694,
+          "elapsed_sec": 1.23,
+          "throughput_tps": 13269.5,
+          "mem_peak_gb": 36.66,
+          "status": "ok"
+        },
+        "18432": {
+          "ppl": 544.227,
+          "loss": 6.2994,
+          "elapsed_sec": 1.45,
+          "throughput_tps": 12721.0,
+          "mem_peak_gb": 39.37,
+          "status": "ok"
+        },
+        "20480": {
+          "ppl": 864.932,
+          "loss": 6.7627,
+          "elapsed_sec": 1.61,
+          "throughput_tps": 12704.0,
+          "mem_peak_gb": 42.09,
+          "status": "ok"
+        },
+        "22528": {
+          "ppl": 1125.171,
+          "loss": 7.0257,
+          "elapsed_sec": 1.75,
+          "throughput_tps": 12845.1,
+          "mem_peak_gb": 44.8,
+          "status": "ok"
+        },
+        "24576": {
+          "ppl": 1375.074,
+          "loss": 7.2263,
+          "elapsed_sec": 2.05,
+          "throughput_tps": 11991.4,
+          "mem_peak_gb": 47.51,
+          "status": "ok"
+        },
+        "26624": {
+          "ppl": 1604.815,
+          "loss": 7.3808,
+          "elapsed_sec": 2.16,
+          "throughput_tps": 12325.2,
+          "mem_peak_gb": 50.22,
+          "status": "ok"
+        },
+        "28672": {
+          "ppl": 1847.321,
+          "loss": 7.5215,
+          "elapsed_sec": 2.46,
+          "throughput_tps": 11634.7,
+          "mem_peak_gb": 52.93,
+          "status": "ok"
+        },
+        "30720": {
+          "ppl": 2067.157,
+          "loss": 7.6339,
+          "elapsed_sec": 2.59,
+          "throughput_tps": 11865.8,
+          "mem_peak_gb": 55.64,
+          "status": "ok"
+        },
+        "32768": {
+          "ppl": 2345.095,
+          "loss": 7.7601,
+          "elapsed_sec": 2.92,
+          "throughput_tps": 11206.6,
+          "mem_peak_gb": 58.36,
+          "status": "ok"
+        }
+      }
+    },
+    "geo_1M": {
+      "config": "geo_1M",
+      "params": {
+        "theta": 1000000
+      },
+      "data": {
+        "2048": {
+          "ppl": 11.118,
+          "loss": 2.4086,
+          "elapsed_sec": 0.12,
+          "throughput_tps": 17244.1,
+          "mem_peak_gb": 17.68,
+          "status": "ok"
+        },
+        "4096": {
+          "ppl": 9.795,
+          "loss": 2.2818,
+          "elapsed_sec": 0.25,
+          "throughput_tps": 16231.7,
+          "mem_peak_gb": 20.39,
+          "status": "ok"
+        },
+        "6144": {
+          "ppl": 9.595,
+          "loss": 2.2613,
+          "elapsed_sec": 0.38,
+          "throughput_tps": 16354.6,
+          "mem_peak_gb": 23.1,
+          "status": "ok"
+        },
+        "8192": {
+          "ppl": 9.417,
+          "loss": 2.2425,
+          "elapsed_sec": 0.51,
+          "throughput_tps": 15998.0,
+          "mem_peak_gb": 25.81,
+          "status": "ok"
+        },
+        "10240": {
+          "ppl": 9.32,
+          "loss": 2.2322,
+          "elapsed_sec": 0.66,
+          "throughput_tps": 15516.7,
+          "mem_peak_gb": 28.53,
+          "status": "ok"
+        },
+        "12288": {
+          "ppl": 9.326,
+          "loss": 2.2329,
+          "elapsed_sec": 0.89,
+          "throughput_tps": 13776.5,
+          "mem_peak_gb": 31.24,
+          "status": "ok"
+        },
+        "14336": {
+          "ppl": 14.001,
+          "loss": 2.6391,
+          "elapsed_sec": 1.07,
+          "throughput_tps": 13420.3,
+          "mem_peak_gb": 33.95,
+          "status": "ok"
+        },
+        "16384": {
+          "ppl": 25.475,
+          "loss": 3.2377,
+          "elapsed_sec": 1.24,
+          "throughput_tps": 13257.0,
+          "mem_peak_gb": 36.66,
+          "status": "ok"
+        },
+        "18432": {
+          "ppl": 45.645,
+          "loss": 3.8209,
+          "elapsed_sec": 1.43,
+          "throughput_tps": 12912.2,
+          "mem_peak_gb": 39.37,
+          "status": "ok"
+        },
+        "20480": {
+          "ppl": 80.852,
+          "loss": 4.3926,
+          "elapsed_sec": 1.61,
+          "throughput_tps": 12681.9,
+          "mem_peak_gb": 42.09,
+          "status": "ok"
+        },
+        "22528": {
+          "ppl": 132.069,
+          "loss": 4.8833,
+          "elapsed_sec": 1.75,
+          "throughput_tps": 12853.3,
+          "mem_peak_gb": 44.8,
+          "status": "ok"
+        },
+        "24576": {
+          "ppl": 201.594,
+          "loss": 5.3063,
+          "elapsed_sec": 2.06,
+          "throughput_tps": 11931.4,
+          "mem_peak_gb": 47.51,
+          "status": "ok"
+        },
+        "26624": {
+          "ppl": 314.794,
+          "loss": 5.7519,
+          "elapsed_sec": 2.16,
+          "throughput_tps": 12353.4,
+          "mem_peak_gb": 50.22,
+          "status": "ok"
+        },
+        "28672": {
+          "ppl": 475.443,
+          "loss": 6.1642,
+          "elapsed_sec": 2.46,
+          "throughput_tps": 11646.7,
+          "mem_peak_gb": 52.93,
+          "status": "ok"
+        },
+        "30720": {
+          "ppl": 630.733,
+          "loss": 6.4469,
+          "elapsed_sec": 2.59,
+          "throughput_tps": 11877.3,
+          "mem_peak_gb": 55.64,
+          "status": "ok"
+        },
+        "32768": {
+          "ppl": 779.466,
+          "loss": 6.6586,
+          "elapsed_sec": 2.93,
+          "throughput_tps": 11183.9,
+          "mem_peak_gb": 58.36,
+          "status": "ok"
+        }
+      }
+    },
+    "anchored_x20": {
+      "config": "anchored_x20",
+      "params": {
+        "theta": 100000,
+        "anchor_factor": 20,
+        "anchor_dim": 16,
+        "slope": 0.5
+      },
+      "data": {
+        "2048": {
+          "ppl": 11.122,
+          "loss": 2.409,
+          "elapsed_sec": 0.12,
+          "throughput_tps": 17221.8,
+          "mem_peak_gb": 17.68,
+          "status": "ok"
+        },
+        "4096": {
+          "ppl": 9.783,
+          "loss": 2.2806,
+          "elapsed_sec": 0.25,
+          "throughput_tps": 16267.8,
+          "mem_peak_gb": 20.39,
+          "status": "ok"
+        },
+        "6144": {
+          "ppl": 9.577,
+          "loss": 2.2593,
+          "elapsed_sec": 0.37,
+          "throughput_tps": 16403.3,
+          "mem_peak_gb": 23.1,
+          "status": "ok"
+        },
+        "8192": {
+          "ppl": 9.405,
+          "loss": 2.2412,
+          "elapsed_sec": 0.51,
+          "throughput_tps": 16002.8,
+          "mem_peak_gb": 25.81,
+          "status": "ok"
+        },
+        "10240": {
+          "ppl": 9.308,
+          "loss": 2.2309,
+          "elapsed_sec": 0.66,
+          "throughput_tps": 15534.0,
+          "mem_peak_gb": 28.53,
+          "status": "ok"
+        },
+        "12288": {
+          "ppl": 9.308,
+          "loss": 2.2309,
+          "elapsed_sec": 0.89,
+          "throughput_tps": 13789.6,
+          "mem_peak_gb": 31.24,
+          "status": "ok"
+        },
+        "14336": {
+          "ppl": 11.353,
+          "loss": 2.4295,
+          "elapsed_sec": 1.07,
+          "throughput_tps": 13451.2,
+          "mem_peak_gb": 33.95,
+          "status": "ok"
+        },
+        "16384": {
+          "ppl": 19.041,
+          "loss": 2.9466,
+          "elapsed_sec": 1.24,
+          "throughput_tps": 13266.1,
+          "mem_peak_gb": 36.66,
+          "status": "ok"
+        },
+        "18432": {
+          "ppl": 32.172,
+          "loss": 3.4711,
+          "elapsed_sec": 1.43,
+          "throughput_tps": 12882.0,
+          "mem_peak_gb": 39.37,
+          "status": "ok"
+        },
+        "20480": {
+          "ppl": 55.641,
+          "loss": 4.0189,
+          "elapsed_sec": 1.61,
+          "throughput_tps": 12689.2,
+          "mem_peak_gb": 42.09,
+          "status": "ok"
+        },
+        "22528": {
+          "ppl": 89.944,
+          "loss": 4.4992,
+          "elapsed_sec": 1.75,
+          "throughput_tps": 12859.1,
+          "mem_peak_gb": 44.8,
+          "status": "ok"
+        },
+        "24576": {
+          "ppl": 138.325,
+          "loss": 4.9296,
+          "elapsed_sec": 2.06,
+          "throughput_tps": 11942.3,
+          "mem_peak_gb": 47.51,
+          "status": "ok"
+        },
+        "26624": {
+          "ppl": 209.611,
+          "loss": 5.3453,
+          "elapsed_sec": 2.15,
+          "throughput_tps": 12357.8,
+          "mem_peak_gb": 50.22,
+          "status": "ok"
+        },
+        "28672": {
+          "ppl": 340.013,
+          "loss": 5.829,
+          "elapsed_sec": 2.47,
+          "throughput_tps": 11597.8,
+          "mem_peak_gb": 52.93,
+          "status": "ok"
+        },
+        "30720": {
+          "ppl": 480.749,
+          "loss": 6.1753,
+          "elapsed_sec": 2.59,
+          "throughput_tps": 11875.3,
+          "mem_peak_gb": 55.64,
+          "status": "ok"
+        },
+        "32768": {
+          "ppl": 636.508,
+          "loss": 6.456,
+          "elapsed_sec": 2.93,
+          "throughput_tps": 11166.7,
+          "mem_peak_gb": 58.36,
+          "status": "ok"
+        }
+      }
+    }
+  }
+}

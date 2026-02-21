@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="720" viewBox="0 0 1080 720">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="90" y="30" font-size="24" font-family="Arial" fill="#111">50M PPL Comparison: Hybrid vs Geo vs Geo+YaRN</text>
+<line x1="90" y1="630.00" x2="1040" y2="630.00" stroke="#e6e6e6"/>
+<text x="80" y="634.00" text-anchor="end" font-size="12" font-family="Arial" fill="#444">6.0</text>
+<line x1="90" y1="516.00" x2="1040" y2="516.00" stroke="#e6e6e6"/>
+<text x="80" y="520.00" text-anchor="end" font-size="12" font-family="Arial" fill="#444">13.1</text>
+<line x1="90" y1="402.00" x2="1040" y2="402.00" stroke="#e6e6e6"/>
+<text x="80" y="406.00" text-anchor="end" font-size="12" font-family="Arial" fill="#444">20.2</text>
+<line x1="90" y1="288.00" x2="1040" y2="288.00" stroke="#e6e6e6"/>
+<text x="80" y="292.00" text-anchor="end" font-size="12" font-family="Arial" fill="#444">27.3</text>
+<line x1="90" y1="174.00" x2="1040" y2="174.00" stroke="#e6e6e6"/>
+<text x="80" y="178.00" text-anchor="end" font-size="12" font-family="Arial" fill="#444">34.4</text>
+<line x1="90" y1="60.00" x2="1040" y2="60.00" stroke="#e6e6e6"/>
+<text x="80" y="64.00" text-anchor="end" font-size="12" font-family="Arial" fill="#444">41.5</text>
+<line x1="90.00" y1="60" x2="90.00" y2="630" stroke="#f0f0f0"/>
+<text x="90.00" y="654" text-anchor="middle" font-size="12" font-family="Arial" fill="#444">2048</text>
+<line x1="225.71" y1="60" x2="225.71" y2="630" stroke="#f0f0f0"/>
+<text x="225.71" y="654" text-anchor="middle" font-size="12" font-family="Arial" fill="#444">4096</text>
+<line x1="497.14" y1="60" x2="497.14" y2="630" stroke="#f0f0f0"/>
+<text x="497.14" y="654" text-anchor="middle" font-size="12" font-family="Arial" fill="#444">8192</text>
+<line x1="768.57" y1="60" x2="768.57" y2="630" stroke="#f0f0f0"/>
+<text x="768.57" y="654" text-anchor="middle" font-size="12" font-family="Arial" fill="#444">12288</text>
+<line x1="1040.00" y1="60" x2="1040.00" y2="630" stroke="#f0f0f0"/>
+<text x="1040.00" y="654" text-anchor="middle" font-size="12" font-family="Arial" fill="#444">16384</text>
+<line x1="90" y1="630" x2="1040" y2="630" stroke="#111" stroke-width="1.5"/>
+<line x1="90" y1="60" x2="90" y2="630" stroke="#111" stroke-width="1.5"/>
+<text x="565.00" y="692" text-anchor="middle" font-size="14" font-family="Arial" fill="#111">Evaluation Length</text>
+<text x="24" y="345.00" transform="rotate(-90 24 345.00)" text-anchor="middle" font-size="14" font-family="Arial" fill="#111">Perplexity (lower is better)</text>
+<polyline points="90.00,619.27 225.71,618.05 497.14,586.85 768.57,512.16 1040.00,455.43" fill="none" stroke="#1f77b4" stroke-width="3"/>
+<circle cx="90.00" cy="619.27" r="4" fill="#1f77b4"/>
+<circle cx="225.71" cy="618.05" r="4" fill="#1f77b4"/>
+<circle cx="497.14" cy="586.85" r="4" fill="#1f77b4"/>
+<circle cx="768.57" cy="512.16" r="4" fill="#1f77b4"/>
+<circle cx="1040.00" cy="455.43" r="4" fill="#1f77b4"/>
+<rect x="760" y="58" width="18" height="4" fill="#1f77b4"/>
+<text x="786" y="62" font-size="13" font-family="Arial" fill="#111">Hybrid (native)</text>
+<polyline points="90.00,616.59 225.71,613.27 497.14,584.52 768.57,508.06 1040.00,437.67" fill="none" stroke="#2ca02c" stroke-width="3"/>
+<circle cx="90.00" cy="616.59" r="4" fill="#2ca02c"/>
+<circle cx="225.71" cy="613.27" r="4" fill="#2ca02c"/>
+<circle cx="497.14" cy="584.52" r="4" fill="#2ca02c"/>
+<circle cx="768.57" cy="508.06" r="4" fill="#2ca02c"/>
+<circle cx="1040.00" cy="437.67" r="4" fill="#2ca02c"/>
+<rect x="760" y="82" width="18" height="4" fill="#2ca02c"/>
+<text x="786" y="86" font-size="13" font-family="Arial" fill="#111">Geo (native)</text>
+<polyline points="90.00,616.59 225.71,587.63 497.14,454.82 768.57,254.58 1040.00,91.74" fill="none" stroke="#d62728" stroke-width="3"/>
+<circle cx="90.00" cy="616.59" r="4" fill="#d62728"/>
+<circle cx="225.71" cy="587.63" r="4" fill="#d62728"/>
+<circle cx="497.14" cy="454.82" r="4" fill="#d62728"/>
+<circle cx="768.57" cy="254.58" r="4" fill="#d62728"/>
+<circle cx="1040.00" cy="91.74" r="4" fill="#d62728"/>
+<rect x="760" y="106" width="18" height="4" fill="#d62728"/>
+<text x="786" y="110" font-size="13" font-family="Arial" fill="#111">Geo + YaRN (progressive)</text>
+</svg>

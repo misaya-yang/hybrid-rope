@@ -1,0 +1,105 @@
+{
+  "phase": "1A",
+  "configs": {
+    "geo_500k": {
+      "config": "geo_500k",
+      "params": {
+        "theta": 500000
+      },
+      "data": {
+        "2048": {
+          "ppl": 11.125,
+          "loss": 2.4092,
+          "elapsed_sec": 0.13,
+          "throughput_tps": 16347.1,
+          "mem_peak_gb": 17.68,
+          "status": "ok"
+        },
+        "16384": {
+          "ppl": 262.278,
+          "loss": 5.5694,
+          "elapsed_sec": 1.2,
+          "throughput_tps": 13625.5,
+          "mem_peak_gb": 36.66,
+          "status": "ok"
+        }
+      }
+    },
+    "geo_1M": {
+      "config": "geo_1M",
+      "params": {
+        "theta": 1000000
+      },
+      "data": {
+        "2048": {
+          "ppl": 11.118,
+          "loss": 2.4086,
+          "elapsed_sec": 0.13,
+          "throughput_tps": 15667.6,
+          "mem_peak_gb": 17.68,
+          "status": "ok"
+        },
+        "16384": {
+          "ppl": 25.475,
+          "loss": 3.2377,
+          "elapsed_sec": 1.2,
+          "throughput_tps": 13624.5,
+          "mem_peak_gb": 36.66,
+          "status": "ok"
+        }
+      }
+    },
+    "geo_2M": {
+      "config": "geo_2M",
+      "params": {
+        "theta": 2000000
+      },
+      "data": {
+        "2048": {
+          "ppl": 11.115,
+          "loss": 2.4083,
+          "elapsed_sec": 0.13,
+          "throughput_tps": 16352.5,
+          "mem_peak_gb": 17.68,
+          "status": "ok"
+        },
+        "16384": {
+          "ppl": 9.264,
+          "loss": 2.2261,
+          "elapsed_sec": 1.2,
+          "throughput_tps": 13600.2,
+          "mem_peak_gb": 36.66,
+          "status": "ok"
+        }
+      }
+    },
+    "anchored_x20": {
+      "config": "anchored_x20",
+      "params": {
+        "theta": 100000,
+        "anchor_factor": 20,
+        "anchor_dim": 16,
+        "slope": 0.5
+      },
+      "data": {
+        "2048": {
+          "ppl": 11.122,
+          "loss": 2.409,
+          "elapsed_sec": 0.13,
+          "throughput_tps": 16072.4,
+          "mem_peak_gb": 17.68,
+          "status": "ok"
+        },
+        "16384": {
+          "ppl": 19.041,
+          "loss": 2.9466,
+          "elapsed_sec": 1.21,
+          "throughput_tps": 13583.0,
+          "mem_peak_gb": 36.66,
+          "status": "ok"
+        }
+      }
+    }
+  },
+  "timestamp": "2026-02-14T00:55:25.313236"
+}

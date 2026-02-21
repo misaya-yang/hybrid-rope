@@ -1,0 +1,6 @@
+{
+  "phase": 4,
+  "timestamp": "2026-02-14T01:00:28.807581",
+  "status": "skipped",
+  "note": "Mechanism probe requires custom attention hooks - skipped for stability"
+}

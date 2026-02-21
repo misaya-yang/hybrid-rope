@@ -1,0 +1,125 @@
+# 实验结果汇总
+
+本目录包含所有实验的核心结果快照，按实验类型组织。
+
+## 目录结构
+
+```
+results/
+├── evidence_chain_50m_3cfg3seed/   # 50M模型证据链实验 (2026-02-13)
+├── cross_model_wikitext_v1/        # 跨模型WikiText评测 (2026-02-13)
+├── qwen_hybrid_lora/               # Qwen Hybrid LoRA实验 (2026-02-13)
+├── llama_shape_theta_min/          # LLaMA频谱形状vsθ实验 (2026-02-13)
+├── 350m_final/                     # 350M模型最终实验
+├── 50m_yarn_compare_v2/            # YARN对比实验
+├── unified_search/                  # 统一搜索实验
+├── unified_search_3cfg_3seed/      # 3配置3种子统一搜索
+└── figures/                         # 结果图表
+```
+
+## 最新实验结果 (2026-02-13)
+
+### 1. Evidence Chain 50M 3Config 3Seed
+
+**实验目的**: 验证不同RoPE配置在50M模型上的外推能力
+
+| 配置 | PPL@2048 | PPL@16384 | 外推能力 |
+|------|----------|-----------|---------|
+| geo_500k | 6.821 ± 0.067 | 19.386 ± 2.007 | ❌ 高方差 |
+| **hybrid_a0.2_t100k** | 6.686 ± 0.200 | **17.404** ± 1.564 | ✅ 最佳 |
+| anchpoly_p3.9_omf0.3_t500k | **6.620** ± 0.245 | 17.945 ± 0.546 | ✅ 稳定 |
+
+**结论**: Hybrid RoPE在长序列外推上表现最佳，anchpoly最稳定。
+
+---
+
+### 2. Cross-Model WikiText Evaluation
+
+**实验目的**: 跨模型对比不同RoPE方案在预训练模型上的表现
+
+| 模型 | RoPE类型 | PPL@2048 | PPL@16384 | 崩溃比 |
+|------|----------|----------|-----------|--------|
+| LLaMA-3-8B | geometric | 549.85 | 12111.06 | **22.03x** 🔴 |
+| LLaMA-3-8B | sigmoid | 11.67 | 12.57 | 1.08x ✅ |
+| Qwen2.5-7B | orig (YARN) | 8.46 | **6.98** | 0.82x 🏆 |
+| Qwen2.5-7B | geometric | 8.58 | 7.16 | 0.83x |
+
+**关键发现**:
+- LLaMA + geometric 在16k完全崩溃 (22倍PPL增长)
+- Sigmoid RoPE显著稳定LLaMA (崩溃比从22x降到1.08x)
+- Qwen原生YARN是最佳长上下文方案 (PPL@16k < PPL@2k)
+
+---
+
+### 3. Qwen Hybrid LoRA
+
+**实验目的**: 测试Hybrid RoPE通过LoRA注入Qwen的效果
+
+| 测试长度 | Base PPL | Hybrid LoRA PPL | Passkey Acc |
+|----------|----------|-----------------|-------------|
+| 8192 | 3.14 | 8.87 | 100% |
+| 16384 | 3.06 | 9.64 | 100% |
+| 24576 | 3.04 | 11.09 | 100% |
+| 32768 | 3.24 | 10.42 | 100% |
+
+**结论**: 
+- LoRA微调后PPL显著上升，但长上下文检索能力保持100%
+- Qwen原生模型已有出色的长上下文能力
+
+---
+
+### 4. LLaMA Shape vs Theta Min ⭐ NEW
+
+**实验目的**: 验证"频谱形状 > θ大小"的稳定性假设
+
+| Config | PPL@2048 | PPL@16384 | Collapse Ratio |
+|--------|----------|-----------|----------------|
+| geo_10k | 518.013 | 11214.916 | **22.026x** 🔴 |
+| sigmoid_t100k | 10.372 | 12.51 | **1.077x** ✅ |
+
+**关键发现**:
+- **20.5倍稳定性提升**: Sigmoid相比Geometric在长序列上显著更稳定
+- **频谱形状是关键**: 即使θ参数更小，sigmoid形状仍能保持稳定
+- **Geometric在16K完全崩溃**: PPL从518暴涨到11215
+
+**结论**: 支持 **频谱形状 > θ大小** 假设，平滑的频率过渡是长序列外推的关键。
+
+![PPL Comparison](llama_shape_theta_min/figures/ppl_comparison.png)
+
+---
+
+## 实验规范
+
+### 结果文件格式
+
+每个实验目录应包含:
+- `results.json` - 结构化结果数据
+- `run.log` - 运行日志
+- `README.md` - 实验说明 (可选)
+
+### JSON格式规范
+
+```json
+{
+  "timestamp": "2026-02-13_HHMMSS",
+  "experiment": "experiment_name",
+  "metadata": {
+    "model": "model_name",
+    "dataset": "dataset_name",
+    "server": "server_name"
+  },
+  "results": { ... },
+  "summary": { ... }
+}
+```
+
+### 服务器信息
+
+- **AutoDL RTX 6000 Blackwell**: `connect.bjb1.seetacloud.com:42581`
+- 98GB显存，适合大规模实验
+
+---
+
+## 更新日志
+
+- 2026-02-13: 添加evidence_chain_50m_3cfg3seed, cross_model_wikitext_v1, qwen_hybrid_lora

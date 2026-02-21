@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "timestamp": "2026-02-15 04:11:35",
+    "variants": [
+      "yarn",
+      "pi",
+      "hybrid",
+      "pi_soft"
+    ],
+    "output_root": "/root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_lora_suite_20260214",
+    "eval_lengths": "16384,32768,65536",
+    "max_steps": 600,
+    "seq_len": 8192,
+    "per_device_train_batch_size": 4,
+    "gradient_accumulation_steps": 1
+  },
+  "variants": {
+    "yarn": {
+      "train_loss": 1.7247872638702393,
+      "train_hours": 1.4391,
+      "ppl@16k": 6.05657412194485,
+      "ppl@32k": 6.2702038945092005,
+      "ppl@64k": NaN,
+      "raw_summary_path": "/root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_lora_suite_20260214/yarn/summary.json",
+      "run_rc": 0
+    },
+    "pi": {
+      "train_loss": 1.949328695933024,
+      "train_hours": 1.4399,
+      "ppl@16k": 6.136894447008149,
+      "ppl@32k": 6.310046882890174,
+      "ppl@64k": NaN,
+      "raw_summary_path": "/root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_lora_suite_20260214/pi/summary.json",
+      "run_rc": 0
+    },
+    "hybrid": {
+      "train_loss": 2.056473668416341,
+      "train_hours": 1.4396,
+      "ppl@16k": 11.875320821511794,
+      "ppl@32k": 77.13811784345627,
+      "ppl@64k": NaN,
+      "raw_summary_path": "/root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_lora_suite_20260214/hybrid/summary.json",
+      "run_rc": 0
+    },
+    "pi_soft": {
+      "train_loss": 1.7151819245020548,
+      "train_hours": 1.4394,
+      "ppl@16k": 218.62372143549533,
+      "ppl@32k": 2958.3524026071523,
+      "ppl@64k": NaN,
+      "raw_summary_path": "/root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_lora_suite_20260214/pi_soft/summary.json",
+      "run_rc": 0
+    }
+  }
+}

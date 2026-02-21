@@ -1,0 +1,6 @@
+{
+  "dataset_name": "LongBench-local",
+  "num_text_docs": 3668,
+  "num_tokens": 12000000,
+  "target_tokens": 12000000
+}

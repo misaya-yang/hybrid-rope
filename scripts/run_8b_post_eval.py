@@ -96,6 +96,7 @@ def main() -> None:
     ap.add_argument("--niah_depths", type=str, default="0,10,20,30,40,50,60,70,80,90,100")
     ap.add_argument("--niah_trials_per_cell", type=int, default=1)
     ap.add_argument("--niah_multi_needles", type=int, default=4)
+    ap.add_argument("--niah_prompt_mode", type=str, default="qa", choices=["qa", "continuation"])
     ap.add_argument("--longbench_tasks", type=str, default="qasper,hotpotqa,gov_report")
     ap.add_argument("--longbench_max_samples", type=int, default=100)
     ap.add_argument("--longbench_max_input_tokens", type=int, default=16384)
@@ -174,6 +175,8 @@ def main() -> None:
                 str(args.niah_trials_per_cell),
                 "--needles_per_prompt",
                 str(needles),
+                "--prompt_mode",
+                args.niah_prompt_mode,
                 "--attn_implementation",
                 "sdpa",
                 "--seed",
@@ -194,6 +197,8 @@ def main() -> None:
                     args.base_model_path,
                     "--adapter_path",
                     str(apath),
+                    "--variant",
+                    v,
                     "--output_dir",
                     str(out_dir),
                     "--lengths",
@@ -204,6 +209,8 @@ def main() -> None:
                     str(args.niah_trials_per_cell),
                     "--needles_per_prompt",
                     str(needles),
+                    "--prompt_mode",
+                    args.niah_prompt_mode,
                     "--attn_implementation",
                     "sdpa",
                     "--seed",
@@ -223,6 +230,8 @@ def main() -> None:
                 args.base_model_path,
                 "--hybrid_adapter_path",
                 str(apath),
+                "--variant",
+                v,
                 "--tasks",
                 args.longbench_tasks,
                 "--max_samples_per_task",

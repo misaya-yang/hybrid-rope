@@ -1,21 +1,24 @@
-# docs 目录说明
+# Docs Index
 
-本目录保存**可读性优先**的说明文档。
+This folder contains paper-facing explanations, reproducibility notes, and experiment summaries.
 
-## 文件清单
+## Priority Docs (Current)
 
-- `RESULTS.md`：关键实验结果与结论
-- `METHODOLOGY.md`：评测口径、训练口径、不可变设置
-- `REPRODUCE.md`：复现实验步骤
-- `YARN_COMPARISON_2026-02-13.md`：Hybrid 与 YaRN 对照补充
-- `SERVER_SYNC_2026-02-13.md`：双机同步过程与排除项
-- `DFROPE_EXPERIMENTS_ROPE_FREQ_SUMMARY.md`：从 DF-RoPE 到频谱路线的全流程总结
-- `EXPERIMENT_INDEX_CN.md`：实验配置/脚本/结果的一站式索引
-- `REPO_STRUCTURE_CN.md`：仓库目录结构总览（中文）
+- `RESEARCH_STORYLINE_2026-02-21.md`
+  - coherent paper narrative across all experiment lines
+- `EXPERIMENT_MASTER_SUMMARY_2026-02-21.md`
+  - single-file advisor summary of completed and in-progress lines
+- `EXPERIMENT_ENVIRONMENT_2026-02-21.md`
+  - local/server runtime environment and constraints
+- `SERVER_EVIDENCE_SYNC_2026-02-21.md`
+  - what was pulled from server and how
+- `RESULTS.md`
+  - consolidated result highlights
+- `METHODOLOGY.md`
+  - evaluation/training protocol notes
+- `REPRODUCE.md`
+  - reproducibility commands
 
-## 建议阅读顺序
+## Legacy Docs
 
-1. `RESULTS.md`
-2. `METHODOLOGY.md`
-3. `EXPERIMENT_INDEX_CN.md`
-4. 其余按需求查阅
+Older snapshots remain for traceability and should not be deleted unless explicitly archived.

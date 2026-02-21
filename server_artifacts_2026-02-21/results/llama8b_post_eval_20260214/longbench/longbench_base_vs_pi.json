@@ -1,0 +1,248 @@
+{
+  "meta": {
+    "timestamp": "2026-02-15_11:59:48",
+    "base_model_path": "/root/autodl-tmp/dfrope/ms_models/LLM-Research/Meta-Llama-3-8B-Instruct",
+    "hybrid_adapter_path": "/root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_lora_suite_20260214/pi/final_lora",
+    "tasks": [
+      "qasper",
+      "hotpotqa",
+      "gov_report"
+    ],
+    "max_samples_per_task": 100,
+    "max_input_tokens": 16384,
+    "attn_implementation": "sdpa",
+    "variant": "pi",
+    "rope_factor": 8.0,
+    "orig_ctx": 8192,
+    "rope_theta": 500000.0
+  },
+  "models": {
+    "base_unfinetuned": {
+      "attn_used": "sdpa",
+      "variant_used": "base",
+      "rope_used": null,
+      "tasks": {
+        "qasper": {
+          "task": "qasper",
+          "metric": "f1",
+          "num_scored": 100,
+          "score": 0.06992901085646094,
+          "examples": [
+            {
+              "index": 66,
+              "question": "",
+              "prediction": "The DeepMine database is a large-scale speech corpus that was collected using crowdsourcing and contains text-dependent and text-prompted speaker verification data in Persian and English, as well as text-independent speaker verification and speech recognition data in Persian. The database is publicly available and can be used to evaluate the performance of different speaker verification",
+              "reference_0": "Android application",
+              "score": 0.0,
+              "context_preview": "Introduction\nNowadays deep learning techniques outperform the other conventional methods in most of the speech-related tasks. Training robust deep neural networks for each task depends on the availability of powerful processing GPUs, as well as standard and large scale datasets. In text-independent "
+            },
+            {
+              "index": 187,
+              "question": "",
+              "prediction": "The corpus is a collection of 53 medical case reports with manual annotations of medical entities, including cases, conditions, factors, findings, and modifiers. The annotations are based on the CARE guidelines and were performed by medical doctors experienced in extracting knowledge from texts. The corpus is available in BioC JSON format and can be used",
+              "reference_0": "8,275 sentences and 167,739 words in total",
+              "score": 0.10169491525423728,
+              "context_preview": "Introduction\nThe automatic processing of medical texts and documents plays an increasingly important role in the recent development of the digital health area. To enable dedicated Natural Language Processing (NLP) that is highly accurate with respect to medically relevant categories, manually annota"
+            },
+            {
+              "index": 101,
+              "question": "",
+              "prediction": "The question is not provided. However, based on the context, it seems that the question is related to the topic of propaganda detection and the use of BERT in this context. The answer would likely involve discussing the strengths and limitations of the approach, as well as potential future directions for research.",
+              "reference_0": "Unanswerable",
+              "score": 0.0,
+              "context_preview": "Introduction\nThe challenges of imbalanced classification—in which the proportion of elements in each class for a classification task significantly differ—and of the ability to generalise on dissimilar data have remained important problems in Natural Language Processing (NLP) and Machine Learning in "
+            }
+          ]
+        },
+        "hotpotqa": {
+          "task": "hotpotqa",
+          "metric": "f1",
+          "num_scored": 100,
+          "score": 0.011428183976010064,
+          "examples": [
+            {
+              "index": 66,
+              "question": "",
+              "prediction": "The\n\n The\n\nThe\n\n The\n\n The\n\n The\n\n The\n\n The\n C\n\n The\n\n The\n\n The\n\n The\n The\n\n The\n C\nFirst as the 7\n\n The\n\n The 1\n\n The\n\n The\n\n The 1\n\n The first\n\n The 1\n9\nthe",
+              "reference_0": "Deftones",
+              "score": 0.0,
+              "context_preview": "Passage 1:\nAdrenaline (album)\nAdrenaline is the debut studio album by American alternative metal band Deftones, released on October 3, 1995, by Maverick Records. The majority of the album was produced by Terry Date, while a hidden track titled \"Fist\" was produced by Ross Robinson.\n\nBackground and re"
+            },
+            {
+              "index": 187,
+              "question": "",
+              "prediction": "The correct answer is Passage 1: Pit River Bridge. The Pit River Bridge is a double-deck, deck truss, road and rail bridge over Shasta Lake in Shasta County, California. It was built in 1942 as part of the construction of the Shasta Dam/Shasta Lake reservoir system.",
+              "reference_0": "37.5",
+              "score": 0.0,
+              "context_preview": "Passage 1:\nPit River Bridge\nThe Pit River Bridge (officially the Veterans of Foreign Wars Memorial Bridge) is a double deck, deck truss, road and rail bridge over Shasta Lake in Shasta County, California. The bridge, carrying Interstate 5 on its upper deck and Union Pacific Railroad on its lower dec"
+            },
+            {
+              "index": 101,
+              "question": "",
+              "prediction": "1741\n1741\n1741 the \nPass the \nG\n The 53 \nG\n The 1\n The 174\n The  The 183 the \nthe \nthe \nthe \nthe \nthe \nthe \nthe \nthe \nthe \nThe 1689\n The  The",
+              "reference_0": "King James II of England",
+              "score": 0.0,
+              "context_preview": "Passage 1:\nEnglish general election, 1689\nThe 1689 English general election, held in January 1689, elected the Convention Parliament, which was summoned in the aftermath of the Glorious Revolution. \n513 Members of Parliament were returned, across 53 counties and 217 boroughs in England and Wales, mo"
+            }
+          ]
+        },
+        "gov_report": {
+          "task": "gov_report",
+          "metric": "rouge_l_f1",
+          "num_scored": 100,
+          "score": 0.13638536991158762,
+          "examples": [
+            {
+              "index": 66,
+              "question": "",
+              "prediction": "The Government Accountability Office (GAO) has been monitoring the Department of Veterans Affairs' (VA) efforts to modernize its electronic health record system, known as VistA. The VA has initiated four modernization programs, with the latest one being the Electronic Health Record Modernization (EHRM) program, which aims to replace VistA with a commercially available electronic health record system used by the Department of Defense (DOD). The GAO has identified several challenges and concerns w",
+              "reference_0": "The use of IT is crucial to helping VA effectively serve the nation's veterans and, each year, the department spends billions of dollars on its information systems and assets. However, VA has faced challenges spanning a number of critical initiatives related to modernizing its major systems. To improve all major federal agencies' acquisitions and hold them accountable for reducing duplication and achieving cost savings, in December 2014 Congress enacted federal IT acquisition reform legislation ",
+              "score": 0.15384615384615385,
+              "context_preview": "VA’s mission is to promote the health, welfare, and dignity of all veterans in recognition of their service to the nation by ensuring that they receive medical care, benefits, social support, and lasting memorials. In carrying out this mission, the department operates one of the largest health care "
+            },
+            {
+              "index": 187,
+              "question": "",
+              "prediction": "The report discusses the financial sustainability of the Postal Service Retiree Health Benefits Fund (RHB Fund), which provides health insurance benefits to postal retirees. The report notes that the RHB Fund is on an unsustainable path and is projected to be depleted in 12 years under the status quo. The report also discusses eight potential policy approaches to address the financial shortfall, including increasing postal retirees' participation in Medicare, reducing the required level of prefu",
+              "reference_0": "USPS is required to prefund its share of health benefits costs for its retirees. To do so, USPS is required to make payments into the RHB Fund, which is administered by OPM. However, USPS has not made any payments to the fund since fiscal year 2010. At the end of fiscal year 2017, USPS had missed $38.2 billion in payments, leaving the fund 44 percent funded. Pursuant to law, beginning in fiscal year 2017, OPM started drawing from the fund to cover USPS's share of postal retirees' health benefits",
+              "score": 0.13589743589743591,
+              "context_preview": "Postal retiree health benefits are provided as part of the Federal Employees Health Benefits Program (FEHBP). FEHBP covers federal employees and retirees, including postal and nonpostal retirees, who receive health insurance from companies that contract with OPM. Retiree participation is voluntary; "
+            },
+            {
+              "index": 101,
+              "question": "",
+              "prediction": "The United States Postal Service (USPS) has a wide range of domestic competitive products that are a growing sector of its business. The volume of USPS's competitive products increased from approximately 750 million pieces in fiscal year 2008 to 4.9 billion pieces in fiscal year 2017. Revenue from these products increased from about 10 percent of all USPS mail revenues in fiscal year 2008 to about 28 percent in fiscal year 2017. USPS forecasts that continued growth in e-commerce will increase th",
+              "reference_0": "USPS's competitive products have become increasingly important, comprising about 28 percent of USPS's total revenue. USPS scans these packages at various points throughout the postal network. When scans are inaccurate or missing, questions are raised about the veracity of USPS's data on scanning performance and can lead to customer complaints. GAO was asked to review USPS's scanning policies and procedures. In this report, GAO (1) describes USPS's scanning performance and (2) examines how USPS e",
+              "score": 0.12962962962962962,
+              "context_preview": "USPS has a wide range of domestic competitive products that are a growing sector of its business. The volume of USPS’s competitive products increased from approximately 750 million pieces in fiscal year 2008 to 4.9 billion pieces in fiscal year 2017. Revenue from these products increased from about "
+            }
+          ]
+        }
+      }
+    },
+    "hybrid_lora": {
+      "attn_used": "sdpa",
+      "variant_used": "pi",
+      "rope_used": {
+        "rope_type": "linear",
+        "factor": 8.0,
+        "rope_theta": 500000.0
+      },
+      "tasks": {
+        "qasper": {
+          "task": "qasper",
+          "metric": "f1",
+          "num_scored": 100,
+          "score": 0.05664630228643487,
+          "examples": [
+            {
+              "index": 66,
+              "question": "",
+              "prediction": "The DeepMine database is a large speech corpus collected using crowdsourcing. It is the largest public database for Persian speech recognition and speaker verification. It is also the largest public database for text @-@ dependent speaker verification. \n \n = = = = = 1. = = \n \n The DeepMine database is a large",
+              "reference_0": "Android application",
+              "score": 0.0,
+              "context_preview": "Introduction\nNowadays deep learning techniques outperform the other conventional methods in most of the speech-related tasks. Training robust deep neural networks for each task depends on the availability of powerful processing GPUs, as well as standard and large scale datasets. In text-independent "
+            },
+            {
+              "index": 187,
+              "question": "",
+              "prediction": "The corpus most comparable to ours is the French corpus of clinical case reports by <unk> - <unk> - <unk>. \n \n = = = = = = = = = = = = = = = \n \n \n \n \n \n = = = = = = = = = = = = = = =",
+              "reference_0": "8,275 sentences and 167,739 words in total",
+              "score": 0.08,
+              "context_preview": "Introduction\nThe automatic processing of medical texts and documents plays an increasingly important role in the recent development of the digital health area. To enable dedicated Natural Language Processing (NLP) that is highly accurate with respect to medically relevant categories, manually annota"
+            },
+            {
+              "index": 101,
+              "question": "",
+              "prediction": "The authors of this paper have used BERT to identify propaganda in sentences. They have also used cost sensitivity to improve the model's ability to generalise to dissimilar datasets. \n \n = = = = = What is the main topic of the passage? = = = = \n \n The main topic of the passage is",
+              "reference_0": "Unanswerable",
+              "score": 0.0,
+              "context_preview": "Introduction\nThe challenges of imbalanced classification—in which the proportion of elements in each class for a classification task significantly differ—and of the ability to generalise on dissimilar data have remained important problems in Natural Language Processing (NLP) and Machine Learning in "
+            }
+          ]
+        },
+        "hotpotqa": {
+          "task": "hotpotqa",
+          "metric": "f1",
+          "num_scored": 100,
+          "score": 0.01795581867119863,
+          "examples": [
+            {
+              "index": 66,
+              "question": "",
+              "prediction": "The <unk> is a <unk>, a type of <unk> that is native to the <unk> and <unk> regions of North America. It is a perennial herbaceous plant that grows up to 3 feet ( 90 cm ) tall, with a single stem and a rosette",
+              "reference_0": "Deftones",
+              "score": 0.0,
+              "context_preview": "Passage 1:\nAdrenaline (album)\nAdrenaline is the debut studio album by American alternative metal band Deftones, released on October 3, 1995, by Maverick Records. The majority of the album was produced by Terry Date, while a hidden track titled \"Fist\" was produced by Ross Robinson.\n\nBackground and re"
+            },
+            {
+              "index": 187,
+              "question": "",
+              "prediction": "The correct answer is Passage 8 : Port Mann Bridge. \n \n = = = = Explanation = = \n \n The Port Mann Bridge is a 10 @-@ lane cable @-@ stayed bridge, 100 km / hr speed limit, in British Columbia, Canada that opened to traffic in 2012. It",
+              "reference_0": "37.5",
+              "score": 0.0,
+              "context_preview": "Passage 1:\nPit River Bridge\nThe Pit River Bridge (officially the Veterans of Foreign Wars Memorial Bridge) is a double deck, deck truss, road and rail bridge over Shasta Lake in Shasta County, California. The bridge, carrying Interstate 5 on its upper deck and Union Pacific Railroad on its lower dec"
+            },
+            {
+              "index": 101,
+              "question": "",
+              "prediction": "The 1681 English general election returned members to the last parliament of Charles II. Dubbed the Oxford Parliament, the body sat for one week from 21 March 1681 until 28 March 1681. Party strengths are an approximation, with many MPs'allegiances being unknown. \n \n = = =",
+              "reference_0": "King James II of England",
+              "score": 0.09523809523809523,
+              "context_preview": "Passage 1:\nEnglish general election, 1689\nThe 1689 English general election, held in January 1689, elected the Convention Parliament, which was summoned in the aftermath of the Glorious Revolution. \n513 Members of Parliament were returned, across 53 counties and 217 boroughs in England and Wales, mo"
+            }
+          ]
+        },
+        "gov_report": {
+          "task": "gov_report",
+          "metric": "rouge_l_f1",
+          "num_scored": 100,
+          "score": 0.17626322514420883,
+          "examples": [
+            {
+              "index": 66,
+              "question": "",
+              "prediction": "The Department of Veterans Affairs (VA) is responsible for promoting the health, welfare, and dignity of all veterans in recognition of their service to the nation by ensuring that they receive medical care, benefits, and lasting memorials. The department operates one of the largest health care delivery systems in America, providing health care to millions of veterans and their families at more than 1 @,@ 500 facilities. The department ’s three major components — the Veterans Health Administrati",
+              "reference_0": "The use of IT is crucial to helping VA effectively serve the nation's veterans and, each year, the department spends billions of dollars on its information systems and assets. However, VA has faced challenges spanning a number of critical initiatives related to modernizing its major systems. To improve all major federal agencies' acquisitions and hold them accountable for reducing duplication and achieving cost savings, in December 2014 Congress enacted federal IT acquisition reform legislation ",
+              "score": 0.12538226299694188,
+              "context_preview": "VA’s mission is to promote the health, welfare, and dignity of all veterans in recognition of their service to the nation by ensuring that they receive medical care, benefits, social support, and lasting memorials. In carrying out this mission, the department operates one of the largest health care "
+            },
+            {
+              "index": 187,
+              "question": "",
+              "prediction": "The report discusses the financial challenges faced by the Postal Service Retiree Health Benefits Fund (RHB Fund ) and the potential policy approaches to address the financial sustainability of postal retiree health benefits. The RHB Fund is a newly established fund in the U.S. Treasury for the Postal Service ( USPS ) to deposit money into and is used by the Office of Personnel Management ( OPM ) to pay USPS's share of premiums for postal retirees'health benefits. The 2006 Postal Accountability ",
+              "reference_0": "USPS is required to prefund its share of health benefits costs for its retirees. To do so, USPS is required to make payments into the RHB Fund, which is administered by OPM. However, USPS has not made any payments to the fund since fiscal year 2010. At the end of fiscal year 2017, USPS had missed $38.2 billion in payments, leaving the fund 44 percent funded. Pursuant to law, beginning in fiscal year 2017, OPM started drawing from the fund to cover USPS's share of postal retirees' health benefits",
+              "score": 0.1640625,
+              "context_preview": "Postal retiree health benefits are provided as part of the Federal Employees Health Benefits Program (FEHBP). FEHBP covers federal employees and retirees, including postal and nonpostal retirees, who receive health insurance from companies that contract with OPM. Retiree participation is voluntary; "
+            },
+            {
+              "index": 101,
+              "question": "",
+              "prediction": "The United States Postal Service (USPS) has a wide range of domestic competitive products that are a growing sector of its business. The volume of USPS's competitive products increased from approximately 750 million pieces in fiscal year 2008 to 4 billion pieces in fiscal year 2017. Revenue from these products increased from about 10 percent of all USPS revenues in fiscal year 2008 to about 28 percent in fiscal year 2017. USPS forecasts that continued growth in e @-@ commerce will increase the v",
+              "reference_0": "USPS's competitive products have become increasingly important, comprising about 28 percent of USPS's total revenue. USPS scans these packages at various points throughout the postal network. When scans are inaccurate or missing, questions are raised about the veracity of USPS's data on scanning performance and can lead to customer complaints. GAO was asked to review USPS's scanning policies and procedures. In this report, GAO (1) describes USPS's scanning performance and (2) examines how USPS e",
+              "score": 0.12533333333333335,
+              "context_preview": "USPS has a wide range of domestic competitive products that are a growing sector of its business. The volume of USPS’s competitive products increased from approximately 750 million pieces in fiscal year 2008 to 4.9 billion pieces in fiscal year 2017. Revenue from these products increased from about "
+            }
+          ]
+        }
+      }
+    }
+  },
+  "comparison": {
+    "qasper": {
+      "base_unfinetuned": 0.06992901085646094,
+      "hybrid_lora": 0.05664630228643487,
+      "delta_hybrid_minus_base": -0.013282708570026072
+    },
+    "hotpotqa": {
+      "base_unfinetuned": 0.011428183976010064,
+      "hybrid_lora": 0.01795581867119863,
+      "delta_hybrid_minus_base": 0.006527634695188566
+    },
+    "gov_report": {
+      "base_unfinetuned": 0.13638536991158762,
+      "hybrid_lora": 0.17626322514420883,
+      "delta_hybrid_minus_base": 0.03987785523262122
+    }
+  }
+}

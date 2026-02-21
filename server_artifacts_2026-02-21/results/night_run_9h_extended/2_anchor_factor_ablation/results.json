@@ -1,0 +1,312 @@
+{
+  "experiment": "anchor_factor_ablation",
+  "timestamp": "2026-02-14T01:07:35.294073",
+  "configs": {
+    "anchored_x5": {
+      "config": "anchored_x5",
+      "params": {
+        "theta": 100000,
+        "anchor_factor": 5,
+        "anchor_dim": 16,
+        "slope": 0.5
+      },
+      "data": {
+        "2048": {
+          "ppl": 11.249,
+          "loss": 2.4203,
+          "elapsed_sec": 0.12,
+          "throughput_tps": 17182.3,
+          "mem_peak_gb": 17.68,
+          "status": "ok"
+        },
+        "8192": {
+          "ppl": 20.229,
+          "loss": 3.0071,
+          "elapsed_sec": 0.51,
+          "throughput_tps": 15944.7,
+          "mem_peak_gb": 25.81,
+          "status": "ok"
+        },
+        "16384": {
+          "ppl": 981.883,
+          "loss": 6.8895,
+          "elapsed_sec": 1.25,
+          "throughput_tps": 13159.8,
+          "mem_peak_gb": 36.66,
+          "status": "ok"
+        },
+        "24576": {
+          "ppl": 2396.395,
+          "loss": 7.7817,
+          "elapsed_sec": 1.97,
+          "throughput_tps": 12463.7,
+          "mem_peak_gb": 47.51,
+          "status": "ok"
+        },
+        "32768": {
+          "ppl": 4214.137,
+          "loss": 8.3462,
+          "elapsed_sec": 2.93,
+          "throughput_tps": 11196.0,
+          "mem_peak_gb": 58.36,
+          "status": "ok"
+        }
+      }
+    },
+    "anchored_x10": {
+      "config": "anchored_x10",
+      "params": {
+        "theta": 100000,
+        "anchor_factor": 10,
+        "anchor_dim": 16,
+        "slope": 0.5
+      },
+      "data": {
+        "2048": {
+          "ppl": 11.101,
+          "loss": 2.4071,
+          "elapsed_sec": 0.12,
+          "throughput_tps": 17189.5,
+          "mem_peak_gb": 17.68,
+          "status": "ok"
+        },
+        "8192": {
+          "ppl": 9.499,
+          "loss": 2.2512,
+          "elapsed_sec": 0.51,
+          "throughput_tps": 15951.1,
+          "mem_peak_gb": 25.81,
+          "status": "ok"
+        },
+        "16384": {
+          "ppl": 155.583,
+          "loss": 5.0472,
+          "elapsed_sec": 1.24,
+          "throughput_tps": 13181.2,
+          "mem_peak_gb": 36.66,
+          "status": "ok"
+        },
+        "24576": {
+          "ppl": 997.369,
+          "loss": 6.9051,
+          "elapsed_sec": 1.97,
+          "throughput_tps": 12491.7,
+          "mem_peak_gb": 47.51,
+          "status": "ok"
+        },
+        "32768": {
+          "ppl": 1807.28,
+          "loss": 7.4996,
+          "elapsed_sec": 2.92,
+          "throughput_tps": 11239.0,
+          "mem_peak_gb": 58.36,
+          "status": "ok"
+        }
+      }
+    },
+    "anchored_x15": {
+      "config": "anchored_x15",
+      "params": {
+        "theta": 100000,
+        "anchor_factor": 15,
+        "anchor_dim": 16,
+        "slope": 0.5
+      },
+      "data": {
+        "2048": {
+          "ppl": 11.086,
+          "loss": 2.4057,
+          "elapsed_sec": 0.12,
+          "throughput_tps": 17207.2,
+          "mem_peak_gb": 17.68,
+          "status": "ok"
+        },
+        "8192": {
+          "ppl": 9.412,
+          "loss": 2.242,
+          "elapsed_sec": 0.51,
+          "throughput_tps": 15975.5,
+          "mem_peak_gb": 25.81,
+          "status": "ok"
+        },
+        "16384": {
+          "ppl": 43.229,
+          "loss": 3.7665,
+          "elapsed_sec": 1.24,
+          "throughput_tps": 13215.7,
+          "mem_peak_gb": 36.66,
+          "status": "ok"
+        },
+        "24576": {
+          "ppl": 401.456,
+          "loss": 5.9951,
+          "elapsed_sec": 1.96,
+          "throughput_tps": 12544.6,
+          "mem_peak_gb": 47.51,
+          "status": "ok"
+        },
+        "32768": {
+          "ppl": 1106.226,
+          "loss": 7.0087,
+          "elapsed_sec": 2.9,
+          "throughput_tps": 11281.7,
+          "mem_peak_gb": 58.36,
+          "status": "ok"
+        }
+      }
+    },
+    "anchored_x20": {
+      "config": "anchored_x20",
+      "params": {
+        "theta": 100000,
+        "anchor_factor": 20,
+        "anchor_dim": 16,
+        "slope": 0.5
+      },
+      "data": {
+        "2048": {
+          "ppl": 11.122,
+          "loss": 2.409,
+          "elapsed_sec": 0.12,
+          "throughput_tps": 16945.1,
+          "mem_peak_gb": 17.68,
+          "status": "ok"
+        },
+        "8192": {
+          "ppl": 9.405,
+          "loss": 2.2412,
+          "elapsed_sec": 0.51,
+          "throughput_tps": 16089.7,
+          "mem_peak_gb": 25.81,
+          "status": "ok"
+        },
+        "16384": {
+          "ppl": 19.041,
+          "loss": 2.9466,
+          "elapsed_sec": 1.23,
+          "throughput_tps": 13271.0,
+          "mem_peak_gb": 36.66,
+          "status": "ok"
+        },
+        "24576": {
+          "ppl": 138.325,
+          "loss": 4.9296,
+          "elapsed_sec": 1.95,
+          "throughput_tps": 12599.9,
+          "mem_peak_gb": 47.51,
+          "status": "ok"
+        },
+        "32768": {
+          "ppl": 636.508,
+          "loss": 6.456,
+          "elapsed_sec": 2.89,
+          "throughput_tps": 11322.5,
+          "mem_peak_gb": 58.36,
+          "status": "ok"
+        }
+      }
+    },
+    "anchored_x30": {
+      "config": "anchored_x30",
+      "params": {
+        "theta": 100000,
+        "anchor_factor": 30,
+        "anchor_dim": 16,
+        "slope": 0.5
+      },
+      "data": {
+        "2048": {
+          "ppl": 11.142,
+          "loss": 2.4107,
+          "elapsed_sec": 0.12,
+          "throughput_tps": 17019.7,
+          "mem_peak_gb": 17.68,
+          "status": "ok"
+        },
+        "8192": {
+          "ppl": 9.38,
+          "loss": 2.2386,
+          "elapsed_sec": 0.51,
+          "throughput_tps": 16064.5,
+          "mem_peak_gb": 25.81,
+          "status": "ok"
+        },
+        "16384": {
+          "ppl": 9.294,
+          "loss": 2.2293,
+          "elapsed_sec": 1.23,
+          "throughput_tps": 13301.3,
+          "mem_peak_gb": 36.66,
+          "status": "ok"
+        },
+        "24576": {
+          "ppl": 36.695,
+          "loss": 3.6026,
+          "elapsed_sec": 1.95,
+          "throughput_tps": 12610.2,
+          "mem_peak_gb": 47.51,
+          "status": "ok"
+        },
+        "32768": {
+          "ppl": 190.513,
+          "loss": 5.2497,
+          "elapsed_sec": 2.89,
+          "throughput_tps": 11356.4,
+          "mem_peak_gb": 58.36,
+          "status": "ok"
+        }
+      }
+    },
+    "anchored_x50": {
+      "config": "anchored_x50",
+      "params": {
+        "theta": 100000,
+        "anchor_factor": 50,
+        "anchor_dim": 16,
+        "slope": 0.5
+      },
+      "data": {
+        "2048": {
+          "ppl": 11.158,
+          "loss": 2.4121,
+          "elapsed_sec": 0.12,
+          "throughput_tps": 17249.1,
+          "mem_peak_gb": 17.68,
+          "status": "ok"
+        },
+        "8192": {
+          "ppl": 9.385,
+          "loss": 2.2391,
+          "elapsed_sec": 0.51,
+          "throughput_tps": 16112.5,
+          "mem_peak_gb": 25.81,
+          "status": "ok"
+        },
+        "16384": {
+          "ppl": 9.254,
+          "loss": 2.2251,
+          "elapsed_sec": 1.23,
+          "throughput_tps": 13308.1,
+          "mem_peak_gb": 36.66,
+          "status": "ok"
+        },
+        "24576": {
+          "ppl": 11.649,
+          "loss": 2.4552,
+          "elapsed_sec": 1.95,
+          "throughput_tps": 12635.0,
+          "mem_peak_gb": 47.51,
+          "status": "ok"
+        },
+        "32768": {
+          "ppl": 37.731,
+          "loss": 3.6305,
+          "elapsed_sec": 2.89,
+          "throughput_tps": 11341.1,
+          "mem_peak_gb": 58.36,
+          "status": "ok"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+
+=== START 2026-02-14 22:10:47 variant=yarn ===
+
+=== START 2026-02-14 22:14:51 variant=yarn ===
+[step=1] loss=2.333186 lr=0.000e+00
+[step=2] loss=2.303963 lr=6.667e-06
+[step=3] loss=1.996116 lr=1.333e-05
+[step=4] loss=2.219671 lr=2.000e-05
+[step=5] loss=2.179759 lr=2.667e-05
+[step=6] loss=1.970686 lr=3.333e-05
+[step=7] loss=2.076996 lr=4.000e-05
+[step=8] loss=2.133008 lr=4.667e-05

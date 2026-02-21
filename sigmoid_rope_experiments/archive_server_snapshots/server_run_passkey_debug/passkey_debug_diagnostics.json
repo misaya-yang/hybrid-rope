@@ -1,0 +1,118 @@
+{
+  "env": {
+    "cwd": "/root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments",
+    "torch_version": "2.8.0+cu128",
+    "cuda_available": true,
+    "cuda_device_count": 1,
+    "cuda_name_0": "NVIDIA RTX PRO 6000 Blackwell Server Edition"
+  },
+  "transformers_version": "5.1.0",
+  "model_path": "/root/autodl-tmp/dfrope/ms_models/LLM-Research/Meta-Llama-3-8B-Instruct",
+  "rope_theta_model": 500000.0,
+  "rope_base_used": 500000.0,
+  "head_dim": 128,
+  "params_source": "/root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/data/phase3/summary.json",
+  "k_formula": 0.12534920634989263,
+  "x0_formula": 61.82275427909598,
+  "k_opt": 0.1279999999999999,
+  "x0_opt": 63.0,
+  "requested_lengths": [
+    4096,
+    8192,
+    16384,
+    32768
+  ],
+  "supported_lengths": [
+    4096,
+    8192,
+    16384,
+    32768
+  ],
+  "skipped_lengths_reasons": {},
+  "ratios": [
+    0.1,
+    0.3,
+    0.5,
+    0.7,
+    0.9
+  ],
+  "repeats": 10,
+  "force_monkey_patch": false,
+  "probe_original": {
+    "model.rotary_emb": {
+      "cos_shape": [
+        1,
+        16,
+        128
+      ],
+      "sin_shape": [
+        1,
+        16,
+        128
+      ],
+      "cos_sample": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sin_sample": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "probe_sigmoid": {
+    "model.rotary_emb": {
+      "cos_shape": [
+        1,
+        16,
+        128
+      ],
+      "sin_shape": [
+        1,
+        16,
+        128
+      ],
+      "cos_sample": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sin_sample": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "hook_shapes_original": {
+    "model.rotary_emb": {
+      "input_shapes": [
+        [
+          1,
+          11,
+          4096
+        ]
+      ],
+      "output_shapes": [
+        [
+          1,
+          11,
+          128
+        ],
+        [
+          1,
+          11,
+          128
+        ]
+      ]
+    }
+  },
+  "passkey_csv": "/root/autodl-tmp/dfrope/hybrid-rope/sigmoid_rope_experiments/data/passkey_results_v3.csv",
+  "elapsed_sec": 927.1231110095978
+}
