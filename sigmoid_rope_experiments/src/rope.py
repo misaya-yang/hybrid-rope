@@ -42,6 +42,24 @@ class RoPEFrequencyAllocator:
         freqs = self.base ** (-s_tilde)
         return freqs
 
+    def anchored_sigmoid(self, k: float, j0: float, anchor_factor: float = 20.0) -> torch.Tensor:
+        """
+        Anchored Sigmoid frequencies in float64.
+
+        theta_i^anchored = theta_i^std * [1 + (alpha - 1) * sigma(k(i-j0))]
+        where alpha=anchor_factor.
+        """
+        if anchor_factor <= 0:
+            raise ValueError(f"anchor_factor must be > 0, got {anchor_factor}")
+        i = torch.arange(self.N, dtype=torch.float64)
+        k_t = torch.tensor(float(k), dtype=torch.float64)
+        j0_t = torch.tensor(float(j0), dtype=torch.float64)
+        alpha_t = torch.tensor(float(anchor_factor), dtype=torch.float64)
+        std = self.standard()
+        sig = 1.0 / (1.0 + torch.exp(-k_t * (i - j0_t)))
+        gain = 1.0 + (alpha_t - 1.0) * sig
+        return std * gain
+
     def sigmoid_analytical_v1(self, L: int) -> Tuple[torch.Tensor, float, float]:
         """Original heuristic (v1): x0=(d-2)/4, k=c1*ln(L/2pi)/d with c1=2ln19."""
         x0 = (self.d - 2.0) / 4.0
