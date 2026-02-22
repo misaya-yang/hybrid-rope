@@ -7,14 +7,18 @@
 
 # Large model/checkpoint binaries (do not commit)
 **/*.safetensors
-**/optimizer.pt
-**/scheduler.pt
-**/rng_state.pth
-**/training_args.bin
-**/c4_val_tokens_*.pt
-**/cache/*.pt
-**/cache/*.u16
-**/cache/*.tokens*
+**/*.pt
+**/*.pth
+**/*.bin
+**/*.ckpt
+**/*.h5
+**/*.onnx
+**/optimizer.*
+**/scheduler.*
+**/rng_state.*
+**/training_args.*
+**/c4_val_tokens_*
+**/cache/*
 
 # A800 LoRA checkpoint/full adapter artifacts (keep only README markers)
 artifacts/a800_2026-02-13/results/llama3_hybrid_lora/checkpoint-500/*
@@ -30,6 +34,8 @@ artifacts/a800_2026-02-13/results/llama3_hybrid_lora/final_lora/*
 # Local sync/cache folders
 .tmp_sync/
 logs/
+2026-02-22/
+tmp_phase4_compare/
 
 # Keep quarantined weights out of version control
 results/_weights_quarantine/**
@@ -42,3 +48,6 @@ secrets/
 .secrets/
 *.pw
 *.pw.txt
+
+*.pt
+*.pth

@@ -1,0 +1,74 @@
+{
+  "dataset_name": "Synthetic-Passkey",
+  "tokenizer": "byte",
+  "total_tokens": 8000000,
+  "param_count": 49330560,
+  "train_hours": 0.5878571197059419,
+  "train_cfg": {
+    "max_steps": 1200,
+    "eval_interval": 50,
+    "save_interval": 200,
+    "lr": 0.0006,
+    "warmup_steps": 200,
+    "early_stop_patience": 300,
+    "micro_batch": 8,
+    "grad_accum": 1,
+    "effective_batch": 8,
+    "amp_dtype": "torch.bfloat16"
+  },
+  "rope_params": {
+    "sigmoid": {
+      "k": 0.25078125,
+      "x0": 15.04
+    },
+    "anchored20": {
+      "k": 0.25078125,
+      "j0": 15.04,
+      "alpha": 20.0
+    },
+    "anchored_alpha": null
+  },
+  "train_meta": [
+    {
+      "tag": "standard",
+      "log_csv": "E:\\rope\\hybrid-rope\\sigmoid_rope_experiments\\phase4_local_50m_shape_base200k_2026-02-22\\data\\training_log_standard.csv",
+      "best_step": 1150,
+      "best_val": 0.021077464567497373,
+      "best_ckpt": "E:\\rope\\hybrid-rope\\sigmoid_rope_experiments\\phase4_local_50m_shape_base200k_2026-02-22\\checkpoints\\standard_best\\checkpoint_step001150.pt",
+      "final_model": "E:\\rope\\hybrid-rope\\sigmoid_rope_experiments\\phase4_local_50m_shape_base200k_2026-02-22\\checkpoints\\standard_final\\model.pt"
+    },
+    {
+      "tag": "sigmoid",
+      "log_csv": "E:\\rope\\hybrid-rope\\sigmoid_rope_experiments\\phase4_local_50m_shape_base200k_2026-02-22\\data\\training_log_sigmoid.csv",
+      "best_step": 1200,
+      "best_val": 0.021084939828142524,
+      "best_ckpt": "E:\\rope\\hybrid-rope\\sigmoid_rope_experiments\\phase4_local_50m_shape_base200k_2026-02-22\\checkpoints\\sigmoid_best\\checkpoint_step001200.pt",
+      "final_model": "E:\\rope\\hybrid-rope\\sigmoid_rope_experiments\\phase4_local_50m_shape_base200k_2026-02-22\\checkpoints\\sigmoid_final\\model.pt"
+    }
+  ],
+  "best_table": [
+    {
+      "model": "Standard",
+      "best_step": 1150,
+      "best_val": 0.021077464567497373,
+      "best_ppl": 1.0213011632262106
+    },
+    {
+      "model": "Sigmoid",
+      "best_step": 1200,
+      "best_val": 0.021084939828142524,
+      "best_ppl": 1.0213087977471378
+    }
+  ],
+  "artifacts": {
+    "training_curves_all": "E:\\rope\\hybrid-rope\\sigmoid_rope_experiments\\phase4_local_50m_shape_base200k_2026-02-22\\results\\training_curves_all.pdf",
+    "ppl_vs_length": "E:\\rope\\hybrid-rope\\sigmoid_rope_experiments\\phase4_local_50m_shape_base200k_2026-02-22\\results\\ppl_vs_length.pdf",
+    "positional_loss": "E:\\rope\\hybrid-rope\\sigmoid_rope_experiments\\phase4_local_50m_shape_base200k_2026-02-22\\results\\positional_loss.pdf",
+    "passkey_fixed": "E:\\rope\\hybrid-rope\\sigmoid_rope_experiments\\phase4_local_50m_shape_base200k_2026-02-22\\results\\passkey_fixed.pdf",
+    "passkey_by_length_fixed": "E:\\rope\\hybrid-rope\\sigmoid_rope_experiments\\phase4_local_50m_shape_base200k_2026-02-22\\results\\passkey_by_length_fixed.pdf",
+    "freq_comparison_trained": "E:\\rope\\hybrid-rope\\sigmoid_rope_experiments\\phase4_local_50m_shape_base200k_2026-02-22\\results\\freq_comparison_trained.pdf",
+    "passkey_csv": "E:\\rope\\hybrid-rope\\sigmoid_rope_experiments\\phase4_local_50m_shape_base200k_2026-02-22\\data\\passkey_fixed_results.csv",
+    "ppl_csv": "E:\\rope\\hybrid-rope\\sigmoid_rope_experiments\\phase4_local_50m_shape_base200k_2026-02-22\\data\\ppl_vs_length.csv",
+    "positional_csv": "E:\\rope\\hybrid-rope\\sigmoid_rope_experiments\\phase4_local_50m_shape_base200k_2026-02-22\\data\\positional_loss.csv"
+  }
+}

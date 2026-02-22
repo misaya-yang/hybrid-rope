@@ -17,6 +17,7 @@ from typing import Dict, List, Optional, Sequence, Tuple
 import numpy as np
 import pandas as pd
 import torch
+import torch.nn.functional as F
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
@@ -135,8 +136,27 @@ def save_checkpoint(model: p4.GPTSmall, optimizer: torch.optim.Optimizer, step: 
 def save_best_checkpoint(model: p4.GPTSmall, optimizer: torch.optim.Optimizer, step: int, ckpt_dir: Path, tag: str, val_loss: float) -> Path:
     out_dir = ckpt_dir / f"{tag}_best"
     out_dir.mkdir(parents=True, exist_ok=True)
-    torch.save({"model": model.state_dict(), "optimizer": optimizer.state_dict(), "step": int(step), "best_val_loss": float(val_loss)}, out_dir / "checkpoint.pt")
-    return out_dir
+    # Windows can intermittently lock same-name overwrite under heavy IO/scan.
+    # Use unique filenames for each best update to avoid overwrite races.
+    out_path = out_dir / f"checkpoint_step{int(step):06d}.pt"
+    torch.save(
+        {
+            "model": model.state_dict(),
+            "optimizer": optimizer.state_dict(),
+            "step": int(step),
+            "best_val_loss": float(val_loss),
+        },
+        out_path,
+    )
+    # Keep directory small: retain only newest best file.
+    for old in sorted(out_dir.glob("checkpoint_step*.pt")):
+        if old == out_path:
+            continue
+        try:
+            old.unlink()
+        except Exception:
+            pass
+    return out_path
 
 
 def save_final_model(model: p4.GPTSmall, out_dir: Path) -> None:
@@ -145,12 +165,13 @@ def save_final_model(model: p4.GPTSmall, out_dir: Path) -> None:
 
 
 def load_model_state(model: p4.GPTSmall, ckpt_or_model_path: Path, device: torch.device) -> None:
-    if ckpt_or_model_path.name == "checkpoint.pt":
-        payload = torch.load(ckpt_or_model_path, map_location=device)
+    payload = torch.load(ckpt_or_model_path, map_location=device)
+    if isinstance(payload, dict) and "model" in payload and isinstance(payload["model"], dict):
         model.load_state_dict(payload["model"], strict=True)
-    else:
-        payload = torch.load(ckpt_or_model_path, map_location=device)
+    elif isinstance(payload, dict):
         model.load_state_dict(payload, strict=True)
+    else:
+        raise ValueError(f"Unsupported checkpoint format at {ckpt_or_model_path}")
 
 
 def autotune_micro_batch(model: p4.GPTSmall, token_ids: np.ndarray, seq_len: int, candidates: Sequence[int], device: torch.device, amp_dtype: torch.dtype, use_amp: bool, seed: int) -> int:
@@ -244,8 +265,7 @@ def train_single_model(
             if val_loss < best_val - 1e-7:
                 best_val = float(val_loss)
                 best_step = int(step)
-                best_dir = save_best_checkpoint(model, opt, step, ckpt_root, tag, best_val)
-                best_path = best_dir / "checkpoint.pt"
+                best_path = save_best_checkpoint(model, opt, step, ckpt_root, tag, best_val)
             print(f"[train:{tag}] step={step}/{cfg.max_steps} lr={lr:.3e} train={train_loss:.4f} val={val_loss:.4f} best={best_val:.4f}@{best_step} eta={eta_h:.2f}h")
             if step >= cfg.min_train_steps and (step - best_step) >= cfg.early_stop_patience:
                 print(f"[train:{tag}] early stop at step={step}")
@@ -260,8 +280,7 @@ def train_single_model(
     final_dir = root_dir / "checkpoints" / f"{tag}_final"
     save_final_model(model, final_dir)
     if best_path is None:
-        best_dir = save_best_checkpoint(model, opt, 0, ckpt_root, tag, float("nan"))
-        best_path = best_dir / "checkpoint.pt"
+        best_path = save_best_checkpoint(model, opt, 0, ckpt_root, tag, float("nan"))
 
     return {
         "tag": tag,
@@ -309,6 +328,45 @@ def greedy_generate(model: p4.GPTSmall, input_ids: torch.Tensor, max_new_tokens:
     return x
 
 
+def sample_false_passkey_with_same_token_len(
+    rng: random.Random,
+    tokenizer: p4.TokenizerBase,
+    true_passkey: str,
+    true_token_len: int,
+    max_trials: int = 256,
+) -> str:
+    fallback = true_passkey
+    for _ in range(max_trials):
+        cand = f"{rng.randint(10000, 99999)}"
+        if cand == true_passkey:
+            continue
+        fallback = cand
+        if len(tokenizer.encode(cand)) == true_token_len:
+            return cand
+    if fallback == true_passkey:
+        fallback = f"{(int(true_passkey) + 1) % 100000:05d}"
+    return fallback
+
+
+def key_only_ce_loss(
+    model: p4.GPTSmall,
+    prompt_ids: Sequence[int],
+    key_ids: Sequence[int],
+) -> float:
+    if len(key_ids) <= 0:
+        return float("nan")
+    device = next(model.parameters()).device
+    x_ids = list(prompt_ids) + list(key_ids)
+    x = torch.tensor([x_ids], dtype=torch.long, device=device)
+    key_len = len(key_ids)
+    with torch.no_grad():
+        logits = model(x)
+    pred = logits[:, -key_len - 1 : -1, :].contiguous()
+    labels = x[:, -key_len:].contiguous()
+    loss = F.cross_entropy(pred.view(-1, pred.size(-1)), labels.view(-1), reduction="mean")
+    return float(loss.detach().item())
+
+
 def evaluate_passkey_fixed_for_model(
     model: p4.GPTSmall,
     model_name: str,
@@ -353,6 +411,76 @@ def evaluate_passkey_fixed_for_model(
                     rows.append({"model": model_name, "context_length": lval, "position_ratio": rval, "repeat": rep_idx, "correct": ok, "status": "ok", "passkey": key, "pred_digits": pred_digits, "generated_text": gen_txt})
                 except RuntimeError as ex:
                     rows.append({"model": model_name, "context_length": lval, "position_ratio": rval, "repeat": rep_idx, "correct": 0, "status": "oom" if "out of memory" in str(ex).lower() else "error"})
+                    cleanup_cuda()
+                pbar.update(1)
+    pbar.close()
+    return pd.DataFrame(rows)
+
+
+def evaluate_passkey_teacher_forcing_for_model(
+    model: p4.GPTSmall,
+    model_name: str,
+    tokenizer: p4.TokenizerBase,
+    lengths: List[int],
+    ratios: List[float],
+    repeats: int,
+    seed: int,
+) -> pd.DataFrame:
+    rng = random.Random(seed)
+    rows: List[Dict] = []
+    model.eval()
+    pbar = tqdm(total=len(lengths) * len(ratios) * repeats, desc=f"passkey-tf-{model_name}", dynamic_ncols=True)
+    for lval in lengths:
+        for rval in ratios:
+            for rep_idx in range(repeats):
+                key = f"{rng.randint(10000, 99999)}"
+                prompt = build_completion_passkey_prompt(tokenizer, lval, key, rval)
+                if prompt is None:
+                    rows.append(
+                        {
+                            "model": model_name,
+                            "context_length": lval,
+                            "position_ratio": rval,
+                            "repeat": rep_idx,
+                            "correct": 0,
+                            "status": "invalid",
+                        }
+                    )
+                    pbar.update(1)
+                    continue
+                true_ids = tokenizer.encode(key)
+                false_key = sample_false_passkey_with_same_token_len(rng, tokenizer, key, len(true_ids))
+                false_ids = tokenizer.encode(false_key)
+                try:
+                    true_loss = key_only_ce_loss(model, prompt, true_ids)
+                    false_loss = key_only_ce_loss(model, prompt, false_ids)
+                    hit = int(true_loss < false_loss)
+                    rows.append(
+                        {
+                            "model": model_name,
+                            "context_length": lval,
+                            "position_ratio": rval,
+                            "repeat": rep_idx,
+                            "correct": hit,
+                            "status": "ok",
+                            "passkey_true": key,
+                            "passkey_false": false_key,
+                            "true_loss": true_loss,
+                            "false_loss": false_loss,
+                            "margin_false_minus_true": float(false_loss - true_loss),
+                        }
+                    )
+                except RuntimeError as ex:
+                    rows.append(
+                        {
+                            "model": model_name,
+                            "context_length": lval,
+                            "position_ratio": rval,
+                            "repeat": rep_idx,
+                            "correct": 0,
+                            "status": "oom" if "out of memory" in str(ex).lower() else "error",
+                        }
+                    )
                     cleanup_cuda()
                 pbar.update(1)
     pbar.close()
@@ -597,6 +725,16 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--target_tokens", type=int, default=24000000)
     ap.add_argument("--max_docs", type=int, default=20000)
     ap.add_argument("--synthetic_docs", type=int, default=2000)
+    ap.add_argument(
+        "--allow_byte_fallback",
+        action="store_true",
+        help="Allow silent fallback to byte tokenizer when HF/local tokenizer is unavailable.",
+    )
+    ap.add_argument(
+        "--allow_synthetic_fallback",
+        action="store_true",
+        help="Allow auto/local/hf mode to fallback to synthetic data when target dataset is unavailable.",
+    )
     ap.add_argument("--max_seq_len", type=int, default=8192)
     ap.add_argument("--max_steps", type=int, default=3000)
     ap.add_argument("--lr", type=float, default=6e-4)
@@ -612,8 +750,23 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--passkey_repeats", type=int, default=20)
     ap.add_argument("--passkey_max_new_tokens", type=int, default=16)
     ap.add_argument("--passkey_lengths", type=str, default="1024,2048,4096,8192,16384")
+    ap.add_argument(
+        "--passkey_eval_mode",
+        type=str,
+        default="teacher_forcing",
+        choices=["teacher_forcing", "generation", "none"],
+        help="Passkey evaluation protocol. teacher_forcing is the recommended robust mode.",
+    )
     ap.add_argument("--ppl_lengths", type=str, default="512,1024,2048,4096,8192,16384,32768")
     ap.add_argument("--ppl_samples", type=int, default=6)
+    ap.add_argument("--n_layers", type=int, default=12)
+    ap.add_argument("--n_heads", type=int, default=12)
+    ap.add_argument("--d_model", type=int, default=768)
+    ap.add_argument("--d_ff", type=int, default=3072)
+    ap.add_argument("--head_dim", type=int, default=64)
+    ap.add_argument("--rope_base", type=float, default=10000.0)
+    ap.add_argument("--variants", type=str, default="standard,sigmoid,anchored20")
+    ap.add_argument("--output_subdir", type=str, default="")
     return ap.parse_args()
 
 
@@ -622,7 +775,9 @@ def main() -> None:
     ensure_dependencies()
     set_seed(args.seed)
 
-    root_dir = Path(__file__).resolve().parent
+    base_root = Path(__file__).resolve().parent
+    subdir = str(args.output_subdir).strip()
+    root_dir = (base_root / subdir) if subdir else base_root
     (root_dir / "data").mkdir(parents=True, exist_ok=True)
     (root_dir / "results").mkdir(parents=True, exist_ok=True)
     (root_dir / "checkpoints").mkdir(parents=True, exist_ok=True)
@@ -633,6 +788,12 @@ def main() -> None:
 
     tokenizer, tok_name = resolve_tokenizer(args.tokenizer_mode, args.tokenizer_path, args.local_model_candidates)
     print(f"[phase4-corrected] tokenizer: {tok_name}, vocab_size={tokenizer.vocab_size}")
+    if tok_name == "byte" and args.tokenizer_mode != "byte" and not args.allow_byte_fallback:
+        raise RuntimeError(
+            "Tokenizer resolved to byte fallback in non-byte mode. "
+            "This is usually protocol drift and can make PPL incomparable. "
+            "Pass --allow_byte_fallback to override intentionally."
+        )
 
     token_ids, dataset_name = p4.load_training_tokens(
         root_dir=root_dir,
@@ -640,7 +801,18 @@ def main() -> None:
         target_tokens=int(args.target_tokens),
         max_docs=int(args.max_docs),
         seed=int(args.seed),
+        dataset_mode=str(args.dataset_mode),
+        synthetic_docs=int(args.synthetic_docs),
     )
+    if (
+        dataset_name == "Synthetic-Passkey"
+        and str(args.dataset_mode).lower() != "synthetic"
+        and not args.allow_synthetic_fallback
+    ):
+        raise RuntimeError(
+            "Dataset fell back to Synthetic-Passkey while dataset_mode is not synthetic. "
+            "This can produce non-comparable PPL. Pass --allow_synthetic_fallback to override intentionally."
+        )
     print(f"[phase4-corrected] dataset={dataset_name}, tokens={token_ids.size}")
 
     token_min = int(token_ids.min()) if token_ids.size else 0
@@ -651,9 +823,30 @@ def main() -> None:
     train_ids, val_ids = split_train_val(token_ids, val_ratio=0.05)
     print(f"[phase4-corrected] train_tokens={train_ids.size}, val_tokens={val_ids.size}")
 
-    cfg = TrainConfig(max_seq_len=int(args.max_seq_len), max_steps=int(args.max_steps), lr=float(args.lr), weight_decay=float(args.weight_decay), warmup_steps=int(args.warmup_steps), eval_interval=int(args.eval_interval), save_interval=int(args.save_interval), early_stop_patience=int(args.early_stop_patience), min_train_steps=int(args.min_train_steps))
+    cfg = TrainConfig(
+        n_layers=int(args.n_layers),
+        n_heads=int(args.n_heads),
+        d_model=int(args.d_model),
+        d_ff=int(args.d_ff),
+        head_dim=int(args.head_dim),
+        max_seq_len=int(args.max_seq_len),
+        max_steps=int(args.max_steps),
+        lr=float(args.lr),
+        weight_decay=float(args.weight_decay),
+        warmup_steps=int(args.warmup_steps),
+        eval_interval=int(args.eval_interval),
+        save_interval=int(args.save_interval),
+        early_stop_patience=int(args.early_stop_patience),
+        min_train_steps=int(args.min_train_steps),
+    )
+    if cfg.d_model % cfg.n_heads != 0:
+        raise ValueError(f"d_model ({cfg.d_model}) must be divisible by n_heads ({cfg.n_heads})")
+    if cfg.d_model // cfg.n_heads != cfg.head_dim:
+        raise ValueError(
+            f"head_dim mismatch: d_model//n_heads={cfg.d_model // cfg.n_heads}, but --head_dim={cfg.head_dim}"
+        )
 
-    allocator = RoPEFrequencyAllocator(d=cfg.head_dim, base=10000.0)
+    allocator = RoPEFrequencyAllocator(d=cfg.head_dim, base=float(args.rope_base))
     inv_std = allocator.standard()
     N = cfg.head_dim // 2
     k_sig = 16.05 / cfg.head_dim
@@ -690,9 +883,24 @@ def main() -> None:
     cleanup_cuda()
     val_batches = build_fixed_eval_batches(val_ids, cfg.max_seq_len, num_batches=8, batch_size=max(1, min(2, micro_batch)), seed=args.seed + 7)
 
-    variant_specs: List[Tuple[str, torch.Tensor]] = [("standard", inv_std), ("sigmoid", inv_sig), ("anchored20", inv_anchor20)]
-    if args.include_alpha_star:
-        variant_specs.append(("anchored_alpha", inv_anchor_star))
+    requested = [x.strip() for x in str(args.variants).split(",") if x.strip()]
+    freq_map: Dict[str, torch.Tensor] = {
+        "standard": inv_std,
+        "sigmoid": inv_sig,
+        "anchored20": inv_anchor20,
+        "anchored_alpha": inv_anchor_star,
+    }
+    if not requested:
+        requested = ["standard", "sigmoid", "anchored20"]
+    if args.include_alpha_star and "anchored_alpha" not in requested:
+        requested.append("anchored_alpha")
+    variant_specs: List[Tuple[str, torch.Tensor]] = []
+    for name in requested:
+        if name not in freq_map:
+            raise ValueError(f"Unknown variant '{name}'. Supported: {', '.join(freq_map.keys())}")
+        if name == "anchored_alpha" and (not args.include_alpha_star):
+            continue
+        variant_specs.append((name, freq_map[name]))
     color_map = {"standard": "#d62728", "sigmoid": "#1f77b4", "anchored20": "#2ca02c", "anchored_alpha": "#9467bd"}
 
     train_meta: List[Dict[str, object]] = []
@@ -751,16 +959,50 @@ def main() -> None:
     passkey_lengths = parse_int_list(args.passkey_lengths)
     passkey_ratios = [0.1, 0.3, 0.5, 0.7, 0.9]
     pass_frames: List[pd.DataFrame] = []
-    for em in eval_models:
-        model = p4.GPTSmall(vocab_size=model_vocab_size, n_layers=cfg.n_layers, n_heads=cfg.n_heads, d_model=cfg.d_model, d_ff=cfg.d_ff, inv_freq=em["inv_freq"], gradient_checkpointing=False).to(device)
-        load_model_state(model, Path(em["best_ckpt"]), device)
-        pass_frames.append(evaluate_passkey_fixed_for_model(model, str(em["display"]), tokenizer, passkey_lengths, passkey_ratios, int(args.passkey_repeats), int(args.passkey_max_new_tokens), seed=args.seed + 900 + hash(str(em["tag"])) % 1000, debug_examples=2))
-        del model
-        cleanup_cuda()
-    passkey_df = pd.concat(pass_frames, ignore_index=True) if pass_frames else pd.DataFrame()
+    passkey_df = pd.DataFrame()
     passkey_csv = root_dir / "data" / "passkey_fixed_results.csv"
-    passkey_df.to_csv(passkey_csv, index=False, encoding="utf-8")
-    plot_passkey_fixed(root_dir, passkey_df, [str(m["display"]) for m in eval_models])
+    if str(args.passkey_eval_mode) != "none":
+        for em in eval_models:
+            model = p4.GPTSmall(
+                vocab_size=model_vocab_size,
+                n_layers=cfg.n_layers,
+                n_heads=cfg.n_heads,
+                d_model=cfg.d_model,
+                d_ff=cfg.d_ff,
+                inv_freq=em["inv_freq"],
+                gradient_checkpointing=False,
+            ).to(device)
+            load_model_state(model, Path(em["best_ckpt"]), device)
+            if str(args.passkey_eval_mode) == "teacher_forcing":
+                frame = evaluate_passkey_teacher_forcing_for_model(
+                    model,
+                    str(em["display"]),
+                    tokenizer,
+                    passkey_lengths,
+                    passkey_ratios,
+                    int(args.passkey_repeats),
+                    seed=args.seed + 900 + hash(str(em["tag"])) % 1000,
+                )
+            else:
+                frame = evaluate_passkey_fixed_for_model(
+                    model,
+                    str(em["display"]),
+                    tokenizer,
+                    passkey_lengths,
+                    passkey_ratios,
+                    int(args.passkey_repeats),
+                    int(args.passkey_max_new_tokens),
+                    seed=args.seed + 900 + hash(str(em["tag"])) % 1000,
+                    debug_examples=2,
+                )
+            pass_frames.append(frame)
+            del model
+            cleanup_cuda()
+        passkey_df = pd.concat(pass_frames, ignore_index=True) if pass_frames else pd.DataFrame()
+        passkey_df.to_csv(passkey_csv, index=False, encoding="utf-8")
+        plot_passkey_fixed(root_dir, passkey_df, [str(m["display"]) for m in eval_models])
+    else:
+        print("[phase4-corrected] passkey evaluation skipped by --passkey_eval_mode none")
 
     ppl_lengths = parse_int_list(args.ppl_lengths)
     ppl_frames: List[pd.DataFrame] = []

@@ -87,7 +87,11 @@ class HFTokenizer(TokenizerBase):
         from transformers import AutoTokenizer
 
         self.path = path
-        self.tok = AutoTokenizer.from_pretrained(path, local_files_only=True, trust_remote_code=True)
+        # Prefer local cache first for offline clusters, then fallback to online.
+        try:
+            self.tok = AutoTokenizer.from_pretrained(path, local_files_only=True, trust_remote_code=True)
+        except Exception:
+            self.tok = AutoTokenizer.from_pretrained(path, trust_remote_code=True)
         if self.tok.pad_token_id is None and self.tok.eos_token_id is not None:
             self.tok.pad_token = self.tok.eos_token
         # Use full tokenizer length (includes added/special tokens) to avoid id overflow.
@@ -169,6 +173,30 @@ def extract_text_from_longbench_jsonl(path: Path, max_docs: int) -> List[str]:
     return texts
 
 
+def extract_text_from_hf_stream(
+    dataset_name: str,
+    split: str,
+    max_docs: int,
+    text_keys: Sequence[str] = ("text",),
+) -> List[str]:
+    from datasets import load_dataset
+
+    texts: List[str] = []
+    ds = load_dataset(dataset_name, split=split, streaming=True)
+    for item in ds:
+        found = ""
+        for k in text_keys:
+            v = item.get(k, "")
+            if isinstance(v, str) and v.strip():
+                found = v.strip()
+                break
+        if found:
+            texts.append(found)
+        if len(texts) >= max_docs:
+            break
+    return texts
+
+
 def generate_synthetic_texts(num_docs: int, seed: int) -> List[str]:
     rng = random.Random(seed)
     base_sent = [
@@ -221,12 +249,18 @@ def load_training_tokens(
     target_tokens: int,
     max_docs: int,
     seed: int,
+    dataset_mode: str = "auto",
+    synthetic_docs: Optional[int] = None,
 ) -> Tuple[np.ndarray, str]:
+    mode = str(dataset_mode).lower().strip()
+    if mode not in {"auto", "local", "hf", "synthetic"}:
+        mode = "auto"
+
     longbench_dir = Path("/root/autodl-tmp/dfrope/ms_datasets/LongBench/data")
     texts: List[str] = []
     dataset_name = ""
 
-    if longbench_dir.exists():
+    if mode in {"auto", "local"} and longbench_dir.exists():
         files = sorted(longbench_dir.glob("*_e.jsonl"))
         for p in files:
             if len(texts) >= max_docs:
@@ -240,8 +274,23 @@ def load_training_tokens(
         if texts:
             dataset_name = "LongBench-local"
 
+    if not texts and mode in {"auto", "hf"}:
+        try:
+            texts = extract_text_from_hf_stream(
+                dataset_name="roneneldan/TinyStories",
+                split="train",
+                max_docs=max_docs,
+                text_keys=("text",),
+            )
+            if texts:
+                dataset_name = "TinyStories-hf-stream"
+        except Exception:
+            texts = []
+
     if not texts:
-        texts = generate_synthetic_texts(num_docs=max_docs, seed=seed)
+        n_synth = int(synthetic_docs) if synthetic_docs is not None else int(max_docs)
+        n_synth = max(100, n_synth)
+        texts = generate_synthetic_texts(num_docs=n_synth, seed=seed)
         dataset_name = "Synthetic-Passkey"
 
     ids = build_token_buffer(tokenizer=tokenizer, texts=texts, target_tokens=target_tokens)
@@ -1139,6 +1188,18 @@ def parse_args() -> argparse.Namespace:
     )
     ap.add_argument("--target_tokens", type=int, default=12000000)
     ap.add_argument("--max_docs", type=int, default=4000)
+    ap.add_argument("--dataset_mode", type=str, default="auto", choices=["auto", "hf", "local", "synthetic"])
+    ap.add_argument("--synthetic_docs", type=int, default=4000)
+    ap.add_argument(
+        "--allow_byte_fallback",
+        action="store_true",
+        help="Allow silent fallback to byte tokenizer when HF/local tokenizer is unavailable.",
+    )
+    ap.add_argument(
+        "--allow_synthetic_fallback",
+        action="store_true",
+        help="Allow auto/local/hf mode to fallback to synthetic data when target dataset is unavailable.",
+    )
     ap.add_argument("--max_steps", type=int, default=10000)
     ap.add_argument("--min_steps_if_slow", type=int, default=5000)
     ap.add_argument("--effective_batch_target", type=int, default=8)
@@ -1169,6 +1230,12 @@ def main() -> None:
         local_model_candidates=args.local_model_candidates,
     )
     print(f"[phase4] tokenizer: {tok_name}, vocab_size={tokenizer.vocab_size}")
+    if tok_name == "byte" and args.tokenizer_mode != "byte" and not args.allow_byte_fallback:
+        raise RuntimeError(
+            "Tokenizer resolved to byte fallback in non-byte mode. "
+            "This is usually protocol drift and can make PPL incomparable. "
+            "Pass --allow_byte_fallback to override intentionally."
+        )
 
     token_ids, dataset_name = load_training_tokens(
         root_dir=root_dir,
@@ -1176,7 +1243,18 @@ def main() -> None:
         target_tokens=int(args.target_tokens),
         max_docs=int(args.max_docs),
         seed=int(args.seed),
+        dataset_mode=str(args.dataset_mode),
+        synthetic_docs=int(args.synthetic_docs),
     )
+    if (
+        dataset_name == "Synthetic-Passkey"
+        and str(args.dataset_mode).lower() != "synthetic"
+        and not args.allow_synthetic_fallback
+    ):
+        raise RuntimeError(
+            "Dataset fell back to Synthetic-Passkey while dataset_mode is not synthetic. "
+            "This can produce non-comparable PPL. Pass --allow_synthetic_fallback to override intentionally."
+        )
     print(f"[phase4] dataset={dataset_name}, tokens={token_ids.size}")
     token_min = int(token_ids.min()) if token_ids.size else 0
     token_max = int(token_ids.max()) if token_ids.size else 0

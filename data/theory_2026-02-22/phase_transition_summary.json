@@ -1,0 +1,46 @@
+{
+  "head_dim": 128,
+  "base": 10000.0,
+  "L": 131072,
+  "gamma": 1.0,
+  "p_grid_points": 41,
+  "methods": [
+    "baseline",
+    "pi",
+    "yarn",
+    "anchored_hybrid",
+    "sigmoid_formula",
+    "sigmoid_tuned"
+  ],
+  "hybrid_minus_baseline_crossings": [],
+  "sigmoid_formula_minus_baseline_crossings": [
+    0.34765323507236323
+  ],
+  "sigmoid_tuned_minus_baseline_crossings": [
+    0.4983868806246538
+  ],
+  "sigmoid_scan_best": {
+    "k": 0.17708333333333334,
+    "x0": 30.08,
+    "crossing": 0.4983868806246538,
+    "distance_to_target": 0.0016131193753461948,
+    "score_p0": 0.02387719679813427,
+    "score_p1": 0.23636933194188994
+  },
+  "score_at_p0": {
+    "baseline": 0.00784533714229487,
+    "pi": 0.019340690428657985,
+    "yarn": 0.019129261111073586,
+    "anchored_hybrid": 0.008168571605804463,
+    "sigmoid_formula": 0.013965072427338798,
+    "sigmoid_tuned": 0.02387719679813427
+  },
+  "score_at_p1": {
+    "baseline": 0.2525049716306277,
+    "pi": 0.4748028318442332,
+    "yarn": 0.3043543897910724,
+    "anchored_hybrid": 0.25899482111985117,
+    "sigmoid_formula": 0.2410217201815769,
+    "sigmoid_tuned": 0.23636933194188994
+  }
+}

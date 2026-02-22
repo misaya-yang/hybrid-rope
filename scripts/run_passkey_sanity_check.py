@@ -77,6 +77,11 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--head_dim", type=int, default=64)
     ap.add_argument("--rope_base", type=float, default=10000.0)
     ap.add_argument("--output_dir", type=str, default="results/phase4_passkey_sanity")
+    ap.add_argument(
+        "--allow_missing_models",
+        action="store_true",
+        help="Skip missing model checkpoints instead of raising an error.",
+    )
     return ap.parse_args()
 
 
@@ -492,6 +497,7 @@ def main() -> None:
         )
 
     found_ckpts: Dict[str, str] = {}
+    available_specs: List[ModelSpec] = []
     missing: List[str] = []
     for spec in model_specs:
         ckpt = find_checkpoint_for_model(spec, search_roots)
@@ -499,13 +505,19 @@ def main() -> None:
             missing.append(spec.display)
         else:
             found_ckpts[spec.tag] = str(ckpt)
-    if missing:
+            available_specs.append(spec)
+    if missing and not args.allow_missing_models:
         raise RuntimeError(
             "Missing checkpoints for models: "
             + ", ".join(missing)
             + ". Search roots: "
             + ", ".join([str(p) for p in search_roots])
+            + ". Re-run with --allow_missing_models to skip them."
         )
+    if missing and args.allow_missing_models:
+        print(f"[passkey-sanity] warning: skipping missing checkpoints: {', '.join(missing)}")
+    if not available_specs:
+        raise RuntimeError("No available model checkpoints found after filtering.")
 
     cases = build_case_specs()
     rng = random.Random(int(args.seed) + 1337)
@@ -515,10 +527,10 @@ def main() -> None:
     print("[passkey-sanity] env:", env_info())
     print(f"[passkey-sanity] device={device}, amp_dtype={amp_dtype}, tokenizer={tok_name}, vocab_size={tokenizer.vocab_size}")
     print(f"[passkey-sanity] search_roots={', '.join(str(x) for x in search_roots)}")
-    for spec in model_specs:
+    for spec in available_specs:
         print(f"[passkey-sanity] {spec.display} checkpoint -> {found_ckpts[spec.tag]}")
 
-    for spec in model_specs:
+    for spec in available_specs:
         ckpt_path = Path(found_ckpts[spec.tag])
         state = load_state_dict(ckpt_path)
         model = instantiate_model(state, spec, args, device)
