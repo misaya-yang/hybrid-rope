@@ -1,0 +1,32 @@
+{
+  "L": 16384,
+  "d": 128,
+  "num_phi": 321,
+  "fit_range": [
+    0.1,
+    0.9
+  ],
+  "case_b1e4": {
+    "A_fit": 0.43459405281401975,
+    "B_fit": 0.4746390826944385,
+    "A_theory": 0.43454477938296904,
+    "B_theory": 0.4745611564124804,
+    "r2_mid": 0.9942077196243758,
+    "mae_mid": 0.0022578958282551184,
+    "maxe_mid": 0.07594571159263708
+  },
+  "case_b5e5": {
+    "A_fit": 0.43685337850855294,
+    "B_fit": 0.6723761874068647,
+    "A_theory": 0.43454477938296904,
+    "B_theory": 0.6761274489044348,
+    "r2_mid": 0.9954140166590921,
+    "mae_mid": 0.00586466008275236,
+    "maxe_mid": 0.04275339147296364
+  },
+  "artifacts": {
+    "csv": "results\\theory_2026-02-22\\ediag_exact_vs_affine.csv",
+    "pdf": "results\\theory_2026-02-22\\ediag_exact_vs_affine.pdf",
+    "png": "results\\theory_2026-02-22\\ediag_exact_vs_affine.png"
+  }
+}
