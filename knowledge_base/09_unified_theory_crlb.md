@@ -60,6 +60,6 @@ Previous heuristic papers claimed +55.7% collision reductions using severe extre
 
 ## 6. Verifiable Implications (Section 4 Predictions)
 
-1.  **Phase Transition Crossover ($\gamma^*$):** Datasets organically transition from $p<0.5 \implies$ Standard RoPE to $p>0.5 \implies$ Convex Anchor density.
+1.  **Phase Transition Crossover & Scale Collapse ($\gamma^*$):** Datasets organically transition from uniform randomness ($p \to 0$) to structured syntax ($p \to 1$). We mathematically trace a critical topological inversion point $p^*$. Yet, crucially, as sequence scale radically extends ($L/b \ge 100$), background isotropic padding mechanically overwhelms local syntax, and the transition threshold collapses toward pure Standard RoPE optimality ($p^* \approx 0.0007$).
 2.  **Base Expansion Divergence:** Contrary to consensus, aggressively increasing $b$ (e.g., $10^4 \to 5\cdot 10^5$ in LLaMA-3) while maintaining $L$ amplifies the mathematical optimality mismatch error ($\mathcal{O}(\frac{\ln b}{\ln L})$ increases). Massive Base scaling *exacerbates* the need for continuous variational modification, rather than fixing it.
 3.  **Layer-wise Continuous RoPE (L-CRoPE):** Because shallow multi-head attention acts locally ($\gamma_{\text{high}}$) and deep layers act globally ($\gamma_{\text{low}}$), static curves are structurally suboptimal. Dynamic $\rho^*_l(\phi)$ assignment per-layer constitutes the deterministic path to optimal infinite-sequence encoding.

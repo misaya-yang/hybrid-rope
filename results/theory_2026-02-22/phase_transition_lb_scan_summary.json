@@ -1,0 +1,76 @@
+{
+  "device": "cuda",
+  "d": 128,
+  "base": 10000.0,
+  "alpha": 0.2,
+  "poly_power": 2.0,
+  "chunk_size": 262144,
+  "ratios": [
+    1.6,
+    10.0,
+    100.0,
+    1000.0
+  ],
+  "summary": [
+    {
+      "ratio_L_over_b": 1.6,
+      "L": 16000,
+      "C_unif_geo": 0.013479126506330636,
+      "C_unif_hybrid": 0.011175385388756566,
+      "C_pow_geo": 0.3028424922115786,
+      "C_pow_hybrid": 0.2472355337562444,
+      "p_star": 0.0,
+      "c_star": 0.013479126506330636,
+      "exact_crossing": false,
+      "delta_at_p0": -0.00230374111757407,
+      "delta_at_p1": -0.0556069584553342
+    },
+    {
+      "ratio_L_over_b": 10.0,
+      "L": 100000,
+      "C_unif_geo": 0.007918157093914361,
+      "C_unif_hybrid": 0.007827631475431153,
+      "C_pow_geo": 0.25798620917421605,
+      "C_pow_hybrid": 0.2108471247020304,
+      "p_star": 0.0,
+      "c_star": 0.007918157093914361,
+      "exact_crossing": false,
+      "delta_at_p0": -9.052561848320838e-05,
+      "delta_at_p1": -0.04713908447218565
+    },
+    {
+      "ratio_L_over_b": 100.0,
+      "L": 1000000,
+      "C_unif_geo": 0.007798218607920151,
+      "C_unif_hybrid": 0.007828145742255531,
+      "C_pow_geo": 0.21795145774683072,
+      "C_pow_hybrid": 0.1783622058130876,
+      "p_star": 0.0007553698748769125,
+      "c_star": 0.007956962033873487,
+      "exact_crossing": true,
+      "delta_at_p0": 2.9927134335380398e-05,
+      "delta_at_p1": -0.03958925193374313
+    },
+    {
+      "ratio_L_over_b": 1000.0,
+      "L": 10000000,
+      "C_unif_geo": 0.0078110208176101785,
+      "C_unif_hybrid": 0.007811284879296202,
+      "C_pow_geo": 0.18897028796159873,
+      "C_pow_hybrid": 0.15483927294912,
+      "p_star": 7.736647825283935e-06,
+      "c_star": 0.007812422383060358,
+      "exact_crossing": true,
+      "delta_at_p0": 2.6406168602329666e-07,
+      "delta_at_p1": -0.03413101501247873
+    }
+  ],
+  "artifacts": {
+    "csv": "results\\theory_2026-02-22\\phase_transition_lb_scan.csv",
+    "json": "results\\theory_2026-02-22\\phase_transition_lb_scan_summary.json",
+    "delta_plot_pdf": "results\\theory_2026-02-22\\phase_transition_lb_scan_delta.pdf",
+    "delta_plot_png": "results\\theory_2026-02-22\\phase_transition_lb_scan_delta.png",
+    "scores_plot_pdf": "results\\theory_2026-02-22\\phase_transition_lb_scan_scores.pdf",
+    "scores_plot_png": "results\\theory_2026-02-22\\phase_transition_lb_scan_scores.png"
+  }
+}
