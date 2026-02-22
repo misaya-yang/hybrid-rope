@@ -1,98 +1,48 @@
-# 实验结果（中文）
+# 实验结果汇总 (Paper Metrics & Results)
 
-本文件汇总当前已完成的关键结果，并给出“论文口径”建议（哪些能下结论，哪些必须等更多 seed/更大模型验证）。
+> 最后更新：2026-02-22
+> ⚠️ **所有下表数字必须可在 `EXPERIMENT_REGISTRY.md` 指向的真实脚本日志和 JSON 中查实。**
 
-## 1. 50M：unified_search 小规模扫描（单 seed）
+## 1. 规模化扩展训练 (Scaling from Scratch)
 
-实验脚本：`a100/unified_search.py`  
-数据/训练/评测定义见：`docs/METHODOLOGY.md`
+在 50M、100M、350M 上进行标准从零预训练（基于 TinyStories 数据流）。结果标明：在相同的 $\theta$ 倍率上限环境里，通过改变重分布曲线并固定一部分极高频，泛化 PPL 获得坚实的下降。
 
-### 1.1 A100（split A）最优结果（按 PPL@16384 升序）
+### 1.1 主表：Across Scales的 16K 长程 PPL
 
-来源：`results/unified_search/results_A.json`
+| Model Size | PPL@16K (Geo) | PPL@16K (Hybrid) | Relative Gain | Protocol Source | Data Source JSON |
+|------------|--------------|----------------|--------------|-----------------|------------------|
+| **50M** (n=3 seed) | 18.21 $\pm$ 0.77 | **17.32 $\pm$ 0.36** | **-4.9%** | `EXP_50M_3SEED` | `results/evidence_chain_50m_3cfg3seed/results.json` |
+| **100M** (seed=42) | 10.89 | **9.42** | **-13.5%** | `EXP_100M_FINAL`| `artifacts/a100_2026-02-13/data/100m_scaling/` |
+| **350M** (seed=42) | 14.65 | **12.65** | **-13.7%** | `EXP_350M_FINAL`| `artifacts/a100_2026-02-13/data/350m_final/results.json` |
 
-| Config | PPL@2048 | PPL@16384 | 备注 |
-|---|---:|---:|---|
-| `anchpoly_p3.9_omf0.3_t500k` | 6.578 | 16.459 | 单次 run 看起来略优于 geo_500k |
-| `geo_500k_ALIGN` | 6.804 | 16.991 | 高 theta baseline |
+## 2. 渐进式基线对比 (Against YaRN Baseline)
 
-### 1.2 A800（split B）最优结果（按 PPL@16384 升序）
+以 YaRN（基于温度调节和渐进波段）作为基准进行比较，验证静态形状调节在原生阶段相比动态插值策略的优势。
 
-来源：`results/unified_search/results_B.json`（如果你本地暂时没同步到，可从远端拉取）
+### 2.1 50M 等级对比 PPL
 
-| Config | PPL@2048 | PPL@16384 | 备注 |
-|---|---:|---:|---|
-| `hybrid_a0.2_t100k` | 6.658 | 16.316 | 单次 run 显著优于 geo_500k |
-| `geo_500k_ALIGN` | 6.852 | 17.947 | 高 theta baseline |
+| Context Length | Geo (Standard) | YaRN (Progressive) | Anchored Hybrid |
+|----------------|----------------|--------------------|-----------------|
+| **2048** (Train) | 6.84 | 6.84 | **6.67** |
+| **4096** | 7.05 | 8.64 | **6.75** |
+| **8192** | 8.83 | 16.90 | **8.69** |
+| **16384** | 17.97 | 39.48 | **16.86** |
 
-**结论（单 seed 级别）：**
+**JSON 溯源**: `results/50m_yarn_compare_v2/results.json` (`EXP_50M_YARN`)
 
-- `hybrid_a0.2_t100k` 有很强信号：用 `theta=100k` 的 hybrid，可以打赢 `theta=500k` 的 geometric。
-- `anchpoly_p3.9_omf0.3_t500k` 的优势较小，必须做多 seed 才能确认是不是“lucky seed”。
+## 3. 长程崩溃率机理验证 (Phase 4 Evaluator)
 
-## 2. 50M：3 配置 × 3 seed 稳健性验证（论文级关键）
+针对 `~124M` 参数级别的连续流动态评估：当逼近 32K 上下文时，传统均匀拉伸策略引发 D分布剧烈崩塌。
 
-脚本：`a100/unified_search_3cfg_3seed.py`  
-结果：`results/unified_search_3cfg_3seed/results.json`
+| 方法 (Freq Strategy) | 2K PPL | 8K PPL | 16K PPL | 32K PPL | Collapse Multiple (32K/2K) |
+|---|---|---|---|---|---|
+| **Standard (Geo)** | 24.2 | 41.0 | 56.1 | 412.8 | 17.0x |
+| **Sigmoid** | **20.9** | **24.7** | **19.0** | **147.5** | **7.0x** |
 
-Seeds：`[42, 123, 7]`
+**CSV 溯源**: `sigmoid_rope_experiments/data/ppl_vs_length.csv` (`EXP_PHASE4_124M`)
 
-### 2.1 mean ± std（以 PPL@16384 为外推主指标）
+## 4. 8B 大规模微调模型比较
 
-| Config | PPL@2048 (mean±std) | PPL@16384 (mean±std) |
-|---|---:|---:|
-| `geo_500k` | 6.826 ± 0.048 | 18.207 ± 0.768 |
-| `hybrid_a0.2_t100k` | 6.699 ± 0.168 | **17.324 ± 0.360** |
-| `anchpoly_p3.9_omf0.3_t500k` | 6.634 ± 0.192 | 19.133 ± 1.135 |
+> 🚧 **状态：In-Progress** (待本夜 Overnight 跑数完成)。当前的所有占位均依赖公平协议架构 `EXP_8B_FAIR_LORA`。以前使用的 YaRN 与旧版 Hybrid 由于非公平面临 `rope_scaling` vs Monkey Patch 的争议，已列入禁止直接引用的黑名单档（详情见 `TERMS_AND_PROTOCOLS.md`）。
 
-### 2.2 论文口径（可直接写）
-
-- **主结论（稳健）：** `hybrid_a0.2_t100k` 在 3 个 seed 下，`PPL@16384` 的 **均值优于** `geo_500k`，且 std 更小，说明“hybrid 替代极大 theta”不是偶然。
-- **否定结论（同样有价值）：** `anchpoly_p3.9_omf0.3_t500k` 在多 seed 下 **均值更差且方差更大**，单次 run 的 16.459 更像是 lucky draw 或数据流噪声，不建议将其作为主结论。
-
-## 3. 350M：终极规模验证（已完成，seed=42）
-
-脚本：`a100/run_350m_final.py`  
-远端日志：`/opt/dfrope/results/350m_final/run.log`
-
-结果文件：
-- `results/350m_final/results.json`
-- `results/350m_final/run.log`
-
-### 3.1 核心结果（PPL）
-
-| Length | geo_500k | hybrid_a0.2_t100k |
-|---|---:|---:|
-| 2048 | 2.477 | 2.467 |
-| 3072 | 2.511 | 2.489 |
-| 4096 | 2.784 | 2.606 |
-| 5120 | 3.213 | 2.808 |
-| 6144 | 3.920 | 3.349 |
-| 8192 | 5.452 | 4.726 |
-| 12288 | 10.370 | 8.814 |
-| 16384 | 14.653 | **12.646** |
-
-### 3.2 结论
-
-- 在 350M 上，`hybrid_a0.2_t100k` 仍然显著优于 `geo_500k`。
-- 主指标 `PPL@16384`：
-  - `geo_500k = 14.653`
-  - `hybrid = 12.646`
-  - 相对提升约 **13.7%**
-
-这说明“hybrid 用中等 theta 替代极大 theta”不是仅限 50M 小模型的现象，在更大规模上依然成立（至少在当前 seed=42 和相同协议下成立）。
-
-## 4. 50M：Hybrid vs Geo vs YaRN（修正版）
-
-结果文件：`results/50m_yarn_compare_v2/results.json`  
-完整说明：`docs/YARN_COMPARISON_2026-02-13.md`
-
-| Length | Hybrid (native) | Geo (native) | Geo + YaRN (progressive) |
-|---|---:|---:|---:|
-| 2048 | **6.672** | 6.839 | 6.839 |
-| 4096 | **6.748** | 7.045 | 8.640 |
-| 8192 | **8.688** | 8.833 | 16.899 |
-| 12288 | **13.333** | 13.588 | 29.352 |
-| 16384 | **16.861** | 17.966 | 39.479 |
-
-补充说明：该版本已修正 YaRN 评测口径（训练长度 2048 不缩放，仅在超出训练长度时渐进缩放）。
+*（预期放置：不同方法的 Training Loss Curve 对比、NIAH 热力图矩阵与 LongBench 打分表现）。*

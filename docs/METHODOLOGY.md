@@ -1,79 +1,44 @@
-# 方法说明（中文）
+# 方法论与公平评测协议 (Methodology & Fair Evaluation Protocol)
 
-本文档解释：我们到底“改了什么”、以及为什么这仍在 RoPE 的“合法空间”内（不破坏 Translation Invariance, TI）。
+> 最后更新：2026-02-22
+> 供学术发表与审稿复现参考的底层机制说明。
 
-## 1. 核心变量：频率集合 `ω_k`
+## 1. 核心数学重塑 (Core Mathematical Reformulation)
 
-在每个 head 的 RoPE 里（本项目常用 `head_dim=64`），有：
+在每个注意力头（典型 `head_dim=64`）中，我们拥有 $K = \text{head\_dim} / 2 = 32$ 个维度的旋转频率 $\omega_k$。距离为 $d$ 时的相位差由 $\Delta\phi_k(d) = \omega_k \cdot d$ 决定。这确保了严谨的平移不变性 (Translation Invariance, TI)。
 
-- `K = head_dim / 2 = 32` 个频率通道
+我们的方法不同于通过标量拉伸 $\theta$，而是通过构造**形状映射**来重分配频带资源的策略。
 
-相对距离 `d` 的相位差形式仍然是：
+### 1.1 频率分布函数实现
 
-- `Δφ_k(d) = ω_k * d`
-
-因此 TI 仍成立：编码只依赖距离 `d`，不依赖绝对位置。
-
-我们做的唯一改变是：重新设计 `ω_k`（或等价的 `inv_freq[k]`）的分布。
-
-## 2. 频率函数（必须逐字一致）
-
-下面三段函数是我们全套实验的“不可变核”，在 50M/350M 实验中保持一致（任何改动都属于 definition drift，会让结果不可对比）。
+所有代码逻辑必须基于以下不可突变的基础函数进行计算：
 
 ```python
+# 基线: 数学原生的几何级数 (Standard RoPE)
 def geometric_freq(K, theta):
     k = torch.arange(K, dtype=torch.float32)
     return 1.0 / (theta ** (2 * k / (2 * K)))
 
-def anchored_poly_freq(K, theta_base, p=3.9, omf=0.3):
-    k = torch.arange(K, dtype=torch.float32)
-    geo = geometric_freq(K, theta_base)
-    omega_max = geo[0].item()
-    omega_min = geo[-1].item() * omf
-    t = k / (K - 1)
-    log_omega = math.log(omega_max) + (t ** p) * (math.log(omega_min) - math.log(omega_max))
-    return torch.exp(log_omega)
-
+# 方案: 高频绝对锚定+中低频平滑凸组合 (Anchored Hybrid)
+# 本项目提倡以 "rigid core" 保护高频段以维持局部结构完整性
 def hybrid_freq(freq_a, freq_b, alpha):
     return (1 - alpha) * freq_a + alpha * freq_b
 ```
 
-解释：
+## 2. 严密的公平比较原则 (Strict Fairness Protocols)
 
-- `geometric_freq`：标准等比频谱（对应 RoPE 传统 `theta` 参数）
-- `anchored_poly_freq`：固定端点（`omega_max/omega_min`）后，在 log 空间用 `t^p` 做非线性插值，改变“中频”分配
-- `hybrid_freq`：两组频谱的凸组合（不改变 TI），用于验证“较小 theta + 频谱重分配”是否可替代“极大 theta”
+当我们评价现有方法（PI, YaRN）与形状调节方法时的底层规范：
 
-## 3. 训练与评测定义（避免 definition drift）
+### 2.1 频率注入的唯一出口：`inv_freq` Buffer Mutation
+**[Critical Requirement]** 过去文献（和早期的 HF 实现）通过定义前向 `rope_scaling` 甚至猴子补丁 (monkey patch) 修改注意力传播路径，这在框架计算层面引发了不平等的计算误差。
+为此，项目中强制移除所有的挂载式代码，所有策略的对比必须体现为 `model.model.rotary_emb.inv_freq.copy_(target_omega)` 的静态显存替换。
+- `model.config.rope_scaling = None`
 
-### 3.1 数据
+### 2.2 评估协议：数据确定性 (Deterministic Evaluation)
+- **Token 流切割**: 使用固定验证集上的滑动窗口计算（即 Chunk 0 为 `val[0:L]`, Chunk 1 为 `val[L:2L]`...）。在同等 Token 容量下排除了 PPL 计算的偶然波动。
 
-- TinyStories streaming + `gpt-neox-20b` tokenizer
-- `encode(add_special_tokens=False)`
-- 训练：取前 N 个 tokens（N=50M 或 500M）
-- 验证：取前 5M tokens
+## 3. 指标定义口径
 
-### 3.2 评测 slicing（非常关键）
-
-对每个评测长度 `L`，取连续的 `EVAL_CHUNKS` 个 chunk：
-
-- chunk 0：`val[0:L]`
-- chunk 1：`val[L:2L]`
-- ...
-
-好处：
-
-- 给定同一 `val` token 流时完全确定性
-- 易于复现与对比
-
-### 3.3 报告指标
-
-- `PPL@2048`：训练长度内质量（必须不崩）
-- `PPL@16384`：外推能力主指标
-- 多 seed：以 `mean ± std` 为最终结论依据
-
-## 4. 为什么不上传权重 / memmap cache
-
-- 权重：体积大，且本工作目标是对比结论可复现，不是 release 模型。
-- memmap cache：500M tokens 级别可能上百 GB，不适合 GitHub；cache 可由脚本用 streaming 重建。
-
+- **Perplexity (PPL)**: 利用验证集的 Causal Language Modeling 极大似然底数，主要观测长片段下的稳定度（如 `PPL@16K`, `PPL@32K`）。
+- **Needle In A Haystack (NIAH)**: 必须采取 10 级背景长度和 11-级深度的综合热力图探针测试，评价文档找回。
+- **LongBench**: 综合代码补全、长篇阅读理解和多文档检索的 F1 / ROUGE-L 指标。

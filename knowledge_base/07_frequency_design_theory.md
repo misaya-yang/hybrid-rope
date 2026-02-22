@@ -101,10 +101,12 @@ This provides a **theoretically grounded** way to choose RoPE parameters:
 The "range matching" principle is now quantified:
 
 - **Target length L determines required base**
-- **base ≈ 0.3 × L** is the optimal choice
+- **base ≈ 0.3 × L** is the optimal choice for pure phase coverage
 - **When base is insufficient**, use scaling methods (NTK/YaRN/Sigmoid)
 
-This provides a clear, principled guideline for RoPE frequency design.
+### The Base Expansion Dilemma (Critical Limitation)
+
+While we can theoretically extend context by scaling base to massive values (e.g., 500k), this induces a severe **High-Frequency Resolution Collapse**. A massive base artificially compresses the high-frequency bandwidth, destroying local syntactical tracking and degrading tasks like Needle-In-A-Haystack. Therefore, for extremely long contexts, standard Geometric RoPE is structurally flawed, requiring the **Anchored Hybrid** approach to explicitly protect local resolution while scaling the low-frequency tail.
 
 ---
 

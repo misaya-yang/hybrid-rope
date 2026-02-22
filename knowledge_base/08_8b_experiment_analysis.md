@@ -1,97 +1,48 @@
-# 8B LoRA 实验分析
+# 8B LoRA 实验分析 (8B LoRA Experiment Analysis)
 
-> 最后更新：2026-02-22（标记旧问题状态、新增公平实验设计）
+> 最后更新：2026-02-22
+> 本文档记录 8B 规模实验的历史探索、失败分析与最新的公平重构方案。
 
-## 1. 旧实验问题诊断（全部已修复 ✅）
+## 1. TL;DR
 
-### Issue 1：不公平比较 → ✅ 已修复
+- **旧版实验协议不公平**：早期的 8B Hybrid 实验由于使用了 forward monkey patch 而基线使用了 `rope_scaling`，导致底层核不一致，测试结果不可比且性能崩塌 (PPL@16K 达 11.8+)。
+- **参数未调优饿死中频**：旧版缺乏 `rigid_j0` 高频锚定保护，导致中频信息分配不足，NIAH 等针刺任务失败。
+- **已启动公平校验链**：全部重构为基于 `inv_freq.copy_()` 的统一注入法。当前 overnight 脚本正在运行 4 种方法（Baseline, PI, YaRN, Anchored Hybrid）的公平对比。
 
-| 问题 | 旧做法 | 新做法 |
-|------|--------|--------|
-| RoPE 实现 | YaRN/PI 用 `rope_scaling`，Hybrid 用 monkey patch | 统一 `inv_freq.copy_()` buffer 覆写 |
-| Config 污染 | YaRN 修改 `model.config.rope_scaling` | 强制 `rope_scaling=None` |
-| Forward patch | Hybrid 替换 forward 函数 | 禁止任何 forward monkey patch |
+## 2. Claims (论文可用主张)
 
-### Issue 2：超参不一致 → ✅ 已修复
+- **Claim 1 (Methodology)**: 评价频率缩减方法必须在相同的底层实现机制下进行，否则会引入框架误差。
+  - *置信度*: High
+  - *适用范围*: 扩展所有长文本 Llama 架构
+  - *证据指针*: `scripts/debug_sigmoid_rope.py` (探针修复)
+- **Claim 2 (Failure Mode)**: 极端高频直接缩放会导致局部注意力模板遗忘，引发零射击能力丧失和长程 PPL 劣化。
+  - *置信度*: High
+  - *适用范围*: 8B 及以上指令微调模型
+  - *证据指针*: [-> BAD_8B_LORA_OLD] 历史运行记录与模型崩溃日志。
 
-所有方法现在锁定完全相同的训练超参：
+## 3. Evidence Map
 
-| 参数 | 值 |
-|------|-----|
-| batch_size × grad_accum | 2 × 2 = 4 |
-| learning_rate | 2e-4 |
-| max_steps | 600 |
-| attention | sdpa（强制） |
-| LoRA rank/alpha | 64/128 |
-| LoRA targets | q,k,v,o_proj |
-| bf16 | True |
-| gradient_checkpointing | True (use_reentrant=False) |
+| 实验 | 实验路径 / 数据路径 | 核心产物 | 可复现命令 / 脚本 |
+|------|-------------------|----------|------------------|
+| **旧版不公平实验 (废弃)** | `knowledge_base/08_8b_experiment_analysis.md` (旧版留存) | PPL劣化日志 | *(Deprecated)* |
+| **新版公平流水线 (进行中)** | `results/overnight_8h/summary/` | 统一的 loss 与 NIAH | `scripts/run_overnight_8h.py` |
+| **验证探针与数值测试** | `2026-02-22/scripts/_test_inject.py` | 验证 `inv_freq` 注入成功 | `python 2026-02-22/scripts/_test_inject.py` |
 
-### Issue 3：Hybrid 超参未调优 → ✅ 重新设计
+## 4. Failure & Fix (失败与修复)
 
-旧 Hybrid 使用 `compute_hybrid_inv_freq` 的固定参数（split_ratio=0.5, alpha=0.2, p=3.9）。
+- **Failure**: 旧版 Hybrid 方法 PPL@16K 为 11.875，远逊于 PI 的 6.136。
+  - *原因*: 实现层面的不一致造成了 flash attention 核的行为差异；缺乏高频保护导致局部指令连贯性受损。
+- **Fix**: 
+  - 弃用 forward patch，统一通过 `.copy_()` 将四种策略的具体频率张量注入 `inv_freq` buffer。
+  - 强制设定 `rope_scaling=None`。
+  - 引入了 `rigid_j0=12` 的位级对齐保护核心高频。
 
-新方法 `anchored_hybrid` 采用物理更清晰的设计：
-- **rigid_j0=12**：前 12 对高频与 baseline 精确相同（bitwise equal）
-- **tail_base = base × scale²**：低频段使用更大 base（严格 > 原 base）
-- **cosine ramp + alpha blend**：平滑过渡，无硬拼接
+## 5. What to write in paper (论文段落建议)
 
-### Issue 4：Device mismatch → ✅ 已修复
+**段落：Implementation Mirages in Length Extension**
+> "When scaling position encodings, seemingly innocuous implementation details—such as whether frequencies are overridden via buffer mutation or scaling APIs—can confound comparative evaluations. In our early 8B LoRA experiments, we observed that mixing arbitrary forward patch mechanisms with native scaling heuristics exaggerated the gap between methods, rendering ablation studies unreliable. To establish a rigorous testbed, we unify all interpolation techniques under a strict `inv_freq` injection protocol..."
 
-验证探针使用 `next(model.parameters()).device` 而非硬编码 `cuda:0`。
+## 6. Open Questions
 
-### Issue 5：BOS token 丢失 → ✅ 已修复
-
-截断逻辑保留 `[BOS] + tail` 而非纯尾截断。
-
-### Issue 6：inv_freq 注入可能失效 → ✅ 已加防御
-
-运行时探针检测 inv_freq 是否被 forward 真正消费。
-
----
-
-## 2. 新公平实验设计
-
-### 脚本
-
-- 训练：`2026-02-22/scripts/run_llama8b_fair_suite.py`（830 行，含所有安全检查）
-- 流水线：`2026-02-22/scripts/run_overnight_8h.py`（606 行，4-gate 自动化）
-
-### 4 个方法
-
-| 方法 | inv_freq 计算方式 | 特点 |
-|------|------------------|------|
-| baseline | 原始几何频率 | 对照组 |
-| PI | `base_inv / scale` | 位置插值 |
-| YaRN | progresssive ramp + temperature | 渐进插值 |
-| anchored_hybrid | rigid core + cosine-ramp blend | **我们的方法** |
-
-### 评测
-
-- NIAH 热力图：[4K, 8K, 16K, 32K] × 11 depth × 3 trials
-- 训练 loss 曲线
-- 基于 baseline（无 LoRA）的参考线
-
-### 安全检查链
-
-1. `model.config.rope_scaling == None` 断言
-2. inv_freq shape/dtype 匹配检查
-3. rigid core bitwise equal 验证
-4. 运行时 logit diff 探针
-5. BOS 保留验证
-
----
-
-## 3. 旧实验结果存档（仅供参考）
-
-| 方法 | train_loss | PPL@16K | PPL@32K | 状态 |
-|------|-----------|---------|---------|------|
-| YaRN (旧) | 1.7248 | 6.0566 | 6.2702 | ⚠️ 旧协议 |
-| PI (旧) | 1.9493 | 6.1369 | 6.3100 | ⚠️ 旧协议 |
-| Hybrid (旧) | 2.0565 | 11.8753 | 77.1381 | ❌ 不公平比较 |
-
-**这些数据不应在论文中引用**，等待新公平实验结果替代。
-
----
-
-*分析完成：2026-02-22 01:50*
+- 新的严格公平协议下，`anchored_hybrid` 能否在 NIAH 任务中反超 YaRN？
+- 如果 8B LoRA 的效果差距收窄，是否意味着 Llama-3 原生的注意力机制掩盖了部分频率重塑的带来的 PPL 增益？(取决于 overnight 数据)

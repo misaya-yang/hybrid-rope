@@ -155,8 +155,9 @@ This is a significant finding that requires theoretical reconsideration:
 ### 4.3 Implications
 
 1. **For Theorem 1**: The prediction holds - geometric is optimal under Uniform
-2. **For the paper narrative**: The "D(Δ) determines optimal method" claim needs stronger evidence
-3. **For future work**: Need to reconsider whether frequency shape (vs base) is the right design dimension
+2. **For the paper narrative**: The "D(Δ) determines optimal method" claim needs stronger evidence.
+3. **The "Trade-off" Insight (Core Contribution)**: While increasing `base` mathematically optimizes Phase Collision over long contexts, doing so blindly causes severe **High-Frequency Collapse**. It compresses the high-frequency dimensions responsible for local syntax and precise retrieval.
+4. **Conclusion**: Pure Geometric scaling is a mathematical trap for extreme contexts. The true optimal frequency allocation must **Anchor** high frequencies (preserving local resolution) while redistributing mid/low frequencies to minimize Phase Collisions (our Anchored Hybrid method).
 
 ---
 
@@ -188,15 +189,14 @@ This is a significant finding that requires theoretical reconsideration:
 ## 7. Discussion Points for Advisor
 
 1. **Is the "frequency shape" design dimension meaningful?**
-   - V2 suggests base selection matters more than shape
+   - V2 suggests base selection matters more than shape for *pure long-range Phase Collision*.
+   - **However**, shape design becomes critical when we consider the trade-off. We must alter the shape to preserve high-frequency anchoring (which base-scaling destroys).
    
 2. **Should we reconsider the theoretical framework?**
-   - Perhaps the optimization target should be different
+   - Yes. The optimization target should explicitly penalize the loss of high-frequency local discrimination (Fisher Information).
    
 3. **What's the path forward?**
-   - Option A: Keep exploring frequency shapes with different formulations
-   - Option B: Accept that geometric is near-optimal, focus on other aspects
-   - Option C: Theoretically justify why different bases are needed
+   - Pivot the narrative to the "Trade-off Story": We introduce Anchored Hybrid to balance theoretical Phase Collision metrics with practical short-range resolution logic.
 
 ---
 
