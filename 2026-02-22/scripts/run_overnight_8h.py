@@ -47,7 +47,7 @@ BASE_MODEL = "/root/autodl-tmp/dfrope/ms_models/LLM-Research/Meta-Llama-3-8B-Ins
 OUTPUT_ROOT = REPO_ROOT / "results" / "overnight_8h"
 
 METHODS = ["baseline", "pi", "yarn", "anchored_hybrid"]
-TRAIN_STEPS = 600
+TRAIN_STEPS = 300
 MAX_SEQ_LEN = 16384
 SEED = 42
 
@@ -176,7 +176,7 @@ def gate1_training(calib_ok: Dict[str, bool]) -> Dict[str, Optional[Path]]:
             "--max_seq_len", str(MAX_SEQ_LEN),
             "--seed", str(SEED),
         ]
-        rc, output = run_subprocess(args, f"GATE1/{method}", timeout=7200)
+        rc, output = run_subprocess(args, f"GATE1/{method}", timeout=36000)
         dt = elapsed_str(t0)
 
         if rc == 0 and adapter_dir.exists():

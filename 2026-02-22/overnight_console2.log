@@ -1,0 +1,20 @@
+[00:00:00] [MAIN] ============================================================
+[00:00:00] [MAIN] Overnight 8h Experiment Suite — Starting
+[00:00:00] [MAIN] Methods: ['baseline', 'pi', 'yarn', 'anchored_hybrid']
+[00:00:00] [MAIN] Train: 600 steps @ 16384 ctx
+[00:00:00] [MAIN] NIAH: lengths=[4096, 8192, 16384, 32768] depths=11 trials=3
+[00:00:00] [MAIN] Output: /root/autodl-tmp/dfrope/hybrid-rope/results/overnight_8h
+[00:00:00] [GATE0] ============================================================
+[00:00:00] [GATE0] Calibration check for all methods
+[00:00:00] [GATE0/baseline] CMD: /root/miniconda3/bin/python /root/autodl-tmp/dfrope/hybrid-rope/2026-02-22/scripts/run_llama8b_fair_suite.py --method baseline --run_name calib_baseline...
+[00:00:05] [GATE0]   baseline: OK, patched 1 layers
+[00:00:05] [GATE0/pi] CMD: /root/miniconda3/bin/python /root/autodl-tmp/dfrope/hybrid-rope/2026-02-22/scripts/run_llama8b_fair_suite.py --method pi --run_name calib_pi...
+[00:00:11] [GATE0]   pi: OK, patched 1 layers
+[00:00:11] [GATE0/yarn] CMD: /root/miniconda3/bin/python /root/autodl-tmp/dfrope/hybrid-rope/2026-02-22/scripts/run_llama8b_fair_suite.py --method yarn --run_name calib_yarn...
+[00:00:16] [GATE0]   yarn: OK, patched 1 layers
+[00:00:16] [GATE0/anchored_hybrid] CMD: /root/miniconda3/bin/python /root/autodl-tmp/dfrope/hybrid-rope/2026-02-22/scripts/run_llama8b_fair_suite.py --method anchored_hybrid --run_name calib_anchored_hybrid...
+[00:00:22] [GATE0]   anchored_hybrid: OK, patched 1 layers
+[00:00:22] [GATE0] Calibration: 4/4 passed
+[00:00:22] [GATE1] ============================================================
+[00:00:22] [GATE1] Full training: 600 steps × 4 methods @ 16384 ctx
+[00:00:22] [GATE1/baseline] CMD: /root/miniconda3/bin/python /root/autodl-tmp/dfrope/hybrid-rope/2026-02-22/scripts/run_llama8b_fair_suite.py --method baseline --run_name train_baseline...
