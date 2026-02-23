@@ -1,0 +1,457 @@
+{
+  "meta": {
+    "timestamp": "2026-02-23_18:17:23",
+    "base_model_path": "/root/autodl-tmp/dfrope/ms_models/LLM-Research/Meta-Llama-3-8B-Instruct",
+    "hybrid_adapter_path": "/root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_v2_longbench_stable_20260223_0150/sigmoid/final_lora",
+    "custom_inv_freq_path": "/root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_v2_longbench_stable_20260223_0150/sigmoid/artifacts/custom_inv_freq.pt",
+    "tasks": [
+      "qasper",
+      "hotpotqa",
+      "2wikimqa",
+      "multi_news",
+      "gov_report",
+      "narrativeqa"
+    ],
+    "max_samples_per_task": 80,
+    "max_input_tokens": 16384,
+    "attn_implementation": "sdpa",
+    "variant": "custom",
+    "rope_factor": 8.0,
+    "orig_ctx": 8192,
+    "rope_theta": 500000.0
+  },
+  "models": {
+    "base_unfinetuned": {
+      "attn_used": "sdpa",
+      "variant_used": "base",
+      "rope_used": null,
+      "tasks": {
+        "qasper": {
+          "task": "qasper",
+          "metric": "f1",
+          "num_scored": 80,
+          "score": 0.06704590988687531,
+          "examples": [
+            {
+              "index": 66,
+              "question": "",
+              "prediction": "The DeepMine database is a large-scale speech corpus that was collected using crowdsourcing and contains text-dependent and text-prompted speaker verification data in Persian and English, as well as text-independent speaker verification and speech recognition data in Persian. The database is publicly available and can be used to evaluate the performance of different speaker verification",
+              "reference_0": "Android application",
+              "score": 0.0,
+              "context_preview": "Introduction\nNowadays deep learning techniques outperform the other conventional methods in most of the speech-related tasks. Training robust deep neural networks for each task depends on the availability of powerful processing GPUs, as well as standard and large scale datasets. In text-independent "
+            },
+            {
+              "index": 187,
+              "question": "",
+              "prediction": "The corpus is a collection of 53 medical case reports with manual annotations of medical entities, including cases, conditions, factors, findings, and modifiers. The annotations are based on the CARE guidelines and were performed by medical doctors experienced in extracting knowledge from texts. The corpus is available in BioC JSON format and can be used",
+              "reference_0": "8,275 sentences and 167,739 words in total",
+              "score": 0.10169491525423728,
+              "context_preview": "Introduction\nThe automatic processing of medical texts and documents plays an increasingly important role in the recent development of the digital health area. To enable dedicated Natural Language Processing (NLP) that is highly accurate with respect to medically relevant categories, manually annota"
+            },
+            {
+              "index": 101,
+              "question": "",
+              "prediction": "The question is not provided. However, based on the context, it seems that the question is related to the topic of propaganda detection and the use of BERT in this context. The answer would likely involve discussing the strengths and limitations of the approach, as well as potential future directions for research.",
+              "reference_0": "Unanswerable",
+              "score": 0.0,
+              "context_preview": "Introduction\nThe challenges of imbalanced classification—in which the proportion of elements in each class for a classification task significantly differ—and of the ability to generalise on dissimilar data have remained important problems in Natural Language Processing (NLP) and Machine Learning in "
+            }
+          ]
+        },
+        "hotpotqa": {
+          "task": "hotpotqa",
+          "metric": "f1",
+          "num_scored": 80,
+          "score": 0.008839244089244089,
+          "examples": [
+            {
+              "index": 66,
+              "question": "",
+              "prediction": "The\n\n The\n\nThe\n\n The\n\n The\n\n The\n\n The\n\n The\n C\n\n The\n\n The\n\n The\n\n The\n The\n\n The\n C\nFirst as the 7\n\n The\n\n The 1\n\n The\n\n The\n\n The 1\n\n The first\n\n The 1\n9\nthe",
+              "reference_0": "Deftones",
+              "score": 0.0,
+              "context_preview": "Passage 1:\nAdrenaline (album)\nAdrenaline is the debut studio album by American alternative metal band Deftones, released on October 3, 1995, by Maverick Records. The majority of the album was produced by Terry Date, while a hidden track titled \"Fist\" was produced by Ross Robinson.\n\nBackground and re"
+            },
+            {
+              "index": 187,
+              "question": "",
+              "prediction": "The correct answer is Passage 1: Pit River Bridge. The Pit River Bridge is a double-deck, deck truss, road and rail bridge over Shasta Lake in Shasta County, California. It was built in 1942 as part of the construction of the Shasta Dam/Shasta Lake reservoir system.",
+              "reference_0": "37.5",
+              "score": 0.0,
+              "context_preview": "Passage 1:\nPit River Bridge\nThe Pit River Bridge (officially the Veterans of Foreign Wars Memorial Bridge) is a double deck, deck truss, road and rail bridge over Shasta Lake in Shasta County, California. The bridge, carrying Interstate 5 on its upper deck and Union Pacific Railroad on its lower dec"
+            },
+            {
+              "index": 101,
+              "question": "",
+              "prediction": "1741\n1741\n1741 the \nPass the \nG\n The 53 \nG\n The 1\n The 174\n The  The 183 the \nthe \nthe \nthe \nthe \nthe \nthe \nthe \nthe \nthe \nThe 1689\n The  The",
+              "reference_0": "King James II of England",
+              "score": 0.0,
+              "context_preview": "Passage 1:\nEnglish general election, 1689\nThe 1689 English general election, held in January 1689, elected the Convention Parliament, which was summoned in the aftermath of the Glorious Revolution. \n513 Members of Parliament were returned, across 53 counties and 217 boroughs in England and Wales, mo"
+            }
+          ]
+        },
+        "2wikimqa": {
+          "task": "2wikimqa",
+          "metric": "rouge_l_f1",
+          "num_scored": 80,
+          "score": 0.02014213277298668,
+          "examples": [
+            {
+              "index": 66,
+              "question": "",
+              "prediction": "The correct answer is Passage 5: Miracle of Marcelino. The passage describes the film \"Miracle of Marcelino\" (1955), a Spanish film written by José Maria Sanchez-Silva, directed by Ladislao Vajda, and starring Juan Calvo and Pablito Calvo. The film is based on a medieval legend and tells the story of a young boy named Marcelino who is abandoned as a baby and grows up in a monastery, where he befriends a statue of Christ that comes to life. The film was a critical and commercial success and has b",
+              "reference_0": "Madrid",
+              "score": 0.0,
+              "context_preview": "Passage 1:\nHenri Verdun\nHenri Verdun (1895–1977) was a French composer of film scores.\n\nSelected filmography\nNapoléon (1927)\nThe Sweetness of Loving (1930)\nThe Levy Department Stores (1932)\nThe Lacquered Box (1932)\nThe Weaker Sex (1933)\nThe Flame (1936)\nGirls of Paris (1936)\nThe Assault (1936)\nLes D"
+            },
+            {
+              "index": 187,
+              "question": "",
+              "prediction": "The passage is about the filmography of various directors, including Sam Newfield, W. Augustus Barratt, Claude Weisz, Eugenio Alabiso, Jacques Décombe, Sepideh Farsi, Fred Roy Krug, Umberto Lenzi, and others. The passages provide information about their lives, careers, and filmographies, including details about their films, awards, and recognition. The passages also include information about the genres and styles of their films, as well as their influences and contributions to the film industry.",
+              "reference_0": "From Corleone To Brooklyn",
+              "score": 0.028571428571428574,
+              "context_preview": "Passage 1:\nSam Newfield\nSam Newfield, born Samuel Neufeld (December 6, 1899 – November 10, 1964), also known as Sherman Scott or Peter Stewart, was an American B-movie director, one of the most prolific in American film history—he is credited with directing over 250 feature films in a career which b"
+            },
+            {
+              "index": 101,
+              "question": "",
+              "prediction": "Johann Christian Gustav Skram. He was the first managing director of the Railway Company of Zealand, from 1844 to 1856, which ran the first railway in Denmark. He was also the father of Danish writer Erik Skram and the second husband of Norwegian writer Amalie Skram.",
+              "reference_0": "yes",
+              "score": 0.0,
+              "context_preview": "Passage 1:\nGustav Skram\nJohan Christian Gustav Skram (13 July 1802 – 7 April 1865) was a Danish railroad director. He was the father of danish writer Erik Skram, the second husband of Norwegian writer Amalie Skram.\n\nCareer\nSkram was the first managing director of the Railway Company of Zealand, from"
+            }
+          ]
+        },
+        "multi_news": {
+          "task": "multi_news",
+          "metric": "rouge_l_f1",
+          "num_scored": 80,
+          "score": 0.12986047345877244,
+          "examples": [
+            {
+              "index": 66,
+              "question": "",
+              "prediction": "The passage is describing the movie \"The Lovely Bones\" directed by Peter Jackson, based on the novel by Alice Sebold. The movie follows the story of a 14-year-old girl named Susie Salmon who is murdered by her neighbor George Harvey and watches her family from the \"in-between\", a world between heaven and earth. The movie explores themes of grief, loss, and the power of love. The passage highlights the performances of the actors, particularly Saoirse Ronan as Susie, and Stanley Tucci as George Ha",
+              "reference_0": "Peter Jackson's crafts a fantastic vision of the afterlife in The Lovely Bones, say critics, but some feel it came at the expense of the human side of the story of a murdered teen, adapted from the book by Alice Sebold. \"By turns warmly sentimental, serial-killer sinister, and science-fiction fantastical, The Lovely Bones was an unlikely book to achieve worldwide success,\" Kenneth Turan writes in the Los Angeles Times. \"Those mismatched elements come back to haunt\" the film version, \"making the ",
+              "score": 0.11726384364820847,
+              "context_preview": "Passage 1:\nBy turns warmly sentimental, serial-killer sinister and science-fiction fantastical, \"The Lovely Bones\" was an unlikely book to achieve worldwide success. In the film version, those mismatched elements come back to haunt the story, so to speak, making the final product more hit-and-miss t"
+            },
+            {
+              "index": 187,
+              "question": "",
+              "prediction": "The answer is \"No\". The convicted white-collar criminal, Shannon Egeland, was sentenced to 10 years in prison for mortgage fraud, and then he staged an insurance scam by having his 17-year-old son shoot him in the leg, hoping to delay his prison sentence and benefit from a disability insurance policy. The scam was quickly detected, and Egeland was sentenced to an additional three years and 10 months in prison. He lost his left leg as a result of the gunshot and had it amputated. He expressed rem",
+              "reference_0": "A white-collar crook is facing extra prison time for having his son shoot him in the legs with a 20-gauge shotgun, the BBC reports. Shannon Egeland, 43, was already facing 10 years for taking part in a vast mortgage-fraud scheme when he had his 17-year-old son shoot him by a road in Caldwell, Idaho, in an attempt to avoid prison. \"The psychological and emotional destruction defendant caused this minor child is unimaginable,\" US attorney Scott Bradford wrote in a sentencing memo. Back in 2009, Eg",
+              "score": 0.2073170731707317,
+              "context_preview": "Passage 1:\nA convicted white-collar criminal was sentenced Wednesday for persuading his son to shoot him in the leg as part of a staged insurance scam a day before he was to set to start serving a decade-long federal prison term from a high-profile mortgage fraud case. NEWLINE_CHAR NEWLINE_CHAR U.S."
+            },
+            {
+              "index": 101,
+              "question": "",
+              "prediction": "The question is asking about the context of the passage and the answer is that Britney Spears' handlers have strict rules for radio deejays interviewing her, limiting the questions to three and not allowing personal or funny questions.",
+              "reference_0": "Britney Spears' father, Jamie, has been in charge of her since she was placed under conservatorship in 2008, and he thinks it's about time for a raise, Radar reports. \"I continue to perform services to protect and care for Britney’s person and to administer her estate in good faith and in her best interests. I continue to have significant oversight duties relating to her visitation with her children,\" he writes in a new petition to the court. In addition to the $16,000 he gets for those duties p",
+              "score": 0.07531380753138076,
+              "context_preview": "Passage 1:\nNeil Warner / Splash News Britney Spears' handlers have strong ideas on how radio deejays should go about interviewing her. NEWLINE_CHAR NEWLINE_CHAR Britney will grant you three questions, which she may not answer. NEWLINE_CHAR NEWLINE_CHAR Pop star Britney Spears recently ended a radio "
+            }
+          ]
+        },
+        "gov_report": {
+          "task": "gov_report",
+          "metric": "rouge_l_f1",
+          "num_scored": 80,
+          "score": 0.1415226501604804,
+          "examples": [
+            {
+              "index": 66,
+              "question": "",
+              "prediction": "The Government Accountability Office (GAO) has been monitoring the Department of Veterans Affairs' (VA) efforts to modernize its electronic health record system, known as VistA. The VA has initiated four modernization programs, with the latest one being the Electronic Health Record Modernization (EHRM) program, which aims to replace VistA with a commercially available electronic health record system used by the Department of Defense (DOD). The GAO has identified several challenges and concerns w",
+              "reference_0": "The use of IT is crucial to helping VA effectively serve the nation's veterans and, each year, the department spends billions of dollars on its information systems and assets. However, VA has faced challenges spanning a number of critical initiatives related to modernizing its major systems. To improve all major federal agencies' acquisitions and hold them accountable for reducing duplication and achieving cost savings, in December 2014 Congress enacted federal IT acquisition reform legislation ",
+              "score": 0.15384615384615385,
+              "context_preview": "VA’s mission is to promote the health, welfare, and dignity of all veterans in recognition of their service to the nation by ensuring that they receive medical care, benefits, social support, and lasting memorials. In carrying out this mission, the department operates one of the largest health care "
+            },
+            {
+              "index": 187,
+              "question": "",
+              "prediction": "The report discusses the financial sustainability of the Postal Service Retiree Health Benefits Fund (RHB Fund), which provides health insurance benefits to postal retirees. The report notes that the RHB Fund is on an unsustainable path and is projected to be depleted in 12 years under the status quo. The report also discusses eight potential policy approaches to address the financial shortfall, including increasing postal retirees' participation in Medicare, reducing the required level of prefu",
+              "reference_0": "USPS is required to prefund its share of health benefits costs for its retirees. To do so, USPS is required to make payments into the RHB Fund, which is administered by OPM. However, USPS has not made any payments to the fund since fiscal year 2010. At the end of fiscal year 2017, USPS had missed $38.2 billion in payments, leaving the fund 44 percent funded. Pursuant to law, beginning in fiscal year 2017, OPM started drawing from the fund to cover USPS's share of postal retirees' health benefits",
+              "score": 0.13589743589743591,
+              "context_preview": "Postal retiree health benefits are provided as part of the Federal Employees Health Benefits Program (FEHBP). FEHBP covers federal employees and retirees, including postal and nonpostal retirees, who receive health insurance from companies that contract with OPM. Retiree participation is voluntary; "
+            },
+            {
+              "index": 101,
+              "question": "",
+              "prediction": "The United States Postal Service (USPS) has a wide range of domestic competitive products that are a growing sector of its business. The volume of USPS's competitive products increased from approximately 750 million pieces in fiscal year 2008 to 4.9 billion pieces in fiscal year 2017. Revenue from these products increased from about 10 percent of all USPS mail revenues in fiscal year 2008 to about 28 percent in fiscal year 2017. USPS forecasts that continued growth in e-commerce will increase th",
+              "reference_0": "USPS's competitive products have become increasingly important, comprising about 28 percent of USPS's total revenue. USPS scans these packages at various points throughout the postal network. When scans are inaccurate or missing, questions are raised about the veracity of USPS's data on scanning performance and can lead to customer complaints. GAO was asked to review USPS's scanning policies and procedures. In this report, GAO (1) describes USPS's scanning performance and (2) examines how USPS e",
+              "score": 0.12962962962962962,
+              "context_preview": "USPS has a wide range of domestic competitive products that are a growing sector of its business. The volume of USPS’s competitive products increased from approximately 750 million pieces in fiscal year 2008 to 4.9 billion pieces in fiscal year 2017. Revenue from these products increased from about "
+            }
+          ]
+        },
+        "narrativeqa": {
+          "task": "narrativeqa",
+          "metric": "rouge_l_f1",
+          "num_scored": 80,
+          "score": 0.00397449900892188,
+          "examples": [
+            {
+              "index": 66,
+              "question": "",
+              "prediction": "Doctor\n        The\n        the\n        The\n        The\n        The\n the\n the\n        The\n the doctor\n\n        the\n M the\n M the\n the\n the\n the\n the\n\n the\n\n M the\n        the\n the\n the\n the\n        the\n the\n the\n the\n The\n M the\n        The\n the\n the\n\n the\n the\n the\n The\n the\n the\n\n M\n the\n\n the\n\n M\n of the\n the\n\n.\n\n\n          M\n\n the\n\n.\n\n\n       The\n        the\n the\n the\n\n        the\n the\n the\n          M\n          Mary\n\n          M\n        M\n the\n the\n        the\n the\n        the\n        the\n  ",
+              "reference_0": "A lawyer",
+              "score": 0.0,
+              "context_preview": "Produced by Greg Weeks, Mary Meehan and the Online\nDistributed Proofreading Team at http://www.pgdp.net\n\n\n\n\n\n\n\n\n\n                                DOCTOR\n\n                          BY MURRAY LEINSTER\n\n                         Illustrated by FINLAY\n\n           [Transcriber's Note: This etext was produc"
+            },
+            {
+              "index": 187,
+              "question": "",
+              "prediction": "I\nthe\nI\nare\nthe\nI\nthe\nthe\nthe\nyou, the\nI\nthe\nwill\nthe\nthe\nthe\nyou to\nto the\nthat\nyou\nthe\nthe\nthe\nthe\nthe Americans, to\nhave\nthe\nis\nthe\nthe\nI\nthe\nthe\nto\nthe\nis\nthe\nthe\nthe\nthe\nthe\nthe\nf\nthe\nyou\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nwill\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nI\nthe\nhave\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe \"I\nthe\nthe\nthe\nto the\nthe\nthe\nthe\nthe\nthe\nthe\nthe \"c\nthe\nto\nthe\nto\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\nthe\n",
+              "reference_0": "The beauty of the women",
+              "score": 0.0,
+              "context_preview": "Transcribed from the 1887 Macmillan and Co. edition by David Price, email\nccx074@coventry.ac.uk.  Proofing by Andy McLauchan and David Stapleton.\n\n\n\n\n\nA BUNDLE OF LETTERS\nby Henry James\n\n\nCHAPTER I\n\n\nFROM MISS MIRANDA MOPE, IN PARIS, TO MRS. ABRAHAM C. MOPE, AT BANGOR,\nMAINE.\n\nSeptember 5th, 1879.\n\n"
+            },
+            {
+              "index": 101,
+              "question": "",
+              "prediction": "P\nP <P <P\n\nP\n\nP <P <P <P\n\n<P <C\nP <C\nP <P <P <P <P <P <P <P <P <P <C\nP <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P\n\nP\n\nP <P <P P\nP <P <P\n\nP <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P <P",
+              "reference_0": "Mexico.",
+              "score": 0.0,
+              "context_preview": "<b><HTML> <HEAD>       <TITLE>TRUE ROMANCE</TITLE>\n</b><LINK rel=\"stylesheet\" type=\"text/css\">\n\n<META http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">\n<style type=\"text/css\">\n\nBODY { background-color: \"#FFFFFF\"; font-family: Courier New, Helvetica, sans-serif; font-size:10.0pt }\n\nD"
+            }
+          ]
+        }
+      }
+    },
+    "hybrid_lora": {
+      "attn_used": "sdpa",
+      "variant_used": "custom",
+      "rope_used": {
+        "custom_inv_freq_path": "/root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_v2_longbench_stable_20260223_0150/sigmoid/artifacts/custom_inv_freq.pt"
+      },
+      "tasks": {
+        "qasper": {
+          "task": "qasper",
+          "metric": "f1",
+          "num_scored": 80,
+          "score": 0.056026805912735914,
+          "examples": [
+            {
+              "index": 66,
+              "question": "",
+              "prediction": "The DeepMine database is a large-scale speech corpus collected using crowdsourcing. It is the largest publicly available text-dependent and text-prompted speaker verification database in two languages: Persian and English. It is also the largest text-independent speaker verification evaluation database, making it suitable to robustly evaluate state-of-the-art methods on",
+              "reference_0": "Android application",
+              "score": 0.0,
+              "context_preview": "Introduction\nNowadays deep learning techniques outperform the other conventional methods in most of the speech-related tasks. Training robust deep neural networks for each task depends on the availability of powerful processing GPUs, as well as standard and large scale datasets. In text-independent "
+            },
+            {
+              "index": 187,
+              "question": "",
+              "prediction": "The corpus presented in this paper is the very first of its kind and a valuable addition to the scarce number of corpora available in the field of biomedical NLP.\nMultitask learning\nen\na5b0d0b0b0c6b0c0d0b0c0d0",
+              "reference_0": "8,275 sentences and 167,739 words in total",
+              "score": 0.15789473684210528,
+              "context_preview": "Introduction\nThe automatic processing of medical texts and documents plays an increasingly important role in the recent development of the digital health area. To enable dedicated Natural Language Processing (NLP) that is highly accurate with respect to medically relevant categories, manually annota"
+            },
+            {
+              "index": 101,
+              "question": "",
+              "prediction": "The challenges of imbalanced classification—in which the proportion of elements in each class for a classification task significantly differ—and of the ability to generalise on dissimilar data have remained important problems in Natural Language Processing (NLP) and Machine Learning in general. Popular NLP tasks including sentiment analysis, propaganda detection, and event extraction",
+              "reference_0": "Unanswerable",
+              "score": 0.0,
+              "context_preview": "Introduction\nThe challenges of imbalanced classification—in which the proportion of elements in each class for a classification task significantly differ—and of the ability to generalise on dissimilar data have remained important problems in Natural Language Processing (NLP) and Machine Learning in "
+            }
+          ]
+        },
+        "hotpotqa": {
+          "task": "hotpotqa",
+          "metric": "f1",
+          "num_scored": 80,
+          "score": 0.02651848441933404,
+          "examples": [
+            {
+              "index": 66,
+              "question": "",
+              "prediction": "2003\nPassage 1:\nThe Red &amp; the Black\nThe Red & the Black is a rock album by the Poway, California band Agent 51, released by Surfdog Records in 2003. It was the band's third album and was named \"best punk album\" at",
+              "reference_0": "Deftones",
+              "score": 0.0,
+              "context_preview": "Passage 1:\nAdrenaline (album)\nAdrenaline is the debut studio album by American alternative metal band Deftones, released on October 3, 1995, by Maverick Records. The majority of the album was produced by Terry Date, while a hidden track titled \"Fist\" was produced by Ross Robinson.\n\nBackground and re"
+            },
+            {
+              "index": 187,
+              "question": "",
+              "prediction": "The Maiden Lane Bridge was a railroad bridge across the Hudson River between the city of Albany and Rensselaer County, New York. It was designed by Kellogg, Clark & Co., and was one of the largest bridges they designed. The bridge was owned and built by the Hudson River Bridge Company, which was",
+              "reference_0": "37.5",
+              "score": 0.0,
+              "context_preview": "Passage 1:\nPit River Bridge\nThe Pit River Bridge (officially the Veterans of Foreign Wars Memorial Bridge) is a double deck, deck truss, road and rail bridge over Shasta Lake in Shasta County, California. The bridge, carrying Interstate 5 on its upper deck and Union Pacific Railroad on its lower dec"
+            },
+            {
+              "index": 101,
+              "question": "",
+              "prediction": "The 1681 English general election returned members to the last parliament of Charles II.  Dubbed the Oxford Parliament, the body elected sat for one week from 21 March 1681 until 28 March 1681. Party strengths are an approximation, with many MPs' allegiances being unknown.\nPassage",
+              "reference_0": "King James II of England",
+              "score": 0.0888888888888889,
+              "context_preview": "Passage 1:\nEnglish general election, 1689\nThe 1689 English general election, held in January 1689, elected the Convention Parliament, which was summoned in the aftermath of the Glorious Revolution. \n513 Members of Parliament were returned, across 53 counties and 217 boroughs in England and Wales, mo"
+            }
+          ]
+        },
+        "2wikimqa": {
+          "task": "2wikimqa",
+          "metric": "rouge_l_f1",
+          "num_scored": 80,
+          "score": 0.00882225446338646,
+          "examples": [
+            {
+              "index": 66,
+              "question": "",
+              "prediction": "1\nPassage 1:\nThe Miracle of Marcelino\nThe Miracle of Marcelino (Spanish: Marcelino, pan y vino, \"Marcelino, bread and wine\") is a 1955 Spanish film written by José Maria Sanchez-Silva, based on his novel, and directed by Ladislao Vajda. It starred, Juan Calvo (who also starred together as Don Quixote and Sancho Panza in the 1947 Spanish film version of Miguel de Cervantes' Don Quixote) and the young child star Pablito Calvo (no relation to Juan) as Marcelino. The musical score and theme song – s",
+              "reference_0": "Madrid",
+              "score": 0.0,
+              "context_preview": "Passage 1:\nHenri Verdun\nHenri Verdun (1895–1977) was a French composer of film scores.\n\nSelected filmography\nNapoléon (1927)\nThe Sweetness of Loving (1930)\nThe Levy Department Stores (1932)\nThe Lacquered Box (1932)\nThe Weaker Sex (1933)\nThe Flame (1936)\nGirls of Paris (1936)\nThe Assault (1936)\nLes D"
+            },
+            {
+              "index": 187,
+              "question": "",
+              "prediction": "1\nPassage 1:\nThe Last of the Mohicans\nThe Last of the Mohicans is a historical novel written by James Fenimore Cooper. The novel is set in 1757 during the French and Indian War. The story takes place in upper New York State and in the region around Fort William Henry, which was located near the present-day city of Lake George, New York. The novel follows the lives of a family of British colonists, their Native American allies, and a Huron chief and his daughter. The novel is known for its vivid ",
+              "reference_0": "From Corleone To Brooklyn",
+              "score": 0.011560693641618498,
+              "context_preview": "Passage 1:\nSam Newfield\nSam Newfield, born Samuel Neufeld (December 6, 1899 – November 10, 1964), also known as Sherman Scott or Peter Stewart, was an American B-movie director, one of the most prolific in American film history—he is credited with directing over 250 feature films in a career which b"
+            },
+            {
+              "index": 101,
+              "question": "",
+              "prediction": "1\nPassage 1:\nJohann Christian Friedrich Bach\nJohann Christian Friedrich Bach (17 January 1735 – 14 January 1782) was a German composer and organist. He was the youngest son of Johann Sebastian Bach and Maria Barbara Bach, and the brother of Carl Philipp Emanuel Bach and Wilhelm Friedemann Bach.\n\nLife\nJohann Christian Friedrich Bach was born in Leipzig, where his father was employed as Thomaskantor. He was the youngest of the Bach children, and the only one to be born in Leipzig. He was named aft",
+              "reference_0": "yes",
+              "score": 0.0,
+              "context_preview": "Passage 1:\nGustav Skram\nJohan Christian Gustav Skram (13 July 1802 – 7 April 1865) was a Danish railroad director. He was the father of danish writer Erik Skram, the second husband of Norwegian writer Amalie Skram.\n\nCareer\nSkram was the first managing director of the Railway Company of Zealand, from"
+            }
+          ]
+        },
+        "multi_news": {
+          "task": "multi_news",
+          "metric": "rouge_l_f1",
+          "num_scored": 80,
+          "score": 0.12711962006815303,
+          "examples": [
+            {
+              "index": 66,
+              "question": "",
+              "prediction": "1\nPassage:\nPassage 1:\nThe 2011–12 season was the 92nd season of competitive football in the Republic of Ireland. The season began on 4 March 2011 and ended on 5 November 2011. The season was notable for the fact that the FAI Cup was played in the summer for the first time, with the final being played on 6 November 2011. The season also saw the introduction of the League of Ireland Cup, a competition featuring the top teams from the League of Ireland Premier Division and the League of Ireland Fir",
+              "reference_0": "Peter Jackson's crafts a fantastic vision of the afterlife in The Lovely Bones, say critics, but some feel it came at the expense of the human side of the story of a murdered teen, adapted from the book by Alice Sebold. \"By turns warmly sentimental, serial-killer sinister, and science-fiction fantastical, The Lovely Bones was an unlikely book to achieve worldwide success,\" Kenneth Turan writes in the Los Angeles Times. \"Those mismatched elements come back to haunt\" the film version, \"making the ",
+              "score": 0.0989010989010989,
+              "context_preview": "Passage 1:\nBy turns warmly sentimental, serial-killer sinister and science-fiction fantastical, \"The Lovely Bones\" was an unlikely book to achieve worldwide success. In the film version, those mismatched elements come back to haunt the story, so to speak, making the final product more hit-and-miss t"
+            },
+            {
+              "index": 187,
+              "question": "",
+              "prediction": "10\nPassage 3:\nA convicted white-collar criminal was sentenced Wednesday for persuading his son to shoot him in the leg as part of a staged insurance scam a day before he was to set to start serving a decade-long federal prison term from a high-profile mortgage fraud case. NEWLINE_CHAR NEWLINE_CHAR U.S. District Judge Anna J. Brown called Shannon Egeland's insurance scheme and concocted shooting, which led to the amputation of his left leg, \"an unthinkable kind of situation,'' and tacked on three",
+              "reference_0": "A white-collar crook is facing extra prison time for having his son shoot him in the legs with a 20-gauge shotgun, the BBC reports. Shannon Egeland, 43, was already facing 10 years for taking part in a vast mortgage-fraud scheme when he had his 17-year-old son shoot him by a road in Caldwell, Idaho, in an attempt to avoid prison. \"The psychological and emotional destruction defendant caused this minor child is unimaginable,\" US attorney Scott Bradford wrote in a sentencing memo. Back in 2009, Eg",
+              "score": 0.19117647058823528,
+              "context_preview": "Passage 1:\nA convicted white-collar criminal was sentenced Wednesday for persuading his son to shoot him in the leg as part of a staged insurance scam a day before he was to set to start serving a decade-long federal prison term from a high-profile mortgage fraud case. NEWLINE_CHAR NEWLINE_CHAR U.S."
+            },
+            {
+              "index": 101,
+              "question": "",
+              "prediction": "1\nPassage 1:\nThe 2014 FIFA World Cup qualification (AFC) was the qualifying process for the 2014 FIFA World Cup, the 20th edition of the FIFA World Cup, the quadrennial international men's association football world championship, organized by Fédération Internationale de Football Association (FIFA). The qualification process ran from 2011 to 2013, and consisted of the following two rounds: the first round, which took place from 2 March to 11 September 2011, and the second round, which took place",
+              "reference_0": "Britney Spears' father, Jamie, has been in charge of her since she was placed under conservatorship in 2008, and he thinks it's about time for a raise, Radar reports. \"I continue to perform services to protect and care for Britney’s person and to administer her estate in good faith and in her best interests. I continue to have significant oversight duties relating to her visitation with her children,\" he writes in a new petition to the court. In addition to the $16,000 he gets for those duties p",
+              "score": 0.07629427792915532,
+              "context_preview": "Passage 1:\nNeil Warner / Splash News Britney Spears' handlers have strong ideas on how radio deejays should go about interviewing her. NEWLINE_CHAR NEWLINE_CHAR Britney will grant you three questions, which she may not answer. NEWLINE_CHAR NEWLINE_CHAR Pop star Britney Spears recently ended a radio "
+            }
+          ]
+        },
+        "gov_report": {
+          "task": "gov_report",
+          "metric": "rouge_l_f1",
+          "num_scored": 80,
+          "score": 0.18529879049091136,
+          "examples": [
+            {
+              "index": 66,
+              "question": "",
+              "prediction": "The Department of Veterans Affairs (VA) has made extensive use of numerous contractors and has obligated more than $1 billion for contracts that supported two of four VistA modernization programs that the department has initiated. VA has recently begun the fourth modernization program in which it plans to replace VistA with the same commercially available electronic health record system that is used by the Department of Defense (DOD). However, the department's latest modernization effort is in t",
+              "reference_0": "The use of IT is crucial to helping VA effectively serve the nation's veterans and, each year, the department spends billions of dollars on its information systems and assets. However, VA has faced challenges spanning a number of critical initiatives related to modernizing its major systems. To improve all major federal agencies' acquisitions and hold them accountable for reducing duplication and achieving cost savings, in December 2014 Congress enacted federal IT acquisition reform legislation ",
+              "score": 0.15060240963855423,
+              "context_preview": "VA’s mission is to promote the health, welfare, and dignity of all veterans in recognition of their service to the nation by ensuring that they receive medical care, benefits, social support, and lasting memorials. In carrying out this mission, the department operates one of the largest health care "
+            },
+            {
+              "index": 187,
+              "question": "",
+              "prediction": "The Postal Accountability and Enhancement Act of 2006 (PAEA) established the Postal Service Retiree Health Benefits Fund (RHB Fund) to prefund retiree health benefits for postal employees. The RHB Fund is on an unsustainable path and is projected to be depleted in 12 years under the status quo. USPS has missed approximately $38 billion in payments to the fund since fiscal year 2010, and the fund’s balance is declining. Beginning in fiscal year 2017, OPM started drawing from the fund to pay USPS’",
+              "reference_0": "USPS is required to prefund its share of health benefits costs for its retirees. To do so, USPS is required to make payments into the RHB Fund, which is administered by OPM. However, USPS has not made any payments to the fund since fiscal year 2010. At the end of fiscal year 2017, USPS had missed $38.2 billion in payments, leaving the fund 44 percent funded. Pursuant to law, beginning in fiscal year 2017, OPM started drawing from the fund to cover USPS's share of postal retirees' health benefits",
+              "score": 0.16988416988416988,
+              "context_preview": "Postal retiree health benefits are provided as part of the Federal Employees Health Benefits Program (FEHBP). FEHBP covers federal employees and retirees, including postal and nonpostal retirees, who receive health insurance from companies that contract with OPM. Retiree participation is voluntary; "
+            },
+            {
+              "index": 101,
+              "question": "",
+              "prediction": "The U.S. Postal Service (USPS) has a wide range of domestic competitive products that are a growing sector of its business. The volume of USPS’s competitive products increased from approximately 750 million pieces in fiscal year 2008 to 4.9 billion pieces in fiscal year 2017. Revenue from these products increased from about 10 percent of all USPS mail revenues in fiscal year 2008 to about 28 percent in fiscal year 2017 (see fig. 1). USPS forecasts that continued growth in e-commerce will increas",
+              "reference_0": "USPS's competitive products have become increasingly important, comprising about 28 percent of USPS's total revenue. USPS scans these packages at various points throughout the postal network. When scans are inaccurate or missing, questions are raised about the veracity of USPS's data on scanning performance and can lead to customer complaints. GAO was asked to review USPS's scanning policies and procedures. In this report, GAO (1) describes USPS's scanning performance and (2) examines how USPS e",
+              "score": 0.11764705882352941,
+              "context_preview": "USPS has a wide range of domestic competitive products that are a growing sector of its business. The volume of USPS’s competitive products increased from approximately 750 million pieces in fiscal year 2008 to 4.9 billion pieces in fiscal year 2017. Revenue from these products increased from about "
+            }
+          ]
+        },
+        "narrativeqa": {
+          "task": "narrativeqa",
+          "metric": "rouge_l_f1",
+          "num_scored": 80,
+          "score": 0.008238641736516956,
+          "examples": [
+            {
+              "index": 66,
+              "question": "",
+              "prediction": "1\nPassage:\nThe first time I saw her, she was sitting on a bench in the park, staring at a small, white flower. She was a small, white flower herself, with a delicate, porcelain complexion and a slender, golden figure. She was dressed in a white, flowing gown that seemed to be woven of moonbeams and the petals of flowers. Her hair was a golden mist that seemed to be blown by the wind, and her eyes were like two stars that shone with a soft, ethereal light. She was a vision of loveliness, and I wa",
+              "reference_0": "A lawyer",
+              "score": 0.0,
+              "context_preview": "Produced by Greg Weeks, Mary Meehan and the Online\nDistributed Proofreading Team at http://www.pgdp.net\n\n\n\n\n\n\n\n\n\n                                DOCTOR\n\n                          BY MURRAY LEINSTER\n\n                         Illustrated by FINLAY\n\n           [Transcriber's Note: This etext was produc"
+            },
+            {
+              "index": 187,
+              "question": "",
+              "prediction": "The American girl who is traveling in Europe is Miranda Hope.  She is traveling with her mother and her brother, who is studying French.  She is staying with a French family, who are running a boarding house for Americans and English.  She is interested in the French and the English, and she is also interested in the Americans.  She is interested in the Americans because they are so different from the French and the English.  She is also interested in the Americans because they are so different ",
+              "reference_0": "The beauty of the women",
+              "score": 0.0,
+              "context_preview": "Transcribed from the 1887 Macmillan and Co. edition by David Price, email\nccx074@coventry.ac.uk.  Proofing by Andy McLauchan and David Stapleton.\n\n\n\n\n\nA BUNDLE OF LETTERS\nby Henry James\n\n\nCHAPTER I\n\n\nFROM MISS MIRANDA MOPE, IN PARIS, TO MRS. ABRAHAM C. MOPE, AT BANGOR,\nMAINE.\n\nSeptember 5th, 1879.\n\n"
+            },
+            {
+              "index": 101,
+              "question": "",
+              "prediction": "2\nPassage:\nQuestion:\nWhat is the name of the movie in which a man is killed by a falling piano?\nAnswer:\nThe movie is \"The Big Sleep\" (1946), directed by Howard Hawks, starring Humphrey Bogart and Lauren Bacall. The scene is a parody of the famous scene in \"The Gold Rush\" (1925), directed by Charlie Chaplin, in which a character is killed by a falling safe. The scene in \"The Big Sleep\" is a parody of the scene in \"The Gold Rush\" and is not a parody of the scene in \"The Big Sleep\" itself.\n2\nhotpot",
+              "reference_0": "Mexico.",
+              "score": 0.0,
+              "context_preview": "<b><HTML> <HEAD>       <TITLE>TRUE ROMANCE</TITLE>\n</b><LINK rel=\"stylesheet\" type=\"text/css\">\n\n<META http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">\n<style type=\"text/css\">\n\nBODY { background-color: \"#FFFFFF\"; font-family: Courier New, Helvetica, sans-serif; font-size:10.0pt }\n\nD"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "comparison": {
+    "qasper": {
+      "base_unfinetuned": 0.06704590988687531,
+      "hybrid_lora": 0.056026805912735914,
+      "delta_hybrid_minus_base": -0.011019103974139396
+    },
+    "hotpotqa": {
+      "base_unfinetuned": 0.008839244089244089,
+      "hybrid_lora": 0.02651848441933404,
+      "delta_hybrid_minus_base": 0.017679240330089954
+    },
+    "2wikimqa": {
+      "base_unfinetuned": 0.02014213277298668,
+      "hybrid_lora": 0.00882225446338646,
+      "delta_hybrid_minus_base": -0.011319878309600222
+    },
+    "multi_news": {
+      "base_unfinetuned": 0.12986047345877244,
+      "hybrid_lora": 0.12711962006815303,
+      "delta_hybrid_minus_base": -0.0027408533906194132
+    },
+    "gov_report": {
+      "base_unfinetuned": 0.1415226501604804,
+      "hybrid_lora": 0.18529879049091136,
+      "delta_hybrid_minus_base": 0.04377614033043095
+    },
+    "narrativeqa": {
+      "base_unfinetuned": 0.00397449900892188,
+      "hybrid_lora": 0.008238641736516956,
+      "delta_hybrid_minus_base": 0.0042641427275950765
+    }
+  }
+}

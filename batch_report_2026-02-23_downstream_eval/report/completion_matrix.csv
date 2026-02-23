@@ -1,0 +1,11 @@
+profile,method,niah,longbench,passkey_tf,coverage
+downstream_eval_autorun,baseline,Y,Y,Y,3
+downstream_eval_autorun,pi,Y,Y,Y,3
+downstream_eval_autorun,yarn,Y,N,N,1
+downstream_eval_autorun,sigmoid,Y,Y,Y,3
+downstream_eval_autorun,anchored_sigmoid,Y,Y,Y,3
+downstream_eval_parallel_seed42_m2,baseline,N,N,N,0
+downstream_eval_parallel_seed42_m2,pi,Y,Y,Y,3
+downstream_eval_parallel_seed42_m2,yarn,Y,Y,Y,3
+downstream_eval_parallel_seed42_m2,sigmoid,Y,Y,Y,3
+downstream_eval_parallel_seed42_m2,anchored_sigmoid,Y,Y,Y,3

@@ -1,0 +1,74 @@
+2026-02-23 14:11:05 | INFO | Loading model...
+2026-02-23 14:11:10 | INFO | Patched custom inv_freq from /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_v2_longbench_stable_20260223_0150/pi/artifacts/custom_inv_freq.pt into 1 layers
+2026-02-23 14:11:10 | INFO | Loading adapter: /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_v2_longbench_stable_20260223_0150/pi/final_lora
+2026-02-23 14:11:14 | INFO | Model ready. attn=sdpa variant=custom rope={'custom_inv_freq_path': '/root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_v2_longbench_stable_20260223_0150/pi/artifacts/custom_inv_freq.pt'}
+2026-02-23 14:11:14 | INFO | Lengths=[4096, 8192, 16384] Depths=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+2026-02-23 14:11:14 | INFO | Cell start: length=4096 depth=0% needles=1
+2026-02-23 14:11:18 | INFO | Cell done: length=4096 depth=0% acc=1.000 (2/2)
+2026-02-23 14:11:18 | INFO | Cell start: length=4096 depth=10% needles=1
+2026-02-23 14:11:21 | INFO | Cell done: length=4096 depth=10% acc=1.000 (2/2)
+2026-02-23 14:11:21 | INFO | Cell start: length=4096 depth=20% needles=1
+2026-02-23 14:11:23 | INFO | Cell done: length=4096 depth=20% acc=1.000 (2/2)
+2026-02-23 14:11:23 | INFO | Cell start: length=4096 depth=30% needles=1
+2026-02-23 14:11:26 | INFO | Cell done: length=4096 depth=30% acc=1.000 (2/2)
+2026-02-23 14:11:26 | INFO | Cell start: length=4096 depth=40% needles=1
+2026-02-23 14:11:29 | INFO | Cell done: length=4096 depth=40% acc=1.000 (2/2)
+2026-02-23 14:11:29 | INFO | Cell start: length=4096 depth=50% needles=1
+2026-02-23 14:11:32 | INFO | Cell done: length=4096 depth=50% acc=1.000 (2/2)
+2026-02-23 14:11:32 | INFO | Cell start: length=4096 depth=60% needles=1
+2026-02-23 14:11:35 | INFO | Cell done: length=4096 depth=60% acc=1.000 (2/2)
+2026-02-23 14:11:35 | INFO | Cell start: length=4096 depth=70% needles=1
+2026-02-23 14:11:38 | INFO | Cell done: length=4096 depth=70% acc=1.000 (2/2)
+2026-02-23 14:11:38 | INFO | Cell start: length=4096 depth=80% needles=1
+2026-02-23 14:11:41 | INFO | Cell done: length=4096 depth=80% acc=1.000 (2/2)
+2026-02-23 14:11:41 | INFO | Cell start: length=4096 depth=90% needles=1
+2026-02-23 14:11:43 | INFO | Cell done: length=4096 depth=90% acc=1.000 (2/2)
+2026-02-23 14:11:43 | INFO | Cell start: length=4096 depth=100% needles=1
+2026-02-23 14:11:46 | INFO | Cell done: length=4096 depth=100% acc=1.000 (2/2)
+2026-02-23 14:11:46 | INFO | Cell start: length=8192 depth=0% needles=1
+2026-02-23 14:11:50 | INFO | Cell done: length=8192 depth=0% acc=1.000 (2/2)
+2026-02-23 14:11:50 | INFO | Cell start: length=8192 depth=10% needles=1
+2026-02-23 14:11:54 | INFO | Cell done: length=8192 depth=10% acc=1.000 (2/2)
+2026-02-23 14:11:54 | INFO | Cell start: length=8192 depth=20% needles=1
+2026-02-23 14:11:58 | INFO | Cell done: length=8192 depth=20% acc=1.000 (2/2)
+2026-02-23 14:11:58 | INFO | Cell start: length=8192 depth=30% needles=1
+2026-02-23 14:12:02 | INFO | Cell done: length=8192 depth=30% acc=1.000 (2/2)
+2026-02-23 14:12:02 | INFO | Cell start: length=8192 depth=40% needles=1
+2026-02-23 14:12:06 | INFO | Cell done: length=8192 depth=40% acc=1.000 (2/2)
+2026-02-23 14:12:06 | INFO | Cell start: length=8192 depth=50% needles=1
+2026-02-23 14:12:10 | INFO | Cell done: length=8192 depth=50% acc=1.000 (2/2)
+2026-02-23 14:12:10 | INFO | Cell start: length=8192 depth=60% needles=1
+2026-02-23 14:12:15 | INFO | Cell done: length=8192 depth=60% acc=1.000 (2/2)
+2026-02-23 14:12:15 | INFO | Cell start: length=8192 depth=70% needles=1
+2026-02-23 14:12:19 | INFO | Cell done: length=8192 depth=70% acc=1.000 (2/2)
+2026-02-23 14:12:19 | INFO | Cell start: length=8192 depth=80% needles=1
+2026-02-23 14:12:23 | INFO | Cell done: length=8192 depth=80% acc=1.000 (2/2)
+2026-02-23 14:12:23 | INFO | Cell start: length=8192 depth=90% needles=1
+2026-02-23 14:12:27 | INFO | Cell done: length=8192 depth=90% acc=1.000 (2/2)
+2026-02-23 14:12:27 | INFO | Cell start: length=8192 depth=100% needles=1
+2026-02-23 14:12:31 | INFO | Cell done: length=8192 depth=100% acc=1.000 (2/2)
+2026-02-23 14:12:31 | INFO | Cell start: length=16384 depth=0% needles=1
+2026-02-23 14:12:37 | INFO | Cell done: length=16384 depth=0% acc=1.000 (2/2)
+2026-02-23 14:12:37 | INFO | Cell start: length=16384 depth=10% needles=1
+2026-02-23 14:12:44 | INFO | Cell done: length=16384 depth=10% acc=1.000 (2/2)
+2026-02-23 14:12:44 | INFO | Cell start: length=16384 depth=20% needles=1
+2026-02-23 14:12:51 | INFO | Cell done: length=16384 depth=20% acc=1.000 (2/2)
+2026-02-23 14:12:51 | INFO | Cell start: length=16384 depth=30% needles=1
+2026-02-23 14:12:57 | INFO | Cell done: length=16384 depth=30% acc=1.000 (2/2)
+2026-02-23 14:12:57 | INFO | Cell start: length=16384 depth=40% needles=1
+2026-02-23 14:13:04 | INFO | Cell done: length=16384 depth=40% acc=1.000 (2/2)
+2026-02-23 14:13:04 | INFO | Cell start: length=16384 depth=50% needles=1
+2026-02-23 14:13:10 | INFO | Cell done: length=16384 depth=50% acc=1.000 (2/2)
+2026-02-23 14:13:10 | INFO | Cell start: length=16384 depth=60% needles=1
+2026-02-23 14:13:17 | INFO | Cell done: length=16384 depth=60% acc=1.000 (2/2)
+2026-02-23 14:13:17 | INFO | Cell start: length=16384 depth=70% needles=1
+2026-02-23 14:13:23 | INFO | Cell done: length=16384 depth=70% acc=1.000 (2/2)
+2026-02-23 14:13:23 | INFO | Cell start: length=16384 depth=80% needles=1
+2026-02-23 14:13:30 | INFO | Cell done: length=16384 depth=80% acc=1.000 (2/2)
+2026-02-23 14:13:30 | INFO | Cell start: length=16384 depth=90% needles=1
+2026-02-23 14:13:37 | INFO | Cell done: length=16384 depth=90% acc=1.000 (2/2)
+2026-02-23 14:13:37 | INFO | Cell start: length=16384 depth=100% needles=1
+2026-02-23 14:13:43 | INFO | Cell done: length=16384 depth=100% acc=1.000 (2/2)
+2026-02-23 14:13:44 | INFO | Saved /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_v2_longbench_stable_20260223_0150/downstream_eval_parallel_seed42_m2/niah/pi/niah_recall_heatmap.pdf
+2026-02-23 14:13:44 | INFO | Saved /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_v2_longbench_stable_20260223_0150/downstream_eval_parallel_seed42_m2/niah/pi/niah_recall_heatmap.png
+2026-02-23 14:13:44 | INFO | Saved /root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_v2_longbench_stable_20260223_0150/downstream_eval_parallel_seed42_m2/niah/pi/niah_recall_results.json

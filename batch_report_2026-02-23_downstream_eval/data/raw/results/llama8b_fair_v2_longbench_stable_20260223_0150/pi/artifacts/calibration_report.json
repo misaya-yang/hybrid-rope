@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-02-23 04:02:22",
+  "method": "pi",
+  "inferred_head_dim": 128,
+  "rope_base": 500000.0,
+  "max_seq_len": 16384,
+  "template_report": {
+    "template_ids_len": 14,
+    "start_header_id": 128006,
+    "end_header_id": 128007
+  },
+  "baseline_probe": null,
+  "inject_info": {
+    "patched_count": 1,
+    "patched_modules": [
+      {
+        "name": "model.rotary_emb",
+        "shape": [
+          64
+        ],
+        "dtype": "torch.float32",
+        "device": "cpu",
+        "min": 1.2275703511477332e-06,
+        "max": 0.5
+      }
+    ]
+  },
+  "custom_inv_stats": {
+    "shape": [
+      64
+    ],
+    "min": 1.2275703955658044e-06,
+    "max": 0.5,
+    "mean": 0.042142452276035414
+  }
+}

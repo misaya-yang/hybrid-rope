@@ -1,0 +1,71 @@
+{
+  "meta": {
+    "timestamp": "2026-02-23 22:45:44",
+    "base_model_path": "/root/autodl-tmp/dfrope/ms_models/LLM-Research/Meta-Llama-3-8B-Instruct",
+    "adapter_path": "/root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_v2_longbench_stable_20260223_0150/anchored_sigmoid/final_lora",
+    "variant_used": "custom",
+    "rope_used": {
+      "custom_inv_freq_path": "/root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_v2_longbench_stable_20260223_0150/anchored_sigmoid/artifacts/custom_inv_freq.pt"
+    },
+    "attn_used": "sdpa",
+    "custom_inv_freq_path": "/root/autodl-tmp/dfrope/hybrid-rope/results/llama8b_fair_v2_longbench_stable_20260223_0150/anchored_sigmoid/artifacts/custom_inv_freq.pt",
+    "lengths": [
+      1024,
+      2048,
+      4096,
+      8192,
+      16384
+    ],
+    "depths": [
+      10,
+      50,
+      90
+    ],
+    "trials_per_cell": 24,
+    "seed": 42,
+    "run_generation_probe": false
+  },
+  "overall": {
+    "tf_accuracy": 1.0,
+    "margin_mean": 6.351479889949163,
+    "margin_std": 0.9115538691777492,
+    "n": 360
+  },
+  "by_length": {
+    "1024": {
+      "tf_accuracy": 1.0,
+      "margin_mean": 5.963869316710366,
+      "margin_std": 0.854033691187167,
+      "n": 72,
+      "gen_accuracy": null
+    },
+    "2048": {
+      "tf_accuracy": 1.0,
+      "margin_mean": 6.572956879933675,
+      "margin_std": 0.995782967022468,
+      "n": 72,
+      "gen_accuracy": null
+    },
+    "4096": {
+      "tf_accuracy": 1.0,
+      "margin_mean": 6.276020950741238,
+      "margin_std": 0.8782140393335567,
+      "n": 72,
+      "gen_accuracy": null
+    },
+    "8192": {
+      "tf_accuracy": 1.0,
+      "margin_mean": 6.4203585882981615,
+      "margin_std": 0.8278300000317957,
+      "n": 72,
+      "gen_accuracy": null
+    },
+    "16384": {
+      "tf_accuracy": 1.0,
+      "margin_mean": 6.524193714062373,
+      "margin_std": 0.8837471759500224,
+      "n": 72,
+      "gen_accuracy": null
+    }
+  }
+}

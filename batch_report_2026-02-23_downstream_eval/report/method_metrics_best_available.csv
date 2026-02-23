@@ -1,0 +1,6 @@
+method,source_profile,coverage,niah_mean,longbench_avg,passkey_tf_16k,passkey_margin_16k
+baseline,downstream_eval_autorun,3,0.9545454545454546,0.06264296579266099,1.0,4.684607297182083
+pi,downstream_eval_autorun,3,1.0,0.06651979957854981,1.0,6.5850189824899035
+yarn,downstream_eval_parallel_seed42_m2,3,1.0,0.06563480302894688,1.0,5.243292328384188
+sigmoid,downstream_eval_autorun,3,1.0,0.06867076618183962,1.0,5.413687719239129
+anchored_sigmoid,downstream_eval_autorun,3,1.0,0.07172358805249233,1.0,6.524193714062373
