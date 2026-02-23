@@ -14,6 +14,7 @@ LONGBENCH_LOCAL_DATA_DIR="${LONGBENCH_LOCAL_DATA_DIR:-/root/autodl-tmp/dfrope/ms
 
 WATCH_HOURS="${WATCH_HOURS:-6}"
 POLL_SECONDS="${POLL_SECONDS:-90}"
+SKIP_GIT_SYNC="${SKIP_GIT_SYNC:-1}"
 
 TASKS_REVIEWER="${TASKS_REVIEWER:-qasper,hotpotqa,2wikimqa,multi_news,gov_report,narrativeqa}"
 NIAH_LENGTHS="${NIAH_LENGTHS:-4096,8192,16384}"
@@ -35,9 +36,18 @@ ensure_repo_latest() {
     exit 1
   fi
   cd "${REPO_ROOT}"
-  # Best effort: stay non-interactive and do not block autopilot on transient network issues.
-  git fetch origin --quiet || true
-  git pull --ff-only --quiet || true
+  if [[ "${SKIP_GIT_SYNC}" == "1" ]]; then
+    log "skip git sync (SKIP_GIT_SYNC=1)"
+  else
+    # Best effort: non-interactive, with timeout guard.
+    if command -v timeout >/dev/null 2>&1; then
+      timeout 45 git fetch origin --quiet || true
+      timeout 45 git pull --ff-only --quiet || true
+    else
+      git fetch origin --quiet || true
+      git pull --ff-only --quiet || true
+    fi
+  fi
   log "repo_head=$(git rev-parse --short HEAD)"
 }
 
@@ -218,4 +228,3 @@ main() {
 }
 
 main "$@"
-
