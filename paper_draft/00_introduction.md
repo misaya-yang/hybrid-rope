@@ -18,3 +18,17 @@ Validating this framework, we introduce **Anchored Hybrid RoPE**, a continuously
 Crucially, we also transparently document the boundary failure modes predicted by our theory and empirical evaluation: zero-shot frequency injection categorically collapses without training adaptation (as pre-trained phase manifolds are inextricably bound), and arbitrarily extending the base parameter to extremes (e.g., $b=300,000$ in our ablation studies) structurally destroys high-frequency Fisher Information. Furthermore, we expose severe methodological "Implementation Mirages" prevalent in the field, where silent injection failures (inert key-value caches) or arithmetic scaler overflows mask themselves as algorithmic failures. This rigorously validates our claim that bounding both theoretical prior-mismatch and empirical execution constraints is strictly necessary to prevent context scaling from becoming an evolutionary dead-end.
 
 By unifying information theory with variational calculus, our work formally closes the theoretical gap in positional encoding design. We provide the first closed-form mapping between corpus attention priors and optimal representation capacity, transitioning RoPE scaling from an empirical art to a rigorously grounded science.
+
+---
+
+## Contributions
+
+Our main contributions are:
+
+1. **Theoretical Framework**: We establish a Constrained Continuous Variational Framework that maps RoPE frequency allocation to a functional optimization problem, deriving the exact analytical solution $\rho^*(\phi) \propto 1/E_{\text{diag}}(\phi)$ where $E_{\text{diag}}$ is the topological potential from the cosine transform of the attention distance prior.
+
+2. **Prior-Dependent Optimality**: We prove that Standard RoPE ($\rho \propto 1$) is optimal if and only if the attention distance follows a Uniform prior; under a Power-Law prior ($\mathcal{D} \propto \Delta^{-\gamma}$), the optimal density must be a smoothly decaying convex curve with amplitude bounded by $\mathcal{O}(\frac{\ln b}{\ln L})$.
+
+3. **Structural Stability**: To address concerns that our theorems rely on a diagonal surrogate, we prove structural stability: under power-law priors the full functional admits a closed-form solution $\rho^\star \propto \cosh(1-\phi)$ that is uniformly valid across $[0,1]$ (boundary correction $O(1/\ln b)$), strengthening the convexity conclusion. A strict waterbed inequality $\int \ln E \geq \ln b - \text{const}$ formalizes base-expansion exacerbation.
+
+4. **Empirical Validation**: We introduce Anchored Hybrid RoPE, a continuously differentiable allocation derived from the Power-Law solution. Across 50M, 100M, and 350M pre-training evaluations, we achieve a stable $\sim 13.5\%$ improvement over baseline, perfectly matching our theoretical predictions.
