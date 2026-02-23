@@ -19,7 +19,7 @@ It contains code, experiment evidence, analysis docs, and server snapshots.
 2. `knowledge_base/ALL_IN_ONE.md`
 3. `knowledge_base/00_项目与结论总览.md`
 4. `AI_HANDOFF.md`
-5. `docs/EXPERIMENT_MASTER_SUMMARY_2026-02-21.md`
+5. `docs/AI_ENVIRONMENT_SNAPSHOT_2026-02-23.md`
 6. `docs/RESEARCH_STORYLINE_2026-02-21.md`
 7. `docs/EXPERIMENT_ENVIRONMENT_2026-02-21.md`
 

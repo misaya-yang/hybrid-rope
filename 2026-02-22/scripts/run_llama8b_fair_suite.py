@@ -28,6 +28,7 @@ from __future__ import annotations
 import argparse
 import inspect
 import json
+import hashlib
 import math
 import os
 import random
@@ -195,6 +196,7 @@ def get_custom_inv_freq(
     base: float = 10000.0,
     max_seq_len: int = 8192,
     rigid_j0: int = 12,
+    anchor_factor: float = 0.0,
 ) -> torch.Tensor:
     """
     Return inv_freq tensor of shape (head_dim // 2,).
@@ -269,6 +271,42 @@ def get_custom_inv_freq(
         if rigid_j0 > 0:
             assert torch.equal(out[:rigid_j0], base_inv[:rigid_j0]), "Rigid core is not exact baseline."
         return out
+
+    if method == "sigmoid":
+        # Sigmoid-RoPE: remap frequency allocation with normalized sigmoid.
+        n = head_dim // 2
+        slope = 16.05 / float(head_dim)
+        center = 0.47 * float(n)
+
+        idx = torch.arange(n, dtype=torch.float64)
+        sigmoid_values = 1.0 / (1.0 + torch.exp(-slope * (idx - center)))
+        s_min = sigmoid_values[0]
+        s_max = sigmoid_values[-1]
+        denom = s_max - s_min
+        if torch.abs(denom) < 1e-18:
+            raise RuntimeError("sigmoid normalization collapsed (s_max == s_min).")
+        s_normalized = (sigmoid_values - s_min) / denom
+        inv_freq = 1.0 / (float(base) ** s_normalized)
+        return inv_freq
+
+    if method == "anchored_sigmoid":
+        # Anchored Sigmoid:
+        # theta_i = b^{-2i/d} * [1 + (alpha-1) * sigma(k(i-j0))]
+        # inv_freq_i = original_inv / [1 + (alpha-1) * sigma(...)]
+        n = head_dim // 2
+        slope = 16.05 / float(head_dim)
+        j0 = 0.47 * float(n)
+
+        eff_anchor = float(anchor_factor)
+        if eff_anchor <= 0:
+            eff_anchor = max(2.0, 2.5 * scale)
+            eff_anchor = min(eff_anchor, 30.0)
+
+        idx = torch.arange(n, dtype=torch.float64)
+        sigmoid_w = 1.0 / (1.0 + torch.exp(-slope * (idx - j0)))
+        scale_factor = 1.0 + (eff_anchor - 1.0) * sigmoid_w
+        inv_freq = base_inv / scale_factor
+        return inv_freq
 
     raise ValueError(f"Unknown method: {method}")
 
@@ -484,6 +522,151 @@ class SyntheticLongQADataset(Dataset):
         }
 
 
+class RealTextPackingDataset(Dataset):
+    """
+    Pack real text into fixed-length sequences for causal LM training/eval.
+    Falls back to structured synthetic text only when no real source is available.
+    """
+
+    def __init__(
+        self,
+        tokenizer: AutoTokenizer,
+        max_seq_len: int,
+        num_samples: int,
+        seed: int = 42,
+        data_source: str = "auto",
+        split: str = "train",
+        split_ratio: float = 0.95,
+    ) -> None:
+        self.tokenizer = tokenizer
+        self.max_seq_len = int(max_seq_len)
+        self.num_samples = int(num_samples)
+        self.split = str(split)
+        self.split_ratio = float(split_ratio)
+        if self.split not in {"train", "eval"}:
+            raise ValueError(f"split must be 'train' or 'eval', got {self.split}")
+        if not (0.5 <= self.split_ratio < 1.0):
+            raise ValueError(f"split_ratio must be in [0.5,1.0), got {self.split_ratio}")
+
+        all_text, source_used = self._load_text(data_source)
+        self.data_source = source_used
+        self.text_sha256 = hashlib.sha256(all_text.encode("utf-8", errors="ignore")).hexdigest()
+
+        print(f"[data] tokenizing {len(all_text)} chars...", flush=True)
+        all_ids = tokenizer.encode(all_text, add_special_tokens=False)
+        print(f"[data] total tokens: {len(all_ids)}", flush=True)
+        self.total_tokens = int(len(all_ids))
+
+        all_chunks: List[List[int]] = []
+        for start in range(0, max(0, len(all_ids) - self.max_seq_len), self.max_seq_len):
+            all_chunks.append(all_ids[start : start + self.max_seq_len])
+        self.total_chunks = int(len(all_chunks))
+        if len(all_chunks) == 0:
+            raise RuntimeError(
+                f"[data] no valid chunks produced (tokens={len(all_ids)}, max_seq_len={self.max_seq_len})"
+            )
+
+        split_at = max(1, int(len(all_chunks) * self.split_ratio))
+        if self.split == "train":
+            pool = all_chunks[:split_at]
+        else:
+            pool = all_chunks[split_at:]
+        if len(pool) == 0:
+            raise RuntimeError(
+                f"[data] split '{self.split}' has 0 chunks. "
+                f"total_chunks={len(all_chunks)}, split_ratio={self.split_ratio}"
+            )
+        self.available_chunks = int(len(pool))
+        self.chunks = list(pool)
+
+        if len(self.chunks) < self.num_samples:
+            print(
+                f"[data] WARNING: only {len(self.chunks)} chunks available, cycling to {self.num_samples}",
+                flush=True,
+            )
+            base_chunks = list(self.chunks)
+            while len(self.chunks) < self.num_samples:
+                idx = (len(self.chunks) - len(base_chunks)) % len(base_chunks)
+                self.chunks.append(base_chunks[idx])
+
+        rng = random.Random(int(seed))
+        rng.shuffle(self.chunks)
+        self.chunks = self.chunks[: self.num_samples]
+        print(
+            f"[data] source={self.data_source} split={self.split} prepared {len(self.chunks)} chunks "
+            f"of length {self.max_seq_len} (pool={self.available_chunks}, total_chunks={self.total_chunks})",
+            flush=True,
+        )
+
+    def _load_text(self, source: str) -> Tuple[str, str]:
+        # Try 1: local text files.
+        local_paths = [
+            "/root/autodl-tmp/data/long_text.txt",
+            "/root/autodl-tmp/data/redpajama_sample.txt",
+            "/root/autodl-tmp/data/slimpajama_sample.txt",
+            "./data/long_text.txt",
+        ]
+        for p in local_paths:
+            if os.path.isfile(p):
+                print(f"[data] loading from local file: {p}", flush=True)
+                with open(p, "r", encoding="utf-8") as f:
+                    text = f.read()
+                if len(text) > 10000:
+                    return text, f"local:{p}"
+
+        # Try 2: HF datasets.
+        try:
+            from datasets import load_dataset
+
+            print("[data] trying to load wikitext-103-v1...", flush=True)
+            ds = load_dataset("wikitext", "wikitext-103-v1", split="train")
+            text = "\n".join([x["text"] for x in ds if len(x["text"]) > 100])
+            if len(text) > 10000:
+                print(f"[data] loaded wikitext-103: {len(text)} chars", flush=True)
+                return text, "hf:wikitext-103-v1"
+        except Exception as e:
+            print(f"[data] wikitext failed: {e}", flush=True)
+
+        # Try 3: structured synthetic fallback.
+        print("[data] FALLBACK: generating structured synthetic text", flush=True)
+        paragraphs: List[str] = []
+        topics = [
+            "The history of artificial intelligence spans several decades of research and development.",
+            "Climate change represents one of the most significant challenges facing humanity today.",
+            "Modern financial systems rely on complex networks of institutions and regulations.",
+            "The development of quantum computing promises to revolutionize computational capabilities.",
+            "Advances in medical research continue to improve human health outcomes worldwide.",
+            "The evolution of programming languages reflects changing computational paradigms.",
+            "Space exploration has entered a new era with private companies joining government agencies.",
+            "The study of neuroscience reveals the remarkable complexity of the human brain.",
+            "Renewable energy technologies are transforming the global energy landscape.",
+            "The field of materials science enables the creation of novel substances with unique properties.",
+        ]
+        rng = random.Random(42)
+        target_chars = self.num_samples * self.max_seq_len * 5
+        text = ""
+        while len(text) < target_chars:
+            topic = rng.choice(topics)
+            para = (topic + " ") * rng.randint(50, 100)
+            paragraphs.append(para)
+            text = "\n\n".join(paragraphs)
+        return text, "synthetic:fallback_structured"
+
+    def __len__(self) -> int:
+        return len(self.chunks)
+
+    def __getitem__(self, idx: int) -> Dict[str, torch.Tensor]:
+        ids = self.chunks[idx]
+        input_ids = torch.tensor(ids, dtype=torch.long)
+        attention_mask = torch.ones(len(ids), dtype=torch.long)
+        labels = input_ids.clone()
+        return {
+            "input_ids": input_ids,
+            "attention_mask": attention_mask,
+            "labels": labels,
+        }
+
+
 def collate_fixed(features: List[Dict[str, torch.Tensor]]) -> Dict[str, torch.Tensor]:
     return {
         "input_ids": torch.stack([f["input_ids"] for f in features], dim=0),
@@ -574,9 +757,159 @@ def probe_baseline_reinject_stability(
     }
 
 
+def evaluate_ppl_at_lengths(
+    model: torch.nn.Module,
+    tokenizer: AutoTokenizer,
+    eval_chunks: List[List[int]],
+    lengths: Sequence[int],
+    device: torch.device,
+) -> Dict[int, Dict[str, object]]:
+    """Evaluate Tail-PPL at multiple lengths on packed text chunks."""
+    del tokenizer  # tokenizer kept for signature consistency
+    model.eval()
+    results: Dict[int, Dict[str, object]] = {}
+
+    for seq_len in lengths:
+        seq_len = int(seq_len)
+        valid_chunks = [c[:seq_len] for c in eval_chunks if len(c) >= seq_len]
+        if not valid_chunks:
+            results[seq_len] = {"ppl": float("inf"), "note": "insufficient data"}
+            continue
+
+        losses: List[float] = []
+        n_eval = min(10, len(valid_chunks))
+        for i in range(n_eval):
+            chunk = valid_chunks[i]
+            input_ids = torch.tensor([chunk], dtype=torch.long, device=device)
+            labels = input_ids.clone()
+            
+            # Predict only the second half (tail PPL) to measure true long-range dependency
+            half = seq_len // 2
+            labels[:, :half] = -100
+            
+            with torch.no_grad():
+                outputs = model(input_ids=input_ids, labels=labels)
+                losses.append(float(outputs.loss.item()))
+
+        avg_loss = sum(losses) / len(losses) if losses else float("inf")
+        try:
+            ppl = math.exp(min(avg_loss, 20.0)) if math.isfinite(avg_loss) else float("inf")
+        except OverflowError:
+            ppl = float("inf")
+            
+        results[seq_len] = {
+            "ppl": round(float(ppl), 4) if math.isfinite(ppl) else float("inf"),
+            "loss": round(float(avg_loss), 4) if math.isfinite(avg_loss) else float("inf"),
+            "n_chunks": int(len(losses)),
+        }
+        print(
+            f"  Tail-PPL@{seq_len}: {ppl:.4f} (loss={avg_loss:.4f}, chunks={len(losses)})",
+            flush=True,
+        )
+    return results
+
+
+def evaluate_passkey(
+    model: torch.nn.Module,
+    tokenizer: AutoTokenizer,
+    lengths: Sequence[int],
+    n_trials: int = 20,
+    device: torch.device = torch.device("cuda"),
+) -> Dict[int, Dict[str, object]]:
+    """Passkey retrieval using instruction-tuned chat template."""
+    model.eval()
+    results: Dict[int, Dict[str, object]] = {}
+
+    filler = "The quick brown fox jumps over the lazy dog. " * 10
+    filler_ids = tokenizer.encode(filler, add_special_tokens=False)
+    if len(filler_ids) == 0:
+        raise RuntimeError("Passkey filler tokenization returned empty ids.")
+
+    old_use_cache = getattr(model.config, "use_cache", None)
+    if hasattr(model.config, "use_cache"):
+        model.config.use_cache = True
+
+    try:
+        for seq_len in lengths:
+            correct = 0
+            total = 0
+
+            for trial in range(int(n_trials)):
+                rng = random.Random(42 * 1000 + int(seq_len) * 31 + trial)
+                passkey = str(rng.randint(10000, 99999))
+
+                needle = f"IMPORTANT: The special magic number is {passkey}. Keep this exact number in memory."
+                needle_ids = tokenizer.encode(needle, add_special_tokens=False)
+
+                # Determine structural overhead of the chat template
+                dummy_msg = [{"role": "user", "content": "Question: What is the special magic number?"}]
+                template_ids = tokenizer.apply_chat_template(dummy_msg, tokenize=True, add_generation_prompt=True)
+                template_ids = coerce_chat_template_ids(tokenizer, template_ids)
+                
+                # Budgets
+                filler_budget = int(seq_len) - len(needle_ids) - len(template_ids) - 10
+                if filler_budget <= 0:
+                    continue
+
+                n_filler = (filler_ids * ((filler_budget // len(filler_ids)) + 1))[:filler_budget]
+                insert_pos = rng.randint(0, len(n_filler))
+                context_ids = n_filler[:insert_pos] + needle_ids + n_filler[insert_pos:]
+                
+                context_text = tokenizer.decode(context_ids, skip_special_tokens=True)
+                user_text = f"Read the long document and answer with only the exact number.\n\n{context_text}\n\nQuestion: What is the special magic number?"
+                
+                messages = [{"role": "user", "content": user_text}]
+                full_ids = tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True)
+                full_ids = coerce_chat_template_ids(tokenizer, full_ids)
+                
+                if len(full_ids) == 0:
+                    continue
+
+                # Ensure exact length constraint
+                if len(full_ids) > int(seq_len):
+                    # Keep first token (BOS) + end
+                    full_ids = [full_ids[0]] + full_ids[-(int(seq_len) - 1):]
+
+                input_tensor = torch.tensor([full_ids], dtype=torch.long, device=device)
+
+                with torch.no_grad():
+                    output = model.generate(
+                        input_ids=input_tensor,
+                        max_new_tokens=10,
+                        do_sample=False,
+                        pad_token_id=tokenizer.pad_token_id,
+                        eos_token_id=tokenizer.eos_token_id,
+                    )
+
+                generated = output[0][len(full_ids) :]
+                generated_text = tokenizer.decode(generated, skip_special_tokens=True).strip()
+                if passkey in generated_text:
+                    correct += 1
+                total += 1
+
+            acc = (correct / total) if total > 0 else 0.0
+            results[int(seq_len)] = {"accuracy": round(acc, 4), "correct": int(correct), "total": int(total)}
+            print(f"  Passkey@{seq_len}: {acc:.1%} ({correct}/{total})", flush=True)
+    finally:
+        if hasattr(model.config, "use_cache") and old_use_cache is not None:
+            model.config.use_cache = old_use_cache
+
+    return results
+
+
+def chunk_fingerprint(chunk: Sequence[int]) -> str:
+    arr = np.asarray(chunk, dtype=np.int32)
+    return hashlib.sha1(arr.tobytes()).hexdigest()
+
+
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser(description="Fair Llama-3-8B LoRA suite (single method per run).")
-    ap.add_argument("--method", type=str, required=True, choices=["baseline", "pi", "yarn", "anchored_hybrid"])
+    ap.add_argument(
+        "--method",
+        type=str,
+        required=True,
+        choices=["baseline", "pi", "yarn", "anchored_hybrid", "sigmoid", "anchored_sigmoid"],
+    )
     ap.add_argument("--run_name", type=str, required=True)
 
     ap.add_argument(
@@ -609,6 +942,21 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--max_seq_len", type=int, default=16384)
     ap.add_argument("--rope_base", type=float, default=0.0, help="<=0 means auto-infer from model.config.rope_theta")
     ap.add_argument("--rigid_j0", type=int, default=12)
+    ap.add_argument(
+        "--anchor_factor",
+        type=float,
+        default=0.0,
+        help="Anchor factor for anchored_sigmoid. <=0 means auto-compute from scale.",
+    )
+    ap.add_argument("--data_split_ratio", type=float, default=0.95)
+    ap.add_argument("--passkey_trials", type=int, default=20)
+    ap.add_argument("--ppl_eval_chunks", type=int, default=20)
+    ap.add_argument(
+        "--allow_synthetic_fallback",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Allow synthetic fallback text when no real corpus is found.",
+    )
 
     # Synthetic data controls.
     ap.add_argument("--num_train_samples", type=int, default=2048)
@@ -703,6 +1051,7 @@ def main() -> None:
         base=rope_base,
         max_seq_len=args.max_seq_len,
         rigid_j0=args.rigid_j0,
+        anchor_factor=args.anchor_factor,
     )
     custom_inv = get_custom_inv_freq(
         method=args.method,
@@ -710,6 +1059,7 @@ def main() -> None:
         base=rope_base,
         max_seq_len=args.max_seq_len,
         rigid_j0=args.rigid_j0,
+        anchor_factor=args.anchor_factor,
     )
     if custom_inv.shape != first_mod.inv_freq.shape:
         raise RuntimeError(
@@ -830,19 +1180,45 @@ def main() -> None:
     model = get_peft_model(model, lora_cfg)
     model.print_trainable_parameters()
 
-    train_ds = SyntheticLongQADataset(
+    # Training/eval data: packed real text chunks.
+    train_ds = RealTextPackingDataset(
         tokenizer=tokenizer,
+        max_seq_len=args.max_seq_len,
         num_samples=args.num_train_samples,
-        max_seq_len=args.max_seq_len,
         seed=args.seed,
-        depth_choices=[0.1, 0.3, 0.5, 0.7, 0.9],
+        split="train",
+        split_ratio=args.data_split_ratio,
     )
-    eval_ds = SyntheticLongQADataset(
+    eval_ds = RealTextPackingDataset(
         tokenizer=tokenizer,
-        num_samples=args.num_eval_samples,
         max_seq_len=args.max_seq_len,
+        num_samples=args.num_eval_samples,
         seed=args.seed + 999,
-        depth_choices=[0.5],
+        split="eval",
+        split_ratio=args.data_split_ratio,
+    )
+    if train_ds.text_sha256 != eval_ds.text_sha256:
+        raise RuntimeError(
+            "Train/eval text source mismatch: "
+            f"train_sha={train_ds.text_sha256[:12]} eval_sha={eval_ds.text_sha256[:12]}"
+        )
+    if train_ds.data_source.startswith("synthetic:") and not args.allow_synthetic_fallback:
+        raise RuntimeError(
+            "Refusing to train on synthetic fallback text by default. "
+            "Provide real corpus file or pass --allow_synthetic_fallback."
+        )
+    train_fp = {chunk_fingerprint(c) for c in train_ds.chunks}
+    eval_fp = {chunk_fingerprint(c) for c in eval_ds.chunks}
+    overlap_count = len(train_fp.intersection(eval_fp))
+    if overlap_count > 0:
+        raise RuntimeError(
+            f"Train/eval chunk leakage detected: overlap_count={overlap_count}. "
+            "Refusing to continue to protect evidence validity."
+        )
+    print(
+        f"[data] train/eval split verified: overlap=0, "
+        f"source={train_ds.data_source}, sha256={train_ds.text_sha256[:12]}...",
+        flush=True,
     )
 
     training_args = build_training_args_compat(
@@ -903,6 +1279,48 @@ def main() -> None:
     trainer.model.save_pretrained(adapter_dir)
     tokenizer.save_pretrained(adapter_dir)
 
+    # ============ Post-training evaluation ============
+    print("\n" + "=" * 60, flush=True)
+    print("  POST-TRAINING EVALUATION", flush=True)
+    print("=" * 60, flush=True)
+
+    eval_device = next(trainer.model.parameters()).device
+
+    # Held-out PPL text comes from eval chunks only (avoid train leakage).
+    # We pass the unflattened chunks directly to evaluate_ppl_at_lengths.
+    eval_chunks = eval_ds.chunks
+
+    print("\n[eval] Tail-PPL at multiple lengths:", flush=True)
+    ppl_lengths: List[int] = [1024, 2048, 4096, 8192]
+    if args.max_seq_len >= 16384:
+        ppl_lengths.append(16384)
+    if args.max_seq_len >= 32768:
+        ppl_lengths.append(32768)
+
+    ppl_results: Dict[int, Dict[str, object]] = {}
+    if eval_chunks and max(len(c) for c in eval_chunks) >= min(ppl_lengths):
+        ppl_results = evaluate_ppl_at_lengths(
+            model=trainer.model,
+            tokenizer=tokenizer,
+            eval_chunks=eval_chunks,
+            lengths=ppl_lengths,
+            device=eval_device,
+        )
+    else:
+        print("[eval] insufficient text length for Tail-PPL evaluation, skipping", flush=True)
+
+    print("\n[eval] Passkey Retrieval:", flush=True)
+    passkey_lengths: List[int] = [1024, 2048, 4096, 8192]
+    if args.max_seq_len >= 16384:
+        passkey_lengths.append(16384)
+    passkey_results = evaluate_passkey(
+        model=trainer.model,
+        tokenizer=tokenizer,
+        lengths=passkey_lengths,
+        n_trials=args.passkey_trials,
+        device=eval_device,
+    )
+
     summary = {
         "timestamp_end": now(),
         "method": args.method,
@@ -917,6 +1335,19 @@ def main() -> None:
             "adapter_dir": str(adapter_dir),
             "calibration_report": str(run_dir / "artifacts" / "calibration_report.json"),
             "train_log": str(run_dir / "logs" / "train.log"),
+        },
+        "ppl_results": ppl_results,
+        "passkey_results": passkey_results,
+        "data_provenance": {
+            "source": train_ds.data_source,
+            "text_sha256": train_ds.text_sha256,
+            "max_seq_len": args.max_seq_len,
+            "split_ratio": args.data_split_ratio,
+            "train_chunks": len(train_ds.chunks),
+            "eval_chunks": len(eval_ds.chunks),
+            "train_pool_chunks": train_ds.available_chunks,
+            "eval_pool_chunks": eval_ds.available_chunks,
+            "split_overlap_count": overlap_count,
         },
     }
     (run_dir / "summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
