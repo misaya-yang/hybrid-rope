@@ -19,6 +19,8 @@ Crucially, we also transparently document the boundary failure modes predicted b
 
 By unifying information theory with variational calculus, our work formally closes the theoretical gap in positional encoding design. We provide the first closed-form mapping between corpus attention priors and optimal representation capacity, transitioning RoPE scaling from an empirical art to a rigorously grounded science.
 
+**Scope and positioning.** This paper is fundamentally a **theory-framework** contribution rather than a leaderboard-centric benchmark report. Our core deliverable is a falsifiable mathematical map from distance priors to optimal frequency allocation, including explicit validity boundaries and failure modes. Accordingly, experiments in this paper are used primarily as consistency and falsification tests of the framework's predictions, not as the sole source of novelty.
+
 ---
 
 ## Contributions
