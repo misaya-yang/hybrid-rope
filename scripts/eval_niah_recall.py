@@ -90,8 +90,17 @@ def build_parser() -> argparse.ArgumentParser:
         "--variant",
         type=str,
         default="auto",
-        choices=["auto", "base", "hybrid", "yarn", "pi", "pi_soft"],
+        choices=["auto", "base", "hybrid", "yarn", "pi", "pi_soft", "custom"],
         help="RoPE variant used during adapter training. auto=try infer from adapter summary.",
+    )
+    ap.add_argument(
+        "--custom_inv_freq_path",
+        type=str,
+        default="",
+        help=(
+            "Optional path to a saved inv_freq tensor (.pt). "
+            "When provided, this tensor is patched into rotary modules and overrides variant mapping."
+        ),
     )
     ap.add_argument("--rope_factor", type=float, default=8.0)
     ap.add_argument("--orig_ctx", type=int, default=8192)
@@ -235,6 +244,7 @@ def compute_hybrid_inv_freq(
 
 
 def patch_hybrid_rope(model: torch.nn.Module, inv_freq_cpu: torch.Tensor) -> int:
+    inv_freq_cpu = inv_freq_cpu.detach().to("cpu").float().view(-1)
     patched = 0
     for name, module in model.named_modules():
         if not hasattr(module, "inv_freq"):
@@ -242,6 +252,12 @@ def patch_hybrid_rope(model: torch.nn.Module, inv_freq_cpu: torch.Tensor) -> int
         if "rotary_emb" not in name and not name.endswith(".rotary_emb"):
             continue
         old = module.inv_freq
+        if old.ndim != 1:
+            raise RuntimeError(f"{name}.inv_freq is not 1D: shape={tuple(old.shape)}")
+        if old.numel() != inv_freq_cpu.numel():
+            raise RuntimeError(
+                f"{name}.inv_freq size mismatch: model={old.numel()} vs provided={inv_freq_cpu.numel()}"
+            )
         new = inv_freq_cpu.to(device=old.device, dtype=old.dtype)
         if isinstance(old, torch.nn.Parameter):
             module.inv_freq = torch.nn.Parameter(new, requires_grad=False)
@@ -253,6 +269,21 @@ def patch_hybrid_rope(model: torch.nn.Module, inv_freq_cpu: torch.Tensor) -> int
     if patched == 0:
         raise RuntimeError("No rotary modules patched for hybrid variant.")
     return patched
+
+
+def load_custom_inv_freq(path: str) -> torch.Tensor:
+    p = Path(path)
+    if not p.exists():
+        raise FileNotFoundError(f"custom_inv_freq_path not found: {p}")
+    obj = torch.load(str(p), map_location="cpu")
+    if isinstance(obj, torch.Tensor):
+        return obj.detach().float().view(-1)
+    if isinstance(obj, dict):
+        for key in ("inv_freq", "custom_inv_freq", "tensor", "data"):
+            val = obj.get(key)
+            if isinstance(val, torch.Tensor):
+                return val.detach().float().view(-1)
+    raise RuntimeError(f"Unsupported custom inv_freq payload in {p}")
 
 
 def infer_variant_and_rope_from_adapter(
@@ -308,10 +339,16 @@ def load_model_and_tokenizer(args: argparse.Namespace) -> Tuple[torch.nn.Module,
     rope_cfg: Optional[dict] = None
     rope_factor = float(args.rope_factor)
     orig_ctx = int(args.orig_ctx)
+    custom_inv_freq_path = args.custom_inv_freq_path.strip()
 
     if not args.base_only:
         if not args.adapter_path:
             raise ValueError("adapter_path is empty but base_only is False.")
+        if not custom_inv_freq_path:
+            auto_custom = Path(args.adapter_path).resolve().parent / "artifacts" / "custom_inv_freq.pt"
+            if auto_custom.exists():
+                custom_inv_freq_path = str(auto_custom)
+                LOG.info("Auto-detected custom inv_freq: %s", custom_inv_freq_path)
         infer_variant = args.variant if args.variant != "auto" else "auto"
         inferred_variant, inferred_rope_cfg, inferred_factor, inferred_orig_ctx = infer_variant_and_rope_from_adapter(
             adapter_path=args.adapter_path,
@@ -328,7 +365,14 @@ def load_model_and_tokenizer(args: argparse.Namespace) -> Tuple[torch.nn.Module,
     elif variant == "auto":
         variant = "base"
 
-    if variant not in {"base", "hybrid", "yarn", "pi", "pi_soft"}:
+    if custom_inv_freq_path:
+        variant = "custom"
+        rope_cfg = None
+
+    if variant == "custom" and not custom_inv_freq_path:
+        raise ValueError("variant=custom requires custom_inv_freq_path.")
+
+    if variant not in {"base", "hybrid", "yarn", "pi", "pi_soft", "custom"}:
         LOG.warning("Unknown variant=%s, fallback to base.", variant)
         variant = "base"
 
@@ -375,7 +419,12 @@ def load_model_and_tokenizer(args: argparse.Namespace) -> Tuple[torch.nn.Module,
             if attn is not None:
                 kwargs["attn_implementation"] = attn
             model = AutoModelForCausalLM.from_pretrained(args.base_model_path, **kwargs)
-            if variant == "hybrid":
+            if custom_inv_freq_path:
+                inv = load_custom_inv_freq(custom_inv_freq_path)
+                patched = patch_hybrid_rope(model, inv)
+                rope_cfg = {"custom_inv_freq_path": custom_inv_freq_path}
+                LOG.info("Patched custom inv_freq from %s into %d layers", custom_inv_freq_path, patched)
+            elif variant == "hybrid":
                 head_dim = model.config.hidden_size // model.config.num_attention_heads
                 inv = compute_hybrid_inv_freq(
                     head_dim=head_dim,
