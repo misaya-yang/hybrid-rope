@@ -35,6 +35,16 @@ def parse_csv(text: str) -> List[str]:
     return [x.strip() for x in text.split(",") if x.strip()]
 
 
+def json_ready(path: Path) -> bool:
+    if not path.exists() or path.stat().st_size <= 0:
+        return False
+    try:
+        _ = json.loads(path.read_text(encoding="utf-8"))
+        return True
+    except Exception:
+        return False
+
+
 def suite_running() -> bool:
     p = subprocess.run(["pgrep", "-af", "run_llama8b_fair_suite.py"], capture_output=True, text=True)
     if p.returncode != 0:
@@ -188,6 +198,11 @@ def main() -> None:
     ap.add_argument("--passkey_depths", type=str, default="10,50,90")
     ap.add_argument("--passkey_trials_per_cell", type=int, default=24)
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument(
+        "--no_resume",
+        action="store_true",
+        help="Disable output-based resume; rerun all task stages even if outputs already exist.",
+    )
     args = ap.parse_args()
 
     repo_root = Path(args.repo_root)
@@ -217,6 +232,7 @@ def main() -> None:
             "suite_output_root": str(suite_root),
             "eval_root": str(eval_root),
             "methods_requested": methods,
+            "resume_enabled": not bool(args.no_resume),
         },
         "methods": {},
     }
@@ -250,8 +266,13 @@ def main() -> None:
         if custom_inv.exists():
             common_custom_args = ["--variant", "custom", "--custom_inv_freq_path", str(custom_inv)]
 
+        rc_values: List[int] = []
+        resume_enabled = not bool(args.no_resume)
+
         if not args.skip_niah:
             niah_out = eval_root / "niah" / method
+            niah_json = niah_out / "niah_recall_results.json"
+            skipped_existing = False
             cmd = [
                 args.python_bin,
                 "scripts/eval_niah_recall.py",
@@ -276,15 +297,23 @@ def main() -> None:
                 "--seed",
                 str(args.seed),
             ] + common_custom_args
-            rc = run_cmd(cmd, cwd=repo_root, env=env, log_file=eval_root / "logs" / f"niah_{method}.log")
+            if resume_enabled and json_ready(niah_json):
+                print(f"[{now()}] [resume] skip NIAH {method}: {niah_json}", flush=True)
+                rc = 0
+                skipped_existing = True
+            else:
+                rc = run_cmd(cmd, cwd=repo_root, env=env, log_file=eval_root / "logs" / f"niah_{method}.log")
+            rc_values.append(int(rc))
             m_out["niah"] = {
                 "rc": rc,
                 "output_dir": str(niah_out),
-                "result_json": str(niah_out / "niah_recall_results.json"),
+                "result_json": str(niah_json),
+                "skipped_existing": skipped_existing,
             }
 
         if not args.skip_longbench:
             lb_out = eval_root / "longbench" / f"{method}.json"
+            skipped_existing = False
             cmd = [
                 args.python_bin,
                 "scripts/eval_longbench.py",
@@ -307,14 +336,23 @@ def main() -> None:
                 "--seed",
                 str(args.seed),
             ] + common_custom_args
-            rc = run_cmd(cmd, cwd=repo_root, env=env, log_file=eval_root / "logs" / f"longbench_{method}.log")
+            if resume_enabled and json_ready(lb_out):
+                print(f"[{now()}] [resume] skip LongBench {method}: {lb_out}", flush=True)
+                rc = 0
+                skipped_existing = True
+            else:
+                rc = run_cmd(cmd, cwd=repo_root, env=env, log_file=eval_root / "logs" / f"longbench_{method}.log")
+            rc_values.append(int(rc))
             m_out["longbench"] = {
                 "rc": rc,
                 "output_json": str(lb_out),
+                "skipped_existing": skipped_existing,
             }
 
         if not args.skip_passkey_tf:
             pk_out = eval_root / "passkey_tf" / method
+            pk_summary = pk_out / "passkey_tf_summary.json"
+            skipped_existing = False
             cmd = [
                 args.python_bin,
                 "scripts/eval_passkey_teacher_forcing.py",
@@ -335,14 +373,21 @@ def main() -> None:
                 "--seed",
                 str(args.seed),
             ] + common_custom_args
-            rc = run_cmd(cmd, cwd=repo_root, env=env, log_file=eval_root / "logs" / f"passkey_tf_{method}.log")
+            if resume_enabled and json_ready(pk_summary):
+                print(f"[{now()}] [resume] skip Passkey-TF {method}: {pk_summary}", flush=True)
+                rc = 0
+                skipped_existing = True
+            else:
+                rc = run_cmd(cmd, cwd=repo_root, env=env, log_file=eval_root / "logs" / f"passkey_tf_{method}.log")
+            rc_values.append(int(rc))
             m_out["passkey_tf"] = {
                 "rc": rc,
                 "output_dir": str(pk_out),
-                "summary_json": str(pk_out / "passkey_tf_summary.json"),
+                "summary_json": str(pk_summary),
+                "skipped_existing": skipped_existing,
             }
 
-        m_out["status"] = "done"
+        m_out["status"] = "done" if all(x == 0 for x in rc_values) else "failed"
 
     # Build aggregate report.
     report_dir = eval_root / "report"
