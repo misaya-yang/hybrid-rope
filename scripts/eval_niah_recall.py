@@ -461,6 +461,7 @@ def load_model_and_tokenizer(args: argparse.Namespace) -> Tuple[torch.nn.Module,
                 "Expected adapter_model.safetensors or adapter_model.bin."
             )
         LOG.info("Loading adapter: %s", adapter_path)
+        _normalize_no_split_modules_for_peft(model)
         model = PeftModel.from_pretrained(model, str(adapter_path), is_trainable=False)
         if args.merge_lora:
             LOG.info("Merging adapter into base model.")
@@ -475,6 +476,36 @@ def model_main_device(model: torch.nn.Module) -> torch.device:
         return next(model.parameters()).device
     except Exception:
         return torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+
+def _normalize_no_split_modules_for_peft(model: torch.nn.Module) -> None:
+    """Normalize model._no_split_modules to avoid accelerate hash/type errors."""
+    raw = getattr(model, "_no_split_modules", None)
+    if raw is None:
+        return
+    if isinstance(raw, str):
+        return
+
+    normalized: List[str] = []
+    try:
+        items = list(raw)
+    except Exception:
+        return
+
+    for item in items:
+        if isinstance(item, str):
+            normalized.append(item)
+            continue
+        if isinstance(item, (list, tuple, set)):
+            for inner in item:
+                if isinstance(inner, str):
+                    normalized.append(inner)
+        elif item is not None:
+            normalized.append(str(item))
+
+    if normalized:
+        # Keep order but remove duplicates.
+        model._no_split_modules = list(dict.fromkeys(normalized))
 
 
 def random_passkey(rng: random.Random) -> str:

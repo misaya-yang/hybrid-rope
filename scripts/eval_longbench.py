@@ -664,6 +664,8 @@ def evaluate_task(
         "indices": [int(i) for i in idxs],
         "num_scored": len(scores),
         "score": float(np.mean(scores)) if scores else None,
+        # Keep full per-sample numeric scores so paired significance tests are valid.
+        "per_sample_scores": [float(x) for x in scores],
         "examples": records,
     }
 
