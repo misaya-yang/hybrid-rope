@@ -52,6 +52,8 @@
 - `report/downstream_metrics_by_profile.csv`
 - `report/method_metrics_best_available.csv`
 - `report/longbench_task_scores.csv`
+- `report/unified_master_table.csv`（单表入口，导师/审稿视角优先）
+- `report/unified_master_table.md`（可直接贴进汇报文档）
 
 ## 6) 停机决策（成本控制）
 

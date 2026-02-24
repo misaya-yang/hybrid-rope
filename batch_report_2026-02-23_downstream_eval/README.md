@@ -11,7 +11,10 @@ This folder contains the recovered data and report artifacts for:
 - `logs/remote_status_snapshot_clean.txt`: remote runtime snapshot at bundle time.
 - `report/BATCH_REPORT_CN.md`: consolidated Chinese report.
 - `report/*.csv`: completion matrix, method metrics, and task-level scores.
+- `report/unified_master_table.csv`: one-table executive summary (ranked).
+- `report/unified_master_table.md`: markdown version for direct reporting.
 - `report/build_report.py`: report builder script from local extracted files.
+- `report/build_unified_master_table.py`: builder for the unified master table.
 
 ## Rebuild Report
 
