@@ -50,6 +50,11 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--text_path", type=str, default="/root/autodl-tmp/data/long_text.txt")
     ap.add_argument("--out_fig", type=str, default="artifacts/figures/Dhat_loglog.png")
     ap.add_argument("--out_json", type=str, default="artifacts/results/prior_fit.json")
+    ap.add_argument(
+        "--save_hist",
+        action="store_true",
+        help="Include rebinned/overall histogram arrays in JSON output for downstream bridge analysis.",
+    )
     return ap.parse_args()
 
 
@@ -272,6 +277,7 @@ def main() -> None:
             "bins": args.bins,
             "query_stride": args.query_stride,
             "query_block": args.query_block,
+            "hist_length": int(overall_hist.shape[0]),
         },
         "overall": {
             "alpha": overall_fit.get("alpha"),
@@ -286,6 +292,13 @@ def main() -> None:
             "prior_fit_json": str(out_json),
         },
     }
+    if args.save_hist:
+        payload["overall_hist"] = overall_hist.astype(float).tolist()
+        payload["overall_hist_rebinned"] = rebin_hist(overall_hist, args.bins).astype(float).tolist()
+        payload["by_layer_hist_rebinned"] = {
+            str(layer): rebin_hist(hist, args.bins).astype(float).tolist()
+            for layer, hist in layer_mean_hists.items()
+        }
     out_json.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(payload, indent=2, ensure_ascii=False), flush=True)
 

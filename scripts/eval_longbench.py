@@ -37,6 +37,17 @@ except Exception:
 LOG = logging.getLogger("eval_longbench")
 
 
+# Keep task->metric mapping explicit to avoid accidental implicit defaults.
+TASK_METRIC_MAP: Dict[str, str] = {
+    "qasper": "f1",
+    "hotpotqa": "f1",
+    "2wikimqa": "f1",
+    "narrativeqa": "f1",
+    "multi_news": "rouge_l_f1",
+    "gov_report": "rouge_l_f1",
+}
+
+
 def enforce_offline_mode() -> None:
     os.environ.setdefault("HF_HUB_OFFLINE", "1")
     os.environ.setdefault("HF_DATASETS_OFFLINE", "1")
@@ -59,6 +70,12 @@ def setup_logging(log_path: Path) -> None:
 
 def parse_csv(text: str) -> List[str]:
     return [x.strip() for x in text.split(",") if x.strip()]
+
+
+def scale_score(value_raw: float, score_scale: str) -> float:
+    if score_scale == "pct":
+        return float(value_raw) * 100.0
+    return float(value_raw)
 
 
 def attn_candidates(mode: str) -> List[Optional[str]]:
@@ -597,6 +614,7 @@ def evaluate_task(
     seed: int,
     local_data_dir: Optional[str],
     indices: Optional[List[int]] = None,
+    score_scale: str = "raw",
 ) -> Dict:
     ds = load_task_dataset(task, local_data_dir=local_data_dir)
     if indices is None:
@@ -614,9 +632,14 @@ def evaluate_task(
             random.Random(seed).shuffle(idxs)
             idxs = idxs[:n]
 
-    scores: List[float] = []
+    raw_scores: List[float] = []
     records: List[Dict] = []
-    metric_name = "f1" if task in {"qasper", "hotpotqa"} else "rouge_l_f1"
+    metric_name = TASK_METRIC_MAP.get(task)
+    if metric_name is None:
+        raise ValueError(
+            f"Task '{task}' is missing from TASK_METRIC_MAP. "
+            "Please add explicit metric mapping to avoid silent metric drift."
+        )
     max_new = max_new_tokens_qa if metric_name == "f1" else max_new_tokens_sum
 
     for k, i in enumerate(idxs):
@@ -638,10 +661,11 @@ def evaluate_task(
                 raise
 
         if metric_name == "f1":
-            sc = token_f1(pred, refs)
+            sc_raw = token_f1(pred, refs)
         else:
-            sc = rouge_l_f1(pred, refs)
-        scores.append(sc)
+            sc_raw = rouge_l_f1(pred, refs)
+        raw_scores.append(sc_raw)
+        sc = scale_score(sc_raw, score_scale=score_scale)
 
         if len(records) < 3:
             records.append(
@@ -650,22 +674,44 @@ def evaluate_task(
                     "question": question[:200],
                     "prediction": pred[:500],
                     "reference_0": refs[0][:500],
-                    "score": sc,
+                    "score_raw": float(sc_raw),
+                    "score_pct": float(sc_raw) * 100.0,
+                    "score": float(sc),
                     "context_preview": context[:300],
                 }
             )
 
         if (k + 1) % 10 == 0:
-            LOG.info("task=%s progress=%d/%d running_%s=%.4f", task, k + 1, n, metric_name, float(np.mean(scores)))
+            LOG.info(
+                "task=%s progress=%d/%d running_%s_raw=%.4f",
+                task,
+                k + 1,
+                n,
+                metric_name,
+                float(np.mean(raw_scores)),
+            )
+
+    score_raw = float(np.mean(raw_scores)) if raw_scores else None
+    score_pct = (score_raw * 100.0) if score_raw is not None else None
+    display_score = score_pct if score_scale == "pct" else score_raw
+    per_sample_raw = [float(x) for x in raw_scores]
+    per_sample_pct = [float(x) * 100.0 for x in raw_scores]
+    per_sample_display = per_sample_pct if score_scale == "pct" else per_sample_raw
 
     return {
         "task": task,
         "metric": metric_name,
+        "metric_unit": "0-1",
+        "score_scale": score_scale,
         "indices": [int(i) for i in idxs],
-        "num_scored": len(scores),
-        "score": float(np.mean(scores)) if scores else None,
-        # Keep full per-sample numeric scores so paired significance tests are valid.
-        "per_sample_scores": [float(x) for x in scores],
+        "num_scored": len(raw_scores),
+        "score": display_score,
+        "score_raw": score_raw,
+        "score_pct": score_pct,
+        # Keep scale-specific plus canonical raw/pct tracks for downstream statistics.
+        "per_sample_scores": per_sample_display,
+        "per_sample_scores_raw": per_sample_raw,
+        "per_sample_scores_pct": per_sample_pct,
         "examples": records,
     }
 
@@ -712,6 +758,13 @@ def main() -> None:
     ap.add_argument("--max_new_tokens_qa", type=int, default=64)
     ap.add_argument("--max_new_tokens_sum", type=int, default=256)
     ap.add_argument(
+        "--score_scale",
+        type=str,
+        default="raw",
+        choices=["raw", "pct"],
+        help="How to populate task-level 'score' fields: raw in [0,1] or percentage in [0,100].",
+    )
+    ap.add_argument(
         "--longbench_local_data_dir",
         type=str,
         default=os.environ.get("LONGBENCH_LOCAL_DATA_DIR", "/root/autodl-tmp/dfrope/ms_datasets/LongBench/data"),
@@ -749,6 +802,9 @@ def main() -> None:
             "tasks": tasks,
             "max_samples_per_task": args.max_samples_per_task,
             "max_input_tokens": args.max_input_tokens,
+            "score_scale": args.score_scale,
+            "score_unit_raw": "0-1",
+            "score_unit_pct": "0-100",
             "attn_implementation": args.attn_implementation,
             "variant": args.variant,
             "rope_factor": args.rope_factor,
@@ -816,6 +872,7 @@ def main() -> None:
                     seed=args.seed,
                     local_data_dir=args.longbench_local_data_dir,
                     indices=task_index_map.get(task),
+                    score_scale=args.score_scale,
                 )
                 if task not in task_index_map:
                     task_index_map[task] = [int(i) for i in tres.get("indices", [])]
@@ -824,6 +881,8 @@ def main() -> None:
                     "task": task,
                     "error": f"{type(e).__name__}: {e}",
                     "score": None,
+                    "score_raw": None,
+                    "score_pct": None,
                 }
             mres["tasks"][task] = tres
 

@@ -1,43 +1,66 @@
 #!/usr/bin/env python3
 """
-Paired bootstrap significance test for 8B LongBench results.
+Paired significance testing for LongBench results.
 
-Usage:
-    python significance_test.py --data_dir <path_to_longbench_results>
+Supports three evidence levels:
+1) per-task paired tests
+2) per-sample pooled paired tests
+3) cross-seed paired tests (when multiple roots are provided)
 
-Expected directory structure:
-    data_dir/
-      baseline/longbench/*.json    (or similar per-task files)
-      pi/longbench/*.json
-      yarn/longbench/*.json
-      sigmoid/longbench/*.json
-      anchored_sigmoid/longbench/*.json
-
-Each task JSON should contain per-sample scores.
-Adjust RESULT_LOADER below to match your actual file structure.
+Expected result JSON structure includes task-level `per_sample_scores`
+from scripts/eval_longbench.py.
 """
 
-import json
-import os
-import glob
-import numpy as np
+from __future__ import annotations
+
 import argparse
+import csv
+import glob
+import json
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Dict, List, Optional, Tuple
 
-# ============================================================
-# STEP 0: Configure these paths to match your repo structure
-# ============================================================
+import numpy as np
 
-# The 6 LongBench tasks from your evaluation
-TASKS = [
-    "multi_news", "narrativeqa", "qasper",
-    "2wikimqa", "hotpotqa", "gov_report"
+
+DEFAULT_TASKS = [
+    "multi_news",
+    "narrativeqa",
+    "qasper",
+    "2wikimqa",
+    "hotpotqa",
+    "gov_report",
 ]
 
 METHODS = ["baseline", "pi", "yarn", "sigmoid", "anchored_sigmoid"]
+COMPARISONS = [
+    ("anchored_sigmoid", "baseline", "Anc-Sig vs Baseline"),
+    ("anchored_sigmoid", "pi", "Anc-Sig vs PI"),
+    ("anchored_sigmoid", "yarn", "Anc-Sig vs YaRN"),
+    ("anchored_sigmoid", "sigmoid", "Anc-Sig vs Sigmoid (ablation)"),
+    ("sigmoid", "baseline", "Sigmoid vs Baseline"),
+    ("sigmoid", "pi", "Sigmoid vs PI"),
+]
 
 
-def resolve_data_dir(data_dir):
+@dataclass
+class PairStats:
+    n_pairs: int
+    mean_a: float
+    mean_b: float
+    diff: float
+    ci_low: float
+    ci_high: float
+    p_bootstrap: float
+    p_signflip: float
+
+
+def parse_csv(text: str) -> List[str]:
+    return [x.strip() for x in text.split(",") if x.strip()]
+
+
+def resolve_data_dir(data_dir: str) -> Path:
     """Resolve user-provided data_dir, including common batch_report wrappers."""
     base = Path(data_dir)
     if base.exists():
@@ -51,8 +74,8 @@ def resolve_data_dir(data_dir):
 
     return base
 
-def _extract_scores(obj):
-    """Extract a 1D numeric score array from common result containers."""
+
+def _extract_scores(obj) -> Optional[np.ndarray]:
     if obj is None:
         return None
 
@@ -60,273 +83,476 @@ def _extract_scores(obj):
         if not obj:
             return None
         if all(isinstance(x, (int, float)) for x in obj):
-            return np.array(obj, dtype=float)
+            return np.asarray(obj, dtype=float)
         if all(isinstance(x, dict) for x in obj):
-            for key in ["score", "f1", "rouge", "accuracy", "em"]:
+            for key in ("score", "f1", "rouge", "accuracy", "em"):
                 vals = [x.get(key) for x in obj if isinstance(x.get(key), (int, float))]
                 if vals:
-                    return np.array(vals, dtype=float)
+                    return np.asarray(vals, dtype=float)
         return None
 
     if isinstance(obj, dict):
-        for key in ["scores", "results", "per_sample_scores"]:
+        # Prefer canonical raw scores for robust cross-run comparability.
+        for key in ("per_sample_scores_raw", "per_sample_scores", "scores", "results"):
             vals = obj.get(key)
             if isinstance(vals, list) and vals and all(isinstance(x, (int, float)) for x in vals):
-                return np.array(vals, dtype=float)
+                return np.asarray(vals, dtype=float)
 
         examples = obj.get("examples")
         if isinstance(examples, list):
-            vals = [x.get("score") for x in examples if isinstance(x, dict) and isinstance(x.get("score"), (int, float))]
+            vals = [
+                x.get("score_raw")
+                for x in examples
+                if isinstance(x, dict) and isinstance(x.get("score_raw"), (int, float))
+            ]
             if vals:
-                return np.array(vals, dtype=float)
+                return np.asarray(vals, dtype=float)
+            vals = [
+                x.get("score")
+                for x in examples
+                if isinstance(x, dict) and isinstance(x.get("score"), (int, float))
+            ]
+            if vals:
+                return np.asarray(vals, dtype=float)
 
     return None
 
 
-def load_per_sample_scores(data_dir, method, task):
-    """
-    Load per-sample scores for a given method and task.
-    
-    *** YOU MUST ADAPT THIS FUNCTION TO YOUR ACTUAL FILE STRUCTURE ***
-    
-    Look in your data directory for the actual JSON format.
-    Common patterns:
-      - data_dir/{method}/longbench/{task}.json  -> list of dicts with "score" key
-      - data_dir/{method}/longbench/results.json -> dict with task keys
-    """
-    # Pattern 1: legacy per-task/per-method files
+def load_per_sample_scores(data_dir: str, method: str, task: str) -> Optional[np.ndarray]:
     candidates = [
-        os.path.join(data_dir, method, "longbench", f"{task}.json"),
-        os.path.join(data_dir, method, "longbench", f"{task}_results.json"),
-        os.path.join(data_dir, method, f"longbench_{task}.json"),
+        os_path(data_dir, method, "longbench", f"{task}.json"),
+        os_path(data_dir, method, "longbench", f"{task}_results.json"),
+        os_path(data_dir, method, f"longbench_{task}.json"),
+        os_path(data_dir, "downstream_eval_autorun", "longbench", f"{method}.json"),
+        os_path(data_dir, "downstream_eval_parallel_seed42_m2", "longbench", f"{method}.json"),
     ]
-
-    # Pattern 2: this repo's consolidated downstream LongBench outputs
-    candidates.extend([
-        os.path.join(data_dir, "downstream_eval_autorun", "longbench", f"{method}.json"),
-        os.path.join(data_dir, "downstream_eval_parallel_seed42_m2", "longbench", f"{method}.json"),
-    ])
-    candidates.extend(sorted(glob.glob(
-        os.path.join(data_dir, "downstream_eval_*", "longbench", f"{method}.json")
-    )))
-
-    # Keep order while de-duplicating.
+    candidates.extend(
+        sorted(glob.glob(os_path(data_dir, "downstream_eval_*", "longbench", f"{method}.json")))
+    )
     candidates = list(dict.fromkeys(candidates))
-    
+
     for path in candidates:
-        if os.path.exists(path):
-            with open(path) as f:
-                data = json.load(f)
-            # Direct extraction from root or task-keyed dict.
-            scores = _extract_scores(data if not isinstance(data, dict) else data.get(task, data))
-            if scores is not None and len(scores) > 0:
-                return scores
+        p = Path(path)
+        if not p.exists():
+            continue
+        try:
+            data = json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            continue
 
-            # Consolidated format:
-            #   { "models": { "hybrid_lora": { "tasks": { task: {...} } } } }
-            if isinstance(data, dict) and "models" in data and isinstance(data["models"], dict):
-                models = data["models"]
-                preferred_model_keys = [k for k in ["hybrid_lora", method] if k in models]
-                preferred_model_keys += [k for k in models.keys()
-                                         if k not in preferred_model_keys and k != "base_unfinetuned"]
-                if "base_unfinetuned" in models:
-                    preferred_model_keys.append("base_unfinetuned")
-
-                for model_key in preferred_model_keys:
-                    task_blob = models.get(model_key, {}).get("tasks", {}).get(task)
-                    scores = _extract_scores(task_blob)
-                    if scores is not None and len(scores) > 0:
-                        declared_n = task_blob.get("num_scored") if isinstance(task_blob, dict) else None
-                        if isinstance(declared_n, int) and declared_n > len(scores):
-                            print(
-                                f"  [WARN] {method}/{task}: extracted {len(scores)} score(s), "
-                                f"but metadata reports num_scored={declared_n}. "
-                                f"Current JSON appears to keep only preview examples."
-                            )
-                        return scores
-
-            print(f"  [WARN] Found {path} but couldn't parse per-sample scores for {method}/{task}")
-    
-    # Pattern 3: single results file with all tasks
-    single_file = os.path.join(data_dir, method, "longbench", "results.json")
-    if os.path.exists(single_file):
-        with open(single_file) as f:
-            data = json.load(f)
-        scores = _extract_scores(data.get(task) if isinstance(data, dict) else None)
+        # direct task-keyed or root-level extraction
+        scores = _extract_scores(data if not isinstance(data, dict) else data.get(task, data))
         if scores is not None and len(scores) > 0:
             return scores
-    
-    print(f"  [ERROR] Cannot find per-sample scores for {method}/{task}")
-    print(f"  Searched: {candidates}")
-    print(f"  Please adapt load_per_sample_scores() to your file structure.")
+
+        # consolidated format
+        if isinstance(data, dict) and isinstance(data.get("models"), dict):
+            models = data["models"]
+            preferred = [k for k in ("hybrid_lora", method) if k in models]
+            preferred += [k for k in models.keys() if k not in preferred and k != "base_unfinetuned"]
+            if "base_unfinetuned" in models:
+                preferred.append("base_unfinetuned")
+
+            for model_key in preferred:
+                task_blob = models.get(model_key, {}).get("tasks", {}).get(task)
+                scores = _extract_scores(task_blob)
+                if scores is not None and len(scores) > 0:
+                    return scores
+
+    single_file = Path(os_path(data_dir, method, "longbench", "results.json"))
+    if single_file.exists():
+        try:
+            data = json.loads(single_file.read_text(encoding="utf-8"))
+            scores = _extract_scores(data.get(task) if isinstance(data, dict) else None)
+            if scores is not None and len(scores) > 0:
+                return scores
+        except Exception:
+            pass
+
     return None
 
 
-def paired_bootstrap_test(scores_a, scores_b, n_bootstrap=10000, seed=42):
-    """
-    Paired bootstrap test: H0: mean(A) = mean(B)
-    Returns: observed_diff, p_value, ci_lower, ci_upper (95% CI of diff)
-    """
-    rng = np.random.RandomState(seed)
-    n = len(scores_a)
-    assert len(scores_b) == n, f"Length mismatch: {len(scores_a)} vs {len(scores_b)}"
-    
-    observed_diff = np.mean(scores_a) - np.mean(scores_b)
-    
-    # Bootstrap
-    diffs = np.zeros(n_bootstrap)
-    for i in range(n_bootstrap):
-        idx = rng.randint(0, n, size=n)
-        diffs[i] = np.mean(scores_a[idx]) - np.mean(scores_b[idx])
-    
-    # Two-sided p-value
-    # Under H0, center the bootstrap distribution
-    centered_diffs = diffs - np.mean(diffs)
-    p_value = np.mean(np.abs(centered_diffs) >= np.abs(observed_diff))
-    
-    # 95% CI
-    ci_lower = np.percentile(diffs, 2.5)
-    ci_upper = np.percentile(diffs, 97.5)
-    
-    return observed_diff, p_value, ci_lower, ci_upper
+def os_path(*parts: str) -> str:
+    return str(Path(*parts))
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--data_dir", required=True, 
-                        help="Root directory of 8B LongBench results")
+def bootstrap_diff_from_diffs(diffs: np.ndarray, n_bootstrap: int, seed: int) -> Tuple[float, float, float, float]:
+    rng = np.random.default_rng(seed)
+    n = int(diffs.shape[0])
+    observed = float(np.mean(diffs))
+
+    boot = np.zeros(int(n_bootstrap), dtype=np.float64)
+    for i in range(int(n_bootstrap)):
+        idx = rng.integers(0, n, size=n)
+        boot[i] = float(np.mean(diffs[idx]))
+
+    centered = boot - float(np.mean(boot))
+    p_boot = float(np.mean(np.abs(centered) >= abs(observed)))
+    ci_lo = float(np.percentile(boot, 2.5))
+    ci_hi = float(np.percentile(boot, 97.5))
+    return observed, p_boot, ci_lo, ci_hi
+
+
+def sign_flip_pvalue(diffs: np.ndarray, seed: int = 42, n_mc: int = 20000) -> float:
+    n = int(diffs.shape[0])
+    if n <= 0:
+        return float("nan")
+
+    observed = abs(float(np.mean(diffs)))
+    if n <= 20:
+        total = 1 << n
+        count = 0
+        for mask in range(total):
+            signs = np.ones(n, dtype=np.float64)
+            for i in range(n):
+                if (mask >> i) & 1:
+                    signs[i] = -1.0
+            m = abs(float(np.mean(diffs * signs)))
+            if m >= observed:
+                count += 1
+        return float(count / total)
+
+    rng = np.random.default_rng(seed)
+    count = 0
+    for _ in range(int(n_mc)):
+        signs = rng.choice(np.array([-1.0, 1.0]), size=n, replace=True)
+        m = abs(float(np.mean(diffs * signs)))
+        if m >= observed:
+            count += 1
+    return float(count / float(n_mc))
+
+
+def paired_stats(a: np.ndarray, b: np.ndarray, n_bootstrap: int, seed: int) -> PairStats:
+    n = min(len(a), len(b))
+    if n <= 0:
+        return PairStats(0, float("nan"), float("nan"), float("nan"), float("nan"), float("nan"), float("nan"), float("nan"))
+
+    a_use = np.asarray(a[:n], dtype=np.float64)
+    b_use = np.asarray(b[:n], dtype=np.float64)
+    diffs = a_use - b_use
+    diff, p_boot, ci_lo, ci_hi = bootstrap_diff_from_diffs(diffs=diffs, n_bootstrap=n_bootstrap, seed=seed)
+    p_flip = sign_flip_pvalue(diffs=diffs, seed=seed)
+
+    return PairStats(
+        n_pairs=n,
+        mean_a=float(np.mean(a_use)),
+        mean_b=float(np.mean(b_use)),
+        diff=float(diff),
+        ci_low=float(ci_lo),
+        ci_high=float(ci_hi),
+        p_bootstrap=float(p_boot),
+        p_signflip=float(p_flip),
+    )
+
+
+def hierarchical_bootstrap_diff(
+    by_seed_task_diffs: Dict[str, Dict[str, np.ndarray]],
+    n_bootstrap: int,
+    seed: int,
+) -> Tuple[float, float, float]:
+    """Two-level bootstrap: seed -> task -> sample."""
+    rng = np.random.default_rng(seed)
+    seed_keys = [k for k, v in by_seed_task_diffs.items() if v]
+    if not seed_keys:
+        return float("nan"), float("nan"), float("nan")
+
+    observed_vals = []
+    for sk in seed_keys:
+        task_vals = [float(np.mean(arr)) for arr in by_seed_task_diffs[sk].values() if len(arr) > 0]
+        if task_vals:
+            observed_vals.append(float(np.mean(task_vals)))
+    observed = float(np.mean(observed_vals)) if observed_vals else float("nan")
+
+    boot = np.zeros(int(n_bootstrap), dtype=np.float64)
+    for i in range(int(n_bootstrap)):
+        chosen_seeds = rng.choice(seed_keys, size=len(seed_keys), replace=True)
+        seed_means = []
+        for sk in chosen_seeds:
+            tmap = by_seed_task_diffs.get(str(sk), {})
+            task_keys = [t for t, arr in tmap.items() if len(arr) > 0]
+            if not task_keys:
+                continue
+            chosen_tasks = rng.choice(task_keys, size=len(task_keys), replace=True)
+            task_means = []
+            for tk in chosen_tasks:
+                arr = np.asarray(tmap[tk], dtype=np.float64)
+                idx = rng.integers(0, len(arr), size=len(arr))
+                task_means.append(float(np.mean(arr[idx])))
+            if task_means:
+                seed_means.append(float(np.mean(task_means)))
+        boot[i] = float(np.mean(seed_means)) if seed_means else 0.0
+
+    return observed, float(np.percentile(boot, 2.5)), float(np.percentile(boot, 97.5))
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Seed-aware significance testing for LongBench")
+    parser.add_argument("--data_dir", required=True, help="Primary result root")
     parser.add_argument("--n_bootstrap", type=int, default=10000)
+    parser.add_argument(
+        "--task_list",
+        type=str,
+        default=",".join(DEFAULT_TASKS),
+        help="Comma-separated task list to include",
+    )
+    parser.add_argument(
+        "--seed_grouped",
+        type=str,
+        default="",
+        help="Comma-separated extra result roots for additional seeds",
+    )
+    parser.add_argument(
+        "--hierarchical_bootstrap",
+        action="store_true",
+        help="Enable two-level hierarchical bootstrap (seed->task->sample) for pooled analysis",
+    )
+    parser.add_argument("--output_prefix", type=str, default="significance_seeded")
     args = parser.parse_args()
 
-    data_dir = resolve_data_dir(args.data_dir)
-    if not data_dir.exists():
-        raise FileNotFoundError(f"Cannot resolve data_dir: {args.data_dir}")
-    if str(data_dir) != args.data_dir:
-        print(f"  [INFO] Resolved data_dir to: {data_dir}")
-    
-    # ============================================================
-    # STEP 1: Load all per-sample scores
-    # ============================================================
-    all_scores = {}  # {method: {task: np.array}}
-    
-    for method in METHODS:
-        all_scores[method] = {}
-        for task in TASKS:
-            scores = load_per_sample_scores(str(data_dir), method, task)
-            if scores is not None:
-                all_scores[method][task] = scores
-                print(f"  Loaded {method}/{task}: {len(scores)} samples, "
-                      f"mean={np.mean(scores):.4f}")
-    
-    # ============================================================
-    # STEP 2: Compute per-method averages (sanity check)
-    # ============================================================
-    print("\n" + "="*60)
-    print("SANITY CHECK: Method averages (should match your report)")
-    print("="*60)
-    
-    for method in METHODS:
-        if all_scores[method]:
-            task_means = [np.mean(all_scores[method][t]) 
-                         for t in TASKS if t in all_scores[method]]
-            overall = np.mean(task_means) if task_means else float('nan')
-            print(f"  {method:20s}: {overall:.4f}")
-    
-    # ============================================================
-    # STEP 3: Pairwise significance tests
-    # ============================================================
-    # Key comparisons for the paper
-    comparisons = [
-        ("anchored_sigmoid", "baseline",  "Anc-Sig vs Baseline"),
-        ("anchored_sigmoid", "pi",        "Anc-Sig vs PI"),
-        ("anchored_sigmoid", "yarn",      "Anc-Sig vs YaRN"),
-        ("anchored_sigmoid", "sigmoid",   "Anc-Sig vs Sigmoid (ablation)"),
-        ("sigmoid",          "baseline",  "Sigmoid vs Baseline"),
-        ("sigmoid",          "pi",        "Sigmoid vs PI"),
-    ]
-    
-    print("\n" + "="*60)
-    print("PAIRED BOOTSTRAP SIGNIFICANCE TESTS")
-    print(f"(n_bootstrap={args.n_bootstrap})")
-    print("="*60)
-    
-    results_for_paper = []
-    
-    for method_a, method_b, label in comparisons:
-        print(f"\n--- {label} ---")
-        
-        # Concatenate per-sample scores across all tasks
-        scores_a_all = []
-        scores_b_all = []
-        
-        for task in TASKS:
-            if (task in all_scores[method_a] and 
-                task in all_scores[method_b]):
-                sa = all_scores[method_a][task]
-                sb = all_scores[method_b][task]
-                n = min(len(sa), len(sb))  # align lengths
-                scores_a_all.append(sa[:n])
-                scores_b_all.append(sb[:n])
-        
-        if not scores_a_all:
-            print("  [SKIP] No overlapping task data")
+    tasks = parse_csv(args.task_list)
+    if not tasks:
+        raise ValueError("task_list is empty")
+
+    roots = [resolve_data_dir(args.data_dir)]
+    roots.extend(resolve_data_dir(x) for x in parse_csv(args.seed_grouped))
+
+    dedup_roots: List[Path] = []
+    seen = set()
+    for r in roots:
+        rr = r.resolve()
+        if rr in seen:
             continue
-        
-        scores_a = np.concatenate(scores_a_all)
-        scores_b = np.concatenate(scores_b_all)
-        
-        diff, p, ci_lo, ci_hi = paired_bootstrap_test(
-            scores_a, scores_b, n_bootstrap=args.n_bootstrap
-        )
-        
-        sig = "***" if p < 0.001 else "**" if p < 0.01 else "*" if p < 0.05 else "n.s."
-        
-        print(f"  N samples:     {len(scores_a)}")
-        print(f"  Mean A:        {np.mean(scores_a):.4f}")
-        print(f"  Mean B:        {np.mean(scores_b):.4f}")
-        print(f"  Diff (A-B):    {diff:+.4f}")
-        print(f"  95% CI:        [{ci_lo:+.4f}, {ci_hi:+.4f}]")
-        print(f"  p-value:       {p:.4f}  {sig}")
-        
-        results_for_paper.append({
+        seen.add(rr)
+        dedup_roots.append(rr)
+    roots = dedup_roots
+
+    missing = [str(r) for r in roots if not r.exists()]
+    if missing:
+        raise FileNotFoundError(f"Result root(s) not found: {missing}")
+
+    print(f"[info] tasks={tasks}")
+    print(f"[info] roots={roots}")
+
+    all_scores: Dict[str, Dict[str, Dict[str, np.ndarray]]] = {}
+    for ridx, root in enumerate(roots):
+        seed_key = f"seed_{ridx}"
+        all_scores[seed_key] = {m: {} for m in METHODS}
+        for method in METHODS:
+            for task in tasks:
+                arr = load_per_sample_scores(str(root), method, task)
+                if arr is not None and len(arr) > 0:
+                    all_scores[seed_key][method][task] = np.asarray(arr, dtype=np.float64)
+
+    # sanity summary
+    print("\n" + "=" * 72)
+    print("SANITY CHECK: method averages by seed")
+    print("=" * 72)
+    for seed_key, per_method in all_scores.items():
+        print(f"[{seed_key}]")
+        for method in METHODS:
+            vals = [float(np.mean(per_method[method][t])) for t in tasks if t in per_method[method]]
+            if vals:
+                print(f"  {method:18s}: {float(np.mean(vals)):.4f}")
+
+    rows_csv: List[Dict[str, object]] = []
+    output_payload: Dict[str, object] = {
+        "meta": {
+            "timestamp": __import__("time").strftime("%Y-%m-%d %H:%M:%S"),
+            "roots": [str(r) for r in roots],
+            "tasks": tasks,
+            "n_bootstrap": int(args.n_bootstrap),
+            "hierarchical_bootstrap": bool(args.hierarchical_bootstrap),
+        },
+        "comparisons": [],
+    }
+
+    for method_a, method_b, label in COMPARISONS:
+        comp_obj: Dict[str, object] = {
             "comparison": label,
-            "diff": diff,
-            "ci": (ci_lo, ci_hi),
-            "p": p,
-            "sig": sig
-        })
-    
-    # ============================================================
-    # STEP 4: Summary for paper
-    # ============================================================
-    print("\n" + "="*60)
-    print("SUMMARY FOR PAPER")
-    print("="*60)
-    print()
-    
-    any_significant = False
-    for r in results_for_paper:
-        status = "SIGNIFICANT" if r["p"] < 0.05 else "NOT significant"
-        print(f"  {r['comparison']:30s}  p={r['p']:.4f}  {status}")
-        if r["p"] < 0.05:
-            any_significant = True
-    
-    print()
-    if any_significant:
-        print("  ✅ You CAN write 'statistically significant' for p<0.05 comparisons.")
-        print("  Suggested wording: 'statistically significant improvement")
-        print("  (paired bootstrap, p < 0.05, 10K resamples)'")
-    else:
-        print("  ⚠️  No comparison reached p<0.05.")
-        print("  Suggested wording: 'numerically higher but not statistically")
-        print("  significant at conventional thresholds (paired bootstrap, 10K resamples)'")
-    
-    # Save results
-    output_path = data_dir / "significance_test_results.json"
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, "w") as f:
-        json.dump([{**r, "ci": list(r["ci"])} for r in results_for_paper], f, indent=2)
-    print(f"\n  Results saved to: {output_path}")
+            "method_a": method_a,
+            "method_b": method_b,
+            "per_task": {},
+            "per_sample": {},
+            "cross_seed": {},
+        }
+
+        # per-task pooled over seeds (within each seed first, then concatenate pairs)
+        for task in tasks:
+            a_parts = []
+            b_parts = []
+            for seed_key in all_scores:
+                a = all_scores[seed_key][method_a].get(task)
+                b = all_scores[seed_key][method_b].get(task)
+                if a is None or b is None:
+                    continue
+                n = min(len(a), len(b))
+                if n <= 0:
+                    continue
+                a_parts.append(a[:n])
+                b_parts.append(b[:n])
+            if not a_parts:
+                continue
+
+            a_all = np.concatenate(a_parts)
+            b_all = np.concatenate(b_parts)
+            st = paired_stats(a_all, b_all, n_bootstrap=args.n_bootstrap, seed=42)
+            comp_obj["per_task"][task] = {
+                "n_pairs": st.n_pairs,
+                "mean_a": st.mean_a,
+                "mean_b": st.mean_b,
+                "diff": st.diff,
+                "ci_low": st.ci_low,
+                "ci_high": st.ci_high,
+                "p_bootstrap": st.p_bootstrap,
+                "p_signflip": st.p_signflip,
+            }
+            rows_csv.append(
+                {
+                    "comparison": label,
+                    "level": "per_task",
+                    "task": task,
+                    "n_pairs": st.n_pairs,
+                    "diff": st.diff,
+                    "ci_low": st.ci_low,
+                    "ci_high": st.ci_high,
+                    "p_bootstrap": st.p_bootstrap,
+                    "p_signflip": st.p_signflip,
+                }
+            )
+
+        # per-sample pooled analysis
+        pooled_a = []
+        pooled_b = []
+        by_seed_task_diffs: Dict[str, Dict[str, np.ndarray]] = {}
+        for seed_key in all_scores:
+            by_seed_task_diffs[seed_key] = {}
+            for task in tasks:
+                a = all_scores[seed_key][method_a].get(task)
+                b = all_scores[seed_key][method_b].get(task)
+                if a is None or b is None:
+                    continue
+                n = min(len(a), len(b))
+                if n <= 0:
+                    continue
+                a_use = np.asarray(a[:n], dtype=np.float64)
+                b_use = np.asarray(b[:n], dtype=np.float64)
+                pooled_a.append(a_use)
+                pooled_b.append(b_use)
+                by_seed_task_diffs[seed_key][task] = a_use - b_use
+
+        if pooled_a:
+            a_cat = np.concatenate(pooled_a)
+            b_cat = np.concatenate(pooled_b)
+            st = paired_stats(a_cat, b_cat, n_bootstrap=args.n_bootstrap, seed=42)
+            per_sample_obj = {
+                "n_pairs": st.n_pairs,
+                "mean_a": st.mean_a,
+                "mean_b": st.mean_b,
+                "diff": st.diff,
+                "ci_low": st.ci_low,
+                "ci_high": st.ci_high,
+                "p_bootstrap": st.p_bootstrap,
+                "p_signflip": st.p_signflip,
+            }
+
+            if args.hierarchical_bootstrap:
+                h_obs, h_lo, h_hi = hierarchical_bootstrap_diff(
+                    by_seed_task_diffs=by_seed_task_diffs,
+                    n_bootstrap=args.n_bootstrap,
+                    seed=52,
+                )
+                per_sample_obj["hierarchical_diff"] = h_obs
+                per_sample_obj["hierarchical_ci_low"] = h_lo
+                per_sample_obj["hierarchical_ci_high"] = h_hi
+
+            comp_obj["per_sample"] = per_sample_obj
+            rows_csv.append(
+                {
+                    "comparison": label,
+                    "level": "per_sample",
+                    "task": "all",
+                    "n_pairs": st.n_pairs,
+                    "diff": st.diff,
+                    "ci_low": st.ci_low,
+                    "ci_high": st.ci_high,
+                    "p_bootstrap": st.p_bootstrap,
+                    "p_signflip": st.p_signflip,
+                }
+            )
+
+        # cross-seed analysis (seed-level aggregated deltas)
+        seed_deltas = []
+        for seed_key in all_scores:
+            task_means = []
+            for task in tasks:
+                a = all_scores[seed_key][method_a].get(task)
+                b = all_scores[seed_key][method_b].get(task)
+                if a is None or b is None:
+                    continue
+                n = min(len(a), len(b))
+                if n <= 0:
+                    continue
+                task_means.append(float(np.mean(a[:n] - b[:n])))
+            if task_means:
+                seed_deltas.append(float(np.mean(task_means)))
+
+        if seed_deltas:
+            arr = np.asarray(seed_deltas, dtype=np.float64)
+            obs, p_boot, ci_lo, ci_hi = bootstrap_diff_from_diffs(arr, n_bootstrap=args.n_bootstrap, seed=62)
+            p_flip = sign_flip_pvalue(arr, seed=62)
+            comp_obj["cross_seed"] = {
+                "n_seeds": int(len(arr)),
+                "seed_deltas": [float(x) for x in arr.tolist()],
+                "diff": float(obs),
+                "ci_low": float(ci_lo),
+                "ci_high": float(ci_hi),
+                "p_bootstrap": float(p_boot),
+                "p_signflip": float(p_flip),
+            }
+            rows_csv.append(
+                {
+                    "comparison": label,
+                    "level": "cross_seed",
+                    "task": "seed_mean",
+                    "n_pairs": int(len(arr)),
+                    "diff": float(obs),
+                    "ci_low": float(ci_lo),
+                    "ci_high": float(ci_hi),
+                    "p_bootstrap": float(p_boot),
+                    "p_signflip": float(p_flip),
+                }
+            )
+
+        output_payload["comparisons"].append(comp_obj)
+
+    out_root = roots[0]
+    out_json = out_root / f"{args.output_prefix}.json"
+    out_csv = out_root / f"{args.output_prefix}.csv"
+    out_json.parent.mkdir(parents=True, exist_ok=True)
+
+    out_json.write_text(json.dumps(output_payload, indent=2, ensure_ascii=False), encoding="utf-8")
+    with out_csv.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(
+            f,
+            fieldnames=["comparison", "level", "task", "n_pairs", "diff", "ci_low", "ci_high", "p_bootstrap", "p_signflip"],
+        )
+        writer.writeheader()
+        for row in rows_csv:
+            writer.writerow(row)
+
+    print("\n" + "=" * 72)
+    print("SIGNIFICANCE SUMMARY (per_sample level)")
+    print("=" * 72)
+    for comp in output_payload["comparisons"]:
+        ps = comp.get("per_sample") or {}
+        if not ps:
+            continue
+        p = ps.get("p_bootstrap")
+        status = "SIGNIFICANT" if isinstance(p, (int, float)) and p < 0.05 else "NOT significant"
+        print(f"{comp['comparison']:30s} p={p:.4f} {status}")
+
+    print(f"\n[ok] wrote json: {out_json}")
+    print(f"[ok] wrote csv : {out_csv}")
 
 
 if __name__ == "__main__":

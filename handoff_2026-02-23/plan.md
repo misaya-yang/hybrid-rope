@@ -81,6 +81,90 @@ Execution policy for 2026-02-25:
 - run `E2` first (shape contribution check), then `E1` refresh table, then paired significance.
 - if significance still weak: report as directional + mechanism consistency; do not overclaim.
 
+## 0.7) Seven-day sprint code status (2026-02-24, implemented)
+
+The following code-level upgrades from the "v6 seven-day整改计划" are implemented and ready:
+
+- `scripts/eval_longbench.py`
+  - added `--score_scale {raw,pct}` (default `raw`)
+  - each task now outputs:
+    - `score_raw`, `score_pct`, `score`
+    - `metric_unit`, `score_scale`
+    - `per_sample_scores_raw`, `per_sample_scores_pct`, `per_sample_scores`
+  - explicit task->metric mapping is enforced (no implicit fallback)
+
+- `scripts/run_eval.py`
+  - added `--longbench_score_scale {raw,pct}`
+  - longbench stage summary now records:
+    - `longbench_avg_raw`, `longbench_avg_pct`
+    - `longbench_score_unit`
+  - keeps protocol traceability via `inv_freq_sha256`
+
+- `scripts/import_2024/significance_test.py` (rewritten)
+  - added `--task_list`, `--seed_grouped`, `--hierarchical_bootstrap`
+  - outputs three evidence levels:
+    - `per_task`
+    - `per_sample`
+    - `cross_seed`
+  - writes `significance_seeded.json/csv` by default
+
+- `scripts/import_2024/diag_residual_grid.py` (new)
+  - computes diagonal residual grid over `(b, L, prior_family)`
+  - outputs:
+    - `diag_residual_grid.csv/json`
+    - `diag_residual_grid.png/pdf`
+    - `recommended_domain.md`
+
+- `scripts/run_attn_hist.py`
+  - added `--save_hist` to persist reusable prior histograms into `prior_fit.json`
+    (`overall_hist`, `overall_hist_rebinned`, `by_layer_hist_rebinned`)
+
+- `scripts/import_2024/attention_prior_bridge.py` (new)
+  - compares baseline vs anchored prior-fit artifacts
+  - estimates theory-predicted density from fitted `alpha`
+  - aligns prediction with observed `inv_freq` density (if provided)
+  - outputs:
+    - `prior_fit_comparison.json`
+    - `prior_fit_comparison.png/pdf`
+
+- `scripts/import_2024/longbench_scale_audit.py` (new)
+  - validates `score_pct == 100 * score_raw`
+  - checks ranking invariance under scale conversion
+  - outputs `longbench_scale_audit.md`
+
+### Quick execution snippets (copy-run)
+
+```bash
+# P0: LongBench scale audit
+python scripts/import_2024/longbench_scale_audit.py \
+  --metrics_csv batch_report_2026-02-23_downstream_eval/report/method_metrics_best_available.csv \
+  --out_md artifacts/reviewer_2026-02-24/longbench_scale_audit.md
+
+# P3: diagonal residual applicability grid
+python scripts/import_2024/diag_residual_grid.py \
+  --b_grid 1e3,1e4,1e5,5e5,1e6 \
+  --L_grid 4096,8192,16384,32768,65536 \
+  --prior_family uniform,powerlaw,bimodal \
+  --out_dir artifacts/reviewer_2026-02-24/diag_residual_grid
+
+# P4-1: attention prior fit (baseline / anchored), keep hist for bridge
+python scripts/run_attn_hist.py --model <BASE_MODEL> --variant base --save_hist \
+  --out_json artifacts/reviewer_2026-02-24/prior_bridge/baseline_prior_fit.json \
+  --out_fig artifacts/reviewer_2026-02-24/prior_bridge/baseline_Dhat.png
+
+python scripts/run_attn_hist.py --model <BASE_MODEL> --variant custom \
+  --adapter_path <ANCHORED_ADAPTER> --custom_inv_freq_path <CUSTOM_INV_FREQ_PT> --save_hist \
+  --out_json artifacts/reviewer_2026-02-24/prior_bridge/anchored_prior_fit.json \
+  --out_fig artifacts/reviewer_2026-02-24/prior_bridge/anchored_Dhat.png
+
+# P4-2: empirical prior bridge
+python scripts/import_2024/attention_prior_bridge.py \
+  --baseline_prior_json artifacts/reviewer_2026-02-24/prior_bridge/baseline_prior_fit.json \
+  --anchored_prior_json artifacts/reviewer_2026-02-24/prior_bridge/anchored_prior_fit.json \
+  --anchored_inv_freq <CUSTOM_INV_FREQ_PT> \
+  --out_dir artifacts/reviewer_2026-02-24/prior_bridge
+```
+
 ---
 
 ## 0) Non‑negotiables (protocol lock)

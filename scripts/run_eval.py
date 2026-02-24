@@ -213,6 +213,13 @@ def parse_args() -> argparse.Namespace:
         type=str,
         default="qasper,hotpotqa,2wikimqa,multi_news,gov_report,narrativeqa",
     )
+    ap.add_argument(
+        "--longbench_score_scale",
+        type=str,
+        default="raw",
+        choices=["raw", "pct"],
+        help="How eval_longbench populates task-level 'score': raw [0,1] or pct [0,100].",
+    )
     ap.add_argument("--longbench_max_samples", type=int, default=80)
     ap.add_argument("--ppl_max_chunks", type=int, default=20)
     ap.add_argument("--needle_depths", type=str, default="10,50,90")
@@ -390,6 +397,8 @@ logging:
                 args.attn_implementation,
                 "--manifest_json",
                 str(manifest_path),
+                "--score_scale",
+                args.longbench_score_scale,
             ]
             if resolved["custom_inv_freq_path"]:
                 cmd.extend(["--variant", "custom", "--custom_inv_freq_path", resolved["custom_inv_freq_path"]])
@@ -401,18 +410,32 @@ logging:
             obj = maybe_load_json(lb_json) or {}
             tasks = parse_csv(args.longbench_tasks)
             vals = []
+            vals_raw = []
+            vals_pct = []
             for t in tasks:
-                v = (
+                task_obj = (
                     obj.get("models", {})
                     .get("hybrid_lora", {})
                     .get("tasks", {})
                     .get(t, {})
-                    .get("score")
                 )
+                v = task_obj.get("score")
+                v_raw = task_obj.get("score_raw")
+                v_pct = task_obj.get("score_pct")
                 if isinstance(v, (int, float)):
                     vals.append(float(v))
+                if isinstance(v_raw, (int, float)):
+                    vals_raw.append(float(v_raw))
+                if isinstance(v_pct, (int, float)):
+                    vals_pct.append(float(v_pct))
             lb_avg = float(sum(vals) / len(vals)) if vals else None
+            lb_avg_raw = float(sum(vals_raw) / len(vals_raw)) if vals_raw else None
+            lb_avg_pct = float(sum(vals_pct) / len(vals_pct)) if vals_pct else None
+            score_unit = "0-100" if args.longbench_score_scale == "pct" else "0-1"
             summary["metrics"]["longbench_avg"] = lb_avg
+            summary["metrics"]["longbench_avg_raw"] = lb_avg_raw
+            summary["metrics"]["longbench_avg_pct"] = lb_avg_pct
+            summary["metrics"]["longbench_score_unit"] = score_unit
             json_append(
                 metrics_jsonl,
                 {
@@ -420,6 +443,9 @@ logging:
                     "rc": rc,
                     "output_json": str(lb_json),
                     "longbench_avg": lb_avg,
+                    "longbench_avg_raw": lb_avg_raw,
+                    "longbench_avg_pct": lb_avg_pct,
+                    "longbench_score_unit": score_unit,
                     "tasks": tasks,
                 },
             )
