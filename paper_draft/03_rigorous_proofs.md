@@ -180,6 +180,50 @@ $\rho^* \propto 1/E_{\text{bi}}$ mathematically explodes at bounds. The inverse 
 
 **[Negative Insight]** The massive $+55.7\%$ proxy improvement seen in previous bounded evaluations was a mathematically engineered mirage caused by overfitting this bimodal proxy test bias. Deploying it against true continuous tokens (obeying Power-Law) induces severe "Prior Mismatch" and CRLB variance escalation.
 
+### 3.6 Regularized Inverse Problem: Interference-Resolution Joint Functional
+
+The previous analysis minimizes collision energy $\mathcal{C}[\rho]$ directly. This explains why unconstrained solutions can become overly aggressive at boundaries under adversarial priors. To close the loop with the waterbed warning, we introduce an explicit local-resolution regularizer and treat context extension as a **regularized variational inverse problem**.
+
+#### 3.6.1 Joint Objective from CRLB and Burg Entropy
+
+From CRLB, $E(\phi) \ge \mathcal{I}(\phi)^{-1}$. Taking logs and integrating:
+$$ \int_0^1 \ln E(\phi)\,d\phi \ge -\int_0^1 \ln \mathcal{I}(\phi)\,d\phi $$
+Using $\mathcal{I}(\phi)\propto \rho(\phi)b^{-2\phi}$:
+$$ \int_0^1 \ln \mathcal{I}(\phi)\,d\phi = \int_0^1 \ln \rho(\phi)\,d\phi - \ln b + C $$
+Hence maximizing $\int_0^1\ln\rho(\phi)\,d\phi$ tightens the waterbed lower bound up to constants. Define the reward:
+$$ \mathcal{R}[\rho] = \int_0^1 \ln \rho(\phi)\,d\phi $$
+and the regularized functional:
+$$
+\mathcal{L}[\rho]
+= \mathcal{C}[\rho;\mathcal{D}]
+- \lambda \int_0^1 \ln \rho(\phi)\,d\phi
++ \mu\!\left(\int_0^1\rho(\phi)\,d\phi - 1\right), \qquad \lambda>0
+$$
+The $-\lambda\ln\rho$ term is a logarithmic barrier: if $\rho(\phi)\to 0^+$ at any band, the penalty diverges.
+
+#### 3.6.2 Euler-Lagrange Dynamics Under Local-Kernel Approximation
+
+Under (A2) and local-kernel approximation in the broadband regime, we use
+$$ \frac{\delta \mathcal{C}}{\delta\rho} \approx -\rho'' + \rho $$
+which yields the stationarity equation:
+$$ -\rho'' + \rho - \frac{\lambda}{\rho} + \mu = 0
+\quad\Longleftrightarrow\quad
+\rho'' = \rho - \frac{\lambda}{\rho} + \mu $$
+
+This is a nonlinear singular-barrier ODE. With effective potential
+$$ W(\rho)=\frac{1}{2}\rho^2-\lambda\ln\rho+\mu\rho, \qquad W''(\rho)=1+\frac{\lambda}{\rho^2}>0, $$
+the landscape is strictly strongly convex for $\rho>0$, so collapse toward $\rho\to 0$ is energetically forbidden. Intuitively, this prevents mid-band frequency starvation while still allowing collision-aware reallocation.
+
+#### 3.6.3 Corollary: Unified-base Anomaly at $\theta=10^4$
+
+Under $\int_0^1\rho(\phi)\,d\phi=1$, Jensen gives:
+$$ \int_0^1\ln\rho(\phi)\,d\phi \le \ln\!\left(\int_0^1\rho(\phi)\,d\phi\right)=0, $$
+with equality iff $\rho(\phi)\equiv 1$ almost everywhere. Therefore any non-uniform warp strictly incurs entropy penalty.
+
+When $b=\theta=10^4$ (moderate $\ln b$ regime), empirical behavior is consistent with a resolution-dominated phase: gains from further reducing $\mathcal{C}$ are limited, while entropy/barrier cost from warping is nontrivial. This provides a formal explanation for why uniform geometric allocation can remain competitive or optimal under strict unified-base protocols. At much larger bases ($\ln b$ increases), interference pressure grows and symmetry-breaking warps become more favorable.
+
+> **Scope note.** This section is a controlled asymptotic extension under (A2) + local-kernel approximation, used to explain regime transitions. It is not claimed as a universal closed-form solution for all priors/kernels.
+
 ---
 
 ## Section 4: Analysis and Predictions
