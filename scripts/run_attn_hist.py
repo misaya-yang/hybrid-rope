@@ -10,6 +10,7 @@ import random
 import sys
 import time
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Dict, List
 
 import matplotlib
@@ -151,22 +152,45 @@ def main() -> None:
         torch.cuda.manual_seed_all(args.seed)
 
     rope_theta = infer_rope_theta(args.model, True)
-    model, tokenizer, _, _, _ = load_model_and_tokenizer(
-        base_model_path=args.model,
-        adapter_path=args.adapter_path or None,
-        custom_inv_freq_path=args.custom_inv_freq_path or None,
-        merge_lora=False,
-        attn_mode=args.attn_implementation,
-        trust_remote_code=True,
-        variant=args.variant,
-        rope_factor=8.0,
-        orig_ctx=8192,
-        rope_theta=rope_theta,
-        hybrid_split_ratio=0.5,
-        hybrid_alpha=0.2,
-        hybrid_p=3.9,
-        hybrid_min_freq_scale=4.0,
-    )
+    try:
+        # Newer eval_niah_recall.py interface.
+        model, tokenizer, _, _, _ = load_model_and_tokenizer(
+            base_model_path=args.model,
+            adapter_path=args.adapter_path or None,
+            custom_inv_freq_path=args.custom_inv_freq_path or None,
+            merge_lora=False,
+            attn_mode=args.attn_implementation,
+            trust_remote_code=True,
+            variant=args.variant,
+            rope_factor=8.0,
+            orig_ctx=8192,
+            rope_theta=rope_theta,
+            hybrid_split_ratio=0.5,
+            hybrid_alpha=0.2,
+            hybrid_p=3.9,
+            hybrid_min_freq_scale=4.0,
+        )
+    except TypeError:
+        # Backward-compatible fallback for namespace-style interface.
+        compat_args = SimpleNamespace(
+            base_model_path=args.model,
+            adapter_path=args.adapter_path or "",
+            base_only=not bool(args.adapter_path),
+            merge_lora=False,
+            device_map="auto",
+            variant=args.variant,
+            custom_inv_freq_path=args.custom_inv_freq_path or "",
+            rope_factor=8.0,
+            orig_ctx=8192,
+            rope_theta=rope_theta,
+            hybrid_split_ratio=0.5,
+            hybrid_alpha=0.2,
+            hybrid_p=3.9,
+            hybrid_min_freq_scale=4.0,
+            attn_implementation=args.attn_implementation,
+            trust_remote_code=True,
+        )
+        model, tokenizer, _, _, _ = load_model_and_tokenizer(compat_args)
 
     model.eval()
     layers = find_transformer_layers(model)
