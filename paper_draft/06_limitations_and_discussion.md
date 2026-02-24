@@ -13,3 +13,8 @@ To ensure our metrics reflect mathematical reality rather than engineering artif
 
 ## 4. Future Work
 While we mathematically characterize the connection between the distance prior $D(\Delta)$ and the optimal allocation density, determining the real-time empirical probability prior for a given dynamic sequence without multi-pass overhead remains computationally intractable. Future work should explore continuous context-aware dynamic frequency allocation, potentially utilizing the initial layers as dynamic phase estimators to inject sequence-specific priors into the deeper attention blocks.
+
+## 5. From "Best Method" to "Warning Boundary"
+Figure 3 in the main text should be interpreted as a warning diagnostic, not a leaderboard plot. The two-panel comparison (`rho(phi)` theoretical band vs actual warp; corrected `E_diag(phi)` trend) shows that aggressive sigmoid-like warps can move outside the bounded-amplitude regime predicted by Theorem 2 and therefore increase waterbed risk described by Theorem 3. In contrast, anchored-sigmoid stays closer to the admissible region by preserving high-frequency anchors while redistributing lower frequencies smoothly.
+
+This framing also aligns with our statistical reporting discipline: the current 8B fair LongBench comparisons in Table 4 show trend-level gains but are not statistically significant under the current sample size (`p > 0.05` across key pairwise tests). We therefore claim predictive warning value and mechanism-level guidance, rather than unconditional superiority.

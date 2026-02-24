@@ -17,7 +17,7 @@
 
 其实，单纯“提高 base + 使用 Geometric” 的理论最优是有**严重副作用**的。这就是大型 LLM（如 LLaMA）哪怕调大 base 也会在长文中变笨的根源——**高频区坍塌（High-Frequency Collapse）**。
 
-因此，论文的核心主张必须从“我找了一个理论更优的形状” 升级为：**“我提出了一种能兼顾长程容量与短程指令跟随的 Trade-off 最优形状”**。
+因此，论文的核心主张必须从“我找了一个理论更优的形状” 升级为：**“我们的理论不仅给出趋势预测，还能预警你的 warp 何时过于激进”**。
 
 ### 核心论点重组 (The New Story)
 
@@ -25,8 +25,8 @@
 2. **观察 2 (Empirical Pain Point)**：但为了极度扩展长上下文，模型被迫使用超大的 base（如 $500k$），这会导致频率曲线整体下沉，使得前几十维的高频区（负责局部精确匹配、语法结构、短文指令跟随）被严重挤压和模糊化。
 3. **我们的解法 (Hybrid/Sigmoid)**：我们不盲目追求纯数学上的极大长程 Phase Collision 最优。相反，我们**“锁定/锚定（Anchor）”高频区**（让它们保留足够的分辨率），只在低频区和中频区做平滑的重分配。
 4. **结果与证明 (The Payoff)**：
-   - 理论上：它在 Phase Collision 上的得分仅次于最优的 Geo，具备很强的长程理论基础。
-   - 实践上：这种局部让步换取了**极其惊艳的真实训练红利**。我们在从零训练（50M-350M）中获得一致 13% 的 16K PPL 改善；在 Phase 4 (124M) 中，16K PPL 暴降 66%！因为我们保留了局部理解力（精准检索），同时平滑了长程。
+   - 理论上：Theorem 2 给出可接受的幅度边界（bounded amplitude），Theorem 3 给出“水床效应”告警边界（waterbed warning）。
+   - 实践上：当形状过于极端时，模型会在局部能力上付出代价；anchored-sigmoid 的价值不在于“处处第一”，而在于把曲线约束在理论允许的安全区间内。
 
 ---
 
@@ -42,7 +42,18 @@
 - **4.3 理论重评估** —— 展示加入高位锚定后，虽然理论 Phase Collision 有极小幅度的让步，但在考虑了 $D(\Delta)$ 的综合评分下，它是所有“保留了高频分辨率”的方法里的最优解。
 
 ### Section 5: Systematic Evaluation (实验验证)
-- 这个部分就是你的王牌区域：放上 50M-350M 训练结果、Phase4 Sigmoid 甚至正在跑出的 8B 公平协议结果。强调这是一种 **"Practice-first, Theory-backed"** 的优秀架构。
+- 这个部分的主叙事改为：**Theory-as-Warning**，即理论告诉我们“什么时候不该再把 warp 做得更激进”。
+- **Figure 3（主文）**：使用 `paper_draft/figures/figure3_theory_warning.pdf`，展示 `rho(phi)` 理论带与真实 sigmoid/anchored-sigmoid 的偏离关系，以及修正后的 `E_diag(phi)` 递增趋势。
+
+#### 5.6 Ablation: Extreme Sigmoid vs Anchored-Sigmoid
+- `Extreme sigmoid` 的边界压缩更激进，虽然可能在代理指标上表现亮眼，但更容易触发 Theorem 3 所揭示的 waterbed 风险（长程收益换来中短程伤害）。
+- `Anchored-sigmoid` 的形状更温和，遵守 Theorem 2 的 bounded amplitude 约束，在长程容量与局部分辨率之间维持可控折中。
+- 这一节要强调：我们的理论贡献不是“替你宣布冠军”，而是“给出可执行的风控边界”。
+
+#### Table 4 Discussion（统计口径）
+- 对 LongBench 公平协议结果，Anchored-Sigmoid 相比 Baseline/PI/YaRN/Sigmoid 的比较目前均为 **not statistically significant**（全部 `p > 0.05`）。
+- 建议正文固定措辞：`We observe trend-level gains, but differences are not statistically significant under the current sample size and protocol.`
+- 这段诚实声明是加分项，不是减分项：它与 Figure 3 的“预警能力”定位一致，避免过度宣称。
 
 ---
 
@@ -58,4 +69,4 @@
    - 如果 8B 跑出来：Hybrid 在 16K/32K LongBench 或 Passkey（特别是精确 Retrieval）上**明显好于** YaRN，那这就是“高频保留”的直接铁证。
    - 相反，如果 PPL 指标小输 YaRN 但具体任务全胜，这个故事就彻底完美闭环了。
 
-> **总结**：我们把原本可能被 Reviewer 一脚踢翻的“基数控制变量失范（confounder）”改写成了对 LLM 外推界最痛难点的反思（Base 膨胀的高频灾难）。这大大提高了你这篇理论创新的厚度。
+> **总结**：我们把原本可能被 Reviewer 一脚踢翻的“基数控制变量失范（confounder）”改写成“理论提供预警边界”的正面贡献：它不仅解释现象，还能提前告诉你何时 warp 过激、何时应回到锚定与温和重分配。
