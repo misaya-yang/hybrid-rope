@@ -51,3 +51,10 @@ secrets/
 
 *.pt
 *.pth
+
+# Paper drafting artifacts
+paper_draft/
+
+# macOS metadata
+.DS_Store
+**/.DS_Store

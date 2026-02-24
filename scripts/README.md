@@ -11,6 +11,10 @@
 - `eval_passkey_teacher_forcing.py`：Passkey teacher-forcing 真/假候选对比评测
 - `run_sota_downstream_eval.py`：统一运行 NIAH/LongBench/Passkey 并产出论文表格和图（支持断点续跑，默认跳过已完成输出）
 - `reviewer_eval_autopilot.sh`：审稿人视角的自动化评测守护脚本（排队多 seed、自动续跑、防 GPU 空转）
+- `run_probe.py`：E0 探针（注入校验 + 64K 显存可行性）并输出 `main_ctx.txt`
+- `run_eval.py`：E1/E2 统一执行入口（PPL + LongBench + Needle），自动写 `runs/<run_id>/...` 与 `artifacts/registry.jsonl`
+- `run_attn_hist.py`：E3-lite 距离先验直方图与幂律拟合（在线累积）
+- `summarize.py`：从 `artifacts/registry.jsonl` 聚合生成论文表格 CSV
 
 ## 使用建议
 

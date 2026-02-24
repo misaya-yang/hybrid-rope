@@ -596,12 +596,23 @@ def evaluate_task(
     max_new_tokens_sum: int,
     seed: int,
     local_data_dir: Optional[str],
+    indices: Optional[List[int]] = None,
 ) -> Dict:
     ds = load_task_dataset(task, local_data_dir=local_data_dir)
-    n = min(max_samples, len(ds))
-    idxs = list(range(len(ds)))
-    random.Random(seed).shuffle(idxs)
-    idxs = idxs[:n]
+    if indices is None:
+        n = min(max_samples, len(ds))
+        idxs = list(range(len(ds)))
+        random.Random(seed).shuffle(idxs)
+        idxs = idxs[:n]
+    else:
+        idxs = [int(i) for i in indices if 0 <= int(i) < len(ds)]
+        if idxs:
+            n = len(idxs)
+        else:
+            n = min(max_samples, len(ds))
+            idxs = list(range(len(ds)))
+            random.Random(seed).shuffle(idxs)
+            idxs = idxs[:n]
 
     scores: List[float] = []
     records: List[Dict] = []
@@ -650,6 +661,7 @@ def evaluate_task(
     return {
         "task": task,
         "metric": metric_name,
+        "indices": [int(i) for i in idxs],
         "num_scored": len(scores),
         "score": float(np.mean(scores)) if scores else None,
         "examples": records,
@@ -705,6 +717,12 @@ def main() -> None:
     )
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--output_json", type=str, required=True)
+    ap.add_argument(
+        "--manifest_json",
+        type=str,
+        default="",
+        help="Optional path for paired-eval manifest (task -> fixed indices).",
+    )
     ap.add_argument("--attn_implementation", type=str, default="auto", choices=["auto", "flash_attention_2", "sdpa", "eager"])
     ap.add_argument("--merge_lora", action="store_true")
     ap.add_argument("--trust_remote_code", action="store_true", default=True)
@@ -737,6 +755,21 @@ def main() -> None:
         },
         "models": {},
     }
+
+    manifest_path = Path(args.manifest_json) if args.manifest_json else None
+    manifest_obj: Dict[str, object] = {"meta": {}, "tasks": {}}
+    if manifest_path and manifest_path.exists():
+        try:
+            manifest_obj = json.loads(manifest_path.read_text(encoding="utf-8"))
+            if not isinstance(manifest_obj.get("tasks"), dict):
+                manifest_obj["tasks"] = {}
+        except Exception as e:
+            LOG.warning("Failed to read manifest %s: %s", manifest_path, e)
+            manifest_obj = {"meta": {}, "tasks": {}}
+    task_index_map: Dict[str, List[int]] = {}
+    for t, v in (manifest_obj.get("tasks") or {}).items():
+        if isinstance(v, list):
+            task_index_map[str(t)] = [int(i) for i in v]
 
     model_specs = [
         ("base_unfinetuned", None, "base"),
@@ -780,7 +813,10 @@ def main() -> None:
                     max_new_tokens_sum=args.max_new_tokens_sum,
                     seed=args.seed,
                     local_data_dir=args.longbench_local_data_dir,
+                    indices=task_index_map.get(task),
                 )
+                if task not in task_index_map:
+                    task_index_map[task] = [int(i) for i in tres.get("indices", [])]
             except Exception as e:
                 tres = {
                     "task": task,
@@ -806,6 +842,20 @@ def main() -> None:
             "delta_hybrid_minus_base": (hyb_score - base_score) if (base_score is not None and hyb_score is not None) else None,
         }
     results["comparison"] = compare
+
+    if manifest_path:
+        manifest_path.parent.mkdir(parents=True, exist_ok=True)
+        manifest_payload = {
+            "meta": {
+                "timestamp": time.strftime("%Y-%m-%d_%H:%M:%S"),
+                "seed": args.seed,
+                "tasks": tasks,
+                "max_samples_per_task": args.max_samples_per_task,
+            },
+            "tasks": {t: task_index_map.get(t, []) for t in tasks},
+        }
+        manifest_path.write_text(json.dumps(manifest_payload, indent=2, ensure_ascii=False), encoding="utf-8")
+        results["meta"]["manifest_json"] = str(manifest_path)
 
     out_path.write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
     LOG.info("Saved %s", out_path)
