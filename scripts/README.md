@@ -7,6 +7,8 @@
 - `plot_yarn_compare.py`：绘制 50M YaRN 对比图
 - `pull_a100_350m_artifacts.sh`：从 A100 拉取 350M 相关产物
 - `commit_and_push.sh`：快速提交并推送
+- `cross_model_finetune.sh`：跨模型公平 LoRA 批量微调总控（6 组任务，固定超参，顺序执行，支持后台并行下载缺失模型）
+- `train_cross_model_lora.py`：跨模型公平 LoRA 单任务训练器（统一注入 `inv_freq.copy_()`，保存 `custom_inv_freq.pt` 和 `summary.json`）
 - `prepare_longbench_local_data.py`：下载并固化 LongBench 子任务到本地 jsonl（离线评测，支持 `--source auto/hf/modelscope/dashscope`）
 - `eval_passkey_teacher_forcing.py`：Passkey teacher-forcing 真/假候选对比评测
 - `run_sota_downstream_eval.py`：统一运行 NIAH/LongBench/Passkey 并产出论文表格和图（支持断点续跑，默认跳过已完成输出）
@@ -20,3 +22,4 @@
 
 - 具体实验脚本优先看 `artifacts/<machine>_2026-02-13/scripts/`
 - 本目录脚本更多是辅助同步/画图/维护
+- 跨模型 LoRA 批量微调默认使用本地文本语料：`/root/autodl-tmp/wikitext_data/train.txt`（训练）与 `valid.txt`（验证参考）

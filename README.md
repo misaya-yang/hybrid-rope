@@ -42,10 +42,15 @@ It contains code, experiment evidence, analysis docs, and server snapshots.
   - `scripts/run_8b_post_eval.py`
 - 8B LoRA variant training:
   - `scripts/train_llama8b_lora_variant.py`
+- Cross-model fair LoRA batch training:
+  - `scripts/cross_model_finetune.sh`
+  - `scripts/train_cross_model_lora.py`
 - NIAH eval:
   - `scripts/eval_niah_recall.py`
 - LongBench eval:
   - `scripts/eval_longbench.py`
+- F1 distance-prior empirical validation:
+  - `prior_validation.py`
 - Sigmoid phase pipelines:
   - `sigmoid_rope_experiments/run_all.py`
   - `sigmoid_rope_experiments/run_phase2.py`
