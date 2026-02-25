@@ -1,6 +1,6 @@
 # AI Handoff (One-Glance Ops Card)
 
-Last updated: 2026-02-25 09:25 CST  
+Last updated: 2026-02-25 17:15 CST  
 Local repo: `/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope`  
 Server repo: `/root/autodl-tmp/dfrope/hybrid-rope`
 
@@ -8,7 +8,12 @@ Server repo: `/root/autodl-tmp/dfrope/hybrid-rope`
 
 Use this folder as the current reviewer-remediation entrypoint:
 
-- `handoff_2026-02-25/README.md`
+- `handoff_2026-02-25/0_README.md`
+- `handoff_2026-02-25/1_PROTOCOL_LOCK.md`
+- `handoff_2026-02-25/2_ASSET_MAP.md`
+- `handoff_2026-02-25/3_RUNBOOK.md`
+- `handoff_2026-02-25/4_RECOVERY_AND_CLEANUP.md`
+- `handoff_2026-02-25/README.md` (legacy)
 - `handoff_2026-02-25/01_IMPLEMENTED_SCOPE.md`
 - `handoff_2026-02-25/02_VALIDATION_SNAPSHOT_AIDEMO.md`
 - `handoff_2026-02-25/03_NEXT_EXECUTION_GATES.md`
@@ -16,11 +21,18 @@ Use this folder as the current reviewer-remediation entrypoint:
 ## 0) Must-Read TL;DR
 
 - **Locked tuned params for next runs**: `anchor_factor=4`, `slope_raw=20`, `center_ratio=0.70`.
+- **Main evidence chain focus (cost-sensitive)**: `Qwen2.5-7B-Instruct` baseline_gold + anchored(tuned) + modern anchor (NTK) on **full lb21** and **multi-seed**.
 - **Current cross-model training script on server is NOT using tuned params**.
   - It uses legacy default anchored-sigmoid (`center_ratio=0.47`, `slope=16.05/head_dim`, auto anchor at 16K ~= 5).
 - **Current run status (confirmed)**:
   - `llama baseline seed=1337` is done (`checkpoint-600` exists).
   - `llama anchored_sigmoid seed=1337` is running now.
+
+## 0.2) New “facts-first” indices (do not skip)
+
+- Experiment inventory mirror: `docs/exp/EXPERIMENT_INVENTORY.md`
+- Authoritative registry (single source of truth): `docs/EXPERIMENT_REGISTRY.md`
+- Server cleanup manifest (quarantine-first): `docs/exp/SERVER_CLEANUP_MANIFEST.md`
 
 ## 1) Current live server status (for immediate decision)
 
@@ -109,6 +121,8 @@ PER_DEVICE_BATCH=4 MAX_STEPS=50 bash scripts/cross_model_finetune_fast_tuned.sh
 - Do not compare numbers across mismatched manifests/settings.
 - Do not claim SOTA; use theory-guided consistency framing.
 - If a condition loses, keep it in final sign-test table (no cherry-pick).
+- Cleanup is quarantine-first: move to `/root/autodl-tmp/dfrope/trash/hybrid-rope/<date>/` and record every move in `docs/exp/SERVER_CLEANUP_MANIFEST.md`.
+  - Note: `/autodl-pub/data` is mounted read-only for `trash/` on this server.
 
 ## 7) New NeurIPS sprint assets (2026-02-25)
 
@@ -122,6 +136,7 @@ Implemented scripts for high-priority整改:
     - `--truncate_mode {tail,middle}`
     - `--max_new_tokens_policy {official,manual}`
     - `--strict_parity_check`
+    - (new) `--batch_size N` (default 1) for batched greedy generation
   - `scripts/longbench_official_config/dataset2prompt.json`
   - `scripts/longbench_official_config/dataset2maxlen.json`
   - `scripts/import_2024/longbench_pipeline_audit.py`

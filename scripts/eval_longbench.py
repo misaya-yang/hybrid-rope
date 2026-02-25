@@ -14,13 +14,17 @@ from __future__ import annotations
 
 import argparse
 import gc
+import hashlib
 import json
 import logging
 import math
 import os
+import platform
 import random
 import re
 import string
+import subprocess
+import sys
 import time
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -111,6 +115,15 @@ NO_CHAT_TEMPLATE_TASKS = {
     "repobench-p",
 }
 
+TEMPLATE_LEAK_PATTERNS = [
+    r"<\|start_header_id\|>",
+    r"<\|end_header_id\|>",
+    r"<\|eot_id\|>",
+    r"(?i)\bassistant\s*:",
+    r"(?i)\buser\s*:",
+    r"(?i)\bsystem\s*:",
+]
+
 
 def enforce_offline_mode() -> None:
     os.environ.setdefault("HF_HUB_OFFLINE", "1")
@@ -134,6 +147,27 @@ def setup_logging(log_path: Path) -> None:
 
 def parse_csv(text: str) -> List[str]:
     return [x.strip() for x in text.split(",") if x.strip()]
+
+
+def clip_text(text: str, max_chars: int) -> str:
+    s = text or ""
+    if max_chars <= 0:
+        return s
+    if len(s) <= max_chars:
+        return s
+    return s[:max_chars]
+
+
+def sha1_text(text: str) -> str:
+    return hashlib.sha1((text or "").encode("utf-8", errors="ignore")).hexdigest()
+
+
+def has_template_leakage(pred: str) -> bool:
+    s = pred or ""
+    for pat in TEMPLATE_LEAK_PATTERNS:
+        if re.search(pat, s):
+            return True
+    return False
 
 
 def scale_score(value_raw: float, score_scale: str) -> float:
@@ -841,19 +875,48 @@ def build_prompt(
         return extract_legacy_prompt(task, sample)
 
 
-def truncate_prompt(tokenizer: AutoTokenizer, prompt: str, max_tokens: int, mode: str) -> str:
+def truncate_prompt_with_meta(
+    tokenizer: AutoTokenizer,
+    prompt: str,
+    max_tokens: int,
+    mode: str,
+) -> Tuple[str, Dict[str, object]]:
     ids = tokenizer.encode(prompt, add_special_tokens=False)
-    if len(ids) <= max_tokens:
-        return prompt
+    n_total = len(ids)
+    meta: Dict[str, object] = {
+        "input_tokens_before_trunc": int(n_total),
+        "input_tokens_after_trunc": int(min(n_total, max_tokens)),
+        "truncated": bool(n_total > max_tokens),
+        "truncate_mode": mode,
+        "truncation_keep_head_tokens": int(0),
+        "truncation_keep_tail_tokens": int(min(n_total, max_tokens)),
+        "truncation_dropped_tokens": int(max(0, n_total - max_tokens)),
+        "truncation_dropped_span_start": None,
+        "truncation_dropped_span_end": None,
+    }
+    if n_total <= max_tokens:
+        return prompt, meta
 
     if mode == "middle":
         first = max_tokens // 2
         second = max_tokens - first
-        ids = ids[:first] + ids[-second:]
+        kept = ids[:first] + ids[-second:]
+        meta["truncation_keep_head_tokens"] = int(first)
+        meta["truncation_keep_tail_tokens"] = int(second)
+        meta["truncation_dropped_span_start"] = int(first)
+        meta["truncation_dropped_span_end"] = int(max(first, n_total - second))
     else:
-        ids = ids[-max_tokens:]
+        kept = ids[-max_tokens:]
+        meta["truncation_keep_head_tokens"] = int(0)
+        meta["truncation_keep_tail_tokens"] = int(max_tokens)
+        meta["truncation_dropped_span_start"] = int(0)
+        meta["truncation_dropped_span_end"] = int(max(0, n_total - max_tokens))
 
-    return tokenizer.decode(ids, skip_special_tokens=True)
+    return tokenizer.decode(kept, skip_special_tokens=True), meta
+
+
+def truncate_prompt(tokenizer: AutoTokenizer, prompt: str, max_tokens: int, mode: str) -> str:
+    return truncate_prompt_with_meta(tokenizer=tokenizer, prompt=prompt, max_tokens=max_tokens, mode=mode)[0]
 
 
 def maybe_apply_chat_template(
@@ -979,6 +1042,54 @@ def generate_text(
     return tokenizer.decode(gen_ids, skip_special_tokens=True).strip()
 
 
+def ensure_pad_token(tokenizer: AutoTokenizer) -> None:
+    if tokenizer.pad_token_id is not None:
+        return
+    if tokenizer.eos_token_id is None:
+        raise ValueError("Tokenizer has no pad_token_id or eos_token_id; cannot batch-generate with padding.")
+    tokenizer.pad_token = tokenizer.eos_token
+
+
+@torch.no_grad()
+def generate_text_batch(
+    model: torch.nn.Module,
+    tokenizer: AutoTokenizer,
+    prompts: List[str],
+    max_new_tokens: int,
+) -> List[str]:
+    if not prompts:
+        return []
+    ensure_pad_token(tokenizer)
+
+    # Decoder-only generation is safest with left padding so "last token" is real prompt, not PAD.
+    old_padding_side = getattr(tokenizer, "padding_side", "right")
+    tokenizer.padding_side = "left"
+    try:
+        device = next(model.parameters()).device
+        enc = tokenizer(
+            prompts,
+            return_tensors="pt",
+            add_special_tokens=False,
+            padding=True,
+        ).to(device)
+        prompt_len = int(enc["input_ids"].shape[1])
+        out = model.generate(
+            **enc,
+            max_new_tokens=int(max_new_tokens),
+            do_sample=False,
+            temperature=None,
+            top_p=None,
+            use_cache=True,
+            pad_token_id=tokenizer.pad_token_id,
+            eos_token_id=tokenizer.eos_token_id,
+        )
+        gen_ids = out[:, prompt_len:]
+        preds = tokenizer.batch_decode(gen_ids, skip_special_tokens=True)
+        return [p.strip() for p in preds]
+    finally:
+        tokenizer.padding_side = old_padding_side
+
+
 def evaluate_task(
     model: torch.nn.Module,
     tokenizer: AutoTokenizer,
@@ -997,6 +1108,9 @@ def evaluate_task(
     official_prompt_map: Dict[str, str],
     official_maxlen_map: Dict[str, int],
     indices: Optional[List[int]] = None,
+    batch_size: int = 1,
+    save_per_sample_traces: bool = True,
+    trace_output_max_chars: int = 0,
 ) -> Dict:
     ds = load_task_dataset(task, local_data_dir=local_data_dir)
     if indices is None:
@@ -1023,76 +1137,245 @@ def evaluate_task(
 
     raw_scores: List[float] = []
     records: List[Dict] = []
+    traces: List[Dict[str, object]] = []
+    n_total = len(idxs)
+    empty_output_count = 0
+    template_leakage_count = 0
+    parse_fail_count = 0
+    truncation_at_question_count = 0
+    generation_error_count = 0
+    missing_reference_count = 0
 
-    for k, i in enumerate(idxs):
-        sample = enrich_sample_fields(dict(ds[int(i)]))
-        refs, all_classes, ref_key = extract_refs_and_classes(sample)
-        if not refs:
-            continue
+    bs = max(1, int(batch_size))
 
-        prompt = build_prompt(
-            task=task,
-            sample=sample,
-            prompt_source=prompt_source,
-            official_prompt_map=official_prompt_map,
-        )
-        prompt = maybe_apply_chat_template(tokenizer=tokenizer, task=task, prompt=prompt, chat_template=chat_template)
-        prompt = truncate_prompt(tokenizer=tokenizer, prompt=prompt, max_tokens=max_input_tokens, mode=truncate_mode)
+    def chunks(seq: List[int], size: int):
+        for start in range(0, len(seq), size):
+            yield seq[start : start + size]
 
-        max_new = pick_max_new_tokens(
-            task=task,
-            metric_name=metric_name,
-            policy=max_new_tokens_policy,
-            official_maxlen_map=official_maxlen_map,
-            max_new_tokens_qa=max_new_tokens_qa,
-            max_new_tokens_sum=max_new_tokens_sum,
-        )
+    processed = 0
+    for chunk in chunks([int(x) for x in idxs], bs):
+        entries: List[Dict[str, object]] = []
+        for i in chunk:
+            sample = enrich_sample_fields(dict(ds[int(i)]))
+            refs, all_classes, ref_key = extract_refs_and_classes(sample)
+            prompt = build_prompt(
+                task=task,
+                sample=sample,
+                prompt_source=prompt_source,
+                official_prompt_map=official_prompt_map,
+            )
+            prompt_chat = maybe_apply_chat_template(tokenizer=tokenizer, task=task, prompt=prompt, chat_template=chat_template)
+            prompt_trunc, trunc_meta = truncate_prompt_with_meta(
+                tokenizer=tokenizer,
+                prompt=prompt_chat,
+                max_tokens=max_input_tokens,
+                mode=truncate_mode,
+            )
+            question_text = as_text(sample.get("input", "")).strip()
+            q_before = bool(question_text and (question_text in prompt_chat))
+            q_after = bool(question_text and (question_text in prompt_trunc))
+            q_truncated = bool(trunc_meta.get("truncated")) and q_before and (not q_after)
+            if q_truncated:
+                truncation_at_question_count += 1
 
-        pred = ""
-        try:
-            pred = generate_text(model, tokenizer, prompt, max_new_tokens=max_new)
-        except RuntimeError as e:
-            if "out of memory" in str(e).lower():
-                torch.cuda.empty_cache()
-                short_prompt = truncate_prompt(
-                    tokenizer=tokenizer,
-                    prompt=prompt,
-                    max_tokens=max(512, max_input_tokens // 2),
-                    mode=truncate_mode,
+            max_new = pick_max_new_tokens(
+                task=task,
+                metric_name=metric_name,
+                policy=max_new_tokens_policy,
+                official_maxlen_map=official_maxlen_map,
+                max_new_tokens_qa=max_new_tokens_qa,
+                max_new_tokens_sum=max_new_tokens_sum,
+            )
+
+            entry: Dict[str, object] = {
+                "index": int(i),
+                "sample": sample,
+                "refs": refs,
+                "all_classes": all_classes,
+                "ref_key": ref_key,
+                "prompt_trunc": prompt_trunc,
+                "trunc_meta": trunc_meta,
+                "q_before": q_before,
+                "q_after": q_after,
+                "q_truncated": q_truncated,
+                "max_new": int(max_new),
+                "raw_pred": "",
+                "prompt_for_eval": prompt_trunc,
+                "fallback_used": False,
+                "evaluator_status": "ok",
+                "failure_type": "none",
+                "error_message": "",
+            }
+
+            if not refs:
+                missing_reference_count += 1
+                parse_fail_count += 1
+                entry["evaluator_status"] = "parse_fail"
+                entry["failure_type"] = "missing_reference"
+            entries.append(entry)
+
+        # Batch generate for the "ok" entries. If batch fails, fall back to per-sample generation.
+        gen_positions = [p for p, e in enumerate(entries) if e.get("evaluator_status") == "ok"]
+        gen_prompts = [str(entries[p]["prompt_for_eval"]) for p in gen_positions]
+        gen_preds: List[str] = []
+        gen_failed = False
+        if gen_prompts:
+            try:
+                gen_preds = generate_text_batch(model, tokenizer, gen_prompts, max_new_tokens=int(entries[gen_positions[0]]["max_new"]))
+            except RuntimeError as e:
+                if "out of memory" in str(e).lower():
+                    torch.cuda.empty_cache()
+                gen_failed = True
+            except Exception:
+                gen_failed = True
+
+        if gen_prompts and not gen_failed and len(gen_preds) == len(gen_prompts):
+            for p, raw_pred in zip(gen_positions, gen_preds):
+                entries[p]["raw_pred"] = raw_pred
+        else:
+            for p in gen_positions:
+                prompt_for_eval = str(entries[p]["prompt_for_eval"])
+                max_new = int(entries[p]["max_new"])
+                try:
+                    entries[p]["raw_pred"] = generate_text(model, tokenizer, prompt_for_eval, max_new_tokens=max_new)
+                except RuntimeError as e:
+                    if "out of memory" in str(e).lower():
+                        torch.cuda.empty_cache()
+                        prompt_for_eval = truncate_prompt(
+                            tokenizer=tokenizer,
+                            prompt=prompt_for_eval,
+                            max_tokens=max(512, max_input_tokens // 2),
+                            mode=truncate_mode,
+                        )
+                        entries[p]["prompt_for_eval"] = prompt_for_eval
+                        entries[p]["fallback_used"] = True
+                        try:
+                            entries[p]["raw_pred"] = generate_text(model, tokenizer, prompt_for_eval, max_new_tokens=max_new)
+                        except Exception as e2:
+                            generation_error_count += 1
+                            entries[p]["evaluator_status"] = "generation_error"
+                            entries[p]["failure_type"] = "generation_error"
+                            entries[p]["error_message"] = f"{type(e2).__name__}: {e2}"
+                    else:
+                        generation_error_count += 1
+                        entries[p]["evaluator_status"] = "generation_error"
+                        entries[p]["failure_type"] = "generation_error"
+                        entries[p]["error_message"] = f"{type(e).__name__}: {e}"
+                except Exception as e:
+                    generation_error_count += 1
+                    entries[p]["evaluator_status"] = "generation_error"
+                    entries[p]["failure_type"] = "generation_error"
+                    entries[p]["error_message"] = f"{type(e).__name__}: {e}"
+
+        for entry in entries:
+            i = int(entry["index"])
+            refs = entry["refs"]  # type: ignore[assignment]
+            all_classes = entry["all_classes"]  # type: ignore[assignment]
+            ref_key = str(entry["ref_key"])
+            raw_pred = str(entry.get("raw_pred", ""))
+            pred = post_process_prediction(task=task, pred=raw_pred)
+
+            evaluator_status = str(entry.get("evaluator_status", "ok"))
+            failure_type = str(entry.get("failure_type", "none"))
+            error_message = str(entry.get("error_message", ""))
+            fallback_used = bool(entry.get("fallback_used", False))
+            prompt_for_eval = str(entry.get("prompt_for_eval", ""))
+            trunc_meta = entry.get("trunc_meta") or {}
+            q_before = bool(entry.get("q_before", False))
+            q_after = bool(entry.get("q_after", False))
+            q_truncated = bool(entry.get("q_truncated", False))
+            max_new = int(entry.get("max_new", 0))
+
+            template_leak = has_template_leakage(pred)
+            if template_leak:
+                template_leakage_count += 1
+
+            score_raw_val: Optional[float] = None
+            score_pct_val: Optional[float] = None
+            score_val: Optional[float] = None
+
+            if evaluator_status == "ok":
+                if pred.strip() == "":
+                    empty_output_count += 1
+                    failure_type = "empty_output"
+                elif template_leak:
+                    failure_type = "template_leakage"
+
+                try:
+                    sc_raw = score_prediction(task=task, metric_name=metric_name, pred=pred, refs=refs, all_classes=all_classes)
+                    raw_scores.append(sc_raw)
+                    sc = scale_score(sc_raw, score_scale=score_scale)
+                    score_raw_val = float(sc_raw)
+                    score_pct_val = float(sc_raw) * 100.0
+                    score_val = float(sc)
+                except Exception as e:
+                    parse_fail_count += 1
+                    evaluator_status = "parse_fail"
+                    failure_type = "parse_fail"
+                    error_message = f"{type(e).__name__}: {e}"
+
+            if len(records) < 3:
+                sample = entry.get("sample") or {}
+                records.append(
+                    {
+                        "index": int(i),
+                        "prediction": clip_text(pred, 500),
+                        "reference_0": clip_text(refs[0], 500) if refs else "",
+                        "answer_key": ref_key,
+                        "score_raw": score_raw_val,
+                        "score_pct": score_pct_val,
+                        "score": score_val,
+                        "context_preview": as_text(sample.get("context", ""))[:300],
+                        "input_preview": as_text(sample.get("input", ""))[:200],
+                        "failure_type": failure_type,
+                        "evaluator_status": evaluator_status,
+                    }
                 )
-                pred = generate_text(model, tokenizer, short_prompt, max_new_tokens=max_new)
-            else:
-                raise
 
-        pred = post_process_prediction(task=task, pred=pred)
-        sc_raw = score_prediction(task=task, metric_name=metric_name, pred=pred, refs=refs, all_classes=all_classes)
-        raw_scores.append(sc_raw)
-        sc = scale_score(sc_raw, score_scale=score_scale)
+            prompt_eval_tokens = tokenizer.encode(prompt_for_eval, add_special_tokens=False)
+            trace_obj: Dict[str, object] = {
+                "index": int(i),
+                "task": task,
+                "answer_key": ref_key,
+                "metric": metric_name,
+                "prompt_sha1": sha1_text(prompt_for_eval),
+                "input_tokens_before_trunc": int(getattr(trunc_meta, "get", lambda *_: 0)("input_tokens_before_trunc", 0)),
+                "input_tokens_after_trunc": int(len(prompt_eval_tokens)),
+                "truncated": bool(getattr(trunc_meta, "get", lambda *_: False)("truncated", False)),
+                "truncate_mode": str(getattr(trunc_meta, "get", lambda *_: truncate_mode)("truncate_mode", truncate_mode)),
+                "truncation_keep_head_tokens": int(getattr(trunc_meta, "get", lambda *_: 0)("truncation_keep_head_tokens", 0)),
+                "truncation_keep_tail_tokens": int(getattr(trunc_meta, "get", lambda *_: 0)("truncation_keep_tail_tokens", 0)),
+                "truncation_dropped_tokens": int(getattr(trunc_meta, "get", lambda *_: 0)("truncation_dropped_tokens", 0)),
+                "truncation_dropped_span_start": getattr(trunc_meta, "get", lambda *_: None)("truncation_dropped_span_start"),
+                "truncation_dropped_span_end": getattr(trunc_meta, "get", lambda *_: None)("truncation_dropped_span_end"),
+                "question_present_before_trunc": bool(q_before),
+                "question_present_after_trunc": bool(q_after),
+                "question_truncated": bool(q_truncated),
+                "max_new_tokens": int(max_new),
+                "fallback_short_prompt_used": bool(fallback_used),
+                "raw_output": clip_text(raw_pred, trace_output_max_chars),
+                "prediction": clip_text(pred, trace_output_max_chars),
+                "score_raw": score_raw_val,
+                "score_pct": score_pct_val,
+                "score": score_val,
+                "evaluator_status": evaluator_status,
+                "failure_type": failure_type,
+                "error_message": error_message,
+                "template_leakage": bool(template_leak),
+            }
+            if save_per_sample_traces:
+                traces.append(trace_obj)
 
-        if len(records) < 3:
-            records.append(
-                {
-                    "index": int(i),
-                    "prediction": pred[:500],
-                    "reference_0": refs[0][:500],
-                    "answer_key": ref_key,
-                    "score_raw": float(sc_raw),
-                    "score_pct": float(sc_raw) * 100.0,
-                    "score": float(sc),
-                    "context_preview": as_text(sample.get("context", ""))[:300],
-                    "input_preview": as_text(sample.get("input", ""))[:200],
-                }
-            )
-
-        if (k + 1) % 10 == 0:
-            LOG.info(
-                "task=%s progress=%d/%d running_%s_raw=%.4f",
-                task,
-                k + 1,
-                n,
-                metric_name,
-                float(np.mean(raw_scores)),
-            )
+            processed += 1
+            if processed % 10 == 0 and raw_scores:
+                LOG.info(
+                    "task=%s progress=%d/%d running_%s_raw=%.4f",
+                    task,
+                    processed,
+                    n,
+                    metric_name,
+                    float(np.mean(raw_scores)),
+                )
 
     score_raw = float(np.mean(raw_scores)) if raw_scores else None
     score_pct = (score_raw * 100.0) if score_raw is not None else None
@@ -1100,6 +1383,21 @@ def evaluate_task(
     per_sample_raw = [float(x) for x in raw_scores]
     per_sample_pct = [float(x) * 100.0 for x in raw_scores]
     per_sample_display = per_sample_pct if score_scale == "pct" else per_sample_raw
+    denom = max(1, n_total)
+    audit = {
+        "num_selected": int(n_total),
+        "num_scored": int(len(raw_scores)),
+        "num_missing_reference": int(missing_reference_count),
+        "num_generation_error": int(generation_error_count),
+        "num_parse_fail": int(parse_fail_count),
+        "num_empty_output": int(empty_output_count),
+        "num_template_leakage": int(template_leakage_count),
+        "num_truncation_at_question": int(truncation_at_question_count),
+        "empty_output_rate": float(empty_output_count / denom),
+        "template_leakage_rate": float(template_leakage_count / denom),
+        "parse_fail_rate": float(parse_fail_count / denom),
+        "truncation_at_question_rate": float(truncation_at_question_count / denom),
+    }
 
     return {
         "task": task,
@@ -1118,6 +1416,8 @@ def evaluate_task(
         "per_sample_scores": per_sample_display,
         "per_sample_scores_raw": per_sample_raw,
         "per_sample_scores_pct": per_sample_pct,
+        "per_sample_traces": traces,
+        "audit": audit,
         "examples": records,
     }
 
@@ -1146,6 +1446,79 @@ def resolve_tasks(task_set: str, tasks: str) -> List[str]:
     if task_set not in TASK_SET_MAP:
         raise ValueError(f"Unsupported task_set={task_set}, expected one of {sorted(TASK_SET_MAP.keys())}")
     return list(TASK_SET_MAP[task_set])
+
+
+def try_run(cmd: List[str], cwd: Optional[Path] = None) -> str:
+    try:
+        p = subprocess.run(
+            cmd,
+            cwd=str(cwd) if cwd else None,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            check=False,
+        )
+        return (p.stdout or "").strip()
+    except Exception as e:
+        return f"<error: {type(e).__name__}: {e}>"
+
+
+def write_repro_manifest(
+    out_dir: Path,
+    args: argparse.Namespace,
+    tasks: List[str],
+    rope_theta: float,
+) -> None:
+    out_dir.mkdir(parents=True, exist_ok=True)
+    repo_root = Path(__file__).resolve().parents[1]
+    head = try_run(["git", "rev-parse", "HEAD"], cwd=repo_root)
+    status = try_run(["git", "status", "--short"], cwd=repo_root)
+
+    code_hash_lines = [
+        f"repo_root={repo_root}",
+        f"git_head={head}",
+        "git_status_short:",
+        status if status else "<clean>",
+    ]
+    (out_dir / "code_hash.txt").write_text("\n".join(code_hash_lines) + "\n", encoding="utf-8")
+
+    env_lines = [
+        f"timestamp={time.strftime('%Y-%m-%d %H:%M:%S')}",
+        f"python_executable={sys.executable}",
+        f"python_version={sys.version.replace(chr(10), ' ')}",
+        f"platform={platform.platform()}",
+        f"torch_version={getattr(torch, '__version__', 'unknown')}",
+        f"transformers_version={try_run([sys.executable, '-c', 'import transformers as t; print(t.__version__)'])}",
+        "pip_freeze:",
+        try_run([sys.executable, "-m", "pip", "freeze"]),
+    ]
+    nvsmi = try_run(["nvidia-smi", "--query-gpu=name,driver_version,memory.total", "--format=csv,noheader"])
+    if nvsmi and not nvsmi.startswith("<error:"):
+        env_lines.extend(["nvidia_smi:", nvsmi])
+    (out_dir / "env_freeze.txt").write_text("\n".join(env_lines) + "\n", encoding="utf-8")
+
+    baseline_gold = [
+        "baseline_gold:",
+        f"  base_model_path: \"{args.base_model_path}\"",
+        f"  adapter_path: \"{args.adapter_path or args.hybrid_adapter_path}\"",
+        f"  task_set: \"{args.task_set}\"",
+        f"  tasks: {json.dumps(tasks, ensure_ascii=False)}",
+        f"  max_samples_per_task: {int(args.max_samples_per_task)}",
+        f"  max_input_tokens: {int(args.max_input_tokens)}",
+        f"  batch_size: {int(args.batch_size)}",
+        f"  max_new_tokens_policy: \"{args.max_new_tokens_policy}\"",
+        f"  prompt_source: \"{args.prompt_source}\"",
+        f"  chat_template: \"{args.chat_template}\"",
+        f"  truncate_mode: \"{args.truncate_mode}\"",
+        f"  score_scale: \"{args.score_scale}\"",
+        f"  strict_parity_check: {bool(args.strict_parity_check)}",
+        f"  attn_implementation: \"{args.attn_implementation}\"",
+        f"  rope_theta: {float(rope_theta)}",
+        f"  official_prompt_path: \"{args.official_prompt_path}\"",
+        f"  official_maxlen_path: \"{args.official_maxlen_path}\"",
+        f"  output_json: \"{args.output_json}\"",
+    ]
+    (out_dir / "baseline_gold.yaml").write_text("\n".join(baseline_gold) + "\n", encoding="utf-8")
 
 
 def enforce_strict_parity(args: argparse.Namespace) -> None:
@@ -1234,6 +1607,12 @@ def main() -> None:
 
     ap.add_argument("--max_samples_per_task", type=int, default=100)
     ap.add_argument("--max_input_tokens", type=int, default=16384)
+    ap.add_argument(
+        "--batch_size",
+        type=int,
+        default=1,
+        help="Batch size for greedy generation. Increase on large-VRAM GPUs to improve throughput.",
+    )
     ap.add_argument("--max_new_tokens_qa", type=int, default=64)
     ap.add_argument("--max_new_tokens_sum", type=int, default=256)
     ap.add_argument(
@@ -1290,6 +1669,25 @@ def main() -> None:
     )
 
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument(
+        "--save_per_sample_traces",
+        type=int,
+        default=1,
+        choices=[0, 1],
+        help="Whether to save full per-sample trace objects (1=yes, 0=no).",
+    )
+    ap.add_argument(
+        "--trace_output_max_chars",
+        type=int,
+        default=0,
+        help="Max chars stored for raw_output/prediction in per-sample traces.",
+    )
+    ap.add_argument(
+        "--repro_manifest_dir",
+        type=str,
+        default="",
+        help="Optional directory to emit baseline_gold.yaml / env_freeze.txt / code_hash.txt.",
+    )
     ap.add_argument("--output_json", type=str, required=True)
     ap.add_argument(
         "--manifest_json",
@@ -1344,11 +1742,14 @@ def main() -> None:
             "tasks": tasks,
             "max_samples_per_task": args.max_samples_per_task,
             "max_input_tokens": args.max_input_tokens,
+            "batch_size": int(args.batch_size),
             "max_new_tokens_policy": args.max_new_tokens_policy,
             "prompt_source": args.prompt_source,
             "chat_template": args.chat_template,
             "truncate_mode": args.truncate_mode,
             "score_scale": args.score_scale,
+            "save_per_sample_traces": bool(args.save_per_sample_traces),
+            "trace_output_max_chars": int(args.trace_output_max_chars),
             "score_unit_raw": "0-1",
             "score_unit_pct": "0-100",
             "attn_implementation": args.attn_implementation,
@@ -1359,9 +1760,17 @@ def main() -> None:
             "strict_parity_check": bool(args.strict_parity_check),
             "official_prompt_path": args.official_prompt_path,
             "official_maxlen_path": args.official_maxlen_path,
+            "repro_manifest_dir": args.repro_manifest_dir,
         },
         "models": {},
     }
+    if args.repro_manifest_dir:
+        write_repro_manifest(
+            out_dir=Path(args.repro_manifest_dir),
+            args=args,
+            tasks=tasks,
+            rope_theta=rope_theta,
+        )
 
     manifest_path = Path(args.manifest_json) if args.manifest_json else None
     manifest_obj: Dict[str, object] = {"meta": {}, "tasks": {}}
@@ -1433,6 +1842,9 @@ def main() -> None:
                     official_prompt_map=official_prompt_map,
                     official_maxlen_map=official_maxlen_map,
                     indices=task_index_map.get(task),
+                    batch_size=int(args.batch_size),
+                    save_per_sample_traces=bool(args.save_per_sample_traces),
+                    trace_output_max_chars=int(args.trace_output_max_chars),
                 )
                 if task not in task_index_map:
                     task_index_map[task] = [int(i) for i in tres.get("indices", [])]

@@ -4,9 +4,14 @@ This folder is the single entrypoint for the current NeurIPS rescue track.
 
 ## Read order (strict)
 
-1. `01_IMPLEMENTED_SCOPE.md`
-2. `02_VALIDATION_SNAPSHOT_AIDEMO.md`
-3. `03_NEXT_EXECUTION_GATES.md`
+1. `0_README.md`
+2. `1_PROTOCOL_LOCK.md`
+3. `2_ASSET_MAP.md`
+4. `3_RUNBOOK.md`
+5. `4_RECOVERY_AND_CLEANUP.md`
+6. `01_IMPLEMENTED_SCOPE.md` (implementation snapshot)
+7. `02_VALIDATION_SNAPSHOT_AIDEMO.md` (local validation)
+8. `03_NEXT_EXECUTION_GATES.md` (execution gates)
 
 ## Scope
 

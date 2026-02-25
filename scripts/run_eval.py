@@ -291,7 +291,19 @@ def parse_args() -> argparse.Namespace:
         choices=["raw", "pct"],
         help="How eval_longbench populates task-level 'score': raw [0,1] or pct [0,100].",
     )
+    ap.add_argument(
+        "--longbench_repro_manifest_dir",
+        type=str,
+        default="",
+        help="Optional directory for baseline_gold.yaml / env_freeze.txt / code_hash.txt outputs.",
+    )
     ap.add_argument("--longbench_max_samples", type=int, default=80)
+    ap.add_argument(
+        "--longbench_batch_size",
+        type=int,
+        default=1,
+        help="Batch size for eval_longbench greedy generation. Increase to use more VRAM and reduce wall time.",
+    )
     ap.add_argument("--ppl_max_chunks", type=int, default=20)
     ap.add_argument("--needle_depths", type=str, default="10,50,90")
     ap.add_argument("--needle_trials_per_cell", type=int, default=24)
@@ -351,7 +363,7 @@ rope:
   shape: "{shape}"
 eval:
   ctx: {args.ctx}
-  batch_size: 1
+  batch_size: {int(args.longbench_batch_size)}
   seed: {args.seed}
   suite: {json.dumps(suites)}
 logging:
@@ -398,6 +410,8 @@ logging:
         "longbench_truncate_mode": args.longbench_truncate_mode,
         "longbench_max_new_tokens_policy": args.longbench_max_new_tokens_policy,
         "longbench_score_scale": args.longbench_score_scale,
+        "longbench_batch_size": int(args.longbench_batch_size),
+        "longbench_repro_manifest_dir": args.longbench_repro_manifest_dir,
         "strict_parity_check": bool(args.strict_parity_check),
         "manifest_path": str(manifest_path),
     }
@@ -428,6 +442,8 @@ logging:
             "longbench_chat_template": args.longbench_chat_template,
             "longbench_truncate_mode": args.longbench_truncate_mode,
             "longbench_max_new_tokens_policy": args.longbench_max_new_tokens_policy,
+            "longbench_batch_size": int(args.longbench_batch_size),
+            "longbench_repro_manifest_dir": args.longbench_repro_manifest_dir,
             "strict_parity_check": bool(args.strict_parity_check),
         },
         "metrics": {},
@@ -496,6 +512,8 @@ logging:
                 str(args.longbench_max_samples),
                 "--max_input_tokens",
                 str(args.ctx),
+                "--batch_size",
+                str(int(args.longbench_batch_size)),
                 "--seed",
                 str(args.seed),
                 "--attn_implementation",
@@ -515,6 +533,8 @@ logging:
             ]
             if longbench_tasks_arg:
                 cmd.extend(["--tasks", longbench_tasks_arg])
+            if args.longbench_repro_manifest_dir.strip():
+                cmd.extend(["--repro_manifest_dir", args.longbench_repro_manifest_dir.strip()])
             if args.strict_parity_check:
                 cmd.append("--strict_parity_check")
             if resolved["custom_inv_freq_path"]:

@@ -195,6 +195,12 @@ def main() -> None:
     ap.add_argument("--longbench_max_samples", type=int, default=80)
     ap.add_argument("--longbench_max_input_tokens", type=int, default=16384)
     ap.add_argument(
+        "--longbench_batch_size",
+        type=int,
+        default=1,
+        help="Batch size for eval_longbench greedy generation. Increase to use more VRAM and reduce wall time.",
+    )
+    ap.add_argument(
         "--longbench_prompt_source",
         type=str,
         default="official",
@@ -219,6 +225,18 @@ def main() -> None:
         choices=["official", "manual"],
     )
     ap.add_argument("--strict_parity_check", action="store_true")
+    ap.add_argument(
+        "--longbench_repro_manifest_dir",
+        type=str,
+        default="",
+        help="Optional root directory for per-method baseline_gold/env_freeze/code_hash outputs.",
+    )
+    ap.add_argument(
+        "--manifest_root",
+        type=str,
+        default="artifacts/manifests",
+        help="Shared manifest root for paired LongBench evaluation indices.",
+    )
     ap.add_argument(
         "--longbench_local_data_dir",
         type=str,
@@ -257,12 +275,17 @@ def main() -> None:
             time.sleep(max(5, int(args.poll_seconds)))
 
     methods = parse_csv(args.methods)
+    manifest_root = Path(args.manifest_root)
+    if not manifest_root.is_absolute():
+        manifest_root = (repo_root / manifest_root).resolve()
+    manifest_path = manifest_root / f"longbench_manifest_ctx{int(args.longbench_max_input_tokens)}_seed{int(args.seed)}.json"
     manifest: Dict[str, object] = {
         "meta": {
             "timestamp": now(),
             "suite_output_root": str(suite_root),
             "eval_root": str(eval_root),
             "methods_requested": methods,
+            "longbench_manifest_json": str(manifest_path),
             "resume_enabled": not bool(args.no_resume),
         },
         "methods": {},
@@ -344,6 +367,9 @@ def main() -> None:
 
         if not args.skip_longbench:
             lb_out = eval_root / "longbench" / f"{method}.json"
+            repro_manifest_dir = ""
+            if args.longbench_repro_manifest_dir.strip():
+                repro_manifest_dir = str((Path(args.longbench_repro_manifest_dir) / method).resolve())
             skipped_existing = False
             cmd = [
                 args.python_bin,
@@ -360,12 +386,16 @@ def main() -> None:
                 str(args.longbench_max_samples),
                 "--max_input_tokens",
                 str(args.longbench_max_input_tokens),
+                "--batch_size",
+                str(int(args.longbench_batch_size)),
                 "--longbench_local_data_dir",
                 args.longbench_local_data_dir,
                 "--attn_implementation",
                 "sdpa",
                 "--seed",
                 str(args.seed),
+                "--manifest_json",
+                str(manifest_path),
                 "--prompt_source",
                 args.longbench_prompt_source,
                 "--chat_template",
@@ -375,6 +405,8 @@ def main() -> None:
                 "--max_new_tokens_policy",
                 args.longbench_max_new_tokens_policy,
             ] + common_custom_args
+            if repro_manifest_dir:
+                cmd.extend(["--repro_manifest_dir", repro_manifest_dir])
             if args.longbench_tasks.strip():
                 cmd.extend(["--tasks", args.longbench_tasks.strip()])
             if args.strict_parity_check:
@@ -389,6 +421,8 @@ def main() -> None:
             m_out["longbench"] = {
                 "rc": rc,
                 "output_json": str(lb_out),
+                "manifest_json": str(manifest_path),
+                "repro_manifest_dir": repro_manifest_dir,
                 "skipped_existing": skipped_existing,
             }
 
