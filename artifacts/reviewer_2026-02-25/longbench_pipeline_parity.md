@@ -1,7 +1,7 @@
 # LongBench Pipeline Parity Audit
 
-- Candidate: `/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/downstream_eval_autorun/longbench/anchored_sigmoid.json`
-- Reference: `/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/downstream_eval_autorun/longbench/anchored_sigmoid.json`
+- Candidate: `/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/archives/batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/downstream_eval_autorun/longbench/anchored_sigmoid.json`
+- Reference: `/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/archives/batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/downstream_eval_autorun/longbench/anchored_sigmoid.json`
 - Tasks compared: **6**
 - Tolerance (abs): **1.000**
 

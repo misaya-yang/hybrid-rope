@@ -1,6 +1,6 @@
 # Knowledge Base 文档索引
 
-> 最后更新：2026-02-22
+> 最后更新：2026-02-25
 
 本目录汇集项目的核心知识文档，按编号组织，便于快速定位。
 
@@ -30,7 +30,7 @@
 
 | 脚本 | 用途 |
 |------|------|
-| `2026-02-22/scripts/run_llama8b_fair_suite.py` | 单方法训练（公平协议） |
-| `2026-02-22/scripts/run_overnight_8h.py` | 4 方法自动化流水线 |
+| `scripts/run_llama8b_fair_suite.py` | 单方法训练（公平协议） |
+| `archives/2026-02-22/scripts/run_overnight_8h.py` | 4 方法自动化流水线（历史归档，仅追溯） |
 | `scripts/eval_niah_recall.py` | NIAH 单独评测（旧协议） |
 | `scripts/eval_longbench.py` | LongBench 评测 |

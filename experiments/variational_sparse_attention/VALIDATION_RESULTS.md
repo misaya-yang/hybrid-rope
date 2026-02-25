@@ -85,6 +85,6 @@ These results support the theoretical claims in the paper and demonstrate practi
 
 ## Files
 
-- `scripts/simple_validation.py` - Main validation script
-- `scripts/validate_sparse_attention.py` - Alternative implementation with hooks
-- `prior_validation.py` - Early prototype (deprecated)
+- `experiments/variational_sparse_attention/scripts/simple_validation.py` - Main validation script
+- `experiments/variational_sparse_attention/scripts/validate_sparse_attention.py` - Alternative implementation with hooks
+- `scripts/legacy/prior_validation.py` - Early prototype (deprecated)

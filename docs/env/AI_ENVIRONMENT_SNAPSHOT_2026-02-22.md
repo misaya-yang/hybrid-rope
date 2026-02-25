@@ -79,7 +79,7 @@ scp -P 42581 local_file root@connect.bjb1.seetacloud.com:/remote/path
 
 | 参数 | 值 |
 |------|-----|
-| 脚本 | `2026-02-22/scripts/run_overnight_8h.py` |
+| 脚本 | `archives/2026-02-22/scripts/run_overnight_8h.py` |
 | 方法 | baseline, PI, YaRN, anchored_hybrid |
 | 训练步数 | 300 |
 | 上下文长度 | 16384 |
@@ -125,9 +125,9 @@ ps aux | grep run_llama
 
 | 脚本 | 用途 | 位置 |
 |------|------|------|
-| `run_llama8b_fair_suite.py` | 单方法 8B LoRA 训练（公平协议） | `2026-02-22/scripts/` |
-| `run_overnight_8h.py` | 4 方法自动化流水线 | `2026-02-22/scripts/` |
-| `_launch.sh` | **正确的实验启动脚本** | `2026-02-22/scripts/` |
+| `run_llama8b_fair_suite.py` | 单方法 8B LoRA 训练（公平协议） | `archives/2026-02-22/scripts/` |
+| `run_overnight_8h.py` | 4 方法自动化流水线 | `archives/2026-02-22/scripts/` |
+| `_launch.sh` | **正确的实验启动脚本** | `archives/2026-02-22/scripts/` |
 | `run_passkey_sanity_check.py` | Teacher-forcing passkey 评测 | `scripts/` |
 
 ### RoPE 频率注入机制
@@ -190,7 +190,7 @@ Python `import torch` 会分配 CUDA context (~81 GB)，导致子训练进程 OO
 16K context + 8B model + LoRA + gradient_checkpointing ≈ **48 秒/步**。
 用此数据计算合理的 `TRAIN_STEPS` 和 `timeout`。
 
-详细踩坑日志：`2026-02-22/SESSION_LOG.md`
+详细踩坑日志：`archives/2026-02-22/SESSION_LOG.md`
 
 ---
 
@@ -212,6 +212,6 @@ Python `import torch` 会分配 CUDA context (~81 GB)，导致子训练进程 OO
 
 1. **检查实验是否完成**：`tail results/overnight_8h/experiment.log`
 2. **如果完成**：下载 `results/overnight_8h/summary/` 的 CSV 和热力图
-3. **如果失败**：读 `results/overnight_8h/console.log` 找错误，用 `bash 2026-02-22/scripts/_launch.sh` 重启
+3. **如果失败**：读 `results/overnight_8h/console.log` 找错误，用 `bash archives/2026-02-22/scripts/_launch.sh` 重启
 4. **分析结果**：对比 4 方法的 loss 曲线和 NIAH recall
 5. **开始写论文**：参考 `knowledge_base/02_论文故事线与主张.md` 的图表清单

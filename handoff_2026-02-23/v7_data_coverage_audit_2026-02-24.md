@@ -6,7 +6,7 @@
 - Data sources:
   - `handoff_2026-02-23/01_结果真值表_VALID_INVALID.md`
   - `results/theory_2026-02-22/*`
-  - `batch_report_2026-02-23_downstream_eval/report/*`
+  - `archives/batch_report_2026-02-23_downstream_eval/report/*`
   - `.../significance_seeded_v7_refresh.{json,csv}` (local refresh run)
 
 ## Coverage Verdict

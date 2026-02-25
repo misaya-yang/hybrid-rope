@@ -92,8 +92,8 @@ Phase4 core data synced:
 - `sigmoid_rope_experiments/data/passkey_sanity_probe_summary.csv`
 
 Archive copy:
-- `server_artifacts_2026-02-21/results/phase4_passkey_sanity/`
-- `server_artifacts_2026-02-21/logs/run_passkey_sanity_check.log`
+- `archives/server_artifacts_2026-02-21/results/phase4_passkey_sanity/`
+- `archives/server_artifacts_2026-02-21/logs/run_passkey_sanity_check.log`
 
 ## 8) Next-Run Checklist
 

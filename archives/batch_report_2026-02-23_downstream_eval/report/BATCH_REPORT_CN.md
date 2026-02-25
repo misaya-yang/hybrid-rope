@@ -1,7 +1,7 @@
 # 批次实验整理汇报（2026-02-23）
 
 - 生成时间: `2026-02-23 23:42:02`
-- 本地归档目录: `/Users/yang/projects/hybrid-rope/batch_report_2026-02-23_downstream_eval`
+- 本地归档目录: `archives/batch_report_2026-02-23_downstream_eval`
 - 运行根目录: `data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150`
 - 已归档文件数: `231`
 - 已归档体积: `176.78 MB`

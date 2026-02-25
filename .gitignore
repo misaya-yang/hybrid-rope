@@ -30,22 +30,17 @@ artifacts/a800_2026-02-13/results/llama3_hybrid_lora/final_lora/*
 
 # Packaging artifacts
 **/*.tar.gz
+**/*.tgz
 
 # Local sync/cache folders
 .tmp_sync/
 logs/
-2026-02-22/
-tmp_phase4_compare/
 artifacts/local_monitor/
 artifacts/reviewer_2026-02-24/
 
 # Local significance smoke/rerun artifacts (generated during analysis)
-batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/significance_seeded_smoke.csv
-batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/significance_seeded_smoke.json
-batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/significance_seeded_hier_smoke.csv
-batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/significance_seeded_hier_smoke.json
-batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/significance_seeded_v7_refresh.csv
-batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/significance_seeded_v7_refresh.json
+archives/batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/significance_seeded_*.csv
+archives/batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/significance_seeded_*.json
 
 # Keep quarantined weights out of version control
 results/_weights_quarantine/**

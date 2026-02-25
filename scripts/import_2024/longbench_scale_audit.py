@@ -16,13 +16,13 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument(
         "--metrics_csv",
         type=str,
-        default="batch_report_2026-02-23_downstream_eval/report/method_metrics_best_available.csv",
+        default="archives/batch_report_2026-02-23_downstream_eval/report/method_metrics_best_available.csv",
     )
     ap.add_argument("--value_col", type=str, default="longbench_avg")
     ap.add_argument(
         "--out_md",
         type=str,
-        default="artifacts/reviewer_2026-02-24/longbench_scale_audit.md",
+        default="artifacts/results/theory_validation/longbench_scale_audit.md",
     )
     ap.add_argument("--tolerance", type=float, default=1e-6)
     return ap.parse_args()

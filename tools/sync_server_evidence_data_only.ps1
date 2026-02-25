@@ -13,7 +13,7 @@ param(
 
     [string]$RemoteRepoRoot = "/root/autodl-tmp/dfrope/hybrid-rope",
     [string]$LocalRepoRoot = ".",
-    [string]$LocalTargetRel = "server_artifacts_2026-02-21",
+    [string]$LocalTargetRel = "archives/server_artifacts_2026-02-21",
     [switch]$CleanTarget
 )
 

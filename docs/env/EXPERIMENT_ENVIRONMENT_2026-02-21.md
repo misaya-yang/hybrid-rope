@@ -41,6 +41,6 @@ Updated: `2026-02-21`
 ## 5. Evidence Sync Strategy
 
 - Raw server evidence is mirrored to:
-  - `server_artifacts_2026-02-21/`
+  - `archives/server_artifacts_2026-02-21/`
 - Sync script:
   - `tools/sync_server_evidence_data_only.ps1`

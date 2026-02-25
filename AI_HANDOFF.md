@@ -1,6 +1,6 @@
 # AI Handoff (One-Glance Ops Card)
 
-Last updated: 2026-02-25 17:15 CST  
+Last updated: 2026-02-25 20:36 CST  
 Local repo: `/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope`  
 Server repo: `/root/autodl-tmp/dfrope/hybrid-rope`
 
@@ -22,11 +22,13 @@ Use this folder as the current reviewer-remediation entrypoint:
 
 - **Locked tuned params for next runs**: `anchor_factor=4`, `slope_raw=20`, `center_ratio=0.70`.
 - **Main evidence chain focus (cost-sensitive)**: `Qwen2.5-7B-Instruct` baseline_gold + anchored(tuned) + modern anchor (NTK) on **full lb21** and **multi-seed**.
-- **Current cross-model training script on server is NOT using tuned params**.
-  - It uses legacy default anchored-sigmoid (`center_ratio=0.47`, `slope=16.05/head_dim`, auto anchor at 16K ~= 5).
-- **Current run status (confirmed)**:
-  - `llama baseline seed=1337` is done (`checkpoint-600` exists).
-  - `llama anchored_sigmoid seed=1337` is running now.
+- **Current server training uses the tuned fast entrypoint**:
+  - `scripts/train_cross_model_lora_fast_tuned.py --method anchored_sigmoid --anchor_factor 4 --slope_raw 20 --center_ratio 0.70`
+- **Current run status (confirmed on 2026-02-25 20:36 CST)**:
+  - done: `qwen2_5_7b_instruct_baseline_42` (`checkpoint-400` exists).
+  - done: `qwen2_5_7b_instruct_anchored_sigmoid_42` (`checkpoint-400` exists).
+  - running: `qwen2_5_7b_instruct_baseline_1337` (`checkpoint-200` exists; training PID shown below).
+  - pending: `qwen2_5_7b_instruct_anchored_sigmoid_1337` (directory not created yet).
 
 ## 0.2) New “facts-first” indices (do not skip)
 
@@ -36,29 +38,25 @@ Use this folder as the current reviewer-remediation entrypoint:
 
 ## 1) Current live server status (for immediate decision)
 
-As of `2026-02-25 09:23 CST`:
-- GPU: `50567 MiB / 97887 MiB`, util ~`100%`
+As of `2026-02-25 20:36 CST`:
+- GPU: ~`90277 MiB / 97887 MiB`, util ~`100%` (training running)
 - Active process:
-  - `scripts/train_cross_model_lora.py --method anchored_sigmoid ... --seed 1337 --max_steps 600`
+  - `scripts/train_cross_model_lora_fast_tuned.py --method baseline ... --seed 1337 --max_steps 400`
 - Progress:
-  - `artifacts/cross_model/monitor.log` shows `step=347/600`
-- Completed artifact:
-  - `artifacts/cross_model/llama_3_8b_instruct_baseline_1337/checkpoint-600`
+  - `checkpoint-200` exists under the baseline seed=1337 output dir (ETA depends on compile/save overhead)
+- Completed artifacts:
+  - `artifacts/cross_model_fast_tuned_b1_gc/qwen2_5_7b_instruct_baseline_42/checkpoint-400`
+  - `artifacts/cross_model_fast_tuned_b1_gc/qwen2_5_7b_instruct_anchored_sigmoid_42/checkpoint-400`
 - Running artifact:
-  - `artifacts/cross_model/llama_3_8b_instruct_anchored_sigmoid_1337/checkpoint-200`
-
-## 2) Why this matters
-
-Current cross-model run is protocol-clean in budget, but **parameter-misaligned** with the tuned schedule selected for v6 remediation.  
-If we continue full queue without correction, Mistral/Qwen may consume compute on non-target params.
+  - `artifacts/cross_model_fast_tuned_b1_gc/qwen2_5_7b_instruct_baseline_1337/checkpoint-200`
 
 ## 3) Fast verification commands (do before any next launch)
 
 ```bash
 # A) Check running process and progress
 cd /root/autodl-tmp/dfrope/hybrid-rope
-pgrep -af 'scripts/train_cross_model_lora.py'
-tail -n 10 artifacts/cross_model/monitor.log
+pgrep -af 'scripts/train_cross_model_lora_fast_tuned.py'
+ls -1d artifacts/cross_model_fast_tuned_b1_gc/qwen2_5_7b_instruct_baseline_1337/checkpoint-* 2>/dev/null || true
 nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader,nounits
 ```
 
@@ -70,8 +68,8 @@ grep -nE 'center_ratio|slope =|anchor_factor|eff_anchor' rope/schedules.py scrip
 
 ## 4) Next-action checklist (operator handoff)
 
-1. Let current `llama anchored` finish, then decide whether to early-stop queued models.
-2. Before launching Mistral/Qwen, switch to tuned schedule path and log `inv_freq_sha256`.
+1. Let current `qwen baseline seed=1337` finish, then launch `qwen anchored seed=1337` to complete the 2-seed pair.
+2. Before launching any new model, log `inv_freq_sha256` and keep protocol locked (data/model/steps/lora).
 3. Keep fairness locked: same data, steps, LR, LoRA rank/alpha, tokenizer, eval manifest.
 4. For every rerun, write one-line provenance:
    - method, seed, model, `anchor_factor/slope_raw/center_ratio`, `inv_freq_sha256`.

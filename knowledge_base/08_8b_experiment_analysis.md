@@ -1,6 +1,6 @@
 # 8B LoRA 实验分析 (8B LoRA Experiment Analysis)
 
-> 最后更新：2026-02-22
+> 最后更新：2026-02-25
 > 本文档记录 8B 规模实验的历史探索、失败分析与最新的公平重构方案。
 
 ## 1. TL;DR
@@ -25,8 +25,8 @@
 | 实验 | 实验路径 / 数据路径 | 核心产物 | 可复现命令 / 脚本 |
 |------|-------------------|----------|------------------|
 | **旧版不公平实验 (废弃)** | `knowledge_base/08_8b_experiment_analysis.md` (旧版留存) | PPL劣化日志 | *(Deprecated)* |
-| **新版公平流水线 (进行中)** | `results/overnight_8h/summary/` | 统一的 loss 与 NIAH | `scripts/run_overnight_8h.py` |
-| **验证探针与数值测试** | `2026-02-22/scripts/_test_inject.py` | 验证 `inv_freq` 注入成功 | `python 2026-02-22/scripts/_test_inject.py` |
+| **新版公平流水线 (进行中)** | `results/overnight_8h/summary/` | 统一的 loss 与 NIAH | `bash scripts/run_fair_comparison.sh` |
+| **验证探针与数值测试** | `archives/2026-02-22/scripts/_test_inject.py` | 验证 `inv_freq` 注入成功 | `python archives/2026-02-22/scripts/_test_inject.py` |
 
 ## 4. Failure & Fix (失败与修复)
 

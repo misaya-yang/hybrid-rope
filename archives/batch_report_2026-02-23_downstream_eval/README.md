@@ -19,7 +19,7 @@ This folder contains the recovered data and report artifacts for:
 ## Rebuild Report
 
 ```bash
-python3 batch_report_2026-02-23_downstream_eval/report/build_report.py
+python3 archives/batch_report_2026-02-23_downstream_eval/report/build_report.py
 ```
 
 ## Notes

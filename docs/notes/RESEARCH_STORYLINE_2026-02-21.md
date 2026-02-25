@@ -33,7 +33,7 @@ Long-context extrapolation with standard geometric RoPE often shows strong degra
 - Evidence:
   - `results/advisor_package_2026-02-15/03_llama8b_fair_lora/`
   - `results/advisor_package_2026-02-15/04_niah_and_retrieval/`
-  - latest raw mirror: `server_artifacts_2026-02-21/results/llama8b_fair_lora_suite_20260214/`
+  - latest raw mirror: `archives/server_artifacts_2026-02-21/results/llama8b_fair_lora_suite_20260214/`
 
 ### Stage D: Sigmoid-RoPE Mechanistic Line
 
@@ -45,7 +45,7 @@ Long-context extrapolation with standard geometric RoPE often shows strong degra
   - training-time validation with two matched GPT models (standard vs sigmoid frequencies)
 - Evidence:
   - local canonical outputs: `sigmoid_rope_experiments/data/`, `sigmoid_rope_experiments/results/`
-  - server snapshot: `server_artifacts_2026-02-21/sigmoid_rope_experiments/`
+  - server snapshot: `archives/server_artifacts_2026-02-21/sigmoid_rope_experiments/`
   - zero-shot tensor mechanism artifact:
     - `artifacts/neurips_zero_shot_mechanism/`
 
@@ -61,13 +61,13 @@ Long-context extrapolation with standard geometric RoPE often shows strong degra
 
 - Phase4 training-time experiment is active on server.
 - Progress snapshot has been synced into:
-  - `server_artifacts_2026-02-21/sigmoid_rope_experiments/run_phase4.log`
-  - `server_artifacts_2026-02-21/sigmoid_rope_experiments/data/training_log_standard.csv`
-  - `server_artifacts_2026-02-21/sigmoid_rope_experiments/data/training_log_sigmoid.csv`
+  - `archives/server_artifacts_2026-02-21/sigmoid_rope_experiments/run_phase4.log`
+  - `archives/server_artifacts_2026-02-21/sigmoid_rope_experiments/data/training_log_standard.csv`
+  - `archives/server_artifacts_2026-02-21/sigmoid_rope_experiments/data/training_log_sigmoid.csv`
 
 ## 5. Citation Policy Inside This Repo
 
 - Use curated package for stable numbers:
   - `results/advisor_package_2026-02-15/`
 - Use server snapshot for "latest in-progress" statements:
-  - `server_artifacts_2026-02-21/`
+  - `archives/server_artifacts_2026-02-21/`

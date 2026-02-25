@@ -1,6 +1,6 @@
 # 文档目录 (Documentation Index)
 
-> 最后更新：2026-02-22
+> 最后更新：2026-02-25
 
 欢迎查阅本项目的文档与实验索引。为了保证论文数据的严谨性和代码复现的确定性，请遵循以下结构：
 
@@ -37,6 +37,14 @@
 | `EXPERIMENT_OVERVIEW.md` |已被 `EXPERIMENT_REGISTRY.md` 替代。|
 | `RESEARCH_STORYLINE_*.md` | 已被合并入 `knowledge_base` 和 `paper_draft`。 |
 | `QWEN_STANDARDIZED_COMPARISON...`| 已被更加严格的公平注入协议要求替代。 |
+
+## 4. 子目录导航 (Folders)
+
+- `env/`: 环境快照、SSH 连接与机器信息（用于复现与排查）
+- `protocols/`: 可复现协议文档（跨模型微调、公平对比标准等）
+- `ops/`: 运营与同步文档（证据同步、文档更新日志）
+- `notes/`: 研究过程记录（storyline、方向分析、理论状态）
+- `legacy/`: 过时/历史文档（不可引用）
 
 ---
 **阅读建议**：

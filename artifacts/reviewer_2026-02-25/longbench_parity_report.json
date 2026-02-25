@@ -1,7 +1,7 @@
 {
   "meta": {
-    "candidate_json": "/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/downstream_eval_autorun/longbench/anchored_sigmoid.json",
-    "reference_json": "/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/downstream_eval_autorun/longbench/anchored_sigmoid.json",
+    "candidate_json": "/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/archives/batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/downstream_eval_autorun/longbench/anchored_sigmoid.json",
+    "reference_json": "/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/archives/batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/downstream_eval_autorun/longbench/anchored_sigmoid.json",
     "candidate_model_alias": "hybrid_lora",
     "reference_model_alias": "hybrid_lora",
     "prefer_pct": false,

@@ -7,4 +7,4 @@ Current canonical evidence paths are:
 
 - `../data/`
 - `../results/`
-- top-level `../../server_artifacts_2026-02-21/`
+- top-level `../../archives/server_artifacts_2026-02-21/`

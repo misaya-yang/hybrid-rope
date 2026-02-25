@@ -39,10 +39,10 @@ python -c "from entmax import sparsemax; import torch; print(sparsemax(torch.ten
 
 ```bash
 # 默认参数运行（gpt2, α=1.0, λ=2.0, γ=1.0）
-python scripts/run_variational_attention_experiment.py
+python experiments/variational_sparse_attention/scripts/run_variational_attention_experiment.py
 
 # 自定义参数
-python scripts/run_variational_attention_experiment.py \
+python experiments/variational_sparse_attention/scripts/run_variational_attention_experiment.py \
     --model-name gpt2 \
     --alpha 1.5 \
     --lam 3.0 \
@@ -51,7 +51,7 @@ python scripts/run_variational_attention_experiment.py \
     --batch-size 2
 
 # 使用 entmax1.5 替代 sparsemax
-python scripts/run_variational_attention_experiment.py \
+python experiments/variational_sparse_attention/scripts/run_variational_attention_experiment.py \
     --use-entmax15 \
     --gamma 1.0
 ```
@@ -152,10 +152,15 @@ FINAL REPORT
 ## 代码结构
 
 ```
-scripts/
-├── run_variational_attention_experiment.py  # 主实验脚本
-├── needle_data.py                           # Needle数据生成工具
-└── README.md                                # 本文档
+experiments/variational_sparse_attention/
+├── README.md                                 # 本文档
+├── EXPERIMENTAL_PROTOCOL.md                  # 最小可发表 protocol
+├── VALIDATION_RESULTS.md                     # 现有验证结果摘要
+├── scripts/
+│   ├── run_variational_attention_experiment.py  # 主实验脚本
+│   └── needle_data.py                           # Needle 数据生成工具
+└── tools/
+    └── check_exp_status.sh                   # 运行状态查看（本地日志）
 ```
 
 ### 核心类说明

@@ -1,6 +1,6 @@
 # 复现路径指南 (Reproduction Guide)
 
-> 最后更新：2026-02-22
+> 最后更新：2026-02-25
 > 依照开放科学准则，本文档提供三种最具代表性的最短验证路径。
 
 ## 环境前置依赖
@@ -14,7 +14,7 @@
 
 **执行命令:**
 ```bash
-python a100/unified_search_3cfg_3seed.py
+python archives/a100/unified_search_3cfg_3seed.py
 ```
 **原理与预期:**
 该脚本内嵌了 42, 123, 7 三个随机种子集合，利用串流形式截断 TinyStories 做前向训练与滑动 PPL 评估，产出完整的均值和方差统计。
@@ -38,11 +38,11 @@ python scripts/plot_yarn_compare.py
 **执行单测的快捷路径 (验证逻辑链合法性):**
 由于完整的 8B 继续预训练时间开销巨大，我们提供专门探针检测修改的 RoPE `inv_freq` 确实贯穿前向过程发挥功效：
 ```bash
-python 2026-02-22/scripts/_test_inject.py
+python archives/2026-02-22/scripts/_test_inject.py
 ```
 
 **执行完整 4 方法全景评测管线 (包含 PPL 与 NIAH):**
 ```bash
-python 2026-02-22/scripts/run_overnight_8h.py
+bash scripts/run_fair_comparison.sh
 ```
-*(由于资源要求巨大，可能耗时8小时+，该脚本中包含严格的变量检查锁定)*
+*(更早的 8 小时自动化脚本已归档在 `archives/2026-02-22/scripts/run_overnight_8h.py`，仅用于追溯。)*

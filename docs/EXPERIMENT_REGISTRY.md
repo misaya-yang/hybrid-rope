@@ -7,10 +7,10 @@
 
 | Experiment ID | Hypothesis / Purpose | Model | Dataset & Protocol | Baselines | Method Params | Seeds | Entry Script | Output Files (JSON/CSV) | Key Numbers (PPL@16K) | Status |
 |---------------|----------------------|-------|--------------------|-----------|---------------|-------|--------------|-------------------------|------------------------|--------|
-| `EXP_50M_3SEED` | 验证 Hybrid 优于 Geo 及其对噪声的稳健性 | 50M | TinyStories, 500k steps, 2k/16k PPL | Geo_500k, AnchPoly | a=0.2, t=100k | `[42,123,7]` | `a100/unified_search_3cfg_3seed.py` | `results/evidence_chain_50m_3cfg3seed/results.json` | Geo: 18.2±0.8; Hybrid: **17.3±0.4** | ✅ Paper-ready |
-| `EXP_50M_YARN` | 对比原生 Hybrid 与渐进式 YaRN | 50M | TinyStories, 500k steps, 2k-16k PPL | Geo, YaRN | none | 42 | `a100/run_50m_yarn_compare.py` / `scripts/plot_yarn_compare.py` | `results/50m_yarn_compare_v2/results.json` | Geo: 17.97; YaRN: 39.48; Hybrid: **16.86** | ✅ Paper-ready |
+| `EXP_50M_3SEED` | 验证 Hybrid 优于 Geo 及其对噪声的稳健性 | 50M | TinyStories, 500k steps, 2k/16k PPL | Geo_500k, AnchPoly | a=0.2, t=100k | `[42,123,7]` | `archives/a100/unified_search_3cfg_3seed.py` | `results/evidence_chain_50m_3cfg3seed/results.json` | Geo: 18.2±0.8; Hybrid: **17.3±0.4** | ✅ Paper-ready |
+| `EXP_50M_YARN` | 对比原生 Hybrid 与渐进式 YaRN | 50M | TinyStories, 500k steps, 2k-16k PPL | Geo, YaRN | none | 42 | `artifacts/a100_2026-02-13/scripts/run_50m_yarn_compare.py` / `scripts/plot_yarn_compare.py` | `results/50m_yarn_compare_v2/results.json` | Geo: 17.97; YaRN: 39.48; Hybrid: **16.86** | ✅ Paper-ready |
 | `EXP_100M_FINAL` | 验证 100M 参数规模改善 | 100M | TinyStories, 500k steps | Geo | a=0.2, t=100k | 42 | (散列/详见统一脚本) | `artifacts/a100_2026-02-13/data/100m_scaling/` | Geo: 10.88; Hybrid: **9.41** (-13.5%) | ✅ Paper-ready |
-| `EXP_350M_FINAL` | 验证改善随规模放大(至350M)稳定性 | 350M | TinyStories, 500M tokens, chunk eval | Geo_500k | a=0.2, t=100k | 42 | `a100/run_350m_final.py` | `artifacts/a100_2026-02-13/data/350m_final/results.json` | Geo: 14.65; Hybrid: **12.65** (-13.7%) | ✅ Paper-ready |
+| `EXP_350M_FINAL` | 验证改善随规模放大(至350M)稳定性 | 350M | TinyStories, 500M tokens, chunk eval | Geo_500k | a=0.2, t=100k | 42 | `archives/a100/run_350m_final.py` | `artifacts/a100_2026-02-13/data/350m_final/results.json` | Geo: 14.65; Hybrid: **12.65** (-13.7%) | ✅ Paper-ready |
 
 ## 2. Phase 4 训练期与机理验证 (Tier 1.5 - 2: 高可信支撑)
 
@@ -24,7 +24,7 @@
 
 | Experiment ID | Hypothesis / Purpose | Model | Dataset & Protocol | Baselines | Method Params | Seeds | Entry Script | Output Files | Key Notes | Status |
 |---------------|----------------------|-------|--------------------|-----------|---------------|-------|--------------|--------------|-----------|--------|
-| `EXP_8B_FAIR_LORA` | 完全公平条件下对比长程方法 (消除实现差异) | Llama-3-8B | 600 steps, L=16K, PPL+NIAH | PI, YaRN | inv_freq.copy_() buffer 覆写 | - | `scripts/run_llama8b_fair_suite.py` / `2026-02-22/scripts/run_overnight_8h.py` | `results/overnight_8h/summary/` | 4方法严格控制变量，统一使用 inv_freq 操作不使用 HF rope_scaling | 🔄 In-progress |
+| `EXP_8B_FAIR_LORA` | 完全公平条件下对比长程方法 (消除实现差异) | Llama-3-8B | 600 steps, L=16K, PPL+NIAH | PI, YaRN | inv_freq.copy_() buffer 覆写 | - | `scripts/run_llama8b_fair_suite.py` / `archives/2026-02-22/scripts/run_overnight_8h.py` | `results/overnight_8h/summary/` | 4方法严格控制变量，统一使用 inv_freq 操作不使用 HF rope_scaling | 🔄 In-progress |
 
 ## 4. 已知问题与废弃实验 (⚠️ 禁止在正面结果中引用)
 

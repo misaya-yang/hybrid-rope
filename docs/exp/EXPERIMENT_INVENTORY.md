@@ -23,10 +23,10 @@ For each item, keep 6 fields:
 
 | ID | Status | Claim | Artifacts | Reproduce | Notes |
 |---|---|---|---|---|---|
-| `EXP_50M_3SEED` | `VALID` | Hybrid improves long-context PPL vs geometric (3 seeds). | `results/evidence_chain_50m_3cfg3seed/results.json` | `python a100/unified_search_3cfg_3seed.py` | See `docs/EXPERIMENT_REGISTRY.md` for exact protocol. |
-| `EXP_50M_YARN` | `VALID` | Hybrid beats YaRN under the same TinyStories setup. | `results/50m_yarn_compare_v2/results.json` | `python a100/run_50m_yarn_compare.py` | YaRN is highly sensitive; this experiment is used as controlled contrast. |
+| `EXP_50M_3SEED` | `VALID` | Hybrid improves long-context PPL vs geometric (3 seeds). | `results/evidence_chain_50m_3cfg3seed/results.json` | `python archives/a100/unified_search_3cfg_3seed.py` | See `docs/EXPERIMENT_REGISTRY.md` for exact protocol. |
+| `EXP_50M_YARN` | `VALID` | Hybrid beats YaRN under the same TinyStories setup. | `results/50m_yarn_compare_v2/results.json` | `python artifacts/a100_2026-02-13/scripts/run_50m_yarn_compare.py` | YaRN is highly sensitive; this experiment is used as controlled contrast. |
 | `EXP_100M_FINAL` | `VALID` | Hybrid improves 16K PPL at 100M scale. | `artifacts/a100_2026-02-13/data/100m_scaling/` | See run metadata under artifacts folder. | Registry notes mention a unified script; do not invent entrypoints. |
-| `EXP_350M_FINAL` | `VALID` | Hybrid improvement persists at 350M scale. | `artifacts/a100_2026-02-13/data/350m_final/results.json` | `python a100/run_350m_final.py` | Chunk eval protocol; keep identical chunking if re-running. |
+| `EXP_350M_FINAL` | `VALID` | Hybrid improvement persists at 350M scale. | `artifacts/a100_2026-02-13/data/350m_final/results.json` | `python archives/a100/run_350m_final.py` | Chunk eval protocol; keep identical chunking if re-running. |
 
 ### Tier 1.5-2: Mechanism / Phase-4 evidence
 
@@ -40,7 +40,7 @@ For each item, keep 6 fields:
 
 | ID | Status | Claim | Artifacts | Reproduce | Notes |
 |---|---|---|---|---|---|
-| `EXP_8B_FAIR_LORA` | `PENDING` | Fair-protocol 8B comparison under identical injection path and budget. | Server: `/root/autodl-tmp/dfrope/hybrid-rope/results/overnight_8h/summary/` | `python scripts/run_llama8b_fair_suite.py` / `2026-02-22/scripts/run_overnight_8h.py` | Must pass LongBench parity, full lb21, per-sample traces, and multi-seed before main claims. |
+| `EXP_8B_FAIR_LORA` | `PENDING` | Fair-protocol 8B comparison under identical injection path and budget. | Server: `/root/autodl-tmp/dfrope/hybrid-rope/results/overnight_8h/summary/` | `python scripts/run_llama8b_fair_suite.py` / `archives/2026-02-22/scripts/run_overnight_8h.py` | Must pass LongBench parity, full lb21, per-sample traces, and multi-seed before main claims. |
 
 ## INVALID (Do not cite)
 
@@ -64,4 +64,3 @@ Any new experiment becomes `VALID` only when all are true:
 3. LongBench claims use full task set (`lb21`), not preview-only.
 4. Saves per-sample traces (including truncation meta and failure types).
 5. Statistics: paired bootstrap CI + permutation/sign-flip p-value + effect size + FDR (BH/BY).
-

@@ -1,6 +1,6 @@
 # LongBench Scale Audit
 
-- Source: `batch_report_2026-02-23_downstream_eval/report/method_metrics_best_available.csv`
+- Source: `archives/batch_report_2026-02-23_downstream_eval/report/method_metrics_best_available.csv`
 - Value column: `longbench_avg`
 - Check: `score_pct == 100 * score_raw` (tol=1.0e-06)
 

@@ -161,8 +161,8 @@ The following code-level upgrades from the "v6 seven-day整改计划" are implem
 ```bash
 # P0: LongBench scale audit
 python scripts/import_2024/longbench_scale_audit.py \
-  --metrics_csv batch_report_2026-02-23_downstream_eval/report/method_metrics_best_available.csv \
-  --out_md artifacts/reviewer_2026-02-24/longbench_scale_audit.md
+  --metrics_csv archives/batch_report_2026-02-23_downstream_eval/report/method_metrics_best_available.csv \
+  --out_md artifacts/results/theory_validation/longbench_scale_audit.md
 
 # P3: diagonal residual applicability grid
 python scripts/import_2024/diag_residual_grid.py \

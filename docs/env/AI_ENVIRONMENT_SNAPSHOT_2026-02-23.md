@@ -21,7 +21,7 @@ Last updated: 2026-02-23 09:05 CST
 ## 3) Active experiment (live)
 
 - Script launcher: `scripts/run_fair_comparison.sh`
-- Core train script: `2026-02-22/scripts/run_llama8b_fair_suite.py`
+- Core train script: `scripts/run_llama8b_fair_suite.py`
 - Output root:
   - `results/llama8b_fair_v2_longbench_stable_20260223_0150`
 - Log files:

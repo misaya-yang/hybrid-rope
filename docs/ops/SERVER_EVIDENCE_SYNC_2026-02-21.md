@@ -9,13 +9,13 @@ Pull back all relevant experiment evidence from server to local repository while
 ## 2. Local Destination
 
 - Snapshot root:
-  - `server_artifacts_2026-02-21/`
+  - `archives/server_artifacts_2026-02-21/`
 - Synced content groups:
-  - `server_artifacts_2026-02-21/results/`
-  - `server_artifacts_2026-02-21/logs/`
-  - `server_artifacts_2026-02-21/sigmoid_rope_experiments/data/`
-  - `server_artifacts_2026-02-21/sigmoid_rope_experiments/results/`
-  - `server_artifacts_2026-02-21/sigmoid_rope_experiments/*.log`
+  - `archives/server_artifacts_2026-02-21/results/`
+  - `archives/server_artifacts_2026-02-21/logs/`
+  - `archives/server_artifacts_2026-02-21/sigmoid_rope_experiments/data/`
+  - `archives/server_artifacts_2026-02-21/sigmoid_rope_experiments/results/`
+  - `archives/server_artifacts_2026-02-21/sigmoid_rope_experiments/*.log`
 
 ## 3. Exclusion Policy
 
@@ -40,7 +40,7 @@ powershell -ExecutionPolicy Bypass -File tools/sync_server_evidence_data_only.ps
   -RemotePassword "<PASSWORD>" `
   -RemoteRepoRoot "/root/autodl-tmp/dfrope/hybrid-rope" `
   -LocalRepoRoot "." `
-  -LocalTargetRel "server_artifacts_2026-02-21"
+  -LocalTargetRel "archives/server_artifacts_2026-02-21"
 ```
 
 ## 5. Notes

@@ -33,4 +33,4 @@ sigmoid_rope_experiments/
 - Keep all outputs in `data/` and `results/`.
 - Do not commit weights/checkpoints.
 - Use top-level server mirror for cross-machine evidence:
-  - `../server_artifacts_2026-02-21/`
+  - `../archives/server_artifacts_2026-02-21/`

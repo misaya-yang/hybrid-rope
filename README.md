@@ -3,6 +3,13 @@
 This repository is the paper workspace for long-context RoPE research.
 It contains code, experiment evidence, analysis docs, and server snapshots.
 
+## Start Here (New Collaborators)
+
+1. `AI_HANDOFF.md` (what to run, where outputs land)
+2. `docs/README.md` (documentation index + citation rules)
+3. `docs/EXPERIMENT_REGISTRY.md` (single source of truth for VALID/PENDING/INVALID)
+4. `docs/REPO_STRUCTURE_CN.md` (repo “file manager”: where to put new things)
+
 ## What This Repo Is For
 
 - Primary goal: support paper writing with auditable experiment evidence.
@@ -13,28 +20,39 @@ It contains code, experiment evidence, analysis docs, and server snapshots.
   - Training-time validation pipeline (`sigmoid_rope_experiments`).
 - Rule: no model weights/checkpoints are committed as evidence artifacts.
 
-## Read In This Order
+## Repo Layout (High Level)
+
+- `docs/`: paper-facing docs + protocols + experiment registry (start here)
+- `scripts/`: repo-level runnable entrypoints (training/eval/audit)
+- `rope/`: core RoPE schedule/injection code
+- `results/`: curated result bundles + paper-ready small artifacts
+- `paper_exports/`: dated paper export packages (tables/figures/json, no weights)
+- `artifacts/`: machine/cluster snapshots and small manifests
+- `archives/`: historical snapshots/batch reports (kept for traceability, not “current”)
+- `experiments/`: one-off or side projects (non-core; see per-folder README)
+
+## Read In This Order (Paper Work)
 
 1. `knowledge_base/README.md`
 2. `knowledge_base/ALL_IN_ONE.md`
 3. `knowledge_base/00_项目与结论总览.md`
-4. `AI_HANDOFF.md`
-5. `docs/AI_ENVIRONMENT_SNAPSHOT_2026-02-23.md`
-6. `docs/RESEARCH_STORYLINE_2026-02-21.md`
-7. `docs/EXPERIMENT_ENVIRONMENT_2026-02-21.md`
+4. `docs/README.md`
+5. `docs/env/AI_ENVIRONMENT_SNAPSHOT_2026-02-23.md`
+6. `docs/notes/RESEARCH_STORYLINE_2026-02-21.md`
+7. `docs/env/EXPERIMENT_ENVIRONMENT_2026-02-21.md`
 
 ## Canonical Evidence Locations
 
 - Curated advisor package:
   - `results/advisor_package_2026-02-15/`
 - Latest server evidence snapshot (data/logs only):
-  - `server_artifacts_2026-02-21/`
+  - `archives/server_artifacts_2026-02-21/`
 - Sigmoid-RoPE project outputs:
   - `sigmoid_rope_experiments/data/`
   - `sigmoid_rope_experiments/results/`
 - Historical machine-specific snapshots:
   - `artifacts/`
-  - `server_artifacts_2026-02-13/`
+  - `archives/server_artifacts_2026-02-13/`
 
 ## Main Code Entrypoints
 
@@ -49,8 +67,8 @@ It contains code, experiment evidence, analysis docs, and server snapshots.
   - `scripts/eval_niah_recall.py`
 - LongBench eval:
   - `scripts/eval_longbench.py`
-- F1 distance-prior empirical validation:
-  - `prior_validation.py`
+- Attention distance prior estimation:
+  - `scripts/run_attn_hist.py`
 - Sigmoid phase pipelines:
   - `sigmoid_rope_experiments/run_all.py`
   - `sigmoid_rope_experiments/run_phase2.py`

@@ -256,7 +256,7 @@
 
 **关键文件**：
 - `scripts/debug_sigmoid_rope.py`
-- `2026-02-22/scripts/_test_inject.py`
+- `archives/2026-02-22/scripts/_test_inject.py`
 - `scripts/run_passkey_sanity_check.py`
 
 ---

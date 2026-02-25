@@ -9,7 +9,7 @@ OUTPUT_ROOT="${OUTPUT_ROOT:-./results/llama8b_fair_v2}"
 MAX_SEQ_LEN="${MAX_SEQ_LEN:-16384}"
 MAX_STEPS="${MAX_STEPS:-400}"
 SEED="${SEED:-42}"
-SCRIPT_PATH="${SCRIPT_PATH:-2026-02-22/scripts/run_llama8b_fair_suite.py}"
+SCRIPT_PATH="${SCRIPT_PATH:-scripts/run_llama8b_fair_suite.py}"
 PYTHON_BIN="${PYTHON_BIN:-/root/miniconda3/bin/python}"
 
 if [[ ! -x "$PYTHON_BIN" ]]; then
