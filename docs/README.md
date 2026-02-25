@@ -11,6 +11,9 @@
 | 文档 | 用途 |
 |------|------|
 | ⭐ **[EXPERIMENT_REGISTRY.md](EXPERIMENT_REGISTRY.md)** | **实验事实表**：所有跑数记录、结论状态与原始 JSON 证据链汇总。任何未在此表中标为 ✅ 的数据，严禁放入论文正文。 |
+| ⭐ **[exp/EXPERIMENT_INVENTORY.md](exp/EXPERIMENT_INVENTORY.md)** | **可引用性镜像索引**：按 `VALID/PENDING/INVALID/DEPRECATED` 分类，附复现入口。 |
+| ⭐ **[exp/plan_b_audit_manifest.md](exp/plan_b_audit_manifest.md)** | **红线审计与隔离 Plan B 清单**：运行脚本保护、审计模板、恢复路径。 |
+| [exp/REPO_FILE_INDEX.md](exp/REPO_FILE_INDEX.md) | **仓库文件分层索引**：一眼看清目录分类与整理状态。 |
 | ⭐ **[TERMS_AND_PROTOCOLS.md](TERMS_AND_PROTOCOLS.md)** | **术语与公平协议标准**：定义何为可用的评测分数、跨方法比较的红线，以及禁止引用的黑名单。 |
 | [RESULTS.md](RESULTS.md) | **论文口径核心结果**：直接为论文 Table/Figure 提供数据的简明汇总页。 |
 | [METHODOLOGY.md](METHODOLOGY.md) | **实现方法与评价方法**：核心频率映射函数、滑动窗口取样、Token 切片规范。 |

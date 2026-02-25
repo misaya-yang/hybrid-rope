@@ -9,6 +9,8 @@ It contains code, experiment evidence, analysis docs, and server snapshots.
 2. `docs/README.md` (documentation index + citation rules)
 3. `docs/EXPERIMENT_REGISTRY.md` (single source of truth for VALID/PENDING/INVALID)
 4. `docs/REPO_STRUCTURE_CN.md` (repo “file manager”: where to put new things)
+5. `docs/exp/EXPERIMENT_INVENTORY.md` (claim-ready inventory mirror)
+6. `docs/exp/plan_b_audit_manifest.md` (strict red-line audit + recovery checklist)
 
 ## What This Repo Is For
 

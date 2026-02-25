@@ -1,6 +1,6 @@
 # Experiment Inventory (Authoritative Index Mirror)
 
-Last updated: 2026-02-25
+Last updated: 2026-02-25 (21:20 CST)
 
 This file is a **human/AI-friendly index** of experiments, artifacts, and whether they are usable for paper claims.
 
@@ -41,6 +41,8 @@ For each item, keep 6 fields:
 | ID | Status | Claim | Artifacts | Reproduce | Notes |
 |---|---|---|---|---|---|
 | `EXP_8B_FAIR_LORA` | `PENDING` | Fair-protocol 8B comparison under identical injection path and budget. | Server: `/root/autodl-tmp/dfrope/hybrid-rope/results/overnight_8h/summary/` | `python scripts/run_llama8b_fair_suite.py` / `archives/2026-02-22/scripts/run_overnight_8h.py` | Must pass LongBench parity, full lb21, per-sample traces, and multi-seed before main claims. |
+| `EXP_QWEN_FAST_TUNED_B1_GC` | `PENDING` | Cost-optimized 400-step Qwen baseline/anchored runs. | Server: `artifacts/cross_model_fast_tuned_b1_gc/` | `python scripts/train_cross_model_lora_fast_tuned.py` | Not paper-mainline for the strict 8K extension claim; currently running job uses Qwen + WikiText and fails the Llama-3-8B-only red-line audit. |
+| `EXP_PLAN_B_LLAMA3_8K_RECOVERY` | `PENDING` | Recovery pipeline locked to Meta-Llama-3-8B-Instruct with full lb21 + traces. | `artifacts/plan_b_runs/`, `artifacts/plan_b_eval/`, `docs/exp/plan_b_audit_manifest.md` | `python scripts/plan_b_train_anchored_v2.py` then `python scripts/plan_b_eval_longbench.py` | Isolated Plan B created after CRITICAL audit; all claims blocked until this pipeline finishes and passes gates. |
 
 ## INVALID (Do not cite)
 

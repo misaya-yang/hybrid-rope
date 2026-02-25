@@ -18,17 +18,25 @@ Use this folder as the current reviewer-remediation entrypoint:
 - `handoff_2026-02-25/02_VALIDATION_SNAPSHOT_AIDEMO.md`
 - `handoff_2026-02-25/03_NEXT_EXECUTION_GATES.md`
 
+## 0.2) Audit red-line package (2026-02-25 night)
+
+- Strict audit manifest:
+  - `docs/exp/plan_b_audit_manifest.md`
+- Isolated Plan B files (do not edit sacred running scripts):
+  - `scripts/plan_b_train_anchored_v2.py`
+  - `scripts/plan_b_eval_longbench.py`
+
 ## 0) Must-Read TL;DR
 
 - **Locked tuned params for next runs**: `anchor_factor=4`, `slope_raw=20`, `center_ratio=0.70`.
 - **Main evidence chain focus (cost-sensitive)**: `Qwen2.5-7B-Instruct` baseline_gold + anchored(tuned) + modern anchor (NTK) on **full lb21** and **multi-seed**.
 - **Current server training uses the tuned fast entrypoint**:
   - `scripts/train_cross_model_lora_fast_tuned.py --method anchored_sigmoid --anchor_factor 4 --slope_raw 20 --center_ratio 0.70`
-- **Current run status (confirmed on 2026-02-25 20:36 CST)**:
+- **Current run status (confirmed on 2026-02-25 21:05 CST)**:
   - done: `qwen2_5_7b_instruct_baseline_42` (`checkpoint-400` exists).
   - done: `qwen2_5_7b_instruct_anchored_sigmoid_42` (`checkpoint-400` exists).
-  - running: `qwen2_5_7b_instruct_baseline_1337` (`checkpoint-200` exists; training PID shown below).
-  - pending: `qwen2_5_7b_instruct_anchored_sigmoid_1337` (directory not created yet).
+  - running: `qwen2_5_7b_instruct_anchored_sigmoid_1337` (new run dir exists; no checkpoint yet as of 21:05 CST).
+  - note: this run is operationally valid for Qwen evidence, but fails the strict "Meta-Llama-3-8B-Instruct only" red-line narrative.
 
 ## 0.2) New “facts-first” indices (do not skip)
 
