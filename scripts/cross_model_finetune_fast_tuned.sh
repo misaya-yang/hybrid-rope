@@ -16,12 +16,13 @@ LOCAL_FILES_ONLY="${LOCAL_FILES_ONLY:-1}"    # 1: force local loading for traini
 TRUST_REMOTE_CODE="${TRUST_REMOTE_CODE:-1}"
 LOAD_IN_4BIT="${LOAD_IN_4BIT:-1}"            # Keep fixed across all six runs.
 ATTN_IMPLEMENTATION="${ATTN_IMPLEMENTATION:-auto}"
+# Help PyTorch allocator reduce long-run fragmentation on 16K QLoRA jobs.
+PYTORCH_CUDA_ALLOC_CONF_DEFAULT="${PYTORCH_CUDA_ALLOC_CONF_DEFAULT:-expandable_segments:True}"
 
 # Fixed shared training hyper-parameters (must be identical across all six tasks).
 MAX_STEPS="${MAX_STEPS:-400}"
 LEARNING_RATE="${LEARNING_RATE:-2e-5}"
 WARMUP_STEPS="${WARMUP_STEPS:-50}"
-PER_DEVICE_BATCH="${PER_DEVICE_BATCH:-2}"
 GRAD_ACCUM="${GRAD_ACCUM:-1}"
 MAX_SEQ_LEN="${MAX_SEQ_LEN:-16384}"
 LORA_RANK="${LORA_RANK:-16}"
@@ -29,7 +30,8 @@ LORA_ALPHA="${LORA_ALPHA:-32}"
 LORA_TARGETS="q_proj,k_proj,v_proj,o_proj"
 LR_SCHEDULER="${LR_SCHEDULER:-cosine}"
 BF16="${BF16:-1}"
-GRAD_CHECKPOINTING="${GRAD_CHECKPOINTING:-0}"
+PER_DEVICE_BATCH="${PER_DEVICE_BATCH:-1}"
+GRAD_CHECKPOINTING="${GRAD_CHECKPOINTING:-1}"
 
 # Anchored-sigmoid schedule controls.
 ANCHOR_FACTOR_DEFAULT="${ANCHOR_FACTOR_DEFAULT:-4}"
@@ -37,6 +39,10 @@ ANCHORED_SLOPE_RAW="${ANCHORED_SLOPE_RAW:-20}"
 ANCHORED_CENTER_RATIO="${ANCHORED_CENTER_RATIO:-0.70}"
 
 mkdir -p "${OUTPUT_ROOT}" "${LOG_ROOT}"
+
+if [[ -z "${PYTORCH_CUDA_ALLOC_CONF:-}" ]]; then
+  export PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF_DEFAULT}"
+fi
 
 log() {
   echo "[$(date '+%F %T %Z')] $*"
@@ -279,6 +285,7 @@ for row in "${ORDERED_TASKS[@]}"; do
 done
 log "shared hparams: steps=${MAX_STEPS}, batch=${PER_DEVICE_BATCH}, grad_acc=${GRAD_ACCUM}, seq=${MAX_SEQ_LEN}, lr=${LEARNING_RATE}, checkpointing=${GRAD_CHECKPOINTING}, attn=${ATTN_IMPLEMENTATION}"
 log "anchored schedule: anchor_factor=${ANCHOR_FACTOR_DEFAULT}, slope_raw=${ANCHORED_SLOPE_RAW}, center_ratio=${ANCHORED_CENTER_RATIO}"
+log "cuda alloc conf: ${PYTORCH_CUDA_ALLOC_CONF}"
 
 run_task() {
   local model_key="$1"

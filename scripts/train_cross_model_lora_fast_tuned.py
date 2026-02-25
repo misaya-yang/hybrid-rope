@@ -298,9 +298,9 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--seed", type=int, default=42)
 
     ap.add_argument("--max_seq_len", type=int, default=16384)
-    ap.add_argument("--max_steps", type=int, default=600)
+    ap.add_argument("--max_steps", type=int, default=400)
     ap.add_argument("--per_device_train_batch_size", type=int, default=1)
-    ap.add_argument("--gradient_accumulation_steps", type=int, default=8)
+    ap.add_argument("--gradient_accumulation_steps", type=int, default=1)
     ap.add_argument("--learning_rate", type=float, default=2e-5)
     ap.add_argument("--warmup_steps", type=int, default=50)
     ap.add_argument("--logging_steps", type=int, default=10)
@@ -315,9 +315,9 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--lora_target_modules", type=str, default="q_proj,k_proj,v_proj,o_proj")
 
     ap.add_argument("--rope_base", type=float, default=0.0)
-    ap.add_argument("--anchor_factor", type=float, default=0.0)
-    ap.add_argument("--slope_raw", type=float, default=16.05)
-    ap.add_argument("--center_ratio", type=float, default=0.47)
+    ap.add_argument("--anchor_factor", type=float, default=4.0)
+    ap.add_argument("--slope_raw", type=float, default=20.0)
+    ap.add_argument("--center_ratio", type=float, default=0.70)
     ap.add_argument("--gradient_checkpointing", action=argparse.BooleanOptionalAction, default=True)
 
     ap.add_argument("--attn_implementation", type=str, default="auto")
