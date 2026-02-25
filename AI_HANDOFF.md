@@ -55,6 +55,37 @@ grep -nE 'center_ratio|slope =|anchor_factor|eff_anchor' rope/schedules.py scrip
 4. For every rerun, write one-line provenance:
    - method, seed, model, `anchor_factor/slope_raw/center_ratio`, `inv_freq_sha256`.
 
+## 4.1) New speed-first launcher (for future runs)
+
+Use:
+
+```bash
+cd /root/autodl-tmp/dfrope/hybrid-rope
+bash scripts/cross_model_finetune_fast_tuned.sh
+```
+
+This launcher uses a separate train entrypoint (`scripts/train_cross_model_lora_fast_tuned.py`) and does not require modifying legacy scripts.
+
+Defaults in this launcher:
+- `MAX_STEPS=400`
+- `PER_DEVICE_BATCH=2`
+- `GRAD_ACCUM=1`
+- `GRAD_CHECKPOINTING=0`
+- tuned anchored schedule:
+  - `ANCHOR_FACTOR_DEFAULT=4`
+  - `ANCHORED_SLOPE_RAW=20`
+  - `ANCHORED_CENTER_RATIO=0.70`
+
+Why `MAX_STEPS=400`:
+- baseline log on this server showed strong gains in 0-200, moderate 200-400, and very small 400-600 marginal gain.
+- this keeps most quality gain while cutting runtime cost significantly.
+
+Example override (`batch=4` smoke):
+
+```bash
+PER_DEVICE_BATCH=4 MAX_STEPS=50 bash scripts/cross_model_finetune_fast_tuned.sh
+```
+
 ## 5) Single source of truth for tuned schedule
 
 - Tuning evidence: `handoff_2026-02-23/local_tuning_proof_2026-02-24.md`

@@ -19,11 +19,13 @@
   - default code path still uses anchored-sigmoid legacy defaults (`center_ratio=0.47`, `slope=16.05/head_dim`, auto anchor for 16K ~= 5).
 - **Action rule**
   - before launching Mistral/Qwen continuation, verify schedule source and record `inv_freq_sha256` in run summary.
+  - future speed-first relaunch entrypoint: `scripts/cross_model_finetune_fast_tuned.sh`
 
 Reference docs:
 - `AI_HANDOFF.md`
 - `handoff_2026-02-23/local_tuning_proof_2026-02-24.md`
 - `handoff_2026-02-23/tomorrow_tuned_param_runbook_2026-02-25.md`
+- `handoff_2026-02-23/fast_tuned_training_runbook_2026-02-25.md`
 
 ---
 
