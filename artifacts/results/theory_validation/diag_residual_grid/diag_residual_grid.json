@@ -1,0 +1,649 @@
+{
+  "meta": {
+    "timestamp": "2026-02-24 20:10:41",
+    "b_grid": [
+      1000.0,
+      10000.0,
+      100000.0,
+      500000.0,
+      1000000.0
+    ],
+    "L_grid": [
+      4096,
+      8192,
+      16384,
+      32768,
+      65536
+    ],
+    "prior_family": [
+      "uniform",
+      "powerlaw",
+      "bimodal"
+    ],
+    "phi_points": 64,
+    "chunk_size": 2048,
+    "residual_threshold": 0.15
+  },
+  "rows": [
+    {
+      "prior_family": "uniform",
+      "L": 4096,
+      "b": 1000.0,
+      "phi_points": 64,
+      "residual_fro": 0.575428273759185,
+      "diag_dominance": 0.4395868634784585
+    },
+    {
+      "prior_family": "uniform",
+      "L": 4096,
+      "b": 10000.0,
+      "phi_points": 64,
+      "residual_fro": 0.89314493710652,
+      "diag_dominance": 0.17733619874462214
+    },
+    {
+      "prior_family": "uniform",
+      "L": 4096,
+      "b": 100000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9632375635559242,
+      "diag_dominance": 0.0769656262608925
+    },
+    {
+      "prior_family": "uniform",
+      "L": 4096,
+      "b": 500000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9736646265433384,
+      "diag_dominance": 0.056837840949081744
+    },
+    {
+      "prior_family": "uniform",
+      "L": 4096,
+      "b": 1000000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9761751550023569,
+      "diag_dominance": 0.051129297676156225
+    },
+    {
+      "prior_family": "uniform",
+      "L": 8192,
+      "b": 1000.0,
+      "phi_points": 64,
+      "residual_fro": 0.3789677585273545,
+      "diag_dominance": 0.6100248505196825
+    },
+    {
+      "prior_family": "uniform",
+      "L": 8192,
+      "b": 10000.0,
+      "phi_points": 64,
+      "residual_fro": 0.7853403255112114,
+      "diag_dominance": 0.27968906528739357
+    },
+    {
+      "prior_family": "uniform",
+      "L": 8192,
+      "b": 100000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9499007164364648,
+      "diag_dominance": 0.1039535963154779
+    },
+    {
+      "prior_family": "uniform",
+      "L": 8192,
+      "b": 500000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9676936432990028,
+      "diag_dominance": 0.06974896342289921
+    },
+    {
+      "prior_family": "uniform",
+      "L": 8192,
+      "b": 1000000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9716448033413749,
+      "diag_dominance": 0.06175767997497382
+    },
+    {
+      "prior_family": "uniform",
+      "L": 16384,
+      "b": 1000.0,
+      "phi_points": 64,
+      "residual_fro": 0.1817090808932425,
+      "diag_dominance": 0.7592656856216687
+    },
+    {
+      "prior_family": "uniform",
+      "L": 16384,
+      "b": 10000.0,
+      "phi_points": 64,
+      "residual_fro": 0.6437333663608181,
+      "diag_dominance": 0.40270522139355486
+    },
+    {
+      "prior_family": "uniform",
+      "L": 16384,
+      "b": 100000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9257512425611646,
+      "diag_dominance": 0.14716778817927664
+    },
+    {
+      "prior_family": "uniform",
+      "L": 16384,
+      "b": 500000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9589516342171327,
+      "diag_dominance": 0.08833098611234724
+    },
+    {
+      "prior_family": "uniform",
+      "L": 16384,
+      "b": 1000000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9651868393933577,
+      "diag_dominance": 0.076695641515003
+    },
+    {
+      "prior_family": "uniform",
+      "L": 32768,
+      "b": 1000.0,
+      "phi_points": 64,
+      "residual_fro": 0.09126347502739847,
+      "diag_dominance": 0.8664333724649133
+    },
+    {
+      "prior_family": "uniform",
+      "L": 32768,
+      "b": 10000.0,
+      "phi_points": 64,
+      "residual_fro": 0.5123233582388109,
+      "diag_dominance": 0.5374015328149078
+    },
+    {
+      "prior_family": "uniform",
+      "L": 32768,
+      "b": 100000.0,
+      "phi_points": 64,
+      "residual_fro": 0.8759740758240723,
+      "diag_dominance": 0.21996802656555658
+    },
+    {
+      "prior_family": "uniform",
+      "L": 32768,
+      "b": 500000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9451174910238498,
+      "diag_dominance": 0.11664167530492024
+    },
+    {
+      "prior_family": "uniform",
+      "L": 32768,
+      "b": 1000000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9556435316511604,
+      "diag_dominance": 0.09716786174301799
+    },
+    {
+      "prior_family": "uniform",
+      "L": 65536,
+      "b": 1000.0,
+      "phi_points": 64,
+      "residual_fro": 0.045590629250555015,
+      "diag_dominance": 0.92711692733722
+    },
+    {
+      "prior_family": "uniform",
+      "L": 65536,
+      "b": 10000.0,
+      "phi_points": 64,
+      "residual_fro": 0.3184729391101491,
+      "diag_dominance": 0.7024741822679235
+    },
+    {
+      "prior_family": "uniform",
+      "L": 65536,
+      "b": 100000.0,
+      "phi_points": 64,
+      "residual_fro": 0.7641980996824704,
+      "diag_dominance": 0.33729288486228665
+    },
+    {
+      "prior_family": "uniform",
+      "L": 65536,
+      "b": 500000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9208043891842256,
+      "diag_dominance": 0.15989774194941478
+    },
+    {
+      "prior_family": "uniform",
+      "L": 65536,
+      "b": 1000000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9405003958151636,
+      "diag_dominance": 0.1281570746870893
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 4096,
+      "b": 1000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9686402294537564,
+      "diag_dominance": 0.03775140861618306
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 4096,
+      "b": 10000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9771762250775509,
+      "diag_dominance": 0.031963761840105666
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 4096,
+      "b": 100000.0,
+      "phi_points": 64,
+      "residual_fro": 0.981935897986299,
+      "diag_dominance": 0.028142833525539118
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 4096,
+      "b": 500000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9839657277241759,
+      "diag_dominance": 0.026238096234654486
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 4096,
+      "b": 1000000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9846246148799194,
+      "diag_dominance": 0.025573129989976465
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 8192,
+      "b": 1000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9650652622200784,
+      "diag_dominance": 0.03991563615745536
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 8192,
+      "b": 10000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9749378639855346,
+      "diag_dominance": 0.0335816678732783
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 8192,
+      "b": 100000.0,
+      "phi_points": 64,
+      "residual_fro": 0.980336803139594,
+      "diag_dominance": 0.029512273580837883
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 8192,
+      "b": 500000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9827313872554475,
+      "diag_dominance": 0.02741796652343748
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 8192,
+      "b": 1000000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9835262032127589,
+      "diag_dominance": 0.02666471225994874
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 16384,
+      "b": 1000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9613071219513891,
+      "diag_dominance": 0.042076949478296835
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 16384,
+      "b": 10000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9726194794192914,
+      "diag_dominance": 0.035188753048989746
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 16384,
+      "b": 100000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9786125683448256,
+      "diag_dominance": 0.030890190320084235
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 16384,
+      "b": 500000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9814032750403345,
+      "diag_dominance": 0.02860956116292351
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 16384,
+      "b": 1000000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9823189716667023,
+      "diag_dominance": 0.02779484981508696
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 32768,
+      "b": 1000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9574295613886697,
+      "diag_dominance": 0.04421535327407123
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 32768,
+      "b": 10000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9700463260054444,
+      "diag_dominance": 0.03686645119927325
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 32768,
+      "b": 100000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9768022264599678,
+      "diag_dominance": 0.03225062045527697
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 32768,
+      "b": 500000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9799616694091804,
+      "diag_dominance": 0.02982272959240752
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 32768,
+      "b": 1000000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9810189574940494,
+      "diag_dominance": 0.02893963451394628
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 65536,
+      "b": 1000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9534266102606807,
+      "diag_dominance": 0.04633870504950934
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 65536,
+      "b": 10000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9674027293040199,
+      "diag_dominance": 0.03851761541702696
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 65536,
+      "b": 100000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9749579995898714,
+      "diag_dominance": 0.03357356168661398
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 65536,
+      "b": 500000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9784104050706427,
+      "diag_dominance": 0.031049676454022363
+    },
+    {
+      "prior_family": "powerlaw",
+      "L": 65536,
+      "b": 1000000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9796207945369877,
+      "diag_dominance": 0.030099177389590955
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 4096,
+      "b": 1000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9365912493609564,
+      "diag_dominance": 0.08677650193623208
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 4096,
+      "b": 10000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9624896956153479,
+      "diag_dominance": 0.058307047166802115
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 4096,
+      "b": 100000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9742389584896807,
+      "diag_dominance": 0.04456977135090203
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 4096,
+      "b": 500000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9786390417191597,
+      "diag_dominance": 0.03884259186097142
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 4096,
+      "b": 1000000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9808690446465377,
+      "diag_dominance": 0.03532486227903584
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 8192,
+      "b": 1000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9008006879358084,
+      "diag_dominance": 0.12406722080703408
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 8192,
+      "b": 10000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9512206868126981,
+      "diag_dominance": 0.0711240240485412
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 8192,
+      "b": 100000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9676076420318421,
+      "diag_dominance": 0.05483909686722816
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 8192,
+      "b": 500000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9756366294460128,
+      "diag_dominance": 0.04472791620667175
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 8192,
+      "b": 1000000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9765043102769496,
+      "diag_dominance": 0.04228237150696319
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 16384,
+      "b": 1000.0,
+      "phi_points": 64,
+      "residual_fro": 0.8423841454428117,
+      "diag_dominance": 0.1870597271897422
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 16384,
+      "b": 10000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9404211956168228,
+      "diag_dominance": 0.09228230345732388
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 16384,
+      "b": 100000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9607910394226049,
+      "diag_dominance": 0.0658645783948452
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 16384,
+      "b": 500000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9719771607505647,
+      "diag_dominance": 0.05030275092480572
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 16384,
+      "b": 1000000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9724787126098875,
+      "diag_dominance": 0.05121954848306234
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 32768,
+      "b": 1000.0,
+      "phi_points": 64,
+      "residual_fro": 0.7315057412278376,
+      "diag_dominance": 0.27631390789036253
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 32768,
+      "b": 10000.0,
+      "phi_points": 64,
+      "residual_fro": 0.910434263485882,
+      "diag_dominance": 0.13181594388065596
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 32768,
+      "b": 100000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9515452110720928,
+      "diag_dominance": 0.08031392757224307
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 32768,
+      "b": 500000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9640660033372387,
+      "diag_dominance": 0.061757042141369824
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 32768,
+      "b": 1000000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9689767298441138,
+      "diag_dominance": 0.056317448700097084
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 65536,
+      "b": 1000.0,
+      "phi_points": 64,
+      "residual_fro": 0.5916036491872219,
+      "diag_dominance": 0.39835200097587026
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 65536,
+      "b": 10000.0,
+      "phi_points": 64,
+      "residual_fro": 0.8667246978922671,
+      "diag_dominance": 0.1829774751105124
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 65536,
+      "b": 100000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9354489542022124,
+      "diag_dominance": 0.09790176602514021
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 65536,
+      "b": 500000.0,
+      "phi_points": 64,
+      "residual_fro": 0.9561540142769712,
+      "diag_dominance": 0.07609016735445102
+    },
+    {
+      "prior_family": "bimodal",
+      "L": 65536,
+      "b": 1000000.0,
+      "phi_points": 64,
+      "residual_fro": 0.962490437949676,
+      "diag_dominance": 0.06827316938074893
+    }
+  ],
+  "recommended_region": [
+    {
+      "prior_family": "uniform",
+      "L": 32768,
+      "b": 1000.0,
+      "residual_fro": 0.09126347502739847
+    },
+    {
+      "prior_family": "uniform",
+      "L": 65536,
+      "b": 1000.0,
+      "residual_fro": 0.045590629250555015
+    }
+  ],
+  "artifacts": {
+    "csv": "artifacts/results/theory_validation/diag_residual_grid/diag_residual_grid.csv",
+    "png": "artifacts/results/theory_validation/diag_residual_grid/diag_residual_grid.png",
+    "pdf": "artifacts/results/theory_validation/diag_residual_grid/diag_residual_grid.pdf",
+    "recommended_md": "artifacts/results/theory_validation/diag_residual_grid/recommended_domain.md"
+  }
+}

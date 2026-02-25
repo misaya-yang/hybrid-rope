@@ -65,3 +65,13 @@ paper_draft/
 # macOS metadata
 .DS_Store
 **/.DS_Store
+
+# Local runtime logs / transient outputs (do not version)
+exp_pid.txt
+experiment_log.txt
+full_experiment.log
+outputs/
+experiments/**/outputs/
+experiments/**/experiment.log
+experiments/variational_sparse_attn/*training*.log
+experiments/variational_sparse_attn/test_run.log

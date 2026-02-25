@@ -1,0 +1,1 @@
+# Claim Policy Report\n\nPolicy:\n- Use `significant improvement` only when `p_fdr_bh < 0.05` and `diff > 0`.\n- Otherwise use `directional improvement consistent with theory (p_raw=..., FDR-adjusted p=...)`.\n\n| Comparison | Level | diff | p_raw | p_fdr_bh | p_fdr_by | claim_grade |\n|---|---|---:|---:|---:|---:|---|\n
