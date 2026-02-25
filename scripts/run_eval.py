@@ -37,6 +37,10 @@ METHOD_DIR_MAP = {
     "hybrid": "anchored_sigmoid",
     "b_shape_only": "anchored_sigmoid",
     "d_full_hybrid": "anchored_sigmoid",
+    "ntk_aware": "ntk_aware",
+    "ntk_dynamic": "ntk_aware",
+    "dynamic": "ntk_aware",
+    "longrope": "longrope",
 }
 
 METHOD_VARIANT_MAP = {
@@ -51,6 +55,37 @@ METHOD_VARIANT_MAP = {
     "hybrid": "custom",
     "b_shape_only": "custom",
     "d_full_hybrid": "custom",
+    "ntk_aware": "ntk_dynamic",
+    "ntk_dynamic": "ntk_dynamic",
+    "dynamic": "ntk_dynamic",
+    "longrope": "longrope",
+}
+
+TASK_SET_MAP = {
+    "lb6": ["qasper", "hotpotqa", "2wikimqa", "multi_news", "gov_report", "narrativeqa"],
+    "lb21": [
+        "narrativeqa",
+        "qasper",
+        "multifieldqa_en",
+        "multifieldqa_zh",
+        "hotpotqa",
+        "2wikimqa",
+        "musique",
+        "dureader",
+        "gov_report",
+        "qmsum",
+        "multi_news",
+        "vcsum",
+        "trec",
+        "triviaqa",
+        "samsum",
+        "lsht",
+        "passage_count",
+        "passage_retrieval_en",
+        "passage_retrieval_zh",
+        "lcc",
+        "repobench-p",
+    ],
 }
 
 
@@ -211,7 +246,43 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument(
         "--longbench_tasks",
         type=str,
-        default="qasper,hotpotqa,2wikimqa,multi_news,gov_report,narrativeqa",
+        default="",
+        help="Explicit task CSV override. Empty string follows --longbench_task_set.",
+    )
+    ap.add_argument(
+        "--longbench_task_set",
+        type=str,
+        default="lb6",
+        choices=["lb6", "lb21"],
+    )
+    ap.add_argument(
+        "--longbench_prompt_source",
+        type=str,
+        default="official",
+        choices=["official", "legacy"],
+    )
+    ap.add_argument(
+        "--longbench_chat_template",
+        type=str,
+        default="auto",
+        choices=["auto", "on", "off"],
+    )
+    ap.add_argument(
+        "--longbench_truncate_mode",
+        type=str,
+        default="middle",
+        choices=["tail", "middle"],
+    )
+    ap.add_argument(
+        "--longbench_max_new_tokens_policy",
+        type=str,
+        default="official",
+        choices=["official", "manual"],
+    )
+    ap.add_argument(
+        "--strict_parity_check",
+        action="store_true",
+        help="Enable strict parity validation in eval_longbench.py.",
     )
     ap.add_argument(
         "--longbench_score_scale",
@@ -308,6 +379,30 @@ logging:
         manifest_root = (repo_root / manifest_root).resolve()
     manifest_path = manifest_root / f"longbench_manifest_ctx{args.ctx}_seed{args.seed}.json"
 
+    protocol_lock = {
+        "timestamp": now(),
+        "exp": args.exp,
+        "model": args.model,
+        "method": args.method,
+        "seed": int(args.seed),
+        "ctx": int(args.ctx),
+        "attn_implementation": args.attn_implementation,
+        "adapter_path": resolved["adapter_path"],
+        "custom_inv_freq_path": resolved["custom_inv_freq_path"],
+        "inv_freq_sha256": inv_sha,
+        "suite_output_root": str(suite_root),
+        "longbench_task_set": args.longbench_task_set,
+        "longbench_tasks_override": args.longbench_tasks.strip(),
+        "longbench_prompt_source": args.longbench_prompt_source,
+        "longbench_chat_template": args.longbench_chat_template,
+        "longbench_truncate_mode": args.longbench_truncate_mode,
+        "longbench_max_new_tokens_policy": args.longbench_max_new_tokens_policy,
+        "longbench_score_scale": args.longbench_score_scale,
+        "strict_parity_check": bool(args.strict_parity_check),
+        "manifest_path": str(manifest_path),
+    }
+    write_text(run_dir / "baseline_protocol_lock.json", json.dumps(protocol_lock, indent=2, ensure_ascii=False))
+
     metrics_jsonl = run_dir / "metrics.jsonl"
     stdout_log = run_dir / "stdout.log"
     py = sys.executable
@@ -325,6 +420,15 @@ logging:
             "adapter_path": resolved["adapter_path"],
             "custom_inv_freq_path": resolved["custom_inv_freq_path"],
             "manifest_path": str(manifest_path),
+            "protocol_lock_json": str(run_dir / "baseline_protocol_lock.json"),
+        },
+        "protocol": {
+            "longbench_task_set": args.longbench_task_set,
+            "longbench_prompt_source": args.longbench_prompt_source,
+            "longbench_chat_template": args.longbench_chat_template,
+            "longbench_truncate_mode": args.longbench_truncate_mode,
+            "longbench_max_new_tokens_policy": args.longbench_max_new_tokens_policy,
+            "strict_parity_check": bool(args.strict_parity_check),
         },
         "metrics": {},
     }
@@ -376,6 +480,7 @@ logging:
 
         if "longbench_full" in suites:
             lb_json = run_dir / "longbench.json"
+            longbench_tasks_arg = args.longbench_tasks.strip()
             cmd = [
                 py,
                 str((repo_root / "scripts/eval_longbench.py").resolve()),
@@ -385,8 +490,8 @@ logging:
                 resolved["adapter_path"],
                 "--output_json",
                 str(lb_json),
-                "--tasks",
-                args.longbench_tasks,
+                "--task_set",
+                args.longbench_task_set,
                 "--max_samples_per_task",
                 str(args.longbench_max_samples),
                 "--max_input_tokens",
@@ -399,7 +504,19 @@ logging:
                 str(manifest_path),
                 "--score_scale",
                 args.longbench_score_scale,
+                "--prompt_source",
+                args.longbench_prompt_source,
+                "--chat_template",
+                args.longbench_chat_template,
+                "--truncate_mode",
+                args.longbench_truncate_mode,
+                "--max_new_tokens_policy",
+                args.longbench_max_new_tokens_policy,
             ]
+            if longbench_tasks_arg:
+                cmd.extend(["--tasks", longbench_tasks_arg])
+            if args.strict_parity_check:
+                cmd.append("--strict_parity_check")
             if resolved["custom_inv_freq_path"]:
                 cmd.extend(["--variant", "custom", "--custom_inv_freq_path", resolved["custom_inv_freq_path"]])
             else:
@@ -408,7 +525,10 @@ logging:
             stage_rc["longbench_full"] = rc
 
             obj = maybe_load_json(lb_json) or {}
-            tasks = parse_csv(args.longbench_tasks)
+            if args.longbench_tasks.strip():
+                tasks = parse_csv(args.longbench_tasks)
+            else:
+                tasks = list(TASK_SET_MAP.get(args.longbench_task_set, []))
             vals = []
             vals_raw = []
             vals_pct = []

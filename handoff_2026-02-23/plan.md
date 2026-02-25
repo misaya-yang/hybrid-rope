@@ -189,6 +189,35 @@ python scripts/import_2024/attention_prior_bridge.py \
   --out_dir artifacts/reviewer_2026-02-24/prior_bridge
 ```
 
+## 0.8) H1/H4 pipeline hardening update (2026-02-25)
+
+New assets added for the NeurIPS sprint remediation:
+
+- LongBench parity hardening:
+  - `scripts/longbench_official_config/dataset2prompt.json`
+  - `scripts/longbench_official_config/dataset2maxlen.json`
+  - `scripts/import_2024/longbench_pipeline_audit.py`
+  - `scripts/eval_longbench.py` now supports:
+    - `--task_set {lb6,lb21}`
+    - `--prompt_source {official,legacy}`
+    - `--chat_template {auto,on,off}`
+    - `--truncate_mode {tail,middle}`
+    - `--max_new_tokens_policy {official,manual}`
+    - `--strict_parity_check`
+
+- Protocol lock propagation:
+  - `scripts/run_eval.py` now records parity knobs and writes `baseline_protocol_lock.json` in each run folder.
+
+- Statistical rigor:
+  - `scripts/import_2024/significance_test.py` now supports FDR output:
+    - `p_raw`, `p_fdr_bh`, `p_fdr_by`, `claim_grade`
+    - `--fdr_method {bh,by,both}`
+    - auto `claim_policy_report.md`
+
+- Theory strengthening:
+  - `scripts/import_2024/functional_residual_real_prior.py`
+  - `scripts/import_2024/theorem3_adversarial_bimodal.py`
+
 ---
 
 ## 0) Non‑negotiables (protocol lock)

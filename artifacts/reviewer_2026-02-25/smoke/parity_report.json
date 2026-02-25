@@ -1,0 +1,43 @@
+{
+  "meta": {
+    "candidate_json": "/private/tmp/hybrid_rope_smoke/candidate.json",
+    "reference_json": "/private/tmp/hybrid_rope_smoke/reference.json",
+    "candidate_model_alias": "hybrid_lora",
+    "reference_model_alias": "hybrid_lora",
+    "prefer_pct": true,
+    "tolerance_abs": 5.0,
+    "n_tasks": 2
+  },
+  "summary": {
+    "within_tolerance_ratio": 1.0,
+    "within_tolerance_count": 2,
+    "rank_consistent": true,
+    "max_abs_delta": 1.0
+  },
+  "task_rows": [
+    {
+      "task": "hotpotqa",
+      "candidate": 25.0,
+      "reference": 24.0,
+      "delta": 1.0,
+      "abs_delta": 1.0,
+      "within_tolerance": true
+    },
+    {
+      "task": "qasper",
+      "candidate": 12.0,
+      "reference": 11.0,
+      "delta": 1.0,
+      "abs_delta": 1.0,
+      "within_tolerance": true
+    }
+  ],
+  "candidate_rank": [
+    "hotpotqa",
+    "qasper"
+  ],
+  "reference_rank": [
+    "hotpotqa",
+    "qasper"
+  ]
+}

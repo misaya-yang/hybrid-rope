@@ -33,12 +33,14 @@ DEFAULT_TASKS = [
     "gov_report",
 ]
 
-METHODS = ["baseline", "pi", "yarn", "sigmoid", "anchored_sigmoid"]
+METHODS = ["baseline", "pi", "yarn", "sigmoid", "anchored_sigmoid", "ntk_aware", "longrope"]
 COMPARISONS = [
     ("anchored_sigmoid", "baseline", "Anc-Sig vs Baseline"),
     ("anchored_sigmoid", "pi", "Anc-Sig vs PI"),
     ("anchored_sigmoid", "yarn", "Anc-Sig vs YaRN"),
     ("anchored_sigmoid", "sigmoid", "Anc-Sig vs Sigmoid (ablation)"),
+    ("anchored_sigmoid", "ntk_aware", "Anc-Sig vs NTK-aware"),
+    ("anchored_sigmoid", "longrope", "Anc-Sig vs LongRoPE"),
     ("sigmoid", "baseline", "Sigmoid vs Baseline"),
     ("sigmoid", "pi", "Sigmoid vs PI"),
 ]
@@ -222,6 +224,54 @@ def sign_flip_pvalue(diffs: np.ndarray, seed: int = 42, n_mc: int = 20000) -> fl
     return float(count / float(n_mc))
 
 
+def fdr_bh(pvals: List[float]) -> List[float]:
+    m = len(pvals)
+    if m == 0:
+        return []
+    pairs = [(i, float(p)) for i, p in enumerate(pvals)]
+    pairs.sort(key=lambda x: x[1])
+    adj_sorted = [0.0] * m
+    for rank, (_, p) in enumerate(pairs, start=1):
+        adj_sorted[rank - 1] = p * m / float(rank)
+    # monotonic from tail
+    for i in range(m - 2, -1, -1):
+        adj_sorted[i] = min(adj_sorted[i], adj_sorted[i + 1])
+    out = [0.0] * m
+    for rank, (idx, _) in enumerate(pairs):
+        out[idx] = float(min(max(adj_sorted[rank], 0.0), 1.0))
+    return out
+
+
+def fdr_by(pvals: List[float]) -> List[float]:
+    m = len(pvals)
+    if m == 0:
+        return []
+    c_m = float(np.sum(1.0 / np.arange(1, m + 1, dtype=np.float64)))
+    pairs = [(i, float(p)) for i, p in enumerate(pvals)]
+    pairs.sort(key=lambda x: x[1])
+    adj_sorted = [0.0] * m
+    for rank, (_, p) in enumerate(pairs, start=1):
+        adj_sorted[rank - 1] = p * m * c_m / float(rank)
+    for i in range(m - 2, -1, -1):
+        adj_sorted[i] = min(adj_sorted[i], adj_sorted[i + 1])
+    out = [0.0] * m
+    for rank, (idx, _) in enumerate(pairs):
+        out[idx] = float(min(max(adj_sorted[rank], 0.0), 1.0))
+    return out
+
+
+def claim_grade(diff: float, p_fdr_bh: Optional[float], p_raw: Optional[float]) -> str:
+    if not np.isfinite(diff):
+        return "insufficient_data"
+    if diff <= 0:
+        return "no_improvement"
+    if isinstance(p_fdr_bh, (int, float)) and np.isfinite(float(p_fdr_bh)) and float(p_fdr_bh) < 0.05:
+        return "significant_improvement"
+    if isinstance(p_raw, (int, float)) and np.isfinite(float(p_raw)):
+        return "directional_consistent_with_theory"
+    return "directional_consistent_with_theory"
+
+
 def paired_stats(a: np.ndarray, b: np.ndarray, n_bootstrap: int, seed: int) -> PairStats:
     n = min(len(a), len(b))
     if n <= 0:
@@ -306,6 +356,13 @@ def main() -> None:
         action="store_true",
         help="Enable two-level hierarchical bootstrap (seed->task->sample) for pooled analysis",
     )
+    parser.add_argument(
+        "--fdr_method",
+        type=str,
+        default="both",
+        choices=["bh", "by", "both"],
+        help="FDR correction method(s) applied over each (comparison, level, family) group.",
+    )
     parser.add_argument("--output_prefix", type=str, default="significance_seeded")
     args = parser.parse_args()
 
@@ -355,6 +412,7 @@ def main() -> None:
                 print(f"  {method:18s}: {float(np.mean(vals)):.4f}")
 
     rows_csv: List[Dict[str, object]] = []
+    correction_rows: List[Dict[str, object]] = []
     output_payload: Dict[str, object] = {
         "meta": {
             "timestamp": __import__("time").strftime("%Y-%m-%d %H:%M:%S"),
@@ -362,6 +420,7 @@ def main() -> None:
             "tasks": tasks,
             "n_bootstrap": int(args.n_bootstrap),
             "hierarchical_bootstrap": bool(args.hierarchical_bootstrap),
+            "fdr_method": args.fdr_method,
         },
         "comparisons": [],
     }
@@ -374,6 +433,7 @@ def main() -> None:
             "per_task": {},
             "per_sample": {},
             "cross_seed": {},
+            "fdr_summary": {},
         }
 
         # per-task pooled over seeds (within each seed first, then concatenate pairs)
@@ -405,18 +465,38 @@ def main() -> None:
                 "ci_high": st.ci_high,
                 "p_bootstrap": st.p_bootstrap,
                 "p_signflip": st.p_signflip,
+                "p_raw": st.p_bootstrap,
+                "p_fdr_bh": None,
+                "p_fdr_by": None,
+                "claim_grade": None,
+                "family": f"{label}|per_task",
             }
             rows_csv.append(
                 {
                     "comparison": label,
                     "level": "per_task",
                     "task": task,
+                    "family": f"{label}|per_task",
                     "n_pairs": st.n_pairs,
                     "diff": st.diff,
                     "ci_low": st.ci_low,
                     "ci_high": st.ci_high,
                     "p_bootstrap": st.p_bootstrap,
                     "p_signflip": st.p_signflip,
+                    "p_raw": st.p_bootstrap,
+                    "p_fdr_bh": None,
+                    "p_fdr_by": None,
+                    "claim_grade": None,
+                }
+            )
+            correction_rows.append(
+                {
+                    "comparison": label,
+                    "level": "per_task",
+                    "task": task,
+                    "family": f"{label}|per_task",
+                    "p_raw": float(st.p_bootstrap),
+                    "diff": float(st.diff),
                 }
             )
 
@@ -453,6 +533,11 @@ def main() -> None:
                 "ci_high": st.ci_high,
                 "p_bootstrap": st.p_bootstrap,
                 "p_signflip": st.p_signflip,
+                "p_raw": st.p_bootstrap,
+                "p_fdr_bh": None,
+                "p_fdr_by": None,
+                "claim_grade": None,
+                "family": f"{label}|per_sample",
             }
 
             if args.hierarchical_bootstrap:
@@ -471,12 +556,27 @@ def main() -> None:
                     "comparison": label,
                     "level": "per_sample",
                     "task": "all",
+                    "family": f"{label}|per_sample",
                     "n_pairs": st.n_pairs,
                     "diff": st.diff,
                     "ci_low": st.ci_low,
                     "ci_high": st.ci_high,
                     "p_bootstrap": st.p_bootstrap,
                     "p_signflip": st.p_signflip,
+                    "p_raw": st.p_bootstrap,
+                    "p_fdr_bh": None,
+                    "p_fdr_by": None,
+                    "claim_grade": None,
+                }
+            )
+            correction_rows.append(
+                {
+                    "comparison": label,
+                    "level": "per_sample",
+                    "task": "all",
+                    "family": f"{label}|per_sample",
+                    "p_raw": float(st.p_bootstrap),
+                    "diff": float(st.diff),
                 }
             )
 
@@ -508,22 +608,130 @@ def main() -> None:
                 "ci_high": float(ci_hi),
                 "p_bootstrap": float(p_boot),
                 "p_signflip": float(p_flip),
+                "p_raw": float(p_boot),
+                "p_fdr_bh": None,
+                "p_fdr_by": None,
+                "claim_grade": None,
+                "family": f"{label}|cross_seed",
             }
             rows_csv.append(
                 {
                     "comparison": label,
                     "level": "cross_seed",
                     "task": "seed_mean",
+                    "family": f"{label}|cross_seed",
                     "n_pairs": int(len(arr)),
                     "diff": float(obs),
                     "ci_low": float(ci_lo),
                     "ci_high": float(ci_hi),
                     "p_bootstrap": float(p_boot),
                     "p_signflip": float(p_flip),
+                    "p_raw": float(p_boot),
+                    "p_fdr_bh": None,
+                    "p_fdr_by": None,
+                    "claim_grade": None,
+                }
+            )
+            correction_rows.append(
+                {
+                    "comparison": label,
+                    "level": "cross_seed",
+                    "task": "seed_mean",
+                    "family": f"{label}|cross_seed",
+                    "p_raw": float(p_boot),
+                    "diff": float(obs),
                 }
             )
 
         output_payload["comparisons"].append(comp_obj)
+
+    # Apply FDR correction by family and attach claim grades.
+    families: Dict[str, List[Dict[str, object]]] = {}
+    for r in correction_rows:
+        fam = str(r.get("family", ""))
+        families.setdefault(fam, []).append(r)
+
+    correction_map: Dict[Tuple[str, str, str], Dict[str, Optional[float]]] = {}
+    for fam, items in families.items():
+        pvals = [float(x.get("p_raw", 1.0)) for x in items]
+        p_bh = fdr_bh(pvals) if args.fdr_method in {"bh", "both"} else [None] * len(pvals)
+        p_by = fdr_by(pvals) if args.fdr_method in {"by", "both"} else [None] * len(pvals)
+        for i, item in enumerate(items):
+            key = (
+                str(item.get("comparison", "")),
+                str(item.get("level", "")),
+                str(item.get("task", "")),
+            )
+            raw = float(item.get("p_raw", 1.0))
+            bh = p_bh[i] if isinstance(p_bh[i], float) else None
+            by = p_by[i] if isinstance(p_by[i], float) else None
+            diff = float(item.get("diff", float("nan")))
+            grade = claim_grade(diff=diff, p_fdr_bh=bh, p_raw=raw)
+            correction_map[key] = {
+                "p_raw": raw,
+                "p_fdr_bh": bh,
+                "p_fdr_by": by,
+                "claim_grade": grade,
+            }
+
+    # Patch CSV rows.
+    for row in rows_csv:
+        key = (str(row.get("comparison", "")), str(row.get("level", "")), str(row.get("task", "")))
+        corr = correction_map.get(key)
+        if not corr:
+            continue
+        row["p_raw"] = corr["p_raw"]
+        row["p_fdr_bh"] = corr["p_fdr_bh"]
+        row["p_fdr_by"] = corr["p_fdr_by"]
+        row["claim_grade"] = corr["claim_grade"]
+
+    # Patch JSON payload and per-comparison family summaries.
+    for comp in output_payload["comparisons"]:
+        label = str(comp.get("comparison", ""))
+        fsum = {}
+
+        per_task = comp.get("per_task") or {}
+        if isinstance(per_task, dict):
+            for task, obj in per_task.items():
+                key = (label, "per_task", str(task))
+                corr = correction_map.get(key)
+                if corr and isinstance(obj, dict):
+                    obj["p_raw"] = corr["p_raw"]
+                    obj["p_fdr_bh"] = corr["p_fdr_bh"]
+                    obj["p_fdr_by"] = corr["p_fdr_by"]
+                    obj["claim_grade"] = corr["claim_grade"]
+
+        per_sample = comp.get("per_sample") or {}
+        if isinstance(per_sample, dict) and per_sample:
+            key = (label, "per_sample", "all")
+            corr = correction_map.get(key)
+            if corr:
+                per_sample["p_raw"] = corr["p_raw"]
+                per_sample["p_fdr_bh"] = corr["p_fdr_bh"]
+                per_sample["p_fdr_by"] = corr["p_fdr_by"]
+                per_sample["claim_grade"] = corr["claim_grade"]
+
+        cross_seed = comp.get("cross_seed") or {}
+        if isinstance(cross_seed, dict) and cross_seed:
+            key = (label, "cross_seed", "seed_mean")
+            corr = correction_map.get(key)
+            if corr:
+                cross_seed["p_raw"] = corr["p_raw"]
+                cross_seed["p_fdr_bh"] = corr["p_fdr_bh"]
+                cross_seed["p_fdr_by"] = corr["p_fdr_by"]
+                cross_seed["claim_grade"] = corr["claim_grade"]
+
+        fam_key = f"{label}|per_task"
+        fam_items = families.get(fam_key, [])
+        if fam_items:
+            ps = [float(x.get("p_raw", 1.0)) for x in fam_items]
+            fsum[fam_key] = {
+                "n_hypotheses": len(ps),
+                "min_p_raw": float(min(ps)),
+                "method": args.fdr_method,
+            }
+
+        comp["fdr_summary"] = fsum
 
     out_root = roots[0]
     out_json = out_root / f"{args.output_prefix}.json"
@@ -534,11 +742,53 @@ def main() -> None:
     with out_csv.open("w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(
             f,
-            fieldnames=["comparison", "level", "task", "n_pairs", "diff", "ci_low", "ci_high", "p_bootstrap", "p_signflip"],
+            fieldnames=[
+                "comparison",
+                "level",
+                "task",
+                "family",
+                "n_pairs",
+                "diff",
+                "ci_low",
+                "ci_high",
+                "p_bootstrap",
+                "p_signflip",
+                "p_raw",
+                "p_fdr_bh",
+                "p_fdr_by",
+                "claim_grade",
+            ],
         )
         writer.writeheader()
         for row in rows_csv:
             writer.writerow(row)
+
+    claim_md = out_root / "claim_policy_report.md"
+    md_lines = [
+        "# Claim Policy Report",
+        "",
+        "Policy:",
+        "- Use `significant improvement` only when `p_fdr_bh < 0.05` and `diff > 0`.",
+        "- Otherwise use `directional improvement consistent with theory (p_raw=..., FDR-adjusted p=...)`.",
+        "",
+        "| Comparison | Level | diff | p_raw | p_fdr_bh | p_fdr_by | claim_grade |",
+        "|---|---|---:|---:|---:|---:|---|",
+    ]
+    for row in rows_csv:
+        if str(row.get("level")) != "per_sample":
+            continue
+        md_lines.append(
+            "| {comparison} | {level} | {diff:.6f} | {p_raw:.6f} | {p_fdr_bh} | {p_fdr_by} | {claim_grade} |".format(
+                comparison=str(row.get("comparison", "")),
+                level=str(row.get("level", "")),
+                diff=float(row.get("diff", 0.0)),
+                p_raw=float(row.get("p_raw", 1.0)),
+                p_fdr_bh=("NA" if row.get("p_fdr_bh") is None else f"{float(row.get('p_fdr_bh')):.6f}"),  # type: ignore[arg-type]
+                p_fdr_by=("NA" if row.get("p_fdr_by") is None else f"{float(row.get('p_fdr_by')):.6f}"),  # type: ignore[arg-type]
+                claim_grade=str(row.get("claim_grade", "")),
+            )
+        )
+    claim_md.write_text("\\n".join(md_lines) + "\\n", encoding="utf-8")
 
     print("\n" + "=" * 72)
     print("SIGNIFICANCE SUMMARY (per_sample level)")
@@ -547,9 +797,16 @@ def main() -> None:
         ps = comp.get("per_sample") or {}
         if not ps:
             continue
-        p = ps.get("p_bootstrap")
-        status = "SIGNIFICANT" if isinstance(p, (int, float)) and p < 0.05 else "NOT significant"
-        print(f"{comp['comparison']:30s} p={p:.4f} {status}")
+        p = ps.get("p_raw", ps.get("p_bootstrap"))
+        p_bh = ps.get("p_fdr_bh")
+        grade = ps.get("claim_grade", "n/a")
+        p_show = float(p) if isinstance(p, (int, float)) else float("nan")
+        if isinstance(p_bh, (int, float)):
+            status = "SIGNIFICANT" if float(p_bh) < 0.05 else "NOT significant"
+            print(f"{comp['comparison']:30s} p_raw={p_show:.4f} p_fdr_bh={float(p_bh):.4f} {status} grade={grade}")
+        else:
+            status = "NOT significant" if isinstance(p, (int, float)) and float(p) >= 0.05 else "SIGNIFICANT"
+            print(f"{comp['comparison']:30s} p_raw={p_show:.4f} {status} grade={grade}")
 
     print(f"\n[ok] wrote json: {out_json}")
     print(f"[ok] wrote csv : {out_csv}")

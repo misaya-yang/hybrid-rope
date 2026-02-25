@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """
-Evaluate LongBench tasks for base vs hybrid-lora.
+Evaluate LongBench tasks with fair-protocol controls.
 
-Tasks (default):
-- qasper (single-document QA, F1)
-- hotpotqa (multi-document QA, F1)
-- gov_report (long summarization, Rouge-L)
+Key features:
+- `task_set` support (`lb6` and full `lb21`)
+- official prompt/max_new_tokens parity mode
+- chat template controls (`auto/on/off`)
+- truncation policy controls (`middle/tail`)
+- explicit task->metric mapping for all LongBench-21 tasks
 """
 
 from __future__ import annotations
@@ -37,14 +39,76 @@ except Exception:
 LOG = logging.getLogger("eval_longbench")
 
 
+LB6_TASKS = [
+    "qasper",
+    "hotpotqa",
+    "2wikimqa",
+    "multi_news",
+    "gov_report",
+    "narrativeqa",
+]
+
+LB21_TASKS = [
+    "narrativeqa",
+    "qasper",
+    "multifieldqa_en",
+    "multifieldqa_zh",
+    "hotpotqa",
+    "2wikimqa",
+    "musique",
+    "dureader",
+    "gov_report",
+    "qmsum",
+    "multi_news",
+    "vcsum",
+    "trec",
+    "triviaqa",
+    "samsum",
+    "lsht",
+    "passage_count",
+    "passage_retrieval_en",
+    "passage_retrieval_zh",
+    "lcc",
+    "repobench-p",
+]
+
+TASK_SET_MAP: Dict[str, List[str]] = {
+    "lb6": LB6_TASKS,
+    "lb21": LB21_TASKS,
+}
+
 # Keep task->metric mapping explicit to avoid accidental implicit defaults.
 TASK_METRIC_MAP: Dict[str, str] = {
-    "qasper": "f1",
-    "hotpotqa": "f1",
-    "2wikimqa": "f1",
-    "narrativeqa": "f1",
-    "multi_news": "rouge_l_f1",
+    "narrativeqa": "qa_f1",
+    "qasper": "qa_f1",
+    "multifieldqa_en": "qa_f1",
+    "multifieldqa_zh": "qa_f1_zh",
+    "hotpotqa": "qa_f1",
+    "2wikimqa": "qa_f1",
+    "musique": "qa_f1",
+    "dureader": "rouge_l_zh",
     "gov_report": "rouge_l_f1",
+    "qmsum": "rouge_l_f1",
+    "multi_news": "rouge_l_f1",
+    "vcsum": "rouge_l_zh",
+    "trec": "classification",
+    "triviaqa": "qa_f1",
+    "samsum": "rouge_l_f1",
+    "lsht": "classification",
+    "passage_count": "count",
+    "passage_retrieval_en": "retrieval_en",
+    "passage_retrieval_zh": "retrieval_zh",
+    "lcc": "code_sim",
+    "repobench-p": "code_sim",
+}
+
+NO_CHAT_TEMPLATE_TASKS = {
+    "trec",
+    "triviaqa",
+    "samsum",
+    "lsht",
+    "lcc",
+    "repobench-p",
 }
 
 
@@ -84,6 +148,16 @@ def attn_candidates(mode: str) -> List[Optional[str]]:
     return [mode]
 
 
+def _safe_float(x: object, default: float) -> float:
+    try:
+        v = float(x)
+        if math.isfinite(v):
+            return v
+    except Exception:
+        pass
+    return float(default)
+
+
 def infer_rope_theta(base_model_path: str, trust_remote_code: bool) -> float:
     theta: Optional[float] = None
     try:
@@ -113,10 +187,29 @@ def infer_rope_theta(base_model_path: str, trust_remote_code: bool) -> float:
     return float(theta)
 
 
-def rope_scaling_candidates(variant: str, factor: float, orig_ctx: int, rope_theta: float) -> List[Optional[dict]]:
+def parse_float_list(text: str) -> List[float]:
+    out: List[float] = []
+    for tok in parse_csv(text):
+        try:
+            out.append(float(tok))
+        except Exception:
+            continue
+    return out
+
+
+def rope_scaling_candidates(
+    variant: str,
+    factor: float,
+    orig_ctx: int,
+    rope_theta: float,
+    longrope_short_factor: str,
+    longrope_long_factor: str,
+) -> List[Optional[dict]]:
     factor = float(factor)
     rope_theta = float(rope_theta)
-    if variant == "yarn":
+    v = variant.strip().lower()
+
+    if v == "yarn":
         return [
             {
                 "rope_type": "yarn",
@@ -127,16 +220,45 @@ def rope_scaling_candidates(variant: str, factor: float, orig_ctx: int, rope_the
             {"rope_type": "dynamic", "factor": factor, "rope_theta": rope_theta},
             {"rope_type": "linear", "factor": factor, "rope_theta": rope_theta},
         ]
-    if variant == "pi":
+
+    if v == "pi":
         return [
             {"rope_type": "linear", "factor": factor, "rope_theta": rope_theta},
             {"rope_type": "dynamic", "factor": factor, "rope_theta": rope_theta},
         ]
-    if variant == "pi_soft":
+
+    if v == "pi_soft":
         return [
             {"rope_type": "dynamic", "factor": factor, "rope_theta": rope_theta},
             {"rope_type": "linear", "factor": factor, "rope_theta": rope_theta},
         ]
+
+    if v in {"ntk_dynamic", "ntk", "dynamic"}:
+        return [
+            {
+                "rope_type": "dynamic",
+                "factor": factor,
+                "rope_theta": rope_theta,
+                "original_max_position_embeddings": int(orig_ctx),
+            },
+            {"rope_type": "linear", "factor": factor, "rope_theta": rope_theta},
+        ]
+
+    if v == "longrope":
+        short_vals = parse_float_list(longrope_short_factor)
+        long_vals = parse_float_list(longrope_long_factor)
+        cfg = {
+            "rope_type": "longrope",
+            "factor": factor,
+            "rope_theta": rope_theta,
+            "original_max_position_embeddings": int(orig_ctx),
+        }
+        if short_vals:
+            cfg["short_factor"] = short_vals
+        if long_vals:
+            cfg["long_factor"] = long_vals
+        return [cfg, {"rope_type": "dynamic", "factor": factor, "rope_theta": rope_theta}]
+
     return [None]
 
 
@@ -208,7 +330,7 @@ def patch_hybrid_rope(model: torch.nn.Module, inv_freq_cpu: torch.Tensor) -> int
             module.max_seq_len_cached = 0
         patched += 1
     if patched == 0:
-        raise RuntimeError("No rotary modules patched for hybrid variant.")
+        raise RuntimeError("No rotary modules patched for hybrid/custom variant.")
     return patched
 
 
@@ -257,7 +379,19 @@ def infer_variant_and_rope_from_adapter(
 
     if variant == "auto":
         parent_name = Path(adapter_path).resolve().parent.name.strip().lower()
-        variant = parent_name if parent_name in {"hybrid", "yarn", "pi", "pi_soft"} else "base"
+        valid = {
+            "hybrid",
+            "yarn",
+            "pi",
+            "pi_soft",
+            "custom",
+            "base",
+            "dynamic",
+            "ntk_dynamic",
+            "ntk",
+            "longrope",
+        }
+        variant = parent_name if parent_name in valid else "base"
     return variant, rope_cfg, rope_factor, orig_ctx
 
 
@@ -276,6 +410,8 @@ def load_model_and_tokenizer(
     hybrid_alpha: float,
     hybrid_p: float,
     hybrid_min_freq_scale: float,
+    longrope_short_factor: str,
+    longrope_long_factor: str,
 ) -> Tuple[torch.nn.Module, AutoTokenizer, str, str, Optional[dict]]:
     tokenizer = AutoTokenizer.from_pretrained(
         base_model_path,
@@ -323,72 +459,85 @@ def load_model_and_tokenizer(
         raise ValueError("variant=custom requires custom_inv_freq_path.")
 
     if isinstance(rope_cfg, dict) and rope_cfg.get("factor") is not None:
-        try:
-            rope_factor_used = float(rope_cfg.get("factor"))
-        except Exception:
-            pass
+        rope_factor_used = _safe_float(rope_cfg.get("factor"), rope_factor_used)
 
-    if variant_used in {"yarn", "pi", "pi_soft"} and rope_cfg is None:
-        rope_cfg = rope_scaling_candidates(variant_used, rope_factor_used, orig_ctx_used, rope_theta)[0]
+    if isinstance(rope_cfg, dict):
+        rope_cfg_candidates: List[Optional[dict]] = [dict(rope_cfg)]
+    elif variant_used in {"yarn", "pi", "pi_soft", "dynamic", "ntk", "ntk_dynamic", "longrope"}:
+        rope_cfg_candidates = rope_scaling_candidates(
+            variant=variant_used,
+            factor=rope_factor_used,
+            orig_ctx=orig_ctx_used,
+            rope_theta=rope_theta,
+            longrope_short_factor=longrope_short_factor,
+            longrope_long_factor=longrope_long_factor,
+        )
+    else:
+        rope_cfg_candidates = [None]
 
     model = None
     used_attn = "default"
     errs: List[str] = []
-    for attn in attn_candidates(attn_mode):
-        try:
-            cfg = AutoConfig.from_pretrained(
-                base_model_path,
-                trust_remote_code=trust_remote_code,
-                local_files_only=True,
-            )
-
-            if adapter_path and variant_used != "base":
-                target_max_pos = max(
-                    int(getattr(cfg, "max_position_embeddings", orig_ctx_used)),
-                    int(orig_ctx_used * max(1.0, rope_factor_used)),
+    for rope_cfg_try in rope_cfg_candidates:
+        for attn in attn_candidates(attn_mode):
+            try:
+                cfg = AutoConfig.from_pretrained(
+                    base_model_path,
+                    trust_remote_code=trust_remote_code,
+                    local_files_only=True,
                 )
-                cfg.max_position_embeddings = target_max_pos
 
-            if rope_cfg is not None:
-                cfg.rope_scaling = dict(rope_cfg)
-                if hasattr(cfg, "rope_parameters"):
-                    cfg.rope_parameters = dict(rope_cfg)
-                if hasattr(cfg, "rope_theta") and getattr(cfg, "rope_theta", None) is None:
-                    cfg.rope_theta = float(rope_theta)
+                if adapter_path and variant_used != "base":
+                    target_max_pos = max(
+                        int(getattr(cfg, "max_position_embeddings", orig_ctx_used)),
+                        int(orig_ctx_used * max(1.0, rope_factor_used)),
+                    )
+                    cfg.max_position_embeddings = target_max_pos
 
-            kwargs = dict(
-                config=cfg,
-                torch_dtype=torch.bfloat16,
-                device_map="auto",
-                trust_remote_code=trust_remote_code,
-                local_files_only=True,
-            )
-            if attn is not None:
-                kwargs["attn_implementation"] = attn
-            model = AutoModelForCausalLM.from_pretrained(base_model_path, **kwargs)
-            if custom_inv:
-                inv = load_custom_inv_freq(custom_inv)
-                patched = patch_hybrid_rope(model, inv)
-                rope_cfg = {"custom_inv_freq_path": custom_inv}
-                LOG.info("Patched custom inv_freq from %s into %d layers", custom_inv, patched)
-            elif adapter_path and variant_used == "hybrid":
-                head_dim = model.config.hidden_size // model.config.num_attention_heads
-                inv = compute_hybrid_inv_freq(
-                    head_dim=head_dim,
-                    theta_base=rope_theta,
-                    split_ratio=hybrid_split_ratio,
-                    alpha=hybrid_alpha,
-                    p=hybrid_p,
-                    min_freq_scale=hybrid_min_freq_scale,
+                if rope_cfg_try is not None:
+                    cfg.rope_scaling = dict(rope_cfg_try)
+                    if hasattr(cfg, "rope_parameters"):
+                        cfg.rope_parameters = dict(rope_cfg_try)
+                    if hasattr(cfg, "rope_theta") and getattr(cfg, "rope_theta", None) is None:
+                        cfg.rope_theta = float(rope_theta)
+
+                kwargs = dict(
+                    config=cfg,
+                    torch_dtype=torch.bfloat16,
+                    device_map="auto",
+                    trust_remote_code=trust_remote_code,
+                    local_files_only=True,
                 )
-                patched = patch_hybrid_rope(model, inv)
-                LOG.info("Patched hybrid rotary layers=%d", patched)
-            used_attn = attn or "default"
+                if attn is not None:
+                    kwargs["attn_implementation"] = attn
+                model = AutoModelForCausalLM.from_pretrained(base_model_path, **kwargs)
+                if custom_inv:
+                    inv = load_custom_inv_freq(custom_inv)
+                    patched = patch_hybrid_rope(model, inv)
+                    rope_cfg = {"custom_inv_freq_path": custom_inv}
+                    LOG.info("Patched custom inv_freq from %s into %d layers", custom_inv, patched)
+                elif adapter_path and variant_used == "hybrid":
+                    head_dim = model.config.hidden_size // model.config.num_attention_heads
+                    inv = compute_hybrid_inv_freq(
+                        head_dim=head_dim,
+                        theta_base=rope_theta,
+                        split_ratio=hybrid_split_ratio,
+                        alpha=hybrid_alpha,
+                        p=hybrid_p,
+                        min_freq_scale=hybrid_min_freq_scale,
+                    )
+                    patched = patch_hybrid_rope(model, inv)
+                    LOG.info("Patched hybrid rotary layers=%d", patched)
+                else:
+                    rope_cfg = dict(rope_cfg_try) if isinstance(rope_cfg_try, dict) else None
+                used_attn = attn or "default"
+                break
+            except Exception as e:
+                errs.append(f"variant={variant_used} rope={rope_cfg_try} attn={attn}: {type(e).__name__}: {e}")
+                gc.collect()
+                torch.cuda.empty_cache()
+        if model is not None:
             break
-        except Exception as e:
-            errs.append(f"variant={variant_used} rope={rope_cfg} attn={attn}: {type(e).__name__}: {e}")
-            gc.collect()
-            torch.cuda.empty_cache()
     if model is None:
         raise RuntimeError("Failed to load model:\n" + "\n".join(errs))
 
@@ -419,31 +568,70 @@ def normalize_text(text: str) -> str:
     return text
 
 
-def token_f1(pred: str, refs: List[str]) -> float:
-    pred_tokens = normalize_text(pred).split()
-    if not pred_tokens:
+def normalize_zh_text(text: str) -> str:
+    text = text.lower()
+    cn_punc = "！？｡。＂＃＄％＆＇（）＊＋，－／：；＜＝＞＠［＼］＾＿｀｛｜｝～｟｠｢｣､、〃》「」『』【】〔〕〖〗〘〙〚〛〜〝〞〟〰〾〿–—‘’‛“”„‟…‧﹏."
+    punc = set(string.punctuation + cn_punc)
+    text = "".join(ch for ch in text if ch not in punc)
+    return "".join(text.split())
+
+
+def zh_tokenize(text: str) -> List[str]:
+    text = normalize_zh_text(text)
+    tokens: List[str] = []
+    buf: List[str] = []
+    for ch in text:
+        is_cjk = "\u4e00" <= ch <= "\u9fff"
+        if is_cjk:
+            if buf:
+                tokens.append("".join(buf))
+                buf = []
+            tokens.append(ch)
+        elif ch.isalnum():
+            buf.append(ch)
+        else:
+            if buf:
+                tokens.append("".join(buf))
+                buf = []
+    if buf:
+        tokens.append("".join(buf))
+    return [t for t in tokens if t]
+
+
+def token_f1(pred_tokens: List[str], ref_tokens: List[str]) -> float:
+    if not pred_tokens or not ref_tokens:
         return 0.0
-    best = 0.0
-    pred_counter = {}
+    pred_counter: Dict[str, int] = {}
     for t in pred_tokens:
         pred_counter[t] = pred_counter.get(t, 0) + 1
+    ref_counter: Dict[str, int] = {}
+    for t in ref_tokens:
+        ref_counter[t] = ref_counter.get(t, 0) + 1
+
+    overlap = 0
+    for t, c in pred_counter.items():
+        overlap += min(c, ref_counter.get(t, 0))
+    if overlap == 0:
+        return 0.0
+    p = overlap / max(1, len(pred_tokens))
+    r = overlap / max(1, len(ref_tokens))
+    return float(2 * p * r / max(1e-12, p + r))
+
+
+def qa_f1_score(pred: str, refs: List[str]) -> float:
+    pred_tokens = normalize_text(pred).split()
+    best = 0.0
     for r in refs:
-        ref_tokens = normalize_text(r).split()
-        if not ref_tokens:
-            continue
-        ref_counter = {}
-        for t in ref_tokens:
-            ref_counter[t] = ref_counter.get(t, 0) + 1
-        overlap = 0
-        for t, c in pred_counter.items():
-            overlap += min(c, ref_counter.get(t, 0))
-        if overlap == 0:
-            continue
-        p = overlap / max(1, len(pred_tokens))
-        rr = overlap / max(1, len(ref_tokens))
-        f1 = 2 * p * rr / max(1e-12, p + rr)
-        best = max(best, f1)
-    return best
+        best = max(best, token_f1(pred_tokens, normalize_text(r).split()))
+    return float(best)
+
+
+def qa_f1_zh_score(pred: str, refs: List[str]) -> float:
+    pred_tokens = zh_tokenize(pred)
+    best = 0.0
+    for r in refs:
+        best = max(best, token_f1(pred_tokens, zh_tokenize(r)))
+    return float(best)
 
 
 def lcs_len(a: List[str], b: List[str]) -> int:
@@ -473,13 +661,96 @@ def rouge_l_f1(pred: str, refs: List[str]) -> float:
         if not ref_tokens:
             continue
         lcs = lcs_len(pred_tokens, ref_tokens)
-        if lcs == 0:
+        if lcs <= 0:
             continue
-        p = lcs / len(pred_tokens)
-        rr = lcs / len(ref_tokens)
+        p = lcs / max(1, len(pred_tokens))
+        rr = lcs / max(1, len(ref_tokens))
         f1 = 2 * p * rr / max(1e-12, p + rr)
         best = max(best, f1)
-    return best
+    return float(best)
+
+
+def rouge_l_zh(pred: str, refs: List[str]) -> float:
+    pred_tokens = zh_tokenize(pred)
+    if not pred_tokens:
+        return 0.0
+    best = 0.0
+    for r in refs:
+        ref_tokens = zh_tokenize(r)
+        if not ref_tokens:
+            continue
+        lcs = lcs_len(pred_tokens, ref_tokens)
+        if lcs <= 0:
+            continue
+        p = lcs / max(1, len(pred_tokens))
+        rr = lcs / max(1, len(ref_tokens))
+        f1 = 2 * p * rr / max(1e-12, p + rr)
+        best = max(best, f1)
+    return float(best)
+
+
+def classification_score(pred: str, refs: List[str], all_classes: List[str]) -> float:
+    if not refs:
+        return 0.0
+    gt = refs[0]
+    if not all_classes:
+        return 1.0 if gt in pred else 0.0
+    matches = [c for c in all_classes if isinstance(c, str) and c and c in pred]
+    clean: List[str] = []
+    for m in matches:
+        if m in gt and m != gt:
+            continue
+        clean.append(m)
+    if gt in clean and clean:
+        return float(1.0 / len(clean))
+    return 0.0
+
+
+def count_score(pred: str, refs: List[str]) -> float:
+    if not refs:
+        return 0.0
+    gt = str(refs[0])
+    numbers = re.findall(r"\d+", pred)
+    if not numbers:
+        return 0.0
+    hit = 0
+    for n in numbers:
+        if n == gt:
+            hit += 1
+    return float(hit / len(numbers))
+
+
+def retrieval_score(pred: str, refs: List[str], zh: bool = False) -> float:
+    if not refs:
+        return 0.0
+    pattern = r"段落(\d+)" if zh else r"Paragraph\s*(\d+)"
+    match = re.findall(pattern, refs[0])
+    if not match:
+        match = re.findall(r"\d+", refs[0])
+    if not match:
+        return 0.0
+    target = str(match[0])
+    nums = re.findall(r"\d+", pred)
+    if not nums:
+        return 0.0
+    hit = sum(1 for n in nums if str(n) == target)
+    return float(hit / len(nums))
+
+
+def code_sim_score(pred: str, refs: List[str]) -> float:
+    if not refs:
+        return 0.0
+    candidate = ""
+    for line in pred.lstrip("\n").split("\n"):
+        if "`" in line or line.strip().startswith("#") or "//" in line:
+            continue
+        candidate = line
+        break
+    if not candidate:
+        candidate = pred.strip()
+    import difflib
+
+    return float(difflib.SequenceMatcher(None, candidate, refs[0]).ratio())
 
 
 def as_text(x) -> str:
@@ -494,59 +765,167 @@ def as_text(x) -> str:
     return str(x)
 
 
-def extract_context_question_refs(task: str, sample: Dict) -> Tuple[str, str, List[str], str]:
-    context_keys = ["context", "article", "document", "documents", "passage", "input", "text"]
-    question_keys = ["question", "query", "instruction"]
+def enrich_sample_fields(sample: Dict) -> Dict:
+    out = dict(sample)
+    if "context" not in out or not out.get("context"):
+        for k in ("article", "document", "documents", "passage", "text"):
+            if k in out and out.get(k) is not None:
+                out["context"] = as_text(out.get(k))
+                break
+    if "input" not in out or not out.get("input"):
+        for k in ("question", "query", "instruction"):
+            if k in out and out.get(k) is not None:
+                out["input"] = as_text(out.get(k))
+                break
+    return out
+
+
+def extract_refs_and_classes(sample: Dict) -> Tuple[List[str], List[str], str]:
     answer_keys = ["answers", "answer", "output", "summary", "target", "label"]
-
-    context = ""
-    for k in context_keys:
-        if k in sample and sample[k] is not None:
-            context = as_text(sample[k])
-            if context:
-                break
-
-    question = ""
-    for k in question_keys:
-        if k in sample and sample[k] is not None:
-            question = as_text(sample[k])
-            if question:
-                break
-
     refs: List[str] = []
+    used_key = ""
     for k in answer_keys:
         if k in sample and sample[k] is not None:
             v = sample[k]
             if isinstance(v, list):
-                refs.extend([as_text(x) for x in v if as_text(x)])
+                refs = [as_text(x) for x in v if as_text(x)]
             else:
                 s = as_text(v)
-                if s:
-                    refs.append(s)
+                refs = [s] if s else []
             if refs:
+                used_key = k
                 break
+    all_classes = sample.get("all_classes")
+    classes: List[str] = []
+    if isinstance(all_classes, list):
+        classes = [str(x) for x in all_classes if isinstance(x, (str, int, float))]
+    return refs, classes, used_key
 
+
+def extract_legacy_prompt(task: str, sample: Dict) -> str:
+    context = as_text(sample.get("context", ""))
+    question = as_text(sample.get("input", ""))
     if task == "gov_report":
-        prompt = (
+        return (
             "You are given a long report.\n"
             "Write a concise, faithful summary.\n\n"
             f"Report:\n{context}\n\nSummary:"
         )
-    else:
-        prompt = (
-            "Read the context and answer the question.\n"
-            "Answer as briefly and accurately as possible.\n\n"
-            f"Context:\n{context}\n\nQuestion:\n{question}\n\nAnswer:"
-        )
-    return prompt, question, refs, context
+    return (
+        "Read the context and answer the question.\n"
+        "Answer as briefly and accurately as possible.\n\n"
+        f"Context:\n{context}\n\nQuestion:\n{question}\n\nAnswer:"
+    )
 
 
-def truncate_prompt(tokenizer: AutoTokenizer, prompt: str, max_tokens: int) -> str:
+class _SafeFormatDict(dict):
+    def __missing__(self, key):
+        return ""
+
+
+def build_prompt(
+    task: str,
+    sample: Dict,
+    prompt_source: str,
+    official_prompt_map: Dict[str, str],
+) -> str:
+    if prompt_source == "legacy":
+        return extract_legacy_prompt(task, sample)
+
+    tmpl = official_prompt_map.get(task)
+    if not tmpl:
+        return extract_legacy_prompt(task, sample)
+    try:
+        return str(tmpl).format_map(_SafeFormatDict(sample))
+    except Exception:
+        return extract_legacy_prompt(task, sample)
+
+
+def truncate_prompt(tokenizer: AutoTokenizer, prompt: str, max_tokens: int, mode: str) -> str:
     ids = tokenizer.encode(prompt, add_special_tokens=False)
     if len(ids) <= max_tokens:
         return prompt
-    ids = ids[-max_tokens:]
-    return tokenizer.decode(ids, skip_special_tokens=False)
+
+    if mode == "middle":
+        first = max_tokens // 2
+        second = max_tokens - first
+        ids = ids[:first] + ids[-second:]
+    else:
+        ids = ids[-max_tokens:]
+
+    return tokenizer.decode(ids, skip_special_tokens=True)
+
+
+def maybe_apply_chat_template(
+    tokenizer: AutoTokenizer,
+    task: str,
+    prompt: str,
+    chat_template: str,
+) -> str:
+    if chat_template == "off":
+        return prompt
+
+    if chat_template == "auto" and task in NO_CHAT_TEMPLATE_TASKS:
+        return prompt
+
+    try:
+        if hasattr(tokenizer, "apply_chat_template"):
+            return tokenizer.apply_chat_template(
+                [{"role": "user", "content": prompt}],
+                tokenize=False,
+                add_generation_prompt=True,
+            )
+    except Exception as e:
+        LOG.warning("Chat template failed for task=%s: %s", task, e)
+
+    # Fallback for chat-template-enabled path.
+    return f"User: {prompt}\nAssistant:"
+
+
+def pick_max_new_tokens(
+    task: str,
+    metric_name: str,
+    policy: str,
+    official_maxlen_map: Dict[str, int],
+    max_new_tokens_qa: int,
+    max_new_tokens_sum: int,
+) -> int:
+    if policy == "official":
+        val = official_maxlen_map.get(task)
+        if isinstance(val, int) and val > 0:
+            return int(val)
+    if metric_name in {"qa_f1", "qa_f1_zh", "classification", "count", "retrieval_en", "retrieval_zh", "code_sim"}:
+        return int(max_new_tokens_qa)
+    return int(max_new_tokens_sum)
+
+
+def post_process_prediction(task: str, pred: str) -> str:
+    p = pred or ""
+    if task in {"trec", "triviaqa", "samsum", "lsht"}:
+        p = p.lstrip("\n").split("\n")[0]
+    return p.strip()
+
+
+def score_prediction(task: str, metric_name: str, pred: str, refs: List[str], all_classes: List[str]) -> float:
+    if metric_name == "qa_f1":
+        return qa_f1_score(pred, refs)
+    if metric_name == "qa_f1_zh":
+        return qa_f1_zh_score(pred, refs)
+    if metric_name == "rouge_l_f1":
+        return rouge_l_f1(pred, refs)
+    if metric_name == "rouge_l_zh":
+        return rouge_l_zh(pred, refs)
+    if metric_name == "classification":
+        return classification_score(pred, refs, all_classes=all_classes)
+    if metric_name == "count":
+        return count_score(pred, refs)
+    if metric_name == "retrieval_en":
+        return retrieval_score(pred, refs, zh=False)
+    if metric_name == "retrieval_zh":
+        return retrieval_score(pred, refs, zh=True)
+    if metric_name == "code_sim":
+        return code_sim_score(pred, refs)
+    raise ValueError(f"Unsupported metric_name={metric_name} for task={task}")
 
 
 def load_task_dataset(task: str, local_data_dir: Optional[str] = None):
@@ -558,9 +937,6 @@ def load_task_dataset(task: str, local_data_dir: Optional[str] = None):
             if p.exists():
                 return load_dataset("json", data_files=str(p), split="train")
 
-    # LongBench requires a config name. Do not fall back to cfg=None, otherwise
-    # we may silently return a misleading "Config name is missing" error as the
-    # final exception even when earlier attempts failed for a different reason.
     base = task.strip()
     candidates: List[str] = []
     for cfg in (base, base.lower(), f"{base}_e", f"{base.lower()}_e"):
@@ -591,7 +967,7 @@ def generate_text(
     ids = tokenizer(prompt, return_tensors="pt", add_special_tokens=False).to(device)
     out = model.generate(
         **ids,
-        max_new_tokens=max_new_tokens,
+        max_new_tokens=int(max_new_tokens),
         do_sample=False,
         temperature=None,
         top_p=None,
@@ -611,14 +987,20 @@ def evaluate_task(
     max_input_tokens: int,
     max_new_tokens_qa: int,
     max_new_tokens_sum: int,
+    max_new_tokens_policy: str,
+    prompt_source: str,
+    chat_template: str,
+    truncate_mode: str,
+    score_scale: str,
     seed: int,
     local_data_dir: Optional[str],
+    official_prompt_map: Dict[str, str],
+    official_maxlen_map: Dict[str, int],
     indices: Optional[List[int]] = None,
-    score_scale: str = "raw",
 ) -> Dict:
     ds = load_task_dataset(task, local_data_dir=local_data_dir)
     if indices is None:
-        n = min(max_samples, len(ds))
+        n = len(ds) if max_samples <= 0 else min(max_samples, len(ds))
         idxs = list(range(len(ds)))
         random.Random(seed).shuffle(idxs)
         idxs = idxs[:n]
@@ -627,27 +1009,44 @@ def evaluate_task(
         if idxs:
             n = len(idxs)
         else:
-            n = min(max_samples, len(ds))
+            n = len(ds) if max_samples <= 0 else min(max_samples, len(ds))
             idxs = list(range(len(ds)))
             random.Random(seed).shuffle(idxs)
             idxs = idxs[:n]
 
-    raw_scores: List[float] = []
-    records: List[Dict] = []
     metric_name = TASK_METRIC_MAP.get(task)
     if metric_name is None:
         raise ValueError(
             f"Task '{task}' is missing from TASK_METRIC_MAP. "
             "Please add explicit metric mapping to avoid silent metric drift."
         )
-    max_new = max_new_tokens_qa if metric_name == "f1" else max_new_tokens_sum
+
+    raw_scores: List[float] = []
+    records: List[Dict] = []
 
     for k, i in enumerate(idxs):
-        sample = ds[int(i)]
-        prompt, question, refs, context = extract_context_question_refs(task, sample)
+        sample = enrich_sample_fields(dict(ds[int(i)]))
+        refs, all_classes, ref_key = extract_refs_and_classes(sample)
         if not refs:
             continue
-        prompt = truncate_prompt(tokenizer, prompt, max_input_tokens)
+
+        prompt = build_prompt(
+            task=task,
+            sample=sample,
+            prompt_source=prompt_source,
+            official_prompt_map=official_prompt_map,
+        )
+        prompt = maybe_apply_chat_template(tokenizer=tokenizer, task=task, prompt=prompt, chat_template=chat_template)
+        prompt = truncate_prompt(tokenizer=tokenizer, prompt=prompt, max_tokens=max_input_tokens, mode=truncate_mode)
+
+        max_new = pick_max_new_tokens(
+            task=task,
+            metric_name=metric_name,
+            policy=max_new_tokens_policy,
+            official_maxlen_map=official_maxlen_map,
+            max_new_tokens_qa=max_new_tokens_qa,
+            max_new_tokens_sum=max_new_tokens_sum,
+        )
 
         pred = ""
         try:
@@ -655,15 +1054,18 @@ def evaluate_task(
         except RuntimeError as e:
             if "out of memory" in str(e).lower():
                 torch.cuda.empty_cache()
-                short_prompt = truncate_prompt(tokenizer, prompt, max_input_tokens // 2)
+                short_prompt = truncate_prompt(
+                    tokenizer=tokenizer,
+                    prompt=prompt,
+                    max_tokens=max(512, max_input_tokens // 2),
+                    mode=truncate_mode,
+                )
                 pred = generate_text(model, tokenizer, short_prompt, max_new_tokens=max_new)
             else:
                 raise
 
-        if metric_name == "f1":
-            sc_raw = token_f1(pred, refs)
-        else:
-            sc_raw = rouge_l_f1(pred, refs)
+        pred = post_process_prediction(task=task, pred=pred)
+        sc_raw = score_prediction(task=task, metric_name=metric_name, pred=pred, refs=refs, all_classes=all_classes)
         raw_scores.append(sc_raw)
         sc = scale_score(sc_raw, score_scale=score_scale)
 
@@ -671,13 +1073,14 @@ def evaluate_task(
             records.append(
                 {
                     "index": int(i),
-                    "question": question[:200],
                     "prediction": pred[:500],
                     "reference_0": refs[0][:500],
+                    "answer_key": ref_key,
                     "score_raw": float(sc_raw),
                     "score_pct": float(sc_raw) * 100.0,
                     "score": float(sc),
-                    "context_preview": context[:300],
+                    "context_preview": as_text(sample.get("context", ""))[:300],
+                    "input_preview": as_text(sample.get("input", ""))[:200],
                 }
             )
 
@@ -703,12 +1106,15 @@ def evaluate_task(
         "metric": metric_name,
         "metric_unit": "0-1",
         "score_scale": score_scale,
+        "prompt_source": prompt_source,
+        "chat_template": chat_template,
+        "truncate_mode": truncate_mode,
+        "max_new_tokens_policy": max_new_tokens_policy,
         "indices": [int(i) for i in idxs],
         "num_scored": len(raw_scores),
         "score": display_score,
         "score_raw": score_raw,
         "score_pct": score_pct,
-        # Keep scale-specific plus canonical raw/pct tracks for downstream statistics.
         "per_sample_scores": per_sample_display,
         "per_sample_scores_raw": per_sample_raw,
         "per_sample_scores_pct": per_sample_pct,
@@ -716,8 +1122,48 @@ def evaluate_task(
     }
 
 
+def load_official_longbench_config(prompt_path: str, maxlen_path: str) -> Tuple[Dict[str, str], Dict[str, int]]:
+    p_prompt = Path(prompt_path)
+    p_maxlen = Path(maxlen_path)
+    if not p_prompt.exists() or not p_maxlen.exists():
+        raise FileNotFoundError(
+            "Official LongBench config missing. "
+            f"prompt={p_prompt} exists={p_prompt.exists()} maxlen={p_maxlen} exists={p_maxlen.exists()}"
+        )
+
+    prompt_map = json.loads(p_prompt.read_text(encoding="utf-8"))
+    maxlen_map_raw = json.loads(p_maxlen.read_text(encoding="utf-8"))
+    maxlen_map = {str(k): int(v) for k, v in maxlen_map_raw.items()}
+    if not isinstance(prompt_map, dict):
+        raise RuntimeError(f"Invalid prompt config format: {p_prompt}")
+    return {str(k): str(v) for k, v in prompt_map.items()}, maxlen_map
+
+
+def resolve_tasks(task_set: str, tasks: str) -> List[str]:
+    explicit = parse_csv(tasks)
+    if explicit:
+        return explicit
+    if task_set not in TASK_SET_MAP:
+        raise ValueError(f"Unsupported task_set={task_set}, expected one of {sorted(TASK_SET_MAP.keys())}")
+    return list(TASK_SET_MAP[task_set])
+
+
+def enforce_strict_parity(args: argparse.Namespace) -> None:
+    errors: List[str] = []
+    if args.prompt_source != "official":
+        errors.append("prompt_source must be 'official'")
+    if args.truncate_mode != "middle":
+        errors.append("truncate_mode must be 'middle'")
+    if args.max_new_tokens_policy != "official":
+        errors.append("max_new_tokens_policy must be 'official'")
+    if args.chat_template == "off":
+        errors.append("chat_template must be 'auto' or 'on' (not 'off')")
+    if errors:
+        raise RuntimeError("strict_parity_check failed: " + "; ".join(errors))
+
+
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Compare base vs hybrid_lora on LongBench subset.")
+    ap = argparse.ArgumentParser(description="Evaluate LongBench with official-parity controls.")
     ap.add_argument(
         "--base_model_path",
         type=str,
@@ -726,14 +1172,31 @@ def main() -> None:
     ap.add_argument(
         "--hybrid_adapter_path",
         type=str,
-        required=True,
-        help="Path to hybrid_lora adapter dir (contains adapter_model.safetensors/bin).",
+        default="",
+        help="Backward-compatible alias of --adapter_path.",
+    )
+    ap.add_argument(
+        "--adapter_path",
+        type=str,
+        default="",
+        help="LoRA adapter path to evaluate against base model.",
+    )
+    ap.add_argument(
+        "--model_alias",
+        type=str,
+        default="hybrid_lora",
+        help="Model key name used in output for adapter-backed model.",
+    )
+    ap.add_argument(
+        "--skip_base_unfinetuned",
+        action="store_true",
+        help="Skip evaluating base model and only evaluate adapter model.",
     )
     ap.add_argument(
         "--variant",
         type=str,
         default="auto",
-        choices=["auto", "base", "hybrid", "yarn", "pi", "pi_soft", "custom"],
+        choices=["auto", "base", "hybrid", "yarn", "pi", "pi_soft", "custom", "dynamic", "ntk", "ntk_dynamic", "longrope"],
         help="RoPE variant used during adapter training. auto=try infer from adapter summary.",
     )
     ap.add_argument(
@@ -748,15 +1211,60 @@ def main() -> None:
     ap.add_argument("--rope_factor", type=float, default=8.0)
     ap.add_argument("--orig_ctx", type=int, default=8192)
     ap.add_argument("--rope_theta", type=float, default=0.0, help="<=0 means infer from base config.")
+    ap.add_argument("--longrope_short_factor", type=str, default="")
+    ap.add_argument("--longrope_long_factor", type=str, default="")
     ap.add_argument("--hybrid_split_ratio", type=float, default=0.5)
     ap.add_argument("--hybrid_alpha", type=float, default=0.2)
     ap.add_argument("--hybrid_p", type=float, default=3.9)
     ap.add_argument("--hybrid_min_freq_scale", type=float, default=4.0)
-    ap.add_argument("--tasks", type=str, default="qasper,hotpotqa,gov_report")
+
+    ap.add_argument(
+        "--task_set",
+        type=str,
+        default="lb6",
+        choices=["lb6", "lb21"],
+        help="Predefined task set. Use --tasks for explicit override.",
+    )
+    ap.add_argument(
+        "--tasks",
+        type=str,
+        default="",
+        help="Explicit comma-separated task list. Overrides --task_set when non-empty.",
+    )
+
     ap.add_argument("--max_samples_per_task", type=int, default=100)
     ap.add_argument("--max_input_tokens", type=int, default=16384)
     ap.add_argument("--max_new_tokens_qa", type=int, default=64)
     ap.add_argument("--max_new_tokens_sum", type=int, default=256)
+    ap.add_argument(
+        "--max_new_tokens_policy",
+        type=str,
+        default="official",
+        choices=["official", "manual"],
+        help="official: use dataset2maxlen.json; manual: use qa/sum fallbacks.",
+    )
+    ap.add_argument(
+        "--prompt_source",
+        type=str,
+        default="official",
+        choices=["official", "legacy"],
+        help="Prompt source for LongBench tasks.",
+    )
+    ap.add_argument(
+        "--chat_template",
+        type=str,
+        default="auto",
+        choices=["auto", "on", "off"],
+        help="Chat template usage policy.",
+    )
+    ap.add_argument(
+        "--truncate_mode",
+        type=str,
+        default="middle",
+        choices=["tail", "middle"],
+        help="Prompt truncation policy when input exceeds max_input_tokens.",
+    )
+
     ap.add_argument(
         "--score_scale",
         type=str,
@@ -770,6 +1278,17 @@ def main() -> None:
         default=os.environ.get("LONGBENCH_LOCAL_DATA_DIR", "/root/autodl-tmp/dfrope/ms_datasets/LongBench/data"),
         help="Directory containing local LongBench jsonl files (e.g. qasper.jsonl).",
     )
+    ap.add_argument(
+        "--official_prompt_path",
+        type=str,
+        default=str((Path(__file__).resolve().parent / "longbench_official_config" / "dataset2prompt.json")),
+    )
+    ap.add_argument(
+        "--official_maxlen_path",
+        type=str,
+        default=str((Path(__file__).resolve().parent / "longbench_official_config" / "dataset2maxlen.json")),
+    )
+
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--output_json", type=str, required=True)
     ap.add_argument(
@@ -778,7 +1297,17 @@ def main() -> None:
         default="",
         help="Optional path for paired-eval manifest (task -> fixed indices).",
     )
-    ap.add_argument("--attn_implementation", type=str, default="auto", choices=["auto", "flash_attention_2", "sdpa", "eager"])
+    ap.add_argument(
+        "--strict_parity_check",
+        action="store_true",
+        help="Fail fast unless official parity knobs are active.",
+    )
+    ap.add_argument(
+        "--attn_implementation",
+        type=str,
+        default="auto",
+        choices=["auto", "flash_attention_2", "sdpa", "eager"],
+    )
     ap.add_argument("--merge_lora", action="store_true")
     ap.add_argument("--trust_remote_code", action="store_true", default=True)
     args = ap.parse_args()
@@ -788,8 +1317,20 @@ def main() -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     setup_logging(out_path.parent / "eval_longbench.log")
 
-    tasks = parse_csv(args.tasks)
+    if args.strict_parity_check:
+        enforce_strict_parity(args)
+
+    adapter_path = args.adapter_path or args.hybrid_adapter_path
+    tasks = resolve_tasks(task_set=args.task_set, tasks=args.tasks)
+
+    official_prompt_map, official_maxlen_map = load_official_longbench_config(
+        prompt_path=args.official_prompt_path,
+        maxlen_path=args.official_maxlen_path,
+    )
+
     LOG.info("Tasks=%s", tasks)
+    LOG.info("Prompt source=%s chat_template=%s truncate=%s max_new_tokens_policy=%s", args.prompt_source, args.chat_template, args.truncate_mode, args.max_new_tokens_policy)
+
     rope_theta = float(args.rope_theta) if args.rope_theta > 0 else infer_rope_theta(args.base_model_path, args.trust_remote_code)
     LOG.info("Resolved rope_theta=%.1f", rope_theta)
 
@@ -797,11 +1338,16 @@ def main() -> None:
         "meta": {
             "timestamp": time.strftime("%Y-%m-%d_%H:%M:%S"),
             "base_model_path": args.base_model_path,
-            "hybrid_adapter_path": args.hybrid_adapter_path,
+            "adapter_path": adapter_path,
             "custom_inv_freq_path": args.custom_inv_freq_path,
+            "task_set": args.task_set,
             "tasks": tasks,
             "max_samples_per_task": args.max_samples_per_task,
             "max_input_tokens": args.max_input_tokens,
+            "max_new_tokens_policy": args.max_new_tokens_policy,
+            "prompt_source": args.prompt_source,
+            "chat_template": args.chat_template,
+            "truncate_mode": args.truncate_mode,
             "score_scale": args.score_scale,
             "score_unit_raw": "0-1",
             "score_unit_pct": "0-100",
@@ -810,6 +1356,9 @@ def main() -> None:
             "rope_factor": args.rope_factor,
             "orig_ctx": args.orig_ctx,
             "rope_theta": rope_theta,
+            "strict_parity_check": bool(args.strict_parity_check),
+            "official_prompt_path": args.official_prompt_path,
+            "official_maxlen_path": args.official_maxlen_path,
         },
         "models": {},
     }
@@ -829,17 +1378,20 @@ def main() -> None:
         if isinstance(v, list):
             task_index_map[str(t)] = [int(i) for i in v]
 
-    model_specs = [
-        ("base_unfinetuned", None, "base"),
-        ("hybrid_lora", args.hybrid_adapter_path, args.variant),
-    ]
+    model_specs: List[Tuple[str, Optional[str], str]] = []
+    if not args.skip_base_unfinetuned:
+        model_specs.append(("base_unfinetuned", None, "base"))
+    if adapter_path:
+        model_specs.append((args.model_alias, adapter_path, args.variant))
+    if not model_specs:
+        raise RuntimeError("No model selected for evaluation. Provide --adapter_path or disable --skip_base_unfinetuned.")
 
-    for model_name, adapter_path, variant_name in model_specs:
+    for model_name, model_adapter_path, variant_name in model_specs:
         LOG.info("=== Evaluate model: %s ===", model_name)
         model, tokenizer, attn_used, variant_used, rope_used = load_model_and_tokenizer(
             base_model_path=args.base_model_path,
-            adapter_path=adapter_path,
-            custom_inv_freq_path=args.custom_inv_freq_path if adapter_path else "",
+            adapter_path=model_adapter_path,
+            custom_inv_freq_path=args.custom_inv_freq_path if model_adapter_path else "",
             merge_lora=args.merge_lora,
             attn_mode=args.attn_implementation,
             trust_remote_code=args.trust_remote_code,
@@ -851,6 +1403,8 @@ def main() -> None:
             hybrid_alpha=args.hybrid_alpha,
             hybrid_p=args.hybrid_p,
             hybrid_min_freq_scale=args.hybrid_min_freq_scale,
+            longrope_short_factor=args.longrope_short_factor,
+            longrope_long_factor=args.longrope_long_factor,
         )
         mres = {
             "attn_used": attn_used,
@@ -869,10 +1423,16 @@ def main() -> None:
                     max_input_tokens=args.max_input_tokens,
                     max_new_tokens_qa=args.max_new_tokens_qa,
                     max_new_tokens_sum=args.max_new_tokens_sum,
+                    max_new_tokens_policy=args.max_new_tokens_policy,
+                    prompt_source=args.prompt_source,
+                    chat_template=args.chat_template,
+                    truncate_mode=args.truncate_mode,
+                    score_scale=args.score_scale,
                     seed=args.seed,
                     local_data_dir=args.longbench_local_data_dir,
+                    official_prompt_map=official_prompt_map,
+                    official_maxlen_map=official_maxlen_map,
                     indices=task_index_map.get(task),
-                    score_scale=args.score_scale,
                 )
                 if task not in task_index_map:
                     task_index_map[task] = [int(i) for i in tres.get("indices", [])]
@@ -892,17 +1452,19 @@ def main() -> None:
         gc.collect()
         torch.cuda.empty_cache()
 
-    # Flattened comparison table for quick reading
-    compare = {}
-    for task in tasks:
-        base_score = results["models"].get("base_unfinetuned", {}).get("tasks", {}).get(task, {}).get("score")
-        hyb_score = results["models"].get("hybrid_lora", {}).get("tasks", {}).get(task, {}).get("score")
-        compare[task] = {
-            "base_unfinetuned": base_score,
-            "hybrid_lora": hyb_score,
-            "delta_hybrid_minus_base": (hyb_score - base_score) if (base_score is not None and hyb_score is not None) else None,
-        }
-    results["comparison"] = compare
+    # Flattened comparison table for quick reading when both models exist.
+    compare: Dict[str, Dict[str, Optional[float]]] = {}
+    model_alias = args.model_alias
+    if "base_unfinetuned" in results["models"] and model_alias in results["models"]:
+        for task in tasks:
+            base_score = results["models"].get("base_unfinetuned", {}).get("tasks", {}).get(task, {}).get("score")
+            alt_score = results["models"].get(model_alias, {}).get("tasks", {}).get(task, {}).get("score")
+            compare[task] = {
+                "base_unfinetuned": base_score,
+                model_alias: alt_score,
+                "delta_alt_minus_base": (alt_score - base_score) if (base_score is not None and alt_score is not None) else None,
+            }
+        results["comparison"] = compare
 
     if manifest_path:
         manifest_path.parent.mkdir(parents=True, exist_ok=True)
@@ -911,7 +1473,12 @@ def main() -> None:
                 "timestamp": time.strftime("%Y-%m-%d_%H:%M:%S"),
                 "seed": args.seed,
                 "tasks": tasks,
+                "task_set": args.task_set,
                 "max_samples_per_task": args.max_samples_per_task,
+                "prompt_source": args.prompt_source,
+                "chat_template": args.chat_template,
+                "truncate_mode": args.truncate_mode,
+                "max_new_tokens_policy": args.max_new_tokens_policy,
             },
             "tasks": {t: task_index_map.get(t, []) for t in tasks},
         }

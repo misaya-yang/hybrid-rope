@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "candidate_json": "/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/downstream_eval_autorun/longbench/anchored_sigmoid.json",
+    "reference_json": "/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/downstream_eval_autorun/longbench/anchored_sigmoid.json",
+    "candidate_model_alias": "hybrid_lora",
+    "reference_model_alias": "hybrid_lora",
+    "prefer_pct": false,
+    "tolerance_abs": 1.0,
+    "n_tasks": 6
+  },
+  "summary": {
+    "within_tolerance_ratio": 1.0,
+    "within_tolerance_count": 6,
+    "rank_consistent": true,
+    "max_abs_delta": 0.0
+  },
+  "task_rows": [
+    {
+      "task": "2wikimqa",
+      "candidate": 0.01753426511106936,
+      "reference": 0.01753426511106936,
+      "delta": 0.0,
+      "abs_delta": 0.0,
+      "within_tolerance": true
+    },
+    {
+      "task": "gov_report",
+      "candidate": 0.19513274261335464,
+      "reference": 0.19513274261335464,
+      "delta": 0.0,
+      "abs_delta": 0.0,
+      "within_tolerance": true
+    },
+    {
+      "task": "hotpotqa",
+      "candidate": 0.021784874480079694,
+      "reference": 0.021784874480079694,
+      "delta": 0.0,
+      "abs_delta": 0.0,
+      "within_tolerance": true
+    },
+    {
+      "task": "multi_news",
+      "candidate": 0.14482391116054738,
+      "reference": 0.14482391116054738,
+      "delta": 0.0,
+      "abs_delta": 0.0,
+      "within_tolerance": true
+    },
+    {
+      "task": "narrativeqa",
+      "candidate": 0.009076690983999413,
+      "reference": 0.009076690983999413,
+      "delta": 0.0,
+      "abs_delta": 0.0,
+      "within_tolerance": true
+    },
+    {
+      "task": "qasper",
+      "candidate": 0.041989043965903486,
+      "reference": 0.041989043965903486,
+      "delta": 0.0,
+      "abs_delta": 0.0,
+      "within_tolerance": true
+    }
+  ],
+  "candidate_rank": [
+    "gov_report",
+    "multi_news",
+    "qasper",
+    "hotpotqa",
+    "2wikimqa",
+    "narrativeqa"
+  ],
+  "reference_rank": [
+    "gov_report",
+    "multi_news",
+    "qasper",
+    "hotpotqa",
+    "2wikimqa",
+    "narrativeqa"
+  ]
+}

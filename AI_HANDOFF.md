@@ -4,6 +4,15 @@ Last updated: 2026-02-25 09:25 CST
 Local repo: `/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope`  
 Server repo: `/root/autodl-tmp/dfrope/hybrid-rope`
 
+## 0.1) New dated handoff package (2026-02-25)
+
+Use this folder as the current reviewer-remediation entrypoint:
+
+- `handoff_2026-02-25/README.md`
+- `handoff_2026-02-25/01_IMPLEMENTED_SCOPE.md`
+- `handoff_2026-02-25/02_VALIDATION_SNAPSHOT_AIDEMO.md`
+- `handoff_2026-02-25/03_NEXT_EXECUTION_GATES.md`
+
 ## 0) Must-Read TL;DR
 
 - **Locked tuned params for next runs**: `anchor_factor=4`, `slope_raw=20`, `center_ratio=0.70`.
@@ -100,3 +109,38 @@ PER_DEVICE_BATCH=4 MAX_STEPS=50 bash scripts/cross_model_finetune_fast_tuned.sh
 - Do not compare numbers across mismatched manifests/settings.
 - Do not claim SOTA; use theory-guided consistency framing.
 - If a condition loses, keep it in final sign-test table (no cherry-pick).
+
+## 7) New NeurIPS sprint assets (2026-02-25)
+
+Implemented scripts for high-priority整改:
+
+- LongBench parity + 21-task pipeline
+  - `scripts/eval_longbench.py`
+    - `--task_set {lb6,lb21}`
+    - `--prompt_source {official,legacy}`
+    - `--chat_template {auto,on,off}`
+    - `--truncate_mode {tail,middle}`
+    - `--max_new_tokens_policy {official,manual}`
+    - `--strict_parity_check`
+  - `scripts/longbench_official_config/dataset2prompt.json`
+  - `scripts/longbench_official_config/dataset2maxlen.json`
+  - `scripts/import_2024/longbench_pipeline_audit.py`
+
+- Protocol-trace runner updates
+  - `scripts/run_eval.py`
+    - adds longbench parity args passthrough
+    - writes `baseline_protocol_lock.json` per run folder
+
+- Statistical rigor updates
+  - `scripts/import_2024/significance_test.py`
+    - `--fdr_method {bh,by,both}`
+    - outputs `p_raw`, `p_fdr_bh`, `p_fdr_by`, `claim_grade`
+    - auto-generates `claim_policy_report.md`
+
+- Theory strengthening scripts
+  - `scripts/import_2024/functional_residual_real_prior.py`
+  - `scripts/import_2024/theorem3_adversarial_bimodal.py`
+
+Supporting notes:
+- `handoff_2026-02-23/longbench_pipeline_parity.md`
+- `handoff_2026-02-23/anchored_sigmoid_math_note.md`

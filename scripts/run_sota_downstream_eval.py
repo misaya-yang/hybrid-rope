@@ -185,9 +185,40 @@ def main() -> None:
     ap.add_argument("--niah_needles_per_prompt", type=int, default=1)
     ap.add_argument("--niah_prompt_mode", type=str, default="qa", choices=["qa", "continuation"])
 
-    ap.add_argument("--longbench_tasks", type=str, default="qasper,hotpotqa,2wikimqa,multi_news,gov_report,narrativeqa")
+    ap.add_argument(
+        "--longbench_tasks",
+        type=str,
+        default="",
+        help="Explicit CSV task override. Empty string follows --longbench_task_set.",
+    )
+    ap.add_argument("--longbench_task_set", type=str, default="lb6", choices=["lb6", "lb21"])
     ap.add_argument("--longbench_max_samples", type=int, default=80)
     ap.add_argument("--longbench_max_input_tokens", type=int, default=16384)
+    ap.add_argument(
+        "--longbench_prompt_source",
+        type=str,
+        default="official",
+        choices=["official", "legacy"],
+    )
+    ap.add_argument(
+        "--longbench_chat_template",
+        type=str,
+        default="auto",
+        choices=["auto", "on", "off"],
+    )
+    ap.add_argument(
+        "--longbench_truncate_mode",
+        type=str,
+        default="middle",
+        choices=["tail", "middle"],
+    )
+    ap.add_argument(
+        "--longbench_max_new_tokens_policy",
+        type=str,
+        default="official",
+        choices=["official", "manual"],
+    )
+    ap.add_argument("--strict_parity_check", action="store_true")
     ap.add_argument(
         "--longbench_local_data_dir",
         type=str,
@@ -323,8 +354,8 @@ def main() -> None:
                 str(adapter_path),
                 "--output_json",
                 str(lb_out),
-                "--tasks",
-                args.longbench_tasks,
+                "--task_set",
+                args.longbench_task_set,
                 "--max_samples_per_task",
                 str(args.longbench_max_samples),
                 "--max_input_tokens",
@@ -335,7 +366,19 @@ def main() -> None:
                 "sdpa",
                 "--seed",
                 str(args.seed),
+                "--prompt_source",
+                args.longbench_prompt_source,
+                "--chat_template",
+                args.longbench_chat_template,
+                "--truncate_mode",
+                args.longbench_truncate_mode,
+                "--max_new_tokens_policy",
+                args.longbench_max_new_tokens_policy,
             ] + common_custom_args
+            if args.longbench_tasks.strip():
+                cmd.extend(["--tasks", args.longbench_tasks.strip()])
+            if args.strict_parity_check:
+                cmd.append("--strict_parity_check")
             if resume_enabled and json_ready(lb_out):
                 print(f"[{now()}] [resume] skip LongBench {method}: {lb_out}", flush=True)
                 rc = 0
@@ -394,7 +437,34 @@ def main() -> None:
     report_dir.mkdir(parents=True, exist_ok=True)
     summary_rows: List[Dict[str, object]] = []
     longbench_rows: List[Dict[str, object]] = []
-    all_tasks = parse_csv(args.longbench_tasks)
+    if args.longbench_tasks.strip():
+        all_tasks = parse_csv(args.longbench_tasks)
+    elif args.longbench_task_set == "lb21":
+        all_tasks = [
+            "narrativeqa",
+            "qasper",
+            "multifieldqa_en",
+            "multifieldqa_zh",
+            "hotpotqa",
+            "2wikimqa",
+            "musique",
+            "dureader",
+            "gov_report",
+            "qmsum",
+            "multi_news",
+            "vcsum",
+            "trec",
+            "triviaqa",
+            "samsum",
+            "lsht",
+            "passage_count",
+            "passage_retrieval_en",
+            "passage_retrieval_zh",
+            "lcc",
+            "repobench-p",
+        ]
+    else:
+        all_tasks = ["qasper", "hotpotqa", "2wikimqa", "multi_news", "gov_report", "narrativeqa"]
 
     for method, info in manifest["methods"].items():
         if not isinstance(info, dict):
