@@ -5,6 +5,28 @@
 
 ---
 
+## 0.4) Operator quick card (2026-02-25, read first)
+
+- **Tuned schedule to use for next controlled reruns**
+  - `anchor_factor=4`
+  - `slope_raw=20`
+  - `center_ratio=0.70`
+- **Current server cross-model run status**
+  - `llama baseline seed=1337`: completed (`checkpoint-600`)
+  - `llama anchored_sigmoid seed=1337`: running
+- **Important mismatch**
+  - current server `cross_model_finetune.sh` / `train_cross_model_lora.py` path does not pass tuned params.
+  - default code path still uses anchored-sigmoid legacy defaults (`center_ratio=0.47`, `slope=16.05/head_dim`, auto anchor for 16K ~= 5).
+- **Action rule**
+  - before launching Mistral/Qwen continuation, verify schedule source and record `inv_freq_sha256` in run summary.
+
+Reference docs:
+- `AI_HANDOFF.md`
+- `handoff_2026-02-23/local_tuning_proof_2026-02-24.md`
+- `handoff_2026-02-23/tomorrow_tuned_param_runbook_2026-02-25.md`
+
+---
+
 ## 0.5) Implementation status (2026-02-24)
 
 The following plan scripts are now implemented in-repo and ready for execution once model/data mounts finish:
