@@ -1,8 +1,30 @@
 # AI Handoff (One-Glance Ops Card)
 
-Last updated: 2026-02-25 20:36 CST  
+Last updated: 2026-02-26 01:20 CST  
 Local repo: `/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope`  
 Server repo: `/root/autodl-tmp/dfrope/hybrid-rope`
+
+## 0.0) New dated handoff package (2026-02-26)
+
+Use this folder as the current implementation handoff for the 24h dual-track plan:
+
+- `handoff_2026-02-26/0_README.md`
+- `handoff_2026-02-26/1_PROTOCOL_LOCK.md`
+- `handoff_2026-02-26/2_ASSET_MAP.md`
+- `handoff_2026-02-26/3_RUNBOOK.md`
+- `handoff_2026-02-26/01_IMPLEMENTED_SCOPE.md`
+- `handoff_2026-02-26/02_VALIDATION_SNAPSHOT.md`
+- `handoff_2026-02-26/03_DEEP_REVIEW_FINDINGS.md`
+- `handoff_2026-02-26/README.md`
+
+Key code deltas in this round:
+- `final_lora` export contract in fast LoRA trainer + backward-compatible root adapter retention.
+- model registry compatibility for `root_adapter` and `final_lora` layouts.
+- Plan B evaluator CLI expansion (`task_set/tasks/max_samples + stress knobs`).
+- unified evaluation schema fields added to LongBench/NIAH/Passkey outputs:
+  - `protocol_lock`, `manifest_json`, `per_sample_scores_raw`, `inv_sha256`.
+- new dataset mixer:
+  - `scripts/prepare_long_instruction_mix.py`.
 
 ## 0.1) New dated handoff package (2026-02-25)
 

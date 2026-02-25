@@ -7,6 +7,7 @@ import argparse
 import gc
 import json
 import random
+import shutil
 import sys
 import time
 from pathlib import Path
@@ -436,6 +437,42 @@ def main() -> None:
     trainer.save_model(str(out_dir))
     tokenizer.save_pretrained(str(out_dir))
 
+    # Keep backward compatibility (root adapter files) while enforcing the
+    # newer contract: <run_dir>/final_lora as the canonical adapter directory.
+    final_lora_dir = out_dir / "final_lora"
+    final_lora_dir.mkdir(parents=True, exist_ok=True)
+    final_lora_export_mode = "save_pretrained"
+    try:
+        model.save_pretrained(str(final_lora_dir))
+    except Exception as exc:
+        final_lora_export_mode = f"fallback_copy:{type(exc).__name__}"
+    for name in [
+        "adapter_config.json",
+        "adapter_model.safetensors",
+        "adapter_model.bin",
+        "README.md",
+        "tokenizer_config.json",
+        "tokenizer.json",
+        "special_tokens_map.json",
+        "chat_template.jinja",
+    ]:
+        src = out_dir / name
+        dst = final_lora_dir / name
+        if src.exists() and not dst.exists():
+            shutil.copy2(src, dst)
+
+    has_root_adapter = (out_dir / "adapter_config.json").exists()
+    has_final_lora = (final_lora_dir / "adapter_config.json").exists()
+    if has_root_adapter and has_final_lora:
+        adapter_layout = "dual_root_and_final_lora"
+    elif has_final_lora:
+        adapter_layout = "final_lora_only"
+    elif has_root_adapter:
+        adapter_layout = "root_adapter_only"
+    else:
+        adapter_layout = "none"
+    adapter_resolved_path = str(final_lora_dir if has_final_lora else out_dir) if adapter_layout != "none" else ""
+
     peak_mem_gb = None
     if torch.cuda.is_available():
         peak_mem_gb = torch.cuda.max_memory_allocated() / (1024**3)
@@ -482,6 +519,13 @@ def main() -> None:
             "inv_max": rope_info["inv_max"],
             "inject_info": rope_info["inject_info"],
             "schedule_params": rope_info["schedule_params"],
+        },
+        "artifacts_contract": {
+            "adapter_layout": adapter_layout,
+            "adapter_resolved_path": adapter_resolved_path,
+            "root_adapter_path": str(out_dir),
+            "final_lora_path": str(final_lora_dir),
+            "final_lora_export_mode": final_lora_export_mode,
         },
         "output_dir": str(out_dir),
     }

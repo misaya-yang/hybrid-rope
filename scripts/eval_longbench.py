@@ -162,6 +162,71 @@ def sha1_text(text: str) -> str:
     return hashlib.sha1((text or "").encode("utf-8", errors="ignore")).hexdigest()
 
 
+def sha256_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        while True:
+            chunk = f.read(1024 * 1024)
+            if not chunk:
+                break
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def read_json_silent(path: Path) -> Optional[Dict]:
+    if not path.exists() or not path.is_file():
+        return None
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
+def resolve_inv_metadata(
+    adapter_path: Optional[str],
+    custom_inv_freq_path: Optional[str],
+    rope_used: Optional[dict],
+) -> Tuple[str, str]:
+    inv_path = ""
+    inv_sha256 = ""
+    candidates: List[Path] = []
+
+    custom_inv = (custom_inv_freq_path or "").strip()
+    if custom_inv:
+        candidates.append(Path(custom_inv).expanduser())
+    if isinstance(rope_used, dict):
+        rope_custom = str(rope_used.get("custom_inv_freq_path", "") or "").strip()
+        if rope_custom:
+            candidates.append(Path(rope_custom).expanduser())
+    if adapter_path:
+        ap = Path(adapter_path).expanduser().resolve()
+        candidates.extend(
+            [
+                ap / "artifacts" / "custom_inv_freq.pt",
+                ap / "custom_inv_freq.pt",
+                ap.parent / "artifacts" / "custom_inv_freq.pt",
+            ]
+        )
+        for summary_path in [ap / "artifacts" / "summary.json", ap.parent / "artifacts" / "summary.json"]:
+            summary = read_json_silent(summary_path)
+            if isinstance(summary, dict):
+                inv_sha256 = str((summary.get("rope") or {}).get("inv_sha256", "") or "")
+                if inv_sha256:
+                    break
+
+    seen: set[str] = set()
+    for p in candidates:
+        key = p.as_posix()
+        if key in seen:
+            continue
+        seen.add(key)
+        if p.exists() and p.is_file():
+            inv_path = p.resolve().as_posix()
+            inv_sha256 = sha256_file(p.resolve())
+            break
+    return inv_sha256, inv_path
+
+
 def has_template_leakage(pred: str) -> bool:
     s = pred or ""
     for pat in TEMPLATE_LEAK_PATTERNS:
@@ -1720,6 +1785,7 @@ def main() -> None:
 
     adapter_path = args.adapter_path or args.hybrid_adapter_path
     tasks = resolve_tasks(task_set=args.task_set, tasks=args.tasks)
+    manifest_path = Path(args.manifest_json).resolve() if args.manifest_json else None
 
     official_prompt_map, official_maxlen_map = load_official_longbench_config(
         prompt_path=args.official_prompt_path,
@@ -1731,8 +1797,35 @@ def main() -> None:
 
     rope_theta = float(args.rope_theta) if args.rope_theta > 0 else infer_rope_theta(args.base_model_path, args.trust_remote_code)
     LOG.info("Resolved rope_theta=%.1f", rope_theta)
+    protocol_lock = {
+        "base_model_path": args.base_model_path,
+        "adapter_path": adapter_path,
+        "task_set": args.task_set,
+        "tasks": tasks,
+        "max_samples_per_task": int(args.max_samples_per_task),
+        "max_input_tokens": int(args.max_input_tokens),
+        "batch_size": int(args.batch_size),
+        "seed": int(args.seed),
+        "attn_implementation": args.attn_implementation,
+        "prompt_source": args.prompt_source,
+        "chat_template": args.chat_template,
+        "truncate_mode": args.truncate_mode,
+        "max_new_tokens_policy": args.max_new_tokens_policy,
+        "score_scale": args.score_scale,
+        "strict_parity_check": bool(args.strict_parity_check),
+        "decode": {
+            "do_sample": False,
+            "temperature": None,
+            "top_p": None,
+            "use_cache": True,
+        },
+    }
 
     results: Dict = {
+        "protocol_lock": protocol_lock,
+        "manifest_json": manifest_path.as_posix() if manifest_path else "",
+        "per_sample_scores_raw": {},
+        "inv_sha256": {},
         "meta": {
             "timestamp": time.strftime("%Y-%m-%d_%H:%M:%S"),
             "base_model_path": args.base_model_path,
@@ -1761,6 +1854,8 @@ def main() -> None:
             "official_prompt_path": args.official_prompt_path,
             "official_maxlen_path": args.official_maxlen_path,
             "repro_manifest_dir": args.repro_manifest_dir,
+            "manifest_json": manifest_path.as_posix() if manifest_path else "",
+            "protocol_lock": protocol_lock,
         },
         "models": {},
     }
@@ -1772,7 +1867,6 @@ def main() -> None:
             rope_theta=rope_theta,
         )
 
-    manifest_path = Path(args.manifest_json) if args.manifest_json else None
     manifest_obj: Dict[str, object] = {"meta": {}, "tasks": {}}
     if manifest_path and manifest_path.exists():
         try:
@@ -1821,6 +1915,7 @@ def main() -> None:
             "rope_used": rope_used,
             "tasks": {},
         }
+        model_per_sample_scores_raw: Dict[str, List[float]] = {}
 
         for task in tasks:
             try:
@@ -1855,9 +1950,23 @@ def main() -> None:
                     "score": None,
                     "score_raw": None,
                     "score_pct": None,
+                    "per_sample_scores_raw": [],
                 }
+            task_scores_raw = tres.get("per_sample_scores_raw", []) if isinstance(tres, dict) else []
+            if isinstance(task_scores_raw, list):
+                model_per_sample_scores_raw[task] = [float(x) for x in task_scores_raw if isinstance(x, (int, float))]
             mres["tasks"][task] = tres
 
+        inv_sha256, inv_path = resolve_inv_metadata(
+            adapter_path=model_adapter_path,
+            custom_inv_freq_path=args.custom_inv_freq_path if model_adapter_path else "",
+            rope_used=rope_used if isinstance(rope_used, dict) else None,
+        )
+        mres["inv_sha256"] = inv_sha256
+        mres["inv_freq_path"] = inv_path
+        mres["per_sample_scores_raw"] = model_per_sample_scores_raw
+        results["per_sample_scores_raw"][model_name] = model_per_sample_scores_raw
+        results["inv_sha256"][model_name] = inv_sha256
         results["models"][model_name] = mres
 
         del model
@@ -1895,7 +2004,8 @@ def main() -> None:
             "tasks": {t: task_index_map.get(t, []) for t in tasks},
         }
         manifest_path.write_text(json.dumps(manifest_payload, indent=2, ensure_ascii=False), encoding="utf-8")
-        results["meta"]["manifest_json"] = str(manifest_path)
+        results["meta"]["manifest_json"] = manifest_path.as_posix()
+        results["manifest_json"] = manifest_path.as_posix()
 
     out_path.write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
     LOG.info("Saved %s", out_path)

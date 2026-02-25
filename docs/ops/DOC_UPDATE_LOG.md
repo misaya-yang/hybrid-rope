@@ -1,5 +1,37 @@
 # 文档系统性优化升级日志 (Documentation Refactoring Log)
 
+> 更新时间: 2026-02-26 01:20 CST
+> 本轮更新用于对齐 “24小时 NeurIPS 证据加固计划” 的代码接口、审计字段和交接文档。
+
+## 0. 2026-02-26 本轮新增
+
+- **新增 handoff 包**：`handoff_2026-02-26/`，沿用现有 dated-handoff 结构，包含：
+  - `0_README.md`, `1_PROTOCOL_LOCK.md`, `2_ASSET_MAP.md`, `3_RUNBOOK.md`
+  - `01_IMPLEMENTED_SCOPE.md`, `02_VALIDATION_SNAPSHOT.md`, `03_DEEP_REVIEW_FINDINGS.md`
+- **更新 AI 接手入口**：`AI_HANDOFF.md` 新增 2026-02-26 包索引。
+- **更新脚本索引**：`scripts/README.md` 纳入：
+  - `plan_b_eval_longbench.py`
+  - `plan_b_train_anchored_v2.py`
+  - `prepare_long_instruction_mix.py`
+  - `build_model_registry.py`
+- **更新实验库存说明**：`docs/exp/EXPERIMENT_INVENTORY.md` 补充 Plan B 代码就绪状态。
+- **更新审计清单**：`docs/exp/plan_b_audit_manifest.md` 补充统一结果 schema 与接口变更状态。
+
+## 0.1 代码/协议对齐摘要（与文档关联）
+
+- LoRA 资产合同：
+  - 训练产物支持 `root_adapter + final_lora` 双布局，并在 `summary.json` 记录 `adapter_layout`。
+- Registry 可评测判定：
+  - `build_model_registry.py` 支持 `root_adapter|final_lora`，输出 `adapter_resolved_path`。
+- Plan B 评测控制面：
+  - 可选 `lb6/lb21/custom tasks`，并支持 NIAH/Passkey 压测参数。
+- 统一结果 schema：
+  - `eval_longbench.py`, `eval_niah_recall.py`, `eval_passkey_teacher_forcing.py` 均写入：
+    - `protocol_lock`
+    - `manifest_json`
+    - `per_sample_scores_raw`
+    - `inv_sha256`
+
 > 更新时间: 2026-02-22
 > 本更新日志总结了为满足 "可直接写论文/可复现实验/可被导师复核" 标准而对核心文档层进行的重构。
 

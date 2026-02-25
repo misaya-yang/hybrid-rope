@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import gc
+import hashlib
 import json
 import logging
 import math
@@ -47,6 +48,75 @@ LOG = logging.getLogger("eval_niah_recall")
 
 def parse_int_list(text: str) -> List[int]:
     return [int(x.strip()) for x in text.split(",") if x.strip()]
+
+
+def sha256_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        while True:
+            chunk = f.read(1024 * 1024)
+            if not chunk:
+                break
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def read_json_silent(path: Path) -> Optional[Dict]:
+    if not path.exists() or not path.is_file():
+        return None
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
+def resolve_inv_metadata(
+    base_only: bool,
+    adapter_path: str,
+    custom_inv_freq_path: str,
+    rope_used: Optional[dict],
+) -> Tuple[str, str]:
+    if base_only:
+        return "", ""
+
+    inv_path = ""
+    inv_sha256 = ""
+    candidates: List[Path] = []
+
+    custom_inv = (custom_inv_freq_path or "").strip()
+    if custom_inv:
+        candidates.append(Path(custom_inv).expanduser())
+    if isinstance(rope_used, dict):
+        rope_custom = str(rope_used.get("custom_inv_freq_path", "") or "").strip()
+        if rope_custom:
+            candidates.append(Path(rope_custom).expanduser())
+
+    ap = Path(adapter_path).expanduser().resolve()
+    candidates.extend(
+        [
+            ap / "artifacts" / "custom_inv_freq.pt",
+            ap / "custom_inv_freq.pt",
+            ap.parent / "artifacts" / "custom_inv_freq.pt",
+        ]
+    )
+    for summary_path in [ap / "artifacts" / "summary.json", ap.parent / "artifacts" / "summary.json"]:
+        summary = read_json_silent(summary_path)
+        if isinstance(summary, dict):
+            inv_sha256 = str((summary.get("rope") or {}).get("inv_sha256", "") or "")
+            if inv_sha256:
+                break
+
+    seen: set[str] = set()
+    for p in candidates:
+        key = p.as_posix()
+        if key in seen:
+            continue
+        seen.add(key)
+        if p.exists() and p.is_file():
+            inv_path = p.resolve().as_posix()
+            inv_sha256 = sha256_file(p.resolve())
+            break
+    return inv_sha256, inv_path
 
 
 def enforce_offline_mode() -> None:
@@ -133,6 +203,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     ap.add_argument("--device_map", type=str, default="auto")
     ap.add_argument("--trust_remote_code", action="store_true", default=True)
+    ap.add_argument("--manifest_json", type=str, default="")
     return ap
 
 
@@ -834,8 +905,54 @@ def main() -> None:
     pdf_path = output_dir / "niah_recall_heatmap.pdf"
     png_path = output_dir / "niah_recall_heatmap.png"
     save_heatmap(df, pdf_path, png_path, title=title)
+    inv_sha256, inv_path = resolve_inv_metadata(
+        base_only=bool(args.base_only),
+        adapter_path=args.adapter_path,
+        custom_inv_freq_path=args.custom_inv_freq_path,
+        rope_used=rope_used if isinstance(rope_used, dict) else None,
+    )
+    per_sample_scores_raw: List[float] = []
+    for len_map in (raw.get("cells") or {}).values():
+        if not isinstance(len_map, dict):
+            continue
+        for depth_obj in len_map.values():
+            if not isinstance(depth_obj, dict):
+                continue
+            for trial in depth_obj.get("trials", []):
+                if not isinstance(trial, dict):
+                    continue
+                correct = trial.get("correct")
+                if isinstance(correct, bool):
+                    per_sample_scores_raw.append(1.0 if correct else 0.0)
+                elif isinstance(correct, (int, float)):
+                    per_sample_scores_raw.append(float(correct))
+
+    manifest_json = Path(args.manifest_json).resolve().as_posix() if args.manifest_json else ""
+    protocol_lock = {
+        "base_model_path": args.base_model_path,
+        "adapter_path": None if args.base_only else args.adapter_path,
+        "variant": args.variant,
+        "custom_inv_freq_path": args.custom_inv_freq_path,
+        "attn_implementation": args.attn_implementation,
+        "lengths": lengths,
+        "depths": depths,
+        "trials_per_cell": int(args.trials_per_cell),
+        "needles_per_prompt": int(args.needles_per_prompt),
+        "prompt_mode": args.prompt_mode,
+        "seed": int(args.seed),
+        "decode": {
+            "do_sample": False,
+            "temperature": None,
+            "top_p": None,
+            "use_cache": True,
+        },
+    }
 
     payload = {
+        "protocol_lock": protocol_lock,
+        "manifest_json": manifest_json,
+        "per_sample_scores_raw": per_sample_scores_raw,
+        "inv_sha256": inv_sha256,
         "meta": {
             "timestamp": time.strftime("%Y-%m-%d_%H:%M:%S"),
             "base_model_path": args.base_model_path,
@@ -851,6 +968,10 @@ def main() -> None:
             "trials_per_cell": args.trials_per_cell,
             "needles_per_prompt": args.needles_per_prompt,
             "seed": args.seed,
+            "manifest_json": manifest_json,
+            "inv_sha256": inv_sha256,
+            "inv_freq_path": inv_path,
+            "protocol_lock": protocol_lock,
         },
         "accuracy_matrix": df.to_dict(orient="index"),
         "raw": raw,

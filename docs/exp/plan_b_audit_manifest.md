@@ -53,3 +53,31 @@ For each audit cycle, fill the following fields:
 4. Launch Plan B evaluation (LongBench lb21 full + NIAH + Passkey).
 5. Run significance and FDR policy report.
 
+## 6) 2026-02-26 Interface Status (Code Landed)
+
+The following interface-level requirements are implemented in code:
+
+1. LoRA artifact contract:
+   - `scripts/train_cross_model_lora_fast_tuned.py`
+   - exports `<run_dir>/final_lora/` while keeping root adapter files for backward compatibility.
+   - writes `summary.json -> artifacts_contract.adapter_layout`.
+2. Registry compatibility:
+   - `scripts/build_model_registry.py`
+   - `ready` supports `root_adapter|final_lora`.
+   - outputs `adapter_layout` and `adapter_resolved_path`.
+3. Plan B eval control surface:
+   - `scripts/plan_b_eval_longbench.py`
+   - supports `--task_set`, `--tasks`, `--max_samples_per_task`.
+   - supports stress params (`--niah_needles_per_prompt`, `--niah_trials_per_cell`, `--passkey_trials_per_cell`).
+4. Data mixer:
+   - `scripts/prepare_long_instruction_mix.py`
+   - outputs `train/valid/test` and `mix_manifest.json`.
+5. Unified result schema lock:
+   - `scripts/eval_longbench.py`
+   - `scripts/eval_niah_recall.py`
+   - `scripts/eval_passkey_teacher_forcing.py`
+   - each output includes:
+     - `protocol_lock`
+     - `manifest_json`
+     - `per_sample_scores_raw`
+     - `inv_sha256`

@@ -28,6 +28,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
 from eval_niah_recall import enforce_offline_mode, load_model_and_tokenizer
+from eval_niah_recall import resolve_inv_metadata
 
 
 def parse_int_csv(text: str) -> List[int]:
@@ -73,6 +74,7 @@ def make_parser() -> argparse.ArgumentParser:
     ap.add_argument("--max_new_tokens", type=int, default=12)
     ap.add_argument("--run_generation_probe", action="store_true")
     ap.add_argument("--output_dir", type=str, required=True)
+    ap.add_argument("--manifest_json", type=str, default="")
     return ap
 
 
@@ -346,8 +348,37 @@ def main() -> None:
         out_png=out_dir / "passkey_tf_margin_heatmap.png",
         out_pdf=out_dir / "passkey_tf_margin_heatmap.pdf",
     )
+    inv_sha256, inv_path = resolve_inv_metadata(
+        base_only=bool(args.base_only),
+        adapter_path=args.adapter_path,
+        custom_inv_freq_path=args.custom_inv_freq_path,
+        rope_used=rope_used if isinstance(rope_used, dict) else None,
+    )
+    per_sample_scores_raw = [float(x) for x in df["tf_correct"].tolist()]
+    manifest_json = Path(args.manifest_json).resolve().as_posix() if args.manifest_json else ""
+    protocol_lock = {
+        "base_model_path": args.base_model_path,
+        "adapter_path": None if args.base_only else args.adapter_path,
+        "variant": args.variant,
+        "custom_inv_freq_path": args.custom_inv_freq_path,
+        "attn_implementation": args.attn_implementation,
+        "lengths": lengths,
+        "depths": depths,
+        "trials_per_cell": int(args.trials_per_cell),
+        "seed": int(args.seed),
+        "decode": {
+            "do_sample": False,
+            "temperature": None,
+            "top_p": None,
+            "use_cache": True,
+        },
+    }
 
     summary = {
+        "protocol_lock": protocol_lock,
+        "manifest_json": manifest_json,
+        "per_sample_scores_raw": per_sample_scores_raw,
+        "inv_sha256": inv_sha256,
         "meta": {
             "timestamp": now(),
             "base_model_path": args.base_model_path,
@@ -361,6 +392,10 @@ def main() -> None:
             "trials_per_cell": int(args.trials_per_cell),
             "seed": int(args.seed),
             "run_generation_probe": bool(args.run_generation_probe),
+            "manifest_json": manifest_json,
+            "inv_sha256": inv_sha256,
+            "inv_freq_path": inv_path,
+            "protocol_lock": protocol_lock,
         },
         "overall": {
             "tf_accuracy": float(df["tf_correct"].mean()),
@@ -385,4 +420,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
