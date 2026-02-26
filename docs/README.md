@@ -1,6 +1,6 @@
 # 文档目录 (Documentation Index)
 
-> 最后更新：2026-02-25
+> 最后更新：2026-02-26
 
 欢迎查阅本项目的文档与实验索引。为了保证论文数据的严谨性和代码复现的确定性，请遵循以下结构：
 
@@ -11,6 +11,7 @@
 | 文档 | 用途 |
 |------|------|
 | ⭐ **[EXPERIMENT_REGISTRY.md](EXPERIMENT_REGISTRY.md)** | **实验事实表**：所有跑数记录、结论状态与原始 JSON 证据链汇总。任何未在此表中标为 ✅ 的数据，严禁放入论文正文。 |
+| ⭐ **[protocols/LLAMA3_8B_LORA_STANDARD_2026-02-26.md](protocols/LLAMA3_8B_LORA_STANDARD_2026-02-26.md)** | **Llama-3-8B 主线 LoRA 最新规范**：固定不动 attention 的主线配置、gate-stop 策略、以及后续搜索边界。 |
 | ⭐ **[exp/EXPERIMENT_INVENTORY.md](exp/EXPERIMENT_INVENTORY.md)** | **可引用性镜像索引**：按 `VALID/PENDING/INVALID/DEPRECATED` 分类，附复现入口。 |
 | ⭐ **[exp/README.md](exp/README.md)** | **实验文档总入口**：新同事/新机器先看这一页，再进入具体计划与报告。 |
 | ⭐ **[exp/PROJECT_FILE_MANAGER.md](exp/PROJECT_FILE_MANAGER.md)** | **仓库文件管理规则**：哪些文件该放哪，如何清理与恢复，避免根目录污染。 |

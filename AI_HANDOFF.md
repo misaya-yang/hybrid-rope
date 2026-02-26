@@ -1,8 +1,20 @@
 # AI Handoff (One-Glance Ops Card)
 
-Last updated: 2026-02-26 01:20 CST  
+Last updated: 2026-02-26 16:05 CST  
 Local repo: `/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope`  
 Server repo: `/root/autodl-tmp/dfrope/hybrid-rope`
+
+## 0.0.2) Latest Llama-3-8B LoRA standard (2026-02-26)
+
+Primary protocol is now frozen in:
+
+- `docs/protocols/LLAMA3_8B_LORA_STANDARD_2026-02-26.md`
+
+Important default decisions:
+
+- mainline runs use `Meta-Llama-3-8B-Instruct` + `inv_freq.copy_()` only;
+- attention-side interventions are **off** by default for paper evidence;
+- gate-first policy: run `qasper,musique` first, only pass then launch full `lb21`.
 
 ## 0.0.1) Attention-integrated isolated pipeline (2026-02-26)
 

@@ -85,13 +85,18 @@ def _patch_loader(module_name: str, cfg: AttentionBiasConfig) -> Tuple[object, o
     mod = importlib.import_module(module_name)
     original = mod.load_model_and_tokenizer
 
-    def wrapped_loader(args):
-        out = original(args)
-        # eval_longbench returns 5-tuple; niah loader also returns 5-tuple.
+    def wrapped_loader(*args, **kwargs):
+        out = original(*args, **kwargs)
+        if not (cfg.enabled and cfg.mode != "off"):
+            return out
+        # eval_longbench / niah loaders return tuple with model at index 0.
+        if not isinstance(out, tuple) or not out:
+            raise RuntimeError(
+                f"Unexpected load_model_and_tokenizer return type in {module_name}: {type(out).__name__}"
+            )
         model = out[0]
-        if cfg.enabled and cfg.mode != "off":
-            handle: PatchHandle = apply_llama_attention_bias_patch(model, cfg)
-            setattr(model, "_attn_bias_patch_handle", handle)
+        handle: PatchHandle = apply_llama_attention_bias_patch(model, cfg)
+        setattr(model, "_attn_bias_patch_handle", handle)
         return out
 
     mod.load_model_and_tokenizer = wrapped_loader
