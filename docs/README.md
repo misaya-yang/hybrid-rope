@@ -12,6 +12,8 @@
 |------|------|
 | ⭐ **[EXPERIMENT_REGISTRY.md](EXPERIMENT_REGISTRY.md)** | **实验事实表**：所有跑数记录、结论状态与原始 JSON 证据链汇总。任何未在此表中标为 ✅ 的数据，严禁放入论文正文。 |
 | ⭐ **[exp/EXPERIMENT_INVENTORY.md](exp/EXPERIMENT_INVENTORY.md)** | **可引用性镜像索引**：按 `VALID/PENDING/INVALID/DEPRECATED` 分类，附复现入口。 |
+| ⭐ **[exp/README.md](exp/README.md)** | **实验文档总入口**：新同事/新机器先看这一页，再进入具体计划与报告。 |
+| ⭐ **[exp/PROJECT_FILE_MANAGER.md](exp/PROJECT_FILE_MANAGER.md)** | **仓库文件管理规则**：哪些文件该放哪，如何清理与恢复，避免根目录污染。 |
 | ⭐ **[exp/plan_b_audit_manifest.md](exp/plan_b_audit_manifest.md)** | **红线审计与隔离 Plan B 清单**：运行脚本保护、审计模板、恢复路径。 |
 | [exp/REPO_FILE_INDEX.md](exp/REPO_FILE_INDEX.md) | **仓库文件分层索引**：一眼看清目录分类与整理状态。 |
 | ⭐ **[TERMS_AND_PROTOCOLS.md](TERMS_AND_PROTOCOLS.md)** | **术语与公平协议标准**：定义何为可用的评测分数、跨方法比较的红线，以及禁止引用的黑名单。 |

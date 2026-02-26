@@ -4,6 +4,22 @@ Last updated: 2026-02-26 01:20 CST
 Local repo: `/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope`  
 Server repo: `/root/autodl-tmp/dfrope/hybrid-rope`
 
+## 0.0.1) Attention-integrated isolated pipeline (2026-02-26)
+
+All newly added attention-integrated scripts are now grouped under:
+
+- `scripts/isolated/attn/new_lora_longalpaca_attnbias_train.py`
+- `scripts/isolated/attn/new_eval_longbench_attnbias.py`
+- `scripts/isolated/attn/attn_patch_llama_attention_bias.py`
+- `scripts/isolated/attn/attn_audit_readonly.py`
+- `scripts/isolated/attn/next_attn_lora_queue.sh`
+
+Operational reports are under:
+
+- `docs/exp/reports/attn_audit_report_2026-02-26.md`
+- `docs/exp/reports/midrun_metrics_snapshot_2026-02-26.md`
+- `docs/exp/reports/midrun_hypotheses_2026-02-26.md`
+
 ## 0.0) New dated handoff package (2026-02-26)
 
 Use this folder as the current implementation handoff for the 24h dual-track plan:

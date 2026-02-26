@@ -69,6 +69,10 @@ It contains code, experiment evidence, analysis docs, and server snapshots.
   - `scripts/eval_niah_recall.py`
 - LongBench eval:
   - `scripts/eval_longbench.py`
+- Attention-integrated isolated pipeline:
+  - `train.py` (LLaMA-3-8B anchored/static/dynamic penalty trainer)
+  - `scripts/isolated/attn/new_eval_longbench_attnbias.py`
+  - `scripts/isolated/attn/next_attn_lora_queue.sh`
 - Attention distance prior estimation:
   - `scripts/run_attn_hist.py`
 - Sigmoid phase pipelines:

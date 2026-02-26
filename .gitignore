@@ -37,6 +37,7 @@ artifacts/a800_2026-02-13/results/llama3_hybrid_lora/final_lora/*
 logs/
 artifacts/local_monitor/
 artifacts/reviewer_2026-02-24/
+artifacts/_server_sync/
 
 # Local significance smoke/rerun artifacts (generated during analysis)
 archives/batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/significance_seeded_*.csv

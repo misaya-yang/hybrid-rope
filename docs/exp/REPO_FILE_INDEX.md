@@ -1,6 +1,6 @@
 # Repo File Index
 
-Generated: 2026-02-25 21:16:15
+Generated: 2026-02-26 11:08:00
 Root: `/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope`
 
 ## Top-level Classification
@@ -45,3 +45,9 @@ Root: `/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope`
 
 - `status=review` entries should be moved, archived, or documented in `docs/exp/EXPERIMENT_INVENTORY.md`.
 - This report is non-destructive and safe to run repeatedly.
+
+## New Isolated Pipeline Locations (2026-02-26)
+
+- `scripts/isolated/attn/`: attention-integrated, red-line-safe scripts only.
+- `docs/exp/reports/`: read-only audit snapshots and mid-run diagnosis reports.
+- `artifacts/reviewer_2026-02-26/`: machine-readable snapshots and SHA256 manifests.
