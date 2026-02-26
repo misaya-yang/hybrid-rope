@@ -1174,6 +1174,7 @@ def evaluate_task(
     official_maxlen_map: Dict[str, int],
     indices: Optional[List[int]] = None,
     batch_size: int = 1,
+    max_batch_input_tokens: int = 0,
     save_per_sample_traces: bool = True,
     trace_output_max_chars: int = 0,
 ) -> Dict:
@@ -1212,13 +1213,70 @@ def evaluate_task(
     missing_reference_count = 0
 
     bs = max(1, int(batch_size))
+    token_budget = int(max_batch_input_tokens)
+    if token_budget <= 0:
+        token_budget = int(bs * max_input_tokens)
+    build_chunk_size = max(bs * 4, bs)
 
     def chunks(seq: List[int], size: int):
         for start in range(0, len(seq), size):
             yield seq[start : start + size]
 
     processed = 0
-    for chunk in chunks([int(x) for x in idxs], bs):
+    def run_single_generation(entries: List[Dict[str, object]], pos: int) -> None:
+        nonlocal generation_error_count
+
+        def mark_generation_error(exc: Exception) -> None:
+            nonlocal generation_error_count
+            generation_error_count += 1
+            entries[pos]["evaluator_status"] = "generation_error"
+            entries[pos]["failure_type"] = "generation_error"
+            entries[pos]["error_message"] = f"{type(exc).__name__}: {exc}"
+
+        prompt_for_eval = str(entries[pos]["prompt_for_eval"])
+        max_new = int(entries[pos]["max_new"])
+        try:
+            entries[pos]["raw_pred"] = generate_text(model, tokenizer, prompt_for_eval, max_new_tokens=max_new)
+        except RuntimeError as e:
+            if "out of memory" in str(e).lower():
+                torch.cuda.empty_cache()
+                prompt_for_eval = truncate_prompt(
+                    tokenizer=tokenizer,
+                    prompt=prompt_for_eval,
+                    max_tokens=max(512, max_input_tokens // 2),
+                    mode=truncate_mode,
+                )
+                entries[pos]["prompt_for_eval"] = prompt_for_eval
+                entries[pos]["fallback_used"] = True
+                try:
+                    entries[pos]["raw_pred"] = generate_text(model, tokenizer, prompt_for_eval, max_new_tokens=max_new)
+                    return
+                except Exception as e2:
+                    mark_generation_error(e2)
+                    return
+            mark_generation_error(e)
+        except Exception as e:
+            mark_generation_error(e)
+
+    def iter_generation_groups(entries: List[Dict[str, object]], positions: List[int]):
+        current: List[int] = []
+        current_tokens = 0
+        for pos in positions:
+            trunc_meta = entries[pos].get("trunc_meta") or {}
+            prompt_tokens = int(trunc_meta.get("input_tokens_after_trunc", 0) if isinstance(trunc_meta, dict) else 0)
+            prompt_tokens = max(1, prompt_tokens)
+            over_items = len(current) >= bs
+            over_tokens = bool(current) and (current_tokens + prompt_tokens > token_budget)
+            if over_items or over_tokens:
+                yield current
+                current = []
+                current_tokens = 0
+            current.append(pos)
+            current_tokens += prompt_tokens
+        if current:
+            yield current
+
+    for chunk in chunks([int(x) for x in idxs], build_chunk_size):
         entries: List[Dict[str, object]] = []
         for i in chunk:
             sample = enrich_sample_fields(dict(ds[int(i)]))
@@ -1281,56 +1339,31 @@ def evaluate_task(
 
         # Batch generate for the "ok" entries. If batch fails, fall back to per-sample generation.
         gen_positions = [p for p, e in enumerate(entries) if e.get("evaluator_status") == "ok"]
-        gen_prompts = [str(entries[p]["prompt_for_eval"]) for p in gen_positions]
-        gen_preds: List[str] = []
-        gen_failed = False
-        if gen_prompts:
-            try:
-                gen_preds = generate_text_batch(model, tokenizer, gen_prompts, max_new_tokens=int(entries[gen_positions[0]]["max_new"]))
-            except RuntimeError as e:
-                if "out of memory" in str(e).lower():
-                    torch.cuda.empty_cache()
-                gen_failed = True
-            except Exception:
-                gen_failed = True
-
-        if gen_prompts and not gen_failed and len(gen_preds) == len(gen_prompts):
-            for p, raw_pred in zip(gen_positions, gen_preds):
-                entries[p]["raw_pred"] = raw_pred
-        else:
-            for p in gen_positions:
-                prompt_for_eval = str(entries[p]["prompt_for_eval"])
-                max_new = int(entries[p]["max_new"])
+        for group in iter_generation_groups(entries, gen_positions):
+            gen_prompts = [str(entries[p]["prompt_for_eval"]) for p in group]
+            gen_preds: List[str] = []
+            gen_failed = False
+            if gen_prompts:
                 try:
-                    entries[p]["raw_pred"] = generate_text(model, tokenizer, prompt_for_eval, max_new_tokens=max_new)
+                    gen_preds = generate_text_batch(
+                        model,
+                        tokenizer,
+                        gen_prompts,
+                        max_new_tokens=int(entries[group[0]]["max_new"]),
+                    )
                 except RuntimeError as e:
                     if "out of memory" in str(e).lower():
                         torch.cuda.empty_cache()
-                        prompt_for_eval = truncate_prompt(
-                            tokenizer=tokenizer,
-                            prompt=prompt_for_eval,
-                            max_tokens=max(512, max_input_tokens // 2),
-                            mode=truncate_mode,
-                        )
-                        entries[p]["prompt_for_eval"] = prompt_for_eval
-                        entries[p]["fallback_used"] = True
-                        try:
-                            entries[p]["raw_pred"] = generate_text(model, tokenizer, prompt_for_eval, max_new_tokens=max_new)
-                        except Exception as e2:
-                            generation_error_count += 1
-                            entries[p]["evaluator_status"] = "generation_error"
-                            entries[p]["failure_type"] = "generation_error"
-                            entries[p]["error_message"] = f"{type(e2).__name__}: {e2}"
-                    else:
-                        generation_error_count += 1
-                        entries[p]["evaluator_status"] = "generation_error"
-                        entries[p]["failure_type"] = "generation_error"
-                        entries[p]["error_message"] = f"{type(e).__name__}: {e}"
-                except Exception as e:
-                    generation_error_count += 1
-                    entries[p]["evaluator_status"] = "generation_error"
-                    entries[p]["failure_type"] = "generation_error"
-                    entries[p]["error_message"] = f"{type(e).__name__}: {e}"
+                    gen_failed = True
+                except Exception:
+                    gen_failed = True
+
+            if gen_prompts and not gen_failed and len(gen_preds) == len(gen_prompts):
+                for p, raw_pred in zip(group, gen_preds):
+                    entries[p]["raw_pred"] = raw_pred
+            else:
+                for p in group:
+                    run_single_generation(entries, p)
 
         for entry in entries:
             i = int(entry["index"])
@@ -1571,6 +1604,7 @@ def write_repro_manifest(
         f"  max_samples_per_task: {int(args.max_samples_per_task)}",
         f"  max_input_tokens: {int(args.max_input_tokens)}",
         f"  batch_size: {int(args.batch_size)}",
+        f"  max_batch_input_tokens: {int(args.max_batch_input_tokens)}",
         f"  max_new_tokens_policy: \"{args.max_new_tokens_policy}\"",
         f"  prompt_source: \"{args.prompt_source}\"",
         f"  chat_template: \"{args.chat_template}\"",
@@ -1677,6 +1711,16 @@ def main() -> None:
         type=int,
         default=1,
         help="Batch size for greedy generation. Increase on large-VRAM GPUs to improve throughput.",
+    )
+    ap.add_argument(
+        "--max_batch_input_tokens",
+        type=int,
+        default=0,
+        help=(
+            "Soft token budget per generation micro-batch. "
+            "0 means batch_size * max_input_tokens. "
+            "Useful to increase batch_size while capping peak VRAM."
+        ),
     )
     ap.add_argument("--max_new_tokens_qa", type=int, default=64)
     ap.add_argument("--max_new_tokens_sum", type=int, default=256)
@@ -1805,6 +1849,7 @@ def main() -> None:
         "max_samples_per_task": int(args.max_samples_per_task),
         "max_input_tokens": int(args.max_input_tokens),
         "batch_size": int(args.batch_size),
+        "max_batch_input_tokens": int(args.max_batch_input_tokens),
         "seed": int(args.seed),
         "attn_implementation": args.attn_implementation,
         "prompt_source": args.prompt_source,
@@ -1836,6 +1881,7 @@ def main() -> None:
             "max_samples_per_task": args.max_samples_per_task,
             "max_input_tokens": args.max_input_tokens,
             "batch_size": int(args.batch_size),
+            "max_batch_input_tokens": int(args.max_batch_input_tokens),
             "max_new_tokens_policy": args.max_new_tokens_policy,
             "prompt_source": args.prompt_source,
             "chat_template": args.chat_template,
@@ -1938,6 +1984,7 @@ def main() -> None:
                     official_maxlen_map=official_maxlen_map,
                     indices=task_index_map.get(task),
                     batch_size=int(args.batch_size),
+                    max_batch_input_tokens=int(args.max_batch_input_tokens),
                     save_per_sample_traces=bool(args.save_per_sample_traces),
                     trace_output_max_chars=int(args.trace_output_max_chars),
                 )

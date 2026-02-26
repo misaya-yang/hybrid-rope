@@ -145,6 +145,41 @@ def build_length_buckets(longbench_json: Path, out_path: Path) -> Dict[str, obje
     return payload
 
 
+def load_inv_freq_tensor(path: Path) -> "torch.Tensor":
+    import torch
+
+    raw = torch.load(path, map_location="cpu")
+    if isinstance(raw, dict):
+        for k in ("inv_freq", "custom_inv_freq", "tensor", "data"):
+            if k in raw:
+                raw = raw[k]
+                break
+    inv = torch.as_tensor(raw, dtype=torch.float32).view(-1)
+    if inv.numel() <= 1:
+        raise RuntimeError(f"Invalid inv_freq payload in {path}")
+    return inv
+
+
+def build_s2_by_delta_from_inv_freq(inv_freq_1d: "torch.Tensor", max_delta: int) -> "torch.Tensor":
+    import torch
+
+    inv = inv_freq_1d.detach().to(dtype=torch.float32, device="cpu").view(-1)
+    d = torch.arange(int(max_delta), dtype=torch.float32).view(-1, 1)
+    s = torch.cos(d * inv.view(1, -1)).mean(dim=1)
+    return (s * s).clamp_min(1e-8)
+
+
+def resolve_import_roots(this_file: Path) -> Tuple[Path, Path]:
+    # Prefer robust discovery: locate scripts/eval_longbench.py from current path.
+    for parent in [this_file.parent] + list(this_file.parents):
+        scripts_candidate = parent / "scripts"
+        if (scripts_candidate / "eval_longbench.py").exists():
+            return scripts_candidate, parent
+    # Backward-compatible fallback for current repository layout.
+    scripts_root = this_file.resolve().parents[2]
+    return scripts_root, scripts_root.parent
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description="Evaluate longbench/niah/passkey with optional attention bias patch.")
     ap.add_argument("--base_model_path", type=str, default=MODEL_LOCK_DEFAULT)
@@ -152,8 +187,17 @@ def main() -> None:
     ap.add_argument("--custom_inv_freq_path", type=str, default="")
     ap.add_argument("--output_root", type=Path, default=Path("artifacts/new_attnbias_v1/eval"))
     ap.add_argument("--seed", type=int, default=42)
-    ap.add_argument("--max_input_tokens", type=int, default=16384)
-    ap.add_argument("--batch_size", type=int, default=2)
+    ap.add_argument("--max_input_tokens", type=int, default=8192)
+    ap.add_argument("--batch_size", type=int, default=1)
+    ap.add_argument(
+        "--max_batch_input_tokens",
+        type=int,
+        default=0,
+        help=(
+            "Soft token budget per generation micro-batch forwarded to eval_longbench. "
+            "0 means batch_size * max_input_tokens."
+        ),
+    )
     ap.add_argument("--attn_implementation", type=str, default="auto")
     ap.add_argument("--longbench_local_data_dir", type=str, default="/root/autodl-tmp/dfrope/ms_datasets/LongBench/data")
     ap.add_argument("--attn_bias_mode", type=str, choices=["off", "bias", "bias+gate"], default="off")
@@ -164,12 +208,62 @@ def main() -> None:
     ap.add_argument("--gamma_head_high", type=float, default=0.0)
     ap.add_argument("--gate_tau", type=float, default=0.0)
     ap.add_argument("--gate_tg", type=float, default=1.0)
+    ap.add_argument("--s2_power", type=float, default=2.0)
+    ap.add_argument("--s2_table_path", type=str, default="")
+    ap.add_argument("--require_s2_table", action=argparse.BooleanOptionalAction, default=True)
     args = ap.parse_args()
+    if int(args.max_input_tokens) > int(MODEL_LOCK_MAX_POS):
+        print(
+            f"[WARNING] max_input_tokens={args.max_input_tokens} exceeds model lock {MODEL_LOCK_MAX_POS}; "
+            f"clamping to {MODEL_LOCK_MAX_POS}."
+        )
+        args.max_input_tokens = int(MODEL_LOCK_MAX_POS)
+
+    if args.attn_bias_mode != "off":
+        if args.attn_implementation in {"auto", "flash_attention_2", "flash_attention_3"}:
+            print(
+                "[WARNING] attn_bias_mode enabled; forcing attn_implementation=sdpa "
+                "to avoid flash-attention additive-mask incompatibility while keeping throughput."
+            )
+            args.attn_implementation = "sdpa"
+        if int(args.batch_size) > 1:
+            print("[WARNING] attn_bias_mode enabled; forcing batch_size=1 for eval stability.")
+            args.batch_size = 1
 
     model_info = assert_model_lock(args.base_model_path)
     args.output_root.mkdir(parents=True, exist_ok=True)
     traces_dir = args.output_root / "traces"
     traces_dir.mkdir(parents=True, exist_ok=True)
+
+    resolved_s2_table_path = str(args.s2_table_path).strip()
+    if args.attn_bias_mode != "off":
+        if not resolved_s2_table_path:
+            if not str(args.custom_inv_freq_path).strip():
+                if bool(args.require_s2_table):
+                    raise RuntimeError(
+                        "attn_bias_mode requires s2 table: provide --s2_table_path or --custom_inv_freq_path."
+                    )
+            else:
+                inv = load_inv_freq_tensor(Path(args.custom_inv_freq_path))
+                auto_s2 = build_s2_by_delta_from_inv_freq(inv, max_delta=int(args.max_input_tokens))
+                auto_s2_path = traces_dir / "s2_by_delta.pt"
+                import torch
+
+                torch.save(
+                    {
+                        "s2_by_delta": auto_s2,
+                        "meta": {
+                            "source": "from_custom_inv_freq",
+                            "max_delta": int(args.max_input_tokens),
+                            "custom_inv_freq_path": str(args.custom_inv_freq_path),
+                            "custom_inv_freq_sha256": sha256_file(Path(args.custom_inv_freq_path)),
+                        },
+                    },
+                    auto_s2_path,
+                )
+                resolved_s2_table_path = auto_s2_path.as_posix()
+        elif bool(args.require_s2_table) and (not Path(resolved_s2_table_path).exists()):
+            raise FileNotFoundError(f"s2_table_path not found: {resolved_s2_table_path}")
 
     cfg = AttentionBiasConfig(
         mode=args.attn_bias_mode,
@@ -180,13 +274,17 @@ def main() -> None:
         gamma_head_high=float(args.gamma_head_high),
         tau=float(args.gate_tau),
         tg=float(args.gate_tg),
+        s2_power=float(args.s2_power),
+        s2_table_path=resolved_s2_table_path,
+        require_s2_table=bool(args.require_s2_table),
         enabled=(args.attn_bias_mode != "off"),
     )
 
-    repo_root = Path(__file__).resolve().parent
-    scripts_root = repo_root / "scripts"
-    if str(scripts_root) not in sys.path:
-        sys.path.insert(0, str(scripts_root))
+    scripts_root, repo_root = resolve_import_roots(Path(__file__).resolve())
+    for p in [scripts_root, repo_root]:
+        p_str = str(p)
+        if p_str not in sys.path:
+            sys.path.insert(0, p_str)
 
     lb_mod, lb_orig_loader = _patch_loader("eval_longbench", cfg)
     niah_mod, niah_orig_loader = _patch_loader("eval_niah_recall", cfg)
@@ -211,6 +309,8 @@ def main() -> None:
             str(args.max_input_tokens),
             "--batch_size",
             str(args.batch_size),
+            "--max_batch_input_tokens",
+            str(int(args.max_batch_input_tokens)),
             "--prompt_source",
             "official",
             "--chat_template",
@@ -310,6 +410,12 @@ def main() -> None:
         "adapter_path": args.adapter_path,
         "custom_inv_freq_path": args.custom_inv_freq_path,
         "attn_bias": vars(cfg),
+        "s2_table_path_resolved": resolved_s2_table_path,
+        "eval_batching": {
+            "batch_size": int(args.batch_size),
+            "max_batch_input_tokens": int(args.max_batch_input_tokens),
+            "max_input_tokens": int(args.max_input_tokens),
+        },
         "return_codes": {"longbench": rc_lb, "niah": rc_niah, "passkey": rc_passkey},
         "outputs": {
             "longbench_json": (args.output_root / "longbench_lb21.json").as_posix(),

@@ -36,7 +36,8 @@ resolve_env() {
 
 wait_sacred_done() {
   log "Waiting sacred Qwen eval job to finish..."
-  while pgrep -af "scripts/eval_longbench.py.*Qwen|queue_qwen400_from_baseline.sh" >/dev/null 2>&1; do
+  # Match by script names first, then by model keyword as fallback.
+  while pgrep -af "queue_qwen400_from_baseline.sh|eval_longbench.py|run_sota_downstream_eval.py|new_eval_longbench_attnbias.py|qwen" >/dev/null 2>&1; do
     sleep 20
   done
   log "Sacred Qwen job ended. Starting next run."
@@ -48,8 +49,12 @@ run_train_eval() {
   local run_name="llama3_8b_${mode}_seed${seed}"
   local train_log="$REPO_DIR/artifacts/${run_name}_train.log"
   local eval_log="$REPO_DIR/artifacts/${run_name}_eval.log"
+  local attn_impl="auto"
+  if [[ "$mode" == "dynamic_penalty" ]]; then
+    attn_impl="eager"
+  fi
 
-  log "Training start: mode=${mode} seed=${seed}"
+  log "Training start: mode=${mode} seed=${seed} attn_impl=${attn_impl}"
   "$CONDA_BIN" run -n "$ENV_NAME" python "$REPO_DIR/train.py" \
     --base_model "$BASE_MODEL" \
     --run_name "$run_name" \
@@ -60,7 +65,7 @@ run_train_eval() {
     --lora_alpha "$LORA_ALPHA" \
     --attention_mode "$mode" \
     --lambda_weight 1e-3 \
-    --attn_implementation auto \
+    --attn_implementation "$attn_impl" \
     --disable_wandb \
     >>"$train_log" 2>&1
   log "Training done: mode=${mode} seed=${seed}"

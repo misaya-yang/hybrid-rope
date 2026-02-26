@@ -398,10 +398,10 @@ class HybridRopeTrainer(BaseTrainer):
             self.log({"oom_skipped_batches": float(self.oom_skip_count)})
             return torch.zeros((), device=self.args.device, requires_grad=True)
 
-    def log(self, logs: Dict[str, float]) -> None:  # type: ignore[override]
+    def log(self, logs: Dict[str, float], *args, **kwargs) -> None:  # type: ignore[override]
         logs = dict(logs)
         logs["attention_penalty"] = float(self.last_attention_penalty)
-        super().log(logs)
+        super().log(logs, *args, **kwargs)
 
 
 def parse_args() -> argparse.Namespace:
@@ -577,6 +577,7 @@ def main() -> None:
         "penalty_query_stride": args.penalty_query_stride,
         "penalty_key_stride": args.penalty_key_stride,
     }
+    trainer_params = inspect.signature(BaseTrainer.__init__).parameters
     if HAS_TRL:
         trainer_kwargs.update(
             {
@@ -587,24 +588,30 @@ def main() -> None:
             }
         )
         # TRL has minor API drift across versions; support both names.
-        trainer_kwargs["processing_class"] = tokenizer
+        if "processing_class" in trainer_params:
+            trainer_kwargs["processing_class"] = tokenizer
+        elif "tokenizer" in trainer_params:
+            trainer_kwargs["tokenizer"] = tokenizer
     else:
         train_tok = tokenize_for_causal_lm(train_ds, tokenizer, args.max_seq_length)
         val_tok = tokenize_for_causal_lm(val_ds, tokenizer, args.max_seq_length)
-        trainer_kwargs.update(
-            {
-                "train_dataset": train_tok,
-                "eval_dataset": val_tok,
-                "tokenizer": tokenizer,
-                "data_collator": DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False),
-            }
-        )
+        trainer_kwargs["train_dataset"] = train_tok
+        trainer_kwargs["eval_dataset"] = val_tok
+        trainer_kwargs["data_collator"] = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
+        if "tokenizer" in trainer_params:
+            trainer_kwargs["tokenizer"] = tokenizer
+        elif "processing_class" in trainer_params:
+            trainer_kwargs["processing_class"] = tokenizer
     if HAS_TRL:
         try:
             trainer = HybridRopeTrainer(**trainer_kwargs)
         except TypeError:
             trainer_kwargs.pop("processing_class", None)
-            trainer_kwargs["tokenizer"] = tokenizer
+            trainer_kwargs.pop("tokenizer", None)
+            if "tokenizer" in trainer_params:
+                trainer_kwargs["tokenizer"] = tokenizer
+            elif "processing_class" in trainer_params:
+                trainer_kwargs["processing_class"] = tokenizer
             trainer = HybridRopeTrainer(**trainer_kwargs)
     else:
         trainer = HybridRopeTrainer(**trainer_kwargs)
