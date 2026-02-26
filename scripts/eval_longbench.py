@@ -431,6 +431,23 @@ def compute_hybrid_inv_freq(
 
 
 def patch_hybrid_rope(model: torch.nn.Module, inv_freq_cpu: torch.Tensor) -> int:
+    def invalidate_rotary_cache(module: torch.nn.Module) -> None:
+        for attr in ("_cos_cached", "_sin_cached", "cos_cached", "sin_cached"):
+            if hasattr(module, attr):
+                try:
+                    delattr(module, attr)
+                except Exception:
+                    try:
+                        setattr(module, attr, None)
+                    except Exception:
+                        pass
+        for attr in ("max_seq_len_cached", "seq_len_cached"):
+            if hasattr(module, attr):
+                try:
+                    setattr(module, attr, 0)
+                except Exception:
+                    pass
+
     inv_freq_cpu = inv_freq_cpu.detach().to("cpu").float().view(-1)
     patched = 0
     for name, module in model.named_modules():
@@ -450,8 +467,7 @@ def patch_hybrid_rope(model: torch.nn.Module, inv_freq_cpu: torch.Tensor) -> int
             module.inv_freq = torch.nn.Parameter(new, requires_grad=False)
         else:
             module.inv_freq = new
-        if hasattr(module, "max_seq_len_cached"):
-            module.max_seq_len_cached = 0
+        invalidate_rotary_cache(module)
         patched += 1
     if patched == 0:
         raise RuntimeError("No rotary modules patched for hybrid/custom variant.")

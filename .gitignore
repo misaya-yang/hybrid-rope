@@ -72,3 +72,9 @@ experiments/**/outputs/
 experiments/**/experiment.log
 experiments/variational_sparse_attn/*training*.log
 experiments/variational_sparse_attn/test_run.log
+
+# Local Python virtual envs
+.venv/
+
+# Local dry-run artifacts
+artifacts/_dryrun_llama8k_evq/

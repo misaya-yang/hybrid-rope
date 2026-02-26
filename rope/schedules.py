@@ -25,6 +25,12 @@ METHOD_ALIASES = {
     "anchored_hybrid": "anchored_hybrid",
     "sigmoid": "sigmoid",
     "anchored_sigmoid": "anchored_sigmoid",
+    "evq_cosh": "evq_cosh",
+    "exact_cosh": "evq_cosh",
+    "cosh": "evq_cosh",
+    "evq_exp": "evq_exp",
+    "exact_exp": "evq_exp",
+    "exp_cdf": "evq_exp",
 }
 
 
@@ -47,6 +53,10 @@ def infer_shape_name(method: str) -> str:
         return "sigmoid"
     if m == "anchored_sigmoid":
         return "anchored_sigmoid"
+    if m == "evq_cosh":
+        return "evq_cosh"
+    if m == "evq_exp":
+        return "evq_exp"
     return m
 
 
@@ -167,6 +177,29 @@ def build_inv_freq(
         scale_factor = 1.0 + (eff_anchor - 1.0) * sig
         return base_inv / scale_factor
 
+    if m == "evq_cosh":
+        n = head_dim // 2
+        tau = 0.5
+        idx = torch.arange(n, dtype=torch.float64)
+        u = idx / float(n)
+        if tau <= 1e-4:
+            phi = u
+        else:
+            sinh_tau = math.sinh(tau)
+            phi = 1.0 - (1.0 / tau) * torch.asinh((1.0 - u) * sinh_tau)
+        return torch.pow(float(base), -phi)
+
+    if m == "evq_exp":
+        n = head_dim // 2
+        beta = 3.0
+        idx = torch.arange(n, dtype=torch.float64)
+        u = idx / float(n)
+        if beta <= 1e-6:
+            phi = u
+        else:
+            phi = (torch.pow(1.0 + beta, u) - 1.0) / beta
+        return torch.pow(float(base), -phi)
+
     raise ValueError(f"Unsupported method: {method}")
 
 
@@ -187,6 +220,18 @@ def default_shape_params(method: str, base: float, max_seq_len: int) -> Dict[str
             "schedule": "sigmoid",
             "slope": 16.05,
             "center_ratio": 0.47,
+            "base": float(base),
+        }
+    if m == "evq_cosh":
+        return {
+            "schedule": "evq_cosh",
+            "tau": 0.5,
+            "base": float(base),
+        }
+    if m == "evq_exp":
+        return {
+            "schedule": "evq_exp",
+            "beta": 3.0,
             "base": float(base),
         }
     if m == "yarn":

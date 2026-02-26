@@ -107,6 +107,40 @@ def geometric_inv_freq(head_dim: int, base: float) -> torch.Tensor:
     return 1.0 / (float(base) ** (2.0 * idx / float(head_dim)))
 
 
+def evq_cosh_inv_freq(head_dim: int, base: float, tau: float) -> torch.Tensor:
+    if head_dim % 2 != 0:
+        raise ValueError(f"head_dim must be even, got {head_dim}")
+    tau = float(tau)
+    if tau < 0:
+        raise ValueError(f"evq_tau must be non-negative, got {tau}")
+    n = head_dim // 2
+    idx = torch.arange(n, dtype=torch.float64)
+    u = idx / float(n)
+    if tau <= 1e-4:
+        # Exact degeneration to geometric grid when tau is tiny.
+        phi = u
+    else:
+        sinh_tau = math.sinh(tau)
+        phi = 1.0 - (1.0 / tau) * torch.asinh((1.0 - u) * float(sinh_tau))
+    return torch.pow(float(base), -phi)
+
+
+def evq_exp_inv_freq(head_dim: int, base: float, beta: float) -> torch.Tensor:
+    if head_dim % 2 != 0:
+        raise ValueError(f"head_dim must be even, got {head_dim}")
+    beta = float(beta)
+    if beta <= 0:
+        raise ValueError(f"evq_beta must be positive, got {beta}")
+    n = head_dim // 2
+    idx = torch.arange(n, dtype=torch.float64)
+    u = idx / float(n)
+    if beta <= 1e-6:
+        phi = u
+    else:
+        phi = (torch.pow(1.0 + beta, u) - 1.0) / beta
+    return torch.pow(float(base), -phi)
+
+
 def build_inv_freq_fast_tuned(
     method: str,
     head_dim: int,
@@ -115,6 +149,8 @@ def build_inv_freq_fast_tuned(
     anchor_factor: float,
     slope_raw: float,
     center_ratio: float,
+    evq_tau: float,
+    evq_beta: float,
 ) -> torch.Tensor:
     m = canonical_method(method)
     base_inv = geometric_inv_freq(head_dim=head_dim, base=base)
@@ -127,6 +163,10 @@ def build_inv_freq_fast_tuned(
 
     if m == "baseline":
         return base_inv
+    if m == "evq_cosh":
+        return evq_cosh_inv_freq(head_dim=head_dim, base=base, tau=evq_tau)
+    if m == "evq_exp":
+        return evq_exp_inv_freq(head_dim=head_dim, base=base, beta=evq_beta)
     if m != "anchored_sigmoid":
         raise ValueError(f"Unsupported method for fast-tuned runner: {method}")
 
@@ -241,6 +281,8 @@ def build_and_inject_inv_freq(
     anchor_factor: float,
     slope_raw: float,
     center_ratio: float,
+    evq_tau: float,
+    evq_beta: float,
 ) -> Dict[str, object]:
     modules = find_rotary_modules_with_inv_freq(model)
     if not modules:
@@ -259,12 +301,16 @@ def build_and_inject_inv_freq(
         anchor_factor=anchor_factor,
         slope_raw=slope_raw,
         center_ratio=center_ratio,
+        evq_tau=evq_tau,
+        evq_beta=evq_beta,
     )
     inject = apply_inv_freq_inplace(model=model, inv_freq=inv)
     schedule_params = {
         "anchor_factor_requested": float(anchor_factor),
         "slope_raw": float(slope_raw),
         "center_ratio": float(center_ratio),
+        "evq_tau": float(evq_tau),
+        "evq_beta": float(evq_beta),
     }
     if method == "anchored_sigmoid":
         scale = max(float(max_seq_len) / 8192.0, 1.0)
@@ -288,7 +334,7 @@ def build_and_inject_inv_freq(
 
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser(description="Train one cross-model LoRA run.")
-    ap.add_argument("--method", type=str, required=True, choices=["baseline", "anchored_sigmoid"])
+    ap.add_argument("--method", type=str, required=True, choices=["baseline", "anchored_sigmoid", "evq_cosh", "evq_exp"])
     ap.add_argument("--base_model_path", type=str, required=True)
     ap.add_argument("--modelscope_repo", type=str, default="")
     ap.add_argument("--allow_modelscope_download", action=argparse.BooleanOptionalAction, default=False)
@@ -319,6 +365,8 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--anchor_factor", type=float, default=4.0)
     ap.add_argument("--slope_raw", type=float, default=20.0)
     ap.add_argument("--center_ratio", type=float, default=0.70)
+    ap.add_argument("--evq_tau", type=float, default=0.5)
+    ap.add_argument("--evq_beta", type=float, default=3.0)
     ap.add_argument("--gradient_checkpointing", action=argparse.BooleanOptionalAction, default=True)
 
     ap.add_argument("--attn_implementation", type=str, default="auto")
@@ -331,7 +379,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     args.method = canonical_method(args.method)
-    if args.method not in {"baseline", "anchored_sigmoid"}:
+    if args.method not in {"baseline", "anchored_sigmoid", "evq_cosh", "evq_exp"}:
         raise ValueError(f"Unsupported method for this runner: {args.method}")
 
     set_seed(args.seed)
@@ -368,6 +416,8 @@ def main() -> None:
         anchor_factor=args.anchor_factor,
         slope_raw=args.slope_raw,
         center_ratio=args.center_ratio,
+        evq_tau=args.evq_tau,
+        evq_beta=args.evq_beta,
     )
     torch.save(rope_info["inv_freq"], artifacts_dir / "custom_inv_freq.pt")
 

@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import random
 import statistics
 import subprocess
@@ -47,6 +48,8 @@ DEFAULT_WIKITEXT = "/root/autodl-tmp/wikitext_data/train.txt"
 DEFAULT_MORNING_REF = (
     "artifacts/reviewer_2026-02-25/h2_qwen_fast400_seed42/downstream_eval_fast400/longbench/anchored_sigmoid.json"
 )
+TRAIN_TRUNCATE_MODE = "head_tail_keep_drop_middle"
+TRAIN_TRUNCATE_HEAD_CAP = 500
 
 
 def now() -> str:
@@ -230,15 +233,41 @@ def build_wikitext_rows(path: Path, max_samples: int, seed: int) -> List[Dict]:
     if not path.exists() or max_samples <= 0:
         return []
     text = path.read_text(encoding="utf-8", errors="ignore")
-    blocks = [b.strip() for b in text.split("\n\n") if len(b.strip()) >= 800]
+    # WikiText paragraphs are often short; use a lower threshold and a fallback chunker.
+    blocks = [b.strip() for b in text.split("\n\n") if len(b.strip()) >= 300]
+    if len(blocks) < max_samples:
+        lines = [ln.strip() for ln in text.splitlines() if ln.strip() and not ln.strip().startswith("=")]
+        cur: List[str] = []
+        cur_chars = 0
+        stitched: List[str] = []
+        for ln in lines:
+            cur.append(ln)
+            cur_chars += len(ln) + 1
+            if cur_chars >= 450:
+                stitched.append(" ".join(cur))
+                cur = []
+                cur_chars = 0
+        if cur_chars >= 300:
+            stitched.append(" ".join(cur))
+        blocks.extend(stitched)
     rng = random.Random(seed)
     rng.shuffle(blocks)
     rows: List[Dict] = []
-    for block in blocks[:max_samples]:
-        sents = split_sentences(block)
-        if len(sents) < 8:
+    seen: set[str] = set()
+    for block in blocks:
+        if len(rows) >= max_samples:
+            break
+        block = " ".join(block.split())
+        if len(block) < 400:
             continue
-        summary = " ".join(sents[:2]).strip()
+        if block in seen:
+            continue
+        seen.add(block)
+        sents = split_sentences(block)
+        if len(sents) >= 2:
+            summary = " ".join(sents[:2]).strip()
+        else:
+            summary = (block[:200].strip() + "...") if len(block) > 220 else block.strip()
         if not summary:
             continue
         rows.append(
@@ -256,30 +285,36 @@ def build_synthetic_long_qa_rows(n_samples: int, seed: int) -> List[Dict]:
     rows: List[Dict] = []
     for i in range(max(0, int(n_samples))):
         key = f"K{seed % 1000:03d}-{i:05d}"
-        filler = " ".join([f"tok{rng.randint(1000,9999)}" for _ in range(320)])
-        q_type = i % 3
-        if q_type == 0:
-            instruction = "Read the long context and answer with only the key value."
-            question = f"What is the verification key?"
-            answer = key
-        elif q_type == 1:
-            instruction = "Read the long context and answer with only the entity name."
-            question = "Which project codename appears in the context?"
-            answer = f"Project-{key}"
-        else:
-            instruction = "Read the long context and answer with only the integer number."
-            question = "What is the reference number in the context?"
-            answer = str(700000 + i)
+        project = f"Project-{key}"
+        ref_num = str(700000 + i)
+        owner = f"Owner-{rng.randint(10, 99)}"
+        shard = f"Shard-{rng.randint(1, 8)}"
+        ticket = f"TKT-{rng.randint(100000, 999999)}"
+        checksum = f"C{rng.randint(1000000, 9999999)}"
+        filler_left = " ".join([f"tok{rng.randint(1000,9999)}" for _ in range(220)])
+        filler_right = " ".join([f"tok{rng.randint(1000,9999)}" for _ in range(220)])
+        answer = (
+            f"The complete verification information is as follows. "
+            f"The verification key is {key}. The project codename is {project}. "
+            f"The reference number is {ref_num}. The owner is {owner} and the serving shard is {shard}. "
+            f"The confirmation ticket is {ticket} with checksum {checksum}. "
+            f"This answer is obtained by combining the ledger entry, project registry, and audit trail statements in the context."
+        )
         context = (
-            f"{filler} "
-            f"The record stores verification key [{key}] and project codename [Project-{key}] "
-            f"with reference number [{700000 + i}]. "
-            f"{filler}"
+            f"{filler_left} "
+            f"Ledger entry: key [{key}] maps to project [{project}] and reference number [{ref_num}]. "
+            f"Registry entry: project [{project}] belongs to owner [{owner}] on shard [{shard}]. "
+            f"Audit entry: owner [{owner}] approved ticket [{ticket}] with checksum [{checksum}] for key [{key}]. "
+            f"{filler_right}"
         )
         rows.append(
             {
-                "instruction": instruction,
-                "input": f"Context:\n{context}\n\nQuestion:\n{question}",
+                "instruction": "Read the long context carefully and answer with a complete sentence.",
+                "input": (
+                    f"Context:\n{context}\n\n"
+                    "Question:\nWhat is the complete verification information for this record? "
+                    "Include key, project codename, reference number, owner, shard, ticket, and checksum."
+                ),
                 "output": answer,
             }
         )
@@ -371,9 +406,11 @@ def build_longinst_mix(
     if not long_rows:
         raise RuntimeError("No long-instruction rows found (LongAlpaca/LongQA missing).")
 
-    wiki_rows = build_wikitext_rows(wikitext_path, max_samples=max_wiki_samples, seed=seed + 19)
+    wiki_cap_requested = max(0, int(max_wiki_samples))
+    wiki_cap_effective = wiki_cap_requested
+    wiki_rows = build_wikitext_rows(wikitext_path, max_samples=wiki_cap_effective, seed=seed + 19)
 
-    total_target = len(long_rows)
+    total_target_rows = len(long_rows)
     r_long = max(0.0, float(mix_long_ratio))
     r_wiki = max(0.0, float(mix_wiki_ratio))
     r_syn = max(0.0, float(synthetic_ratio))
@@ -381,14 +418,69 @@ def build_longinst_mix(
     if r_sum <= 0.0:
         raise RuntimeError("Invalid mix ratios: mix_long_ratio + mix_wiki_ratio + synthetic_ratio must be > 0.")
 
-    desired_long = int(round(total_target * (r_long / r_sum)))
-    desired_wiki = int(round(total_target * (r_wiki / r_sum)))
-    desired_syn = max(0, total_target - desired_long - desired_wiki)
+    avg_token_defaults = {"long": 2000.0, "wiki": 400.0, "synthetic": 3000.0}
+
+    def estimate_avg_tokens(rows: List[Dict], source: str, probe_n: int, seed_offset: int) -> float:
+        if not rows:
+            return float(avg_token_defaults[source])
+        idxs = list(range(len(rows)))
+        probe_rng = random.Random(seed + seed_offset)
+        probe_rng.shuffle(idxs)
+        lens: List[int] = []
+        for idx in idxs[: max(1, min(probe_n, len(idxs)))]:
+            msgs = normalize_messages(rows[idx])
+            if not msgs:
+                continue
+            sample = render_sample(tokenizer, msgs, source=source)
+            if sample is None:
+                continue
+            tok_n = len(tokenizer(sample.text, add_special_tokens=False, truncation=False)["input_ids"])
+            if tok_n > 0:
+                lens.append(int(tok_n))
+        if lens:
+            return float(statistics.mean(lens))
+        return float(avg_token_defaults[source])
+
+    synthetic_probe_rows = build_synthetic_long_qa_rows(64, seed=seed + 37)
+    avg_long_tokens = estimate_avg_tokens(long_rows, "long", probe_n=64, seed_offset=11)
+    avg_wiki_tokens = estimate_avg_tokens(wiki_rows, "wiki", probe_n=64, seed_offset=19)
+    avg_synthetic_tokens = estimate_avg_tokens(synthetic_probe_rows, "synthetic", probe_n=64, seed_offset=37)
+
+    total_target_tokens = max(1, int(round(float(total_target_rows) * float(avg_long_tokens))))
+    target_long_tokens = float(total_target_tokens) * float(r_long / r_sum)
+    target_wiki_tokens = float(total_target_tokens) * float(r_wiki / r_sum)
+    target_syn_tokens = float(total_target_tokens) * float(r_syn / r_sum)
+
+    desired_long = int(round(target_long_tokens / max(1.0, float(avg_long_tokens))))
+    desired_wiki = int(round(target_wiki_tokens / max(1.0, float(avg_wiki_tokens))))
+    desired_syn = int(round(target_syn_tokens / max(1.0, float(avg_synthetic_tokens))))
+    if r_long > 0 and desired_long <= 0:
+        desired_long = 1
+    if r_wiki > 0 and desired_wiki <= 0 and wiki_rows:
+        desired_wiki = 1
+    if r_syn > 0 and desired_syn <= 0:
+        desired_syn = 1
+
+    if desired_wiki > wiki_cap_effective:
+        wiki_cap_effective = max(int(desired_wiki * 2), wiki_cap_effective)
+        wiki_rows = build_wikitext_rows(wikitext_path, max_samples=wiki_cap_effective, seed=seed + 19)
+        avg_wiki_tokens = estimate_avg_tokens(wiki_rows, "wiki", probe_n=64, seed_offset=19)
+        desired_wiki = int(round(target_wiki_tokens / max(1.0, float(avg_wiki_tokens))))
+        if r_wiki > 0 and desired_wiki <= 0 and wiki_rows:
+            desired_wiki = 1
 
     wiki_target = min(len(wiki_rows), max(0, desired_wiki))
     synthetic_target = max(0, desired_syn)
-    # Backfill ratio gaps with long rows when external pools are insufficient.
-    long_target = min(len(long_rows), max(0, total_target - wiki_target - synthetic_target))
+    long_target = min(len(long_rows), max(0, desired_long))
+    planned_tokens = (
+        float(long_target) * float(avg_long_tokens)
+        + float(wiki_target) * float(avg_wiki_tokens)
+        + float(synthetic_target) * float(avg_synthetic_tokens)
+    )
+    if planned_tokens < float(total_target_tokens) and long_target < len(long_rows):
+        deficit_tokens = float(total_target_tokens) - planned_tokens
+        extra_long = int(math.ceil(deficit_tokens / max(1.0, float(avg_long_tokens))))
+        long_target = min(len(long_rows), long_target + max(0, extra_long))
 
     rng.shuffle(long_rows)
     rng.shuffle(wiki_rows)
@@ -403,6 +495,7 @@ def build_longinst_mix(
 
     rendered: List[RenderedSample] = []
     continuation_like = 0
+    source_token_counts = {"long": 0, "synthetic": 0, "wiki": 0}
     for source, row in selected:
         msgs = normalize_messages(row)
         if not msgs:
@@ -410,6 +503,8 @@ def build_longinst_mix(
         sample = render_sample(tokenizer, msgs, source=source)
         if sample is not None:
             rendered.append(sample)
+            tok_n = len(tokenizer(sample.text, add_special_tokens=False, truncation=False)["input_ids"])
+            source_token_counts[source] += int(max(1, tok_n))
             if looks_like_continuation_prompt(sample.messages):
                 continuation_like += 1
 
@@ -455,9 +550,34 @@ def build_longinst_mix(
         "synthetic": int(sum(1 for s in rendered if s.source == "synthetic")),
         "wiki": int(sum(1 for s in rendered if s.source == "wiki")),
     }
+    total_selected_tokens = int(sum(int(v) for v in source_token_counts.values()))
+    actual_wiki = float(selected_counts["wiki"]) / float(max(1, len(rendered)))
+    actual_synthetic = float(selected_counts["synthetic"]) / float(max(1, len(rendered)))
+    actual_wiki_token = float(source_token_counts["wiki"]) / float(max(1, total_selected_tokens))
+    actual_synthetic_token = float(source_token_counts["synthetic"]) / float(max(1, total_selected_tokens))
+    print(
+        "[DATA CHECK] "
+        f"actual_wiki_ratio={actual_wiki:.4f}, actual_synthetic_ratio={actual_synthetic:.4f}, "
+        f"actual_wiki_token_ratio={actual_wiki_token:.4f}, actual_synthetic_token_ratio={actual_synthetic_token:.4f}",
+        flush=True,
+    )
+    if actual_wiki_token < 0.05:
+        raise RuntimeError(f"WikiText token ratio too low: {actual_wiki_token:.4f} (expected >= 0.05).")
+    if actual_synthetic_token < 0.10:
+        print("[WARNING] synthetic ratio low; continuing with warning.", flush=True)
+
     stats = {
         "long_rows_raw": len(long_rows),
         "wiki_rows_raw": len(wiki_rows),
+        "max_wiki_samples_requested": int(wiki_cap_requested),
+        "max_wiki_samples_effective": int(wiki_cap_effective),
+        "avg_long_tokens_probe": float(avg_long_tokens),
+        "avg_wiki_tokens_probe": float(avg_wiki_tokens),
+        "avg_synthetic_tokens_probe": float(avg_synthetic_tokens),
+        "target_total_tokens": int(total_target_tokens),
+        "target_long_tokens": float(target_long_tokens),
+        "target_wiki_tokens": float(target_wiki_tokens),
+        "target_synthetic_tokens": float(target_syn_tokens),
         "target_long_ratio": float(r_long / r_sum),
         "target_wiki_ratio": float(r_wiki / r_sum),
         "target_synthetic_ratio": float(r_syn / r_sum),
@@ -467,15 +587,110 @@ def build_longinst_mix(
         "selected_long": selected_counts["long"],
         "selected_synthetic": selected_counts["synthetic"],
         "selected_wiki": selected_counts["wiki"],
+        "selected_long_tokens": int(source_token_counts["long"]),
+        "selected_wiki_tokens": int(source_token_counts["wiki"]),
+        "selected_synthetic_tokens": int(source_token_counts["synthetic"]),
         "rendered_total": len(rendered),
         "actual_long_ratio": float(selected_counts["long"]) / float(max(1, len(rendered))),
-        "actual_wiki_ratio": float(selected_counts["wiki"]) / float(max(1, len(rendered))),
-        "actual_synthetic_ratio": float(selected_counts["synthetic"]) / float(max(1, len(rendered))),
+        "actual_wiki_ratio": actual_wiki,
+        "actual_synthetic_ratio": actual_synthetic,
+        "actual_wiki_token_ratio": actual_wiki_token,
+        "actual_synthetic_token_ratio": actual_synthetic_token,
+        "actual_long_token_ratio": float(source_token_counts["long"]) / float(max(1, total_selected_tokens)),
+        "actual_wiki_ratio_final": actual_wiki,
+        "actual_synthetic_ratio_final": actual_synthetic,
         "continuation_like_ratio": continuation_ratio,
         "longinst_mix_jsonl": out_jsonl.as_posix(),
         "preview_20": preview_txt.as_posix(),
     }
     return rendered, stats
+
+
+def write_rendered_preview(samples: List[RenderedSample], preview_txt: Path, limit: int = 20) -> None:
+    preview_txt.parent.mkdir(parents=True, exist_ok=True)
+    with preview_txt.open("w", encoding="utf-8") as f:
+        for i, s in enumerate(samples[: max(1, int(limit))]):
+            user_text = ""
+            for m in s.messages:
+                if m.get("role") == "user":
+                    user_text = str(m.get("content", ""))
+                    break
+            ans = str(s.messages[-1].get("content", "")) if s.messages else ""
+            f.write(f"[#{i}] source={s.source}\n")
+            f.write("USER:\n" + user_text[:1200] + "\n")
+            f.write("ASSISTANT:\n" + ans[:600] + "\n")
+            f.write("-" * 80 + "\n")
+
+
+def load_prebuilt_mixed_split(
+    tokenizer: AutoTokenizer,
+    mixed_dataset_dir: Path,
+    split: str,
+    preview_txt: Path,
+) -> Tuple[List[RenderedSample], Dict[str, object], Path]:
+    split = str(split).strip().lower() or "train"
+    candidates = [mixed_dataset_dir / f"{split}.jsonl"]
+    if split == "all":
+        candidates.insert(0, mixed_dataset_dir / "mixed_prior_finetune.jsonl")
+    candidates.extend(
+        [
+            mixed_dataset_dir / "mixed_prior_finetune.jsonl",
+            mixed_dataset_dir / "longinst_mix.jsonl",
+        ]
+    )
+    source_jsonl = next((p for p in candidates if p.exists()), None)
+    if source_jsonl is None:
+        raise RuntimeError(
+            f"mixed_dataset_dir provided but no dataset split found under {mixed_dataset_dir.as_posix()}. "
+            f"Tried: {[p.name for p in candidates]}"
+        )
+
+    rendered: List[RenderedSample] = []
+    source_counts: Dict[str, int] = {}
+    with source_jsonl.open("r", encoding="utf-8", errors="ignore") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                row = json.loads(line)
+            except Exception:
+                continue
+            if not isinstance(row, dict):
+                continue
+            msgs = row.get("messages")
+            if not isinstance(msgs, list):
+                msgs = normalize_messages(row)
+            if not msgs:
+                continue
+            source = str(
+                row.get("source_prior", row.get("source", row.get("source_name", "mixed_dataset")))
+            ).strip()
+            sample = render_sample(tokenizer, msgs, source=source)
+            if sample is None:
+                continue
+            rendered.append(sample)
+            source_counts[source] = source_counts.get(source, 0) + 1
+
+    if len(rendered) < 500:
+        raise RuntimeError(f"Too few usable samples in prebuilt mixed dataset: {len(rendered)}")
+
+    write_rendered_preview(rendered, preview_txt=preview_txt, limit=20)
+
+    manifest_path = mixed_dataset_dir / "mix_manifest.json"
+    prebuilt_manifest = load_json(manifest_path) if manifest_path.exists() else {}
+
+    stats = {
+        "using_prebuilt_mixed_dataset": True,
+        "mixed_dataset_dir": mixed_dataset_dir.as_posix(),
+        "mixed_dataset_split": split,
+        "mixed_source_jsonl_path": source_jsonl.as_posix(),
+        "rendered_total": len(rendered),
+        "selected_by_source": source_counts,
+        "prebuilt_manifest_json": manifest_path.as_posix() if manifest_path.exists() else "",
+        "prebuilt_manifest_targets": prebuilt_manifest.get("targets", {}),
+    }
+    return rendered, stats, source_jsonl
 
 
 def tokenize_response_only(
@@ -492,20 +707,83 @@ def tokenize_response_only(
     seg_preview: List[Dict[str, object]] = []
     dropped_no_assistant = 0
     dropped_low_supervised = 0
+    head_tail_truncations = 0
+    boundary_dropped_middle = 0
+    boundary_offset_count = 0
+    boundary_prefix_count = 0
+    mask_check_printed = 0
 
     for i, s in enumerate(samples):
-        full_ids = tokenizer(s.text, add_special_tokens=False, truncation=False)["input_ids"]
+        full_offsets = None
+        try:
+            full_enc = tokenizer(
+                s.text,
+                add_special_tokens=False,
+                truncation=False,
+                return_offsets_mapping=True,
+            )
+            full_ids = list(full_enc["input_ids"])
+            raw_offsets = full_enc.get("offset_mapping")
+            if (
+                isinstance(raw_offsets, list)
+                and len(raw_offsets) == len(full_ids)
+                and len(raw_offsets) > 0
+                and isinstance(raw_offsets[0], (list, tuple))
+                and len(raw_offsets[0]) == 2
+            ):
+                full_offsets = raw_offsets
+        except Exception:
+            full_ids = tokenizer(s.text, add_special_tokens=False, truncation=False)["input_ids"]
+
         pref_ids = tokenizer(s.prefix_text, add_special_tokens=False, truncation=False)["input_ids"]
         if not full_ids or not pref_ids:
             dropped_no_assistant += 1
             continue
-        truncated = list(full_ids[-max_seq_len:])
-        dropped = max(0, len(full_ids) - len(truncated))
-        assistant_start = int(len(pref_ids) - dropped)
-        assistant_start = max(0, assistant_start)
+
+        assistant_start_full = int(len(pref_ids))
+        boundary_mode = "prefix_len"
+        if full_offsets is not None:
+            prefix_char_len = len(s.prefix_text)
+            assistant_start_full = int(
+                next((idx for idx, pair in enumerate(full_offsets) if int(pair[0]) >= prefix_char_len), len(full_ids))
+            )
+            boundary_mode = "offset_mapping"
+
+        if len(full_ids) > max_seq_len:
+            head_len = min(int(TRAIN_TRUNCATE_HEAD_CAP), max(0, int(max_seq_len) - 1))
+            tail_len = max(0, int(max_seq_len) - head_len)
+            middle_start = int(head_len)
+            middle_end = int(len(full_ids) - tail_len)
+            if tail_len > 0:
+                truncated = list(full_ids[:head_len] + full_ids[-tail_len:])
+            else:
+                truncated = list(full_ids[:head_len])
+            if assistant_start_full <= middle_start:
+                assistant_start = int(assistant_start_full)
+            elif assistant_start_full >= middle_end:
+                assistant_start = int(head_len + (assistant_start_full - middle_end))
+            else:
+                # Assistant boundary is lost in dropped middle chunk; reject this sample later.
+                assistant_start = int(len(truncated))
+                boundary_dropped_middle += 1
+            head_tail_truncations += 1
+        else:
+            truncated = list(full_ids)
+            assistant_start = int(assistant_start_full)
+
+        assistant_start = max(0, int(assistant_start))
+        if boundary_mode == "offset_mapping":
+            boundary_offset_count += 1
+        else:
+            boundary_prefix_count += 1
+
+        if assistant_start >= len(truncated):
+            # Assistant part is out of window or boundary parse failed; drop this sample.
+            dropped_no_assistant += 1
+            continue
 
         labels = list(truncated)
-        for j in range(min(assistant_start, len(labels))):
+        for j in range(max(0, min(assistant_start, len(labels)))):
             labels[j] = -100
         supervised = sum(1 for x in labels if int(x) != -100)
         if supervised < int(min_supervised_tokens):
@@ -518,6 +796,18 @@ def tokenize_response_only(
         total_tokens_list.append(len(truncated))
         assistant_tokens_list.append(supervised)
 
+        if mask_check_printed < 2:
+            supervised_ids = [int(tok) for tok, lbl in zip(truncated, labels) if int(lbl) != -100]
+            decoded = tokenizer.decode(supervised_ids, skip_special_tokens=False) if supervised_ids else ""
+            decoded = decoded.replace("\n", "\\n")
+            print(
+                f"[MASK CHECK] sample={i} source={s.source} boundary={boundary_mode} "
+                f"assistant_start={assistant_start} supervised_tokens={len(supervised_ids)}",
+                flush=True,
+            )
+            print(f"[MASK CHECK] decoded={decoded[:200]}", flush=True)
+            mask_check_printed += 1
+
         if len(seg_preview) < 32:
             seg_preview.append(
                 {
@@ -526,6 +816,7 @@ def tokenize_response_only(
                     "total_tokens": len(truncated),
                     "assistant_tokens": supervised,
                     "assistant_start": assistant_start,
+                    "boundary_mode": boundary_mode,
                     "user_preview": next((m["content"] for m in s.messages if m["role"] == "user"), "")[:300],
                     "assistant_preview": str(s.messages[-1].get("content", ""))[:200],
                 }
@@ -546,6 +837,10 @@ def tokenize_response_only(
         "num_samples_after_tokenize": len(input_ids_all),
         "num_dropped_no_assistant": int(dropped_no_assistant),
         "num_dropped_low_supervised": int(dropped_low_supervised),
+        "num_head_tail_truncations": int(head_tail_truncations),
+        "num_boundary_in_dropped_middle": int(boundary_dropped_middle),
+        "num_boundary_offset_mapping": int(boundary_offset_count),
+        "num_boundary_prefix_len": int(boundary_prefix_count),
         "total_tokens": quantiles(total_tokens_list),
         "assistant_tokens": quantiles(assistant_tokens_list),
         "assistant_tokens_lt64_ratio": float(sum(1 for x in assistant_tokens_list if x < 64)) / float(max(1, len(assistant_tokens_list))),
@@ -579,24 +874,105 @@ def build_anchored_inv_freq(head_dim: int, base: float, anchor_factor: float, sl
     return base_inv / (1.0 + (float(anchor_factor) - 1.0) * sig)
 
 
-def inject_inv_freq_copy(model: torch.nn.Module, rope_base: float, anchor_factor: float, slope_raw: float, center_ratio: float) -> Dict[str, object]:
+def build_evq_cosh_inv_freq(head_dim: int, base: float, tau: float) -> torch.Tensor:
+    if head_dim % 2 != 0:
+        raise ValueError(f"head_dim must be even, got {head_dim}")
+    tau = float(tau)
+    if tau < 0:
+        raise ValueError(f"evq_tau must be non-negative, got {tau}")
+    n = head_dim // 2
+    idx = torch.arange(n, dtype=torch.float32)
+    u = idx / float(n)
+    if tau < 0.01:
+        # tau close to 0 should behave as strict geometric RoPE.
+        phi = u
+    else:
+        phi = 1.0 - (1.0 / tau) * torch.asinh((1.0 - u) * torch.sinh(torch.tensor(tau, dtype=torch.float32)))
+    return torch.pow(torch.tensor(float(base), dtype=torch.float32), -phi)
+
+
+def build_evq_exp_inv_freq(head_dim: int, base: float, beta: float) -> torch.Tensor:
+    if head_dim % 2 != 0:
+        raise ValueError(f"head_dim must be even, got {head_dim}")
+    beta = float(beta)
+    if beta <= 0:
+        raise ValueError(f"evq_beta must be positive, got {beta}")
+    n = head_dim // 2
+    idx = torch.arange(n, dtype=torch.float32)
+    u = idx / float(n)
+    if beta <= 1e-6:
+        phi = u
+    else:
+        phi = (torch.pow(torch.tensor(1.0 + beta, dtype=torch.float32), u) - 1.0) / beta
+    return torch.pow(torch.tensor(float(base), dtype=torch.float32), -phi)
+
+
+def invalidate_rotary_cache(module: torch.nn.Module) -> None:
+    for attr in ("_cos_cached", "_sin_cached", "cos_cached", "sin_cached"):
+        if hasattr(module, attr):
+            try:
+                delattr(module, attr)
+            except Exception:
+                try:
+                    setattr(module, attr, None)
+                except Exception:
+                    pass
+    for attr in ("max_seq_len_cached", "seq_len_cached"):
+        if hasattr(module, attr):
+            try:
+                setattr(module, attr, 0)
+            except Exception:
+                pass
+
+
+def inject_inv_freq_copy(
+    model: torch.nn.Module,
+    rope_base: float,
+    rope_schedule: str,
+    anchor_factor: float,
+    slope_raw: float,
+    center_ratio: float,
+    evq_tau: float,
+    evq_beta: float,
+) -> Dict[str, object]:
     modules = find_rotary_modules_with_inv_freq(model)
     if not modules:
         raise RuntimeError("No rotary modules with inv_freq found for inv_freq.copy_().")
     ref = modules[0][1].inv_freq
     head_dim = int(ref.numel()) * 2
-    inv = build_anchored_inv_freq(
-        head_dim=head_dim,
-        base=float(rope_base),
-        anchor_factor=float(anchor_factor),
-        slope_raw=float(slope_raw),
-        center_ratio=float(center_ratio),
-    ).to(dtype=ref.dtype)
+    schedule = str(rope_schedule).strip().lower()
+    if schedule == "anchored_sigmoid":
+        inv = build_anchored_inv_freq(
+            head_dim=head_dim,
+            base=float(rope_base),
+            anchor_factor=float(anchor_factor),
+            slope_raw=float(slope_raw),
+            center_ratio=float(center_ratio),
+        )
+    elif schedule == "evq_cosh":
+        inv = build_evq_cosh_inv_freq(
+            head_dim=head_dim,
+            base=float(rope_base),
+            tau=float(evq_tau),
+        )
+    elif schedule == "evq_exp":
+        inv = build_evq_exp_inv_freq(
+            head_dim=head_dim,
+            base=float(rope_base),
+            beta=float(evq_beta),
+        )
+    else:
+        raise ValueError(f"Unsupported rope_schedule: {rope_schedule}")
+
+    inv = inv.to(dtype=ref.dtype)
     with torch.no_grad():
         for _, module in modules:
             module.inv_freq.copy_(inv.to(device=module.inv_freq.device, dtype=module.inv_freq.dtype))
+        for _, module in modules:
+            invalidate_rotary_cache(module)
     inv_sha = hashlib.sha256(inv.detach().cpu().numpy().tobytes()).hexdigest()
     return {
+        "rope_schedule": schedule,
         "rotary_module_count": len(modules),
         "inv_freq_numel": int(inv.numel()),
         "inv_sha256": inv_sha,
@@ -651,16 +1027,21 @@ def write_frozen_protocol(
         f"- lora_alpha: `{args.lora_alpha}`",
         f"- lora_target_modules: `{args.lora_target_modules}`",
         f"- response_only_loss: `true`",
-        f"- truncation_side: `left`",
+        f"- tokenizer_truncation_side: `{str(tokenizer.truncation_side)}`",
+        f"- training_truncate_mode: `{TRAIN_TRUNCATE_MODE}`",
+        f"- training_window_policy: `if len>max_seq_len keep first min({TRAIN_TRUNCATE_HEAD_CAP}, max_seq_len-1) tokens and last remainder; drop middle`",
         f"- packing_strategy: `no-packing (sample-level)`",
         "",
         "## RoPE injection lock",
         "- injection_path: `inv_freq.copy_()`",
         "- no_hf_rope_scaling: `true`",
+        f"- rope_schedule: `{args.rope_schedule}`",
         f"- rope_base: `{args.rope_base}` (0 means infer from model config)",
         f"- anchor_factor: `{args.anchor_factor}`",
         f"- slope_raw: `{args.slope_raw}`",
         f"- center_ratio: `{args.center_ratio}`",
+        f"- evq_tau: `{args.evq_tau}`",
+        f"- evq_beta: `{args.evq_beta}`",
         "",
         "## Eval decode lock",
         "- prompt_source: `official`",
@@ -1070,13 +1451,16 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--longalpaca_path", type=str, default=DEFAULT_LONGALPACA)
     ap.add_argument("--longqa_path", type=str, default=DEFAULT_LONGQA)
     ap.add_argument("--wikitext_train_path", type=str, default=DEFAULT_WIKITEXT)
+    ap.add_argument("--mixed_dataset_dir", type=str, default="")
+    ap.add_argument("--mixed_dataset_split", type=str, default="train")
     ap.add_argument("--max_long_records", type=int, default=12000)
-    ap.add_argument("--max_wiki_samples", type=int, default=5000)
+    ap.add_argument("--max_wiki_samples", type=int, default=12000)
     ap.add_argument("--mix_long_ratio", type=float, default=0.7)
     ap.add_argument("--mix_wiki_ratio", type=float, default=0.1)
     ap.add_argument("--synthetic_ratio", type=float, default=0.20)
     ap.add_argument("--allow_continuation_dominant_corpus", action=argparse.BooleanOptionalAction, default=False)
-    ap.add_argument("--min_supervised_tokens", type=int, default=16)
+    ap.add_argument("--min_supervised_tokens", type=int, default=32)
+    ap.add_argument("--debug_mix", action=argparse.BooleanOptionalAction, default=False)
 
     ap.add_argument("--max_seq_len", type=int, default=8192)
     ap.add_argument("--max_steps", type=int, default=800)
@@ -1097,9 +1481,12 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--lora_target_modules", type=str, default="q_proj,k_proj,v_proj,o_proj")
 
     ap.add_argument("--rope_base", type=float, default=0.0)
+    ap.add_argument("--rope_schedule", type=str, default="evq_cosh", choices=["anchored_sigmoid", "evq_cosh", "evq_exp"])
     ap.add_argument("--anchor_factor", type=float, default=4.0)
     ap.add_argument("--slope_raw", type=float, default=20.0)
     ap.add_argument("--center_ratio", type=float, default=0.70)
+    ap.add_argument("--evq_tau", type=float, default=0.5)
+    ap.add_argument("--evq_beta", type=float, default=3.0)
 
     ap.add_argument("--morning_reference_json", type=str, default=DEFAULT_MORNING_REF)
     ap.add_argument("--morning_compare_task", type=str, default="qasper")
@@ -1117,6 +1504,15 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    print(f"[CONFIG] rope_schedule={args.rope_schedule}, evq_tau={args.evq_tau}", flush=True)
+    if str(args.rope_schedule).strip().lower() == "anchored_sigmoid":
+        print(
+            "[WARNING] Using anchored_sigmoid schedule. "
+            "For EVQ runs use --rope_schedule evq_cosh with explicit --evq_tau.",
+            flush=True,
+        )
+    if str(args.rope_schedule).strip().lower() == "evq_cosh" and float(args.evq_tau) == 0.0:
+        print("[INFO] tau=0.0 detected -> running as pure geometric RoPE", flush=True)
     random.seed(args.seed)
     torch.manual_seed(args.seed)
     if torch.cuda.is_available():
@@ -1146,6 +1542,7 @@ def main() -> None:
     tokenizer = AutoTokenizer.from_pretrained(args.base_model_path, trust_remote_code=True, local_files_only=True)
     tokenizer.truncation_side = "left"
     if tokenizer.pad_token_id is None and tokenizer.eos_token_id is not None:
+        tokenizer.pad_token_id = tokenizer.eos_token_id
         tokenizer.pad_token = tokenizer.eos_token
 
     known_path = Path(args.known_good_run_config)
@@ -1163,22 +1560,41 @@ def main() -> None:
     if str(args.longqa_path).strip():
         long_paths.append(Path(args.longqa_path))
 
-    mix_jsonl = data_dir / "longinst_mix.jsonl"
     preview_txt = data_dir / "preview_20.txt"
-    rendered, mix_stats = build_longinst_mix(
-        tokenizer=tokenizer,
-        long_paths=long_paths,
-        wikitext_path=Path(args.wikitext_train_path),
-        max_long_records=int(args.max_long_records),
-        max_wiki_samples=int(args.max_wiki_samples),
-        mix_long_ratio=float(args.mix_long_ratio),
-        mix_wiki_ratio=float(args.mix_wiki_ratio),
-        synthetic_ratio=float(args.synthetic_ratio),
-        allow_continuation_dominant_corpus=bool(args.allow_continuation_dominant_corpus),
-        seed=int(args.seed),
-        out_jsonl=mix_jsonl,
-        preview_txt=preview_txt,
-    )
+    mixed_dataset_dir = Path(str(args.mixed_dataset_dir)).expanduser() if str(args.mixed_dataset_dir).strip() else None
+    if mixed_dataset_dir is not None:
+        rendered, mix_stats, mix_jsonl = load_prebuilt_mixed_split(
+            tokenizer=tokenizer,
+            mixed_dataset_dir=mixed_dataset_dir,
+            split=str(args.mixed_dataset_split),
+            preview_txt=preview_txt,
+        )
+    else:
+        mix_jsonl = data_dir / "longinst_mix.jsonl"
+        rendered, mix_stats = build_longinst_mix(
+            tokenizer=tokenizer,
+            long_paths=long_paths,
+            wikitext_path=Path(args.wikitext_train_path),
+            max_long_records=int(args.max_long_records),
+            max_wiki_samples=int(args.max_wiki_samples),
+            mix_long_ratio=float(args.mix_long_ratio),
+            mix_wiki_ratio=float(args.mix_wiki_ratio),
+            synthetic_ratio=float(args.synthetic_ratio),
+            allow_continuation_dominant_corpus=bool(args.allow_continuation_dominant_corpus),
+            seed=int(args.seed),
+            out_jsonl=mix_jsonl,
+            preview_txt=preview_txt,
+        )
+    if bool(args.debug_mix):
+        print("[DEBUG MIX] First 5 rendered samples:", flush=True)
+        for idx, sample in enumerate(rendered[:5]):
+            user_preview = next((m["content"] for m in sample.messages if m.get("role") == "user"), "")
+            assistant_preview = str(sample.messages[-1].get("content", ""))
+            print(
+                f"[DEBUG MIX][{idx}] source={sample.source} "
+                f"user={user_preview[:180]!r} assistant={assistant_preview[:180]!r}",
+                flush=True,
+            )
 
     ds, token_stats, seg_preview = tokenize_response_only(
         tokenizer=tokenizer,
@@ -1204,11 +1620,14 @@ def main() -> None:
             "longalpaca_path": args.longalpaca_path,
             "longqa_path": args.longqa_path,
             "wikitext_train_path": args.wikitext_train_path,
+            "mixed_dataset_dir": args.mixed_dataset_dir,
+            "mixed_dataset_split": args.mixed_dataset_split,
         },
         "mix": {
             "mix_long_ratio": float(args.mix_long_ratio),
             "mix_wiki_ratio": float(args.mix_wiki_ratio),
             "synthetic_ratio": float(args.synthetic_ratio),
+            "using_prebuilt_mixed_dataset": bool(str(args.mixed_dataset_dir).strip()),
         },
         "stats": stats,
         "mix_jsonl": mix_jsonl.as_posix(),
@@ -1251,10 +1670,16 @@ def main() -> None:
         rope_info = inject_inv_freq_copy(
             model=model,
             rope_base=rope_base,
+            rope_schedule=str(args.rope_schedule),
             anchor_factor=float(args.anchor_factor),
             slope_raw=float(args.slope_raw),
             center_ratio=float(args.center_ratio),
+            evq_tau=float(args.evq_tau),
+            evq_beta=float(args.evq_beta),
         )
+        inv_head = rope_info["inv_freq_tensor"][:8].detach().cpu().tolist()
+        inv_head_str = ", ".join(f"{float(v):.6e}" for v in inv_head)
+        print(f"[ROPE] inv_freq[0:8]=[{inv_head_str}]", flush=True)
 
         artifacts_dir = train_dir / "artifacts"
         artifacts_dir.mkdir(parents=True, exist_ok=True)
@@ -1335,10 +1760,13 @@ def main() -> None:
                 "target_modules": parse_csv(args.lora_target_modules),
             },
             "rope": {
+                "rope_schedule": str(rope_info.get("rope_schedule", args.rope_schedule)),
                 "rope_base": float(rope_base),
                 "anchor_factor": float(args.anchor_factor),
                 "slope_raw": float(args.slope_raw),
                 "center_ratio": float(args.center_ratio),
+                "evq_tau": float(args.evq_tau),
+                "evq_beta": float(args.evq_beta),
                 "inv_sha256": str(rope_info["inv_sha256"]),
                 "custom_inv_freq_path": custom_inv_path.as_posix(),
                 "custom_inv_freq_sha256": sha256_file(custom_inv_path),
@@ -1351,6 +1779,14 @@ def main() -> None:
                 "segmentation_preview_10": seg_preview_path.as_posix(),
                 "stats": stats,
                 "tokenizer_chat_template_sha256": sha256_text(str(getattr(tokenizer, "chat_template", "") or "")),
+                "tokenizer_truncation_side": str(tokenizer.truncation_side),
+                "training_truncate_mode": TRAIN_TRUNCATE_MODE,
+                "training_truncate_head_cap_tokens": int(TRAIN_TRUNCATE_HEAD_CAP),
+                "training_truncate_head_tokens": int(min(int(TRAIN_TRUNCATE_HEAD_CAP), max(0, int(args.max_seq_len) - 1))),
+                "training_truncate_tail_tokens": int(
+                    max(0, int(args.max_seq_len) - min(int(TRAIN_TRUNCATE_HEAD_CAP), max(0, int(args.max_seq_len) - 1)))
+                ),
+                # Legacy key retained for compatibility with older downstream readers.
                 "truncation_side": str(tokenizer.truncation_side),
                 "response_only": True,
             },

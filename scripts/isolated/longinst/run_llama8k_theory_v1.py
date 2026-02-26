@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-"""Two-stage 8-job runner for LLaMA-3-8B (8K) Anchored vs Geometric theory validation.
+"""Two-stage 8-job runner for LLaMA-3-8B (8K) EVQ-Cosh vs Geometric validation.
 
 Plan contract:
 - Stage A (4 jobs, seed=42, gate only):
-  A1 geometric r32 s800
-  A2 anchored r32 s800
-  A3 anchored r48 s800
-  A4 anchored r32 s600
+  A1 geometric (tau=0.0) r32 s800
+  A2 evq_cosh (tau=0.4) r32 s800
+  A3 evq_cosh (tau=0.6) r32 s800
+  A4 evq_cosh (tau=0.8) r32 s800
 - Stage B (4 jobs):
   B1 geometric_best seed1337 gate
-  B2 anchored_best seed1337 gate
+  B2 evq_best seed1337 gate
   B3 geometric_best seed42 full lb21
-  B4 anchored_best seed42 full lb21
+  B4 evq_best seed42 full lb21
 
 This script only orchestrates the canonical pipeline entry:
   scripts/isolated/longinst/new_lora_longinst_train_v1.py
@@ -61,26 +61,28 @@ def save_csv(path: Path, rows: List[Dict], fieldnames: List[str]) -> None:
 class Job:
     job_id: str
     phase: str
-    method: str  # geometric | anchored
+    method: str  # geometric | evq_cosh
     seed: int
     lora_rank: int
     max_steps: int
-    anchor_factor: float
+    rope_schedule: str
+    evq_tau: float
     run_full_eval: bool
     notes: str = ""
 
 
 def build_stage_a_jobs() -> List[Job]:
     return [
-        Job("A1", "A", "geometric", 42, 32, 800, 1.0, False, "Geometric baseline"),
-        Job("A2", "A", "anchored", 42, 32, 800, 4.0, False, "Anchored default"),
-        Job("A3", "A", "anchored", 42, 48, 800, 4.0, False, "Anchored higher rank"),
-        Job("A4", "A", "anchored", 42, 32, 600, 4.0, False, "Anchored fewer steps"),
+        Job("A1", "A", "geometric", 42, 32, 800, "evq_cosh", 0.0, False, "Geometric baseline (tau=0.0)"),
+        Job("A2", "A", "evq_cosh", 42, 32, 800, "evq_cosh", 0.4, False, "EVQ-Cosh flatter finite-base (tau=0.4)"),
+        Job("A3", "A", "evq_cosh", 42, 32, 800, "evq_cosh", 0.6, False, "EVQ-Cosh moderate tension (tau=0.6)"),
+        Job("A4", "A", "evq_cosh", 42, 32, 800, "evq_cosh", 0.8, False, "EVQ-Cosh steeper limit (tau=0.8)"),
     ]
 
 
 def job_run_name(job: Job) -> str:
-    return f"{job.job_id}_{job.method}_r{job.lora_rank}_s{job.max_steps}_seed{job.seed}"
+    tau_tag = f"_tau{job.evq_tau:.2f}".replace(".", "p")
+    return f"{job.job_id}_{job.method}{tau_tag}_r{job.lora_rank}_s{job.max_steps}_seed{job.seed}"
 
 
 def is_job_complete(job: Job, run_dir: Path) -> bool:
@@ -110,6 +112,12 @@ def run_job(
     logs_dir = output_root / "logs"
     logs_dir.mkdir(parents=True, exist_ok=True)
     log_path = logs_dir / f"{run_name}.log"
+    if job.method == "geometric" or float(job.evq_tau) < 1e-5:
+        rope_schedule = "evq_cosh"
+        evq_tau = 0.0
+    else:
+        rope_schedule = str(job.rope_schedule)
+        evq_tau = float(job.evq_tau)
 
     cmd = [
         args.python_exe,
@@ -126,12 +134,12 @@ def run_job(
         str(job.max_steps),
         "--lora_rank",
         str(job.lora_rank),
-        "--anchor_factor",
-        str(job.anchor_factor),
-        "--slope_raw",
-        str(args.slope_raw),
-        "--center_ratio",
-        str(args.center_ratio),
+        "--rope_schedule",
+        rope_schedule,
+        "--evq_tau",
+        str(evq_tau),
+        "--evq_beta",
+        str(args.evq_beta),
         "--mix_long_ratio",
         str(args.mix_long_ratio),
         "--mix_wiki_ratio",
@@ -156,6 +164,8 @@ def run_job(
         args.longqa_path,
         "--wikitext_train_path",
         args.wikitext_train_path,
+        "--mixed_dataset_split",
+        args.mixed_dataset_split,
         "--longbench_local_data_dir",
         args.longbench_local_data_dir,
         "--qwen_seed42_json",
@@ -171,6 +181,9 @@ def run_job(
         "--max_input_tokens_eval",
         str(args.max_input_tokens_eval),
     ]
+
+    if str(args.mixed_dataset_dir).strip():
+        cmd.extend(["--mixed_dataset_dir", args.mixed_dataset_dir])
 
     if job.run_full_eval:
         cmd.append("--run_full_eval")
@@ -235,7 +248,8 @@ def run_job(
         "seed": job.seed,
         "lora_rank": job.lora_rank,
         "max_steps": job.max_steps,
-        "anchor_factor": job.anchor_factor,
+        "rope_schedule": rope_schedule,
+        "evq_tau": evq_tau,
         "run_full_eval": bool(job.run_full_eval),
         "run_name": run_name,
         "status": status,
@@ -265,8 +279,8 @@ def run_job(
     return result
 
 
-def pick_best_anchored(stage_a_rows: List[Dict[str, object]]) -> Optional[Dict[str, object]]:
-    cands = [r for r in stage_a_rows if r.get("method") == "anchored" and bool(r.get("gate_pass"))]
+def pick_best_evq(stage_a_rows: List[Dict[str, object]]) -> Optional[Dict[str, object]]:
+    cands = [r for r in stage_a_rows if r.get("method") == "evq_cosh" and bool(r.get("gate_pass"))]
     if not cands:
         return None
 
@@ -287,11 +301,23 @@ def write_report(
     report_path: Path,
     rows: List[Dict[str, object]],
     stats_json: Optional[Path],
-    anchored_best: Optional[Dict[str, object]],
+    evq_best: Optional[Dict[str, object]],
     geometric_ref: Optional[Dict[str, object]],
 ) -> None:
     stage_a = [r for r in rows if str(r.get("phase")) == "A"]
     stage_b = [r for r in rows if str(r.get("phase")) == "B"]
+    full_eval_seed_set = set()
+    for r in rows:
+        if str(r.get("method")) not in {"geometric", "evq_cosh"}:
+            continue
+        if not str(r.get("full_raw_json", "")).strip():
+            continue
+        try:
+            full_eval_seed_set.add(int(r.get("seed")))
+        except Exception:
+            pass
+    full_eval_seeds = sorted(full_eval_seed_set)
+    full_eval_seed_text = ",".join(str(s) for s in full_eval_seeds) if full_eval_seeds else "NA"
 
     lines = [
         "# llama8k_theory_v1 Report",
@@ -306,7 +332,7 @@ def write_report(
         "1. Base model fixed to Meta-Llama-3-8B-Instruct: enforced in training entry script.",
         "2. Protocol lock with hashes: run_config + data_hash + code_hash + inv_freq_hash required.",
         "3. Gate rule: qasper>=base and musique>=base-1.0.",
-        "4. Seed pair: 42 and 1337 covered by Stage B gate runs.",
+        "4. Stage B seeds: 42 has full lb21; 1337 is gate-only unless full eval is explicitly extended.",
         "5. Paired stats file: see stats section below.",
         "",
         "## Selected Config",
@@ -317,33 +343,41 @@ def write_report(
         lines.append(
             f"- geometric_ref: `{geometric_ref.get('run_name')}` (r={geometric_ref.get('lora_rank')}, steps={geometric_ref.get('max_steps')})"
         )
-    if anchored_best:
+    if evq_best:
         lines.append(
-            f"- anchored_best: `{anchored_best.get('run_name')}` (r={anchored_best.get('lora_rank')}, steps={anchored_best.get('max_steps')})"
+            f"- evq_best: `{evq_best.get('run_name')}` (r={evq_best.get('lora_rank')}, steps={evq_best.get('max_steps')}, tau={evq_best.get('evq_tau')})"
         )
     if not geometric_ref:
         lines.append("- geometric_ref: `NA`")
-    if not anchored_best:
-        lines.append("- anchored_best: `NA`")
+    if not evq_best:
+        lines.append("- evq_best: `NA`")
 
     lines.extend(
         [
             "",
             "## Stage Jobs",
             "",
-            "| job_id | phase | method | seed | rank | steps | gate_pass | macro_delta_pct | status | run_name |",
-            "|---|---|---|---:|---:|---:|---|---:|---|---|",
+            "| job_id | phase | method | schedule | tau | seed | rank | steps | gate_pass | macro_delta_pct | status | run_name |",
+            "|---|---|---|---|---:|---:|---:|---:|---|---:|---|---|",
         ]
     )
     for r in rows:
+        seed_raw = r.get("seed", "NA")
+        seed_str = str(int(seed_raw)) if isinstance(seed_raw, (int, float)) else str(seed_raw)
+        rank_raw = r.get("lora_rank", "NA")
+        rank_str = str(int(rank_raw)) if isinstance(rank_raw, (int, float)) else str(rank_raw)
+        steps_raw = r.get("max_steps", "NA")
+        steps_str = str(int(steps_raw)) if isinstance(steps_raw, (int, float)) else str(steps_raw)
         lines.append(
-            "| {job_id} | {phase} | {method} | {seed} | {lora_rank} | {max_steps} | {gate_pass} | {macro} | {status} | {run_name} |".format(
+            "| {job_id} | {phase} | {method} | {rope_schedule} | {evq_tau} | {seed} | {lora_rank} | {max_steps} | {gate_pass} | {macro} | {status} | {run_name} |".format(
                 job_id=str(r.get("job_id", "")),
                 phase=str(r.get("phase", "")),
                 method=str(r.get("method", "")),
-                seed=int(r.get("seed", 0) or 0),
-                lora_rank=int(r.get("lora_rank", 0) or 0),
-                max_steps=int(r.get("max_steps", 0) or 0),
+                rope_schedule=str(r.get("rope_schedule", "")),
+                evq_tau=("NA" if r.get("evq_tau") in {"", None, "NA"} else f"{float(r.get('evq_tau')):.2f}"),
+                seed=seed_str,
+                lora_rank=rank_str,
+                max_steps=steps_str,
                 gate_pass=str(r.get("gate_pass", "NA")),
                 macro=("NA" if r.get("full_macro_delta_pct") is None else f"{float(r.get('full_macro_delta_pct')):.4f}"),
                 status=str(r.get("status", "")),
@@ -352,6 +386,14 @@ def write_report(
         )
 
     lines.extend(["", "## Stats", ""])
+    lines.append(f"- full_eval_training_seeds: `{full_eval_seed_text}`")
+    lines.append("- inference_scope: `paired sample-level EVQ-vs-Geometric deltas on shared evaluation examples`")
+    if len(full_eval_seeds) < 2:
+        lines.append(
+            "- caveat: `Current significance does not estimate cross-seed training-run variance "
+            "(fewer than 2 full-eval training seeds).`"
+        )
+
     if stats_json and stats_json.exists():
         st = load_json(stats_json)
         pooled = st.get("pooled", {}) if isinstance(st, dict) else {}
@@ -381,31 +423,31 @@ def run_stats_if_possible(
     execute: bool,
 ) -> Optional[Path]:
     geo_raws = [str(r.get("full_raw_json")) for r in rows if r.get("method") == "geometric" and str(r.get("full_raw_json", ""))]
-    anc_raws = [str(r.get("full_raw_json")) for r in rows if r.get("method") == "anchored" and str(r.get("full_raw_json", ""))]
+    evq_raws = [str(r.get("full_raw_json")) for r in rows if r.get("method") == "evq_cosh" and str(r.get("full_raw_json", ""))]
 
-    if not geo_raws or not anc_raws:
+    if not geo_raws or not evq_raws:
         return None
 
     # Pair by seed when possible.
     seed_to_geo: Dict[int, str] = {int(r.get("seed", -1)): str(r.get("full_raw_json")) for r in rows if r.get("method") == "geometric" and str(r.get("full_raw_json", ""))}
-    seed_to_anc: Dict[int, str] = {int(r.get("seed", -1)): str(r.get("full_raw_json")) for r in rows if r.get("method") == "anchored" and str(r.get("full_raw_json", ""))}
-    common_seeds = sorted(set(seed_to_geo.keys()) & set(seed_to_anc.keys()))
+    seed_to_evq: Dict[int, str] = {int(r.get("seed", -1)): str(r.get("full_raw_json")) for r in rows if r.get("method") == "evq_cosh" and str(r.get("full_raw_json", ""))}
+    common_seeds = sorted(set(seed_to_geo.keys()) & set(seed_to_evq.keys()))
     if not common_seeds:
         return None
 
-    anchored_jsons = ",".join([seed_to_anc[s] for s in common_seeds])
+    evq_jsons = ",".join([seed_to_evq[s] for s in common_seeds])
     geometric_jsons = ",".join([seed_to_geo[s] for s in common_seeds])
 
     stats_dir = output_root / "stats"
     stats_dir.mkdir(parents=True, exist_ok=True)
-    out_json = stats_dir / "paired_stats_anchored_vs_geometric.json"
-    out_md = stats_dir / "paired_stats_anchored_vs_geometric.md"
+    out_json = stats_dir / "paired_stats_evq_vs_geometric.json"
+    out_md = stats_dir / "paired_stats_evq_vs_geometric.md"
 
     cmd = [
         args.python_exe,
         Path(args.stats_script).as_posix(),
-        "--anchored_jsons",
-        anchored_jsons,
+        "--evq_jsons",
+        evq_jsons,
         "--geometric_jsons",
         geometric_jsons,
         "--output_json",
@@ -433,6 +475,8 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--longalpaca_path", type=str, required=True)
     ap.add_argument("--longqa_path", type=str, default="")
     ap.add_argument("--wikitext_train_path", type=str, required=True)
+    ap.add_argument("--mixed_dataset_dir", type=str, default="")
+    ap.add_argument("--mixed_dataset_split", type=str, default="train")
     ap.add_argument("--longbench_local_data_dir", type=str, required=True)
 
     ap.add_argument("--qwen_seed42_json", type=str, required=True)
@@ -449,8 +493,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--gradient_accumulation_steps", type=int, default=1)
     ap.add_argument("--learning_rate", type=float, default=2e-5)
     ap.add_argument("--warmup_steps", type=int, default=50)
-    ap.add_argument("--slope_raw", type=float, default=20.0)
-    ap.add_argument("--center_ratio", type=float, default=0.70)
+    ap.add_argument("--evq_beta", type=float, default=3.0)
 
     ap.add_argument("--eval_batch_size", type=int, default=8)
     ap.add_argument("--max_batch_input_tokens", type=int, default=98304)
@@ -489,20 +532,21 @@ def main() -> None:
 
     stage_a_rows = [r for r in registry_rows if str(r.get("phase")) == "A"]
     geometric_ref = next((r for r in stage_a_rows if str(r.get("job_id")) == "A1"), None)
-    anchored_best = pick_best_anchored(stage_a_rows)
+    evq_best = pick_best_evq(stage_a_rows)
 
     stage_b_jobs: List[Job] = []
-    if geometric_ref and anchored_best:
+    if geometric_ref and evq_best:
         g_rank = int(geometric_ref.get("lora_rank", 32) or 32)
         g_steps = int(geometric_ref.get("max_steps", 800) or 800)
-        a_rank = int(anchored_best.get("lora_rank", 32) or 32)
-        a_steps = int(anchored_best.get("max_steps", 800) or 800)
+        e_rank = int(evq_best.get("lora_rank", 32) or 32)
+        e_steps = int(evq_best.get("max_steps", 800) or 800)
+        e_tau = float(evq_best.get("evq_tau", 0.5) or 0.5)
 
         stage_b_jobs = [
-            Job("B1", "B", "geometric", 1337, g_rank, g_steps, 1.0, False, "Geometric best on seed1337 gate"),
-            Job("B2", "B", "anchored", 1337, a_rank, a_steps, 4.0, False, "Anchored best on seed1337 gate"),
-            Job("B3", "B", "geometric", 42, g_rank, g_steps, 1.0, True, "Geometric full lb21"),
-            Job("B4", "B", "anchored", 42, a_rank, a_steps, 4.0, True, "Anchored full lb21"),
+            Job("B1", "B", "geometric", 1337, g_rank, g_steps, "evq_cosh", 0.0, False, "Geometric best on seed1337 gate"),
+            Job("B2", "B", "evq_cosh", 1337, e_rank, e_steps, "evq_cosh", e_tau, False, "EVQ best on seed1337 gate"),
+            Job("B3", "B", "geometric", 42, g_rank, g_steps, "evq_cosh", 0.0, True, "Geometric full lb21"),
+            Job("B4", "B", "evq_cosh", 42, e_rank, e_steps, "evq_cosh", e_tau, True, "EVQ full lb21"),
         ]
 
     for job in stage_b_jobs[:2]:
@@ -540,7 +584,8 @@ def main() -> None:
                 "seed": "NA",
                 "lora_rank": "NA",
                 "max_steps": "NA",
-                "anchor_factor": "NA",
+                "rope_schedule": "NA",
+                "evq_tau": "NA",
                 "run_full_eval": True,
                 "run_name": "NA",
                 "status": "CANCELLED_BY_GATE",
@@ -592,7 +637,8 @@ def main() -> None:
         "seed",
         "lora_rank",
         "max_steps",
-        "anchor_factor",
+        "rope_schedule",
+        "evq_tau",
         "run_full_eval",
         "run_name",
         "status",
@@ -624,7 +670,7 @@ def main() -> None:
         report_path=report_md,
         rows=registry_rows,
         stats_json=stats_json,
-        anchored_best=anchored_best,
+        evq_best=evq_best,
         geometric_ref=geometric_ref,
     )
 

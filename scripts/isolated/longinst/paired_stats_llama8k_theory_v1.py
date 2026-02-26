@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Paired statistics for Anchored vs Geometric from LongBench raw compare outputs.
+"""Paired statistics for EVQ-vs-Geometric from LongBench raw compare outputs.
 
 Input files must be raw outputs produced by scripts/eval_longbench.py, containing:
 - models.hybrid_lora.tasks.<task>.per_sample_traces
 
-The script pairs samples by (task, index), computes paired diff = anchored - geometric,
+The script pairs samples by (task, index), computes paired diff = EVQ - geometric,
 and reports bootstrap CI, sign-flip p-value, permutation p-value, and effect size.
 """
 
@@ -88,8 +88,8 @@ def traces_to_indexed_scores(task_blob: Dict) -> Dict[int, float]:
     return out
 
 
-def collect_diffs(anchored_json: Path, geometric_json: Path, tasks: List[str]) -> Tuple[Dict[str, np.ndarray], np.ndarray]:
-    a_obj = load_json(anchored_json)
+def collect_diffs(method_a_json: Path, geometric_json: Path, tasks: List[str]) -> Tuple[Dict[str, np.ndarray], np.ndarray]:
+    a_obj = load_json(method_a_json)
     g_obj = load_json(geometric_json)
     a_tasks = a_obj.get("models", {}).get("hybrid_lora", {}).get("tasks", {})
     g_tasks = g_obj.get("models", {}).get("hybrid_lora", {}).get("tasks", {})
@@ -200,8 +200,26 @@ def summarize_diffs(diffs: np.ndarray, n_bootstrap: int, seed: int) -> Dict[str,
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Paired stats for llama8k theory validation (Anchored vs Geometric)")
-    ap.add_argument("--anchored_jsons", type=str, required=True, help="Comma-separated list of anchored raw compare json files")
+    ap = argparse.ArgumentParser(description="Paired stats for llama8k theory validation (EVQ vs Geometric)")
+    ap.add_argument(
+        "--evq_jsons",
+        type=str,
+        default="",
+        help="Comma-separated list of EVQ raw compare json files.",
+    )
+    ap.add_argument(
+        "--anchored_jsons",
+        type=str,
+        default="",
+        help="Deprecated alias for --evq_jsons (kept for backward compatibility).",
+    )
+    ap.add_argument(
+        "--method_a_jsons",
+        type=str,
+        default="",
+        help="Generic alias for method-A jsons. Prefer --evq_jsons for this pipeline.",
+    )
+    ap.add_argument("--method_a_name", type=str, default="evq_cosh", help="Method-A name used in metadata/report labels.")
     ap.add_argument("--geometric_jsons", type=str, required=True, help="Comma-separated list of geometric raw compare json files")
     ap.add_argument("--tasks", type=str, default=",".join(LB21_TASKS))
     ap.add_argument("--n_bootstrap", type=int, default=10000)
@@ -210,20 +228,28 @@ def main() -> None:
     ap.add_argument("--output_md", type=str, required=True)
     args = ap.parse_args()
 
-    anchored_paths = [Path(p) for p in parse_csv(args.anchored_jsons)]
+    method_a_name = "_".join(str(args.method_a_name).strip().lower().split()) or "evq_cosh"
+    method_a_csv = (
+        str(args.evq_jsons).strip()
+        or str(args.method_a_jsons).strip()
+        or str(args.anchored_jsons).strip()
+    )
+    if not method_a_csv:
+        raise ValueError("Missing method-a jsons: provide --evq_jsons (or --method_a_jsons / legacy --anchored_jsons).")
+    method_paths = [Path(p) for p in parse_csv(method_a_csv)]
     geometric_paths = [Path(p) for p in parse_csv(args.geometric_jsons)]
-    if len(anchored_paths) != len(geometric_paths):
-        raise ValueError("anchored_jsons and geometric_jsons must have the same count")
+    if len(method_paths) != len(geometric_paths):
+        raise ValueError("evq/method_a jsons and geometric_jsons must have the same count")
     tasks = parse_csv(args.tasks)
 
     pooled_all: List[float] = []
     per_task_all: Dict[str, List[float]] = {t: [] for t in tasks}
     run_pairs: List[Dict[str, str]] = []
 
-    for a_path, g_path in zip(anchored_paths, geometric_paths):
+    for a_path, g_path in zip(method_paths, geometric_paths):
         if not a_path.exists() or not g_path.exists():
             continue
-        run_pairs.append({"anchored": a_path.as_posix(), "geometric": g_path.as_posix()})
+        run_pairs.append({"method_a": a_path.as_posix(), "geometric": g_path.as_posix()})
         per_task, pooled = collect_diffs(a_path, g_path, tasks)
         pooled_all.extend(pooled.tolist())
         for task, diffs in per_task.items():
@@ -246,7 +272,13 @@ def main() -> None:
             "n_bootstrap": int(args.n_bootstrap),
             "seed": int(args.seed),
             "score_unit": "raw_and_pct",
-            "comparison": "anchored_minus_geometric",
+            "method_a_name": method_a_name,
+            "comparison": f"{method_a_name}_minus_geometric",
+            "inference_scope": (
+                "paired sample-level difference over provided model-pair outputs; "
+                "does not estimate cross-seed training-run variance unless multiple "
+                "full-eval training seeds are included in run_pairs"
+            ),
         },
         "pooled": pooled_summary,
         "per_task": per_task_summary,
@@ -257,9 +289,11 @@ def main() -> None:
     save_json(output_json, out)
 
     lines = [
-        "# Paired Statistics: Anchored vs Geometric",
+        f"# Paired Statistics: {method_a_name} vs Geometric",
         "",
         f"- run_pairs: `{len(run_pairs)}`",
+        "- inference_scope: `paired sample-level difference over provided EVQ/Geometric model pairs`",
+        "- caveat: `This is not cross-seed training significance unless multiple full-eval training seeds are present.`",
         f"- claim_grade: `{pooled_summary.get('claim_grade', 'inconclusive')}`",
         f"- pooled_mean_diff_pct: `{pooled_summary.get('mean_diff_pct', 0.0):.4f}`",
         f"- pooled_ci95_pct: `[{pooled_summary.get('ci95_low_pct', 0.0):.4f}, {pooled_summary.get('ci95_high_pct', 0.0):.4f}]`",

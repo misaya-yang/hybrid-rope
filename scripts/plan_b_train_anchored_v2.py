@@ -284,6 +284,10 @@ def build_train_cmd(args: argparse.Namespace, method: str, seed: int, output_dir
         str(args.slope_raw),
         "--center_ratio",
         str(args.center_ratio),
+        "--evq_tau",
+        str(args.evq_tau),
+        "--evq_beta",
+        str(args.evq_beta),
     ]
     return cmd
 
@@ -331,6 +335,8 @@ def main() -> None:
     parser.add_argument("--anchor_factor", type=float, default=4.0)
     parser.add_argument("--slope_raw", type=float, default=20.0)
     parser.add_argument("--center_ratio", type=float, default=0.70)
+    parser.add_argument("--evq_tau", type=float, default=0.5)
+    parser.add_argument("--evq_beta", type=float, default=3.0)
     parser.add_argument("--dry_run", action="store_true")
     parser.add_argument("--skip_existing", action="store_true")
     args = parser.parse_args()
@@ -354,7 +360,7 @@ def main() -> None:
     methods = parse_csv(args.methods)
     seeds = parse_seed_csv(args.seeds)
     if not methods:
-        raise RuntimeError("No methods selected. Expected baseline and/or anchored_sigmoid.")
+        raise RuntimeError("No methods selected. Expected baseline/anchored_sigmoid/evq_cosh/evq_exp.")
     if not seeds:
         raise RuntimeError("No seeds selected.")
 
@@ -376,12 +382,14 @@ def main() -> None:
             "anchor_factor": float(args.anchor_factor),
             "slope_raw": float(args.slope_raw),
             "center_ratio": float(args.center_ratio),
+            "evq_tau": float(args.evq_tau),
+            "evq_beta": float(args.evq_beta),
         },
         "runs": [],
     }
 
     for method in methods:
-        if method not in {"baseline", "anchored_sigmoid"}:
+        if method not in {"baseline", "anchored_sigmoid", "evq_cosh", "evq_exp"}:
             raise RuntimeError(f"Unsupported method for Plan B: {method}")
         for seed in seeds:
             run_name = f"planb_llama3_8b_{method}_{seed}"
