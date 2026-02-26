@@ -1,0 +1,24 @@
+comparison,level,task,family,n_pairs,diff,ci_low,ci_high,p_bootstrap,p_signflip,p_raw,p_fdr_bh,p_fdr_by,claim_grade
+Anc-Sig vs Baseline,per_task,narrativeqa,Anc-Sig vs Baseline|per_task,400,0.013640415897236684,-0.001889414685829707,0.029844140538368417,0.0868,0.0914,0.0868,0.20253333333333334,0.7383066496712781,directional_consistent_with_theory
+Anc-Sig vs Baseline,per_task,qasper,Anc-Sig vs Baseline|per_task,400,0.002612899070095448,-0.009132203883034958,0.015167924370514504,0.6602,0.6703,0.6602,0.886725,1.0,directional_consistent_with_theory
+Anc-Sig vs Baseline,per_task,multifieldqa_en,Anc-Sig vs Baseline|per_task,300,0.0026845404714316685,-0.014383553120736792,0.01921606657341493,0.7598,0.76065,0.7598,0.8968105263157895,1.0,directional_consistent_with_theory
+Anc-Sig vs Baseline,per_task,multifieldqa_zh,Anc-Sig vs Baseline|per_task,400,0.001967853056388908,-0.0142342109833716,0.017297506066982354,0.8114,0.81,0.8114,0.8968105263157895,1.0,directional_consistent_with_theory
+Anc-Sig vs Baseline,per_task,hotpotqa,Anc-Sig vs Baseline|per_task,400,-0.021798937696978462,-0.04815821195755107,0.003648947845090993,0.105,0.1059,0.105,0.2205,0.8038015944001818,no_improvement
+Anc-Sig vs Baseline,per_task,2wikimqa,Anc-Sig vs Baseline|per_task,400,-0.026385989010989007,-0.060261794313063624,0.006315886565840083,0.123,0.1208,0.123,0.23481818181818184,0.8559965031274664,no_improvement
+Anc-Sig vs Baseline,per_task,musique,Anc-Sig vs Baseline|per_task,400,-0.03253771161926239,-0.04876198716286332,-0.017326052874424645,0.0002,5e-05,0.0002,0.0021000000000000003,0.007655253280001733,no_improvement
+Anc-Sig vs Baseline,per_task,dureader,Anc-Sig vs Baseline|per_task,400,-0.011228348132866278,-0.019802914137788508,-0.002584973849408891,0.012,0.0098,0.012,0.063,0.22965759840005195,no_improvement
+Anc-Sig vs Baseline,per_task,gov_report,Anc-Sig vs Baseline|per_task,400,-0.002318787680320654,-0.004780154956650918,0.00023986886329366563,0.0708,0.07885,0.0708,0.20253333333333334,0.7383066496712781,no_improvement
+Anc-Sig vs Baseline,per_task,qmsum,Anc-Sig vs Baseline|per_task,400,-0.008349567799274205,-0.012116631163000715,-0.004806175314029076,0.0002,0.0,0.0002,0.0021000000000000003,0.007655253280001733,no_improvement
+Anc-Sig vs Baseline,per_task,multi_news,Anc-Sig vs Baseline|per_task,400,0.0004970208330981796,-0.0019175713879137966,0.0028402536472391026,0.6756,0.6766,0.6756,0.886725,1.0,directional_consistent_with_theory
+Anc-Sig vs Baseline,per_task,vcsum,Anc-Sig vs Baseline|per_task,400,2.217394767199364e-06,-0.0015473625781547485,0.0014937117856216888,0.9974,0.99765,0.9974,0.9974,1.0,directional_consistent_with_theory
+Anc-Sig vs Baseline,per_task,trec,Anc-Sig vs Baseline|per_task,400,0.0025,-0.015,0.02,0.7852,1.0,0.7852,0.8968105263157895,1.0,directional_consistent_with_theory
+Anc-Sig vs Baseline,per_task,triviaqa,Anc-Sig vs Baseline|per_task,400,0.008876643601758018,-0.0003946750935309285,0.019716338967890736,0.0868,0.0887,0.0868,0.20253333333333334,0.7383066496712781,directional_consistent_with_theory
+Anc-Sig vs Baseline,per_task,samsum,Anc-Sig vs Baseline|per_task,400,-0.007519018714006345,-0.014913316440034715,-0.0001232963318051681,0.0478,0.04435,0.0478,0.1673,0.6098685113068046,no_improvement
+Anc-Sig vs Baseline,per_task,lsht,Anc-Sig vs Baseline|per_task,400,0.005,-0.015,0.0275,0.64,0.81345,0.64,0.886725,1.0,directional_consistent_with_theory
+Anc-Sig vs Baseline,per_task,passage_count,Anc-Sig vs Baseline|per_task,400,-0.008445436507936508,-0.026661929563492066,0.008742733134920626,0.3362,0.35565,0.3362,0.58835,1.0,no_improvement
+Anc-Sig vs Baseline,per_task,passage_retrieval_en,Anc-Sig vs Baseline|per_task,400,0.025,0.005,0.045,0.0158,0.03165,0.0158,0.06636,0.24190600364805476,directional_consistent_with_theory
+Anc-Sig vs Baseline,per_task,passage_retrieval_zh,Anc-Sig vs Baseline|per_task,400,-0.01,-0.0325,0.0125,0.384,0.51935,0.384,0.6203076923076923,1.0,no_improvement
+Anc-Sig vs Baseline,per_task,lcc,Anc-Sig vs Baseline|per_task,1000,-0.0009048831159237811,-0.012955549634676685,0.010396214830329879,0.8762,0.87005,0.8762,0.9200099999999999,1.0,no_improvement
+Anc-Sig vs Baseline,per_task,repobench-p,Anc-Sig vs Baseline|per_task,1000,-0.014184482917283034,-0.025113484008780742,-0.0033350863167806244,0.0106,0.01025,0.0106,0.063,0.22965759840005195,no_improvement
+Anc-Sig vs Baseline,per_sample,all,Anc-Sig vs Baseline|per_sample,9500,-0.004387231875272955,-0.007775585391575245,-0.0009707450702478518,0.0102,0.01405,0.0102,0.0102,0.0102,no_improvement
+Anc-Sig vs Baseline,cross_seed,seed_mean,Anc-Sig vs Baseline|cross_seed,2,-0.0038519796604792643,-0.0041793063919658285,-0.0035246529289927006,0.0,0.5,0.0,0.0,0.0,no_improvement
