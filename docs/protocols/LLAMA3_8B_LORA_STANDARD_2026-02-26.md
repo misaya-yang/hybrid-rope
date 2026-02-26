@@ -12,6 +12,8 @@
 - RoPE 注入方式锁定：`inv_freq.copy_()`。
 - 主线实验默认：`不启用 attention bias / gate / macro-micro KL`。
 - 若需探索 attention 联合优化，必须走独立分支，不得与主线结果混用。
+- hardest-task 主线（`qasper/musique`）**必须**使用 `scripts/isolated/attn/new_lora_longalpaca_attnbias_train.py`；
+  不再使用随机窗口 LM 训练脚本（会破坏 instruction/answer 对齐，易造成 tradeoff）。
 
 ## 2. 当前推荐默认配置（主线）
 
@@ -30,6 +32,8 @@
 - `attn_implementation=sdpa`
 - `attn_bias_mode=off`
 - `use_macro_micro_kl=false`
+- LongAlpaca 输入建议：`/root/autodl-tmp/dfrope/datasets/LongAlpaca_msdownload/LongAlpaca-12k.min64.jsonl`
+  （数据审计见 `docs/exp/2026-02-26_longalpaca_min64_data_audit.md`）
 
 Anchored 调度参数（固定）：
 
@@ -114,7 +118,10 @@ python scripts/isolated/attn/new_lora_longalpaca_attnbias_train.py \
   --lora_target_modules q_proj,k_proj,v_proj,o_proj \
   --attn_implementation sdpa \
   --attn_bias_mode off \
-  --use_macro_micro_kl false
+  --no-use_macro_micro_kl \
+  --response_only_loss \
+  --require_assistant_header \
+  --min_supervised_tokens 16
 ```
 
 Gate 评测：
@@ -133,4 +140,3 @@ python scripts/eval_longbench.py \
   --score_scale pct \
   --output_json <gate_json>
 ```
-

@@ -13,6 +13,7 @@ Key features:
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import gc
 import hashlib
 import json
@@ -244,7 +245,31 @@ def scale_score(value_raw: float, score_scale: str) -> float:
 def attn_candidates(mode: str) -> List[Optional[str]]:
     if mode == "auto":
         return ["flash_attention_2", "sdpa", None]
+    if mode == "flash_attention_2":
+        return ["flash_attention_2", "sdpa", None]
+    if mode == "sdpa":
+        return ["sdpa", None]
     return [mode]
+
+
+def default_score_workers() -> int:
+    cpu = os.cpu_count() or 4
+    return max(1, min(16, cpu // 2))
+
+
+def resolve_batch_policy(
+    batch_size: int,
+    max_batch_size: int,
+    max_batch_input_tokens: int,
+    max_input_tokens: int,
+) -> Tuple[int, int]:
+    bs = max(1, int(batch_size))
+    max_bs = max(1, int(max_batch_size)) if int(max_batch_size) > 0 else bs
+    max_bs = max(bs, max_bs)
+    token_budget = int(max_batch_input_tokens)
+    if token_budget <= 0:
+        token_budget = int(max_bs * int(max_input_tokens))
+    return int(max_bs), int(token_budget)
 
 
 def _safe_float(x: object, default: float) -> float:
@@ -1155,6 +1180,47 @@ def generate_text_batch(
         tokenizer.padding_side = old_padding_side
 
 
+def score_prediction_safe(
+    task: str,
+    metric_name: str,
+    pred: str,
+    refs: List[str],
+    all_classes: Optional[List[str]],
+) -> Tuple[Optional[float], Optional[str]]:
+    try:
+        return float(score_prediction(task=task, metric_name=metric_name, pred=pred, refs=refs, all_classes=all_classes)), None
+    except Exception as e:
+        return None, f"{type(e).__name__}: {e}"
+
+
+def flush_trace_chunk(path: Path, buffer: List[Dict[str, object]]) -> None:
+    if not buffer:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as f:
+        for row in buffer:
+            f.write(json.dumps(row, ensure_ascii=False) + "\n")
+    buffer.clear()
+
+
+def load_trace_chunk(path: Path) -> List[Dict[str, object]]:
+    if not path.exists():
+        return []
+    out: List[Dict[str, object]] = []
+    with path.open("r", encoding="utf-8", errors="ignore") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                obj = json.loads(line)
+                if isinstance(obj, dict):
+                    out.append(obj)
+            except Exception:
+                continue
+    return out
+
+
 def evaluate_task(
     model: torch.nn.Module,
     tokenizer: AutoTokenizer,
@@ -1174,8 +1240,14 @@ def evaluate_task(
     official_maxlen_map: Dict[str, int],
     indices: Optional[List[int]] = None,
     batch_size: int = 1,
+    max_batch_size: int = 0,
     max_batch_input_tokens: int = 0,
+    enable_length_bucket: bool = True,
+    enable_oom_backoff: bool = True,
+    score_workers: int = 1,
     save_per_sample_traces: bool = True,
+    trace_chunk_path: str = "",
+    trace_chunk_size: int = 0,
     trace_output_max_chars: int = 0,
 ) -> Dict:
     ds = load_task_dataset(task, local_data_dir=local_data_dir)
@@ -1211,12 +1283,23 @@ def evaluate_task(
     truncation_at_question_count = 0
     generation_error_count = 0
     missing_reference_count = 0
+    oom_backoff_count = 0
+
+    trace_chunk_file = Path(trace_chunk_path).resolve() if trace_chunk_path else None
+    trace_chunk_buffer: List[Dict[str, object]] = []
+    chunk_len = max(0, int(trace_chunk_size))
+    if trace_chunk_file and trace_chunk_file.exists():
+        trace_chunk_file.unlink()
 
     bs = max(1, int(batch_size))
-    token_budget = int(max_batch_input_tokens)
-    if token_budget <= 0:
-        token_budget = int(bs * max_input_tokens)
-    build_chunk_size = max(bs * 4, bs)
+    max_bs, token_budget = resolve_batch_policy(
+        batch_size=bs,
+        max_batch_size=max_batch_size,
+        max_batch_input_tokens=max_batch_input_tokens,
+        max_input_tokens=max_input_tokens,
+    )
+    workers = max(1, int(score_workers))
+    build_chunk_size = max(max_bs * 4, max_bs)
 
     def chunks(seq: List[int], size: int):
         for start in range(0, len(seq), size):
@@ -1259,22 +1342,74 @@ def evaluate_task(
             mark_generation_error(e)
 
     def iter_generation_groups(entries: List[Dict[str, object]], positions: List[int]):
+        if enable_length_bucket:
+            positions = sorted(
+                positions,
+                key=lambda p: int(
+                    (entries[p].get("trunc_meta") or {}).get("input_tokens_after_trunc", 0)
+                    if isinstance(entries[p].get("trunc_meta"), dict)
+                    else 0
+                ),
+                reverse=True,
+            )
         current: List[int] = []
         current_tokens = 0
+        current_max_new = -1
         for pos in positions:
             trunc_meta = entries[pos].get("trunc_meta") or {}
             prompt_tokens = int(trunc_meta.get("input_tokens_after_trunc", 0) if isinstance(trunc_meta, dict) else 0)
             prompt_tokens = max(1, prompt_tokens)
-            over_items = len(current) >= bs
+            max_new = int(entries[pos].get("max_new", 0))
+            over_items = len(current) >= max_bs
             over_tokens = bool(current) and (current_tokens + prompt_tokens > token_budget)
-            if over_items or over_tokens:
+            over_max_new = bool(current) and (max_new != current_max_new)
+            if over_items or over_tokens or over_max_new:
                 yield current
                 current = []
                 current_tokens = 0
+                current_max_new = -1
             current.append(pos)
             current_tokens += prompt_tokens
+            current_max_new = max_new
         if current:
             yield current
+
+    def run_group_with_backoff(entries: List[Dict[str, object]], positions: List[int]) -> None:
+        nonlocal oom_backoff_count
+        if not positions:
+            return
+        pending: List[List[int]] = [positions]
+        while pending:
+            group = pending.pop()
+            if not group:
+                continue
+            gen_prompts = [str(entries[p]["prompt_for_eval"]) for p in group]
+            max_new = int(entries[group[0]].get("max_new", 0))
+            try:
+                gen_preds = generate_text_batch(
+                    model=model,
+                    tokenizer=tokenizer,
+                    prompts=gen_prompts,
+                    max_new_tokens=max_new,
+                )
+                if len(gen_preds) != len(group):
+                    raise RuntimeError(f"Batch size mismatch: prompts={len(group)} preds={len(gen_preds)}")
+                for p, raw_pred in zip(group, gen_preds):
+                    entries[p]["raw_pred"] = raw_pred
+                continue
+            except RuntimeError as e:
+                if "out of memory" in str(e).lower():
+                    torch.cuda.empty_cache()
+                    if enable_oom_backoff and len(group) > 1:
+                        oom_backoff_count += 1
+                        split = int(math.ceil(len(group) / 2.0))
+                        pending.append(group[split:])
+                        pending.append(group[:split])
+                        continue
+            except Exception:
+                pass
+            for p in group:
+                run_single_generation(entries, p)
 
     for chunk in chunks([int(x) for x in idxs], build_chunk_size):
         entries: List[Dict[str, object]] = []
@@ -1337,41 +1472,63 @@ def evaluate_task(
                 entry["failure_type"] = "missing_reference"
             entries.append(entry)
 
-        # Batch generate for the "ok" entries. If batch fails, fall back to per-sample generation.
+        # Batch generate for the "ok" entries, with optional OOM split backoff.
         gen_positions = [p for p, e in enumerate(entries) if e.get("evaluator_status") == "ok"]
         for group in iter_generation_groups(entries, gen_positions):
-            gen_prompts = [str(entries[p]["prompt_for_eval"]) for p in group]
-            gen_preds: List[str] = []
-            gen_failed = False
-            if gen_prompts:
-                try:
-                    gen_preds = generate_text_batch(
-                        model,
-                        tokenizer,
-                        gen_prompts,
-                        max_new_tokens=int(entries[group[0]]["max_new"]),
-                    )
-                except RuntimeError as e:
-                    if "out of memory" in str(e).lower():
-                        torch.cuda.empty_cache()
-                    gen_failed = True
-                except Exception:
-                    gen_failed = True
+            run_group_with_backoff(entries, group)
 
-            if gen_prompts and not gen_failed and len(gen_preds) == len(gen_prompts):
-                for p, raw_pred in zip(group, gen_preds):
-                    entries[p]["raw_pred"] = raw_pred
+        # Stage-1: normalize predictions and prepare score jobs.
+        score_jobs: Dict[int, Tuple[str, str, str, List[str], Optional[List[str]]]] = {}
+        for pos, entry in enumerate(entries):
+            raw_pred = str(entry.get("raw_pred", ""))
+            pred = post_process_prediction(task=task, pred=raw_pred)
+            entry["pred"] = pred
+            template_leak = has_template_leakage(pred)
+            entry["template_leak"] = bool(template_leak)
+            if template_leak:
+                template_leakage_count += 1
+
+            evaluator_status = str(entry.get("evaluator_status", "ok"))
+            failure_type = str(entry.get("failure_type", "none"))
+            if evaluator_status == "ok":
+                if pred.strip() == "":
+                    empty_output_count += 1
+                    entry["failure_type"] = "empty_output"
+                elif template_leak:
+                    entry["failure_type"] = "template_leakage"
+                refs = entry["refs"]  # type: ignore[assignment]
+                all_classes = entry["all_classes"]  # type: ignore[assignment]
+                score_jobs[pos] = (task, metric_name, pred, refs, all_classes)
             else:
-                for p in group:
-                    run_single_generation(entries, p)
+                entry["failure_type"] = failure_type
 
-        for entry in entries:
+        # Stage-2: score in CPU workers; keep deterministic assignment by entry index.
+        score_out: Dict[int, Tuple[Optional[float], Optional[str]]] = {}
+        if score_jobs:
+            if workers <= 1:
+                for pos, payload in score_jobs.items():
+                    score_out[pos] = score_prediction_safe(*payload)
+            else:
+                with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as ex:
+                    fut_to_pos = {
+                        ex.submit(score_prediction_safe, *payload): pos
+                        for pos, payload in score_jobs.items()
+                    }
+                    for fut in concurrent.futures.as_completed(fut_to_pos):
+                        pos = fut_to_pos[fut]
+                        try:
+                            score_out[pos] = fut.result()
+                        except Exception as e:
+                            score_out[pos] = (None, f"{type(e).__name__}: {e}")
+
+        # Stage-3: build task records, traces, and aggregate scores.
+        for pos, entry in enumerate(entries):
             i = int(entry["index"])
             refs = entry["refs"]  # type: ignore[assignment]
             all_classes = entry["all_classes"]  # type: ignore[assignment]
             ref_key = str(entry["ref_key"])
             raw_pred = str(entry.get("raw_pred", ""))
-            pred = post_process_prediction(task=task, pred=raw_pred)
+            pred = str(entry.get("pred", ""))
 
             evaluator_status = str(entry.get("evaluator_status", "ok"))
             failure_type = str(entry.get("failure_type", "none"))
@@ -1384,33 +1541,25 @@ def evaluate_task(
             q_truncated = bool(entry.get("q_truncated", False))
             max_new = int(entry.get("max_new", 0))
 
-            template_leak = has_template_leakage(pred)
-            if template_leak:
-                template_leakage_count += 1
+            template_leak = bool(entry.get("template_leak", False))
 
             score_raw_val: Optional[float] = None
             score_pct_val: Optional[float] = None
             score_val: Optional[float] = None
 
             if evaluator_status == "ok":
-                if pred.strip() == "":
-                    empty_output_count += 1
-                    failure_type = "empty_output"
-                elif template_leak:
-                    failure_type = "template_leakage"
-
-                try:
-                    sc_raw = score_prediction(task=task, metric_name=metric_name, pred=pred, refs=refs, all_classes=all_classes)
+                sc_raw, sc_err = score_out.get(pos, (None, "missing_score_result"))
+                if sc_raw is not None:
                     raw_scores.append(sc_raw)
                     sc = scale_score(sc_raw, score_scale=score_scale)
                     score_raw_val = float(sc_raw)
                     score_pct_val = float(sc_raw) * 100.0
                     score_val = float(sc)
-                except Exception as e:
+                else:
                     parse_fail_count += 1
                     evaluator_status = "parse_fail"
                     failure_type = "parse_fail"
-                    error_message = f"{type(e).__name__}: {e}"
+                    error_message = str(sc_err or "unknown scoring error")
 
             if len(records) < 3:
                 sample = entry.get("sample") or {}
@@ -1462,7 +1611,12 @@ def evaluate_task(
                 "template_leakage": bool(template_leak),
             }
             if save_per_sample_traces:
-                traces.append(trace_obj)
+                if trace_chunk_file and chunk_len > 0:
+                    trace_chunk_buffer.append(trace_obj)
+                    if len(trace_chunk_buffer) >= chunk_len:
+                        flush_trace_chunk(trace_chunk_file, trace_chunk_buffer)
+                else:
+                    traces.append(trace_obj)
 
             processed += 1
             if processed % 10 == 0 and raw_scores:
@@ -1474,6 +1628,10 @@ def evaluate_task(
                     metric_name,
                     float(np.mean(raw_scores)),
                 )
+
+    if save_per_sample_traces and trace_chunk_file and chunk_len > 0:
+        flush_trace_chunk(trace_chunk_file, trace_chunk_buffer)
+        traces = load_trace_chunk(trace_chunk_file)
 
     score_raw = float(np.mean(raw_scores)) if raw_scores else None
     score_pct = (score_raw * 100.0) if score_raw is not None else None
@@ -1491,6 +1649,15 @@ def evaluate_task(
         "num_empty_output": int(empty_output_count),
         "num_template_leakage": int(template_leakage_count),
         "num_truncation_at_question": int(truncation_at_question_count),
+        "oom_backoff_count": int(oom_backoff_count),
+        "score_workers": int(workers),
+        "enable_length_bucket": bool(enable_length_bucket),
+        "enable_oom_backoff": bool(enable_oom_backoff),
+        "batch_policy": {
+            "initial_batch_size": int(bs),
+            "max_batch_size": int(max_bs),
+            "max_batch_input_tokens": int(token_budget),
+        },
         "empty_output_rate": float(empty_output_count / denom),
         "template_leakage_rate": float(template_leakage_count / denom),
         "parse_fail_rate": float(parse_fail_count / denom),
@@ -1515,6 +1682,8 @@ def evaluate_task(
         "per_sample_scores_raw": per_sample_raw,
         "per_sample_scores_pct": per_sample_pct,
         "per_sample_traces": traces,
+        "trace_chunk_path": trace_chunk_file.as_posix() if trace_chunk_file else "",
+        "trace_chunk_size": int(chunk_len),
         "audit": audit,
         "examples": records,
     }
@@ -1604,14 +1773,20 @@ def write_repro_manifest(
         f"  max_samples_per_task: {int(args.max_samples_per_task)}",
         f"  max_input_tokens: {int(args.max_input_tokens)}",
         f"  batch_size: {int(args.batch_size)}",
+        f"  max_batch_size: {int(args.max_batch_size if int(args.max_batch_size) > 0 else args.batch_size)}",
         f"  max_batch_input_tokens: {int(args.max_batch_input_tokens)}",
+        f"  score_workers: {int(args.score_workers)}",
+        f"  trace_chunk_size: {int(args.trace_chunk_size)}",
+        f"  enable_length_bucket: {bool(args.enable_length_bucket)}",
+        f"  enable_oom_backoff: {bool(args.enable_oom_backoff)}",
         f"  max_new_tokens_policy: \"{args.max_new_tokens_policy}\"",
         f"  prompt_source: \"{args.prompt_source}\"",
         f"  chat_template: \"{args.chat_template}\"",
         f"  truncate_mode: \"{args.truncate_mode}\"",
         f"  score_scale: \"{args.score_scale}\"",
         f"  strict_parity_check: {bool(args.strict_parity_check)}",
-        f"  attn_implementation: \"{args.attn_implementation}\"",
+        f"  engine_preference: \"{args.engine_preference}\"",
+        f"  attn_implementation_alias: \"{args.attn_implementation}\"",
         f"  rope_theta: {float(rope_theta)}",
         f"  official_prompt_path: \"{args.official_prompt_path}\"",
         f"  official_maxlen_path: \"{args.official_maxlen_path}\"",
@@ -1713,6 +1888,12 @@ def main() -> None:
         help="Batch size for greedy generation. Increase on large-VRAM GPUs to improve throughput.",
     )
     ap.add_argument(
+        "--max_batch_size",
+        type=int,
+        default=0,
+        help="Maximum dynamic micro-batch size. 0 means use --batch_size.",
+    )
+    ap.add_argument(
         "--max_batch_input_tokens",
         type=int,
         default=0,
@@ -1721,6 +1902,32 @@ def main() -> None:
             "0 means batch_size * max_input_tokens. "
             "Useful to increase batch_size while capping peak VRAM."
         ),
+    )
+    ap.add_argument(
+        "--score_workers",
+        type=int,
+        default=default_score_workers(),
+        help="CPU worker threads used for parallel per-sample scoring.",
+    )
+    ap.add_argument(
+        "--trace_chunk_size",
+        type=int,
+        default=200,
+        help="Chunk size for per-sample trace jsonl flushing. 0 disables chunk flushing.",
+    )
+    ap.add_argument(
+        "--enable_length_bucket",
+        type=int,
+        default=1,
+        choices=[0, 1],
+        help="Enable prompt-length bucket sorting before dynamic micro-batching.",
+    )
+    ap.add_argument(
+        "--enable_oom_backoff",
+        type=int,
+        default=1,
+        choices=[0, 1],
+        help="Enable OOM-triggered batch split backoff.",
     )
     ap.add_argument("--max_new_tokens_qa", type=int, default=64)
     ap.add_argument("--max_new_tokens_sum", type=int, default=256)
@@ -1814,10 +2021,21 @@ def main() -> None:
         type=str,
         default="auto",
         choices=["auto", "flash_attention_2", "sdpa", "eager"],
+        help="Compatibility alias. Prefer --engine_preference.",
+    )
+    ap.add_argument(
+        "--engine_preference",
+        type=str,
+        default="",
+        choices=["", "auto", "flash_attention_2", "sdpa", "eager"],
+        help="Preferred attention engine for model loading. flash_attention_2 will auto-fallback to sdpa.",
     )
     ap.add_argument("--merge_lora", action="store_true")
     ap.add_argument("--trust_remote_code", action="store_true", default=True)
     args = ap.parse_args()
+
+    if not args.engine_preference:
+        args.engine_preference = args.attn_implementation
 
     enforce_offline_mode()
     out_path = Path(args.output_json)
@@ -1835,9 +2053,25 @@ def main() -> None:
         prompt_path=args.official_prompt_path,
         maxlen_path=args.official_maxlen_path,
     )
+    effective_max_bs, effective_token_budget = resolve_batch_policy(
+        batch_size=int(args.batch_size),
+        max_batch_size=int(args.max_batch_size),
+        max_batch_input_tokens=int(args.max_batch_input_tokens),
+        max_input_tokens=int(args.max_input_tokens),
+    )
 
     LOG.info("Tasks=%s", tasks)
     LOG.info("Prompt source=%s chat_template=%s truncate=%s max_new_tokens_policy=%s", args.prompt_source, args.chat_template, args.truncate_mode, args.max_new_tokens_policy)
+    LOG.info(
+        "Engine preference=%s batch_size=%d max_batch_size=%d token_budget=%d score_workers=%d length_bucket=%s oom_backoff=%s",
+        args.engine_preference,
+        int(args.batch_size),
+        int(effective_max_bs),
+        int(effective_token_budget),
+        int(args.score_workers),
+        bool(args.enable_length_bucket),
+        bool(args.enable_oom_backoff),
+    )
 
     rope_theta = float(args.rope_theta) if args.rope_theta > 0 else infer_rope_theta(args.base_model_path, args.trust_remote_code)
     LOG.info("Resolved rope_theta=%.1f", rope_theta)
@@ -1849,9 +2083,15 @@ def main() -> None:
         "max_samples_per_task": int(args.max_samples_per_task),
         "max_input_tokens": int(args.max_input_tokens),
         "batch_size": int(args.batch_size),
+        "max_batch_size": int(effective_max_bs),
         "max_batch_input_tokens": int(args.max_batch_input_tokens),
+        "score_workers": int(args.score_workers),
+        "trace_chunk_size": int(args.trace_chunk_size),
+        "enable_length_bucket": bool(args.enable_length_bucket),
+        "enable_oom_backoff": bool(args.enable_oom_backoff),
         "seed": int(args.seed),
-        "attn_implementation": args.attn_implementation,
+        "engine_preference": args.engine_preference,
+        "attn_implementation_alias": args.attn_implementation,
         "prompt_source": args.prompt_source,
         "chat_template": args.chat_template,
         "truncate_mode": args.truncate_mode,
@@ -1881,7 +2121,12 @@ def main() -> None:
             "max_samples_per_task": args.max_samples_per_task,
             "max_input_tokens": args.max_input_tokens,
             "batch_size": int(args.batch_size),
+            "max_batch_size": int(effective_max_bs),
             "max_batch_input_tokens": int(args.max_batch_input_tokens),
+            "score_workers": int(args.score_workers),
+            "trace_chunk_size": int(args.trace_chunk_size),
+            "enable_length_bucket": bool(args.enable_length_bucket),
+            "enable_oom_backoff": bool(args.enable_oom_backoff),
             "max_new_tokens_policy": args.max_new_tokens_policy,
             "prompt_source": args.prompt_source,
             "chat_template": args.chat_template,
@@ -1891,7 +2136,18 @@ def main() -> None:
             "trace_output_max_chars": int(args.trace_output_max_chars),
             "score_unit_raw": "0-1",
             "score_unit_pct": "0-100",
-            "attn_implementation": args.attn_implementation,
+            "engine_requested": args.engine_preference,
+            "engine_used": {},
+            "engine_fallback_reason": {},
+            "attn_implementation_alias": args.attn_implementation,
+            "batch_policy": {
+                "initial_batch_size": int(args.batch_size),
+                "max_batch_size": int(effective_max_bs),
+                "token_budget": int(effective_token_budget),
+                "enable_length_bucket": bool(args.enable_length_bucket),
+                "enable_oom_backoff": bool(args.enable_oom_backoff),
+            },
+            "oom_backoff_count": {},
             "variant": args.variant,
             "rope_factor": args.rope_factor,
             "orig_ctx": args.orig_ctx,
@@ -1942,7 +2198,7 @@ def main() -> None:
             adapter_path=model_adapter_path,
             custom_inv_freq_path=args.custom_inv_freq_path if model_adapter_path else "",
             merge_lora=args.merge_lora,
-            attn_mode=args.attn_implementation,
+            attn_mode=args.engine_preference,
             trust_remote_code=args.trust_remote_code,
             variant=variant_name,
             rope_factor=args.rope_factor,
@@ -1961,10 +2217,18 @@ def main() -> None:
             "rope_used": rope_used,
             "tasks": {},
         }
+        results["meta"]["engine_used"][model_name] = attn_used
+        if args.engine_preference not in {"", "auto"} and attn_used != args.engine_preference:
+            results["meta"]["engine_fallback_reason"][model_name] = f"fallback_from_{args.engine_preference}_to_{attn_used}"
         model_per_sample_scores_raw: Dict[str, List[float]] = {}
 
         for task in tasks:
             try:
+                trace_chunk_path = ""
+                if bool(args.save_per_sample_traces) and int(args.trace_chunk_size) > 0:
+                    trace_chunk_path = str(
+                        (out_path.parent / "trace_chunks" / f"{model_name}__{task}.jsonl").resolve()
+                    )
                 tres = evaluate_task(
                     model=model,
                     tokenizer=tokenizer,
@@ -1984,8 +2248,14 @@ def main() -> None:
                     official_maxlen_map=official_maxlen_map,
                     indices=task_index_map.get(task),
                     batch_size=int(args.batch_size),
+                    max_batch_size=int(args.max_batch_size),
                     max_batch_input_tokens=int(args.max_batch_input_tokens),
+                    enable_length_bucket=bool(args.enable_length_bucket),
+                    enable_oom_backoff=bool(args.enable_oom_backoff),
+                    score_workers=int(args.score_workers),
                     save_per_sample_traces=bool(args.save_per_sample_traces),
+                    trace_chunk_path=trace_chunk_path,
+                    trace_chunk_size=int(args.trace_chunk_size),
                     trace_output_max_chars=int(args.trace_output_max_chars),
                 )
                 if task not in task_index_map:
@@ -2003,6 +2273,25 @@ def main() -> None:
             if isinstance(task_scores_raw, list):
                 model_per_sample_scores_raw[task] = [float(x) for x in task_scores_raw if isinstance(x, (int, float))]
             mres["tasks"][task] = tres
+
+        task_audits = [
+            task_obj.get("audit", {})
+            for task_obj in mres["tasks"].values()
+            if isinstance(task_obj, dict)
+        ]
+        mres["batch_policy"] = {
+            "initial_batch_size": int(args.batch_size),
+            "max_batch_size": int(effective_max_bs),
+            "max_batch_input_tokens": int(effective_token_budget),
+            "enable_length_bucket": bool(args.enable_length_bucket),
+            "enable_oom_backoff": bool(args.enable_oom_backoff),
+        }
+        mres["oom_backoff_count"] = int(
+            sum(int(a.get("oom_backoff_count", 0)) for a in task_audits if isinstance(a, dict))
+        )
+        mres["score_workers"] = int(args.score_workers)
+        mres["trace_chunk_size"] = int(args.trace_chunk_size)
+        results["meta"]["oom_backoff_count"][model_name] = int(mres["oom_backoff_count"])
 
         inv_sha256, inv_path = resolve_inv_metadata(
             adapter_path=model_adapter_path,
@@ -2047,6 +2336,14 @@ def main() -> None:
                 "chat_template": args.chat_template,
                 "truncate_mode": args.truncate_mode,
                 "max_new_tokens_policy": args.max_new_tokens_policy,
+                "engine_preference": args.engine_preference,
+                "batch_size": int(args.batch_size),
+                "max_batch_size": int(effective_max_bs),
+                "max_batch_input_tokens": int(args.max_batch_input_tokens),
+                "score_workers": int(args.score_workers),
+                "trace_chunk_size": int(args.trace_chunk_size),
+                "enable_length_bucket": bool(args.enable_length_bucket),
+                "enable_oom_backoff": bool(args.enable_oom_backoff),
             },
             "tasks": {t: task_index_map.get(t, []) for t in tasks},
         }

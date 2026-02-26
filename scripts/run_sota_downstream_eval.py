@@ -201,6 +201,45 @@ def main() -> None:
         help="Batch size for eval_longbench greedy generation. Increase to use more VRAM and reduce wall time.",
     )
     ap.add_argument(
+        "--longbench_max_batch_input_tokens",
+        type=int,
+        default=0,
+        help="Soft token budget for dynamic micro-batch grouping in eval_longbench.",
+    )
+    ap.add_argument(
+        "--longbench_engine",
+        type=str,
+        default="flash_attention_2",
+        choices=["auto", "flash_attention_2", "sdpa", "eager"],
+        help="Preferred LongBench attention backend. flash_attention_2 auto-fallbacks to sdpa.",
+    )
+    ap.add_argument(
+        "--longbench_score_workers",
+        type=int,
+        default=16,
+        help="CPU worker threads for per-sample score post-processing.",
+    )
+    ap.add_argument(
+        "--longbench_trace_chunk_size",
+        type=int,
+        default=200,
+        help="Chunk size for flushing per-sample trace jsonl files.",
+    )
+    ap.add_argument(
+        "--longbench_enable_length_bucket",
+        type=int,
+        default=1,
+        choices=[0, 1],
+        help="Enable prompt length bucket sorting before dynamic micro-batching.",
+    )
+    ap.add_argument(
+        "--longbench_enable_oom_backoff",
+        type=int,
+        default=1,
+        choices=[0, 1],
+        help="Enable OOM-triggered micro-batch split backoff in eval_longbench.",
+    )
+    ap.add_argument(
         "--longbench_prompt_source",
         type=str,
         default="official",
@@ -286,6 +325,14 @@ def main() -> None:
             "eval_root": str(eval_root),
             "methods_requested": methods,
             "longbench_manifest_json": str(manifest_path),
+            "longbench_task_set": args.longbench_task_set,
+            "longbench_engine": args.longbench_engine,
+            "longbench_batch_size": int(args.longbench_batch_size),
+            "longbench_max_batch_input_tokens": int(args.longbench_max_batch_input_tokens),
+            "longbench_score_workers": int(args.longbench_score_workers),
+            "longbench_trace_chunk_size": int(args.longbench_trace_chunk_size),
+            "longbench_enable_length_bucket": bool(args.longbench_enable_length_bucket),
+            "longbench_enable_oom_backoff": bool(args.longbench_enable_oom_backoff),
             "resume_enabled": not bool(args.no_resume),
         },
         "methods": {},
@@ -388,10 +435,16 @@ def main() -> None:
                 str(args.longbench_max_input_tokens),
                 "--batch_size",
                 str(int(args.longbench_batch_size)),
+                "--max_batch_size",
+                str(int(args.longbench_batch_size)),
+                "--max_batch_input_tokens",
+                str(int(args.longbench_max_batch_input_tokens)),
                 "--longbench_local_data_dir",
                 args.longbench_local_data_dir,
+                "--engine_preference",
+                args.longbench_engine,
                 "--attn_implementation",
-                "sdpa",
+                args.longbench_engine,
                 "--seed",
                 str(args.seed),
                 "--manifest_json",
@@ -404,6 +457,14 @@ def main() -> None:
                 args.longbench_truncate_mode,
                 "--max_new_tokens_policy",
                 args.longbench_max_new_tokens_policy,
+                "--score_workers",
+                str(int(args.longbench_score_workers)),
+                "--trace_chunk_size",
+                str(int(args.longbench_trace_chunk_size)),
+                "--enable_length_bucket",
+                str(int(args.longbench_enable_length_bucket)),
+                "--enable_oom_backoff",
+                str(int(args.longbench_enable_oom_backoff)),
             ] + common_custom_args
             if repro_manifest_dir:
                 cmd.extend(["--repro_manifest_dir", repro_manifest_dir])
@@ -423,6 +484,13 @@ def main() -> None:
                 "output_json": str(lb_out),
                 "manifest_json": str(manifest_path),
                 "repro_manifest_dir": repro_manifest_dir,
+                "engine_preference": args.longbench_engine,
+                "batch_size": int(args.longbench_batch_size),
+                "max_batch_input_tokens": int(args.longbench_max_batch_input_tokens),
+                "score_workers": int(args.longbench_score_workers),
+                "trace_chunk_size": int(args.longbench_trace_chunk_size),
+                "enable_length_bucket": bool(args.longbench_enable_length_bucket),
+                "enable_oom_backoff": bool(args.longbench_enable_oom_backoff),
                 "skipped_existing": skipped_existing,
             }
 

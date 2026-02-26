@@ -38,6 +38,7 @@ logs/
 artifacts/local_monitor/
 artifacts/reviewer_2026-02-24/
 artifacts/_server_sync/
+artifacts/longinst_v1/
 
 # Local significance smoke/rerun artifacts (generated during analysis)
 archives/batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/significance_seeded_*.csv

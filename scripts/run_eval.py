@@ -304,6 +304,45 @@ def parse_args() -> argparse.Namespace:
         default=1,
         help="Batch size for eval_longbench greedy generation. Increase to use more VRAM and reduce wall time.",
     )
+    ap.add_argument(
+        "--longbench_max_batch_input_tokens",
+        type=int,
+        default=0,
+        help="Soft token budget for dynamic micro-batch grouping in eval_longbench.",
+    )
+    ap.add_argument(
+        "--longbench_engine",
+        type=str,
+        default="flash_attention_2",
+        choices=["auto", "flash_attention_2", "sdpa", "eager"],
+        help="Preferred LongBench attention backend. flash_attention_2 auto-fallbacks to sdpa.",
+    )
+    ap.add_argument(
+        "--longbench_score_workers",
+        type=int,
+        default=16,
+        help="CPU worker threads for per-sample score post-processing.",
+    )
+    ap.add_argument(
+        "--longbench_trace_chunk_size",
+        type=int,
+        default=200,
+        help="Chunk size for flushing per-sample trace jsonl files.",
+    )
+    ap.add_argument(
+        "--longbench_enable_length_bucket",
+        type=int,
+        default=1,
+        choices=[0, 1],
+        help="Enable prompt length bucket sorting before dynamic micro-batching.",
+    )
+    ap.add_argument(
+        "--longbench_enable_oom_backoff",
+        type=int,
+        default=1,
+        choices=[0, 1],
+        help="Enable OOM-triggered micro-batch split backoff in eval_longbench.",
+    )
     ap.add_argument("--ppl_max_chunks", type=int, default=20)
     ap.add_argument("--needle_depths", type=str, default="10,50,90")
     ap.add_argument("--needle_trials_per_cell", type=int, default=24)
@@ -364,6 +403,12 @@ rope:
 eval:
   ctx: {args.ctx}
   batch_size: {int(args.longbench_batch_size)}
+  max_batch_input_tokens: {int(args.longbench_max_batch_input_tokens)}
+  engine: "{args.longbench_engine}"
+  score_workers: {int(args.longbench_score_workers)}
+  trace_chunk_size: {int(args.longbench_trace_chunk_size)}
+  enable_length_bucket: {bool(args.longbench_enable_length_bucket)}
+  enable_oom_backoff: {bool(args.longbench_enable_oom_backoff)}
   seed: {args.seed}
   suite: {json.dumps(suites)}
 logging:
@@ -411,6 +456,12 @@ logging:
         "longbench_max_new_tokens_policy": args.longbench_max_new_tokens_policy,
         "longbench_score_scale": args.longbench_score_scale,
         "longbench_batch_size": int(args.longbench_batch_size),
+        "longbench_max_batch_input_tokens": int(args.longbench_max_batch_input_tokens),
+        "longbench_engine": args.longbench_engine,
+        "longbench_score_workers": int(args.longbench_score_workers),
+        "longbench_trace_chunk_size": int(args.longbench_trace_chunk_size),
+        "longbench_enable_length_bucket": bool(args.longbench_enable_length_bucket),
+        "longbench_enable_oom_backoff": bool(args.longbench_enable_oom_backoff),
         "longbench_repro_manifest_dir": args.longbench_repro_manifest_dir,
         "strict_parity_check": bool(args.strict_parity_check),
         "manifest_path": str(manifest_path),
@@ -443,6 +494,12 @@ logging:
             "longbench_truncate_mode": args.longbench_truncate_mode,
             "longbench_max_new_tokens_policy": args.longbench_max_new_tokens_policy,
             "longbench_batch_size": int(args.longbench_batch_size),
+            "longbench_max_batch_input_tokens": int(args.longbench_max_batch_input_tokens),
+            "longbench_engine": args.longbench_engine,
+            "longbench_score_workers": int(args.longbench_score_workers),
+            "longbench_trace_chunk_size": int(args.longbench_trace_chunk_size),
+            "longbench_enable_length_bucket": bool(args.longbench_enable_length_bucket),
+            "longbench_enable_oom_backoff": bool(args.longbench_enable_oom_backoff),
             "longbench_repro_manifest_dir": args.longbench_repro_manifest_dir,
             "strict_parity_check": bool(args.strict_parity_check),
         },
@@ -514,10 +571,16 @@ logging:
                 str(args.ctx),
                 "--batch_size",
                 str(int(args.longbench_batch_size)),
+                "--max_batch_size",
+                str(int(args.longbench_batch_size)),
+                "--max_batch_input_tokens",
+                str(int(args.longbench_max_batch_input_tokens)),
+                "--engine_preference",
+                args.longbench_engine,
                 "--seed",
                 str(args.seed),
                 "--attn_implementation",
-                args.attn_implementation,
+                args.longbench_engine,
                 "--manifest_json",
                 str(manifest_path),
                 "--score_scale",
@@ -530,6 +593,14 @@ logging:
                 args.longbench_truncate_mode,
                 "--max_new_tokens_policy",
                 args.longbench_max_new_tokens_policy,
+                "--score_workers",
+                str(int(args.longbench_score_workers)),
+                "--trace_chunk_size",
+                str(int(args.longbench_trace_chunk_size)),
+                "--enable_length_bucket",
+                str(int(args.longbench_enable_length_bucket)),
+                "--enable_oom_backoff",
+                str(int(args.longbench_enable_oom_backoff)),
             ]
             if longbench_tasks_arg:
                 cmd.extend(["--tasks", longbench_tasks_arg])

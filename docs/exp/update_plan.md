@@ -1,5 +1,8 @@
 # RoPE 变分框架论文实验重构计划书（Codex 执行版，可直接落地）
 
+> 最新执行入口（LLaMA-3-8B 8K 理论验证）：
+> `/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/docs/exp/llama8k_theory_v1_execution.md`
+
 > 版本：v2（针对“可复制/可执行/可审计”优化版）  
 > 目标：仅从**实验设计与执行**角度，重构论文实证证据链，修复 8B 管线可信度问题，补齐基线、统计功效、复现材料与论文级附录产出。  
 > 适用对象：Codex / 自动化实验代理 / 实验工程同学  

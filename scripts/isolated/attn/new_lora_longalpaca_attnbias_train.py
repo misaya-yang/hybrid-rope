@@ -60,6 +60,10 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
+def sha256_text(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8", errors="ignore")).hexdigest()
+
+
 def parse_csv(text: str) -> List[str]:
     return [x.strip() for x in str(text).split(",") if x.strip()]
 
@@ -404,6 +408,8 @@ def tokenize_dataset(
             padding=False,
         )
         labels: List[List[int]] = []
+        supervised_tokens: List[int] = []
+        assistant_header_found: List[int] = []
         for ids in tok["input_ids"]:
             lbl = list(ids)
             if response_only_loss and assistant_header_ids:
@@ -412,11 +418,19 @@ def tokenize_dataset(
                     cutoff = min(len(lbl), pos + len(assistant_header_ids))
                     for i in range(cutoff):
                         lbl[i] = -100
+                    assistant_header_found.append(1)
+                else:
+                    assistant_header_found.append(0)
+            else:
+                assistant_header_found.append(1)
+            supervised_tokens.append(sum(1 for x in lbl if int(x) != -100))
             labels.append(lbl)
         return {
             "input_ids": tok["input_ids"],
             "attention_mask": tok["attention_mask"],
             "labels": labels,
+            "supervised_tokens": supervised_tokens,
+            "assistant_header_found": assistant_header_found,
         }
 
     ds = ds.map(_tok, batched=True, remove_columns=["text"])
@@ -719,6 +733,8 @@ def main() -> None:
     ap.add_argument("--synthetic_ratio", type=float, default=0.30)
     ap.add_argument("--wikitext_ratio", type=float, default=0.20)
     ap.add_argument("--response_only_loss", action=argparse.BooleanOptionalAction, default=True)
+    ap.add_argument("--require_assistant_header", action=argparse.BooleanOptionalAction, default=True)
+    ap.add_argument("--min_supervised_tokens", type=int, default=16)
     ap.add_argument("--max_seq_len", type=int, default=8192)
     ap.add_argument("--max_steps", type=int, default=800)
     ap.add_argument("--per_device_train_batch_size", type=int, default=1)
@@ -743,7 +759,7 @@ def main() -> None:
     ap.add_argument("--s2_table_path", type=str, default="")
     ap.add_argument("--require_s2_table", action=argparse.BooleanOptionalAction, default=True)
     ap.add_argument("--allow_prerope_gate", action="store_true")
-    ap.add_argument("--use_macro_micro_kl", action="store_true")
+    ap.add_argument("--use_macro_micro_kl", action=argparse.BooleanOptionalAction, default=False)
     ap.add_argument("--lambda_micro", type=float, default=0.01)
     ap.add_argument("--lambda_macro", type=float, default=0.01)
     ap.add_argument("--regularizer_warmup_steps", type=int, default=80)
@@ -812,19 +828,40 @@ def main() -> None:
         max_seq_len=int(args.max_seq_len),
         response_only_loss=bool(args.response_only_loss),
     )
+    ds_before_filter = len(ds)
+    ds_filtered_header = 0
+    ds_filtered_supervised = 0
+    min_supervised = max(1, int(args.min_supervised_tokens))
     if bool(args.response_only_loss):
-        masked_tokens = 0
-        total_tokens = 0
-        probe_n = min(128, len(ds))
-        for i in range(probe_n):
-            labels_i = ds[i]["labels"]
-            total_tokens += len(labels_i)
-            masked_tokens += sum(1 for x in labels_i if int(x) == -100)
-        if total_tokens > 0 and masked_tokens == 0:
-            print(
-                "[WARNING] response_only_loss enabled but no assistant header mask detected in probe samples; "
-                "falling back to full-token loss behavior for those samples."
+        if bool(args.require_assistant_header):
+            ds = ds.filter(lambda x: int(x["assistant_header_found"]) == 1)
+            ds_filtered_header = ds_before_filter - len(ds)
+        ds_after_header = len(ds)
+        ds = ds.filter(lambda x: int(x["supervised_tokens"]) >= min_supervised)
+        ds_filtered_supervised = ds_after_header - len(ds)
+        if len(ds) < 200:
+            raise RuntimeError(
+                f"Too few samples after SFT filtering: {len(ds)} "
+                f"(header_dropped={ds_filtered_header}, supervised_dropped={ds_filtered_supervised})."
             )
+    probe_n = min(256, len(ds))
+    masked_tokens = 0
+    total_tokens = 0
+    probe_header_hits = 0
+    probe_supervised = 0
+    for i in range(probe_n):
+        row = ds[i]
+        labels_i = row["labels"]
+        total_tokens += len(labels_i)
+        masked_tokens += sum(1 for x in labels_i if int(x) == -100)
+        probe_header_hits += int(row.get("assistant_header_found", 1))
+        probe_supervised += int(row.get("supervised_tokens", 0))
+    probe_mask_ratio = float(masked_tokens) / float(max(total_tokens, 1))
+    if bool(args.response_only_loss) and probe_mask_ratio <= 0.0:
+        raise RuntimeError(
+            "response_only_loss is enabled but probe_mask_ratio is 0; "
+            "assistant masking did not activate."
+        )
     train_ds, val_ds = split_dataset(ds, seed=args.seed)
 
     effective_attn_impl = args.attn_implementation
@@ -1002,9 +1039,22 @@ def main() -> None:
             "dashscope_model": args.dashscope_model,
             "dashscope_bootstrap_samples": int(args.dashscope_bootstrap_samples),
             "tokenizer_truncation_side": str(tokenizer.truncation_side),
+            "tokenizer_chat_template_sha256": sha256_text(str(getattr(tokenizer, "chat_template", "") or "")),
             "response_only_loss": bool(args.response_only_loss),
+            "require_assistant_header": bool(args.require_assistant_header),
+            "min_supervised_tokens": int(args.min_supervised_tokens),
         },
         "data_info": data_info,
+        "sft_data_audit": {
+            "dataset_size_before_filter": int(ds_before_filter),
+            "dataset_size_after_filter": int(len(ds)),
+            "dropped_missing_assistant_header": int(ds_filtered_header),
+            "dropped_low_supervised_tokens": int(ds_filtered_supervised),
+            "probe_n": int(probe_n),
+            "probe_mask_ratio": float(probe_mask_ratio),
+            "probe_header_hit_rate": float(probe_header_hits) / float(max(probe_n, 1)),
+            "probe_mean_supervised_tokens": float(probe_supervised) / float(max(probe_n, 1)),
+        },
         "rope_info": rope_info,
         "attn_bias": vars(patch_cfg),
         "s2_table": {
