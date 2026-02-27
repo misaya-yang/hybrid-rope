@@ -71,6 +71,7 @@ NOISE_VOCAB = [
     "router",
     "buffer",
 ]
+TRAIN_TRUNCATE_HEAD_CAP = 500
 
 
 @dataclass
@@ -609,17 +610,29 @@ def iter_scaffold_candidates(
 def build_response_only_labels(
     *,
     full_ids: List[int],
-    pref_ids: List[int],
+    assistant_start_full: int,
     max_seq_len: int,
-    min_supervised_tokens: int,
+    truncate_head_cap: int,
 ) -> Tuple[List[int], List[int], int, int]:
-    truncated = list(full_ids[-int(max_seq_len):])
-    dropped = len(full_ids) - len(truncated)
-    assistant_start = max(0, int(len(pref_ids) - dropped))
-
-    if assistant_start >= len(truncated):
-        # Assistant span is outside the retained window; leave it invalid so caller can drop the sample.
-        assistant_start = len(truncated)
+    if len(full_ids) > int(max_seq_len):
+        head_len = min(int(truncate_head_cap), max(0, int(max_seq_len) - 1))
+        tail_len = max(0, int(max_seq_len) - head_len)
+        middle_start = int(head_len)
+        middle_end = int(len(full_ids) - tail_len)
+        if tail_len > 0:
+            truncated = list(full_ids[:head_len] + full_ids[-tail_len:])
+        else:
+            truncated = list(full_ids[:head_len])
+        if int(assistant_start_full) < middle_start:
+            assistant_start = int(assistant_start_full)
+        elif int(assistant_start_full) >= middle_end:
+            assistant_start = int(head_len + (int(assistant_start_full) - middle_end))
+        else:
+            # Assistant boundary falls into dropped middle; sample must be rejected by caller.
+            assistant_start = int(len(truncated))
+    else:
+        truncated = list(full_ids)
+        assistant_start = int(assistant_start_full)
 
     labels = list(truncated)
     for j in range(max(0, min(assistant_start, len(labels)))):
@@ -635,6 +648,8 @@ def render_and_prepare(
     candidate: Dict[str, object],
     max_seq_len: int,
     min_supervised_tokens: int,
+    truncate_head_cap: int,
+    require_offset_boundary: bool,
 ) -> Tuple[Optional[PreparedSample], str]:
     messages = candidate.get("messages", [])
     if not isinstance(messages, list) or len(messages) < 2:
@@ -652,26 +667,48 @@ def render_and_prepare(
     except Exception:
         return None, "template_error"
 
-    text = str(text).strip()
-    prefix_text = str(prefix_text).strip()
-    if not text or not prefix_text:
+    # Keep exact rendered boundary (no strip) to avoid assistant offset drift.
+    text = str(text)
+    prefix_text = str(prefix_text)
+    if not text.strip() or not prefix_text.strip():
         return None, "render_error"
 
+    full_offsets = None
     try:
-        full_ids = tokenizer(text, add_special_tokens=False, truncation=False)["input_ids"]
+        full_enc = tokenizer(text, add_special_tokens=False, truncation=False, return_offsets_mapping=True)
+        full_ids = list(full_enc["input_ids"])
+        raw_offsets = full_enc.get("offset_mapping")
+        if (
+            isinstance(raw_offsets, list)
+            and len(raw_offsets) == len(full_ids)
+            and len(raw_offsets) > 0
+            and isinstance(raw_offsets[0], (list, tuple))
+            and len(raw_offsets[0]) == 2
+        ):
+            full_offsets = raw_offsets
         pref_ids = tokenizer(prefix_text, add_special_tokens=False, truncation=False)["input_ids"]
     except Exception:
         return None, "tokenize_error"
 
     if not full_ids or not pref_ids:
         return None, "tokenize_error"
+    assistant_start_full = int(len(pref_ids))
+    if full_offsets is not None:
+        prefix_char_len = len(prefix_text)
+        assistant_start_full = int(
+            next((idx for idx, pair in enumerate(full_offsets) if int(pair[0]) >= prefix_char_len), len(full_ids))
+        )
+    elif bool(require_offset_boundary):
+        return None, "missing_offset_mapping"
 
     truncated, labels, assistant_start, supervised = build_response_only_labels(
         full_ids=full_ids,
-        pref_ids=pref_ids,
+        assistant_start_full=assistant_start_full,
         max_seq_len=max_seq_len,
-        min_supervised_tokens=min_supervised_tokens,
+        truncate_head_cap=int(truncate_head_cap),
     )
+    if assistant_start >= len(truncated):
+        return None, "assistant_out_of_window"
 
     if supervised < int(min_supervised_tokens):
         return None, "low_supervised"
@@ -703,6 +740,8 @@ def collect_prior_pool(
     tokenizer,
     max_seq_len: int,
     min_supervised_tokens: int,
+    truncate_head_cap: int,
+    require_offset_boundary: bool,
     seen_hashes: Set[str],
     strict: bool,
 ) -> Tuple[List[PreparedSample], Dict[str, object]]:
@@ -745,6 +784,8 @@ def collect_prior_pool(
             candidate=cand,
             max_seq_len=max_seq_len,
             min_supervised_tokens=min_supervised_tokens,
+            truncate_head_cap=int(truncate_head_cap),
+            require_offset_boundary=bool(require_offset_boundary),
         )
         if sample is None:
             key = f"dropped_{reason}"
@@ -929,6 +970,8 @@ def build_label_mask_preview(
     rows: List[PreparedSample],
     max_seq_len: int,
     min_supervised_tokens: int,
+    truncate_head_cap: int,
+    require_offset_boundary: bool,
     sample_n: int,
 ) -> Tuple[Dict[str, object], bool]:
     previews: List[Dict[str, object]] = []
@@ -938,16 +981,45 @@ def build_label_mask_preview(
         prefix_msgs = list(s.messages[:-1]) + [{"role": "assistant", "content": ""}]
         full_text = tokenizer.apply_chat_template(s.messages, tokenize=False, add_generation_prompt=False)
         prefix_text = tokenizer.apply_chat_template(prefix_msgs, tokenize=False, add_generation_prompt=False)
-        full_ids = tokenizer(str(full_text), add_special_tokens=False, truncation=False)["input_ids"]
+        full_offsets = None
+        full_enc = tokenizer(str(full_text), add_special_tokens=False, truncation=False, return_offsets_mapping=True)
+        full_ids = list(full_enc["input_ids"])
+        raw_offsets = full_enc.get("offset_mapping")
+        if (
+            isinstance(raw_offsets, list)
+            and len(raw_offsets) == len(full_ids)
+            and len(raw_offsets) > 0
+            and isinstance(raw_offsets[0], (list, tuple))
+            and len(raw_offsets[0]) == 2
+        ):
+            full_offsets = raw_offsets
         pref_ids = tokenizer(str(prefix_text), add_special_tokens=False, truncation=False)["input_ids"]
+        assistant_start_full = int(len(pref_ids))
+        if full_offsets is not None:
+            prefix_char_len = len(str(prefix_text))
+            assistant_start_full = int(
+                next((idx for idx, pair in enumerate(full_offsets) if int(pair[0]) >= prefix_char_len), len(full_ids))
+            )
+        elif bool(require_offset_boundary):
+            previews.append(
+                {
+                    "index": int(i),
+                    "prior": s.prior,
+                    "source_name": s.source_name,
+                    "check_pass": False,
+                    "error": "missing_offset_mapping",
+                }
+            )
+            ok = False
+            continue
         trunc_ids, labels, assistant_start, supervised = build_response_only_labels(
             full_ids=full_ids,
-            pref_ids=pref_ids,
+            assistant_start_full=assistant_start_full,
             max_seq_len=max_seq_len,
-            min_supervised_tokens=min_supervised_tokens,
+            truncate_head_cap=int(truncate_head_cap),
         )
 
-        has_masked_prefix = any(x == -100 for x in labels[:assistant_start]) if assistant_start > 0 else False
+        has_masked_prefix = all(x == -100 for x in labels[:assistant_start]) if assistant_start > 0 else True
         has_supervised_suffix = any(x != -100 for x in labels[assistant_start:]) if assistant_start < len(labels) else False
         local_ok = bool(has_masked_prefix and has_supervised_suffix and supervised >= int(min_supervised_tokens))
         ok = bool(ok and local_ok)
@@ -1123,7 +1195,9 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--test_ratio", type=float, default=0.02)
 
     ap.add_argument("--max_seq_len", type=int, default=16384)
+    ap.add_argument("--training_truncate_head_cap_tokens", type=int, default=TRAIN_TRUNCATE_HEAD_CAP)
     ap.add_argument("--min_supervised_tokens", type=int, default=64)
+    ap.add_argument("--require_offset_boundary", action=argparse.BooleanOptionalAction, default=True)
     ap.add_argument("--pool_factor", type=float, default=1.12)
 
     ap.add_argument("--max_attempts_powerlaw", type=int, default=180000)
@@ -1233,6 +1307,8 @@ def main() -> None:
         tokenizer=tokenizer,
         max_seq_len=int(args.max_seq_len),
         min_supervised_tokens=int(args.min_supervised_tokens),
+        truncate_head_cap=int(args.training_truncate_head_cap_tokens),
+        require_offset_boundary=bool(args.require_offset_boundary),
         seen_hashes=seen_hashes,
         strict=bool(args.strict),
     )
@@ -1245,6 +1321,8 @@ def main() -> None:
         tokenizer=tokenizer,
         max_seq_len=int(args.max_seq_len),
         min_supervised_tokens=int(args.min_supervised_tokens),
+        truncate_head_cap=int(args.training_truncate_head_cap_tokens),
+        require_offset_boundary=bool(args.require_offset_boundary),
         seen_hashes=seen_hashes,
         strict=bool(args.strict),
     )
@@ -1257,6 +1335,8 @@ def main() -> None:
         tokenizer=tokenizer,
         max_seq_len=int(args.max_seq_len),
         min_supervised_tokens=int(args.min_supervised_tokens),
+        truncate_head_cap=int(args.training_truncate_head_cap_tokens),
+        require_offset_boundary=bool(args.require_offset_boundary),
         seen_hashes=seen_hashes,
         strict=bool(args.strict),
     )
@@ -1303,6 +1383,8 @@ def main() -> None:
         rows=splits["train"],
         max_seq_len=int(args.max_seq_len),
         min_supervised_tokens=int(args.min_supervised_tokens),
+        truncate_head_cap=int(args.training_truncate_head_cap_tokens),
+        require_offset_boundary=bool(args.require_offset_boundary),
         sample_n=int(args.label_preview_samples),
     )
     label_preview_obj["pass"] = bool(label_preview_ok)
@@ -1348,8 +1430,12 @@ def main() -> None:
     }
 
     filter_rule = (
-        f"response_only(labels[:assistant_start]=-100; min_supervised_tokens={int(args.min_supervised_tokens)}; "
-        "no_tail_fallback; assistant_out_of_window=drop)"
+        "response_only("
+        f"truncate_mode=head_tail_keep_drop_middle; head_cap={int(args.training_truncate_head_cap_tokens)}; "
+        f"max_seq_len={int(args.max_seq_len)}; "
+        f"require_offset_boundary={bool(args.require_offset_boundary)}; "
+        f"min_supervised_tokens={int(args.min_supervised_tokens)}; "
+        "labels[:assistant_start]=-100; assistant_out_of_window=drop)"
     )
     source_audit = build_source_audit(rows=all_rows, input_files=input_files, filter_rule=filter_rule)
 
@@ -1386,7 +1472,10 @@ def main() -> None:
         "seed": int(args.seed),
         "tokenizer_path": str(args.tokenizer_path),
         "max_seq_len": int(args.max_seq_len),
+        "training_truncate_head_cap_tokens": int(args.training_truncate_head_cap_tokens),
+        "training_truncate_mode": "head_tail_keep_drop_middle",
         "min_supervised_tokens": int(args.min_supervised_tokens),
+        "require_offset_boundary": bool(args.require_offset_boundary),
         "targets": {
             "ratios": target_share,
             "tokens": {

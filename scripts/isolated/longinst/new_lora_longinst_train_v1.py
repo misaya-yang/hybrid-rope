@@ -92,6 +92,7 @@ def canonicalize_source_name(raw_source: str) -> str:
     wiki_aliases = {
         "wiki",
         "wikitext",
+        "power_law_base",
         "power_law",
         "powerlaw",
         "power-law",
@@ -102,6 +103,7 @@ def canonicalize_source_name(raw_source: str) -> str:
     }
     synthetic_aliases = {
         "synthetic",
+        "bimodal_reasoning",
         "multihop",
         "multi_hop",
         "multihop_qa",
@@ -117,6 +119,7 @@ def canonicalize_source_name(raw_source: str) -> str:
         "long",
         "longinst",
         "long_instruction",
+        "uniform_scaffold",
         "instruction",
         "format_scaffold",
         "scaffold",
@@ -150,13 +153,35 @@ def parse_ratio_like(value: object) -> Optional[float]:
     return float(v)
 
 
+def parse_bool_like(value: object) -> Optional[bool]:
+    if isinstance(value, bool):
+        return bool(value)
+    if value is None:
+        return None
+    text = str(value).strip().lower()
+    if text in {"1", "true", "yes", "y", "on"}:
+        return True
+    if text in {"0", "false", "no", "n", "off"}:
+        return False
+    return None
+
+
 def lookup_manifest_ratio(manifest: Dict, keys: List[str]) -> Optional[float]:
     containers: List[Dict] = []
     if isinstance(manifest, dict):
         containers.append(manifest)
+        actual = manifest.get("actual")
+        if isinstance(actual, dict):
+            containers.append(actual)
+            actual_share = actual.get("prior_token_share")
+            if isinstance(actual_share, dict):
+                containers.append(actual_share)
         targets = manifest.get("targets")
         if isinstance(targets, dict):
             containers.append(targets)
+            target_ratios = targets.get("ratios")
+            if isinstance(target_ratios, dict):
+                containers.append(target_ratios)
     for container in containers:
         for key in keys:
             if key in container:
@@ -735,6 +760,10 @@ def load_prebuilt_mixed_split(
     mixed_dataset_dir: Path,
     split: str,
     preview_txt: Path,
+    expected_max_seq_len: int,
+    expected_truncate_head_cap_tokens: int,
+    expected_min_supervised_tokens: int,
+    expected_require_offset_boundary: bool,
 ) -> Tuple[List[RenderedSample], Dict[str, object], Path]:
     split = str(split).strip().lower() or "train"
     candidates = [mixed_dataset_dir / f"{split}.jsonl"]
@@ -791,6 +820,33 @@ def load_prebuilt_mixed_split(
 
     manifest_path = mixed_dataset_dir / "mix_manifest.json"
     prebuilt_manifest = load_json(manifest_path) if manifest_path.exists() else {}
+    if prebuilt_manifest:
+        manifest_max_seq = prebuilt_manifest.get("max_seq_len")
+        if manifest_max_seq is not None and int(manifest_max_seq) != int(expected_max_seq_len):
+            raise RuntimeError(
+                "Prebuilt mixed dataset protocol mismatch: "
+                f"manifest.max_seq_len={int(manifest_max_seq)} vs train.max_seq_len={int(expected_max_seq_len)}."
+            )
+        manifest_head_cap = prebuilt_manifest.get("training_truncate_head_cap_tokens")
+        if manifest_head_cap is not None and int(manifest_head_cap) != int(expected_truncate_head_cap_tokens):
+            raise RuntimeError(
+                "Prebuilt mixed dataset protocol mismatch: "
+                "training_truncate_head_cap_tokens differs "
+                f"(manifest={int(manifest_head_cap)}, train={int(expected_truncate_head_cap_tokens)})."
+            )
+        manifest_min_supervised = prebuilt_manifest.get("min_supervised_tokens")
+        if manifest_min_supervised is not None and int(manifest_min_supervised) != int(expected_min_supervised_tokens):
+            raise RuntimeError(
+                "Prebuilt mixed dataset protocol mismatch: "
+                "min_supervised_tokens differs "
+                f"(manifest={int(manifest_min_supervised)}, train={int(expected_min_supervised_tokens)})."
+            )
+        manifest_require_offset = parse_bool_like(prebuilt_manifest.get("require_offset_boundary"))
+        if manifest_require_offset is not None and bool(manifest_require_offset) != bool(expected_require_offset_boundary):
+            raise RuntimeError(
+                "Prebuilt mixed dataset protocol mismatch: require_offset_boundary differs "
+                f"(manifest={bool(manifest_require_offset)}, train={bool(expected_require_offset_boundary)})."
+            )
 
     total_selected_tokens = int(sum(int(v) for v in source_token_counts.values()))
     actual_long_token_ratio = float(source_token_counts["long"]) / float(max(1, total_selected_tokens))
@@ -798,15 +854,36 @@ def load_prebuilt_mixed_split(
     actual_synthetic_token_ratio = float(source_token_counts["synthetic"]) / float(max(1, total_selected_tokens))
     target_long_ratio = lookup_manifest_ratio(
         prebuilt_manifest,
-        ["target_long_ratio", "long_token_ratio", "long_ratio", "mix_long_ratio"],
+        [
+            "target_long_ratio",
+            "long_token_ratio",
+            "long_ratio",
+            "mix_long_ratio",
+            "uniform_scaffold",
+            "uniform_scaffold_ratio",
+        ],
     )
     target_wiki_ratio = lookup_manifest_ratio(
         prebuilt_manifest,
-        ["target_wiki_ratio", "wiki_token_ratio", "wiki_ratio", "mix_wiki_ratio"],
+        [
+            "target_wiki_ratio",
+            "wiki_token_ratio",
+            "wiki_ratio",
+            "mix_wiki_ratio",
+            "power_law_base",
+            "power_law_base_ratio",
+        ],
     )
     target_synthetic_ratio = lookup_manifest_ratio(
         prebuilt_manifest,
-        ["target_synthetic_ratio", "synthetic_token_ratio", "synthetic_ratio", "mix_synthetic_ratio"],
+        [
+            "target_synthetic_ratio",
+            "synthetic_token_ratio",
+            "synthetic_ratio",
+            "mix_synthetic_ratio",
+            "bimodal_reasoning",
+            "bimodal_reasoning_ratio",
+        ],
     )
     if actual_wiki_token_ratio < 0.05:
         raise RuntimeError(
@@ -849,6 +926,10 @@ def load_prebuilt_mixed_split(
         "target_synthetic_ratio": target_synthetic_ratio,
         "prebuilt_manifest_json": manifest_path.as_posix() if manifest_path.exists() else "",
         "prebuilt_manifest_targets": prebuilt_manifest.get("targets", {}),
+        "prebuilt_manifest_max_seq_len": prebuilt_manifest.get("max_seq_len"),
+        "prebuilt_manifest_training_truncate_head_cap_tokens": prebuilt_manifest.get("training_truncate_head_cap_tokens"),
+        "prebuilt_manifest_min_supervised_tokens": prebuilt_manifest.get("min_supervised_tokens"),
+        "prebuilt_manifest_require_offset_boundary": parse_bool_like(prebuilt_manifest.get("require_offset_boundary")),
     }
     return rendered, stats, source_jsonl
 
@@ -873,8 +954,16 @@ def tokenize_response_only(
     boundary_offset_count = 0
     boundary_prefix_count = 0
     mask_check_printed = 0
+    source_kept_counts: Dict[str, int] = {}
+    source_kept_tokens: Dict[str, int] = {}
+    source_dropped_no_assistant: Dict[str, int] = {}
+    source_dropped_low_supervised: Dict[str, int] = {}
+
+    def bump(counter: Dict[str, int], key: str, delta: int = 1) -> None:
+        counter[key] = int(counter.get(key, 0)) + int(delta)
 
     for i, s in enumerate(samples):
+        source_key = str(s.source or "unknown")
         full_offsets = None
         try:
             full_enc = tokenizer(
@@ -899,6 +988,7 @@ def tokenize_response_only(
         pref_ids = tokenizer(s.prefix_text, add_special_tokens=False, truncation=False)["input_ids"]
         if not full_ids or not pref_ids:
             dropped_no_assistant += 1
+            bump(source_dropped_no_assistant, source_key)
             continue
 
         assistant_start_full = int(len(pref_ids))
@@ -945,6 +1035,7 @@ def tokenize_response_only(
         if assistant_start >= len(truncated):
             # Assistant part is out of window or boundary parse failed; drop this sample.
             dropped_no_assistant += 1
+            bump(source_dropped_no_assistant, source_key)
             continue
 
         labels = list(truncated)
@@ -955,6 +1046,7 @@ def tokenize_response_only(
         supervised = sum(1 for x in labels if int(x) != -100)
         if supervised < int(min_supervised_tokens):
             dropped_low_supervised += 1
+            bump(source_dropped_low_supervised, source_key)
             continue
 
         input_ids_all.append(truncated)
@@ -962,6 +1054,8 @@ def tokenize_response_only(
         labels_all.append(labels)
         total_tokens_list.append(len(truncated))
         assistant_tokens_list.append(supervised)
+        bump(source_kept_counts, source_key)
+        bump(source_kept_tokens, source_key, delta=len(truncated))
 
         if mask_check_printed < 2:
             supervised_ids = [int(tok) for tok, lbl in zip(truncated, labels) if int(lbl) != -100]
@@ -999,6 +1093,11 @@ def tokenize_response_only(
             "labels": labels_all,
         }
     )
+    total_post_tokens = int(sum(int(v) for v in source_kept_tokens.values()))
+    post_token_ratio = {
+        k: float(v) / float(max(1, total_post_tokens))
+        for k, v in sorted(source_kept_tokens.items())
+    }
 
     stats = {
         "num_samples_after_tokenize": len(input_ids_all),
@@ -1012,6 +1111,11 @@ def tokenize_response_only(
         "total_tokens": quantiles(total_tokens_list),
         "assistant_tokens": quantiles(assistant_tokens_list),
         "assistant_tokens_lt64_ratio": float(sum(1 for x in assistant_tokens_list if x < 64)) / float(max(1, len(assistant_tokens_list))),
+        "post_token_source_counts": {k: int(v) for k, v in sorted(source_kept_counts.items())},
+        "post_token_source_tokens": {k: int(v) for k, v in sorted(source_kept_tokens.items())},
+        "post_token_source_token_ratio": post_token_ratio,
+        "dropped_no_assistant_by_source": {k: int(v) for k, v in sorted(source_dropped_no_assistant.items())},
+        "dropped_low_supervised_by_source": {k: int(v) for k, v in sorted(source_dropped_low_supervised.items())},
     }
     return ds, stats, seg_preview
 
@@ -1800,7 +1904,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--logging_steps", type=int, default=10)
     ap.add_argument("--lr_scheduler_type", type=str, default="cosine")
     ap.add_argument("--optim", type=str, default="paged_adamw_8bit")
-    ap.add_argument("--attn_implementation", type=str, default="flash_attention_2")
+    ap.add_argument("--attn_implementation", type=str, default="sdpa")
     ap.add_argument("--load_in_4bit", action=argparse.BooleanOptionalAction, default=True)
     ap.add_argument("--gradient_checkpointing", action=argparse.BooleanOptionalAction, default=True)
 
@@ -1927,6 +2031,10 @@ def main() -> None:
             mixed_dataset_dir=mixed_dataset_dir,
             split=str(args.mixed_dataset_split),
             preview_txt=preview_txt,
+            expected_max_seq_len=int(args.max_seq_len),
+            expected_truncate_head_cap_tokens=int(TRAIN_TRUNCATE_HEAD_CAP),
+            expected_min_supervised_tokens=int(args.min_supervised_tokens),
+            expected_require_offset_boundary=bool(args.require_offset_boundary),
         )
     else:
         mix_jsonl = data_dir / "longinst_mix.jsonl"
@@ -1963,6 +2071,48 @@ def main() -> None:
         require_offset_boundary=bool(args.require_offset_boundary),
     )
     stats = {**mix_stats, **token_stats}
+    post_ratio = token_stats.get("post_token_source_token_ratio", {}) if isinstance(token_stats, dict) else {}
+    post_long = float(post_ratio.get("long", 0.0))
+    post_wiki = float(post_ratio.get("wiki", 0.0))
+    post_synthetic = float(post_ratio.get("synthetic", 0.0))
+    target_long_ratio = mix_stats.get("target_long_ratio")
+    target_wiki_ratio = mix_stats.get("target_wiki_ratio")
+    target_synthetic_ratio = mix_stats.get("target_synthetic_ratio")
+    ratio_tolerance_post = 0.12
+    if target_long_ratio is not None and abs(post_long - float(target_long_ratio)) > ratio_tolerance_post:
+        raise RuntimeError(
+            "Post-token long ratio drift too large: "
+            f"actual={post_long:.4f}, target={float(target_long_ratio):.4f}, tol={ratio_tolerance_post:.4f}."
+        )
+    if target_wiki_ratio is not None:
+        tw = float(target_wiki_ratio)
+        if post_wiki < max(0.02, tw * 0.50):
+            raise RuntimeError(
+                "Post-token wiki ratio too low after response-only filter: "
+                f"actual={post_wiki:.4f}, target={tw:.4f}, min={max(0.02, tw * 0.50):.4f}."
+            )
+        if abs(post_wiki - tw) > ratio_tolerance_post:
+            raise RuntimeError(
+                "Post-token wiki ratio drift too large: "
+                f"actual={post_wiki:.4f}, target={tw:.4f}, tol={ratio_tolerance_post:.4f}."
+            )
+    if target_synthetic_ratio is not None:
+        ts = float(target_synthetic_ratio)
+        if post_synthetic < max(0.05, ts * 0.50):
+            raise RuntimeError(
+                "Post-token synthetic ratio too low after response-only filter: "
+                f"actual={post_synthetic:.4f}, target={ts:.4f}, min={max(0.05, ts * 0.50):.4f}."
+            )
+        if abs(post_synthetic - ts) > ratio_tolerance_post:
+            raise RuntimeError(
+                "Post-token synthetic ratio drift too large: "
+                f"actual={post_synthetic:.4f}, target={ts:.4f}, tol={ratio_tolerance_post:.4f}."
+            )
+    print(
+        "[POST TOKEN CHECK] "
+        f"long={post_long:.4f}, wiki={post_wiki:.4f}, synthetic={post_synthetic:.4f}",
+        flush=True,
+    )
     if float(stats.get("assistant_tokens_lt64_ratio", 0.0)) > 0.10:
         raise RuntimeError(
             f"assistant_tokens_lt64_ratio too high: {stats.get('assistant_tokens_lt64_ratio')}. "

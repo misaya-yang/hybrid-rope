@@ -164,6 +164,8 @@ def run_job(
         str(args.mix_wiki_ratio),
         "--synthetic_ratio",
         str(args.synthetic_ratio),
+        "--min_supervised_tokens",
+        str(args.min_supervised_tokens),
         "--max_seq_len",
         str(args.max_seq_len),
         "--attn_implementation",
@@ -209,6 +211,7 @@ def run_job(
 
     if str(args.mixed_dataset_dir).strip():
         cmd.extend(["--mixed_dataset_dir", args.mixed_dataset_dir])
+    cmd.append("--require_offset_boundary" if bool(args.require_offset_boundary) else "--no-require_offset_boundary")
 
     if job.run_full_eval:
         cmd.append("--run_full_eval")
@@ -538,6 +541,12 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--wikitext_train_path", type=str, required=True)
     ap.add_argument("--mixed_dataset_dir", type=str, default="")
     ap.add_argument("--mixed_dataset_split", type=str, default="train")
+    ap.add_argument(
+        "--require_mixed_dataset_dir",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Fail fast if --execute is used without an explicit --mixed_dataset_dir.",
+    )
     ap.add_argument("--longbench_local_data_dir", type=str, required=True)
 
     ap.add_argument("--qwen_seed42_json", type=str, required=True)
@@ -547,9 +556,11 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--mix_long_ratio", type=float, default=0.7)
     ap.add_argument("--mix_wiki_ratio", type=float, default=0.1)
     ap.add_argument("--synthetic_ratio", type=float, default=0.2)
+    ap.add_argument("--min_supervised_tokens", type=int, default=64)
+    ap.add_argument("--require_offset_boundary", action=argparse.BooleanOptionalAction, default=True)
 
     ap.add_argument("--max_seq_len", type=int, default=8192)
-    ap.add_argument("--attn_implementation", type=str, default="flash_attention_2")
+    ap.add_argument("--attn_implementation", type=str, default="sdpa")
     ap.add_argument("--per_device_train_batch_size", type=int, default=4)
     ap.add_argument("--gradient_accumulation_steps", type=int, default=1)
     ap.add_argument("--learning_rate", type=float, default=2e-5)
@@ -584,6 +595,11 @@ def main() -> None:
     args = parse_args()
     if int(args.stats_claim_min_run_pairs) < 1:
         raise ValueError("--stats_claim_min_run_pairs must be >= 1")
+    if bool(args.execute) and bool(args.require_mixed_dataset_dir) and not str(args.mixed_dataset_dir).strip():
+        raise RuntimeError(
+            "Refusing execution without --mixed_dataset_dir. "
+            "On-the-fly fallback mix is not allowed for paper-grade runs."
+        )
     repo_root = Path(__file__).resolve().parents[3]
     output_root = (repo_root / args.output_root).resolve() if not Path(args.output_root).is_absolute() else Path(args.output_root)
     output_root.mkdir(parents=True, exist_ok=True)
@@ -696,6 +712,10 @@ def main() -> None:
         "stats_json": stats_json.as_posix() if stats_json else None,
         "stage_a_jobs": [job_run_name(j) for j in stage_a_jobs],
         "stage_b_jobs": [job_run_name(j) for j in stage_b_jobs],
+        "mixed_dataset_dir": str(args.mixed_dataset_dir),
+        "require_mixed_dataset_dir": bool(args.require_mixed_dataset_dir),
+        "min_supervised_tokens": int(args.min_supervised_tokens),
+        "require_offset_boundary": bool(args.require_offset_boundary),
         "run_full_eval_seed1337": bool(args.run_full_eval_seed1337),
         "stats_claim_min_run_pairs": int(args.stats_claim_min_run_pairs),
     }

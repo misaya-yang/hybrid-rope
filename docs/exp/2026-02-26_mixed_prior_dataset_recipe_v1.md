@@ -19,7 +19,9 @@ The ratio is enforced by **token budget**, not row count.
   - prompt tokens masked to `-100`
   - assistant tokens supervised
   - `min_supervised_tokens >= 64`
-  - tail supervision fallback is enabled when left truncation drops assistant span
+  - no supervision fallback when assistant span is out-of-window (sample is dropped)
+  - truncation policy aligns with trainer: `head-tail keep + drop middle` (`head_cap=500`)
+  - assistant boundary is resolved by `offset_mapping` (strict mode)
 
 ## Script
 - Builder: `/Users/yang/projects/hybrid-rope/scripts/prepare_mixed_prior_dataset_v1.py`
