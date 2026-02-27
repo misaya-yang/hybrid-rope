@@ -1873,11 +1873,17 @@ def main() -> None:
             f"Unexpected max_position_embeddings={max_pos}. Expected 8192 for LLaMA-3-8B-Instruct protocol."
         )
     rope_scaling_cfg = getattr(cfg_guard, "rope_scaling", None)
+    # transformers >= 5.x auto-populates rope_scaling with defaults even when
+    # the original config.json has null.  rope_type="default" means standard
+    # RoPE (no dynamic scaling), so we allow it.
     if rope_scaling_cfg is not None and rope_scaling_cfg != {}:
-        raise RuntimeError(
-            f"Unsupported rope_scaling={rope_scaling_cfg}. "
-            "This pipeline requires base LLaMA-3-8B-Instruct without dynamic rope_scaling."
-        )
+        rtype = rope_scaling_cfg.get("rope_type", "") if isinstance(rope_scaling_cfg, dict) else ""
+        if rtype != "default":
+            raise RuntimeError(
+                f"Unsupported rope_scaling={rope_scaling_cfg}. "
+                "This pipeline requires base LLaMA-3-8B-Instruct without dynamic rope_scaling. "
+                "(rope_type='default' is allowed as it means standard RoPE.)"
+            )
     strict_guard_enabled = bool(args.strict_single_96gb) or bool(args.strict_single_h800_96gb)
     if bool(args.strict_single_h800_96gb):
         print("[DEPRECATED] --strict_single_h800_96gb is deprecated. Use --strict_single_96gb.", flush=True)
