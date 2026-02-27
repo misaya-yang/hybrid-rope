@@ -29,8 +29,7 @@ TOP_LEVEL_CATEGORY: Dict[str, str] = {
     "outputs": "temporary_outputs",
     "tools": "ops_tooling",
     "eval": "evaluation_helpers",
-    "handoff_2026-02-23": "dated_handoff",
-    "handoff_2026-02-25": "dated_handoff",
+    "handoff": "dated_handoff",
     "neurips_plan": "planning",
     "sigmoid_rope_experiments": "subproject_sigmoid",
     "tmp_phase4_compare": "temporary_workspace",
@@ -41,6 +40,7 @@ ALLOWED_ROOT_FILES = {
     "AI_HANDOFF.md",
     ".gitignore",
     "AGENTS.md",
+    "train.py",
 }
 
 

@@ -9,7 +9,7 @@ Run future cross-model LoRA experiments with:
 
 Detailed handoff contract is maintained at:
 
-- `handoff_2026-02-23/05_GPU最大化与LoRA资产交接规范_2026-02-25.md`
+- `handoff/2026-02-23/05_GPU最大化与LoRA资产交接规范_2026-02-25.md`
 
 ## New scripts (legacy untouched)
 

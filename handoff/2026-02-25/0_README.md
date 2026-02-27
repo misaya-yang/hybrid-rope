@@ -44,7 +44,7 @@ cd /root/autodl-tmp/dfrope/hybrid-rope
 3) Anchored tuned (LoRA or inference-only) and statistics
 
 See:
-- `handoff_2026-02-25/3_RUNBOOK.md` (exact command matrix)
+- `handoff/2026-02-25/3_RUNBOOK.md` (exact command matrix)
 
 Stop conditions (hard):
 - Any comparison without identical manifest/template/decode/injection metadata is `INVALID`.

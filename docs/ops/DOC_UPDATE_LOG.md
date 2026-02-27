@@ -5,7 +5,7 @@
 
 ## 0. 2026-02-26 本轮新增
 
-- **新增 handoff 包**：`handoff_2026-02-26/`，沿用现有 dated-handoff 结构，包含：
+- **新增 handoff 包**：`handoff/2026-02-26/`，沿用现有 dated-handoff 结构，包含：
   - `0_README.md`, `1_PROTOCOL_LOCK.md`, `2_ASSET_MAP.md`, `3_RUNBOOK.md`
   - `01_IMPLEMENTED_SCOPE.md`, `02_VALIDATION_SNAPSHOT.md`, `03_DEEP_REVIEW_FINDINGS.md`
 - **更新 AI 接手入口**：`AI_HANDOFF.md` 新增 2026-02-26 包索引。

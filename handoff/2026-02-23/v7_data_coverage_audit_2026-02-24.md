@@ -4,7 +4,7 @@
 - Goal: verify whether currently strongest **VALID** evidence is already reflected in the v7 anonymous paper.
 - Paper target: `/Users/misaya.yanghejazfs.com.au/download/releases/neurips/hybrid_rope_neurips_submission_v7_anonymous.tex`
 - Data sources:
-  - `handoff_2026-02-23/01_结果真值表_VALID_INVALID.md`
+  - `handoff/2026-02-23/01_结果真值表_VALID_INVALID.md`
   - `results/theory_2026-02-22/*`
   - `archives/batch_report_2026-02-23_downstream_eval/report/*`
   - `.../significance_seeded_v7_refresh.{json,csv}` (local refresh run)

@@ -50,10 +50,10 @@ Implemented:
 Updated/added:
 
 - `AI_HANDOFF.md`
-- `handoff_2026-02-23/plan.md`
-- `handoff_2026-02-23/anchored_sigmoid_math_note.md`
-- `handoff_2026-02-23/longbench_pipeline_parity.md`
-- `handoff_2026-02-23/theory_appendix_extensions.md`
+- `handoff/2026-02-23/plan.md`
+- `handoff/2026-02-23/anchored_sigmoid_math_note.md`
+- `handoff/2026-02-23/longbench_pipeline_parity.md`
+- `handoff/2026-02-23/theory_appendix_extensions.md`
 
 ## F) Artifacts already available
 

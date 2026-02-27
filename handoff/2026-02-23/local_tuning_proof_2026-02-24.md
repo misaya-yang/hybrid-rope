@@ -33,7 +33,7 @@ Recommended practical setting:
 - Use the tuned setting above as the only schedule change in the next protocol-locked rerun.
 - Keep checkpoint/tokenizer/manifest/decode/seed unchanged.
 - Run order: `E2` first (shape signal), then `E1` full table refresh, then paired significance.
-- Detailed commands: `handoff_2026-02-23/tomorrow_tuned_param_runbook_2026-02-25.md`.
+- Detailed commands: `handoff/2026-02-23/tomorrow_tuned_param_runbook_2026-02-25.md`.
 
 ## Quantitative gains vs current anchored_sigmoid
 

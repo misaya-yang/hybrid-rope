@@ -54,7 +54,7 @@ hybrid-rope/
 - 想看当前结果汇总：`docs/RESULTS.md`
 - 想跑 LongBench：`scripts/eval_longbench.py`
 - 想估计 attention distance prior：`scripts/run_attn_hist.py`
-- 想要换机无缝：`AI_HANDOFF.md` + `handoff_2026-02-25/0_README.md`
+- 想要换机无缝：`AI_HANDOFF.md` + `handoff/2026-02-25/0_README.md`
 
 ## 5) 归档策略（避免仓库继续变乱）
 

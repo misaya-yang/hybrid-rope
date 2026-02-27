@@ -36,14 +36,15 @@ Operational reports are under:
 
 Use this folder as the current implementation handoff for the 24h dual-track plan:
 
-- `handoff_2026-02-26/0_README.md`
-- `handoff_2026-02-26/1_PROTOCOL_LOCK.md`
-- `handoff_2026-02-26/2_ASSET_MAP.md`
-- `handoff_2026-02-26/3_RUNBOOK.md`
-- `handoff_2026-02-26/01_IMPLEMENTED_SCOPE.md`
-- `handoff_2026-02-26/02_VALIDATION_SNAPSHOT.md`
-- `handoff_2026-02-26/03_DEEP_REVIEW_FINDINGS.md`
-- `handoff_2026-02-26/README.md`
+- Handoff index/convention: `handoff/README.md`
+- `handoff/2026-02-26/0_README.md`
+- `handoff/2026-02-26/1_PROTOCOL_LOCK.md`
+- `handoff/2026-02-26/2_ASSET_MAP.md`
+- `handoff/2026-02-26/3_RUNBOOK.md`
+- `handoff/2026-02-26/01_IMPLEMENTED_SCOPE.md`
+- `handoff/2026-02-26/02_VALIDATION_SNAPSHOT.md`
+- `handoff/2026-02-26/03_DEEP_REVIEW_FINDINGS.md`
+- `handoff/2026-02-26/README.md`
 
 Key code deltas in this round:
 - `final_lora` export contract in fast LoRA trainer + backward-compatible root adapter retention.
@@ -58,15 +59,15 @@ Key code deltas in this round:
 
 Use this folder as the current reviewer-remediation entrypoint:
 
-- `handoff_2026-02-25/0_README.md`
-- `handoff_2026-02-25/1_PROTOCOL_LOCK.md`
-- `handoff_2026-02-25/2_ASSET_MAP.md`
-- `handoff_2026-02-25/3_RUNBOOK.md`
-- `handoff_2026-02-25/4_RECOVERY_AND_CLEANUP.md`
-- `handoff_2026-02-25/README.md` (legacy)
-- `handoff_2026-02-25/01_IMPLEMENTED_SCOPE.md`
-- `handoff_2026-02-25/02_VALIDATION_SNAPSHOT_AIDEMO.md`
-- `handoff_2026-02-25/03_NEXT_EXECUTION_GATES.md`
+- `handoff/2026-02-25/0_README.md`
+- `handoff/2026-02-25/1_PROTOCOL_LOCK.md`
+- `handoff/2026-02-25/2_ASSET_MAP.md`
+- `handoff/2026-02-25/3_RUNBOOK.md`
+- `handoff/2026-02-25/4_RECOVERY_AND_CLEANUP.md`
+- `handoff/2026-02-25/README.md` (legacy)
+- `handoff/2026-02-25/01_IMPLEMENTED_SCOPE.md`
+- `handoff/2026-02-25/02_VALIDATION_SNAPSHOT_AIDEMO.md`
+- `handoff/2026-02-25/03_NEXT_EXECUTION_GATES.md`
 
 ## 0.2) Audit red-line package (2026-02-25 night)
 
@@ -165,8 +166,8 @@ PER_DEVICE_BATCH=4 MAX_STEPS=50 bash scripts/cross_model_finetune_fast_tuned.sh
 
 ## 5) Single source of truth for tuned schedule
 
-- Tuning evidence: `handoff_2026-02-23/local_tuning_proof_2026-02-24.md`
-- Runbook: `handoff_2026-02-23/tomorrow_tuned_param_runbook_2026-02-25.md`
+- Tuning evidence: `handoff/2026-02-23/local_tuning_proof_2026-02-24.md`
+- Runbook: `handoff/2026-02-23/tomorrow_tuned_param_runbook_2026-02-25.md`
 - Locked recommendation:
   - `anchor_factor=4`
   - `slope_raw=20`
@@ -213,5 +214,5 @@ Implemented scripts for high-priority整改:
   - `scripts/import_2024/theorem3_adversarial_bimodal.py`
 
 Supporting notes:
-- `handoff_2026-02-23/longbench_pipeline_parity.md`
-- `handoff_2026-02-23/anchored_sigmoid_math_note.md`
+- `handoff/2026-02-23/longbench_pipeline_parity.md`
+- `handoff/2026-02-23/anchored_sigmoid_math_note.md`

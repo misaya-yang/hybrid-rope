@@ -23,9 +23,9 @@
 
 Reference docs:
 - `AI_HANDOFF.md`
-- `handoff_2026-02-23/local_tuning_proof_2026-02-24.md`
-- `handoff_2026-02-23/tomorrow_tuned_param_runbook_2026-02-25.md`
-- `handoff_2026-02-23/fast_tuned_training_runbook_2026-02-25.md`
+- `handoff/2026-02-23/local_tuning_proof_2026-02-24.md`
+- `handoff/2026-02-23/tomorrow_tuned_param_runbook_2026-02-25.md`
+- `handoff/2026-02-23/fast_tuned_training_runbook_2026-02-25.md`
 
 ---
 
@@ -97,7 +97,7 @@ This is the priority block for the next run day: replace default anchored-sigmoi
 - recommended run setting:
   - `anchor_factor=4`, `slope_raw=20`, `center_ratio=0.70`
 - evidence file:
-  - `handoff_2026-02-23/local_tuning_proof_2026-02-24.md`
+  - `handoff/2026-02-23/local_tuning_proof_2026-02-24.md`
 
 Execution policy for 2026-02-25:
 - keep all fairness controls unchanged (same adapters/checkpoints, tokenizer, manifest, decode settings).

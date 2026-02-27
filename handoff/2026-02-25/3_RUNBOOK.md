@@ -33,7 +33,7 @@ cd /root/autodl-tmp/dfrope/hybrid-rope
   --out_dir artifacts/reviewer_2026-02-25/longbench_parity_audit
 ```
 
-Expected: errors are within the parity threshold in `handoff_2026-02-23/longbench_pipeline_parity.md`.
+Expected: errors are within the parity threshold in `handoff/2026-02-23/longbench_pipeline_parity.md`.
 
 ## 3) Gate B: Baseline Gold (Qwen, full lb21)
 
