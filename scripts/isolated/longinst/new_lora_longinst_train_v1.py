@@ -1255,10 +1255,13 @@ def strict_single_96gb_preflight(args: argparse.Namespace, cfg: AutoConfig) -> D
         )
 
     train_tokens_per_microbatch = int(args.per_device_train_batch_size) * int(args.max_seq_len)
-    if train_tokens_per_microbatch > 16384:
+    # 96GB-class GPU with 4-bit quant can handle batch=4 * seq=8192 = 32768 tokens.
+    # Original limit of 16384 was too conservative and blocked the default config.
+    max_train_tokens = 49152
+    if train_tokens_per_microbatch > max_train_tokens:
         raise RuntimeError(
             "strict_single_96gb token budget exceeded: "
-            f"per_device_train_batch_size*max_seq_len={train_tokens_per_microbatch} > 16384."
+            f"per_device_train_batch_size*max_seq_len={train_tokens_per_microbatch} > {max_train_tokens}."
         )
 
     eval_bs = max(1, int(args.eval_batch_size))

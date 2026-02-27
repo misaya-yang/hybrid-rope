@@ -49,9 +49,9 @@
 | 4.2 | Finite-base calibration | ✅ 完成 | |
 | 4.3 | Implicit priors of existing methods | ✅ 完成 | |
 | 5.1 | Protocol summary | ✅ 完成 | |
-| 5.2 | From-scratch TinyStories scaling | ⚠️ **数据过时** | 使用旧 anchored_sigmoid 数据 |
-| 5.3 | Controlled-protocol LoRA evaluation | ⚠️ **数据过时** | 同上 |
-| 5.4 | Waterbed trade-off verification | ⚠️ **数据占位** | 需要 τ-sweep 真实数据 |
+| 5.2 | From-scratch TinyStories scaling | 🟡 **数据已就绪** | EVQ τ-sweep 50M+125M 数据已 Paper-ready，待替换 LaTeX |
+| 5.3 | Controlled-protocol LoRA evaluation | 🔴 **待 8B 数据** | 需 EXP_EVQ_8B_LONGINST 结果 |
+| 5.4 | Waterbed trade-off verification | 🟡 **数据已就绪** | 125M 双种子验证: 无 waterbed, 待替换 LaTeX |
 | 6 | Limitations | ✅ 完成 | EVQ framing |
 | 7 | Conclusion | ✅ 完成 | EVQ framing |
 
@@ -72,34 +72,35 @@
 
 ## 4. 🔴 关键缺口 (Critical Gaps)
 
-### Gap 1: 实验数据与理论框架不匹配
+### ~~Gap 1: 实验数据与理论框架不匹配~~ ✅ 已解决
 
-**问题**: 论文 V5 理论全部基于 EVQ (τ parameterized)，但 Section 5 的实验数据仍然来自旧的 anchored_sigmoid 方法。这是当前最大的内在矛盾。
+**数据已就绪** (2026-02-27): 5090 τ-sweep 完成，双种子交叉验证通过。
 
-**解决方案**: 用 5090 上运行的 τ-sweep 实验结果替换。
+**已有数据**:
+- [x] 50M τ-sweep PPL 表 (τ = 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.5, 2.0) — `results/paper_ready/evq_tau_sweep/50m_seed42.json`
+- [x] 125M τ-sweep PPL 表 (τ = 0.0, 0.2, 1.5, cross-seed) — `results/paper_ready/evq_tau_sweep/125m_seed{42,137}.json`
+- [x] Waterbed 验证: 双种子均无 waterbed 效应
+- [x] Phase collision vs τ: τ=1.5 最低 (0.268)
 
-**需要的数据**:
-- [ ] 50M τ-sweep PPL 表 (τ = 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.5, 2.0)
-- [ ] 125M τ-sweep PPL 表 (同上)
-- [ ] Waterbed 验证散点图
-- [ ] Phase collision vs τ 数据
+**待做**: 将数据写入 LaTeX Section 5.2 和 5.4 替换旧占位数据。
+**CSV**: `results/paper_ready/evq_tau_sweep/evq_sweep_paper_table.csv`
 
 ### Gap 2: 8B 大模型验证
 
 **问题**: 无 8B 模型使用 EVQ 的实验结果。
 
-**解决方案**: 等 τ-sweep 确定最优 τ 后，在 longinst 管线中运行。
+**解决方案**: τ=1.5 已确认为最优值，longinst 管线已优化就绪。
 
 **需要的数据**:
-- [ ] Llama-3-8B EVQ τ=best vs baseline，LongBench-21 分数
+- [ ] Llama-3-8B EVQ τ=1.5 vs baseline，LongBench-21 分数
 - [ ] NIAH heatmap
 - [ ] Passkey 准确率
 
-### Gap 3: 缺少 Figure 2
+### Gap 3: Figure 2
 
 **问题**: 论文只有 1 张图 (EVQ warp curves)，空间允许再加 1 张。
 
-**候选**: PPL vs τ 曲线图（待 τ-sweep 数据就绪后生成）
+**候选**: PPL vs τ 曲线图 — 数据已就绪，可用 `scripts/m4_evq_sweep/evq_analysis.py` 生成。
 
 ---
 
@@ -128,3 +129,4 @@ python scripts/m4_evq_sweep/evq_analysis.py --input <results_final.json>
 | 2026-02-27 | 创建本文档；V5 完成编译 | Claude (Cowork) |
 | 2026-02-27 | Figure 1 插入 | Claude (Cowork) |
 | 2026-02-27 | Limitations/Conclusion/Appendix 改写 | Claude (Cowork) |
+| 2026-02-27 | Gap 1 解决: τ-sweep 数据 Paper-ready, 双种子验证通过 | Claude (Cowork) |

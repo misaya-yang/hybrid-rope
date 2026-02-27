@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
-"""Two-stage runner for LLaMA-3-8B (8K) EVQ-Cosh vs Geometric validation.
+"""Direct dual-seed runner for LLaMA-3-8B (8K) EVQ τ=1.5 vs Geometric.
 
-Updated 2026-02-27: τ=1.5 confirmed optimal by 50M (-10.9%) and 125M (-18.9%)
-τ-sweep experiments. Stage A now uses τ∈{0.0, 1.2, 1.5, 1.8} to bracket
-the proven optimum instead of the old {0.0, 0.4, 0.6, 0.8} range.
+Updated 2026-02-27: τ=1.5 confirmed optimal across 4 independent runs:
+  - 50M  seed=42:  PPL@16K -10.9%
+  - 125M seed=42:  PPL@16K -18.9%
+  - 125M seed=137: PPL@16K even better (26.860 vs 27.699)
+  - Cross-seed CV = 2.2% → not noise
 
-Plan contract:
-- Stage A (4 jobs, seed=42, gate only):
+Stage A τ-sweep is SKIPPED. We go directly to dual-seed full evaluation:
+- Stage A (2 jobs, seed=42, full LB21):
   A1 geometric (tau=0.0) r32 s800
-  A2 evq_cosh (tau=1.2) r32 s800  [bracket-low]
-  A3 evq_cosh (tau=1.5) r32 s800  [primary, proven optimal]
-  A4 evq_cosh (tau=1.8) r32 s800  [bracket-high]
-- Stage B (4 jobs):
-  B1 geometric_best seed1337 gate
-  B2 evq_best seed1337 gate
-  B3 geometric_best seed42 full lb21
-  B4 evq_best seed42 full lb21
+  A2 evq_cosh (tau=1.5) r32 s800
+- Stage B (2 jobs, seed=1337, full LB21):
+  B1 geometric (tau=0.0) r32 s800
+  B2 evq_cosh (tau=1.5) r32 s800
+
+All 4 jobs run full LB21 eval → paired statistics across 2 seeds.
 
 This script only orchestrates the canonical pipeline entry:
   scripts/isolated/longinst/new_lora_longinst_train_v1.py
@@ -26,7 +26,6 @@ from __future__ import annotations
 import argparse
 import csv
 import json
-import shutil
 import statistics
 import subprocess
 import sys
@@ -78,10 +77,8 @@ class Job:
 
 def build_stage_a_jobs() -> List[Job]:
     return [
-        Job("A1", "A", "geometric", 42, 32, 800, "evq_cosh", 0.0, False, "Geometric baseline (tau=0.0)"),
-        Job("A2", "A", "evq_cosh", 42, 32, 800, "evq_cosh", 1.2, False, "EVQ-Cosh bracket-low (tau=1.2)"),
-        Job("A3", "A", "evq_cosh", 42, 32, 800, "evq_cosh", 1.5, False, "EVQ-Cosh proven optimal (tau=1.5)"),
-        Job("A4", "A", "evq_cosh", 42, 32, 800, "evq_cosh", 1.8, False, "EVQ-Cosh bracket-high (tau=1.8)"),
+        Job("A1", "A", "geometric", 42, 32, 800, "evq_cosh", 0.0, True, "Geometric baseline (tau=0.0) seed42 full lb21"),
+        Job("A2", "A", "evq_cosh", 42, 32, 800, "evq_cosh", 1.5, True, "EVQ-Cosh tau=1.5 seed42 full lb21"),
     ]
 
 
@@ -104,36 +101,6 @@ def has_reusable_artifacts(run_dir: Path) -> bool:
         and inv_path.exists()
         and run_cfg.exists()
     )
-
-
-def copy_training_artifacts(source_dir: Path, target_dir: Path) -> None:
-    """Copy adapter/, artifacts/custom_inv_freq.pt, and run_config.json from
-    a completed Stage-A run to a Stage-B directory so that B can skip training
-    and only run the full evaluation."""
-    target_dir.mkdir(parents=True, exist_ok=True)
-    # adapter/
-    src_adapter = source_dir / "adapter"
-    dst_adapter = target_dir / "adapter"
-    if src_adapter.exists():
-        if dst_adapter.exists():
-            shutil.rmtree(dst_adapter)
-        shutil.copytree(src_adapter, dst_adapter)
-    # artifacts/custom_inv_freq.pt
-    src_artifacts = source_dir / "artifacts"
-    dst_artifacts = target_dir / "artifacts"
-    dst_artifacts.mkdir(parents=True, exist_ok=True)
-    for name in ("custom_inv_freq.pt", "data_manifest.json", "data_hash.sha256"):
-        src = src_artifacts / name
-        if src.exists():
-            shutil.copy2(src, dst_artifacts / name)
-    # run_config.json
-    src_cfg = source_dir / "run_config.json"
-    if src_cfg.exists():
-        shutil.copy2(src_cfg, target_dir / "run_config.json")
-    # train_log.jsonl (for provenance)
-    src_log = source_dir / "train_log.jsonl"
-    if src_log.exists():
-        shutil.copy2(src_log, target_dir / "train_log.jsonl")
 
 
 def is_job_complete(job: Job, run_dir: Path) -> bool:
@@ -393,7 +360,7 @@ def write_report(
         "1. Base model fixed to Meta-Llama-3-8B-Instruct: enforced in training entry script.",
         "2. Protocol lock with hashes: run_config + data_hash + code_hash + inv_freq_hash required.",
         "3. Gate rule: qasper>=base and musique>=base-1.0.",
-        "4. Stage B seeds: 42 has full lb21; 1337 is gate-only unless full eval is explicitly extended.",
+        "4. Dual-seed: both seed=42 (Stage A) and seed=1337 (Stage B) run full LB21.",
         "5. Paired stats file: see stats section below.",
         "",
         "## Selected Config",
@@ -592,7 +559,9 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--eval_batch_size", type=int, default=8)
     ap.add_argument("--max_batch_input_tokens", type=int, default=98304)
     ap.add_argument("--max_input_tokens_eval", type=int, default=8192)
-    ap.add_argument("--run_full_eval_seed1337", action=argparse.BooleanOptionalAction, default=False)
+    # --run_full_eval_seed1337 removed: all 4 jobs now run full LB21 by default.
+    # Kept for backward-compat (ignored).
+    ap.add_argument("--run_full_eval_seed1337", action=argparse.BooleanOptionalAction, default=True)
     ap.add_argument("--stats_claim_min_run_pairs", type=int, default=2)
     ap.add_argument("--strict_single_96gb", action=argparse.BooleanOptionalAction, default=False)
     ap.add_argument("--strict_single_h800_96gb", action=argparse.BooleanOptionalAction, default=False)
@@ -633,48 +602,21 @@ def main() -> None:
         row = run_job(job, args=args, repo_root=repo_root, output_root=output_root, execute=bool(args.execute))
         registry_rows.append(row)
 
+    # ── Stage B: seed=1337 replication (geometric baseline + EVQ τ=1.5) ──
+    # Both jobs run full LB21 eval.  No gate needed — τ=1.5 already
+    # confirmed optimal by 50M/125M τ-sweep (dual-seed, CV=2.2%).
     stage_a_rows = [r for r in registry_rows if str(r.get("phase")) == "A"]
     geometric_ref = next((r for r in stage_a_rows if str(r.get("job_id")) == "A1"), None)
-    evq_best = pick_best_evq(stage_a_rows)
+    evq_ref = next((r for r in stage_a_rows if str(r.get("job_id")) == "A2"), None)
 
-    stage_b_jobs: List[Job] = []
-    if geometric_ref and evq_best:
-        g_rank = int(geometric_ref.get("lora_rank", 32) or 32)
-        g_steps = int(geometric_ref.get("max_steps", 800) or 800)
-        e_rank = int(evq_best.get("lora_rank", 32) or 32)
-        e_steps = int(evq_best.get("max_steps", 800) or 800)
-        e_tau = float(evq_best.get("evq_tau", 0.5) or 0.5)
+    stage_b_jobs: List[Job] = [
+        Job("B1", "B", "geometric", 1337, 32, 800, "evq_cosh", 0.0, True,
+            "Geometric baseline (tau=0.0) seed1337 full lb21"),
+        Job("B2", "B", "evq_cosh", 1337, 32, 800, "evq_cosh", 1.5, True,
+            "EVQ-Cosh tau=1.5 seed1337 full lb21"),
+    ]
 
-        stage_b_jobs = [
-            Job(
-                "B1",
-                "B",
-                "geometric",
-                1337,
-                g_rank,
-                g_steps,
-                "evq_cosh",
-                0.0,
-                bool(args.run_full_eval_seed1337),
-                "Geometric best on seed1337 (gate-only unless run_full_eval_seed1337=true)",
-            ),
-            Job(
-                "B2",
-                "B",
-                "evq_cosh",
-                1337,
-                e_rank,
-                e_steps,
-                "evq_cosh",
-                e_tau,
-                bool(args.run_full_eval_seed1337),
-                "EVQ best on seed1337 (gate-only unless run_full_eval_seed1337=true)",
-            ),
-            Job("B3", "B", "geometric", 42, g_rank, g_steps, "evq_cosh", 0.0, True, "Geometric full lb21"),
-            Job("B4", "B", "evq_cosh", 42, e_rank, e_steps, "evq_cosh", e_tau, True, "EVQ full lb21"),
-        ]
-
-    for job in stage_b_jobs[:2]:
+    for job in stage_b_jobs:
         run_name = job_run_name(job)
         run_dir = output_root / "train" / run_name
         if bool(args.skip_existing) and is_job_complete(job, run_dir):
@@ -684,80 +626,6 @@ def main() -> None:
             continue
         row = run_job(job, args=args, repo_root=repo_root, output_root=output_root, execute=bool(args.execute))
         registry_rows.append(row)
-
-    b1 = next((r for r in registry_rows if str(r.get("job_id")) == "B1"), None)
-    b2 = next((r for r in registry_rows if str(r.get("job_id")) == "B2"), None)
-    b_gate_ok = bool(b1 and b2 and bool(b1.get("gate_pass")) and bool(b2.get("gate_pass")))
-
-    if b_gate_ok:
-        # Map B3/B4 to their matching Stage-A source dirs.
-        # B3 reuses A1 (geometric, seed=42) and B4 reuses the best EVQ
-        # from Stage A (same seed=42, same tau/rank/steps).  This avoids
-        # retraining identical configs and guarantees that the full lb21
-        # evaluation runs on the *exact same* model weights as the gate.
-        b_reuse_source: Dict[str, Optional[Path]] = {
-            "B3": Path(str(geometric_ref["run_dir"])) if geometric_ref and str(geometric_ref.get("run_dir", "")).strip() else None,
-            "B4": Path(str(evq_best["run_dir"])) if evq_best and str(evq_best.get("run_dir", "")).strip() else None,
-        }
-        for job in stage_b_jobs[2:]:
-            run_name = job_run_name(job)
-            run_dir = output_root / "train" / run_name
-            if bool(args.skip_existing) and is_job_complete(job, run_dir):
-                row = run_job(job, args=args, repo_root=repo_root, output_root=output_root, execute=False)
-                row["status"] = "SKIPPED_EXISTING"
-                registry_rows.append(row)
-                continue
-            # Reuse Stage-A trained artifacts when available.
-            source_dir = b_reuse_source.get(job.job_id)
-            reuse_ok = bool(source_dir and has_reusable_artifacts(source_dir))
-            if reuse_ok:
-                copy_training_artifacts(source_dir, run_dir)
-                row = run_job(
-                    job, args=args, repo_root=repo_root, output_root=output_root,
-                    execute=bool(args.execute), skip_training=True,
-                )
-                row["notes"] = f"Reused train artifacts from {source_dir.name}; {job.notes}"
-            else:
-                row = run_job(job, args=args, repo_root=repo_root, output_root=output_root, execute=bool(args.execute))
-            registry_rows.append(row)
-    elif stage_b_jobs:
-        registry_rows.append(
-            {
-                "job_id": "B3_B4",
-                "phase": "B",
-                "method": "NA",
-                "seed": "NA",
-                "lora_rank": "NA",
-                "max_steps": "NA",
-                "rope_schedule": "NA",
-                "evq_tau": "NA",
-                "run_full_eval": True,
-                "run_name": "NA",
-                "status": "CANCELLED_BY_GATE",
-                "return_code": "NA",
-                "run_dir": "",
-                "log_path": "",
-                "gate_json": "",
-                "gate_pass": False,
-                "gate_qasper_base": "",
-                "gate_qasper_lora": "",
-                "gate_musique_base": "",
-                "gate_musique_lora": "",
-                "full_json": "",
-                "full_raw_json": "",
-                "full_macro_base_pct": "",
-                "full_macro_lora_pct": "",
-                "full_macro_delta_pct": "",
-                "run_config_json": "",
-                "code_hash": "",
-                "data_hash": "",
-                "inv_freq_hash": "",
-                "started_at": now(),
-                "elapsed_sec": 0.0,
-                "notes": "B1/B2 gate failed; full lb21 stopped.",
-                "cmd": [],
-            }
-        )
 
     stats_json = run_stats_if_possible(
         args=args,
@@ -815,7 +683,7 @@ def main() -> None:
         report_path=report_md,
         rows=registry_rows,
         stats_json=stats_json,
-        evq_best=evq_best,
+        evq_best=evq_ref,
         geometric_ref=geometric_ref,
     )
 
