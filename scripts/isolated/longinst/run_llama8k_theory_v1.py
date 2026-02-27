@@ -181,6 +181,10 @@ def run_job(
         "--max_input_tokens_eval",
         str(args.max_input_tokens_eval),
     ]
+    if bool(args.strict_single_h800_96gb):
+        cmd.append("--strict_single_h800_96gb")
+    if str(args.require_transformers_version).strip():
+        cmd.extend(["--require_transformers_version", str(args.require_transformers_version).strip()])
 
     if str(args.mixed_dataset_dir).strip():
         cmd.extend(["--mixed_dataset_dir", args.mixed_dataset_dir])
@@ -533,6 +537,8 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--max_input_tokens_eval", type=int, default=8192)
     ap.add_argument("--run_full_eval_seed1337", action=argparse.BooleanOptionalAction, default=False)
     ap.add_argument("--stats_claim_min_run_pairs", type=int, default=2)
+    ap.add_argument("--strict_single_h800_96gb", action=argparse.BooleanOptionalAction, default=False)
+    ap.add_argument("--require_transformers_version", type=str, default="")
 
     ap.add_argument("--execute", action=argparse.BooleanOptionalAction, default=False)
     ap.add_argument(
