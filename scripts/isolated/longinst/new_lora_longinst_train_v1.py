@@ -1470,7 +1470,7 @@ def write_frozen_protocol(
         "- chat_template: `auto`",
         "- truncate_mode: `middle`",
         "- max_new_tokens_policy: `official`",
-        "- do_sample: `false`",
+        "- sampling_mode: `eval_longbench.py default (deterministic path)`",
         "- score_scale: `pct`",
     ]
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -1737,8 +1737,6 @@ def run_gate_and_optional_full(args: argparse.Namespace, repo_root: Path, run_di
         "--trace_output_max_chars",
         "1024",
         "--strict_parity_check",
-        "--do_sample",
-        "false",
         "--output_json",
         gate_raw_json.as_posix(),
     ]
@@ -1846,8 +1844,6 @@ def run_gate_and_optional_full(args: argparse.Namespace, repo_root: Path, run_di
         "--trace_output_max_chars",
         "1024",
         "--strict_parity_check",
-        "--do_sample",
-        "false",
         "--output_json",
         full_raw_json.as_posix(),
     ]
