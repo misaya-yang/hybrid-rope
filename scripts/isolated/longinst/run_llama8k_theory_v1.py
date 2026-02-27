@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import shutil
 import statistics
 import subprocess
 import sys
@@ -85,10 +86,55 @@ def job_run_name(job: Job) -> str:
     return f"{job.job_id}_{job.method}{tau_tag}_r{job.lora_rank}_s{job.max_steps}_seed{job.seed}"
 
 
-def is_job_complete(job: Job, run_dir: Path) -> bool:
+def has_reusable_artifacts(run_dir: Path) -> bool:
+    adapter_dir = run_dir / "adapter"
+    adapter_cfg = adapter_dir / "adapter_config.json"
+    adapter_weight_safe = adapter_dir / "adapter_model.safetensors"
+    adapter_weight_bin = adapter_dir / "adapter_model.bin"
+    inv_path = run_dir / "artifacts" / "custom_inv_freq.pt"
     run_cfg = run_dir / "run_config.json"
+    return (
+        adapter_dir.exists()
+        and adapter_cfg.exists()
+        and (adapter_weight_safe.exists() or adapter_weight_bin.exists())
+        and inv_path.exists()
+        and run_cfg.exists()
+    )
+
+
+def copy_training_artifacts(source_dir: Path, target_dir: Path) -> None:
+    """Copy adapter/, artifacts/custom_inv_freq.pt, and run_config.json from
+    a completed Stage-A run to a Stage-B directory so that B can skip training
+    and only run the full evaluation."""
+    target_dir.mkdir(parents=True, exist_ok=True)
+    # adapter/
+    src_adapter = source_dir / "adapter"
+    dst_adapter = target_dir / "adapter"
+    if src_adapter.exists():
+        if dst_adapter.exists():
+            shutil.rmtree(dst_adapter)
+        shutil.copytree(src_adapter, dst_adapter)
+    # artifacts/custom_inv_freq.pt
+    src_artifacts = source_dir / "artifacts"
+    dst_artifacts = target_dir / "artifacts"
+    dst_artifacts.mkdir(parents=True, exist_ok=True)
+    for name in ("custom_inv_freq.pt", "data_manifest.json", "data_hash.sha256"):
+        src = src_artifacts / name
+        if src.exists():
+            shutil.copy2(src, dst_artifacts / name)
+    # run_config.json
+    src_cfg = source_dir / "run_config.json"
+    if src_cfg.exists():
+        shutil.copy2(src_cfg, target_dir / "run_config.json")
+    # train_log.jsonl (for provenance)
+    src_log = source_dir / "train_log.jsonl"
+    if src_log.exists():
+        shutil.copy2(src_log, target_dir / "train_log.jsonl")
+
+
+def is_job_complete(job: Job, run_dir: Path) -> bool:
     gate_json = run_dir / "eval" / "qasper_musique_compare.json"
-    if not run_cfg.exists() or not gate_json.exists():
+    if not has_reusable_artifacts(run_dir) or not gate_json.exists():
         return False
     if job.run_full_eval:
         full_json = run_dir / "eval" / "longbench_full_compare.json"
@@ -105,6 +151,7 @@ def run_job(
     repo_root: Path,
     output_root: Path,
     execute: bool,
+    skip_training: bool = False,
 ) -> Dict[str, object]:
     run_name = job_run_name(job)
     train_script = Path(args.train_script)
@@ -181,8 +228,11 @@ def run_job(
         "--max_input_tokens_eval",
         str(args.max_input_tokens_eval),
     ]
-    if bool(args.strict_single_h800_96gb):
-        cmd.append("--strict_single_h800_96gb")
+    if bool(args.strict_single_96gb) or bool(args.strict_single_h800_96gb):
+        cmd.append("--strict_single_96gb")
+        cmd.extend(["--min_gpu_memory_gib", str(float(args.min_gpu_memory_gib))])
+        if str(args.require_gpu_name_substring).strip():
+            cmd.extend(["--require_gpu_name_substring", str(args.require_gpu_name_substring).strip()])
     if str(args.require_transformers_version).strip():
         cmd.extend(["--require_transformers_version", str(args.require_transformers_version).strip()])
 
@@ -193,6 +243,9 @@ def run_job(
         cmd.append("--run_full_eval")
     else:
         cmd.append("--no-run_full_eval")
+
+    if skip_training:
+        cmd.append("--skip_training")
 
     start = time.time()
     status = "PLANNED"
@@ -537,7 +590,10 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--max_input_tokens_eval", type=int, default=8192)
     ap.add_argument("--run_full_eval_seed1337", action=argparse.BooleanOptionalAction, default=False)
     ap.add_argument("--stats_claim_min_run_pairs", type=int, default=2)
+    ap.add_argument("--strict_single_96gb", action=argparse.BooleanOptionalAction, default=False)
     ap.add_argument("--strict_single_h800_96gb", action=argparse.BooleanOptionalAction, default=False)
+    ap.add_argument("--min_gpu_memory_gib", type=float, default=90.0)
+    ap.add_argument("--require_gpu_name_substring", type=str, default="")
     ap.add_argument("--require_transformers_version", type=str, default="")
 
     ap.add_argument("--execute", action=argparse.BooleanOptionalAction, default=False)
@@ -630,6 +686,15 @@ def main() -> None:
     b_gate_ok = bool(b1 and b2 and bool(b1.get("gate_pass")) and bool(b2.get("gate_pass")))
 
     if b_gate_ok:
+        # Map B3/B4 to their matching Stage-A source dirs.
+        # B3 reuses A1 (geometric, seed=42) and B4 reuses the best EVQ
+        # from Stage A (same seed=42, same tau/rank/steps).  This avoids
+        # retraining identical configs and guarantees that the full lb21
+        # evaluation runs on the *exact same* model weights as the gate.
+        b_reuse_source: Dict[str, Optional[Path]] = {
+            "B3": Path(str(geometric_ref["run_dir"])) if geometric_ref and str(geometric_ref.get("run_dir", "")).strip() else None,
+            "B4": Path(str(evq_best["run_dir"])) if evq_best and str(evq_best.get("run_dir", "")).strip() else None,
+        }
         for job in stage_b_jobs[2:]:
             run_name = job_run_name(job)
             run_dir = output_root / "train" / run_name
@@ -638,7 +703,18 @@ def main() -> None:
                 row["status"] = "SKIPPED_EXISTING"
                 registry_rows.append(row)
                 continue
-            row = run_job(job, args=args, repo_root=repo_root, output_root=output_root, execute=bool(args.execute))
+            # Reuse Stage-A trained artifacts when available.
+            source_dir = b_reuse_source.get(job.job_id)
+            reuse_ok = bool(source_dir and has_reusable_artifacts(source_dir))
+            if reuse_ok:
+                copy_training_artifacts(source_dir, run_dir)
+                row = run_job(
+                    job, args=args, repo_root=repo_root, output_root=output_root,
+                    execute=bool(args.execute), skip_training=True,
+                )
+                row["notes"] = f"Reused train artifacts from {source_dir.name}; {job.notes}"
+            else:
+                row = run_job(job, args=args, repo_root=repo_root, output_root=output_root, execute=bool(args.execute))
             registry_rows.append(row)
     elif stage_b_jobs:
         registry_rows.append(

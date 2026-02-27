@@ -1202,30 +1202,32 @@ def infer_rope_base_from_config(cfg: AutoConfig, fallback: float = 500000.0) -> 
     return float(fallback)
 
 
-def strict_single_h800_preflight(args: argparse.Namespace, cfg: AutoConfig) -> Dict[str, object]:
+def strict_single_96gb_preflight(args: argparse.Namespace, cfg: AutoConfig) -> Dict[str, object]:
     if not torch.cuda.is_available():
-        raise RuntimeError("strict_single_h800_96gb requires CUDA, but no CUDA device is visible.")
+        raise RuntimeError("strict_single_96gb requires CUDA, but no CUDA device is visible.")
     dev_count = int(torch.cuda.device_count())
     if dev_count != 1:
         raise RuntimeError(
-            f"strict_single_h800_96gb requires exactly 1 visible GPU, got {dev_count}. "
-            "Please set CUDA_VISIBLE_DEVICES to a single H800."
+            f"strict_single_96gb requires exactly 1 visible GPU, got {dev_count}. "
+            "Please set CUDA_VISIBLE_DEVICES to a single 96GB-class GPU."
         )
 
     props = torch.cuda.get_device_properties(0)
     gpu_name = str(props.name)
-    gpu_name_l = gpu_name.lower()
     mem_gib = float(props.total_memory) / float(1024 ** 3)
-    if "h800" not in gpu_name_l:
+    min_mem = float(args.min_gpu_memory_gib)
+    if mem_gib < min_mem:
         raise RuntimeError(
-            f"strict_single_h800_96gb expected NVIDIA H800, but detected `{gpu_name}`."
+            f"strict_single_96gb expected >= {min_mem:.2f} GiB VRAM, but detected {mem_gib:.2f} GiB."
         )
-    if mem_gib < 90.0:
+    require_name_substr = str(args.require_gpu_name_substring).strip().lower()
+    if require_name_substr and require_name_substr not in gpu_name.lower():
         raise RuntimeError(
-            f"strict_single_h800_96gb expected >=90 GiB VRAM, but detected {mem_gib:.2f} GiB."
+            "strict_single_96gb GPU name guard failed: "
+            f"required substring `{require_name_substr}`, got `{gpu_name}`."
         )
 
-    required_version = str(args.require_transformers_version).strip() or "5.1.0"
+    required_version = str(args.require_transformers_version).strip()
     cur_version = str(transformers.__version__).strip()
 
     def _norm_ver(v: str) -> str:
@@ -1238,13 +1240,13 @@ def strict_single_h800_preflight(args: argparse.Namespace, cfg: AutoConfig) -> D
             v = v.split(".dev", 1)[0]
         return v
 
-    if _norm_ver(cur_version) != _norm_ver(required_version):
+    if required_version and _norm_ver(cur_version) != _norm_ver(required_version):
         raise RuntimeError(
-            f"strict_single_h800_96gb requires transformers=={required_version}, got {cur_version}."
+            f"strict_single_96gb requires transformers=={required_version}, got {cur_version}."
         )
 
     if not bool(args.load_in_4bit):
-        raise RuntimeError("strict_single_h800_96gb requires --load_in_4bit for launch safety.")
+        raise RuntimeError("strict_single_96gb requires --load_in_4bit for launch safety.")
 
     max_pos_cfg = int(getattr(cfg, "max_position_embeddings", 8192) or 8192)
     if int(args.max_seq_len) > max_pos_cfg:
@@ -1255,7 +1257,7 @@ def strict_single_h800_preflight(args: argparse.Namespace, cfg: AutoConfig) -> D
     train_tokens_per_microbatch = int(args.per_device_train_batch_size) * int(args.max_seq_len)
     if train_tokens_per_microbatch > 16384:
         raise RuntimeError(
-            "strict_single_h800_96gb token budget exceeded: "
+            "strict_single_96gb token budget exceeded: "
             f"per_device_train_batch_size*max_seq_len={train_tokens_per_microbatch} > 16384."
         )
 
@@ -1266,7 +1268,7 @@ def strict_single_h800_preflight(args: argparse.Namespace, cfg: AutoConfig) -> D
     effective_eval_bs = min(eval_bs, eval_cap_by_tokens)
     if effective_eval_bs > 8:
         raise RuntimeError(
-            "strict_single_h800_96gb eval batch risk too high: "
+            "strict_single_96gb eval batch risk too high: "
             f"effective_eval_bs={effective_eval_bs} (>8). "
             "Lower --eval_batch_size or --max_batch_input_tokens."
         )
@@ -1281,8 +1283,27 @@ def strict_single_h800_preflight(args: argparse.Namespace, cfg: AutoConfig) -> D
     }
 
 
-def missing_artifacts(paths: List[Path]) -> List[str]:
-    return [p.as_posix() for p in paths if not p.exists()]
+def missing_reusable_train_artifacts(train_dir: Path) -> List[str]:
+    adapter_dir = train_dir / "adapter"
+    inv_path = train_dir / "artifacts" / "custom_inv_freq.pt"
+    run_cfg_path = train_dir / "run_config.json"
+
+    missing: List[str] = []
+    if not adapter_dir.exists():
+        missing.append(adapter_dir.as_posix())
+    else:
+        adapter_cfg = adapter_dir / "adapter_config.json"
+        adapter_weight_safe = adapter_dir / "adapter_model.safetensors"
+        adapter_weight_bin = adapter_dir / "adapter_model.bin"
+        if not adapter_cfg.exists():
+            missing.append(adapter_cfg.as_posix())
+        if not (adapter_weight_safe.exists() or adapter_weight_bin.exists()):
+            missing.append(f"{adapter_weight_safe.as_posix()} | {adapter_weight_bin.as_posix()}")
+
+    for p in (inv_path, run_cfg_path):
+        if not p.exists():
+            missing.append(p.as_posix())
+    return missing
 
 
 def write_frozen_protocol(
@@ -1563,7 +1584,7 @@ def run_gate_and_optional_full(args: argparse.Namespace, repo_root: Path, run_di
 
     adapter_path = run_dir / "adapter"
     inv_path = run_dir / "artifacts" / "custom_inv_freq.pt"
-    missing = missing_artifacts([adapter_path, inv_path])
+    missing = missing_reusable_train_artifacts(run_dir)
     if missing:
         raise RuntimeError(
             "Cannot run evaluation: missing required trained artifacts:\n- " + "\n- ".join(missing)
@@ -1609,6 +1630,8 @@ def run_gate_and_optional_full(args: argparse.Namespace, repo_root: Path, run_di
         "--trace_output_max_chars",
         "1024",
         "--strict_parity_check",
+        "--do_sample",
+        "false",
         "--output_json",
         gate_raw_json.as_posix(),
     ]
@@ -1716,6 +1739,8 @@ def run_gate_and_optional_full(args: argparse.Namespace, repo_root: Path, run_di
         "--trace_output_max_chars",
         "1024",
         "--strict_parity_check",
+        "--do_sample",
+        "false",
         "--output_json",
         full_raw_json.as_posix(),
     ]
@@ -1797,10 +1822,14 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--max_input_tokens_eval", type=int, default=8192)
     ap.add_argument("--eval_batch_size", type=int, default=8)
     ap.add_argument("--max_batch_input_tokens", type=int, default=98304)
+    ap.add_argument("--strict_single_96gb", action=argparse.BooleanOptionalAction, default=False)
     ap.add_argument("--strict_single_h800_96gb", action=argparse.BooleanOptionalAction, default=False)
+    ap.add_argument("--min_gpu_memory_gib", type=float, default=90.0)
+    ap.add_argument("--require_gpu_name_substring", type=str, default="")
     ap.add_argument("--require_transformers_version", type=str, default="")
     ap.add_argument("--run_full_eval", action=argparse.BooleanOptionalAction, default=False)
     ap.add_argument("--skip_training", action=argparse.BooleanOptionalAction, default=False)
+    ap.add_argument("--data_only", action=argparse.BooleanOptionalAction, default=False)
     return ap.parse_args()
 
 
@@ -1846,10 +1875,13 @@ def main() -> None:
             f"Unsupported rope_scaling={rope_scaling_cfg}. "
             "This pipeline requires base LLaMA-3-8B-Instruct without dynamic rope_scaling."
         )
+    strict_guard_enabled = bool(args.strict_single_96gb) or bool(args.strict_single_h800_96gb)
     if bool(args.strict_single_h800_96gb):
-        hw_info = strict_single_h800_preflight(args=args, cfg=cfg_guard)
+        print("[DEPRECATED] --strict_single_h800_96gb is deprecated. Use --strict_single_96gb.", flush=True)
+    if strict_guard_enabled:
+        hw_info = strict_single_96gb_preflight(args=args, cfg=cfg_guard)
         print(
-            "[HARDWARE CHECK] strict_single_h800_96gb passed: "
+            "[HARDWARE CHECK] strict_single_96gb passed: "
             f"gpu={hw_info['gpu_name']}, vram={float(hw_info['gpu_memory_gib']):.2f}GiB, "
             f"transformers={hw_info['transformers_version']}, "
             f"train_tokens/microbatch={int(hw_info['train_tokens_per_microbatch'])}, "
@@ -1955,6 +1987,10 @@ def main() -> None:
     save_json(data_dir / "data_manifest.json", data_manifest)
     data_hash = sha256_file(mix_jsonl)
     (data_dir / "data_hash.sha256").write_text(data_hash + "\n", encoding="utf-8")
+
+    if bool(args.data_only):
+        print("[DATA ONLY] Dataset artifacts prepared. Training and evaluation skipped.", flush=True)
+        return
 
     train_ds, val_ds = split_dataset(ds, seed=args.seed)
 
@@ -2121,10 +2157,7 @@ def main() -> None:
             out_json=train_dir / "loss_slope_report.json",
         )
     else:
-        adapter_path = train_dir / "adapter"
-        inv_path = train_dir / "artifacts" / "custom_inv_freq.pt"
-        run_cfg_path = train_dir / "run_config.json"
-        missing = missing_artifacts([adapter_path, inv_path, run_cfg_path])
+        missing = missing_reusable_train_artifacts(train_dir)
         if missing:
             raise RuntimeError(
                 "--skip_training was requested but required artifacts are missing:\n- "

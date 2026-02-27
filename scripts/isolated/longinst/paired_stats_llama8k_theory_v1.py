@@ -58,6 +58,19 @@ def save_json(path: Path, obj: Dict) -> None:
 
 
 def score_from_trace(tr: Dict) -> float:
+    """Extract a [0, 1] raw score from a per-sample trace dict.
+
+    Priority order (first present wins):
+      1. score_raw  — already in [0, 1], used directly.
+      2. score_pct  — percentage [0, 100], divided by 100.
+      3. score      — legacy key: if > 1.0 assumed pct and divided by 100,
+                      otherwise used as raw.  Note: a true pct value of
+                      exactly 1.0 (i.e. 1 %) would be mis-interpreted as
+                      raw; this edge case is negligible for standard metrics.
+
+    Current eval_longbench.py always emits both score_raw and score_pct, so
+    the score fallback should never be reached in production runs.
+    """
     raw = tr.get("score_raw")
     if isinstance(raw, (int, float)):
         return float(raw)
@@ -66,7 +79,6 @@ def score_from_trace(tr: Dict) -> float:
         return float(pct) / 100.0
     s = tr.get("score")
     if isinstance(s, (int, float)):
-        # Some old artifacts store pct under `score`.
         return float(s) / 100.0 if float(s) > 1.0 else float(s)
     return 0.0
 
@@ -162,10 +174,13 @@ def paired_permutation_pvalue(diffs: np.ndarray, seed: int = 52, n_mc: int = 200
 def effect_size_dz(diffs: np.ndarray) -> float:
     if diffs.size <= 1:
         return 0.0
+    mean = float(np.mean(diffs))
     std = float(np.std(diffs, ddof=1))
     if std <= 1e-12:
-        return float("inf") if float(np.mean(diffs)) > 0 else float("-inf")
-    return float(np.mean(diffs) / std)
+        if abs(mean) <= 1e-12:
+            return 0.0
+        return float("inf") if mean > 0 else float("-inf")
+    return float(mean / std)
 
 
 def claim_grade(mean_diff_pct: float, ci_low_pct: float, p_perm: float, run_pair_count: int, min_run_pairs: int) -> str:
@@ -338,6 +353,28 @@ def main() -> None:
         else:
             row["claim_grade_fdr_bh"] = "inconclusive"
 
+    # Task-weighted macro pooled: equal weight per task (avoids domination by
+    # high-sample tasks like triviaqa).  Construct one mean-diff per task,
+    # then bootstrap / permutation-test across task means.
+    task_means: List[float] = []
+    for task in per_task_summary:
+        task_means.append(float(per_task_summary[task].get("mean_diff_raw", 0.0)))
+    if task_means:
+        task_means_arr = np.asarray(task_means, dtype=np.float64)
+        macro_pooled_summary = summarize_diffs(
+            diffs=task_means_arr,
+            n_bootstrap=int(args.n_bootstrap),
+            seed=int(args.seed) + 31,
+            run_pair_count=len(run_pairs),
+            min_run_pairs=int(args.claim_min_run_pairs),
+        )
+        macro_pooled_summary["n_tasks"] = len(task_means)
+        macro_pooled_summary["note"] = (
+            "equal weight per task; each task contributes one mean diff value"
+        )
+    else:
+        macro_pooled_summary = {}
+
     out = {
         "meta": {
             "tasks": tasks,
@@ -357,6 +394,7 @@ def main() -> None:
             ),
         },
         "pooled": pooled_summary,
+        "pooled_macro": macro_pooled_summary,
         "per_task": per_task_summary,
     }
 
@@ -378,6 +416,17 @@ def main() -> None:
         f"- p_sign_flip: `{pooled_summary.get('p_sign_flip', float('nan')):.6f}`",
         f"- p_permutation: `{pooled_summary.get('p_permutation', float('nan')):.6f}`",
         f"- effect_size_dz: `{pooled_summary.get('effect_size_dz', 0.0):.6f}`",
+        "",
+        "## Macro-pooled (equal weight per task)",
+        "",
+        f"- macro_claim_grade: `{macro_pooled_summary.get('claim_grade', 'N/A')}`",
+        f"- macro_mean_diff_pct: `{float(macro_pooled_summary.get('mean_diff_pct', 0.0)):.4f}`",
+        f"- macro_ci95_pct: `[{float(macro_pooled_summary.get('ci95_low_pct', 0.0)):.4f}, {float(macro_pooled_summary.get('ci95_high_pct', 0.0)):.4f}]`",
+        f"- macro_p_permutation: `{float(macro_pooled_summary.get('p_permutation', float('nan'))):.6f}`",
+        f"- macro_effect_size_dz: `{float(macro_pooled_summary.get('effect_size_dz', 0.0)):.6f}`",
+        f"- macro_n_tasks: `{int(macro_pooled_summary.get('n_tasks', 0))}`",
+        "",
+        "## Per-task details",
         "",
         "| task | n_pairs | mean_diff_pct | ci95_low_pct | ci95_high_pct | p_permutation | p_permutation_fdr_bh | effect_size_dz | claim_grade | claim_grade_fdr_bh |",
         "|---|---:|---:|---:|---:|---:|---:|---:|---|---|",

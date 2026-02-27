@@ -58,6 +58,7 @@ secrets/
 
 # Paper drafting artifacts
 paper_draft/
+paper_exports/**/*.pdf
 
 # macOS metadata
 .DS_Store
