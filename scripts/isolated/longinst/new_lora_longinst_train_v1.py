@@ -1786,7 +1786,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--mix_wiki_ratio", type=float, default=0.1)
     ap.add_argument("--synthetic_ratio", type=float, default=0.20)
     ap.add_argument("--allow_continuation_dominant_corpus", action=argparse.BooleanOptionalAction, default=False)
-    ap.add_argument("--min_supervised_tokens", type=int, default=32)
+    ap.add_argument("--min_supervised_tokens", type=int, default=64)
     ap.add_argument("--require_offset_boundary", action=argparse.BooleanOptionalAction, default=True)
     ap.add_argument("--debug_mix", action=argparse.BooleanOptionalAction, default=False)
 
