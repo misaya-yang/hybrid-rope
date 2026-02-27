@@ -1413,6 +1413,26 @@ def missing_reusable_train_artifacts(train_dir: Path) -> List[str]:
     return missing
 
 
+def existing_run_artifact_markers(train_dir: Path) -> List[str]:
+    markers: List[str] = []
+    run_cfg = train_dir / "run_config.json"
+    if run_cfg.exists():
+        markers.append(run_cfg.as_posix())
+    train_log = train_dir / "train_log.jsonl"
+    if train_log.exists():
+        markers.append(train_log.as_posix())
+    adapter_cfg = train_dir / "adapter" / "adapter_config.json"
+    if adapter_cfg.exists():
+        markers.append(adapter_cfg.as_posix())
+    eval_gate = train_dir / "eval" / "qasper_musique_compare.json"
+    if eval_gate.exists():
+        markers.append(eval_gate.as_posix())
+    ckpts = sorted(train_dir.glob("checkpoint-*"))
+    if ckpts:
+        markers.append(f"{train_dir.as_posix()}/checkpoint-* ({len(ckpts)} found)")
+    return markers
+
+
 def write_frozen_protocol(
     path: Path,
     base_model_path: str,
@@ -1932,6 +1952,15 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--require_transformers_version", type=str, default="")
     ap.add_argument("--run_full_eval", action=argparse.BooleanOptionalAction, default=False)
     ap.add_argument("--skip_training", action=argparse.BooleanOptionalAction, default=False)
+    ap.add_argument(
+        "--allow_existing_run_dir",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help=(
+            "Allow writing into an existing train/<run_name> directory. "
+            "Default is false to prevent mixed logs/checkpoints across reruns."
+        ),
+    )
     ap.add_argument("--data_only", action=argparse.BooleanOptionalAction, default=False)
     return ap.parse_args()
 
@@ -1959,6 +1988,21 @@ def main() -> None:
     data_dir = output_root / "data" / run_name
     train_dir = output_root / "train" / run_name
     frozen_protocol = output_root / "frozen_protocol.md"
+    if not bool(args.skip_training):
+        stale_markers = existing_run_artifact_markers(train_dir)
+        if stale_markers and not bool(args.allow_existing_run_dir):
+            raise RuntimeError(
+                "Refusing to reuse existing run_dir for a fresh training run; "
+                "this prevents mixed train logs/checkpoints from multiple attempts.\n- "
+                + "\n- ".join(stale_markers)
+                + "\nUse a unique --run_name (recommended) or pass --allow_existing_run_dir."
+            )
+        if stale_markers and bool(args.allow_existing_run_dir):
+            print(
+                "[WARNING] allow_existing_run_dir=True; existing artifacts detected and may be overwritten:\n- "
+                + "\n- ".join(stale_markers),
+                flush=True,
+            )
 
     model_key = str(args.base_model_path).lower()
     if "llama-3.1" in model_key:
@@ -2151,6 +2195,9 @@ def main() -> None:
 
     if not bool(args.skip_training):
         train_dir.mkdir(parents=True, exist_ok=True)
+        train_log_path = train_dir / "train_log.jsonl"
+        if train_log_path.exists():
+            train_log_path.unlink()
         model_cfg = AutoConfig.from_pretrained(args.base_model_path, trust_remote_code=True, local_files_only=True)
         rope_base = float(args.rope_base) if float(args.rope_base) > 0 else infer_rope_base_from_config(model_cfg)
 
@@ -2241,7 +2288,7 @@ def main() -> None:
             train_dataset=train_ds,
             eval_dataset=val_ds,
             data_collator=CausalLMCollator(pad_token_id=int(tokenizer.pad_token_id or 0)),
-            callbacks=[JsonlLogCallback(train_dir / "train_log.jsonl")],
+            callbacks=[JsonlLogCallback(train_log_path)],
         )
         result = trainer.train()
         trainer.save_model(str(train_dir / "adapter"))

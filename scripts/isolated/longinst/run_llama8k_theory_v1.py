@@ -39,6 +39,22 @@ def now() -> str:
     return time.strftime("%Y-%m-%d %H:%M:%S")
 
 
+def normalize_run_tag(raw: str) -> str:
+    tag = str(raw or "").strip()
+    if not tag:
+        return ""
+    out: List[str] = []
+    for ch in tag:
+        if ch.isalnum() or ch in {"_", "-"}:
+            out.append(ch)
+        elif ch in {".", ":", "/", " "}:
+            out.append("_")
+    normalized = "".join(out).strip("_-")
+    if not normalized:
+        raise ValueError(f"Invalid --run_tag={raw!r}: no usable characters after normalization.")
+    return normalized
+
+
 def parse_csv(text: str) -> List[str]:
     return [x.strip() for x in str(text).split(",") if x.strip()]
 
@@ -82,9 +98,13 @@ def build_stage_a_jobs() -> List[Job]:
     ]
 
 
-def job_run_name(job: Job) -> str:
+def job_run_name(job: Job, run_tag: str = "") -> str:
     tau_tag = f"_tau{job.evq_tau:.2f}".replace(".", "p")
-    return f"{job.job_id}_{job.method}{tau_tag}_r{job.lora_rank}_s{job.max_steps}_seed{job.seed}"
+    base = f"{job.job_id}_{job.method}{tau_tag}_r{job.lora_rank}_s{job.max_steps}_seed{job.seed}"
+    tag = normalize_run_tag(run_tag)
+    if tag:
+        return f"{base}__{tag}"
+    return base
 
 
 def has_reusable_artifacts(run_dir: Path) -> bool:
@@ -121,10 +141,12 @@ def run_job(
     args: argparse.Namespace,
     repo_root: Path,
     output_root: Path,
+    run_tag: str,
     execute: bool,
     skip_training: bool = False,
 ) -> Dict[str, object]:
-    run_name = job_run_name(job)
+    run_name = job_run_name(job, run_tag=run_tag)
+    run_name_base = job_run_name(job, run_tag="")
     train_script = Path(args.train_script)
     run_dir = output_root / "train" / run_name
     logs_dir = output_root / "logs"
@@ -283,6 +305,8 @@ def run_job(
         "evq_tau": evq_tau,
         "run_full_eval": bool(job.run_full_eval),
         "run_name": run_name,
+        "run_name_base": run_name_base,
+        "run_tag": normalize_run_tag(run_tag),
         "status": status,
         "return_code": return_code,
         "run_dir": run_dir.as_posix(),
@@ -582,6 +606,15 @@ def parse_args() -> argparse.Namespace:
 
     ap.add_argument("--execute", action=argparse.BooleanOptionalAction, default=False)
     ap.add_argument(
+        "--run_tag",
+        type=str,
+        default="",
+        help=(
+            "Optional run suffix appended to every job run_name. "
+            "When --execute is on and this is empty, a timestamp tag is auto-generated to avoid run_dir collisions."
+        ),
+    )
+    ap.add_argument(
         "--write_docs",
         action=argparse.BooleanOptionalAction,
         default=False,
@@ -603,19 +636,38 @@ def main() -> None:
     repo_root = Path(__file__).resolve().parents[3]
     output_root = (repo_root / args.output_root).resolve() if not Path(args.output_root).is_absolute() else Path(args.output_root)
     output_root.mkdir(parents=True, exist_ok=True)
+    run_tag = normalize_run_tag(args.run_tag)
+    if bool(args.execute) and not run_tag:
+        run_tag = time.strftime("%Y%m%d_%H%M%S")
+    if run_tag:
+        print(f"[RUN TAG] {run_tag}")
 
     registry_rows: List[Dict[str, object]] = []
 
     stage_a_jobs = build_stage_a_jobs()
     for job in stage_a_jobs:
-        run_name = job_run_name(job)
+        run_name = job_run_name(job, run_tag=run_tag)
         run_dir = output_root / "train" / run_name
         if bool(args.skip_existing) and is_job_complete(job, run_dir):
-            row = run_job(job, args=args, repo_root=repo_root, output_root=output_root, execute=False)
+            row = run_job(
+                job,
+                args=args,
+                repo_root=repo_root,
+                output_root=output_root,
+                run_tag=run_tag,
+                execute=False,
+            )
             row["status"] = "SKIPPED_EXISTING"
             registry_rows.append(row)
             continue
-        row = run_job(job, args=args, repo_root=repo_root, output_root=output_root, execute=bool(args.execute))
+        row = run_job(
+            job,
+            args=args,
+            repo_root=repo_root,
+            output_root=output_root,
+            run_tag=run_tag,
+            execute=bool(args.execute),
+        )
         registry_rows.append(row)
 
     # ── Stage B: seed=1337 replication (geometric baseline + EVQ τ=1.5) ──
@@ -633,14 +685,28 @@ def main() -> None:
     ]
 
     for job in stage_b_jobs:
-        run_name = job_run_name(job)
+        run_name = job_run_name(job, run_tag=run_tag)
         run_dir = output_root / "train" / run_name
         if bool(args.skip_existing) and is_job_complete(job, run_dir):
-            row = run_job(job, args=args, repo_root=repo_root, output_root=output_root, execute=False)
+            row = run_job(
+                job,
+                args=args,
+                repo_root=repo_root,
+                output_root=output_root,
+                run_tag=run_tag,
+                execute=False,
+            )
             row["status"] = "SKIPPED_EXISTING"
             registry_rows.append(row)
             continue
-        row = run_job(job, args=args, repo_root=repo_root, output_root=output_root, execute=bool(args.execute))
+        row = run_job(
+            job,
+            args=args,
+            repo_root=repo_root,
+            output_root=output_root,
+            run_tag=run_tag,
+            execute=bool(args.execute),
+        )
         registry_rows.append(row)
 
     stats_json = run_stats_if_possible(
@@ -670,6 +736,8 @@ def main() -> None:
         "evq_tau",
         "run_full_eval",
         "run_name",
+        "run_name_base",
+        "run_tag",
         "status",
         "return_code",
         "gate_pass",
@@ -712,6 +780,9 @@ def main() -> None:
         "stats_json": stats_json.as_posix() if stats_json else None,
         "stage_a_jobs": [job_run_name(j) for j in stage_a_jobs],
         "stage_b_jobs": [job_run_name(j) for j in stage_b_jobs],
+        "stage_a_runs": [job_run_name(j, run_tag=run_tag) for j in stage_a_jobs],
+        "stage_b_runs": [job_run_name(j, run_tag=run_tag) for j in stage_b_jobs],
+        "run_tag": run_tag,
         "mixed_dataset_dir": str(args.mixed_dataset_dir),
         "require_mixed_dataset_dir": bool(args.require_mixed_dataset_dir),
         "min_supervised_tokens": int(args.min_supervised_tokens),
