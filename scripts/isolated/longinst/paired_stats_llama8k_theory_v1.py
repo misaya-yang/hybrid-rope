@@ -168,7 +168,9 @@ def effect_size_dz(diffs: np.ndarray) -> float:
     return float(np.mean(diffs) / std)
 
 
-def claim_grade(mean_diff_pct: float, ci_low_pct: float, p_perm: float) -> str:
+def claim_grade(mean_diff_pct: float, ci_low_pct: float, p_perm: float, run_pair_count: int, min_run_pairs: int) -> str:
+    if int(run_pair_count) < int(max(1, min_run_pairs)):
+        return "insufficient_seed_replication"
     if mean_diff_pct > 0 and ci_low_pct > 0 and p_perm < 0.05:
         return "significant"
     if mean_diff_pct > 0:
@@ -176,7 +178,38 @@ def claim_grade(mean_diff_pct: float, ci_low_pct: float, p_perm: float) -> str:
     return "inconclusive"
 
 
-def summarize_diffs(diffs: np.ndarray, n_bootstrap: int, seed: int) -> Dict[str, float]:
+def fdr_bh_adjust(pvals: List[float]) -> List[float]:
+    n = len(pvals)
+    if n == 0:
+        return []
+    indexed = []
+    for i, p in enumerate(pvals):
+        pv = float(p)
+        if not math.isfinite(pv):
+            pv = 1.0
+        pv = min(1.0, max(0.0, pv))
+        indexed.append((i, pv))
+    indexed.sort(key=lambda x: x[1])
+    adjusted_sorted = [1.0] * n
+    prev = 1.0
+    for rank in range(n, 0, -1):
+        idx, pv = indexed[rank - 1]
+        adj = min(prev, (pv * n) / float(rank))
+        adjusted_sorted[rank - 1] = adj
+        prev = adj
+    adjusted = [1.0] * n
+    for rank, (idx, _) in enumerate(indexed):
+        adjusted[idx] = float(min(1.0, max(0.0, adjusted_sorted[rank])))
+    return adjusted
+
+
+def summarize_diffs(
+    diffs: np.ndarray,
+    n_bootstrap: int,
+    seed: int,
+    run_pair_count: int,
+    min_run_pairs: int,
+) -> Dict[str, float]:
     mean_raw, ci_low_raw, ci_high_raw = bootstrap_ci_mean(diffs=diffs, n_bootstrap=n_bootstrap, seed=seed)
     p_sign = sign_flip_pvalue(diffs=diffs, seed=seed)
     p_perm = paired_permutation_pvalue(diffs=diffs, seed=seed + 1)
@@ -195,7 +228,13 @@ def summarize_diffs(diffs: np.ndarray, n_bootstrap: int, seed: int) -> Dict[str,
         "p_sign_flip": float(p_sign),
         "p_permutation": float(p_perm),
         "effect_size_dz": float(dz),
-        "claim_grade": claim_grade(mean_diff_pct=mean_pct, ci_low_pct=ci_low_pct, p_perm=float(p_perm)),
+        "claim_grade": claim_grade(
+            mean_diff_pct=mean_pct,
+            ci_low_pct=ci_low_pct,
+            p_perm=float(p_perm),
+            run_pair_count=int(run_pair_count),
+            min_run_pairs=int(min_run_pairs),
+        ),
     }
 
 
@@ -224,6 +263,7 @@ def main() -> None:
     ap.add_argument("--tasks", type=str, default=",".join(LB21_TASKS))
     ap.add_argument("--n_bootstrap", type=int, default=10000)
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--claim_min_run_pairs", type=int, default=2)
     ap.add_argument("--output_json", type=str, required=True)
     ap.add_argument("--output_md", type=str, required=True)
     args = ap.parse_args()
@@ -255,15 +295,48 @@ def main() -> None:
         for task, diffs in per_task.items():
             per_task_all.setdefault(task, []).extend(diffs.tolist())
 
+    if len(run_pairs) == 0:
+        raise RuntimeError("No valid run pairs found. Both method-a and geometric jsons must exist on disk.")
     pooled_arr = np.asarray(pooled_all, dtype=np.float64)
-    pooled_summary = summarize_diffs(diffs=pooled_arr, n_bootstrap=int(args.n_bootstrap), seed=int(args.seed))
+    if pooled_arr.size == 0:
+        raise RuntimeError("No paired per-sample traces found across provided run pairs/tasks.")
+    pooled_summary = summarize_diffs(
+        diffs=pooled_arr,
+        n_bootstrap=int(args.n_bootstrap),
+        seed=int(args.seed),
+        run_pair_count=len(run_pairs),
+        min_run_pairs=int(args.claim_min_run_pairs),
+    )
 
     per_task_summary: Dict[str, Dict[str, float]] = {}
     for task in tasks:
         vals = np.asarray(per_task_all.get(task, []), dtype=np.float64)
         if vals.size == 0:
             continue
-        per_task_summary[task] = summarize_diffs(diffs=vals, n_bootstrap=int(args.n_bootstrap), seed=int(args.seed) + 17)
+        per_task_summary[task] = summarize_diffs(
+            diffs=vals,
+            n_bootstrap=int(args.n_bootstrap),
+            seed=int(args.seed) + 17,
+            run_pair_count=len(run_pairs),
+            min_run_pairs=int(args.claim_min_run_pairs),
+        )
+
+    fdr_tasks = list(per_task_summary.keys())
+    fdr_raw = [float(per_task_summary[t].get("p_permutation", 1.0)) for t in fdr_tasks]
+    fdr_adj = fdr_bh_adjust(fdr_raw)
+    for t, p_adj in zip(fdr_tasks, fdr_adj):
+        row = per_task_summary[t]
+        row["p_permutation_fdr_bh"] = float(p_adj)
+        ci_low_pct = float(row.get("ci95_low_pct", 0.0))
+        mean_diff_pct = float(row.get("mean_diff_pct", 0.0))
+        if int(len(run_pairs)) < int(max(1, args.claim_min_run_pairs)):
+            row["claim_grade_fdr_bh"] = "insufficient_seed_replication"
+        elif mean_diff_pct > 0 and ci_low_pct > 0 and float(p_adj) < 0.05:
+            row["claim_grade_fdr_bh"] = "significant_fdr_bh"
+        elif mean_diff_pct > 0:
+            row["claim_grade_fdr_bh"] = "directional"
+        else:
+            row["claim_grade_fdr_bh"] = "inconclusive"
 
     out = {
         "meta": {
@@ -274,6 +347,9 @@ def main() -> None:
             "score_unit": "raw_and_pct",
             "method_a_name": method_a_name,
             "comparison": f"{method_a_name}_minus_geometric",
+            "run_pair_count": int(len(run_pairs)),
+            "claim_min_run_pairs": int(args.claim_min_run_pairs),
+            "seed_replication_ok": bool(len(run_pairs) >= int(max(1, args.claim_min_run_pairs))),
             "inference_scope": (
                 "paired sample-level difference over provided model-pair outputs; "
                 "does not estimate cross-seed training-run variance unless multiple "
@@ -292,7 +368,9 @@ def main() -> None:
         f"# Paired Statistics: {method_a_name} vs Geometric",
         "",
         f"- run_pairs: `{len(run_pairs)}`",
-        "- inference_scope: `paired sample-level difference over provided EVQ/Geometric model pairs`",
+        f"- claim_min_run_pairs: `{int(args.claim_min_run_pairs)}`",
+        f"- seed_replication_ok: `{bool(len(run_pairs) >= int(max(1, args.claim_min_run_pairs)))}`",
+        f"- inference_scope: `paired sample-level difference over provided {method_a_name}/geometric model pairs`",
         "- caveat: `This is not cross-seed training significance unless multiple full-eval training seeds are present.`",
         f"- claim_grade: `{pooled_summary.get('claim_grade', 'inconclusive')}`",
         f"- pooled_mean_diff_pct: `{pooled_summary.get('mean_diff_pct', 0.0):.4f}`",
@@ -301,20 +379,22 @@ def main() -> None:
         f"- p_permutation: `{pooled_summary.get('p_permutation', float('nan')):.6f}`",
         f"- effect_size_dz: `{pooled_summary.get('effect_size_dz', 0.0):.6f}`",
         "",
-        "| task | n_pairs | mean_diff_pct | ci95_low_pct | ci95_high_pct | p_permutation | effect_size_dz | claim_grade |",
-        "|---|---:|---:|---:|---:|---:|---:|---|",
+        "| task | n_pairs | mean_diff_pct | ci95_low_pct | ci95_high_pct | p_permutation | p_permutation_fdr_bh | effect_size_dz | claim_grade | claim_grade_fdr_bh |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---|---|",
     ]
     for task, row in per_task_summary.items():
         lines.append(
-            "| {task} | {n_pairs} | {mean_diff_pct:.4f} | {ci95_low_pct:.4f} | {ci95_high_pct:.4f} | {p_permutation:.6f} | {effect_size_dz:.6f} | {claim_grade} |".format(
+            "| {task} | {n_pairs} | {mean_diff_pct:.4f} | {ci95_low_pct:.4f} | {ci95_high_pct:.4f} | {p_permutation:.6f} | {p_permutation_fdr_bh:.6f} | {effect_size_dz:.6f} | {claim_grade} | {claim_grade_fdr_bh} |".format(
                 task=task,
                 n_pairs=int(row.get("n_pairs", 0)),
                 mean_diff_pct=float(row.get("mean_diff_pct", 0.0)),
                 ci95_low_pct=float(row.get("ci95_low_pct", 0.0)),
                 ci95_high_pct=float(row.get("ci95_high_pct", 0.0)),
                 p_permutation=float(row.get("p_permutation", float("nan"))),
+                p_permutation_fdr_bh=float(row.get("p_permutation_fdr_bh", float("nan"))),
                 effect_size_dz=float(row.get("effect_size_dz", 0.0)),
                 claim_grade=str(row.get("claim_grade", "inconclusive")),
+                claim_grade_fdr_bh=str(row.get("claim_grade_fdr_bh", "inconclusive")),
             )
         )
 

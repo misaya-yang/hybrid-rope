@@ -28,6 +28,16 @@ Goal: remove high-risk logic that can silently waste GPU budget, then lock a saf
 - Fix: generalized wording to Method-A vs Geometric.
 - Added `--method_a_jsons` while keeping legacy `--anchored_jsons` compatible.
 
+6. `new_lora_longinst_train_v1.py` could silently accept prebuilt mixed datasets with bad source ratios.
+- Fix: prebuilt mode now computes per-source token ratios and enforces hard safety floors plus manifest-target drift tolerance.
+- Source aliases are canonicalized (`power_law -> wiki`, `multihop -> synthetic`, etc.) before ratio auditing.
+
+7. `new_lora_longinst_train_v1.py` EVQ small-`tau` branch used an overly coarse cutoff (`tau<0.01`) and lacked invariants.
+- Fix: geometric equivalence branch is now only for `tau<=1e-8`; EVQ computation uses float64 and checks positivity/strict monotonicity.
+
+8. `run_llama8k_theory_v1.py` could compute paired stats on mismatched run protocols.
+- Fix: stats step now hard-checks per-seed `code_hash` and `data_hash` parity between geometric and EVQ before running tests.
+
 ## Data-Safety Status (Already Enforced)
 - Response-only masking no longer forces a tail reserve when assistant span is missing.
 - Samples with assistant out-of-window are dropped, not force-supervised.
@@ -73,6 +83,11 @@ cd /Users/yang/projects/hybrid-rope
 .venv/bin/python scripts/isolated/longinst/run_llama8k_theory_v1.py <same args> --execute
 ```
 
+5. For paper-grade seed replication on full-lb21, include:
+```bash
+--run_full_eval_seed1337
+```
+
 ## Expected Outputs
 - Registry CSV: `docs/exp/llama8k_theory_v1_registry.csv`
 - Report MD: `docs/exp/llama8k_theory_v1_report.md`
@@ -82,3 +97,4 @@ cd /Users/yang/projects/hybrid-rope
 ## Notes
 - `.venv/` and local dry-run artifacts are environment/runtime assets and are not part of git deliverables.
 - If Stage-B gate fails (`B1/B2`), orchestrator will stop `B3/B4` automatically by design.
+- If stats parity check fails (`code_hash` or `data_hash` mismatch), orchestrator aborts stats instead of emitting misleading significance.

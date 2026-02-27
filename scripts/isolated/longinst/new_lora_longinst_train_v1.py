@@ -84,6 +84,87 @@ def parse_csv(text: str) -> List[str]:
     return [x.strip() for x in str(text).split(",") if x.strip()]
 
 
+def canonicalize_source_name(raw_source: str) -> str:
+    s = str(raw_source or "").strip().lower()
+    if not s:
+        return "long"
+    wiki_aliases = {
+        "wiki",
+        "wikitext",
+        "power_law",
+        "powerlaw",
+        "power-law",
+        "redpajama",
+        "slimpajama",
+        "book",
+        "arxiv",
+    }
+    synthetic_aliases = {
+        "synthetic",
+        "multihop",
+        "multi_hop",
+        "multihop_qa",
+        "qa",
+        "reasoning",
+        "hotpotqa",
+        "musique",
+        "2wikimqa",
+        "mid_band",
+        "midband",
+    }
+    long_aliases = {
+        "long",
+        "longinst",
+        "long_instruction",
+        "instruction",
+        "format_scaffold",
+        "scaffold",
+        "sharegpt",
+        "alpaca",
+    }
+    if s in wiki_aliases:
+        return "wiki"
+    if s in synthetic_aliases:
+        return "synthetic"
+    if s in long_aliases:
+        return "long"
+    return "long"
+
+
+def parse_ratio_like(value: object) -> Optional[float]:
+    if value is None:
+        return None
+    try:
+        v = float(value)
+    except Exception:
+        return None
+    if not math.isfinite(v):
+        return None
+    if v > 1.0:
+        v = v / 100.0
+    if v < 0.0:
+        return 0.0
+    if v > 1.0:
+        return 1.0
+    return float(v)
+
+
+def lookup_manifest_ratio(manifest: Dict, keys: List[str]) -> Optional[float]:
+    containers: List[Dict] = []
+    if isinstance(manifest, dict):
+        containers.append(manifest)
+        targets = manifest.get("targets")
+        if isinstance(targets, dict):
+            containers.append(targets)
+    for container in containers:
+        for key in keys:
+            if key in container:
+                parsed = parse_ratio_like(container.get(key))
+                if parsed is not None:
+                    return parsed
+    return None
+
+
 def iter_json_records(path: Path) -> Iterable[Dict]:
     if path.suffix.lower() == ".jsonl":
         with path.open("r", encoding="utf-8") as f:
@@ -346,11 +427,10 @@ def render_sample(tokenizer: AutoTokenizer, messages: List[Dict[str, str]], sour
     if not str(messages[-1].get("content", "")).strip():
         return None
     prefix_msgs = list(messages[:-1]) + [{"role": "assistant", "content": ""}]
-    text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=False)
-    prefix_text = tokenizer.apply_chat_template(prefix_msgs, tokenize=False, add_generation_prompt=False)
-    text = str(text).strip()
-    prefix_text = str(prefix_text).strip()
-    if not text or not prefix_text:
+    text = str(tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=False))
+    prefix_text = str(tokenizer.apply_chat_template(prefix_msgs, tokenize=False, add_generation_prompt=False))
+    # Do not strip boundary whitespace; response-only masking relies on exact prefix boundary.
+    if not text.strip() or not prefix_text.strip():
         return None
     return RenderedSample(source=source, messages=messages, text=text, prefix_text=prefix_text)
 
@@ -551,20 +631,47 @@ def build_longinst_mix(
         "wiki": int(sum(1 for s in rendered if s.source == "wiki")),
     }
     total_selected_tokens = int(sum(int(v) for v in source_token_counts.values()))
+    target_long_ratio = float(r_long / r_sum)
+    target_wiki_ratio = float(r_wiki / r_sum)
+    target_synthetic_ratio = float(r_syn / r_sum)
     actual_wiki = float(selected_counts["wiki"]) / float(max(1, len(rendered)))
     actual_synthetic = float(selected_counts["synthetic"]) / float(max(1, len(rendered)))
     actual_wiki_token = float(source_token_counts["wiki"]) / float(max(1, total_selected_tokens))
     actual_synthetic_token = float(source_token_counts["synthetic"]) / float(max(1, total_selected_tokens))
+    actual_long_token = float(source_token_counts["long"]) / float(max(1, total_selected_tokens))
     print(
         "[DATA CHECK] "
         f"actual_wiki_ratio={actual_wiki:.4f}, actual_synthetic_ratio={actual_synthetic:.4f}, "
-        f"actual_wiki_token_ratio={actual_wiki_token:.4f}, actual_synthetic_token_ratio={actual_synthetic_token:.4f}",
+        f"actual_wiki_token_ratio={actual_wiki_token:.4f}, actual_synthetic_token_ratio={actual_synthetic_token:.4f}, "
+        f"actual_long_token_ratio={actual_long_token:.4f}",
         flush=True,
     )
-    if actual_wiki_token < 0.05:
-        raise RuntimeError(f"WikiText token ratio too low: {actual_wiki_token:.4f} (expected >= 0.05).")
-    if actual_synthetic_token < 0.10:
-        print("[WARNING] synthetic ratio low; continuing with warning.", flush=True)
+    if target_wiki_ratio > 0 and actual_wiki_token < max(0.02, target_wiki_ratio * 0.60):
+        raise RuntimeError(
+            f"WikiText token ratio too low: {actual_wiki_token:.4f} "
+            f"(target={target_wiki_ratio:.4f}, min={max(0.02, target_wiki_ratio * 0.60):.4f})."
+        )
+    if target_synthetic_ratio > 0 and actual_synthetic_token < max(0.05, target_synthetic_ratio * 0.60):
+        raise RuntimeError(
+            f"Synthetic token ratio too low: {actual_synthetic_token:.4f} "
+            f"(target={target_synthetic_ratio:.4f}, min={max(0.05, target_synthetic_ratio * 0.60):.4f})."
+        )
+    ratio_tolerance = 0.08
+    if target_long_ratio > 0 and abs(actual_long_token - target_long_ratio) > ratio_tolerance:
+        raise RuntimeError(
+            f"Long token ratio drift too large: actual={actual_long_token:.4f}, "
+            f"target={target_long_ratio:.4f}, tol={ratio_tolerance:.4f}."
+        )
+    if target_wiki_ratio > 0 and abs(actual_wiki_token - target_wiki_ratio) > ratio_tolerance:
+        raise RuntimeError(
+            f"Wiki token ratio drift too large: actual={actual_wiki_token:.4f}, "
+            f"target={target_wiki_ratio:.4f}, tol={ratio_tolerance:.4f}."
+        )
+    if target_synthetic_ratio > 0 and abs(actual_synthetic_token - target_synthetic_ratio) > ratio_tolerance:
+        raise RuntimeError(
+            f"Synthetic token ratio drift too large: actual={actual_synthetic_token:.4f}, "
+            f"target={target_synthetic_ratio:.4f}, tol={ratio_tolerance:.4f}."
+        )
 
     stats = {
         "long_rows_raw": len(long_rows),
@@ -578,9 +685,9 @@ def build_longinst_mix(
         "target_long_tokens": float(target_long_tokens),
         "target_wiki_tokens": float(target_wiki_tokens),
         "target_synthetic_tokens": float(target_syn_tokens),
-        "target_long_ratio": float(r_long / r_sum),
-        "target_wiki_ratio": float(r_wiki / r_sum),
-        "target_synthetic_ratio": float(r_syn / r_sum),
+        "target_long_ratio": target_long_ratio,
+        "target_wiki_ratio": target_wiki_ratio,
+        "target_synthetic_ratio": target_synthetic_ratio,
         "target_long_count": int(desired_long),
         "target_wiki_count": int(desired_wiki),
         "target_synthetic_count": int(desired_syn),
@@ -596,7 +703,7 @@ def build_longinst_mix(
         "actual_synthetic_ratio": actual_synthetic,
         "actual_wiki_token_ratio": actual_wiki_token,
         "actual_synthetic_token_ratio": actual_synthetic_token,
-        "actual_long_token_ratio": float(source_token_counts["long"]) / float(max(1, total_selected_tokens)),
+        "actual_long_token_ratio": actual_long_token,
         "actual_wiki_ratio_final": actual_wiki,
         "actual_synthetic_ratio_final": actual_synthetic,
         "continuation_like_ratio": continuation_ratio,
@@ -646,7 +753,8 @@ def load_prebuilt_mixed_split(
         )
 
     rendered: List[RenderedSample] = []
-    source_counts: Dict[str, int] = {}
+    source_counts: Dict[str, int] = {"long": 0, "synthetic": 0, "wiki": 0}
+    source_token_counts: Dict[str, int] = {"long": 0, "synthetic": 0, "wiki": 0}
     with source_jsonl.open("r", encoding="utf-8", errors="ignore") as f:
         for line in f:
             line = line.strip()
@@ -663,14 +771,17 @@ def load_prebuilt_mixed_split(
                 msgs = normalize_messages(row)
             if not msgs:
                 continue
-            source = str(
+            source_raw = str(
                 row.get("source_prior", row.get("source", row.get("source_name", "mixed_dataset")))
             ).strip()
+            source = canonicalize_source_name(source_raw)
             sample = render_sample(tokenizer, msgs, source=source)
             if sample is None:
                 continue
             rendered.append(sample)
             source_counts[source] = source_counts.get(source, 0) + 1
+            tok_n = len(tokenizer(sample.text, add_special_tokens=False, truncation=False)["input_ids"])
+            source_token_counts[source] = source_token_counts.get(source, 0) + int(max(1, tok_n))
 
     if len(rendered) < 500:
         raise RuntimeError(f"Too few usable samples in prebuilt mixed dataset: {len(rendered)}")
@@ -680,6 +791,47 @@ def load_prebuilt_mixed_split(
     manifest_path = mixed_dataset_dir / "mix_manifest.json"
     prebuilt_manifest = load_json(manifest_path) if manifest_path.exists() else {}
 
+    total_selected_tokens = int(sum(int(v) for v in source_token_counts.values()))
+    actual_long_token_ratio = float(source_token_counts["long"]) / float(max(1, total_selected_tokens))
+    actual_wiki_token_ratio = float(source_token_counts["wiki"]) / float(max(1, total_selected_tokens))
+    actual_synthetic_token_ratio = float(source_token_counts["synthetic"]) / float(max(1, total_selected_tokens))
+    target_long_ratio = lookup_manifest_ratio(
+        prebuilt_manifest,
+        ["target_long_ratio", "long_token_ratio", "long_ratio", "mix_long_ratio"],
+    )
+    target_wiki_ratio = lookup_manifest_ratio(
+        prebuilt_manifest,
+        ["target_wiki_ratio", "wiki_token_ratio", "wiki_ratio", "mix_wiki_ratio"],
+    )
+    target_synthetic_ratio = lookup_manifest_ratio(
+        prebuilt_manifest,
+        ["target_synthetic_ratio", "synthetic_token_ratio", "synthetic_ratio", "mix_synthetic_ratio"],
+    )
+    if actual_wiki_token_ratio < 0.05:
+        raise RuntimeError(
+            f"Prebuilt mixed dataset wiki token ratio too low: {actual_wiki_token_ratio:.4f} (required >= 0.05)."
+        )
+    if actual_synthetic_token_ratio < 0.10:
+        raise RuntimeError(
+            f"Prebuilt mixed dataset synthetic token ratio too low: {actual_synthetic_token_ratio:.4f} (required >= 0.10)."
+        )
+    ratio_tolerance = 0.08
+    if target_long_ratio is not None and abs(actual_long_token_ratio - float(target_long_ratio)) > ratio_tolerance:
+        raise RuntimeError(
+            f"Prebuilt mixed dataset long token ratio drift too large: actual={actual_long_token_ratio:.4f}, "
+            f"target={float(target_long_ratio):.4f}, tol={ratio_tolerance:.4f}."
+        )
+    if target_wiki_ratio is not None and abs(actual_wiki_token_ratio - float(target_wiki_ratio)) > ratio_tolerance:
+        raise RuntimeError(
+            f"Prebuilt mixed dataset wiki token ratio drift too large: actual={actual_wiki_token_ratio:.4f}, "
+            f"target={float(target_wiki_ratio):.4f}, tol={ratio_tolerance:.4f}."
+        )
+    if target_synthetic_ratio is not None and abs(actual_synthetic_token_ratio - float(target_synthetic_ratio)) > ratio_tolerance:
+        raise RuntimeError(
+            f"Prebuilt mixed dataset synthetic token ratio drift too large: actual={actual_synthetic_token_ratio:.4f}, "
+            f"target={float(target_synthetic_ratio):.4f}, tol={ratio_tolerance:.4f}."
+        )
+
     stats = {
         "using_prebuilt_mixed_dataset": True,
         "mixed_dataset_dir": mixed_dataset_dir.as_posix(),
@@ -687,6 +839,13 @@ def load_prebuilt_mixed_split(
         "mixed_source_jsonl_path": source_jsonl.as_posix(),
         "rendered_total": len(rendered),
         "selected_by_source": source_counts,
+        "selected_token_by_source": source_token_counts,
+        "actual_long_token_ratio": actual_long_token_ratio,
+        "actual_wiki_token_ratio": actual_wiki_token_ratio,
+        "actual_synthetic_token_ratio": actual_synthetic_token_ratio,
+        "target_long_ratio": target_long_ratio,
+        "target_wiki_ratio": target_wiki_ratio,
+        "target_synthetic_ratio": target_synthetic_ratio,
         "prebuilt_manifest_json": manifest_path.as_posix() if manifest_path.exists() else "",
         "prebuilt_manifest_targets": prebuilt_manifest.get("targets", {}),
     }
@@ -698,6 +857,7 @@ def tokenize_response_only(
     samples: List[RenderedSample],
     max_seq_len: int,
     min_supervised_tokens: int,
+    require_offset_boundary: bool,
 ) -> Tuple[Dataset, Dict[str, object], List[Dict[str, object]]]:
     input_ids_all: List[List[int]] = []
     attention_mask_all: List[List[int]] = []
@@ -748,6 +908,10 @@ def tokenize_response_only(
                 next((idx for idx, pair in enumerate(full_offsets) if int(pair[0]) >= prefix_char_len), len(full_ids))
             )
             boundary_mode = "offset_mapping"
+        elif bool(require_offset_boundary):
+            raise RuntimeError(
+                "Tokenizer did not provide offset_mapping; cannot guarantee strict response-only masking safety."
+            )
 
         if len(full_ids) > max_seq_len:
             head_len = min(int(TRAIN_TRUNCATE_HEAD_CAP), max(0, int(max_seq_len) - 1))
@@ -758,7 +922,7 @@ def tokenize_response_only(
                 truncated = list(full_ids[:head_len] + full_ids[-tail_len:])
             else:
                 truncated = list(full_ids[:head_len])
-            if assistant_start_full <= middle_start:
+            if assistant_start_full < middle_start:
                 assistant_start = int(assistant_start_full)
             elif assistant_start_full >= middle_end:
                 assistant_start = int(head_len + (assistant_start_full - middle_end))
@@ -783,6 +947,8 @@ def tokenize_response_only(
             continue
 
         labels = list(truncated)
+        if len(labels) != len(truncated):
+            raise RuntimeError("Label length mismatch: labels and input_ids must have identical length.")
         for j in range(max(0, min(assistant_start, len(labels)))):
             labels[j] = -100
         supervised = sum(1 for x in labels if int(x) != -100)
@@ -841,6 +1007,7 @@ def tokenize_response_only(
         "num_boundary_in_dropped_middle": int(boundary_dropped_middle),
         "num_boundary_offset_mapping": int(boundary_offset_count),
         "num_boundary_prefix_len": int(boundary_prefix_count),
+        "require_offset_boundary": bool(require_offset_boundary),
         "total_tokens": quantiles(total_tokens_list),
         "assistant_tokens": quantiles(assistant_tokens_list),
         "assistant_tokens_lt64_ratio": float(sum(1 for x in assistant_tokens_list if x < 64)) / float(max(1, len(assistant_tokens_list))),
@@ -877,18 +1044,26 @@ def build_anchored_inv_freq(head_dim: int, base: float, anchor_factor: float, sl
 def build_evq_cosh_inv_freq(head_dim: int, base: float, tau: float) -> torch.Tensor:
     if head_dim % 2 != 0:
         raise ValueError(f"head_dim must be even, got {head_dim}")
+    if float(base) <= 1.0:
+        raise ValueError(f"rope base must be > 1.0, got {base}")
     tau = float(tau)
     if tau < 0:
         raise ValueError(f"evq_tau must be non-negative, got {tau}")
     n = head_dim // 2
-    idx = torch.arange(n, dtype=torch.float32)
+    idx = torch.arange(n, dtype=torch.float64)
     u = idx / float(n)
-    if tau < 0.01:
-        # tau close to 0 should behave as strict geometric RoPE.
+    if tau <= 1e-8:
+        # Exact geometric equivalence branch.
         phi = u
     else:
-        phi = 1.0 - (1.0 / tau) * torch.asinh((1.0 - u) * torch.sinh(torch.tensor(tau, dtype=torch.float32)))
-    return torch.pow(torch.tensor(float(base), dtype=torch.float32), -phi)
+        tau_t = torch.tensor(tau, dtype=torch.float64)
+        phi = 1.0 - (1.0 / tau_t) * torch.asinh((1.0 - u) * torch.sinh(tau_t))
+    inv = torch.pow(torch.tensor(float(base), dtype=torch.float64), -phi)
+    if torch.any(inv <= 0):
+        raise RuntimeError("EVQ-Cosh produced non-positive inv_freq entries.")
+    if n > 1 and not bool(torch.all(inv[:-1] > inv[1:]).item()):
+        raise RuntimeError("EVQ-Cosh inv_freq must be strictly decreasing by frequency index.")
+    return inv.to(dtype=torch.float32)
 
 
 def build_evq_exp_inv_freq(head_dim: int, base: float, beta: float) -> torch.Tensor:
@@ -939,6 +1114,14 @@ def inject_inv_freq_copy(
     if not modules:
         raise RuntimeError("No rotary modules with inv_freq found for inv_freq.copy_().")
     ref = modules[0][1].inv_freq
+    ref_numel = int(ref.numel())
+    for name, module in modules:
+        cur_numel = int(module.inv_freq.numel())
+        if cur_numel != ref_numel:
+            raise RuntimeError(
+                f"Rotary head_dim mismatch: module={name} inv_freq_numel={cur_numel}, "
+                f"expected={ref_numel}."
+            )
     head_dim = int(ref.numel()) * 2
     schedule = str(rope_schedule).strip().lower()
     if schedule == "anchored_sigmoid":
@@ -968,6 +1151,14 @@ def inject_inv_freq_copy(
     with torch.no_grad():
         for _, module in modules:
             module.inv_freq.copy_(inv.to(device=module.inv_freq.device, dtype=module.inv_freq.dtype))
+            if hasattr(module, "original_inv_freq"):
+                original_inv = getattr(module, "original_inv_freq")
+                if isinstance(original_inv, torch.Tensor):
+                    if int(original_inv.numel()) != int(module.inv_freq.numel()):
+                        raise RuntimeError(
+                            "original_inv_freq shape mismatch; cannot safely keep rotary cache coherent."
+                        )
+                    original_inv.copy_(inv.to(device=original_inv.device, dtype=original_inv.dtype))
         for _, module in modules:
             invalidate_rotary_cache(module)
     inv_sha = hashlib.sha256(inv.detach().cpu().numpy().tobytes()).hexdigest()
@@ -1460,6 +1651,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--synthetic_ratio", type=float, default=0.20)
     ap.add_argument("--allow_continuation_dominant_corpus", action=argparse.BooleanOptionalAction, default=False)
     ap.add_argument("--min_supervised_tokens", type=int, default=32)
+    ap.add_argument("--require_offset_boundary", action=argparse.BooleanOptionalAction, default=True)
     ap.add_argument("--debug_mix", action=argparse.BooleanOptionalAction, default=False)
 
     ap.add_argument("--max_seq_len", type=int, default=8192)
@@ -1538,6 +1730,12 @@ def main() -> None:
         raise RuntimeError(
             f"Unexpected max_position_embeddings={max_pos}. Expected 8192 for LLaMA-3-8B-Instruct protocol."
         )
+    rope_scaling_cfg = getattr(cfg_guard, "rope_scaling", None)
+    if rope_scaling_cfg is not None and rope_scaling_cfg != {}:
+        raise RuntimeError(
+            f"Unsupported rope_scaling={rope_scaling_cfg}. "
+            "This pipeline requires base LLaMA-3-8B-Instruct without dynamic rope_scaling."
+        )
 
     tokenizer = AutoTokenizer.from_pretrained(args.base_model_path, trust_remote_code=True, local_files_only=True)
     tokenizer.truncation_side = "left"
@@ -1601,6 +1799,7 @@ def main() -> None:
         samples=rendered,
         max_seq_len=int(args.max_seq_len),
         min_supervised_tokens=int(args.min_supervised_tokens),
+        require_offset_boundary=bool(args.require_offset_boundary),
     )
     stats = {**mix_stats, **token_stats}
     if float(stats.get("assistant_tokens_lt64_ratio", 0.0)) > 0.10:

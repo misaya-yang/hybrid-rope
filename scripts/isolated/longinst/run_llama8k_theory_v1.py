@@ -397,9 +397,13 @@ def write_report(
     if stats_json and stats_json.exists():
         st = load_json(stats_json)
         pooled = st.get("pooled", {}) if isinstance(st, dict) else {}
+        meta = st.get("meta", {}) if isinstance(st, dict) else {}
         lines.extend(
             [
                 f"- stats_json: `{stats_json.as_posix()}`",
+                f"- run_pair_count: `{int(meta.get('run_pair_count', 0))}`",
+                f"- claim_min_run_pairs: `{int(meta.get('claim_min_run_pairs', 0))}`",
+                f"- seed_replication_ok: `{bool(meta.get('seed_replication_ok', False))}`",
                 f"- claim_grade: `{pooled.get('claim_grade', 'inconclusive')}`",
                 f"- mean_diff_pct: `{float(pooled.get('mean_diff_pct', 0.0)):.4f}`",
                 f"- ci95_pct: `[{float(pooled.get('ci95_low_pct', 0.0)):.4f}, {float(pooled.get('ci95_high_pct', 0.0)):.4f}]`",
@@ -431,9 +435,36 @@ def run_stats_if_possible(
     # Pair by seed when possible.
     seed_to_geo: Dict[int, str] = {int(r.get("seed", -1)): str(r.get("full_raw_json")) for r in rows if r.get("method") == "geometric" and str(r.get("full_raw_json", ""))}
     seed_to_evq: Dict[int, str] = {int(r.get("seed", -1)): str(r.get("full_raw_json")) for r in rows if r.get("method") == "evq_cosh" and str(r.get("full_raw_json", ""))}
+    seed_to_geo_row: Dict[int, Dict[str, object]] = {int(r.get("seed", -1)): r for r in rows if r.get("method") == "geometric" and str(r.get("full_raw_json", ""))}
+    seed_to_evq_row: Dict[int, Dict[str, object]] = {int(r.get("seed", -1)): r for r in rows if r.get("method") == "evq_cosh" and str(r.get("full_raw_json", ""))}
     common_seeds = sorted(set(seed_to_geo.keys()) & set(seed_to_evq.keys()))
     if not common_seeds:
         return None
+
+    protocol_issues: List[str] = []
+    for seed in common_seeds:
+        geo_path = Path(seed_to_geo[seed])
+        evq_path = Path(seed_to_evq[seed])
+        if not geo_path.exists():
+            protocol_issues.append(f"seed={seed}: geometric full_raw_json missing on disk: {geo_path.as_posix()}")
+        if not evq_path.exists():
+            protocol_issues.append(f"seed={seed}: evq full_raw_json missing on disk: {evq_path.as_posix()}")
+        geo_row = seed_to_geo_row.get(seed, {})
+        evq_row = seed_to_evq_row.get(seed, {})
+        for key in ("code_hash", "data_hash"):
+            geo_val = str(geo_row.get(key, "")).strip()
+            evq_val = str(evq_row.get(key, "")).strip()
+            if not geo_val or not evq_val:
+                protocol_issues.append(f"seed={seed}: missing {key} for protocol parity check.")
+            elif geo_val != evq_val:
+                protocol_issues.append(
+                    f"seed={seed}: {key} mismatch (geometric={geo_val[:12]}..., evq={evq_val[:12]}...)."
+                )
+    if protocol_issues:
+        raise RuntimeError(
+            "Refusing paired stats due to protocol mismatch between geometric and EVQ runs:\n- "
+            + "\n- ".join(protocol_issues)
+        )
 
     evq_jsons = ",".join([seed_to_evq[s] for s in common_seeds])
     geometric_jsons = ",".join([seed_to_geo[s] for s in common_seeds])
@@ -450,6 +481,8 @@ def run_stats_if_possible(
         evq_jsons,
         "--geometric_jsons",
         geometric_jsons,
+        "--claim_min_run_pairs",
+        str(int(args.stats_claim_min_run_pairs)),
         "--output_json",
         out_json.as_posix(),
         "--output_md",
@@ -498,6 +531,8 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--eval_batch_size", type=int, default=8)
     ap.add_argument("--max_batch_input_tokens", type=int, default=98304)
     ap.add_argument("--max_input_tokens_eval", type=int, default=8192)
+    ap.add_argument("--run_full_eval_seed1337", action=argparse.BooleanOptionalAction, default=False)
+    ap.add_argument("--stats_claim_min_run_pairs", type=int, default=2)
 
     ap.add_argument("--execute", action=argparse.BooleanOptionalAction, default=False)
     ap.add_argument(
@@ -512,6 +547,8 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    if int(args.stats_claim_min_run_pairs) < 1:
+        raise ValueError("--stats_claim_min_run_pairs must be >= 1")
     repo_root = Path(__file__).resolve().parents[3]
     output_root = (repo_root / args.output_root).resolve() if not Path(args.output_root).is_absolute() else Path(args.output_root)
     output_root.mkdir(parents=True, exist_ok=True)
@@ -543,8 +580,30 @@ def main() -> None:
         e_tau = float(evq_best.get("evq_tau", 0.5) or 0.5)
 
         stage_b_jobs = [
-            Job("B1", "B", "geometric", 1337, g_rank, g_steps, "evq_cosh", 0.0, False, "Geometric best on seed1337 gate"),
-            Job("B2", "B", "evq_cosh", 1337, e_rank, e_steps, "evq_cosh", e_tau, False, "EVQ best on seed1337 gate"),
+            Job(
+                "B1",
+                "B",
+                "geometric",
+                1337,
+                g_rank,
+                g_steps,
+                "evq_cosh",
+                0.0,
+                bool(args.run_full_eval_seed1337),
+                "Geometric best on seed1337 (gate-only unless run_full_eval_seed1337=true)",
+            ),
+            Job(
+                "B2",
+                "B",
+                "evq_cosh",
+                1337,
+                e_rank,
+                e_steps,
+                "evq_cosh",
+                e_tau,
+                bool(args.run_full_eval_seed1337),
+                "EVQ best on seed1337 (gate-only unless run_full_eval_seed1337=true)",
+            ),
             Job("B3", "B", "geometric", 42, g_rank, g_steps, "evq_cosh", 0.0, True, "Geometric full lb21"),
             Job("B4", "B", "evq_cosh", 42, e_rank, e_steps, "evq_cosh", e_tau, True, "EVQ full lb21"),
         ]
@@ -683,6 +742,8 @@ def main() -> None:
         "stats_json": stats_json.as_posix() if stats_json else None,
         "stage_a_jobs": [job_run_name(j) for j in stage_a_jobs],
         "stage_b_jobs": [job_run_name(j) for j in stage_b_jobs],
+        "run_full_eval_seed1337": bool(args.run_full_eval_seed1337),
+        "stats_claim_min_run_pairs": int(args.stats_claim_min_run_pairs),
     }
     save_json(output_root / "stats" / "run_manifest.json", run_manifest)
 

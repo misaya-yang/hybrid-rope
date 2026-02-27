@@ -21,6 +21,9 @@
   - `qasper_lora >= qasper_base`
   - `musique_lora >= musique_base - 1.0`
 - Claim grade: `significant / directional / inconclusive`
+- Seed-replication claim guard: if full-eval run-pairs `< 2`, stats claim is forced to `insufficient_seed_replication`.
+- Stats protocol parity guard: paired stats will refuse to run if geometric/EVQ have mismatched `code_hash` or `data_hash`.
+- Prebuilt mixed dataset guard: trainer enforces source token ratios (`wiki>=0.05`, `synthetic>=0.10`) and manifest-target drift tolerance.
 
 ## Two-Stage 8 Jobs
 - Stage A (seed=42, gate only)
@@ -50,6 +53,8 @@ cd /Users/yang/projects/hybrid-rope
 ```
 
 > 说明：`LongAlpaca-12k.min64.jsonl` 为已完成监督长度过滤（assistant_tokens>=64）的版本，优先用于本计划。
+>
+> 若要得到双训练 seed 的 full-lb21 统计口径，请额外加：`--run_full_eval_seed1337`。
 
 ## Artifacts
 - Train/Eval: `artifacts/llama8k_theory_v1/train/<run_name>/...`
@@ -61,3 +66,4 @@ cd /Users/yang/projects/hybrid-rope
 - `assistant_tokens_lt64_ratio > 0.10` -> stop training
 - continuation-dominant corpus detected and no override -> stop training
 - Stage B gate failed -> cancel full LB21 jobs
+- Stats protocol mismatch (`code_hash/data_hash`) -> stop stats generation
