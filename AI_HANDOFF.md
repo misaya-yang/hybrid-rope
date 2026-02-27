@@ -1,218 +1,238 @@
-# AI Handoff (One-Glance Ops Card)
+# AI Handoff 总纲 (Master Guide)
 
-Last updated: 2026-02-26 16:05 CST  
-Local repo: `/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope`  
-Server repo: `/root/autodl-tmp/dfrope/hybrid-rope`
+> **最后更新**: 2026-02-27
+> **论文**: NeurIPS 2026 — "RoPE Frequency Allocation as a Variational Inverse Problem"
+> **当前版本**: V5 (EVQ / τ 单参数 / Waterbed rewrite)
+> **本地路径**: 以本仓库根目录为准（用户可能在不同机器上工作，路径会变化）
 
-## 0.0.2) Latest Llama-3-8B LoRA standard (2026-02-26)
+---
 
-Primary protocol is now frozen in:
+## ⚠️ AI 工作守则 (MANDATORY — 每个 AI 必读)
 
-- `docs/protocols/LLAMA3_8B_LORA_STANDARD_2026-02-26.md`
+**你在完成任何工作后，必须执行以下两件事：**
 
-Important default decisions:
+1. **整理文件**: 临时文件归入 `tmp/` 或删除；产出物按下方约定放入正确文件夹；不得在根目录留下散落文件。
+2. **更新文档**: 在 `docs/exp/` 下为你的工作写一份简短报告 (`YYYY-MM-DD_<topic>.md`)，并更新本文件的"当前状态"部分。
 
-- mainline runs use `Meta-Llama-3-8B-Instruct` + `inv_freq.copy_()` only;
-- attention-side interventions are **off** by default for paper evidence;
-- gate-first policy: run `qasper,musique` first, only pass then launch full `lb21`.
+**如果你不遵守，后续 AI 将花费大量时间理解你留下的混乱——这是对用户时间和金钱的浪费。**
 
-## 0.0.1) Attention-integrated isolated pipeline (2026-02-26)
+---
 
-All newly added attention-integrated scripts are now grouped under:
+## 1. 项目一句话总结
 
-- `scripts/isolated/attn/new_lora_longalpaca_attnbias_train.py`
-- `scripts/isolated/attn/new_eval_longbench_attnbias.py`
-- `scripts/isolated/attn/attn_patch_llama_attention_bias.py`
-- `scripts/isolated/attn/attn_audit_readonly.py`
-- `scripts/isolated/attn/next_attn_lora_queue.sh`
+本项目证明 RoPE 的频率分配是一个变分逆问题，其精确解 **EVQ (Exact Variational Quantization)** 由单参数 **τ = √(β/α)** 完全控制。τ 调节高频/低频资源的重分配比例，且满足 **Waterbed Inequality**：改善长上下文必然退化短上下文。
 
-Operational reports are under:
+---
 
-- `docs/exp/reports/attn_audit_report_2026-02-26.md`
-- `docs/exp/reports/midrun_metrics_snapshot_2026-02-26.md`
-- `docs/exp/reports/midrun_hypotheses_2026-02-26.md`
+## 2. 理论框架速览
 
-## 0.0) New dated handoff package (2026-02-26)
+| 概念 | 公式/描述 | 位置 |
+|------|-----------|------|
+| **EVQ warp** | φ_k(τ) = 1 - (1/τ) arcsinh((1-u_k) sinh(τ)) | `rope/schedules.py` → `evq_cosh` |
+| **τ 物理含义** | τ = √(β/α), interference coupling ratio | 论文 Section 3 |
+| **Theorem 1** | Joint ODE exact solution (cosh tether + Fisher pulse) | 论文 Appendix A |
+| **Theorem 2** | EVQ → geometric RoPE as τ→0 (asymptotic degradation) | 论文 Appendix A |
+| **Waterbed** | ∫₀¹ ln E(φ)dφ ≥ ln b - ln c | 论文 Section 3.5 |
+| **Phase Collision** | cos(θΔ) 在低频碰撞导致注意力局部性崩溃 | `knowledge_base/06_phase_collision_D_analysis.md` |
 
-Use this folder as the current implementation handoff for the 24h dual-track plan:
+---
 
-- Handoff index/convention: `handoff/README.md`
-- `handoff/2026-02-26/0_README.md`
-- `handoff/2026-02-26/1_PROTOCOL_LOCK.md`
-- `handoff/2026-02-26/2_ASSET_MAP.md`
-- `handoff/2026-02-26/3_RUNBOOK.md`
-- `handoff/2026-02-26/01_IMPLEMENTED_SCOPE.md`
-- `handoff/2026-02-26/02_VALIDATION_SNAPSHOT.md`
-- `handoff/2026-02-26/03_DEEP_REVIEW_FINDINGS.md`
-- `handoff/2026-02-26/README.md`
+## 3. 论文当前状态
 
-Key code deltas in this round:
-- `final_lora` export contract in fast LoRA trainer + backward-compatible root adapter retention.
-- model registry compatibility for `root_adapter` and `final_lora` layouts.
-- Plan B evaluator CLI expansion (`task_set/tasks/max_samples + stress knobs`).
-- unified evaluation schema fields added to LongBench/NIAH/Passkey outputs:
-  - `protocol_lock`, `manifest_json`, `per_sample_scores_raw`, `inv_sha256`.
-- new dataset mixer:
-  - `scripts/prepare_long_instruction_mix.py`.
+**→ 详见 `docs/PAPER_DRAFT_STATUS.md`**
 
-## 0.1) New dated handoff package (2026-02-25)
+简要：
+- **V5 已完成**: 全文 EVQ/τ/Waterbed 改写，8/9 页（剩 1 页用于实验结果）
+- **Figure 1**: EVQ warp curves (已插入)
+- **缺失**: τ-sweep 实验数据表、longinst 8B 实验结果
+- **截止**: NeurIPS 2026 DDL (约 9 周后)
 
-Use this folder as the current reviewer-remediation entrypoint:
+---
 
-- `handoff/2026-02-25/0_README.md`
-- `handoff/2026-02-25/1_PROTOCOL_LOCK.md`
-- `handoff/2026-02-25/2_ASSET_MAP.md`
-- `handoff/2026-02-25/3_RUNBOOK.md`
-- `handoff/2026-02-25/4_RECOVERY_AND_CLEANUP.md`
-- `handoff/2026-02-25/README.md` (legacy)
-- `handoff/2026-02-25/01_IMPLEMENTED_SCOPE.md`
-- `handoff/2026-02-25/02_VALIDATION_SNAPSHOT_AIDEMO.md`
-- `handoff/2026-02-25/03_NEXT_EXECUTION_GATES.md`
+## 4. 代码核心入口
 
-## 0.2) Audit red-line package (2026-02-25 night)
+| 文件 | 用途 | 备注 |
+|------|------|------|
+| `rope/schedules.py` | 所有频率 schedule 的构建（含 EVQ） | **核心实现** |
+| `rope/inject.py` | inv_freq.copy_() 注入协议 | 2 行代码 |
+| `scripts/m4_evq_sweep/run_evq_sweep.py` | τ-sweep 从零训练 + 评估 | 50M/125M/350M |
+| `scripts/m4_evq_sweep/evq_analysis.py` | 分析出图（NeurIPS 级 PDF） | 4 图 + CSV |
+| `scripts/isolated/longinst/` | 8B LoRA long-instruction 训练 | **关键实验** |
+| `scripts/eval_longbench.py` | LongBench-21 评估 | 88KB, 全功能 |
+| `train.py` | 主训练脚本 | 根目录 |
 
-- Strict audit manifest:
-  - `docs/exp/plan_b_audit_manifest.md`
-- Isolated Plan B files (do not edit sacred running scripts):
-  - `scripts/plan_b_train_anchored_v2.py`
-  - `scripts/plan_b_eval_longbench.py`
+---
 
-## 0) Must-Read TL;DR
+## 5. 实验全景 (Experiment Landscape)
 
-- **Locked tuned params for next runs**: `anchor_factor=4`, `slope_raw=20`, `center_ratio=0.70`.
-- **Main evidence chain focus (cost-sensitive)**: `Qwen2.5-7B-Instruct` baseline_gold + anchored(tuned) + modern anchor (NTK) on **full lb21** and **multi-seed**.
-- **Current server training uses the tuned fast entrypoint**:
-  - `scripts/train_cross_model_lora_fast_tuned.py --method anchored_sigmoid --anchor_factor 4 --slope_raw 20 --center_ratio 0.70`
-- **Current run status (confirmed on 2026-02-25 21:05 CST)**:
-  - done: `qwen2_5_7b_instruct_baseline_42` (`checkpoint-400` exists).
-  - done: `qwen2_5_7b_instruct_anchored_sigmoid_42` (`checkpoint-400` exists).
-  - running: `qwen2_5_7b_instruct_anchored_sigmoid_1337` (new run dir exists; no checkpoint yet as of 21:05 CST).
-  - note: this run is operationally valid for Qwen evidence, but fails the strict "Meta-Llama-3-8B-Instruct only" red-line narrative.
+### 5.1 论文中引用的实验 (V5)
 
-## 0.2) New “facts-first” indices (do not skip)
+| 实验 | 论文位置 | 数据来源 | 质量 | 备注 |
+|------|----------|----------|------|------|
+| 50M 3-seed scaling | Table 1 | `results/evidence_chain_50m_3cfg3seed/` | ⚠️ 旧框架 | 使用 anchored_sigmoid，非 EVQ |
+| 100M scaling | Table 1 | `artifacts/a100_2026-02-13/data/100m_scaling/` | ⚠️ 旧框架 | 同上 |
+| 350M scaling | Table 1 | `artifacts/a100_2026-02-13/data/350m_final/` | ⚠️ 旧框架 | 同上 |
+| 50M YaRN compare | Table 2 | `results/50m_yarn_compare_v2/` | ⚠️ 旧框架 | 同上 |
+| Phase collision | Fig/Text | `results/phase_collision_comparison_v2/` | ✅ 理论有效 | 通用分析 |
+| EVQ warp curves | Figure 1 | `plot_evq_warp_v2.py` 生成 | ✅ 理论图 | 纯数学 |
 
-- Experiment inventory mirror: `docs/exp/EXPERIMENT_INVENTORY.md`
-- Authoritative registry (single source of truth): `docs/EXPERIMENT_REGISTRY.md`
-- Server cleanup manifest (quarantine-first): `docs/exp/SERVER_CLEANUP_MANIFEST.md`
+> **关键问题**: 当前论文中所有从零训练实验都使用旧的 anchored_sigmoid 方法，而论文 V5 已改写为 EVQ/τ 框架。**急需用 EVQ τ-sweep 替换这些实验数据**。
 
-## 1) Current live server status (for immediate decision)
+### 5.2 进行中的实验
 
-As of `2026-02-25 20:36 CST`:
-- GPU: ~`90277 MiB / 97887 MiB`, util ~`100%` (training running)
-- Active process:
-  - `scripts/train_cross_model_lora_fast_tuned.py --method baseline ... --seed 1337 --max_steps 400`
-- Progress:
-  - `checkpoint-200` exists under the baseline seed=1337 output dir (ETA depends on compile/save overhead)
-- Completed artifacts:
-  - `artifacts/cross_model_fast_tuned_b1_gc/qwen2_5_7b_instruct_baseline_42/checkpoint-400`
-  - `artifacts/cross_model_fast_tuned_b1_gc/qwen2_5_7b_instruct_anchored_sigmoid_42/checkpoint-400`
-- Running artifact:
-  - `artifacts/cross_model_fast_tuned_b1_gc/qwen2_5_7b_instruct_baseline_1337/checkpoint-200`
+| 实验 | 状态 | 位置 | 预期用途 |
+|------|------|------|----------|
+| **5090 τ-sweep** (50M + 125M) | 🔄 运行中 | 服务器 `/root/evq_sweep/` | 替换论文 Table 1-2 |
+| **Longinst 8B** | ⏳ 等待 τ 确定 | `scripts/isolated/longinst/` | 论文 Section 5 |
 
-## 3) Fast verification commands (do before any next launch)
+### 5.3 历史实验（存档参考）
 
-```bash
-# A) Check running process and progress
-cd /root/autodl-tmp/dfrope/hybrid-rope
-pgrep -af 'scripts/train_cross_model_lora_fast_tuned.py'
-ls -1d artifacts/cross_model_fast_tuned_b1_gc/qwen2_5_7b_instruct_baseline_1337/checkpoint-* 2>/dev/null || true
-nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader,nounits
+大量旧实验保存在 `results/`, `artifacts/`, `archives/`, `sigmoid_rope_experiments/` 中。这些实验使用旧方法名（anchored_sigmoid, hybrid 等），**不可直接用于 V5 论文**，但可作为方法演化的参考。
+
+---
+
+## 6. 文件夹结构约定
+
+```
+hybrid-rope/
+├── AI_HANDOFF.md            ← 你正在读的这个文件 (总纲)
+├── README.md                ← 项目简介
+├── train.py                 ← 主训练入口
+│
+├── rope/                    ← 核心库 (schedules, inject)
+├── eval/                    ← 评估模块
+│
+├── docs/                    ← 📄 所有文档
+│   ├── EXPERIMENT_REGISTRY.md  ← 实验权威注册表
+│   ├── PAPER_DRAFT_STATUS.md   ← 论文进度追踪
+│   ├── protocols/              ← 锁定的实验协议
+│   ├── exp/                    ← 实验报告 (按日期)
+│   ├── notes/                  ← 研究笔记
+│   ├── env/                    ← 环境快照
+│   └── review/                 ← 审稿意见
+│
+├── scripts/                 ← 🔧 所有可执行脚本
+│   ├── m4_evq_sweep/          ← τ-sweep 实验
+│   ├── isolated/              ← 独立实验管线
+│   │   ├── longinst/          ← 8B long-instruction
+│   │   └── attn/              ← 注意力实验
+│   └── ...                    ← 其他工具脚本
+│
+├── knowledge_base/          ← 📚 研究知识库 (中文为主)
+│   ├── 00-11 编号文档          ← 系统知识
+│   └── ALL_IN_ONE.md          ← 合并版
+│
+├── results/                 ← 📊 整理后的实验结果
+│   ├── paper_ready/           ← 论文级结果
+│   └── ...                    ← 其他结果包
+│
+├── artifacts/               ← 🗄️ 服务器快照
+│   ├── a100_2026-02-13/       ← A100 集群
+│   ├── a800_2026-02-13/       ← A800 集群
+│   └── reviewer_2026-02-*/    ← 审稿相关
+│
+├── paper_exports/           ← 📝 论文编译输出
+│   ├── neurips_v5/            ← 当前版本
+│   └── neurips_v5_fig/        ← 带图版本
+│
+├── handoff/                 ← 🔄 历史交接包 (按日期)
+│   ├── 2026-02-23/
+│   ├── 2026-02-25/
+│   └── 2026-02-26/
+│
+├── archives/                ← 📦 历史存档
+├── sigmoid_rope_experiments/← 旧 sigmoid 实验管线
+├── tools/                   ← 工具脚本
+├── data/                    ← 原始数据
+├── outputs/                 ← 分析输出
+└── experiments/             ← 探索性实验
 ```
 
+---
+
+## 7. 新 AI 快速上手路径
+
+**如果你是第一次接手这个项目，按以下顺序阅读：**
+
+1. **本文件** (`AI_HANDOFF.md`) — 你正在读
+2. **`docs/PAPER_DRAFT_STATUS.md`** — 论文当前状态和 TODO
+3. **`knowledge_base/02_论文故事线与主张.md`** — 论文叙事逻辑
+4. **`knowledge_base/09_unified_theory_crlb.md`** — EVQ 理论推导
+5. **`knowledge_base/11_waterbed_strict_proof.md`** — Waterbed 证明
+6. **`docs/EXPERIMENT_REGISTRY.md`** — 实验权威表
+7. **`docs/protocols/LLAMA3_8B_LORA_STANDARD_2026-02-26.md`** — 8B 实验协议
+8. **`rope/schedules.py`** — 代码实现
+
+---
+
+## 8. 关键术语映射 (新旧对照)
+
+论文已从 V4 (anchored-sigmoid) 全面改写为 V5 (EVQ)。以下是术语对照：
+
+| V4 旧名 | V5 新名 | 备注 |
+|---------|---------|------|
+| anchored_sigmoid | EVQ (τ parameterized) | 论文主方法 |
+| hybrid / shape_only | EVQ 的特例 | 代码中 alias 保留 |
+| anchor_factor, slope, center_ratio | τ (single parameter) | 论文只用 τ |
+| sigmoid schedule | EVQ-cosh warp | 理论化表述 |
+| Phase 4 | Section 5 experiments | 论文结构改 |
+
+**代码中 `anchored_sigmoid` 和 `evq_cosh` 都保留**，但论文中统一使用 EVQ 术语。
+
+---
+
+## 9. 当前紧急任务优先级
+
+1. **🔴 等待 5090 τ-sweep 结果** → 拿到数据后更新论文 Table
+2. **🔴 用 τ-sweep 确定最优 τ 范围** → 预计 0.4-0.8
+3. **🟡 longinst 8B 实验** → 用确定的 τ 去跑
+4. **🟡 论文实验部分重写** → 用 EVQ 数据替换旧 anchored_sigmoid 数据
+5. **🟢 Appendix 补充** → 125M scaling 证据、完整 phase collision 数据
+
+---
+
+## 10. 服务器与环境
+
+| 环境 | 用途 | 备注 |
+|------|------|------|
+| 本地 M4 Max 36GB | 小模型验证、论文编写 | conda `aidemo` |
+| 5090 32GB (租用) | τ-sweep 中型实验 | 6元/时 |
+| RTX Pro 6000 96GB (租用) | 8B 大模型实验 | Blackwell 架构 |
+| A100/A800 (按需) | 备选大模型实验 | 价格更高 |
+
+### ⚠️ 服务器环境初始化 (MANDATORY — 每次 SSH 登录后必须执行)
+
+**每个 AI 在服务器上执行任何 Python 命令之前，必须先运行以下环境变量设置：**
+
 ```bash
-# B) Verify schedule defaults in code (should show legacy values)
-cd /root/autodl-tmp/dfrope/hybrid-rope
-grep -nE 'center_ratio|slope =|anchor_factor|eff_anchor' rope/schedules.py scripts/train_cross_model_lora.py
+export PATH="/root/miniconda3/bin:$PATH"
+export HF_ENDPOINT=https://hf-mirror.com
+export PYTHONUNBUFFERED=1
 ```
 
-## 4) Next-action checklist (operator handoff)
+说明：
+- `PATH`: 服务器的 Python/conda 不在默认 PATH 中，不设置会找不到 python/pip
+- `HF_ENDPOINT`: 中国大陆服务器无法直连 HuggingFace，必须使用镜像站
+- `PYTHONUNBUFFERED`: 确保训练日志实时输出，不被缓冲
 
-1. Let current `qwen baseline seed=1337` finish, then launch `qwen anchored seed=1337` to complete the 2-seed pair.
-2. Before launching any new model, log `inv_freq_sha256` and keep protocol locked (data/model/steps/lora).
-3. Keep fairness locked: same data, steps, LR, LoRA rank/alpha, tokenizer, eval manifest.
-4. For every rerun, write one-line provenance:
-   - method, seed, model, `anchor_factor/slope_raw/center_ratio`, `inv_freq_sha256`.
+**建议写入脚本开头或 `~/.bashrc`**，避免每次手动设置。
 
-## 4.1) New speed-first launcher (for future runs)
+---
 
-Use:
+## 11. ⚠️ 已知陷阱
 
-```bash
-cd /root/autodl-tmp/dfrope/hybrid-rope
-bash scripts/cross_model_finetune_fast_tuned.sh
-```
+1. **服务器环境未初始化**: AI 最常犯的错误！登录服务器后必须先 `export PATH="/root/miniconda3/bin:$PATH"` 和 `export HF_ENDPOINT=https://hf-mirror.com`，否则会报 python 找不到或 HF 连接超时。详见上方"服务器环境初始化"。
+2. **MPS OOM**: M4 Max 跑 float32 attention 在 L≥16384 会 OOM。`run_evq_sweep.py` 已添加保护。
+3. **旧实验数据不可直接引用**: results/ 中大量数据使用旧方法名，需确认是否与 EVQ 框架一致。
+4. **anchored_sigmoid ≠ evq_cosh**: 代码中这是两个不同的 schedule！anchored_sigmoid 用 sigmoid 函数，evq_cosh 用 arcsinh。论文 V5 理论基于 evq_cosh。
+5. **Zero-shot 频率替换无效**: 必须配合训练（至少微调）才能看到效果。
+6. **已花费 >1000 RMB 在无效实验上**: 务必先在小模型验证再上大机器。
 
-This launcher uses a separate train entrypoint (`scripts/train_cross_model_lora_fast_tuned.py`) and does not require modifying legacy scripts.
+---
 
-Defaults in this launcher:
-- `MAX_STEPS=400`
-- `PER_DEVICE_BATCH=2`
-- `GRAD_ACCUM=1`
-- `GRAD_CHECKPOINTING=0`
-- tuned anchored schedule:
-  - `ANCHOR_FACTOR_DEFAULT=4`
-  - `ANCHORED_SLOPE_RAW=20`
-  - `ANCHORED_CENTER_RATIO=0.70`
+## 12. 文档更新日志
 
-Why `MAX_STEPS=400`:
-- baseline log on this server showed strong gains in 0-200, moderate 200-400, and very small 400-600 marginal gain.
-- this keeps most quality gain while cutting runtime cost significantly.
-
-Example override (`batch=4` smoke):
-
-```bash
-PER_DEVICE_BATCH=4 MAX_STEPS=50 bash scripts/cross_model_finetune_fast_tuned.sh
-```
-
-## 5) Single source of truth for tuned schedule
-
-- Tuning evidence: `handoff/2026-02-23/local_tuning_proof_2026-02-24.md`
-- Runbook: `handoff/2026-02-23/tomorrow_tuned_param_runbook_2026-02-25.md`
-- Locked recommendation:
-  - `anchor_factor=4`
-  - `slope_raw=20`
-  - `center_ratio=0.70`
-
-## 6) Guardrails
-
-- Do not compare numbers across mismatched manifests/settings.
-- Do not claim SOTA; use theory-guided consistency framing.
-- If a condition loses, keep it in final sign-test table (no cherry-pick).
-- Cleanup is quarantine-first: move to `/root/autodl-tmp/dfrope/trash/hybrid-rope/<date>/` and record every move in `docs/exp/SERVER_CLEANUP_MANIFEST.md`.
-  - Note: `/autodl-pub/data` is mounted read-only for `trash/` on this server.
-
-## 7) New NeurIPS sprint assets (2026-02-25)
-
-Implemented scripts for high-priority整改:
-
-- LongBench parity + 21-task pipeline
-  - `scripts/eval_longbench.py`
-    - `--task_set {lb6,lb21}`
-    - `--prompt_source {official,legacy}`
-    - `--chat_template {auto,on,off}`
-    - `--truncate_mode {tail,middle}`
-    - `--max_new_tokens_policy {official,manual}`
-    - `--strict_parity_check`
-    - (new) `--batch_size N` (default 1) for batched greedy generation
-  - `scripts/longbench_official_config/dataset2prompt.json`
-  - `scripts/longbench_official_config/dataset2maxlen.json`
-  - `scripts/import_2024/longbench_pipeline_audit.py`
-
-- Protocol-trace runner updates
-  - `scripts/run_eval.py`
-    - adds longbench parity args passthrough
-    - writes `baseline_protocol_lock.json` per run folder
-
-- Statistical rigor updates
-  - `scripts/import_2024/significance_test.py`
-    - `--fdr_method {bh,by,both}`
-    - outputs `p_raw`, `p_fdr_bh`, `p_fdr_by`, `claim_grade`
-    - auto-generates `claim_policy_report.md`
-
-- Theory strengthening scripts
-  - `scripts/import_2024/functional_residual_real_prior.py`
-  - `scripts/import_2024/theorem3_adversarial_bimodal.py`
-
-Supporting notes:
-- `handoff/2026-02-23/longbench_pipeline_parity.md`
-- `handoff/2026-02-23/anchored_sigmoid_math_note.md`
+| 日期 | 更新内容 | 操作者 |
+|------|----------|--------|
+| 2026-02-27 | 全面重写为 V5/EVQ 框架；新增总纲结构 | Claude (Cowork) |
+| 2026-02-26 | 旧版（anchored-sigmoid 框架，已过时） | Claude Code |

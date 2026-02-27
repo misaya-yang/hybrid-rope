@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-"""Two-stage 8-job runner for LLaMA-3-8B (8K) EVQ-Cosh vs Geometric validation.
+"""Two-stage runner for LLaMA-3-8B (8K) EVQ-Cosh vs Geometric validation.
+
+Updated 2026-02-27: τ=1.5 confirmed optimal by 50M (-10.9%) and 125M (-18.9%)
+τ-sweep experiments. Stage A now uses τ∈{0.0, 1.2, 1.5, 1.8} to bracket
+the proven optimum instead of the old {0.0, 0.4, 0.6, 0.8} range.
 
 Plan contract:
 - Stage A (4 jobs, seed=42, gate only):
   A1 geometric (tau=0.0) r32 s800
-  A2 evq_cosh (tau=0.4) r32 s800
-  A3 evq_cosh (tau=0.6) r32 s800
-  A4 evq_cosh (tau=0.8) r32 s800
+  A2 evq_cosh (tau=1.2) r32 s800  [bracket-low]
+  A3 evq_cosh (tau=1.5) r32 s800  [primary, proven optimal]
+  A4 evq_cosh (tau=1.8) r32 s800  [bracket-high]
 - Stage B (4 jobs):
   B1 geometric_best seed1337 gate
   B2 evq_best seed1337 gate
@@ -75,9 +79,9 @@ class Job:
 def build_stage_a_jobs() -> List[Job]:
     return [
         Job("A1", "A", "geometric", 42, 32, 800, "evq_cosh", 0.0, False, "Geometric baseline (tau=0.0)"),
-        Job("A2", "A", "evq_cosh", 42, 32, 800, "evq_cosh", 0.4, False, "EVQ-Cosh flatter finite-base (tau=0.4)"),
-        Job("A3", "A", "evq_cosh", 42, 32, 800, "evq_cosh", 0.6, False, "EVQ-Cosh moderate tension (tau=0.6)"),
-        Job("A4", "A", "evq_cosh", 42, 32, 800, "evq_cosh", 0.8, False, "EVQ-Cosh steeper limit (tau=0.8)"),
+        Job("A2", "A", "evq_cosh", 42, 32, 800, "evq_cosh", 1.2, False, "EVQ-Cosh bracket-low (tau=1.2)"),
+        Job("A3", "A", "evq_cosh", 42, 32, 800, "evq_cosh", 1.5, False, "EVQ-Cosh proven optimal (tau=1.5)"),
+        Job("A4", "A", "evq_cosh", 42, 32, 800, "evq_cosh", 1.8, False, "EVQ-Cosh bracket-high (tau=1.8)"),
     ]
 
 
@@ -578,8 +582,8 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--synthetic_ratio", type=float, default=0.2)
 
     ap.add_argument("--max_seq_len", type=int, default=8192)
-    ap.add_argument("--attn_implementation", type=str, default="sdpa")
-    ap.add_argument("--per_device_train_batch_size", type=int, default=2)
+    ap.add_argument("--attn_implementation", type=str, default="flash_attention_2")
+    ap.add_argument("--per_device_train_batch_size", type=int, default=4)
     ap.add_argument("--gradient_accumulation_steps", type=int, default=1)
     ap.add_argument("--learning_rate", type=float, default=2e-5)
     ap.add_argument("--warmup_steps", type=int, default=50)

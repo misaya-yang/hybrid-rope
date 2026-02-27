@@ -1,7 +1,19 @@
 # 实验事实表 (Experiment Registry)
 
-> 最后更新：2026-02-22
+> 最后更新：2026-02-27
 > 目的：作为唯一权威来源，为论文提供 100% 可追溯的实验数据支持。**任何在此表中标记为 "Deprecated" 或找不到路径的数据，禁止放入论文**。
+>
+> ⚠️ **重要提醒 (2026-02-27)**: 论文已从 V4 (anchored-sigmoid) 改写为 V5 (EVQ/τ)。
+> 下方 Tier 1 实验使用旧方法（anchored_sigmoid/hybrid），与 V5 理论框架不完全匹配。
+> 新的 EVQ τ-sweep 实验正在进行中（见 Tier 0），完成后将替代 Tier 1 数据。
+
+## 0. EVQ τ-sweep 实验 (Tier 0: V5 论文核心 — 进行中)
+
+| Experiment ID | Hypothesis / Purpose | Model | τ values | Seeds | Entry Script | Output | Status |
+|---------------|----------------------|-------|----------|-------|--------------|--------|--------|
+| `EXP_EVQ_50M_SWEEP` | 验证 EVQ τ 对 PPL 的影响 + waterbed | 50M | 0.0,0.2,0.4,0.6,0.8,1.0,1.5,2.0 | 42 | `scripts/m4_evq_sweep/run_evq_sweep.py --tier 50m` | 服务器 5090 | ✅ **完成** τ=1.5 最优，PPL@16K -10.9% |
+| `EXP_EVQ_125M_SWEEP` | 验证 τ-sweep scaling 到 125M | 125M | 0.0, 0.2, 1.5 (部分) | 42 | `scripts/m4_evq_sweep/run_evq_sweep.py --tier 125m` | 服务器 5090 | ✅ **完成** τ=1.5 PPL@16K -18.9%, 全长度改善 |
+| `EXP_EVQ_8B_LONGINST` | EVQ τ=1.5 在 8B LoRA long-instruction | Llama-3-8B | τ=1.5 (primary), 1.2/1.8 (bracket) | 42,1337 | `scripts/isolated/longinst/` | TBD | 🔴 **下一步** |
 
 ## 1. 从零训练主线 (Tier 1: 绝对核心证据)
 

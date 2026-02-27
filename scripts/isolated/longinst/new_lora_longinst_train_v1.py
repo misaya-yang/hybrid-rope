@@ -1789,7 +1789,7 @@ def parse_args() -> argparse.Namespace:
 
     ap.add_argument("--max_seq_len", type=int, default=8192)
     ap.add_argument("--max_steps", type=int, default=800)
-    ap.add_argument("--per_device_train_batch_size", type=int, default=2)
+    ap.add_argument("--per_device_train_batch_size", type=int, default=4)
     ap.add_argument("--gradient_accumulation_steps", type=int, default=1)
     ap.add_argument("--learning_rate", type=float, default=2e-5)
     ap.add_argument("--warmup_steps", type=int, default=50)
@@ -1797,7 +1797,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--logging_steps", type=int, default=10)
     ap.add_argument("--lr_scheduler_type", type=str, default="cosine")
     ap.add_argument("--optim", type=str, default="paged_adamw_8bit")
-    ap.add_argument("--attn_implementation", type=str, default="sdpa")
+    ap.add_argument("--attn_implementation", type=str, default="flash_attention_2")
     ap.add_argument("--load_in_4bit", action=argparse.BooleanOptionalAction, default=True)
     ap.add_argument("--gradient_checkpointing", action=argparse.BooleanOptionalAction, default=True)
 
@@ -1810,7 +1810,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--anchor_factor", type=float, default=4.0)
     ap.add_argument("--slope_raw", type=float, default=20.0)
     ap.add_argument("--center_ratio", type=float, default=0.70)
-    ap.add_argument("--evq_tau", type=float, default=0.5)
+    ap.add_argument("--evq_tau", type=float, default=1.5)
     ap.add_argument("--evq_beta", type=float, default=3.0)
 
     ap.add_argument("--morning_reference_json", type=str, default=DEFAULT_MORNING_REF)
