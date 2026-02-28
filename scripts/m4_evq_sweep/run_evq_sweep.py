@@ -103,6 +103,21 @@ TIER_CONFIGS = {
         "eval_lengths": [2048, 4096, 8192],
         "eval_chunks": 8,
     },
+    "500m": {
+        "vocab_size": 50304,
+        "hidden_size": 1024,
+        "num_layers": 28,
+        "num_heads": 16,
+        "head_dim": 64,
+        "intermediate_size": 4096,
+        "max_position_embeddings": 2048,
+        "batch_size": 8,
+        "train_tokens": 200_000_000,
+        "seq_len": 2048,
+        "lr": 1.5e-4,
+        "eval_lengths": [2048, 4096, 8192, 16384],
+        "eval_chunks": 10,
+    },
 }
 
 # ---------------------------------------------------------------------------
@@ -112,15 +127,15 @@ TIER_CONFIGS = {
 def evq_cosh_inv_freq(
     head_dim: int, tau: float, base: float = 500000.0
 ) -> torch.Tensor:
-    """φ_k(τ) = 1 - (1/τ) arcsinh((1-u_k) sinh(τ))
+    """φ_k(τ) = 1 - (1/τ) arcsinh((1-u_k) sinh(τ)), u_k = (k+0.5)/K
 
     Returns inv_freq of shape (head_dim // 2,) in float32.
     """
     K = head_dim // 2
     idx = torch.arange(K, dtype=torch.float64)
-    u = idx / float(K)
+    u = (idx + 0.5) / float(K)  # midpoint quantization (paper formula 9)
     if abs(tau) < 1e-8:
-        phi = u  # geometric limit (Theorem 2)
+        phi = u  # geometric limit (Theorem 2), half-step shifted
     else:
         sinh_tau = math.sinh(tau)
         phi = 1.0 - (1.0 / tau) * torch.arcsinh((1.0 - u) * sinh_tau)
@@ -300,6 +315,7 @@ class Block(nn.Module):
 class GPT(nn.Module):
     def __init__(self, cfg: dict, inv_freq: torch.Tensor) -> None:
         super().__init__()
+        self._num_layers = cfg["num_layers"]
         self.emb = nn.Embedding(cfg["vocab_size"], cfg["hidden_size"])
         rope = RotaryEmbedding(cfg["head_dim"], cfg["max_position_embeddings"], inv_freq)
         self.blocks = nn.ModuleList(
@@ -309,6 +325,11 @@ class GPT(nn.Module):
         self.head = nn.Linear(cfg["hidden_size"], cfg["vocab_size"], bias=False)
         self.head.weight = self.emb.weight  # weight tying
         self.apply(self._init)
+        # Depth-scaled init for residual projections (GPT-2 / nanoGPT convention)
+        residual_scale = 1.0 / math.sqrt(2 * self._num_layers)
+        for block in self.blocks:
+            nn.init.normal_(block.attn.o.weight, std=0.02 * residual_scale)
+            nn.init.normal_(block.mlp.down.weight, std=0.02 * residual_scale)
         n = sum(p.numel() for p in self.parameters())
         print(f"  Model params: {n / 1e6:.1f}M")
 
@@ -365,6 +386,16 @@ def load_val(tokenizer, max_tokens: int = 5_000_000) -> torch.Tensor:
 # Training loop
 # ---------------------------------------------------------------------------
 
+def set_seed(seed: int) -> None:
+    """Set all random seeds for reproducibility."""
+    import random as _random
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+    np.random.seed(seed)
+    _random.seed(seed)
+
+
 def train_model(
     model: GPT,
     data: torch.Tensor,
@@ -373,24 +404,25 @@ def train_model(
 ) -> GPT:
     model.train()
     lr = cfg["lr"]
+    min_lr = lr * 0.1  # Cosine schedule floor (standard practice)
     batch_size = cfg["batch_size"]
     opt = torch.optim.AdamW(
         model.parameters(), lr=lr, betas=(0.9, 0.95), weight_decay=0.1
     )
     steps = len(data) // batch_size
     warmup = int(steps * 0.02)
-    torch.manual_seed(seed)
+    set_seed(seed)
     perm = torch.randperm(len(data))
     t0 = time.time()
 
     for s in range(steps):
         batch = data[perm[s * batch_size : (s + 1) * batch_size]].to(DEVICE)
 
-        # Cosine LR with warmup
+        # Cosine LR with warmup + min_lr floor
         if s < warmup:
             cur_lr = lr * s / max(warmup, 1)
         else:
-            cur_lr = lr * 0.5 * (
+            cur_lr = min_lr + (lr - min_lr) * 0.5 * (
                 1 + math.cos(math.pi * (s - warmup) / max(steps - warmup, 1))
             )
         for g in opt.param_groups:
@@ -432,17 +464,22 @@ def eval_model(
     val_data: torch.Tensor,
     eval_lengths: List[int],
     eval_chunks: int = 10,
+    eval_seed: int = 9999,
 ) -> Dict[str, float]:
     model.eval()
     model.extend_rope(max(eval_lengths) + 100)
     ctx = torch.amp.autocast("cuda", dtype=DTYPE) if USE_AUTOCAST else nullcontext()
+    rng = np.random.RandomState(eval_seed)
     results = {}
     for L in eval_lengths:
         losses = []
-        for i in range(eval_chunks):
-            if (i + 1) * L > len(val_data):
-                break
-            chunk = val_data[i * L : (i + 1) * L].unsqueeze(0).to(DEVICE)
+        max_start = len(val_data) - L
+        if max_start <= 0:
+            print(f"    L={L}: val_data too short, skipping")
+            continue
+        offsets = sorted(rng.choice(max_start, size=min(eval_chunks, max_start // L), replace=False))
+        for offset in offsets:
+            chunk = val_data[offset : offset + L].unsqueeze(0).to(DEVICE)
             try:
                 with ctx:
                     logits = model(chunk[:, :-1])
@@ -529,7 +566,7 @@ def run_single(
         )
 
     # Train
-    torch.manual_seed(seed)
+    set_seed(seed)
     model = GPT(cfg, inv_freq).to(DEVICE)
     t0 = time.time()
     model = train_model(model, train_data, cfg, seed=seed)
@@ -574,7 +611,7 @@ def run_single(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="EVQ τ-sweep on M4 Max")
-    parser.add_argument("--tier", choices=["50m", "125m", "350m"], default="50m")
+    parser.add_argument("--tier", choices=["50m", "125m", "350m", "500m"], default="50m")
     parser.add_argument("--taus", type=str, default="0.0,0.2,0.4,0.6,0.8,1.0,1.5,2.0")
     parser.add_argument("--seeds", type=str, default="42")
     parser.add_argument("--base", type=float, default=500000.0,
@@ -610,12 +647,18 @@ def main() -> None:
             total_mem = getattr(props, "total_mem")
         vram_gb = total_mem / (1024 ** 3)
         print(f"  [CUDA] GPU: {props.name}, VRAM: {vram_gb:.1f} GB")
-        if vram_gb < 40:
+        if vram_gb >= 80:
+            if args.tier == "500m":
+                cfg["batch_size"] = 16
+            elif args.tier == "350m":
+                cfg["batch_size"] = 8
+            print(f"  [CUDA >=80GB] Adjusted {args.tier}: batch={cfg['batch_size']}, eval={cfg['eval_lengths']}")
+        elif vram_gb < 40:
             if args.tier == "50m":
                 cfg["batch_size"] = 8
             elif args.tier == "125m":
                 cfg["batch_size"] = 4
-            elif args.tier == "350m":
+            elif args.tier in ("350m", "500m"):
                 cfg["batch_size"] = 2
                 cfg["eval_lengths"] = [2048, 4096, 8192]
             print(f"  [CUDA <40GB] Adjusted {args.tier}: batch={cfg['batch_size']}, eval={cfg['eval_lengths']}")
