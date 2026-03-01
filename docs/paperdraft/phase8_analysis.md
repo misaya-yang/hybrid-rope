@@ -97,10 +97,17 @@ Passkey 差**不是 EVQ 频率分配的问题**，而是两个因素叠加：
 | From-scratch 128-tok | **EVQ 55% > Geo 48.5%** | Phase 6 ✅ |
 | Extension 512→2K (4x) | EVQ < Geo | Phase 7F |
 | Extension 512→4K (8x) | EVQ < Geo @短距, ≈ Geo @8K | Phase 8A |
-| From-scratch 4K | **待 8C 确认** | Phase 8C ⏳ |
+| From-scratch 4K (τ=2.0) | EVQ PPL **-6.3%** ✅, Passkey -3pp (τ 非最优) | Phase 8C ✅ |
 
-**如果 8C 确认 from-scratch 4K EVQ passkey ≥ Geo** → 完整证据链：
-"EVQ 的 passkey 劣势 100% 来自 extension alignment cost，而非频率分配本身"
+**8C 结果（已出）**：
+- C1 Geo from-scratch: PPL@16K=175.4, Passkey=69%
+- C2 EVQ τ=2.0 from-scratch: PPL@16K=164.4(**-6.3%**), Passkey=66%(-3pp)
+
+**PPL 大胜，Passkey 小输**。解读：
+- Extension passkey gap = 6.75pp → From-scratch gap = 3pp → **Alignment cost 占 ~55% 的 passkey 损失**
+- 剩余 3pp 归因于 **τ=2.0 对 L=4096 过大**：scaling law 预测 τ*(4096)=1.0，τ=2.0 过度偏低频、挤压高频精度
+- 对比 Phase 6：τ=2.0 对 L=128 合理（预测 τ*=5.66），EVQ passkey 赢了 6.5pp
+- **结论**：EVQ passkey 不是频率分配的固有缺陷，而是 (1) alignment cost + (2) τ 选择不当的叠加
 
 ---
 

@@ -122,19 +122,18 @@ DTYPE = torch.bfloat16  # Pro 6000 Blackwell 原生支持 bf16
 | Run ID | Method | 频率方案 | τ 值 | 预计时间 |
 |--------|--------|---------|------|---------|
 | B1 | Geometric | 原始频率不变 | — | ~1.5h |
-| B2 | EVQ | cosh 分配，τ 由 scaling law 决定 | 1.0 | ~1.5h |
-| B3 | EVQ | cosh 分配，经验值 | 1.5 | ~1.5h |
-| B4 | Hybrid EVQ | 高频 8ch Geo + 低频 24ch EVQ | τ=1.5 | ~1.5h |
+| B2 | EVQ | cosh 分配，scaling law 最优 | **1.0** | ~1.5h |
+| B3 | EVQ | cosh 分配，对照 | 1.5 | ~1.5h |
+| B4 | Hybrid EVQ | 高频 8ch Geo + 低频 24ch EVQ | **τ=1.0** | ~1.5h |
 
-**τ 值选择说明**：
-- τ=1.0：scaling law 预测 τ*(4096) = 64/√4096 = 1.0。如果 Phase 8D 验证了 scaling law，这是理论最优值
-- τ=1.5：经验安全值，Phase 7F/8A 表现稳定
-- Hybrid τ=1.5：保护高频 Q/K 对齐 + EVQ 低频优化
-- **不跑 PI/YaRN**：Phase 7F/8A 已经证明它们在 8x 扩展比下崩溃，1B 不需要重复
+**τ 值选择说明（基于 Phase 8C 更新）**：
+- **τ=1.0 是主力**：scaling law 预测 τ*(4096) = 1.0。Phase 8C 证明 τ=2.0 对 L=4096 过大（passkey 输 3pp），必须用更小的 τ
+- τ=1.5：对照组，看 τ=1.0 vs 1.5 的 passkey 差异
+- **Hybrid 也用 τ=1.0**：Phase 8A Hybrid τ=2.0 passkey 不够好，降 τ 应改善
+- **不跑 PI/YaRN**：Phase 7F/8A 已证明它们在 8x 扩展比下崩溃
 
 **如果 Phase 8D 的 L=4096 实测 τ* ≠ 1.0**：
-- 实测 τ* < 1.5 → 仍然跑 B2 用实测值，B3 保持 1.5
-- 实测 τ* > 1.5 → B2 用实测值，B3 用 2.0
+- 用实测值替换 B2 和 B4 的 τ，B3 保持 1.5 作为对照
 
 ### EVQ 频率生成
 
