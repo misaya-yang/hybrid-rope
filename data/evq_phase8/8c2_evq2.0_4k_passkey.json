@@ -1,0 +1,4036 @@
+{
+  "details": {
+    "L=1024_d=0.5_t=0": {
+      "nll_correct": 3.7278,
+      "nll_wrong": 4.3768,
+      "nll_gap": 0.649,
+      "retrieved": true,
+      "correct_passkey": "0-8-7-1-4",
+      "wrong_passkey": "5-0-4-7-9",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=1": {
+      "nll_correct": 3.6286,
+      "nll_wrong": 4.0876,
+      "nll_gap": 0.4589,
+      "retrieved": true,
+      "correct_passkey": "0-7-5-5-3",
+      "wrong_passkey": "7-2-6-4-6",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=2": {
+      "nll_correct": 3.6953,
+      "nll_wrong": 4.0699,
+      "nll_gap": 0.3746,
+      "retrieved": true,
+      "correct_passkey": "0-8-0-3-8",
+      "wrong_passkey": "9-2-5-6-9",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=3": {
+      "nll_correct": 3.8254,
+      "nll_wrong": 3.6345,
+      "nll_gap": -0.1908,
+      "retrieved": false,
+      "correct_passkey": "8-3-8-7-3",
+      "wrong_passkey": "1-5-6-6-1",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=4": {
+      "nll_correct": 3.5572,
+      "nll_wrong": 3.9681,
+      "nll_gap": 0.4109,
+      "retrieved": true,
+      "correct_passkey": "1-0-8-3-4",
+      "wrong_passkey": "7-8-2-5-3",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=5": {
+      "nll_correct": 3.7896,
+      "nll_wrong": 3.7194,
+      "nll_gap": -0.0702,
+      "retrieved": false,
+      "correct_passkey": "3-9-2-0-1",
+      "wrong_passkey": "4-7-3-1-3",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=6": {
+      "nll_correct": 3.7083,
+      "nll_wrong": 4.4365,
+      "nll_gap": 0.7282,
+      "retrieved": true,
+      "correct_passkey": "6-8-4-6-3",
+      "wrong_passkey": "7-1-7-0-4",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=7": {
+      "nll_correct": 3.5035,
+      "nll_wrong": 3.6563,
+      "nll_gap": 0.1528,
+      "retrieved": true,
+      "correct_passkey": "2-9-3-3-7",
+      "wrong_passkey": "1-8-2-8-6",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=8": {
+      "nll_correct": 3.6034,
+      "nll_wrong": 4.2578,
+      "nll_gap": 0.6544,
+      "retrieved": true,
+      "correct_passkey": "9-6-3-5-1",
+      "wrong_passkey": "4-2-1-0-5",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=9": {
+      "nll_correct": 3.52,
+      "nll_wrong": 4.0319,
+      "nll_gap": 0.5119,
+      "retrieved": true,
+      "correct_passkey": "3-4-0-4-2",
+      "wrong_passkey": "9-8-6-2-8",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=10": {
+      "nll_correct": 3.3324,
+      "nll_wrong": 3.5861,
+      "nll_gap": 0.2537,
+      "retrieved": true,
+      "correct_passkey": "1-2-4-9-8",
+      "wrong_passkey": "3-9-3-4-5",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=11": {
+      "nll_correct": 3.5285,
+      "nll_wrong": 3.9059,
+      "nll_gap": 0.3774,
+      "retrieved": true,
+      "correct_passkey": "1-9-8-3-5",
+      "wrong_passkey": "6-4-7-4-8",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=12": {
+      "nll_correct": 3.5258,
+      "nll_wrong": 3.7696,
+      "nll_gap": 0.2438,
+      "retrieved": true,
+      "correct_passkey": "4-5-5-6-4",
+      "wrong_passkey": "3-9-9-8-8",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=13": {
+      "nll_correct": 3.1235,
+      "nll_wrong": 4.0023,
+      "nll_gap": 0.8788,
+      "retrieved": true,
+      "correct_passkey": "2-3-4-5-9",
+      "wrong_passkey": "1-9-2-0-1",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=14": {
+      "nll_correct": 3.5409,
+      "nll_wrong": 4.2385,
+      "nll_gap": 0.6976,
+      "retrieved": true,
+      "correct_passkey": "8-4-2-4-7",
+      "wrong_passkey": "7-0-7-1-0",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=15": {
+      "nll_correct": 3.6231,
+      "nll_wrong": 3.9061,
+      "nll_gap": 0.283,
+      "retrieved": true,
+      "correct_passkey": "3-5-9-8-6",
+      "wrong_passkey": "8-8-6-9-5",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=16": {
+      "nll_correct": 3.6966,
+      "nll_wrong": 3.767,
+      "nll_gap": 0.0704,
+      "retrieved": true,
+      "correct_passkey": "7-6-5-3-5",
+      "wrong_passkey": "1-1-2-0-6",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=17": {
+      "nll_correct": 3.6214,
+      "nll_wrong": 3.7306,
+      "nll_gap": 0.1093,
+      "retrieved": true,
+      "correct_passkey": "2-7-8-1-9",
+      "wrong_passkey": "5-6-7-6-4",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=18": {
+      "nll_correct": 3.9202,
+      "nll_wrong": 4.0842,
+      "nll_gap": 0.164,
+      "retrieved": true,
+      "correct_passkey": "7-4-7-1-3",
+      "wrong_passkey": "4-1-9-7-7",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=19": {
+      "nll_correct": 3.8024,
+      "nll_wrong": 4.2169,
+      "nll_gap": 0.4146,
+      "retrieved": true,
+      "correct_passkey": "4-9-1-5-0",
+      "wrong_passkey": "0-7-2-7-4",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=20": {
+      "nll_correct": 4.0683,
+      "nll_wrong": 3.6902,
+      "nll_gap": -0.3781,
+      "retrieved": false,
+      "correct_passkey": "6-5-0-7-7",
+      "wrong_passkey": "3-3-8-6-1",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=21": {
+      "nll_correct": 3.6954,
+      "nll_wrong": 4.0005,
+      "nll_gap": 0.3052,
+      "retrieved": true,
+      "correct_passkey": "9-1-1-4-1",
+      "wrong_passkey": "5-5-8-7-0",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=22": {
+      "nll_correct": 3.6301,
+      "nll_wrong": 3.9384,
+      "nll_gap": 0.3083,
+      "retrieved": true,
+      "correct_passkey": "3-7-1-8-0",
+      "wrong_passkey": "5-2-7-2-6",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=23": {
+      "nll_correct": 3.7293,
+      "nll_wrong": 3.8857,
+      "nll_gap": 0.1564,
+      "retrieved": true,
+      "correct_passkey": "8-8-4-6-2",
+      "wrong_passkey": "5-5-6-2-9",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=24": {
+      "nll_correct": 3.5721,
+      "nll_wrong": 3.8655,
+      "nll_gap": 0.2934,
+      "retrieved": true,
+      "correct_passkey": "0-0-6-1-9",
+      "wrong_passkey": "3-7-7-7-5",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=25": {
+      "nll_correct": 4.0257,
+      "nll_wrong": 3.6019,
+      "nll_gap": -0.4237,
+      "retrieved": false,
+      "correct_passkey": "5-5-1-8-1",
+      "wrong_passkey": "4-4-4-2-7",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=26": {
+      "nll_correct": 3.5763,
+      "nll_wrong": 3.6174,
+      "nll_gap": 0.0411,
+      "retrieved": true,
+      "correct_passkey": "3-2-8-5-0",
+      "wrong_passkey": "1-6-6-4-7",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=27": {
+      "nll_correct": 3.6304,
+      "nll_wrong": 4.3079,
+      "nll_gap": 0.6775,
+      "retrieved": true,
+      "correct_passkey": "0-6-1-6-7",
+      "wrong_passkey": "4-0-5-9-8",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=28": {
+      "nll_correct": 3.9289,
+      "nll_wrong": 3.8948,
+      "nll_gap": -0.0342,
+      "retrieved": false,
+      "correct_passkey": "5-5-1-6-6",
+      "wrong_passkey": "7-8-4-2-8",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=29": {
+      "nll_correct": 3.6749,
+      "nll_wrong": 3.8948,
+      "nll_gap": 0.2199,
+      "retrieved": true,
+      "correct_passkey": "9-7-8-8-5",
+      "wrong_passkey": "6-8-6-2-9",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=30": {
+      "nll_correct": 3.8021,
+      "nll_wrong": 3.9164,
+      "nll_gap": 0.1143,
+      "retrieved": true,
+      "correct_passkey": "7-6-6-2-3",
+      "wrong_passkey": "8-9-2-5-9",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=31": {
+      "nll_correct": 3.7692,
+      "nll_wrong": 4.0609,
+      "nll_gap": 0.2917,
+      "retrieved": true,
+      "correct_passkey": "4-9-7-6-0",
+      "wrong_passkey": "7-3-8-2-4",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=32": {
+      "nll_correct": 3.9285,
+      "nll_wrong": 4.0713,
+      "nll_gap": 0.1428,
+      "retrieved": true,
+      "correct_passkey": "5-4-0-6-5",
+      "wrong_passkey": "8-7-5-1-7",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=33": {
+      "nll_correct": 3.8562,
+      "nll_wrong": 3.9001,
+      "nll_gap": 0.0438,
+      "retrieved": true,
+      "correct_passkey": "9-9-9-9-6",
+      "wrong_passkey": "7-6-3-7-8",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=34": {
+      "nll_correct": 3.6713,
+      "nll_wrong": 3.7937,
+      "nll_gap": 0.1224,
+      "retrieved": true,
+      "correct_passkey": "4-7-3-1-9",
+      "wrong_passkey": "7-5-6-6-1",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=35": {
+      "nll_correct": 3.6511,
+      "nll_wrong": 3.9416,
+      "nll_gap": 0.2905,
+      "retrieved": true,
+      "correct_passkey": "0-1-6-8-0",
+      "wrong_passkey": "5-7-8-6-5",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=36": {
+      "nll_correct": 3.2891,
+      "nll_wrong": 4.1498,
+      "nll_gap": 0.8607,
+      "retrieved": true,
+      "correct_passkey": "3-3-1-3-2",
+      "wrong_passkey": "0-8-0-4-8",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=37": {
+      "nll_correct": 3.9176,
+      "nll_wrong": 3.9975,
+      "nll_gap": 0.0798,
+      "retrieved": true,
+      "correct_passkey": "4-0-7-2-9",
+      "wrong_passkey": "8-2-6-9-4",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=38": {
+      "nll_correct": 3.7387,
+      "nll_wrong": 3.9571,
+      "nll_gap": 0.2184,
+      "retrieved": true,
+      "correct_passkey": "8-1-4-1-7",
+      "wrong_passkey": "3-8-1-9-5",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=39": {
+      "nll_correct": 3.5449,
+      "nll_wrong": 3.8042,
+      "nll_gap": 0.2592,
+      "retrieved": true,
+      "correct_passkey": "2-1-4-7-2",
+      "wrong_passkey": "4-2-1-8-8",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=40": {
+      "nll_correct": 3.3889,
+      "nll_wrong": 4.1784,
+      "nll_gap": 0.7896,
+      "retrieved": true,
+      "correct_passkey": "4-2-3-6-9",
+      "wrong_passkey": "0-0-0-7-6",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=41": {
+      "nll_correct": 3.8262,
+      "nll_wrong": 3.934,
+      "nll_gap": 0.1078,
+      "retrieved": true,
+      "correct_passkey": "6-6-7-2-4",
+      "wrong_passkey": "8-7-2-1-3",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=42": {
+      "nll_correct": 3.1781,
+      "nll_wrong": 3.8145,
+      "nll_gap": 0.6364,
+      "retrieved": true,
+      "correct_passkey": "4-3-3-4-5",
+      "wrong_passkey": "6-8-4-9-7",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=43": {
+      "nll_correct": 3.5698,
+      "nll_wrong": 4.2312,
+      "nll_gap": 0.6614,
+      "retrieved": true,
+      "correct_passkey": "2-6-9-6-9",
+      "wrong_passkey": "7-0-2-0-7",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=44": {
+      "nll_correct": 3.5445,
+      "nll_wrong": 3.7199,
+      "nll_gap": 0.1754,
+      "retrieved": true,
+      "correct_passkey": "3-8-1-3-7",
+      "wrong_passkey": "1-6-5-8-2",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=45": {
+      "nll_correct": 4.1173,
+      "nll_wrong": 4.3055,
+      "nll_gap": 0.1883,
+      "retrieved": true,
+      "correct_passkey": "7-0-5-8-4",
+      "wrong_passkey": "0-2-0-7-1",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=46": {
+      "nll_correct": 3.5968,
+      "nll_wrong": 4.0388,
+      "nll_gap": 0.442,
+      "retrieved": true,
+      "correct_passkey": "3-7-1-4-1",
+      "wrong_passkey": "7-3-8-1-7",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=47": {
+      "nll_correct": 3.7327,
+      "nll_wrong": 3.9441,
+      "nll_gap": 0.2114,
+      "retrieved": true,
+      "correct_passkey": "9-8-9-8-5",
+      "wrong_passkey": "4-9-4-5-0",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=48": {
+      "nll_correct": 3.9004,
+      "nll_wrong": 3.8213,
+      "nll_gap": -0.0791,
+      "retrieved": false,
+      "correct_passkey": "7-8-1-7-4",
+      "wrong_passkey": "9-4-3-8-7",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=49": {
+      "nll_correct": 3.6629,
+      "nll_wrong": 3.9443,
+      "nll_gap": 0.2814,
+      "retrieved": true,
+      "correct_passkey": "0-2-9-1-9",
+      "wrong_passkey": "6-0-2-2-6",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=50": {
+      "nll_correct": 3.3951,
+      "nll_wrong": 3.7053,
+      "nll_gap": 0.3102,
+      "retrieved": true,
+      "correct_passkey": "6-2-2-2-3",
+      "wrong_passkey": "9-3-5-5-5",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=51": {
+      "nll_correct": 3.4279,
+      "nll_wrong": 3.9341,
+      "nll_gap": 0.5061,
+      "retrieved": true,
+      "correct_passkey": "0-1-0-4-3",
+      "wrong_passkey": "2-4-5-0-1",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=52": {
+      "nll_correct": 3.513,
+      "nll_wrong": 3.8055,
+      "nll_gap": 0.2925,
+      "retrieved": true,
+      "correct_passkey": "3-6-7-7-8",
+      "wrong_passkey": "2-5-9-5-0",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=53": {
+      "nll_correct": 3.69,
+      "nll_wrong": 4.0015,
+      "nll_gap": 0.3115,
+      "retrieved": true,
+      "correct_passkey": "9-4-4-1-0",
+      "wrong_passkey": "3-9-9-7-6",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=54": {
+      "nll_correct": 3.8191,
+      "nll_wrong": 3.6772,
+      "nll_gap": -0.1419,
+      "retrieved": false,
+      "correct_passkey": "4-5-1-8-5",
+      "wrong_passkey": "5-6-4-7-8",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=55": {
+      "nll_correct": 3.666,
+      "nll_wrong": 4.0663,
+      "nll_gap": 0.4004,
+      "retrieved": true,
+      "correct_passkey": "0-0-8-0-2",
+      "wrong_passkey": "2-9-5-7-7",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=56": {
+      "nll_correct": 3.8976,
+      "nll_wrong": 3.9381,
+      "nll_gap": 0.0405,
+      "retrieved": true,
+      "correct_passkey": "0-4-7-0-1",
+      "wrong_passkey": "6-5-8-3-2",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=57": {
+      "nll_correct": 3.5642,
+      "nll_wrong": 3.6678,
+      "nll_gap": 0.1036,
+      "retrieved": true,
+      "correct_passkey": "2-0-1-6-5",
+      "wrong_passkey": "4-9-3-3-8",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=58": {
+      "nll_correct": 3.7527,
+      "nll_wrong": 4.1504,
+      "nll_gap": 0.3976,
+      "retrieved": true,
+      "correct_passkey": "5-5-3-8-6",
+      "wrong_passkey": "7-0-4-4-5",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=59": {
+      "nll_correct": 3.642,
+      "nll_wrong": 3.941,
+      "nll_gap": 0.299,
+      "retrieved": true,
+      "correct_passkey": "9-6-4-6-6",
+      "wrong_passkey": "7-5-1-2-2",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=60": {
+      "nll_correct": 3.5867,
+      "nll_wrong": 3.8966,
+      "nll_gap": 0.3099,
+      "retrieved": true,
+      "correct_passkey": "4-4-1-5-8",
+      "wrong_passkey": "9-2-6-6-2",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=61": {
+      "nll_correct": 3.5575,
+      "nll_wrong": 3.6623,
+      "nll_gap": 0.1048,
+      "retrieved": true,
+      "correct_passkey": "2-2-8-7-8",
+      "wrong_passkey": "7-4-2-3-2",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=62": {
+      "nll_correct": 3.3249,
+      "nll_wrong": 3.9362,
+      "nll_gap": 0.6113,
+      "retrieved": true,
+      "correct_passkey": "1-6-1-3-0",
+      "wrong_passkey": "9-5-5-8-9",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=63": {
+      "nll_correct": 3.1418,
+      "nll_wrong": 4.4176,
+      "nll_gap": 1.2758,
+      "retrieved": true,
+      "correct_passkey": "1-2-5-3-0",
+      "wrong_passkey": "8-9-6-0-4",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=64": {
+      "nll_correct": 3.4559,
+      "nll_wrong": 4.0919,
+      "nll_gap": 0.636,
+      "retrieved": true,
+      "correct_passkey": "7-3-0-0-2",
+      "wrong_passkey": "9-4-7-9-9",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=65": {
+      "nll_correct": 3.3715,
+      "nll_wrong": 3.739,
+      "nll_gap": 0.3675,
+      "retrieved": true,
+      "correct_passkey": "1-0-5-4-7",
+      "wrong_passkey": "9-2-3-5-9",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=66": {
+      "nll_correct": 3.671,
+      "nll_wrong": 4.0878,
+      "nll_gap": 0.4169,
+      "retrieved": true,
+      "correct_passkey": "9-6-5-3-5",
+      "wrong_passkey": "2-1-8-6-4",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=67": {
+      "nll_correct": 3.397,
+      "nll_wrong": 3.7685,
+      "nll_gap": 0.3714,
+      "retrieved": true,
+      "correct_passkey": "1-5-7-6-6",
+      "wrong_passkey": "3-0-4-3-0",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=68": {
+      "nll_correct": 3.6121,
+      "nll_wrong": 4.2903,
+      "nll_gap": 0.6782,
+      "retrieved": true,
+      "correct_passkey": "2-8-1-8-5",
+      "wrong_passkey": "7-2-5-0-7",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=69": {
+      "nll_correct": 3.7998,
+      "nll_wrong": 4.2566,
+      "nll_gap": 0.4569,
+      "retrieved": true,
+      "correct_passkey": "5-1-2-8-8",
+      "wrong_passkey": "9-0-5-6-0",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=70": {
+      "nll_correct": 3.3852,
+      "nll_wrong": 4.1238,
+      "nll_gap": 0.7386,
+      "retrieved": true,
+      "correct_passkey": "8-2-3-3-9",
+      "wrong_passkey": "7-4-7-0-8",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=71": {
+      "nll_correct": 3.9238,
+      "nll_wrong": 3.9066,
+      "nll_gap": -0.0173,
+      "retrieved": false,
+      "correct_passkey": "6-9-2-6-2",
+      "wrong_passkey": "3-1-8-1-9",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=72": {
+      "nll_correct": 3.4498,
+      "nll_wrong": 3.7155,
+      "nll_gap": 0.2657,
+      "retrieved": true,
+      "correct_passkey": "2-6-4-7-1",
+      "wrong_passkey": "4-7-7-2-3",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=73": {
+      "nll_correct": 3.6184,
+      "nll_wrong": 3.8036,
+      "nll_gap": 0.1853,
+      "retrieved": true,
+      "correct_passkey": "5-6-3-5-9",
+      "wrong_passkey": "8-5-5-6-2",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=74": {
+      "nll_correct": 3.8325,
+      "nll_wrong": 3.7806,
+      "nll_gap": -0.0519,
+      "retrieved": false,
+      "correct_passkey": "6-2-1-9-9",
+      "wrong_passkey": "8-6-8-3-7",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=75": {
+      "nll_correct": 3.7031,
+      "nll_wrong": 3.5941,
+      "nll_gap": -0.109,
+      "retrieved": false,
+      "correct_passkey": "7-1-4-3-3",
+      "wrong_passkey": "1-5-6-4-4",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=76": {
+      "nll_correct": 3.4819,
+      "nll_wrong": 4.0083,
+      "nll_gap": 0.5264,
+      "retrieved": true,
+      "correct_passkey": "2-8-5-4-0",
+      "wrong_passkey": "7-7-1-3-5",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=77": {
+      "nll_correct": 3.8088,
+      "nll_wrong": 3.9078,
+      "nll_gap": 0.099,
+      "retrieved": true,
+      "correct_passkey": "6-1-5-2-3",
+      "wrong_passkey": "8-8-9-8-8",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=78": {
+      "nll_correct": 3.5118,
+      "nll_wrong": 3.9347,
+      "nll_gap": 0.4228,
+      "retrieved": true,
+      "correct_passkey": "1-1-9-4-2",
+      "wrong_passkey": "0-6-6-5-1",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=79": {
+      "nll_correct": 4.1253,
+      "nll_wrong": 3.9349,
+      "nll_gap": -0.1905,
+      "retrieved": false,
+      "correct_passkey": "8-0-5-8-4",
+      "wrong_passkey": "4-2-6-7-7",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=80": {
+      "nll_correct": 3.4041,
+      "nll_wrong": 4.4105,
+      "nll_gap": 1.0064,
+      "retrieved": true,
+      "correct_passkey": "1-4-8-4-3",
+      "wrong_passkey": "8-0-4-9-7",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=81": {
+      "nll_correct": 3.9649,
+      "nll_wrong": 3.7538,
+      "nll_gap": -0.2111,
+      "retrieved": false,
+      "correct_passkey": "9-7-0-5-0",
+      "wrong_passkey": "3-0-4-0-4",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=82": {
+      "nll_correct": 3.9095,
+      "nll_wrong": 4.0858,
+      "nll_gap": 0.1763,
+      "retrieved": true,
+      "correct_passkey": "5-1-8-1-7",
+      "wrong_passkey": "0-3-6-6-4",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=83": {
+      "nll_correct": 3.5262,
+      "nll_wrong": 3.8206,
+      "nll_gap": 0.2944,
+      "retrieved": true,
+      "correct_passkey": "3-3-5-9-3",
+      "wrong_passkey": "8-5-2-4-2",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=84": {
+      "nll_correct": 3.9513,
+      "nll_wrong": 4.2723,
+      "nll_gap": 0.321,
+      "retrieved": true,
+      "correct_passkey": "7-9-9-5-1",
+      "wrong_passkey": "0-2-1-4-4",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=85": {
+      "nll_correct": 3.864,
+      "nll_wrong": 3.4657,
+      "nll_gap": -0.3982,
+      "retrieved": false,
+      "correct_passkey": "2-6-0-9-1",
+      "wrong_passkey": "1-3-1-3-4",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=86": {
+      "nll_correct": 4.1512,
+      "nll_wrong": 3.7524,
+      "nll_gap": -0.3987,
+      "retrieved": false,
+      "correct_passkey": "7-0-4-7-0",
+      "wrong_passkey": "6-1-2-4-9",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=87": {
+      "nll_correct": 3.4905,
+      "nll_wrong": 4.0035,
+      "nll_gap": 0.513,
+      "retrieved": true,
+      "correct_passkey": "6-3-5-4-9",
+      "wrong_passkey": "5-0-2-0-5",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=88": {
+      "nll_correct": 3.2658,
+      "nll_wrong": 4.1004,
+      "nll_gap": 0.8346,
+      "retrieved": true,
+      "correct_passkey": "2-0-0-4-8",
+      "wrong_passkey": "7-8-2-6-7",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=89": {
+      "nll_correct": 4.0105,
+      "nll_wrong": 3.8664,
+      "nll_gap": -0.1441,
+      "retrieved": false,
+      "correct_passkey": "7-1-7-7-1",
+      "wrong_passkey": "8-8-2-8-7",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=90": {
+      "nll_correct": 3.9219,
+      "nll_wrong": 3.8489,
+      "nll_gap": -0.073,
+      "retrieved": false,
+      "correct_passkey": "8-0-5-4-7",
+      "wrong_passkey": "4-9-3-5-8",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=91": {
+      "nll_correct": 3.5781,
+      "nll_wrong": 4.3205,
+      "nll_gap": 0.7423,
+      "retrieved": true,
+      "correct_passkey": "2-3-7-9-0",
+      "wrong_passkey": "5-9-0-6-9",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=92": {
+      "nll_correct": 3.8351,
+      "nll_wrong": 4.0479,
+      "nll_gap": 0.2128,
+      "retrieved": true,
+      "correct_passkey": "9-9-7-9-1",
+      "wrong_passkey": "6-5-4-1-2",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=93": {
+      "nll_correct": 3.2285,
+      "nll_wrong": 3.8475,
+      "nll_gap": 0.619,
+      "retrieved": true,
+      "correct_passkey": "2-3-1-3-1",
+      "wrong_passkey": "6-6-3-9-7",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=94": {
+      "nll_correct": 3.5419,
+      "nll_wrong": 3.4744,
+      "nll_gap": -0.0675,
+      "retrieved": false,
+      "correct_passkey": "3-7-8-4-7",
+      "wrong_passkey": "2-3-3-2-3",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=95": {
+      "nll_correct": 3.5941,
+      "nll_wrong": 3.7919,
+      "nll_gap": 0.1978,
+      "retrieved": true,
+      "correct_passkey": "0-4-8-5-7",
+      "wrong_passkey": "3-8-2-7-0",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=96": {
+      "nll_correct": 3.7373,
+      "nll_wrong": 3.482,
+      "nll_gap": -0.2553,
+      "retrieved": false,
+      "correct_passkey": "2-3-7-0-9",
+      "wrong_passkey": "3-5-1-4-6",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=97": {
+      "nll_correct": 3.8685,
+      "nll_wrong": 3.8964,
+      "nll_gap": 0.0278,
+      "retrieved": true,
+      "correct_passkey": "8-4-9-8-5",
+      "wrong_passkey": "7-9-8-3-3",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=98": {
+      "nll_correct": 3.5347,
+      "nll_wrong": 3.6725,
+      "nll_gap": 0.1378,
+      "retrieved": true,
+      "correct_passkey": "2-7-4-2-8",
+      "wrong_passkey": "4-2-7-4-1",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=99": {
+      "nll_correct": 2.73,
+      "nll_wrong": 3.9565,
+      "nll_gap": 1.2265,
+      "retrieved": true,
+      "correct_passkey": "0-0-0-0-0",
+      "wrong_passkey": "5-2-3-1-6",
+      "ar_generated": "\n\u201cThe world is a country in which the",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=0": {
+      "nll_correct": 4.4689,
+      "nll_wrong": 5.0564,
+      "nll_gap": 0.5875,
+      "retrieved": true,
+      "correct_passkey": "5-3-1-0-1",
+      "wrong_passkey": "7-0-0-8-9",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=1": {
+      "nll_correct": 4.2536,
+      "nll_wrong": 4.5164,
+      "nll_gap": 0.2628,
+      "retrieved": true,
+      "correct_passkey": "4-5-5-1-2",
+      "wrong_passkey": "9-4-4-9-1",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=2": {
+      "nll_correct": 4.7992,
+      "nll_wrong": 4.4781,
+      "nll_gap": -0.3211,
+      "retrieved": false,
+      "correct_passkey": "2-8-0-7-9",
+      "wrong_passkey": "6-5-9-3-8",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=3": {
+      "nll_correct": 4.4627,
+      "nll_wrong": 4.7931,
+      "nll_gap": 0.3305,
+      "retrieved": true,
+      "correct_passkey": "0-7-0-5-2",
+      "wrong_passkey": "9-3-6-0-5",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=4": {
+      "nll_correct": 4.4447,
+      "nll_wrong": 4.9095,
+      "nll_gap": 0.4648,
+      "retrieved": true,
+      "correct_passkey": "9-1-2-8-7",
+      "wrong_passkey": "7-9-0-1-2",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=5": {
+      "nll_correct": 4.8911,
+      "nll_wrong": 4.7158,
+      "nll_gap": -0.1754,
+      "retrieved": false,
+      "correct_passkey": "2-0-6-9-1",
+      "wrong_passkey": "7-2-9-4-6",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=6": {
+      "nll_correct": 4.3077,
+      "nll_wrong": 4.4338,
+      "nll_gap": 0.126,
+      "retrieved": true,
+      "correct_passkey": "4-5-7-1-7",
+      "wrong_passkey": "9-6-3-5-3",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=7": {
+      "nll_correct": 4.4333,
+      "nll_wrong": 4.1112,
+      "nll_gap": -0.3221,
+      "retrieved": false,
+      "correct_passkey": "4-6-9-3-7",
+      "wrong_passkey": "3-5-5-6-6",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=8": {
+      "nll_correct": 4.1918,
+      "nll_wrong": 5.1247,
+      "nll_gap": 0.9329,
+      "retrieved": true,
+      "correct_passkey": "1-8-7-4-2",
+      "wrong_passkey": "2-0-2-9-8",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=9": {
+      "nll_correct": 4.2582,
+      "nll_wrong": 4.466,
+      "nll_gap": 0.2078,
+      "retrieved": true,
+      "correct_passkey": "6-3-2-2-1",
+      "wrong_passkey": "0-2-5-5-3",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=10": {
+      "nll_correct": 4.6211,
+      "nll_wrong": 4.7431,
+      "nll_gap": 0.122,
+      "retrieved": true,
+      "correct_passkey": "6-0-2-2-8",
+      "wrong_passkey": "7-2-4-0-3",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=11": {
+      "nll_correct": 4.3554,
+      "nll_wrong": 4.5993,
+      "nll_gap": 0.244,
+      "retrieved": true,
+      "correct_passkey": "8-1-1-5-8",
+      "wrong_passkey": "4-9-5-1-6",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=12": {
+      "nll_correct": 4.7492,
+      "nll_wrong": 4.6751,
+      "nll_gap": -0.0741,
+      "retrieved": false,
+      "correct_passkey": "7-9-0-0-2",
+      "wrong_passkey": "0-5-3-9-0",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=13": {
+      "nll_correct": 4.4056,
+      "nll_wrong": 4.5713,
+      "nll_gap": 0.1656,
+      "retrieved": true,
+      "correct_passkey": "7-4-8-9-7",
+      "wrong_passkey": "6-9-7-1-5",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=14": {
+      "nll_correct": 4.3126,
+      "nll_wrong": 4.8534,
+      "nll_gap": 0.5408,
+      "retrieved": true,
+      "correct_passkey": "0-7-4-3-2",
+      "wrong_passkey": "8-0-1-0-6",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=15": {
+      "nll_correct": 4.5331,
+      "nll_wrong": 5.1854,
+      "nll_gap": 0.6523,
+      "retrieved": true,
+      "correct_passkey": "2-5-5-0-8",
+      "wrong_passkey": "7-0-9-2-5",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=16": {
+      "nll_correct": 4.2265,
+      "nll_wrong": 4.4914,
+      "nll_gap": 0.2648,
+      "retrieved": true,
+      "correct_passkey": "4-5-5-9-0",
+      "wrong_passkey": "9-6-3-6-8",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=17": {
+      "nll_correct": 4.5926,
+      "nll_wrong": 4.4154,
+      "nll_gap": -0.1772,
+      "retrieved": false,
+      "correct_passkey": "1-8-7-0-4",
+      "wrong_passkey": "0-6-3-4-6",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=18": {
+      "nll_correct": 4.3321,
+      "nll_wrong": 4.9451,
+      "nll_gap": 0.613,
+      "retrieved": true,
+      "correct_passkey": "8-6-7-7-5",
+      "wrong_passkey": "6-1-9-0-8",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=19": {
+      "nll_correct": 4.2605,
+      "nll_wrong": 4.5173,
+      "nll_gap": 0.2568,
+      "retrieved": true,
+      "correct_passkey": "5-7-4-6-9",
+      "wrong_passkey": "3-9-5-9-5",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=20": {
+      "nll_correct": 4.4916,
+      "nll_wrong": 4.8235,
+      "nll_gap": 0.3319,
+      "retrieved": true,
+      "correct_passkey": "7-2-2-6-1",
+      "wrong_passkey": "2-6-0-4-3",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=21": {
+      "nll_correct": 4.8701,
+      "nll_wrong": 4.6416,
+      "nll_gap": -0.2285,
+      "retrieved": false,
+      "correct_passkey": "5-0-6-0-3",
+      "wrong_passkey": "2-3-1-7-8",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=22": {
+      "nll_correct": 4.301,
+      "nll_wrong": 4.8776,
+      "nll_gap": 0.5767,
+      "retrieved": true,
+      "correct_passkey": "1-9-1-6-3",
+      "wrong_passkey": "9-7-5-0-7",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=23": {
+      "nll_correct": 4.4975,
+      "nll_wrong": 4.4144,
+      "nll_gap": -0.0831,
+      "retrieved": false,
+      "correct_passkey": "6-5-2-7-7",
+      "wrong_passkey": "4-7-7-3-2",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=24": {
+      "nll_correct": 4.4127,
+      "nll_wrong": 5.2113,
+      "nll_gap": 0.7986,
+      "retrieved": true,
+      "correct_passkey": "7-3-4-2-6",
+      "wrong_passkey": "2-0-8-7-8",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=25": {
+      "nll_correct": 4.9646,
+      "nll_wrong": 4.9581,
+      "nll_gap": -0.0065,
+      "retrieved": false,
+      "correct_passkey": "8-0-3-9-7",
+      "wrong_passkey": "3-2-0-7-8",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=26": {
+      "nll_correct": 4.6024,
+      "nll_wrong": 4.5997,
+      "nll_gap": -0.0027,
+      "retrieved": false,
+      "correct_passkey": "1-0-5-8-7",
+      "wrong_passkey": "4-2-9-5-9",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=27": {
+      "nll_correct": 4.9981,
+      "nll_wrong": 4.4986,
+      "nll_gap": -0.4994,
+      "retrieved": false,
+      "correct_passkey": "7-0-8-6-6",
+      "wrong_passkey": "4-1-5-9-1",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=28": {
+      "nll_correct": 4.0796,
+      "nll_wrong": 5.0637,
+      "nll_gap": 0.984,
+      "retrieved": true,
+      "correct_passkey": "0-5-5-3-9",
+      "wrong_passkey": "2-0-6-9-5",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=29": {
+      "nll_correct": 4.5612,
+      "nll_wrong": 4.3627,
+      "nll_gap": -0.1985,
+      "retrieved": false,
+      "correct_passkey": "7-1-8-3-5",
+      "wrong_passkey": "3-2-3-6-1",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=30": {
+      "nll_correct": 4.192,
+      "nll_wrong": 4.5442,
+      "nll_gap": 0.3522,
+      "retrieved": true,
+      "correct_passkey": "0-4-3-8-1",
+      "wrong_passkey": "9-2-6-3-8",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=31": {
+      "nll_correct": 4.3764,
+      "nll_wrong": 4.6855,
+      "nll_gap": 0.3091,
+      "retrieved": true,
+      "correct_passkey": "1-7-6-2-0",
+      "wrong_passkey": "0-2-4-9-9",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=32": {
+      "nll_correct": 4.5401,
+      "nll_wrong": 4.5134,
+      "nll_gap": -0.0267,
+      "retrieved": false,
+      "correct_passkey": "9-3-1-6-5",
+      "wrong_passkey": "7-1-7-4-6",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=33": {
+      "nll_correct": 4.5164,
+      "nll_wrong": 4.1218,
+      "nll_gap": -0.3946,
+      "retrieved": false,
+      "correct_passkey": "5-1-8-8-0",
+      "wrong_passkey": "3-3-4-4-2",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=34": {
+      "nll_correct": 4.5401,
+      "nll_wrong": 4.726,
+      "nll_gap": 0.1859,
+      "retrieved": true,
+      "correct_passkey": "8-1-3-6-1",
+      "wrong_passkey": "0-8-6-3-2",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=35": {
+      "nll_correct": 4.3374,
+      "nll_wrong": 4.5525,
+      "nll_gap": 0.2151,
+      "retrieved": true,
+      "correct_passkey": "6-1-3-1-0",
+      "wrong_passkey": "8-5-7-9-6",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=36": {
+      "nll_correct": 3.9423,
+      "nll_wrong": 4.3923,
+      "nll_gap": 0.45,
+      "retrieved": true,
+      "correct_passkey": "1-1-2-5-6",
+      "wrong_passkey": "5-7-6-4-7",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=37": {
+      "nll_correct": 4.2869,
+      "nll_wrong": 4.5384,
+      "nll_gap": 0.2515,
+      "retrieved": true,
+      "correct_passkey": "0-7-4-8-5",
+      "wrong_passkey": "4-9-2-1-9",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=38": {
+      "nll_correct": 4.2525,
+      "nll_wrong": 4.9122,
+      "nll_gap": 0.6597,
+      "retrieved": true,
+      "correct_passkey": "4-4-6-9-9",
+      "wrong_passkey": "5-9-0-5-2",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=39": {
+      "nll_correct": 4.1644,
+      "nll_wrong": 4.8698,
+      "nll_gap": 0.7054,
+      "retrieved": true,
+      "correct_passkey": "3-3-4-8-1",
+      "wrong_passkey": "1-9-0-3-0",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=40": {
+      "nll_correct": 4.2395,
+      "nll_wrong": 4.5245,
+      "nll_gap": 0.285,
+      "retrieved": true,
+      "correct_passkey": "1-1-8-5-2",
+      "wrong_passkey": "8-8-9-1-8",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=41": {
+      "nll_correct": 4.4828,
+      "nll_wrong": 4.6896,
+      "nll_gap": 0.2067,
+      "retrieved": true,
+      "correct_passkey": "8-8-6-1-0",
+      "wrong_passkey": "4-4-0-2-5",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=42": {
+      "nll_correct": 4.3858,
+      "nll_wrong": 4.389,
+      "nll_gap": 0.0032,
+      "retrieved": true,
+      "correct_passkey": "8-5-9-7-2",
+      "wrong_passkey": "4-8-3-5-9",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=43": {
+      "nll_correct": 4.6385,
+      "nll_wrong": 4.7061,
+      "nll_gap": 0.0676,
+      "retrieved": true,
+      "correct_passkey": "1-9-0-0-1",
+      "wrong_passkey": "7-1-7-4-0",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=44": {
+      "nll_correct": 4.0893,
+      "nll_wrong": 4.3159,
+      "nll_gap": 0.2265,
+      "retrieved": true,
+      "correct_passkey": "3-2-4-4-7",
+      "wrong_passkey": "2-4-2-1-3",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=45": {
+      "nll_correct": 4.5256,
+      "nll_wrong": 4.1681,
+      "nll_gap": -0.3575,
+      "retrieved": false,
+      "correct_passkey": "9-4-6-2-9",
+      "wrong_passkey": "1-3-1-1-3",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=46": {
+      "nll_correct": 4.4717,
+      "nll_wrong": 4.2317,
+      "nll_gap": -0.24,
+      "retrieved": false,
+      "correct_passkey": "4-7-1-5-1",
+      "wrong_passkey": "3-5-6-3-7",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=47": {
+      "nll_correct": 4.2963,
+      "nll_wrong": 4.528,
+      "nll_gap": 0.2317,
+      "retrieved": true,
+      "correct_passkey": "8-8-8-5-5",
+      "wrong_passkey": "0-1-0-2-6",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=48": {
+      "nll_correct": 4.2488,
+      "nll_wrong": 5.0601,
+      "nll_gap": 0.8113,
+      "retrieved": true,
+      "correct_passkey": "3-4-3-1-3",
+      "wrong_passkey": "1-0-8-7-9",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=49": {
+      "nll_correct": 4.3582,
+      "nll_wrong": 4.4022,
+      "nll_gap": 0.044,
+      "retrieved": true,
+      "correct_passkey": "3-5-2-1-2",
+      "wrong_passkey": "1-1-4-9-7",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=50": {
+      "nll_correct": 4.4288,
+      "nll_wrong": 4.7725,
+      "nll_gap": 0.3438,
+      "retrieved": true,
+      "correct_passkey": "6-2-6-4-8",
+      "wrong_passkey": "7-3-2-0-0",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=51": {
+      "nll_correct": 4.5962,
+      "nll_wrong": 4.8324,
+      "nll_gap": 0.2363,
+      "retrieved": true,
+      "correct_passkey": "7-1-8-5-1",
+      "wrong_passkey": "0-8-9-2-9",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=52": {
+      "nll_correct": 4.9728,
+      "nll_wrong": 4.6524,
+      "nll_gap": -0.3204,
+      "retrieved": false,
+      "correct_passkey": "6-0-7-5-1",
+      "wrong_passkey": "3-1-8-7-7",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=53": {
+      "nll_correct": 4.7727,
+      "nll_wrong": 4.3855,
+      "nll_gap": -0.3872,
+      "retrieved": false,
+      "correct_passkey": "4-7-0-6-5",
+      "wrong_passkey": "1-9-6-8-4",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=54": {
+      "nll_correct": 4.2693,
+      "nll_wrong": 4.5613,
+      "nll_gap": 0.2919,
+      "retrieved": true,
+      "correct_passkey": "2-5-8-9-6",
+      "wrong_passkey": "3-9-1-6-9",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=55": {
+      "nll_correct": 4.4769,
+      "nll_wrong": 4.2265,
+      "nll_gap": -0.2505,
+      "retrieved": false,
+      "correct_passkey": "6-6-8-1-8",
+      "wrong_passkey": "4-4-6-5-2",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=56": {
+      "nll_correct": 4.4246,
+      "nll_wrong": 4.6615,
+      "nll_gap": 0.2369,
+      "retrieved": true,
+      "correct_passkey": "8-8-3-8-3",
+      "wrong_passkey": "4-5-5-0-2",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=57": {
+      "nll_correct": 4.4219,
+      "nll_wrong": 4.5707,
+      "nll_gap": 0.1488,
+      "retrieved": true,
+      "correct_passkey": "5-7-7-3-3",
+      "wrong_passkey": "2-8-4-9-7",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=58": {
+      "nll_correct": 4.9464,
+      "nll_wrong": 4.9822,
+      "nll_gap": 0.0359,
+      "retrieved": true,
+      "correct_passkey": "9-0-9-1-2",
+      "wrong_passkey": "6-3-0-7-7",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=59": {
+      "nll_correct": 4.3839,
+      "nll_wrong": 4.5238,
+      "nll_gap": 0.1398,
+      "retrieved": true,
+      "correct_passkey": "0-7-6-3-5",
+      "wrong_passkey": "2-6-1-7-7",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=60": {
+      "nll_correct": 4.903,
+      "nll_wrong": 4.6386,
+      "nll_gap": -0.2645,
+      "retrieved": false,
+      "correct_passkey": "6-0-8-1-5",
+      "wrong_passkey": "2-5-9-2-1",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=61": {
+      "nll_correct": 4.4646,
+      "nll_wrong": 4.3325,
+      "nll_gap": -0.1321,
+      "retrieved": false,
+      "correct_passkey": "6-8-5-1-5",
+      "wrong_passkey": "1-1-8-4-2",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=62": {
+      "nll_correct": 4.0451,
+      "nll_wrong": 4.6935,
+      "nll_gap": 0.6484,
+      "retrieved": true,
+      "correct_passkey": "0-5-5-3-1",
+      "wrong_passkey": "5-8-4-0-8",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=63": {
+      "nll_correct": 4.5502,
+      "nll_wrong": 4.8456,
+      "nll_gap": 0.2954,
+      "retrieved": true,
+      "correct_passkey": "2-0-0-5-8",
+      "wrong_passkey": "0-9-7-2-9",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=64": {
+      "nll_correct": 4.0836,
+      "nll_wrong": 4.4624,
+      "nll_gap": 0.3788,
+      "retrieved": true,
+      "correct_passkey": "4-1-2-2-9",
+      "wrong_passkey": "2-5-7-3-4",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=65": {
+      "nll_correct": 4.436,
+      "nll_wrong": 4.3903,
+      "nll_gap": -0.0457,
+      "retrieved": false,
+      "correct_passkey": "3-2-7-5-9",
+      "wrong_passkey": "1-3-9-1-6",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=66": {
+      "nll_correct": 4.3611,
+      "nll_wrong": 4.9389,
+      "nll_gap": 0.5779,
+      "retrieved": true,
+      "correct_passkey": "2-3-7-7-1",
+      "wrong_passkey": "6-0-4-1-6",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=67": {
+      "nll_correct": 3.951,
+      "nll_wrong": 4.7794,
+      "nll_gap": 0.8284,
+      "retrieved": true,
+      "correct_passkey": "1-5-4-3-5",
+      "wrong_passkey": "6-2-9-2-0",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=68": {
+      "nll_correct": 4.0941,
+      "nll_wrong": 4.9284,
+      "nll_gap": 0.8343,
+      "retrieved": true,
+      "correct_passkey": "2-5-5-3-2",
+      "wrong_passkey": "3-9-8-0-8",
+      "ar_generated": " the act of making a good thing.\"\n4",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=69": {
+      "nll_correct": 4.3864,
+      "nll_wrong": 4.5921,
+      "nll_gap": 0.2057,
+      "retrieved": true,
+      "correct_passkey": "0-6-0-2-6",
+      "wrong_passkey": "2-9-9-4-7",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=70": {
+      "nll_correct": 4.3274,
+      "nll_wrong": 5.1376,
+      "nll_gap": 0.8102,
+      "retrieved": true,
+      "correct_passkey": "8-6-4-7-6",
+      "wrong_passkey": "5-0-9-5-5",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=71": {
+      "nll_correct": 4.2106,
+      "nll_wrong": 4.2782,
+      "nll_gap": 0.0676,
+      "retrieved": true,
+      "correct_passkey": "3-3-4-1-2",
+      "wrong_passkey": "5-6-8-4-6",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=72": {
+      "nll_correct": 4.3483,
+      "nll_wrong": 4.6141,
+      "nll_gap": 0.2658,
+      "retrieved": true,
+      "correct_passkey": "5-3-2-6-8",
+      "wrong_passkey": "0-8-4-8-6",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=73": {
+      "nll_correct": 4.3499,
+      "nll_wrong": 4.3316,
+      "nll_gap": -0.0183,
+      "retrieved": false,
+      "correct_passkey": "2-8-9-7-6",
+      "wrong_passkey": "0-4-3-4-9",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=74": {
+      "nll_correct": 4.3347,
+      "nll_wrong": 4.8258,
+      "nll_gap": 0.4911,
+      "retrieved": true,
+      "correct_passkey": "5-5-9-7-9",
+      "wrong_passkey": "6-2-4-0-3",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=75": {
+      "nll_correct": 4.1769,
+      "nll_wrong": 4.3873,
+      "nll_gap": 0.2104,
+      "retrieved": true,
+      "correct_passkey": "2-3-4-1-4",
+      "wrong_passkey": "6-5-8-3-8",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=76": {
+      "nll_correct": 4.6294,
+      "nll_wrong": 4.6344,
+      "nll_gap": 0.005,
+      "retrieved": true,
+      "correct_passkey": "1-9-0-8-2",
+      "wrong_passkey": "9-2-5-1-0",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=77": {
+      "nll_correct": 4.4637,
+      "nll_wrong": 4.4926,
+      "nll_gap": 0.0289,
+      "retrieved": true,
+      "correct_passkey": "0-6-2-0-1",
+      "wrong_passkey": "1-2-0-9-8",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=78": {
+      "nll_correct": 4.3999,
+      "nll_wrong": 4.6755,
+      "nll_gap": 0.2756,
+      "retrieved": true,
+      "correct_passkey": "4-8-4-2-1",
+      "wrong_passkey": "2-2-7-7-0",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=79": {
+      "nll_correct": 4.4495,
+      "nll_wrong": 4.0213,
+      "nll_gap": -0.4282,
+      "retrieved": false,
+      "correct_passkey": "9-2-5-3-4",
+      "wrong_passkey": "1-1-2-4-2",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=80": {
+      "nll_correct": 4.2646,
+      "nll_wrong": 4.5991,
+      "nll_gap": 0.3345,
+      "retrieved": true,
+      "correct_passkey": "1-1-8-9-6",
+      "wrong_passkey": "0-7-7-1-1",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=81": {
+      "nll_correct": 4.8948,
+      "nll_wrong": 4.477,
+      "nll_gap": -0.4179,
+      "retrieved": false,
+      "correct_passkey": "6-9-9-0-3",
+      "wrong_passkey": "9-4-6-7-6",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=82": {
+      "nll_correct": 4.6323,
+      "nll_wrong": 4.7134,
+      "nll_gap": 0.081,
+      "retrieved": true,
+      "correct_passkey": "7-3-2-9-2",
+      "wrong_passkey": "6-2-4-0-6",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=83": {
+      "nll_correct": 4.533,
+      "nll_wrong": 4.5706,
+      "nll_gap": 0.0376,
+      "retrieved": true,
+      "correct_passkey": "1-0-6-4-8",
+      "wrong_passkey": "3-5-9-2-0",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=84": {
+      "nll_correct": 4.4356,
+      "nll_wrong": 4.1552,
+      "nll_gap": -0.2804,
+      "retrieved": false,
+      "correct_passkey": "8-5-9-9-7",
+      "wrong_passkey": "5-4-4-3-2",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=85": {
+      "nll_correct": 4.2672,
+      "nll_wrong": 4.5849,
+      "nll_gap": 0.3177,
+      "retrieved": true,
+      "correct_passkey": "2-5-2-2-1",
+      "wrong_passkey": "6-2-5-9-3",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=86": {
+      "nll_correct": 4.734,
+      "nll_wrong": 4.6619,
+      "nll_gap": -0.072,
+      "retrieved": false,
+      "correct_passkey": "3-8-0-0-6",
+      "wrong_passkey": "7-7-9-2-8",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=87": {
+      "nll_correct": 4.4674,
+      "nll_wrong": 4.8393,
+      "nll_gap": 0.3719,
+      "retrieved": true,
+      "correct_passkey": "4-6-1-7-5",
+      "wrong_passkey": "6-2-0-4-6",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=88": {
+      "nll_correct": 4.5985,
+      "nll_wrong": 4.4992,
+      "nll_gap": -0.0993,
+      "retrieved": false,
+      "correct_passkey": "5-7-9-2-3",
+      "wrong_passkey": "6-9-6-5-2",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=89": {
+      "nll_correct": 4.3802,
+      "nll_wrong": 4.4748,
+      "nll_gap": 0.0946,
+      "retrieved": true,
+      "correct_passkey": "2-5-1-7-7",
+      "wrong_passkey": "6-6-9-9-8",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=90": {
+      "nll_correct": 4.2271,
+      "nll_wrong": 4.5638,
+      "nll_gap": 0.3367,
+      "retrieved": true,
+      "correct_passkey": "1-3-7-1-6",
+      "wrong_passkey": "9-2-6-5-9",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=91": {
+      "nll_correct": 4.1901,
+      "nll_wrong": 4.5998,
+      "nll_gap": 0.4097,
+      "retrieved": true,
+      "correct_passkey": "0-4-0-5-1",
+      "wrong_passkey": "8-2-3-7-8",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=92": {
+      "nll_correct": 4.7457,
+      "nll_wrong": 4.3496,
+      "nll_gap": -0.3961,
+      "retrieved": false,
+      "correct_passkey": "3-9-0-2-0",
+      "wrong_passkey": "8-5-5-3-1",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=93": {
+      "nll_correct": 4.3795,
+      "nll_wrong": 4.7803,
+      "nll_gap": 0.4008,
+      "retrieved": true,
+      "correct_passkey": "3-9-8-5-6",
+      "wrong_passkey": "2-0-0-4-3",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=94": {
+      "nll_correct": 4.6802,
+      "nll_wrong": 4.3716,
+      "nll_gap": -0.3086,
+      "retrieved": false,
+      "correct_passkey": "2-0-8-1-9",
+      "wrong_passkey": "4-8-6-4-7",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=95": {
+      "nll_correct": 4.5036,
+      "nll_wrong": 4.314,
+      "nll_gap": -0.1896,
+      "retrieved": false,
+      "correct_passkey": "9-6-2-2-6",
+      "wrong_passkey": "2-4-5-8-2",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=96": {
+      "nll_correct": 4.5605,
+      "nll_wrong": 4.6831,
+      "nll_gap": 0.1226,
+      "retrieved": true,
+      "correct_passkey": "9-9-3-8-9",
+      "wrong_passkey": "2-4-0-2-0",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=97": {
+      "nll_correct": 4.1742,
+      "nll_wrong": 4.1,
+      "nll_gap": -0.0743,
+      "retrieved": false,
+      "correct_passkey": "1-7-8-6-9",
+      "wrong_passkey": "3-5-4-5-1",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=98": {
+      "nll_correct": 4.611,
+      "nll_wrong": 4.5526,
+      "nll_gap": -0.0584,
+      "retrieved": false,
+      "correct_passkey": "9-2-7-1-6",
+      "wrong_passkey": "7-6-2-8-8",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=99": {
+      "nll_correct": 4.3639,
+      "nll_wrong": 5.1101,
+      "nll_gap": 0.7463,
+      "retrieved": true,
+      "correct_passkey": "1-5-2-9-2",
+      "wrong_passkey": "7-0-3-8-0",
+      "ar_generated": " \"the act of the act of the act of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=0": {
+      "nll_correct": 5.3075,
+      "nll_wrong": 5.4792,
+      "nll_gap": 0.1717,
+      "retrieved": true,
+      "correct_passkey": "0-8-3-9-1",
+      "wrong_passkey": "8-9-9-1-3",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=1": {
+      "nll_correct": 4.6683,
+      "nll_wrong": 4.9801,
+      "nll_gap": 0.3117,
+      "retrieved": true,
+      "correct_passkey": "3-6-5-4-2",
+      "wrong_passkey": "5-7-4-8-5",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=2": {
+      "nll_correct": 4.9411,
+      "nll_wrong": 4.8818,
+      "nll_gap": -0.0593,
+      "retrieved": false,
+      "correct_passkey": "6-7-8-6-4",
+      "wrong_passkey": "1-3-2-8-1",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=3": {
+      "nll_correct": 4.954,
+      "nll_wrong": 5.1221,
+      "nll_gap": 0.1681,
+      "retrieved": true,
+      "correct_passkey": "0-7-2-2-8",
+      "wrong_passkey": "6-9-7-8-9",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=4": {
+      "nll_correct": 5.0256,
+      "nll_wrong": 4.9638,
+      "nll_gap": -0.0618,
+      "retrieved": false,
+      "correct_passkey": "5-6-3-0-3",
+      "wrong_passkey": "1-1-1-8-8",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=5": {
+      "nll_correct": 5.1881,
+      "nll_wrong": 5.0364,
+      "nll_gap": -0.1517,
+      "retrieved": false,
+      "correct_passkey": "6-8-0-3-0",
+      "wrong_passkey": "4-2-1-6-2",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=6": {
+      "nll_correct": 4.9335,
+      "nll_wrong": 5.1907,
+      "nll_gap": 0.2572,
+      "retrieved": true,
+      "correct_passkey": "0-6-5-6-1",
+      "wrong_passkey": "2-2-8-9-6",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=7": {
+      "nll_correct": 5.2574,
+      "nll_wrong": 5.1997,
+      "nll_gap": -0.0577,
+      "retrieved": false,
+      "correct_passkey": "9-5-5-9-2",
+      "wrong_passkey": "5-9-8-3-0",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=8": {
+      "nll_correct": 5.2581,
+      "nll_wrong": 4.886,
+      "nll_gap": -0.372,
+      "retrieved": false,
+      "correct_passkey": "4-7-2-9-1",
+      "wrong_passkey": "1-6-6-3-3",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=9": {
+      "nll_correct": 5.1223,
+      "nll_wrong": 5.1411,
+      "nll_gap": 0.0189,
+      "retrieved": true,
+      "correct_passkey": "5-2-0-6-3",
+      "wrong_passkey": "1-5-8-9-5",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=10": {
+      "nll_correct": 5.0621,
+      "nll_wrong": 5.3013,
+      "nll_gap": 0.2392,
+      "retrieved": true,
+      "correct_passkey": "2-0-3-5-9",
+      "wrong_passkey": "5-2-1-9-8",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=11": {
+      "nll_correct": 4.7884,
+      "nll_wrong": 4.916,
+      "nll_gap": 0.1277,
+      "retrieved": true,
+      "correct_passkey": "5-6-6-8-7",
+      "wrong_passkey": "6-2-5-5-2",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=12": {
+      "nll_correct": 5.3575,
+      "nll_wrong": 5.2466,
+      "nll_gap": -0.1109,
+      "retrieved": false,
+      "correct_passkey": "5-0-9-8-7",
+      "wrong_passkey": "8-2-1-7-5",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=13": {
+      "nll_correct": 5.2267,
+      "nll_wrong": 4.8565,
+      "nll_gap": -0.3701,
+      "retrieved": false,
+      "correct_passkey": "0-9-5-7-1",
+      "wrong_passkey": "2-6-2-5-9",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=14": {
+      "nll_correct": 5.1263,
+      "nll_wrong": 5.4457,
+      "nll_gap": 0.3194,
+      "retrieved": true,
+      "correct_passkey": "1-9-0-0-2",
+      "wrong_passkey": "0-4-9-3-7",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=15": {
+      "nll_correct": 5.5399,
+      "nll_wrong": 4.7499,
+      "nll_gap": -0.79,
+      "retrieved": false,
+      "correct_passkey": "9-9-2-9-8",
+      "wrong_passkey": "5-5-3-4-7",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=16": {
+      "nll_correct": 5.0932,
+      "nll_wrong": 4.9839,
+      "nll_gap": -0.1092,
+      "retrieved": false,
+      "correct_passkey": "7-0-4-4-2",
+      "wrong_passkey": "0-4-2-2-4",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=17": {
+      "nll_correct": 4.8199,
+      "nll_wrong": 4.9882,
+      "nll_gap": 0.1684,
+      "retrieved": true,
+      "correct_passkey": "3-2-8-3-4",
+      "wrong_passkey": "6-8-2-5-7",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=18": {
+      "nll_correct": 5.0578,
+      "nll_wrong": 4.8665,
+      "nll_gap": -0.1913,
+      "retrieved": false,
+      "correct_passkey": "3-4-1-9-7",
+      "wrong_passkey": "8-3-2-3-3",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=19": {
+      "nll_correct": 4.601,
+      "nll_wrong": 5.486,
+      "nll_gap": 0.885,
+      "retrieved": true,
+      "correct_passkey": "1-2-4-6-9",
+      "wrong_passkey": "5-0-9-7-8",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=20": {
+      "nll_correct": 5.2302,
+      "nll_wrong": 4.9934,
+      "nll_gap": -0.2369,
+      "retrieved": false,
+      "correct_passkey": "0-9-0-8-2",
+      "wrong_passkey": "4-2-2-7-9",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=21": {
+      "nll_correct": 4.5235,
+      "nll_wrong": 5.1514,
+      "nll_gap": 0.6279,
+      "retrieved": true,
+      "correct_passkey": "2-3-3-4-5",
+      "wrong_passkey": "6-1-1-8-8",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=22": {
+      "nll_correct": 5.1302,
+      "nll_wrong": 5.1048,
+      "nll_gap": -0.0254,
+      "retrieved": false,
+      "correct_passkey": "6-8-0-2-0",
+      "wrong_passkey": "8-7-8-3-5",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=23": {
+      "nll_correct": 4.9958,
+      "nll_wrong": 5.2336,
+      "nll_gap": 0.2379,
+      "retrieved": true,
+      "correct_passkey": "7-6-6-9-4",
+      "wrong_passkey": "5-8-3-0-2",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=24": {
+      "nll_correct": 5.164,
+      "nll_wrong": 5.1761,
+      "nll_gap": 0.0121,
+      "retrieved": true,
+      "correct_passkey": "8-0-3-3-7",
+      "wrong_passkey": "6-2-1-7-8",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=25": {
+      "nll_correct": 5.1886,
+      "nll_wrong": 5.1034,
+      "nll_gap": -0.0851,
+      "retrieved": false,
+      "correct_passkey": "6-7-1-7-1",
+      "wrong_passkey": "4-6-7-9-3",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=26": {
+      "nll_correct": 4.7111,
+      "nll_wrong": 5.1715,
+      "nll_gap": 0.4604,
+      "retrieved": true,
+      "correct_passkey": "3-2-6-5-0",
+      "wrong_passkey": "6-5-1-8-8",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=27": {
+      "nll_correct": 5.105,
+      "nll_wrong": 4.9022,
+      "nll_gap": -0.2028,
+      "retrieved": false,
+      "correct_passkey": "8-6-9-7-4",
+      "wrong_passkey": "4-3-3-8-7",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=28": {
+      "nll_correct": 4.917,
+      "nll_wrong": 4.9395,
+      "nll_gap": 0.0225,
+      "retrieved": true,
+      "correct_passkey": "5-0-2-0-9",
+      "wrong_passkey": "2-1-3-6-1",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=29": {
+      "nll_correct": 5.3233,
+      "nll_wrong": 5.1577,
+      "nll_gap": -0.1656,
+      "retrieved": false,
+      "correct_passkey": "3-7-9-0-3",
+      "wrong_passkey": "2-9-6-8-8",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=30": {
+      "nll_correct": 4.8326,
+      "nll_wrong": 5.3403,
+      "nll_gap": 0.5077,
+      "retrieved": true,
+      "correct_passkey": "0-2-4-6-9",
+      "wrong_passkey": "5-8-0-0-4",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=31": {
+      "nll_correct": 5.1786,
+      "nll_wrong": 5.1811,
+      "nll_gap": 0.0025,
+      "retrieved": true,
+      "correct_passkey": "9-8-6-3-6",
+      "wrong_passkey": "5-2-9-6-0",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=32": {
+      "nll_correct": 4.9284,
+      "nll_wrong": 5.0365,
+      "nll_gap": 0.1081,
+      "retrieved": true,
+      "correct_passkey": "0-3-0-3-4",
+      "wrong_passkey": "4-0-6-0-1",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=33": {
+      "nll_correct": 5.0724,
+      "nll_wrong": 4.9208,
+      "nll_gap": -0.1516,
+      "retrieved": false,
+      "correct_passkey": "7-6-9-4-5",
+      "wrong_passkey": "1-3-0-0-1",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=34": {
+      "nll_correct": 5.0762,
+      "nll_wrong": 5.1377,
+      "nll_gap": 0.0615,
+      "retrieved": true,
+      "correct_passkey": "9-5-3-6-9",
+      "wrong_passkey": "8-1-4-8-7",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=35": {
+      "nll_correct": 5.0502,
+      "nll_wrong": 5.6401,
+      "nll_gap": 0.5899,
+      "retrieved": true,
+      "correct_passkey": "3-7-9-7-9",
+      "wrong_passkey": "9-0-4-9-2",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=36": {
+      "nll_correct": 4.7858,
+      "nll_wrong": 5.1186,
+      "nll_gap": 0.3328,
+      "retrieved": true,
+      "correct_passkey": "4-4-6-8-4",
+      "wrong_passkey": "6-5-9-3-3",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=37": {
+      "nll_correct": 5.0272,
+      "nll_wrong": 4.801,
+      "nll_gap": -0.2262,
+      "retrieved": false,
+      "correct_passkey": "6-3-1-6-7",
+      "wrong_passkey": "5-4-5-2-9",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=38": {
+      "nll_correct": 4.8154,
+      "nll_wrong": 4.8731,
+      "nll_gap": 0.0577,
+      "retrieved": true,
+      "correct_passkey": "0-4-2-4-7",
+      "wrong_passkey": "8-6-5-5-4",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=39": {
+      "nll_correct": 4.7724,
+      "nll_wrong": 4.6886,
+      "nll_gap": -0.0838,
+      "retrieved": false,
+      "correct_passkey": "4-5-3-2-7",
+      "wrong_passkey": "5-3-4-5-8",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=40": {
+      "nll_correct": 5.4094,
+      "nll_wrong": 4.7917,
+      "nll_gap": -0.6177,
+      "retrieved": false,
+      "correct_passkey": "7-9-7-0-7",
+      "wrong_passkey": "3-4-3-7-1",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=41": {
+      "nll_correct": 4.9067,
+      "nll_wrong": 4.8835,
+      "nll_gap": -0.0232,
+      "retrieved": false,
+      "correct_passkey": "3-3-2-9-8",
+      "wrong_passkey": "1-2-6-7-5",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=42": {
+      "nll_correct": 5.1096,
+      "nll_wrong": 5.3543,
+      "nll_gap": 0.2446,
+      "retrieved": true,
+      "correct_passkey": "7-7-8-1-2",
+      "wrong_passkey": "8-0-2-6-1",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=43": {
+      "nll_correct": 5.2412,
+      "nll_wrong": 5.2581,
+      "nll_gap": 0.0168,
+      "retrieved": true,
+      "correct_passkey": "8-9-8-2-4",
+      "wrong_passkey": "0-3-7-4-9",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=44": {
+      "nll_correct": 5.5458,
+      "nll_wrong": 4.7515,
+      "nll_gap": -0.7943,
+      "retrieved": false,
+      "correct_passkey": "9-9-2-0-9",
+      "wrong_passkey": "3-6-6-5-4",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=45": {
+      "nll_correct": 5.2187,
+      "nll_wrong": 4.9255,
+      "nll_gap": -0.2932,
+      "retrieved": false,
+      "correct_passkey": "0-3-0-9-7",
+      "wrong_passkey": "2-2-1-0-2",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=46": {
+      "nll_correct": 5.112,
+      "nll_wrong": 5.3505,
+      "nll_gap": 0.2385,
+      "retrieved": true,
+      "correct_passkey": "7-1-8-5-4",
+      "wrong_passkey": "9-9-1-2-5",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=47": {
+      "nll_correct": 5.208,
+      "nll_wrong": 5.1072,
+      "nll_gap": -0.1008,
+      "retrieved": false,
+      "correct_passkey": "6-8-0-3-7",
+      "wrong_passkey": "1-9-4-1-0",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=48": {
+      "nll_correct": 5.2656,
+      "nll_wrong": 4.9728,
+      "nll_gap": -0.2928,
+      "retrieved": false,
+      "correct_passkey": "0-1-6-9-1",
+      "wrong_passkey": "4-4-8-8-3",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=49": {
+      "nll_correct": 5.2621,
+      "nll_wrong": 5.315,
+      "nll_gap": 0.0528,
+      "retrieved": true,
+      "correct_passkey": "5-9-1-0-3",
+      "wrong_passkey": "0-3-8-2-8",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=50": {
+      "nll_correct": 5.2889,
+      "nll_wrong": 5.1558,
+      "nll_gap": -0.1332,
+      "retrieved": false,
+      "correct_passkey": "6-2-7-0-5",
+      "wrong_passkey": "4-8-8-9-2",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=51": {
+      "nll_correct": 4.979,
+      "nll_wrong": 4.9868,
+      "nll_gap": 0.0077,
+      "retrieved": true,
+      "correct_passkey": "2-7-2-6-0",
+      "wrong_passkey": "5-5-8-2-7",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=52": {
+      "nll_correct": 4.5929,
+      "nll_wrong": 5.3961,
+      "nll_gap": 0.8033,
+      "retrieved": true,
+      "correct_passkey": "4-3-2-2-7",
+      "wrong_passkey": "0-5-8-9-6",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=53": {
+      "nll_correct": 4.9485,
+      "nll_wrong": 5.1673,
+      "nll_gap": 0.2189,
+      "retrieved": true,
+      "correct_passkey": "5-0-4-4-7",
+      "wrong_passkey": "2-3-7-9-9",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=54": {
+      "nll_correct": 5.033,
+      "nll_wrong": 5.5724,
+      "nll_gap": 0.5394,
+      "retrieved": true,
+      "correct_passkey": "0-1-6-2-2",
+      "wrong_passkey": "9-9-0-5-7",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=55": {
+      "nll_correct": 5.0079,
+      "nll_wrong": 4.9684,
+      "nll_gap": -0.0395,
+      "retrieved": false,
+      "correct_passkey": "7-5-7-3-8",
+      "wrong_passkey": "8-4-2-6-7",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=56": {
+      "nll_correct": 4.8128,
+      "nll_wrong": 5.0112,
+      "nll_gap": 0.1984,
+      "retrieved": true,
+      "correct_passkey": "8-4-2-4-5",
+      "wrong_passkey": "6-3-3-0-9",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=57": {
+      "nll_correct": 4.8372,
+      "nll_wrong": 5.2853,
+      "nll_gap": 0.4481,
+      "retrieved": true,
+      "correct_passkey": "2-1-3-5-3",
+      "wrong_passkey": "8-2-6-0-8",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=58": {
+      "nll_correct": 5.2234,
+      "nll_wrong": 4.7511,
+      "nll_gap": -0.4723,
+      "retrieved": false,
+      "correct_passkey": "2-9-9-6-8",
+      "wrong_passkey": "6-5-4-4-0",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=59": {
+      "nll_correct": 4.762,
+      "nll_wrong": 5.2522,
+      "nll_gap": 0.4903,
+      "retrieved": true,
+      "correct_passkey": "4-6-5-5-9",
+      "wrong_passkey": "6-0-6-3-0",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=60": {
+      "nll_correct": 5.3949,
+      "nll_wrong": 5.1919,
+      "nll_gap": -0.2029,
+      "retrieved": false,
+      "correct_passkey": "9-0-7-0-4",
+      "wrong_passkey": "1-1-9-5-9",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=61": {
+      "nll_correct": 4.8642,
+      "nll_wrong": 5.5234,
+      "nll_gap": 0.6592,
+      "retrieved": true,
+      "correct_passkey": "6-6-5-3-0",
+      "wrong_passkey": "8-1-9-0-3",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=62": {
+      "nll_correct": 5.0091,
+      "nll_wrong": 5.1959,
+      "nll_gap": 0.1868,
+      "retrieved": true,
+      "correct_passkey": "2-8-6-6-1",
+      "wrong_passkey": "8-6-9-8-2",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=63": {
+      "nll_correct": 5.0561,
+      "nll_wrong": 5.0912,
+      "nll_gap": 0.0351,
+      "retrieved": true,
+      "correct_passkey": "2-6-3-0-3",
+      "wrong_passkey": "9-3-2-3-0",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=64": {
+      "nll_correct": 5.0715,
+      "nll_wrong": 5.1759,
+      "nll_gap": 0.1045,
+      "retrieved": true,
+      "correct_passkey": "5-1-7-8-0",
+      "wrong_passkey": "9-6-2-1-3",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=65": {
+      "nll_correct": 5.0446,
+      "nll_wrong": 5.1288,
+      "nll_gap": 0.0841,
+      "retrieved": true,
+      "correct_passkey": "4-9-4-5-9",
+      "wrong_passkey": "9-7-6-6-6",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=66": {
+      "nll_correct": 4.922,
+      "nll_wrong": 5.3061,
+      "nll_gap": 0.3841,
+      "retrieved": true,
+      "correct_passkey": "2-7-5-4-3",
+      "wrong_passkey": "0-3-0-8-5",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=67": {
+      "nll_correct": 5.0275,
+      "nll_wrong": 4.8279,
+      "nll_gap": -0.1996,
+      "retrieved": false,
+      "correct_passkey": "9-4-2-3-0",
+      "wrong_passkey": "5-1-4-2-4",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=68": {
+      "nll_correct": 4.8421,
+      "nll_wrong": 4.9711,
+      "nll_gap": 0.129,
+      "retrieved": true,
+      "correct_passkey": "3-4-7-7-5",
+      "wrong_passkey": "8-7-5-4-1",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=69": {
+      "nll_correct": 5.2229,
+      "nll_wrong": 5.1994,
+      "nll_gap": -0.0236,
+      "retrieved": false,
+      "correct_passkey": "3-0-2-9-0",
+      "wrong_passkey": "6-5-7-0-5",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=70": {
+      "nll_correct": 5.3097,
+      "nll_wrong": 5.0607,
+      "nll_gap": -0.249,
+      "retrieved": false,
+      "correct_passkey": "8-0-7-1-6",
+      "wrong_passkey": "7-7-8-3-7",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=71": {
+      "nll_correct": 4.9417,
+      "nll_wrong": 5.2607,
+      "nll_gap": 0.3189,
+      "retrieved": true,
+      "correct_passkey": "2-7-6-5-6",
+      "wrong_passkey": "3-9-9-9-3",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=72": {
+      "nll_correct": 4.9561,
+      "nll_wrong": 4.8732,
+      "nll_gap": -0.0829,
+      "retrieved": false,
+      "correct_passkey": "8-2-5-6-5",
+      "wrong_passkey": "1-8-2-3-1",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=73": {
+      "nll_correct": 5.0468,
+      "nll_wrong": 5.3366,
+      "nll_gap": 0.2898,
+      "retrieved": true,
+      "correct_passkey": "3-1-5-9-0",
+      "wrong_passkey": "9-9-4-3-6",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=74": {
+      "nll_correct": 4.9106,
+      "nll_wrong": 4.9573,
+      "nll_gap": 0.0467,
+      "retrieved": true,
+      "correct_passkey": "7-2-3-1-3",
+      "wrong_passkey": "3-6-0-4-1",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=75": {
+      "nll_correct": 5.0565,
+      "nll_wrong": 5.1233,
+      "nll_gap": 0.0668,
+      "retrieved": true,
+      "correct_passkey": "0-7-0-4-7",
+      "wrong_passkey": "4-6-2-9-9",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=76": {
+      "nll_correct": 4.8345,
+      "nll_wrong": 5.1768,
+      "nll_gap": 0.3422,
+      "retrieved": true,
+      "correct_passkey": "6-5-5-3-9",
+      "wrong_passkey": "1-0-7-0-2",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=77": {
+      "nll_correct": 5.0293,
+      "nll_wrong": 5.4367,
+      "nll_gap": 0.4074,
+      "retrieved": true,
+      "correct_passkey": "3-1-0-8-4",
+      "wrong_passkey": "9-0-5-5-0",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=78": {
+      "nll_correct": 5.3158,
+      "nll_wrong": 5.0296,
+      "nll_gap": -0.2862,
+      "retrieved": false,
+      "correct_passkey": "9-1-1-9-3",
+      "wrong_passkey": "8-5-8-7-6",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=79": {
+      "nll_correct": 4.9856,
+      "nll_wrong": 5.1386,
+      "nll_gap": 0.153,
+      "retrieved": true,
+      "correct_passkey": "3-7-3-7-1",
+      "wrong_passkey": "5-0-0-1-2",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=80": {
+      "nll_correct": 4.9797,
+      "nll_wrong": 5.1518,
+      "nll_gap": 0.1721,
+      "retrieved": true,
+      "correct_passkey": "6-5-7-7-0",
+      "wrong_passkey": "4-1-0-4-4",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=81": {
+      "nll_correct": 4.7695,
+      "nll_wrong": 5.1466,
+      "nll_gap": 0.3771,
+      "retrieved": true,
+      "correct_passkey": "2-5-6-3-5",
+      "wrong_passkey": "1-7-0-2-2",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=82": {
+      "nll_correct": 4.9999,
+      "nll_wrong": 4.7985,
+      "nll_gap": -0.2014,
+      "retrieved": false,
+      "correct_passkey": "4-7-1-1-4",
+      "wrong_passkey": "5-1-3-3-7",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=83": {
+      "nll_correct": 5.2737,
+      "nll_wrong": 5.1999,
+      "nll_gap": -0.0737,
+      "retrieved": false,
+      "correct_passkey": "6-1-7-0-5",
+      "wrong_passkey": "0-7-0-2-6",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=84": {
+      "nll_correct": 4.8504,
+      "nll_wrong": 5.2529,
+      "nll_gap": 0.4024,
+      "retrieved": true,
+      "correct_passkey": "7-6-6-6-0",
+      "wrong_passkey": "0-1-5-5-1",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=85": {
+      "nll_correct": 4.7758,
+      "nll_wrong": 5.0975,
+      "nll_gap": 0.3217,
+      "retrieved": true,
+      "correct_passkey": "3-6-7-4-5",
+      "wrong_passkey": "1-2-1-9-3",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=86": {
+      "nll_correct": 4.9751,
+      "nll_wrong": 4.9905,
+      "nll_gap": 0.0154,
+      "retrieved": true,
+      "correct_passkey": "3-2-6-0-9",
+      "wrong_passkey": "4-6-7-2-7",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=87": {
+      "nll_correct": 5.412,
+      "nll_wrong": 5.4516,
+      "nll_gap": 0.0396,
+      "retrieved": true,
+      "correct_passkey": "8-9-7-0-0",
+      "wrong_passkey": "0-5-9-6-6",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=88": {
+      "nll_correct": 4.797,
+      "nll_wrong": 5.4585,
+      "nll_gap": 0.6615,
+      "retrieved": true,
+      "correct_passkey": "2-2-5-1-0",
+      "wrong_passkey": "9-8-0-0-8",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=89": {
+      "nll_correct": 5.3261,
+      "nll_wrong": 4.9043,
+      "nll_gap": -0.4218,
+      "retrieved": false,
+      "correct_passkey": "9-2-6-9-7",
+      "wrong_passkey": "1-8-1-2-9",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=90": {
+      "nll_correct": 5.0574,
+      "nll_wrong": 5.0765,
+      "nll_gap": 0.0192,
+      "retrieved": true,
+      "correct_passkey": "7-8-8-2-4",
+      "wrong_passkey": "2-6-7-1-7",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=91": {
+      "nll_correct": 4.8821,
+      "nll_wrong": 5.2674,
+      "nll_gap": 0.3853,
+      "retrieved": true,
+      "correct_passkey": "4-2-6-5-1",
+      "wrong_passkey": "1-7-9-2-9",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=92": {
+      "nll_correct": 5.1257,
+      "nll_wrong": 5.2152,
+      "nll_gap": 0.0895,
+      "retrieved": true,
+      "correct_passkey": "1-5-7-0-2",
+      "wrong_passkey": "9-8-2-4-6",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=93": {
+      "nll_correct": 5.2798,
+      "nll_wrong": 5.1794,
+      "nll_gap": -0.1005,
+      "retrieved": false,
+      "correct_passkey": "8-0-8-4-5",
+      "wrong_passkey": "6-2-9-6-1",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=94": {
+      "nll_correct": 5.0464,
+      "nll_wrong": 5.3326,
+      "nll_gap": 0.2862,
+      "retrieved": true,
+      "correct_passkey": "5-9-3-4-4",
+      "wrong_passkey": "4-8-0-0-1",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=95": {
+      "nll_correct": 4.7228,
+      "nll_wrong": 5.3681,
+      "nll_gap": 0.6452,
+      "retrieved": true,
+      "correct_passkey": "3-3-6-8-8",
+      "wrong_passkey": "8-0-7-4-2",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=96": {
+      "nll_correct": 4.9095,
+      "nll_wrong": 4.8538,
+      "nll_gap": -0.0557,
+      "retrieved": false,
+      "correct_passkey": "1-0-0-8-2",
+      "wrong_passkey": "3-4-3-0-6",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=97": {
+      "nll_correct": 5.0123,
+      "nll_wrong": 4.6359,
+      "nll_gap": -0.3764,
+      "retrieved": false,
+      "correct_passkey": "7-4-7-7-4",
+      "wrong_passkey": "2-3-4-3-8",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=98": {
+      "nll_correct": 5.1841,
+      "nll_wrong": 5.2981,
+      "nll_gap": 0.114,
+      "retrieved": true,
+      "correct_passkey": "6-6-0-7-6",
+      "wrong_passkey": "8-0-6-6-2",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=99": {
+      "nll_correct": 5.28,
+      "nll_wrong": 4.8958,
+      "nll_gap": -0.3842,
+      "retrieved": false,
+      "correct_passkey": "9-5-0-4-8",
+      "wrong_passkey": "5-3-3-8-5",
+      "ar_generated": " a new project.\nThe project will be used",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=0": {
+      "nll_correct": 5.7055,
+      "nll_wrong": 5.9291,
+      "nll_gap": 0.2235,
+      "retrieved": true,
+      "correct_passkey": "5-8-1-9-4",
+      "wrong_passkey": "3-7-0-3-1",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=1": {
+      "nll_correct": 5.8848,
+      "nll_wrong": 5.8006,
+      "nll_gap": -0.0842,
+      "retrieved": false,
+      "correct_passkey": "5-7-9-2-2",
+      "wrong_passkey": "4-4-4-3-3",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=2": {
+      "nll_correct": 5.6232,
+      "nll_wrong": 6.0964,
+      "nll_gap": 0.4732,
+      "retrieved": true,
+      "correct_passkey": "6-3-1-4-4",
+      "wrong_passkey": "9-0-8-7-0",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=3": {
+      "nll_correct": 5.4524,
+      "nll_wrong": 5.7753,
+      "nll_gap": 0.3229,
+      "retrieved": true,
+      "correct_passkey": "6-1-5-2-4",
+      "wrong_passkey": "5-2-0-1-2",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=4": {
+      "nll_correct": 5.7659,
+      "nll_wrong": 5.8981,
+      "nll_gap": 0.1322,
+      "retrieved": true,
+      "correct_passkey": "4-0-5-2-1",
+      "wrong_passkey": "8-8-9-9-2",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=5": {
+      "nll_correct": 5.7619,
+      "nll_wrong": 5.5835,
+      "nll_gap": -0.1784,
+      "retrieved": false,
+      "correct_passkey": "5-0-0-2-0",
+      "wrong_passkey": "3-8-3-5-9",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=6": {
+      "nll_correct": 5.6317,
+      "nll_wrong": 5.7984,
+      "nll_gap": 0.1667,
+      "retrieved": true,
+      "correct_passkey": "9-9-2-1-0",
+      "wrong_passkey": "6-1-8-8-5",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=7": {
+      "nll_correct": 5.9856,
+      "nll_wrong": 5.9377,
+      "nll_gap": -0.0478,
+      "retrieved": false,
+      "correct_passkey": "5-4-0-6-1",
+      "wrong_passkey": "7-0-7-3-0",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=8": {
+      "nll_correct": 5.6084,
+      "nll_wrong": 5.924,
+      "nll_gap": 0.3155,
+      "retrieved": true,
+      "correct_passkey": "3-8-2-1-7",
+      "wrong_passkey": "0-6-9-3-4",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=9": {
+      "nll_correct": 5.6105,
+      "nll_wrong": 5.8253,
+      "nll_gap": 0.2148,
+      "retrieved": true,
+      "correct_passkey": "1-6-1-3-4",
+      "wrong_passkey": "3-2-2-7-9",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=10": {
+      "nll_correct": 5.8495,
+      "nll_wrong": 5.7414,
+      "nll_gap": -0.108,
+      "retrieved": false,
+      "correct_passkey": "3-9-6-4-7",
+      "wrong_passkey": "6-3-4-2-4",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=11": {
+      "nll_correct": 5.5527,
+      "nll_wrong": 5.8097,
+      "nll_gap": 0.257,
+      "retrieved": true,
+      "correct_passkey": "6-1-3-9-7",
+      "wrong_passkey": "2-8-7-5-8",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=12": {
+      "nll_correct": 5.9587,
+      "nll_wrong": 5.7181,
+      "nll_gap": -0.2406,
+      "retrieved": false,
+      "correct_passkey": "4-2-8-4-2",
+      "wrong_passkey": "7-3-6-5-7",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=13": {
+      "nll_correct": 5.7548,
+      "nll_wrong": 5.6159,
+      "nll_gap": -0.1389,
+      "retrieved": false,
+      "correct_passkey": "1-6-0-1-3",
+      "wrong_passkey": "9-3-2-3-8",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=14": {
+      "nll_correct": 5.7043,
+      "nll_wrong": 5.9925,
+      "nll_gap": 0.2882,
+      "retrieved": true,
+      "correct_passkey": "3-8-6-1-3",
+      "wrong_passkey": "7-0-9-3-5",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=15": {
+      "nll_correct": 5.9229,
+      "nll_wrong": 5.5872,
+      "nll_gap": -0.3357,
+      "retrieved": false,
+      "correct_passkey": "4-4-4-6-3",
+      "wrong_passkey": "2-2-1-3-1",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=16": {
+      "nll_correct": 6.027,
+      "nll_wrong": 5.9279,
+      "nll_gap": -0.0991,
+      "retrieved": false,
+      "correct_passkey": "8-0-7-4-2",
+      "wrong_passkey": "5-8-8-7-3",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=17": {
+      "nll_correct": 5.6406,
+      "nll_wrong": 5.4862,
+      "nll_gap": -0.1544,
+      "retrieved": false,
+      "correct_passkey": "4-7-1-0-0",
+      "wrong_passkey": "8-1-5-5-1",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=18": {
+      "nll_correct": 5.7894,
+      "nll_wrong": 5.7201,
+      "nll_gap": -0.0693,
+      "retrieved": false,
+      "correct_passkey": "1-9-2-6-6",
+      "wrong_passkey": "5-1-4-8-1",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=19": {
+      "nll_correct": 6.0404,
+      "nll_wrong": 5.8936,
+      "nll_gap": -0.1468,
+      "retrieved": false,
+      "correct_passkey": "8-2-0-7-9",
+      "wrong_passkey": "0-3-4-9-6",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=20": {
+      "nll_correct": 5.964,
+      "nll_wrong": 5.8168,
+      "nll_gap": -0.1472,
+      "retrieved": false,
+      "correct_passkey": "9-0-9-4-6",
+      "wrong_passkey": "1-6-5-8-8",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=21": {
+      "nll_correct": 5.8433,
+      "nll_wrong": 5.8728,
+      "nll_gap": 0.0295,
+      "retrieved": true,
+      "correct_passkey": "9-6-7-4-6",
+      "wrong_passkey": "6-4-6-9-5",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=22": {
+      "nll_correct": 5.7571,
+      "nll_wrong": 5.977,
+      "nll_gap": 0.2199,
+      "retrieved": true,
+      "correct_passkey": "9-3-4-2-9",
+      "wrong_passkey": "8-4-9-4-1",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=23": {
+      "nll_correct": 5.8784,
+      "nll_wrong": 5.6419,
+      "nll_gap": -0.2365,
+      "retrieved": false,
+      "correct_passkey": "8-8-7-9-9",
+      "wrong_passkey": "5-1-3-8-6",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=24": {
+      "nll_correct": 5.4062,
+      "nll_wrong": 5.7948,
+      "nll_gap": 0.3886,
+      "retrieved": true,
+      "correct_passkey": "3-1-0-0-8",
+      "wrong_passkey": "9-8-9-7-6",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=25": {
+      "nll_correct": 5.6718,
+      "nll_wrong": 5.7858,
+      "nll_gap": 0.1141,
+      "retrieved": true,
+      "correct_passkey": "3-7-5-0-3",
+      "wrong_passkey": "4-1-8-9-4",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=26": {
+      "nll_correct": 5.6165,
+      "nll_wrong": 5.8216,
+      "nll_gap": 0.2051,
+      "retrieved": true,
+      "correct_passkey": "6-4-1-5-7",
+      "wrong_passkey": "3-3-6-9-4",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=27": {
+      "nll_correct": 5.8046,
+      "nll_wrong": 5.5504,
+      "nll_gap": -0.2542,
+      "retrieved": false,
+      "correct_passkey": "9-3-9-3-9",
+      "wrong_passkey": "1-2-2-5-2",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=28": {
+      "nll_correct": 5.6699,
+      "nll_wrong": 5.9061,
+      "nll_gap": 0.2362,
+      "retrieved": true,
+      "correct_passkey": "3-2-4-2-6",
+      "wrong_passkey": "9-9-9-7-5",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=29": {
+      "nll_correct": 5.7849,
+      "nll_wrong": 5.6887,
+      "nll_gap": -0.0962,
+      "retrieved": false,
+      "correct_passkey": "4-6-2-3-3",
+      "wrong_passkey": "1-7-1-5-8",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=30": {
+      "nll_correct": 5.9669,
+      "nll_wrong": 5.7883,
+      "nll_gap": -0.1786,
+      "retrieved": false,
+      "correct_passkey": "0-8-9-9-8",
+      "wrong_passkey": "8-3-7-1-4",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=31": {
+      "nll_correct": 5.7784,
+      "nll_wrong": 5.9989,
+      "nll_gap": 0.2205,
+      "retrieved": true,
+      "correct_passkey": "3-9-6-3-3",
+      "wrong_passkey": "2-6-4-8-5",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=32": {
+      "nll_correct": 5.7689,
+      "nll_wrong": 5.789,
+      "nll_gap": 0.0201,
+      "retrieved": true,
+      "correct_passkey": "3-5-5-7-0",
+      "wrong_passkey": "9-7-4-3-6",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=33": {
+      "nll_correct": 5.753,
+      "nll_wrong": 5.8725,
+      "nll_gap": 0.1195,
+      "retrieved": true,
+      "correct_passkey": "3-5-7-2-9",
+      "wrong_passkey": "2-4-8-1-7",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=34": {
+      "nll_correct": 5.9474,
+      "nll_wrong": 5.6506,
+      "nll_gap": -0.2968,
+      "retrieved": false,
+      "correct_passkey": "6-3-9-8-5",
+      "wrong_passkey": "9-9-1-3-7",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=35": {
+      "nll_correct": 5.6106,
+      "nll_wrong": 5.9909,
+      "nll_gap": 0.3803,
+      "retrieved": true,
+      "correct_passkey": "1-8-4-0-6",
+      "wrong_passkey": "6-0-0-9-5",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=36": {
+      "nll_correct": 5.8395,
+      "nll_wrong": 5.6943,
+      "nll_gap": -0.1452,
+      "retrieved": false,
+      "correct_passkey": "4-3-4-4-4",
+      "wrong_passkey": "7-9-1-3-2",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=37": {
+      "nll_correct": 5.7706,
+      "nll_wrong": 5.6107,
+      "nll_gap": -0.1599,
+      "retrieved": false,
+      "correct_passkey": "7-6-0-0-6",
+      "wrong_passkey": "9-4-5-5-5",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=38": {
+      "nll_correct": 5.9524,
+      "nll_wrong": 5.9491,
+      "nll_gap": -0.0032,
+      "retrieved": false,
+      "correct_passkey": "3-7-2-7-3",
+      "wrong_passkey": "8-0-3-6-7",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=39": {
+      "nll_correct": 5.485,
+      "nll_wrong": 5.7904,
+      "nll_gap": 0.3053,
+      "retrieved": true,
+      "correct_passkey": "7-3-1-0-1",
+      "wrong_passkey": "9-5-6-6-8",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=40": {
+      "nll_correct": 5.9157,
+      "nll_wrong": 5.8004,
+      "nll_gap": -0.1153,
+      "retrieved": false,
+      "correct_passkey": "5-2-0-9-9",
+      "wrong_passkey": "4-7-4-1-6",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=41": {
+      "nll_correct": 5.9311,
+      "nll_wrong": 5.9071,
+      "nll_gap": -0.024,
+      "retrieved": false,
+      "correct_passkey": "6-4-8-9-3",
+      "wrong_passkey": "4-2-9-2-9",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=42": {
+      "nll_correct": 5.6459,
+      "nll_wrong": 5.6461,
+      "nll_gap": 0.0002,
+      "retrieved": true,
+      "correct_passkey": "5-0-0-0-3",
+      "wrong_passkey": "8-5-2-5-7",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=43": {
+      "nll_correct": 5.649,
+      "nll_wrong": 5.888,
+      "nll_gap": 0.2389,
+      "retrieved": true,
+      "correct_passkey": "4-1-5-7-0",
+      "wrong_passkey": "8-9-6-9-2",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=44": {
+      "nll_correct": 5.5991,
+      "nll_wrong": 5.952,
+      "nll_gap": 0.3528,
+      "retrieved": true,
+      "correct_passkey": "6-0-1-3-8",
+      "wrong_passkey": "1-7-8-6-3",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=45": {
+      "nll_correct": 5.7292,
+      "nll_wrong": 5.8015,
+      "nll_gap": 0.0723,
+      "retrieved": true,
+      "correct_passkey": "1-8-0-1-5",
+      "wrong_passkey": "7-7-9-2-4",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=46": {
+      "nll_correct": 5.958,
+      "nll_wrong": 5.6447,
+      "nll_gap": -0.3133,
+      "retrieved": false,
+      "correct_passkey": "9-7-0-4-2",
+      "wrong_passkey": "1-1-6-8-4",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=47": {
+      "nll_correct": 6.028,
+      "nll_wrong": 5.7095,
+      "nll_gap": -0.3185,
+      "retrieved": false,
+      "correct_passkey": "9-6-0-8-1",
+      "wrong_passkey": "8-2-5-0-4",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=48": {
+      "nll_correct": 5.9593,
+      "nll_wrong": 5.8377,
+      "nll_gap": -0.1216,
+      "retrieved": false,
+      "correct_passkey": "8-2-0-6-6",
+      "wrong_passkey": "7-9-3-8-9",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=49": {
+      "nll_correct": 5.9369,
+      "nll_wrong": 5.8118,
+      "nll_gap": -0.1251,
+      "retrieved": false,
+      "correct_passkey": "6-8-0-6-6",
+      "wrong_passkey": "3-0-7-1-5",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=50": {
+      "nll_correct": 5.5586,
+      "nll_wrong": 5.7802,
+      "nll_gap": 0.2216,
+      "retrieved": true,
+      "correct_passkey": "6-1-9-1-4",
+      "wrong_passkey": "3-5-2-8-1",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=51": {
+      "nll_correct": 5.6467,
+      "nll_wrong": 5.7213,
+      "nll_gap": 0.0746,
+      "retrieved": true,
+      "correct_passkey": "4-4-1-2-3",
+      "wrong_passkey": "1-2-3-8-9",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=52": {
+      "nll_correct": 5.7692,
+      "nll_wrong": 5.9823,
+      "nll_gap": 0.2131,
+      "retrieved": true,
+      "correct_passkey": "2-8-1-4-9",
+      "wrong_passkey": "8-4-9-9-8",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=53": {
+      "nll_correct": 5.6501,
+      "nll_wrong": 5.8461,
+      "nll_gap": 0.196,
+      "retrieved": true,
+      "correct_passkey": "9-8-7-0-7",
+      "wrong_passkey": "8-2-9-1-2",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=54": {
+      "nll_correct": 5.8019,
+      "nll_wrong": 5.9667,
+      "nll_gap": 0.1648,
+      "retrieved": true,
+      "correct_passkey": "7-3-9-5-7",
+      "wrong_passkey": "5-0-6-4-5",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=55": {
+      "nll_correct": 5.8364,
+      "nll_wrong": 5.8352,
+      "nll_gap": -0.0013,
+      "retrieved": false,
+      "correct_passkey": "2-9-2-4-5",
+      "wrong_passkey": "1-0-9-5-8",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=56": {
+      "nll_correct": 5.657,
+      "nll_wrong": 5.7971,
+      "nll_gap": 0.1401,
+      "retrieved": true,
+      "correct_passkey": "5-6-1-5-1",
+      "wrong_passkey": "6-2-8-1-9",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=57": {
+      "nll_correct": 5.4453,
+      "nll_wrong": 5.6878,
+      "nll_gap": 0.2424,
+      "retrieved": true,
+      "correct_passkey": "6-1-0-0-0",
+      "wrong_passkey": "0-5-3-5-3",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=58": {
+      "nll_correct": 5.6502,
+      "nll_wrong": 5.7151,
+      "nll_gap": 0.0649,
+      "retrieved": true,
+      "correct_passkey": "5-1-4-9-3",
+      "wrong_passkey": "6-9-7-0-5",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=59": {
+      "nll_correct": 5.4352,
+      "nll_wrong": 5.8134,
+      "nll_gap": 0.3782,
+      "retrieved": true,
+      "correct_passkey": "1-1-7-0-1",
+      "wrong_passkey": "7-5-5-8-6",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=60": {
+      "nll_correct": 5.8032,
+      "nll_wrong": 5.4391,
+      "nll_gap": -0.3641,
+      "retrieved": false,
+      "correct_passkey": "7-6-8-1-2",
+      "wrong_passkey": "4-1-5-5-5",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=61": {
+      "nll_correct": 5.9689,
+      "nll_wrong": 5.7436,
+      "nll_gap": -0.2253,
+      "retrieved": false,
+      "correct_passkey": "7-4-8-9-1",
+      "wrong_passkey": "4-6-2-1-2",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=62": {
+      "nll_correct": 5.967,
+      "nll_wrong": 5.6281,
+      "nll_gap": -0.3389,
+      "retrieved": false,
+      "correct_passkey": "8-9-6-7-4",
+      "wrong_passkey": "2-4-1-1-1",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=63": {
+      "nll_correct": 5.8446,
+      "nll_wrong": 5.8814,
+      "nll_gap": 0.0368,
+      "retrieved": true,
+      "correct_passkey": "5-5-6-9-3",
+      "wrong_passkey": "8-0-5-2-4",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=64": {
+      "nll_correct": 5.6667,
+      "nll_wrong": 5.758,
+      "nll_gap": 0.0913,
+      "retrieved": true,
+      "correct_passkey": "6-1-5-8-9",
+      "wrong_passkey": "5-5-8-0-1",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=65": {
+      "nll_correct": 5.6062,
+      "nll_wrong": 5.5551,
+      "nll_gap": -0.0511,
+      "retrieved": false,
+      "correct_passkey": "7-5-5-5-7",
+      "wrong_passkey": "3-2-1-3-5",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=66": {
+      "nll_correct": 5.7485,
+      "nll_wrong": 5.9093,
+      "nll_gap": 0.1608,
+      "retrieved": true,
+      "correct_passkey": "4-9-5-3-6",
+      "wrong_passkey": "8-8-9-9-4",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=67": {
+      "nll_correct": 5.7948,
+      "nll_wrong": 5.7334,
+      "nll_gap": -0.0614,
+      "retrieved": false,
+      "correct_passkey": "2-3-0-3-4",
+      "wrong_passkey": "1-4-5-6-5",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=68": {
+      "nll_correct": 5.576,
+      "nll_wrong": 5.7446,
+      "nll_gap": 0.1686,
+      "retrieved": true,
+      "correct_passkey": "1-9-3-5-5",
+      "wrong_passkey": "9-1-9-9-8",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=69": {
+      "nll_correct": 5.7884,
+      "nll_wrong": 5.8823,
+      "nll_gap": 0.094,
+      "retrieved": true,
+      "correct_passkey": "6-4-5-9-6",
+      "wrong_passkey": "7-9-9-4-9",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=70": {
+      "nll_correct": 5.7433,
+      "nll_wrong": 5.9079,
+      "nll_gap": 0.1646,
+      "retrieved": true,
+      "correct_passkey": "2-9-5-2-0",
+      "wrong_passkey": "8-0-4-5-6",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=71": {
+      "nll_correct": 5.8072,
+      "nll_wrong": 5.914,
+      "nll_gap": 0.1069,
+      "retrieved": true,
+      "correct_passkey": "7-8-5-8-1",
+      "wrong_passkey": "8-1-8-7-2",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=72": {
+      "nll_correct": 5.4876,
+      "nll_wrong": 5.8928,
+      "nll_gap": 0.4051,
+      "retrieved": true,
+      "correct_passkey": "0-1-1-8-2",
+      "wrong_passkey": "3-6-8-6-9",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=73": {
+      "nll_correct": 5.79,
+      "nll_wrong": 5.8008,
+      "nll_gap": 0.0108,
+      "retrieved": true,
+      "correct_passkey": "8-9-1-9-5",
+      "wrong_passkey": "3-7-6-3-4",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=74": {
+      "nll_correct": 5.6217,
+      "nll_wrong": 6.0305,
+      "nll_gap": 0.4089,
+      "retrieved": true,
+      "correct_passkey": "0-1-4-6-2",
+      "wrong_passkey": "2-5-0-8-4",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=75": {
+      "nll_correct": 5.9592,
+      "nll_wrong": 5.6429,
+      "nll_gap": -0.3163,
+      "retrieved": false,
+      "correct_passkey": "1-9-8-8-6",
+      "wrong_passkey": "8-3-1-3-0",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=76": {
+      "nll_correct": 5.6893,
+      "nll_wrong": 5.8417,
+      "nll_gap": 0.1524,
+      "retrieved": true,
+      "correct_passkey": "7-8-6-1-8",
+      "wrong_passkey": "3-4-2-8-1",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=77": {
+      "nll_correct": 5.8895,
+      "nll_wrong": 5.8021,
+      "nll_gap": -0.0874,
+      "retrieved": false,
+      "correct_passkey": "3-7-8-2-7",
+      "wrong_passkey": "2-3-7-1-6",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=78": {
+      "nll_correct": 5.9095,
+      "nll_wrong": 5.9053,
+      "nll_gap": -0.0043,
+      "retrieved": false,
+      "correct_passkey": "9-5-9-8-7",
+      "wrong_passkey": "7-6-8-4-4",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=79": {
+      "nll_correct": 5.8325,
+      "nll_wrong": 5.9358,
+      "nll_gap": 0.1032,
+      "retrieved": true,
+      "correct_passkey": "3-6-6-4-1",
+      "wrong_passkey": "2-9-2-6-8",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=80": {
+      "nll_correct": 5.683,
+      "nll_wrong": 5.8581,
+      "nll_gap": 0.175,
+      "retrieved": true,
+      "correct_passkey": "8-1-8-2-6",
+      "wrong_passkey": "3-3-4-7-7",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=81": {
+      "nll_correct": 5.6855,
+      "nll_wrong": 5.7854,
+      "nll_gap": 0.0999,
+      "retrieved": true,
+      "correct_passkey": "8-1-9-3-8",
+      "wrong_passkey": "2-2-5-6-3",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=82": {
+      "nll_correct": 5.6062,
+      "nll_wrong": 5.7216,
+      "nll_gap": 0.1154,
+      "retrieved": true,
+      "correct_passkey": "7-5-3-5-3",
+      "wrong_passkey": "4-1-2-7-8",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=83": {
+      "nll_correct": 5.7846,
+      "nll_wrong": 5.8552,
+      "nll_gap": 0.0706,
+      "retrieved": true,
+      "correct_passkey": "7-5-9-1-1",
+      "wrong_passkey": "6-9-6-6-6",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=84": {
+      "nll_correct": 5.9694,
+      "nll_wrong": 5.3713,
+      "nll_gap": -0.5981,
+      "retrieved": false,
+      "correct_passkey": "7-5-8-7-3",
+      "wrong_passkey": "3-1-3-2-7",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=85": {
+      "nll_correct": 5.8426,
+      "nll_wrong": 5.619,
+      "nll_gap": -0.2236,
+      "retrieved": false,
+      "correct_passkey": "8-7-9-5-6",
+      "wrong_passkey": "7-1-7-0-7",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=86": {
+      "nll_correct": 5.8683,
+      "nll_wrong": 5.8412,
+      "nll_gap": -0.0271,
+      "retrieved": false,
+      "correct_passkey": "2-8-6-4-8",
+      "wrong_passkey": "5-2-7-3-1",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=87": {
+      "nll_correct": 5.8028,
+      "nll_wrong": 5.5559,
+      "nll_gap": -0.2469,
+      "retrieved": false,
+      "correct_passkey": "2-6-6-1-6",
+      "wrong_passkey": "9-1-3-6-2",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=88": {
+      "nll_correct": 5.7883,
+      "nll_wrong": 5.9211,
+      "nll_gap": 0.1328,
+      "retrieved": true,
+      "correct_passkey": "0-8-5-4-6",
+      "wrong_passkey": "9-3-7-7-1",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=89": {
+      "nll_correct": 5.6891,
+      "nll_wrong": 5.7884,
+      "nll_gap": 0.0992,
+      "retrieved": true,
+      "correct_passkey": "8-5-5-1-6",
+      "wrong_passkey": "1-4-9-5-3",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=90": {
+      "nll_correct": 5.7738,
+      "nll_wrong": 5.765,
+      "nll_gap": -0.0088,
+      "retrieved": false,
+      "correct_passkey": "9-8-0-2-3",
+      "wrong_passkey": "1-9-5-7-9",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=91": {
+      "nll_correct": 5.5978,
+      "nll_wrong": 5.4872,
+      "nll_gap": -0.1106,
+      "retrieved": false,
+      "correct_passkey": "6-1-9-5-6",
+      "wrong_passkey": "3-2-2-0-7",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=92": {
+      "nll_correct": 5.828,
+      "nll_wrong": 5.616,
+      "nll_gap": -0.212,
+      "retrieved": false,
+      "correct_passkey": "2-9-6-2-5",
+      "wrong_passkey": "7-5-5-5-6",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=93": {
+      "nll_correct": 5.8858,
+      "nll_wrong": 5.9345,
+      "nll_gap": 0.0487,
+      "retrieved": true,
+      "correct_passkey": "5-0-9-5-2",
+      "wrong_passkey": "8-4-7-9-9",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=94": {
+      "nll_correct": 5.6783,
+      "nll_wrong": 5.8727,
+      "nll_gap": 0.1944,
+      "retrieved": true,
+      "correct_passkey": "5-8-5-2-6",
+      "wrong_passkey": "6-4-4-9-5",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=95": {
+      "nll_correct": 5.9522,
+      "nll_wrong": 5.869,
+      "nll_gap": -0.0832,
+      "retrieved": false,
+      "correct_passkey": "0-3-0-6-7",
+      "wrong_passkey": "7-5-6-8-0",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=96": {
+      "nll_correct": 5.6405,
+      "nll_wrong": 5.597,
+      "nll_gap": -0.0435,
+      "retrieved": false,
+      "correct_passkey": "0-1-4-9-6",
+      "wrong_passkey": "3-4-5-0-5",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=97": {
+      "nll_correct": 5.7929,
+      "nll_wrong": 6.0821,
+      "nll_gap": 0.2892,
+      "retrieved": true,
+      "correct_passkey": "2-7-3-3-3",
+      "wrong_passkey": "5-6-0-7-0",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=98": {
+      "nll_correct": 5.9428,
+      "nll_wrong": 5.8892,
+      "nll_gap": -0.0535,
+      "retrieved": false,
+      "correct_passkey": "8-7-2-8-2",
+      "wrong_passkey": "2-4-9-3-3",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=99": {
+      "nll_correct": 5.9336,
+      "nll_wrong": 5.9329,
+      "nll_gap": -0.0006,
+      "retrieved": false,
+      "correct_passkey": "6-6-0-4-1",
+      "wrong_passkey": "2-8-6-6-5",
+      "ar_generated": "\n-T-based learning and learning to help",
+      "ar_exact_match": false
+    }
+  },
+  "summary": {
+    "L=1024_d=0.5": {
+      "mean_nll_gap": 0.2856,
+      "retrieval_rate": 0.82,
+      "ar_exact_match_rate": 0.0,
+      "trials": 100
+    },
+    "L=2048_d=0.5": {
+      "mean_nll_gap": 0.1723,
+      "retrieval_rate": 0.68,
+      "ar_exact_match_rate": 0.0,
+      "trials": 100
+    },
+    "L=4096_d=0.5": {
+      "mean_nll_gap": 0.0681,
+      "retrieval_rate": 0.6,
+      "ar_exact_match_rate": 0.0,
+      "trials": 100
+    },
+    "L=8192_d=0.5": {
+      "mean_nll_gap": 0.0292,
+      "retrieval_rate": 0.54,
+      "ar_exact_match_rate": 0.0,
+      "trials": 100
+    }
+  },
+  "global": {
+    "total_trials": 400,
+    "mean_nll_gap": 0.1388,
+    "retrieval_rate": 0.66,
+    "ar_exact_match_rate": 0.0
+  }
+}
