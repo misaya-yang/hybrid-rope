@@ -576,3 +576,61 @@ EVAL_LENGTHS = [512, 1024, 2048, 4096, 8192]
 3. **τ=2.83 可以用 math.sqrt(8) 精确计算**: `tau = 64.0 / math.sqrt(512)`
 4. **如果 D1 的最优 τ 不是 4.0 但在 3.5-4.5 之间**，仍然算 scaling law 成立（±15% 误差在 3 个已有数据点的范围内）
 5. **report 中画 τ* vs L 的 log-log 图**：如果 scaling law 成立，log(τ*) = log(64) - 0.5·log(L) 应该是一条斜率 -0.5 的直线
+
+---
+
+## 实验 8E: From-Scratch 4K τ=1.0 验证（8D 完成后自动执行）
+
+**目的**: Phase 8C 用 τ=2.0，passkey 输 Geo 3pp。Scaling law 预测 τ*(4096)=1.0。本实验验证用正确的 τ 是否能追平或反超 Geo passkey。
+**优先级**: ★★★（Passkey 是论文生死线）
+**预计时间**: ~25 min（1 个 run）+ ~25 min（Hybrid，如果时间够）
+**前置**: 8D 完成后立即执行
+
+### 设计
+
+复用 8C 完全相同的配置，只改 τ：
+
+```python
+MODEL_CONFIG = dict(hidden=1024, layers=24, heads=16, head_dim=64)  # 350M
+TRAIN_SEQ_LEN = 4096
+TRAIN_TOKENS = 50_000_000  # 50M tokens
+ROPE_BASE = 500_000
+BATCH_SIZE = 2
+LR = 6e-4  # from-scratch lr
+DATASET = "HuggingFaceFW/fineweb-edu-score-2"
+```
+
+| Run ID | Method | τ | 目录 | 预计时间 |
+|--------|--------|---|------|---------|
+| E1 | EVQ τ=1.0 | 1.0 | `from_scratch_4k/evq1.0_4k/` | ~25 min |
+| E2 | Hybrid τ=1.0 | 1.0 (n_geometric_high=8) | `from_scratch_4k/hybrid1.0_4k/` | ~25 min |
+
+### 评估
+
+和 8C 完全一致：
+
+```python
+EVAL_LENGTHS = [512, 1024, 2048, 4096, 8192, 16384]
+# Passkey 也和 C1/C2 相同设置
+PASSKEY_LENGTHS = [1024, 2048, 4096, 8192]
+TRIALS_PER_LENGTH = 100
+```
+
+### 关键对比
+
+| Run | Method | τ | 期望 PPL@16K | 期望 Passkey |
+|-----|--------|---|-------------|-------------|
+| C1 | Geo (已有) | — | 175.4 | 69% |
+| C2 | EVQ τ=2.0 (已有) | 2.0 | 164.4 | 66% |
+| **E1** | **EVQ τ=1.0** | **1.0** | **< 175?** | **≥ 69%?** |
+| E2 | Hybrid τ=1.0 | 1.0 | — | bonus |
+
+**成功标准**: E1 passkey ≥ C1 Geo passkey (69%) → 证明 τ=1.0 是正确选择，EVQ passkey 问题完全解决
+
+### 注意事项
+
+1. **从零训练**，不是 extension，不需要 pretrain checkpoint
+2. **和 C1/C2 用完全相同的代码和 eval 设置**，只改频率生成函数的 τ 参数
+3. **E2 (Hybrid) 优先级低于 E1**：如果时间不够只跑 E1
+4. 结果追加到 `results_phase8.json`
+5. **如果 8D 的实测 τ*(4096) ≠ 1.0**：用 8D 的实测值替换 E1 的 τ

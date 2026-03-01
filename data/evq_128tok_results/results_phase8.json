@@ -887,6 +887,322 @@
           }
         },
         "train_time_sec": 1551.2
+      },
+      "evq1.0_4k": {
+        "method": "E1 EVQ \u03c4=1.0 (from scratch)",
+        "ppl": {
+          "512": 93.135,
+          "1024": 89.472,
+          "2048": 92.761,
+          "4096": 92.792,
+          "8192": 120.296,
+          "16384": 180.081
+        },
+        "passkey_global": {
+          "total_trials": 400,
+          "mean_nll_gap": 0.2521,
+          "retrieval_rate": 0.72,
+          "ar_exact_match_rate": 0.0
+        },
+        "passkey_summary": {
+          "L=1024_d=0.5": {
+            "mean_nll_gap": 0.4622,
+            "retrieval_rate": 0.88,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=2048_d=0.5": {
+            "mean_nll_gap": 0.3905,
+            "retrieval_rate": 0.83,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=4096_d=0.5": {
+            "mean_nll_gap": 0.1001,
+            "retrieval_rate": 0.57,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=8192_d=0.5": {
+            "mean_nll_gap": 0.0557,
+            "retrieval_rate": 0.6,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          }
+        },
+        "train_time_sec": 1551.0
+      },
+      "hybrid1.0_4k": {
+        "method": "E2 Hybrid EVQ \u03c4=1.0 (from scratch)",
+        "ppl": {
+          "512": 92.151,
+          "1024": 90.601,
+          "2048": 91.885,
+          "4096": 92.995,
+          "8192": 117.272,
+          "16384": 172.609
+        },
+        "passkey_global": {
+          "total_trials": 400,
+          "mean_nll_gap": 0.2195,
+          "retrieval_rate": 0.705,
+          "ar_exact_match_rate": 0.0
+        },
+        "passkey_summary": {
+          "L=1024_d=0.5": {
+            "mean_nll_gap": 0.5024,
+            "retrieval_rate": 0.93,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=2048_d=0.5": {
+            "mean_nll_gap": 0.3032,
+            "retrieval_rate": 0.82,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=4096_d=0.5": {
+            "mean_nll_gap": 0.0039,
+            "retrieval_rate": 0.5,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=8192_d=0.5": {
+            "mean_nll_gap": 0.0687,
+            "retrieval_rate": 0.57,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          }
+        },
+        "train_time_sec": 1550.8
+      }
+    },
+    "8D_scaling_law_verification": {
+      "purpose": "Verify tau*(L) = 64/sqrt(L) conjecture",
+      "model": "125M (head_dim=64)",
+      "train_tokens": "50M",
+      "D1_L256": {
+        "predicted_tau_star": 4.0,
+        "observed_tau_star": 5.0,
+        "results": {
+          "tau_0.0": {
+            "ppl_256": 181.48,
+            "ppl_512": 137.406,
+            "ppl_1024": 239.216,
+            "ppl_2048": 461.024,
+            "ppl_4096": 745.185,
+            "ppl_8192": 1284.362
+          },
+          "tau_2.0": {
+            "ppl_256": 185.439,
+            "ppl_512": 125.945,
+            "ppl_1024": 220.305,
+            "ppl_2048": 389.176,
+            "ppl_4096": 569.628,
+            "ppl_8192": 891.148
+          },
+          "tau_3.0": {
+            "ppl_256": 185.341,
+            "ppl_512": 117.118,
+            "ppl_1024": 185.598,
+            "ppl_2048": 305.418,
+            "ppl_4096": 419.398,
+            "ppl_8192": 666.581
+          },
+          "tau_4.0": {
+            "ppl_256": 184.967,
+            "ppl_512": 117.155,
+            "ppl_1024": 185.383,
+            "ppl_2048": 315.235,
+            "ppl_4096": 496.386,
+            "ppl_8192": 776.395
+          },
+          "tau_5.0": {
+            "ppl_256": 188.525,
+            "ppl_512": 110.419,
+            "ppl_1024": 166.551,
+            "ppl_2048": 271.049,
+            "ppl_4096": 393.534,
+            "ppl_8192": 664.227
+          }
+        }
+      },
+      "D2_L512": {
+        "predicted_tau_star": 2.83,
+        "observed_tau_star": 4.0,
+        "results": {
+          "tau_0.0": {
+            "ppl_512": 79.713,
+            "ppl_1024": 120.731,
+            "ppl_2048": 228.544,
+            "ppl_4096": 350.218,
+            "ppl_8192": 472.889
+          },
+          "tau_1.5": {
+            "ppl_512": 81.238,
+            "ppl_1024": 116.874,
+            "ppl_2048": 221.616,
+            "ppl_4096": 337.581,
+            "ppl_8192": 458.653
+          },
+          "tau_2.0": {
+            "ppl_512": 80.966,
+            "ppl_1024": 108.486,
+            "ppl_2048": 209.714,
+            "ppl_4096": 304.942,
+            "ppl_8192": 409.783
+          },
+          "tau_2.83": {
+            "ppl_512": 83.287,
+            "ppl_1024": 107.777,
+            "ppl_2048": 197.161,
+            "ppl_4096": 314.135,
+            "ppl_8192": 451.927
+          },
+          "tau_3.5": {
+            "ppl_512": 83.921,
+            "ppl_1024": 107.764,
+            "ppl_2048": 182.961,
+            "ppl_4096": 285.896,
+            "ppl_8192": 388.976
+          },
+          "tau_4.0": {
+            "ppl_512": 84.037,
+            "ppl_1024": 104.991,
+            "ppl_2048": 167.71,
+            "ppl_4096": 245.009,
+            "ppl_8192": 336.314
+          }
+        }
+      },
+      "scaling_law_fit": {
+        "data_points": [
+          {
+            "L": 128,
+            "observed_tau_star": 5.0,
+            "predicted": 5.66
+          },
+          {
+            "L": 1024,
+            "observed_tau_star": 2.0,
+            "predicted": 2.0
+          },
+          {
+            "L": 2048,
+            "observed_tau_star": 1.5,
+            "predicted": 1.41
+          },
+          {
+            "L": 256,
+            "observed_tau_star": 5.0,
+            "predicted": 4.0
+          },
+          {
+            "L": 512,
+            "observed_tau_star": 4.0,
+            "predicted": 2.83
+          }
+        ],
+        "free_fit": {
+          "slope": 56.34,
+          "intercept": 0.701,
+          "R2": 0.8059
+        },
+        "forced_origin_fit": {
+          "C": 67.84,
+          "R2": 0.7647,
+          "note": "Predicted C=64 (d_head), fitted C=67.84"
+        }
+      }
+    },
+    "8E_extra_from_scratch_4k": {
+      "evq1.0_4k": {
+        "method": "E1 EVQ \u03c4=1.0 (from scratch)",
+        "ppl": {
+          "512": 93.135,
+          "1024": 89.472,
+          "2048": 92.761,
+          "4096": 92.792,
+          "8192": 120.296,
+          "16384": 180.081
+        },
+        "passkey_global": {
+          "total_trials": 400,
+          "mean_nll_gap": 0.2521,
+          "retrieval_rate": 0.72,
+          "ar_exact_match_rate": 0.0
+        },
+        "passkey_summary": {
+          "L=1024_d=0.5": {
+            "mean_nll_gap": 0.4622,
+            "retrieval_rate": 0.88,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=2048_d=0.5": {
+            "mean_nll_gap": 0.3905,
+            "retrieval_rate": 0.83,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=4096_d=0.5": {
+            "mean_nll_gap": 0.1001,
+            "retrieval_rate": 0.57,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=8192_d=0.5": {
+            "mean_nll_gap": 0.0557,
+            "retrieval_rate": 0.6,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          }
+        },
+        "train_time_sec": 1551.0
+      },
+      "hybrid1.0_4k": {
+        "method": "E2 Hybrid EVQ \u03c4=1.0 (from scratch)",
+        "ppl": {
+          "512": 92.151,
+          "1024": 90.601,
+          "2048": 91.885,
+          "4096": 92.995,
+          "8192": 117.272,
+          "16384": 172.609
+        },
+        "passkey_global": {
+          "total_trials": 400,
+          "mean_nll_gap": 0.2195,
+          "retrieval_rate": 0.705,
+          "ar_exact_match_rate": 0.0
+        },
+        "passkey_summary": {
+          "L=1024_d=0.5": {
+            "mean_nll_gap": 0.5024,
+            "retrieval_rate": 0.93,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=2048_d=0.5": {
+            "mean_nll_gap": 0.3032,
+            "retrieval_rate": 0.82,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=4096_d=0.5": {
+            "mean_nll_gap": 0.0039,
+            "retrieval_rate": 0.5,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=8192_d=0.5": {
+            "mean_nll_gap": 0.0687,
+            "retrieval_rate": 0.57,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          }
+        },
+        "train_time_sec": 1550.8
       }
     }
   }
