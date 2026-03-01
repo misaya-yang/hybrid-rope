@@ -93,7 +93,7 @@ PRETRAIN_EVAL_LENGTHS = [512, 1024, 2048, 4096, 8192, 16384, 32768]
 PRETRAIN_CKPT = "/path/to/phase9/pretrain_4k/checkpoint.pt"  # 阶段 A 产出
 
 TRAIN_SEQ_LEN = 32768  # 32K，8x expansion from 4K
-TRAIN_TOKENS = 50_000_000  # 50M tokens（预训练的 10%）
+TRAIN_TOKENS = 100_000_000  # 100M tokens（预训练的 20%）— Phase 8B 证明续训量对 passkey 恢复至关重要
 BATCH_SIZE = 1  # 32K 需要 batch=1
 GRADIENT_ACCUMULATION = 4  # 有效 batch=4
 LR = 3e-5  # 续训 lr
