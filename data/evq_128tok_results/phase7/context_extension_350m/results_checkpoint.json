@@ -1,0 +1,211 @@
+{
+  "pretrain": {
+    "ppl": {
+      "512": 80.278,
+      "1024": 100.149,
+      "2048": 153.489,
+      "4096": 216.913,
+      "8192": 301.504
+    },
+    "train_time_sec": 1566.4
+  },
+  "continue": {
+    "extend_geo": {
+      "method": "Geometric (unchanged)",
+      "ppl": {
+        "512": 86.731,
+        "1024": 86.51,
+        "2048": 87.589,
+        "4096": 93.17,
+        "8192": 97.959
+      },
+      "train_time_sec": 165.6
+    },
+    "extend_pi": {
+      "method": "PI (/4x)",
+      "ppl": {
+        "512": 88.135,
+        "1024": 87.921,
+        "2048": 87.953,
+        "4096": 156.076,
+        "8192": 246.112
+      },
+      "train_time_sec": 165.6
+    },
+    "extend_yarn": {
+      "method": "YaRN (s=4)",
+      "ppl": {
+        "512": 86.71,
+        "1024": 86.364,
+        "2048": 86.625,
+        "4096": 116.12,
+        "8192": 174.541
+      },
+      "train_time_sec": 165.6
+    },
+    "extend_evq_1.5": {
+      "method": "EVQ tau=1.5",
+      "ppl": {
+        "512": 87.385,
+        "1024": 88.105,
+        "2048": 88.851,
+        "4096": 94.943,
+        "8192": 99.356
+      },
+      "train_time_sec": 165.6
+    },
+    "extend_evq_2.0": {
+      "method": "EVQ tau=2.0",
+      "ppl": {
+        "512": 88.292,
+        "1024": 88.856,
+        "2048": 89.233,
+        "4096": 95.922,
+        "8192": 99.129
+      },
+      "train_time_sec": 165.6
+    }
+  },
+  "passkey": {
+    "extend_geo": {
+      "global": {
+        "total_trials": 150,
+        "mean_nll_gap": 0.2103,
+        "retrieval_rate": 0.7333,
+        "ar_exact_match_rate": 0.0
+      },
+      "summary": {
+        "L=1024_d=0.5": {
+          "mean_nll_gap": 0.3024,
+          "retrieval_rate": 0.9,
+          "ar_exact_match_rate": 0.0,
+          "trials": 50
+        },
+        "L=2048_d=0.5": {
+          "mean_nll_gap": 0.2575,
+          "retrieval_rate": 0.78,
+          "ar_exact_match_rate": 0.0,
+          "trials": 50
+        },
+        "L=4096_d=0.5": {
+          "mean_nll_gap": 0.0711,
+          "retrieval_rate": 0.52,
+          "ar_exact_match_rate": 0.0,
+          "trials": 50
+        }
+      }
+    },
+    "extend_pi": {
+      "global": {
+        "total_trials": 150,
+        "mean_nll_gap": 0.1592,
+        "retrieval_rate": 0.6533,
+        "ar_exact_match_rate": 0.0
+      },
+      "summary": {
+        "L=1024_d=0.5": {
+          "mean_nll_gap": 0.2716,
+          "retrieval_rate": 0.88,
+          "ar_exact_match_rate": 0.0,
+          "trials": 50
+        },
+        "L=2048_d=0.5": {
+          "mean_nll_gap": 0.2794,
+          "retrieval_rate": 0.74,
+          "ar_exact_match_rate": 0.0,
+          "trials": 50
+        },
+        "L=4096_d=0.5": {
+          "mean_nll_gap": -0.0734,
+          "retrieval_rate": 0.34,
+          "ar_exact_match_rate": 0.0,
+          "trials": 50
+        }
+      }
+    },
+    "extend_yarn": {
+      "global": {
+        "total_trials": 150,
+        "mean_nll_gap": 0.2351,
+        "retrieval_rate": 0.72,
+        "ar_exact_match_rate": 0.0
+      },
+      "summary": {
+        "L=1024_d=0.5": {
+          "mean_nll_gap": 0.3711,
+          "retrieval_rate": 0.88,
+          "ar_exact_match_rate": 0.0,
+          "trials": 50
+        },
+        "L=2048_d=0.5": {
+          "mean_nll_gap": 0.3461,
+          "retrieval_rate": 0.8,
+          "ar_exact_match_rate": 0.0,
+          "trials": 50
+        },
+        "L=4096_d=0.5": {
+          "mean_nll_gap": -0.0118,
+          "retrieval_rate": 0.48,
+          "ar_exact_match_rate": 0.0,
+          "trials": 50
+        }
+      }
+    },
+    "extend_evq_1.5": {
+      "global": {
+        "total_trials": 150,
+        "mean_nll_gap": 0.1195,
+        "retrieval_rate": 0.6533,
+        "ar_exact_match_rate": 0.0
+      },
+      "summary": {
+        "L=1024_d=0.5": {
+          "mean_nll_gap": 0.1767,
+          "retrieval_rate": 0.78,
+          "ar_exact_match_rate": 0.0,
+          "trials": 50
+        },
+        "L=2048_d=0.5": {
+          "mean_nll_gap": 0.1866,
+          "retrieval_rate": 0.7,
+          "ar_exact_match_rate": 0.0,
+          "trials": 50
+        },
+        "L=4096_d=0.5": {
+          "mean_nll_gap": -0.0049,
+          "retrieval_rate": 0.48,
+          "ar_exact_match_rate": 0.0,
+          "trials": 50
+        }
+      }
+    },
+    "extend_evq_2.0": {
+      "global": {
+        "total_trials": 150,
+        "mean_nll_gap": 0.1086,
+        "retrieval_rate": 0.6467,
+        "ar_exact_match_rate": 0.0
+      },
+      "summary": {
+        "L=1024_d=0.5": {
+          "mean_nll_gap": 0.1896,
+          "retrieval_rate": 0.82,
+          "ar_exact_match_rate": 0.0,
+          "trials": 50
+        },
+        "L=2048_d=0.5": {
+          "mean_nll_gap": 0.1901,
+          "retrieval_rate": 0.72,
+          "ar_exact_match_rate": 0.0,
+          "trials": 50
+        },
+        "L=4096_d=0.5": {
+          "mean_nll_gap": -0.0539,
+          "retrieval_rate": 0.4,
+          "ar_exact_match_rate": 0.0,
+          "trials": 50
+        }
+      }
+    }
+  }
+}

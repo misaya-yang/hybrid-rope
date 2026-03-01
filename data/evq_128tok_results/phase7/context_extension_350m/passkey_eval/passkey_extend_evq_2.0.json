@@ -1,0 +1,1530 @@
+{
+  "details": {
+    "L=1024_d=0.5_t=0": {
+      "nll_correct": 4.4286,
+      "nll_wrong": 4.7769,
+      "nll_gap": 0.3483,
+      "retrieved": true,
+      "correct_passkey": "0-8-7-1-4",
+      "wrong_passkey": "5-0-4-7-9",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=1": {
+      "nll_correct": 4.3309,
+      "nll_wrong": 4.4453,
+      "nll_gap": 0.1144,
+      "retrieved": true,
+      "correct_passkey": "0-7-5-5-3",
+      "wrong_passkey": "7-2-6-4-6",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=2": {
+      "nll_correct": 4.3089,
+      "nll_wrong": 4.5888,
+      "nll_gap": 0.2799,
+      "retrieved": true,
+      "correct_passkey": "0-8-0-3-8",
+      "wrong_passkey": "9-2-5-6-9",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=3": {
+      "nll_correct": 4.3737,
+      "nll_wrong": 4.1892,
+      "nll_gap": -0.1845,
+      "retrieved": false,
+      "correct_passkey": "8-3-8-7-3",
+      "wrong_passkey": "1-5-6-6-1",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=4": {
+      "nll_correct": 4.3416,
+      "nll_wrong": 4.4741,
+      "nll_gap": 0.1324,
+      "retrieved": true,
+      "correct_passkey": "1-0-8-3-4",
+      "wrong_passkey": "7-8-2-5-3",
+      "ar_generated": "\n- The United States has been the world\u2019",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=5": {
+      "nll_correct": 4.4552,
+      "nll_wrong": 4.2603,
+      "nll_gap": -0.195,
+      "retrieved": false,
+      "correct_passkey": "3-9-2-0-1",
+      "wrong_passkey": "4-7-3-1-3",
+      "ar_generated": "\n- The United States has been the world\u2019",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=6": {
+      "nll_correct": 4.2555,
+      "nll_wrong": 4.8049,
+      "nll_gap": 0.5494,
+      "retrieved": true,
+      "correct_passkey": "6-8-4-6-3",
+      "wrong_passkey": "7-1-7-0-4",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=7": {
+      "nll_correct": 4.3262,
+      "nll_wrong": 4.3259,
+      "nll_gap": -0.0002,
+      "retrieved": false,
+      "correct_passkey": "2-9-3-3-7",
+      "wrong_passkey": "1-8-2-8-6",
+      "ar_generated": "\n- The United States has been the world\u2019",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=8": {
+      "nll_correct": 4.294,
+      "nll_wrong": 4.4553,
+      "nll_gap": 0.1613,
+      "retrieved": true,
+      "correct_passkey": "9-6-3-5-1",
+      "wrong_passkey": "4-2-1-0-5",
+      "ar_generated": "\n- The United States has been the world\u2019",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=9": {
+      "nll_correct": 4.1178,
+      "nll_wrong": 4.6446,
+      "nll_gap": 0.5268,
+      "retrieved": true,
+      "correct_passkey": "3-4-0-4-2",
+      "wrong_passkey": "9-8-6-2-8",
+      "ar_generated": "\n- The United States has been the world\u2019",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=10": {
+      "nll_correct": 3.9256,
+      "nll_wrong": 4.394,
+      "nll_gap": 0.4684,
+      "retrieved": true,
+      "correct_passkey": "1-2-4-9-8",
+      "wrong_passkey": "3-9-3-4-5",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=11": {
+      "nll_correct": 4.2877,
+      "nll_wrong": 4.3859,
+      "nll_gap": 0.0982,
+      "retrieved": true,
+      "correct_passkey": "1-9-8-3-5",
+      "wrong_passkey": "6-4-7-4-8",
+      "ar_generated": "\n- The United States has been the world\u2019",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=12": {
+      "nll_correct": 4.057,
+      "nll_wrong": 4.4236,
+      "nll_gap": 0.3666,
+      "retrieved": true,
+      "correct_passkey": "4-5-5-6-4",
+      "wrong_passkey": "3-9-9-8-8",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=13": {
+      "nll_correct": 3.9138,
+      "nll_wrong": 4.6387,
+      "nll_gap": 0.7249,
+      "retrieved": true,
+      "correct_passkey": "2-3-4-5-9",
+      "wrong_passkey": "1-9-2-0-1",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=14": {
+      "nll_correct": 4.197,
+      "nll_wrong": 4.6797,
+      "nll_gap": 0.4827,
+      "retrieved": true,
+      "correct_passkey": "8-4-2-4-7",
+      "wrong_passkey": "7-0-7-1-0",
+      "ar_generated": "\n- The United States has been the world\u2019",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=15": {
+      "nll_correct": 4.2434,
+      "nll_wrong": 4.4802,
+      "nll_gap": 0.2369,
+      "retrieved": true,
+      "correct_passkey": "3-5-9-8-6",
+      "wrong_passkey": "8-8-6-9-5",
+      "ar_generated": "\n- The United States has been the world\u2019",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=16": {
+      "nll_correct": 4.235,
+      "nll_wrong": 4.3217,
+      "nll_gap": 0.0866,
+      "retrieved": true,
+      "correct_passkey": "7-6-5-3-5",
+      "wrong_passkey": "1-1-2-0-6",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=17": {
+      "nll_correct": 4.5147,
+      "nll_wrong": 4.5348,
+      "nll_gap": 0.0201,
+      "retrieved": true,
+      "correct_passkey": "2-7-8-1-9",
+      "wrong_passkey": "5-6-7-6-4",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=18": {
+      "nll_correct": 4.3317,
+      "nll_wrong": 4.4723,
+      "nll_gap": 0.1406,
+      "retrieved": true,
+      "correct_passkey": "7-4-7-1-3",
+      "wrong_passkey": "4-1-9-7-7",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=19": {
+      "nll_correct": 4.4026,
+      "nll_wrong": 4.751,
+      "nll_gap": 0.3484,
+      "retrieved": true,
+      "correct_passkey": "4-9-1-5-0",
+      "wrong_passkey": "0-7-2-7-4",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=20": {
+      "nll_correct": 4.4693,
+      "nll_wrong": 4.3062,
+      "nll_gap": -0.1631,
+      "retrieved": false,
+      "correct_passkey": "6-5-0-7-7",
+      "wrong_passkey": "3-3-8-6-1",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=21": {
+      "nll_correct": 4.1954,
+      "nll_wrong": 4.4351,
+      "nll_gap": 0.2397,
+      "retrieved": true,
+      "correct_passkey": "9-1-1-4-1",
+      "wrong_passkey": "5-5-8-7-0",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=22": {
+      "nll_correct": 4.3691,
+      "nll_wrong": 4.5748,
+      "nll_gap": 0.2057,
+      "retrieved": true,
+      "correct_passkey": "3-7-1-8-0",
+      "wrong_passkey": "5-2-7-2-6",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=23": {
+      "nll_correct": 4.32,
+      "nll_wrong": 4.379,
+      "nll_gap": 0.059,
+      "retrieved": true,
+      "correct_passkey": "8-8-4-6-2",
+      "wrong_passkey": "5-5-6-2-9",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=24": {
+      "nll_correct": 4.3531,
+      "nll_wrong": 4.54,
+      "nll_gap": 0.1869,
+      "retrieved": true,
+      "correct_passkey": "0-0-6-1-9",
+      "wrong_passkey": "3-7-7-7-5",
+      "ar_generated": "\n- The United States has been the world\u2019",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=25": {
+      "nll_correct": 4.3833,
+      "nll_wrong": 4.2375,
+      "nll_gap": -0.1458,
+      "retrieved": false,
+      "correct_passkey": "5-5-1-8-1",
+      "wrong_passkey": "4-4-4-2-7",
+      "ar_generated": "\n- The United States has been the world\u2019",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=26": {
+      "nll_correct": 4.3763,
+      "nll_wrong": 4.3312,
+      "nll_gap": -0.0451,
+      "retrieved": false,
+      "correct_passkey": "3-2-8-5-0",
+      "wrong_passkey": "1-6-6-4-7",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=27": {
+      "nll_correct": 4.3895,
+      "nll_wrong": 4.5996,
+      "nll_gap": 0.21,
+      "retrieved": true,
+      "correct_passkey": "0-6-1-6-7",
+      "wrong_passkey": "4-0-5-9-8",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=28": {
+      "nll_correct": 4.3765,
+      "nll_wrong": 4.512,
+      "nll_gap": 0.1354,
+      "retrieved": true,
+      "correct_passkey": "5-5-1-6-6",
+      "wrong_passkey": "7-8-4-2-8",
+      "ar_generated": "\n- The United States has been the world\u2019",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=29": {
+      "nll_correct": 4.4191,
+      "nll_wrong": 4.4762,
+      "nll_gap": 0.0571,
+      "retrieved": true,
+      "correct_passkey": "9-7-8-8-5",
+      "wrong_passkey": "6-8-6-2-9",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=30": {
+      "nll_correct": 4.4193,
+      "nll_wrong": 4.52,
+      "nll_gap": 0.1007,
+      "retrieved": true,
+      "correct_passkey": "7-6-6-2-3",
+      "wrong_passkey": "8-9-2-5-9",
+      "ar_generated": "\n- The United States has been the world\u2019",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=31": {
+      "nll_correct": 4.4338,
+      "nll_wrong": 4.5085,
+      "nll_gap": 0.0747,
+      "retrieved": true,
+      "correct_passkey": "4-9-7-6-0",
+      "wrong_passkey": "7-3-8-2-4",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=32": {
+      "nll_correct": 4.3516,
+      "nll_wrong": 4.6146,
+      "nll_gap": 0.263,
+      "retrieved": true,
+      "correct_passkey": "5-4-0-6-5",
+      "wrong_passkey": "8-7-5-1-7",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=33": {
+      "nll_correct": 4.4585,
+      "nll_wrong": 4.4388,
+      "nll_gap": -0.0196,
+      "retrieved": false,
+      "correct_passkey": "9-9-9-9-6",
+      "wrong_passkey": "7-6-3-7-8",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=34": {
+      "nll_correct": 4.2913,
+      "nll_wrong": 4.3455,
+      "nll_gap": 0.0543,
+      "retrieved": true,
+      "correct_passkey": "4-7-3-1-9",
+      "wrong_passkey": "7-5-6-6-1",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=35": {
+      "nll_correct": 4.2734,
+      "nll_wrong": 4.5068,
+      "nll_gap": 0.2334,
+      "retrieved": true,
+      "correct_passkey": "0-1-6-8-0",
+      "wrong_passkey": "5-7-8-6-5",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=36": {
+      "nll_correct": 3.9467,
+      "nll_wrong": 4.7723,
+      "nll_gap": 0.8256,
+      "retrieved": true,
+      "correct_passkey": "3-3-1-3-2",
+      "wrong_passkey": "0-8-0-4-8",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=37": {
+      "nll_correct": 4.4568,
+      "nll_wrong": 4.4531,
+      "nll_gap": -0.0037,
+      "retrieved": false,
+      "correct_passkey": "4-0-7-2-9",
+      "wrong_passkey": "8-2-6-9-4",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=38": {
+      "nll_correct": 4.2125,
+      "nll_wrong": 4.3797,
+      "nll_gap": 0.1672,
+      "retrieved": true,
+      "correct_passkey": "8-1-4-1-7",
+      "wrong_passkey": "3-8-1-9-5",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=39": {
+      "nll_correct": 4.2764,
+      "nll_wrong": 4.2925,
+      "nll_gap": 0.0161,
+      "retrieved": true,
+      "correct_passkey": "2-1-4-7-2",
+      "wrong_passkey": "4-2-1-8-8",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=40": {
+      "nll_correct": 4.0174,
+      "nll_wrong": 4.7451,
+      "nll_gap": 0.7278,
+      "retrieved": true,
+      "correct_passkey": "4-2-3-6-9",
+      "wrong_passkey": "0-0-0-7-6",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=41": {
+      "nll_correct": 4.4704,
+      "nll_wrong": 4.5396,
+      "nll_gap": 0.0692,
+      "retrieved": true,
+      "correct_passkey": "6-6-7-2-4",
+      "wrong_passkey": "8-7-2-1-3",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=42": {
+      "nll_correct": 3.8044,
+      "nll_wrong": 4.2744,
+      "nll_gap": 0.47,
+      "retrieved": true,
+      "correct_passkey": "4-3-3-4-5",
+      "wrong_passkey": "6-8-4-9-7",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=43": {
+      "nll_correct": 4.4305,
+      "nll_wrong": 4.8801,
+      "nll_gap": 0.4496,
+      "retrieved": true,
+      "correct_passkey": "2-6-9-6-9",
+      "wrong_passkey": "7-0-2-0-7",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=44": {
+      "nll_correct": 4.2506,
+      "nll_wrong": 4.3039,
+      "nll_gap": 0.0533,
+      "retrieved": true,
+      "correct_passkey": "3-8-1-3-7",
+      "wrong_passkey": "1-6-5-8-2",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=45": {
+      "nll_correct": 4.4197,
+      "nll_wrong": 4.5957,
+      "nll_gap": 0.176,
+      "retrieved": true,
+      "correct_passkey": "7-0-5-8-4",
+      "wrong_passkey": "0-2-0-7-1",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=46": {
+      "nll_correct": 4.3284,
+      "nll_wrong": 4.3506,
+      "nll_gap": 0.0222,
+      "retrieved": true,
+      "correct_passkey": "3-7-1-4-1",
+      "wrong_passkey": "7-3-8-1-7",
+      "ar_generated": "\n- The United States has been the world\u2019",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=47": {
+      "nll_correct": 4.3968,
+      "nll_wrong": 4.4032,
+      "nll_gap": 0.0064,
+      "retrieved": true,
+      "correct_passkey": "9-8-9-8-5",
+      "wrong_passkey": "4-9-4-5-0",
+      "ar_generated": "\n- The United Nations Conference on the Rights of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=48": {
+      "nll_correct": 4.4213,
+      "nll_wrong": 4.4132,
+      "nll_gap": -0.0081,
+      "retrieved": false,
+      "correct_passkey": "7-8-1-7-4",
+      "wrong_passkey": "9-4-3-8-7",
+      "ar_generated": "\n- The United States has been the world\u2019",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=49": {
+      "nll_correct": 4.3751,
+      "nll_wrong": 4.7312,
+      "nll_gap": 0.3561,
+      "retrieved": true,
+      "correct_passkey": "0-2-9-1-9",
+      "wrong_passkey": "6-0-2-2-6",
+      "ar_generated": "\n- The United States has been the world\u2019",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=0": {
+      "nll_correct": 5.01,
+      "nll_wrong": 5.393,
+      "nll_gap": 0.383,
+      "retrieved": true,
+      "correct_passkey": "5-3-1-0-1",
+      "wrong_passkey": "7-0-0-8-9",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=1": {
+      "nll_correct": 4.7866,
+      "nll_wrong": 4.9553,
+      "nll_gap": 0.1688,
+      "retrieved": true,
+      "correct_passkey": "4-5-5-1-2",
+      "wrong_passkey": "9-4-4-9-1",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=2": {
+      "nll_correct": 5.6723,
+      "nll_wrong": 5.0121,
+      "nll_gap": -0.6602,
+      "retrieved": false,
+      "correct_passkey": "2-8-0-7-9",
+      "wrong_passkey": "6-5-9-3-8",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=3": {
+      "nll_correct": 5.2424,
+      "nll_wrong": 5.4603,
+      "nll_gap": 0.2178,
+      "retrieved": true,
+      "correct_passkey": "0-7-0-5-2",
+      "wrong_passkey": "9-3-6-0-5",
+      "ar_generated": " the act or power of the mind.\"\n4",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=4": {
+      "nll_correct": 5.0743,
+      "nll_wrong": 5.5032,
+      "nll_gap": 0.429,
+      "retrieved": true,
+      "correct_passkey": "9-1-2-8-7",
+      "wrong_passkey": "7-9-0-1-2",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=5": {
+      "nll_correct": 5.536,
+      "nll_wrong": 5.2976,
+      "nll_gap": -0.2384,
+      "retrieved": false,
+      "correct_passkey": "2-0-6-9-1",
+      "wrong_passkey": "7-2-9-4-6",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=6": {
+      "nll_correct": 4.9325,
+      "nll_wrong": 4.9848,
+      "nll_gap": 0.0523,
+      "retrieved": true,
+      "correct_passkey": "4-5-7-1-7",
+      "wrong_passkey": "9-6-3-5-3",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=7": {
+      "nll_correct": 5.0052,
+      "nll_wrong": 4.6522,
+      "nll_gap": -0.3531,
+      "retrieved": false,
+      "correct_passkey": "4-6-9-3-7",
+      "wrong_passkey": "3-5-5-6-6",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=8": {
+      "nll_correct": 5.0037,
+      "nll_wrong": 5.7658,
+      "nll_gap": 0.7621,
+      "retrieved": true,
+      "correct_passkey": "1-8-7-4-2",
+      "wrong_passkey": "2-0-2-9-8",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=9": {
+      "nll_correct": 4.7301,
+      "nll_wrong": 4.9289,
+      "nll_gap": 0.1988,
+      "retrieved": true,
+      "correct_passkey": "6-3-2-2-1",
+      "wrong_passkey": "0-2-5-5-3",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=10": {
+      "nll_correct": 5.0502,
+      "nll_wrong": 5.1071,
+      "nll_gap": 0.057,
+      "retrieved": true,
+      "correct_passkey": "6-0-2-2-8",
+      "wrong_passkey": "7-2-4-0-3",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=11": {
+      "nll_correct": 5.017,
+      "nll_wrong": 5.2172,
+      "nll_gap": 0.2002,
+      "retrieved": true,
+      "correct_passkey": "8-1-1-5-8",
+      "wrong_passkey": "4-9-5-1-6",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=12": {
+      "nll_correct": 5.2969,
+      "nll_wrong": 5.0792,
+      "nll_gap": -0.2178,
+      "retrieved": false,
+      "correct_passkey": "7-9-0-0-2",
+      "wrong_passkey": "0-5-3-9-0",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=13": {
+      "nll_correct": 4.9012,
+      "nll_wrong": 5.1714,
+      "nll_gap": 0.2701,
+      "retrieved": true,
+      "correct_passkey": "7-4-8-9-7",
+      "wrong_passkey": "6-9-7-1-5",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=14": {
+      "nll_correct": 4.9632,
+      "nll_wrong": 5.3245,
+      "nll_gap": 0.3612,
+      "retrieved": true,
+      "correct_passkey": "0-7-4-3-2",
+      "wrong_passkey": "8-0-1-0-6",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=15": {
+      "nll_correct": 5.1445,
+      "nll_wrong": 5.5564,
+      "nll_gap": 0.4118,
+      "retrieved": true,
+      "correct_passkey": "2-5-5-0-8",
+      "wrong_passkey": "7-0-9-2-5",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=16": {
+      "nll_correct": 4.7002,
+      "nll_wrong": 5.015,
+      "nll_gap": 0.3149,
+      "retrieved": true,
+      "correct_passkey": "4-5-5-9-0",
+      "wrong_passkey": "9-6-3-6-8",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=17": {
+      "nll_correct": 5.3548,
+      "nll_wrong": 4.9623,
+      "nll_gap": -0.3925,
+      "retrieved": false,
+      "correct_passkey": "1-8-7-0-4",
+      "wrong_passkey": "0-6-3-4-6",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=18": {
+      "nll_correct": 5.0365,
+      "nll_wrong": 5.5836,
+      "nll_gap": 0.5472,
+      "retrieved": true,
+      "correct_passkey": "8-6-7-7-5",
+      "wrong_passkey": "6-1-9-0-8",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=19": {
+      "nll_correct": 4.9742,
+      "nll_wrong": 5.0868,
+      "nll_gap": 0.1126,
+      "retrieved": true,
+      "correct_passkey": "5-7-4-6-9",
+      "wrong_passkey": "3-9-5-9-5",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=20": {
+      "nll_correct": 5.0531,
+      "nll_wrong": 5.7364,
+      "nll_gap": 0.6833,
+      "retrieved": true,
+      "correct_passkey": "7-2-2-6-1",
+      "wrong_passkey": "2-6-0-4-3",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=21": {
+      "nll_correct": 5.2121,
+      "nll_wrong": 5.2617,
+      "nll_gap": 0.0496,
+      "retrieved": true,
+      "correct_passkey": "5-0-6-0-3",
+      "wrong_passkey": "2-3-1-7-8",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=22": {
+      "nll_correct": 5.2486,
+      "nll_wrong": 5.5375,
+      "nll_gap": 0.2889,
+      "retrieved": true,
+      "correct_passkey": "1-9-1-6-3",
+      "wrong_passkey": "9-7-5-0-7",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=23": {
+      "nll_correct": 5.0329,
+      "nll_wrong": 5.0484,
+      "nll_gap": 0.0155,
+      "retrieved": true,
+      "correct_passkey": "6-5-2-7-7",
+      "wrong_passkey": "4-7-7-3-2",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=24": {
+      "nll_correct": 4.8008,
+      "nll_wrong": 5.8076,
+      "nll_gap": 1.0068,
+      "retrieved": true,
+      "correct_passkey": "7-3-4-2-6",
+      "wrong_passkey": "2-0-8-7-8",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=25": {
+      "nll_correct": 5.3751,
+      "nll_wrong": 5.5101,
+      "nll_gap": 0.135,
+      "retrieved": true,
+      "correct_passkey": "8-0-3-9-7",
+      "wrong_passkey": "3-2-0-7-8",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=26": {
+      "nll_correct": 5.2923,
+      "nll_wrong": 5.2826,
+      "nll_gap": -0.0097,
+      "retrieved": false,
+      "correct_passkey": "1-0-5-8-7",
+      "wrong_passkey": "4-2-9-5-9",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=27": {
+      "nll_correct": 5.4327,
+      "nll_wrong": 4.992,
+      "nll_gap": -0.4406,
+      "retrieved": false,
+      "correct_passkey": "7-0-8-6-6",
+      "wrong_passkey": "4-1-5-9-1",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=28": {
+      "nll_correct": 4.6919,
+      "nll_wrong": 5.6957,
+      "nll_gap": 1.0038,
+      "retrieved": true,
+      "correct_passkey": "0-5-5-3-9",
+      "wrong_passkey": "2-0-6-9-5",
+      "ar_generated": " the act or power of the mind.\"\n4",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=29": {
+      "nll_correct": 5.1307,
+      "nll_wrong": 4.7936,
+      "nll_gap": -0.3371,
+      "retrieved": false,
+      "correct_passkey": "7-1-8-3-5",
+      "wrong_passkey": "3-2-3-6-1",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=30": {
+      "nll_correct": 4.7696,
+      "nll_wrong": 5.1844,
+      "nll_gap": 0.4148,
+      "retrieved": true,
+      "correct_passkey": "0-4-3-8-1",
+      "wrong_passkey": "9-2-6-3-8",
+      "ar_generated": " the act or power of the mind.\"\n4",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=31": {
+      "nll_correct": 5.1493,
+      "nll_wrong": 4.9985,
+      "nll_gap": -0.1508,
+      "retrieved": false,
+      "correct_passkey": "1-7-6-2-0",
+      "wrong_passkey": "0-2-4-9-9",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=32": {
+      "nll_correct": 5.1335,
+      "nll_wrong": 5.1813,
+      "nll_gap": 0.0478,
+      "retrieved": true,
+      "correct_passkey": "9-3-1-6-5",
+      "wrong_passkey": "7-1-7-4-6",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=33": {
+      "nll_correct": 5.0671,
+      "nll_wrong": 4.5299,
+      "nll_gap": -0.5372,
+      "retrieved": false,
+      "correct_passkey": "5-1-8-8-0",
+      "wrong_passkey": "3-3-4-4-2",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=34": {
+      "nll_correct": 4.9254,
+      "nll_wrong": 5.2957,
+      "nll_gap": 0.3703,
+      "retrieved": true,
+      "correct_passkey": "8-1-3-6-1",
+      "wrong_passkey": "0-8-6-3-2",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=35": {
+      "nll_correct": 4.6938,
+      "nll_wrong": 4.9994,
+      "nll_gap": 0.3056,
+      "retrieved": true,
+      "correct_passkey": "6-1-3-1-0",
+      "wrong_passkey": "8-5-7-9-6",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=36": {
+      "nll_correct": 4.5831,
+      "nll_wrong": 5.1027,
+      "nll_gap": 0.5196,
+      "retrieved": true,
+      "correct_passkey": "1-1-2-5-6",
+      "wrong_passkey": "5-7-6-4-7",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=37": {
+      "nll_correct": 4.9952,
+      "nll_wrong": 5.2561,
+      "nll_gap": 0.2608,
+      "retrieved": true,
+      "correct_passkey": "0-7-4-8-5",
+      "wrong_passkey": "4-9-2-1-9",
+      "ar_generated": " the act or power of the mind.\"\n4",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=38": {
+      "nll_correct": 4.7583,
+      "nll_wrong": 5.669,
+      "nll_gap": 0.9108,
+      "retrieved": true,
+      "correct_passkey": "4-4-6-9-9",
+      "wrong_passkey": "5-9-0-5-2",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=39": {
+      "nll_correct": 4.5689,
+      "nll_wrong": 5.673,
+      "nll_gap": 1.1041,
+      "retrieved": true,
+      "correct_passkey": "3-3-4-8-1",
+      "wrong_passkey": "1-9-0-3-0",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=40": {
+      "nll_correct": 4.98,
+      "nll_wrong": 5.271,
+      "nll_gap": 0.291,
+      "retrieved": true,
+      "correct_passkey": "1-1-8-5-2",
+      "wrong_passkey": "8-8-9-1-8",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=41": {
+      "nll_correct": 5.1538,
+      "nll_wrong": 5.2145,
+      "nll_gap": 0.0607,
+      "retrieved": true,
+      "correct_passkey": "8-8-6-1-0",
+      "wrong_passkey": "4-4-0-2-5",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=42": {
+      "nll_correct": 5.0419,
+      "nll_wrong": 4.9707,
+      "nll_gap": -0.0713,
+      "retrieved": false,
+      "correct_passkey": "8-5-9-7-2",
+      "wrong_passkey": "4-8-3-5-9",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=43": {
+      "nll_correct": 5.3286,
+      "nll_wrong": 5.4099,
+      "nll_gap": 0.0813,
+      "retrieved": true,
+      "correct_passkey": "1-9-0-0-1",
+      "wrong_passkey": "7-1-7-4-0",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=44": {
+      "nll_correct": 4.6532,
+      "nll_wrong": 5.0664,
+      "nll_gap": 0.4132,
+      "retrieved": true,
+      "correct_passkey": "3-2-4-4-7",
+      "wrong_passkey": "2-4-2-1-3",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=45": {
+      "nll_correct": 5.0855,
+      "nll_wrong": 4.8162,
+      "nll_gap": -0.2693,
+      "retrieved": false,
+      "correct_passkey": "9-4-6-2-9",
+      "wrong_passkey": "1-3-1-1-3",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=46": {
+      "nll_correct": 5.1136,
+      "nll_wrong": 4.7905,
+      "nll_gap": -0.3231,
+      "retrieved": false,
+      "correct_passkey": "4-7-1-5-1",
+      "wrong_passkey": "3-5-6-3-7",
+      "ar_generated": " the act or power of the mind.\"\n4",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=47": {
+      "nll_correct": 5.0361,
+      "nll_wrong": 5.1733,
+      "nll_gap": 0.1372,
+      "retrieved": true,
+      "correct_passkey": "8-8-8-5-5",
+      "wrong_passkey": "0-1-0-2-6",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=48": {
+      "nll_correct": 4.7011,
+      "nll_wrong": 5.646,
+      "nll_gap": 0.9449,
+      "retrieved": true,
+      "correct_passkey": "3-4-3-1-3",
+      "wrong_passkey": "1-0-8-7-9",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=49": {
+      "nll_correct": 4.8647,
+      "nll_wrong": 4.8401,
+      "nll_gap": -0.0245,
+      "retrieved": false,
+      "correct_passkey": "3-5-2-1-2",
+      "wrong_passkey": "1-1-4-9-7",
+      "ar_generated": " \"the act or power of the mind\" is",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=0": {
+      "nll_correct": 5.1648,
+      "nll_wrong": 5.2048,
+      "nll_gap": 0.04,
+      "retrieved": true,
+      "correct_passkey": "0-8-3-9-1",
+      "wrong_passkey": "8-9-9-1-3",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=1": {
+      "nll_correct": 4.3233,
+      "nll_wrong": 4.5956,
+      "nll_gap": 0.2723,
+      "retrieved": true,
+      "correct_passkey": "3-6-5-4-2",
+      "wrong_passkey": "5-7-4-8-5",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=2": {
+      "nll_correct": 4.7837,
+      "nll_wrong": 4.5869,
+      "nll_gap": -0.1967,
+      "retrieved": false,
+      "correct_passkey": "6-7-8-6-4",
+      "wrong_passkey": "1-3-2-8-1",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=3": {
+      "nll_correct": 5.1082,
+      "nll_wrong": 4.7961,
+      "nll_gap": -0.3122,
+      "retrieved": false,
+      "correct_passkey": "0-7-2-2-8",
+      "wrong_passkey": "6-9-7-8-9",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=4": {
+      "nll_correct": 4.8455,
+      "nll_wrong": 4.5463,
+      "nll_gap": -0.2992,
+      "retrieved": false,
+      "correct_passkey": "5-6-3-0-3",
+      "wrong_passkey": "1-1-1-8-8",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=5": {
+      "nll_correct": 5.1321,
+      "nll_wrong": 4.9105,
+      "nll_gap": -0.2216,
+      "retrieved": false,
+      "correct_passkey": "6-8-0-3-0",
+      "wrong_passkey": "4-2-1-6-2",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=6": {
+      "nll_correct": 4.8872,
+      "nll_wrong": 4.8502,
+      "nll_gap": -0.037,
+      "retrieved": false,
+      "correct_passkey": "0-6-5-6-1",
+      "wrong_passkey": "2-2-8-9-6",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=7": {
+      "nll_correct": 4.8266,
+      "nll_wrong": 4.919,
+      "nll_gap": 0.0925,
+      "retrieved": true,
+      "correct_passkey": "9-5-5-9-2",
+      "wrong_passkey": "5-9-8-3-0",
+      "ar_generated": " the first of the five species of forest in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=8": {
+      "nll_correct": 4.875,
+      "nll_wrong": 4.6405,
+      "nll_gap": -0.2346,
+      "retrieved": false,
+      "correct_passkey": "4-7-2-9-1",
+      "wrong_passkey": "1-6-6-3-3",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=9": {
+      "nll_correct": 5.1008,
+      "nll_wrong": 4.4552,
+      "nll_gap": -0.6456,
+      "retrieved": false,
+      "correct_passkey": "5-2-0-6-3",
+      "wrong_passkey": "1-5-8-9-5",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=10": {
+      "nll_correct": 5.0975,
+      "nll_wrong": 4.867,
+      "nll_gap": -0.2305,
+      "retrieved": false,
+      "correct_passkey": "2-0-3-5-9",
+      "wrong_passkey": "5-2-1-9-8",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=11": {
+      "nll_correct": 4.4892,
+      "nll_wrong": 4.6807,
+      "nll_gap": 0.1915,
+      "retrieved": true,
+      "correct_passkey": "5-6-6-8-7",
+      "wrong_passkey": "6-2-5-5-2",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=12": {
+      "nll_correct": 5.1728,
+      "nll_wrong": 5.2218,
+      "nll_gap": 0.049,
+      "retrieved": true,
+      "correct_passkey": "5-0-9-8-7",
+      "wrong_passkey": "8-2-1-7-5",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=13": {
+      "nll_correct": 5.0436,
+      "nll_wrong": 4.7337,
+      "nll_gap": -0.3099,
+      "retrieved": false,
+      "correct_passkey": "0-9-5-7-1",
+      "wrong_passkey": "2-6-2-5-9",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=14": {
+      "nll_correct": 4.7892,
+      "nll_wrong": 5.1798,
+      "nll_gap": 0.3906,
+      "retrieved": true,
+      "correct_passkey": "1-9-0-0-2",
+      "wrong_passkey": "0-4-9-3-7",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=15": {
+      "nll_correct": 5.2189,
+      "nll_wrong": 4.3601,
+      "nll_gap": -0.8589,
+      "retrieved": false,
+      "correct_passkey": "9-9-2-9-8",
+      "wrong_passkey": "5-5-3-4-7",
+      "ar_generated": " the first of the five species of forest in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=16": {
+      "nll_correct": 5.2655,
+      "nll_wrong": 5.0576,
+      "nll_gap": -0.2079,
+      "retrieved": false,
+      "correct_passkey": "7-0-4-4-2",
+      "wrong_passkey": "0-4-2-2-4",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=17": {
+      "nll_correct": 4.7494,
+      "nll_wrong": 4.6964,
+      "nll_gap": -0.0529,
+      "retrieved": false,
+      "correct_passkey": "3-2-8-3-4",
+      "wrong_passkey": "6-8-2-5-7",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=18": {
+      "nll_correct": 4.5274,
+      "nll_wrong": 4.818,
+      "nll_gap": 0.2907,
+      "retrieved": true,
+      "correct_passkey": "3-4-1-9-7",
+      "wrong_passkey": "8-3-2-3-3",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=19": {
+      "nll_correct": 4.0589,
+      "nll_wrong": 5.2432,
+      "nll_gap": 1.1844,
+      "retrieved": true,
+      "correct_passkey": "1-2-4-6-9",
+      "wrong_passkey": "5-0-9-7-8",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=20": {
+      "nll_correct": 5.3241,
+      "nll_wrong": 4.8265,
+      "nll_gap": -0.4976,
+      "retrieved": false,
+      "correct_passkey": "0-9-0-8-2",
+      "wrong_passkey": "4-2-2-7-9",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=21": {
+      "nll_correct": 4.2411,
+      "nll_wrong": 4.9591,
+      "nll_gap": 0.718,
+      "retrieved": true,
+      "correct_passkey": "2-3-3-4-5",
+      "wrong_passkey": "6-1-1-8-8",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=22": {
+      "nll_correct": 5.0934,
+      "nll_wrong": 5.1455,
+      "nll_gap": 0.0521,
+      "retrieved": true,
+      "correct_passkey": "6-8-0-2-0",
+      "wrong_passkey": "8-7-8-3-5",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=23": {
+      "nll_correct": 4.7932,
+      "nll_wrong": 5.0828,
+      "nll_gap": 0.2896,
+      "retrieved": true,
+      "correct_passkey": "7-6-6-9-4",
+      "wrong_passkey": "5-8-3-0-2",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=24": {
+      "nll_correct": 5.2145,
+      "nll_wrong": 5.0164,
+      "nll_gap": -0.1981,
+      "retrieved": false,
+      "correct_passkey": "8-0-3-3-7",
+      "wrong_passkey": "6-2-1-7-8",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=25": {
+      "nll_correct": 4.9543,
+      "nll_wrong": 4.6402,
+      "nll_gap": -0.3141,
+      "retrieved": false,
+      "correct_passkey": "6-7-1-7-1",
+      "wrong_passkey": "4-6-7-9-3",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=26": {
+      "nll_correct": 4.4602,
+      "nll_wrong": 4.7134,
+      "nll_gap": 0.2532,
+      "retrieved": true,
+      "correct_passkey": "3-2-6-5-0",
+      "wrong_passkey": "6-5-1-8-8",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=27": {
+      "nll_correct": 5.041,
+      "nll_wrong": 4.6406,
+      "nll_gap": -0.4005,
+      "retrieved": false,
+      "correct_passkey": "8-6-9-7-4",
+      "wrong_passkey": "4-3-3-8-7",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=28": {
+      "nll_correct": 4.722,
+      "nll_wrong": 4.696,
+      "nll_gap": -0.026,
+      "retrieved": false,
+      "correct_passkey": "5-0-2-0-9",
+      "wrong_passkey": "2-1-3-6-1",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=29": {
+      "nll_correct": 4.9882,
+      "nll_wrong": 4.8995,
+      "nll_gap": -0.0887,
+      "retrieved": false,
+      "correct_passkey": "3-7-9-0-3",
+      "wrong_passkey": "2-9-6-8-8",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=30": {
+      "nll_correct": 4.7308,
+      "nll_wrong": 4.9291,
+      "nll_gap": 0.1983,
+      "retrieved": true,
+      "correct_passkey": "0-2-4-6-9",
+      "wrong_passkey": "5-8-0-0-4",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=31": {
+      "nll_correct": 5.0941,
+      "nll_wrong": 4.9524,
+      "nll_gap": -0.1417,
+      "retrieved": false,
+      "correct_passkey": "9-8-6-3-6",
+      "wrong_passkey": "5-2-9-6-0",
+      "ar_generated": " the first of the five species of forest in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=32": {
+      "nll_correct": 4.9213,
+      "nll_wrong": 4.9403,
+      "nll_gap": 0.019,
+      "retrieved": true,
+      "correct_passkey": "0-3-0-3-4",
+      "wrong_passkey": "4-0-6-0-1",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=33": {
+      "nll_correct": 4.9566,
+      "nll_wrong": 4.6056,
+      "nll_gap": -0.351,
+      "retrieved": false,
+      "correct_passkey": "7-6-9-4-5",
+      "wrong_passkey": "1-3-0-0-1",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=34": {
+      "nll_correct": 4.8523,
+      "nll_wrong": 5.1279,
+      "nll_gap": 0.2756,
+      "retrieved": true,
+      "correct_passkey": "9-5-3-6-9",
+      "wrong_passkey": "8-1-4-8-7",
+      "ar_generated": " the first of the five species of forest in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=35": {
+      "nll_correct": 4.6582,
+      "nll_wrong": 5.6209,
+      "nll_gap": 0.9628,
+      "retrieved": true,
+      "correct_passkey": "3-7-9-7-9",
+      "wrong_passkey": "9-0-4-9-2",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=36": {
+      "nll_correct": 4.4285,
+      "nll_wrong": 4.8098,
+      "nll_gap": 0.3812,
+      "retrieved": true,
+      "correct_passkey": "4-4-6-8-4",
+      "wrong_passkey": "6-5-9-3-3",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=37": {
+      "nll_correct": 4.8329,
+      "nll_wrong": 4.5611,
+      "nll_gap": -0.2718,
+      "retrieved": false,
+      "correct_passkey": "6-3-1-6-7",
+      "wrong_passkey": "5-4-5-2-9",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=38": {
+      "nll_correct": 4.8233,
+      "nll_wrong": 4.8102,
+      "nll_gap": -0.0131,
+      "retrieved": false,
+      "correct_passkey": "0-4-2-4-7",
+      "wrong_passkey": "8-6-5-5-4",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=39": {
+      "nll_correct": 4.5622,
+      "nll_wrong": 4.2936,
+      "nll_gap": -0.2687,
+      "retrieved": false,
+      "correct_passkey": "4-5-3-2-7",
+      "wrong_passkey": "5-3-4-5-8",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=40": {
+      "nll_correct": 5.3148,
+      "nll_wrong": 4.5089,
+      "nll_gap": -0.8059,
+      "retrieved": false,
+      "correct_passkey": "7-9-7-0-7",
+      "wrong_passkey": "3-4-3-7-1",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=41": {
+      "nll_correct": 4.583,
+      "nll_wrong": 4.3953,
+      "nll_gap": -0.1878,
+      "retrieved": false,
+      "correct_passkey": "3-3-2-9-8",
+      "wrong_passkey": "1-2-6-7-5",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=42": {
+      "nll_correct": 4.9714,
+      "nll_wrong": 5.4437,
+      "nll_gap": 0.4723,
+      "retrieved": true,
+      "correct_passkey": "7-7-8-1-2",
+      "wrong_passkey": "8-0-2-6-1",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=43": {
+      "nll_correct": 5.1727,
+      "nll_wrong": 5.1133,
+      "nll_gap": -0.0594,
+      "retrieved": false,
+      "correct_passkey": "8-9-8-2-4",
+      "wrong_passkey": "0-3-7-4-9",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=44": {
+      "nll_correct": 5.2922,
+      "nll_wrong": 4.5268,
+      "nll_gap": -0.7654,
+      "retrieved": false,
+      "correct_passkey": "9-9-2-0-9",
+      "wrong_passkey": "3-6-6-5-4",
+      "ar_generated": " the first of the five species of forest in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=45": {
+      "nll_correct": 5.1388,
+      "nll_wrong": 4.7754,
+      "nll_gap": -0.3634,
+      "retrieved": false,
+      "correct_passkey": "0-3-0-9-7",
+      "wrong_passkey": "2-2-1-0-2",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=46": {
+      "nll_correct": 5.0531,
+      "nll_wrong": 5.0715,
+      "nll_gap": 0.0184,
+      "retrieved": true,
+      "correct_passkey": "7-1-8-5-4",
+      "wrong_passkey": "9-9-1-2-5",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=47": {
+      "nll_correct": 5.1293,
+      "nll_wrong": 4.857,
+      "nll_gap": -0.2723,
+      "retrieved": false,
+      "correct_passkey": "6-8-0-3-7",
+      "wrong_passkey": "1-9-4-1-0",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=48": {
+      "nll_correct": 4.941,
+      "nll_wrong": 4.4969,
+      "nll_gap": -0.444,
+      "retrieved": false,
+      "correct_passkey": "0-1-6-9-1",
+      "wrong_passkey": "4-4-8-8-3",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=49": {
+      "nll_correct": 4.9622,
+      "nll_wrong": 5.1901,
+      "nll_gap": 0.2279,
+      "retrieved": true,
+      "correct_passkey": "5-9-1-0-3",
+      "wrong_passkey": "0-3-8-2-8",
+      "ar_generated": "\n- The conservation of the forest and its habitat",
+      "ar_exact_match": false
+    }
+  },
+  "summary": {
+    "L=1024_d=0.5": {
+      "mean_nll_gap": 0.1896,
+      "retrieval_rate": 0.82,
+      "ar_exact_match_rate": 0.0,
+      "trials": 50
+    },
+    "L=2048_d=0.5": {
+      "mean_nll_gap": 0.1901,
+      "retrieval_rate": 0.72,
+      "ar_exact_match_rate": 0.0,
+      "trials": 50
+    },
+    "L=4096_d=0.5": {
+      "mean_nll_gap": -0.0539,
+      "retrieval_rate": 0.4,
+      "ar_exact_match_rate": 0.0,
+      "trials": 50
+    }
+  },
+  "global": {
+    "total_trials": 150,
+    "mean_nll_gap": 0.1086,
+    "retrieval_rate": 0.6467,
+    "ar_exact_match_rate": 0.0
+  }
+}

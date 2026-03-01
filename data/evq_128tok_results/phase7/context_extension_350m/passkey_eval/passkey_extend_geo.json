@@ -1,0 +1,1530 @@
+{
+  "details": {
+    "L=1024_d=0.5_t=0": {
+      "nll_correct": 3.8893,
+      "nll_wrong": 4.4076,
+      "nll_gap": 0.5183,
+      "retrieved": true,
+      "correct_passkey": "0-8-7-1-4",
+      "wrong_passkey": "5-0-4-7-9",
+      "ar_generated": "1-3.\nThe United States has been",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=1": {
+      "nll_correct": 3.5229,
+      "nll_wrong": 4.2569,
+      "nll_gap": 0.734,
+      "retrieved": true,
+      "correct_passkey": "0-7-5-5-3",
+      "wrong_passkey": "7-2-6-4-6",
+      "ar_generated": "1-3.\nThe United States has been",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=2": {
+      "nll_correct": 3.6286,
+      "nll_wrong": 4.4297,
+      "nll_gap": 0.8011,
+      "retrieved": true,
+      "correct_passkey": "0-8-0-3-8",
+      "wrong_passkey": "9-2-5-6-9",
+      "ar_generated": "1-3.\nThe United States has been",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=3": {
+      "nll_correct": 4.108,
+      "nll_wrong": 3.8013,
+      "nll_gap": -0.3068,
+      "retrieved": false,
+      "correct_passkey": "8-3-8-7-3",
+      "wrong_passkey": "1-5-6-6-1",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=4": {
+      "nll_correct": 3.6204,
+      "nll_wrong": 4.2116,
+      "nll_gap": 0.5912,
+      "retrieved": true,
+      "correct_passkey": "1-0-8-3-4",
+      "wrong_passkey": "7-8-2-5-3",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=5": {
+      "nll_correct": 4.1624,
+      "nll_wrong": 4.2856,
+      "nll_gap": 0.1231,
+      "retrieved": true,
+      "correct_passkey": "3-9-2-0-1",
+      "wrong_passkey": "4-7-3-1-3",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=6": {
+      "nll_correct": 3.9348,
+      "nll_wrong": 4.5758,
+      "nll_gap": 0.641,
+      "retrieved": true,
+      "correct_passkey": "6-8-4-6-3",
+      "wrong_passkey": "7-1-7-0-4",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=7": {
+      "nll_correct": 3.9071,
+      "nll_wrong": 4.0349,
+      "nll_gap": 0.1278,
+      "retrieved": true,
+      "correct_passkey": "2-9-3-3-7",
+      "wrong_passkey": "1-8-2-8-6",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=8": {
+      "nll_correct": 3.995,
+      "nll_wrong": 4.394,
+      "nll_gap": 0.399,
+      "retrieved": true,
+      "correct_passkey": "9-6-3-5-1",
+      "wrong_passkey": "4-2-1-0-5",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=9": {
+      "nll_correct": 3.8005,
+      "nll_wrong": 4.5765,
+      "nll_gap": 0.776,
+      "retrieved": true,
+      "correct_passkey": "3-4-0-4-2",
+      "wrong_passkey": "9-8-6-2-8",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=10": {
+      "nll_correct": 3.5198,
+      "nll_wrong": 4.2009,
+      "nll_gap": 0.681,
+      "retrieved": true,
+      "correct_passkey": "1-2-4-9-8",
+      "wrong_passkey": "3-9-3-4-5",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=11": {
+      "nll_correct": 3.8213,
+      "nll_wrong": 4.1711,
+      "nll_gap": 0.3498,
+      "retrieved": true,
+      "correct_passkey": "1-9-8-3-5",
+      "wrong_passkey": "6-4-7-4-8",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=12": {
+      "nll_correct": 3.7968,
+      "nll_wrong": 4.296,
+      "nll_gap": 0.4992,
+      "retrieved": true,
+      "correct_passkey": "4-5-5-6-4",
+      "wrong_passkey": "3-9-9-8-8",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=13": {
+      "nll_correct": 3.4729,
+      "nll_wrong": 4.3263,
+      "nll_gap": 0.8534,
+      "retrieved": true,
+      "correct_passkey": "2-3-4-5-9",
+      "wrong_passkey": "1-9-2-0-1",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=14": {
+      "nll_correct": 3.9435,
+      "nll_wrong": 4.6467,
+      "nll_gap": 0.7031,
+      "retrieved": true,
+      "correct_passkey": "8-4-2-4-7",
+      "wrong_passkey": "7-0-7-1-0",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=15": {
+      "nll_correct": 3.9907,
+      "nll_wrong": 4.1928,
+      "nll_gap": 0.2021,
+      "retrieved": true,
+      "correct_passkey": "3-5-9-8-6",
+      "wrong_passkey": "8-8-6-9-5",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=16": {
+      "nll_correct": 3.7697,
+      "nll_wrong": 3.9591,
+      "nll_gap": 0.1894,
+      "retrieved": true,
+      "correct_passkey": "7-6-5-3-5",
+      "wrong_passkey": "1-1-2-0-6",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=17": {
+      "nll_correct": 4.2031,
+      "nll_wrong": 4.3793,
+      "nll_gap": 0.1762,
+      "retrieved": true,
+      "correct_passkey": "2-7-8-1-9",
+      "wrong_passkey": "5-6-7-6-4",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=18": {
+      "nll_correct": 4.1839,
+      "nll_wrong": 4.3955,
+      "nll_gap": 0.2116,
+      "retrieved": true,
+      "correct_passkey": "7-4-7-1-3",
+      "wrong_passkey": "4-1-9-7-7",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=19": {
+      "nll_correct": 4.32,
+      "nll_wrong": 4.4973,
+      "nll_gap": 0.1773,
+      "retrieved": true,
+      "correct_passkey": "4-9-1-5-0",
+      "wrong_passkey": "0-7-2-7-4",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=20": {
+      "nll_correct": 4.1245,
+      "nll_wrong": 4.1797,
+      "nll_gap": 0.0553,
+      "retrieved": true,
+      "correct_passkey": "6-5-0-7-7",
+      "wrong_passkey": "3-3-8-6-1",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=21": {
+      "nll_correct": 4.0064,
+      "nll_wrong": 4.3643,
+      "nll_gap": 0.358,
+      "retrieved": true,
+      "correct_passkey": "9-1-1-4-1",
+      "wrong_passkey": "5-5-8-7-0",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=22": {
+      "nll_correct": 4.2164,
+      "nll_wrong": 4.413,
+      "nll_gap": 0.1967,
+      "retrieved": true,
+      "correct_passkey": "3-7-1-8-0",
+      "wrong_passkey": "5-2-7-2-6",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=23": {
+      "nll_correct": 3.8976,
+      "nll_wrong": 4.1023,
+      "nll_gap": 0.2046,
+      "retrieved": true,
+      "correct_passkey": "8-8-4-6-2",
+      "wrong_passkey": "5-5-6-2-9",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=24": {
+      "nll_correct": 3.6929,
+      "nll_wrong": 4.343,
+      "nll_gap": 0.6501,
+      "retrieved": true,
+      "correct_passkey": "0-0-6-1-9",
+      "wrong_passkey": "3-7-7-7-5",
+      "ar_generated": "1-3.\nThe United States has been",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=25": {
+      "nll_correct": 4.2158,
+      "nll_wrong": 4.2003,
+      "nll_gap": -0.0155,
+      "retrieved": false,
+      "correct_passkey": "5-5-1-8-1",
+      "wrong_passkey": "4-4-4-2-7",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=26": {
+      "nll_correct": 4.2264,
+      "nll_wrong": 4.0641,
+      "nll_gap": -0.1623,
+      "retrieved": false,
+      "correct_passkey": "3-2-8-5-0",
+      "wrong_passkey": "1-6-6-4-7",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=27": {
+      "nll_correct": 3.8109,
+      "nll_wrong": 4.2029,
+      "nll_gap": 0.392,
+      "retrieved": true,
+      "correct_passkey": "0-6-1-6-7",
+      "wrong_passkey": "4-0-5-9-8",
+      "ar_generated": "1-3.\nThe United States has been",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=28": {
+      "nll_correct": 4.1876,
+      "nll_wrong": 4.2796,
+      "nll_gap": 0.0919,
+      "retrieved": true,
+      "correct_passkey": "5-5-1-6-6",
+      "wrong_passkey": "7-8-4-2-8",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=29": {
+      "nll_correct": 4.1159,
+      "nll_wrong": 4.2937,
+      "nll_gap": 0.1778,
+      "retrieved": true,
+      "correct_passkey": "9-7-8-8-5",
+      "wrong_passkey": "6-8-6-2-9",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=30": {
+      "nll_correct": 4.0498,
+      "nll_wrong": 4.0188,
+      "nll_gap": -0.031,
+      "retrieved": false,
+      "correct_passkey": "7-6-6-2-3",
+      "wrong_passkey": "8-9-2-5-9",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=31": {
+      "nll_correct": 4.3589,
+      "nll_wrong": 4.4871,
+      "nll_gap": 0.1282,
+      "retrieved": true,
+      "correct_passkey": "4-9-7-6-0",
+      "wrong_passkey": "7-3-8-2-4",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=32": {
+      "nll_correct": 4.0547,
+      "nll_wrong": 4.3662,
+      "nll_gap": 0.3116,
+      "retrieved": true,
+      "correct_passkey": "5-4-0-6-5",
+      "wrong_passkey": "8-7-5-1-7",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=33": {
+      "nll_correct": 4.1609,
+      "nll_wrong": 4.1999,
+      "nll_gap": 0.039,
+      "retrieved": true,
+      "correct_passkey": "9-9-9-9-6",
+      "wrong_passkey": "7-6-3-7-8",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=34": {
+      "nll_correct": 4.1959,
+      "nll_wrong": 4.2287,
+      "nll_gap": 0.0328,
+      "retrieved": true,
+      "correct_passkey": "4-7-3-1-9",
+      "wrong_passkey": "7-5-6-6-1",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=35": {
+      "nll_correct": 3.7156,
+      "nll_wrong": 4.325,
+      "nll_gap": 0.6094,
+      "retrieved": true,
+      "correct_passkey": "0-1-6-8-0",
+      "wrong_passkey": "5-7-8-6-5",
+      "ar_generated": "1-3.\nThe United States has been",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=36": {
+      "nll_correct": 3.7151,
+      "nll_wrong": 4.2186,
+      "nll_gap": 0.5035,
+      "retrieved": true,
+      "correct_passkey": "3-3-1-3-2",
+      "wrong_passkey": "0-8-0-4-8",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=37": {
+      "nll_correct": 4.3082,
+      "nll_wrong": 4.4481,
+      "nll_gap": 0.14,
+      "retrieved": true,
+      "correct_passkey": "4-0-7-2-9",
+      "wrong_passkey": "8-2-6-9-4",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=38": {
+      "nll_correct": 4.0778,
+      "nll_wrong": 4.2714,
+      "nll_gap": 0.1936,
+      "retrieved": true,
+      "correct_passkey": "8-1-4-1-7",
+      "wrong_passkey": "3-8-1-9-5",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=39": {
+      "nll_correct": 3.9094,
+      "nll_wrong": 4.2844,
+      "nll_gap": 0.375,
+      "retrieved": true,
+      "correct_passkey": "2-1-4-7-2",
+      "wrong_passkey": "4-2-1-8-8",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=40": {
+      "nll_correct": 4.0186,
+      "nll_wrong": 4.2832,
+      "nll_gap": 0.2646,
+      "retrieved": true,
+      "correct_passkey": "4-2-3-6-9",
+      "wrong_passkey": "0-0-0-7-6",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=41": {
+      "nll_correct": 4.2087,
+      "nll_wrong": 4.2613,
+      "nll_gap": 0.0526,
+      "retrieved": true,
+      "correct_passkey": "6-6-7-2-4",
+      "wrong_passkey": "8-7-2-1-3",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=42": {
+      "nll_correct": 3.702,
+      "nll_wrong": 4.1685,
+      "nll_gap": 0.4665,
+      "retrieved": true,
+      "correct_passkey": "4-3-3-4-5",
+      "wrong_passkey": "6-8-4-9-7",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=43": {
+      "nll_correct": 3.9975,
+      "nll_wrong": 4.6352,
+      "nll_gap": 0.6377,
+      "retrieved": true,
+      "correct_passkey": "2-6-9-6-9",
+      "wrong_passkey": "7-0-2-0-7",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=44": {
+      "nll_correct": 4.1088,
+      "nll_wrong": 3.8958,
+      "nll_gap": -0.2131,
+      "retrieved": false,
+      "correct_passkey": "3-8-1-3-7",
+      "wrong_passkey": "1-6-5-8-2",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=45": {
+      "nll_correct": 3.994,
+      "nll_wrong": 4.2691,
+      "nll_gap": 0.2751,
+      "retrieved": true,
+      "correct_passkey": "7-0-5-8-4",
+      "wrong_passkey": "0-2-0-7-1",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=46": {
+      "nll_correct": 4.1584,
+      "nll_wrong": 4.3327,
+      "nll_gap": 0.1743,
+      "retrieved": true,
+      "correct_passkey": "3-7-1-4-1",
+      "wrong_passkey": "7-3-8-1-7",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=47": {
+      "nll_correct": 4.1493,
+      "nll_wrong": 4.1768,
+      "nll_gap": 0.0275,
+      "retrieved": true,
+      "correct_passkey": "9-8-9-8-5",
+      "wrong_passkey": "4-9-4-5-0",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=48": {
+      "nll_correct": 4.0493,
+      "nll_wrong": 4.1046,
+      "nll_gap": 0.0553,
+      "retrieved": true,
+      "correct_passkey": "7-8-1-7-4",
+      "wrong_passkey": "9-4-3-8-7",
+      "ar_generated": "\n- The United States has a long history of",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=49": {
+      "nll_correct": 3.8167,
+      "nll_wrong": 4.4965,
+      "nll_gap": 0.6798,
+      "retrieved": true,
+      "correct_passkey": "0-2-9-1-9",
+      "wrong_passkey": "6-0-2-2-6",
+      "ar_generated": "1-3.\nThe United States has been",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=0": {
+      "nll_correct": 4.7716,
+      "nll_wrong": 5.3188,
+      "nll_gap": 0.5472,
+      "retrieved": true,
+      "correct_passkey": "5-3-1-0-1",
+      "wrong_passkey": "7-0-0-8-9",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=1": {
+      "nll_correct": 4.6917,
+      "nll_wrong": 4.9877,
+      "nll_gap": 0.296,
+      "retrieved": true,
+      "correct_passkey": "4-5-5-1-2",
+      "wrong_passkey": "9-4-4-9-1",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=2": {
+      "nll_correct": 5.1419,
+      "nll_wrong": 4.8855,
+      "nll_gap": -0.2564,
+      "retrieved": false,
+      "correct_passkey": "2-8-0-7-9",
+      "wrong_passkey": "6-5-9-3-8",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=3": {
+      "nll_correct": 4.7427,
+      "nll_wrong": 5.3209,
+      "nll_gap": 0.5781,
+      "retrieved": true,
+      "correct_passkey": "0-7-0-5-2",
+      "wrong_passkey": "9-3-6-0-5",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=4": {
+      "nll_correct": 4.8787,
+      "nll_wrong": 5.1173,
+      "nll_gap": 0.2386,
+      "retrieved": true,
+      "correct_passkey": "9-1-2-8-7",
+      "wrong_passkey": "7-9-0-1-2",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=5": {
+      "nll_correct": 5.0372,
+      "nll_wrong": 5.2722,
+      "nll_gap": 0.235,
+      "retrieved": true,
+      "correct_passkey": "2-0-6-9-1",
+      "wrong_passkey": "7-2-9-4-6",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=6": {
+      "nll_correct": 4.8817,
+      "nll_wrong": 4.9389,
+      "nll_gap": 0.0572,
+      "retrieved": true,
+      "correct_passkey": "4-5-7-1-7",
+      "wrong_passkey": "9-6-3-5-3",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=7": {
+      "nll_correct": 4.8754,
+      "nll_wrong": 4.5229,
+      "nll_gap": -0.3525,
+      "retrieved": false,
+      "correct_passkey": "4-6-9-3-7",
+      "wrong_passkey": "3-5-5-6-6",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=8": {
+      "nll_correct": 4.65,
+      "nll_wrong": 5.4142,
+      "nll_gap": 0.7643,
+      "retrieved": true,
+      "correct_passkey": "1-8-7-4-2",
+      "wrong_passkey": "2-0-2-9-8",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=9": {
+      "nll_correct": 4.7102,
+      "nll_wrong": 4.8666,
+      "nll_gap": 0.1564,
+      "retrieved": true,
+      "correct_passkey": "6-3-2-2-1",
+      "wrong_passkey": "0-2-5-5-3",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=10": {
+      "nll_correct": 4.892,
+      "nll_wrong": 4.9429,
+      "nll_gap": 0.0509,
+      "retrieved": true,
+      "correct_passkey": "6-0-2-2-8",
+      "wrong_passkey": "7-2-4-0-3",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=11": {
+      "nll_correct": 4.8318,
+      "nll_wrong": 4.9499,
+      "nll_gap": 0.118,
+      "retrieved": true,
+      "correct_passkey": "8-1-1-5-8",
+      "wrong_passkey": "4-9-5-1-6",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=12": {
+      "nll_correct": 4.6972,
+      "nll_wrong": 5.053,
+      "nll_gap": 0.3558,
+      "retrieved": true,
+      "correct_passkey": "7-9-0-0-2",
+      "wrong_passkey": "0-5-3-9-0",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=13": {
+      "nll_correct": 4.7712,
+      "nll_wrong": 5.0067,
+      "nll_gap": 0.2355,
+      "retrieved": true,
+      "correct_passkey": "7-4-8-9-7",
+      "wrong_passkey": "6-9-7-1-5",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=14": {
+      "nll_correct": 4.6238,
+      "nll_wrong": 5.2027,
+      "nll_gap": 0.5789,
+      "retrieved": true,
+      "correct_passkey": "0-7-4-3-2",
+      "wrong_passkey": "8-0-1-0-6",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=15": {
+      "nll_correct": 4.6469,
+      "nll_wrong": 5.5378,
+      "nll_gap": 0.891,
+      "retrieved": true,
+      "correct_passkey": "2-5-5-0-8",
+      "wrong_passkey": "7-0-9-2-5",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=16": {
+      "nll_correct": 4.5552,
+      "nll_wrong": 4.9853,
+      "nll_gap": 0.43,
+      "retrieved": true,
+      "correct_passkey": "4-5-5-9-0",
+      "wrong_passkey": "9-6-3-6-8",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=17": {
+      "nll_correct": 4.8146,
+      "nll_wrong": 4.895,
+      "nll_gap": 0.0804,
+      "retrieved": true,
+      "correct_passkey": "1-8-7-0-4",
+      "wrong_passkey": "0-6-3-4-6",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=18": {
+      "nll_correct": 4.7752,
+      "nll_wrong": 5.3201,
+      "nll_gap": 0.5449,
+      "retrieved": true,
+      "correct_passkey": "8-6-7-7-5",
+      "wrong_passkey": "6-1-9-0-8",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=19": {
+      "nll_correct": 4.7886,
+      "nll_wrong": 4.8583,
+      "nll_gap": 0.0697,
+      "retrieved": true,
+      "correct_passkey": "5-7-4-6-9",
+      "wrong_passkey": "3-9-5-9-5",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=20": {
+      "nll_correct": 4.9454,
+      "nll_wrong": 5.1393,
+      "nll_gap": 0.1939,
+      "retrieved": true,
+      "correct_passkey": "7-2-2-6-1",
+      "wrong_passkey": "2-6-0-4-3",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=21": {
+      "nll_correct": 4.8928,
+      "nll_wrong": 4.8818,
+      "nll_gap": -0.011,
+      "retrieved": false,
+      "correct_passkey": "5-0-6-0-3",
+      "wrong_passkey": "2-3-1-7-8",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=22": {
+      "nll_correct": 4.7458,
+      "nll_wrong": 5.2886,
+      "nll_gap": 0.5428,
+      "retrieved": true,
+      "correct_passkey": "1-9-1-6-3",
+      "wrong_passkey": "9-7-5-0-7",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=23": {
+      "nll_correct": 4.845,
+      "nll_wrong": 4.8432,
+      "nll_gap": -0.0018,
+      "retrieved": false,
+      "correct_passkey": "6-5-2-7-7",
+      "wrong_passkey": "4-7-7-3-2",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=24": {
+      "nll_correct": 4.7591,
+      "nll_wrong": 5.3701,
+      "nll_gap": 0.611,
+      "retrieved": true,
+      "correct_passkey": "7-3-4-2-6",
+      "wrong_passkey": "2-0-8-7-8",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=25": {
+      "nll_correct": 5.0525,
+      "nll_wrong": 5.0778,
+      "nll_gap": 0.0253,
+      "retrieved": true,
+      "correct_passkey": "8-0-3-9-7",
+      "wrong_passkey": "3-2-0-7-8",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=26": {
+      "nll_correct": 4.6017,
+      "nll_wrong": 5.2029,
+      "nll_gap": 0.6011,
+      "retrieved": true,
+      "correct_passkey": "1-0-5-8-7",
+      "wrong_passkey": "4-2-9-5-9",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=27": {
+      "nll_correct": 5.1981,
+      "nll_wrong": 4.7937,
+      "nll_gap": -0.4044,
+      "retrieved": false,
+      "correct_passkey": "7-0-8-6-6",
+      "wrong_passkey": "4-1-5-9-1",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=28": {
+      "nll_correct": 4.4363,
+      "nll_wrong": 5.2624,
+      "nll_gap": 0.8261,
+      "retrieved": true,
+      "correct_passkey": "0-5-5-3-9",
+      "wrong_passkey": "2-0-6-9-5",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=29": {
+      "nll_correct": 4.9848,
+      "nll_wrong": 4.7021,
+      "nll_gap": -0.2826,
+      "retrieved": false,
+      "correct_passkey": "7-1-8-3-5",
+      "wrong_passkey": "3-2-3-6-1",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=30": {
+      "nll_correct": 4.5596,
+      "nll_wrong": 5.2058,
+      "nll_gap": 0.6462,
+      "retrieved": true,
+      "correct_passkey": "0-4-3-8-1",
+      "wrong_passkey": "9-2-6-3-8",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=31": {
+      "nll_correct": 4.8282,
+      "nll_wrong": 5.0186,
+      "nll_gap": 0.1903,
+      "retrieved": true,
+      "correct_passkey": "1-7-6-2-0",
+      "wrong_passkey": "0-2-4-9-9",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=32": {
+      "nll_correct": 4.9251,
+      "nll_wrong": 5.0712,
+      "nll_gap": 0.1461,
+      "retrieved": true,
+      "correct_passkey": "9-3-1-6-5",
+      "wrong_passkey": "7-1-7-4-6",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=33": {
+      "nll_correct": 4.9465,
+      "nll_wrong": 4.4623,
+      "nll_gap": -0.4843,
+      "retrieved": false,
+      "correct_passkey": "5-1-8-8-0",
+      "wrong_passkey": "3-3-4-4-2",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=34": {
+      "nll_correct": 4.7624,
+      "nll_wrong": 4.973,
+      "nll_gap": 0.2106,
+      "retrieved": true,
+      "correct_passkey": "8-1-3-6-1",
+      "wrong_passkey": "0-8-6-3-2",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=35": {
+      "nll_correct": 4.7444,
+      "nll_wrong": 4.8071,
+      "nll_gap": 0.0627,
+      "retrieved": true,
+      "correct_passkey": "6-1-3-1-0",
+      "wrong_passkey": "8-5-7-9-6",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=36": {
+      "nll_correct": 4.2784,
+      "nll_wrong": 4.9729,
+      "nll_gap": 0.6945,
+      "retrieved": true,
+      "correct_passkey": "1-1-2-5-6",
+      "wrong_passkey": "5-7-6-4-7",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=37": {
+      "nll_correct": 4.7207,
+      "nll_wrong": 5.2212,
+      "nll_gap": 0.5005,
+      "retrieved": true,
+      "correct_passkey": "0-7-4-8-5",
+      "wrong_passkey": "4-9-2-1-9",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=38": {
+      "nll_correct": 4.669,
+      "nll_wrong": 5.3132,
+      "nll_gap": 0.6442,
+      "retrieved": true,
+      "correct_passkey": "4-4-6-9-9",
+      "wrong_passkey": "5-9-0-5-2",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=39": {
+      "nll_correct": 4.5162,
+      "nll_wrong": 5.1802,
+      "nll_gap": 0.664,
+      "retrieved": true,
+      "correct_passkey": "3-3-4-8-1",
+      "wrong_passkey": "1-9-0-3-0",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=40": {
+      "nll_correct": 4.4953,
+      "nll_wrong": 5.1313,
+      "nll_gap": 0.6361,
+      "retrieved": true,
+      "correct_passkey": "1-1-8-5-2",
+      "wrong_passkey": "8-8-9-1-8",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=41": {
+      "nll_correct": 4.9142,
+      "nll_wrong": 5.0274,
+      "nll_gap": 0.1131,
+      "retrieved": true,
+      "correct_passkey": "8-8-6-1-0",
+      "wrong_passkey": "4-4-0-2-5",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=42": {
+      "nll_correct": 4.7676,
+      "nll_wrong": 4.7233,
+      "nll_gap": -0.0443,
+      "retrieved": false,
+      "correct_passkey": "8-5-9-7-2",
+      "wrong_passkey": "4-8-3-5-9",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=43": {
+      "nll_correct": 4.4991,
+      "nll_wrong": 5.3012,
+      "nll_gap": 0.802,
+      "retrieved": true,
+      "correct_passkey": "1-9-0-0-1",
+      "wrong_passkey": "7-1-7-4-0",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=44": {
+      "nll_correct": 4.5887,
+      "nll_wrong": 4.9761,
+      "nll_gap": 0.3874,
+      "retrieved": true,
+      "correct_passkey": "3-2-4-4-7",
+      "wrong_passkey": "2-4-2-1-3",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=45": {
+      "nll_correct": 4.9826,
+      "nll_wrong": 4.5753,
+      "nll_gap": -0.4073,
+      "retrieved": false,
+      "correct_passkey": "9-4-6-2-9",
+      "wrong_passkey": "1-3-1-1-3",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=46": {
+      "nll_correct": 4.909,
+      "nll_wrong": 4.6869,
+      "nll_gap": -0.2221,
+      "retrieved": false,
+      "correct_passkey": "4-7-1-5-1",
+      "wrong_passkey": "3-5-6-3-7",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=47": {
+      "nll_correct": 4.7146,
+      "nll_wrong": 4.9487,
+      "nll_gap": 0.2341,
+      "retrieved": true,
+      "correct_passkey": "8-8-8-5-5",
+      "wrong_passkey": "0-1-0-2-6",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=48": {
+      "nll_correct": 4.686,
+      "nll_wrong": 5.1867,
+      "nll_gap": 0.5007,
+      "retrieved": true,
+      "correct_passkey": "3-4-3-1-3",
+      "wrong_passkey": "1-0-8-7-9",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=49": {
+      "nll_correct": 4.8074,
+      "nll_wrong": 4.6883,
+      "nll_gap": -0.119,
+      "retrieved": false,
+      "correct_passkey": "3-5-2-1-2",
+      "wrong_passkey": "1-1-4-9-7",
+      "ar_generated": " \"the act of being able to see the mind",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=0": {
+      "nll_correct": 4.7498,
+      "nll_wrong": 4.9579,
+      "nll_gap": 0.208,
+      "retrieved": true,
+      "correct_passkey": "0-8-3-9-1",
+      "wrong_passkey": "8-9-9-1-3",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=1": {
+      "nll_correct": 4.2213,
+      "nll_wrong": 4.4664,
+      "nll_gap": 0.2451,
+      "retrieved": true,
+      "correct_passkey": "3-6-5-4-2",
+      "wrong_passkey": "5-7-4-8-5",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=2": {
+      "nll_correct": 4.5228,
+      "nll_wrong": 4.5153,
+      "nll_gap": -0.0074,
+      "retrieved": false,
+      "correct_passkey": "6-7-8-6-4",
+      "wrong_passkey": "1-3-2-8-1",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=3": {
+      "nll_correct": 4.7799,
+      "nll_wrong": 4.7165,
+      "nll_gap": -0.0634,
+      "retrieved": false,
+      "correct_passkey": "0-7-2-2-8",
+      "wrong_passkey": "6-9-7-8-9",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=4": {
+      "nll_correct": 4.7052,
+      "nll_wrong": 4.5841,
+      "nll_gap": -0.1211,
+      "retrieved": false,
+      "correct_passkey": "5-6-3-0-3",
+      "wrong_passkey": "1-1-1-8-8",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=5": {
+      "nll_correct": 4.8041,
+      "nll_wrong": 4.8793,
+      "nll_gap": 0.0752,
+      "retrieved": true,
+      "correct_passkey": "6-8-0-3-0",
+      "wrong_passkey": "4-2-1-6-2",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=6": {
+      "nll_correct": 4.3752,
+      "nll_wrong": 4.6994,
+      "nll_gap": 0.3242,
+      "retrieved": true,
+      "correct_passkey": "0-6-5-6-1",
+      "wrong_passkey": "2-2-8-9-6",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=7": {
+      "nll_correct": 4.5007,
+      "nll_wrong": 4.7372,
+      "nll_gap": 0.2365,
+      "retrieved": true,
+      "correct_passkey": "9-5-5-9-2",
+      "wrong_passkey": "5-9-8-3-0",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=8": {
+      "nll_correct": 4.7833,
+      "nll_wrong": 4.5792,
+      "nll_gap": -0.2041,
+      "retrieved": false,
+      "correct_passkey": "4-7-2-9-1",
+      "wrong_passkey": "1-6-6-3-3",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=9": {
+      "nll_correct": 4.7931,
+      "nll_wrong": 4.3841,
+      "nll_gap": -0.409,
+      "retrieved": false,
+      "correct_passkey": "5-2-0-6-3",
+      "wrong_passkey": "1-5-8-9-5",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=10": {
+      "nll_correct": 4.559,
+      "nll_wrong": 4.9476,
+      "nll_gap": 0.3886,
+      "retrieved": true,
+      "correct_passkey": "2-0-3-5-9",
+      "wrong_passkey": "5-2-1-9-8",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=11": {
+      "nll_correct": 4.3849,
+      "nll_wrong": 4.6216,
+      "nll_gap": 0.2367,
+      "retrieved": true,
+      "correct_passkey": "5-6-6-8-7",
+      "wrong_passkey": "6-2-5-5-2",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=12": {
+      "nll_correct": 4.9169,
+      "nll_wrong": 5.0262,
+      "nll_gap": 0.1093,
+      "retrieved": true,
+      "correct_passkey": "5-0-9-8-7",
+      "wrong_passkey": "8-2-1-7-5",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=13": {
+      "nll_correct": 4.6641,
+      "nll_wrong": 4.5915,
+      "nll_gap": -0.0726,
+      "retrieved": false,
+      "correct_passkey": "0-9-5-7-1",
+      "wrong_passkey": "2-6-2-5-9",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=14": {
+      "nll_correct": 4.7573,
+      "nll_wrong": 5.0243,
+      "nll_gap": 0.2671,
+      "retrieved": true,
+      "correct_passkey": "1-9-0-0-2",
+      "wrong_passkey": "0-4-9-3-7",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=15": {
+      "nll_correct": 4.9546,
+      "nll_wrong": 4.4352,
+      "nll_gap": -0.5193,
+      "retrieved": false,
+      "correct_passkey": "9-9-2-9-8",
+      "wrong_passkey": "5-5-3-4-7",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=16": {
+      "nll_correct": 4.842,
+      "nll_wrong": 4.6848,
+      "nll_gap": -0.1572,
+      "retrieved": false,
+      "correct_passkey": "7-0-4-4-2",
+      "wrong_passkey": "0-4-2-2-4",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=17": {
+      "nll_correct": 4.6908,
+      "nll_wrong": 4.6165,
+      "nll_gap": -0.0743,
+      "retrieved": false,
+      "correct_passkey": "3-2-8-3-4",
+      "wrong_passkey": "6-8-2-5-7",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=18": {
+      "nll_correct": 4.5198,
+      "nll_wrong": 4.7608,
+      "nll_gap": 0.241,
+      "retrieved": true,
+      "correct_passkey": "3-4-1-9-7",
+      "wrong_passkey": "8-3-2-3-3",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=19": {
+      "nll_correct": 4.0623,
+      "nll_wrong": 5.2321,
+      "nll_gap": 1.1698,
+      "retrieved": true,
+      "correct_passkey": "1-2-4-6-9",
+      "wrong_passkey": "5-0-9-7-8",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=20": {
+      "nll_correct": 4.9545,
+      "nll_wrong": 4.803,
+      "nll_gap": -0.1514,
+      "retrieved": false,
+      "correct_passkey": "0-9-0-8-2",
+      "wrong_passkey": "4-2-2-7-9",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=21": {
+      "nll_correct": 4.1584,
+      "nll_wrong": 5.0152,
+      "nll_gap": 0.8568,
+      "retrieved": true,
+      "correct_passkey": "2-3-3-4-5",
+      "wrong_passkey": "6-1-1-8-8",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=22": {
+      "nll_correct": 4.8841,
+      "nll_wrong": 4.8115,
+      "nll_gap": -0.0725,
+      "retrieved": false,
+      "correct_passkey": "6-8-0-2-0",
+      "wrong_passkey": "8-7-8-3-5",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=23": {
+      "nll_correct": 4.5673,
+      "nll_wrong": 4.9134,
+      "nll_gap": 0.3462,
+      "retrieved": true,
+      "correct_passkey": "7-6-6-9-4",
+      "wrong_passkey": "5-8-3-0-2",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=24": {
+      "nll_correct": 4.745,
+      "nll_wrong": 4.955,
+      "nll_gap": 0.21,
+      "retrieved": true,
+      "correct_passkey": "8-0-3-3-7",
+      "wrong_passkey": "6-2-1-7-8",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=25": {
+      "nll_correct": 4.7315,
+      "nll_wrong": 4.5426,
+      "nll_gap": -0.1888,
+      "retrieved": false,
+      "correct_passkey": "6-7-1-7-1",
+      "wrong_passkey": "4-6-7-9-3",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=26": {
+      "nll_correct": 4.3764,
+      "nll_wrong": 4.6689,
+      "nll_gap": 0.2925,
+      "retrieved": true,
+      "correct_passkey": "3-2-6-5-0",
+      "wrong_passkey": "6-5-1-8-8",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=27": {
+      "nll_correct": 4.6543,
+      "nll_wrong": 4.6679,
+      "nll_gap": 0.0136,
+      "retrieved": true,
+      "correct_passkey": "8-6-9-7-4",
+      "wrong_passkey": "4-3-3-8-7",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=28": {
+      "nll_correct": 4.6586,
+      "nll_wrong": 4.5571,
+      "nll_gap": -0.1016,
+      "retrieved": false,
+      "correct_passkey": "5-0-2-0-9",
+      "wrong_passkey": "2-1-3-6-1",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=29": {
+      "nll_correct": 4.8875,
+      "nll_wrong": 4.744,
+      "nll_gap": -0.1435,
+      "retrieved": false,
+      "correct_passkey": "3-7-9-0-3",
+      "wrong_passkey": "2-9-6-8-8",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=30": {
+      "nll_correct": 4.3044,
+      "nll_wrong": 4.8582,
+      "nll_gap": 0.5538,
+      "retrieved": true,
+      "correct_passkey": "0-2-4-6-9",
+      "wrong_passkey": "5-8-0-0-4",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=31": {
+      "nll_correct": 4.7542,
+      "nll_wrong": 4.9371,
+      "nll_gap": 0.1829,
+      "retrieved": true,
+      "correct_passkey": "9-8-6-3-6",
+      "wrong_passkey": "5-2-9-6-0",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=32": {
+      "nll_correct": 4.4052,
+      "nll_wrong": 4.8478,
+      "nll_gap": 0.4426,
+      "retrieved": true,
+      "correct_passkey": "0-3-0-3-4",
+      "wrong_passkey": "4-0-6-0-1",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=33": {
+      "nll_correct": 4.7358,
+      "nll_wrong": 4.6002,
+      "nll_gap": -0.1357,
+      "retrieved": false,
+      "correct_passkey": "7-6-9-4-5",
+      "wrong_passkey": "1-3-0-0-1",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=34": {
+      "nll_correct": 4.5893,
+      "nll_wrong": 4.7582,
+      "nll_gap": 0.1688,
+      "retrieved": true,
+      "correct_passkey": "9-5-3-6-9",
+      "wrong_passkey": "8-1-4-8-7",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=35": {
+      "nll_correct": 4.5027,
+      "nll_wrong": 5.3059,
+      "nll_gap": 0.8033,
+      "retrieved": true,
+      "correct_passkey": "3-7-9-7-9",
+      "wrong_passkey": "9-0-4-9-2",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=36": {
+      "nll_correct": 4.3671,
+      "nll_wrong": 4.6873,
+      "nll_gap": 0.3202,
+      "retrieved": true,
+      "correct_passkey": "4-4-6-8-4",
+      "wrong_passkey": "6-5-9-3-3",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=37": {
+      "nll_correct": 4.7539,
+      "nll_wrong": 4.5411,
+      "nll_gap": -0.2128,
+      "retrieved": false,
+      "correct_passkey": "6-3-1-6-7",
+      "wrong_passkey": "5-4-5-2-9",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=38": {
+      "nll_correct": 4.4223,
+      "nll_wrong": 4.5011,
+      "nll_gap": 0.0788,
+      "retrieved": true,
+      "correct_passkey": "0-4-2-4-7",
+      "wrong_passkey": "8-6-5-5-4",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=39": {
+      "nll_correct": 4.5596,
+      "nll_wrong": 4.3581,
+      "nll_gap": -0.2015,
+      "retrieved": false,
+      "correct_passkey": "4-5-3-2-7",
+      "wrong_passkey": "5-3-4-5-8",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=40": {
+      "nll_correct": 5.104,
+      "nll_wrong": 4.4298,
+      "nll_gap": -0.6743,
+      "retrieved": false,
+      "correct_passkey": "7-9-7-0-7",
+      "wrong_passkey": "3-4-3-7-1",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=41": {
+      "nll_correct": 4.5858,
+      "nll_wrong": 4.3603,
+      "nll_gap": -0.2255,
+      "retrieved": false,
+      "correct_passkey": "3-3-2-9-8",
+      "wrong_passkey": "1-2-6-7-5",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=42": {
+      "nll_correct": 4.8161,
+      "nll_wrong": 5.0489,
+      "nll_gap": 0.2329,
+      "retrieved": true,
+      "correct_passkey": "7-7-8-1-2",
+      "wrong_passkey": "8-0-2-6-1",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=43": {
+      "nll_correct": 4.8752,
+      "nll_wrong": 4.7879,
+      "nll_gap": -0.0872,
+      "retrieved": false,
+      "correct_passkey": "8-9-8-2-4",
+      "wrong_passkey": "0-3-7-4-9",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=44": {
+      "nll_correct": 5.0729,
+      "nll_wrong": 4.3874,
+      "nll_gap": -0.6855,
+      "retrieved": false,
+      "correct_passkey": "9-9-2-0-9",
+      "wrong_passkey": "3-6-6-5-4",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=45": {
+      "nll_correct": 4.7013,
+      "nll_wrong": 4.7491,
+      "nll_gap": 0.0478,
+      "retrieved": true,
+      "correct_passkey": "0-3-0-9-7",
+      "wrong_passkey": "2-2-1-0-2",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=46": {
+      "nll_correct": 4.7807,
+      "nll_wrong": 4.9034,
+      "nll_gap": 0.1227,
+      "retrieved": true,
+      "correct_passkey": "7-1-8-5-4",
+      "wrong_passkey": "9-9-1-2-5",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=47": {
+      "nll_correct": 4.8591,
+      "nll_wrong": 4.8154,
+      "nll_gap": -0.0437,
+      "retrieved": false,
+      "correct_passkey": "6-8-0-3-7",
+      "wrong_passkey": "1-9-4-1-0",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=48": {
+      "nll_correct": 4.5671,
+      "nll_wrong": 4.5056,
+      "nll_gap": -0.0615,
+      "retrieved": false,
+      "correct_passkey": "0-1-6-9-1",
+      "wrong_passkey": "4-4-8-8-3",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=49": {
+      "nll_correct": 4.9469,
+      "nll_wrong": 4.9428,
+      "nll_gap": -0.004,
+      "retrieved": false,
+      "correct_passkey": "5-9-1-0-3",
+      "wrong_passkey": "0-3-8-2-8",
+      "ar_generated": " The project will be a major step forward in the",
+      "ar_exact_match": false
+    }
+  },
+  "summary": {
+    "L=1024_d=0.5": {
+      "mean_nll_gap": 0.3024,
+      "retrieval_rate": 0.9,
+      "ar_exact_match_rate": 0.0,
+      "trials": 50
+    },
+    "L=2048_d=0.5": {
+      "mean_nll_gap": 0.2575,
+      "retrieval_rate": 0.78,
+      "ar_exact_match_rate": 0.0,
+      "trials": 50
+    },
+    "L=4096_d=0.5": {
+      "mean_nll_gap": 0.0711,
+      "retrieval_rate": 0.52,
+      "ar_exact_match_rate": 0.0,
+      "trials": 50
+    }
+  },
+  "global": {
+    "total_trials": 150,
+    "mean_nll_gap": 0.2103,
+    "retrieval_rate": 0.7333,
+    "ar_exact_match_rate": 0.0
+  }
+}
