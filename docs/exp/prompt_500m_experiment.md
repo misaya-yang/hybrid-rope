@@ -1,4 +1,12 @@
+# Claude Code Prompt: 500M EVQ From-Scratch Training + Passkey Evaluation
 
+> 直接复制下面分隔线内的内容给 Claude Code
+
+---
+
+## 任务概述
+
+我需要你在现有的 `scripts/m4_evq_sweep/run_evq_sweep.py` 基础上，完成以下工作：
 
 1. 新增 500M 模型配置
 2. 实现适用于从零训练小模型的 Passkey Retrieval 评测（含训练数据混入）
@@ -483,14 +491,4 @@ echo "Done! Results in ${WORK_DIR}/"
 - [ ] 所有新代码有 docstring 和类型注解
 - [ ] FineWeb-Edu 下载失败时自动 fallback 到 SlimPajama
 
----聪明。τ 依赖的是 D(Δ)、b、L——跟模型大小无关。50M 和 125M 就能完全验证"理论预测 τ"这个 story。
-实验设计应该是这样：
-第一步：FineWeb-Edu 上的 τ-sweep（50M）。跑 τ ∈ {0, 0.5, 1.0, 1.5, 2.0}，5 个 run。50M 模型单个 run 大概几十分钟，总共几小时就完。拿到 FineWeb-Edu 的最优 τ_emp。
-第二步：对比 TinyStories 的 τ_emp = 1.5。如果 FineWeb-Edu 上最优 τ ≠ 1.5，这就直接证明了 τ 确实反映数据的距离先验结构——不同数据集需要不同的 τ。
-第三步：测量 D(Δ) 并预测 τ。从 FineWeb-Edu 的训练数据里统计 attention 距离分布（或者更简单地，直接统计 token 间的共现距离分布作为代理），拟合 power-law 指数 γ，从理论算出 τ*，看 τ* 是否接近 τ_emp。
-第四步：125M 双 seed 确认。在 FineWeb-Edu 上只跑 τ=0 和 τ=τ_emp 两个点，双 seed 验证。
-这样你的论文就有了一个 DAPE 完全没有的杀手级证据：
-
-"我们不只是 sweep 找到了一个好的 τ，我们从数据的距离先验直接预测了 τ，预测值与经验最优值吻合。"
-
-这比"EVQ 赢了 geometric 15%"有力得多。这是 theory → prediction → validation 的完整闭环，NeurIPS 审稿人最喜欢这个。
+---
