@@ -1,0 +1,44 @@
+{
+  "method": "C1 Geometric (from scratch)",
+  "ppl": {
+    "512": 90.284,
+    "1024": 88.171,
+    "2048": 90.098,
+    "4096": 91.063,
+    "8192": 115.56,
+    "16384": 175.437
+  },
+  "passkey_global": {
+    "total_trials": 400,
+    "mean_nll_gap": 0.1814,
+    "retrieval_rate": 0.69,
+    "ar_exact_match_rate": 0.0
+  },
+  "passkey_summary": {
+    "L=1024_d=0.5": {
+      "mean_nll_gap": 0.3587,
+      "retrieval_rate": 0.87,
+      "ar_exact_match_rate": 0.0,
+      "trials": 100
+    },
+    "L=2048_d=0.5": {
+      "mean_nll_gap": 0.3069,
+      "retrieval_rate": 0.8,
+      "ar_exact_match_rate": 0.0,
+      "trials": 100
+    },
+    "L=4096_d=0.5": {
+      "mean_nll_gap": 0.0722,
+      "retrieval_rate": 0.54,
+      "ar_exact_match_rate": 0.0,
+      "trials": 100
+    },
+    "L=8192_d=0.5": {
+      "mean_nll_gap": -0.0123,
+      "retrieval_rate": 0.55,
+      "ar_exact_match_rate": 0.0,
+      "trials": 100
+    }
+  },
+  "train_time_sec": 1551.1
+}

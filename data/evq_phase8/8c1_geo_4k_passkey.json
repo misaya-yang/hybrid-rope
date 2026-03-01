@@ -1,0 +1,4036 @@
+{
+  "details": {
+    "L=1024_d=0.5_t=0": {
+      "nll_correct": 3.9131,
+      "nll_wrong": 4.4449,
+      "nll_gap": 0.5318,
+      "retrieved": true,
+      "correct_passkey": "0-8-7-1-4",
+      "wrong_passkey": "5-0-4-7-9",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=1": {
+      "nll_correct": 3.9485,
+      "nll_wrong": 4.4736,
+      "nll_gap": 0.5251,
+      "retrieved": true,
+      "correct_passkey": "0-7-5-5-3",
+      "wrong_passkey": "7-2-6-4-6",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=2": {
+      "nll_correct": 3.7604,
+      "nll_wrong": 4.4186,
+      "nll_gap": 0.6582,
+      "retrieved": true,
+      "correct_passkey": "0-8-0-3-8",
+      "wrong_passkey": "9-2-5-6-9",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=3": {
+      "nll_correct": 3.7695,
+      "nll_wrong": 3.6503,
+      "nll_gap": -0.1192,
+      "retrieved": false,
+      "correct_passkey": "8-3-8-7-3",
+      "wrong_passkey": "1-5-6-6-1",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=4": {
+      "nll_correct": 3.7053,
+      "nll_wrong": 4.4032,
+      "nll_gap": 0.6979,
+      "retrieved": true,
+      "correct_passkey": "1-0-8-3-4",
+      "wrong_passkey": "7-8-2-5-3",
+      "ar_generated": "\n\u201cThe United States is a country in which",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=5": {
+      "nll_correct": 3.6876,
+      "nll_wrong": 3.5689,
+      "nll_gap": -0.1187,
+      "retrieved": false,
+      "correct_passkey": "3-9-2-0-1",
+      "wrong_passkey": "4-7-3-1-3",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=6": {
+      "nll_correct": 3.5476,
+      "nll_wrong": 4.114,
+      "nll_gap": 0.5664,
+      "retrieved": true,
+      "correct_passkey": "6-8-4-6-3",
+      "wrong_passkey": "7-1-7-0-4",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=7": {
+      "nll_correct": 3.7866,
+      "nll_wrong": 3.9262,
+      "nll_gap": 0.1396,
+      "retrieved": true,
+      "correct_passkey": "2-9-3-3-7",
+      "wrong_passkey": "1-8-2-8-6",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=8": {
+      "nll_correct": 3.5741,
+      "nll_wrong": 4.1147,
+      "nll_gap": 0.5405,
+      "retrieved": true,
+      "correct_passkey": "9-6-3-5-1",
+      "wrong_passkey": "4-2-1-0-5",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=9": {
+      "nll_correct": 3.3896,
+      "nll_wrong": 4.0817,
+      "nll_gap": 0.6921,
+      "retrieved": true,
+      "correct_passkey": "3-4-0-4-2",
+      "wrong_passkey": "9-8-6-2-8",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=10": {
+      "nll_correct": 3.6599,
+      "nll_wrong": 3.9352,
+      "nll_gap": 0.2754,
+      "retrieved": true,
+      "correct_passkey": "1-2-4-9-8",
+      "wrong_passkey": "3-9-3-4-5",
+      "ar_generated": "\n\u201cThe United States is a country in which",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=11": {
+      "nll_correct": 3.8431,
+      "nll_wrong": 4.2194,
+      "nll_gap": 0.3763,
+      "retrieved": true,
+      "correct_passkey": "1-9-8-3-5",
+      "wrong_passkey": "6-4-7-4-8",
+      "ar_generated": "\n\u201cThe United States is a country in which",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=12": {
+      "nll_correct": 3.4032,
+      "nll_wrong": 3.777,
+      "nll_gap": 0.3738,
+      "retrieved": true,
+      "correct_passkey": "4-5-5-6-4",
+      "wrong_passkey": "3-9-9-8-8",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=13": {
+      "nll_correct": 3.4012,
+      "nll_wrong": 4.1732,
+      "nll_gap": 0.7719,
+      "retrieved": true,
+      "correct_passkey": "2-3-4-5-9",
+      "wrong_passkey": "1-9-2-0-1",
+      "ar_generated": "\n\u201cThe United States is a country in which",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=14": {
+      "nll_correct": 3.5544,
+      "nll_wrong": 4.0185,
+      "nll_gap": 0.4641,
+      "retrieved": true,
+      "correct_passkey": "8-4-2-4-7",
+      "wrong_passkey": "7-0-7-1-0",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=15": {
+      "nll_correct": 3.7233,
+      "nll_wrong": 3.952,
+      "nll_gap": 0.2287,
+      "retrieved": true,
+      "correct_passkey": "3-5-9-8-6",
+      "wrong_passkey": "8-8-6-9-5",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=16": {
+      "nll_correct": 3.6345,
+      "nll_wrong": 3.5909,
+      "nll_gap": -0.0436,
+      "retrieved": false,
+      "correct_passkey": "7-6-5-3-5",
+      "wrong_passkey": "1-1-2-0-6",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=17": {
+      "nll_correct": 3.9531,
+      "nll_wrong": 4.0335,
+      "nll_gap": 0.0804,
+      "retrieved": true,
+      "correct_passkey": "2-7-8-1-9",
+      "wrong_passkey": "5-6-7-6-4",
+      "ar_generated": "\n\u201cThe United States is a country in which",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=18": {
+      "nll_correct": 3.7653,
+      "nll_wrong": 3.9795,
+      "nll_gap": 0.2142,
+      "retrieved": true,
+      "correct_passkey": "7-4-7-1-3",
+      "wrong_passkey": "4-1-9-7-7",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=19": {
+      "nll_correct": 3.5649,
+      "nll_wrong": 4.192,
+      "nll_gap": 0.6271,
+      "retrieved": true,
+      "correct_passkey": "4-9-1-5-0",
+      "wrong_passkey": "0-7-2-7-4",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=20": {
+      "nll_correct": 3.6471,
+      "nll_wrong": 3.6605,
+      "nll_gap": 0.0133,
+      "retrieved": true,
+      "correct_passkey": "6-5-0-7-7",
+      "wrong_passkey": "3-3-8-6-1",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=21": {
+      "nll_correct": 3.6515,
+      "nll_wrong": 3.8602,
+      "nll_gap": 0.2087,
+      "retrieved": true,
+      "correct_passkey": "9-1-1-4-1",
+      "wrong_passkey": "5-5-8-7-0",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=22": {
+      "nll_correct": 3.5702,
+      "nll_wrong": 3.8848,
+      "nll_gap": 0.3147,
+      "retrieved": true,
+      "correct_passkey": "3-7-1-8-0",
+      "wrong_passkey": "5-2-7-2-6",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=23": {
+      "nll_correct": 3.5647,
+      "nll_wrong": 3.6427,
+      "nll_gap": 0.0781,
+      "retrieved": true,
+      "correct_passkey": "8-8-4-6-2",
+      "wrong_passkey": "5-5-6-2-9",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=24": {
+      "nll_correct": 3.659,
+      "nll_wrong": 4.0352,
+      "nll_gap": 0.3763,
+      "retrieved": true,
+      "correct_passkey": "0-0-6-1-9",
+      "wrong_passkey": "3-7-7-7-5",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=25": {
+      "nll_correct": 3.5732,
+      "nll_wrong": 3.41,
+      "nll_gap": -0.1632,
+      "retrieved": false,
+      "correct_passkey": "5-5-1-8-1",
+      "wrong_passkey": "4-4-4-2-7",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=26": {
+      "nll_correct": 3.7519,
+      "nll_wrong": 3.6527,
+      "nll_gap": -0.0992,
+      "retrieved": false,
+      "correct_passkey": "3-2-8-5-0",
+      "wrong_passkey": "1-6-6-4-7",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=27": {
+      "nll_correct": 3.85,
+      "nll_wrong": 4.3634,
+      "nll_gap": 0.5133,
+      "retrieved": true,
+      "correct_passkey": "0-6-1-6-7",
+      "wrong_passkey": "4-0-5-9-8",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=28": {
+      "nll_correct": 3.6196,
+      "nll_wrong": 3.9289,
+      "nll_gap": 0.3094,
+      "retrieved": true,
+      "correct_passkey": "5-5-1-6-6",
+      "wrong_passkey": "7-8-4-2-8",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=29": {
+      "nll_correct": 3.6604,
+      "nll_wrong": 3.9553,
+      "nll_gap": 0.2949,
+      "retrieved": true,
+      "correct_passkey": "9-7-8-8-5",
+      "wrong_passkey": "6-8-6-2-9",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=30": {
+      "nll_correct": 3.6976,
+      "nll_wrong": 3.8528,
+      "nll_gap": 0.1552,
+      "retrieved": true,
+      "correct_passkey": "7-6-6-2-3",
+      "wrong_passkey": "8-9-2-5-9",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=31": {
+      "nll_correct": 3.5169,
+      "nll_wrong": 3.8476,
+      "nll_gap": 0.3308,
+      "retrieved": true,
+      "correct_passkey": "4-9-7-6-0",
+      "wrong_passkey": "7-3-8-2-4",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=32": {
+      "nll_correct": 3.5764,
+      "nll_wrong": 3.8361,
+      "nll_gap": 0.2597,
+      "retrieved": true,
+      "correct_passkey": "5-4-0-6-5",
+      "wrong_passkey": "8-7-5-1-7",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=33": {
+      "nll_correct": 3.73,
+      "nll_wrong": 3.968,
+      "nll_gap": 0.238,
+      "retrieved": true,
+      "correct_passkey": "9-9-9-9-6",
+      "wrong_passkey": "7-6-3-7-8",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=34": {
+      "nll_correct": 3.4378,
+      "nll_wrong": 3.8302,
+      "nll_gap": 0.3925,
+      "retrieved": true,
+      "correct_passkey": "4-7-3-1-9",
+      "wrong_passkey": "7-5-6-6-1",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=35": {
+      "nll_correct": 3.8248,
+      "nll_wrong": 3.904,
+      "nll_gap": 0.0791,
+      "retrieved": true,
+      "correct_passkey": "0-1-6-8-0",
+      "wrong_passkey": "5-7-8-6-5",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=36": {
+      "nll_correct": 3.2318,
+      "nll_wrong": 4.295,
+      "nll_gap": 1.0632,
+      "retrieved": true,
+      "correct_passkey": "3-3-1-3-2",
+      "wrong_passkey": "0-8-0-4-8",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=37": {
+      "nll_correct": 3.5316,
+      "nll_wrong": 4.026,
+      "nll_gap": 0.4943,
+      "retrieved": true,
+      "correct_passkey": "4-0-7-2-9",
+      "wrong_passkey": "8-2-6-9-4",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=38": {
+      "nll_correct": 3.6057,
+      "nll_wrong": 3.8847,
+      "nll_gap": 0.2791,
+      "retrieved": true,
+      "correct_passkey": "8-1-4-1-7",
+      "wrong_passkey": "3-8-1-9-5",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=39": {
+      "nll_correct": 3.8723,
+      "nll_wrong": 4.2384,
+      "nll_gap": 0.3661,
+      "retrieved": true,
+      "correct_passkey": "2-1-4-7-2",
+      "wrong_passkey": "4-2-1-8-8",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=40": {
+      "nll_correct": 3.3282,
+      "nll_wrong": 4.0765,
+      "nll_gap": 0.7484,
+      "retrieved": true,
+      "correct_passkey": "4-2-3-6-9",
+      "wrong_passkey": "0-0-0-7-6",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=41": {
+      "nll_correct": 3.6414,
+      "nll_wrong": 3.7437,
+      "nll_gap": 0.1023,
+      "retrieved": true,
+      "correct_passkey": "6-6-7-2-4",
+      "wrong_passkey": "8-7-2-1-3",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=42": {
+      "nll_correct": 3.1004,
+      "nll_wrong": 3.7816,
+      "nll_gap": 0.6812,
+      "retrieved": true,
+      "correct_passkey": "4-3-3-4-5",
+      "wrong_passkey": "6-8-4-9-7",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=43": {
+      "nll_correct": 3.9754,
+      "nll_wrong": 4.4519,
+      "nll_gap": 0.4765,
+      "retrieved": true,
+      "correct_passkey": "2-6-9-6-9",
+      "wrong_passkey": "7-0-2-0-7",
+      "ar_generated": "\n\u201cThe United States is a country in which",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=44": {
+      "nll_correct": 3.5843,
+      "nll_wrong": 3.9237,
+      "nll_gap": 0.3394,
+      "retrieved": true,
+      "correct_passkey": "3-8-1-3-7",
+      "wrong_passkey": "1-6-5-8-2",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=45": {
+      "nll_correct": 3.8834,
+      "nll_wrong": 4.2305,
+      "nll_gap": 0.3471,
+      "retrieved": true,
+      "correct_passkey": "7-0-5-8-4",
+      "wrong_passkey": "0-2-0-7-1",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=46": {
+      "nll_correct": 3.5306,
+      "nll_wrong": 3.9749,
+      "nll_gap": 0.4443,
+      "retrieved": true,
+      "correct_passkey": "3-7-1-4-1",
+      "wrong_passkey": "7-3-8-1-7",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=47": {
+      "nll_correct": 3.7016,
+      "nll_wrong": 3.9849,
+      "nll_gap": 0.2834,
+      "retrieved": true,
+      "correct_passkey": "9-8-9-8-5",
+      "wrong_passkey": "4-9-4-5-0",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=48": {
+      "nll_correct": 3.6405,
+      "nll_wrong": 4.0187,
+      "nll_gap": 0.3782,
+      "retrieved": true,
+      "correct_passkey": "7-8-1-7-4",
+      "wrong_passkey": "9-4-3-8-7",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=49": {
+      "nll_correct": 3.9149,
+      "nll_wrong": 4.1077,
+      "nll_gap": 0.1928,
+      "retrieved": true,
+      "correct_passkey": "0-2-9-1-9",
+      "wrong_passkey": "6-0-2-2-6",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=50": {
+      "nll_correct": 3.3568,
+      "nll_wrong": 3.8764,
+      "nll_gap": 0.5196,
+      "retrieved": true,
+      "correct_passkey": "6-2-2-2-3",
+      "wrong_passkey": "9-3-5-5-5",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=51": {
+      "nll_correct": 3.6242,
+      "nll_wrong": 4.0643,
+      "nll_gap": 0.44,
+      "retrieved": true,
+      "correct_passkey": "0-1-0-4-3",
+      "wrong_passkey": "2-4-5-0-1",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=52": {
+      "nll_correct": 3.5422,
+      "nll_wrong": 4.0402,
+      "nll_gap": 0.498,
+      "retrieved": true,
+      "correct_passkey": "3-6-7-7-8",
+      "wrong_passkey": "2-5-9-5-0",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=53": {
+      "nll_correct": 3.5122,
+      "nll_wrong": 3.9588,
+      "nll_gap": 0.4467,
+      "retrieved": true,
+      "correct_passkey": "9-4-4-1-0",
+      "wrong_passkey": "3-9-9-7-6",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=54": {
+      "nll_correct": 3.6605,
+      "nll_wrong": 3.6717,
+      "nll_gap": 0.0112,
+      "retrieved": true,
+      "correct_passkey": "4-5-1-8-5",
+      "wrong_passkey": "5-6-4-7-8",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=55": {
+      "nll_correct": 3.6032,
+      "nll_wrong": 4.3138,
+      "nll_gap": 0.7106,
+      "retrieved": true,
+      "correct_passkey": "0-0-8-0-2",
+      "wrong_passkey": "2-9-5-7-7",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=56": {
+      "nll_correct": 3.7961,
+      "nll_wrong": 4.0069,
+      "nll_gap": 0.2108,
+      "retrieved": true,
+      "correct_passkey": "0-4-7-0-1",
+      "wrong_passkey": "6-5-8-3-2",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=57": {
+      "nll_correct": 3.837,
+      "nll_wrong": 4.1002,
+      "nll_gap": 0.2633,
+      "retrieved": true,
+      "correct_passkey": "2-0-1-6-5",
+      "wrong_passkey": "4-9-3-3-8",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=58": {
+      "nll_correct": 3.5195,
+      "nll_wrong": 4.0476,
+      "nll_gap": 0.5281,
+      "retrieved": true,
+      "correct_passkey": "5-5-3-8-6",
+      "wrong_passkey": "7-0-4-4-5",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=59": {
+      "nll_correct": 3.6915,
+      "nll_wrong": 4.0017,
+      "nll_gap": 0.3102,
+      "retrieved": true,
+      "correct_passkey": "9-6-4-6-6",
+      "wrong_passkey": "7-5-1-2-2",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=60": {
+      "nll_correct": 3.3871,
+      "nll_wrong": 3.9861,
+      "nll_gap": 0.599,
+      "retrieved": true,
+      "correct_passkey": "4-4-1-5-8",
+      "wrong_passkey": "9-2-6-6-2",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=61": {
+      "nll_correct": 4.047,
+      "nll_wrong": 4.1944,
+      "nll_gap": 0.1475,
+      "retrieved": true,
+      "correct_passkey": "2-2-8-7-8",
+      "wrong_passkey": "7-4-2-3-2",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=62": {
+      "nll_correct": 3.4249,
+      "nll_wrong": 4.2685,
+      "nll_gap": 0.8436,
+      "retrieved": true,
+      "correct_passkey": "1-6-1-3-0",
+      "wrong_passkey": "9-5-5-8-9",
+      "ar_generated": "\n\u201cThe United States is a country in which",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=63": {
+      "nll_correct": 3.4085,
+      "nll_wrong": 4.5714,
+      "nll_gap": 1.1629,
+      "retrieved": true,
+      "correct_passkey": "1-2-5-3-0",
+      "wrong_passkey": "8-9-6-0-4",
+      "ar_generated": "\n\u201cThe United States is a country in which",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=64": {
+      "nll_correct": 3.3563,
+      "nll_wrong": 4.0467,
+      "nll_gap": 0.6904,
+      "retrieved": true,
+      "correct_passkey": "7-3-0-0-2",
+      "wrong_passkey": "9-4-7-9-9",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=65": {
+      "nll_correct": 3.5494,
+      "nll_wrong": 4.2397,
+      "nll_gap": 0.6903,
+      "retrieved": true,
+      "correct_passkey": "1-0-5-4-7",
+      "wrong_passkey": "9-2-3-5-9",
+      "ar_generated": "\n\u201cThe United States is a country in which",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=66": {
+      "nll_correct": 3.7562,
+      "nll_wrong": 4.2426,
+      "nll_gap": 0.4864,
+      "retrieved": true,
+      "correct_passkey": "9-6-5-3-5",
+      "wrong_passkey": "2-1-8-6-4",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=67": {
+      "nll_correct": 3.79,
+      "nll_wrong": 4.1873,
+      "nll_gap": 0.3973,
+      "retrieved": true,
+      "correct_passkey": "1-5-7-6-6",
+      "wrong_passkey": "3-0-4-3-0",
+      "ar_generated": "\n\u201cThe United States is a country in which",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=68": {
+      "nll_correct": 3.9304,
+      "nll_wrong": 4.5792,
+      "nll_gap": 0.6489,
+      "retrieved": true,
+      "correct_passkey": "2-8-1-8-5",
+      "wrong_passkey": "7-2-5-0-7",
+      "ar_generated": "\n\u201cThe United States is a country in which",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=69": {
+      "nll_correct": 3.7233,
+      "nll_wrong": 4.1481,
+      "nll_gap": 0.4248,
+      "retrieved": true,
+      "correct_passkey": "5-1-2-8-8",
+      "wrong_passkey": "9-0-5-6-0",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=70": {
+      "nll_correct": 3.3546,
+      "nll_wrong": 4.0757,
+      "nll_gap": 0.7212,
+      "retrieved": true,
+      "correct_passkey": "8-2-3-3-9",
+      "wrong_passkey": "7-4-7-0-8",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=71": {
+      "nll_correct": 3.6861,
+      "nll_wrong": 3.6878,
+      "nll_gap": 0.0018,
+      "retrieved": true,
+      "correct_passkey": "6-9-2-6-2",
+      "wrong_passkey": "3-1-8-1-9",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=72": {
+      "nll_correct": 3.6943,
+      "nll_wrong": 3.839,
+      "nll_gap": 0.1446,
+      "retrieved": true,
+      "correct_passkey": "2-6-4-7-1",
+      "wrong_passkey": "4-7-7-2-3",
+      "ar_generated": "\n\u201cThe United States is a country in which",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=73": {
+      "nll_correct": 3.3914,
+      "nll_wrong": 3.5904,
+      "nll_gap": 0.1991,
+      "retrieved": true,
+      "correct_passkey": "5-6-3-5-9",
+      "wrong_passkey": "8-5-5-6-2",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=74": {
+      "nll_correct": 3.7035,
+      "nll_wrong": 3.7816,
+      "nll_gap": 0.0781,
+      "retrieved": true,
+      "correct_passkey": "6-2-1-9-9",
+      "wrong_passkey": "8-6-8-3-7",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=75": {
+      "nll_correct": 3.6894,
+      "nll_wrong": 3.6037,
+      "nll_gap": -0.0857,
+      "retrieved": false,
+      "correct_passkey": "7-1-4-3-3",
+      "wrong_passkey": "1-5-6-4-4",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=76": {
+      "nll_correct": 3.8105,
+      "nll_wrong": 4.0803,
+      "nll_gap": 0.2698,
+      "retrieved": true,
+      "correct_passkey": "2-8-5-4-0",
+      "wrong_passkey": "7-7-1-3-5",
+      "ar_generated": "\n\u201cThe United States is a country in which",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=77": {
+      "nll_correct": 3.7173,
+      "nll_wrong": 3.7057,
+      "nll_gap": -0.0116,
+      "retrieved": false,
+      "correct_passkey": "6-1-5-2-3",
+      "wrong_passkey": "8-8-9-8-8",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=78": {
+      "nll_correct": 3.768,
+      "nll_wrong": 4.2761,
+      "nll_gap": 0.5081,
+      "retrieved": true,
+      "correct_passkey": "1-1-9-4-2",
+      "wrong_passkey": "0-6-6-5-1",
+      "ar_generated": "\n\u201cThe United States is a country in which",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=79": {
+      "nll_correct": 3.8783,
+      "nll_wrong": 3.8992,
+      "nll_gap": 0.0209,
+      "retrieved": true,
+      "correct_passkey": "8-0-5-8-4",
+      "wrong_passkey": "4-2-6-7-7",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=80": {
+      "nll_correct": 3.7865,
+      "nll_wrong": 4.6971,
+      "nll_gap": 0.9106,
+      "retrieved": true,
+      "correct_passkey": "1-4-8-4-3",
+      "wrong_passkey": "8-0-4-9-7",
+      "ar_generated": "\n\u201cThe United States is a country in which",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=81": {
+      "nll_correct": 3.7262,
+      "nll_wrong": 3.5168,
+      "nll_gap": -0.2094,
+      "retrieved": false,
+      "correct_passkey": "9-7-0-5-0",
+      "wrong_passkey": "3-0-4-0-4",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=82": {
+      "nll_correct": 3.6521,
+      "nll_wrong": 4.2213,
+      "nll_gap": 0.5692,
+      "retrieved": true,
+      "correct_passkey": "5-1-8-1-7",
+      "wrong_passkey": "0-3-6-6-4",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=83": {
+      "nll_correct": 3.6322,
+      "nll_wrong": 4.1924,
+      "nll_gap": 0.5602,
+      "retrieved": true,
+      "correct_passkey": "3-3-5-9-3",
+      "wrong_passkey": "8-5-2-4-2",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=84": {
+      "nll_correct": 3.6712,
+      "nll_wrong": 4.3008,
+      "nll_gap": 0.6296,
+      "retrieved": true,
+      "correct_passkey": "7-9-9-5-1",
+      "wrong_passkey": "0-2-1-4-4",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=85": {
+      "nll_correct": 3.9266,
+      "nll_wrong": 3.5042,
+      "nll_gap": -0.4225,
+      "retrieved": false,
+      "correct_passkey": "2-6-0-9-1",
+      "wrong_passkey": "1-3-1-3-4",
+      "ar_generated": "\n\u201cThe United States is a country in which",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=86": {
+      "nll_correct": 3.7239,
+      "nll_wrong": 3.6035,
+      "nll_gap": -0.1204,
+      "retrieved": false,
+      "correct_passkey": "7-0-4-7-0",
+      "wrong_passkey": "6-1-2-4-9",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=87": {
+      "nll_correct": 3.3722,
+      "nll_wrong": 3.9314,
+      "nll_gap": 0.5592,
+      "retrieved": true,
+      "correct_passkey": "6-3-5-4-9",
+      "wrong_passkey": "5-0-2-0-5",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=88": {
+      "nll_correct": 3.5737,
+      "nll_wrong": 4.4166,
+      "nll_gap": 0.8429,
+      "retrieved": true,
+      "correct_passkey": "2-0-0-4-8",
+      "wrong_passkey": "7-8-2-6-7",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=89": {
+      "nll_correct": 3.7273,
+      "nll_wrong": 3.8867,
+      "nll_gap": 0.1594,
+      "retrieved": true,
+      "correct_passkey": "7-1-7-7-1",
+      "wrong_passkey": "8-8-2-8-7",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=90": {
+      "nll_correct": 3.703,
+      "nll_wrong": 3.8316,
+      "nll_gap": 0.1286,
+      "retrieved": true,
+      "correct_passkey": "8-0-5-4-7",
+      "wrong_passkey": "4-9-3-5-8",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=91": {
+      "nll_correct": 3.6986,
+      "nll_wrong": 4.5817,
+      "nll_gap": 0.8831,
+      "retrieved": true,
+      "correct_passkey": "2-3-7-9-0",
+      "wrong_passkey": "5-9-0-6-9",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=92": {
+      "nll_correct": 3.6617,
+      "nll_wrong": 3.8872,
+      "nll_gap": 0.2255,
+      "retrieved": true,
+      "correct_passkey": "9-9-7-9-1",
+      "wrong_passkey": "6-5-4-1-2",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=93": {
+      "nll_correct": 3.4164,
+      "nll_wrong": 4.0119,
+      "nll_gap": 0.5955,
+      "retrieved": true,
+      "correct_passkey": "2-3-1-3-1",
+      "wrong_passkey": "6-6-3-9-7",
+      "ar_generated": "\n\u201cThe United States is a country in which",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=94": {
+      "nll_correct": 3.6351,
+      "nll_wrong": 3.6259,
+      "nll_gap": -0.0093,
+      "retrieved": false,
+      "correct_passkey": "3-7-8-4-7",
+      "wrong_passkey": "2-3-3-2-3",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=95": {
+      "nll_correct": 3.9341,
+      "nll_wrong": 4.0653,
+      "nll_gap": 0.1312,
+      "retrieved": true,
+      "correct_passkey": "0-4-8-5-7",
+      "wrong_passkey": "3-8-2-7-0",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=96": {
+      "nll_correct": 3.8798,
+      "nll_wrong": 3.7138,
+      "nll_gap": -0.166,
+      "retrieved": false,
+      "correct_passkey": "2-3-7-0-9",
+      "wrong_passkey": "3-5-1-4-6",
+      "ar_generated": "\n\u201cThe United States is a country in which",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=97": {
+      "nll_correct": 3.8277,
+      "nll_wrong": 3.8236,
+      "nll_gap": -0.004,
+      "retrieved": false,
+      "correct_passkey": "8-4-9-8-5",
+      "wrong_passkey": "7-9-8-3-3",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=98": {
+      "nll_correct": 3.8497,
+      "nll_wrong": 4.0718,
+      "nll_gap": 0.222,
+      "retrieved": true,
+      "correct_passkey": "2-7-4-2-8",
+      "wrong_passkey": "4-2-7-4-1",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=1024_d=0.5_t=99": {
+      "nll_correct": 2.641,
+      "nll_wrong": 4.1711,
+      "nll_gap": 1.5301,
+      "retrieved": true,
+      "correct_passkey": "0-0-0-0-0",
+      "wrong_passkey": "5-2-3-1-6",
+      "ar_generated": "\nThe United States has a strong political and political",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=0": {
+      "nll_correct": 4.1457,
+      "nll_wrong": 4.7966,
+      "nll_gap": 0.6509,
+      "retrieved": true,
+      "correct_passkey": "5-3-1-0-1",
+      "wrong_passkey": "7-0-0-8-9",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=1": {
+      "nll_correct": 3.9816,
+      "nll_wrong": 4.6479,
+      "nll_gap": 0.6663,
+      "retrieved": true,
+      "correct_passkey": "4-5-5-1-2",
+      "wrong_passkey": "9-4-4-9-1",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=2": {
+      "nll_correct": 4.8391,
+      "nll_wrong": 4.6315,
+      "nll_gap": -0.2076,
+      "retrieved": false,
+      "correct_passkey": "2-8-0-7-9",
+      "wrong_passkey": "6-5-9-3-8",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=3": {
+      "nll_correct": 4.2653,
+      "nll_wrong": 4.9886,
+      "nll_gap": 0.7234,
+      "retrieved": true,
+      "correct_passkey": "0-7-0-5-2",
+      "wrong_passkey": "9-3-6-0-5",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=4": {
+      "nll_correct": 4.6186,
+      "nll_wrong": 4.7039,
+      "nll_gap": 0.0852,
+      "retrieved": true,
+      "correct_passkey": "9-1-2-8-7",
+      "wrong_passkey": "7-9-0-1-2",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=5": {
+      "nll_correct": 4.8686,
+      "nll_wrong": 4.7822,
+      "nll_gap": -0.0863,
+      "retrieved": false,
+      "correct_passkey": "2-0-6-9-1",
+      "wrong_passkey": "7-2-9-4-6",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=6": {
+      "nll_correct": 4.1268,
+      "nll_wrong": 4.5808,
+      "nll_gap": 0.454,
+      "retrieved": true,
+      "correct_passkey": "4-5-7-1-7",
+      "wrong_passkey": "9-6-3-5-3",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=7": {
+      "nll_correct": 4.2679,
+      "nll_wrong": 4.0406,
+      "nll_gap": -0.2273,
+      "retrieved": false,
+      "correct_passkey": "4-6-9-3-7",
+      "wrong_passkey": "3-5-5-6-6",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=8": {
+      "nll_correct": 4.2966,
+      "nll_wrong": 5.2543,
+      "nll_gap": 0.9577,
+      "retrieved": true,
+      "correct_passkey": "1-8-7-4-2",
+      "wrong_passkey": "2-0-2-9-8",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=9": {
+      "nll_correct": 4.1943,
+      "nll_wrong": 4.5961,
+      "nll_gap": 0.4018,
+      "retrieved": true,
+      "correct_passkey": "6-3-2-2-1",
+      "wrong_passkey": "0-2-5-5-3",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=10": {
+      "nll_correct": 4.464,
+      "nll_wrong": 4.6376,
+      "nll_gap": 0.1737,
+      "retrieved": true,
+      "correct_passkey": "6-0-2-2-8",
+      "wrong_passkey": "7-2-4-0-3",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=11": {
+      "nll_correct": 4.375,
+      "nll_wrong": 4.5504,
+      "nll_gap": 0.1754,
+      "retrieved": true,
+      "correct_passkey": "8-1-1-5-8",
+      "wrong_passkey": "4-9-5-1-6",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=12": {
+      "nll_correct": 4.3173,
+      "nll_wrong": 4.8452,
+      "nll_gap": 0.528,
+      "retrieved": true,
+      "correct_passkey": "7-9-0-0-2",
+      "wrong_passkey": "0-5-3-9-0",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=13": {
+      "nll_correct": 4.347,
+      "nll_wrong": 4.4912,
+      "nll_gap": 0.1443,
+      "retrieved": true,
+      "correct_passkey": "7-4-8-9-7",
+      "wrong_passkey": "6-9-7-1-5",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=14": {
+      "nll_correct": 4.2022,
+      "nll_wrong": 5.0137,
+      "nll_gap": 0.8115,
+      "retrieved": true,
+      "correct_passkey": "0-7-4-3-2",
+      "wrong_passkey": "8-0-1-0-6",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=15": {
+      "nll_correct": 4.5217,
+      "nll_wrong": 5.0389,
+      "nll_gap": 0.5172,
+      "retrieved": true,
+      "correct_passkey": "2-5-5-0-8",
+      "wrong_passkey": "7-0-9-2-5",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=16": {
+      "nll_correct": 3.9847,
+      "nll_wrong": 4.4886,
+      "nll_gap": 0.5039,
+      "retrieved": true,
+      "correct_passkey": "4-5-5-9-0",
+      "wrong_passkey": "9-6-3-6-8",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=17": {
+      "nll_correct": 4.5748,
+      "nll_wrong": 4.5559,
+      "nll_gap": -0.0189,
+      "retrieved": false,
+      "correct_passkey": "1-8-7-0-4",
+      "wrong_passkey": "0-6-3-4-6",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=18": {
+      "nll_correct": 4.1957,
+      "nll_wrong": 4.9551,
+      "nll_gap": 0.7594,
+      "retrieved": true,
+      "correct_passkey": "8-6-7-7-5",
+      "wrong_passkey": "6-1-9-0-8",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=19": {
+      "nll_correct": 4.083,
+      "nll_wrong": 4.5639,
+      "nll_gap": 0.481,
+      "retrieved": true,
+      "correct_passkey": "5-7-4-6-9",
+      "wrong_passkey": "3-9-5-9-5",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=20": {
+      "nll_correct": 4.5073,
+      "nll_wrong": 4.8507,
+      "nll_gap": 0.3434,
+      "retrieved": true,
+      "correct_passkey": "7-2-2-6-1",
+      "wrong_passkey": "2-6-0-4-3",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=21": {
+      "nll_correct": 4.3266,
+      "nll_wrong": 4.7436,
+      "nll_gap": 0.417,
+      "retrieved": true,
+      "correct_passkey": "5-0-6-0-3",
+      "wrong_passkey": "2-3-1-7-8",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=22": {
+      "nll_correct": 4.4032,
+      "nll_wrong": 4.8536,
+      "nll_gap": 0.4504,
+      "retrieved": true,
+      "correct_passkey": "1-9-1-6-3",
+      "wrong_passkey": "9-7-5-0-7",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=23": {
+      "nll_correct": 4.4545,
+      "nll_wrong": 4.2411,
+      "nll_gap": -0.2134,
+      "retrieved": false,
+      "correct_passkey": "6-5-2-7-7",
+      "wrong_passkey": "4-7-7-3-2",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=24": {
+      "nll_correct": 4.2973,
+      "nll_wrong": 5.2385,
+      "nll_gap": 0.9412,
+      "retrieved": true,
+      "correct_passkey": "7-3-4-2-6",
+      "wrong_passkey": "2-0-8-7-8",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=25": {
+      "nll_correct": 4.7386,
+      "nll_wrong": 4.7941,
+      "nll_gap": 0.0556,
+      "retrieved": true,
+      "correct_passkey": "8-0-3-9-7",
+      "wrong_passkey": "3-2-0-7-8",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=26": {
+      "nll_correct": 4.4786,
+      "nll_wrong": 4.8046,
+      "nll_gap": 0.326,
+      "retrieved": true,
+      "correct_passkey": "1-0-5-8-7",
+      "wrong_passkey": "4-2-9-5-9",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=27": {
+      "nll_correct": 4.5784,
+      "nll_wrong": 4.6815,
+      "nll_gap": 0.103,
+      "retrieved": true,
+      "correct_passkey": "7-0-8-6-6",
+      "wrong_passkey": "4-1-5-9-1",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=28": {
+      "nll_correct": 4.1021,
+      "nll_wrong": 5.198,
+      "nll_gap": 1.0959,
+      "retrieved": true,
+      "correct_passkey": "0-5-5-3-9",
+      "wrong_passkey": "2-0-6-9-5",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=29": {
+      "nll_correct": 4.478,
+      "nll_wrong": 4.3094,
+      "nll_gap": -0.1686,
+      "retrieved": false,
+      "correct_passkey": "7-1-8-3-5",
+      "wrong_passkey": "3-2-3-6-1",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=30": {
+      "nll_correct": 4.2004,
+      "nll_wrong": 4.8134,
+      "nll_gap": 0.613,
+      "retrieved": true,
+      "correct_passkey": "0-4-3-8-1",
+      "wrong_passkey": "9-2-6-3-8",
+      "ar_generated": " the act of being a person who is a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=31": {
+      "nll_correct": 4.3343,
+      "nll_wrong": 4.6898,
+      "nll_gap": 0.3555,
+      "retrieved": true,
+      "correct_passkey": "1-7-6-2-0",
+      "wrong_passkey": "0-2-4-9-9",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=32": {
+      "nll_correct": 4.578,
+      "nll_wrong": 4.5143,
+      "nll_gap": -0.0637,
+      "retrieved": false,
+      "correct_passkey": "9-3-1-6-5",
+      "wrong_passkey": "7-1-7-4-6",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=33": {
+      "nll_correct": 4.3134,
+      "nll_wrong": 3.8748,
+      "nll_gap": -0.4386,
+      "retrieved": false,
+      "correct_passkey": "5-1-8-8-0",
+      "wrong_passkey": "3-3-4-4-2",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=34": {
+      "nll_correct": 4.4625,
+      "nll_wrong": 4.5934,
+      "nll_gap": 0.1309,
+      "retrieved": true,
+      "correct_passkey": "8-1-3-6-1",
+      "wrong_passkey": "0-8-6-3-2",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=35": {
+      "nll_correct": 4.1083,
+      "nll_wrong": 4.3214,
+      "nll_gap": 0.2132,
+      "retrieved": true,
+      "correct_passkey": "6-1-3-1-0",
+      "wrong_passkey": "8-5-7-9-6",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=36": {
+      "nll_correct": 4.1247,
+      "nll_wrong": 4.4031,
+      "nll_gap": 0.2783,
+      "retrieved": true,
+      "correct_passkey": "1-1-2-5-6",
+      "wrong_passkey": "5-7-6-4-7",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=37": {
+      "nll_correct": 4.351,
+      "nll_wrong": 4.8933,
+      "nll_gap": 0.5423,
+      "retrieved": true,
+      "correct_passkey": "0-7-4-8-5",
+      "wrong_passkey": "4-9-2-1-9",
+      "ar_generated": " the act of being a person who is a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=38": {
+      "nll_correct": 4.0906,
+      "nll_wrong": 4.7175,
+      "nll_gap": 0.627,
+      "retrieved": true,
+      "correct_passkey": "4-4-6-9-9",
+      "wrong_passkey": "5-9-0-5-2",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=39": {
+      "nll_correct": 4.0212,
+      "nll_wrong": 4.908,
+      "nll_gap": 0.8868,
+      "retrieved": true,
+      "correct_passkey": "3-3-4-8-1",
+      "wrong_passkey": "1-9-0-3-0",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=40": {
+      "nll_correct": 4.3473,
+      "nll_wrong": 4.4803,
+      "nll_gap": 0.1331,
+      "retrieved": true,
+      "correct_passkey": "1-1-8-5-2",
+      "wrong_passkey": "8-8-9-1-8",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=41": {
+      "nll_correct": 4.1407,
+      "nll_wrong": 4.4806,
+      "nll_gap": 0.3398,
+      "retrieved": true,
+      "correct_passkey": "8-8-6-1-0",
+      "wrong_passkey": "4-4-0-2-5",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=42": {
+      "nll_correct": 4.2684,
+      "nll_wrong": 4.3456,
+      "nll_gap": 0.0772,
+      "retrieved": true,
+      "correct_passkey": "8-5-9-7-2",
+      "wrong_passkey": "4-8-3-5-9",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=43": {
+      "nll_correct": 4.3095,
+      "nll_wrong": 4.7943,
+      "nll_gap": 0.4847,
+      "retrieved": true,
+      "correct_passkey": "1-9-0-0-1",
+      "wrong_passkey": "7-1-7-4-0",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=44": {
+      "nll_correct": 4.097,
+      "nll_wrong": 4.5118,
+      "nll_gap": 0.4148,
+      "retrieved": true,
+      "correct_passkey": "3-2-4-4-7",
+      "wrong_passkey": "2-4-2-1-3",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=45": {
+      "nll_correct": 4.5033,
+      "nll_wrong": 4.1562,
+      "nll_gap": -0.3471,
+      "retrieved": false,
+      "correct_passkey": "9-4-6-2-9",
+      "wrong_passkey": "1-3-1-1-3",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=46": {
+      "nll_correct": 4.1662,
+      "nll_wrong": 4.0106,
+      "nll_gap": -0.1556,
+      "retrieved": false,
+      "correct_passkey": "4-7-1-5-1",
+      "wrong_passkey": "3-5-6-3-7",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=47": {
+      "nll_correct": 4.1839,
+      "nll_wrong": 4.5644,
+      "nll_gap": 0.3804,
+      "retrieved": true,
+      "correct_passkey": "8-8-8-5-5",
+      "wrong_passkey": "0-1-0-2-6",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=48": {
+      "nll_correct": 4.0969,
+      "nll_wrong": 4.9095,
+      "nll_gap": 0.8126,
+      "retrieved": true,
+      "correct_passkey": "3-4-3-1-3",
+      "wrong_passkey": "1-0-8-7-9",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=49": {
+      "nll_correct": 4.2872,
+      "nll_wrong": 4.6961,
+      "nll_gap": 0.4089,
+      "retrieved": true,
+      "correct_passkey": "3-5-2-1-2",
+      "wrong_passkey": "1-1-4-9-7",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=50": {
+      "nll_correct": 4.4127,
+      "nll_wrong": 4.8269,
+      "nll_gap": 0.4142,
+      "retrieved": true,
+      "correct_passkey": "6-2-6-4-8",
+      "wrong_passkey": "7-3-2-0-0",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=51": {
+      "nll_correct": 4.4388,
+      "nll_wrong": 4.8076,
+      "nll_gap": 0.3688,
+      "retrieved": true,
+      "correct_passkey": "7-1-8-5-1",
+      "wrong_passkey": "0-8-9-2-9",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=52": {
+      "nll_correct": 4.4925,
+      "nll_wrong": 4.6955,
+      "nll_gap": 0.203,
+      "retrieved": true,
+      "correct_passkey": "6-0-7-5-1",
+      "wrong_passkey": "3-1-8-7-7",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=53": {
+      "nll_correct": 4.4297,
+      "nll_wrong": 4.6241,
+      "nll_gap": 0.1945,
+      "retrieved": true,
+      "correct_passkey": "4-7-0-6-5",
+      "wrong_passkey": "1-9-6-8-4",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=54": {
+      "nll_correct": 4.6879,
+      "nll_wrong": 4.7127,
+      "nll_gap": 0.0248,
+      "retrieved": true,
+      "correct_passkey": "2-5-8-9-6",
+      "wrong_passkey": "3-9-1-6-9",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=55": {
+      "nll_correct": 4.2836,
+      "nll_wrong": 4.0411,
+      "nll_gap": -0.2425,
+      "retrieved": false,
+      "correct_passkey": "6-6-8-1-8",
+      "wrong_passkey": "4-4-6-5-2",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=56": {
+      "nll_correct": 4.3574,
+      "nll_wrong": 4.543,
+      "nll_gap": 0.1855,
+      "retrieved": true,
+      "correct_passkey": "8-8-3-8-3",
+      "wrong_passkey": "4-5-5-0-2",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=57": {
+      "nll_correct": 4.1596,
+      "nll_wrong": 4.8892,
+      "nll_gap": 0.7296,
+      "retrieved": true,
+      "correct_passkey": "5-7-7-3-3",
+      "wrong_passkey": "2-8-4-9-7",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=58": {
+      "nll_correct": 4.5732,
+      "nll_wrong": 4.6964,
+      "nll_gap": 0.1232,
+      "retrieved": true,
+      "correct_passkey": "9-0-9-1-2",
+      "wrong_passkey": "6-3-0-7-7",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=59": {
+      "nll_correct": 4.3377,
+      "nll_wrong": 4.8341,
+      "nll_gap": 0.4964,
+      "retrieved": true,
+      "correct_passkey": "0-7-6-3-5",
+      "wrong_passkey": "2-6-1-7-7",
+      "ar_generated": " the act of being a person who is a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=60": {
+      "nll_correct": 4.5006,
+      "nll_wrong": 4.9067,
+      "nll_gap": 0.4062,
+      "retrieved": true,
+      "correct_passkey": "6-0-8-1-5",
+      "wrong_passkey": "2-5-9-2-1",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=61": {
+      "nll_correct": 4.3272,
+      "nll_wrong": 4.5258,
+      "nll_gap": 0.1986,
+      "retrieved": true,
+      "correct_passkey": "6-8-5-1-5",
+      "wrong_passkey": "1-1-8-4-2",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=62": {
+      "nll_correct": 4.0558,
+      "nll_wrong": 4.6966,
+      "nll_gap": 0.6407,
+      "retrieved": true,
+      "correct_passkey": "0-5-5-3-1",
+      "wrong_passkey": "5-8-4-0-8",
+      "ar_generated": " the act of being a person who is a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=63": {
+      "nll_correct": 4.5505,
+      "nll_wrong": 4.7746,
+      "nll_gap": 0.2241,
+      "retrieved": true,
+      "correct_passkey": "2-0-0-5-8",
+      "wrong_passkey": "0-9-7-2-9",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=64": {
+      "nll_correct": 4.0605,
+      "nll_wrong": 4.5858,
+      "nll_gap": 0.5253,
+      "retrieved": true,
+      "correct_passkey": "4-1-2-2-9",
+      "wrong_passkey": "2-5-7-3-4",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=65": {
+      "nll_correct": 4.4303,
+      "nll_wrong": 4.4611,
+      "nll_gap": 0.0308,
+      "retrieved": true,
+      "correct_passkey": "3-2-7-5-9",
+      "wrong_passkey": "1-3-9-1-6",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=66": {
+      "nll_correct": 4.4229,
+      "nll_wrong": 4.9907,
+      "nll_gap": 0.5678,
+      "retrieved": true,
+      "correct_passkey": "2-3-7-7-1",
+      "wrong_passkey": "6-0-4-1-6",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=67": {
+      "nll_correct": 4.1402,
+      "nll_wrong": 5.0095,
+      "nll_gap": 0.8693,
+      "retrieved": true,
+      "correct_passkey": "1-5-4-3-5",
+      "wrong_passkey": "6-2-9-2-0",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=68": {
+      "nll_correct": 4.2985,
+      "nll_wrong": 4.9405,
+      "nll_gap": 0.642,
+      "retrieved": true,
+      "correct_passkey": "2-5-5-3-2",
+      "wrong_passkey": "3-9-8-0-8",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=69": {
+      "nll_correct": 4.2668,
+      "nll_wrong": 5.0785,
+      "nll_gap": 0.8117,
+      "retrieved": true,
+      "correct_passkey": "0-6-0-2-6",
+      "wrong_passkey": "2-9-9-4-7",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=70": {
+      "nll_correct": 4.2866,
+      "nll_wrong": 4.885,
+      "nll_gap": 0.5984,
+      "retrieved": true,
+      "correct_passkey": "8-6-4-7-6",
+      "wrong_passkey": "5-0-9-5-5",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=71": {
+      "nll_correct": 3.9906,
+      "nll_wrong": 4.1358,
+      "nll_gap": 0.1451,
+      "retrieved": true,
+      "correct_passkey": "3-3-4-1-2",
+      "wrong_passkey": "5-6-8-4-6",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=72": {
+      "nll_correct": 4.2387,
+      "nll_wrong": 4.6697,
+      "nll_gap": 0.431,
+      "retrieved": true,
+      "correct_passkey": "5-3-2-6-8",
+      "wrong_passkey": "0-8-4-8-6",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=73": {
+      "nll_correct": 4.7217,
+      "nll_wrong": 4.5568,
+      "nll_gap": -0.1649,
+      "retrieved": false,
+      "correct_passkey": "2-8-9-7-6",
+      "wrong_passkey": "0-4-3-4-9",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=74": {
+      "nll_correct": 4.1882,
+      "nll_wrong": 4.9382,
+      "nll_gap": 0.7499,
+      "retrieved": true,
+      "correct_passkey": "5-5-9-7-9",
+      "wrong_passkey": "6-2-4-0-3",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=75": {
+      "nll_correct": 4.2452,
+      "nll_wrong": 4.4705,
+      "nll_gap": 0.2253,
+      "retrieved": true,
+      "correct_passkey": "2-3-4-1-4",
+      "wrong_passkey": "6-5-8-3-8",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=76": {
+      "nll_correct": 4.5206,
+      "nll_wrong": 4.922,
+      "nll_gap": 0.4014,
+      "retrieved": true,
+      "correct_passkey": "1-9-0-8-2",
+      "wrong_passkey": "9-2-5-1-0",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=77": {
+      "nll_correct": 4.2924,
+      "nll_wrong": 4.6867,
+      "nll_gap": 0.3943,
+      "retrieved": true,
+      "correct_passkey": "0-6-2-0-1",
+      "wrong_passkey": "1-2-0-9-8",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=78": {
+      "nll_correct": 4.2382,
+      "nll_wrong": 4.8142,
+      "nll_gap": 0.576,
+      "retrieved": true,
+      "correct_passkey": "4-8-4-2-1",
+      "wrong_passkey": "2-2-7-7-0",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=79": {
+      "nll_correct": 4.6055,
+      "nll_wrong": 4.2524,
+      "nll_gap": -0.3532,
+      "retrieved": false,
+      "correct_passkey": "9-2-5-3-4",
+      "wrong_passkey": "1-1-2-4-2",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=80": {
+      "nll_correct": 4.4282,
+      "nll_wrong": 4.5052,
+      "nll_gap": 0.077,
+      "retrieved": true,
+      "correct_passkey": "1-1-8-9-6",
+      "wrong_passkey": "0-7-7-1-1",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=81": {
+      "nll_correct": 4.5741,
+      "nll_wrong": 4.7264,
+      "nll_gap": 0.1523,
+      "retrieved": true,
+      "correct_passkey": "6-9-9-0-3",
+      "wrong_passkey": "9-4-6-7-6",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=82": {
+      "nll_correct": 4.5786,
+      "nll_wrong": 4.79,
+      "nll_gap": 0.2114,
+      "retrieved": true,
+      "correct_passkey": "7-3-2-9-2",
+      "wrong_passkey": "6-2-4-0-6",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=83": {
+      "nll_correct": 4.356,
+      "nll_wrong": 4.6562,
+      "nll_gap": 0.3002,
+      "retrieved": true,
+      "correct_passkey": "1-0-6-4-8",
+      "wrong_passkey": "3-5-9-2-0",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=84": {
+      "nll_correct": 4.3904,
+      "nll_wrong": 4.1965,
+      "nll_gap": -0.1939,
+      "retrieved": false,
+      "correct_passkey": "8-5-9-9-7",
+      "wrong_passkey": "5-4-4-3-2",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=85": {
+      "nll_correct": 4.4451,
+      "nll_wrong": 4.7725,
+      "nll_gap": 0.3275,
+      "retrieved": true,
+      "correct_passkey": "2-5-2-2-1",
+      "wrong_passkey": "6-2-5-9-3",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=86": {
+      "nll_correct": 4.564,
+      "nll_wrong": 4.6066,
+      "nll_gap": 0.0426,
+      "retrieved": true,
+      "correct_passkey": "3-8-0-0-6",
+      "wrong_passkey": "7-7-9-2-8",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=87": {
+      "nll_correct": 4.3056,
+      "nll_wrong": 4.9016,
+      "nll_gap": 0.596,
+      "retrieved": true,
+      "correct_passkey": "4-6-1-7-5",
+      "wrong_passkey": "6-2-0-4-6",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=88": {
+      "nll_correct": 4.4069,
+      "nll_wrong": 4.3583,
+      "nll_gap": -0.0487,
+      "retrieved": false,
+      "correct_passkey": "5-7-9-2-3",
+      "wrong_passkey": "6-9-6-5-2",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=89": {
+      "nll_correct": 4.5729,
+      "nll_wrong": 4.5554,
+      "nll_gap": -0.0176,
+      "retrieved": false,
+      "correct_passkey": "2-5-1-7-7",
+      "wrong_passkey": "6-6-9-9-8",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=90": {
+      "nll_correct": 4.165,
+      "nll_wrong": 4.8314,
+      "nll_gap": 0.6663,
+      "retrieved": true,
+      "correct_passkey": "1-3-7-1-6",
+      "wrong_passkey": "9-2-6-5-9",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=91": {
+      "nll_correct": 4.0464,
+      "nll_wrong": 4.8884,
+      "nll_gap": 0.8421,
+      "retrieved": true,
+      "correct_passkey": "0-4-0-5-1",
+      "wrong_passkey": "8-2-3-7-8",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=92": {
+      "nll_correct": 4.5281,
+      "nll_wrong": 4.3388,
+      "nll_gap": -0.1894,
+      "retrieved": false,
+      "correct_passkey": "3-9-0-2-0",
+      "wrong_passkey": "8-5-5-3-1",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=93": {
+      "nll_correct": 4.4338,
+      "nll_wrong": 5.0727,
+      "nll_gap": 0.6389,
+      "retrieved": true,
+      "correct_passkey": "3-9-8-5-6",
+      "wrong_passkey": "2-0-0-4-3",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=94": {
+      "nll_correct": 4.6306,
+      "nll_wrong": 4.4633,
+      "nll_gap": -0.1673,
+      "retrieved": false,
+      "correct_passkey": "2-0-8-1-9",
+      "wrong_passkey": "4-8-6-4-7",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=95": {
+      "nll_correct": 4.6557,
+      "nll_wrong": 4.6229,
+      "nll_gap": -0.0329,
+      "retrieved": false,
+      "correct_passkey": "9-6-2-2-6",
+      "wrong_passkey": "2-4-5-8-2",
+      "ar_generated": " the act of being in the form of a person",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=96": {
+      "nll_correct": 4.5507,
+      "nll_wrong": 4.7984,
+      "nll_gap": 0.2477,
+      "retrieved": true,
+      "correct_passkey": "9-9-3-8-9",
+      "wrong_passkey": "2-4-0-2-0",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=97": {
+      "nll_correct": 4.317,
+      "nll_wrong": 4.1737,
+      "nll_gap": -0.1433,
+      "retrieved": false,
+      "correct_passkey": "1-7-8-6-9",
+      "wrong_passkey": "3-5-4-5-1",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=98": {
+      "nll_correct": 4.5457,
+      "nll_wrong": 4.5532,
+      "nll_gap": 0.0075,
+      "retrieved": true,
+      "correct_passkey": "9-2-7-1-6",
+      "wrong_passkey": "7-6-2-8-8",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=99": {
+      "nll_correct": 4.5804,
+      "nll_wrong": 5.0016,
+      "nll_gap": 0.4212,
+      "retrieved": true,
+      "correct_passkey": "1-5-2-9-2",
+      "wrong_passkey": "7-0-3-8-0",
+      "ar_generated": " the act of being a person's own body.\"",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=0": {
+      "nll_correct": 5.5734,
+      "nll_wrong": 5.7129,
+      "nll_gap": 0.1395,
+      "retrieved": true,
+      "correct_passkey": "0-8-3-9-1",
+      "wrong_passkey": "8-9-9-1-3",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=1": {
+      "nll_correct": 4.7982,
+      "nll_wrong": 5.0969,
+      "nll_gap": 0.2987,
+      "retrieved": true,
+      "correct_passkey": "3-6-5-4-2",
+      "wrong_passkey": "5-7-4-8-5",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=2": {
+      "nll_correct": 5.0787,
+      "nll_wrong": 5.1355,
+      "nll_gap": 0.0568,
+      "retrieved": true,
+      "correct_passkey": "6-7-8-6-4",
+      "wrong_passkey": "1-3-2-8-1",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=3": {
+      "nll_correct": 5.305,
+      "nll_wrong": 5.3635,
+      "nll_gap": 0.0585,
+      "retrieved": true,
+      "correct_passkey": "0-7-2-2-8",
+      "wrong_passkey": "6-9-7-8-9",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=4": {
+      "nll_correct": 5.2654,
+      "nll_wrong": 5.1687,
+      "nll_gap": -0.0967,
+      "retrieved": false,
+      "correct_passkey": "5-6-3-0-3",
+      "wrong_passkey": "1-1-1-8-8",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=5": {
+      "nll_correct": 5.4058,
+      "nll_wrong": 5.2697,
+      "nll_gap": -0.1362,
+      "retrieved": false,
+      "correct_passkey": "6-8-0-3-0",
+      "wrong_passkey": "4-2-1-6-2",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=6": {
+      "nll_correct": 5.3412,
+      "nll_wrong": 5.557,
+      "nll_gap": 0.2158,
+      "retrieved": true,
+      "correct_passkey": "0-6-5-6-1",
+      "wrong_passkey": "2-2-8-9-6",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=7": {
+      "nll_correct": 5.5055,
+      "nll_wrong": 5.31,
+      "nll_gap": -0.1955,
+      "retrieved": false,
+      "correct_passkey": "9-5-5-9-2",
+      "wrong_passkey": "5-9-8-3-0",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=8": {
+      "nll_correct": 5.3915,
+      "nll_wrong": 5.041,
+      "nll_gap": -0.3506,
+      "retrieved": false,
+      "correct_passkey": "4-7-2-9-1",
+      "wrong_passkey": "1-6-6-3-3",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=9": {
+      "nll_correct": 5.4761,
+      "nll_wrong": 5.3868,
+      "nll_gap": -0.0893,
+      "retrieved": false,
+      "correct_passkey": "5-2-0-6-3",
+      "wrong_passkey": "1-5-8-9-5",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=10": {
+      "nll_correct": 5.2583,
+      "nll_wrong": 5.5613,
+      "nll_gap": 0.303,
+      "retrieved": true,
+      "correct_passkey": "2-0-3-5-9",
+      "wrong_passkey": "5-2-1-9-8",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=11": {
+      "nll_correct": 4.9784,
+      "nll_wrong": 5.2039,
+      "nll_gap": 0.2255,
+      "retrieved": true,
+      "correct_passkey": "5-6-6-8-7",
+      "wrong_passkey": "6-2-5-5-2",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=12": {
+      "nll_correct": 5.6653,
+      "nll_wrong": 5.6469,
+      "nll_gap": -0.0184,
+      "retrieved": false,
+      "correct_passkey": "5-0-9-8-7",
+      "wrong_passkey": "8-2-1-7-5",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=13": {
+      "nll_correct": 5.6126,
+      "nll_wrong": 5.1813,
+      "nll_gap": -0.4314,
+      "retrieved": false,
+      "correct_passkey": "0-9-5-7-1",
+      "wrong_passkey": "2-6-2-5-9",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=14": {
+      "nll_correct": 5.3152,
+      "nll_wrong": 5.7342,
+      "nll_gap": 0.419,
+      "retrieved": true,
+      "correct_passkey": "1-9-0-0-2",
+      "wrong_passkey": "0-4-9-3-7",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=15": {
+      "nll_correct": 5.7685,
+      "nll_wrong": 4.96,
+      "nll_gap": -0.8085,
+      "retrieved": false,
+      "correct_passkey": "9-9-2-9-8",
+      "wrong_passkey": "5-5-3-4-7",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=16": {
+      "nll_correct": 5.5403,
+      "nll_wrong": 5.2097,
+      "nll_gap": -0.3306,
+      "retrieved": false,
+      "correct_passkey": "7-0-4-4-2",
+      "wrong_passkey": "0-4-2-2-4",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=17": {
+      "nll_correct": 5.1497,
+      "nll_wrong": 5.3975,
+      "nll_gap": 0.2478,
+      "retrieved": true,
+      "correct_passkey": "3-2-8-3-4",
+      "wrong_passkey": "6-8-2-5-7",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=18": {
+      "nll_correct": 5.3405,
+      "nll_wrong": 5.2904,
+      "nll_gap": -0.0502,
+      "retrieved": false,
+      "correct_passkey": "3-4-1-9-7",
+      "wrong_passkey": "8-3-2-3-3",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=19": {
+      "nll_correct": 4.8949,
+      "nll_wrong": 5.8108,
+      "nll_gap": 0.9159,
+      "retrieved": true,
+      "correct_passkey": "1-2-4-6-9",
+      "wrong_passkey": "5-0-9-7-8",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=20": {
+      "nll_correct": 5.555,
+      "nll_wrong": 5.4316,
+      "nll_gap": -0.1234,
+      "retrieved": false,
+      "correct_passkey": "0-9-0-8-2",
+      "wrong_passkey": "4-2-2-7-9",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=21": {
+      "nll_correct": 4.6338,
+      "nll_wrong": 5.4877,
+      "nll_gap": 0.8538,
+      "retrieved": true,
+      "correct_passkey": "2-3-3-4-5",
+      "wrong_passkey": "6-1-1-8-8",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=22": {
+      "nll_correct": 5.4343,
+      "nll_wrong": 5.3459,
+      "nll_gap": -0.0884,
+      "retrieved": false,
+      "correct_passkey": "6-8-0-2-0",
+      "wrong_passkey": "8-7-8-3-5",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=23": {
+      "nll_correct": 5.2265,
+      "nll_wrong": 5.5986,
+      "nll_gap": 0.3721,
+      "retrieved": true,
+      "correct_passkey": "7-6-6-9-4",
+      "wrong_passkey": "5-8-3-0-2",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=24": {
+      "nll_correct": 5.4868,
+      "nll_wrong": 5.3343,
+      "nll_gap": -0.1525,
+      "retrieved": false,
+      "correct_passkey": "8-0-3-3-7",
+      "wrong_passkey": "6-2-1-7-8",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=25": {
+      "nll_correct": 5.2321,
+      "nll_wrong": 5.1556,
+      "nll_gap": -0.0765,
+      "retrieved": false,
+      "correct_passkey": "6-7-1-7-1",
+      "wrong_passkey": "4-6-7-9-3",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=26": {
+      "nll_correct": 4.9632,
+      "nll_wrong": 5.3767,
+      "nll_gap": 0.4135,
+      "retrieved": true,
+      "correct_passkey": "3-2-6-5-0",
+      "wrong_passkey": "6-5-1-8-8",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=27": {
+      "nll_correct": 5.426,
+      "nll_wrong": 5.0636,
+      "nll_gap": -0.3624,
+      "retrieved": false,
+      "correct_passkey": "8-6-9-7-4",
+      "wrong_passkey": "4-3-3-8-7",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=28": {
+      "nll_correct": 5.1451,
+      "nll_wrong": 5.0749,
+      "nll_gap": -0.0702,
+      "retrieved": false,
+      "correct_passkey": "5-0-2-0-9",
+      "wrong_passkey": "2-1-3-6-1",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=29": {
+      "nll_correct": 5.4781,
+      "nll_wrong": 5.545,
+      "nll_gap": 0.0669,
+      "retrieved": true,
+      "correct_passkey": "3-7-9-0-3",
+      "wrong_passkey": "2-9-6-8-8",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=30": {
+      "nll_correct": 5.223,
+      "nll_wrong": 5.6465,
+      "nll_gap": 0.4235,
+      "retrieved": true,
+      "correct_passkey": "0-2-4-6-9",
+      "wrong_passkey": "5-8-0-0-4",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=31": {
+      "nll_correct": 5.5298,
+      "nll_wrong": 5.5105,
+      "nll_gap": -0.0193,
+      "retrieved": false,
+      "correct_passkey": "9-8-6-3-6",
+      "wrong_passkey": "5-2-9-6-0",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=32": {
+      "nll_correct": 5.0315,
+      "nll_wrong": 5.4246,
+      "nll_gap": 0.393,
+      "retrieved": true,
+      "correct_passkey": "0-3-0-3-4",
+      "wrong_passkey": "4-0-6-0-1",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=33": {
+      "nll_correct": 5.3807,
+      "nll_wrong": 5.1216,
+      "nll_gap": -0.2592,
+      "retrieved": false,
+      "correct_passkey": "7-6-9-4-5",
+      "wrong_passkey": "1-3-0-0-1",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=34": {
+      "nll_correct": 5.3603,
+      "nll_wrong": 5.6975,
+      "nll_gap": 0.3371,
+      "retrieved": true,
+      "correct_passkey": "9-5-3-6-9",
+      "wrong_passkey": "8-1-4-8-7",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=35": {
+      "nll_correct": 5.1935,
+      "nll_wrong": 6.1744,
+      "nll_gap": 0.9809,
+      "retrieved": true,
+      "correct_passkey": "3-7-9-7-9",
+      "wrong_passkey": "9-0-4-9-2",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=36": {
+      "nll_correct": 5.0443,
+      "nll_wrong": 5.3011,
+      "nll_gap": 0.2568,
+      "retrieved": true,
+      "correct_passkey": "4-4-6-8-4",
+      "wrong_passkey": "6-5-9-3-3",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=37": {
+      "nll_correct": 5.1965,
+      "nll_wrong": 5.0552,
+      "nll_gap": -0.1413,
+      "retrieved": false,
+      "correct_passkey": "6-3-1-6-7",
+      "wrong_passkey": "5-4-5-2-9",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=38": {
+      "nll_correct": 5.2353,
+      "nll_wrong": 5.3671,
+      "nll_gap": 0.1318,
+      "retrieved": true,
+      "correct_passkey": "0-4-2-4-7",
+      "wrong_passkey": "8-6-5-5-4",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=39": {
+      "nll_correct": 4.9471,
+      "nll_wrong": 4.7674,
+      "nll_gap": -0.1797,
+      "retrieved": false,
+      "correct_passkey": "4-5-3-2-7",
+      "wrong_passkey": "5-3-4-5-8",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=40": {
+      "nll_correct": 5.5971,
+      "nll_wrong": 4.8445,
+      "nll_gap": -0.7526,
+      "retrieved": false,
+      "correct_passkey": "7-9-7-0-7",
+      "wrong_passkey": "3-4-3-7-1",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=41": {
+      "nll_correct": 5.021,
+      "nll_wrong": 5.126,
+      "nll_gap": 0.105,
+      "retrieved": true,
+      "correct_passkey": "3-3-2-9-8",
+      "wrong_passkey": "1-2-6-7-5",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=42": {
+      "nll_correct": 5.3024,
+      "nll_wrong": 5.823,
+      "nll_gap": 0.5206,
+      "retrieved": true,
+      "correct_passkey": "7-7-8-1-2",
+      "wrong_passkey": "8-0-2-6-1",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=43": {
+      "nll_correct": 5.6045,
+      "nll_wrong": 5.5291,
+      "nll_gap": -0.0754,
+      "retrieved": false,
+      "correct_passkey": "8-9-8-2-4",
+      "wrong_passkey": "0-3-7-4-9",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=44": {
+      "nll_correct": 5.8684,
+      "nll_wrong": 4.9195,
+      "nll_gap": -0.9488,
+      "retrieved": false,
+      "correct_passkey": "9-9-2-0-9",
+      "wrong_passkey": "3-6-6-5-4",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=45": {
+      "nll_correct": 5.525,
+      "nll_wrong": 5.1363,
+      "nll_gap": -0.3887,
+      "retrieved": false,
+      "correct_passkey": "0-3-0-9-7",
+      "wrong_passkey": "2-2-1-0-2",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=46": {
+      "nll_correct": 5.5012,
+      "nll_wrong": 5.6105,
+      "nll_gap": 0.1092,
+      "retrieved": true,
+      "correct_passkey": "7-1-8-5-4",
+      "wrong_passkey": "9-9-1-2-5",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=47": {
+      "nll_correct": 5.4338,
+      "nll_wrong": 5.3847,
+      "nll_gap": -0.049,
+      "retrieved": false,
+      "correct_passkey": "6-8-0-3-7",
+      "wrong_passkey": "1-9-4-1-0",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=48": {
+      "nll_correct": 5.6851,
+      "nll_wrong": 5.2586,
+      "nll_gap": -0.4266,
+      "retrieved": false,
+      "correct_passkey": "0-1-6-9-1",
+      "wrong_passkey": "4-4-8-8-3",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=49": {
+      "nll_correct": 5.589,
+      "nll_wrong": 5.5604,
+      "nll_gap": -0.0287,
+      "retrieved": false,
+      "correct_passkey": "5-9-1-0-3",
+      "wrong_passkey": "0-3-8-2-8",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=50": {
+      "nll_correct": 5.5421,
+      "nll_wrong": 5.4021,
+      "nll_gap": -0.14,
+      "retrieved": false,
+      "correct_passkey": "6-2-7-0-5",
+      "wrong_passkey": "4-8-8-9-2",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=51": {
+      "nll_correct": 5.2216,
+      "nll_wrong": 5.2728,
+      "nll_gap": 0.0512,
+      "retrieved": true,
+      "correct_passkey": "2-7-2-6-0",
+      "wrong_passkey": "5-5-8-2-7",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=52": {
+      "nll_correct": 4.8161,
+      "nll_wrong": 5.7638,
+      "nll_gap": 0.9477,
+      "retrieved": true,
+      "correct_passkey": "4-3-2-2-7",
+      "wrong_passkey": "0-5-8-9-6",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=53": {
+      "nll_correct": 5.2982,
+      "nll_wrong": 5.201,
+      "nll_gap": -0.0972,
+      "retrieved": false,
+      "correct_passkey": "5-0-4-4-7",
+      "wrong_passkey": "2-3-7-9-9",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=54": {
+      "nll_correct": 5.3916,
+      "nll_wrong": 6.0009,
+      "nll_gap": 0.6093,
+      "retrieved": true,
+      "correct_passkey": "0-1-6-2-2",
+      "wrong_passkey": "9-9-0-5-7",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=55": {
+      "nll_correct": 5.232,
+      "nll_wrong": 5.4782,
+      "nll_gap": 0.2461,
+      "retrieved": true,
+      "correct_passkey": "7-5-7-3-8",
+      "wrong_passkey": "8-4-2-6-7",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=56": {
+      "nll_correct": 5.4845,
+      "nll_wrong": 5.2617,
+      "nll_gap": -0.2228,
+      "retrieved": false,
+      "correct_passkey": "8-4-2-4-5",
+      "wrong_passkey": "6-3-3-0-9",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=57": {
+      "nll_correct": 5.1119,
+      "nll_wrong": 5.8459,
+      "nll_gap": 0.734,
+      "retrieved": true,
+      "correct_passkey": "2-1-3-5-3",
+      "wrong_passkey": "8-2-6-0-8",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=58": {
+      "nll_correct": 5.6092,
+      "nll_wrong": 5.121,
+      "nll_gap": -0.4883,
+      "retrieved": false,
+      "correct_passkey": "2-9-9-6-8",
+      "wrong_passkey": "6-5-4-4-0",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=59": {
+      "nll_correct": 4.8876,
+      "nll_wrong": 5.4819,
+      "nll_gap": 0.5943,
+      "retrieved": true,
+      "correct_passkey": "4-6-5-5-9",
+      "wrong_passkey": "6-0-6-3-0",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=60": {
+      "nll_correct": 5.7132,
+      "nll_wrong": 5.478,
+      "nll_gap": -0.2351,
+      "retrieved": false,
+      "correct_passkey": "9-0-7-0-4",
+      "wrong_passkey": "1-1-9-5-9",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=61": {
+      "nll_correct": 4.9305,
+      "nll_wrong": 5.7639,
+      "nll_gap": 0.8334,
+      "retrieved": true,
+      "correct_passkey": "6-6-5-3-0",
+      "wrong_passkey": "8-1-9-0-3",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=62": {
+      "nll_correct": 5.3239,
+      "nll_wrong": 5.4356,
+      "nll_gap": 0.1117,
+      "retrieved": true,
+      "correct_passkey": "2-8-6-6-1",
+      "wrong_passkey": "8-6-9-8-2",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=63": {
+      "nll_correct": 5.3194,
+      "nll_wrong": 5.4252,
+      "nll_gap": 0.1057,
+      "retrieved": true,
+      "correct_passkey": "2-6-3-0-3",
+      "wrong_passkey": "9-3-2-3-0",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=64": {
+      "nll_correct": 5.3755,
+      "nll_wrong": 5.6239,
+      "nll_gap": 0.2485,
+      "retrieved": true,
+      "correct_passkey": "5-1-7-8-0",
+      "wrong_passkey": "9-6-2-1-3",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=65": {
+      "nll_correct": 5.2917,
+      "nll_wrong": 5.4081,
+      "nll_gap": 0.1164,
+      "retrieved": true,
+      "correct_passkey": "4-9-4-5-9",
+      "wrong_passkey": "9-7-6-6-6",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=66": {
+      "nll_correct": 5.2586,
+      "nll_wrong": 5.5808,
+      "nll_gap": 0.3222,
+      "retrieved": true,
+      "correct_passkey": "2-7-5-4-3",
+      "wrong_passkey": "0-3-0-8-5",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=67": {
+      "nll_correct": 5.4398,
+      "nll_wrong": 5.161,
+      "nll_gap": -0.2788,
+      "retrieved": false,
+      "correct_passkey": "9-4-2-3-0",
+      "wrong_passkey": "5-1-4-2-4",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=68": {
+      "nll_correct": 5.0765,
+      "nll_wrong": 5.5002,
+      "nll_gap": 0.4238,
+      "retrieved": true,
+      "correct_passkey": "3-4-7-7-5",
+      "wrong_passkey": "8-7-5-4-1",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=69": {
+      "nll_correct": 5.4895,
+      "nll_wrong": 5.4619,
+      "nll_gap": -0.0276,
+      "retrieved": false,
+      "correct_passkey": "3-0-2-9-0",
+      "wrong_passkey": "6-5-7-0-5",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=70": {
+      "nll_correct": 5.7454,
+      "nll_wrong": 5.3044,
+      "nll_gap": -0.441,
+      "retrieved": false,
+      "correct_passkey": "8-0-7-1-6",
+      "wrong_passkey": "7-7-8-3-7",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=71": {
+      "nll_correct": 5.2922,
+      "nll_wrong": 5.4355,
+      "nll_gap": 0.1433,
+      "retrieved": true,
+      "correct_passkey": "2-7-6-5-6",
+      "wrong_passkey": "3-9-9-9-3",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=72": {
+      "nll_correct": 5.5119,
+      "nll_wrong": 5.0572,
+      "nll_gap": -0.4547,
+      "retrieved": false,
+      "correct_passkey": "8-2-5-6-5",
+      "wrong_passkey": "1-8-2-3-1",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=73": {
+      "nll_correct": 5.4031,
+      "nll_wrong": 5.6744,
+      "nll_gap": 0.2713,
+      "retrieved": true,
+      "correct_passkey": "3-1-5-9-0",
+      "wrong_passkey": "9-9-4-3-6",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=74": {
+      "nll_correct": 5.2167,
+      "nll_wrong": 5.2792,
+      "nll_gap": 0.0625,
+      "retrieved": true,
+      "correct_passkey": "7-2-3-1-3",
+      "wrong_passkey": "3-6-0-4-1",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=75": {
+      "nll_correct": 5.4556,
+      "nll_wrong": 5.4641,
+      "nll_gap": 0.0085,
+      "retrieved": true,
+      "correct_passkey": "0-7-0-4-7",
+      "wrong_passkey": "4-6-2-9-9",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=76": {
+      "nll_correct": 4.9449,
+      "nll_wrong": 5.3686,
+      "nll_gap": 0.4237,
+      "retrieved": true,
+      "correct_passkey": "6-5-5-3-9",
+      "wrong_passkey": "1-0-7-0-2",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=77": {
+      "nll_correct": 5.5335,
+      "nll_wrong": 5.9552,
+      "nll_gap": 0.4217,
+      "retrieved": true,
+      "correct_passkey": "3-1-0-8-4",
+      "wrong_passkey": "9-0-5-5-0",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=78": {
+      "nll_correct": 5.6542,
+      "nll_wrong": 5.4788,
+      "nll_gap": -0.1755,
+      "retrieved": false,
+      "correct_passkey": "9-1-1-9-3",
+      "wrong_passkey": "8-5-8-7-6",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=79": {
+      "nll_correct": 4.9009,
+      "nll_wrong": 5.2909,
+      "nll_gap": 0.39,
+      "retrieved": true,
+      "correct_passkey": "3-7-3-7-1",
+      "wrong_passkey": "5-0-0-1-2",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=80": {
+      "nll_correct": 4.9893,
+      "nll_wrong": 5.5201,
+      "nll_gap": 0.5308,
+      "retrieved": true,
+      "correct_passkey": "6-5-7-7-0",
+      "wrong_passkey": "4-1-0-4-4",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=81": {
+      "nll_correct": 5.1043,
+      "nll_wrong": 5.2898,
+      "nll_gap": 0.1855,
+      "retrieved": true,
+      "correct_passkey": "2-5-6-3-5",
+      "wrong_passkey": "1-7-0-2-2",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=82": {
+      "nll_correct": 5.2903,
+      "nll_wrong": 5.0649,
+      "nll_gap": -0.2254,
+      "retrieved": false,
+      "correct_passkey": "4-7-1-1-4",
+      "wrong_passkey": "5-1-3-3-7",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=83": {
+      "nll_correct": 5.4708,
+      "nll_wrong": 5.3136,
+      "nll_gap": -0.1572,
+      "retrieved": false,
+      "correct_passkey": "6-1-7-0-5",
+      "wrong_passkey": "0-7-0-2-6",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=84": {
+      "nll_correct": 5.0503,
+      "nll_wrong": 5.5486,
+      "nll_gap": 0.4983,
+      "retrieved": true,
+      "correct_passkey": "7-6-6-6-0",
+      "wrong_passkey": "0-1-5-5-1",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=85": {
+      "nll_correct": 5.0151,
+      "nll_wrong": 5.2765,
+      "nll_gap": 0.2614,
+      "retrieved": true,
+      "correct_passkey": "3-6-7-4-5",
+      "wrong_passkey": "1-2-1-9-3",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=86": {
+      "nll_correct": 5.237,
+      "nll_wrong": 5.2562,
+      "nll_gap": 0.0192,
+      "retrieved": true,
+      "correct_passkey": "3-2-6-0-9",
+      "wrong_passkey": "4-6-7-2-7",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=87": {
+      "nll_correct": 5.7248,
+      "nll_wrong": 5.6749,
+      "nll_gap": -0.0499,
+      "retrieved": false,
+      "correct_passkey": "8-9-7-0-0",
+      "wrong_passkey": "0-5-9-6-6",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=88": {
+      "nll_correct": 5.0485,
+      "nll_wrong": 5.8813,
+      "nll_gap": 0.8328,
+      "retrieved": true,
+      "correct_passkey": "2-2-5-1-0",
+      "wrong_passkey": "9-8-0-0-8",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=89": {
+      "nll_correct": 5.7129,
+      "nll_wrong": 5.0886,
+      "nll_gap": -0.6243,
+      "retrieved": false,
+      "correct_passkey": "9-2-6-9-7",
+      "wrong_passkey": "1-8-1-2-9",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=90": {
+      "nll_correct": 5.3839,
+      "nll_wrong": 5.3225,
+      "nll_gap": -0.0614,
+      "retrieved": false,
+      "correct_passkey": "7-8-8-2-4",
+      "wrong_passkey": "2-6-7-1-7",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=91": {
+      "nll_correct": 5.0928,
+      "nll_wrong": 5.2692,
+      "nll_gap": 0.1764,
+      "retrieved": true,
+      "correct_passkey": "4-2-6-5-1",
+      "wrong_passkey": "1-7-9-2-9",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=92": {
+      "nll_correct": 5.4081,
+      "nll_wrong": 5.7743,
+      "nll_gap": 0.3662,
+      "retrieved": true,
+      "correct_passkey": "1-5-7-0-2",
+      "wrong_passkey": "9-8-2-4-6",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=93": {
+      "nll_correct": 5.8838,
+      "nll_wrong": 5.4947,
+      "nll_gap": -0.3891,
+      "retrieved": false,
+      "correct_passkey": "8-0-8-4-5",
+      "wrong_passkey": "6-2-9-6-1",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=94": {
+      "nll_correct": 5.294,
+      "nll_wrong": 5.6049,
+      "nll_gap": 0.3109,
+      "retrieved": true,
+      "correct_passkey": "5-9-3-4-4",
+      "wrong_passkey": "4-8-0-0-1",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=95": {
+      "nll_correct": 4.8177,
+      "nll_wrong": 5.9073,
+      "nll_gap": 1.0896,
+      "retrieved": true,
+      "correct_passkey": "3-3-6-8-8",
+      "wrong_passkey": "8-0-7-4-2",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=96": {
+      "nll_correct": 5.4539,
+      "nll_wrong": 5.1535,
+      "nll_gap": -0.3004,
+      "retrieved": false,
+      "correct_passkey": "1-0-0-8-2",
+      "wrong_passkey": "3-4-3-0-6",
+      "ar_generated": " the most important habitat for the project.\nThe",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=97": {
+      "nll_correct": 5.2868,
+      "nll_wrong": 4.7474,
+      "nll_gap": -0.5395,
+      "retrieved": false,
+      "correct_passkey": "7-4-7-7-4",
+      "wrong_passkey": "2-3-4-3-8",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=98": {
+      "nll_correct": 5.4358,
+      "nll_wrong": 5.8073,
+      "nll_gap": 0.3715,
+      "retrieved": true,
+      "correct_passkey": "6-6-0-7-6",
+      "wrong_passkey": "8-0-6-6-2",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=99": {
+      "nll_correct": 5.74,
+      "nll_wrong": 4.963,
+      "nll_gap": -0.7769,
+      "retrieved": false,
+      "correct_passkey": "9-5-0-4-8",
+      "wrong_passkey": "5-3-3-8-5",
+      "ar_generated": "\n- The first of the three major areas of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=0": {
+      "nll_correct": 4.9472,
+      "nll_wrong": 5.1304,
+      "nll_gap": 0.1833,
+      "retrieved": true,
+      "correct_passkey": "5-8-1-9-4",
+      "wrong_passkey": "3-7-0-3-1",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=1": {
+      "nll_correct": 5.2672,
+      "nll_wrong": 4.9918,
+      "nll_gap": -0.2754,
+      "retrieved": false,
+      "correct_passkey": "5-7-9-2-2",
+      "wrong_passkey": "4-4-4-3-3",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=2": {
+      "nll_correct": 5.0235,
+      "nll_wrong": 5.4877,
+      "nll_gap": 0.4643,
+      "retrieved": true,
+      "correct_passkey": "6-3-1-4-4",
+      "wrong_passkey": "9-0-8-7-0",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=3": {
+      "nll_correct": 5.0334,
+      "nll_wrong": 5.2754,
+      "nll_gap": 0.242,
+      "retrieved": true,
+      "correct_passkey": "6-1-5-2-4",
+      "wrong_passkey": "5-2-0-1-2",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=4": {
+      "nll_correct": 5.5564,
+      "nll_wrong": 4.9368,
+      "nll_gap": -0.6196,
+      "retrieved": false,
+      "correct_passkey": "4-0-5-2-1",
+      "wrong_passkey": "8-8-9-9-2",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=5": {
+      "nll_correct": 5.5727,
+      "nll_wrong": 4.7856,
+      "nll_gap": -0.7871,
+      "retrieved": false,
+      "correct_passkey": "5-0-0-2-0",
+      "wrong_passkey": "3-8-3-5-9",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=6": {
+      "nll_correct": 4.9186,
+      "nll_wrong": 4.9838,
+      "nll_gap": 0.0652,
+      "retrieved": true,
+      "correct_passkey": "9-9-2-1-0",
+      "wrong_passkey": "6-1-8-8-5",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=7": {
+      "nll_correct": 5.223,
+      "nll_wrong": 5.47,
+      "nll_gap": 0.247,
+      "retrieved": true,
+      "correct_passkey": "5-4-0-6-1",
+      "wrong_passkey": "7-0-7-3-0",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=8": {
+      "nll_correct": 4.8462,
+      "nll_wrong": 5.1605,
+      "nll_gap": 0.3144,
+      "retrieved": true,
+      "correct_passkey": "3-8-2-1-7",
+      "wrong_passkey": "0-6-9-3-4",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=9": {
+      "nll_correct": 4.7056,
+      "nll_wrong": 5.0766,
+      "nll_gap": 0.3711,
+      "retrieved": true,
+      "correct_passkey": "1-6-1-3-4",
+      "wrong_passkey": "3-2-2-7-9",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=10": {
+      "nll_correct": 5.0419,
+      "nll_wrong": 4.9551,
+      "nll_gap": -0.0868,
+      "retrieved": false,
+      "correct_passkey": "3-9-6-4-7",
+      "wrong_passkey": "6-3-4-2-4",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=11": {
+      "nll_correct": 5.0234,
+      "nll_wrong": 4.9728,
+      "nll_gap": -0.0506,
+      "retrieved": false,
+      "correct_passkey": "6-1-3-9-7",
+      "wrong_passkey": "2-8-7-5-8",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=12": {
+      "nll_correct": 5.3329,
+      "nll_wrong": 4.89,
+      "nll_gap": -0.4429,
+      "retrieved": false,
+      "correct_passkey": "4-2-8-4-2",
+      "wrong_passkey": "7-3-6-5-7",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=13": {
+      "nll_correct": 4.9042,
+      "nll_wrong": 4.9935,
+      "nll_gap": 0.0893,
+      "retrieved": true,
+      "correct_passkey": "1-6-0-1-3",
+      "wrong_passkey": "9-3-2-3-8",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=14": {
+      "nll_correct": 4.8729,
+      "nll_wrong": 5.5694,
+      "nll_gap": 0.6964,
+      "retrieved": true,
+      "correct_passkey": "3-8-6-1-3",
+      "wrong_passkey": "7-0-9-3-5",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=15": {
+      "nll_correct": 4.9591,
+      "nll_wrong": 5.0296,
+      "nll_gap": 0.0705,
+      "retrieved": true,
+      "correct_passkey": "4-4-4-6-3",
+      "wrong_passkey": "2-2-1-3-1",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=16": {
+      "nll_correct": 5.5294,
+      "nll_wrong": 4.9248,
+      "nll_gap": -0.6047,
+      "retrieved": false,
+      "correct_passkey": "8-0-7-4-2",
+      "wrong_passkey": "5-8-8-7-3",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=17": {
+      "nll_correct": 5.3756,
+      "nll_wrong": 4.952,
+      "nll_gap": -0.4236,
+      "retrieved": false,
+      "correct_passkey": "4-7-1-0-0",
+      "wrong_passkey": "8-1-5-5-1",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=18": {
+      "nll_correct": 4.8014,
+      "nll_wrong": 5.0893,
+      "nll_gap": 0.2879,
+      "retrieved": true,
+      "correct_passkey": "1-9-2-6-6",
+      "wrong_passkey": "5-1-4-8-1",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=19": {
+      "nll_correct": 5.4395,
+      "nll_wrong": 4.9252,
+      "nll_gap": -0.5144,
+      "retrieved": false,
+      "correct_passkey": "8-2-0-7-9",
+      "wrong_passkey": "0-3-4-9-6",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=20": {
+      "nll_correct": 5.7044,
+      "nll_wrong": 4.6405,
+      "nll_gap": -1.0639,
+      "retrieved": false,
+      "correct_passkey": "9-0-9-4-6",
+      "wrong_passkey": "1-6-5-8-8",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=21": {
+      "nll_correct": 5.0903,
+      "nll_wrong": 4.9817,
+      "nll_gap": -0.1086,
+      "retrieved": false,
+      "correct_passkey": "9-6-7-4-6",
+      "wrong_passkey": "6-4-6-9-5",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=22": {
+      "nll_correct": 5.0762,
+      "nll_wrong": 5.2587,
+      "nll_gap": 0.1825,
+      "retrieved": true,
+      "correct_passkey": "9-3-4-2-9",
+      "wrong_passkey": "8-4-9-4-1",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=23": {
+      "nll_correct": 4.8734,
+      "nll_wrong": 5.0705,
+      "nll_gap": 0.1971,
+      "retrieved": true,
+      "correct_passkey": "8-8-7-9-9",
+      "wrong_passkey": "5-1-3-8-6",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=24": {
+      "nll_correct": 5.3423,
+      "nll_wrong": 4.9911,
+      "nll_gap": -0.3512,
+      "retrieved": false,
+      "correct_passkey": "3-1-0-0-8",
+      "wrong_passkey": "9-8-9-7-6",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=25": {
+      "nll_correct": 5.1061,
+      "nll_wrong": 5.2619,
+      "nll_gap": 0.1558,
+      "retrieved": true,
+      "correct_passkey": "3-7-5-0-3",
+      "wrong_passkey": "4-1-8-9-4",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=26": {
+      "nll_correct": 4.9596,
+      "nll_wrong": 4.9274,
+      "nll_gap": -0.0321,
+      "retrieved": false,
+      "correct_passkey": "6-4-1-5-7",
+      "wrong_passkey": "3-3-6-9-4",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=27": {
+      "nll_correct": 5.3127,
+      "nll_wrong": 4.7034,
+      "nll_gap": -0.6093,
+      "retrieved": false,
+      "correct_passkey": "9-3-9-3-9",
+      "wrong_passkey": "1-2-2-5-2",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=28": {
+      "nll_correct": 4.9915,
+      "nll_wrong": 5.1001,
+      "nll_gap": 0.1087,
+      "retrieved": true,
+      "correct_passkey": "3-2-4-2-6",
+      "wrong_passkey": "9-9-9-7-5",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=29": {
+      "nll_correct": 4.9605,
+      "nll_wrong": 4.7763,
+      "nll_gap": -0.1843,
+      "retrieved": false,
+      "correct_passkey": "4-6-2-3-3",
+      "wrong_passkey": "1-7-1-5-8",
+      "ar_generated": "\n- The Classroom: The Maths and",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=30": {
+      "nll_correct": 4.9333,
+      "nll_wrong": 5.1129,
+      "nll_gap": 0.1796,
+      "retrieved": true,
+      "correct_passkey": "0-8-9-9-8",
+      "wrong_passkey": "8-3-7-1-4",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=31": {
+      "nll_correct": 5.0224,
+      "nll_wrong": 4.8901,
+      "nll_gap": -0.1323,
+      "retrieved": false,
+      "correct_passkey": "3-9-6-3-3",
+      "wrong_passkey": "2-6-4-8-5",
+      "ar_generated": "\n- The Classroom: The Maths and",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=32": {
+      "nll_correct": 4.7994,
+      "nll_wrong": 4.9104,
+      "nll_gap": 0.111,
+      "retrieved": true,
+      "correct_passkey": "3-5-5-7-0",
+      "wrong_passkey": "9-7-4-3-6",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=33": {
+      "nll_correct": 5.0054,
+      "nll_wrong": 5.0132,
+      "nll_gap": 0.0078,
+      "retrieved": true,
+      "correct_passkey": "3-5-7-2-9",
+      "wrong_passkey": "2-4-8-1-7",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=34": {
+      "nll_correct": 5.0513,
+      "nll_wrong": 5.0144,
+      "nll_gap": -0.037,
+      "retrieved": false,
+      "correct_passkey": "6-3-9-8-5",
+      "wrong_passkey": "9-9-1-3-7",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=35": {
+      "nll_correct": 4.9739,
+      "nll_wrong": 5.653,
+      "nll_gap": 0.6791,
+      "retrieved": true,
+      "correct_passkey": "1-8-4-0-6",
+      "wrong_passkey": "6-0-0-9-5",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=36": {
+      "nll_correct": 4.9059,
+      "nll_wrong": 5.0431,
+      "nll_gap": 0.1372,
+      "retrieved": true,
+      "correct_passkey": "4-3-4-4-4",
+      "wrong_passkey": "7-9-1-3-2",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=37": {
+      "nll_correct": 5.2376,
+      "nll_wrong": 4.8968,
+      "nll_gap": -0.3407,
+      "retrieved": false,
+      "correct_passkey": "7-6-0-0-6",
+      "wrong_passkey": "9-4-5-5-5",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=38": {
+      "nll_correct": 4.9518,
+      "nll_wrong": 5.3013,
+      "nll_gap": 0.3494,
+      "retrieved": true,
+      "correct_passkey": "3-7-2-7-3",
+      "wrong_passkey": "8-0-3-6-7",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=39": {
+      "nll_correct": 5.2672,
+      "nll_wrong": 4.939,
+      "nll_gap": -0.3282,
+      "retrieved": false,
+      "correct_passkey": "7-3-1-0-1",
+      "wrong_passkey": "9-5-6-6-8",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=40": {
+      "nll_correct": 5.4609,
+      "nll_wrong": 5.143,
+      "nll_gap": -0.318,
+      "retrieved": false,
+      "correct_passkey": "5-2-0-9-9",
+      "wrong_passkey": "4-7-4-1-6",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=41": {
+      "nll_correct": 4.9419,
+      "nll_wrong": 5.5488,
+      "nll_gap": 0.6069,
+      "retrieved": true,
+      "correct_passkey": "6-4-8-9-3",
+      "wrong_passkey": "4-2-9-2-9",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=42": {
+      "nll_correct": 5.6403,
+      "nll_wrong": 4.8911,
+      "nll_gap": -0.7492,
+      "retrieved": false,
+      "correct_passkey": "5-0-0-0-3",
+      "wrong_passkey": "8-5-2-5-7",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=43": {
+      "nll_correct": 5.264,
+      "nll_wrong": 5.0059,
+      "nll_gap": -0.2581,
+      "retrieved": false,
+      "correct_passkey": "4-1-5-7-0",
+      "wrong_passkey": "8-9-6-9-2",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=44": {
+      "nll_correct": 5.3353,
+      "nll_wrong": 4.7794,
+      "nll_gap": -0.5559,
+      "retrieved": false,
+      "correct_passkey": "6-0-1-3-8",
+      "wrong_passkey": "1-7-8-6-3",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=45": {
+      "nll_correct": 4.9383,
+      "nll_wrong": 5.1803,
+      "nll_gap": 0.242,
+      "retrieved": true,
+      "correct_passkey": "1-8-0-1-5",
+      "wrong_passkey": "7-7-9-2-4",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=46": {
+      "nll_correct": 5.254,
+      "nll_wrong": 4.8257,
+      "nll_gap": -0.4283,
+      "retrieved": false,
+      "correct_passkey": "9-7-0-4-2",
+      "wrong_passkey": "1-1-6-8-4",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=47": {
+      "nll_correct": 5.1842,
+      "nll_wrong": 5.3021,
+      "nll_gap": 0.1179,
+      "retrieved": true,
+      "correct_passkey": "9-6-0-8-1",
+      "wrong_passkey": "8-2-5-0-4",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=48": {
+      "nll_correct": 5.3954,
+      "nll_wrong": 4.9703,
+      "nll_gap": -0.4251,
+      "retrieved": false,
+      "correct_passkey": "8-2-0-6-6",
+      "wrong_passkey": "7-9-3-8-9",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=49": {
+      "nll_correct": 5.1387,
+      "nll_wrong": 5.4269,
+      "nll_gap": 0.2882,
+      "retrieved": true,
+      "correct_passkey": "6-8-0-6-6",
+      "wrong_passkey": "3-0-7-1-5",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=50": {
+      "nll_correct": 5.1372,
+      "nll_wrong": 4.9061,
+      "nll_gap": -0.231,
+      "retrieved": false,
+      "correct_passkey": "6-1-9-1-4",
+      "wrong_passkey": "3-5-2-8-1",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=51": {
+      "nll_correct": 5.172,
+      "nll_wrong": 4.7469,
+      "nll_gap": -0.4252,
+      "retrieved": false,
+      "correct_passkey": "4-4-1-2-3",
+      "wrong_passkey": "1-2-3-8-9",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=52": {
+      "nll_correct": 5.0279,
+      "nll_wrong": 5.1199,
+      "nll_gap": 0.092,
+      "retrieved": true,
+      "correct_passkey": "2-8-1-4-9",
+      "wrong_passkey": "8-4-9-9-8",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=53": {
+      "nll_correct": 5.1869,
+      "nll_wrong": 5.352,
+      "nll_gap": 0.1651,
+      "retrieved": true,
+      "correct_passkey": "9-8-7-0-7",
+      "wrong_passkey": "8-2-9-1-2",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=54": {
+      "nll_correct": 5.1334,
+      "nll_wrong": 5.4943,
+      "nll_gap": 0.3608,
+      "retrieved": true,
+      "correct_passkey": "7-3-9-5-7",
+      "wrong_passkey": "5-0-6-4-5",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=55": {
+      "nll_correct": 5.0609,
+      "nll_wrong": 5.3769,
+      "nll_gap": 0.3161,
+      "retrieved": true,
+      "correct_passkey": "2-9-2-4-5",
+      "wrong_passkey": "1-0-9-5-8",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=56": {
+      "nll_correct": 4.9253,
+      "nll_wrong": 5.177,
+      "nll_gap": 0.2517,
+      "retrieved": true,
+      "correct_passkey": "5-6-1-5-1",
+      "wrong_passkey": "6-2-8-1-9",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=57": {
+      "nll_correct": 5.3489,
+      "nll_wrong": 4.7318,
+      "nll_gap": -0.6171,
+      "retrieved": false,
+      "correct_passkey": "6-1-0-0-0",
+      "wrong_passkey": "0-5-3-5-3",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=58": {
+      "nll_correct": 5.1737,
+      "nll_wrong": 5.3621,
+      "nll_gap": 0.1884,
+      "retrieved": true,
+      "correct_passkey": "5-1-4-9-3",
+      "wrong_passkey": "6-9-7-0-5",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=59": {
+      "nll_correct": 5.0855,
+      "nll_wrong": 4.7962,
+      "nll_gap": -0.2893,
+      "retrieved": false,
+      "correct_passkey": "1-1-7-0-1",
+      "wrong_passkey": "7-5-5-8-6",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=60": {
+      "nll_correct": 4.9553,
+      "nll_wrong": 5.119,
+      "nll_gap": 0.1637,
+      "retrieved": true,
+      "correct_passkey": "7-6-8-1-2",
+      "wrong_passkey": "4-1-5-5-5",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=61": {
+      "nll_correct": 4.9905,
+      "nll_wrong": 4.9919,
+      "nll_gap": 0.0014,
+      "retrieved": true,
+      "correct_passkey": "7-4-8-9-1",
+      "wrong_passkey": "4-6-2-1-2",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=62": {
+      "nll_correct": 5.0171,
+      "nll_wrong": 4.9348,
+      "nll_gap": -0.0823,
+      "retrieved": false,
+      "correct_passkey": "8-9-6-7-4",
+      "wrong_passkey": "2-4-1-1-1",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=63": {
+      "nll_correct": 4.9961,
+      "nll_wrong": 5.4598,
+      "nll_gap": 0.4638,
+      "retrieved": true,
+      "correct_passkey": "5-5-6-9-3",
+      "wrong_passkey": "8-0-5-2-4",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=64": {
+      "nll_correct": 4.9876,
+      "nll_wrong": 5.2694,
+      "nll_gap": 0.2818,
+      "retrieved": true,
+      "correct_passkey": "6-1-5-8-9",
+      "wrong_passkey": "5-5-8-0-1",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=65": {
+      "nll_correct": 4.7187,
+      "nll_wrong": 5.0112,
+      "nll_gap": 0.2926,
+      "retrieved": true,
+      "correct_passkey": "7-5-5-5-7",
+      "wrong_passkey": "3-2-1-3-5",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=66": {
+      "nll_correct": 5.2352,
+      "nll_wrong": 4.9505,
+      "nll_gap": -0.2847,
+      "retrieved": false,
+      "correct_passkey": "4-9-5-3-6",
+      "wrong_passkey": "8-8-9-9-4",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=67": {
+      "nll_correct": 5.067,
+      "nll_wrong": 4.6573,
+      "nll_gap": -0.4097,
+      "retrieved": false,
+      "correct_passkey": "2-3-0-3-4",
+      "wrong_passkey": "1-4-5-6-5",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=68": {
+      "nll_correct": 4.7424,
+      "nll_wrong": 5.1685,
+      "nll_gap": 0.4261,
+      "retrieved": true,
+      "correct_passkey": "1-9-3-5-5",
+      "wrong_passkey": "9-1-9-9-8",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=69": {
+      "nll_correct": 4.9216,
+      "nll_wrong": 5.2417,
+      "nll_gap": 0.3201,
+      "retrieved": true,
+      "correct_passkey": "6-4-5-9-6",
+      "wrong_passkey": "7-9-9-4-9",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=70": {
+      "nll_correct": 5.1276,
+      "nll_wrong": 5.3125,
+      "nll_gap": 0.1849,
+      "retrieved": true,
+      "correct_passkey": "2-9-5-2-0",
+      "wrong_passkey": "8-0-4-5-6",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=71": {
+      "nll_correct": 4.753,
+      "nll_wrong": 5.0491,
+      "nll_gap": 0.2961,
+      "retrieved": true,
+      "correct_passkey": "7-8-5-8-1",
+      "wrong_passkey": "8-1-8-7-2",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=72": {
+      "nll_correct": 4.8701,
+      "nll_wrong": 4.7982,
+      "nll_gap": -0.0719,
+      "retrieved": false,
+      "correct_passkey": "0-1-1-8-2",
+      "wrong_passkey": "3-6-8-6-9",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=73": {
+      "nll_correct": 4.9436,
+      "nll_wrong": 4.9033,
+      "nll_gap": -0.0403,
+      "retrieved": false,
+      "correct_passkey": "8-9-1-9-5",
+      "wrong_passkey": "3-7-6-3-4",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=74": {
+      "nll_correct": 4.8507,
+      "nll_wrong": 5.1882,
+      "nll_gap": 0.3375,
+      "retrieved": true,
+      "correct_passkey": "0-1-4-6-2",
+      "wrong_passkey": "2-5-0-8-4",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=75": {
+      "nll_correct": 4.7287,
+      "nll_wrong": 5.04,
+      "nll_gap": 0.3113,
+      "retrieved": true,
+      "correct_passkey": "1-9-8-8-6",
+      "wrong_passkey": "8-3-1-3-0",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=76": {
+      "nll_correct": 4.8617,
+      "nll_wrong": 4.9374,
+      "nll_gap": 0.0756,
+      "retrieved": true,
+      "correct_passkey": "7-8-6-1-8",
+      "wrong_passkey": "3-4-2-8-1",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=77": {
+      "nll_correct": 5.0392,
+      "nll_wrong": 5.0141,
+      "nll_gap": -0.0251,
+      "retrieved": false,
+      "correct_passkey": "3-7-8-2-7",
+      "wrong_passkey": "2-3-7-1-6",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=78": {
+      "nll_correct": 5.0507,
+      "nll_wrong": 5.0027,
+      "nll_gap": -0.048,
+      "retrieved": false,
+      "correct_passkey": "9-5-9-8-7",
+      "wrong_passkey": "7-6-8-4-4",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=79": {
+      "nll_correct": 4.8104,
+      "nll_wrong": 5.0709,
+      "nll_gap": 0.2605,
+      "retrieved": true,
+      "correct_passkey": "3-6-6-4-1",
+      "wrong_passkey": "2-9-2-6-8",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=80": {
+      "nll_correct": 5.1429,
+      "nll_wrong": 4.8311,
+      "nll_gap": -0.3119,
+      "retrieved": false,
+      "correct_passkey": "8-1-8-2-6",
+      "wrong_passkey": "3-3-4-7-7",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=81": {
+      "nll_correct": 5.2437,
+      "nll_wrong": 4.9468,
+      "nll_gap": -0.2969,
+      "retrieved": false,
+      "correct_passkey": "8-1-9-3-8",
+      "wrong_passkey": "2-2-5-6-3",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=82": {
+      "nll_correct": 4.7146,
+      "nll_wrong": 5.2251,
+      "nll_gap": 0.5105,
+      "retrieved": true,
+      "correct_passkey": "7-5-3-5-3",
+      "wrong_passkey": "4-1-2-7-8",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=83": {
+      "nll_correct": 5.0861,
+      "nll_wrong": 5.0072,
+      "nll_gap": -0.0789,
+      "retrieved": false,
+      "correct_passkey": "7-5-9-1-1",
+      "wrong_passkey": "6-9-6-6-6",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=84": {
+      "nll_correct": 4.8831,
+      "nll_wrong": 4.9023,
+      "nll_gap": 0.0192,
+      "retrieved": true,
+      "correct_passkey": "7-5-8-7-3",
+      "wrong_passkey": "3-1-3-2-7",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=85": {
+      "nll_correct": 5.0503,
+      "nll_wrong": 5.3902,
+      "nll_gap": 0.3398,
+      "retrieved": true,
+      "correct_passkey": "8-7-9-5-6",
+      "wrong_passkey": "7-1-7-0-7",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=86": {
+      "nll_correct": 5.0067,
+      "nll_wrong": 5.2629,
+      "nll_gap": 0.2562,
+      "retrieved": true,
+      "correct_passkey": "2-8-6-4-8",
+      "wrong_passkey": "5-2-7-3-1",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=87": {
+      "nll_correct": 4.9065,
+      "nll_wrong": 4.9676,
+      "nll_gap": 0.0611,
+      "retrieved": true,
+      "correct_passkey": "2-6-6-1-6",
+      "wrong_passkey": "9-1-3-6-2",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=88": {
+      "nll_correct": 4.8834,
+      "nll_wrong": 5.15,
+      "nll_gap": 0.2666,
+      "retrieved": true,
+      "correct_passkey": "0-8-5-4-6",
+      "wrong_passkey": "9-3-7-7-1",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=89": {
+      "nll_correct": 4.8789,
+      "nll_wrong": 4.9628,
+      "nll_gap": 0.0838,
+      "retrieved": true,
+      "correct_passkey": "8-5-5-1-6",
+      "wrong_passkey": "1-4-9-5-3",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=90": {
+      "nll_correct": 5.1511,
+      "nll_wrong": 4.802,
+      "nll_gap": -0.3491,
+      "retrieved": false,
+      "correct_passkey": "9-8-0-2-3",
+      "wrong_passkey": "1-9-5-7-9",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=91": {
+      "nll_correct": 5.1676,
+      "nll_wrong": 5.2241,
+      "nll_gap": 0.0565,
+      "retrieved": true,
+      "correct_passkey": "6-1-9-5-6",
+      "wrong_passkey": "3-2-2-0-7",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=92": {
+      "nll_correct": 5.1551,
+      "nll_wrong": 4.7142,
+      "nll_gap": -0.4409,
+      "retrieved": false,
+      "correct_passkey": "2-9-6-2-5",
+      "wrong_passkey": "7-5-5-5-6",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=93": {
+      "nll_correct": 5.5991,
+      "nll_wrong": 5.0596,
+      "nll_gap": -0.5396,
+      "retrieved": false,
+      "correct_passkey": "5-0-9-5-2",
+      "wrong_passkey": "8-4-7-9-9",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=94": {
+      "nll_correct": 5.0414,
+      "nll_wrong": 4.9871,
+      "nll_gap": -0.0543,
+      "retrieved": false,
+      "correct_passkey": "5-8-5-2-6",
+      "wrong_passkey": "6-4-4-9-5",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=95": {
+      "nll_correct": 5.0983,
+      "nll_wrong": 4.8837,
+      "nll_gap": -0.2146,
+      "retrieved": false,
+      "correct_passkey": "0-3-0-6-7",
+      "wrong_passkey": "7-5-6-8-0",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=96": {
+      "nll_correct": 4.9746,
+      "nll_wrong": 5.0746,
+      "nll_gap": 0.1,
+      "retrieved": true,
+      "correct_passkey": "0-1-4-9-6",
+      "wrong_passkey": "3-4-5-0-5",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=97": {
+      "nll_correct": 4.8427,
+      "nll_wrong": 5.2226,
+      "nll_gap": 0.38,
+      "retrieved": true,
+      "correct_passkey": "2-7-3-3-3",
+      "wrong_passkey": "5-6-0-7-0",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=98": {
+      "nll_correct": 4.913,
+      "nll_wrong": 5.1648,
+      "nll_gap": 0.2517,
+      "retrieved": true,
+      "correct_passkey": "8-7-2-8-2",
+      "wrong_passkey": "2-4-9-3-3",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=99": {
+      "nll_correct": 5.1724,
+      "nll_wrong": 4.9676,
+      "nll_gap": -0.2048,
+      "retrieved": false,
+      "correct_passkey": "6-6-0-4-1",
+      "wrong_passkey": "2-8-6-6-5",
+      "ar_generated": "\n- The Maths: The Maths:",
+      "ar_exact_match": false
+    }
+  },
+  "summary": {
+    "L=1024_d=0.5": {
+      "mean_nll_gap": 0.3587,
+      "retrieval_rate": 0.87,
+      "ar_exact_match_rate": 0.0,
+      "trials": 100
+    },
+    "L=2048_d=0.5": {
+      "mean_nll_gap": 0.3069,
+      "retrieval_rate": 0.8,
+      "ar_exact_match_rate": 0.0,
+      "trials": 100
+    },
+    "L=4096_d=0.5": {
+      "mean_nll_gap": 0.0722,
+      "retrieval_rate": 0.54,
+      "ar_exact_match_rate": 0.0,
+      "trials": 100
+    },
+    "L=8192_d=0.5": {
+      "mean_nll_gap": -0.0123,
+      "retrieval_rate": 0.55,
+      "ar_exact_match_rate": 0.0,
+      "trials": 100
+    }
+  },
+  "global": {
+    "total_trials": 400,
+    "mean_nll_gap": 0.1814,
+    "retrieval_rate": 0.69,
+    "ar_exact_match_rate": 0.0
+  }
+}
