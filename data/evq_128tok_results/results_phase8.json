@@ -1,0 +1,893 @@
+{
+  "phase": 8,
+  "date": "2026-03-01",
+  "hardware": "RTX 5090 32GB",
+  "experiments": {
+    "8A_ext_4k": {
+      "methods": {
+        "extend_geo": {
+          "method": "A1 Geometric (unchanged)",
+          "ppl": {
+            "512": 76.646,
+            "1024": 77.814,
+            "2048": 77.109,
+            "4096": 80.392,
+            "8192": 81.355,
+            "16384": 83.252
+          },
+          "passkey": {
+            "total_trials": 400,
+            "mean_nll_gap": 0.1345,
+            "retrieval_rate": 0.6675,
+            "ar_exact_match_rate": 0.0
+          },
+          "passkey_by_length": {
+            "L=1024_d=0.5": {
+              "mean_nll_gap": 0.2592,
+              "retrieval_rate": 0.82,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=2048_d=0.5": {
+              "mean_nll_gap": 0.1875,
+              "retrieval_rate": 0.72,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=4096_d=0.5": {
+              "mean_nll_gap": 0.0711,
+              "retrieval_rate": 0.59,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=8192_d=0.5": {
+              "mean_nll_gap": 0.0202,
+              "retrieval_rate": 0.54,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            }
+          },
+          "train_time_sec": 309.8
+        },
+        "extend_pi": {
+          "method": "A2 PI (/8x)",
+          "ppl": {
+            "512": 79.059,
+            "1024": 80.303,
+            "2048": 79.344,
+            "4096": 82.225,
+            "8192": 159.107,
+            "16384": 254.408
+          },
+          "passkey": {
+            "total_trials": 400,
+            "mean_nll_gap": 0.1566,
+            "retrieval_rate": 0.6575,
+            "ar_exact_match_rate": 0.0
+          },
+          "passkey_by_length": {
+            "L=1024_d=0.5": {
+              "mean_nll_gap": 0.2639,
+              "retrieval_rate": 0.81,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=2048_d=0.5": {
+              "mean_nll_gap": 0.2214,
+              "retrieval_rate": 0.74,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=4096_d=0.5": {
+              "mean_nll_gap": 0.1646,
+              "retrieval_rate": 0.65,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=8192_d=0.5": {
+              "mean_nll_gap": -0.0233,
+              "retrieval_rate": 0.43,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            }
+          },
+          "train_time_sec": 309.7
+        },
+        "extend_yarn": {
+          "method": "A3 YaRN (s=8)",
+          "ppl": {
+            "512": 76.466,
+            "1024": 77.538,
+            "2048": 76.772,
+            "4096": 79.541,
+            "8192": 107.782,
+            "16384": 161.883
+          },
+          "passkey": {
+            "total_trials": 400,
+            "mean_nll_gap": 0.2288,
+            "retrieval_rate": 0.72,
+            "ar_exact_match_rate": 0.0
+          },
+          "passkey_by_length": {
+            "L=1024_d=0.5": {
+              "mean_nll_gap": 0.4348,
+              "retrieval_rate": 0.87,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=2048_d=0.5": {
+              "mean_nll_gap": 0.3383,
+              "retrieval_rate": 0.82,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=4096_d=0.5": {
+              "mean_nll_gap": 0.2002,
+              "retrieval_rate": 0.7,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=8192_d=0.5": {
+              "mean_nll_gap": -0.0582,
+              "retrieval_rate": 0.49,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            }
+          },
+          "train_time_sec": 309.8
+        },
+        "extend_evq_1.5": {
+          "method": "A4 EVQ \u03c4=1.5",
+          "ppl": {
+            "512": 78.452,
+            "1024": 79.915,
+            "2048": 79.341,
+            "4096": 83.058,
+            "8192": 84.238,
+            "16384": 85.694
+          },
+          "passkey": {
+            "total_trials": 400,
+            "mean_nll_gap": 0.0728,
+            "retrieval_rate": 0.6,
+            "ar_exact_match_rate": 0.0
+          },
+          "passkey_by_length": {
+            "L=1024_d=0.5": {
+              "mean_nll_gap": 0.1667,
+              "retrieval_rate": 0.7,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=2048_d=0.5": {
+              "mean_nll_gap": 0.1077,
+              "retrieval_rate": 0.66,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=4096_d=0.5": {
+              "mean_nll_gap": 0.0155,
+              "retrieval_rate": 0.52,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=8192_d=0.5": {
+              "mean_nll_gap": 0.0012,
+              "retrieval_rate": 0.52,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            }
+          },
+          "train_time_sec": 309.8
+        },
+        "extend_evq_2.0": {
+          "method": "A5 EVQ \u03c4=2.0",
+          "ppl": {
+            "512": 80.152,
+            "1024": 81.361,
+            "2048": 80.849,
+            "4096": 84.836,
+            "8192": 86.452,
+            "16384": 87.994
+          },
+          "passkey": {
+            "total_trials": 400,
+            "mean_nll_gap": 0.0456,
+            "retrieval_rate": 0.56,
+            "ar_exact_match_rate": 0.0
+          },
+          "passkey_by_length": {
+            "L=1024_d=0.5": {
+              "mean_nll_gap": 0.1143,
+              "retrieval_rate": 0.64,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=2048_d=0.5": {
+              "mean_nll_gap": 0.0813,
+              "retrieval_rate": 0.63,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=4096_d=0.5": {
+              "mean_nll_gap": -0.0036,
+              "retrieval_rate": 0.47,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=8192_d=0.5": {
+              "mean_nll_gap": -0.0096,
+              "retrieval_rate": 0.5,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            }
+          },
+          "train_time_sec": 309.8
+        },
+        "extend_evq_2.5": {
+          "method": "A6 EVQ \u03c4=2.5",
+          "ppl": {
+            "512": 82.078,
+            "1024": 83.316,
+            "2048": 83.196,
+            "4096": 87.274,
+            "8192": 88.895,
+            "16384": 90.208
+          },
+          "passkey": {
+            "total_trials": 400,
+            "mean_nll_gap": 0.0399,
+            "retrieval_rate": 0.555,
+            "ar_exact_match_rate": 0.0
+          },
+          "passkey_by_length": {
+            "L=1024_d=0.5": {
+              "mean_nll_gap": 0.0927,
+              "retrieval_rate": 0.64,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=2048_d=0.5": {
+              "mean_nll_gap": 0.0479,
+              "retrieval_rate": 0.6,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=4096_d=0.5": {
+              "mean_nll_gap": -0.0082,
+              "retrieval_rate": 0.45,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=8192_d=0.5": {
+              "mean_nll_gap": 0.0271,
+              "retrieval_rate": 0.53,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            }
+          },
+          "train_time_sec": 309.8
+        },
+        "extend_hybrid_2.0": {
+          "method": "A7 Hybrid EVQ \u03c4=2.0",
+          "ppl": {
+            "512": 77.203,
+            "1024": 79.267,
+            "2048": 78.119,
+            "4096": 82.01,
+            "8192": 83.336,
+            "16384": 84.731
+          },
+          "passkey": {
+            "total_trials": 400,
+            "mean_nll_gap": 0.0695,
+            "retrieval_rate": 0.5925,
+            "ar_exact_match_rate": 0.0
+          },
+          "passkey_by_length": {
+            "L=1024_d=0.5": {
+              "mean_nll_gap": 0.1814,
+              "retrieval_rate": 0.74,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=2048_d=0.5": {
+              "mean_nll_gap": 0.086,
+              "retrieval_rate": 0.61,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=4096_d=0.5": {
+              "mean_nll_gap": 0.0092,
+              "retrieval_rate": 0.5,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=8192_d=0.5": {
+              "mean_nll_gap": 0.0014,
+              "retrieval_rate": 0.52,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            }
+          },
+          "train_time_sec": 309.8
+        }
+      },
+      "passkey": {
+        "extend_geo": {
+          "global": {
+            "total_trials": 400,
+            "mean_nll_gap": 0.1345,
+            "retrieval_rate": 0.6675,
+            "ar_exact_match_rate": 0.0
+          },
+          "summary": {
+            "L=1024_d=0.5": {
+              "mean_nll_gap": 0.2592,
+              "retrieval_rate": 0.82,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=2048_d=0.5": {
+              "mean_nll_gap": 0.1875,
+              "retrieval_rate": 0.72,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=4096_d=0.5": {
+              "mean_nll_gap": 0.0711,
+              "retrieval_rate": 0.59,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=8192_d=0.5": {
+              "mean_nll_gap": 0.0202,
+              "retrieval_rate": 0.54,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            }
+          }
+        },
+        "extend_pi": {
+          "global": {
+            "total_trials": 400,
+            "mean_nll_gap": 0.1566,
+            "retrieval_rate": 0.6575,
+            "ar_exact_match_rate": 0.0
+          },
+          "summary": {
+            "L=1024_d=0.5": {
+              "mean_nll_gap": 0.2639,
+              "retrieval_rate": 0.81,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=2048_d=0.5": {
+              "mean_nll_gap": 0.2214,
+              "retrieval_rate": 0.74,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=4096_d=0.5": {
+              "mean_nll_gap": 0.1646,
+              "retrieval_rate": 0.65,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=8192_d=0.5": {
+              "mean_nll_gap": -0.0233,
+              "retrieval_rate": 0.43,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            }
+          }
+        },
+        "extend_yarn": {
+          "global": {
+            "total_trials": 400,
+            "mean_nll_gap": 0.2288,
+            "retrieval_rate": 0.72,
+            "ar_exact_match_rate": 0.0
+          },
+          "summary": {
+            "L=1024_d=0.5": {
+              "mean_nll_gap": 0.4348,
+              "retrieval_rate": 0.87,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=2048_d=0.5": {
+              "mean_nll_gap": 0.3383,
+              "retrieval_rate": 0.82,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=4096_d=0.5": {
+              "mean_nll_gap": 0.2002,
+              "retrieval_rate": 0.7,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=8192_d=0.5": {
+              "mean_nll_gap": -0.0582,
+              "retrieval_rate": 0.49,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            }
+          }
+        },
+        "extend_evq_1.5": {
+          "global": {
+            "total_trials": 400,
+            "mean_nll_gap": 0.0728,
+            "retrieval_rate": 0.6,
+            "ar_exact_match_rate": 0.0
+          },
+          "summary": {
+            "L=1024_d=0.5": {
+              "mean_nll_gap": 0.1667,
+              "retrieval_rate": 0.7,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=2048_d=0.5": {
+              "mean_nll_gap": 0.1077,
+              "retrieval_rate": 0.66,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=4096_d=0.5": {
+              "mean_nll_gap": 0.0155,
+              "retrieval_rate": 0.52,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=8192_d=0.5": {
+              "mean_nll_gap": 0.0012,
+              "retrieval_rate": 0.52,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            }
+          }
+        },
+        "extend_evq_2.0": {
+          "global": {
+            "total_trials": 400,
+            "mean_nll_gap": 0.0456,
+            "retrieval_rate": 0.56,
+            "ar_exact_match_rate": 0.0
+          },
+          "summary": {
+            "L=1024_d=0.5": {
+              "mean_nll_gap": 0.1143,
+              "retrieval_rate": 0.64,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=2048_d=0.5": {
+              "mean_nll_gap": 0.0813,
+              "retrieval_rate": 0.63,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=4096_d=0.5": {
+              "mean_nll_gap": -0.0036,
+              "retrieval_rate": 0.47,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=8192_d=0.5": {
+              "mean_nll_gap": -0.0096,
+              "retrieval_rate": 0.5,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            }
+          }
+        },
+        "extend_evq_2.5": {
+          "global": {
+            "total_trials": 400,
+            "mean_nll_gap": 0.0399,
+            "retrieval_rate": 0.555,
+            "ar_exact_match_rate": 0.0
+          },
+          "summary": {
+            "L=1024_d=0.5": {
+              "mean_nll_gap": 0.0927,
+              "retrieval_rate": 0.64,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=2048_d=0.5": {
+              "mean_nll_gap": 0.0479,
+              "retrieval_rate": 0.6,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=4096_d=0.5": {
+              "mean_nll_gap": -0.0082,
+              "retrieval_rate": 0.45,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=8192_d=0.5": {
+              "mean_nll_gap": 0.0271,
+              "retrieval_rate": 0.53,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            }
+          }
+        },
+        "extend_hybrid_2.0": {
+          "global": {
+            "total_trials": 400,
+            "mean_nll_gap": 0.0695,
+            "retrieval_rate": 0.5925,
+            "ar_exact_match_rate": 0.0
+          },
+          "summary": {
+            "L=1024_d=0.5": {
+              "mean_nll_gap": 0.1814,
+              "retrieval_rate": 0.74,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=2048_d=0.5": {
+              "mean_nll_gap": 0.086,
+              "retrieval_rate": 0.61,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=4096_d=0.5": {
+              "mean_nll_gap": 0.0092,
+              "retrieval_rate": 0.5,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            },
+            "L=8192_d=0.5": {
+              "mean_nll_gap": 0.0014,
+              "retrieval_rate": 0.52,
+              "ar_exact_match_rate": 0.0,
+              "trials": 100
+            }
+          }
+        }
+      }
+    },
+    "8B_finetune_ablation": {
+      "evq2.0_2.5M": {
+        "method": "EVQ \u03c4=2.0 (2.5M)",
+        "tokens": 2500000,
+        "ppl": {
+          "512": 87.281,
+          "1024": 88.628,
+          "2048": 90.378,
+          "4096": 96.798,
+          "8192": 102.013
+        },
+        "passkey_global": {
+          "total_trials": 300,
+          "mean_nll_gap": 0.0518,
+          "retrieval_rate": 0.5667,
+          "ar_exact_match_rate": 0.0
+        },
+        "passkey_summary": {
+          "L=1024_d=0.5": {
+            "mean_nll_gap": 0.0858,
+            "retrieval_rate": 0.63,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=2048_d=0.5": {
+            "mean_nll_gap": 0.056,
+            "retrieval_rate": 0.57,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=4096_d=0.5": {
+            "mean_nll_gap": 0.0135,
+            "retrieval_rate": 0.5,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          }
+        },
+        "train_time_sec": 72.5
+      },
+      "evq2.0_10M": {
+        "method": "EVQ \u03c4=2.0 (10M)",
+        "tokens": 10000000,
+        "ppl": {
+          "512": 79.375,
+          "1024": 80.602,
+          "2048": 80.665,
+          "4096": 85.304,
+          "8192": 88.75
+        },
+        "passkey_global": {
+          "total_trials": 300,
+          "mean_nll_gap": 0.073,
+          "retrieval_rate": 0.59,
+          "ar_exact_match_rate": 0.0
+        },
+        "passkey_summary": {
+          "L=1024_d=0.5": {
+            "mean_nll_gap": 0.1233,
+            "retrieval_rate": 0.66,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=2048_d=0.5": {
+            "mean_nll_gap": 0.0881,
+            "retrieval_rate": 0.64,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=4096_d=0.5": {
+            "mean_nll_gap": 0.0077,
+            "retrieval_rate": 0.47,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          }
+        },
+        "train_time_sec": 291.0
+      },
+      "evq2.0_20M": {
+        "method": "EVQ \u03c4=2.0 (20M)",
+        "tokens": 20000000,
+        "ppl": {
+          "512": 75.291,
+          "1024": 75.679,
+          "2048": 75.742,
+          "4096": 79.286,
+          "8192": 82.0
+        },
+        "passkey_global": {
+          "total_trials": 300,
+          "mean_nll_gap": 0.0972,
+          "retrieval_rate": 0.61,
+          "ar_exact_match_rate": 0.0
+        },
+        "passkey_summary": {
+          "L=1024_d=0.5": {
+            "mean_nll_gap": 0.1555,
+            "retrieval_rate": 0.72,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=2048_d=0.5": {
+            "mean_nll_gap": 0.1236,
+            "retrieval_rate": 0.63,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=4096_d=0.5": {
+            "mean_nll_gap": 0.0127,
+            "retrieval_rate": 0.48,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          }
+        },
+        "train_time_sec": 582.1
+      },
+      "geo_10M": {
+        "method": "Geometric (10M)",
+        "tokens": 10000000,
+        "ppl": {
+          "512": 76.125,
+          "1024": 77.234,
+          "2048": 77.126,
+          "4096": 80.996,
+          "8192": 85.886
+        },
+        "passkey_global": {
+          "total_trials": 300,
+          "mean_nll_gap": 0.1702,
+          "retrieval_rate": 0.68,
+          "ar_exact_match_rate": 0.0
+        },
+        "passkey_summary": {
+          "L=1024_d=0.5": {
+            "mean_nll_gap": 0.2507,
+            "retrieval_rate": 0.8,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=2048_d=0.5": {
+            "mean_nll_gap": 0.1915,
+            "retrieval_rate": 0.7,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=4096_d=0.5": {
+            "mean_nll_gap": 0.0686,
+            "retrieval_rate": 0.54,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          }
+        },
+        "train_time_sec": 291.0
+      },
+      "geo_20M": {
+        "method": "Geometric (20M)",
+        "tokens": 20000000,
+        "ppl": {
+          "512": 73.21,
+          "1024": 73.275,
+          "2048": 73.42,
+          "4096": 76.31,
+          "8192": 80.458
+        },
+        "passkey_global": {
+          "total_trials": 300,
+          "mean_nll_gap": 0.1833,
+          "retrieval_rate": 0.69,
+          "ar_exact_match_rate": 0.0
+        },
+        "passkey_summary": {
+          "L=1024_d=0.5": {
+            "mean_nll_gap": 0.268,
+            "retrieval_rate": 0.8,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=2048_d=0.5": {
+            "mean_nll_gap": 0.2006,
+            "retrieval_rate": 0.69,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=4096_d=0.5": {
+            "mean_nll_gap": 0.0812,
+            "retrieval_rate": 0.58,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          }
+        },
+        "train_time_sec": 582.6
+      },
+      "evq2.0_5M_ref": {
+        "method": "EVQ \u03c4=2.0 (5M) \u2014 7F ref",
+        "tokens": 5000000,
+        "ppl": {
+          "512": 88.292,
+          "1024": 88.856,
+          "2048": 89.233,
+          "4096": 95.922,
+          "8192": 99.129
+        },
+        "passkey_global": {
+          "retrieval_rate": 0.6467,
+          "mean_nll_gap": 0.1086
+        },
+        "passkey_summary": {
+          "L=1024_d=0.5": {
+            "retrieval_rate": 0.82
+          },
+          "L=2048_d=0.5": {
+            "retrieval_rate": 0.72
+          },
+          "L=4096_d=0.5": {
+            "retrieval_rate": 0.4
+          }
+        }
+      },
+      "geo_5M_ref": {
+        "method": "Geometric (5M) \u2014 7F ref",
+        "tokens": 5000000,
+        "ppl": {
+          "512": 86.731,
+          "1024": 86.472,
+          "2048": 87.589,
+          "4096": 93.17,
+          "8192": 97.959
+        },
+        "passkey_global": {
+          "retrieval_rate": 0.7333,
+          "mean_nll_gap": 0.2103
+        },
+        "passkey_summary": {
+          "L=1024_d=0.5": {
+            "retrieval_rate": 0.9
+          },
+          "L=2048_d=0.5": {
+            "retrieval_rate": 0.78
+          },
+          "L=4096_d=0.5": {
+            "retrieval_rate": 0.52
+          }
+        }
+      }
+    },
+    "8C_from_scratch_4k": {
+      "geo_4k": {
+        "method": "C1 Geometric (from scratch)",
+        "ppl": {
+          "512": 90.284,
+          "1024": 88.171,
+          "2048": 90.098,
+          "4096": 91.063,
+          "8192": 115.56,
+          "16384": 175.437
+        },
+        "passkey_global": {
+          "total_trials": 400,
+          "mean_nll_gap": 0.1814,
+          "retrieval_rate": 0.69,
+          "ar_exact_match_rate": 0.0
+        },
+        "passkey_summary": {
+          "L=1024_d=0.5": {
+            "mean_nll_gap": 0.3587,
+            "retrieval_rate": 0.87,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=2048_d=0.5": {
+            "mean_nll_gap": 0.3069,
+            "retrieval_rate": 0.8,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=4096_d=0.5": {
+            "mean_nll_gap": 0.0722,
+            "retrieval_rate": 0.54,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=8192_d=0.5": {
+            "mean_nll_gap": -0.0123,
+            "retrieval_rate": 0.55,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          }
+        },
+        "train_time_sec": 1551.1
+      },
+      "evq2.0_4k": {
+        "method": "C2 EVQ \u03c4=2.0 (from scratch)",
+        "ppl": {
+          "512": 91.839,
+          "1024": 89.856,
+          "2048": 92.038,
+          "4096": 93.097,
+          "8192": 113.885,
+          "16384": 164.379
+        },
+        "passkey_global": {
+          "total_trials": 400,
+          "mean_nll_gap": 0.1388,
+          "retrieval_rate": 0.66,
+          "ar_exact_match_rate": 0.0
+        },
+        "passkey_summary": {
+          "L=1024_d=0.5": {
+            "mean_nll_gap": 0.2856,
+            "retrieval_rate": 0.82,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=2048_d=0.5": {
+            "mean_nll_gap": 0.1723,
+            "retrieval_rate": 0.68,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=4096_d=0.5": {
+            "mean_nll_gap": 0.0681,
+            "retrieval_rate": 0.6,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          },
+          "L=8192_d=0.5": {
+            "mean_nll_gap": 0.0292,
+            "retrieval_rate": 0.54,
+            "ar_exact_match_rate": 0.0,
+            "trials": 100
+          }
+        },
+        "train_time_sec": 1551.2
+      }
+    }
+  }
+}
