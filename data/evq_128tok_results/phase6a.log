@@ -1,0 +1,718 @@
+====== PHASE 6A: EXTENDED TAU SWEEP ======
+Sun Mar 1 17:41:12 CST 2026
+
+====== FineWeb tau=3.0 ======
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+  [CUDA] GPU: NVIDIA GeForce RTX 5090, VRAM: 31.4 GB
+  [CUDA <40GB] Adjusted 125m: batch=4, eval=[128, 256, 512, 1024, 2048, 4096, 8192]
+  [short-seq] seq_len=128, batch_size scaled 16x to 64
+
+############################################################
+  EVQ τ-SWEEP  |  tier=125m  |  taus=[3.0]
+  seq_len=128  train_tokens=15M
+  eval_lengths=[128, 256, 512, 1024, 2048, 4096, 8192]
+  device=cuda  dtype=torch.bfloat16  base=500000.0
+  work_dir=/root/autodl-tmp/evq_phase6/extended_sweep
+############################################################
+
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+
+  [check] Passkey tokenizer sanity check:
+  Tokenisation of '<<PASS:7-4-2-9-1>>':
+    IDs:    [14193, 25692, 27, 24, 14, 21, 14, 19, 14, 26, 14, 18, 5064]
+    Tokens: ['<<', 'PASS', ':', '7', '-', '4', '-', '2', '-', '9', '-', '1', '>>']
+    OK: all digits ['7', '4', '2', '9', '1'] are independent tokens
+  [data] Trying HuggingFaceFW/fineweb-edu (config=sample-10BT)...
+    Tokenized 0.0M tokens from 2 docs in 4s
+  [data] Connection OK, streaming 15M tokens...
+    [sample 0] 'The Independent Jane\nFor all the love, romance and scandal in Jane Austen’s books, what they are rea'...
+    [sample 1] 'Taking Play Seriously\nBy ROBIN MARANTZ HENIG\nPublished: February 17, 2008\nOn a drizzly Tuesday night'...
+    [sample 2] 'How do you get HIV?\nHIV can be passed on when infected bodily fluid, such as blood or semen, is pass'...
+    [10M/15M tokens] 9687 docs, 0.4M tok/s, ETA 13s
+    Tokenized 15.0M tokens from 14737 docs in 36s
+  [data] Got 117190 chunks (15.0M tokens) from HuggingFaceFW/fineweb-edu
+  [data] Saved cache: /root/autodl-tmp/evq_phase6/extended_sweep/train_fineweb-edu_15000000_128.pt (120.0MB)
+  [val] Trying HuggingFaceFW/fineweb-edu...
+    Tokenized 5.0M tokens from 5108 docs in 20s
+  [val] Got 5.0M tokens from HuggingFaceFW/fineweb-edu
+  [val] Saved cache: /root/autodl-tmp/evq_phase6/extended_sweep/val_fineweb-edu_5000000.pt (40.0MB)
+
+============================================================
+  RUN: 125m_tau3.00_seed42  (base=500000)
+============================================================
+  inv_freq: shape=torch.Size([32])  max=0.933757  min=0.00000396  hash=514ce7a3f617989a
+  Phase collision total=0.149584
+  Model params: 151.9M
+    step 0/1831  loss=10.9661  lr=0.00e+00  ETA=0min
+    step 50/1831  loss=7.3452  lr=3.00e-04  ETA=2min
+    step 100/1831  loss=6.9669  lr=2.99e-04  ETA=2min
+    step 150/1831  loss=6.6719  lr=2.97e-04  ETA=2min
+    step 200/1831  loss=6.4782  lr=2.94e-04  ETA=2min
+    step 250/1831  loss=6.4462  lr=2.91e-04  ETA=2min
+    step 300/1831  loss=6.2984  lr=2.86e-04  ETA=2min
+    step 350/1831  loss=6.2346  lr=2.80e-04  ETA=2min
+    step 400/1831  loss=6.0848  lr=2.74e-04  ETA=2min
+    step 450/1831  loss=5.9139  lr=2.66e-04  ETA=2min
+    step 500/1831  loss=5.7992  lr=2.58e-04  ETA=2min
+    step 550/1831  loss=5.8091  lr=2.49e-04  ETA=2min
+    step 600/1831  loss=5.8469  lr=2.39e-04  ETA=2min
+    step 650/1831  loss=5.7737  lr=2.29e-04  ETA=2min
+    step 700/1831  loss=5.6948  lr=2.19e-04  ETA=1min
+    step 750/1831  loss=5.5715  lr=2.08e-04  ETA=1min
+    step 800/1831  loss=5.5468  lr=1.96e-04  ETA=1min
+    step 850/1831  loss=5.5823  lr=1.85e-04  ETA=1min
+    step 900/1831  loss=5.4634  lr=1.73e-04  ETA=1min
+    step 950/1831  loss=5.6389  lr=1.61e-04  ETA=1min
+    step 1000/1831  loss=5.4822  lr=1.49e-04  ETA=1min
+    step 1050/1831  loss=5.3685  lr=1.38e-04  ETA=1min
+    step 1100/1831  loss=5.4611  lr=1.26e-04  ETA=1min
+    step 1150/1831  loss=5.2396  lr=1.15e-04  ETA=1min
+    step 1200/1831  loss=5.3110  lr=1.04e-04  ETA=1min
+    step 1250/1831  loss=5.2975  lr=9.40e-05  ETA=1min
+    step 1300/1831  loss=5.3441  lr=8.42e-05  ETA=1min
+    step 1350/1831  loss=5.2472  lr=7.51e-05  ETA=1min
+    step 1400/1831  loss=5.3110  lr=6.66e-05  ETA=1min
+    step 1450/1831  loss=5.2789  lr=5.89e-05  ETA=1min
+    step 1500/1831  loss=5.1710  lr=5.20e-05  ETA=0min
+    step 1550/1831  loss=5.2505  lr=4.60e-05  ETA=0min
+    step 1600/1831  loss=5.1466  lr=4.09e-05  ETA=0min
+    step 1650/1831  loss=5.0962  lr=3.67e-05  ETA=0min
+    step 1700/1831  loss=5.1400  lr=3.35e-05  ETA=0min
+    step 1750/1831  loss=5.1446  lr=3.14e-05  ETA=0min
+    step 1800/1831  loss=5.3297  lr=3.02e-05  ETA=0min
+  Training done in 2.4 min
+    L=128: PPL=180.307  (10 chunks)
+    L=256: PPL=207.441  (10 chunks)
+    L=512: PPL=255.450  (10 chunks)
+    L=1024: PPL=230.605  (10 chunks)
+    L=2048: PPL=211.857  (10 chunks)
+    L=4096: PPL=274.339  (10 chunks)
+    L=8192: PPL=365.188  (10 chunks)
+  [checkpoint] saved to /root/autodl-tmp/evq_phase6/extended_sweep/results_checkpoint.json
+
+============================================================
+  SWEEP COMPLETE  |  2.5 min total
+  Results: /root/autodl-tmp/evq_phase6/extended_sweep/results_final.json
+============================================================
+
+  Next: python scripts/m4_evq_sweep/evq_analysis.py --input /root/autodl-tmp/evq_phase6/extended_sweep/results_final.json
+
+====== FineWeb tau=3.5 ======
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+  [CUDA] GPU: NVIDIA GeForce RTX 5090, VRAM: 31.4 GB
+  [CUDA <40GB] Adjusted 125m: batch=4, eval=[128, 256, 512, 1024, 2048, 4096, 8192]
+  [short-seq] seq_len=128, batch_size scaled 16x to 64
+
+############################################################
+  EVQ τ-SWEEP  |  tier=125m  |  taus=[3.5]
+  seq_len=128  train_tokens=15M
+  eval_lengths=[128, 256, 512, 1024, 2048, 4096, 8192]
+  device=cuda  dtype=torch.bfloat16  base=500000.0
+  work_dir=/root/autodl-tmp/evq_phase6/extended_sweep
+############################################################
+
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+
+  [check] Passkey tokenizer sanity check:
+  Tokenisation of '<<PASS:7-4-2-9-1>>':
+    IDs:    [14193, 25692, 27, 24, 14, 21, 14, 19, 14, 26, 14, 18, 5064]
+    Tokens: ['<<', 'PASS', ':', '7', '-', '4', '-', '2', '-', '9', '-', '1', '>>']
+    OK: all digits ['7', '4', '2', '9', '1'] are independent tokens
+  [data] Loading from cache: /root/autodl-tmp/evq_phase6/extended_sweep/train_fineweb-edu_15000000_128.pt
+  [data] Cached: 117190 chunks (15.0M tokens)
+  [val] Loading from cache: /root/autodl-tmp/evq_phase6/extended_sweep/val_fineweb-edu_5000000.pt
+  [val] Cached: 5.0M tokens
+  Resumed 1 existing results
+
+============================================================
+  RUN: 125m_tau3.50_seed42  (base=500000)
+============================================================
+  inv_freq: shape=torch.Size([32])  max=0.942768  min=0.00000522  hash=202222e68a717866
+  Phase collision total=0.192353
+  Model params: 151.9M
+    step 0/1831  loss=10.9676  lr=0.00e+00  ETA=0min
+    step 50/1831  loss=7.3084  lr=3.00e-04  ETA=3min
+    step 100/1831  loss=6.9474  lr=2.99e-04  ETA=2min
+    step 150/1831  loss=6.6569  lr=2.97e-04  ETA=2min
+    step 200/1831  loss=6.4630  lr=2.94e-04  ETA=2min
+    step 250/1831  loss=6.4242  lr=2.91e-04  ETA=2min
+    step 300/1831  loss=6.2796  lr=2.86e-04  ETA=2min
+    step 350/1831  loss=6.2383  lr=2.80e-04  ETA=2min
+    step 400/1831  loss=6.0799  lr=2.74e-04  ETA=2min
+    step 450/1831  loss=5.9026  lr=2.66e-04  ETA=2min
+    step 500/1831  loss=5.7924  lr=2.58e-04  ETA=2min
+    step 550/1831  loss=5.8004  lr=2.49e-04  ETA=2min
+    step 600/1831  loss=5.8450  lr=2.39e-04  ETA=2min
+    step 650/1831  loss=5.7677  lr=2.29e-04  ETA=2min
+    step 700/1831  loss=5.6889  lr=2.19e-04  ETA=2min
+    step 750/1831  loss=5.5561  lr=2.08e-04  ETA=1min
+    step 800/1831  loss=5.5421  lr=1.96e-04  ETA=1min
+    step 850/1831  loss=5.5768  lr=1.85e-04  ETA=1min
+    step 900/1831  loss=5.4614  lr=1.73e-04  ETA=1min
+    step 950/1831  loss=5.6332  lr=1.61e-04  ETA=1min
+    step 1000/1831  loss=5.4753  lr=1.49e-04  ETA=1min
+    step 1050/1831  loss=5.3614  lr=1.38e-04  ETA=1min
+    step 1100/1831  loss=5.4537  lr=1.26e-04  ETA=1min
+    step 1150/1831  loss=5.2310  lr=1.15e-04  ETA=1min
+    step 1200/1831  loss=5.2962  lr=1.04e-04  ETA=1min
+    step 1250/1831  loss=5.3030  lr=9.40e-05  ETA=1min
+    step 1300/1831  loss=5.3427  lr=8.42e-05  ETA=1min
+    step 1350/1831  loss=5.2418  lr=7.51e-05  ETA=1min
+    step 1400/1831  loss=5.3000  lr=6.66e-05  ETA=1min
+    step 1450/1831  loss=5.2713  lr=5.89e-05  ETA=1min
+    step 1500/1831  loss=5.1690  lr=5.20e-05  ETA=0min
+    step 1550/1831  loss=5.2438  lr=4.60e-05  ETA=0min
+    step 1600/1831  loss=5.1482  lr=4.09e-05  ETA=0min
+    step 1650/1831  loss=5.0875  lr=3.67e-05  ETA=0min
+    step 1700/1831  loss=5.1293  lr=3.35e-05  ETA=0min
+    step 1750/1831  loss=5.1445  lr=3.14e-05  ETA=0min
+    step 1800/1831  loss=5.3336  lr=3.02e-05  ETA=0min
+  Training done in 2.4 min
+    L=128: PPL=180.137  (10 chunks)
+    L=256: PPL=205.929  (10 chunks)
+    L=512: PPL=250.993  (10 chunks)
+    L=1024: PPL=227.017  (10 chunks)
+    L=2048: PPL=205.482  (10 chunks)
+    L=4096: PPL=266.562  (10 chunks)
+    L=8192: PPL=352.096  (10 chunks)
+  [checkpoint] saved to /root/autodl-tmp/evq_phase6/extended_sweep/results_checkpoint.json
+
+============================================================
+  SWEEP COMPLETE  |  2.5 min total
+  Results: /root/autodl-tmp/evq_phase6/extended_sweep/results_final.json
+============================================================
+
+  Next: python scripts/m4_evq_sweep/evq_analysis.py --input /root/autodl-tmp/evq_phase6/extended_sweep/results_final.json
+
+====== FineWeb tau=4.0 ======
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+  [CUDA] GPU: NVIDIA GeForce RTX 5090, VRAM: 31.4 GB
+  [CUDA <40GB] Adjusted 125m: batch=4, eval=[128, 256, 512, 1024, 2048, 4096, 8192]
+  [short-seq] seq_len=128, batch_size scaled 16x to 64
+
+############################################################
+  EVQ τ-SWEEP  |  tier=125m  |  taus=[4.0]
+  seq_len=128  train_tokens=15M
+  eval_lengths=[128, 256, 512, 1024, 2048, 4096, 8192]
+  device=cuda  dtype=torch.bfloat16  base=500000.0
+  work_dir=/root/autodl-tmp/evq_phase6/extended_sweep
+############################################################
+
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+
+  [check] Passkey tokenizer sanity check:
+  Tokenisation of '<<PASS:7-4-2-9-1>>':
+    IDs:    [14193, 25692, 27, 24, 14, 21, 14, 19, 14, 26, 14, 18, 5064]
+    Tokens: ['<<', 'PASS', ':', '7', '-', '4', '-', '2', '-', '9', '-', '1', '>>']
+    OK: all digits ['7', '4', '2', '9', '1'] are independent tokens
+  [data] Loading from cache: /root/autodl-tmp/evq_phase6/extended_sweep/train_fineweb-edu_15000000_128.pt
+  [data] Cached: 117190 chunks (15.0M tokens)
+  [val] Loading from cache: /root/autodl-tmp/evq_phase6/extended_sweep/val_fineweb-edu_5000000.pt
+  [val] Cached: 5.0M tokens
+  Resumed 2 existing results
+
+============================================================
+  RUN: 125m_tau4.00_seed42  (base=500000)
+============================================================
+  inv_freq: shape=torch.Size([32])  max=0.949681  min=0.00000779  hash=78ebc7bc32db94cc
+  Phase collision total=0.209255
+  Model params: 151.9M
+    step 0/1831  loss=10.9680  lr=0.00e+00  ETA=0min
+    step 50/1831  loss=7.3187  lr=3.00e-04  ETA=3min
+    step 100/1831  loss=6.9615  lr=2.99e-04  ETA=2min
+    step 150/1831  loss=6.6634  lr=2.97e-04  ETA=2min
+    step 200/1831  loss=6.4639  lr=2.94e-04  ETA=2min
+    step 250/1831  loss=6.4317  lr=2.91e-04  ETA=2min
+    step 300/1831  loss=6.2839  lr=2.86e-04  ETA=2min
+    step 350/1831  loss=6.2292  lr=2.80e-04  ETA=2min
+    step 400/1831  loss=6.0818  lr=2.74e-04  ETA=2min
+    step 450/1831  loss=5.9011  lr=2.66e-04  ETA=2min
+    step 500/1831  loss=5.7965  lr=2.58e-04  ETA=2min
+    step 550/1831  loss=5.7990  lr=2.49e-04  ETA=2min
+    step 600/1831  loss=5.8446  lr=2.39e-04  ETA=2min
+    step 650/1831  loss=5.7713  lr=2.29e-04  ETA=2min
+    step 700/1831  loss=5.6919  lr=2.19e-04  ETA=2min
+    step 750/1831  loss=5.5703  lr=2.08e-04  ETA=1min
+    step 800/1831  loss=5.5498  lr=1.96e-04  ETA=1min
+    step 850/1831  loss=5.5799  lr=1.85e-04  ETA=1min
+    step 900/1831  loss=5.4612  lr=1.73e-04  ETA=1min
+    step 950/1831  loss=5.6400  lr=1.61e-04  ETA=1min
+    step 1000/1831  loss=5.4761  lr=1.49e-04  ETA=1min
+    step 1050/1831  loss=5.3649  lr=1.38e-04  ETA=1min
+    step 1100/1831  loss=5.4551  lr=1.26e-04  ETA=1min
+    step 1150/1831  loss=5.2356  lr=1.15e-04  ETA=1min
+    step 1200/1831  loss=5.3021  lr=1.04e-04  ETA=1min
+    step 1250/1831  loss=5.3055  lr=9.40e-05  ETA=1min
+    step 1300/1831  loss=5.3423  lr=8.42e-05  ETA=1min
+    step 1350/1831  loss=5.2450  lr=7.51e-05  ETA=1min
+    step 1400/1831  loss=5.3129  lr=6.66e-05  ETA=1min
+    step 1450/1831  loss=5.2764  lr=5.89e-05  ETA=1min
+    step 1500/1831  loss=5.1791  lr=5.20e-05  ETA=0min
+    step 1550/1831  loss=5.2485  lr=4.60e-05  ETA=0min
+    step 1600/1831  loss=5.1466  lr=4.09e-05  ETA=0min
+    step 1650/1831  loss=5.0977  lr=3.67e-05  ETA=0min
+    step 1700/1831  loss=5.1357  lr=3.35e-05  ETA=0min
+    step 1750/1831  loss=5.1427  lr=3.14e-05  ETA=0min
+    step 1800/1831  loss=5.3269  lr=3.02e-05  ETA=0min
+  Training done in 2.4 min
+    L=128: PPL=182.652  (10 chunks)
+    L=256: PPL=207.751  (10 chunks)
+    L=512: PPL=253.657  (10 chunks)
+    L=1024: PPL=229.122  (10 chunks)
+    L=2048: PPL=203.753  (10 chunks)
+    L=4096: PPL=266.856  (10 chunks)
+    L=8192: PPL=348.269  (10 chunks)
+  [checkpoint] saved to /root/autodl-tmp/evq_phase6/extended_sweep/results_checkpoint.json
+
+============================================================
+  SWEEP COMPLETE  |  2.5 min total
+  Results: /root/autodl-tmp/evq_phase6/extended_sweep/results_final.json
+============================================================
+
+  Next: python scripts/m4_evq_sweep/evq_analysis.py --input /root/autodl-tmp/evq_phase6/extended_sweep/results_final.json
+
+====== FineWeb tau=5.0 ======
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+  [CUDA] GPU: NVIDIA GeForce RTX 5090, VRAM: 31.4 GB
+  [CUDA <40GB] Adjusted 125m: batch=4, eval=[128, 256, 512, 1024, 2048, 4096, 8192]
+  [short-seq] seq_len=128, batch_size scaled 16x to 64
+
+############################################################
+  EVQ τ-SWEEP  |  tier=125m  |  taus=[5.0]
+  seq_len=128  train_tokens=15M
+  eval_lengths=[128, 256, 512, 1024, 2048, 4096, 8192]
+  device=cuda  dtype=torch.bfloat16  base=500000.0
+  work_dir=/root/autodl-tmp/evq_phase6/extended_sweep
+############################################################
+
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+
+  [check] Passkey tokenizer sanity check:
+  Tokenisation of '<<PASS:7-4-2-9-1>>':
+    IDs:    [14193, 25692, 27, 24, 14, 21, 14, 19, 14, 26, 14, 18, 5064]
+    Tokens: ['<<', 'PASS', ':', '7', '-', '4', '-', '2', '-', '9', '-', '1', '>>']
+    OK: all digits ['7', '4', '2', '9', '1'] are independent tokens
+  [data] Loading from cache: /root/autodl-tmp/evq_phase6/extended_sweep/train_fineweb-edu_15000000_128.pt
+  [data] Cached: 117190 chunks (15.0M tokens)
+  [val] Loading from cache: /root/autodl-tmp/evq_phase6/extended_sweep/val_fineweb-edu_5000000.pt
+  [val] Cached: 5.0M tokens
+  Resumed 3 existing results
+
+============================================================
+  RUN: 125m_tau5.00_seed42  (base=500000)
+============================================================
+  inv_freq: shape=torch.Size([32])  max=0.959515  min=0.00002686  hash=1749296c29fa0662
+  Phase collision total=0.021231
+  Model params: 151.9M
+    step 0/1831  loss=10.9688  lr=0.00e+00  ETA=0min
+    step 50/1831  loss=7.3283  lr=3.00e-04  ETA=3min
+    step 100/1831  loss=6.9621  lr=2.99e-04  ETA=2min
+    step 150/1831  loss=6.6671  lr=2.97e-04  ETA=2min
+    step 200/1831  loss=6.4668  lr=2.94e-04  ETA=2min
+    step 250/1831  loss=6.4286  lr=2.91e-04  ETA=2min
+    step 300/1831  loss=6.2901  lr=2.86e-04  ETA=2min
+    step 350/1831  loss=6.2373  lr=2.80e-04  ETA=2min
+    step 400/1831  loss=6.0888  lr=2.74e-04  ETA=2min
+    step 450/1831  loss=5.9075  lr=2.66e-04  ETA=2min
+    step 500/1831  loss=5.8009  lr=2.58e-04  ETA=2min
+    step 550/1831  loss=5.8200  lr=2.49e-04  ETA=2min
+    step 600/1831  loss=5.8513  lr=2.39e-04  ETA=2min
+    step 650/1831  loss=5.7798  lr=2.29e-04  ETA=2min
+    step 700/1831  loss=5.6902  lr=2.19e-04  ETA=2min
+    step 750/1831  loss=5.5673  lr=2.08e-04  ETA=1min
+    step 800/1831  loss=5.5454  lr=1.96e-04  ETA=1min
+    step 850/1831  loss=5.5921  lr=1.85e-04  ETA=1min
+    step 900/1831  loss=5.4679  lr=1.73e-04  ETA=1min
+    step 950/1831  loss=5.6404  lr=1.61e-04  ETA=1min
+    step 1000/1831  loss=5.4834  lr=1.49e-04  ETA=1min
+    step 1050/1831  loss=5.3639  lr=1.38e-04  ETA=1min
+    step 1100/1831  loss=5.4617  lr=1.26e-04  ETA=1min
+    step 1150/1831  loss=5.2366  lr=1.15e-04  ETA=1min
+    step 1200/1831  loss=5.3073  lr=1.04e-04  ETA=1min
+    step 1250/1831  loss=5.3033  lr=9.40e-05  ETA=1min
+    step 1300/1831  loss=5.3508  lr=8.42e-05  ETA=1min
+    step 1350/1831  loss=5.2569  lr=7.51e-05  ETA=1min
+    step 1400/1831  loss=5.3156  lr=6.66e-05  ETA=1min
+    step 1450/1831  loss=5.2737  lr=5.89e-05  ETA=1min
+    step 1500/1831  loss=5.1834  lr=5.20e-05  ETA=0min
+    step 1550/1831  loss=5.2505  lr=4.60e-05  ETA=0min
+    step 1600/1831  loss=5.1543  lr=4.09e-05  ETA=0min
+    step 1650/1831  loss=5.0980  lr=3.67e-05  ETA=0min
+    step 1700/1831  loss=5.1404  lr=3.35e-05  ETA=0min
+    step 1750/1831  loss=5.1552  lr=3.14e-05  ETA=0min
+    step 1800/1831  loss=5.3379  lr=3.02e-05  ETA=0min
+  Training done in 2.4 min
+    L=128: PPL=182.014  (10 chunks)
+    L=256: PPL=207.039  (10 chunks)
+    L=512: PPL=253.510  (10 chunks)
+    L=1024: PPL=226.355  (10 chunks)
+    L=2048: PPL=199.484  (10 chunks)
+    L=4096: PPL=255.493  (10 chunks)
+    L=8192: PPL=333.696  (10 chunks)
+  [checkpoint] saved to /root/autodl-tmp/evq_phase6/extended_sweep/results_checkpoint.json
+
+============================================================
+  SWEEP COMPLETE  |  2.5 min total
+  Results: /root/autodl-tmp/evq_phase6/extended_sweep/results_final.json
+============================================================
+
+  Next: python scripts/m4_evq_sweep/evq_analysis.py --input /root/autodl-tmp/evq_phase6/extended_sweep/results_final.json
+
+====== TinyStories tau=3.0 ======
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+  [CUDA] GPU: NVIDIA GeForce RTX 5090, VRAM: 31.4 GB
+  [CUDA <40GB] Adjusted 125m: batch=4, eval=[128, 256, 512, 1024, 2048, 4096, 8192]
+  [short-seq] seq_len=128, batch_size scaled 16x to 64
+
+############################################################
+  EVQ τ-SWEEP  |  tier=125m  |  taus=[3.0]
+  seq_len=128  train_tokens=15M
+  eval_lengths=[128, 256, 512, 1024, 2048, 4096, 8192]
+  device=cuda  dtype=torch.bfloat16  base=500000.0
+  work_dir=/root/autodl-tmp/evq_phase6/extended_sweep_ts
+############################################################
+
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+
+  [check] Passkey tokenizer sanity check:
+  Tokenisation of '<<PASS:7-4-2-9-1>>':
+    IDs:    [14193, 25692, 27, 24, 14, 21, 14, 19, 14, 26, 14, 18, 5064]
+    Tokens: ['<<', 'PASS', ':', '7', '-', '4', '-', '2', '-', '9', '-', '1', '>>']
+    OK: all digits ['7', '4', '2', '9', '1'] are independent tokens
+  [data] Trying roneneldan/TinyStories (config=None)...
+    Tokenized 0.0M tokens from 6 docs in 4s
+  [data] Connection OK, streaming 15M tokens...
+    [sample 0] 'One day, a little girl named Lily found a needle in her room. She knew it was difficult to play with'...
+    [sample 1] 'Once upon a time, there was a little car named Beep. Beep loved to go fast and play in the sun. Beep'...
+    [sample 2] 'One day, a little fish named Fin was swimming near the shore. He saw a big crab and wanted to be fri'...
+    [10M/15M tokens] 45046 docs, 0.5M tok/s, ETA 11s
+    Tokenized 15.0M tokens from 67385 docs in 30s
+  [data] Got 117189 chunks (15.0M tokens) from roneneldan/TinyStories
+  [data] Saved cache: /root/autodl-tmp/evq_phase6/extended_sweep_ts/train_tinystories_15000000_128.pt (120.0MB)
+  [val] Trying roneneldan/TinyStories...
+  [val] Got 4.8M tokens from roneneldan/TinyStories
+  [val] Saved cache: /root/autodl-tmp/evq_phase6/extended_sweep_ts/val_tinystories_5000000.pt (38.0MB)
+
+============================================================
+  RUN: 125m_tau3.00_seed42  (base=500000)
+============================================================
+  inv_freq: shape=torch.Size([32])  max=0.933757  min=0.00000396  hash=514ce7a3f617989a
+  Phase collision total=0.149584
+  Model params: 151.9M
+    step 0/1831  loss=10.9454  lr=0.00e+00  ETA=0min
+    step 50/1831  loss=4.4174  lr=3.00e-04  ETA=2min
+    step 100/1831  loss=3.5781  lr=2.99e-04  ETA=2min
+    step 150/1831  loss=3.2957  lr=2.97e-04  ETA=2min
+    step 200/1831  loss=3.0834  lr=2.94e-04  ETA=2min
+    step 250/1831  loss=2.9206  lr=2.91e-04  ETA=2min
+    step 300/1831  loss=2.7378  lr=2.86e-04  ETA=2min
+    step 350/1831  loss=2.7278  lr=2.80e-04  ETA=2min
+    step 400/1831  loss=2.6172  lr=2.74e-04  ETA=2min
+    step 450/1831  loss=2.6185  lr=2.66e-04  ETA=2min
+    step 500/1831  loss=2.5938  lr=2.58e-04  ETA=2min
+    step 550/1831  loss=2.4439  lr=2.49e-04  ETA=2min
+    step 600/1831  loss=2.5019  lr=2.39e-04  ETA=2min
+    step 650/1831  loss=2.5385  lr=2.29e-04  ETA=2min
+    step 700/1831  loss=2.4705  lr=2.19e-04  ETA=1min
+    step 750/1831  loss=2.4210  lr=2.08e-04  ETA=1min
+    step 800/1831  loss=2.4453  lr=1.96e-04  ETA=1min
+    step 850/1831  loss=2.2818  lr=1.85e-04  ETA=1min
+    step 900/1831  loss=2.3456  lr=1.73e-04  ETA=1min
+    step 950/1831  loss=2.2893  lr=1.61e-04  ETA=1min
+    step 1000/1831  loss=2.1786  lr=1.49e-04  ETA=1min
+    step 1050/1831  loss=2.1356  lr=1.38e-04  ETA=1min
+    step 1100/1831  loss=2.2491  lr=1.26e-04  ETA=1min
+    step 1150/1831  loss=2.2308  lr=1.15e-04  ETA=1min
+    step 1200/1831  loss=2.1306  lr=1.04e-04  ETA=1min
+    step 1250/1831  loss=2.0978  lr=9.40e-05  ETA=1min
+    step 1300/1831  loss=2.1763  lr=8.42e-05  ETA=1min
+    step 1350/1831  loss=2.1727  lr=7.51e-05  ETA=1min
+    step 1400/1831  loss=2.0729  lr=6.66e-05  ETA=1min
+    step 1450/1831  loss=2.1305  lr=5.89e-05  ETA=1min
+    step 1500/1831  loss=2.0784  lr=5.20e-05  ETA=0min
+    step 1550/1831  loss=2.1550  lr=4.60e-05  ETA=0min
+    step 1600/1831  loss=2.0339  lr=4.09e-05  ETA=0min
+    step 1650/1831  loss=2.1021  lr=3.67e-05  ETA=0min
+    step 1700/1831  loss=2.0847  lr=3.35e-05  ETA=0min
+    step 1750/1831  loss=2.0694  lr=3.14e-05  ETA=0min
+    step 1800/1831  loss=2.0540  lr=3.02e-05  ETA=0min
+  Training done in 2.4 min
+    L=128: PPL=12.462  (10 chunks)
+    L=256: PPL=7.585  (10 chunks)
+    L=512: PPL=7.897  (10 chunks)
+    L=1024: PPL=8.828  (10 chunks)
+    L=2048: PPL=10.456  (10 chunks)
+    L=4096: PPL=13.816  (10 chunks)
+    L=8192: PPL=17.110  (10 chunks)
+  [checkpoint] saved to /root/autodl-tmp/evq_phase6/extended_sweep_ts/results_checkpoint.json
+
+============================================================
+  SWEEP COMPLETE  |  2.5 min total
+  Results: /root/autodl-tmp/evq_phase6/extended_sweep_ts/results_final.json
+============================================================
+
+  Next: python scripts/m4_evq_sweep/evq_analysis.py --input /root/autodl-tmp/evq_phase6/extended_sweep_ts/results_final.json
+
+====== TinyStories tau=3.5 ======
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+  [CUDA] GPU: NVIDIA GeForce RTX 5090, VRAM: 31.4 GB
+  [CUDA <40GB] Adjusted 125m: batch=4, eval=[128, 256, 512, 1024, 2048, 4096, 8192]
+  [short-seq] seq_len=128, batch_size scaled 16x to 64
+
+############################################################
+  EVQ τ-SWEEP  |  tier=125m  |  taus=[3.5]
+  seq_len=128  train_tokens=15M
+  eval_lengths=[128, 256, 512, 1024, 2048, 4096, 8192]
+  device=cuda  dtype=torch.bfloat16  base=500000.0
+  work_dir=/root/autodl-tmp/evq_phase6/extended_sweep_ts
+############################################################
+
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+
+  [check] Passkey tokenizer sanity check:
+  Tokenisation of '<<PASS:7-4-2-9-1>>':
+    IDs:    [14193, 25692, 27, 24, 14, 21, 14, 19, 14, 26, 14, 18, 5064]
+    Tokens: ['<<', 'PASS', ':', '7', '-', '4', '-', '2', '-', '9', '-', '1', '>>']
+    OK: all digits ['7', '4', '2', '9', '1'] are independent tokens
+  [data] Loading from cache: /root/autodl-tmp/evq_phase6/extended_sweep_ts/train_tinystories_15000000_128.pt
+  [data] Cached: 117189 chunks (15.0M tokens)
+  [val] Loading from cache: /root/autodl-tmp/evq_phase6/extended_sweep_ts/val_tinystories_5000000.pt
+  [val] Cached: 4.8M tokens
+  Resumed 1 existing results
+
+============================================================
+  RUN: 125m_tau3.50_seed42  (base=500000)
+============================================================
+  inv_freq: shape=torch.Size([32])  max=0.942768  min=0.00000522  hash=202222e68a717866
+  Phase collision total=0.192353
+  Model params: 151.9M
+    step 0/1831  loss=10.9449  lr=0.00e+00  ETA=0min
+    step 50/1831  loss=4.4484  lr=3.00e-04  ETA=3min
+    step 100/1831  loss=3.5930  lr=2.99e-04  ETA=2min
+    step 150/1831  loss=3.3028  lr=2.97e-04  ETA=2min
+    step 200/1831  loss=3.0806  lr=2.94e-04  ETA=2min
+    step 250/1831  loss=2.9231  lr=2.91e-04  ETA=2min
+    step 300/1831  loss=2.7336  lr=2.86e-04  ETA=2min
+    step 350/1831  loss=2.7275  lr=2.80e-04  ETA=2min
+    step 400/1831  loss=2.6181  lr=2.74e-04  ETA=2min
+    step 450/1831  loss=2.6171  lr=2.66e-04  ETA=2min
+    step 500/1831  loss=2.5882  lr=2.58e-04  ETA=2min
+    step 550/1831  loss=2.4478  lr=2.49e-04  ETA=2min
+    step 600/1831  loss=2.5023  lr=2.39e-04  ETA=2min
+    step 650/1831  loss=2.5319  lr=2.29e-04  ETA=2min
+    step 700/1831  loss=2.4674  lr=2.19e-04  ETA=1min
+    step 750/1831  loss=2.4274  lr=2.08e-04  ETA=1min
+    step 800/1831  loss=2.4386  lr=1.96e-04  ETA=1min
+    step 850/1831  loss=2.2829  lr=1.85e-04  ETA=1min
+    step 900/1831  loss=2.3451  lr=1.73e-04  ETA=1min
+    step 950/1831  loss=2.2879  lr=1.61e-04  ETA=1min
+    step 1000/1831  loss=2.1793  lr=1.49e-04  ETA=1min
+    step 1050/1831  loss=2.1304  lr=1.38e-04  ETA=1min
+    step 1100/1831  loss=2.2500  lr=1.26e-04  ETA=1min
+    step 1150/1831  loss=2.2323  lr=1.15e-04  ETA=1min
+    step 1200/1831  loss=2.1295  lr=1.04e-04  ETA=1min
+    step 1250/1831  loss=2.0968  lr=9.40e-05  ETA=1min
+    step 1300/1831  loss=2.1683  lr=8.42e-05  ETA=1min
+    step 1350/1831  loss=2.1801  lr=7.51e-05  ETA=1min
+    step 1400/1831  loss=2.0635  lr=6.66e-05  ETA=1min
+    step 1450/1831  loss=2.1364  lr=5.89e-05  ETA=1min
+    step 1500/1831  loss=2.0821  lr=5.20e-05  ETA=0min
+    step 1550/1831  loss=2.1550  lr=4.60e-05  ETA=0min
+    step 1600/1831  loss=2.0313  lr=4.09e-05  ETA=0min
+    step 1650/1831  loss=2.1088  lr=3.67e-05  ETA=0min
+    step 1700/1831  loss=2.0808  lr=3.35e-05  ETA=0min
+    step 1750/1831  loss=2.0721  lr=3.14e-05  ETA=0min
+    step 1800/1831  loss=2.0530  lr=3.02e-05  ETA=0min
+  Training done in 2.4 min
+    L=128: PPL=12.521  (10 chunks)
+    L=256: PPL=7.512  (10 chunks)
+    L=512: PPL=7.828  (10 chunks)
+    L=1024: PPL=8.698  (10 chunks)
+    L=2048: PPL=9.887  (10 chunks)
+    L=4096: PPL=12.344  (10 chunks)
+    L=8192: PPL=14.639  (10 chunks)
+  [checkpoint] saved to /root/autodl-tmp/evq_phase6/extended_sweep_ts/results_checkpoint.json
+
+============================================================
+  SWEEP COMPLETE  |  2.5 min total
+  Results: /root/autodl-tmp/evq_phase6/extended_sweep_ts/results_final.json
+============================================================
+
+  Next: python scripts/m4_evq_sweep/evq_analysis.py --input /root/autodl-tmp/evq_phase6/extended_sweep_ts/results_final.json
+
+====== TinyStories tau=4.0 ======
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+  [CUDA] GPU: NVIDIA GeForce RTX 5090, VRAM: 31.4 GB
+  [CUDA <40GB] Adjusted 125m: batch=4, eval=[128, 256, 512, 1024, 2048, 4096, 8192]
+  [short-seq] seq_len=128, batch_size scaled 16x to 64
+
+############################################################
+  EVQ τ-SWEEP  |  tier=125m  |  taus=[4.0]
+  seq_len=128  train_tokens=15M
+  eval_lengths=[128, 256, 512, 1024, 2048, 4096, 8192]
+  device=cuda  dtype=torch.bfloat16  base=500000.0
+  work_dir=/root/autodl-tmp/evq_phase6/extended_sweep_ts
+############################################################
+
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+
+  [check] Passkey tokenizer sanity check:
+  Tokenisation of '<<PASS:7-4-2-9-1>>':
+    IDs:    [14193, 25692, 27, 24, 14, 21, 14, 19, 14, 26, 14, 18, 5064]
+    Tokens: ['<<', 'PASS', ':', '7', '-', '4', '-', '2', '-', '9', '-', '1', '>>']
+    OK: all digits ['7', '4', '2', '9', '1'] are independent tokens
+  [data] Loading from cache: /root/autodl-tmp/evq_phase6/extended_sweep_ts/train_tinystories_15000000_128.pt
+  [data] Cached: 117189 chunks (15.0M tokens)
+  [val] Loading from cache: /root/autodl-tmp/evq_phase6/extended_sweep_ts/val_tinystories_5000000.pt
+  [val] Cached: 4.8M tokens
+  Resumed 2 existing results
+
+============================================================
+  RUN: 125m_tau4.00_seed42  (base=500000)
+============================================================
+  inv_freq: shape=torch.Size([32])  max=0.949681  min=0.00000779  hash=78ebc7bc32db94cc
+  Phase collision total=0.209255
+  Model params: 151.9M
+    step 0/1831  loss=10.9450  lr=0.00e+00  ETA=0min
+    step 50/1831  loss=4.4017  lr=3.00e-04  ETA=3min
+    step 100/1831  loss=3.5659  lr=2.99e-04  ETA=2min
+    step 150/1831  loss=3.2946  lr=2.97e-04  ETA=2min
+    step 200/1831  loss=3.0723  lr=2.94e-04  ETA=2min
+    step 250/1831  loss=2.9228  lr=2.91e-04  ETA=2min
+    step 300/1831  loss=2.7266  lr=2.86e-04  ETA=2min
+    step 350/1831  loss=2.7353  lr=2.80e-04  ETA=2min
+    step 400/1831  loss=2.6278  lr=2.74e-04  ETA=2min
+    step 450/1831  loss=2.6168  lr=2.66e-04  ETA=2min
+    step 500/1831  loss=2.5917  lr=2.58e-04  ETA=2min
+    step 550/1831  loss=2.4466  lr=2.49e-04  ETA=2min
+    step 600/1831  loss=2.5061  lr=2.39e-04  ETA=2min
+    step 650/1831  loss=2.5416  lr=2.29e-04  ETA=2min
+    step 700/1831  loss=2.4635  lr=2.19e-04  ETA=1min
+    step 750/1831  loss=2.4203  lr=2.08e-04  ETA=1min
+    step 800/1831  loss=2.4323  lr=1.96e-04  ETA=1min
+    step 850/1831  loss=2.2756  lr=1.85e-04  ETA=1min
+    step 900/1831  loss=2.3411  lr=1.73e-04  ETA=1min
+    step 950/1831  loss=2.2829  lr=1.61e-04  ETA=1min
+    step 1000/1831  loss=2.1868  lr=1.49e-04  ETA=1min
+    step 1050/1831  loss=2.1225  lr=1.38e-04  ETA=1min
+    step 1100/1831  loss=2.2514  lr=1.26e-04  ETA=1min
+    step 1150/1831  loss=2.2290  lr=1.15e-04  ETA=1min
+    step 1200/1831  loss=2.1263  lr=1.04e-04  ETA=1min
+    step 1250/1831  loss=2.0932  lr=9.40e-05  ETA=1min
+    step 1300/1831  loss=2.1700  lr=8.42e-05  ETA=1min
+    step 1350/1831  loss=2.1805  lr=7.51e-05  ETA=1min
+    step 1400/1831  loss=2.0642  lr=6.66e-05  ETA=1min
+    step 1450/1831  loss=2.1315  lr=5.89e-05  ETA=1min
+    step 1500/1831  loss=2.0728  lr=5.20e-05  ETA=0min
+    step 1550/1831  loss=2.1582  lr=4.60e-05  ETA=0min
+    step 1600/1831  loss=2.0274  lr=4.09e-05  ETA=0min
+    step 1650/1831  loss=2.0987  lr=3.67e-05  ETA=0min
+    step 1700/1831  loss=2.0831  lr=3.35e-05  ETA=0min
+    step 1750/1831  loss=2.0712  lr=3.14e-05  ETA=0min
+    step 1800/1831  loss=2.0612  lr=3.02e-05  ETA=0min
+  Training done in 2.4 min
+    L=128: PPL=12.816  (10 chunks)
+    L=256: PPL=7.509  (10 chunks)
+    L=512: PPL=7.880  (10 chunks)
+    L=1024: PPL=8.707  (10 chunks)
+    L=2048: PPL=9.888  (10 chunks)
+    L=4096: PPL=12.534  (10 chunks)
+    L=8192: PPL=14.799  (10 chunks)
+  [checkpoint] saved to /root/autodl-tmp/evq_phase6/extended_sweep_ts/results_checkpoint.json
+
+============================================================
+  SWEEP COMPLETE  |  2.5 min total
+  Results: /root/autodl-tmp/evq_phase6/extended_sweep_ts/results_final.json
+============================================================
+
+  Next: python scripts/m4_evq_sweep/evq_analysis.py --input /root/autodl-tmp/evq_phase6/extended_sweep_ts/results_final.json
+
+====== TinyStories tau=5.0 ======
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+  [CUDA] GPU: NVIDIA GeForce RTX 5090, VRAM: 31.4 GB
+  [CUDA <40GB] Adjusted 125m: batch=4, eval=[128, 256, 512, 1024, 2048, 4096, 8192]
+  [short-seq] seq_len=128, batch_size scaled 16x to 64
+
+############################################################
+  EVQ τ-SWEEP  |  tier=125m  |  taus=[5.0]
+  seq_len=128  train_tokens=15M
+  eval_lengths=[128, 256, 512, 1024, 2048, 4096, 8192]
+  device=cuda  dtype=torch.bfloat16  base=500000.0
+  work_dir=/root/autodl-tmp/evq_phase6/extended_sweep_ts
+############################################################
+
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+
+  [check] Passkey tokenizer sanity check:
+  Tokenisation of '<<PASS:7-4-2-9-1>>':
+    IDs:    [14193, 25692, 27, 24, 14, 21, 14, 19, 14, 26, 14, 18, 5064]
+    Tokens: ['<<', 'PASS', ':', '7', '-', '4', '-', '2', '-', '9', '-', '1', '>>']
+    OK: all digits ['7', '4', '2', '9', '1'] are independent tokens
+  [data] Loading from cache: /root/autodl-tmp/evq_phase6/extended_sweep_ts/train_tinystories_15000000_128.pt
+  [data] Cached: 117189 chunks (15.0M tokens)
+  [val] Loading from cache: /root/autodl-tmp/evq_phase6/extended_sweep_ts/val_tinystories_5000000.pt
+  [val] Cached: 4.8M tokens
+  Resumed 3 existing results
+
+============================================================
+  RUN: 125m_tau5.00_seed42  (base=500000)
+============================================================
+  inv_freq: shape=torch.Size([32])  max=0.959515  min=0.00002686  hash=1749296c29fa0662
+  Phase collision total=0.021231
+  Model params: 151.9M
+    step 0/1831  loss=10.9458  lr=0.00e+00  ETA=0min
+    step 50/1831  loss=4.4102  lr=3.00e-04  ETA=3min
+    step 100/1831  loss=3.5838  lr=2.99e-04  ETA=2min
+    step 150/1831  loss=3.2988  lr=2.97e-04  ETA=2min
+    step 200/1831  loss=3.0927  lr=2.94e-04  ETA=2min
+    step 250/1831  loss=2.9233  lr=2.91e-04  ETA=2min
+    step 300/1831  loss=2.7230  lr=2.86e-04  ETA=2min
+    step 350/1831  loss=2.7349  lr=2.80e-04  ETA=2min
+    step 400/1831  loss=2.6248  lr=2.74e-04  ETA=2min
+    step 450/1831  loss=2.6227  lr=2.66e-04  ETA=2min
+    step 500/1831  loss=2.5972  lr=2.58e-04  ETA=2min
+    step 550/1831  loss=2.4357  lr=2.49e-04  ETA=2min
+    step 600/1831  loss=2.5089  lr=2.39e-04  ETA=2min
+    step 650/1831  loss=2.5315  lr=2.29e-04  ETA=2min
+    step 700/1831  loss=2.4720  lr=2.19e-04  ETA=2min
+    step 750/1831  loss=2.4240  lr=2.08e-04  ETA=1min
+    step 800/1831  loss=2.4458  lr=1.96e-04  ETA=1min
+    step 850/1831  loss=2.2728  lr=1.85e-04  ETA=1min
+    step 900/1831  loss=2.3439  lr=1.73e-04  ETA=1min
+    step 950/1831  loss=2.2879  lr=1.61e-04  ETA=1min
+    step 1000/1831  loss=2.1810  lr=1.49e-04  ETA=1min
+    step 1050/1831  loss=2.1302  lr=1.38e-04  ETA=1min
+    step 1100/1831  loss=2.2596  lr=1.26e-04  ETA=1min
+    step 1150/1831  loss=2.2319  lr=1.15e-04  ETA=1min
+    step 1200/1831  loss=2.1317  lr=1.04e-04  ETA=1min
+    step 1250/1831  loss=2.0966  lr=9.40e-05  ETA=1min
+    step 1300/1831  loss=2.1657  lr=8.42e-05  ETA=1min
+    step 1350/1831  loss=2.1834  lr=7.51e-05  ETA=1min
+    step 1400/1831  loss=2.0676  lr=6.66e-05  ETA=1min
+    step 1450/1831  loss=2.1409  lr=5.89e-05  ETA=1min
+    step 1500/1831  loss=2.0778  lr=5.20e-05  ETA=0min
+    step 1550/1831  loss=2.1583  lr=4.60e-05  ETA=0min
+    step 1600/1831  loss=2.0280  lr=4.09e-05  ETA=0min
+    step 1650/1831  loss=2.1033  lr=3.67e-05  ETA=0min
+    step 1700/1831  loss=2.0910  lr=3.35e-05  ETA=0min
+    step 1750/1831  loss=2.0733  lr=3.14e-05  ETA=0min
+    step 1800/1831  loss=2.0607  lr=3.02e-05  ETA=0min
+  Training done in 2.4 min
+    L=128: PPL=12.681  (10 chunks)
+    L=256: PPL=7.454  (10 chunks)
+    L=512: PPL=7.833  (10 chunks)
+    L=1024: PPL=8.554  (10 chunks)
+    L=2048: PPL=9.406  (10 chunks)
+    L=4096: PPL=11.802  (10 chunks)
+    L=8192: PPL=13.437  (10 chunks)
+  [checkpoint] saved to /root/autodl-tmp/evq_phase6/extended_sweep_ts/results_checkpoint.json
+
+============================================================
+  SWEEP COMPLETE  |  2.5 min total
+  Results: /root/autodl-tmp/evq_phase6/extended_sweep_ts/results_final.json
+============================================================
+
+  Next: python scripts/m4_evq_sweep/evq_analysis.py --input /root/autodl-tmp/evq_phase6/extended_sweep_ts/results_final.json
+
+====== PHASE 6A COMPLETE ======
+Sun Mar 1 18:04:34 CST 2026
