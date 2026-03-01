@@ -175,7 +175,13 @@ class MixedDataset(torch.utils.data.Dataset):
     def __len__(self) -> int:
         return len(self.lm_data)
 
-    def __getitem__(self, idx: int) -> torch.Tensor:
+    def __getitem__(self, idx) -> torch.Tensor:
+        # Support batch indexing (tensor/list of indices) for perm[slice] access
+        if isinstance(idx, torch.Tensor) and idx.dim() > 0:
+            return torch.stack([self._get_single(int(i)) for i in idx])
+        return self._get_single(int(idx))
+
+    def _get_single(self, idx: int) -> torch.Tensor:
         # Deterministic decision: use a hash of the index to decide
         # whether this sample is passkey or LM.
         det_rng = random.Random(idx * 6364136223846793005 + 1)
