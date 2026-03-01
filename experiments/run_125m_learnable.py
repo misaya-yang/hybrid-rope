@@ -5,7 +5,7 @@ Runs:
   1. Geometric (τ=0.0)
   2-5. Fixed τ ∈ {0.5, 1.0, 1.5, 2.0}
   6. Learnable τ, init=1.0
-  7. Learnable τ, init=0.01
+  7. Learnable τ, init=0.5
 
 Usage:
     python experiments/run_125m_learnable.py --work_dir ~/evq_125m_learnable
@@ -40,8 +40,8 @@ RUNS = [
     ("Fixed τ=1.0",             ["--taus", "1.0"]),
     ("Fixed τ=1.5",             ["--taus", "1.5"]),
     ("Fixed τ=2.0",             ["--taus", "2.0"]),
-    ("Learnable init=1.0",      ["--learnable", "--tau_init", "1.0", "--tau_lr_mult", "10"]),
-    ("Learnable init=0.01",     ["--learnable", "--tau_init", "0.01", "--tau_lr_mult", "10"]),
+    ("Learnable init=1.0",      ["--learnable", "--tau_init", "1.0", "--tau_lr_mult", "100"]),
+    ("Learnable init=0.5",      ["--learnable", "--tau_init", "0.5", "--tau_lr_mult", "100"]),
 ]
 
 

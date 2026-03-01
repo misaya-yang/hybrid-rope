@@ -371,6 +371,9 @@ class TauLogger:
             entry = {"step": step, "tau": tau_val}
             if loss is not None:
                 entry["loss"] = loss
+            # Log gradient if available (after backward, before zero_grad)
+            if evq_module.raw_tau.grad is not None:
+                entry["grad_tau"] = evq_module.raw_tau.grad.item()
             self.trajectory.append(entry)
 
     def save(self, path: str):

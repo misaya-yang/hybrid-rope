@@ -157,6 +157,48 @@ def evq_cosh_inv_freq(
     return inv.float()
 
 
+def yarn_inv_freq(
+    head_dim: int, base: float = 500000.0,
+    original_max_position: int = 128, target_max_position: int = 8192,
+    beta_fast: float = 32.0, beta_slow: float = 1.0,
+) -> torch.Tensor:
+    """YaRN frequency scaling (Peng et al. 2023).
+
+    Three regions: high-freq (no scaling), low-freq (PI scaling),
+    mid-freq (smooth interpolation).
+
+    Returns inv_freq of shape (head_dim // 2,) in float32.
+    """
+    dim = head_dim
+    s = target_max_position / original_max_position
+
+    inv_freq = 1.0 / (base ** (torch.arange(0, dim, 2, dtype=torch.float64) / dim))
+
+    # Wavelength boundaries
+    low = math.floor(dim * math.log(original_max_position / (beta_fast * 2 * math.pi))
+                     / (2 * math.log(base)))
+    high = math.ceil(dim * math.log(original_max_position / (beta_slow * 2 * math.pi))
+                     / (2 * math.log(base)))
+    low = max(low, 0)
+    high = min(high, dim // 2 - 1)
+
+    scaled = inv_freq.clone()
+    for i in range(dim // 2):
+        if i < low:
+            # High frequency: no scaling
+            pass
+        elif i > high:
+            # Low frequency: PI-like linear scaling
+            scaled[i] = inv_freq[i] / s
+        else:
+            # Middle: smooth interpolation
+            t = (i - low) / max(high - low, 1)
+            gamma = 1 - t
+            scaled[i] = inv_freq[i] / (1 + (s - 1) * (1 - gamma))
+
+    return scaled.float()
+
+
 # ---------------------------------------------------------------------------
 # Phase collision metric
 # ---------------------------------------------------------------------------
@@ -306,6 +348,35 @@ class LearnableRotaryEmbedding(nn.Module):
         return cos, sin
 
 
+class DAPERotaryEmbedding(nn.Module):
+    """DAPE-style: d/2 independent learnable log-frequency parameters.
+
+    Each of the d/2 frequency channels is an independent nn.Parameter (log-scale).
+    Recomputes cos/sin every forward for gradient flow.
+    """
+
+    def __init__(self, head_dim: int, max_seq: int, base: float = 500000.0,
+                 lr_multiplier: float = 10.0) -> None:
+        super().__init__()
+        n_freqs = head_dim // 2
+        # Initialise as geometric RoPE: inv_freq_k = base^{-(k+0.5)/K}
+        u = (torch.arange(n_freqs, dtype=torch.float64) + 0.5) / n_freqs
+        log_inv_freq = -u * math.log(base)  # log(inv_freq)
+        self.log_inv_freq = nn.Parameter(log_inv_freq)  # d/2 learnable params
+        self.lr_multiplier = lr_multiplier
+        self._max = max_seq
+
+    def get_inv_freq(self) -> torch.Tensor:
+        return torch.exp(self.log_inv_freq).float()
+
+    def forward(self, L: int) -> Tuple[torch.Tensor, torch.Tensor]:
+        inv_freq = torch.exp(self.log_inv_freq)  # stay in float64 for precision
+        t = torch.arange(L, dtype=inv_freq.dtype, device=inv_freq.device)
+        freqs = torch.outer(t, inv_freq)
+        emb = torch.cat([freqs, freqs], dim=-1)
+        return emb.cos().float(), emb.sin().float()
+
+
 def rotate_half(x: torch.Tensor) -> torch.Tensor:
     x1, x2 = x.chunk(2, dim=-1)
     return torch.cat([-x2, x1], dim=-1)
@@ -402,6 +473,8 @@ class GPT(nn.Module):
         rope = self.blocks[0].attn.rope
         if isinstance(rope, LearnableRotaryEmbedding):
             rope._extend(L)
+        elif isinstance(rope, DAPERotaryEmbedding):
+            rope._max = max(rope._max, L)  # no cache to rebuild
         else:
             rope._build(L)
 
@@ -610,21 +683,22 @@ def train_model(
     lr = cfg["lr"]
     batch_size = cfg["batch_size"]
 
-    # Optimizer: separate param group for raw_tau when learnable
+    # Optimizer: separate param group for learnable PE params (raw_tau or log_inv_freq)
     # Store base_lr per group for cosine schedule
+    _pe_param_names = ("raw_tau", "log_inv_freq")
     if tau_lr_multiplier is not None:
-        tau_params = [p for n, p in model.named_parameters()
-                      if p.requires_grad and "raw_tau" in n]
+        pe_params = [p for n, p in model.named_parameters()
+                     if p.requires_grad and any(k in n for k in _pe_param_names)]
         other_params = [p for n, p in model.named_parameters()
-                        if p.requires_grad and "raw_tau" not in n]
-        tau_base_lr = lr * tau_lr_multiplier
+                        if p.requires_grad and not any(k in n for k in _pe_param_names)]
+        pe_base_lr = lr * tau_lr_multiplier
         opt = torch.optim.AdamW([
             {"params": other_params, "lr": lr, "weight_decay": 0.1},
-            {"params": tau_params, "lr": tau_base_lr, "weight_decay": 0.0},
+            {"params": pe_params, "lr": pe_base_lr, "weight_decay": 0.0},
         ], betas=(0.9, 0.95))
-        group_base_lrs = [lr, tau_base_lr]
-        print(f"  [tau] Separate param group: lr_tau={tau_base_lr:.2e}, "
-              f"n_tau_params={sum(p.numel() for p in tau_params)}")
+        group_base_lrs = [lr, pe_base_lr]
+        print(f"  [PE] Separate param group: lr_pe={pe_base_lr:.2e}, "
+              f"n_pe_params={sum(p.numel() for p in pe_params)}")
     else:
         opt = torch.optim.AdamW(
             model.parameters(), lr=lr, betas=(0.9, 0.95), weight_decay=0.1
@@ -668,12 +742,13 @@ def train_model(
 
         opt.zero_grad(set_to_none=True)
         loss.backward()
-        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-        opt.step()
 
-        # Log τ
+        # Log τ (after backward, before clip — captures raw gradient)
         if tau_logger is not None and evq_module is not None:
             tau_logger.log(s, evq_module, loss=loss.item())
+
+        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+        opt.step()
 
         if s % 50 == 0:
             elapsed = time.time() - t0
@@ -778,8 +853,15 @@ def run_single(
     learnable: bool = False,
     tau_init: float = 1.0,
     tau_lr_multiplier: float = 10.0,
+    dape: bool = False,
+    yarn: bool = False,
+    yarn_target: int = 8192,
 ) -> RunResult:
-    if learnable:
+    if yarn:
+        run_id = f"{tier}_yarn_target{yarn_target}_seed{seed}"
+    elif dape:
+        run_id = f"{tier}_dape_lrmult{tau_lr_multiplier:.0f}_seed{seed}"
+    elif learnable:
         run_id = f"{tier}_learnable_init{tau_init:.2f}_seed{seed}"
     else:
         run_id = f"{tier}_tau{tau:.2f}_seed{seed}"
@@ -789,7 +871,19 @@ def run_single(
 
     import hashlib
 
-    if learnable:
+    if yarn:
+        # YaRN mode: compute YaRN-scaled frequencies
+        inv_freq = yarn_inv_freq(
+            cfg["head_dim"], base,
+            original_max_position=cfg["seq_len"],
+            target_max_position=yarn_target,
+        )
+        print(f"  [yarn] original={cfg['seq_len']}  target={yarn_target}  scale={yarn_target/cfg['seq_len']:.0f}x")
+    elif dape:
+        # DAPE mode: init frequencies are geometric (τ=0)
+        inv_freq = evq_cosh_inv_freq(cfg["head_dim"], 0.0, base)
+        print(f"  [dape] d/2={cfg['head_dim']//2} learnable freqs  lr_mult={tau_lr_multiplier}")
+    elif learnable:
         # Learnable mode: inv_freq computed from initial tau for stats/collision only
         inv_freq = evq_cosh_inv_freq(cfg["head_dim"], tau_init, base)
         print(f"  [learnable] tau_init={tau_init:.4f}  lr_mult={tau_lr_multiplier}")
@@ -822,25 +916,36 @@ def run_single(
             phase_collision=pc, inv_freq_stats=inv_stats,
         )
 
-    # Wrap training data with MixedDataset for passkey mixing
-    from eval_passkey_scratch import MixedDataset
-    mixed_data = MixedDataset(
-        lm_data=train_data,
-        filler_tokens=val_data[:50000],
-        tokenizer=tokenizer,
-        passkey_ratio=0.005,
-        seq_len=cfg["seq_len"],
-    )
-    # Log passkey mixing ratio
-    import random as _rnd
-    pk_count = sum(1 for i in range(min(1000, len(mixed_data)))
-                   if _rnd.Random(i * 6364136223846793005 + 1).random() < 0.005)
-    print(f"  [passkey] Mix ratio check: {pk_count}/1000 = {pk_count/10:.1f}%")
+    # Wrap training data with MixedDataset for passkey mixing (skip for short seq_len)
+    if cfg["seq_len"] >= 2048:
+        from eval_passkey_scratch import MixedDataset
+        mixed_data = MixedDataset(
+            lm_data=train_data,
+            filler_tokens=val_data[:50000],
+            tokenizer=tokenizer,
+            passkey_ratio=0.005,
+            seq_len=cfg["seq_len"],
+        )
+        # Log passkey mixing ratio
+        import random as _rnd
+        pk_count = sum(1 for i in range(min(1000, len(mixed_data)))
+                       if _rnd.Random(i * 6364136223846793005 + 1).random() < 0.005)
+        print(f"  [passkey] Mix ratio check: {pk_count}/1000 = {pk_count/10:.1f}%")
+    else:
+        mixed_data = train_data  # plain LM data for short sequences
 
     # Build model
     set_seed(seed)
     tau_logger = None
-    if learnable:
+    if dape:
+        dape_rope = DAPERotaryEmbedding(
+            head_dim=cfg["head_dim"],
+            max_seq=cfg["max_position_embeddings"],
+            base=base,
+            lr_multiplier=tau_lr_multiplier,
+        ).to(DEVICE)
+        model = GPT(cfg, inv_freq, learnable_rope=dape_rope).to(DEVICE)
+    elif learnable:
         learnable_rope = LearnableRotaryEmbedding(
             head_dim=cfg["head_dim"],
             max_seq=cfg["max_position_embeddings"],
@@ -867,7 +972,7 @@ def run_single(
     t0 = time.time()
     model = train_model(
         model, mixed_data, cfg, seed=seed,
-        tau_lr_multiplier=tau_lr_multiplier if learnable else None,
+        tau_lr_multiplier=tau_lr_multiplier if (learnable or dape) else None,
         tau_logger=tau_logger,
     )
     train_time = time.time() - t0
@@ -880,9 +985,9 @@ def run_single(
     ppl = eval_model(model, val_data, eval_lengths, cfg["eval_chunks"])
     eval_time = time.time() - t1
 
-    # Eval: Passkey NLL gap
+    # Eval: Passkey NLL gap (skip for short seq_len — passkey requires ≥2048)
     passkey_results = {}
-    if tokenizer is not None:
+    if tokenizer is not None and cfg["seq_len"] >= 2048:
         print(f"\n  [passkey] NLL-gap evaluation for {run_id}")
         from eval_passkey_scratch import eval_passkey_nll_gap
         passkey_results = eval_passkey_nll_gap(
@@ -902,7 +1007,18 @@ def run_single(
 
     # Learnable-specific saves
     final_tau = tau
-    if learnable:
+    if dape:
+        dape_mod = model.blocks[0].attn.rope
+        learned_inv = dape_mod.get_inv_freq().detach().cpu().numpy()
+        np.save(run_dir / "dape_learned_inv_freq.npy", learned_inv)
+        # Compute distance from geometric init for analysis
+        K = cfg["head_dim"] // 2
+        u = (np.arange(K) + 0.5) / K
+        geo_inv = np.float_power(base, -u)
+        delta = np.abs(learned_inv - geo_inv) / (geo_inv + 1e-30)
+        print(f"  [dape] Learned inv_freq: max_rel_change={delta.max():.4f}, "
+              f"mean_rel_change={delta.mean():.4f}")
+    elif learnable:
         evq_mod = model.blocks[0].attn.rope.evq
         final_tau = evq_mod.get_tau_value()
         # Save tau trajectory
@@ -926,9 +1042,9 @@ def run_single(
         with open(run_dir / "passkey_nll.json", "w") as f:
             _json.dump(passkey_results, f, indent=2, ensure_ascii=False, default=str)
 
-    # PI baseline: inference-time only, on geometric model (τ=0) — skip for learnable
+    # PI baseline: inference-time only, on geometric model (τ=0) — skip for learnable/dape
     pi_results = {}
-    if not learnable and abs(tau) < 1e-8:
+    if not learnable and not dape and abs(tau) < 1e-8:
         print(f"\n  [PI] Inference-time PI baseline (zero-cost, no extra training)")
         pi_scale = max(max(eval_lengths) / cfg["seq_len"], 1.0)
         pi_inv_freq = inv_freq / pi_scale
@@ -944,8 +1060,8 @@ def run_single(
         pi_ppl = eval_model(model, val_data, eval_lengths, cfg["eval_chunks"])
         pi_results["ppl"] = pi_ppl
 
-        # Passkey eval with PI
-        if tokenizer is not None:
+        # Passkey eval with PI (skip for short seq_len — passkey requires ≥2048)
+        if tokenizer is not None and cfg["seq_len"] >= 2048:
             print(f"  [PI] Passkey NLL-gap evaluation")
             from eval_passkey_scratch import eval_passkey_nll_gap
             pi_passkey = eval_passkey_nll_gap(
@@ -1009,13 +1125,33 @@ def main() -> None:
                         help="Initial τ for learnable mode (default: 1.0)")
     parser.add_argument("--tau_lr_mult", type=float, default=10.0,
                         help="LR multiplier for τ parameter (default: 10.0)")
+    parser.add_argument("--train_tokens", type=int, default=None,
+                        help="Override train_tokens (e.g. 15000000 for quick sanity check)")
+    parser.add_argument("--seq_len", type=int, default=None,
+                        help="Override training seq_len (e.g. 128 for DAPE-style PE quality test)")
+    parser.add_argument("--eval_lengths", type=str, default=None,
+                        help="Override eval lengths (comma-separated, e.g. 128,256,512,1024,2048,4096,8192)")
+    parser.add_argument("--dape", action="store_true",
+                        help="Use DAPE-style d/2 independent learnable frequencies")
+    parser.add_argument("--yarn", action="store_true",
+                        help="Use YaRN frequency scaling (from-scratch training)")
+    parser.add_argument("--yarn_target", type=int, default=8192,
+                        help="YaRN target max position (default: 8192)")
     args = parser.parse_args()
 
     taus = [float(t) for t in args.taus.split(",")]
     seeds = [int(s) for s in args.seeds.split(",")]
     cfg = TIER_CONFIGS[args.tier].copy()
+    if args.train_tokens is not None:
+        cfg["train_tokens"] = args.train_tokens
+    if args.seq_len is not None:
+        cfg["seq_len"] = args.seq_len
+        cfg["max_position_embeddings"] = args.seq_len
+    if args.eval_lengths is not None:
+        cfg["eval_lengths"] = [int(x) for x in args.eval_lengths.split(",")]
 
-    # Device-specific adjustments
+    # Device-specific adjustments (applied BEFORE short-seq scaling so the
+    # auto-scale multiplier stacks on top of the device-adjusted base batch)
     if DEVICE == "mps":
         # MPS float32: no flash attention, full attention matrix materialised
         # Reduce batch + cap eval length to avoid OOM
@@ -1053,17 +1189,29 @@ def main() -> None:
                 cfg["eval_lengths"] = [2048, 4096, 8192]
             print(f"  [CUDA <40GB] Adjusted {args.tier}: batch={cfg['batch_size']}, eval={cfg['eval_lengths']}")
 
+    # Auto-scale batch_size for short sequences (AFTER device adjustments).
+    # 128 tok uses ~16x less memory than 2048 → scale batch proportionally.
+    if cfg["seq_len"] < 2048:
+        scale = 2048 // cfg["seq_len"]  # e.g. 16x for 128 tokens
+        cfg["batch_size"] = cfg["batch_size"] * scale
+        print(f"  [short-seq] seq_len={cfg['seq_len']}, batch_size scaled {scale}x to {cfg['batch_size']}")
+
     if not args.work_dir:
         args.work_dir = str(Path.home() / "evq_m4_sweep")
     work_dir = Path(args.work_dir)
     work_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"\n{'#'*60}")
-    if args.learnable:
+    if args.dape:
+        print(f"  DAPE (d/2 learnable freqs)  |  tier={args.tier}")
+        print(f"  lr_mult={args.tau_lr_mult}  seeds={seeds}")
+    elif args.learnable:
         print(f"  EVQ LEARNABLE τ  |  tier={args.tier}  |  tau_init={args.tau_init}")
         print(f"  lr_mult={args.tau_lr_mult}  seeds={seeds}")
     else:
         print(f"  EVQ τ-SWEEP  |  tier={args.tier}  |  taus={taus}")
+    print(f"  seq_len={cfg['seq_len']}  train_tokens={cfg['train_tokens']/1e6:.0f}M")
+    print(f"  eval_lengths={cfg['eval_lengths']}")
     print(f"  device={DEVICE}  dtype={DTYPE}  base={args.base}")
     print(f"  work_dir={work_dir}")
     print(f"{'#'*60}\n")
@@ -1100,6 +1248,8 @@ def main() -> None:
                 "device": DEVICE,
                 "dtype": str(DTYPE),
                 "base": args.base,
+                "seq_len": cfg["seq_len"],
+                "train_tokens": cfg["train_tokens"],
                 "taus": taus,
                 "seeds": seeds,
                 "dataset": args.dataset,
@@ -1112,15 +1262,25 @@ def main() -> None:
     # Run sweep
     t_total = time.time()
 
-    if args.learnable:
+    if args.yarn:
+        # YaRN mode: single run per seed with YaRN-scaled frequencies
+        run_configs = [(seed, None, False, False, True) for seed in seeds]
+    elif args.dape:
+        # DAPE mode: single run per seed
+        run_configs = [(seed, None, False, True, False) for seed in seeds]
+    elif args.learnable:
         # Learnable mode: single run per seed with given tau_init
-        run_configs = [(seed, None, True) for seed in seeds]
+        run_configs = [(seed, None, True, False, False) for seed in seeds]
     else:
         # Fixed-τ sweep
-        run_configs = [(seed, tau, False) for seed in seeds for tau in taus]
+        run_configs = [(seed, tau, False, False, False) for seed in seeds for tau in taus]
 
-    for seed, tau, is_learnable in run_configs:
-        if is_learnable:
+    for seed, tau, is_learnable, is_dape, is_yarn in run_configs:
+        if is_yarn:
+            run_id = f"{args.tier}_yarn_target{args.yarn_target}_seed{seed}"
+        elif is_dape:
+            run_id = f"{args.tier}_dape_lrmult{args.tau_lr_mult:.0f}_seed{seed}"
+        elif is_learnable:
             run_id = f"{args.tier}_learnable_init{args.tau_init:.2f}_seed{seed}"
         else:
             run_id = f"{args.tier}_tau{tau:.2f}_seed{seed}"
@@ -1138,6 +1298,9 @@ def main() -> None:
             learnable=is_learnable,
             tau_init=args.tau_init,
             tau_lr_multiplier=args.tau_lr_mult,
+            dape=is_dape,
+            yarn=is_yarn,
+            yarn_target=args.yarn_target,
         )
         if isinstance(ret, tuple):
             result, passkey_res, pi_res = ret

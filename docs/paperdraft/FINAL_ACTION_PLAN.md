@@ -1,7 +1,8 @@
-# 最终行动方案（综合 Gemini + GPT-5.2 Pro + Claude 审核）
+# 最终行动方案 v4（综合 Gemini + GPT-5.2 Pro + Claude 审核 + 实验诊断）
 
 > **日期**: 2026-03-01
-> **状态**: 定稿，不再改动
+> **状态**: v4 更新——解决 learnable τ 不收敛问题
+> **关键变更**: 训练序列长度从 2048 改为 128（对标 DAPE）
 
 ---
 
@@ -92,53 +93,74 @@ $$\frac{\partial \phi}{\partial \tau} = \frac{1}{\tau^2}\left[\text{arcsinh}((1-
 
 ---
 
-## 五、5090 实验清单（更新: Learnable τ 为核心）
+## 五、5090 实验清单 (v4: 128-token PE Quality Test)
 
-### Phase 0: D(Δ) 测量 + Algorithm 1 验证 (~30 min)
-| 序号 | 任务 | GPU 时间 | 产出 |
-|------|------|---------|------|
-| 0a | 测量 TinyStories 的 D̂(Δ) | 10 min | D̂_tiny.npy |
-| 0b | 测量 FineWeb-Edu 的 D̂(Δ) | 10 min | D̂_fw.npy |
-| 0c | Algorithm 1: D̂ → τ* | 1 min (CPU) | τ*_tiny, τ*_fw |
+> **⚠️ v4 变更说明**: 2K 训练中 learnable τ 不收敛（loss landscape 平坦），
+> 根因是训练上下文太长，模型权重吸收了 PE 差异。
+> 改为 DAPE 风格的 128 token 训练，直接对标 DAPE (NeurIPS 2024)。
+> 详细分析见 `docs/paperdraft/EXPERIMENT_AUDIT_V4.md`
 
-### Phase 1: 100M 对照实验 (~10.5 hr)
-| 序号 | Method | 配置 | 产出 |
-|------|--------|------|------|
-| 1 | Geometric baseline | 标准 RoPE | PPL 基线 |
-| 2 | Fixed EVQ τ=0.5 | 固定 | sweep 点 |
-| 3 | Fixed EVQ τ=1.0 | 固定 | sweep 点 |
-| 4 | Fixed EVQ τ=1.5 | 固定 | sweep 点 |
-| 5 | Fixed EVQ τ=2.0 | 固定 | sweep 点 |
-| 6 | **Learnable EVQ** τ_init=1.0 | lr_mult=10 | 核心实验 |
-| 7 | **Learnable EVQ** τ_init=0.01 | 从 geometric 开始 | 鲁棒性验证 |
-
-### Phase 2: 验证扩展 (如果 Phase 1 成功)
-| 序号 | 任务 | 目的 |
+### Phase 0: D(Δ) 测量 + Algorithm 1 盲预测 (~10 min, CPU)
+| 序号 | 任务 | 产出 |
 |------|------|------|
-| 8 | 100M TinyStories Learnable EVQ | 跨数据集 τ 差异 |
-| 9 | 125M FineWeb-Edu Learnable EVQ (seed 42) | 规模不变性 |
-| 10 | 125M FineWeb-Edu Learnable EVQ (seed 137) | 复现性 |
+| 0a | 测量 FineWeb-Edu D̂(Δ) for Δ∈[1,128] | D̂_fw_128.npy |
+| 0b | Algorithm 1: D̂ → τ*_128 | τ*_128_FW (盲预测) |
+| 0c | 测量 TinyStories D̂(Δ) for Δ∈[1,128] | D̂_tiny_128.npy |
 
-**总计**: ~12-15 hr (Phase 1) + ~5 hr (Phase 2)
+### Phase 1: 128-token 核心对比 (~2h GPU)
+| 序号 | Method | 配置 | 目的 |
+|------|--------|------|------|
+| A1 | Geometric RoPE | τ=0 | baseline |
+| A2 | Fixed EVQ τ=1.0 | 固定 | sweep 中值 |
+| A3 | Fixed EVQ τ=1.5 | 固定 | sweep 高值 |
+| A4 | **Learnable EVQ** | τ_init=1.0, lr_mult=100 | **核心实验** |
+| A5 | **Learnable EVQ** | τ_init=0.01, lr_mult=100 | 鲁棒性 |
+
+公共配置: 125M, train_seq=128, train_tokens=15M, FineWeb-Edu, base=500000, seed=42
+评估长度: [128, 256, 512, 1024, 2048, 4096, 8192]
+
+### Phase 2: DAPE 直接对比 (~1h GPU)
+| 序号 | Method | 配置 | 目的 |
+|------|--------|------|------|
+| B1 | DAPE-style | d/2=32 独立可学习频率, lr_mult=10 | 直接对标 |
+| B2 | DAPE-style | d/2=32 独立可学习频率, lr_mult=100 | LR 校准 |
+
+### Phase 3: 多 seed 确认 (~1h GPU, 如果 Phase 1 成功)
+| 序号 | Method | 配置 | 目的 |
+|------|--------|------|------|
+| C1 | Learnable EVQ | seed=137 | 复现性 |
+| C2 | Learnable EVQ | seed=256 | 第三 seed |
+
+### Phase 4: Context Extension (可选, ~4h GPU)
+| 序号 | 步骤 | 配置 | 目的 |
+|------|------|------|------|
+| D0 | 预训练 | 125M, geometric, 2K, 100M tokens | 基础模型 |
+| D1 | 扩展: Geometric | 继续训练 8K, 20M tokens | baseline |
+| D2 | 扩展: PI | freq /= 4 | 经典方法 |
+| D3 | 扩展: YaRN | PI + 高频保护 | 经典方法 |
+| D4 | 扩展: EVQ fixed τ=1.5 | — | 理论方法 |
+| D5 | 扩展: EVQ learnable | τ_init=1.0 | **核心** |
+
+**总计**: Phase 0-3 (~4h) + Phase 4 (~4h) = ~8h
 
 ---
 
-## 六、论文叙事升级路径 (v3: Learnable τ)
+## 六、论文叙事升级路径 (v4: PE-dominant regime)
 
 **v1**: theory → EVQ formula → sweep 找到好的 τ → improvement
 **v2**: theory → D(Δ) measurement → τ prediction → sweep validates
-**v3 (当前)**: theory → EVQ 函数族 → **τ 可学习** → 自动收敛到最优 → 理论预测验证
+**v3**: theory → EVQ 函数族 → learnable τ → 自动收敛 (❌ 在 2K 训练中失效)
+**v4 (当前)**: theory → EVQ 函数族 → 在 PE-dominant regime 中 learnable τ 收敛 → 1 param vs DAPE 32 params
 
-从 "understanding paper" → "predictive theory paper" → **"method paper with theory"**
+**关键见解**：PE 的频率分配在 "PE-dominant regime"（短训练上下文或 context extension）中有强梯度信号。
+在 "model-dominant regime"（长训练上下文）中，模型权重吸收了 PE 差异，τ 的 landscape 平坦。
+这不是理论的失败，而是关于 PE 与模型能力交互的见解。
 
-审稿人看到的不是"他们调了一个超参数赢了"，
-而是"他们从变分理论推导出参数化族，τ 在训练中自动收敛到理论预测值"。
-
-**核心卖点变化**：
-- 理论的价值 = 把 N/2 维搜索空间压缩到 1D → 函数形式保证
-- 工程的价值 = 零手动调参，drop-in replacement
-- 三重验证 = Algorithm 1 预测 ≈ sweep 最优 ≈ 学习收敛值
+**核心卖点**：
+- 理论的价值 = 把 N/2 维搜索空间压缩到 1D（vs DAPE 的暴力搜索）
+- 实验的价值 = EVQ (1 param) ≈ DAPE (32 params) at extrapolation
+- 三重验证 = Algorithm 1 预测 ≈ sweep 最优 ≈ 学习收敛值（在 128-token regime）
 
 详细设计: `docs/paperdraft/LEARNABLE_TAU_DESIGN.md`
+实验审核: `docs/paperdraft/EXPERIMENT_AUDIT_V4.md`
 实现代码: `rope/learnable_evq.py`
-Claude Code prompt: `docs/paperdraft/PROMPT_CLAUDE_CODE_LEARNABLE_TAU.md`

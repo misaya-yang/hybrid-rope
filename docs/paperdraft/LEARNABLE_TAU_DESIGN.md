@@ -31,6 +31,26 @@
 2. 函数形式保证了 boundary anchoring（端点不动）
 3. 收敛的 τ_learned 应该接近 τ*_theory → **理论的可检验预测**
 
+### Learnable τ 的双重身份
+
+**身份 1: 工程方法** — Drop-in replacement, 零调参，任何数据集自动适配
+
+**身份 2: Landscape Probe（理论验证探测器）** — 如果 τ 从任意初始值收敛到 Algorithm 1 预测的 τ*_theory，这证明变分泛函 J[ρ] 忠实地捕获了真实 loss landscape 的极值结构。
+
+> **论文措辞**: "We learn τ end-to-end as a landscape probe: convergence to the theory-predicted value validates that the variational functional J[ρ] faithfully captures the structure of the empirical loss."
+
+### vs DAPE: 流形约束的优势
+
+| | DAPE (NeurIPS 2024) | EVQ-Cosh (Ours) |
+|---|---|---|
+| 搜索空间 | R^{d/2}（~32-64 维） | **1D**（τ 流形） |
+| 理论约束 | 无（纯数据驱动） | cosh 族 = Galerkin 投影下的最优参数化 |
+| 保证 | 无 | boundary anchoring, τ→0 恢复 geometric |
+| 过拟合风险 | 高维搜索 + 高频梯度弱 → Hessian 病态 | 1D 搜索 → 单盆地拟凸 |
+| 可预测性 | 不可预测最终频率 | Algorithm 1 先验预测 τ* |
+
+> **论文措辞**: "While DAPE learns d/2 independent frequencies in an unconstrained space, our variational theory compresses the search to a single parameter τ on a physically-derived manifold. The manifold constraint reduces dimensionality by d/2× while providing boundary anchoring, smooth geometric recovery, and a priori τ* prediction."
+
 ---
 
 ## 1. 数学基础
@@ -360,6 +380,49 @@ A: 在单一数据集上，是的。τ 控制的是 "全局耦合 vs 局部脊" 
 
 ---
 
-## 10. 版本历史
+---
+
+## 10. 实验结果 (128-tok PE Quality Test)
+
+### 10.1 核心发现
+
+| 结果 | 值 | 状态 |
+|------|-----|------|
+| τ_learned (3-seed mean) | **1.141 ± 0.003** | ✅ 高度一致 |
+| τ_sweep optimal | **1.5** | ✅ 稳定 |
+| EVQ learnable vs Geometric @8K | **-14.1%** | ✅ 显著 |
+| EVQ fixed τ=1.5 vs Geometric @8K | **-18.3%** | ✅ 显著 |
+| EVQ learnable (1p) vs DAPE (32p) @8K | **-3.1%** | ✅ 核心 claim |
+| EVQ fixed vs DAPE @2K | **-13.9%** | ✅ 核心 claim |
+| Algorithm 1 τ* prediction | 40.96 (残差 35.6%) | ❌ 失败 |
+
+### 10.2 τ_learned vs τ_sweep gap 的解释
+
+τ_learned = 1.14 优化的是训练 loss (PPL@128)，τ_sweep = 1.5 优化的是外推 PPL@8K。
+两个目标不完全一致。τ_learned 的方向是正确的（从 1.0 向 1.5 移动了 0.14），
+但因为训练目标只看 128 token 内的 loss，τ 没有动力继续增大。
+
+**论文措辞**: "The learned value τ=1.14 represents the in-distribution optimum;
+the sweep optimum τ=1.5 additionally accounts for extrapolation quality.
+The gap (0.36) quantifies the divergence between training and deployment objectives."
+
+### 10.3 Algorithm 1 失败的后续处理
+
+Algorithm 1 的 Hilbert-Schmidt 投影在实际数据上残差 35-49%，无法给出可靠的 τ* 预测。
+论文中 Algorithm 1 的角色从"实用工具"降级为"理论联系"：
+
+- **正文**: 保留 Algorithm 1 的数学推导（展示 D(Δ) → τ 的理论映射）
+- **正文**: 加 Remark 讨论投影残差和实际局限性
+- **Appendix**: 报告具体残差数值，讨论改进方向
+
+**实际 τ 获取方案**:
+1. 默认 τ=1.5（跨协议/跨数据集一致）
+2. Learnable τ init=1.0（自适应，给出 reasonable 值）
+3. 3-point mini-sweep（15 min GPU，最精确）
+
+---
+
+## 11. 版本历史
 
 - v1 (2026-03-01): 初始设计，综合 Gemini/GPT-5.2Pro/Claude 分析
+- v2 (2026-03-01): 128-tok 实验结果整合，Algorithm 1 失败处理

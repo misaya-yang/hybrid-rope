@@ -1,0 +1,100 @@
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+Loading filler tokens from: /root/autodl-tmp/evq_128tok/val_fineweb-edu_5000000.pt
+Filler tokens: torch.Size([50000])
+
+============================================================
+  PASSKEY EVAL: geo_tau0
+============================================================
+  Model params: 151.9M
+  Loaded: /root/autodl-tmp/evq_128tok/125m_tau0.00_seed42/model.pt
+  L=2048_d=0.5 ... gap=+0.024  ret=51%  AR=0%  (100 trials)
+  L=8192_d=0.5 ... gap=-0.010  ret=46%  AR=0%  (100 trials)
+
+  Results for geo_tau0:
+    Retrieval rate: 0.485
+    Mean NLL gap:   0.0069
+    AR exact match: 0.0
+    Time: 46.7s
+
+============================================================
+  PASSKEY EVAL: evq_tau1.5
+============================================================
+  Model params: 151.9M
+  Loaded: /root/autodl-tmp/evq_128tok/125m_tau1.50_seed42/model.pt
+  L=2048_d=0.5 ... gap=+0.055  ret=58%  AR=0%  (100 trials)
+  L=8192_d=0.5 ... gap=+0.008  ret=53%  AR=0%  (100 trials)
+
+  Results for evq_tau1.5:
+    Retrieval rate: 0.555
+    Mean NLL gap:   0.0318
+    AR exact match: 0.0
+    Time: 46.7s
+
+============================================================
+  PASSKEY EVAL: evq_tau2.5
+============================================================
+  Model params: 151.9M
+  Loaded: /root/autodl-tmp/evq_minisweep/125m_tau2.50_seed42/model.pt
+  L=2048_d=0.5 ... gap=+0.049  ret=59%  AR=0%  (100 trials)
+  L=8192_d=0.5 ... gap=+0.014  ret=53%  AR=0%  (100 trials)
+
+  Results for evq_tau2.5:
+    Retrieval rate: 0.56
+    Mean NLL gap:   0.0315
+    AR exact match: 0.0
+    Time: 46.7s
+
+============================================================
+  PASSKEY EVAL: evq_tau5.0
+============================================================
+  Model params: 151.9M
+  Loaded: /root/autodl-tmp/evq_phase6/extended_sweep/125m_tau5.00_seed42/model.pt
+  L=2048_d=0.5 ... gap=+0.022  ret=55%  AR=0%  (100 trials)
+  L=8192_d=0.5 ... gap=+0.031  ret=55%  AR=0%  (100 trials)
+
+  Results for evq_tau5.0:
+    Retrieval rate: 0.55
+    Mean NLL gap:   0.0264
+    AR exact match: 0.0
+    Time: 46.9s
+
+============================================================
+  PASSKEY EVAL: dape_lrmult100
+============================================================
+  Model params: 151.9M
+  Loaded: /root/autodl-tmp/evq_128tok/125m_dape_lrmult100_seed42/model.pt
+  L=2048_d=0.5 ... gap=-0.004  ret=47%  AR=0%  (100 trials)
+  L=8192_d=0.5 ... gap=+0.006  ret=52%  AR=0%  (100 trials)
+
+  Results for dape_lrmult100:
+    Retrieval rate: 0.495
+    Mean NLL gap:   0.0009
+    AR exact match: 0.0
+    Time: 48.0s
+
+============================================================
+  PASSKEY EVAL: yarn_infer
+============================================================
+  Model params: 151.9M
+  Loaded: /root/autodl-tmp/evq_128tok/125m_tau0.00_seed42/model.pt
+  [YaRN-infer] Replaced inv_freq with YaRN (128->8192)
+  L=2048_d=0.5 ... gap=+0.020  ret=54%  AR=0%  (100 trials)
+  L=8192_d=0.5 ... gap=+0.008  ret=48%  AR=0%  (100 trials)
+
+  Results for yarn_infer:
+    Retrieval rate: 0.51
+    Mean NLL gap:   0.0143
+    AR exact match: 0.0
+    Time: 46.8s
+
+============================================================
+  ALL PASSKEY RESULTS
+============================================================
+  geo_tau0              retrieval= 0.485  gap=  0.0069  ar= 0.000
+  evq_tau1.5            retrieval= 0.555  gap=  0.0318  ar= 0.000
+  evq_tau2.5            retrieval= 0.560  gap=  0.0315  ar= 0.000
+  evq_tau5.0            retrieval= 0.550  gap=  0.0264  ar= 0.000
+  dape_lrmult100        retrieval= 0.495  gap=  0.0009  ar= 0.000
+  yarn_infer            retrieval= 0.510  gap=  0.0143  ar= 0.000
+
+Results saved to /root/autodl-tmp/evq_phase6/passkey_retrieval/results_checkpoint.json
