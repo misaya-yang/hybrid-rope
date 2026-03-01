@@ -23,8 +23,22 @@ import sys
 import time
 
 # Use HuggingFace mirror for Chinese mainland servers
-if not os.environ.get("HF_ENDPOINT"):
-    os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
+os.environ["HF_ENDPOINT"] = os.environ.get("HF_ENDPOINT", "https://hf-mirror.com")
+# Fix: hf-mirror.com returns pagination Link headers pointing to huggingface.co,
+# causing "Network is unreachable" on page 2+. Patch _get_next_page to rewrite URLs.
+try:
+    import huggingface_hub.utils._pagination as _hf_pag
+    _orig_get_next_page = _hf_pag._get_next_page
+    def _patched_get_next_page(response):
+        url = _orig_get_next_page(response)
+        if url and "huggingface.co" in url:
+            mirror = os.environ.get("HF_ENDPOINT", "").rstrip("/")
+            if mirror and mirror != "https://huggingface.co":
+                url = url.replace("https://huggingface.co", mirror)
+        return url
+    _hf_pag._get_next_page = _patched_get_next_page
+except Exception:
+    pass
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -111,11 +125,11 @@ TIER_CONFIGS = {
         "head_dim": 64,
         "intermediate_size": 4096,
         "max_position_embeddings": 2048,
-        "batch_size": 8,
-        "train_tokens": 200_000_000,
+        "batch_size": 4,
+        "train_tokens": 500_000_000,
         "seq_len": 2048,
         "lr": 1.5e-4,
-        "eval_lengths": [2048, 4096, 8192, 16384],
+        "eval_lengths": [2048, 4096, 8192],
         "eval_chunks": 10,
     },
 }
@@ -257,6 +271,41 @@ class RotaryEmbedding(nn.Module):
         return self.cos_c[:L], self.sin_c[:L]
 
 
+class LearnableRotaryEmbedding(nn.Module):
+    """RoPE adapter wrapping LearnableEVQRoPE — recomputes every forward for gradient flow."""
+
+    def __init__(self, head_dim: int, max_seq: int, base: float,
+                 tau_init: float = 1.0, tau_lr_multiplier: float = 10.0) -> None:
+        super().__init__()
+        # Add project root so rope/ package is importable
+        _proj_root = str(Path(__file__).resolve().parents[2])
+        if _proj_root not in sys.path:
+            sys.path.insert(0, _proj_root)
+        from rope.learnable_evq import LearnableEVQRoPE
+        self.evq = LearnableEVQRoPE(
+            dim=head_dim, max_seq_len=max_seq, base=base,
+            tau_init=tau_init, tau_lr_multiplier=tau_lr_multiplier,
+        )
+        self._max = max_seq
+
+    def _extend(self, seq_len: int) -> None:
+        """Extend position buffer for eval at longer sequences."""
+        if seq_len > self._max:
+            device = self.evq.pos.device
+            new_pos = torch.arange(seq_len, dtype=torch.float64, device=device)
+            self.evq.register_buffer("pos", new_pos)
+            self.evq.max_seq_len = seq_len
+            self._max = seq_len
+
+    def forward(self, L: int) -> Tuple[torch.Tensor, torch.Tensor]:
+        self._extend(L)
+        cos_half, sin_half = self.evq.get_cos_sin(L)  # (L, n_freqs=head_dim//2)
+        # Double to match (L, head_dim) expected by apply_rope
+        cos = torch.cat([cos_half, cos_half], dim=-1).float()
+        sin = torch.cat([sin_half, sin_half], dim=-1).float()
+        return cos, sin
+
+
 def rotate_half(x: torch.Tensor) -> torch.Tensor:
     x1, x2 = x.chunk(2, dim=-1)
     return torch.cat([-x2, x1], dim=-1)
@@ -313,11 +362,15 @@ class Block(nn.Module):
 
 
 class GPT(nn.Module):
-    def __init__(self, cfg: dict, inv_freq: torch.Tensor) -> None:
+    def __init__(self, cfg: dict, inv_freq: torch.Tensor,
+                 learnable_rope: Optional[LearnableRotaryEmbedding] = None) -> None:
         super().__init__()
         self._num_layers = cfg["num_layers"]
         self.emb = nn.Embedding(cfg["vocab_size"], cfg["hidden_size"])
-        rope = RotaryEmbedding(cfg["head_dim"], cfg["max_position_embeddings"], inv_freq)
+        if learnable_rope is not None:
+            rope = learnable_rope
+        else:
+            rope = RotaryEmbedding(cfg["head_dim"], cfg["max_position_embeddings"], inv_freq)
         self.blocks = nn.ModuleList(
             [Block(cfg, rope) for _ in range(cfg["num_layers"])]
         )
@@ -346,40 +399,189 @@ class GPT(nn.Module):
         return self.head(self.ln(x))
 
     def extend_rope(self, L: int) -> None:
-        self.blocks[0].attn.rope._build(L)
+        rope = self.blocks[0].attn.rope
+        if isinstance(rope, LearnableRotaryEmbedding):
+            rope._extend(L)
+        else:
+            rope._build(L)
 
 
 # ---------------------------------------------------------------------------
-# Data loading (TinyStories from HuggingFace)
+# Data loading with fallback
 # ---------------------------------------------------------------------------
 
-def load_data(tokenizer, max_tokens: int, seq_len: int) -> torch.Tensor:
+# Dataset candidates for fallback (priority order)
+_DATASET_CANDIDATES = {
+    "fineweb-edu": [
+        ("HuggingFaceFW/fineweb-edu", "sample-10BT", "text"),
+        ("cerebras/SlimPajama-627B", None, "text"),
+        ("roneneldan/TinyStories", None, "text"),
+    ],
+    "tinystories": [
+        ("roneneldan/TinyStories", None, "text"),
+    ],
+}
+
+
+def _stream_tokenize(
+    ds_name: str,
+    config: Optional[str],
+    text_key: str,
+    tokenizer,
+    max_tokens: int,
+    shuffle_seed: Optional[int] = None,
+    print_samples: int = 0,
+) -> List[int]:
+    """Stream-tokenize from a HF dataset. Returns list of token IDs."""
     from datasets import load_dataset
 
-    print(f"  Loading TinyStories train ({max_tokens / 1e6:.0f}M tokens)...")
-    ds = load_dataset("roneneldan/TinyStories", split="train", streaming=True)
+    kwargs = {"split": "train", "streaming": True}
+    if config:
+        ds = load_dataset(ds_name, name=config, **kwargs)
+    else:
+        ds = load_dataset(ds_name, **kwargs)
+
+    if shuffle_seed is not None:
+        ds = ds.shuffle(seed=shuffle_seed, buffer_size=10000)
+
     ids: List[int] = []
+    n_docs = 0
+    _next_report = 10_000_000  # progress every 10M tokens
+    t0 = time.time()
     for x in ds:
-        ids.extend(tokenizer.encode(x["text"], add_special_tokens=False))
+        txt = x.get(text_key)
+        if not txt:
+            continue
+        if print_samples > 0 and n_docs < print_samples:
+            print(f"    [sample {n_docs}] {txt[:100]!r}...")
+        ids.extend(tokenizer.encode(txt, add_special_tokens=False))
+        n_docs += 1
+        if len(ids) >= _next_report:
+            elapsed = time.time() - t0
+            rate = len(ids) / elapsed
+            eta = (max_tokens - len(ids)) / rate if rate > 0 else 0
+            print(f"    [{len(ids)/1e6:.0f}M/{max_tokens/1e6:.0f}M tokens] "
+                  f"{n_docs} docs, {rate/1e6:.1f}M tok/s, ETA {eta:.0f}s")
+            _next_report += 10_000_000
         if len(ids) >= max_tokens:
             break
-    n = len(ids) // seq_len
-    print(f"  Got {n} chunks ({len(ids) / 1e6:.1f}M tokens)")
-    return torch.tensor(ids[: n * seq_len], dtype=torch.long).view(n, seq_len)
+
+    elapsed = time.time() - t0
+    print(f"    Tokenized {len(ids)/1e6:.1f}M tokens from {n_docs} docs in {elapsed:.0f}s")
+    return ids
 
 
-def load_val(tokenizer, max_tokens: int = 5_000_000) -> torch.Tensor:
-    from datasets import load_dataset
+def load_data(
+    tokenizer, max_tokens: int, seq_len: int, dataset: str = "fineweb-edu",
+    cache_dir: Optional[str] = None,
+) -> torch.Tensor:
+    """Load training data with automatic fallback and disk cache."""
+    # Check disk cache first
+    if cache_dir:
+        cache_path = Path(cache_dir) / f"train_{dataset}_{max_tokens}_{seq_len}.pt"
+        if cache_path.exists():
+            print(f"  [data] Loading from cache: {cache_path}")
+            data = torch.load(cache_path, weights_only=True)
+            print(f"  [data] Cached: {data.shape[0]} chunks ({data.numel()/1e6:.1f}M tokens)")
+            return data
 
-    print("  Loading validation data...")
-    ds = load_dataset("roneneldan/TinyStories", split="validation", streaming=True)
-    ids: List[int] = []
-    for x in ds:
-        ids.extend(tokenizer.encode(x["text"], add_special_tokens=False))
-        if len(ids) >= max_tokens:
-            break
-    print(f"  Val tokens: {len(ids) / 1e6:.1f}M")
-    return torch.tensor(ids, dtype=torch.long)
+    candidates = _DATASET_CANDIDATES.get(dataset, _DATASET_CANDIDATES["tinystories"])
+
+    for ds_name, config, text_key in candidates:
+        try:
+            print(f"  [data] Trying {ds_name} (config={config})...")
+
+            # Quick connectivity check
+            test_ids = _stream_tokenize(
+                ds_name, config, text_key, tokenizer,
+                max_tokens=1000, print_samples=0,
+            )
+            if len(test_ids) < 1000:
+                raise RuntimeError(f"Only got {len(test_ids)} tokens from {ds_name}")
+            print(f"  [data] Connection OK, streaming {max_tokens/1e6:.0f}M tokens...")
+
+            # Full load
+            ids = _stream_tokenize(
+                ds_name, config, text_key, tokenizer,
+                max_tokens=max_tokens, print_samples=3,
+            )
+            n = len(ids) // seq_len
+            print(f"  [data] Got {n} chunks ({len(ids)/1e6:.1f}M tokens) from {ds_name}")
+            data = torch.tensor(ids[: n * seq_len], dtype=torch.long).view(n, seq_len)
+
+            # Save to disk cache
+            if cache_dir:
+                Path(cache_dir).mkdir(parents=True, exist_ok=True)
+                torch.save(data, cache_path)
+                print(f"  [data] Saved cache: {cache_path} ({cache_path.stat().st_size/1e6:.1f}MB)")
+
+            return data
+
+        except Exception as e:
+            print(f"  [data] FAILED: {ds_name} — {e}")
+            print(f"  [data] Falling back to next candidate...")
+            continue
+
+    raise RuntimeError("All dataset candidates failed!")
+
+
+def load_val(
+    tokenizer, max_tokens: int = 5_000_000, dataset: str = "fineweb-edu",
+    cache_dir: Optional[str] = None,
+) -> torch.Tensor:
+    """Load validation data (shuffled split for fineweb-edu)."""
+    # Check disk cache
+    if cache_dir:
+        cache_path = Path(cache_dir) / f"val_{dataset}_{max_tokens}.pt"
+        if cache_path.exists():
+            print(f"  [val] Loading from cache: {cache_path}")
+            data = torch.load(cache_path, weights_only=True)
+            print(f"  [val] Cached: {data.numel()/1e6:.1f}M tokens")
+            return data
+
+    if dataset == "fineweb-edu":
+        candidates = [
+            ("HuggingFaceFW/fineweb-edu", "sample-10BT", "text"),
+            ("cerebras/SlimPajama-627B", None, "text"),
+            ("roneneldan/TinyStories", None, "text"),
+        ]
+        shuffle_seed = 99999  # different from train for sample-level split
+    else:
+        candidates = [("roneneldan/TinyStories", None, "text")]
+        shuffle_seed = None  # TinyStories has a validation split
+
+    for ds_name, config, text_key in candidates:
+        try:
+            print(f"  [val] Trying {ds_name}...")
+            # For TinyStories, use the validation split directly
+            if ds_name == "roneneldan/TinyStories" and shuffle_seed is None:
+                from datasets import load_dataset
+                vds = load_dataset(ds_name, split="validation", streaming=True)
+                ids: List[int] = []
+                for x in vds:
+                    ids.extend(tokenizer.encode(x["text"], add_special_tokens=False))
+                    if len(ids) >= max_tokens:
+                        break
+            else:
+                ids = _stream_tokenize(
+                    ds_name, config, text_key, tokenizer,
+                    max_tokens=max_tokens, shuffle_seed=shuffle_seed,
+                )
+            print(f"  [val] Got {len(ids)/1e6:.1f}M tokens from {ds_name}")
+            data = torch.tensor(ids, dtype=torch.long)
+
+            # Save to disk cache
+            if cache_dir:
+                Path(cache_dir).mkdir(parents=True, exist_ok=True)
+                torch.save(data, cache_path)
+                print(f"  [val] Saved cache: {cache_path} ({cache_path.stat().st_size/1e6:.1f}MB)")
+
+            return data
+        except Exception as e:
+            print(f"  [val] FAILED: {ds_name} — {e}")
+            continue
+
+    raise RuntimeError("All validation dataset candidates failed!")
 
 
 # ---------------------------------------------------------------------------
@@ -401,32 +603,60 @@ def train_model(
     data: torch.Tensor,
     cfg: dict,
     seed: int = 42,
+    tau_lr_multiplier: Optional[float] = None,
+    tau_logger=None,
 ) -> GPT:
     model.train()
     lr = cfg["lr"]
-    min_lr = lr * 0.1  # Cosine schedule floor (standard practice)
     batch_size = cfg["batch_size"]
-    opt = torch.optim.AdamW(
-        model.parameters(), lr=lr, betas=(0.9, 0.95), weight_decay=0.1
-    )
+
+    # Optimizer: separate param group for raw_tau when learnable
+    # Store base_lr per group for cosine schedule
+    if tau_lr_multiplier is not None:
+        tau_params = [p for n, p in model.named_parameters()
+                      if p.requires_grad and "raw_tau" in n]
+        other_params = [p for n, p in model.named_parameters()
+                        if p.requires_grad and "raw_tau" not in n]
+        tau_base_lr = lr * tau_lr_multiplier
+        opt = torch.optim.AdamW([
+            {"params": other_params, "lr": lr, "weight_decay": 0.1},
+            {"params": tau_params, "lr": tau_base_lr, "weight_decay": 0.0},
+        ], betas=(0.9, 0.95))
+        group_base_lrs = [lr, tau_base_lr]
+        print(f"  [tau] Separate param group: lr_tau={tau_base_lr:.2e}, "
+              f"n_tau_params={sum(p.numel() for p in tau_params)}")
+    else:
+        opt = torch.optim.AdamW(
+            model.parameters(), lr=lr, betas=(0.9, 0.95), weight_decay=0.1
+        )
+        group_base_lrs = [lr]
+
     steps = len(data) // batch_size
     warmup = int(steps * 0.02)
     set_seed(seed)
     perm = torch.randperm(len(data))
     t0 = time.time()
 
+    # Find EVQ module for tau logging (if any)
+    evq_module = None
+    if tau_logger is not None:
+        rope = model.blocks[0].attn.rope
+        if isinstance(rope, LearnableRotaryEmbedding):
+            evq_module = rope.evq
+
     for s in range(steps):
         batch = data[perm[s * batch_size : (s + 1) * batch_size]].to(DEVICE)
 
-        # Cosine LR with warmup + min_lr floor
-        if s < warmup:
-            cur_lr = lr * s / max(warmup, 1)
-        else:
-            cur_lr = min_lr + (lr - min_lr) * 0.5 * (
-                1 + math.cos(math.pi * (s - warmup) / max(steps - warmup, 1))
-            )
-        for g in opt.param_groups:
-            g["lr"] = cur_lr
+        # Cosine LR with warmup + min_lr floor (applied per group)
+        for gi, g in enumerate(opt.param_groups):
+            blr = group_base_lrs[gi]
+            blr_min = blr * 0.1
+            if s < warmup:
+                g["lr"] = blr * s / max(warmup, 1)
+            else:
+                g["lr"] = blr_min + (blr - blr_min) * 0.5 * (
+                    1 + math.cos(math.pi * (s - warmup) / max(steps - warmup, 1))
+                )
 
         # Forward pass — autocast on CUDA (flash attention + bf16), plain on MPS/CPU
         ctx = torch.amp.autocast("cuda", dtype=DTYPE) if USE_AUTOCAST else nullcontext()
@@ -441,12 +671,20 @@ def train_model(
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         opt.step()
 
+        # Log τ
+        if tau_logger is not None and evq_module is not None:
+            tau_logger.log(s, evq_module, loss=loss.item())
+
         if s % 50 == 0:
             elapsed = time.time() - t0
             eta = elapsed / (s + 1) * (steps - s - 1) if s > 0 else 0
+            tau_str = ""
+            if evq_module is not None:
+                tau_str = f"  tau={evq_module.get_tau_value():.4f}"
+            cur_lr = opt.param_groups[0]["lr"]
             print(
                 f"    step {s}/{steps}  loss={loss.item():.4f}  "
-                f"lr={cur_lr:.2e}  ETA={eta / 60:.0f}min"
+                f"lr={cur_lr:.2e}{tau_str}  ETA={eta / 60:.0f}min"
             )
 
     elapsed = time.time() - t0
@@ -535,17 +773,34 @@ def run_single(
     val_data: torch.Tensor,
     work_dir: Path,
     dry_run: bool = False,
+    tokenizer=None,
+    eval_16k: bool = False,
+    learnable: bool = False,
+    tau_init: float = 1.0,
+    tau_lr_multiplier: float = 10.0,
 ) -> RunResult:
-    run_id = f"{tier}_tau{tau:.2f}_seed{seed}"
+    if learnable:
+        run_id = f"{tier}_learnable_init{tau_init:.2f}_seed{seed}"
+    else:
+        run_id = f"{tier}_tau{tau:.2f}_seed{seed}"
     print(f"\n{'='*60}")
     print(f"  RUN: {run_id}  (base={base:.0f})")
     print(f"{'='*60}")
 
-    # Build inv_freq
-    inv_freq = evq_cosh_inv_freq(cfg["head_dim"], tau, base)
-    print(f"  inv_freq: max={inv_freq.max().item():.6f}  min={inv_freq.min().item():.8f}")
+    import hashlib
 
-    # Phase collision
+    if learnable:
+        # Learnable mode: inv_freq computed from initial tau for stats/collision only
+        inv_freq = evq_cosh_inv_freq(cfg["head_dim"], tau_init, base)
+        print(f"  [learnable] tau_init={tau_init:.4f}  lr_mult={tau_lr_multiplier}")
+    else:
+        inv_freq = evq_cosh_inv_freq(cfg["head_dim"], tau, base)
+
+    inv_hash = hashlib.sha256(inv_freq.numpy().tobytes()).hexdigest()[:16]
+    print(f"  inv_freq: shape={inv_freq.shape}  max={inv_freq.max().item():.6f}  "
+          f"min={inv_freq.min().item():.8f}  hash={inv_hash}")
+
+    # Phase collision (on initial frequencies)
     pc = phase_collision_score(inv_freq)
     print(f"  Phase collision total={pc['total']:.6f}")
 
@@ -556,32 +811,154 @@ def run_single(
         "ratio_max_min": round((inv_freq.max() / inv_freq.min()).item(), 2),
         "mean": round(inv_freq.mean().item(), 8),
         "std": round(inv_freq.std().item(), 8),
+        "sha256_16": inv_hash,
     }
 
     if dry_run:
         print("  [DRY RUN] skipping training & eval")
         return RunResult(
-            run_id=run_id, tau=tau, seed=seed, tier=tier, base=base,
+            run_id=run_id, tau=tau if not learnable else tau_init,
+            seed=seed, tier=tier, base=base,
             phase_collision=pc, inv_freq_stats=inv_stats,
         )
 
-    # Train
+    # Wrap training data with MixedDataset for passkey mixing
+    from eval_passkey_scratch import MixedDataset
+    mixed_data = MixedDataset(
+        lm_data=train_data,
+        filler_tokens=val_data[:50000],
+        tokenizer=tokenizer,
+        passkey_ratio=0.005,
+        seq_len=cfg["seq_len"],
+    )
+    # Log passkey mixing ratio
+    import random as _rnd
+    pk_count = sum(1 for i in range(min(1000, len(mixed_data)))
+                   if _rnd.Random(i * 6364136223846793005 + 1).random() < 0.005)
+    print(f"  [passkey] Mix ratio check: {pk_count}/1000 = {pk_count/10:.1f}%")
+
+    # Build model
     set_seed(seed)
-    model = GPT(cfg, inv_freq).to(DEVICE)
+    tau_logger = None
+    if learnable:
+        learnable_rope = LearnableRotaryEmbedding(
+            head_dim=cfg["head_dim"],
+            max_seq=cfg["max_position_embeddings"],
+            base=base,
+            tau_init=tau_init,
+            tau_lr_multiplier=tau_lr_multiplier,
+        ).to(DEVICE)
+        model = GPT(cfg, inv_freq, learnable_rope=learnable_rope).to(DEVICE)
+        # Import TauLogger
+        _proj_root = str(Path(__file__).resolve().parents[2])
+        if _proj_root not in sys.path:
+            sys.path.insert(0, _proj_root)
+        from rope.learnable_evq import TauLogger
+        tau_logger = TauLogger(log_interval=50)
+    else:
+        model = GPT(cfg, inv_freq).to(DEVICE)
+
+    # Parameter count validation for 500m
+    n_params = sum(p.numel() for p in model.parameters())
+    if tier == "500m":
+        assert 450_000_000 <= n_params <= 550_000_000, \
+            f"500M tier: expected 450-550M params, got {n_params/1e6:.1f}M"
+
     t0 = time.time()
-    model = train_model(model, train_data, cfg, seed=seed)
+    model = train_model(
+        model, mixed_data, cfg, seed=seed,
+        tau_lr_multiplier=tau_lr_multiplier if learnable else None,
+        tau_logger=tau_logger,
+    )
     train_time = time.time() - t0
 
-    # Eval
+    # Eval: PPL
+    eval_lengths = list(cfg["eval_lengths"])
+    if eval_16k and 16384 not in eval_lengths:
+        eval_lengths.append(16384)
     t1 = time.time()
-    ppl = eval_model(model, val_data, cfg["eval_lengths"], cfg["eval_chunks"])
+    ppl = eval_model(model, val_data, eval_lengths, cfg["eval_chunks"])
     eval_time = time.time() - t1
+
+    # Eval: Passkey NLL gap
+    passkey_results = {}
+    if tokenizer is not None:
+        print(f"\n  [passkey] NLL-gap evaluation for {run_id}")
+        from eval_passkey_scratch import eval_passkey_nll_gap
+        passkey_results = eval_passkey_nll_gap(
+            model, tokenizer, val_data,
+            lengths=[2048, 4096, 8192],
+            depths=[0.10, 0.25, 0.50, 0.75, 0.90],
+            num_trials=10,
+        )
+        g = passkey_results.get("global", {})
+        print(f"  [passkey] Retrieval rate: {g.get('retrieval_rate', 'N/A')}")
+        print(f"  [passkey] Mean NLL gap: {g.get('mean_nll_gap', 'N/A')}")
 
     # Save checkpoint
     run_dir = work_dir / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
     torch.save(model.state_dict(), run_dir / "model.pt")
-    np.save(run_dir / "inv_freq.npy", inv_freq.numpy())
+
+    # Learnable-specific saves
+    final_tau = tau
+    if learnable:
+        evq_mod = model.blocks[0].attn.rope.evq
+        final_tau = evq_mod.get_tau_value()
+        # Save tau trajectory
+        if tau_logger is not None:
+            tau_logger.save(str(run_dir / "tau_trajectory.json"))
+        # Save learned inv_freq
+        learned_freqs = evq_mod.get_frequencies().detach().cpu().numpy()
+        np.save(run_dir / "learned_inv_freq.npy", learned_freqs)
+        # Save learned phi schedule
+        learned_phi = evq_mod.get_phi_schedule().detach().cpu().numpy()
+        np.save(run_dir / "learned_phi.npy", learned_phi)
+        print(f"  [learnable] Final tau: {final_tau:.6f}")
+        if tau_logger is not None:
+            conv_std = tau_logger.get_convergence_std()
+            print(f"  [learnable] Convergence std (last 20%): {conv_std:.6f}")
+    else:
+        np.save(run_dir / "inv_freq.npy", inv_freq.numpy())
+
+    if passkey_results:
+        import json as _json
+        with open(run_dir / "passkey_nll.json", "w") as f:
+            _json.dump(passkey_results, f, indent=2, ensure_ascii=False, default=str)
+
+    # PI baseline: inference-time only, on geometric model (τ=0) — skip for learnable
+    pi_results = {}
+    if not learnable and abs(tau) < 1e-8:
+        print(f"\n  [PI] Inference-time PI baseline (zero-cost, no extra training)")
+        pi_scale = max(max(eval_lengths) / cfg["seq_len"], 1.0)
+        pi_inv_freq = inv_freq / pi_scale
+        pi_hash = hashlib.sha256(pi_inv_freq.numpy().tobytes()).hexdigest()[:16]
+        print(f"  [PI] scale={pi_scale:.1f}  inv_freq hash={pi_hash}")
+
+        # Replace inv_freq in model
+        orig_inv = model.blocks[0].attn.rope.inv_freq.clone()
+        model.blocks[0].attn.rope.inv_freq.copy_(pi_inv_freq)
+        model.blocks[0].attn.rope._build(max(eval_lengths) + 100)
+
+        # PPL eval with PI
+        pi_ppl = eval_model(model, val_data, eval_lengths, cfg["eval_chunks"])
+        pi_results["ppl"] = pi_ppl
+
+        # Passkey eval with PI
+        if tokenizer is not None:
+            print(f"  [PI] Passkey NLL-gap evaluation")
+            from eval_passkey_scratch import eval_passkey_nll_gap
+            pi_passkey = eval_passkey_nll_gap(
+                model, tokenizer, val_data,
+                lengths=[2048, 4096, 8192],
+                depths=[0.10, 0.25, 0.50, 0.75, 0.90],
+                num_trials=10,
+            )
+            pi_results["passkey"] = pi_passkey
+
+        # Restore original inv_freq
+        model.blocks[0].attn.rope.inv_freq.copy_(orig_inv)
+        model.blocks[0].attn.rope._build(cfg["max_position_embeddings"])
 
     # Cleanup model to free memory
     del model
@@ -592,7 +969,7 @@ def run_single(
 
     result = RunResult(
         run_id=run_id,
-        tau=tau,
+        tau=final_tau,
         seed=seed,
         tier=tier,
         base=base,
@@ -602,7 +979,7 @@ def run_single(
         train_time_sec=round(train_time, 1),
         eval_time_sec=round(eval_time, 1),
     )
-    return result
+    return result, passkey_results, pi_results
 
 
 # ---------------------------------------------------------------------------
@@ -617,10 +994,21 @@ def main() -> None:
     parser.add_argument("--base", type=float, default=500000.0,
                         help="RoPE base (500000=Llama-3, 10000=classic)")
     parser.add_argument("--work_dir", type=str, default="")
+    parser.add_argument("--dataset", type=str, default="fineweb-edu",
+                        choices=["fineweb-edu", "tinystories"],
+                        help="Training data source")
+    parser.add_argument("--eval_16k", action="store_true",
+                        help="Include 16384 in eval lengths (may OOM)")
     parser.add_argument("--dry_run", action="store_true",
                         help="Build models & inv_freq only, skip training")
     parser.add_argument("--resume", action="store_true",
                         help="Skip runs that already have results")
+    parser.add_argument("--learnable", action="store_true",
+                        help="Use learnable τ (LearnableEVQRoPE)")
+    parser.add_argument("--tau_init", type=float, default=1.0,
+                        help="Initial τ for learnable mode (default: 1.0)")
+    parser.add_argument("--tau_lr_mult", type=float, default=10.0,
+                        help="LR multiplier for τ parameter (default: 10.0)")
     args = parser.parse_args()
 
     taus = [float(t) for t in args.taus.split(",")]
@@ -652,6 +1040,8 @@ def main() -> None:
                 cfg["batch_size"] = 16
             elif args.tier == "350m":
                 cfg["batch_size"] = 8
+            if args.eval_16k and 16384 not in cfg["eval_lengths"]:
+                cfg["eval_lengths"].append(16384)
             print(f"  [CUDA >=80GB] Adjusted {args.tier}: batch={cfg['batch_size']}, eval={cfg['eval_lengths']}")
         elif vram_gb < 40:
             if args.tier == "50m":
@@ -669,7 +1059,11 @@ def main() -> None:
     work_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"\n{'#'*60}")
-    print(f"  EVQ τ-SWEEP  |  tier={args.tier}  |  taus={taus}")
+    if args.learnable:
+        print(f"  EVQ LEARNABLE τ  |  tier={args.tier}  |  tau_init={args.tau_init}")
+        print(f"  lr_mult={args.tau_lr_mult}  seeds={seeds}")
+    else:
+        print(f"  EVQ τ-SWEEP  |  tier={args.tier}  |  taus={taus}")
     print(f"  device={DEVICE}  dtype={DTYPE}  base={args.base}")
     print(f"  work_dir={work_dir}")
     print(f"{'#'*60}\n")
@@ -678,9 +1072,17 @@ def main() -> None:
     from transformers import AutoTokenizer
     tok = AutoTokenizer.from_pretrained("EleutherAI/gpt-neox-20b")
 
+    # Passkey tokenizer sanity check
+    from eval_passkey_scratch import sanity_check_tokenizer
+    print("\n  [check] Passkey tokenizer sanity check:")
+    tok_ok = sanity_check_tokenizer(tok)
+    if not tok_ok:
+        print("  WARNING: tokenizer sanity check failed!")
+
     if not args.dry_run:
-        train_data = load_data(tok, cfg["train_tokens"], cfg["seq_len"])
-        val_data = load_val(tok)
+        train_data = load_data(tok, cfg["train_tokens"], cfg["seq_len"], args.dataset,
+                               cache_dir=str(work_dir))
+        val_data = load_val(tok, dataset=args.dataset, cache_dir=str(work_dir))
     else:
         train_data = torch.zeros(10, cfg["seq_len"], dtype=torch.long)
         val_data = torch.zeros(50000, dtype=torch.long)
@@ -700,6 +1102,7 @@ def main() -> None:
                 "base": args.base,
                 "taus": taus,
                 "seeds": seeds,
+                "dataset": args.dataset,
                 "started": time.strftime("%Y-%m-%d %H:%M:%S"),
             },
             "experiments": {},
@@ -708,25 +1111,53 @@ def main() -> None:
 
     # Run sweep
     t_total = time.time()
-    for seed in seeds:
-        for tau in taus:
+
+    if args.learnable:
+        # Learnable mode: single run per seed with given tau_init
+        run_configs = [(seed, None, True) for seed in seeds]
+    else:
+        # Fixed-τ sweep
+        run_configs = [(seed, tau, False) for seed in seeds for tau in taus]
+
+    for seed, tau, is_learnable in run_configs:
+        if is_learnable:
+            run_id = f"{args.tier}_learnable_init{args.tau_init:.2f}_seed{seed}"
+        else:
             run_id = f"{args.tier}_tau{tau:.2f}_seed{seed}"
 
-            if args.resume and run_id in all_results["experiments"]:
-                print(f"\n  [SKIP] {run_id} already completed")
-                continue
+        if args.resume and run_id in all_results["experiments"]:
+            print(f"\n  [SKIP] {run_id} already completed")
+            continue
 
-            result = run_single(
-                tau=tau, seed=seed, cfg=cfg, tier=args.tier, base=args.base,
-                train_data=train_data, val_data=val_data,
-                work_dir=work_dir, dry_run=args.dry_run,
-            )
-            all_results["experiments"][run_id] = asdict(result)
+        ret = run_single(
+            tau=tau if tau is not None else 0.0,
+            seed=seed, cfg=cfg, tier=args.tier, base=args.base,
+            train_data=train_data, val_data=val_data,
+            work_dir=work_dir, dry_run=args.dry_run,
+            tokenizer=tok, eval_16k=args.eval_16k,
+            learnable=is_learnable,
+            tau_init=args.tau_init,
+            tau_lr_multiplier=args.tau_lr_mult,
+        )
+        if isinstance(ret, tuple):
+            result, passkey_res, pi_res = ret
+        else:
+            result, passkey_res, pi_res = ret, {}, {}
+        all_results["experiments"][run_id] = asdict(result)
+        if passkey_res:
+            all_results["experiments"][run_id]["passkey"] = passkey_res
+        if pi_res:
+            pi_run_id = f"{args.tier}_PI_seed{seed}"
+            all_results["experiments"][pi_run_id] = {
+                "method": "PI_inference_time",
+                "source_run": run_id,
+                **pi_res,
+            }
 
-            # Checkpoint after each run
-            with open(results_path, "w") as f:
-                json.dump(all_results, f, indent=2, ensure_ascii=False)
-            print(f"  [checkpoint] saved to {results_path}")
+        # Checkpoint after each run
+        with open(results_path, "w") as f:
+            json.dump(all_results, f, indent=2, ensure_ascii=False)
+        print(f"  [checkpoint] saved to {results_path}")
 
     # Waterbed analysis (compare each τ>0 against τ=0)
     for seed in seeds:
