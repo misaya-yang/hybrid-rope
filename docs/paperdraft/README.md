@@ -1,24 +1,23 @@
-# paperdraft/ 文件夹说明
+# EVQ-Cosh NeurIPS 2026 — 论文核心文档
 
-> **目标会议**: NeurIPS 2026
-> **论文标题**: "RoPE Scaling as a Variational Inverse Problem: Exact Frequency Allocation and the Waterbed Trade-off"
-> **截止日期**: ~2026年5月中旬
-
----
+> 本文件夹只放论文写作直接需要的文档。Prompt 在 `../prompts/`，历史文档在 `../archive/`。
 
 ## 文档清单
 
-| 文件 | 用途 | 优先级 |
-|------|------|--------|
-| **THEORY_IRONCLAD.md** | 理论体系的绝对权威参考，含推导链条、定理证明要点、审稿防御速查 | 🔴 最高 |
-| **PROJECT_LESSONS.md** | 项目决策记录和教训（尤其是 LoRA 弯路），含预算和时间线 | 🟡 高 |
-| **DAPE_REFERENCE.md** | NeurIPS 2024 中稿论文 DAPE 的模版参考，含对比分析 | 🟡 高 |
-| discussion_evq_cosh_analysis.md | Discussion Section 的详细分析和数学审查记录 | 🟢 参考 |
+| 文件 | 内容 | 读取顺序 |
+|------|------|---------|
+| `PROMPT_AI_HANDOFF.md` | 项目状态 + 数据路径 + 红线 | **第 1 个读** |
+| `CORE_THEORY.md` | 理论精简版（推导链 + 6 个核心理论点） | **第 2 个读** |
+| `EXPERIMENT_RESULTS_128TOK.md` | 128-tok paper-ready 结果表 | 写 Section 5 时读 |
+| `phase6_report.md` | Phase 6 完整实验报告 | 写 Section 5 时读 |
+| `phase7_report.md` | Phase 7 完整实验报告 | 写 Section 5 时读 |
+| `EXPERIMENT_REPORT_128TOK.md` | Phase 1-3 mini-sweep 详细报告 | 需要细节时读 |
+| `PAPER_ERROR_CORRECTIONS.md` | 论文 7 个已知错误 | 改论文前必读 |
+| `LATEX_SNIPPETS.md` | 可粘贴的 LaTeX 段落 | 写论文时参考 |
 
-## ⚠️ 致所有 AI 助手的核心指令
+## 其他文件夹
 
-1. **理论已验证**: 三大定理数学正确，推导完整。不要质疑 cosh 的来源或 τ 的物理意义
-2. **From-scratch 是正路**: 50M/125M/350M/500M from-scratch 训练是正确的实验范式
-3. **LoRA 不是 EVQ 的正确验证方式**: 但受控 LoRA 实验仍有价值（waterbed 验证）
-4. **编号注意**: 论文中的 Theorem 1/2 ≠ 知识库中的 Theorem 1/2/3。以论文 V5/V6 为准
-5. **不要使用知识库中的夸张措辞**: 如"绝对最优"、"趋于无穷"等，论文中已修正为审慎表述
+- `../prompts/` — Claude Code 实验计划（Phase 5-8）+ Gemini 理论提问
+- `../archive/` — 历史讨论、旧版文档、Gemini 回复原文
+- `../../data/evq_128tok_results/` — 全部实验 JSON 数据
+- `../../scripts/m4_evq_sweep/` — 训练 + 评估脚本

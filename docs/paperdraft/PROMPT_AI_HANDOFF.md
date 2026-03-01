@@ -1,89 +1,79 @@
-# AI Handoff Prompt: EVQ-Cosh NeurIPS 2026 论文
+# AI Handoff: EVQ-Cosh NeurIPS 2026
 
-> **用途**: 粘贴给任何 AI 助手（Claude Code / Claude / GPT / Gemini），让它快速进入项目上下文
 > **最后更新**: 2026-03-01
-> **使用方法**: 直接说"请读这个文件，然后开始工作"
+> **语言**: 全程中文
+> **理论参考**: `docs/CORE_THEORY.md`（写论文时必读）
 
 ---
 
-## 项目概述
+## 项目
 
-我们正在准备一篇 NeurIPS 2026 投稿：**"RoPE Scaling as a Variational Inverse Problem: Exact Frequency Allocation and the Waterbed Trade-off"**。
+NeurIPS 2026。方法 EVQ-Cosh：单参数 τ 控制 RoPE 频率分配，变分逆问题闭式最优解。
 
-核心贡献：证明 RoPE 频率分配是一个变分逆问题，推导出闭式最优解 EVQ-Cosh（由单参数 τ 控制），并证明 Waterbed 不等式约束了任何分配的性能边界。
+## 进度
 
-## 当前状态
+| Phase | 状态 | 结论 |
+|-------|------|------|
+| 1-3 | ✅ | 128-tok: EVQ τ=1.5 → -18.3% PPL@8K vs Geo |
+| 6 | ✅ | τ=0→5.0 单调下降无peak; YaRN全崩; 1024-tok τ*≈2.0; passkey EVQ>Geo |
+| 7 | ✅ | YaRN确认方法级不兼容; multi-seed CV<2.3%; τ lr不敏感; 无waterbed; 350M ext Geo≈EVQ |
+| **8** | **⏳** | 8x扩展比(512→4K): EVQ +2.9% vs Geo @16K, PI +205%, YaRN +94%。Hybrid/passkey待出 |
+| **8D** | **待做** | Scaling law 验证: L=256(τ*=4.0?), L=512(τ*=2.83?) |
+| **9** | **待做** | 1B Pro 6000: 4K pretrain → 32K ext, Geo/EVQ/Hybrid |
 
-### 已完成的实验 ✅
+## Phase 8 关键待看
 
-1. **128-Token PE Quality Test** (FineWeb-Edu, 125M):
-   - EVQ fixed τ=1.5 vs Geometric: **-18.3% PPL@8K**
-   - EVQ learnable (1 param) vs DAPE (32 params): **EVQ 赢 3-14%**
-   - Learnable τ 跨 3 seed 收敛到 **1.141 ± 0.003**
-   - 详细数据: `docs/paperdraft/EXPERIMENT_RESULTS_128TOK.md`
+1. **Hybrid EVQ (A7)** passkey 是否追上 Geometric
+2. **EVQ τ=2.5 (A6)** PPL 是否比 τ=1.5 好
+3. **8B 续训量消融** passkey 是否随续训量恢复
+4. **8D Scaling law**: τ*(256)=4.0? τ*(512)=2.83? → 验证 τ*=64/√L
 
-2. **TinyStories From-Scratch Scaling** (50M-350M):
-   - EVQ τ=1.5 vs Geometric @16K: -10.9% (50M), -18.9% (125M seed42)
-   - 数据: `results/paper_ready/evq_tau_sweep/evq_sweep_paper_table.csv`
+## 核心数据一览
 
-3. **LoRA Downstream Waterbed** (8B Llama-3, 7B Qwen-2.5):
-   - Retrieval +2.50, Multi-hop -2.69（方向完美复现 Waterbed 理论预测）
-   - 数据: `results/paper_ready/llama8b_fair_lora_suite_20260214/`
+**From-scratch 128-tok（PE-dominant）**:
+- τ=5.0: -35% PPL@8K (FW), -57% (TS), 无waterbed
+- Passkey: EVQ 55% vs Geo 48.5%
+- Learnable τ → 1.14±0.02, PPL@128 平坦度 1.3%
 
-### 已知问题 ⚠️
+**Context extension 350M 512→2K（4x）**:
+- PPL: EVQ ≈ Geo >> YaRN >> PI
+- Passkey: EVQ < Geo（Q/K alignment cost）
 
-1. **Algorithm 1 (D(Δ)→τ* 预测器) 失败**: 残差 35-49%，预测值无意义。降级为 Appendix 理论工具。
-2. **Learnable τ gap**: τ_learned=1.14 vs τ_sweep=1.5。训练目标 vs 外推目标不一致。
-3. **Softplus 死区**: τ_init < 0.1 时梯度消失。建议 init ≥ 0.5 或换 exp 参数化。
+**Context extension 350M 512→4K（8x, Phase 8 部分结果）**:
+- PPL@16K: Geo 83.3, EVQ τ=1.5 85.7(+2.9%), PI 254.4, YaRN 161.9
 
-### 待完成实验 ⬜
+## 文件路径
 
-见下方 `PROMPT_NEXT_EXPERIMENTS.md` 部分。
+**核心文档**:
+- `docs/CORE_THEORY.md` — 理论精简版（写论文必读）
+- `docs/paperdraft/PAPER_ERROR_CORRECTIONS.md` — 论文 7 个已知错误
 
-## 文件导航
+**实验报告**:
+- `docs/paperdraft/phase6_report.md` / `phase7_report.md`
 
-**写论文时按顺序读这些文件：**
+**实验计划**（在 `docs/prompts/`）:
+- `docs/prompts/PROMPT_PHASE8_EXTENDED_RATIO.md`（8A-8D，含 scaling law 验证）
+- `docs/prompts/PROMPT_PHASE9_1B_PRO6000.md`（1B 终极验证，待 Phase 8 完成后启动）
 
-1. `docs/paperdraft/THEORY_IRONCLAD.md` — 理论权威参考
-2. `docs/paperdraft/EXPERIMENT_RESULTS_128TOK.md` — 128-tok 实验数据
-3. `docs/paperdraft/LATEX_SNIPPETS.md` — 可直接粘贴的 LaTeX 段落
-4. `docs/paperdraft/FINAL_ACTION_PLAN.md` — 行动方案 v4
-5. `docs/paperdraft/PAPER_FILE_INDEX.md` — 全部文件总索引
+**数据 JSON**:
+- `data/evq_128tok_results/results_phase6.json`
+- `data/evq_128tok_results/results_phase7.json`
+- Phase 8: `/root/autodl-tmp/evq_phase8/results_phase8.json`（待生成）
+- Phase 9: `/root/autodl-tmp/evq_phase9/results_phase9.json`（待生成）
 
-**做实验时读：**
+**代码**:
+- `rope/learnable_evq.py` — EVQ 核心实现
+- `scripts/m4_evq_sweep/run_evq_sweep.py` — 训练 pipeline
+- `scripts/m4_evq_sweep/phase7f_context_ext.py` — context extension
 
-6. `docs/paperdraft/EXPERIMENT_AUDIT_V4.md` — 实验设计审核
-7. `docs/paperdraft/LEARNABLE_TAU_DESIGN.md` — Learnable τ 设计+结果
-8. `rope/learnable_evq.py` — 核心实现代码
-9. `scripts/m4_evq_sweep/run_evq_sweep.py` — 训练 pipeline
+**论文**: `submission/paper/hybrid_rope_neurips.tex`（有 7 个已知错误，暂不更新）
 
-**论文 LaTeX 源文件：**
+## 红线
 
-10. `submission/paper/hybrid_rope_neurips.tex` — 当前版本
-
-## 论文叙事 (v4)
-
-```
-Theory → ODE → cosh 族（N/2 维压缩到 1D）
-    → 在 PE-dominant regime 中 learnable τ 收敛（1.141 ± 0.003）
-    → EVQ (1 param) 击败 DAPE (32 params)
-    → 跨协议/跨数据集 τ=1.5 稳定
-    → Waterbed 不等式：理论预测 + 实验验证
-```
-
-核心卖点：**理论导出的 1 参数方法优于无理论的 32 参数方法。**
-
-## ⚠️ 致 AI 助手的警告
-
-请勿犯以下错误（本项目历史上曾出现过）：
-
-1. ❌ "cosh 是 ansatz/假设" → 是 ODE 的精确齐次解
-2. ❌ "Algorithm 1 能可靠预测 τ" → 不能，残差 35-49%
-3. ❌ "Learnable τ 收敛到 sweep 最优" → 收敛到 1.14，sweep 最优是 1.5
-4. ❌ "τ→0 退化定理没价值" → 它是统一性声明
-5. ❌ "Waterbed 说明 EVQ 没用" → Waterbed 是可检验预测，不是否定
-6. ❌ "三重验证成立" → Algorithm 1 失败，只有二重（sweep ≈ learnable 方向）
-
----
-
-*Handoff 创建: 2026-03-01*
+1. 全程中文
+2. 不写 LLaMA-3 实验（协议问题）
+3. τ*=1.5 不是 universal default（regime-dependent）
+4. Algorithm 1 不可用（残差 35-49%）
+5. Qwen 用的 anchored_sigmoid 不是 EVQ
+6. LongBench 是 21 tasks 不是 6
+7. 不擅自更新论文 LaTeX
