@@ -227,16 +227,92 @@ Mild waterbed effect at short training lengths (up to 5%), compared to essential
 | 8D Scaling law | τ*>5 at L=256, τ*>4 at L=512; R²=0.76 | Scaling law valid only for L≥1024 |
 | 8E EVQ τ=1.0 | Best from-scratch passkey (72%); Hybrid τ=1.0 PK@1K=93% | τ controls PPL-passkey tradeoff |
 
-## Narrative for Paper
+---
 
-The key finding from Phase 8 is that EVQ's advantage depends on the **training paradigm**:
+## 8F: Multi-Seed Statistical Verification
 
-1. **From-scratch training**: EVQ provides clear PPL benefits (especially at long extrapolation) but at the cost of passkey retrieval degradation at high τ. **The τ parameter controls a PPL-vs-passkey tradeoff**: τ=1.0 matches Geometric passkey while retaining some extrapolation benefit; τ=2.0 maximizes extrapolation at the cost of passkey.
+**Goal**: Verify 8E headline results (EVQ τ=1.0 PK > Geo, Hybrid dual-win) with 4 seeds.
 
-2. **Context extension**: Geometric RoPE is remarkably robust. Even at 8x expansion (512→4K), PPL@16K=83.3 with no collapse. EVQ and Hybrid EVQ match but don't substantially beat Geometric. The pretrained Q/K alignment makes frequency reallocation counterproductive.
+**Config**: Same as 8C/8E — 350M, from-scratch 4K, 50M tokens, lr=6e-4. Seeds: 42 (reused from 8C/8E), 137, 256, 314.
 
-3. **Hybrid EVQ**: A promising middle ground — better PPL than Geometric at long extrapolation in extension settings, with partially recovered passkey. In from-scratch, Hybrid τ=1.0 achieves PK@1K=93% (best overall) with competitive PPL.
+### PPL@16K by Seed
 
-4. **Scaling law**: The conjecture τ*=C/√L fits the longer-L data (L≥1024) but for short L the PPL improvement is monotonically increasing with τ without peaking. Forced-origin fit gives C=67.84 (predicted 64), R²=0.76.
+| Seed | Geometric | EVQ τ=1.0 | Hybrid τ=1.0 |
+|------|-----------|-----------|-------------|
+| 42 | 175.4 | 180.1 | 172.6 |
+| 137 | 194.5 | 182.8 | 187.3 |
+| 256 | 162.7 | 194.9 | 177.2 |
+| 314 | 170.3 | 217.7 | 170.7 |
+| **Mean** | **175.7** | **193.9** | **177.0** |
+| **Std** | **13.6** | **17.1** | **7.4** |
 
-5. **Practical recommendation**: For from-scratch training, EVQ τ=1.0 offers the best balanced profile (matching Geometric passkey while improving extrapolation PPL by −6% at 16K). For context extension, stick with Geometric RoPE.
+### Passkey Global by Seed
+
+| Seed | Geometric | EVQ τ=1.0 | Hybrid τ=1.0 |
+|------|-----------|-----------|-------------|
+| 42 | 69.0% | 72.0% | 70.5% |
+| 137 | 81.5% | 70.0% | 71.8% |
+| 256 | 72.3% | 71.5% | 70.3% |
+| 314 | 71.3% | 69.0% | 71.3% |
+| **Mean** | **73.5%** | **70.6%** | **70.9%** |
+| **Std** | **5.5%** | **1.4%** | **0.7%** |
+
+### Passkey by Length (Mean ± Std)
+
+| Length | Geometric | EVQ τ=1.0 | Hybrid τ=1.0 |
+|--------|-----------|-----------|-------------|
+| @1K | 91.0% ± 3.6% | 86.8% ± 1.5% | **93.5% ± 2.1%** |
+| @2K | 82.8% ± 3.6% | **85.0% ± 4.4%** | 80.8% ± 1.3% |
+| @4K | **64.5% ± 10.0%** | 56.3% ± 5.9% | 53.8% ± 2.9% |
+| @8K | 55.8% ± 7.4% | 54.5% ± 5.3% | 55.8% ± 1.9% |
+
+### Statistical Tests
+
+| Test | t-stat | p-value | Significant? |
+|------|--------|---------|-------------|
+| EVQ vs Geo PPL@16K (paired) | 1.36 | 0.266 | No |
+| EVQ vs Geo PK (paired) | −0.93 | 0.419 | No |
+| EVQ vs Geo PK (pooled χ²) | — | 0.076 | No |
+| Hybrid vs Geo PPL@16K (paired) | 0.27 | 0.808 | No |
+| Hybrid vs Geo PK (paired) | −1.02 | 0.381 | No |
+| Hybrid vs Geo PK (pooled χ²) | — | 0.114 | No |
+
+Cohen's h: EVQ vs Geo = −0.064, Hybrid vs Geo = −0.057 (negligible effect size).
+
+### Verdict: FAIL
+
+**The 8E headline does not survive multi-seed verification.**
+
+1. **EVQ τ=1.0 PK (70.6%) < Geo PK (73.5%)**: Direction reversed from seed 42. Only 1/4 seeds show EVQ > Geo. p=0.42, not significant.
+
+2. **Hybrid dual-win does not hold**: Hybrid PPL@16K (177.0) ≈ Geo (175.7), p=0.81. Hybrid PK (70.9%) < Geo (73.5%), p=0.38. Neither advantage is significant.
+
+3. **EVQ PPL@16K is WORSE**: 193.9 vs 175.7 (+10.3%). Seed 314 is an outlier (217.7) but even without it, EVQ averages worse.
+
+### Key Insights Despite the Fail
+
+1. **Hybrid has dramatically lower variance**: PPL@16K std=7.4 vs Geo 13.6 vs EVQ 17.1. PK std=0.7% vs Geo 5.5%. Hybrid is the most stable method across seeds.
+
+2. **Hybrid PK@1K = 93.5% consistently beats Geo PK@1K = 91.0%**: This is the one sub-metric where Hybrid shows consistent advantage (4/4 seeds), though the margin (2.5pp) is small.
+
+3. **PK@8K is indistinguishable**: All three methods converge to ~55-56% at 8K, confirming the 350M model capacity ceiling.
+
+4. **Geo has surprisingly high variance**: PK ranges from 69% to 81.5% (12.5pp range). This makes any 3pp claim from a single seed meaningless.
+
+5. **The "from-scratch EVQ passkey advantage" from Phase 6D (128-tok) does not transfer to 4K training**: At 128-tok, EVQ had clear advantage (55% vs 48.5%). At 4K, the advantage vanishes because the model has enough training context to develop strong attention patterns regardless of frequency allocation.
+
+---
+
+## Updated Narrative for Paper
+
+The key finding from Phase 8 is that EVQ's advantage depends on the **training paradigm** and **training length**:
+
+1. **Short training (128-tok, PE-dominant)**: EVQ provides massive PPL improvements (up to −35% at 8K) and better passkey (+7pp), both statistically significant across seeds. This is EVQ's strongest regime.
+
+2. **Long training (4K, from-scratch)**: **No significant difference between EVQ/Hybrid and Geometric** in either PPL@16K or passkey (p > 0.05 for all comparisons). The model's learned attention patterns dominate over frequency allocation at this training length. Hybrid shows the lowest variance.
+
+3. **Context extension**: Geometric RoPE is robust at 8× expansion. EVQ/Hybrid match but don't beat Geometric. PI and YaRN collapse.
+
+4. **Scaling law**: τ*(L) ≈ 68/√L for L ≥ 1024, R²=0.76.
+
+5. **Practical recommendation**: EVQ is most valuable for **short-context pretraining** where PE quality dominates. For long-context training (≥ 4K), Geometric RoPE is sufficient; Hybrid EVQ is a reasonable alternative offering lower variance across seeds.

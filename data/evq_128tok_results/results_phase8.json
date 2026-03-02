@@ -1204,6 +1204,818 @@
         },
         "train_time_sec": 1550.8
       }
+    },
+    "8F_multi_seed_verification": {
+      "purpose": "Statistical verification of 8E headline results",
+      "model": "350M (head_dim=64)",
+      "train_config": "from-scratch 4K, 50M tokens, lr=6e-4",
+      "seeds": [
+        42,
+        137,
+        256,
+        314
+      ],
+      "per_seed_results": {
+        "seed_42": {
+          "geo": {
+            "ppl": {
+              "512": 90.284,
+              "1024": 88.171,
+              "2048": 90.098,
+              "4096": 91.063,
+              "8192": 115.56,
+              "16384": 175.437
+            },
+            "passkey_global": {
+              "total_trials": 400,
+              "mean_nll_gap": 0.1814,
+              "retrieval_rate": 0.69,
+              "ar_exact_match_rate": 0.0
+            },
+            "passkey_summary": {
+              "L=1024_d=0.5": {
+                "mean_nll_gap": 0.3587,
+                "retrieval_rate": 0.87,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=2048_d=0.5": {
+                "mean_nll_gap": 0.3069,
+                "retrieval_rate": 0.8,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=4096_d=0.5": {
+                "mean_nll_gap": 0.0722,
+                "retrieval_rate": 0.54,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=8192_d=0.5": {
+                "mean_nll_gap": -0.0123,
+                "retrieval_rate": 0.55,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              }
+            }
+          },
+          "evq1.0": {
+            "ppl": {
+              "512": 93.135,
+              "1024": 89.472,
+              "2048": 92.761,
+              "4096": 92.792,
+              "8192": 120.296,
+              "16384": 180.081
+            },
+            "passkey_global": {
+              "total_trials": 400,
+              "mean_nll_gap": 0.2521,
+              "retrieval_rate": 0.72,
+              "ar_exact_match_rate": 0.0
+            },
+            "passkey_summary": {
+              "L=1024_d=0.5": {
+                "mean_nll_gap": 0.4622,
+                "retrieval_rate": 0.88,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=2048_d=0.5": {
+                "mean_nll_gap": 0.3905,
+                "retrieval_rate": 0.83,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=4096_d=0.5": {
+                "mean_nll_gap": 0.1001,
+                "retrieval_rate": 0.57,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=8192_d=0.5": {
+                "mean_nll_gap": 0.0557,
+                "retrieval_rate": 0.6,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              }
+            }
+          },
+          "hybrid1.0": {
+            "ppl": {
+              "512": 92.151,
+              "1024": 90.601,
+              "2048": 91.885,
+              "4096": 92.995,
+              "8192": 117.272,
+              "16384": 172.609
+            },
+            "passkey_global": {
+              "total_trials": 400,
+              "mean_nll_gap": 0.2195,
+              "retrieval_rate": 0.705,
+              "ar_exact_match_rate": 0.0
+            },
+            "passkey_summary": {
+              "L=1024_d=0.5": {
+                "mean_nll_gap": 0.5024,
+                "retrieval_rate": 0.93,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=2048_d=0.5": {
+                "mean_nll_gap": 0.3032,
+                "retrieval_rate": 0.82,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=4096_d=0.5": {
+                "mean_nll_gap": 0.0039,
+                "retrieval_rate": 0.5,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=8192_d=0.5": {
+                "mean_nll_gap": 0.0687,
+                "retrieval_rate": 0.57,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              }
+            }
+          }
+        },
+        "seed_137": {
+          "geo": {
+            "ppl": {
+              "512": 87.919,
+              "1024": 86.417,
+              "2048": 86.229,
+              "4096": 87.893,
+              "8192": 115.132,
+              "16384": 194.515
+            },
+            "passkey_global": {
+              "total_trials": 400,
+              "mean_nll_gap": 0.2884,
+              "retrieval_rate": 0.815,
+              "ar_exact_match_rate": 0.0
+            },
+            "passkey_summary": {
+              "L=1024_d=0.5": {
+                "mean_nll_gap": 0.4904,
+                "retrieval_rate": 0.95,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=2048_d=0.5": {
+                "mean_nll_gap": 0.3875,
+                "retrieval_rate": 0.88,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=4096_d=0.5": {
+                "mean_nll_gap": 0.187,
+                "retrieval_rate": 0.78,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=8192_d=0.5": {
+                "mean_nll_gap": 0.0887,
+                "retrieval_rate": 0.65,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              }
+            }
+          },
+          "evq1.0": {
+            "ppl": {
+              "512": 90.387,
+              "1024": 88.006,
+              "2048": 88.226,
+              "4096": 89.797,
+              "8192": 122.11,
+              "16384": 182.802
+            },
+            "passkey_global": {
+              "total_trials": 400,
+              "mean_nll_gap": 0.2222,
+              "retrieval_rate": 0.7,
+              "ar_exact_match_rate": 0.0
+            },
+            "passkey_summary": {
+              "L=1024_d=0.5": {
+                "mean_nll_gap": 0.4268,
+                "retrieval_rate": 0.86,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=2048_d=0.5": {
+                "mean_nll_gap": 0.2883,
+                "retrieval_rate": 0.8,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=4096_d=0.5": {
+                "mean_nll_gap": 0.1672,
+                "retrieval_rate": 0.64,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=8192_d=0.5": {
+                "mean_nll_gap": 0.0063,
+                "retrieval_rate": 0.5,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              }
+            }
+          },
+          "hybrid1.0": {
+            "ppl": {
+              "512": 90.58,
+              "1024": 87.457,
+              "2048": 87.954,
+              "4096": 89.334,
+              "8192": 118.03,
+              "16384": 187.3
+            },
+            "passkey_global": {
+              "total_trials": 400,
+              "mean_nll_gap": 0.2326,
+              "retrieval_rate": 0.7175,
+              "ar_exact_match_rate": 0.0
+            },
+            "passkey_summary": {
+              "L=1024_d=0.5": {
+                "mean_nll_gap": 0.4393,
+                "retrieval_rate": 0.96,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=2048_d=0.5": {
+                "mean_nll_gap": 0.3374,
+                "retrieval_rate": 0.79,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=4096_d=0.5": {
+                "mean_nll_gap": 0.0874,
+                "retrieval_rate": 0.56,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=8192_d=0.5": {
+                "mean_nll_gap": 0.0664,
+                "retrieval_rate": 0.56,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              }
+            }
+          }
+        },
+        "seed_256": {
+          "geo": {
+            "ppl": {
+              "512": 89.458,
+              "1024": 84.675,
+              "2048": 85.331,
+              "4096": 86.561,
+              "8192": 107.162,
+              "16384": 162.664
+            },
+            "passkey_global": {
+              "total_trials": 400,
+              "mean_nll_gap": 0.1898,
+              "retrieval_rate": 0.7225,
+              "ar_exact_match_rate": 0.0
+            },
+            "passkey_summary": {
+              "L=1024_d=0.5": {
+                "mean_nll_gap": 0.3253,
+                "retrieval_rate": 0.89,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=2048_d=0.5": {
+                "mean_nll_gap": 0.2574,
+                "retrieval_rate": 0.81,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=4096_d=0.5": {
+                "mean_nll_gap": 0.1126,
+                "retrieval_rate": 0.63,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=8192_d=0.5": {
+                "mean_nll_gap": 0.0638,
+                "retrieval_rate": 0.56,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              }
+            }
+          },
+          "evq1.0": {
+            "ppl": {
+              "512": 91.341,
+              "1024": 87.287,
+              "2048": 88.18,
+              "4096": 90.332,
+              "8192": 122.172,
+              "16384": 194.889
+            },
+            "passkey_global": {
+              "total_trials": 400,
+              "mean_nll_gap": 0.1617,
+              "retrieval_rate": 0.715,
+              "ar_exact_match_rate": 0.0
+            },
+            "passkey_summary": {
+              "L=1024_d=0.5": {
+                "mean_nll_gap": 0.283,
+                "retrieval_rate": 0.88,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=2048_d=0.5": {
+                "mean_nll_gap": 0.31,
+                "retrieval_rate": 0.9,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=4096_d=0.5": {
+                "mean_nll_gap": 0.0366,
+                "retrieval_rate": 0.5,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=8192_d=0.5": {
+                "mean_nll_gap": 0.0173,
+                "retrieval_rate": 0.58,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              }
+            }
+          },
+          "hybrid1.0": {
+            "ppl": {
+              "512": 89.51,
+              "1024": 85.15,
+              "2048": 85.907,
+              "4096": 87.482,
+              "8192": 113.815,
+              "16384": 177.244
+            },
+            "passkey_global": {
+              "total_trials": 400,
+              "mean_nll_gap": 0.2003,
+              "retrieval_rate": 0.7025,
+              "ar_exact_match_rate": 0.0
+            },
+            "passkey_summary": {
+              "L=1024_d=0.5": {
+                "mean_nll_gap": 0.3856,
+                "retrieval_rate": 0.91,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=2048_d=0.5": {
+                "mean_nll_gap": 0.3106,
+                "retrieval_rate": 0.81,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=4096_d=0.5": {
+                "mean_nll_gap": 0.0953,
+                "retrieval_rate": 0.56,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=8192_d=0.5": {
+                "mean_nll_gap": 0.0097,
+                "retrieval_rate": 0.53,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              }
+            }
+          }
+        },
+        "seed_314": {
+          "geo": {
+            "ppl": {
+              "512": 90.488,
+              "1024": 87.825,
+              "2048": 88.728,
+              "4096": 89.055,
+              "8192": 113.749,
+              "16384": 170.281
+            },
+            "passkey_global": {
+              "total_trials": 400,
+              "mean_nll_gap": 0.2545,
+              "retrieval_rate": 0.7125,
+              "ar_exact_match_rate": 0.0
+            },
+            "passkey_summary": {
+              "L=1024_d=0.5": {
+                "mean_nll_gap": 0.5125,
+                "retrieval_rate": 0.93,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=2048_d=0.5": {
+                "mean_nll_gap": 0.3538,
+                "retrieval_rate": 0.82,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=4096_d=0.5": {
+                "mean_nll_gap": 0.1361,
+                "retrieval_rate": 0.63,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=8192_d=0.5": {
+                "mean_nll_gap": 0.0155,
+                "retrieval_rate": 0.47,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              }
+            }
+          },
+          "evq1.0": {
+            "ppl": {
+              "512": 91.661,
+              "1024": 88.369,
+              "2048": 90.148,
+              "4096": 91.307,
+              "8192": 127.815,
+              "16384": 217.66
+            },
+            "passkey_global": {
+              "total_trials": 400,
+              "mean_nll_gap": 0.1859,
+              "retrieval_rate": 0.69,
+              "ar_exact_match_rate": 0.0
+            },
+            "passkey_summary": {
+              "L=1024_d=0.5": {
+                "mean_nll_gap": 0.3576,
+                "retrieval_rate": 0.85,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=2048_d=0.5": {
+                "mean_nll_gap": 0.3128,
+                "retrieval_rate": 0.87,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=4096_d=0.5": {
+                "mean_nll_gap": 0.047,
+                "retrieval_rate": 0.54,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=8192_d=0.5": {
+                "mean_nll_gap": 0.0261,
+                "retrieval_rate": 0.5,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              }
+            }
+          },
+          "hybrid1.0": {
+            "ppl": {
+              "512": 89.88,
+              "1024": 88.641,
+              "2048": 89.498,
+              "4096": 91.035,
+              "8192": 119.235,
+              "16384": 170.747
+            },
+            "passkey_global": {
+              "total_trials": 400,
+              "mean_nll_gap": 0.2092,
+              "retrieval_rate": 0.7125,
+              "ar_exact_match_rate": 0.0
+            },
+            "passkey_summary": {
+              "L=1024_d=0.5": {
+                "mean_nll_gap": 0.4726,
+                "retrieval_rate": 0.94,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=2048_d=0.5": {
+                "mean_nll_gap": 0.2666,
+                "retrieval_rate": 0.81,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=4096_d=0.5": {
+                "mean_nll_gap": 0.0435,
+                "retrieval_rate": 0.53,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              },
+              "L=8192_d=0.5": {
+                "mean_nll_gap": 0.0541,
+                "retrieval_rate": 0.57,
+                "ar_exact_match_rate": 0.0,
+                "trials": 100
+              }
+            }
+          }
+        }
+      },
+      "aggregated": {
+        "geo": {
+          "ppl_16k_mean": 175.72,
+          "ppl_16k_std": 13.58,
+          "pk_global_mean": 0.735,
+          "pk_global_std": 0.055,
+          "ppl_all": {
+            "512": {
+              "mean": 89.54,
+              "std": 1.17
+            },
+            "1024": {
+              "mean": 86.77,
+              "std": 1.59
+            },
+            "2048": {
+              "mean": 87.6,
+              "std": 2.2
+            },
+            "4096": {
+              "mean": 88.64,
+              "std": 1.91
+            },
+            "8192": {
+              "mean": 112.9,
+              "std": 3.9
+            },
+            "16384": {
+              "mean": 175.72,
+              "std": 13.58
+            }
+          },
+          "pk_by_length": {
+            "1024": {
+              "values": [
+                0.87,
+                0.95,
+                0.89,
+                0.93
+              ],
+              "mean": 0.91,
+              "std": 0.0365
+            },
+            "2048": {
+              "values": [
+                0.8,
+                0.88,
+                0.81,
+                0.82
+              ],
+              "mean": 0.8275,
+              "std": 0.0359
+            },
+            "4096": {
+              "values": [
+                0.54,
+                0.78,
+                0.63,
+                0.63
+              ],
+              "mean": 0.645,
+              "std": 0.0995
+            },
+            "8192": {
+              "values": [
+                0.55,
+                0.65,
+                0.56,
+                0.47
+              ],
+              "mean": 0.5575,
+              "std": 0.0737
+            }
+          }
+        },
+        "evq1.0": {
+          "ppl_16k_mean": 193.86,
+          "ppl_16k_std": 17.12,
+          "pk_global_mean": 0.7062,
+          "pk_global_std": 0.0138,
+          "ppl_all": {
+            "512": {
+              "mean": 91.63,
+              "std": 1.14
+            },
+            "1024": {
+              "mean": 88.28,
+              "std": 0.91
+            },
+            "2048": {
+              "mean": 89.83,
+              "std": 2.16
+            },
+            "4096": {
+              "mean": 91.06,
+              "std": 1.31
+            },
+            "8192": {
+              "mean": 123.1,
+              "std": 3.26
+            },
+            "16384": {
+              "mean": 193.86,
+              "std": 17.12
+            }
+          },
+          "pk_by_length": {
+            "1024": {
+              "values": [
+                0.88,
+                0.86,
+                0.88,
+                0.85
+              ],
+              "mean": 0.8675,
+              "std": 0.015
+            },
+            "2048": {
+              "values": [
+                0.83,
+                0.8,
+                0.9,
+                0.87
+              ],
+              "mean": 0.85,
+              "std": 0.044
+            },
+            "4096": {
+              "values": [
+                0.57,
+                0.64,
+                0.5,
+                0.54
+              ],
+              "mean": 0.5625,
+              "std": 0.0591
+            },
+            "8192": {
+              "values": [
+                0.6,
+                0.5,
+                0.58,
+                0.5
+              ],
+              "mean": 0.545,
+              "std": 0.0526
+            }
+          }
+        },
+        "hybrid1.0": {
+          "ppl_16k_mean": 176.98,
+          "ppl_16k_std": 7.41,
+          "pk_global_mean": 0.7094,
+          "pk_global_std": 0.0069,
+          "ppl_all": {
+            "512": {
+              "mean": 90.53,
+              "std": 1.17
+            },
+            "1024": {
+              "mean": 87.96,
+              "std": 2.28
+            },
+            "2048": {
+              "mean": 88.81,
+              "std": 2.52
+            },
+            "4096": {
+              "mean": 90.21,
+              "std": 2.36
+            },
+            "8192": {
+              "mean": 117.09,
+              "std": 2.33
+            },
+            "16384": {
+              "mean": 176.98,
+              "std": 7.41
+            }
+          },
+          "pk_by_length": {
+            "1024": {
+              "values": [
+                0.93,
+                0.96,
+                0.91,
+                0.94
+              ],
+              "mean": 0.935,
+              "std": 0.0208
+            },
+            "2048": {
+              "values": [
+                0.82,
+                0.79,
+                0.81,
+                0.81
+              ],
+              "mean": 0.8075,
+              "std": 0.0126
+            },
+            "4096": {
+              "values": [
+                0.5,
+                0.56,
+                0.56,
+                0.53
+              ],
+              "mean": 0.5375,
+              "std": 0.0287
+            },
+            "8192": {
+              "values": [
+                0.57,
+                0.56,
+                0.53,
+                0.57
+              ],
+              "mean": 0.5575,
+              "std": 0.0189
+            }
+          }
+        }
+      },
+      "statistical_tests": {
+        "evq1.0_vs_geo_ppl16k": {
+          "paired_diffs": [
+            4.64,
+            -11.71,
+            32.23,
+            47.38
+          ],
+          "mean_diff": 18.13,
+          "t_stat": 1.3622,
+          "p_value": 0.266402
+        },
+        "evq1.0_vs_geo_pk": {
+          "paired_diffs": [
+            0.03,
+            -0.115,
+            -0.0075,
+            -0.0225
+          ],
+          "mean_diff": -0.0288,
+          "t_stat": -0.9335,
+          "p_value": 0.419405
+        },
+        "evq1.0_vs_geo_pk_pooled": {
+          "method_pooled_rate": 0.7062,
+          "geo_pooled_rate": 0.735,
+          "chi2": 3.1432,
+          "p_value_chi2": 0.076242,
+          "cohens_h": -0.0641,
+          "n_total": 1600
+        },
+        "hybrid1.0_vs_geo_ppl16k": {
+          "paired_diffs": [
+            -2.83,
+            -7.21,
+            14.58,
+            0.47
+          ],
+          "mean_diff": 1.25,
+          "t_stat": 0.2654,
+          "p_value": 0.80792
+        },
+        "hybrid1.0_vs_geo_pk": {
+          "paired_diffs": [
+            0.015,
+            -0.0975,
+            -0.02,
+            0.0
+          ],
+          "mean_diff": -0.0256,
+          "t_stat": -1.0247,
+          "p_value": 0.380923
+        },
+        "hybrid1.0_vs_geo_pk_pooled": {
+          "method_pooled_rate": 0.7094,
+          "geo_pooled_rate": 0.735,
+          "chi2": 2.4921,
+          "p_value_chi2": 0.114418,
+          "cohens_h": -0.0572,
+          "n_total": 1600
+        }
+      },
+      "verdict": "FAIL: EVQ PK (70.6%) \u2264 Geo PK (73.5%)"
     }
   }
 }

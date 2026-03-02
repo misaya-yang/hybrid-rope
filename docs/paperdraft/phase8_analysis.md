@@ -74,34 +74,44 @@ Geo @1K: 80→80%（已饱和）
 
 ---
 
-## 三、8C/8E From-Scratch 4K 对比 — Passkey 问题已解决 ✅
+## 三、8C/8E From-Scratch 4K 对比 — ~~Passkey 问题已解决~~ ⚠️ 8F 翻车
 
-### 完整 from-scratch 结果
+### 8E 单 seed 结果（seed=42 only）
 
 | Method | τ | PPL@16K | Passkey (global) | vs Geo |
 |--------|---|---------|------------------|--------|
 | C1 Geometric | — | 175.4 | 69.0% | baseline |
 | C2 EVQ | 2.0 | **164.4** (-6.3%) | 66.0% (-3pp) | PPL赢PK输 |
-| **E1 EVQ** | **1.0** | 180.1 (+2.7%) | **72.0%** (+3pp) | **PK赢!** |
-| **E2 Hybrid** | **1.0** | **172.6** (-1.6%) | **70.5%** (+1.5pp) | **双赢!** |
+| E1 EVQ | 1.0 | 180.1 (+2.7%) | 72.0% (+3pp) | 单seed PK赢 |
+| E2 Hybrid | 1.0 | 172.6 (-1.6%) | 70.5% (+1.5pp) | 单seed 双赢 |
 
-### 核心发现
+### 8F Multi-seed 验证（4 seeds: 42/137/256/314）— FAIL ❌
 
-1. **EVQ τ=1.0 passkey 72% > Geo 69%**: 用对 τ，EVQ passkey 就是比 Geo 好！8C 的 -3pp 完全是因为 τ=2.0 过大
-2. **Hybrid τ=1.0 两项全赢**: PPL 172.6 < 175.4 (-1.6%) 且 Passkey 70.5% > 69% (+1.5pp)。这是论文最佳推荐方案
-3. **τ 控制 PPL ↔ Passkey tradeoff**: τ=2.0 偏重低频(好PPL差PK)，τ=1.0 偏重高频(好PK差PPL)，Hybrid 两者兼得
-4. **Scaling law 指导选 τ**: τ*(4096)=1.0 恰好是 passkey 最优点，理论和实验吻合
+| Method | PPL@16K (mean±std) | PK Global (mean±std) | p-value (vs Geo) |
+|--------|-------------------|---------------------|------------------|
+| Geometric | **175.7 ± 13.6** | **73.5% ± 5.5%** | — |
+| EVQ τ=1.0 | 193.9 ± 17.1 | 70.6% ± 1.4% | PPL: 0.27, PK: 0.42 |
+| Hybrid τ=1.0 | 177.0 ± 7.4 | 70.9% ± 0.7% | PPL: 0.81, PK: 0.38 |
 
-### 完整证据链（已闭环）
+**8E 的 headline 完全是噪音**：
+1. EVQ PK 72% > Geo 69% 只在 seed=42，其他 3 个 seed 方向相反
+2. Hybrid 双赢只在 seed=42，多 seed 下 PPL ≈ Geo，PK < Geo
+3. Geo PK 方差极大（69%-81.5%），3pp 差异在噪音范围内
 
-| 设置 | EVQ vs Geo Passkey | τ | 解读 |
-|------|-------------------|---|------|
-| From-scratch 128-tok | **EVQ +6.5pp** ✅ | ~2.0 (≈最优) | PE-dominant, EVQ 赢 |
-| From-scratch 4K τ=2.0 | EVQ -3pp | 2.0 (过大) | τ 不对, 挤压高频 |
-| **From-scratch 4K τ=1.0** | **EVQ +3pp** ✅ | **1.0 (最优)** | **用对 τ 就赢** |
-| Extension 512→4K (8x) | EVQ -6.75pp | 1.5-2.0 | alignment cost + τ 偏大 |
+**唯一的正面发现**：
+- Hybrid PPL@16K 方差最低（std=7.4 vs Geo 13.6）
+- Hybrid PK@1K = 93.5% > Geo 91.0%（4/4 seeds 一致，+2.5pp）
+- PK@8K 三方法趋同（~55-56%），350M 能力天花板
 
-**结论**: EVQ passkey 劣势 = alignment cost + τ 选择不当。两个问题都有解决方案（Hybrid 解决 alignment，scaling law 指导 τ）。
+### 修正后的证据链
+
+| 设置 | EVQ vs Geo Passkey | 统计显著性 | 解读 |
+|------|-------------------|-----------|------|
+| From-scratch 128-tok | **EVQ +6.5pp** ✅ | Phase 6D 200 trials | PE-dominant, EVQ 赢 |
+| From-scratch 4K (4 seeds) | **EVQ -2.9pp** ❌ | p=0.42, n.s. | 无显著差异 |
+| Extension 512→4K (8x) | EVQ -6.75pp | 单 seed | alignment cost |
+
+**修正结论**: EVQ passkey 优势仅存在于**短序列 PE-dominant 训练**（128-tok）。4K 训练下，三方法无显著差异。
 
 ---
 

@@ -31,11 +31,12 @@ EVQ-Cosh RoPE provides a closed-form, single-parameter (τ) frequency allocation
 | EVQ (1 param) beats DAPE (32 params) | PPL@8K: 441 vs 455 (−3%), fixed τ=1.5: 420 vs 455 (−8%) | 0–3 |
 | τ converges deterministically | τ → 1.14 ± 0.003 across 3 seeds, 20× lr range | 0–3, 7C |
 | No waterbed effect | PPL@L_train varies < 2% across all τ | 6A, 7D |
-| τ* depends on training length | 128→>5.0, 1024→2.0, 2048→1.5, 4096→1.0 | 6E, 7F, 8D, 8E |
+| τ* depends on training length | 128→>5.0, 1024→2.0, 2048→1.5 | 6E, 7F, 8D |
 | YaRN catastrophic for from-scratch | PPL 2–8× worse than Geometric | 6B, 7A |
 | Scaling law τ*(L) ≈ 68/√L | R²=0.76, valid for L ≥ 1024 | 8D |
-| Hybrid EVQ: PPL + passkey dual win | PPL −1.6%, passkey +1.5pp vs Geo (from-scratch 4K) | 8E |
 | EVQ robust at 8× extension | PPL flat to 16K, PI/YaRN collapse | 8A |
+| **4K from-scratch: no significant diff** | **Geo ≈ EVQ ≈ Hybrid (p > 0.05 for all), 4 seeds** | **8F** |
+| Hybrid has lowest cross-seed variance | PPL std 7.4 vs Geo 13.6; PK std 0.7% vs Geo 5.5% | 8F |
 
 ---
 
@@ -82,6 +83,7 @@ EVQ-Cosh RoPE provides a closed-form, single-parameter (τ) frequency allocation
 | 8C | From-scratch 4K baseline | 50M | 4096 | 350M |
 | 8D | τ* scaling law (L=256, 512) | 50M | 256, 512 | 125M |
 | 8E | From-scratch 4K (τ=1.0, Hybrid) | 50M | 4096 | 350M |
+| 8F | Multi-seed verification (4 seeds) | 50M × 4 | 4096 | 350M |
 
 ---
 
@@ -430,6 +432,37 @@ Extension wins for PPL (pretrain+continue >> from-scratch). From-scratch wins fo
 
 Both D1 and D2 show monotonically improving PPL with no peak (same as L=128).
 
+### 6.7 Phase 8F: Multi-Seed Statistical Verification
+
+**Goal**: Verify 8E headlines with 4 seeds (42/137/256/314). Config identical to 8C/8E.
+
+**PPL@16K (4 seeds)**:
+
+| | Geometric | EVQ τ=1.0 | Hybrid τ=1.0 |
+|---|-----------|-----------|-------------|
+| Mean | **175.7** | 193.9 | 177.0 |
+| Std | 13.6 | 17.1 | **7.4** |
+
+**Passkey Global (4 seeds)**:
+
+| | Geometric | EVQ τ=1.0 | Hybrid τ=1.0 |
+|---|-----------|-----------|-------------|
+| Mean | **73.5%** | 70.6% | 70.9% |
+| Std | 5.5% | 1.4% | **0.7%** |
+
+**Passkey @1K (4 seeds)**:
+
+| | Geometric | EVQ τ=1.0 | Hybrid τ=1.0 |
+|---|-----------|-----------|-------------|
+| Mean | 91.0% | 86.8% | **93.5%** |
+| Std | 3.6% | 1.5% | **2.1%** |
+
+**Statistical tests**: All p > 0.05. No significant differences between any method pair for PPL or passkey. Cohen's h < 0.07 (negligible effect size).
+
+**VERDICT: FAIL** — The 8E single-seed headline (EVQ PK > Geo, Hybrid dual-win) does not survive multi-seed verification. EVQ PK (70.6%) is actually LOWER than Geo PK (73.5%) on average, though not significantly.
+
+**Key insight**: At 4K training length, all three methods are statistically indistinguishable. Hybrid shows the lowest variance across seeds (PPL std 7.4 vs Geo 13.6; PK std 0.7% vs Geo 5.5%).
+
 ---
 
 ## 7. Cross-Phase Synthesis
@@ -444,8 +477,8 @@ Both D1 and D2 show monotonically improving PPL with no peak (same as L=128).
 | 1024-tok, 125M, @8K | 309.2 | 241.5 (τ=2.0) | **−21.9%** | 6E |
 | 512→2K ext, 350M, @8K | 98.0 | 99.1 (τ=2.0) | +1.1% | 7F |
 | 512→4K ext, 350M, @16K | 83.3 | 84.7 (Hybrid) | +1.7% | 8A |
-| 4K scratch, 350M, @16K | 175.4 | 164.4 (τ=2.0) | **−6.3%** | 8C |
-| 4K scratch, 350M, @16K | 175.4 | 172.6 (Hybrid 1.0) | **−1.6%** | 8E |
+| 4K scratch, 350M, @16K (single seed) | 175.4 | 164.4 (τ=2.0) | **−6.3%** | 8C |
+| 4K scratch, 350M, @16K (4 seeds) | 175.7 ± 13.6 | 177.0 ± 7.4 (Hybrid) | +0.7% (n.s.) | 8F |
 
 ### 7.2 Master Passkey Comparison
 
@@ -454,10 +487,11 @@ Both D1 and D2 show monotonically improving PPL with no peak (same as L=128).
 | 128-tok, 125M (NLL-gap) | 48.5% | **56.0%** (+7.5pp) | 2.5 | 6D |
 | 512→2K ext, 350M | **90%** @1K | 82% @1K (−8pp) | 2.0 | 7F |
 | 512→4K ext, 350M | **82%** @1K | 74% @1K (−8pp) | Hybrid 2.0 | 8A |
-| 4K scratch, 350M | 87% @1K | **93%** @1K (+6pp) | Hybrid 1.0 | 8E |
-| 4K scratch, 350M (global) | 69.0% | **72.0%** (+3pp) | 1.0 | 8E |
+| 4K scratch, 350M @1K (single seed) | 87% @1K | **93%** @1K (+6pp) | Hybrid 1.0 | 8E |
+| 4K scratch, 350M @1K (4 seeds) | 91.0% @1K | **93.5%** @1K (+2.5pp) | Hybrid 1.0 | 8F |
+| 4K scratch, 350M global (4 seeds) | **73.5%** | 70.9% (−2.6pp, n.s.) | Hybrid 1.0 | 8F |
 
-**Pattern**: EVQ wins passkey in from-scratch settings; loses in extension settings (Q/K alignment cost).
+**Updated pattern**: EVQ wins passkey only in short-training from-scratch (128-tok). At 4K from-scratch, differences are not significant (p > 0.05). In extension, Geometric leads.
 
 ### 7.3 Baseline Comparison (All Methods)
 
@@ -523,10 +557,10 @@ For practitioners choosing τ:
 
 ### 9.1 From-Scratch Training
 
-1. **Best balanced profile**: **Hybrid EVQ τ=1.0** at 4K training length — PPL −1.6% AND passkey +1.5pp vs Geometric
-2. **Best extrapolation PPL**: EVQ τ=2.0 at 4K (PPL@16K −6.3% vs Geo) with modest passkey cost (−3pp)
-3. **τ selection**: Use scaling law τ* ≈ 68/√L for L ≥ 1024; use large τ (≥ 5) for L < 512
-4. **τ is free**: Zero in-distribution cost (< 2% PPL variation at training length)
+1. **Short context (≤ 512 tok)**: EVQ with high τ (≥ 5.0) provides massive extrapolation gains (−35% PPL@8K) with no in-distribution cost. This is EVQ's strongest regime.
+2. **Medium context (1K–2K tok)**: EVQ τ*(L) ≈ 68/√L gives significant improvements (−22% @8K for 1K training). Peaked τ* exists.
+3. **Long context (≥ 4K tok)**: **No significant advantage over Geometric** (Phase 8F). Hybrid EVQ τ=1.0 offers lower cross-seed variance but similar mean performance. Geometric is the safe default.
+4. **τ is free**: Zero in-distribution cost (< 2% PPL variation at training length, ≤ 5% for short L)
 
 ### 9.2 Context Extension
 
@@ -535,15 +569,15 @@ For practitioners choosing τ:
 3. **Avoid PI and YaRN** beyond 2× the training window (both collapse)
 4. **More continuation tokens help**: PPL improves continuously with data volume
 
-### 9.3 Method Selection Guide
+### 9.3 Method Selection Guide (Updated After 8F)
 
 | Scenario | Recommended Method | Why |
 |----------|-------------------|-----|
-| Short training (≤ 512 tok) | EVQ τ ≥ 5.0 | PE-dominant, max compression helps |
-| Medium training (1K–4K tok) | Hybrid EVQ τ*(L) | Balanced PPL + passkey |
-| Context extension (any ratio) | Geometric or Hybrid | Preserve Q/K alignment |
-| PPL-only optimization | EVQ τ = 2×τ*(L) | Higher τ = better extrapolation |
-| Passkey-critical | EVQ τ = τ*(L) or Hybrid | τ*(L) is passkey-optimal too |
+| Short training (≤ 512 tok) | EVQ τ ≥ 5.0 | PE-dominant, max compression, significant gains |
+| Medium training (1K–2K tok) | EVQ τ*(L) | Significant PPL improvement, peaked τ* |
+| Long training (≥ 4K tok) | Geometric or Hybrid | No significant difference (8F), Hybrid has lower variance |
+| Context extension (any ratio) | Geometric | Robust, preserves Q/K alignment |
+| Lowest variance desired | Hybrid EVQ τ=1.0 | PPL std 7.4 vs Geo 13.6 (8F) |
 
 ---
 
@@ -556,7 +590,7 @@ For practitioners choosing τ:
 | Algorithm 1 fails | Replaced by mini-sweep (3–5 points, 15 min) | 0–3 |
 | Softplus dead zone (init < 0.1) | Always init τ ≥ 0.5 | 0–3 |
 | Learnable τ ≠ sweep τ* | Fundamental: in-distribution PPL flat across τ | 6E, 7C |
-| EVQ passkey inferior? | Only in extension; from-scratch EVQ wins (τ=1.0: +3pp) | 8E |
+| EVQ passkey inferior? | From-scratch 128-tok: EVQ wins (+7pp). 4K: no significant diff (p>0.05) | 6D, 8F |
 | Scaling law R² low | Valid only for L ≥ 1024; short L has no peak | 8D |
 
 ### 10.2 Open Questions
@@ -586,14 +620,30 @@ For practitioners choosing τ:
 | 4.0 | 182.7 | — | — | — | — | — | 348.3 |
 | 5.0 | 182.0 | — | — | — | — | — | 333.7 |
 
-### A.2 From-Scratch 4K, 350M (Phase 8C/8E)
+### A.2 From-Scratch 4K, 350M, 4-Seed Mean ± Std (Phase 8F)
 
-| Method | PPL@512 | PPL@1K | PPL@2K | PPL@4K | PPL@8K | PPL@16K |
-|--------|---------|--------|--------|--------|--------|---------|
-| Geometric | — | — | — | 91.1 | 115.6 | 175.4 |
-| EVQ τ=2.0 | — | — | — | 93.1 | 113.9 | 164.4 |
-| EVQ τ=1.0 | — | — | — | 92.8 | 120.3 | 180.1 |
-| Hybrid τ=1.0 | — | — | — | 93.0 | 117.3 | 172.6 |
+| Method | PPL@4K | PPL@8K | PPL@16K | PK@1K | PK Global |
+|--------|--------|--------|---------|-------|-----------|
+| Geometric | 88.6 ± 1.9 | 112.9 ± 3.9 | 175.7 ± 13.6 | 91.0% ± 3.6% | 73.5% ± 5.5% |
+| EVQ τ=1.0 | 91.1 ± 1.3 | 123.1 ± 3.3 | 193.9 ± 17.1 | 86.8% ± 1.5% | 70.6% ± 1.4% |
+| Hybrid τ=1.0 | 90.2 ± 2.4 | 117.1 ± 2.3 | 177.0 ± 7.4 | 93.5% ± 2.1% | 70.9% ± 0.7% |
+
+### A.2b From-Scratch 4K, 350M, Per-Seed Detail (Phase 8C/8E/8F)
+
+| Method | Seed | PPL@4K | PPL@16K | PK@1K | PK Global |
+|--------|------|--------|---------|-------|-----------|
+| Geometric | 42 | 91.1 | 175.4 | 87% | 69.0% |
+| Geometric | 137 | 87.9 | 194.5 | 95% | 81.5% |
+| Geometric | 256 | 86.6 | 162.7 | 89% | 72.3% |
+| Geometric | 314 | 89.1 | 170.3 | 93% | 71.3% |
+| EVQ τ=1.0 | 42 | 92.8 | 180.1 | 88% | 72.0% |
+| EVQ τ=1.0 | 137 | 89.8 | 182.8 | 86% | 70.0% |
+| EVQ τ=1.0 | 256 | 90.3 | 194.9 | 88% | 71.5% |
+| EVQ τ=1.0 | 314 | 91.3 | 217.7 | 85% | 69.0% |
+| Hybrid τ=1.0 | 42 | 93.0 | 172.6 | 93% | 70.5% |
+| Hybrid τ=1.0 | 137 | 89.3 | 187.3 | 96% | 71.8% |
+| Hybrid τ=1.0 | 256 | 87.5 | 177.2 | 91% | 70.3% |
+| Hybrid τ=1.0 | 314 | 91.0 | 170.7 | 94% | 71.3% |
 
 ### A.3 512→4K Extension, 350M (Phase 8A)
 
@@ -634,4 +684,4 @@ For practitioners choosing τ:
 
 ---
 
-*Report generated: 2026-03-02. Covers Phase 0–8 (125M/350M, 128–4096 tok, FineWeb-Edu/TinyStories).*
+*Report generated: 2026-03-02 (updated with 8F multi-seed). Covers Phase 0–8F (125M/350M, 128–4096 tok, FineWeb-Edu/TinyStories).*
