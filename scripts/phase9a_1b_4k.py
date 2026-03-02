@@ -60,8 +60,8 @@ CFG_1B = dict(
     seq_len=SEQ_LEN,
     train_tokens=TOKENS,
     lr=3e-4,
-    batch_size=8,       # effective (no grad accum needed for L=4096 on 96GB)
-    micro_batch_size=8,
+    batch_size=4,       # 4K safety: halve batch to reduce VRAM
+    micro_batch_size=4,
     grad_accum=1,
 )
 

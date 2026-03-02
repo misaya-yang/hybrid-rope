@@ -667,7 +667,7 @@ def eval_model(
                 losses.append(loss.item())
             except RuntimeError as e:
                 if "out of memory" in str(e).lower():
-                    print(f"    L={L}: OOM on chunk {i}, stopping this length")
+                    print(f"    L={L}: OOM on offset {offset}, stopping this length")
                     # Free memory
                     del chunk
                     if DEVICE == "cuda":
