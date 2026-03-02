@@ -2,7 +2,9 @@
 """
 Phase 9F: 750M, L=2048, base=500K, 1B tokens, seed=42.
 Runs: Geometric, Hybrid tau=1.5 r=16.
-Adds automatic checkpoint evaluation at 25/50/75/100% of each run.
+Adds automatic checkpoint evaluation with per-run schedule:
+  - Geo:    25/50/75/100
+  - Hybrid: 50/75/100 (skip 25% to save time)
 RULER-style multi-needle checkpoint eval only at 75% and 100%.
 """
 
@@ -46,7 +48,8 @@ MN_NEEDLES = 5
 MN_TRIALS = 8
 
 # checkpoint eval config
-CKPT_FRACTIONS = [0.25, 0.50, 0.75, 1.00]
+CKPT_FRACTIONS_GEO = [0.25, 0.50, 0.75, 1.00]
+CKPT_FRACTIONS_HYBRID = [0.50, 0.75, 1.00]
 CKPT_EVAL_CHUNKS = 4
 CKPT_PK_TRIALS = 20
 CKPT_MN_FRACTIONS = [0.75, 1.00]
@@ -159,7 +162,7 @@ def train_model_ga(model, data, cfg, seed=42, on_step_end=None):
     return model, elapsed
 
 
-def run_single(tag, inv_freq, cfg, train_data, val_data, filler, tok):
+def run_single(tag, inv_freq, cfg, train_data, val_data, filler, tok, ckpt_fractions):
     run_dir = WORK / f"seed{SEED}" / tag
     ckpt_dir = run_dir / "checkpoints"
     result_file = run_dir / "result.json"
@@ -179,7 +182,7 @@ def run_single(tag, inv_freq, cfg, train_data, val_data, filler, tok):
     model = GPT(cfg, inv_freq).to(DEVICE)
 
     total_steps = len(train_data) // (cfg.get("micro_batch_size", cfg["batch_size"]) * cfg.get("grad_accum", 1))
-    checkpoint_steps = sorted(set(max(1, min(total_steps, int(total_steps * f))) for f in CKPT_FRACTIONS))
+    checkpoint_steps = sorted(set(max(1, min(total_steps, int(total_steps * f))) for f in ckpt_fractions))
     ruler_checkpoint_steps = sorted(set(max(1, min(total_steps, int(total_steps * f))) for f in CKPT_MN_FRACTIONS))
     ckpt_records = []
     ckpt_done = set()
@@ -266,7 +269,7 @@ def run_single(tag, inv_freq, cfg, train_data, val_data, filler, tok):
         multi_needle_global=mn.get("global", {}),
         multi_needle_by_length=mn.get("by_length", {}),
         checkpoints=ckpt_records,
-        checkpoint_fractions=CKPT_FRACTIONS,
+        checkpoint_fractions=ckpt_fractions,
         train_sec=round(train_elapsed, 1),
         config=dict(
             passkey_mix_ratio=PASSKEY_MIX_RATIO,
@@ -287,7 +290,7 @@ def run_single(tag, inv_freq, cfg, train_data, val_data, filler, tok):
 def main():
     print("#" * 70)
     print("  Phase 9F: 750M, L=2048, Geo vs Hybrid(tau=1.5,r=16), 1B tokens")
-    print("  Checkpoint eval: 25/50/75/100 (RULER only at 75/100)")
+    print("  Checkpoint eval: Geo=25/50/75/100, Hybrid=50/75/100 (RULER only at 75/100)")
     print("#" * 70)
 
     cfg = CFG_750M.copy()
@@ -314,13 +317,32 @@ def main():
     )
 
     runs = [
-        ("geo_750m_2k_1bdata_ckpt", geometric_inv_freq()),
-        ("hybrid1.5_r16_750m_2k_1bdata_ckpt", hybrid_evq_inv_freq(DIM, BASE, TAU, r=16)),
+        dict(
+            tag="geo_750m_2k_1bdata_ckpt",
+            inv_freq=geometric_inv_freq(),
+            ckpt_fractions=CKPT_FRACTIONS_GEO,
+        ),
+        dict(
+            tag="hybrid1.5_r16_750m_2k_1bdata_ckpt",
+            inv_freq=hybrid_evq_inv_freq(DIM, BASE, TAU, r=16),
+            ckpt_fractions=CKPT_FRACTIONS_HYBRID,
+        ),
     ]
 
+    print("\n  Auto-chain mode: Geo -> Hybrid (sequential, same process)")
     results = {}
-    for tag, inv_freq in runs:
-        results[tag] = run_single(tag, inv_freq, cfg, train_data, val_data, filler, tok)
+    for r in runs:
+        print(f"  Schedule {r['tag']}: checkpoints={r['ckpt_fractions']}")
+        results[r["tag"]] = run_single(
+            r["tag"],
+            r["inv_freq"],
+            cfg,
+            train_data,
+            val_data,
+            filler,
+            tok,
+            r["ckpt_fractions"],
+        )
 
     geo = results["geo_750m_2k_1bdata_ckpt"]
     hyb = results["hybrid1.5_r16_750m_2k_1bdata_ckpt"]
@@ -344,7 +366,10 @@ def main():
         passkey_mix_ratio=PASSKEY_MIX_RATIO,
         phase="9F-1Bdata-ckpt-ruler75_100", model="750M", seq_len=SEQ_LEN, tokens=TOKENS,
         runs=["geo", "hybrid1.5_r16"], seed=SEED,
-        checkpoint_fractions=CKPT_FRACTIONS,
+        checkpoint_fractions=dict(
+            geo=CKPT_FRACTIONS_GEO,
+            hybrid=CKPT_FRACTIONS_HYBRID,
+        ),
         ruler_checkpoint_fractions=CKPT_MN_FRACTIONS,
         results=results,
     )
