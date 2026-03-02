@@ -78,5 +78,8 @@ experiments/variational_sparse_attn/test_run.log
 .venv/
 venv/
 
+# Codex local workspace data
+.codex/
+
 # Local dry-run artifacts
 artifacts/_dryrun_llama8k_evq/

@@ -1,9 +1,10 @@
 # AI Handoff 总纲 (Master Guide)
 
-> **最后更新**: 2026-02-27
+> **最后更新**: 2026-03-02
 > **论文**: NeurIPS 2026 — "RoPE Frequency Allocation as a Variational Inverse Problem"
 > **当前版本**: V5 (EVQ / τ 单参数 / Waterbed rewrite)
 > **本地路径**: 以本仓库根目录为准（用户可能在不同机器上工作，路径会变化）
+> **🔴 核心理论参考**: `docs/paperdraft/CORE_THEORY.md`（v3，包含所有最新理论、实验数据、红线）
 
 ---
 
@@ -78,14 +79,32 @@
 
 > **关键问题**: 当前论文中所有从零训练实验都使用旧的 anchored_sigmoid 方法，而论文 V5 已改写为 EVQ/τ 框架。**急需用 EVQ τ-sweep 替换这些实验数据**。
 
-### 5.2 进行中的实验
+### 5.2 进行中的实验（2026-03-02 更新）
 
 | 实验 | 状态 | 位置 | 预期用途 |
 |------|------|------|----------|
-| **5090 τ-sweep** (50M + 125M) | 🔄 运行中 | 服务器 `/root/evq_sweep/` | 替换论文 Table 1-2 |
-| **Longinst 8B** | ⏳ 等待 τ 确定 | `scripts/isolated/longinst/` | 论文 Section 5 |
+| **Phase 9A Group 2** (1.7B, L=2048, τ=1.5) | 🔄 R6000 下载数据中 | `scripts/phase9a_1b_2k.py` | 论文核心实验 |
+| **Phase 9A Group 1** (1.7B, L=4096, τ=1.0) | ⏳ Group 2 后 | `scripts/phase9a_1b_4k.py` | Learnability 验证 |
+| **5090 快速验证** (350M, L=2048, τ=1.5) | ✅ 单seed完成，等多seed | Codex 管理 | 快速信号确认 |
 
-### 5.3 历史实验（存档参考）
+**5090 单seed结果（2026-03-02，FineWeb-Edu, 350M, seed=42）**：
+- PPL@16K: -15.4% ✅ (远超10%噪音门槛)
+- PPL@8K: -10.2% ✅
+- PPL@2K: +1.9% (轻微短程退化，理论可解释——E_learn 主导)
+- Retrieval: ~55%两边都低（模型太小）
+- **结论**：信号明确，等多seed确认后 R6000 可放心跑
+
+### 5.3 已完成关键实验
+
+| 实验 | 结论 | 位置 |
+|------|------|------|
+| **Phase 8D** (τ* scaling law, 5 点) | τ*=d_head/√L 验证，L≥1024 吻合 | CORE_THEORY §7.2 |
+| **Phase 8F** (350M, base=500K, 4-seed) | Hybrid 方差最低（8×），均值持平 | CORE_THEORY §8.1 |
+| **Phase 8H** (350M, base=10K, τ sweep) | 全败，碰撞块死区确认 | CORE_THEORY §7.7.5 |
+| **50M/125M EVQ τ-sweep** | τ=1.5 赢 Geo 10-19% (L=2048) | `results/paper_ready/evq_tau_sweep/` |
+| **5090 350M 验证** (FineWeb-Edu) | PPL@16K -15.4%, PPL@2K +1.9% | CORE_THEORY §7.8 |
+
+### 5.4 历史实验（存档参考）
 
 大量旧实验保存在 `results/`, `artifacts/`, `archives/`, `sigmoid_rope_experiments/` 中。这些实验使用旧方法名（anchored_sigmoid, hybrid 等），**不可直接用于 V5 论文**，但可作为方法演化的参考。
 
@@ -181,23 +200,79 @@ hybrid-rope/
 
 ---
 
-## 9. 当前紧急任务优先级
+## 9. 当前紧急任务优先级（2026-03-02 更新）
 
-1. **🔴 等待 5090 τ-sweep 结果** → 拿到数据后更新论文 Table
-2. **🔴 用 τ-sweep 确定最优 τ 范围** → 预计 0.4-0.8
-3. **🟡 longinst 8B 实验** → 用确定的 τ 去跑
-4. **🟡 论文实验部分重写** → 用 EVQ 数据替换旧 anchored_sigmoid 数据
-5. **🟢 Appendix 补充** → 125M scaling 证据、完整 phase collision 数据
+1. **🔴 等 5090 多 seed 结果** — 单 seed 已出：PPL@16K -15.4% ✅，等多 seed 确认稳定性
+2. **🔴 R6000 Phase 9 准备中** — 1.7B 模型, base=500K, 2B tokens, 多 seed 确认后开始训练
+   - 脚本: `scripts/phase9a_1b_2k.py`（Group 2: L=2048, τ=1.5）, `scripts/phase9a_1b_4k.py`（Group 1: L=4096, τ=1.0）
+3. **🟡 5090 多 seed 验证** → 单 seed 赢了后补 2-3 个 seed，论文投稿必需
+4. **🟡 论文实验部分重写** → 用 Phase 9 数据替换旧数据
+5. **🟢 Multi-needle 评测** → `scripts/eval_multi_needle.py` 已写好，Phase 9 4K 组包含
 
 ---
 
-## 10. 服务器与环境
+## 10. 🔴 关键发现与理论进展（2026-03-02，必读）
+
+> **详细推导和公式见 `docs/paperdraft/CORE_THEORY.md`**
+
+### 10.1 τ* Scaling Law（已验证）
+
+$$\tau^* = \frac{d_{head}}{\sqrt{L_{train}}}$$
+
+- L=2048: τ*=1.41（实测最优 τ=1.5，偏差 6%）— 50M/125M/350M 三个规模全赢 Geo 10-19%
+- L=4096: τ*=1.0 — Phase 8D 5 点验证
+- **所有早期赢的实验 L_train 都是 2048**，Phase 8F 用 L=4096 + τ=1.0 没赢但方差降低
+- 双变量 τ*(L,b) 含 base 修正的公式已被否定，**论文只用单变量形式**
+
+### 10.2 Base=10K 是"死区"（负面结果，理论确认）
+
+350M, 50M tokens, base=10K 下 5 组实验全败（EVQ τ=0.7/1.1/1.2, Hybrid r=22）。原因：
+
+**碰撞块（Collision Block）分析**：EVQ 净增益 ΔJ ∝ (1-c)/lnb，其中 c=lnL/lnb。
+- Base=10K: c=0.903, 碰撞块仅 3/32 通道 → 优化空间极小
+- Base=500K: c=0.634, 碰撞块 12/32 通道 → 充足空间
+- **"低 base 放大 EVQ 增益" 叙事被推翻**，实际 base=500K 净增益是 10K 的 2.7 倍
+
+### 10.3 Learnability 假说（待 Phase 9 验证）
+
+E_total = E_alloc(τ) + E_learn(τ, N_params)。EVQ 信息论最优但学习难度更高，小模型可能学不到。Phase 9 的 1.7B 模型是验证这个假说的关键。
+
+### 10.4 Phase 9 实验设计
+
+| Group | L_train | τ | 模型 | Tokens | 方法 |
+|-------|---------|---|------|--------|------|
+| 2 (先跑) | 2048 | 1.5 | 1.7B | 2B | Geo / EVQ / Hybrid r=16 |
+| 1 (后跑) | 4096 | 1.0 | 1.7B | 2B | Geo / EVQ / Hybrid r=16 |
+
+- 1.7B 配置: hidden=2048, layers=24, heads=32, head_dim=64, intermediate=8192
+- R6000 (96GB GDDR7): micro_bs=8, grad_accum=2, effective_bs=16
+- **head_dim=64 不变 → τ* 和 r*=16 公式沿用**
+- 评测: PPL@2K/4K/8K/16K + 单针 passkey + 多针 passkey（5 needles）
+
+### 10.5 Anchored Sigmoid 历史战绩（重要参考）
+
+Anchored sigmoid（EVQ 的前身，cruder approximation）在 from-scratch 预训练中：
+- 50M: PPL@16K 赢 Geo 7-11%
+- 125M: 赢 6-19%
+- 350M (L=2048): 赢 13.7%
+- 8B LoRA 微调: LongBench +14.5%, Passkey@16K 100% vs 80%
+- **全部 L_train=2048**
+
+### 10.6 Hybrid 理论
+
+r* = (d_head/(2lnb)) · ln(L/2π)。Base=500K 下 r*≈16（恰好是 50/50 split）。
+Waterbed 隔离：锁定高频 Geometric（保护 PPL），仅低频做 EVQ。
+方差降低 8×（passkey std），论文叙事的核心卖点之一。
+
+---
+
+## 11. 服务器与环境
 
 | 环境 | 用途 | 备注 |
 |------|------|------|
 | 本地 M4 Max 36GB | 小模型验证、论文编写 | conda `aidemo` |
-| 5090 32GB (租用) | τ-sweep 中型实验 | 6元/时 |
-| RTX Pro 6000 96GB (租用) | 8B 大模型实验 | Blackwell 架构 |
+| 5090 32GB (租用) | 350M 快速验证（Codex 管理） | 便宜，试错用 |
+| RTX PRO 6000 96GB (租用) | 1.7B Phase 9 实验（Claude Code 管理） | Blackwell 架构, GDDR7, 1.8TB/s |
 | A100/A800 (按需) | 备选大模型实验 | 价格更高 |
 
 ### ⚠️ 服务器环境初始化 (MANDATORY — 每次 SSH 登录后必须执行)
@@ -219,7 +294,7 @@ export PYTHONUNBUFFERED=1
 
 ---
 
-## 11. ⚠️ 已知陷阱
+## 12. ⚠️ 已知陷阱
 
 1. **服务器环境未初始化**: AI 最常犯的错误！登录服务器后必须先 `export PATH="/root/miniconda3/bin:$PATH"` 和 `export HF_ENDPOINT=https://hf-mirror.com`，否则会报 python 找不到或 HF 连接超时。详见上方"服务器环境初始化"。
 2. **MPS OOM**: M4 Max 跑 float32 attention 在 L≥16384 会 OOM。`run_evq_sweep.py` 已添加保护。
@@ -230,9 +305,10 @@ export PYTHONUNBUFFERED=1
 
 ---
 
-## 12. 文档更新日志
+## 13. 文档更新日志
 
 | 日期 | 更新内容 | 操作者 |
 |------|----------|--------|
+| 2026-03-02 | 新增 §10 关键发现：τ* scaling law, 碰撞块分析, learnability 假说, Phase 9 设计, anchored sigmoid 历史战绩; 更新 §9 任务优先级; 添加 CORE_THEORY.md 引用 | Claude (Cowork) |
 | 2026-02-27 | 全面重写为 V5/EVQ 框架；新增总纲结构 | Claude (Cowork) |
 | 2026-02-26 | 旧版（anchored-sigmoid 框架，已过时） | Claude Code |
