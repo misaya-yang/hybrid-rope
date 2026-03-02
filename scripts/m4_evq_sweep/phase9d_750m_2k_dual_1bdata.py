@@ -21,6 +21,7 @@ sys.path.insert(0, str(SCRIPT_DIR))
 from run_evq_sweep import (
     GPT, DEVICE, DTYPE, USE_AUTOCAST,
     eval_model, set_seed, load_data, load_val,
+    get_batch_from_data, maybe_wrap_with_passkey_mix, resolve_passkey_mix_ratio,
 )
 from eval_passkey_scratch import eval_passkey_nll_gap
 from eval_multi_needle import eval_multi_needle_passkey
@@ -32,6 +33,7 @@ SEED      = 42
 TOKENS    = 1_000_000_000      # fast pilot minimum
 SEQ_LEN   = 2048
 TAU       = 1.5
+PASSKEY_MIX_RATIO = resolve_passkey_mix_ratio(default=0.03)
 
 EVAL_LENGTHS = [1024, 2048, 4096, 8192, 16384]
 EVAL_CHUNKS  = 6
@@ -124,7 +126,7 @@ def train_model_ga(model, data, cfg, seed=42):
 
         for a in range(grad_accum):
             chunk_idx = s * effective_bs + a * micro_bs
-            batch = data[perm[chunk_idx : chunk_idx + micro_bs]].to(DEVICE)
+            batch = get_batch_from_data(data, perm[chunk_idx : chunk_idx + micro_bs]).to(DEVICE)
             ctx = torch.amp.autocast("cuda", dtype=DTYPE) if USE_AUTOCAST else nullcontext()
             with ctx:
                 logits = model(batch[:, :-1])
@@ -190,6 +192,7 @@ def run_single(tag, inv_freq, cfg, train_data, val_data, filler, tok):
         multi_needle_by_length=mn.get("by_length", {}),
         train_sec=round(train_sec, 1),
         config=dict(
+            passkey_mix_ratio=PASSKEY_MIX_RATIO,
             hidden_size=cfg["hidden_size"], num_layers=cfg["num_layers"],
             num_heads=cfg["num_heads"], head_dim=cfg["head_dim"],
             intermediate_size=cfg["intermediate_size"], lr=cfg["lr"],
@@ -224,6 +227,14 @@ def main():
     val_data = load_val(tok, 5_000_000, "fineweb-edu", cache_dir=str(DATA_CACHE_DIR))
     filler = val_data[:50000]
 
+    train_data = maybe_wrap_with_passkey_mix(
+        train_data=train_data,
+        filler_tokens=filler,
+        tokenizer=tok,
+        seq_len=SEQ_LEN,
+        passkey_ratio=PASSKEY_MIX_RATIO,
+    )
+
     runs = [
         ("geo_750m_2k_1bdata", geometric_inv_freq()),
         ("hybrid1.5_r16_750m_2k_1bdata", hybrid_evq_inv_freq(DIM, BASE, TAU, r=16)),
@@ -252,6 +263,7 @@ def main():
         print(f"  Hybrid vs Geo PPL@16K: {(hyb_ppl/geo_ppl - 1)*100:+.2f}%")
 
     summary = dict(
+        passkey_mix_ratio=PASSKEY_MIX_RATIO,
         phase="9D-1Bdata", model="750M", seq_len=SEQ_LEN, tokens=TOKENS,
         runs=["geo", "hybrid1.5_r16"], seed=SEED,
         results=results,

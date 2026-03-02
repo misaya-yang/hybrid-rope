@@ -574,9 +574,72 @@ def set_seed(seed: int) -> None:
     _random.seed(seed)
 
 
+def resolve_passkey_mix_ratio(default: float = 0.005) -> float:
+    """Resolve passkey mix ratio from env var (supports plain float or percent)."""
+    raw = os.environ.get("PASSKEY_MIX_RATIO")
+    if raw is None or raw == "":
+        ratio = default
+    else:
+        text = raw.strip()
+        if text.endswith("%"):
+            ratio = float(text[:-1]) / 100.0
+        else:
+            ratio = float(text)
+    if not (0.0 <= ratio <= 1.0):
+        raise ValueError(f"PASSKEY_MIX_RATIO must be within [0,1], got {ratio}")
+    return ratio
+
+
+def get_batch_from_data(data, indices: torch.Tensor) -> torch.Tensor:
+    """Fetch a batch from either a tensor dataset or a torch Dataset."""
+    if isinstance(data, torch.Tensor):
+        return data[indices]
+    index_list = indices.tolist()
+    return torch.stack([data[i] for i in index_list], dim=0)
+
+
+def maybe_wrap_with_passkey_mix(
+    train_data: torch.Tensor,
+    filler_tokens: torch.Tensor,
+    tokenizer,
+    seq_len: int,
+    passkey_ratio: float,
+    sample_check_n: int = 2000,
+):
+    """Wrap train_data with MixedDataset if passkey_ratio > 0, otherwise return input."""
+    if passkey_ratio <= 0.0:
+        print("  [passkey-train] mix disabled (ratio=0.00%)")
+        return train_data
+    if tokenizer is None:
+        raise ValueError("tokenizer is required when passkey_ratio > 0")
+
+    from eval_passkey_scratch import MixedDataset
+    mixed_data = MixedDataset(
+        lm_data=train_data,
+        filler_tokens=filler_tokens,
+        tokenizer=tokenizer,
+        passkey_ratio=passkey_ratio,
+        seq_len=seq_len,
+    )
+
+    # Deterministic sanity check on the hash-based sampler logic.
+    import random as _random
+    n = min(sample_check_n, len(mixed_data))
+    pk_count = sum(
+        1
+        for i in range(n)
+        if _random.Random(i * 6364136223846793005 + 1).random() < passkey_ratio
+    )
+    print(
+        f"  [passkey-train] mix target={passkey_ratio:.2%}, "
+        f"sample_check={pk_count}/{n} ({(pk_count / max(n, 1)):.2%})"
+    )
+    return mixed_data
+
+
 def train_model(
     model: GPT,
-    data: torch.Tensor,
+    data,
     cfg: dict,
     seed: int = 42,
 ) -> GPT:
@@ -594,7 +657,9 @@ def train_model(
     t0 = time.time()
 
     for s in range(steps):
-        batch = data[perm[s * batch_size : (s + 1) * batch_size]].to(DEVICE)
+        batch = get_batch_from_data(
+            data, perm[s * batch_size : (s + 1) * batch_size]
+        ).to(DEVICE)
 
         # Cosine LR with warmup + min_lr floor
         if s < warmup:
@@ -749,20 +814,14 @@ def run_single(
             phase_collision=pc, inv_freq_stats=inv_stats,
         )
 
-    # Wrap training data with MixedDataset for passkey mixing
-    from eval_passkey_scratch import MixedDataset
-    mixed_data = MixedDataset(
-        lm_data=train_data,
+    passkey_mix_ratio = float(cfg.get("passkey_mix_ratio", 0.005))
+    mixed_data = maybe_wrap_with_passkey_mix(
+        train_data=train_data,
         filler_tokens=val_data[:50000],
         tokenizer=tokenizer,
-        passkey_ratio=0.005,
         seq_len=cfg["seq_len"],
+        passkey_ratio=passkey_mix_ratio,
     )
-    # Log passkey mixing ratio
-    import random as _rnd
-    pk_count = sum(1 for i in range(min(1000, len(mixed_data)))
-                   if _rnd.Random(i * 6364136223846793005 + 1).random() < 0.005)
-    print(f"  [passkey] Mix ratio check: {pk_count}/1000 = {pk_count/10:.1f}%")
 
     # Train
     set_seed(seed)
@@ -888,11 +947,27 @@ def main() -> None:
                         help="Build models & inv_freq only, skip training")
     parser.add_argument("--resume", action="store_true",
                         help="Skip runs that already have results")
+    parser.add_argument(
+        "--passkey_mix_ratio",
+        type=float,
+        default=None,
+        help="Optional passkey training mix ratio (e.g. 0.02 for 2%%). "
+             "If omitted, uses PASSKEY_MIX_RATIO env or defaults to 0.005.",
+    )
     args = parser.parse_args()
 
     taus = [float(t) for t in args.taus.split(",")]
     seeds = [int(s) for s in args.seeds.split(",")]
     cfg = TIER_CONFIGS[args.tier].copy()
+    cfg["passkey_mix_ratio"] = (
+        args.passkey_mix_ratio
+        if args.passkey_mix_ratio is not None
+        else resolve_passkey_mix_ratio(default=0.005)
+    )
+    if not (0.0 <= cfg["passkey_mix_ratio"] <= 1.0):
+        raise ValueError(
+            f"passkey_mix_ratio must be within [0,1], got {cfg['passkey_mix_ratio']}"
+        )
 
     # Device-specific adjustments
     if DEVICE == "mps":
@@ -940,6 +1015,7 @@ def main() -> None:
     print(f"\n{'#'*60}")
     print(f"  EVQ τ-SWEEP  |  tier={args.tier}  |  taus={taus}")
     print(f"  device={DEVICE}  dtype={DTYPE}  base={args.base}")
+    print(f"  passkey_mix_ratio={cfg['passkey_mix_ratio']:.2%}")
     print(f"  work_dir={work_dir}")
     print(f"{'#'*60}\n")
 

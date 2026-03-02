@@ -21,6 +21,7 @@ sys.path.insert(0, str(SCRIPT_DIR))
 from run_evq_sweep import (
     GPT, evq_cosh_inv_freq, DEVICE, DTYPE, USE_AUTOCAST,
     eval_model, set_seed, load_data, load_val,
+    get_batch_from_data, maybe_wrap_with_passkey_mix, resolve_passkey_mix_ratio,
 )
 from eval_passkey_scratch import eval_passkey_nll_gap
 from eval_multi_needle import eval_multi_needle_passkey
@@ -32,6 +33,7 @@ SEED      = 42
 TOKENS    = 2_000_000_000
 SEQ_LEN   = 2048        # L_train=2048 for Group 2
 TAU       = 1.5         # τ*=64/√2048≈1.41
+PASSKEY_MIX_RATIO = resolve_passkey_mix_ratio(default=0.03)
 
 EVAL_LENGTHS = [512, 1024, 2048, 4096, 8192, 16384]
 EVAL_CHUNKS  = 10
@@ -138,7 +140,7 @@ def train_model_ga(model, data, cfg, seed=42):
 
         for a in range(grad_accum):
             chunk_idx = s * effective_bs + a * micro_bs
-            batch = data[perm[chunk_idx : chunk_idx + micro_bs]].to(DEVICE)
+            batch = get_batch_from_data(data, perm[chunk_idx : chunk_idx + micro_bs]).to(DEVICE)
             ctx = torch.amp.autocast("cuda", dtype=DTYPE) if USE_AUTOCAST else nullcontext()
             with ctx:
                 logits = model(batch[:, :-1])
@@ -230,6 +232,7 @@ def run_single(tag, inv_freq, cfg, train_data, val_data, filler, tok):
         multi_needle_by_position=mn.get("by_needle_position", {}),
         train_sec=round(train_sec, 1),
         config=dict(
+            passkey_mix_ratio=PASSKEY_MIX_RATIO,
             hidden_size=cfg["hidden_size"], num_layers=cfg["num_layers"],
             num_heads=cfg["num_heads"], head_dim=cfg["head_dim"],
             intermediate_size=cfg["intermediate_size"],
@@ -267,6 +270,14 @@ def main():
     print("Loading validation data...")
     val_data = load_val(tok, 5_000_000, "fineweb-edu", cache_dir=str(DATA_CACHE_DIR))
     filler = val_data[:50000]
+
+    train_data = maybe_wrap_with_passkey_mix(
+        train_data=train_data,
+        filler_tokens=filler,
+        tokenizer=tok,
+        seq_len=SEQ_LEN,
+        passkey_ratio=PASSKEY_MIX_RATIO,
+    )
 
     # ── Three runs: Geo first, then Hybrid (fastest comparison), then EVQ ──
     runs = [
@@ -330,6 +341,7 @@ def main():
         print(f"    Hybrid τ=1.5 vs Geo: {(hyb_ret/geo_ret-1)*100:+.1f}%  {'WIN' if hyb_beats else 'LOSS'}")
 
     summary = dict(
+        passkey_mix_ratio=PASSKEY_MIX_RATIO,
         phase="9A-group2", model="1B", base=BASE, seed=SEED, tokens=TOKENS,
         seq_len=SEQ_LEN, tau=TAU,
         config=cfg,
