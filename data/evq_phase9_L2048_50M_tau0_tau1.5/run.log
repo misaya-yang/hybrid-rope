@@ -1,0 +1,1368 @@
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+  [CUDA] GPU: NVIDIA GeForce RTX 5090, VRAM: 31.4 GB
+  [CUDA <40GB] Adjusted 350m: batch=2, eval=[2048, 4096, 8192]
+
+############################################################
+  EVQ τ-SWEEP  |  tier=350m  |  taus=[0.0, 1.5]
+  seq_len=2048  train_tokens=50M
+  eval_lengths=[2048, 4096, 8192]
+  device=cuda  dtype=torch.bfloat16  base=500000.0
+  work_dir=/root/autodl-tmp/evq_phase9_350m_L2048_50M_tau0_tau1.5
+############################################################
+
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+
+  [check] Passkey tokenizer sanity check:
+  Tokenisation of '<<PASS:7-4-2-9-1>>':
+    IDs:    [14193, 25692, 27, 24, 14, 21, 14, 19, 14, 26, 14, 18, 5064]
+    Tokens: ['<<', 'PASS', ':', '7', '-', '4', '-', '2', '-', '9', '-', '1', '>>']
+    OK: all digits ['7', '4', '2', '9', '1'] are independent tokens
+  [data] Loading from cache: /root/autodl-tmp/evq_phase9_350m_L2048_50M_tau0_tau1.5/train_fineweb-edu_50000000_2048.pt
+  [data] Cached: 24414 chunks (50.0M tokens)
+  [val] Loading from cache: /root/autodl-tmp/evq_phase9_350m_L2048_50M_tau0_tau1.5/val_fineweb-edu_5000000.pt
+  [val] Cached: 5.0M tokens
+  Resumed 3 existing results
+
+  [SKIP] 350m_tau0.00_seed42 already completed
+
+  [SKIP] 350m_tau1.50_seed42 already completed
+
+============================================================
+  RUN: 350m_tau0.00_seed137  (base=500000)
+============================================================
+  inv_freq: shape=torch.Size([32])  max=0.814617  min=0.00000246  hash=88654f1fe2a414d3
+  Phase collision total=0.350769
+  [passkey] Mix ratio check: 5/1000 = 0.5%
+  Model params: 454.2M
+    step 0/12207  loss=11.0070  lr=0.00e+00  ETA=0min
+    step 50/12207  loss=8.6498  lr=4.10e-05  ETA=29min
+    step 100/12207  loss=7.4199  lr=8.20e-05  ETA=28min
+    step 150/12207  loss=7.2011  lr=1.23e-04  ETA=28min
+    step 200/12207  loss=6.9917  lr=1.64e-04  ETA=27min
+    step 250/12207  loss=7.1191  lr=2.00e-04  ETA=27min
+    step 300/12207  loss=6.5170  lr=2.00e-04  ETA=27min
+    step 350/12207  loss=6.5813  lr=2.00e-04  ETA=27min
+    step 400/12207  loss=7.1372  lr=2.00e-04  ETA=27min
+    step 450/12207  loss=6.6785  lr=2.00e-04  ETA=27min
+    step 500/12207  loss=6.5180  lr=2.00e-04  ETA=26min
+    step 550/12207  loss=6.6295  lr=2.00e-04  ETA=26min
+    step 600/12207  loss=5.8202  lr=2.00e-04  ETA=26min
+    step 650/12207  loss=6.4563  lr=1.99e-04  ETA=26min
+    step 700/12207  loss=5.9099  lr=1.99e-04  ETA=26min
+    step 750/12207  loss=6.3233  lr=1.99e-04  ETA=26min
+    step 800/12207  loss=6.6071  lr=1.99e-04  ETA=26min
+    step 850/12207  loss=6.3090  lr=1.99e-04  ETA=26min
+    step 900/12207  loss=6.1677  lr=1.99e-04  ETA=26min
+    step 950/12207  loss=6.1966  lr=1.98e-04  ETA=25min
+    step 1000/12207  loss=6.1981  lr=1.98e-04  ETA=25min
+    step 1050/12207  loss=5.9202  lr=1.98e-04  ETA=25min
+    step 1100/12207  loss=6.2456  lr=1.98e-04  ETA=25min
+    step 1150/12207  loss=5.9336  lr=1.97e-04  ETA=25min
+    step 1200/12207  loss=6.0210  lr=1.97e-04  ETA=25min
+    step 1250/12207  loss=6.1910  lr=1.97e-04  ETA=25min
+    step 1300/12207  loss=5.7587  lr=1.97e-04  ETA=25min
+    step 1350/12207  loss=6.0830  lr=1.96e-04  ETA=25min
+    step 1400/12207  loss=5.7670  lr=1.96e-04  ETA=24min
+    step 1450/12207  loss=6.2322  lr=1.96e-04  ETA=24min
+    step 1500/12207  loss=5.7622  lr=1.95e-04  ETA=24min
+    step 1550/12207  loss=5.8972  lr=1.95e-04  ETA=24min
+    step 1600/12207  loss=6.1726  lr=1.94e-04  ETA=24min
+    step 1650/12207  loss=5.5107  lr=1.94e-04  ETA=24min
+    step 1700/12207  loss=5.5916  lr=1.94e-04  ETA=24min
+    step 1750/12207  loss=6.4016  lr=1.93e-04  ETA=24min
+    step 1800/12207  loss=5.8209  lr=1.93e-04  ETA=24min
+    step 1850/12207  loss=5.8974  lr=1.92e-04  ETA=23min
+    step 1900/12207  loss=5.8412  lr=1.92e-04  ETA=23min
+    step 1950/12207  loss=6.0571  lr=1.91e-04  ETA=23min
+    step 2000/12207  loss=5.8544  lr=1.91e-04  ETA=23min
+    step 2050/12207  loss=5.8931  lr=1.90e-04  ETA=23min
+    step 2100/12207  loss=5.9106  lr=1.90e-04  ETA=23min
+    step 2150/12207  loss=5.8479  lr=1.89e-04  ETA=23min
+    step 2200/12207  loss=5.6394  lr=1.88e-04  ETA=23min
+    step 2250/12207  loss=5.6415  lr=1.88e-04  ETA=22min
+    step 2300/12207  loss=5.5658  lr=1.87e-04  ETA=22min
+    step 2350/12207  loss=5.6941  lr=1.87e-04  ETA=22min
+    step 2400/12207  loss=5.4685  lr=1.86e-04  ETA=22min
+    step 2450/12207  loss=5.4164  lr=1.85e-04  ETA=22min
+    step 2500/12207  loss=5.5281  lr=1.85e-04  ETA=22min
+    step 2550/12207  loss=5.4610  lr=1.84e-04  ETA=22min
+    step 2600/12207  loss=5.6963  lr=1.83e-04  ETA=22min
+    step 2650/12207  loss=5.6192  lr=1.83e-04  ETA=22min
+    step 2700/12207  loss=5.3977  lr=1.82e-04  ETA=21min
+    step 2750/12207  loss=5.9878  lr=1.81e-04  ETA=21min
+    step 2800/12207  loss=5.4024  lr=1.80e-04  ETA=21min
+    step 2850/12207  loss=5.4736  lr=1.80e-04  ETA=21min
+    step 2900/12207  loss=5.4727  lr=1.79e-04  ETA=21min
+    step 2950/12207  loss=6.1073  lr=1.78e-04  ETA=21min
+    step 3000/12207  loss=5.5859  lr=1.77e-04  ETA=21min
+    step 3050/12207  loss=5.5245  lr=1.77e-04  ETA=21min
+    step 3100/12207  loss=5.2717  lr=1.76e-04  ETA=21min
+    step 3150/12207  loss=5.3032  lr=1.75e-04  ETA=20min
+    step 3200/12207  loss=5.2161  lr=1.74e-04  ETA=20min
+    step 3250/12207  loss=5.4381  lr=1.73e-04  ETA=20min
+    step 3300/12207  loss=4.9574  lr=1.73e-04  ETA=20min
+    step 3350/12207  loss=5.3611  lr=1.72e-04  ETA=20min
+    step 3400/12207  loss=5.7366  lr=1.71e-04  ETA=20min
+    step 3450/12207  loss=5.9449  lr=1.70e-04  ETA=20min
+    step 3500/12207  loss=5.8531  lr=1.69e-04  ETA=20min
+    step 3550/12207  loss=5.2940  lr=1.68e-04  ETA=20min
+    step 3600/12207  loss=5.1319  lr=1.67e-04  ETA=19min
+    step 3650/12207  loss=5.5493  lr=1.66e-04  ETA=19min
+    step 3700/12207  loss=5.3292  lr=1.65e-04  ETA=19min
+    step 3750/12207  loss=5.3309  lr=1.64e-04  ETA=19min
+    step 3800/12207  loss=5.3544  lr=1.64e-04  ETA=19min
+    step 3850/12207  loss=5.2481  lr=1.63e-04  ETA=19min
+    step 3900/12207  loss=5.3962  lr=1.62e-04  ETA=19min
+    step 3950/12207  loss=4.9052  lr=1.61e-04  ETA=19min
+    step 4000/12207  loss=5.2372  lr=1.60e-04  ETA=19min
+    step 4050/12207  loss=5.2836  lr=1.59e-04  ETA=18min
+    step 4100/12207  loss=5.3403  lr=1.58e-04  ETA=18min
+    step 4150/12207  loss=5.2255  lr=1.57e-04  ETA=18min
+    step 4200/12207  loss=5.0593  lr=1.56e-04  ETA=18min
+    step 4250/12207  loss=5.0906  lr=1.55e-04  ETA=18min
+    step 4300/12207  loss=5.3888  lr=1.54e-04  ETA=18min
+    step 4350/12207  loss=5.3269  lr=1.53e-04  ETA=18min
+    step 4400/12207  loss=5.0899  lr=1.52e-04  ETA=18min
+    step 4450/12207  loss=4.7089  lr=1.50e-04  ETA=18min
+    step 4500/12207  loss=5.4546  lr=1.49e-04  ETA=17min
+    step 4550/12207  loss=5.1533  lr=1.48e-04  ETA=17min
+    step 4600/12207  loss=5.4977  lr=1.47e-04  ETA=17min
+    step 4650/12207  loss=4.9529  lr=1.46e-04  ETA=17min
+    step 4700/12207  loss=4.9755  lr=1.45e-04  ETA=17min
+    step 4750/12207  loss=4.9023  lr=1.44e-04  ETA=17min
+    step 4800/12207  loss=5.3154  lr=1.43e-04  ETA=17min
+    step 4850/12207  loss=5.3071  lr=1.42e-04  ETA=17min
+    step 4900/12207  loss=5.5204  lr=1.41e-04  ETA=17min
+    step 4950/12207  loss=5.4375  lr=1.40e-04  ETA=16min
+    step 5000/12207  loss=5.2214  lr=1.38e-04  ETA=16min
+    step 5050/12207  loss=5.4338  lr=1.37e-04  ETA=16min
+    step 5100/12207  loss=5.3105  lr=1.36e-04  ETA=16min
+    step 5150/12207  loss=5.1418  lr=1.35e-04  ETA=16min
+    step 5200/12207  loss=5.0730  lr=1.34e-04  ETA=16min
+    step 5250/12207  loss=5.1922  lr=1.33e-04  ETA=16min
+    step 5300/12207  loss=4.5918  lr=1.32e-04  ETA=16min
+    step 5350/12207  loss=5.1825  lr=1.31e-04  ETA=15min
+    step 5400/12207  loss=5.1781  lr=1.29e-04  ETA=15min
+    step 5450/12207  loss=5.2189  lr=1.28e-04  ETA=15min
+    step 5500/12207  loss=5.0040  lr=1.27e-04  ETA=15min
+    step 5550/12207  loss=5.0239  lr=1.26e-04  ETA=15min
+    step 5600/12207  loss=5.1545  lr=1.25e-04  ETA=15min
+    step 5650/12207  loss=5.0046  lr=1.24e-04  ETA=15min
+    step 5700/12207  loss=5.6194  lr=1.22e-04  ETA=15min
+    step 5750/12207  loss=5.1865  lr=1.21e-04  ETA=15min
+    step 5800/12207  loss=4.9671  lr=1.20e-04  ETA=14min
+    step 5850/12207  loss=5.0813  lr=1.19e-04  ETA=14min
+    step 5900/12207  loss=4.9895  lr=1.18e-04  ETA=14min
+    step 5950/12207  loss=4.8502  lr=1.17e-04  ETA=14min
+    step 6000/12207  loss=5.1326  lr=1.15e-04  ETA=14min
+    step 6050/12207  loss=5.0748  lr=1.14e-04  ETA=14min
+    step 6100/12207  loss=5.3353  lr=1.13e-04  ETA=14min
+    step 6150/12207  loss=5.4389  lr=1.12e-04  ETA=14min
+    step 6200/12207  loss=5.1389  lr=1.11e-04  ETA=14min
+    step 6250/12207  loss=4.8761  lr=1.09e-04  ETA=13min
+    step 6300/12207  loss=4.7466  lr=1.08e-04  ETA=13min
+    step 6350/12207  loss=5.3897  lr=1.07e-04  ETA=13min
+    step 6400/12207  loss=5.1026  lr=1.06e-04  ETA=13min
+    step 6450/12207  loss=4.9346  lr=1.05e-04  ETA=13min
+    step 6500/12207  loss=4.9642  lr=1.04e-04  ETA=13min
+    step 6550/12207  loss=4.5848  lr=1.02e-04  ETA=13min
+    step 6600/12207  loss=4.7872  lr=1.01e-04  ETA=13min
+    step 6650/12207  loss=4.5885  lr=1.00e-04  ETA=13min
+    step 6700/12207  loss=4.4410  lr=9.88e-05  ETA=12min
+    step 6750/12207  loss=4.8560  lr=9.76e-05  ETA=12min
+    step 6800/12207  loss=5.3706  lr=9.65e-05  ETA=12min
+    step 6850/12207  loss=4.7740  lr=9.53e-05  ETA=12min
+    step 6900/12207  loss=4.9150  lr=9.41e-05  ETA=12min
+    step 6950/12207  loss=5.1633  lr=9.30e-05  ETA=12min
+    step 7000/12207  loss=4.9486  lr=9.18e-05  ETA=12min
+    step 7050/12207  loss=4.9186  lr=9.07e-05  ETA=12min
+    step 7100/12207  loss=4.7927  lr=8.95e-05  ETA=12min
+    step 7150/12207  loss=4.7284  lr=8.84e-05  ETA=11min
+    step 7200/12207  loss=4.9760  lr=8.72e-05  ETA=11min
+    step 7250/12207  loss=5.1057  lr=8.61e-05  ETA=11min
+    step 7300/12207  loss=4.6912  lr=8.49e-05  ETA=11min
+    step 7350/12207  loss=4.3336  lr=8.38e-05  ETA=11min
+    step 7400/12207  loss=4.8797  lr=8.27e-05  ETA=11min
+    step 7450/12207  loss=4.9205  lr=8.16e-05  ETA=11min
+    step 7500/12207  loss=4.9835  lr=8.04e-05  ETA=11min
+    step 7550/12207  loss=4.8216  lr=7.93e-05  ETA=11min
+    step 7600/12207  loss=5.0627  lr=7.82e-05  ETA=10min
+    step 7650/12207  loss=5.1982  lr=7.71e-05  ETA=10min
+    step 7700/12207  loss=4.8160  lr=7.60e-05  ETA=10min
+    step 7750/12207  loss=4.9562  lr=7.49e-05  ETA=10min
+    step 7800/12207  loss=4.8223  lr=7.38e-05  ETA=10min
+    step 7850/12207  loss=5.1515  lr=7.28e-05  ETA=10min
+    step 7900/12207  loss=4.7761  lr=7.17e-05  ETA=10min
+    step 7950/12207  loss=4.6215  lr=7.06e-05  ETA=10min
+    step 8000/12207  loss=4.9656  lr=6.96e-05  ETA=10min
+    step 8050/12207  loss=4.7146  lr=6.85e-05  ETA=9min
+    step 8100/12207  loss=4.4234  lr=6.75e-05  ETA=9min
+    step 8150/12207  loss=5.0737  lr=6.64e-05  ETA=9min
+    step 8200/12207  loss=4.9811  lr=6.54e-05  ETA=9min
+    step 8250/12207  loss=4.9315  lr=6.44e-05  ETA=9min
+    step 8300/12207  loss=4.4510  lr=6.34e-05  ETA=9min
+    step 8350/12207  loss=4.8292  lr=6.24e-05  ETA=9min
+    step 8400/12207  loss=4.4312  lr=6.14e-05  ETA=9min
+    step 8450/12207  loss=4.5328  lr=6.04e-05  ETA=8min
+    step 8500/12207  loss=4.7575  lr=5.94e-05  ETA=8min
+    step 8550/12207  loss=4.5195  lr=5.84e-05  ETA=8min
+    step 8600/12207  loss=4.8737  lr=5.74e-05  ETA=8min
+    step 8650/12207  loss=4.1657  lr=5.65e-05  ETA=8min
+    step 8700/12207  loss=4.6239  lr=5.55e-05  ETA=8min
+    step 8750/12207  loss=4.7831  lr=5.46e-05  ETA=8min
+    step 8800/12207  loss=4.8059  lr=5.37e-05  ETA=8min
+    step 8850/12207  loss=4.6345  lr=5.28e-05  ETA=8min
+    step 8900/12207  loss=4.4307  lr=5.19e-05  ETA=7min
+    step 8950/12207  loss=4.9065  lr=5.10e-05  ETA=7min
+    step 9000/12207  loss=4.6686  lr=5.01e-05  ETA=7min
+    step 9050/12207  loss=5.0165  lr=4.92e-05  ETA=7min
+    step 9100/12207  loss=4.5515  lr=4.83e-05  ETA=7min
+    step 9150/12207  loss=4.6543  lr=4.75e-05  ETA=7min
+    step 9200/12207  loss=4.7021  lr=4.66e-05  ETA=7min
+    step 9250/12207  loss=4.6653  lr=4.58e-05  ETA=7min
+    step 9300/12207  loss=4.7350  lr=4.50e-05  ETA=7min
+    step 9350/12207  loss=4.6944  lr=4.42e-05  ETA=6min
+    step 9400/12207  loss=4.3765  lr=4.34e-05  ETA=6min
+    step 9450/12207  loss=4.7465  lr=4.26e-05  ETA=6min
+    step 9500/12207  loss=4.8249  lr=4.18e-05  ETA=6min
+    step 9550/12207  loss=4.6210  lr=4.10e-05  ETA=6min
+    step 9600/12207  loss=4.6294  lr=4.03e-05  ETA=6min
+    step 9650/12207  loss=4.6489  lr=3.95e-05  ETA=6min
+    step 9700/12207  loss=4.7925  lr=3.88e-05  ETA=6min
+    step 9750/12207  loss=4.6872  lr=3.81e-05  ETA=6min
+    step 9800/12207  loss=4.6629  lr=3.74e-05  ETA=5min
+    step 9850/12207  loss=4.2157  lr=3.67e-05  ETA=5min
+    step 9900/12207  loss=4.5046  lr=3.60e-05  ETA=5min
+    step 9950/12207  loss=4.9097  lr=3.54e-05  ETA=5min
+    step 10000/12207  loss=4.4288  lr=3.47e-05  ETA=5min
+    step 10050/12207  loss=4.7850  lr=3.41e-05  ETA=5min
+    step 10100/12207  loss=5.2589  lr=3.34e-05  ETA=5min
+    step 10150/12207  loss=4.2822  lr=3.28e-05  ETA=5min
+    step 10200/12207  loss=4.1618  lr=3.22e-05  ETA=5min
+    step 10250/12207  loss=4.5591  lr=3.16e-05  ETA=4min
+    step 10300/12207  loss=4.8086  lr=3.11e-05  ETA=4min
+    step 10350/12207  loss=4.6287  lr=3.05e-05  ETA=4min
+    step 10400/12207  loss=4.8343  lr=2.99e-05  ETA=4min
+    step 10450/12207  loss=4.5128  lr=2.94e-05  ETA=4min
+    step 10500/12207  loss=4.8487  lr=2.89e-05  ETA=4min
+    step 10550/12207  loss=4.5625  lr=2.84e-05  ETA=4min
+    step 10600/12207  loss=4.1011  lr=2.79e-05  ETA=4min
+    step 10650/12207  loss=4.6129  lr=2.74e-05  ETA=4min
+    step 10700/12207  loss=4.7043  lr=2.70e-05  ETA=3min
+    step 10750/12207  loss=4.8398  lr=2.65e-05  ETA=3min
+    step 10800/12207  loss=4.2924  lr=2.61e-05  ETA=3min
+    step 10850/12207  loss=4.5683  lr=2.57e-05  ETA=3min
+    step 10900/12207  loss=4.6943  lr=2.52e-05  ETA=3min
+    step 10950/12207  loss=4.5289  lr=2.49e-05  ETA=3min
+    step 11000/12207  loss=4.6992  lr=2.45e-05  ETA=3min
+    step 11050/12207  loss=4.7817  lr=2.41e-05  ETA=3min
+    step 11100/12207  loss=4.5650  lr=2.38e-05  ETA=2min
+    step 11150/12207  loss=4.6320  lr=2.34e-05  ETA=2min
+    step 11200/12207  loss=4.6513  lr=2.31e-05  ETA=2min
+    step 11250/12207  loss=4.3808  lr=2.28e-05  ETA=2min
+    step 11300/12207  loss=4.5531  lr=2.25e-05  ETA=2min
+    step 11350/12207  loss=4.7666  lr=2.23e-05  ETA=2min
+    step 11400/12207  loss=4.5398  lr=2.20e-05  ETA=2min
+    step 11450/12207  loss=4.7151  lr=2.18e-05  ETA=2min
+    step 11500/12207  loss=4.5695  lr=2.15e-05  ETA=2min
+    step 11550/12207  loss=4.8325  lr=2.13e-05  ETA=1min
+    step 11600/12207  loss=4.6752  lr=2.11e-05  ETA=1min
+    step 11650/12207  loss=4.9062  lr=2.10e-05  ETA=1min
+    step 11700/12207  loss=4.4471  lr=2.08e-05  ETA=1min
+    step 11750/12207  loss=4.6013  lr=2.06e-05  ETA=1min
+    step 11800/12207  loss=4.4898  lr=2.05e-05  ETA=1min
+    step 11850/12207  loss=3.9785  lr=2.04e-05  ETA=1min
+    step 11900/12207  loss=4.5578  lr=2.03e-05  ETA=1min
+    step 11950/12207  loss=4.7559  lr=2.02e-05  ETA=1min
+    step 12000/12207  loss=4.6714  lr=2.01e-05  ETA=0min
+    step 12050/12207  loss=4.6205  lr=2.01e-05  ETA=0min
+    step 12100/12207  loss=4.4523  lr=2.00e-05  ETA=0min
+    step 12150/12207  loss=4.8353  lr=2.00e-05  ETA=0min
+    step 12200/12207  loss=4.5715  lr=2.00e-05  ETA=0min
+  Training done in 27.6 min
+    L=2048: PPL=86.346  (8 chunks)
+    L=4096: PPL=113.702  (8 chunks)
+    L=8192: PPL=168.676  (8 chunks)
+    L=16384: PPL=274.944  (8 chunks)
+
+  [passkey] NLL-gap evaluation for 350m_tau0.00_seed137
+  L=2048_d=0.1 ... gap=+0.038  ret=60%  AR=0%  (10 trials)
+  L=2048_d=0.2 ... gap=+0.018  ret=60%  AR=0%  (10 trials)
+  L=2048_d=0.5 ... gap=+0.120  ret=90%  AR=0%  (10 trials)
+  L=2048_d=0.8 ... gap=+0.092  ret=70%  AR=0%  (10 trials)
+  L=2048_d=0.9 ... gap=+0.186  ret=70%  AR=0%  (10 trials)
+  L=4096_d=0.1 ... gap=+0.082  ret=60%  AR=0%  (10 trials)
+  L=4096_d=0.2 ... gap=+0.086  ret=70%  AR=0%  (10 trials)
+  L=4096_d=0.5 ... gap=-0.174  ret=10%  AR=0%  (10 trials)
+  L=4096_d=0.8 ... gap=+0.082  ret=50%  AR=0%  (10 trials)
+  L=4096_d=0.9 ... gap=+0.043  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.1 ... gap=+0.018  ret=70%  AR=0%  (10 trials)
+  L=8192_d=0.2 ... gap=-0.074  ret=50%  AR=0%  (10 trials)
+  L=8192_d=0.5 ... gap=+0.094  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.8 ... gap=+0.063  ret=40%  AR=0%  (10 trials)
+  L=8192_d=0.9 ... gap=-0.010  ret=50%  AR=0%  (10 trials)
+  [passkey] Retrieval rate: 0.58
+  [passkey] Mean NLL gap: 0.0443
+
+  [PI] Inference-time PI baseline (zero-cost, no extra training)
+  [PI] scale=8.0  inv_freq hash=61a4945ca26c2340
+    L=2048: PPL=223.642  (8 chunks)
+    L=4096: PPL=239.278  (8 chunks)
+    L=8192: PPL=243.839  (8 chunks)
+    L=16384: PPL=274.072  (8 chunks)
+  [PI] Passkey NLL-gap evaluation
+  L=2048_d=0.1 ... gap=+0.026  ret=50%  AR=0%  (10 trials)
+  L=2048_d=0.2 ... gap=+0.092  ret=60%  AR=0%  (10 trials)
+  L=2048_d=0.5 ... gap=+0.019  ret=70%  AR=0%  (10 trials)
+  L=2048_d=0.8 ... gap=-0.084  ret=50%  AR=0%  (10 trials)
+  L=2048_d=0.9 ... gap=-0.031  ret=30%  AR=0%  (10 trials)
+  L=4096_d=0.1 ... gap=-0.026  ret=50%  AR=0%  (10 trials)
+  L=4096_d=0.2 ... gap=-0.020  ret=50%  AR=0%  (10 trials)
+  L=4096_d=0.5 ... gap=-0.147  ret=10%  AR=0%  (10 trials)
+  L=4096_d=0.8 ... gap=+0.009  ret=60%  AR=0%  (10 trials)
+  L=4096_d=0.9 ... gap=+0.050  ret=70%  AR=0%  (10 trials)
+  L=8192_d=0.1 ... gap=+0.017  ret=50%  AR=0%  (10 trials)
+  L=8192_d=0.2 ... gap=-0.101  ret=40%  AR=0%  (10 trials)
+  L=8192_d=0.5 ... gap=+0.086  ret=70%  AR=0%  (10 trials)
+  L=8192_d=0.8 ... gap=+0.056  ret=70%  AR=0%  (10 trials)
+  L=8192_d=0.9 ... gap=-0.036  ret=40%  AR=0%  (10 trials)
+  [checkpoint] saved to /root/autodl-tmp/evq_phase9_350m_L2048_50M_tau0_tau1.5/results_checkpoint.json
+
+============================================================
+  RUN: 350m_tau1.50_seed137  (base=500000)
+============================================================
+  inv_freq: shape=torch.Size([32])  max=0.882917  min=0.00000268  hash=129bc828f2bd246e
+  Phase collision total=0.258812
+  [passkey] Mix ratio check: 5/1000 = 0.5%
+  Model params: 454.2M
+    step 0/12207  loss=11.0051  lr=0.00e+00  ETA=0min
+    step 50/12207  loss=8.6642  lr=4.10e-05  ETA=27min
+    step 100/12207  loss=7.4150  lr=8.20e-05  ETA=27min
+    step 150/12207  loss=7.1576  lr=1.23e-04  ETA=27min
+    step 200/12207  loss=6.9547  lr=1.64e-04  ETA=27min
+    step 250/12207  loss=7.0984  lr=2.00e-04  ETA=27min
+    step 300/12207  loss=6.4918  lr=2.00e-04  ETA=27min
+    step 350/12207  loss=6.5570  lr=2.00e-04  ETA=27min
+    step 400/12207  loss=7.1269  lr=2.00e-04  ETA=27min
+    step 450/12207  loss=6.6635  lr=2.00e-04  ETA=27min
+    step 500/12207  loss=6.5019  lr=2.00e-04  ETA=26min
+    step 550/12207  loss=6.6237  lr=2.00e-04  ETA=26min
+    step 600/12207  loss=5.8054  lr=2.00e-04  ETA=26min
+    step 650/12207  loss=6.4486  lr=1.99e-04  ETA=26min
+    step 700/12207  loss=5.9047  lr=1.99e-04  ETA=26min
+    step 750/12207  loss=6.3160  lr=1.99e-04  ETA=26min
+    step 800/12207  loss=6.6547  lr=1.99e-04  ETA=26min
+    step 850/12207  loss=6.2889  lr=1.99e-04  ETA=26min
+    step 900/12207  loss=6.1783  lr=1.99e-04  ETA=26min
+    step 950/12207  loss=6.1966  lr=1.98e-04  ETA=25min
+    step 1000/12207  loss=6.2055  lr=1.98e-04  ETA=25min
+    step 1050/12207  loss=5.9282  lr=1.98e-04  ETA=25min
+    step 1100/12207  loss=6.2288  lr=1.98e-04  ETA=25min
+    step 1150/12207  loss=5.9139  lr=1.97e-04  ETA=25min
+    step 1200/12207  loss=6.0134  lr=1.97e-04  ETA=25min
+    step 1250/12207  loss=6.2081  lr=1.97e-04  ETA=25min
+    step 1300/12207  loss=5.7503  lr=1.97e-04  ETA=25min
+    step 1350/12207  loss=6.0569  lr=1.96e-04  ETA=25min
+    step 1400/12207  loss=5.7693  lr=1.96e-04  ETA=24min
+    step 1450/12207  loss=6.2272  lr=1.96e-04  ETA=24min
+    step 1500/12207  loss=5.7761  lr=1.95e-04  ETA=24min
+    step 1550/12207  loss=5.8854  lr=1.95e-04  ETA=24min
+    step 1600/12207  loss=6.1697  lr=1.94e-04  ETA=24min
+    step 1650/12207  loss=5.5303  lr=1.94e-04  ETA=24min
+    step 1700/12207  loss=5.6166  lr=1.94e-04  ETA=24min
+    step 1750/12207  loss=6.3834  lr=1.93e-04  ETA=24min
+    step 1800/12207  loss=5.7929  lr=1.93e-04  ETA=24min
+    step 1850/12207  loss=5.8756  lr=1.92e-04  ETA=23min
+    step 1900/12207  loss=5.8074  lr=1.92e-04  ETA=23min
+    step 1950/12207  loss=6.0527  lr=1.91e-04  ETA=23min
+    step 2000/12207  loss=5.8347  lr=1.91e-04  ETA=23min
+    step 2050/12207  loss=5.8991  lr=1.90e-04  ETA=23min
+    step 2100/12207  loss=5.9032  lr=1.90e-04  ETA=23min
+    step 2150/12207  loss=5.8495  lr=1.89e-04  ETA=23min
+    step 2200/12207  loss=5.6159  lr=1.88e-04  ETA=23min
+    step 2250/12207  loss=5.6262  lr=1.88e-04  ETA=22min
+    step 2300/12207  loss=5.5470  lr=1.87e-04  ETA=22min
+    step 2350/12207  loss=5.6713  lr=1.87e-04  ETA=22min
+    step 2400/12207  loss=5.4772  lr=1.86e-04  ETA=22min
+    step 2450/12207  loss=5.4084  lr=1.85e-04  ETA=22min
+    step 2500/12207  loss=5.5100  lr=1.85e-04  ETA=22min
+    step 2550/12207  loss=5.4289  lr=1.84e-04  ETA=22min
+    step 2600/12207  loss=5.6724  lr=1.83e-04  ETA=22min
+    step 2650/12207  loss=5.6124  lr=1.83e-04  ETA=22min
+    step 2700/12207  loss=5.3878  lr=1.82e-04  ETA=21min
+    step 2750/12207  loss=5.9926  lr=1.81e-04  ETA=21min
+    step 2800/12207  loss=5.3877  lr=1.80e-04  ETA=21min
+    step 2850/12207  loss=5.4444  lr=1.80e-04  ETA=21min
+    step 2900/12207  loss=5.4631  lr=1.79e-04  ETA=21min
+    step 2950/12207  loss=6.0963  lr=1.78e-04  ETA=21min
+    step 3000/12207  loss=5.5599  lr=1.77e-04  ETA=21min
+    step 3050/12207  loss=5.5050  lr=1.77e-04  ETA=21min
+    step 3100/12207  loss=5.2316  lr=1.76e-04  ETA=21min
+    step 3150/12207  loss=5.2873  lr=1.75e-04  ETA=20min
+    step 3200/12207  loss=5.2085  lr=1.74e-04  ETA=20min
+    step 3250/12207  loss=5.4236  lr=1.73e-04  ETA=20min
+    step 3300/12207  loss=4.9280  lr=1.73e-04  ETA=20min
+    step 3350/12207  loss=5.3370  lr=1.72e-04  ETA=20min
+    step 3400/12207  loss=5.7123  lr=1.71e-04  ETA=20min
+    step 3450/12207  loss=5.9261  lr=1.70e-04  ETA=20min
+    step 3500/12207  loss=5.8201  lr=1.69e-04  ETA=20min
+    step 3550/12207  loss=5.2609  lr=1.68e-04  ETA=20min
+    step 3600/12207  loss=5.1113  lr=1.67e-04  ETA=19min
+    step 3650/12207  loss=5.5450  lr=1.66e-04  ETA=19min
+    step 3700/12207  loss=5.3129  lr=1.65e-04  ETA=19min
+    step 3750/12207  loss=5.3203  lr=1.64e-04  ETA=19min
+    step 3800/12207  loss=5.3219  lr=1.64e-04  ETA=19min
+    step 3850/12207  loss=5.2278  lr=1.63e-04  ETA=19min
+    step 3900/12207  loss=5.3926  lr=1.62e-04  ETA=19min
+    step 3950/12207  loss=4.9006  lr=1.61e-04  ETA=19min
+    step 4000/12207  loss=5.2030  lr=1.60e-04  ETA=19min
+    step 4050/12207  loss=5.2681  lr=1.59e-04  ETA=18min
+    step 4100/12207  loss=5.3190  lr=1.58e-04  ETA=18min
+    step 4150/12207  loss=5.2067  lr=1.57e-04  ETA=18min
+    step 4200/12207  loss=5.0537  lr=1.56e-04  ETA=18min
+    step 4250/12207  loss=5.0838  lr=1.55e-04  ETA=18min
+    step 4300/12207  loss=5.3481  lr=1.54e-04  ETA=18min
+    step 4350/12207  loss=5.2966  lr=1.53e-04  ETA=18min
+    step 4400/12207  loss=5.0495  lr=1.52e-04  ETA=18min
+    step 4450/12207  loss=4.6883  lr=1.50e-04  ETA=18min
+    step 4500/12207  loss=5.4490  lr=1.49e-04  ETA=17min
+    step 4550/12207  loss=5.1273  lr=1.48e-04  ETA=17min
+    step 4600/12207  loss=5.4753  lr=1.47e-04  ETA=17min
+    step 4650/12207  loss=4.9571  lr=1.46e-04  ETA=17min
+    step 4700/12207  loss=4.9482  lr=1.45e-04  ETA=17min
+    step 4750/12207  loss=4.8786  lr=1.44e-04  ETA=17min
+    step 4800/12207  loss=5.2840  lr=1.43e-04  ETA=17min
+    step 4850/12207  loss=5.2541  lr=1.42e-04  ETA=17min
+    step 4900/12207  loss=5.4676  lr=1.41e-04  ETA=17min
+    step 4950/12207  loss=5.4033  lr=1.40e-04  ETA=16min
+    step 5000/12207  loss=5.2002  lr=1.38e-04  ETA=16min
+    step 5050/12207  loss=5.3968  lr=1.37e-04  ETA=16min
+    step 5100/12207  loss=5.2640  lr=1.36e-04  ETA=16min
+    step 5150/12207  loss=5.1124  lr=1.35e-04  ETA=16min
+    step 5200/12207  loss=5.0367  lr=1.34e-04  ETA=16min
+    step 5250/12207  loss=5.1756  lr=1.33e-04  ETA=16min
+    step 5300/12207  loss=4.5825  lr=1.32e-04  ETA=16min
+    step 5350/12207  loss=5.1370  lr=1.31e-04  ETA=15min
+    step 5400/12207  loss=5.1234  lr=1.29e-04  ETA=15min
+    step 5450/12207  loss=5.1850  lr=1.28e-04  ETA=15min
+    step 5500/12207  loss=4.9766  lr=1.27e-04  ETA=15min
+    step 5550/12207  loss=5.0049  lr=1.26e-04  ETA=15min
+    step 5600/12207  loss=5.1386  lr=1.25e-04  ETA=15min
+    step 5650/12207  loss=4.9563  lr=1.24e-04  ETA=15min
+    step 5700/12207  loss=5.5760  lr=1.22e-04  ETA=15min
+    step 5750/12207  loss=5.1343  lr=1.21e-04  ETA=15min
+    step 5800/12207  loss=4.9391  lr=1.20e-04  ETA=14min
+    step 5850/12207  loss=5.0630  lr=1.19e-04  ETA=14min
+    step 5900/12207  loss=4.9585  lr=1.18e-04  ETA=14min
+    step 5950/12207  loss=4.8505  lr=1.17e-04  ETA=14min
+    step 6000/12207  loss=5.0721  lr=1.15e-04  ETA=14min
+    step 6050/12207  loss=5.0275  lr=1.14e-04  ETA=14min
+    step 6100/12207  loss=5.3306  lr=1.13e-04  ETA=14min
+    step 6150/12207  loss=5.4075  lr=1.12e-04  ETA=14min
+    step 6200/12207  loss=5.1015  lr=1.11e-04  ETA=14min
+    step 6250/12207  loss=4.8317  lr=1.09e-04  ETA=13min
+    step 6300/12207  loss=4.7173  lr=1.08e-04  ETA=13min
+    step 6350/12207  loss=5.3590  lr=1.07e-04  ETA=13min
+    step 6400/12207  loss=5.0706  lr=1.06e-04  ETA=13min
+    step 6450/12207  loss=4.8825  lr=1.05e-04  ETA=13min
+    step 6500/12207  loss=4.9494  lr=1.04e-04  ETA=13min
+    step 6550/12207  loss=4.5667  lr=1.02e-04  ETA=13min
+    step 6600/12207  loss=4.7401  lr=1.01e-04  ETA=13min
+    step 6650/12207  loss=4.5726  lr=1.00e-04  ETA=13min
+    step 6700/12207  loss=4.4066  lr=9.88e-05  ETA=12min
+    step 6750/12207  loss=4.8447  lr=9.76e-05  ETA=12min
+    step 6800/12207  loss=5.2995  lr=9.65e-05  ETA=12min
+    step 6850/12207  loss=4.7258  lr=9.53e-05  ETA=12min
+    step 6900/12207  loss=4.8692  lr=9.41e-05  ETA=12min
+    step 6950/12207  loss=5.1441  lr=9.30e-05  ETA=12min
+    step 7000/12207  loss=4.9291  lr=9.18e-05  ETA=12min
+    step 7050/12207  loss=4.8798  lr=9.07e-05  ETA=12min
+    step 7100/12207  loss=4.7503  lr=8.95e-05  ETA=12min
+    step 7150/12207  loss=4.7117  lr=8.84e-05  ETA=11min
+    step 7200/12207  loss=4.9337  lr=8.72e-05  ETA=11min
+    step 7250/12207  loss=5.0726  lr=8.61e-05  ETA=11min
+    step 7300/12207  loss=4.6516  lr=8.49e-05  ETA=11min
+    step 7350/12207  loss=4.2919  lr=8.38e-05  ETA=11min
+    step 7400/12207  loss=4.8620  lr=8.27e-05  ETA=11min
+    step 7450/12207  loss=4.8892  lr=8.16e-05  ETA=11min
+    step 7500/12207  loss=4.9580  lr=8.04e-05  ETA=11min
+    step 7550/12207  loss=4.8027  lr=7.93e-05  ETA=11min
+    step 7600/12207  loss=5.0270  lr=7.82e-05  ETA=10min
+    step 7650/12207  loss=5.1465  lr=7.71e-05  ETA=10min
+    step 7700/12207  loss=4.7725  lr=7.60e-05  ETA=10min
+    step 7750/12207  loss=4.9314  lr=7.49e-05  ETA=10min
+    step 7800/12207  loss=4.8110  lr=7.38e-05  ETA=10min
+    step 7850/12207  loss=5.0918  lr=7.28e-05  ETA=10min
+    step 7900/12207  loss=4.7239  lr=7.17e-05  ETA=10min
+    step 7950/12207  loss=4.5982  lr=7.06e-05  ETA=10min
+    step 8000/12207  loss=4.9276  lr=6.96e-05  ETA=10min
+    step 8050/12207  loss=4.6881  lr=6.85e-05  ETA=9min
+    step 8100/12207  loss=4.3917  lr=6.75e-05  ETA=9min
+    step 8150/12207  loss=5.0318  lr=6.64e-05  ETA=9min
+    step 8200/12207  loss=4.9315  lr=6.54e-05  ETA=9min
+    step 8250/12207  loss=4.9209  lr=6.44e-05  ETA=9min
+    step 8300/12207  loss=4.4213  lr=6.34e-05  ETA=9min
+    step 8350/12207  loss=4.8172  lr=6.24e-05  ETA=9min
+    step 8400/12207  loss=4.4257  lr=6.14e-05  ETA=9min
+    step 8450/12207  loss=4.5280  lr=6.04e-05  ETA=8min
+    step 8500/12207  loss=4.7364  lr=5.94e-05  ETA=8min
+    step 8550/12207  loss=4.4980  lr=5.84e-05  ETA=8min
+    step 8600/12207  loss=4.8375  lr=5.74e-05  ETA=8min
+    step 8650/12207  loss=4.1451  lr=5.65e-05  ETA=8min
+    step 8700/12207  loss=4.6286  lr=5.55e-05  ETA=8min
+    step 8750/12207  loss=4.7772  lr=5.46e-05  ETA=8min
+    step 8800/12207  loss=4.7954  lr=5.37e-05  ETA=8min
+    step 8850/12207  loss=4.5990  lr=5.28e-05  ETA=8min
+    step 8900/12207  loss=4.4127  lr=5.19e-05  ETA=7min
+    step 8950/12207  loss=4.8652  lr=5.10e-05  ETA=7min
+    step 9000/12207  loss=4.6386  lr=5.01e-05  ETA=7min
+    step 9050/12207  loss=5.0019  lr=4.92e-05  ETA=7min
+    step 9100/12207  loss=4.5478  lr=4.83e-05  ETA=7min
+    step 9150/12207  loss=4.6390  lr=4.75e-05  ETA=7min
+    step 9200/12207  loss=4.6710  lr=4.66e-05  ETA=7min
+    step 9250/12207  loss=4.6325  lr=4.58e-05  ETA=7min
+    step 9300/12207  loss=4.7097  lr=4.50e-05  ETA=7min
+    step 9350/12207  loss=4.6761  lr=4.42e-05  ETA=6min
+    step 9400/12207  loss=4.3465  lr=4.34e-05  ETA=6min
+    step 9450/12207  loss=4.7141  lr=4.26e-05  ETA=6min
+    step 9500/12207  loss=4.7857  lr=4.18e-05  ETA=6min
+    step 9550/12207  loss=4.5935  lr=4.10e-05  ETA=6min
+    step 9600/12207  loss=4.6202  lr=4.03e-05  ETA=6min
+    step 9650/12207  loss=4.6370  lr=3.95e-05  ETA=6min
+    step 9700/12207  loss=4.7767  lr=3.88e-05  ETA=6min
+    step 9750/12207  loss=4.6613  lr=3.81e-05  ETA=6min
+    step 9800/12207  loss=4.6307  lr=3.74e-05  ETA=5min
+    step 9850/12207  loss=4.2085  lr=3.67e-05  ETA=5min
+    step 9900/12207  loss=4.4877  lr=3.60e-05  ETA=5min
+    step 9950/12207  loss=4.8868  lr=3.54e-05  ETA=5min
+    step 10000/12207  loss=4.4091  lr=3.47e-05  ETA=5min
+    step 10050/12207  loss=4.7821  lr=3.41e-05  ETA=5min
+    step 10100/12207  loss=5.2140  lr=3.34e-05  ETA=5min
+    step 10150/12207  loss=4.2811  lr=3.28e-05  ETA=5min
+    step 10200/12207  loss=4.1472  lr=3.22e-05  ETA=5min
+    step 10250/12207  loss=4.5319  lr=3.16e-05  ETA=4min
+    step 10300/12207  loss=4.8028  lr=3.11e-05  ETA=4min
+    step 10350/12207  loss=4.5966  lr=3.05e-05  ETA=4min
+    step 10400/12207  loss=4.8043  lr=2.99e-05  ETA=4min
+    step 10450/12207  loss=4.4980  lr=2.94e-05  ETA=4min
+    step 10500/12207  loss=4.8291  lr=2.89e-05  ETA=4min
+    step 10550/12207  loss=4.5394  lr=2.84e-05  ETA=4min
+    step 10600/12207  loss=4.0782  lr=2.79e-05  ETA=4min
+    step 10650/12207  loss=4.5881  lr=2.74e-05  ETA=4min
+    step 10700/12207  loss=4.6770  lr=2.70e-05  ETA=3min
+    step 10750/12207  loss=4.8243  lr=2.65e-05  ETA=3min
+    step 10800/12207  loss=4.2837  lr=2.61e-05  ETA=3min
+    step 10850/12207  loss=4.5448  lr=2.57e-05  ETA=3min
+    step 10900/12207  loss=4.6657  lr=2.52e-05  ETA=3min
+    step 10950/12207  loss=4.5178  lr=2.49e-05  ETA=3min
+    step 11000/12207  loss=4.6855  lr=2.45e-05  ETA=3min
+    step 11050/12207  loss=4.7664  lr=2.41e-05  ETA=3min
+    step 11100/12207  loss=4.5509  lr=2.38e-05  ETA=3min
+    step 11150/12207  loss=4.6224  lr=2.34e-05  ETA=2min
+    step 11200/12207  loss=4.6364  lr=2.31e-05  ETA=2min
+    step 11250/12207  loss=4.3831  lr=2.28e-05  ETA=2min
+    step 11300/12207  loss=4.5184  lr=2.25e-05  ETA=2min
+    step 11350/12207  loss=4.7468  lr=2.23e-05  ETA=2min
+    step 11400/12207  loss=4.5129  lr=2.20e-05  ETA=2min
+    step 11450/12207  loss=4.6946  lr=2.18e-05  ETA=2min
+    step 11500/12207  loss=4.5715  lr=2.15e-05  ETA=2min
+    step 11550/12207  loss=4.8301  lr=2.13e-05  ETA=1min
+    step 11600/12207  loss=4.6670  lr=2.11e-05  ETA=1min
+    step 11650/12207  loss=4.8976  lr=2.10e-05  ETA=1min
+    step 11700/12207  loss=4.4161  lr=2.08e-05  ETA=1min
+    step 11750/12207  loss=4.5897  lr=2.06e-05  ETA=1min
+    step 11800/12207  loss=4.4751  lr=2.05e-05  ETA=1min
+    step 11850/12207  loss=3.9476  lr=2.04e-05  ETA=1min
+    step 11900/12207  loss=4.5296  lr=2.03e-05  ETA=1min
+    step 11950/12207  loss=4.7210  lr=2.02e-05  ETA=1min
+    step 12000/12207  loss=4.6611  lr=2.01e-05  ETA=0min
+    step 12050/12207  loss=4.6082  lr=2.01e-05  ETA=0min
+    step 12100/12207  loss=4.4256  lr=2.00e-05  ETA=0min
+    step 12150/12207  loss=4.8298  lr=2.00e-05  ETA=0min
+    step 12200/12207  loss=4.5607  lr=2.00e-05  ETA=0min
+  Training done in 27.6 min
+    L=2048: PPL=84.334  (8 chunks)
+    L=4096: PPL=109.840  (8 chunks)
+    L=8192: PPL=156.664  (8 chunks)
+    L=16384: PPL=251.192  (8 chunks)
+
+  [passkey] NLL-gap evaluation for 350m_tau1.50_seed137
+  L=2048_d=0.1 ... gap=+0.098  ret=80%  AR=0%  (10 trials)
+  L=2048_d=0.2 ... gap=+0.096  ret=80%  AR=0%  (10 trials)
+  L=2048_d=0.5 ... gap=+0.195  ret=90%  AR=0%  (10 trials)
+  L=2048_d=0.8 ... gap=+0.273  ret=80%  AR=0%  (10 trials)
+  L=2048_d=0.9 ... gap=+0.269  ret=90%  AR=0%  (10 trials)
+  L=4096_d=0.1 ... gap=+0.063  ret=60%  AR=0%  (10 trials)
+  L=4096_d=0.2 ... gap=-0.016  ret=50%  AR=0%  (10 trials)
+  L=4096_d=0.5 ... gap=-0.127  ret=40%  AR=0%  (10 trials)
+  L=4096_d=0.8 ... gap=-0.034  ret=40%  AR=0%  (10 trials)
+  L=4096_d=0.9 ... gap=+0.029  ret=50%  AR=0%  (10 trials)
+  L=8192_d=0.1 ... gap=+0.008  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.2 ... gap=-0.022  ret=40%  AR=0%  (10 trials)
+  L=8192_d=0.5 ... gap=+0.055  ret=70%  AR=0%  (10 trials)
+  L=8192_d=0.8 ... gap=+0.019  ret=50%  AR=0%  (10 trials)
+  L=8192_d=0.9 ... gap=+0.091  ret=50%  AR=0%  (10 trials)
+  [passkey] Retrieval rate: 0.62
+  [passkey] Mean NLL gap: 0.0665
+  [checkpoint] saved to /root/autodl-tmp/evq_phase9_350m_L2048_50M_tau0_tau1.5/results_checkpoint.json
+
+============================================================
+  RUN: 350m_tau0.00_seed256  (base=500000)
+============================================================
+  inv_freq: shape=torch.Size([32])  max=0.814617  min=0.00000246  hash=88654f1fe2a414d3
+  Phase collision total=0.350769
+  [passkey] Mix ratio check: 5/1000 = 0.5%
+  Model params: 454.2M
+    step 0/12207  loss=11.0605  lr=0.00e+00  ETA=0min
+    step 50/12207  loss=8.7118  lr=4.10e-05  ETA=28min
+    step 100/12207  loss=7.4164  lr=8.20e-05  ETA=28min
+    step 150/12207  loss=7.1486  lr=1.23e-04  ETA=27min
+    step 200/12207  loss=6.6832  lr=1.64e-04  ETA=27min
+    step 250/12207  loss=6.8605  lr=2.00e-04  ETA=27min
+    step 300/12207  loss=7.2796  lr=2.00e-04  ETA=27min
+    step 350/12207  loss=6.7330  lr=2.00e-04  ETA=27min
+    step 400/12207  loss=6.4344  lr=2.00e-04  ETA=27min
+    step 450/12207  loss=6.7402  lr=2.00e-04  ETA=27min
+    step 500/12207  loss=6.6685  lr=2.00e-04  ETA=26min
+    step 550/12207  loss=6.2652  lr=2.00e-04  ETA=26min
+    step 600/12207  loss=6.4690  lr=2.00e-04  ETA=26min
+    step 650/12207  loss=6.3403  lr=1.99e-04  ETA=26min
+    step 700/12207  loss=6.6167  lr=1.99e-04  ETA=26min
+    step 750/12207  loss=6.4916  lr=1.99e-04  ETA=26min
+    step 800/12207  loss=6.4415  lr=1.99e-04  ETA=26min
+    step 850/12207  loss=6.2488  lr=1.99e-04  ETA=26min
+    step 900/12207  loss=6.0928  lr=1.99e-04  ETA=26min
+    step 950/12207  loss=6.3665  lr=1.98e-04  ETA=25min
+    step 1000/12207  loss=5.7419  lr=1.98e-04  ETA=25min
+    step 1050/12207  loss=6.3340  lr=1.98e-04  ETA=25min
+    step 1100/12207  loss=5.9375  lr=1.98e-04  ETA=25min
+    step 1150/12207  loss=6.2681  lr=1.97e-04  ETA=25min
+    step 1200/12207  loss=5.8735  lr=1.97e-04  ETA=25min
+    step 1250/12207  loss=6.3921  lr=1.97e-04  ETA=25min
+    step 1300/12207  loss=5.7622  lr=1.97e-04  ETA=25min
+    step 1350/12207  loss=6.0567  lr=1.96e-04  ETA=25min
+    step 1400/12207  loss=5.9958  lr=1.96e-04  ETA=24min
+    step 1450/12207  loss=5.7446  lr=1.96e-04  ETA=24min
+    step 1500/12207  loss=6.0476  lr=1.95e-04  ETA=24min
+    step 1550/12207  loss=6.1849  lr=1.95e-04  ETA=24min
+    step 1600/12207  loss=5.9687  lr=1.94e-04  ETA=24min
+    step 1650/12207  loss=5.9133  lr=1.94e-04  ETA=24min
+    step 1700/12207  loss=5.7868  lr=1.94e-04  ETA=24min
+    step 1750/12207  loss=5.8892  lr=1.93e-04  ETA=24min
+    step 1800/12207  loss=5.9630  lr=1.93e-04  ETA=24min
+    step 1850/12207  loss=5.6629  lr=1.92e-04  ETA=23min
+    step 1900/12207  loss=5.6237  lr=1.92e-04  ETA=23min
+    step 1950/12207  loss=5.5192  lr=1.91e-04  ETA=23min
+    step 2000/12207  loss=6.0477  lr=1.91e-04  ETA=23min
+    step 2050/12207  loss=5.6857  lr=1.90e-04  ETA=23min
+    step 2100/12207  loss=5.7455  lr=1.90e-04  ETA=23min
+    step 2150/12207  loss=6.1016  lr=1.89e-04  ETA=23min
+    step 2200/12207  loss=5.5156  lr=1.88e-04  ETA=23min
+    step 2250/12207  loss=5.9217  lr=1.88e-04  ETA=23min
+    step 2300/12207  loss=6.0392  lr=1.87e-04  ETA=22min
+    step 2350/12207  loss=5.7266  lr=1.87e-04  ETA=22min
+    step 2400/12207  loss=5.6237  lr=1.86e-04  ETA=22min
+    step 2450/12207  loss=5.5269  lr=1.85e-04  ETA=22min
+    step 2500/12207  loss=5.4560  lr=1.85e-04  ETA=22min
+    step 2550/12207  loss=5.5991  lr=1.84e-04  ETA=22min
+    step 2600/12207  loss=5.9170  lr=1.83e-04  ETA=22min
+    step 2650/12207  loss=5.4301  lr=1.83e-04  ETA=22min
+    step 2700/12207  loss=5.7277  lr=1.82e-04  ETA=21min
+    step 2750/12207  loss=5.3815  lr=1.81e-04  ETA=21min
+    step 2800/12207  loss=5.5617  lr=1.80e-04  ETA=21min
+    step 2850/12207  loss=5.7828  lr=1.80e-04  ETA=21min
+    step 2900/12207  loss=5.7832  lr=1.79e-04  ETA=21min
+    step 2950/12207  loss=5.4796  lr=1.78e-04  ETA=21min
+    step 3000/12207  loss=5.7228  lr=1.77e-04  ETA=21min
+    step 3050/12207  loss=5.1230  lr=1.77e-04  ETA=21min
+    step 3100/12207  loss=5.6256  lr=1.76e-04  ETA=21min
+    step 3150/12207  loss=5.4654  lr=1.75e-04  ETA=20min
+    step 3200/12207  loss=5.3140  lr=1.74e-04  ETA=20min
+    step 3250/12207  loss=5.6902  lr=1.73e-04  ETA=20min
+    step 3300/12207  loss=5.5426  lr=1.73e-04  ETA=20min
+    step 3350/12207  loss=5.1810  lr=1.72e-04  ETA=20min
+    step 3400/12207  loss=5.3478  lr=1.71e-04  ETA=20min
+    step 3450/12207  loss=5.2238  lr=1.70e-04  ETA=20min
+    step 3500/12207  loss=5.2442  lr=1.69e-04  ETA=20min
+    step 3550/12207  loss=5.1933  lr=1.68e-04  ETA=20min
+    step 3600/12207  loss=5.3236  lr=1.67e-04  ETA=19min
+    step 3650/12207  loss=5.1960  lr=1.66e-04  ETA=19min
+    step 3700/12207  loss=5.5130  lr=1.65e-04  ETA=19min
+    step 3750/12207  loss=5.8966  lr=1.64e-04  ETA=19min
+    step 3800/12207  loss=5.5469  lr=1.64e-04  ETA=19min
+    step 3850/12207  loss=5.5944  lr=1.63e-04  ETA=19min
+    step 3900/12207  loss=5.1744  lr=1.62e-04  ETA=19min
+    step 3950/12207  loss=5.2908  lr=1.61e-04  ETA=19min
+    step 4000/12207  loss=5.3179  lr=1.60e-04  ETA=19min
+    step 4050/12207  loss=5.6433  lr=1.59e-04  ETA=18min
+    step 4100/12207  loss=5.4221  lr=1.58e-04  ETA=18min
+    step 4150/12207  loss=5.3571  lr=1.57e-04  ETA=18min
+    step 4200/12207  loss=5.3667  lr=1.56e-04  ETA=18min
+    step 4250/12207  loss=5.1372  lr=1.55e-04  ETA=18min
+    step 4300/12207  loss=5.2116  lr=1.54e-04  ETA=18min
+    step 4350/12207  loss=5.1096  lr=1.53e-04  ETA=18min
+    step 4400/12207  loss=5.6497  lr=1.52e-04  ETA=18min
+    step 4450/12207  loss=5.1065  lr=1.50e-04  ETA=18min
+    step 4500/12207  loss=4.8145  lr=1.49e-04  ETA=17min
+    step 4550/12207  loss=5.1668  lr=1.48e-04  ETA=17min
+    step 4600/12207  loss=5.1543  lr=1.47e-04  ETA=17min
+    step 4650/12207  loss=4.8122  lr=1.46e-04  ETA=17min
+    step 4700/12207  loss=5.2927  lr=1.45e-04  ETA=17min
+    step 4750/12207  loss=5.4105  lr=1.44e-04  ETA=17min
+    step 4800/12207  loss=5.5081  lr=1.43e-04  ETA=17min
+    step 4850/12207  loss=5.2729  lr=1.42e-04  ETA=17min
+    step 4900/12207  loss=5.0575  lr=1.41e-04  ETA=17min
+    step 4950/12207  loss=5.1267  lr=1.40e-04  ETA=16min
+    step 5000/12207  loss=5.3660  lr=1.38e-04  ETA=16min
+    step 5050/12207  loss=5.4103  lr=1.37e-04  ETA=16min
+    step 5100/12207  loss=5.4299  lr=1.36e-04  ETA=16min
+    step 5150/12207  loss=5.0532  lr=1.35e-04  ETA=16min
+    step 5200/12207  loss=5.1803  lr=1.34e-04  ETA=16min
+    step 5250/12207  loss=5.2037  lr=1.33e-04  ETA=16min
+    step 5300/12207  loss=5.1563  lr=1.32e-04  ETA=16min
+    step 5350/12207  loss=4.8690  lr=1.31e-04  ETA=16min
+    step 5400/12207  loss=5.1118  lr=1.29e-04  ETA=15min
+    step 5450/12207  loss=4.6683  lr=1.28e-04  ETA=15min
+    step 5500/12207  loss=5.2568  lr=1.27e-04  ETA=15min
+    step 5550/12207  loss=4.9649  lr=1.26e-04  ETA=15min
+    step 5600/12207  loss=4.8025  lr=1.25e-04  ETA=15min
+    step 5650/12207  loss=5.0765  lr=1.24e-04  ETA=15min
+    step 5700/12207  loss=4.5371  lr=1.22e-04  ETA=15min
+    step 5750/12207  loss=4.8568  lr=1.21e-04  ETA=15min
+    step 5800/12207  loss=4.9445  lr=1.20e-04  ETA=14min
+    step 5850/12207  loss=5.2009  lr=1.19e-04  ETA=14min
+    step 5900/12207  loss=5.1348  lr=1.18e-04  ETA=14min
+    step 5950/12207  loss=4.8299  lr=1.17e-04  ETA=14min
+    step 6000/12207  loss=5.0475  lr=1.15e-04  ETA=14min
+    step 6050/12207  loss=4.8687  lr=1.14e-04  ETA=14min
+    step 6100/12207  loss=4.9092  lr=1.13e-04  ETA=14min
+    step 6150/12207  loss=4.6585  lr=1.12e-04  ETA=14min
+    step 6200/12207  loss=5.5838  lr=1.11e-04  ETA=14min
+    step 6250/12207  loss=5.0780  lr=1.09e-04  ETA=13min
+    step 6300/12207  loss=5.4007  lr=1.08e-04  ETA=13min
+    step 6350/12207  loss=4.9485  lr=1.07e-04  ETA=13min
+    step 6400/12207  loss=5.2672  lr=1.06e-04  ETA=13min
+    step 6450/12207  loss=4.9961  lr=1.05e-04  ETA=13min
+    step 6500/12207  loss=4.8480  lr=1.04e-04  ETA=13min
+    step 6550/12207  loss=4.6946  lr=1.02e-04  ETA=13min
+    step 6600/12207  loss=4.9680  lr=1.01e-04  ETA=13min
+    step 6650/12207  loss=4.7946  lr=1.00e-04  ETA=13min
+    step 6700/12207  loss=4.6354  lr=9.88e-05  ETA=12min
+    step 6750/12207  loss=4.5903  lr=9.76e-05  ETA=12min
+    step 6800/12207  loss=4.5280  lr=9.65e-05  ETA=12min
+    step 6850/12207  loss=4.9033  lr=9.53e-05  ETA=12min
+    step 6900/12207  loss=5.2427  lr=9.41e-05  ETA=12min
+    step 6950/12207  loss=4.5446  lr=9.30e-05  ETA=12min
+    step 7000/12207  loss=4.7953  lr=9.18e-05  ETA=12min
+    step 7050/12207  loss=4.7447  lr=9.07e-05  ETA=12min
+    step 7100/12207  loss=4.9192  lr=8.95e-05  ETA=12min
+    step 7150/12207  loss=5.0454  lr=8.84e-05  ETA=11min
+    step 7200/12207  loss=5.3502  lr=8.72e-05  ETA=11min
+    step 7250/12207  loss=4.8790  lr=8.61e-05  ETA=11min
+    step 7300/12207  loss=4.8803  lr=8.49e-05  ETA=11min
+    step 7350/12207  loss=4.6411  lr=8.38e-05  ETA=11min
+    step 7400/12207  loss=5.1476  lr=8.27e-05  ETA=11min
+    step 7450/12207  loss=5.1009  lr=8.16e-05  ETA=11min
+    step 7500/12207  loss=4.7325  lr=8.04e-05  ETA=11min
+    step 7550/12207  loss=4.3485  lr=7.93e-05  ETA=11min
+    step 7600/12207  loss=4.6564  lr=7.82e-05  ETA=10min
+    step 7650/12207  loss=4.5647  lr=7.71e-05  ETA=10min
+    step 7700/12207  loss=4.7966  lr=7.60e-05  ETA=10min
+    step 7750/12207  loss=4.5433  lr=7.49e-05  ETA=10min
+    step 7800/12207  loss=5.1536  lr=7.38e-05  ETA=10min
+    step 7850/12207  loss=4.8821  lr=7.28e-05  ETA=10min
+    step 7900/12207  loss=4.6409  lr=7.17e-05  ETA=10min
+    step 7950/12207  loss=4.6678  lr=7.06e-05  ETA=10min
+    step 8000/12207  loss=4.7368  lr=6.96e-05  ETA=10min
+    step 8050/12207  loss=4.9097  lr=6.85e-05  ETA=9min
+    step 8100/12207  loss=5.1946  lr=6.75e-05  ETA=9min
+    step 8150/12207  loss=4.3133  lr=6.64e-05  ETA=9min
+    step 8200/12207  loss=4.6066  lr=6.54e-05  ETA=9min
+    step 8250/12207  loss=4.6656  lr=6.44e-05  ETA=9min
+    step 8300/12207  loss=4.7331  lr=6.34e-05  ETA=9min
+    step 8350/12207  loss=4.9014  lr=6.24e-05  ETA=9min
+    step 8400/12207  loss=5.0439  lr=6.14e-05  ETA=9min
+    step 8450/12207  loss=5.0037  lr=6.04e-05  ETA=8min
+    step 8500/12207  loss=4.7281  lr=5.94e-05  ETA=8min
+    step 8550/12207  loss=4.7407  lr=5.84e-05  ETA=8min
+    step 8600/12207  loss=4.9714  lr=5.74e-05  ETA=8min
+    step 8650/12207  loss=4.7212  lr=5.65e-05  ETA=8min
+    step 8700/12207  loss=5.2871  lr=5.55e-05  ETA=8min
+    step 8750/12207  loss=4.8326  lr=5.46e-05  ETA=8min
+    step 8800/12207  loss=4.4352  lr=5.37e-05  ETA=8min
+    step 8850/12207  loss=4.8327  lr=5.28e-05  ETA=8min
+    step 8900/12207  loss=4.6453  lr=5.19e-05  ETA=7min
+    step 8950/12207  loss=4.6706  lr=5.10e-05  ETA=7min
+    step 9000/12207  loss=4.6346  lr=5.01e-05  ETA=7min
+    step 9050/12207  loss=4.7913  lr=4.92e-05  ETA=7min
+    step 9100/12207  loss=4.5234  lr=4.83e-05  ETA=7min
+    step 9150/12207  loss=4.7503  lr=4.75e-05  ETA=7min
+    step 9200/12207  loss=4.9950  lr=4.66e-05  ETA=7min
+    step 9250/12207  loss=4.4879  lr=4.58e-05  ETA=7min
+    step 9300/12207  loss=4.5026  lr=4.50e-05  ETA=7min
+    step 9350/12207  loss=4.7407  lr=4.42e-05  ETA=6min
+    step 9400/12207  loss=4.5594  lr=4.34e-05  ETA=6min
+    step 9450/12207  loss=4.7985  lr=4.26e-05  ETA=6min
+    step 9500/12207  loss=4.9375  lr=4.18e-05  ETA=6min
+    step 9550/12207  loss=4.6738  lr=4.10e-05  ETA=6min
+    step 9600/12207  loss=4.6217  lr=4.03e-05  ETA=6min
+    step 9650/12207  loss=4.8520  lr=3.95e-05  ETA=6min
+    step 9700/12207  loss=4.8051  lr=3.88e-05  ETA=6min
+    step 9750/12207  loss=4.6760  lr=3.81e-05  ETA=6min
+    step 9800/12207  loss=4.7731  lr=3.74e-05  ETA=5min
+    step 9850/12207  loss=4.8009  lr=3.67e-05  ETA=5min
+    step 9900/12207  loss=4.9245  lr=3.60e-05  ETA=5min
+    step 9950/12207  loss=4.6408  lr=3.54e-05  ETA=5min
+    step 10000/12207  loss=4.6194  lr=3.47e-05  ETA=5min
+    step 10050/12207  loss=4.7846  lr=3.41e-05  ETA=5min
+    step 10100/12207  loss=4.5323  lr=3.34e-05  ETA=5min
+    step 10150/12207  loss=4.1660  lr=3.28e-05  ETA=5min
+    step 10200/12207  loss=4.7225  lr=3.22e-05  ETA=5min
+    step 10250/12207  loss=4.7073  lr=3.16e-05  ETA=4min
+    step 10300/12207  loss=4.7074  lr=3.11e-05  ETA=4min
+    step 10350/12207  loss=4.5362  lr=3.05e-05  ETA=4min
+    step 10400/12207  loss=4.5509  lr=2.99e-05  ETA=4min
+    step 10450/12207  loss=4.7471  lr=2.94e-05  ETA=4min
+    step 10500/12207  loss=4.4180  lr=2.89e-05  ETA=4min
+    step 10550/12207  loss=4.5212  lr=2.84e-05  ETA=4min
+    step 10600/12207  loss=4.7100  lr=2.79e-05  ETA=4min
+    step 10650/12207  loss=4.6579  lr=2.74e-05  ETA=4min
+    step 10700/12207  loss=4.5635  lr=2.70e-05  ETA=3min
+    step 10750/12207  loss=4.0689  lr=2.65e-05  ETA=3min
+    step 10800/12207  loss=4.0705  lr=2.61e-05  ETA=3min
+    step 10850/12207  loss=4.3979  lr=2.57e-05  ETA=3min
+    step 10900/12207  loss=4.6100  lr=2.52e-05  ETA=3min
+    step 10950/12207  loss=4.4877  lr=2.49e-05  ETA=3min
+    step 11000/12207  loss=4.7042  lr=2.45e-05  ETA=3min
+    step 11050/12207  loss=4.2257  lr=2.41e-05  ETA=3min
+    step 11100/12207  loss=4.6530  lr=2.38e-05  ETA=3min
+    step 11150/12207  loss=4.9075  lr=2.34e-05  ETA=2min
+    step 11200/12207  loss=4.6076  lr=2.31e-05  ETA=2min
+    step 11250/12207  loss=4.4286  lr=2.28e-05  ETA=2min
+    step 11300/12207  loss=4.5769  lr=2.25e-05  ETA=2min
+    step 11350/12207  loss=4.5404  lr=2.23e-05  ETA=2min
+    step 11400/12207  loss=4.6076  lr=2.20e-05  ETA=2min
+    step 11450/12207  loss=4.8596  lr=2.18e-05  ETA=2min
+    step 11500/12207  loss=4.7032  lr=2.15e-05  ETA=2min
+    step 11550/12207  loss=4.6756  lr=2.13e-05  ETA=1min
+    step 11600/12207  loss=4.3700  lr=2.11e-05  ETA=1min
+    step 11650/12207  loss=4.6848  lr=2.10e-05  ETA=1min
+    step 11700/12207  loss=4.7127  lr=2.08e-05  ETA=1min
+    step 11750/12207  loss=4.4319  lr=2.06e-05  ETA=1min
+    step 11800/12207  loss=4.4796  lr=2.05e-05  ETA=1min
+    step 11850/12207  loss=4.8912  lr=2.04e-05  ETA=1min
+    step 11900/12207  loss=4.6155  lr=2.03e-05  ETA=1min
+    step 11950/12207  loss=4.5787  lr=2.02e-05  ETA=1min
+    step 12000/12207  loss=4.4479  lr=2.01e-05  ETA=0min
+    step 12050/12207  loss=4.6708  lr=2.01e-05  ETA=0min
+    step 12100/12207  loss=4.6696  lr=2.00e-05  ETA=0min
+    step 12150/12207  loss=4.5108  lr=2.00e-05  ETA=0min
+    step 12200/12207  loss=4.4053  lr=2.00e-05  ETA=0min
+  Training done in 27.6 min
+    L=2048: PPL=85.853  (8 chunks)
+    L=4096: PPL=119.487  (8 chunks)
+    L=8192: PPL=182.542  (8 chunks)
+    L=16384: PPL=300.161  (8 chunks)
+
+  [passkey] NLL-gap evaluation for 350m_tau0.00_seed256
+  L=2048_d=0.1 ... gap=+0.148  ret=80%  AR=0%  (10 trials)
+  L=2048_d=0.2 ... gap=+0.059  ret=60%  AR=0%  (10 trials)
+  L=2048_d=0.5 ... gap=+0.144  ret=80%  AR=0%  (10 trials)
+  L=2048_d=0.8 ... gap=+0.067  ret=60%  AR=0%  (10 trials)
+  L=2048_d=0.9 ... gap=+0.189  ret=90%  AR=0%  (10 trials)
+  L=4096_d=0.1 ... gap=+0.050  ret=60%  AR=0%  (10 trials)
+  L=4096_d=0.2 ... gap=-0.047  ret=50%  AR=0%  (10 trials)
+  L=4096_d=0.5 ... gap=-0.268  ret=0%  AR=0%  (10 trials)
+  L=4096_d=0.8 ... gap=+0.031  ret=60%  AR=0%  (10 trials)
+  L=4096_d=0.9 ... gap=-0.030  ret=40%  AR=0%  (10 trials)
+  L=8192_d=0.1 ... gap=-0.094  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.2 ... gap=+0.092  ret=80%  AR=0%  (10 trials)
+  L=8192_d=0.5 ... gap=+0.108  ret=70%  AR=0%  (10 trials)
+  L=8192_d=0.8 ... gap=+0.059  ret=70%  AR=0%  (10 trials)
+  L=8192_d=0.9 ... gap=+0.016  ret=50%  AR=0%  (10 trials)
+  [passkey] Retrieval rate: 0.6067
+  [passkey] Mean NLL gap: 0.0349
+
+  [PI] Inference-time PI baseline (zero-cost, no extra training)
+  [PI] scale=8.0  inv_freq hash=61a4945ca26c2340
+    L=2048: PPL=233.534  (8 chunks)
+    L=4096: PPL=245.313  (8 chunks)
+    L=8192: PPL=252.503  (8 chunks)
+    L=16384: PPL=286.927  (8 chunks)
+  [PI] Passkey NLL-gap evaluation
+  L=2048_d=0.1 ... gap=+0.082  ret=50%  AR=0%  (10 trials)
+  L=2048_d=0.2 ... gap=+0.071  ret=50%  AR=0%  (10 trials)
+  L=2048_d=0.5 ... gap=+0.006  ret=40%  AR=0%  (10 trials)
+  L=2048_d=0.8 ... gap=-0.191  ret=20%  AR=0%  (10 trials)
+  L=2048_d=0.9 ... gap=+0.015  ret=50%  AR=0%  (10 trials)
+  L=4096_d=0.1 ... gap=+0.008  ret=60%  AR=0%  (10 trials)
+  L=4096_d=0.2 ... gap=-0.023  ret=50%  AR=0%  (10 trials)
+  L=4096_d=0.5 ... gap=-0.286  ret=0%  AR=0%  (10 trials)
+  L=4096_d=0.8 ... gap=-0.073  ret=30%  AR=0%  (10 trials)
+  L=4096_d=0.9 ... gap=+0.020  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.1 ... gap=+0.091  ret=70%  AR=0%  (10 trials)
+  L=8192_d=0.2 ... gap=+0.059  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.5 ... gap=+0.031  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.8 ... gap=+0.104  ret=70%  AR=0%  (10 trials)
+  L=8192_d=0.9 ... gap=+0.091  ret=80%  AR=0%  (10 trials)
+  [checkpoint] saved to /root/autodl-tmp/evq_phase9_350m_L2048_50M_tau0_tau1.5/results_checkpoint.json
+
+============================================================
+  RUN: 350m_tau1.50_seed256  (base=500000)
+============================================================
+  inv_freq: shape=torch.Size([32])  max=0.882917  min=0.00000268  hash=129bc828f2bd246e
+  Phase collision total=0.258812
+  [passkey] Mix ratio check: 5/1000 = 0.5%
+  Model params: 454.2M
+    step 0/12207  loss=11.0569  lr=0.00e+00  ETA=0min
+    step 50/12207  loss=8.7463  lr=4.10e-05  ETA=27min
+    step 100/12207  loss=7.4393  lr=8.20e-05  ETA=27min
+    step 150/12207  loss=7.0993  lr=1.23e-04  ETA=27min
+    step 200/12207  loss=6.6785  lr=1.64e-04  ETA=27min
+    step 250/12207  loss=6.8444  lr=2.00e-04  ETA=27min
+    step 300/12207  loss=7.2695  lr=2.00e-04  ETA=27min
+    step 350/12207  loss=6.7104  lr=2.00e-04  ETA=27min
+    step 400/12207  loss=6.4356  lr=2.00e-04  ETA=27min
+    step 450/12207  loss=6.7290  lr=2.00e-04  ETA=27min
+    step 500/12207  loss=6.6499  lr=2.00e-04  ETA=26min
+    step 550/12207  loss=6.2802  lr=2.00e-04  ETA=26min
+    step 600/12207  loss=6.4476  lr=2.00e-04  ETA=26min
+    step 650/12207  loss=6.3341  lr=1.99e-04  ETA=26min
+    step 700/12207  loss=6.6277  lr=1.99e-04  ETA=26min
+    step 750/12207  loss=6.4980  lr=1.99e-04  ETA=26min
+    step 800/12207  loss=6.4399  lr=1.99e-04  ETA=26min
+    step 850/12207  loss=6.2453  lr=1.99e-04  ETA=26min
+    step 900/12207  loss=6.0881  lr=1.99e-04  ETA=26min
+    step 950/12207  loss=6.3610  lr=1.98e-04  ETA=25min
+    step 1000/12207  loss=5.7631  lr=1.98e-04  ETA=25min
+    step 1050/12207  loss=6.3330  lr=1.98e-04  ETA=25min
+    step 1100/12207  loss=5.9360  lr=1.98e-04  ETA=25min
+    step 1150/12207  loss=6.2743  lr=1.97e-04  ETA=25min
+    step 1200/12207  loss=5.8781  lr=1.97e-04  ETA=25min
+    step 1250/12207  loss=6.3860  lr=1.97e-04  ETA=25min
+    step 1300/12207  loss=5.7650  lr=1.97e-04  ETA=25min
+    step 1350/12207  loss=6.0476  lr=1.96e-04  ETA=25min
+    step 1400/12207  loss=5.9800  lr=1.96e-04  ETA=24min
+    step 1450/12207  loss=5.7269  lr=1.96e-04  ETA=24min
+    step 1500/12207  loss=6.0429  lr=1.95e-04  ETA=24min
+    step 1550/12207  loss=6.1658  lr=1.95e-04  ETA=24min
+    step 1600/12207  loss=5.9539  lr=1.94e-04  ETA=24min
+    step 1650/12207  loss=5.9030  lr=1.94e-04  ETA=24min
+    step 1700/12207  loss=5.7805  lr=1.94e-04  ETA=24min
+    step 1750/12207  loss=5.9018  lr=1.93e-04  ETA=24min
+    step 1800/12207  loss=5.9466  lr=1.93e-04  ETA=24min
+    step 1850/12207  loss=5.6627  lr=1.92e-04  ETA=23min
+    step 1900/12207  loss=5.6145  lr=1.92e-04  ETA=23min
+    step 1950/12207  loss=5.5173  lr=1.91e-04  ETA=23min
+    step 2000/12207  loss=6.0607  lr=1.91e-04  ETA=23min
+    step 2050/12207  loss=5.6628  lr=1.90e-04  ETA=23min
+    step 2100/12207  loss=5.7492  lr=1.90e-04  ETA=23min
+    step 2150/12207  loss=6.1104  lr=1.89e-04  ETA=23min
+    step 2200/12207  loss=5.4971  lr=1.88e-04  ETA=23min
+    step 2250/12207  loss=5.9336  lr=1.88e-04  ETA=22min
+    step 2300/12207  loss=6.0351  lr=1.87e-04  ETA=22min
+    step 2350/12207  loss=5.7205  lr=1.87e-04  ETA=22min
+    step 2400/12207  loss=5.6242  lr=1.86e-04  ETA=22min
+    step 2450/12207  loss=5.5117  lr=1.85e-04  ETA=22min
+    step 2500/12207  loss=5.4437  lr=1.85e-04  ETA=22min
+    step 2550/12207  loss=5.5958  lr=1.84e-04  ETA=22min
+    step 2600/12207  loss=5.9022  lr=1.83e-04  ETA=22min
+    step 2650/12207  loss=5.4395  lr=1.83e-04  ETA=22min
+    step 2700/12207  loss=5.7350  lr=1.82e-04  ETA=21min
+    step 2750/12207  loss=5.3739  lr=1.81e-04  ETA=21min
+    step 2800/12207  loss=5.5665  lr=1.80e-04  ETA=21min
+    step 2850/12207  loss=5.7578  lr=1.80e-04  ETA=21min
+    step 2900/12207  loss=5.7879  lr=1.79e-04  ETA=21min
+    step 2950/12207  loss=5.4869  lr=1.78e-04  ETA=21min
+    step 3000/12207  loss=5.7143  lr=1.77e-04  ETA=21min
+    step 3050/12207  loss=5.1040  lr=1.77e-04  ETA=21min
+    step 3100/12207  loss=5.6157  lr=1.76e-04  ETA=21min
+    step 3150/12207  loss=5.4544  lr=1.75e-04  ETA=20min
+    step 3200/12207  loss=5.3260  lr=1.74e-04  ETA=20min
+    step 3250/12207  loss=5.7222  lr=1.73e-04  ETA=20min
+    step 3300/12207  loss=5.5417  lr=1.73e-04  ETA=20min
+    step 3350/12207  loss=5.1865  lr=1.72e-04  ETA=20min
+    step 3400/12207  loss=5.3655  lr=1.71e-04  ETA=20min
+    step 3450/12207  loss=5.2264  lr=1.70e-04  ETA=20min
+    step 3500/12207  loss=5.2274  lr=1.69e-04  ETA=20min
+    step 3550/12207  loss=5.1933  lr=1.68e-04  ETA=20min
+    step 3600/12207  loss=5.2987  lr=1.67e-04  ETA=19min
+    step 3650/12207  loss=5.1831  lr=1.66e-04  ETA=19min
+    step 3700/12207  loss=5.5011  lr=1.65e-04  ETA=19min
+    step 3750/12207  loss=5.8988  lr=1.64e-04  ETA=19min
+    step 3800/12207  loss=5.5586  lr=1.64e-04  ETA=19min
+    step 3850/12207  loss=5.5873  lr=1.63e-04  ETA=19min
+    step 3900/12207  loss=5.1782  lr=1.62e-04  ETA=19min
+    step 3950/12207  loss=5.3033  lr=1.61e-04  ETA=19min
+    step 4000/12207  loss=5.3130  lr=1.60e-04  ETA=19min
+    step 4050/12207  loss=5.6420  lr=1.59e-04  ETA=18min
+    step 4100/12207  loss=5.4261  lr=1.58e-04  ETA=18min
+    step 4150/12207  loss=5.3702  lr=1.57e-04  ETA=18min
+    step 4200/12207  loss=5.3631  lr=1.56e-04  ETA=18min
+    step 4250/12207  loss=5.1070  lr=1.55e-04  ETA=18min
+    step 4300/12207  loss=5.2065  lr=1.54e-04  ETA=18min
+    step 4350/12207  loss=5.0958  lr=1.53e-04  ETA=18min
+    step 4400/12207  loss=5.6389  lr=1.52e-04  ETA=18min
+    step 4450/12207  loss=5.1212  lr=1.50e-04  ETA=18min
+    step 4500/12207  loss=4.8354  lr=1.49e-04  ETA=17min
+    step 4550/12207  loss=5.1638  lr=1.48e-04  ETA=17min
+    step 4600/12207  loss=5.1608  lr=1.47e-04  ETA=17min
+    step 4650/12207  loss=4.8310  lr=1.46e-04  ETA=17min
+    step 4700/12207  loss=5.2930  lr=1.45e-04  ETA=17min
+    step 4750/12207  loss=5.4203  lr=1.44e-04  ETA=17min
+    step 4800/12207  loss=5.5072  lr=1.43e-04  ETA=17min
+    step 4850/12207  loss=5.3031  lr=1.42e-04  ETA=17min
+    step 4900/12207  loss=5.0767  lr=1.41e-04  ETA=16min
+    step 4950/12207  loss=5.1158  lr=1.40e-04  ETA=16min
+    step 5000/12207  loss=5.3946  lr=1.38e-04  ETA=16min
+    step 5050/12207  loss=5.4055  lr=1.37e-04  ETA=16min
+    step 5100/12207  loss=5.4191  lr=1.36e-04  ETA=16min
+    step 5150/12207  loss=5.0740  lr=1.35e-04  ETA=16min
+    step 5200/12207  loss=5.2055  lr=1.34e-04  ETA=16min
+    step 5250/12207  loss=5.2034  lr=1.33e-04  ETA=16min
+    step 5300/12207  loss=5.1403  lr=1.32e-04  ETA=16min
+    step 5350/12207  loss=4.8685  lr=1.31e-04  ETA=15min
+    step 5400/12207  loss=5.0979  lr=1.29e-04  ETA=15min
+    step 5450/12207  loss=4.6717  lr=1.28e-04  ETA=15min
+    step 5500/12207  loss=5.2376  lr=1.27e-04  ETA=15min
+    step 5550/12207  loss=4.9788  lr=1.26e-04  ETA=15min
+    step 5600/12207  loss=4.8220  lr=1.25e-04  ETA=15min
+    step 5650/12207  loss=5.0907  lr=1.24e-04  ETA=15min
+    step 5700/12207  loss=4.5418  lr=1.22e-04  ETA=15min
+    step 5750/12207  loss=4.8723  lr=1.21e-04  ETA=15min
+    step 5800/12207  loss=4.9700  lr=1.20e-04  ETA=14min
+    step 5850/12207  loss=5.2310  lr=1.19e-04  ETA=14min
+    step 5900/12207  loss=5.1478  lr=1.18e-04  ETA=14min
+    step 5950/12207  loss=4.8082  lr=1.17e-04  ETA=14min
+    step 6000/12207  loss=5.0775  lr=1.15e-04  ETA=14min
+    step 6050/12207  loss=4.8610  lr=1.14e-04  ETA=14min
+    step 6100/12207  loss=4.9166  lr=1.13e-04  ETA=14min
+    step 6150/12207  loss=4.6793  lr=1.12e-04  ETA=14min
+    step 6200/12207  loss=5.6052  lr=1.11e-04  ETA=14min
+    step 6250/12207  loss=5.1032  lr=1.09e-04  ETA=13min
+    step 6300/12207  loss=5.3994  lr=1.08e-04  ETA=13min
+    step 6350/12207  loss=4.9736  lr=1.07e-04  ETA=13min
+    step 6400/12207  loss=5.2777  lr=1.06e-04  ETA=13min
+    step 6450/12207  loss=5.0041  lr=1.05e-04  ETA=13min
+    step 6500/12207  loss=4.8578  lr=1.04e-04  ETA=13min
+    step 6550/12207  loss=4.7197  lr=1.02e-04  ETA=13min
+    step 6600/12207  loss=5.0262  lr=1.01e-04  ETA=13min
+    step 6650/12207  loss=4.8244  lr=1.00e-04  ETA=13min
+    step 6700/12207  loss=4.6514  lr=9.88e-05  ETA=12min
+    step 6750/12207  loss=4.6051  lr=9.76e-05  ETA=12min
+    step 6800/12207  loss=4.5549  lr=9.65e-05  ETA=12min
+    step 6850/12207  loss=4.8850  lr=9.53e-05  ETA=12min
+    step 6900/12207  loss=5.2535  lr=9.41e-05  ETA=12min
+    step 6950/12207  loss=4.5759  lr=9.30e-05  ETA=12min
+    step 7000/12207  loss=4.8104  lr=9.18e-05  ETA=12min
+    step 7050/12207  loss=4.7585  lr=9.07e-05  ETA=12min
+    step 7100/12207  loss=4.9264  lr=8.95e-05  ETA=12min
+    step 7150/12207  loss=5.0588  lr=8.84e-05  ETA=11min
+    step 7200/12207  loss=5.3980  lr=8.72e-05  ETA=11min
+    step 7250/12207  loss=4.8813  lr=8.61e-05  ETA=11min
+    step 7300/12207  loss=4.8940  lr=8.49e-05  ETA=11min
+    step 7350/12207  loss=4.6730  lr=8.38e-05  ETA=11min
+    step 7400/12207  loss=5.1714  lr=8.27e-05  ETA=11min
+    step 7450/12207  loss=5.1054  lr=8.16e-05  ETA=11min
+    step 7500/12207  loss=4.7283  lr=8.04e-05  ETA=11min
+    step 7550/12207  loss=4.3694  lr=7.93e-05  ETA=11min
+    step 7600/12207  loss=4.6718  lr=7.82e-05  ETA=10min
+    step 7650/12207  loss=4.5830  lr=7.71e-05  ETA=10min
+    step 7700/12207  loss=4.8107  lr=7.60e-05  ETA=10min
+    step 7750/12207  loss=4.5558  lr=7.49e-05  ETA=10min
+    step 7800/12207  loss=5.2019  lr=7.38e-05  ETA=10min
+    step 7850/12207  loss=4.9105  lr=7.28e-05  ETA=10min
+    step 7900/12207  loss=4.6509  lr=7.17e-05  ETA=10min
+    step 7950/12207  loss=4.6654  lr=7.06e-05  ETA=10min
+    step 8000/12207  loss=4.7628  lr=6.96e-05  ETA=9min
+    step 8050/12207  loss=4.9331  lr=6.85e-05  ETA=9min
+    step 8100/12207  loss=5.2249  lr=6.75e-05  ETA=9min
+    step 8150/12207  loss=4.3024  lr=6.64e-05  ETA=9min
+    step 8200/12207  loss=4.6304  lr=6.54e-05  ETA=9min
+    step 8250/12207  loss=4.6868  lr=6.44e-05  ETA=9min
+    step 8300/12207  loss=4.7384  lr=6.34e-05  ETA=9min
+    step 8350/12207  loss=4.9062  lr=6.24e-05  ETA=9min
+    step 8400/12207  loss=5.0680  lr=6.14e-05  ETA=9min
+    step 8450/12207  loss=5.0078  lr=6.04e-05  ETA=8min
+    step 8500/12207  loss=4.7458  lr=5.94e-05  ETA=8min
+    step 8550/12207  loss=4.7783  lr=5.84e-05  ETA=8min
+    step 8600/12207  loss=5.0054  lr=5.74e-05  ETA=8min
+    step 8650/12207  loss=4.7366  lr=5.65e-05  ETA=8min
+    step 8700/12207  loss=5.3326  lr=5.55e-05  ETA=8min
+    step 8750/12207  loss=4.8571  lr=5.46e-05  ETA=8min
+    step 8800/12207  loss=4.4577  lr=5.37e-05  ETA=8min
+    step 8850/12207  loss=4.8475  lr=5.28e-05  ETA=8min
+    step 8900/12207  loss=4.6702  lr=5.19e-05  ETA=7min
+    step 8950/12207  loss=4.6790  lr=5.10e-05  ETA=7min
+    step 9000/12207  loss=4.6632  lr=5.01e-05  ETA=7min
+    step 9050/12207  loss=4.8222  lr=4.92e-05  ETA=7min
+    step 9100/12207  loss=4.5576  lr=4.83e-05  ETA=7min
+    step 9150/12207  loss=4.7766  lr=4.75e-05  ETA=7min
+    step 9200/12207  loss=5.0209  lr=4.66e-05  ETA=7min
+    step 9250/12207  loss=4.4888  lr=4.58e-05  ETA=7min
+    step 9300/12207  loss=4.5149  lr=4.50e-05  ETA=7min
+    step 9350/12207  loss=4.7536  lr=4.42e-05  ETA=6min
+    step 9400/12207  loss=4.5773  lr=4.34e-05  ETA=6min
+    step 9450/12207  loss=4.8186  lr=4.26e-05  ETA=6min
+    step 9500/12207  loss=4.9573  lr=4.18e-05  ETA=6min
+    step 9550/12207  loss=4.7182  lr=4.10e-05  ETA=6min
+    step 9600/12207  loss=4.6320  lr=4.03e-05  ETA=6min
+    step 9650/12207  loss=4.8914  lr=3.95e-05  ETA=6min
+    step 9700/12207  loss=4.8435  lr=3.88e-05  ETA=6min
+    step 9750/12207  loss=4.6863  lr=3.81e-05  ETA=6min
+    step 9800/12207  loss=4.8009  lr=3.74e-05  ETA=5min
+    step 9850/12207  loss=4.8061  lr=3.67e-05  ETA=5min
+    step 9900/12207  loss=4.9559  lr=3.60e-05  ETA=5min
+    step 9950/12207  loss=4.6538  lr=3.54e-05  ETA=5min
+    step 10000/12207  loss=4.6375  lr=3.47e-05  ETA=5min
+    step 10050/12207  loss=4.8079  lr=3.41e-05  ETA=5min
+    step 10100/12207  loss=4.5579  lr=3.34e-05  ETA=5min
+    step 10150/12207  loss=4.1707  lr=3.28e-05  ETA=5min
+    step 10200/12207  loss=4.7344  lr=3.22e-05  ETA=5min
+    step 10250/12207  loss=4.7184  lr=3.16e-05  ETA=4min
+    step 10300/12207  loss=4.7312  lr=3.11e-05  ETA=4min
+    step 10350/12207  loss=4.5769  lr=3.05e-05  ETA=4min
+    step 10400/12207  loss=4.5489  lr=2.99e-05  ETA=4min
+    step 10450/12207  loss=4.7861  lr=2.94e-05  ETA=4min
+    step 10500/12207  loss=4.4493  lr=2.89e-05  ETA=4min
+    step 10550/12207  loss=4.5359  lr=2.84e-05  ETA=4min
+    step 10600/12207  loss=4.7017  lr=2.79e-05  ETA=4min
+    step 10650/12207  loss=4.6902  lr=2.74e-05  ETA=4min
+    step 10700/12207  loss=4.5616  lr=2.70e-05  ETA=3min
+    step 10750/12207  loss=4.0797  lr=2.65e-05  ETA=3min
+    step 10800/12207  loss=4.1007  lr=2.61e-05  ETA=3min
+    step 10850/12207  loss=4.3968  lr=2.57e-05  ETA=3min
+    step 10900/12207  loss=4.6473  lr=2.52e-05  ETA=3min
+    step 10950/12207  loss=4.4998  lr=2.49e-05  ETA=3min
+    step 11000/12207  loss=4.7110  lr=2.45e-05  ETA=3min
+    step 11050/12207  loss=4.2451  lr=2.41e-05  ETA=3min
+    step 11100/12207  loss=4.6674  lr=2.38e-05  ETA=2min
+    step 11150/12207  loss=4.9332  lr=2.34e-05  ETA=2min
+    step 11200/12207  loss=4.6154  lr=2.31e-05  ETA=2min
+    step 11250/12207  loss=4.4874  lr=2.28e-05  ETA=2min
+    step 11300/12207  loss=4.6090  lr=2.25e-05  ETA=2min
+    step 11350/12207  loss=4.5904  lr=2.23e-05  ETA=2min
+    step 11400/12207  loss=4.6338  lr=2.20e-05  ETA=2min
+    step 11450/12207  loss=4.9019  lr=2.18e-05  ETA=2min
+    step 11500/12207  loss=4.7162  lr=2.15e-05  ETA=2min
+    step 11550/12207  loss=4.7163  lr=2.13e-05  ETA=1min
+    step 11600/12207  loss=4.3910  lr=2.11e-05  ETA=1min
+    step 11650/12207  loss=4.7093  lr=2.10e-05  ETA=1min
+    step 11700/12207  loss=4.7416  lr=2.08e-05  ETA=1min
+    step 11750/12207  loss=4.4658  lr=2.06e-05  ETA=1min
+    step 11800/12207  loss=4.4991  lr=2.05e-05  ETA=1min
+    step 11850/12207  loss=4.9056  lr=2.04e-05  ETA=1min
+    step 11900/12207  loss=4.6449  lr=2.03e-05  ETA=1min
+    step 11950/12207  loss=4.6088  lr=2.02e-05  ETA=1min
+    step 12000/12207  loss=4.4559  lr=2.01e-05  ETA=0min
+    step 12050/12207  loss=4.6877  lr=2.01e-05  ETA=0min
+    step 12100/12207  loss=4.6699  lr=2.00e-05  ETA=0min
+    step 12150/12207  loss=4.5351  lr=2.00e-05  ETA=0min
+    step 12200/12207  loss=4.4227  lr=2.00e-05  ETA=0min
+  Training done in 27.6 min
+    L=2048: PPL=87.219  (8 chunks)
+    L=4096: PPL=114.767  (8 chunks)
+    L=8192: PPL=159.854  (8 chunks)
+    L=16384: PPL=253.310  (8 chunks)
+
+  [passkey] NLL-gap evaluation for 350m_tau1.50_seed256
+  L=2048_d=0.1 ... gap=+0.083  ret=70%  AR=0%  (10 trials)
+  L=2048_d=0.2 ... gap=+0.010  ret=40%  AR=0%  (10 trials)
+  L=2048_d=0.5 ... gap=+0.104  ret=80%  AR=0%  (10 trials)
+  L=2048_d=0.8 ... gap=+0.044  ret=50%  AR=0%  (10 trials)
+  L=2048_d=0.9 ... gap=+0.028  ret=40%  AR=0%  (10 trials)
+  L=4096_d=0.1 ... gap=+0.125  ret=50%  AR=0%  (10 trials)
+  L=4096_d=0.2 ... gap=+0.032  ret=60%  AR=0%  (10 trials)
+  L=4096_d=0.5 ... gap=-0.070  ret=30%  AR=0%  (10 trials)
+  L=4096_d=0.8 ... gap=+0.039  ret=70%  AR=0%  (10 trials)
+  L=4096_d=0.9 ... gap=-0.080  ret=30%  AR=0%  (10 trials)
+  L=8192_d=0.1 ... gap=+0.175  ret=80%  AR=0%  (10 trials)
+  L=8192_d=0.2 ... gap=-0.100  ret=50%  AR=0%  (10 trials)
+  L=8192_d=0.5 ... gap=+0.064  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.8 ... gap=+0.090  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.9 ... gap=-0.017  ret=40%  AR=0%  (10 trials)
+  [passkey] Retrieval rate: 0.54
+  [passkey] Mean NLL gap: 0.0351
+  [checkpoint] saved to /root/autodl-tmp/evq_phase9_350m_L2048_50M_tau0_tau1.5/results_checkpoint.json
+
+============================================================
+  RUN: 350m_tau0.00_seed314  (base=500000)
+============================================================
+  inv_freq: shape=torch.Size([32])  max=0.814617  min=0.00000246  hash=88654f1fe2a414d3
+  Phase collision total=0.350769
+  [passkey] Mix ratio check: 5/1000 = 0.5%
+  Model params: 454.2M
+    step 0/12207  loss=11.0187  lr=0.00e+00  ETA=0min
+    step 50/12207  loss=8.4888  lr=4.10e-05  ETA=27min
+    step 100/12207  loss=7.3410  lr=8.20e-05  ETA=27min
+    step 150/12207  loss=7.3211  lr=1.23e-04  ETA=27min
+    step 200/12207  loss=6.9890  lr=1.64e-04  ETA=27min
+    step 250/12207  loss=6.6998  lr=2.00e-04  ETA=27min
+    step 300/12207  loss=6.8811  lr=2.00e-04  ETA=27min
+    step 350/12207  loss=6.9133  lr=2.00e-04  ETA=27min
+    step 400/12207  loss=6.6597  lr=2.00e-04  ETA=27min
+    step 450/12207  loss=6.5203  lr=2.00e-04  ETA=27min
+    step 500/12207  loss=6.2668  lr=2.00e-04  ETA=26min
+    step 550/12207  loss=6.8012  lr=2.00e-04  ETA=26min
+    step 600/12207  loss=6.5012  lr=2.00e-04  ETA=26min
+    step 650/12207  loss=6.9600  lr=1.99e-04  ETA=26min
+    step 700/12207  loss=6.4099  lr=1.99e-04  ETA=26min
+    step 750/12207  loss=6.1800  lr=1.99e-04  ETA=26min
+    step 800/12207  loss=6.0311  lr=1.99e-04  ETA=26min
+    step 850/12207  loss=6.3961  lr=1.99e-04  ETA=26min
+    step 900/12207  loss=6.5658  lr=1.99e-04  ETA=26min
+    step 950/12207  loss=6.2433  lr=1.98e-04  ETA=25min
+    step 1000/12207  loss=6.4096  lr=1.98e-04  ETA=25min
+    step 1050/12207  loss=6.1516  lr=1.98e-04  ETA=25min
+    step 1100/12207  loss=6.0442  lr=1.98e-04  ETA=25min
+    step 1150/12207  loss=6.1317  lr=1.97e-04  ETA=25min
+    step 1200/12207  loss=5.9852  lr=1.97e-04  ETA=25min
+    step 1250/12207  loss=6.5544  lr=1.97e-04  ETA=25min
+    step 1300/12207  loss=6.1804  lr=1.97e-04  ETA=25min
+    step 1350/12207  loss=6.1205  lr=1.96e-04  ETA=24min
+    step 1400/12207  loss=6.3675  lr=1.96e-04  ETA=24min
+    step 1450/12207  loss=6.1330  lr=1.96e-04  ETA=24min
+    step 1500/12207  loss=6.4413  lr=1.95e-04  ETA=24min
+    step 1550/12207  loss=5.7458  lr=1.95e-04  ETA=24min
+    step 1600/12207  loss=5.8018  lr=1.94e-04  ETA=24min
+    step 1650/12207  loss=6.0103  lr=1.94e-04  ETA=24min
+    step 1700/12207  loss=5.6137  lr=1.94e-04  ETA=24min
+    step 1750/12207  loss=5.9565  lr=1.93e-04  ETA=24min
+    step 1800/12207  loss=5.9169  lr=1.93e-04  ETA=23min
+    step 1850/12207  loss=6.0054  lr=1.92e-04  ETA=23min
+    step 1900/12207  loss=5.6937  lr=1.92e-04  ETA=23min
+    step 1950/12207  loss=5.8919  lr=1.91e-04  ETA=23min
+    step 2000/12207  loss=5.9395  lr=1.91e-04  ETA=23min
+    step 2050/12207  loss=5.7091  lr=1.90e-04  ETA=23min
+    step 2100/12207  loss=5.7841  lr=1.90e-04  ETA=23min
+    step 2150/12207  loss=5.7582  lr=1.89e-04  ETA=23min
+    step 2200/12207  loss=5.7735  lr=1.88e-04  ETA=23min
+    step 2250/12207  loss=5.2733  lr=1.88e-04  ETA=22min
+    step 2300/12207  loss=5.6150  lr=1.87e-04  ETA=22min
+    step 2350/12207  loss=5.4055  lr=1.87e-04  ETA=22min
+    step 2400/12207  loss=5.1934  lr=1.86e-04  ETA=22min
+    step 2450/12207  loss=5.9246  lr=1.85e-04  ETA=22min
+    step 2500/12207  loss=5.7295  lr=1.85e-04  ETA=22min
+    step 2550/12207  loss=5.6187  lr=1.84e-04  ETA=22min
+    step 2600/12207  loss=5.6294  lr=1.83e-04  ETA=22min
+    step 2650/12207  loss=5.7905  lr=1.83e-04  ETA=22min
+    step 2700/12207  loss=5.7636  lr=1.82e-04  ETA=21min
+    step 2750/12207  loss=5.3889  lr=1.81e-04  ETA=21min
+    step 2800/12207  loss=5.4470  lr=1.80e-04  ETA=21min
+    step 2850/12207  loss=5.7890  lr=1.80e-04  ETA=21min
+    step 2900/12207  loss=5.5092  lr=1.79e-04  ETA=21min
+    step 2950/12207  loss=5.4561  lr=1.78e-04  ETA=21min
+    step 3000/12207  loss=5.0289  lr=1.77e-04  ETA=21min
+    step 3050/12207  loss=5.4031  lr=1.77e-04  ETA=21min
+    step 3100/12207  loss=4.9169  lr=1.76e-04  ETA=21min
+    step 3150/12207  loss=5.7643  lr=1.75e-04  ETA=20min
+    step 3200/12207  loss=5.5516  lr=1.74e-04  ETA=20min
+    step 3250/12207  loss=5.1469  lr=1.73e-04  ETA=20min
+    step 3300/12207  loss=5.6677  lr=1.73e-04  ETA=20min
+    step 3350/12207  loss=5.8684  lr=1.72e-04  ETA=20min
+    step 3400/12207  loss=5.5107  lr=1.71e-04  ETA=20min
+    step 3450/12207  loss=5.4499  lr=1.70e-04  ETA=20min
+    step 3500/12207  loss=5.6877  lr=1.69e-04  ETA=20min
+    step 3550/12207  loss=5.4870  lr=1.68e-04  ETA=20min
+    step 3600/12207  loss=5.3082  lr=1.67e-04  ETA=19min
+    step 3650/12207  loss=5.5896  lr=1.66e-04  ETA=19min
+    step 3700/12207  loss=5.8433  lr=1.65e-04  ETA=19min
+    step 3750/12207  loss=5.3970  lr=1.64e-04  ETA=19min
+    step 3800/12207  loss=5.5013  lr=1.64e-04  ETA=19min
+    step 3850/12207  loss=5.2780  lr=1.63e-04  ETA=19min
+    step 3900/12207  loss=5.7817  lr=1.62e-04  ETA=19min
+    step 3950/12207  loss=5.4404  lr=1.61e-04  ETA=19min
+    step 4000/12207  loss=5.4710  lr=1.60e-04  ETA=19min
+    step 4050/12207  loss=5.2019  lr=1.59e-04  ETA=18min
+    step 4100/12207  loss=5.3933  lr=1.58e-04  ETA=18min
+    step 4150/12207  loss=5.1888  lr=1.57e-04  ETA=18min
+    step 4200/12207  loss=5.3215  lr=1.56e-04  ETA=18min
+    step 4250/12207  loss=5.2130  lr=1.55e-04  ETA=18min
+    step 4300/12207  loss=5.3106  lr=1.54e-04  ETA=18min
+    step 4350/12207  loss=5.1230  lr=1.53e-04  ETA=18min
+    step 4400/12207  loss=5.1817  lr=1.52e-04  ETA=18min
+    step 4450/12207  loss=5.1741  lr=1.50e-04  ETA=18min
+    step 4500/12207  loss=5.5534  lr=1.49e-04  ETA=17min
+    step 4550/12207  loss=5.0837  lr=1.48e-04  ETA=17min
+    step 4600/12207  loss=4.9816  lr=1.47e-04  ETA=17min
+    step 4650/12207  loss=5.1363  lr=1.46e-04  ETA=17min
+    step 4700/12207  loss=5.4097  lr=1.45e-04  ETA=17min
+    step 4750/12207  loss=5.0303  lr=1.44e-04  ETA=17min
+    step 4800/12207  loss=5.0083  lr=1.43e-04  ETA=17min
+    step 4850/12207  loss=5.0846  lr=1.42e-04  ETA=17min
+    step 4900/12207  loss=5.3378  lr=1.41e-04  ETA=16min
+    step 4950/12207  loss=5.0438  lr=1.40e-04  ETA=16min
+    step 5000/12207  loss=6.0834  lr=1.38e-04  ETA=16min
+    step 5050/12207  loss=5.6482  lr=1.37e-04  ETA=16min
+    step 5100/12207  loss=5.1195  lr=1.36e-04  ETA=16min
+    step 5150/12207  loss=5.3169  lr=1.35e-04  ETA=16min
+    step 5200/12207  loss=5.1091  lr=1.34e-04  ETA=16min
+    step 5250/12207  loss=4.8965  lr=1.33e-04  ETA=16min
+    step 5300/12207  loss=5.0816  lr=1.32e-04  ETA=16min
+    step 5350/12207  loss=5.3153  lr=1.31e-04  ETA=15min
+    step 5400/12207  loss=5.0054  lr=1.29e-04  ETA=15min
+    step 5450/12207  loss=5.1494  lr=1.28e-04  ETA=15min
+    step 5500/12207  loss=4.8906  lr=1.27e-04  ETA=15min
+    step 5550/12207  loss=5.2956  lr=1.26e-04  ETA=15min
+    step 5600/12207  loss=5.4491  lr=1.25e-04  ETA=15min
+    step 5650/12207  loss=4.9230  lr=1.24e-04  ETA=15min
+    step 5700/12207  loss=5.3172  lr=1.22e-04  ETA=15min
+    step 5750/12207  loss=4.9736  lr=1.21e-04  ETA=15min
+    step 5800/12207  loss=5.1212  lr=1.20e-04  ETA=14min
+    step 5850/12207  loss=4.8647  lr=1.19e-04  ETA=14min
+    step 5900/12207  loss=4.9347  lr=1.18e-04  ETA=14min
+    step 5950/12207  loss=5.2624  lr=1.17e-04  ETA=14min
+    step 6000/12207  loss=4.9041  lr=1.15e-04  ETA=14min
+    step 6050/12207  loss=4.9648  lr=1.14e-04  ETA=14min
+    step 6100/12207  loss=4.6482  lr=1.13e-04  ETA=14min
+    step 6150/12207  loss=5.0215  lr=1.12e-04  ETA=14min
+    step 6200/12207  loss=4.6079  lr=1.11e-04  ETA=14min
+    step 6250/12207  loss=5.0977  lr=1.09e-04  ETA=13min
+    step 6300/12207  loss=4.8588  lr=1.08e-04  ETA=13min
+    step 6350/12207  loss=5.4069  lr=1.07e-04  ETA=13min
+    step 6400/12207  loss=4.8722  lr=1.06e-04  ETA=13min
+    step 6450/12207  loss=5.0298  lr=1.05e-04  ETA=13min
+    step 6500/12207  loss=4.6262  lr=1.04e-04  ETA=13min
+    step 6550/12207  loss=4.8466  lr=1.02e-04  ETA=13min
+    step 6600/12207  loss=5.2644  lr=1.01e-04  ETA=13min
+    step 6650/12207  loss=4.8004  lr=1.00e-04  ETA=13min
+    step 6700/12207  loss=4.5819  lr=9.88e-05  ETA=12min
+    step 6750/12207  loss=5.0112  lr=9.76e-05  ETA=12min
+    step 6800/12207  loss=4.7613  lr=9.65e-05  ETA=12min
+    step 6850/12207  loss=4.6708  lr=9.53e-05  ETA=12min
+    step 6900/12207  loss=5.0450  lr=9.41e-05  ETA=12min
+    step 6950/12207  loss=5.0899  lr=9.30e-05  ETA=12min
+    step 7000/12207  loss=4.6080  lr=9.18e-05  ETA=12min
+    step 7050/12207  loss=4.8542  lr=9.07e-05  ETA=12min
+    step 7100/12207  loss=4.6035  lr=8.95e-05  ETA=12min
+    step 7150/12207  loss=4.7749  lr=8.84e-05  ETA=11min
+    step 7200/12207  loss=4.9916  lr=8.72e-05  ETA=11min
+    step 7250/12207  loss=4.7051  lr=8.61e-05  ETA=11min
+    step 7300/12207  loss=5.0548  lr=8.49e-05  ETA=11min
+    step 7350/12207  loss=4.6980  lr=8.38e-05  ETA=11min
+    step 7400/12207  loss=5.0427  lr=8.27e-05  ETA=11min
+    step 7450/12207  loss=5.0746  lr=8.16e-05  ETA=11min
+    step 7500/12207  loss=5.2761  lr=8.04e-05  ETA=11min
+    step 7550/12207  loss=5.1148  lr=7.93e-05  ETA=11min
+    step 7600/12207  loss=5.0194  lr=7.82e-05  ETA=10min
+    step 7650/12207  loss=4.8441  lr=7.71e-05  ETA=10min
+    step 7700/12207  loss=5.0086  lr=7.60e-05  ETA=10min
+    step 7750/12207  loss=4.7774  lr=7.49e-05  ETA=10min
+    step 7800/12207  loss=4.6697  lr=7.38e-05  ETA=10min
+    step 7850/12207  loss=4.9321  lr=7.28e-05  ETA=10min
+    step 7900/12207  loss=5.2377  lr=7.17e-05  ETA=10min
+    step 7950/12207  loss=4.9846  lr=7.06e-05  ETA=10min
+    step 8000/12207  loss=4.9824  lr=6.96e-05  ETA=9min
+    step 8050/12207  loss=4.7496  lr=6.85e-05  ETA=9min
+    step 8100/12207  loss=5.0949  lr=6.75e-05  ETA=9min
+    step 8150/12207  loss=4.9140  lr=6.64e-05  ETA=9min
+    step 8200/12207  loss=4.4276  lr=6.54e-05  ETA=9min
+    step 8250/12207  loss=4.8342  lr=6.44e-05  ETA=9min
+    step 8300/12207  loss=4.7493  lr=6.34e-05  ETA=9min
+    step 8350/12207  loss=4.7498  lr=6.24e-05  ETA=9min
+    step 8400/12207  loss=4.3514  lr=6.14e-05  ETA=9min
+    step 8450/12207  loss=4.5443  lr=6.04e-05  ETA=8min
+    step 8500/12207  loss=4.6605  lr=5.94e-05  ETA=8min
+    step 8550/12207  loss=4.5494  lr=5.84e-05  ETA=8min
+    step 8600/12207  loss=4.7232  lr=5.74e-05  ETA=8min
+    step 8650/12207  loss=4.6108  lr=5.65e-05  ETA=8min

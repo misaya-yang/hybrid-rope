@@ -1,0 +1,1602 @@
+{
+  "details": {
+    "L=2048_d=0.1_t=0": {
+      "nll_correct": 1.1285,
+      "nll_wrong": 1.2239,
+      "nll_gap": 0.0953,
+      "retrieved": true,
+      "correct_passkey": "4-4-9-5-2",
+      "wrong_passkey": "7-2-2-9-7",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.1_t=1": {
+      "nll_correct": 1.1054,
+      "nll_wrong": 1.0727,
+      "nll_gap": -0.0327,
+      "retrieved": false,
+      "correct_passkey": "7-8-7-5-4",
+      "wrong_passkey": "3-4-8-2-0",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.1_t=2": {
+      "nll_correct": 0.9566,
+      "nll_wrong": 1.2977,
+      "nll_gap": 0.3411,
+      "retrieved": true,
+      "correct_passkey": "0-3-3-3-1",
+      "wrong_passkey": "9-0-8-2-0",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.1_t=3": {
+      "nll_correct": 1.0923,
+      "nll_wrong": 1.2468,
+      "nll_gap": 0.1545,
+      "retrieved": true,
+      "correct_passkey": "0-3-9-4-4",
+      "wrong_passkey": "9-5-2-6-0",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.1_t=4": {
+      "nll_correct": 1.1235,
+      "nll_wrong": 1.1347,
+      "nll_gap": 0.0112,
+      "retrieved": true,
+      "correct_passkey": "2-2-9-9-0",
+      "wrong_passkey": "7-9-6-4-7",
+      "ar_generated": "1-2-0-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.1_t=5": {
+      "nll_correct": 1.1026,
+      "nll_wrong": 1.1066,
+      "nll_gap": 0.004,
+      "retrieved": true,
+      "correct_passkey": "0-3-7-2-2",
+      "wrong_passkey": "3-6-8-6-3",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.1_t=6": {
+      "nll_correct": 1.1303,
+      "nll_wrong": 1.0605,
+      "nll_gap": -0.0698,
+      "retrieved": false,
+      "correct_passkey": "8-5-4-6-7",
+      "wrong_passkey": "1-6-8-8-6",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.1_t=7": {
+      "nll_correct": 1.1388,
+      "nll_wrong": 0.9691,
+      "nll_gap": -0.1696,
+      "retrieved": false,
+      "correct_passkey": "7-6-5-5-2",
+      "wrong_passkey": "2-0-2-4-3",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.1_t=8": {
+      "nll_correct": 1.1512,
+      "nll_wrong": 1.0936,
+      "nll_gap": -0.0576,
+      "retrieved": false,
+      "correct_passkey": "6-4-7-7-0",
+      "wrong_passkey": "5-3-8-8-1",
+      "ar_generated": "1-2-0-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.1_t=9": {
+      "nll_correct": 1.0681,
+      "nll_wrong": 1.1734,
+      "nll_gap": 0.1053,
+      "retrieved": true,
+      "correct_passkey": "4-6-6-7-8",
+      "wrong_passkey": "6-8-3-9-9",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.2_t=0": {
+      "nll_correct": 1.0831,
+      "nll_wrong": 1.0675,
+      "nll_gap": -0.0155,
+      "retrieved": false,
+      "correct_passkey": "7-3-3-3-3",
+      "wrong_passkey": "3-0-2-6-2",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.2_t=1": {
+      "nll_correct": 1.0731,
+      "nll_wrong": 1.0827,
+      "nll_gap": 0.0096,
+      "retrieved": true,
+      "correct_passkey": "3-9-0-5-6",
+      "wrong_passkey": "2-4-6-9-3",
+      "ar_generated": "1-0-0-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.2_t=2": {
+      "nll_correct": 1.0625,
+      "nll_wrong": 1.1085,
+      "nll_gap": 0.046,
+      "retrieved": true,
+      "correct_passkey": "5-9-3-2-5",
+      "wrong_passkey": "3-1-6-5-8",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.2_t=3": {
+      "nll_correct": 1.093,
+      "nll_wrong": 0.9757,
+      "nll_gap": -0.1173,
+      "retrieved": false,
+      "correct_passkey": "8-9-5-6-1",
+      "wrong_passkey": "0-3-3-0-9",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.2_t=4": {
+      "nll_correct": 0.9015,
+      "nll_wrong": 1.1335,
+      "nll_gap": 0.232,
+      "retrieved": true,
+      "correct_passkey": "1-0-1-6-7",
+      "wrong_passkey": "6-8-6-8-8",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.2_t=5": {
+      "nll_correct": 1.0688,
+      "nll_wrong": 1.1365,
+      "nll_gap": 0.0677,
+      "retrieved": true,
+      "correct_passkey": "9-7-3-8-8",
+      "wrong_passkey": "0-8-9-6-5",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.2_t=6": {
+      "nll_correct": 1.127,
+      "nll_wrong": 0.95,
+      "nll_gap": -0.1769,
+      "retrieved": false,
+      "correct_passkey": "7-4-6-0-1",
+      "wrong_passkey": "2-3-0-6-2",
+      "ar_generated": "1-2-0-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.2_t=7": {
+      "nll_correct": 0.8559,
+      "nll_wrong": 1.0107,
+      "nll_gap": 0.1547,
+      "retrieved": true,
+      "correct_passkey": "2-3-2-3-3",
+      "wrong_passkey": "5-0-7-0-7",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.2_t=8": {
+      "nll_correct": 1.0995,
+      "nll_wrong": 1.0526,
+      "nll_gap": -0.0469,
+      "retrieved": false,
+      "correct_passkey": "7-5-0-9-5",
+      "wrong_passkey": "3-7-8-8-6",
+      "ar_generated": "1-2-0-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.2_t=9": {
+      "nll_correct": 1.0305,
+      "nll_wrong": 1.0522,
+      "nll_gap": 0.0217,
+      "retrieved": true,
+      "correct_passkey": "5-6-2-6-6",
+      "wrong_passkey": "6-3-3-4-5",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=0": {
+      "nll_correct": 0.9916,
+      "nll_wrong": 1.0521,
+      "nll_gap": 0.0605,
+      "retrieved": true,
+      "correct_passkey": "5-3-1-0-1",
+      "wrong_passkey": "7-0-0-8-9",
+      "ar_generated": "1-1-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=1": {
+      "nll_correct": 1.0536,
+      "nll_wrong": 1.1594,
+      "nll_gap": 0.1058,
+      "retrieved": true,
+      "correct_passkey": "4-5-5-1-2",
+      "wrong_passkey": "9-4-4-9-1",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=2": {
+      "nll_correct": 1.0095,
+      "nll_wrong": 1.2221,
+      "nll_gap": 0.2126,
+      "retrieved": true,
+      "correct_passkey": "2-8-0-7-9",
+      "wrong_passkey": "6-5-9-3-8",
+      "ar_generated": "1-2-0-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=3": {
+      "nll_correct": 0.914,
+      "nll_wrong": 1.2085,
+      "nll_gap": 0.2945,
+      "retrieved": true,
+      "correct_passkey": "0-7-0-5-2",
+      "wrong_passkey": "9-3-6-0-5",
+      "ar_generated": "1-0-0-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=4": {
+      "nll_correct": 1.0117,
+      "nll_wrong": 1.1741,
+      "nll_gap": 0.1624,
+      "retrieved": true,
+      "correct_passkey": "9-1-2-8-7",
+      "wrong_passkey": "7-9-0-1-2",
+      "ar_generated": "1-1-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=5": {
+      "nll_correct": 1.0827,
+      "nll_wrong": 1.2091,
+      "nll_gap": 0.1265,
+      "retrieved": true,
+      "correct_passkey": "2-0-6-9-1",
+      "wrong_passkey": "7-2-9-4-6",
+      "ar_generated": "1-1-1-1-1-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=6": {
+      "nll_correct": 1.079,
+      "nll_wrong": 1.1576,
+      "nll_gap": 0.0787,
+      "retrieved": true,
+      "correct_passkey": "4-5-7-1-7",
+      "wrong_passkey": "9-6-3-5-3",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=7": {
+      "nll_correct": 1.0749,
+      "nll_wrong": 1.0047,
+      "nll_gap": -0.0702,
+      "retrieved": false,
+      "correct_passkey": "4-6-9-3-7",
+      "wrong_passkey": "3-5-5-6-6",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=8": {
+      "nll_correct": 0.916,
+      "nll_wrong": 1.0043,
+      "nll_gap": 0.0883,
+      "retrieved": true,
+      "correct_passkey": "1-8-7-4-2",
+      "wrong_passkey": "2-0-2-9-8",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=9": {
+      "nll_correct": 1.0163,
+      "nll_wrong": 1.1586,
+      "nll_gap": 0.1423,
+      "retrieved": true,
+      "correct_passkey": "6-3-2-2-1",
+      "wrong_passkey": "0-2-5-5-3",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.8_t=0": {
+      "nll_correct": 0.9866,
+      "nll_wrong": 1.0509,
+      "nll_gap": 0.0644,
+      "retrieved": true,
+      "correct_passkey": "3-7-5-2-3",
+      "wrong_passkey": "5-0-9-5-0",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.8_t=1": {
+      "nll_correct": 1.0581,
+      "nll_wrong": 1.0072,
+      "nll_gap": -0.0509,
+      "retrieved": false,
+      "correct_passkey": "8-4-1-6-3",
+      "wrong_passkey": "5-5-6-1-7",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.8_t=2": {
+      "nll_correct": 0.9994,
+      "nll_wrong": 1.056,
+      "nll_gap": 0.0566,
+      "retrieved": true,
+      "correct_passkey": "6-7-0-1-2",
+      "wrong_passkey": "3-2-4-9-8",
+      "ar_generated": "1-0-0-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.8_t=3": {
+      "nll_correct": 1.0783,
+      "nll_wrong": 1.0303,
+      "nll_gap": -0.048,
+      "retrieved": false,
+      "correct_passkey": "6-2-7-0-9",
+      "wrong_passkey": "1-9-2-9-2",
+      "ar_generated": "1-0-0-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.8_t=4": {
+      "nll_correct": 0.8453,
+      "nll_wrong": 1.207,
+      "nll_gap": 0.3617,
+      "retrieved": true,
+      "correct_passkey": "2-9-0-1-8",
+      "wrong_passkey": "6-7-6-8-7",
+      "ar_generated": "1-0-0-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.8_t=5": {
+      "nll_correct": 0.99,
+      "nll_wrong": 1.0471,
+      "nll_gap": 0.0571,
+      "retrieved": true,
+      "correct_passkey": "9-2-2-2-8",
+      "wrong_passkey": "3-9-4-8-9",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.8_t=6": {
+      "nll_correct": 0.7092,
+      "nll_wrong": 1.2516,
+      "nll_gap": 0.5424,
+      "retrieved": true,
+      "correct_passkey": "1-1-4-0-4",
+      "wrong_passkey": "8-6-9-7-0",
+      "ar_generated": "1-0-0-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.8_t=7": {
+      "nll_correct": 0.9843,
+      "nll_wrong": 1.0909,
+      "nll_gap": 0.1066,
+      "retrieved": true,
+      "correct_passkey": "4-0-8-4-6",
+      "wrong_passkey": "5-6-9-1-4",
+      "ar_generated": "1-0-0-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.8_t=8": {
+      "nll_correct": 1.0578,
+      "nll_wrong": 0.7787,
+      "nll_gap": -0.2791,
+      "retrieved": false,
+      "correct_passkey": "8-2-6-1-5",
+      "wrong_passkey": "2-1-2-0-8",
+      "ar_generated": "1-1-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.8_t=9": {
+      "nll_correct": 1.0373,
+      "nll_wrong": 1.1499,
+      "nll_gap": 0.1126,
+      "retrieved": true,
+      "correct_passkey": "6-3-5-0-8",
+      "wrong_passkey": "0-7-3-3-2",
+      "ar_generated": "1-0-0-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.9_t=0": {
+      "nll_correct": 1.0357,
+      "nll_wrong": 1.2785,
+      "nll_gap": 0.2428,
+      "retrieved": true,
+      "correct_passkey": "9-8-3-2-1",
+      "wrong_passkey": "0-7-7-5-8",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.9_t=1": {
+      "nll_correct": 0.8833,
+      "nll_wrong": 1.2003,
+      "nll_gap": 0.317,
+      "retrieved": true,
+      "correct_passkey": "3-8-1-3-5",
+      "wrong_passkey": "8-5-7-9-7",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.9_t=2": {
+      "nll_correct": 1.0037,
+      "nll_wrong": 1.0026,
+      "nll_gap": -0.0011,
+      "retrieved": false,
+      "correct_passkey": "6-0-7-3-2",
+      "wrong_passkey": "1-4-1-9-6",
+      "ar_generated": "1-0-0-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.9_t=3": {
+      "nll_correct": 0.7868,
+      "nll_wrong": 1.0771,
+      "nll_gap": 0.2903,
+      "retrieved": true,
+      "correct_passkey": "2-0-4-1-0",
+      "wrong_passkey": "3-4-6-3-2",
+      "ar_generated": "1-0-0-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.9_t=4": {
+      "nll_correct": 0.8229,
+      "nll_wrong": 1.0804,
+      "nll_gap": 0.2575,
+      "retrieved": true,
+      "correct_passkey": "0-5-3-4-5",
+      "wrong_passkey": "3-8-7-3-9",
+      "ar_generated": "0-0-0-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.9_t=5": {
+      "nll_correct": 1.0178,
+      "nll_wrong": 0.9306,
+      "nll_gap": -0.0872,
+      "retrieved": false,
+      "correct_passkey": "7-5-6-4-7",
+      "wrong_passkey": "3-0-3-0-1",
+      "ar_generated": "1-3-4-4-4>>",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.9_t=6": {
+      "nll_correct": 0.6922,
+      "nll_wrong": 1.2474,
+      "nll_gap": 0.5552,
+      "retrieved": true,
+      "correct_passkey": "0-4-0-1-5",
+      "wrong_passkey": "4-7-3-2-1",
+      "ar_generated": "0-0-0-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.9_t=7": {
+      "nll_correct": 0.8759,
+      "nll_wrong": 1.1824,
+      "nll_gap": 0.3065,
+      "retrieved": true,
+      "correct_passkey": "3-7-1-3-8",
+      "wrong_passkey": "7-8-0-5-6",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.9_t=8": {
+      "nll_correct": 0.9744,
+      "nll_wrong": 1.0832,
+      "nll_gap": 0.1088,
+      "retrieved": true,
+      "correct_passkey": "0-8-9-2-3",
+      "wrong_passkey": "5-0-4-0-4",
+      "ar_generated": "0-0-0-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.9_t=9": {
+      "nll_correct": 1.0878,
+      "nll_wrong": 0.963,
+      "nll_gap": -0.1248,
+      "retrieved": false,
+      "correct_passkey": "8-2-7-7-2",
+      "wrong_passkey": "4-8-3-3-0",
+      "ar_generated": "1-2-2-2-2-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.1_t=0": {
+      "nll_correct": 2.1478,
+      "nll_wrong": 1.9344,
+      "nll_gap": -0.2133,
+      "retrieved": false,
+      "correct_passkey": "0-1-5-9-3",
+      "wrong_passkey": "7-4-1-3-4",
+      "ar_generated": "\n- The project will be the most important to",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.1_t=1": {
+      "nll_correct": 1.9676,
+      "nll_wrong": 2.3908,
+      "nll_gap": 0.4232,
+      "retrieved": true,
+      "correct_passkey": "4-2-4-2-6",
+      "wrong_passkey": "8-4-8-0-0",
+      "ar_generated": "\n- The project will be the most important to",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.1_t=2": {
+      "nll_correct": 1.9504,
+      "nll_wrong": 2.2688,
+      "nll_gap": 0.3184,
+      "retrieved": true,
+      "correct_passkey": "2-7-4-1-4",
+      "wrong_passkey": "0-6-8-6-2",
+      "ar_generated": "\n- The project will be the most important to",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.1_t=3": {
+      "nll_correct": 2.0491,
+      "nll_wrong": 2.1087,
+      "nll_gap": 0.0596,
+      "retrieved": true,
+      "correct_passkey": "2-0-9-7-8",
+      "wrong_passkey": "6-5-4-0-9",
+      "ar_generated": "\n- The project will be the most important to",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.1_t=4": {
+      "nll_correct": 1.934,
+      "nll_wrong": 1.7818,
+      "nll_gap": -0.1522,
+      "retrieved": false,
+      "correct_passkey": "7-6-4-8-5",
+      "wrong_passkey": "1-4-9-4-9",
+      "ar_generated": "\n- The project will be the most important to",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.1_t=5": {
+      "nll_correct": 2.098,
+      "nll_wrong": 2.4821,
+      "nll_gap": 0.3841,
+      "retrieved": true,
+      "correct_passkey": "5-9-2-3-3",
+      "wrong_passkey": "9-1-6-0-1",
+      "ar_generated": "\n- The project will be the most important to",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.1_t=6": {
+      "nll_correct": 2.2471,
+      "nll_wrong": 1.9885,
+      "nll_gap": -0.2585,
+      "retrieved": false,
+      "correct_passkey": "0-9-5-2-8",
+      "wrong_passkey": "7-7-3-7-0",
+      "ar_generated": "\n- The project will be the most important to",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.1_t=7": {
+      "nll_correct": 2.0436,
+      "nll_wrong": 2.0105,
+      "nll_gap": -0.0331,
+      "retrieved": false,
+      "correct_passkey": "5-2-1-6-1",
+      "wrong_passkey": "3-9-9-4-5",
+      "ar_generated": "\n- The project will be the most important to",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.1_t=8": {
+      "nll_correct": 2.3576,
+      "nll_wrong": 2.4506,
+      "nll_gap": 0.093,
+      "retrieved": true,
+      "correct_passkey": "7-5-7-0-6",
+      "wrong_passkey": "4-2-0-6-8",
+      "ar_generated": "\n- The project will be the most important to",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.1_t=9": {
+      "nll_correct": 1.8587,
+      "nll_wrong": 2.06,
+      "nll_gap": 0.2012,
+      "retrieved": true,
+      "correct_passkey": "0-3-3-3-6",
+      "wrong_passkey": "3-2-9-6-1",
+      "ar_generated": "\n- The project will be the most important to",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.2_t=0": {
+      "nll_correct": 2.2395,
+      "nll_wrong": 2.4627,
+      "nll_gap": 0.2232,
+      "retrieved": true,
+      "correct_passkey": "3-4-8-4-4",
+      "wrong_passkey": "4-8-7-3-7",
+      "ar_generated": "\n- The project will be the most important to",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.2_t=1": {
+      "nll_correct": 2.2689,
+      "nll_wrong": 2.4781,
+      "nll_gap": 0.2092,
+      "retrieved": true,
+      "correct_passkey": "6-0-3-2-4",
+      "wrong_passkey": "9-9-7-6-9",
+      "ar_generated": "\n- The project will be the most important to",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.2_t=2": {
+      "nll_correct": 2.4795,
+      "nll_wrong": 2.4931,
+      "nll_gap": 0.0137,
+      "retrieved": true,
+      "correct_passkey": "4-6-8-6-2",
+      "wrong_passkey": "2-5-9-8-5",
+      "ar_generated": "\n- The project will be the most important to",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.2_t=3": {
+      "nll_correct": 2.3478,
+      "nll_wrong": 2.2158,
+      "nll_gap": -0.1319,
+      "retrieved": false,
+      "correct_passkey": "4-3-2-3-6",
+      "wrong_passkey": "7-6-4-1-4",
+      "ar_generated": "\n- The project will be the most important to",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.2_t=4": {
+      "nll_correct": 2.2437,
+      "nll_wrong": 2.5661,
+      "nll_gap": 0.3224,
+      "retrieved": true,
+      "correct_passkey": "6-7-0-4-3",
+      "wrong_passkey": "9-2-5-6-7",
+      "ar_generated": "\n- The project will be the most important to",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.2_t=5": {
+      "nll_correct": 2.3891,
+      "nll_wrong": 2.5102,
+      "nll_gap": 0.1211,
+      "retrieved": true,
+      "correct_passkey": "7-9-0-6-4",
+      "wrong_passkey": "4-6-8-8-9",
+      "ar_generated": "\n- The project will be the most important to",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.2_t=6": {
+      "nll_correct": 2.4525,
+      "nll_wrong": 2.4424,
+      "nll_gap": -0.0101,
+      "retrieved": false,
+      "correct_passkey": "7-7-2-6-4",
+      "wrong_passkey": "4-8-7-4-9",
+      "ar_generated": "\n- The project will be the most important to",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.2_t=7": {
+      "nll_correct": 2.333,
+      "nll_wrong": 2.3455,
+      "nll_gap": 0.0125,
+      "retrieved": true,
+      "correct_passkey": "3-5-0-7-0",
+      "wrong_passkey": "8-0-3-4-7",
+      "ar_generated": "\n- The project will be the most important to",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.2_t=8": {
+      "nll_correct": 2.4074,
+      "nll_wrong": 2.3524,
+      "nll_gap": -0.055,
+      "retrieved": false,
+      "correct_passkey": "9-1-5-4-7",
+      "wrong_passkey": "6-3-2-3-8",
+      "ar_generated": "\n- The project will be the most important to",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.2_t=9": {
+      "nll_correct": 2.2486,
+      "nll_wrong": 2.4057,
+      "nll_gap": 0.1571,
+      "retrieved": true,
+      "correct_passkey": "3-4-9-3-2",
+      "wrong_passkey": "6-2-1-6-5",
+      "ar_generated": "\n- The project will be the most important to",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=0": {
+      "nll_correct": 2.9813,
+      "nll_wrong": 2.8522,
+      "nll_gap": -0.1292,
+      "retrieved": false,
+      "correct_passkey": "0-8-3-9-1",
+      "wrong_passkey": "8-9-9-1-3",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=1": {
+      "nll_correct": 2.701,
+      "nll_wrong": 2.6225,
+      "nll_gap": -0.0786,
+      "retrieved": false,
+      "correct_passkey": "3-6-5-4-2",
+      "wrong_passkey": "5-7-4-8-5",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=2": {
+      "nll_correct": 2.816,
+      "nll_wrong": 2.6431,
+      "nll_gap": -0.173,
+      "retrieved": false,
+      "correct_passkey": "6-7-8-6-4",
+      "wrong_passkey": "1-3-2-8-1",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=3": {
+      "nll_correct": 2.9752,
+      "nll_wrong": 2.8022,
+      "nll_gap": -0.173,
+      "retrieved": false,
+      "correct_passkey": "0-7-2-2-8",
+      "wrong_passkey": "6-9-7-8-9",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=4": {
+      "nll_correct": 2.8735,
+      "nll_wrong": 2.459,
+      "nll_gap": -0.4145,
+      "retrieved": false,
+      "correct_passkey": "5-6-3-0-3",
+      "wrong_passkey": "1-1-1-8-8",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=5": {
+      "nll_correct": 2.9241,
+      "nll_wrong": 3.026,
+      "nll_gap": 0.1019,
+      "retrieved": true,
+      "correct_passkey": "6-8-0-3-0",
+      "wrong_passkey": "4-2-1-6-2",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=6": {
+      "nll_correct": 3.0104,
+      "nll_wrong": 2.9896,
+      "nll_gap": -0.0208,
+      "retrieved": false,
+      "correct_passkey": "0-6-5-6-1",
+      "wrong_passkey": "2-2-8-9-6",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=7": {
+      "nll_correct": 2.8332,
+      "nll_wrong": 2.7517,
+      "nll_gap": -0.0815,
+      "retrieved": false,
+      "correct_passkey": "9-5-5-9-2",
+      "wrong_passkey": "5-9-8-3-0",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=8": {
+      "nll_correct": 3.0649,
+      "nll_wrong": 2.5337,
+      "nll_gap": -0.5313,
+      "retrieved": false,
+      "correct_passkey": "4-7-2-9-1",
+      "wrong_passkey": "1-6-6-3-3",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=9": {
+      "nll_correct": 2.8171,
+      "nll_wrong": 2.5794,
+      "nll_gap": -0.2377,
+      "retrieved": false,
+      "correct_passkey": "5-2-0-6-3",
+      "wrong_passkey": "1-5-8-9-5",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.8_t=0": {
+      "nll_correct": 2.8753,
+      "nll_wrong": 3.1357,
+      "nll_gap": 0.2604,
+      "retrieved": true,
+      "correct_passkey": "4-7-6-4-5",
+      "wrong_passkey": "2-6-9-6-3",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.8_t=1": {
+      "nll_correct": 2.7703,
+      "nll_wrong": 3.0602,
+      "nll_gap": 0.2899,
+      "retrieved": true,
+      "correct_passkey": "3-1-7-2-3",
+      "wrong_passkey": "4-8-9-9-0",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.8_t=2": {
+      "nll_correct": 3.1889,
+      "nll_wrong": 3.1745,
+      "nll_gap": -0.0144,
+      "retrieved": false,
+      "correct_passkey": "6-0-5-0-7",
+      "wrong_passkey": "0-6-7-8-3",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.8_t=3": {
+      "nll_correct": 2.8634,
+      "nll_wrong": 2.7521,
+      "nll_gap": -0.1113,
+      "retrieved": false,
+      "correct_passkey": "7-6-1-3-6",
+      "wrong_passkey": "8-1-3-5-8",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.8_t=4": {
+      "nll_correct": 2.8079,
+      "nll_wrong": 2.8812,
+      "nll_gap": 0.0733,
+      "retrieved": true,
+      "correct_passkey": "5-6-2-1-3",
+      "wrong_passkey": "7-2-7-9-5",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.8_t=5": {
+      "nll_correct": 2.8408,
+      "nll_wrong": 3.1787,
+      "nll_gap": 0.3379,
+      "retrieved": true,
+      "correct_passkey": "6-4-9-9-4",
+      "wrong_passkey": "3-0-2-5-6",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.8_t=6": {
+      "nll_correct": 3.0634,
+      "nll_wrong": 2.9607,
+      "nll_gap": -0.1027,
+      "retrieved": false,
+      "correct_passkey": "4-9-2-3-3",
+      "wrong_passkey": "3-0-6-6-2",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.8_t=7": {
+      "nll_correct": 2.9379,
+      "nll_wrong": 2.89,
+      "nll_gap": -0.0479,
+      "retrieved": false,
+      "correct_passkey": "4-4-6-2-5",
+      "wrong_passkey": "5-0-9-3-6",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.8_t=8": {
+      "nll_correct": 2.9589,
+      "nll_wrong": 3.1435,
+      "nll_gap": 0.1846,
+      "retrieved": true,
+      "correct_passkey": "7-7-7-5-5",
+      "wrong_passkey": "5-3-2-0-9",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.8_t=9": {
+      "nll_correct": 2.9323,
+      "nll_wrong": 2.8852,
+      "nll_gap": -0.0471,
+      "retrieved": false,
+      "correct_passkey": "6-5-0-4-3",
+      "wrong_passkey": "3-9-8-7-0",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.9_t=0": {
+      "nll_correct": 2.8367,
+      "nll_wrong": 2.9092,
+      "nll_gap": 0.0725,
+      "retrieved": true,
+      "correct_passkey": "9-9-1-8-7",
+      "wrong_passkey": "2-2-3-9-4",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.9_t=1": {
+      "nll_correct": 2.9431,
+      "nll_wrong": 2.8633,
+      "nll_gap": -0.0798,
+      "retrieved": false,
+      "correct_passkey": "6-3-2-8-7",
+      "wrong_passkey": "2-8-3-1-3",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.9_t=2": {
+      "nll_correct": 2.7996,
+      "nll_wrong": 2.7608,
+      "nll_gap": -0.0388,
+      "retrieved": false,
+      "correct_passkey": "7-4-7-8-9",
+      "wrong_passkey": "9-2-6-7-5",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.9_t=3": {
+      "nll_correct": 2.8611,
+      "nll_wrong": 2.9438,
+      "nll_gap": 0.0827,
+      "retrieved": true,
+      "correct_passkey": "3-0-7-7-0",
+      "wrong_passkey": "7-3-2-8-3",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.9_t=4": {
+      "nll_correct": 2.7019,
+      "nll_wrong": 3.0767,
+      "nll_gap": 0.3748,
+      "retrieved": true,
+      "correct_passkey": "8-5-3-9-6",
+      "wrong_passkey": "6-6-5-0-2",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.9_t=5": {
+      "nll_correct": 2.7403,
+      "nll_wrong": 2.6869,
+      "nll_gap": -0.0534,
+      "retrieved": false,
+      "correct_passkey": "5-9-1-6-8",
+      "wrong_passkey": "9-1-4-8-5",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.9_t=6": {
+      "nll_correct": 2.6354,
+      "nll_wrong": 2.6839,
+      "nll_gap": 0.0485,
+      "retrieved": true,
+      "correct_passkey": "6-6-4-1-6",
+      "wrong_passkey": "8-2-6-3-7",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.9_t=7": {
+      "nll_correct": 2.7641,
+      "nll_wrong": 2.839,
+      "nll_gap": 0.0749,
+      "retrieved": true,
+      "correct_passkey": "3-9-8-2-2",
+      "wrong_passkey": "9-2-5-8-4",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.9_t=8": {
+      "nll_correct": 2.8111,
+      "nll_wrong": 2.726,
+      "nll_gap": -0.0851,
+      "retrieved": false,
+      "correct_passkey": "4-4-6-2-4",
+      "wrong_passkey": "7-6-7-4-5",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.9_t=9": {
+      "nll_correct": 2.9839,
+      "nll_wrong": 3.0156,
+      "nll_gap": 0.0317,
+      "retrieved": true,
+      "correct_passkey": "9-0-1-9-7",
+      "wrong_passkey": "2-4-5-8-9",
+      "ar_generated": "\n- The project will be the first to develop",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.1_t=0": {
+      "nll_correct": 3.0832,
+      "nll_wrong": 3.2233,
+      "nll_gap": 0.1401,
+      "retrieved": true,
+      "correct_passkey": "3-9-7-6-0",
+      "wrong_passkey": "6-6-2-9-1",
+      "ar_generated": "\n- The Classroom of the 5th and",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.1_t=1": {
+      "nll_correct": 3.2757,
+      "nll_wrong": 2.9045,
+      "nll_gap": -0.3712,
+      "retrieved": false,
+      "correct_passkey": "3-9-0-9-1",
+      "wrong_passkey": "5-6-6-1-0",
+      "ar_generated": "\n- The Classroom of the book, the",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.1_t=2": {
+      "nll_correct": 3.0746,
+      "nll_wrong": 3.1503,
+      "nll_gap": 0.0757,
+      "retrieved": true,
+      "correct_passkey": "2-8-5-5-3",
+      "wrong_passkey": "8-9-2-4-4",
+      "ar_generated": "\n- The Classroom of the book, the",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.1_t=3": {
+      "nll_correct": 3.2034,
+      "nll_wrong": 2.6353,
+      "nll_gap": -0.5681,
+      "retrieved": false,
+      "correct_passkey": "2-8-2-1-4",
+      "wrong_passkey": "1-1-9-5-2",
+      "ar_generated": "\n- The Classroom of the book, the",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.1_t=4": {
+      "nll_correct": 2.9991,
+      "nll_wrong": 3.2058,
+      "nll_gap": 0.2068,
+      "retrieved": true,
+      "correct_passkey": "8-7-1-5-4",
+      "wrong_passkey": "5-6-9-0-3",
+      "ar_generated": "\n- The Classroom of the book, the",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.1_t=5": {
+      "nll_correct": 2.8722,
+      "nll_wrong": 3.0138,
+      "nll_gap": 0.1416,
+      "retrieved": true,
+      "correct_passkey": "8-8-1-1-7",
+      "wrong_passkey": "9-9-8-7-2",
+      "ar_generated": "\n- The Classroom of the book, the",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.1_t=6": {
+      "nll_correct": 2.9525,
+      "nll_wrong": 2.7764,
+      "nll_gap": -0.1761,
+      "retrieved": false,
+      "correct_passkey": "3-3-8-7-3",
+      "wrong_passkey": "1-9-4-3-4",
+      "ar_generated": "\n- The Classroom of the book, the",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.1_t=7": {
+      "nll_correct": 2.6355,
+      "nll_wrong": 3.0188,
+      "nll_gap": 0.3833,
+      "retrieved": true,
+      "correct_passkey": "3-3-1-4-4",
+      "wrong_passkey": "2-0-0-3-3",
+      "ar_generated": "\n- The Classroom of the book, the",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.1_t=8": {
+      "nll_correct": 3.0134,
+      "nll_wrong": 3.0632,
+      "nll_gap": 0.0498,
+      "retrieved": true,
+      "correct_passkey": "2-7-3-4-0",
+      "wrong_passkey": "5-2-9-2-6",
+      "ar_generated": "\n- The Classroom of the 5th and",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.1_t=9": {
+      "nll_correct": 3.0127,
+      "nll_wrong": 3.3082,
+      "nll_gap": 0.2955,
+      "retrieved": true,
+      "correct_passkey": "0-6-1-7-3",
+      "wrong_passkey": "2-9-2-5-5",
+      "ar_generated": "\n- The Classroom of the book, the",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.2_t=0": {
+      "nll_correct": 2.7354,
+      "nll_wrong": 2.4543,
+      "nll_gap": -0.2811,
+      "retrieved": false,
+      "correct_passkey": "7-7-5-6-7",
+      "wrong_passkey": "1-0-9-5-2",
+      "ar_generated": "\n- The Classroom of the children's and",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.2_t=1": {
+      "nll_correct": 2.706,
+      "nll_wrong": 2.4139,
+      "nll_gap": -0.292,
+      "retrieved": false,
+      "correct_passkey": "1-7-6-9-4",
+      "wrong_passkey": "8-0-1-1-1",
+      "ar_generated": "\n- The Classroom of the children's and",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.2_t=2": {
+      "nll_correct": 2.789,
+      "nll_wrong": 2.8505,
+      "nll_gap": 0.0615,
+      "retrieved": true,
+      "correct_passkey": "4-0-6-1-6",
+      "wrong_passkey": "0-3-9-0-4",
+      "ar_generated": "\n- The Classroom of the children's and",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.2_t=3": {
+      "nll_correct": 2.7291,
+      "nll_wrong": 2.7049,
+      "nll_gap": -0.0242,
+      "retrieved": false,
+      "correct_passkey": "3-6-7-1-9",
+      "wrong_passkey": "8-4-8-6-5",
+      "ar_generated": "\n- The Classroom of the children's and",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.2_t=4": {
+      "nll_correct": 2.6118,
+      "nll_wrong": 2.7188,
+      "nll_gap": 0.107,
+      "retrieved": true,
+      "correct_passkey": "3-4-9-1-6",
+      "wrong_passkey": "9-0-7-5-2",
+      "ar_generated": "\n- The Classroom of the children's and",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.2_t=5": {
+      "nll_correct": 2.8775,
+      "nll_wrong": 2.363,
+      "nll_gap": -0.5145,
+      "retrieved": false,
+      "correct_passkey": "4-9-6-7-9",
+      "wrong_passkey": "3-3-1-1-7",
+      "ar_generated": "\n- The Classroom of the children's and",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.2_t=6": {
+      "nll_correct": 2.3764,
+      "nll_wrong": 2.4821,
+      "nll_gap": 0.1057,
+      "retrieved": true,
+      "correct_passkey": "1-5-9-4-9",
+      "wrong_passkey": "3-0-3-3-6",
+      "ar_generated": "\n- The Classroom of the children's and",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.2_t=7": {
+      "nll_correct": 2.6863,
+      "nll_wrong": 2.8721,
+      "nll_gap": 0.1858,
+      "retrieved": true,
+      "correct_passkey": "4-6-1-2-8",
+      "wrong_passkey": "7-5-2-7-7",
+      "ar_generated": "\n- The Classroom of the children's and",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.2_t=8": {
+      "nll_correct": 2.8825,
+      "nll_wrong": 2.6949,
+      "nll_gap": -0.1876,
+      "retrieved": false,
+      "correct_passkey": "3-8-5-9-6",
+      "wrong_passkey": "5-6-6-6-1",
+      "ar_generated": "\n- The Classroom of the children's and",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.2_t=9": {
+      "nll_correct": 2.5807,
+      "nll_wrong": 2.6842,
+      "nll_gap": 0.1035,
+      "retrieved": true,
+      "correct_passkey": "9-4-5-6-8",
+      "wrong_passkey": "3-1-3-9-1",
+      "ar_generated": "\n- The Classroom of the children's and",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=0": {
+      "nll_correct": 3.449,
+      "nll_wrong": 3.5243,
+      "nll_gap": 0.0753,
+      "retrieved": true,
+      "correct_passkey": "5-8-1-9-4",
+      "wrong_passkey": "3-7-0-3-1",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=1": {
+      "nll_correct": 3.6292,
+      "nll_wrong": 3.37,
+      "nll_gap": -0.2592,
+      "retrieved": false,
+      "correct_passkey": "5-7-9-2-2",
+      "wrong_passkey": "4-4-4-3-3",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=2": {
+      "nll_correct": 3.2047,
+      "nll_wrong": 3.6059,
+      "nll_gap": 0.4012,
+      "retrieved": true,
+      "correct_passkey": "6-3-1-4-4",
+      "wrong_passkey": "9-0-8-7-0",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=3": {
+      "nll_correct": 3.3758,
+      "nll_wrong": 3.4683,
+      "nll_gap": 0.0925,
+      "retrieved": true,
+      "correct_passkey": "6-1-5-2-4",
+      "wrong_passkey": "5-2-0-1-2",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=4": {
+      "nll_correct": 3.5588,
+      "nll_wrong": 3.6485,
+      "nll_gap": 0.0897,
+      "retrieved": true,
+      "correct_passkey": "4-0-5-2-1",
+      "wrong_passkey": "8-8-9-9-2",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=5": {
+      "nll_correct": 3.4797,
+      "nll_wrong": 3.4354,
+      "nll_gap": -0.0443,
+      "retrieved": false,
+      "correct_passkey": "5-0-0-2-0",
+      "wrong_passkey": "3-8-3-5-9",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=6": {
+      "nll_correct": 3.5223,
+      "nll_wrong": 3.5166,
+      "nll_gap": -0.0058,
+      "retrieved": false,
+      "correct_passkey": "9-9-2-1-0",
+      "wrong_passkey": "6-1-8-8-5",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=7": {
+      "nll_correct": 3.4707,
+      "nll_wrong": 3.5057,
+      "nll_gap": 0.035,
+      "retrieved": true,
+      "correct_passkey": "5-4-0-6-1",
+      "wrong_passkey": "7-0-7-3-0",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=8": {
+      "nll_correct": 3.5047,
+      "nll_wrong": 3.4606,
+      "nll_gap": -0.0441,
+      "retrieved": false,
+      "correct_passkey": "3-8-2-1-7",
+      "wrong_passkey": "0-6-9-3-4",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=9": {
+      "nll_correct": 3.0321,
+      "nll_wrong": 3.6286,
+      "nll_gap": 0.5965,
+      "retrieved": true,
+      "correct_passkey": "1-6-1-3-4",
+      "wrong_passkey": "3-2-2-7-9",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.8_t=0": {
+      "nll_correct": 3.4956,
+      "nll_wrong": 3.6952,
+      "nll_gap": 0.1995,
+      "retrieved": true,
+      "correct_passkey": "3-0-2-5-1",
+      "wrong_passkey": "7-7-7-9-8",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.8_t=1": {
+      "nll_correct": 3.4143,
+      "nll_wrong": 3.3797,
+      "nll_gap": -0.0346,
+      "retrieved": false,
+      "correct_passkey": "4-3-5-1-7",
+      "wrong_passkey": "0-2-6-4-4",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.8_t=2": {
+      "nll_correct": 3.2856,
+      "nll_wrong": 3.6211,
+      "nll_gap": 0.3356,
+      "retrieved": true,
+      "correct_passkey": "1-4-7-8-6",
+      "wrong_passkey": "5-9-0-0-9",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.8_t=3": {
+      "nll_correct": 3.4651,
+      "nll_wrong": 3.4449,
+      "nll_gap": -0.0201,
+      "retrieved": false,
+      "correct_passkey": "0-8-5-2-2",
+      "wrong_passkey": "8-4-4-6-7",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.8_t=4": {
+      "nll_correct": 3.5629,
+      "nll_wrong": 3.3495,
+      "nll_gap": -0.2134,
+      "retrieved": false,
+      "correct_passkey": "7-1-0-7-5",
+      "wrong_passkey": "4-3-3-3-1",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.8_t=5": {
+      "nll_correct": 3.4861,
+      "nll_wrong": 3.4781,
+      "nll_gap": -0.008,
+      "retrieved": false,
+      "correct_passkey": "8-3-1-8-8",
+      "wrong_passkey": "9-1-8-5-6",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.8_t=6": {
+      "nll_correct": 3.452,
+      "nll_wrong": 3.6313,
+      "nll_gap": 0.1793,
+      "retrieved": true,
+      "correct_passkey": "1-6-9-0-7",
+      "wrong_passkey": "7-9-7-9-9",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.8_t=7": {
+      "nll_correct": 3.3879,
+      "nll_wrong": 3.2069,
+      "nll_gap": -0.1811,
+      "retrieved": false,
+      "correct_passkey": "6-4-6-4-2",
+      "wrong_passkey": "1-2-3-6-1",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.8_t=8": {
+      "nll_correct": 3.585,
+      "nll_wrong": 3.5595,
+      "nll_gap": -0.0255,
+      "retrieved": false,
+      "correct_passkey": "3-4-2-0-2",
+      "wrong_passkey": "8-0-0-5-1",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.8_t=9": {
+      "nll_correct": 3.1562,
+      "nll_wrong": 3.5527,
+      "nll_gap": 0.3965,
+      "retrieved": true,
+      "correct_passkey": "0-3-4-5-5",
+      "wrong_passkey": "7-5-3-8-2",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.9_t=0": {
+      "nll_correct": 3.3734,
+      "nll_wrong": 3.2955,
+      "nll_gap": -0.0779,
+      "retrieved": false,
+      "correct_passkey": "5-9-4-1-4",
+      "wrong_passkey": "6-1-5-4-8",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.9_t=1": {
+      "nll_correct": 3.5551,
+      "nll_wrong": 3.591,
+      "nll_gap": 0.0359,
+      "retrieved": true,
+      "correct_passkey": "0-2-2-8-3",
+      "wrong_passkey": "8-9-7-3-0",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.9_t=2": {
+      "nll_correct": 3.5122,
+      "nll_wrong": 3.7584,
+      "nll_gap": 0.2462,
+      "retrieved": true,
+      "correct_passkey": "9-5-5-8-2",
+      "wrong_passkey": "7-8-7-2-7",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.9_t=3": {
+      "nll_correct": 3.4111,
+      "nll_wrong": 3.703,
+      "nll_gap": 0.2919,
+      "retrieved": true,
+      "correct_passkey": "0-9-5-2-8",
+      "wrong_passkey": "7-2-7-6-0",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.9_t=4": {
+      "nll_correct": 3.3699,
+      "nll_wrong": 3.6723,
+      "nll_gap": 0.3025,
+      "retrieved": true,
+      "correct_passkey": "0-6-2-4-3",
+      "wrong_passkey": "3-2-7-7-9",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.9_t=5": {
+      "nll_correct": 3.4801,
+      "nll_wrong": 3.308,
+      "nll_gap": -0.1721,
+      "retrieved": false,
+      "correct_passkey": "9-8-4-3-1",
+      "wrong_passkey": "7-0-1-1-3",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.9_t=6": {
+      "nll_correct": 3.503,
+      "nll_wrong": 3.543,
+      "nll_gap": 0.0399,
+      "retrieved": true,
+      "correct_passkey": "3-6-3-7-2",
+      "wrong_passkey": "8-0-9-1-8",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.9_t=7": {
+      "nll_correct": 3.7432,
+      "nll_wrong": 3.254,
+      "nll_gap": -0.4892,
+      "retrieved": false,
+      "correct_passkey": "2-2-7-2-8",
+      "wrong_passkey": "8-1-3-4-4",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.9_t=8": {
+      "nll_correct": 3.5155,
+      "nll_wrong": 3.2872,
+      "nll_gap": -0.2284,
+      "retrieved": false,
+      "correct_passkey": "9-8-5-5-5",
+      "wrong_passkey": "0-0-4-6-9",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.9_t=9": {
+      "nll_correct": 3.5481,
+      "nll_wrong": 3.4944,
+      "nll_gap": -0.0537,
+      "retrieved": false,
+      "correct_passkey": "3-9-8-7-9",
+      "wrong_passkey": "0-2-9-5-2",
+      "ar_generated": "\n- The Classroom of the Classroom of",
+      "ar_exact_match": false
+    }
+  },
+  "summary": {
+    "L=2048_d=0.1": {
+      "mean_nll_gap": 0.0382,
+      "retrieval_rate": 0.6,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=2048_d=0.2": {
+      "mean_nll_gap": 0.0175,
+      "retrieval_rate": 0.6,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=2048_d=0.5": {
+      "mean_nll_gap": 0.1201,
+      "retrieval_rate": 0.9,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=2048_d=0.8": {
+      "mean_nll_gap": 0.0923,
+      "retrieval_rate": 0.7,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=2048_d=0.9": {
+      "mean_nll_gap": 0.1865,
+      "retrieval_rate": 0.7,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=4096_d=0.1": {
+      "mean_nll_gap": 0.0822,
+      "retrieval_rate": 0.6,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=4096_d=0.2": {
+      "mean_nll_gap": 0.0862,
+      "retrieval_rate": 0.7,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=4096_d=0.5": {
+      "mean_nll_gap": -0.1738,
+      "retrieval_rate": 0.1,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=4096_d=0.8": {
+      "mean_nll_gap": 0.0823,
+      "retrieval_rate": 0.5,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=4096_d=0.9": {
+      "mean_nll_gap": 0.0428,
+      "retrieval_rate": 0.6,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=8192_d=0.1": {
+      "mean_nll_gap": 0.0177,
+      "retrieval_rate": 0.7,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=8192_d=0.2": {
+      "mean_nll_gap": -0.0736,
+      "retrieval_rate": 0.5,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=8192_d=0.5": {
+      "mean_nll_gap": 0.0937,
+      "retrieval_rate": 0.6,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=8192_d=0.8": {
+      "mean_nll_gap": 0.0628,
+      "retrieval_rate": 0.4,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=8192_d=0.9": {
+      "mean_nll_gap": -0.0105,
+      "retrieval_rate": 0.5,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    }
+  },
+  "global": {
+    "total_trials": 150,
+    "mean_nll_gap": 0.0443,
+    "retrieval_rate": 0.58,
+    "ar_exact_match_rate": 0.0
+  }
+}

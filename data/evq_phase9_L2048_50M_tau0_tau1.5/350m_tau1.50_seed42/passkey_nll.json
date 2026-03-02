@@ -1,0 +1,1602 @@
+{
+  "details": {
+    "L=2048_d=0.1_t=0": {
+      "nll_correct": 1.001,
+      "nll_wrong": 1.1076,
+      "nll_gap": 0.1066,
+      "retrieved": true,
+      "correct_passkey": "4-4-9-5-2",
+      "wrong_passkey": "7-2-2-9-7",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.1_t=1": {
+      "nll_correct": 0.9485,
+      "nll_wrong": 0.9613,
+      "nll_gap": 0.0128,
+      "retrieved": true,
+      "correct_passkey": "7-8-7-5-4",
+      "wrong_passkey": "3-4-8-2-0",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.1_t=2": {
+      "nll_correct": 1.1485,
+      "nll_wrong": 1.153,
+      "nll_gap": 0.0045,
+      "retrieved": true,
+      "correct_passkey": "0-3-3-3-1",
+      "wrong_passkey": "9-0-8-2-0",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.1_t=3": {
+      "nll_correct": 1.1279,
+      "nll_wrong": 1.0853,
+      "nll_gap": -0.0426,
+      "retrieved": false,
+      "correct_passkey": "0-3-9-4-4",
+      "wrong_passkey": "9-5-2-6-0",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.1_t=4": {
+      "nll_correct": 1.0023,
+      "nll_wrong": 1.1074,
+      "nll_gap": 0.1051,
+      "retrieved": true,
+      "correct_passkey": "2-2-9-9-0",
+      "wrong_passkey": "7-9-6-4-7",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.1_t=5": {
+      "nll_correct": 1.1033,
+      "nll_wrong": 0.9634,
+      "nll_gap": -0.1399,
+      "retrieved": false,
+      "correct_passkey": "0-3-7-2-2",
+      "wrong_passkey": "3-6-8-6-3",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.1_t=6": {
+      "nll_correct": 0.9634,
+      "nll_wrong": 0.8448,
+      "nll_gap": -0.1186,
+      "retrieved": false,
+      "correct_passkey": "8-5-4-6-7",
+      "wrong_passkey": "1-6-8-8-6",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.1_t=7": {
+      "nll_correct": 0.9981,
+      "nll_wrong": 1.0223,
+      "nll_gap": 0.0242,
+      "retrieved": true,
+      "correct_passkey": "7-6-5-5-2",
+      "wrong_passkey": "2-0-2-4-3",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.1_t=8": {
+      "nll_correct": 1.0989,
+      "nll_wrong": 0.8749,
+      "nll_gap": -0.224,
+      "retrieved": false,
+      "correct_passkey": "6-4-7-7-0",
+      "wrong_passkey": "5-3-8-8-1",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.1_t=9": {
+      "nll_correct": 1.0159,
+      "nll_wrong": 1.1208,
+      "nll_gap": 0.1048,
+      "retrieved": true,
+      "correct_passkey": "4-6-6-7-8",
+      "wrong_passkey": "6-8-3-9-9",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.2_t=0": {
+      "nll_correct": 1.1612,
+      "nll_wrong": 1.0441,
+      "nll_gap": -0.1171,
+      "retrieved": false,
+      "correct_passkey": "7-3-3-3-3",
+      "wrong_passkey": "3-0-2-6-2",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.2_t=1": {
+      "nll_correct": 1.0518,
+      "nll_wrong": 0.9917,
+      "nll_gap": -0.0601,
+      "retrieved": false,
+      "correct_passkey": "3-9-0-5-6",
+      "wrong_passkey": "2-4-6-9-3",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.2_t=2": {
+      "nll_correct": 1.1016,
+      "nll_wrong": 0.9858,
+      "nll_gap": -0.1158,
+      "retrieved": false,
+      "correct_passkey": "5-9-3-2-5",
+      "wrong_passkey": "3-1-6-5-8",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.2_t=3": {
+      "nll_correct": 1.0675,
+      "nll_wrong": 1.065,
+      "nll_gap": -0.0024,
+      "retrieved": false,
+      "correct_passkey": "8-9-5-6-1",
+      "wrong_passkey": "0-3-3-0-9",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.2_t=4": {
+      "nll_correct": 0.868,
+      "nll_wrong": 0.9734,
+      "nll_gap": 0.1053,
+      "retrieved": true,
+      "correct_passkey": "1-0-1-6-7",
+      "wrong_passkey": "6-8-6-8-8",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.2_t=5": {
+      "nll_correct": 1.1115,
+      "nll_wrong": 1.116,
+      "nll_gap": 0.0045,
+      "retrieved": true,
+      "correct_passkey": "9-7-3-8-8",
+      "wrong_passkey": "0-8-9-6-5",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.2_t=6": {
+      "nll_correct": 1.014,
+      "nll_wrong": 0.8866,
+      "nll_gap": -0.1274,
+      "retrieved": false,
+      "correct_passkey": "7-4-6-0-1",
+      "wrong_passkey": "2-3-0-6-2",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.2_t=7": {
+      "nll_correct": 0.9216,
+      "nll_wrong": 0.9367,
+      "nll_gap": 0.0151,
+      "retrieved": true,
+      "correct_passkey": "2-3-2-3-3",
+      "wrong_passkey": "5-0-7-0-7",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.2_t=8": {
+      "nll_correct": 0.9828,
+      "nll_wrong": 0.9282,
+      "nll_gap": -0.0546,
+      "retrieved": false,
+      "correct_passkey": "7-5-0-9-5",
+      "wrong_passkey": "3-7-8-8-6",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.2_t=9": {
+      "nll_correct": 0.9777,
+      "nll_wrong": 1.1491,
+      "nll_gap": 0.1714,
+      "retrieved": true,
+      "correct_passkey": "5-6-2-6-6",
+      "wrong_passkey": "6-3-3-4-5",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=0": {
+      "nll_correct": 0.8923,
+      "nll_wrong": 0.9592,
+      "nll_gap": 0.0669,
+      "retrieved": true,
+      "correct_passkey": "5-3-1-0-1",
+      "wrong_passkey": "7-0-0-8-9",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=1": {
+      "nll_correct": 0.9076,
+      "nll_wrong": 1.1628,
+      "nll_gap": 0.2552,
+      "retrieved": true,
+      "correct_passkey": "4-5-5-1-2",
+      "wrong_passkey": "9-4-4-9-1",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=2": {
+      "nll_correct": 0.9405,
+      "nll_wrong": 1.1161,
+      "nll_gap": 0.1756,
+      "retrieved": true,
+      "correct_passkey": "2-8-0-7-9",
+      "wrong_passkey": "6-5-9-3-8",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=3": {
+      "nll_correct": 1.0259,
+      "nll_wrong": 1.1483,
+      "nll_gap": 0.1224,
+      "retrieved": true,
+      "correct_passkey": "0-7-0-5-2",
+      "wrong_passkey": "9-3-6-0-5",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=4": {
+      "nll_correct": 1.0511,
+      "nll_wrong": 1.0877,
+      "nll_gap": 0.0367,
+      "retrieved": true,
+      "correct_passkey": "9-1-2-8-7",
+      "wrong_passkey": "7-9-0-1-2",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=5": {
+      "nll_correct": 1.0285,
+      "nll_wrong": 1.1003,
+      "nll_gap": 0.0718,
+      "retrieved": true,
+      "correct_passkey": "2-0-6-9-1",
+      "wrong_passkey": "7-2-9-4-6",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=6": {
+      "nll_correct": 0.9616,
+      "nll_wrong": 1.1821,
+      "nll_gap": 0.2205,
+      "retrieved": true,
+      "correct_passkey": "4-5-7-1-7",
+      "wrong_passkey": "9-6-3-5-3",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=7": {
+      "nll_correct": 1.1145,
+      "nll_wrong": 0.8642,
+      "nll_gap": -0.2503,
+      "retrieved": false,
+      "correct_passkey": "4-6-9-3-7",
+      "wrong_passkey": "3-5-5-6-6",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=8": {
+      "nll_correct": 0.9483,
+      "nll_wrong": 1.0491,
+      "nll_gap": 0.1008,
+      "retrieved": true,
+      "correct_passkey": "1-8-7-4-2",
+      "wrong_passkey": "2-0-2-9-8",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.5_t=9": {
+      "nll_correct": 1.117,
+      "nll_wrong": 1.1076,
+      "nll_gap": -0.0094,
+      "retrieved": false,
+      "correct_passkey": "6-3-2-2-1",
+      "wrong_passkey": "0-2-5-5-3",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.8_t=0": {
+      "nll_correct": 0.9774,
+      "nll_wrong": 1.0454,
+      "nll_gap": 0.068,
+      "retrieved": true,
+      "correct_passkey": "3-7-5-2-3",
+      "wrong_passkey": "5-0-9-5-0",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.8_t=1": {
+      "nll_correct": 1.0403,
+      "nll_wrong": 0.8865,
+      "nll_gap": -0.1538,
+      "retrieved": false,
+      "correct_passkey": "8-4-1-6-3",
+      "wrong_passkey": "5-5-6-1-7",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.8_t=2": {
+      "nll_correct": 1.0869,
+      "nll_wrong": 0.9967,
+      "nll_gap": -0.0902,
+      "retrieved": false,
+      "correct_passkey": "6-7-0-1-2",
+      "wrong_passkey": "3-2-4-9-8",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.8_t=3": {
+      "nll_correct": 1.058,
+      "nll_wrong": 1.054,
+      "nll_gap": -0.004,
+      "retrieved": false,
+      "correct_passkey": "6-2-7-0-9",
+      "wrong_passkey": "1-9-2-9-2",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.8_t=4": {
+      "nll_correct": 0.9805,
+      "nll_wrong": 1.0474,
+      "nll_gap": 0.0669,
+      "retrieved": true,
+      "correct_passkey": "2-9-0-1-8",
+      "wrong_passkey": "6-7-6-8-7",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.8_t=5": {
+      "nll_correct": 1.1045,
+      "nll_wrong": 1.008,
+      "nll_gap": -0.0965,
+      "retrieved": false,
+      "correct_passkey": "9-2-2-2-8",
+      "wrong_passkey": "3-9-4-8-9",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.8_t=6": {
+      "nll_correct": 0.7443,
+      "nll_wrong": 1.1664,
+      "nll_gap": 0.4221,
+      "retrieved": true,
+      "correct_passkey": "1-1-4-0-4",
+      "wrong_passkey": "8-6-9-7-0",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.8_t=7": {
+      "nll_correct": 0.9481,
+      "nll_wrong": 1.053,
+      "nll_gap": 0.1048,
+      "retrieved": true,
+      "correct_passkey": "4-0-8-4-6",
+      "wrong_passkey": "5-6-9-1-4",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.8_t=8": {
+      "nll_correct": 1.0434,
+      "nll_wrong": 0.8462,
+      "nll_gap": -0.1973,
+      "retrieved": false,
+      "correct_passkey": "8-2-6-1-5",
+      "wrong_passkey": "2-1-2-0-8",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.8_t=9": {
+      "nll_correct": 1.0465,
+      "nll_wrong": 1.2477,
+      "nll_gap": 0.2012,
+      "retrieved": true,
+      "correct_passkey": "6-3-5-0-8",
+      "wrong_passkey": "0-7-3-3-2",
+      "ar_generated": "1-2-0-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.9_t=0": {
+      "nll_correct": 1.1315,
+      "nll_wrong": 1.1981,
+      "nll_gap": 0.0666,
+      "retrieved": true,
+      "correct_passkey": "9-8-3-2-1",
+      "wrong_passkey": "0-7-7-5-8",
+      "ar_generated": "1-2-1-0-0>>",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.9_t=1": {
+      "nll_correct": 0.9282,
+      "nll_wrong": 1.0132,
+      "nll_gap": 0.085,
+      "retrieved": true,
+      "correct_passkey": "3-8-1-3-5",
+      "wrong_passkey": "8-5-7-9-7",
+      "ar_generated": "1-2-1-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.9_t=2": {
+      "nll_correct": 1.1204,
+      "nll_wrong": 0.9214,
+      "nll_gap": -0.1989,
+      "retrieved": false,
+      "correct_passkey": "6-0-7-3-2",
+      "wrong_passkey": "1-4-1-9-6",
+      "ar_generated": "1-2-0-0-0>>",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.9_t=3": {
+      "nll_correct": 0.8971,
+      "nll_wrong": 0.9854,
+      "nll_gap": 0.0883,
+      "retrieved": true,
+      "correct_passkey": "2-0-4-1-0",
+      "wrong_passkey": "3-4-6-3-2",
+      "ar_generated": "1-2-0-0-0>>",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.9_t=4": {
+      "nll_correct": 0.9906,
+      "nll_wrong": 1.039,
+      "nll_gap": 0.0484,
+      "retrieved": true,
+      "correct_passkey": "0-5-3-4-5",
+      "wrong_passkey": "3-8-7-3-9",
+      "ar_generated": "1-2-1-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.9_t=5": {
+      "nll_correct": 0.9576,
+      "nll_wrong": 0.9774,
+      "nll_gap": 0.0197,
+      "retrieved": true,
+      "correct_passkey": "7-5-6-4-7",
+      "wrong_passkey": "3-0-3-0-1",
+      "ar_generated": "1-2-1-0-0.\"",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.9_t=6": {
+      "nll_correct": 0.8735,
+      "nll_wrong": 1.1491,
+      "nll_gap": 0.2756,
+      "retrieved": true,
+      "correct_passkey": "0-4-0-1-5",
+      "wrong_passkey": "4-7-3-2-1",
+      "ar_generated": "1-2-1-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.9_t=7": {
+      "nll_correct": 0.9756,
+      "nll_wrong": 1.0353,
+      "nll_gap": 0.0597,
+      "retrieved": true,
+      "correct_passkey": "3-7-1-3-8",
+      "wrong_passkey": "7-8-0-5-6",
+      "ar_generated": "1-2-1-0-0-",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.9_t=8": {
+      "nll_correct": 1.0345,
+      "nll_wrong": 0.9994,
+      "nll_gap": -0.0351,
+      "retrieved": false,
+      "correct_passkey": "0-8-9-2-3",
+      "wrong_passkey": "5-0-4-0-4",
+      "ar_generated": "1-2-1-0-0>>",
+      "ar_exact_match": false
+    },
+    "L=2048_d=0.9_t=9": {
+      "nll_correct": 1.0424,
+      "nll_wrong": 1.0646,
+      "nll_gap": 0.0222,
+      "retrieved": true,
+      "correct_passkey": "8-2-7-7-2",
+      "wrong_passkey": "4-8-3-3-0",
+      "ar_generated": "1-2-1-0-0>>",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.1_t=0": {
+      "nll_correct": 1.9001,
+      "nll_wrong": 1.9624,
+      "nll_gap": 0.0623,
+      "retrieved": true,
+      "correct_passkey": "0-1-5-9-3",
+      "wrong_passkey": "7-4-1-3-4",
+      "ar_generated": "1.5-1.5-1-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.1_t=1": {
+      "nll_correct": 1.9531,
+      "nll_wrong": 1.9648,
+      "nll_gap": 0.0117,
+      "retrieved": true,
+      "correct_passkey": "4-2-4-2-6",
+      "wrong_passkey": "8-4-8-0-0",
+      "ar_generated": "1.5-1.5-1-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.1_t=2": {
+      "nll_correct": 1.9697,
+      "nll_wrong": 1.8193,
+      "nll_gap": -0.1504,
+      "retrieved": false,
+      "correct_passkey": "2-7-4-1-4",
+      "wrong_passkey": "0-6-8-6-2",
+      "ar_generated": "1.5-1.5-1-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.1_t=3": {
+      "nll_correct": 1.9222,
+      "nll_wrong": 2.0389,
+      "nll_gap": 0.1167,
+      "retrieved": true,
+      "correct_passkey": "2-0-9-7-8",
+      "wrong_passkey": "6-5-4-0-9",
+      "ar_generated": "1.5-1.5-1-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.1_t=4": {
+      "nll_correct": 1.7459,
+      "nll_wrong": 1.7563,
+      "nll_gap": 0.0105,
+      "retrieved": true,
+      "correct_passkey": "7-6-4-8-5",
+      "wrong_passkey": "1-4-9-4-9",
+      "ar_generated": "1.5-1.5-1-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.1_t=5": {
+      "nll_correct": 1.7857,
+      "nll_wrong": 1.9651,
+      "nll_gap": 0.1794,
+      "retrieved": true,
+      "correct_passkey": "5-9-2-3-3",
+      "wrong_passkey": "9-1-6-0-1",
+      "ar_generated": "1.5-1.5-1-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.1_t=6": {
+      "nll_correct": 1.9846,
+      "nll_wrong": 2.0023,
+      "nll_gap": 0.0177,
+      "retrieved": true,
+      "correct_passkey": "0-9-5-2-8",
+      "wrong_passkey": "7-7-3-7-0",
+      "ar_generated": "1.5-1.5-1-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.1_t=7": {
+      "nll_correct": 1.8709,
+      "nll_wrong": 1.8019,
+      "nll_gap": -0.069,
+      "retrieved": false,
+      "correct_passkey": "5-2-1-6-1",
+      "wrong_passkey": "3-9-9-4-5",
+      "ar_generated": "1.5-1.5-1-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.1_t=8": {
+      "nll_correct": 1.9911,
+      "nll_wrong": 2.0051,
+      "nll_gap": 0.014,
+      "retrieved": true,
+      "correct_passkey": "7-5-7-0-6",
+      "wrong_passkey": "4-2-0-6-8",
+      "ar_generated": "1.5-1.5-1-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.1_t=9": {
+      "nll_correct": 2.0078,
+      "nll_wrong": 1.9082,
+      "nll_gap": -0.0996,
+      "retrieved": false,
+      "correct_passkey": "0-3-3-3-6",
+      "wrong_passkey": "3-2-9-6-1",
+      "ar_generated": "1.5-1.5-1-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.2_t=0": {
+      "nll_correct": 1.7226,
+      "nll_wrong": 1.7167,
+      "nll_gap": -0.0058,
+      "retrieved": false,
+      "correct_passkey": "3-4-8-4-4",
+      "wrong_passkey": "4-8-7-3-7",
+      "ar_generated": "1-8.\nThe project is a major",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.2_t=1": {
+      "nll_correct": 1.9346,
+      "nll_wrong": 1.8691,
+      "nll_gap": -0.0655,
+      "retrieved": false,
+      "correct_passkey": "6-0-3-2-4",
+      "wrong_passkey": "9-9-7-6-9",
+      "ar_generated": "1-5-6-year-old and",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.2_t=2": {
+      "nll_correct": 1.5609,
+      "nll_wrong": 1.7098,
+      "nll_gap": 0.1489,
+      "retrieved": true,
+      "correct_passkey": "4-6-8-6-2",
+      "wrong_passkey": "2-5-9-8-5",
+      "ar_generated": "1-8.\nThe project is a major",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.2_t=3": {
+      "nll_correct": 1.8839,
+      "nll_wrong": 1.9429,
+      "nll_gap": 0.059,
+      "retrieved": true,
+      "correct_passkey": "4-3-2-3-6",
+      "wrong_passkey": "7-6-4-1-4",
+      "ar_generated": "1-5-6-year-old and",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.2_t=4": {
+      "nll_correct": 1.8699,
+      "nll_wrong": 1.9095,
+      "nll_gap": 0.0396,
+      "retrieved": true,
+      "correct_passkey": "6-7-0-4-3",
+      "wrong_passkey": "9-2-5-6-7",
+      "ar_generated": "1-5-6-year-old and",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.2_t=5": {
+      "nll_correct": 1.9161,
+      "nll_wrong": 1.5581,
+      "nll_gap": -0.358,
+      "retrieved": false,
+      "correct_passkey": "7-9-0-6-4",
+      "wrong_passkey": "4-6-8-8-9",
+      "ar_generated": "1-8.\nThe project is a major",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.2_t=6": {
+      "nll_correct": 1.9245,
+      "nll_wrong": 1.7256,
+      "nll_gap": -0.1989,
+      "retrieved": false,
+      "correct_passkey": "7-7-2-6-4",
+      "wrong_passkey": "4-8-7-4-9",
+      "ar_generated": "1-5-6-year-old,",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.2_t=7": {
+      "nll_correct": 1.7917,
+      "nll_wrong": 1.8258,
+      "nll_gap": 0.0341,
+      "retrieved": true,
+      "correct_passkey": "3-5-0-7-0",
+      "wrong_passkey": "8-0-3-4-7",
+      "ar_generated": "1-8.\nThe project is a major",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.2_t=8": {
+      "nll_correct": 1.8827,
+      "nll_wrong": 2.0208,
+      "nll_gap": 0.1381,
+      "retrieved": true,
+      "correct_passkey": "9-1-5-4-7",
+      "wrong_passkey": "6-3-2-3-8",
+      "ar_generated": "1-8.\nThe project is a major",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.2_t=9": {
+      "nll_correct": 1.8032,
+      "nll_wrong": 2.0214,
+      "nll_gap": 0.2182,
+      "retrieved": true,
+      "correct_passkey": "3-4-9-3-2",
+      "wrong_passkey": "6-2-1-6-5",
+      "ar_generated": "1-5-6-year-old and",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=0": {
+      "nll_correct": 2.0312,
+      "nll_wrong": 1.9829,
+      "nll_gap": -0.0484,
+      "retrieved": false,
+      "correct_passkey": "0-8-3-9-1",
+      "wrong_passkey": "8-9-9-1-3",
+      "ar_generated": "1-1.\nThe project will be a",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=1": {
+      "nll_correct": 1.727,
+      "nll_wrong": 1.7126,
+      "nll_gap": -0.0143,
+      "retrieved": false,
+      "correct_passkey": "3-6-5-4-2",
+      "wrong_passkey": "5-7-4-8-5",
+      "ar_generated": "1-1.\nThe project will be a",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=2": {
+      "nll_correct": 1.7376,
+      "nll_wrong": 1.7529,
+      "nll_gap": 0.0153,
+      "retrieved": true,
+      "correct_passkey": "6-7-8-6-4",
+      "wrong_passkey": "1-3-2-8-1",
+      "ar_generated": "1-1.\nThe project is a project",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=3": {
+      "nll_correct": 2.1856,
+      "nll_wrong": 1.8339,
+      "nll_gap": -0.3517,
+      "retrieved": false,
+      "correct_passkey": "0-7-2-2-8",
+      "wrong_passkey": "6-9-7-8-9",
+      "ar_generated": "1-1.\nThe project will be a",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=4": {
+      "nll_correct": 2.0636,
+      "nll_wrong": 1.6545,
+      "nll_gap": -0.4091,
+      "retrieved": false,
+      "correct_passkey": "5-6-3-0-3",
+      "wrong_passkey": "1-1-1-8-8",
+      "ar_generated": "1-1.\nThe project will be a",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=5": {
+      "nll_correct": 1.7788,
+      "nll_wrong": 1.9005,
+      "nll_gap": 0.1217,
+      "retrieved": true,
+      "correct_passkey": "6-8-0-3-0",
+      "wrong_passkey": "4-2-1-6-2",
+      "ar_generated": "1-1.\nThe project will be a",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=6": {
+      "nll_correct": 1.9443,
+      "nll_wrong": 1.8936,
+      "nll_gap": -0.0507,
+      "retrieved": false,
+      "correct_passkey": "0-6-5-6-1",
+      "wrong_passkey": "2-2-8-9-6",
+      "ar_generated": "1-1.\nThe project will be a",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=7": {
+      "nll_correct": 1.735,
+      "nll_wrong": 1.7537,
+      "nll_gap": 0.0187,
+      "retrieved": true,
+      "correct_passkey": "9-5-5-9-2",
+      "wrong_passkey": "5-9-8-3-0",
+      "ar_generated": "1-1.\nThe project will be a",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=8": {
+      "nll_correct": 1.892,
+      "nll_wrong": 1.7446,
+      "nll_gap": -0.1475,
+      "retrieved": false,
+      "correct_passkey": "4-7-2-9-1",
+      "wrong_passkey": "1-6-6-3-3",
+      "ar_generated": "1-1.\nThe project will be a",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.5_t=9": {
+      "nll_correct": 1.8643,
+      "nll_wrong": 1.6411,
+      "nll_gap": -0.2232,
+      "retrieved": false,
+      "correct_passkey": "5-2-0-6-3",
+      "wrong_passkey": "1-5-8-9-5",
+      "ar_generated": "1-1.\nThe project will be a",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.8_t=0": {
+      "nll_correct": 1.8832,
+      "nll_wrong": 1.8026,
+      "nll_gap": -0.0807,
+      "retrieved": false,
+      "correct_passkey": "4-7-6-4-5",
+      "wrong_passkey": "2-6-9-6-3",
+      "ar_generated": "1.5-year-year-year-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.8_t=1": {
+      "nll_correct": 1.9965,
+      "nll_wrong": 1.6505,
+      "nll_gap": -0.346,
+      "retrieved": false,
+      "correct_passkey": "3-1-7-2-3",
+      "wrong_passkey": "4-8-9-9-0",
+      "ar_generated": "1.5-year-year-year-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.8_t=2": {
+      "nll_correct": 2.1161,
+      "nll_wrong": 2.0726,
+      "nll_gap": -0.0435,
+      "retrieved": false,
+      "correct_passkey": "6-0-5-0-7",
+      "wrong_passkey": "0-6-7-8-3",
+      "ar_generated": "1.5-year-year-year-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.8_t=3": {
+      "nll_correct": 1.9718,
+      "nll_wrong": 1.8927,
+      "nll_gap": -0.0791,
+      "retrieved": false,
+      "correct_passkey": "7-6-1-3-6",
+      "wrong_passkey": "8-1-3-5-8",
+      "ar_generated": "1.5-year-year-year-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.8_t=4": {
+      "nll_correct": 1.9197,
+      "nll_wrong": 2.0643,
+      "nll_gap": 0.1445,
+      "retrieved": true,
+      "correct_passkey": "5-6-2-1-3",
+      "wrong_passkey": "7-2-7-9-5",
+      "ar_generated": "1.5-year-year-year-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.8_t=5": {
+      "nll_correct": 1.8468,
+      "nll_wrong": 1.8746,
+      "nll_gap": 0.0278,
+      "retrieved": true,
+      "correct_passkey": "6-4-9-9-4",
+      "wrong_passkey": "3-0-2-5-6",
+      "ar_generated": "1.5-year-year-year-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.8_t=6": {
+      "nll_correct": 1.9878,
+      "nll_wrong": 1.8045,
+      "nll_gap": -0.1833,
+      "retrieved": false,
+      "correct_passkey": "4-9-2-3-3",
+      "wrong_passkey": "3-0-6-6-2",
+      "ar_generated": "1.5-year-year-year-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.8_t=7": {
+      "nll_correct": 1.9274,
+      "nll_wrong": 1.8229,
+      "nll_gap": -0.1046,
+      "retrieved": false,
+      "correct_passkey": "4-4-6-2-5",
+      "wrong_passkey": "5-0-9-3-6",
+      "ar_generated": "1.5-year-year-year-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.8_t=8": {
+      "nll_correct": 1.9304,
+      "nll_wrong": 2.2773,
+      "nll_gap": 0.3469,
+      "retrieved": true,
+      "correct_passkey": "7-7-7-5-5",
+      "wrong_passkey": "5-3-2-0-9",
+      "ar_generated": "1.5-year-year-year-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.8_t=9": {
+      "nll_correct": 1.9515,
+      "nll_wrong": 1.8761,
+      "nll_gap": -0.0754,
+      "retrieved": false,
+      "correct_passkey": "6-5-0-4-3",
+      "wrong_passkey": "3-9-8-7-0",
+      "ar_generated": "1.5-year-year-year-",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.9_t=0": {
+      "nll_correct": 1.8753,
+      "nll_wrong": 1.8416,
+      "nll_gap": -0.0337,
+      "retrieved": false,
+      "correct_passkey": "9-9-1-8-7",
+      "wrong_passkey": "2-2-3-9-4",
+      "ar_generated": "1-1.\nThe project is a project",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.9_t=1": {
+      "nll_correct": 1.9922,
+      "nll_wrong": 1.8939,
+      "nll_gap": -0.0983,
+      "retrieved": false,
+      "correct_passkey": "6-3-2-8-7",
+      "wrong_passkey": "2-8-3-1-3",
+      "ar_generated": "1-1.\nThe project will be a",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.9_t=2": {
+      "nll_correct": 1.8196,
+      "nll_wrong": 2.0352,
+      "nll_gap": 0.2156,
+      "retrieved": true,
+      "correct_passkey": "7-4-7-8-9",
+      "wrong_passkey": "9-2-6-7-5",
+      "ar_generated": "1-1.\nThe project is a project",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.9_t=3": {
+      "nll_correct": 1.8776,
+      "nll_wrong": 1.9927,
+      "nll_gap": 0.1151,
+      "retrieved": true,
+      "correct_passkey": "3-0-7-7-0",
+      "wrong_passkey": "7-3-2-8-3",
+      "ar_generated": "1-1.\nThe project is a project",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.9_t=4": {
+      "nll_correct": 1.8491,
+      "nll_wrong": 2.0903,
+      "nll_gap": 0.2412,
+      "retrieved": true,
+      "correct_passkey": "8-5-3-9-6",
+      "wrong_passkey": "6-6-5-0-2",
+      "ar_generated": "1-1.\nThe project will be a",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.9_t=5": {
+      "nll_correct": 1.6848,
+      "nll_wrong": 1.8091,
+      "nll_gap": 0.1243,
+      "retrieved": true,
+      "correct_passkey": "5-9-1-6-8",
+      "wrong_passkey": "9-1-4-8-5",
+      "ar_generated": "1-1.\nThe project will be a",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.9_t=6": {
+      "nll_correct": 1.9216,
+      "nll_wrong": 2.0149,
+      "nll_gap": 0.0932,
+      "retrieved": true,
+      "correct_passkey": "6-6-4-1-6",
+      "wrong_passkey": "8-2-6-3-7",
+      "ar_generated": "1-1.\nThe project will be a",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.9_t=7": {
+      "nll_correct": 1.8238,
+      "nll_wrong": 1.8879,
+      "nll_gap": 0.0641,
+      "retrieved": true,
+      "correct_passkey": "3-9-8-2-2",
+      "wrong_passkey": "9-2-5-8-4",
+      "ar_generated": "1-1.\nThe project will be a",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.9_t=8": {
+      "nll_correct": 1.8455,
+      "nll_wrong": 1.8362,
+      "nll_gap": -0.0094,
+      "retrieved": false,
+      "correct_passkey": "4-4-6-2-4",
+      "wrong_passkey": "7-6-7-4-5",
+      "ar_generated": "1-1.\nThe project will be a",
+      "ar_exact_match": false
+    },
+    "L=4096_d=0.9_t=9": {
+      "nll_correct": 1.8407,
+      "nll_wrong": 1.7013,
+      "nll_gap": -0.1395,
+      "retrieved": false,
+      "correct_passkey": "9-0-1-9-7",
+      "wrong_passkey": "2-4-5-8-9",
+      "ar_generated": "1-1.\nThe project is a project",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.1_t=0": {
+      "nll_correct": 2.4259,
+      "nll_wrong": 2.4972,
+      "nll_gap": 0.0713,
+      "retrieved": true,
+      "correct_passkey": "3-9-7-6-0",
+      "wrong_passkey": "6-6-2-9-1",
+      "ar_generated": "1-5-8-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.1_t=1": {
+      "nll_correct": 2.5212,
+      "nll_wrong": 2.1391,
+      "nll_gap": -0.3822,
+      "retrieved": false,
+      "correct_passkey": "3-9-0-9-1",
+      "wrong_passkey": "5-6-6-1-0",
+      "ar_generated": "1-5-8-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.1_t=2": {
+      "nll_correct": 2.0936,
+      "nll_wrong": 2.5957,
+      "nll_gap": 0.5021,
+      "retrieved": true,
+      "correct_passkey": "2-8-5-5-3",
+      "wrong_passkey": "8-9-2-4-4",
+      "ar_generated": "1-5-8-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.1_t=3": {
+      "nll_correct": 2.3499,
+      "nll_wrong": 2.0281,
+      "nll_gap": -0.3218,
+      "retrieved": false,
+      "correct_passkey": "2-8-2-1-4",
+      "wrong_passkey": "1-1-9-5-2",
+      "ar_generated": "1-5-8-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.1_t=4": {
+      "nll_correct": 2.3424,
+      "nll_wrong": 2.2321,
+      "nll_gap": -0.1103,
+      "retrieved": false,
+      "correct_passkey": "8-7-1-5-4",
+      "wrong_passkey": "5-6-9-0-3",
+      "ar_generated": "1-5-8-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.1_t=5": {
+      "nll_correct": 2.247,
+      "nll_wrong": 2.3545,
+      "nll_gap": 0.1075,
+      "retrieved": true,
+      "correct_passkey": "8-8-1-1-7",
+      "wrong_passkey": "9-9-8-7-2",
+      "ar_generated": "1-5-8-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.1_t=6": {
+      "nll_correct": 2.4902,
+      "nll_wrong": 2.291,
+      "nll_gap": -0.1991,
+      "retrieved": false,
+      "correct_passkey": "3-3-8-7-3",
+      "wrong_passkey": "1-9-4-3-4",
+      "ar_generated": "1-5-8-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.1_t=7": {
+      "nll_correct": 2.4519,
+      "nll_wrong": 2.4974,
+      "nll_gap": 0.0455,
+      "retrieved": true,
+      "correct_passkey": "3-3-1-4-4",
+      "wrong_passkey": "2-0-0-3-3",
+      "ar_generated": "1-5-8-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.1_t=8": {
+      "nll_correct": 2.5368,
+      "nll_wrong": 2.4163,
+      "nll_gap": -0.1205,
+      "retrieved": false,
+      "correct_passkey": "2-7-3-4-0",
+      "wrong_passkey": "5-2-9-2-6",
+      "ar_generated": "1-5-8-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.1_t=9": {
+      "nll_correct": 2.3797,
+      "nll_wrong": 2.3926,
+      "nll_gap": 0.013,
+      "retrieved": true,
+      "correct_passkey": "0-6-1-7-3",
+      "wrong_passkey": "2-9-2-5-5",
+      "ar_generated": "1-5-8-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.2_t=0": {
+      "nll_correct": 2.5477,
+      "nll_wrong": 2.113,
+      "nll_gap": -0.4348,
+      "retrieved": false,
+      "correct_passkey": "7-7-5-6-7",
+      "wrong_passkey": "1-0-9-5-2",
+      "ar_generated": "1.5-12-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.2_t=1": {
+      "nll_correct": 2.3268,
+      "nll_wrong": 2.4566,
+      "nll_gap": 0.1298,
+      "retrieved": true,
+      "correct_passkey": "1-7-6-9-4",
+      "wrong_passkey": "8-0-1-1-1",
+      "ar_generated": "1.5-12-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.2_t=2": {
+      "nll_correct": 2.3599,
+      "nll_wrong": 2.6828,
+      "nll_gap": 0.3229,
+      "retrieved": true,
+      "correct_passkey": "4-0-6-1-6",
+      "wrong_passkey": "0-3-9-0-4",
+      "ar_generated": "1.5-12-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.2_t=3": {
+      "nll_correct": 2.5462,
+      "nll_wrong": 2.5776,
+      "nll_gap": 0.0314,
+      "retrieved": true,
+      "correct_passkey": "3-6-7-1-9",
+      "wrong_passkey": "8-4-8-6-5",
+      "ar_generated": "1.5-12-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.2_t=4": {
+      "nll_correct": 2.3539,
+      "nll_wrong": 2.5089,
+      "nll_gap": 0.1551,
+      "retrieved": true,
+      "correct_passkey": "3-4-9-1-6",
+      "wrong_passkey": "9-0-7-5-2",
+      "ar_generated": "1.5-12-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.2_t=5": {
+      "nll_correct": 2.5263,
+      "nll_wrong": 2.4951,
+      "nll_gap": -0.0312,
+      "retrieved": false,
+      "correct_passkey": "4-9-6-7-9",
+      "wrong_passkey": "3-3-1-1-7",
+      "ar_generated": "1.5-12-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.2_t=6": {
+      "nll_correct": 2.0543,
+      "nll_wrong": 2.4292,
+      "nll_gap": 0.3749,
+      "retrieved": true,
+      "correct_passkey": "1-5-9-4-9",
+      "wrong_passkey": "3-0-3-3-6",
+      "ar_generated": "1.5-12-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.2_t=7": {
+      "nll_correct": 2.4716,
+      "nll_wrong": 2.5636,
+      "nll_gap": 0.092,
+      "retrieved": true,
+      "correct_passkey": "4-6-1-2-8",
+      "wrong_passkey": "7-5-2-7-7",
+      "ar_generated": "1.5-12-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.2_t=8": {
+      "nll_correct": 2.3073,
+      "nll_wrong": 2.3666,
+      "nll_gap": 0.0593,
+      "retrieved": true,
+      "correct_passkey": "3-8-5-9-6",
+      "wrong_passkey": "5-6-6-6-1",
+      "ar_generated": "1.5-12-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.2_t=9": {
+      "nll_correct": 2.3895,
+      "nll_wrong": 2.4697,
+      "nll_gap": 0.0803,
+      "retrieved": true,
+      "correct_passkey": "9-4-5-6-8",
+      "wrong_passkey": "3-1-3-9-1",
+      "ar_generated": "1.5-12-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=0": {
+      "nll_correct": 2.2206,
+      "nll_wrong": 2.7055,
+      "nll_gap": 0.485,
+      "retrieved": true,
+      "correct_passkey": "5-8-1-9-4",
+      "wrong_passkey": "3-7-0-3-1",
+      "ar_generated": "1-5-12-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=1": {
+      "nll_correct": 2.4369,
+      "nll_wrong": 2.3849,
+      "nll_gap": -0.052,
+      "retrieved": false,
+      "correct_passkey": "5-7-9-2-2",
+      "wrong_passkey": "4-4-4-3-3",
+      "ar_generated": "1-5-12-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=2": {
+      "nll_correct": 2.519,
+      "nll_wrong": 2.435,
+      "nll_gap": -0.084,
+      "retrieved": false,
+      "correct_passkey": "6-3-1-4-4",
+      "wrong_passkey": "9-0-8-7-0",
+      "ar_generated": "1-5-12-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=3": {
+      "nll_correct": 2.3538,
+      "nll_wrong": 2.6591,
+      "nll_gap": 0.3053,
+      "retrieved": true,
+      "correct_passkey": "6-1-5-2-4",
+      "wrong_passkey": "5-2-0-1-2",
+      "ar_generated": "1-5-12-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=4": {
+      "nll_correct": 2.2784,
+      "nll_wrong": 2.4413,
+      "nll_gap": 0.1629,
+      "retrieved": true,
+      "correct_passkey": "4-0-5-2-1",
+      "wrong_passkey": "8-8-9-9-2",
+      "ar_generated": "1-5-12-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=5": {
+      "nll_correct": 2.5419,
+      "nll_wrong": 2.3103,
+      "nll_gap": -0.2316,
+      "retrieved": false,
+      "correct_passkey": "5-0-0-2-0",
+      "wrong_passkey": "3-8-3-5-9",
+      "ar_generated": "1-5-12-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=6": {
+      "nll_correct": 2.5207,
+      "nll_wrong": 2.4618,
+      "nll_gap": -0.0589,
+      "retrieved": false,
+      "correct_passkey": "9-9-2-1-0",
+      "wrong_passkey": "6-1-8-8-5",
+      "ar_generated": "1-5-12-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=7": {
+      "nll_correct": 2.6194,
+      "nll_wrong": 2.5967,
+      "nll_gap": -0.0227,
+      "retrieved": false,
+      "correct_passkey": "5-4-0-6-1",
+      "wrong_passkey": "7-0-7-3-0",
+      "ar_generated": "1-5-12-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=8": {
+      "nll_correct": 2.3672,
+      "nll_wrong": 2.5751,
+      "nll_gap": 0.2078,
+      "retrieved": true,
+      "correct_passkey": "3-8-2-1-7",
+      "wrong_passkey": "0-6-9-3-4",
+      "ar_generated": "1-5-12-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.5_t=9": {
+      "nll_correct": 2.1776,
+      "nll_wrong": 2.5765,
+      "nll_gap": 0.3989,
+      "retrieved": true,
+      "correct_passkey": "1-6-1-3-4",
+      "wrong_passkey": "3-2-2-7-9",
+      "ar_generated": "1-5-12-year-old students",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.8_t=0": {
+      "nll_correct": 1.9748,
+      "nll_wrong": 2.4626,
+      "nll_gap": 0.4878,
+      "retrieved": true,
+      "correct_passkey": "3-0-2-5-1",
+      "wrong_passkey": "7-7-7-9-8",
+      "ar_generated": "1-5-5-5-5-",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.8_t=1": {
+      "nll_correct": 2.2157,
+      "nll_wrong": 2.3201,
+      "nll_gap": 0.1044,
+      "retrieved": true,
+      "correct_passkey": "4-3-5-1-7",
+      "wrong_passkey": "0-2-6-4-4",
+      "ar_generated": "1-5-5-5-5-",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.8_t=2": {
+      "nll_correct": 2.1209,
+      "nll_wrong": 2.4414,
+      "nll_gap": 0.3205,
+      "retrieved": true,
+      "correct_passkey": "1-4-7-8-6",
+      "wrong_passkey": "5-9-0-0-9",
+      "ar_generated": "1-5-5-5-5-",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.8_t=3": {
+      "nll_correct": 2.2984,
+      "nll_wrong": 2.2584,
+      "nll_gap": -0.04,
+      "retrieved": false,
+      "correct_passkey": "0-8-5-2-2",
+      "wrong_passkey": "8-4-4-6-7",
+      "ar_generated": "1-5 years of the class 4th grade",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.8_t=4": {
+      "nll_correct": 2.5395,
+      "nll_wrong": 2.3815,
+      "nll_gap": -0.158,
+      "retrieved": false,
+      "correct_passkey": "7-1-0-7-5",
+      "wrong_passkey": "4-3-3-3-1",
+      "ar_generated": "1-5 years of the class 4th grade",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.8_t=5": {
+      "nll_correct": 2.4149,
+      "nll_wrong": 2.2061,
+      "nll_gap": -0.2088,
+      "retrieved": false,
+      "correct_passkey": "8-3-1-8-8",
+      "wrong_passkey": "9-1-8-5-6",
+      "ar_generated": "1-5 years of the class 4th grade",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.8_t=6": {
+      "nll_correct": 2.195,
+      "nll_wrong": 2.4057,
+      "nll_gap": 0.2106,
+      "retrieved": true,
+      "correct_passkey": "1-6-9-0-7",
+      "wrong_passkey": "7-9-7-9-9",
+      "ar_generated": "1-5-5-5-5-",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.8_t=7": {
+      "nll_correct": 2.0839,
+      "nll_wrong": 2.0908,
+      "nll_gap": 0.007,
+      "retrieved": true,
+      "correct_passkey": "6-4-6-4-2",
+      "wrong_passkey": "1-2-3-6-1",
+      "ar_generated": "1-5 years of the first grade 3 years",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.8_t=8": {
+      "nll_correct": 2.4203,
+      "nll_wrong": 2.2384,
+      "nll_gap": -0.1819,
+      "retrieved": false,
+      "correct_passkey": "3-4-2-0-2",
+      "wrong_passkey": "8-0-0-5-1",
+      "ar_generated": "1-5-5-5-5-",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.8_t=9": {
+      "nll_correct": 2.2854,
+      "nll_wrong": 2.1831,
+      "nll_gap": -0.1023,
+      "retrieved": false,
+      "correct_passkey": "0-3-4-5-5",
+      "wrong_passkey": "7-5-3-8-2",
+      "ar_generated": "1-5-5-5-5-",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.9_t=0": {
+      "nll_correct": 2.1698,
+      "nll_wrong": 2.1133,
+      "nll_gap": -0.0565,
+      "retrieved": false,
+      "correct_passkey": "5-9-4-1-4",
+      "wrong_passkey": "6-1-5-4-8",
+      "ar_generated": "1-5-5-5-5-",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.9_t=1": {
+      "nll_correct": 2.4611,
+      "nll_wrong": 2.4898,
+      "nll_gap": 0.0287,
+      "retrieved": true,
+      "correct_passkey": "0-2-2-8-3",
+      "wrong_passkey": "8-9-7-3-0",
+      "ar_generated": "1-5 years of the class 4th grade",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.9_t=2": {
+      "nll_correct": 1.9241,
+      "nll_wrong": 2.3911,
+      "nll_gap": 0.467,
+      "retrieved": true,
+      "correct_passkey": "9-5-5-8-2",
+      "wrong_passkey": "7-8-7-2-7",
+      "ar_generated": "1-5 years of the class 4th grade",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.9_t=3": {
+      "nll_correct": 2.3214,
+      "nll_wrong": 2.4808,
+      "nll_gap": 0.1594,
+      "retrieved": true,
+      "correct_passkey": "0-9-5-2-8",
+      "wrong_passkey": "7-2-7-6-0",
+      "ar_generated": "1-5 years of the class 4th grade",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.9_t=4": {
+      "nll_correct": 2.3011,
+      "nll_wrong": 2.5522,
+      "nll_gap": 0.251,
+      "retrieved": true,
+      "correct_passkey": "0-6-2-4-3",
+      "wrong_passkey": "3-2-7-7-9",
+      "ar_generated": "1-5 years of the class 4th grade",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.9_t=5": {
+      "nll_correct": 2.1912,
+      "nll_wrong": 2.1091,
+      "nll_gap": -0.082,
+      "retrieved": false,
+      "correct_passkey": "9-8-4-3-1",
+      "wrong_passkey": "7-0-1-1-3",
+      "ar_generated": "1-5 years of the class 4th grade",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.9_t=6": {
+      "nll_correct": 2.3678,
+      "nll_wrong": 2.2224,
+      "nll_gap": -0.1454,
+      "retrieved": false,
+      "correct_passkey": "3-6-3-7-2",
+      "wrong_passkey": "8-0-9-1-8",
+      "ar_generated": "1-5-5-5-5-",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.9_t=7": {
+      "nll_correct": 2.4178,
+      "nll_wrong": 2.2889,
+      "nll_gap": -0.1289,
+      "retrieved": false,
+      "correct_passkey": "2-2-7-2-8",
+      "wrong_passkey": "8-1-3-4-4",
+      "ar_generated": "1-5 years of the class 4th grade",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.9_t=8": {
+      "nll_correct": 1.9125,
+      "nll_wrong": 2.1929,
+      "nll_gap": 0.2805,
+      "retrieved": true,
+      "correct_passkey": "9-8-5-5-5",
+      "wrong_passkey": "0-0-4-6-9",
+      "ar_generated": "1-5 years of the class 4th grade",
+      "ar_exact_match": false
+    },
+    "L=8192_d=0.9_t=9": {
+      "nll_correct": 2.2544,
+      "nll_wrong": 2.2934,
+      "nll_gap": 0.039,
+      "retrieved": true,
+      "correct_passkey": "3-9-8-7-9",
+      "wrong_passkey": "0-2-9-5-2",
+      "ar_generated": "1-5-5-5-5-",
+      "ar_exact_match": false
+    }
+  },
+  "summary": {
+    "L=2048_d=0.1": {
+      "mean_nll_gap": -0.0167,
+      "retrieval_rate": 0.6,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=2048_d=0.2": {
+      "mean_nll_gap": -0.0181,
+      "retrieval_rate": 0.4,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=2048_d=0.5": {
+      "mean_nll_gap": 0.079,
+      "retrieval_rate": 0.8,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=2048_d=0.8": {
+      "mean_nll_gap": 0.0321,
+      "retrieval_rate": 0.5,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=2048_d=0.9": {
+      "mean_nll_gap": 0.0432,
+      "retrieval_rate": 0.8,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=4096_d=0.1": {
+      "mean_nll_gap": 0.0093,
+      "retrieval_rate": 0.7,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=4096_d=0.2": {
+      "mean_nll_gap": 0.001,
+      "retrieval_rate": 0.6,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=4096_d=0.5": {
+      "mean_nll_gap": -0.1089,
+      "retrieval_rate": 0.3,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=4096_d=0.8": {
+      "mean_nll_gap": -0.0393,
+      "retrieval_rate": 0.3,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=4096_d=0.9": {
+      "mean_nll_gap": 0.0573,
+      "retrieval_rate": 0.6,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=8192_d=0.1": {
+      "mean_nll_gap": -0.0394,
+      "retrieval_rate": 0.5,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=8192_d=0.2": {
+      "mean_nll_gap": 0.078,
+      "retrieval_rate": 0.8,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=8192_d=0.5": {
+      "mean_nll_gap": 0.1111,
+      "retrieval_rate": 0.5,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=8192_d=0.8": {
+      "mean_nll_gap": 0.0439,
+      "retrieval_rate": 0.5,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    },
+    "L=8192_d=0.9": {
+      "mean_nll_gap": 0.0813,
+      "retrieval_rate": 0.6,
+      "ar_exact_match_rate": 0.0,
+      "trials": 10
+    }
+  },
+  "global": {
+    "total_trials": 150,
+    "mean_nll_gap": 0.0209,
+    "retrieval_rate": 0.5667,
+    "ar_exact_match_rate": 0.0
+  }
+}
