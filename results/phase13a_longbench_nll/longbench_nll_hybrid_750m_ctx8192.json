@@ -1,0 +1,57 @@
+{
+  "model_path": "/root/autodl-tmp/evq_phase9/seed42/hybrid1.5_r16_750m_2k_1bdata_ckpt/checkpoints/step_15258.pt",
+  "method": "hybrid_750m",
+  "tier": "750m",
+  "rope_type": "hybrid",
+  "tau": 1.5,
+  "max_context_len": 8192,
+  "tasks": [
+    "qasper",
+    "hotpotqa",
+    "2wikimqa",
+    "narrativeqa"
+  ],
+  "timestamp": "2026-03-04 00:41:33",
+  "results": {
+    "qasper": {
+      "mean_nll": 5.735067294836044,
+      "std_nll": 1.707691753973205,
+      "median_nll": 6.045706272125244,
+      "n_samples": 100,
+      "skipped": 0,
+      "mean_seq_len": 4613.17,
+      "ppl_from_nll": 309.53380008467315
+    },
+    "hotpotqa": {
+      "mean_nll": 6.617364363074302,
+      "std_nll": 1.9699465930751672,
+      "median_nll": 6.513568878173828,
+      "n_samples": 100,
+      "skipped": 0,
+      "mean_seq_len": 7724.01,
+      "ppl_from_nll": 747.9711166123374
+    },
+    "2wikimqa": {
+      "mean_nll": 6.390045647919178,
+      "std_nll": 2.0568145607526103,
+      "median_nll": 6.2643141746521,
+      "n_samples": 100,
+      "skipped": 0,
+      "mean_seq_len": 6014.74,
+      "ppl_from_nll": 595.88377992182
+    },
+    "narrativeqa": {
+      "mean_nll": 6.731373763084411,
+      "std_nll": 1.3907428652381042,
+      "median_nll": 6.65381646156311,
+      "n_samples": 100,
+      "skipped": 0,
+      "mean_seq_len": 8192.0,
+      "ppl_from_nll": 838.2980982688117
+    },
+    "_aggregate": {
+      "mean_nll": 6.368462767228484,
+      "n_tasks": 4
+    }
+  }
+}

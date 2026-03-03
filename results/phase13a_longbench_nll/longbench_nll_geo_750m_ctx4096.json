@@ -1,0 +1,57 @@
+{
+  "model_path": "/root/autodl-tmp/evq_phase9/seed42/geo_750m_2k_1bdata_ckpt/checkpoints/step_15258.pt",
+  "method": "geo_750m",
+  "tier": "750m",
+  "rope_type": "geo",
+  "tau": null,
+  "max_context_len": 4096,
+  "tasks": [
+    "qasper",
+    "hotpotqa",
+    "2wikimqa",
+    "narrativeqa"
+  ],
+  "timestamp": "2026-03-04 00:38:58",
+  "results": {
+    "qasper": {
+      "mean_nll": 5.230990496873855,
+      "std_nll": 1.6819485366074618,
+      "median_nll": 5.251386642456055,
+      "n_samples": 100,
+      "skipped": 0,
+      "mean_seq_len": 3669.35,
+      "ppl_from_nll": 186.9779128680947
+    },
+    "hotpotqa": {
+      "mean_nll": 6.077930849790573,
+      "std_nll": 2.3460556593466175,
+      "median_nll": 5.873729228973389,
+      "n_samples": 100,
+      "skipped": 0,
+      "mean_seq_len": 4038.11,
+      "ppl_from_nll": 436.12585056827976
+    },
+    "2wikimqa": {
+      "mean_nll": 5.620057378858328,
+      "std_nll": 2.10841384842682,
+      "median_nll": 5.6719348430633545,
+      "n_samples": 100,
+      "skipped": 0,
+      "mean_seq_len": 3927.19,
+      "ppl_from_nll": 275.9052139067857
+    },
+    "narrativeqa": {
+      "mean_nll": 6.2805779504776,
+      "std_nll": 1.265764685875018,
+      "median_nll": 6.291487216949463,
+      "n_samples": 100,
+      "skipped": 0,
+      "mean_seq_len": 4096.0,
+      "ppl_from_nll": 534.0972564057813
+    },
+    "_aggregate": {
+      "mean_nll": 5.802389169000089,
+      "n_tasks": 4
+    }
+  }
+}
