@@ -157,6 +157,50 @@ def evq_cosh_inv_freq(
     return inv.float()
 
 
+def hybrid_evq_inv_freq(
+    head_dim: int, tau: float, r: int, base: float = 500000.0
+) -> torch.Tensor:
+    """Hybrid frequency allocation: first r channels stay Geometric, rest use EVQ warp.
+
+    Args:
+        head_dim: head dimension (e.g. 64)
+        tau: EVQ warp temperature
+        r: number of high-frequency channels to keep as Geometric
+           r=0 → full EVQ, r=K → full Geometric
+        base: RoPE base frequency
+
+    Returns:
+        inv_freq of shape (head_dim // 2,) in float32
+    """
+    K = head_dim // 2
+    if r <= 0:
+        return evq_cosh_inv_freq(head_dim, tau, base)
+    if r >= K:
+        return evq_cosh_inv_freq(head_dim, 0.0, base)  # geometric
+
+    # Geometric part: channels 0..r-1 (high-frequency)
+    geo_full = evq_cosh_inv_freq(head_dim, 0.0, base)
+    geo_part = geo_full[:r]
+
+    # EVQ part: channels r..K-1 (low-frequency), warp within [theta_r, theta_{K-1}]
+    n_evq = K - r
+    theta_max = geo_full[r].item()      # highest freq in EVQ region
+    theta_min = geo_full[K - 1].item()  # lowest freq in EVQ region
+
+    idx = torch.arange(n_evq, dtype=torch.float64)
+    u = idx / max(n_evq - 1, 1)  # 0..1 within EVQ region
+
+    if abs(tau) < 1e-8:
+        phi = 1.0 - u
+    else:
+        sinh_tau = math.sinh(tau)
+        phi = 1.0 - (1.0 / tau) * torch.arcsinh((1.0 - u) * sinh_tau)
+
+    evq_part = (theta_min ** phi) * (theta_max ** (1.0 - phi))
+
+    return torch.cat([geo_part, evq_part.float()])
+
+
 # ---------------------------------------------------------------------------
 # Phase collision metric
 # ---------------------------------------------------------------------------
@@ -780,14 +824,19 @@ def run_single(
     dry_run: bool = False,
     tokenizer=None,
     eval_16k: bool = False,
+    override_inv_freq: Optional[torch.Tensor] = None,
+    override_run_id: Optional[str] = None,
 ) -> RunResult:
-    run_id = f"{tier}_tau{tau:.2f}_seed{seed}"
+    run_id = override_run_id or f"{tier}_tau{tau:.2f}_seed{seed}"
     print(f"\n{'='*60}")
     print(f"  RUN: {run_id}  (base={base:.0f})")
     print(f"{'='*60}")
 
     # Build inv_freq
-    inv_freq = evq_cosh_inv_freq(cfg["head_dim"], tau, base)
+    if override_inv_freq is not None:
+        inv_freq = override_inv_freq
+    else:
+        inv_freq = evq_cosh_inv_freq(cfg["head_dim"], tau, base)
     import hashlib
     inv_hash = hashlib.sha256(inv_freq.numpy().tobytes()).hexdigest()[:16]
     print(f"  inv_freq: shape={inv_freq.shape}  max={inv_freq.max().item():.6f}  "
@@ -954,11 +1003,37 @@ def main() -> None:
         help="Optional passkey training mix ratio (e.g. 0.02 for 2%%). "
              "If omitted, uses PASSKEY_MIX_RATIO env or defaults to 0.005.",
     )
+    parser.add_argument("--r_values", type=str, default=None,
+                        help="Comma-separated Hybrid r values to sweep (e.g. '0,8,14,16,24,32'). "
+                             "If provided, runs r-sweep instead of tau-sweep. "
+                             "r=0 means full EVQ, r=32 means full Geometric.")
+    parser.add_argument("--fixed_tau", type=float, default=None,
+                        help="Fixed tau for r-sweep (required when --r_values is set)")
+    parser.add_argument("--train_tokens", type=int, default=None,
+                        help="Override tier's default train_tokens (e.g. 50000000 for 50M)")
     args = parser.parse_args()
 
     taus = [float(t) for t in args.taus.split(",")]
     seeds = [int(s) for s in args.seeds.split(",")]
     cfg = TIER_CONFIGS[args.tier].copy()
+
+    # Override train_tokens if specified
+    if args.train_tokens is not None:
+        cfg["train_tokens"] = args.train_tokens
+        print(f"  [override] train_tokens={cfg['train_tokens']/1e6:.0f}M")
+
+    # r-sweep mode setup
+    r_sweep_mode = args.r_values is not None
+    r_values = []
+    fixed_tau = None
+    if r_sweep_mode:
+        r_values = [int(r) for r in args.r_values.split(",")]
+        fixed_tau = args.fixed_tau
+        if fixed_tau is None:
+            fixed_tau = cfg["head_dim"] / math.sqrt(cfg["seq_len"])
+            print(f"  [r-sweep] No --fixed_tau provided, using tau*={fixed_tau:.2f}")
+        print(f"  [r-sweep] r_values={r_values}, fixed_tau={fixed_tau:.2f}")
+
     cfg["passkey_mix_ratio"] = (
         args.passkey_mix_ratio
         if args.passkey_mix_ratio is not None
@@ -1013,8 +1088,12 @@ def main() -> None:
     work_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"\n{'#'*60}")
-    print(f"  EVQ τ-SWEEP  |  tier={args.tier}  |  taus={taus}")
+    if r_sweep_mode:
+        print(f"  EVQ r-SWEEP  |  tier={args.tier}  |  r_values={r_values}  |  tau={fixed_tau:.2f}")
+    else:
+        print(f"  EVQ τ-SWEEP  |  tier={args.tier}  |  taus={taus}")
     print(f"  device={DEVICE}  dtype={DTYPE}  base={args.base}")
+    print(f"  train_tokens={cfg['train_tokens']/1e6:.0f}M")
     print(f"  passkey_mix_ratio={cfg['passkey_mix_ratio']:.2%}")
     print(f"  work_dir={work_dir}")
     print(f"{'#'*60}\n")
@@ -1045,72 +1124,132 @@ def main() -> None:
             all_results = json.load(f)
         print(f"  Resumed {len(all_results.get('experiments', {}))} existing results")
     else:
+        metadata = {
+            "tier": args.tier,
+            "device": DEVICE,
+            "dtype": str(DTYPE),
+            "base": args.base,
+            "seeds": seeds,
+            "dataset": args.dataset,
+            "train_tokens": cfg["train_tokens"],
+            "started": time.strftime("%Y-%m-%d %H:%M:%S"),
+        }
+        if r_sweep_mode:
+            metadata["mode"] = "r-sweep"
+            metadata["r_values"] = r_values
+            metadata["fixed_tau"] = fixed_tau
+        else:
+            metadata["mode"] = "tau-sweep"
+            metadata["taus"] = taus
         all_results = {
-            "metadata": {
-                "tier": args.tier,
-                "device": DEVICE,
-                "dtype": str(DTYPE),
-                "base": args.base,
-                "taus": taus,
-                "seeds": seeds,
-                "dataset": args.dataset,
-                "started": time.strftime("%Y-%m-%d %H:%M:%S"),
-            },
+            "metadata": metadata,
             "experiments": {},
             "waterbed": {},
         }
 
     # Run sweep
     t_total = time.time()
-    for seed in seeds:
-        for tau in taus:
-            run_id = f"{args.tier}_tau{tau:.2f}_seed{seed}"
 
-            if args.resume and run_id in all_results["experiments"]:
-                print(f"\n  [SKIP] {run_id} already completed")
+    def _process_run_result(ret, run_id):
+        """Extract result tuple and store in all_results."""
+        if isinstance(ret, tuple):
+            result, passkey_res, pi_res = ret
+        else:
+            result, passkey_res, pi_res = ret, {}, {}
+        all_results["experiments"][run_id] = asdict(result)
+        if passkey_res:
+            all_results["experiments"][run_id]["passkey"] = passkey_res
+        if pi_res:
+            pi_run_id = f"{args.tier}_PI_seed{seed}"
+            all_results["experiments"][pi_run_id] = {
+                "method": "PI_inference_time",
+                "source_run": run_id,
+                **pi_res,
+            }
+        # Checkpoint after each run
+        with open(results_path, "w") as f:
+            json.dump(all_results, f, indent=2, ensure_ascii=False)
+        print(f"  [checkpoint] saved to {results_path}")
+
+    if r_sweep_mode:
+        for seed in seeds:
+            for r_val in r_values:
+                run_id = f"{args.tier}_r{r_val}_tau{fixed_tau:.2f}_seed{seed}"
+
+                if args.resume and run_id in all_results["experiments"]:
+                    print(f"\n  [SKIP] {run_id} already completed")
+                    continue
+
+                inv_freq = hybrid_evq_inv_freq(cfg["head_dim"], fixed_tau, r_val, args.base)
+
+                # Print inv_freq continuity check at the r boundary
+                K = cfg["head_dim"] // 2
+                if 0 < r_val < K:
+                    geo_full = evq_cosh_inv_freq(cfg["head_dim"], 0.0, args.base)
+                    print(f"  [r={r_val}] boundary check: geo[{r_val-1}]={inv_freq[r_val-1].item():.6e}, "
+                          f"evq[0]={inv_freq[r_val].item():.6e}, "
+                          f"ratio={inv_freq[r_val-1].item()/inv_freq[r_val].item():.3f}")
+
+                ret = run_single(
+                    tau=fixed_tau, seed=seed, cfg=cfg, tier=args.tier, base=args.base,
+                    train_data=train_data, val_data=val_data,
+                    work_dir=work_dir, dry_run=args.dry_run,
+                    tokenizer=tok, eval_16k=args.eval_16k,
+                    override_inv_freq=inv_freq,
+                    override_run_id=run_id,
+                )
+                _process_run_result(ret, run_id)
+    else:
+        for seed in seeds:
+            for tau in taus:
+                run_id = f"{args.tier}_tau{tau:.2f}_seed{seed}"
+
+                if args.resume and run_id in all_results["experiments"]:
+                    print(f"\n  [SKIP] {run_id} already completed")
+                    continue
+
+                ret = run_single(
+                    tau=tau, seed=seed, cfg=cfg, tier=args.tier, base=args.base,
+                    train_data=train_data, val_data=val_data,
+                    work_dir=work_dir, dry_run=args.dry_run,
+                    tokenizer=tok, eval_16k=args.eval_16k,
+                )
+                _process_run_result(ret, run_id)
+
+    # Waterbed analysis
+    if r_sweep_mode:
+        # Compare each r<32 against r=32 (geometric baseline)
+        K = cfg["head_dim"] // 2
+        for seed in seeds:
+            baseline_id = f"{args.tier}_r{K}_tau{fixed_tau:.2f}_seed{seed}"
+            baseline_ppl = all_results["experiments"].get(baseline_id, {}).get("ppl", {})
+            if not baseline_ppl:
                 continue
-
-            ret = run_single(
-                tau=tau, seed=seed, cfg=cfg, tier=args.tier, base=args.base,
-                train_data=train_data, val_data=val_data,
-                work_dir=work_dir, dry_run=args.dry_run,
-                tokenizer=tok, eval_16k=args.eval_16k,
-            )
-            if isinstance(ret, tuple):
-                result, passkey_res, pi_res = ret
-            else:
-                result, passkey_res, pi_res = ret, {}, {}
-            all_results["experiments"][run_id] = asdict(result)
-            if passkey_res:
-                all_results["experiments"][run_id]["passkey"] = passkey_res
-            if pi_res:
-                pi_run_id = f"{args.tier}_PI_seed{seed}"
-                all_results["experiments"][pi_run_id] = {
-                    "method": "PI_inference_time",
-                    "source_run": run_id,
-                    **pi_res,
-                }
-
-            # Checkpoint after each run
-            with open(results_path, "w") as f:
-                json.dump(all_results, f, indent=2, ensure_ascii=False)
-            print(f"  [checkpoint] saved to {results_path}")
-
-    # Waterbed analysis (compare each τ>0 against τ=0)
-    for seed in seeds:
-        baseline_id = f"{args.tier}_tau0.00_seed{seed}"
-        baseline_ppl = all_results["experiments"].get(baseline_id, {}).get("ppl", {})
-        if not baseline_ppl:
-            continue
-        for tau in taus:
-            if tau == 0.0:
+            for r_val in r_values:
+                if r_val >= K:
+                    continue
+                run_id = f"{args.tier}_r{r_val}_tau{fixed_tau:.2f}_seed{seed}"
+                run_ppl = all_results["experiments"].get(run_id, {}).get("ppl", {})
+                if not run_ppl:
+                    continue
+                wb = waterbed_analysis(baseline_ppl, run_ppl)
+                all_results["waterbed"][run_id] = wb
+    else:
+        # Compare each τ>0 against τ=0
+        for seed in seeds:
+            baseline_id = f"{args.tier}_tau0.00_seed{seed}"
+            baseline_ppl = all_results["experiments"].get(baseline_id, {}).get("ppl", {})
+            if not baseline_ppl:
                 continue
-            run_id = f"{args.tier}_tau{tau:.2f}_seed{seed}"
-            run_ppl = all_results["experiments"].get(run_id, {}).get("ppl", {})
-            if not run_ppl:
-                continue
-            wb = waterbed_analysis(baseline_ppl, run_ppl)
-            all_results["waterbed"][run_id] = wb
+            for tau in taus:
+                if tau == 0.0:
+                    continue
+                run_id = f"{args.tier}_tau{tau:.2f}_seed{seed}"
+                run_ppl = all_results["experiments"].get(run_id, {}).get("ppl", {})
+                if not run_ppl:
+                    continue
+                wb = waterbed_analysis(baseline_ppl, run_ppl)
+                all_results["waterbed"][run_id] = wb
 
     # Final save
     total_time = time.time() - t_total

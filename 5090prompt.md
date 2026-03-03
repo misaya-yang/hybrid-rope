@@ -1,44 +1,37 @@
-你现在是实验结果回收与统计分析助手。请按下面步骤执行，直到输出最终报告：
+你是实验执行助手。在5090服务器上执行 passkey 混合训练实验，数据盘还在拷贝中，你可以先分析，预计1min
+【服务器】
+- SSH: ssh -p 16966 root@connect.westb.seetacloud.com
+- 密码: 3wog+1mHWO4C
+- GPU: 5090 32GB
 
-【服务器与路径】
-- 服务器：ssh -p 48142 root@connect.westc.gpuhub.com
-- 密码：3wog+1mHWO4C
-- 工作目录：/root/autodl-tmp/evq_phase9_350m_L2048_50M_tau0_tau1.5
-- 主结果文件：results_final.json
-- 中间结果：results_checkpoint.json
-- 运行日志：run.log
+【任务】
+运行 350M 模型的 passkey 混合训练实验：90% FineWeb-Edu + 10% passkey 训练数据。
+目的：验证模型学会检索后，EVQ 的频率分配能否让检索更好地外推到训练长度以外。
 
-【实验设定】
-- 模型：350M
-- 配置：L_train=2048, base=500K, train_tokens=50M
-- 比较组：Geo(tau=0.0) vs EVQ(tau=1.5)
-- seeds：42,137,256,314
-- 目标指标：PPL@2048/4096/8192/16384，passkey retrieval，mean_nll_gap
+【步骤】
+1. 连接服务器，确认 GPU 可用（nvidia-smi）
+2. 进入代码目录：cd /root/autodl-tmp/dfrope/hybrid-rope/scripts/m4_evq_sweep
+3. 修改 run_evq_sweep.py 中 TIER_CONFIGS 的 "350m" 条目，把 eval_lengths 改为：
+   "eval_lengths": [2048, 4096, 8192, 10240, 12288, 16384],
+   （代码已有 OOM 保护，eval 时某长度崩了会自动跳过继续，所以放心加）
+4. 创建输出目录并执行实验：
+   mkdir -p /root/autodl-tmp/evq_passkey_mix_10pct
+   nohup python -u run_evq_sweep.py \
+       --tier 350m \
+       --taus 0.0,1.5 \
+       --seeds 42 \
+       --base 500000 \
+       --passkey_mix_ratio 0.10 \
+       --work_dir /root/autodl-tmp/evq_passkey_mix_10pct \
+       > /root/autodl-tmp/evq_passkey_mix_10pct/run.log 2>&1 &
+5. 监控日志直到完成：tail -f /root/autodl-tmp/evq_passkey_mix_10pct/run.log
+   - 确认看到 "[passkey-train] mix target=10.00%" 说明混合数据生效
+   - 预计 1-2 小时（350M × 100M tokens × 2 configs）
 
-【执行要求】
-1. 先检查进程是否结束（run.pid + ps）。
-2. 若未结束，每 120 秒轮询一次；结束后立即继续。
-3. 读取 results_final.json，提取以下 run：
-   - 350m_tau0.00_seed42/137/256/314
-   - 350m_tau1.50_seed42/137/256/314
-4. 生成表格：
-   - 每个 seed 的 Geo vs EVQ：PPL 四档、retrieval、mean_nll_gap
-   - seed 维度差值：EVQ-Geo
-   - 均值±标准差（n=4）
-5. 做统计检验（必须写清方法与 p 值）：
-   - seed 级配对检验：retrieval、PPL@8192、PPL@16384、mean_nll_gap
-   - passkey trial 级配对检验：从 passkey.details 做 EVQ vs Geo 配对 sign test / McNemar
-   - 重点判断“全局只多3个命中是否噪音”
-6. 额外输出：
-   - 按长度的 passkey 对比（2048/4096/8192）
-   - 按网格 (L, depth) 的 retrieval 差值热表（0.1/0.2/0.5/0.8/0.9）
-7. 最后给结论分级：
-   - Strong / Weak / Inconclusive
-   - 是否建议继续扩大 seed 或改超参
-8. 输出为 Markdown 报告，保存到：
-   - /root/autodl-tmp/evq_phase9_350m_L2048_50M_tau0_tau1.5/final_multiseed_analysis.md
-
-注意：
-- 不要重跑训练。
-- 如果缺失某个 seed 的 run，明确列出缺失项并继续输出“当前可得结论”。
-- 结论里必须单独回答：“+3 命中是不是噪音？”
+【完成后】
+6. 读取结果目录下每个 run 的 result.json
+7. 输出对比表格：
+   - PPL@{2K, 4K, 8K, 10K, 12K, 16K}: Geo vs EVQ（delta 和百分比）
+   - Passkey retrieval@{2K, 4K, 8K, 10K, 12K, 16K}: Geo vs EVQ
+   - 重点关注：2K passkey 两边是否都高（验证学会了检索）？4K以上 EVQ 是否优于 Geo？
+8. 保存完整报告到 /root/autodl-tmp/evq_passkey_mix_10pct/analysis_report.md

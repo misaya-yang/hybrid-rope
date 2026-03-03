@@ -1,0 +1,786 @@
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+######################################################################
+  Phase 9F: 750M, L=2048, Geo vs Hybrid(tau=1.5,r=16), 1B tokens
+  Checkpoint eval: 25/50/75/100 (RULER only at 75/100)
+######################################################################
+
+  Config: micro_bs=16, accum=2, effective_bs=32, chunks=488281, steps=15258
+
+Loading training data...
+  [data] Found larger cache: /root/autodl-tmp/evq_phase9/data/train_fineweb-edu_2000000000_2048.pt (2000M tokens)
+  [data] Sliced to 488281 chunks (1000.0M tokens)
+Loading validation data...
+  [val] Loading from cache: /root/autodl-tmp/evq_phase9/data/val_fineweb-edu_5000000.pt
+  [val] Cached: 5.0M tokens
+
+======================================================================
+  geo_750m_2k_1bdata_ckpt  (base=500000, 750M, L=2048, 1000M tokens, seed=42)
+======================================================================
+  Model params: 756.8M
+  Checkpoint steps: [3814, 7629, 11443, 15258]
+  RULER checkpoint steps: [11443, 15258]
+  Training: micro_bs=16, grad_accum=2, effective_bs=32, steps=15258, warmup=305
+    step 0/15258  loss=11.1474  lr=0.00e+00  ETA=0min
+    step 50/15258  loss=7.4852  lr=4.92e-05  ETA=488min
+    step 100/15258  loss=6.6395  lr=9.84e-05  ETA=486min
+    step 150/15258  loss=6.2369  lr=1.48e-04  ETA=485min
+    step 200/15258  loss=5.8710  lr=1.97e-04  ETA=483min
+    step 250/15258  loss=5.6430  lr=2.46e-04  ETA=481min
+    step 300/15258  loss=5.4889  lr=2.95e-04  ETA=480min
+    step 350/15258  loss=5.3198  lr=3.00e-04  ETA=478min
+    step 400/15258  loss=5.1608  lr=3.00e-04  ETA=476min
+    step 450/15258  loss=5.0629  lr=3.00e-04  ETA=475min
+    step 500/15258  loss=4.9769  lr=3.00e-04  ETA=473min
+    step 550/15258  loss=4.9090  lr=3.00e-04  ETA=472min
+    step 600/15258  loss=4.7752  lr=3.00e-04  ETA=470min
+    step 650/15258  loss=4.7030  lr=3.00e-04  ETA=469min
+    step 700/15258  loss=4.6715  lr=3.00e-04  ETA=467min
+    step 750/15258  loss=4.5894  lr=2.99e-04  ETA=465min
+    step 800/15258  loss=4.5517  lr=2.99e-04  ETA=464min
+    step 850/15258  loss=4.4529  lr=2.99e-04  ETA=462min
+    step 900/15258  loss=4.4071  lr=2.99e-04  ETA=461min
+    step 950/15258  loss=4.3345  lr=2.99e-04  ETA=459min
+    step 1000/15258  loss=4.3728  lr=2.99e-04  ETA=457min
+    step 1050/15258  loss=4.1999  lr=2.98e-04  ETA=456min
+    step 1100/15258  loss=4.2203  lr=2.98e-04  ETA=454min
+    step 1150/15258  loss=4.2508  lr=2.98e-04  ETA=453min
+    step 1200/15258  loss=4.1747  lr=2.98e-04  ETA=451min
+    step 1250/15258  loss=4.0742  lr=2.97e-04  ETA=450min
+    step 1300/15258  loss=4.0448  lr=2.97e-04  ETA=448min
+    step 1350/15258  loss=4.1222  lr=2.97e-04  ETA=446min
+    step 1400/15258  loss=4.0976  lr=2.96e-04  ETA=445min
+    step 1450/15258  loss=4.0883  lr=2.96e-04  ETA=443min
+    step 1500/15258  loss=3.9279  lr=2.96e-04  ETA=441min
+    step 1550/15258  loss=3.9914  lr=2.95e-04  ETA=440min
+    step 1600/15258  loss=3.9750  lr=2.95e-04  ETA=438min
+    step 1650/15258  loss=3.8946  lr=2.95e-04  ETA=437min
+    step 1700/15258  loss=3.9711  lr=2.94e-04  ETA=435min
+    step 1750/15258  loss=3.8746  lr=2.94e-04  ETA=433min
+    step 1800/15258  loss=3.9268  lr=2.93e-04  ETA=432min
+    step 1850/15258  loss=3.9395  lr=2.93e-04  ETA=430min
+    step 1900/15258  loss=3.8916  lr=2.92e-04  ETA=428min
+    step 1950/15258  loss=3.8877  lr=2.92e-04  ETA=427min
+    step 2000/15258  loss=3.8938  lr=2.92e-04  ETA=425min
+    step 2050/15258  loss=3.8793  lr=2.91e-04  ETA=424min
+    step 2100/15258  loss=3.8385  lr=2.91e-04  ETA=422min
+    step 2150/15258  loss=3.8174  lr=2.90e-04  ETA=420min
+    step 2200/15258  loss=3.8528  lr=2.89e-04  ETA=419min
+    step 2250/15258  loss=3.8184  lr=2.89e-04  ETA=417min
+    step 2300/15258  loss=3.9308  lr=2.88e-04  ETA=416min
+    step 2350/15258  loss=3.7650  lr=2.88e-04  ETA=414min
+    step 2400/15258  loss=3.6979  lr=2.87e-04  ETA=412min
+    step 2450/15258  loss=3.7979  lr=2.87e-04  ETA=411min
+    step 2500/15258  loss=3.7756  lr=2.86e-04  ETA=409min
+    step 2550/15258  loss=3.7528  lr=2.85e-04  ETA=408min
+    step 2600/15258  loss=3.7665  lr=2.85e-04  ETA=406min
+    step 2650/15258  loss=3.8208  lr=2.84e-04  ETA=404min
+    step 2700/15258  loss=3.7582  lr=2.83e-04  ETA=403min
+    step 2750/15258  loss=3.6547  lr=2.83e-04  ETA=401min
+    step 2800/15258  loss=3.7673  lr=2.82e-04  ETA=399min
+    step 2850/15258  loss=3.7496  lr=2.81e-04  ETA=398min
+    step 2900/15258  loss=3.7526  lr=2.80e-04  ETA=396min
+    step 2950/15258  loss=3.7498  lr=2.80e-04  ETA=395min
+    step 3000/15258  loss=3.7336  lr=2.79e-04  ETA=393min
+    step 3050/15258  loss=3.5709  lr=2.78e-04  ETA=391min
+    step 3100/15258  loss=3.6816  lr=2.77e-04  ETA=390min
+    step 3150/15258  loss=3.6148  lr=2.77e-04  ETA=388min
+    step 3200/15258  loss=3.6820  lr=2.76e-04  ETA=386min
+    step 3250/15258  loss=3.7175  lr=2.75e-04  ETA=385min
+    step 3300/15258  loss=3.6206  lr=2.74e-04  ETA=383min
+    step 3350/15258  loss=3.6281  lr=2.73e-04  ETA=382min
+    step 3400/15258  loss=3.7295  lr=2.72e-04  ETA=380min
+    step 3450/15258  loss=3.6438  lr=2.72e-04  ETA=378min
+    step 3500/15258  loss=3.5924  lr=2.71e-04  ETA=377min
+    step 3550/15258  loss=3.6644  lr=2.70e-04  ETA=375min
+    step 3600/15258  loss=3.6730  lr=2.69e-04  ETA=374min
+    step 3650/15258  loss=3.6070  lr=2.68e-04  ETA=372min
+    step 3700/15258  loss=3.5403  lr=2.67e-04  ETA=370min
+    step 3750/15258  loss=3.5201  lr=2.66e-04  ETA=369min
+    step 3800/15258  loss=3.6475  lr=2.65e-04  ETA=367min
+
+  [CKPT] geo_750m_2k_1bdata_ckpt step_03814 (25.0%) -> save+eval
+    L=1024: PPL=28.081  (4 chunks)
+    L=2048: PPL=35.195  (4 chunks)
+    L=4096: PPL=51.068  (4 chunks)
+    L=8192: PPL=97.774  (4 chunks)
+    L=16384: PPL=200.129  (4 chunks)
+  L=1024_d=0.5 ... gap=+1.117  ret=100%  AR=5%  (20 trials)
+  L=2048_d=0.5 ... gap=+0.612  ret=95%  AR=0%  (20 trials)
+  L=4096_d=0.5 ... gap=+0.062  ret=50%  AR=0%  (20 trials)
+  L=8192_d=0.5 ... gap=-0.049  ret=55%  AR=0%  (20 trials)
+    step 3850/15258  loss=3.6213  lr=2.64e-04  ETA=368min
+    step 3900/15258  loss=3.5790  lr=2.63e-04  ETA=366min
+    step 3950/15258  loss=3.6036  lr=2.62e-04  ETA=364min
+    step 4000/15258  loss=3.5189  lr=2.61e-04  ETA=363min
+    step 4050/15258  loss=3.5675  lr=2.60e-04  ETA=361min
+    step 4100/15258  loss=3.5371  lr=2.59e-04  ETA=359min
+    step 4150/15258  loss=3.4637  lr=2.58e-04  ETA=358min
+    step 4200/15258  loss=3.5809  lr=2.57e-04  ETA=356min
+    step 4250/15258  loss=3.4965  lr=2.56e-04  ETA=354min
+    step 4300/15258  loss=3.5124  lr=2.55e-04  ETA=353min
+    step 4350/15258  loss=3.5219  lr=2.54e-04  ETA=351min
+    step 4400/15258  loss=3.5411  lr=2.53e-04  ETA=350min
+    step 4450/15258  loss=3.6484  lr=2.52e-04  ETA=348min
+    step 4500/15258  loss=3.5363  lr=2.51e-04  ETA=346min
+    step 4550/15258  loss=3.4968  lr=2.50e-04  ETA=345min
+    step 4600/15258  loss=3.5089  lr=2.49e-04  ETA=343min
+    step 4650/15258  loss=3.5172  lr=2.48e-04  ETA=341min
+    step 4700/15258  loss=3.5481  lr=2.46e-04  ETA=340min
+    step 4750/15258  loss=3.4874  lr=2.45e-04  ETA=338min
+    step 4800/15258  loss=3.6161  lr=2.44e-04  ETA=336min
+    step 4850/15258  loss=3.3959  lr=2.43e-04  ETA=335min
+    step 4900/15258  loss=3.5677  lr=2.42e-04  ETA=333min
+    step 4950/15258  loss=3.4332  lr=2.41e-04  ETA=332min
+    step 5000/15258  loss=3.4417  lr=2.39e-04  ETA=330min
+    step 5050/15258  loss=3.4711  lr=2.38e-04  ETA=328min
+    step 5100/15258  loss=3.5976  lr=2.37e-04  ETA=327min
+    step 5150/15258  loss=3.4013  lr=2.36e-04  ETA=325min
+    step 5200/15258  loss=3.4728  lr=2.35e-04  ETA=323min
+    step 5250/15258  loss=3.4420  lr=2.33e-04  ETA=322min
+    step 5300/15258  loss=3.4694  lr=2.32e-04  ETA=320min
+    step 5350/15258  loss=3.4392  lr=2.31e-04  ETA=319min
+    step 5400/15258  loss=3.5005  lr=2.30e-04  ETA=317min
+    step 5450/15258  loss=3.4652  lr=2.29e-04  ETA=315min
+    step 5500/15258  loss=3.3647  lr=2.27e-04  ETA=314min
+    step 5550/15258  loss=3.4340  lr=2.26e-04  ETA=312min
+    step 5600/15258  loss=3.4387  lr=2.25e-04  ETA=310min
+    step 5650/15258  loss=3.4849  lr=2.23e-04  ETA=309min
+    step 5700/15258  loss=3.4108  lr=2.22e-04  ETA=307min
+    step 5750/15258  loss=3.4679  lr=2.21e-04  ETA=306min
+    step 5800/15258  loss=3.5333  lr=2.20e-04  ETA=304min
+    step 5850/15258  loss=3.4647  lr=2.18e-04  ETA=302min
+    step 5900/15258  loss=3.5134  lr=2.17e-04  ETA=301min
+    step 5950/15258  loss=3.4197  lr=2.16e-04  ETA=299min
+    step 6000/15258  loss=3.3634  lr=2.14e-04  ETA=298min
+    step 6050/15258  loss=3.4181  lr=2.13e-04  ETA=296min
+    step 6100/15258  loss=3.3982  lr=2.12e-04  ETA=294min
+    step 6150/15258  loss=3.4066  lr=2.10e-04  ETA=293min
+    step 6200/15258  loss=3.3401  lr=2.09e-04  ETA=291min
+    step 6250/15258  loss=3.3589  lr=2.08e-04  ETA=289min
+    step 6300/15258  loss=3.2976  lr=2.06e-04  ETA=288min
+    step 6350/15258  loss=3.3193  lr=2.05e-04  ETA=286min
+    step 6400/15258  loss=3.3567  lr=2.04e-04  ETA=285min
+    step 6450/15258  loss=3.4029  lr=2.02e-04  ETA=283min
+    step 6500/15258  loss=3.4615  lr=2.01e-04  ETA=281min
+    step 6550/15258  loss=3.3884  lr=2.00e-04  ETA=280min
+    step 6600/15258  loss=3.4293  lr=1.98e-04  ETA=278min
+    step 6650/15258  loss=3.4128  lr=1.97e-04  ETA=277min
+    step 6700/15258  loss=3.3949  lr=1.95e-04  ETA=275min
+    step 6750/15258  loss=3.4052  lr=1.94e-04  ETA=273min
+    step 6800/15258  loss=3.3523  lr=1.93e-04  ETA=272min
+    step 6850/15258  loss=3.3722  lr=1.91e-04  ETA=270min
+    step 6900/15258  loss=3.2610  lr=1.90e-04  ETA=268min
+    step 6950/15258  loss=3.2557  lr=1.88e-04  ETA=267min
+    step 7000/15258  loss=3.4680  lr=1.87e-04  ETA=265min
+    step 7050/15258  loss=3.3103  lr=1.86e-04  ETA=264min
+    step 7100/15258  loss=3.3534  lr=1.84e-04  ETA=262min
+    step 7150/15258  loss=3.2365  lr=1.83e-04  ETA=260min
+    step 7200/15258  loss=3.3133  lr=1.81e-04  ETA=259min
+    step 7250/15258  loss=3.2822  lr=1.80e-04  ETA=257min
+    step 7300/15258  loss=3.4802  lr=1.79e-04  ETA=256min
+    step 7350/15258  loss=3.2535  lr=1.77e-04  ETA=254min
+    step 7400/15258  loss=3.3260  lr=1.76e-04  ETA=252min
+    step 7450/15258  loss=3.3361  lr=1.74e-04  ETA=251min
+    step 7500/15258  loss=3.2198  lr=1.73e-04  ETA=249min
+    step 7550/15258  loss=3.2150  lr=1.72e-04  ETA=248min
+    step 7600/15258  loss=3.3037  lr=1.70e-04  ETA=246min
+
+  [CKPT] geo_750m_2k_1bdata_ckpt step_07629 (50.0%) -> save+eval
+    L=1024: PPL=21.977  (4 chunks)
+    L=2048: PPL=26.995  (4 chunks)
+    L=4096: PPL=42.197  (4 chunks)
+    L=8192: PPL=99.432  (4 chunks)
+    L=16384: PPL=215.103  (4 chunks)
+  L=1024_d=0.5 ... gap=+1.291  ret=100%  AR=15%  (20 trials)
+  L=2048_d=0.5 ... gap=+0.997  ret=100%  AR=0%  (20 trials)
+  L=4096_d=0.5 ... gap=+0.310  ret=80%  AR=0%  (20 trials)
+  L=8192_d=0.5 ... gap=+0.140  ret=70%  AR=0%  (20 trials)
+    step 7650/15258  loss=3.3398  lr=1.69e-04  ETA=245min
+    step 7700/15258  loss=3.3742  lr=1.67e-04  ETA=243min
+    step 7750/15258  loss=3.2920  lr=1.66e-04  ETA=242min
+    step 7800/15258  loss=3.3467  lr=1.64e-04  ETA=240min
+    step 7850/15258  loss=3.2258  lr=1.63e-04  ETA=239min
+    step 7900/15258  loss=3.2294  lr=1.62e-04  ETA=237min
+    step 7950/15258  loss=3.2710  lr=1.60e-04  ETA=235min
+    step 8000/15258  loss=3.3303  lr=1.59e-04  ETA=234min
+    step 8050/15258  loss=3.2989  lr=1.57e-04  ETA=232min
+    step 8100/15258  loss=3.2575  lr=1.56e-04  ETA=230min
+    step 8150/15258  loss=3.2689  lr=1.55e-04  ETA=229min
+    step 8200/15258  loss=3.3043  lr=1.53e-04  ETA=227min
+    step 8250/15258  loss=3.2906  lr=1.52e-04  ETA=226min
+    step 8300/15258  loss=3.2952  lr=1.50e-04  ETA=224min
+    step 8350/15258  loss=3.2216  lr=1.49e-04  ETA=222min
+    step 8400/15258  loss=3.3692  lr=1.48e-04  ETA=221min
+    step 8450/15258  loss=3.3735  lr=1.46e-04  ETA=219min
+    step 8500/15258  loss=3.3215  lr=1.45e-04  ETA=217min
+    step 8550/15258  loss=3.3158  lr=1.43e-04  ETA=216min
+    step 8600/15258  loss=3.2087  lr=1.42e-04  ETA=214min
+    step 8650/15258  loss=3.2386  lr=1.41e-04  ETA=213min
+    step 8700/15258  loss=3.2929  lr=1.39e-04  ETA=211min
+    step 8750/15258  loss=3.2695  lr=1.38e-04  ETA=209min
+    step 8800/15258  loss=3.3130  lr=1.36e-04  ETA=208min
+    step 8850/15258  loss=3.2488  lr=1.35e-04  ETA=206min
+    step 8900/15258  loss=3.1515  lr=1.34e-04  ETA=205min
+    step 8950/15258  loss=3.2165  lr=1.32e-04  ETA=203min
+    step 9000/15258  loss=3.2535  lr=1.31e-04  ETA=201min
+    step 9050/15258  loss=3.2979  lr=1.29e-04  ETA=200min
+    step 9100/15258  loss=3.1784  lr=1.28e-04  ETA=198min
+    step 9150/15258  loss=3.2818  lr=1.27e-04  ETA=197min
+    step 9200/15258  loss=3.2543  lr=1.25e-04  ETA=195min
+    step 9250/15258  loss=3.3142  lr=1.24e-04  ETA=193min
+    step 9300/15258  loss=3.3065  lr=1.23e-04  ETA=192min
+    step 9350/15258  loss=3.2325  lr=1.21e-04  ETA=190min
+    step 9400/15258  loss=3.2924  lr=1.20e-04  ETA=188min
+    step 9450/15258  loss=3.2128  lr=1.19e-04  ETA=187min
+    step 9500/15258  loss=3.2070  lr=1.17e-04  ETA=185min
+    step 9550/15258  loss=3.2610  lr=1.16e-04  ETA=184min
+    step 9600/15258  loss=3.2745  lr=1.15e-04  ETA=182min
+    step 9650/15258  loss=3.2553  lr=1.13e-04  ETA=180min
+    step 9700/15258  loss=3.3406  lr=1.12e-04  ETA=179min
+    step 9750/15258  loss=3.2169  lr=1.11e-04  ETA=177min
+    step 9800/15258  loss=3.2055  lr=1.09e-04  ETA=176min
+    step 9850/15258  loss=3.2281  lr=1.08e-04  ETA=174min
+    step 9900/15258  loss=3.1445  lr=1.07e-04  ETA=172min
+    step 9950/15258  loss=3.1721  lr=1.06e-04  ETA=171min
+    step 10000/15258  loss=3.2607  lr=1.04e-04  ETA=169min
+    step 10050/15258  loss=3.1204  lr=1.03e-04  ETA=167min
+    step 10100/15258  loss=3.1075  lr=1.02e-04  ETA=166min
+    step 10150/15258  loss=3.2498  lr=1.01e-04  ETA=164min
+    step 10200/15258  loss=3.1750  lr=9.93e-05  ETA=163min
+    step 10250/15258  loss=3.1254  lr=9.81e-05  ETA=161min
+    step 10300/15258  loss=3.2637  lr=9.69e-05  ETA=159min
+    step 10350/15258  loss=3.1325  lr=9.56e-05  ETA=158min
+    step 10400/15258  loss=3.2826  lr=9.44e-05  ETA=156min
+    step 10450/15258  loss=3.2433  lr=9.32e-05  ETA=155min
+    step 10500/15258  loss=3.1559  lr=9.20e-05  ETA=153min
+    step 10550/15258  loss=3.2041  lr=9.08e-05  ETA=151min
+    step 10600/15258  loss=3.2295  lr=8.96e-05  ETA=150min
+    step 10650/15258  loss=3.1459  lr=8.85e-05  ETA=148min
+    step 10700/15258  loss=3.2000  lr=8.73e-05  ETA=147min
+    step 10750/15258  loss=3.1891  lr=8.62e-05  ETA=145min
+    step 10800/15258  loss=3.2092  lr=8.50e-05  ETA=143min
+    step 10850/15258  loss=3.0694  lr=8.39e-05  ETA=142min
+    step 10900/15258  loss=3.2365  lr=8.27e-05  ETA=140min
+    step 10950/15258  loss=3.1692  lr=8.16e-05  ETA=138min
+    step 11000/15258  loss=3.2223  lr=8.05e-05  ETA=137min
+    step 11050/15258  loss=3.1312  lr=7.94e-05  ETA=135min
+    step 11100/15258  loss=3.1618  lr=7.83e-05  ETA=134min
+    step 11150/15258  loss=3.2614  lr=7.72e-05  ETA=132min
+    step 11200/15258  loss=3.1769  lr=7.62e-05  ETA=130min
+    step 11250/15258  loss=3.2664  lr=7.51e-05  ETA=129min
+    step 11300/15258  loss=3.0934  lr=7.40e-05  ETA=127min
+    step 11350/15258  loss=3.1073  lr=7.30e-05  ETA=126min
+    step 11400/15258  loss=3.1174  lr=7.20e-05  ETA=124min
+
+  [CKPT] geo_750m_2k_1bdata_ckpt step_11443 (75.0%) -> save+eval
+    L=1024: PPL=18.953  (4 chunks)
+    L=2048: PPL=23.523  (4 chunks)
+    L=4096: PPL=41.411  (4 chunks)
+    L=8192: PPL=108.804  (4 chunks)
+    L=16384: PPL=238.198  (4 chunks)
+  L=1024_d=0.5 ... gap=+1.345  ret=100%  AR=30%  (20 trials)
+  L=2048_d=0.5 ... gap=+0.886  ret=100%  AR=0%  (20 trials)
+  L=4096_d=0.5 ... gap=+0.031  ret=55%  AR=0%  (20 trials)
+  L=8192_d=0.5 ... gap=+0.083  ret=60%  AR=0%  (20 trials)
+    [CKPT-RULER] Multi-needle at step=11443 (75.0%)
+  L=2048 (5 needles, 8 trials)... per_needle=92%  all_needle=62%  gap=+0.439  (8 trials)
+  L=4096 (5 needles, 8 trials)... per_needle=57%  all_needle=12%  gap=+0.135  (8 trials)
+  L=8192 (5 needles, 8 trials)... per_needle=48%  all_needle=0%  gap=-0.010  (8 trials)
+    step 11450/15258  loss=3.1597  lr=7.09e-05  ETA=123min
+    step 11500/15258  loss=3.1774  lr=6.99e-05  ETA=121min
+    step 11550/15258  loss=3.1872  lr=6.89e-05  ETA=119min
+    step 11600/15258  loss=3.1741  lr=6.79e-05  ETA=118min
+    step 11650/15258  loss=3.0787  lr=6.70e-05  ETA=116min
+    step 11700/15258  loss=3.1663  lr=6.60e-05  ETA=115min
+    step 11750/15258  loss=3.2033  lr=6.50e-05  ETA=113min
+    step 11800/15258  loss=3.2324  lr=6.41e-05  ETA=111min
+    step 11850/15258  loss=3.1656  lr=6.32e-05  ETA=110min
+    step 11900/15258  loss=3.2202  lr=6.22e-05  ETA=108min
+    step 11950/15258  loss=3.1834  lr=6.13e-05  ETA=107min
+    step 12000/15258  loss=3.1178  lr=6.04e-05  ETA=105min
+    step 12050/15258  loss=3.2209  lr=5.95e-05  ETA=103min
+    step 12100/15258  loss=3.1707  lr=5.86e-05  ETA=102min
+    step 12150/15258  loss=3.1217  lr=5.78e-05  ETA=100min
+    step 12200/15258  loss=3.1701  lr=5.69e-05  ETA=98min
+    step 12250/15258  loss=3.2447  lr=5.61e-05  ETA=97min
+    step 12300/15258  loss=3.2298  lr=5.52e-05  ETA=95min
+    step 12350/15258  loss=3.1841  lr=5.44e-05  ETA=94min
+    step 12400/15258  loss=3.2002  lr=5.36e-05  ETA=92min
+    step 12450/15258  loss=3.0882  lr=5.28e-05  ETA=90min
+    step 12500/15258  loss=3.0593  lr=5.20e-05  ETA=89min
+    step 12550/15258  loss=3.1960  lr=5.13e-05  ETA=87min
+    step 12600/15258  loss=3.1595  lr=5.05e-05  ETA=86min
+    step 12650/15258  loss=3.1807  lr=4.98e-05  ETA=84min
+    step 12700/15258  loss=3.0935  lr=4.90e-05  ETA=82min
+    step 12750/15258  loss=3.1239  lr=4.83e-05  ETA=81min
+    step 12800/15258  loss=3.2602  lr=4.76e-05  ETA=79min
+    step 12850/15258  loss=2.9705  lr=4.69e-05  ETA=78min
+    step 12900/15258  loss=3.1709  lr=4.62e-05  ETA=76min
+    step 12950/15258  loss=3.1981  lr=4.56e-05  ETA=74min
+    step 13000/15258  loss=3.1896  lr=4.49e-05  ETA=73min
+    step 13050/15258  loss=3.1531  lr=4.43e-05  ETA=71min
+    step 13100/15258  loss=3.1362  lr=4.36e-05  ETA=69min
+    step 13150/15258  loss=3.0691  lr=4.30e-05  ETA=68min
+    step 13200/15258  loss=3.0447  lr=4.24e-05  ETA=66min
+    step 13250/15258  loss=3.0702  lr=4.18e-05  ETA=65min
+    step 13300/15258  loss=3.1552  lr=4.13e-05  ETA=63min
+    step 13350/15258  loss=3.1306  lr=4.07e-05  ETA=61min
+    step 13400/15258  loss=3.2276  lr=4.02e-05  ETA=60min
+    step 13450/15258  loss=3.0689  lr=3.96e-05  ETA=58min
+    step 13500/15258  loss=3.1522  lr=3.91e-05  ETA=57min
+    step 13550/15258  loss=3.0917  lr=3.86e-05  ETA=55min
+    step 13600/15258  loss=3.1486  lr=3.81e-05  ETA=53min
+    step 13650/15258  loss=3.1466  lr=3.76e-05  ETA=52min
+    step 13700/15258  loss=3.0210  lr=3.72e-05  ETA=50min
+    step 13750/15258  loss=3.1589  lr=3.67e-05  ETA=49min
+    step 13800/15258  loss=3.1447  lr=3.63e-05  ETA=47min
+    step 13850/15258  loss=3.1466  lr=3.59e-05  ETA=45min
+    step 13900/15258  loss=3.0741  lr=3.55e-05  ETA=44min
+    step 13950/15258  loss=3.2127  lr=3.51e-05  ETA=42min
+    step 14000/15258  loss=3.1554  lr=3.47e-05  ETA=40min
+    step 14050/15258  loss=3.0626  lr=3.43e-05  ETA=39min
+    step 14100/15258  loss=3.1368  lr=3.40e-05  ETA=37min
+    step 14150/15258  loss=3.0582  lr=3.36e-05  ETA=36min
+    step 14200/15258  loss=3.1975  lr=3.33e-05  ETA=34min
+    step 14250/15258  loss=3.1689  lr=3.30e-05  ETA=32min
+    step 14300/15258  loss=3.1104  lr=3.27e-05  ETA=31min
+    step 14350/15258  loss=3.1003  lr=3.24e-05  ETA=29min
+    step 14400/15258  loss=3.1070  lr=3.22e-05  ETA=28min
+    step 14450/15258  loss=3.2294  lr=3.19e-05  ETA=26min
+    step 14500/15258  loss=3.2193  lr=3.17e-05  ETA=24min
+    step 14550/15258  loss=3.0882  lr=3.15e-05  ETA=23min
+    step 14600/15258  loss=3.1262  lr=3.13e-05  ETA=21min
+    step 14650/15258  loss=3.0019  lr=3.11e-05  ETA=20min
+    step 14700/15258  loss=3.1237  lr=3.09e-05  ETA=18min
+    step 14750/15258  loss=3.0671  lr=3.08e-05  ETA=16min
+    step 14800/15258  loss=3.1579  lr=3.06e-05  ETA=15min
+    step 14850/15258  loss=3.0622  lr=3.05e-05  ETA=13min
+    step 14900/15258  loss=3.1821  lr=3.04e-05  ETA=11min
+    step 14950/15258  loss=3.1738  lr=3.03e-05  ETA=10min
+    step 15000/15258  loss=3.0613  lr=3.02e-05  ETA=8min
+    step 15050/15258  loss=3.1122  lr=3.01e-05  ETA=7min
+    step 15100/15258  loss=3.1071  lr=3.01e-05  ETA=5min
+    step 15150/15258  loss=3.0812  lr=3.00e-05  ETA=3min
+    step 15200/15258  loss=3.1081  lr=3.00e-05  ETA=2min
+    step 15250/15258  loss=3.1421  lr=3.00e-05  ETA=0min
+
+  [CKPT] geo_750m_2k_1bdata_ckpt step_15258 (100.0%) -> save+eval
+    L=1024: PPL=17.554  (4 chunks)
+    L=2048: PPL=21.980  (4 chunks)
+    L=4096: PPL=41.375  (4 chunks)
+    L=8192: PPL=115.010  (4 chunks)
+    L=16384: PPL=253.175  (4 chunks)
+  L=1024_d=0.5 ... gap=+1.453  ret=100%  AR=60%  (20 trials)
+  L=2048_d=0.5 ... gap=+1.326  ret=100%  AR=5%  (20 trials)
+  L=4096_d=0.5 ... gap=+0.160  ret=80%  AR=0%  (20 trials)
+  L=8192_d=0.5 ... gap=+0.089  ret=60%  AR=0%  (20 trials)
+    [CKPT-RULER] Multi-needle at step=15258 (100.0%)
+  L=2048 (5 needles, 8 trials)... per_needle=95%  all_needle=75%  gap=+0.543  (8 trials)
+  L=4096 (5 needles, 8 trials)... per_needle=57%  all_needle=12%  gap=+0.137  (8 trials)
+  L=8192 (5 needles, 8 trials)... per_needle=48%  all_needle=0%  gap=+0.003  (8 trials)
+  Training done in 491.8 min
+    L=1024: PPL=19.539  (6 chunks)
+    L=2048: PPL=23.464  (6 chunks)
+    L=4096: PPL=38.842  (6 chunks)
+    L=8192: PPL=115.638  (6 chunks)
+    L=16384: PPL=245.090  (6 chunks)
+  Passkey eval (40 trials/length)
+  L=1024_d=0.5 ... gap=+1.442  ret=100%  AR=75%  (40 trials)
+  L=2048_d=0.5 ... gap=+1.328  ret=100%  AR=5%  (40 trials)
+  L=4096_d=0.5 ... gap=+0.210  ret=78%  AR=0%  (40 trials)
+  L=8192_d=0.5 ... gap=+0.030  ret=50%  AR=0%  (40 trials)
+  Multi-needle eval (5 needles, 8 trials)
+  L=2048 (5 needles, 8 trials)... per_needle=95%  all_needle=75%  gap=+0.543  (8 trials)
+  L=4096 (5 needles, 8 trials)... per_needle=57%  all_needle=12%  gap=+0.137  (8 trials)
+  L=8192 (5 needles, 8 trials)... per_needle=48%  all_needle=0%  gap=+0.003  (8 trials)
+
+======================================================================
+  hybrid1.5_r16_750m_2k_1bdata_ckpt  (base=500000, 750M, L=2048, 1000M tokens, seed=42)
+======================================================================
+  Model params: 756.8M
+  Checkpoint steps: [3814, 7629, 11443, 15258]
+  RULER checkpoint steps: [11443, 15258]
+  Training: micro_bs=16, grad_accum=2, effective_bs=32, steps=15258, warmup=305
+    step 0/15258  loss=11.1476  lr=0.00e+00  ETA=0min
+    step 50/15258  loss=7.4886  lr=4.92e-05  ETA=487min
+    step 100/15258  loss=6.6454  lr=9.84e-05  ETA=485min
+    step 150/15258  loss=6.2414  lr=1.48e-04  ETA=484min
+    step 200/15258  loss=5.8754  lr=1.97e-04  ETA=482min
+    step 250/15258  loss=5.6470  lr=2.46e-04  ETA=480min
+    step 300/15258  loss=5.5013  lr=2.95e-04  ETA=479min
+    step 350/15258  loss=5.3029  lr=3.00e-04  ETA=477min
+    step 400/15258  loss=5.1535  lr=3.00e-04  ETA=476min
+    step 450/15258  loss=5.0631  lr=3.00e-04  ETA=474min
+    step 500/15258  loss=4.9713  lr=3.00e-04  ETA=473min
+    step 550/15258  loss=4.9157  lr=3.00e-04  ETA=471min
+    step 600/15258  loss=4.7780  lr=3.00e-04  ETA=469min
+    step 650/15258  loss=4.7064  lr=3.00e-04  ETA=468min
+    step 700/15258  loss=4.6647  lr=3.00e-04  ETA=466min
+    step 750/15258  loss=4.5743  lr=2.99e-04  ETA=465min
+    step 800/15258  loss=4.5501  lr=2.99e-04  ETA=463min
+    step 850/15258  loss=4.4480  lr=2.99e-04  ETA=461min
+    step 900/15258  loss=4.4078  lr=2.99e-04  ETA=460min
+    step 950/15258  loss=4.3353  lr=2.99e-04  ETA=458min
+    step 1000/15258  loss=4.3738  lr=2.99e-04  ETA=457min
+    step 1050/15258  loss=4.1965  lr=2.98e-04  ETA=455min
+    step 1100/15258  loss=4.2097  lr=2.98e-04  ETA=453min
+    step 1150/15258  loss=4.2514  lr=2.98e-04  ETA=452min
+    step 1200/15258  loss=4.1715  lr=2.98e-04  ETA=450min
+    step 1250/15258  loss=4.0723  lr=2.97e-04  ETA=449min
+    step 1300/15258  loss=4.0338  lr=2.97e-04  ETA=447min
+    step 1350/15258  loss=4.1311  lr=2.97e-04  ETA=446min
+    step 1400/15258  loss=4.0943  lr=2.96e-04  ETA=444min
+    step 1450/15258  loss=4.0892  lr=2.96e-04  ETA=442min
+    step 1500/15258  loss=3.9249  lr=2.96e-04  ETA=441min
+    step 1550/15258  loss=3.9881  lr=2.95e-04  ETA=439min
+    step 1600/15258  loss=3.9708  lr=2.95e-04  ETA=438min
+    step 1650/15258  loss=3.8999  lr=2.95e-04  ETA=436min
+    step 1700/15258  loss=3.9687  lr=2.94e-04  ETA=434min
+    step 1750/15258  loss=3.8735  lr=2.94e-04  ETA=433min
+    step 1800/15258  loss=3.9310  lr=2.93e-04  ETA=431min
+    step 1850/15258  loss=3.9370  lr=2.93e-04  ETA=430min
+    step 1900/15258  loss=3.8954  lr=2.92e-04  ETA=428min
+    step 1950/15258  loss=3.8883  lr=2.92e-04  ETA=426min
+    step 2000/15258  loss=3.8937  lr=2.92e-04  ETA=425min
+    step 2050/15258  loss=3.8879  lr=2.91e-04  ETA=423min
+    step 2100/15258  loss=3.8397  lr=2.91e-04  ETA=422min
+    step 2150/15258  loss=3.8160  lr=2.90e-04  ETA=420min
+    step 2200/15258  loss=3.8503  lr=2.89e-04  ETA=418min
+    step 2250/15258  loss=3.8209  lr=2.89e-04  ETA=417min
+    step 2300/15258  loss=3.9272  lr=2.88e-04  ETA=415min
+    step 2350/15258  loss=3.7667  lr=2.88e-04  ETA=414min
+    step 2400/15258  loss=3.6969  lr=2.87e-04  ETA=412min
+    step 2450/15258  loss=3.7987  lr=2.87e-04  ETA=410min
+    step 2500/15258  loss=3.7700  lr=2.86e-04  ETA=409min
+    step 2550/15258  loss=3.7553  lr=2.85e-04  ETA=407min
+    step 2600/15258  loss=3.7714  lr=2.85e-04  ETA=405min
+    step 2650/15258  loss=3.8248  lr=2.84e-04  ETA=404min
+    step 2700/15258  loss=3.7628  lr=2.83e-04  ETA=402min
+    step 2750/15258  loss=3.6568  lr=2.83e-04  ETA=401min
+    step 2800/15258  loss=3.7684  lr=2.82e-04  ETA=399min
+    step 2850/15258  loss=3.7564  lr=2.81e-04  ETA=397min
+    step 2900/15258  loss=3.7571  lr=2.80e-04  ETA=396min
+    step 2950/15258  loss=3.7552  lr=2.80e-04  ETA=394min
+    step 3000/15258  loss=3.7359  lr=2.79e-04  ETA=393min
+    step 3050/15258  loss=3.5736  lr=2.78e-04  ETA=391min
+    step 3100/15258  loss=3.6792  lr=2.77e-04  ETA=389min
+    step 3150/15258  loss=3.6195  lr=2.77e-04  ETA=388min
+    step 3200/15258  loss=3.6871  lr=2.76e-04  ETA=386min
+    step 3250/15258  loss=3.7196  lr=2.75e-04  ETA=385min
+    step 3300/15258  loss=3.6245  lr=2.74e-04  ETA=383min
+    step 3350/15258  loss=3.6304  lr=2.73e-04  ETA=381min
+    step 3400/15258  loss=3.7287  lr=2.72e-04  ETA=380min
+    step 3450/15258  loss=3.6460  lr=2.72e-04  ETA=378min
+    step 3500/15258  loss=3.5946  lr=2.71e-04  ETA=377min
+    step 3550/15258  loss=3.6653  lr=2.70e-04  ETA=375min
+    step 3600/15258  loss=3.6784  lr=2.69e-04  ETA=373min
+    step 3650/15258  loss=3.5995  lr=2.68e-04  ETA=372min
+    step 3700/15258  loss=3.5457  lr=2.67e-04  ETA=370min
+    step 3750/15258  loss=3.5227  lr=2.66e-04  ETA=369min
+    step 3800/15258  loss=3.6501  lr=2.65e-04  ETA=367min
+
+  [CKPT] hybrid1.5_r16_750m_2k_1bdata_ckpt step_03814 (25.0%) -> save+eval
+    L=1024: PPL=28.046  (4 chunks)
+    L=2048: PPL=35.212  (4 chunks)
+    L=4096: PPL=52.752  (4 chunks)
+    L=8192: PPL=104.051  (4 chunks)
+    L=16384: PPL=214.826  (4 chunks)
+  L=1024_d=0.5 ... gap=+1.120  ret=100%  AR=5%  (20 trials)
+  L=2048_d=0.5 ... gap=+0.845  ret=95%  AR=0%  (20 trials)
+  L=4096_d=0.5 ... gap=+0.149  ret=70%  AR=0%  (20 trials)
+  L=8192_d=0.5 ... gap=-0.002  ret=45%  AR=0%  (20 trials)
+    step 3850/15258  loss=3.6263  lr=2.64e-04  ETA=367min
+    step 3900/15258  loss=3.5813  lr=2.63e-04  ETA=366min
+    step 3950/15258  loss=3.6007  lr=2.62e-04  ETA=364min
+    step 4000/15258  loss=3.5209  lr=2.61e-04  ETA=363min
+    step 4050/15258  loss=3.5710  lr=2.60e-04  ETA=361min
+    step 4100/15258  loss=3.5335  lr=2.59e-04  ETA=359min
+    step 4150/15258  loss=3.4620  lr=2.58e-04  ETA=358min
+    step 4200/15258  loss=3.5826  lr=2.57e-04  ETA=356min
+    step 4250/15258  loss=3.4971  lr=2.56e-04  ETA=354min
+    step 4300/15258  loss=3.5156  lr=2.55e-04  ETA=353min
+    step 4350/15258  loss=3.5275  lr=2.54e-04  ETA=351min
+    step 4400/15258  loss=3.5465  lr=2.53e-04  ETA=349min
+    step 4450/15258  loss=3.5831  lr=2.52e-04  ETA=348min
+    step 4500/15258  loss=3.5369  lr=2.51e-04  ETA=346min
+    step 4550/15258  loss=3.4954  lr=2.50e-04  ETA=345min
+    step 4600/15258  loss=3.5131  lr=2.49e-04  ETA=343min
+    step 4650/15258  loss=3.5116  lr=2.48e-04  ETA=341min
+    step 4700/15258  loss=3.5586  lr=2.46e-04  ETA=340min
+    step 4750/15258  loss=3.4895  lr=2.45e-04  ETA=338min
+    step 4800/15258  loss=3.6173  lr=2.44e-04  ETA=336min
+    step 4850/15258  loss=3.3987  lr=2.43e-04  ETA=335min
+    step 4900/15258  loss=3.5716  lr=2.42e-04  ETA=333min
+    step 4950/15258  loss=3.4391  lr=2.41e-04  ETA=332min
+    step 5000/15258  loss=3.4413  lr=2.39e-04  ETA=330min
+    step 5050/15258  loss=3.4721  lr=2.38e-04  ETA=328min
+    step 5100/15258  loss=3.5994  lr=2.37e-04  ETA=327min
+    step 5150/15258  loss=3.3987  lr=2.36e-04  ETA=325min
+    step 5200/15258  loss=3.4699  lr=2.35e-04  ETA=324min
+    step 5250/15258  loss=3.4363  lr=2.33e-04  ETA=322min
+    step 5300/15258  loss=3.4724  lr=2.32e-04  ETA=320min
+    step 5350/15258  loss=3.4391  lr=2.31e-04  ETA=319min
+    step 5400/15258  loss=3.4979  lr=2.30e-04  ETA=317min
+    step 5450/15258  loss=3.4686  lr=2.29e-04  ETA=315min
+    step 5500/15258  loss=3.3660  lr=2.27e-04  ETA=314min
+    step 5550/15258  loss=3.4392  lr=2.26e-04  ETA=312min
+    step 5600/15258  loss=3.4413  lr=2.25e-04  ETA=311min
+    step 5650/15258  loss=3.4861  lr=2.23e-04  ETA=309min
+    step 5700/15258  loss=3.4074  lr=2.22e-04  ETA=307min
+    step 5750/15258  loss=3.4675  lr=2.21e-04  ETA=306min
+    step 5800/15258  loss=3.5343  lr=2.20e-04  ETA=304min
+    step 5850/15258  loss=3.4681  lr=2.18e-04  ETA=302min
+    step 5900/15258  loss=3.5146  lr=2.17e-04  ETA=301min
+    step 5950/15258  loss=3.4237  lr=2.16e-04  ETA=299min
+    step 6000/15258  loss=3.3686  lr=2.14e-04  ETA=298min
+    step 6050/15258  loss=3.4176  lr=2.13e-04  ETA=296min
+    step 6100/15258  loss=3.3960  lr=2.12e-04  ETA=294min
+    step 6150/15258  loss=3.4089  lr=2.10e-04  ETA=293min
+    step 6200/15258  loss=3.3421  lr=2.09e-04  ETA=291min
+    step 6250/15258  loss=3.3583  lr=2.08e-04  ETA=290min
+    step 6300/15258  loss=3.3017  lr=2.06e-04  ETA=288min
+    step 6350/15258  loss=3.3231  lr=2.05e-04  ETA=286min
+    step 6400/15258  loss=3.3577  lr=2.04e-04  ETA=285min
+    step 6450/15258  loss=3.4078  lr=2.02e-04  ETA=283min
+    step 6500/15258  loss=3.4653  lr=2.01e-04  ETA=282min
+    step 6550/15258  loss=3.3872  lr=2.00e-04  ETA=280min
+    step 6600/15258  loss=3.4298  lr=1.98e-04  ETA=278min
+    step 6650/15258  loss=3.4127  lr=1.97e-04  ETA=277min
+    step 6700/15258  loss=3.3931  lr=1.95e-04  ETA=275min
+    step 6750/15258  loss=3.4019  lr=1.94e-04  ETA=273min
+    step 6800/15258  loss=3.3516  lr=1.93e-04  ETA=272min
+    step 6850/15258  loss=3.3757  lr=1.91e-04  ETA=270min
+    step 6900/15258  loss=3.2606  lr=1.90e-04  ETA=269min
+    step 6950/15258  loss=3.2573  lr=1.88e-04  ETA=267min
+    step 7000/15258  loss=3.4685  lr=1.87e-04  ETA=265min
+    step 7050/15258  loss=3.3168  lr=1.86e-04  ETA=264min
+    step 7100/15258  loss=3.3509  lr=1.84e-04  ETA=262min
+    step 7150/15258  loss=3.2391  lr=1.83e-04  ETA=261min
+    step 7200/15258  loss=3.3197  lr=1.81e-04  ETA=259min
+    step 7250/15258  loss=3.2799  lr=1.80e-04  ETA=257min
+    step 7300/15258  loss=3.4808  lr=1.79e-04  ETA=256min
+    step 7350/15258  loss=3.2582  lr=1.77e-04  ETA=254min
+    step 7400/15258  loss=3.3267  lr=1.76e-04  ETA=252min
+    step 7450/15258  loss=3.3400  lr=1.74e-04  ETA=251min
+    step 7500/15258  loss=3.2229  lr=1.73e-04  ETA=249min
+    step 7550/15258  loss=3.2180  lr=1.72e-04  ETA=248min
+    step 7600/15258  loss=3.3047  lr=1.70e-04  ETA=246min
+
+  [CKPT] hybrid1.5_r16_750m_2k_1bdata_ckpt step_07629 (50.0%) -> save+eval
+    L=1024: PPL=21.745  (4 chunks)
+    L=2048: PPL=26.780  (4 chunks)
+    L=4096: PPL=43.158  (4 chunks)
+    L=8192: PPL=104.356  (4 chunks)
+    L=16384: PPL=225.650  (4 chunks)
+  L=1024_d=0.5 ... gap=+1.355  ret=100%  AR=30%  (20 trials)
+  L=2048_d=0.5 ... gap=+1.258  ret=100%  AR=0%  (20 trials)
+  L=4096_d=0.5 ... gap=+0.297  ret=80%  AR=0%  (20 trials)
+  L=8192_d=0.5 ... gap=+0.054  ret=65%  AR=0%  (20 trials)
+    step 7650/15258  loss=3.3405  lr=1.69e-04  ETA=245min
+    step 7700/15258  loss=3.3742  lr=1.67e-04  ETA=243min
+    step 7750/15258  loss=3.2917  lr=1.66e-04  ETA=242min
+    step 7800/15258  loss=3.3429  lr=1.64e-04  ETA=240min
+    step 7850/15258  loss=3.2269  lr=1.63e-04  ETA=239min
+    step 7900/15258  loss=3.2289  lr=1.62e-04  ETA=237min
+    step 7950/15258  loss=3.2715  lr=1.60e-04  ETA=235min
+    step 8000/15258  loss=3.3329  lr=1.59e-04  ETA=234min
+    step 8050/15258  loss=3.2970  lr=1.57e-04  ETA=232min
+    step 8100/15258  loss=3.2564  lr=1.56e-04  ETA=231min
+    step 8150/15258  loss=3.2671  lr=1.55e-04  ETA=229min
+    step 8200/15258  loss=3.3098  lr=1.53e-04  ETA=227min
+    step 8250/15258  loss=3.2962  lr=1.52e-04  ETA=226min
+    step 8300/15258  loss=3.2901  lr=1.50e-04  ETA=224min
+    step 8350/15258  loss=3.2253  lr=1.49e-04  ETA=222min
+    step 8400/15258  loss=3.3712  lr=1.48e-04  ETA=221min
+    step 8450/15258  loss=3.3713  lr=1.46e-04  ETA=219min
+    step 8500/15258  loss=3.3199  lr=1.45e-04  ETA=218min
+    step 8550/15258  loss=3.3130  lr=1.43e-04  ETA=216min
+    step 8600/15258  loss=3.2130  lr=1.42e-04  ETA=214min
+    step 8650/15258  loss=3.2381  lr=1.41e-04  ETA=213min
+    step 8700/15258  loss=3.2928  lr=1.39e-04  ETA=211min
+    step 8750/15258  loss=3.2670  lr=1.38e-04  ETA=210min
+    step 8800/15258  loss=3.3100  lr=1.36e-04  ETA=208min
+    step 8850/15258  loss=3.2506  lr=1.35e-04  ETA=206min
+    step 8900/15258  loss=3.1521  lr=1.34e-04  ETA=205min
+    step 8950/15258  loss=3.2172  lr=1.32e-04  ETA=203min
+    step 9000/15258  loss=3.2555  lr=1.31e-04  ETA=201min
+    step 9050/15258  loss=3.2986  lr=1.29e-04  ETA=200min
+    step 9100/15258  loss=3.1813  lr=1.28e-04  ETA=198min
+    step 9150/15258  loss=3.2792  lr=1.27e-04  ETA=197min
+    step 9200/15258  loss=3.2535  lr=1.25e-04  ETA=195min
+    step 9250/15258  loss=3.3148  lr=1.24e-04  ETA=193min
+    step 9300/15258  loss=3.3044  lr=1.23e-04  ETA=192min
+    step 9350/15258  loss=3.2355  lr=1.21e-04  ETA=190min
+    step 9400/15258  loss=3.2905  lr=1.20e-04  ETA=189min
+    step 9450/15258  loss=3.2156  lr=1.19e-04  ETA=187min
+    step 9500/15258  loss=3.2114  lr=1.17e-04  ETA=185min
+    step 9550/15258  loss=3.2618  lr=1.16e-04  ETA=184min
+    step 9600/15258  loss=3.2782  lr=1.15e-04  ETA=182min
+    step 9650/15258  loss=3.2519  lr=1.13e-04  ETA=180min
+    step 9700/15258  loss=3.3413  lr=1.12e-04  ETA=179min
+    step 9750/15258  loss=3.2198  lr=1.11e-04  ETA=177min
+    step 9800/15258  loss=3.2059  lr=1.09e-04  ETA=176min
+    step 9850/15258  loss=3.2310  lr=1.08e-04  ETA=174min
+    step 9900/15258  loss=3.1433  lr=1.07e-04  ETA=172min
+    step 9950/15258  loss=3.1785  lr=1.06e-04  ETA=171min
+    step 10000/15258  loss=3.2668  lr=1.04e-04  ETA=169min
+    step 10050/15258  loss=3.1180  lr=1.03e-04  ETA=168min
+    step 10100/15258  loss=3.1071  lr=1.02e-04  ETA=166min
+    step 10150/15258  loss=3.2495  lr=1.01e-04  ETA=164min
+    step 10200/15258  loss=3.1783  lr=9.93e-05  ETA=163min
+    step 10250/15258  loss=3.1224  lr=9.81e-05  ETA=161min
+    step 10300/15258  loss=3.2638  lr=9.69e-05  ETA=159min
+    step 10350/15258  loss=3.1337  lr=9.56e-05  ETA=158min
+    step 10400/15258  loss=3.2849  lr=9.44e-05  ETA=156min
+    step 10450/15258  loss=3.2417  lr=9.32e-05  ETA=155min
+    step 10500/15258  loss=3.1566  lr=9.20e-05  ETA=153min
+    step 10550/15258  loss=3.2063  lr=9.08e-05  ETA=151min
+    step 10600/15258  loss=3.2287  lr=8.96e-05  ETA=150min
+    step 10650/15258  loss=3.1499  lr=8.85e-05  ETA=148min
+    step 10700/15258  loss=3.2016  lr=8.73e-05  ETA=147min
+    step 10750/15258  loss=3.1898  lr=8.62e-05  ETA=145min
+    step 10800/15258  loss=3.2148  lr=8.50e-05  ETA=143min
+    step 10850/15258  loss=3.0689  lr=8.39e-05  ETA=142min
+    step 10900/15258  loss=3.2395  lr=8.27e-05  ETA=140min
+    step 10950/15258  loss=3.1716  lr=8.16e-05  ETA=139min
+    step 11000/15258  loss=3.2212  lr=8.05e-05  ETA=137min
+    step 11050/15258  loss=3.1312  lr=7.94e-05  ETA=135min
+    step 11100/15258  loss=3.1640  lr=7.83e-05  ETA=134min
+    step 11150/15258  loss=3.2605  lr=7.72e-05  ETA=132min
+    step 11200/15258  loss=3.1779  lr=7.62e-05  ETA=130min
+    step 11250/15258  loss=3.2672  lr=7.51e-05  ETA=129min
+    step 11300/15258  loss=3.0990  lr=7.40e-05  ETA=127min
+    step 11350/15258  loss=3.1064  lr=7.30e-05  ETA=126min
+    step 11400/15258  loss=3.1218  lr=7.20e-05  ETA=124min
+
+  [CKPT] hybrid1.5_r16_750m_2k_1bdata_ckpt step_11443 (75.0%) -> save+eval
+    L=1024: PPL=18.941  (4 chunks)
+    L=2048: PPL=23.058  (4 chunks)
+    L=4096: PPL=42.083  (4 chunks)
+    L=8192: PPL=115.214  (4 chunks)
+    L=16384: PPL=248.884  (4 chunks)
+  L=1024_d=0.5 ... gap=+1.475  ret=100%  AR=80%  (20 trials)
+  L=2048_d=0.5 ... gap=+1.328  ret=100%  AR=0%  (20 trials)
+  L=4096_d=0.5 ... gap=+0.142  ret=80%  AR=0%  (20 trials)
+  L=8192_d=0.5 ... gap=+0.138  ret=75%  AR=0%  (20 trials)
+    [CKPT-RULER] Multi-needle at step=11443 (75.0%)
+  L=2048 (5 needles, 8 trials)... per_needle=95%  all_needle=75%  gap=+0.471  (8 trials)
+  L=4096 (5 needles, 8 trials)... per_needle=55%  all_needle=0%  gap=+0.022  (8 trials)
+  L=8192 (5 needles, 8 trials)... per_needle=40%  all_needle=0%  gap=-0.050  (8 trials)
+    step 11450/15258  loss=3.1611  lr=7.09e-05  ETA=123min
+    step 11500/15258  loss=3.1788  lr=6.99e-05  ETA=121min
+    step 11550/15258  loss=3.1910  lr=6.89e-05  ETA=119min
+    step 11600/15258  loss=3.1790  lr=6.79e-05  ETA=118min
+    step 11650/15258  loss=3.0773  lr=6.70e-05  ETA=116min
+    step 11700/15258  loss=3.1664  lr=6.60e-05  ETA=115min
+    step 11750/15258  loss=3.2031  lr=6.50e-05  ETA=113min
+    step 11800/15258  loss=3.2370  lr=6.41e-05  ETA=111min
+    step 11850/15258  loss=3.1692  lr=6.32e-05  ETA=110min
+    step 11900/15258  loss=3.2250  lr=6.22e-05  ETA=108min
+    step 11950/15258  loss=3.1864  lr=6.13e-05  ETA=107min
+    step 12000/15258  loss=3.1168  lr=6.04e-05  ETA=105min
+    step 12050/15258  loss=3.2173  lr=5.95e-05  ETA=103min
+    step 12100/15258  loss=3.1727  lr=5.86e-05  ETA=102min
+    step 12150/15258  loss=3.1209  lr=5.78e-05  ETA=100min
+    step 12200/15258  loss=3.1711  lr=5.69e-05  ETA=99min
+    step 12250/15258  loss=3.2449  lr=5.61e-05  ETA=97min
+    step 12300/15258  loss=3.2326  lr=5.52e-05  ETA=95min
+    step 12350/15258  loss=3.1812  lr=5.44e-05  ETA=94min
+    step 12400/15258  loss=3.2023  lr=5.36e-05  ETA=92min
+    step 12450/15258  loss=3.0871  lr=5.28e-05  ETA=90min
+    step 12500/15258  loss=3.0601  lr=5.20e-05  ETA=89min
+    step 12550/15258  loss=3.2016  lr=5.13e-05  ETA=87min
+    step 12600/15258  loss=3.1576  lr=5.05e-05  ETA=86min
+    step 12650/15258  loss=3.1783  lr=4.98e-05  ETA=84min
+    step 12700/15258  loss=3.0913  lr=4.90e-05  ETA=82min
+    step 12750/15258  loss=3.1261  lr=4.83e-05  ETA=81min
+    step 12800/15258  loss=3.2596  lr=4.76e-05  ETA=79min
+    step 12850/15258  loss=2.9722  lr=4.69e-05  ETA=78min
+    step 12900/15258  loss=3.1759  lr=4.62e-05  ETA=76min
+    step 12950/15258  loss=3.1988  lr=4.56e-05  ETA=74min
+    step 13000/15258  loss=3.1910  lr=4.49e-05  ETA=73min
+    step 13050/15258  loss=3.1590  lr=4.43e-05  ETA=71min
+    step 13100/15258  loss=3.1399  lr=4.36e-05  ETA=69min
+    step 13150/15258  loss=3.0682  lr=4.30e-05  ETA=68min
+    step 13200/15258  loss=3.0455  lr=4.24e-05  ETA=66min
+    step 13250/15258  loss=3.0734  lr=4.18e-05  ETA=65min
+    step 13300/15258  loss=3.1535  lr=4.13e-05  ETA=63min
+    step 13350/15258  loss=3.1340  lr=4.07e-05  ETA=61min
+    step 13400/15258  loss=3.2263  lr=4.02e-05  ETA=60min
+    step 13450/15258  loss=3.0723  lr=3.96e-05  ETA=58min
+    step 13500/15258  loss=3.1514  lr=3.91e-05  ETA=57min
+    step 13550/15258  loss=3.0972  lr=3.86e-05  ETA=55min
+    step 13600/15258  loss=3.1507  lr=3.81e-05  ETA=53min
+    step 13650/15258  loss=3.1442  lr=3.76e-05  ETA=52min
+    step 13700/15258  loss=3.0197  lr=3.72e-05  ETA=50min
+    step 13750/15258  loss=3.1629  lr=3.67e-05  ETA=49min
+    step 13800/15258  loss=3.1476  lr=3.63e-05  ETA=47min
+    step 13850/15258  loss=3.1488  lr=3.59e-05  ETA=45min
+    step 13900/15258  loss=3.0798  lr=3.55e-05  ETA=44min
+    step 13950/15258  loss=3.2100  lr=3.51e-05  ETA=42min
+    step 14000/15258  loss=3.1563  lr=3.47e-05  ETA=40min
+    step 14050/15258  loss=3.0660  lr=3.43e-05  ETA=39min
+    step 14100/15258  loss=3.1369  lr=3.40e-05  ETA=37min
+    step 14150/15258  loss=3.0571  lr=3.36e-05  ETA=36min
+    step 14200/15258  loss=3.2032  lr=3.33e-05  ETA=34min
+    step 14250/15258  loss=3.1702  lr=3.30e-05  ETA=32min
+    step 14300/15258  loss=3.1134  lr=3.27e-05  ETA=31min
+    step 14350/15258  loss=3.1001  lr=3.24e-05  ETA=29min
+    step 14400/15258  loss=3.1086  lr=3.22e-05  ETA=28min
+    step 14450/15258  loss=3.2329  lr=3.19e-05  ETA=26min
+    step 14500/15258  loss=3.2167  lr=3.17e-05  ETA=24min
+    step 14550/15258  loss=3.0899  lr=3.15e-05  ETA=23min
+    step 14600/15258  loss=3.1241  lr=3.13e-05  ETA=21min
+    step 14650/15258  loss=2.9977  lr=3.11e-05  ETA=20min
+    step 14700/15258  loss=3.1241  lr=3.09e-05  ETA=18min
+    step 14750/15258  loss=3.0715  lr=3.08e-05  ETA=16min
+    step 14800/15258  loss=3.1576  lr=3.06e-05  ETA=15min
+    step 14850/15258  loss=3.0622  lr=3.05e-05  ETA=13min
+    step 14900/15258  loss=3.1820  lr=3.04e-05  ETA=11min
+    step 14950/15258  loss=3.1745  lr=3.03e-05  ETA=10min
+    step 15000/15258  loss=3.0564  lr=3.02e-05  ETA=8min
+    step 15050/15258  loss=3.1139  lr=3.01e-05  ETA=7min
+    step 15100/15258  loss=3.1099  lr=3.01e-05  ETA=5min
+    step 15150/15258  loss=3.0861  lr=3.00e-05  ETA=3min
+    step 15200/15258  loss=3.1109  lr=3.00e-05  ETA=2min
+    step 15250/15258  loss=3.1433  lr=3.00e-05  ETA=0min
+
+  [CKPT] hybrid1.5_r16_750m_2k_1bdata_ckpt step_15258 (100.0%) -> save+eval
+    L=1024: PPL=17.529  (4 chunks)
+    L=2048: PPL=21.648  (4 chunks)
+    L=4096: PPL=42.257  (4 chunks)
+    L=8192: PPL=121.583  (4 chunks)
+    L=16384: PPL=267.703  (4 chunks)
+  L=1024_d=0.5 ... gap=+1.594  ret=100%  AR=85%  (20 trials)
+  L=2048_d=0.5 ... gap=+1.530  ret=100%  AR=35%  (20 trials)
+  L=4096_d=0.5 ... gap=+0.096  ret=65%  AR=0%  (20 trials)
+  L=8192_d=0.5 ... gap=+0.116  ret=80%  AR=0%  (20 trials)
+    [CKPT-RULER] Multi-needle at step=15258 (100.0%)
+  L=2048 (5 needles, 8 trials)... per_needle=88%  all_needle=38%  gap=+0.538  (8 trials)
+  L=4096 (5 needles, 8 trials)... per_needle=60%  all_needle=0%  gap=+0.010  (8 trials)
+  L=8192 (5 needles, 8 trials)... per_needle=40%  all_needle=0%  gap=-0.067  (8 trials)
+  Training done in 492.0 min
+    L=1024: PPL=19.468  (6 chunks)
+    L=2048: PPL=23.180  (6 chunks)
+    L=4096: PPL=39.532  (6 chunks)
+    L=8192: PPL=121.343  (6 chunks)
+    L=16384: PPL=261.739  (6 chunks)
+  Passkey eval (40 trials/length)
+  L=1024_d=0.5 ... gap=+1.558  ret=100%  AR=82%  (40 trials)
+  L=2048_d=0.5 ... gap=+1.477  ret=100%  AR=45%  (40 trials)
+  L=4096_d=0.5 ... gap=+0.098  ret=65%  AR=0%  (40 trials)
+  L=8192_d=0.5 ... gap=+0.036  ret=62%  AR=0%  (40 trials)
+  Multi-needle eval (5 needles, 8 trials)
+  L=2048 (5 needles, 8 trials)... per_needle=88%  all_needle=38%  gap=+0.538  (8 trials)
+  L=4096 (5 needles, 8 trials)... per_needle=60%  all_needle=0%  gap=+0.010  (8 trials)
+  L=8192 (5 needles, 8 trials)... per_needle=40%  all_needle=0%  gap=-0.067  (8 trials)
+
+======================================================================
+  SUMMARY (750M, 2 runs, 1B data, checkpoint eval)
+======================================================================
+  Geo    : ret=0.8187, ppl16k=245.09
+  Hybrid : ret=0.8187, ppl16k=261.739
+  Hybrid vs Geo retrieval: +0.00%
+  Hybrid vs Geo PPL@16K: +6.79%
+
+Saved: /root/autodl-tmp/evq_phase9/phase9f_750m_2k_dual_1bdata_ckpt_ruler75_100_summary.json
