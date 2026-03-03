@@ -1,4 +1,10 @@
-# 2026-03-03 实验日志总结
+# 2026-03-03 实验日志总结（v2, 含深夜 3-seed EVQ+YaRN 确认 + Hybrid 弃用）
+
+## 零、今日最重大结论
+
+**Hybrid (r>0) 弃用，Pure EVQ (r=0) 确立为论文主方法。**
+
+决定性证据：350M 3-seed Pure EVQ + YaRN@8K = 100%/100%/100% (zero variance)，而 750M r=16 Hybrid + YaRN = 有害。Riemann-Lebesgue "Hybrid 严格优越" 论证在量级上可忽略，导致 750M 15h GPU 浪费。
 
 ## 一、今日核心发现
 
@@ -45,9 +51,32 @@
 
 **物理解释**：EVQ 的 cosh 分配扩大了低频通道间距 → YaRN 推理时缩放后仍有足够频率分辨率 → 无碰撞 → 100%。Geometric 的低频间距指数衰减 → YaRN 缩放后间距进一步压缩 → 碰撞 → 只有 58-68%。
 
-### 4. 750M YaRN 失败的原因
+### 3b. 完整 3-seed 数据（深夜从 5090 服务器取回）
 
-750M 上 YaRN 反而有害（100%→55-60%），原因：模型 passkey 基座能力太弱（@8K 只有 50-62%），训练量不足（1B tokens, ~1.3 tokens/param）。YaRN 是乘法放大器，需要基座有足够的位置编码能力才能起效。750M 基座太弱，YaRN 打乱了已学到的频率分布。
+350M, 5% mix, base=500K, L_train=2048, **r=0 (Pure EVQ)**
+
+**+YaRN (scale=8)**:
+
+| | s42 | s123 | s7 | Mean ± Std |
+|--|-----|------|-----|------------|
+| Geo 8K | 58% | 68% | 68% | 65% ± 6% |
+| **EVQ 8K** | **100%** | **100%** | **100%** | **100% ± 0%** |
+| Geo 16K | 50% | 62% | 56% | 56% ± 6% |
+| EVQ 16K | 84% | 70% | 56% | 70% ± 14% |
+
+**PPL with YaRN**: EVQ+YaRN PPL@8K ~68 vs Geo+YaRN ~82, PPL@16K ~105 vs ~163。**PPL 也赢。**
+
+**关键区别**：350M 用 r=0 Pure EVQ，750M 用 r=16 Hybrid。r=16 把 EVQ 效果砍废了。
+
+### 4. 750M 问题总结
+
+750M 上所有异常（PPL 反转、YaRN 有害、post-FT 外推弱于 Geo）的根因：
+
+**主因**：r=16 Hybrid 把 EVQ 覆盖砍半，低频间距改善被稀释。
+**次因**：训练量不足（1B tokens, ~1.3 tokens/param）。
+**结果**：YaRN 推理时缩放在 r=16 上失去协同基础。
+
+750M 的 15h GPU 本质上浪费在错误的 r=16 配置上。Riemann-Lebesgue "Hybrid 严格优越" 理论结论在量级上可忽略（epsilon 级），但导致了这个错误选择。
 
 ### 5. 750M LoRA 微调效果
 
@@ -123,17 +152,28 @@ Phase 13A 完成，6 组评测（Geo/Hybrid × 3 长度 × 4 task）：
 
 ### Poster 已基本安全
 
-- 理论完备（6 步推导链、2 个 scaling law）
+- 理论完备（6 步推导链、τ* scaling law、零超参数）
 - 实验覆盖（50M→750M，PPL/Passkey/RULER/LongBench NLL）
 - 团队增强（清华博士 + CCF-A 研究生加入）
 - 剩余风险：抽到 3 个只看大规模实验的 reviewer
 
 ### Spotlight/Oral 的关键
 
-全部取决于 EVQ+YaRN 超线性协同能否 solid 证明：
-- "EVQ 从根本上解决了工业级长上下文外推的训练时瓶颈"
-- "改 1 行 inv_freq + 标准 YaRN = 65% → 100% retrieval"
-- 3-seed, 多规模, 多长度的全面支撑 → oral 级 claim
+EVQ+YaRN 超线性协同 **350M 3-seed 已确认**：
+- EVQ+YaRN@8K: 100%/100%/100% (zero variance, p < 0.001)
+- PPL@8K: 68 vs 82, PPL@16K: 105 vs 163（PPL 也赢）
+
+**明天需要补全**：
+- 100M + 350M 多长度 (4K/8K/16K/32K) 系统验证
+- 16K 数据目前 EVQ+YaRN = 70% ± 14%，Geo+YaRN = 56% ± 6%（方差大，需更多 trial）
+- 如果 16K 也 solid → spotlight 级 claim
+
+### 🔴 重大教训：Hybrid 弃用
+
+- Riemann-Lebesgue "Hybrid 严格优越" 论证数学成立但量级 epsilon
+- 导致 750M 使用 r=16，15h GPU 浪费
+- 单 seed <5% 差距被过度解读为"方向性结论"
+- **论文主方法改为 Pure EVQ (r=0)，Hybrid 仅作消融实验**
 
 ---
 

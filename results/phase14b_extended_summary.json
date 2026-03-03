@@ -1,0 +1,170 @@
+{
+  "geo": {
+    "pre_ft": {
+      "label": "geo_750m_pre",
+      "global": {
+        "total_trials": 100,
+        "mean_nll_gap": 0.3034,
+        "retrieval_rate": 0.68,
+        "ar_exact_match_rate": 0.01
+      },
+      "summary": {
+        "L=2048_d=0.5": {
+          "mean_nll_gap": 1.3255,
+          "retrieval_rate": 1.0,
+          "ar_exact_match_rate": 0.05,
+          "trials": 20
+        },
+        "L=4096_d=0.5": {
+          "mean_nll_gap": 0.1602,
+          "retrieval_rate": 0.8,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        },
+        "L=8192_d=0.5": {
+          "mean_nll_gap": 0.0893,
+          "retrieval_rate": 0.6,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        },
+        "L=16384_d=0.5": {
+          "mean_nll_gap": -0.0034,
+          "retrieval_rate": 0.5,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        },
+        "L=32768_d=0.5": {
+          "mean_nll_gap": -0.0542,
+          "retrieval_rate": 0.5,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        }
+      }
+    },
+    "post_ft": {
+      "label": "geo_750m_post",
+      "global": {
+        "total_trials": 100,
+        "mean_nll_gap": 1.6475,
+        "retrieval_rate": 0.91,
+        "ar_exact_match_rate": 0.53
+      },
+      "summary": {
+        "L=2048_d=0.5": {
+          "mean_nll_gap": 2.6956,
+          "retrieval_rate": 1.0,
+          "ar_exact_match_rate": 1.0,
+          "trials": 20
+        },
+        "L=4096_d=0.5": {
+          "mean_nll_gap": 2.6736,
+          "retrieval_rate": 1.0,
+          "ar_exact_match_rate": 1.0,
+          "trials": 20
+        },
+        "L=8192_d=0.5": {
+          "mean_nll_gap": 1.724,
+          "retrieval_rate": 1.0,
+          "ar_exact_match_rate": 0.65,
+          "trials": 20
+        },
+        "L=16384_d=0.5": {
+          "mean_nll_gap": 1.0411,
+          "retrieval_rate": 1.0,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        },
+        "L=32768_d=0.5": {
+          "mean_nll_gap": 0.103,
+          "retrieval_rate": 0.55,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        }
+      }
+    }
+  },
+  "hybrid": {
+    "pre_ft": {
+      "label": "hybrid_750m_pre",
+      "global": {
+        "total_trials": 100,
+        "mean_nll_gap": 0.34,
+        "retrieval_rate": 0.62,
+        "ar_exact_match_rate": 0.07
+      },
+      "summary": {
+        "L=2048_d=0.5": {
+          "mean_nll_gap": 1.5297,
+          "retrieval_rate": 1.0,
+          "ar_exact_match_rate": 0.35,
+          "trials": 20
+        },
+        "L=4096_d=0.5": {
+          "mean_nll_gap": 0.096,
+          "retrieval_rate": 0.65,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        },
+        "L=8192_d=0.5": {
+          "mean_nll_gap": 0.116,
+          "retrieval_rate": 0.8,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        },
+        "L=16384_d=0.5": {
+          "mean_nll_gap": -0.0253,
+          "retrieval_rate": 0.3,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        },
+        "L=32768_d=0.5": {
+          "mean_nll_gap": -0.0165,
+          "retrieval_rate": 0.35,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        }
+      }
+    },
+    "post_ft": {
+      "label": "hybrid_750m_post",
+      "global": {
+        "total_trials": 100,
+        "mean_nll_gap": 1.4077,
+        "retrieval_rate": 0.81,
+        "ar_exact_match_rate": 0.55
+      },
+      "summary": {
+        "L=2048_d=0.5": {
+          "mean_nll_gap": 2.6734,
+          "retrieval_rate": 1.0,
+          "ar_exact_match_rate": 1.0,
+          "trials": 20
+        },
+        "L=4096_d=0.5": {
+          "mean_nll_gap": 2.6653,
+          "retrieval_rate": 1.0,
+          "ar_exact_match_rate": 1.0,
+          "trials": 20
+        },
+        "L=8192_d=0.5": {
+          "mean_nll_gap": 1.591,
+          "retrieval_rate": 1.0,
+          "ar_exact_match_rate": 0.75,
+          "trials": 20
+        },
+        "L=16384_d=0.5": {
+          "mean_nll_gap": 0.1072,
+          "retrieval_rate": 0.55,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        },
+        "L=32768_d=0.5": {
+          "mean_nll_gap": 0.0016,
+          "retrieval_rate": 0.5,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        }
+      }
+    }
+  }
+}
