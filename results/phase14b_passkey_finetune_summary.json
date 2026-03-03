@@ -1,0 +1,354 @@
+{
+  "geo": {
+    "tag": "geo_750m",
+    "ckpt_path": "/root/autodl-tmp/evq_phase9/seed42/geo_750m_2k_1bdata_ckpt/checkpoints/step_15258.pt",
+    "ft_steps": 50,
+    "ft_lr": 0.0001,
+    "ft_seq_len": 4096,
+    "ft_batch_size": 4,
+    "ft_losses": [
+      3.7897849082946777,
+      3.546008586883545,
+      3.4313955307006836,
+      3.3425397872924805,
+      3.306532382965088,
+      2.867086887359619,
+      2.8076353073120117,
+      2.899806499481201,
+      2.700885772705078,
+      2.6843409538269043,
+      2.468000888824463,
+      2.440459728240967,
+      2.8530378341674805,
+      2.385695457458496,
+      2.3623666763305664,
+      2.2170286178588867,
+      2.131631374359131,
+      2.023198366165161,
+      2.1907618045806885,
+      1.907028317451477,
+      1.82319176197052,
+      1.5329816341400146,
+      1.9953851699829102,
+      2.341754913330078,
+      1.4348652362823486,
+      1.2874833345413208,
+      1.8904181718826294,
+      1.5196449756622314,
+      1.2451558113098145,
+      1.246819257736206,
+      1.147958755493164,
+      1.2388014793395996,
+      1.4604190587997437,
+      1.096146821975708,
+      0.9668394327163696,
+      1.129075527191162,
+      0.726681113243103,
+      0.6302686929702759,
+      1.0386513471603394,
+      0.8055810332298279,
+      0.7771904468536377,
+      0.6622881889343262,
+      0.6651808619499207,
+      0.5349239110946655,
+      0.6720044612884521,
+      0.5364392995834351,
+      0.9063171148300171,
+      0.524103045463562,
+      0.30882930755615234,
+      0.42534369230270386
+    ],
+    "pre_finetune": {
+      "label": "geo_750m_pre",
+      "global": {
+        "total_trials": 60,
+        "mean_nll_gap": 0.525,
+        "retrieval_rate": 0.8,
+        "ar_exact_match_rate": 0.0167
+      },
+      "summary": {
+        "L=2048_d=0.5": {
+          "mean_nll_gap": 1.3255,
+          "retrieval_rate": 1.0,
+          "ar_exact_match_rate": 0.05,
+          "trials": 20
+        },
+        "L=4096_d=0.5": {
+          "mean_nll_gap": 0.1602,
+          "retrieval_rate": 0.8,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        },
+        "L=8192_d=0.5": {
+          "mean_nll_gap": 0.0893,
+          "retrieval_rate": 0.6,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        }
+      }
+    },
+    "pre_finetune_yarn4x": {
+      "label": "geo_750m_pre+YaRN@4.0x",
+      "global": {
+        "total_trials": 60,
+        "mean_nll_gap": 0.0531,
+        "retrieval_rate": 0.5667,
+        "ar_exact_match_rate": 0.0
+      },
+      "summary": {
+        "L=2048_d=0.5": {
+          "mean_nll_gap": 0.1647,
+          "retrieval_rate": 0.7,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        },
+        "L=4096_d=0.5": {
+          "mean_nll_gap": -0.065,
+          "retrieval_rate": 0.45,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        },
+        "L=8192_d=0.5": {
+          "mean_nll_gap": 0.0596,
+          "retrieval_rate": 0.55,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        }
+      }
+    },
+    "post_finetune": {
+      "label": "geo_750m_post",
+      "global": {
+        "total_trials": 60,
+        "mean_nll_gap": 2.3644,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 0.8833
+      },
+      "summary": {
+        "L=2048_d=0.5": {
+          "mean_nll_gap": 2.6956,
+          "retrieval_rate": 1.0,
+          "ar_exact_match_rate": 1.0,
+          "trials": 20
+        },
+        "L=4096_d=0.5": {
+          "mean_nll_gap": 2.6736,
+          "retrieval_rate": 1.0,
+          "ar_exact_match_rate": 1.0,
+          "trials": 20
+        },
+        "L=8192_d=0.5": {
+          "mean_nll_gap": 1.724,
+          "retrieval_rate": 1.0,
+          "ar_exact_match_rate": 0.65,
+          "trials": 20
+        }
+      }
+    },
+    "post_finetune_yarn4x": {
+      "label": "geo_750m_post+YaRN@4.0x",
+      "global": {
+        "total_trials": 60,
+        "mean_nll_gap": 0.0293,
+        "retrieval_rate": 0.6,
+        "ar_exact_match_rate": 0.0
+      },
+      "summary": {
+        "L=2048_d=0.5": {
+          "mean_nll_gap": 0.0424,
+          "retrieval_rate": 0.65,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        },
+        "L=4096_d=0.5": {
+          "mean_nll_gap": -0.0078,
+          "retrieval_rate": 0.6,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        },
+        "L=8192_d=0.5": {
+          "mean_nll_gap": 0.0532,
+          "retrieval_rate": 0.55,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        }
+      }
+    }
+  },
+  "hybrid": {
+    "tag": "hybrid_750m",
+    "ckpt_path": "/root/autodl-tmp/evq_phase9/seed42/hybrid1.5_r16_750m_2k_1bdata_ckpt/checkpoints/step_15258.pt",
+    "ft_steps": 50,
+    "ft_lr": 0.0001,
+    "ft_seq_len": 4096,
+    "ft_batch_size": 4,
+    "ft_losses": [
+      3.7818222045898438,
+      3.565661668777466,
+      3.4478726387023926,
+      3.3680148124694824,
+      3.343259811401367,
+      2.910037040710449,
+      2.8343935012817383,
+      2.9257936477661133,
+      2.737137794494629,
+      2.711925506591797,
+      2.503716230392456,
+      2.4659905433654785,
+      2.883183002471924,
+      2.3970067501068115,
+      2.382828950881958,
+      2.235126256942749,
+      2.15219783782959,
+      2.0633153915405273,
+      2.2150845527648926,
+      1.9270522594451904,
+      1.8337804079055786,
+      1.5648012161254883,
+      2.015082359313965,
+      2.341132164001465,
+      1.451509952545166,
+      1.303015947341919,
+      1.9087457656860352,
+      1.5512220859527588,
+      1.2751179933547974,
+      1.2762742042541504,
+      1.1516005992889404,
+      1.259087324142456,
+      1.47011399269104,
+      1.1201003789901733,
+      0.9894917011260986,
+      1.1703684329986572,
+      0.7493883371353149,
+      0.6382342576980591,
+      1.0428264141082764,
+      0.8205686807632446,
+      0.7919827103614807,
+      0.6664774417877197,
+      0.6801174879074097,
+      0.5595027208328247,
+      0.6789013743400574,
+      0.554856538772583,
+      0.921750009059906,
+      0.5555544495582581,
+      0.30460458993911743,
+      0.4334357678890228
+    ],
+    "pre_finetune": {
+      "label": "hybrid_750m_pre",
+      "global": {
+        "total_trials": 60,
+        "mean_nll_gap": 0.5806,
+        "retrieval_rate": 0.8167,
+        "ar_exact_match_rate": 0.1167
+      },
+      "summary": {
+        "L=2048_d=0.5": {
+          "mean_nll_gap": 1.5297,
+          "retrieval_rate": 1.0,
+          "ar_exact_match_rate": 0.35,
+          "trials": 20
+        },
+        "L=4096_d=0.5": {
+          "mean_nll_gap": 0.096,
+          "retrieval_rate": 0.65,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        },
+        "L=8192_d=0.5": {
+          "mean_nll_gap": 0.116,
+          "retrieval_rate": 0.8,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        }
+      }
+    },
+    "pre_finetune_yarn4x": {
+      "label": "hybrid_750m_pre+YaRN@4.0x",
+      "global": {
+        "total_trials": 60,
+        "mean_nll_gap": 0.0896,
+        "retrieval_rate": 0.5833,
+        "ar_exact_match_rate": 0.0
+      },
+      "summary": {
+        "L=2048_d=0.5": {
+          "mean_nll_gap": 0.2216,
+          "retrieval_rate": 0.7,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        },
+        "L=4096_d=0.5": {
+          "mean_nll_gap": 0.0093,
+          "retrieval_rate": 0.5,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        },
+        "L=8192_d=0.5": {
+          "mean_nll_gap": 0.0377,
+          "retrieval_rate": 0.55,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        }
+      }
+    },
+    "post_finetune": {
+      "label": "hybrid_750m_post",
+      "global": {
+        "total_trials": 60,
+        "mean_nll_gap": 2.3099,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 0.9167
+      },
+      "summary": {
+        "L=2048_d=0.5": {
+          "mean_nll_gap": 2.6734,
+          "retrieval_rate": 1.0,
+          "ar_exact_match_rate": 1.0,
+          "trials": 20
+        },
+        "L=4096_d=0.5": {
+          "mean_nll_gap": 2.6653,
+          "retrieval_rate": 1.0,
+          "ar_exact_match_rate": 1.0,
+          "trials": 20
+        },
+        "L=8192_d=0.5": {
+          "mean_nll_gap": 1.591,
+          "retrieval_rate": 1.0,
+          "ar_exact_match_rate": 0.75,
+          "trials": 20
+        }
+      }
+    },
+    "post_finetune_yarn4x": {
+      "label": "hybrid_750m_post+YaRN@4.0x",
+      "global": {
+        "total_trials": 60,
+        "mean_nll_gap": -0.017,
+        "retrieval_rate": 0.5333,
+        "ar_exact_match_rate": 0.0
+      },
+      "summary": {
+        "L=2048_d=0.5": {
+          "mean_nll_gap": 0.0337,
+          "retrieval_rate": 0.55,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        },
+        "L=4096_d=0.5": {
+          "mean_nll_gap": -0.0212,
+          "retrieval_rate": 0.6,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        },
+        "L=8192_d=0.5": {
+          "mean_nll_gap": -0.0635,
+          "retrieval_rate": 0.45,
+          "ar_exact_match_rate": 0.0,
+          "trials": 20
+        }
+      }
+    }
+  }
+}
