@@ -433,6 +433,36 @@ RULER 8 trials 方差极大（all-needle 差 3 个 trial = 37.5pp），统计效
 5. **检索距离重分布**：40-trial 全局 retrieval 相同 (81.87%)，但 Hybrid 从 L=4K 推移 +12.5pp 到 L=8K
 6. **AR Precision**：Hybrid 30% vs Geo 16.25% (+13.75pp)，不只是定位到 passkey，还能精确复现内容
 
+### 11.10 🆕 128-tok PE-Dominant Regime 对标实验（Phase 6, 125M, FineWeb-Edu + TinyStories）
+
+> **对标论文**：DAPE (2024)，可学习频率参数。我们在相同设置下完胜：可解析闭式解、0 额外参数、更强外推。
+> **数据源**：`data/evq_128tok_results/`，`docs/exp/phase6_report.md`
+
+**配置**：125M GPT-2, seq_len=128, 15M tokens, base=500K
+
+#### PPL 外推（128 → 8K，64× extrapolation）
+
+| 方法 | 额外参数 | FW PPL@128 | FW PPL@8K | Δ vs Geo | TS PPL@8K | Δ vs Geo |
+|------|---------|------------|-----------|----------|-----------|----------|
+| Geometric (τ=0) | 0 | 184.9 | 513.7 | — | 30.95 | — |
+| EVQ τ=1.5 | 0 | 183.0 | 419.7 | -18.3% | 22.29 | -28.0% |
+| **EVQ τ=5.0** | **0** | **182.0** | **333.7** | **-35.0%** | **13.44** | **-56.6%** |
+| DAPE (lr×100) | 32 | 183.6 | 455.3 | -11.4% | — | — |
+| Learnable τ (3-seed) | 1 | 181.2 | 437.9 | -14.8% | — | — |
+| YaRN-train | 0 | — | 1136.5 | +121% ❌ | 250.8 | +710% ❌ |
+| PI (inference) | 0 | — | 539.7 | +5.1% ❌ | 92.9 | +200% ❌ |
+
+**核心结论**：
+
+1. **序列内几乎无损**：PPL@128 Geo 184.9 vs EVQ τ=5.0 182.0（<2%），TinyStories 12.63 vs 12.68（<1%）
+2. **序列外全赢，越远越赢**：外推距离从 2× 到 64×，EVQ 优势从几个百分点扩大到 -35%/-57%
+3. **0 参数 > 32 参数**：EVQ 闭式解（0 额外参数）PPL@8K=334 完胜 DAPE（32 可学习参数）455
+4. **Learnable τ 失败 = 理论必要性证明**：3-seed 全部收敛 τ≈1.14±0.003。ID PPL 跨 τ=0~5.0 仅变化 <2%，训练 loss 无梯度信号区分好坏 τ → 必须用理论推导 τ*
+5. **YaRN/PI 训练时灾难性**：YaRN-train PPL@8K=1136（2.2× Geo），PI 也退化。inference-time 方法不能替代 training-time 频率优化
+6. **PE-dominant regime 是最纯净的 ablation**：训练长度极短，模型权重几乎不学位置信息，频率分配质量是唯一决定外推能力的变量
+
+**论文定位**：对标 DAPE 2024 的直接实验。用相同（甚至更极端）的设置证明 EVQ 更强，同时强调我们是可解析闭式解而非暴力学习。
+
 ---
 
 ## 12. Capability-Preserving Property + Passkey Mix 验证 ✅
@@ -540,7 +570,7 @@ def evq_cosh_inv_freq(d_head, L, base):
 
 ## 14. 论文叙事方向（v6, 2026-03-04 凌晨，重大修正：Pure EVQ + YaRN 协同）
 
-**核心叙事（13 层递进，Hybrid→Pure EVQ 修正版）**：
+**核心叙事（14 层递进，Hybrid→Pure EVQ 修正版）**：
 
 1. **变分逆问题**："RoPE frequency allocation is a variational inverse problem with closed-form solution"
 2. **Geometric 是零温极限**："Standard RoPE is the τ=0 degenerate case; for any L > 0, τ* > 0 proving Geometric strictly suboptimal"
@@ -555,6 +585,7 @@ def evq_cosh_inv_freq(d_head, L, base):
 11. **5%→10% 反对称 scaling**："More passkey data makes Geo worse (-22pp) and EVQ better (+22pp). Frequency allocation quality, not data quantity, is the bottleneck for length generalization"
 12. **🆕🔴 EVQ+YaRN 超线性协同（冲击 Spotlight 核心武器）**："Training-time frequency optimization (EVQ) × inference-time position scaling (YaRN) = orthogonal optimization. EVQ+YaRN@8K: 100% (3 seed, zero variance). Geo+YaRN@8K: 65%. PPL@8K: 68 vs 82. EVQ unlocks the training-time bottleneck for long-context extrapolation."
 13. **🆕 r 不是超参数**："r-sweep confirms r=0 ≈ r=4; cosh warp mathematically preserves high-freq (k=0: EVQ = Geometric exactly). Hybrid was over-engineering."
+14. **🆕 128-tok PE-dominant regime 对标实验**："In the extreme short-training regime (128 tokens, 64× extrapolation to 8K), where model weights learn almost nothing about position, EVQ τ=5.0 achieves PPL@8K -35% (FineWeb) / -57% (TinyStories) vs Geometric with <2% in-distribution cost. Closed-form, 0 extra parameters, beats DAPE (32 learnable params, -27%) and YaRN-train (catastrophic, 2.2× worse). This is the cleanest ablation: PE quality is the ONLY variable."
 
 **论文 Figure 规划**：
 
@@ -579,11 +610,13 @@ def evq_cosh_inv_freq(d_head, L, base):
 - ✅ **检索距离重分布**：40-trial 全局 retrieval 相同 81.87%，但 EVQ 向 L=8K 推移 +12.5pp
 - ✅ **🔴 EVQ+YaRN 超线性协同（3-seed）**：EVQ+YaRN@8K 100%（zero variance）vs Geo+YaRN 65%。PPL@8K 68 vs 82, PPL@16K 105 vs 163。训练时频率优化 × 推理时位置缩放 = 正交优化
 - ✅ **r 不是超参数**：r=0 ≈ r=4（噪音级差距）。cosh 分配数学性质自动保持高频不变。Pure EVQ 是正确主方法
+- ✅ **🆕 128-tok PE-dominant regime 对标实验**：125M 在 128-token 训练、64× 外推到 8K。EVQ τ=5.0 PPL@8K -35%（FineWeb）/ -57%（TinyStories）vs Geo，ID PPL 代价 <2%。完胜 DAPE（32 可学习参数，PPL@8K 455 vs EVQ 334）和 YaRN-train（灾难性 1136 vs 514）。Learnable τ 3-seed 收敛到 1.14±0.003，证明 in-dist loss 对 τ 完全平坦——理论推导 τ* 的必要性。**可解析闭式解 + 0 额外参数 + 对标原论文完胜**
 
 **不能说**：
 - ❌ "τ=1.0 universally optimal"（依赖 L）
 - ❌ "τ 把频率推向低频端"（数学上错，见 §3）
-- ❌ "Passkey 证明 EVQ 更强"（from-scratch 小模型下无效）
+- ❌ "Passkey 证明 EVQ 更强"（from-scratch ≤125M 下无效，容量阈值问题）
+- ❌ "128-tok 实验 passkey retrieval 强"（128-tok 训练 125M AR=0%，NLL-gap 仅 55% vs 48.5%，有方向但不 solid）
 
 **🔴 核心瓶颈**：缺乏 real downstream task benchmark（LongBench/SCROLLS/RULER）。规模不是问题（PE 论文以 125M 发表过），下游任务是冲 spotlight 的关键。
 
@@ -602,6 +635,8 @@ def evq_cosh_inv_freq(d_head, L, base):
 | "多给数据就行" | ❌ 5%→10% passkey：Geo -22pp / EVQ +22pp。数据量不是瓶颈 |
 | "为什么不用 YaRN" | ✅ EVQ+YaRN 100%@8K vs Geo+YaRN 65%。YaRN 不是竞品，是互补——但只有 EVQ 能释放 YaRN 全部潜力 |
 | "单 seed" | 350M PPL 3-seed 一致；passkey mix 多 seed 进行中 |
+| "DAPE/learnable 也行" | ✅ 128-tok 实验：DAPE 32 参数 PPL@8K=455，EVQ 0 参数 334（-27%）。Learnable τ 3-seed 收敛 1.14±0.003，in-dist PPL 对 τ 完全平坦，学不到最优值 |
+| "EVQ 只是 heuristic" | ✅ 变分推导闭式解，128-tok regime 验证 PE 质量是唯一变量时仍全赢。对标原论文（DAPE 2024）：可解析、0 额外参数、更强 |
 
 ---
 
