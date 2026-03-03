@@ -136,6 +136,8 @@ def parse_args():
     p.add_argument("--hybrid_r", type=int, default=16,
                    help="Number of geometric dims to keep in hybrid")
     p.add_argument("--base", type=float, default=500000.0, help="RoPE base frequency")
+    p.add_argument("--data_dir", type=str, default="",
+                   help="Local directory with {task}.jsonl files (skips HF download)")
     return p.parse_args()
 
 
@@ -268,34 +270,46 @@ def truncate_prompt_ids(
 
 # ── Data loading ────────────────────────────────────────────────────────────
 
-def load_longbench_task(task_name: str, max_samples: int, seed: int) -> List[dict]:
-    """Load a LongBench task from HuggingFace."""
-    from datasets import load_dataset
+def load_longbench_task(task_name: str, max_samples: int, seed: int,
+                        data_dir: str = "") -> List[dict]:
+    """Load a LongBench task from local JSONL or HuggingFace."""
+    import random
+
+    def _load_jsonl(path):
+        data = []
+        with open(path) as f:
+            for line in f:
+                data.append(json.loads(line))
+        return data
+
+    # Try local data_dir first (preferred - no network needed)
+    if data_dir:
+        local_path = os.path.join(data_dir, f"{task_name}.jsonl")
+        if os.path.exists(local_path):
+            data = _load_jsonl(local_path)
+            if len(data) > max_samples:
+                data = random.Random(seed).sample(data, max_samples)
+            return data
+        # Try data/ subdirectory (LongBench zip extracts to data/)
+        local_path2 = os.path.join(data_dir, "data", f"{task_name}.jsonl")
+        if os.path.exists(local_path2):
+            data = _load_jsonl(local_path2)
+            if len(data) > max_samples:
+                data = random.Random(seed).sample(data, max_samples)
+            return data
+
+    # Fallback: HuggingFace
     try:
+        from datasets import load_dataset
         ds = load_dataset("THUDM/LongBench", task_name, split="test",
                          trust_remote_code=True)
+        data = list(ds)
+        if len(data) > max_samples:
+            data = random.Random(seed).sample(data, max_samples)
+        return data
     except Exception as e:
-        print(f"  [WARN] Failed to load {task_name} from HF: {e}")
-        print(f"  Trying local path...")
-        local_path = f"data/longbench/{task_name}.jsonl"
-        if os.path.exists(local_path):
-            data = []
-            with open(local_path) as f:
-                for line in f:
-                    data.append(json.loads(line))
-            if len(data) > max_samples:
-                import random
-                rng = random.Random(seed)
-                data = rng.sample(data, max_samples)
-            return data
+        print(f"  [WARN] Failed to load {task_name}: {e}")
         raise
-
-    data = list(ds)
-    if len(data) > max_samples:
-        import random
-        rng = random.Random(seed)
-        data = rng.sample(data, max_samples)
-    return data
 
 
 # ── Model loading ───────────────────────────────────────────────────────────
@@ -365,7 +379,8 @@ def evaluate_task(
     print(f"Task: {task_name}")
     print(f"{'='*60}")
 
-    samples = load_longbench_task(task_name, args.max_samples, args.seed)
+    samples = load_longbench_task(task_name, args.max_samples, args.seed,
+                                   getattr(args, 'data_dir', ''))
     print(f"  Loaded {len(samples)} samples")
 
     nlls = []
