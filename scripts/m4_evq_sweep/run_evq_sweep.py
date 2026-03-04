@@ -899,9 +899,10 @@ def run_single(
     if tokenizer is not None:
         print(f"\n  [passkey] NLL-gap evaluation for {run_id}")
         from eval_passkey_scratch import eval_passkey_nll_gap
+        pk_lengths = [L for L in eval_lengths if L >= cfg["seq_len"]][:3]
         passkey_results = eval_passkey_nll_gap(
             model, tokenizer, val_data,
-            lengths=[2048, 4096, 8192],
+            lengths=pk_lengths,
             depths=[0.10, 0.25, 0.50, 0.75, 0.90],
             num_trials=10,
         )
@@ -1011,6 +1012,11 @@ def main() -> None:
                         help="Fixed tau for r-sweep (required when --r_values is set)")
     parser.add_argument("--train_tokens", type=int, default=None,
                         help="Override tier's default train_tokens (e.g. 50000000 for 50M)")
+    parser.add_argument("--seq_len", type=int, default=None,
+                        help="Override training sequence length (default: from tier config). "
+                             "Batch size auto-adjusts to keep tokens/step constant.")
+    parser.add_argument("--batch_size", type=int, default=None,
+                        help="Override batch size (bypasses all auto-adjustment)")
     args = parser.parse_args()
 
     taus = [float(t) for t in args.taus.split(",")]
@@ -1021,6 +1027,18 @@ def main() -> None:
     if args.train_tokens is not None:
         cfg["train_tokens"] = args.train_tokens
         print(f"  [override] train_tokens={cfg['train_tokens']/1e6:.0f}M")
+
+    # Override seq_len if specified (adjust batch_size to keep tokens/step constant)
+    if args.seq_len is not None:
+        orig_seq = cfg["seq_len"]
+        cfg["seq_len"] = args.seq_len
+        cfg["max_position_embeddings"] = args.seq_len
+        scale_factor = orig_seq / args.seq_len
+        cfg["batch_size"] = max(1, int(cfg["batch_size"] * scale_factor))
+        cfg["eval_lengths"] = [args.seq_len * m for m in [1, 2, 4, 8, 16]
+                               if args.seq_len * m <= 16384]
+        print(f"  [override] seq_len={args.seq_len}  batch_size={cfg['batch_size']}  "
+              f"eval_lengths={cfg['eval_lengths']}")
 
     # r-sweep mode setup
     r_sweep_mode = args.r_values is not None
@@ -1044,13 +1062,16 @@ def main() -> None:
             f"passkey_mix_ratio must be within [0,1], got {cfg['passkey_mix_ratio']}"
         )
 
-    # Device-specific adjustments
+    # Device-specific adjustments (skip batch_size override if --seq_len was set,
+    # since batch_size was already scaled to keep tokens/step constant)
+    seq_len_overridden = args.seq_len is not None
     if DEVICE == "mps":
         # MPS float32: no flash attention, full attention matrix materialised
         # Reduce batch + cap eval length to avoid OOM
-        cfg["batch_size"] = min(cfg["batch_size"], 8)
+        if not seq_len_overridden:
+            cfg["batch_size"] = min(cfg["batch_size"], 8)
         cfg["eval_lengths"] = [L for L in cfg["eval_lengths"] if L <= 8192]
-        if args.tier == "350m":
+        if args.tier == "350m" and not seq_len_overridden:
             cfg["batch_size"] = 1
             cfg["eval_lengths"] = [2048, 4096]
         print(f"  [MPS] Adjusted: batch={cfg['batch_size']}, eval_lengths={cfg['eval_lengths']}")
@@ -1065,22 +1086,29 @@ def main() -> None:
         vram_gb = total_mem / (1024 ** 3)
         print(f"  [CUDA] GPU: {props.name}, VRAM: {vram_gb:.1f} GB")
         if vram_gb >= 80:
-            if args.tier == "500m":
-                cfg["batch_size"] = 16
-            elif args.tier == "350m":
-                cfg["batch_size"] = 8
+            if not seq_len_overridden:
+                if args.tier == "500m":
+                    cfg["batch_size"] = 16
+                elif args.tier == "350m":
+                    cfg["batch_size"] = 8
             if args.eval_16k and 16384 not in cfg["eval_lengths"]:
                 cfg["eval_lengths"].append(16384)
             print(f"  [CUDA >=80GB] Adjusted {args.tier}: batch={cfg['batch_size']}, eval={cfg['eval_lengths']}")
         elif vram_gb < 40:
-            if args.tier == "50m":
-                cfg["batch_size"] = 8
-            elif args.tier == "125m":
-                cfg["batch_size"] = 4
-            elif args.tier in ("350m", "500m"):
-                cfg["batch_size"] = 2
-                cfg["eval_lengths"] = [2048, 4096, 8192]
+            if not seq_len_overridden:
+                if args.tier == "50m":
+                    cfg["batch_size"] = 8
+                elif args.tier == "125m":
+                    cfg["batch_size"] = 4
+                elif args.tier in ("350m", "500m"):
+                    cfg["batch_size"] = 2
+            cfg["eval_lengths"] = [L for L in cfg["eval_lengths"] if L <= 8192]
             print(f"  [CUDA <40GB] Adjusted {args.tier}: batch={cfg['batch_size']}, eval={cfg['eval_lengths']}")
+
+    # Manual batch_size override (highest priority)
+    if args.batch_size is not None:
+        cfg["batch_size"] = args.batch_size
+        print(f"  [override] batch_size={cfg['batch_size']}")
 
     if not args.work_dir:
         args.work_dir = str(Path.home() / "evq_m4_sweep")
