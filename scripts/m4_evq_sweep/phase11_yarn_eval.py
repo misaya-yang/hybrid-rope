@@ -2,6 +2,8 @@
 """
 Phase 11 YaRN Post-Eval: Load trained checkpoints, apply YaRN scaling, re-evaluate PPL.
 Tests EVQ+YaRN synergy vs Geo+YaRN at various extrapolation ratios.
+
+Multi-scale: for each eval length, test with multiple YaRN scales to find optimal.
 """
 
 import json, math, os, sys, gc
@@ -28,61 +30,81 @@ TRAIN_LEN = 256
 BASE = 500_000.0
 DIM = 64
 
+# YaRN scales to test — from exact match to over-scaled
+YARN_SCALES = [1.0, 2.0, 4.0, 8.0, 16.0, 32.0]
+
 
 def build_yarn_inv_freq(base_inv, head_dim, scale):
-    """YaRN progressive frequency scaling with smoothstep ramp."""
+    """YaRN progressive frequency scaling with smoothstep ramp.
+
+    Follows the standard YaRN formula:
+    - Low-freq dims (position-encoding): scale normally (divide by scale)
+    - High-freq dims (local): leave untouched
+    - Middle dims: smoothstep interpolation
+    - Attention temperature correction
+    """
+    if scale <= 1.0:
+        return base_inv.clone()
     K = head_dim // 2
     idx = torch.arange(K, dtype=torch.float64)
+    # YaRN ramp parameters (standard: beta_fast=32, beta_slow=1 → 20%-90% range)
     start = int(0.20 * K)
     end = int(0.90 * K)
     if end <= start:
         end = min(K - 1, start + 1)
     ramp = torch.clamp((idx - start) / float(max(1, end - start)), 0.0, 1.0)
     ramp = ramp * ramp * (3.0 - 2.0 * ramp)  # smoothstep
-    temperature = 1.0 + 0.07 * math.log2(scale) if scale > 1.0 else 1.0
+    # Temperature correction
+    temperature = 1.0 + 0.07 * math.log2(scale)
     yarn_scale = (scale ** ramp) * (temperature ** (0.5 * ramp))
     return (base_inv.double() / yarn_scale).float()
 
 
-def eval_ppl_with_inv_freq(model, val_data, inv_freq, eval_lengths, n_chunks=8):
-    """Evaluate PPL after swapping in new inv_freq."""
-    # Swap inv_freq in all layers
+def build_ntk_aware_inv_freq(base_inv, head_dim, base, scale):
+    """NTK-Aware: scaled_base = base * scale^(d/(d-2)), recompute geometric."""
+    if scale <= 1.0:
+        return base_inv.clone()
+    d = head_dim
+    scaled_base = base * (scale ** (d / (d - 2)))
+    K = d // 2
+    idx = torch.arange(K, dtype=torch.float64)
+    inv = 1.0 / (scaled_base ** (2.0 * idx / d))
+    return inv.float()
+
+
+def eval_ppl_single(model, val_data, inv_freq, L, n_chunks=8):
+    """Evaluate PPL at single length after swapping inv_freq."""
     for block in model.blocks:
         block.attn.rope.inv_freq.copy_(inv_freq)
-    model.blocks[0].attn.rope._build(max(eval_lengths) + 100)
+    model.blocks[0].attn.rope._build(L + 100)
 
     model.eval()
     ctx = torch.amp.autocast("cuda", dtype=DTYPE) if USE_AUTOCAST else nullcontext()
     rng = np.random.RandomState(9999)
-    results = {}
 
-    for L in eval_lengths:
-        losses = []
-        max_start = len(val_data) - L
-        if max_start <= 0:
-            continue
-        offsets = sorted(rng.choice(max_start, size=min(n_chunks, max_start // L), replace=False))
-        for offset in offsets:
-            chunk = val_data[offset:offset + L].unsqueeze(0).to(DEVICE)
-            try:
-                with torch.no_grad(), ctx:
-                    logits = model(chunk[:, :-1])
-                    loss = F.cross_entropy(logits.reshape(-1, logits.size(-1)),
-                                           chunk[:, 1:].reshape(-1))
-                losses.append(loss.item())
-            except RuntimeError as e:
-                if "out of memory" in str(e).lower():
-                    print(f"    L={L}: OOM, skipping")
-                    torch.cuda.empty_cache()
-                    break
-                raise
-            finally:
-                del chunk
-        if losses:
-            ppl = math.exp(sum(losses) / len(losses))
-            results[str(L)] = round(ppl, 3)
-            print(f"    L={L:>5d}: PPL={ppl:.2f}  ({len(losses)} chunks)")
-    return results
+    max_start = len(val_data) - L
+    if max_start <= 0:
+        return None
+    offsets = sorted(rng.choice(max_start, size=min(n_chunks, max_start // L), replace=False))
+    losses = []
+    for offset in offsets:
+        chunk = val_data[offset:offset + L].unsqueeze(0).to(DEVICE)
+        try:
+            with torch.no_grad(), ctx:
+                logits = model(chunk[:, :-1])
+                loss = F.cross_entropy(logits.reshape(-1, logits.size(-1)),
+                                       chunk[:, 1:].reshape(-1))
+            losses.append(loss.item())
+        except RuntimeError as e:
+            if "out of memory" in str(e).lower():
+                torch.cuda.empty_cache()
+                break
+            raise
+        finally:
+            del chunk
+    if losses:
+        return round(math.exp(sum(losses) / len(losses)), 3)
+    return None
 
 
 def main():
@@ -96,7 +118,6 @@ def main():
     seeds = [int(s) for s in args.seeds.split(",")]
     methods = args.methods.split(",")
 
-    # Load val data
     val_path = Path("/root/autodl-tmp/evq_phase9/data/val_fineweb-edu_5000000.pt")
     print(f"Loading val data from {val_path}...")
     val_data = torch.load(val_path, weights_only=True)
@@ -128,7 +149,7 @@ def main():
                 print(f"\n  SKIP {run_id} (no checkpoint)")
                 continue
 
-            result_path = WORK / run_id / "yarn_eval.json"
+            result_path = WORK / run_id / "yarn_multi_scale.json"
             if result_path.exists():
                 print(f"\n  SKIP {run_id} (yarn eval exists)")
                 with open(result_path) as f:
@@ -136,10 +157,9 @@ def main():
                 continue
 
             print(f"\n{'='*70}")
-            print(f"  YARN EVAL: {run_id}")
+            print(f"  YARN MULTI-SCALE EVAL: {run_id}")
             print(f"{'='*70}")
 
-            # Load model
             base_inv = base_inv_freqs[method]
             model = GPT(cfg, base_inv).to(DEVICE)
             state = torch.load(model_path, map_location=DEVICE, weights_only=True)
@@ -147,27 +167,72 @@ def main():
 
             result = {"run_id": run_id, "method": method, "seed": seed}
 
-            # For each eval length > TRAIN_LEN, apply YaRN with appropriate scale
-            for yarn_scale_name, yarn_scales in [
-                ("yarn_auto", None),  # auto scale = L_eval / L_train
-            ]:
-                yarn_ppl = {}
-                for L in EVAL_LENGTHS:
-                    if L <= TRAIN_LEN:
-                        # No YaRN needed for in-distribution
+            # 1. Raw PPL (no scaling) at all lengths
+            print(f"\n  [raw] No scaling:")
+            raw_ppl = {}
+            for L in EVAL_LENGTHS:
+                ppl = eval_ppl_single(model, val_data, base_inv, L)
+                if ppl:
+                    raw_ppl[str(L)] = ppl
+                    print(f"    L={L:>5d}: PPL={ppl:.2f}")
+            result["raw"] = raw_ppl
+
+            # 2. YaRN at multiple scales for each eval length
+            print(f"\n  [yarn] Multi-scale:")
+            yarn_results = {}
+            for L in EVAL_LENGTHS:
+                if L <= TRAIN_LEN:
+                    continue
+                best_ppl = None
+                best_scale = None
+                scale_ppls = {}
+                for scale in YARN_SCALES:
+                    if scale < 1.0:
                         continue
+                    yarn_inv = build_yarn_inv_freq(base_inv, DIM, scale)
+                    ppl = eval_ppl_single(model, val_data, yarn_inv, L)
+                    if ppl:
+                        scale_ppls[f"s{scale:.0f}"] = ppl
+                        if best_ppl is None or ppl < best_ppl:
+                            best_ppl = ppl
+                            best_scale = scale
+                yarn_results[str(L)] = {
+                    "scales": scale_ppls,
+                    "best_ppl": best_ppl,
+                    "best_scale": best_scale,
+                }
+                print(f"    L={L:>5d}: {scale_ppls}  best=s{best_scale}({best_ppl:.1f})")
+            result["yarn_multi"] = yarn_results
+
+            # 3. YaRN with auto scale (L/L_train) — the standard approach
+            print(f"\n  [yarn_auto] scale = L/L_train:")
+            yarn_auto = {}
+            for L in EVAL_LENGTHS:
+                if L <= TRAIN_LEN:
+                    ppl = eval_ppl_single(model, val_data, base_inv, L)
+                else:
                     scale = L / TRAIN_LEN
                     yarn_inv = build_yarn_inv_freq(base_inv, DIM, scale)
-                    # Eval just this length
-                    ppl = eval_ppl_with_inv_freq(model, val_data, yarn_inv, [L])
-                    yarn_ppl.update(ppl)
+                    ppl = eval_ppl_single(model, val_data, yarn_inv, L)
+                if ppl:
+                    yarn_auto[str(L)] = ppl
+                    print(f"    L={L:>5d} (scale={L/TRAIN_LEN:>5.1f}×): PPL={ppl:.2f}")
+            result["yarn_auto"] = yarn_auto
 
-                # Also eval at TRAIN_LEN with no YaRN (baseline)
-                ppl_base = eval_ppl_with_inv_freq(model, val_data, base_inv, [TRAIN_LEN])
-                yarn_ppl.update(ppl_base)
-
-                result[yarn_scale_name] = yarn_ppl
-                print(f"  {yarn_scale_name}: {yarn_ppl}")
+            # 4. NTK-Aware for comparison
+            print(f"\n  [ntk] NTK-Aware, scale = L/L_train:")
+            ntk_results = {}
+            for L in EVAL_LENGTHS:
+                if L <= TRAIN_LEN:
+                    ppl = eval_ppl_single(model, val_data, base_inv, L)
+                else:
+                    scale = L / TRAIN_LEN
+                    ntk_inv = build_ntk_aware_inv_freq(base_inv, DIM, BASE, scale)
+                    ppl = eval_ppl_single(model, val_data, ntk_inv, L)
+                if ppl:
+                    ntk_results[str(L)] = ppl
+                    print(f"    L={L:>5d} (scale={L/TRAIN_LEN:>5.1f}×): PPL={ppl:.2f}")
+            result["ntk_auto"] = ntk_results
 
             with open(result_path, "w") as f:
                 json.dump(result, f, indent=2)
@@ -178,61 +243,87 @@ def main():
             torch.cuda.empty_cache()
 
     # Save aggregate
-    agg_path = WORK / "yarn_eval_results.json"
+    agg_path = WORK / "yarn_multi_scale_results.json"
     with open(agg_path, "w") as f:
         json.dump(all_results, f, indent=2)
 
-    # Print summary
-    print(f"\n{'='*90}")
-    print(f"  YARN EVAL RESULTS: L_train={TRAIN_LEN}, 350M")
-    print(f"{'='*90}")
+    # ── Print comprehensive summary ────────────────────────────────────
+    sep = "=" * 100
+    print(f"\n{sep}")
+    print(f"  COMPREHENSIVE RESULTS: L_train={TRAIN_LEN}, 350M, 3-seed mean")
+    print(f"{sep}")
+
+    # Compute 3-seed means
+    def mean_ppl(method, key, L):
+        vals = []
+        for s in seeds:
+            r = all_results.get(f"350m_{method}_seed{s}", {})
+            v = r.get(key, {}).get(str(L))
+            if v is not None:
+                vals.append(v)
+        return sum(vals) / len(vals) if vals else None
+
+    header = f"  {'Method':>12s} {'Scale':>8s}"
+    for L in EVAL_LENGTHS:
+        header += f" {'L='+str(L):>8s}"
+    print(header)
+    print("  " + "-" * 90)
 
     for method in methods:
-        print(f"\n  {method.upper()} + YaRN(auto):")
-        header = "    " + " ".join(f"{'L='+str(L):>10s}" for L in EVAL_LENGTHS)
-        print(header)
-
-        for seed in seeds:
-            r = all_results.get(f"350m_{method}_seed{seed}", {})
-            yarn = r.get("yarn_auto", {})
-            # Also load raw PPL for comparison
-            raw_path = WORK / f"350m_{method}_seed{seed}" / "result.json"
-            raw_ppl = {}
-            if raw_path.exists():
-                with open(raw_path) as f:
-                    raw_ppl = json.load(f).get("ppl", {})
-
-            raw_vals = " ".join(f"{raw_ppl.get(str(L), 0):>10.1f}" for L in EVAL_LENGTHS)
-            yarn_vals = " ".join(f"{yarn.get(str(L), 0):>10.1f}" for L in EVAL_LENGTHS)
-            print(f"    raw s={seed:>3d}: {raw_vals}")
-            print(f"    yarn s={seed:>3d}: {yarn_vals}")
-
-    # Delta: YaRN improvement
-    print(f"\n  YaRN IMPROVEMENT (PPL reduction %):")
-    for method in methods:
-        print(f"    {method.upper():>10s}: ", end="")
+        # Raw
+        raw_line = f"  {method:>12s} {'raw':>8s}"
         for L in EVAL_LENGTHS:
-            if L <= TRAIN_LEN:
-                print(f"{'--':>10s}", end=" ")
-                continue
-            raw_ppls = []
-            yarn_ppls = []
-            for seed in seeds:
-                raw_path = WORK / f"350m_{method}_seed{seed}" / "result.json"
-                if raw_path.exists():
-                    with open(raw_path) as f:
-                        rp = json.load(f).get("ppl", {}).get(str(L))
-                        if rp: raw_ppls.append(rp)
-                yr = all_results.get(f"350m_{method}_seed{seed}", {}).get("yarn_auto", {}).get(str(L))
-                if yr: yarn_ppls.append(yr)
-            if raw_ppls and yarn_ppls:
-                raw_m = sum(raw_ppls) / len(raw_ppls)
-                yarn_m = sum(yarn_ppls) / len(yarn_ppls)
-                delta = (yarn_m / raw_m - 1) * 100
-                print(f"{delta:>+9.1f}%", end=" ")
-            else:
-                print(f"{'N/A':>10s}", end=" ")
+            m = mean_ppl(method, "raw", L)
+            raw_line += f" {m:>8.1f}" if m else f" {'--':>8s}"
+        print(raw_line)
+
+        # YaRN auto
+        yarn_line = f"  {method:>12s} {'yarn':>8s}"
+        for L in EVAL_LENGTHS:
+            m = mean_ppl(method, "yarn_auto", L)
+            yarn_line += f" {m:>8.1f}" if m else f" {'--':>8s}"
+        print(yarn_line)
+
+        # NTK
+        ntk_line = f"  {method:>12s} {'ntk':>8s}"
+        for L in EVAL_LENGTHS:
+            m = mean_ppl(method, "ntk_auto", L)
+            ntk_line += f" {m:>8.1f}" if m else f" {'--':>8s}"
+        print(ntk_line)
         print()
+
+    # Delta table: EVQ vs Geo
+    print(f"\n  DELTA vs GEO (raw → raw, yarn → yarn):")
+    for method in methods:
+        if method == "geo":
+            continue
+        for key in ["raw", "yarn_auto", "ntk_auto"]:
+            label = f"{method}+{key.split('_')[0]}"
+            line = f"  {label:>18s}:"
+            for L in EVAL_LENGTHS:
+                geo_m = mean_ppl("geo", key, L)
+                evq_m = mean_ppl(method, key, L)
+                if geo_m and evq_m:
+                    delta = (evq_m / geo_m - 1) * 100
+                    line += f" {delta:>+7.1f}%"
+                else:
+                    line += f" {'--':>8s}"
+            print(line)
+        print()
+
+    # YaRN improvement over raw
+    print(f"\n  YARN IMPROVEMENT (yarn_auto PPL / raw PPL - 1):")
+    for method in methods:
+        line = f"  {method:>12s}:"
+        for L in EVAL_LENGTHS:
+            raw_m = mean_ppl(method, "raw", L)
+            yarn_m = mean_ppl(method, "yarn_auto", L)
+            if raw_m and yarn_m and L > TRAIN_LEN:
+                delta = (yarn_m / raw_m - 1) * 100
+                line += f" {delta:>+7.1f}%"
+            else:
+                line += f" {'--':>8s}"
+        print(line)
 
     print(f"\n  Results saved to {agg_path}")
 

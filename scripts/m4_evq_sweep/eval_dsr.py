@@ -16,21 +16,17 @@ Four curves:
   3. Geo + YaRN    (τ=0, per-length YaRN scaling)
   4. EVQ + YaRN    (τ=1.5, per-length YaRN scaling)
 
-Output:
-  - Accuracy(Δ) curves (retrieval rate vs distance)
-  - AUC over normalized distance [1×, 8×]
-  - Break-point Δ_50 (first distance where accuracy < 50%)
+Performance:
+  - Batched forward passes (default batch=8) for high GPU utilization
+  - correct + wrong sequences interleaved in the same batch
+  - Vectorized NLL computation (no Python loops)
 
 Usage:
     python eval_dsr.py \
         --geo_dir  /path/to/350m_tau0.00_seed42 \
         --evq_dir  /path/to/350m_tau1.50_seed42 \
         --tier 350m --train_len 2048 --base 500000 \
-        --num_trials 50
-
-    # Quick test (10 trials):
-    python eval_dsr.py \
-        --geo_dir ... --evq_dir ... --tier 350m --num_trials 10
+        --num_trials 50 --batch_size 8
 """
 
 from __future__ import annotations
@@ -41,11 +37,13 @@ import math
 import random
 import sys
 import time
+from contextlib import nullcontext
 from pathlib import Path
 from typing import Dict, List, Tuple
 
 import numpy as np
 import torch
+import torch.nn.functional as F
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPT_DIR))
@@ -54,8 +52,6 @@ from run_evq_sweep import GPT, TIER_CONFIGS, get_device_and_dtype, load_val
 from eval_pe_baselines import build_yarn_inv_freq, _swap_inv_freq, _restore_inv_freq
 from eval_passkey_scratch import (
     build_passkey_eval_sequence,
-    _compute_nll_at_positions,
-    _autoregressive_probe,
     PASSKEY_PREFIX,
     PASSKEY_SUFFIX,
     DASH,
@@ -84,40 +80,22 @@ def build_dsr_sequence(
     The probe (query) is always at the end. The needle is placed such that
     the token distance from needle to probe equals `distance`.
 
-    Args:
-        filler_tokens: 1-D tensor of filler token IDs.
-        passkey: Dash-separated digit string, e.g. "7-4-2-9-1".
-        tokenizer: HuggingFace tokenizer.
-        total_length: Total sequence length in tokens.
-        distance: Desired token distance from needle start to probe start.
-
     Returns:
         (input_ids, passkey_start, probe_start)
     """
-    # Convert distance to depth_percent:
-    # probe is at the end, needle at (total_length - distance) from start
-    # depth_percent = needle_position / filler_budget
     full_marker_text = f"{PASSKEY_PREFIX}{passkey}{PASSKEY_SUFFIX}"
     probe_text = PASSKEY_PREFIX
     full_marker_ids = tokenizer.encode(full_marker_text, add_special_tokens=False)
     probe_ids = tokenizer.encode(probe_text, add_special_tokens=False)
     filler_budget = total_length - len(full_marker_ids) - len(probe_ids)
 
-    # needle_start should be at: total_length - len(probe_ids) - distance
-    # = filler_before_len (since seq = before + marker + after + probe)
-    # filler_before_len = total_length - len(probe_ids) - distance - len(full_marker_ids) ... wait no
-    # Actually: probe_start = before_len + len(full_marker_ids) + after_len
-    # distance = probe_start - passkey_start = len(full_marker_ids) + after_len
-    # So: after_len = distance - len(full_marker_ids)
     after_len = max(0, distance - len(full_marker_ids))
     before_len = filler_budget - after_len
 
     if before_len < 0:
-        # distance too large for this total_length, clip
         before_len = 0
         after_len = filler_budget
 
-    # Use depth_percent to delegate to existing function
     depth = before_len / max(filler_budget, 1)
     depth = max(0.0, min(1.0, depth))
 
@@ -127,13 +105,11 @@ def build_dsr_sequence(
 
 
 def make_random_passkey(rng: random.Random) -> str:
-    """Generate a random 5-digit dash-separated passkey."""
     digits = [str(rng.randint(0, 9)) for _ in range(5)]
     return DASH.join(digits)
 
 
 def make_wrong_passkey(correct: str, rng: random.Random) -> str:
-    """Generate a wrong passkey differing in every digit."""
     digits = correct.split(DASH)
     wrong = []
     for d in digits:
@@ -143,7 +119,65 @@ def make_wrong_passkey(correct: str, rng: random.Random) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Single model evaluation
+# Batched NLL computation — the key optimization
+# ---------------------------------------------------------------------------
+
+@torch.no_grad()
+def _batched_nll(
+    model: GPT,
+    ctx,
+    batch_ids: torch.Tensor,   # (B, T)
+    starts: List[int],         # probe_start per sequence
+    n_answer: int,
+) -> List[float]:
+    """Compute mean NLL for answer tokens across a batch.
+
+    Memory-efficient: runs transformer backbone on full batch, then applies
+    lm_head ONLY at the ~n_answer positions per sequence. This avoids the
+    huge (B, T, V) logits tensor that causes OOM on long sequences.
+
+    Returns:
+        List of mean NLL values, one per batch element.
+    """
+    B, T = batch_ids.shape
+    batch_ids = batch_ids.to(DEVICE)
+
+    # Step 1: transformer backbone → hidden states (B, T-1, hidden_dim)
+    # This is small: 8 × 16K × 1024 × 2 bytes = 256 MB
+    with ctx:
+        x = model.emb(batch_ids[:, :-1])
+        for b in model.blocks:
+            x = b(x)
+        hidden = model.ln(x)  # (B, T-1, hidden_dim)
+    del x
+
+    # Step 2: lm_head ONLY at answer positions
+    results = []
+    for i in range(B):
+        s = starts[i]
+        n_valid = min(n_answer, T - 1 - s)
+        if n_valid <= 0:
+            results.append(0.0)
+            continue
+
+        # Extract hidden states at answer positions only: (n_valid, hidden_dim)
+        h_answer = hidden[i, s:s + n_valid, :]
+        # Project to vocab: (n_valid, V) — tiny compared to (T, V)
+        logits_answer = model.head(h_answer).float()  # (n_valid, V)
+        target_ids = batch_ids[i, s + 1 : s + 1 + n_valid]  # (n_valid,)
+
+        nll = F.cross_entropy(logits_answer, target_ids, reduction="mean")
+        results.append(nll.item())
+
+    del hidden
+    if DEVICE == "cuda":
+        torch.cuda.empty_cache()
+
+    return results
+
+
+# ---------------------------------------------------------------------------
+# Single model evaluation — batched
 # ---------------------------------------------------------------------------
 
 @torch.no_grad()
@@ -158,16 +192,12 @@ def eval_dsr_single_model(
     eval_length: int,
     distances: List[int],
     num_trials: int,
+    batch_size: int = 8,
     apply_yarn: bool = False,
     seed: int = 42,
 ) -> Dict:
-    """Evaluate one model across all distances.
-
-    Returns:
-        Dict with per-distance retrieval rates and summary stats.
-    """
+    """Evaluate one model across all distances with batched inference."""
     model.eval()
-    from contextlib import nullcontext
     ctx = torch.amp.autocast("cuda", dtype=DTYPE) if USE_AUTOCAST else nullcontext()
 
     # Apply YaRN if requested
@@ -181,58 +211,77 @@ def eval_dsr_single_model(
     rng = random.Random(seed)
     results = {}
 
+    # Pre-tokenize answer template once
+    sample_answer = f"0{DASH}0{DASH}0{DASH}0{DASH}0{PASSKEY_SUFFIX}"
+    n_answer = len(tokenizer.encode(sample_answer, add_special_tokens=False))
+
     for dist in distances:
         dist_ratio = dist / train_len
         trial_results = []
 
+        # Pre-generate all trials for this distance
+        trials_data = []
         for t in range(num_trials):
             passkey = make_random_passkey(rng)
             wrong_passkey = make_wrong_passkey(passkey, rng)
-
-            # Randomize filler offset for each trial
             filler_offset = rng.randint(0, max(1, len(filler_tokens) - eval_length))
             trial_filler = filler_tokens[filler_offset:]
 
-            input_ids, pk_start, probe_start = build_dsr_sequence(
+            correct_ids, pk_start, probe_start = build_dsr_sequence(
                 trial_filler, passkey, tokenizer, eval_length, dist
             )
 
-            # NLL gap scoring
-            answer_ids = tokenizer.encode(
-                f"{passkey}{PASSKEY_SUFFIX}", add_special_tokens=False
-            )
-            n_answer = len(answer_ids)
-
-            nll_correct = _compute_nll_at_positions(
-                model, ctx, input_ids, probe_start, n_answer
-            )
-
-            # Build wrong sequence for comparison
-            wrong_ids = input_ids.clone()
+            # Build wrong version by replacing the passkey marker
+            wrong_ids = correct_ids.clone()
             wrong_marker = tokenizer.encode(
                 f"{PASSKEY_PREFIX}{wrong_passkey}{PASSKEY_SUFFIX}",
                 add_special_tokens=False,
             )
-            # Replace the original passkey with wrong one at pk_start
             for i, tok in enumerate(wrong_marker):
                 if pk_start + i < len(wrong_ids):
                     wrong_ids[pk_start + i] = tok
 
-            nll_wrong = _compute_nll_at_positions(
-                model, ctx, wrong_ids, probe_start, n_answer
-            )
-
-            nll_gap = nll_wrong - nll_correct
-            retrieved = nll_gap > 0
-
-            trial_results.append({
-                "trial": t,
+            trials_data.append({
                 "passkey": passkey,
-                "nll_correct": round(nll_correct, 4),
-                "nll_wrong": round(nll_wrong, 4),
-                "nll_gap": round(nll_gap, 4),
-                "retrieved": bool(retrieved),
+                "wrong_passkey": wrong_passkey,
+                "correct_ids": correct_ids,
+                "wrong_ids": wrong_ids,
+                "probe_start": probe_start,
             })
+
+        # Process in batches: interleave correct/wrong pairs
+        # Each batch element pair: [correct_0, wrong_0, correct_1, wrong_1, ...]
+        for batch_start in range(0, num_trials, batch_size):
+            batch_end = min(batch_start + batch_size, num_trials)
+            batch_trials = trials_data[batch_start:batch_end]
+
+            # Stack correct and wrong together: [c0, w0, c1, w1, ...]
+            all_ids = []
+            all_starts = []
+            for td in batch_trials:
+                all_ids.append(td["correct_ids"])
+                all_ids.append(td["wrong_ids"])
+                all_starts.append(td["probe_start"])
+                all_starts.append(td["probe_start"])
+
+            batch_tensor = torch.stack(all_ids, dim=0)  # (2*B, T)
+            nlls = _batched_nll(model, ctx, batch_tensor, all_starts, n_answer)
+
+            # Unpack results: pairs of (correct, wrong)
+            for i, td in enumerate(batch_trials):
+                nll_correct = nlls[2 * i]
+                nll_wrong = nlls[2 * i + 1]
+                nll_gap = nll_wrong - nll_correct
+                retrieved = nll_gap > 0
+
+                trial_results.append({
+                    "trial": batch_start + i,
+                    "passkey": td["passkey"],
+                    "nll_correct": round(nll_correct, 4),
+                    "nll_wrong": round(nll_wrong, 4),
+                    "nll_gap": round(nll_gap, 4),
+                    "retrieved": bool(retrieved),
+                })
 
         # Aggregate
         retrieval_rate = sum(1 for r in trial_results if r["retrieved"]) / num_trials
@@ -277,12 +326,11 @@ def compute_summary(results: Dict, train_len: int) -> Dict:
             r0, a0 = extrap_points[i]
             r1, a1 = extrap_points[i + 1]
             auc += (r1 - r0) * (a0 + a1) / 2  # trapezoidal
-        # Normalize by range
         r_range = extrap_points[-1][0] - extrap_points[0][0]
         if r_range > 0:
             auc /= r_range
 
-    # Break-point: first ratio where accuracy < 50%
+    # Break-point: first ratio where accuracy < threshold
     breakpoint_50 = None
     breakpoint_70 = None
     for ratio, rate in points:
@@ -321,6 +369,8 @@ def main() -> None:
                         default="0.5,1.0,1.5,2.0,2.5,3.0,4.0,6.0,8.0",
                         help="Comma-separated Δ/L_train ratios")
     parser.add_argument("--num_trials", type=int, default=50)
+    parser.add_argument("--batch_size", type=int, default=8,
+                        help="Num trials per batch (actual GPU batch = 2×this for correct+wrong)")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--output", type=str, default=None,
                         help="Output JSON path (default: auto)")
@@ -339,14 +389,14 @@ def main() -> None:
     print(f"  tier={args.tier}  train_len={args.train_len}  eval_len={eval_length}")
     print(f"  distances (tokens): {distances}")
     print(f"  distance ratios: {distance_ratios}")
-    print(f"  num_trials={args.num_trials}  seed={args.seed}")
+    print(f"  num_trials={args.num_trials}  batch_size={args.batch_size}")
+    print(f"  seed={args.seed}")
     print(f"{'#'*60}\n")
 
     # Load tokenizer & filler data
     from transformers import AutoTokenizer
     tok = AutoTokenizer.from_pretrained("EleutherAI/gpt-neox-20b")
 
-    # Use parent of geo_dir as cache
     cache_dir = str(Path(args.geo_dir).parent)
     filler_tokens = load_val(tok, dataset=args.dataset, cache_dir=cache_dir)
 
@@ -366,6 +416,7 @@ def main() -> None:
             "base": args.base,
             "distance_ratios": distance_ratios,
             "num_trials": args.num_trials,
+            "batch_size": args.batch_size,
             "seed": args.seed,
             "device": DEVICE,
             "started": time.strftime("%Y-%m-%d %H:%M:%S"),
@@ -385,7 +436,7 @@ def main() -> None:
             continue
 
         print(f"\n  {'='*50}")
-        print(f"  {label}")
+        print(f"  {label}  (ckpt: {ckpt_dir})")
         print(f"  {'='*50}")
 
         # Load model
@@ -413,6 +464,7 @@ def main() -> None:
             eval_length=eval_length,
             distances=distances,
             num_trials=args.num_trials,
+            batch_size=args.batch_size,
             apply_yarn=use_yarn,
             seed=args.seed,
         )
@@ -428,6 +480,7 @@ def main() -> None:
         print(f"\n    AUC(extrap): {summary['auc_extrap']:.3f}  "
               f"Δ_50: {summary['breakpoint_50']}  "
               f"Δ_70: {summary['breakpoint_70']}")
+        print(f"    Time: {elapsed:.0f}s")
 
         # Free GPU memory before loading next model
         del model
@@ -462,7 +515,6 @@ def _print_comparison(all_results: Dict, train_len: int) -> None:
     if not curves:
         return
 
-    # Collect all distances
     all_dists = set()
     for c in curves.values():
         for key, val in c.get("results", {}).items():
