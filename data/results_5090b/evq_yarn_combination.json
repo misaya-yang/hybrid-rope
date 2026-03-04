@@ -1,0 +1,326 @@
+{
+  "metadata": {
+    "checkpoint": "350m_tau1.50_seed42",
+    "mix": "10pct",
+    "scale": 4.0,
+    "finished": "2026-03-03 19:46:21"
+  },
+  "EVQ (baseline)": {
+    "ppl": {
+      "2048": 67.96,
+      "4096": 95.312,
+      "8192": 152.504
+    },
+    "passkey_global": {
+      "total_trials": 150,
+      "mean_nll_gap": 1.2779,
+      "retrieval_rate": 0.8067,
+      "ar_exact_match_rate": 0.2667
+    },
+    "passkey_summary": {
+      "L=2048_d=0.1": {
+        "mean_nll_gap": 1.0224,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      },
+      "L=2048_d=0.2": {
+        "mean_nll_gap": 3.0822,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 1.0,
+        "trials": 10
+      },
+      "L=2048_d=0.5": {
+        "mean_nll_gap": 3.33,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 1.0,
+        "trials": 10
+      },
+      "L=2048_d=0.8": {
+        "mean_nll_gap": 3.3021,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 1.0,
+        "trials": 10
+      },
+      "L=2048_d=0.9": {
+        "mean_nll_gap": 3.4026,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 1.0,
+        "trials": 10
+      },
+      "L=4096_d=0.1": {
+        "mean_nll_gap": 0.6093,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      },
+      "L=4096_d=0.2": {
+        "mean_nll_gap": 1.2585,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      },
+      "L=4096_d=0.5": {
+        "mean_nll_gap": 2.2974,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      },
+      "L=4096_d=0.8": {
+        "mean_nll_gap": 0.0961,
+        "retrieval_rate": 0.6,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      },
+      "L=4096_d=0.9": {
+        "mean_nll_gap": 0.0513,
+        "retrieval_rate": 0.5,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      },
+      "L=8192_d=0.1": {
+        "mean_nll_gap": 0.0041,
+        "retrieval_rate": 0.4,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      },
+      "L=8192_d=0.2": {
+        "mean_nll_gap": 0.3426,
+        "retrieval_rate": 0.7,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      },
+      "L=8192_d=0.5": {
+        "mean_nll_gap": 0.2715,
+        "retrieval_rate": 0.8,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      },
+      "L=8192_d=0.8": {
+        "mean_nll_gap": 0.0969,
+        "retrieval_rate": 0.6,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      },
+      "L=8192_d=0.9": {
+        "mean_nll_gap": 0.0009,
+        "retrieval_rate": 0.5,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      }
+    },
+    "time_sec": 183.4
+  },
+  "EVQ + YaRN": {
+    "ppl": {
+      "2048": 69.278,
+      "4096": 74.156,
+      "8192": 82.327
+    },
+    "passkey_global": {
+      "total_trials": 150,
+      "mean_nll_gap": 2.31,
+      "retrieval_rate": 0.9933,
+      "ar_exact_match_rate": 0.5667
+    },
+    "passkey_summary": {
+      "L=2048_d=0.1": {
+        "mean_nll_gap": 0.4458,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      },
+      "L=2048_d=0.2": {
+        "mean_nll_gap": 2.6721,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 1.0,
+        "trials": 10
+      },
+      "L=2048_d=0.5": {
+        "mean_nll_gap": 2.5857,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 1.0,
+        "trials": 10
+      },
+      "L=2048_d=0.8": {
+        "mean_nll_gap": 3.0361,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 1.0,
+        "trials": 10
+      },
+      "L=2048_d=0.9": {
+        "mean_nll_gap": 2.753,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 0.9,
+        "trials": 10
+      },
+      "L=4096_d=0.1": {
+        "mean_nll_gap": 3.2446,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 1.0,
+        "trials": 10
+      },
+      "L=4096_d=0.2": {
+        "mean_nll_gap": 3.138,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 1.0,
+        "trials": 10
+      },
+      "L=4096_d=0.5": {
+        "mean_nll_gap": 3.1436,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 1.0,
+        "trials": 10
+      },
+      "L=4096_d=0.8": {
+        "mean_nll_gap": 2.9891,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 1.0,
+        "trials": 10
+      },
+      "L=4096_d=0.9": {
+        "mean_nll_gap": 2.7563,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 0.6,
+        "trials": 10
+      },
+      "L=8192_d=0.1": {
+        "mean_nll_gap": 1.4399,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      },
+      "L=8192_d=0.2": {
+        "mean_nll_gap": 2.0175,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      },
+      "L=8192_d=0.5": {
+        "mean_nll_gap": 2.3386,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      },
+      "L=8192_d=0.8": {
+        "mean_nll_gap": 1.8021,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      },
+      "L=8192_d=0.9": {
+        "mean_nll_gap": 0.2874,
+        "retrieval_rate": 0.9,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      }
+    },
+    "time_sec": 183.1
+  },
+  "EVQ + NTK-aware": {
+    "ppl": {
+      "2048": 69.191,
+      "4096": 73.681,
+      "8192": 96.784
+    },
+    "passkey_global": {
+      "total_trials": 150,
+      "mean_nll_gap": 2.1046,
+      "retrieval_rate": 0.96,
+      "ar_exact_match_rate": 0.58
+    },
+    "passkey_summary": {
+      "L=2048_d=0.1": {
+        "mean_nll_gap": 0.4173,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      },
+      "L=2048_d=0.2": {
+        "mean_nll_gap": 2.4061,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 1.0,
+        "trials": 10
+      },
+      "L=2048_d=0.5": {
+        "mean_nll_gap": 2.672,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 1.0,
+        "trials": 10
+      },
+      "L=2048_d=0.8": {
+        "mean_nll_gap": 2.3479,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 1.0,
+        "trials": 10
+      },
+      "L=2048_d=0.9": {
+        "mean_nll_gap": 3.2024,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 1.0,
+        "trials": 10
+      },
+      "L=4096_d=0.1": {
+        "mean_nll_gap": 3.1741,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 1.0,
+        "trials": 10
+      },
+      "L=4096_d=0.2": {
+        "mean_nll_gap": 3.076,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 1.0,
+        "trials": 10
+      },
+      "L=4096_d=0.5": {
+        "mean_nll_gap": 3.2886,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 1.0,
+        "trials": 10
+      },
+      "L=4096_d=0.8": {
+        "mean_nll_gap": 3.1736,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 1.0,
+        "trials": 10
+      },
+      "L=4096_d=0.9": {
+        "mean_nll_gap": 2.8495,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 0.7,
+        "trials": 10
+      },
+      "L=8192_d=0.1": {
+        "mean_nll_gap": 0.7936,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      },
+      "L=8192_d=0.2": {
+        "mean_nll_gap": 1.5207,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      },
+      "L=8192_d=0.5": {
+        "mean_nll_gap": 2.3548,
+        "retrieval_rate": 1.0,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      },
+      "L=8192_d=0.8": {
+        "mean_nll_gap": 0.1486,
+        "retrieval_rate": 0.8,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      },
+      "L=8192_d=0.9": {
+        "mean_nll_gap": 0.1434,
+        "retrieval_rate": 0.6,
+        "ar_exact_match_rate": 0.0,
+        "trials": 10
+      }
+    },
+    "time_sec": 183.1
+  }
+}

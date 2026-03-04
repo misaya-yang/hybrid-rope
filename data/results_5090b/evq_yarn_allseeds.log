@@ -1,0 +1,576 @@
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+
+############################################################
+  EVQ + YaRN ALL-SEED COMBINATION TEST
+  scale=8.0  passkey up to 16K (8x extrapolation)
+  device=cuda  dtype=torch.bfloat16
+############################################################
+
+  Found 9 checkpoints:
+    Geo  mix=5pct  tau=0.00  seed=123
+    Geo  mix=5pct  tau=0.00  seed=42
+    Geo  mix=5pct  tau=0.00  seed=7
+    EVQ  mix=5pct  tau=1.50  seed=123
+    EVQ  mix=5pct  tau=1.50  seed=42
+    EVQ  mix=5pct  tau=1.50  seed=7
+    Geo  mix=10pct  tau=0.00  seed=123
+    Geo  mix=10pct  tau=0.00  seed=42
+    EVQ  mix=10pct  tau=1.50  seed=42
+  [val] Loading from cache: /root/autodl-tmp/evq_passkey_mix_10pct/val_fineweb-edu_5000000.pt
+  [val] Cached: 5.0M tokens
+
+============================================================
+  CHECKPOINT: Geo  mix=5pct  seed=123  tau=0.00
+============================================================
+  Model params: 454.2M
+
+  [baseline] Geo raw
+    L=2048: PPL=65.014  (8 chunks)
+    L=4096: PPL=96.790  (8 chunks)
+    L=8192: PPL=169.500  (8 chunks)
+    L=12288: PPL=223.679  (8 chunks)
+    L=16384: PPL=265.350  (8 chunks)
+  L=2048_d=0.1 ... gap=+1.089  ret=100%  AR=60%  (10 trials)
+  L=2048_d=0.2 ... gap=+2.543  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.5 ... gap=+3.207  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.8 ... gap=+3.076  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.9 ... gap=+3.195  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.1 ... gap=+0.119  ret=80%  AR=0%  (10 trials)
+  L=4096_d=0.2 ... gap=+0.289  ret=60%  AR=0%  (10 trials)
+  L=4096_d=0.5 ... gap=+0.288  ret=80%  AR=0%  (10 trials)
+  L=4096_d=0.8 ... gap=+0.209  ret=60%  AR=0%  (10 trials)
+  L=4096_d=0.9 ... gap=+0.111  ret=50%  AR=0%  (10 trials)
+  L=8192_d=0.1 ... gap=-0.009  ret=40%  AR=0%  (10 trials)
+  L=8192_d=0.2 ... gap=+0.070  ret=40%  AR=0%  (10 trials)
+  L=8192_d=0.5 ... gap=+0.001  ret=50%  AR=0%  (10 trials)
+  L=8192_d=0.8 ... gap=-0.066  ret=50%  AR=0%  (10 trials)
+  L=8192_d=0.9 ... gap=-0.183  ret=30%  AR=0%  (10 trials)
+  L=12288_d=0.1 ... gap=+0.018  ret=40%  AR=0%  (10 trials)
+  L=12288_d=0.2 ... gap=+0.073  ret=70%  AR=0%  (10 trials)
+  L=12288_d=0.5 ... gap=+0.078  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.8 ... gap=+0.235  ret=70%  AR=0%  (10 trials)
+  L=12288_d=0.9 ... gap=-0.146  ret=30%  AR=0%  (10 trials)
+  L=16384_d=0.1 ... gap=-0.143  ret=40%  AR=0%  (10 trials)
+  L=16384_d=0.2 ... gap=-0.301  ret=40%  AR=0%  (10 trials)
+  L=16384_d=0.5 ... gap=+0.095  ret=60%  AR=0%  (10 trials)
+  L=16384_d=0.8 ... gap=+0.075  ret=50%  AR=0%  (10 trials)
+  L=16384_d=0.9 ... gap=+0.003  ret=40%  AR=0%  (10 trials)
+    PK@2K = 100%
+    PK@4K = 66%
+    PK@8K = 42%
+    PK@12K = 54%
+    PK@16K = 46%
+    PPL: {'2048': 65.01, '4096': 96.79, '8192': 169.5, '12288': 223.68, '16384': 265.35}
+
+  [+YaRN] Geo + YaRN (scale=8.0)
+    L=2048: PPL=65.880  (8 chunks)
+    L=4096: PPL=69.366  (8 chunks)
+    L=8192: PPL=80.323  (8 chunks)
+    L=12288: PPL=119.797  (8 chunks)
+    L=16384: PPL=162.937  (8 chunks)
+  L=2048_d=0.1 ... gap=+1.194  ret=100%  AR=60%  (10 trials)
+  L=2048_d=0.2 ... gap=+1.865  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.5 ... gap=+2.774  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.8 ... gap=+2.479  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.9 ... gap=+2.854  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.1 ... gap=+2.229  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.2 ... gap=+3.029  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.5 ... gap=+3.210  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.8 ... gap=+2.939  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.9 ... gap=+2.414  ret=100%  AR=100%  (10 trials)
+  L=8192_d=0.1 ... gap=+0.711  ret=80%  AR=0%  (10 trials)
+  L=8192_d=0.2 ... gap=+0.499  ret=80%  AR=0%  (10 trials)
+  L=8192_d=0.5 ... gap=+0.954  ret=100%  AR=0%  (10 trials)
+  L=8192_d=0.8 ... gap=+0.203  ret=50%  AR=0%  (10 trials)
+  L=8192_d=0.9 ... gap=-0.407  ret=30%  AR=0%  (10 trials)
+  L=12288_d=0.1 ... gap=-0.014  ret=40%  AR=0%  (10 trials)
+  L=12288_d=0.2 ... gap=+0.161  ret=80%  AR=0%  (10 trials)
+  L=12288_d=0.5 ... gap=+0.182  ret=70%  AR=0%  (10 trials)
+  L=12288_d=0.8 ... gap=+0.150  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.9 ... gap=-0.142  ret=30%  AR=0%  (10 trials)
+  L=16384_d=0.1 ... gap=-0.067  ret=50%  AR=0%  (10 trials)
+  L=16384_d=0.2 ... gap=+0.064  ret=70%  AR=0%  (10 trials)
+  L=16384_d=0.5 ... gap=+0.130  ret=40%  AR=0%  (10 trials)
+  L=16384_d=0.8 ... gap=+0.111  ret=70%  AR=0%  (10 trials)
+  L=16384_d=0.9 ... gap=+0.322  ret=80%  AR=0%  (10 trials)
+    PK@2K = 100%
+    PK@4K = 100%
+    PK@8K = 68%
+    PK@12K = 56%
+    PK@16K = 62%
+    PPL: {'2048': 65.88, '4096': 69.37, '8192': 80.32, '12288': 119.8, '16384': 162.94}
+
+============================================================
+  CHECKPOINT: Geo  mix=5pct  seed=42  tau=0.00
+============================================================
+  Model params: 454.2M
+
+  [baseline] Geo raw
+    L=2048: PPL=63.685  (8 chunks)
+    L=4096: PPL=95.336  (8 chunks)
+    L=8192: PPL=152.811  (8 chunks)
+    L=12288: PPL=202.086  (8 chunks)
+    L=16384: PPL=241.288  (8 chunks)
+  L=2048_d=0.1 ... gap=+2.596  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.2 ... gap=+3.204  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.5 ... gap=+3.189  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.8 ... gap=+3.148  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.9 ... gap=+3.242  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.1 ... gap=-0.219  ret=40%  AR=0%  (10 trials)
+  L=4096_d=0.2 ... gap=+0.554  ret=80%  AR=0%  (10 trials)
+  L=4096_d=0.5 ... gap=+0.500  ret=80%  AR=0%  (10 trials)
+  L=4096_d=0.8 ... gap=+0.167  ret=70%  AR=0%  (10 trials)
+  L=4096_d=0.9 ... gap=+0.054  ret=50%  AR=0%  (10 trials)
+  L=8192_d=0.1 ... gap=+0.039  ret=50%  AR=0%  (10 trials)
+  L=8192_d=0.2 ... gap=+0.145  ret=50%  AR=0%  (10 trials)
+  L=8192_d=0.5 ... gap=+0.090  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.8 ... gap=+0.076  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.9 ... gap=+0.105  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.1 ... gap=-0.101  ret=40%  AR=0%  (10 trials)
+  L=12288_d=0.2 ... gap=+0.108  ret=70%  AR=0%  (10 trials)
+  L=12288_d=0.5 ... gap=-0.146  ret=40%  AR=0%  (10 trials)
+  L=12288_d=0.8 ... gap=-0.189  ret=40%  AR=0%  (10 trials)
+  L=12288_d=0.9 ... gap=+0.202  ret=60%  AR=0%  (10 trials)
+  L=16384_d=0.1 ... gap=-0.274  ret=40%  AR=0%  (10 trials)
+  L=16384_d=0.2 ... gap=-0.056  ret=40%  AR=0%  (10 trials)
+  L=16384_d=0.5 ... gap=-0.071  ret=40%  AR=0%  (10 trials)
+  L=16384_d=0.8 ... gap=-0.041  ret=50%  AR=0%  (10 trials)
+  L=16384_d=0.9 ... gap=+0.075  ret=70%  AR=0%  (10 trials)
+    PK@2K = 100%
+    PK@4K = 64%
+    PK@8K = 56%
+    PK@12K = 50%
+    PK@16K = 48%
+    PPL: {'2048': 63.69, '4096': 95.34, '8192': 152.81, '12288': 202.09, '16384': 241.29}
+
+  [+YaRN] Geo + YaRN (scale=8.0)
+    L=2048: PPL=64.473  (8 chunks)
+    L=4096: PPL=68.826  (8 chunks)
+    L=8192: PPL=81.177  (8 chunks)
+    L=12288: PPL=115.752  (8 chunks)
+    L=16384: PPL=151.643  (8 chunks)
+  L=2048_d=0.1 ... gap=+1.152  ret=100%  AR=90%  (10 trials)
+  L=2048_d=0.2 ... gap=+1.466  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.5 ... gap=+1.620  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.8 ... gap=+1.458  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.9 ... gap=+1.248  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.1 ... gap=+2.292  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.2 ... gap=+2.887  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.5 ... gap=+2.820  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.8 ... gap=+2.361  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.9 ... gap=+2.043  ret=100%  AR=100%  (10 trials)
+  L=8192_d=0.1 ... gap=+0.330  ret=70%  AR=0%  (10 trials)
+  L=8192_d=0.2 ... gap=+0.209  ret=50%  AR=0%  (10 trials)
+  L=8192_d=0.5 ... gap=+0.468  ret=70%  AR=0%  (10 trials)
+  L=8192_d=0.8 ... gap=-0.079  ret=50%  AR=0%  (10 trials)
+  L=8192_d=0.9 ... gap=-0.091  ret=50%  AR=0%  (10 trials)
+  L=12288_d=0.1 ... gap=-0.138  ret=30%  AR=0%  (10 trials)
+  L=12288_d=0.2 ... gap=+0.136  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.5 ... gap=-0.182  ret=30%  AR=0%  (10 trials)
+  L=12288_d=0.8 ... gap=-0.064  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.9 ... gap=+0.153  ret=60%  AR=0%  (10 trials)
+  L=16384_d=0.1 ... gap=-0.153  ret=40%  AR=0%  (10 trials)
+  L=16384_d=0.2 ... gap=+0.024  ret=40%  AR=0%  (10 trials)
+  L=16384_d=0.5 ... gap=+0.180  ret=50%  AR=0%  (10 trials)
+  L=16384_d=0.8 ... gap=+0.105  ret=50%  AR=0%  (10 trials)
+  L=16384_d=0.9 ... gap=+0.328  ret=70%  AR=0%  (10 trials)
+    PK@2K = 100%
+    PK@4K = 100%
+    PK@8K = 58%
+    PK@12K = 48%
+    PK@16K = 50%
+    PPL: {'2048': 64.47, '4096': 68.83, '8192': 81.18, '12288': 115.75, '16384': 151.64}
+
+============================================================
+  CHECKPOINT: Geo  mix=5pct  seed=7  tau=0.00
+============================================================
+  Model params: 454.2M
+
+  [baseline] Geo raw
+    L=2048: PPL=65.280  (8 chunks)
+    L=4096: PPL=104.652  (8 chunks)
+    L=8192: PPL=172.795  (8 chunks)
+    L=12288: PPL=226.680  (8 chunks)
+    L=16384: PPL=263.686  (8 chunks)
+  L=2048_d=0.1 ... gap=+2.514  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.2 ... gap=+3.029  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.5 ... gap=+3.266  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.8 ... gap=+3.282  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.9 ... gap=+3.371  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.1 ... gap=+0.210  ret=50%  AR=0%  (10 trials)
+  L=4096_d=0.2 ... gap=+0.356  ret=80%  AR=0%  (10 trials)
+  L=4096_d=0.5 ... gap=+0.571  ret=90%  AR=0%  (10 trials)
+  L=4096_d=0.8 ... gap=+0.224  ret=60%  AR=0%  (10 trials)
+  L=4096_d=0.9 ... gap=-0.187  ret=20%  AR=0%  (10 trials)
+  L=8192_d=0.1 ... gap=+0.233  ret=70%  AR=0%  (10 trials)
+  L=8192_d=0.2 ... gap=-0.025  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.5 ... gap=+0.285  ret=70%  AR=0%  (10 trials)
+  L=8192_d=0.8 ... gap=+0.152  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.9 ... gap=+0.081  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.1 ... gap=-0.039  ret=50%  AR=0%  (10 trials)
+  L=12288_d=0.2 ... gap=+0.257  ret=90%  AR=0%  (10 trials)
+  L=12288_d=0.5 ... gap=-0.003  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.8 ... gap=-0.046  ret=40%  AR=0%  (10 trials)
+  L=12288_d=0.9 ... gap=+0.071  ret=60%  AR=0%  (10 trials)
+  L=16384_d=0.1 ... gap=+0.216  ret=90%  AR=0%  (10 trials)
+  L=16384_d=0.2 ... gap=+0.136  ret=60%  AR=0%  (10 trials)
+  L=16384_d=0.5 ... gap=+0.086  ret=70%  AR=0%  (10 trials)
+  L=16384_d=0.8 ... gap=-0.006  ret=60%  AR=0%  (10 trials)
+  L=16384_d=0.9 ... gap=+0.178  ret=80%  AR=0%  (10 trials)
+    PK@2K = 100%
+    PK@4K = 60%
+    PK@8K = 64%
+    PK@12K = 60%
+    PK@16K = 72%
+    PPL: {'2048': 65.28, '4096': 104.65, '8192': 172.79, '12288': 226.68, '16384': 263.69}
+
+  [+YaRN] Geo + YaRN (scale=8.0)
+    L=2048: PPL=66.179  (8 chunks)
+    L=4096: PPL=70.399  (8 chunks)
+    L=8192: PPL=85.618  (8 chunks)
+    L=12288: PPL=131.257  (8 chunks)
+    L=16384: PPL=175.152  (8 chunks)
+  L=2048_d=0.1 ... gap=+2.477  ret=100%  AR=90%  (10 trials)
+  L=2048_d=0.2 ... gap=+2.815  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.5 ... gap=+2.286  ret=100%  AR=90%  (10 trials)
+  L=2048_d=0.8 ... gap=+2.172  ret=100%  AR=90%  (10 trials)
+  L=2048_d=0.9 ... gap=+2.256  ret=100%  AR=70%  (10 trials)
+  L=4096_d=0.1 ... gap=+3.145  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.2 ... gap=+2.980  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.5 ... gap=+3.218  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.8 ... gap=+2.273  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.9 ... gap=+2.390  ret=100%  AR=100%  (10 trials)
+  L=8192_d=0.1 ... gap=+0.138  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.2 ... gap=+0.323  ret=70%  AR=0%  (10 trials)
+  L=8192_d=0.5 ... gap=+0.656  ret=100%  AR=0%  (10 trials)
+  L=8192_d=0.8 ... gap=+0.223  ret=80%  AR=0%  (10 trials)
+  L=8192_d=0.9 ... gap=-0.137  ret=30%  AR=0%  (10 trials)
+  L=12288_d=0.1 ... gap=-0.002  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.2 ... gap=+0.154  ret=70%  AR=0%  (10 trials)
+  L=12288_d=0.5 ... gap=-0.018  ret=40%  AR=0%  (10 trials)
+  L=12288_d=0.8 ... gap=+0.036  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.9 ... gap=+0.116  ret=60%  AR=0%  (10 trials)
+  L=16384_d=0.1 ... gap=+0.185  ret=70%  AR=0%  (10 trials)
+  L=16384_d=0.2 ... gap=+0.124  ret=60%  AR=0%  (10 trials)
+  L=16384_d=0.5 ... gap=+0.043  ret=40%  AR=0%  (10 trials)
+  L=16384_d=0.8 ... gap=+0.015  ret=40%  AR=0%  (10 trials)
+  L=16384_d=0.9 ... gap=+0.297  ret=70%  AR=0%  (10 trials)
+    PK@2K = 100%
+    PK@4K = 100%
+    PK@8K = 68%
+    PK@12K = 58%
+    PK@16K = 56%
+    PPL: {'2048': 66.18, '4096': 70.4, '8192': 85.62, '12288': 131.26, '16384': 175.15}
+
+============================================================
+  CHECKPOINT: EVQ  mix=5pct  seed=123  tau=1.50
+============================================================
+  Model params: 454.2M
+
+  [baseline] EVQ raw
+    L=2048: PPL=65.307  (8 chunks)
+    L=4096: PPL=90.399  (8 chunks)
+    L=8192: PPL=147.989  (8 chunks)
+    L=12288: PPL=193.920  (8 chunks)
+    L=16384: PPL=236.241  (8 chunks)
+  L=2048_d=0.1 ... gap=+2.751  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.2 ... gap=+3.053  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.5 ... gap=+3.326  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.8 ... gap=+3.139  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.9 ... gap=+3.330  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.1 ... gap=+0.503  ret=80%  AR=0%  (10 trials)
+  L=4096_d=0.2 ... gap=+0.362  ret=90%  AR=0%  (10 trials)
+  L=4096_d=0.5 ... gap=+0.576  ret=90%  AR=0%  (10 trials)
+  L=4096_d=0.8 ... gap=+0.043  ret=50%  AR=0%  (10 trials)
+  L=4096_d=0.9 ... gap=-0.030  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.1 ... gap=+0.012  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.2 ... gap=-0.026  ret=50%  AR=0%  (10 trials)
+  L=8192_d=0.5 ... gap=+0.021  ret=50%  AR=0%  (10 trials)
+  L=8192_d=0.8 ... gap=+0.010  ret=50%  AR=0%  (10 trials)
+  L=8192_d=0.9 ... gap=-0.021  ret=50%  AR=0%  (10 trials)
+  L=12288_d=0.1 ... gap=-0.031  ret=30%  AR=0%  (10 trials)
+  L=12288_d=0.2 ... gap=+0.276  ret=80%  AR=0%  (10 trials)
+  L=12288_d=0.5 ... gap=-0.127  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.8 ... gap=+0.006  ret=50%  AR=0%  (10 trials)
+  L=12288_d=0.9 ... gap=+0.057  ret=60%  AR=0%  (10 trials)
+  L=16384_d=0.1 ... gap=-0.169  ret=30%  AR=0%  (10 trials)
+  L=16384_d=0.2 ... gap=+0.083  ret=60%  AR=0%  (10 trials)
+  L=16384_d=0.5 ... gap=+0.265  ret=80%  AR=0%  (10 trials)
+  L=16384_d=0.8 ... gap=+0.007  ret=40%  AR=0%  (10 trials)
+  L=16384_d=0.9 ... gap=+0.465  ret=90%  AR=0%  (10 trials)
+    PK@2K = 100%
+    PK@4K = 74%
+    PK@8K = 52%
+    PK@12K = 56%
+    PK@16K = 60%
+    PPL: {'2048': 65.31, '4096': 90.4, '8192': 147.99, '12288': 193.92, '16384': 236.24}
+
+  [+YaRN] EVQ + YaRN (scale=8.0)
+    L=2048: PPL=68.092  (8 chunks)
+    L=4096: PPL=72.879  (8 chunks)
+    L=8192: PPL=68.342  (8 chunks)
+    L=12288: PPL=79.097  (8 chunks)
+    L=16384: PPL=107.040  (8 chunks)
+  L=2048_d=0.1 ... gap=+1.717  ret=100%  AR=90%  (10 trials)
+  L=2048_d=0.2 ... gap=+2.033  ret=100%  AR=90%  (10 trials)
+  L=2048_d=0.5 ... gap=+2.007  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.8 ... gap=+2.109  ret=100%  AR=80%  (10 trials)
+  L=2048_d=0.9 ... gap=+2.064  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.1 ... gap=+1.964  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.2 ... gap=+2.075  ret=100%  AR=90%  (10 trials)
+  L=4096_d=0.5 ... gap=+1.897  ret=100%  AR=90%  (10 trials)
+  L=4096_d=0.8 ... gap=+1.677  ret=100%  AR=70%  (10 trials)
+  L=4096_d=0.9 ... gap=+1.779  ret=100%  AR=100%  (10 trials)
+  L=8192_d=0.1 ... gap=+2.350  ret=100%  AR=90%  (10 trials)
+  L=8192_d=0.2 ... gap=+2.525  ret=100%  AR=80%  (10 trials)
+  L=8192_d=0.5 ... gap=+2.213  ret=100%  AR=70%  (10 trials)
+  L=8192_d=0.8 ... gap=+2.687  ret=100%  AR=60%  (10 trials)
+  L=8192_d=0.9 ... gap=+2.265  ret=100%  AR=90%  (10 trials)
+  L=12288_d=0.1 ... gap=+0.482  ret=90%  AR=0%  (10 trials)
+  L=12288_d=0.2 ... gap=+0.430  ret=70%  AR=0%  (10 trials)
+  L=12288_d=0.5 ... gap=-0.128  ret=30%  AR=0%  (10 trials)
+  L=12288_d=0.8 ... gap=+0.075  ret=50%  AR=0%  (10 trials)
+  L=12288_d=0.9 ... gap=+0.177  ret=50%  AR=0%  (10 trials)
+  L=16384_d=0.1 ... gap=+0.237  ret=70%  AR=0%  (10 trials)
+  L=16384_d=0.2 ... gap=+0.303  ret=70%  AR=0%  (10 trials)
+  L=16384_d=0.5 ... gap=+0.125  ret=80%  AR=0%  (10 trials)
+  L=16384_d=0.8 ... gap=-0.110  ret=50%  AR=0%  (10 trials)
+  L=16384_d=0.9 ... gap=+0.383  ret=80%  AR=0%  (10 trials)
+    PK@2K = 100%
+    PK@4K = 100%
+    PK@8K = 100%
+    PK@12K = 58%
+    PK@16K = 70%
+    PPL: {'2048': 68.09, '4096': 72.88, '8192': 68.34, '12288': 79.1, '16384': 107.04}
+
+============================================================
+  CHECKPOINT: EVQ  mix=5pct  seed=42  tau=1.50
+============================================================
+  Model params: 454.2M
+
+  [baseline] EVQ raw
+    L=2048: PPL=65.128  (8 chunks)
+    L=4096: PPL=88.207  (8 chunks)
+    L=8192: PPL=138.811  (8 chunks)
+    L=12288: PPL=179.771  (8 chunks)
+    L=16384: PPL=213.088  (8 chunks)
+  L=2048_d=0.1 ... gap=+2.508  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.2 ... gap=+2.673  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.5 ... gap=+3.332  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.8 ... gap=+3.354  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.9 ... gap=+3.388  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.1 ... gap=+0.066  ret=60%  AR=0%  (10 trials)
+  L=4096_d=0.2 ... gap=+0.029  ret=60%  AR=0%  (10 trials)
+  L=4096_d=0.5 ... gap=-0.001  ret=50%  AR=0%  (10 trials)
+  L=4096_d=0.8 ... gap=+0.013  ret=50%  AR=0%  (10 trials)
+  L=4096_d=0.9 ... gap=+0.150  ret=80%  AR=0%  (10 trials)
+  L=8192_d=0.1 ... gap=+0.205  ret=70%  AR=0%  (10 trials)
+  L=8192_d=0.2 ... gap=+0.023  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.5 ... gap=+0.021  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.8 ... gap=+0.012  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.9 ... gap=-0.061  ret=30%  AR=0%  (10 trials)
+  L=12288_d=0.1 ... gap=+0.023  ret=50%  AR=0%  (10 trials)
+  L=12288_d=0.2 ... gap=+0.151  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.5 ... gap=+0.122  ret=50%  AR=0%  (10 trials)
+  L=12288_d=0.8 ... gap=+0.037  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.9 ... gap=+0.116  ret=70%  AR=0%  (10 trials)
+  L=16384_d=0.1 ... gap=-0.138  ret=40%  AR=0%  (10 trials)
+  L=16384_d=0.2 ... gap=+0.014  ret=50%  AR=0%  (10 trials)
+  L=16384_d=0.5 ... gap=+0.148  ret=80%  AR=0%  (10 trials)
+  L=16384_d=0.8 ... gap=+0.189  ret=60%  AR=0%  (10 trials)
+  L=16384_d=0.9 ... gap=+0.210  ret=80%  AR=0%  (10 trials)
+    PK@2K = 100%
+    PK@4K = 60%
+    PK@8K = 56%
+    PK@12K = 58%
+    PK@16K = 62%
+    PPL: {'2048': 65.13, '4096': 88.21, '8192': 138.81, '12288': 179.77, '16384': 213.09}
+
+  [+YaRN] EVQ + YaRN (scale=8.0)
+    L=2048: PPL=67.876  (8 chunks)
+    L=4096: PPL=73.508  (8 chunks)
+    L=8192: PPL=68.542  (8 chunks)
+    L=12288: PPL=78.414  (8 chunks)
+    L=16384: PPL=102.399  (8 chunks)
+  L=2048_d=0.1 ... gap=+1.965  ret=100%  AR=70%  (10 trials)
+  L=2048_d=0.2 ... gap=+2.124  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.5 ... gap=+3.079  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.8 ... gap=+3.153  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.9 ... gap=+2.694  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.1 ... gap=+2.550  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.2 ... gap=+3.119  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.5 ... gap=+3.264  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.8 ... gap=+3.196  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.9 ... gap=+3.040  ret=100%  AR=100%  (10 trials)
+  L=8192_d=0.1 ... gap=+2.775  ret=100%  AR=100%  (10 trials)
+  L=8192_d=0.2 ... gap=+3.039  ret=100%  AR=100%  (10 trials)
+  L=8192_d=0.5 ... gap=+3.360  ret=100%  AR=100%  (10 trials)
+  L=8192_d=0.8 ... gap=+3.428  ret=100%  AR=100%  (10 trials)
+  L=8192_d=0.9 ... gap=+3.396  ret=100%  AR=100%  (10 trials)
+  L=12288_d=0.1 ... gap=+0.158  ret=80%  AR=0%  (10 trials)
+  L=12288_d=0.2 ... gap=+0.313  ret=80%  AR=0%  (10 trials)
+  L=12288_d=0.5 ... gap=+0.113  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.8 ... gap=+0.085  ret=50%  AR=0%  (10 trials)
+  L=12288_d=0.9 ... gap=+0.077  ret=60%  AR=0%  (10 trials)
+  L=16384_d=0.1 ... gap=+0.657  ret=100%  AR=0%  (10 trials)
+  L=16384_d=0.2 ... gap=+0.490  ret=90%  AR=0%  (10 trials)
+  L=16384_d=0.5 ... gap=+0.373  ret=90%  AR=0%  (10 trials)
+  L=16384_d=0.8 ... gap=+0.133  ret=70%  AR=0%  (10 trials)
+  L=16384_d=0.9 ... gap=+0.169  ret=70%  AR=0%  (10 trials)
+    PK@2K = 100%
+    PK@4K = 100%
+    PK@8K = 100%
+    PK@12K = 66%
+    PK@16K = 84%
+    PPL: {'2048': 67.88, '4096': 73.51, '8192': 68.54, '12288': 78.41, '16384': 102.4}
+
+============================================================
+  CHECKPOINT: EVQ  mix=5pct  seed=7  tau=1.50
+============================================================
+  Model params: 454.2M
+
+  [baseline] EVQ raw
+    L=2048: PPL=65.128  (8 chunks)
+    L=4096: PPL=91.853  (8 chunks)
+    L=8192: PPL=157.052  (8 chunks)
+    L=12288: PPL=203.143  (8 chunks)
+    L=16384: PPL=240.280  (8 chunks)
+  L=2048_d=0.1 ... gap=+2.494  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.2 ... gap=+2.872  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.5 ... gap=+3.172  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.8 ... gap=+2.911  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.9 ... gap=+2.884  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.1 ... gap=+0.706  ret=100%  AR=0%  (10 trials)
+  L=4096_d=0.2 ... gap=+0.297  ret=70%  AR=0%  (10 trials)
+  L=4096_d=0.5 ... gap=+0.246  ret=70%  AR=0%  (10 trials)
+  L=4096_d=0.8 ... gap=+0.198  ret=60%  AR=0%  (10 trials)
+  L=4096_d=0.9 ... gap=+0.115  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.1 ... gap=+0.408  ret=80%  AR=0%  (10 trials)
+  L=8192_d=0.2 ... gap=+0.175  ret=50%  AR=0%  (10 trials)
+  L=8192_d=0.5 ... gap=+0.185  ret=60%  AR=0%  (10 trials)
+  L=8192_d=0.8 ... gap=+0.239  ret=80%  AR=0%  (10 trials)
+  L=8192_d=0.9 ... gap=-0.286  ret=40%  AR=0%  (10 trials)
+  L=12288_d=0.1 ... gap=+0.033  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.2 ... gap=+0.198  ret=90%  AR=0%  (10 trials)
+  L=12288_d=0.5 ... gap=+0.037  ret=70%  AR=0%  (10 trials)
+  L=12288_d=0.8 ... gap=-0.041  ret=40%  AR=0%  (10 trials)
+  L=12288_d=0.9 ... gap=+0.149  ret=40%  AR=0%  (10 trials)
+  L=16384_d=0.1 ... gap=-0.141  ret=40%  AR=0%  (10 trials)
+  L=16384_d=0.2 ... gap=+0.097  ret=50%  AR=0%  (10 trials)
+  L=16384_d=0.5 ... gap=+0.175  ret=60%  AR=0%  (10 trials)
+  L=16384_d=0.8 ... gap=-0.111  ret=30%  AR=0%  (10 trials)
+  L=16384_d=0.9 ... gap=+0.197  ret=50%  AR=0%  (10 trials)
+    PK@2K = 100%
+    PK@4K = 72%
+    PK@8K = 62%
+    PK@12K = 60%
+    PK@16K = 46%
+    PPL: {'2048': 65.13, '4096': 91.85, '8192': 157.05, '12288': 203.14, '16384': 240.28}
+
+  [+YaRN] EVQ + YaRN (scale=8.0)
+    L=2048: PPL=67.749  (8 chunks)
+    L=4096: PPL=72.317  (8 chunks)
+    L=8192: PPL=67.702  (8 chunks)
+    L=12288: PPL=78.302  (8 chunks)
+    L=16384: PPL=105.018  (8 chunks)
+  L=2048_d=0.1 ... gap=+1.263  ret=100%  AR=30%  (10 trials)
+  L=2048_d=0.2 ... gap=+1.711  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.5 ... gap=+1.693  ret=100%  AR=70%  (10 trials)
+  L=2048_d=0.8 ... gap=+1.685  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.9 ... gap=+1.293  ret=100%  AR=60%  (10 trials)
+  L=4096_d=0.1 ... gap=+2.064  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.2 ... gap=+2.084  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.5 ... gap=+2.185  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.8 ... gap=+2.001  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.9 ... gap=+1.993  ret=100%  AR=100%  (10 trials)
+  L=8192_d=0.1 ... gap=+2.171  ret=100%  AR=100%  (10 trials)
+  L=8192_d=0.2 ... gap=+1.997  ret=100%  AR=90%  (10 trials)
+  L=8192_d=0.5 ... gap=+1.748  ret=100%  AR=100%  (10 trials)
+  L=8192_d=0.8 ... gap=+1.729  ret=100%  AR=50%  (10 trials)
+  L=8192_d=0.9 ... gap=+1.148  ret=100%  AR=60%  (10 trials)
+  L=12288_d=0.1 ... gap=+0.076  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.2 ... gap=+0.303  ret=80%  AR=0%  (10 trials)
+  L=12288_d=0.5 ... gap=+0.083  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.8 ... gap=+0.043  ret=50%  AR=0%  (10 trials)
+  L=12288_d=0.9 ... gap=+0.153  ret=70%  AR=0%  (10 trials)
+  L=16384_d=0.1 ... gap=+0.097  ret=60%  AR=0%  (10 trials)
+  L=16384_d=0.2 ... gap=+0.466  ret=90%  AR=0%  (10 trials)
+  L=16384_d=0.5 ... gap=-0.079  ret=40%  AR=0%  (10 trials)
+  L=16384_d=0.8 ... gap=-0.087  ret=50%  AR=0%  (10 trials)
+  L=16384_d=0.9 ... gap=-0.180  ret=40%  AR=0%  (10 trials)
+    PK@2K = 100%
+    PK@4K = 100%
+    PK@8K = 100%
+    PK@12K = 64%
+    PK@16K = 56%
+    PPL: {'2048': 67.75, '4096': 72.32, '8192': 67.7, '12288': 78.3, '16384': 105.02}
+
+============================================================
+  CHECKPOINT: Geo  mix=10pct  seed=123  tau=0.00
+============================================================
+  Model params: 454.2M
+
+  [baseline] Geo raw
+    L=2048: PPL=66.252  (8 chunks)
+    L=4096: PPL=100.154  (8 chunks)
+    L=8192: PPL=170.900  (8 chunks)
+    L=12288: PPL=222.964  (8 chunks)
+    L=16384: PPL=269.398  (8 chunks)
+  L=2048_d=0.1 ... gap=+3.408  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.2 ... gap=+3.549  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.5 ... gap=+3.762  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.8 ... gap=+3.741  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.9 ... gap=+3.810  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.1 ... gap=+0.515  ret=80%  AR=0%  (10 trials)
+  L=4096_d=0.2 ... gap=+0.617  ret=90%  AR=0%  (10 trials)
+  L=4096_d=0.5 ... gap=+0.777  ret=90%  AR=0%  (10 trials)
+  L=4096_d=0.8 ... gap=-0.007  ret=40%  AR=0%  (10 trials)
+  L=4096_d=0.9 ... gap=-0.001  ret=70%  AR=0%  (10 trials)
+  L=8192_d=0.1 ... gap=-0.306  ret=20%  AR=0%  (10 trials)
+  L=8192_d=0.2 ... gap=+0.480  ret=50%  AR=0%  (10 trials)
+  L=8192_d=0.5 ... gap=-0.087  ret=30%  AR=0%  (10 trials)
+  L=8192_d=0.8 ... gap=-0.226  ret=30%  AR=0%  (10 trials)
+  L=8192_d=0.9 ... gap=+0.036  ret=50%  AR=0%  (10 trials)
+  L=12288_d=0.1 ... gap=-0.139  ret=40%  AR=0%  (10 trials)
+  L=12288_d=0.2 ... gap=+0.159  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.5 ... gap=-0.050  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.8 ... gap=+0.131  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.9 ... gap=-0.358  ret=30%  AR=0%  (10 trials)
+  L=16384_d=0.1 ... gap=+0.022  ret=50%  AR=0%  (10 trials)
+  L=16384_d=0.2 ... gap=-0.163  ret=70%  AR=0%  (10 trials)
+  L=16384_d=0.5 ... gap=+0.187  ret=60%  AR=0%  (10 trials)
+  L=16384_d=0.8 ... gap=+0.074  ret=70%  AR=0%  (10 trials)
+  L=16384_d=0.9 ... gap=+0.331  ret=70%  AR=0%  (10 trials)
+    PK@2K = 100%
+    PK@4K = 74%
+    PK@8K = 36%
+    PK@12K = 50%
+    PK@16K = 64%
+    PPL: {'2048': 66.25, '4096': 100.15, '8192': 170.9, '12288': 222.96, '16384': 269.4}
+
+  [+YaRN] Geo + YaRN (scale=8.0)
+    L=2048: PPL=67.107  (8 chunks)
+    L=4096: PPL=71.915  (8 chunks)
+    L=8192: PPL=82.577  (8 chunks)
+    L=12288: PPL=119.512  (8 chunks)
+    L=16384: PPL=161.761  (8 chunks)
+  L=2048_d=0.1 ... gap=+1.404  ret=100%  AR=90%  (10 trials)
+  L=2048_d=0.2 ... gap=+1.347  ret=100%  AR=90%  (10 trials)
+  L=2048_d=0.5 ... gap=+1.362  ret=100%  AR=100%  (10 trials)
+  L=2048_d=0.8 ... gap=+1.074  ret=100%  AR=40%  (10 trials)
+  L=2048_d=0.9 ... gap=+0.995  ret=100%  AR=60%  (10 trials)
+  L=4096_d=0.1 ... gap=+3.462  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.2 ... gap=+3.203  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.5 ... gap=+3.558  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.8 ... gap=+3.424  ret=100%  AR=100%  (10 trials)
+  L=4096_d=0.9 ... gap=+3.349  ret=100%  AR=100%  (10 trials)
+  L=8192_d=0.1 ... gap=+0.263  ret=80%  AR=0%  (10 trials)
+  L=8192_d=0.2 ... gap=+0.752  ret=70%  AR=0%  (10 trials)
+  L=8192_d=0.5 ... gap=+0.194  ret=50%  AR=0%  (10 trials)
+  L=8192_d=0.8 ... gap=-0.109  ret=40%  AR=0%  (10 trials)
+  L=8192_d=0.9 ... gap=-0.001  ret=50%  AR=0%  (10 trials)
+  L=12288_d=0.1 ... gap=-0.096  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.2 ... gap=-0.148  ret=40%  AR=0%  (10 trials)
+  L=12288_d=0.5 ... gap=+0.156  ret=50%  AR=0%  (10 trials)
+  L=12288_d=0.8 ... gap=+0.195  ret=60%  AR=0%  (10 trials)
+  L=12288_d=0.9 ... 

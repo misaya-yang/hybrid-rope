@@ -94,7 +94,7 @@ NeurIPS 10pt single column，一页约 55-60 行正文 or 3 个 medium table。
 | S3 | Exact solution → EVQ, single parameter τ | 20 |
 | S4 | Geometric RoPE = τ=0, strictly suboptimal | 15 |
 | S5 | From-scratch 50M-750M: PPL -10-19%, passkey +40pp | 20 |
-| S6 | **Killer**: EVQ + YaRN 8K=98% vs Geo+YaRN=62% | 25 |
+| S6 | **Killer**: EVQ + YaRN 8K=100% (3 seeds, zero variance) vs Geo+YaRN=65% | 25 |
 | S7 | One-line replacement, zero hyperparameters | 15 |
 | **Total** | | **~135** |
 
@@ -114,7 +114,7 @@ NeurIPS 10pt single column，一页约 55-60 行正文 or 3 个 medium table。
 1. Joint variational framework → governing ODE → exact solution (Theorem 1)
 2. EVQ closed-form warp → Geometric is τ=0 degenerate (Theorem 2) → scaling law τ*=d/√L
 3. From-scratch validation 50M-750M: PPL improvement + retrieval divergence + capability preservation
-4. **Superlinear complementarity**: EVQ + YaRN achieves 98% 8K retrieval vs 62% for Geo+YaRN, establishing training-time and inference-time PE as orthogonal optimization dimensions
+4. **Superlinear complementarity**: EVQ + YaRN achieves 100% 8K retrieval across 3 seeds (zero variance) vs 65% for Geo+YaRN (+35pp), establishing training-time and inference-time PE as orthogonal optimization dimensions
 
 **风格**：
 - 每条 contribution 以 "We derive / We prove / We validate / We demonstrate" 开头
@@ -171,7 +171,18 @@ Table 1: 5 行（50M/125M/350M/350M-FW/750M），列: Scale | Dataset | Seeds | 
 
 #### 5.3 Training-time vs Inference-time PE（**新，核心 section**）
 
-**Table 2（最重要的新表）**：
+**Table 2（最重要的表，论文 killer result）**：
+
+用 5% 3-seed 数据（多 seed 确认，统计更强）：
+
+| Method | Type | Seeds | PK@8K | PK@12K | PK@16K |
+|--------|------|-------|-------|--------|--------|
+| Geo (no PE) | baseline | 3 | 54±11% | 55±5% | 55±14% |
+| Geo + YaRN | infer | 3 | 65±6% | 54±4% | 56±6% |
+| EVQ τ=1.5 | train | 3 | 57±5% | 58±2% | 56±9% |
+| **EVQ + YaRN** | **train+infer** | **3** | **100±0%** | **63±4%** | **70±14%** |
+
+补充 10% single-seed 表（含更多 PE baselines，放正文或 Appendix）：
 
 | Method | Type | PK@4K | PK@8K | PPL@4K | PPL@8K |
 |--------|------|-------|-------|--------|--------|
@@ -184,18 +195,18 @@ Table 1: 5 行（50M/125M/350M/350M-FW/750M），列: Scale | Dataset | Seeds | 
 | **EVQ + YaRN** | **train+infer** | **100%** | **98%** | 74.2 | 82.3 |
 | **EVQ + NTK-aware** | **train+infer** | **100%** | **88%** | 73.7 | 96.8 |
 
-Caption: "Training-time vs inference-time frequency optimization on the 350M passkey-mix model (10% mix, base=500K, L_train=2048). Inference-time methods applied to the Geometric-trained checkpoint at evaluation; EVQ is trained from scratch. The combination EVQ + YaRN achieves 98% passkey retrieval at 4× extrapolation (8K), compared to 62% for Geo + YaRN, demonstrating superlinear complementarity between training-time and inference-time optimization."
+Caption（3-seed 表）: "Training-time vs inference-time frequency optimization (350M, 5% passkey mix, base=500K, 3 seeds). EVQ + YaRN achieves 100% retrieval at 4× extrapolation (8K) across all three seeds with zero variance, compared to 65±6% for Geo + YaRN (+35pp). The effect extends to 8× extrapolation (16K): 70% vs 56% (+14pp). This demonstrates superlinear complementarity between training-time and inference-time optimization."
 
 **Para 1**（结果概述）：
-- YaRN/NTK-aware reach 100% at 4K through inference-time rescaling
-- EVQ reaches 82% at 4K through training-time reallocation alone
-- These operate at different stages: EVQ improves learned representations, YaRN improves inference-time extrapolation
+- YaRN/NTK-aware reach 100% at 4K (2×) through inference-time rescaling alone
+- EVQ alone reaches 82% at 4K through training-time reallocation
+- These operate at different stages and are complementary
 
-**Para 2**（超线性叠加 = killer paragraph）：
-- EVQ + YaRN at 8K: 98%, far exceeding both EVQ alone (60%) and Geo+YaRN (62%)
-- The synergy is superlinear: EVQ's expanded low-frequency spacing creates representations more amenable to inference-time rescaling
-- EVQ + NTK-aware shows the same pattern: 88% vs 50%
-- This establishes training-time and inference-time PE as orthogonal optimization dimensions
+**Para 2**（超线性叠加 = killer paragraph，用 3-seed 数据）：
+- EVQ + YaRN at 8K: **100% across all 3 seeds, zero variance**, vs Geo+YaRN = 65±6%（+35pp）
+- The effect persists at extreme extrapolation: 12K +9pp, 16K +14pp
+- EVQ's expanded low-frequency spacing creates representations more amenable to inference-time rescaling
+- This establishes training-time and inference-time PE as orthogonal optimization dimensions with superlinear interaction
 
 #### 5.4 Passkey Mix + Capability Preservation（Table 3 + 段落 + Prop 4）
 
