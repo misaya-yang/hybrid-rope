@@ -60,6 +60,15 @@ secrets/
 paper_draft/
 paper_exports/**/*.pdf
 
+# LaTeX build artifacts (paperdraft)
+docs/paperdraft/*.aux
+docs/paperdraft/*.log
+docs/paperdraft/*.out
+docs/paperdraft/*.toc
+docs/paperdraft/*.synctex.gz
+docs/paperdraft/*.fdb_latexmk
+docs/paperdraft/*.fls
+
 # macOS metadata
 .DS_Store
 **/.DS_Store

@@ -17,14 +17,15 @@ Fredholm integral equation of the second kind, which admits no closed-form
 solution for general $D(\Delta)$.
 
 The broadband constants $(\alpha^*,\beta^*)$ in our decomposition
-$K \approx \alpha\,\delta(\phi_1{-}\phi_2) + \beta\min(\phi_1,\phi_2)$ are the
-Hilbert--Schmidt projection of $K$ onto the two-parameter operator family
-$\{\alpha I + \beta M\}$, where $I$ is the identity and
-$M_{ij} = \min(\phi_i,\phi_j)$. While the projection residual can be
-substantial for finite data (35--49\% Frobenius norm in our experiments),
-the resulting constant-coefficient ODE admits the cosh family as its
-exact solution (Theorem~1), and empirical evaluation confirms that
-this family contains near-optimal frequency allocations (\S\ref{sec:experiments}).
+$K \approx \alpha\,\delta(\phi_1{-}\phi_2) + \beta\min(\phi_1,\phi_2)$ can be
+\emph{defined} as the Hilbert--Schmidt (least-squares) projection of $K$ onto
+the two-parameter operator family $\{\alpha I + \beta M\}$, where $I$ is the
+identity and $M_{ij} = \min(\phi_i,\phi_j)$.
+While the projection residual can be substantial for finite data (35--49\%
+Frobenius norm in our experiments), the resulting constant-coefficient ODE
+admits the cosh family as its exact solution (Theorem~1), and empirical
+evaluation confirms that this family contains near-optimal frequency allocations
+(\S\ref{sec:experiments}).
 \end{remark}
 ```
 
@@ -58,9 +59,11 @@ where $\sigma$ is the sigmoid function and
 $\partial\phi_k/\partial\tau$ is given in closed form (Appendix~\ref{app:gradient}).
 
 \paragraph{Boundary anchoring.}
-$\partial\phi_k/\partial\tau = 0$ at both $k=0$ (highest frequency) and
-$k=N{-}1$ (lowest frequency). Learning $\tau$ redistributes density only among
-interior frequencies, preserving the spectral endpoints.
+The continuous warp has fixed endpoints ($\phi(0;\tau)=0$, $\phi(1;\tau)=1$), and
+$\partial\phi/\partial\tau$ vanishes at $u\in\{0,1\}$.
+Under standard RoPE indexing $u_k=k/N$, this anchors the highest-frequency
+channel exactly ($k=0$), while the lowest-frequency endpoint is approached as
+$u_k\to 1$ (i.e., $k$ near $N{-}1$).
 
 \paragraph{Manifold-constrained search.}
 In contrast to DAPE~\citep{dape2024}, which learns $d/2$ independent frequencies
@@ -203,7 +206,7 @@ higher-order operator bases---is a promising direction for future work.
 \subsection{Gradient of EVQ-Cosh with Respect to $\tau$}
 \label{app:gradient}
 
-Let $A_k = 1 - u_k$ where $u_k = (k+\tfrac{1}{2})/N$. The exact derivative is:
+Let $A_k = 1 - u_k$ where $u_k = k/N$. The exact derivative is:
 \begin{equation}
 \frac{\partial\phi_k}{\partial\tau}
 = \frac{1}{\tau^2}\arcsinh(A_k\sinh\tau)
@@ -217,7 +220,7 @@ Expanding to leading order:
 = -\frac{A_k(1-A_k^2)}{3}\,\tau + O(\tau^3).
 \end{equation}
 The gradient is $O(\tau)$, ensuring numerical stability and boundary anchoring
-($\partial\phi_0/\partial\tau = \partial\phi_{N-1}/\partial\tau = 0$).
+(at the continuous endpoints $u\in\{0,1\}$).
 
 \paragraph{Implementation.}
 We use $\tau = \mathrm{softplus}(\psi)$ and switch to the Taylor approximation

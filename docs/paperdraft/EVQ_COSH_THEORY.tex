@@ -58,14 +58,20 @@ the lowest frequency ($\omega=b^{-1}$).
 
 \begin{definition}[Channel density and discretization]
 Let $\rho(\phi)\ge 0$ be a density on $[0,1]$ with $\int_0^1\rho(\phi)\dd\phi=1$.
-Given $N$ discrete frequency channels, we use midpoint quantiles
+Given $N$ discrete frequency channels, we use the standard RoPE indexing
 \begin{equation}
-u_k=\frac{k+\tfrac{1}{2}}{N},\qquad k=0,1,\dots,N-1,
+u_k=\frac{k}{N},\qquad k=0,1,\dots,N-1,
 \end{equation}
 and define discrete locations $\phi_k$ by the inverse CDF:
 $F(\phi_k)=u_k$, where $F(\phi)=\int_0^\phi\rho(t)\dd t$.
 The RoPE inverse frequencies are $\omega_k=\omega(\phi_k)=b^{-\phi_k}$.
 \end{definition}
+
+\begin{remark}[Discrete endpoint convention]
+Under $u_k=k/N$, the discrete grid does not include $u=1$ (hence typically
+$\phi_{N-1}<1$). We use the continuous interval $[0,1]$ for analysis and treat
+$\phi=1$ as a normalized low-frequency boundary.
+\end{remark}
 
 \section{Exact Kernel and Broadband Projection}
 
@@ -263,7 +269,7 @@ $1-u=\sinh(\tau(1-\phi))/\sinh\tau$ gives~\eqref{eq:evq_warp}.
 \end{proof}
 
 \begin{corollary}[Geometric is the $\tau\to 0$ limit]
-Let $u_k=(k+\tfrac{1}{2})/N$. Then $\phi_k(\tau)=\phi(u_k;\tau)$ satisfies
+Let $u_k=k/N$. Then $\phi_k(\tau)=\phi(u_k;\tau)$ satisfies
 $\lim_{\tau\to 0}\phi_k(\tau)=u_k$. Equivalently, EVQ degrades to geometric RoPE
 as $\tau\to 0$.
 \end{corollary}
@@ -277,10 +283,11 @@ $\asinh(x)=x+\mathcal{O}(x^3)$. Hence
 \]
 \end{proof}
 
-\begin{proposition}[Endpoint anchoring and ``no $r$'' fact]
+\begin{proposition}[Endpoint anchoring]
 For any $\tau>0$, the EVQ warp satisfies $\phi(0;\tau)=0$ and $\phi(1;\tau)=1$.
-In particular, the highest-frequency channel ($u\approx 0$) satisfies
-$\omega=b^{-\phi}=1$ exactly, matching geometric RoPE at $k=0$.
+In particular, under the discrete choice $u_0=0$ we have $\phi_0=0$ and
+$\omega_0=b^{-\phi_0}=1$ exactly, matching the geometric highest-frequency
+channel.
 \end{proposition}
 \begin{proof}
 Immediate from~\eqref{eq:evq_warp}: $\asinh(\sinh\tau)=\tau$ and $\asinh(0)=0$.
@@ -343,7 +350,7 @@ parameter obeys
 \section{Summary: Copy-Paste Formula Sheet}
 
 \paragraph{EVQ warp (inverse CDF).}
-For $N=d_{\mathrm{head}}/2$ and $u_k=(k+0.5)/N$:
+For $N=d_{\mathrm{head}}/2$ and $u_k=k/N$:
 \begin{equation}
 \phi_k(\tau)=1-\frac{1}{\tau}\asinh\!\bigl((1-u_k)\sinh\tau\bigr),
 \qquad
