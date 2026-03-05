@@ -799,3 +799,108 @@ EVQ 改变：改 1 行 inv_freq（零成本）→ YaRN 效果从 65% 跳到 100%
 5. **🔴 LoRA 微调不能证明 EVQ 有效**：改变 RoPE 频率 + LoRA 微调 = 模型同时学习"适应新频率"和"下游任务"，两个信号 confounded。加上灾难性遗忘（预训练知识因 PE 变化而丢失），LoRA 实验无论好坏都不能 cleanly 归因于 EVQ。**唯一干净的实验设计是 from-scratch 训练。** 这是核心方法论原则，不可妥协
 6. **🔴 Riemann-Lebesgue "Hybrid 严格优越" 导致 750M 实验浪费**：理论预测 Hybrid > Pure EVQ，但量级为 epsilon。基于此选择 r=16 进行 750M 训练（15h GPU），导致所有结果受 r=16 稀释污染。r-sweep（r=0 ≈ r=4）和 EVQ+YaRN（r=0 = 100%, r=16 = 有害）决定性证明了 Pure EVQ 才是正确选择。**教训：理论上"严格成立"不等于"实际重要"。epsilon 级理论优势不应指导实验设计。**
 7. **🔴 不要把单 seed <5% 差距当结论**：750M 的 PPL@16K +5.7% 和 LongBench NLL +2-3% 都是单 seed 单 r 配置的结果，完全在噪音范围内。但曾被当作"Geo 长程赢"来分析，浪费大量时间。**单 seed 下 <5% 差距 = 噪音，不可做方向性判断。**
+
+---
+
+## 18. 🔴 当前项目状态与待解决问题（2026-03-04 晚，等待清华大佬指导）
+
+### 18.1 已完成的 solid 证据（论文可用）
+
+| 证据 | 强度 | 规模 | Seeds | 状态 |
+|------|------|------|-------|------|
+| 变分推导 → ODE → EVQ 闭式解 | 理论 A | — | — | ✅ 完整 |
+| Geometric 是 τ=0 退化点 | 理论 A+ | — | — | ✅ 证毕 |
+| Waterbed 不等式 | 理论 A | — | — | ✅ 证毕 |
+| τ* = d_head/√L scaling law | 理论 B+ | — | — | ✅ 5+1 点验证 |
+| 350M PPL@16K -13.3% (L=2048) | 实验 A | 350M | 3 | ✅ |
+| 750M Retrieval Divergence +20pp | 实验 A | 750M | 1 | ✅ (单seed但轨迹清晰) |
+| Passkey mix 4K +40pp | 实验 A | 350M | 1 (10%) | ✅ |
+| EVQ+YaRN 8K=100% (L=2048) | 实验 A+ | 350M | 6 | ✅ zero variance |
+| 5%→10% 反对称 scaling | 实验 B | 350M | 1 | ⚠️ 需多seed |
+| 128-tok 对标 DAPE 完胜 | 实验 A | 125M | 1-3 | ✅ |
+| **L=256 Raw PPL -37.5%@32×** | **实验 A** | **454M** | **3** | **✅ 🆕** |
+| **L=256 EVQ+YaRN -61.7%@32×** | **实验 A+** | **454M** | **3** | **✅ 🆕** |
+| **L=256 YaRN 杠杆 10×** | **实验 A** | **454M** | **3** | **✅ 🆕** |
+| **L=256 τ*=4.0 验证** | **实验 A** | **454M** | **3** | **✅ 🆕** |
+| **L=256 NTK 不兼容 EVQ** | **实验 A** | **454M** | **3** | **✅ 🆕** |
+| 碰撞块预测 base=10K 死区 | 实验 B+ | 350M | 1 | ✅ 负面结果=理论验证 |
+
+### 18.2 核心理论严格性评估
+
+| 推导步骤 | 严格性 | 需要大佬帮忙？ |
+|---------|--------|--------------|
+| D(Δ) → K(φ₁,φ₂) 碰撞核 | A（精确定义） | 否 |
+| **K → αδ + βmin (Broadband 投影)** | **B+（唯一近似）** | **✅ 需要 perturbation bound** |
+| J[ρ] → ODE (Euler-Lagrange) | A+（教科书） | 否 |
+| ODE → ρ* = cosh + sinh + b^{-2φ} | A+（精确解） | 否 |
+| ρ* → φ_k(τ) (CDF 反演) | A+（精确变换） | 否 |
+| τ* = d_head/√L | B+（semi-rigorous） | **✅ 需要打磨推导** |
+
+**需要清华大佬帮忙的两件事**：
+1. **Broadband 近似的 perturbation bound**：利用 J 的强凸性证明 ‖ρ*_exact - ρ*_approx‖ ≤ ε，给出 ε 的定量估计。封死 reviewer 对 35% 残差的质疑。估计半天工作量。
+2. **τ* scaling law 推导打磨**：把 α*(L,b) ∝ 1/(L·lnb) 这步论证写得更 tight，明确哪些是 theorem 哪些是 conjecture。
+
+### 18.3 🔴 待解决的三大问题（等待指导）
+
+#### 问题 1：r 超参数的理论地位
+
+**现状**：实验已证明 r 不重要（r=0 ≈ r=4，cosh 数学性质自动保持高频不变）。但理论上缺乏对"r 为什么不重要"的正式论证，只有 k=0 时 φ=0 的数学事实。
+
+**需要的**：r 的理论分析——要么证明 r=0 在某种意义下最优，要么给出 r 的影响上界证明它可忽略。
+
+**当前防御**：r-sweep 实验（9 points）+ cosh 数学性质 + EVQ+YaRN 在 r=0 的决定性优势。对论文来说可能够了，但 reviewer 如果追问"为什么不需要 r"需要更好的理论回答。
+
+#### 问题 2：更大模型规模验证
+
+**现状**：
+- 50M/125M/350M/454M/750M 均有实验
+- 750M 使用了错误的 r=16 Hybrid（已弃用），结果受污染
+- 没有 750M+ Pure EVQ (r=0) 的数据
+
+**需要的**：至少一个 ≥1B 的 Pure EVQ (r=0) 实验，哪怕单 seed。或者用 LoRA 以外的方法在大模型上验证（但 LoRA 方法论有根本缺陷，见教训 §17.5）。
+
+**风险评估**：PE 论文惯例是 125M-350M（FIRE, DAPE, Kerple 都是），不需要 7B。但 750M Pure EVQ 会让论文更强。GPU 预算是约束。
+
+#### 问题 3：下游任务 beyond passkey
+
+**现状**：
+- PPL（多规模、多域）✅
+- Passkey retrieval（多变体）✅
+- EVQ+YaRN passkey 100% ✅
+- **缺乏**：real NLP downstream（QA, summarization, code）
+
+**已设计但未执行**：
+- DSR (Distance-Swept Retrieval) — 已有完整设计，最高优先级
+- Multi-domain PPL — 已有 TinyStories + FineWeb-Edu，可补 PG-19/Arxiv
+- KV Retrieval — 设计完成，需 pilot 确认 350M 基线非随机
+- QA Mix — 需新训练
+
+**建议优先级**：DSR > KV Retrieval pilot > Multi-NIAH 加 trials > QA Mix
+
+### 18.4 论文写作状态
+
+| 文档 | 状态 | 位置 |
+|------|------|------|
+| CORE_THEORY.md | ✅ 最新（含 Phase 11 全量数据） | 本文件 |
+| PAPER_PLAN_V9.md | ✅ 结构完成，需更新 Phase 11 | `docs/paperdraft/` |
+| Figure 1 三联图 | ✅ 已完成 | `paper_exports/` |
+| LaTeX 正文 | ❌ 未开始 | — |
+| Appendix 证明 | ❌ 未开始 | — |
+
+### 18.5 Phase 11 (L=256) 对论文结构的影响
+
+Phase 11 结果极强，建议在论文中作为独立 subsection（Section 5.X: PE-Dominant Regime）：
+
+- **Figure**：Extrapolation ratio curve（x: 1×-32×, y: PPL, 四条线: Geo/EVQ/Geo+YaRN/EVQ+YaRN, 3-seed shading）
+- **Table**：完整 PPL 对比 + YaRN synergy + NTK 不兼容
+- **核心 claim**：(1) τ* prediction confirmed, (2) EVQ+YaRN -62% at 32×, (3) YaRN leverage 10×, (4) NTK incompatibility proves frequency structure preservation is key
+
+这个 section 同时验证了理论（τ* scaling law）和方法（EVQ+YaRN 协同），是论文最强的综合性证据。
+
+### 18.6 给清华大佬的简报要点
+
+1. **我们做了什么**：RoPE 频率分配的变分逆问题，得到闭式解 EVQ-cosh，单参数 τ，Geometric 是退化点
+2. **核心实验结果**：L=2048 PPL -13%(3-seed), passkey +40pp, EVQ+YaRN 100%(6-seed), L=256 PPL -38%(3-seed), EVQ+YaRN -62%
+3. **需要帮忙的**：(a) Broadband 近似的 perturbation bound, (b) τ* 推导打磨
+4. **不需要帮忙的**：六步推导链本身（5/6 步精确，远超 PE 论文惯例）
+5. **接下来要做的**：DSR 实验, 可选 750M+ Pure EVQ, 论文 LaTeX 写作
