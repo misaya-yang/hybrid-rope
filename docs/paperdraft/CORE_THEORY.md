@@ -668,7 +668,7 @@ def evq_cosh_inv_freq(d_head, L, base):
 
 ## 14. 论文叙事方向（v6, 2026-03-04 凌晨，重大修正：Pure EVQ + YaRN 协同）
 
-**核心叙事（14 层递进，Hybrid→Pure EVQ 修正版）**：
+**核心叙事（15 层递进，Hybrid→Pure EVQ 修正版）**：
 
 1. **变分逆问题**："RoPE frequency allocation is a variational inverse problem with closed-form solution"
 2. **Geometric 是零温极限**："Standard RoPE is the τ=0 degenerate case; for any L > 0, τ* > 0 proving Geometric strictly suboptimal"
@@ -684,6 +684,7 @@ def evq_cosh_inv_freq(d_head, L, base):
 12. **🆕🔴 EVQ+YaRN 超线性协同（冲击 Spotlight 核心武器）**："Training-time frequency optimization (EVQ) × inference-time position scaling (YaRN) = orthogonal optimization. EVQ+YaRN@8K: 100% (3 seed, zero variance). Geo+YaRN@8K: 65%. PPL@8K: 68 vs 82. EVQ unlocks the training-time bottleneck for long-context extrapolation."
 13. **🆕 r 不是超参数**："r-sweep confirms r=0 ≈ r=4; cosh warp mathematically preserves high-freq (k=0: EVQ = Geometric exactly). Hybrid was over-engineering."
 14. **🆕 128-tok PE-dominant regime 对标实验**："In the extreme short-training regime (128 tokens, 64× extrapolation to 8K), where model weights learn almost nothing about position, EVQ τ=5.0 achieves PPL@8K -35% (FineWeb) / -57% (TinyStories) vs Geometric with <2% in-distribution cost. Closed-form, 0 extra parameters, beats DAPE (32 learnable params, -27%) and YaRN-train (catastrophic, 2.2× worse). This is the cleanest ablation: PE quality is the ONLY variable."
+15. **🆕🔴 Video temporal 维度泛化（3D RoPE）**："EVQ-cosh 的频率分配不仅适用于 1D text RoPE，也适用于 3D Video RoPE 的 temporal 维度，且 τ* 预测依然成立。固定 spatial geometric、仅替换 temporal `inv_freq_t` 的控制实验中，EVQ 在 2×-8× temporal extrapolation 持续优于 Geo，且 EVQ+temporal-YaRN 进一步放大优势。"
 
 **论文 Figure 规划**：
 
@@ -710,6 +711,7 @@ def evq_cosh_inv_freq(d_head, L, base):
 - ✅ **r 不是超参数**：r=0 ≈ r=4（噪音级差距）。cosh 分配数学性质自动保持高频不变。Pure EVQ 是正确主方法
 - ✅ **🆕 128-tok PE-dominant regime 对标实验**：125M 在 128-token 训练、64× 外推到 8K。EVQ τ=5.0 PPL@8K -35%（FineWeb）/ -57%（TinyStories）vs Geo，ID PPL 代价 <2%。完胜 DAPE（32 可学习参数，PPL@8K 455 vs EVQ 334）和 YaRN-train（灾难性 1136 vs 514）。Learnable τ 3-seed 收敛到 1.14±0.003，证明 in-dist loss 对 τ 完全平坦——理论推导 τ* 的必要性。**可解析闭式解 + 0 额外参数 + 对标原论文完胜**
 - ✅ **🆕🔴 L=256 PE-dominant 完整结果（Phase 11, COMPLETE）**：454M, L_train=256, 3-seed。三个 spotlight 级发现：(1) Raw PPL@32× -37.5%，τ=4.0（=τ*预测值）全面优于 τ=2.0。(2) EVQ τ=4.0+YaRN PPL@32× 99.6 vs Geo+YaRN 260.2（**-61.7%**，目前最强单个数字）。(3) YaRN 杠杆效应 10×：对 Geo 改善 3-5%，对 EVQ 改善 33-41%。NTK-Aware 对 EVQ 有害（覆盖频率优化），只有 YaRN 保留 EVQ 结构
+- ✅ **🆕 Video temporal 外推验证（3D RoPE）**：在 bouncing-ball 控制实验中，保持 spatial 频率全 geometric，仅替换 temporal 频率切片（`inv_freq_t`）。结果显示 EVQ τ=2.0 相比 Geo 在 4×/8× temporal extrapolation 明显改善（raw PPL 约 +19% / +18%），EVQ+temporal-YaRN 提升进一步扩大到约 +28% / +21%。**直接支持跨模态核心 claim：EVQ-cosh 适用于 1D text 与 3D video temporal，且 τ* 预测在视频 temporal 维度依然有效。**
 
 **不能说**：
 - ❌ "τ=1.0 universally optimal"（依赖 L）
