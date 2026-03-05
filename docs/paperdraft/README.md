@@ -8,6 +8,7 @@
 |------|------|---------|
 | `PROMPT_AI_HANDOFF.md` | 项目状态 + 数据路径 + 红线 | **第 1 个读** |
 | `CORE_THEORY.md` | 理论精简版（推导链 + 6 个核心理论点） | **第 2 个读** |
+| `EVQ_COSH_THEORY.tex` (`EVQ_COSH_THEORY.pdf`) | 纯理论版定理/公式集合（可直接粘贴到论文 Appendix） | 写 Appendix/Proofs 时读 |
 | `EXPERIMENT_RESULTS_128TOK.md` | 128-tok paper-ready 结果表 | 写 Section 5 时读 |
 | `phase6_report.md` | Phase 6 完整实验报告 | 写 Section 5 时读 |
 | `phase7_report.md` | Phase 7 完整实验报告 | 写 Section 5 时读 |
