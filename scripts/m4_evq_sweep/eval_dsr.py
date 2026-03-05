@@ -12,21 +12,29 @@ Setup:
 
 Four curves:
   1. Geo           (τ=0, raw frequencies)
-  2. EVQ           (τ=1.5, raw frequencies)
+  2. EVQ           (τ=τ_evq, raw frequencies)
   3. Geo + YaRN    (τ=0, per-length YaRN scaling)
-  4. EVQ + YaRN    (τ=1.5, per-length YaRN scaling)
+  4. EVQ + YaRN    (τ=τ_evq, per-length YaRN scaling)
 
 Performance:
   - Batched forward passes (default batch=8) for high GPU utilization
   - correct + wrong sequences interleaved in the same batch
-  - Vectorized NLL computation (no Python loops)
+  - Split lm_head: backbone on full batch, lm_head only at answer positions
 
 Usage:
+    # 350M passkey-mix models (inv_freq.npy available):
     python eval_dsr.py \
         --geo_dir  /path/to/350m_tau0.00_seed42 \
         --evq_dir  /path/to/350m_tau1.50_seed42 \
         --tier 350m --train_len 2048 --base 500000 \
         --num_trials 50 --batch_size 8
+
+    # 125M phase11b models (inv_freq in model.pt state dict):
+    python eval_dsr.py \
+        --geo_dir  /path/to/125m_geo_seed42 \
+        --evq_dir  /path/to/125m_evq4.0_seed42 \
+        --tier 125m --train_len 256 --base 500000 \
+        --num_trials 50 --batch_size 16
 """
 
 from __future__ import annotations
@@ -439,18 +447,25 @@ def main() -> None:
         print(f"  {label}  (ckpt: {ckpt_dir})")
         print(f"  {'='*50}")
 
-        # Load model
-        inv_freq = np.load(str(inv_freq_path))
-        inv_freq_t = torch.from_numpy(inv_freq)
+        # Load inv_freq: prefer .npy file, fallback to model state dict
+        state = torch.load(str(model_path), map_location=DEVICE, weights_only=True)
+        if inv_freq_path.exists():
+            inv_freq = np.load(str(inv_freq_path))
+            inv_freq_t = torch.from_numpy(inv_freq)
+        else:
+            # Extract from model state dict (phase11b saves it inside model.pt)
+            inv_freq_t = state["blocks.0.attn.rope.inv_freq"].cpu()
+            print(f"    inv_freq from state dict: shape={inv_freq_t.shape}, "
+                  f"min={inv_freq_t.min():.6f}, max={inv_freq_t.max():.6f}")
 
         eval_cfg = cfg.copy()
         eval_cfg["seq_len"] = args.train_len
         eval_cfg["max_position_embeddings"] = args.train_len
 
         model = GPT(eval_cfg, inv_freq_t).to(DEVICE)
-        state = torch.load(str(model_path), map_location=DEVICE, weights_only=True)
         model.load_state_dict(state)
         model.eval()
+        del state
 
         t0 = time.time()
         curve = eval_dsr_single_model(
