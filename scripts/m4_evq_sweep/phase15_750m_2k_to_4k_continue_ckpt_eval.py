@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Phase 15: 750M context continuation 2K -> 4K (Geo vs Hybrid).
+Phase 15: 750M context continuation 2K -> 4K (Geo vs EVQ/Hybrid).
 
 Goal:
   Continue from existing 750M@2K checkpoints and evaluate whether 4K continuation
@@ -8,7 +8,7 @@ Goal:
 
 Runs:
   1) Geo 750M 2K ckpt -> continue at 4K
-  2) Hybrid (tau=1.5, r=16) 750M 2K ckpt -> continue at 4K
+  2) EVQ/Hybrid (tau, r_keep configurable) 750M 2K ckpt -> continue at 4K
 
 Checkpoint eval:
   - 50%, 75%, 100%: PPL + passkey
@@ -75,12 +75,13 @@ from eval_longbench_nll import (  # noqa: E402
 
 BASE = 500_000.0
 DIM = 64
-TAU = 1.5
-R_KEEP = 16
+TAU = float(os.environ.get("PHASE15_TAU", "1.5"))
+R_KEEP = int(os.environ.get("PHASE15_R_KEEP", "0"))
 
 SEED = int(os.environ.get("PHASE15_SEED", "42"))
 TOKENS = int(os.environ.get("PHASE15_TOKENS", "100000000"))  # +100M by default
 SEQ_LEN = 4096
+RUN_ONLY = os.environ.get("PHASE15_RUN_ONLY", "").strip().lower()  # "", "geo", "evq"/"hybrid"
 PASSKEY_MIX_RATIO = float(
     os.environ.get(
         "PHASE15_PASSKEY_MIX_RATIO",
@@ -144,10 +145,8 @@ GEO_INIT_CKPT = (
     "/root/autodl-tmp/evq_phase9/seed42/"
     "geo_750m_2k_1bdata_ckpt/checkpoints/step_15258.pt"
 )
-HYBRID_INIT_CKPT = (
-    "/root/autodl-tmp/evq_phase9/seed42/"
-    "hybrid1.5_r16_750m_2k_1bdata_ckpt/checkpoints/step_15258.pt"
-)
+EVQ_INIT_CKPT = os.environ.get("PHASE15_EVQ_INIT_CKPT", GEO_INIT_CKPT).strip()
+EVQ_TAG = f"evq{TAU:g}_r{R_KEEP}_750m_2k_to_4k_continue"
 
 
 def geometric_inv_freq(dim=DIM, base=BASE):
@@ -724,7 +723,7 @@ def run_single_continue(
 
 def main():
     print("#" * 72)
-    print("  Phase 15: 750M continuation 2K -> 4K (Geo vs Hybrid)")
+    print("  Phase 15: 750M continuation 2K -> 4K (Geo vs EVQ/Hybrid)")
     print("#" * 72)
     downstream_tasks = _resolve_downstream_tasks(DOWNSTREAM_TASKS)
     print(f"  device={DEVICE} dtype={DTYPE} autocast={USE_AUTOCAST}")
@@ -733,8 +732,16 @@ def main():
         f"passkey_mix={PASSKEY_MIX_RATIO:.2%} downstream_mix={DOWNSTREAM_MIX_RATIO:.2%}"
     )
     print(f"  downstream tasks={downstream_tasks or '[]'}")
+    print(f"  EVQ config: tau={TAU}, r_keep={R_KEEP}, init_ckpt={EVQ_INIT_CKPT}")
 
     cfg = CFG_750M_4K.copy()
+    if os.environ.get("PHASE15_MICRO_BATCH_SIZE"):
+        cfg["micro_batch_size"] = int(os.environ["PHASE15_MICRO_BATCH_SIZE"])
+    if os.environ.get("PHASE15_GRAD_ACCUM"):
+        cfg["grad_accum"] = int(os.environ["PHASE15_GRAD_ACCUM"])
+    # Keep effective batch consistent with micro * accum.
+    cfg["batch_size"] = cfg["micro_batch_size"] * cfg["grad_accum"]
+
     n_chunks = TOKENS // SEQ_LEN
     n_steps = n_chunks // cfg["batch_size"]
     print(
@@ -781,11 +788,19 @@ def main():
             target_inv=geometric_inv_freq(),
         ),
         dict(
-            tag="hybrid1.5_r16_750m_2k_to_4k_continue",
-            init_ckpt=HYBRID_INIT_CKPT,
+            tag=EVQ_TAG,
+            init_ckpt=EVQ_INIT_CKPT,
             target_inv=hybrid_evq_inv_freq(DIM, BASE, TAU, R_KEEP),
         ),
     ]
+    if RUN_ONLY in {"geo", "hybrid", "evq"}:
+        if RUN_ONLY == "geo":
+            runs = [r for r in runs if r["tag"].startswith("geo_")]
+        else:
+            runs = [r for r in runs if not r["tag"].startswith("geo_")]
+        print(f"  Run filter enabled: PHASE15_RUN_ONLY={RUN_ONLY} -> {[r['tag'] for r in runs]}")
+    if not runs:
+        raise RuntimeError("No runs selected after PHASE15_RUN_ONLY filter")
 
     results = {}
     for r in runs:
@@ -802,39 +817,41 @@ def main():
             downstream_mix_ratio=effective_downstream_ratio,
         )
 
-    geo = results["geo_750m_2k_to_4k_continue"]
-    hyb = results["hybrid1.5_r16_750m_2k_to_4k_continue"]
+    geo = results.get("geo_750m_2k_to_4k_continue")
+    evq = results.get(EVQ_TAG)
 
-    geo_ret = geo.get("passkey_global", {}).get("retrieval_rate", 0)
-    hyb_ret = hyb.get("passkey_global", {}).get("retrieval_rate", 0)
-    geo_ppl = geo.get("ppl_16k") or geo.get("ppl", {}).get("16384", 0)
-    hyb_ppl = hyb.get("ppl_16k") or hyb.get("ppl", {}).get("16384", 0)
+    geo_ret = geo.get("passkey_global", {}).get("retrieval_rate", 0) if geo else 0
+    evq_ret = evq.get("passkey_global", {}).get("retrieval_rate", 0) if evq else 0
+    geo_ppl = (geo.get("ppl_16k") or geo.get("ppl", {}).get("16384", 0)) if geo else 0
+    evq_ppl = (evq.get("ppl_16k") or evq.get("ppl", {}).get("16384", 0)) if evq else 0
 
     print(f"\n{'='*72}")
     print("  SUMMARY (750M 2K->4K continuation)")
     print(f"{'='*72}")
-    print(f"  Geo    : ret={geo_ret:.4f}, ppl16k={geo_ppl}")
-    print(f"  Hybrid : ret={hyb_ret:.4f}, ppl16k={hyb_ppl}")
-    geo_ds = (geo.get("downstream_nll") or {}).get("_aggregate", {})
-    hyb_ds = (hyb.get("downstream_nll") or {}).get("_aggregate", {})
+    if geo:
+        print(f"  Geo    : ret={geo_ret:.4f}, ppl16k={geo_ppl}")
+    if evq:
+        print(f"  EVQ(r={R_KEEP}) : ret={evq_ret:.4f}, ppl16k={evq_ppl}")
+    geo_ds = (geo.get("downstream_nll") or {}).get("_aggregate", {}) if geo else {}
+    evq_ds = (evq.get("downstream_nll") or {}).get("_aggregate", {}) if evq else {}
     if geo_ds:
         print(
             f"  Geo downstream: NLL={geo_ds.get('mean_nll', float('nan')):.4f} "
             f"(tasks={geo_ds.get('n_tasks', 0)})"
         )
-    if hyb_ds:
+    if evq_ds:
         print(
-            f"  Hybrid downstream: NLL={hyb_ds.get('mean_nll', float('nan')):.4f} "
-            f"(tasks={hyb_ds.get('n_tasks', 0)})"
+            f"  EVQ(r={R_KEEP}) downstream: NLL={evq_ds.get('mean_nll', float('nan')):.4f} "
+            f"(tasks={evq_ds.get('n_tasks', 0)})"
         )
-    if geo_ret:
-        print(f"  Hybrid vs Geo retrieval: {(hyb_ret / geo_ret - 1) * 100:+.2f}%")
-    if geo_ppl:
-        print(f"  Hybrid vs Geo PPL@16K: {(hyb_ppl / geo_ppl - 1) * 100:+.2f}%")
-    if geo_ds and hyb_ds and geo_ds.get("mean_nll", 0):
+    if geo and evq and geo_ret:
+        print(f"  EVQ vs Geo retrieval: {(evq_ret / geo_ret - 1) * 100:+.2f}%")
+    if geo and evq and geo_ppl:
+        print(f"  EVQ vs Geo PPL@16K: {(evq_ppl / geo_ppl - 1) * 100:+.2f}%")
+    if geo and evq and geo_ds and evq_ds and geo_ds.get("mean_nll", 0):
         print(
-            f"  Hybrid vs Geo downstream NLL: "
-            f"{(hyb_ds['mean_nll'] / geo_ds['mean_nll'] - 1) * 100:+.2f}%"
+            f"  EVQ vs Geo downstream NLL: "
+            f"{(evq_ds['mean_nll'] / geo_ds['mean_nll'] - 1) * 100:+.2f}%"
         )
 
     summary = dict(
@@ -842,8 +859,11 @@ def main():
         model="750M",
         seq_len=SEQ_LEN,
         tokens=TOKENS,
-        runs=["geo", "hybrid1.5_r16"],
+        runs=list(results.keys()),
         seed=SEED,
+        tau=TAU,
+        r_keep=R_KEEP,
+        evq_init_ckpt=EVQ_INIT_CKPT,
         passkey_mix_ratio=PASSKEY_MIX_RATIO,
         downstream_mix_ratio=effective_downstream_ratio,
         downstream_tasks=downstream_tasks,
