@@ -2,12 +2,13 @@
 """
 Phase 11E: Continued Pretraining — Geo→EVQ Frequency Retrofit
 
-Takes existing 454M Geo checkpoint (L=2048, 100M tokens pretrained) and forks:
+Takes existing 454M Geo checkpoint (L_train=256, 100M tokens) and continues
+pretraining at L=2048 with more tokens:
   Fork A (control):    Continue training with Geo inv_freq
   Fork B (experiment): Swap inv_freq to EVQ τ*, continue training
 
 Both forks train for the same number of additional tokens on identical data.
-Compares extrapolation PPL to show EVQ can be retrofitted onto existing models.
+Tests whether EVQ frequency allocation helps during context-length extension.
 
 Usage:
   python phase11e_continued_pretrain.py --seeds 42
@@ -39,22 +40,16 @@ from run_evq_sweep import (
 
 WORK = Path("/root/autodl-tmp/evq_phase11e_continued")
 
-# Checkpoint sources (5090 paths)
-CKPT_CANDIDATES = [
-    Path("/root/autodl-tmp/evq_passkey_mix_5pct"),
-    Path("/root/autodl-tmp/evq_passkey_mix_10pct"),
-]
+# Checkpoint sources — Phase 11 454M Geo (L_train=256, 100M tokens)
+CKPT_DIR = Path("/root/autodl-tmp/evq_phase11_L256")
 
-# Data sources
+# Data sources — Phase 9 2B token dataset at L=2048
 DATA_CANDIDATES = [
-    Path("/root/autodl-tmp/evq_passkey_mix_10pct/train_fineweb-edu_100000000_2048.pt"),
-    Path("/root/autodl-tmp/evq_passkey_mix_5pct/train_fineweb-edu_100000000_2048.pt"),
     Path("/root/autodl-tmp/evq_phase9/data/train_fineweb-edu_2000000000_2048.pt"),
 ]
 VAL_CANDIDATES = [
-    Path("/root/autodl-tmp/evq_passkey_mix_10pct/val_fineweb-edu_5000000.pt"),
-    Path("/root/autodl-tmp/evq_passkey_mix_5pct/val_fineweb-edu_5000000.pt"),
     Path("/root/autodl-tmp/evq_phase9/data/val_fineweb-edu_5000000.pt"),
+    Path("/root/autodl-tmp/evq_phase11_L256/val_fineweb-edu_5000000.pt"),
 ]
 
 SEQ_LEN = 2048
@@ -73,9 +68,9 @@ CFG_454M = dict(
     # Continued pretraining defaults
     train_tokens=200_000_000,
     lr=1e-4,            # Lower than original 3e-4
-    batch_size=32,       # Effective batch size
-    micro_batch_size=16, # For 5090 32GB
-    grad_accum=2,
+    batch_size=36,       # Effective batch size
+    micro_batch_size=18, # For R6000 96GB (85GB peak)
+    grad_accum=2,        # effective bs = 36
 )
 
 EVAL_LENGTHS = [2048, 4096, 8192, 16384]
@@ -134,18 +129,13 @@ def load_val_data():
     return data
 
 
-def find_checkpoint(seed, ckpt_dirs=CKPT_CANDIDATES):
+def find_checkpoint(seed):
     """Find a Geo checkpoint for the given seed."""
-    for base_dir in ckpt_dirs:
-        for name in [f"350m_tau0_seed{seed}", f"454m_geo_seed{seed}"]:
-            ckpt = base_dir / name / "model.pt"
-            if ckpt.exists():
-                print(f"  Found checkpoint: {ckpt}")
-                return ckpt
-    raise FileNotFoundError(
-        f"No Geo checkpoint for seed={seed}. Searched:\n" +
-        "\n".join(f"  - {d}" for d in ckpt_dirs)
-    )
+    ckpt = CKPT_DIR / f"350m_geo_seed{seed}" / "model.pt"
+    if ckpt.exists():
+        print(f"  Found checkpoint: {ckpt}")
+        return ckpt
+    raise FileNotFoundError(f"No Geo checkpoint for seed={seed} at {ckpt}")
 
 
 # ── Model loading with frequency swap ───────────────────────────────
@@ -342,8 +332,8 @@ def main():
                         help="Comma-separated tau values for EVQ (default: 1.414 = d/√L)")
     parser.add_argument("--lr", type=float, default=1e-4,
                         help="Learning rate for continued pretraining")
-    parser.add_argument("--micro_batch", type=int, default=16,
-                        help="Micro batch size (default: 16 for 5090 32GB)")
+    parser.add_argument("--micro_batch", type=int, default=18,
+                        help="Micro batch size (default: 18 for R6000 96GB)")
     parser.add_argument("--skip_geo", action="store_true",
                         help="Skip Geo fork (only train EVQ forks)")
     args = parser.parse_args()

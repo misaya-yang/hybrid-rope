@@ -59,6 +59,16 @@ secrets/
 # Paper drafting artifacts
 paper_draft/
 paper_exports/**/*.pdf
+paper/neurips_submission/*.aux
+paper/neurips_submission/*.bbl
+paper/neurips_submission/*.blg
+paper/neurips_submission/*.log
+paper/neurips_submission/*.out
+paper/neurips_submission/*.toc
+paper/neurips_submission/*.fls
+paper/neurips_submission/*.fdb_latexmk
+paper/neurips_submission/*.synctex.gz
+paper/neurips_submission/*.pdf
 
 # LaTeX build artifacts (paperdraft)
 docs/paperdraft/*.aux
