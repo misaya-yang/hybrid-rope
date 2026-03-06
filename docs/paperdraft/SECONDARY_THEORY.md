@@ -2,7 +2,7 @@
 
 > **定位**：发散性理论思考、待验证猜想、Appendix 级别推导、次要实验结果。
 > **与 CORE_THEORY.md 的关系**：一旦某个猜想获得实验验证或严格证明，升级到 CORE。
-> **最后更新**：2026-03-03
+> **最后更新**：2026-03-06（Passkey Mix 多 seed 校准已同步至 CORE / PLAN 口径）
 
 ---
 
@@ -197,8 +197,9 @@ from-scratch 预训练：
 
 ### G.1 ✅ 5090 Passkey Mix — 已完成，已升级到 CORE §12
 
-- 结果：4K retrieval 42%→82%（+40pp），PPL@16K -4.4%
-- Capability-Preserving Property 已升级为 Proposition
+- 初始 seed=42 极值：4K retrieval 42%→82%（+40pp），PPL@16K -4.4%
+- multi-seed 校准后，CORE 主文使用 10% mix 的 3-seed mean：raw retrieval +10.0pp@4K / +12.7pp@8K，并以 EVQ+YaRN@8K = 100% across 6/6 seeds 作为更强 headline
+- Capability-Preserving 的正文表述已收紧为 empirical proposition / observation
 - **详见 CORE_THEORY.md §12**
 
 ### G.2 R6000 Phase9F Hybrid Checkpoint Trajectory

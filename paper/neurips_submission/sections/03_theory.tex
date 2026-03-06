@@ -1,0 +1,111 @@
+\section{Theory and Method}
+
+\subsection{RoPE as frequency allocation}
+
+Let \(\phi \in [0,1]\) parameterize log-frequency and define \(\omega(\phi) = b^{-\phi}\). A discrete RoPE design is therefore equivalent to choosing a density \(\rho(\phi)\) and then discretizing it by inverse CDF. Standard geometric RoPE corresponds to a uniform density over \(\phi\); EVQ instead derives \(\rho\) from a variational objective. This reparameterization moves the design space from a hand-written index rule to a continuous allocation problem.
+
+\subsection{Exact kernel and broadband surrogate}
+
+Under a distance prior \(D(\Delta)\), the phase-collision kernel is
+\begin{equation}
+K(\phi_1,\phi_2)
+=
+\int D(\Delta)\cos(\omega(\phi_1)\Delta)\cos(\omega(\phi_2)\Delta)\,d\Delta.
+\end{equation}
+Our only approximation step is a broadband surrogate,
+\begin{equation}
+K_{\mathrm{app}}(\phi_1,\phi_2)
+\approx
+\alpha \delta(\phi_1-\phi_2) + \beta \min(\phi_1,\phi_2),
+\end{equation}
+which isolates a diagonal ridge term and a smooth off-diagonal covariance term. The \(\delta\) term captures local ridge structure, while \(\min(\phi_1,\phi_2)\) is the Green kernel of a one-dimensional second-order operator. After this step, the remaining derivation is exact.
+
+\subsection{Variational objective and exact ODE}
+
+The broadband functional takes the form
+\begin{equation}
+\mathcal{J}[\rho]
+=
+\frac{\alpha}{2}\int \rho(\phi)^2\,d\phi
++
+\frac{\beta}{2}\int\!\!\int \rho(\phi)\rho(\psi)\min(\phi,\psi)\,d\phi\,d\psi
+-
+\mu\int \rho(\phi)b^{-2\phi}\,d\phi.
+\end{equation}
+
+\begin{theorem}
+After fixing the surrogate \(K_{\mathrm{app}}\), the stationary density satisfies
+\begin{equation}
+\rho''(\phi) - \tau^2 \rho(\phi) = \gamma b^{-2\phi},
+\qquad
+\tau = \sqrt{\beta/\alpha},
+\end{equation}
+with a closed-form solution consisting of a hyperbolic tether and a Fisher-driven forcing term.
+\end{theorem}
+
+This is the exact theory backbone used in the paper body: the surrogate is the only approximation, while the ODE and its closed-form family are exact conditional on that surrogate. The homogeneous branch supplies a global tether that redistributes density, while the forcing term preserves local Fisher utility.
+The practical significance of this decomposition is that it separates two qualitatively different requirements: a global allocation that decides where frequency mass should live, and a local utility term that prevents the solution from collapsing into a purely asymptotic long-range design. EVQ is therefore not an unconstrained long-range distortion of RoPE; it is the stationary compromise induced by the surrogate objective.
+
+\subsection{Closed-form EVQ and the geometric limit}
+
+The pure-tether branch yields an inverse-CDF warp
+\begin{equation}
+\phi_k(\tau)
+=
+1 - \frac{1}{\tau}
+\operatorname{arcsinh}\!\left((1-u_k)\sinh\tau\right),
+\qquad
+u_k = \frac{k}{K},
+\end{equation}
+and inverse frequencies \(b^{-\phi_k(\tau)}\).
+
+\begin{theorem}
+EVQ-cosh converges smoothly to geometric RoPE as \(\tau \to 0\). Therefore, geometric RoPE is the \(\tau=0\) degenerate limit of the EVQ family rather than a generic optimum.
+\end{theorem}
+
+The discrete implementation then follows by evaluating \(\phi_k(\tau)\) at evenly spaced quantiles \(u_k\). In this form, EVQ changes no architecture component and requires no auxiliary positional network: it changes only the inverse-frequency initialization. This is the key methodological distinction from learnable PE approaches. The theory commits to a specific allocation map before optimization begins, rather than hoping that in-distribution training dynamics will discover the same map through extra positional parameters.
+
+\subsection{Practical EVQ instantiation}
+
+For a head dimension \(d_{\mathrm{head}}\) and training length \(L\), the implementation used throughout the paper is
+\begin{equation}
+\tau = \frac{d_{\mathrm{head}}}{\sqrt{L}},
+\qquad
+u_k = \frac{k}{K},
+\qquad
+\omega_k^{\mathrm{EVQ}} = b^{-\phi_k(\tau)},
+\qquad
+K=\frac{d_{\mathrm{head}}}{2}.
+\end{equation}
+This construction is deliberately minimal: it modifies the inverse-frequency schedule but leaves the transformer, attention rule, optimizer, and inference stack unchanged. It is therefore a direct replacement for the standard geometric initialization rather than a learnable add-on.
+
+In practice, the method reduces to four deterministic steps: choose \(L\) and \(d_{\mathrm{head}}\), set \(\tau=d_{\mathrm{head}}/\sqrt{L}\), evaluate the closed-form warp on uniform quantiles \(u_k\), and replace the geometric inverse frequencies by \(b^{-\phi_k(\tau)}\). There is no auxiliary positional loss, no extra MLP, and no optimizer dependence beyond the ordinary language-model training loop.
+
+The quantile form also explains two implementation-level facts used later in the paper. First, \(u_0=0\) implies \(\phi_0(\tau)=0\), so the first channel remains anchored at \(\omega_0=1\), matching geometric RoPE exactly. Second, because the warp is small near the high-frequency end and grows toward the low-frequency end, EVQ does not require a separate ``keep-\(r\)-channels-geometric'' design choice in order to preserve useful short-range structure.
+
+\begin{center}
+\fbox{%
+\parbox{0.93\linewidth}{%
+\textbf{Practical recipe: EVQ-cosh initialization.}
+Given \(d_{\mathrm{head}}\), \(L_{\mathrm{train}}\), and base \(b\): (1) set \(\tau=d_{\mathrm{head}}/\sqrt{L_{\mathrm{train}}}\); (2) define \(K=d_{\mathrm{head}}/2\) and \(u_k=k/K\); (3) compute
+\[
+\phi_k(\tau)=1-\frac{1}{\tau}\operatorname{arcsinh}\!\left((1-u_k)\sinh\tau\right);
+\]
+(4) initialize inverse frequencies as \(b^{-\phi_k(\tau)}\). This is the complete method used in the body experiments. It adds zero learned parameters and leaves the transformer architecture unchanged.}}
+\end{center}
+
+\subsection{Waterbed and the scaling-law statement}
+
+\begin{proposition}
+Under the assumptions used in the broadband model, EVQ obeys a waterbed inequality: improving long-range frequency resolution necessarily redistributes error rather than eliminating it globally.
+\end{proposition}
+
+This proposition explains why small in-range costs can coexist with large out-of-range gains. Geometric RoPE distributes density uniformly in log-frequency, while EVQ intentionally pays bounded high-frequency cost to relieve the low-frequency collision bottleneck.
+
+We treat the length-dependent optimal temperature
+\begin{equation}
+\tau^*(L) = \frac{d_{\mathrm{head}}}{\sqrt{L}}
+\end{equation}
+as an empirical law / conjecture supported by multi-regime experiments, not as an unconditional theorem. This distinction keeps the theory honest: the exact claim is the surrogate-to-ODE chain, while the scaling law is a predictive summary of how the surrogate coefficients behave across training lengths.
+
+Two consequences follow immediately. When \(L\) is short, \(\tau^*(L)\) is large and the optimal schedule should depart visibly from the geometric allocation; this is precisely the PE-dominant regime in which DAPE-style comparisons are most revealing. When \(L\) grows, \(\tau^*(L)\) shrinks and EVQ should converge smoothly back toward geometric RoPE, predicting bounded in-range cost together with a progressively narrower but still useful long-range correction. This is exactly the pattern that later appears in the multi-scale and continued-pretraining results.

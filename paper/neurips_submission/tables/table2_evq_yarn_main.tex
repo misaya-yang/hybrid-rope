@@ -1,0 +1,16 @@
+\begin{table}[t]
+\caption{Training-time versus inference-time positional optimization on the 10\% mix fair-comparison setting. EVQ+YaRN reaches \(100\%\) retrieval at \(8\mathrm{K}\) and materially lowers long-context PPL relative to Geo+YaRN.}
+\label{tab:evq-yarn}
+\centering
+\small
+\begin{tabular}{@{}l l c c c c c@{}}
+\toprule
+Method & Type & Seeds & PK@8K & PK@12K & PK@16K & PPL@8K / 16K \\
+\midrule
+Geo & baseline & 3 & 41\% & 57\% & 51\% & 161.9 / 253.2 \\
+Geo+YaRN & infer & 3 & 61\% & 59\% & 51\% & 82.9 / 157.7 \\
+EVQ & train & 3 & 53\% & 63\% & 50\% & 150.3 / 229.5 \\
+\textbf{EVQ+YaRN} & \textbf{train+infer} & \textbf{3} & \textbf{100\%} & \textbf{79\%} & \textbf{68\%} & \textbf{70.9 / 107.5} \\
+\bottomrule
+\end{tabular}
+\end{table}

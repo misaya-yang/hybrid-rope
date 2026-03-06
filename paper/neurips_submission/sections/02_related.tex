@@ -1,0 +1,13 @@
+\section{Related Work}
+
+\paragraph{Rotary and relative positional methods.}
+Transformers rely on positional structure to recover order information \citep{vaswani2017attention}. Popular alternatives include relative attention biases \citep{shaw2018self, raffel2020exploring}, ALiBi \citep{press2022alibi}, and RoPE / RoFormer \citep{su2024roformer}. Our work is closest in object to RoPE, but unlike prior usage it treats frequency allocation itself as the quantity to optimize.
+
+\paragraph{Inference-time context extension.}
+Recent long-context methods often preserve the training checkpoint and modify positional behavior only at inference time, for example via positional interpolation, YaRN, LongRoPE, and related extension heuristics \citep{chen2023position, peng2024yarn, ding2024longrope, anil2022pose, jin2024selfextend}. Survey work already frames positional design as a central obstacle in length extrapolation \citep{survey2024lengthextrapolation}. These methods are practically important and form the relevant systems baseline, but they do not directly optimize the training-time frequency geometry on which extrapolation ultimately relies. Our thesis is not that such methods are unimportant, but that they are operating on a checkpoint whose positional substrate may already be suboptimal.
+
+\paragraph{Learnable and adaptive positional encoding.}
+Another line of work introduces learnable or adaptive positional mechanisms, including Kerple, FIRE, and DAPE \citep{chi2023kerple, li2024fire, zheng2024dape}. These methods are the closest comparison point for our PE-dominant experiments because they ask whether adaptive positional structure can improve extrapolation. Our distinction is that EVQ is derived in closed form rather than learned through additional positional parameters, which lets us separate the question of \emph{what frequency allocation is optimal} from the question of \emph{whether an optimizer can discover it from in-distribution loss alone}.
+
+\paragraph{Evaluation for long-context behavior.}
+Long-context evaluation is often split between synthetic retrieval-style diagnostics and broader long-context task suites such as LongBench and RULER \citep{bai2024longbench, hsieh2024ruler}. Prior work has also shown that long contexts can fail even when relevant information is technically present \citep{liu2024lost}. We therefore use both PE-dominant extrapolation settings and retrieval-heavy long-context evaluation to separate mechanistic evidence from broader empirical support, and we treat incomplete larger-scale task evidence conservatively.

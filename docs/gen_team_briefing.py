@@ -717,7 +717,9 @@ def build_pdf():
         ["docs/exp/2026-03-03_passkey_mix_results.md", "Complete passkey mix + PE baselines data"],
         ["docs/prompts/PROMPT_WRITE_PAPER.md", "Prompt templates for AI-assisted paper writing"],
         ["paper_exports/neurips_v5/hybrid_rope_neurips_v8.tex", "Current draft (needs rewrite to v9)"],
-        ["paper_exports/fig1_neurips.pdf", "Main figure: 3-panel training dynamics"],
+        ["docs/paperdraft/figs/README.md", "Paper figure/table matrix: theory core ↔ narrative core ↔ assets"],
+        ["docs/paperdraft/figs/fig1_frequency_dynamics.pdf", "Supporting figure: frequency allocation + 750M dynamics"],
+        ["docs/paperdraft/figs/fig2_evq_yarn_synergy.pdf", "Main figure: EVQ × YaRN orthogonality / synergy"],
     ]
     cw = [avail_w * 0.55, avail_w * 0.45]
     story.append(make_table(files_data, col_widths=cw))

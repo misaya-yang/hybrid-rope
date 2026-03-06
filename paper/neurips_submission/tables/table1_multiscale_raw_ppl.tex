@@ -1,0 +1,17 @@
+\begin{table}[t]
+\caption{Multi-scale raw length generalization. Positive in-range deltas remain small, while long-range gains are consistent across scales. The \(750\mathrm{M}\) `continue@4K' row is reported as a single-seed consistency check.}
+\label{tab:multiscale}
+\centering
+\small
+\begin{tabular}{@{}l l c c c@{}}
+\toprule
+Scale & Dataset & Seeds & $\Delta$PPL@2K & $\Delta$PPL@16K \\
+\midrule
+50M & TinyStories & 1 & -0.3\% & -10.9\% \\
+125M & TinyStories & 1 & -1.7\% & -18.9\% \\
+350M & TinyStories (Hybrid) & 1 & -0.4\% & -13.7\% \\
+350M & FineWeb-Edu & 3 & +0.4\% & -13.3\% \\
+750M continue@4K & Mix setting & 1 & +0.9\% & -45.9\% \\
+\bottomrule
+\end{tabular}
+\end{table}

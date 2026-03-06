@@ -1,0 +1,72 @@
+\section{Experiments}
+
+\subsection{Setup}
+
+All core experiments are from-scratch and keep the model architecture fixed. We use \(b=500\mathrm{K}\), the predicted \(\tau^*(L)\) for each training length, and modify only the RoPE inverse-frequency initialization. The primary datasets are TinyStories, FineWeb-Edu, and controlled passkey-mix settings; the main long-context evaluations are retrieval-style extrapolation and broader suites such as LongBench and RULER when available \citep{bai2024longbench, hsieh2024ruler}. Architecturally, the models follow standard GPT-style decoder stacks \citep{radford2019gpt2}, and no extra positional network is trained.
+
+Primary body claims are anchored in multi-seed evidence. The core raw-PPL and passkey-mix comparisons use three seeds, and the strongest EVQ\(\times\)YaRN retrieval result aggregates six seeds across the relevant fair-comparison settings. Evaluation is split deliberately: retrieval-style tasks test whether information can still be localized at long range, while stricter AR-exact and multi-needle variants test whether that information remains recoverable with high precision. Full hyperparameters, dataset construction details, and appendix-only baselines are reserved for the supplementary material.
+
+\subsection{EVQ unlocks YaRN}
+
+Figure~\ref{fig:evq-yarn} and Table~\ref{tab:evq-yarn} contain the paper's main systems result. The decisive comparison is not EVQ against geometric RoPE in isolation, but EVQ combined with YaRN against Geo+YaRN. In the fair \(10\%\) mix comparison, EVQ+YaRN reaches \(100\%\) retrieval at \(8\mathrm{K}\) across the three seeds used in that setting, while Geo+YaRN remains at \(61\%\); the same combination lowers PPL from \(82.9\) to \(70.9\) at \(8\mathrm{K}\) and from \(157.7\) to \(107.5\) at \(16\mathrm{K}\).
+
+This result is best interpreted as orthogonal complementarity. YaRN is an inference-time scaling method; EVQ is a training-time frequency-allocation method. Their interaction is therefore not additive in the usual baseline sense. EVQ changes the checkpoint geometry so that inference-time rescaling has a much cleaner low-frequency substrate to operate on.
+
+Two aspects of Table~\ref{tab:evq-yarn} matter. First, EVQ alone is helpful but not dominant: the raw EVQ row improves over Geo, yet it does not already saturate retrieval. The sharp jump to \(100\%\) at \(8\mathrm{K}\) therefore cannot be dismissed as a ceiling effect. Second, the corresponding PPL reductions show that the retrieval gain is not a narrow metric artifact. The same checkpoint geometry that helps retrieval also makes the long-range language-modeling distribution materially easier under YaRN.
+
+The practical implication is that EVQ is not positioned as a replacement for YaRN. It is a better training-time substrate for the same inference-time extension mechanism that practitioners already want to use. This is the systems interpretation of the main result: geometric RoPE is a hidden bottleneck that prevents YaRN from reaching its full effect.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.98\linewidth]{fig2_evq_yarn_synergy.pdf}
+  \caption{Training-time and inference-time positional optimization are orthogonal. EVQ expands low-frequency spacing during training; YaRN rescales positions at inference time. Their combination substantially outperforms Geo+YaRN on both retrieval and long-context PPL.}
+  \label{fig:evq-yarn}
+\end{figure}
+
+\input{tables/table2_evq_yarn_main}
+
+\subsection{Extreme extrapolation and scaling-law confirmation}
+
+Figure~\ref{fig:pe-dominant} provides the second principal empirical anchor. In the DAPE-style PE-dominant regime, EVQ beats learnable PE with zero extra parameters: on the \(128\!\rightarrow\!8\mathrm{K}\) setup, EVQ reaches \(333.7\) PPL while DAPE reaches \(455.3\). This matters because it isolates positional encoding itself as the decisive variable.
+
+The DAPE-style comparison is important for a second reason: it shows that simply making positional encoding learnable is not enough. In-distribution optimization sees only weak signal about extreme extrapolation, so a learned positional module can improve over static baselines while still missing the closed-form allocation favored by the variational theory. This is why the PE-dominant regime is such a strong test of whether the theory is actually predictive.
+
+The same figure also carries the \(L=256\) Phase 11 confirmation. At this length, the theory predicts \(\tau^*=4.0\), and the raw plus YaRN curves show exactly the expected ordering: \(\tau=4.0\) dominates \(\tau=2.0\), the raw \(32\times\) curve drops from \(268.4\) to \(167.8\), and EVQ4+YaRN reduces PPL further from \(260.2\) to \(99.6\). The YaRN leverage itself is highly asymmetric: geometric RoPE gains only a few percent under YaRN at long range, whereas EVQ gains tens of percent. The same variational principle therefore explains both PE-dominant extreme extrapolation and the EVQ\(\times\)YaRN interaction seen at larger training lengths.
+
+The \(L=256\) result also matters because it is predictive in a way that is hard to fake with heuristic tuning. The preferred value is not ``some positive \(\tau\)'' but specifically the theory-favored \(\tau=4.0\), and the same ordering appears again when the \(L=256\) comparison is repeated at \(125\mathrm{M}\) and \(454\mathrm{M}\): model scale changes the absolute difficulty of extrapolation, but it does not change which EVQ setting is preferred. This is exactly the kind of cross-regime consistency that a purely benchmark-specific heuristic would struggle to explain.
+
+\input{tables/table5_phase11_leverage.tex}
+
+Table~\ref{tab:phase11-leverage} makes the interaction more explicit. At \(L=256\), YaRN is barely helpful on geometric RoPE but dramatically helpful on EVQ, which is the clearest PE-dominant confirmation of the paper's main systems thesis. The same table also records the opposite behavior for NTK-aware scaling: because NTK-aware recomputes a geometric-style frequency transform at inference time, it is not complementary to EVQ and can even become destructive at large \(\tau\). This asymmetry strengthens the causal interpretation of the YaRN result. The benefit is not coming from \emph{any} inference-time context extension heuristic; it comes specifically from pairing EVQ with a method that preserves the optimized training-time frequency structure.
+
+\input{tables/table4_pe_dominant.tex}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.98\linewidth]{fig3_pe_dominant_scaling.pdf}
+  \caption{PE-dominant evidence. Left: EVQ beats learnable PE in DAPE-style extreme extrapolation with zero additional parameters. Right: at \(L=256\), the predicted \(\tau^*=4.0\) is directly favored, and EVQ4+YaRN dramatically outperforms Geo+YaRN.}
+  \label{fig:pe-dominant}
+\end{figure}
+
+\subsection{Robustness and capability preservation}
+
+Table~\ref{tab:multiscale} summarizes the raw multi-scale pattern. Across model scales, EVQ pays at most a small in-range cost while improving long-range PPL. Table~\ref{tab:capability} complements this with capability-oriented evidence: when retrieval is absent from training, EVQ is non-destructive; once retrieval is learned, EVQ improves extrapolated retrieval and is markedly more robust to denser passkey supervision.
+
+\input{tables/table1_multiscale_raw_ppl}
+\input{tables/table3_capability_passkey}
+
+Together, these tables establish two distinct facts. First, EVQ is not confined to PE-dominant toy settings: the raw multi-scale trend is consistent from \(50\mathrm{M}\) through \(350\mathrm{M}\), and the continued-pretraining evidence at \(750\mathrm{M}\) remains directionally aligned. Second, the gains are not restricted to PPL. When retrieval is absent from training, EVQ is effectively non-destructive; when retrieval is learned, EVQ improves extrapolated retrieval and degrades much less than geometric RoPE as the supervision becomes denser.
+
+This is the right place to state the capability-preserving claim carefully. We do not claim that EVQ universally improves every downstream task. Instead, the experiments support two narrower properties: when a task is absent from training, EVQ is approximately non-destructive; when a retrieval-style task is learned, EVQ improves its extrapolated performance beyond \(L_{\mathrm{train}}\). This is the empirical counterpart of the waterbed principle in capability space.
+
+Table~\ref{tab:capability} also clarifies why the raw passkey-mix result remains useful even though the main systems headline is EVQ+YaRN. Without YaRN, the same \(10\%\) mix setting already shows the characteristic pattern one would want from the theory: both models learn the in-range task equally well, EVQ improves only after extrapolation, and the PPL profile exhibits exactly the bounded-short-range / improved-long-range asymmetry predicted by the waterbed view.
+
+\input{tables/table6_750m_continue_supporting.tex}
+
+As a larger-scale consistency check, the \(750\mathrm{M}\) `continue@4K' full-EVQ run preserves the same qualitative pattern: it pays only \(+0.9\%\) at \(2\mathrm{K}\) and \(+1.5\%\) at \(4\mathrm{K}\), but improves PPL by \(16.2\%\) at \(8\mathrm{K}\) and \(45.9\%\) at \(16\mathrm{K}\). At the same time, \(8\mathrm{K}\) AR exact rises from \(0\%\) to \(77.5\%\). Because this run is single-seed and the downstream LongBench comparison is incomplete due to a data-download failure, we use it only to test whether the same pattern persists at larger scale, not as a primary fairness anchor.
+
+The AR-exact jump is informative because it appears precisely where retrieval accuracy has already saturated. In that regime, hit-rate alone no longer measures whether the model retains a sufficiently precise long-range representation; exact autoregressive recovery is stricter. The \(750\mathrm{M}\) result therefore supports the same mechanism emphasized by the theory: as models become stronger, the residual benefit of EVQ concentrates increasingly on true long-range precision rather than on coarse retrieval alone.
+
+\subsection{Rebuttal paragraph}
+
+The most obvious negative result in the project, the \(b=10\mathrm{K}\) dead zone, is useful rather than harmful: it confirms the collision-block prediction that only a small fraction of channels are optimizable at low base. Likewise, the larger-scale single-seed evidence is directionally consistent with the multi-seed body anchors. These two facts are best handled as rebuttal-strength support rather than as additional body headlines.

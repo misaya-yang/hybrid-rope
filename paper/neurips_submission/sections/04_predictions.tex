@@ -1,0 +1,17 @@
+\section{Predictions and Mechanism}
+
+The theory predicts an asymmetric tradeoff. EVQ does not ``push frequencies to the low end''; instead it redistributes channel density, expanding low-frequency spacing while compressing high-frequency spacing. The anticipated gain is therefore concentrated in the regime where long-range discrimination is bottlenecked by low-frequency collisions. In the small-\(\tau\) regime, the warp admits a smooth Taylor expansion,
+\begin{equation}
+\phi_k(\tau)\approx u_k-\frac{u_k(1-u_k)(2-u_k)}{6}\tau^2,
+\end{equation}
+which shows that the deviation from geometric allocation grows predictably as the context shortens and \(\tau^*(L)\) rises.
+
+This leads to a waterbed interpretation of the empirical curves. Short-range costs should remain bounded because high-frequency channels are redundant for nearby positions, while long-range gains can be large because the low-frequency bottleneck is the dominant failure mode. This asymmetry explains why small in-range costs can coexist with large out-of-range improvements.
+
+The same picture also predicts a base dependence. If frequencies with wavelength larger than \(L_{\mathrm{train}}\) define a collision block of relative size \(c \approx \ln L / \ln b\), then the amount of density available for useful reallocation scales with the complementary mass \(1-c\). In other words, EVQ should help most when the geometric schedule leaves a substantial low-frequency collision block to repair, and it should help much less when that block is already tiny.
+
+The same mechanism predicts complementarity with inference-time scaling. YaRN rescales positions at inference time, which effectively compresses usable frequency spacing. If the training-time allocation is already geometric, this compression acts on an already crowded low-frequency regime. EVQ changes that geometry before inference-time scaling is applied, so EVQ expands low-frequency spacing precisely where YaRN would otherwise suffer the most. This is why the strongest systems result in the paper is not EVQ in isolation but EVQ combined with YaRN: inference-time scaling becomes substantially more effective once the checkpoint starts from a better training-time frequency substrate.
+
+This mechanism also predicts how metric sensitivity should shift as models become stronger. Once coarse retrieval saturates, the remaining effect of better low-frequency geometry should appear more clearly in stricter precision-oriented metrics than in hit-rate alone. This is exactly the pattern observed in the larger-scale continued-pretraining result, where retrieval saturates at \(100\%\) but autoregressive exact recovery still separates EVQ sharply from the geometric baseline.
+
+A final prediction concerns negative results. If the effective collision block is already tiny, there is little density to reallocate. This is why the low-base dead-zone experiments are theoretically useful rather than embarrassing: EVQ should \emph{not} create gains when the collision-block analysis predicts little room for improvement. A negative result in that regime is therefore evidence that the mechanism is specific rather than overfit.

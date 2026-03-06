@@ -1,0 +1,121 @@
+\section{Proof Details}
+
+\subsection{From the broadband surrogate to the ODE}
+
+Starting from the surrogate kernel
+\begin{equation}
+K_{\mathrm{app}}(\phi,\psi)=\alpha\delta(\phi-\psi)+\beta\min(\phi,\psi),
+\end{equation}
+the functional is
+\begin{equation}
+\mathcal{J}[\rho]
+=
+\frac{\alpha}{2}\int_0^1 \rho(\phi)^2\,d\phi
++
+\frac{\beta}{2}\int_0^1\int_0^1 \rho(\phi)\rho(\psi)\min(\phi,\psi)\,d\phi\,d\psi
+- \mu\int_0^1 \rho(\phi)b^{-2\phi}\,d\phi.
+\end{equation}
+Its first variation is
+\begin{equation}
+\delta\mathcal{J}
+=
+\int_0^1
+\left[
+\alpha\rho(\phi)
++
+\beta\int_0^1 \rho(\psi)\min(\phi,\psi)\,d\psi
+- \mu b^{-2\phi}
+\right]\delta\rho(\phi)\,d\phi.
+\end{equation}
+The Euler-Lagrange stationarity condition is therefore
+\begin{equation}
+\alpha\rho(\phi)
++
+\beta\int_0^1 \rho(\psi)\min(\phi,\psi)\,d\psi
+=
+\mu b^{-2\phi}.
+\end{equation}
+Define
+\begin{equation}
+g(\phi)=\int_0^1 \rho(\psi)\min(\phi,\psi)\,d\psi
+=
+\int_0^\phi \rho(\psi)\psi\,d\psi
++
+\phi\int_\phi^1 \rho(\psi)\,d\psi.
+\end{equation}
+Direct differentiation gives
+\begin{align}
+g'(\phi)
+&=
+\int_\phi^1 \rho(\psi)\,d\psi,\\
+g''(\phi)
+&=
+-\rho(\phi).
+\end{align}
+Hence the stationarity equation can be rewritten as
+\begin{equation}
+\alpha \rho(\phi)+\beta g(\phi)=\mu b^{-2\phi}.
+\end{equation}
+Differentiating twice with respect to \(\phi\) and substituting \(g''(\phi)=-\rho(\phi)\) yields
+\begin{equation}
+\rho''(\phi)-\frac{\beta}{\alpha}\rho(\phi)=\gamma b^{-2\phi},
+\qquad
+\tau=\sqrt{\beta/\alpha}.
+\end{equation}
+The same calculation shows that \(g(0)=0\) and \(g'(1)=0\), so \(\min(\phi,\psi)\) acts as the Green kernel of \(-d^2/d\phi^2\) under the mixed boundary conditions induced by the surrogate formulation. Conditional on the surrogate, this step is exact.
+
+\subsection{Closed-form solution and geometric limit}
+
+The non-resonant ODE has the closed-form solution
+\begin{equation}
+\rho^*(\phi)=C_1\cosh(\tau\phi)+C_2\sinh(\tau\phi)+P\,b^{-2\phi}.
+\end{equation}
+The first two terms span the homogeneous solution of \(\rho''-\tau^2\rho=0\), and the final term is a particular solution induced by the Fisher-weighted source \(b^{-2\phi}\). This decomposition is the source of the main paper's ``tether + pulse'' interpretation.
+
+To translate the density into RoPE frequencies, write the cumulative map
+\begin{equation}
+F(\phi)=\int_0^\phi \rho^*(s)\,ds,
+\end{equation}
+normalize it to \([0,1]\), and invert at the discrete quantiles \(u_k=k/K\). In the pure-tether branch this inversion has the closed form
+\begin{equation}
+\phi_k(\tau)
+=
+1-\frac{1}{\tau}\operatorname{arcsinh}\!\left((1-u_k)\sinh\tau\right).
+\end{equation}
+To recover geometric RoPE, expand \(\sinh\tau\approx\tau\) as \(\tau\to 0\). Then
+\begin{equation}
+\phi_k(\tau)\to 1-\frac{1}{\tau}\operatorname{arcsinh}((1-u_k)\tau)\to u_k,
+\end{equation}
+which is exactly the uniform quantile map.
+
+This also shows why the high-frequency end remains effectively anchored: for \(u_0=0\), one has \(\phi_0(\tau)=0\) exactly, so the leading inverse frequency remains \(b^0=1\), matching geometric RoPE.
+
+\subsection{Waterbed assumptions}
+
+The waterbed proposition in the body is conditional. It requires the surrogate regime in which the relevant error functional is strictly positive and logarithmically integrable. Under those assumptions, Jensen's inequality yields a lower bound of the form
+\begin{equation}
+\int \ln E(\phi)\,d\phi \ge \ln b - \ln c,
+\end{equation}
+with equality at the geometric allocation. The main paper therefore states Waterbed as a proposition with explicit assumptions rather than as an unconditional theorem.
+
+The logic is the standard convexity argument. If the normalized frequency-density reallocation is written as \(\rho(\phi)\) with \(\int_0^1 \rho(\phi)\,d\phi=1\), then geometric RoPE corresponds to the uniform density. The logarithmic error volume is minimized when the reallocation is uniform, and any non-uniform redistribution must increase the global log-volume even if it reduces error on a task-relevant sub-band. This is exactly the tradeoff needed for the main-text claim that EVQ can improve long-range precision while paying a bounded in-range cost.
+
+\subsection{Why the scaling law remains a conjecture}
+
+The current argument for
+\begin{equation}
+\tau^*(L)=\frac{d_{\mathrm{head}}}{\sqrt{L}}
+\end{equation}
+combines asymptotic scaling intuition with experimental confirmation across multiple \(L\) values. What is still missing is a theorem that turns the scale analysis into an explicit bound with constants, so the body keeps this statement at the level of an empirical law / conjecture.
+
+In particular, the current derivation argues that the surrogate coefficients satisfy an effective scaling of the form
+\begin{equation}
+\alpha^*(L,b)\propto \frac{1}{L\ln b},
+\qquad
+\beta^*(L,b)=O(1),
+\end{equation}
+which suggests
+\begin{equation}
+\tau^*(L,b)=\sqrt{\frac{\beta^*(L,b)}{\alpha^*(L,b)}}\propto \frac{1}{\sqrt{L\ln b}}.
+\end{equation}
+Fixing \(b\) then yields the single-variable form used in the paper. The empirical evidence is strong enough to justify using this law as the practical recipe, but not yet strong enough to promote it from conjecture to theorem. That distinction is maintained explicitly in the body.

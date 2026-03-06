@@ -1,0 +1,173 @@
+\documentclass{article}
+
+\usepackage[nonatbib]{neurips_2025}
+\usepackage{natbib}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\graphicspath{{../../docs/paperdraft/figs/}}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue,
+}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}{Remark}
+
+\title{EVQ-Cosh: Closed-Form Frequency Allocation for Long-Context Extrapolation}
+
+\author{Anonymous Authors}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Rotary position embedding is often extended at inference time, but its training-time geometric frequency allocation is usually left untouched. We formulate RoPE frequency allocation as a variational inverse problem, derive a broadband surrogate whose stationary density satisfies a second-order ODE, and obtain a closed-form family, EVQ-cosh, in which geometric RoPE is the degenerate \(\tau=0\) limit. Empirically, EVQ beats learnable adaptive positional encoding in DAPE-style extreme extrapolation (\(128\!\rightarrow\!8\mathrm{K}\): \(333.7\) vs.\ \(455.3\) PPL), showing that positional structure alone can determine extreme long-range behavior. More importantly, EVQ unlocks inference-time scaling: across six seeds, EVQ+YaRN reaches \(100\%\) retrieval at \(8\mathrm{K}\), while Geo+YaRN remains at \(61\%\) to \(65\%\); in a fair \(10\%\) mix comparison, EVQ+YaRN lowers PPL from \(82.9\) to \(70.9\) at \(8\mathrm{K}\) and from \(157.7\) to \(107.5\) at \(16\mathrm{K}\). These results identify training-time frequency allocation as a missing foundation for long-context extrapolation.
+\end{abstract}
+
+\input{sections/01_intro}
+\input{sections/02_related}
+\input{sections/03_theory}
+\input{sections/04_predictions}
+\input{sections/05_experiments}
+\input{sections/06_limitations}
+\input{sections/07_conclusion}
+
+\bibliographystyle{plainnat}
+\bibliography{refs/references}
+
+\section*{NeurIPS Paper Checklist}
+
+\begin{enumerate}
+\item \textbf{Claims}
+\begin{itemize}
+\item \textbf{Question:} Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?
+\item \textbf{Answer:} \answerYes{}
+\item \textbf{Justification:} The abstract and introduction are restricted to three core claims: closed-form variational theory, DAPE-style extreme extrapolation, and the main systems result that EVQ unlocks YaRN.
+\end{itemize}
+
+\item \textbf{Limitations}
+\begin{itemize}
+\item \textbf{Question:} Does the paper discuss the limitations of the work performed by the authors?
+\item \textbf{Answer:} \answerYes{}
+\item \textbf{Justification:} The body explicitly marks the broadband surrogate as the only approximation, keeps \(\tau^*\) as an empirical law / conjecture, and demotes single-seed and video evidence to supporting status.
+\end{itemize}
+
+\item \textbf{Theory assumptions and proofs}
+\begin{itemize}
+\item \textbf{Question:} For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?
+\item \textbf{Answer:} \answerYes{}
+\item \textbf{Justification:} The body states theorem/proposition identities and the appendix records the surrogate-to-ODE derivation, geometric-limit proof, and the assumptions behind the waterbed statement.
+\end{itemize}
+
+\item \textbf{Experimental result reproducibility}
+\begin{itemize}
+\item \textbf{Question:} Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper?
+\item \textbf{Answer:} \answerYes{}
+\item \textbf{Justification:} The body states the principal settings and the appendix records datasets, seeds, evaluation grouping, and the status of larger supporting runs.
+\end{itemize}
+
+\item \textbf{Open access to data and code}
+\begin{itemize}
+\item \textbf{Question:} Does the paper provide open access to the data and code?
+\item \textbf{Answer:} \answerNo{}
+\item \textbf{Justification:} The anonymous review package does not assume public release during review.
+\end{itemize}
+
+\item \textbf{Experimental setting/details}
+\begin{itemize}
+\item \textbf{Question:} Does the paper specify all the training and test details?
+\item \textbf{Answer:} \answerYes{}
+\item \textbf{Justification:} Main settings are given in the body and additional details are placed in the appendix.
+\end{itemize}
+
+\item \textbf{Experiment statistical significance}
+\begin{itemize}
+\item \textbf{Question:} Does the paper report error bars or equivalent multi-run evidence?
+\item \textbf{Answer:} \answerYes{}
+\item \textbf{Justification:} Primary claims are anchored in multi-seed evidence and single-seed runs are clearly labeled as supporting only.
+\end{itemize}
+
+\item \textbf{Experiments compute resources}
+\begin{itemize}
+\item \textbf{Question:} For each experiment, does the paper provide sufficient information on the computer resources used?
+\item \textbf{Answer:} \answerYes{}
+\item \textbf{Justification:} The appendix records the main model scales, training lengths, and the key continued-pretraining setup.
+\end{itemize}
+
+\item \textbf{Code of ethics}
+\begin{itemize}
+\item \textbf{Question:} Does the research conducted in the paper conform to the NeurIPS Code of Ethics?
+\item \textbf{Answer:} \answerYes{}
+\item \textbf{Justification:} The work studies positional encoding and long-context extrapolation and does not involve human-subject experimentation or a deployed user-facing system.
+\end{itemize}
+
+\item \textbf{Broader impacts}
+\begin{itemize}
+\item \textbf{Question:} Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?
+\item \textbf{Answer:} \answerYes{}
+\item \textbf{Justification:} The limitations discussion and checklist justifications state both the potential systems benefits of better long-context positional design and the risk of over-generalizing beyond the present evidence.
+\end{itemize}
+
+\item \textbf{Safeguards}
+\begin{itemize}
+\item \textbf{Question:} Does the paper describe safeguards that have been put in place for responsible release?
+\item \textbf{Answer:} \answerNA{}
+\item \textbf{Justification:} The submission does not release a deployed system or a safety-sensitive product.
+\end{itemize}
+
+\item \textbf{Licenses}
+\begin{itemize}
+\item \textbf{Question:} Are the creators or original owners of assets used in the paper properly credited?
+\item \textbf{Answer:} \answerYes{}
+\item \textbf{Justification:} External methods, benchmarks, and model families are cited in the references.
+\end{itemize}
+
+\item \textbf{New assets}
+\begin{itemize}
+\item \textbf{Question:} Are new assets introduced in the paper well documented?
+\item \textbf{Answer:} \answerNA{}
+\item \textbf{Justification:} The submission does not introduce a released dataset or benchmark asset.
+\end{itemize}
+
+\item \textbf{Crowdsourcing and human subjects}
+\begin{itemize}
+\item \textbf{Question:} For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants?
+\item \textbf{Answer:} \answerNA{}
+\item \textbf{Justification:} No crowdsourcing or human-subject research is involved.
+\end{itemize}
+
+\item \textbf{IRB approvals}
+\begin{itemize}
+\item \textbf{Question:} Does the paper describe potential risks incurred by study participants?
+\item \textbf{Answer:} \answerNA{}
+\item \textbf{Justification:} No human-subject study is involved.
+\end{itemize}
+\end{enumerate}
+
+\clearpage
+\appendix
+
+\section*{Broader Impact}
+
+This work studies positional encoding for long-context extrapolation rather than a specific deployed application. Its main positive impact is scientific and systems-oriented: replacing ad hoc context-extension heuristics with a more principled training-time frequency design can reduce wasted compute and improve the reliability of long-context models. The main risk is over-generalization. Our strongest evidence remains concentrated on text extrapolation and retrieval-heavy long-context evaluation, so we do not present EVQ as a universal guarantee of downstream improvement across all tasks, modalities, or deployment settings.
+
+\input{appendix/a1_proofs}
+\input{appendix/a2_experiment_details}
+\input{appendix/a3_supporting_results}
+
+\end{document}

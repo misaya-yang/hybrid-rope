@@ -1,0 +1,54 @@
+\section{Experimental Details}
+
+\subsection{Primary body experiments}
+
+The body centers three empirical anchors:
+\begin{enumerate}
+\item the EVQ\(\times\)YaRN systems result on passkey-mix data,
+\item DAPE-style PE-dominant extrapolation at \(128\) tokens,
+\item the \(L=256\) Phase 11 confirmation with raw and YaRN curves.
+\end{enumerate}
+These anchors were selected because they are either multi-seed or directly tied to the central theoretical prediction.
+
+\subsection{Reproducibility snapshot}
+
+\begin{table}[ht]
+\caption{Compact reproducibility summary for the primary experiments discussed in the main text.}
+\label{tab:appendix-repro}
+\centering
+\small
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Anchor & Train length & Scale & Seeds & Main datasets \\
+\midrule
+EVQ\(\times\)YaRN & 2048 & 350M & 3 + 3 & FineWeb-Edu + passkey mix \\
+DAPE-style & 128 & 125M & 1--3 & FineWeb-Edu / TinyStories \\
+Phase 11 & 256 & 454M & 3 & FineWeb-Edu \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Across all three anchors, the architectural intervention is deliberately minimal: model architecture, optimizer family, and training loop are kept fixed, and only the RoPE inverse-frequency initialization is changed. The principal base in the body is \(b=500\mathrm{K}\), which is also the regime where the collision-block analysis predicts the largest headroom for non-geometric allocations.
+
+\subsection{Larger-scale supporting evidence}
+
+The \(750\mathrm{M}\) `continue@4K' experiment is reported as supporting evidence only. The reason is not that the result is weak; on the contrary, it shows \(16\mathrm{K}\) PPL improving from \(45.136\) to \(24.407\) and \(8\mathrm{K}\) AR exact improving from \(0\%\) to \(77.5\%\). The reason is evidence hygiene: the run is single-seed, and the downstream LongBench comparison is incomplete because the remote dataset download failed during evaluation.
+
+This distinction is important for interpretation. The larger-scale run is best viewed as evidence that the same EVQ pattern persists after continued pretraining at a longer training length, not as the main fairness anchor of the paper. The main fairness anchors remain the multi-seed \(350\mathrm{M}\) and \(454\mathrm{M}\) comparisons used in the main text.
+
+\subsection{Evaluation notes}
+
+The paper uses three increasingly strict long-context evaluation views.
+\begin{enumerate}
+\item \textbf{PPL}: global language-modeling quality under extrapolation.
+\item \textbf{Retrieval}: whether the relevant item is still localized at long range.
+\item \textbf{AR exact / multi-needle}: whether the localized information remains precisely recoverable.
+\end{enumerate}
+
+This split is necessary because stronger models can saturate coarse retrieval while still differing sharply in exact long-range recovery. The \(750\mathrm{M}\) supporting run is the clearest example: retrieval is already saturated, but AR exact separates geometric RoPE from EVQ very strongly.
+
+\subsection{Cross-modal evidence}
+
+Video temporal extrapolation is high-upside because it tests whether the same frequency-allocation principle transfers beyond text RoPE. However, the current video evidence is still lighter than the text package, so it remains supportive rather than co-primary.
+
+The current submission therefore keeps video in the appendix/discussion layer. This is a scientific choice rather than a negative judgment: the existing video results already suggest transfer of the same principle to temporal RoPE, but the text package is stronger, cleaner, and more directly aligned with the main systems claim.

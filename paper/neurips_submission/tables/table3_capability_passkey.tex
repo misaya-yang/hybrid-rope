@@ -1,0 +1,21 @@
+\begin{table}[t]
+\caption{Capability preservation and retrieval robustness. EVQ is non-destructive when retrieval is absent from training, improves extrapolated retrieval once the task is learned, and degrades much less than geometric RoPE as passkey supervision becomes denser. The same 10\% mix setting also preserves the expected waterbed pattern in PPL.}
+\label{tab:capability}
+\centering
+\small
+\begin{tabular}{@{}l c c c@{}}
+\toprule
+Setting & Geo & EVQ & Interpretation \\
+\midrule
+Pure FineWeb-Edu passkey & 55.7\% & 56.7\% & non-destructive \\
+10\% mix retrieval @2K & 100\% & 100\% & both learn task \\
+10\% mix retrieval @4K & 58.7\% & 68.7\% & +10.0pp \\
+10\% mix retrieval @8K & 40.7\% & 53.3\% & +12.7pp \\
+10\% mix global retrieval & 66.7\% & 74.0\% & +7.3pp \\
+10\% mix PPL@2K & 67.2 & 67.9 & +1.0\% \\
+10\% mix PPL@8K & 161.9 & 150.3 & -7.2\% \\
+10\% mix PPL@16K & 262.0 & 237.2 & -9.5\% \\
+5\%\,$\rightarrow$\,10\% delta @8K & -13.3pp & -3.3pp & EVQ more robust \\
+\bottomrule
+\end{tabular}
+\end{table}

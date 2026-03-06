@@ -1,5 +1,7 @@
 # NeurIPS v9 论文写作规划（Definitive）
 
+> **Canonical note**：匿名投稿版的当前唯一正式执行计划已迁移到 [NEURIPS_SUBMISSION_PLAN.md](/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/docs/paperdraft/NEURIPS_SUBMISSION_PLAN.md)，实际提交骨架位于 [paper/neurips_submission/main.tex](/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/paper/neurips_submission/main.tex)。本文件保留为历史工作笔记，不再作为红线来源。
+
 > **硬性目标**：正文 ≤ 9 页（Title/Abstract 到 Conclusion 末尾），References 不计，Appendix 不计
 > **当前 v8 问题诊断**：正文约 13 页，Abstract 269 words（应 ≤150），段落冗余，自吹式语言（"This is one of the paper's strongest results"），bullet list 过多
 
@@ -28,13 +30,13 @@
 
 ### B.2 v9 叙事（新）
 
-**一句话**：Training-time frequency optimization (EVQ) and inference-time length scaling (YaRN) are orthogonal; their combination achieves near-perfect extrapolation (98% at 4× context) that neither achieves alone.
+**一句话**：Training-time frequency optimization (EVQ) and inference-time length scaling (YaRN) are orthogonal; their combination achieves 100% retrieval at 4× extrapolation (8K) across 6/6 seeds and materially lower long-context PPL than Geo+YaRN in fair scale=8 comparisons.
 
 **三层递进**：
 
 1. **理论层**：RoPE frequency allocation 是变分逆问题 → ODE 闭式解 → 单参数 τ → Geometric 是 τ=0 退化点 → scaling law τ*=d/√L
-2. **训练时实验层**：EVQ 单独在 4 个规模上改善 OOD PPL 10-19%，passkey +40pp，retrieval divergence（Geo 退化 vs EVQ 单调上升）
-3. **🆕 组合层（killer result）**：EVQ + YaRN 8K retrieval = 98% vs Geo + YaRN = 62%（+36pp）。Training-time 和 inference-time 是正交优化维度，EVQ 提供更好的 foundation 让 inference-time PE 更有效
+2. **训练时实验层**：EVQ 单独在 4 个规模上改善 OOD PPL 10-19%；在 passkey mix 上，raw retrieval 提升为 +10.0pp@4K / +12.7pp@8K（3-seed）；另有单 seed 750M checkpoint trajectory 作为 supporting dynamics evidence
+3. **🆕 组合层（killer result）**：EVQ + YaRN 在 8K retrieval 上达到 **100% across 6/6 seeds**，而 Geo + YaRN 为 61%-65%；在 10% mix、scale=8 的公平比较中，PPL@8K 为 70.9 vs 82.9。Training-time 和 inference-time 是正交优化维度，EVQ 提供更好的 foundation 让 inference-time PE 更有效
 
 ### B.3 要删除的内容
 - ❌ 旧 Table 3（50M TinyStories competitor comparison）——对 YaRN 不公平的 from-scratch 对比
@@ -74,12 +76,12 @@ NeurIPS 10pt single column，一页约 55-60 行正文 or 3 个 medium table。
 |------------|------|------|-------|
 | 5.1 Setup | 0.15 | 1 段：base/L/τ/seeds/datasets | — |
 | 5.2 PPL scaling (50M-750M) | 0.45 | Table 1 + 1 段 | Tab 1 |
-| 5.3 Training-time vs Inference-time PE | 0.65 | **新 Table 2** + 2 段 | Tab 2 |
-| 5.4 Passkey mix + capability preservation | 0.55 | Table 3 + antisymmetric + Prop 4 | Tab 3 |
+| 5.3 Training-time vs Inference-time PE | 0.65 | **Figure 2 + Table 2** + 2 段 | Fig 2, Tab 2 |
+| 5.4 Passkey mix + capability preservation | 0.55 | Table 3 + robustness gap + empirical proposition | Tab 3 |
 | 5.5 750M retrieval divergence | 0.7 | Table 4 + Figure 1 + 2 段 | Tab 4, Fig 1 |
 | 5.6 Theory validation | 0.4 | τ* table + collision dead zone（合并） | Tab 5 |
-| 5.7 Pareto frontier (r-sweep) | 0.4 | r-sweep 结果 + r* 验证 | Tab 6 or Fig 2 |
-| **Total** | **3.3** | | **4-5 Tab, 1-2 Fig** |
+| 5.7 Pareto frontier (r-sweep) | 0.4 | r-sweep 结果 + r* 验证 | Tab 6 or Fig 4 |
+| **Total** | **3.3** | | **4-5 Tab, 2-3 Fig** |
 
 ---
 
@@ -93,8 +95,8 @@ NeurIPS 10pt single column，一页约 55-60 行正文 or 3 个 medium table。
 | S2 | We formulate ... variational problem | 20 |
 | S3 | Exact solution → EVQ, single parameter τ | 20 |
 | S4 | Geometric RoPE = τ=0, strictly suboptimal | 15 |
-| S5 | From-scratch 50M-750M: PPL -10-19%, passkey +40pp | 20 |
-| S6 | **Killer**: EVQ + YaRN 8K=100% (3 seeds, zero variance) vs Geo+YaRN=65% | 25 |
+| S5 | From-scratch 50M-750M: PPL -10-19%, passkey raw +10.0pp@4K / +12.7pp@8K | 20 |
+| S6 | **Killer**: EVQ + YaRN 8K=100% (6/6 seeds, zero variance) vs Geo+YaRN=61%-65% | 25 |
 | S7 | One-line replacement, zero hyperparameters | 15 |
 | **Total** | | **~135** |
 
@@ -114,7 +116,7 @@ NeurIPS 10pt single column，一页约 55-60 行正文 or 3 个 medium table。
 1. Joint variational framework → governing ODE → exact solution (Theorem 1)
 2. EVQ closed-form warp → Geometric is τ=0 degenerate (Theorem 2) → scaling law τ*=d/√L
 3. From-scratch validation 50M-750M: PPL improvement + retrieval divergence + capability preservation
-4. **Superlinear complementarity**: EVQ + YaRN achieves 100% 8K retrieval across 3 seeds (zero variance) vs 65% for Geo+YaRN (+35pp), establishing training-time and inference-time PE as orthogonal optimization dimensions
+4. **Superlinear complementarity**: EVQ + YaRN achieves 100% 8K retrieval across 6/6 seeds (zero variance) vs 61%-65% for Geo+YaRN, establishing training-time and inference-time PE as orthogonal optimization dimensions
 
 **风格**：
 - 每条 contribution 以 "We derive / We prove / We validate / We demonstrate" 开头
@@ -171,40 +173,31 @@ Table 1: 5 行（50M/125M/350M/350M-FW/750M），列: Scale | Dataset | Seeds | 
 
 #### 5.3 Training-time vs Inference-time PE（**新，核心 section**）
 
+Figure 2: `docs/paperdraft/figs/fig2_evq_yarn_synergy.pdf`
+
 **Table 2（最重要的表，论文 killer result）**：
 
-用 5% 3-seed 数据（多 seed 确认，统计更强）：
+用 **10% mix, scale=8 的 3-seed 公平比较** 作为正文主表，5% 3-seed 作为 replicate / Appendix 支撑：
 
-| Method | Type | Seeds | PK@8K | PK@12K | PK@16K |
-|--------|------|-------|-------|--------|--------|
-| Geo (no PE) | baseline | 3 | 54±11% | 55±5% | 55±14% |
-| Geo + YaRN | infer | 3 | 65±6% | 54±4% | 56±6% |
-| EVQ τ=1.5 | train | 3 | 57±5% | 58±2% | 56±9% |
-| **EVQ + YaRN** | **train+infer** | **3** | **100±0%** | **63±4%** | **70±14%** |
+| Method | Type | Seeds | PK@8K | PK@12K | PK@16K | PPL@8K | PPL@16K |
+|--------|------|-------|-------|--------|--------|--------|---------|
+| Geo (no PE) | baseline | 3 | 41% | 57% | 51% | 161.9 | 253.2 |
+| Geo + YaRN | infer | 3 | 61% | 59% | 51% | 82.9 | 157.7 |
+| EVQ τ=1.5 | train | 3 | 53% | 63% | 50% | 150.3 | 229.5 |
+| **EVQ + YaRN** | **train+infer** | **3** | **100%** | **79%** | **68%** | **70.9** | **107.5** |
 
-补充 10% single-seed 表（含更多 PE baselines，放正文或 Appendix）：
+补充 Appendix 表：10% mix 下 PI / NTK-aware / Dynamic NTK / YaRN 等 inference-only baselines，以及 5% 3-seed replicate。
 
-| Method | Type | PK@4K | PK@8K | PPL@4K | PPL@8K |
-|--------|------|-------|-------|--------|--------|
-| Geo (no PE) | baseline | 42% | 46% | 94.9 | 156.5 |
-| PI | inference | 54% | 56% | 198.9 | 204.2 |
-| Dynamic NTK | inference | 60% | 50% | 93.1 | 115.7 |
-| NTK-aware | inference | 100% | 50% | 74.8 | 90.8 |
-| YaRN | inference | 100% | 62% | 72.5 | 82.4 |
-| **EVQ τ=1.5** | **training** | **82%** | **60%** | 95.3 | 152.5 |
-| **EVQ + YaRN** | **train+infer** | **100%** | **98%** | 74.2 | 82.3 |
-| **EVQ + NTK-aware** | **train+infer** | **100%** | **88%** | 73.7 | 96.8 |
-
-Caption（3-seed 表）: "Training-time vs inference-time frequency optimization (350M, 5% passkey mix, base=500K, 3 seeds). EVQ + YaRN achieves 100% retrieval at 4× extrapolation (8K) across all three seeds with zero variance, compared to 65±6% for Geo + YaRN (+35pp). The effect extends to 8× extrapolation (16K): 70% vs 56% (+14pp). This demonstrates superlinear complementarity between training-time and inference-time optimization."
+Caption（主表）: "Training-time vs inference-time frequency optimization (350M, 10% passkey mix, base=500K, 3 seeds, fair scale=8 comparison). EVQ + YaRN achieves 100% retrieval at 4× extrapolation (8K) across all three seeds with zero variance, compared to 61% for Geo + YaRN, while also reducing PPL from 82.9 to 70.9. The effect extends to more extreme extrapolation (12K/16K), demonstrating superlinear complementarity between training-time and inference-time optimization."
 
 **Para 1**（结果概述）：
-- YaRN/NTK-aware reach 100% at 4K (2×) through inference-time rescaling alone
-- EVQ alone reaches 82% at 4K through training-time reallocation
+- In 10% mix inference-time baselines, YaRN/NTK-aware reach 100% at 4K (2×) on the Geo checkpoint
+- In raw 10% 3-seed training-time comparison, EVQ improves 4K retrieval from 58.7% to 68.7%
 - These operate at different stages and are complementary
 
-**Para 2**（超线性叠加 = killer paragraph，用 3-seed 数据）：
-- EVQ + YaRN at 8K: **100% across all 3 seeds, zero variance**, vs Geo+YaRN = 65±6%（+35pp）
-- The effect persists at extreme extrapolation: 12K +9pp, 16K +14pp
+**Para 2**（超线性叠加 = killer paragraph，用多 seed 数据）：
+- EVQ + YaRN at 8K: **100% across all 6 seeds (5%×3 + 10%×3), zero variance**；在 10% fair scale=8 比较中，Geo+YaRN 仅 61%
+- The effect persists at extreme extrapolation: 在 10% fair 比较中，12K +20pp，16K +17pp
 - EVQ's expanded low-frequency spacing creates representations more amenable to inference-time rescaling
 - This establishes training-time and inference-time PE as orthogonal optimization dimensions with superlinear interaction
 
@@ -212,13 +205,13 @@ Caption（3-seed 表）: "Training-time vs inference-time frequency optimization
 
 Table 3: 保持 v8 的 passkey mix table (4 行: 2K/4K/8K/16K × Geo/EVQ retrieval + PPL)
 
-1 段：+40pp at 4K, antisymmetric 5%→10% scaling (1 句), Prop 4 statement (2 句)
+1 段：raw retrieval +10.0pp@4K / +12.7pp@8K（3-seed），5%→10% robustness gap（Geo -13.3pp vs EVQ -3.3pp @8K），empirical proposition statement（2 句）
 
 #### 5.5 750M Retrieval Divergence（Table 4 + Figure 1）
 
 Table 4: 4 checkpoints × PPL@8K / PK@8K / AR (6 columns, 保持 v8)
 
-Figure 1: 三联图（保持 v8）
+Figure 1: 三联图（`docs/paperdraft/figs/fig1_frequency_dynamics.pdf`）
 
 2 段：
 - Para 1: Retrieval divergence description (Geo regresses, Hybrid improves monotonically)
@@ -252,7 +245,7 @@ Table 7 或 Figure 2: r-sweep 9 points (r vs PPL@2K vs PPL@16K vs Δ@2K vs Δ@16
 2. Waterbed trade-off intrinsic (750M Hybrid OOD PPL +5.7%)
 3. Model scale 50M-750M (PE papers publish at 125M)
 4. τ* validated at 5 points, single base
-5. Single seed for 750M and 10% passkey mix
+5. Single seed for 750M Hybrid dynamics; passkey mix multi-seed is complete but still limited to retrieval-style tasks
 
 **风格**：段落散文，不用 bullet list，不用 bold label，不自我贬低
 
@@ -263,7 +256,7 @@ Table 7 或 Figure 2: r-sweep 9 points (r vs PPL@2K vs PPL@16K vs Δ@2K vs Δ@16
 **Para 2**（实验总结 + impact）：
 - PPL improvement 10-19% across 4 scales
 - Retrieval divergence at 750M
-- **EVQ + YaRN superlinear complementarity** (98% vs 62% at 8K)
+- **EVQ + YaRN superlinear complementarity** (100% at 8K across 6/6 seeds; 10% fair comparison: 100% vs 61%)
 - Training-time and inference-time optimization are orthogonal
 - One-line replacement, zero hyperparameters
 - Future: r* validation, layer-wise allocation, billion-scale
@@ -334,7 +327,7 @@ Table 7 或 Figure 2: r-sweep 9 points (r vs PPL@2K vs PPL@16K vs Δ@2K vs Δ@16
 - [ ] 正文 ≤ 9 pages → pdflatex 编译后测量
 - [ ] 每个 Table caption 自包含（独立可读）
 - [ ] 每个数字引用来源（Appendix table or inline）
-- [ ] Figure 1 referenced in text
+- [ ] Figure 1 / Figure 2 referenced in text
 - [ ] All theorems/propositions numbered consistently
 - [ ] No "striking/remarkably/interestingly"
 - [ ] No bullet list analysis in experiments

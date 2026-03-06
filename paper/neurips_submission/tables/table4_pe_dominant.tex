@@ -1,0 +1,26 @@
+\begin{table}[t]
+\caption{PE-dominant summary. Left: EVQ beats learnable PE in DAPE-style \(128\!\rightarrow\!8\mathrm{K}\) extrapolation with zero added parameters while preserving in-range quality. Right: at \(L=256\), the predicted \(\tau=4.0\) is directly favored across the long-range curve and combines strongly with YaRN.}
+\label{tab:pe-dominant}
+\centering
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Method (128\(\rightarrow\)8K) & Extra params & PPL@128 & PPL@8K & $\Delta$ vs Geo \\
+\midrule
+Geo & 0 & 184.9 & 513.7 & -- \\
+Learnable $\tau$ & 1 & \textbf{181.2} & 437.9 & -14.8\% \\
+DAPE & 32 & 183.6 & 455.3 & -11.4\% \\
+EVQ & 0 & 182.0 & \textbf{333.7} & \textbf{-35.0\%} \\
+\bottomrule
+\end{tabular}
+\hfill
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Method (\(L=256\)) & 4$\times$ & 8$\times$ & 16$\times$ & 32$\times$ \\
+\midrule
+Geo+YaRN & 60.7 & 97.5 & 190.4 & 260.2 \\
+EVQ2+YaRN & 51.6 & 66.7 & 107.9 & 141.7 \\
+EVQ4+YaRN & \textbf{50.9} & \textbf{60.9} & \textbf{84.1} & \textbf{99.6} \\
+\bottomrule
+\end{tabular}
+\end{table}

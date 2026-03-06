@@ -1,0 +1,17 @@
+\begin{table}[t]
+\caption{Phase 11 leverage and incompatibility at \(L=256\). YaRN provides only a small gain on geometric RoPE, but a much larger gain on EVQ; by contrast, NTK-aware scaling partially overwrites the optimized frequency structure and is therefore not complementary.}
+\label{tab:phase11-leverage}
+\centering
+\small
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Method & YaRN gain @4K & YaRN gain @8K \\
+\midrule
+Geo & -4.5\% & -3.1\% \\
+EVQ \(\tau=2.0\) & -27.0\% & -28.9\% \\
+EVQ \(\tau=4.0\) & \textbf{-32.5\%} & \textbf{-40.7\%} \\
+\midrule
+\multicolumn{3}{@{}l@{}}{\textit{NTK-aware at \(32\times\): Geo 198.1, EVQ2 143.3, EVQ4 331.4}} \\
+\bottomrule
+\end{tabular}
+\end{table}

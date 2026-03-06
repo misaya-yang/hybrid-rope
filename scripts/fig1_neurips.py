@@ -3,7 +3,9 @@ Figure 1 for NeurIPS paper: EVQ-Cosh Frequency Allocation
 3-panel: (a) Frequency allocation  (b) PPL Waterbed  (c) Retrieval Crossover
 
 Usage: python scripts/fig1_neurips.py
-Output: paper_exports/fig1_neurips.pdf + .png
+Output:
+  - paper_exports/fig1_neurips.pdf/.png
+  - docs/paperdraft/figs/fig1_frequency_dynamics.pdf/.png
 """
 
 import numpy as np
@@ -75,9 +77,13 @@ geo_ret_8k = np.array([55, 70, 60, 60])
 hyb_ret_8k = np.array([45, 65, 75, 80])
 
 # ── Figure ─────────────────────────────────────────────────────────
-fig, axes = plt.subplots(1, 3, figsize=(7.0, 2.4),
-                         gridspec_kw={"width_ratios": [1.1, 1.0, 1.0],
-                                      "wspace": 0.38})
+fig, axes = plt.subplots(
+    1,
+    3,
+    figsize=(7.0, 2.4),
+    constrained_layout=True,
+    gridspec_kw={"width_ratios": [1.1, 1.0, 1.0]},
+)
 
 # ═══════════════════════════════════════════════════════════════════
 # Panel (a): Frequency Allocation Stem Plot
@@ -252,13 +258,26 @@ ax.legend(loc="lower left", framealpha=0.9, edgecolor="none",
 ax.set_title("(c) Passkey retrieval ($L$=8K)", fontweight="bold", pad=6)
 
 # ── Save ───────────────────────────────────────────────────────────
-fig.tight_layout(pad=0.5)
-
 import os
-os.makedirs("paper_exports", exist_ok=True)
-fig.savefig("paper_exports/fig1_neurips.pdf", bbox_inches="tight", pad_inches=0.02)
-fig.savefig("paper_exports/fig1_neurips.png", bbox_inches="tight", pad_inches=0.02)
-print("Saved: paper_exports/fig1_neurips.pdf + .png")
+
+legacy_dir = "paper_exports"
+paper_fig_dir = "docs/paperdraft/figs"
+os.makedirs(legacy_dir, exist_ok=True)
+os.makedirs(paper_fig_dir, exist_ok=True)
+
+legacy_pdf = os.path.join(legacy_dir, "fig1_neurips.pdf")
+legacy_png = os.path.join(legacy_dir, "fig1_neurips.png")
+paper_pdf = os.path.join(paper_fig_dir, "fig1_frequency_dynamics.pdf")
+paper_png = os.path.join(paper_fig_dir, "fig1_frequency_dynamics.png")
+
+for path in [legacy_pdf, legacy_png, paper_pdf, paper_png]:
+    fig.savefig(path, bbox_inches="tight", pad_inches=0.02)
+
+print("Saved:")
+print(f"  {legacy_pdf}")
+print(f"  {legacy_png}")
+print(f"  {paper_pdf}")
+print(f"  {paper_png}")
 print(f"\nFrequency data check:")
 print(f"  Collision boundary c = {c_boundary:.3f}")
 print(f"  Geo spacing (low-freq, k=28-29): {phi_geo[29]-phi_geo[28]:.4f}")

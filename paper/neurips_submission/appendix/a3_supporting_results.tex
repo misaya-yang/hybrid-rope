@@ -1,0 +1,25 @@
+\section{Supporting Results Placement}
+
+The main text intentionally reserves space for Figure~\ref{fig:evq-yarn} and Figure~\ref{fig:pe-dominant}. The following assets are supporting and belong in the appendix:
+\begin{itemize}
+\item Figure 1: \(750\mathrm{M}\) dynamics and retrieval divergence,
+\item collision-block / dead-zone visualizations,
+\item full phase9f and phase15 tables,
+\item `r`-sweep ablations,
+\item video temporal transfer figures and tables,
+\item complete implementation and hyperparameter dumps.
+\end{itemize}
+
+This separation is deliberate. The body should answer only three questions: what the exact theory gives, whether closed-form EVQ beats learnable PE in the cleanest extrapolation regime, and whether EVQ materially unlocks inference-time scaling. Everything else strengthens the package, but should not dilute the central narrative under the 9-page anonymous submission constraint.
+
+\subsection{Why Figure 1 is appendix-only}
+
+The \(750\mathrm{M}\) dynamics figure is visually strong, but it is not the right primary anchor for an anonymous submission because it mixes two avoidable weaknesses: it is single-seed and it was produced with the now-deprecated hybrid configuration. Its role in the submission is therefore explanatory rather than foundational. It helps the reader understand the qualitative geometry of retrieval divergence, but it should not compete with the multi-seed EVQ\(\times\)YaRN result or the PE-dominant scaling-law confirmation for body space.
+
+\subsection{Why video remains supportive}
+
+The video temporal experiments are scientifically important because they suggest that the same variational frequency-allocation principle may apply beyond text RoPE. However, the review package should treat them as cross-modal support rather than as co-primary evidence. The text results already deliver a closed-form theory, a clean extreme-extrapolation test, and a strong systems interaction result; video currently strengthens the scope claim, but is not required for the main text-level thesis to stand.
+
+\subsection{Why base=10K and r-sweep move to the appendix}
+
+Both of these result families matter, but mainly for rebuttal and mechanism. The low-base dead-zone result is a theory-confirming negative result, and the \(r\)-sweep is a method-simplification argument showing that the main EVQ recipe does not need a hybrid cutoff. Neither is strong enough to justify body-level figure real estate under the current page budget, so both are retained as appendix-strength material.
