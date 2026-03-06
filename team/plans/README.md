@@ -1,6 +1,6 @@
 # Team Plans
 
-This folder contains concrete next-step plans for humans, not raw logs.
+This folder contains concrete next-step plans rather than raw logs.
 
 ## Read In This Order
 
@@ -14,8 +14,8 @@ This folder contains concrete next-step plans for humans, not raw logs.
 
 ## Rule
 
-Every file here should answer three questions quickly:
+Each plan should answer three questions:
 
-1. what we are trying to prove or falsify,
+1. what claim is being tested,
 2. what evidence we already have,
 3. what exact experiment should be run next.

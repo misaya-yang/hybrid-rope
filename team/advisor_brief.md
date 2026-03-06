@@ -40,7 +40,7 @@ The most suggestive observation is from the recent Geo continued-pretraining run
 
 The surprising point is that `8K PPL` is even slightly lower than `2K PPL`. This is not proof, but it is strong motivation to test whether model scale and training sufficiency can absorb short/mid-range positional burden while leaving far-range low-frequency structure as the irreducible bottleneck.
 
-The full internal plan is here:
+Related note:
 
 - `team/plans/capacity_compensation_hypothesis.md`
 
@@ -58,7 +58,7 @@ The full internal plan is here:
 3. Advising whether the new "capacity compensation" hypothesis is theoretically coherent enough to justify a dedicated scale sweep.
 4. Advising whether the next largest budget block should go to a `1.5B text anchor` or a stronger `video temporal theory+experiment package`.
 
-## Immediate Reading Path
+## Suggested Reading
 
 1. `paper_draft/mainstory.md`
 2. `paper_draft/CORE_THEORY.md`

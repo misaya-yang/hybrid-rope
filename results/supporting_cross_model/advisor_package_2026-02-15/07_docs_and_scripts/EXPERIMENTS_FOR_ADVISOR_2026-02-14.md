@@ -1,4 +1,4 @@
-﻿# Hybrid-RoPE 实验全量整理（给导师）
+﻿# Hybrid-RoPE 实验全量整理
 
 - 报告日期：2026-02-14
 - 仓库：`e:/rope/hybrid-rope`

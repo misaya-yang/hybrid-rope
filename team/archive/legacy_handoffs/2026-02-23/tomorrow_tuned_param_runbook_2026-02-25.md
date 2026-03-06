@@ -109,7 +109,7 @@ $CONDA_EXE run -n base python scripts/summarize.py --registry artifacts/registry
 $CONDA_EXE run -n base python scripts/import_2024/significance_test.py --data_dir results/llama8b_fair_v2_longbench_stable_20260223_0150 --n_bootstrap 10000
 ```
 
-## 通过标准（给导师/审稿人口径）
+## 通过标准
 - 协议不变，仅改频率曲线参数。
 - 至少给出 `Hybrid vs YaRN/PI/Baseline` 的 paired CI 和 p-value。
 - 若显著性仍弱，结论写成：

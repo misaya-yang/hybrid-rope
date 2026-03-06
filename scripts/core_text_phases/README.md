@@ -7,7 +7,7 @@ This directory is the main Phase 8–15 text experiment chain.
 | Phase | Question | Paper role | Main scripts |
 |---|---|---|---|
 | 8 | Does EVQ beat geometric in the raw from-scratch regime, and is there a scaling-law pattern? | theory-to-raw-text foundation | `run_evq_sweep.py`, `phase8d_scaling_law.py`, `phase8f_multi_seed.py` |
-| 11 | Does the scaling law predict the PE-dominant regime, and does EVQ unlock YaRN there too? | primary anchor | `phase11_L256_extrap.py`, `phase11_yarn_eval.py`, `phase11b_125m_dape.py`, `phase11c_454m_scaling.py` |
+| 11 | Does the scaling law predict the PE-dominant regime, and does EVQ unlock YaRN there too? | primary anchor | `phase11_L256_extrap.py`, `phase11_yarn_eval.py`, `phase11b_125m_dape.py`, `phase11c_454m_scaling.py`, `phase11f_token_scaling_454m.py` |
 | 13 | Can we get a larger-model downstream NLL probe? | supporting downstream probe | `phase13a_longbench_nll.py` |
 | 14 | Is `EVQ + YaRN >> Geo + YaRN` in the main systems setting? | primary anchor | `phase14c_multiscale_evq_yarn.py`, `phase14d_125m_tinystories_10pct.py` |
 | 15 | Do EVQ gains persist under larger-scale continued pretraining? | supporting scale-up evidence | `phase15_750m_2k_to_4k_continue_ckpt_eval.py`, `phase11e_continued_pretrain.py` |
@@ -30,6 +30,7 @@ This directory is the main Phase 8–15 text experiment chain.
 - `phase11_yarn_eval.py`: L=256 YaRN interaction evaluation
 - `phase11b_125m_dape.py`: 125M DAPE-style compatibility / comparison
 - `phase11c_454m_scaling.py`: token-scaling follow-up
+- `phase11f_token_scaling_454m.py`: 454M token-scaling continuation under the L=2048 setting
 - `phase11e_continued_pretrain.py`: Geo-to-EVQ continued-pretraining retrofit experiment
 
 ### Phase 13: downstream NLL probe

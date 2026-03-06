@@ -1,6 +1,6 @@
-# AI Handoff
+# Project Handoff
 
-## Mission
+## Repository Scope
 
 This repository is now a submission-oriented EVQ-Cosh workspace. The goal is not to preserve every historical branch of exploration, but to keep a clean, defensible path from theory to experiments to anonymous paper draft.
 
@@ -12,7 +12,7 @@ This repository is now a submission-oriented EVQ-Cosh workspace. The goal is not
 - `team/`: advisor and collaborator coordination material
 - `results/`: classified outputs
 
-## Read Order for New Sessions
+## Recommended Reading Order
 
 1. `README.md`
 2. `paper_draft/mainstory.md`
@@ -61,7 +61,7 @@ Do not drift away from these three claims unless new evidence justifies it:
 2. Extreme extrapolation: EVQ beats learnable PE in DAPE-style regimes.
 3. Systems result: `EVQ + YaRN >> Geo + YaRN`.
 
-## How To Improve The Paper Next
+## Paper Improvement Priorities
 
 Optimize the paper under three principles:
 
