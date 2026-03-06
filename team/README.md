@@ -7,7 +7,9 @@ This directory is for human collaborators, not machine handoff dumps.
 1. `team/advisor_brief.md`
 2. `team/senior_collab_brief.md`
 3. `team/open_gaps.md`
-4. `team/plans/DSR.md`
+4. `team/plans/README.md`
+5. `team/plans/capacity_compensation_hypothesis.md`
+6. `team/plans/DSR.md`
 
 ## Purpose
 

@@ -20,9 +20,14 @@
 5. **Single-seed larger-scale evidence**
    - Phase 9f and Phase 15 are both useful, but they remain supporting rather than main-paper anchors.
 
+6. **Capacity-compensation hypothesis is motivated but not closed**
+   - We now have a plausible mechanism story that stronger models may absorb short-range positional burden while far-range low-frequency structure remains irreducible.
+   - This is not yet a paper claim; it still needs a dedicated scale/training sweep.
+
 ## Current Practical Priority Order
 
 1. stronger large-scale text anchor,
 2. DSR / harder retrieval evaluation,
-3. theoretical tightening,
-4. stronger video temporal package.
+3. scale-sweep for the capacity-compensation hypothesis,
+4. theoretical tightening,
+5. stronger video temporal package.

@@ -61,6 +61,32 @@ Do not drift away from these three claims unless new evidence justifies it:
 2. Extreme extrapolation: EVQ beats learnable PE in DAPE-style regimes.
 3. Systems result: `EVQ + YaRN >> Geo + YaRN`.
 
+## How To Improve The Paper Next
+
+Optimize the paper under three principles:
+
+1. **Protect the evidence hierarchy**
+   - Keep `P0` as the real paper core: `EVQ+YaRN` and PE-dominant / DAPE-style extrapolation.
+   - Keep `P1` as robustness support.
+   - Keep `P2` as scope-expanding evidence only.
+   - Do not promote single-seed or cross-modal results into body-level anchors without new multi-seed support.
+
+2. **Protect the theorem / conjecture boundary**
+   - Closed-form ODE solution and geometric limit are paper-grade theory.
+   - `tau*` remains an empirical law / conjecture unless the derivation is tightened.
+   - New mechanism ideas, including the capacity-compensation hypothesis, stay in `team/plans/` until they are experimentally closed.
+
+3. **Optimize around the current submission skeleton, not around loose notes**
+   - Submission source of truth: `paper_draft/submission/main.tex`
+   - Submission structure and redlines: `paper_draft/NEURIPS_SUBMISSION_PLAN.md`
+   - Core paper narrative: `paper_draft/mainstory.md`
+   - Theory source of truth: `paper_draft/CORE_THEORY.md`
+   - Figure / table matrix: `paper_draft/figs/README.md`
+   - Known paper-side corrections and claim hygiene: `paper_draft/PAPER_ERROR_CORRECTIONS.md`
+   - Missing evidence and collaborator-facing next steps: `team/open_gaps.md`, `team/plans/`
+
+Practical rule: improve the paper by strengthening the current three-claim package, not by adding parallel storylines.
+
 ## What Has Been Deliberately Demoted
 
 These are not headline claims in the current submission package:
