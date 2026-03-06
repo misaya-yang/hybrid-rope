@@ -1,6 +1,0 @@
-method,summary_json,train_loss,eval_loss,ppl_16k,passkey_gen_16k
-baseline,data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/baseline/summary.json,1.880706422328949,2.518735885620117,11.4764,0.8
-pi,data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/pi/summary.json,1.6833404755592347,2.4713683128356934,10.6616,1.0
-yarn,data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/yarn/summary.json,1.685179932117462,2.460536003112793,10.5914,1.0
-sigmoid,data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/sigmoid/summary.json,1.6997810220718383,2.4860825538635254,10.8552,1.0
-anchored_sigmoid,data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/anchored_sigmoid/summary.json,1.6489165496826172,2.4528863430023193,10.461,1.0

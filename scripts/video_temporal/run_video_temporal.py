@@ -35,7 +35,7 @@ import torch.nn.functional as F
 # ---------------------------------------------------------------------------
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-SWEEP_DIR = SCRIPT_DIR.parent / "m4_evq_sweep"
+SWEEP_DIR = SCRIPT_DIR.parent / "core_text_phases"
 sys.path.insert(0, str(SWEEP_DIR))
 
 from run_evq_sweep import (

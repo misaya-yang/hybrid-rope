@@ -4,7 +4,7 @@
 > 状态: **COMPLETE**
 > 服务器: R6000
 > 实验: `phase15_750m_2k_to_4k_continue_ckpt_eval`
-> 本地镜像: `results/phase15/*.json`
+> 本地镜像: `results/core_text/phase15/*.json`
 
 ---
 
@@ -26,10 +26,10 @@
 
 **导回本地的关键 JSON**
 
-- `results/phase15/phase15_evq_r0_seed42_result.json`
-- `results/phase15/phase15_evq_r0_seed42_checkpoint_eval_progress.json`
-- `results/phase15/phase15_geo_seed42_result.json`
-- `results/phase15/phase15_continue_summary.json`
+- `results/core_text/phase15/phase15_evq_r0_seed42_result.json`
+- `results/core_text/phase15/phase15_evq_r0_seed42_checkpoint_eval_progress.json`
+- `results/core_text/phase15/phase15_geo_seed42_result.json`
+- `results/core_text/phase15/phase15_continue_summary.json`
 
 ---
 

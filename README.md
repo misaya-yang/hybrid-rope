@@ -1,88 +1,98 @@
-# Hybrid-RoPE Research Repository
+# EVQ-Cosh Submission Repository
 
-This repository is the paper workspace for long-context RoPE research.
-It contains code, experiment evidence, analysis docs, and server snapshots.
+This repository has been reduced to the minimum working surface for the EVQ-Cosh NeurIPS submission.
 
-## Start Here (New Collaborators)
+## Repository Contract
 
-1. `AI_HANDOFF.md` (what to run, where outputs land)
-2. `docs/README.md` (documentation index + citation rules)
-3. `docs/EXPERIMENT_REGISTRY.md` (single source of truth for VALID/PENDING/INVALID)
-4. `docs/REPO_STRUCTURE_CN.md` (repo “file manager”: where to put new things)
-5. `docs/exp/EXPERIMENT_INVENTORY.md` (claim-ready inventory mirror)
-6. `docs/exp/plan_b_audit_manifest.md` (strict red-line audit + recovery checklist)
+Visible top-level working directories are intentionally limited to:
 
-## What This Repo Is For
+- `scripts/`: core experiment, evaluation, and figure-generation code that directly supports the paper
+- `docs/`: curated experiment reports, overview notes, and theory derivation material
+- `paper_draft/`: core narrative, theory source of truth, figure/table matrix, and anonymous submission source
+- `team/`: collaboration-facing handoff and planning material for advisor and lab coordination
+- `results/`: classified experiment outputs and small evidence artifacts
 
-- Primary goal: support paper writing with auditable experiment evidence.
-- Scope:
-  - From-scratch scaling experiments (50M / 100M / 350M / 700M lines).
-  - Llama/Qwen long-context adaptation and fair LoRA comparisons.
-  - Sigmoid-RoPE analytical study (phase collision, fitting, robustness).
-  - Training-time validation pipeline (`sigmoid_rope_experiments`).
-- Rule: no model weights/checkpoints are committed as evidence artifacts.
+Root-level entry documents:
 
-## Repo Layout (High Level)
+- `README.md`: repository map and working contract
+- `AIHANDOFF.md`: operational handoff for future AI or engineer sessions
 
-- `docs/`: paper-facing docs + protocols + experiment registry (start here)
-- `scripts/`: repo-level runnable entrypoints (training/eval/audit)
-- `rope/`: core RoPE schedule/injection code
-- `results/`: curated result bundles + paper-ready small artifacts
-- `paper_exports/`: dated paper export packages (tables/figures/json, no weights)
-- `artifacts/`: machine/cluster snapshots and small manifests
-- `archives/`: historical snapshots/batch reports (kept for traceability, not “current”)
-- `experiments/`: one-off or side projects (non-core; see per-folder README)
+Hidden infra directories such as `.git/`, `.codex/`, and `.claude/` remain because they are tooling, not research content.
 
-## Read In This Order (Paper Work)
+## Start Here
 
-1. `knowledge_base/README.md`
-2. `knowledge_base/ALL_IN_ONE.md`
-3. `knowledge_base/00_项目与结论总览.md`
-4. `docs/README.md`
-5. `docs/env/AI_ENVIRONMENT_SNAPSHOT_2026-02-23.md`
-6. `docs/notes/RESEARCH_STORYLINE_2026-02-21.md`
-7. `docs/env/EXPERIMENT_ENVIRONMENT_2026-02-21.md`
+1. `AIHANDOFF.md`
+2. `paper_draft/mainstory.md`
+3. `paper_draft/CORE_THEORY.md`
+4. `paper_draft/figs/README.md`
+5. `paper_draft/submission/main.tex`
 
-## Canonical Evidence Locations
+## Directory Guide
 
-- Curated advisor package:
-  - `results/advisor_package_2026-02-15/`
-- Latest server evidence snapshot (data/logs only):
-  - `archives/server_artifacts_2026-02-21/`
-- Sigmoid-RoPE project outputs:
-  - `sigmoid_rope_experiments/data/`
-  - `sigmoid_rope_experiments/results/`
-- Historical machine-specific snapshots:
-  - `artifacts/`
-  - `archives/server_artifacts_2026-02-13/`
+### `scripts/`
+Only keeps code that is directly relevant to submission-grade experiments.
 
-## Main Code Entrypoints
+- `scripts/train.py`: core training entrypoint retained for from-scratch / continued-pretraining flows
+- `scripts/core_text_phases/`: the Phase 8–15 core text experiment chain used in the paper
+- `scripts/supporting_eval/`: supporting evaluators kept for follow-up checks and extensions
+- `scripts/data_prep/`: dataset preparation helpers still needed for reproducibility
+- `figures/`: paper figure builders
+- `video_temporal/`: temporal-only video extrapolation experiment
+- `lib/rope/`: retained local RoPE schedule / injection library
 
-- 8B post-eval pipeline:
-  - `scripts/run_8b_post_eval.py`
-- 8B LoRA variant training:
-  - `scripts/train_llama8b_lora_variant.py`
-- Cross-model fair LoRA batch training:
-  - `scripts/cross_model_finetune.sh`
-  - `scripts/train_cross_model_lora.py`
-- NIAH eval:
-  - `scripts/eval_niah_recall.py`
-- LongBench eval:
-  - `scripts/eval_longbench.py`
-- Attention-integrated isolated pipeline:
-  - `train.py` (LLaMA-3-8B anchored/static/dynamic penalty trainer)
-  - `scripts/isolated/attn/new_eval_longbench_attnbias.py`
-  - `scripts/isolated/attn/next_attn_lora_queue.sh`
-- Attention distance prior estimation:
-  - `scripts/run_attn_hist.py`
-- Sigmoid phase pipelines:
-  - `sigmoid_rope_experiments/run_all.py`
-  - `sigmoid_rope_experiments/run_phase2.py`
-  - `sigmoid_rope_experiments/run_phase3.py`
-  - `sigmoid_rope_experiments/run_phase4.py`
+### `docs/`
+Curated research record, split into three parts.
 
-## Notes
+- `overview/`: repo-level methodology, reproducibility, experiment registry
+- `exp/`: key experiment reports only
+- `theory/`: rigorous derivation material and theory validation notes
 
-- If you need fresh remote evidence, run:
-  - `tools/sync_server_evidence_data_only.ps1`
-- The repository may contain ongoing-run logs; check timestamps before citing numbers.
+### `paper_draft/`
+Paper-facing material only.
+
+- `mainstory.md`: one-page spotlight-oriented narrative spine
+- `CORE_THEORY.md`: main theory + evidence source of truth
+- `SECONDARY_THEORY.md`: secondary claims and appendix-level material
+- `figs/`: canonical paper figures and the theory-narrative-figure matrix
+- `submission/`: anonymous NeurIPS draft source
+
+### `team/`
+Human collaboration surface.
+
+- advisor handoffs
+- lab coordination notes
+- next-experiment planning material
+
+### `results/`
+Classified evidence store.
+
+- `core_text/`: primary text experiments used in the main paper arc
+- `theory/`: theory validation and mechanism artifacts
+- `supporting_cross_model/`: cross-model / LoRA / longbench-adjacent supporting runs
+- `supporting_video/`: video temporal transfer results
+- `legacy/`: preserved but de-prioritized historical outputs
+
+## Submission Anchors
+
+The paper currently centers on three claims:
+
+1. RoPE frequency allocation admits a closed-form variational solution, with geometric RoPE as the `tau = 0` degenerate limit.
+2. EVQ beats learnable adaptive PE in DAPE-style extreme extrapolation.
+3. The main systems result is `EVQ + YaRN >> Geo + YaRN`.
+
+Everything else in the repository is organized around strengthening, reproducing, or qualifying those three claims.
+
+## Working Rules
+
+- New experiment reports go under `docs/exp/`.
+- New paper-facing figures go under `paper_draft/figs/`.
+- New non-core exploratory material should not be added back at the repository root.
+- Large weights and checkpoints are intentionally excluded from version control.
+
+## Build / Verify
+
+The anonymous submission draft lives at:
+
+- `paper_draft/submission/main.tex`
+
+For runtime verification, use an activated Conda environment as required by the repo policy.

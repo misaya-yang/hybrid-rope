@@ -1,6 +1,0 @@
-{
-  "dataset_name": "Synthetic-Passkey",
-  "num_text_docs": 20000,
-  "num_tokens": 4000000,
-  "target_tokens": 4000000
-}

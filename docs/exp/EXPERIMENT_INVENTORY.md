@@ -48,7 +48,7 @@ For each item, keep 6 fields:
 
 | ID | Status | Claim | Artifacts | Reproduce | Notes |
 |---|---|---|---|---|---|
-| `Task3/Task4 (2026-02-22 mentor plan)` | `INVALID` | N/A | `results/theory_2026-02-22/mentor_plan_execution_summary.json` | N/A | Wrong dataset/tokenizer mode (`Synthetic-Passkey`, byte tokenizer), PPL scale anomaly; only for debugging postmortem. |
+| `Task3/Task4 (2026-02-22 mentor plan)` | `INVALID` | N/A | `results/theory/theory_2026-02-22/mentor_plan_execution_summary.json` | N/A | Wrong dataset/tokenizer mode (`Synthetic-Passkey`, byte tokenizer), PPL scale anomaly; only for debugging postmortem. |
 
 ## DEPRECATED (Do not cite in main results)
 

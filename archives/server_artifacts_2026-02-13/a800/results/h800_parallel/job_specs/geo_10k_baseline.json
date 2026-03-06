@@ -1,8 +1,0 @@
-{
-  "name": "geo_10k_baseline",
-  "group": "baseline",
-  "rope": {
-    "kind": "standard",
-    "theta": 10000.0
-  }
-}

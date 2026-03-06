@@ -2,10 +2,16 @@
 **/__pycache__/
 **/*.pyc
 
-# Runtime PID/temp
+# Runtime / temp markers
 **/*.pid
+exp_pid.txt
+experiment_log.txt
+full_experiment.log
+outputs/
+logs/
+.tmp_sync/
 
-# Large model/checkpoint binaries (do not commit)
+# Large model / checkpoint binaries
 **/*.safetensors
 **/*.pt
 **/*.pth
@@ -17,38 +23,13 @@
 **/scheduler.*
 **/rng_state.*
 **/training_args.*
-**/c4_val_tokens_*
 **/cache/*
-
-# A800 LoRA checkpoint/full adapter artifacts (keep only README markers)
-artifacts/a800_2026-02-13/results/llama3_hybrid_lora/checkpoint-500/*
-!artifacts/a800_2026-02-13/results/llama3_hybrid_lora/checkpoint-500/README.md
-artifacts/a800_2026-02-13/results/llama3_hybrid_lora/checkpoint-600/*
-!artifacts/a800_2026-02-13/results/llama3_hybrid_lora/checkpoint-600/README.md
-artifacts/a800_2026-02-13/results/llama3_hybrid_lora/final_lora/*
-!artifacts/a800_2026-02-13/results/llama3_hybrid_lora/final_lora/README.md
 
 # Packaging artifacts
 **/*.tar.gz
 **/*.tgz
 
-# Local sync/cache folders
-.tmp_sync/
-logs/
-artifacts/local_monitor/
-artifacts/reviewer_2026-02-24/
-artifacts/_server_sync/
-artifacts/longinst_v1/
-
-# Local significance smoke/rerun artifacts (generated during analysis)
-archives/batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/significance_seeded_*.csv
-archives/batch_report_2026-02-23_downstream_eval/data/raw/results/llama8b_fair_v2_longbench_stable_20260223_0150/significance_seeded_*.json
-
-# Keep quarantined weights out of version control
-results/_weights_quarantine/**
-!results/_weights_quarantine/README.md
-
-# Local secrets (never commit)
+# Secrets and local credentials
 .env
 .env.*
 secrets/
@@ -56,49 +37,33 @@ secrets/
 *.pw
 *.pw.txt
 
-# Paper drafting artifacts
-paper_draft/
-paper_exports/**/*.pdf
-paper/neurips_submission/*.aux
-paper/neurips_submission/*.bbl
-paper/neurips_submission/*.blg
-paper/neurips_submission/*.log
-paper/neurips_submission/*.out
-paper/neurips_submission/*.toc
-paper/neurips_submission/*.fls
-paper/neurips_submission/*.fdb_latexmk
-paper/neurips_submission/*.synctex.gz
-paper/neurips_submission/*.pdf
+# Paper build artifacts
+paper_draft/submission/*.aux
+paper_draft/submission/*.bbl
+paper_draft/submission/*.blg
+paper_draft/submission/*.fdb_latexmk
+paper_draft/submission/*.fls
+paper_draft/submission/*.log
+paper_draft/submission/*.out
+paper_draft/submission/*.synctex.gz
+paper_draft/submission/*.toc
+paper_draft/submission/*.pdf
+paper_draft/*.aux
+paper_draft/*.log
+paper_draft/*.out
+paper_draft/*.toc
+paper_draft/*.synctex.gz
+paper_draft/*.fdb_latexmk
+paper_draft/*.fls
 
-# LaTeX build artifacts (paperdraft)
-docs/paperdraft/*.aux
-docs/paperdraft/*.log
-docs/paperdraft/*.out
-docs/paperdraft/*.toc
-docs/paperdraft/*.synctex.gz
-docs/paperdraft/*.fdb_latexmk
-docs/paperdraft/*.fls
+# Local environments
+.venv/
+venv/
+
+# Tooling metadata
+.codex/
+.claude/
 
 # macOS metadata
 .DS_Store
 **/.DS_Store
-
-# Local runtime logs / transient outputs (do not version)
-exp_pid.txt
-experiment_log.txt
-full_experiment.log
-outputs/
-experiments/**/outputs/
-experiments/**/experiment.log
-experiments/variational_sparse_attn/*training*.log
-experiments/variational_sparse_attn/test_run.log
-
-# Local Python virtual envs
-.venv/
-venv/
-
-# Codex local workspace data
-.codex/
-
-# Local dry-run artifacts
-artifacts/_dryrun_llama8k_evq/

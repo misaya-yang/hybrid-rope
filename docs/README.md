@@ -1,57 +1,25 @@
-# 文档目录 (Documentation Index)
+# Docs
 
-> 最后更新：2026-02-26
+This directory contains only curated written material that is still useful to the current EVQ-Cosh submission.
 
-欢迎查阅本项目的文档与实验索引。为了保证论文数据的严谨性和代码复现的确定性，请遵循以下结构：
+## Structure
 
-## 1. 优先级文档 (Priority Docs - Current)
+- `overview/`: high-level repo, methodology, reproducibility, and registry documents
+- `exp/`: key experiment reports kept as auditable narrative evidence
+- `theory/`: rigorous derivations and validation notes that support the theory chain
 
-这些是**唯一权威**的参考资料，可直接用于论文写作：
+## Reading Order
 
-| 文档 | 用途 |
-|------|------|
-| ⭐ **[EXPERIMENT_REGISTRY.md](EXPERIMENT_REGISTRY.md)** | **实验事实表**：所有跑数记录、结论状态与原始 JSON 证据链汇总。任何未在此表中标为 ✅ 的数据，严禁放入论文正文。 |
-| ⭐ **[protocols/LLAMA3_8B_LORA_STANDARD_2026-02-26.md](protocols/LLAMA3_8B_LORA_STANDARD_2026-02-26.md)** | **Llama-3-8B 主线 LoRA 最新规范**：固定不动 attention 的主线配置、gate-stop 策略、以及后续搜索边界。 |
-| ⭐ **[exp/EXPERIMENT_INVENTORY.md](exp/EXPERIMENT_INVENTORY.md)** | **可引用性镜像索引**：按 `VALID/PENDING/INVALID/DEPRECATED` 分类，附复现入口。 |
-| ⭐ **[exp/README.md](exp/README.md)** | **实验文档总入口**：新同事/新机器先看这一页，再进入具体计划与报告。 |
-| ⭐ **[exp/PROJECT_FILE_MANAGER.md](exp/PROJECT_FILE_MANAGER.md)** | **仓库文件管理规则**：哪些文件该放哪，如何清理与恢复，避免根目录污染。 |
-| ⭐ **[exp/plan_b_audit_manifest.md](exp/plan_b_audit_manifest.md)** | **红线审计与隔离 Plan B 清单**：运行脚本保护、审计模板、恢复路径。 |
-| [exp/REPO_FILE_INDEX.md](exp/REPO_FILE_INDEX.md) | **仓库文件分层索引**：一眼看清目录分类与整理状态。 |
-| ⭐ **[TERMS_AND_PROTOCOLS.md](TERMS_AND_PROTOCOLS.md)** | **术语与公平协议标准**：定义何为可用的评测分数、跨方法比较的红线，以及禁止引用的黑名单。 |
-| [RESULTS.md](RESULTS.md) | **论文口径核心结果**：直接为论文 Table/Figure 提供数据的简明汇总页。 |
-| [METHODOLOGY.md](METHODOLOGY.md) | **实现方法与评价方法**：核心频率映射函数、滑动窗口取样、Token 切片规范。 |
-| [REPRODUCE.md](REPRODUCE.md) | **最短复现路径**：包含如何一键跑出核心数字的三条路径（小模型/大模型验桩）。 |
+1. `overview/PROJECT_OVERVIEW.md`
+2. `overview/METHODOLOGY.md`
+3. `overview/SUBMISSION_CORE_ASSET_CHECKLIST.md`
+4. `exp/README.md`
+5. `theory/THEORY_MATH_VALIDATION.md`
 
-## 2. 详细分析资产 (Knowledge Base)
+## Inclusion Rule
 
-存放在 `../knowledge_base/`，用于论文撰写素材和理论自洽性证明：
+Only keep documents here if they satisfy one of these conditions:
 
-| 编号 | 文档 | 用途 |
-|------|------|------|
-| `00` | [项目与结论总览](../knowledge_base/00_项目与结论总览.md) | Claims / 核心贡献与理论脉络 |
-| `01` | [已完成实验核心数据](../knowledge_base/01_已完成实验核心数据.md) | 提供至实验事实表的最快指针 |
-| `08` | [8B 实验分析](../knowledge_base/08_8b_experiment_analysis.md) | 分析为何需要完全公平条件、Failures & Fix |
-
-*(其他文件参见对应目录)*
-
-## 3. 遗留归档文献 (Legacy - Do Not Cite)
-
-以下文件仅供历史追溯，**其内容已过时或包含不公平测试结果，不得引用**：
-
-| 文档 | 说明 |
-|------|------|
-| `EXPERIMENT_OVERVIEW.md` |已被 `EXPERIMENT_REGISTRY.md` 替代。|
-| `RESEARCH_STORYLINE_*.md` | 已被合并入 `knowledge_base` 和 `paper_draft`。 |
-| `QWEN_STANDARDIZED_COMPARISON...`| 已被更加严格的公平注入协议要求替代。 |
-
-## 4. 子目录导航 (Folders)
-
-- `env/`: 环境快照、SSH 连接与机器信息（用于复现与排查）
-- `protocols/`: 可复现协议文档（跨模型微调、公平对比标准等）
-- `ops/`: 运营与同步文档（证据同步、文档更新日志）
-- `notes/`: 研究过程记录（storyline、方向分析、理论状态）
-- `legacy/`: 过时/历史文档（不可引用）
-
----
-**阅读建议**：
-若您是评审委员或合作者，请严格从 `EXPERIMENT_REGISTRY.md` 循迹以复核所有声称效果的真实性。
+- they support a current paper claim
+- they document a core experiment used in the paper package
+- they preserve a theory derivation that is still relevant to the current submission

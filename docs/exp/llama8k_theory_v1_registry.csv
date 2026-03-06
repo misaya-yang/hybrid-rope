@@ -1,1 +1,0 @@
-job_id,phase,method,seed,lora_rank,max_steps,anchor_factor,run_full_eval,run_name,status,return_code,gate_pass,gate_qasper_base,gate_qasper_lora,gate_musique_base,gate_musique_lora,full_macro_base_pct,full_macro_lora_pct,full_macro_delta_pct,run_dir,log_path,gate_json,full_json,full_raw_json,run_config_json,code_hash,data_hash,inv_freq_hash,started_at,elapsed_sec,notes
