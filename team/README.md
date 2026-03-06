@@ -1,6 +1,6 @@
 # Team Collaboration Surface
 
-This directory is for human collaborators, not machine handoff dumps.
+This directory holds collaboration briefs, open issues, and execution plans.
 
 ## Read In This Order
 
@@ -13,13 +13,13 @@ This directory is for human collaborators, not machine handoff dumps.
 
 ## Purpose
 
-- `advisor_brief.md`: what the Tsinghua PhD advisor needs to know immediately
-- `senior_collab_brief.md`: what the senior grad collaborator can execute or validate next
-- `open_gaps.md`: the exact missing pieces between the current repo state and a stronger submission
+- `advisor_brief.md`: top-level status, strongest evidence, and strategic questions
+- `senior_collab_brief.md`: execution-facing summary for the next experiment wave
+- `open_gaps.md`: the missing pieces between the current repo state and a stronger submission
 - `plans/`: concrete next-experiment plans
 - `tools/`: helper scripts for generating collaboration materials
 - `archive/`: older handoffs preserved only for traceability
 
 ## Rule
 
-Everything here should be readable by a human in one pass. Do not put raw experiment dumps or AI-oriented operating notes here.
+Everything here should be readable in one pass. Do not put raw experiment dumps or operating notes here.
