@@ -105,6 +105,62 @@ These are not headline claims in the current submission package:
 - New advisor/collaboration note: `team/`
 - New structured output bundle: `results/<bucket>/`
 
+## Blackwell GPU (RTX 5090 / RTX 6000 Pro) Training Setup
+
+RTX 5090 和 RTX 6000 Pro 都是 Blackwell 架构 (sm_120, compute capability 12.0)，训练配置完全相同。
+
+### 环境要求
+
+- **PyTorch >= 2.7.0**，推荐 2.8+
+- **CUDA 12.8**（sm_120 必须 CUDA 12.8+）
+- 验证：`python -c "import torch; print(torch.__version__, torch.version.cuda, torch.cuda.get_device_capability())"`
+- 预期输出：`2.8.x+cu128 12.8 (12, 0)`
+
+### torch.compile 配置（关键！）
+
+Blackwell 上 **必须** 使用 `torch.compile` 才能获得正常 GPU 利用率。不用 compile，GPU 利用率只有 ~30%（kernel launch 开销），训练时间会膨胀 3-4 倍。
+
+```python
+model = GPT(cfg, inv_freq).to("cuda")
+model = torch.compile(model, mode="max-autotune")  # 关键！
+```
+
+训练循环每步前加：
+```python
+torch.compiler.cudagraph_mark_step_begin()  # 防止 CUDA Graph 覆写错误
+```
+
+#### 常见坑
+
+| 问题 | 原因 | 解决 |
+|---|---|---|
+| `mode="reduce-overhead"` crash | CUDA Graph 张量覆写冲突 | 改用 `mode="max-autotune"` 或 `mode="default"` |
+| `mode="max-autotune"` backward crash | 缺少 `cudagraph_mark_step_begin()` | 每步 forward 前调用 `torch.compiler.cudagraph_mark_step_begin()` |
+| Triton "OutOfMemoryError: out of resource" 警告 | 部分 triton kernel 配置超出 sm_120 寄存器限制 | 无害警告，autotune 会自动跳过这些配置，选择可用的 |
+| compile warmup 慢（首次 2-3 分钟） | Triton autotune 为每个 kernel 搜索最优配置 | 正常现象，只在首步发生 |
+
+### 性能参考（454M 模型, L=512, RTX 5090 32GB）
+
+| 配置 | ms/step | tok/s | VRAM | ETA (2B tokens) |
+|---|---|---|---|---|
+| eager (无 compile) | 231ms | 44K | 25.1GB | 12.6h |
+| `compile(mode="default")` | 165ms | 62K | 17.6GB | 8.9h |
+| `compile(mode="max-autotune")` | 183ms | 56K | 20.9GB | **9.9h** |
+
+注意：`max-autotune` 在 454M 模型上比 `default` 略慢，因为 autotune 的 triton kernel 在此模型尺寸上不一定优于 cuBLAS。两者都远优于 eager。实际选择可根据模型尺寸 benchmark 决定。
+
+### 其他训练优化
+
+- **bf16 不需要 GradScaler**：bf16 与 fp32 共享指数范围，GradScaler 只对 fp16 有意义，且会引入 CPU-GPU 同步开销
+- **loss.item() 避免每步调用**：每 200 步调用一次，否则每步都触发 CPU-GPU 同步
+- **clip_grad_norm_ 只在 warmup 期间使用**：之后跳过可省 ~55ms/step
+- **数据预存为 int64**：避免每步 int32→int64 转换开销
+- **passkey 混合数据缓存到磁盘**：`torch.save(mixed_data, "mixed_data_seed{seed}.pt")`，避免每次重启重新生成
+
+### 经验教训
+
+> **不要因为 torch.compile crash 就认定"硬件不支持"。** Blackwell (sm_120) 在 PyTorch 2.7+ / CUDA 12.8 下完全支持 compile。crash 通常是 mode 选择或 CUDA Graph 配置问题，换个 mode 或加一行 `cudagraph_mark_step_begin()` 就能解决。先排查再下结论。
+
 ## Practical Warning
 
 This repo has already been intentionally pruned. Do not recreate old root-level clutter. If a new artifact does not clearly belong to one of the five visible top-level directories, the default answer is that it does not belong in this repository.
