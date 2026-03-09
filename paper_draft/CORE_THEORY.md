@@ -2,7 +2,7 @@
 
 > **定位**：论文写作的唯一核心参考。只含已证明/已验证的理论和 solid 实验结果。
 > **配套文档**：`SECONDARY_THEORY.md`（发散性理论、待验证猜想、次要实验）
-> **最后更新**：2026-03-06（Phase 11 / Passkey Mix 多 seed 结果 / Video temporal 表述统一校准）
+> **最后更新**：2026-03-09（Phase16 τ 公式 sweep 写入核心叙事）
 
 ---
 
@@ -148,7 +148,7 @@ Jensen on f(x)=-lnx（严格凸），等号 ↔ ρ ≡ 1 ↔ Geometric。
 
 ## 8. τ* Scaling Law
 
-### 公式（单变量，base=500K 已验证）
+### 公式（单变量主律，base=500K 主线）
 
 $$\tau^*(L) = \frac{d_{head}}{\sqrt{L}}$$
 
@@ -158,7 +158,7 @@ $$\tau^*(L) = \frac{d_{head}}{\sqrt{L}}$$
 
 τ* = √(β*/α*) ∝ 1/√(L·lnb)。固定 base 时简化为 ∝ 1/√L。
 
-### Phase 8D 实验验证（5 数据点 + Phase 11 新验证）
+### Phase 8D / Phase 11 锚点验证
 
 | L_train | 预测 τ*=64/√L | 实测 τ* | 备注 |
 |---------|--------------|--------|------|
@@ -170,6 +170,47 @@ $$\tau^*(L) = \frac{d_{head}}{\sqrt{L}}$$
 | 2048 | 1.41 | 1.5 | 偏差 6% |
 
 L≥1024 吻合良好；L<1024 旧数据系统偏高（PE-dominant regime），但 **Phase 11 用 454M（更大模型、更多 token）重测 L=256 后，τ=4.0 确认为最优方向**，与理论预测一致。旧 Phase 8D L=256 偏高可能是 125M 模型容量不足导致。
+
+### Phase 16 全面 sweep（99 runs, 9 configs, 3 seeds）
+
+为了回答 “`τ*=d_head/√L` 是不是只是偶然近似” 这一核心质疑，我们做了一个系统 sweep：
+
+- `L_train ∈ {256, 512, 1024}`
+- `num_heads ∈ {4, 8, 16}`，对应 `d_head ∈ {128, 64, 32}`
+- `45` 个 pilot run + `54` 个 confirm run = **`99` runs**
+- confirm 覆盖 `3` 个 seed
+- 每个配置比较 `tau=0`、`tau=theory` 及 theory 邻域候选
+
+**结论统计**：
+
+- theory `tau` 是**精确最优**：`3/9`
+- theory `tau` 进入**前二**：`6/9`
+- theory `tau` 进入**前三**：`8/9`
+- 所有配置的经验最优值都落在 theory 的 **`1.5x`** 以内
+- 最优值与 theory 的平均比例约为 **`1.20x`**
+- theory `tau` 相比 `tau=0` (Geometric) 在 **`7/9`** 个配置上更优
+
+| Config | Theory tau | Best tau | Theory rank |
+|---|---:|---:|---:|
+| `L256_H4_Dh128` | `8.00` | `10.00` | `2` |
+| `L256_H8_Dh64` | `4.00` | `4.00` | `1` |
+| `L256_H16_Dh32` | `2.00` | `2.00` | `1` |
+| `L512_H4_Dh128` | `5.66` | `5.66` | `1` |
+| `L512_H8_Dh64` | `2.83` | `4.24` | `3` |
+| `L512_H16_Dh32` | `1.41` | `1.77` | `5` |
+| `L1024_H4_Dh128` | `4.00` | `5.00` | `2` |
+| `L1024_H8_Dh64` | `2.00` | `2.50` | `2` |
+| `L1024_H16_Dh32` | `1.00` | `1.25` | `3` |
+
+**Paper-safe interpretation**：
+
+- `τ*=d_head/√L` 已经足以把搜索空间压缩到一个很小的 near-optimal 带
+- 它更像**稳健的近似最优 scaling law**，而不是在有限模型/有限数据下处处精确命中的刚性定律
+- 经验最优值存在轻微右偏，说明 closed-form 抓住了主导量纲，但有限容量 setting 仍有小的 correction
+
+因此，正文最稳的写法应是：
+
+> The closed-form rule `τ*=d_head/√L` is a robust near-optimal prior. Finite-capacity sweeps show a mild right-shift of the empirical optimum, but the optimum remains tightly concentrated around the theoretical prediction.
 
 ### 模型大小无关性（✅ Phase 11 实验确认）
 
