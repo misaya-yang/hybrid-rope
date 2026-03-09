@@ -1,0 +1,244 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{float}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  urlcolor=blue!50!black
+}
+
+\setlength{\parskip}{0.45em}
+\setlength{\parindent}{0pt}
+
+\title{\textbf{EVQ-Cosh: Core Theory and Experimental Story}}
+\author{}
+\date{March 6, 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Overview}
+
+The central claim is simple: long-context extrapolation fails not only because
+inference-time scaling is imperfect, but because standard geometric RoPE starts
+from the wrong training-time frequency allocation. EVQ-Cosh reframes frequency
+allocation as a variational inverse problem, derives a closed-form family, and
+shows that geometric RoPE is the $\tau=0$ degenerate limit of that family.
+
+The empirical picture is equally direct. In the cleanest extrapolation regimes,
+EVQ outperforms learnable positional encodings despite using no extra
+parameters. In the systems setting, the strongest result is not merely
+``EVQ $>$ Geo'', but rather \textbf{EVQ + YaRN $\gg$ Geo + YaRN}. This suggests
+that the hidden bottleneck for long-context systems is the training-time
+frequency substrate, not only the inference-time scaling rule.
+
+\section*{Core Thesis}
+
+\textbf{Training-time frequency allocation is the hidden bottleneck for
+long-context extrapolation.}
+
+Standard geometric RoPE distributes frequencies uniformly in log space. That
+choice is analytically convenient, but it is not the generic optimum of the
+underlying interference problem. EVQ-Cosh instead reallocates channel density:
+it compresses high-frequency spacing and expands low-frequency spacing. The
+point is not to ``move frequencies to low frequencies''; mathematically that is
+incorrect. The point is to reduce low-frequency phase collisions, which become
+the structural bottleneck at long range.
+
+This leads to three main consequences:
+
+\begin{enumerate}
+  \item Geometric RoPE should be treated as a special case, not as the default optimum.
+  \item Extreme extrapolation quality can be improved by changing only the training-time frequency allocation.
+  \item Inference-time scaling methods such as YaRN become much stronger when the underlying frequency allocation is repaired first.
+\end{enumerate}
+
+\section*{Theory in One Page}
+
+\subsection*{1. Variational formulation}
+
+Let $D(\Delta)$ denote a distance prior and let $\phi$ index the log-frequency
+axis. The exact phase-interference kernel is
+\[
+K(\phi_1,\phi_2)
+= \int D(\Delta)\cos(b^{-\phi_1}\Delta)\cos(b^{-\phi_2}\Delta)\,d\Delta.
+\]
+
+The only approximation step is a broadband surrogate:
+\[
+K(\phi_1,\phi_2) \approx \alpha\,\delta(\phi_1-\phi_2)+\beta\,\min(\phi_1,\phi_2).
+\]
+
+This turns the optimization over channel density $\rho(\phi)$ into the
+variational objective
+\[
+J[\rho]
+= \frac{\alpha}{2}\int \rho(\phi)^2\,d\phi
++ \frac{\beta}{2}\int\!\!\int \rho(\phi)\rho(\psi)\min(\phi,\psi)\,d\phi\,d\psi
+- \mu\int \rho(\phi)b^{-2\phi}\,d\phi.
+\]
+
+\subsection*{2. Exact ODE and closed-form family}
+
+The Euler--Lagrange equation reduces to
+\[
+\rho''(\phi)-\tau^2\rho(\phi)=\gamma b^{-2\phi},
+\qquad \tau=\sqrt{\beta/\alpha}.
+\]
+
+Its solution is exact:
+\[
+\rho^*(\phi)=C_1\cosh(\tau\phi)+C_2\sinh(\tau\phi)+Pb^{-2\phi}.
+\]
+
+After CDF inversion, the EVQ-Cosh warp is
+\[
+\phi_k(\tau)
+= 1-\frac{1}{\tau}\operatorname{arcsinh}\!\left((1-u_k)\sinh\tau\right).
+\]
+
+\subsection*{3. Geometric RoPE as a degenerate limit}
+
+Taking $\tau\to 0$ yields
+\[
+\phi_k(\tau)\to u_k,
+\]
+which is exactly the uniform-quantile allocation of geometric RoPE. In this
+sense, geometric RoPE is not a fundamentally distinct design; it is the zero
+temperature limit of the EVQ family.
+
+\subsection*{4. Waterbed interpretation}
+
+The theory predicts a constrained tradeoff. EVQ reduces long-range low-frequency
+collisions by spending positional budget away from high-frequency redundancy.
+This is not a symmetric trade: high-frequency spacing is often partially
+redundant, while low-frequency collisions are structurally destructive for very
+long-range separation.
+
+\subsection*{5. Scaling law}
+
+The practical rule supported by the current evidence is
+\[
+\tau^*(L)\approx \frac{d_{\text{head}}}{\sqrt{L}}.
+\]
+
+In the current paper package, this scaling law should still be treated as an
+empirical law or conjecture, not as a fully closed theorem. The exact ODE and
+the geometric limit are the paper-grade theoretical anchors.
+
+\section*{What The Experiments Establish}
+
+\subsection*{A. Extreme extrapolation beats learnable PE}
+
+In the 128-token DAPE-style PE-dominant regime, EVQ wins in the exact setting
+where positional encoding quality is the dominant variable.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{lccc}
+\toprule
+Method & Extra params & PPL@8K & vs Geo \\
+\midrule
+Geometric & 0 & 513.7 & --- \\
+DAPE & 32 & 455.3 & -11.4\% \\
+Learnable $\tau$ & 1 & 437.9 & -14.8\% \\
+\textbf{EVQ $\tau=5.0$} & \textbf{0} & \textbf{333.7} & \textbf{-35.0\%} \\
+\bottomrule
+\end{tabular}
+\caption{128-token training, 64$\times$ extrapolation to 8K. EVQ outperforms a learnable positional encoding family while using no additional parameters.}
+\end{table}
+
+This result matters because it isolates the positional encoding itself. It
+shows that a closed-form frequency family can outperform a more flexible but
+less structured learnable parameterization.
+
+\subsection*{B. EVQ unlocks YaRN}
+
+The main systems result is the interaction with YaRN. The strongest story is
+not that EVQ is a slightly better standalone RoPE variant. The stronger story
+is that EVQ changes how well inference-time scaling works.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{lcccc}
+\toprule
+Method & PK@8K & PK@12K & PPL@8K & PPL@16K \\
+\midrule
+Geo & 41\% & 57\% & 161.9 & 253.2 \\
+Geo + YaRN & 61\% & 59\% & 82.9 & 157.7 \\
+EVQ & 53\% & 63\% & 150.3 & 229.5 \\
+\textbf{EVQ + YaRN} & \textbf{100\%} & \textbf{79\%} & \textbf{70.9} & \textbf{107.5} \\
+\bottomrule
+\end{tabular}
+\caption{Main systems comparison in the fair 10\% mix, scale=8 setting. EVQ+YaRN clearly dominates Geo+YaRN.}
+\end{table}
+
+The interpretation is straightforward. Geo compresses low-frequency spacing so
+aggressively that inference-time rescaling still starts from a compromised
+substrate. EVQ first repairs the low-frequency spacing, and YaRN can then act
+on a much stronger base.
+
+\subsection*{C. PE-dominant scaling-law confirmation}
+
+At $L_{\text{train}}=256$, the scaling-law prediction points to $\tau^*=4.0$.
+The experiment confirms this direction directly, and the YaRN interaction is
+especially strong in this regime.
+
+\begin{itemize}
+  \item Raw: EVQ $\tau=4.0$ outperforms EVQ $\tau=2.0$ across all OOD lengths.
+  \item With YaRN: EVQ4+YaRN reaches \textbf{99.6} PPL at $32\times$, versus \textbf{260.2} for Geo+YaRN.
+  \item The implied gain is \textbf{-61.7\%} at the most extreme evaluation point.
+\end{itemize}
+
+\section*{Figures}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{../figs/fig2_evq_yarn_synergy.pdf}
+\caption{Main systems figure. The strongest practical result is that EVQ unlocks YaRN: the training-time frequency allocation and inference-time scaling are complementary rather than redundant.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{../figs/fig3_pe_dominant_scaling.pdf}
+\caption{PE-dominant and extreme extrapolation figure. The same theory explains both DAPE-style extrapolation and the stronger Phase 11 scaling-law regime.}
+\end{figure}
+
+\section*{Current Interpretation}
+
+The evidence currently supports the following reading:
+
+\begin{enumerate}
+  \item The exact theoretical core is real: the ODE, its closed-form family, and the geometric limit are not heuristic curve fits.
+  \item The strongest empirical message is systems-level: EVQ repairs the training-time positional substrate and thereby unlocks more of YaRN.
+  \item The PE-dominant results are important because they show that this is not merely a downstream tuning trick; positional encoding quality alone can create large extrapolation gaps.
+  \item Larger-scale continued pretraining remains supportive rather than primary, but it is directionally consistent: the long-range gain survives scale-up.
+\end{enumerate}
+
+\section*{What Remains Open}
+
+Three open fronts are still worth closing:
+
+\begin{itemize}
+  \item a tighter perturbation-bound story for the broadband surrogate;
+  \item a cleaner larger-scale text anchor on a real downstream benchmark;
+  \item stronger cross-modal evidence if video is to raise the paper ceiling rather than remain supportive.
+\end{itemize}
+
+The current package is already enough to support a clear claim: long-context
+extrapolation depends critically on how RoPE frequencies are allocated during
+training, and repairing that allocation yields a closed-form method that is
+both theoretically grounded and practically strong.
+
+\end{document}

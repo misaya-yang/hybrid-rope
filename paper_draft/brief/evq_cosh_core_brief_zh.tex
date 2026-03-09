@@ -1,0 +1,133 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=2.35cm]{geometry}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{booktabs,tabularx,array}
+\usepackage{graphicx,float}
+\usepackage{xcolor,hyperref}
+\usepackage{fontspec}
+
+\setmainfont{Songti SC}
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip = 0pt plus 1pt
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=[rgb]{0.10,0.24,0.55},
+  urlcolor=[rgb]{0.10,0.24,0.55}
+}
+
+\graphicspath{{../figs/}}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.25em}
+
+\title{EVQ-Cosh：核心理论与关键实验说明}
+\author{}
+\date{2026-03-06}
+
+\begin{document}
+\maketitle
+
+这项工作从 RoPE 的频率分配问题切入，而不是把注意力集中在推理时如何继续缩放位置。现有长上下文方法大多默认 geometric RoPE 是一个足够好的训练底座，再在推理时叠加 PI、NTK-aware、YaRN 等长度缩放规则。EVQ-Cosh 的核心判断不同：如果训练时的频率分配本身已经把低频通道挤得过密，那么推理时继续缩放位置只会在错误的底座上做外推，真正的瓶颈仍然留在训练阶段。沿着这条思路，EVQ-Cosh 将 RoPE 频率分配重新表述为一个变分逆问题，并试图给出一个闭式、可实现、且与实验现象一致的频率分配公式。
+
+\section*{一、理论主线已经站稳的部分}
+
+以 \(\phi\in[0,1]\) 表示对数频率坐标、\(\omega(\phi)=b^{-\phi}\) 表示角频率、\(D(\Delta)\) 表示距离先验，则 phase-collision kernel 可写成
+\begin{equation}
+K(\phi_1,\phi_2)=\int D(\Delta)\cos(\omega(\phi_1)\Delta)\cos(\omega(\phi_2)\Delta)\,\mathrm d\Delta .
+\end{equation}
+这一步仍是精确表达。后续唯一的核心近似，是把精确 kernel 压缩到一个可解析的 broadband surrogate：
+\begin{equation}
+\mathsf K \approx \alpha I+\beta \mathsf A^{-1},
+\end{equation}
+其中 \(\mathsf A=-\partial_\phi^2\)，\(\mathsf A^{-1}\) 的 Green 核对应 \(\min(\phi_1,\phi_2)\)。一旦这一步固定，后面的变分泛函、Euler--Lagrange 方程、双曲函数型通解与反 CDF 频率分配链条都可以严格写出。
+
+在这一 surrogate 下，频率密度 \(\rho(\phi)\) 的目标泛函为
+\begin{equation}
+J[\rho]
+=\frac{\alpha}{2}\int_0^1\rho(\phi)^2\,\mathrm d\phi
++\frac{\beta}{2}\int_0^1\int_0^1\rho(\phi)\rho(\psi)\min(\phi,\psi)\,\mathrm d\phi\mathrm d\psi
+-\mu\int_0^1 \rho(\phi)b^{-2\phi}\,\mathrm d\phi.
+\end{equation}
+极小点满足常系数受迫 ODE
+\begin{equation}
+\rho''-\tau^2\rho=\gamma b^{-2\phi},\qquad \tau=\sqrt{\beta/\alpha},
+\end{equation}
+其通解由双曲 tether 与 Fisher forcing 两部分组成：
+\begin{equation}
+\rho^*(\phi)=C_1\cosh(\tau\phi)+C_2\sinh(\tau\phi)+P b^{-2\phi}.
+\end{equation}
+在最干净的 pure-tether 设定下，CDF 可显式反演，从而得到直接替换 \texttt{inv\_freq} 的闭式公式
+\begin{equation}
+\phi_k(\tau)=1-\frac{1}{\tau}\,\mathrm{arsinh}\!\bigl((1-u_k)\sinh\tau\bigr),\qquad u_k=\frac{k}{K}.
+\end{equation}
+
+这条理论链最关键的结论，是 geometric RoPE 并不在 EVQ 家族之外。令 \(\tau\to 0\)，由 \(\sinh\tau\sim\tau\) 和 \(\mathrm{arsinh}(x\tau)/\tau\to x\) 可得 \(\phi_k(\tau)\to u_k\)，也就是标准 geometric 的均匀分位点。换句话说，geometric RoPE 不是另一种原则，而是 EVQ 家族中的零温退化点。这个结论将“EVQ 是否只是另一个位置编码技巧”的问题改写为“geometric 是否只是更大最优族中的一个退化极限”。
+
+另一个必须同时保留的结构是 waterbed。不考虑其具体实现形式，仅从误差再分配角度看，EVQ 的收益不是无代价的；它的作用机制是把高频段的冗余压缩掉，用以缓解真正决定长程外推的低频碰撞。这也是当前实验中经常看到“短程变化很小、长程改善很大”的理论基础。
+
+\section*{二、理论上需要保守处理的几点}
+
+严格版理论文稿给出的最大帮助，不是推翻这条主线，而是把边界划得更清楚。当前需要保守处理的点主要有五个。
+
+第一，\(\mathsf K\approx \alpha I+\beta \mathsf A^{-1}\) 这一步仍然是整条理论中的唯一近似，而且在连续模型里更适合被解释为算子层面的建模约定，而不是直接说成对 \(\alpha\delta+\beta\min\) 的 Hilbert--Schmidt 投影。原因是连续情形下的 \(\delta\) 对应恒等算子 \(I\)，并不是普通 \(L^2\) 核。严格说法应当是：正文把这一步当作唯一 surrogate，附录或后续工作再去补它与精确 kernel 之间的扰动界。
+
+第二，目标泛函真正严谨的写法需要连同函数空间、边界条件和正性约束一起给出。若把 \(\rho\) 解释为概率密度，则最小化问题的可行域并不只是一个仿射空间，还包含 \(\rho\ge 0\) 的约束；严格版本中，这意味着 Euler--Lagrange 方程只直接适用于严格正的内点极小解，更一般的情形需要通过 KKT 条件补齐。现有正文主线默认工作在内点解 regime，这是合理的，但这层假设需要明确说出。
+
+第三，若把 \(\mathsf A=-\partial_\phi^2\) 与混合边界条件一起完整写出，则 \(\min(\phi,\psi)\) 作为 Green 核这件事可以严格成立。相应地，\(\rho^*\) 的存在唯一性也应建立在 \(\alpha>0\) 带来的强凸性之上，而不是只从 ODE 形式直接推出。这个修正不会改变结论方向，但能避免“公式写对了、函数分析地基没写”的问题。
+
+第四，waterbed 型不等式在严格写法里需要额外假设 \(E(\phi)>0\) 且 \(\ln E\) 可积。只要这两个条件写清楚，原有结论仍然可保留；如果不写，就容易在技术细节上留下漏洞。
+
+第五，\(\tau^*(L)=d_{\mathrm{head}}/\sqrt L\) 目前仍应视为经验规律或条件性结论，而不是无条件定理。现有实验对它的支持已经很强，尤其是 \(L=256\) 的 Phase 11 直接确认了 \(\tau=4.0\) 优于 \(\tau=2.0\)，但这和“理论上已经完全证明其标度律”仍然是两回事。严格版文稿给出的正确处理方式，是把它降格为 empirical law / conjecture，同时把短长度区间的偏差归因于 PE-dominant regime 与模型容量因素。
+
+\section*{三、这套理论在机制上解释了什么}
+
+如果只从实现层面看，EVQ 似乎只是把一组 \texttt{inv\_freq} 换掉；但理论真正解释的不是“换了一组数字”，而是通道密度如何被重新分配。这里最容易说错的一句话，是“\(\tau\) 把频率推向低频端”。这个说法并不准确。更严格的描述是：\(\tau>0\) 之后，每个 \(\phi_k\) 会向高频端偏移，但真正重要的效应不在位置本身，而在相邻通道的间距重新分布。低频端间距被拉开，高频端间距被压缩，因而长距离最关键的低频碰撞被缓解，而高频段承担了 waterbed 代价。
+
+这一点解释了为什么实验中常见的形状不是“短程和长程一起线性改进”，而是“短程基本不变，长程明显改善”。在当前自然语言设定下，高频近程往往已经存在相当冗余，相邻通道编码的信息高度相似；低频端则更像瓶颈，一旦发生相位碰撞，模型对超出训练长度的远程依赖几乎失去区分能力。因此 EVQ 的本质不是平均地优化所有频段，而是把资源从相对冗余的高频端转移到真正限制外推的低频端。
+
+这也正是 collision-block 分析的价值所在。若某个频率通道对应的波长已经长到超出训练长度，它在训练阶段就无法被充分分辨。随着 base 变小，可真正被优化的通道数会显著减少，因此 EVQ 的净收益会迅速进入 dead zone。现有 \(base=10\mathrm K\) 的负面结果正好说明了这一点：当可优化通道太少时，EVQ 不但难以带来收益，甚至会显式退化。这个负面结果并不削弱理论，反而是理论在一个极端边界条件下的确认。
+
+另一条机制层面的结论是：\(r\) 并不是一个真正需要调的核心超参数。早期 Hybrid 思路试图只对一部分频段做局部 warp，但后续理论与实验都表明，EVQ-Cosh 的闭式解天然就保持了最高频端的锚定：\(k=0\) 时有 \(\phi=0\)，最前几个通道的改变量本来就极小。也就是说，“高频不动、低频重分配”已经内含在闭式解里，不需要再靠人为指定 \(r\) 去硬切频段。后续 r-sweep 和 EVQ+YaRN 的结果也都支持这一点：Pure EVQ 是更干净、更稳定的主方法。
+
+\section*{四、目前最硬的实验事实}
+
+当前最强的系统级结论不是 EVQ 单独优于 Geo，而是 \textbf{EVQ 明显放大了 YaRN 的作用}。在 \(10\%\) passkey mix、fair scale \(=8\) 的三种子比较中，EVQ+YaRN 在 \(8\mathrm K\) retrieval 上达到 \(100\%\)，而 Geo+YaRN 只有 \(61\%\sim 65\%\)；PPL@\(8\mathrm K\) 为 \(70.9\) 对 \(82.9\)，PPL@\(16\mathrm K\) 为 \(107.5\) 对 \(157.7\)。这组结果的含义不是“训练时与推理时两个方法叠加后数值更大”，而是它明确揭示出一个结构性事实：推理时长度缩放的上限，取决于训练时频率底座是否先被做对。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.93\textwidth]{fig2_evq_yarn_synergy.pdf}
+\caption{当前最强的系统级结果。核心信息不是 EVQ 单独优于 Geo，而是 EVQ 作为训练时频率底座，显著放大了 YaRN 的推理时外推效果。}
+\end{figure}
+
+第二条硬结果来自 DAPE 风格的极端外推设定。模型只在 \(128\) token 上训练，却要外推到 \(8\mathrm K\)。在这个 regime 中，模型权重来不及学会复杂的位置补偿，因此结果更直接地反映位置编码本身的质量。当前数值是 geometric 的 \(\mathrm{PPL@8K}=513.7\)，DAPE 为 \(455.3\)，EVQ 为 \(333.7\)。这说明在极端外推场景下，闭式频率分配不仅优于 geometric，也优于 learnable PE；EVQ 的优势不是来自额外可学习参数，而是来自频率本身分配得更合理。
+
+第三条核心结果是 Phase 11。在 \(454\mathrm M\)、\(L_{\mathrm{train}}=256\)、三种子设定下，理论预测的 \(\tau=4.0\) 全面优于 \(\tau=2.0\)；加上 YaRN 后，\(\mathrm{EVQ}_{\tau=4.0}+\mathrm{YaRN}\) 在 \(32\times\) 外推处达到 \(99.6\)，而 Geo+YaRN 为 \(260.2\)，相对下降 \(-61.7\%\)。与此同时，YaRN 对 Geo 只带来 \(3\text{--}5\%\) 改善，但对 EVQ 可带来 \(33\text{--}41\%\) 改善，杠杆效应接近 \(10\times\)。这一组数据把理论和系统级结论真正粘合在一起：\(\tau^*\) 不是事后拟合出来的单点参数，而是能够在新的 PE-dominant regime 中继续给出正确方向；EVQ×YaRN 的协同也会在训练长度更短、低频碰撞更严重时进一步放大。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.93\textwidth]{fig3_pe_dominant_scaling.pdf}
+\caption{PE-dominant 设定中的双重验证。左图对应 DAPE 风格的极端外推，右侧两图给出 \(L=256\) 的 raw 与 YaRN 结果。它们共同说明：闭式频率分配不仅能在极端外推中胜过 learnable PE，也能在更大模型中给出正确的最优方向与协同强度。}
+\end{figure}
+
+第四条是更常规、但同样重要的稳健性结果。在 \(350\mathrm M\)、\(L_{\mathrm{train}}=2048\)、FineWeb-Edu 三种子设定下，EVQ 在 \(2\mathrm K\) 的代价只有 \(+0.4\%\)，但在 \(16\mathrm K\) 上可把 PPL 从 \(284.8\) 降到 \(246.9\)，相对改善 \(-13.3\%\)。这说明 EVQ 不是只在极端 toy regime 里成立；即使回到更常规的训练长度，它仍然保持了“短程代价很小、长程收益明确”的形状。
+
+第五条是 capability-preserving 方向的证据。纯 FineWeb-Edu 下，passkey 对 from-scratch 小模型几乎是随机任务，Geo 与 EVQ 表现没有显著差异；而一旦在训练中显式混入 retrieval 模式，EVQ 在外推长度上的优势就稳定出现。在 \(10\%\) passkey mix、三种子平均下，EVQ 相对 Geo 在 \(4\mathrm K\) retrieval 上提升 \(+10.0\) 个百分点，在 \(8\mathrm K\) 上提升 \(+12.7\) 个百分点。这说明 EVQ 并不是无条件地提升一切能力，而是在已有任务能力被学会之后，显著改善其长度泛化。
+
+此外还有两类结果值得保留，但当前不宜放到最前面。第一类是 \(750\mathrm M\) 模型在训练长度继续拉到 \(4\mathrm K\) 之后的结果。在 full EVQ、\(2\mathrm K\to4\mathrm K\) continue 的设定下，\(16\mathrm K\) PPL 从 \(45.1\) 降到 \(24.4\)，\(8\mathrm K\) 的 AR exact 从 \(0\%\) 升到 \(77.5\%\)。这表明随着训练长度和 token 增大，EVQ 的长程收益没有被洗掉；但由于它目前还是 single-seed，最稳妥的身份仍然是 supporting evidence。
+
+第二类是 video temporal transfer。当前控制实验表明，在保持 spatial 频率全 geometric、只替换 temporal slice 时，EVQ 与 temporal-YaRN 的协同仍然明显存在。这说明该机制并非 text-only artifact，但视频证据目前还不足以取代文本主线。
+
+\section*{五、当前最稳妥的结论}
+
+截至目前，最稳妥的总结合理地分成两层。第一层是理论层：RoPE 的频率分配确实可以写成一条完整的变分主线，surrogate 固定后，ODE、双曲函数型最优密度、反 CDF 频率分配、以及 geometric 作为 \(\tau=0\) 退化点这几件事是同一条链上的结果。第二层是实验层：在当前最强的系统设定里，真正抓住问题本质的不是“EVQ 单独 raw PPL 更好”，而是“训练时频率优化决定了推理时长度缩放能否真正发挥作用”，这就是 EVQ+YaRN 显著优于 Geo+YaRN 的原因。
+
+因此，当前最适合保留在主叙事中的一句话是：\textbf{EVQ 的本质不是把频率简单推向某一端，而是重分配通道密度，通过压缩高频间距、扩大低频间距，缓解真正决定长程外推的低频碰撞；而这一点恰好解释了为什么 EVQ 能显著放大 YaRN 的作用。}
+
+\section*{六、仍待补齐的部分}
+
+需要继续补齐的地方也很明确。理论上，broadband surrogate 与精确 kernel 之间的扰动界仍未给出；\(\tau^*(L)\) 的标度律仍需更紧的证明；若要把密度问题写到完全严格，还应把非负性约束与 KKT 条件整合进正文或附录。实验上，真实下游任务上的 clean win 还不够多，目前最强证据仍集中在长上下文检索与 PE-dominant 外推；\(750\mathrm M\) continue 和视频 temporal 的结果都很有价值，但现在更适合作为 supporting evidence，而不是 primary anchor。
+
+在这个边界之内，现有结论已经足够清楚：EVQ-Cosh 并不是另一个孤立的位置编码技巧，而是一条从频率分配问题出发的完整理论与实验路线。它已经给出了解释 geometric 退化性的方式，也已经在极端外推、PE-dominant regime 和 EVQ×YaRN 组合上拿到了很强的经验支持；需要继续补的，是严格性边界和更强的下游锚点，而不是主线方向本身。
+
+\end{document}

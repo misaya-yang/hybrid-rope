@@ -25,6 +25,17 @@ logs/
 **/training_args.*
 **/cache/*
 
+# Experiment results (scan sweeps, checkpoints, logs)
+results/**/*.json
+results/**/*.jsonl
+results/**/*.log
+results/**/checkpoint_last.pt
+
+# Brief build artifacts
+paper_draft/brief/*.aux
+paper_draft/brief/*.log
+paper_draft/brief/*.out
+
 # Packaging artifacts
 **/*.tar.gz
 **/*.tgz
