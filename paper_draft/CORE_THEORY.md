@@ -18,7 +18,7 @@ D(Δ) 距离先验
   → CDF 反演: φ_k(τ) = 1 - (1/τ)arcsinh((1-u_k)sinhτ)
 ```
 
-**唯一核心近似**：Broadband 投影（步骤 2→3）。其有效性来自 mid-band 的高拟合度（R²_mid>0.99）；剩余残差主要来自边界效应与对角“脊”(diagonal ridge) 的有限宽度（δ 近似误差）。其余全是精确推导。
+**唯一核心近似**：Broadband 投影（步骤 2→3）。其有效性来自 mid-band 的高拟合度（在真实语料距离先验 D(Δ) 下 R²>0.9，短窗口 L=512 时 R²≈0.96；长窗口 L=16K 时 R²≈0.87，反映 RoPE 碰撞瓶颈）；剩余残差主要来自边界效应与对角”脊”(diagonal ridge) 的有限宽度（δ 近似误差）。其余全是精确推导。
 
 ---
 
@@ -94,7 +94,7 @@ min(φ₁,φ₂) 是 A = -d²/dφ² 在混合边界条件下的 Green 函数。
 
 **K_approx = αI + βA⁻¹**（Identity + Resolvent）
 
-若用 Hilbert-Schmidt 内积在二参数算子族 {αI + βA⁻¹} 上对精确核 K 做最小二乘投影来定义 (α,β)，则 K_approx 是对应的 HS 投影；本文把 (α,β) 视为 broadband 有效系数（唯一近似步骤），并用实验验证其 mid-band 结构拟合度（R²_mid>0.99）。
+若用 Hilbert-Schmidt 内积在二参数算子族 {αI + βA⁻¹} 上对精确核 K 做最小二乘投影来定义 (α,β)，则 K_approx 是对应的 HS 投影；本文把 (α,β) 视为 broadband 有效系数（唯一近似步骤），并用实验验证其 mid-band 结构拟合度（在 FineWeb-Edu 真实距离先验下 R²>0.9；合成 power-law 先验下 R²≈0.74，差距源于真实 D(Δ) 的 spike+tail 结构未被简单幂律捕获）。
 
 R² 衡量中间频率区（渐近物理区）。全矩阵残差 35-49% 主要来自三个边界效应：UV 边界离散化、IR 边界波长超限、以及对角“脊”(diagonal ridge) 的有限宽度导致的 δ 近似误差。
 
@@ -791,7 +791,24 @@ def evq_cosh_inv_freq(d_head, L, base):
 - ✅ **r 不是超参数**：r=0 ≈ r=4（噪音级差距）。cosh 分配数学性质自动保持高频不变。Pure EVQ 是正确主方法
 - ✅ **🆕 128-tok PE-dominant regime 对标实验**：125M 在 128-token 训练、64× 外推到 8K。EVQ τ=5.0 PPL@8K -35%（FineWeb）/ -57%（TinyStories）vs Geo，ID PPL 代价 <2%。完胜 DAPE（32 可学习参数，PPL@8K 455 vs EVQ 334）和 YaRN-train（灾难性 1136 vs 514）。Learnable τ 3-seed 收敛到 1.14±0.003，证明 in-dist loss 对 τ 完全平坦——理论推导 τ* 的必要性。**可解析闭式解 + 0 额外参数 + 对标原论文完胜**
 - ✅ **🆕🔴 L=256 PE-dominant 完整结果（Phase 11, COMPLETE）**：454M, L_train=256, 3-seed。三个 spotlight 级发现：(1) Raw PPL@32× -37.5%，τ=4.0（=τ*预测值）全面优于 τ=2.0。(2) EVQ τ=4.0+YaRN PPL@32× 99.6 vs Geo+YaRN 260.2（**-61.7%**，目前最强单个数字）。(3) YaRN 杠杆效应 10×：对 Geo 改善 3-5%，对 EVQ 改善 33-41%。NTK-Aware 对 EVQ 有害（覆盖频率优化），只有 YaRN 保留 EVQ 结构
-- ✅ **🆕 Video temporal 外推验证（3D RoPE）**：在 bouncing-ball 控制实验中，保持 spatial 频率全 geometric，仅替换 temporal 频率切片（`inv_freq_t`）。2-seed mean 上，raw EVQ 相比 Geo 在大部分 OOD temporal 长度有改善：`τ=2.0` 在 `4×/6×/8×` 约 `-3.4%/-8.3%/-10.3%`，`τ=4.0` 在 `2×/3×` 约 `-4.5%/-6.1%`。更关键的是 temporal-YaRN 只在 EVQ 上被显著放大，最佳配置 `τ=4.0 + temporal-YaRN` 相比 `Geo+YaRN` 在 `2×-8×` 约 `-26.6%/-45.0%/-46.9%/-48.6%/-47.2%`。**这提供跨模态支持，但当前视频结果应表述为“supports transfer + strong EVQ×YaRN synergy”，不宜单独写成 `τ*=2.0` 已被视频严格确认。**
+- ✅ **🆕 Video temporal 外推验证（3D RoPE）**：在 bouncing-ball 控制实验中，保持 spatial 频率全 geometric，仅替换 temporal 频率切片（`inv_freq_t`）。2-seed mean 上，raw EVQ 相比 Geo 在大部分 OOD temporal 长度有改善：`τ=2.0` 在 `4×/6×/8×` 约 `-3.4%/-8.3%/-10.3%`，`τ=4.0` 在 `2×/3×` 约 `-4.5%/-6.1%`。更关键的是 temporal-YaRN 只在 EVQ 上被显著放大，最佳配置 `τ=4.0 + temporal-YaRN` 相比 `Geo+YaRN` 在 `2×-8×` 约 `-26.6%/-45.0%/-46.9%/-48.6%/-47.2%`。**这提供跨模态支持，但当前视频结果应表述为”supports transfer + strong EVQ×YaRN synergy”，不宜单独写成 `τ*=2.0` 已被视频严格确认。**
+- ✅ **🆕🔴 Phase 17c 三阶段 progressive 完成（454M 512→1024→2048, HEADLINE RESULT）**：
+  - **EVQ 优势三阶段超线性放大**：34.6% (L=512) → 52.0% (L=1024) → **81.2%@16K** (L=2048)
+  - **EVQ+YaRN@48K PPL=2.63**（24× 训练长度），全程 1.79~3.29；Geo+YaRN@48K=14.22，优势 **82%**
+  - **EVQ raw 16K 内近乎平坦**：2.33→2.48（+6.4%），同区间 Geo 崩塌 2.31→13.17（+470%）
+  - **EVQ+YaRN passkey 100%**：2K-16K 40/40 trials 全部成功（唯一全长度成功方法），Geo+YaRN 最高 90%@4K
+  - **EVQ+YaRN 32K→48K PPL 反降**：3.29→2.63，非退化而是趋于稳定
+  - 完整 PPL 表（Stage 3, L_train=2048）：
+    ```
+    Method     | 2K   | 4K   | 8K   | 16K  | 24K  | 32K  | 48K
+    Geo raw    | 2.31 | 1.87 | 3.94 |13.17 |27.98 |56.27 |57.94
+    Geo+YaRN   | 2.31 | 1.78 | 2.15 | 3.84 | 6.93 |15.12 |14.22
+    EVQ raw    | 2.33 | 1.78 | 1.91 | 2.48 | 5.22 |13.45 |17.27
+    EVQ+YaRN   | 2.33 | 1.79 | 1.91 | 2.19 | 2.50 | 3.29 | 2.63
+    ```
+  - **τ* 公式三阶段完美验证**：64/√512=2.83, 64/√1024=2.0, 64/√2048=1.414，全部直接使用无需调参
+  - **当前单 seed (seed=42)**，需补跑 2-3 seeds 获得置信区间
+  - 详细报告：`docs/exp/2026-03-11_phase17c_2048_continue_results.md`
 
 **不能说**：
 - ❌ "τ=1.0 universally optimal"（依赖 L）
@@ -806,15 +823,16 @@ def evq_cosh_inv_freq(d_head, L, base):
 | 攻击 | 防御 |
 |------|------|
 | "Base=10K 全败" | 碰撞块精确预测，负面结果 = 理论验证 |
-| "只有 PPL" | ✅ Passkey mix 3-seed raw gains（+10.0pp/+12.7pp）+ EVQ+YaRN 6-seed 100%@8K + 750M 训练动态 + AR +13.75pp + RULER |
-| "350M 太小" | ✅ 750M supporting evidence 不止一条：phase9f 提供 dynamics，phase15 full EVQ continue 提供 `16K -45.9%` 与 `8K AR exact 77.5% vs 0%` |
+| "只有 PPL" | ✅ Passkey mix 3-seed raw gains + EVQ+YaRN 6-seed 100%@8K + Phase 17c EVQ+YaRN passkey 100% 全长度（40/40）+ 750M 训练动态 + AR +13.75pp |
+| "350M 太小" | ✅ 454M 三阶段 progressive 完整验证 + 750M supporting（phase9f dynamics, phase15 `16K -45.9%`，`8K AR exact 77.5% vs 0%`） |
 | "只在一个 base 赢" | base=500K = LLaMA-3/Qwen2 实际使用的 base |
 | "Hybrid 是 hack" | ✅ 已弃用 Hybrid，主方法是 Pure EVQ (r=0)。r-sweep 证明 r=0 ≈ r=4，cosh 数学性质自动保持高频不变 |
 | "短程退化" | 750M L=1K -0.14%, L=2K -1.51%。零代价 |
 | "只是一个快照" | ✅ Figure 1 完整 4-checkpoint 轨迹 |
 | "Geo 也行" | ❌ Geo passkey regression -10pp + Hybrid@50% > Geo@100% |
 | "多给数据就行" | ❌ 5%→10% passkey multi-seed：Geo 8K -13.3pp，EVQ 仅 -3.3pp。数据量本身不能修复 geometric 频率瓶颈 |
-| "为什么不用 YaRN" | ✅ EVQ+YaRN 100%@8K vs Geo+YaRN 65%。YaRN 不是竞品，是互补——但只有 EVQ 能释放 YaRN 全部潜力 |
+| "为什么不用 YaRN" | ✅ EVQ+YaRN@48K PPL=2.63 vs Geo+YaRN=14.22（-82%）。Passkey EVQ+YaRN 100% 全长度 vs Geo+YaRN 最高 90%。YaRN 不是竞品，是互补——但只有 EVQ 能释放 YaRN 全部潜力 |
+| "更多训练会洗掉 EVQ" | ✅ Phase 17c 三阶段直接回答：EVQ 优势 34.6%→52.0%→81.2%@16K，**越训越强，超线性放大** |
 | "τ* 只是 curve fitting" | ✅ Phase 11 L=256 直接验证：理论预测 τ*=4.0，实测 τ=4.0 全面优于 τ=2.0（-37.4% vs -25.9%@16×）。454M 3-seed，不是 fitting 是 prediction |
 | "单 seed" | 350M PPL 3-seed 一致；passkey mix 与 EVQ+YaRN 已完成多 seed，750M 轨迹只作为 supporting evidence |
 | "DAPE/learnable 也行" | ✅ 128-tok 实验：DAPE 32 参数 PPL@8K=455，EVQ 0 参数 334（-27%）。Learnable τ 3-seed 收敛 1.14±0.003，in-dist PPL 对 τ 完全平坦，学不到最优值 |

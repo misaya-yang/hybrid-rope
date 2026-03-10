@@ -108,7 +108,7 @@
 2. 对角 ridge 的 δ 近似在 φ-space 的宽度不是单纯 `O(1/ln b)`，会混入 L、Jacobian 等因素。
 
 建议写法：
-1. 只说“mid-band 捕获度高（R²_mid>0.99）”，把残差来源归因于 boundary + ridge 有限宽度 + 离散化。
+1. 只说”真实语料先验下 mid-band R²>0.9（FineWeb-Edu 实测 0.91）”，把残差来源归因于 boundary + ridge 有限宽度 + 离散化。
 2. 避免任何“pointwise residual 很小 / o(1)”的措辞。
 
 当前修正：

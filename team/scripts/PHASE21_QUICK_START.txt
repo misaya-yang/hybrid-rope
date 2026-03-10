@@ -1,0 +1,166 @@
+================================================================================
+PHASE 21 — QUICK START GUIDE
+================================================================================
+
+FILE: phase21_video_dit.py (902 lines)
+
+================================================================================
+IMMEDIATE EXECUTION (SUB-A: BOUNCING BALL)
+================================================================================
+
+1. DEFAULT RUN (all taus, all seeds):
+   $ python team/scripts/phase21_video_dit.py --mode bouncing_ball
+
+2. QUICK TEST (subset):
+   $ python team/scripts/phase21_video_dit.py --mode bouncing_ball \
+     --taus 0.0,2.0 --seeds 42
+
+3. DRY RUN (data gen only, no training):
+   $ python team/scripts/phase21_video_dit.py --mode bouncing_ball --dry_run
+
+4. CUSTOM OUTPUT DIR:
+   $ python team/scripts/phase21_video_dit.py --mode bouncing_ball \
+     --work_dir /path/to/results
+
+================================================================================
+WHAT HAPPENS
+================================================================================
+
+Each execution:
+  1. Generates 10K synthetic training videos (multi-ball, 16 frames)
+  2. Generates 2K validation videos (128 frames)
+  3. For each τ in {0.0, 0.5, 1.0, 1.5, 2.0, 3.0}:
+     For each seed in {42, 137, 256}:
+       - Train VideoGPT (85M params, 5K steps)
+       - Evaluate on {16, 32, 48, 64, 96, 128} frames
+       - Compute PPL, temporal consistency
+  4. Print results table
+  5. Save JSON with all metrics
+
+TOTAL: ~14-16 hours (sequential), ~50-60 min (parallel per batch)
+
+================================================================================
+OUTPUT
+================================================================================
+
+JSON: results/phase21_video_dit/results_phase21_bouncing_ball.json
+Table: Printed to console with τ vs frame count PPL
+
+Example row:
+  tau=2.0            4.00      5.05      6.10      7.45      8.67      9.78
+                     (16f)     (32f)     (48f)     (64f)     (96f)    (128f)
+
+================================================================================
+KEY METRICS
+================================================================================
+
+PPL (Perplexity):
+  Lower is better. Measures language modeling loss exp(CE_loss).
+  τ=0.0 (geometric) vs τ=2.0 (EVQ) → difference shows EVQ effect
+
+Temporal Consistency:
+  Measures frame-to-frame smoothness during autoregressive generation.
+  Lower = smoother predictions.
+
+Expected: τ ≈ 2.0 minimizes PPL at long extrapolation (8x = 128 frames)
+
+================================================================================
+CONFIGURATION (IF NEEDED)
+================================================================================
+
+Edit BB_CONFIG in script to change:
+  • frame_size: 32 (video resolution)
+  • n_balls: 3 (number of balls per frame)
+  • train_samples: 10_000 (training videos)
+  • train_steps: 5_000 (training iterations)
+  • eval_frames: [16, 32, 48, 64, 96, 128] (evaluation lengths)
+  • tau_sweep: modify taus in main()
+  • seed_sweep: modify seeds in main()
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Memory Error:
+  → Script auto-reduces eval_chunks or skips evaluation
+  → Try smaller batch_size (default 32)
+
+Slow Training:
+  → Normal on CPU/MPS, ~25-35 min per run
+  → GPU (CUDA) should be ~5-10 min per run
+
+Missing torch:
+  → Install: pip install torch numpy
+  → For GPU: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+================================================================================
+EXPECTED RESULTS (FROM THEORY)
+================================================================================
+
+τ = 0.0 (Geometric RoPE):
+  • Baseline, all frequencies treated equally
+  • PPL increases rapidly with extrapolation
+  • Example: 4.12 → 14.56 (3.5x increase at 8x)
+
+τ = 2.0 (EVQ-Cosh, optimal):
+  • Theoretical optimum: τ* = K_t/√T_train = 8/√16 = 2.0
+  • Better long-range generalization
+  • Example: 4.00 → 9.78 (2.4x increase at 8x)
+  • ~33% improvement over geometric at 8x
+
+τ = 3.0+ (Over-warped):
+  • Frequency warping too aggressive
+  • Phase collision concentrates
+  • Performance degrades
+  • Example: 4.02 → 10.56 (worse than τ=2.0)
+
+================================================================================
+VALIDATION CHECKS
+================================================================================
+
+Before running, script checks:
+  ✓ Frequency split: K_h + K_w + K_t = 32 (head_dim/2)
+  ✓ Device detection: CUDA/MPS/CPU
+  ✓ dtype selection: bfloat16 (CUDA) or float32 (MPS/CPU)
+
+After training, script produces:
+  ✓ Model parameters printed (~85M)
+  ✓ Per-frame PPL for each evaluation length
+  ✓ JSON results with complete metadata
+  ✓ Console results table
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+1. Run Sub-A to generate baseline results:
+   python team/scripts/phase21_video_dit.py --mode bouncing_ball
+
+2. Check JSON output:
+   cat results/phase21_video_dit/results_phase21_bouncing_ball.json
+
+3. Verify theory:
+   - PPL at 128f minimized near τ=2.0?
+   - Temporal consistency improves with τ?
+   - Geometric (τ=0) worse than EVQ (τ=2.0) at 8x?
+
+4. (Optional) Sub-B for real video:
+   - Obtain Latte checkpoint
+   - Download UCF-101
+   - Implement Latte integration (currently stubbed)
+
+================================================================================
+QUESTIONS?
+================================================================================
+
+See PHASE21_README.md for:
+  • Detailed architecture explanation
+  • 3D RoPE frequency design
+  • Training/eval loop details
+  • Complete component reference
+
+See run_evq_sweep.py and run_video_temporal.py for:
+  • Text-domain EVQ validation (Phase 11)
+  • 3D RoPE video temporal extrapolation (earlier version)
+
+================================================================================
