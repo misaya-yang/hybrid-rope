@@ -1,0 +1,460 @@
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+########################################################################
+  Phase 17C: 454M staged continuation 1024 → 2048
+  Strategy: TRAIN ALL FIRST, then EVAL ALL (avoids compile OOM)
+########################################################################
+  device=cuda dtype=torch.bfloat16 autocast=True
+  L_train=2048 tau*=1.414214 tokens=500M seed=42
+  lr=2.0e-04 micro_bs=5 grad_accum=4 effective_bs=20
+  passkey_mix=5.00%
+  dataset=fineweb-edu
+  eval_lengths=[2048, 4096, 8192, 16384, 24576, 32768, 40960, 49152]
+  geo_init: /root/autodl-tmp/evq_phase17b/454m_geo_seed42_continue1024/model.pt
+  evq_init: /root/autodl-tmp/evq_phase17b/454m_evq_seed42_continue1024/model.pt
+
+########################################################################
+  PHASE 1: TRAINING (all models)
+########################################################################
+
+  Loading training data...
+  [data] loading stage-3 cache: /root/autodl-tmp/evq_phase17c_2048_continue/data/train_rechunk_stage3_500000000_2048.pt
+  [data] cached: 244140 chunks (500.0M tokens)
+  train_data: torch.Size([244140, 2048]) (500M tokens)
+  Loading validation data...
+  Using cached val: /root/autodl-tmp/evq_phase17/val_proof-pile-2_5000000.pt
+  [passkey-train] loading cached mixed tensor: /root/autodl-tmp/evq_phase17c_2048_continue/data/mixed_fineweb-edu_seed42_pk5_500000000_2048.pt
+  [passkey-train] cached shape=(244140, 2048)
+
+========================================================================
+  TRAIN: geo_454m_1024_to_2048_continue  |  init=/root/autodl-tmp/evq_phase17b/454m_geo_seed42_continue1024/model.pt
+  Continue @L=2048, tokens=500M, seed=42, tau=1.414214
+========================================================================
+  Model params: 454.2M
+  torch.compile enabled (reduce-overhead)
+  inv_freq set: max=1.00000000 min=0.00000301
+  checkpoint_steps=[3051, 6103, 9155, 12207]
+  Train cfg: lr=2.0e-04, min_lr=2.0e-05, micro_bs=5, grad_accum=4, effective_bs=20, chunks=244140, steps=12207, warmup=244, gpu_chunks=8
+  [gpu-chunk 1/8] loaded (30517, 2048) (0.5GB)
+    step 1/12207  loss=1.0102  lr=8.20e-07  GPU=23.4GB  ETA=675min
+    step 51/12207  loss=0.7054  lr=4.18e-05  GPU=27.0GB  ETA=189min
+    step 101/12207  loss=0.7147  lr=8.28e-05  GPU=27.0GB  ETA=175min
+    step 151/12207  loss=0.7948  lr=1.24e-04  GPU=27.0GB  ETA=170min
+    step 201/12207  loss=0.7096  lr=1.65e-04  GPU=27.0GB  ETA=167min
+    step 251/12207  loss=0.9149  lr=2.00e-04  GPU=27.0GB  ETA=166min
+    step 301/12207  loss=0.8428  lr=2.00e-04  GPU=27.0GB  ETA=164min
+    step 351/12207  loss=0.7616  lr=2.00e-04  GPU=27.0GB  ETA=163min
+    step 401/12207  loss=0.8543  lr=2.00e-04  GPU=27.0GB  ETA=162min
+    step 451/12207  loss=0.9436  lr=2.00e-04  GPU=27.0GB  ETA=161min
+    step 501/12207  loss=0.8038  lr=2.00e-04  GPU=27.0GB  ETA=160min
+    step 551/12207  loss=0.6658  lr=2.00e-04  GPU=27.0GB  ETA=159min
+    step 601/12207  loss=0.7976  lr=2.00e-04  GPU=27.0GB  ETA=158min
+    step 651/12207  loss=0.8928  lr=1.99e-04  GPU=27.0GB  ETA=157min
+    step 701/12207  loss=0.8559  lr=1.99e-04  GPU=27.0GB  ETA=156min
+    step 751/12207  loss=0.7453  lr=1.99e-04  GPU=27.0GB  ETA=156min
+    step 801/12207  loss=0.7031  lr=1.99e-04  GPU=27.0GB  ETA=155min
+    step 851/12207  loss=0.9548  lr=1.99e-04  GPU=27.0GB  ETA=154min
+    step 901/12207  loss=0.8266  lr=1.99e-04  GPU=27.0GB  ETA=153min
+    step 951/12207  loss=0.8130  lr=1.98e-04  GPU=27.0GB  ETA=153min
+    step 1001/12207  loss=0.7616  lr=1.98e-04  GPU=27.0GB  ETA=152min
+    step 1051/12207  loss=0.6376  lr=1.98e-04  GPU=27.0GB  ETA=151min
+    step 1101/12207  loss=0.8052  lr=1.98e-04  GPU=27.0GB  ETA=150min
+    step 1151/12207  loss=0.6955  lr=1.97e-04  GPU=27.0GB  ETA=150min
+    step 1201/12207  loss=0.6611  lr=1.97e-04  GPU=27.0GB  ETA=149min
+    step 1251/12207  loss=0.7778  lr=1.97e-04  GPU=27.0GB  ETA=148min
+    step 1301/12207  loss=0.7345  lr=1.97e-04  GPU=27.0GB  ETA=148min
+    step 1351/12207  loss=0.6514  lr=1.96e-04  GPU=27.0GB  ETA=147min
+    step 1401/12207  loss=0.7892  lr=1.96e-04  GPU=27.0GB  ETA=146min
+    step 1451/12207  loss=0.6396  lr=1.96e-04  GPU=27.0GB  ETA=146min
+    step 1501/12207  loss=1.0109  lr=1.95e-04  GPU=27.0GB  ETA=145min
+  [gpu-chunk 2/8] loaded (30517, 2048) (0.5GB)
+    step 1551/12207  loss=0.6792  lr=1.95e-04  GPU=27.0GB  ETA=144min
+    step 1601/12207  loss=0.8052  lr=1.94e-04  GPU=27.0GB  ETA=143min
+    step 1651/12207  loss=0.9246  lr=1.94e-04  GPU=27.0GB  ETA=143min
+    step 1701/12207  loss=0.5731  lr=1.94e-04  GPU=27.0GB  ETA=142min
+    step 1751/12207  loss=0.7962  lr=1.93e-04  GPU=27.0GB  ETA=141min
+    step 1801/12207  loss=0.7441  lr=1.93e-04  GPU=27.0GB  ETA=141min
+    step 1851/12207  loss=0.7587  lr=1.92e-04  GPU=27.0GB  ETA=140min
+    step 1901/12207  loss=0.8946  lr=1.92e-04  GPU=27.0GB  ETA=139min
+    step 1951/12207  loss=0.8312  lr=1.91e-04  GPU=27.0GB  ETA=139min
+    step 2001/12207  loss=0.8373  lr=1.91e-04  GPU=27.0GB  ETA=138min
+    step 2051/12207  loss=0.6835  lr=1.90e-04  GPU=27.0GB  ETA=137min
+    step 2101/12207  loss=0.8356  lr=1.90e-04  GPU=27.0GB  ETA=137min
+    step 2151/12207  loss=0.6732  lr=1.89e-04  GPU=27.0GB  ETA=136min
+    step 2201/12207  loss=0.6768  lr=1.88e-04  GPU=27.0GB  ETA=135min
+    step 2251/12207  loss=0.7635  lr=1.88e-04  GPU=27.0GB  ETA=134min
+    step 2301/12207  loss=0.5843  lr=1.87e-04  GPU=27.0GB  ETA=134min
+    step 2351/12207  loss=0.4815  lr=1.87e-04  GPU=27.0GB  ETA=133min
+    step 2401/12207  loss=0.8745  lr=1.86e-04  GPU=27.0GB  ETA=132min
+    step 2451/12207  loss=0.7869  lr=1.85e-04  GPU=27.0GB  ETA=132min
+    step 2501/12207  loss=0.7885  lr=1.85e-04  GPU=27.0GB  ETA=131min
+    step 2551/12207  loss=0.7649  lr=1.84e-04  GPU=27.0GB  ETA=130min
+    step 2601/12207  loss=0.8779  lr=1.83e-04  GPU=27.0GB  ETA=130min
+    step 2651/12207  loss=0.7551  lr=1.83e-04  GPU=27.0GB  ETA=129min
+    step 2701/12207  loss=0.7187  lr=1.82e-04  GPU=27.0GB  ETA=128min
+    step 2751/12207  loss=0.6504  lr=1.81e-04  GPU=27.0GB  ETA=128min
+    step 2801/12207  loss=0.5156  lr=1.80e-04  GPU=27.0GB  ETA=127min
+    step 2851/12207  loss=0.4483  lr=1.80e-04  GPU=27.0GB  ETA=126min
+    step 2901/12207  loss=0.7305  lr=1.79e-04  GPU=27.0GB  ETA=126min
+    step 2951/12207  loss=0.8566  lr=1.78e-04  GPU=27.0GB  ETA=125min
+    step 3001/12207  loss=0.8120  lr=1.77e-04  GPU=27.0GB  ETA=124min
+  [gpu-chunk 3/8] loaded (30517, 2048) (0.5GB)
+    step 3051/12207  loss=0.7649  lr=1.77e-04  GPU=27.0GB  ETA=124min
+
+  [CKPT-SAVE] geo_454m_1024_to_2048_continue step_03051 (25.0%)
+    step 3101/12207  loss=0.5996  lr=1.76e-04  GPU=27.0GB  ETA=123min
+    step 3151/12207  loss=0.5633  lr=1.75e-04  GPU=27.0GB  ETA=122min
+    step 3201/12207  loss=0.8217  lr=1.74e-04  GPU=27.0GB  ETA=122min
+    step 3251/12207  loss=0.6968  lr=1.73e-04  GPU=27.0GB  ETA=121min
+    step 3301/12207  loss=0.4761  lr=1.73e-04  GPU=27.0GB  ETA=120min
+    step 3351/12207  loss=0.5615  lr=1.72e-04  GPU=27.0GB  ETA=120min
+    step 3401/12207  loss=0.8229  lr=1.71e-04  GPU=27.0GB  ETA=119min
+    step 3451/12207  loss=0.7183  lr=1.70e-04  GPU=27.0GB  ETA=118min
+    step 3501/12207  loss=0.8682  lr=1.69e-04  GPU=27.0GB  ETA=118min
+    step 3551/12207  loss=0.7516  lr=1.68e-04  GPU=27.0GB  ETA=117min
+    step 3601/12207  loss=0.5487  lr=1.67e-04  GPU=27.0GB  ETA=116min
+    step 3651/12207  loss=0.7437  lr=1.66e-04  GPU=27.0GB  ETA=116min
+    step 3701/12207  loss=0.7797  lr=1.65e-04  GPU=27.0GB  ETA=115min
+    step 3751/12207  loss=0.7265  lr=1.64e-04  GPU=27.0GB  ETA=114min
+    step 3801/12207  loss=0.6551  lr=1.64e-04  GPU=27.0GB  ETA=113min
+    step 3851/12207  loss=0.6373  lr=1.63e-04  GPU=27.0GB  ETA=113min
+    step 3901/12207  loss=0.7520  lr=1.62e-04  GPU=27.0GB  ETA=112min
+    step 3951/12207  loss=0.8614  lr=1.61e-04  GPU=27.0GB  ETA=111min
+    step 4001/12207  loss=0.7991  lr=1.60e-04  GPU=27.0GB  ETA=111min
+    step 4051/12207  loss=0.6878  lr=1.59e-04  GPU=27.0GB  ETA=110min
+    step 4101/12207  loss=0.6772  lr=1.58e-04  GPU=27.0GB  ETA=109min
+    step 4151/12207  loss=0.7946  lr=1.57e-04  GPU=27.0GB  ETA=109min
+    step 4201/12207  loss=0.6092  lr=1.56e-04  GPU=27.0GB  ETA=108min
+    step 4251/12207  loss=0.6175  lr=1.55e-04  GPU=27.0GB  ETA=107min
+    step 4301/12207  loss=0.7377  lr=1.54e-04  GPU=27.0GB  ETA=107min
+    step 4351/12207  loss=0.5791  lr=1.53e-04  GPU=27.0GB  ETA=106min
+    step 4401/12207  loss=0.7454  lr=1.52e-04  GPU=27.0GB  ETA=105min
+    step 4451/12207  loss=0.9961  lr=1.50e-04  GPU=27.0GB  ETA=105min
+    step 4501/12207  loss=0.8710  lr=1.49e-04  GPU=27.0GB  ETA=104min
+    step 4551/12207  loss=0.8107  lr=1.48e-04  GPU=27.0GB  ETA=103min
+  [gpu-chunk 4/8] loaded (30517, 2048) (0.5GB)
+    step 4601/12207  loss=0.6793  lr=1.47e-04  GPU=27.0GB  ETA=103min
+    step 4651/12207  loss=0.7214  lr=1.46e-04  GPU=27.0GB  ETA=102min
+    step 4701/12207  loss=0.6348  lr=1.45e-04  GPU=27.0GB  ETA=101min
+    step 4751/12207  loss=0.5943  lr=1.44e-04  GPU=27.0GB  ETA=101min
+    step 4801/12207  loss=0.5090  lr=1.43e-04  GPU=27.0GB  ETA=100min
+    step 4851/12207  loss=0.8013  lr=1.42e-04  GPU=27.0GB  ETA=99min
+    step 4901/12207  loss=0.6909  lr=1.41e-04  GPU=27.0GB  ETA=99min
+    step 4951/12207  loss=0.5767  lr=1.40e-04  GPU=27.0GB  ETA=98min
+    step 5001/12207  loss=0.8658  lr=1.38e-04  GPU=27.0GB  ETA=97min
+    step 5051/12207  loss=0.7925  lr=1.37e-04  GPU=27.0GB  ETA=97min
+    step 5101/12207  loss=0.4643  lr=1.36e-04  GPU=27.0GB  ETA=96min
+    step 5151/12207  loss=0.7826  lr=1.35e-04  GPU=27.0GB  ETA=95min
+    step 5201/12207  loss=0.7156  lr=1.34e-04  GPU=27.0GB  ETA=94min
+    step 5251/12207  loss=0.9111  lr=1.33e-04  GPU=27.0GB  ETA=94min
+    step 5301/12207  loss=0.7937  lr=1.32e-04  GPU=27.0GB  ETA=93min
+    step 5351/12207  loss=0.7381  lr=1.31e-04  GPU=27.0GB  ETA=92min
+    step 5401/12207  loss=0.6975  lr=1.29e-04  GPU=27.0GB  ETA=92min
+    step 5451/12207  loss=0.8519  lr=1.28e-04  GPU=27.0GB  ETA=91min
+    step 5501/12207  loss=0.6643  lr=1.27e-04  GPU=27.0GB  ETA=90min
+    step 5551/12207  loss=0.7355  lr=1.26e-04  GPU=27.0GB  ETA=90min
+    step 5601/12207  loss=0.6270  lr=1.25e-04  GPU=27.0GB  ETA=89min
+    step 5651/12207  loss=0.7416  lr=1.24e-04  GPU=27.0GB  ETA=88min
+    step 5701/12207  loss=0.8741  lr=1.22e-04  GPU=27.0GB  ETA=88min
+    step 5751/12207  loss=0.5209  lr=1.21e-04  GPU=27.0GB  ETA=87min
+    step 5801/12207  loss=0.7000  lr=1.20e-04  GPU=27.0GB  ETA=86min
+    step 5851/12207  loss=0.8221  lr=1.19e-04  GPU=27.0GB  ETA=86min
+    step 5901/12207  loss=0.8097  lr=1.18e-04  GPU=27.0GB  ETA=85min
+    step 5951/12207  loss=0.5332  lr=1.17e-04  GPU=27.0GB  ETA=84min
+    step 6001/12207  loss=0.6056  lr=1.15e-04  GPU=27.0GB  ETA=84min
+    step 6051/12207  loss=0.6532  lr=1.14e-04  GPU=27.0GB  ETA=83min
+  [gpu-chunk 5/8] loaded (30517, 2048) (0.5GB)
+    step 6101/12207  loss=0.6975  lr=1.13e-04  GPU=27.0GB  ETA=82min
+
+  [CKPT-SAVE] geo_454m_1024_to_2048_continue step_06103 (50.0%)
+    step 6151/12207  loss=0.7559  lr=1.12e-04  GPU=27.0GB  ETA=82min
+    step 6201/12207  loss=0.7489  lr=1.11e-04  GPU=27.0GB  ETA=81min
+    step 6251/12207  loss=0.7916  lr=1.09e-04  GPU=27.0GB  ETA=80min
+    step 6301/12207  loss=0.7450  lr=1.08e-04  GPU=27.0GB  ETA=80min
+    step 6351/12207  loss=0.6663  lr=1.07e-04  GPU=27.0GB  ETA=79min
+    step 6401/12207  loss=0.8917  lr=1.06e-04  GPU=27.0GB  ETA=78min
+    step 6451/12207  loss=0.6416  lr=1.05e-04  GPU=27.0GB  ETA=78min
+    step 6501/12207  loss=0.6248  lr=1.04e-04  GPU=27.0GB  ETA=77min
+    step 6551/12207  loss=0.6953  lr=1.02e-04  GPU=27.0GB  ETA=76min
+    step 6601/12207  loss=0.9023  lr=1.01e-04  GPU=27.0GB  ETA=76min
+    step 6651/12207  loss=0.7805  lr=1.00e-04  GPU=27.0GB  ETA=75min
+    step 6701/12207  loss=0.6890  lr=9.88e-05  GPU=27.0GB  ETA=74min
+    step 6751/12207  loss=0.8161  lr=9.76e-05  GPU=27.0GB  ETA=74min
+    step 6801/12207  loss=0.5319  lr=9.65e-05  GPU=27.0GB  ETA=73min
+    step 6851/12207  loss=0.8176  lr=9.53e-05  GPU=27.0GB  ETA=72min
+    step 6901/12207  loss=0.4693  lr=9.41e-05  GPU=27.0GB  ETA=72min
+    step 6951/12207  loss=0.7524  lr=9.30e-05  GPU=27.0GB  ETA=71min
+    step 7001/12207  loss=0.6295  lr=9.18e-05  GPU=27.0GB  ETA=70min
+    step 7051/12207  loss=0.8792  lr=9.07e-05  GPU=27.0GB  ETA=69min
+    step 7101/12207  loss=0.7075  lr=8.95e-05  GPU=27.0GB  ETA=69min
+    step 7151/12207  loss=0.7414  lr=8.84e-05  GPU=27.0GB  ETA=68min
+    step 7201/12207  loss=0.5474  lr=8.72e-05  GPU=27.0GB  ETA=67min
+    step 7251/12207  loss=0.8765  lr=8.61e-05  GPU=27.0GB  ETA=67min
+    step 7301/12207  loss=0.6471  lr=8.49e-05  GPU=27.0GB  ETA=66min
+    step 7351/12207  loss=0.7140  lr=8.38e-05  GPU=27.0GB  ETA=65min
+    step 7401/12207  loss=0.6848  lr=8.27e-05  GPU=27.0GB  ETA=65min
+    step 7451/12207  loss=0.6495  lr=8.16e-05  GPU=27.0GB  ETA=64min
+    step 7501/12207  loss=0.5922  lr=8.04e-05  GPU=27.0GB  ETA=63min
+    step 7551/12207  loss=0.6894  lr=7.93e-05  GPU=27.0GB  ETA=63min
+    step 7601/12207  loss=0.7076  lr=7.82e-05  GPU=27.0GB  ETA=62min
+  [gpu-chunk 6/8] loaded (30517, 2048) (0.5GB)
+    step 7651/12207  loss=0.6469  lr=7.71e-05  GPU=27.0GB  ETA=61min
+    step 7701/12207  loss=0.9258  lr=7.60e-05  GPU=27.0GB  ETA=61min
+    step 7751/12207  loss=0.4760  lr=7.49e-05  GPU=27.0GB  ETA=60min
+    step 7801/12207  loss=0.8834  lr=7.38e-05  GPU=27.0GB  ETA=59min
+    step 7851/12207  loss=0.5536  lr=7.28e-05  GPU=27.0GB  ETA=59min
+    step 7901/12207  loss=0.5303  lr=7.17e-05  GPU=27.0GB  ETA=58min
+    step 7951/12207  loss=0.6248  lr=7.06e-05  GPU=27.0GB  ETA=57min
+    step 8001/12207  loss=0.7776  lr=6.96e-05  GPU=27.0GB  ETA=57min
+    step 8051/12207  loss=0.6764  lr=6.85e-05  GPU=27.0GB  ETA=56min
+    step 8101/12207  loss=0.7151  lr=6.75e-05  GPU=27.0GB  ETA=55min
+    step 8151/12207  loss=0.5355  lr=6.64e-05  GPU=27.0GB  ETA=55min
+    step 8201/12207  loss=0.7370  lr=6.54e-05  GPU=27.0GB  ETA=54min
+    step 8251/12207  loss=0.6253  lr=6.44e-05  GPU=27.0GB  ETA=53min
+    step 8301/12207  loss=0.6690  lr=6.34e-05  GPU=27.0GB  ETA=53min
+    step 8351/12207  loss=0.8031  lr=6.24e-05  GPU=27.0GB  ETA=52min
+    step 8401/12207  loss=0.7879  lr=6.14e-05  GPU=27.0GB  ETA=51min
+    step 8451/12207  loss=0.4915  lr=6.04e-05  GPU=27.0GB  ETA=51min
+    step 8501/12207  loss=0.3889  lr=5.94e-05  GPU=27.0GB  ETA=50min
+    step 8551/12207  loss=0.5786  lr=5.84e-05  GPU=27.0GB  ETA=49min
+    step 8601/12207  loss=0.6596  lr=5.74e-05  GPU=27.0GB  ETA=49min
+    step 8651/12207  loss=0.6806  lr=5.65e-05  GPU=27.0GB  ETA=48min
+    step 8701/12207  loss=0.8186  lr=5.55e-05  GPU=27.0GB  ETA=47min
+    step 8751/12207  loss=0.6101  lr=5.46e-05  GPU=27.0GB  ETA=47min
+    step 8801/12207  loss=0.6417  lr=5.37e-05  GPU=27.0GB  ETA=46min
+    step 8851/12207  loss=0.5826  lr=5.28e-05  GPU=27.0GB  ETA=45min
+    step 8901/12207  loss=0.6089  lr=5.19e-05  GPU=27.0GB  ETA=45min
+    step 8951/12207  loss=0.5966  lr=5.10e-05  GPU=27.0GB  ETA=44min
+    step 9001/12207  loss=0.4900  lr=5.01e-05  GPU=27.0GB  ETA=43min
+    step 9051/12207  loss=0.6758  lr=4.92e-05  GPU=27.0GB  ETA=43min
+    step 9101/12207  loss=0.5797  lr=4.83e-05  GPU=27.0GB  ETA=42min
+  [gpu-chunk 7/8] loaded (30517, 2048) (0.5GB)
+    step 9151/12207  loss=0.5431  lr=4.75e-05  GPU=27.0GB  ETA=41min
+
+  [CKPT-SAVE] geo_454m_1024_to_2048_continue step_09155 (75.0%)
+    step 9201/12207  loss=0.6132  lr=4.66e-05  GPU=27.0GB  ETA=40min
+    step 9251/12207  loss=0.4556  lr=4.58e-05  GPU=27.0GB  ETA=40min
+    step 9301/12207  loss=0.5641  lr=4.50e-05  GPU=27.0GB  ETA=39min
+    step 9351/12207  loss=0.7185  lr=4.42e-05  GPU=27.0GB  ETA=38min
+    step 9401/12207  loss=0.5032  lr=4.34e-05  GPU=27.0GB  ETA=38min
+    step 9451/12207  loss=0.7032  lr=4.26e-05  GPU=27.0GB  ETA=37min
+    step 9501/12207  loss=0.7455  lr=4.18e-05  GPU=27.0GB  ETA=36min
+    step 9551/12207  loss=0.6577  lr=4.10e-05  GPU=27.0GB  ETA=36min
+    step 9601/12207  loss=0.6182  lr=4.03e-05  GPU=27.0GB  ETA=35min
+    step 9651/12207  loss=0.6728  lr=3.95e-05  GPU=27.0GB  ETA=34min
+    step 9701/12207  loss=0.3854  lr=3.88e-05  GPU=27.0GB  ETA=34min
+    step 9751/12207  loss=0.7041  lr=3.81e-05  GPU=27.0GB  ETA=33min
+    step 9801/12207  loss=0.5911  lr=3.74e-05  GPU=27.0GB  ETA=32min
+    step 9851/12207  loss=0.7109  lr=3.67e-05  GPU=27.0GB  ETA=32min
+    step 9901/12207  loss=0.6919  lr=3.60e-05  GPU=27.0GB  ETA=31min
+    step 9951/12207  loss=0.8959  lr=3.54e-05  GPU=27.0GB  ETA=30min
+    step 10001/12207  loss=0.7285  lr=3.47e-05  GPU=27.0GB  ETA=30min
+    step 10051/12207  loss=0.6325  lr=3.41e-05  GPU=27.0GB  ETA=29min
+    step 10101/12207  loss=0.7057  lr=3.34e-05  GPU=27.0GB  ETA=28min
+    step 10151/12207  loss=0.6083  lr=3.28e-05  GPU=27.0GB  ETA=28min
+    step 10201/12207  loss=0.7480  lr=3.22e-05  GPU=27.0GB  ETA=27min
+    step 10251/12207  loss=0.6285  lr=3.16e-05  GPU=27.0GB  ETA=26min
+    step 10301/12207  loss=0.8750  lr=3.11e-05  GPU=27.0GB  ETA=26min
+    step 10351/12207  loss=0.5141  lr=3.05e-05  GPU=27.0GB  ETA=25min
+    step 10401/12207  loss=0.6073  lr=2.99e-05  GPU=27.0GB  ETA=24min
+    step 10451/12207  loss=0.5278  lr=2.94e-05  GPU=27.0GB  ETA=24min
+    step 10501/12207  loss=0.7356  lr=2.89e-05  GPU=27.0GB  ETA=23min
+    step 10551/12207  loss=0.7142  lr=2.84e-05  GPU=27.0GB  ETA=22min
+    step 10601/12207  loss=0.7067  lr=2.79e-05  GPU=27.0GB  ETA=22min
+    step 10651/12207  loss=0.7258  lr=2.74e-05  GPU=27.0GB  ETA=21min
+  [gpu-chunk 8/8] loaded (30521, 2048) (0.5GB)
+    step 10701/12207  loss=0.6095  lr=2.70e-05  GPU=27.0GB  ETA=20min
+    step 10751/12207  loss=0.8199  lr=2.65e-05  GPU=27.0GB  ETA=20min
+    step 10801/12207  loss=0.5885  lr=2.61e-05  GPU=27.0GB  ETA=19min
+    step 10851/12207  loss=0.5489  lr=2.57e-05  GPU=27.0GB  ETA=18min
+    step 10901/12207  loss=0.8053  lr=2.52e-05  GPU=27.0GB  ETA=18min
+    step 10951/12207  loss=0.6789  lr=2.49e-05  GPU=27.0GB  ETA=17min
+    step 11001/12207  loss=0.5880  lr=2.45e-05  GPU=27.0GB  ETA=16min
+    step 11051/12207  loss=0.7730  lr=2.41e-05  GPU=27.0GB  ETA=16min
+    step 11101/12207  loss=0.6274  lr=2.38e-05  GPU=27.0GB  ETA=15min
+    step 11151/12207  loss=0.7342  lr=2.34e-05  GPU=27.0GB  ETA=14min
+    step 11201/12207  loss=0.6904  lr=2.31e-05  GPU=27.0GB  ETA=14min
+    step 11251/12207  loss=0.9241  lr=2.28e-05  GPU=27.0GB  ETA=13min
+    step 11301/12207  loss=0.5053  lr=2.25e-05  GPU=27.0GB  ETA=12min
+    step 11351/12207  loss=0.6283  lr=2.23e-05  GPU=27.0GB  ETA=12min
+    step 11401/12207  loss=0.7618  lr=2.20e-05  GPU=27.0GB  ETA=11min
+    step 11451/12207  loss=0.6700  lr=2.18e-05  GPU=27.0GB  ETA=10min
+    step 11501/12207  loss=0.6868  lr=2.15e-05  GPU=27.0GB  ETA=10min
+    step 11551/12207  loss=0.6426  lr=2.13e-05  GPU=27.0GB  ETA=9min
+    step 11601/12207  loss=0.7678  lr=2.11e-05  GPU=27.0GB  ETA=8min
+    step 11651/12207  loss=0.5154  lr=2.10e-05  GPU=27.0GB  ETA=7min
+    step 11701/12207  loss=0.6863  lr=2.08e-05  GPU=27.0GB  ETA=7min
+    step 11751/12207  loss=0.6664  lr=2.06e-05  GPU=27.0GB  ETA=6min
+    step 11801/12207  loss=0.6372  lr=2.05e-05  GPU=27.0GB  ETA=5min
+    step 11851/12207  loss=0.6594  lr=2.04e-05  GPU=27.0GB  ETA=5min
+    step 11901/12207  loss=0.6129  lr=2.03e-05  GPU=27.0GB  ETA=4min
+    step 11951/12207  loss=0.5492  lr=2.02e-05  GPU=27.0GB  ETA=3min
+    step 12001/12207  loss=0.5745  lr=2.01e-05  GPU=27.0GB  ETA=3min
+    step 12051/12207  loss=0.5263  lr=2.01e-05  GPU=27.0GB  ETA=2min
+    step 12101/12207  loss=0.6610  lr=2.00e-05  GPU=27.0GB  ETA=1min
+    step 12151/12207  loss=0.4520  lr=2.00e-05  GPU=27.0GB  ETA=1min
+    step 12201/12207  loss=0.4899  lr=2.00e-05  GPU=27.0GB  ETA=0min
+  Training done in 164.3 min
+
+  Training done: /root/autodl-tmp/evq_phase17c_2048_continue/seed42/geo_454m_1024_to_2048_continue/model.pt  (164.3 min)
+
+========================================================================
+  TRAIN: evq1.41421_454m_1024_to_2048_continue  |  init=/root/autodl-tmp/evq_phase17b/454m_evq_seed42_continue1024/model.pt
+  Continue @L=2048, tokens=500M, seed=42, tau=1.414214
+========================================================================
+  Model params: 454.2M
+  torch.compile enabled (reduce-overhead)
+  inv_freq set: max=0.87844616 min=0.00000265
+  checkpoint_steps=[3051, 6103, 9155, 12207]
+  Train cfg: lr=2.0e-04, min_lr=2.0e-05, micro_bs=5, grad_accum=4, effective_bs=20, chunks=244140, steps=12207, warmup=244, gpu_chunks=8
+  [gpu-chunk 1/8] loaded (30517, 2048) (0.5GB)
+    step 1/12207  loss=1.7344  lr=8.20e-07  GPU=27.0GB  ETA=1121min
+    step 51/12207  loss=0.7512  lr=4.18e-05  GPU=27.0GB  ETA=182min
+    step 101/12207  loss=0.7401  lr=8.28e-05  GPU=27.0GB  ETA=172min
+    step 151/12207  loss=0.8296  lr=1.24e-04  GPU=27.0GB  ETA=168min
+    step 201/12207  loss=0.7348  lr=1.65e-04  GPU=27.0GB  ETA=166min
+    step 251/12207  loss=0.9361  lr=2.00e-04  GPU=27.0GB  ETA=165min
+    step 301/12207  loss=0.8676  lr=2.00e-04  GPU=27.0GB  ETA=163min
+    step 351/12207  loss=0.7759  lr=2.00e-04  GPU=27.0GB  ETA=162min
+    step 401/12207  loss=0.8707  lr=2.00e-04  GPU=27.0GB  ETA=161min
+    step 451/12207  loss=0.9664  lr=2.00e-04  GPU=27.0GB  ETA=160min
+    step 501/12207  loss=0.8157  lr=2.00e-04  GPU=27.0GB  ETA=159min
+    step 551/12207  loss=0.6798  lr=2.00e-04  GPU=27.0GB  ETA=158min
+    step 601/12207  loss=0.8165  lr=2.00e-04  GPU=27.0GB  ETA=158min
+    step 651/12207  loss=0.9124  lr=1.99e-04  GPU=27.0GB  ETA=157min
+    step 701/12207  loss=0.8708  lr=1.99e-04  GPU=27.0GB  ETA=156min
+    step 751/12207  loss=0.7552  lr=1.99e-04  GPU=27.0GB  ETA=155min
+    step 801/12207  loss=0.7168  lr=1.99e-04  GPU=27.0GB  ETA=155min
+    step 851/12207  loss=0.9765  lr=1.99e-04  GPU=27.0GB  ETA=154min
+    step 901/12207  loss=0.8371  lr=1.99e-04  GPU=27.0GB  ETA=153min
+    step 951/12207  loss=0.8324  lr=1.98e-04  GPU=27.0GB  ETA=152min
+    step 1001/12207  loss=0.7803  lr=1.98e-04  GPU=27.0GB  ETA=152min
+    step 1051/12207  loss=0.6500  lr=1.98e-04  GPU=27.0GB  ETA=151min
+    step 1101/12207  loss=0.8163  lr=1.98e-04  GPU=27.0GB  ETA=150min
+    step 1151/12207  loss=0.7096  lr=1.97e-04  GPU=27.0GB  ETA=149min
+    step 1201/12207  loss=0.6741  lr=1.97e-04  GPU=27.0GB  ETA=149min
+    step 1251/12207  loss=0.7899  lr=1.97e-04  GPU=27.0GB  ETA=148min
+    step 1301/12207  loss=0.7466  lr=1.97e-04  GPU=27.0GB  ETA=147min
+    step 1351/12207  loss=0.6620  lr=1.96e-04  GPU=27.0GB  ETA=147min
+    step 1401/12207  loss=0.8117  lr=1.96e-04  GPU=27.0GB  ETA=146min
+    step 1451/12207  loss=0.6557  lr=1.96e-04  GPU=27.0GB  ETA=145min
+    step 1501/12207  loss=1.0244  lr=1.95e-04  GPU=27.0GB  ETA=145min
+  [gpu-chunk 2/8] loaded (30517, 2048) (0.5GB)
+    step 1551/12207  loss=0.6889  lr=1.95e-04  GPU=27.0GB  ETA=144min
+    step 1601/12207  loss=0.8150  lr=1.94e-04  GPU=27.0GB  ETA=143min
+    step 1651/12207  loss=0.9375  lr=1.94e-04  GPU=27.0GB  ETA=142min
+    step 1701/12207  loss=0.5775  lr=1.94e-04  GPU=27.0GB  ETA=142min
+    step 1751/12207  loss=0.8093  lr=1.93e-04  GPU=27.0GB  ETA=141min
+    step 1801/12207  loss=0.7515  lr=1.93e-04  GPU=27.0GB  ETA=140min
+    step 1851/12207  loss=0.7703  lr=1.92e-04  GPU=27.0GB  ETA=140min
+    step 1901/12207  loss=0.9071  lr=1.92e-04  GPU=27.0GB  ETA=139min
+    step 1951/12207  loss=0.8511  lr=1.91e-04  GPU=27.0GB  ETA=138min
+    step 2001/12207  loss=0.8452  lr=1.91e-04  GPU=27.0GB  ETA=138min
+    step 2051/12207  loss=0.6890  lr=1.90e-04  GPU=27.0GB  ETA=137min
+    step 2101/12207  loss=0.8540  lr=1.90e-04  GPU=27.0GB  ETA=136min
+    step 2151/12207  loss=0.6816  lr=1.89e-04  GPU=27.0GB  ETA=136min
+    step 2201/12207  loss=0.6851  lr=1.88e-04  GPU=27.0GB  ETA=135min
+    step 2251/12207  loss=0.7673  lr=1.88e-04  GPU=27.0GB  ETA=134min
+    step 2301/12207  loss=0.5930  lr=1.87e-04  GPU=27.0GB  ETA=134min
+    step 2351/12207  loss=0.4898  lr=1.87e-04  GPU=27.0GB  ETA=133min
+    step 2401/12207  loss=0.8845  lr=1.86e-04  GPU=27.0GB  ETA=132min
+    step 2451/12207  loss=0.8112  lr=1.85e-04  GPU=27.0GB  ETA=132min
+    step 2501/12207  loss=0.8012  lr=1.85e-04  GPU=27.0GB  ETA=131min
+    step 2551/12207  loss=0.7692  lr=1.84e-04  GPU=27.0GB  ETA=130min
+    step 2601/12207  loss=0.8889  lr=1.83e-04  GPU=27.0GB  ETA=130min
+    step 2651/12207  loss=0.7667  lr=1.83e-04  GPU=27.0GB  ETA=129min
+    step 2701/12207  loss=0.7274  lr=1.82e-04  GPU=27.0GB  ETA=128min
+    step 2751/12207  loss=0.6592  lr=1.81e-04  GPU=27.0GB  ETA=127min
+    step 2801/12207  loss=0.5245  lr=1.80e-04  GPU=27.0GB  ETA=127min
+    step 2851/12207  loss=0.4542  lr=1.80e-04  GPU=27.0GB  ETA=126min
+    step 2901/12207  loss=0.7415  lr=1.79e-04  GPU=27.0GB  ETA=125min
+    step 2951/12207  loss=0.8657  lr=1.78e-04  GPU=27.0GB  ETA=125min
+    step 3001/12207  loss=0.8225  lr=1.77e-04  GPU=27.0GB  ETA=124min
+  [gpu-chunk 3/8] loaded (30517, 2048) (0.5GB)
+    step 3051/12207  loss=0.7752  lr=1.77e-04  GPU=27.0GB  ETA=123min
+
+  [CKPT-SAVE] evq1.41421_454m_1024_to_2048_continue step_03051 (25.0%)
+    step 3101/12207  loss=0.6029  lr=1.76e-04  GPU=27.0GB  ETA=123min
+    step 3151/12207  loss=0.5622  lr=1.75e-04  GPU=27.0GB  ETA=122min
+    step 3201/12207  loss=0.8304  lr=1.74e-04  GPU=27.0GB  ETA=121min
+    step 3251/12207  loss=0.7037  lr=1.73e-04  GPU=27.0GB  ETA=121min
+    step 3301/12207  loss=0.4801  lr=1.73e-04  GPU=27.0GB  ETA=120min
+    step 3351/12207  loss=0.5703  lr=1.72e-04  GPU=27.0GB  ETA=119min
+    step 3401/12207  loss=0.8337  lr=1.71e-04  GPU=27.0GB  ETA=119min
+    step 3451/12207  loss=0.7251  lr=1.70e-04  GPU=27.0GB  ETA=118min
+    step 3501/12207  loss=0.8722  lr=1.69e-04  GPU=27.0GB  ETA=117min
+    step 3551/12207  loss=0.7589  lr=1.68e-04  GPU=27.0GB  ETA=117min
+    step 3601/12207  loss=0.5521  lr=1.67e-04  GPU=27.0GB  ETA=116min
+    step 3651/12207  loss=0.7479  lr=1.66e-04  GPU=27.0GB  ETA=115min
+    step 3701/12207  loss=0.7904  lr=1.65e-04  GPU=27.0GB  ETA=115min
+    step 3751/12207  loss=0.7342  lr=1.64e-04  GPU=27.0GB  ETA=114min
+    step 3801/12207  loss=0.6632  lr=1.64e-04  GPU=27.0GB  ETA=113min
+    step 3851/12207  loss=0.6441  lr=1.63e-04  GPU=27.0GB  ETA=113min
+    step 3901/12207  loss=0.7607  lr=1.62e-04  GPU=27.0GB  ETA=112min
+    step 3951/12207  loss=0.8701  lr=1.61e-04  GPU=27.0GB  ETA=111min
+    step 4001/12207  loss=0.8057  lr=1.60e-04  GPU=27.0GB  ETA=111min
+    step 4051/12207  loss=0.6919  lr=1.59e-04  GPU=27.0GB  ETA=110min
+    step 4101/12207  loss=0.6846  lr=1.58e-04  GPU=27.0GB  ETA=109min
+    step 4151/12207  loss=0.8040  lr=1.57e-04  GPU=27.0GB  ETA=109min
+    step 4201/12207  loss=0.6150  lr=1.56e-04  GPU=27.0GB  ETA=108min
+    step 4251/12207  loss=0.6327  lr=1.55e-04  GPU=27.0GB  ETA=107min
+    step 4301/12207  loss=0.7477  lr=1.54e-04  GPU=27.0GB  ETA=107min
+    step 4351/12207  loss=0.5841  lr=1.53e-04  GPU=27.0GB  ETA=106min
+    step 4401/12207  loss=0.7511  lr=1.52e-04  GPU=27.0GB  ETA=105min
+    step 4451/12207  loss=1.0075  lr=1.50e-04  GPU=27.0GB  ETA=105min
+    step 4501/12207  loss=0.8847  lr=1.49e-04  GPU=27.0GB  ETA=104min
+    step 4551/12207  loss=0.8142  lr=1.48e-04  GPU=27.0GB  ETA=103min
+  [gpu-chunk 4/8] loaded (30517, 2048) (0.5GB)
+    step 4601/12207  loss=0.6848  lr=1.47e-04  GPU=27.0GB  ETA=103min
+    step 4651/12207  loss=0.7250  lr=1.46e-04  GPU=27.0GB  ETA=102min
+    step 4701/12207  loss=0.6436  lr=1.45e-04  GPU=27.0GB  ETA=101min
+    step 4751/12207  loss=0.5991  lr=1.44e-04  GPU=27.0GB  ETA=100min
+    step 4801/12207  loss=0.5119  lr=1.43e-04  GPU=27.0GB  ETA=100min
+    step 4851/12207  loss=0.8035  lr=1.42e-04  GPU=27.0GB  ETA=99min
+    step 4901/12207  loss=0.6935  lr=1.41e-04  GPU=27.0GB  ETA=98min
+    step 4951/12207  loss=0.5836  lr=1.40e-04  GPU=27.0GB  ETA=98min
+    step 5001/12207  loss=0.8738  lr=1.38e-04  GPU=27.0GB  ETA=97min
+    step 5051/12207  loss=0.8040  lr=1.37e-04  GPU=27.0GB  ETA=96min
+    step 5101/12207  loss=0.4731  lr=1.36e-04  GPU=27.0GB  ETA=96min
+    step 5151/12207  loss=0.7869  lr=1.35e-04  GPU=27.0GB  ETA=95min
+    step 5201/12207  loss=0.7171  lr=1.34e-04  GPU=27.0GB  ETA=94min
+    step 5251/12207  loss=0.9184  lr=1.33e-04  GPU=27.0GB  ETA=94min
+    step 5301/12207  loss=0.7978  lr=1.32e-04  GPU=27.0GB  ETA=93min
+    step 5351/12207  loss=0.7472  lr=1.31e-04  GPU=27.0GB  ETA=92min
+    step 5401/12207  loss=0.7044  lr=1.29e-04  GPU=27.0GB  ETA=92min
+    step 5451/12207  loss=0.8607  lr=1.28e-04  GPU=27.0GB  ETA=91min
+    step 5501/12207  loss=0.6666  lr=1.27e-04  GPU=27.0GB  ETA=90min
+    step 5551/12207  loss=0.7405  lr=1.26e-04  GPU=27.0GB  ETA=90min
+    step 5601/12207  loss=0.6335  lr=1.25e-04  GPU=27.0GB  ETA=89min
+    step 5651/12207  loss=0.7478  lr=1.24e-04  GPU=27.0GB  ETA=88min
+    step 5701/12207  loss=0.8816  lr=1.22e-04  GPU=27.0GB  ETA=88min
+    step 5751/12207  loss=0.5254  lr=1.21e-04  GPU=27.0GB  ETA=87min
+    step 5801/12207  loss=0.7055  lr=1.20e-04  GPU=27.0GB  ETA=86min
+    step 5851/12207  loss=0.8344  lr=1.19e-04  GPU=27.0GB  ETA=86min
+    step 5901/12207  loss=0.8156  lr=1.18e-04  GPU=27.0GB  ETA=85min
+    step 5951/12207  loss=0.5402  lr=1.17e-04  GPU=27.0GB  ETA=84min
+    step 6001/12207  loss=0.6092  lr=1.15e-04  GPU=27.0GB  ETA=84min
+    step 6051/12207  loss=0.6585  lr=1.14e-04  GPU=27.0GB  ETA=83min
+  [gpu-chunk 5/8] loaded (30517, 2048) (0.5GB)
+    step 6101/12207  loss=0.7007  lr=1.13e-04  GPU=27.0GB  ETA=82min
+
+  [CKPT-SAVE] evq1.41421_454m_1024_to_2048_continue step_06103 (50.0%)
+    step 6151/12207  loss=0.7594  lr=1.12e-04  GPU=27.0GB  ETA=82min
+    step 6201/12207  loss=0.7536  lr=1.11e-04  GPU=27.0GB  ETA=81min
+    step 6251/12207  loss=0.7957  lr=1.09e-04  GPU=27.0GB  ETA=80min
+    step 6301/12207  loss=0.7554  lr=1.08e-04  GPU=27.0GB  ETA=80min
+    step 6351/12207  loss=0.6729  lr=1.07e-04  GPU=27.0GB  ETA=79min
+    step 6401/12207  loss=0.8990  lr=1.06e-04  GPU=27.0GB  ETA=78min
+    step 6451/12207  loss=0.6479  lr=1.05e-04  GPU=27.0GB  ETA=78min
+    step 6501/12207  loss=0.6282  lr=1.04e-04  GPU=27.0GB  ETA=77min
+    step 6551/12207  loss=0.7064  lr=1.02e-04  GPU=27.0GB  ETA=76min
+    step 6601/12207  loss=0.9076  lr=1.01e-04  GPU=27.0GB  ETA=76min
+    step 6651/12207  loss=0.7893  lr=1.00e-04  GPU=27.0GB  ETA=75min
+    step 6701/12207  loss=0.6966  lr=9.88e-05  GPU=27.0GB  ETA=74min
+    step 6751/12207  loss=0.8174  lr=9.76e-05  GPU=27.0GB  ETA=74min
+    step 6801/12207  loss=0.5360  lr=9.65e-05  GPU=27.0GB  ETA=73min
+    step 6851/12207  loss=0.8231  lr=9.53e-05  GPU=27.0GB  ETA=72min
+    step 6901/12207  loss=0.4717  lr=9.41e-05  GPU=27.0GB  ETA=71min
+    step 6951/12207  loss=0.7608  lr=9.30e-05  GPU=27.0GB  ETA=71min
+    step 7001/12207  loss=0.6384  lr=9.18e-05  GPU=27.0GB  ETA=70min
+    step 7051/12207  loss=0.8871  lr=9.07e-05  GPU=27.0GB  ETA=69min
+    step 7101/12207  loss=0.7130  lr=8.95e-05  GPU=27.0GB  ETA=69min
