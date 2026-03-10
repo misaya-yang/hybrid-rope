@@ -172,44 +172,59 @@ def train_model(model, train_loader, optimizer, scheduler, tokens_to_train, cfg,
     return tokens_trained, step
 
 
-def make_train_loader(dataset_name, seq_len, batch_size, seed, cache_dir="data_cache"):
-    """Create training data loader from cached data."""
-    # Get project root (parent of scripts/)
-    script_dir = Path(__file__).resolve().parent
-    project_root = script_dir.parent.parent.parent
-    work_dir = project_root / "results" / "core_text" / "phase18_base_sweep"
-    cache_path = work_dir / "data_cache" / f"train_{dataset_name}_50100000_{seq_len}.pt"
-    
-    cache_path_100m = work_dir / "data_cache" / f"train_{dataset_name}_100000000_{seq_len}.pt"
-    
-    if cache_path_100m.exists():
-        print(f"  [data] Loading from cache: {cache_path_100m}")
-        data = torch.load(cache_path_100m, weights_only=True)
-        print(f"  [data] Cached: {data.shape[0]} chunks ({data.numel()/1e6:.1f}M tokens)")
-    elif cache_path.exists():
-        print(f"  [data] Loading from cache: {cache_path}")
-        data = torch.load(cache_path, weights_only=True)
-        print(f"  [data] Cached: {data.shape[0]} chunks ({data.numel()/1e6:.1f}M tokens)")
-    else:
-        # Fall back to loading fresh
+def make_train_loader(dataset_name, seq_len, micro_batch_size, seed, cache_dir=None):
+    """Create training data loader from cached data.
+
+    IMPORTANT: yields micro-batches (not full batches). The training loop
+    calls next() once per grad-accum micro-step.
+    """
+    # Resolve cache directory
+    if cache_dir is None:
+        # Default: <project_root>/results/core_text/phase18_base_sweep/data_cache
+        script_dir = Path(__file__).resolve().parent
+        project_root = script_dir.parent.parent  # scripts/core_text_phases → scripts → hybrid-rope
+        cache_dir = str(project_root / "results" / "core_text" / "phase18_base_sweep" / "data_cache")
+
+    cache_path = Path(cache_dir)
+    cache_path.mkdir(parents=True, exist_ok=True)
+
+    # Try to find existing cache (any token count, same dataset+seq_len)
+    data = None
+    prefix = f"train_{dataset_name}_"
+    suffix = f"_{seq_len}.pt"
+    candidates = sorted(cache_path.glob(f"{prefix}*{suffix}"), reverse=True)
+
+    for p in candidates:
+        try:
+            print(f"  [data] Loading from cache: {p}")
+            data = torch.load(p, weights_only=True)
+            print(f"  [data] Cached: {data.shape[0]} chunks ({data.numel()/1e6:.1f}M tokens)")
+            break
+        except Exception as e:
+            print(f"  [data] Failed to load {p}: {e}")
+            continue
+
+    if data is None:
+        # Fall back to loading fresh via run_evq_sweep
         from run_evq_sweep import load_data
         from transformers import AutoTokenizer
         tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neox-20b")
         max_tokens = 100_000_000
-        data = load_data(tokenizer, max_tokens=max_tokens, seq_len=seq_len, 
+        data = load_data(tokenizer, max_tokens=max_tokens, seq_len=seq_len,
                         dataset=dataset_name, cache_dir=cache_dir)
-    
+
     # data shape: (n_chunks, seq_len)
     n_chunks = data.shape[0]
-    
+    print(f"  [data] Ready: {n_chunks} chunks, micro_batch={micro_batch_size}")
+
     # Simple random sampler
     torch.manual_seed(seed)
-    
+
     def batch_generator():
         while True:
-            indices = torch.randint(0, n_chunks, (batch_size,))
+            indices = torch.randint(0, n_chunks, (micro_batch_size,))
             yield data[indices]
-    
+
     return batch_generator()
 
 
@@ -218,18 +233,20 @@ def eval_model_simple(model, val_data, eval_lengths, eval_chunks=10, eval_seed=9
     import numpy as np
     model.eval()
     model.extend_rope(max(eval_lengths) + 100)
-    
-    ctx = torch.amp.autocast("mps", dtype=DTYPE) if USE_AUTOCAST else nullcontext()
+
+    ctx = torch.amp.autocast(DEVICE, dtype=DTYPE) if USE_AUTOCAST else nullcontext()
     rng = np.random.RandomState(eval_seed)
     results = {}
-    
+
     for L in eval_lengths:
         losses = []
         max_start = len(val_data) - L
         if max_start <= 0:
             print(f"    L={L}: val_data too short, skipping")
             continue
-        offsets = sorted(rng.choice(max_start, size=min(eval_chunks, max_start // L), replace=False))
+        n_chunks_avail = max(max_start // L, 1)
+        n_sample = min(eval_chunks, n_chunks_avail)
+        offsets = sorted(rng.choice(max_start, size=n_sample, replace=False))
         
         for offset in offsets:
             chunk = val_data[offset : offset + L].unsqueeze(0).to(DEVICE)
@@ -306,18 +323,20 @@ def run_single_experiment(work_dir, cfg, base, tau, seed, d_head, device, dry_ru
     
     # Scheduler: warmup + cosine decay
     warmup_steps = 100
-    total_steps = cfg["train_tokens"] // (cfg["batch_size"] * cfg["seq_len"])
-    
+    tokens_per_step = cfg["micro_batch_size"] * cfg["grad_accum"] * cfg["seq_len"]
+    total_steps = cfg["train_tokens"] // tokens_per_step
+
     def lr_lambda(step):
         if step < warmup_steps:
             return step / warmup_steps
-        return 0.5 * (1 + math.cos(math.pi * (step - warmup_steps) / (total_steps - warmup_steps)))
-    
+        progress = min((step - warmup_steps) / max(total_steps - warmup_steps, 1), 1.0)
+        return 0.5 * (1 + math.cos(math.pi * progress))
+
     scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda)
-    
+
     # Train
-    print(f"  Training...")
-    train_loader = make_train_loader("fineweb-edu", cfg["seq_len"], cfg["batch_size"], seed,
+    print(f"  Training ({total_steps} steps, {tokens_per_step} tok/step)...")
+    train_loader = make_train_loader("fineweb-edu", cfg["seq_len"], cfg["micro_batch_size"], seed,
                                      cache_dir=str(work_dir / "data_cache"))
     start_time = time.time()
     
@@ -355,7 +374,11 @@ def run_single_experiment(work_dir, cfg, base, tau, seed, d_head, device, dry_ru
     
     # Cleanup
     del model, val_data
-    torch.mps.empty_cache() if device.type == "mps" else torch.cuda.empty_cache()
+    dev_str = device if isinstance(device, str) else device.type
+    if dev_str == "mps" and hasattr(torch, "mps"):
+        torch.mps.empty_cache()
+    elif dev_str == "cuda":
+        torch.cuda.empty_cache()
     
     return result
 
