@@ -10,6 +10,8 @@ This directory keeps only scripts that are still useful for the current paper pa
 - `scripts/data_prep/`: dataset preparation helpers still needed for reproducibility and next-step runs
 - `scripts/figures/`: paper figure generators
 - `scripts/video_temporal/`: temporal-only video extrapolation support
+- `scripts/mac_train/`: M4 Max local experiments (legacy, ~20GB assumption)
+- `scripts/m4_max_36gb/`: M4 Max 36GB local experiments — progressive chain, base sweep, τ landscape, 350M scaling
 - `scripts/lib/rope/`: retained local RoPE schedule and injection code
 
 ## Working Rule
