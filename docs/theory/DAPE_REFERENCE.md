@@ -150,7 +150,7 @@ FIRE (ICLR 2024) 用 125M 和 350M 做了 SCROLLS 7 个子任务，方法是 tas
 | "DAPE 是 data-adaptive 的，你的不是" | EVQ 通过 τ 参数化了距离先验的形状；task-conditional τ 是自然扩展（Future Work） |
 | "DAPE 在更严肃的数据集上评测" | 我们的 500M 实验将使用 FineWeb-Edu，比 DAPE 的数据集更大更新 |
 | "DAPE 的方法更通用" | EVQ 的优势是理论基础：我们知道为什么它工作，以及何时它不工作（waterbed） |
-| "你们模型太小" | DAPE 用 125M 被 NeurIPS 接受；FIRE 用 125M/350M 被 ICLR 接受；我们有 50M–750M 五点 scaling chain，是 PE allocation 文献中最大规模 |
+| "你们模型太小" | DAPE 用 125M 被 NeurIPS 接受；FIRE 用 125M/350M 被 ICLR 接受；我们有 50M–750M 五点 scaling chain，据我们所知是 PE allocation 文献中覆盖最广的规模范围 |
 | "没有下游任务" | DAPE 也没有下游照样中了；我们可做 SCROLLS task-specific finetuning（FIRE 路线，454M > FIRE Large 350M），EVQ vs Geo 同 recipe 微调，归因干净 |
 
 ---

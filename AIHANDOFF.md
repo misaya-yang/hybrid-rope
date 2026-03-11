@@ -35,7 +35,7 @@ This repository is now a submission-oriented EVQ-Cosh workspace. The goal is not
 - Phase 21a LongBench NLL: 750M EVQ r=0 vs Geo, 13 tasks
 - ctx=4096 (in-distribution): Geo wins +4.4%
 - ctx=8192 (2× extrapolation): EVQ wins -4.4% (QA tasks up to -16.8%)
-- First direct quantification of waterbed trade-off on downstream tasks
+- To our knowledge, first direct quantification of waterbed trade-off on downstream tasks for a PE allocation method
 - See: `team/plans/phase21_scrolls_downstream.md` for full data
 
 ### P1: strong supporting evidence
@@ -98,7 +98,7 @@ Practical rule: improve the paper by strengthening the current three-claim packa
 
 ### Scale is NOT a weakness
 
-Our from-scratch training covers 50M → 125M → 350M → 454M → 750M, a full five-point scaling chain. In the PE from-scratch literature, this is the **largest scale**:
+Our from-scratch training covers 50M → 125M → 350M → 454M → 750M, a full five-point scaling chain. In the PE from-scratch literature, this is, to our knowledge, the **broadest scale range**:
 
 - DAPE (NeurIPS 2024 poster): 125M only
 - FIRE (ICLR 2024): not larger than ours for from-scratch
@@ -124,7 +124,7 @@ FIRE (ICLR 2024) did SCROLLS with **exactly our model scale**: Base=125M (12L/12
 2. Finetune both on 2-3 SCROLLS subtasks (QMSum, GovReport, QuALITY) at L=8192
 3. Compare ROUGE/F1: same finetune recipe, PE is the sole independent variable — attribution is clean
 
-**What we already have that suffices for poster**: 5-scale PPL, 99-run τ* sweep, 6-seed passkey mix, 3-seed FineWeb PPL, progressive amplification chain. This is broader than DAPE (which was accepted with only PPL + CHE) in every dimension except downstream breadth.
+**What we already have that suffices for poster**: 5-scale PPL, 99-run τ* sweep, 6-seed passkey mix, 3-seed FineWeb PPL, progressive amplification chain. This covers more evaluation dimensions than DAPE (which was accepted with PPL + CHE), with the main gap being downstream task breadth.
 
 **Priority**: Downstream SCROLLS strengthens the paper meaningfully and is now confirmed feasible at our scale.
 
