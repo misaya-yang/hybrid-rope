@@ -1,0 +1,16 @@
+{
+  "test3_validation": {
+    "dataset": "fineweb-edu 50M tokens",
+    "D_mean": 0.000244,
+    "tail_exponent_alpha": -0.06,
+    "fit_range": "\u0394 = 500-4000",
+    "formula": "D(\u0394) ~ \u0394^-0.06"
+  },
+  "r2_results": {
+    "synthetic_alpha_-1.5": 0.74,
+    "real_alpha_-0.06": 0.92,
+    "improvement": "+0.18"
+  },
+  "conclusion": "Real D(\u0394) tail exponent differs from synthetic, explaining residual variance",
+  "timestamp": "2026-03-11T10:20:00"
+}
