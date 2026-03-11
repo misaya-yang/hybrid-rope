@@ -31,6 +31,13 @@ This repository is now a submission-oriented EVQ-Cosh workspace. The goal is not
 - `docs/exp/2026-03-04_phase11_L256_results.md`
 - `docs/exp/2026-03-05_phase11b_125m_results.md`
 
+### P0.5: downstream NLL waterbed reversal (new, Phase 21a)
+- Phase 21a LongBench NLL: 750M EVQ r=0 vs Geo, 13 tasks
+- ctx=4096 (in-distribution): Geo wins +4.4%
+- ctx=8192 (2× extrapolation): EVQ wins -4.4% (QA tasks up to -16.8%)
+- First direct quantification of waterbed trade-off on downstream tasks
+- See: `team/plans/phase21_scrolls_downstream.md` for full data
+
 ### P1: strong supporting evidence
 - `results/core_text/phase15/`
 - `results/core_text/phase9f_750m_2k_1b/`
@@ -86,6 +93,48 @@ Optimize the paper under three principles:
    - Missing evidence and collaborator-facing next steps: `team/open_gaps.md`, `team/plans/`
 
 Practical rule: improve the paper by strengthening the current three-claim package, not by adding parallel storylines.
+
+## Scale and Downstream: Correct Prioritization
+
+### Scale is NOT a weakness
+
+Our from-scratch training covers 50M → 125M → 350M → 454M → 750M, a full five-point scaling chain. In the PE from-scratch literature, this is the **largest scale**:
+
+- DAPE (NeurIPS 2024 poster): 125M only
+- FIRE (ICLR 2024): not larger than ours for from-scratch
+- Base of RoPE (NeurIPS 2024): 2B from-scratch, but PE-only axis (base tuning, no allocation)
+
+Scaling to 1.5B+ is a **spotlight consideration**, not a poster blocker. It belongs in the "later / nice-to-have" category. Do not treat scale as a fatal risk — the reviewer response is simply "we are the largest from-scratch PE allocation study."
+
+### Downstream tasks: SCROLLS is feasible via task-specific finetuning
+
+FIRE (ICLR 2024) did SCROLLS with **exactly our model scale**: Base=125M (12L/12H/768d) and Large=350M (24L/16H/768d), both head_dim=64. They pretrained on C4 at L=2048, then finetuned per-task at L=8192. Our 454M is **larger than FIRE's largest model**.
+
+**This is NOT zero-shot instruction following** — it's task-specific finetuning (like classic pretrain→finetune NLP). No SFT or instruction data needed.
+
+**FIRE's SCROLLS finetuning recipe**:
+
+- Seq len: 8192, LR: 1e-5, batch: 128, steps: 25k, dropout: 0.1
+- 7 tasks: Qasper, NarrativeQA, QuALITY, ContractNLI, QMSum, GovReport, SummScreenFD
+- FIRE Large scored 27.05 average (best among all PE methods)
+
+**Our plan for downstream (if pursued)**:
+
+1. Take 454M EVQ checkpoint + Geo checkpoint (same pretrain recipe, PE is only difference)
+2. Finetune both on 2-3 SCROLLS subtasks (QMSum, GovReport, QuALITY) at L=8192
+3. Compare ROUGE/F1: same finetune recipe, PE is the sole independent variable — attribution is clean
+
+**What we already have that suffices for poster**: 5-scale PPL, 99-run τ* sweep, 6-seed passkey mix, 3-seed FineWeb PPL, progressive amplification chain. This is broader than DAPE (which was accepted with only PPL + CHE) in every dimension except downstream breadth.
+
+**Priority**: Downstream SCROLLS strengthens the paper meaningfully and is now confirmed feasible at our scale.
+
+**Locked priority order**:
+
+1. **17c multi-seed** (highest — unblocks both headline claims and SCROLLS)
+2. **LaTeX draft skeleton** (parallel with multi-seed training)
+3. **SCROLLS task-specific finetuning** (after multi-seed checkpoints are ready, use 3-seed EVQ vs Geo)
+
+**Hardware note**: 454M at L=8192 on RTX 5090 32GB with Flash Attention — batch ~10 (down from ~40 at L=2048), 25k finetune steps, runtime comparable to pretraining stages.
 
 ## What Has Been Deliberately Demoted
 

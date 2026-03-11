@@ -108,14 +108,38 @@
 
 - [x] Passkey retrieval（PE 论文标准评测，Base of RoPE 用了）
 - [x] NIAH（近年标准）
-- [ ] Scaling law 图（PPL improvement vs model size）← 500M 完成后可做
+- [ ] Scaling law 图（PPL improvement vs model size）← 750M 已有，可做完整图
 - [x] 跨模型族验证
+- [ ] SCROLLS task-specific finetuning（见 §5.4）
 
 ### 5.3 不需要的
 
-- LongBench 对 from-scratch 小模型不适用（需要指令跟随能力）
+- LongBench **zero-shot**（需要指令跟随能力，454M from-scratch 做不了）
 - 标准 NLU benchmarks（PE 论文不需要）
 - 真正的超长上下文（128K+）评测（小模型 OOM，且不是 PE 论文的重点）
+
+### 5.4 SCROLLS 下游评测方案（FIRE 路线，已确认可行）
+
+FIRE (ICLR 2024) 用 125M 和 350M 做了 SCROLLS 7 个子任务，方法是 task-specific finetuning（不是 zero-shot 指令跟随）。我们的 454M 比 FIRE 的最大模型还大。
+
+**FIRE 的 SCROLLS 配置**:
+
+| 参数 | 值 |
+|------|-----|
+| 模型 | Base=125M (12L/12H/768d), Large=350M (24L/16H/768d), head_dim=64 |
+| 预训练 | C4, L=2048, AdamW, LR=6e-4(Base)/3e-4(Large), batch=256, 600k steps |
+| SCROLLS 微调 | L=8192, LR=1e-5, batch=128, 25k steps, dropout=0.1 |
+| 子任务 | Qasper, NarrativeQA, QuALITY, ContractNLI, QMSum, GovReport, SummScreenFD |
+| FIRE Large 平均分 | 27.05 (所有 PE 方法中最高) |
+
+**我们的操作方案**:
+
+1. 取 454M 3-seed EVQ checkpoint 和 Geo checkpoint（同一 pretrain recipe）
+2. 在 QMSum / GovReport / QuALITY 上分别 finetune（L=8192, LR=1e-5, 25k steps）
+3. 比较 EVQ-finetuned vs Geo-finetuned 的 ROUGE/F1
+4. PE 是唯一自变量，归因干净
+
+**优先级**: 17c 多 seed > LaTeX 骨架 ≥ SCROLLS finetune
 
 ---
 
@@ -126,7 +150,8 @@
 | "DAPE 是 data-adaptive 的，你的不是" | EVQ 通过 τ 参数化了距离先验的形状；task-conditional τ 是自然扩展（Future Work） |
 | "DAPE 在更严肃的数据集上评测" | 我们的 500M 实验将使用 FineWeb-Edu，比 DAPE 的数据集更大更新 |
 | "DAPE 的方法更通用" | EVQ 的优势是理论基础：我们知道为什么它工作，以及何时它不工作（waterbed） |
-| "你们模型太小" | DAPE 用 125M 被 NeurIPS 接受；我们从 50M 到 8B 都有覆盖 |
+| "你们模型太小" | DAPE 用 125M 被 NeurIPS 接受；FIRE 用 125M/350M 被 ICLR 接受；我们有 50M–750M 五点 scaling chain，是 PE allocation 文献中最大规模 |
+| "没有下游任务" | DAPE 也没有下游照样中了；我们可做 SCROLLS task-specific finetuning（FIRE 路线，454M > FIRE Large 350M），EVQ vs Geo 同 recipe 微调，归因干净 |
 
 ---
 
