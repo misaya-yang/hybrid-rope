@@ -794,19 +794,19 @@ def main():
     # Load data
     # ────────────────────────────────────────────────────────────────────
 
+    from transformers import AutoTokenizer
+
+    tok = AutoTokenizer.from_pretrained("EleutherAI/gpt-neox-20b")
+
     print("\n  Loading data...")
     train_data = load_data(
-        tok=None,
+        tok=tok,
         num_tokens=stage_cfg["tokens"],
         seq_len=stage_cfg["seq_len"],
         dataset=DATASET,
         cache_dir=str(DATA_CACHE_DIR),
     )
     print(f"  train_data: {train_data.shape} ({train_data.numel()/1e6:.0f}M tokens)")
-
-    from transformers import AutoTokenizer
-
-    tok = AutoTokenizer.from_pretrained("EleutherAI/gpt-neox-20b")
 
     print("  Loading validation data...")
     val_data = load_val(

@@ -280,14 +280,20 @@ def eval_yarn_overlay(
     print(f"\n  YaRN overlay evaluation (scales={yarn_scales})")
     results = {}
 
-    # Note: This requires model to support YaRN parameter modification
-    # Current implementation is a placeholder; full YaRN integration
-    # would require modifying model's RoPE initialization
+    # ⚠️ PLACEHOLDER: YaRN overlay requires modifying model's RoPE inv_freq
+    # at inference time. Full implementation should:
+    #   1. Save original inv_freq
+    #   2. For each scale: apply YaRN NTK-by-parts scaling to inv_freq
+    #   3. Rebuild sin/cos cache
+    #   4. Evaluate
+    #   5. Restore original inv_freq
+    # Current version evaluates without actual YaRN scaling (all scales identical).
+    # Will be implemented when integrating with the existing YaRN code from
+    # scripts/core_text_phases/phase17c_extended_eval.py
 
+    print("    ⚠️ WARNING: YaRN overlay is PLACEHOLDER - scales not actually applied")
     for scale in yarn_scales:
         print(f"    Scale={scale}...", end=" ", flush=True)
-        # TODO: Apply YaRN scaling to model.rope
-        # For now, we just evaluate at the scale=1.0 point multiple times
         scale_results = eval_ppl_curves(model, val_data, eval_lengths, chunks, seed)
         results[scale] = scale_results
 
@@ -372,9 +378,10 @@ def eval_multi_needle(
             key = f"n={n_needles}_L={length}"
             print(f"    {key}...", end=" ", flush=True)
 
-            # Placeholder: would implement multi-needle sequence construction
-            # and evaluate retrieval accuracy
-            acc = 0.5  # Dummy value
+            # ⚠️ PLACEHOLDER: Multi-needle requires constructing sequences with
+            # n_needles distinct passkeys at different depths, then evaluating
+            # retrieval accuracy for each. Will be implemented in production.
+            acc = -1.0  # Placeholder: -1 indicates not-yet-implemented
             needle_results[length] = acc
             print(f"recall={acc:.1%}")
 
