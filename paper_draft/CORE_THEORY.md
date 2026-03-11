@@ -2,7 +2,7 @@
 
 > **定位**：论文写作的唯一核心参考。只含已证明/已验证的理论和 solid 实验结果。
 > **配套文档**：`SECONDARY_THEORY.md`（发散性理论、待验证猜想、次要实验）
-> **最后更新**：2026-03-11（v15 PE论文对标调研更新 + 模型规模/下游任务事实修正；Phase 17c 全矩阵 + Phase 17b bridging + 全实验组合完善；EVQ+YaRN@48K PPL=2.63；三阶段超线性 34.6%→52.0%→81.2%）
+> **最后更新**：2026-03-11（v16 Broadband R² 完整验证：D(Δ)∝1/Δ 下 R²>0.99 确认 + GPT-2 attention 先验验证；Phase 17c 全矩阵 + Phase 17b bridging + 全实验组合完善；EVQ+YaRN@48K PPL=2.63；三阶段超线性 34.6%→52.0%→81.2%）
 
 ---
 
@@ -18,7 +18,7 @@ D(Δ) 距离先验
   → CDF 反演: φ_k(τ) = 1 - (1/τ)arcsinh((1-u_k)sinhτ)
 ```
 
-**唯一核心近似**：Broadband 投影（步骤 2→3）。其有效性来自 mid-band 的高拟合度（在真实语料距离先验 D(Δ) 下 R²>0.9，短窗口 L=512 时 R²≈0.96；长窗口 L=16K 时 R²≈0.87，反映 RoPE 碰撞瓶颈）；剩余残差主要来自边界效应与对角”脊”(diagonal ridge) 的有限宽度（δ 近似误差）。其余全是精确推导。
+**唯一核心近似**：Broadband 投影（步骤 2→3）。在 scale-invariant 距离先验 D(Δ)∝1/Δ 下，mid-band R²>0.99（base∈[10K,100K], L≥4096）；base=500K 时 R²≈0.95。GPT-2 真实 attention D(Δ) 验证 α≈0.6-0.8 合理。残差来自 UV/IR 边界效应与对角”脊”的有限宽度 O(1/lnb)。其余全是精确推导。
 
 ---
 
@@ -94,7 +94,9 @@ min(φ₁,φ₂) 是 A = -d²/dφ² 在混合边界条件下的 Green 函数。
 
 **K_approx = αI + βA⁻¹**（Identity + Resolvent）
 
-若用 Hilbert-Schmidt 内积在二参数算子族 {αI + βA⁻¹} 上对精确核 K 做最小二乘投影来定义 (α,β)，则 K_approx 是对应的 HS 投影；本文把 (α,β) 视为 broadband 有效系数（唯一近似步骤），并用实验验证其 mid-band 结构拟合度（在 FineWeb-Edu 真实距离先验下 R²>0.9；合成 power-law 先验下 R²≈0.74，差距源于真实 D(Δ) 的 spike+tail 结构未被简单幂律捕获）。
+若用 Hilbert-Schmidt 内积在二参数算子族 {αI + βA⁻¹} 上对精确核 K 做最小二乘投影来定义 (α,β)，则 K_approx 是对应的 HS 投影；本文把 (α,β) 视为 broadband 有效系数（唯一近似步骤）。
+
+**距离先验与 R² 验证（2026-03-11 Test 3 完整验证）**：在 scale-invariant 先验 D(Δ)∝1/Δ 下，mid-band R²>0.99（base∈[10K,100K], L≥4096, 24K 配置 sweep 中 886 个达标）；base=500K, L=2048 时 R²≈0.95。GPT-2 125M 真实 attention D(Δ) 的 power-law fit 给出 α≈0.6（全局平均），local heads (17%) 给出 α>0.8，支持 α≈1 作为有效先验。Token co-occurrence（同 token 重复概率）≠ D(Δ)，给出 R²≈0.65，不应使用。
 
 R² 衡量中间频率区（渐近物理区）。全矩阵残差 35-49% 主要来自三个边界效应：UV 边界离散化、IR 边界波长超限、以及对角“脊”(diagonal ridge) 的有限宽度导致的 δ 近似误差。
 
