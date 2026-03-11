@@ -2,7 +2,7 @@
 
 > **定位**：论文写作的唯一核心参考。只含已证明/已验证的理论和 solid 实验结果。
 > **配套文档**：`SECONDARY_THEORY.md`（发散性理论、待验证猜想、次要实验）
-> **最后更新**：2026-03-11（v14 Phase 17c 全矩阵 + Phase 17b bridging + 全实验组合完善；EVQ+YaRN@48K PPL=2.63；三阶段超线性 34.6%→52.0%→81.2%）
+> **最后更新**：2026-03-11（v15 PE论文对标调研更新 + 模型规模/下游任务事实修正；Phase 17c 全矩阵 + Phase 17b bridging + 全实验组合完善；EVQ+YaRN@48K PPL=2.63；三阶段超线性 34.6%→52.0%→81.2%）
 
 ---
 
@@ -932,7 +932,7 @@ EVQ 的价值不只是"换一行代码 PPL 好了"，而是一个双层故事：
 - C=d_head 可能是巧合，需换 head_dim 验证
 - 碰撞块分析中 (1-c)/lnb 是简化模型，精确指数待确认
 - ✅ ~~R6000 Geo 退化数据仅 2 个 checkpoint~~ → Figure 1 展示完整 4-checkpoint 轨迹，趋势清晰
-- Capability-preserving 目前仍主要由 passkey 这一类 OOD retrieval 任务支撑，尚缺 real downstream task 验证
+- Capability-preserving 目前仍主要由 passkey 这一类 OOD retrieval 任务支撑，尚缺 real downstream task 验证（注：DAPE 同标准无NLP下游，poster 够用；但 FIRE(ICLR 2024) 有 SCROLLS+GLUE，冲 spotlight 建议补下游）
 - **750M Phase9F 全量完成，但为单 seed (42)**。训练轨迹趋势清晰，但统计确认需多 seed
 - **750M full EVQ continue @4K 也是单 seed**。当前最强信号是 `16K PPL` 与 `AR exact`，应写成 supporting evidence
 - **Passkey mix 多 seed 已完成**。初始 `+40pp` 来自 seed=42 极值；论文正文应使用 3-seed mean，避免继续传播单 seed headline
@@ -946,7 +946,7 @@ EVQ 的价值不只是"换一行代码 PPL 好了"，而是一个双层故事：
 ## 16. ⚠️ 教训记录
 
 1. Passkey ~50% = 随机噪声。引入新指标前必须先验证基线有非随机表现
-2. 不要用"规模不够"解释 EVQ 不 work。PE 同类以 125M 发表，真正瓶颈是下游任务
+2. 不要用"规模不够"解释 EVQ 不 work。从零训练 PE 论文惯例 125M-350M（DAPE/FIRE），我们 750M 已是最大之一。真正加分项是补充下游任务（FIRE 有 SCROLLS+GLUE）
 3. "τ 推向低频"的说法数学上错误。正确描述是重分配通道密度/间距
 4. 双变量 τ*(L,b) 公式尚未确定（A vs B 竞争），论文只用单变量形式
 5. **🔴 LoRA 微调不能证明 EVQ 有效**：改变 RoPE 频率 + LoRA 微调 = 模型同时学习"适应新频率"和"下游任务"，两个信号 confounded。加上灾难性遗忘（预训练知识因 PE 变化而丢失），LoRA 实验无论好坏都不能 cleanly 归因于 EVQ。**唯一干净的实验设计是 from-scratch 训练。** 这是核心方法论原则，不可妥协
@@ -979,6 +979,54 @@ EVQ 的价值不只是"换一行代码 PPL 好了"，而是一个双层故事：
 | **CHE Even Pairs** | — | 40 | 1 | EVQ L=100 43.7% < Geo 72.9%（⚠️ 负面，τ=5 过极端） | **C** |
 
 **统计汇总**：6 个模型规模（50M-750M），6 个训练长度（128-2048），最多 3×9=27 seed，99-run τ sweep，4 种 PE baseline 对比（DAPE/PI/YaRN/NTK），2 个域（text+video），5 个语料 R² 验证。
+
+---
+
+## 17C. 🔴 PE 论文对标分析（2026-03-11 网络调研，事实驱动）
+
+> **此节基于对 DAPE/FIRE/YaRN/LongRoPE/ALiBi 论文的网络调研，确保对比基于事实而非假设。**
+
+### 从零训练 PE 论文（与 EVQ 同赛道）
+
+| 论文 | 会议/等级 | 最大模型 | 训练长度 | PPL评估 | 下游/检索 | 理论贡献 | 统计严谨性 |
+|------|-----------|----------|----------|---------|-----------|----------|-----------|
+| **FIRE** | ICLR 2024 poster | 350M | ≤2048 | C4/arXiv/Github | **SCROLLS(7) + GLUE + SuperGLUE** | 中(函数插值) | 一般 |
+| **DAPE** | NeurIPS 2024 poster | 125M-350M | 128/512/1024 | Arxiv/Books3 | CHE算法推理(非标准NLP) | 中(数据自适应MLP) | 一般 |
+| **ALiBi** | ICLR 2022 | 1.3B | — | ✅ | ❌ | 中 | 一般 |
+| **Kerple** | — | 125M-350M | — | ✅ | ❌ | 中 | 一般 |
+| **EVQ** | 目标NeurIPS 2026 | **750M**(5规模:50M-750M) | 128-2048(progressive) | **多域5语料** | **Passkey 100% + NIAH** | **极强**(闭合解+最优性) | **极强**(99-run sweep, 6-seed zero-var) |
+
+### 微调预训练模型 PE 论文（不同赛道，不可直接对比）
+
+| 论文 | 会议 | 基座模型 | 下游任务 | 理论贡献 |
+|------|------|----------|----------|----------|
+| **YaRN** | ICLR 2024 | LLaMA2-7B/13B, Mistral-7B | ARC-C/HellaSwag/MMLU/TruthfulQA | 较低(工程方法) |
+| **LongRoPE** | ICML 2024 | LLaMA2-7B, Mistral-7B | Open LLM Benchmark | 较低(搜索优化) |
+
+### EVQ 优势维度（在从零训练赛道中领先）
+
+1. **模型规模最大之一**：750M > DAPE(350M), FIRE(350M)，仅次于 ALiBi(1.3B)
+2. **理论深度无出其右**：唯一给出频率分配闭合最优解的工作
+3. **统计严谨性最强**：99-run τ sweep + 6-seed zero variance + R²>0.999 跨5语料
+4. **训练范式创新**：三阶段 progressive 揭示超线性放大（34.6%→52.0%→81.2%）
+5. **推理时协同**：EVQ+YaRN 正交协同是全新发现，为 PE 研究开辟新维度
+
+### EVQ 需要补强的维度
+
+1. **标准NLP下游缺失**：FIRE 有 SCROLLS+GLUE+SuperGLUE；YaRN 有 ARC-C/MMLU 等。EVQ 完全没有。DAPE 也没有但它被 poster 接收——说明 poster 不强制要求，但 spotlight 建议补
+2. **训练长度较短**：最长 2048（计划 8K）。但从零训练成本远高于微调，2048 在同赛道中正常
+
+### 修正后投稿概率估计
+
+**当前实验（截至 Phase 17c）**：
+- Poster: **65-75%** — 理论+统计在从零训练 PE 中最强，规模超 DAPE/FIRE，缺下游但 DAPE 先例在
+- Spotlight: **18-25%** — 需要 reviewer 特别看重理论创新+统计严谨性
+- Oral/BP: **3-5%** — 理论虽美但缺大规模验证和下游
+
+**完成 Phase 20 后（1.5B + 下游 eval）**：
+- Poster: **80-88%** — 1.5B 成为从零训练 PE 最大规模（超 ALiBi 的 1.3B），补下游堵住攻击面
+- Spotlight: **28-38%** — 完整叙事：理论+最大规模+下游+跨模态
+- Oral/BP: **5-10%** — 如果 1.5B progressive 显示更强超线性放大
 
 ---
 
@@ -1047,11 +1095,36 @@ EVQ 的价值不只是"换一行代码 PPL 好了"，而是一个双层故事：
 
 **需要的**：至少一个 ≥1B 的 Pure EVQ (r=0) 实验，或者把当前 750M continue 扩展到多 seed / clean downstream。LoRA 仍然不是干净验证路径（见教训 §17.5）。
 
-**风险评估**：PE 论文惯例是 125M-350M（FIRE, DAPE, Kerple 都是），不需要 7B。但 750M Pure EVQ 会让论文更强。GPU 预算是约束。
+**风险评估（基于 2026-03 网络调研事实）**：
 
-#### 问题 3：下游任务 beyond passkey（⚠️ 非致命弱点，锦上添花项）
+**从零训练 PE 论文模型规模对比**：
+| 论文 | 会议 | 最大模型(从零训) | 评估指标 |
+|------|------|-----------------|----------|
+| FIRE | ICLR 2024 poster | **350M** | PPL + SCROLLS(7任务) + GLUE + SuperGLUE |
+| DAPE | NeurIPS 2024 poster | **125M-350M** | PPL(Arxiv/Books3) + CHE算法推理 |
+| ALiBi | ICLR 2022 | **1.3B** | PPL |
+| Kerple | — | **125M-350M** | PPL |
+| **EVQ (我们)** | **目标 NeurIPS 2026** | **750M** (5个规模: 50M-750M) | PPL(多域) + Passkey + NIAH + R² |
 
-**重要背景**：DAPE (2024) 同样只有 PPL + passkey，无 NLP 下游准确率，照样被接收为 poster。我们的三阶段 progressive + EVQ+YaRN + 99-run sweep 等证据体系远超 DAPE 标准。核心叙事"训练时 stronger + 推理时完美适配"用 PPL+passkey 已充分支撑。下游任务是冲 spotlight 的加分项，但缺少它不构成 reject 理由。
+**微调预训练模型 PE 论文**（不同赛道，不可直接对比从零训练）：
+| 论文 | 会议 | 模型 | 评估指标 |
+|------|------|------|----------|
+| YaRN | ICLR 2024 | LLaMA2-7B/13B, Mistral-7B | PPL + Passkey + ARC-C/HellaSwag/MMLU/TruthfulQA |
+| LongRoPE | ICML 2024 | LLaMA2-7B, Mistral-7B | PPL + Passkey + Open LLM Benchmark |
+
+**结论**：EVQ 的 750M 在**从零训练 PE 论文中已是最大规模之一**（仅次于 ALiBi 的 1.3B）。DAPE 和 FIRE 最大只到 350M。YaRN/LongRoPE 用 7B 但是微调预训练模型，是完全不同的范式（成本低 10-100×，不能说明 PE 本身效果）。1.5B 计划完成后将成为从零训练 PE 论文最大规模。GPU 预算是约束。
+
+#### 问题 3：下游任务 beyond passkey（⚠️ 需要注意但可防御）
+
+**基于网络调研的事实对比**：
+- **DAPE** (NeurIPS 2024 poster)：PPL + CHE算法推理，**无标准NLP下游**，模型最大350M → 成功接收
+- **FIRE** (ICLR 2024 poster)：PPL + **SCROLLS(7任务) + GLUE + SuperGLUE**，模型最大350M → 有真实下游任务
+- **YaRN** (ICLR 2024)：PPL + Passkey + **ARC-C/HellaSwag/MMLU/TruthfulQA** → 有真实下游，但是微调7B预训练模型（不可直接对比）
+- **ALiBi** (ICLR 2022)：主要PPL，1.3B → 无标准下游
+
+**客观判断**："PE论文不需要下游"这个说法需要 nuance。DAPE 证明了 poster 可以不需要标准NLP下游，但 FIRE 确实有 SCROLLS+GLUE。如果目标是 poster，当前证据组合（PPL+passkey+NIAH+R²+99-run sweep）类比 DAPE 足够。如果冲 spotlight，补一组 SCROLLS 或简单 downstream 会大大增强说服力。
+
+**核心防御逻辑**：我们的证据体系（三阶段 progressive + EVQ+YaRN + 99-run sweep + 5规模 scaling + 多域 R²）在**广度和统计严谨性上远超 DAPE 标准**，且模型规模(750M)是 DAPE(350M) 的 2 倍以上。核心叙事"训练时 stronger + 推理时完美适配"用 PPL+passkey 已充分支撑。
 
 **现状**：
 - PPL（多规模、多域）✅
