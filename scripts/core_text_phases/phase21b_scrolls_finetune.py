@@ -117,7 +117,21 @@ def parse_args():
                    help="Max tokens to generate during eval")
     p.add_argument("--eval_samples", type=int, default=200,
                    help="Number of validation samples for ROUGE eval")
-    return p.parse_args()
+    p.add_argument("--eval_seq_len", type=int, default=0,
+                   help="Eval context length (0=same as --seq_len). Use 16384 for 16K eval.")
+    p.add_argument("--eval_yarn", type=int, default=0, choices=[0, 1],
+                   help="Apply YaRN at eval time only (useful: finetune raw @8K, eval +YaRN @16K)")
+    p.add_argument("--eval_yarn_scale", type=float, default=0.0,
+                   help="YaRN scale for eval (0=auto from eval_seq_len/seq_len)")
+    args = p.parse_args()
+    # Default eval_seq_len to seq_len
+    if args.eval_seq_len <= 0:
+        args.eval_seq_len = args.seq_len
+    # Auto compute eval YaRN scale
+    if args.eval_yarn and args.eval_yarn_scale <= 0:
+        args.eval_yarn_scale = args.eval_seq_len / args.seq_len
+        print(f"  Auto eval_yarn_scale = {args.eval_yarn_scale:.1f}")
+    return args
 
 
 # ── Helpers ────────────────────────────────────────────────────────────
@@ -131,12 +145,29 @@ def geometric_inv_freq(dim=64, base=500000.0):
 
 
 def apply_yarn_scaling(inv_freq, scale, original_max_pos=2048):
-    """Apply YaRN NTK-aware scaling to inv_freq."""
-    # NTK-aware interpolation: scale the base frequency
-    # Equivalent to: base_new = base * scale^(dim/(dim-2))
-    dim = len(inv_freq) * 2
-    factor = scale ** (dim / (dim - 2))
-    return inv_freq / factor
+    """Apply real YaRN progressive frequency scaling with smoothstep ramp.
+
+    This is the CORRECT YaRN implementation (per-channel scaling):
+      - High-freq channels (k < 20% of K): unchanged
+      - Mid-freq channels: smoothstep interpolation
+      - Low-freq channels (k > 90% of K): full NTK scaling
+
+    WARNING: The previous version was NTK-aware (all channels / same factor),
+    which DESTROYS EVQ frequency allocation structure. Real YaRN preserves it.
+    """
+    if scale <= 1.0:
+        return inv_freq.clone()
+    K = len(inv_freq)
+    idx = torch.arange(K, dtype=torch.float64)
+    start = int(0.20 * K)
+    end = int(0.90 * K)
+    if end <= start:
+        end = min(K - 1, start + 1)
+    ramp = torch.clamp((idx - start) / float(max(1, end - start)), 0.0, 1.0)
+    ramp = ramp * ramp * (3.0 - 2.0 * ramp)  # smoothstep
+    temperature = 1.0 + 0.07 * math.log2(scale)
+    yarn_scale = (scale ** ramp) * (temperature ** (0.5 * ramp))
+    return (inv_freq.double() / yarn_scale).float()
 
 
 def save_json(path, data):
@@ -474,8 +505,15 @@ def train_finetune(model, input_ids, loss_masks, args, on_step_end=None):
 # ── Generation ────────────────────────────────────────────────────────
 
 @torch.no_grad()
-def generate(model, input_ids, max_new_tokens=512, temperature=0.0):
-    """Simple greedy/sampling generation for evaluation."""
+def generate(model, input_ids, max_new_tokens=512, temperature=0.0, max_ctx_len=16384):
+    """Simple greedy/sampling generation for evaluation.
+
+    Args:
+        max_ctx_len: Maximum context window. Must match the rope length the
+            model was extended to. Default 16384 (NOT 8192 — the old hardcoded
+            value caused eval@16K to silently truncate input to 8K, producing
+            random outputs on QA tasks).
+    """
     model.eval()
     device = next(model.parameters()).device
 
@@ -484,8 +522,8 @@ def generate(model, input_ids, max_new_tokens=512, temperature=0.0):
         ids = ids.unsqueeze(0)
 
     for _ in range(max_new_tokens):
-        # Only use last seq_len tokens if sequence gets too long
-        ctx = ids if ids.size(1) <= 8192 else ids[:, -8192:]
+        # Only use last max_ctx_len tokens if sequence gets too long
+        ctx = ids if ids.size(1) <= max_ctx_len else ids[:, -max_ctx_len:]
 
         amp_ctx = (torch.amp.autocast("cuda", dtype=DTYPE)
                    if USE_AUTOCAST and DEVICE == "cuda" else nullcontext())
@@ -539,7 +577,8 @@ def evaluate_rouge(model, tokenizer, val_samples, task, args):
 
         # Tokenize prompt (truncate to leave room for generation)
         prompt_ids = tokenizer.encode(prompt_str, add_special_tokens=True)
-        max_prompt = args.seq_len - args.max_gen_tokens
+        eval_ctx = args.eval_seq_len  # use eval context length, not train seq_len
+        max_prompt = eval_ctx - args.max_gen_tokens
         if len(prompt_ids) > max_prompt:
             half = max_prompt // 2
             prompt_ids = prompt_ids[:half] + prompt_ids[-(max_prompt - half):]
@@ -551,7 +590,10 @@ def evaluate_rouge(model, tokenizer, val_samples, task, args):
         model.extend_rope(needed_len)
 
         # Generate
-        output_ids = generate(model, prompt_tensor, max_new_tokens=args.max_gen_tokens)
+        output_ids = generate(
+            model, prompt_tensor, max_new_tokens=args.max_gen_tokens,
+            max_ctx_len=eval_ctx,
+        )
         generated_ids = output_ids[len(prompt_ids):]
         generated_text = tokenizer.decode(generated_ids, skip_special_tokens=True).strip()
 
@@ -602,7 +644,8 @@ def evaluate_accuracy(model, tokenizer, val_samples, task, args):
         gold = answer_str.strip()
 
         prompt_ids = tokenizer.encode(prompt_str, add_special_tokens=True)
-        max_prompt = args.seq_len - 16
+        eval_ctx = args.eval_seq_len  # use eval context length, not train seq_len
+        max_prompt = eval_ctx - 16
         if len(prompt_ids) > max_prompt:
             half = max_prompt // 2
             prompt_ids = prompt_ids[:half] + prompt_ids[-(max_prompt - half):]
@@ -610,7 +653,9 @@ def evaluate_accuracy(model, tokenizer, val_samples, task, args):
         prompt_tensor = torch.tensor(prompt_ids, dtype=torch.long)
         model.extend_rope(len(prompt_ids) + 16)
 
-        output_ids = generate(model, prompt_tensor, max_new_tokens=16)
+        output_ids = generate(
+            model, prompt_tensor, max_new_tokens=16, max_ctx_len=eval_ctx,
+        )
         gen_ids = output_ids[len(prompt_ids):]
         gen_text = tokenizer.decode(gen_ids, skip_special_tokens=True).strip()
 
@@ -744,6 +789,33 @@ def main():
     if DEVICE == "cuda":
         torch.cuda.empty_cache()
 
+    # ── Apply eval-time YaRN if requested ──
+    if args.eval_yarn and args.eval_yarn_scale > 1.0:
+        print(f"\n  Applying eval-time YaRN (scale={args.eval_yarn_scale:.1f})...")
+        # Get base inv_freq (before any training-time YaRN)
+        tier_cfg_eval = TIER_CONFIGS[args.tier]
+        dim_eval = tier_cfg_eval["head_dim"]
+        if args.rope == "evq":
+            base_inv = evq_cosh_inv_freq(head_dim=dim_eval, tau=args.tau, base=args.base)
+        else:
+            base_inv = geometric_inv_freq(dim_eval, args.base)
+
+        # If training already used YaRN, we need cumulative scaling
+        if args.yarn:
+            total_scale = args.yarn_scale * args.eval_yarn_scale
+        else:
+            total_scale = args.eval_yarn_scale
+        eval_inv_freq = apply_yarn_scaling(base_inv, total_scale)
+
+        for block in model.blocks:
+            block.attn.rope.inv_freq.copy_(eval_inv_freq.to(block.attn.rope.inv_freq.device))
+        model.extend_rope(args.eval_seq_len)
+        print(f"  inv_freq updated for eval: max={eval_inv_freq.max():.8f} min={eval_inv_freq.min():.10f}")
+    elif args.eval_seq_len > args.seq_len:
+        # Just extend rope table without YaRN — raw extrapolation
+        model.extend_rope(args.eval_seq_len)
+        print(f"\n  Extended rope to {args.eval_seq_len} (raw, no YaRN)")
+
     # ── Evaluate ──
     task_info = TASK_PROMPTS[args.task]
     if task_info["eval_metric"] == "rouge":
@@ -758,8 +830,12 @@ def main():
         "rope": args.rope,
         "tau": args.tau if args.rope == "evq" else None,
         "base": args.base,
-        "yarn": args.yarn,
+        "yarn_train": args.yarn,
+        "yarn_train_scale": args.yarn_scale if args.yarn else None,
         "seq_len": args.seq_len,
+        "eval_seq_len": args.eval_seq_len,
+        "eval_yarn": args.eval_yarn,
+        "eval_yarn_scale": args.eval_yarn_scale if args.eval_yarn else None,
         "steps": args.steps,
         "lr": args.lr,
         "dropout": args.dropout,
