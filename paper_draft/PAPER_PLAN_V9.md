@@ -155,7 +155,7 @@ NeurIPS 10pt single column，一页约 55-60 行正文 or 3 个 medium table。
 | Subsection | 保留？ | 处理 |
 |------------|--------|------|
 | 4.1 Waterbed inequality | ✅ 保留 | 公式 + 3 句解释 |
-| 4.2 Finite-base calibration | ⚠️ 精简 | 删 table，保留 1 句 "R²>0.99 confirms affine approximation" |
+| 4.2 Finite-base calibration | ⚠️ 精简 | 删 table，保留 1 句 "R²>0.9 across 5 corpora confirms broadband surrogate" |
 | 4.3 τ* scaling law | ✅ 保留 | 公式 + 2 句推导概要 |
 | 4.4 Collision-block | ✅ 保留 | 公式 + dead zone prediction |
 | ~~4.5 Implicit priors~~ | ❌ 删除 | 移 1 句到 Related Work |

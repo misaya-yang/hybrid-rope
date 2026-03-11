@@ -87,7 +87,7 @@ $$K(\phi_1,\phi_2) \xrightarrow{b,L\to\infty} \alpha\delta(\phi_1-\phi_2) + \bet
 
 **残差分析**（论文 Appendix E-G）：
 - 有限 base 残差 = O(1/ln b)，即 b=10⁴ 时约 11%
-- Table 1 验证：R²_mid ≈ 0.994（b=10⁴）和 0.995（b=5×10⁵）
+- 真实语料先验验证：R²≈0.91（FineWeb-Edu D(Δ)），短窗口 L=512 可达 0.96
 - Appendix G Proposition G.2 给出了精确的有限 (b,L) 残差上界
 
 **这是论文最重要的近似，也是唯一的核心近似。论文在 Limitations 中诚实地承认了这一点。**
@@ -258,7 +258,7 @@ $$(\alpha^*, \beta^*) = \arg\min_{\alpha, \beta} \iint_{[0,1]^2} \left[ K(\phi_1
 ### 7.0.2 近似质量的量化
 
 - broadband 残差 = O(1/ln b)。b=10⁴ 时约 11%，b=5×10⁵ 时约 8%
-- Table 1 验证：R²_mid ≈ 0.994（b=10⁴）和 0.995（b=5×10⁵）
+- 真实语料先验验证：R²≈0.91（FineWeb-Edu D(Δ)），短窗口 L=512 可达 0.96
 - Appendix G Proposition G.2 给出显式的有限 (b, L) 残差上界
 
 ### 7.0.3 Learnable τ 自动补偿残差
@@ -345,7 +345,7 @@ TinyStories 可能被审稿人攻击为"过于简单"。但这个攻击实际上
 |----------------|------|
 | "cosh 是凑出来的" | 不是。是常系数 EL-ODE 的齐次解。常系数来自精确核的 Galerkin 投影（§7.0.1） |
 | "为什么最优一定在 cosh 族" | cosh 族是投影后常系数 ODE 的精确解。精确核下是 Fredholm 积分方程，无闭式解，但投影残差 <11% 且 learnable τ 自动补偿 |
-| "Broadband 近似太粗糙" | 两层回应：(1) R²>0.99 对 mid-region 拟合成立 (Table 1)；(2) Algorithm 1 的全矩阵投影残差 35-49%，说明常数 (α,β) 近似有局限，但 cosh **函数族**本身仍然是实验最优——128-tok 实验中 EVQ 打赢所有 baseline 包括无约束 DAPE |
+| "Broadband 近似太粗糙" | 两层回应：(1) 真实语料先验下 R²>0.9（FineWeb-Edu 实测 0.91，L=512 达 0.96）；(2) Algorithm 1 的全矩阵投影残差 35-49%，说明常数 (α,β) 近似有局限，但 cosh **函数族**本身仍然是实验最优——128-tok 实验中 EVQ 打赢所有 baseline 包括无约束 DAPE |
 | "τ 怎么选" | 三种方式：(1) 默认 τ=1.5（跨协议/跨数据集稳定），(2) 3-point mini-sweep，(3) learnable τ 自动收敛到 reasonable 值 (1.14)。Algorithm 1 是理论联系工具但数值精度不足 |
 | "1D 参数够用吗" | 128-tok 实验：EVQ (1 param) 击败 DAPE (32 params) PPL@8K -3.1%，PPL@2K -7.4%。cosh 族为无梯度通道提供结构保证 |
 | "Waterbed 说明 EVQ 没用" | 恰恰相反：waterbed 是可检验预测，Table 4-5 完美验证了方向性 |

@@ -278,7 +278,7 @@ def build_pdf():
 
     story.append(Paragraph(
         "<b>Key Approximation:</b> Only Step 3 (broadband projection) is approximate. "
-        "Residual is O(1/ln b), with R<super>2</super> &gt; 0.99 in the mid-frequency band. "
+        "Residual is O(1/ln b), with R<super>2</super> &gt; 0.9 under empirical distance prior (0.91 on FineWeb-Edu). "
         "All other steps are exact derivations.",
         s_callout
     ))
