@@ -296,7 +296,7 @@ def run_single_experiment(work_dir, cfg, base, tau, seed, d_head, device, dry_ru
     
     # Create inv_freq
     if tau > 0:
-        inv_freq = evq_cosh_inv_freq(dim=d_head, tau=tau, base=float(base))
+        inv_freq = evq_cosh_inv_freq(head_dim=d_head, tau=tau, base=float(base))
     else:
         inv_freq = geometric_inv_freq(dim=d_head, base=float(base))
     
