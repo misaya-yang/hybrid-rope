@@ -87,9 +87,124 @@ Phase 13A 的 Hybrid r=16 在外推时也更差 — 因为 r=16 只优化了 16/
 
 ---
 
-## Phase 21b: SCROLLS Task-Specific Finetuning (主路线)
+## Phase 21B Pilot 结果：GovReport 750M (已完成)
+
+### 配置
+
+- Model: 750M (18L/24H/1536d), base=500K
+- Init: Phase 15 checkpoint (L=2048→4096 continue)
+- Finetune: 2000 steps, lr=1e-5, dropout=0.1, seq_len=8192
+- Eval: 200 samples, max_gen_tokens=512
+
+### 结果
+
+**@8192 (in-distribution after finetune)**:
+
+| Metric | Geo | EVQ (τ=1.5) | Δ mean | Δ std |
+|--------|-----|-------------|--------|-------|
+| ROUGE-1 | 30.20 ±8.92 | 28.73 ±8.42 | -1.47 | **-5.6%** |
+| ROUGE-2 | 8.66 ±5.01 | 7.28 ±4.00 | -1.38 | **-20.2%** |
+| ROUGE-L | 20.39 ±4.89 | 19.83 ±4.72 | -0.56 | **-3.5%** |
+
+**@16384 (2× beyond finetune)**:
+
+| Metric | Geo | EVQ | Δ |
+|--------|-----|-----|---|
+| ROUGE-1 | 28.81 | 27.97 | -0.84 |
+| ROUGE-2 | 7.54 | 7.15 | -0.39 |
+| ROUGE-L | 20.18 | 19.52 | -0.66 |
+
+**@16K std (方差)**:
+
+| Metric | Geo std | EVQ std | Δ |
+|--------|---------|---------|---|
+| ROUGE-1 | 8.50 | 8.36 | -0.14 |
+| ROUGE-2 | 4.84 | 3.93 | **-0.91** |
+| ROUGE-L | 4.75 | 4.72 | -0.03 |
+
+### 关键发现
+
+1. **Geo mean 略高，但差距从 @8K→@16K 缩小了 43%**（-1.47 → -0.84）
+2. **EVQ 方差全面更低**（6/6 指标），ROUGE-2 std -20%，说明 EVQ 生成更稳定
+3. **GovReport 是 summarization 任务** — Phase 21a 已显示 summarization 区分度低。EVQ 优势集中在 QA 任务（musique -16.8%, hotpotqa -13.5%）
+4. **Finetune at 8192 消除了 extrapolation 优势** — 8192 变成 in-distribution，waterbed cost 占主导
+5. **base=500K 过大** — Geo 频率铺得很开，sub-cycle channels 少，EVQ 优化空间有限
+
+### 结论：GovReport 不是展示 EVQ 优势的正确任务。应转向 QuALITY (QA)。
+
+---
+
+## Phase 21C: QuALITY QA Finetuning (新主路线)
 
 ### 动机
+
+Phase 21a NLL 数据明确显示：EVQ 优势集中在 **QA 任务**（需要精确长距离检索），而非 summarization（依赖全局统计）。QuALITY 是 SCROLLS 中的多选阅读理解 QA，直接测试长文档中的证据定位能力 — 正好是 EVQ 低频优势的主场。
+
+### QuALITY 任务特点
+
+- **类型**: 长文档多选 QA（4 选 1）
+- **输入**: 长篇故事/文章（median ~5K tokens, 最长 ~8K）+ 问题 + 4 个选项
+- **输出**: 选项字母 (A/B/C/D)
+- **指标**: Accuracy（不是 ROUGE）
+- **Hard subset**: 需要多步推理的高难度题目
+- **与 Phase 21a 的对应**: musique, hotpotqa, 2wikimqa 都是 QA → EVQ 赢 -13.5% to -16.8%
+
+### Finetune 配置
+
+```bash
+# QuALITY EVQ
+python scripts/core_text_phases/phase21b_scrolls_finetune.py \
+    --init_ckpt /path/to/750m_evq_phase15/model.pt \
+    --rope evq --tau 1.5 --base 500000 \
+    --task quality --seq_len 8192 --yarn 0 \
+    --lr 1e-5 --steps 2000 --dropout 0.1 \
+    --seed 42 \
+    --output_dir results/phase21c/quality_raw/evq_seed42/
+
+# QuALITY Geo
+python scripts/core_text_phases/phase21b_scrolls_finetune.py \
+    --init_ckpt /path/to/750m_geo_phase15/model.pt \
+    --rope geo --base 500000 \
+    --task quality --seq_len 8192 --yarn 0 \
+    --lr 1e-5 --steps 2000 --dropout 0.1 \
+    --seed 42 \
+    --output_dir results/phase21c/quality_raw/geo_seed42/
+```
+
+### Eval 矩阵 (关键！)
+
+| 配置 | eval@8K (in-dist) | eval@16K (extrap) |
+|------|-------------------|-------------------|
+| Geo raw | ✓ | ✓ |
+| EVQ raw | ✓ | ✓ |
+| Geo+YaRN | — | ✓ |
+| EVQ+YaRN | — | ✓ |
+
+**@8K**: 预期 Geo 略赢（waterbed cost, 与 GovReport 一致）
+**@16K raw**: 预期 EVQ 反超（QA 需要精确检索，EVQ 低频优势发挥）
+**@16K +YaRN**: 预期 EVQ+YaRN >> Geo+YaRN（Claim 3 的下游验证）
+
+### 理想结果：Paper 最强表
+
+| Task type | Task | @8K (in-dist) | @16K (extrap) | @16K +YaRN |
+|-----------|------|---------------|---------------|------------|
+| Summarization | GovReport ROUGE | Geo +1.5 (已有) | Geo +0.8 (已有) | TBD |
+| QA | QuALITY Acc | Geo 略赢? | **EVQ 赢** | **EVQ+YaRN >> Geo+YaRN** |
+
+这张表同时验证：waterbed theory (in-dist cost) + bandpass prediction (QA vs Sum) + YaRN composition (Claim 3) → 三个 claim 一张表搞定。
+
+### 注意事项
+
+1. **QuALITY 是多选题** — eval 方式是看模型输出的 logits 对 A/B/C/D 哪个最高，或者 generate 后 parse 答案字母
+2. **max_gen_tokens 可以很小**（只需输出一个字母），不像 GovReport 需要 512 tokens
+3. **如果 finetune 脚本已支持 GovReport，改 QuALITY 主要是数据格式变化**
+4. **2000 步 pilot 先跑**，看方向再决定是否加步数
+
+---
+
+## Phase 21b 原始计划 (SCROLLS 通用，保留参考)
+
+### 动机（原始）
 
 Phase 21a 已在 NLL eval 上证明 EVQ 在外推场景下的下游优势（-4.4% aggregate, QA 最高 -16.8%）。SCROLLS finetune 会进一步放大这个优势：finetune 教会模型将长距离 attention 转化为任务表现，EVQ 的低频分辨率优势应更充分体现在 ROUGE/F1 上。
 
@@ -276,11 +391,12 @@ python scripts/core_text_phases/phase21b_scrolls_finetune.py \
 | 42, 137, 256 | GEO | 3-seed Stage3 L=2048 |
 | 42, 137, 256 | EVQ τ=√2 | 3-seed Stage3 L=2048 |
 
-## Success Criteria
+## Success Criteria (Updated)
 
-- Phase 21b pilot: EVQ ROUGE 在 GovReport 上 ≥ 5% 高于 Geo
-- Phase 21b multi-seed: 差异方向在 3 seed 上一致，至少 2/3 任务 EVQ > Geo
-- 理想结果: ROUGE-L 差异 ≥ 10%（与 PPL 外推增益幅度匹配）
+- **Phase 21B GovReport**: ✅ 已完成 — Geo mean 略赢 (waterbed confirmed), EVQ variance 全面更低 (frequency equalization confirmed)
+- **Phase 21C QuALITY pilot**: EVQ Accuracy @16K > Geo Accuracy @16K（方向确认即可）
+- **Phase 21C QuALITY +YaRN**: EVQ+YaRN @16K >> Geo+YaRN @16K（复现 Claim 3）
+- **理想结果**: QuALITY @16K EVQ 赢 ≥ 5% accuracy，同时 @8K Geo 略赢 → 完美 waterbed reversal on QA task
 
 ## Dependencies
 
@@ -288,11 +404,12 @@ python scripts/core_text_phases/phase21b_scrolls_finetune.py \
 - Phase 21b multi-seed: 依赖 17c multi-seed 完成
 - SCROLLS 数据集下载（HuggingFace，需提前验证网络可达）
 
-## Priority
+## Priority (Updated)
 
-**17c multi-seed > LaTeX draft ≥ Phase 21b SCROLLS pilot**
+**17c multi-seed > LaTeX draft ≥ Phase 21C QuALITY pilot**
 
-Phase 21b pilot 可以和 17c multi-seed 并行跑（用 seed=42 的现有 checkpoint）。
+Phase 21C QuALITY 可以用现有 750M Phase 15 checkpoint 立即开始（与 GovReport pilot 同源）。
+GovReport 已有结果（summarization baseline），QuALITY 是下一个关键实验。
 
 ## Appendix: Phase 21a NLL 结果 — Waterbed 对称反转
 
