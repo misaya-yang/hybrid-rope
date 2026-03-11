@@ -1,0 +1,30 @@
+{
+  "5_datasets": {
+    "fineweb-edu": {
+      "D_mean": 0.000244,
+      "tail_alpha": -0.06,
+      "source": "cached 50M",
+      "status": "success"
+    },
+    "slim-pajama": {
+      "status": "failed",
+      "error": "Dataset 'modelscope/slim_pajama' doesn't exist on the Hub or cannot be accessed."
+    },
+    "proof-pile": {
+      "status": "failed",
+      "error": "Dataset 'modelscope/proof_pile' doesn't exist on the Hub or cannot be accessed."
+    },
+    "tinystories": {
+      "status": "failed",
+      "error": "Dataset 'modelscope/tiny_stories' doesn't exist on the Hub or cannot be accessed."
+    },
+    "c4-en": {
+      "status": "failed",
+      "error": "Dataset 'modelscope/c4' doesn't exist on the Hub or cannot be accessed."
+    }
+  },
+  "key_finding": "Cross-dataset D(\u0394) validation",
+  "expected": "All should show tail ~\u0394^-0.05 to -0.1 (flat)",
+  "vs_synthetic": "Synth \u0394^-1.5 decays much faster",
+  "timestamp": "2026-03-11T10:25:00"
+}

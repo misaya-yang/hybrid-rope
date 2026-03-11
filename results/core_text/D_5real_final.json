@@ -1,0 +1,31 @@
+{
+  "5_datasets": {
+    "fineweb-edu": {
+      "D_mean": 0.000244,
+      "tail_alpha": -0.06,
+      "source": "cached 50M",
+      "status": "success"
+    },
+    "slim-pajama": {
+      "status": "failed",
+      "error": "Dataset 'cerebras/SlimPajama-627B' doesn't exist on the Hub or cannot be accesse"
+    },
+    "proof-pile": {
+      "status": "failed",
+      "error": "Dataset 'EleutherAI/proof-pile' doesn't exist on the Hub or cannot be accessed."
+    },
+    "tinystories": {
+      "D_mean": 0.000244,
+      "tail_alpha": -0.01,
+      "source": "HF 5M",
+      "status": "success"
+    },
+    "c4": {
+      "D_mean": 0.000244,
+      "tail_alpha": -0.06,
+      "source": "HF 5M",
+      "status": "success"
+    }
+  },
+  "timestamp": "2026-03-11T10:30:00"
+}
