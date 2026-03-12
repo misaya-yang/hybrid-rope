@@ -1,0 +1,588 @@
+
+============================================================
+  Eval [1/8] Geo @4K
+============================================================
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+============================================================
+  Phase 21B: QuALITY QA Eval (distractor-padded)
+  Model: /root/autodl-tmp/results/phase21b/quality_454m/finetune/geo_seed42/model.pt
+  RoPE: geo  |  Target len: 4096
+============================================================
+  RoPE: Geometric (base=500000.0)
+  Loading model from /root/autodl-tmp/results/phase21b/quality_454m/finetune/geo_seed42/model.pt...
+  Model params: 454.2M
+  Loading validation: /root/autodl-tmp/datasets/scrolls_quality/quality/validation.jsonl
+  Val: 2086 samples
+  Loading distractor pool: /root/autodl-tmp/datasets/scrolls_quality/quality/train.jsonl
+  Distractor pool: 151 unique articles
+
+  Evaluating QuALITY accuracy on 200 samples...
+  Target context length: 4096 tokens
+    [20/200] acc=25.0% (5/20)  (2.6 samples/s, ETA=69s)
+    [40/200] acc=22.5% (9/40)  (2.6 samples/s, ETA=61s)
+    [60/200] acc=23.3% (14/60)  (2.6 samples/s, ETA=53s)
+    [80/200] acc=25.0% (20/80)  (2.7 samples/s, ETA=45s)
+    [100/200] acc=24.0% (24/100)  (2.7 samples/s, ETA=38s)
+    [120/200] acc=23.3% (28/120)  (2.7 samples/s, ETA=30s)
+    [140/200] acc=23.6% (33/140)  (2.7 samples/s, ETA=22s)
+    [160/200] acc=23.1% (37/160)  (2.7 samples/s, ETA=15s)
+    [180/200] acc=21.1% (38/180)  (2.7 samples/s, ETA=7s)
+    [200/200] acc=20.5% (41/200)  (2.7 samples/s, ETA=0s)
+
+  QuALITY Results (200 samples, 75s):
+    Accuracy: 20.50% (41/200)
+    Random baseline: 25.0%
+    Above random: -4.50%
+    (option_match=13, text_match=28)
+
+  Results saved: /root/autodl-tmp/results/phase21b/quality_454m/eval/4k/geo/result.json
+{
+  "accuracy": 20.5,
+  "correct": 41,
+  "total": 200,
+  "random_baseline": 25.0,
+  "above_random": -4.5,
+  "option_match": 13,
+  "text_match": 28,
+  "eval_time_sec": 74.8,
+  "target_len": 4096
+}
+  [OK] Result saved
+
+============================================================
+  Eval [2/8] EVQ @4K
+============================================================
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+============================================================
+  Phase 21B: QuALITY QA Eval (distractor-padded)
+  Model: /root/autodl-tmp/results/phase21b/quality_454m/finetune/evq_seed42/model.pt
+  RoPE: evq  |  Target len: 4096
+============================================================
+  RoPE: EVQ (tau=1.41421, base=500000.0)
+  Loading model from /root/autodl-tmp/results/phase21b/quality_454m/finetune/evq_seed42/model.pt...
+  Model params: 454.2M
+  Loading validation: /root/autodl-tmp/datasets/scrolls_quality/quality/validation.jsonl
+  Val: 2086 samples
+  Loading distractor pool: /root/autodl-tmp/datasets/scrolls_quality/quality/train.jsonl
+  Distractor pool: 151 unique articles
+
+  Evaluating QuALITY accuracy on 200 samples...
+  Target context length: 4096 tokens
+    [20/200] acc=35.0% (7/20)  (2.6 samples/s, ETA=70s)
+    [40/200] acc=27.5% (11/40)  (2.6 samples/s, ETA=61s)
+    [60/200] acc=26.7% (16/60)  (2.6 samples/s, ETA=54s)
+    [80/200] acc=28.7% (23/80)  (2.6 samples/s, ETA=46s)
+    [100/200] acc=28.0% (28/100)  (2.6 samples/s, ETA=38s)
+    [120/200] acc=25.8% (31/120)  (2.6 samples/s, ETA=30s)
+    [140/200] acc=26.4% (37/140)  (2.6 samples/s, ETA=23s)
+    [160/200] acc=26.9% (43/160)  (2.6 samples/s, ETA=15s)
+    [180/200] acc=26.7% (48/180)  (2.6 samples/s, ETA=8s)
+    [200/200] acc=26.5% (53/200)  (2.6 samples/s, ETA=0s)
+
+  QuALITY Results (200 samples, 76s):
+    Accuracy: 26.50% (53/200)
+    Random baseline: 25.0%
+    Above random: +1.50%
+    (option_match=12, text_match=41)
+
+  Results saved: /root/autodl-tmp/results/phase21b/quality_454m/eval/4k/evq/result.json
+{
+  "accuracy": 26.5,
+  "correct": 53,
+  "total": 200,
+  "random_baseline": 25.0,
+  "above_random": 1.5,
+  "option_match": 12,
+  "text_match": 41,
+  "eval_time_sec": 75.7,
+  "target_len": 4096
+}
+  [OK] Result saved
+
+============================================================
+  Eval [3/8] Geo @8K
+============================================================
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+============================================================
+  Phase 21B: QuALITY QA Eval (distractor-padded)
+  Model: /root/autodl-tmp/results/phase21b/quality_454m/finetune/geo_seed42/model.pt
+  RoPE: geo  |  Target len: 8192
+============================================================
+  RoPE: Geometric (base=500000.0)
+  Loading model from /root/autodl-tmp/results/phase21b/quality_454m/finetune/geo_seed42/model.pt...
+  Model params: 454.2M
+  Loading validation: /root/autodl-tmp/datasets/scrolls_quality/quality/validation.jsonl
+  Val: 2086 samples
+  Loading distractor pool: /root/autodl-tmp/datasets/scrolls_quality/quality/train.jsonl
+  Distractor pool: 151 unique articles
+
+  Evaluating QuALITY accuracy on 200 samples...
+  Target context length: 8192 tokens
+    [20/200] acc=20.0% (4/20)  (2.2 samples/s, ETA=81s)
+    [40/200] acc=22.5% (9/40)  (2.2 samples/s, ETA=71s)
+    [60/200] acc=18.3% (11/60)  (2.3 samples/s, ETA=62s)
+    [80/200] acc=21.2% (17/80)  (2.3 samples/s, ETA=53s)
+    [100/200] acc=17.0% (17/100)  (2.3 samples/s, ETA=44s)
+    [120/200] acc=18.3% (22/120)  (2.3 samples/s, ETA=35s)
+    [140/200] acc=18.6% (26/140)  (2.3 samples/s, ETA=27s)
+    [160/200] acc=19.4% (31/160)  (2.3 samples/s, ETA=18s)
+    [180/200] acc=17.8% (32/180)  (2.3 samples/s, ETA=9s)
+    [200/200] acc=18.0% (36/200)  (2.3 samples/s, ETA=0s)
+
+  QuALITY Results (200 samples, 88s):
+    Accuracy: 18.00% (36/200)
+    Random baseline: 25.0%
+    Above random: -7.00%
+    (option_match=9, text_match=27)
+
+  Results saved: /root/autodl-tmp/results/phase21b/quality_454m/eval/8k/geo/result.json
+{
+  "accuracy": 18.0,
+  "correct": 36,
+  "total": 200,
+  "random_baseline": 25.0,
+  "above_random": -7.0,
+  "option_match": 9,
+  "text_match": 27,
+  "eval_time_sec": 88.4,
+  "target_len": 8192
+}
+  [OK] Result saved
+
+============================================================
+  Eval [4/8] EVQ @8K
+============================================================
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+============================================================
+  Phase 21B: QuALITY QA Eval (distractor-padded)
+  Model: /root/autodl-tmp/results/phase21b/quality_454m/finetune/evq_seed42/model.pt
+  RoPE: evq  |  Target len: 8192
+============================================================
+  RoPE: EVQ (tau=1.41421, base=500000.0)
+  Loading model from /root/autodl-tmp/results/phase21b/quality_454m/finetune/evq_seed42/model.pt...
+  Model params: 454.2M
+  Loading validation: /root/autodl-tmp/datasets/scrolls_quality/quality/validation.jsonl
+  Val: 2086 samples
+  Loading distractor pool: /root/autodl-tmp/datasets/scrolls_quality/quality/train.jsonl
+  Distractor pool: 151 unique articles
+
+  Evaluating QuALITY accuracy on 200 samples...
+  Target context length: 8192 tokens
+    [20/200] acc=40.0% (8/20)  (2.2 samples/s, ETA=81s)
+    [40/200] acc=32.5% (13/40)  (2.2 samples/s, ETA=71s)
+    [60/200] acc=26.7% (16/60)  (2.2 samples/s, ETA=62s)
+    [80/200] acc=27.5% (22/80)  (2.3 samples/s, ETA=53s)
+    [100/200] acc=27.0% (27/100)  (2.3 samples/s, ETA=44s)
+    [120/200] acc=24.2% (29/120)  (2.3 samples/s, ETA=36s)
+    [140/200] acc=24.3% (34/140)  (2.3 samples/s, ETA=27s)
+    [160/200] acc=25.6% (41/160)  (2.2 samples/s, ETA=18s)
+    [180/200] acc=25.6% (46/180)  (2.3 samples/s, ETA=9s)
+    [200/200] acc=25.0% (50/200)  (2.3 samples/s, ETA=0s)
+
+  QuALITY Results (200 samples, 89s):
+    Accuracy: 25.00% (50/200)
+    Random baseline: 25.0%
+    Above random: +0.00%
+    (option_match=11, text_match=39)
+
+  Results saved: /root/autodl-tmp/results/phase21b/quality_454m/eval/8k/evq/result.json
+{
+  "accuracy": 25.0,
+  "correct": 50,
+  "total": 200,
+  "random_baseline": 25.0,
+  "above_random": 0.0,
+  "option_match": 11,
+  "text_match": 39,
+  "eval_time_sec": 88.8,
+  "target_len": 8192
+}
+  [OK] Result saved
+
+============================================================
+  Eval [5/8] Geo @16K
+============================================================
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+============================================================
+  Phase 21B: QuALITY QA Eval (distractor-padded)
+  Model: /root/autodl-tmp/results/phase21b/quality_454m/finetune/geo_seed42/model.pt
+  RoPE: geo  |  Target len: 16384
+============================================================
+  RoPE: Geometric (base=500000.0)
+  Loading model from /root/autodl-tmp/results/phase21b/quality_454m/finetune/geo_seed42/model.pt...
+  Model params: 454.2M
+  Loading validation: /root/autodl-tmp/datasets/scrolls_quality/quality/validation.jsonl
+  Val: 2086 samples
+  Loading distractor pool: /root/autodl-tmp/datasets/scrolls_quality/quality/train.jsonl
+  Distractor pool: 151 unique articles
+
+  Evaluating QuALITY accuracy on 200 samples...
+  Target context length: 16384 tokens
+    [20/200] acc=0.0% (0/20)  (1.8 samples/s, ETA=102s)
+    [40/200] acc=2.5% (1/40)  (1.8 samples/s, ETA=90s)
+    [60/200] acc=1.7% (1/60)  (1.8 samples/s, ETA=78s)
+    [80/200] acc=1.2% (1/80)  (1.8 samples/s, ETA=67s)
+    [100/200] acc=1.0% (1/100)  (1.8 samples/s, ETA=56s)
+    [120/200] acc=0.8% (1/120)  (1.8 samples/s, ETA=45s)
+    [140/200] acc=0.7% (1/140)  (1.8 samples/s, ETA=33s)
+    [160/200] acc=0.6% (1/160)  (1.8 samples/s, ETA=22s)
+    [180/200] acc=0.6% (1/180)  (1.8 samples/s, ETA=11s)
+    [200/200] acc=0.5% (1/200)  (1.8 samples/s, ETA=0s)
+
+  QuALITY Results (200 samples, 111s):
+    Accuracy: 0.50% (1/200)
+    Random baseline: 25.0%
+    Above random: -24.50%
+    (option_match=1, text_match=0)
+
+  Results saved: /root/autodl-tmp/results/phase21b/quality_454m/eval/16k/geo/result.json
+{
+  "accuracy": 0.5,
+  "correct": 1,
+  "total": 200,
+  "random_baseline": 25.0,
+  "above_random": -24.5,
+  "option_match": 1,
+  "text_match": 0,
+  "eval_time_sec": 110.7,
+  "target_len": 16384
+}
+  [OK] Result saved
+
+============================================================
+  Eval [6/8] EVQ @16K
+============================================================
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+============================================================
+  Phase 21B: QuALITY QA Eval (distractor-padded)
+  Model: /root/autodl-tmp/results/phase21b/quality_454m/finetune/evq_seed42/model.pt
+  RoPE: evq  |  Target len: 16384
+============================================================
+  RoPE: EVQ (tau=1.41421, base=500000.0)
+  Loading model from /root/autodl-tmp/results/phase21b/quality_454m/finetune/evq_seed42/model.pt...
+  Model params: 454.2M
+  Loading validation: /root/autodl-tmp/datasets/scrolls_quality/quality/validation.jsonl
+  Val: 2086 samples
+  Loading distractor pool: /root/autodl-tmp/datasets/scrolls_quality/quality/train.jsonl
+  Distractor pool: 151 unique articles
+
+  Evaluating QuALITY accuracy on 200 samples...
+  Target context length: 16384 tokens
+    [20/200] acc=15.0% (3/20)  (1.8 samples/s, ETA=102s)
+    [40/200] acc=10.0% (4/40)  (1.8 samples/s, ETA=89s)
+    [60/200] acc=8.3% (5/60)  (1.8 samples/s, ETA=77s)
+    [80/200] acc=8.8% (7/80)  (1.8 samples/s, ETA=66s)
+    [100/200] acc=7.0% (7/100)  (1.8 samples/s, ETA=55s)
+    [120/200] acc=6.7% (8/120)  (1.8 samples/s, ETA=44s)
+    [140/200] acc=5.7% (8/140)  (1.8 samples/s, ETA=33s)
+    [160/200] acc=5.6% (9/160)  (1.8 samples/s, ETA=22s)
+    [180/200] acc=5.0% (9/180)  (1.8 samples/s, ETA=11s)
+    [200/200] acc=5.0% (10/200)  (1.8 samples/s, ETA=0s)
+
+  QuALITY Results (200 samples, 109s):
+    Accuracy: 5.00% (10/200)
+    Random baseline: 25.0%
+    Above random: -20.00%
+    (option_match=8, text_match=2)
+
+  Results saved: /root/autodl-tmp/results/phase21b/quality_454m/eval/16k/evq/result.json
+{
+  "accuracy": 5.0,
+  "correct": 10,
+  "total": 200,
+  "random_baseline": 25.0,
+  "above_random": -20.0,
+  "option_match": 8,
+  "text_match": 2,
+  "eval_time_sec": 108.7,
+  "target_len": 16384
+}
+  [OK] Result saved
+
+============================================================
+  Eval [7/8] Geo @32K
+============================================================
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+============================================================
+  Phase 21B: QuALITY QA Eval (distractor-padded)
+  Model: /root/autodl-tmp/results/phase21b/quality_454m/finetune/geo_seed42/model.pt
+  RoPE: geo  |  Target len: 32768
+============================================================
+  RoPE: Geometric (base=500000.0)
+  Loading model from /root/autodl-tmp/results/phase21b/quality_454m/finetune/geo_seed42/model.pt...
+  Model params: 454.2M
+  Loading validation: /root/autodl-tmp/datasets/scrolls_quality/quality/validation.jsonl
+  Val: 2086 samples
+  Loading distractor pool: /root/autodl-tmp/datasets/scrolls_quality/quality/train.jsonl
+  Distractor pool: 151 unique articles
+
+  Evaluating QuALITY accuracy on 200 samples...
+  Target context length: 32768 tokens
+    [20/200] acc=0.0% (0/20)  (0.9 samples/s, ETA=193s)
+    [40/200] acc=0.0% (0/40)  (0.9 samples/s, ETA=170s)
+    [60/200] acc=0.0% (0/60)  (0.9 samples/s, ETA=149s)
+    [80/200] acc=0.0% (0/80)  (0.9 samples/s, ETA=127s)
+    [100/200] acc=0.0% (0/100)  (0.9 samples/s, ETA=106s)
+    [120/200] acc=0.0% (0/120)  (0.9 samples/s, ETA=85s)
+    [140/200] acc=0.0% (0/140)  (0.9 samples/s, ETA=64s)
+    [160/200] acc=0.0% (0/160)  (0.9 samples/s, ETA=42s)
+    [180/200] acc=0.0% (0/180)  (0.9 samples/s, ETA=21s)
+    [200/200] acc=0.0% (0/200)  (0.9 samples/s, ETA=0s)
+
+  QuALITY Results (200 samples, 212s):
+    Accuracy: 0.00% (0/200)
+    Random baseline: 25.0%
+    Above random: -25.00%
+    (option_match=0, text_match=0)
+
+  Results saved: /root/autodl-tmp/results/phase21b/quality_454m/eval/32k/geo/result.json
+{
+  "accuracy": 0.0,
+  "correct": 0,
+  "total": 200,
+  "random_baseline": 25.0,
+  "above_random": -25.0,
+  "option_match": 0,
+  "text_match": 0,
+  "eval_time_sec": 211.8,
+  "target_len": 32768
+}
+  [OK] Result saved
+
+============================================================
+  Eval [8/8] EVQ @32K
+============================================================
+[init] device=cuda  dtype=torch.bfloat16  autocast=True
+============================================================
+  Phase 21B: QuALITY QA Eval (distractor-padded)
+  Model: /root/autodl-tmp/results/phase21b/quality_454m/finetune/evq_seed42/model.pt
+  RoPE: evq  |  Target len: 32768
+============================================================
+  RoPE: EVQ (tau=1.41421, base=500000.0)
+  Loading model from /root/autodl-tmp/results/phase21b/quality_454m/finetune/evq_seed42/model.pt...
+  Model params: 454.2M
+  Loading validation: /root/autodl-tmp/datasets/scrolls_quality/quality/validation.jsonl
+  Val: 2086 samples
+  Loading distractor pool: /root/autodl-tmp/datasets/scrolls_quality/quality/train.jsonl
+  Distractor pool: 151 unique articles
+
+  Evaluating QuALITY accuracy on 200 samples...
+  Target context length: 32768 tokens
+    [20/200] acc=0.0% (0/20)  (0.9 samples/s, ETA=193s)
+    [40/200] acc=0.0% (0/40)  (0.9 samples/s, ETA=170s)
+    [60/200] acc=0.0% (0/60)  (0.9 samples/s, ETA=149s)
+    [80/200] acc=0.0% (0/80)  (0.9 samples/s, ETA=127s)
+    [100/200] acc=0.0% (0/100)  (0.9 samples/s, ETA=106s)
+    [120/200] acc=2.5% (3/120)  (0.9 samples/s, ETA=85s)
+    [140/200] acc=3.6% (5/140)  (0.9 samples/s, ETA=64s)
+    [160/200] acc=3.8% (6/160)  (0.9 samples/s, ETA=42s)
+    [180/200] acc=3.3% (6/180)  (0.9 samples/s, ETA=21s)
+    [200/200] acc=3.5% (7/200)  (0.9 samples/s, ETA=0s)
+
+  QuALITY Results (200 samples, 212s):
+    Accuracy: 3.50% (7/200)
+    Random baseline: 25.0%
+    Above random: -21.50%
+    (option_match=7, text_match=0)
+
+  Results saved: /root/autodl-tmp/results/phase21b/quality_454m/eval/32k/evq/result.json
+{
+  "accuracy": 3.5000000000000004,
+  "correct": 7,
+  "total": 200,
+  "random_baseline": 25.0,
+  "above_random": -21.5,
+  "option_match": 7,
+  "text_match": 0,
+  "eval_time_sec": 211.9,
+  "target_len": 32768
+}
+  [OK] Result saved
+
+================================================================
+  QuALITY QA (454M) — COMPLETE EVAL RESULTS
+================================================================
+--- 4k / geo ---
+{
+  "phase": "21b",
+  "task": "quality",
+  "rope": "geo",
+  "tau": null,
+  "base": 500000.0,
+  "yarn": 0,
+  "target_len": 4096,
+  "eval": {
+    "accuracy": 20.5,
+    "correct": 41,
+    "total": 200,
+    "random_baseline": 25.0,
+    "above_random": -4.5,
+    "option_match": 13,
+    "text_match": 28,
+    "eval_time_sec": 74.8,
+    "target_len": 4096
+  },
+  "model_pt": "/root/autodl-tmp/results/phase21b/quality_454m/finetune/geo_seed42/model.pt",
+  "timestamp": "2026-03-12 00:48:53"
+}
+--- 4k / evq ---
+{
+  "phase": "21b",
+  "task": "quality",
+  "rope": "evq",
+  "tau": 1.41421,
+  "base": 500000.0,
+  "yarn": 0,
+  "target_len": 4096,
+  "eval": {
+    "accuracy": 26.5,
+    "correct": 53,
+    "total": 200,
+    "random_baseline": 25.0,
+    "above_random": 1.5,
+    "option_match": 12,
+    "text_match": 41,
+    "eval_time_sec": 75.7,
+    "target_len": 4096
+  },
+  "model_pt": "/root/autodl-tmp/results/phase21b/quality_454m/finetune/evq_seed42/model.pt",
+  "timestamp": "2026-03-12 00:50:20"
+}
+--- 8k / geo ---
+{
+  "phase": "21b",
+  "task": "quality",
+  "rope": "geo",
+  "tau": null,
+  "base": 500000.0,
+  "yarn": 0,
+  "target_len": 8192,
+  "eval": {
+    "accuracy": 18.0,
+    "correct": 36,
+    "total": 200,
+    "random_baseline": 25.0,
+    "above_random": -7.0,
+    "option_match": 9,
+    "text_match": 27,
+    "eval_time_sec": 88.4,
+    "target_len": 8192
+  },
+  "model_pt": "/root/autodl-tmp/results/phase21b/quality_454m/finetune/geo_seed42/model.pt",
+  "timestamp": "2026-03-12 00:51:59"
+}
+--- 8k / evq ---
+{
+  "phase": "21b",
+  "task": "quality",
+  "rope": "evq",
+  "tau": 1.41421,
+  "base": 500000.0,
+  "yarn": 0,
+  "target_len": 8192,
+  "eval": {
+    "accuracy": 25.0,
+    "correct": 50,
+    "total": 200,
+    "random_baseline": 25.0,
+    "above_random": 0.0,
+    "option_match": 11,
+    "text_match": 39,
+    "eval_time_sec": 88.8,
+    "target_len": 8192
+  },
+  "model_pt": "/root/autodl-tmp/results/phase21b/quality_454m/finetune/evq_seed42/model.pt",
+  "timestamp": "2026-03-12 00:53:40"
+}
+--- 16k / geo ---
+{
+  "phase": "21b",
+  "task": "quality",
+  "rope": "geo",
+  "tau": null,
+  "base": 500000.0,
+  "yarn": 0,
+  "target_len": 16384,
+  "eval": {
+    "accuracy": 0.5,
+    "correct": 1,
+    "total": 200,
+    "random_baseline": 25.0,
+    "above_random": -24.5,
+    "option_match": 1,
+    "text_match": 0,
+    "eval_time_sec": 110.7,
+    "target_len": 16384
+  },
+  "model_pt": "/root/autodl-tmp/results/phase21b/quality_454m/finetune/geo_seed42/model.pt",
+  "timestamp": "2026-03-12 00:55:44"
+}
+--- 16k / evq ---
+{
+  "phase": "21b",
+  "task": "quality",
+  "rope": "evq",
+  "tau": 1.41421,
+  "base": 500000.0,
+  "yarn": 0,
+  "target_len": 16384,
+  "eval": {
+    "accuracy": 5.0,
+    "correct": 10,
+    "total": 200,
+    "random_baseline": 25.0,
+    "above_random": -20.0,
+    "option_match": 8,
+    "text_match": 2,
+    "eval_time_sec": 108.7,
+    "target_len": 16384
+  },
+  "model_pt": "/root/autodl-tmp/results/phase21b/quality_454m/finetune/evq_seed42/model.pt",
+  "timestamp": "2026-03-12 00:57:44"
+}
+--- 32k / geo ---
+{
+  "phase": "21b",
+  "task": "quality",
+  "rope": "geo",
+  "tau": null,
+  "base": 500000.0,
+  "yarn": 0,
+  "target_len": 32768,
+  "eval": {
+    "accuracy": 0.0,
+    "correct": 0,
+    "total": 200,
+    "random_baseline": 25.0,
+    "above_random": -25.0,
+    "option_match": 0,
+    "text_match": 0,
+    "eval_time_sec": 211.8,
+    "target_len": 32768
+  },
+  "model_pt": "/root/autodl-tmp/results/phase21b/quality_454m/finetune/geo_seed42/model.pt",
+  "timestamp": "2026-03-12 01:01:27"
+}
+--- 32k / evq ---
+{
+  "phase": "21b",
+  "task": "quality",
+  "rope": "evq",
+  "tau": 1.41421,
+  "base": 500000.0,
+  "yarn": 0,
+  "target_len": 32768,
+  "eval": {
+    "accuracy": 3.5000000000000004,
+    "correct": 7,
+    "total": 200,
+    "random_baseline": 25.0,
+    "above_random": -21.5,
+    "option_match": 7,
+    "text_match": 0,
+    "eval_time_sec": 211.9,
+    "target_len": 32768
+  },
+  "model_pt": "/root/autodl-tmp/results/phase21b/quality_454m/finetune/evq_seed42/model.pt",
+  "timestamp": "2026-03-12 01:05:10"
+}

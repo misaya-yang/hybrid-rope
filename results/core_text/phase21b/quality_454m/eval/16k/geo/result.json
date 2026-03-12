@@ -1,0 +1,22 @@
+{
+  "phase": "21b",
+  "task": "quality",
+  "rope": "geo",
+  "tau": null,
+  "base": 500000.0,
+  "yarn": 0,
+  "target_len": 16384,
+  "eval": {
+    "accuracy": 0.5,
+    "correct": 1,
+    "total": 200,
+    "random_baseline": 25.0,
+    "above_random": -24.5,
+    "option_match": 1,
+    "text_match": 0,
+    "eval_time_sec": 110.7,
+    "target_len": 16384
+  },
+  "model_pt": "/root/autodl-tmp/results/phase21b/quality_454m/finetune/geo_seed42/model.pt",
+  "timestamp": "2026-03-12 00:55:44"
+}

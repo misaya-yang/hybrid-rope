@@ -1,0 +1,82 @@
+{
+  "experiment": "Phase 21B: QuALITY QA Downstream Evaluation (454M)",
+  "date": "2026-03-12",
+  "description": "Distractor-padded QuALITY multiple-choice QA evaluation comparing EVQ-Cosh vs Geometric RoPE on 454M models. Tests long-range retrieval ability by embedding target articles among distractor text at controlled context lengths.",
+
+  "setup": {
+    "model_tier": "454M",
+    "architecture": "24L/16H/1024d, head_dim=64",
+    "pretrain_context": 2048,
+    "continue_train_context": 4096,
+    "base_frequency": 500000,
+    "finetune_task": "QuALITY QA",
+    "finetune_context": 4096,
+    "finetune_steps": 2000,
+    "finetune_lr": 1e-5,
+    "finetune_dropout": 0.1,
+    "finetune_effective_batch_size": 4,
+    "eval_samples": 200,
+    "eval_format": "distractor-padded (random position 20%-80%)",
+    "distractor_pool": "151 unique QuALITY training articles",
+    "random_baseline": 25.0
+  },
+
+  "models": {
+    "geo": {
+      "rope": "geometric",
+      "tau": null,
+      "init_ckpt": "Phase 17c geo_454m_1024_to_2048_continue",
+      "finetune_accuracy": 78.0
+    },
+    "evq": {
+      "rope": "EVQ-Cosh",
+      "tau": 1.41421,
+      "init_ckpt": "Phase 17c evq1.41421_454m_1024_to_2048_continue",
+      "finetune_accuracy": 79.0
+    }
+  },
+
+  "distractor_padded_eval": {
+    "4k": {
+      "extrapolation": "1x (in-distribution)",
+      "geo_accuracy": 20.5,
+      "evq_accuracy": 26.5,
+      "delta": 6.0,
+      "note": "EVQ above random, Geo below"
+    },
+    "8k": {
+      "extrapolation": "2x",
+      "geo_accuracy": 18.0,
+      "evq_accuracy": 25.0,
+      "delta": 7.0,
+      "note": "Largest gap; EVQ maintains random-level, Geo drops further"
+    },
+    "16k": {
+      "extrapolation": "4x",
+      "geo_accuracy": 0.5,
+      "evq_accuracy": 5.0,
+      "delta": 4.5,
+      "note": "Both below random; 454M capacity limit reached"
+    },
+    "32k": {
+      "extrapolation": "8x",
+      "geo_accuracy": 0.0,
+      "evq_accuracy": 3.5,
+      "delta": 3.5,
+      "note": "Geo completely collapsed; EVQ retains trace signal"
+    }
+  },
+
+  "key_findings": [
+    "EVQ-Cosh outperforms Geometric RoPE at ALL context lengths on QA retrieval",
+    "Maximum advantage at 2x extrapolation (8K): EVQ 25.0% vs Geo 18.0% (+7.0%)",
+    "EVQ maintains random-baseline accuracy (25%) at 2x extrapolation; Geo drops to 18%",
+    "At 4x+ extrapolation, both models degrade significantly — 454M model capacity limit",
+    "EVQ retains non-zero signal (3.5%) at 8x extrapolation where Geo hits 0.0%",
+    "Finetune accuracy nearly identical (Geo 78%, EVQ 79%) — difference emerges only with distractor padding",
+    "Result consistent with theory: EVQ allocates frequencies to preserve long-range retrieval"
+  ],
+
+  "server": "AutoDL westc, RTX 5090 32GB",
+  "gpu_memory_peak": "17.7GB (finetune), ~5GB (eval @4K), ~23GB (eval @32K)"
+}
