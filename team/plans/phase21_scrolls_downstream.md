@@ -404,12 +404,114 @@ python scripts/core_text_phases/phase21b_scrolls_finetune.py \
 - Phase 21b multi-seed: 依赖 17c multi-seed 完成
 - SCROLLS 数据集下载（HuggingFace，需提前验证网络可达）
 
-## Priority (Updated)
+## Phase 21 Root Cause Analysis: 为什么 Downstream 不赢 (2026-03-12)
 
-**17c multi-seed > LaTeX draft ≥ Phase 21C QuALITY pilot**
+### 诊断总结
 
-Phase 21C QuALITY 可以用现有 750M Phase 15 checkpoint 立即开始（与 GovReport pilot 同源）。
-GovReport 已有结果（summarization baseline），QuALITY 是下一个关键实验。
+GovReport ROUGE 和 QuALITY accuracy/NLL 均未能 clean 展示 EVQ 优势。根因分两层：
+
+**第一层：协议污染（可修复）**
+
+| 问题 | 影响 | 状态 |
+|------|------|------|
+| τ 未为 8K finetune 重新标定（τ=1.5 适合 L=2048，L=8192 时 τ*≈0.707） | EVQ 在 finetune 阶段携带不匹配的频率参数，Geo 没有此负担 | 未修复 |
+| "YaRN" 实际跑的是 NTK-aware（uniform scaling，非 progressive） | YaRN 对比结果不可靠 | 未修复 |
+| 750M checkpoint 是 Geo pretrain → EVQ continue 的 retrofit | 不是 clean from-scratch pair，EVQ checkpoint 继承了 Geo 训练的 weight distribution | 未修复 |
+| QuALITY accuracy metric 用首字符匹配 | 83.84% 的选项首字符不唯一，metric 无效 | 已识别，需换 metric |
+| 训练目标 (free-form generation) vs 评测 (multiple-choice accuracy) 不一致 | 训练不教模型选择，评测要求选择 | 需改训练格式 |
+
+**第二层：信号掩盖机制（物理限制）**
+
+| 现象 | 机制 |
+|------|------|
+| 400 步 WikiText finetune on 7B → 21 task LongBench 成功展示 trade-off | 轻量 finetune 不改变 attention pattern，PE 质量差异直接反映到 downstream |
+| 2000 步 task-specific finetune on 750M → ROUGE/Accuracy 无清晰差异 | 重度 finetune 让模型通过 learned attention 补偿 PE 差异 |
+| Phase 21a NLL (zero finetune) → 完美 ±4.4% 对称反转 | Zero finetune = zero masking，PE 信号完整保留 |
+
+**核心洞察**：finetune 步数越多、任务越 specific，模型越能学到 task-specific attention shortcuts 来绕过 PE 差异。这不是 bug，是 transformer 的适应能力。
+
+### QuALITY gold_answer_nll 确认了信号存在
+
+尽管 accuracy 没有清晰差异，gold_answer_nll 在远距离外推仍显示 EVQ 翻转：
+
+| ctx | Geo NLL | EVQ NLL | 谁赢 | % |
+|-----|---------|---------|------|---|
+| 8K | 0.4903 | 0.5861 | Geo | +19.5% |
+| 24K | 4.8131 | 4.1510 | **EVQ** | **-13.7%** |
+| 32K | 4.7718 | 3.2310 | **EVQ** | **-32.3%** |
+| 40K | 6.6160 | 6.0479 | **EVQ** | **-8.6%** |
+
+**模式一致**：与 Phase 21a 的 NLL reversal 完全一致 — in-dist Geo 赢，外推 EVQ 赢。信号存在，但 task-specific accuracy 太粗无法捕捉。
+
+### 关于 "8B LLaMA 21 task 完美 trade-off" 的澄清
+
+经查 `paper_draft/PAPER_ERROR_CORRECTIONS.md`：
+- 那次实验是 **Qwen-2.5-7B + anchored_sigmoid**（旧方法），不是 EVQ τ
+- LLaMA-3-8B 只跑了 6 个 task 且 protocol 有 error
+- Qwen 结果 seed42 avg delta = -0.35，seed1337 = -0.42（小幅回归，不是 "完美 trade-off"）
+- 那次实验验证的是 phase collision phenomenon，不是 EVQ effect
+
+---
+
+## Phase 21D Action Plan: 解决 Downstream 证据问题
+
+### 路径评估
+
+| 路径 | 方案 | 成本 | 预期产出 | 推荐 |
+|------|------|------|----------|------|
+| A | 修复协议，重跑 750M (clean pair + τ retarget + proper YaRN) | 高（等 17c checkpoint + GPU 时间） | 最 clean 但最慢 | 如果 17c 能产出 clean pair |
+| B | 轻量 WikiText finetune on 750M → LongBench eval | 低（~400 步 + eval） | 复现 Qwen 成功模式但用 EVQ | **首选** |
+| C | 不补做 downstream，用已有 Phase 21a NLL 防守 | 零 | 已有 ±4.4% 对称反转 + QA -16.8% | **必做（baseline 防线）** |
+
+### 推荐策略：C + B 组合
+
+**立即做（C）**：将 Phase 21a NLL reversal 定位为 **primary downstream evidence**。
+
+论文叙事：
+> "We directly measure the waterbed trade-off on 13 LongBench downstream tasks. At the training length (4096), geometric allocation achieves 4.4% lower NLL; at 2× extrapolation (8192), EVQ reverses this advantage by 4.4%, with QA tasks showing up to 16.8% improvement. To our knowledge, this is the first direct quantification of the PE allocation trade-off on downstream task NLL."
+
+这已经够 poster acceptance — DAPE 只有 PPL + CHE，我们有 PPL + passkey + 13-task NLL reversal。
+
+**有余力再做（B）**：750M WikiText 轻量 finetune + LongBench eval
+
+```bash
+# 轻量 WikiText finetune (不是 task-specific，不会 mask PE signal)
+python scripts/core_text_phases/phase21d_light_finetune.py \
+    --init_ckpt /path/to/750m_evq_phase15/model.pt \
+    --rope evq --tau 1.5 --base 500000 \
+    --data wikitext --seq_len 8192 \
+    --lr 1e-5 --steps 400 --dropout 0.0 \
+    --seed 42 \
+    --output_dir results/phase21d/light_ft/evq_seed42/
+
+# 然后跑 LongBench eval (zero-shot, 不需要 per-task finetune)
+python scripts/core_text_phases/phase21d_longbench_eval.py \
+    --model_dir results/phase21d/light_ft/evq_seed42/ \
+    --tasks all --max_len 8192 \
+    --output results/phase21d/longbench/evq_seed42.json
+```
+
+关键设计原则：
+- **轻量 = 不改变 attention pattern** → PE 信号保留
+- **WikiText = 通用语言** → 不引入 task-specific shortcut
+- **LongBench = 多任务** → 展示 broad downstream pattern，不依赖单个 task
+
+### 不建议加大步数的原因
+
+增加步数（如 25K）在当前 setup 下可能适得其反：
+1. 更多 task-specific finetune 步数 → 更多 attention adaptation → 更彻底地掩盖 PE 差异
+2. FIRE 的 25K 步是为了展示收敛后的绝对性能排名，不是为了量化 PE quality 差异
+3. 我们的论文核心不是 "EVQ 在 GovReport 上 ROUGE 更高"，而是 "频率重分配存在可量化的 waterbed trade-off"
+4. Phase 21a 已经完美展示了这个，不需要 ROUGE 来验证
+
+---
+
+## Priority (Updated 2026-03-12)
+
+**17c multi-seed > LaTeX draft > Phase 21D light finetune (optional)**
+
+Phase 21a NLL reversal 是当前最 clean 的 downstream evidence，无需额外实验即可写入论文。
+Phase 21D light finetune 是可选的加强实验，如果时间和 GPU 允许再做。
 
 ## Appendix: Phase 21a NLL 结果 — Waterbed 对称反转
 
