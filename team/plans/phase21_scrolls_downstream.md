@@ -506,12 +506,183 @@ python scripts/core_text_phases/phase21d_longbench_eval.py \
 
 ---
 
-## Priority (Updated 2026-03-12)
+## Phase 21E: Clean FIRE-Aligned Downstream Protocol (2026-03-12)
 
-**17c multi-seed > LaTeX draft > Phase 21D light finetune (optional)**
+### 经验教训总结
 
-Phase 21a NLL reversal 是当前最 clean 的 downstream evidence，无需额外实验即可写入论文。
-Phase 21D light finetune 是可选的加强实验，如果时间和 GPU 允许再做。
+| 错误 | 后果 | 修复 |
+|------|------|------|
+| 训练量不足（2K步×bs4 vs FIRE 25K步×bs128） | 模型远未收敛，无法归因到 PE | 对齐 FIRE 训练量 |
+| Finetune 长度不匹配（我们4K, FIRE 8K） | 8K 已经是 extrapolation，混淆了 finetune 质量 vs PE 质量 | 改用 L=8192 |
+| τ 没有 retarget（用 L=2048 的 τ finetune@4096/8192） | EVQ 自带 handicap | 按 τ*=d_head/√L_finetune 重新计算 |
+| Distractor padding 改变了任务性质 | 变成 needle-in-haystack 而非阅读理解 | 用标准 SCROLLS eval（无 padding） |
+| 两个 eval 脚本 YaRN 实现不一致 | phase21b_quality_eval.py 用 NTK-aware（错误） | 统一使用 progressive YaRN |
+| 首字符匹配 accuracy metric | 83.84% options 首字符不唯一 | 改用 full-text option NLL scoring |
+
+### 对齐 FIRE 的 Clean Protocol
+
+#### A. 训练配置
+
+```bash
+# ── 454M 模型 ──
+# Pretrain: Phase 17c, L=1024→2048 continue-train
+# Finetune: L=8192 (4× continue-train length, 与 FIRE 一致)
+
+# τ retarget: τ*(8192) = 64 / √8192 ≈ 0.707
+# 注意：预训练时 τ 从 2.83→2.0→1.414 逐阶段适配
+# finetune 时必须继续跟着调到 0.707
+
+FINETUNE_SEQ_LEN=8192
+FINETUNE_TAU=0.707107    # 64/√8192
+
+# 训练量对齐
+# FIRE: 25K steps × bs128 × 8192 tokens = 26.2B tokens
+# 我们的 GPU 限制: RTX 5090 32GB, micro_bs=1
+# 可行方案: 25K steps × bs4(grad_accum) × 8192 = 819M tokens
+# 这仍然是 FIRE 的 1/32, 但比之前好 25x
+# 如果内存允许 micro_bs=2: 25K × bs8 × 8192 = 1.64B tokens
+
+FINETUNE_STEPS=25000
+MICRO_BS=1
+GRAD_ACCUM=4    # 或 8 如果能腾出显存
+WARMUP=500
+LR=1e-5
+DROPOUT=0.1
+```
+
+#### B. Finetune 命令
+
+```bash
+# EVQ (τ retargeted to 0.707)
+python phase21b_scrolls_finetune.py \
+    --init_ckpt $EVQ_INIT \
+    --tier 454m \
+    --rope evq --tau 0.707107 --base 500000 \
+    --task quality --seq_len 8192 --yarn 0 \
+    --lr 1e-5 --steps 25000 --warmup 500 --dropout 0.1 \
+    --micro_batch_size 1 --grad_accum 4 --seed 42 \
+    --eval_every 5000 --eval_samples 200 \
+    --data_dir $QA_DATA \
+    --output_dir $BASE/finetune_v2/evq_tau0707_seed42/
+
+# Geo (baseline, 无 τ)
+python phase21b_scrolls_finetune.py \
+    --init_ckpt $GEO_INIT \
+    --tier 454m \
+    --rope geo --base 500000 \
+    --task quality --seq_len 8192 --yarn 0 \
+    --lr 1e-5 --steps 25000 --warmup 500 --dropout 0.1 \
+    --micro_batch_size 1 --grad_accum 4 --seed 42 \
+    --eval_every 5000 --eval_samples 200 \
+    --data_dir $QA_DATA \
+    --output_dir $BASE/finetune_v2/geo_seed42/
+```
+
+#### C. 评估方案（两层）
+
+**Layer 1: 标准 SCROLLS eval（与 FIRE 完全对齐）**
+
+在 L=8192（in-dist after finetune）上直接评测，不加 distractor，不做 extrapolation。
+
+这直接回答："同样的 FIRE recipe，EVQ 比 Geo 好多少？"
+
+```bash
+# 标准 eval @8K (in-dist, 无 distractor)
+python phase21b_quality_eval_clean.py \
+    --model_pt $BASE/finetune_v2/evq_tau0707_seed42/model.pt \
+    --tier 454m --rope evq --tau 0.707107 --base 500000 \
+    --target_len 8192 --protocol in_dist_nopad \
+    --scoring_mode options_nll \
+    --eval_samples 200 \
+    --data_dir $QA_DATA \
+    --output_dir $BASE/eval_v2/8k_nopad/evq/
+```
+
+Metric: options_nll accuracy（从 4 个选项中选 NLL 最低的），不依赖 generation quality。
+
+**Layer 2: 外推 eval（展示 EVQ 长距离优势）**
+
+在 16K/32K 上用 distractor padding 评测。因为 finetune@8192 了，所以 16K 是 2× extrapolation，32K 是 4×。
+
+```bash
+# Extrapolation eval @16K (2× from finetune)
+python phase21b_quality_eval_clean.py \
+    --model_pt $BASE/finetune_v2/evq_tau0707_seed42/model.pt \
+    --tier 454m --rope evq --tau 0.707107 --base 500000 \
+    --target_len 16384 --protocol article_pad_extrap \
+    --scoring_mode options_nll \
+    --eval_samples 200 \
+    --data_dir $QA_DATA \
+    --output_dir $BASE/eval_v2/16k_pad/evq/
+```
+
+#### D. 完整 Eval 矩阵
+
+| 长度 | Protocol | 意义 | 预期 |
+|------|----------|------|------|
+| 8K (in-dist) | 标准 SCROLLS, 无 padding | 与 FIRE 对齐，公平比较 | EVQ ≈ Geo（waterbed 可能小幅劣势，但 τ 已 retarget） |
+| 8K (in-dist) | 标准 SCROLLS, 无 padding, +YaRN | 看 YaRN composition | EVQ+YaRN ≥ Geo+YaRN |
+| 16K (2× extrap) | Distractor padding | 中等外推 | **EVQ 赢** |
+| 16K (2× extrap) | Distractor padding, +YaRN | YaRN + 外推 | **EVQ+YaRN >> Geo+YaRN** |
+| 32K (4× extrap) | Distractor padding | 极端外推 | 两者都可能崩，但 EVQ 崩得慢 |
+
+#### E. 与 454M 初版实验的关键改进
+
+| 维度 | 初版 (Phase 21B) | Clean (Phase 21E) |
+|------|-----------------|-------------------|
+| Finetune 长度 | 4096 | **8192** (与 FIRE 一致) |
+| τ | 1.414 (L=2048 的值) | **0.707** (retargeted for L=8192) |
+| Steps | 2000 | **25000** (与 FIRE 一致) |
+| Batch | 4 | 4-8 (GPU 限制，无法达到 FIRE 的 128) |
+| 标准 eval | 无（只有 distractor） | **标准 SCROLLS @8K (无 padding)** |
+| Accuracy metric | 首字符匹配 | **options_nll scoring** |
+| YaRN 实现 | NTK-aware（错误） | **Progressive smoothstep（正确）** |
+
+#### F. 资源估算
+
+| 配置 | 时间估算 (RTX 5090 32GB) |
+|------|--------------------------|
+| 1× finetune (25K steps, micro_bs=1, grad_accum=4, L=8192) | ~3-5 小时 |
+| 2× finetune (Geo + EVQ) | ~6-10 小时 |
+| 5 点 eval matrix × 2 methods | ~2-3 小时 |
+| **总计单 seed** | **~8-13 小时** |
+
+显存可行性：454M @ L=8192, micro_bs=1 需要约 20-25GB，RTX 5090 (32GB) 可以容纳。
+
+#### G. 可选优化：也跑 GovReport
+
+如果 QuALITY 结果好，用同样的 clean protocol 跑 GovReport（summarization baseline）：
+
+```bash
+# GovReport 有 ~19K 训练样本，25K 步不会严重过拟合
+python phase21b_scrolls_finetune.py \
+    --init_ckpt $EVQ_INIT \
+    --tier 454m --rope evq --tau 0.707107 --base 500000 \
+    --task gov_report --seq_len 8192 --yarn 0 \
+    --lr 1e-5 --steps 25000 --warmup 500 --dropout 0.1 \
+    --micro_batch_size 1 --grad_accum 4 --seed 42 \
+    --output_dir $BASE/finetune_v2/govreport_evq_seed42/
+```
+
+这样论文就有 QA + Summarization 两个 task 的 clean downstream 数据。
+
+### 注意事项
+
+1. **QuALITY 只有 2523 个训练样本**。25K 步 × bs4 = 100K 样本 = ~40 epochs。会过拟合。但 FIRE 也是这么做的（他们 bs128 × 25K = 3.2M 样本，QuALITY 训练集更小，epoch 数更多）。Dropout=0.1 是关键的正则化手段。
+
+2. **micro_bs=1 @ L=8192 的显存**。454M 比 750M 小，但 L=8192 的 attention 矩阵 8192²=67M entries per head per batch。需要实测。如果 OOM，可以启用 gradient checkpointing。
+
+3. **τ 变化从 1.414→0.707 是 2 倍跳变**。454M 之前的 progressive training 每次跳变约 √2 倍（2.83→2.0→1.414），这次也是 1.414→0.707（正好 √2 倍），应该在模型可适应范围内。
+
+4. **eval 脚本统一**。所有 eval 必须用 `phase21b_quality_eval_clean.py`（正确的 YaRN + options_nll scoring），废弃旧的 `phase21b_quality_eval.py`。
+
+---
+
+## Priority (Updated 2026-03-12 evening)
+
+**17c multi-seed > Phase 21E clean downstream > LaTeX draft**
+
+Phase 21E 的 clean protocol 解决了之前所有已知问题（τ、步数、eval 格式、YaRN）。如果 17c multi-seed 已经在跑，Phase 21E 可以在另一张卡上并行。
 
 ## Appendix: Phase 21a NLL 结果 — Waterbed 对称反转
 
