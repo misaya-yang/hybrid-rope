@@ -210,6 +210,28 @@ torch.compiler.cudagraph_mark_step_begin()  # 防止 CUDA Graph 覆写错误
 
 > **不要因为 torch.compile crash 就认定"硬件不支持"。** Blackwell (sm_120) 在 PyTorch 2.7+ / CUDA 12.8 下完全支持 compile。crash 通常是 mode 选择或 CUDA Graph 配置问题，换个 mode 或加一行 `cudagraph_mark_step_begin()` 就能解决。先排查再下结论。
 
+### CUDA 内存碎片化（RTX PRO 6000, 98GB）
+
+750M 模型在 seq_len=8192, micro_batch_size=4 下训练，峰值显存 ~92.8GB，卡总共 ~95 GiB 可用（98GB 标称），余量约 5GB。实际观测到在 step ~1300 处因 CUDA caching allocator 碎片化触发 OOM：
+
+```
+torch.OutOfMemoryError: Tried to allocate 384.00 MiB. 158.81 MiB is free.
+```
+
+崩溃点在 MLP forward：`self.down(F.silu(self.gate(x)) * self.up(x))`，需要同时持有 4 个 384 MiB 的中间张量。总空闲可能够，但找不到连续的 384 MiB 块。
+
+**碎片化是非确定性的**：同样配置有时能跑完 2000 步，有时 ~1300 步 OOM。5GB 余量不算小，只是运气问题。
+
+**修复方案（未来实验代码必须加）**：
+
+```bash
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+```
+
+这启用 CUDA 虚拟内存，允许分配器使用不连续的物理块拼成逻辑连续分配，彻底消除碎片化问题。零成本，无副作用，**所有训练脚本的 shell wrapper 都应该默认加上此环境变量**。
+
+备选方案（显存确实不够时）：降低 `micro_batch_size`（如 4→2），用 `grad_accum`（如 1→2）补偿，保持相同 effective batch size。这样激活内存减半，余量充裕。
+
 ## Practical Warning
 
 This repo has already been intentionally pruned. Do not recreate old root-level clutter. If a new artifact does not clearly belong to one of the five visible top-level directories, the default answer is that it does not belong in this repository.
