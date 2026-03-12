@@ -9,29 +9,16 @@ Outputs:
   1. attn_weight_vs_distance.pdf   — Attention weight vs distance curve, per layer
   2. attn_head_avg_distance.pdf    — Per-head average attention distance scatter
   3. attn_distance_heatmap.pdf     — Layer × distance heatmap (side-by-side)
+  4. attn_aggregate_comparison.pdf — Single-panel summary
 
 Usage:
   python visualize_attention_distance.py \
       --geo_ckpt  /path/to/geo_750m_checkpoint.pt \
       --evq_ckpt  /path/to/evq_750m_checkpoint.pt \
-      --tier 750m \
-      --tau 1.5 \
-      --seq_len 8192 \
+      --val_pt    /path/to/val_fineweb-edu_5000000.pt \
+      --num_samples 16 \
+      --tier 750m --tau 1.5 --seq_len 8192 \
       --output_dir ./figures/attention_viz
-
-  # Quick test with shorter context:
-  python visualize_attention_distance.py \
-      --geo_ckpt  /path/to/geo.pt \
-      --evq_ckpt  /path/to/evq.pt \
-      --seq_len 2048 \
-      --output_dir ./figures/attention_viz
-
-Notes:
-  - For 750M @ 8K: ~6GB VRAM per model (R6000 24GB is fine)
-  - Attention weights are computed manually (not via F.scaled_dot_product_attention)
-    so we can capture per-head weight matrices.
-  - Statistics are accumulated on-the-fly; full attention matrices are NOT stored
-    in memory to keep VRAM usage manageable.
 """
 
 import argparse
@@ -112,20 +99,18 @@ class AttentionStatsCollector:
     """
 
     def __init__(self, num_layers: int, num_heads: int,
-                 seq_len: int, num_bins: int = 256):
+                 seq_len: int, num_bins: int = 128):
         self.num_layers = num_layers
         self.num_heads = num_heads
         self.seq_len = seq_len
-        self.num_bins = num_bins
 
-        # Log-spaced bins from 1 to seq_len
-        self.bin_edges = np.concatenate([
-            [0],
-            np.logspace(0, np.log10(seq_len), num_bins).astype(int)
-        ])
-        self.bin_edges = np.unique(self.bin_edges)
+        # Uniform-in-log bins: equal width on log scale
+        self.bin_edges = np.geomspace(1, seq_len, num_bins + 1)
+        self.bin_edges = np.concatenate([[0], self.bin_edges])  # prepend 0 for distance=0
         self.num_bins = len(self.bin_edges) - 1
-        self.bin_centers = (self.bin_edges[:-1] + self.bin_edges[1:]) / 2.0
+        self.bin_centers = np.sqrt(
+            np.maximum(self.bin_edges[:-1], 0.5) * self.bin_edges[1:]
+        )  # geometric mean for log-spaced centers
 
         # Accumulators: [num_layers, num_heads, num_bins]
         self.distance_hist = np.zeros((num_layers, num_heads, self.num_bins), dtype=np.float64)
@@ -134,6 +119,7 @@ class AttentionStatsCollector:
         self.weight_sum = np.zeros((num_layers, num_heads), dtype=np.float64)
 
         self._hooks = []
+        self.num_samples_accumulated = 0
 
     def register_hooks(self, model: GPT):
         """Register forward hooks on all Attention modules."""
@@ -143,8 +129,16 @@ class AttentionStatsCollector:
             self._hooks.append(h)
 
     def _make_hook(self, layer_idx: int, attn_module: Attention):
-        """Create a hook that recomputes attention weights and accumulates stats."""
+        """Create a hook that computes attention weights and accumulates stats.
+
+        Optimizations:
+          - All histogram computation on GPU via torch.bucketize + scatter_add
+          - No Python loop over heads (fully vectorized)
+          - Single CPU transfer per layer
+        """
         collector = self
+        bin_edges_t = torch.from_numpy(self.bin_edges.astype(np.float32))
+        num_bins = self.num_bins
 
         def hook_fn(module, inputs, output):
             x = inputs[0]  # (B, L, H)
@@ -153,68 +147,61 @@ class AttentionStatsCollector:
             hd = module.hd
 
             with torch.no_grad():
-                # Recompute QKV and apply RoPE (same as Attention.forward)
+                dev = x.device
+
+                # Recompute QKV + RoPE (needed because SDPA doesn't expose weights)
                 qkv = module.qkv(x).view(B, L, 3, nh, hd).permute(2, 0, 3, 1, 4)
                 q, k = qkv[0], qkv[1]  # (B, nh, L, hd)
+                del qkv
                 cos, sin = module.rope(L)
                 cos, sin = cos[None, None], sin[None, None]
                 q = apply_rope(q, cos, sin)
                 k = apply_rope(k, cos, sin)
 
-                # Compute attention scores manually
                 scale = 1.0 / math.sqrt(hd)
+                bin_edges_dev = bin_edges_t.to(dev)
 
-                # Process in chunks along query dimension to save memory
-                # For each chunk of queries, compute attention over ALL keys
-                chunk_size = min(512, L)
+                # GPU accumulators for this layer
+                hist_gpu = torch.zeros(nh, num_bins, device=dev, dtype=torch.float64)
+                wdist_gpu = torch.zeros(nh, device=dev, dtype=torch.float64)
+                wsum_gpu = torch.zeros(nh, device=dev, dtype=torch.float64)
+
+                chunk_size = min(1024, L)
                 for q_start in range(0, L, chunk_size):
                     q_end = min(q_start + chunk_size, L)
                     q_chunk = q[:, :, q_start:q_end, :]  # (B, nh, chunk, hd)
 
-                    # Scores: (B, nh, chunk, L)
                     scores = torch.matmul(q_chunk, k.transpose(-2, -1)) * scale
 
-                    # Causal mask: query at position q_pos can only attend to k_pos <= q_pos
-                    q_positions = torch.arange(q_start, q_end, device=x.device)
-                    k_positions = torch.arange(L, device=x.device)
-                    # mask[i, j] = True if k_positions[j] > q_positions[i]
-                    causal_mask = k_positions[None, :] > q_positions[:, None]
-                    scores.masked_fill_(causal_mask[None, None, :, :], float('-inf'))
+                    q_pos = torch.arange(q_start, q_end, device=dev)
+                    k_pos = torch.arange(L, device=dev)
+                    causal_mask = k_pos[None, :] > q_pos[:, None]
+                    scores.masked_fill_(causal_mask[None, None], float('-inf'))
 
-                    # Softmax → attention weights
-                    weights = F.softmax(scores, dim=-1)  # (B, nh, chunk, L)
+                    # (B, nh, chunk, L) → average over batch → (nh, chunk, L)
+                    weights = F.softmax(scores, dim=-1).float().mean(dim=0)
+                    del scores
 
-                    # Compute distances: |q_pos - k_pos| for valid (non-masked) positions
-                    # distances[i, j] = q_positions[i] - k_positions[j]  (always >= 0 for causal)
-                    distances = q_positions[:, None] - k_positions[None, :]  # (chunk, L)
-                    distances = distances.clamp(min=0)
+                    distances = (q_pos[:, None] - k_pos[None, :]).clamp(min=0).float()  # (chunk, L)
 
-                    # Accumulate statistics (move to CPU for numpy)
-                    weights_cpu = weights.float().mean(dim=0).cpu().numpy()  # (nh, chunk, L)
-                    distances_cpu = distances.cpu().numpy()  # (chunk, L)
+                    # ── Vectorized histogram: all heads at once via scatter_add ──
+                    bin_idx = torch.bucketize(distances, bin_edges_dev) - 1
+                    bin_idx = bin_idx.clamp(0, num_bins - 1).long()  # (chunk, L)
 
-                    for h in range(nh):
-                        w_h = weights_cpu[h]  # (chunk, L)
-                        # Flatten for histogram
-                        d_flat = distances_cpu.ravel()
-                        w_flat = w_h.ravel()
+                    # Expand bin_idx to (nh, chunk*L) and flatten weights
+                    bin_flat = bin_idx.unsqueeze(0).expand(nh, -1, -1).reshape(nh, -1)
+                    w_flat = weights.reshape(nh, -1).double()
+                    hist_gpu.scatter_add_(1, bin_flat, w_flat)
 
-                        # Remove -inf/NaN positions (where mask was applied)
-                        valid = np.isfinite(w_flat) & (w_flat > 0)
-                        d_valid = d_flat[valid]
-                        w_valid = w_flat[valid]
+                    # Weighted distance sum (vectorized, no head loop)
+                    d_exp = distances.unsqueeze(0).expand(nh, -1, -1).double()
+                    wdist_gpu += (weights.double() * d_exp).sum(dim=(1, 2))
+                    wsum_gpu += weights.double().sum(dim=(1, 2))
 
-                        if len(w_valid) == 0:
-                            continue
-
-                        # Bin into distance histogram
-                        hist, _ = np.histogram(d_valid, bins=collector.bin_edges,
-                                               weights=w_valid)
-                        collector.distance_hist[layer_idx, h] += hist
-
-                        # Accumulate for weighted average distance
-                        collector.weighted_dist_sum[layer_idx, h] += np.sum(d_valid * w_valid)
-                        collector.weight_sum[layer_idx, h] += np.sum(w_valid)
+                # Single CPU transfer per layer
+                collector.distance_hist[layer_idx] += hist_gpu.cpu().numpy()
+                collector.weighted_dist_sum[layer_idx] += wdist_gpu.cpu().numpy()
+                collector.weight_sum[layer_idx] += wsum_gpu.cpu().numpy()
 
         return hook_fn
 
@@ -235,6 +222,13 @@ class AttentionStatsCollector:
         with np.errstate(divide='ignore', invalid='ignore'):
             normalized = self.distance_hist / np.maximum(totals, 1e-12)
         return normalized
+
+    def get_density_hist(self):
+        """Density histogram: normalized AND divided by bin width (for proper PDF).
+        This corrects for unequal bin widths in log-spaced bins."""
+        normalized = self.get_normalized_hist()
+        bin_widths = np.diff(self.bin_edges)
+        return normalized / bin_widths[None, None, :]
 
 
 # ── Model loading ────────────────────────────────────────────────────
@@ -271,73 +265,99 @@ def load_model(ckpt_path, tier, rope_type, tau, base, seq_len, device):
 
 # ── Input data preparation ───────────────────────────────────────────
 
-def prepare_input(seq_len: int, device, tokenizer=None, text_file=None):
+def prepare_inputs(seq_len: int, device, val_pt=None, num_samples=16):
     """
-    Prepare input token IDs for attention analysis.
+    Prepare multiple input segments for robust attention analysis.
 
-    Priority:
-      1. If text_file is provided, tokenize from file
-      2. If tokenizer available, use a built-in sample text
-      3. Fallback: random token IDs (attention patterns still meaningful for PE comparison)
+    If val_pt is provided, loads pre-tokenized data and splits into segments.
+    Otherwise falls back to random tokens.
+
+    Returns: list of (1, seq_len) tensors
     """
-    if text_file and os.path.exists(text_file):
-        print(f"  Loading text from {text_file}")
-        with open(text_file, "r") as f:
-            text = f.read()
-        if tokenizer is not None:
-            ids = tokenizer.encode(text, add_special_tokens=True)
-            ids = ids[:seq_len]
-            if len(ids) < seq_len:
-                print(f"  WARNING: text only {len(ids)} tokens, padding to {seq_len}")
-                ids = ids + [tokenizer.eos_token_id] * (seq_len - len(ids))
-            return torch.tensor([ids], dtype=torch.long, device=device)
+    if val_pt and os.path.exists(val_pt):
+        print(f"  Loading pre-tokenized data from {val_pt}")
+        data = torch.load(val_pt, map_location="cpu")
+        if isinstance(data, dict):
+            data = data.get("val", data.get("data", next(iter(data.values()))))
+        data = data.flatten()
+        total_tokens = data.shape[0]
+        max_segments = total_tokens // seq_len
+        num_samples = min(num_samples, max_segments)
+        print(f"  {total_tokens} tokens → {max_segments} possible segments, using {num_samples}")
 
-    if tokenizer is not None:
-        try:
-            from datasets import load_dataset
-            print("  Loading sample from FineWeb-Edu for attention analysis...")
-            ds = load_dataset("HuggingFaceFW/fineweb-edu", "sample-10BT",
-                              split="train", streaming=True)
-            texts = []
-            total_tokens = 0
-            for sample in ds:
-                texts.append(sample["text"])
-                total_tokens += len(sample["text"].split())
-                if total_tokens > seq_len * 2:
-                    break
-            full_text = "\n\n".join(texts)
-            ids = tokenizer.encode(full_text, add_special_tokens=True)[:seq_len]
-            print(f"  Tokenized {len(ids)} tokens from FineWeb-Edu")
-            return torch.tensor([ids], dtype=torch.long, device=device)
-        except Exception as e:
-            print(f"  Could not load FineWeb-Edu: {e}")
+        segments = []
+        for i in range(num_samples):
+            start = i * seq_len
+            seg = data[start:start + seq_len].unsqueeze(0).to(device)
+            segments.append(seg)
+        return segments
 
-    # Fallback: random tokens (still valid for PE structural comparison)
-    print("  Using random token IDs (structural PE comparison still valid)")
-    ids = torch.randint(100, 50000, (1, seq_len), device=device)
-    return ids
+    # Fallback: try streaming from HF
+    try:
+        from transformers import AutoTokenizer
+        from datasets import load_dataset
+        tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neox-20b")
+        print("  Loading from FineWeb-Edu (streaming)...")
+        ds = load_dataset("HuggingFaceFW/fineweb-edu", "sample-10BT",
+                          split="train", streaming=True)
+        all_ids = []
+        for sample in ds:
+            ids = tokenizer.encode(sample["text"], add_special_tokens=False)
+            all_ids.extend(ids)
+            if len(all_ids) >= seq_len * num_samples:
+                break
+        all_ids = all_ids[:seq_len * num_samples]
+        segments = []
+        for i in range(num_samples):
+            seg = torch.tensor(all_ids[i * seq_len:(i + 1) * seq_len],
+                               dtype=torch.long, device=device).unsqueeze(0)
+            segments.append(seg)
+        print(f"  Prepared {len(segments)} segments from FineWeb-Edu")
+        return segments
+    except Exception as e:
+        print(f"  Could not load FineWeb-Edu: {e}")
+
+    # Final fallback: random tokens
+    print(f"  Using random token IDs ({num_samples} segments)")
+    segments = []
+    for _ in range(num_samples):
+        seg = torch.randint(100, 50000, (1, seq_len), device=device)
+        segments.append(seg)
+    return segments
+
+
+# ── Smoothing utility ────────────────────────────────────────────────
+
+def smooth_curve(y, sigma=2.0):
+    """Gaussian smoothing for 1D curves."""
+    try:
+        from scipy.ndimage import gaussian_filter1d
+        return gaussian_filter1d(y, sigma=sigma)
+    except ImportError:
+        # Manual Gaussian smoothing fallback
+        kernel_size = int(sigma * 4) * 2 + 1
+        x = np.arange(kernel_size) - kernel_size // 2
+        kernel = np.exp(-0.5 * (x / sigma) ** 2)
+        kernel /= kernel.sum()
+        return np.convolve(y, kernel, mode='same')
 
 
 # ── Visualization ────────────────────────────────────────────────────
 
-def plot_attention_weight_vs_distance(geo_collector, evq_collector, output_path, tier):
+def plot_attention_weight_vs_distance(geo_collector, evq_collector, output_path, tier,
+                                       sigma=2.0):
     """
     Figure 1: Attention weight vs distance curve.
-    One subplot per layer, EVQ vs Geo lines overlaid.
+    One subplot per layer, EVQ vs Geo lines overlaid, with smoothing.
     """
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    from matplotlib.ticker import LogLocator, NullFormatter
 
     num_layers = geo_collector.num_layers
-    geo_hist = geo_collector.get_normalized_hist()  # (L, H, bins)
-    evq_hist = evq_collector.get_normalized_hist()
+    geo_density = geo_collector.get_density_hist().mean(axis=1)  # (L, bins)
+    evq_density = evq_collector.get_density_hist().mean(axis=1)
     bin_centers = geo_collector.bin_centers
-
-    # Average over heads for per-layer curves
-    geo_layer = geo_hist.mean(axis=1)  # (L, bins)
-    evq_layer = evq_hist.mean(axis=1)
 
     cols = 3
     rows = math.ceil(num_layers / cols)
@@ -347,9 +367,11 @@ def plot_attention_weight_vs_distance(geo_collector, evq_collector, output_path,
 
     for layer_idx in range(num_layers):
         ax = axes_flat[layer_idx]
-        ax.plot(bin_centers, geo_layer[layer_idx], color="#2196F3",
+        geo_y = smooth_curve(geo_density[layer_idx], sigma)
+        evq_y = smooth_curve(evq_density[layer_idx], sigma)
+        ax.plot(bin_centers, geo_y, color="#2196F3",
                 alpha=0.85, linewidth=1.5, label="Geometric")
-        ax.plot(bin_centers, evq_layer[layer_idx], color="#FF5722",
+        ax.plot(bin_centers, evq_y, color="#FF5722",
                 alpha=0.85, linewidth=1.5, label="EVQ-Cosh")
         ax.set_xscale("log")
         ax.set_title(f"Layer {layer_idx}", fontsize=10)
@@ -357,12 +379,11 @@ def plot_attention_weight_vs_distance(geo_collector, evq_collector, output_path,
         if layer_idx == 0:
             ax.legend(fontsize=8, loc="upper right")
 
-    # Hide unused subplots
     for idx in range(num_layers, len(axes_flat)):
         axes_flat[idx].set_visible(False)
 
     fig.supxlabel("Attention Distance (tokens)", fontsize=12)
-    fig.supylabel("Normalized Attention Weight", fontsize=12)
+    fig.supylabel("Attention Density", fontsize=12)
     fig.suptitle(f"Attention Weight vs Distance — {tier.upper()} (head-averaged)",
                  fontsize=13, fontweight="bold")
     plt.tight_layout(rect=[0.02, 0.02, 1, 0.96])
@@ -384,6 +405,11 @@ def plot_head_avg_distance(geo_collector, evq_collector, output_path, tier):
     geo_avg = geo_collector.get_avg_distance()  # (L, H)
     evq_avg = evq_collector.get_avg_distance()
     num_layers = geo_avg.shape[0]
+    num_heads = geo_avg.shape[1]
+
+    # Count heads above/below diagonal
+    above = np.sum(evq_avg > geo_avg)
+    total = geo_avg.size
 
     # Color by layer
     cmap = plt.cm.viridis
@@ -393,7 +419,7 @@ def plot_head_avg_distance(geo_collector, evq_collector, output_path, tier):
 
     for layer_idx in range(num_layers):
         ax.scatter(geo_avg[layer_idx], evq_avg[layer_idx],
-                   c=[colors[layer_idx]] * geo_avg.shape[1],
+                   c=[colors[layer_idx]] * num_heads,
                    s=30, alpha=0.7, edgecolors="white", linewidths=0.3,
                    label=f"L{layer_idx}" if layer_idx % 3 == 0 else None)
 
@@ -407,7 +433,7 @@ def plot_head_avg_distance(geo_collector, evq_collector, output_path, tier):
     ax.set_xlabel("Geometric — Avg Attention Distance (tokens)", fontsize=11)
     ax.set_ylabel("EVQ-Cosh — Avg Attention Distance (tokens)", fontsize=11)
     ax.set_title(f"Per-Head Average Attention Distance — {tier.upper()}\n"
-                 f"(above diagonal = EVQ attends farther)", fontsize=12, fontweight="bold")
+                 f"({above}/{total} heads: EVQ attends farther)", fontsize=12, fontweight="bold")
     ax.legend(fontsize=8, ncol=3, loc="upper left")
     ax.set_aspect("equal")
     ax.grid(True, alpha=0.2)
@@ -418,50 +444,64 @@ def plot_head_avg_distance(geo_collector, evq_collector, output_path, tier):
 
 def plot_distance_heatmap(geo_collector, evq_collector, output_path, tier):
     """
-    Figure 3: Distance heatmap (layer × distance bins).
+    Figure 3: Distance heatmap (layer × distance).
     Side-by-side: Geo | EVQ | Difference.
-    Head-averaged, log-distance x-axis.
+    X-axis: actual distance (log-scale), Y-axis: layer.
+    Uses pcolormesh with log color scale to reveal long-range structure.
     """
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    from matplotlib.colors import TwoSlopeNorm
+    from matplotlib.colors import LogNorm, TwoSlopeNorm, SymLogNorm
+    import matplotlib.ticker as mticker
 
+    # Use raw normalized histogram (not density) for heatmap —
+    # pcolormesh already renders each bin at its true log-width
     geo_hist = geo_collector.get_normalized_hist().mean(axis=1)  # (L, bins)
     evq_hist = evq_collector.get_normalized_hist().mean(axis=1)
-    diff = evq_hist - geo_hist  # positive = EVQ has more weight at this distance
-    bin_centers = geo_collector.bin_centers
+    diff = evq_hist - geo_hist
+    bin_edges = geo_collector.bin_edges
+    num_layers = geo_hist.shape[0]
+
+    x_edges = bin_edges.copy()
+    x_edges[0] = max(x_edges[0], 0.5)
+    y_edges = np.arange(num_layers + 1) - 0.5
 
     fig, axes = plt.subplots(1, 3, figsize=(18, 5), sharey=True)
 
-    # Shared colormap for Geo and EVQ
-    vmax = max(geo_hist.max(), evq_hist.max())
+    # Log color scale reveals both short and long-range patterns
+    vmin_log = 1e-4
+    vmax_log = max(geo_hist.max(), evq_hist.max())
     for ax_idx, (data, title, cmap_name) in enumerate([
         (geo_hist, "Geometric", "Blues"),
         (evq_hist, "EVQ-Cosh", "Oranges"),
     ]):
         ax = axes[ax_idx]
-        im = ax.imshow(data, aspect="auto", origin="lower",
-                       cmap=cmap_name, vmin=0, vmax=vmax,
-                       extent=[0, data.shape[1], -0.5, data.shape[0] - 0.5])
+        data_clipped = np.clip(data, vmin_log, None)
+        im = ax.pcolormesh(x_edges, y_edges, data_clipped, cmap=cmap_name,
+                           norm=LogNorm(vmin=vmin_log, vmax=vmax_log),
+                           shading='flat')
+        ax.set_xscale("log")
         ax.set_title(title, fontsize=12, fontweight="bold")
-        ax.set_xlabel("Distance Bin Index (log-spaced)", fontsize=10)
+        ax.set_xlabel("Attention Distance (tokens)", fontsize=10)
         if ax_idx == 0:
             ax.set_ylabel("Layer", fontsize=10)
-        plt.colorbar(im, ax=ax, shrink=0.8)
+        ax.set_yticks(range(num_layers))
+        plt.colorbar(im, ax=ax, shrink=0.8, label="Attn Weight (log)")
 
-    # Difference plot
+    # Difference: symmetric log scale to show both positive/negative and small values
     ax = axes[2]
     abs_max = max(abs(diff.min()), abs(diff.max()))
     if abs_max < 1e-12:
         abs_max = 1.0
-    norm = TwoSlopeNorm(vmin=-abs_max, vcenter=0, vmax=abs_max)
-    im = ax.imshow(diff, aspect="auto", origin="lower",
-                   cmap="RdBu_r", norm=norm,
-                   extent=[0, diff.shape[1], -0.5, diff.shape[0] - 0.5])
+    norm = SymLogNorm(linthresh=1e-4, vmin=-abs_max, vmax=abs_max)
+    im = ax.pcolormesh(x_edges, y_edges, diff, cmap="RdBu_r", norm=norm,
+                       shading='flat')
+    ax.set_xscale("log")
     ax.set_title("Δ (EVQ − Geo)", fontsize=12, fontweight="bold")
-    ax.set_xlabel("Distance Bin Index (log-spaced)", fontsize=10)
-    plt.colorbar(im, ax=ax, shrink=0.8)
+    ax.set_xlabel("Attention Distance (tokens)", fontsize=10)
+    ax.set_yticks(range(num_layers))
+    plt.colorbar(im, ax=ax, shrink=0.8, label="Δ Weight (symlog)")
 
     fig.suptitle(f"Attention Distance Distribution Heatmap — {tier.upper()} (head-averaged)",
                  fontsize=13, fontweight="bold")
@@ -471,38 +511,83 @@ def plot_distance_heatmap(geo_collector, evq_collector, output_path, tier):
     print(f"  Saved: {output_path}")
 
 
-def plot_layer_aggregate_comparison(geo_collector, evq_collector, output_path, tier):
+def plot_layer_aggregate_comparison(geo_collector, evq_collector, output_path, tier,
+                                     sigma=2.0):
     """
-    Figure 4 (bonus): Single-panel summary.
-    Aggregate across all layers: attention weight vs distance for Geo and EVQ.
-    Clearest view of the PE difference.
+    Figure 4: Two-panel summary.
+    Top: attention density vs distance (smoothed, log-x).
+    Bottom: EVQ/Geo ratio — makes the long-range advantage clearly visible.
     """
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+    from matplotlib.ticker import ScalarFormatter
 
-    geo_hist = geo_collector.get_normalized_hist().mean(axis=(0, 1))  # (bins,)
-    evq_hist = evq_collector.get_normalized_hist().mean(axis=(0, 1))
+    geo_density = geo_collector.get_density_hist().mean(axis=(0, 1))  # (bins,)
+    evq_density = evq_collector.get_density_hist().mean(axis=(0, 1))
     bin_centers = geo_collector.bin_centers
 
-    fig, ax = plt.subplots(figsize=(8, 4.5))
-    ax.plot(bin_centers, geo_hist, color="#2196F3", linewidth=2, label="Geometric")
-    ax.plot(bin_centers, evq_hist, color="#FF5722", linewidth=2, label="EVQ-Cosh")
+    geo_smooth = smooth_curve(geo_density, sigma)
+    evq_smooth = smooth_curve(evq_density, sigma)
 
-    ax.fill_between(bin_centers, geo_hist, evq_hist,
-                     where=(evq_hist > geo_hist), alpha=0.15, color="#FF5722",
-                     label="EVQ > Geo")
-    ax.fill_between(bin_centers, geo_hist, evq_hist,
-                     where=(geo_hist > evq_hist), alpha=0.15, color="#2196F3",
-                     label="Geo > EVQ")
+    # Compute ratio (EVQ / Geo), safe division
+    with np.errstate(divide='ignore', invalid='ignore'):
+        ratio = np.where(geo_smooth > 1e-15,
+                         evq_smooth / geo_smooth, 1.0)
+    ratio_smooth = smooth_curve(ratio, sigma)
 
-    ax.set_xscale("log")
-    ax.set_xlabel("Attention Distance (tokens)", fontsize=12)
-    ax.set_ylabel("Normalized Attention Weight", fontsize=12)
-    ax.set_title(f"Aggregate Attention Distance Distribution — {tier.upper()}\n"
-                 f"(averaged across all layers and heads)", fontsize=13, fontweight="bold")
-    ax.legend(fontsize=10)
-    ax.grid(True, alpha=0.2)
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 7), sharex=True,
+                                    gridspec_kw={"height_ratios": [2, 1], "hspace": 0.08})
+
+    # ── Top panel: density curves ──
+    ax1.plot(bin_centers, geo_smooth, color="#2196F3", linewidth=2, label="Geometric")
+    ax1.plot(bin_centers, evq_smooth, color="#FF5722", linewidth=2, label="EVQ-Cosh")
+
+    ax1.fill_between(bin_centers, geo_smooth, evq_smooth,
+                      where=(evq_smooth > geo_smooth), alpha=0.15, color="#FF5722",
+                      label="EVQ > Geo")
+    ax1.fill_between(bin_centers, geo_smooth, evq_smooth,
+                      where=(geo_smooth > evq_smooth), alpha=0.15, color="#2196F3",
+                      label="Geo > EVQ")
+
+    # Find and annotate crossover point
+    diff = evq_smooth - geo_smooth
+    sign_changes = np.where(np.diff(np.sign(diff)))[0]
+    cross_dist = None
+    for idx in sign_changes:
+        if bin_centers[idx] > 2:
+            cross_dist = bin_centers[idx]
+            ax1.axvline(cross_dist, color="gray", linestyle=":", alpha=0.5, linewidth=1)
+            ax1.annotate(f"crossover ≈{cross_dist:.0f} tok",
+                        xy=(cross_dist, geo_smooth[idx]),
+                        xytext=(cross_dist * 3, max(geo_smooth) * 0.6),
+                        fontsize=9, color="gray",
+                        arrowprops=dict(arrowstyle="->", color="gray", alpha=0.5))
+            break
+
+    ax1.set_xscale("log")
+    ax1.set_ylabel("Attention Density", fontsize=11)
+    ax1.set_title(f"Aggregate Attention Distance Distribution — {tier.upper()}\n"
+                  f"(averaged over all layers, heads, and {geo_collector.num_samples_accumulated} samples)",
+                  fontsize=12, fontweight="bold")
+    ax1.legend(fontsize=9, loc="upper right")
+    ax1.grid(True, alpha=0.2)
+
+    # ── Bottom panel: ratio ──
+    ax2.plot(bin_centers, ratio_smooth, color="#333333", linewidth=1.5)
+    ax2.axhline(1.0, color="gray", linestyle="--", alpha=0.4, linewidth=1)
+    ax2.fill_between(bin_centers, 1.0, ratio_smooth,
+                      where=(ratio_smooth > 1.0), alpha=0.2, color="#FF5722")
+    ax2.fill_between(bin_centers, 1.0, ratio_smooth,
+                      where=(ratio_smooth < 1.0), alpha=0.2, color="#2196F3")
+
+    if cross_dist is not None:
+        ax2.axvline(cross_dist, color="gray", linestyle=":", alpha=0.5, linewidth=1)
+
+    ax2.set_ylabel("EVQ / Geo Ratio", fontsize=11)
+    ax2.set_xlabel("Attention Distance (tokens)", fontsize=11)
+    ax2.set_ylim(0.4, 2.5)
+    ax2.grid(True, alpha=0.2)
 
     fig.savefig(output_path, dpi=200, bbox_inches="tight")
     plt.close(fig)
@@ -511,21 +596,27 @@ def plot_layer_aggregate_comparison(geo_collector, evq_collector, output_path, t
 
 # ── Main ─────────────────────────────────────────────────────────────
 
-def collect_attention_stats(model, input_ids, tier_cfg):
-    """Run forward pass and collect attention statistics."""
+def collect_attention_stats(model, input_segments, tier_cfg):
+    """Run forward passes over multiple segments and accumulate attention statistics."""
     num_layers = tier_cfg["num_layers"]
     num_heads = tier_cfg["num_heads"]
-    seq_len = input_ids.shape[1]
+    seq_len = input_segments[0].shape[1]
 
     collector = AttentionStatsCollector(num_layers, num_heads, seq_len)
     collector.register_hooks(model)
 
-    print(f"  Running forward pass (seq_len={seq_len})...")
+    total_samples = len(input_segments)
     t0 = time.time()
-    with torch.no_grad():
-        _ = model(input_ids)
+    for i, seg in enumerate(input_segments):
+        with torch.no_grad():
+            _ = model(seg)
+        collector.num_samples_accumulated += 1
+        elapsed = time.time() - t0
+        eta = elapsed / (i + 1) * (total_samples - i - 1)
+        print(f"    sample {i+1}/{total_samples}  ({elapsed:.1f}s elapsed, ETA {eta:.0f}s)")
+
     t1 = time.time()
-    print(f"  Forward pass done in {t1 - t0:.1f}s")
+    print(f"  All {total_samples} forward passes done in {t1 - t0:.1f}s")
 
     collector.remove_hooks()
     return collector
@@ -547,12 +638,16 @@ def main():
                         help="RoPE base frequency (default: 500000)")
     parser.add_argument("--seq_len", type=int, default=8192,
                         help="Sequence length for attention analysis (default: 8192)")
-    parser.add_argument("--text_file", type=str, default=None,
-                        help="Optional text file for input (otherwise uses FineWeb or random)")
+    parser.add_argument("--val_pt", type=str, default=None,
+                        help="Path to pre-tokenized validation .pt file (flat 1D tensor)")
+    parser.add_argument("--num_samples", type=int, default=16,
+                        help="Number of text segments to average over (default: 16)")
     parser.add_argument("--output_dir", type=str, default="./figures/attention_viz",
                         help="Output directory for figures")
-    parser.add_argument("--num_bins", type=int, default=256,
-                        help="Number of distance histogram bins (default: 256)")
+    parser.add_argument("--num_bins", type=int, default=128,
+                        help="Number of distance histogram bins (default: 128)")
+    parser.add_argument("--sigma", type=float, default=2.0,
+                        help="Gaussian smoothing sigma for curves (default: 2.0)")
     parser.add_argument("--device", type=str, default=None,
                         help="Device (default: auto-detect)")
     parser.add_argument("--dtype", type=str, default="bf16",
@@ -577,17 +672,10 @@ def main():
     tier_cfg = TIER_CONFIGS[args.tier]
     os.makedirs(args.output_dir, exist_ok=True)
 
-    # ── Prepare input ────────────────────────────────────────────────
-    print("\n=== Preparing input tokens ===")
-    try:
-        from transformers import AutoTokenizer
-        tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neox-20b")
-    except Exception:
-        tokenizer = None
-        print("  transformers not available, will use random tokens")
-
-    input_ids = prepare_input(args.seq_len, device, tokenizer, args.text_file)
-    print(f"  Input shape: {input_ids.shape}")
+    # ── Prepare input segments ────────────────────────────────────────
+    print("\n=== Preparing input segments ===")
+    input_segments = prepare_inputs(args.seq_len, device, args.val_pt, args.num_samples)
+    print(f"  {len(input_segments)} segments × {args.seq_len} tokens")
 
     # ── Collect Geometric attention stats ────────────────────────────
     print("\n=== Loading Geometric model ===")
@@ -595,10 +683,9 @@ def main():
         args.geo_ckpt, args.tier, "geo", args.tau, args.base, args.seq_len, device)
     if compute_dtype != torch.float32:
         geo_model = geo_model.to(dtype=compute_dtype)
-        # Hooks do manual attention in float32 for numerical stability
 
     print("\n=== Collecting Geometric attention statistics ===")
-    geo_collector = collect_attention_stats(geo_model, input_ids, tier_cfg)
+    geo_collector = collect_attention_stats(geo_model, input_segments, tier_cfg)
     del geo_model
     torch.cuda.empty_cache() if device.type == "cuda" else None
 
@@ -610,7 +697,7 @@ def main():
         evq_model = evq_model.to(dtype=compute_dtype)
 
     print("\n=== Collecting EVQ attention statistics ===")
-    evq_collector = collect_attention_stats(evq_model, input_ids, tier_cfg)
+    evq_collector = collect_attention_stats(evq_model, input_segments, tier_cfg)
     del evq_model
     torch.cuda.empty_cache() if device.type == "cuda" else None
 
@@ -620,7 +707,7 @@ def main():
     plot_attention_weight_vs_distance(
         geo_collector, evq_collector,
         os.path.join(args.output_dir, "attn_weight_vs_distance.pdf"),
-        args.tier)
+        args.tier, sigma=args.sigma)
 
     plot_head_avg_distance(
         geo_collector, evq_collector,
@@ -635,7 +722,7 @@ def main():
     plot_layer_aggregate_comparison(
         geo_collector, evq_collector,
         os.path.join(args.output_dir, "attn_aggregate_comparison.pdf"),
-        args.tier)
+        args.tier, sigma=args.sigma)
 
     # ── Save raw statistics for later use ────────────────────────────
     stats_path = os.path.join(args.output_dir, "attention_stats.npz")
@@ -647,6 +734,7 @@ def main():
         evq_avg_distance=evq_collector.get_avg_distance(),
         bin_edges=geo_collector.bin_edges,
         bin_centers=geo_collector.bin_centers,
+        num_samples=geo_collector.num_samples_accumulated,
     )
     print(f"  Raw stats saved: {stats_path}")
 
@@ -654,7 +742,7 @@ def main():
     geo_avg = geo_collector.get_avg_distance()
     evq_avg = evq_collector.get_avg_distance()
     print("\n" + "=" * 64)
-    print("SUMMARY: Per-Layer Average Attention Distance")
+    print(f"SUMMARY: Per-Layer Average Attention Distance ({geo_collector.num_samples_accumulated} samples)")
     print("=" * 64)
     print(f"{'Layer':<8} {'Geo':>10} {'EVQ':>10} {'Δ':>10} {'EVQ/Geo':>10}")
     print("-" * 48)
