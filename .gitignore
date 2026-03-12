@@ -67,12 +67,16 @@ paper_draft/*.synctex.gz
 paper_draft/*.fdb_latexmk
 paper_draft/*.fls
 
+# Paper folder (entire directory)
+paper/
+
 # Local environments
 .venv/
 venv/
 
 # Tooling metadata
 .codex/
+.codex_tmp/
 .claude/
 
 # macOS metadata
