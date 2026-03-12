@@ -128,7 +128,51 @@ Phase 15 文档记录的初始化是：
 
 本轮后续 clean eval 已修成真正的 per-channel progressive YaRN。
 
-### 3.4 训练目标与评测目标错位
+### 3.4 EVQ 的 `tau` 没有按 `8K` finetune stage 重新 retarget
+
+这是一个更具体、也更容易被忽略的设计不对称。
+
+当前 `750M` downstream finetune 用的不是一个“随 stage 更新的 EVQ 频率分配”，而是直接沿用了已有 checkpoint 的固定 `tau`。
+
+本轮使用的 Phase 15 文档写的是：
+
+- `EVQ tau=1.5, r=0`
+
+而按我们自己在 progressive protocol 中写过的 scaling：
+
+- `L=2048 -> tau*=64/sqrt(2048)=1.414`
+- `L=4096 -> tau*=64/sqrt(4096)=1.0`
+- `L=8192 -> tau*=64/sqrt(8192)=0.707`
+
+也就是说，如果把 `8K finetune` 看成一个新的训练 stage，那么当前 EVQ 其实是带着一个 **对更短训练长度更激进的 warp** 去适应 `8K` 任务数据。
+
+这对 Geo 不构成同类问题，因为：
+
+- Geo 永远是 `tau=0`
+
+所以当前实验存在一个真实的 asymmetric burden：
+
+- Geo: 没有 length-dependent hyperparameter mismatch
+- EVQ: 有
+
+这很可能解释了为什么我们看到：
+
+- `8K/12K/16K` 的 in-dist / near-extrap 区间整体偏 Geo
+- 但更远处 `24K/32K/40K` EVQ 又能重新冒出优势
+
+换句话说，这轮实验更像是在测：
+
+- **fixed-tau EVQ carried into 8K SFT**
+
+而不是：
+
+- **stage-aware retargeted EVQ at 8K**
+
+因此，当前 downstream negative signal 不能直接被读成“按我们自己的 length-aware EVQ rule，工程上也不行”；它更准确地是在说：
+
+- **固定旧 `tau` 直接拿去做 8K SFT，没有证明工程收益**
+
+### 3.5 训练目标与评测目标错位
 
 这是本轮最大的结构性问题。
 
@@ -150,7 +194,7 @@ Phase 15 文档记录的初始化是：
 
 这个差异不是模型突然不会做题，而是 **scorer 和训练目标根本没对齐**。
 
-### 3.5 原来的 “clean @8K” 其实也不是 in-distribution baseline
+### 3.6 原来的 “clean @8K” 其实也不是 in-distribution baseline
 
 在 `article_pad_extrap` 协议里，evaluator 会：
 
@@ -166,7 +210,7 @@ Phase 15 文档记录的初始化是：
 
 所以之前那个 “clean @8K” 其实仍然是 stress test，不是 in-dist baseline。
 
-### 3.6 Finetune 数据本身存在中间截断
+### 3.7 Finetune 数据本身存在中间截断
 
 当前 finetune 预处理对所有超过 `seq_len` 的样本采用 middle truncation：
 
@@ -183,7 +227,7 @@ Phase 15 文档记录的初始化是：
 也就是说，大约十分之一的训练样本在 finetune 时就会丢失中间证据。
 对需要精确证据定位的 QA，这会直接增加训练噪声。
 
-### 3.7 统计功效不足
+### 3.8 统计功效不足
 
 当前 pilot 的规模太小：
 
@@ -339,6 +383,13 @@ Phase 15 文档记录的初始化是：
 
 因此不能把这轮写成稳定、单调、可复现的 downstream anchor。
 
+另一个重要 caveat 是：
+
+- 当前这条曲线测到的还是 **fixed-tau EVQ**
+- 不是按 `tau*(L_train)` 在 `8K` stage 重新 retarget 过的 EVQ
+
+因此它对“EVQ 作为 length-aware rule 是否在工程上有效”的判定，仍然是不完整的。
+
 ### 6.3 当前最合理的定位
 
 这轮实验最适合被定位为：
@@ -355,19 +406,23 @@ Phase 15 文档记录的初始化是：
 
 如果只选一个最核心的问题，我会选：
 
-**当前 QuALITY pipeline 把 free-form generation finetune，当成了 multiple-choice calibrated evaluation 来读。**
+**当前 QuALITY pipeline 同时犯了两类最伤解释性的错：**
 
-这是解释链条断裂的根源。
+- 把 free-form generation finetune，当成了 multiple-choice calibrated evaluation 来读
+- 在 `8K` finetune stage 没有按 length-aware rule 重新 retarget `tau`
+
+这两点叠在一起，基本足以把下游结论读歪。
 
 如果展开成问题树，排序如下：
 
 1. **训练目标 vs 评测目标错位**
-2. **旧版 QuALITY accuracy 指标无效**
-3. **旧版长长度 eval 存在真实 bug**
-4. **8K baseline 最初并不干净**
-5. **750M checkpoint 血统不够 clean**
-6. **训练样本有 10% 中间截断**
-7. **pilot 统计功效不足**
+2. **EVQ `tau` 没有按 `8K` finetune stage 重新 retarget**
+3. **旧版 QuALITY accuracy 指标无效**
+4. **旧版长长度 eval 存在真实 bug**
+5. **8K baseline 最初并不干净**
+6. **750M checkpoint 血统不够 clean**
+7. **训练样本有 10% 中间截断**
+8. **pilot 统计功效不足**
 
 也就是说，当前问题不是“QuALITY 这个任务选错了”，而是：
 
