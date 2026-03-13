@@ -1,68 +1,60 @@
-# Advisor Brief
+# Advisor Brief — EVQ-Cosh NeurIPS 2026
 
-## What We Have Done
+> 最后更新: 2026-03-13
 
-- Formulated RoPE frequency allocation as a variational inverse problem.
-- Derived a closed-form EVQ-cosh family, with geometric RoPE recovered as the `tau = 0` limit.
-- Built a paper package around three anchored claims:
-  1. closed-form theory for training-time frequency allocation,
-  2. EVQ beats learnable PE in DAPE-style extreme extrapolation,
-  3. `EVQ + YaRN >> Geo + YaRN` in the main long-context systems setting.
+## 论文三锚点
 
-## Strongest Current Evidence
+1. **Closed-form theory**: RoPE 频率分配是变分逆问题的闭式解，geometric RoPE 是 τ→0 退化极限
+2. **Extreme extrapolation**: EVQ 在 DAPE-style 128→8K 极端外推中匹敌/超越可学习 PE (Phase 11b, 3-seed)
+3. **Systems result**: EVQ + Progressive YaRN = 100% passkey @8× vs Geo + YaRN = 61-65% (Phase 14c, 3+3 seed)
 
-- `350M` multi-seed raw text results: stable long-range PPL gains with near-zero short-range cost.
-- `Phase 11 (L=256)`:
-  - direct support for the `tau*` prediction,
-  - strong PE-dominant extrapolation gains,
-  - EVQ×YaRN leverage becomes much larger than Geo×YaRN.
-- `Passkey mix` multi-seed:
-  - raw retrieval gains are stable,
-  - EVQ+YaRN reaches `100% @ 8K` while Geo+YaRN does not.
-- `750M continue@4K` supporting signal:
-  - long-range gains persist at larger scale,
-  - `16K PPL -45.9%`,
-  - `8K AR exact 77.5% vs 0%`.
+## 最新进展 (2026-03-12/13)
 
-## New Mechanism Question We Now Want To Test
+### 已完成
+- ✅ **99-run τ* scaling law 验证** (Phase 16): τ*=d_head/√L 在 50M/125M 多配置下 R²>0.95
+- ✅ **Phase 17c 454M Stage 2-3**: seeds 42-44 确认 1024→2048 续训仍保持 EVQ 优势
+- ✅ **750M continued-pretrain**: 16K PPL -45.9%, 8K AR exact 77.5% vs 0% (单 seed, supporting)
+- ✅ **QuALITY 下游评估** (n=2086): Gold NLL -30.1% @8K, -21.4% @16K (EVQ vs Geo)
+- ✅ **LaTeX 初稿完成**: 10页正文 + 8页附录, 7 figures, 6 tables
+- ✅ **Attention distance visualization**: 750M EVQ vs Geo head-level 对比
 
-We now have a more specific scale-dependent hypothesis:
+### 单点风险
+| 风险 | 严重程度 | 缓解策略 |
+|------|---------|---------|
+| Phase 17c 仅 seeds 42-44, single-config | ⚠️ HIGH | 补充 multi-config 或标注 limitations |
+| 750M 仅 single-seed | ⚠️ HIGH | 标注为 supporting evidence |
+| 454M 下游准确率无差异 | MEDIUM | 已改用 Gold NLL (信号清晰) |
 
-- a sufficiently strong model may absorb part of the short-range cost caused by weaker high-frequency positional detail,
-- but true long-range separation still requires strong low-frequency positional structure and cannot be recovered by model capacity alone.
+## 最强当前证据
 
-The most suggestive observation is from the recent Geo continued-pretraining run:
+| 证据 | Phase | 规模 | Seeds | 关键数字 |
+|------|-------|------|-------|---------|
+| EVQ+YaRN synergy | 14c | 350M | 3+3 | 100% vs 61-65% passkey @8K |
+| PE-dominant regime | 11 | 125M-454M | 3 | Raw PPL -52% @8× extrapolation |
+| τ* scaling law | 16 | 50M-125M | 99 runs | Predicted vs actual R²>0.95 |
+| Downstream NLL | 21b | 750M | n=2086 | Gold NLL -30.1% @8K |
+| 750M scale-up | 15 | 750M | 1 | 16K PPL -45.9% |
 
-- `2K PPL: 107.36 -> 36.45`
-- `4K PPL: 172.20 -> 36.49`
-- `8K PPL after training: 35.04`
-- `16K PPL after training: 45.53`
+## 仍然缺失
 
-The surprising point is that `8K PPL` is even slightly lower than `2K PPL`. This is not proof, but it is strong motivation to test whether model scale and training sufficiency can absorb short/mid-range positional burden while leaving far-range low-frequency structure as the irreducible bottleneck.
+1. **下游准确率差异**: 454M 容量地板，750M 仅 single-seed，无法在准确率上展示 PE 差异
+2. **理论 polish**: Broadband surrogate approximation 的 perturbation bound 需收紧
+3. **Theorem/Proposition 边界**: Scaling law 目前是 empirical，需要标注清楚
+4. **Cross-modal**: Video temporal 数据已有但仅作 appendix-level supporting
 
-Related note:
+## 需要老师帮助
 
-- `team/plans/capacity_compensation_hypothesis.md`
+1. **理论收紧**: Surrogate approximation argument, theorem vs conjecture 边界
+2. **Capacity compensation 假说**: 是否值得单独做 scale sweep (见 `plans/capacity_compensation_hypothesis.md`)
+3. **下一步资源分配**: 1.5B text anchor vs 强化 video package vs 补 multi-seed
+4. **论文叙事**: 当前 three-anchor 结构是否最优，是否需要调整重心
 
-## What Is Still Missing
+## 快速入口
 
-- A cleaner larger-scale primary anchor on a real downstream benchmark.
-- A tighter perturbation-bound story for the broadband surrogate step.
-- A more polished theorem/conjecture boundary for the scaling law.
-- More mature cross-modal evidence if we want video to raise the paper ceiling rather than stay supporting.
-
-## Where Help From You Matters Most
-
-1. Tightening the surrogate approximation argument.
-2. Stress-testing the theorem / proposition / conjecture split.
-3. Advising whether the new "capacity compensation" hypothesis is theoretically coherent enough to justify a dedicated scale sweep.
-4. Advising whether the next largest budget block should go to a `1.5B text anchor` or a stronger `video temporal theory+experiment package`.
-
-## Suggested Reading
-
-1. `paper_draft/mainstory.md`
-2. `paper_draft/CORE_THEORY.md`
-3. `paper_draft/figs/README.md`
-4. `docs/exp/2026-03-04_phase11_L256_results.md`
-5. `docs/exp/2026-03-06_phase15_750m_2k_to_4k_continue_results.md`
-6. `team/plans/capacity_compensation_hypothesis.md`
+| 内容 | 路径 |
+|------|------|
+| 论文 LaTeX | `paper/main.tex` |
+| 叙事线 | `internal/mainstory.md` |
+| P0-P3 优先级 + 完整缺口 | `team/status/WORKFLOW_AND_PAPER_GAPS.md` |
+| 论文↔实验映射 | `docs/overview/PAPER_CLAIMS_MAP.md` |
+| 完整实验报告索引 | `docs/exp/README.md` |

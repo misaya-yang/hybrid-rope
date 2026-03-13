@@ -1,237 +1,272 @@
-# Project Handoff
+# EVQ-Cosh AI Agent Handoff — Complete Specification
 
-## Repository Scope
+> **如果你是新接手的 AI agent，按此顺序阅读：**
+> 1. 本文件 Part 1-3 (架构 + 超参数 + 禁止事项) → 确保配置正确，避免 GPU 浪费
+> 2. `docs/overview/PAPER_CLAIMS_MAP.md` → 论文↔实验↔脚本完整映射
+> 3. `paper/main.tex` → 当前论文 LaTeX 源码
+> 4. `team/status/WORKFLOW_AND_PAPER_GAPS.md` → P0-P3 优先级矩阵
 
-This repository is now a submission-oriented EVQ-Cosh workspace. The goal is not to preserve every historical branch of exploration, but to keep a clean, defensible path from theory to experiments to anonymous paper draft.
+---
 
-## Current Topology
+## Part 1: 模型架构规范（禁止偏离）
 
-- `scripts/`: only paper-core experiment, evaluation, and figure code
-- `docs/`: curated experiment records and theory derivation material
-- `paper_draft/`: narrative, theory source of truth, matrix docs, and submission source
-- `team/`: advisor and collaborator coordination material
-- `results/`: classified outputs
+所有实验必须使用以下精确配置。**任何偏离都会导致结果不可比，浪费 GPU 时间。**
 
-## Recommended Reading Order
+### 架构表
 
-1. `README.md`
-2. `paper_draft/mainstory.md`
-3. `paper_draft/CORE_THEORY.md`
-4. `paper_draft/figs/README.md`
-5. `docs/exp/2026-03-04_phase11_L256_results.md`
-6. `docs/exp/2026-03-03_passkey_mix_results.md`
-7. `docs/exp/2026-03-06_phase15_750m_2k_to_4k_continue_results.md`
+| Tier | Params | Layers | Heads | head_dim | Hidden | FFN | Vocab | 来源 |
+|------|--------|--------|-------|----------|--------|-----|-------|------|
+| 50M  | ~50M   | 6      | 8     | 64       | 512    | 2048| 50304 | `run_evq_sweep.py:75-89` |
+| 125M | ~125M  | 12     | 12    | 64       | 768    | 3072| 50304 | `run_evq_sweep.py:90-104` |
+| 350M | ~350M  | 24     | 16    | 64       | 1024   | 4096| 50304 | `run_evq_sweep.py:105-119` |
+| 454M | ~454M  | 24     | 16    | 64       | 1024   | 4096| 50304 | `phase21b_quality_eval_clean.py:40-47` |
+| 500M | ~500M  | 28     | 16    | 64       | 1024   | 4096| 50304 | `run_evq_sweep.py:120-134` |
+| 750M | ~750M  | 18     | 24    | 64       | 1536   | 6144| 50304 | `phase21b_quality_eval_clean.py:48-56` |
 
-## Primary Evidence Hierarchy
+⚠️ **关键注意**: 750M 是 **18 层 / 24 头**，不是 24 层 / 16 头！论文 Appendix B.1 中此处有错误需修正。
 
-### P0: main anchors
-- `paper_draft/figs/fig2_evq_yarn_synergy.pdf`
-- `paper_draft/figs/fig3_pe_dominant_scaling.pdf`
-- `docs/exp/2026-03-03_passkey_mix_results.md`
-- `docs/exp/2026-03-04_phase11_L256_results.md`
-- `docs/exp/2026-03-05_phase11b_125m_results.md`
+⚠️ **454M vs 350M**: 454M 使用与 350M 完全相同的架构配置（24L/16H/1024/4096）。参数量差异来自不同的训练设置，实际上共享同一 GPT 类配置。
 
-### P0.5: downstream NLL waterbed reversal (new, Phase 21a)
-- Phase 21a LongBench NLL: 750M EVQ r=0 vs Geo, 13 tasks
-- ctx=4096 (in-distribution): Geo wins +4.4%
-- ctx=8192 (2× extrapolation): EVQ wins -4.4% (QA tasks up to -16.8%)
-- To our knowledge, first direct quantification of waterbed trade-off on downstream tasks for a PE allocation method
-- See: `team/plans/phase21_scrolls_downstream.md` for full data
+### 训练超参数
 
-### P1: strong supporting evidence
-- `results/core_text/phase15/`
-- `results/core_text/phase9f_750m_2k_1b/`
-- `results/core_text/phase14_yarn_passkey/`
+从 `scripts/core_text_phases/run_evq_sweep.py` 精确提取：
 
-### P2: secondary / scope-expanding evidence
-- `results/supporting_video/video_temporal/`
-- `results/supporting_cross_model/`
-- `results/theory/`
+| Tier | LR | Batch Size | Seq Len | Total Tokens | Warmup |
+|------|----|-----------|---------|-------------|--------|
+| 50M  | 6e-4 | 32 | 2048 | 50M | min(200, total_steps//10) |
+| 125M | 3e-4 | 16 | 2048 | 100M | min(200, total_steps//10) |
+| 350M | 2e-4 | 2 | 2048 | 100M | min(200, total_steps//10) |
+| 500M | 1.5e-4 | 4 | 2048 | 500M | min(200, total_steps//10) |
 
-## Submission Source
+所有 Tier 共用：
+- **Optimizer**: AdamW, β1=0.9, β2=0.95, weight_decay=0.1
+- **LR Schedule**: Cosine decay to min_lr (通常 1e-5)
+- **Tokenizer**: `EleutherAI/gpt-neox-20b` (vocab=50304)
+- **Dataset**: FineWeb-Edu (HuggingFace streaming)
+- **DTYPE**: bfloat16 (CUDA), float32 (MPS/CPU)
+- **RoPE base**: 500,000
 
-Anonymous draft source is here:
+### Continued Pretrain 超参数（Phase 11e/15/17 系列）
 
-- `paper_draft/submission/main.tex`
+| 参数 | 值 | 备注 |
+|------|---|------|
+| LR | 1e-5 | Finetuning/继续预训练用 |
+| Warmup | 500 steps | |
+| Weight decay | 0.1 | |
+| Micro batch | 2 | |
+| Grad accum | 5 | Effective batch = 10 |
+| 参考脚本 | `phase21b_scrolls_finetune.py` | |
 
-The current draft should obey these structural rules:
+---
 
-- page 10 starts with `References`
-- body keeps Figure 2 and Figure 3 as the two main figures
-- Figure 1 stays supporting, not primary
+## Part 2: EVQ-Cosh 公式规范
 
-## Current Narrative Lock
+### 核心公式
 
-Do not drift away from these three claims unless new evidence justifies it:
+```
+φ_k(τ) = 1 - (1/τ) × arcsinh((1 - u_k) × sinh(τ))
 
-1. Closed-form theory: RoPE frequency allocation is a variational inverse problem.
-2. Extreme extrapolation: EVQ beats learnable PE in DAPE-style regimes.
-3. Systems result: `EVQ + YaRN >> Geo + YaRN`.
+其中:
+  u_k = (k + 0.5) / K    (midpoint quantization, 论文 Formula 9)
+  k = 0, 1, ..., K-1
+  K = head_dim / 2 = 32   (当 head_dim=64)
 
-## Paper Improvement Priorities
+inv_freq_k = base^(-φ_k(τ))
+  base = 500,000 (默认)
+```
 
-Optimize the paper under three principles:
+### τ* 最优值公式
 
-1. **Protect the evidence hierarchy**
-   - Keep `P0` as the real paper core: `EVQ+YaRN` and PE-dominant / DAPE-style extrapolation.
-   - Keep `P1` as robustness support.
-   - Keep `P2` as scope-expanding evidence only.
-   - Do not promote single-seed or cross-modal results into body-level anchors without new multi-seed support.
+```
+τ* = d_head / √L_train
 
-2. **Protect the theorem / conjecture boundary**
-   - Closed-form ODE solution and geometric limit are paper-grade theory.
-   - `tau*` remains an empirical law / conjecture unless the derivation is tightened.
-   - New mechanism ideas, including the capacity-compensation hypothesis, stay in `team/plans/` until they are experimentally closed.
+示例:
+  d_head=64, L_train=2048 → τ* = 64/√2048 ≈ 1.414
+  d_head=64, L_train=256  → τ* = 64/√256  = 4.0
+  d_head=64, L_train=512  → τ* = 64/√512  ≈ 2.828
+```
 
-3. **Optimize around the current submission skeleton, not around loose notes**
-   - Submission source of truth: `paper_draft/submission/main.tex`
-   - Submission structure and redlines: `paper_draft/NEURIPS_SUBMISSION_PLAN.md`
-   - Core paper narrative: `paper_draft/mainstory.md`
-   - Theory source of truth: `paper_draft/CORE_THEORY.md`
-   - Figure / table matrix: `paper_draft/figs/README.md`
-   - Known paper-side corrections and claim hygiene: `paper_draft/PAPER_ERROR_CORRECTIONS.md`
-   - Missing evidence and collaborator-facing next steps: `team/open_gaps.md`, `team/plans/`
+### 参考实现（规范版本）
 
-Practical rule: improve the paper by strengthening the current three-claim package, not by adding parallel storylines.
-
-## Scale and Downstream: Correct Prioritization
-
-### Scale is NOT a weakness
-
-Our from-scratch training covers 50M → 125M → 350M → 454M → 750M, a full five-point scaling chain. In the PE from-scratch literature, this is, to our knowledge, the **broadest scale range**:
-
-- DAPE (NeurIPS 2024 poster): 125M only
-- FIRE (ICLR 2024): not larger than ours for from-scratch
-- Base of RoPE (NeurIPS 2024): 2B from-scratch, but PE-only axis (base tuning, no allocation)
-
-Scaling to 1.5B+ is a **spotlight consideration**, not a poster blocker. It belongs in the "later / nice-to-have" category. Do not treat scale as a fatal risk — the reviewer response is simply "we are the largest from-scratch PE allocation study."
-
-### Downstream tasks: SCROLLS is feasible via task-specific finetuning
-
-FIRE (ICLR 2024) did SCROLLS with **exactly our model scale**: Base=125M (12L/12H/768d) and Large=350M (24L/16H/768d), both head_dim=64. They pretrained on C4 at L=2048, then finetuned per-task at L=8192. Our 454M is **larger than FIRE's largest model**.
-
-**This is NOT zero-shot instruction following** — it's task-specific finetuning (like classic pretrain→finetune NLP). No SFT or instruction data needed.
-
-**FIRE's SCROLLS finetuning recipe**:
-
-- Seq len: 8192, LR: 1e-5, batch: 128, steps: 25k, dropout: 0.1
-- 7 tasks: Qasper, NarrativeQA, QuALITY, ContractNLI, QMSum, GovReport, SummScreenFD
-- FIRE Large scored 27.05 average (best among all PE methods)
-
-**Our plan for downstream (if pursued)**:
-
-1. Take 454M EVQ checkpoint + Geo checkpoint (same pretrain recipe, PE is only difference)
-2. Finetune both on 2-3 SCROLLS subtasks (QMSum, GovReport, QuALITY) at L=8192
-3. Compare ROUGE/F1: same finetune recipe, PE is the sole independent variable — attribution is clean
-
-**What we already have that suffices for poster**: 5-scale PPL, 99-run τ* sweep, 6-seed passkey mix, 3-seed FineWeb PPL, progressive amplification chain. This covers more evaluation dimensions than DAPE (which was accepted with PPL + CHE), with the main gap being downstream task breadth.
-
-**Priority**: Downstream SCROLLS strengthens the paper meaningfully and is now confirmed feasible at our scale.
-
-**Locked priority order**:
-
-1. **17c multi-seed** (highest — unblocks both headline claims and SCROLLS)
-2. **LaTeX draft skeleton** (parallel with multi-seed training)
-3. **SCROLLS task-specific finetuning** (after multi-seed checkpoints are ready, use 3-seed EVQ vs Geo)
-
-**Hardware note**: 454M at L=8192 on RTX 5090 32GB with Flash Attention — batch ~10 (down from ~40 at L=2048), 25k finetune steps, runtime comparable to pretraining stages.
-
-## What Has Been Deliberately Demoted
-
-These are not headline claims in the current submission package:
-
-- single-seed `+40pp` passkey outliers
-- `Hybrid strict superiority`
-- `video confirms tau*=2.0`
-- `750M phase9f` as a primary result
-- `750M continue` as a primary result
-
-## Where To Put New Work
-
-- New experiment report: `docs/exp/YYYY-MM-DD_<topic>.md`
-- New theory derivation note: `docs/theory/`
-- New submission-facing figure: `paper_draft/figs/`
-- New advisor/collaboration note: `team/`
-- New structured output bundle: `results/<bucket>/`
-
-## Blackwell GPU (RTX 5090 / RTX 6000 Pro) Training Setup
-
-RTX 5090 和 RTX 6000 Pro 都是 Blackwell 架构 (sm_120, compute capability 12.0)，训练配置完全相同。
-
-### 环境要求
-
-- **PyTorch >= 2.7.0**，推荐 2.8+
-- **CUDA 12.8**（sm_120 必须 CUDA 12.8+）
-- 验证：`python -c "import torch; print(torch.__version__, torch.version.cuda, torch.cuda.get_device_capability())"`
-- 预期输出：`2.8.x+cu128 12.8 (12, 0)`
-
-### torch.compile 配置（关键！）
-
-Blackwell 上 **必须** 使用 `torch.compile` 才能获得正常 GPU 利用率。不用 compile，GPU 利用率只有 ~30%（kernel launch 开销），训练时间会膨胀 3-4 倍。
+文件: `scripts/core_text_phases/run_evq_sweep.py` 第 141-157 行
 
 ```python
-model = GPT(cfg, inv_freq).to("cuda")
-model = torch.compile(model, mode="max-autotune")  # 关键！
+def evq_cosh_inv_freq(head_dim: int, tau: float, base: float = 500000.0) -> torch.Tensor:
+    K = head_dim // 2
+    idx = torch.arange(K, dtype=torch.float64)          # ⚠️ 必须 float64
+    u = (idx + 0.5) / float(K)                           # midpoint quantization
+    if abs(tau) < 1e-8:
+        phi = u                                           # geometric limit (Theorem 2)
+    else:
+        sinh_tau = math.sinh(tau)
+        phi = 1.0 - (1.0 / tau) * torch.arcsinh((1.0 - u) * sinh_tau)
+    inv = torch.pow(torch.tensor(float(base), dtype=torch.float64), -phi)
+    return inv.float()                                    # 最后转回 float32
 ```
 
-训练循环每步前加：
-```python
-torch.compiler.cudagraph_mark_step_begin()  # 防止 CUDA Graph 覆写错误
+### 数值稳定性要点
+
+1. **必须用 float64 计算 inv_freq**，低频通道可达 1e-6，float32 精度不够
+2. **τ ≤ 1e-8 时回退到 geometric**（Taylor 展开，避免除零）
+3. `math.sinh(tau)` 用 Python float64，`torch.arcsinh` 用 tensor float64
+4. 最终 `inv.float()` 转回 float32 供模型使用
+
+### 其他实现位置
+
+| 文件 | 用途 | 备注 |
+|------|------|------|
+| `scripts/lib/rope/schedules.py:180-190` | 通用 RoPE schedule builder | u_k = k/n（无 midpoint），τ 默认 0.5 |
+| `scripts/core_text_phases/run_evq_sweep.py:141-157` | **规范版本** | u_k = (k+0.5)/K（有 midpoint），与论文一致 |
+| `scripts/lib/rope/learnable_evq.py:95-113` | 可学习 EVQ | Taylor 展开版本 |
+
+⚠️ **schedules.py 与 run_evq_sweep.py 的 u_k 定义不同！** 论文使用 midpoint 版本，以 run_evq_sweep.py 为准。
+
+---
+
+## Part 3: 禁止事项（违反将浪费 GPU 时间）
+
+### ❌ 绝对禁止
+
+**1. ❌ 不要用 NTK-aware YaRN**
+- NTK-aware 对所有频率通道施加相同 scale factor: `factor = scale^(dim/(dim-2))`
+- 这会破坏 EVQ 精心设计的频率结构
+- ✅ 必须用 **Progressive YaRN**: per-channel smoothstep ramp，高频保护，低频缩放
+- 参考实现: `phase14c_multiscale_evq_yarn.py` (channel-index ramp, start=0.20×K, end=0.90×K)
+- 已知 bug 文件: `phase21b_quality_eval.py` 使用了 NTK-aware ❌
+
+**2. ❌ 不要在已训练的 Geo checkpoint 上直接换 EVQ inv_freq**
+- Retrofit（事后替换）不等于从头训练，attention 权重已适配 geometric 频率
+- ✅ 必须从头训练（run_evq_sweep.py）或使用 continued-pretrain 流程（phase11e）
+- Continued-pretrain: 从 Geo checkpoint 出发，以较低 LR 继续训练时切换 inv_freq
+
+**3. ❌ 不要用 τ=0.707**
+- 这是早期错误值，τ=0.707 时 EVQ ≈ Geo，看不出差异
+- ✅ 用 τ* = d_head/√L_train 计算，常用值: τ=1.414 (L=2048), τ=4.0 (L=256)
+
+**4. ❌ 不要用 torch.compile(mode="max-autotune") 做首次运行**
+- max-autotune 编译时间极长，首次应确认逻辑正确
+- ✅ 先用 mode="default" 验证，确认无误后再切换
+
+**5. ❌ eval 时不要改 seq_len 而忘记同步 YaRN scale**
+- YaRN scale factor = eval_length / train_length
+- 如果训练 L=2048，eval 在 L=16384，则 scale = 8
+- ✅ 始终保持 scale = eval_len / train_len
+
+**6. ❌ 不要混用 tokenizer**
+- 所有实验统一: `EleutherAI/gpt-neox-20b`，vocab_size=50304
+- ✅ 不要用 GPT-2 tokenizer (vocab=50257) 或其他
+
+**7. ❌ 不要在纯文本训练后期望 passkey 100%**
+- Passkey 100% 需要在训练中混入 5-10% passkey 数据
+- ✅ Phase 14+ 实验使用 passkey mix: `generate_passkey_sample()` 在 run_evq_sweep.py 中
+
+**8. ❌ 不要期望 454M 在 QuALITY 上出现准确率差异**
+- 454M 处于 QuALITY 容量地板: ~25% ≈ 随机基线
+- EVQ vs Geo 的差异被随机噪声淹没
+- ✅ 用 Gold NLL（-30.1% @8K）或 PPL 做指标，不用准确率
+
+**9. ❌ 不要照搬 FIRE 的 25K 步训练量**
+- FIRE 使用可学习 PE，25K 步是学习频率所需
+- EVQ 是闭式解，不需要学习频率
+- ✅ 理解方法论，不要复制超参数
+
+### Blackwell GPU (RTX 5090 / RTX 6000 Pro) 特殊注意
+
+| 要求 | 设置 |
+|------|------|
+| PyTorch | ≥ 2.7.0, 推荐 2.8+ |
+| CUDA | 12.8 (sm_120 required) |
+| torch.compile | **必须开启**，否则 GPU 利用率极低 |
+| 每步必须调用 | `torch.compiler.cudagraph_mark_step_begin()` |
+| 内存配置 | `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` |
+
+性能参考 (454M, L=512, RTX 5090 32GB):
+
+| 模式 | ms/step | tok/s | VRAM | ETA (2B tokens) |
+|------|---------|-------|------|-----------------|
+| eager | 231 | 44K | 25.1GB | 12.6h |
+| compile(default) | 165 | 62K | 17.6GB | 8.9h |
+| compile(max-autotune) | 183 | 56K | 20.9GB | 9.9h |
+
+---
+
+## Part 4: 新实验检查清单
+
+每次启动新实验前，必须逐项确认：
+
+- [ ] **τ 值**: τ = d_head / √L_train，L_train 是当前阶段训练长度
+- [ ] **d_head**: 确认是 per-head dimension (64)，不是 hidden_size
+- [ ] **YaRN 实现**: Progressive (per-channel ramp)? 不是 NTK-aware (uniform)?
+- [ ] **YaRN scale**: scale = eval_length / train_length
+- [ ] **Checkpoint 来源**: 是 progressive EVQ checkpoint 还是 retrofit?
+- [ ] **eval 指标**: NLL / accuracy / retrieval? 样本量是否充分?
+- [ ] **eval 模式**: standard 还是 distractor-padded? 与 baseline 一致?
+- [ ] **train/eval 一致性**: YaRN / loss masking / tokenizer 在训练和评估中相同?
+- [ ] **数值精度**: inv_freq 是否用 float64 计算?
+- [ ] **架构配置**: 是否与上面的架构表完全一致?
+
+### 实验报告模板
+
+每个实验完成后，在 `docs/exp/` 创建报告，命名: `YYYY-MM-DD_slug.md`
+
+```markdown
+# [Phase XX] 实验名称
+
+## 配置
+- Tier: 350M (24L/16H/1024)
+- τ: 1.414 (d_head=64, L_train=2048)
+- RoPE base: 500000
+- YaRN: Progressive, scale=8
+- Seeds: 42, 123, 7
+- Tokens: 100M FineWeb-Edu + 5% passkey mix
+
+## 结果
+[表格]
+
+## 与论文关联
+- 支撑 Claim: C3 (EVQ+YaRN synergy)
+- 对应 Figure/Table: Figure 2, Table 2
+
+## 异常与注意事项
+[如有]
 ```
 
-#### 常见坑
+---
 
-| 问题 | 原因 | 解决 |
-|---|---|---|
-| `mode="reduce-overhead"` crash | CUDA Graph 张量覆写冲突 | 改用 `mode="max-autotune"` 或 `mode="default"` |
-| `mode="max-autotune"` backward crash | 缺少 `cudagraph_mark_step_begin()` | 每步 forward 前调用 `torch.compiler.cudagraph_mark_step_begin()` |
-| Triton "OutOfMemoryError: out of resource" 警告 | 部分 triton kernel 配置超出 sm_120 寄存器限制 | 无害警告，autotune 会自动跳过这些配置，选择可用的 |
-| compile warmup 慢（首次 2-3 分钟） | Triton autotune 为每个 kernel 搜索最优配置 | 正常现象，只在首步发生 |
+## Part 5: 项目状态与证据层级
 
-### 性能参考（454M 模型, L=512, RTX 5090 32GB）
+### 论文三锚点 (Narrative Lock, 2026-03-12)
 
-| 配置 | ms/step | tok/s | VRAM | ETA (2B tokens) |
-|---|---|---|---|---|
-| eager (无 compile) | 231ms | 44K | 25.1GB | 12.6h |
-| `compile(mode="default")` | 165ms | 62K | 17.6GB | 8.9h |
-| `compile(mode="max-autotune")` | 183ms | 56K | 20.9GB | **9.9h** |
+1. **Closed-form theory**: RoPE 频率分配是变分逆问题的闭式解，geometric RoPE 是 τ→0 退化极限
+2. **Extreme extrapolation**: EVQ 在 DAPE-style 极端外推中匹敌或超越可学习 PE
+3. **Systems result**: EVQ + Progressive YaRN >> Geo + YaRN (100% vs 61-65% passkey @8×)
 
-注意：`max-autotune` 在 454M 模型上比 `default` 略慢，因为 autotune 的 triton kernel 在此模型尺寸上不一定优于 cuBLAS。两者都远优于 eager。实际选择可根据模型尺寸 benchmark 决定。
+### 证据层级
 
-### 其他训练优化
+| 级别 | 内容 | 状态 |
+|------|------|------|
+| **P0** (主锚) | fig2 EVQ+YaRN, fig3 PE-dominant, passkey mix 3-seed | ✅ 完成 |
+| **P0.5** | Phase 21 downstream NLL (750M, 13 LongBench tasks) | ✅ 完成 |
+| **P1** (强支撑) | Phase 15 750M continue, Phase 9f 750M baseline | ✅ 完成 (single-seed) |
+| **P2** (扩展) | Video temporal, cross-model (Llama/Qwen) | 部分完成 |
 
-- **bf16 不需要 GradScaler**：bf16 与 fp32 共享指数范围，GradScaler 只对 fp16 有意义，且会引入 CPU-GPU 同步开销
-- **loss.item() 避免每步调用**：每 200 步调用一次，否则每步都触发 CPU-GPU 同步
-- **clip_grad_norm_ 只在 warmup 期间使用**：之后跳过可省 ~55ms/step
-- **数据预存为 int64**：避免每步 int32→int64 转换开销
-- **passkey 混合数据缓存到磁盘**：`torch.save(mixed_data, "mixed_data_seed{seed}.pt")`，避免每次重启重新生成
+### 单点风险
 
-### 经验教训
+| 风险 | 严重程度 | 缓解 |
+|------|---------|------|
+| C4: 454M Stage 2-3 仅 seeds 42-44, single-config | ⚠️ HIGH | 需补充 multi-config |
+| C5: 750M continued-pretrain 仅 single-seed | ⚠️ HIGH | 标注为 supporting evidence |
+| LongBench 下载失败 | MEDIUM | 已用 NLL 替代 accuracy |
 
-> **不要因为 torch.compile crash 就认定"硬件不支持"。** Blackwell (sm_120) 在 PyTorch 2.7+ / CUDA 12.8 下完全支持 compile。crash 通常是 mode 选择或 CUDA Graph 配置问题，换个 mode 或加一行 `cudagraph_mark_step_begin()` 就能解决。先排查再下结论。
+### 关键文件索引
 
-### CUDA 内存碎片化（RTX PRO 6000, 98GB）
-
-750M 模型在 seq_len=8192, micro_batch_size=4 下训练，峰值显存 ~92.8GB，卡总共 ~95 GiB 可用（98GB 标称），余量约 5GB。实际观测到在 step ~1300 处因 CUDA caching allocator 碎片化触发 OOM：
-
-```
-torch.OutOfMemoryError: Tried to allocate 384.00 MiB. 158.81 MiB is free.
-```
-
-崩溃点在 MLP forward：`self.down(F.silu(self.gate(x)) * self.up(x))`，需要同时持有 4 个 384 MiB 的中间张量。总空闲可能够，但找不到连续的 384 MiB 块。
-
-**碎片化是非确定性的**：同样配置有时能跑完 2000 步，有时 ~1300 步 OOM。5GB 余量不算小，只是运气问题。
-
-**修复方案（未来实验代码必须加）**：
-
-```bash
-export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-```
-
-这启用 CUDA 虚拟内存，允许分配器使用不连续的物理块拼成逻辑连续分配，彻底消除碎片化问题。零成本，无副作用，**所有训练脚本的 shell wrapper 都应该默认加上此环境变量**。
-
-备选方案（显存确实不够时）：降低 `micro_batch_size`（如 4→2），用 `grad_accum`（如 1→2）补偿，保持相同 effective batch size。这样激活内存减半，余量充裕。
-
-## Practical Warning
-
-This repo has already been intentionally pruned. Do not recreate old root-level clutter. If a new artifact does not clearly belong to one of the five visible top-level directories, the default answer is that it does not belong in this repository.
+| 用途 | 文件 |
+|------|------|
+| 论文 LaTeX | `paper/main.tex` |
+| 核心叙事线 | `internal/mainstory.md` |
+| 论文↔实验映射 | `docs/overview/PAPER_CLAIMS_MAP.md` |
+| P0-P3 优先级矩阵 | `team/status/WORKFLOW_AND_PAPER_GAPS.md` |
+| τ-sweep 主脚本 | `scripts/core_text_phases/run_evq_sweep.py` |
+| RoPE schedule 库 | `scripts/lib/rope/schedules.py` |
+| 实验报告目录 | `docs/exp/` |
+| 复现指南 | `docs/overview/REPRODUCE.md` |

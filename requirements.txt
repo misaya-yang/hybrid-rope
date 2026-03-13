@@ -1,0 +1,19 @@
+# EVQ-Cosh: Closed-Form Frequency Allocation for Long-Context Extrapolation
+# NeurIPS 2026 Submission — Reproducibility Requirements
+
+# Core dependencies
+torch>=2.2.0
+transformers>=4.38.0
+datasets>=2.18.0
+
+# Evaluation & analysis
+numpy>=1.24.0
+matplotlib>=3.8.0
+tqdm>=4.65.0
+scipy>=1.11.0
+
+# Optional: for attention visualization
+# seaborn>=0.13.0
+
+# Note: For Blackwell GPUs (RTX 5090/6000), use PyTorch >= 2.7.0 with CUDA 12.8
+# See internal/AIHANDOFF.md Part 3 for Blackwell-specific setup.
