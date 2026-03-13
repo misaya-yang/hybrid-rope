@@ -31,11 +31,6 @@ results/**/*.jsonl
 results/**/*.log
 results/**/checkpoint_last.pt
 
-# Brief build artifacts
-paper_draft/brief/*.aux
-paper_draft/brief/*.log
-paper_draft/brief/*.out
-
 # Packaging artifacts
 **/*.tar.gz
 **/*.tgz
@@ -48,27 +43,24 @@ secrets/
 *.pw
 *.pw.txt
 
-# Paper build artifacts
-paper_draft/submission/*.aux
-paper_draft/submission/*.bbl
-paper_draft/submission/*.blg
-paper_draft/submission/*.fdb_latexmk
-paper_draft/submission/*.fls
-paper_draft/submission/*.log
-paper_draft/submission/*.out
-paper_draft/submission/*.synctex.gz
-paper_draft/submission/*.toc
-paper_draft/submission/*.pdf
-paper_draft/*.aux
-paper_draft/*.log
-paper_draft/*.out
-paper_draft/*.toc
-paper_draft/*.synctex.gz
-paper_draft/*.fdb_latexmk
-paper_draft/*.fls
+# Paper LaTeX build artifacts
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.log
+paper/*.out
+paper/*.synctex.gz
+paper/*.toc
 
-# Paper folder (entire directory)
-paper/
+# Internal development notes (not for public repo)
+internal/
+
+# Brief build artifacts (now in internal/)
+internal/brief/*.aux
+internal/brief/*.log
+internal/brief/*.out
 
 # Local environments
 .venv/
