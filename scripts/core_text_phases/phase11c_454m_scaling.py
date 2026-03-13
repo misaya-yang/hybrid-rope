@@ -6,6 +6,10 @@ Reuses Phase 11 code but trains with 500M tokens (5× original 100M).
 Only Geo and EVQ τ=4.0 to save compute.
 
 Compare with existing Phase 11 results (100M tokens) for scaling trend.
+
+Paper Role:  Table 4 — 454M PE-dominant scaling (supporting)
+Input:       Phase 9 pre-tokenized data (FineWeb-Edu)
+Output:      results/core_text/phase11c/
 """
 
 import json, math, os, sys, time, gc, hashlib

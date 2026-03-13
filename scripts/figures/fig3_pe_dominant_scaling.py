@@ -10,7 +10,7 @@ Usage:
   ~/miniconda3/bin/conda run -n aidemo python scripts/figures/fig3_pe_dominant_scaling.py
 
 Output:
-  - paper_draft/figs/fig3_pe_dominant_scaling.pdf/.png
+  - paper/figs/fig3_pe_dominant_scaling.pdf/.png
 """
 
 from __future__ import annotations
@@ -329,7 +329,7 @@ def main():
     draw_raw_panel(axes[1])
     draw_yarn_panel(axes[2])
 
-    paper_fig_dir = "paper_draft/figs"
+    paper_fig_dir = "paper/figs"
     os.makedirs(paper_fig_dir, exist_ok=True)
 
     paper_pdf = os.path.join(paper_fig_dir, "fig3_pe_dominant_scaling.pdf")

@@ -4,7 +4,7 @@
 >
 > 本审计以 [CORE_THEORY.md](./CORE_THEORY.md) 的“六步推导链”为主线，并对齐：
 > - [EVQ_COSH_THEORY.tex](./EVQ_COSH_THEORY.tex)（已整理的 theory-only 版本）
-> - `paper_draft/submission/main.tex`（当前匿名稿；同时承接了历史稿中用于排雷符号/推导错误的内容）
+> - `paper/main.tex`（当前匿名稿；同时承接了历史稿中用于排雷符号/推导错误的内容）
 
 ---
 

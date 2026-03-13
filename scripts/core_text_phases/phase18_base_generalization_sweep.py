@@ -18,6 +18,10 @@ Environment:
   PHASE18_MICRO_BATCH_SIZE=8
   PHASE18_GRAD_ACCUM=2
   PHASE18_RUN_ONLY=geo|evq|all
+
+Paper Role:  Appendix — RoPE base generalization ablation
+Input:       FineWeb-Edu streaming data
+Output:      results/core_text/phase18/ (JSON per-base per-method)
   PHASE18_BASES=10000,100000,500000,1000000,10000000
   PHASE18_MLA_COMPARE=0|1
 

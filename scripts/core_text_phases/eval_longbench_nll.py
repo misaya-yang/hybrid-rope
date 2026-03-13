@@ -19,6 +19,10 @@ Usage (custom GPT checkpoint):
         --method_name geo_750m \
         --output_dir results/longbench_nll/
 
+Paper Role:  Reusable helper — LongBench NLL evaluation
+Input:       Any from-scratch checkpoint + LongBench data
+Output:      JSON with per-task NLL results
+
 Usage (HuggingFace model):
     python eval_longbench_nll.py \
         --model_path /path/to/hf_model \

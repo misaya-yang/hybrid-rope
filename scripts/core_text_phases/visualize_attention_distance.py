@@ -18,6 +18,10 @@ Usage:
       --val_pt    /path/to/val_fineweb-edu_5000000.pt \
       --num_samples 16 \
       --tier 750m --tau 1.5 --seq_len 8192 \
+
+Paper Role:  Appendix — Attention distance visualization (750M)
+Input:       750M EVQ vs Geo checkpoints
+Output:      paper/figs/attn_*.pdf
       --output_dir ./figures/attention_viz
 """
 

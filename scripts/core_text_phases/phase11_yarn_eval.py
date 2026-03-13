@@ -4,6 +4,10 @@ Phase 11 YaRN Post-Eval: Load trained checkpoints, apply YaRN scaling, re-evalua
 Tests EVQ+YaRN synergy vs Geo+YaRN at various extrapolation ratios.
 
 Multi-scale: for each eval length, test with multiple YaRN scales to find optimal.
+
+Paper Role:  Fig 3 panel (c) — +YaRN PPL curves at 2×-32× extrapolation
+Input:       Phase 11 trained checkpoints (Geo/EVQ at L=256)
+Output:      results/core_text/phase11/*_yarn_eval.json
 """
 
 import json, math, os, sys, gc

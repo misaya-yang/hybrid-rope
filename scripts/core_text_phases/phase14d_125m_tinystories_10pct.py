@@ -11,6 +11,10 @@ Everything else matches the 350M 5% experiment (base=500K, head_dim=64, etc.)
 
 Usage:
     python -u phase14d_125m_tinystories_10pct.py > /root/autodl-tmp/evq_phase14d/run.log 2>&1
+
+Paper Role:  Supporting — 125M TinyStories 10% mix validation
+Input:       TinyStories + FineWeb-Edu mixed data
+Output:      results/core_text/phase14d/
 """
 
 from __future__ import annotations

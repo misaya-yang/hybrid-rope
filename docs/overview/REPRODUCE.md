@@ -169,3 +169,34 @@ A: 50M tier 可在 CPU 上运行，但会很慢 (~24h)。建议至少使用 Cola
 
 **Q: 为什么我的 PPL 数字和论文略有不同?**
 A: float32 vs bfloat16 会带来小误差 (通常 <1%)。不同 PyTorch 版本的 random 实现也可能有微小差异。
+
+---
+
+## 复现验证清单
+
+完成复现后，使用此清单验证结果的方向性正确:
+
+| 验证项 | 预期结果 | 论文 |
+|--------|---------|------|
+| ✅ 50M τ-sweep: τ≈1.4 优于 τ=0 的 8K PPL | PPL 下降 10-20% | Table 1 |
+| ✅ 125M multi-seed: EVQ 外推 PPL 一致性优于 Geo | 3/3 seeds 方向一致 | Table 1 |
+| ✅ EVQ+YaRN @8K passkey accuracy | 100% (vs Geo+YaRN 61-65%) | Table 2 |
+| ✅ Phase 11 L=256 极端外推: EVQ ≥ DAPE | EVQ PPL 与 DAPE 相当或更低 | Fig 3 |
+| ✅ τ* = d_head/√L 预测: 实际最优 τ 与预测接近 | Top-3 ranking in ≥ 8/9 configs | Fig 6 |
+| ✅ 454M flagship: EVQ+YaRN 48K PPL < 3.5 | Geo+YaRN PPL >> 10 | Fig 4 |
+| ✅ QuALITY Gold NLL: 外推时 EVQ 优于 Geo | NLL 差 10-30% (EVQ 更低) | Fig 5 |
+
+---
+
+## 模型架构速查
+
+| Tier | Layers | Heads | d_model | d_head | FFN | Total Params |
+|------|--------|-------|---------|--------|-----|-------------|
+| 50M | 6 | 8 | 512 | 64 | 2048 | ~50M |
+| 125M | 12 | 12 | 768 | 64 | 3072 | ~125M |
+| 350M | 24 | 16 | 1024 | 64 | 4096 | ~350M |
+| 454M | 24 | 16 | 1024 | 64 | 4096 | ~454M |
+| 500M | 28 | 16 | 1024 | 64 | 4096 | ~500M |
+| 750M | 18 | 24 | 1536 | 64 | 6144 | ~750M |
+
+> 注: 所有 tier 的 d_head=64 (这使得 τ* = 64/√L 通用)。454M 与 350M 架构相同，区别在于训练数据量和 continued pretrain 设置。

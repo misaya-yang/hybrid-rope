@@ -5,6 +5,10 @@ Phase 18: Base Generalization Sweep - Simple Version
 Usage:
     python phase18_simple.py --pilot     # Run base=500K, seed=42 only
     python phase18_simple.py             # Run all bases
+
+Paper Role:  Appendix — Simplified base sweep (single-seed)
+Input:       FineWeb-Edu streaming data
+Output:      results/core_text/phase18/
 """
 
 import argparse

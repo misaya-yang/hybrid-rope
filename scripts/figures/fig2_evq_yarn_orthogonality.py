@@ -14,7 +14,7 @@ Usage:
   ~/miniconda3/bin/conda run -n aidemo python scripts/figures/fig2_evq_yarn_orthogonality.py
 
 Output:
-  - paper_draft/figs/fig2_evq_yarn_synergy.pdf/.png
+  - paper/figs/fig2_evq_yarn_synergy.pdf/.png
 """
 
 import os
@@ -307,7 +307,7 @@ def main():
     draw_retrieval_panel(axes[1])
     draw_ppl_panel(axes[2])
 
-    paper_fig_dir = "paper_draft/figs"
+    paper_fig_dir = "paper/figs"
     os.makedirs(paper_fig_dir, exist_ok=True)
 
     paper_pdf = os.path.join(paper_fig_dir, "fig2_evq_yarn_synergy.pdf")

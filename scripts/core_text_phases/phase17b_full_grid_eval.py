@@ -16,6 +16,10 @@ Usage:
     export PATH=/root/miniconda3/bin:$PATH
     cd /root/autodl-tmp/hybrid-rope
     python scripts/core_text_phases/phase17b_full_grid_eval.py [--resume]
+
+Paper Role:  Fig 4 — Full grid eval supporting Stage 2 analysis
+Input:       Phase 17 + 17B checkpoints (4 models)
+Output:      results/core_text/phase17b/*_grid_eval.json
 """
 
 import gc

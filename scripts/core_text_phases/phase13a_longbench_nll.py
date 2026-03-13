@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 """
-Phase 13A: LongBench NLL Evaluation — 750M Geo vs Hybrid
-Runs qa4 tasks at ctx=2048,4096,8192 for both models.
+Phase 13A: LongBench NLL Evaluation — 750M Geo vs EVQ
+
+Runs QA-category LongBench tasks at ctx=2048/4096/8192 for both models.
+Measures NLL (not accuracy) to capture fine-grained PE differences.
+
+Paper Role:  Appendix — LongBench NLL downstream probe
+Input:       Phase 9F 750M checkpoints (Geo + EVQ)
+Output:      results/phase13a_longbench_nll/ (JSON per-task per-ctx)
 """
 
 import subprocess

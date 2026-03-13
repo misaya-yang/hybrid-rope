@@ -33,6 +33,10 @@ Environment overrides:
   PHASE17B_GRAD_ACCUM=2
   PHASE17B_EVAL_LENGTHS=1024,2048,4096,8192,16384,32768
   PHASE17B_CKPT_EVAL_LENGTHS=1024,4096,8192,16384
+
+Paper Role:  Fig 4 (Stage 2) — 454M staged continuation 512→1024
+Input:       Phase 17 454M@512 checkpoints + fresh continuation data
+Output:      results/core_text/phase17b/ (checkpoints + eval JSON)
 """
 
 import json

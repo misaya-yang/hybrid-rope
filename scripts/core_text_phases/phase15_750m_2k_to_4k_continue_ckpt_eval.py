@@ -21,6 +21,10 @@ Env overrides:
   PHASE15_TOKENS=100000000
   PHASE15_PASSKEY_MIX_RATIO=0.03
   PHASE15_SEED=42
+
+Paper Role:  Table 6 — 750M continued-pretrain supporting evidence
+Input:       Phase 9 750M@2K checkpoints
+Output:      results/core_text/phase15/ (checkpoints + eval JSON)
 """
 
 import json

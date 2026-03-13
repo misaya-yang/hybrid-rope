@@ -4,6 +4,12 @@ Phase 11: 350M L=256 Extrapolation Sweep
 Train at L=256, eval extrapolation to 512/1K/2K/4K/8K (2×-32×).
 Compare Geometric vs EVQ(τ=2.0) vs EVQ(τ=4.0).
 τ*=d_head/√L_train=64/√256=4.0
+
+Paper Role:  Fig 3 panels (b,c) — PE-dominant regime raw & +YaRN PPL curves
+             Tables 4-5 — PE-dominant extreme extrapolation results
+Input:       FineWeb-Edu streaming data (200M tokens)
+Output:      results/core_text/phase11/ (JSON per-seed per-method)
+Seeds:       42, 123, 7 (3-seed)
 """
 
 import json, math, os, sys, time, gc, hashlib

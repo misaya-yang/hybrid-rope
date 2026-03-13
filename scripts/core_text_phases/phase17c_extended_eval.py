@@ -13,6 +13,10 @@ Usage:
   cd /root/autodl-tmp/hybrid-rope
   PYTHONUNBUFFERED=1 nohup python scripts/core_text_phases/phase17c_extended_eval.py \
     > /root/autodl-tmp/evq_phase17c_2048_continue/logs/phase17c_extended_eval.log 2>&1 &
+
+Paper Role:  Fig 4 — Extended eval at 2K-48K (flagship result)
+Input:       Phase 17C trained checkpoints (Geo + EVQ @ L=2048)
+Output:      results/core_text/phase17c/*_extended_eval.json
 """
 
 import gc

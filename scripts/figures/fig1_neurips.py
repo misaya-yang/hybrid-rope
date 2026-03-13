@@ -4,7 +4,7 @@ Figure 1 for NeurIPS paper: EVQ-Cosh Frequency Allocation
 
 Usage: python scripts/figures/fig1_neurips.py
 Output:
-  - paper_draft/figs/fig1_frequency_dynamics.pdf/.png
+  - paper/figs/fig1_frequency_dynamics.pdf/.png
 """
 
 import numpy as np
@@ -259,7 +259,7 @@ ax.set_title("(c) Passkey retrieval ($L$=8K)", fontweight="bold", pad=6)
 # ── Save ───────────────────────────────────────────────────────────
 import os
 
-paper_fig_dir = "paper_draft/figs"
+paper_fig_dir = "paper/figs"
 os.makedirs(paper_fig_dir, exist_ok=True)
 
 paper_pdf = os.path.join(paper_fig_dir, "fig1_frequency_dynamics.pdf")

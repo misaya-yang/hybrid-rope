@@ -18,6 +18,10 @@ Usage:
   cd /root/autodl-tmp/hybrid-rope
   nohup python scripts/core_text_phases/phase17c_resume_evq.py \
     > /root/autodl-tmp/evq_phase17c_2048_continue/logs/phase17c_resume.log 2>&1 &
+
+Paper Role:  Fig 4 — Resume interrupted EVQ training (operational)
+Input:       Phase 17C EVQ checkpoint at step_06103
+Output:      Phase 17C EVQ model.pt + remaining checkpoints
 """
 
 import gc
