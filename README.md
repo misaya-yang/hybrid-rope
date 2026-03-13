@@ -1,98 +1,95 @@
-# EVQ-Cosh Submission Repository
+# EVQ-Cosh: Closed-Form Frequency Allocation for Long-Context Extrapolation
 
-This repository has been reduced to the minimum working surface for the EVQ-Cosh NeurIPS submission.
+Official code repository for the NeurIPS 2026 submission.
 
-## Repository Contract
+**TL;DR** — We derive a closed-form variational solution for RoPE frequency allocation and show that the one-parameter EVQ-Cosh family, combined with Progressive YaRN, achieves 100% passkey retrieval at 8× training length while geometric RoPE + YaRN collapses to 61–65%.
 
-Visible top-level working directories are intentionally limited to:
+## Quick Start
 
-- `scripts/`: core experiment, evaluation, and figure-generation code that directly supports the paper
-- `docs/`: curated experiment reports, overview notes, and theory derivation material
-- `paper_draft/`: core narrative, theory source of truth, figure/table matrix, and anonymous submission source
-- `team/`: collaboration-facing handoff and planning material for advisor and lab coordination
-- `results/`: classified experiment outputs and small evidence artifacts
+```bash
+# Environment
+conda create -n evq python=3.10 && conda activate evq
+pip install torch transformers datasets tqdm matplotlib
 
-Root-level entry documents:
+# Core τ-sweep experiment (50M model, ~4 hours on consumer GPU)
+python scripts/core_text_phases/run_evq_sweep.py --tier 50m
 
-- `README.md`: repository map and working contract
-- `AIHANDOFF.md`: operational handoff for future AI or engineer sessions
+# Reproduce paper figures
+python scripts/figures/fig1_neurips.py
+python scripts/figures/fig2_evq_yarn_orthogonality.py
+python scripts/figures/fig3_pe_dominant_scaling.py
+```
 
-Hidden infra directories such as `.git/`, `.codex/`, and `.claude/` remain because they are tooling, not research content.
+## Repository Structure
 
-## Start Here
+```
+paper/                  LaTeX source, figures, and tables
+├── main.tex            NeurIPS submission entry point
+├── figs/               All paper figures (PDF + PNG)
+├── sections/           Section .tex files
+├── appendix/           Appendix .tex files
+├── tables/             Table .tex files
+└── refs/               BibTeX references
 
-1. `AIHANDOFF.md`
-2. `paper_draft/mainstory.md`
-3. `paper_draft/CORE_THEORY.md`
-4. `paper_draft/figs/README.md`
-5. `paper_draft/submission/main.tex`
+scripts/                Experiment and evaluation code
+├── train.py            Core training entrypoint
+├── core_text_phases/   Main experiment chain (Phase 8–21)
+├── figures/            Paper figure generation scripts
+├── data_prep/          Dataset preparation helpers
+├── supporting_eval/    Supporting evaluators
+├── lib/rope/           RoPE schedule library (EVQ-Cosh, inject, learnable)
+├── m4_max_36gb/        Theory numerical verification
+└── mac_train/          Local training scripts
 
-## Directory Guide
+docs/                   Curated research documentation
+├── exp/                Experiment reports (YYYY-MM-DD_slug.md)
+├── overview/           Methodology, reproducibility, registry
+└── theory/             Derivations and validation notes
 
-### `scripts/`
-Only keeps code that is directly relevant to submission-grade experiments.
+results/                Experiment output artifacts
+├── core_text/          Primary text experiments
+├── theory/             Theory validation outputs
+├── supporting_cross_model/  Cross-model comparisons
+├── supporting_video/   Video temporal transfer
+└── legacy/             Historical outputs
 
-- `scripts/train.py`: core training entrypoint retained for from-scratch / continued-pretraining flows
-- `scripts/core_text_phases/`: the Phase 8–15 core text experiment chain used in the paper
-- `scripts/supporting_eval/`: supporting evaluators kept for follow-up checks and extensions
-- `scripts/data_prep/`: dataset preparation helpers still needed for reproducibility
-- `figures/`: paper figure builders
-- `video_temporal/`: temporal-only video extrapolation experiment
-- `lib/rope/`: retained local RoPE schedule / injection library
+team/                   Collaboration materials
+├── briefs/             Advisor and collaborator briefs
+├── status/             Active gap tracking
+├── plans/              Experiment plans
+└── archive/            Historical handoffs
+```
 
-### `docs/`
-Curated research record, split into three parts.
+## Key Results
 
-- `overview/`: repo-level methodology, reproducibility, experiment registry
-- `exp/`: key experiment reports only
-- `theory/`: rigorous derivation material and theory validation notes
+The paper validates three claims across 99 controlled runs at 50M–750M scale:
 
-### `paper_draft/`
-Paper-facing material only.
+1. **Closed-form solution**: RoPE frequency allocation admits a variational solution φ_k(τ) with geometric RoPE as the τ→0 degenerate limit.
+2. **EVQ > Learnable PE**: EVQ matches or exceeds DAPE-style learnable frequency allocation in extreme extrapolation, without per-run optimization.
+3. **EVQ + YaRN synergy**: At 8× extrapolation, EVQ + Progressive YaRN achieves 100% passkey accuracy vs 61–65% for Geo + YaRN — a qualitative capability gap, not incremental improvement.
 
-- `mainstory.md`: one-page spotlight-oriented narrative spine
-- `CORE_THEORY.md`: main theory + evidence source of truth
-- `SECONDARY_THEORY.md`: secondary claims and appendix-level material
-- `figs/`: canonical paper figures and the theory-narrative-figure matrix
-- `submission/`: anonymous NeurIPS draft source
+## Building the Paper
 
-### `team/`
-Human collaboration surface.
-
-- advisor handoffs
-- lab coordination notes
-- next-experiment planning material
-
-### `results/`
-Classified evidence store.
-
-- `core_text/`: primary text experiments used in the main paper arc
-- `theory/`: theory validation and mechanism artifacts
-- `supporting_cross_model/`: cross-model / LoRA / longbench-adjacent supporting runs
-- `supporting_video/`: video temporal transfer results
-- `legacy/`: preserved but de-prioritized historical outputs
-
-## Submission Anchors
-
-The paper currently centers on three claims:
-
-1. RoPE frequency allocation admits a closed-form variational solution, with geometric RoPE as the `tau = 0` degenerate limit.
-2. EVQ beats learnable adaptive PE in DAPE-style extreme extrapolation.
-3. The main systems result is `EVQ + YaRN >> Geo + YaRN`.
-
-Everything else in the repository is organized around strengthening, reproducing, or qualifying those three claims.
+```bash
+cd paper
+pdflatex main && bibtex main && pdflatex main && pdflatex main
+```
 
 ## Working Rules
 
-- New experiment reports go under `docs/exp/`.
-- New paper-facing figures go under `paper_draft/figs/`.
-- New non-core exploratory material should not be added back at the repository root.
-- Large weights and checkpoints are intentionally excluded from version control.
+New experiment reports go under `docs/exp/` with naming convention `YYYY-MM-DD_slug.md`. New paper figures go under `paper/figs/`. Large weights and checkpoints are excluded from version control via `.gitignore`.
 
-## Build / Verify
+## Citation
 
-The anonymous submission draft lives at:
+```bibtex
+@inproceedings{evqcosh2026,
+  title     = {EVQ-Cosh: Closed-Form Frequency Allocation for Long-Context Extrapolation},
+  author    = {Anonymous},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2026}
+}
+```
 
-- `paper_draft/submission/main.tex`
+## License
 
-For runtime verification, use an activated Conda environment as required by the repo policy.
+This repository is released for academic research purposes.
