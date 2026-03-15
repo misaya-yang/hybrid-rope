@@ -300,6 +300,7 @@ class VideoDiT(nn.Module):
         super().__init__()
         self.patch_size = patch_size
         self.in_channels = in_channels
+        self.gradient_checkpointing = False
         self.hidden_size = hidden_size
         self.frame_size = frame_size
 
@@ -392,9 +393,12 @@ class VideoDiT(nn.Module):
         # Timestep conditioning
         c = self.t_embedder(t)  # (B, D)
 
-        # DiT blocks
+        # DiT blocks (with optional gradient checkpointing to save VRAM)
         for block in self.blocks:
-            x = block(x, c)
+            if self.gradient_checkpointing and self.training:
+                x = torch.utils.checkpoint.checkpoint(block, x, c, use_reentrant=False)
+            else:
+                x = block(x, c)
 
         # Final prediction
         return self.final_layer(x, c)

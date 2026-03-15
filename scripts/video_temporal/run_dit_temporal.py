@@ -42,6 +42,9 @@ from contextlib import nullcontext
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
+# MUST set before any torch import — CUDA allocator config is read at init time
+os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
+
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -144,8 +147,8 @@ def train_dit(
 
         losses.append(loss.item())
 
-        if step % 200 == 0:
-            avg_loss = sum(losses[-200:]) / len(losses[-200:])
+        if step % 50 == 0:
+            avg_loss = sum(losses[-50:]) / len(losses[-50:])
             elapsed = time.time() - t0
             eta = elapsed / (step + 1) * (steps - step - 1) if step > 0 else 0
             print(f"    step {step}/{steps}  loss={avg_loss:.6f}  lr={cur_lr:.2e}  "
@@ -250,68 +253,56 @@ def compute_fvd(
 ) -> Dict[str, float]:
     """Compute FVD using cd-fvd library (VideoMAE + I3D).
 
-    Args:
-        real_videos: (N1, T, C, H, W) in [-1, 1], grayscale
-        gen_videos: (N2, T, C, H, W) in [-1, 1], grayscale
-
-    Returns:
-        dict with videomae_fvd and i3d_fvd
+    Falls back to skip if model weights can't be downloaded (no internet).
     """
+    import signal
+
+    def _timeout_handler(signum, frame):
+        raise TimeoutError("FVD model download timed out")
+
     try:
-        from cdfvd import cdfvd
+        from cdfvd.fvd import cdfvd
     except ImportError:
-        print("  WARNING: cd-fvd not installed. pip install cd-fvd")
+        print("  WARNING: cd-fvd not installed, skipping FVD")
         return {"videomae_fvd": -1.0, "i3d_fvd": -1.0}
 
     results = {}
 
-    # Subsample to 16 frames (cd-fvd expects this) and resize to 224x224
     def preprocess(videos: torch.Tensor, n_frames: int = 16) -> np.ndarray:
         N, T, C, H, W = videos.shape
-        # Uniform temporal subsample
         indices = np.linspace(0, T - 1, n_frames, dtype=int)
-        v = videos[:, indices]  # (N, 16, C, H, W)
-        # Expand grayscale to RGB
+        v = videos[:, indices]
         if C == 1:
             v = v.repeat(1, 1, 3, 1, 1)
-        # Resize to 224x224
         v_flat = v.reshape(-1, 3, H, W)
         v_resized = F.interpolate(v_flat, size=(224, 224), mode="bilinear", align_corners=False)
         v_out = v_resized.reshape(N, n_frames, 3, 224, 224)
-        # Scale from [-1,1] to [0,1]
         v_out = (v_out + 1.0) / 2.0
-        # cd-fvd expects (N, T, H, W, C) uint8
         v_out = (v_out.permute(0, 1, 3, 4, 2).clamp(0, 1) * 255).to(torch.uint8)
         return v_out.numpy()
 
     real_np = preprocess(real_videos)
     gen_np = preprocess(gen_videos)
 
-    # VideoMAE FVD
-    try:
-        fvd_calc = cdfvd()
-        fvd_calc.load_feature_extractor("videomae", ckpt_path=None, device=device)
-        real_feats = fvd_calc.compute_features(real_np)
-        gen_feats = fvd_calc.compute_features(gen_np)
-        vmae_fvd = float(fvd_calc.compute_fvd(real_feats, gen_feats))
-        results["videomae_fvd"] = round(vmae_fvd, 2)
-        print(f"    VideoMAE FVD: {vmae_fvd:.2f}")
-    except Exception as e:
-        print(f"    VideoMAE FVD failed: {e}")
-        results["videomae_fvd"] = -1.0
+    for name, extractor in [("videomae", "videomae"), ("i3d", "i3d")]:
+        try:
+            # 30s timeout for model download — skip if no internet
+            old_handler = signal.signal(signal.SIGALRM, _timeout_handler)
+            signal.alarm(600)
+            fvd_calc = cdfvd()
+            fvd_calc.load_feature_extractor(extractor, ckpt_path=None, device=device)
+            signal.alarm(0)
+            signal.signal(signal.SIGALRM, old_handler)
 
-    # I3D FVD
-    try:
-        fvd_calc2 = cdfvd()
-        fvd_calc2.load_feature_extractor("i3d", ckpt_path=None, device=device)
-        real_feats2 = fvd_calc2.compute_features(real_np)
-        gen_feats2 = fvd_calc2.compute_features(gen_np)
-        i3d_fvd = float(fvd_calc2.compute_fvd(real_feats2, gen_feats2))
-        results["i3d_fvd"] = round(i3d_fvd, 2)
-        print(f"    I3D FVD: {i3d_fvd:.2f}")
-    except Exception as e:
-        print(f"    I3D FVD failed: {e}")
-        results["i3d_fvd"] = -1.0
+            real_feats = fvd_calc.compute_features(real_np)
+            gen_feats = fvd_calc.compute_features(gen_np)
+            val = float(fvd_calc.compute_fvd(real_feats, gen_feats))
+            results[f"{name}_fvd"] = round(val, 2)
+            print(f"    {name} FVD: {val:.2f}")
+        except Exception as e:
+            signal.alarm(0)
+            print(f"    {name} FVD skipped: {e}")
+            results[f"{name}_fvd"] = -1.0
 
     return results
 
@@ -459,8 +450,9 @@ def run_one_method(
     val_videos_32f: torch.Tensor,
     val_videos_128f: torch.Tensor,
     work_dir: Path,
+    tau_override: Optional[float] = None,
 ) -> dict:
-    """Run a single method (geo or evq) and return results."""
+    """Run a single method (geo or evq or custom tau) and return results."""
     print(f"\n{'='*60}")
     print(f"  Method: {method}  Seed: {seed}")
     print(f"{'='*60}")
@@ -477,8 +469,10 @@ def run_one_method(
     inv_freq_h = evq_cosh_inv_freq(K_h * 2, tau=0.0, base=cfg["base"])
     inv_freq_w = evq_cosh_inv_freq(K_w * 2, tau=0.0, base=cfg["base"])
 
-    # Temporal: geo (τ=0) vs EVQ (τ=K_t/√T_train)
-    if method == "geo":
+    # Temporal: custom tau, or geo (τ=0) vs EVQ (τ=K_t/√T_train)
+    if tau_override is not None:
+        tau = tau_override
+    elif method == "geo":
         tau = 0.0
     elif method == "evq":
         tau = K_t / math.sqrt(train_frames)
@@ -503,53 +497,68 @@ def run_one_method(
         inv_freq_w=inv_freq_w,
         inv_freq_t=inv_freq_t,
     ).to(DEVICE)
+    # gradient checkpointing only for match profile on large GPUs
+    if cfg.get("gradient_checkpointing", False):
+        model.gradient_checkpointing = True
 
-    # Train
-    train_result = train_dit(model, train_videos, cfg, seed=seed)
-
-    # Save checkpoint
+    # Train (or load existing checkpoint)
     run_id = f"{method}_seed{seed}"
     ckpt_path = work_dir / f"{run_id}.pt"
-    torch.save({
-        "model_state_dict": model.state_dict(),
-        "config": cfg,
-        "method": method,
-        "tau": tau,
-        "seed": seed,
-        "train_result": train_result,
-    }, ckpt_path)
-    print(f"  Saved checkpoint: {ckpt_path}")
+
+    if ckpt_path.exists():
+        print(f"  Loading existing checkpoint: {ckpt_path}")
+        ckpt = torch.load(ckpt_path, map_location=DEVICE, weights_only=False)
+        model.load_state_dict(ckpt["model_state_dict"])
+        train_result = ckpt.get("train_result", {"final_loss": -1, "elapsed_min": 0, "steps": 0})
+    else:
+        train_result = train_dit(model, train_videos, cfg, seed=seed)
+        torch.save({
+            "model_state_dict": model.state_dict(),
+            "config": cfg,
+            "method": method,
+            "tau": tau,
+            "seed": seed,
+            "train_result": train_result,
+        }, ckpt_path)
+        print(f"  Saved checkpoint: {ckpt_path}")
 
     # Generate videos at train length (32f) and extrapolated (128f)
     n_gen = cfg["n_gen_videos"]
     gen_batch = cfg.get("gen_batch_size", 4)
     sampling_steps = cfg.get("sampling_steps", 50)
 
-    print(f"\n  Generating {n_gen} videos at {train_frames}f (in-distribution)...")
-    gen_32f = generate_videos(
-        model, n_gen, train_frames, train_frames,
-        sampling_steps=sampling_steps, batch_size=gen_batch,
-        apply_yarn=False, device=DEVICE,
-    )
+    # Generate videos (or load existing)
+    gen_32f_path = work_dir / f"{run_id}_gen_32f.npy"
+    gen_128f_path = work_dir / f"{run_id}_gen_128f.npy"
+    gen_128f_ny_path = work_dir / f"{run_id}_gen_128f_noyarn.npy"
 
-    print(f"\n  Generating {n_gen} videos at 128f (4x extrapolation, YaRN)...")
-    gen_128f = generate_videos(
-        model, n_gen, 128, train_frames,
-        sampling_steps=sampling_steps, batch_size=gen_batch,
-        apply_yarn=True, device=DEVICE,
-    )
-
-    print(f"\n  Generating {n_gen} videos at 128f (4x extrapolation, no YaRN)...")
-    gen_128f_noyarn = generate_videos(
-        model, n_gen, 128, train_frames,
-        sampling_steps=sampling_steps, batch_size=gen_batch,
-        apply_yarn=False, device=DEVICE,
-    )
-
-    # Save generated videos
-    np.save(work_dir / f"{run_id}_gen_32f.npy", gen_32f.numpy())
-    np.save(work_dir / f"{run_id}_gen_128f.npy", gen_128f.numpy())
-    np.save(work_dir / f"{run_id}_gen_128f_noyarn.npy", gen_128f_noyarn.numpy())
+    if gen_32f_path.exists():
+        print(f"\n  Loading existing generated videos...")
+        gen_32f = torch.from_numpy(np.load(gen_32f_path))
+        gen_128f = torch.from_numpy(np.load(gen_128f_path))
+        gen_128f_noyarn = torch.from_numpy(np.load(gen_128f_ny_path))
+    else:
+        print(f"\n  Generating {n_gen} videos at {train_frames}f (in-distribution)...")
+        gen_32f = generate_videos(
+            model, n_gen, train_frames, train_frames,
+            sampling_steps=sampling_steps, batch_size=gen_batch,
+            apply_yarn=False, device=DEVICE,
+        )
+        print(f"\n  Generating {n_gen} videos at 128f (4x extrapolation, YaRN)...")
+        gen_128f = generate_videos(
+            model, n_gen, 128, train_frames,
+            sampling_steps=sampling_steps, batch_size=gen_batch,
+            apply_yarn=True, device=DEVICE,
+        )
+        print(f"\n  Generating {n_gen} videos at 128f (4x extrapolation, no YaRN)...")
+        gen_128f_noyarn = generate_videos(
+            model, n_gen, 128, train_frames,
+            sampling_steps=sampling_steps, batch_size=gen_batch,
+            apply_yarn=False, device=DEVICE,
+        )
+        np.save(gen_32f_path, gen_32f.numpy())
+        np.save(gen_128f_path, gen_128f.numpy())
+        np.save(gen_128f_ny_path, gen_128f_noyarn.numpy())
 
     # Evaluate FVD
     results = {"method": method, "seed": seed, "tau": tau, **train_result}
@@ -604,17 +613,23 @@ def run_one_method(
 
 
 def print_comparison(all_results: List[dict]):
-    """Print comparison table."""
+    """Print comparison table — supports arbitrary method names (tau sweep)."""
     print(f"\n{'='*80}")
     print(f"  COMPARISON TABLE")
     print(f"{'='*80}")
 
-    # Group by method
-    geo_results = [r for r in all_results if r["method"] == "geo"]
-    evq_results = [r for r in all_results if r["method"] == "evq"]
+    # Group by method (preserve order)
+    method_order = []
+    by_method: Dict[str, list] = {}
+    for r in all_results:
+        m = r["method"]
+        if m not in by_method:
+            by_method[m] = []
+            method_order.append(m)
+        by_method[m].append(r)
 
-    if not geo_results or not evq_results:
-        print("  Need both geo and evq results for comparison")
+    if len(method_order) < 2:
+        print("  Need at least 2 methods for comparison")
         return
 
     def avg_metric(results, *keys):
@@ -631,37 +646,46 @@ def print_comparison(all_results: List[dict]):
 
     metrics = [
         ("Train loss", "final_loss"),
-        ("Denoise MSE train (YaRN)", "denoise_128f_yarn", "train_mse"),
-        ("Denoise MSE extrap (YaRN)", "denoise_128f_yarn", "all_extrap_mse"),
-        ("Denoise MSE extrap (no YaRN)", "denoise_128f_noyarn", "all_extrap_mse"),
-        ("VideoMAE FVD 32f", "fvd_32f", "videomae_fvd"),
-        ("I3D FVD 32f", "fvd_32f", "i3d_fvd"),
-        ("VideoMAE FVD 128f (YaRN)", "fvd_128f_yarn", "videomae_fvd"),
-        ("I3D FVD 128f (YaRN)", "fvd_128f_yarn", "i3d_fvd"),
-        ("VideoMAE FVD 128f (no YaRN)", "fvd_128f_noyarn", "videomae_fvd"),
-        ("I3D FVD 128f (no YaRN)", "fvd_128f_noyarn", "i3d_fvd"),
+        ("Denoise train (YaRN)", "denoise_128f_yarn", "train_mse"),
+        ("Denoise extrap (YaRN)", "denoise_128f_yarn", "all_extrap_mse"),
+        ("Denoise near (YaRN)", "denoise_128f_yarn", "near_extrap_mse"),
+        ("Denoise mid (YaRN)", "denoise_128f_yarn", "mid_extrap_mse"),
+        ("Denoise far (YaRN)", "denoise_128f_yarn", "far_extrap_mse"),
+        ("Denoise extrap (no YaRN)", "denoise_128f_noyarn", "all_extrap_mse"),
     ]
 
-    print(f"\n  {'Metric':<35} {'geo':>10} {'evq':>10} {'Delta':>10} {'Winner':>8}")
-    print(f"  {'-'*75}")
+    # Header
+    col_w = max(10, max(len(m) for m in method_order) + 2)
+    header = f"  {'Metric':<30}"
+    for m in method_order:
+        header += f" {m:>{col_w}}"
+    header += f" {'Best':>{col_w}}"
+    print(f"\n{header}")
+    print(f"  {'-'*(30 + (col_w+1) * (len(method_order) + 1))}")
 
     for metric_info in metrics:
         name = metric_info[0]
         keys = metric_info[1:]
-        geo_val = avg_metric(geo_results, *keys)
-        evq_val = avg_metric(evq_results, *keys)
+        vals = {}
+        for m in method_order:
+            vals[m] = avg_metric(by_method[m], *keys)
 
-        if geo_val > 0 and evq_val > 0:
-            if "loss" in name.lower() or "fvd" in name.lower() or "mse" in name.lower():
-                # Lower is better (loss, FVD, MSE)
-                delta = (evq_val - geo_val) / geo_val * 100
-                winner = "EVQ" if evq_val < geo_val else "GEO"
-            else:
-                delta = (evq_val - geo_val) / geo_val * 100
-                winner = "EVQ" if evq_val > geo_val else "GEO"
-            print(f"  {name:<35} {geo_val:>10.2f} {evq_val:>10.2f} {delta:>+9.1f}% {winner:>8}")
+        valid = {m: v for m, v in vals.items() if v >= 0}
+        if len(valid) >= 2:
+            best_m = min(valid, key=valid.get)  # lower is better for all these metrics
+            row = f"  {name:<30}"
+            for m in method_order:
+                v = vals[m]
+                marker = " *" if m == best_m and len(valid) > 1 else ""
+                row += f" {v:>{col_w}.6f}" if v < 0.1 else f" {v:>{col_w}.4f}"
+            row += f" {best_m:>{col_w}}"
+            print(row)
         else:
-            print(f"  {name:<35} {geo_val:>10.2f} {evq_val:>10.2f} {'N/A':>10} {'N/A':>8}")
+            row = f"  {name:<30}"
+            for m in method_order:
+                row += f" {vals[m]:>{col_w}.2f}"
+            row += f" {'N/A':>{col_w}}"
+            print(row)
 
 
 def main():
@@ -681,9 +705,12 @@ def main():
                         help="Number of videos to generate for FVD")
     parser.add_argument("--sampling_steps", type=int, default=50,
                         help="Euler ODE sampling steps (50 is usually enough)")
-    parser.add_argument("--profile", type=str, default="match",
-                        choices=["light", "match"],
-                        help="Model profile: 'match' (~250M, matches VideoGPT) or 'light' (~85M)")
+    parser.add_argument("--profile", type=str, default="default",
+                        choices=["default", "medium", "match"],
+                        help="Model profile: 'default' (~50M, fast) or 'match' (~250M, needs 80GB+)")
+    parser.add_argument("--tau", type=str, default="",
+                        help="Comma-separated tau values to sweep (overrides --method). "
+                             "Example: --tau 0.0,0.3,0.7,1.5,2.83")
     args = parser.parse_args()
 
     # Seeds
@@ -692,36 +719,53 @@ def main():
     else:
         seeds = [args.seed]
 
-    # Methods
-    if args.method == "both":
+    # Methods / tau sweep
+    tau_sweep = []
+    if args.tau:
+        tau_sweep = [float(t) for t in args.tau.split(",")]
+        methods = [f"tau{t:.2f}" for t in tau_sweep]
+    elif args.method == "both":
         methods = ["geo", "evq"]
     else:
         methods = [args.method]
 
     # Model profiles
     PROFILES = {
+        "default": {
+            # ~50M params, fast training. 8×8 patches = 64 tokens/frame (same as VideoGPT)
+            # geo vs evq comparison is relative — small model shows same relative differences
+            "hidden_size": 512,
+            "num_layers": 8,
+            "num_heads": 8,
+            "head_dim": 64,
+            "patch_size": 8,    # 64/8 = 8×8 = 64 patches/frame
+            "lr": 2e-4,
+            "batch_size": 64,
+            "epochs": 30,
+            "gen_batch_size": 16,
+        },
+        "medium": {
+            # ~125M params — larger model to confirm same geo vs evq trends
+            "hidden_size": 768,
+            "num_layers": 12,
+            "num_heads": 12,
+            "head_dim": 64,
+            "patch_size": 8,
+            "lr": 1.5e-4,
+            "batch_size": 16,
+            "epochs": 15,
+            "gen_batch_size": 8,
+        },
         "match": {
-            # Match VideoGPT capacity (~250M) and token structure (8×8 patches)
+            # Match VideoGPT capacity (~250M) — only use on 80GB+ GPU
             "hidden_size": 1024,
             "num_layers": 16,
             "num_heads": 16,
             "head_dim": 64,
-            "patch_size": 8,    # 64/8 = 8×8 = 64 patches/frame (same as VideoGPT VQVAE)
+            "patch_size": 8,
             "lr": 1e-4,
             "batch_size": 16,
-            "epochs": 100,
-            "gen_batch_size": 8,
-        },
-        "light": {
-            # Smaller model for quick testing (~85M)
-            "hidden_size": 512,
-            "num_layers": 12,
-            "num_heads": 8,
-            "head_dim": 64,
-            "patch_size": 4,    # 64/4 = 16×16 = 256 patches/frame
-            "lr": 2e-4,
-            "batch_size": 16,
-            "epochs": 200,
+            "epochs": 50,
             "gen_batch_size": 4,
         },
     }
@@ -807,12 +851,14 @@ def main():
     # Run experiments
     all_results = []
 
-    for method in methods:
+    for i, method in enumerate(methods):
+        tau_override = tau_sweep[i] if tau_sweep else None
         for seed in seeds:
             result = run_one_method(
                 method, seed, cfg,
                 train_videos, val_videos_32f, val_videos_128f,
                 work_dir,
+                tau_override=tau_override,
             )
             all_results.append(result)
 
