@@ -57,6 +57,7 @@ from video_dit import (
     RectifiedFlowScheduler,
     RotaryEmbedding3D,
     evq_cosh_inv_freq,
+    power_shift_inv_freq,
     generate_oscillating_mnist_pixels,
 )
 
@@ -451,8 +452,9 @@ def run_one_method(
     val_videos_128f: torch.Tensor,
     work_dir: Path,
     tau_override: Optional[float] = None,
+    alpha_override: Optional[float] = None,
 ) -> dict:
-    """Run a single method (geo or evq or custom tau) and return results."""
+    """Run a single method (geo/evq/custom tau/power-shift alpha) and return results."""
     print(f"\n{'='*60}")
     print(f"  Method: {method}  Seed: {seed}")
     print(f"{'='*60}")
@@ -711,6 +713,9 @@ def main():
     parser.add_argument("--tau", type=str, default="",
                         help="Comma-separated tau values to sweep (overrides --method). "
                              "Example: --tau 0.0,0.3,0.7,1.5,2.83")
+    parser.add_argument("--alpha", type=str, default="",
+                        help="Comma-separated alpha values for power-shift family (Route B). "
+                             "Example: --alpha 0.0,0.3,0.5,1.0")
     args = parser.parse_args()
 
     # Seeds
@@ -719,9 +724,13 @@ def main():
     else:
         seeds = [args.seed]
 
-    # Methods / tau sweep
+    # Methods / tau sweep / alpha sweep
     tau_sweep = []
-    if args.tau:
+    alpha_sweep = []
+    if args.alpha:
+        alpha_sweep = [float(a) for a in args.alpha.split(",")]
+        methods = [f"alpha{a:.2f}" for a in alpha_sweep]
+    elif args.tau:
         tau_sweep = [float(t) for t in args.tau.split(",")]
         methods = [f"tau{t:.2f}" for t in tau_sweep]
     elif args.method == "both":
@@ -853,12 +862,14 @@ def main():
 
     for i, method in enumerate(methods):
         tau_override = tau_sweep[i] if tau_sweep else None
+        alpha_override = alpha_sweep[i] if alpha_sweep else None
         for seed in seeds:
             result = run_one_method(
                 method, seed, cfg,
                 train_videos, val_videos_32f, val_videos_128f,
                 work_dir,
                 tau_override=tau_override,
+                alpha_override=alpha_override,
             )
             all_results.append(result)
 
