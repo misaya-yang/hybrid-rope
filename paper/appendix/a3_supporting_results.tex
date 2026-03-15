@@ -18,7 +18,9 @@ The \(750\mathrm{M}\) dynamics figure is visually strong, but it is not the righ
 
 \subsection{Why video remains supportive}
 
-The video temporal experiments are scientifically important because they suggest that the same variational frequency-allocation principle may apply beyond text RoPE. However, the review package should treat them as cross-modal support rather than as co-primary evidence. The text results already deliver a closed-form theory, a clean extreme-extrapolation test, and a strong systems interaction result; video currently strengthens the scope claim, but is not required for the main text-level thesis to stand.
+The video temporal experiments provide three layers of evidence for cross-modal transfer. First, EVQ-Cosh wins every measured metric on temporal extrapolation, from PPL ($-27.3\%$) through teacher-forced accuracy ($+3.14\%$ top-1, $+5.40\%$ top-5) to generation-level VideoMAE FVD ($-1.5\%$). Second, the teacher-forced evaluation eliminates the autoregressive sampling bottleneck that compresses FVD margins, recovering $3.6\times$ more signal than VideoMAE FVD. Third, and most importantly, the frequency-resolved decomposition (Table~\ref{tab:freq-decomp}) reveals a monotonic gradient: EVQ's advantage is largest for the highest temporal frequency ($+10.4\%$ top-5 at $P{=}16$) and decreases smoothly toward lower frequencies ($+6.3\%$ at $P{=}32$). This gradient matches the theoretical prediction that $\phi_k(\tau)$ redistributes precision toward higher-frequency channels.
+
+Nevertheless, these results remain supportive rather than co-primary: the current evidence is single-seed on a synthetic benchmark, and future work should validate the frequency-precision gradient on natural video using diffusion-based architectures (e.g., DiT with 3D RoPE) that do not suffer from autoregressive error accumulation. The text results already deliver a closed-form theory, a clean extreme-extrapolation test, and a strong systems interaction result; the video evidence strengthens the scope claim but is not required for the main thesis to stand.
 
 \subsection{Why base=10K and r-sweep move to the appendix}
 

@@ -66,6 +66,10 @@ internal/brief/*.out
 .venv/
 venv/
 
+# Local video experiment caches
+data/video_temporal/generated/
+data/video_temporal/external/
+
 # Tooling metadata
 .codex/
 .codex_tmp/

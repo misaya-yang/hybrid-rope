@@ -47,8 +47,79 @@ The paper uses three increasingly strict long-context evaluation views.
 
 This split is necessary because stronger models can saturate coarse retrieval while still differing sharply in exact long-range recovery. The \(750\mathrm{M}\) supporting run is the clearest example: retrieval is already saturated, but AR exact separates geometric RoPE from EVQ very strongly.
 
-\subsection{Cross-modal evidence}
+\subsection{Cross-modal evidence: video temporal extrapolation}
 
-Video temporal extrapolation is high-upside because it tests whether the same frequency-allocation principle transfers beyond text RoPE. However, the current video evidence is still lighter than the text package, so it remains supportive rather than co-primary.
+Video temporal extrapolation tests whether the same frequency-allocation principle transfers beyond text RoPE. We apply EVQ-Cosh to the temporal channels of a 3D RoPE VideoGPT (268.7M parameters, 1024 hidden, 16 layers), trained on tokenized Oscillating Moving MNIST (3 digits, sinusoidal motion with periods 16/24/32 frames). Models train on 32-frame sequences and extrapolate to 128 frames (4$\times$) with temporal YaRN scaling.
 
-The current submission therefore keeps video in the appendix/discussion layer. This is a scientific choice rather than a negative judgment: the existing video results already suggest transfer of the same principle to temporal RoPE, but the text package is stronger, cleaner, and more directly aligned with the main systems claim.
+\paragraph{Setup.} We compare \texttt{geo\_k16} (16 temporal channel pairs, geometric allocation, $\tau{=}0$) against \texttt{evq\_k16} (same budget, EVQ-Cosh with $\tau{=}K_t/\sqrt{T_\mathrm{train}}$). Both allocations share identical spatial channels. Models are evaluated on PPL, teacher-forced top-1 accuracy, and generation quality via Fr\'echet Video Distance (FVD). For FVD, we report both I3D features and VideoMAE-v2 features; the latter are approximately $3\times$ more sensitive to temporal distortion than I3D~\citep{ge2024contentbiasfvd}.
+
+\paragraph{Results.} Table~\ref{tab:video-temporal} summarizes the findings. EVQ wins every metric, but the margins attenuate sharply from distributional quality (PPL) through generation:
+
+\begin{table}[ht]
+\caption{Signal attenuation from distributional quality to generation metrics on Oscillating Moving MNIST (128 frames, 4$\times$ extrapolation). EVQ wins all metrics; the attenuation reflects autoregressive error accumulation and FVD aggregation, not absence of signal.}
+\label{tab:video-temporal}
+\centering
+\small
+\begin{tabular}{@{}llrrr@{}}
+\toprule
+Stage & Metric & geo\_k16 & evq\_k16 & $\Delta$ \\
+\midrule
+Distribution & PPL (YaRN) & 4.787 & \textbf{3.481} & $-27.3\%$ \\
+Distribution & PPL (raw) & 4.832 & \textbf{4.440} & $-8.1\%$ \\
+Prediction & Teacher-forced top-1 & 0.708 & \textbf{0.730} & $+3.1\%$ \\
+Generation & VideoMAE FVD $\downarrow$ & 70.25 & \textbf{69.18} & $-1.5\%$ \\
+Generation & I3D FVD $\downarrow$ & 239.9 & \textbf{238.7} & $-0.5\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The $3.2\times$ sensitivity ratio between VideoMAE and I3D FVD is consistent with the finding that I3D features are dominated by per-frame spatial content and nearly blind to temporal structure~\citep{ge2024contentbiasfvd}. The teacher-forced result confirms that EVQ's temporal predictions are measurably more accurate ($+3.1\%$ top-1 in the extrapolation region), but autoregressive sampling compresses this advantage because both models share similar top-$k$ token sets.
+
+This evidence is supportive rather than co-primary: the text package is stronger, cleaner, and more directly aligned with the main systems claim. Nevertheless, the consistent direction across all metrics suggests that the variational frequency-allocation principle transfers to temporal RoPE in video.
+
+\paragraph{Teacher-forced temporal precision.}
+To isolate position-encoding quality from autoregressive error accumulation, we evaluate the same checkpoints in teacher-forced mode on 128-frame sequences (4$\times$ extrapolation with YaRN). Table~\ref{tab:temporal-precision} reports per-region top-1 and top-5 accuracy. In the training region (frames 0--31), both models are tied to within $0.06\%$, confirming matched capacity. In the extrapolation region, EVQ leads by $+3.14\%$ top-1 and $+5.40\%$ top-5. The advantage peaks in near-extrapolation (32--63f): $+3.74\%$ top-1, $+6.59\%$ top-5.
+
+\begin{table}[ht]
+\caption{Teacher-forced accuracy on Oscillating Moving MNIST (128f, 4$\times$ YaRN, $N{=}2000$). Training region is a near-perfect tie; the gap emerges purely in extrapolation.}
+\label{tab:temporal-precision}
+\centering
+\small
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+& \multicolumn{2}{c}{Top-1 Accuracy} & \multicolumn{2}{c}{Top-5 Accuracy} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Region & geo\_k16 & evq\_k16 & geo\_k16 & evq\_k16 \\
+\midrule
+Train (0--31f) & 74.62\% & 74.60\% & 82.07\% & 82.03\% \\
+Near extrap (32--63f) & 71.99\% & \textbf{74.69\%} & 77.31\% & \textbf{82.41\%} \\
+Mid extrap (64--95f) & 70.24\% & \textbf{72.89\%} & 73.54\% & \textbf{78.24\%} \\
+Far extrap (96--127f) & 70.07\% & \textbf{71.39\%} & 73.10\% & \textbf{75.41\%} \\
+\midrule
+All extrap (32--127f) & 70.77\% & \textbf{72.99\%} & 74.65\% & \textbf{78.69\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Frequency-resolved decomposition.}
+Because the oscillating MNIST data contains digits with known temporal periods ($P{=}16, 24, 32$ frames), we decompose per-position accuracy by dominant oscillation frequency (detected via FFT on per-patch temporal traces, background patches excluded). Table~\ref{tab:freq-decomp} shows a monotonic frequency gradient: the EVQ advantage scales with temporal frequency, from $+3.55\%$ top-1 at $P{=}32$ (lowest frequency) to $+5.07\%$ at $P{=}16$ (highest frequency). Top-5 accuracy amplifies the pattern further, reaching $+10.39\%$ in the near-extrapolation zone at $P{=}16$.
+
+This gradient directly validates the theoretical prediction. EVQ redistributes frequency precision via the $\phi_k(\tau)$ mapping, and the experimental advantage is largest for the highest-frequency temporal components---exactly the channels that receive the most redistributed precision.
+
+\begin{table}[ht]
+\caption{Frequency-resolved top-1/top-5 accuracy delta (EVQ$-$geo) on foreground patches, YaRN mode. Higher temporal frequencies benefit more from EVQ, matching the theoretical prediction. Training region deltas are $<0.1\%$ for all periods (omitted).}
+\label{tab:freq-decomp}
+\centering
+\small
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+& \multicolumn{2}{c}{Top-1 $\Delta$} & \multicolumn{2}{c}{Top-5 $\Delta$} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Period & Near extrap & All extrap & Near extrap & All extrap \\
+\midrule
+$P{=}16$ (highest) & $+6.07\%$ & $+5.07\%$ & $\mathbf{+10.39\%}$ & $+8.48\%$ \\
+$P{=}24$ (mid) & $+5.37\%$ & $+4.39\%$ & $+9.40\%$ & $+7.63\%$ \\
+$P{=}32$ (lowest) & $+4.32\%$ & $+3.55\%$ & $+7.58\%$ & $+6.25\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}

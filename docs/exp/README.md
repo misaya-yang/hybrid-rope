@@ -44,6 +44,7 @@
 | `2026-03-11_test3_broadband_r2_validation.md` | Broadband R² 验证 | Theory appendix | 理论 |
 | `2026-03-12_phase21_quality_downstream_report.md` | QuALITY 下游初步 | Fig 5 | 下游 |
 | `2026-03-12_phase21b_454m_full_eval_report.md` | 454M QuALITY 完整评估 (n=2086) | **Fig 5** | ⭐ 核心 |
+| `2026-03-14_video_temporal_blackwell_plan.md` | Blackwell 视频时序实验计划 | Appendix / Spotlight bridge | 跨模态 |
 
 ---
 

@@ -29,12 +29,19 @@ scripts/
 │   └── fig3_pe_dominant_scaling.py  Fig 3: PE-dominant scaling
 ├── data_prep/                  数据预处理
 │   ├── prepare_mixed_prior_dataset_v1.py  FineWeb-Edu tokenization
+│   ├── prepare_moving_mnist_video.py  Tokenized Moving MNIST video cache
+│   ├── prepare_videorope_assets.py  官方 VideoRoPE 轻量资产下载
 │   └── tokenize_synth.py       合成数据 tokenization
 ├── supporting_eval/            辅助评估工具
 ├── lib/rope/                   RoPE 实现库
 │   ├── schedules.py            EVQ-Cosh + Geometric 频率计算 + Progressive YaRN
 │   └── inject.py               RoPE 注入到 transformer
 ├── video_temporal/             视频时序外推 (supporting)
+│   ├── run_video_temporal.py   早期视频时序外推脚本
+│   ├── run_video_temporal_allocation_sweep.py  VideoRoPE-style temporal allocation sweep
+│   ├── run_phase23_blackwell.sh  Blackwell 一键启动脚本
+│   ├── run_phase23_blackwell_10h.sh  Blackwell 10小时预算启动脚本
+│   └── summarize_videorope_official_results.py  官方 V-NIAH-D 基线汇总
 ├── mac_train/                  M4 Max 本地实验 (legacy)
 └── m4_max_36gb/                M4 Max 36GB 实验
 ```
