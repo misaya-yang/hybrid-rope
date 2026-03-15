@@ -471,18 +471,24 @@ def run_one_method(
     inv_freq_h = evq_cosh_inv_freq(K_h * 2, tau=0.0, base=cfg["base"])
     inv_freq_w = evq_cosh_inv_freq(K_w * 2, tau=0.0, base=cfg["base"])
 
-    # Temporal: custom tau, or geo (τ=0) vs EVQ (τ=K_t/√T_train)
-    if tau_override is not None:
-        tau = tau_override
-    elif method == "geo":
-        tau = 0.0
-    elif method == "evq":
-        tau = K_t / math.sqrt(train_frames)
+    # Temporal frequency allocation
+    if alpha_override is not None:
+        # Route B: power-shift family (DiT-optimized)
+        inv_freq_t = power_shift_inv_freq(K_t * 2, alpha=alpha_override, base=cfg["base"])
+        tau = -1.0  # sentinel: not using cosh
+        print(f"  family = power-shift  alpha = {alpha_override:.4f}")
     else:
-        raise ValueError(f"Unknown method: {method}")
-
-    inv_freq_t = evq_cosh_inv_freq(K_t * 2, tau=tau, base=cfg["base"])
-    print(f"  tau = {tau:.4f}")
+        # Route A: cosh family (custom tau, geo, or evq)
+        if tau_override is not None:
+            tau = tau_override
+        elif method == "geo":
+            tau = 0.0
+        elif method == "evq":
+            tau = K_t / math.sqrt(train_frames)
+        else:
+            raise ValueError(f"Unknown method: {method}")
+        inv_freq_t = evq_cosh_inv_freq(K_t * 2, tau=tau, base=cfg["base"])
+        print(f"  family = cosh  tau = {tau:.4f}")
     print(f"  inv_freq_t range: [{inv_freq_t.min().item():.8f}, {inv_freq_t.max().item():.6f}]")
 
     # Build model
