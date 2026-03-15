@@ -60,6 +60,35 @@ def evq_cosh_inv_freq(dim: int, tau: float, base: float = 10000.0) -> torch.Tens
     return inv_freq.float()
 
 
+def power_shift_inv_freq(dim: int, alpha: float, base: float = 10000.0) -> torch.Tensor:
+    """DiT-optimized frequency allocation: power-law low-frequency enhancement.
+
+    φ_k(α) = 1 - (1 - u_k)^(1+α)
+
+    Properties:
+      - α=0: φ_k = u_k (geometric, same as τ=0 cosh)
+      - α>0: shifts all frequencies toward lower values (larger φ)
+      - High frequencies (small u_k) shift minimally: preserves positional fingerprinting
+      - Low frequencies (large u_k) shift maximally: enhances temporal reach
+      - No mid-frequency "hole" unlike cosh with large τ
+
+    Designed for DiT's bidirectional attention where frequencies serve as
+    positional identifiers, not causal information carriers.
+
+    Args:
+        dim: Full head dimension (frequencies = dim // 2)
+        alpha: Shift strength. α=0 gives geometric. α=0.5 is a good starting point.
+        base: RoPE base frequency
+    """
+    n_freqs = dim // 2
+    u = (torch.arange(n_freqs, dtype=torch.float64) + 0.5) / n_freqs
+
+    phi = 1.0 - (1.0 - u) ** (1.0 + alpha)
+
+    inv_freq = base ** (-phi)
+    return inv_freq.float()
+
+
 class RotaryEmbedding3D(nn.Module):
     """3D RoPE for video DiT: spatial_h + spatial_w + temporal.
 
