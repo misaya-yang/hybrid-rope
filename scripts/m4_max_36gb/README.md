@@ -1,23 +1,23 @@
 # M4 Max 36GB 本地实验中心
 
-> 设备：Apple M4 Max, 36GB 统一内存 (**实际可用 ~25GB**), MPS backend
+> 设备：Apple M4 Max, 36GB 统一内存, MPS backend
 > 环境：`conda activate aidemo`
-> 定位：**125M 专精**——系统性验证与论文 gap 填充，单 run ~10-15min
-> 创建日期：2026-03-10
+> 定位：125M 系统验证 + **350M 大型实验**（清理后可用 >30GB）
+> 创建日期：2026-03-10 | 更新：2026-03-13
 
 ---
 
 ## 0. 硬件约束（实测）
 
-| 模型规模 | 参数 (fp16) | AdamW 状态 | seq=512 总估算 | seq=2048 总估算 | 可行？ |
+| 模型规模 | 参数 (fp32) | AdamW 状态 | seq=512 总估算 | seq=2048 总估算 | 可行？ |
 |---------|------------|-----------|---------------|----------------|-------|
-| **125M** | ~250MB | ~1GB | **~4-6GB** | **~10-12GB** | **主力** |
-| 350M | ~700MB | ~2.8GB | ~8-10GB | ~18-22GB | batch 极小，不实用 |
-| 454M+ | ~900MB+ | ~3.6GB+ | — | — | 不可行 |
+| **125M** | ~500MB | ~1GB | **~4-6GB** | **~10-12GB** | **主力** |
+| **350M** | ~1.4GB | ~2.8GB | **~8-10GB** | **~18-22GB** | **清理后可行 (>30GB)** |
+| 454M+ | ~1.8GB+ | ~3.6GB+ | — | — | 不可行 |
 
-**实际限制**：
-- 统一内存 36GB，系统占 ~10GB → ML 可用 **~25GB**
-- 125M 是唯一能以合理 batch 跑完全部 seq_len 的规模
+**内存模式**：
+- 日常 (~25GB 可用)：125M 主力，350M 勉强
+- 清理后 (>30GB 可用)：350M 可跑完整 progressive chain (L=2048, batch=1)
 - 长序列 eval (≥16K) 需要逐 chunk，可能 OOM 需要 fallback
 
 ---
@@ -42,6 +42,7 @@
 | 1 | Progressive Chain 125M × 3-seed | Phase 19 | `exp1_progressive_chain_125m.py` | ~3-4.5h | ⏳ 等 Phase 18 |
 | 2 | τ Landscape Flatness (d_head=64) | Phase 21 | `exp2_tau_landscape.py` | ~3h | ⏳ |
 | 3 | Training-Inference Equivalence | Phase 22 | `exp3_train_infer_equiv.py` | ~15min | ⏳ 依赖 EXP-1 |
+| **4** | **350M Progressive Chain (Delayed τ)** | **EXP-4** | **`exp4_progressive_chain_350m.py`** | **~40-50h** | **⭐ READY** |
 
 ---
 
