@@ -25,11 +25,10 @@ logs/
 **/training_args.*
 **/cache/*
 
-# Experiment results (scan sweeps, checkpoints, logs)
-results/**/*.json
-results/**/*.jsonl
-results/**/*.log
-results/**/checkpoint_last.pt
+# Experiment results — entire folder ignored
+# Results are synced between machines via rsync, not git
+# To sync: rsync -avz --exclude='*.pt' --exclude='*.npy' results/ <remote>:results/
+results/
 
 # Packaging artifacts
 **/*.tar.gz
