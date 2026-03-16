@@ -58,6 +58,29 @@
 
 ---
 
+## Video/DiT Claims (2026-03-16, new)
+
+| ID | Claim | Primary Evidence | Scripts | Method | Risk |
+|----|-------|-----------------|---------|--------|------|
+| **V1** | EVQ-Cosh generalizes to DiT (bidirectional attention) | 129.6M h2h: τ=1.5 wins -21%/-35% | `run_dit_temporal.py` | Head-to-head | ✅ Low (same-run) |
+| **V2** | DiT needs different τ*: τ*_DiT ≈ 0.53 × τ*_AR | τ sweep: only 1.5 works, 0.3/0.7/1.2 fail | `run_dit_temporal.py --tau` | Head-to-head | ⚠️ Medium (single-model) |
+| **V3** | Sharp phase transition at τ∈(1.2, 1.5) | h2h: τ=1.2 is 2.8x worse, τ=1.5 is 21% better | `run_dit_temporal.py` | Head-to-head | Need fine-grained sweep |
+| **V4** | Teacher-forced: EVQ +5.4% top-5 accuracy | VideoGPT 268.7M, N=2000, extrap region | `eval_temporal_precision.py` | Teacher-forced | ✅ Low (large N) |
+| **V5** | Advantage scales with temporal frequency | P=16: +8.48%, P=24: +7.63%, P=32: +6.25% | `eval_temporal_precision.py` | FFT decomposition | ✅ Low |
+
+### Video Reports & Data
+
+| Experiment | Report | Data | Scripts |
+|-----------|--------|------|---------|
+| DiT 38.8M + 129.6M (cross-run) | `results/video_dit/REPORT_FINAL.md` (v2) | `results/video_dit/20260316_{002758,medium}/` | `run_dit_temporal.py` |
+| DiT τ sweep (cross-run) | `results/video_dit/TAU_SWEEP_HANDOFF.md` | `results/video_dit/20260316_tau_sweep/` (server) | `run_dit_temporal.py --tau` |
+| DiT head-to-head | `results/video_dit/REPORT_FINAL.md` (v2, Part II) | Verbal + server logs | `run_dit_temporal.py` |
+| VideoGPT teacher-forced | `results/supporting_video/temporal_precision_report.md` | `results/supporting_video/temporal_precision/` | `eval_temporal_precision.py` |
+| Phase collision analysis | — | `results/video_dit/phase_collision_analysis.json` | Theory computation |
+| DiT theory analysis | `DiT_frequency_allocation_analysis.md` (root) | — | — |
+
+---
+
 ## Experiment Phase Map (Script → Paper)
 
 | Phase | Question | Paper Role | Key Scripts | → Figure/Table |

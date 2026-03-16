@@ -188,6 +188,30 @@ def evq_cosh_inv_freq(head_dim: int, tau: float, base: float = 500000.0) -> torc
 | compile(default) | 165 | 62K | 17.6GB | 8.9h |
 | compile(max-autotune) | 183 | 56K | 20.9GB | 9.9h |
 
+### Video DiT 特殊注意 (2026-03-16 新增)
+
+**10. ❌ 不要用跨 run 比较做 DiT 实验结论**
+- CUDA 非确定性在 DiT 上可以制造 70%+ 的虚假差异
+- 此前 "129.6M GEO 赢 71%" 完全是跨 run 噪声
+- ✅ 必须用 **head-to-head**（同一 run 内训练两种方法）
+- 参考: `results/video_dit/REPORT_FINAL.md` (v2) Part II
+
+**11. ❌ 不要对 DiT 使用 τ*_AR = K/√T**
+- AR 最优 τ=2.83 对 DiT 失败（中频被过度抽空 → 位置指纹崩坏）
+- ✅ DiT 使用 τ*_DiT ≈ 0.53 × K_t/√T_train
+- 对 K_t=16, T=32: τ*_DiT ≈ 1.5（而非 2.83）
+- 已验证: h2h τ=1.5 赢 GEO -21%/-35%
+
+**12. ❌ 不要使用 Power-Shift 族**
+- φ_k(α) = 1-(1-u_k)^(1+α) 在理论上有吸引力但实践中灾难性失败
+- α=0.25 比 GEO 差 22x，α=0.50 差 6x
+- ✅ DiT 仍使用 EVQ-Cosh 族，只是 τ 不同
+
+**13. ❌ 不要忽略 base=10000 的死通道效应**
+- base=10000 + K_t=16 + T_train=32 产生"死通道"（θ_k × Δ ≈ 0）
+- 这导致 τ 曲线呈离散相变（τ=1.2 差 2.8x，τ=1.5 赢 21%）
+- ✅ 如果做 DiT 实验需注意 base_t 选择，小 base_t（~100-1000）可能消除此效应
+
 ---
 
 ## Part 4: 新实验检查清单
@@ -248,7 +272,9 @@ def evq_cosh_inv_freq(head_dim: int, tau: float, base: float = 500000.0) -> torc
 | **P0** (主锚) | fig2 EVQ+YaRN, fig3 PE-dominant, passkey mix 3-seed | ✅ 完成 |
 | **P0.5** | Phase 21 downstream NLL (750M, 13 LongBench tasks) | ✅ 完成 |
 | **P1** (强支撑) | Phase 15 750M continue, Phase 9f 750M baseline | ✅ 完成 (single-seed) |
-| **P2** (扩展) | Video temporal, cross-model (Llama/Qwen) | 部分完成 |
+| **P1.5** (新) | Video DiT h2h: τ=1.5 赢 GEO -21%/-35% (129.6M) | ✅ 完成 (h2h validated) |
+| **P2** (扩展) | Video AR temporal, cross-model (Llama/Qwen) | ✅ 完成 |
+| **P2.5** (新) | DiT τ*_DiT ≈ 0.53 × τ*_AR 架构缩放律 | 🔄 进行中 (需 fine-grained sweep) |
 
 ### 单点风险
 
@@ -270,3 +296,7 @@ def evq_cosh_inv_freq(head_dim: int, tau: float, base: float = 500000.0) -> torc
 | RoPE schedule 库 | `scripts/lib/rope/schedules.py` |
 | 实验报告目录 | `docs/exp/` |
 | 复现指南 | `docs/overview/REPRODUCE.md` |
+| Video DiT 报告 (v2) | `results/video_dit/REPORT_FINAL.md` |
+| Video DiT 理论 | `DiT_frequency_allocation_analysis.md` (repo root) |
+| Video AR 精度 | `results/supporting_video/temporal_precision_report.md` |
+| Video DiT 脚本 | `scripts/video_temporal/run_dit_temporal.py` |

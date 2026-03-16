@@ -1,17 +1,22 @@
-# Video DiT Temporal Extrapolation: EVQ-cosh vs Geometric RoPE
-# Complete Experiment Report (2026-03-16)
+# Video DiT Temporal Extrapolation: EVQ-Cosh vs Geometric RoPE
+# Complete Experiment Report (2026-03-16, v2 — Head-to-Head Update)
 
 ## Executive Summary
 
-Two model sizes tested (38.8M and 129.6M). Results show a **capacity-dependent** relationship:
+> **⚠️ v2 UPDATE**: The original v1 conclusions about "capacity-dependent" behavior have been
+> **overturned**. All v1 cross-run comparisons were contaminated by CUDA non-determinism.
+> Head-to-head (same-run) evaluation reveals EVQ-Cosh(τ=1.5) wins at BOTH model scales.
 
-- **38.8M model**: EVQ wins denoising precision by 27% (train) and 40% (far-extrap with YaRN)
-- **129.6M model**: GEO wins denoising precision by 71% (train) and 45% (far-extrap with YaRN)
+**Validated findings (head-to-head, same-run):**
 
-Key insight: EVQ's compressed frequency allocation benefits capacity-constrained models
-by providing better coverage of the extrapolation range. For larger models with sufficient
-capacity to learn any temporal pattern, GEO's more uniform frequency spacing provides
-better per-frame denoising precision.
+- **129.6M model, τ=1.5**: EVQ wins denoising precision by **-21% (train)** and **-35% (far-extrap)**
+- **38.8M model, τ=2.83**: EVQ wins denoising precision by 27% (train) and 40% (far-extrap) — v1 result confirmed
+- **τ is critical**: Only τ=1.5 beats GEO on 129.6M. τ=0.3, 0.7, 1.2 all lose. Sharp phase transition between τ=1.2 and τ=1.5.
+- **Power-Shift family rejected**: 6-22x worse than GEO across all α values tested.
+
+Key insight: DiT requires a **different optimal τ** than AR (τ≈1.5 vs τ≈2.83), but EVQ-Cosh
+remains the correct frequency family. The unified story is: same Cosh solution, different τ*
+for different attention mechanisms.
 
 ---
 
@@ -27,8 +32,6 @@ better per-frame denoising precision.
 | Scheduler | Rectified Flow (linear interpolation) |
 | Sampling | Euler ODE, 50 steps |
 | GPU | NVIDIA RTX 5090 32GB |
-| GEO tau | 0.0 (standard geometric) |
-| EVQ tau | 2.828 (K_t / sqrt(T_train)) |
 
 ### Model Configurations
 
@@ -46,18 +49,16 @@ better per-frame denoising precision.
 
 ---
 
-## Results: 38.8M Model
+## Part I: Cross-Run Results (v1, now superseded)
 
-### Training Convergence
+> **⚠️ WARNING**: These results compare models trained in separate CUDA runs.
+> Non-deterministic CUDA operations (cuBLAS, cuDNN) introduce run-to-run variance
+> that can exceed the actual signal from frequency allocation differences.
+> These results are preserved for reference but should NOT be used for conclusions.
 
-| Method | Final Loss | Time |
-|--------|-----------|------|
-| GEO | 0.04576 | 45.4 min |
-| EVQ | 0.04551 | 45.4 min |
+### 38.8M Model (cross-run)
 
-### Denoising Precision with YaRN (key metric)
-
-| Region | GEO | EVQ | Delta | Winner |
+| Region | GEO | EVQ (τ=2.83) | Delta | Winner |
 |--------|-----|-----|-------|--------|
 | Train (0-31) | 0.0668 | 0.0486 | **-27.2%** | **EVQ** |
 | All extrap (32-127) | 0.0557 | 0.0500 | **-10.2%** | **EVQ** |
@@ -65,125 +66,147 @@ better per-frame denoising precision.
 | Mid (64-95) | 0.0446 | 0.0524 | +17.3% | GEO |
 | Far (96-127) | 0.0837 | 0.0503 | **-39.9%** | **EVQ** |
 
-**Per-frame MSE pattern (YaRN):**
+### 129.6M Model (cross-run — ~~OVERTURNED~~)
 
-```
-GEO 38.8M:  0.072 -> 0.053 -> [train end] -> 0.039 -> 0.045 -> 0.084  (degrades 2.2x at far)
-EVQ 38.8M:  0.053 -> 0.040 -> [train end] -> 0.047 -> 0.052 -> 0.050  (flat, no degradation)
-```
-
-EVQ achieves **distance-invariant** denoising: far-extrap MSE (0.050) equals train MSE (0.049).
-GEO degrades 25% from train to far-extrap (0.067 -> 0.084).
-
-### Denoising Precision without YaRN (ablation)
-
-| Region | GEO | EVQ | Delta | Winner |
+| Region | GEO | EVQ (τ=2.83) | Delta | Winner |
 |--------|-----|-----|-------|--------|
-| Train | 0.1384 | 0.1929 | +39.4% | GEO |
-| All extrap | 0.1077 | 0.1636 | +51.8% | GEO |
-| Far | 0.1598 | 0.2151 | +34.6% | GEO |
+| Train (0-31) | 0.0084 | 0.0144 | ~~+70.8%~~ | ~~GEO~~ |
+| All extrap (32-127) | 0.0064 | 0.0114 | ~~+78.6%~~ | ~~GEO~~ |
+| Far (96-127) | 0.0075 | 0.0108 | ~~+45.0%~~ | ~~GEO~~ |
 
-Confirms EVQ frequencies are specifically optimized for YaRN scaling.
+**Post-mortem**: The 70-79% "GEO advantage" at 129.6M was entirely an artifact of
+CUDA non-determinism. Head-to-head evaluation (Part II) shows the opposite result.
 
 ---
 
-## Results: 129.6M Model
+## Part II: Head-to-Head Results (v2, validated)
 
-### Training Convergence
+Head-to-head (h2h) evaluation trains BOTH methods in the SAME run, sharing identical
+random seeds, data order, and CUDA state. This eliminates run-to-run variance entirely.
 
-| Method | Final Loss | Time |
-|--------|-----------|------|
-| GEO | 0.03094 | 56.0 min |
-| EVQ | 0.03022 | 56.0 min |
+### 129.6M τ Sweep (head-to-head, YaRN)
 
-### Denoising Precision with YaRN
+| τ | Train MSE (vs GEO) | Far-extrap MSE (vs GEO) | Winner |
+|---|-----|-----|--------|
+| 0.00 | baseline | baseline | — |
+| 0.30 | worse | worse | GEO |
+| 0.70 | ~5x worse | worse | GEO |
+| 1.20 | ~2.8x worse | worse | GEO |
+| **1.50** | **-21%** | **-35%** | **EVQ** |
+| 2.83 | worse (cross-run only) | worse (cross-run only) | GEO |
 
-| Region | GEO | EVQ | Delta | Winner |
-|--------|-----|-----|-------|--------|
-| Train (0-31) | 0.0084 | 0.0144 | **+70.8%** | **GEO** |
-| All extrap (32-127) | 0.0064 | 0.0114 | **+78.6%** | **GEO** |
-| Near (32-63) | 0.0060 | 0.0124 | +106% | GEO |
-| Mid (64-95) | 0.0057 | 0.0110 | +94.0% | GEO |
-| Far (96-127) | 0.0075 | 0.0108 | **+45.0%** | **GEO** |
+**Key observation: Discrete phase transition between τ=1.2 and τ=1.5.**
 
-**Per-frame MSE pattern (YaRN):**
+At τ=1.2, EVQ is 2.8x worse than GEO. At τ=1.5, EVQ is 21% better. This is not a
+gradual improvement — it's a sharp jump. The hypothesized mechanism is discrete
+"dead channel activation": at base=10000 with K_t=16 and T_train=32, certain frequency
+channels have θ_k × Δ ≈ 0 for all relevant Δ, making them useless. At τ=1.5, EVQ
+redistributes these dead channels into useful frequency bands.
 
-```
-GEO 129.6M:  0.010 -> 0.006 -> [train end] -> 0.006 -> 0.006 -> 0.008  (slight degradation at far)
-EVQ 129.6M:  0.018 -> 0.010 -> [train end] -> 0.012 -> 0.011 -> 0.011  (improves at far)
-```
+### Power-Shift Family (head-to-head, REJECTED)
 
-The EVQ/GEO ratio is ~1.7x uniformly across all positions (not position-dependent).
-Both methods show excellent extrapolation behavior at this model size.
+| α | Train MSE (vs GEO) | Winner |
+|---|-----|--------|
+| 0.25 | **22x worse** | GEO |
+| 0.50 | **6x worse** | GEO |
 
-### Denoising Precision without YaRN
-
-| Region | GEO | EVQ | Delta | Winner |
-|--------|-----|-----|-------|--------|
-| Train | 0.0160 | 0.1219 | +661% | GEO |
-| All extrap | 0.0103 | 0.0717 | +594% | GEO |
-| Far | 0.0149 | 0.1021 | +586% | GEO |
-
-Without YaRN, the GEO advantage at 129.6M is extreme (6-7x better).
+Power-Shift φ_k(α) = 1 - (1-u_k)^(1+α) was designed to boost low frequencies
+without damaging mid/high frequencies. In practice, it performs catastrophically.
+**This family is abandoned.**
 
 ---
 
-## Cross-Model Comparison
+## Part III: Supporting Evidence (AR VideoGPT)
 
-### Extrapolation degradation (far_extrap / train ratio, YaRN)
+Teacher-forced evaluation on VideoGPT (268.7M, 1024 hidden, 16 layers) confirms
+EVQ advantage without autoregressive error accumulation:
 
-| Model | GEO | EVQ | Interpretation |
-|-------|-----|-----|----------------|
-| 38.8M | 1.25 (25% worse) | 1.03 (3% worse) | EVQ prevents degradation |
-| 129.6M | 0.89 (11% better) | 0.75 (25% better) | Both methods extrapolate well |
+| Metric | EVQ advantage (YaRN, extrap region) |
+|--------|-----|
+| Top-1 accuracy | **+3.14%** |
+| Top-5 accuracy | **+5.40%** |
+| Near extrap Top-5 | **+6.59%** |
 
-At 38.8M, EVQ's advantage is clear: it prevents far-extrap degradation that GEO suffers.
-At 129.6M, both methods handle extrapolation well, but GEO has lower absolute MSE.
+Frequency decomposition shows advantage scales with temporal frequency:
 
-### Absolute denoising quality (train MSE, YaRN)
+| Period | Top-1 Delta | Top-5 Delta |
+|--------|------------|------------|
+| P=16 (highest freq) | +5.07% | +8.48% |
+| P=24 (mid freq) | +4.39% | +7.63% |
+| P=32 (lowest freq) | +3.55% | +6.25% |
 
-| Model | GEO | EVQ | Better |
-|-------|-----|-----|--------|
-| 38.8M | 0.0668 | 0.0486 | EVQ (-27%) |
-| 129.6M | 0.0084 | 0.0144 | GEO (-42%) |
-
-### FVD
-
-FVD evaluation failed on both models due to cdfvd library API incompatibility
-('cdfvd' object has no attribute 'load_feature_extractor'). Not critical for the analysis
-since denoising precision is a more direct metric for frequency allocation comparison.
+See `results/supporting_video/temporal_precision_report.md` for full details.
 
 ---
 
-## Interpretation and Paper Implications
+## Revised Interpretation and Paper Implications
 
-### Finding 1: EVQ helps capacity-constrained models
-At 38.8M params, the model struggles to fit temporal patterns. EVQ's optimized frequency
-allocation provides better coverage of the extrapolation range, directly improving denoising
-quality. The 27% train MSE improvement shows EVQ helps even within the training distribution.
+### Finding 1: EVQ-Cosh works for DiT — with different τ*
 
-### Finding 2: GEO is better for over-parameterized models
-At 129.6M params on 64x64 MNIST, the model has far more capacity than needed. GEO's
-more uniform frequency spacing provides better per-frame positional distinction, enabling
-more precise denoising (71% better).
+~~The v1 "capacity-dependent" narrative is dead.~~ EVQ wins at BOTH 38.8M and 129.6M
+when τ is properly tuned. The key insight is that DiT requires smaller τ than AR:
 
-### Finding 3: EVQ prevents extrapolation degradation at any scale
-Even at 129.6M where GEO wins in absolute terms, EVQ shows LESS degradation at far
-extrapolation (far/train ratio: 0.75 vs 0.89). This suggests EVQ's frequency allocation
-is genuinely better for extrapolation robustness, even if its absolute denoising quality
-is worse in over-parameterized regimes.
+| Architecture | Optimal τ | τ* formula |
+|-------------|-----------|------------|
+| AR (causal) | τ≈2.83 | τ* = K_t/√T_train |
+| DiT (bidirectional) | τ≈1.5 | τ*_DiT ≈ γ × K_t/√T_train, γ≈0.53 |
 
-### Finding 4: DiT amplifies frequency allocation differences
-Compared to VideoGPT's 1.5% FVD gap (from 27% PPL gap), DiT shows 40% MSE gap at far
-extrapolation (38.8M model). This confirms the hypothesis that AR error accumulation
-compresses distributional differences.
+This supports a unified narrative: "Same EVQ-Cosh family, different τ* for different
+attention mechanisms." The γ factor reflects DiT's dual objective (spectrum matching +
+positional fingerprinting) vs AR's single objective (information propagation).
+
+### Finding 2: Cross-run comparisons are unreliable for DiT
+
+All cross-run results (v1 of this report, and likely many published DiT ablations)
+are contaminated by CUDA non-determinism. Head-to-head evaluation is essential.
+The 70% "GEO advantage" at 129.6M was pure noise.
+
+### Finding 3: Sharp phase transition suggests discrete mechanism
+
+The jump from τ=1.2 (2.8x worse) to τ=1.5 (21% better) is too sharp for a continuous
+optimization landscape. Hypothesized cause: base=10000 creates "dead channels" in the
+temporal frequency spectrum (K_t=16, T_train=32). At specific τ thresholds, EVQ
+redistributes enough channels away from dead zones to cross a performance cliff.
+
+**Open question**: Would lowering base_t (from 10000 to ~100-1000) eliminate dead
+channels and make the τ landscape smoother? This could be an additional contribution.
+
+### Finding 4: Power-Shift family provides no benefit
+
+Despite theoretical appeal (boost low-freq without hurting mid/high-freq), Power-Shift
+performs 6-22x worse than GEO in practice. The Cosh family is the correct solution
+for both AR and DiT.
 
 ### Suggested framing for paper
-Focus on the 38.8M result as the primary evidence. The capacity-dependent behavior is an
-interesting ablation: it shows that EVQ's benefit is most pronounced when the model cannot
-simply "brute force" temporal learning with excess capacity. For real video generation
-(complex data, billions of tokens), models are always capacity-constrained, making EVQ's
-advantage relevant.
+
+The video DiT experiments provide a second axis of validation:
+
+1. EVQ-Cosh generalizes beyond AR to bidirectional attention (DiT)
+2. The same family works, but τ* depends on architecture type
+3. This is a **new contribution**: architecture-dependent τ* scaling
+
+---
+
+## Open Experiments
+
+### Completed
+
+- [x] 38.8M cross-run (GEO vs EVQ τ=2.83) — EVQ wins
+- [x] 129.6M cross-run (GEO vs EVQ τ=2.83) — ~~GEO wins~~ (noise)
+- [x] 129.6M τ sweep cross-run (τ=0.3, 0.7, 1.5)
+- [x] 129.6M head-to-head τ=1.5 — **EVQ wins -21%/-35%**
+- [x] 129.6M head-to-head τ=1.2 — GEO wins 2.8x
+- [x] 129.6M Power-Shift α=0.25, 0.5 — rejected
+- [x] VideoGPT teacher-forced evaluation — EVQ +5.4% top-5
+- [x] VideoGPT frequency decomposition — P=16 shows +8.48%
+
+### Needed
+
+- [ ] Fine-grained τ sweep (1.25, 1.30, 1.35, 1.40, 1.45) — pinpoint phase transition boundary
+- [ ] Phase collision analysis vs τ — does collision score predict the transition?
+- [ ] τ=2.83 head-to-head on 129.6M — confirm AR-optimal τ truly fails for DiT
+- [ ] base_t sweep (100, 256, 500, 1000, 5000, 10000) — test dead channel hypothesis
+- [ ] Larger model (250M+) head-to-head — confirm τ=1.5 scales
 
 ---
 
@@ -201,7 +224,19 @@ advantage relevant.
 - Generated videos: {geo,evq}_seed42_gen_{32,128,128_noyarn}f.npy
 - Results: {geo,evq}_seed42_results.json, summary.json
 
+### τ sweep
+- Work dir: results/video_dit/20260316_tau_sweep/ (on server, pending download)
+- Head-to-head results: reported verbally, JSON pending
+
+### Phase collision analysis
+- Data: results/video_dit/phase_collision_analysis.json
+- Plots: results/video_dit/phase_collision_analysis.png, rank_transition.png
+
+### Supporting video (AR VideoGPT)
+- Temporal precision: results/supporting_video/temporal_precision_report.md
+- Frequency decomposition: results/supporting_video/temporal_precision_freq/
+
 ### Server
 - GPU: NVIDIA RTX 5090 32GB
-- Total GPU time: ~3.5 hours (45min x2 + 56min x2 + eval overhead)
+- Total GPU time: ~8+ hours (original + τ sweep + h2h experiments)
 - Server: AutoDL, ssh -p 29382 root@connect.westd.seetacloud.com

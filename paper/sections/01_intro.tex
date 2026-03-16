@@ -15,5 +15,6 @@ Our contributions are:
 \item We derive a closed-form variational solution for RoPE frequency allocation and show that geometric RoPE is the \(\tau=0\) degenerate case of a broader optimal family.
 \item We show that closed-form EVQ beats learnable PE in DAPE-style extreme extrapolation, supporting the claim that PE quality itself can determine long-range behavior.
 \item We demonstrate that the strongest systems result is not merely EVQ over geometric RoPE, but EVQ unlocking YaRN: training-time and inference-time positional optimization are orthogonal and strongly complementary.
+\item We show that progressive training amplifies EVQ's advantage superlinearly: three-stage context extension (\(512\!\rightarrow\!1024\!\rightarrow\!2048\)) yields a monotonically growing EVQ+YaRN PPL advantage at \(16\mathrm{K}\) (\(-34.6\%\!\rightarrow\!{-52.0\%}\!\rightarrow\!{-81.2\%}\)), extending functional context to \(48\mathrm{K}\) at PPL~\(2.63\).
 \item We present a conservative empirical package in which the main claims rely on multi-seed text evidence, while larger-scale single-seed runs and cross-modal transfer results are treated as consistency checks rather than primary anchors.
 \end{itemize}

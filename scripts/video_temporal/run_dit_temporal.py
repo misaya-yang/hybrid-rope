@@ -722,6 +722,9 @@ def main():
     parser.add_argument("--alpha", type=str, default="",
                         help="Comma-separated alpha values for power-shift family (Route B). "
                              "Example: --alpha 0.0,0.3,0.5,1.0")
+    parser.add_argument("--base", type=float, default=10000.0,
+                        help="RoPE base frequency (default: 10000). "
+                             "Lower values activate more temporal channels.")
     args = parser.parse_args()
 
     # Seeds
@@ -795,7 +798,7 @@ def main():
         "K_h": 8,
         "K_w": 8,
         "K_t": 16,
-        "base": 10000.0,
+        "base": args.base,
 
         # Data
         "train_frames": 32,

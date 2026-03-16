@@ -22,6 +22,32 @@ The video temporal experiments provide three layers of evidence for cross-modal 
 
 Nevertheless, these results remain supportive rather than co-primary: the current evidence is single-seed on a synthetic benchmark, and future work should validate the frequency-precision gradient on natural video using diffusion-based architectures (e.g., DiT with 3D RoPE) that do not suffer from autoregressive error accumulation. The text results already deliver a closed-form theory, a clean extreme-extrapolation test, and a strong systems interaction result; the video evidence strengthens the scope claim but is not required for the main thesis to stand.
 
+\subsection{Downstream QA evaluation: QuALITY Gold NLL}
+\label{sec:quality-downstream}
+
+The body reports a QuALITY QA evaluation on 454M finetuned checkpoints (\(n{=}2086\), distractor-padded, random article position 20\%--80\%). Table~\ref{tab:quality-nll} gives the full results. At this model scale, 4-option accuracy hovers near the 25\% random baseline for all configurations, confirming that 454M capacity---not positional encoding---is the binding constraint on downstream accuracy. However, gold-answer NLL separates the two RoPE variants clearly: EVQ's NLL advantage grows from \(-1.7\%\) at \(4\mathrm{K}\) (in-distribution) to \(-30.1\%\) at \(8\mathrm{K}\) (\(2\times\) extrapolation) and \(-21.4\%\) at \(16\mathrm{K}\) (\(4\times\)). YaRN at \(8\mathrm{K}\) recovers Geo's accuracy to \(4\mathrm{K}\) level but does not close the NLL gap (\(-8.1\%\)).
+
+\begin{table}[ht]
+\caption{QuALITY QA downstream evaluation (454M, \(n{=}2086\), single seed). Accuracy is near random for all configs; gold-answer NLL reveals EVQ's advantage in probability space.}
+\label{tab:quality-nll}
+\centering
+\small
+\begin{tabular}{@{}l l r r r r r@{}}
+\toprule
+Length & Mode & \multicolumn{2}{c}{Accuracy (\%)} & \multicolumn{2}{c}{Gold NLL \(\downarrow\)} & NLL \(\Delta\) \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+& & Geo & EVQ & Geo & EVQ & \\
+\midrule
+4K & raw & 26.1 & 26.8 & 2.220 & 2.182 & \(-1.7\%\) \\
+8K & raw & 24.6 & 26.8 & 3.202 & 2.239 & \(\mathbf{-30.1\%}\) \\
+8K & YaRN & 26.5 & 26.6 & 2.389 & 2.195 & \(-8.1\%\) \\
+16K & raw & 24.1 & 23.7 & 7.915 & 6.220 & \(-21.4\%\) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The key takeaway is that accuracy at the capacity floor is not a useful discriminator, but NLL on the correct answer preserves the signal. This is consistent with the PPL and passkey evidence in the body: EVQ improves the model's probabilistic calibration at extrapolated lengths even when accuracy is saturated by capacity constraints.
+
 \subsection{Why base=10K and r-sweep move to the appendix}
 
 Both of these result families matter, but mainly for rebuttal and mechanism. The low-base dead-zone result is a theory-confirming negative result, and the \(r\)-sweep is a method-simplification argument showing that the main EVQ recipe does not need a hybrid cutoff. Neither is strong enough to justify body-level figure real estate under the current page budget, so both are retained as appendix-strength material.
