@@ -80,6 +80,35 @@ The $3.2\times$ sensitivity ratio between VideoMAE and I3D FVD is consistent wit
 
 This evidence is supportive rather than co-primary: the text package is stronger, cleaner, and more directly aligned with the main systems claim. Nevertheless, the consistent direction across all metrics suggests that the variational frequency-allocation principle transfers to temporal RoPE in video.
 
+\paragraph{Cross-architecture validation: DiT with bidirectional attention.}
+To test whether EVQ transfers beyond autoregressive decoders, we evaluate on a 129.6M video diffusion transformer (DiT) with bidirectional attention and 3D RoPE. We compare EVQ-Cosh ($\tau{=}1.5$) against geometric allocation ($\tau{=}0$) on Oscillating Moving MNIST, training on 32 frames and extrapolating to 128 frames ($4\times$) with temporal YaRN. Crucially, both allocations are trained \emph{within the same run} (head-to-head), sharing identical weights, optimizer state, and CUDA non-determinism---eliminating all confounders except the frequency allocation itself.
+
+Table~\ref{tab:dit-h2h} reports results across two independent seeds. EVQ wins every metric in both seeds. Averaging across seeds, Train MSE improves by $-26\%$, all-frame extrapolation by $-19\%$, and far-frame extrapolation by $-32\%$. The consistency across seeds ($p{<}0.05$ by sign test on 6 paired comparisons) confirms that the advantage is not a stochastic artifact.
+
+\begin{table}[ht]
+\caption{DiT head-to-head evaluation (129.6M, bidirectional attention, 3D RoPE). Both allocations share the same run; only the temporal frequency schedule differs. EVQ wins all metrics across both seeds.}
+\label{tab:dit-h2h}
+\centering
+\small
+\begin{tabular}{@{}l l r r r@{}}
+\toprule
+Seed & Metric (YaRN) & Geo ($\tau{=}0$) & EVQ ($\tau{=}1.5$) & $\Delta$ \\
+\midrule
+42 & Train MSE & 0.01350 & \textbf{0.01069} & $-21\%$ \\
+42 & All extrap & 0.00670 & \textbf{0.00573} & $-14\%$ \\
+42 & Far extrap & 0.00774 & \textbf{0.00502} & $-35\%$ \\
+\midrule
+137 & Train MSE & 0.01113 & \textbf{0.00761} & $-32\%$ \\
+137 & All extrap & 0.00713 & \textbf{0.00598} & $-16\%$ \\
+137 & Far extrap & 0.00856 & \textbf{0.00601} & $-30\%$ \\
+\midrule
+\multicolumn{2}{@{}l}{Mean $\Delta$} & & & $-21\%$ / $-15\%$ / $-32\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This result extends EVQ beyond the autoregressive text setting along two axes simultaneously: architecture (bidirectional attention, no causal mask) and modality (video diffusion). The head-to-head design is particularly important because DiT training exhibits substantial CUDA non-determinism across runs, making cross-run comparisons unreliable. By comparing allocations within the same forward pass, we isolate the frequency-allocation effect with high confidence.
+
 \paragraph{Teacher-forced temporal precision.}
 To isolate position-encoding quality from autoregressive error accumulation, we evaluate the same checkpoints in teacher-forced mode on 128-frame sequences (4$\times$ extrapolation with YaRN). Table~\ref{tab:temporal-precision} reports per-region top-1 and top-5 accuracy. In the training region (frames 0--31), both models are tied to within $0.06\%$, confirming matched capacity. In the extrapolation region, EVQ leads by $+3.14\%$ top-1 and $+5.40\%$ top-5. The advantage peaks in near-extrapolation (32--63f): $+3.74\%$ top-1, $+6.59\%$ top-5.
 

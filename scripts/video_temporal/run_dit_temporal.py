@@ -64,6 +64,12 @@ from video_dit import (
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 DTYPE = torch.bfloat16 if DEVICE == "cuda" and torch.cuda.is_bf16_supported() else torch.float32
 
+# Enable TF32 for matmul/cudnn — free ~20% speedup on Ampere+/Blackwell
+if DEVICE == "cuda":
+    torch.backends.cuda.matmul.allow_tf32 = True
+    torch.backends.cudnn.allow_tf32 = True
+    torch.backends.cudnn.benchmark = True
+
 
 def set_seed(seed: int):
     import random
@@ -509,6 +515,11 @@ def run_one_method(
     if cfg.get("gradient_checkpointing", False):
         model.gradient_checkpointing = True
 
+    # torch.compile for speedup (Blackwell-compatible via Triton)
+    if cfg.get("compile", False) and hasattr(torch, "compile"):
+        print("  Applying torch.compile (mode=reduce-overhead)...")
+        model = torch.compile(model, mode="reduce-overhead")
+
     # Train (or load existing checkpoint)
     run_id = f"{method}_seed{seed}"
     ckpt_path = work_dir / f"{run_id}.pt"
@@ -725,6 +736,12 @@ def main():
     parser.add_argument("--base", type=float, default=10000.0,
                         help="RoPE base frequency (default: 10000). "
                              "Lower values activate more temporal channels.")
+    parser.add_argument("--batch_size", type=int, default=0,
+                        help="Override training batch size (0 = use profile default)")
+    parser.add_argument("--gen_batch_size", type=int, default=0,
+                        help="Override generation batch size (0 = use profile default)")
+    parser.add_argument("--compile", action="store_true",
+                        help="Use torch.compile for speedup (requires PyTorch 2.7+)")
     args = parser.parse_args()
 
     # Seeds
@@ -808,7 +825,16 @@ def main():
 
         # Sampling
         "sampling_steps": args.sampling_steps,
+
+        # torch.compile flag
+        "compile": args.compile,
     }
+
+    # CLI overrides for batch sizes
+    if args.batch_size > 0:
+        cfg["batch_size"] = args.batch_size
+    if args.gen_batch_size > 0:
+        cfg["gen_batch_size"] = args.gen_batch_size
 
     if args.quick:
         cfg["epochs"] = 10
