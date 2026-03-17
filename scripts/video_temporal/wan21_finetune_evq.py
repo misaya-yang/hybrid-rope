@@ -210,6 +210,12 @@ def train_one_config(
     model.print_trainable_parameters()
 
     model.to(DEVICE)
+    # BUG FIX: model.freqs is a plain tensor (not register_buffer),
+    # so .to(DEVICE) doesn't move it. Move explicitly to avoid device mismatch in rope_apply.
+    base_model = model.base_model.model  # unwrap peft
+    if hasattr(base_model, 'freqs') and not base_model.freqs.is_cuda:
+        base_model.freqs = base_model.freqs.to(DEVICE)
+        print(f"  [fix] Moved model.freqs to {DEVICE}")
     model.train()
 
     # Enable gradient checkpointing

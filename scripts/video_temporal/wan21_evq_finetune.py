@@ -465,9 +465,8 @@ def train_lora(
     transformer.base_model.model.rope.freqs_cos = transformer.base_model.model.rope.freqs_cos.to(device)
     transformer.base_model.model.rope.freqs_sin = transformer.base_model.model.rope.freqs_sin.to(device)
 
-    # Enable gradient checkpointing
-    if hasattr(transformer, 'enable_gradient_checkpointing'):
-        transformer.enable_gradient_checkpointing()
+    # NOTE: No gradient checkpointing — it conflicts with torch.compile on Blackwell
+    # and slows per-step throughput. We compensate with larger batch_size.
 
     # ---- torch.compile (optional) ----
     compile_model = None
@@ -487,6 +486,41 @@ def train_lora(
     # ---- Scheduler for noise ----
     noise_scheduler = pipe.scheduler
 
+    # ---- VRAM auto-scaling (find max batch_size) ----
+    if batch_size == 0:
+        # Auto mode: profile bs=1 then scale up
+        print("[VRAM] Auto-detecting optimal batch_size...")
+        torch.cuda.reset_peak_memory_stats()
+
+        sample_lat = dataset[0]["latents"].unsqueeze(0).to(device=device, dtype=torch.bfloat16)
+        sample_txt = dataset[0]["text_embeds"].unsqueeze(0).to(device=device, dtype=torch.bfloat16)
+        sample_sig = torch.rand(1, device=device)
+        sample_ts = (sample_sig * noise_scheduler.config.num_train_timesteps).long()
+        sample_noise = torch.randn_like(sample_lat)
+        sig_bc = sample_sig.view(1, 1, 1, 1, 1).to(dtype=sample_lat.dtype)
+        sample_noisy = (1 - sig_bc) * sample_lat + sig_bc * sample_noise
+
+        with torch.amp.autocast("cuda", dtype=torch.bfloat16):
+            out = transformer(hidden_states=sample_noisy, encoder_hidden_states=sample_txt,
+                              timestep=sample_ts.float(), return_dict=False)[0]
+            probe_loss = F.mse_loss(out, sample_noise - sample_lat)
+        probe_loss.backward()
+        optimizer.zero_grad()
+        torch.cuda.synchronize()
+
+        peak_bs1 = torch.cuda.max_memory_allocated() / 1e9
+        total_vram = torch.cuda.get_device_properties(0).total_mem / 1e9
+        baseline = sum(p.nelement() * p.element_size() for p in transformer.parameters()) / 1e9
+        act_per_sample = peak_bs1 - baseline
+        safety = 4.0  # GB margin
+        batch_size = max(1, int((total_vram - safety - baseline) / act_per_sample))
+        print(f"  bs=1 peak: {peak_bs1:.1f}GB, act/sample: {act_per_sample:.1f}GB, "
+              f"total VRAM: {total_vram:.0f}GB -> auto bs={batch_size}")
+
+        del out, probe_loss, sample_lat, sample_txt, sample_noisy, sample_noise
+        torch.cuda.empty_cache()
+        torch.cuda.reset_peak_memory_stats()
+
     # ---- DataLoader ----
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=True)
 
@@ -496,17 +530,17 @@ def train_lora(
 
     step = 0
     losses = []
+    compile_time = None
     start_time = time.time()
 
-    print(f"[Train] Starting {num_steps} steps...")
+    print(f"[Train] Starting {num_steps} steps (bs={batch_size})...")
 
     while step < num_steps:
         for batch in dataloader:
             if step >= num_steps:
                 break
 
-            if use_compile:
-                torch.compiler.cudagraph_mark_step_begin()
+            step_start = time.time()
 
             latents = batch["latents"].to(device=device, dtype=torch.bfloat16)
             text_embeds = batch["text_embeds"].to(device=device, dtype=torch.bfloat16)
@@ -544,24 +578,35 @@ def train_lora(
                 optimizer.zero_grad()
                 scheduler.step()
 
+            torch.cuda.synchronize()
+            step_time = time.time() - step_start
             loss_val = loss.item() * grad_accum
             losses.append(loss_val)
 
-            if step % 50 == 0 or step == num_steps - 1:
+            if step == 0:
+                compile_time = step_time
+                print(f"  step 0 (includes compile): {compile_time:.1f}s  loss={loss_val:.6f}  "
+                      f"VRAM={torch.cuda.max_memory_allocated()/1e9:.1f}GB")
+            elif step <= 3 or step % 50 == 0 or step == num_steps - 1:
                 elapsed = time.time() - start_time
                 vram = torch.cuda.max_memory_allocated() / 1e9
                 print(f"  step {step}/{num_steps}  loss={loss_val:.6f}  "
                       f"lr={scheduler.get_last_lr()[0]:.2e}  "
-                      f"VRAM={vram:.1f}GB  elapsed={elapsed:.0f}s")
+                      f"{step_time:.2f}s/step  VRAM={vram:.1f}GB  elapsed={elapsed:.0f}s")
 
             step += 1
 
     total_time = time.time() - start_time
+    train_time = total_time - (compile_time or 0)
     avg_loss = sum(losses[-100:]) / max(len(losses[-100:]), 1)
 
-    print(f"\n[Done] {method.upper()}: {num_steps} steps in {total_time:.0f}s")
+    print(f"\n[Done] {method.upper()}: {num_steps} steps in {total_time:.0f}s "
+          f"(compile: {compile_time:.0f}s, train: {train_time:.0f}s)")
+    if num_steps > 1:
+        print(f"  Avg step time (excl compile): {train_time / (num_steps - 1):.2f}s/step")
     print(f"  Average loss (last 100): {avg_loss:.6f}")
     print(f"  Peak VRAM: {torch.cuda.max_memory_allocated()/1e9:.1f}GB")
+    print(f"  Batch size: {batch_size}")
 
     # ---- Save results ----
     result = {
@@ -570,9 +615,13 @@ def train_lora(
         "theta_t": theta_t,
         "num_steps": num_steps,
         "lora_rank": lora_rank,
+        "batch_size": batch_size,
         "final_loss": avg_loss,
         "all_losses": losses,
         "total_time_s": total_time,
+        "compile_time_s": compile_time,
+        "train_time_s": train_time,
+        "avg_step_time_s": train_time / max(num_steps - 1, 1),
         "peak_vram_gb": torch.cuda.max_memory_allocated() / 1e9,
         "temporal_inv_freq": temporal_inv_freq.tolist(),
         "seed": seed,
@@ -597,8 +646,152 @@ def train_lora(
 
 
 # ============================================================
-# Evaluation
+# Evaluation: temporal extrapolation quality
 # ============================================================
+
+# Diverse prompts covering different motion types
+EVAL_PROMPTS = [
+    # Smooth continuous motion
+    "A boat sailing slowly across a calm lake at sunset",
+    "Clouds drifting across a blue sky over snow-capped mountains",
+    # Dynamic fast motion
+    "A cheetah running at full speed across the African savanna",
+    "Fireworks exploding in colorful patterns over a city skyline",
+    # Periodic repetitive motion
+    "Ocean waves crashing rhythmically onto a rocky shore",
+    "A flag waving steadily in strong wind against a clear sky",
+    # Complex multi-object
+    "Children playing in a park while dogs chase each other",
+    "Busy city traffic with cars and pedestrians at an intersection",
+    # Camera motion
+    "A drone flying slowly over a dense tropical rainforest",
+    "Walking through a narrow cobblestone alley in an old European town",
+    # Nature organic
+    "A flower blooming in time-lapse with petals slowly unfolding",
+    "Rain falling on a still pond creating expanding ripples",
+    # Human motion
+    "A dancer performing a graceful ballet routine on stage",
+    "A person riding a bicycle along a tree-lined country road",
+    # Abstract
+    "Colorful ink drops swirling and mixing in clear water",
+    "Northern lights dancing across a dark starry sky over mountains",
+]
+
+
+def compute_video_metrics(frames_tensor: torch.Tensor) -> dict:
+    """Compute temporal quality metrics from a video tensor.
+
+    Args:
+        frames_tensor: [T, C, H, W] float32 tensor in [0, 1]
+
+    Returns:
+        Dict of scalar metrics.
+    """
+    T = frames_tensor.shape[0]
+    if T < 2:
+        return {}
+
+    # --- Temporal smoothness (pixel-level) ---
+    # MSE between consecutive frames
+    diffs = frames_tensor[1:] - frames_tensor[:-1]  # [T-1, C, H, W]
+    per_frame_mse = (diffs ** 2).mean(dim=(1, 2, 3))  # [T-1]
+
+    # --- Temporal consistency at multiple distances ---
+    # Cosine similarity between frames at distance d (in feature space = flattened pixels)
+    frames_flat = frames_tensor.view(T, -1)  # [T, C*H*W]
+    norms = frames_flat.norm(dim=1, keepdim=True).clamp(min=1e-8)
+    frames_normed = frames_flat / norms
+
+    consistency_by_distance = {}
+    for d in [1, 2, 4, 8, 16]:
+        if d >= T:
+            break
+        cos_sims = (frames_normed[:-d] * frames_normed[d:]).sum(dim=1)  # [T-d]
+        consistency_by_distance[f"cos_sim_d{d}"] = cos_sims.mean().item()
+        consistency_by_distance[f"cos_sim_d{d}_std"] = cos_sims.std().item()
+
+    # --- Motion magnitude ---
+    motion_mag = diffs.abs().mean(dim=(1, 2, 3))  # [T-1]
+
+    # --- Temporal jitter (second-order smoothness) ---
+    # High jitter = inconsistent motion (frame-to-frame speed changes)
+    if T >= 3:
+        accel = per_frame_mse[1:] - per_frame_mse[:-1]
+        jitter = accel.abs().mean().item()
+    else:
+        jitter = 0.0
+
+    return {
+        "temporal_mse_mean": per_frame_mse.mean().item(),
+        "temporal_mse_std": per_frame_mse.std().item(),
+        "motion_magnitude_mean": motion_mag.mean().item(),
+        "motion_magnitude_std": motion_mag.std().item(),
+        "temporal_jitter": jitter,
+        **consistency_by_distance,
+    }
+
+
+def compute_clip_metrics(frames_pil: list, prompt: str, clip_model, clip_processor, device) -> dict:
+    """Compute CLIP-based temporal quality metrics.
+
+    Args:
+        frames_pil: List of PIL images
+        prompt: Text prompt
+        clip_model: CLIPModel instance
+        clip_processor: CLIPProcessor instance
+        device: torch device
+
+    Returns:
+        Dict of CLIP metrics.
+    """
+    import numpy as np
+
+    T = len(frames_pil)
+    if T < 2:
+        return {}
+
+    # Encode all frames in batches of 16
+    all_feats = []
+    for i in range(0, T, 16):
+        batch_frames = frames_pil[i:i+16]
+        inputs = clip_processor(images=batch_frames, return_tensors="pt", padding=True).to(device)
+        with torch.no_grad():
+            feats = clip_model.get_image_features(**inputs)
+            feats = feats / feats.norm(dim=-1, keepdim=True)
+        all_feats.append(feats.cpu())
+    frame_feats = torch.cat(all_feats, dim=0)  # [T, D]
+
+    # --- CLIP frame consistency at multiple distances ---
+    clip_consistency = {}
+    for d in [1, 2, 4, 8, 16]:
+        if d >= T:
+            break
+        cos_sims = (frame_feats[:-d] * frame_feats[d:]).sum(dim=1)
+        clip_consistency[f"clip_cos_d{d}"] = cos_sims.mean().item()
+        clip_consistency[f"clip_cos_d{d}_std"] = cos_sims.std().item()
+
+    # --- CLIP text-video alignment ---
+    text_inputs = clip_processor(text=[prompt], return_tensors="pt", padding=True).to(device)
+    with torch.no_grad():
+        text_feat = clip_model.get_text_features(**text_inputs)
+        text_feat = text_feat / text_feat.norm(dim=-1, keepdim=True)
+    text_feat = text_feat.cpu()
+
+    text_sims = (frame_feats * text_feat).sum(dim=1)  # [T]
+    # Decay curve: average text alignment in first half vs second half
+    mid = T // 2
+    first_half_sim = text_sims[:mid].mean().item()
+    second_half_sim = text_sims[mid:].mean().item()
+
+    return {
+        "clip_text_align_mean": text_sims.mean().item(),
+        "clip_text_align_std": text_sims.std().item(),
+        "clip_text_align_first_half": first_half_sim,
+        "clip_text_align_second_half": second_half_sim,
+        "clip_text_align_decay": second_half_sim - first_half_sim,
+        **clip_consistency,
+    }
+
 
 def evaluate(
     pipe,
@@ -607,14 +800,32 @@ def evaluate(
     tau: float,
     theta_t: float,
     output_dir: str,
-    num_videos: int = 4,
+    num_videos: int = 8,
+    frame_counts: list = None,
+    num_inference_steps: int = 50,
     seed: int = 42,
 ):
-    """Generate videos at standard and extrapolated lengths, measure quality."""
+    """Evaluate temporal extrapolation quality.
+
+    Core idea: EVQ's advantage is extrapolation. Generate videos at training
+    length (49f) and beyond (97f, 145f), measure how temporal quality degrades.
+
+    Metrics per video per length:
+      - Pixel-level: temporal_mse, motion_magnitude, temporal_jitter
+      - Cosine similarity decay curve: cos_sim at distance 1/2/4/8/16
+      - CLIP (if available): frame consistency, text alignment, decay
+
+    Output: JSON with per-video metrics + aggregated per-length summary.
+    """
+    if frame_counts is None:
+        frame_counts = [49, 97, 145]  # 1x, 2x, 3x training length
+
     device = torch.device("cuda")
 
     print(f"\n{'='*60}")
     print(f"  Evaluation: {method.upper()} tau={tau} base={int(theta_t)}")
+    print(f"  Videos: {num_videos}, Lengths: {frame_counts}")
+    print(f"  Inference steps: {num_inference_steps}")
     print(f"{'='*60}\n")
 
     transformer = pipe.transformer
@@ -638,65 +849,148 @@ def evaluate(
     out_path = Path(output_dir)
     out_path.mkdir(parents=True, exist_ok=True)
 
-    prompts = [
-        "A cat walking gracefully across a garden",
-        "Ocean waves rolling onto a sandy beach at sunset",
-        "A time-lapse of flowers blooming in spring",
-        "A person skateboarding through a city park",
-    ][:num_videos]
-
-    results = {"method": method, "tau": tau, "theta_t": theta_t}
-
-    # Standard generation (49 frames)
-    print("  Generating standard-length videos (49 frames)...")
+    # Try loading CLIP for semantic metrics
+    clip_model, clip_processor = None, None
     try:
-        for i, prompt in enumerate(prompts):
-            generator = torch.Generator(device).manual_seed(seed + i)
-            output = pipe(
-                prompt=prompt, num_frames=49, height=480, width=720,
-                num_inference_steps=50, generator=generator,
-            )
-            # Save frames for FVD computation
-            frames = output.frames[0]  # list of PIL images
-            save_dir = out_path / f"videos_{method}" / f"standard_49f"
-            save_dir.mkdir(parents=True, exist_ok=True)
-            for j, frame in enumerate(frames):
-                frame.save(save_dir / f"video{i}_frame{j:04d}.png")
-            print(f"    Video {i}: {len(frames)} frames")
-        results["standard_49f"] = "completed"
+        from transformers import CLIPModel, CLIPProcessor
+        clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32",
+                                                torch_dtype=torch.float16).to(device).eval()
+        clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+        print("  [OK] CLIP loaded for semantic metrics")
     except Exception as e:
-        print(f"    Standard generation failed: {e}")
-        results["standard_49f"] = f"failed: {e}"
+        print(f"  [WARN] CLIP not available ({e}), using pixel-only metrics")
 
-    # Extrapolated generation (97 frames = ~2x temporal)
-    print("  Generating extrapolated videos (97 frames)...")
-    try:
+    prompts = EVAL_PROMPTS[:num_videos]
+
+    all_metrics = {
+        "method": method, "tau": tau, "theta_t": theta_t,
+        "num_videos": num_videos, "frame_counts": frame_counts,
+        "per_video": {},  # {f"{nf}f/video{i}": metrics}
+        "per_length": {},  # {f"{nf}f": aggregated metrics}
+    }
+
+    for nf in frame_counts:
+        label = f"{nf}f"
+        extrap_ratio = nf / frame_counts[0]
+        print(f"\n  --- Generating {nf} frames ({extrap_ratio:.1f}x) ---")
+
+        length_metrics = []
+
         for i, prompt in enumerate(prompts):
-            generator = torch.Generator(device).manual_seed(seed + i)
-            output = pipe(
-                prompt=prompt, num_frames=97, height=480, width=720,
-                num_inference_steps=50, generator=generator,
-            )
-            frames = output.frames[0]
-            save_dir = out_path / f"videos_{method}" / f"extrap_97f"
-            save_dir.mkdir(parents=True, exist_ok=True)
-            for j, frame in enumerate(frames):
-                frame.save(save_dir / f"video{i}_frame{j:04d}.png")
-            print(f"    Video {i}: {len(frames)} frames (extrapolated)")
-        results["extrapolated_97f"] = "completed"
-    except Exception as e:
-        print(f"    Extrapolation failed: {e}")
-        results["extrapolated_97f"] = f"failed: {e}"
+            vid_key = f"{label}/video{i}"
+            try:
+                generator = torch.Generator(device).manual_seed(seed + i)
+                gen_start = time.time()
+                output = pipe(
+                    prompt=prompt,
+                    num_frames=nf,
+                    height=480,
+                    width=720,
+                    num_inference_steps=num_inference_steps,
+                    generator=generator,
+                )
+                gen_time = time.time() - gen_start
 
-    with open(out_path / f"eval_{method}_tau{tau}_base{int(theta_t)}.json", "w") as f:
-        json.dump(results, f, indent=2)
+                frames_pil = output.frames[0]  # list of PIL images
+
+                # Save video frames
+                save_dir = out_path / f"videos_{method}_tau{tau}" / label
+                save_dir.mkdir(parents=True, exist_ok=True)
+                for j, frame in enumerate(frames_pil):
+                    frame.save(save_dir / f"video{i}_frame{j:04d}.png")
+
+                # Convert to tensor for pixel metrics
+                import numpy as np
+                frames_np = np.stack([np.array(f).astype(np.float32) / 255.0 for f in frames_pil])
+                frames_tensor = torch.from_numpy(frames_np).permute(0, 3, 1, 2)  # [T, C, H, W]
+
+                # Compute pixel-level metrics
+                vid_metrics = compute_video_metrics(frames_tensor)
+                vid_metrics["gen_time_s"] = gen_time
+                vid_metrics["num_frames"] = len(frames_pil)
+                vid_metrics["extrap_ratio"] = extrap_ratio
+                vid_metrics["prompt"] = prompt
+
+                # Compute CLIP metrics if available
+                if clip_model is not None:
+                    clip_m = compute_clip_metrics(frames_pil, prompt, clip_model, clip_processor, device)
+                    vid_metrics.update(clip_m)
+
+                all_metrics["per_video"][vid_key] = vid_metrics
+                length_metrics.append(vid_metrics)
+
+                print(f"    video {i}: {len(frames_pil)}f, {gen_time:.1f}s, "
+                      f"mse={vid_metrics['temporal_mse_mean']:.4f}, "
+                      f"jitter={vid_metrics['temporal_jitter']:.4f}"
+                      + (f", clip_d1={vid_metrics.get('clip_cos_d1', 'N/A'):.4f}"
+                         if 'clip_cos_d1' in vid_metrics else ""))
+
+            except Exception as e:
+                print(f"    video {i}: FAILED ({e})")
+                all_metrics["per_video"][vid_key] = {"error": str(e)}
+                continue
+
+        # Aggregate per-length metrics
+        if length_metrics:
+            agg = {}
+            # Collect all numeric keys
+            numeric_keys = [k for k in length_metrics[0] if isinstance(length_metrics[0][k], (int, float))]
+            for k in numeric_keys:
+                vals = [m[k] for m in length_metrics if k in m and isinstance(m.get(k), (int, float))]
+                if vals:
+                    agg[f"{k}_mean"] = sum(vals) / len(vals)
+                    if len(vals) > 1:
+                        mean = agg[f"{k}_mean"]
+                        agg[f"{k}_std"] = (sum((v - mean)**2 for v in vals) / (len(vals) - 1)) ** 0.5
+            agg["n_videos"] = len(length_metrics)
+            agg["extrap_ratio"] = extrap_ratio
+            all_metrics["per_length"][label] = agg
+
+    # --- Summary: extrapolation degradation ---
+    print(f"\n{'='*60}")
+    print(f"  EXTRAPOLATION SUMMARY: {method.upper()} tau={tau}")
+    print(f"{'='*60}")
+
+    base_label = f"{frame_counts[0]}f"
+    if base_label in all_metrics["per_length"]:
+        base_mse = all_metrics["per_length"][base_label].get("temporal_mse_mean_mean", 0)
+        base_jitter = all_metrics["per_length"][base_label].get("temporal_jitter_mean", 0)
+        base_clip_d1 = all_metrics["per_length"][base_label].get("clip_cos_d1_mean", None)
+
+        print(f"  {'Length':>8s}  {'MSE':>8s}  {'Jitter':>8s}  {'MSE_degr':>10s}"
+              + ("  CLIP_d1  CLIP_degr" if base_clip_d1 is not None else ""))
+
+        for nf in frame_counts:
+            label = f"{nf}f"
+            if label not in all_metrics["per_length"]:
+                continue
+            lm = all_metrics["per_length"][label]
+            mse = lm.get("temporal_mse_mean_mean", 0)
+            jitter = lm.get("temporal_jitter_mean", 0)
+            mse_degr = (mse - base_mse) / max(base_mse, 1e-8) * 100
+
+            line = f"  {label:>8s}  {mse:8.4f}  {jitter:8.4f}  {mse_degr:+9.1f}%"
+            if base_clip_d1 is not None:
+                clip_d1 = lm.get("clip_cos_d1_mean", 0)
+                clip_degr = (clip_d1 - base_clip_d1) / max(abs(base_clip_d1), 1e-8) * 100
+                line += f"  {clip_d1:.4f}  {clip_degr:+8.1f}%"
+            print(line)
+
+    # Save all metrics
+    eval_path = out_path / f"eval_{method}_tau{tau}_base{int(theta_t)}.json"
+    with open(eval_path, "w") as f:
+        json.dump(all_metrics, f, indent=2, default=str)
+    print(f"\n  Metrics saved: {eval_path}")
 
     # Clean up
+    del clip_model, clip_processor
     if hasattr(pipe.transformer, 'base_model'):
         pipe.transformer = pipe.transformer.base_model.model
     pipe.cpu()
     torch.cuda.empty_cache()
     gc.collect()
+
+    return all_metrics
 
 
 # ============================================================
@@ -718,7 +1012,8 @@ def main():
     parser.add_argument("--num_steps", type=int, default=500)
     parser.add_argument("--lora_rank", type=int, default=16)
     parser.add_argument("--lr", type=float, default=1e-4)
-    parser.add_argument("--batch_size", type=int, default=1)
+    parser.add_argument("--batch_size", type=int, default=0,
+                        help="0 = auto-detect max batch_size to fill VRAM")
     parser.add_argument("--grad_accum", type=int, default=4)
     parser.add_argument("--output_dir", type=str, default="results/wan21_evq")
     parser.add_argument("--cache_dir", type=str, default="data/wan21_cache")
@@ -729,6 +1024,10 @@ def main():
     parser.add_argument("--pilot", action="store_true", help="5 steps to verify setup")
     parser.add_argument("--num_data", type=int, default=200,
                         help="Number of training samples to encode/generate")
+    parser.add_argument("--num_eval_videos", type=int, default=8,
+                        help="Number of videos to generate per method per length")
+    parser.add_argument("--frame_counts", type=int, nargs="+", default=[49, 97, 145],
+                        help="Frame counts for eval: training length + extrapolation")
 
     args = parser.parse_args()
 
@@ -737,6 +1036,28 @@ def main():
         args.skip_eval = True
         args.num_data = 10
         print("\n*** PILOT MODE: 5 steps, 10 samples, no eval ***\n")
+
+    # ---- Startup diagnostics ----
+    print("[0/5] System check...")
+    gpu_name = torch.cuda.get_device_name(0)
+    gpu_mem = torch.cuda.get_device_properties(0).total_mem / 1e9
+    cc = torch.cuda.get_device_capability(0)
+    print(f"  GPU: {gpu_name} ({gpu_mem:.0f}GB), compute capability: {cc[0]}.{cc[1]}")
+    print(f"  PyTorch: {torch.__version__}, CUDA: {torch.version.cuda}")
+
+    # Check SDPA backends
+    from torch.nn.functional import scaled_dot_product_attention
+    dummy_q = torch.randn(1, 1, 16, 64, device="cuda", dtype=torch.bfloat16)
+    backends = []
+    for name, check in [
+        ("flash", torch.backends.cuda.flash_sdp_enabled),
+        ("mem_efficient", torch.backends.cuda.mem_efficient_sdp_enabled),
+        ("math", torch.backends.cuda.math_sdp_enabled),
+    ]:
+        if callable(check) and check():
+            backends.append(name)
+    print(f"  SDPA backends enabled: {backends}")
+    del dummy_q
 
     # ---- Load pipeline ----
     print("[1/5] Loading Wan2.1-T2V-1.3B pipeline...")
@@ -814,25 +1135,36 @@ def main():
             all_results[f"{method}_tau{tau}_base{int(args.theta_t)}"] = result
 
         if not args.skip_eval:
+            # Reload pipeline fresh for evaluation (no compile baggage)
+            del pipe
+            torch.cuda.empty_cache()
+            gc.collect()
+            pipe = WanPipeline.from_pretrained(args.model_path, torch_dtype=torch.bfloat16)
+
             lora_dir = str(Path(args.output_dir) /
                           f"wan21_{method}_tau{tau}_base{int(args.theta_t)}" / "lora_weights")
-            evaluate(
+            eval_result = evaluate(
                 pipe=pipe,
                 lora_dir=lora_dir,
                 method=method,
                 tau=tau,
                 theta_t=args.theta_t,
                 output_dir=args.output_dir,
+                num_videos=args.num_eval_videos,
+                frame_counts=args.frame_counts,
                 seed=args.seed,
             )
+            all_results[f"{method}_tau{tau}_eval"] = eval_result
 
     # ---- Summary ----
-    if len(all_results) > 1:
+    # Training loss comparison
+    train_keys = [k for k in all_results if not k.endswith("_eval")]
+    if len(train_keys) > 1:
         print(f"\n{'='*60}")
-        print(f"  HEAD-TO-HEAD COMPARISON")
+        print(f"  HEAD-TO-HEAD: TRAINING LOSS")
         print(f"{'='*60}")
-        geo_key = [k for k in all_results if k.startswith("geo")][0]
-        evq_key = [k for k in all_results if k.startswith("evq")][0]
+        geo_key = [k for k in train_keys if k.startswith("geo")][0]
+        evq_key = [k for k in train_keys if k.startswith("evq")][0]
         geo_loss = all_results[geo_key]["final_loss"]
         evq_loss = all_results[evq_key]["final_loss"]
         delta = (evq_loss - geo_loss) / geo_loss * 100
@@ -840,11 +1172,40 @@ def main():
         print(f"  GEO: loss={geo_loss:.6f}")
         print(f"  EVQ: loss={evq_loss:.6f}")
         print(f"  Delta: {delta:+.1f}% ({'EVQ wins' if delta < 0 else 'GEO wins'})")
-        print(f"{'='*60}")
+        print(f"  NOTE: Training loss favors GEO (model pretrained with GEO).")
+        print(f"        The real test is extrapolation quality below.")
 
-        for name, r in all_results.items():
+        for name in train_keys:
+            r = all_results[name]
             print(f"  {name}: loss={r['final_loss']:.6f}, time={r['total_time_s']:.0f}s, "
                   f"VRAM={r['peak_vram_gb']:.1f}GB")
+
+    # Extrapolation comparison (the real test)
+    eval_keys = [k for k in all_results if k.endswith("_eval")]
+    if len(eval_keys) > 1:
+        print(f"\n{'='*60}")
+        print(f"  HEAD-TO-HEAD: TEMPORAL EXTRAPOLATION")
+        print(f"{'='*60}")
+
+        # Compare degradation at each length
+        frame_counts_used = args.frame_counts
+        base_nf = frame_counts_used[0]
+
+        header = f"  {'Length':>8s}"
+        for ek in eval_keys:
+            method_name = ek.replace("_eval", "").split("_")[0].upper()
+            header += f"  {method_name+'_mse':>10s}  {method_name+'_jit':>10s}"
+        print(header)
+
+        for nf in frame_counts_used:
+            label = f"{nf}f"
+            line = f"  {label:>8s}"
+            for ek in eval_keys:
+                per_len = all_results[ek].get("per_length", {}).get(label, {})
+                mse = per_len.get("temporal_mse_mean_mean", float('nan'))
+                jitter = per_len.get("temporal_jitter_mean", float('nan'))
+                line += f"  {mse:10.4f}  {jitter:10.4f}"
+            print(line)
 
     summary_path = Path(args.output_dir) / "experiment_summary.json"
     with open(summary_path, "w") as f:

@@ -83,6 +83,95 @@ def evq_cosh_inv_freq(head_dim, tau, base=500000.0):
 14. 不要凭论文描述自己重写第三方方法，必须对照官方代码逐行确认。已踩坑: RIFLEx自己实现漏了0.9系数+用错L_train/L_test，导致结果完全错误。RIFLEx官方实现: `freqs[k-1] = 0.9 * 2π / L_test`（注意是L_test不是L_train，k由官方intrinsic frequency detection选出，不要自己猜）。
 15. eval结果必须做sanity check: 如果一个公认有效的inference-time方法(RIFLEx/YaRN)让所有模型都变差，第一反应是检查实现bug，不是解读为"方法不适用"。
 
+## Part 4: Wan2.1 视频微调避坑 (Phase 17)
+
+### 模型选型坑
+
+| 模型 | RoPE | Flow-matching | 参数量 | 结论 |
+|------|:---:|:---:|--------|------|
+| CogVideoX-2B | ❌ sinusoidal | ❌ DDPM | 2B | **废弃**: `use_rotary_positional_embeddings=false`，monkey-patch无效 |
+| CogVideoX-5B | ✅ | ❌ DDPM | 5B | 可用但非FM，推理慢(50-100步) |
+| HunyuanVideo | ✅ | ✅ | 13B | 太大，训练慢 |
+| **Wan2.1-1.3B** | ✅ | ✅ rectified flow | 1.3B | **选定**: FM+RoPE+小模型，推理快(20-30步) |
+
+选型前必须验证: (1) 模型config中RoPE是否启用 (2) 调度器类型(FM vs DDPM) (3) 参数量能否fit显存。
+
+### Wan2.1 原始模型 vs diffusers
+
+diffusers `WanPipeline` 需要 diffusers 格式模型(含 `model_index.json`)。服务器上只有原始格式，不要浪费时间下载/转换。直接用原始 `WanModel`:
+
+```python
+sys.path.insert(0, "/root/autodl-tmp/wan21/Wan2.1")  # wan module
+from wan.modules.model import WanModel
+model = WanModel.from_pretrained("/root/autodl-tmp/wan21")  # 传目录不是文件
+```
+
+关键接口差异:
+- **forward**: `model(x=List[Tensor], t=Tensor, context=List[Tensor], seq_len=int)` — x 和 context 是**列表**不是 batch tensor
+- **RoPE**: `model.freqs` 是 complex tensor `[1024, 64]`，前22列=temporal，后42=spatial(21h+21w)
+- **LoRA targets**: `"q", "k", "v", "o"` 不是 `"to_q", "to_k", "to_v", "to_out.0"`
+- **VAE encode**: `vae.encode([tensor])` 输入是列表，每个 `[C,T,H,W]`
+
+### 分辨率与序列长度
+
+VAE stride=(4,8,8), patch_size=(1,2,2)。分辨率必须被 8 整除且 latent 空间被 2 整除:
+
+| 分辨率 | latent H×W | patch后 | seq_len (T=21) | step time (bs=1) | VRAM |
+|--------|-----------|---------|----------------|-------------------|------|
+| 480×832 | 60×104 | 30×52 | 32,760 | ~45s | 87GB (bs=8+ckpt) |
+| **288×288** | 36×36 | 18×18 | **6,804** | **2.8s** | 79.8GB (bs=1) |
+| 280×280 | 35×35 | ❌不整除 | — | — | — |
+
+**280 不行**: 280/8=35(奇数), patch_size=2 无法整除。用 288。
+
+### 显存坑
+
+- bs=4 @ 288×288 无 gradient checkpointing: **OOM** (>96GB)
+- bs=2 @ 288×288 无 gradient checkpointing: **OOM** (>95GB)
+- bs=1 @ 288×288 无 gradient checkpointing: **79.8GB** ✓
+- 之前 480×832 bs=8 + gradient checkpointing: 87.7GB ✓ 但 45s/step
+
+要 bs>1 必须开 gradient checkpointing，但会拖慢每步速度。
+
+### 编码坑
+
+1. **T5 必须加载到 GPU**: 96GB 显存放 T5(11GB)+VAE(0.5GB) 绰绰有余，不要照抄旧脚本的 CPU 加载
+2. **文本嵌入长度不一致**: 不同 caption 产生不同长度的 T5 embedding，必须 pad 到 max_length 再 stack
+3. **PYTHONPATH**: `wan` 模块在 `/root/autodl-tmp/wan21/Wan2.1/`，必须加到 PYTHONPATH
+
+### temporal RoPE 修改
+
+```python
+# model.freqs: complex [1024, 64], 前22列是temporal
+K_t = 22  # t_dim=44, 22 pairs
+positions = torch.arange(1024, dtype=torch.float64)
+raw = torch.outer(positions, inv_freq.double())
+new_freqs = torch.polar(torch.ones_like(raw), raw)
+model.freqs[:, :K_t] = new_freqs
+model.freqs = model.freqs.to(device)
+```
+
+注意: Wan2.1 base=10000 + K_t=22 → 10/22 通道死/近死(45.5%)。τ*_DiT = 0.53 × 22/√13 ≈ 3.2。
+
+### 训练配置 (已验证)
+
+```
+Model: Wan2.1-T2V-1.3B, 1419M params
+Resolution: 288×288, 81 frames
+Latent: [16, 21, 36, 36], seq_len=6804
+LoRA rank=16, targets=["q","k","v","o"], 11.8M trainable
+bs=1, lr=1e-4, AdamW(0.9,0.95), cosine schedule
+VRAM: 79.8GB, step time: 2.8s/step
+500 steps GEO + 500 steps EVQ ≈ 47 min
+```
+
+### 服务器操作铁律
+
+16. 永远不要在付费GPU服务器上调试。所有代码在本地写好、检查好，一次传上去跑。
+17. 每次上传脚本前: (a) 确认所有 import 路径正确 (b) 确认 device=cuda (c) 确认 tensor shape 匹配 (d) 确认 batch_size 不会 OOM
+18. 用 `nohup python -u script.py > /tmp/log 2>&1 &` 后台跑，`python -u` 保证 unbuffered 输出
+19. 不要用 sleep+poll 检查进度，直接 `tail /tmp/log`
+
 ## 关键文件
 
-论文: `paper/main.tex` | 映射: `docs/overview/PAPER_CLAIMS_MAP.md` | sweep脚本: `scripts/core_text_phases/run_evq_sweep.py` | RoPE库: `scripts/lib/rope/schedules.py` | DiT报告: `results/video_dit/REPORT_FINAL.md` | DiT理论: `DiT_frequency_allocation_analysis.md` | DiT脚本: `scripts/video_temporal/run_dit_temporal.py`
+论文: `paper/main.tex` | 映射: `docs/overview/PAPER_CLAIMS_MAP.md` | sweep脚本: `scripts/core_text_phases/run_evq_sweep.py` | RoPE库: `scripts/lib/rope/schedules.py` | DiT报告: `results/video_dit/REPORT_FINAL.md` | DiT理论: `DiT_frequency_allocation_analysis.md` | DiT脚本: `scripts/video_temporal/run_dit_temporal.py` | Wan2.1训练: `scripts/video_temporal/wan21_raw_train.py`
