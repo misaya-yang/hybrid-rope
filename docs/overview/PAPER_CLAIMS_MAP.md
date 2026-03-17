@@ -68,6 +68,11 @@
 | **V4** | Teacher-forced: EVQ +5.4% top-5 accuracy | VideoGPT 268.7M, N=2000, extrap region | `eval_temporal_precision.py` | Teacher-forced | ✅ Low (large N) |
 | **V5** | Advantage scales with temporal frequency | P=16: +8.48%, P=24: +7.63%, P=32: +6.25% | `eval_temporal_precision.py` | FFT decomposition | ✅ Low |
 | **V6** | Dead channel mechanism: base reduction eliminates phase transition | base=1000 h2h: τ=1.2≈τ=1.5, both -48% vs Geo | `run_dit_temporal.py --base 1000` | Head-to-head | ✅ Low (mechanistic) |
+| **V7** | Dead channels are systemic across all major video DiTs | CogVideoX 50%, Wan2.1 42%, Latte 42%, HunyuanVideo 38%, Open-Sora 31% | Pure math (θ_k × T_train < 0.1 rad) | Analytical | ✅ Low (mathematical fact) |
+| **V8** | EVQ robust to base; GEO fragile + non-monotonic | Base sweep 6pt: EVQ 1.9× range vs GEO 11.8× (YaRN); base=50K gap 7.2× | `run_dit_temporal.py --base` | Head-to-head | ✅ Low (6-point sweep) |
+| **V9** | EVQ advantage is training-time, not YaRN artifact | Without YaRN: EVQ -35% to -56% at base≥500 | Same | Head-to-head | ✅ Low |
+| **V10** | Frequency allocation is pure extrapolation effect | 32f eval: ALL 12 configs within 0.0093–0.0102 (<6%); 128f range +18% to -86% | Same checkpoints, 32f eval | Isolation experiment | ✅ Low (decisive) |
+| **V11** | EVQ advantage persists at 3× scale (382M DiT) | 382M h2h: YaRN far -35%, noYaRN far -64%, training loss identical (+0.3%) | `run_dit_temporal.py` (382M config) | Head-to-head | ⚠️ Medium (single-seed) |
 
 ### DiT Appendix Tables (paper/appendix/a2_experiment_details.tex)
 
@@ -81,6 +86,9 @@
 | `tab:freq-decomp` | Frequency-resolved accuracy delta | Same | P=16: +5.07%, P=32: +3.55% |
 | `tab:quality-nll` | QuALITY Gold NLL (appendix a3) | `results/core_text/phase21b/` | -30.1% @8K |
 | `tab:dit-base1000` | Dead channel validation (base=1000 h2h) | `results/video_dit/westd_20260316/base1000_h2h/` | τ=1.2≈τ=1.5, both -48% far |
+| `tab:dit-base-sweep` | Base sweep (100–50K, YaRN + raw, 6pt) | `results/video_dit/base_sweep_h2h.json` | GEO 11.8× range; EVQ 1.9×; global best EVQ@10K |
+| `tab:dit-32f-isolation` | 32f pure training eval (smoking gun) | Same checkpoints | ALL within 0.0093–0.0102, <6% variation |
+| `tab:dit-382m` | 382M scale-up h2h validation | `results/video_dit/dit_382m_h2h.json` | YaRN far -35%, noYaRN far -64% |
 
 ### Video Reports & Data
 

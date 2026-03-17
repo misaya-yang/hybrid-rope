@@ -566,6 +566,131 @@ def generate_oscillating_mnist_pixels(
 
 
 # ---------------------------------------------------------------------------
+# UCF-101 data loading (real video dataset)
+# ---------------------------------------------------------------------------
+
+def download_ucf101(data_dir: str = "data/ucf101") -> str:
+    """Download and extract UCF-101 dataset. Returns path to video directory."""
+    import os, subprocess
+    data_path = os.path.join(data_dir, "UCF-101")
+    if os.path.exists(data_path) and len(os.listdir(data_path)) > 50:
+        print(f"  UCF-101 already exists at {data_path}")
+        return data_path
+
+    os.makedirs(data_dir, exist_ok=True)
+    rar_path = os.path.join(data_dir, "UCF101.rar")
+
+    if not os.path.exists(rar_path):
+        url = "https://www.crcv.ucf.edu/data/UCF101/UCF101.rar"
+        print(f"  Downloading UCF-101 from {url}...")
+        # Try wget first, then curl
+        try:
+            subprocess.run(["wget", "-q", "--show-progress", "-O", rar_path, url],
+                          check=True, timeout=3600)
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            subprocess.run(["curl", "-L", "-o", rar_path, url],
+                          check=True, timeout=3600)
+
+    if not os.path.exists(data_path):
+        print(f"  Extracting UCF-101...")
+        try:
+            subprocess.run(["unrar", "x", "-o+", rar_path, data_dir], check=True)
+        except FileNotFoundError:
+            # Try with python rarfile
+            import rarfile
+            with rarfile.RarFile(rar_path) as rf:
+                rf.extractall(data_dir)
+
+    return data_path
+
+
+def load_ucf101_pixels(
+    data_dir: str,
+    n_samples: int,
+    n_frames: int,
+    frame_size: int = 64,
+    seed: int = 42,
+    split: str = "train",
+) -> torch.Tensor:
+    """Load UCF-101 videos as pixel tensors.
+
+    Returns: (n_samples, n_frames, 3, frame_size, frame_size) float32 in [-1, 1].
+    """
+    import os, glob
+    import numpy as np
+
+    try:
+        import decord
+        decord.bridge.set_bridge("torch")
+    except ImportError:
+        raise ImportError("decord required: pip install decord")
+
+    rng = np.random.RandomState(seed)
+
+    # Find all .avi files
+    video_dir = data_dir
+    all_videos = sorted(glob.glob(os.path.join(video_dir, "**", "*.avi"), recursive=True))
+    if not all_videos:
+        raise FileNotFoundError(f"No .avi files found in {video_dir}")
+
+    print(f"  Found {len(all_videos)} UCF-101 videos")
+
+    # Shuffle and select
+    indices = rng.permutation(len(all_videos))
+
+    videos = np.zeros((n_samples, n_frames, 3, frame_size, frame_size), dtype=np.float32)
+    loaded = 0
+
+    for idx in indices:
+        if loaded >= n_samples:
+            break
+
+        try:
+            vr = decord.VideoReader(all_videos[idx])
+            total = len(vr)
+            if total < 8:  # Skip very short clips
+                continue
+
+            # Sample n_frames evenly
+            if total >= n_frames:
+                frame_indices = np.linspace(0, total - 1, n_frames, dtype=int)
+            else:
+                # Repeat last frame to pad
+                frame_indices = np.arange(total)
+                pad = np.full(n_frames - total, total - 1, dtype=int)
+                frame_indices = np.concatenate([frame_indices, pad])
+
+            frames = vr.get_batch(frame_indices.tolist()).numpy()  # [T, H, W, C] uint8
+
+            # Resize to target size using numpy (avoid torch dependency for speed)
+            from PIL import Image
+            resized = np.zeros((n_frames, frame_size, frame_size, 3), dtype=np.float32)
+            for t in range(n_frames):
+                img = Image.fromarray(frames[t])
+                img = img.resize((frame_size, frame_size), Image.BILINEAR)
+                resized[t] = np.array(img, dtype=np.float32) / 255.0
+
+            # [T, H, W, C] -> [T, C, H, W], scale to [-1, 1]
+            resized = resized.transpose(0, 3, 1, 2)  # [T, C, H, W]
+            videos[loaded] = resized * 2.0 - 1.0
+            loaded += 1
+
+            if loaded % 100 == 0:
+                print(f"  Loaded {loaded}/{n_samples} videos")
+
+        except Exception as e:
+            continue  # Skip corrupted videos
+
+    if loaded < n_samples:
+        print(f"  Warning: only loaded {loaded}/{n_samples} videos, padding with repeats")
+        for i in range(loaded, n_samples):
+            videos[i] = videos[i % loaded]
+
+    print(f"  UCF-101 loaded: {loaded} videos, shape {videos.shape}")
+    return torch.from_numpy(videos)
+
+
+# ---------------------------------------------------------------------------
 # Quick self-test
 # ---------------------------------------------------------------------------
 

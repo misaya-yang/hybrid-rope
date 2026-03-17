@@ -59,6 +59,8 @@ from video_dit import (
     evq_cosh_inv_freq,
     power_shift_inv_freq,
     generate_oscillating_mnist_pixels,
+    load_ucf101_pixels,
+    download_ucf101,
 )
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -503,7 +505,7 @@ def run_one_method(
 
     # Build model
     model = VideoDiT(
-        in_channels=1,
+        in_channels=cfg.get("in_channels", 1),
         patch_size=cfg["patch_size"],
         hidden_size=cfg["hidden_size"],
         num_layers=cfg["num_layers"],
@@ -621,6 +623,16 @@ def run_one_method(
     )
     results["denoise_128f_noyarn"] = denoise_128f_ny
 
+    # Pure in-distribution eval: 32f videos, NO extrapolation, NO YaRN
+    print(f"\n  Computing denoising precision at 32f (in-distribution, t=0.5)...")
+    denoise_32f = compute_denoising_precision(
+        model, val_videos_32f, train_frames,
+        noise_level=0.5, apply_yarn=False,
+        batch_size=gen_batch, device=DEVICE,
+    )
+    results["denoise_32f_indist"] = denoise_32f
+    print(f"    In-distribution 32f MSE: {denoise_32f['train_mse']:.6f}")
+
     # Print denoising summary
     for label, d in [("YaRN", denoise_128f), ("no-YaRN", denoise_128f_ny)]:
         print(f"    Denoising MSE ({label}): train={d['train_mse']:.6f}  "
@@ -737,8 +749,8 @@ def main():
     parser.add_argument("--sampling_steps", type=int, default=50,
                         help="Euler ODE sampling steps (50 is usually enough)")
     parser.add_argument("--profile", type=str, default="default",
-                        choices=["default", "medium", "match"],
-                        help="Model profile: 'default' (~50M, fast) or 'match' (~250M, needs 80GB+)")
+                        choices=["default", "medium", "match", "large"],
+                        help="Model profile: 'default' (~50M), 'medium' (~130M), 'large' (~382M, needs 96GB)")
     parser.add_argument("--tau", type=str, default="",
                         help="Comma-separated tau values to sweep (overrides --method). "
                              "Example: --tau 0.0,0.3,0.7,1.5,2.83")
@@ -754,6 +766,11 @@ def main():
                         help="Override generation batch size (0 = use profile default)")
     parser.add_argument("--compile", action="store_true",
                         help="Use torch.compile for speedup (requires PyTorch 2.7+)")
+    parser.add_argument("--dataset", type=str, default="mnist",
+                        choices=["mnist", "ucf101"],
+                        help="Dataset: 'mnist' (synthetic) or 'ucf101' (real)")
+    parser.add_argument("--data_dir", type=str, default="",
+                        help="Data directory (for UCF-101: path to extracted videos)")
     args = parser.parse_args()
 
     # Seeds
@@ -814,6 +831,19 @@ def main():
             "batch_size": 16,
             "epochs": 50,
             "gen_batch_size": 4,
+        },
+        "large": {
+            # ~382M params — UCF-101 scale, for 96GB GPU
+            "hidden_size": 1024,
+            "num_layers": 20,
+            "num_heads": 16,
+            "head_dim": 64,
+            "patch_size": 8,
+            "lr": 1e-4,
+            "batch_size": 64,
+            "epochs": 15,
+            "gen_batch_size": 8,
+            "gradient_checkpointing": False,
         },
     }
 
@@ -884,25 +914,43 @@ def main():
     with open(work_dir / "config.json", "w") as f:
         json.dump(cfg, f, indent=2)
 
-    # Generate data
-    print(f"\n  Generating training data ({cfg['train_samples']} videos, {cfg['train_frames']}f)...")
-    train_videos = generate_oscillating_mnist_pixels(
-        cfg["train_samples"], cfg["train_frames"],
-        cfg["frame_size"], seed=42,
-    )
+    # Generate / load data
+    in_channels = 1  # default MNIST
+    if args.dataset == "ucf101":
+        in_channels = 3
+        data_dir = args.data_dir or "/root/autodl-tmp/data/ucf101"
+        ucf_path = download_ucf101(data_dir)
+        print(f"\n  Loading UCF-101 training data ({cfg['train_samples']} videos, {cfg['train_frames']}f)...")
+        train_videos = load_ucf101_pixels(
+            ucf_path, cfg["train_samples"], cfg["train_frames"],
+            cfg["frame_size"], seed=42, split="train",
+        )
+        print(f"  Loading UCF-101 validation data...")
+        val_videos_32f = load_ucf101_pixels(
+            ucf_path, cfg["val_samples"], cfg["train_frames"],
+            cfg["frame_size"], seed=99999, split="val",
+        )
+        val_videos_128f = load_ucf101_pixels(
+            ucf_path, cfg["val_samples"], 128,
+            cfg["frame_size"], seed=99999, split="val",
+        )
+    else:
+        print(f"\n  Generating MNIST training data ({cfg['train_samples']} videos, {cfg['train_frames']}f)...")
+        train_videos = generate_oscillating_mnist_pixels(
+            cfg["train_samples"], cfg["train_frames"],
+            cfg["frame_size"], seed=42,
+        )
+        val_videos_32f = generate_oscillating_mnist_pixels(
+            cfg["val_samples"], cfg["train_frames"],
+            cfg["frame_size"], seed=99999,
+        )
+        val_videos_128f = generate_oscillating_mnist_pixels(
+            cfg["val_samples"], 128,
+            cfg["frame_size"], seed=99999,
+        )
+    cfg["in_channels"] = in_channels
+    cfg["dataset"] = args.dataset
     print(f"  Train shape: {train_videos.shape}  range: [{train_videos.min():.1f}, {train_videos.max():.1f}]")
-
-    print(f"  Generating validation data (32f)...")
-    val_videos_32f = generate_oscillating_mnist_pixels(
-        cfg["val_samples"], cfg["train_frames"],
-        cfg["frame_size"], seed=99999,
-    )
-
-    print(f"  Generating validation data (128f for extrapolation eval)...")
-    val_videos_128f = generate_oscillating_mnist_pixels(
-        cfg["val_samples"], 128,
-        cfg["frame_size"], seed=99999,
-    )
 
     # Run experiments
     all_results = []

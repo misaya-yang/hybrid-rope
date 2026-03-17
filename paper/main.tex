@@ -11,7 +11,7 @@
 \usepackage{multirow}
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb,amsthm}
-\usepackage{xcolor}
+\usepackage[table]{xcolor}
 \usepackage{hyperref}
 
 \graphicspath{{figs/}}
@@ -36,7 +36,7 @@
 \maketitle
 
 \begin{abstract}
-Rotary position embedding is often extended at inference time, but its training-time geometric frequency allocation is usually left untouched. We formulate RoPE frequency allocation as a variational inverse problem, derive a broadband surrogate whose stationary density satisfies a second-order ODE, and obtain a closed-form family, EVQ-cosh, in which geometric RoPE is the degenerate \(\tau=0\) limit. Empirically, EVQ beats learnable adaptive positional encoding in DAPE-style extreme extrapolation (\(128\!\rightarrow\!8\mathrm{K}\): \(333.7\) vs.\ \(455.3\) PPL), showing that positional structure alone can determine extreme long-range behavior. More importantly, EVQ unlocks inference-time scaling: across six seeds, EVQ+YaRN reaches \(100\%\) retrieval at \(8\mathrm{K}\), while Geo+YaRN remains at \(61\%\) to \(65\%\); in a fair \(10\%\) mix comparison, EVQ+YaRN lowers PPL from \(82.9\) to \(70.9\) at \(8\mathrm{K}\) and from \(157.7\) to \(107.5\) at \(16\mathrm{K}\). Under progressive training (\(512\!\rightarrow\!1024\!\rightarrow\!2048\)), this advantage amplifies superlinearly, extending functional context to \(48\mathrm{K}\) (\(24\times\) training length) at PPL~\(2.63\). These results identify training-time frequency allocation as a missing foundation for long-context extrapolation.
+Rotary position embedding is often extended at inference time, but its training-time geometric frequency allocation is usually left untouched. We formulate RoPE frequency allocation as a variational inverse problem, derive a broadband surrogate whose stationary density satisfies a second-order ODE, and obtain a closed-form family, EVQ-cosh, in which geometric RoPE is the degenerate \(\tau=0\) limit. Empirically, EVQ beats learnable adaptive positional encoding in DAPE-style extreme extrapolation (\(128\!\rightarrow\!8\mathrm{K}\): \(333.7\) vs.\ \(455.3\) PPL), showing that positional structure alone can determine extreme long-range behavior. More importantly, EVQ unlocks inference-time scaling: across six seeds, EVQ+YaRN reaches \(100\%\) retrieval at \(8\mathrm{K}\), while Geo+YaRN remains at \(61\%\) to \(65\%\); in a fair \(10\%\) mix comparison, EVQ+YaRN lowers PPL from \(82.9\) to \(70.9\) at \(8\mathrm{K}\) and from \(157.7\) to \(107.5\) at \(16\mathrm{K}\). Under progressive training (\(512\!\rightarrow\!1024\!\rightarrow\!2048\)), this advantage widens monotonically as geometric RoPE degrades while EVQ remains stable, extending functional context to \(48\mathrm{K}\) (\(24\times\) training length) at PPL~\(2.63\). These results identify training-time frequency allocation as an under-explored but critical design axis for long-context extrapolation.
 \end{abstract}
 
 \input{sections/01_intro}

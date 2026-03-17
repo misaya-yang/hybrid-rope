@@ -18,7 +18,7 @@ K_{\mathrm{app}}(\phi_1,\phi_2)
 \approx
 \alpha \delta(\phi_1-\phi_2) + \beta \min(\phi_1,\phi_2),
 \end{equation}
-which isolates a diagonal ridge term and a smooth off-diagonal covariance term. The \(\delta\) term captures local ridge structure, while \(\min(\phi_1,\phi_2)\) is the Green kernel of a one-dimensional second-order operator. After this step, the remaining derivation is exact.
+which isolates a diagonal ridge term and a smooth off-diagonal covariance term. The \(\delta\) term captures local ridge structure, while \(\min(\phi_1,\phi_2)\) is the Green kernel of a one-dimensional second-order operator. After this step, the remaining derivation is exact. The exact kernel is oscillatory (sinc-like) and cannot be well-approximated pointwise by a smooth two-parameter model; instead, $K_{\mathrm{app}}$ captures the \emph{functional} structure of the collision objective. Appendix~\ref{sec:surrogate-validation} validates this across 12 configurations spanning three orders of magnitude in $L$ and $b$: the EVQ solution derived from $K_{\mathrm{app}}$ reduces the collision score under the exact kernel by $24$--$92\%$ in every tested regime.
 
 \subsection{Variational objective and exact ODE}
 
