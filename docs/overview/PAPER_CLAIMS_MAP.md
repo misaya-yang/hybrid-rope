@@ -67,6 +67,20 @@
 | **V3** | Sharp phase transition at τ∈(1.2, 1.5) | h2h: τ=1.2 is 2.8x worse, τ=1.5 is 21% better | `run_dit_temporal.py` | Head-to-head | Need fine-grained sweep |
 | **V4** | Teacher-forced: EVQ +5.4% top-5 accuracy | VideoGPT 268.7M, N=2000, extrap region | `eval_temporal_precision.py` | Teacher-forced | ✅ Low (large N) |
 | **V5** | Advantage scales with temporal frequency | P=16: +8.48%, P=24: +7.63%, P=32: +6.25% | `eval_temporal_precision.py` | FFT decomposition | ✅ Low |
+| **V6** | Dead channel mechanism: base reduction eliminates phase transition | base=1000 h2h: τ=1.2≈τ=1.5, both -48% vs Geo | `run_dit_temporal.py --base 1000` | Head-to-head | ✅ Low (mechanistic) |
+
+### DiT Appendix Tables (paper/appendix/a2_experiment_details.tex)
+
+| Table | 描述 | 数据来源 | Key Numbers |
+|-------|------|---------|-------------|
+| `tab:video-temporal` | VideoGPT temporal extrap (PPL, FVD) | `results/supporting_video/` | PPL -27.3%, FVD -1.5% |
+| `tab:dit-h2h` | DiT dual-seed h2h (train/all/far MSE) | `results/video_dit/westd_20260316/` | mean -21%/-15%/-32% |
+| `tab:dit-inference` | DiT inference methods (YaRN/RIFLEx/raw) | `results/video_dit/westd_20260316/riflex_eval_*.json` | EVQ wins all: -37%/-28%/-59% |
+| `tab:dit-timestep` | DiT multi-timestep (t=0.2/0.5/0.8) | Same as dit-inference | -4%/-36%/-27% |
+| `tab:temporal-precision` | Teacher-forced accuracy by region | `results/supporting_video/temporal_precision/` | +3.14% top-1, +5.40% top-5 |
+| `tab:freq-decomp` | Frequency-resolved accuracy delta | Same | P=16: +5.07%, P=32: +3.55% |
+| `tab:quality-nll` | QuALITY Gold NLL (appendix a3) | `results/core_text/phase21b/` | -30.1% @8K |
+| `tab:dit-base1000` | Dead channel validation (base=1000 h2h) | `results/video_dit/westd_20260316/base1000_h2h/` | τ=1.2≈τ=1.5, both -48% far |
 
 ### Video Reports & Data
 

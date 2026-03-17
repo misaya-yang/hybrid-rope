@@ -113,7 +113,11 @@ def train_dit(
     losses = []
     t0 = time.time()
 
+    _has_cudagraph_mark = hasattr(torch, "compiler") and hasattr(torch.compiler, "cudagraph_mark_step_begin")
+
     for step in range(steps):
+        if _has_cudagraph_mark:
+            torch.compiler.cudagraph_mark_step_begin()
         # Cosine LR with warmup
         if step < warmup:
             cur_lr = lr * step / max(warmup, 1)
@@ -517,8 +521,8 @@ def run_one_method(
 
     # torch.compile for speedup (Blackwell-compatible via Triton)
     if cfg.get("compile", False) and hasattr(torch, "compile"):
-        print("  Applying torch.compile (mode=reduce-overhead)...")
-        model = torch.compile(model, mode="reduce-overhead")
+        print("  Applying torch.compile (mode=default)...")
+        model = torch.compile(model, mode="default")
 
     # Train (or load existing checkpoint)
     run_id = f"{method}_seed{seed}"
@@ -627,6 +631,14 @@ def run_one_method(
     with open(result_path, "w") as f:
         json.dump(results, f, indent=2)
     print(f"\n  Results saved: {result_path}")
+
+    # Explicit memory cleanup (AIHANDOFF #6) — prevents OOM on next run
+    del model
+    import gc
+    gc.collect()
+    if DEVICE == "cuda":
+        torch.cuda.empty_cache()
+    print("  Memory released.")
 
     return results
 

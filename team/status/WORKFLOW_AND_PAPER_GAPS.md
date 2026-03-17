@@ -431,4 +431,20 @@ Phase 17c 报告 EVQ+YaRN@48K = 2.63 但没有不确定性。需要:
 
 ---
 
-*文档版本: v1.0 | 2026-03-12*
+---
+
+## 重要待办: 大模型 EVQ+RIFLEx 互补性验证 (2026-03-16 新增)
+
+**背景**: 129.6M DiT 上 RIFLEx 让 Geo 和 EVQ 都变差（因为小模型 failure mode 不是 temporal repetition），但 EVQ 对 RIFLEx 的鲁棒性远强于 Geo（Geo 劣化 3.6-5.4x，EVQ 仅 1.5-2.2x）。RIFLEx 在 CogVideoX/Open-Sora 等大型预训练模型上是正向的（ICML 2025），所以在大模型上 EVQ+RIFLEx 很可能变成正向互补：EVQ 提供更好的 training-time 频率基座，RIFLEx 解决 inference-time temporal repetition。
+
+**目标**: 在大型 video DiT 上验证 EVQ+RIFLEx 互补性，完成 "EVQ = universal training-time frequency substrate" 的 narrative 闭环。
+
+**方案**:
+- 方案A: 对开源 CogVideoX-2B 或 Open-Sora 1.2 做 continued pretrain，只替换 temporal RoPE 频率为 EVQ-Cosh，然后对比 Geo+RIFLEx vs EVQ+RIFLEx
+- 方案B: 从头训练一个 ~350M latent-space video DiT (5090 32GB 可跑)，在更真实的数据上验证
+- 方案C: 如果获得 6000 Pro 96GB 时间，直接跑 ~1B 级别的 DiT
+
+**资源需求**: 方案A 最经济（continued pretrain 几小时），方案B 需要 ~24h 5090 时间，方案C 需要 6000 Pro
+**优先级**: 论文提交后的第一优先级扩展实验（rebuttal 准备）
+
+*文档版本: v1.1 | 2026-03-16*

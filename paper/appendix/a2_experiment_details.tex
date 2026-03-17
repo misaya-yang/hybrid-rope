@@ -109,6 +109,44 @@ Seed & Metric (YaRN) & Geo ($\tau{=}0$) & EVQ ($\tau{=}1.5$) & $\Delta$ \\
 
 This result extends EVQ beyond the autoregressive text setting along two axes simultaneously: architecture (bidirectional attention, no causal mask) and modality (video diffusion). The head-to-head design is particularly important because DiT training exhibits substantial CUDA non-determinism across runs, making cross-run comparisons unreliable. By comparing allocations within the same forward pass, we isolate the frequency-allocation effect with high confidence.
 
+\paragraph{Robustness across inference-time methods.}
+We evaluate the same DiT checkpoints under three inference-time configurations: YaRN (progressive per-channel scaling), RIFLEx~\citep{wang2025riflex} (intrinsic-frequency reduction, official implementation with $0.9$ safety factor), and no scaling (raw extrapolation). Table~\ref{tab:dit-inference} reports far-frame denoising MSE ($t{=}0.5$). EVQ outperforms Geo under \emph{all} configurations ($-28\%$ to $-59\%$). Both inference-time methods improve over raw extrapolation, with YaRN performing best---consistent with YaRN's per-channel progressive scaling addressing more dead channels than RIFLEx's single-frequency correction. Notably, EVQ's raw performance ($0.0108$) already approaches Geo+RIFLEx ($0.0145$), suggesting that EVQ captures at training time much of the frequency correction that RIFLEx provides at inference time.
+
+\begin{table}[ht]
+\caption{DiT far-frame denoising MSE ($t{=}0.5$, $4\times$ extrapolation) under different inference-time methods. EVQ wins all configurations. YaRN is the best inference method; EVQ raw nearly matches Geo+RIFLEx.}
+\label{tab:dit-inference}
+\centering
+\small
+\begin{tabular}{@{}l r r r@{}}
+\toprule
+Inference method & Geo ($\tau{=}0$) & EVQ ($\tau{=}1.5$) & $\Delta$ \\
+\midrule
+YaRN & 0.00998 & \textbf{0.00631} & $-37\%$ \\
+RIFLEx & 0.01452 & \textbf{0.01050} & $-28\%$ \\
+None (raw) & 0.02625 & \textbf{0.01078} & $-59\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Multi-timestep validation.}
+To verify that EVQ's advantage is not an artifact of the noise level chosen for evaluation, we evaluate at three diffusion timesteps (seed 42, YaRN, far-frame MSE). Table~\ref{tab:dit-timestep} shows EVQ wins at all timesteps, with the largest advantage at $t{=}0.5$ ($-36\%$). At low noise ($t{=}0.2$), where position encoding is less critical, the gap narrows to $-4\%$; at high noise ($t{=}0.8$), EVQ still wins by $-27\%$.
+
+\begin{table}[ht]
+\caption{DiT far-frame MSE across diffusion timesteps (seed 42, YaRN). EVQ wins at all noise levels.}
+\label{tab:dit-timestep}
+\centering
+\small
+\begin{tabular}{@{}l r r r@{}}
+\toprule
+Timestep $t$ & Geo ($\tau{=}0$) & EVQ ($\tau{=}1.5$) & $\Delta$ \\
+\midrule
+0.2 (low noise) & 0.00383 & \textbf{0.00366} & $-4\%$ \\
+0.5 (medium) & 0.00982 & \textbf{0.00631} & $-36\%$ \\
+0.8 (high noise) & 0.10368 & \textbf{0.07559} & $-27\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \paragraph{Teacher-forced temporal precision.}
 To isolate position-encoding quality from autoregressive error accumulation, we evaluate the same checkpoints in teacher-forced mode on 128-frame sequences (4$\times$ extrapolation with YaRN). Table~\ref{tab:temporal-precision} reports per-region top-1 and top-5 accuracy. In the training region (frames 0--31), both models are tied to within $0.06\%$, confirming matched capacity. In the extrapolation region, EVQ leads by $+3.14\%$ top-1 and $+5.40\%$ top-5. The advantage peaks in near-extrapolation (32--63f): $+3.74\%$ top-1, $+6.59\%$ top-5.
 
@@ -152,6 +190,27 @@ Period & Near extrap & All extrap & Near extrap & All extrap \\
 $P{=}16$ (highest) & $+6.07\%$ & $+5.07\%$ & $\mathbf{+10.39\%}$ & $+8.48\%$ \\
 $P{=}24$ (mid) & $+5.37\%$ & $+4.39\%$ & $+9.40\%$ & $+7.63\%$ \\
 $P{=}32$ (lowest) & $+4.32\%$ & $+3.55\%$ & $+7.58\%$ & $+6.25\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Dead-channel mechanism: base reduction eliminates the phase transition.}
+At base${}=10{,}000$ with $K_t{=}16$ temporal frequencies and 32 training frames, the lowest-frequency channels accumulate less than $0.1$~rad of phase rotation over the entire training sequence---they are effectively dead. EVQ's $\tau$ parameter activates these channels by redistributing frequency mass, but at base${}=10{,}000$ the activation is discontinuous: $\tau{=}1.2$ leaves 11/16 channels alive (effective rank 9), while $\tau{=}1.5$ activates 12/16 (rank 10), producing the sharp phase transition observed in Table~\ref{tab:dit-h2h}.
+
+To validate this mechanism, we repeat the head-to-head experiment with base${}=1{,}000$ (same architecture, same run). At this base, the geometric allocation already starts with 13/16 alive channels (rank 10), so the dead-channel bottleneck is resolved. Table~\ref{tab:dit-base1000} confirms the prediction: (1)~$\tau{=}1.2$ fully recovers, winning Geo by $-48\%$ far-frame MSE (vs.\ $+162\%$ at base${}=10{,}000$); (2)~$\tau{=}1.2$ and $\tau{=}1.5$ are statistically indistinguishable ($<0.3\%$ difference on all metrics), confirming that the phase transition was caused by the dead-channel threshold, not by any intrinsic property of $\tau{=}1.2$.
+
+\begin{table}[ht]
+\caption{Dead-channel validation: base${}=1{,}000$ DiT head-to-head (129.6M, seed 42, YaRN). The sharp phase transition between $\tau{=}1.2$ and $\tau{=}1.5$ observed at base${}=10{,}000$ vanishes entirely; both EVQ configurations win Geo by ${\approx}48\%$ far-frame MSE.}
+\label{tab:dit-base1000}
+\centering
+\small
+\begin{tabular}{@{}l r r r r@{}}
+\toprule
+$\tau$ & Train MSE & All extrap & Far extrap & $\Delta_\text{far}$ vs Geo \\
+\midrule
+0.0 (Geo) & 0.02037 & 0.01274 & 0.01646 & --- \\
+1.2 & \textbf{0.00933} & \textbf{0.00820} & \textbf{0.00859} & $-48\%$ \\
+1.5 & \textbf{0.00930} & 0.00822 & \textbf{0.00858} & $-48\%$ \\
 \bottomrule
 \end{tabular}
 \end{table}
