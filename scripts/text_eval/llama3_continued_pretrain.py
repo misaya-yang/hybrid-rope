@@ -2,8 +2,10 @@
 """
 LLaMA-3-8B-Instruct Continued Pretraining: GEO vs EVQ-Cosh Head-to-Head
 
-Continued pretraining of Meta-Llama-3-8B-Instruct with LoRA on Q/K projections,
+Full-parameter continued pretraining of Meta-Llama-3-8B-Instruct,
 comparing geometric (control) vs EVQ-Cosh (treatment) frequency allocation.
+Full-param is necessary because attention weights are coupled with PE frequencies —
+LoRA can't restructure the core attention-PE interaction.
 
 Model:
   - Meta-Llama-3-8B-Instruct, head_dim=128, rope_theta=500000, native ctx=8192
@@ -14,32 +16,33 @@ EVQ-Cosh tau: head_dim / sqrt(L_pretrain) = 128 / sqrt(8192) = 1.414
 Experiment design:
   Config 1 (GEO): Original geometric inv_freq — control
   Config 2 (EVQ): EVQ-Cosh tau=1.414 inv_freq — treatment
-  Both: LoRA rank=64 on Q/K only, 2000 steps, seq_len=8192, cosine LR
+  Both: full-param, 2000 steps, seq_len=8192, cosine LR
+  Hardware: 2×H800 80GB with DeepSpeed ZeRO-2 (fp32 Adam, zero precision loss)
 
 Evaluation:
   - PPL at 8192 (in-dist), 16384 (2x), 32768 (4x) with YaRN for extrapolation
   - Passkey retrieval at 8192, 16384, 32768 (20 trials each)
 
 Usage:
-  # Smoke test on T4 16GB
+  # Single GPU (96GB, uses 8-bit Adam)
   python llama3_continued_pretrain.py \\
       --model_dir /path/to/Meta-Llama-3-8B-Instruct \\
-      --data_dir /home/ubuntu/data/packed \\
-      --output_dir /home/ubuntu/results/llama3_h2h \\
+      --data_dir /path/to/packed \\
+      --output_dir /path/to/results
+
+  # 2×H800 with DeepSpeed ZeRO-2 (fp32 Adam, recommended)
+  accelerate launch --num_processes 2 --config_file ds_zero2.yaml \\
+      llama3_continued_pretrain.py \\
+      --model_dir /path/to/Meta-Llama-3-8B-Instruct \\
+      --data_dir /path/to/packed \\
+      --output_dir /path/to/results
+
+  # Pilot (5 steps, minimal eval)
+  python llama3_continued_pretrain.py \\
+      --model_dir /path/to/Meta-Llama-3-8B-Instruct \\
+      --data_dir /path/to/packed \\
+      --output_dir /path/to/results \\
       --steps 5 --pilot
-
-  # Full run on RTX PRO 6000 96GB
-  python llama3_continued_pretrain.py \\
-      --model_dir /path/to/Meta-Llama-3-8B-Instruct \\
-      --data_dir /home/ubuntu/data/packed \\
-      --output_dir /home/ubuntu/results/llama3_h2h
-
-  # EVQ only (skip GEO control)
-  python llama3_continued_pretrain.py \\
-      --model_dir /path/to/Meta-Llama-3-8B-Instruct \\
-      --data_dir /home/ubuntu/data/packed \\
-      --output_dir /home/ubuntu/results/llama3_h2h \\
-      --configs evq
 """
 
 from __future__ import annotations
@@ -57,9 +60,33 @@ from contextlib import nullcontext
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+import os as _os
+_os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import torch.distributed as dist
+
+# DeepSpeed (optional — falls back to single-GPU if not available)
+try:
+    import deepspeed
+    HAS_DEEPSPEED = True
+except ImportError:
+    HAS_DEEPSPEED = False
+
+
+def is_main_process():
+    """Check if this is the main process (rank 0)."""
+    if dist.is_initialized():
+        return dist.get_rank() == 0
+    return True
+
+
+def print_rank0(*args, **kwargs):
+    """Print only on rank 0."""
+    if is_main_process():
+        print(*args, **kwargs)
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -72,14 +99,10 @@ N_FREQ = HEAD_DIM // 2  # 64
 
 TRAIN_SEQ_LEN = 8192
 DEFAULT_STEPS = 2000
-DEFAULT_LR = 2e-5
+DEFAULT_LR = 5e-6  # full-param continued pretraining LR
 DEFAULT_BATCH_SIZE = 1
 DEFAULT_GRAD_ACCUM = 8
 WARMUP_FRACTION = 0.05
-LORA_RANK = 64
-LORA_ALPHA = 128  # alpha = 2 * rank is standard
-LORA_DROPOUT = 0.0
-TARGET_MODULES = ["q_proj", "k_proj"]
 
 EVAL_LENGTHS = [8192, 16384, 32768]
 PASSKEY_TRIALS = 20
@@ -173,7 +196,7 @@ def gpu_mem_str() -> str:
         return "CUDA not available"
     allocated = torch.cuda.memory_allocated() / 1e9
     reserved = torch.cuda.memory_reserved() / 1e9
-    total = torch.cuda.get_device_properties(0).total_mem / 1e9
+    total = torch.cuda.get_device_properties(0).total_memory / 1e9
     return f"VRAM: {allocated:.1f}G alloc / {reserved:.1f}G reserved / {total:.1f}G total"
 
 
@@ -190,41 +213,52 @@ def cleanup_gpu():
 # ---------------------------------------------------------------------------
 
 def patch_inv_freq(model: nn.Module, new_inv_freq: torch.Tensor) -> int:
-    """Patch all rotary embedding inv_freq buffers in-place.
+    """Patch rotary embedding inv_freq buffer in-place.
 
-    Works with transformers LlamaForCausalLM architecture.
+    Supports both transformers <5.x (per-layer rotary_emb) and >=5.x (global model.rotary_emb).
 
     Args:
         model: The HuggingFace LLaMA model.
         new_inv_freq: 1-D tensor of new inverse frequencies.
 
     Returns:
-        Number of layers patched.
+        Number of RoPE modules patched.
     """
     patched = 0
-    for layer in model.model.layers:
-        rope = layer.self_attn.rotary_emb
+
+    # transformers >=5.x: global shared RoPE at model.model.rotary_emb
+    if hasattr(model.model, "rotary_emb"):
+        rope = model.model.rotary_emb
         if hasattr(rope, "inv_freq") and rope.inv_freq is not None:
             device = rope.inv_freq.device
-            dtype = rope.inv_freq.dtype
-            rope.inv_freq = nn.Parameter(
-                new_inv_freq.to(device=device, dtype=dtype),
-                requires_grad=False,
-            )
-            # Clear any cached cos/sin
-            for attr in ("_cos_cached", "_sin_cached", "cos_cached",
-                         "sin_cached", "_cos_cache", "_sin_cache"):
-                if hasattr(rope, attr):
-                    try:
-                        setattr(rope, attr, None)
-                    except Exception:
-                        pass
-            if hasattr(rope, "max_seq_len_cached"):
-                try:
-                    rope.max_seq_len_cached = 0
-                except Exception:
-                    pass
+            # Delete from buffer registry to prevent DeepSpeed bf16 casting
+            if "inv_freq" in rope._buffers:
+                del rope._buffers["inv_freq"]
+            if "original_inv_freq" in rope._buffers:
+                del rope._buffers["original_inv_freq"]
+            rope.inv_freq = new_inv_freq.to(device=device, dtype=torch.float32)
             patched += 1
+
+    # transformers <5.x: per-layer rotary_emb
+    if patched == 0 and hasattr(model.model, "layers"):
+        for layer in model.model.layers:
+            rope = getattr(layer.self_attn, "rotary_emb", None)
+            if rope is None:
+                continue
+            if hasattr(rope, "inv_freq") and rope.inv_freq is not None:
+                device = rope.inv_freq.device
+                if "inv_freq" in rope._buffers:
+                    del rope._buffers["inv_freq"]
+                rope.inv_freq = new_inv_freq.to(device=device, dtype=torch.float32)
+                for attr in ("_cos_cached", "_sin_cached", "cos_cached",
+                             "sin_cached", "_cos_cache", "_sin_cache"):
+                    if hasattr(rope, attr):
+                        try:
+                            setattr(rope, attr, None)
+                        except Exception:
+                            pass
+                patched += 1
+
     return patched
 
 
@@ -238,11 +272,10 @@ def patch_inv_freq_for_eval(model: nn.Module, new_inv_freq: torch.Tensor) -> int
         if hasattr(module, "inv_freq") and module.inv_freq is not None:
             if torch.is_tensor(module.inv_freq) and module.inv_freq.numel() == len(new_inv_freq):
                 device = module.inv_freq.device
-                dtype = module.inv_freq.dtype
-                module.inv_freq = nn.Parameter(
-                    new_inv_freq.to(device=device, dtype=dtype),
-                    requires_grad=False,
-                )
+                # Remove from buffer registry to prevent DeepSpeed dtype casting
+                if "inv_freq" in getattr(module, "_buffers", {}):
+                    del module._buffers["inv_freq"]
+                module.inv_freq = new_inv_freq.to(device=device, dtype=torch.float32)
                 for attr in ("_cos_cached", "_sin_cached", "cos_cached",
                               "sin_cached", "_cos_cache", "_sin_cache"):
                     if hasattr(module, attr):
@@ -272,8 +305,8 @@ def load_packed_data(path: str, label: str = "data") -> torch.Tensor:
     if not p.exists():
         raise FileNotFoundError(f"{label} not found: {p}")
     data = torch.load(str(p), map_location="cpu", weights_only=True)
-    print(f"  Loaded {label}: {p.name} — shape {tuple(data.shape)}, "
-          f"{data.numel() / 1e6:.1f}M tokens")
+    print_rank0(f"  Loaded {label}: {p.name} — shape {tuple(data.shape)}, "
+               f"{data.numel() / 1e6:.1f}M tokens")
     return data
 
 
@@ -386,7 +419,7 @@ def eval_passkey(
     passkeys at random depths, then checks if the model can retrieve them.
 
     Args:
-        model: The (potentially LoRA-adapted) model.
+        model: The model.
         tokenizer: HuggingFace tokenizer.
         context_lengths: List of context lengths to test.
         n_trials: Number of trials per length.
@@ -418,19 +451,18 @@ def eval_passkey(
                 )
                 input_ids = input_ids.unsqueeze(0).to(device)
 
-                # Generate a few tokens
+                # Generate a few tokens with KV cache (avoids O(N²) recompute per token)
                 gen_ids = []
-                cur_ids = input_ids
+                past_key_values = None
+                current_input = input_ids
                 for _ in range(8):  # Generate up to 8 tokens to capture the 5-digit number
                     with torch.amp.autocast("cuda", dtype=torch.bfloat16):
-                        outputs = model(cur_ids)
-                    if hasattr(outputs, "logits"):
-                        logits = outputs.logits
-                    else:
-                        logits = outputs
+                        outputs = model(current_input, past_key_values=past_key_values, use_cache=True)
+                    logits = outputs.logits
+                    past_key_values = outputs.past_key_values
                     next_token = logits[0, -1, :].argmax(dim=-1).unsqueeze(0).unsqueeze(0)
                     gen_ids.append(next_token.item())
-                    cur_ids = torch.cat([cur_ids, next_token], dim=1)
+                    current_input = next_token  # subsequent iterations only feed the new token
 
                 # Decode generated tokens
                 generated_text = tokenizer.decode(gen_ids, skip_special_tokens=True).strip()
@@ -458,8 +490,10 @@ def eval_passkey(
             finally:
                 if "input_ids" in dir():
                     del input_ids
-                if "cur_ids" in dir():
-                    del cur_ids
+                if "current_input" in dir():
+                    del current_input
+                if "past_key_values" in dir():
+                    del past_key_values
                 cleanup_gpu()
 
         acc = correct / max(total, 1)
@@ -491,7 +525,7 @@ def eval_ppl(
     For sequences longer than NATIVE_CTX (8192), applies YaRN scaling.
 
     Args:
-        model: The model (with or without LoRA).
+        model: The model.
         test_data: Tensor of shape (N, seq_len).
         base_inv_freq: The base inv_freq used during training (geo or evq).
         label: Description for logging.
@@ -515,19 +549,21 @@ def eval_ppl(
     total_loss = 0.0
     total_tokens = 0
 
-    print(f"    PPL eval{' (' + label + ')' if label else ''}: "
-          f"seq_len={seq_len}, chunks={n_chunks} ... ", end="", flush=True)
+    print_rank0(f"    PPL eval{' (' + label + ')' if label else ''}: "
+               f"seq_len={seq_len}, chunks={n_chunks} ... ", end="", flush=True)
 
     for i in range(n_chunks):
         chunk = test_data[i].unsqueeze(0).to(device)
         try:
             with torch.amp.autocast("cuda", dtype=torch.bfloat16):
-                outputs = model(chunk[:, :-1], labels=chunk[:, 1:])
+                outputs = model(chunk, labels=chunk)
                 if hasattr(outputs, "loss"):
                     loss = outputs.loss
                 else:
                     # Manual cross-entropy if model doesn't return loss
                     logits = outputs if not hasattr(outputs, "logits") else outputs.logits
+                    # Align logits with shifted labels: logits[:, :-1] predicts chunk[:, 1:]
+                    logits = logits[:, :-1, :]
                     loss = F.cross_entropy(
                         logits.reshape(-1, logits.size(-1)),
                         chunk[:, 1:].reshape(-1),
@@ -570,7 +606,7 @@ def eval_ppl(
 # ---------------------------------------------------------------------------
 
 def train_loop(
-    model: nn.Module,
+    model_engine,  # DeepSpeed engine or plain model
     train_data: torch.Tensor,
     steps: int,
     lr: float,
@@ -579,115 +615,164 @@ def train_loop(
     warmup_fraction: float,
     output_dir: Path,
     config_name: str,
+    use_deepspeed: bool = False,
 ) -> List[float]:
     """Run the training loop with cosine LR schedule.
 
+    Supports both DeepSpeed (multi-GPU) and plain PyTorch (single-GPU).
+    DeepSpeed handles: grad accumulation, loss scaling, grad clipping, zero_grad.
+
     Args:
-        model: The LoRA-adapted model.
+        model_engine: DeepSpeed model engine or plain nn.Module.
         train_data: Tensor of shape (N, seq_len).
-        steps: Total training steps.
+        steps: Total optimizer steps (not micro-steps).
         lr: Peak learning rate.
-        batch_size: Micro-batch size.
+        batch_size: Micro-batch size per GPU per forward pass.
         grad_accum: Gradient accumulation steps.
         warmup_fraction: Fraction of steps for linear warmup.
         output_dir: Directory to save checkpoints.
-        config_name: Name for logging (e.g., "geo", "evq").
+        config_name: Name for logging.
+        use_deepspeed: Whether model_engine is a DeepSpeed engine.
 
     Returns:
-        List of per-step losses.
+        List of per-step losses (one per optimizer step).
     """
-    device = next(model.parameters()).device
-    effective_bs = batch_size * grad_accum
+    if use_deepspeed:
+        device = model_engine.device
+    else:
+        device = next(model_engine.parameters()).device
+
     warmup_steps = max(1, int(steps * warmup_fraction))
     min_lr = lr * 0.1
     seq_len = train_data.shape[1]
+    micro_bs = batch_size  # micro batch size per GPU per forward
 
-    print(f"  Training config: steps={steps}, lr={lr:.1e}, "
-          f"bs={effective_bs} (micro={batch_size}x{grad_accum}), "
-          f"warmup={warmup_steps}, seq_len={seq_len}")
+    n_trainable = sum(p.numel() for p in model_engine.parameters() if p.requires_grad)
+    n_total = sum(p.numel() for p in model_engine.parameters())
+    print_rank0(f"  Training: steps={steps}, lr={lr:.1e}, ga={grad_accum}, seq_len={seq_len}")
+    print_rank0(f"  Trainable: {n_trainable/1e9:.2f}B / {n_total/1e9:.2f}B "
+                f"({100.0*n_trainable/n_total:.1f}%)")
 
-    # Only train LoRA parameters
-    trainable_params = [p for p in model.parameters() if p.requires_grad]
-    n_trainable = sum(p.numel() for p in trainable_params)
-    n_total = sum(p.numel() for p in model.parameters())
-    print(f"  Trainable: {n_trainable / 1e6:.2f}M / {n_total / 1e6:.1f}M "
-          f"({100.0 * n_trainable / n_total:.2f}%)")
+    # For non-DeepSpeed, create optimizer here
+    if not use_deepspeed:
+        trainable_params = [p for p in model_engine.parameters() if p.requires_grad]
+        optimizer = torch.optim.AdamW(
+            trainable_params, lr=lr, weight_decay=0.01, betas=(0.9, 0.95),
+        )
+        print_rank0(f"  Optimizer: AdamW fp32 (single-GPU)")
 
-    optimizer = torch.optim.AdamW(
-        trainable_params,
-        lr=lr,
-        weight_decay=0.01,
-        betas=(0.9, 0.95),
-    )
-
-    model.train()
+    model_engine.train()
     n_samples = len(train_data)
-    perm = torch.randperm(n_samples)
+
+    # Data parallelism: each rank sees DIFFERENT data, gradients are all-reduced
+    if use_deepspeed and dist.is_initialized():
+        rank = dist.get_rank()
+    else:
+        rank = 0
+    data_rng = torch.Generator()
+    data_rng.manual_seed(42 + rank * 10007)  # different seed per rank
+    perm = torch.randperm(n_samples, generator=data_rng)
     ptr = 0
     epoch = 1
     all_losses = []
+    micro_losses = []
     t0 = time.time()
     log_interval = max(1, steps // 20)
 
-    for step in range(1, steps + 1):
-        # LR schedule: linear warmup + cosine decay
-        if step <= warmup_steps:
-            cur_lr = lr * step / warmup_steps
+    # Total micro-steps = steps * grad_accum
+    total_micro = steps * grad_accum
+    cur_optimizer_step = 0
+
+    for micro in range(1, total_micro + 1):
+        # Epoch wrapping (same rng on all ranks)
+        if ptr + micro_bs > n_samples:
+            perm = torch.randperm(n_samples, generator=data_rng)
+            ptr = 0
+            epoch += 1
+
+        indices = perm[ptr:ptr + micro_bs]
+        ptr += micro_bs
+        batch = train_data[indices].to(device)
+
+        # LR schedule (update every optimizer step)
+        is_boundary = (micro % grad_accum == 0)
+        if is_boundary:
+            cur_optimizer_step += 1
+            if cur_optimizer_step <= warmup_steps:
+                cur_lr = lr * cur_optimizer_step / warmup_steps
+            else:
+                progress = (cur_optimizer_step - warmup_steps) / max(steps - warmup_steps, 1)
+                cur_lr = min_lr + (lr - min_lr) * 0.5 * (1.0 + math.cos(math.pi * progress))
+
+            if use_deepspeed:
+                for pg in model_engine.optimizer.param_groups:
+                    pg["lr"] = cur_lr
+            else:
+                for pg in optimizer.param_groups:
+                    pg["lr"] = cur_lr
+
+        # Forward
+        # NOTE: DeepSpeed manages bf16 autocast via its config.
+        # Ensure "bf16": {"enabled": true} is set in your DeepSpeed JSON config.
+        if use_deepspeed:
+            outputs = model_engine(batch, labels=batch)
         else:
-            progress = (step - warmup_steps) / max(steps - warmup_steps, 1)
-            cur_lr = min_lr + (lr - min_lr) * 0.5 * (1.0 + math.cos(math.pi * progress))
-        for pg in optimizer.param_groups:
-            pg["lr"] = cur_lr
-
-        optimizer.zero_grad(set_to_none=True)
-        step_loss = 0.0
-
-        for micro_step in range(grad_accum):
-            # Epoch wrapping
-            if ptr + batch_size > n_samples:
-                perm = torch.randperm(n_samples)
-                ptr = 0
-                epoch += 1
-
-            indices = perm[ptr:ptr + batch_size]
-            ptr += batch_size
-            batch = train_data[indices].to(device)
-
             with torch.amp.autocast("cuda", dtype=torch.bfloat16):
-                outputs = model(batch[:, :-1], labels=batch[:, 1:])
-                if hasattr(outputs, "loss"):
-                    loss = outputs.loss
+                outputs = model_engine(batch, labels=batch)
+
+        if hasattr(outputs, "loss") and outputs.loss is not None:
+            loss = outputs.loss
+        else:
+            # Manual cross-entropy fallback: align logits with shifted labels
+            logits = outputs.logits[:, :-1, :]
+            loss = F.cross_entropy(
+                logits.reshape(-1, logits.size(-1)),
+                batch[:, 1:].reshape(-1),
+            )
+
+        # Backward + step
+        if use_deepspeed:
+            # DeepSpeed handles: accumulation, loss scaling, grad clipping, zero_grad
+            model_engine.backward(loss)
+            model_engine.step()
+        else:
+            (loss / grad_accum).backward()
+            if is_boundary:
+                torch.nn.utils.clip_grad_norm_(trainable_params, 1.0)
+                optimizer.step()
+                optimizer.zero_grad(set_to_none=True)
+
+        micro_losses.append(loss.item())
+
+        # Log at optimizer step boundaries
+        if is_boundary:
+            step_loss = sum(micro_losses[-grad_accum:]) / grad_accum
+            all_losses.append(step_loss)
+
+            if cur_optimizer_step % log_interval == 0 or cur_optimizer_step == 1 or cur_optimizer_step == steps:
+                elapsed = time.time() - t0
+                tokens = cur_optimizer_step * grad_accum * micro_bs * seq_len
+                tps = tokens / max(elapsed, 1e-6)
+                print_rank0(
+                    f"    [{config_name}] step {cur_optimizer_step:>5d}/{steps} "
+                    f"({cur_optimizer_step/steps*100:5.1f}%) | "
+                    f"loss={step_loss:.4f} | lr={cur_lr:.2e} | "
+                    f"epoch={epoch} | {tps/1e6:.2f}M tok/s | "
+                    f"{elapsed:.0f}s | {gpu_mem_str()}")
+
+            # Save checkpoints at step 1500 and final step
+            if cur_optimizer_step in (steps // 2, steps):
+                ckpt_dir = output_dir / f"ckpt_step{cur_optimizer_step}"
+                ckpt_dir.mkdir(parents=True, exist_ok=True)
+                if use_deepspeed:
+                    model_engine.save_checkpoint(str(ckpt_dir), tag=f"step{cur_optimizer_step}")
                 else:
-                    logits = outputs if not hasattr(outputs, "logits") else outputs.logits
-                    loss = F.cross_entropy(
-                        logits.reshape(-1, logits.size(-1)),
-                        batch[:, 1:].reshape(-1),
-                    )
-                loss_scaled = loss / grad_accum
-
-            loss_scaled.backward()
-            step_loss += loss.item() / grad_accum
-
-        # Gradient clipping
-        torch.nn.utils.clip_grad_norm_(trainable_params, 1.0)
-        optimizer.step()
-
-        all_losses.append(step_loss)
-
-        # Logging
-        if step % log_interval == 0 or step == 1 or step == steps:
-            elapsed = time.time() - t0
-            tokens_processed = step * effective_bs * seq_len
-            tps = tokens_processed / max(elapsed, 1e-6)
-            print(f"    [{config_name}] step {step:>5d}/{steps} "
-                  f"({step / steps * 100:5.1f}%) | "
-                  f"loss={step_loss:.4f} | lr={cur_lr:.2e} | "
-                  f"epoch={epoch} | {tps / 1e6:.2f}M tok/s | "
-                  f"{elapsed:.0f}s | {gpu_mem_str()}")
+                    if is_main_process():
+                        torch.save(model_engine.state_dict(), str(ckpt_dir / "model_state_dict.pt"))
+                print_rank0(f"    >>> Checkpoint saved at step {cur_optimizer_step}: {ckpt_dir}")
 
     elapsed = time.time() - t0
-    print(f"  Training done: {elapsed:.0f}s ({elapsed / 60:.1f}min), "
-          f"{epoch} epoch(s)")
+    print_rank0(f"  Training done: {elapsed:.0f}s ({elapsed/60:.1f}min), {epoch} epoch(s)")
 
     return all_losses
 
@@ -714,8 +799,10 @@ def main():
                         help=f"Micro-batch size (default: {DEFAULT_BATCH_SIZE})")
     parser.add_argument("--grad_accum", type=int, default=DEFAULT_GRAD_ACCUM,
                         help=f"Gradient accumulation steps (default: {DEFAULT_GRAD_ACCUM})")
-    parser.add_argument("--lora_rank", type=int, default=LORA_RANK,
-                        help=f"LoRA rank (default: {LORA_RANK})")
+    parser.add_argument("--deepspeed_config", type=str, default=None,
+                        help="DeepSpeed config JSON path (enables multi-GPU ZeRO)")
+    parser.add_argument("--local_rank", type=int, default=-1,
+                        help="Local rank (auto-set by deepspeed launcher)")
     parser.add_argument("--tau", type=float, default=None,
                         help="EVQ tau (default: head_dim / sqrt(native_ctx) = 1.414)")
     parser.add_argument("--configs", type=str, default="geo,evq",
@@ -730,6 +817,10 @@ def main():
                         help="Random seed (default: 42)")
     parser.add_argument("--no_passkey", action="store_true",
                         help="Skip passkey evaluation")
+    parser.add_argument("--train_only", action="store_true",
+                        help="Train only, skip all evaluation (save checkpoint and exit)")
+    parser.add_argument("--compile", action="store_true",
+                        help="Apply torch.compile for 20-30%% speedup")
     parser.add_argument("--gradient_checkpointing", action="store_true", default=True,
                         help="Enable gradient checkpointing (default: True)")
     parser.add_argument("--no_gradient_checkpointing", action="store_true",
@@ -767,30 +858,33 @@ def main():
 
     # ── Header ──────────────────────────────────────────────────────
     sep = "=" * 72
-    print(sep)
-    print("  LLaMA-3-8B-Instruct Continued Pretraining: GEO vs EVQ-Cosh")
-    print(sep)
-    print(f"  Model:          {args.model_dir}")
-    print(f"  Data dir:       {args.data_dir}")
-    print(f"  Output dir:     {args.output_dir}")
-    print(f"  Configs:        {config_names}")
-    print(f"  Steps:          {args.steps}")
-    print(f"  LR:             {args.lr:.1e}")
-    print(f"  Effective BS:   {args.batch_size * args.grad_accum} "
-          f"(micro={args.batch_size} x ga={args.grad_accum})")
-    print(f"  LoRA rank:      {args.lora_rank}")
-    print(f"  LoRA targets:   {TARGET_MODULES}")
-    print(f"  EVQ tau:        {tau:.6f}")
-    print(f"  Grad ckpt:      {use_grad_ckpt}")
-    print(f"  Pilot mode:     {args.pilot}")
-    print(f"  Seed:           {args.seed}")
-    print(f"  Eval lengths:   {eval_lengths}")
-    print(f"  Passkey trials: {passkey_trials}")
+    use_ds = args.deepspeed_config is not None and HAS_DEEPSPEED
+    world_size = dist.get_world_size() if dist.is_initialized() else 1
+    effective_bs = args.batch_size * args.grad_accum * world_size
+    print_rank0(sep)
+    print_rank0("  LLaMA-3-8B-Instruct Continued Pretraining: GEO vs EVQ-Cosh")
+    print_rank0(sep)
+    print_rank0(f"  Model:          {args.model_dir}")
+    print_rank0(f"  Data dir:       {args.data_dir}")
+    print_rank0(f"  Output dir:     {args.output_dir}")
+    print_rank0(f"  Configs:        {config_names}")
+    print_rank0(f"  Steps:          {args.steps}")
+    print_rank0(f"  LR:             {args.lr:.1e}")
+    print_rank0(f"  Effective BS:   {effective_bs} "
+                f"(micro={args.batch_size} x ga={args.grad_accum} x gpus={world_size})")
+    print_rank0(f"  Training mode:  full-param")
+    print_rank0(f"  DeepSpeed:      {args.deepspeed_config if use_ds else 'disabled'}")
+    print_rank0(f"  EVQ tau:        {tau:.6f}")
+    print_rank0(f"  Grad ckpt:      {use_grad_ckpt}")
+    print_rank0(f"  Pilot mode:     {args.pilot}")
+    print_rank0(f"  Seed:           {args.seed}")
+    print_rank0(f"  Eval lengths:   {eval_lengths}")
+    print_rank0(f"  Passkey trials: {passkey_trials}")
     if torch.cuda.is_available():
-        print(f"  GPU:            {torch.cuda.get_device_name(0)}")
-        print(f"  {gpu_mem_str()}")
-    print(sep)
-    print()
+        print_rank0(f"  GPU:            {torch.cuda.get_device_name(0)}")
+        print_rank0(f"  {gpu_mem_str()}")
+    print_rank0(sep)
+    print_rank0()
 
     # ── Set seed ────────────────────────────────────────────────────
     torch.manual_seed(args.seed)
@@ -800,16 +894,16 @@ def main():
     geo_freq = geometric_inv_freq(HEAD_DIM, ROPE_THETA)
     evq_freq = evq_cosh_inv_freq(HEAD_DIM, tau, ROPE_THETA)
 
-    print("[0] Frequency comparison (first 8 / last 8 of 64):")
-    print(f"    GEO: {geo_freq[:8].tolist()}")
-    print(f"         ... {geo_freq[-8:].tolist()}")
-    print(f"    EVQ: {evq_freq[:8].tolist()}")
-    print(f"         ... {evq_freq[-8:].tolist()}")
-    print(f"    Max abs diff: {(geo_freq - evq_freq).abs().max().item():.8f}")
-    print()
+    print_rank0("[0] Frequency comparison (first 8 / last 8 of 64):")
+    print_rank0(f"    GEO: {geo_freq[:8].tolist()}")
+    print_rank0(f"         ... {geo_freq[-8:].tolist()}")
+    print_rank0(f"    EVQ: {evq_freq[:8].tolist()}")
+    print_rank0(f"         ... {evq_freq[-8:].tolist()}")
+    print_rank0(f"    Max abs diff: {(geo_freq - evq_freq).abs().max().item():.8f}")
+    print_rank0()
 
     # ── Load training data ──────────────────────────────────────────
-    print("[1] Loading data...")
+    print_rank0("[1] Loading data...")
     train_path = data_dir / "train_packed.pt"
     train_data = load_packed_data(str(train_path), "train")
 
@@ -824,15 +918,15 @@ def main():
         if test_path.exists():
             test_datasets[L] = load_packed_data(str(test_path), f"test L={L}")
         else:
-            print(f"  WARNING: {test_path} not found, skipping PPL eval at L={L}")
-    print()
+            print_rank0(f"  WARNING: {test_path} not found, skipping PPL eval at L={L}")
+    print_rank0()
 
     # ── Load tokenizer ──────────────────────────────────────────────
-    print("[2] Loading tokenizer...")
+    print_rank0("[2] Loading tokenizer...")
     from transformers import AutoTokenizer
     tokenizer = AutoTokenizer.from_pretrained(args.model_dir)
-    print(f"  Tokenizer: vocab_size={tokenizer.vocab_size}")
-    print()
+    print_rank0(f"  Tokenizer: vocab_size={tokenizer.vocab_size}")
+    print_rank0()
 
     # ── Run configs ─────────────────────────────────────────────────
     all_results = {}
@@ -859,57 +953,86 @@ def main():
         print(f"  CONFIG: {config_name} — {config_label}")
         print(f"{sep}")
 
-        # ── Load fresh model ────────────────────────────────────────
-        print(f"\n  [A] Loading model...")
+        # ── Load fresh model (on CPU — DeepSpeed handles GPU placement) ──
+        print_rank0(f"\n  [A] Loading model...")
         from transformers import AutoModelForCausalLM
 
         model = AutoModelForCausalLM.from_pretrained(
             args.model_dir,
-            torch_dtype=torch.bfloat16,
+            dtype=torch.bfloat16,
             attn_implementation="sdpa",
-            device_map="auto",
         )
-        print(f"  Model loaded. {gpu_mem_str()}")
+        print_rank0(f"  Model loaded on CPU. {gpu_mem_str()}")
 
-        # ── Patch inv_freq ──────────────────────────────────────────
-        print(f"\n  [B] Patching inv_freq ({config_name})...")
+        # ── Patch inv_freq BEFORE DeepSpeed init ────────────────────
+        print_rank0(f"\n  [B] Patching inv_freq ({config_name})...")
         n_patched = patch_inv_freq(model, inv_freq)
-        print(f"  Patched {n_patched} rotary layers")
+        print_rank0(f"  Patched {n_patched} rotary layers")
 
-        # Verify patch
-        sample_freq = model.model.layers[0].self_attn.rotary_emb.inv_freq
-        print(f"  Verify layer 0 inv_freq[0]: {sample_freq[0].item():.8f} "
-              f"(expected: {inv_freq[0].item():.8f})")
+        # Verify: get inv_freq from global rotary_emb (transformers >=5.x) or per-layer
+        if hasattr(model.model, "rotary_emb"):
+            sample_freq = model.model.rotary_emb.inv_freq
+        else:
+            _rope = model.model.layers[0].self_attn.rotary_emb
+            sample_freq = _rope.inv_freq
+        print_rank0(f"  Verify layer 0 inv_freq[0]: {sample_freq[0].item():.8f} "
+                    f"(expected: {inv_freq[0].item():.8f})")
 
-        # ── Setup LoRA ──────────────────────────────────────────────
-        print(f"\n  [C] Setting up LoRA (rank={args.lora_rank}, targets={TARGET_MODULES})...")
-        from peft import LoraConfig, get_peft_model, TaskType
-
-        lora_config = LoraConfig(
-            r=args.lora_rank,
-            lora_alpha=LORA_ALPHA,
-            target_modules=TARGET_MODULES,
-            lora_dropout=LORA_DROPOUT,
-            bias="none",
-            task_type=TaskType.CAUSAL_LM,
-        )
-        model = get_peft_model(model, lora_config)
-        model.print_trainable_parameters()
-        print(f"  {gpu_mem_str()}")
-
-        # ── Gradient checkpointing ──────────────────────────────────
+        # ── Gradient checkpointing BEFORE DeepSpeed init ─────────────
         if use_grad_ckpt:
             model.gradient_checkpointing_enable(
                 gradient_checkpointing_kwargs={"use_reentrant": False}
             )
-            print("  Gradient checkpointing: enabled")
+            print_rank0("  Gradient checkpointing: enabled")
+
+        # ── DeepSpeed init or single-GPU setup ───────────────────────
+        if use_ds:
+            print_rank0(f"\n  [C] DeepSpeed ZeRO-2 init...")
+            import datetime
+            print(f"  [{datetime.datetime.now()}] [rank={os.environ.get('LOCAL_RANK','?')}] Creating optimizer...", flush=True)
+            optimizer = torch.optim.AdamW(
+                model.parameters(), lr=args.lr, weight_decay=0.01, betas=(0.9, 0.95),
+            )
+            print(f"  [{datetime.datetime.now()}] [rank={os.environ.get('LOCAL_RANK','?')}] Calling deepspeed.initialize()...", flush=True)
+            os.environ["NCCL_DEBUG"] = "WARN"
+            model_engine, optimizer, _, _ = deepspeed.initialize(
+                model=model,
+                optimizer=optimizer,
+                config=args.deepspeed_config,
+            )
+            print(f"  [{datetime.datetime.now()}] [rank={os.environ.get('LOCAL_RANK','?')}] deepspeed.initialize() DONE", flush=True)
+            # Verify inv_freq survived DeepSpeed init
+            if hasattr(model_engine.module.model, "rotary_emb"):
+                check_freq = model_engine.module.model.rotary_emb.inv_freq
+            else:
+                check_freq = model_engine.module.model.layers[0].self_attn.rotary_emb.inv_freq
+            assert check_freq.dtype == torch.float32, \
+                f"inv_freq was cast to {check_freq.dtype} by DeepSpeed!"
+            print_rank0(f"  inv_freq post-DS: dtype={check_freq.dtype}, val[0]={check_freq[0].item():.8f}")
+            print_rank0(f"  {gpu_mem_str()}")
+        else:
+            model = model.cuda()
+            model_engine = model
+            print_rank0(f"\n  [C] Single-GPU mode")
+            print_rank0(f"  {gpu_mem_str()}")
+
+        n_params = sum(p.numel() for p in model_engine.parameters())
+        print_rank0(f"  Params: {n_params/1e9:.2f}B")
+
+        # ── torch.compile for speedup ────────────────────────────────
+        if args.compile:
+            print_rank0("  Applying torch.compile(mode='default')...")
+            if use_ds:
+                model_engine.module = torch.compile(model_engine.module, mode="default")
+            else:
+                model_engine = torch.compile(model_engine, mode="default")
 
         # ── Train ───────────────────────────────────────────────────
-        print(f"\n  [D] Training ({config_name})...")
+        print_rank0(f"\n  [D] Training ({config_name})...")
         t_start = time.time()
 
         losses = train_loop(
-            model=model,
+            model_engine=model_engine,
             train_data=train_data,
             steps=args.steps,
             lr=args.lr,
@@ -918,77 +1041,87 @@ def main():
             warmup_fraction=WARMUP_FRACTION,
             output_dir=run_dir,
             config_name=config_name,
+            use_deepspeed=use_ds,
         )
 
         train_time = time.time() - t_start
 
-        # Save LoRA adapter
-        adapter_dir = run_dir / "lora_adapter"
-        model.save_pretrained(str(adapter_dir))
-        print(f"  LoRA adapter saved to: {adapter_dir}")
+        # Save checkpoint
+        if use_ds:
+            model_engine.save_checkpoint(str(run_dir), tag="final")
+            print_rank0(f"  DeepSpeed checkpoint saved to: {run_dir}/final")
+        else:
+            ckpt_path = run_dir / "model_state_dict.pt"
+            torch.save(model_engine.state_dict(), str(ckpt_path))
+            print_rank0(f"  Checkpoint saved to: {ckpt_path}")
 
-        # Save loss curve
-        loss_path = run_dir / "losses.json"
-        with open(loss_path, "w") as f:
-            json.dump(losses, f)
-        print(f"  Loss curve saved to: {loss_path}")
+        # Save loss curve (rank 0 only)
+        if is_main_process():
+            loss_path = run_dir / "losses.json"
+            with open(loss_path, "w") as f:
+                json.dump(losses, f)
+            print(f"  Loss curve saved to: {loss_path}")
 
-        # ── Evaluate PPL ────────────────────────────────────────────
-        print(f"\n  [E] Evaluating PPL ({config_name})...")
-        model.eval()
-
-        # Disable gradient checkpointing for eval
-        if use_grad_ckpt:
-            try:
-                model.gradient_checkpointing_disable()
-            except Exception:
-                pass
-
+        # ── Evaluate (skip if --train_only) ─────────────────────────
         ppl_results = {}
-        for L in eval_lengths:
-            if L in test_datasets:
-                ppl_results[f"L={L}"] = eval_ppl(
-                    model, test_datasets[L], inv_freq,
-                    label=f"{config_name} L={L}",
-                    max_chunks=max_ppl_chunks,
-                )
-
-        # ── Evaluate Passkey ────────────────────────────────────────
         passkey_results = {}
-        if not args.no_passkey:
-            print(f"\n  [F] Evaluating passkey retrieval ({config_name})...")
 
-            # For passkey at extrapolated lengths, apply YaRN
-            for L in passkey_lengths:
-                if L > NATIVE_CTX:
-                    scale = L / NATIVE_CTX
-                    scaled_freq = yarn_inv_freq(inv_freq, scale, HEAD_DIM)
-                    patch_inv_freq_for_eval(model, scaled_freq)
+        if not args.train_only:
+            # Get the raw model for eval (unwrap DeepSpeed)
+            eval_model = model_engine.module if use_ds else model_engine
+            eval_model.eval()
 
+            if use_grad_ckpt:
                 try:
-                    passkey_at_L = eval_passkey(
-                        model, tokenizer, [L],
-                        n_trials=passkey_trials,
-                        seed=args.seed,
-                    )
-                    passkey_results.update(passkey_at_L)
-                except Exception as e:
-                    print(f"    ERROR at L={L}: {e}")
-                    passkey_results[f"L={L}"] = {"accuracy": -1, "error": str(e)}
-                finally:
-                    # Restore original freq
-                    if L > NATIVE_CTX:
-                        patch_inv_freq_for_eval(model, inv_freq)
-                    cleanup_gpu()
+                    eval_model.gradient_checkpointing_disable()
+                except Exception:
+                    pass
 
-        # ── Compile results ─────────────────────────────────────────
+            if is_main_process():
+                print_rank0(f"\n  [E] Evaluating PPL ({config_name})...")
+                for L in eval_lengths:
+                    if L in test_datasets:
+                        ppl_results[f"L={L}"] = eval_ppl(
+                            eval_model, test_datasets[L], inv_freq,
+                            label=f"{config_name} L={L}",
+                            max_chunks=max_ppl_chunks,
+                        )
+
+                if not args.no_passkey:
+                    print(f"\n  [F] Evaluating passkey retrieval ({config_name})...")
+                    for L in passkey_lengths:
+                        if L > NATIVE_CTX:
+                            scale = L / NATIVE_CTX
+                            scaled_freq = yarn_inv_freq(inv_freq, scale, HEAD_DIM)
+                            patch_inv_freq_for_eval(eval_model, scaled_freq)
+                        try:
+                            passkey_at_L = eval_passkey(
+                                eval_model, tokenizer, [L],
+                                n_trials=passkey_trials,
+                                seed=args.seed,
+                            )
+                            passkey_results.update(passkey_at_L)
+                        except Exception as e:
+                            print(f"    ERROR at L={L}: {e}")
+                            passkey_results[f"L={L}"] = {"accuracy": -1, "error": str(e)}
+                        finally:
+                            if L > NATIVE_CTX:
+                                patch_inv_freq_for_eval(eval_model, inv_freq)
+                            cleanup_gpu()
+
+            if use_ds and dist.is_initialized():
+                dist.barrier()
+        else:
+            print_rank0(f"\n  [E] Skipping eval (--train_only mode)")
+
+        # ── Compile results (rank 0 only) ──────────────────────────
         result = {
             "config": config_name,
             "label": config_label,
             "model": args.model_dir,
             "tau": tau if config_name == "evq" else 0.0,
-            "lora_rank": args.lora_rank,
-            "lora_targets": TARGET_MODULES,
+            "training_mode": "full_param",
+            "optimizer": "fp32_adamw_deepspeed" if use_ds else "fp32_adamw",
             "steps": args.steps,
             "lr": args.lr,
             "effective_batch_size": args.batch_size * args.grad_accum,
@@ -1000,30 +1133,33 @@ def main():
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
         }
 
-        with open(result_path, "w") as f:
-            json.dump(result, f, indent=2, ensure_ascii=False)
-        print(f"\n  Result saved: {result_path}")
+        if is_main_process():
+            with open(result_path, "w") as f:
+                json.dump(result, f, indent=2, ensure_ascii=False)
+            print(f"\n  Result saved: {result_path}")
 
         all_results[config_name] = result
 
         # ── Cleanup GPU ─────────────────────────────────────────────
-        print(f"\n  [G] Cleaning up ({config_name})...")
-        del model
+        print_rank0(f"\n  [G] Cleaning up ({config_name})...")
+        del model_engine
+        if use_ds:
+            del model
         cleanup_gpu()
-        print(f"  {gpu_mem_str()}")
+        print_rank0(f"  {gpu_mem_str()}")
 
     # ── Comparison table ────────────────────────────────────────────
-    print(f"\n\n{'=' * 80}")
-    print("  COMPARISON TABLE: GEO vs EVQ-Cosh")
-    print(f"{'=' * 80}")
+    print_rank0(f"\n\n{'=' * 80}")
+    print_rank0("  COMPARISON TABLE: GEO vs EVQ-Cosh")
+    print_rank0(f"{'=' * 80}")
 
     # PPL table
-    print(f"\n  PERPLEXITY:")
+    print_rank0(f"\n  PERPLEXITY:")
     header = f"  {'Config':<12}"
     for L in eval_lengths:
         header += f"  {'L=' + str(L):>10}"
-    print(header)
-    print("  " + "-" * (12 + 12 * len(eval_lengths)))
+    print_rank0(header)
+    print_rank0("  " + "-" * (12 + 12 * len(eval_lengths)))
 
     for cname in config_names:
         r = all_results.get(cname, {})
@@ -1035,7 +1171,7 @@ def main():
                 line += f"  {v:>10.2f}"
             else:
                 line += f"  {'--':>10}"
-        print(line)
+        print_rank0(line)
 
     # Delta row
     if "geo" in all_results and "evq" in all_results:
@@ -1048,16 +1184,16 @@ def main():
                 line += f"  {delta:>+9.1f}%"
             else:
                 line += f"  {'--':>10}"
-        print(line)
+        print_rank0(line)
 
     # Passkey table
     if not args.no_passkey:
-        print(f"\n  PASSKEY RETRIEVAL ACCURACY:")
+        print_rank0(f"\n  PASSKEY RETRIEVAL ACCURACY:")
         header = f"  {'Config':<12}"
         for L in passkey_lengths:
             header += f"  {'L=' + str(L):>10}"
-        print(header)
-        print("  " + "-" * (12 + 12 * len(passkey_lengths)))
+        print_rank0(header)
+        print_rank0("  " + "-" * (12 + 12 * len(passkey_lengths)))
 
         for cname in config_names:
             r = all_results.get(cname, {})
@@ -1069,29 +1205,30 @@ def main():
                     line += f"  {v:>9.0%} "
                 else:
                     line += f"  {'--':>10}"
-            print(line)
+            print_rank0(line)
 
     # Training loss
-    print(f"\n  TRAINING:")
-    print(f"  {'Config':<12}  {'Final Loss':>12}  {'Time (min)':>12}")
-    print("  " + "-" * 40)
+    print_rank0(f"\n  TRAINING:")
+    print_rank0(f"  {'Config':<12}  {'Final Loss':>12}  {'Time (min)':>12}")
+    print_rank0("  " + "-" * 40)
     for cname in config_names:
         r = all_results.get(cname, {})
         fl = r.get("final_loss")
         tt = r.get("train_time_sec")
         fl_str = f"{fl:.4f}" if fl is not None else "--"
         tt_str = f"{tt / 60:.1f}" if tt is not None else "--"
-        print(f"  {cname:<12}  {fl_str:>12}  {tt_str:>12}")
+        print_rank0(f"  {cname:<12}  {fl_str:>12}  {tt_str:>12}")
 
     # Save aggregate
     agg_path = output_dir / "all_results.json"
-    with open(agg_path, "w") as f:
-        json.dump(all_results, f, indent=2, ensure_ascii=False)
-    print(f"\n  All results saved to: {agg_path}")
+    if is_main_process():
+        with open(agg_path, "w") as f:
+            json.dump(all_results, f, indent=2, ensure_ascii=False)
+    print_rank0(f"\n  All results saved to: {agg_path}")
 
-    print(f"\n{'=' * 80}")
-    print("  DONE")
-    print(f"{'=' * 80}")
+    print_rank0(f"\n{'=' * 80}")
+    print_rank0("  DONE")
+    print_rank0(f"{'=' * 80}")
 
 
 if __name__ == "__main__":
