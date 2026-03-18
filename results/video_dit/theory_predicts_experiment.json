@@ -1,0 +1,248 @@
+{
+  "description": "Theory predicts experiment: dead channel analysis for base sweep",
+  "model": "Video DiT 129.6M, K_t=16, T_train=32, T_extrap=128",
+  "theoretical_metrics": {
+    "100": {
+      "geo": {
+        "alive": 16,
+        "dead": 0,
+        "eff_rank": 16,
+        "D_adj": 2.1661082122703954,
+        "D_at_T": 24.65938098877447,
+        "total_phase": 126.66639950816246,
+        "freq_spread": 74.98942092762216,
+        "coverage_uniformity": 1.878764970532346e-11,
+        "min_phase_rad": 0.4267268582922637,
+        "max_phase_rad": 32.0
+      },
+      "evq": {
+        "alive": 16,
+        "dead": 0,
+        "eff_rank": 16,
+        "D_adj": 2.3996886958089254,
+        "D_at_T": 29.075135666353557,
+        "total_phase": 144.2428628282199,
+        "freq_spread": 74.66904747826155,
+        "coverage_uniformity": 0.25444024112498115,
+        "min_phase_rad": 0.39246832943961485,
+        "max_phase_rad": 29.305236327030006
+      }
+    },
+    "500": {
+      "geo": {
+        "alive": 15,
+        "dead": 1,
+        "eff_rank": 15,
+        "D_adj": 1.7487189624224955,
+        "D_at_T": 23.910160603380284,
+        "total_phase": 99.22086413939326,
+        "freq_spread": 339.0661062075219,
+        "coverage_uniformity": 7.98564727684745e-11,
+        "min_phase_rad": 0.09437687637691694,
+        "max_phase_rad": 32.0
+      },
+      "evq": {
+        "alive": 15,
+        "dead": 1,
+        "eff_rank": 15,
+        "D_adj": 1.8294613426144457,
+        "D_at_T": 27.481975006171965,
+        "total_phase": 112.86851945344752,
+        "freq_spread": 337.1127370828108,
+        "coverage_uniformity": 0.25444024107361296,
+        "min_phase_rad": 0.08429815682519347,
+        "max_phase_rad": 28.417982389164603
+      }
+    },
+    "1000": {
+      "geo": {
+        "alive": 14,
+        "dead": 2,
+        "eff_rank": 14,
+        "D_adj": 1.6307888748735613,
+        "D_at_T": 18.571989265893137,
+        "total_phase": 91.17605601700998,
+        "freq_spread": 649.3816311545148,
+        "coverage_uniformity": 1.4845074366546896e-10,
+        "min_phase_rad": 0.049277648833903745,
+        "max_phase_rad": 32.0
+      },
+      "evq": {
+        "alive": 14,
+        "dead": 2,
+        "eff_rank": 14,
+        "D_adj": 1.658455783303695,
+        "D_at_T": 26.850289276070434,
+        "total_phase": 103.17040488272347,
+        "freq_spread": 645.2245993365532,
+        "coverage_uniformity": 0.2544402410174966,
+        "min_phase_rad": 0.04346422457130852,
+        "max_phase_rad": 28.044186905143693
+      }
+    },
+    "5000": {
+      "geo": {
+        "alive": 11,
+        "dead": 5,
+        "eff_rank": 11,
+        "D_adj": 1.4346310370988662,
+        "D_at_T": 11.464536290401464,
+        "total_phase": 77.51106802567138,
+        "freq_spread": 2936.19150473763,
+        "coverage_uniformity": 6.263586940811479e-10,
+        "min_phase_rad": 0.010898471661132779,
+        "max_phase_rad": 32.0
+      },
+      "evq": {
+        "alive": 12,
+        "dead": 4,
+        "eff_rank": 12,
+        "D_adj": 1.3602374911891295,
+        "D_at_T": 18.304186113378748,
+        "total_phase": 85.98362975810993,
+        "freq_spread": 2913.0334126497614,
+        "coverage_uniformity": 0.25444024063960463,
+        "min_phase_rad": 0.00933566798734859,
+        "max_phase_rad": 27.195112869768263
+      }
+    },
+    "10000": {
+      "geo": {
+        "alive": 11,
+        "dead": 5,
+        "eff_rank": 11,
+        "D_adj": 1.3727016201894664,
+        "D_at_T": 12.749916190240215,
+        "total_phase": 73.10902728916828,
+        "freq_spread": 5623.413220280715,
+        "coverage_uniformity": 1.1654252589830662e-09,
+        "min_phase_rad": 0.005690494112124553,
+        "max_phase_rad": 32.0
+      },
+      "evq": {
+        "alive": 12,
+        "dead": 4,
+        "eff_rank": 12,
+        "D_adj": 1.2613955263678822,
+        "D_at_T": 15.010253831367276,
+        "total_phase": 80.21636776699009,
+        "freq_spread": 5575.466615154393,
+        "coverage_uniformity": 0.2544402402232244,
+        "min_phase_rad": 0.004813480925410064,
+        "max_phase_rad": 26.83740238072122
+      }
+    },
+    "50000": {
+      "geo": {
+        "alive": 9,
+        "dead": 7,
+        "eff_rank": 9,
+        "D_adj": 1.2622716426707938,
+        "D_at_T": 14.359364849780485,
+        "total_phase": 65.10914599246796,
+        "freq_spread": 25426.370324713313,
+        "coverage_uniformity": 4.942006007436736e-09,
+        "min_phase_rad": 0.0012585358734924724,
+        "max_phase_rad": 32.0
+      },
+      "evq": {
+        "alive": 10,
+        "dead": 6,
+        "eff_rank": 10,
+        "D_adj": 1.0771341969400803,
+        "D_at_T": 14.85833318514397,
+        "total_phase": 69.37973739972448,
+        "freq_spread": 25171.88620327119,
+        "coverage_uniformity": 0.2544402373798543,
+        "min_phase_rad": 0.0010338861495006984,
+        "max_phase_rad": 26.02486530787017
+      }
+    }
+  },
+  "experimental_mse": {
+    "yarn_far": {
+      "100": {
+        "geo": 0.0161,
+        "evq": 0.0189
+      },
+      "500": {
+        "geo": 0.021,
+        "evq": 0.0207
+      },
+      "1000": {
+        "geo": 0.0517,
+        "evq": 0.0178
+      },
+      "5000": {
+        "geo": 0.0787,
+        "evq": 0.021
+      },
+      "10000": {
+        "geo": 0.0401,
+        "evq": 0.0137
+      },
+      "50000": {
+        "geo": 0.1895,
+        "evq": 0.0262
+      }
+    },
+    "no_yarn_far": {
+      "100": {
+        "geo": 0.296,
+        "evq": 0.356
+      },
+      "500": {
+        "geo": 0.224,
+        "evq": 0.146
+      },
+      "1000": {
+        "geo": 0.286,
+        "evq": 0.132
+      },
+      "5000": {
+        "geo": 0.172,
+        "evq": 0.111
+      },
+      "10000": {
+        "geo": 0.107,
+        "evq": 0.048
+      },
+      "50000": {
+        "geo": 0.247,
+        "evq": 0.108
+      }
+    },
+    "32f_indist": {
+      "100": {
+        "geo": 0.00973,
+        "evq": 0.00961
+      },
+      "500": {
+        "geo": 0.00937,
+        "evq": 0.00955
+      },
+      "1000": {
+        "geo": 0.0094,
+        "evq": 0.00932
+      },
+      "5000": {
+        "geo": 0.00969,
+        "evq": 0.00962
+      },
+      "10000": {
+        "geo": 0.00987,
+        "evq": 0.00978
+      },
+      "50000": {
+        "geo": 0.0102,
+        "evq": 0.0096
+      }
+    }
+  },
+  "correlations": {
+    "D_adj_vs_yarn_mse": -0.3492577637352343,
+    "D_adj_vs_raw_mse": 0.7397978253507206,
+    "alive_vs_yarn_mse": -0.6158109675378072,
+    "alive_vs_raw_mse": 0.512229213354437
+  }
+}

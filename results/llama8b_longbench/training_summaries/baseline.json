@@ -1,0 +1,95 @@
+{
+  "timestamp_end": "2026-02-23 04:02:14",
+  "method": "baseline",
+  "run_name": "baseline",
+  "rope_base": 500000.0,
+  "head_dim": 128,
+  "max_seq_len": 16384,
+  "train_metrics": {
+    "train_runtime": 7447.7582,
+    "train_samples_per_second": 0.215,
+    "train_steps_per_second": 0.054,
+    "total_flos": 1.1889987746267136e+18,
+    "train_loss": 1.880706422328949,
+    "epoch": 0.78125,
+    "train_seconds": 7448.196201324463
+  },
+  "eval_metrics": {
+    "eval_loss": 2.518735885620117,
+    "eval_runtime": 151.6055,
+    "eval_samples_per_second": 0.844,
+    "eval_steps_per_second": 0.844,
+    "epoch": 0.78125
+  },
+  "paths": {
+    "run_dir": "results/llama8b_fair_v2_longbench_stable_20260223_0150/baseline",
+    "adapter_dir": "results/llama8b_fair_v2_longbench_stable_20260223_0150/baseline/final_lora",
+    "calibration_report": "results/llama8b_fair_v2_longbench_stable_20260223_0150/baseline/artifacts/calibration_report.json",
+    "train_log": "results/llama8b_fair_v2_longbench_stable_20260223_0150/baseline/logs/train.log"
+  },
+  "ppl_results": {
+    "1024": {
+      "ppl": 13.1046,
+      "loss": 2.573,
+      "n_chunks": 10
+    },
+    "2048": {
+      "ppl": 11.0107,
+      "loss": 2.3989,
+      "n_chunks": 10
+    },
+    "4096": {
+      "ppl": 13.2128,
+      "loss": 2.5812,
+      "n_chunks": 10
+    },
+    "8192": {
+      "ppl": 11.9123,
+      "loss": 2.4776,
+      "n_chunks": 10
+    },
+    "16384": {
+      "ppl": 11.4764,
+      "loss": 2.4403,
+      "n_chunks": 10
+    }
+  },
+  "passkey_results": {
+    "1024": {
+      "accuracy": 1.0,
+      "correct": 20,
+      "total": 20
+    },
+    "2048": {
+      "accuracy": 1.0,
+      "correct": 20,
+      "total": 20
+    },
+    "4096": {
+      "accuracy": 1.0,
+      "correct": 20,
+      "total": 20
+    },
+    "8192": {
+      "accuracy": 1.0,
+      "correct": 20,
+      "total": 20
+    },
+    "16384": {
+      "accuracy": 0.8,
+      "correct": 16,
+      "total": 20
+    }
+  },
+  "data_provenance": {
+    "source": "local:/root/autodl-tmp/data/long_text.txt",
+    "text_sha256": "2ab984a109a45f9d7788a4027afb2272fb6d195b3b316280ff2c57200f1f2263",
+    "max_seq_len": 16384,
+    "split_ratio": 0.95,
+    "train_chunks": 2048,
+    "eval_chunks": 128,
+    "train_pool_chunks": 4892,
+    "eval_pool_chunks": 258,
+    "split_overlap_count": 0
+  }
+}

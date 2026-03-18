@@ -1,0 +1,12 @@
+{
+  "tau0.00": {
+    "32f_i3d_fvd": -1,
+    "128f_yarn_i3d_fvd": -1,
+    "128f_noyarn_i3d_fvd": -1
+  },
+  "tau1.50": {
+    "32f_i3d_fvd": -1,
+    "128f_yarn_i3d_fvd": -1,
+    "128f_noyarn_i3d_fvd": -1
+  }
+}

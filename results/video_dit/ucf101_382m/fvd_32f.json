@@ -1,0 +1,10 @@
+{
+  "geo": {
+    "videomae_fvd": -1.0,
+    "i3d_fvd": -1.0
+  },
+  "evq": {
+    "videomae_fvd": -1.0,
+    "i3d_fvd": -1.0
+  }
+}
