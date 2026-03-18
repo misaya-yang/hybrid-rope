@@ -615,9 +615,17 @@ def load_ucf101_pixels(
     """Load UCF-101 videos as pixel tensors.
 
     Returns: (n_samples, n_frames, 3, frame_size, frame_size) float32 in [-1, 1].
+    Caches to .pt file for fast reload on subsequent runs.
     """
     import os, glob
     import numpy as np
+
+    # Check cache first
+    cache_name = f"ucf101_{split}_n{n_samples}_f{n_frames}_s{frame_size}_seed{seed}.pt"
+    cache_path = os.path.join(data_dir, cache_name)
+    if os.path.exists(cache_path):
+        print(f"  Loading cached UCF-101 from {cache_path}")
+        return torch.load(cache_path, weights_only=True)
 
     try:
         import decord
@@ -686,8 +694,12 @@ def load_ucf101_pixels(
         for i in range(loaded, n_samples):
             videos[i] = videos[i % loaded]
 
-    print(f"  UCF-101 loaded: {loaded} videos, shape {videos.shape}")
-    return torch.from_numpy(videos)
+    result = torch.from_numpy(videos)
+    print(f"  UCF-101 loaded: {loaded} videos, shape {result.shape}")
+    # Cache for fast reload
+    torch.save(result, cache_path)
+    print(f"  Cached to {cache_path}")
+    return result
 
 
 # ---------------------------------------------------------------------------

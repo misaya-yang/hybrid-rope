@@ -297,21 +297,22 @@ def compute_fvd(
     real_np = preprocess(real_videos)
     gen_np = preprocess(gen_videos)
 
-    for name, extractor in [("videomae", "videomae"), ("i3d", "i3d")]:
+    for name in ["videomae", "i3d"]:
         try:
-            # 30s timeout for model download — skip if no internet
             old_handler = signal.signal(signal.SIGALRM, _timeout_handler)
             signal.alarm(600)
-            fvd_calc = cdfvd()
-            fvd_calc.load_feature_extractor(extractor, ckpt_path=None, device=device)
+            # cdfvd API: model is specified in __init__, not load_feature_extractor
+            fvd_calc = cdfvd(model=name, device=device)
             signal.alarm(0)
             signal.signal(signal.SIGALRM, old_handler)
 
-            real_feats = fvd_calc.compute_features(real_np)
-            gen_feats = fvd_calc.compute_features(gen_np)
-            val = float(fvd_calc.compute_fvd(real_feats, gen_feats))
+            fvd_calc.compute_real_stats(real_np)
+            fvd_calc.compute_fake_stats(gen_np)
+            val = float(fvd_calc.compute_fvd())
             results[f"{name}_fvd"] = round(val, 2)
             print(f"    {name} FVD: {val:.2f}")
+            fvd_calc.empty_real_stats()
+            fvd_calc.empty_fake_stats()
         except Exception as e:
             signal.alarm(0)
             print(f"    {name} FVD skipped: {e}")
