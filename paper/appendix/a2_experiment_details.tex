@@ -39,6 +39,18 @@ This distinction is important for interpretation. The larger-scale run is best v
 
 \input{tables/table6_750m_continue_supporting}
 
+\subsection{Progressive training dynamics}
+\label{sec:progressive-dynamics}
+
+Figure~\ref{fig:progressive} visualizes the progressive training result from the body (Table~\ref{tab:progressive}). The key observation is the divergence pattern: EVQ+YaRN PPL remains flat across all three stages while Geo+YaRN degrades sharply at Stage~3, producing the widening relative advantage ($-34.6\%\!\rightarrow\!{-52.0\%}\!\rightarrow\!{-81.2\%}$). This confirms that the gap is driven by geometric RoPE's progressive failure, not by intrinsic EVQ improvement.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.85\linewidth]{fig4_phase17c_flagship.pdf}
+  \caption{\textbf{Progressive training widens EVQ's advantage.} Three-stage context extension ($512\!\rightarrow\!1024\!\rightarrow\!2048$, 454M, single seed). EVQ+YaRN remains stable across stages while Geo+YaRN degrades sharply, extending functional context to $48\mathrm{K}$ ($24\times$ training length) at PPL~$2.63$.}
+  \label{fig:progressive}
+\end{figure}
+
 \subsection{Evaluation notes}
 
 The paper uses three increasingly strict long-context evaluation views.

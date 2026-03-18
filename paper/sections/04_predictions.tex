@@ -8,7 +8,7 @@ The same mechanism predicts complementarity with inference-time scaling. Geometr
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.98\linewidth]{fig_unification_orthogonal.pdf}
+  \includegraphics[width=0.90\linewidth]{fig_unification_orthogonal.pdf}
   \caption{\textbf{EVQ and YaRN correct orthogonal deficiencies of geometric RoPE.} (a)~EVQ bends the allocation curve \emph{below} the diagonal (shape correction: redistributes density for better long-range discrimination), while YaRN shifts it \emph{above} (range correction: extends coverage beyond $L_{\mathrm{train}}$). NTK-aware makes a similar but linear range correction. (b)~EVQ+YaRN combines both corrections additively in log-frequency space. Setup: base${}=10{,}000$, $d_{\mathrm{head}}{=}128$, $L_{\mathrm{train}}{=}4096$, $4\times$ extrapolation.}
   \label{fig:orthogonal}
 \end{figure}
@@ -16,21 +16,4 @@ The same mechanism predicts complementarity with inference-time scaling. Geometr
 Finally, the theory predicts that EVQ should \emph{not} create gains when the collision-block analysis predicts little room for improvement. The low-base dead-zone experiments confirm this: a negative result in that regime is evidence that the mechanism is specific rather than overfit.
 
 \paragraph{Empirical verification: attention distance redistribution.}
-The waterbed prediction can be tested directly by comparing the attention distance distributions of trained Geometric and EVQ models. Figure~\ref{fig:attn-mechanism} (left) shows the aggregate attention density as a function of token distance, averaged across all layers, heads, and 16 validation samples on a 750M model trained at \(L{=}4096\). Two features match the theory precisely. First, a crossover emerges at approximately \(508\) tokens: below this distance, Geometric attention density exceeds EVQ, while above it the relationship reverses, with EVQ allocating up to \(2.5\times\) more attention mass at distances near \(10^3\) tokens. This is the waterbed in action---EVQ sacrifices short-range attention density (which is redundant) to gain long-range discriminability (which is the extrapolation bottleneck).
-
-Second, a per-head analysis (Figure~\ref{fig:attn-mechanism}, right) reveals that \(295\) out of \(432\) heads (\(68\%\)) shift their average attention distance farther under EVQ, with the effect concentrated in deeper layers (L12--L17, yellow-green points). This layer-depth gradient is consistent with the expectation that deeper layers rely more on long-range contextual integration, and hence benefit most from the frequency reallocation that EVQ provides. Together, these observations confirm that EVQ's PPL and retrieval gains are not incidental metric improvements but reflect a genuine redistribution of the model's positional attention structure, as predicted by the variational theory.
-
-\begin{figure}[t]
-  \centering
-  \begin{minipage}[t]{0.48\linewidth}
-    \centering
-    \includegraphics[width=\linewidth]{attn_aggregate_comparison.pdf}
-  \end{minipage}
-  \hfill
-  \begin{minipage}[t]{0.48\linewidth}
-    \centering
-    \includegraphics[width=\linewidth]{attn_head_avg_distance.pdf}
-  \end{minipage}
-  \caption{\textbf{Waterbed verification in learned attention patterns (750M).} Left: aggregate attention density vs.\ token distance. A crossover at ${\approx}508$ tokens separates a short-range regime (Geometric dominant) from a long-range regime (EVQ dominant, up to $2.5\times$ higher density). Right: per-head average attention distance. 295/432 heads (68\%) attend farther under EVQ, with the strongest shifts in deeper layers (L12--L17).}
-  \label{fig:attn-mechanism}
-\end{figure}
+The waterbed prediction is confirmed by direct measurement of attention distance distributions on a trained 750M model (Figure~\ref{fig:attn-mechanism} in Appendix). A crossover emerges at ${\approx}508$ tokens: below this distance Geometric attention density exceeds EVQ, while above it EVQ allocates up to $2.5\times$ more attention mass. Per-head analysis shows 295/432 heads (68\%) shift farther under EVQ, concentrated in deeper layers (L12--L17), consistent with deeper layers relying more on long-range integration. These observations confirm that EVQ's gains reflect genuine redistribution of positional attention structure, as predicted by the theory.

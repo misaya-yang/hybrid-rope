@@ -12,9 +12,34 @@ The main text intentionally reserves space for Figure~\ref{fig:evq-yarn} and Fig
 
 This separation is deliberate. The body should answer only three questions: what the exact theory gives, whether closed-form EVQ beats learnable PE in the cleanest extrapolation regime, and whether EVQ materially unlocks inference-time scaling. Everything else strengthens the package, but should not dilute the central narrative under the 9-page anonymous submission constraint.
 
+\subsection{Attention distance redistribution}
+\label{sec:attn-redistribution}
+
+\begin{figure}[ht]
+  \centering
+  \begin{minipage}[t]{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{attn_aggregate_comparison.pdf}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{attn_head_avg_distance.pdf}
+  \end{minipage}
+  \caption{\textbf{Waterbed verification in learned attention patterns (750M).} Left: aggregate attention density vs.\ token distance. A crossover at ${\approx}508$ tokens separates a short-range regime (Geometric dominant) from a long-range regime (EVQ dominant, up to $2.5\times$ higher density). Right: per-head average attention distance. 295/432 heads (68\%) attend farther under EVQ, with the strongest shifts in deeper layers (L12--L17).}
+  \label{fig:attn-mechanism}
+\end{figure}
+
 \subsection{Why Figure 1 is appendix-only}
 
 The \(750\mathrm{M}\) dynamics figure is visually strong, but it is not the right primary anchor for an anonymous submission because it mixes two avoidable weaknesses: it is single-seed and it was produced with the now-deprecated hybrid configuration. Its role in the submission is therefore explanatory rather than foundational. It helps the reader understand the qualitative geometry of retrieval divergence, but it should not compete with the multi-seed EVQ\(\times\)YaRN result or the PE-dominant scaling-law confirmation for body space.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.85\linewidth]{fig1_frequency_dynamics.pdf}
+  \caption{\textbf{750M frequency dynamics and retrieval divergence} (single seed, deprecated hybrid configuration). EVQ redistributes resolution toward low-frequency channels, producing qualitatively different retrieval dynamics. This figure is explanatory rather than foundational; see Figures~\ref{fig:evq-yarn} and~\ref{fig:pe-dominant} in the main text for multi-seed primary evidence.}
+  \label{fig:freq-dynamics}
+\end{figure}
 
 \subsection{Why video remains supportive}
 
@@ -46,7 +71,27 @@ Length & Mode & \multicolumn{2}{c}{Accuracy (\%)} & \multicolumn{2}{c}{Gold NLL 
 \end{tabular}
 \end{table}
 
+Figure~\ref{fig:downstream-qa} visualizes the NLL divergence across context lengths, showing that EVQ's advantage grows with extrapolation ratio.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.75\linewidth]{fig5_downstream_qa.pdf}
+  \caption{\textbf{Downstream QA: Gold-answer NLL across context lengths} (454M, QuALITY, $n{=}2086$). EVQ's NLL advantage grows from $-1.7\%$ at in-distribution ($4\mathrm{K}$) to $-30.1\%$ at $2\times$ extrapolation ($8\mathrm{K}$).}
+  \label{fig:downstream-qa}
+\end{figure}
+
 The key takeaway is that accuracy at the capacity floor is not a useful discriminator, but NLL on the correct answer preserves the signal. This is consistent with the PPL and passkey evidence in the body: EVQ improves the model's probabilistic calibration at extrapolated lengths even when accuracy is saturated by capacity constraints.
+
+\subsection{Multi-scale waterbed verification}
+
+Figure~\ref{fig:waterbed-multiscale} visualizes the waterbed effect across model scales, confirming that EVQ consistently trades a small in-range cost for large long-range gains. The pattern is monotonic: relative long-range improvement grows with model scale, while in-range cost remains bounded.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.85\linewidth]{fig7_multiscale_waterbed.pdf}
+  \caption{\textbf{Waterbed verification across model scales.} EVQ pays a bounded in-range cost (left of dashed line) while achieving progressively larger long-range gains. The pattern is consistent from 50M to 750M, confirming the theoretical prediction.}
+  \label{fig:waterbed-multiscale}
+\end{figure}
 
 \subsection{Why base=10K and r-sweep move to the appendix}
 

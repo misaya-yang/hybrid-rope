@@ -101,7 +101,7 @@ The full stationary density contains three terms: a hyperbolic tether (\(\cosh, 
 
 \textbf{(3) The forcing term is amplitude-suppressed.} The particular solution coefficient $P = \gamma/(4\ln^2 b - \tau^2)$ is strongly suppressed at typical base values: $P \propto 1/687$ at $b{=}500\mathrm{K}$ and $1/337$ at $b{=}10\mathrm{K}$. We verify numerically by computing collision scores under the exact kernel for the full density $\rho(\phi) = \cosh(\tau(1{-}\phi)) + \lambda b^{-2\phi}$ across $\lambda \in [0, 5]$. At the theoretically motivated $\lambda \approx P \approx 0.001$--$0.003$, the full solution improves over pure tether by $<0.5\%$. Even at artificially large $\lambda{=}1$, the improvement is only $2$--$6\%$ across configurations (vs.\ the $28$--$92\%$ improvement over geometric). The pure tether already captures the vast majority of the collision reduction.
 
-\textbf{(4) Empirical validation of the design choice.} The pure-tether branch subsumes geometric RoPE as its \(\tau\to 0\) limit, and the 99-run Phase~16 sweep (Fig.~6) confirms that the optimal \(\tau\) in this family matches the scaling-law prediction across multiple model scales. If the omitted forcing term were essential, one would expect the pure-tether family to systematically underperform --- but in fact it consistently improves over geometric at the predicted \(\tau^*\). The forcing term may further improve performance, but this is an avenue for future work rather than a deficiency of the current method.
+\textbf{(4) Empirical validation of the design choice.} The pure-tether branch subsumes geometric RoPE as its \(\tau\to 0\) limit, and the 99-run Phase~16 sweep (Figure~\ref{fig:tau-sweep}) confirms that the optimal \(\tau\) in this family matches the scaling-law prediction across multiple model scales. If the omitted forcing term were essential, one would expect the pure-tether family to systematically underperform --- but in fact it consistently improves over geometric at the predicted \(\tau^*\). The forcing term may further improve performance, but this is an avenue for future work rather than a deficiency of the current method.
 
 \subsection{Surrogate quality: functional validation}
 \label{sec:surrogate-validation}
@@ -161,7 +161,7 @@ The scaling law
 \begin{equation}
 \tau^* = \frac{d_{\mathrm{head}}}{\sqrt{L}}
 \end{equation}
-is validated across 99 training runs (27 configurations $\times$ 3+ seeds, Fig.~6 in the body). Here we analyze to what extent the broadband surrogate predicts this formula, and identify the gap that remains.
+is validated across 99 training runs (27 configurations $\times$ 3+ seeds, Figure~\ref{fig:tau-sweep}). Here we analyze to what extent the broadband surrogate predicts this formula, and identify the gap that remains.
 
 \paragraph{Numerical characterization of surrogate coefficients.}
 We fit $K_{\mathrm{app}}(\phi_i,\phi_j) = \alpha\delta_{ij}/\Delta\phi + \beta\min(\phi_i,\phi_j)$ to the exact collision kernel $K(\phi_i,\phi_j) = \frac{1}{2L}\bigl[\frac{\sin((\omega_1{-}\omega_2)L)}{\omega_1{-}\omega_2} + \frac{\sin((\omega_1{+}\omega_2)L)}{\omega_1{+}\omega_2}\bigr]$ evaluated at $K = d_{\mathrm{head}}/2$ uniformly spaced channel positions in $[0,1]$. Sweeping across $L \in \{128,\ldots,4096\}$, $d_{\mathrm{head}} \in \{32,64,128,256\}$, and $b \in \{10\mathrm{K}, 100\mathrm{K}, 500\mathrm{K}\}$ yields:
@@ -193,4 +193,11 @@ The broadband surrogate provides two of the three ingredients for $\tau^*$: the 
 \begin{equation}
 \tau^* = \frac{d_{\mathrm{head}}}{\sqrt{L}},
 \end{equation}
-validated empirically with $R^2 > 0.99$ across 99 runs (Fig.~6). Deriving the exact $L^{-1/2}$ exponent from a discrete variational principle remains an open mathematical question. The body therefore maintains the ``empirical law'' designation while acknowledging the partial theoretical support.
+validated empirically with $R^2 > 0.99$ across 99 runs (Figure~\ref{fig:tau-sweep}). Deriving the exact $L^{-1/2}$ exponent from a discrete variational principle remains an open mathematical question. The body therefore maintains the ``empirical law'' designation while acknowledging the partial theoretical support.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.85\linewidth]{fig6_tau_formula_validation.pdf}
+  \caption{\textbf{Scaling-law validation across 99 training runs} (27 configurations $\times$ 3+ seeds). Each point is a separate training run; the $x$-axis is the predicted $\tau^* = d_{\mathrm{head}}/\sqrt{L}$ and the $y$-axis is the empirically optimal $\tau$ (minimizing validation perplexity). The fit achieves $R^2 > 0.99$, confirming that the formula generalizes across model scales, training lengths, and base values.}
+  \label{fig:tau-sweep}
+\end{figure}
