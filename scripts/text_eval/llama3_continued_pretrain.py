@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
 """
-LLaMA-3-8B-Instruct Continued Pretraining: GEO vs EVQ-Cosh Head-to-Head
+LLaMA-3.2-1B-Instruct Continued Pretraining: GEO vs EVQ-Cosh Head-to-Head
 
-Full-parameter continued pretraining of Meta-Llama-3-8B-Instruct,
+Full-parameter continued pretraining of Meta-Llama-3.2-1B-Instruct,
 comparing geometric (control) vs EVQ-Cosh (treatment) frequency allocation.
 Full-param is necessary because attention weights are coupled with PE frequencies —
 LoRA can't restructure the core attention-PE interaction.
 
 Model:
-  - Meta-Llama-3-8B-Instruct, head_dim=128, rope_theta=500000, native ctx=8192
-  - 64 inv_freq values (head_dim // 2)
+  - Meta-Llama-3.2-1B-Instruct, head_dim=64, rope_theta=500000, native ctx=8192
+  - 32 inv_freq values (head_dim // 2)
+  - ~1.26B params, full-param bf16 fits on single 32GB GPU (~24GB total)
 
-EVQ-Cosh tau: head_dim / sqrt(L_pretrain) = 128 / sqrt(8192) = 1.414
+EVQ-Cosh tau: head_dim / sqrt(L_pretrain) = 64 / sqrt(8192) = 0.707
 
 Experiment design:
   Config 1 (GEO): Original geometric inv_freq — control
-  Config 2 (EVQ): EVQ-Cosh tau=1.414 inv_freq — treatment
+  Config 2 (EVQ): EVQ-Cosh tau=0.707 inv_freq — treatment
   Both: full-param, 2000 steps, seq_len=8192, cosine LR
   Hardware: 2×H800 80GB with DeepSpeed ZeRO-2 (fp32 Adam, zero precision loss)
 
@@ -92,10 +93,10 @@ def print_rank0(*args, **kwargs):
 # Constants
 # ---------------------------------------------------------------------------
 
-HEAD_DIM = 128
+HEAD_DIM = 64  # LLaMA-3.2-1B: hidden=2048, heads=32, head_dim=64
 ROPE_THETA = 500_000.0
-NATIVE_CTX = 8192
-N_FREQ = HEAD_DIM // 2  # 64
+NATIVE_CTX = 8192  # original_max_position_embeddings
+N_FREQ = HEAD_DIM // 2  # 32
 
 TRAIN_SEQ_LEN = 8192
 DEFAULT_STEPS = 2000
@@ -804,7 +805,7 @@ def main():
     parser.add_argument("--local_rank", type=int, default=-1,
                         help="Local rank (auto-set by deepspeed launcher)")
     parser.add_argument("--tau", type=float, default=None,
-                        help="EVQ tau (default: head_dim / sqrt(native_ctx) = 1.414)")
+                        help="EVQ tau (default: head_dim / sqrt(native_ctx) = 0.707)")
     parser.add_argument("--configs", type=str, default="geo,evq",
                         help="Comma-separated configs to run (default: geo,evq)")
     parser.add_argument("--passkey_trials", type=int, default=PASSKEY_TRIALS,

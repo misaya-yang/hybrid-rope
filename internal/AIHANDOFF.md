@@ -69,7 +69,7 @@ def evq_cosh_inv_freq(head_dim, tau, base=500000.0):
 
 1. 不要用NTK-aware YaRN，破坏EVQ频率结构。用Progressive per-channel ramp，参考phase14c_multiscale_evq_yarn.py。
 2. 不要在Geo checkpoint上直接换EVQ inv_freq，必须从头训练或continued-pretrain(phase11e)。
-3. 不要用τ=0.707，≈Geo无差异。用τ*=d_head/√L_train。
+3. 不要用τ=0.707用于我们自己的454M模型(L=2048→τ*=1.414)，0.707≈Geo无差异。但对外部模型如LLaMA-3.2-1B(head_dim=64, L=8192)，τ*=64/√8192=0.707是正确的理论最优值。τ*=d_head/√L_train，L_train取模型的original_max_position_embeddings。
 4. 不要用max-autotune做首次运行，先default确认逻辑。
 5. eval改seq_len必须同步YaRN scale=eval_len/train_len。
 6. 不要混用tokenizer，统一gpt-neox-20b(50304)。
@@ -82,6 +82,8 @@ def evq_cosh_inv_freq(head_dim, tau, base=500000.0):
 13. 实验work_dir必须放数据盘(`/root/autodl-tmp/`)，不要放系统盘(`/root/`)。系统盘30G容易满，每个DiT实验~2GB(checkpoints+npy)。命令示例: `--work_dir /root/autodl-tmp/hybrid-rope/results/video_dit/xxx`。
 14. 不要凭论文描述自己重写第三方方法，必须对照官方代码逐行确认。已踩坑: RIFLEx自己实现漏了0.9系数+用错L_train/L_test，导致结果完全错误。RIFLEx官方实现: `freqs[k-1] = 0.9 * 2π / L_test`（注意是L_test不是L_train，k由官方intrinsic frequency detection选出，不要自己猜）。
 15. eval结果必须做sanity check: 如果一个公认有效的inference-time方法(RIFLEx/YaRN)让所有模型都变差，第一反应是检查实现bug，不是解读为"方法不适用"。
+16. **OOM假阳性**: RTX 5090 32GB跑1.24B全参fp32 AdamW + 8192 seq实测28GB可行，但首次启动可能因CUDA内存碎片触发OOM（lm_head logits需分配1.96GB连续空间）。遇到OOM先重试一次（kill进程彻底释放显存后再启动），不要立刻改batch/seq_len。已两次出现"首次OOM重试成功"的情况。根因是PyTorch内存分配器碎片化，`expandable_segments:True`可缓解但不完全消除。
+17. **VRAM估算必须包含logits**: vocab_size × seq_len × dtype_bytes。LLaMA-3.2-1B: 128000 × 8192 × 2(bf16) = 2.0GB。这是forward pass的峰值开销，gradient checkpointing不省这部分。总VRAM = 模型(bf16) + 优化器(fp32 master+m+v) + 梯度(bf16) + 激活(grad_ckpt) + logits峰值。
 
 ## Part 4: Wan2.1 视频微调避坑 (Phase 17)
 
