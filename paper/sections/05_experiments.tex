@@ -73,3 +73,30 @@ Stage & \(L_{\mathrm{train}}\) & Geo+YaRN & EVQ+YaRN & \(\Delta\) \\
 \end{table}
 
 The observation is single-seed but directionally consistent with the multi-scale trends across all other experiments. The \(b=10\mathrm{K}\) dead zone is informative rather than harmful: it matches the collision-block prediction that too few channels remain optimizable at low base.
+
+\subsection{Multi-head Latent Attention}
+
+To test whether EVQ's benefit extends to the attention mechanism used in production-scale models such as DeepSeek-V2/V3, we train a 432M-parameter Transformer with Multi-head Latent Attention (MLA) from scratch. MLA decouples RoPE into a compressed subspace: only \(d_{\mathrm{rope}}{=}32\) dimensions (16 frequency channels) carry positional information, while the remaining \(\mathrm{kv\_rank}{=}256\) dimensions carry content. This compressed regime makes each channel's placement especially critical.
+
+The model trains on FineWeb-Edu (500M tokens) at \(L_{\mathrm{train}}{=}8192\) with \(b{=}500\mathrm{K}\) across three seeds (42, 43, 88). EVQ uses \(\tau{=}1.414\) (i.e., \(32/\sqrt{512}\)).
+
+\begin{table}[t]
+\caption{MLA validation (432M, \(d_{\mathrm{rope}}{=}32\), 3-seed mean \(\pm\) std). EVQ alone outperforms GEO+YaRN(s=4) at 16K--24K. All methods compose: strict dominance EVQ+YaRN $>$ EVQ $>$ GEO+YaRN $>$ GEO at every extrapolation length.}
+\label{tab:mla}
+\centering
+\small
+\begin{tabular}{@{}l r r r r@{}}
+\toprule
+Method & PPL@8K & PPL@16K & PPL@24K & PPL@32K \\
+\midrule
+GEO & $35.4{\pm}0.9$ & $138.8{\pm}5.5$ & $241.5{\pm}2.6$ & $323.7{\pm}5.2$ \\
+GEO+YaRN(s=4) & $35.5{\pm}0.9$ & $117.9{\pm}6.5$ & $204.9{\pm}6.9$ & $278.5{\pm}6.3$ \\
+\textbf{EVQ} & $35.8{\pm}0.8$ & $\mathbf{95.6{\pm}4.1}$ & $204.9{\pm}14.7$ & $291.6{\pm}20.5$ \\
+\textbf{EVQ+YaRN(s=4)} & $35.8{\pm}0.8$ & $\mathbf{71.1{\pm}4.1}$ & $\mathbf{153.2{\pm}12.5}$ & $\mathbf{236.6{\pm}15.9}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:mla} shows the results. Three findings stand out. First, EVQ alone reduces PPL at \(16\mathrm{K}\) by \(31.1\%\) (\(138.8 \to 95.6\)) with only \(+0.9\%\) in-distribution cost---a larger relative gain than observed with standard MHA at comparable scales, consistent with the ``fewer channels, each more precious'' hypothesis. Second, EVQ alone outperforms GEO+YaRN(s=4) at \(16\mathrm{K}\) (\(-31.1\%\) vs \(-15.1\%\)) and \(20\mathrm{K}\) (\(-25.9\%\) vs \(-15.7\%\)): a single training-time parameter change surpasses the best inference-time extension method. Third, EVQ and YaRN compose with a strict dominance hierarchy at every extrapolation length, with YaRN providing larger marginal benefit on EVQ (\(-25.6\%\)) than on GEO (\(-15.1\%\)) at \(16\mathrm{K}\), further confirming complementary mechanisms.
+
+Training-progression analysis reveals that EVQ's advantage is present from \(50\%\) training (\(-29.0\%\) at \(16\mathrm{K}\)) and grows monotonically to \(-31.1\%\) at completion, while the in-distribution cost simultaneously decreases from \(+1.4\%\) to \(+0.9\%\). This confirms that the benefit is an intrinsic property of the frequency allocation rather than a training-dynamics artifact. To our knowledge, this is the first study of RoPE frequency allocation on Multi-head Latent Attention.

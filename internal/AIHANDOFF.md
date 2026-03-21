@@ -53,6 +53,39 @@ inv_freq_k = base^(-φ_k(τ)),  base = 500,000
 
 规范实现 `run_evq_sweep.py:141-157`(midpoint u_k)。`schedules.py`用u_k=k/n无midpoint，与论文不一致，以run_evq_sweep.py为准。
 
+### 350M MLA 实验配置速查 (Blackwell 96GB)
+
+模型: 432.2M params, MLA(d_rope=32, 16 freqs, kv_rank=256), head_dim=64, 24层16头, base=500000
+
+| seq_len | train_tokens | batch_size | compile | steps | VRAM | tau | ETA/run |
+|---------|-------------|------------|---------|-------|------|-----|---------|
+| **8192** | 500M | 5 | yes | 12,207 | ~80GB | 0.0, 1.414 | ~2.3h |
+| **4096** | 1B | 12 | yes | 20,345 | ~95GB | 0.0, 1.414, 2.0 | ~3.5h |
+| **2048** | 500M | 25* | yes | ~10,000* | ~95GB* | 0.0, 2.0 | ~1h* |
+
+*2048 配置为估算值，尚未实验验证。
+
+tau 经验规律 (d_rope=32, base=500000, MLA):
+- L=8192 → tau*=1.414 (已验证，-31.1% @16K, 3 seeds)
+- L=4096 → tau*∈[1.414, 2.0] (实验中)
+- L=2048 → tau*≈2.0 (待验证，外推自 tau* 随 L 递减趋势)
+
+通用公式: tau* ≈ K_t / √L_train (AR 文本), tau*_DiT ≈ 0.53 × K_t / √T_train (视频 DiT)
+
+数据:
+- 8K 实验: FineWeb-Edu 500M tokens (`/root/autodl-tmp/data/8k_mixed/`)
+- 4K 实验: Pile-uncopyrighted 60% + OpenWebText 40%, 1B tokens (`/root/autodl-tmp/data/1b_diverse_4k/`)
+
+启动命令模板:
+```bash
+/root/miniconda3/bin/python -u run_gqa_evq_experiment.py \
+    --tier 350m --taus 0.0,1.414 --seeds 42,43,88 \
+    --attn_type mla --d_rope 32 --batch_size <见上表> \
+    --compile --dataset fineweb-edu --seq_len <见上表> \
+    --work_dir /root/autodl-tmp/<experiment_dir> \
+    --train_tokens <见上表> --eval_16k --resume
+```
+
 ```python
 def evq_cosh_inv_freq(head_dim, tau, base=500000.0):
     K = head_dim // 2
