@@ -460,7 +460,7 @@ if __name__ == "__main__":
     # Test 4: Boundary anchoring
     rope_test = LearnableEVQRoPE(dim=128, max_seq_len=4096, tau_init=1.0)
     phi = rope_test.get_phi_schedule()
-    print(f"\nBoundary check:")
+    print("\nBoundary check:")
     print(f"  φ_0 (should be ≈0): {phi[0].item():.6f}")
     print(f"  φ_{n-1} (should be ≈1): {phi[-1].item():.6f}")
 
@@ -476,7 +476,7 @@ if __name__ == "__main__":
     print(f"\nSmall τ gradient check (τ={rope_small.tau.item():.2e}):")
     print(f"  ∂L/∂ψ = {grad_small:.2e} (should be nonzero)")
     assert abs(grad_small) > 0, "Gradient is zero at small τ — Taylor branch broken!"
-    print(f"  ✓ Gradient flows through Taylor branch")
+    print("  ✓ Gradient flows through Taylor branch")
 
     # Test 7: Taylor-to-full continuity at τ=1e-4 boundary
     for tau_val in [9e-5, 1.1e-4]:
@@ -488,10 +488,10 @@ if __name__ == "__main__":
     phi_lo = rope_lo._compute_phi(rope_lo.tau)
     phi_hi = rope_hi._compute_phi(rope_hi.tau)
     boundary_diff = (phi_lo - phi_hi).abs().max().item()
-    print(f"\nTaylor-to-full continuity at boundary:")
+    print("\nTaylor-to-full continuity at boundary:")
     print(f"  max|φ(9e-5) - φ(1.1e-4)| = {boundary_diff:.2e}")
     assert boundary_diff < 1e-6, f"Discontinuity at Taylor boundary: {boundary_diff}"
-    print(f"  ✓ Smooth transition")
+    print("  ✓ Smooth transition")
 
     # Test 8: torch.autograd.gradcheck (finite-difference vs analytic)
     print("\nAutograd gradcheck (finite differences):")
@@ -514,7 +514,7 @@ if __name__ == "__main__":
     D_synthetic = deltas ** (-1.5)
     D_synthetic = D_synthetic / D_synthetic.sum()
     tau_est, alpha, beta, residual = estimate_tau_from_distance_prior(D_synthetic)
-    print(f"Synthetic power-law (p=1.5):")
+    print("Synthetic power-law (p=1.5):")
     print(f"  α = {alpha:.6f}")
     print(f"  β = {beta:.6f}")
     print(f"  τ* = {tau_est:.4f}")
@@ -523,7 +523,7 @@ if __name__ == "__main__":
     # Test 10: Uniform prior → τ ≈ 0 (Algorithm 1 sanity)
     D_uniform = torch.ones(2048, dtype=torch.float64) / 2048
     tau_unif, _, _, res_unif = estimate_tau_from_distance_prior(D_uniform)
-    print(f"\nUniform prior:")
+    print("\nUniform prior:")
     print(f"  τ* = {tau_unif:.4f} (should be small)")
     print(f"  Fit residual = {res_unif:.4f}")
 

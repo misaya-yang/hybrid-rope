@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import random
 import re
 import statistics
@@ -36,11 +37,12 @@ from typing import Dict, Iterable, Iterator, List, Optional, Set, Tuple
 from transformers import AutoTokenizer
 
 
-DEFAULT_LONGALPACA = "/root/autodl-tmp/dfrope/datasets/LongAlpaca_msdownload/LongAlpaca-12k.min64.jsonl"
-DEFAULT_LONGQA = "/root/autodl-tmp/dfrope/datasets/LongQA.jsonl"
-DEFAULT_WIKITEXT = "/root/autodl-tmp/wikitext_data/train.txt"
-DEFAULT_TOKENIZER = "/root/autodl-tmp/dfrope/ms_models/LLM-Research/Meta-Llama-3-8B-Instruct"
-DEFAULT_OUTPUT_ROOT = "/root/autodl-tmp/dfrope/hybrid-rope/artifacts/datasets"
+_DATA_ROOT = os.environ.get("EVQ_DATA_ROOT", "/root/autodl-tmp")
+DEFAULT_LONGALPACA = os.path.join(_DATA_ROOT, "dfrope/datasets/LongAlpaca_msdownload/LongAlpaca-12k.min64.jsonl")
+DEFAULT_LONGQA = os.path.join(_DATA_ROOT, "dfrope/datasets/LongQA.jsonl")
+DEFAULT_WIKITEXT = os.path.join(_DATA_ROOT, "wikitext_data/train.txt")
+DEFAULT_TOKENIZER = os.path.join(_DATA_ROOT, "dfrope/ms_models/LLM-Research/Meta-Llama-3-8B-Instruct")
+DEFAULT_OUTPUT_ROOT = os.path.join(_DATA_ROOT, "dfrope/hybrid-rope/artifacts/datasets")
 
 NOISE_VOCAB = [
     "ledger",

@@ -1,0 +1,25 @@
+# EVQ-Cosh project ruff configuration
+# Run: ruff check scripts/lib/
+
+target-version = "py39"
+line-length = 120
+
+[lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "W",   # pycodestyle warnings
+]
+ignore = [
+    "E501",  # line too long — handled by formatter if needed
+    "E741",  # ambiguous variable name (common in math: l, I, O)
+    "W291",  # trailing whitespace
+    "W292",  # no newline at end of file
+    "W293",  # whitespace before ':'
+]
+
+[lint.per-file-ignores]
+# Experiment scripts: relaxed rules (one-off scripts)
+"scripts/core_text_phases/phase*.py" = ["E", "W"]
+"scripts/video_temporal/*.py" = ["E", "W"]
+"scripts/supporting_eval/*.py" = ["E", "W"]

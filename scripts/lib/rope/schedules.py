@@ -66,7 +66,7 @@ def infer_rope_base_from_config(model_path: str, fallback: float = 500000.0) -> 
         return float(fallback)
     try:
         data = json.loads(cfg.read_text(encoding="utf-8", errors="ignore"))
-    except Exception:
+    except (json.JSONDecodeError, OSError):
         return float(fallback)
     val = data.get("rope_theta")
     if val is None:
@@ -76,7 +76,7 @@ def infer_rope_base_from_config(model_path: str, fallback: float = 500000.0) -> 
             val = rs.get("rope_theta")
     try:
         out = float(val)
-    except Exception:
+    except (TypeError, ValueError):
         out = float(fallback)
     if out <= 0:
         out = float(fallback)

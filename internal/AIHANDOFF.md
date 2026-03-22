@@ -1,96 +1,102 @@
 # EVQ-Cosh AI Agent Handoff
 
-阅读顺序: Part 0 (GPU准则) → Part 1 (架构) → Part 2 (EVQ公式) → Part 3 (禁令)
-其他参考: `docs/overview/PAPER_CLAIMS_MAP.md` | `paper/main.tex` | `results/video_dit/REPORT_FINAL.md`
+参考: `docs/overview/PAPER_CLAIMS_MAP.md` | `paper/main.tex` | `results/video_dit/REPORT_FINAL.md`
 
-## Part 0: GPU 实验铁律
+---
 
-硬件: RTX 5090 (32GB) + RTX 6000 Pro (96GB), Blackwell sm_120, PyTorch ≥2.7, CUDA 12.8, bfloat16
+## Part 0: GPU实验铁律
 
-1. 必须`torch.compile(model, mode="default")`，不用=浪费30-50%算力。实测454M +40%吞吐且VRAM下降，DiT +46%。首次用default，稳定后可切max-autotune。
-2. 训练循环每步开头调用`torch.compiler.cudagraph_mark_step_begin()`，缺少则compile退化到eager。
-3. 脚本头部设`os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"`。
-4. batch size目标是吃满显存(VRAM使用率>90%)。查表一次到位: 129.6M DiT/5090/32f→bs28(~25GB), 454M/5090/L2048→micro=2 accum=5(~25GB), 750M/6000Pro/L2048→bs8-12(~60-80GB)。启动后立刻用nvidia-smi检查，VRAM<80%必须加大batch，不要浪费显存跑完全程。
-5. dtype必须bfloat16，Blackwell原生支持，不要用float16。
-6. 多run流水线(如h2h多个τ值)切换时必须彻底释放显存，否则前一个run的残留直接导致下一个OOM或显存浪费。标准流程: `model.cpu(); del model; del optimizer; del scheduler; del kv_cache; del all_tensors_on_gpu; gc.collect(); torch.cuda.empty_cache(); torch.cuda.reset_peak_memory_stats()`。每个run开始前打印`torch.cuda.memory_allocated()`确认归零。eval同理，eval完必须释放再恢复训练。
-7. 不要反复调试: 本地写代码→远程跑5步验证loss/VRAM/无报错→直接启动完整训练。禁止上传→OOM→改batch→再OOM→改compile的循环。
-8. GPU分配: ≤350M和DiT用5090，750M+和长序列eval(16K-48K)用6000Pro。
-9. 结果必须保存到JSON/log，不要只print到stdout。中间checkpoint必须有，防中断丢失。
-10. gradient accumulation解决显存不够: `loss = model(batch) / grad_accum; loss.backward()`循环后再`optimizer.step()`。
-11. 每次训练启动前必须验证数据量是否合适: 打印total_steps、tokens_per_step(=batch×seq_len)、total_tokens，确认总训练量与目标一致。训练不足导致欠拟合，训练过多浪费GPU时间。参考: 50M→50M tok, 125M→100M tok, 350M→100M tok, DiT 129.6M→15000 steps×bs×frames。
-12. 5步验证时必须同时打印: step时间(ms)、VRAM峰值(GB)、loss值、学习率、total_steps，确认全部正常再启动全量训练。VRAM峰值<总显存80%说明batch太小，必须加大。
-13. 引用第三方方法(RIFLEx/NTK/FIRE等)时，必须先阅读官方repo代码确认关键参数和实现细节，不要凭论文描述自己重写。已踩坑: RIFLEx实现漏了0.9安全系数且用L_train代替L_test选intrinsic frequency，导致结果完全错误浪费一轮eval。正确做法: clone官方repo→找到核心函数→确认所有参数含义→在我们代码中精确复现，不要"大概理解了就自己写"。
-14. eval pipeline必须有sanity check: 对比方法的绝对值必须合理(如inference-time优化方法应该比raw好，否则实现有bug)，新加的eval指标先在已知结果上验证正确性再跑新实验。如果结果违反常识(如优化方法反而让所有模型变差)，第一反应是检查实现而不是解读为"方法在此setting不work"。
+硬件: RTX 6000 Pro Blackwell 96GB (`ssh -p 23173 root@connect.bjb1.seetacloud.com`), PyTorch≥2.7, CUDA 12.8, bfloat16
 
-性能参考: 454M L=512 5090: eager 231ms/44Ktok/25.1GB → compile 165ms/62Ktok/17.6GB (+40%)。129.6M DiT 5090: eager bs=16 ~73samp/s → compile bs=28 ~108samp/s (+46%)。
+### ⚠️ VRAM计算（历次OOM根源，必须掌握）
 
-启动前checklist: torch.compile+cudagraph+expandable_segments, batch吃满显存(>90%), bf16, 5步验证(打印ms/VRAM/loss/lr/total_steps), 验证数据量, τ=d_head/√L_train, YaRN=Progressive not NTK-aware, scale=eval_len/train_len, inv_freq float64, 架构与Part1一致, 结果存JSON+checkpoint, 多run间显存彻底释放, 第三方方法对照官方repo实现不要自己重写, eval结果做sanity check(优化方法应比raw好否则有bug)。
+```
+VRAM总量 = 静态 + 激活 + LOGITS峰值
 
-## Part 1: 架构规范
+静态  = params × 12B  (bf16模型2B + bf16梯度2B + fp32优化器8B)
+          125M→1.5GB,  350M→4.2GB
 
-任何偏离=结果不可比=浪费GPU。
+LOGITS = B × seq_len × vocab × 2B   ← 不随模型大小变化！只随batch增大
+          vocab=50257(gpt2-neox)
+          B=20,L=4096 → 20×4096×50257×2 = 8.2GB
+          B=32,L=4096 → 13.2GB  ← 这是bs=32 OOM的真正原因
 
-| Tier | Params | Layers | Heads | head_dim | Hidden | FFN | Vocab |
-|------|--------|--------|-------|----------|--------|-----|-------|
-| 50M | ~50M | 6 | 8 | 64 | 512 | 2048 | 50304 |
-| 125M | ~125M | 12 | 12 | 64 | 768 | 3072 | 50304 |
-| 350M | ~350M | 24 | 16 | 64 | 1024 | 4096 | 50304 |
-| 454M | ~454M | 24 | 16 | 64 | 1024 | 4096 | 50304 |
-| 750M | ~750M | 18 | 24 | 64 | 1536 | 6144 | 50304 |
+激活   = 从同seq_len实测数据线性外推（不同seq_len不可互推！）
+```
 
-750M是18层/24头不是24层/16头。454M与350M共享架构。
+**MLA架构必须对齐业界标准（DeepSeek-V2/V3, Kimi K2）：**
 
-训练超参: 50M(lr=6e-4,bs=32,50M tok), 125M(3e-4,16,100M), 350M(2e-4,2,100M), 500M(1.5e-4,4,500M)。共用AdamW(β1=0.9,β2=0.95,wd=0.1), cosine→1e-5, tokenizer=gpt-neox-20b(50304), FineWeb-Edu, base=500000。Continued pretrain: LR=1e-5, warmup=500, micro=2, accum=5。
+| 参数 | 业界标准 | 旧配置(已废弃) |
+|------|---------|--------------|
+| d_rope | **64** | 32 |
+| d_nope | **128** | 32 |
+| v_head_dim | **128** | 64 |
+| kv_lora_rank | **512** | 128~256 |
+| K (RoPE频率数) | **32** | 16 |
+| base | **10000** | 500000 |
+| RoPE占attention | **33.3%** | 50% |
+
+**实测安全配置（直接用，不要重新估算）：**
+
+| 模型 | GPU | seq_len | bs | VRAM | ETA/run |
+|------|-----|---------|----|----|---------|
+| 50M MLA(v2) | 5090/32GB | 4096 | **2** | ~16GB | ~? |
+| 125M MLA | 96GB | 4096 | **20** | 91GB ✅ | ~100min |
+| 350M MLA | 96GB | 4096 | **12** | 95GB ✅ | ~3.5h |
+| 350M MLA | 96GB | 8192 | **5**  | 80GB ✅ | ~2.3h |
+
+**OOM时反推最大bs（不要猜）：**
+```
+max_bs = (GPU_total - M_static) / (M_used + M_req - M_static) × bs_oom × 0.9
+例: M_used=78.03, M_req=18.42, bs=24, GPU=94.97, static=1.5
+  → (94.97-1.5)/(96.45-1.5)×24×0.9 = 21.2 → 取bs=20
+```
+
+### 启动前checklist（逐项确认，缺一不可）
+
+1. `torch.compile(model, mode="reduce-overhead")` — **不是default**。**但多tau sweep必须每tau单独Python进程**（CUDA graphs跨run碎片化可达46GB，即使del model+empty_cache也无法清除）
+2. 训练loop每步第一行: `torch.compiler.cudagraph_mark_step_begin()`
+3. 脚本头: `export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`
+4. `--passkey_mix_ratio 0.0` — passkey混入导致动态shape破坏CUDA graphs；passkey可后续100步微调补
+5. batch_size按上表，不要随意调整
+6. 开GPU后**直接运行训练**，不要跑ls/nvidia-smi等诊断命令（浪费付费GPU时间）
+7. 用`nohup ... > log 2>&1 &`后台跑，`tail -f log`查看进度
+
+### 其他规则
+
+- 多run间彻底释放显存: `del model,optimizer; gc.collect(); torch.cuda.empty_cache()`
+- 结果存JSON+checkpoint，中间50%/75%必须保存，防中断丢失
+- 先seed=42单run验证方向，确认后再多seed
+- 第三方方法必须对照官方repo逐行确认（RIFLEx踩坑：漏0.9系数+L_train/L_test用错）
+- eval结果违反常识（优化方法反而更差）→第一反应是检查bug，不是解读
+- work_dir必须在数据盘`/root/autodl-tmp/`，不要放系统盘（30GB容易满）
+
+---
+
+## Part 1: 架构规范（任何偏离=结果不可比）
+
+| Tier | Params | Layers | Heads | head_dim | Hidden | FFN |
+|------|--------|--------|-------|----------|--------|-----|
+| 125M | ~125M | 12 | 12 | 64 | 768 | 3072 |
+| 350M | ~350M | 24 | 16 | 64 | 1024 | 4096 |
+| 750M | ~750M | **18** | 24 | 64 | 1536 | 6144 |
+
+Vocab=50304(所有tier)。750M是18层/24头，不是24层/16头。
+
+训练超参: AdamW(β1=0.9,β2=0.95,wd=0.1), cosine→1e-5, bf16, base=500000
+- 125M: lr=3e-4, bs=20(L=4096)
+- 350M: lr=2e-4, bs=12(L=4096)
+- 续训(continued pretrain): lr=1e-5, warmup=500
+
+---
 
 ## Part 2: EVQ-Cosh 公式
-
-```
-φ_k(τ) = 1 - (1/τ) × arcsinh((1 - u_k) × sinh(τ))
-u_k = (k + 0.5) / K,  K = head_dim/2 = 32
-inv_freq_k = base^(-φ_k(τ)),  base = 500,000
-τ* = d_head / √L_train → L=2048:τ≈1.414, L=256:τ=4.0, L=512:τ≈2.828
-```
-
-规范实现 `run_evq_sweep.py:141-157`(midpoint u_k)。`schedules.py`用u_k=k/n无midpoint，与论文不一致，以run_evq_sweep.py为准。
-
-### 350M MLA 实验配置速查 (Blackwell 96GB)
-
-模型: 432.2M params, MLA(d_rope=32, 16 freqs, kv_rank=256), head_dim=64, 24层16头, base=500000
-
-| seq_len | train_tokens | batch_size | compile | steps | VRAM | tau | ETA/run |
-|---------|-------------|------------|---------|-------|------|-----|---------|
-| **8192** | 500M | 5 | yes | 12,207 | ~80GB | 0.0, 1.414 | ~2.3h |
-| **4096** | 1B | 12 | yes | 20,345 | ~95GB | 0.0, 1.414, 2.0 | ~3.5h |
-| **2048** | 500M | 25* | yes | ~10,000* | ~95GB* | 0.0, 2.0 | ~1h* |
-
-*2048 配置为估算值，尚未实验验证。
-
-tau 经验规律 (d_rope=32, base=500000, MLA):
-- L=8192 → tau*=1.414 (已验证，-31.1% @16K, 3 seeds)
-- L=4096 → tau*∈[1.414, 2.0] (实验中)
-- L=2048 → tau*≈2.0 (待验证，外推自 tau* 随 L 递减趋势)
-
-通用公式: tau* ≈ K_t / √L_train (AR 文本), tau*_DiT ≈ 0.53 × K_t / √T_train (视频 DiT)
-
-数据:
-- 8K 实验: FineWeb-Edu 500M tokens (`/root/autodl-tmp/data/8k_mixed/`)
-- 4K 实验: Pile-uncopyrighted 60% + OpenWebText 40%, 1B tokens (`/root/autodl-tmp/data/1b_diverse_4k/`)
-
-启动命令模板:
-```bash
-/root/miniconda3/bin/python -u run_gqa_evq_experiment.py \
-    --tier 350m --taus 0.0,1.414 --seeds 42,43,88 \
-    --attn_type mla --d_rope 32 --batch_size <见上表> \
-    --compile --dataset fineweb-edu --seq_len <见上表> \
-    --work_dir /root/autodl-tmp/<experiment_dir> \
-    --train_tokens <见上表> --eval_16k --resume
-```
 
 ```python
 def evq_cosh_inv_freq(head_dim, tau, base=500000.0):
     K = head_dim // 2
     idx = torch.arange(K, dtype=torch.float64)  # 必须float64
-    u = (idx + 0.5) / float(K)
+    u = (idx + 0.5) / float(K)                  # midpoint，不是k/n
     if abs(tau) < 1e-8:
         phi = u
     else:
@@ -98,115 +104,66 @@ def evq_cosh_inv_freq(head_dim, tau, base=500000.0):
     return torch.pow(torch.tensor(float(base), dtype=torch.float64), -phi).float()
 ```
 
+**τ* 经验值 (d_rope=32, base=500000, MLA):**
+- L=4096 → τ*=**2.5** (MLA v2, K=32, base=10000, 50M sweep验证: 4K -3.7%, 8K -6.7%, 16K -14.5%。τ=1.414也赢但幅度小。EVQ正确pattern完全恢复)
+- L=8192 → τ*=**1.414** （3-seed验证，PPL@16K -31.1%）
+- L=2048 → τ*≈2.0 （待验证）
+
+通用公式: `τ*(L,b,K) = max(1.20 + 0.45×x, 4/√K)`，`x = 1 - ln(L/2π)/ln(b)`
+DiT修正: `τ*_DiT ≈ 0.53 × τ*_AR`
+
+**4K模型 YaRN FT结果 (scale=2, seed=42):**
+
+| Method | PPL@8K | PPL@16K |
+|--------|-------:|--------:|
+| GEO+YaRN+FT | 31.8 | 97.0 |
+| **EVQ+YaRN+FT** | **31.0** | 115.3 |
+
+EVQ+YaRN+FT@8K比GEO好**-2.5%**（超线性融合）。GEO在16K以上更优。
+
+**YaRN FT配置（已验证）:**
+- lr=2e-6（不是5e-5！5e-5灾难性遗忘）, warmup=50, 500步全参数
+- 混合数据: 50%原始长度 + 50%目标长度（防遗忘，关键）
+- batch=4(8K), batch=2(16K)；FT数据用rechunked训练数据，不用test_*.pt（太少）
+
+**数据 (`/root/autodl-tmp/data/`):**
+
+| 数据集 | seq_len | tokens | 备注 |
+|--------|---------|--------|------|
+| 1b_diverse_4k | 4096 | 1B | seed=42, buf=10k |
+| 1b_diverse_4k_v2 | 4096 | 1B | seed=2024, buf=100k，非重叠 |
+| 1b_diverse_4k_v3 | 4096 | 1B | seed=3000, buf=200k，准备中 |
+| 8k_mixed/b/c | 8192 | 500M×3 | FineWeb/SlimPajama/OWT |
+| train_750m_clean | 2048/4096 | 1.47B | FineWeb-Edu |
+
+测试集: `data/train_750m_clean/test_{4096,8192,16384,32768,49152}.pt`
+
+---
+
 ## Part 3: 禁令
 
-1. 不要用NTK-aware YaRN，破坏EVQ频率结构。用Progressive per-channel ramp，参考phase14c_multiscale_evq_yarn.py。
-2. 不要在Geo checkpoint上直接换EVQ inv_freq，必须从头训练或continued-pretrain(phase11e)。
-3. 不要用τ=0.707用于我们自己的454M模型(L=2048→τ*=1.414)，0.707≈Geo无差异。但对外部模型如LLaMA-3.2-1B(head_dim=64, L=8192)，τ*=64/√8192=0.707是正确的理论最优值。τ*=d_head/√L_train，L_train取模型的original_max_position_embeddings。
-4. 不要用max-autotune做首次运行，先default确认逻辑。
-5. eval改seq_len必须同步YaRN scale=eval_len/train_len。
-6. 不要混用tokenizer，统一gpt-neox-20b(50304)。
-7. 纯文本训练不会passkey 100%，需混入5-10% passkey数据。
-8. 454M QuALITY不要用accuracy做指标(容量地板~25%≈随机)，用Gold NLL(-30.1%@8K)。
-9. DiT禁止跨run比较，CUDA非确定性造成70%+虚假差异，必须head-to-head同run对比。
-10. DiT不要用τ*_AR=K/√T，中频抽空导致位置指纹崩坏。τ*_DiT≈0.53×K_t/√T_train，K_t=16,T=32→τ≈1.5。
-11. Power-Shift族已证伪(α=0.25差22x)，DiT仍用Cosh。
-12. base=10000+K_t=16+T=32产生死通道(θ_k×Δ≈0→相变)，注意base_t选择。
-13. 实验work_dir必须放数据盘(`/root/autodl-tmp/`)，不要放系统盘(`/root/`)。系统盘30G容易满，每个DiT实验~2GB(checkpoints+npy)。命令示例: `--work_dir /root/autodl-tmp/hybrid-rope/results/video_dit/xxx`。
-14. 不要凭论文描述自己重写第三方方法，必须对照官方代码逐行确认。已踩坑: RIFLEx自己实现漏了0.9系数+用错L_train/L_test，导致结果完全错误。RIFLEx官方实现: `freqs[k-1] = 0.9 * 2π / L_test`（注意是L_test不是L_train，k由官方intrinsic frequency detection选出，不要自己猜）。
-15. eval结果必须做sanity check: 如果一个公认有效的inference-time方法(RIFLEx/YaRN)让所有模型都变差，第一反应是检查实现bug，不是解读为"方法不适用"。
-16. **OOM假阳性**: RTX 5090 32GB跑1.24B全参fp32 AdamW + 8192 seq实测28GB可行，但首次启动可能因CUDA内存碎片触发OOM（lm_head logits需分配1.96GB连续空间）。遇到OOM先重试一次（kill进程彻底释放显存后再启动），不要立刻改batch/seq_len。已两次出现"首次OOM重试成功"的情况。根因是PyTorch内存分配器碎片化，`expandable_segments:True`可缓解但不完全消除。
-17. **VRAM估算必须包含logits**: vocab_size × seq_len × dtype_bytes。LLaMA-3.2-1B: 128000 × 8192 × 2(bf16) = 2.0GB。这是forward pass的峰值开销，gradient checkpointing不省这部分。总VRAM = 模型(bf16) + 优化器(fp32 master+m+v) + 梯度(bf16) + 激活(grad_ckpt) + logits峰值。
+1. YaRN必须用Progressive per-channel ramp，不用NTK-aware（破坏EVQ频率结构）
+2. 不要在GEO checkpoint上直接换EVQ inv_freq，必须从头训练
+3. τ=0.707用于我们自己454M模型(L=2048)是错的(≈GEO无差异)；LLaMA-3.2-1B(L=8192)的τ*=64/√8192=0.707才是对的
+4. eval改seq_len必须同步YaRN scale=eval_len/train_len
+5. DiT禁止跨run比较（CUDA非确定性造成70%+虚假差异），必须head-to-head同run
+6. DiT用τ*_DiT≈0.53×K_t/√T_train，不要用AR公式（中频抽空导致崩坏）
+7. passkey训练必须`--passkey_mix_ratio 0.0`+事后微调，不要混入主训练
+8. 第三方方法必须对照官方repo（不要自己重写）
 
-## Part 4: Wan2.1 视频微调避坑 (Phase 17)
+---
 
-### 模型选型坑
+## Part 4: Wan2.1 (Phase 17，已降优先级)
 
-| 模型 | RoPE | Flow-matching | 参数量 | 结论 |
-|------|:---:|:---:|--------|------|
-| CogVideoX-2B | ❌ sinusoidal | ❌ DDPM | 2B | **废弃**: `use_rotary_positional_embeddings=false`，monkey-patch无效 |
-| CogVideoX-5B | ✅ | ❌ DDPM | 5B | 可用但非FM，推理慢(50-100步) |
-| HunyuanVideo | ✅ | ✅ | 13B | 太大，训练慢 |
-| **Wan2.1-1.3B** | ✅ | ✅ rectified flow | 1.3B | **选定**: FM+RoPE+小模型，推理快(20-30步) |
+详见 `scripts/video_temporal/wan21_raw_train.py`。关键坑：
+- 用原始`WanModel`不用diffusers（服务器无diffusers格式）
+- forward输入是List[Tensor]不是batch tensor
+- 分辨率必须288×288（280不行，35×35 patch无法整除）
+- LoRA targets: `"q","k","v","o"` 不是 `"to_q"...`
+- bs=1@288×288=79.8GB，bs>1需gradient checkpointing
 
-选型前必须验证: (1) 模型config中RoPE是否启用 (2) 调度器类型(FM vs DDPM) (3) 参数量能否fit显存。
-
-### Wan2.1 原始模型 vs diffusers
-
-diffusers `WanPipeline` 需要 diffusers 格式模型(含 `model_index.json`)。服务器上只有原始格式，不要浪费时间下载/转换。直接用原始 `WanModel`:
-
-```python
-sys.path.insert(0, "/root/autodl-tmp/wan21/Wan2.1")  # wan module
-from wan.modules.model import WanModel
-model = WanModel.from_pretrained("/root/autodl-tmp/wan21")  # 传目录不是文件
-```
-
-关键接口差异:
-- **forward**: `model(x=List[Tensor], t=Tensor, context=List[Tensor], seq_len=int)` — x 和 context 是**列表**不是 batch tensor
-- **RoPE**: `model.freqs` 是 complex tensor `[1024, 64]`，前22列=temporal，后42=spatial(21h+21w)
-- **LoRA targets**: `"q", "k", "v", "o"` 不是 `"to_q", "to_k", "to_v", "to_out.0"`
-- **VAE encode**: `vae.encode([tensor])` 输入是列表，每个 `[C,T,H,W]`
-
-### 分辨率与序列长度
-
-VAE stride=(4,8,8), patch_size=(1,2,2)。分辨率必须被 8 整除且 latent 空间被 2 整除:
-
-| 分辨率 | latent H×W | patch后 | seq_len (T=21) | step time (bs=1) | VRAM |
-|--------|-----------|---------|----------------|-------------------|------|
-| 480×832 | 60×104 | 30×52 | 32,760 | ~45s | 87GB (bs=8+ckpt) |
-| **288×288** | 36×36 | 18×18 | **6,804** | **2.8s** | 79.8GB (bs=1) |
-| 280×280 | 35×35 | ❌不整除 | — | — | — |
-
-**280 不行**: 280/8=35(奇数), patch_size=2 无法整除。用 288。
-
-### 显存坑
-
-- bs=4 @ 288×288 无 gradient checkpointing: **OOM** (>96GB)
-- bs=2 @ 288×288 无 gradient checkpointing: **OOM** (>95GB)
-- bs=1 @ 288×288 无 gradient checkpointing: **79.8GB** ✓
-- 之前 480×832 bs=8 + gradient checkpointing: 87.7GB ✓ 但 45s/step
-
-要 bs>1 必须开 gradient checkpointing，但会拖慢每步速度。
-
-### 编码坑
-
-1. **T5 必须加载到 GPU**: 96GB 显存放 T5(11GB)+VAE(0.5GB) 绰绰有余，不要照抄旧脚本的 CPU 加载
-2. **文本嵌入长度不一致**: 不同 caption 产生不同长度的 T5 embedding，必须 pad 到 max_length 再 stack
-3. **PYTHONPATH**: `wan` 模块在 `/root/autodl-tmp/wan21/Wan2.1/`，必须加到 PYTHONPATH
-
-### temporal RoPE 修改
-
-```python
-# model.freqs: complex [1024, 64], 前22列是temporal
-K_t = 22  # t_dim=44, 22 pairs
-positions = torch.arange(1024, dtype=torch.float64)
-raw = torch.outer(positions, inv_freq.double())
-new_freqs = torch.polar(torch.ones_like(raw), raw)
-model.freqs[:, :K_t] = new_freqs
-model.freqs = model.freqs.to(device)
-```
-
-注意: Wan2.1 base=10000 + K_t=22 → 10/22 通道死/近死(45.5%)。τ*_DiT = 0.53 × 22/√13 ≈ 3.2。
-
-### 训练配置 (已验证)
-
-```
-Model: Wan2.1-T2V-1.3B, 1419M params
-Resolution: 288×288, 81 frames
-Latent: [16, 21, 36, 36], seq_len=6804
-LoRA rank=16, targets=["q","k","v","o"], 11.8M trainable
-bs=1, lr=1e-4, AdamW(0.9,0.95), cosine schedule
-VRAM: 79.8GB, step time: 2.8s/step
-500 steps GEO + 500 steps EVQ ≈ 47 min
-```
-
-### 服务器操作铁律
-
-16. 永远不要在付费GPU服务器上调试。所有代码在本地写好、检查好，一次传上去跑。
-17. 每次上传脚本前: (a) 确认所有 import 路径正确 (b) 确认 device=cuda (c) 确认 tensor shape 匹配 (d) 确认 batch_size 不会 OOM
-18. 用 `nohup python -u script.py > /tmp/log 2>&1 &` 后台跑，`python -u` 保证 unbuffered 输出
-19. 不要用 sleep+poll 检查进度，直接 `tail /tmp/log`
+---
 
 ## 关键文件
 
-论文: `paper/main.tex` | 映射: `docs/overview/PAPER_CLAIMS_MAP.md` | sweep脚本: `scripts/core_text_phases/run_evq_sweep.py` | RoPE库: `scripts/lib/rope/schedules.py` | DiT报告: `results/video_dit/REPORT_FINAL.md` | DiT理论: `DiT_frequency_allocation_analysis.md` | DiT脚本: `scripts/video_temporal/run_dit_temporal.py` | Wan2.1训练: `scripts/video_temporal/wan21_raw_train.py`
+`paper/main.tex` | `scripts/core_text_phases/run_gqa_evq_experiment.py` | `scripts/core_text_phases/run_evq_sweep.py` | `results/video_dit/REPORT_FINAL.md`

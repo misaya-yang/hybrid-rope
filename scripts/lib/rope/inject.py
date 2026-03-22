@@ -31,14 +31,11 @@ def clear_rotary_cache(module: torch.nn.Module) -> None:
     ):
         if not hasattr(module, attr):
             continue
-        try:
-            cur = getattr(module, attr)
-            if isinstance(cur, (int, float)):
-                setattr(module, attr, 0)
-            else:
-                setattr(module, attr, None)
-        except Exception:
-            pass
+        cur = getattr(module, attr)
+        if isinstance(cur, (int, float)):
+            setattr(module, attr, 0)
+        else:
+            setattr(module, attr, None)
 
 
 def apply_inv_freq_inplace(
