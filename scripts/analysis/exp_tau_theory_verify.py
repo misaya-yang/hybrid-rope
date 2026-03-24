@@ -3,15 +3,15 @@
 τ Theory Verification Experiment — M4 Max Overnight Run
 ========================================================
 
-Verifies the core predictions of the Softmax Transport theory:
-  1. τ* = d_head/√L is optimal (or near-optimal) at each L
-  2. Habitable zone: τ ∈ [1.0, 2.5] always works
-  3. τ=0 (geometric) is suboptimal at extrapolation
-  4. Floor effect: at large L, τ_floor ≈ 1.4 overrides d/√L
+Verifies the NOVEL prediction that existing data does NOT cover:
+
+  >>> At L=4096, d_head=64: the OLD formula gives τ*=1.0,
+  >>> the NEW formula gives τ*=1.4 (floor kicks in).
+  >>> This experiment DISTINGUISHES the two.
 
 Design:
-  Phase A: L=512 sweep  (8 taus × 1 seed, ~2.5h on M4 Max)
-  Phase B: L=2048 sweep (6 taus × 1 seed, ~2h on M4 Max)
+  Phase A: L=4096 sweep  (7 taus, ~3h) — THE FLOOR TEST
+  Phase B: L=2048 sweep  (4 taus, ~1.5h) — confirmation
   Total: ~4.5h — fits well within one overnight session.
 
 Usage:
@@ -64,26 +64,30 @@ MODEL_CFG = dict(
     intermediate_size=3072,
 )
 
-# Phase A: L=512 — formula predicts τ* = 64/√512 = 2.83
+# Phase A: L=4096 — THE FLOOR TEST (highest value)
+# Old formula: d/√L = 64/√4096 = 1.0
+# New formula: max(d/√L, 1.4) = 1.4  (floor kicks in!)
+# If τ=1.4 beats τ=1.0 → floor theory VALIDATED
 PHASE_A = dict(
-    name="L512",
-    seq_len=512,
-    train_tokens=50_000_000,
-    batch_size=16,           # M4 Max can handle 16 at L=512
-    lr=6e-4,
-    taus=[0.0, 0.5, 1.0, 1.5, 2.0, 2.83, 3.5, 5.0],
-    eval_lengths=[512, 1024, 2048, 4096, 8192],
-    data_source_cache=str(ROOT / "results/core_text/phase18_base_sweep/data_cache"),
+    name="L4096_floor_test",
+    seq_len=4096,
+    train_tokens=99_999_744,   # full 100M tokens available
+    batch_size=2,              # M4 Max 36GB at L=4096
+    lr=3e-4,
+    taus=[0.0, 0.5, 0.7, 1.0, 1.4, 2.0, 3.0],
+    eval_lengths=[4096, 8192, 16384, 32768],
+    data_source_cache=str(ROOT / "results/theory/tau_sweep_verify/data_cache"),
 )
 
-# Phase B: L=2048 — formula predicts τ* = 64/√2048 = 1.41
+# Phase B: L=2048 — confirmation at the transition point
+# d/√L = 1.41 ≈ 1.4 floor → both formulas agree here
 PHASE_B = dict(
-    name="L2048",
+    name="L2048_confirm",
     seq_len=2048,
-    train_tokens=50_000_000,
-    batch_size=4,            # M4 Max 36GB limit at L=2048
+    train_tokens=99_999_744,   # full 100M tokens available
+    batch_size=4,              # M4 Max 36GB at L=2048
     lr=3e-4,
-    taus=[0.0, 0.5, 1.0, 1.41, 2.0, 3.0],
+    taus=[0.0, 1.0, 1.41, 2.0],
     eval_lengths=[2048, 4096, 8192, 16384],
     data_source_cache=str(ROOT / "results/theory/tau_sweep_verify/data_cache"),
 )
