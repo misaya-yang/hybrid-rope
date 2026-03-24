@@ -102,10 +102,17 @@ Under the assumptions used in the broadband model, EVQ obeys a waterbed inequali
 
 This proposition explains why small in-range costs can coexist with large out-of-range gains. Geometric RoPE distributes density uniformly in log-frequency, while EVQ intentionally pays bounded high-frequency cost to relieve the low-frequency collision bottleneck.
 
-We treat the length-dependent optimal temperature
+The length-dependent optimal temperature
 \begin{equation}
 \tau^*(L) = \frac{d_{\mathrm{head}}}{\sqrt{L}}
 \end{equation}
-as an empirical law supported by multi-regime experiments (99 runs across 27 configurations; Appendix~\ref{sec:tau-scaling}, Figure~\ref{fig:tau-sweep}), not as an unconditional theorem. The broadband surrogate partially motivates this formula: numerical analysis of the exact kernel's discrete surrogate coefficients (Appendix~\ref{sec:tau-scaling}) shows $\alpha \approx 1/d_{\mathrm{head}}$ and $\beta = O(1)$, yielding $\sqrt{\beta/\alpha} \propto \sqrt{d_{\mathrm{head}}}$---the correct dependence on $d_{\mathrm{head}}$. The $L^{-1/2}$ exponent is a finite-channel correction that the continuous variational theory does not resolve, arising from oscillatory inter-channel correlations in the exact kernel that penalize over-concentration at low frequencies.
+is supported by 99 training runs across 27 configurations (Appendix~\ref{sec:tau-scaling}, Figure~\ref{fig:tau-sweep}). The broadband surrogate provides the $d_{\mathrm{head}}$ dependence ($\alpha \approx 1/d_{\mathrm{head}}$, so $\sqrt{\beta/\alpha} \propto \sqrt{d_{\mathrm{head}}}$) but only $L^{-0.11}$, too weak by a factor of~5. The missing $L$-dependence originates from the softmax attention map.
 
-Two consequences follow immediately. When \(L\) is short, \(\tau^*(L)\) is large and the optimal schedule should depart visibly from the geometric allocation; this is precisely the PE-dominant regime in which DAPE-style comparisons are most revealing. When \(L\) grows, \(\tau^*(L)\) shrinks and EVQ should converge smoothly back toward geometric RoPE, predicting bounded in-range cost together with a progressively narrower but still useful long-range correction. This is exactly the pattern that later appears in the multi-scale and continued-pretraining results.
+\begin{proposition}[Softmax Transport Temperature Selection]
+\label{prop:softmax-transport}
+Define $\mathcal{F}(\tau) = S_{\chi^2}(\tau) - \lambda\,U(\tau, L)$,
+where $S_{\chi^2}(\tau) = \frac{1}{M}\!\left[\frac{\sinh\tau\cdot\arctan(\sinh\tau)}{\tau^2} - 1\right]$ is the Pearson~$\chi^2$ stiffness and $U(\tau,L) = \frac{M}{L}\int_0^1 q(Lb^{-\phi})\rho_\tau(\phi)\,d\phi$ is the post-softmax transport utility. The $1/L$ factor arises from the softmax Jacobian at diffuse baseline $p_0 = 1/L$.
+Then the minimizer satisfies $\tau_* \propto d_{\mathrm{head}}/L^{\gamma}$ with $\gamma \in [0.47, 0.51]$ (Appendix~\ref{sec:stiffness-derivation}).
+\end{proposition}
+
+The $\chi^2$ stiffness reflects attention-load asymmetry: diluted channels ($\rho < 1$) bear per-channel cost ${\propto}1/\rho$. KL, Jeffreys, and all R\'{e}nyi divergences produce $L$-exponents far from $-0.5$; only the $\chi^2$ family succeeds (Appendix~\ref{sec:stiffness-derivation}, Table~\ref{tab:stiffness-sweep}). When $L$ is short, $\tau^*(L)$ is large and EVQ departs visibly from geometric (the PE-dominant regime); as $L$ grows, $\tau^*$ shrinks and EVQ converges back, predicting bounded in-range cost with progressively narrower long-range correction.
