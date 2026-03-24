@@ -51,45 +51,84 @@ from run_evq_sweep import (
 # ══════════════════════════════════════════════════════════════════════
 
 SEED = 42
-D_HEAD = 64
 BASE = 500_000.0
+DATA_CACHE = str(ROOT / "results/theory/tau_sweep_verify/data_cache")
 
-# 125M architecture
-MODEL_CFG = dict(
-    vocab_size=50304,
-    hidden_size=768,
-    num_layers=12,
-    num_heads=12,
-    head_dim=D_HEAD,
-    intermediate_size=3072,
-)
-
-# Phase A: L=4096 — THE FLOOR TEST (highest value)
+# ── Phase A: L=4096, d_head=64 — THE FLOOR TEST (highest value) ──
 # Old formula: d/√L = 64/√4096 = 1.0
 # New formula: max(d/√L, 1.4) = 1.4  (floor kicks in!)
 # If τ=1.4 beats τ=1.0 → floor theory VALIDATED
 PHASE_A = dict(
-    name="L4096_floor_test",
+    name="L4096_d64_floor",
     seq_len=4096,
-    train_tokens=99_999_744,   # full 100M tokens available
-    batch_size=2,              # M4 Max 36GB at L=4096
+    train_tokens=99_999_744,
+    batch_size=2,
     lr=3e-4,
     taus=[0.0, 0.5, 0.7, 1.0, 1.4, 2.0, 3.0],
     eval_lengths=[4096, 8192, 16384, 32768],
-    data_source_cache=str(ROOT / "results/theory/tau_sweep_verify/data_cache"),
+    data_source_cache=DATA_CACHE,
+    seed=42,
+    model_cfg=dict(
+        vocab_size=50304, hidden_size=768, num_layers=12,
+        num_heads=12, head_dim=64, intermediate_size=3072,
+    ),
 )
 
-# Phase B: L=2048 — confirmation at the transition point
-# d/√L = 1.41 ≈ 1.4 floor → both formulas agree here
+# ── Phase B: L=2048, d_head=64 — confirmation at transition ──
 PHASE_B = dict(
-    name="L2048_confirm",
+    name="L2048_d64_confirm",
     seq_len=2048,
-    train_tokens=99_999_744,   # full 100M tokens available
-    batch_size=4,              # M4 Max 36GB at L=2048
+    train_tokens=99_999_744,
+    batch_size=4,
     lr=3e-4,
     taus=[0.0, 1.0, 1.41, 2.0],
     eval_lengths=[2048, 4096, 8192, 16384],
-    data_source_cache=str(ROOT / "results/theory/tau_sweep_verify/data_cache"),
+    data_source_cache=DATA_CACHE,
+    seed=42,
+    model_cfg=dict(
+        vocab_size=50304, hidden_size=768, num_layers=12,
+        num_heads=12, head_dim=64, intermediate_size=3072,
+    ),
+)
+
+# ── Phase C: L=2048, d_head=32 — SECOND FLOOR TEST, bigger gap ──
+# d/√L = 32/√2048 = 0.707 (WAY below floor)
+# τ_floor = 4/√K = 4/√16 = 1.0
+# max(d/√L, 1.4) = 1.4
+# Gap between old (0.71) and new (1.4) is 2× — very decisive
+# Also tests K=16, the MLA-relevant regime
+PHASE_C = dict(
+    name="L2048_d32_floor",
+    seq_len=2048,
+    train_tokens=99_999_744,
+    batch_size=4,
+    lr=3e-4,
+    taus=[0.0, 0.5, 0.71, 1.0, 1.4, 2.0],
+    eval_lengths=[2048, 4096, 8192, 16384],
+    data_source_cache=DATA_CACHE,
+    seed=42,
+    model_cfg=dict(
+        vocab_size=50304, hidden_size=768, num_layers=12,
+        num_heads=24, head_dim=32, intermediate_size=3072,  # 24 heads × 32 = 768
+    ),
+)
+
+# ── Phase D: Seed=137 replication of Phase A critical points ──
+# Error bars on the decisive τ=1.0 vs τ=1.4 comparison
+PHASE_D = dict(
+    name="L4096_d64_seed137",
+    seq_len=4096,
+    train_tokens=99_999_744,
+    batch_size=2,
+    lr=3e-4,
+    taus=[0.0, 1.0, 1.4],
+    eval_lengths=[4096, 8192, 16384, 32768],
+    data_source_cache=DATA_CACHE,
+    seed=137,
+    model_cfg=dict(
+        vocab_size=50304, hidden_size=768, num_layers=12,
+        num_heads=12, head_dim=64, intermediate_size=3072,
+    ),
 )
 
 RESULTS_DIR = ROOT / "results" / "theory" / "tau_theory_verify"
@@ -106,21 +145,22 @@ def set_seed(seed: int):
         torch.cuda.manual_seed_all(seed)
 
 
-def build_model(tau: float, seq_len: int) -> GPT:
-    """Build 125M model with given τ."""
+def build_model(tau: float, seq_len: int, model_cfg: dict, seed: int) -> GPT:
+    """Build model with given τ and architecture config."""
+    d_head = model_cfg["head_dim"]
     cfg = dict(
-        **MODEL_CFG,
+        **model_cfg,
         max_position_embeddings=max(seq_len * 8, 16384),
         rope_base=BASE,
     )
-    set_seed(SEED)
+    set_seed(seed)
     model = GPT(**cfg)
 
     # Inject EVQ frequencies
+    K = d_head // 2
     if abs(tau) > 1e-8:
-        inv_freq = evq_cosh_inv_freq(D_HEAD, tau, BASE)
+        inv_freq = evq_cosh_inv_freq(d_head, tau, BASE)
     else:
-        K = D_HEAD // 2
         inv_freq = torch.pow(
             torch.tensor(BASE, dtype=torch.float64),
             -torch.arange(K).float() / K,
@@ -166,7 +206,9 @@ def train_one_run(
 ) -> dict:
     """Train one model and return results dict."""
     seq_len = phase_cfg["seq_len"]
-    tag = f"tau{tau:.2f}_L{seq_len}"
+    seed = phase_cfg.get("seed", SEED)
+    d_head = phase_cfg["model_cfg"]["head_dim"]
+    tag = f"tau{tau:.2f}_L{seq_len}_d{d_head}_s{seed}"
     result_file = run_dir / f"{tag}.json"
 
     # Skip if already completed
@@ -176,8 +218,8 @@ def train_one_run(
             return json.load(f)
 
     print(f"\n{'='*60}")
-    print(f"  Training: τ={tau:.2f}, L={seq_len}")
-    tau_formula = D_HEAD / math.sqrt(seq_len)
+    print(f"  Training: τ={tau:.2f}, L={seq_len}, d_head={d_head}, seed={seed}")
+    tau_formula = d_head / math.sqrt(seq_len)
     print(f"  Formula τ* = d/√L = {tau_formula:.3f}")
     print(f"{'='*60}")
 
@@ -193,9 +235,9 @@ def train_one_run(
     val_data = load_val(cache_dir, max_tokens=5_000_000)
 
     # Build model
-    model = build_model(tau, seq_len).to(device)
+    model = build_model(tau, seq_len, phase_cfg["model_cfg"], seed).to(device)
     n_params = sum(p.numel() for p in model.parameters()) / 1e6
-    print(f"  Model: {n_params:.1f}M params, device={device}")
+    print(f"  Model: {n_params:.1f}M params, d_head={d_head}, device={device}")
 
     # Optimizer
     optimizer = torch.optim.AdamW(
@@ -272,9 +314,9 @@ def train_one_run(
         tau=tau,
         tau_formula=round(tau_formula, 4),
         seq_len=seq_len,
-        d_head=D_HEAD,
+        d_head=d_head,
         base=BASE,
-        seed=SEED,
+        seed=seed,
         train_tokens=total_tokens,
         train_time_min=round(train_time / 60, 1),
         final_train_loss=round(float(np.mean(step_losses[-50:])), 4),
@@ -307,7 +349,8 @@ def summarize_phase(results: list[dict], phase_name: str):
         return
 
     seq_len = results[0]["seq_len"]
-    tau_formula = D_HEAD / math.sqrt(seq_len)
+    d_head = results[0]["d_head"]
+    tau_formula = d_head / math.sqrt(seq_len)
     eval_lens = sorted(results[0]["ppls"].keys(), key=int)
 
     print(f"\n{'='*72}")
@@ -380,8 +423,10 @@ def summarize_phase(results: list[dict], phase_name: str):
 
 def main():
     parser = argparse.ArgumentParser(description="τ Theory Verification")
-    parser.add_argument("--phase", choices=["A", "B", "AB"], default="AB",
-                        help="A=L512, B=L2048, AB=both (default)")
+    parser.add_argument("--phase", default="ABCD",
+                        help="Any combo of A/B/C/D (default=ABCD). "
+                             "A=L4096 floor, B=L2048 confirm, "
+                             "C=d32 floor, D=seed137 replication")
     parser.add_argument("--dry-run", action="store_true",
                         help="Print plan only, don't train")
     parser.add_argument("--tokens", type=int, default=None,
@@ -399,28 +444,32 @@ def main():
 
     phases = []
     if "A" in args.phase:
-        phases.append(("Phase_A_L512", PHASE_A))
+        phases.append(("Phase_A: L4096 d64 FLOOR TEST", PHASE_A))
     if "B" in args.phase:
-        phases.append(("Phase_B_L2048", PHASE_B))
+        phases.append(("Phase_B: L2048 d64 confirm", PHASE_B))
+    if "C" in args.phase:
+        phases.append(("Phase_C: L2048 d32 FLOOR TEST #2", PHASE_C))
+    if "D" in args.phase:
+        phases.append(("Phase_D: L4096 d64 seed137", PHASE_D))
 
     # Summary
     total_runs = sum(len(p["taus"]) for _, p in phases)
     print(f"\n{'='*72}")
     print(f"τ THEORY VERIFICATION EXPERIMENT")
     print(f"{'='*72}")
-    print(f"  Model: 125M (d_head={D_HEAD}, 12L, 12H)")
-    print(f"  Base: {BASE:.0f}")
-    print(f"  Seed: {SEED}")
+    print(f"  Model: 125M, Base: {BASE:.0f}")
     print(f"  Total runs: {total_runs}")
 
     for name, cfg in phases:
         tokens = args.tokens or cfg["train_tokens"]
-        tau_f = D_HEAD / math.sqrt(cfg["seq_len"])
+        d_h = cfg["model_cfg"]["head_dim"]
+        n_h = cfg["model_cfg"]["num_heads"]
+        tau_f = d_h / math.sqrt(cfg["seq_len"])
         print(f"\n  {name}:")
-        print(f"    L = {cfg['seq_len']}, formula τ* = {tau_f:.3f}")
+        print(f"    L={cfg['seq_len']}, d_head={d_h}, {n_h}H, seed={cfg.get('seed', SEED)}")
+        print(f"    d/√L = {tau_f:.3f}, max(d/√L, 1.4) = {max(tau_f, 1.4):.3f}")
         print(f"    τ sweep: {cfg['taus']}")
-        print(f"    {tokens/1e6:.0f}M tokens, batch_size={cfg['batch_size']}")
-        print(f"    Eval: {cfg['eval_lengths']}")
+        print(f"    {tokens/1e6:.0f}M tokens, bs={cfg['batch_size']}, eval={cfg['eval_lengths']}")
 
     if args.dry_run:
         print("\n  [DRY RUN] — exiting without training.")
@@ -458,11 +507,13 @@ def main():
             all_results.append(json.load(fh))
 
     if all_results:
-        print(f"\n  {'L':>6s} | {'τ*_formula':>10s} | {'τ*_best':>8s} | {'gap':>6s} | {'verdict':>10s}")
-        print("  " + "-" * 50)
-        for sl in sorted(set(r["seq_len"] for r in all_results)):
-            phase_r = [r for r in all_results if r["seq_len"] == sl]
-            tau_f = D_HEAD / math.sqrt(sl)
+        print(f"\n  {'d':>4s} {'L':>6s} {'seed':>5s} | {'d/√L':>6s} {'max()':>6s} | {'τ*_best':>8s} | {'verdict':>10s}")
+        print("  " + "-" * 60)
+        groups = set((r["d_head"], r["seq_len"], r["seed"]) for r in all_results)
+        for d_h, sl, sd in sorted(groups):
+            phase_r = [r for r in all_results if r["d_head"] == d_h and r["seq_len"] == sl and r["seed"] == sd]
+            tau_f = d_h / math.sqrt(sl)
+            tau_new = max(tau_f, 1.4)
             extrap = str(sl * 4)
             best_tau, best_ppl = None, 1e9
             for r in phase_r:
@@ -471,9 +522,10 @@ def main():
                     best_ppl = p
                     best_tau = r["tau"]
             if best_tau is not None:
-                gap = abs(best_tau - tau_f) / tau_f * 100
-                v = "✓" if gap < 30 else "✗"
-                print(f"  {sl:6d} | {tau_f:10.3f} | {best_tau:8.2f} | {gap:5.1f}% | {v:>10s}")
+                gap_old = abs(best_tau - tau_f) / max(tau_f, 0.1) * 100
+                gap_new = abs(best_tau - tau_new) / tau_new * 100
+                v = "NEW ✓" if gap_new < gap_old else "OLD ✓"
+                print(f"  {d_h:4d} {sl:6d} {sd:5d} | {tau_f:6.2f} {tau_new:6.2f} | {best_tau:8.2f} | {v:>10s}")
 
 
 if __name__ == "__main__":
