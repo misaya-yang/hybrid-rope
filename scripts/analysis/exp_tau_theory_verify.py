@@ -42,8 +42,6 @@ from run_evq_sweep import (
     GPT,
     RotaryEmbedding,
     evq_cosh_inv_freq,
-    load_data,
-    load_val,
 )
 
 # ══════════════════════════════════════════════════════════════════════
@@ -54,81 +52,86 @@ SEED = 42
 BASE = 500_000.0
 DATA_CACHE = str(ROOT / "results/theory/tau_sweep_verify/data_cache")
 
-# ── Phase A: L=4096, d_head=64 — THE FLOOR TEST (highest value) ──
-# Old formula: d/√L = 64/√4096 = 1.0
-# New formula: max(d/√L, 1.4) = 1.4  (floor kicks in!)
-# If τ=1.4 beats τ=1.0 → floor theory VALIDATED
+# ════════════════════════════════════════════════════════════════
+# Benchmark-based design (M4 Max MPS, actual measured):
+#   125M d64 L=512  bs=16: 1.6s/step → 0.5h/10M  ✓
+#   125M d64 L=1024 bs=8:  1.7s/step → 0.6h/10M  ✓
+#   50M  d64 L=2048 bs=8:  4.0s/step → 0.7h/10M  ✓
+#   125M d32 L=1024 bs=8:  30s/step  → TOO SLOW   ✗
+#   125M d64 L=2048 bs=4:  28s/step  → TOO SLOW   ✗
+#
+# Strategy: cross-L scaling law with d_head=64 only.
+# The NEW data point is 50M@L=2048 (no existing τ sweep).
+# ════════════════════════════════════════════════════════════════
+
+_125M = dict(vocab_size=50304, hidden_size=768, num_layers=12,
+             num_heads=12, head_dim=64, intermediate_size=3072)
+_50M = dict(vocab_size=50304, hidden_size=512, num_layers=6,
+            num_heads=8, head_dim=64, intermediate_size=2048)
+
+# ── Phase A: 125M L=512 — formula τ*=2.83, full sweep ──
+# Dense sweep to map the complete τ-PPL curve
+# 8 runs × 0.5h = 4h
 PHASE_A = dict(
-    name="L4096_d64_floor",
-    seq_len=4096,
-    train_tokens=99_999_744,
-    batch_size=2,
-    lr=3e-4,
-    taus=[0.0, 0.5, 0.7, 1.0, 1.4, 2.0, 3.0],
-    eval_lengths=[4096, 8192, 16384, 32768],
+    name="125M_L512_d64",
+    seq_len=512,
+    train_tokens=10_000_000,
+    batch_size=16,
+    lr=6e-4,
+    taus=[0.0, 0.5, 1.0, 1.5, 2.0, 2.83, 3.5, 5.0],
+    eval_lengths=[512, 1024, 2048, 4096, 8192],
     data_source_cache=DATA_CACHE,
     seed=42,
-    model_cfg=dict(
-        vocab_size=50304, hidden_size=768, num_layers=12,
-        num_heads=12, head_dim=64, intermediate_size=3072,
-    ),
+    model_cfg=_125M,
 )
 
-# ── Phase B: L=2048, d_head=64 — confirmation at transition ──
+# ── Phase B: 50M L=2048 — formula τ*=1.41, NEW territory ──
+# This is the MOST VALUABLE phase: first τ sweep at L=2048
+# Tests the transition/floor region
+# 6 runs × 0.7h = 4.2h
 PHASE_B = dict(
-    name="L2048_d64_confirm",
+    name="50M_L2048_d64",
     seq_len=2048,
-    train_tokens=99_999_744,
-    batch_size=4,
-    lr=3e-4,
-    taus=[0.0, 1.0, 1.41, 2.0],
+    train_tokens=10_000_000,
+    batch_size=8,
+    lr=6e-4,
+    taus=[0.0, 0.5, 1.0, 1.41, 2.0, 3.0],
     eval_lengths=[2048, 4096, 8192, 16384],
     data_source_cache=DATA_CACHE,
     seed=42,
-    model_cfg=dict(
-        vocab_size=50304, hidden_size=768, num_layers=12,
-        num_heads=12, head_dim=64, intermediate_size=3072,
-    ),
+    model_cfg=_50M,
 )
 
-# ── Phase C: L=2048, d_head=32 — SECOND FLOOR TEST, bigger gap ──
-# d/√L = 32/√2048 = 0.707 (WAY below floor)
-# τ_floor = 4/√K = 4/√16 = 1.0
-# max(d/√L, 1.4) = 1.4
-# Gap between old (0.71) and new (1.4) is 2× — very decisive
-# Also tests K=16, the MLA-relevant regime
+# ── Phase C: 125M L=1024 — formula τ*=2.0, bridge point ──
+# Links L=512 and L=2048, confirms d/√L tracking
+# 5 runs × 0.6h = 3h
 PHASE_C = dict(
-    name="L2048_d32_floor",
-    seq_len=2048,
-    train_tokens=99_999_744,
-    batch_size=4,
+    name="125M_L1024_d64",
+    seq_len=1024,
+    train_tokens=10_000_000,
+    batch_size=8,
     lr=3e-4,
-    taus=[0.0, 0.5, 0.71, 1.0, 1.4, 2.0],
-    eval_lengths=[2048, 4096, 8192, 16384],
+    taus=[0.0, 1.0, 2.0, 2.5, 3.0],
+    eval_lengths=[1024, 2048, 4096, 8192],
     data_source_cache=DATA_CACHE,
     seed=42,
-    model_cfg=dict(
-        vocab_size=50304, hidden_size=768, num_layers=12,
-        num_heads=24, head_dim=32, intermediate_size=3072,  # 24 heads × 32 = 768
-    ),
+    model_cfg=_125M,
 )
 
-# ── Phase D: Seed=137 replication of Phase A critical points ──
-# Error bars on the decisive τ=1.0 vs τ=1.4 comparison
+# ── Phase D: Seed=137 for Phase B (the new territory) ──
+# Error bars at L=2048 where we have no prior data
+# 3 runs × 0.7h = 2.1h
 PHASE_D = dict(
-    name="L4096_d64_seed137",
-    seq_len=4096,
-    train_tokens=99_999_744,
-    batch_size=2,
-    lr=3e-4,
-    taus=[0.0, 1.0, 1.4],
-    eval_lengths=[4096, 8192, 16384, 32768],
+    name="50M_L2048_d64_s137",
+    seq_len=2048,
+    train_tokens=10_000_000,
+    batch_size=8,
+    lr=6e-4,
+    taus=[0.0, 1.0, 1.41],
+    eval_lengths=[2048, 4096, 8192, 16384],
     data_source_cache=DATA_CACHE,
     seed=137,
-    model_cfg=dict(
-        vocab_size=50304, hidden_size=768, num_layers=12,
-        num_heads=12, head_dim=64, intermediate_size=3072,
-    ),
+    model_cfg=_50M,
 )
 
 RESULTS_DIR = ROOT / "results" / "theory" / "tau_theory_verify"
@@ -148,16 +151,9 @@ def set_seed(seed: int):
 def build_model(tau: float, seq_len: int, model_cfg: dict, seed: int) -> GPT:
     """Build model with given τ and architecture config."""
     d_head = model_cfg["head_dim"]
-    cfg = dict(
-        **model_cfg,
-        max_position_embeddings=max(seq_len * 8, 16384),
-        rope_base=BASE,
-    )
-    set_seed(seed)
-    model = GPT(**cfg)
-
-    # Inject EVQ frequencies
     K = d_head // 2
+
+    # Build inv_freq FIRST (GPT constructor needs it)
     if abs(tau) > 1e-8:
         inv_freq = evq_cosh_inv_freq(d_head, tau, BASE)
     else:
@@ -166,13 +162,12 @@ def build_model(tau: float, seq_len: int, model_cfg: dict, seed: int) -> GPT:
             -torch.arange(K).float() / K,
         ).float()
 
-    for module in model.modules():
-        if isinstance(module, RotaryEmbedding):
-            module.inv_freq = torch.nn.Parameter(inv_freq, requires_grad=False)
-            module._cos = None
-            module._sin = None
-            module._max = 0
-
+    cfg = dict(
+        **model_cfg,
+        max_position_embeddings=max(seq_len * 8, 16384),
+    )
+    set_seed(seed)
+    model = GPT(cfg, inv_freq)
     return model
 
 
@@ -225,14 +220,23 @@ def train_one_run(
 
     t0 = time.time()
 
-    # Load data
-    cache_dir = phase_cfg["data_source_cache"]
-    train_data = load_data(
-        cache_dir,
-        max_tokens=phase_cfg["train_tokens"],
-        seq_len=seq_len,
-    )
-    val_data = load_val(cache_dir, max_tokens=5_000_000)
+    # Load data — directly from pre-cached .pt files (no network)
+    cache_dir = Path(phase_cfg["data_source_cache"])
+    # Find the largest cached file for this seq_len
+    pattern = f"train_fineweb-edu_*_{seq_len}.pt"
+    candidates = sorted(cache_dir.glob(pattern), key=lambda p: p.stat().st_size, reverse=True)
+    if not candidates:
+        raise FileNotFoundError(f"No cached data for seq_len={seq_len} in {cache_dir}")
+    train_file = candidates[0]
+    print(f"  Loading: {train_file.name}")
+    train_data = torch.load(str(train_file), weights_only=True)
+    # Flatten to 1D for training loop
+    if train_data.dim() == 2:
+        train_data = train_data.reshape(-1)
+    val_file = cache_dir / "val_fineweb-edu_5000000.pt"
+    val_data = torch.load(str(val_file), weights_only=True)
+    if val_data.dim() == 2:
+        val_data = val_data.reshape(-1)
 
     # Build model
     model = build_model(tau, seq_len, phase_cfg["model_cfg"], seed).to(device)
