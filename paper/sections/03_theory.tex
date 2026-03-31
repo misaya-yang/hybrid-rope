@@ -1,5 +1,12 @@
 \section{Theory and Method}
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.98\linewidth]{fig_method_overview.pdf}
+  \caption{\textbf{EVQ-Cosh frequency allocation overview.} Left: geometric RoPE distributes frequencies uniformly in log-space. Center: the EVQ-cosh warp $\phi_k(\tau)$ bends the allocation below the identity (dashed), concentrating resolution at low frequencies; $\tau{\to}0$ recovers geometric RoPE. Right: the resulting EVQ allocation spreads low-frequency channels, retaining more positional information at long range (bottom: kernel envelope comparison).}
+  \label{fig:method-overview}
+\end{figure}
+
 \subsection{RoPE as frequency allocation}
 
 Let \(\phi \in [0,1]\) parameterize log-frequency and define \(\omega(\phi) = b^{-\phi}\). A discrete RoPE design is equivalent to choosing a density \(\rho(\phi)\) over this interval and discretizing it by inverse CDF. Standard geometric RoPE corresponds to uniform \(\rho\); EVQ derives \(\rho\) from a variational objective. This reparameterization lifts the design space from a hand-written index rule to a continuous allocation problem.
@@ -43,8 +50,7 @@ After fixing the surrogate \(K_{\mathrm{app}}\), the stationary density satisfie
 with a closed-form solution consisting of a hyperbolic tether and a Fisher-driven forcing term.
 \end{theorem}
 
-This is the exact theory backbone used in the paper body: the surrogate is the only approximation, while the ODE and its closed-form family are exact conditional on that surrogate. The homogeneous branch supplies a global tether that redistributes density, while the forcing term preserves local Fisher utility.
-The practical significance of this decomposition is that it separates two qualitatively different requirements: a global allocation that decides where frequency mass should live, and a local utility term that prevents the solution from collapsing into a purely asymptotic long-range design. EVQ is therefore not an unconstrained long-range distortion of RoPE; it is the stationary compromise induced by the surrogate objective.
+The surrogate is the only approximation; the ODE and its closed-form family are exact conditional on $K_{\mathrm{app}}$. The decomposition separates a global tether (redistributing density) from a local Fisher-utility forcing term, ensuring EVQ is the stationary compromise rather than an unconstrained long-range distortion.
 
 \subsection{Closed-form EVQ and the geometric limit}
 
@@ -63,7 +69,7 @@ and inverse frequencies \(b^{-\phi_k(\tau)}\).
 EVQ-cosh converges smoothly to geometric RoPE as \(\tau \to 0\). Therefore, geometric RoPE is the \(\tau=0\) degenerate limit of the EVQ family rather than a generic optimum.
 \end{theorem}
 
-The discrete implementation then follows by evaluating \(\phi_k(\tau)\) at evenly spaced quantiles \(u_k\). In this form, EVQ changes no architecture component and requires no auxiliary positional network: it changes only the inverse-frequency initialization. This is the key methodological distinction from learnable PE approaches. The theory commits to a specific allocation map before optimization begins, rather than hoping that in-distribution training dynamics will discover the same map through extra positional parameters.
+EVQ changes only the inverse-frequency initialization---the key distinction from learnable PE approaches, which rely on in-distribution training dynamics to discover the allocation through extra parameters.
 
 \subsection{Practical EVQ instantiation}
 
@@ -77,11 +83,7 @@ u_k = \frac{k}{K},
 \qquad
 K=\frac{d_{\mathrm{head}}}{2}.
 \end{equation}
-This construction is deliberately minimal: it modifies the inverse-frequency schedule but leaves the transformer, attention rule, optimizer, and inference stack unchanged. It is therefore a direct replacement for the standard geometric initialization rather than a learnable add-on.
-
-In practice, the method reduces to four deterministic steps: choose \(L\) and \(d_{\mathrm{head}}\), set \(\tau=d_{\mathrm{head}}/\sqrt{L}\), evaluate the closed-form warp on uniform quantiles \(u_k\), and replace the geometric inverse frequencies by \(b^{-\phi_k(\tau)}\). There is no auxiliary positional loss, no extra MLP, and no optimizer dependence beyond the ordinary language-model training loop.
-
-The quantile form also explains two implementation-level facts used later in the paper. First, \(u_0=0\) implies \(\phi_0(\tau)=0\), so the first channel remains anchored at \(\omega_0=1\), matching geometric RoPE exactly. Second, because the warp is small near the high-frequency end and grows toward the low-frequency end, EVQ does not require a separate ``keep-\(r\)-channels-geometric'' design choice in order to preserve useful short-range structure.
+The construction is deliberately minimal: four deterministic steps (set $\tau$, compute quantiles, evaluate the warp, replace inverse frequencies) with no auxiliary loss, no extra parameters, and no optimizer dependence. Two properties follow from the quantile form: $u_0{=}0$ implies $\phi_0(\tau){=}0$, so the first channel stays anchored at $\omega_0{=}1$; and because the warp grows toward the low-frequency end, EVQ automatically preserves short-range structure without a separate design choice.
 
 \begin{center}
 \fbox{%
@@ -117,7 +119,7 @@ The $\chi^2$ stiffness reflects attention-load asymmetry: diluted channels ($\rh
 \begin{equation}
 \tau^*(L) = \frac{d_{\mathrm{head}}}{\sqrt{L}}
 \end{equation}
-is semi-analytic: the $d_{\mathrm{head}}$ dependence and the exponent $\gamma$ are derived from the broadband surrogate and softmax transport, but the Lagrange multiplier $\lambda$ is calibrated against empirical $\tau^*$ values. Validation across 99 training runs spanning 27 configurations (Appendix~\ref{sec:tau-scaling}, Figure~\ref{fig:tau-sweep}) confirms that the formula operates in a shallow optimality basin ($<1\%$ PPL gap across tested settings), making it a robust practical default despite its semi-analytic character. When $L$ is short, $\tau^*$ is large and EVQ departs visibly from geometric (the PE-dominant regime); as $L$ grows, $\tau^*$ shrinks and EVQ converges back, predicting bounded in-range cost with progressively narrower long-range correction.
+is semi-analytic: $d_{\mathrm{head}}$ dependence and $\gamma$ are derived, but $\lambda$ is calibrated empirically. Validation across 99 runs (27 configurations, Appendix~\ref{sec:tau-scaling}) confirms a shallow optimality basin ($<1\%$ PPL gap), making the formula a robust default. When $L$ is short, $\tau^*$ is large (PE-dominant regime); as $L$ grows, $\tau^*$ shrinks, predicting bounded in-range cost.
 
 \subsection{Predictions}
 

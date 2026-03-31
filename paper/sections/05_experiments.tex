@@ -10,9 +10,7 @@ Primary body claims are anchored in multi-seed evidence. The core raw-PPL and pa
 
 Figure~\ref{fig:evq-yarn} and Table~\ref{tab:evq-yarn} contain the paper's main systems result. The decisive comparison is not EVQ against geometric RoPE in isolation, but EVQ combined with YaRN against Geo+YaRN. In the fair \(10\%\) mix comparison, EVQ+YaRN reaches \(100\%\) retrieval at \(8\mathrm{K}\) across the three seeds used in that setting, while Geo+YaRN remains at \(61\%\); the same combination lowers PPL from \(82.9\) to \(70.9\) at \(8\mathrm{K}\) and from \(157.7\) to \(107.5\) at \(16\mathrm{K}\).
 
-Two aspects of Table~\ref{tab:evq-yarn} are worth noting. First, EVQ alone improves over Geo without saturating retrieval, so the sharp jump to \(100\%\) at \(8\mathrm{K}\) under YaRN cannot be dismissed as a ceiling effect. Second, the corresponding PPL reductions confirm that the retrieval gain reflects genuine long-range quality improvement, not a narrow metric artifact.
-
-The composition is not accidental: geometric RoPE has two orthogonal deficiencies that limit long-context performance. A \emph{shape} deficiency---uniform log-frequency density wastes channels on redundant high-frequency coverage---and a \emph{range} deficiency---frequencies designed for \(L_{\mathrm{train}}\) cannot discriminate positions beyond training length. EVQ addresses shape by redistributing density toward the collision-critical low-frequency band; YaRN addresses range by rescaling positions at inference time. Because the corrections operate on different axes of the frequency map, their benefits compose rather than compete.
+EVQ alone improves over Geo without saturating retrieval, so the sharp jump to $100\%$ under YaRN is not a ceiling effect, and the PPL reductions confirm genuine long-range quality improvement. The composition reflects the orthogonal deficiency structure described in \S\ref{fig:orthogonal}: EVQ addresses shape, YaRN addresses range, and their corrections are additive.
 
 \begin{figure}[t]
   \centering
@@ -25,9 +23,7 @@ The composition is not accidental: geometric RoPE has two orthogonal deficiencie
 
 \subsection{Extreme extrapolation and scaling-law confirmation}
 
-Figure~\ref{fig:pe-dominant} provides the second principal empirical anchor. In the DAPE-style PE-dominant regime, EVQ beats learnable PE with zero extra parameters: on the \(128\!\rightarrow\!8\mathrm{K}\) setup, EVQ reaches \(333.7\) PPL while DAPE reaches \(455.3\), isolating positional encoding itself as the decisive variable and showing that a learned positional module can still miss the closed-form allocation favored by the variational theory.
-
-The same figure carries the \(L=256\) Phase 11 confirmation. The theory predicts \(\tau^*=4.0\), and the raw plus YaRN curves show exactly the expected ordering: the raw \(32\times\) curve drops from \(268.4\) to \(167.8\), and EVQ4+YaRN reduces PPL from \(260.2\) to \(99.6\). Critically, the same \(\tau^*=4.0\) is preferred across \(125\mathrm{M}\) and \(454\mathrm{M}\) --- model scale changes extrapolation difficulty but not which EVQ setting is optimal.
+Figure~\ref{fig:pe-dominant} provides the second principal anchor. In DAPE-style extreme extrapolation ($128{\to}8\mathrm{K}$), EVQ beats learnable PE with zero extra parameters ($333.7$ vs.\ $455.3$ PPL), isolating frequency allocation as the decisive variable. The $L{=}256$ Phase~11 confirmation shows that the predicted $\tau^*{=}4.0$ is preferred across both $125\mathrm{M}$ and $454\mathrm{M}$---scale changes extrapolation difficulty but not the optimal allocation.
 
 \input{tables/table5_phase11_leverage.tex}
 
@@ -46,7 +42,7 @@ Table~\ref{tab:phase11-leverage} makes the interaction explicit: YaRN is barely 
 
 Table~\ref{tab:multiscale} summarizes the multi-scale pattern: EVQ pays at most a small in-range cost (\({\leq}1\%\)) while improving long-range PPL by \(10\text{--}46\%\) across 50M--750M scales. Capability-oriented evaluation (350M, 3-seed) confirms two properties: EVQ is non-destructive when retrieval is absent from training, and improves extrapolated retrieval by \(+10\text{--}13\mathrm{pp}\) when retrieval is learned. The base generalization sweep (454M, single seed) confirms EVQ leads at both \(b{=}10\mathrm{K}\) and \(b{=}500\mathrm{K}\), with EVQ's extrapolation PPL nearly identical across base values (\(192.4 \approx 191.9\)) while Geo diverges by 38~points---suggesting that frequency optimization partially compensates for suboptimal base choices.
 
-Downstream QuALITY QA (\(n{=}2086\), 454M, single seed) reveals a consistent signal gradient across evaluation granularity: EVQ's advantage is largest in PPL (\(-30\%\) at \(8\mathrm{K}\)), preserved in Gold-Answer NLL (\(-30\%\)), detectable in passkey retrieval (\(+13\mathrm{pp}\)), and marginally visible in 4-option accuracy (\(+2.2\mathrm{pp}\), \(p{\approx}0.02\))---a progressive abstraction pattern consistent with model capacity being the binding constraint on accuracy, not positional encoding. We treat this as supporting evidence that the PPL/retrieval gains reflect genuine quality improvement, rather than a decisive downstream benchmark. A \(750\mathrm{M}\) continue@4K consistency check (single-seed; Appendix~\ref{sec:750m-supporting}) preserves the same pattern.
+Downstream QuALITY QA ($n{=}2086$, 454M, single seed) shows a signal gradient: EVQ's advantage is largest in PPL ($-30\%$ at $8\mathrm{K}$), preserved in Gold-Answer NLL ($-30\%$), and detectable in retrieval ($+13\mathrm{pp}$), consistent with model capacity---not PE---being the binding constraint on accuracy.
 
 \input{tables/table1_multiscale_raw_ppl}
 

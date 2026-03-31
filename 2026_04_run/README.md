@@ -39,7 +39,8 @@
 │   ├── 08_P1P2P3实验清单.md                 ← QuALITY 多种子、LongRoPE2 等
 │   │
 │   │  ── 参考 ──
-│   └── 09_全项目文件索引.md                  ← 论文各 .tex、数据、脚本的路径映射
+│   ├── 09_全项目文件索引.md                  ← 论文各 .tex、数据、脚本的路径映射
+│   └── 10_实验盘点报告_0331.md               ← ★ 全量实验审计：已引用 vs 未挖掘
 │
 ├── figs/                                  ← 图表
 │   ├── 方法图_v3.pdf                       ← EVQ 方法示意图（最新版，待插入论文）
@@ -70,6 +71,8 @@
 | P1-1 | λ cross-validation table 加入 Appendix | `04_lambda闭合分析.md` | 待开始 |
 | P1-2 | 代理自洽性定理写入 Appendix（新发现） | `04_lambda闭合分析.md` | 待开始 |
 | P1-3 | QuALITY downstream 多种子 | `08_P1P2P3实验清单.md` | 待开始 |
+| P1-4 | tau_diagnostic 消融写入 Appendix（collision-only vs full，数据已有） | `10_实验盘点报告_0331.md` | 待开始 |
+| P1-5 | Qwen LongBench 负面结果写入 Limitations（plug-and-play boundary） | `10_实验盘点报告_0331.md` | 待开始 |
 
 ### P2 — Nice to have
 
@@ -77,6 +80,8 @@
 |------|------|------|------|
 | P2-1 | EVQ + LongRoPE2 > Geo + LongRoPE2 实验（师兄建议） | `08_P1P2P3实验清单.md` | 待开始 |
 | P2-2 | 方法图 v3 插入论文 | `figs/方法图_v3.pdf` | 待开始 |
+| P2-3 | LLaMA-8B LoRA 4-method 对比表进 Appendix | `10_实验盘点报告_0331.md` | 待开始 |
+| P2-4 | Video frequency decomposition 详细表格 | `10_实验盘点报告_0331.md` | 待开始 |
 
 ---
 

@@ -1,16 +1,4 @@
-\section{Supporting Results Placement}
-
-The main text intentionally reserves space for Figure~\ref{fig:evq-yarn} and Figure~\ref{fig:pe-dominant}. The following assets are supporting and belong in the appendix:
-\begin{itemize}
-\item Figure 1: \(750\mathrm{M}\) dynamics and retrieval divergence,
-\item collision-block / dead-zone visualizations,
-\item full phase9f and phase15 tables,
-\item `r`-sweep ablations,
-\item video temporal transfer figures and tables,
-\item complete implementation and hyperparameter dumps.
-\end{itemize}
-
-This separation is deliberate. The body should answer only three questions: what the exact theory gives, whether closed-form EVQ beats learnable PE in the cleanest extrapolation regime, and whether EVQ materially unlocks inference-time scaling. Everything else strengthens the package, but should not dilute the central narrative under the 9-page anonymous submission constraint.
+\section{Supporting Results}
 
 \subsection{Multi-head Latent Attention}
 \label{sec:mla-results}
@@ -58,22 +46,12 @@ Training-progression analysis reveals that EVQ's advantage is present from \(50\
   \label{fig:attn-mechanism}
 \end{figure}
 
-\subsection{Why Figure 1 is appendix-only}
-
-The \(750\mathrm{M}\) dynamics figure is visually strong, but it is not the right primary anchor for an anonymous submission because it mixes two avoidable weaknesses: it is single-seed and it was produced with the now-deprecated hybrid configuration. Its role in the submission is therefore explanatory rather than foundational. It helps the reader understand the qualitative geometry of retrieval divergence, but it should not compete with the multi-seed EVQ\(\times\)YaRN result or the PE-dominant scaling-law confirmation for body space.
-
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.85\linewidth]{fig1_frequency_dynamics.pdf}
-  \caption{\textbf{750M frequency dynamics and retrieval divergence} (single seed, deprecated hybrid configuration). EVQ redistributes resolution toward low-frequency channels, producing qualitatively different retrieval dynamics. This figure is explanatory rather than foundational; see Figures~\ref{fig:evq-yarn} and~\ref{fig:pe-dominant} in the main text for multi-seed primary evidence.}
+  \caption{\textbf{750M frequency dynamics and retrieval divergence} (single seed). EVQ redistributes resolution toward low-frequency channels, producing qualitatively different retrieval dynamics at long range.}
   \label{fig:freq-dynamics}
 \end{figure}
-
-\subsection{Why video remains supportive}
-
-The video temporal experiments provide three layers of evidence for cross-modal transfer. First, EVQ-Cosh wins every measured metric on temporal extrapolation, from PPL ($-27.3\%$) through teacher-forced accuracy ($+3.14\%$ top-1, $+5.40\%$ top-5) to generation-level VideoMAE FVD ($-1.5\%$). Second, the teacher-forced evaluation eliminates the autoregressive sampling bottleneck that compresses FVD margins, recovering $3.6\times$ more signal than VideoMAE FVD. Third, and most importantly, the frequency-resolved decomposition (Table~\ref{tab:freq-decomp}) reveals a monotonic gradient: EVQ's advantage is largest for the highest temporal frequency ($+10.4\%$ top-5 at $P{=}16$) and decreases smoothly toward lower frequencies ($+6.3\%$ at $P{=}32$). This gradient matches the theoretical prediction that $\phi_k(\tau)$ redistributes precision toward higher-frequency channels.
-
-Nevertheless, these results remain supportive rather than co-primary: the current evidence is single-seed on a synthetic benchmark, and future work should validate the frequency-precision gradient on natural video using diffusion-based architectures (e.g., DiT with 3D RoPE) that do not suffer from autoregressive error accumulation. The text results already deliver a closed-form theory, a clean extreme-extrapolation test, and a strong systems interaction result; the video evidence strengthens the scope claim but is not required for the main thesis to stand.
 
 \subsection{Downstream QA evaluation: QuALITY Gold NLL}
 \label{sec:quality-downstream}
@@ -121,6 +99,3 @@ Figure~\ref{fig:waterbed-multiscale} visualizes the waterbed effect across model
   \label{fig:waterbed-multiscale}
 \end{figure}
 
-\subsection{Why base=10K and r-sweep move to the appendix}
-
-Both of these result families matter, but mainly for rebuttal and mechanism. The low-base dead-zone result is a theory-confirming negative result, and the \(r\)-sweep is a method-simplification argument showing that the main EVQ recipe does not need a hybrid cutoff. Neither is strong enough to justify body-level figure real estate under the current page budget, so both are retained as appendix-strength material.

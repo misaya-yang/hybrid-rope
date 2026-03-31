@@ -69,53 +69,14 @@ Stage & \(L_{\mathrm{train}}\) & Geo+YaRN & EVQ+YaRN & \(\Delta\) \\
   \label{fig:progressive}
 \end{figure}
 
-\subsection{Evaluation notes}
-
-The paper uses three increasingly strict long-context evaluation views.
-\begin{enumerate}
-\item \textbf{PPL}: global language-modeling quality under extrapolation.
-\item \textbf{Retrieval}: whether the relevant item is still localized at long range.
-\item \textbf{AR exact / multi-needle}: whether the localized information remains precisely recoverable.
-\end{enumerate}
-
-This split is necessary because stronger models can saturate coarse retrieval while still differing sharply in exact long-range recovery. The \(750\mathrm{M}\) supporting run is the clearest example: retrieval is already saturated, but AR exact separates geometric RoPE from EVQ very strongly.
-
 \subsection{Modality-dependent $\tau$ correction for video DiT}
 \label{sec:tau-correction}
 
 The scaling law $\tau^*=d_{\mathrm{head}}/\sqrt{L}$ matches text autoregressive models with causal attention. For bidirectional DiT, the empirically optimal $\tau$ is approximately $0.53\times$ the text prediction ($\tau{=}1.5$ vs.\ predicted $2.83$ for $K_t{=}16, T{=}32$). This ratio reflects at least two compounding factors. First, bidirectional attention doubles the range of relative positions ($\Delta\in[-L,L]$ vs.\ $[0,L]$), predicting a correction of $1/\sqrt{2}\approx 0.71$. Second, diffusion models evaluate a noise-weighted denoising loss across timesteps, and at high noise levels ($t\to 1$) the position-encoding signal is attenuated, reducing the effective gradient contribution of the frequency-allocation term. The product (${\approx}0.71 \times 0.75 \approx 0.53$) is consistent with the observed ratio, but we emphasize that this decomposition is a post-hoc rationalization, not a derivation. A principled modality-aware $\tau^*$ formula remains future work.
 
-\subsection{Cross-modal evidence: video temporal extrapolation}
+\subsection{Cross-modal evidence: video DiT with bidirectional attention}
 
-Video temporal extrapolation tests whether the same frequency-allocation principle transfers beyond text RoPE. We apply EVQ-Cosh to the temporal channels of a 3D RoPE VideoGPT (268.7M parameters, 1024 hidden, 16 layers), trained on tokenized Oscillating Moving MNIST (3 digits, sinusoidal motion with periods 16/24/32 frames). Models train on 32-frame sequences and extrapolate to 128 frames (4$\times$) with temporal YaRN scaling.
 
-\paragraph{Setup.} We compare \texttt{geo\_k16} (16 temporal channel pairs, geometric allocation, $\tau{=}0$) against \texttt{evq\_k16} (same budget, EVQ-Cosh with $\tau{=}K_t/\sqrt{T_\mathrm{train}}$). Both allocations share identical spatial channels. Models are evaluated on PPL, teacher-forced top-1 accuracy, and generation quality via Fr\'echet Video Distance (FVD). For FVD, we report both I3D features and VideoMAE-v2 features; the latter are approximately $3\times$ more sensitive to temporal distortion than I3D~\citep{ge2024contentbiasfvd}.
-
-\paragraph{Results.} Table~\ref{tab:video-temporal} summarizes the findings. EVQ wins every metric, but the margins attenuate sharply from distributional quality (PPL) through generation:
-
-\begin{table}[ht]
-\caption{Signal attenuation from distributional quality to generation metrics on Oscillating Moving MNIST (128 frames, 4$\times$ extrapolation). EVQ wins all metrics; the attenuation reflects autoregressive error accumulation and FVD aggregation, not absence of signal.}
-\label{tab:video-temporal}
-\centering
-\small
-\begin{tabular}{@{}llrrr@{}}
-\toprule
-Stage & Metric & geo\_k16 & evq\_k16 & $\Delta$ \\
-\midrule
-Distribution & PPL (YaRN) & 4.787 & \textbf{3.481} & $-27.3\%$ \\
-Distribution & PPL (raw) & 4.832 & \textbf{4.440} & $-8.1\%$ \\
-Prediction & Teacher-forced top-1 & 0.708 & \textbf{0.730} & $+3.1\%$ \\
-Generation & VideoMAE FVD $\downarrow$ & 70.25 & \textbf{69.18} & $-1.5\%$ \\
-Generation & I3D FVD $\downarrow$ & 239.9 & \textbf{238.7} & $-0.5\%$ \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-The $3.2\times$ sensitivity ratio between VideoMAE and I3D FVD is consistent with the finding that I3D features are dominated by per-frame spatial content and nearly blind to temporal structure~\citep{ge2024contentbiasfvd}. The teacher-forced result confirms that EVQ's temporal predictions are measurably more accurate ($+3.1\%$ top-1 in the extrapolation region), but autoregressive sampling compresses this advantage because both models share similar top-$k$ token sets.
-
-This evidence is supportive rather than co-primary: the text package is stronger, cleaner, and more directly aligned with the main systems claim. Nevertheless, the consistent direction across all metrics suggests that the variational frequency-allocation principle transfers to temporal RoPE in video.
-
-\paragraph{Cross-architecture validation: DiT with bidirectional attention.}
 To test whether EVQ transfers beyond autoregressive decoders, we evaluate on a 129.6M video diffusion transformer (DiT) with bidirectional attention and 3D RoPE. We compare EVQ-Cosh ($\tau{=}1.5$) against geometric allocation ($\tau{=}0$) on Oscillating Moving MNIST, training on 32 frames and extrapolating to 128 frames ($4\times$) with temporal YaRN. Crucially, both allocations are trained \emph{within the same run} (head-to-head), sharing identical weights, optimizer state, and CUDA non-determinism---eliminating all confounders except the frequency allocation itself.
 
 Table~\ref{tab:dit-h2h} reports results across two independent seeds. EVQ wins every metric in both seeds. Averaging across seeds, Train MSE improves by $-26\%$, all-frame extrapolation by $-19\%$, and far-frame extrapolation by $-32\%$. The consistency across both seeds---EVQ wins all three metrics in each---suggests that the advantage is not a stochastic artifact, though we note the sample size (two seeds) is too small for formal statistical testing.
@@ -142,114 +103,7 @@ Seed & Metric (YaRN) & Geo ($\tau{=}0$) & EVQ ($\tau{=}1.5$) & $\Delta$ \\
 \end{tabular}
 \end{table}
 
-This result extends EVQ beyond the autoregressive text setting along two axes simultaneously: architecture (bidirectional attention, no causal mask) and modality (video diffusion). The head-to-head design is particularly important because DiT training exhibits substantial CUDA non-determinism across runs, making cross-run comparisons unreliable. By comparing allocations within the same forward pass, we isolate the frequency-allocation effect with high confidence.
-
-\paragraph{Scale-up validation: 382M DiT.}
-To verify that EVQ's advantage persists at larger scale, we repeat the head-to-head experiment with a 382M DiT (${\approx}3\times$ the 129.6M model). Table~\ref{tab:dit-382m} reports the results. Training loss is identical ($+0.3\%$), confirming no capacity cost. Under YaRN extrapolation, EVQ improves far-frame MSE by $-35\%$, consistent with the 129.6M mean ($-32\%$). Without YaRN, the advantage grows to $-64\%$ (vs.\ $-59\%$ at 129.6M under raw extrapolation in Table~\ref{tab:dit-inference}), suggesting that EVQ's benefit does not diminish---and may increase---with model scale.
-
-\begin{table}[ht]
-\caption{Scale-up validation: 382M DiT head-to-head (seed 42, $4\times$ temporal extrapolation). Training loss is identical; EVQ advantage is consistent with the 129.6M results.}
-\label{tab:dit-382m}
-\centering
-\small
-\begin{tabular}{@{}l r r r@{}}
-\toprule
-Metric & Geo ($\tau{=}0$) & EVQ ($\tau{=}1.5$) & $\Delta$ \\
-\midrule
-Training loss & 0.02665 & 0.02672 & $+0.3\%$ \\
-YaRN train MSE & 0.01344 & \textbf{0.00858} & $-36\%$ \\
-YaRN far MSE & 0.01233 & \textbf{0.00799} & $-35\%$ \\
-No-YaRN far MSE & 0.11408 & \textbf{0.04154} & $-64\%$ \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-This result is single-seed supporting evidence, consistent with the two-seed 129.6M result. Together with the base sweep (Table~\ref{tab:dit-base-sweep}) and dead-channel validation (Table~\ref{tab:dit-base1000}), it completes a three-pronged cross-modal evidence package: EVQ transfers to bidirectional attention DiTs, is robust across base values, and scales to at least $382$M parameters.
-
-\paragraph{Robustness across inference-time methods.}
-We evaluate the same DiT checkpoints under three inference-time configurations: YaRN (progressive per-channel scaling), RIFLEx~\citep{wang2025riflex} (intrinsic-frequency reduction, official implementation with $0.9$ safety factor), and no scaling (raw extrapolation). Table~\ref{tab:dit-inference} reports far-frame denoising MSE ($t{=}0.5$). EVQ outperforms Geo under \emph{all} configurations ($-28\%$ to $-59\%$). Both inference-time methods improve over raw extrapolation, with YaRN performing best---consistent with YaRN's per-channel progressive scaling addressing more dead channels than RIFLEx's single-frequency correction. Notably, EVQ's raw performance ($0.0108$) already approaches Geo+RIFLEx ($0.0145$), suggesting that EVQ captures at training time much of the frequency correction that RIFLEx provides at inference time.
-
-\begin{table}[ht]
-\caption{DiT far-frame denoising MSE ($t{=}0.5$, $4\times$ extrapolation) under different inference-time methods. EVQ wins all configurations. YaRN is the best inference method; EVQ raw nearly matches Geo+RIFLEx.}
-\label{tab:dit-inference}
-\centering
-\small
-\begin{tabular}{@{}l r r r@{}}
-\toprule
-Inference method & Geo ($\tau{=}0$) & EVQ ($\tau{=}1.5$) & $\Delta$ \\
-\midrule
-YaRN & 0.00998 & \textbf{0.00631} & $-37\%$ \\
-RIFLEx & 0.01452 & \textbf{0.01050} & $-28\%$ \\
-None (raw) & 0.02625 & \textbf{0.01078} & $-59\%$ \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\paragraph{Multi-timestep validation.}
-To verify that EVQ's advantage is not an artifact of the noise level chosen for evaluation, we evaluate at three diffusion timesteps (seed 42, YaRN, far-frame MSE). Table~\ref{tab:dit-timestep} shows EVQ wins at all timesteps, with the largest advantage at $t{=}0.5$ ($-36\%$). At low noise ($t{=}0.2$), where position encoding is less critical, the gap narrows to $-4\%$; at high noise ($t{=}0.8$), EVQ still wins by $-27\%$.
-
-\begin{table}[ht]
-\caption{DiT far-frame MSE across diffusion timesteps (seed 42, YaRN). EVQ wins at all noise levels.}
-\label{tab:dit-timestep}
-\centering
-\small
-\begin{tabular}{@{}l r r r@{}}
-\toprule
-Timestep $t$ & Geo ($\tau{=}0$) & EVQ ($\tau{=}1.5$) & $\Delta$ \\
-\midrule
-0.2 (low noise) & 0.00383 & \textbf{0.00366} & $-4\%$ \\
-0.5 (medium) & 0.00982 & \textbf{0.00631} & $-36\%$ \\
-0.8 (high noise) & 0.10368 & \textbf{0.07559} & $-27\%$ \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\paragraph{Teacher-forced temporal precision.}
-To isolate position-encoding quality from autoregressive error accumulation, we evaluate the same checkpoints in teacher-forced mode on 128-frame sequences (4$\times$ extrapolation with YaRN). Table~\ref{tab:temporal-precision} reports per-region top-1 and top-5 accuracy. In the training region (frames 0--31), both models are tied to within $0.06\%$, confirming matched capacity. In the extrapolation region, EVQ leads by $+3.14\%$ top-1 and $+5.40\%$ top-5. The advantage peaks in near-extrapolation (32--63f): $+3.74\%$ top-1, $+6.59\%$ top-5.
-
-\begin{table}[ht]
-\caption{Teacher-forced accuracy on Oscillating Moving MNIST (128f, 4$\times$ YaRN, $N{=}2000$). Training region is a near-perfect tie; the gap emerges purely in extrapolation.}
-\label{tab:temporal-precision}
-\centering
-\small
-\begin{tabular}{@{}lrrrrr@{}}
-\toprule
-& \multicolumn{2}{c}{Top-1 Accuracy} & \multicolumn{2}{c}{Top-5 Accuracy} \\
-\cmidrule(lr){2-3}\cmidrule(lr){4-5}
-Region & geo\_k16 & evq\_k16 & geo\_k16 & evq\_k16 \\
-\midrule
-Train (0--31f) & 74.62\% & 74.60\% & 82.07\% & 82.03\% \\
-Near extrap (32--63f) & 71.99\% & \textbf{74.69\%} & 77.31\% & \textbf{82.41\%} \\
-Mid extrap (64--95f) & 70.24\% & \textbf{72.89\%} & 73.54\% & \textbf{78.24\%} \\
-Far extrap (96--127f) & 70.07\% & \textbf{71.39\%} & 73.10\% & \textbf{75.41\%} \\
-\midrule
-All extrap (32--127f) & 70.77\% & \textbf{72.99\%} & 74.65\% & \textbf{78.69\%} \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\paragraph{Frequency-resolved decomposition.}
-Because the oscillating MNIST data contains digits with known temporal periods ($P{=}16, 24, 32$ frames), we decompose per-position accuracy by dominant oscillation frequency (detected via FFT on per-patch temporal traces, background patches excluded). Table~\ref{tab:freq-decomp} shows a monotonic frequency gradient: the EVQ advantage scales with temporal frequency, from $+3.55\%$ top-1 at $P{=}32$ (lowest frequency) to $+5.07\%$ at $P{=}16$ (highest frequency). Top-5 accuracy amplifies the pattern further, reaching $+10.39\%$ in the near-extrapolation zone at $P{=}16$.
-
-This gradient directly validates the theoretical prediction. EVQ redistributes frequency precision via the $\phi_k(\tau)$ mapping, and the experimental advantage is largest for the highest-frequency temporal components---exactly the channels that receive the most redistributed precision.
-
-\begin{table}[ht]
-\caption{Frequency-resolved top-1/top-5 accuracy delta (EVQ$-$geo) on foreground patches, YaRN mode. Higher temporal frequencies benefit more from EVQ, matching the theoretical prediction. Training region deltas are $<0.1\%$ for all periods (omitted).}
-\label{tab:freq-decomp}
-\centering
-\small
-\begin{tabular}{@{}lrrrr@{}}
-\toprule
-& \multicolumn{2}{c}{Top-1 $\Delta$} & \multicolumn{2}{c}{Top-5 $\Delta$} \\
-\cmidrule(lr){2-3}\cmidrule(lr){4-5}
-Period & Near extrap & All extrap & Near extrap & All extrap \\
-\midrule
-$P{=}16$ (highest) & $+6.07\%$ & $+5.07\%$ & $\mathbf{+10.39\%}$ & $+8.48\%$ \\
-$P{=}24$ (mid) & $+5.37\%$ & $+4.39\%$ & $+9.40\%$ & $+7.63\%$ \\
-$P{=}32$ (lowest) & $+4.32\%$ & $+3.55\%$ & $+7.58\%$ & $+6.25\%$ \\
-\bottomrule
-\end{tabular}
-\end{table}
+This result extends EVQ beyond the autoregressive text setting along two axes simultaneously: architecture (bidirectional attention, no causal mask) and modality (video diffusion). The head-to-head design eliminates all confounders except the frequency allocation itself. A scale-up to 382M DiT ($3\times$ larger) yields consistent results ($-35\%$ far-frame MSE, single seed), and EVQ outperforms Geo under all three inference-time methods tested (YaRN, RIFLEx, raw).
 
 \paragraph{Dead-channel mechanism: base reduction eliminates the phase transition.}
 At base${}=10{,}000$ with $K_t{=}16$ temporal frequencies and 32 training frames, the lowest-frequency channels accumulate less than $0.1$~rad of phase rotation over the entire training sequence---they are effectively dead. EVQ's $\tau$ parameter activates these channels by redistributing frequency mass, but at base${}=10{,}000$ the activation is discontinuous: $\tau{=}1.2$ leaves 11/16 channels alive (effective rank 9), while $\tau{=}1.5$ activates 12/16 (rank 10), producing the sharp phase transition observed in Table~\ref{tab:dit-h2h}.
@@ -322,30 +176,4 @@ Base & GEO & EVQ & $\Delta$ & GEO & EVQ & $\Delta$ & Dead ch. \\
 \end{tabular}
 \end{table}
 
-Four findings emerge. \textbf{(1)}~When all channels are alive (base${}=100$, 0/16 dead), GEO wins by ${\approx}20\%$: frequency redistribution is harmful when the geometric allocation is already optimal, confirming that EVQ's advantage is specific to the dead-channel regime. \textbf{(2)}~GEO is \emph{non-monotonic} in base under both evaluation modes. With YaRN, GEO deteriorates from $0.016$ (base${}=100$) to $0.190$ (base${}=50{,}000$)---a $12\times$ range; without YaRN, GEO at base${}=1{,}000$ ($0.286$) is worse than base${}=500$ ($0.224$). This erratic behavior makes GEO's extrapolation performance unpredictable as a function of base. \textbf{(3)}~EVQ+YaRN is remarkably stable across base${\geq}500$ (MSE $\in [0.014, 0.026]$, a $1.9\times$ range vs.\ GEO's $12\times$), demonstrating intrinsic robustness to the base hyperparameter. \textbf{(4)}~The global optimum is EVQ at base${}=10{,}000$ with YaRN ($0.0137$), which is better than GEO at \emph{any} base (best GEO: $0.0161$ at base${}=100$). EVQ is a strictly superior drop-in replacement at the default base.
-
-Without YaRN, EVQ's advantage monotonically increases with base ($-35\%$ at 500 to $-56\%$ at $50{,}000$), consistent with the dead-channel mechanism: more dead channels create more headroom for EVQ's redistribution. The fact that EVQ wins without YaRN from base${\geq}500$ confirms that its advantage is a \emph{training-time} frequency allocation effect, not an artifact of inference-time scaling.
-
-\paragraph{Isolation experiment: pure training-length evaluation.}
-To definitively isolate whether EVQ's advantage stems from training dynamics or extrapolation, we evaluate all 12 checkpoints from the base sweep on 32-frame sequences (the training length) with \emph{no} YaRN scaling---i.e., the pure training distribution.
-
-\begin{table}[ht]
-\caption{Pure training-length evaluation (32f, no YaRN, no extrapolation). All 12 configurations produce nearly identical MSE ($0.0093$--$0.0102$, $<6\%$ variation), proving that frequency allocation has negligible effect within the training distribution. The entire $+18\%$ to $-86\%$ range in Table~\ref{tab:dit-base-sweep} is a pure \emph{extrapolation} phenomenon.}
-\label{tab:dit-32f-isolation}
-\centering
-\small
-\begin{tabular}{@{}l r r r@{}}
-\toprule
-Base & GEO 32f MSE & EVQ 32f MSE & $\Delta$ \\
-\midrule
-100 & 0.00973 & 0.00961 & $-1.2\%$ \\
-500 & 0.00937 & 0.00955 & $+2.0\%$ \\
-1000 & 0.00940 & 0.00932 & $-0.9\%$ \\
-5000 & 0.00969 & 0.00962 & $-0.7\%$ \\
-10000 & 0.00987 & 0.00978 & $-0.9\%$ \\
-50000 & 0.01020 & 0.00960 & $-5.9\%$ \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-This result has three implications. First, it confirms that the model learns equally well regardless of frequency allocation: neither $\tau$ nor base affects denoising quality within the training distribution ($<6\%$ variation across all 12 configurations). Second, it proves that the catastrophic GEO failures at high base (e.g., $0.190$ at base${}=50{,}000$ with YaRN, vs.\ $0.010$ at 32f) are \emph{entirely} an extrapolation artifact---the model is well-trained but its frequency layout cannot generalize beyond the training temporal length. Third, it resolves the $\tau{=}1.2$ paradox from Table~\ref{tab:dit-h2h}: since all $\tau$ values produce identical 32f MSE, the sharp phase transition at $\tau{\in}(1.2, 1.5)$ must originate in the interaction between the frequency layout and temporal YaRN scaling, not in any deficiency of the learned model.
+Two key findings emerge. First, when all channels are alive (base${}=100$, 0/16 dead), GEO wins by ${\approx}20\%$, confirming EVQ's advantage is specific to the dead-channel regime. Second, EVQ+YaRN is remarkably stable across base${\geq}500$ ($1.9\times$ MSE range vs.\ GEO's $12\times$), demonstrating robustness to the base hyperparameter. The global optimum is EVQ at base${}=10{,}000$ with YaRN ($0.0137$), strictly better than GEO at any base. A pure training-length evaluation (32f, no extrapolation) confirms all 12 configurations produce identical MSE ($<6\%$ variation), proving the entire advantage is an extrapolation phenomenon.

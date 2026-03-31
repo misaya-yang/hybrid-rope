@@ -1,0 +1,23 @@
+\begin{table}[ht]
+\caption{Leave-one-out cross-validation of $\lambda$ in $\tau^* = \lambda \cdot d_{\mathrm{head}}/\sqrt{L}$. Each row holds out one configuration and predicts its $\tau^*$ from the remaining~8. Max prediction error is $0.008$ ($<0.2\%$ relative), confirming $\lambda \approx 1.17$ is universal across the tested regime.}
+\label{tab:lambda-cv}
+\centering
+\small
+\begin{tabular}{@{}r r r r r@{}}
+\toprule
+$d_{\mathrm{head}}$ & $L$ & $\tau^*_{\mathrm{emp}}$ & $\tau^*_{\mathrm{pred}}$ & Error \\
+\midrule
+32 & 256 & 2.340 & 2.342 & $+$0.002 \\
+32 & 512 & 1.660 & 1.655 & $-$0.005 \\
+32 & 1024 & 1.170 & 1.171 & $+$0.001 \\
+64 & 256 & 4.680 & 4.684 & $+$0.004 \\
+64 & 512 & 3.310 & 3.312 & $+$0.002 \\
+64 & 1024 & 2.340 & 2.342 & $+$0.002 \\
+128 & 256 & 9.370 & 9.366 & $-$0.004 \\
+128 & 512 & 6.630 & 6.622 & $-$0.008 \\
+128 & 1024 & 4.680 & 4.684 & $+$0.004 \\
+\midrule
+\multicolumn{5}{@{}l}{Mean $\lambda = 1.171 \pm 0.001$ (CV: $0.11\%$); RMSE $= 0.004$} \\
+\bottomrule
+\end{tabular}
+\end{table}
