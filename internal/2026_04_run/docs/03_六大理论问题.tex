@@ -1,0 +1,276 @@
+\documentclass[11pt,a4paper]{article}
+
+% ===== Font setup =====
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\newfontface\zhfont{Droid Sans Fallback}
+\newcommand{\zh}[1]{{\zhfont #1}}
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip = 0pt plus 1pt
+
+% ===== Math & layout =====
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\hypersetup{colorlinks=false, pdfborder={0 0 0}}
+
+% ===== All black text =====
+\usepackage{xcolor}
+\color{black}
+
+% ===== Section format =====
+\titleformat{\section}{\Large\bfseries}{\zh{问题} \thesection:~}{0em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.5em}{}
+
+% ===== Header/footer =====
+\pagestyle{plain}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries EVQ-Cosh \zh{理论开放问题清单}}\\[4pt]
+{\normalsize 2026-03-31}
+\end{center}
+
+\vspace{6pt}
+\noindent\textbf{\zh{背景。}}\quad
+EVQ-Cosh \zh{的频率分配公式为}
+\begin{equation}
+  \varphi_k(\tau) = 1 - \frac{1}{\tau}\,\operatorname{arcsinh}\!\bigl((1-u_k)\sinh\tau\bigr),
+  \quad u_k = \frac{2k-1}{2d_{\mathrm{head}}},
+  \label{eq:evq}
+\end{equation}
+\zh{其最优温度参数遵循半解析缩放律}
+\begin{equation}
+  \tau^* = \frac{d_{\mathrm{head}}}{\sqrt{L}},
+  \label{eq:tau-star}
+\end{equation}
+\zh{其中} $d_{\mathrm{head}}$ \zh{为注意力头维度，}$L$ \zh{为训练序列长度。以下六个问题是当前理论框架中尚未闭合的核心环节。}
+
+\vspace{12pt}
+
+%% ============================================================
+\section{Lagrange \zh{乘子} $\lambda$ \zh{的解析闭合}}
+%% ============================================================
+
+\subsection*{\zh{当前状态}}
+\zh{缩放律} $\tau^* = d_{\mathrm{head}}/\sqrt{L}$ \zh{中的指数} $\gamma \approx 0.5$ \zh{由} softmax transport \zh{变分推导得出，但} Lagrange \zh{乘子} $\lambda$ \zh{仍然是通过拟合实验} $\tau^*$ \zh{值校准的自由参数。这使得整个缩放律是\textbf{半解析}的，而非无参数定理。}
+
+\subsection*{\zh{问题描述}}
+\zh{变分泛函为}
+\begin{equation}
+  F(\tau) \;=\; S_{\chi^2}(\tau) \;-\; \lambda\,U(\tau, L),
+  \label{eq:variational}
+\end{equation}
+\zh{其中} $\chi^2$ \zh{刚性项为}
+\begin{equation}
+  S_{\chi^2}(\tau) = \sum_{k=1}^{d_{\mathrm{head}}}
+  \int_0^{L} \bigl(\varphi_k'(t;\tau)\bigr)^2\,dt,
+\end{equation}
+\zh{效用项} $U(\tau, L)$ \zh{衡量频率分配对长程注意力的传输能力。对} $\tau$ \zh{求极值可得}
+\begin{equation}
+  \frac{\partial S_{\chi^2}}{\partial \tau}\bigg|_{\tau^*}
+  = \lambda \,\frac{\partial U}{\partial \tau}\bigg|_{\tau^*}.
+\end{equation}
+\zh{目标是在不依赖实验校准的前提下，从} $(d_{\mathrm{head}}, L, \theta_{\mathrm{base}})$ \zh{的函数关系直接确定} $\lambda$\zh{。}
+
+\subsection*{\zh{可能方向}}
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{\zh{信息论约束}}\zh{：将} $\lambda$ \zh{与注意力熵的下界关联}----\zh{如果能证明最优注意力在训练长度} $L$ \zh{处的熵为} $H^* = \log L + c$\zh{，则可能从} $H^*$ \zh{反推} $\lambda$\zh{。}
+  \item \textbf{\zh{渐近展开}}\zh{：在} $d_{\mathrm{head}} \to \infty$ \zh{极限下对} $\varphi_k$ \zh{的连续化积分做鞍点近似，}$\lambda$ \zh{可能以} $d_{\mathrm{head}}$ \zh{的显式函数出现。}
+  \item \textbf{\zh{实验校准的普适性}}\zh{：验证} $\lambda$ \zh{是否在不同} $(d_{\mathrm{head}}, L, \theta_{\mathrm{base}})$ \zh{下为常数或简单函数，若} $\lambda \approx c_0$ \zh{为常数，则半解析结果自动升级为闭合公式。}
+\end{enumerate}
+
+\subsection*{\zh{当前进展}}
+\zh{基于} Phase~16 \zh{的} 99 \zh{组实验（}$L \in \{256,512,1024\}$\zh{，}$d_{\mathrm{head}} \in \{32,64,128\}$\zh{），抛物线拟合得到} $\lambda \approx 1.17 \pm 0.13$ (CV$=$11.1\%)\zh{，初步表明} $\lambda$ \zh{近似为常数。对数线性回归给出} $\tau^* \approx 0.967 \cdot d_{\mathrm{head}}^{0.944} \cdot L^{-0.439}$\zh{，指数偏差约} 6\%\zh{。}
+
+\subsection*{\zh{对论文的意义}}
+$\lambda$ \zh{的近似普适性已得到初步验证，可将} $\tau^*$ \zh{公式定位为「经验校准的半解析公式」。建议在附录中增加} $\lambda$ \zh{的交叉验证表。完全闭合的解析推导仍为开放问题。}
+
+\vspace{12pt}
+
+%% ============================================================
+\section{\zh{宽带代理核的有效性边界}}
+%% ============================================================
+
+\subsection*{\zh{当前状态}}
+\zh{理论推导使用了宽带代理核}
+\begin{equation}
+  K_{\mathrm{app}}(\Delta) = \alpha\,\delta(\Delta) + \beta\,\min(\Delta, L),
+  \label{eq:surrogate}
+\end{equation}
+\zh{来近似真实的振荡} RoPE \zh{核} $K(\Delta) = \sum_k \cos(\theta_k \Delta)$\zh{。代理在} 12 \zh{种配置上功能验证通过}(Appendix~B)\zh{，但逐点保真度未被声称。}
+
+\zh{已验证：连续密度泛函} $J[\rho]$ \zh{在小} $\tau$ \zh{时确实减少碰撞（}$\tau < 1.4$\zh{时} $\Delta J < 0$\zh{）。离散通道碰撞的增加是密度集中项} $T_1$ \zh{主导的结果，不构成与理论的矛盾。论文的「碰撞}$+$\zh{Fisher 效用权衡」框架在泛函层面是正确的。}
+
+\subsection*{\zh{问题描述}}
+\zh{需要回答的关键问题：}
+\begin{enumerate}[leftmargin=2em]
+  \item \zh{代理核} $K_{\mathrm{app}}$ \zh{在什么条件下与真实核} $K$ \zh{的误差可控？即是否存在显式的误差界}
+  \begin{equation}
+    \sup_{\Delta \in [0, L]} \bigl|K(\Delta) - K_{\mathrm{app}}(\Delta)\bigr|
+    \leq \varepsilon(d_{\mathrm{head}}, \theta_{\mathrm{base}}, \tau)?
+  \end{equation}
+  \item \zh{当} $d_{\mathrm{head}}$ \zh{很小（例如} $d_{\mathrm{head}}=16$\zh{）或} $\theta_{\mathrm{base}}$ \zh{极端（例如} $10^7$\zh{）时，代理是否崩溃？}
+  \item \zh{代理的两个系数} $\alpha, \beta$ \zh{是否有解析表达式？}
+\end{enumerate}
+
+\subsection*{\zh{可能方向}}
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{Fourier \zh{分析}}\zh{：将} $K(\Delta)$ \zh{视为} $d_{\mathrm{head}}$ \zh{个余弦的叠加，利用} Weyl equidistribution \zh{或} discrepancy \zh{理论分析其渐近行为。当} $d_{\mathrm{head}} \to \infty$ \zh{且频率由} EVQ \zh{分配时，振荡项的取消程度可量化。}
+  \item \textbf{\zh{数值边界扫描}}\zh{：系统性地在} $(d_{\mathrm{head}}, \theta_{\mathrm{base}}, \tau)$ \zh{网格上计算代理误差，找到崩溃区域的经验边界。}
+  \item \textbf{$\alpha, \beta$ \zh{的矩匹配}}\zh{：通过匹配} $K$ \zh{和} $K_{\mathrm{app}}$ \zh{的前两个矩来导出} $\alpha, \beta$ \zh{的解析式。}
+\end{enumerate}
+
+\vspace{12pt}
+
+%% ============================================================
+\section{DiT \zh{模态修正因子的理论推导}}
+%% ============================================================
+
+\subsection*{\zh{当前状态}}
+\zh{将} $\tau^*$ \zh{公式应用于视频} DiT \zh{模型时，需要一个经验修正因子}
+\begin{equation}
+  \tau^*_{\mathrm{DiT}} \approx 0.53 \times \frac{d_{\mathrm{head}}}{\sqrt{L}}.
+  \label{eq:dit-correction}
+\end{equation}
+\zh{该} $0.53\times$ \zh{因子是} post-hoc \zh{拟合的，分解为「双向注意力因子」和「噪声衰减因子」也是事后解释，缺乏严格推导。}
+
+\subsection*{\zh{问题描述}}
+\begin{enumerate}[leftmargin=2em]
+  \item \zh{为什么} DiT \zh{需要更小的} $\tau^*$\zh{？是因为：}
+  \begin{itemize}
+    \item \zh{双向注意力使有效碰撞率加倍（每个位置同时被左右邻居访问）？}
+    \item \zh{去噪目标的梯度结构与自回归} next-token \zh{不同？}
+    \item 2D/3D \zh{位置编码的空间结构引入额外约束？}
+  \end{itemize}
+  \item \zh{修正因子是否为} $1/\sqrt{n_{\mathrm{dir}}}$ \zh{的形式，其中} $n_{\mathrm{dir}}$ \zh{为注意力方向数（单向}$=$1\zh{，双向}$=$2\zh{）？}
+  \item \zh{能否从变分框架~\eqref{eq:variational}出发，修改效用项} $U$ \zh{以自然包含模态差异？}
+\end{enumerate}
+
+\subsection*{\zh{可能方向}}
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{\zh{双向碰撞率}}\zh{：在双向注意力中，位置} $i$ \zh{处的碰撞概率为}
+  \begin{equation}
+    P_{\mathrm{collision}}^{\mathrm{bi}}(i) = 1 - \prod_{j \neq i} \bigl(1 - p_{ij}\bigr)\bigl(1-p_{ji}\bigr),
+  \end{equation}
+  \zh{相比单向注意力多了} $p_{ji}$ \zh{项。如果低频碰撞主导，可能导致} $\tau^*$ \zh{降低约} $1/\sqrt{2} \approx 0.707$\zh{，但实际因子为} $0.53$\zh{，说明还有其他效应。}
+  \item \textbf{\zh{去噪目标分析}}\zh{：扩散模型的损失为} $\|\epsilon - \epsilon_\theta(x_t, t)\|^2$\zh{，梯度对注意力权重的依赖方式与交叉熵不同。分析梯度中频率选择性的变化可能解释额外的衰减。}
+  \item \textbf{\zh{扩展实验}}\zh{：在纯双向文本模型（}BERT-style\zh{）上测试是否也需要修正因子，以分离「双向」与「扩散」的贡献。}
+\end{enumerate}
+
+\vspace{12pt}
+
+%% ============================================================
+\section{LoRA \zh{相变阈值的严格证明}}
+%% ============================================================
+
+\subsection*{\zh{当前状态}}
+\zh{实验发现：当} LoRA \zh{秩} $r < d_{\mathrm{head}}/2$ \zh{时，}EVQ \zh{的效果急剧崩溃（}LLaMA-8B\zh{，}$r=16$\zh{，}PPL \zh{从正常升至} 77.1\zh{）。我们猜测存在一个\textbf{相变阈值}}
+\begin{equation}
+  r_c = \frac{d_{\mathrm{head}}}{2},
+  \label{eq:lora-threshold}
+\end{equation}
+\zh{低于此阈值，}LoRA \zh{的低秩投影会破坏} EVQ \zh{频率分配所需的权重}--\zh{频率耦合。}
+
+\subsection*{\zh{问题描述}}
+\begin{enumerate}[leftmargin=2em]
+  \item \zh{为什么阈值是} $d_{\mathrm{head}}/2$ \zh{而不是其他值？}
+  \item \zh{设} RoPE \zh{频率矩阵为} $\Theta = \mathrm{diag}(\theta_1, \ldots, \theta_{d_{\mathrm{head}}/2})$\zh{，查询矩阵经} LoRA \zh{近似为} $W_Q \approx W_Q^{(0)} + BA$\zh{，其中} $B \in \mathbb{R}^{d \times r}$, $A \in \mathbb{R}^{r \times d}$\zh{。低秩扰动} $BA$ \zh{在频率域的效果是什么？}
+  \item \zh{是否可以证明：当} $r < d_{\mathrm{head}}/2$ \zh{时，}$BA$ \zh{无法在所有} $d_{\mathrm{head}}/2$ \zh{个频率通道上独立调制？}
+\end{enumerate}
+
+\subsection*{\zh{可能方向}}
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{\zh{频率空间秩分析}}\zh{：}RoPE \zh{将} $d_{\mathrm{head}}$ \zh{维空间分解为} $d_{\mathrm{head}}/2$ \zh{个} 2D \zh{旋转平面。}LoRA \zh{的秩} $r$ \zh{决定了其能独立控制的子空间数。当} $r < d_{\mathrm{head}}/2$ \zh{时，至少有一个旋转平面完全不受} LoRA \zh{控制，导致该频率通道的权重冻结在预训练值，与} EVQ \zh{分配不匹配。}
+  \item \textbf{\zh{矩阵扰动理论}}\zh{：分析} $\|W_Q \Theta - (W_Q^{(0)}+BA)\Theta\|_F$ \zh{在秩约束下的最小化问题，寻找使误差从} $O(1/r)$ \zh{变为} $O(1)$ \zh{的相变点。}
+  \item \textbf{\zh{实验验证}}\zh{：在} $r \in \{4, 8, 16, 32, 48, 64, 96, 128\}$ \zh{上做完整扫描（不仅} PPL\zh{，还看每个频率通道的梯度范数），确认相变的锐度和位置。}
+\end{enumerate}
+
+\vspace{12pt}
+
+%% ============================================================
+\section{\zh{渐进式训练放大机制}}
+%% ============================================================
+
+\subsection*{\zh{当前状态}}
+\zh{渐进式训练（}Progressive training\zh{）的实验结果（单种子）显示} EVQ \zh{优势随阶段\textbf{单调放大}：}
+\begin{center}
+\begin{tabular}{lccc}
+\hline
+& Stage 1 ($L$=512) & Stage 2 ($L$=1024) & Stage 3 ($L$=2048) \\
+\hline
+Geo+YaRN PPL@16K & 3.80 & 4.60 & 13.17 \\
+EVQ+YaRN PPL@16K & 2.48 & 2.21 & 2.48 \\
+$\Delta$ & $-34.7\%$ & $-52.0\%$ & $-81.2\%$ \\
+\hline
+\end{tabular}
+\end{center}
+Geo \zh{在} Stage 3 \zh{出现} PPL \zh{崩溃（}13.17\zh{），而} EVQ \zh{保持稳定（}2.48\zh{）。放大机制的理论解释缺失。}
+
+\subsection*{\zh{问题描述}}
+\begin{enumerate}[leftmargin=2em]
+  \item \zh{为什么} Geo \zh{频率分配在} $L$ \zh{增大时出现灾难性退化，而} EVQ \zh{不会？}
+  \item \zh{每次} $L$ \zh{翻倍时} EVQ \zh{的} $\tau$ \zh{从} $d_{\mathrm{head}}/\sqrt{L}$ retarget \zh{到新值。}retarget \zh{过程中，已学权重如何适应新频率？适应是否有理论保证？}
+  \item \zh{是否存在一个「放大不等式」}
+  \begin{equation}
+    \Delta_{\mathrm{PPL}}^{(s+1)} \geq c \cdot \Delta_{\mathrm{PPL}}^{(s)}, \quad c > 1,
+  \end{equation}
+  \zh{其中} $\Delta_{\mathrm{PPL}}^{(s)}$ \zh{为第} $s$ \zh{阶段} Geo \zh{与} EVQ \zh{的} PPL \zh{差距？}
+\end{enumerate}
+
+\subsection*{\zh{可能方向}}
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{\zh{频率碰撞累积}}\zh{：}Geo \zh{分配的低频密集区在每次} $L$ \zh{翻倍时，碰撞区域扩大（更多位置对落入无法区分的角度范围）。碰撞率} $P_{\mathrm{collision}} \sim (L/L_{\mathrm{critical}})^\alpha$ \zh{随} $L$ \zh{幂律增长，而} EVQ \zh{的均匀效用分配使碰撞率保持} $O(1)$\zh{。}
+  \item \textbf{Retarget \zh{平滑性}}\zh{：当} $\tau$ \zh{从} $\tau_s$ \zh{变为} $\tau_{s+1} = \tau_s/\sqrt{2}$ \zh{时，}EVQ \zh{频率的变化为}
+  \begin{equation}
+    \Delta\varphi_k = \varphi_k(\tau_{s+1}) - \varphi_k(\tau_s).
+  \end{equation}
+  \zh{如果} $\|\Delta\varphi\|_\infty$ \zh{足够小（因为} EVQ \zh{的平滑参数化），权重可以通过少量训练} token \zh{适应。}
+  \item \textbf{\zh{对比：}Geo \zh{无法} retarget}\zh{：}Geo \zh{频率} $\theta_k^{\mathrm{geo}} = \theta_{\mathrm{base}}^{-2k/d}$ \zh{不依赖于} $L$\zh{，因此没有} retarget \zh{机制。当} $L$ \zh{增大时，}Geo \zh{只能依赖} YaRN \zh{的推理时缩放，但} YaRN \zh{对大} $L$ \zh{的外推误差呈超线性增长。}
+\end{enumerate}
+
+\vspace{12pt}
+
+%% ============================================================
+\section{$\tau^*$ \zh{在} $L \geq 4096$ \zh{时的有效性}}
+%% ============================================================
+
+\subsection*{\zh{当前状态}}
+\zh{当前所有实验的训练长度均满足} $L \leq 2048$\zh{。缩放律} $\tau^* = d_{\mathrm{head}}/\sqrt{L}$ \zh{在} $L \in \{256, 512, 1024\}$ \zh{范围内验证良好（指数偏差约} 6\%\zh{），但在} $L \geq 4096$ \zh{时：}
+\begin{itemize}[leftmargin=2em]
+  \item $\tau^*$ \zh{变得很小：例如} $d_{\mathrm{head}}=64, L=4096 \Rightarrow \tau^* = 1.0$
+  \item $\tau^*$ \zh{可能进入「弱分离区」（}$\tau \to 0$ \zh{时} EVQ \zh{退化为均匀分配）}
+  \item \zh{当} $L=16384, d_{\mathrm{head}}=64$ \zh{时} $\tau^* = 0.5$\zh{，此时} $\sinh(\tau) \approx \tau$\zh{，}EVQ \zh{公式~\eqref{eq:evq}简化为线性分配}
+\end{itemize}
+
+\subsection*{\zh{问题描述}}
+\begin{enumerate}[leftmargin=2em]
+  \item \zh{缩放律是否在} $L \geq 4096$ \zh{时仍然成立？还是存在一个饱和机制使得} $\tau^*$ \zh{不低于某个下界} $\tau_{\min}$\zh{？}
+  \item \zh{如果存在饱和，修正后的缩放律可能是}
+  \begin{equation}
+    \tau^* = \max\!\left(\frac{d_{\mathrm{head}}}{\sqrt{L}},\; \tau_{\min}\right),
+    \quad \tau_{\min} = \;?
+  \end{equation}
+  \item \zh{在} $\tau \to 0$ \zh{极限下，}EVQ \zh{分配趋向均匀分配} $\varphi_k \to u_k$\zh{。均匀分配在长序列上是否依然优于} Geo\zh{？}
+  \item \zh{这与} MLA (Multi-head Latent Attention) \zh{架构的无} RoPE \zh{设计有何关系？}
+\end{enumerate}
+
+\subsection*{\zh{可能方向}}
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{\zh{小} $\tau$ \zh{渐近分析}}\zh{：当} $\tau \ll 1$ \zh{时，}
+  \begin{equation}
+    \varphi_k(\tau) \approx u_k - \frac{\tau^2}{6}\,u_k(1-u_k)(2-u_k) + O(\tau^4).
+  \end{equation}
+  \zh{二阶修正项始终为负（将频率向低端压缩），其幅度由} $u_k(1-u_k)(2-u_k)$ \zh{决定。分析该扰动对注意力传输效用的贡献，判断在小} $\tau$ \zh{时是否仍有意义。}
+  \item \textbf{\zh{最小有效} $\tau$ \zh{实验}}\zh{：在} 125M \zh{模型上，以} $L \in \{512, 1024, 2048, 4096, 8192\}$ \zh{训练并测试，绘制} $\tau^*_{\mathrm{empirical}}$ vs $d_{\mathrm{head}}/\sqrt{L}$ \zh{曲线，检测偏离点。}
+  \item \textbf{\zh{与} GQA/MQA \zh{的交互}}\zh{：在} GQA \zh{配置下，有效} $d_{\mathrm{head}}$ \zh{可能更大（因为多个查询头共享键值）。这可能推迟饱和效应，需要实验确认。}
+\end{enumerate}
+
+\vspace{20pt}
+
+\end{document}

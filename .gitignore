@@ -59,10 +59,11 @@ paper/*.snm
 paper/*.vrb
 paper/*.brf
 
-# Internal development notes (not for public repo)
-internal/
+# Internal tool/review artifacts (not for public repo)
+internal/tools/
+internal/reviews/
 
-# Brief build artifacts (now in internal/)
+# Brief build artifacts
 internal/brief/*.aux
 internal/brief/*.log
 internal/brief/*.out
