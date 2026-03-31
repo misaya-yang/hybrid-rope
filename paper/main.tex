@@ -1,6 +1,6 @@
 \documentclass{article}
 
-\usepackage[nonatbib]{neurips_2025}
+\usepackage[nonatbib]{neurips_2026}
 \usepackage{natbib}
 
 \usepackage[utf8]{inputenc}
@@ -28,7 +28,7 @@
 \newtheorem{proposition}{Proposition}
 \newtheorem{remark}{Remark}
 
-\title{EVQ-Cosh: Closed-Form Frequency Allocation for Long-Context Extrapolation}
+\title{EVQ-Cosh: Optimal Frequency Allocation for Rotary Position Embedding}
 
 \author{Anonymous Authors}
 
@@ -37,7 +37,7 @@
 \maketitle
 
 \begin{abstract}
-Long-context language models are typically extended at inference time, but the training-time geometric allocation of RoPE frequencies---a key determinant of long-range representational quality---is usually left untouched. We formulate frequency allocation as a variational inverse problem, derive a broadband surrogate whose stationary density satisfies a closed-form ODE, and obtain a one-parameter family (EVQ-cosh) in which geometric RoPE is the degenerate \(\tau{=}0\) limit. In PE-dominant extreme extrapolation (\(128{\to}8\mathrm{K}\)), EVQ surpasses learnable positional encoding with zero extra parameters (\(333.7\) vs.\ \(455.3\) PPL), isolating frequency structure as the decisive variable. More importantly, EVQ provides a better substrate for inference-time scaling: EVQ+YaRN reaches \(100\%\) retrieval at \(8\mathrm{K}\) (6~seeds) where Geo+YaRN plateaus at \(61\text{--}65\%\), and lowers PPL by \(14\text{--}32\%\) at \(8\text{--}16\mathrm{K}\). Progressive context extension (single seed) widens this gap monotonically, reaching \(48\mathrm{K}\) functional context (\(24\times\) training length) at PPL~\(2.63\). On Multi-head Latent Attention (DeepSeek-V2/V3 mechanism), EVQ alone outperforms Geo+YaRN at \(2\text{--}3\times\) extrapolation (\(-31.1\%\) PPL, 3~seeds). These results identify training-time frequency allocation as an under-explored but critical design axis for long-context extrapolation.
+Rotary position embedding (RoPE) is governed by three design axes: the base frequency, the head dimension, and the allocation of frequencies across channels. The first two have received significant attention; the third---how frequency mass is distributed---has remained fixed at the geometric (equal-ratio) schedule since RoFormer, despite being a key determinant of positional representational quality. We formulate frequency allocation as a variational inverse problem, derive a broadband surrogate whose stationary density satisfies a closed-form ODE, and obtain a one-parameter family (EVQ-cosh) in which geometric RoPE is the degenerate \(\tau{=}0\) limit. EVQ is architecture-agnostic: it modifies only the inverse-frequency initialization, adds zero parameters, and composes with existing inference-time methods. On standard multi-head attention (MHA), EVQ+YaRN reaches \(100\%\) retrieval at \(8\mathrm{K}\) (3~seeds per configuration, 6~total) where Geo+YaRN plateaus at \(61\%\), and lowers PPL by \(14\text{--}32\%\) at \(8\text{--}16\mathrm{K}\). On Multi-head Latent Attention (MLA, DeepSeek-V2/V3), where only 16 frequency channels carry positional information, EVQ alone outperforms Geo+YaRN at \(2\times\) extrapolation (\(-31.1\%\) PPL, 3~seeds). In PE-dominant extreme extrapolation, EVQ surpasses learnable positional encoding with zero extra parameters (\(333.7\) vs.\ \(455.3\) PPL). These results identify frequency allocation as a fundamental and under-explored design axis for rotary position embedding, with consistent gains across MHA, MLA, and video DiT architectures.
 \end{abstract}
 
 \input{sections/01_intro}
@@ -58,7 +58,7 @@ Long-context language models are typically extended at inference time, but the t
 \begin{itemize}
 \item \textbf{Question:} Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?
 \item \textbf{Answer:} \answerYes{}
-\item \textbf{Justification:} The abstract and introduction are restricted to three core claims: closed-form variational theory, DAPE-style extreme extrapolation, and the main systems result that EVQ unlocks YaRN.
+\item \textbf{Justification:} The abstract and introduction are restricted to four core claims: identifying frequency allocation as a fundamental PE design axis, closed-form variational theory, architecture-agnostic gains across MHA/MLA/DiT, and the systems result that EVQ unlocks YaRN.
 \end{itemize}
 
 \item \textbf{Limitations}
@@ -114,7 +114,7 @@ Long-context language models are typically extended at inference time, but the t
 \begin{itemize}
 \item \textbf{Question:} Does the research conducted in the paper conform to the NeurIPS Code of Ethics?
 \item \textbf{Answer:} \answerYes{}
-\item \textbf{Justification:} The work studies positional encoding and long-context extrapolation and does not involve human-subject experimentation or a deployed user-facing system.
+\item \textbf{Justification:} The work studies frequency allocation for rotary position embedding and does not involve human-subject experimentation or a deployed user-facing system.
 \end{itemize}
 
 \item \textbf{Broader impacts}
@@ -165,7 +165,7 @@ Long-context language models are typically extended at inference time, but the t
 
 \section*{Broader Impact}
 
-This work studies positional encoding for long-context extrapolation rather than a specific deployed application. Its main positive impact is scientific and systems-oriented: replacing ad hoc context-extension heuristics with a more principled training-time frequency design can reduce wasted compute and improve the reliability of long-context models. The main risk is over-generalization. Our strongest evidence remains concentrated on text extrapolation and retrieval-heavy long-context evaluation, so we do not present EVQ as a universal guarantee of downstream improvement across all tasks, modalities, or deployment settings.
+This work studies frequency allocation as a design axis for rotary position embedding rather than a specific deployed application. Its main positive impact is scientific and systems-oriented: replacing the default geometric frequency schedule with a principled variational allocation can reduce wasted compute and improve the reliability of long-context models across architectures. The main risk is over-generalization. Our strongest evidence remains concentrated on text extrapolation and retrieval-heavy long-context evaluation, so we do not present EVQ as a universal guarantee of downstream improvement across all tasks, modalities, or deployment settings.
 
 \input{appendix/a1_proofs}
 \input{appendix/a2_experiment_details}
