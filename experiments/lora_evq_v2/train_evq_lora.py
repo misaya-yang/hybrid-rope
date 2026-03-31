@@ -133,9 +133,21 @@ def load_training_data(
     max_seq_len: int = 8192,
     max_samples: int = 8000,
     val_ratio: float = 0.02,
+    cache_dir: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Load and tokenize long-context training data."""
+    """Load and tokenize long-context training data. Caches tokenized result to disk."""
+    import hashlib, random
     from datasets import load_dataset
+
+    # Check cache
+    if cache_dir:
+        cache_key = hashlib.md5(f"{dataset_name}_{max_seq_len}_{max_samples}".encode()).hexdigest()[:12]
+        cache_path = os.path.join(cache_dir, f"tokenized_{cache_key}.pt")
+        if os.path.exists(cache_path):
+            print(f"[DATA] Loading cached tokenized data from {cache_path}")
+            cached = torch.load(cache_path, map_location="cpu", weights_only=False)
+            print(f"[DATA] Train: {len(cached['train'])}, Val: {len(cached['val'])}")
+            return cached
 
     print(f"[DATA] Loading dataset: {dataset_name}")
     if dataset_name.endswith(".jsonl") or dataset_name.endswith(".json"):
@@ -182,11 +194,12 @@ def load_training_data(
     # Tokenize
     tokenized = []
     skipped = 0
-    for msgs in processed:
+    for i, msgs in enumerate(processed):
+        if i % 1000 == 0 and i > 0:
+            print(f"[DATA] Tokenizing {i}/{len(processed)}...")
         try:
             text = tokenizer.apply_chat_template(msgs, tokenize=False, add_generation_prompt=False)
         except Exception:
-            # Fallback: manual formatting
             parts = []
             for m in msgs:
                 role = m.get("role", "user")
@@ -204,7 +217,7 @@ def load_training_data(
         if len(enc["input_ids"]) < 64:
             skipped += 1
             continue
-        tokenized.append(enc)
+        tokenized.append({"input_ids": enc["input_ids"], "attention_mask": enc["attention_mask"]})
 
     print(f"[DATA] Tokenized: {len(tokenized)}, skipped (too short): {skipped}")
 
@@ -216,7 +229,6 @@ def load_training_data(
 
     # Split train/val
     n_val = max(1, int(len(tokenized) * val_ratio))
-    import random
     random.seed(42)
     indices = list(range(len(tokenized)))
     random.shuffle(indices)
@@ -225,7 +237,17 @@ def load_training_data(
     val_data = [tokenized[i] for i in val_indices]
 
     print(f"[DATA] Train: {len(train_data)}, Val: {len(val_data)}")
-    return {"train": train_data, "val": val_data}
+
+    result = {"train": train_data, "val": val_data}
+
+    # Save cache
+    if cache_dir:
+        os.makedirs(cache_dir, exist_ok=True)
+        torch.save(result, cache_path)
+        size_mb = os.path.getsize(cache_path) / 1024 / 1024
+        print(f"[DATA] Cached to {cache_path} ({size_mb:.0f}MB)")
+
+    return result
 
 
 class TokenizedDataset(torch.utils.data.Dataset):
@@ -242,10 +264,26 @@ class TokenizedDataset(torch.utils.data.Dataset):
         input_ids = item["input_ids"][:self.max_seq_len]
         attention_mask = item["attention_mask"][:self.max_seq_len]
         return {
-            "input_ids": torch.tensor(input_ids, dtype=torch.long),
-            "attention_mask": torch.tensor(attention_mask, dtype=torch.long),
-            "labels": torch.tensor(input_ids, dtype=torch.long),
+            "input_ids": input_ids,
+            "attention_mask": attention_mask,
+            "labels": list(input_ids),
         }
+
+
+class PaddingCollator:
+    """Pad variable-length samples to the longest in the batch."""
+    def __init__(self, pad_token_id: int):
+        self.pad_token_id = pad_token_id
+
+    def __call__(self, features: List[Dict]) -> Dict[str, torch.Tensor]:
+        max_len = max(len(f["input_ids"]) for f in features)
+        batch = {"input_ids": [], "attention_mask": [], "labels": []}
+        for f in features:
+            pad_len = max_len - len(f["input_ids"])
+            batch["input_ids"].append(f["input_ids"] + [self.pad_token_id] * pad_len)
+            batch["attention_mask"].append(f["attention_mask"] + [0] * pad_len)
+            batch["labels"].append(f["labels"] + [-100] * pad_len)
+        return {k: torch.tensor(v, dtype=torch.long) for k, v in batch.items()}
 
 
 # ---------------------------------------------------------------------------
@@ -279,8 +317,8 @@ def parse_args():
 
     # Training (bf16 full-precision LoRA — lr lower than QLoRA's 2e-4)
     p.add_argument("--max_steps", type=int, default=600)
-    p.add_argument("--per_device_batch_size", type=int, default=4)
-    p.add_argument("--gradient_accumulation_steps", type=int, default=2)
+    p.add_argument("--per_device_batch_size", type=int, default=2)
+    p.add_argument("--gradient_accumulation_steps", type=int, default=4)
     p.add_argument("--learning_rate", type=float, default=1e-4)
     p.add_argument("--warmup_steps", type=int, default=60)
     p.add_argument("--weight_decay", type=float, default=0.01)
@@ -419,7 +457,6 @@ def main():
         AutoTokenizer,
         TrainingArguments,
         Trainer,
-        DataCollatorForLanguageModeling,
         BitsAndBytesConfig,
     )
     from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
@@ -507,6 +544,7 @@ def main():
         dataset_name=args.local_data_path or args.dataset_name,
         max_seq_len=args.max_seq_len,
         max_samples=args.max_samples,
+        cache_dir=args.output_dir,
     )
 
     train_dataset = TokenizedDataset(data["train"], args.max_seq_len)
@@ -539,10 +577,7 @@ def main():
         remove_unused_columns=False,
     )
 
-    data_collator = DataCollatorForLanguageModeling(
-        tokenizer=tokenizer,
-        mlm=False,
-    )
+    data_collator = PaddingCollator(pad_token_id=tokenizer.pad_token_id)
 
     trainer = Trainer(
         model=model,

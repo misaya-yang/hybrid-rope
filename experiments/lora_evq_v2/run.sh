@@ -75,8 +75,8 @@ run_train() {
         --max_steps ${MAX_STEPS} \
         --max_seq_len ${MAX_SEQ_LEN} \
         --local_data_path "${LOCAL_DATA}" \
-        --per_device_batch_size 4 \
-        --gradient_accumulation_steps 2 \
+        --per_device_batch_size 2 \
+        --gradient_accumulation_steps 4 \
         --learning_rate 1e-4
     echo ""
 }
