@@ -56,7 +56,7 @@ Outputs are saved to `paper/figs/`.
 ```
 paper/                      LaTeX source, figures, and tables
 ├── main.tex                NeurIPS submission entry point
-├── sections/               Section .tex files (introduction, theory, experiments, ...)
+├── sections/               Section .tex files (01_intro … 07_conclusion)
 ├── appendix/               Appendix .tex files
 ├── tables/                 Table .tex files (Tables 1–6)
 ├── figs/                   All paper figures (PDF + PNG)
@@ -65,7 +65,7 @@ paper/                      LaTeX source, figures, and tables
 scripts/                    Experiment and evaluation code
 ├── train.py                Core training entrypoint
 ├── core_text_phases/       Main experiment chain (Phase 8–21)
-│   ├── run_evq_sweep.py    Core τ-sweep (Tables 1)
+│   ├── run_evq_sweep.py    Core τ-sweep (Table 1)
 │   ├── phase14c_*.py       EVQ+YaRN synergy (Tables 2–3, Fig 2)
 │   ├── phase16_*.py        99-run τ* validation (Fig 6)
 │   ├── phase17c_*.py       454M flagship (Fig 4)
@@ -73,25 +73,29 @@ scripts/                    Experiment and evaluation code
 ├── figures/                Paper figure generation scripts
 ├── data_prep/              Dataset preparation helpers
 ├── lib/rope/               RoPE schedule library (EVQ-Cosh, Progressive YaRN)
-└── supporting_eval/        Supporting evaluators
+├── video_temporal/         Video DiT temporal extrapolation experiments
+└── supporting_eval/        Supporting evaluators (LongBench, NIAH, passkey)
+
+experiments/                Standalone experiment packages
+└── lora_evq_v2/            LLaMA-3-8B LoRA fine-tuning with EVQ-Cosh
+    ├── train_evq_lora.py   Training script (bf16, r=64, τ=1.414)
+    ├── eval_evq_lora.py    PPL / Passkey / LongBench evaluation
+    ├── eval_ruler.py       RULER benchmark (6 tasks, 4K–32K)
+    ├── eval_pe_probes.py   Custom PE probing tasks (4 tasks)
+    ├── compare_results.py  Base vs EVQ comparison & LaTeX table
+    └── run.sh              One-click runner
 
 docs/                       Research documentation
 ├── overview/               Methodology, reproducibility, traceability map
-│   ├── PAPER_CLAIMS_MAP.md ⭐ Paper↔Script↔Data navigation hub
+│   ├── PAPER_CLAIMS_MAP.md Paper↔Script↔Data navigation hub
 │   ├── REPRODUCE.md        Full reproducibility guide
 │   └── DATA_PREPARATION.md Data source documentation
 ├── exp/                    Experiment reports (YYYY-MM-DD_slug.md)
 └── theory/                 Derivations and validation notes
 
-results/                    Experiment output artifacts
-├── core_text/              Primary text experiment results
-├── theory/                 Theory validation outputs
-└── supporting_*/           Cross-model and video experiments
+results/                    Experiment output artifacts (gitignored, synced via rsync)
 
-team/                       Collaboration materials
-├── briefs/                 Advisor and collaborator briefs
-├── status/                 Gap tracking and priority matrices
-└── plans/                  Experiment plans
+tests/                      Unit tests
 ```
 
 ---

@@ -75,6 +75,10 @@ venv/
 data/video_temporal/generated/
 data/video_temporal/external/
 
+# Skill / assistant definition files
+*.skill
+**/*.skill
+
 # Tooling metadata
 .codex/
 .codex_tmp/
