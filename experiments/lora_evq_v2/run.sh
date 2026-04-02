@@ -31,7 +31,7 @@ WIKITEXT_PATH="/root/autodl-tmp/data/wikitext2/wikitext2_test.txt"
 TAU=1.414
 LORA_R=64
 LORA_ALPHA=128
-MAX_STEPS=600
+MAX_STEPS=300
 MAX_SEQ_LEN=8192
 # ---------------------------
 

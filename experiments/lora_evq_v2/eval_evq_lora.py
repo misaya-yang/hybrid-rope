@@ -82,22 +82,30 @@ def load_model_and_tokenizer(
 
     model = AutoModelForCausalLM.from_pretrained(model_name, **load_kwargs)
 
-    # Inject custom inv_freq if provided
-    if inv_freq_path and os.path.exists(inv_freq_path):
-        print(f"[ROPE] Loading custom inv_freq from {inv_freq_path}")
-        data = torch.load(inv_freq_path, map_location="cpu", weights_only=True)
-        inv_freq = data["inv_freq"] if isinstance(data, dict) else data
-        from train_evq_lora import inject_inv_freq
-        result = inject_inv_freq(model, inv_freq)
-        print(f"[ROPE] Injected into {result['patched_count']} modules "
-              f"(τ={data.get('tau', '?')})")
-
-    # Load LoRA adapter — 不做 merge, bf16 base + bf16 adapter 全精度推理
+    # Load adapter FIRST, then inject inv_freq (PEFT may reset rotary buffers)
     if adapter_dir:
         print(f"[LORA] Loading adapter from {adapter_dir}")
         from peft import PeftModel
         model = PeftModel.from_pretrained(model, adapter_dir)
         print("[LORA] Adapter loaded (no merge, full-precision inference)")
+
+    if inv_freq_path and os.path.exists(inv_freq_path):
+        print(f"[ROPE] Loading custom inv_freq from {inv_freq_path}")
+        data = torch.load(inv_freq_path, map_location="cpu", weights_only=True)
+        inv_freq = data["inv_freq"] if isinstance(data, dict) else data
+        from train_evq_lora import inject_inv_freq, find_rotary_modules, compute_geometric_inv_freq
+        result = inject_inv_freq(model, inv_freq)
+        # Verify injection
+        mods = find_rotary_modules(model)
+        if mods:
+            actual = mods[0][1].inv_freq.detach().cpu().to(torch.float64)
+            expected = inv_freq.detach().cpu().to(torch.float64)
+            geo = compute_geometric_inv_freq(128, 500000.0)
+            err_evq = (actual - expected).abs().max().item()
+            err_geo = (actual - geo).abs().max().item()
+            print(f"[ROPE] Injected into {result['patched_count']} modules (τ={data.get('tau', '?')})")
+            print(f"[ROPE] Verify: vs_EVQ={err_evq:.2e}, vs_GEO={err_geo:.2e} "
+                  f"{'✅ EVQ active' if err_evq < err_geo else '❌ STILL GEOMETRIC!'}")
 
     model.eval()
     return model, tokenizer

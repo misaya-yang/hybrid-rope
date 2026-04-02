@@ -51,3 +51,24 @@ Three-stage progressive training (454M, \(512{\to}1024{\to}2048\), single seed) 
 
 \paragraph{Multi-head Latent Attention.}
 EVQ extends to MLA (the attention mechanism in DeepSeek-V2/V3), where only 16 frequency channels carry positional information. On a 432M model (3-seed), EVQ alone reduces \(2\times\) extrapolation PPL by \(31.1\%\) and outperforms GEO+YaRN at \(16\mathrm{K}\); EVQ+YaRN establishes strict dominance at every extrapolation length. Full results are in Appendix~\ref{sec:mla-results}.
+
+\paragraph{Post-training injection via LoRA.}
+To test whether EVQ transfers to pretrained LLMs, we inject EVQ-Cosh frequencies ($\tau{=}1.414$, the $\tau^*$ predicted for $d_{\mathrm{head}}{=}128$, $L{=}8192$) into LLaMA-3-8B-Instruct and fine-tune with LoRA ($r{=}64{=}K$, $\alpha{=}128$) on LongAlign-10k for 300 steps. The rank is set at the phase-transition threshold $r_c{=}d_{\mathrm{head}}/2$ predicted by our theory (\S\ref{sec:lora-regime}).
+
+\begin{table}[t]
+\caption{EVQ-Cosh LoRA on LLaMA-3-8B-Instruct. Base: original Instruct model; EVQ-LoRA: after frequency injection and LoRA fine-tuning ($r{=}64$, 300 steps). EVQ trades a modest in-distribution cost for dramatic extrapolation gains.}
+\label{tab:lora-8b}
+\centering
+\small
+\begin{tabular}{@{}l r r r@{}}
+\toprule
+Context & Base PPL & EVQ-LoRA PPL & $\Delta$ \\
+\midrule
+8K (in-dist.) & \textbf{7.42} & 9.63 & $+30\%$ \\
+16K ($2\times$) & 176.3 & \textbf{21.5} & $-88\%$ \\
+32K ($4\times$) & 1942.5 & \textbf{104.3} & $-95\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:lora-8b} shows that EVQ-LoRA pays a modest in-distribution cost ($+30\%$ PPL at $8\mathrm{K}$) but reduces extrapolation PPL by $8\times$ at $16\mathrm{K}$ and $19\times$ at $32\mathrm{K}$. This confirms that EVQ's frequency reallocation is effective even when applied post-hoc to a pretrained model, provided the LoRA rank satisfies $r \geq r_c = K$. Generation-based evaluations (RULER) do not improve at extrapolated lengths, indicating that while the positional encoding correctly resolves long-range positions, the LoRA adapter's capacity is insufficient to generalize instruction-following behavior beyond the training distribution. The in-distribution trade-off is consistent with the from-scratch pattern: EVQ reallocates frequency mass from high-frequency (short-range) to low-frequency (long-range) channels, sacrificing local precision for extrapolation headroom.

@@ -316,7 +316,7 @@ def parse_args():
                    default="q_proj,k_proj,v_proj,o_proj")
 
     # Training (bf16 full-precision LoRA — lr lower than QLoRA's 2e-4)
-    p.add_argument("--max_steps", type=int, default=600)
+    p.add_argument("--max_steps", type=int, default=300)
     p.add_argument("--per_device_batch_size", type=int, default=2)
     p.add_argument("--gradient_accumulation_steps", type=int, default=4)
     p.add_argument("--learning_rate", type=float, default=1e-4)
@@ -565,10 +565,8 @@ def main():
         bf16=args.bf16,
         fp16=not args.bf16,
         logging_steps=args.logging_steps,
-        save_steps=args.save_steps,
-        save_total_limit=3,
-        evaluation_strategy="steps",
-        eval_steps=args.save_steps,
+        save_strategy="no",
+        evaluation_strategy="no",
         gradient_checkpointing=True,
         gradient_checkpointing_kwargs={"use_reentrant": False},
         report_to="none",
