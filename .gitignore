@@ -62,6 +62,7 @@ paper/*.brf
 # Internal tool/review artifacts (not for public repo)
 internal/tools/
 internal/reviews/
+internal/local_snapshots/
 
 # Brief build artifacts
 internal/brief/*.aux
