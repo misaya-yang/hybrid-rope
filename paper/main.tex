@@ -29,7 +29,7 @@
 \newtheorem{corollary}{Corollary}
 \newtheorem{remark}{Remark}
 
-\title{EVQ-Cosh: Optimal Frequency Allocation for Rotary Position Embedding}
+\title{EVQ-Cosh: Variational Frequency Allocation for Rotary Position Embedding}
 
 \author{Anonymous Authors}
 
@@ -38,7 +38,12 @@
 \maketitle
 
 \begin{abstract}
-Rotary position embedding (RoPE) is governed by three design axes: the base frequency, the head dimension, and the allocation of frequencies across channels. The first two have received significant attention; the third---how frequency mass is distributed---has remained fixed at the geometric (equal-ratio) schedule since RoFormer, despite being a key determinant of positional representational quality. We formulate frequency allocation as a variational inverse problem, derive a broadband surrogate whose stationary density satisfies a closed-form ODE, and obtain a one-parameter family (EVQ-cosh) in which geometric RoPE is the degenerate \(\tau{=}0\) limit. EVQ is architecture-agnostic: it modifies only the inverse-frequency initialization, adds zero parameters, and composes with existing inference-time methods. On standard multi-head attention (MHA), EVQ+YaRN reaches \(100\%\) retrieval at \(8\mathrm{K}\) (3~seeds per configuration, 6~total) where Geo+YaRN plateaus at \(61\%\), and lowers PPL by \(14\text{--}32\%\) at \(8\text{--}16\mathrm{K}\). On Multi-head Latent Attention (MLA, DeepSeek-V2/V3), where only 16 frequency channels carry positional information, EVQ alone outperforms Geo+YaRN at \(2\times\) extrapolation (\(-31.1\%\) PPL, 3~seeds). In PE-dominant extreme extrapolation, EVQ surpasses learnable positional encoding with zero extra parameters (\(333.7\) vs.\ \(455.3\) PPL). These results identify frequency allocation as a fundamental and under-explored design axis for rotary position embedding, with consistent gains across MHA, MLA, and video DiT architectures.
+Every mainstream RoPE implementation distributes frequencies across channels using the same geometric (equal-ratio) schedule introduced by RoFormer, yet this allocation is a degenerate limiting case---the $\tau{=}0$ boundary of a broader variational family---not a structurally distinguished optimum.
+We formulate channel-frequency allocation as a variational problem, derive a closed-form one-parameter family (EVQ-cosh) whose $\tau{=}0$ limit recovers geometric RoPE, and show that a deliberately simple, semi-analytic temperature rule $\tau^* = d_{\mathrm{head}}/\sqrt{L}$---sub-optimal by construction---already matches per-setting optima to within $<1\%$ PPL across 27 configurations without any learned parameters.
+The strongest systems result is compositional: on MHA (3~seeds), EVQ+YaRN reaches $100\%$ passkey retrieval at $8\mathrm{K}$ where Geo+YaRN plateaus at $61\%$, with $14$--$32\%$ PPL reductions at $8$--$16\mathrm{K}$.
+On MLA (3~seeds), where only 16 RoPE channels remain, EVQ \emph{alone} outperforms Geo+YaRN at $2\times$ extrapolation ($-31.1\%$ PPL).
+In PE-dominant extreme extrapolation, EVQ surpasses learnable positional encoding with zero extra parameters ($333.7$ vs.\ $455.3$ PPL).
+These results establish frequency allocation as a previously neglected and increasingly consequential RoPE design axis: the structural correction matters more than the precision of the rule that selects it.
 \end{abstract}
 
 \input{sections/01_intro}
@@ -60,7 +65,7 @@ Rotary position embedding (RoPE) is governed by three design axes: the base freq
 \begin{itemize}
 \item \textbf{Question:} Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?
 \item \textbf{Answer:} \answerYes{}
-\item \textbf{Justification:} The abstract and introduction are restricted to four core claims: identifying frequency allocation as a fundamental PE design axis, closed-form variational theory, architecture-agnostic gains across MHA/MLA/DiT, and the systems result that EVQ unlocks YaRN.
+\item \textbf{Justification:} The abstract and introduction are restricted to three contributions: (1) identifying frequency allocation as a fundamental PE design axis with a closed-form variational family, (2) demonstrating that a deliberately sub-optimal semi-analytic rule achieves near-oracle performance across 27 configurations, and (3) the systems result that EVQ unlocks YaRN. The $\tau^*$ rule is explicitly described as sub-optimal by construction throughout.
 \end{itemize}
 
 \item \textbf{Limitations}
@@ -74,7 +79,7 @@ Rotary position embedding (RoPE) is governed by three design axes: the base freq
 \begin{itemize}
 \item \textbf{Question:} For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?
 \item \textbf{Answer:} \answerYes{}
-\item \textbf{Justification:} The body states theorem/proposition identities and the appendix records the surrogate-to-ODE derivation, geometric-limit proof, and the assumptions behind the waterbed statement.
+\item \textbf{Justification:} Theorems~1--2 and Proposition~1 are exact conditional on the broadband surrogate; the surrogate itself is validated in Appendix~\ref{sec:surrogate-validation}. The $\tau^*$ scaling law (Proposition~\ref{prop:softmax-transport}) is semi-analytic: $d_{\mathrm{head}}$ dependence and the $L^{-1/2}$ exponent are derived, but one transport constant $\lambda$ is calibrated empirically. This status is stated explicitly in \S3.7 and the limitations section.
 \end{itemize}
 
 \item \textbf{Experimental result reproducibility}

@@ -2,13 +2,14 @@
   title = {Attention Is All You Need},
   author = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N. and Kaiser, Lukasz and Polosukhin, Illia},
   booktitle = {Advances in Neural Information Processing Systems},
+  volume = {30},
   year = {2017}
 }
 
 @inproceedings{shaw2018self,
   title = {Self-Attention with Relative Position Representations},
   author = {Shaw, Peter and Uszkoreit, Jakob and Vaswani, Ashish},
-  booktitle = {NAACL},
+  booktitle = {Proceedings of the 2018 Conference of the North {A}merican Chapter of the Association for Computational Linguistics: Human Language Technologies},
   year = {2018}
 }
 
@@ -16,6 +17,9 @@
   title = {Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer},
   author = {Raffel, Colin and Shazeer, Noam and Roberts, Adam and Lee, Katherine and Narang, Sharan and Matena, Michael and Zhou, Yanqi and Li, Wei and Liu, Peter J.},
   journal = {Journal of Machine Learning Research},
+  volume = {21},
+  number = {140},
+  pages = {1--67},
   year = {2020}
 }
 
@@ -27,17 +31,19 @@
 }
 
 @article{su2024roformer,
-  title = {RoFormer: Enhanced Transformer with Rotary Position Embedding},
-  author = {Su, Jianlin and Lu, Yu and Pan, Shengfeng and Murtadha, Ahmed and Wen, Bo and Liu, Yunfeng},
+  title = {{RoFormer}: Enhanced Transformer with Rotary Position Embedding},
+  author = {Su, Jianlin and Ahmed, Murtadha and Lu, Yu and Pan, Shengfeng and Wen, Bo and Liu, Yunfeng},
   journal = {Neurocomputing},
+  volume = {568},
+  pages = {127063},
   year = {2024}
 }
 
-@article{chen2023position,
+@inproceedings{chen2024position,
   title = {Extending Context Window of Large Language Models via Positional Interpolation},
   author = {Chen, Shouyuan and Wong, Sherman and Chen, Liangjian and Tian, Yuandong},
-  journal = {arXiv preprint arXiv:2306.15595},
-  year = {2023}
+  booktitle = {Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing},
+  year = {2024}
 }
 
 @inproceedings{peng2024yarn,
@@ -50,14 +56,16 @@
 @inproceedings{ding2024longrope,
   title = {{LongRoPE}: Extending {LLM} Context Window Beyond 2 Million Tokens},
   author = {Ding, Yiran and Zhang, Li Lyna and Zhang, Chengruidong and Xu, Yuanyuan and Shang, Ning and Xu, Jiahang and Yang, Fan and Yang, Mao},
-  booktitle = {International Conference on Machine Learning},
+  booktitle = {Proceedings of the 41st International Conference on Machine Learning},
+  series = {PMLR},
   year = {2024}
 }
 
 @inproceedings{zheng2024dape,
   title = {{DAPE}: Data-Adaptive Positional Encoding for Length Extrapolation},
-  author = {Zheng, Chuanyang and Gao, Yihang and Shi, Han and Huang, Minbin and Li, Jingyao and Xiong, Jing and Ren, Ling and Qin, Sam Siyuan and Liu, Tianyu and Li, Linbo},
+  author = {Zheng, Chuanyang and Gao, Yihang and Shi, Han and Huang, Minbin and Li, Jingyao and Xiong, Jing and Ren, Xiaozhe and Ng, Michael K. and Jiang, Xin and Li, Zhenguo and Li, Yu},
   booktitle = {Advances in Neural Information Processing Systems},
+  volume = {37},
   year = {2024}
 }
 
@@ -72,6 +80,7 @@
   title = {{KERPLE}: Kernelized Relative Positional Embedding for Length Extrapolation},
   author = {Chi, Ta-Chung and Fan, Ting-Han and Ramadge, Peter J. and Rudnicky, Alexander I.},
   booktitle = {Advances in Neural Information Processing Systems},
+  volume = {35},
   year = {2022}
 }
 
@@ -93,10 +102,13 @@
   title = {Lost in the Middle: How Language Models Use Long Contexts},
   author = {Liu, Nelson F. and Lin, Kevin and Hewitt, John and Paranjape, Ashwin and Bevilacqua, Michele and Petroni, Fabio and Liang, Percy},
   journal = {Transactions of the Association for Computational Linguistics},
+  volume = {12},
+  pages = {157--173},
   year = {2024}
 }
 
-@inproceedings{anil2022pose,
+% KEY FIX: was anil2022pose — wrong first author and wrong year
+@inproceedings{zhu2024pose,
   title = {{PoSE}: Efficient Context Window Extension of {LLMs} via Positional Skip-wise Training},
   author = {Zhu, Dawei and Yang, Nan and Wang, Liang and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},
   booktitle = {International Conference on Learning Representations},
@@ -106,14 +118,19 @@
 @inproceedings{jin2024selfextend,
   title = {{LLM} Maybe {LongLM}: {SelfExtend} {LLM} Context Window Without Tuning},
   author = {Jin, Hongye and Han, Xiaotian and Yang, Jingfeng and Jiang, Zhimeng and Liu, Zirui and Chang, Chia-Yuan and Chen, Huiyuan and Hu, Xia},
-  booktitle = {International Conference on Machine Learning},
+  booktitle = {Proceedings of the 41st International Conference on Machine Learning},
+  series = {PMLR},
+  volume = {235},
+  pages = {22099--22114},
   year = {2024}
 }
 
 @inproceedings{videorope2025,
   title = {{VideoRoPE}: What Makes for Good Video Rotary Position Embedding?},
   author = {Wei, Xilin and Liu, Xiaoran and Zang, Yuhang and Dong, Xiaoyi and Zhang, Pan and Cao, Yuhang and Tong, Jian and Duan, Haodong and Guo, Qipeng and Wang, Jiaqi and Qiu, Xipeng and Lin, Dahua},
-  booktitle = {International Conference on Machine Learning},
+  booktitle = {Proceedings of the 42nd International Conference on Machine Learning},
+  series = {PMLR},
+  volume = {267},
   year = {2025}
 }
 
@@ -124,37 +141,52 @@
   year = {2019}
 }
 
-@inproceedings{wang2025riflex,
+% KEY FIX: was wang2025riflex — wrong first author
+@inproceedings{zhao2025riflex,
   title = {{RIFLEx}: A Free Lunch for Length Extrapolation in Video Diffusion Transformers},
   author = {Zhao, Min and He, Guande and Chen, Yixiao and Zhu, Hongzhou and Li, Chongxuan and Zhu, Jun},
-  booktitle = {International Conference on Machine Learning},
+  booktitle = {Proceedings of the 42nd International Conference on Machine Learning},
+  series = {PMLR},
   year = {2025}
 }
 
-@inproceedings{qin2024freenoise,
+% KEY FIX: was qin2024freenoise — wrong first author
+@inproceedings{qiu2024freenoise,
   title = {{FreeNoise}: Tuning-Free Longer Video Diffusion via Noise Rescheduling},
   author = {Qiu, Haonan and Xia, Menghan and Zhang, Yong and He, Yingqing and Wang, Xintao and Shan, Ying and Liu, Ziwei},
   booktitle = {International Conference on Learning Representations},
   year = {2024}
 }
 
-@article{zhu2024longrope2,
+% KEY FIX: was zhu2024longrope2 — wrong first author
+@inproceedings{shang2025longrope2,
   title = {{LongRoPE2}: Near-Lossless {LLM} Context Window Scaling},
   author = {Shang, Ning and Zhang, Li Lyna and Wang, Siyuan and Zhang, Gaokai and Lopez, Gilsinia and Yang, Fan and Chen, Weizhu and Yang, Mao},
-  journal = {arXiv preprint arXiv:2502.20082},
+  booktitle = {Proceedings of the 42nd International Conference on Machine Learning},
+  series = {PMLR},
   year = {2025}
-}
-
-@inproceedings{ge2024contentbiasfvd,
-  title = {On the Content Bias in {Fr\'{e}chet} Video Distance},
-  author = {Ge, Songwei and Mahapatra, Aniruddha and Parmar, Gaurav and Zhu, Jun-Yan and Huang, Jia-Bin},
-  booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-  year = {2024}
 }
 
 @inproceedings{chen2024clex,
   title = {{CLEX}: Continuous Length Extrapolation for Large Language Models},
   author = {Chen, Guanzheng and Li, Xin and Meng, Zaiqiao and Liang, Shangsong and Bing, Lidong},
   booktitle = {International Conference on Learning Representations},
+  year = {2024}
+}
+
+% NEW: Resonance RoPE — reviewer-expected citation for frequency-aware RoPE design
+@inproceedings{wang2024resonance,
+  title = {Resonance {RoPE}: Improving Context Length Generalization of Large Language Models},
+  author = {Wang, Suyuchen and Kobyzev, Ivan and Lu, Peng and Bhatt, Mehdi},
+  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},
+  year = {2024}
+}
+
+% NEW: Found in the Middle — reviewer-expected citation for positional evaluation
+@inproceedings{zhang2024found,
+  title = {Found in the Middle: How Language Models Use Long Contexts Better via Plug-and-Play Positional Encoding},
+  author = {Zhang, Zhenyu and Gao, Runjin and Yu, Junhao and Shao, Xinyu and Zhao, Bo},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume = {37},
   year = {2024}
 }

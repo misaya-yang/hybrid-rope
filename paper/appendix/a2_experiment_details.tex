@@ -21,7 +21,7 @@ These anchors were selected because they are either multi-seed or directly tied 
 \toprule
 Anchor & Train length & Scale & Seeds & Main datasets \\
 \midrule
-EVQ\(\times\)YaRN & 2048 & 350M & 3 + 3 & FineWeb-Edu + passkey mix \\
+EVQ\(\times\)YaRN & 2048 & 454M & 3 + 3 & FineWeb-Edu + passkey mix \\
 DAPE-style & 128 & 125M & 1--3 & FineWeb-Edu / TinyStories \\
 Phase 11 & 256 & 454M & 3 & FineWeb-Edu \\
 \bottomrule
@@ -35,7 +35,7 @@ Across all three anchors, the architectural intervention is deliberately minimal
 
 The \(750\mathrm{M}\) `continue@4K' experiment is reported as supporting evidence only. The reason is not that the result is weak; on the contrary, it shows \(16\mathrm{K}\) PPL improving from \(45.136\) to \(24.407\) and \(8\mathrm{K}\) AR exact improving from \(0\%\) to \(77.5\%\). The reason is evidence hygiene: the run is single-seed, and the downstream LongBench comparison is incomplete because the remote dataset download failed during evaluation.
 
-This distinction is important for interpretation. The larger-scale run is best viewed as evidence that the same EVQ pattern persists after continued pretraining at a longer training length, not as the main fairness anchor of the paper. The main fairness anchors remain the multi-seed \(350\mathrm{M}\) and \(454\mathrm{M}\) comparisons used in the main text.
+This distinction is important for interpretation. The larger-scale run is best viewed as evidence that the same EVQ pattern persists after continued pretraining at a longer training length, not as the main fairness anchor of the paper. The main fairness anchors remain the multi-seed \(454\mathrm{M}\) comparisons used in the main text.
 
 \input{tables/table6_750m_continue_supporting}
 
@@ -103,7 +103,7 @@ Seed & Metric (YaRN) & Geo ($\tau{=}0$) & EVQ ($\tau{=}1.5$) & $\Delta$ \\
 \end{tabular}
 \end{table}
 
-This result extends EVQ beyond the autoregressive text setting along two axes simultaneously: architecture (bidirectional attention, no causal mask) and modality (video diffusion). The head-to-head design eliminates all confounders except the frequency allocation itself. A scale-up to 382M DiT ($3\times$ larger) yields consistent results ($-35\%$ far-frame MSE, single seed), and EVQ outperforms Geo under all three inference-time methods tested (YaRN, RIFLEx, raw).
+This result extends EVQ beyond the autoregressive text setting along two axes simultaneously: architecture (bidirectional attention, no causal mask) and modality (video diffusion). The head-to-head design eliminates all confounders except the frequency allocation itself. A preliminary scale-up to 382M DiT ($3\times$ larger, single seed) yields directionally consistent results ($-35\%$ far-frame MSE), and EVQ outperforms Geo under all three inference-time methods tested (YaRN, RIFLEx, raw). This is reported as supporting evidence only; multi-seed replication is needed to confirm the pattern at this scale.
 
 \paragraph{Dead-channel mechanism: base reduction eliminates the phase transition.}
 At base${}=10{,}000$ with $K_t{=}16$ temporal frequencies and 32 training frames, the lowest-frequency channels accumulate less than $0.1$~rad of phase rotation over the entire training sequence---they are effectively dead. EVQ's $\tau$ parameter activates these channels by redistributing frequency mass, but at base${}=10{,}000$ the activation is discontinuous: $\tau{=}1.2$ leaves 11/16 channels alive (effective rank 9), while $\tau{=}1.5$ activates 12/16 (rank 10), producing the sharp phase transition observed in Table~\ref{tab:dit-h2h}.
