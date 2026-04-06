@@ -1,0 +1,42 @@
+\section{Supporting Experiments (from Main Text)}
+\label{sec:supporting-experiments}
+
+The following results extend EVQ beyond the primary MHA setting. Each is scoped to a specific question and labeled with its seed count.
+
+\paragraph{MLA: allocation matters more when channels are scarce.}
+EVQ extends to MLA \citep{deepseekv2, deepseekv3}, where only 16 frequency channels carry positional information. On a 432M model (3-seed, 500M tokens, $L_{\mathrm{train}}{=}8192$), EVQ alone reduces $2\times$ extrapolation PPL by $31.1\%$ and outperforms Geo+YaRN at $16\mathrm{K}$. Preliminary evidence under thorough training (1B tokens, single seed) suggests that EVQ's raw advantage reverses ($+11.1\%$) while EVQ+YaRN after fine-tuning still wins ($-2.5\%$)---a $13.6\mathrm{pp}$ swing consistent with the frequency substrate remaining the binding constraint even when raw extrapolation saturates. Multi-seed replication is in progress. Full 3-seed standalone results are in Appendix~\ref{sec:mla-results}.
+
+\paragraph{Post-training injection via LoRA (7B scale).}
+To validate EVQ at industrial scale, we inject EVQ-Cosh frequencies ($\tau{=}1.414$, the $\tau^*$ predicted for $d_{\mathrm{head}}{=}128$, $L{=}8192$) into LLaMA-3-8B-Instruct \citep{grattafiori2024llama3} and fine-tune with LoRA ($r{=}64{=}K$, $\alpha{=}128$) on LongAlign-10k for 300 steps.
+
+\begin{table}[ht]
+\caption{EVQ-Cosh LoRA on LLaMA-3-8B-Instruct ($r{=}64$, 300 steps, single seed). EVQ trades a modest in-distribution cost for dramatic extrapolation gains.}
+\label{tab:lora-8b}
+\centering
+\small
+\begin{tabular}{@{}l r r r@{}}
+\toprule
+Context & Base PPL & EVQ-LoRA PPL & $\Delta$ \\
+\midrule
+8K (in-dist.) & \textbf{7.42} & 9.63 & $+30\%$ \\
+16K ($2\times$) & 176.3 & \textbf{21.5} & $-88\%$ \\
+32K ($4\times$) & 1942.5 & \textbf{104.3} & $-95\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:lora-8b} shows that EVQ-LoRA reduces extrapolation PPL by $8\times$ at $16\mathrm{K}$ and $19\times$ at $32\mathrm{K}$ with a modest in-distribution cost ($+30\%$ PPL at $8\mathrm{K}$), confirming post-hoc effectiveness at 7B scale. The rank is set at $r{=}d_{\mathrm{head}}/2{=}64$. The variational analysis (\S\ref{sec:lora-regime}) predicts a phase transition at $r_c{=}d_{\mathrm{head}}/2$: below $r_c$, coupling stiffness prevents frequency redistribution; above it, extrapolation recovers. RULER scores do not improve, consistent with LoRA capacity sufficing for positional adaptation but not instruction-following at extrapolated lengths.
+
+\paragraph{Progressive training (single seed, preliminary).}
+Three-stage progressive training (454M, $512{\to}1024{\to}2048$) reveals monotonically growing advantage (Table~\ref{tab:progressive}): the EVQ+YaRN PPL gap at $16\mathrm{K}$ widens from $-34.6\%$ to $-81.2\%$, driven by Geo+YaRN degradation while EVQ+YaRN remains stable. At Stage~3, functional context reaches $48\mathrm{K}$ ($24\times$ training length) at PPL~$2.63$. After Stage~2, EVQ \emph{raw} (PPL $11.2$ at $16\mathrm{K}$) surpasses EVQ+YaRN at Stage~1 ($16.8$), suggesting that continued training can partially internalize the allocation benefit. This is a single-seed observation; multi-seed replication is in progress.
+
+\paragraph{Cross-modal confirmation: video DiT (supporting).}
+In 129.6M DiT head-to-head experiments (2~seeds, shared training run), EVQ wins every metric in both seeds, eliminating optimizer and CUDA confounds. Once the dead-channel bottleneck is removed (base-1000), both $\tau{=}1.2$ and $\tau{=}1.5$ beat Geo by ${\approx}48\%$ on far-frame MSE. This confirms the mechanism rather than serving as a standalone video contribution: the collision bottleneck identified by the theory operates across modalities. Full results are in \S\ref{sec:tau-correction}.
+
+\paragraph{Signal gradient across abstraction layers.}
+Aggregating across experiments, EVQ's effect attenuates through successive abstraction layers but never reverses: raw PPL $-46\%$ (Table~\ref{tab:multiscale}) $\to$ Gold-Answer NLL $-30\%$ (Table~\ref{tab:quality-nll}) $\to$ passkey $+59\mathrm{pp}$ vs.\ Geo baseline (EVQ+YaRN $100\%$ vs.\ Geo $41\%$, 3~seeds) $\to$ QA accuracy $+2.2\mathrm{pp}$ (Table~\ref{tab:quality-nll}, single seed, near-random baseline). This monotone attenuation is the expected signature of an infrastructure-level improvement: largest at the PE layer, preserved but attenuated through higher abstraction where model capacity becomes the binding constraint.
+
+\paragraph{Capability preservation.}
+Table~\ref{tab:capability} confirms that EVQ is non-destructive when retrieval is absent from training and improves extrapolated retrieval by $+10$--$13\mathrm{pp}$ when retrieval is learned (454M, 3-seed).
+
+\input{tables/table3_capability_passkey}

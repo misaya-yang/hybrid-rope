@@ -97,7 +97,7 @@ The full stationary density contains three terms: a hyperbolic tether (\(\cosh, 
 
 \textbf{(1) Closed-form invertibility.} The pure-tether density \(\rho(\phi)\propto\cosh(\tau(1-\phi))\) admits an analytically invertible CDF, yielding the closed-form warp \(\phi_k(\tau)\). Including the \(b^{-2\phi}\) term destroys this invertibility and requires numerical root-finding.
 
-\textbf{(2) The forcing term is amplitude-suppressed.} The particular solution coefficient $P = \gamma/(4\ln^2 b - \tau^2)$ is strongly suppressed at typical base values ($P \propto 1/687$ at $b{=}500\mathrm{K}$). Numerically, the full solution improves over pure tether by ${<}0.5\%$ at the theoretically motivated $\lambda \approx P$, and by only $2$--$6\%$ even at artificially large $\lambda{=}1$ (vs.\ $28$--$92\%$ improvement over geometric). The 99-run Phase~16 sweep (Figure~\ref{fig:tau-sweep}) confirms that the pure-tether family matches the scaling-law prediction across scales, and subsumes geometric RoPE as its $\tau{\to}0$ limit.
+\textbf{(2) The forcing term is amplitude-suppressed.} The particular solution coefficient $P = \gamma/(4\ln^2 b - \tau^2)$ is strongly suppressed at typical base values ($P \propto 1/689$ at $b{=}500\mathrm{K}$). Numerically, the full solution improves over pure tether by ${<}0.5\%$ at the theoretically motivated $\lambda \approx P$, and by only $2$--$6\%$ even at artificially large $\lambda{=}1$ (vs.\ $28$--$92\%$ improvement over geometric). The 99-run Phase~16 sweep (Figure~\ref{fig:tau-sweep}) confirms that the pure-tether family matches the scaling-law prediction across scales, and subsumes geometric RoPE as its $\tau{\to}0$ limit.
 
 \subsection{Surrogate quality: functional validation}
 \label{sec:surrogate-validation}
@@ -167,7 +167,7 @@ For all $\tau > 0$:
 \begin{proof}
 The Green's function $g(\phi) = \int_0^1 \rho(\psi)\min(\phi,\psi)\,d\psi$ satisfies $g''(\phi) = -\rho(\phi)$ with $g(0) = 0$, $g'(1) = 0$ (from the $\min$ kernel structure; see~\S\ref{sec:proofs}). Define $h(\phi) = \rho(0) - \rho(\phi)$. Then $h'' = -\rho'' = \tau^2\rho$ (from the ODE $\rho'' = \tau^2\rho$), with $h(0) = 0$ and $h'(1) = -\rho'(1) = \tau^2 g'(0)$ (boundary conditions).
 
-Comparing $\tau^2 g$ and $h$: both satisfy $y'' = \tau^2 y$ subject to $y(0) = 0$, hence $\tau^2 g(\phi) = h(\phi) = \rho(0) - \rho(\phi)$, i.e.,
+Define $f(\phi) = \tau^2 g(\phi) - h(\phi)$. Then $f'' = \tau^2 g'' + \rho'' = -\tau^2\rho + \tau^2\rho = 0$, with $f(0) = 0$ and $f'(1) = \tau^2 g'(1) - h'(1) = 0$. Hence $f \equiv 0$, yielding $\tau^2 g(\phi) = h(\phi) = \rho(0) - \rho(\phi)$, i.e.,
 \begin{equation}
 g(\phi) = \frac{\rho(0) - \rho(\phi)}{\tau^2}.
 \label{eq:green-identity}
@@ -180,18 +180,12 @@ T_2 = \int_0^1 \rho(\phi)\,g(\phi)\,d\phi = \frac{1}{\tau^2}\bigl[\rho(0)\underb
 Since $\rho(0) = \tau\cosh\tau/\sinh\tau = \tau\coth\tau$, rearranging gives~\eqref{eq:self-consistency}.
 \end{proof}
 
-Two immediate corollaries follow.
-
-\begin{corollary}[Balance identity]
-$T_1'(\tau) + \tau^2 T_2'(\tau) = 0$ for all $\tau > 0$. Equivalently, the ratio $R(\tau) \coloneqq -T_1'(\tau)/T_2'(\tau) = \tau^2$ is exact.
-\end{corollary}
-
-This identity means that the variational balance between the diagonal term ($\alpha T_1$) and the off-diagonal term ($\beta T_2$) is achieved precisely at $\tau_{\mathrm{surr}} = \sqrt{\beta/\alpha}$, confirming the surrogate ODE's balance point is exact rather than approximate.
+An immediate corollary follows.
 
 \begin{corollary}[Closed-form $T_2$]
 \begin{equation}
 T_2(\tau) = \frac{\sinh 2\tau - 2\tau}{4\tau\sinh^2\tau}.
-\label{eq:T2-closed}
+% \label{eq:T2-closed} % unused
 \end{equation}
 \end{corollary}
 
@@ -202,18 +196,15 @@ The self-consistency theorem reveals that the surrogate's two energy terms are n
 \subsection{Cross-validation of \texorpdfstring{$\lambda$}{lambda}}
 \label{sec:lambda-cv}
 
-The scaling law $\tau^* = \lambda \cdot d_{\mathrm{head}}/\sqrt{L}$ with $\lambda \approx 1.17$ is validated by leave-one-out cross-validation across 9 configurations ($d_{\mathrm{head}} \in \{32, 64, 128\}$, $L \in \{256, 512, 1024\}$). For each held-out configuration, $\lambda$ is estimated from the remaining 8 and used to predict $\tau^*$. Table~\ref{tab:lambda-cv} shows the results: max prediction error is $0.008$ (relative error $<0.2\%$), confirming $\lambda$'s universality across the tested regime.
+The scaling law $\tau^* = \lambda \cdot d_{\mathrm{head}}/\sqrt{L}$ is validated at two levels.
+
+\paragraph{Collision-score level.} We minimize the exact-kernel collision score $C(\tau)$ for each of 9 configurations ($d_{\mathrm{head}} \in \{32, 64, 128\}$, $L \in \{256, 512, 1024\}$) and compute $\lambda_{\mathrm{coll}} = \tau^*_{\mathrm{coll}} / (d_{\mathrm{head}}/\sqrt{L})$. The resulting $\lambda_{\mathrm{coll}} \approx 1.17$ is nearly constant (CV: $0.11\%$); leave-one-out cross-validation confirms max prediction error $<0.4\%$ (Table~\ref{tab:lambda-cv}). This near-zero spread reflects the smoothness of the collision score as a function of $\tau$, not PPL variability.
 
 \input{tables/table_lambda_cv}
 
-Figure~\ref{fig:tau-basin} (left) shows the collision-score landscape $C(\tau)$ for a representative configuration ($d_{\mathrm{head}}{=}64$, $L{=}512$, $b{=}500\mathrm{K}$): the optimal basin is flat within ${\pm}1\%$ for $\tau \in [3.29, 3.36]$, spanning $2.3\%$ of $\tau^*$. This flatness explains $\lambda$'s low CV: the PPL landscape is insensitive to the precise value of $\lambda$ within the basin, making the semi-analytic formula practically equivalent to a closed-form result.
+\paragraph{PPL-sweep level.} Phase~16 training sweeps (99 runs, 9 configurations $\times$ 3+ seeds) identify the PPL-optimal $\tau$ for each configuration. The resulting $\lambda_{\mathrm{PPL}} = \tau^*_{\mathrm{PPL}} / (d_{\mathrm{head}}/\sqrt{L})$ has mean ${\approx}1.19$ with broader scatter (CV ${\approx}14\%$), because PPL depends on training noise, finite data, and the discrete sweep grid. The deployed formula uses $\lambda{=}1$ (i.e.\ $\tau = d_{\mathrm{head}}/\sqrt{L}$ without a multiplicative constant), which consistently falls inside the flat PPL basin: the PPL gap between the formula and the per-configuration optimum is ${<}1\%$ across all 27 validated configurations.
 
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.95\linewidth]{tau_basin.pdf}
-  \caption{\textbf{Left:} Collision score $C(\tau)$ under the exact kernel for $d_{\mathrm{head}}{=}64$, $L{=}512$. The optimal $\tau^*$ sits in a flat basin where ${\pm}20\%$ deviation incurs ${<}1\%$ collision increase. \textbf{Right:} Leave-one-out cross-validation of $\lambda$ across 9 configurations; max error ${<}0.2\%$.}
-  \label{fig:tau-basin}
-\end{figure}
+\paragraph{Basin flatness.} The collision-score landscape $C(\tau)$ for a representative configuration ($d_{\mathrm{head}}{=}64$, $L{=}512$, $b{=}500\mathrm{K}$) reveals a flat optimal basin: ${\pm}20\%$ deviation from $\tau^*_{\mathrm{coll}}$ incurs ${<}1\%$ collision increase, and the basin spans $2.3\%$ of $\tau^*$. This flatness is why the deployed $\lambda{=}1$ formula---despite being ${\approx}17\%$ below the collision-score optimum---lands inside the near-optimal PPL basin for every tested configuration.
 
 \subsection{Scaling analysis of \texorpdfstring{$\tau^*$}{tau*}: from surrogate to empirical law}
 \label{sec:tau-scaling}
@@ -262,6 +253,36 @@ validated empirically with $R^2 > 0.99$ across 99 runs (Figure~\ref{fig:tau-swee
   \caption{\textbf{Scaling-law validation across 99 training runs} (27 configurations $\times$ 3+ seeds). Each point is a separate training run; the $x$-axis is the predicted $\tau^* = d_{\mathrm{head}}/\sqrt{L}$ and the $y$-axis is the empirically optimal $\tau$ (minimizing validation perplexity). The fit achieves $R^2 > 0.99$, confirming that the formula generalizes across model scales, training lengths, and base values.}
   \label{fig:tau-sweep}
 \end{figure}
+
+\paragraph{Configuration breakdown.} Table~\ref{tab:config-breakdown} decomposes the 27 validated configurations by architecture, seed count, and evidence tier.
+
+\begin{table}[ht]
+\caption{Breakdown of the 27 configurations validated against $\tau^* = d_{\mathrm{head}}/\sqrt{L}$. The $0.53\times$ modality correction for video DiT is empirical (\S\ref{sec:tau-correction}).}
+\label{tab:config-breakdown}
+\centering
+\small
+\begin{tabular}{@{}l l r r r l l@{}}
+\toprule
+Architecture & Scale & $d_{\mathrm{head}}$ & $L_{\mathrm{train}}$ & Seeds & $\tau^*$ variant & Tier \\
+\midrule
+MHA (text) & 50M & 64 & 2048 & 1 & base & Robustness \\
+MHA (text) & 125M & 64 & 128 & 1--3 & base & Primary \\
+MHA (text) & 125M & 64 & 2048 & 1 & base & Robustness \\
+MHA (text) & 454M & 64 & 128 & 1--3 & base & Primary \\
+MHA (text) & 454M & 64 & 256 & 3 & base & Primary \\
+MHA (text) & 454M & 64 & 512--2048 & 3 & base & Primary \\
+MHA (text) & 454M & 64 & 2048 & 3 & base & Primary \\
+MHA (text) & 750M & 64 & 4096 & 1 & base & Supporting \\
+\midrule
+MLA & 432M & 128 & 8192 & 3 & base & Primary \\
+\midrule
+DiT (video) & 129M & 16 & 32 & 2 & $0.53\times$ & Supporting \\
+DiT (video) & 382M & 16 & 32 & 1 & $0.53\times$ & Supporting \\
+\midrule
+LoRA & 8B & 128 & 8192 & 1 & base & Supporting \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Stiffness functional derivation}
 \label{sec:stiffness-derivation}

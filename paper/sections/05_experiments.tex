@@ -5,7 +5,7 @@
 
 All core experiments train from scratch with fixed architecture, modifying only the RoPE inverse-frequency initialization. We use $b{=}500\mathrm{K}$, the predicted $\tau^*(L)$ for each training length, and standard GPT-style decoder stacks \citep{radford2019gpt2} with $d_{\mathrm{head}}{=}64$ across 50M--750M. The primary datasets are TinyStories, FineWeb-Edu, and controlled passkey-mix settings; evaluations target PE-diagnostic metrics (extrapolation PPL, passkey retrieval, NIAH, downstream NLL) that isolate positional encoding quality from model capacity. Primary claims use 3~seeds per configuration. Full hyperparameters are in the supplementary material.
 
-The experiments are organized hierarchically: two primary anchors (\S\ref{sec:exp-yarn}, \S\ref{sec:exp-pe}), robustness evidence (\S\ref{sec:exp-robust}), and supporting cross-architecture and cross-scale results (\S\ref{sec:exp-supporting}).
+Evidence is organized in three tiers. \emph{Primary} (3-seed, directly tied to central claims): EVQ$\times$YaRN composition (\S\ref{sec:exp-yarn}), PE-dominant extrapolation (\S\ref{sec:exp-pe}), and MLA (Appendix~\ref{sec:mla-results}). \emph{Robustness} (3-seed, single architecture): capability preservation (\S\ref{sec:exp-robust}). \emph{Supporting} (1--3 seed): multi-scale PPL, progressive training, video DiT, LoRA at 7B (\S\ref{sec:exp-supporting}). No primary claim rests on tier-3 evidence.
 
 %% =========================================================================
 %% PRIMARY ANCHOR 1
@@ -17,7 +17,7 @@ Figure~\ref{fig:evq-yarn} and Table~\ref{tab:evq-yarn} present the paper's main 
 
 In the 454M 10\% mix setting (3~seeds per configuration), EVQ+YaRN reaches $100\%$ passkey retrieval at $8\mathrm{K}$ while Geo+YaRN remains at $61\%$; the same combination lowers PPL from $82.9$ to $70.9$ at $8\mathrm{K}$ and from $157.7$ to $107.5$ at $16\mathrm{K}$. EVQ alone improves over Geo without saturating retrieval, so the jump to $100\%$ under YaRN is not a ceiling effect. The composition reflects the orthogonal deficiency structure: EVQ corrects shape, YaRN corrects range, and their corrections are additive (Figure~\ref{fig:orthogonal}).
 
-Table~\ref{tab:phase11-leverage} makes the interaction quantitative: YaRN provides only a small gain on geometric RoPE ($-4.5\%$ at $4\mathrm{K}$, $-3.1\%$ at $8\mathrm{K}$) but a much larger gain on EVQ ($-32.5\%$ and $-40.7\%$ for $\tau{=}4$). NTK-aware scaling shows the opposite pattern---it becomes destructive at large $\tau$---confirming that complementarity requires a method that preserves the optimized frequency structure.
+Table~\ref{tab:phase11-leverage} quantifies the interaction: YaRN provides only $-4.5\%$/$-3.1\%$ on Geo ($4$/$8\mathrm{K}$) but $-32.5\%$/$-40.7\%$ on EVQ ($\tau{=}4$). NTK-aware scaling becomes destructive at large~$\tau$, confirming complementarity requires preserving the optimized frequency structure.
 
 \begin{figure}[t]
   \centering
@@ -35,7 +35,7 @@ Table~\ref{tab:phase11-leverage} makes the interaction quantitative: YaRN provid
 \subsection{Primary result: PE-dominant extreme extrapolation}
 \label{sec:exp-pe}
 
-Figure~\ref{fig:pe-dominant} and Table~\ref{tab:pe-dominant} provide the second principal anchor, isolating frequency allocation from model capacity. In DAPE-style $128{\to}8\mathrm{K}$ extrapolation, EVQ beats learnable PE with zero extra parameters ($333.7$ vs.\ $455.3$ PPL, $-35\%$ relative to Geo). At $L{=}256$, the predicted $\tau^*{=}4.0$ is preferred across both $125\mathrm{M}$ and $454\mathrm{M}$---scale changes extrapolation difficulty but not the preferred allocation.
+Figure~\ref{fig:pe-dominant} and Table~\ref{tab:pe-dominant} provide the second principal anchor, isolating frequency allocation from model capacity. In DAPE-style $128{\to}8\mathrm{K}$ extrapolation, EVQ achieves $333.7$ PPL ($-35\%$ vs.\ Geo baseline $513.7$), surpassing DAPE ($455.3$) with zero extra parameters. At $L{=}256$, the predicted $\tau^*{=}4.0$ is preferred across both $125\mathrm{M}$ and $454\mathrm{M}$---scale changes extrapolation difficulty but not the preferred allocation.
 
 \input{tables/table4_pe_dominant.tex}
 
@@ -52,49 +52,12 @@ Figure~\ref{fig:pe-dominant} and Table~\ref{tab:pe-dominant} provide the second 
 \subsection{Robustness and capability preservation}
 \label{sec:exp-robust}
 
-Table~\ref{tab:multiscale} summarizes multi-scale raw extrapolation: EVQ pays at most a small in-range cost (${\leq}1\%$) while improving long-range PPL by $10$--$46\%$ across 50M--750M. Capability-oriented evaluation (454M, 3-seed, Table~\ref{tab:capability}) confirms that EVQ is non-destructive when retrieval is absent from training and improves extrapolated retrieval by $+10$--$13\mathrm{pp}$ when retrieval is learned.
-
-The base generalization sweep (454M, single seed) confirms EVQ leads at both $b{=}10\mathrm{K}$ and $b{=}500\mathrm{K}$, with EVQ's extrapolation PPL nearly identical across base values ($192.4 \approx 191.9$) while Geo diverges by 38~points---suggesting that frequency optimization partially compensates for suboptimal base choices.
-
-\input{tables/table1_multiscale_raw_ppl}
+Multi-scale raw extrapolation (Table~\ref{tab:multiscale}, Appendix) shows in-range PPL changes within ${\pm}1.7\%$ while long-range PPL improves by $10$--$46\%$ across 50M--750M. A base-generalization sweep (454M, single seed) confirms EVQ leads at both $b{=}10\mathrm{K}$ and $b{=}500\mathrm{K}$, with EVQ's extrapolation PPL stable across base values ($192.4 \approx 191.9$) while Geo diverges by 38~points. Capability evaluation (Table~\ref{tab:capability}, Appendix~\ref{sec:supporting-experiments}) confirms EVQ is non-destructive when retrieval is absent.
 
 %% =========================================================================
-%% SUPPORTING EVIDENCE
+%% SUPPORTING EVIDENCE (condensed; full results in Appendix)
 %% =========================================================================
-\subsection{Supporting evidence: MLA, LoRA, and progressive training}
+\subsection{Supporting evidence}
 \label{sec:exp-supporting}
 
-The following results extend EVQ beyond the primary MHA setting. Each is scoped to a specific question and labeled with its seed count.
-
-\paragraph{MLA: allocation matters more when channels are scarce.}
-EVQ extends to MLA (DeepSeek-V2/V3), where only 16 frequency channels carry positional information. On a 432M model (3-seed, 500M tokens, $L_{\mathrm{train}}{=}8192$), EVQ alone reduces $2\times$ extrapolation PPL by $31.1\%$ and outperforms Geo+YaRN at $16\mathrm{K}$. Preliminary evidence under thorough training (1B tokens, single seed) suggests that EVQ's raw advantage reverses ($+11.1\%$) while EVQ+YaRN after fine-tuning still wins ($-2.5\%$)---a $13.6\mathrm{pp}$ swing consistent with the frequency substrate remaining the binding constraint even when raw extrapolation saturates. Multi-seed replication is in progress. Full 3-seed standalone results are in Appendix~\ref{sec:mla-results}.
-
-\paragraph{Post-training injection via LoRA (7B scale).}
-To validate EVQ at industrial scale, we inject EVQ-Cosh frequencies ($\tau{=}1.414$, the $\tau^*$ predicted for $d_{\mathrm{head}}{=}128$, $L{=}8192$) into LLaMA-3-8B-Instruct and fine-tune with LoRA ($r{=}64{=}K$, $\alpha{=}128$) on LongAlign-10k for 300 steps.
-
-\begin{table}[t]
-\caption{EVQ-Cosh LoRA on LLaMA-3-8B-Instruct ($r{=}64$, 300 steps, single seed). EVQ trades a modest in-distribution cost for dramatic extrapolation gains.}
-\label{tab:lora-8b}
-\centering
-\small
-\begin{tabular}{@{}l r r r@{}}
-\toprule
-Context & Base PPL & EVQ-LoRA PPL & $\Delta$ \\
-\midrule
-8K (in-dist.) & \textbf{7.42} & 9.63 & $+30\%$ \\
-16K ($2\times$) & 176.3 & \textbf{21.5} & $-88\%$ \\
-32K ($4\times$) & 1942.5 & \textbf{104.3} & $-95\%$ \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-Table~\ref{tab:lora-8b} shows that EVQ-LoRA reduces extrapolation PPL by $8\times$ at $16\mathrm{K}$ and $19\times$ at $32\mathrm{K}$ with a modest in-distribution cost ($+30\%$ PPL at $8\mathrm{K}$), confirming post-hoc effectiveness at 7B scale. The rank is set at $r{=}d_{\mathrm{head}}/2{=}64$. The variational analysis (\S\ref{sec:lora-regime}) predicts a phase transition at $r_c{=}d_{\mathrm{head}}/2$: below $r_c$, coupling stiffness prevents frequency redistribution; above it, extrapolation recovers. RULER scores do not improve, consistent with LoRA capacity sufficing for positional adaptation but not instruction-following at extrapolated lengths.
-
-\paragraph{Progressive training (single seed, preliminary).}
-Three-stage progressive training (454M, $512{\to}1024{\to}2048$) reveals monotonically growing advantage (Table~\ref{tab:progressive} in Appendix): the EVQ+YaRN PPL gap at $16\mathrm{K}$ widens from $-34.6\%$ to $-81.2\%$, driven by Geo+YaRN degradation while EVQ+YaRN remains stable. At Stage~3, functional context reaches $48\mathrm{K}$ ($24\times$ training length) at PPL~$2.63$. After Stage~2, EVQ \emph{raw} (PPL $11.2$ at $16\mathrm{K}$) surpasses EVQ+YaRN at Stage~1 ($16.8$), suggesting that continued training can partially internalize the allocation benefit. This is a single-seed observation; multi-seed replication is in progress.
-
-\paragraph{Cross-modal confirmation: video DiT (supporting).}
-In 129.6M DiT head-to-head experiments (2~seeds, shared training run), EVQ wins every metric in both seeds, eliminating optimizer and CUDA confounds. Once the dead-channel bottleneck is removed (base-1000), both $\tau{=}1.2$ and $\tau{=}1.5$ beat Geo by ${\approx}48\%$ on far-frame MSE. This confirms the mechanism rather than serving as a standalone video contribution: the collision bottleneck identified by the theory operates across modalities. Full results are in the Appendix.
-
-\paragraph{Signal gradient across abstraction layers.}
-Aggregating across experiments, EVQ's effect attenuates through successive abstraction layers but never reverses: raw PPL $-52\%$ (Table~\ref{tab:multiscale}) $\to$ Gold-Answer NLL $-30\%$ (Table~\ref{tab:quality-nll}, Appendix) $\to$ passkey $+60\mathrm{pp}$ (3~seeds per configuration) $\to$ QA accuracy $+2.2\mathrm{pp}$ (Table~\ref{tab:quality-nll}, single seed, near-random baseline). This monotone attenuation is the expected signature of an infrastructure-level improvement: largest at the PE layer, preserved but attenuated through higher abstraction where model capacity becomes the binding constraint.
+EVQ generalizes beyond MHA. On MLA with only 16 RoPE channels (432M, 3-seed), EVQ alone reduces $2\times$ PPL by $31.1\%$ and outperforms Geo+YaRN---the strongest single-result evidence that allocation quality dominates when channels are scarce (Appendix~\ref{sec:supporting-experiments}). Post-training LoRA ($r{=}64$) into LLaMA-3-8B-Instruct \citep{grattafiori2024llama3} confirms effectiveness at 7B ($8$--$19\times$ PPL reduction at $16$--$32\mathrm{K}$, 300 steps). Progressive training (454M, single seed) shows EVQ+YaRN advantage widening from $-34.6\%$ to $-81.2\%$, and video DiT (2~seeds) confirms the collision mechanism operates across modalities. EVQ's effect attenuates through successive abstraction layers (PPL~$\to$~NLL~$\to$~retrieval~$\to$~QA) but never reverses. Full results in Appendix~\ref{sec:supporting-experiments}.

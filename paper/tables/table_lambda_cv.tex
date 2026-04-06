@@ -1,11 +1,11 @@
 \begin{table}[ht]
-\caption{Leave-one-out cross-validation of $\lambda$ in $\tau^* = \lambda \cdot d_{\mathrm{head}}/\sqrt{L}$. Each row holds out one configuration and predicts its $\tau^*$ from the remaining~8. Max prediction error is $0.008$ ($<0.2\%$ relative), confirming $\lambda \approx 1.17$ is universal across the tested regime.}
+\caption{Collision-score cross-validation of $\lambda$ in $\tau^* = \lambda \cdot d_{\mathrm{head}}/\sqrt{L}$. Each $\tau^*_{\mathrm{coll}}$ is the exact-kernel collision-score minimizer (not a PPL-sweep optimum). Each row holds out one configuration and predicts its $\tau^*_{\mathrm{coll}}$ from the remaining~8. Max prediction error is $0.008$ ($<0.4\%$ relative). The near-zero CV reflects the smoothness of the collision score, not PPL variability; PPL-sweep optima exhibit broader scatter ($\text{CV} \approx 14\%$) because PPL depends on training noise. The deployed formula uses $\lambda{=}1$, which falls inside the flat PPL basin ($<1\%$ gap from the PPL optimum across 27 configurations).}
 \label{tab:lambda-cv}
 \centering
 \small
 \begin{tabular}{@{}r r r r r@{}}
 \toprule
-$d_{\mathrm{head}}$ & $L$ & $\tau^*_{\mathrm{emp}}$ & $\tau^*_{\mathrm{pred}}$ & Error \\
+$d_{\mathrm{head}}$ & $L$ & $\tau^*_{\mathrm{coll}}$ & $\tau^*_{\mathrm{pred}}$ & Error \\
 \midrule
 32 & 256 & 2.340 & 2.342 & $+$0.002 \\
 32 & 512 & 1.660 & 1.655 & $-$0.005 \\
@@ -17,7 +17,7 @@ $d_{\mathrm{head}}$ & $L$ & $\tau^*_{\mathrm{emp}}$ & $\tau^*_{\mathrm{pred}}$ &
 128 & 512 & 6.630 & 6.622 & $-$0.008 \\
 128 & 1024 & 4.680 & 4.684 & $+$0.004 \\
 \midrule
-\multicolumn{5}{@{}l}{Mean $\lambda = 1.171 \pm 0.001$ (CV: $0.11\%$); RMSE $= 0.004$} \\
+\multicolumn{5}{@{}l}{Mean $\lambda_{\mathrm{coll}} = 1.171 \pm 0.001$ (CV: $0.11\%$); RMSE $= 0.004$} \\
 \bottomrule
 \end{tabular}
 \end{table}

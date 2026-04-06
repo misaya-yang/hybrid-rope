@@ -14,7 +14,7 @@ These anchors were selected because they are either multi-seed or directly tied 
 
 \begin{table}[ht]
 \caption{Compact reproducibility summary for the primary experiments discussed in the main text.}
-\label{tab:appendix-repro}
+% \label{tab:appendix-repro} % unused
 \centering
 \small
 \begin{tabular}{@{}lllll@{}}
@@ -28,19 +28,51 @@ Phase 11 & 256 & 454M & 3 & FineWeb-Edu \\
 \end{tabular}
 \end{table}
 
+Table~\ref{tab:hyperparams} lists the training hyperparameters shared across text experiments; per-tier deviations (learning rate, batch size) are noted.
+
+\begin{table}[ht]
+\caption{Training hyperparameters for the primary text experiments. All tiers share the same optimizer and schedule; per-tier values are noted where they differ.}
+\label{tab:hyperparams}
+\centering\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+Parameter & Value \\
+\midrule
+Optimizer & AdamW ($\beta_1{=}0.9$, $\beta_2{=}0.95$, $\epsilon{=}10^{-8}$) \\
+Learning rate & $6{\times}10^{-4}$ (50M/125M), $2{\times}10^{-4}$ (454M), $1.5{\times}10^{-4}$ (750M) \\
+LR schedule & Cosine decay to $0.1\times$ peak LR \\
+Warmup & $2\%$ of total steps (linear) \\
+Batch size (seqs) & 32 (50M), 16 (125M), 2--4 (454M/750M) \\
+Weight decay & $0.1$ \\
+Gradient clipping & max-norm $1.0$ \\
+Dropout & $0.0$ (no dropout) \\
+Sequence packing & Contiguous, no cross-document masking \\
+\midrule
+\multicolumn{2}{@{}l}{\emph{Video DiT (129M--382M)}} \\
+Optimizer & AdamW ($\beta_1{=}0.9$, $\beta_2{=}0.95$) \\
+RoPE base & $10{,}000$ (temporal axis) \\
+Activation & GELU (tanh approx.) \\
+\midrule
+\multicolumn{2}{@{}l}{\emph{MLA (432M)}} \\
+LR / warmup & $6{\times}10^{-4}$ / 100 steps \\
+Training tokens & 500M \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 Across all three anchors, the architectural intervention is deliberately minimal: model architecture, optimizer family, and training loop are kept fixed, and only the RoPE inverse-frequency initialization is changed. The principal base in the body is \(b=500\mathrm{K}\), which is also the regime where the collision-block analysis predicts the largest headroom for non-geometric allocations.
 
 \subsection{Larger-scale supporting evidence}
-\label{sec:750m-supporting}
+% \label{sec:750m-supporting} % unused
 
-The \(750\mathrm{M}\) `continue@4K' experiment is reported as supporting evidence only. The reason is not that the result is weak; on the contrary, it shows \(16\mathrm{K}\) PPL improving from \(45.136\) to \(24.407\) and \(8\mathrm{K}\) AR exact improving from \(0\%\) to \(77.5\%\). The reason is evidence hygiene: the run is single-seed, and the downstream LongBench comparison is incomplete because the remote dataset download failed during evaluation.
+The \(750\mathrm{M}\) `continue@4K' experiment is reported as supporting evidence only. The reason is not that the result is weak; on the contrary, it shows \(16\mathrm{K}\) PPL improving from \(45.1\) to \(24.4\) and \(8\mathrm{K}\) AR exact improving from \(0\%\) to \(77.5\%\). The reason is evidence hygiene: the run is single-seed, and the downstream LongBench comparison is incomplete because the remote dataset download failed during evaluation.
 
 This distinction is important for interpretation. The larger-scale run is best viewed as evidence that the same EVQ pattern persists after continued pretraining at a longer training length, not as the main fairness anchor of the paper. The main fairness anchors remain the multi-seed \(454\mathrm{M}\) comparisons used in the main text.
 
 \input{tables/table6_750m_continue_supporting}
 
 \subsection{Progressive training dynamics}
-\label{sec:progressive-dynamics}
+% \label{sec:progressive-dynamics} % unused
 
 Table~\ref{tab:progressive} and Figure~\ref{fig:progressive} detail the progressive training result referenced in the body. The key observation is the divergence pattern: EVQ+YaRN PPL remains flat across all three stages while Geo+YaRN degrades sharply at Stage~3, producing the widening relative advantage ($-34.6\%\!\rightarrow\!{-52.0\%}\!\rightarrow\!{-81.2\%}$). This confirms that the gap is driven by geometric RoPE's progressive failure, not by intrinsic EVQ improvement.
 
@@ -77,9 +109,9 @@ The scaling law $\tau^*=d_{\mathrm{head}}/\sqrt{L}$ matches text autoregressive 
 \subsection{Cross-modal evidence: video DiT with bidirectional attention}
 
 
-To test whether EVQ transfers beyond autoregressive decoders, we evaluate on a 129.6M video diffusion transformer (DiT) with bidirectional attention and 3D RoPE. We compare EVQ-Cosh ($\tau{=}1.5$) against geometric allocation ($\tau{=}0$) on Oscillating Moving MNIST, training on 32 frames and extrapolating to 128 frames ($4\times$) with temporal YaRN. Crucially, both allocations are trained \emph{within the same run} (head-to-head), sharing identical weights, optimizer state, and CUDA non-determinism---eliminating all confounders except the frequency allocation itself.
+To test whether EVQ transfers beyond autoregressive decoders, we evaluate on a 129.6M video diffusion transformer (DiT) with bidirectional attention and 3D RoPE. We compare EVQ-Cosh ($\tau{=}1.5$) against geometric allocation ($\tau{=}0$) on Oscillating Moving MNIST \citep{srivastava2015unsupervised}, training on 32 frames and extrapolating to 128 frames ($4\times$) with temporal YaRN. Crucially, both allocations are trained \emph{within the same run} (head-to-head), sharing identical weights, optimizer state, and CUDA non-determinism---eliminating all confounders except the frequency allocation itself.
 
-Table~\ref{tab:dit-h2h} reports results across two independent seeds. EVQ wins every metric in both seeds. Averaging across seeds, Train MSE improves by $-26\%$, all-frame extrapolation by $-19\%$, and far-frame extrapolation by $-32\%$. The consistency across both seeds---EVQ wins all three metrics in each---suggests that the advantage is not a stochastic artifact, though we note the sample size (two seeds) is too small for formal statistical testing.
+Table~\ref{tab:dit-h2h} reports results across two independent seeds. EVQ wins every metric in both seeds. Averaging across seeds, Train MSE improves by $-26\%$, all-frame extrapolation by $-15\%$, and far-frame extrapolation by $-32\%$. The consistency across both seeds---EVQ wins all three metrics in each---suggests that the advantage is not a stochastic artifact, though we note the sample size (two seeds) is too small for formal statistical testing.
 
 \begin{table}[ht]
 \caption{DiT head-to-head evaluation (129.6M, bidirectional attention, 3D RoPE). Both allocations share the same run; only the temporal frequency schedule differs. EVQ wins all metrics across both seeds.}
@@ -98,7 +130,7 @@ Seed & Metric (YaRN) & Geo ($\tau{=}0$) & EVQ ($\tau{=}1.5$) & $\Delta$ \\
 137 & All extrap & 0.00713 & \textbf{0.00598} & $-16\%$ \\
 137 & Far extrap & 0.00856 & \textbf{0.00601} & $-30\%$ \\
 \midrule
-\multicolumn{2}{@{}l}{Mean $\Delta$} & & & $-21\%$ / $-15\%$ / $-32\%$ \\
+\multicolumn{2}{@{}l}{Mean $\Delta$} & & & $-26\%$ / $-15\%$ / $-32\%$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -140,14 +172,14 @@ Every video model wastes 32--50\% of its temporal frequency channels, because vi
 \toprule
 Model & $K_t$ & $T_\text{train}$ & Dead / $K_t$ & Dead\% & Base oversize \\
 \midrule
-CogVideoX-5B & 8 & 13 & 4/8 & 50\% & $56\times$ \\
-Wan-2.1 1.3B & 22 & 21 & 9/22 & 41\% & $42\times$ \\
-Latte-1 & 12 & 16 & 5/12 & 42\% & $50\times$ \\
-Open-Sora 1.2 & 22 & 51 & 7/22 & 32\% & $17\times$ \\
-HunyuanVideo & 8 & 33 & 3/8 & 38\% & $21\times$ \\
+CogVideoX-5B \citep{yang2024cogvideox} & 8 & 13 & 4/8 & 50\% & $56\times$ \\
+Wan-2.1 1.3B \citep{wan2025wan} & 22 & 21 & 9/22 & 41\% & $42\times$ \\
+Latte-1 \citep{ma2024latte} & 12 & 16 & 5/12 & 42\% & $50\times$ \\
+Open-Sora 1.2 \citep{opensora2024} & 22 & 51 & 7/22 & 32\% & $17\times$ \\
+HunyuanVideo \citep{kong2024hunyuanvideo} & 8 & 33 & 3/8 & 38\% & $21\times$ \\
 Our DiT & 16 & 32 & 6/16 & 38\% & $26\times$ \\
 \midrule
-LLaMA-2 7B (text) & 64 & 4096 & 0/64 & 0\% & --- \\
+LLaMA-2 7B \citep{touvron2023llama2} (text) & 64 & 4096 & 0/64 & 0\% & --- \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -157,7 +189,7 @@ We sweep the temporal RoPE base across four orders of magnitude ($100$--$10{,}00
 
 \begin{table}[ht]
 \caption{Base sweep: far-frame denoising MSE ($t{=}0.5$, $4\times$ extrapolation) as a function of temporal RoPE base. EVQ is remarkably stable across base${\geq}500$; GEO+YaRN exhibits non-monotonic behavior with a catastrophic spike at base${}=5{,}000$.}
-\label{tab:dit-base-sweep}
+% \label{tab:dit-base-sweep} % unused
 \centering
 \small
 \begin{tabular}{@{}l r r r r r r r@{}}

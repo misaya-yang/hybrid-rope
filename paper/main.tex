@@ -11,6 +11,7 @@
 \usepackage{multirow}
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
 \usepackage[table]{xcolor}
 \usepackage{hyperref}
 \usepackage{placeins}
@@ -38,12 +39,10 @@
 \maketitle
 
 \begin{abstract}
-Every mainstream RoPE implementation distributes frequencies across channels using the same geometric (equal-ratio) schedule introduced by RoFormer, yet this allocation is a degenerate limiting case---the $\tau{=}0$ boundary of a broader variational family---not a structurally distinguished optimum.
-We formulate channel-frequency allocation as a variational problem, derive a closed-form one-parameter family (EVQ-cosh) whose $\tau{=}0$ limit recovers geometric RoPE, and show that a deliberately simple, semi-analytic temperature rule $\tau^* = d_{\mathrm{head}}/\sqrt{L}$---sub-optimal by construction---already matches per-setting optima to within $<1\%$ PPL across 27 configurations without any learned parameters.
-The strongest systems result is compositional: on MHA (3~seeds), EVQ+YaRN reaches $100\%$ passkey retrieval at $8\mathrm{K}$ where Geo+YaRN plateaus at $61\%$, with $14$--$32\%$ PPL reductions at $8$--$16\mathrm{K}$.
-On MLA (3~seeds), where only 16 RoPE channels remain, EVQ \emph{alone} outperforms Geo+YaRN at $2\times$ extrapolation ($-31.1\%$ PPL).
-In PE-dominant extreme extrapolation, EVQ surpasses learnable positional encoding with zero extra parameters ($333.7$ vs.\ $455.3$ PPL).
-These results establish frequency allocation as a previously neglected and increasingly consequential RoPE design axis: the structural correction matters more than the precision of the rule that selects it.
+Channel-frequency allocation---how RoPE distributes frequencies across head dimensions---has been fixed at the geometric (equal-ratio) schedule since RoFormer. We show this schedule is not a generic optimum but the $\tau{=}0$ degenerate limit of a variational family, and identify allocation as a consequential third RoPE design axis alongside base frequency and head dimension.
+We derive a closed-form one-parameter family (EVQ-cosh) and a zero-parameter temperature rule $\tau^* = d_{\mathrm{head}}/\sqrt{L}$ that is deliberately sub-optimal yet matches per-setting optima to within $<1\%$ PPL across 27 configurations---evidence that the frequency allocation landscape contains a wide basin around the variational solution.
+A zero-parameter closed-form initialization outperforms a 32-parameter learned PE ($333.7$ vs.\ $455.3$ PPL) and reduces Geo baseline by $35\%$ in extreme extrapolation, composes with YaRN to unlock $100\%$ passkey retrieval where Geo+YaRN plateaus at $61\%$ (3~seeds), and on MLA with only 16 RoPE channels, alone reduces $2\times$ extrapolation PPL by $31.1\%$ relative to Geo baseline---surpassing Geo+YaRN at that length.
+As architectures compress positional information into fewer channels, the structural correction---redistributing frequency mass from redundant high-frequency channels to the information-starved low-frequency regime---becomes particularly decisive.
 \end{abstract}
 
 \input{sections/01_intro}
@@ -58,6 +57,19 @@ These results establish frequency allocation as a previously neglected and incre
 \bibliographystyle{plainnat}
 \bibliography{refs/references}
 
+\clearpage
+\appendix
+
+\section*{Broader Impact}
+
+This work studies frequency allocation as a design axis for rotary position embedding rather than a specific deployed application. Its main positive impact is scientific and systems-oriented: replacing the default geometric frequency schedule with a principled variational allocation can reduce wasted compute and improve the reliability of long-context models across architectures. The main risk is over-generalization. Our strongest evidence remains concentrated on text extrapolation and retrieval-heavy long-context evaluation, so we do not present EVQ as a universal guarantee of downstream improvement across all tasks, modalities, or deployment settings.
+
+\input{appendix/a1_proofs}
+\input{appendix/a2_experiment_details}
+\input{appendix/a3_supporting_results}
+\input{appendix/a4_supporting_experiments}
+
+\clearpage
 \section*{NeurIPS Paper Checklist}
 
 \begin{enumerate}
@@ -166,16 +178,5 @@ These results establish frequency allocation as a previously neglected and incre
 \item \textbf{Justification:} No human-subject study is involved.
 \end{itemize}
 \end{enumerate}
-
-\clearpage
-\appendix
-
-\section*{Broader Impact}
-
-This work studies frequency allocation as a design axis for rotary position embedding rather than a specific deployed application. Its main positive impact is scientific and systems-oriented: replacing the default geometric frequency schedule with a principled variational allocation can reduce wasted compute and improve the reliability of long-context models across architectures. The main risk is over-generalization. Our strongest evidence remains concentrated on text extrapolation and retrieval-heavy long-context evaluation, so we do not present EVQ as a universal guarantee of downstream improvement across all tasks, modalities, or deployment settings.
-
-\input{appendix/a1_proofs}
-\input{appendix/a2_experiment_details}
-\input{appendix/a3_supporting_results}
 
 \end{document}
