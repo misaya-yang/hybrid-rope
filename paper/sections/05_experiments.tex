@@ -45,7 +45,7 @@ Table~\ref{tab:pe-dominant} provides the second principal anchor, isolating freq
 \subsection{Robustness and capability preservation}
 \label{sec:exp-robust}
 
-Multi-scale raw extrapolation (Table~\ref{tab:multiscale}, Appendix) shows in-range PPL changes within ${\pm}1.7\%$ while long-range PPL improves by $10$--$46\%$ across 50M--750M, and a base-generalization sweep confirms EVQ leads at both $b{=}10\mathrm{K}$ and $b{=}500\mathrm{K}$. Capability evaluation (Table~\ref{tab:capability}) confirms EVQ is non-destructive when retrieval is absent.
+Multi-scale raw extrapolation (Table~\ref{tab:multiscale}, Appendix) shows in-range PPL changes within ${\pm}1.7\%$ while long-range PPL improves by $10$--$46\%$ across 50M--750M, and a base-generalization sweep confirms EVQ leads at both $b{=}10\mathrm{K}$ and $b{=}500\mathrm{K}$. Capability evaluation (Table~\ref{tab:capability}) confirms EVQ is non-destructive on tasks that do not require long-range retrieval.
 
 %% =========================================================================
 %% PRIMARY ANCHOR 3: MLA (channels-are-scarce regime)
@@ -55,7 +55,7 @@ Multi-scale raw extrapolation (Table~\ref{tab:multiscale}, Appendix) shows in-ra
 
 Multi-head Latent Attention (MLA) \citep{deepseekv2, deepseekv3} carries positional information in only $d_{\mathrm{rope}}{=}32$ dimensions---$16$ frequency channels after pairing---versus $64$ in standard MHA with $d_{\mathrm{head}}{=}128$. On a 432M MLA transformer trained for 500M tokens at $L_{\mathrm{train}}{=}8192$ (3~seeds), EVQ alone reduces $2\times$ extrapolation PPL from $138.8$ to $95.6$ ($-31.1\%$) with $+1.1\%$ in-distribution cost, surpassing Geo+YaRN ($117.9$; Appendix~\ref{sec:mla-results}). The ranking EVQ+YaRN~$>$~EVQ~$>$~Geo+YaRN~$>$~Geo holds at every tested ratio, and the $31.1\%$ gain exceeds typical MHA gains ($13$--$15\%$)---consistent with the prediction that allocation quality becomes decisive as channels compress.
 
-\paragraph{Composition is robust to training saturation.} Under fully-trained MLA (1B tokens, single seed; Appendix~\ref{sec:mla-results}), EVQ's \emph{standalone} advantage reverses to $+11.1\%$ (Geo wins), yet EVQ+YaRN after fine-tuning still beats Geo+YaRN+FT by $-2.5\%$---a $13.6\mathrm{pp}$ structural swing that rules out ``EVQ = undertraining artifact'' and confirms training-time allocation as the binding constraint for composition with inference-time methods.
+\paragraph{Composition is robust to training saturation.} Under fully-trained MLA (1B tokens, single seed; Appendix~\ref{sec:mla-results}), EVQ's \emph{standalone} advantage reverses to $+11.1\%$ (Geo wins), yet EVQ+YaRN after fine-tuning still beats Geo+YaRN+FT by $-2.5\%$---a $13.6\mathrm{pp}$ structural swing that rules out undertraining as the explanation for EVQ's standalone gains and confirms training-time allocation as the binding constraint for composition with inference-time methods.
 
 %% =========================================================================
 %% SUPPORTING EVIDENCE (condensed; full results in Appendix)

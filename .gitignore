@@ -1,3 +1,6 @@
+# LaTeX build artifacts (paper/main.pdf at paper root IS committed)
+paper/build/
+
 # Python cache
 **/__pycache__/
 **/*.pyc
