@@ -1,5 +1,6 @@
 # LaTeX build artifacts (paper/main.pdf at paper root IS committed)
 paper/build/
+paper/_build_to_delete/
 
 # Python cache
 **/__pycache__/
@@ -83,6 +84,7 @@ data/video_temporal/external/
 # Skill / assistant definition files
 *.skill
 **/*.skill
+tong-jincheng-skill/
 
 # Tooling metadata
 .codex/
@@ -92,3 +94,6 @@ data/video_temporal/external/
 # macOS metadata
 .DS_Store
 **/.DS_Store
+
+# No stray PDFs at repo root — PDFs live under paper/ or internal/<month>/
+/*.pdf
