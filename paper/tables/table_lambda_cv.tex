@@ -1,23 +1,23 @@
 \begin{table}[ht]
-\caption{Collision-score cross-validation of the operating-point prefactor $c_{\mathrm{coll}}$ in $\tau^* = c_{\mathrm{coll}} \cdot d_{\mathrm{head}}/\sqrt{L}$. Each $\tau^*_{\mathrm{coll}}$ is the exact-kernel collision-score minimizer; each row holds out one configuration and predicts $\tau^*_{\mathrm{coll}}$ from the remaining~8. Max error $0.008$ ($<0.4\%$ relative). We reserve $\lambda$ for the curvature multiplier in $\mathcal{F}{=}S_{\chi^2}-\lambda U$ (Appendix~\ref{sec:lambda-curvature}); the empirical prefactor $c_{\mathrm{coll}}$ is related to $\lambda$ by $c^2 \propto \lambda\,Q_1$ under the paper's normalization, so $c_{\mathrm{coll}}{=}1.171$ reports a prefactor estimate, not $\lambda$ directly. The deployed formula uses unit-convention $\lambda{=}1$, and the corresponding $c{=}1$ falls inside the flat PPL basin ($<1\%$ gap from the best observed PPL sweep points across 27 configurations).}
+\caption{Collision-score validation of the operating-point prefactor $c$ in $\tau^* = c \cdot d_{\mathrm{head}}/\sqrt{L}$. Column $c_{\mathrm{pred}}(L,b) = \sqrt{45\,Q_1(L,b)}$ is the theory prediction under the $\lambda{=}1$ unit convention (Appendix~\ref{sec:lambda-curvature}); column $c_{\mathrm{coll}} = \tau^*_{\mathrm{coll}}/(d_{\mathrm{head}}/\sqrt{L})$ is the exact-kernel collision-score minimizer. The ratio $c_{\mathrm{coll}}/c_{\mathrm{pred}} = 0.981\pm 0.003$ (CV $0.28\%$, 9 configurations) is near-unity, supporting surrogate--exact curvature agreement at the $2\%$ level; implied curvature ratio $\lambda_\infty = 0.96\pm 0.005$. Leave-one-out cross-validation on $c_{\mathrm{coll}}$ gives max prediction error $0.008$ ($<0.4\%$ relative, RMSE $0.004$), so the near-zero CV reflects the smoothness of the collision score, not PPL variability (PPL sweep best points exhibit CV ${\approx}14\%$). The deployed formula uses $\lambda{=}1$, which falls inside the $<1\%$ PPL basin across all 27 configurations.}
 \label{tab:lambda-cv}
 \centering
 \small
-\begin{tabular}{@{}r r r r r@{}}
+\begin{tabular}{@{}r r r r r r r@{}}
 \toprule
-$d_{\mathrm{head}}$ & $L$ & $\tau^*_{\mathrm{coll}}$ & $\tau^*_{\mathrm{pred}}$ & Error \\
+$d_{\mathrm{head}}$ & $L$ & $Q_1$ & $c_{\mathrm{pred}}$ & $c_{\mathrm{coll}}$ & Ratio & Error \\
 \midrule
-32 & 256 & 2.340 & 2.342 & $+$0.002 \\
-32 & 512 & 1.660 & 1.655 & $-$0.005 \\
-32 & 1024 & 1.170 & 1.171 & $+$0.001 \\
-64 & 256 & 4.680 & 4.684 & $+$0.004 \\
-64 & 512 & 3.310 & 3.312 & $+$0.002 \\
-64 & 1024 & 2.340 & 2.342 & $+$0.002 \\
-128 & 256 & 9.370 & 9.366 & $-$0.004 \\
-128 & 512 & 6.630 & 6.622 & $-$0.008 \\
-128 & 1024 & 4.680 & 4.684 & $+$0.004 \\
+32  & 256  & 0.03145 & 1.190 & 1.170 & 0.984 & $+$0.002 \\
+32  & 512  & 0.03192 & 1.199 & 1.174 & 0.979 & $-$0.005 \\
+32  & 1024 & 0.03159 & 1.192 & 1.170 & 0.981 & $+$0.001 \\
+64  & 256  & 0.03145 & 1.190 & 1.170 & 0.984 & $+$0.004 \\
+64  & 512  & 0.03192 & 1.199 & 1.170 & 0.976 & $+$0.002 \\
+64  & 1024 & 0.03159 & 1.192 & 1.170 & 0.981 & $+$0.002 \\
+128 & 256  & 0.03145 & 1.190 & 1.171 & 0.985 & $-$0.004 \\
+128 & 512  & 0.03192 & 1.199 & 1.172 & 0.978 & $-$0.008 \\
+128 & 1024 & 0.03159 & 1.192 & 1.170 & 0.981 & $+$0.004 \\
 \midrule
-\multicolumn{5}{@{}l}{Mean $c_{\mathrm{coll}} = 1.171 \pm 0.001$ (CV: $0.11\%$); RMSE $= 0.004$} \\
+\multicolumn{7}{@{}l}{Mean $c_{\mathrm{coll}}/c_{\mathrm{pred}} = 0.981 \pm 0.003$ (CV $0.28\%$); implied $\lambda_\infty = 0.96 \pm 0.005$} \\
 \bottomrule
 \end{tabular}
 \end{table}

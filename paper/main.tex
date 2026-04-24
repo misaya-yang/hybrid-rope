@@ -5,6 +5,7 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage{microtype}
 \usepackage{url}
 \usepackage{booktabs}
@@ -30,6 +31,9 @@
 \newtheorem{corollary}{Corollary}
 \newtheorem{remark}{Remark}
 
+% Partial-answer helper for NeurIPS checklist (not provided by the 2026 style file)
+\providecommand{\answerPartial}[1][]{\textcolor{orange}{[Partial]#1}}
+
 \title{EVQ-Cosh: Variational Frequency Allocation for Rotary Position Embedding}
 
 \author{Anonymous Authors}
@@ -39,7 +43,7 @@
 \maketitle
 
 \begin{abstract}
-Rotary position embedding (RoPE) is usually designed along two axes: the base frequency and inference-time position rescaling. We study a third axis, the training-time allocation of the $d_{\mathrm{head}}/2$ frequency channels across the spectrum. We formulate this allocation as a variational inverse problem over log-frequency densities and derive \textsc{EVQ-cosh}, a closed-form one-parameter family in which geometric RoPE is the $\tau{=}0$ boundary under a broadband functional surrogate of the phase-collision kernel. EVQ-cosh changes only the inverse-frequency initialization and adds zero learned parameters. A semi-analytic operating-point rule, $\tau^{*}{=}d_{\mathrm{head}}/\sqrt{L}$, selects a non-geometric allocation; its $d_{\mathrm{head}}$ and $L^{-1/2}$ structure is derived, and the remaining $\mathcal{O}(1)$ normalization is validated as lying inside a flat empirical PPL basin. Our primary evidence is tiered: in PE-dominant DAPE-style $128{\to}8\mathrm{K}$ extrapolation, EVQ improves over geometric RoPE and a learned positional operator; under matched YaRN scale, EVQ increases YaRN leverage on a $454$M passkey-mix model, reaching $100\%$ passkey retrieval at $8\mathrm{K}$ while Geo+YaRN remains at $61\%$; and in compressed-RoPE MLA with $16$ frequency channels, EVQ gives the largest gains. These results support training-time frequency allocation \emph{shape}, not only frequency \emph{range}, as a first-order RoPE design axis.
+Rotary position embedding (RoPE) is not only a positional operator but also a finite spectral budget: each head has only $d_{\mathrm{head}}/2$ rotary frequency channels, yet the standard geometric schedule spends this budget by inherited convention. We study training-time frequency-channel allocation as a RoPE design axis complementary to operator design and inference-time range scaling. Formulating allocation as a variational inverse problem over log-frequency densities, we derive \textsc{EVQ-Cosh}, a closed-form one-parameter family in which geometric RoPE is recovered as the $\tau{\to}0$ limit of the pure-tether sub-family under a broadband collision surrogate. EVQ-Cosh changes only the inverse-frequency initialization and adds zero learned parameters. A semi-analytic operating-point rule $\tau^{*}{=}d_{\mathrm{head}}/\sqrt{L}$ selects a non-geometric allocation; its $d_{\mathrm{head}}$ factor and $L^{-1/2}$ exponent are derived, and the remaining $\mathcal{O}(1)$ normalization sits inside an empirically flat PPL basin. Three primary stress tests anchor our evidence: in PE-dominant DAPE-style $128{\to}8\mathrm{K}$ extrapolation, EVQ improves over geometric RoPE and a learned positional operator; under matched YaRN scale on a $454$M passkey-mix model, EVQ+YaRN reaches $100\%$ passkey retrieval at $8\mathrm{K}$ while Geo+YaRN remains at $61\%$; and in compressed-RoPE MLA with $16$ frequency channels, EVQ gives the largest relative gains. These results support training-time allocation \emph{shape}, not only frequency \emph{range}, as a first-order RoPE design axis.
 \end{abstract}
 
 \input{sections/01_intro}
@@ -57,14 +61,15 @@ Rotary position embedding (RoPE) is usually designed along two axes: the base fr
 \clearpage
 \appendix
 
-\section*{Broader Impact}
-
-This work studies frequency allocation as a design axis for rotary position embedding rather than a specific deployed application. Its main positive impact is scientific and systems-oriented: replacing the default geometric frequency schedule with a principled variational allocation can reduce wasted compute and improve the reliability of long-context models across architectures. The main risk is over-generalization. Our strongest evidence remains concentrated on text extrapolation and retrieval-heavy long-context evaluation, so we do not present EVQ as a universal guarantee of downstream improvement across all tasks, modalities, or deployment settings.
-
 \input{appendix/a1_proofs}
 \input{appendix/a2_experiment_details}
 \input{appendix/a3_supporting_results}
 \input{appendix/a4_supporting_experiments}
+
+\section{Broader Impact Statement}
+\label{sec:broader-impact}
+
+This work studies frequency allocation as a design axis for rotary position embedding rather than a specific deployed application. Its main positive impact is scientific and systems-oriented: replacing the default geometric frequency schedule with a principled closed-form allocation can reduce wasted compute and improve the reliability of long-context models across architectures. The main risk is over-generalization: our strongest evidence is concentrated on text extrapolation and retrieval-heavy long-context evaluation, so we do not present EVQ as a universal guarantee of downstream improvement across all tasks, modalities, or deployment settings.
 
 \clearpage
 \section*{NeurIPS Paper Checklist}
@@ -74,7 +79,7 @@ This work studies frequency allocation as a design axis for rotary position embe
 \begin{itemize}
 \item \textbf{Question:} Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?
 \item \textbf{Answer:} \answerYes{}
-\item \textbf{Justification:} The abstract and introduction are restricted to three contributions: (1) identifying training-time frequency allocation as a PE design axis with a closed-form variational family, (2) demonstrating that a semi-analytic rule---with derived $d_{\mathrm{head}}$ and $L^{-1/2}$ structure and an empirically validated $\mathcal{O}(1)$ scale---falls within the best observed sweep basin across 27 configurations, and (3) the matched-scale systems result that EVQ increases YaRN leverage. The $\tau^*$ rule's epistemic status---derived $d_{\mathrm{head}}$ and $L^{-1/2}$ structure, first-principles $\chi^2$ stiffness, and unit-choice $\lambda$---is stated explicitly in \S3.7.
+\item \textbf{Justification:} The abstract and introduction are restricted to three contributions: (1) identifying training-time frequency allocation as a PE design axis with a closed-form variational family, (2) demonstrating that a semi-analytic rule---with derived $d_{\mathrm{head}}$ and $L^{-1/2}$ structure and an empirically validated $\mathcal{O}(1)$ scale---falls within the best observed sweep basin across the tested grid of 27 configurations (primary claims rely on 3-seed anchors; supporting 1--2-seed rows extend scope), and (3) the matched-scale systems result that EVQ increases YaRN leverage under a fixed YaRN scale (we do not claim dominance over every tuned YaRN baseline). The $\tau^*$ rule's epistemic status---derived $d_{\mathrm{head}}$ and $L^{-1/2}$ structure under the stated small-$\tau$ scalings, channel-load-motivated $\chi^2$ stiffness, and unit-convention $\lambda$---is stated explicitly in \S3.7.
 \end{itemize}
 
 \item \textbf{Limitations}
@@ -122,8 +127,8 @@ This work studies frequency allocation as a design axis for rotary position embe
 \item \textbf{Experiments compute resources}
 \begin{itemize}
 \item \textbf{Question:} For each experiment, does the paper provide sufficient information on the computer resources used?
-\item \textbf{Answer:} \answerYes{}
-\item \textbf{Justification:} The appendix records the main model scales, training lengths, and the key continued-pretraining setup.
+\item \textbf{Answer:} \answerPartial{}
+\item \textbf{Justification:} The appendix records model scales, training token counts, context windows, batch sizes, and seed counts for every primary run. Primary experiments were conducted on an internal A100 / H100 cluster; total compute for the primary tier (454M EVQ$\times$YaRN + 432M MLA + 125M/454M PE-dominant) is on the order of a few hundred accelerator-hours, with the 454M/432M anchors dominating. Supporting LoRA-on-8B and video-DiT rows each use at most tens of accelerator-hours. Exact wall-clock and per-run GPU-hour accounting varies with cluster scheduling and is not material to the scientific comparison; full per-experiment GPU-hours and hardware configuration will accompany the anonymised code release in the camera-ready reproducibility appendix.
 \end{itemize}
 
 \item \textbf{Code of ethics}

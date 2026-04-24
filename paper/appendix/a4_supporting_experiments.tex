@@ -32,7 +32,7 @@ Context & Base PPL & EVQ-LoRA PPL & $\Delta$ \\
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:lora-8b} shows that EVQ-LoRA reduces extrapolation PPL by $8\times$ at $16\mathrm{K}$ and $19\times$ at $32\mathrm{K}$ with a modest in-distribution cost ($+30\%$ PPL at $8\mathrm{K}$), serving as supporting post-hoc evidence at 7B scale. The rank is set at $r{=}d_{\mathrm{head}}/2{=}64$. The variational analysis (\S\ref{sec:lora-regime}) predicts a phase transition at $r_c{=}d_{\mathrm{head}}/2$: below $r_c$, coupling stiffness prevents frequency redistribution; above it, extrapolation recovers. RULER scores do not improve, consistent with LoRA capacity sufficing for positional adaptation but not instruction-following at extrapolated lengths.
+Table~\ref{tab:lora-8b} shows that EVQ-LoRA reduces extrapolation PPL by $8\times$ at $16\mathrm{K}$ and $19\times$ at $32\mathrm{K}$ with a modest in-distribution cost ($+30\%$ PPL at $8\mathrm{K}$), serving as supporting post-hoc evidence at 7B scale. The rank is set at $r{=}d_{\mathrm{head}}/2{=}64$. The phenomenological variational model in \S\ref{sec:lora-regime} predicts a rank-dependent viability threshold near $r \approx d_{\mathrm{head}}/2$ under our calibration: below the threshold, coupling stiffness appears to prevent frequency redistribution; above it, extrapolation recovers. RULER scores do not improve, consistent with LoRA capacity sufficing for positional adaptation but not instruction-following at extrapolated lengths.
 
 \paragraph{Progressive training (single seed, preliminary).}
 Three-stage progressive training (454M, $512{\to}1024{\to}2048$) is reported as supporting evidence.
@@ -45,6 +45,6 @@ In 129.6M DiT head-to-head experiments (2~seeds, shared training run), EVQ wins 
 Across the diagnostics reported here, EVQ's effect generally attenuates through successive abstraction layers: raw PPL $-46\%$ (Table~\ref{tab:multiscale}) $\to$ Gold-Answer NLL $-30\%$ (Table~\ref{tab:quality-nll}) $\to$ passkey $+59\mathrm{pp}$ vs.\ Geo baseline (EVQ+YaRN $100\%$ vs.\ Geo $41\%$, 3~seeds) $\to$ QA accuracy $+2.2\mathrm{pp}$ (Table~\ref{tab:quality-nll}, single seed, near-random baseline). This pattern is consistent with the intervention being largest at the PE layer and attenuated through higher abstraction where model capacity becomes the binding constraint.
 
 \paragraph{Capability preservation.}
-Table~\ref{tab:capability} confirms that EVQ is non-destructive when retrieval is absent from training and improves extrapolated retrieval by $+10$--$13\mathrm{pp}$ when retrieval is learned (454M, 3-seed).
+Table~\ref{tab:capability} shows that EVQ is non-destructive when retrieval is absent from training and improves extrapolated retrieval by $+10$--$13\mathrm{pp}$ when retrieval is learned (454M, 3-seed).
 
 \input{tables/table3_capability_passkey}

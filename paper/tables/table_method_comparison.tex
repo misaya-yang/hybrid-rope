@@ -3,7 +3,7 @@
 \scriptsize
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{0.88}
-\caption{Compact comparison of RoPE-family context methods. EVQ-cosh is the only row whose main axis is closed-form variational training-time frequency allocation.}
+\caption{Compact comparison of RoPE-family context methods. EVQ-Cosh is the only row whose main axis is closed-form variational training-time frequency allocation.}
 \label{tab:method-comparison}
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{lcccccl}
@@ -19,7 +19,9 @@ DAPE \citep{zheng2024dape}                   & ---      & ---        & training 
 FIRE \citep{li2024fire}                      & ---      & ---        & training  & \checkmark & ---        & learned function \\
 VideoRoPE \citep{videorope2025}              & heuristic & \checkmark & design   & ---      & \checkmark & modality-specific \\
 Resonance RoPE \citep{wang2024resonance}     & ---      & \checkmark & design    & ---      & \checkmark & critical frequencies \\
-\textbf{EVQ-cosh (ours)}                     & \checkmark & ---      & ---       & ---      & \checkmark & \textbf{train-time allocation} \\
+MHRoPE/HoPE \citep{qwen2026mhrope,li2025hope}& heuristic & ---        & design    & ---      & \checkmark & VLM axis-split \\
+CARoPE \citep{veisi2025carope}               & ---      & ---        & training  & \checkmark & ---        & learned dynamic frequencies \\
+\textbf{EVQ-Cosh (ours)}                     & \checkmark & ---      & ---       & ---      & \checkmark & \textbf{train-time allocation} \\
 \bottomrule
 \end{tabular}%
 }
