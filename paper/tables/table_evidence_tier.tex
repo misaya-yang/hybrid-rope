@@ -1,0 +1,23 @@
+\begin{table}[h]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{0.88}
+\caption{Evidence tier by setting. Primary claims rest only on 3-seed primary tier; robustness rows are 3-seed but not primary anchors.}
+\label{tab:evidence-tier}
+\begin{tabular}{llll}
+\toprule
+Tier & Setting & Seeds & Location \\
+\midrule
+Primary I    & EVQ+YaRN, 454M MHA, $4\mathrm{K}{\to}8$/$12$/$16\mathrm{K}$     & 3  & \S\ref{sec:exp-yarn}   \\
+Primary II   & PE-dominant $128{\to}8\mathrm{K}$ (DAPE comparison)             & 3  & \S\ref{sec:exp-pe}     \\
+Primary III  & MLA 432M, 16 RoPE channels, 500M tokens                        & 3  & \S\ref{sec:exp-mla}    \\
+Robustness   & FineWeb-Edu consistency, base sweep, capability preservation   & 3  & \S\ref{sec:exp-robust} \\
+Supporting   & Multi-scale raw-PPL one-seed rows                              & 1  & \S\ref{sec:exp-robust}, App.~\ref{sec:supporting-experiments} \\
+Supporting   & Video DiT 129M / 382M                                          & 1--2  & \S\ref{sec:exp-supporting}, App.~\ref{sec:supporting-experiments} \\
+Supporting   & LoRA into LLaMA-3-8B-Instruct                                  & 1  & \S\ref{sec:exp-supporting}, App.~\ref{sec:supporting-experiments} \\
+Supporting   & Progressive training                                           & 1  & \S\ref{sec:exp-supporting}, App.~\ref{sec:supporting-experiments} \\
+Supporting   & MLA 1B-token (robustness to training saturation)               & 1  & \S\ref{sec:exp-mla},     App.~\ref{sec:supporting-experiments} \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,3 +1,2 @@
-\section{Conclusion}
-
-Channel-frequency allocation is a consequential RoPE design axis that prior work has approached only heuristically. Our variational formulation identifies the geometric schedule as a degenerate boundary case rather than a generic optimum, and a minimal semi-analytic correction---one line of code, zero extra parameters---already yields consistent long-context gains and composes orthogonally with inference-time scaling; the effect is most pronounced where channels are scarce (e.g., MLA), consistent with allocation \emph{shape}---not just \emph{range}---being a binding constraint. We view EVQ-cosh as a starting substrate rather than a final answer; richer families, learned allocations, and modality-conditioned schedules are natural extensions along the axis this paper identifies.
+\paragraph{Conclusion.}
+EVQ-cosh identifies geometric RoPE as the $\tau{=}0$ boundary of a closed-form training-time allocation family; the matched-scale and compressed-RoPE results support allocation \emph{shape}, not just \emph{range}, as a binding RoPE design axis.

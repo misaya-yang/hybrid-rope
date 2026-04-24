@@ -1,8 +1,10 @@
 \begin{table}[t]
-\caption{Phase 11 leverage and incompatibility at \(L=256\). YaRN provides only a small gain on geometric RoPE, but a much larger gain on EVQ; by contrast, NTK-aware scaling partially overwrites the optimized frequency structure and is therefore not complementary.}
+\caption{Matched-scale YaRN leverage at \(L=256\); NTK-aware scaling is not complementary at large \(\tau\).}
 \label{tab:phase11-leverage}
 \centering
-\small
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{0.88}
 \begin{tabular}{@{}lcc@{}}
 \toprule
 Method & YaRN gain @4K & YaRN gain @8K \\

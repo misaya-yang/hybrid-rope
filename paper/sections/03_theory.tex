@@ -2,18 +2,16 @@
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.98\linewidth]{fig_method_overview.pdf}
+  \includegraphics[width=0.88\linewidth]{fig_method_overview.pdf}
   \caption{\textbf{EVQ-Cosh frequency allocation.} Left: geometric RoPE distributes frequencies uniformly in log-space. Center: the EVQ-cosh warp $\phi_k(\tau)$ bends the allocation below the identity (dashed), concentrating resolution at low frequencies; $\tau{\to}0$ recovers geometric RoPE. Right: the resulting allocation spreads low-frequency channels, retaining more positional information at long range.}
   \label{fig:method-overview}
 \end{figure}
 
-The derivation has three layers with distinct epistemic status:
-\begin{enumerate}
-\item \textbf{Exact (conditional on surrogate):} the ODE, closed-form family, geometric limit, and waterbed inequality (\S\ref{sec:ode}--\S\ref{sec:waterbed}).
-\item \textbf{Practical branch choice:} drop the forcing term, retain the pure-tether warp (\S\ref{sec:evq-practical}).
-\item \textbf{Semi-analytic calibration:} the $\tau^*$ scaling rule, whose $d_{\mathrm{head}}$ and $L^{-1/2}$ structure is derived and whose remaining $\mathcal{O}(1)$ scale is empirically validated inside a flat basin (\S\ref{sec:tau-star}).
-\end{enumerate}
-We separate these layers explicitly so that the exact variational results are not conflated with the practical recipe. The first layer is the paper's primary theoretical contribution; the third is a practical convenience whose imprecision is bounded by the basin width demonstrated in \S\ref{sec:tau-star}.
+Before any derivation we state the epistemic status of each component (Table~\ref{tab:epistemic-map}), so that the variational core is not conflated with the practical recipe. In our view this separation is more important than any particular identity in the proofs below.
+
+\input{tables/table_epistemic_map}
+
+The surrogate is functional (not pointwise: Appendix~\ref{sec:surrogate-validation} reports $24$--$92\%$ collision-score reduction under the exact kernel across $12$ configurations). The pure-tether branch of the stationary ODE (Theorem~\ref{thm:ode}) is a design choice that keeps the allocation invertible in closed form; it is not a claim that the Fisher-driven forcing term never matters. The rule $\tau^{*}{=}d_{\mathrm{head}}/\sqrt{L}$ (Proposition~\ref{prop:softmax-transport}) is an operating-point selector whose $d_{\mathrm{head}}$ factor and $L^{-1/2}$ exponent are derived; its remaining $\mathcal{O}(1)$ scale is fixed by normalization convention, and its role is to move the allocation away from the $\tau{=}0$ boundary into a wide non-geometric basin.
 
 \subsection{RoPE as frequency allocation}
 
@@ -27,13 +25,13 @@ K(\phi_1,\phi_2)
 =
 \int D(\Delta)\cos(\omega(\phi_1)\Delta)\cos(\omega(\phi_2)\Delta)\,d\Delta.
 \end{equation}
-Our only approximation is a broadband surrogate,
+The collision objective admits a broadband functional surrogate,
 \begin{equation}
 K_{\mathrm{app}}(\phi_1,\phi_2)
 \approx
 \alpha \delta(\phi_1-\phi_2) + \beta \min(\phi_1,\phi_2),
 \end{equation}
-which isolates a diagonal ridge term and a smooth off-diagonal covariance. The $\delta$ term captures local ridge structure; $\min(\phi_1,\phi_2)$ is the Green kernel of a one-dimensional second-order operator. The exact kernel is oscillatory and cannot be pointwise-matched by a smooth two-parameter model; $K_{\mathrm{app}}$ captures the \emph{functional} structure of the collision objective. Appendix~\ref{sec:surrogate-validation} validates this: the EVQ solution derived from $K_{\mathrm{app}}$ reduces the collision score under the exact kernel by $24$--$92\%$ across 12 configurations and captures $63$--$69\%$ of the collision-oracle's reduction (Appendix~\ref{sec:mechanism-isolation}). The residual gap corresponds to non-cosh families that lose closed-form invertibility, so the variational solution is near-optimal rather than merely directionally correct. A self-consistency theorem (Theorem~\ref{thm:self-consistency} in Appendix) further confirms the surrogate's structural rigidity.
+which isolates a diagonal ridge term and a smooth off-diagonal covariance. The $\delta$ term captures local ridge structure; $\min(\phi_1,\phi_2)$ is the Green kernel of a one-dimensional second-order operator. The exact kernel is oscillatory and cannot be pointwise-matched by a smooth two-parameter model; $K_{\mathrm{app}}$ captures the \emph{functional} structure of the collision objective. Appendix~\ref{sec:surrogate-validation} validates this: the EVQ solution derived from $K_{\mathrm{app}}$ reduces the collision score under the exact kernel by $24$--$92\%$ across 12 configurations, and a collision-only numerical oracle search (Appendix~\ref{sec:mechanism-isolation}) reaches comparable order-of-magnitude reductions, suggesting that non-cosh families may further reduce exact-kernel collision at the cost of losing closed-form invertibility. A self-consistency theorem (Theorem~\ref{thm:self-consistency} in Appendix) further confirms the surrogate's structural rigidity.
 
 \subsection{Variational objective and stationary ODE}
 \label{sec:ode}
@@ -50,6 +48,7 @@ The broadband functional is
 \end{equation}
 
 \begin{theorem}[Stationary ODE]
+\label{thm:ode}
 Conditional on $K_{\mathrm{app}}$, the stationary density satisfies
 \begin{equation}
 \rho''(\phi) - \tau^2 \rho(\phi) = \gamma\, b^{-2\phi},
@@ -83,6 +82,7 @@ EVQ-cosh converges smoothly to geometric RoPE as $\tau \to 0$. Geometric RoPE is
 
 For a head dimension $d_{\mathrm{head}}$ and training length $L$, the complete implementation is
 \begin{equation}
+\label{eq:evq-practical}
 \tau = \frac{d_{\mathrm{head}}}{\sqrt{L}},
 \qquad
 u_k = \frac{k}{K},
@@ -91,29 +91,14 @@ u_k = \frac{k}{K},
 \qquad
 K=\frac{d_{\mathrm{head}}}{2}.
 \end{equation}
-The construction is deliberately minimal: set $\tau$, compute quantiles, evaluate the warp, replace inverse frequencies. No auxiliary loss, no extra parameters, no optimizer dependence. Two properties follow from the quantile form: $u_0{=}0$ implies $\phi_0(\tau){=}0$, anchoring the first channel at $\omega_0{=}1$; and the warp grows toward the low-frequency end, so EVQ preserves short-range structure without a separate design choice. In implementation, midpoint quantization $u_k = (2k{+}1)/(2K)$ is used; for $K \geq 16$ the difference in $\phi_k$ is below $1.6\%$ and does not affect any reported result.
+The construction is deliberately minimal: set $\tau$, compute quantiles, evaluate the warp, replace inverse frequencies. No auxiliary loss, no extra parameters, no optimizer dependence. The endpoint grid $u_k{=}k/K$ has the anchoring property $u_0{=}0{\Rightarrow}\phi_0{=}0$ (preserves $\omega_0{=}1$); our implementation uses midpoint quantization $u_k{=}(2k{+}1)/(2K)$, which trades exact anchoring for avoiding endpoint cells. We do not rely on $\omega_0{=}1$ in any trained model, and the endpoint/midpoint choice affects PPL by ${<}1\%$ in the $<1\%$ PPL basin across all $K{\geq}16$ settings we tested.
 
-\begin{center}
-\fbox{%
-\parbox{0.93\linewidth}{%
-\textbf{Practical recipe: EVQ-cosh initialization.}
-Given $d_{\mathrm{head}}$, $L_{\mathrm{train}}$, and base $b$: (1) set $\tau=d_{\mathrm{head}}/\sqrt{L_{\mathrm{train}}}$; (2) define $K=d_{\mathrm{head}}/2$ and $u_k=k/K$; (3) compute
-\[
-\phi_k(\tau)=1-\frac{1}{\tau}\operatorname{arcsinh}\!\left((1-u_k)\sinh\tau\right);
-\]
-(4) initialize inverse frequencies as $b^{-\phi_k(\tau)}$. This is the complete method. It adds zero learned parameters and leaves the transformer architecture unchanged.}}
-\end{center}
-
-EVQ changes only the inverse-frequency initialization---distinct from learnable PE approaches that rely on in-distribution training dynamics to discover the allocation through extra parameters.
+EVQ-cosh changes only the inverse-frequency initialization---distinct from learnable PE approaches that rely on in-distribution training dynamics to discover the allocation through extra parameters. The full recipe is Equation~(\ref{eq:evq-practical}) above plus $\tau{=}d_{\mathrm{head}}/\sqrt{L_{\mathrm{train}}}$: zero learned parameters, architecture unchanged.
 
 \subsection{Waterbed inequality}
 \label{sec:waterbed}
 
-\begin{proposition}
-Under the broadband model, EVQ obeys a waterbed inequality: improving long-range frequency resolution necessarily redistributes error rather than eliminating it globally.
-\end{proposition}
-
-This explains why small in-range costs coexist with large out-of-range gains. Geometric RoPE distributes density uniformly in log-frequency; EVQ intentionally pays bounded high-frequency cost to relieve the low-frequency collision bottleneck that limits long-range discrimination.
+Under the broadband surrogate, EVQ obeys a tight waterbed inequality (Proposition~\ref{prop:waterbed}, Appendix~\ref{sec:waterbed-proof}): the error functional $\mathcal{W}(\rho) = \alpha\chi^2(U\|P_\rho) + \beta\!\int M_\rho^2$ satisfies $\mathcal{W}(\rho) \ge \alpha(e^{D_B(\rho)} - 1)$ with equality iff $\rho\equiv 1$, and EVQ's in-range cost scales as $\mathcal{W}(\rho_{\tau_*}) = O(d_{\mathrm{head}}^4/(L_{\mathrm{eff}}^{J})^2)$. Long-range improvement is thus paid for by a bounded, quartic-in-$\tau^*$ in-range cost---not eliminated.
 
 \subsection{The \texorpdfstring{$\tau^*$}{tau*} scaling law: epistemic stratification}
 \label{sec:tau-star}
@@ -133,11 +118,13 @@ Q_1(L,b) \;=\; \int_0^1 \eta(\phi)\,q(Lb^{-\phi})\,d\phi,
 with $\eta(\phi) = (1-\phi)^2/2 - 1/6$, hence $\tau_* \propto d_{\mathrm{head}}/\sqrt{L}$ with $L$-exponent exactly $-1/2$.
 \end{proposition}
 
-\paragraph{Three epistemic tiers.} The $d_{\mathrm{head}}$ and $L^{-1/2}$ structure is \textbf{derived} (exact in the small-$\tau$ limit; at practical $\tau$ numerical optimization yields $\gamma \approx 0.465$, within $1\%$ PPL of $L^{-0.500}$). The $\chi^2$ stiffness is \textbf{first-principles but not unique}: attention-load asymmetry gives $\int(\rho-1)^2/\rho = \chi^2$, and the self-consistent $L$-exponent sweep identifies $p \approx 0.80$ with $\chi^2$ closest among $p$-family divergences (KL, Jeffreys, R\'enyi all outside the basin; Table~\ref{tab:stiffness-sweep}). The Lagrange multiplier $\lambda$ is an $\mathcal{O}(1)$ normalization constant that is \textbf{not analytically closed}: once stiffness and utility are normalized, $\lambda$ absorbs a remaining scale and $Q_1(L,b)$ is a computable integral (Appendix~\ref{sec:lambda-cv}). Empirically the collision-score oracle yields $\lambda_{\mathrm{coll}} = 1.171 \pm 0.001$ (CV $0.11\%$, 9 configurations; Table~\ref{tab:lambda-cv})---the near-zero spread rules out $\lambda$ as a free parameter---and using $\lambda{=}1$ remains inside the ${<}1\%$ PPL basin across all 27 configurations.
+\paragraph{Non-diffuse baseline and $L_{\mathrm{eff}}$.}
+\label{sec:leff-remark}
+The $1/L$ factor used $p_0{=}1/L$. Under a trained attention distribution the corresponding scalar is $1/L_{\mathrm{eff}}^{J}$, the reciprocal softmax-Jacobian Rayleigh quotient on the RoPE-induced logit transport direction $g_i$; $g_i$ has a closed form~\eqref{eq:g-closed-form} and $L_{\mathrm{eff}}^{J}$ is defined as a ratio-of-means~\eqref{eq:leff-ratio-of-means} (Appendix~\ref{sec:leff-derivation}). This gives $\tau^{*}\propto d_{\mathrm{head}}/\sqrt{L_{\mathrm{eff}}^{J}}$, and writing $L_{\mathrm{eff}}^{J}{=}\Theta(L_{\mathrm{train}}^{a})$ unifies the rule as $\tau^{*}\propto L_{\mathrm{train}}^{-a/2}$, with $a{\approx}1$ on our $L\!\le\!8$K grid. A cheap entropy proxy $L_{\mathrm{eff}}^{H}{=}(\mathbb{E}[e^{-H}])^{-1}$ agrees with $L_{\mathrm{eff}}^{J}$ under flat-window attention but diverges at near-one-hot heads (where softmax saturates), so we use $L_{\mathrm{eff}}^{H}$ only as a diagnostic. Saturation ($a\!\to\!0$) is empirically testable and would revise $\tau^{*}$ at $L_{\mathrm{train}}{\geq}16$K.
 
-\paragraph{Sub-optimality as a structural discovery.} Beyond the predicted EVQ-over-geometric improvement, the more informative result is that with $\lambda$ frozen at the unit-convention value $\lambda{=}1$, the formula matches 27 per-setting optima within $<1\%$ PPL across 99 runs (from-scratch text 50M--750M, MLA with 16 channels, video DiT, and post-hoc LoRA at 7B; Appendix~\ref{sec:tau-scaling}). This implies a structural fact about the allocation landscape: a wide basin surrounds the variational solution while the uniform baseline ($\tau{=}0$) sits outside it, so the variational derivation's role is to \emph{identify the direction} rather than pinpoint a perfect $\tau$. The practical consequence is that a zero-parameter initialization outperforms learned positional encoding with 32 extra parameters (Table~\ref{tab:pe-dominant}).
+\paragraph{Three epistemic tiers.} The $d_{\mathrm{head}}$ and $L^{-1/2}$ structure is \textbf{derived} (exact in the small-$\tau$ limit; at practical $\tau$ numerical optimization yields $\gamma \approx 0.465$, within $1\%$ PPL of $L^{-0.500}$). The $\chi^2$ stiffness is \textbf{first-principles under a channel-load axiom}: with channels sampled according to $\rho\,d\phi$ and local cell width $\ell(\phi){=}1/\rho(\phi)$, $S_{\chi^2}(\rho) = \mathrm{Var}_{\rho}(1/\rho)$, i.e.\ the variance of per-channel quantization load (Appendix~\ref{sec:chi2-load}). Among load-moment penalties $S_p(\rho){=}\mathbb{E}_\rho[(1/\rho-1)^p]$ only $p{=}2$ reproduces $L^{-1/2}$; smooth $f$-divergences (KL, Jeffreys, R\'enyi) are locally quadratic around $\rho{=}1$ and agree with $\chi^2$ at leading order, but their \emph{finite-$\tau$} best points over our $L$ grid give $L$-exponents $\gamma\in\{0.58\mbox{--}0.81\}$---outside the $\pm 1\%$ PPL basin around $\gamma{=}0.500$ at the tested scales (Table~\ref{tab:stiffness-sweep}). The Lagrange multiplier $\lambda$ is an $\mathcal{O}(1)$ \textbf{curvature-ratio} between the surrogate and exact utilities (Appendix~\ref{sec:lambda-curvature}); the collision-score oracle yields $c_{\mathrm{coll}} = 1.171 \pm 0.001$ (CV $0.11\%$, 9 configurations; Table~\ref{tab:lambda-cv}), which we read as a $17\%$ surrogate curvature under-estimate rather than as a free fit parameter; using $\lambda{=}1$ remains inside the ${<}1\%$ PPL basin across all 27 configurations.
 
-\paragraph{Predictions.} EVQ corrects \emph{shape} (non-uniform density) while YaRN corrects \emph{range} (Figure~\ref{fig:orthogonal}); the corrections are additive, predicting the strong composition observed in \S\ref{sec:experiments}. Attention-distance measurements on a trained 750M model verify the waterbed crossover at ${\approx}508$ tokens (Figure~\ref{fig:attn-mechanism}, Appendix).
+\paragraph{Basin, not point estimate; additive corrections.} With $\lambda{=}1$, the formula falls within $<1\%$ PPL of the best observed sweep points across 27 configurations (MHA 50M--750M, MLA, video DiT, post-hoc LoRA at 7B; Appendix~\ref{sec:tau-scaling}): a wide near-optimal basin surrounds the variational solution while the uniform $\tau{=}0$ baseline sits outside it, so the derivation identifies the \emph{direction}, not a perfect $\tau$. EVQ corrects \emph{shape} while YaRN corrects \emph{range} (Figure~\ref{fig:orthogonal}); the corrections are additive, predicting the strong EVQ+YaRN composition observed in \S\ref{sec:experiments}, and attention-distance measurements verify the waterbed crossover at ${\approx}508$ tokens (Figure~\ref{fig:attn-mechanism}, Appendix).
 
 \begin{figure}[t]
   \centering

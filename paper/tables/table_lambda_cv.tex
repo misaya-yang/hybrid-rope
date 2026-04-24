@@ -1,5 +1,5 @@
 \begin{table}[ht]
-\caption{Collision-score cross-validation of $\lambda$ in $\tau^* = \lambda \cdot d_{\mathrm{head}}/\sqrt{L}$. Each $\tau^*_{\mathrm{coll}}$ is the exact-kernel collision-score minimizer (not a PPL-sweep optimum). Each row holds out one configuration and predicts its $\tau^*_{\mathrm{coll}}$ from the remaining~8. Max prediction error is $0.008$ ($<0.4\%$ relative). The near-zero CV reflects the smoothness of the collision score, not PPL variability; PPL-sweep optima exhibit broader scatter ($\text{CV} \approx 14\%$) because PPL depends on training noise. The deployed formula uses $\lambda{=}1$, which falls inside the flat PPL basin ($<1\%$ gap from the PPL optimum across 27 configurations).}
+\caption{Collision-score cross-validation of the operating-point prefactor $c_{\mathrm{coll}}$ in $\tau^* = c_{\mathrm{coll}} \cdot d_{\mathrm{head}}/\sqrt{L}$. Each $\tau^*_{\mathrm{coll}}$ is the exact-kernel collision-score minimizer; each row holds out one configuration and predicts $\tau^*_{\mathrm{coll}}$ from the remaining~8. Max error $0.008$ ($<0.4\%$ relative). We reserve $\lambda$ for the curvature multiplier in $\mathcal{F}{=}S_{\chi^2}-\lambda U$ (Appendix~\ref{sec:lambda-curvature}); the empirical prefactor $c_{\mathrm{coll}}$ is related to $\lambda$ by $c^2 \propto \lambda\,Q_1$ under the paper's normalization, so $c_{\mathrm{coll}}{=}1.171$ reports a prefactor estimate, not $\lambda$ directly. The deployed formula uses unit-convention $\lambda{=}1$, and the corresponding $c{=}1$ falls inside the flat PPL basin ($<1\%$ gap from the best observed PPL sweep points across 27 configurations).}
 \label{tab:lambda-cv}
 \centering
 \small
@@ -17,7 +17,7 @@ $d_{\mathrm{head}}$ & $L$ & $\tau^*_{\mathrm{coll}}$ & $\tau^*_{\mathrm{pred}}$ 
 128 & 512 & 6.630 & 6.622 & $-$0.008 \\
 128 & 1024 & 4.680 & 4.684 & $+$0.004 \\
 \midrule
-\multicolumn{5}{@{}l}{Mean $\lambda_{\mathrm{coll}} = 1.171 \pm 0.001$ (CV: $0.11\%$); RMSE $= 0.004$} \\
+\multicolumn{5}{@{}l}{Mean $c_{\mathrm{coll}} = 1.171 \pm 0.001$ (CV: $0.11\%$); RMSE $= 0.004$} \\
 \bottomrule
 \end{tabular}
 \end{table}

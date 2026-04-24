@@ -1,0 +1,16 @@
+\begin{table}[t]
+\centering
+\small
+\caption{Epistemic map of the EVQ-cosh derivation. The variational core (rows~1--2) is exact conditional on the broadband surrogate; the practical recipe (rows~3--4) is a deliberate engineering choice whose residual uncertainty is bounded empirically (\S\ref{sec:tau-star}).}
+\label{tab:epistemic-map}
+\begin{tabular}{p{0.20\linewidth} p{0.30\linewidth} p{0.40\linewidth}}
+\toprule
+Component & Status & Role \\
+\midrule
+Broadband surrogate $K_{\mathrm{app}}$ & Functional approximation of the \emph{collision objective} (not pointwise approximation of the kernel) & Yields a tractable variational problem; validated in Appendix~\ref{sec:surrogate-validation} \\
+ODE and closed-form family & Exact conditional on $K_{\mathrm{app}}$ & Theoretical core; geometric RoPE is the $\tau{=}0$ boundary \\
+Pure-tether branch & Practical branch choice of the stationary ODE & Gives a closed-form invertible quantile warp; forcing term suppressed at typical bases \\
+$\tau^*$ scaling rule & Semi-analytic operating-point selector (not a global minimizer) & Moves allocation away from the degenerate $\tau{=}0$ edge into a wide non-geometric basin \\
+\bottomrule
+\end{tabular}
+\end{table}
