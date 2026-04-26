@@ -1,6 +1,4 @@
-\vspace{-0.8\baselineskip}
-\section{Limitations and Scope}
-\label{sec:limitations}
-\vspace{-0.5\baselineskip}
+\section{Conclusion and Limitations}
+\label{sec:conclusion-limitations}
 
-Our claims target a PE mechanism, not production long-context SOTA: causal endpoints are PE-diagnostic (PPL, passkey, NIAH/RULER, gold-answer NLL); downstream accuracy is a non-regression check only. Theory is exact conditional on $\mathcal{C}_{\mathrm{app}}$; $\tau^*$ is semi-analytic, $d_{\mathrm{head}}$ and $L^{-1/2}$ structural, $\mathcal{O}(1)$ prefactor by convention. From-scratch ${\geq}1\mathrm{B}$ text, production MLA at $b{=}10\mathrm{K}$, and tuned EVQ+LongRoPE2 are natural follow-ups.
+RoPE allocation \emph{shape}---not only frequency \emph{range}---is a third design axis; EVQ-Cosh ($\tau^*{=}d_{\mathrm{head}}/\sqrt{L}$) is a closed-form zero-parameter substrate that downstream methods inherit, not a replacement for them. Limitations: PE-diagnostic endpoints (PPL, passkey, NIAH/RULER, gold-NLL) are causal targets, with downstream accuracy as a non-regression check; theory is exact conditional on $\mathcal{C}_{\mathrm{app}}$, while $\tau^*$ is semi-analytic ($d_{\mathrm{head}}$, $L^{-1/2}$ derived; $\mathcal{O}(1)$ prefactor by convention). From-scratch ${\geq}1\mathrm{B}$ text and production MLA ($b{=}10\mathrm{K}$) are natural follow-ups.

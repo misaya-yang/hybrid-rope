@@ -37,7 +37,14 @@ since differentiating $\alpha\rho(\phi)+\beta g(\phi)+\nu = 0$ once and evaluati
 \rho_\tau(\phi) \;=\; \frac{\tau\,\cosh(\tau(1-\phi))}{\sinh\tau},
 \label{eq:rho-tau-closed}
 \end{equation}
-which is main-text Theorem~\ref{thm:ode}. Conditional on the surrogate $\mathcal{C}_{\mathrm{app}}$, this derivation is exact.
+which is main-text Theorem~\ref{thm:ode}. The mass constraint $\int\rho{=}1$ is not lost: it enters the boundary condition at $\phi{=}0$ via $g'(0){=}\int_0^1\rho{=}1$. Positivity holds on the closed interval since $\rho_\tau(0){=}\tau\coth\tau{>}0$ and $\rho_\tau(1){=}\tau/\sinh\tau{>}0$ for $\tau{>}0$.
+
+\paragraph{Convexity / PSD of $\mathcal{C}_{\mathrm{app}}$.} For $\alpha{>}0$ and $\beta{\geq}0$, the surrogate is convex because both quadratic terms are positive semidefinite. The diagonal $\alpha{\int}\rho^2$ is manifestly PSD on $L^2$, and the Green-kernel cross term satisfies the identity
+\begin{equation}
+\iint_{[0,1]^2} f(\phi)\,f(\psi)\,\min(\phi,\psi)\,d\phi\,d\psi \;=\; \int_0^1 \!\left(\int_s^1 f(u)\,du\right)^{\!2}\!ds \;\geq\; 0.
+\label{eq:min-kernel-psd}
+\end{equation}
+Thus the stationary density obtained above is the unique constrained \emph{minimizer} (not merely a critical point), and the surrogate is well-defined as a quadratic functional on $L^2([0,1])\supset C^2([0,1])$ with no further regularity assumption needed for the $\delta$-component. Conditional on $\mathcal{C}_{\mathrm{app}}$, this derivation is exact.
 
 \subsection{Forced Fisher extension}
 \label{subsec:fisher-ext}
@@ -87,7 +94,7 @@ The full stationary density contains three terms: a hyperbolic tether (\(\cosh, 
 
 \textbf{(1) Closed-form invertibility.} The pure-tether density \(\rho(\phi)\propto\cosh(\tau(1-\phi))\) admits an analytically invertible CDF, yielding the closed-form warp \(\phi_k(\tau)\). Including the \(b^{-2\phi}\) term destroys this invertibility and requires numerical root-finding.
 
-\textbf{(2) The forcing branch is globally small in $L^1$/CDF transport, not pointwise.} Once $\gamma(b) = (\lambda_F/\alpha)\,\bar\eta_F\,(2\log b)^2$ is derived (Appendix~\ref{sec:pure-tether-bound}, Eq.~\eqref{eq:gamma-explicit}), the $(s^2{-}\tau^2)^{-1}$ denominator in the particular solution $\delta\rho_F^{\mathrm{part}} = \gamma(b)\,q_s/(s^2-\tau^2)$ is cancelled by the $s^2$ in $\gamma(b)$, so the forcing amplitude is \emph{not} pointwise $O(1/\log^2 b)$. The true suppression is boundary-layer / $L^1$-level: $\|q_s\|_1 = (1-e^{-s})/s = O(1/\log b)$, giving $\|\rho_{\mathrm{full}}-\rho_{\mathrm{EVQ}}\|_1 = O(1/\log b)$ and CDF-level error of the same order (Eq.~\eqref{eq:tether-L1-correct}). Empirically, the full solution improves over pure tether by $2$--$6\%$ at unit-convention $\lambda{=}1$ (vs.\ $28$--$92\%$ improvement over geometric), and the 99-run Phase~16 sweep (Figure~\ref{fig:tau-sweep}) is consistent with the pure-tether family matching the scaling-law prediction, subsuming geometric RoPE as its $\tau{\to}0$ limit.
+\textbf{(2) The forcing branch is globally small in $L^1$/CDF transport, not pointwise.} Once $\gamma(b) = (\lambda_F/\alpha)\,\bar\eta_F\,(2\log b)^2$ is derived (Appendix~\ref{sec:pure-tether-bound}, Eq.~\eqref{eq:gamma-explicit}), the $(s^2{-}\tau^2)^{-1}$ denominator in the particular solution $\delta\rho_F^{\mathrm{part}} = \gamma(b)\,q_s/(s^2-\tau^2)$ is cancelled by the $s^2$ in $\gamma(b)$, so the forcing amplitude is \emph{not} pointwise $O(1/\log^2 b)$. The true suppression is boundary-layer / $L^1$-level: $\|q_s\|_1 = (1-e^{-s})/s = O(1/\log b)$, giving $\|\rho_{\mathrm{full}}-\rho_{\mathrm{EVQ}}\|_1 = O(1/\log b)$ and CDF-level error of the same order (Eq.~\eqref{eq:tether-L1-correct}). The full solution improves over pure tether by $2$--$6\%$ \emph{on the offline collision/utility surrogate objective at unit-convention $\lambda{=}1$} (vs.\ $28$--$92\%$ improvement over geometric on the same objective)---this is a surrogate gap, not a trained-PPL claim, and no main empirical claim relies on the forced solution. Furthermore, since inverse-CDF inversion can amplify CDF perturbations by $1/\inf\rho_\tau{\sim}\sinh\tau/\tau$, at large $\tau$ (e.g.\ $\tau{=}4$) the forced branch is best treated as a numerical extension rather than dismissed by the $L^1$ bound; the deployed pure-tether warp captures the dominant Geo$\to$EVQ direction (28--92\%) while remaining closed-form. The 99-run Phase~16 sweep (Figure~\ref{fig:tau-sweep}) is consistent with the pure-tether family matching the scaling-law prediction, subsuming geometric RoPE as its $\tau{\to}0$ limit.
 
 \subsection{Surrogate quality: functional validation}
 \label{sec:surrogate-validation}
@@ -250,6 +257,13 @@ The scaling law $\tau^* = \lambda \cdot d_{\mathrm{head}}/\sqrt{L}$ is analyzed 
 \tau_*^2 \;=\; 45\,\lambda\,Q_1(L,b)\cdot\frac{d_{\mathrm{head}}^2}{L}.
 \]
 Splitting $Q_1$ into an active-channel contribution ($q \approx 1/2$ for $Lb^{-\phi} \gg 1$, i.e.\ $\phi \in [0, \phi^*]$ with $\phi^* = \ln L/\ln b$) and a dead-channel contribution ($q(x) = x^4/45 + O(x^6)$ for $x = Lb^{-\phi} \ll 1$ on $\phi \in [\phi^*, 1]$; the leading Taylor coefficient is $x^4/45$, not $x^2/45$) gives the closed form $Q_1(L,b) \approx \tfrac{1}{12}\bigl[1 - (1-\phi^*)^3 - \phi^*\bigr]$ to leading order, with the dead-channel correction exponentially small. To avoid symbol reuse, we reserve $\lambda$ for the utility-weight normalization in $\mathcal{F}(\tau){=}\tfrac{1}{2}S_{\chi^2}(\tau){-}\lambda U(\tau,L)$ and write the multiplicative operating-point prefactor as $c$, so $\tau^{*} = c\cdot d_{\mathrm{head}}/\sqrt{L}$. Combining the expansions above gives the theoretical prefactor $c_{\mathrm{pred}}(L,b;\lambda) = \sqrt{45\,\lambda\,Q_1(L,b)}$. Under the deployed convention $\lambda{=}1$, this is a posterior-consistency prediction (computable from $(L,b)$), not a per-experiment fitted hyperparameter; the residual $\mathcal{O}(1)$ offset is absorbed into the flat PPL basin rather than treated as a tunable parameter.
+
+\paragraph{Probabilistic interpretation of $q(x)$.} The function $q(x){=}1/2{+}\sin(2x)/(4x){-}(\sin x/x)^2$ is not a postulated form; it is the cosine phase-variance under a uniform separation prior $t \sim \mathrm{Unif}[0,1]$:
+\[
+q(x) \;=\; \mathrm{Var}_{t \sim U[0,1]}\!\bigl[\cos(xt)\bigr]
+       \;=\; \mathbb{E}_t\!\bigl[\cos^2(xt)\bigr] - \bigl(\mathbb{E}_t\!\bigl[\cos(xt)\bigr]\bigr)^2,
+\]
+since $\mathbb{E}_t[\cos^2(xt)] = 1/2 + \sin(2x)/(4x)$ and $\mathbb{E}_t[\cos(xt)] = \sin(x)/x$. Operationally, $q(Lb^{-\phi})$ measures how much information channel $\phi$ retains about a uniformly distributed relative position over $[0,L]$: in the dead-channel tail ($Lb^{-\phi}\ll 1$) the cosine is nearly constant and $q \to 0$; in the active region ($Lb^{-\phi}\gg 1$) the phase is well-sampled and $q \to 1/2$. Thus $Q_1(L,b)$ weights the cosh-driven density perturbation $\eta(\phi)$ by the per-channel phase-variance budget, and $q(x)$ is a self-contained signal-processing quantity rather than an unmotivated kernel.
 
 \begin{figure}[t]
   \centering

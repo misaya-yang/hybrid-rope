@@ -3,7 +3,7 @@
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.88\linewidth]{fig_method_overview.pdf}
-  \caption{\textbf{EVQ-Cosh frequency allocation.} Left: geometric RoPE distributes frequencies uniformly in log-space. Center: the EVQ-Cosh warp $\phi_k(\tau)$ bends the allocation below the identity (dashed), concentrating resolution at low frequencies; $\tau{\to}0$ recovers geometric RoPE. Right: the resulting allocation spreads low-frequency channels, retaining more positional information at long range.}
+  \caption{\textbf{EVQ-Cosh frequency allocation.} Left: geometric RoPE places channels uniformly in log-frequency. Center: the EVQ-Cosh warp $\phi_k(\tau)$ bends below the identity (dashed); $\tau{\to}0$ recovers geometric RoPE. Right: the allocation \emph{widens spacing} among low-frequency channels and \emph{extends} the spectrum toward longer wavelengths, reducing long-range collisions.}
   \label{fig:method-overview}
 \end{figure}
 
@@ -35,12 +35,13 @@ formally corresponding to the distributional kernel $K_{\mathrm{app}}(\phi,\psi)
 
 Minimizing $\mathcal{C}_{\mathrm{app}}[\rho]$ in~\eqref{eq:Capp} subject to $\int_0^1\rho(\phi)\,d\phi = 1$ with Lagrange multiplier $\nu$, the first variation gives $\alpha\rho(\phi) + \beta\,g(\phi) + \nu = 0$ where $g(\phi) = \int_0^1\rho(\psi)\min(\phi,\psi)\,d\psi$. Since $g''(\phi) = -\rho(\phi)$, every interior stationary density satisfies the homogeneous equation $\rho''(\phi) - \tau^2\rho(\phi) = 0$ with $\tau = \sqrt{\beta/\alpha}$. The pre-differentiated stationarity and mass normalization give the derivative boundary conditions $\rho'(0) = -\tau^2$ and $\rho'(1) = 0$ (Appendix~\ref{sec:proofs}).
 
-\begin{theorem}[Surrogate stationary allocation]
+\begin{theorem}[Exact stationary allocation under the broadband surrogate]
 \label{thm:ode}
-Under~\eqref{eq:Capp} and the constraints $\rho \in C^2([0,1])$, $\rho > 0$, $\int_0^1\rho = 1$, the unique positive interior stationary density is
+Under~\eqref{eq:Capp} with $\alpha{>}0,\beta{\geq}0$ (so $\mathcal{C}_{\mathrm{app}}$ is convex; Appendix~\ref{sec:proofs}) and constraints $\rho\in C^2([0,1])$, $\rho{>}0$, $\int_0^1\rho{=}1$, the unique constrained minimizer is
 \begin{equation}
-\rho_\tau(\phi) \;=\; \frac{\tau\,\cosh(\tau(1{-}\phi))}{\sinh\tau}, \qquad \tau = \sqrt{\beta/\alpha}.
+\rho_\tau(\phi) \;=\; \frac{\tau\,\cosh(\tau(1{-}\phi))}{\sinh\tau}, \qquad \tau = \sqrt{\beta/\alpha},
 \end{equation}
+strictly positive on $[0,1]$.
 \end{theorem}
 
 \paragraph{Fisher-forcing extension (Appendix).} Adding a Fisher utility $-\mu\!\int\rho\,b^{-2\phi}\,d\phi$ to~\eqref{eq:Capp} changes the stationary equation to $\rho'' - \tau^2\rho = \gamma\,b^{-2\phi}$, whose non-resonant solution includes a particular term $\gamma\,b^{-2\phi}/((2\log b)^2-\tau^2)$. EVQ-Cosh corresponds to the homogeneous $\gamma{=}0$ branch; the forced extension is analyzed as a perturbation in Appendix~\ref{sec:pure-tether-bound}. Our practical method uses the homogeneous branch because it gives a closed-form invertible CDF; the forced branch is a controlled but nonzero residual, not zero pointwise.
@@ -59,7 +60,7 @@ u_k = \frac{k}{K},
 and inverse frequencies $b^{-\phi_k(\tau)}$.
 
 \begin{theorem}[Closed-form pure-tether allocation and geometric limit]
-For $\tau > 0$, the stationary density in Theorem~\ref{thm:ode} has CDF $F_\tau(\phi) = 1 - \sinh(\tau(1{-}\phi))/\sinh\tau$, so inverse-CDF quantization gives $\phi_k(\tau) = 1 - \tau^{-1}\operatorname{arcsinh}((1{-}u_k)\sinh\tau)$. As $\tau\to 0$, $\phi_k(\tau) \to u_k$; geometric RoPE is thus recovered as the $\tau{\to}0$ limit of this pure-tether sub-family.
+For $\tau > 0$, the stationary density in Theorem~\ref{thm:ode} has CDF $F_\tau(\phi) = 1 - \sinh(\tau(1{-}\phi))/\sinh\tau$, so inverse-CDF quantization gives $\phi_k(\tau) = 1 - \tau^{-1}\operatorname{arcsinh}((1{-}u_k)\sinh\tau)$. As $\tau\to 0$, $\phi_k(\tau) \to u_k$ and geometric RoPE is recovered.
 \end{theorem}
 
 \subsection{Practical EVQ instantiation}
@@ -83,14 +84,14 @@ EVQ-Cosh changes only the inverse-frequency initialization---distinct from learn
 \subsection{Waterbed inequality}
 \label{sec:waterbed}
 
-Under the broadband surrogate, EVQ obeys a waterbed inequality (a corollary of the sharper envelope in Proposition~\ref{prop:waterbed}, Appendix~\ref{sec:waterbed-proof}). Writing $P_\rho$ for the CDF-induced measure and $U$ for the uniform distribution on $[0,1]$, the error functional $\mathcal{W}(\rho) = \alpha\chi^2(U\|P_\rho) + \beta\!\int M_\rho^2$ satisfies $\mathcal{W}(\rho) \ge \alpha(e^{D_B(\rho)} - 1)$ with equality iff $\rho\equiv 1$, and EVQ's in-range surrogate cost scales as $\mathcal{W}(\rho_{\tau_*}) = O(d_{\mathrm{head}}^4/(L_{\mathrm{eff}}^{J})^2)$. Long-range improvement is thus paid for by a bounded, quartic-in-$\tau^*$ in-range cost.
+Under the broadband surrogate, EVQ obeys a waterbed inequality (a corollary of the sharper envelope in Proposition~\ref{prop:waterbed}, Appendix~\ref{sec:waterbed-proof}). Writing $P_\rho$ for the CDF-induced measure and $U$ for the uniform distribution on $[0,1]$, and letting $D_{\mathrm{Burg}}(\rho){:=}{-}\!\int_0^1\!\log\rho(\phi)\,d\phi$ denote the Burg entropy deficit relative to uniform, the error functional $\mathcal{W}(\rho) = \alpha\chi^2(U\|P_\rho) + \beta\!\int M_\rho^2$ satisfies $\mathcal{W}(\rho) \ge \alpha(e^{D_{\mathrm{Burg}}(\rho)} - 1)$ with equality iff $\rho\equiv 1$. Since $\mathcal{W}(\rho_\tau){=}\mathcal{O}(\tau^4)$ and Proposition~\ref{prop:softmax-transport} gives $\tau_*^2{\sim}d_{\mathrm{head}}^2/L_{\mathrm{eff}}^J$, EVQ's in-range surrogate cost scales as $\mathcal{W}(\rho_{\tau_*}) = \mathcal{O}(d_{\mathrm{head}}^4/(L_{\mathrm{eff}}^{J})^2)$. Long-range improvement is thus paid for by a bounded, quartic-in-$\tau^*$ in-range cost.
 
 \subsection{The \texorpdfstring{$\tau^*$}{tau*} scaling law: epistemic stratification}
 \label{sec:tau-star}
 
 \paragraph{Shape and scale come from separate layers.} The cosh shape is the pre-softmax pure-tether stationary solution under $\mathcal{C}_{\mathrm{app}}$ (\S\ref{sec:ode}--\S\ref{sec:evq-practical}); the scale $\tau^*$ is then selected \emph{post}-softmax by the following proposition, whose $1/L$ factor is the softmax Jacobian eigenvalue at the diffuse long-range baseline $p_0{=}1/L$---an algebraic property of softmax, not a CLT/i.i.d.\ claim about token sequences.
 
-\begin{proposition}[Small-$\tau$ operating-point scaling]
+\begin{proposition}[Semi-analytic operating-point scaling under a diffuse baseline]
 \label{prop:softmax-transport}
 On the pure-tether family $\rho_\tau$, and assuming a diffuse post-softmax baseline $p_0{=}1/L$, the Pearson-$\chi^2$ channel-load stiffness and post-softmax transport utility admit small-$\tau$ expansions
 \[
@@ -103,15 +104,13 @@ with $Q_1(L,b) = \int_0^1 \eta(\phi)\,q(Lb^{-\phi})\,d\phi$, $\eta(\phi) = (1{-}
 \tau_*^2 \;=\; 45\,\lambda\,Q_1(L,b)\cdot\frac{d_{\mathrm{head}}^2}{L},
 \qquad \tau_* \;\propto\; \frac{d_{\mathrm{head}}}{\sqrt{L}}.
 \]
-The $d_{\mathrm{head}}$ factor and $L^{-1/2}$ exponent follow from the combined small-$\tau$ scalings of $S_{\chi^2}$ and $U$; the remaining $\mathcal{O}(1)$ prefactor ($c_S$, $\lambda$, $Q_1$) depends on the normalization convention and is fixed empirically inside a flat basin (below), not claimed as a global optimum.
+The $d_{\mathrm{head}}$ factor and $L^{-1/2}$ exponent follow from the combined small-$\tau$ scalings; the rule balances an $\mathcal{O}(\tau^2)$ utility gain (RoPE logit perturbation transported through a diffuse softmax with $1/L$ Jacobian curvature) against an $\mathcal{O}(\tau^4)$ channel-load stiffness. The remaining $\mathcal{O}(1)$ prefactor ($c_S$, $\lambda$, $Q_1$) depends on normalization convention and is fixed empirically inside a flat basin, not claimed as a global optimum.
 \end{proposition}
 
-\paragraph{Non-diffuse baseline (diagnostic extension).}
+\paragraph{Three epistemic tiers.}
 \label{sec:leff-remark}
-For trained, non-diffuse attention the same Taylor expansion replaces $1/L$ by a RoPE-directional softmax-Jacobian Rayleigh quotient $1/L_{\mathrm{eff}}^{J}$ (Appendix~\ref{sec:leff-derivation}); we treat this as a diagnostic extension of the diffuse-baseline calculation rather than as a main claim, and leave direct measurement of $L_{\mathrm{eff}}^{J}$ at longer contexts as a falsifiable check at $L_{\mathrm{train}}{\geq}16$K.
+The small-$\tau$ expansion in Proposition~\ref{prop:softmax-transport} \emph{derives the structural} $d_{\mathrm{head}}$ factor and $L^{-1/2}$ exponent; at practical $\tau$ (e.g., $\tau{=}4$ in the PE-dominant setting) the exact cosh family is used directly, not the Taylor truncation, and numerical optimization yields an exponent within $1\%$ PPL of $L^{-0.500}$. The Pearson $\chi^2$ stiffness $S_{\chi^2}(\rho){=}\mathrm{Var}_{\rho d\phi}(1/\rho)$ is the canonical load-variance penalty under inverse-CDF cell-width $1/\rho(\phi)$ (Appendix~\ref{sec:chi2-load}); the Lagrange multiplier $\lambda{=}1$ is a unit convention, with an exact-kernel sweep giving $c_{\mathrm{coll}}{=}1.171$ vs.\ surrogate $\sqrt{45Q_1}{\approx}1.19$ ($1.6\%$ relative, CV $0.28\%$, 9 configs; Table~\ref{tab:lambda-cv}). For trained, non-diffuse attention the same expansion replaces $1/L$ by a softmax-Jacobian Rayleigh quotient $1/L_{\mathrm{eff}}^{J}$ (Appendix~\ref{sec:leff-derivation}); we register direct measurement at $L_{\mathrm{train}}{\geq}16$K as a falsifiable test of the diffuse-baseline approximation.
 
-\paragraph{Three epistemic tiers.} The $d_{\mathrm{head}}$ factor and $L^{-1/2}$ exponent follow from the scalings in Proposition~\ref{prop:softmax-transport} under the stated small-$\tau$ assumptions; at practical $\tau$, numerical optimization yields an exponent within $1\%$ PPL of $L^{-0.500}$. We use the Pearson $\chi^2$ channel-load stiffness $S_{\chi^2}(\rho) = \mathrm{Var}_{\rho d\phi}(1/\rho)$ because inverse-CDF quantization assigns local cell width $\ell(\phi){=}1/\rho(\phi)$, so the variance of per-channel load is the canonical load-variance penalty (Appendix~\ref{sec:chi2-load}); alternative smooth divergences agree locally around $\rho\equiv 1$ but differ at finite $\tau$ over our grid (Table~\ref{tab:stiffness-sweep}) so we treat $\chi^2$ as the canonical motivated choice rather than a uniqueness claim. The Lagrange multiplier $\lambda$ fixes the unit convention for comparing stiffness and utility; we set $\lambda{=}1$ in deployment. The exact-kernel collision sweep (Table~\ref{tab:lambda-cv}) gives $c_{\mathrm{coll}}{=}1.171\pm 0.001$ against the surrogate prediction $c_{\mathrm{pred}}{=}\sqrt{45\,Q_1}{\approx}1.19$ (CV $0.28\%$, 9 configurations), an \emph{a posteriori} consistency check placing the convention inside the flat empirical basin rather than an independently derived constant.
-
-\paragraph{Basin, not point estimate.} With $\lambda{=}1$, the formula falls within $<1\%$ PPL of the best observed sweep points across the tested grid of 27 configurations, with primary claims resting on 3-seed anchors (Appendix~\ref{sec:tau-scaling}). EVQ and YaRN correct orthogonal deficiencies (shape vs.\ range; Appendix Fig.~\ref{fig:orthogonal}), predicting the additive EVQ+YaRN composition in \S\ref{sec:experiments}; attention-distance measurements verify the waterbed crossover at ${\approx}508$ tokens (Appendix).
+\paragraph{Basin, not point estimate.} With $\lambda{=}1$, the formula falls within $<1\%$ PPL of the best observed sweep points across 27 configurations (Appendix~\ref{sec:tau-scaling}); EVQ and YaRN correct orthogonal deficiencies (shape vs.\ range; Appendix Fig.~\ref{fig:orthogonal}), predicting the additive EVQ+YaRN composition in \S\ref{sec:experiments}.
 
 %% Figure fig:orthogonal moved to Appendix to preserve body page budget.
