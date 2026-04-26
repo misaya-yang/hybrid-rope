@@ -11,7 +11,7 @@ Before any derivation we state the epistemic status of each component (Table~\re
 
 \input{tables/table_epistemic_map}
 
-The surrogate is functional (not pointwise: Appendix~\ref{sec:surrogate-validation} reports $24$--$92\%$ collision-score reduction under the exact kernel across $12$ configurations). The pure-tether branch of the stationary ODE (Theorem~\ref{thm:ode}) is a design choice that keeps the allocation invertible in closed form; it is not a claim that the Fisher-driven forcing term never matters. The rule $\tau^{*}{=}d_{\mathrm{head}}/\sqrt{L}$ (Proposition~\ref{prop:softmax-transport}) is an operating-point selector whose $d_{\mathrm{head}}$ factor and $L^{-1/2}$ exponent are derived; its remaining $\mathcal{O}(1)$ scale is fixed by normalization convention, and its role is to move the allocation away from the $\tau{=}0$ boundary into a wide non-geometric basin.
+The surrogate is functional, not pointwise (Appendix~\ref{sec:surrogate-validation}: $24$--$92\%$ collision-score reduction across $12$ configs); downstream PPL/passkey then measures the trained-model consequence, not $\mathcal{C}_{\mathrm{app}}$ itself. The pure-tether branch of the stationary ODE (Theorem~\ref{thm:ode}) is a design choice that keeps the allocation invertible in closed form; it is not a claim that the Fisher-driven forcing term never matters. The rule $\tau^{*}{=}d_{\mathrm{head}}/\sqrt{L}$ (Proposition~\ref{prop:softmax-transport}) is an operating-point selector whose $d_{\mathrm{head}}$ factor and $L^{-1/2}$ exponent are derived; its $\mathcal{O}(1)$ scale is by convention, moving the allocation away from the $\tau{=}0$ boundary into a wide non-geometric basin.
 
 \subsection{RoPE as frequency allocation}
 
@@ -41,7 +41,7 @@ Under~\eqref{eq:Capp} with $\alpha{>}0,\beta{\geq}0$ (so $\mathcal{C}_{\mathrm{a
 \begin{equation}
 \rho_\tau(\phi) \;=\; \frac{\tau\,\cosh(\tau(1{-}\phi))}{\sinh\tau}, \qquad \tau = \sqrt{\beta/\alpha},
 \end{equation}
-strictly positive on $[0,1]$.
+strictly positive on $[0,1]$ for $\beta{>}0$; at $\beta{=}0$ the minimizer is the $\tau{\to}0$ limit $\rho_0\equiv 1$ (uniform/geometric).
 \end{theorem}
 
 \paragraph{Fisher-forcing extension (Appendix).} Adding a Fisher utility $-\mu\!\int\rho\,b^{-2\phi}\,d\phi$ to~\eqref{eq:Capp} changes the stationary equation to $\rho'' - \tau^2\rho = \gamma\,b^{-2\phi}$, whose non-resonant solution includes a particular term $\gamma\,b^{-2\phi}/((2\log b)^2-\tau^2)$. EVQ-Cosh corresponds to the homogeneous $\gamma{=}0$ branch; the forced extension is analyzed as a perturbation in Appendix~\ref{sec:pure-tether-bound}. Our practical method uses the homogeneous branch because it gives a closed-form invertible CDF; the forced branch is a controlled but nonzero residual, not zero pointwise.
@@ -60,7 +60,7 @@ u_k = \frac{k}{K},
 and inverse frequencies $b^{-\phi_k(\tau)}$.
 
 \begin{theorem}[Closed-form pure-tether allocation and geometric limit]
-For $\tau > 0$, the stationary density in Theorem~\ref{thm:ode} has CDF $F_\tau(\phi) = 1 - \sinh(\tau(1{-}\phi))/\sinh\tau$, so inverse-CDF quantization gives $\phi_k(\tau) = 1 - \tau^{-1}\operatorname{arcsinh}((1{-}u_k)\sinh\tau)$. As $\tau\to 0$, $\phi_k(\tau) \to u_k$ and geometric RoPE is recovered.
+For $\tau > 0$, the stationary density in Theorem~\ref{thm:ode} (the homogeneous, pure-tether branch) has CDF $F_\tau(\phi) = 1 - \sinh(\tau(1{-}\phi))/\sinh\tau$, so inverse-CDF quantization gives $\phi_k(\tau) = 1 - \tau^{-1}\operatorname{arcsinh}((1{-}u_k)\sinh\tau)$. As $\tau\to 0$, $\phi_k(\tau) \to u_k$ and geometric RoPE is recovered \emph{within the pure-tether sub-family}; the Fisher-forced extension (Appendix~\ref{subsec:fisher-ext}) does not vanish in this limit.
 \end{theorem}
 
 \subsection{Practical EVQ instantiation}
@@ -89,7 +89,7 @@ Under the broadband surrogate, EVQ obeys a waterbed inequality (a corollary of t
 \subsection{The \texorpdfstring{$\tau^*$}{tau*} scaling law: epistemic stratification}
 \label{sec:tau-star}
 
-\paragraph{Shape and scale come from separate layers.} The cosh shape is the pre-softmax pure-tether stationary solution under $\mathcal{C}_{\mathrm{app}}$ (\S\ref{sec:ode}--\S\ref{sec:evq-practical}); the scale $\tau^*$ is then selected \emph{post}-softmax by the following proposition, whose $1/L$ factor is the softmax Jacobian eigenvalue at the diffuse long-range baseline $p_0{=}1/L$---an algebraic property of softmax, not a CLT/i.i.d.\ claim about token sequences.
+\paragraph{Shape and scale come from separate layers.} The cosh shape is the pre-softmax stationary solution under $\mathcal{C}_{\mathrm{app}}$ (\S\ref{sec:ode}--\S\ref{sec:evq-practical}); the scale $\tau^*$ is selected \emph{post}-softmax by the proposition below, with $U(\tau,L)$ the per-channel post-softmax KL gain from an $\mathcal{O}(\tau^2)$ RoPE logit perturbation (formal definition Appendix~\ref{sec:stiffness-derivation}). The $1/L$ factor is the softmax Jacobian eigenvalue at the diffuse baseline $p_0{=}1/L$---an algebraic property, not a CLT claim.
 
 \begin{proposition}[Semi-analytic operating-point scaling under a diffuse baseline]
 \label{prop:softmax-transport}
@@ -111,6 +111,6 @@ The $d_{\mathrm{head}}$ factor and $L^{-1/2}$ exponent follow from the combined 
 \label{sec:leff-remark}
 The small-$\tau$ expansion in Proposition~\ref{prop:softmax-transport} \emph{derives the structural} $d_{\mathrm{head}}$ factor and $L^{-1/2}$ exponent; at practical $\tau$ (e.g., $\tau{=}4$ in the PE-dominant setting) the exact cosh family is used directly, not the Taylor truncation, and numerical optimization yields an exponent within $1\%$ PPL of $L^{-0.500}$. The Pearson $\chi^2$ stiffness $S_{\chi^2}(\rho){=}\mathrm{Var}_{\rho d\phi}(1/\rho)$ is the canonical load-variance penalty under inverse-CDF cell-width $1/\rho(\phi)$ (Appendix~\ref{sec:chi2-load}); the Lagrange multiplier $\lambda{=}1$ is a unit convention, with an exact-kernel sweep giving $c_{\mathrm{coll}}{=}1.171$ vs.\ surrogate $\sqrt{45Q_1}{\approx}1.19$ ($1.6\%$ relative, CV $0.28\%$, 9 configs; Table~\ref{tab:lambda-cv}). For trained, non-diffuse attention the same expansion replaces $1/L$ by a softmax-Jacobian Rayleigh quotient $1/L_{\mathrm{eff}}^{J}$ (Appendix~\ref{sec:leff-derivation}); we register direct measurement at $L_{\mathrm{train}}{\geq}16$K as a falsifiable test of the diffuse-baseline approximation.
 
-\paragraph{Basin, not point estimate.} With $\lambda{=}1$, the formula falls within $<1\%$ PPL of the best observed sweep points across 27 configurations (Appendix~\ref{sec:tau-scaling}); EVQ and YaRN correct orthogonal deficiencies (shape vs.\ range; Appendix Fig.~\ref{fig:orthogonal}), predicting the additive EVQ+YaRN composition in \S\ref{sec:experiments}.
+\paragraph{Basin, not point estimate.} With $\lambda{=}1$, the formula falls within $<1\%$ PPL of the best observed sweep points across 27 configurations (Appendix~\ref{sec:tau-scaling}); pure geometric ($\tau{=}0$) is the natural negative control and falls $10$--$46\%$ outside (Table~\ref{tab:multiscale}). EVQ and YaRN correct orthogonal deficiencies (shape vs.\ range; Appendix Fig.~\ref{fig:orthogonal}), predicting the additive EVQ+YaRN composition in \S\ref{sec:experiments}.
 
 %% Figure fig:orthogonal moved to Appendix to preserve body page budget.
