@@ -150,7 +150,7 @@ At base${}=10{,}000$ with $K_t{=}16$ temporal frequencies and 32 training frames
 To test this mechanism, we repeat the head-to-head experiment with base${}=1{,}000$ (same architecture, same run; 2~seeds). At this base, the geometric allocation already starts with 13/16 alive channels (rank 10), so the dead-channel bottleneck is resolved. Table~\ref{tab:dit-base1000} is consistent with the prediction: (1)~$\tau{=}1.2$ fully recovers, winning Geo by $-48\%$ far-frame MSE (vs.\ $+162\%$ at base${}=10{,}000$); (2)~$\tau{=}1.2$ and $\tau{=}1.5$ are statistically indistinguishable ($<0.3\%$ difference on all metrics), supporting the interpretation that the phase transition was driven by the dead-channel threshold rather than by an intrinsic property of $\tau{=}1.2$.
 
 \begin{table}[ht]
-\caption{Dead-channel validation: base${}=1{,}000$ DiT head-to-head (129.6M, seed 42, YaRN). The sharp phase transition between $\tau{=}1.2$ and $\tau{=}1.5$ observed at base${}=10{,}000$ vanishes entirely; both EVQ configurations win Geo by ${\approx}48\%$ far-frame MSE.}
+\caption{Dead-channel mechanism check: base${}=1{,}000$ DiT head-to-head (129.6M, seed 42, YaRN). The sharp phase transition between $\tau{=}1.2$ and $\tau{=}1.5$ observed at base${}=10{,}000$ is no longer present in this seed; both EVQ configurations win Geo by ${\approx}48\%$ far-frame MSE.}
 \label{tab:dit-base1000}
 \centering
 \small

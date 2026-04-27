@@ -41,6 +41,8 @@ Training-progression analysis shows EVQ's advantage is visible from early traini
 \subsection{Attention distance redistribution}
 % \label{sec:attn-redistribution} % unused
 
+Figure~\ref{fig:attn-mechanism} illustrates the waterbed crossover in learned attention patterns of the 750M continue@4K checkpoint, complementing the surrogate-level analysis in \S\ref{sec:waterbed-proof}.
+
 \begin{figure}[ht]
   \centering
   \begin{minipage}[t]{0.48\linewidth}
@@ -52,7 +54,7 @@ Training-progression analysis shows EVQ's advantage is visible from early traini
     \centering
     \includegraphics[width=\linewidth]{attn_head_avg_distance.pdf}
   \end{minipage}
-  \caption{\textbf{Waterbed verification in learned attention patterns (750M).} Left: aggregate attention density vs.\ token distance. A crossover at ${\approx}508$ tokens separates a short-range regime (Geometric dominant) from a long-range regime (EVQ dominant, up to $2.5\times$ higher density). Right: per-head average attention distance. 295/432 heads (68\%) attend farther under EVQ, with the strongest shifts in deeper layers (L12--L17).}
+  \caption{\textbf{Waterbed illustration in learned attention patterns (750M, single seed).} Left: aggregate attention density vs.\ token distance. A crossover at ${\approx}508$ tokens separates a short-range regime (Geometric dominant) from a long-range regime (EVQ dominant, up to $2.5\times$ higher density). Right: per-head average attention distance. 295/432 heads (68\%) attend farther under EVQ, with the strongest shifts in deeper layers (L12--L17).}
   \label{fig:attn-mechanism}
 \end{figure}
 
@@ -66,7 +68,7 @@ Training-progression analysis shows EVQ's advantage is visible from early traini
 \subsection{Downstream QA evaluation: QuALITY Gold NLL}
 % \label{sec:quality-downstream} % unused
 
-The body reports a QuALITY QA evaluation on 454M finetuned checkpoints (\(n{=}2086\), distractor-padded, random article position 20\%--80\%). Table~\ref{tab:quality-nll} gives the full results. At this model scale, 4-option accuracy hovers near the 25\% random baseline for all configurations, consistent with 454M capacity---not positional encoding---being the binding constraint on downstream accuracy. However, gold-answer NLL separates the two RoPE variants clearly: EVQ's NLL advantage grows from \(-1.7\%\) at \(4\mathrm{K}\) (in-distribution) to \(-30.1\%\) at \(8\mathrm{K}\) (\(2\times\) extrapolation) and \(-21.4\%\) at \(16\mathrm{K}\) (\(4\times\)). YaRN at \(8\mathrm{K}\) recovers Geo's accuracy to \(4\mathrm{K}\) level but does not close the NLL gap (\(-8.1\%\)).
+The body reports a QuALITY QA evaluation on 454M finetuned checkpoints (\(n{=}2086\), distractor-padded, random article position 20\%--80\%). Table~\ref{tab:quality-nll} gives the full results. At this model scale, 4-option accuracy hovers near the 25\% random baseline for all configurations, consistent with 454M capacity---not positional encoding---being the binding constraint on downstream accuracy. However, gold-answer NLL separates the two RoPE variants: EVQ's NLL advantage grows from \(-1.7\%\) at \(4\mathrm{K}\) (in-distribution) to \(-30.1\%\) at \(8\mathrm{K}\) (\(2\times\) extrapolation) and \(-21.4\%\) at \(16\mathrm{K}\) (\(4\times\)). YaRN at \(8\mathrm{K}\) recovers Geo's accuracy to \(4\mathrm{K}\) level but does not close the NLL gap (\(-8.1\%\)).
 
 \begin{table}[ht]
 \caption{QuALITY QA downstream evaluation (454M, \(n{=}2086\), single seed). Accuracy is near random for all configs; gold-answer NLL reveals EVQ's advantage in probability space.}
@@ -100,12 +102,12 @@ The key takeaway is that accuracy at the capacity floor is not a useful discrimi
 
 \subsection{Multi-scale waterbed verification}
 
-Figure~\ref{fig:waterbed-multiscale} visualizes the waterbed effect across model scales, supporting the interpretation that EVQ consistently trades a small in-range cost for large long-range gains. The pattern is consistent across model scales: long-range gains are substantial while in-range cost remains bounded.
+Figure~\ref{fig:waterbed-multiscale} visualizes the waterbed effect across model scales: EVQ trades a small in-range cost (${\pm}1.7\%$) for long-range gains ($10$--$46\%$) across the tested grid.
 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.85\linewidth]{fig7_multiscale_waterbed.pdf}
-  \caption{\textbf{Waterbed verification across model scales.} EVQ pays a bounded in-range cost (left of dashed line) while achieving substantial long-range gains. The pattern is consistent from 50M to 750M within the tested grid, consistent with the theoretical prediction.}
+  \caption{\textbf{Waterbed illustration across model scales.} EVQ pays a bounded in-range cost (left of dashed line) while achieving substantial long-range gains. The pattern is consistent from 50M to 750M within the tested grid, consistent with the theoretical prediction.}
   \label{fig:waterbed-multiscale}
 \end{figure}
 

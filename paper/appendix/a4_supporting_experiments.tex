@@ -33,7 +33,7 @@ EVQ extends to MLA \citep{deepseekv2, deepseekv3}, where only 16 frequency chann
 As supporting post-hoc evidence, we inject EVQ-Cosh frequencies ($\tau{=}1.414$, the $\tau^*$ predicted for $d_{\mathrm{head}}{=}128$, $L{=}8192$) into LLaMA-3-8B-Instruct \citep{grattafiori2024llama3} and fine-tune with LoRA ($r{=}64{=}K$, $\alpha{=}128$) on LongAlign-10k for 300 steps.
 
 \begin{table}[ht]
-\caption{EVQ-Cosh LoRA on LLaMA-3-8B-Instruct ($r{=}64$, 300 steps, single seed). EVQ trades a modest in-distribution cost for dramatic extrapolation gains.}
+\caption{EVQ-Cosh LoRA on LLaMA-3-8B-Instruct ($r{=}64$, 300 steps, single seed). EVQ trades a modest in-distribution cost for substantial extrapolation gains.}
 \label{tab:lora-8b}
 \centering
 \small
@@ -54,7 +54,7 @@ Table~\ref{tab:lora-8b} shows that EVQ-LoRA reduces extrapolation PPL by $8\time
 Three-stage progressive training (454M, $512{\to}1024{\to}2048$) is reported as supporting evidence.
 The EVQ+YaRN PPL gap at $16\mathrm{K}$ widens from $-34.6\%$ to $-81.2\%$, driven by Geo+YaRN degradation while EVQ+YaRN remains stable. At Stage~3, functional context reaches $48\mathrm{K}$ ($24\times$ training length) at PPL~$2.63$. After Stage~2, EVQ \emph{raw} (PPL $11.2$ at $16\mathrm{K}$) surpasses EVQ+YaRN at Stage~1 ($16.8$), suggesting that continued training can partially internalize the allocation benefit. This is a single-seed observation; multi-seed replication is in progress.
 
-\paragraph{Cross-modal confirmation: video DiT (supporting).}
+\paragraph{Cross-modal mechanism check: video DiT.}
 In 129.6M DiT head-to-head experiments (2~seeds, shared training run), EVQ wins every metric in both seeds, eliminating optimizer and CUDA confounds. Once the dead-channel bottleneck is removed (base-1000), both $\tau{=}1.2$ and $\tau{=}1.5$ beat Geo by ${\approx}48\%$ on far-frame MSE. This is a supporting mechanism check rather than a standalone video contribution: the collision bottleneck identified by the theory appears across modalities. Full results are in \S\ref{sec:tau-correction}.
 
 \paragraph{Signal gradient across abstraction layers.}

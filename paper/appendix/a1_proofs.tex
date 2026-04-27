@@ -37,7 +37,7 @@ since differentiating $\alpha\rho(\phi)+\beta g(\phi)+\nu = 0$ once and evaluati
 \rho_\tau(\phi) \;=\; \frac{\tau\,\cosh(\tau(1-\phi))}{\sinh\tau},
 \label{eq:rho-tau-closed}
 \end{equation}
-which is main-text Theorem~\ref{thm:ode}. The mass constraint $\int\rho{=}1$ is not lost: it enters the boundary condition at $\phi{=}0$ via $g'(0){=}\int_0^1\rho{=}1$. Positivity holds on the closed interval since $\rho_\tau(0){=}\tau\coth\tau{>}0$ and $\rho_\tau(1){=}\tau/\sinh\tau{>}0$ for $\tau{>}0$.
+which is main-text Theorem~\ref{thm:ode}. The mass constraint $\int\rho{=}1$ is not lost: it enters the boundary condition at $\phi{=}0$ via $g'(0){=}\int_0^1\rho{=}1$. Positivity holds on the closed interval since $\rho_\tau(0){=}\tau\coth\tau{>}0$ and $\rho_\tau(1){=}\tau/\sinh\tau{>}0$ for $\tau{>}0$. For the degenerate case $\beta{=}0$ the ODE reduces to $\rho''{=}0$ with $\rho'(0){=}\rho'(1){=}0$ and $\int\rho{=}1$, forcing $\rho\equiv 1$, which is also the $\tau{\to}0$ limit of~\eqref{eq:rho-tau-closed}.
 
 \paragraph{Convexity / PSD of $\mathcal{C}_{\mathrm{app}}$.} For $\alpha{>}0$ and $\beta{\geq}0$, the surrogate is convex because both quadratic terms are positive semidefinite. The diagonal $\alpha{\int}\rho^2$ is manifestly PSD on $L^2$, and the Green-kernel cross term satisfies the identity
 \begin{equation}
@@ -144,7 +144,7 @@ The one-channel mid-displacement threshold admits an exact Taylor series in $1/K
 
 \begin{proposition}[Higher-order floor]
 \label{prop:floor-higher-order}
-For the EVQ-Cosh mapping with $K = d_{\mathrm{head}}/2$ channels, the $N$-channel mid-displacement threshold satisfies
+For the EVQ-Cosh mapping with $K = d_{\mathrm{rot}}/2$ channels, the $N$-channel mid-displacement threshold satisfies
 \begin{equation}
 \tau_{\mathrm{floor}}(N, K) \;=\; 4\sqrt{\frac{N}{K}}\left[1 + \frac{N}{2K} + \frac{241}{120}\left(\frac{N}{K}\right)^{\!2} + O(K^{-3})\right].
 \end{equation}
@@ -183,7 +183,7 @@ with equality $\mathcal{W}(\rho) = 0$ if and only if $\rho \equiv 1$ (geometric 
 Since $\beta\int M_\rho^2\ge 0$, $\mathcal{W}(\rho)\ge\alpha\chi^2(U\|P_\rho)$. For fixed $D_B(\rho){=}d$, the sharp lower envelope of $\chi^2$ over all densities is the Csisz\'ar--Vajda $f$-divergence comparison $F_{*}$, whose extremizer is a two-level density $X=1/\rho\in\{a,c\}$ with mass-normalization and entropy-deficit constraints. For the corollary, $1+\chi^2(U\|P_\rho) = \int 1/\rho\,\mathbb{E}_{U}[\cdot] \ge e^{D_1(U\|P_\rho)} = e^{D_B(\rho)}$ by R\'enyi-2 $\ge$ R\'enyi-1. Equality at $\rho{\equiv}1$ is immediate from both sides vanishing.
 \end{proof}
 
-\paragraph{EVQ evaluation.} For $\rho_\tau(\phi) = \tau\cosh(\tau(1{-}\phi))/\sinh\tau$,
+\paragraph{EVQ evaluation.} For $\rho_\tau(\phi) = \tau\cosh(\tau(1{-}\phi))/\sinh\tau$ (Eq.~\eqref{eq:S-chi2-evq} below uses the un-normalized integral; cf.\ \S\ref{sec:chi2-load} ``Normalization convention''),
 \begin{align}
 D_B(\rho_\tau) \;&=\; \log\tfrac{\sinh\tau}{\tau} - \tfrac{1}{\tau}\int_0^\tau\log\cosh y\,dy \;=\; \tfrac{\tau^4}{90} - \tfrac{8\tau^6}{2835} + O(\tau^8),\label{eq:D-B-evq}\\
 S_{\chi^2}(\rho_\tau) \;&=\; \tfrac{\sinh\tau}{\tau^2}\arctan(\sinh\tau) - 1 \;=\; \tfrac{\tau^4}{45} - \tfrac{2\tau^6}{315} + O(\tau^8),\label{eq:S-chi2-evq}\\
@@ -545,7 +545,7 @@ so dropping the forcing term is $O(\gamma(b)^2)$: if $R_F\!\le\!r$, the missed c
 \subsection{Channel-load motivation for Pearson \texorpdfstring{$\chi^2$}{chi2}}
 \label{sec:chi2-load}
 
-\paragraph{Normalization convention.} Throughout this paper, $S_{\chi^2}(\tau)$ denotes the $d_{\mathrm{head}}$-normalized stiffness $S_{\chi^2}(\tau){:=}\frac{1}{d_{\mathrm{head}}}\!\int_0^1\!(1{-}\rho_\tau)^2/\rho_\tau\,d\phi$, with leading expansion $\tau^4/(45\,d_{\mathrm{head}}){+}O(\tau^6)$ consistent with Proposition~\ref{prop:softmax-transport}. Identities below that produce a bare $\tau^4/45$ leading coefficient apply to $d_{\mathrm{head}}\,S_{\chi^2}(\tau)$ (the un-normalized integral); the $d_{\mathrm{head}}$ factor enters via the surrogate diagonal $\alpha{=}1/d_{\mathrm{rot}}$ derived in \S\ref{sec:tau-scaling}.
+\paragraph{Normalization convention.} Throughout this paper, $S_{\chi^2}(\tau)$ denotes the $d_{\mathrm{head}}$-normalized stiffness $S_{\chi^2}(\tau){:=}\frac{1}{d_{\mathrm{head}}}\!\int_0^1\!(1{-}\rho_\tau)^2/\rho_\tau\,d\phi$, with leading expansion $\tau^4/(45\,d_{\mathrm{head}}){+}O(\tau^6)$ consistent with Proposition~\ref{prop:softmax-transport}. Identities below that produce a bare $\tau^4/45$ leading coefficient apply to $d_{\mathrm{head}}\,S_{\chi^2}(\tau)$ (the un-normalized integral); the $d_{\mathrm{head}}$ factor enters via the surrogate diagonal $\alpha{=}1/d_{\mathrm{rot}}$ ($={}1/d_{\mathrm{head}}$ for MHA via \S\ref{sec:tau-scaling}; ${=}1/d_{\mathrm{rope}}$ for compressed-RoPE MLA via \S\ref{sec:mla-results}).
 
 \paragraph{Channel-load axioms.} Inverse-CDF quantization places channels with cell width $\ell(\phi){=}1/\rho(\phi)$ and samples channels according to $dP_\rho{=}\rho\,d\phi$. Under the modeling axioms (i)~channel-measure averaging, (ii)~load $\ell$ as the primitive local quantity, (iii)~second central moment, (iv)~uniform density has zero stiffness, (v)~local additivity, the canonical load-variance penalty is
 \begin{equation}

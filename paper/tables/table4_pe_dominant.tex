@@ -1,5 +1,5 @@
 \begin{table}[t]
-\caption{PE-dominant summary (125M, 3-seed mean): in the tested DAPE-style \(128\!\rightarrow\!8\mathrm{K}\) protocol, EVQ's closed-form allocation (zero learned parameters) closes more of the extrapolation gap than the learned positional-operator baseline. An \(L{=}256\) EVQ4+YaRN comparison is in Appendix~\ref{sec:supporting-experiments}.}
+\caption{PE-dominant summary (125M, $L_{\mathrm{train}}{=}128$, FineWeb-Edu): in the tested DAPE-style \(128\!\rightarrow\!8\mathrm{K}\) protocol, EVQ's closed-form allocation (zero learned parameters) closes more of the extrapolation gap than the learned positional-operator baseline. Geo, DAPE, and EVQ rows are single-seed (seed 42); the Learnable $\tau$ row is 3-seed (42/137/256), with mean $\pm$ std reported. An \(L{=}256\) EVQ4+YaRN comparison is in Appendix~\ref{sec:supporting-experiments}.}
 \label{tab:pe-dominant}
 \centering
 \small
@@ -10,7 +10,7 @@
 Method (128\(\rightarrow\)8K) & Extra params & PPL@128 & PPL@8K & $\Delta$ vs Geo \\
 \midrule
 Geo & 0 & 184.9 & 513.7 & -- \\
-Learnable $\tau$ & 1 & \textbf{181.2} & 437.9 & $-14.8\%$ \\
+Learnable $\tau$ & 1 & $\mathbf{181.2{\scriptstyle\,\pm 1.3}}$ & $437.9{\scriptstyle\,\pm 12.2}$ & $-14.8\%$ \\
 DAPE & 32 & 183.6 & 455.3 & $-11.4\%$ \\
 EVQ & 0 & 182.0 & \textbf{333.7} & $\mathbf{-35.0\%}$ \\
 \bottomrule
