@@ -21,7 +21,7 @@ These anchors were selected because they are either multi-seed or directly tied 
 \toprule
 Anchor & Train length & Scale & Seeds & Main datasets \\
 \midrule
-EVQ\(\times\)YaRN & 512 & 454M & 3 + 3 & FineWeb-Edu + 10\% passkey mix \\
+EVQ\(\times\)YaRN & 2048 & 454M & 3 + 3 & FineWeb-Edu + 10\% passkey mix \\
 DAPE-style & 128 & 125M & 1--3 & FineWeb-Edu / TinyStories \\
 Phase 11 & 256 & 454M & 3 & FineWeb-Edu \\
 \bottomrule
@@ -74,7 +74,7 @@ This distinction is important for interpretation. The larger-scale run is best v
 \subsection{Progressive training dynamics}
 % \label{sec:progressive-dynamics} % unused
 
-Table~\ref{tab:progressive} and Figure~\ref{fig:progressive} detail the supporting progressive training result referenced in the body. This is a single-seed run separate from the primary EVQ\(\times\)YaRN anchor above, whose training length is \(512\). The key observation is the divergence pattern: EVQ+YaRN PPL remains flat across all three stages while Geo+YaRN degrades sharply at Stage~3, producing the widening relative advantage ($-34.6\%\!\rightarrow\!{-52.0\%}\!\rightarrow\!{-81.2\%}$). In this single-seed setup the gap is consistent with being driven by geometric RoPE's progressive degradation rather than by further intrinsic EVQ improvement.
+Table~\ref{tab:progressive} and Figure~\ref{fig:progressive} detail the supporting progressive training result referenced in the body. This is a single-seed run separate from the primary EVQ\(\times\)YaRN anchor above, with Stage~1 training length \(L{=}512\) before progressive extension. The key observation is the divergence pattern: EVQ+YaRN PPL remains flat across all three stages while Geo+YaRN degrades sharply at Stage~3, producing the widening relative advantage ($-34.6\%\!\rightarrow\!{-52.0\%}\!\rightarrow\!{-81.2\%}$). In this single-seed setup the gap is consistent with being driven by geometric RoPE's progressive degradation rather than by further intrinsic EVQ improvement.
 
 \begin{table}[ht]
 \caption{Progressive training widens EVQ's advantage (454M, single seed, PPL@16K with YaRN).}
