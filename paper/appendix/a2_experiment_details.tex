@@ -39,7 +39,7 @@ Table~\ref{tab:hyperparams} lists the training hyperparameters shared across tex
 Parameter & Value \\
 \midrule
 Optimizer & AdamW ($\beta_1{=}0.9$, $\beta_2{=}0.95$, $\epsilon{=}10^{-8}$) \\
-Learning rate & $6{\times}10^{-4}$ (50M/125M), $2{\times}10^{-4}$ (454M), $1.5{\times}10^{-4}$ (750M) \\
+Learning rate & $6{\times}10^{-4}$ (50M/125M), $2{\times}10^{-4}$ (454M), $3{\times}10^{-4}$ (750M) \\
 LR schedule & Cosine decay to $0.1\times$ peak LR \\
 Warmup & $2\%$ of total steps (linear) \\
 Batch size (seqs) & 32 (50M), 16 (125M), 2--4 (454M/750M) \\
