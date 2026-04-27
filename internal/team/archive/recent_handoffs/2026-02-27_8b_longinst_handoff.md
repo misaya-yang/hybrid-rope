@@ -11,7 +11,7 @@
 
 ```bash
 ssh -p 23173 root@connect.bjb1.seetacloud.com
-# 密码: htG0sD63/yG0
+# 密码: [REDACTED — rotated 2026-04-27]
 source /root/miniconda3/bin/activate
 ```
 
@@ -162,7 +162,8 @@ cat /root/autodl-tmp/dfrope/hybrid-rope/artifacts/llama8k_theory_v1/A1_geometric
 
 ```bash
 # 下载结果到本地 (训练完成后执行)
-sshpass -p 'htG0sD63/yG0' scp -P 23173 -r \
+# 注: SSH 密码已于 2026-04-27 轮换；以下命令需重新填入新凭据或使用 ssh-key
+scp -P 23173 -r \
   root@connect.bjb1.seetacloud.com:/root/autodl-tmp/dfrope/hybrid-rope/artifacts/llama8k_theory_v1/ \
   /Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/artifacts/llama8k_theory_v1_blackwell/
 ```

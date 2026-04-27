@@ -20,7 +20,7 @@ Let $\phi \in [0,1]$ parameterize log-frequency, $\omega(\phi) = b^{-\phi}$. Let
 
 \subsection{A surrogate collision functional}
 
-Under a distance prior $D(\Delta)$, the exact phase-collision kernel is $K(\phi_1,\phi_2) = \int D(\Delta)\cos(\omega(\phi_1)\Delta)\cos(\omega(\phi_2)\Delta)\,d\Delta$; it is oscillatory and is not pointwise approximated by a smooth two-term model. We therefore introduce the following surrogate collision quadratic form as the object of our variational analysis:
+Under a smooth, bounded-support distance prior $D \in W^{m,1}(\mathbb{R})$ ($m\geq 1$; the regime relevant to autoregressive language models with finite effective context), the exact phase-collision kernel is $K(\phi_1,\phi_2) = \int D(\Delta)\cos(\omega(\phi_1)\Delta)\cos(\omega(\phi_2)\Delta)\,d\Delta$; it is oscillatory and is not pointwise approximated by a smooth two-term model. We therefore introduce the following surrogate collision quadratic form as the object of our variational analysis:
 \begin{equation}
 \mathcal{C}_{\mathrm{app}}[\rho]
 =
@@ -29,7 +29,7 @@ Under a distance prior $D(\Delta)$, the exact phase-collision kernel is $K(\phi_
 \frac{\beta}{2}\!\iint_{[0,1]^2}\! \rho(\phi)\rho(\psi)\min(\phi,\psi)\,d\phi\,d\psi,
 \label{eq:Capp}
 \end{equation}
-formally corresponding to the distributional kernel $K_{\mathrm{app}}(\phi,\psi) := \alpha\,\delta(\phi{-}\psi) + \beta\min(\phi,\psi)$. The diagonal term penalizes channel-load concentration; $\min(\phi,\psi)$ is the Green kernel of $-\partial_\phi^2$ on $[0,1]$ and encodes cumulative low-frequency overlap. We validate $\mathcal{C}_{\mathrm{app}}$ \emph{functionally}, not pointwise: allocations derived from $\mathcal{C}_{\mathrm{app}}$ reduce the exact-kernel collision score by $24$--$92\%$ across $12$ configurations, and a collision-only oracle search reaches comparable reductions (Appendices~\ref{sec:surrogate-validation},~\ref{sec:mechanism-isolation}).
+with constants $\alpha,\beta>0$ \emph{fitted from the exact kernel $K$ on the deployed discrete channel grid} ($K{\in}\{16,32\}$; Appendix~\ref{sec:tau-scaling}), giving $\alpha{\approx}1/d_{\mathrm{rot}}$. The diagonal $\alpha\!\int\!\rho^2$ penalizes channel-load concentration; $\min(\phi,\psi)$ is the Green kernel of $-\partial_\phi^2$ on $[0,1]$ and encodes cumulative low-frequency overlap. $\mathcal{C}_{\mathrm{app}}$ is a discrete-grid surrogate, not the continuum stationary-phase asymptotic of $K$ (which would give a $\phi$-dependent diagonal coefficient; see Appendix~\ref{sec:proofs} ``Why constant $\alpha$''). We validate $\mathcal{C}_{\mathrm{app}}$ \emph{functionally}: allocations derived from it reduce the exact-kernel collision score by $24$--$92\%$ across $12$ configurations, and a collision-only oracle search reaches comparable reductions (Appendices~\ref{sec:surrogate-validation},~\ref{sec:mechanism-isolation}).
 
 \subsection{Constrained stationary allocation}
 \label{sec:ode}
@@ -90,7 +90,7 @@ Under the broadband surrogate, EVQ obeys a waterbed inequality (a corollary of t
 \subsection{The \texorpdfstring{$\tau^*$}{tau*} scaling law: epistemic stratification}
 \label{sec:tau-star}
 
-\paragraph{Shape and scale come from separate layers.} The cosh shape is the pre-softmax stationary solution under $\mathcal{C}_{\mathrm{app}}$ (\S\ref{sec:ode}--\S\ref{sec:evq-practical}); the scale $\tau^*$ is selected \emph{post}-softmax by the proposition below, with $U(\tau,L)$ the per-channel post-softmax KL gain from an $\mathcal{O}(\tau^2)$ RoPE logit perturbation (formal definition Appendix~\ref{sec:stiffness-derivation}). The $1/L$ factor is the softmax Jacobian eigenvalue at the diffuse baseline $p_0{=}1/L$---an algebraic property, not a CLT claim.
+\paragraph{Shape and scale come from separate layers.} The cosh shape is the pre-softmax stationary solution under $\mathcal{C}_{\mathrm{app}}$ (\S\ref{sec:ode}--\S\ref{sec:evq-practical}); the scale $\tau^*$ is selected \emph{post}-softmax by the proposition below, with $U(\tau,L)$ the per-channel post-softmax KL gain from an $\mathcal{O}(\tau^2)$ RoPE logit perturbation (formal definition Appendix~\ref{sec:stiffness-derivation}). The $1/L$ factor is the softmax Jacobian eigenvalue at the diffuse baseline $p_0{=}1/L$---an algebraic property, not a CLT claim; convention $\tfrac{1}{2}$ factors from the KL Taylor expansion are absorbed into $\lambda$ (Appendix~\ref{sec:lambda-curvature}).
 
 \begin{proposition}[Semi-analytic operating-point scaling under a diffuse baseline]
 \label{prop:softmax-transport}
@@ -105,7 +105,7 @@ with $Q_1(L,b) = \int_0^1 \eta(\phi)\,q(Lb^{-\phi})\,d\phi$, $\eta(\phi) = (1{-}
 \tau_*^2 \;=\; 45\,\lambda\,Q_1(L,b)\cdot\frac{d_{\mathrm{head}}^2}{L},
 \qquad \tau_* \;\propto\; \frac{d_{\mathrm{head}}}{\sqrt{L}}.
 \]
-The $d_{\mathrm{head}}$ factor and $L^{-1/2}$ exponent follow from the combined small-$\tau$ scalings; the rule balances an $\mathcal{O}(\tau^2)$ utility gain (RoPE logit perturbation transported through a diffuse softmax with $1/L$ Jacobian curvature) against an $\mathcal{O}(\tau^4)$ channel-load stiffness. The remaining $\mathcal{O}(1)$ prefactor ($c_S$, $\lambda$, $Q_1$) depends on normalization convention and is fixed empirically inside a flat basin, not claimed as a global optimum.
+The $d_{\mathrm{head}}$ factor and $L^{-1/2}$ exponent follow from the combined small-$\tau$ scalings; the rule balances an $\mathcal{O}(\tau^2)$ utility gain (RoPE logit perturbation transported through a diffuse softmax with $1/L$ Jacobian curvature) against an $\mathcal{O}(\tau^4)$ channel-load stiffness. Real $\tau_*$ requires $Q_1(L,b){>}0$, verified across the tested grid ($Q_1{\in}[0.008, 0.032]$; Appendix~\ref{sec:lambda-cv}). The remaining $\mathcal{O}(1)$ prefactor depends on normalization convention and is fixed empirically inside a flat basin, not claimed as a global optimum.
 \end{proposition}
 
 \paragraph{Three epistemic tiers.}
