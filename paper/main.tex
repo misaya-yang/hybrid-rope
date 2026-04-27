@@ -64,7 +64,7 @@ Rotary position embedding (RoPE) is not only a positional operator but also a fi
 \input{appendix/a3_supporting_results}
 \input{appendix/a4_supporting_experiments}
 
-\section{Broader Impact Statement}
+\section*{Broader Impact Statement}
 \label{sec:broader-impact}
 
 This work studies frequency allocation as a design axis for rotary position embedding rather than a specific deployed application. Its main positive impact is scientific and systems-oriented: replacing the default geometric frequency schedule with a principled closed-form allocation can reduce wasted compute and improve the reliability of long-context models across architectures. The main risk is over-generalization: our strongest evidence is concentrated on text extrapolation and retrieval-heavy long-context evaluation, so we do not present EVQ as a universal guarantee of downstream improvement across all tasks, modalities, or deployment settings.
