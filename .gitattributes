@@ -19,6 +19,11 @@ paper/build_codex/** export-ignore
 paper/build_codex_verify/** export-ignore
 paper/build_tectonic/** export-ignore
 paper/_build_to_delete/** export-ignore
+paper/REBUTTAL_PLAYBOOK.md export-ignore
+paper/REVIEW_PROMPT.md export-ignore
+paper/CITATION_AUDIT_REPORT.md export-ignore
+paper/EDIT_CHANGELOG.md export-ignore
+paper/COWORK_FINAL_PROMPT.md export-ignore
 .codex/** export-ignore
 .claude/** export-ignore
 **/__pycache__/** export-ignore

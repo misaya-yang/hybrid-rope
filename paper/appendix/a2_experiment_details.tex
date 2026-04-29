@@ -6,9 +6,9 @@ The body centers three empirical anchors:
 \begin{enumerate}
 \item the EVQ\(\times\)YaRN systems result on passkey-mix data,
 \item DAPE-style PE-dominant extrapolation at \(128\) tokens,
-\item the \(L=256\) Phase 11 confirmation with raw and YaRN curves.
+\item the \(432\)M MLA scarce-channel stress test with \(d_{\mathrm{rope}}=32\).
 \end{enumerate}
-These anchors were selected because they are either multi-seed or directly tied to the central theoretical prediction.
+These anchors were selected because they directly stress the substrate--range composition, PE-dominant allocation, and scarce-channel regimes emphasized in the main text. The \(L=256\) Phase 11 raw/YaRN curves are retained as supporting confirmation rather than a primary anchor.
 
 \subsection{Reproducibility snapshot}
 
@@ -23,7 +23,7 @@ Anchor & Train length & Scale & Seeds & Main datasets \\
 \midrule
 EVQ\(\times\)YaRN & 2048 & 454M & 3 + 3 & FineWeb-Edu + 10\% passkey mix \\
 DAPE-style & 128 & 125M & 1--3 & FineWeb-Edu / TinyStories \\
-Phase 11 & 256 & 454M & 3 & FineWeb-Edu \\
+MLA scarce-channel & 8192 & 432M & 3 & FineWeb-Edu / MLA setting \\
 \bottomrule
 \end{tabular}
 \end{table}

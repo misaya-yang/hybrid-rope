@@ -681,7 +681,7 @@ def main() -> None:
 
     # Load filler data
     print("\n--- Loading filler data ---")
-    from run_evq_sweep import load_val
+    from scripts.core_text_phases.run_evq_sweep import load_val
 
     filler_tokens = load_val(tokenizer, args.val_tokens)
     print(f"  Filler tokens: {len(filler_tokens)}")

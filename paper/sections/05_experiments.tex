@@ -55,7 +55,6 @@ In the $454$M $10\%$ passkey-mix setting ($3$~seeds per config), EVQ+YaRN reache
 %% =========================================================================
 %% ROBUSTNESS + SUPPORTING EVIDENCE (merged; full results in Appendix)
 %% =========================================================================
-\subsection{Robustness and supporting evidence}
+\paragraph{Robustness and supporting evidence.}
 \label{sec:exp-robust}
-
-Multi-scale raw extrapolation (Table~\ref{tab:multiscale}): in-range PPL stays within ${\pm}1.7\%$ while long-range improves $10$--$46\%$; capability checks (Table~\ref{tab:capability}) show EVQ is non-destructive. Supporting (1--2 seed): video DiT ($0.53\times$ post-hoc), LoRA into LLaMA-3-8B at $r{=}d_{\mathrm{head}}/2$ ($8$--$19\times$ extrapolation-PPL), progressive training. Aggregated, EVQ's effect attenuates through abstraction layers (raw PPL ${-}46\%$/${-}13\%$ 1-/3-seed; gold-NLL ${-}30\%$; passkey ${+}59$~pp; QA ${+}2.2$~pp), concentrated at the PE layer.
+Multi-scale raw extrapolation (Table~\ref{tab:multiscale}): in-range PPL within ${\pm}1.7\%$, long-range improves $10$--$46\%$; capability checks (Table~\ref{tab:capability}) confirm non-destructiveness. Supporting (1--2 seed): video DiT ($0.53\times$ post-hoc), LoRA into LLaMA-3-8B ($8$--$19\times$ extrapolation-PPL), progressive training. Effect attenuates through abstraction layers (raw PPL/NLL/passkey/QA; full breakdown Appendix~\ref{sec:supporting-experiments}), concentrated at the PE layer.

@@ -13,7 +13,11 @@ cd paper
 bash compile_aidemo.sh
 ```
 
-输出: `paper/main.pdf`
+输出: `paper/build_aidemo/main.pdf`。如需同时更新提交用的 `paper/main.pdf`，运行:
+
+```bash
+COPY_MAIN=1 bash compile_aidemo.sh
+```
 
 该脚本会通过 `conda run --no-capture-output -n aidemo` 执行 `pdflatex -> bibtex -> pdflatex x3`，并把中间产物隔离在 `paper/build_aidemo/`。NeurIPS 2026 样式文件已包含在本目录。
 

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-Phase 14C: Multi-scale EVQ+YaRN synergy validation (50M, 125M).
+Phase 14C: supporting multi-scale EVQ+YaRN validation (50M, 125M).
 
-Replicates the 350M 5% passkey mix experiment at smaller model scales.
+Runs a supporting 5% passkey-mix check at smaller model scales.
 3 seeds (42, 123, 7) × 2 methods (Geo, EVQ tau=1.5 r=0) × 2 tiers (50M, 125M) = 12 runs.
 
 After training, runs YaRN@scale=8 passkey eval + PPL eval to verify
-EVQ+YaRN superlinear synergy holds across model scales.
+that the matched-scale EVQ+YaRN pattern persists across smaller scales.
 
-All hyperparameters match the 350M experiment EXACTLY:
+Hyperparameters follow the supporting multiscale protocol:
   - 100M tokens FineWeb-Edu
   - seq_len=2048
   - base=500K
