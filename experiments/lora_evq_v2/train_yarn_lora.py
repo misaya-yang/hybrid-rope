@@ -24,11 +24,20 @@ import torch
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from train_evq_lora import load_training_data, TokenizedDataset, PaddingCollator
 
+LOCAL_BASE = Path(__file__).resolve().parent / "local"
+DEFAULT_MODEL = os.environ.get(
+    "EVQ_LORA_MODEL",
+    str(LOCAL_BASE / "models" / "Meta-Llama-3-8B-Instruct"),
+)
+DEFAULT_TRAIN_DATA = os.environ.get(
+    "EVQ_LORA_TRAIN_DATA",
+    str(LOCAL_BASE / "data" / "longalign_10k" / "longalign_10k.jsonl"),
+)
+
 
 def parse_args():
     p = argparse.ArgumentParser(description="YaRN LoRA Training")
-    p.add_argument("--model_name", type=str,
-                   default="/root/autodl-tmp/models/Meta-Llama-3-8B-Instruct")
+    p.add_argument("--model_name", type=str, default=DEFAULT_MODEL)
     p.add_argument("--output_dir", type=str, required=True)
     p.add_argument("--yarn_factor", type=float, default=2.0)
     p.add_argument("--lora_r", type=int, default=64)
@@ -42,8 +51,7 @@ def parse_args():
     p.add_argument("--warmup_steps", type=int, default=60)
     p.add_argument("--weight_decay", type=float, default=0.01)
     p.add_argument("--max_seq_len", type=int, default=8192)
-    p.add_argument("--local_data_path", type=str,
-                   default="/root/autodl-tmp/data/longalign_10k/longalign_10k.jsonl")
+    p.add_argument("--local_data_path", type=str, default=DEFAULT_TRAIN_DATA)
     p.add_argument("--dataset_name", type=str, default="THUDM/LongAlign-10k")
     p.add_argument("--max_samples", type=int, default=8000)
     p.add_argument("--bf16", action="store_true", default=True)

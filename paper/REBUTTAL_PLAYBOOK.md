@@ -414,7 +414,7 @@ The waterbed inequality in our context is a consequence of the variational optim
 
 If this concern arises, we can consolidate in the camera-ready:
 1. Theory: Closed-form variational solution, geometric RoPE = tau=0 limit
-2. Systems result: EVQ unlocks YaRN (multiplicative composition + progressive amplification + structural reversal)
+2. Systems result: EVQ increases fixed-scale YaRN leverage (multiplicative composition + progressive amplification + structural reversal)
 3. PE-dominant: Closed-form beats learnable PE with 0 parameters
 4. MLA: First study on MLA, amplified benefit in compressed regime
 

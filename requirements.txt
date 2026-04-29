@@ -12,5 +12,8 @@ tqdm>=4.65.0
 peft>=0.7.0
 pandas>=2.0.0
 
+# Optional: local verification
+pytest>=8.0.0
+
 # Optional: experiment tracking
 # wandb>=0.15.0

@@ -8,8 +8,15 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from eval_ruler import make_haystack, build_prompt, load_model
 
-MODEL = "/root/autodl-tmp/models/Meta-Llama-3-8B-Instruct"
-CKPT = "/root/autodl-tmp/lora_evq_v2/checkpoints/evq_r64_tau1414"
+LOCAL_BASE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "local")
+MODEL = os.environ.get(
+    "EVQ_LORA_MODEL",
+    os.path.join(LOCAL_BASE, "models", "Meta-Llama-3-8B-Instruct"),
+)
+CKPT = os.environ.get(
+    "EVQ_LORA_CKPT",
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "checkpoints", "evq_r64_tau1414"),
+)
 CTX = 8192
 
 def run_test(model, tokenizer, label):

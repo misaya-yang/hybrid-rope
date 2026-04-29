@@ -39,6 +39,8 @@ from lib.rope.learnable_evq import (
 from lib.rope.schedules import (
     build_inv_freq,
     canonical_method,
+    evq_cosh_inv_freq,
+    evq_cosh_phi,
     geometric_inv_freq,
     infer_shape_name,
     METHOD_ALIASES,
@@ -465,7 +467,8 @@ class TestBuildInvFreq:
     ])
     def test_all_methods_return_correct_shape(self, method):
         """All methods should return K frequencies."""
-        inv_freq = build_inv_freq(method, head_dim=64, base=500000.0, max_seq_len=8192)
+        kwargs = {"tau": 1.414} if method == "evq_cosh" else {}
+        inv_freq = build_inv_freq(method, head_dim=64, base=500000.0, max_seq_len=8192, **kwargs)
         assert inv_freq.shape == (32,)
 
     @pytest.mark.parametrize("method", [
@@ -474,7 +477,8 @@ class TestBuildInvFreq:
     ])
     def test_all_positive(self, method):
         """All methods should produce positive frequencies."""
-        inv_freq = build_inv_freq(method, head_dim=64, base=500000.0, max_seq_len=8192)
+        kwargs = {"tau": 1.414} if method == "evq_cosh" else {}
+        inv_freq = build_inv_freq(method, head_dim=64, base=500000.0, max_seq_len=8192, **kwargs)
         assert (inv_freq > 0).all(), f"{method} produced non-positive frequencies"
 
     def test_baseline_matches_geometric(self):
@@ -489,6 +493,31 @@ class TestBuildInvFreq:
         inv_pi = build_inv_freq("pi", head_dim=64, base=500000.0, max_seq_len=16384)
         # PI divides by scale (16384/8192 = 2), so PI freqs should be lower
         assert (inv_pi <= inv_base + 1e-10).all()
+
+    def test_schedules_exports_evq_cosh_inv_freq(self):
+        """The README-public EVQ API should exist and return finite frequencies."""
+        inv = evq_cosh_inv_freq(head_dim=64, tau=1.414, base=500000.0)
+        assert inv.shape == (32,)
+        assert torch.isfinite(inv).all()
+
+    def test_build_inv_freq_evq_requires_explicit_tau(self):
+        """The public builder must not silently use a hardcoded EVQ tau."""
+        with pytest.raises(ValueError, match="explicit tau"):
+            build_inv_freq("evq_cosh", head_dim=64, base=500000.0, max_seq_len=8192)
+
+    def test_build_inv_freq_evq_uses_tau(self):
+        inv1 = build_inv_freq("evq_cosh", head_dim=64, base=500000.0, max_seq_len=8192, tau=0.5)
+        inv2 = build_inv_freq("evq_cosh", head_dim=64, base=500000.0, max_seq_len=8192, tau=1.5)
+        assert not torch.allclose(inv1, inv2)
+
+    def test_evq_tau_zero_is_midpoint_geometric(self):
+        """tau=0 is the midpoint grid; baseline geometric remains endpoint-grid RoPE."""
+        phi = evq_cosh_phi(32, tau=0.0, midpoint=True)
+        expected = (torch.arange(32, dtype=torch.float64) + 0.5) / 32.0
+        torch.testing.assert_close(phi, expected)
+        evq_zero = evq_cosh_inv_freq(head_dim=64, tau=0.0, base=500000.0)
+        endpoint_geo = geometric_inv_freq(64, base=500000.0)
+        assert not torch.allclose(evq_zero, endpoint_geo)
 
 
 class TestInferShapeName:

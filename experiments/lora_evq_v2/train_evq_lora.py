@@ -2,8 +2,8 @@
 """
 EVQ-Cosh LoRA Training for LLaMA-3-8B-Instruct
 ================================================
-Core experiment: proves LoRA r=64 with EVQ-cosh τ=1.414 avoids the
-phase-transition collapse observed at r=16 (PPL 77.1).
+Supporting experiment: validates LoRA r=64 with EVQ-cosh τ=1.414 against
+the phase-transition collapse observed at r=16 (PPL 77.1).
 
 Usage:
     # Full training (requires GPU)
@@ -30,6 +30,15 @@ from typing import Any, Dict, List, Optional
 import numpy as np
 import torch
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.lib.rope.schedules import (
+    evq_cosh_inv_freq as _canonical_evq_cosh_inv_freq,
+    geometric_inv_freq as _canonical_geometric_inv_freq,
+)
+
 
 # ---------------------------------------------------------------------------
 # EVQ-Cosh frequency computation (from theory)
@@ -53,30 +62,18 @@ def compute_evq_cosh_inv_freq(
         midpoint: if True, use u_k = (2k-1)/(2K) (midpoint quantization)
                   if False, use u_k = k/K (boundary quantization)
     """
-    K = head_dim // 2  # number of frequency channels
-    idx = torch.arange(K, dtype=torch.float64)
-
-    if midpoint:
-        u = (2.0 * idx + 1.0) / (2.0 * K)
-    else:
-        u = idx / float(K)
-
-    if tau < 1e-6:
-        # τ→0 limit: geometric RoPE
-        phi = u
-    else:
-        sinh_tau = math.sinh(tau)
-        phi = 1.0 - (1.0 / tau) * torch.asinh((1.0 - u) * sinh_tau)
-
-    inv_freq = torch.pow(float(base), -phi)
-    return inv_freq
+    return _canonical_evq_cosh_inv_freq(
+        head_dim=head_dim,
+        tau=tau,
+        base=base,
+        midpoint=midpoint,
+        dtype=torch.float64,
+    )
 
 
 def compute_geometric_inv_freq(head_dim: int, base: float) -> torch.Tensor:
     """Standard geometric RoPE inverse frequencies."""
-    K = head_dim // 2
-    idx = torch.arange(K, dtype=torch.float64)
-    return 1.0 / (float(base) ** (2.0 * idx / float(head_dim)))
+    return _canonical_geometric_inv_freq(head_dim=head_dim, base=base, dtype=torch.float64)
 
 
 # ---------------------------------------------------------------------------

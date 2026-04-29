@@ -2,19 +2,19 @@
 
 Official code repository for the NeurIPS 2026 submission.
 
-**TL;DR** — We derive a closed-form variational solution for RoPE frequency allocation and show that the one-parameter EVQ-Cosh family, combined with Progressive YaRN, achieves 100% passkey retrieval at 8× training length while geometric RoPE + YaRN collapses to 61–65%.
+**TL;DR** - We derive a closed-form variational solution for RoPE frequency allocation and show that the one-parameter EVQ-Cosh family, under the same fixed YaRN scale, reaches 100% passkey retrieval at 8K on a 454M passkey-mix setting where geometric RoPE + YaRN remains at 61%.
 
 ---
 
 ## Key Results
 
-The paper validates three core claims across 99 controlled runs at 50M–750M scale:
+The paper validates three core claims across controlled runs at 50M-750M scale, with explicit evidence tiers in the manuscript:
 
-**Claim 1 — Closed-form solution.** RoPE frequency allocation admits a variational solution φ_k(τ) with a single temperature parameter τ. Geometric RoPE is the τ→0 degenerate limit, making EVQ-Cosh a strict generalization.
+**Claim 1 - Closed-form solution.** RoPE frequency allocation admits a variational solution `phi_k(tau)` with a single temperature parameter `tau`. Geometric RoPE is the `tau -> 0` limit, making EVQ-Cosh a strict generalization.
 
-**Claim 2 — EVQ ≥ Learnable PE.** In extreme extrapolation (128→8K tokens), EVQ-Cosh matches or exceeds DAPE-style learnable frequency allocation at 125M scale (3-seed), without per-run optimization.
+**Claim 2 - PE-dominant diagnostic.** In a DAPE-style `128 -> 8K` protocol at 125M scale, the seed-42 EVQ-Cosh row attains lower extrapolation PPL than the Geo and DAPE-style learned-operator baselines, without adding learned positional parameters.
 
-**Claim 3 — EVQ + YaRN synergy.** At 8× extrapolation, EVQ + Progressive YaRN achieves 100% passkey accuracy versus 61–65% for Geometric + YaRN (350M, 3+3 seeds). This is a qualitative capability gap, not an incremental improvement.
+**Claim 3 - EVQ + YaRN matched-scale leverage.** At 4x extrapolation from `L_train=2048`, EVQ + YaRN reaches 100% passkey accuracy versus 61% for Geometric + YaRN (454M, 3 seeds per configuration). This is reported as a matched-scale substrate test, not a tuned-YaRN sweep.
 
 ---
 
@@ -24,7 +24,7 @@ The paper validates three core claims across 99 controlled runs at 50M–750M sc
 
 ```bash
 conda create -n evq python=3.10 && conda activate evq
-pip install -r requirements.txt
+pip install -r requirements-lock.txt
 ```
 
 For Blackwell GPUs (RTX 5090/6000), use PyTorch ≥ 2.7.0 with CUDA 12.8.
@@ -33,11 +33,13 @@ For Blackwell GPUs (RTX 5090/6000), use PyTorch ≥ 2.7.0 with CUDA 12.8.
 
 ```bash
 # 50M τ-sweep (~4 hours on any GPU with 4GB+ VRAM)
-python scripts/core_text_phases/run_evq_sweep.py --tier 50m --seeds 42
+python scripts/core_text_phases/run_evq_sweep.py --tier 50m --seeds 42 --strict_dataset --passkey_mix_ratio 0
 
 # 125M τ-sweep (~8 hours, requires 16GB+ GPU)
-python scripts/core_text_phases/run_evq_sweep.py --tier 125m --seeds 42,123,7
+python scripts/core_text_phases/run_evq_sweep.py --tier 125m --seeds 42,123,7 --strict_dataset --passkey_mix_ratio 0
 ```
+
+`requirements.txt` keeps broad lower bounds for portability; `requirements-lock.txt` records the paper validation environment. Use `--strict_dataset` for paper reproduction so FineWeb-Edu failures do not silently fall back to another corpus.
 
 ### Reproduce Paper Figures
 
@@ -63,7 +65,7 @@ paper/                      LaTeX source, figures, and tables
 └── refs/                   BibTeX references
 
 scripts/                    Experiment and evaluation code
-├── train.py                Core training entrypoint
+├── train.py                Legacy LoRA/Anchored-Sigmoid entrypoint
 ├── core_text_phases/       Main experiment chain (Phase 8–21)
 │   ├── run_evq_sweep.py    Core τ-sweep (Table 1)
 │   ├── phase14c_*.py       EVQ+YaRN synergy (Tables 2–3, Fig 2)
@@ -72,7 +74,7 @@ scripts/                    Experiment and evaluation code
 │   └── phase21b_*.py       QuALITY downstream (Fig 5)
 ├── figures/                Paper figure generation scripts
 ├── data_prep/              Dataset preparation helpers
-├── lib/rope/               RoPE schedule library (EVQ-Cosh, Progressive YaRN)
+├── lib/rope/               RoPE schedule library (EVQ-Cosh and scaling baselines)
 ├── video_temporal/         Video DiT temporal extrapolation experiments
 └── supporting_eval/        Supporting evaluators (LongBench, NIAH, passkey)
 
@@ -107,7 +109,7 @@ Every Figure and Table can be traced back to its generating script and source da
 | Paper Element | Generating Script | Phase |
 |--------------|-------------------|-------|
 | Table 1 (Multi-scale PPL) | `run_evq_sweep.py` | 8 |
-| Table 2–3 (EVQ+YaRN) | `phase14c_multiscale_evq_yarn.py` | 14 |
+| Table 2–3 (EVQ+YaRN) | 454M aggregate + `phase14c_multiscale_evq_yarn.py` supporting check | 14 |
 | Table 4–5 (PE-dominant) | `phase11_L256_extrap.py`, `phase11b_125m_dape.py` | 11 |
 | Table 6 (750M continue) | `phase15_750m_*.py` | 15 |
 | Fig 1 (Frequency dynamics) | `fig1_neurips.py` | — |
@@ -126,10 +128,20 @@ Hardware requirements and full reproduction paths are documented in **`docs/over
 | Path | Hardware | Time |
 |------|----------|------|
 | Quick validation (50M) | Any GPU 4GB+ or Apple M-series | ~4 hours |
-| Core results (125M/350M) | NVIDIA GPU 16GB+ | ~24 hours |
+| Core results (125M/454M) | NVIDIA GPU 16GB+ | ~24+ hours |
 | Full reproduction (454M/750M) | A100/RTX 4090+ | ~72 hours |
 
 All training data is streamed from HuggingFace Hub (no pre-download required). See `docs/overview/DATA_PREPARATION.md` for details.
+
+## Supplement Packaging
+
+Do not zip the working directory directly: local `results/`, `internal/`, historical runbooks, LaTeX build products, caches, and private machine paths are not part of the reviewer supplement. Build the curated archive with the leak-checking packager:
+
+```bash
+python scripts/package_supplement.py
+```
+
+The packager copies only the public paper/source paths and fails if common identity or server-path strings are found. Include only curated result JSONs needed by figure scripts, not full checkpoints or local experiment dumps.
 
 ---
 
@@ -137,7 +149,7 @@ All training data is streamed from HuggingFace Hub (no pre-download required). S
 
 ```bash
 cd paper
-pdflatex main && bibtex main && pdflatex main && pdflatex main
+bash compile_aidemo.sh
 ```
 
 ---

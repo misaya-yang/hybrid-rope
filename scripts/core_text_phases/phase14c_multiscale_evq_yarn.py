@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-Phase 14C: Multi-scale EVQ+YaRN synergy validation (50M, 125M).
+Phase 14C: supporting multi-scale EVQ+YaRN validation (50M, 125M).
 
-Replicates the 350M 5% passkey mix experiment at smaller model scales.
+Runs a supporting 5% passkey-mix check at smaller model scales.
 3 seeds (42, 123, 7) × 2 methods (Geo, EVQ tau=1.5 r=0) × 2 tiers (50M, 125M) = 12 runs.
 
 After training, runs YaRN@scale=8 passkey eval + PPL eval to verify
-EVQ+YaRN superlinear synergy holds across model scales.
+that the matched-scale EVQ+YaRN pattern persists across smaller scales.
 
-All hyperparameters match the 350M experiment EXACTLY:
+Hyperparameters follow the supporting multiscale protocol:
   - 100M tokens FineWeb-Edu
   - seq_len=2048
   - base=500K
@@ -19,7 +19,8 @@ All hyperparameters match the 350M experiment EXACTLY:
   - YaRN: scale=8, channel-index ramp (start=0.20*K, end=0.90*K), smoothstep + temperature
 
 Usage (on 5090):
-    nohup python phase14c_multiscale_evq_yarn.py > /root/autodl-tmp/evq_phase14c/run.log 2>&1 &
+    EVQ_PHASE14C_WORK_DIR=results/core_text/phase14c \
+      python scripts/core_text_phases/phase14c_multiscale_evq_yarn.py
 """
 
 from __future__ import annotations
@@ -42,9 +43,11 @@ import torch.nn.functional as F
 os.environ["HF_ENDPOINT"] = os.environ.get("HF_ENDPOINT", "https://hf-mirror.com")
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-sys.path.insert(0, str(SCRIPT_DIR))
+PROJECT_ROOT = SCRIPT_DIR.parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
-from run_evq_sweep import (
+from scripts.core_text_phases.run_evq_sweep import (
     GPT,
     DEVICE,
     DTYPE,
@@ -57,7 +60,7 @@ from run_evq_sweep import (
     get_batch_from_data,
     maybe_wrap_with_passkey_mix,
 )
-from eval_passkey_scratch import eval_passkey_nll_gap
+from scripts.supporting_eval.eval_passkey_scratch import eval_passkey_nll_gap
 
 # ===================================================================
 # Constants — MUST match 350M experiment exactly
@@ -109,8 +112,18 @@ TIERS = {
     ),
 }
 
-WORK = Path("/root/autodl-tmp/evq_phase14c")
-DATA_CACHE_DIR = WORK / "data"
+WORK = Path(os.environ.get("EVQ_PHASE14C_WORK_DIR", "results/core_text/phase14c"))
+DATA_CACHE_DIR = Path(os.environ.get("EVQ_DATA_CACHE", str(WORK / "data")))
+REUSE_CACHE_DIRS = [
+    Path(p)
+    for p in os.environ.get("EVQ_PHASE14C_REUSE_DIRS", "").split(os.pathsep)
+    if p
+]
+PHASE14C_350M_DIRS = [
+    Path(p)
+    for p in os.environ.get("EVQ_PHASE14C_350M_DIRS", "").split(os.pathsep)
+    if p
+]
 
 
 # ===================================================================
@@ -520,34 +533,49 @@ def main():
     from transformers import AutoTokenizer
     tok = AutoTokenizer.from_pretrained("EleutherAI/gpt-neox-20b")
 
-    # Load data (reuse cache if available from 350M experiments)
+    # Load data.  Optional reuse paths are explicit via EVQ_PHASE14C_REUSE_DIRS;
+    # the default path stays inside the repository-local results tree.
     print("\nLoading training data...")
-    # Check for existing cache from 350M experiments
-    existing_caches = [
-        Path("/root/autodl-tmp/evq_passkey_mix_5pct/train_fineweb-edu_100000000_2048.pt"),
-        DATA_CACHE_DIR / "train_fineweb-edu_100000000_2048.pt",
-    ]
+    train_cache_name = "train_fineweb-edu_100000000_2048.pt"
+    existing_caches = [DATA_CACHE_DIR / train_cache_name]
+    existing_caches.extend(d / train_cache_name for d in REUSE_CACHE_DIRS)
     train_cache = None
     for p in existing_caches:
         if p.exists():
             train_cache = p
             break
 
-    if train_cache and train_cache != DATA_CACHE_DIR / "train_fineweb-edu_100000000_2048.pt":
+    if train_cache and train_cache != DATA_CACHE_DIR / train_cache_name:
         # Symlink to avoid double storage
-        dest = DATA_CACHE_DIR / "train_fineweb-edu_100000000_2048.pt"
+        dest = DATA_CACHE_DIR / train_cache_name
         if not dest.exists():
             os.symlink(str(train_cache), str(dest))
         print(f"  Reusing existing cache: {train_cache}")
 
-    train_data_raw = load_data(tok, TRAIN_TOKENS, SEQ_LEN, "fineweb-edu", cache_dir=str(DATA_CACHE_DIR))
+    train_data_raw = load_data(
+        tok,
+        TRAIN_TOKENS,
+        SEQ_LEN,
+        "fineweb-edu",
+        cache_dir=str(DATA_CACHE_DIR),
+        strict_dataset=True,
+    )
 
     print("Loading validation data...")
-    existing_val = Path("/root/autodl-tmp/evq_passkey_mix_5pct/val_fineweb-edu_5000000.pt")
+    val_cache_name = "val_fineweb-edu_5000000.pt"
     val_cache_dest = DATA_CACHE_DIR / "val_fineweb-edu_5000000.pt"
-    if existing_val.exists() and not val_cache_dest.exists():
-        os.symlink(str(existing_val), str(val_cache_dest))
-    val_data = load_val(tok, 5_000_000, "fineweb-edu", cache_dir=str(DATA_CACHE_DIR))
+    for existing_val in [d / val_cache_name for d in REUSE_CACHE_DIRS]:
+        if existing_val.exists() and not val_cache_dest.exists():
+            os.symlink(str(existing_val), str(val_cache_dest))
+            print(f"  Reusing existing validation cache: {existing_val}")
+            break
+    val_data = load_val(
+        tok,
+        5_000_000,
+        "fineweb-edu",
+        cache_dir=str(DATA_CACHE_DIR),
+        strict_dataset=True,
+    )
     filler = val_data[:50000]
 
     # Wrap with passkey mix (5%)
@@ -569,8 +597,8 @@ def main():
                 result = run_single(tier, tau, seed, train_data, val_data, filler, tok)
                 all_results[tag] = result
 
-    # Load 350M results for cross-scale comparison (if available)
-    for mix_dir in [Path("/root/autodl-tmp/evq_passkey_mix_5pct")]:
+    # Load 350M results for cross-scale comparison if explicitly provided.
+    for mix_dir in PHASE14C_350M_DIRS:
         for tau in TAUS:
             for seed in SEEDS:
                 tag_350 = run_tag("350m", tau, seed)
