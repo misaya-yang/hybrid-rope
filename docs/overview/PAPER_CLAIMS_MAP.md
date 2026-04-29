@@ -10,7 +10,7 @@
 
 | Stable asset | 论文位置 | 描述 | 生成脚本 | 数据来源 | 输出文件 |
 |--------------|---------|------|---------|---------|---------|
-| Method overview | Theory and Method | EVQ-Cosh allocation schematic | manual/static asset | paper diagram source | `paper/figs/fig_method_overview.pdf` |
+| Main story overview | Theory and Method | Finite spectral budget → closed-form allocation → mechanism stress tests | `scripts/figures/fig0_main_story.py` | generated schematic + paper-reported primary values | `paper/figs/fig0_main_story.pdf` |
 | EVQ × YaRN | Experiments / Primary I | EVQ × YaRN orthogonal synergy | `scripts/figures/fig2_evq_yarn_orthogonality.py` | `docs/exp/2026-03-03_passkey_mix_results.md` (inline hardcoded) | `paper/figs/fig2_evq_yarn_synergy.pdf` |
 | PE-dominant scaling | Appendix supporting PE-dominant section | PE-dominant regime & scaling law | `scripts/figures/fig3_pe_dominant_scaling.py` | `data/curated/fig3_extreme_128.json` fallback for panel (a); `results/core_text/phase11/results_phase11_{raw,yarn}.json` for panels (b,c) | `paper/figs/fig3_pe_dominant_scaling.pdf` |
 | Progressive training | Appendix experiment details | Phase 17c 454M supporting/progressive pattern | `scripts/core_text_phases/phase17c_*.py` | `results/evq_phase17c_results/` | `paper/figs/fig4_phase17c_flagship.pdf` |
@@ -24,20 +24,20 @@
 
 ## Tables
 
-> Use the LaTeX file/label as the stable handle. Current compiled table numbers were last checked on 2026-04-29 and may shift if floats move.
+> Use the LaTeX file/label as the stable handle. Compiled table numbers are intentionally omitted here because floats may move between builds.
 
-| Stable table source | Current PDF item | 论文位置 | 描述 | 数据来源脚本 | 实验报告 |
-|---------------------|------------------|---------|------|------------|---------|
-| `paper/tables/table_method_comparison.tex` | Table 1 | Related Work | Compact method comparison / positioning | literature survey | — |
-| `paper/tables/table_epistemic_map.tex` | Table 2 | Theory and Method | Epistemic status of derivation components | theory audit | — |
-| `paper/tables/table_evidence_tier.tex` | Table 3 | Experiments setup | Evidence tier by setting | paper audit | — |
-| `paper/tables/table2_evq_yarn_main.tex` | Table 4 | Primary I | EVQ+YaRN main systems result | 454M aggregate + `phase14c_multiscale_evq_yarn.py` supporting check | `docs/exp/2026-03-03_passkey_mix_results.md` |
-| `paper/tables/table4_pe_dominant.tex` | Table 5 | Primary II | PE-dominant extreme extrapolation | `phase11c_454m_scaling.py` + `phase11b_125m_dape.py` | `docs/exp/2026-03-04_phase11_L256_results.md` |
-| `paper/appendix/a2_experiment_details.tex` (inline) | Table 11 | Appendix experiment details | Reproducibility snapshot | — | — |
-| `paper/tables/table6_750m_continue_supporting.tex` | Table 13 | Appendix experiment details | 750M continued-pretraining support | `phase15_750m_2k_to_4k_continue_ckpt_eval.py` | `docs/exp/2026-03-06_phase15_750m_2k_to_4k_continue_results.md` |
-| `paper/tables/table5_phase11_leverage.tex` | Table 20 | Appendix supporting results | Phase 11 leverage (YaRN asymmetry at L=256) | `phase11_L256_extrap.py` + `phase11_yarn_eval.py` | `docs/exp/2026-03-04_phase11_L256_results.md` |
-| `paper/tables/table1_multiscale_raw_ppl.tex` | Table 21 | Appendix supporting results | Multi-scale raw PPL (50M-750M) | `run_evq_sweep.py` (50M/125M tiers plus curated larger rows) | `docs/exp/2026-02-27_evq_tau_sweep_results.md` |
-| `paper/tables/table3_capability_passkey.tex` | Table 25 | Appendix supporting experiments | Capability preservation / passkey robustness | `eval_passkey.py` | `docs/exp/2026-03-03_passkey_mix_results.md` |
+| Stable table source | Stable PDF location | 论文位置 | 描述 | 数据来源脚本 | 实验报告 |
+|---------------------|---------------------|---------|------|------------|---------|
+| `paper/tables/table_epistemic_map.tex` | Main body table | Theory and Method | Epistemic status of derivation components | theory audit | — |
+| `paper/tables/table_evidence_tier.tex` | Main body table | Experiments setup | Evidence tier by setting | paper audit | — |
+| `paper/tables/table2_evq_yarn_main.tex` | Main body table | Primary I | EVQ+YaRN main systems result | 454M aggregate + `phase14c_multiscale_evq_yarn.py` supporting check | `docs/exp/2026-03-03_passkey_mix_results.md` |
+| `paper/tables/table4_pe_dominant.tex` | Main body table | Primary II | PE-dominant extreme extrapolation | `phase11c_454m_scaling.py` + `phase11b_125m_dape.py` | `docs/exp/2026-03-04_phase11_L256_results.md` |
+| `paper/tables/table_method_comparison.tex` | Appendix table | Appendix method comparison | Compact method comparison / positioning | literature survey | — |
+| `paper/appendix/a2_experiment_details.tex` (inline) | Appendix table | Appendix experiment details | Reproducibility snapshot | — | — |
+| `paper/tables/table6_750m_continue_supporting.tex` | Appendix table | Appendix experiment details | 750M continued-pretraining support | `phase15_750m_2k_to_4k_continue_ckpt_eval.py` | `docs/exp/2026-03-06_phase15_750m_2k_to_4k_continue_results.md` |
+| `paper/tables/table5_phase11_leverage.tex` | Appendix table | Appendix supporting results | Phase 11 leverage (YaRN asymmetry at L=256) | `phase11_L256_extrap.py` + `phase11_yarn_eval.py` | `docs/exp/2026-03-04_phase11_L256_results.md` |
+| `paper/tables/table1_multiscale_raw_ppl.tex` | Appendix table | Appendix supporting results | Multi-scale raw PPL (50M-750M) | `run_evq_sweep.py` (50M/125M tiers plus curated larger rows) | `docs/exp/2026-02-27_evq_tau_sweep_results.md` |
+| `paper/tables/table3_capability_passkey.tex` | Appendix table | Appendix supporting experiments | Capability preservation / passkey robustness | `eval_passkey.py` | `docs/exp/2026-03-03_passkey_mix_results.md` |
 
 ---
 

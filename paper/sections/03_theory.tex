@@ -3,8 +3,8 @@
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.88\linewidth]{fig_method_overview.pdf}
-  \caption{\textbf{EVQ-Cosh frequency allocation.} Left: geometric RoPE places channels uniformly in log-frequency. Center: the EVQ-Cosh warp $\phi_k(\tau)$ bends below the identity (dashed); $\tau{\to}0$ recovers geometric RoPE. Right: the allocation \emph{widens spacing} among low-frequency channels and \emph{extends} the spectrum toward longer wavelengths, reducing long-range collisions.}
+  \includegraphics[width=0.98\linewidth]{fig0_main_story.pdf}
+  \caption{\textbf{EVQ-Cosh as frequency allocation.} Panel (a) frames the default geometric RoPE table as an inherited allocation of a fixed spectral budget. Panel (b) shows the closed-form EVQ-Cosh inverse-CDF warp used to reallocate the same finite set of RoPE channels. Panel (c) summarizes the mechanism stress tests: EVQ changes allocation shape without adding learned parameters or changing the rotary operator, complementing inference-time range scaling rather than replacing it.}
   \label{fig:method-overview}
 \end{figure}
 

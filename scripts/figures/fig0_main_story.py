@@ -35,6 +35,8 @@ plt.rcParams.update(
         "legend.fontsize": 6,
         "figure.dpi": 300,
         "savefig.dpi": 300,
+        "pdf.fonttype": 42,
+        "ps.fonttype": 42,
         "axes.linewidth": 0.55,
         "xtick.major.width": 0.5,
         "ytick.major.width": 0.5,
@@ -162,7 +164,7 @@ def draw_budget_panel(ax: plt.Axes) -> None:
     ax.text(0.50, 0.12, "same K, different allocation", ha="center", va="center", fontsize=6.3, color=C_TEXT)
 
     ax.annotate(
-        "spread low-frequency\nchannels apart",
+        "less low-frequency\ncrowding",
         xy=(x_evq[-4], y_evq),
         xytext=(0.64, 0.21),
         fontsize=5.8,
@@ -251,7 +253,7 @@ def metric_card(
     ax.text(x0 + 0.03, y0 + h - 0.055, title, ha="left", va="center", fontsize=6.8, color=C_TEXT, fontweight="bold")
     ax.text(x0 + 0.03, y0 + h - 0.120, metric, ha="left", va="center", fontsize=5.9, color=C_MUTED)
 
-    bar_x, bar_w = x0 + 0.62, 0.22
+    bar_x, bar_w = x0 + 0.68, 0.17
     b1_y = y0 + 0.085
     b2_y = y0 + 0.035
     b_h = 0.038
@@ -283,7 +285,7 @@ def metric_card(
 
 
 def draw_evidence_panel(ax: plt.Axes) -> None:
-    add_panel_label(ax, "(c)", "Three primary stress tests close the loop")
+    add_panel_label(ax, "(c)", "Three mechanism stress tests close the loop")
     ax.set_axis_off()
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
@@ -292,7 +294,7 @@ def draw_evidence_panel(ax: plt.Axes) -> None:
         ax,
         0.69,
         "Substrate + range complementarity",
-        r"454M passkey-mix, PK@8K",
+        r"PK@8K, 454M passkey-mix",
         "Geo+YaRN",
         61,
         "EVQ+YaRN",
@@ -305,7 +307,7 @@ def draw_evidence_panel(ax: plt.Axes) -> None:
         ax,
         0.385,
         "PE-dominant extrapolation",
-        r"125M FineWeb-Edu, PPL@8K",
+        r"PPL@8K, 125M FineWeb-Edu",
         "Geo",
         513.7,
         "EVQ",
@@ -318,7 +320,7 @@ def draw_evidence_panel(ax: plt.Axes) -> None:
         ax,
         0.08,
         "Scarce-channel MLA",
-        r"432M MLA, 16 RoPE channels",
+        r"16 RoPE channels, 432M MLA",
         "Geo",
         138.8,
         "EVQ",
@@ -362,7 +364,7 @@ def main() -> None:
     draw_evidence_panel(axes[2])
 
     fig.suptitle(
-        "EVQ-Cosh turns RoPE from an inherited geometric schedule into a train-time frequency allocation",
+        "RoPE's frequency table is a scarce spectral budget; EVQ-Cosh reallocates it analytically",
         x=0.50,
         y=0.985,
         ha="center",
@@ -374,7 +376,7 @@ def main() -> None:
     fig.text(
         0.50,
         0.925,
-        "Zero learned parameters; same rotary operator; complementary to inference-time range scaling.",
+        "Same rotary operator; zero learned parameters; complementary to inference-time range scaling.",
         ha="center",
         va="top",
         fontsize=7.0,

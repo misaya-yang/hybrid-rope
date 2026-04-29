@@ -3,25 +3,25 @@
 \scriptsize
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{0.88}
-\caption{Compact comparison of RoPE-family context methods. EVQ-Cosh is the row targeting closed-form variational training-time frequency allocation for standard RoPE.}
+\caption{Method-landscape comparison supporting the Related Work positioning. EVQ-Cosh is the row targeting closed-form variational training-time frequency allocation for standard RoPE.}
 \label{tab:method-comparison}
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{lcccccl}
 \toprule
-Method & \shortstack{Train\\alloc.} & \shortstack{Infer\\scale} & \shortstack{Post-hoc/\\search} & Learned & \shortstack{Closed\\form} & Main axis \\
+Method & \shortstack{Train\\alloc.} & \shortstack{Infer\\scale} & \shortstack{Post-hoc/\\search} & Learned & \shortstack{Closed-form\\allocation} & Main axis \\
 \midrule
 Geometric RoPE \citep{su2024roformer}        & fixed    & ---        & ---       & ---      & \checkmark & default operator \\
-NTK / PI \citep{roziere2023codellama,chen2024position} & --- & \checkmark & post-hoc  & ---      & \checkmark & global range \\
-YaRN \citep{peng2024yarn}                    & ---      & \checkmark & post-hoc  & ---      & \checkmark & piecewise range \\
+NTK / PI \citep{roziere2023codellama,chen2024position} & --- & \checkmark & post-hoc  & ---      & --- & global range \\
+YaRN \citep{peng2024yarn}                    & ---      & \checkmark & post-hoc  & ---      & --- & piecewise range \\
 LongRoPE \citep{ding2024longrope}            & ---      & \checkmark & search    & ---      & ---        & range schedule \\
 LongRoPE2 \citep{shang2025longrope2}         & ---      & \checkmark & search    & ---      & ---        & per-channel range \\
 DAPE \citep{zheng2024dape}                   & ---      & ---        & training  & \checkmark & ---        & adaptive operator \\
 FIRE \citep{li2024fire}                      & ---      & ---        & training  & \checkmark & ---        & learned function \\
-VideoRoPE \citep{videorope2025}              & heuristic & \checkmark & design   & ---      & \checkmark & modality-specific \\
-Resonance RoPE \citep{wang2024resonance}     & ---      & \checkmark & design    & ---      & \checkmark & critical frequencies \\
-MHRoPE/HoPE \citep{qwen2026mhrope,li2025hope}& heuristic & ---        & design    & ---      & \checkmark & VLM axis-split \\
+VideoRoPE \citep{videorope2025}              & heuristic & \checkmark & design   & ---      & --- & modality-specific \\
+Resonance RoPE \citep{wang2024resonance}     & ---      & \checkmark & design    & ---      & --- & critical frequencies \\
+MHRoPE/HoPE \citep{qwen2026mhrope,li2025hope}& heuristic & ---        & design    & ---      & --- & VLM axis-split \\
 CARoPE \citep{veisi2025carope}               & ---      & ---        & training  & \checkmark & ---        & learned dynamic frequencies \\
-CoPE \citep{li2026copeclipped}               & ---      & \checkmark & post-hoc  & ---      & \checkmark & low-frequency clipping \\
+CoPE \citep{li2026copeclipped}               & ---      & \checkmark & post-hoc  & ---      & --- & low-frequency clipping \\
 \textbf{EVQ-Cosh (ours)}                     & \checkmark & ---      & ---       & ---      & \checkmark & \textbf{train-time allocation} \\
 \bottomrule
 \end{tabular}%
