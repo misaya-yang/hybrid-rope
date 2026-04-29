@@ -2,7 +2,7 @@
 
 Official code repository for the NeurIPS 2026 submission.
 
-**TL;DR** - We derive a closed-form variational solution for RoPE frequency allocation and show that the one-parameter EVQ-Cosh family, under the same fixed YaRN scale, reaches 100% passkey retrieval at 8K on a 454M passkey-mix setting where geometric RoPE + YaRN remains at 61%.
+**TL;DR** - We derive a closed-form variational solution for RoPE frequency allocation and show that the one-parameter EVQ-Cosh family, under the same fixed YaRN scale, reaches 100% PK retrieval at 8K on a 454M passkey-mix setting where geometric RoPE + YaRN remains at 61%. PK/passkey denotes teacher-forced NLL-gap retrieval unless explicitly marked as autoregressive exact match.
 
 ---
 
@@ -14,7 +14,7 @@ The paper validates three core claims across controlled runs at 50M-750M scale, 
 
 **Claim 2 - PE-dominant diagnostic.** In a DAPE-style `128 -> 8K` protocol at 125M scale, the seed-42 EVQ-Cosh row attains lower extrapolation PPL than the Geo and DAPE-style learned-operator baselines, without adding learned positional parameters.
 
-**Claim 3 - EVQ + YaRN matched-scale leverage.** At 4x extrapolation from `L_train=2048`, EVQ + YaRN reaches 100% passkey accuracy versus 61% for Geometric + YaRN (454M, 3 seeds per configuration). This is reported as a matched-scale substrate test, not a tuned-YaRN sweep.
+**Claim 3 - EVQ + YaRN matched-scale leverage.** At 4x extrapolation from `L_train=2048`, EVQ + YaRN reaches 100% PK retrieval versus 61% for Geometric + YaRN (454M, 3 seeds per configuration). This is reported as a matched-scale substrate test, not a tuned-YaRN sweep.
 
 ---
 
@@ -60,17 +60,17 @@ paper/                      LaTeX source, figures, and tables
 ├── main.tex                NeurIPS submission entry point
 ├── sections/               Section .tex files (01_intro … 07_conclusion)
 ├── appendix/               Appendix .tex files
-├── tables/                 Table .tex files (Tables 1–6)
+├── tables/                 Table .tex files (stable sources; compiled numbers may shift)
 ├── figs/                   All paper figures (PDF + PNG)
 └── refs/                   BibTeX references
 
 scripts/                    Experiment and evaluation code
 ├── train.py                Legacy LoRA/Anchored-Sigmoid entrypoint
 ├── core_text_phases/       Main experiment chain (Phase 8–21)
-│   ├── run_evq_sweep.py    Core τ-sweep (Table 1)
-│   ├── phase14c_*.py       EVQ+YaRN synergy (Tables 2–3, Fig 2)
+│   ├── run_evq_sweep.py    Core τ-sweep (raw PPL table)
+│   ├── phase14c_*.py       EVQ+YaRN synergy and capability tables
 │   ├── phase16_*.py        99-run τ* validation (Fig 6)
-│   ├── phase17c_*.py       454M flagship (Fig 4)
+│   ├── phase17c_*.py       454M supporting progressive check (Fig 4)
 │   └── phase21b_*.py       QuALITY downstream (Fig 5)
 ├── figures/                Paper figure generation scripts
 ├── data_prep/              Dataset preparation helpers
@@ -106,18 +106,19 @@ tests/                      Unit tests
 
 Every Figure and Table can be traced back to its generating script and source data in 3 steps. The full traceability map is at **`docs/overview/PAPER_CLAIMS_MAP.md`**.
 
-| Paper Element | Generating Script | Phase |
-|--------------|-------------------|-------|
-| Table 1 (Multi-scale PPL) | `run_evq_sweep.py` | 8 |
-| Table 2–3 (EVQ+YaRN) | 454M aggregate + `phase14c_multiscale_evq_yarn.py` supporting check | 14 |
-| Table 4–5 (PE-dominant) | `phase11_L256_extrap.py`, `phase11b_125m_dape.py` | 11 |
-| Table 6 (750M continue) | `phase15_750m_*.py` | 15 |
-| Fig 1 (Frequency dynamics) | `fig1_neurips.py` | — |
-| Fig 2 (EVQ×YaRN synergy) | `fig2_evq_yarn_orthogonality.py` | — |
-| Fig 3 (PE-dominant scaling) | `fig3_pe_dominant_scaling.py` | — |
-| Fig 4 (454M flagship) | `phase17c_*.py` | 17 |
-| Fig 5 (Downstream QA) | `phase21b_quality_eval_clean.py` | 21 |
-| Fig 6 (τ* validation) | `phase16_formula_optimality_sweep.py` | 16 |
+| Stable Paper Asset | Generating Script | Phase |
+|--------------------|-------------------|-------|
+| Multi-scale raw PPL table | `run_evq_sweep.py` | 8 |
+| EVQ+YaRN systems table | 454M aggregate + `phase14c_multiscale_evq_yarn.py` supporting check | 14 |
+| Capability/passkey robustness table | `eval_passkey.py` | 14 |
+| PE-dominant tables | `phase11_L256_extrap.py`, `phase11b_125m_dape.py` | 11 |
+| 750M continue table | `phase15_750m_*.py` | 15 |
+| Frequency dynamics / multiscale waterbed figures | `fig1_neurips.py` | — |
+| EVQ×YaRN synergy figure | `fig2_evq_yarn_orthogonality.py` | — |
+| PE-dominant scaling figure | `fig3_pe_dominant_scaling.py` | — |
+| 454M supporting progressive figure | `phase17c_*.py` | 17 |
+| Downstream QA figure | `phase21b_quality_eval_clean.py` | 21 |
+| τ* validation figure | `phase16_formula_optimality_sweep.py` | 16 |
 
 ---
 

@@ -39,21 +39,25 @@ import torch.nn.functional as F
 import torch.utils.data
 
 # ---------------------------------------------------------------------------
-# Import model & utilities from sweep script
+# Import path and lightweight utilities
 # ---------------------------------------------------------------------------
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
-from scripts.core_text_phases.run_evq_sweep import (
-    GPT,
-    TIER_CONFIGS,
-    evq_cosh_inv_freq,
-    get_device_and_dtype,
-)
+from scripts.lib.rope.schedules import evq_cosh_inv_freq
 
-DEVICE, DTYPE = get_device_and_dtype()
+
+def _get_device_and_dtype() -> Tuple[str, torch.dtype]:
+    if torch.cuda.is_available():
+        return "cuda", torch.bfloat16
+    if hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+        return "mps", torch.float32
+    return "cpu", torch.float32
+
+
+DEVICE, DTYPE = _get_device_and_dtype()
 USE_AUTOCAST = DEVICE == "cuda" and DTYPE != torch.float32
 
 # ---------------------------------------------------------------------------
@@ -679,10 +683,10 @@ def main() -> None:
     if not tok_ok:
         print("  WARNING: tokenizer sanity check failed, results may be unreliable")
 
+    from scripts.core_text_phases.run_evq_sweep import GPT, TIER_CONFIGS, load_val
+
     # Load filler data
     print("\n--- Loading filler data ---")
-    from scripts.core_text_phases.run_evq_sweep import load_val
-
     filler_tokens = load_val(tokenizer, args.val_tokens)
     print(f"  Filler tokens: {len(filler_tokens)}")
 

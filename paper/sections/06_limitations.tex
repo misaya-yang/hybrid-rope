@@ -1,4 +1,4 @@
-\section{Limitations}
+\section{Discussion and Limitations}
 \label{sec:limitations}
 
 This is a PE mechanism study, not a universal long-context recipe. Strongest claims use PE diagnostics---extrapolation PPL, teacher-forced NLL-gap retrieval, passkey/NIAH probes, and gold-answer NLL---not universal downstream accuracy; semantic capacity, data, instruction tuning, and task coverage can dominate. The variational solution is exact for the stated surrogate, but its trained-model link is functionally validated, not derived from full attention dynamics. The rule $\tau=d_{\mathrm{eff}}/\sqrt{L}$ is an empirical-basin default, not a global optimum. MLA convention and production-scale per-channel ablations remain future work; video/LoRA/progressive rows are supporting, not primary.

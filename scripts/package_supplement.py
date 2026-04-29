@@ -65,13 +65,18 @@ EXCLUDE_SUFFIXES = {
     ".log",
     ".npz",
     ".out",
+    ".pt",
+    ".bin",
     ".pyc",
+    ".safetensors",
     ".synctex.gz",
 }
 
 LEAK_PATTERNS = re.compile(
     rb"misaya|yanghej|hejaz|sshpass|seetacloud|connect\.bjb|connect\.west|"
-    rb"@hejazfs|/Users/|/root/autodl-tmp|wandb\.ai",
+    rb"@hejazfs|@privaterelay|/Users/|/root/autodl-tmp|wandb\.ai|"
+    rb"AKIA[0-9A-Z]{16}|hf_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9_-]{20,}|"
+    rb"ghp_[A-Za-z0-9]{20,}|BEGIN OPENSSH PRIVATE KEY|BEGIN RSA PRIVATE KEY",
     re.IGNORECASE,
 )
 

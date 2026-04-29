@@ -31,9 +31,9 @@ paper/
 ├── sections/             正文各章节
 │   ├── 01_intro.tex
 │   ├── 02_related.tex
-│   ├── 03_theory.tex     §3 EVQ-Cosh 推导
-│   ├── 04_predictions.tex §4 Waterbed 分析 (historical; not included by main.tex)
-│   ├── 05_experiments.tex §5 实验结果
+│   ├── 03_theory.tex     EVQ-Cosh 推导
+│   ├── 04_predictions.tex historical; not included by main.tex
+│   ├── 05_experiments.tex 实验结果
 │   ├── 06_limitations.tex
 │   └── 07_conclusion.tex (historical; not included by main.tex)
 ├── appendix/             附录
@@ -72,15 +72,15 @@ paper/
 
 ### 快速对照
 
-| Figure/Table | 生成脚本 |
-|-------------|---------|
-| Fig 1 | `scripts/figures/fig1_neurips.py` |
-| Fig 2 | `scripts/figures/fig2_evq_yarn_orthogonality.py` |
-| Fig 3 | `scripts/figures/fig3_pe_dominant_scaling.py` |
-| Fig 4 | `scripts/core_text_phases/phase17c_*.py` |
-| Fig 5 | `scripts/core_text_phases/phase21b_quality_eval_clean.py` |
-| Fig 6 | `scripts/core_text_phases/phase16_formula_optimality_sweep.py` |
-| Tables 1-6 | 见 `docs/overview/PAPER_CLAIMS_MAP.md` |
+| Stable asset/source | 生成脚本 |
+|---------------------|---------|
+| Frequency dynamics / multiscale waterbed figures | `scripts/figures/fig1_neurips.py` |
+| EVQ × YaRN synergy figure | `scripts/figures/fig2_evq_yarn_orthogonality.py` |
+| PE-dominant scaling figure | `scripts/figures/fig3_pe_dominant_scaling.py` |
+| 454M supporting progressive figure | `scripts/core_text_phases/phase17c_*.py` |
+| Downstream QA figure | `scripts/core_text_phases/phase21b_quality_eval_clean.py` |
+| τ* validation figure | `scripts/core_text_phases/phase16_formula_optimality_sweep.py` |
+| Table `.tex` sources | 见 `docs/overview/PAPER_CLAIMS_MAP.md` |
 
 ---
 
