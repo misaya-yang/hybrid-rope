@@ -41,6 +41,8 @@ plt.rcParams.update(
         "legend.fontsize": 7,
         "figure.dpi": 300,
         "savefig.dpi": 300,
+        "pdf.fonttype": 42,
+        "ps.fonttype": 42,
         "axes.linewidth": 0.6,
         "xtick.major.width": 0.5,
         "ytick.major.width": 0.5,
@@ -61,6 +63,15 @@ C_TEXT = "#333333"
 
 LENGTHS = np.array([256, 512, 1024, 2048, 4096, 8192], dtype=float)
 RATIO_LABELS = ["1x", "2x", "4x", "8x", "16x", "32x"]
+CURATED_PHASE6_EXTREME = Path("data/curated/fig3_extreme_128.json")
+LEGACY_PHASE6_SWEEP = Path("data/evq_128tok_results/results_phase6.json")
+LEGACY_PHASE6_CKPT = Path("data/evq_128tok_results/results_checkpoint.json")
+EXTREME_COLORS = {
+    "Geo": C_GEO,
+    "Learnable $\\tau$": C_LEARN,
+    "DAPE (32p)": C_DAPE,
+    "EVQ $\\tau$=5.0": C_EVQ,
+}
 
 
 def setup_axis(ax):
@@ -70,13 +81,20 @@ def setup_axis(ax):
         ax.spines[spine].set_visible(False)
 
 
-def load_json(path: str):
+def load_json(path: str | Path):
     return json.loads(Path(path).read_text())
 
 
 def load_phase6_extreme_data():
-    sweep = load_json("data/evq_128tok_results/results_phase6.json")
-    ckpt = load_json("data/evq_128tok_results/results_checkpoint.json")
+    if not (LEGACY_PHASE6_SWEEP.exists() and LEGACY_PHASE6_CKPT.exists()):
+        curated = load_json(CURATED_PHASE6_EXTREME)
+        return {
+            label: {**metrics, "color": EXTREME_COLORS[label]}
+            for label, metrics in curated["rows"].items()
+        }
+
+    sweep = load_json(LEGACY_PHASE6_SWEEP)
+    ckpt = load_json(LEGACY_PHASE6_CKPT)
 
     fineweb_curve = sweep["experiments"]["6A_extended_sweep"]["complete_tau_curve"]["fineweb"]
     evq_tau5 = next(item for item in fineweb_curve if item["tau"] == 5.0)
@@ -146,12 +164,12 @@ def draw_extreme_panel(ax):
     dape_8k = data["DAPE (32p)"]["ppl_8192"]
 
     ax.annotate(
-        "EVQ beats DAPE\nby 27% at 64x",
+        "seed-42 contrast:\nEVQ lower PPL",
         xy=(3, evq_8k),
-        xytext=(2.1, 610),
-        fontsize=6.2,
+        xytext=(2.05, 630),
+        fontsize=5.8,
         color=C_EVQ,
-        ha="center",
+        ha="left",
         fontweight="bold",
         arrowprops=dict(arrowstyle="-|>", color=C_EVQ, lw=0.8, mutation_scale=8),
         bbox=dict(boxstyle="round,pad=0.25", facecolor="#fff3ef", edgecolor=C_EVQ, linewidth=0.6),
@@ -160,7 +178,7 @@ def draw_extreme_panel(ax):
         "Geo baseline",
         xy=(0, geo_8k),
         xytext=(0.25, 560),
-        fontsize=5.8,
+        fontsize=5.3,
         color=C_GEO,
         ha="left",
         arrowprops=dict(arrowstyle="-|>", color=C_GEO, lw=0.7, mutation_scale=7),
@@ -169,7 +187,7 @@ def draw_extreme_panel(ax):
     ax.text(
         1.5,
         95,
-        "125M FineWeb, 128$\\rightarrow$8192 (64x)\n15M tokens, direct DAPE-style regime",
+        "125M FineWeb, 128$\\rightarrow$8192 (64x)\nseed 42 except learnable $\\tau$ mean",
         ha="center",
         va="bottom",
         fontsize=5.8,
@@ -177,11 +195,11 @@ def draw_extreme_panel(ax):
         bbox=dict(boxstyle="round,pad=0.18", facecolor="#f7f7f7", edgecolor="none", alpha=0.95),
     )
 
-    ax.set_title("(a) Extreme extrapolation beats learnable PE", fontweight="bold", pad=6)
+    ax.set_title("(a) PE-dominant diagnostic", fontweight="bold", pad=6)
     ax.set_ylabel("PPL at 8K")
     ax.set_xticks(x)
-    ax.set_xticklabels(["Geo", "Learnable\n$\\tau$", "DAPE\n(32p)", "EVQ\n(0p)"])
-    ax.tick_params(axis="x", labelsize=7.0)
+    ax.set_xticklabels(["Geo", "Learn.\n$\\tau$", "DAPE\n(32p)", "EVQ\n(0p)"])
+    ax.tick_params(axis="x", labelsize=6.4)
     ax.set_ylim(0, 720)
     ax.set_yticks([0, 150, 300, 450, 600])
     setup_axis(ax)
@@ -293,7 +311,7 @@ def draw_raw_panel(ax):
 
 def draw_yarn_panel(ax):
     summary = summarize_phase11("results/core_text/phase11/results_phase11_yarn.json", "yarn_auto")
-    draw_curve_panel(ax, summary, YARN_STYLE, "(c) EVQ unlocks YaRN in PE-dominant regime")
+    draw_curve_panel(ax, summary, YARN_STYLE, "(c) Matched-scale YaRN leverage")
     ax.set_ylabel("Perplexity")
     ax.set_ylim(45, 285)
     ax.set_yticks([50, 100, 150, 200, 250])
@@ -301,7 +319,7 @@ def draw_yarn_panel(ax):
     geo_32 = summary["geo"]["mean"][5]
     evq4_32 = summary["evq4.0"]["mean"][5]
     ax.annotate(
-        "99.6 vs 260.2 at 32x\nYaRN leverage: ~10x",
+        "same fixed scale $s=8$\n99.6 vs 260.2 at 32x",
         xy=(5, evq4_32),
         xytext=(3.15, 230),
         fontsize=6.1,

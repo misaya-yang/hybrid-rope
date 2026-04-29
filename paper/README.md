@@ -6,14 +6,16 @@
 
 ## 编译
 
+推荐使用本仓库已验证的 `aidemo` wrapper：
+
 ```bash
 cd paper
-pdflatex main && bibtex main && pdflatex main && pdflatex main
+bash compile_aidemo.sh
 ```
 
 输出: `paper/main.pdf`
 
-> 需要标准 LaTeX 环境 (texlive-full 或 MacTeX)。NeurIPS 2026 样式文件已包含在本目录。
+该脚本会通过 `conda run --no-capture-output -n aidemo` 执行 `pdflatex -> bibtex -> pdflatex x3`，并把中间产物隔离在 `paper/build_aidemo/`。NeurIPS 2026 样式文件已包含在本目录。
 
 ---
 
@@ -26,21 +28,24 @@ paper/
 │   ├── 01_intro.tex
 │   ├── 02_related.tex
 │   ├── 03_theory.tex     §3 EVQ-Cosh 推导
-│   ├── 04_predictions.tex §4 Waterbed 分析
+│   ├── 04_predictions.tex §4 Waterbed 分析 (historical; not included by main.tex)
 │   ├── 05_experiments.tex §5 实验结果
 │   ├── 06_limitations.tex
-│   └── 07_conclusion.tex
+│   └── 07_conclusion.tex (historical; not included by main.tex)
 ├── appendix/             附录
 │   ├── a1_proofs.tex
 │   ├── a2_experiment_details.tex
-│   └── a3_supporting_results.tex
+│   ├── a3_supporting_results.tex
+│   └── a4_supporting_experiments.tex
 ├── tables/               论文表格 (.tex)
 │   ├── table1_multiscale_raw_ppl.tex
 │   ├── table2_evq_yarn_main.tex
 │   ├── table3_capability_passkey.tex
 │   ├── table4_pe_dominant.tex
 │   ├── table5_phase11_leverage.tex
-│   └── table6_750m_continue_supporting.tex
+│   ├── table6_750m_continue_supporting.tex
+│   ├── table_evidence_tier.tex
+│   └── table_method_comparison.tex
 ├── figs/                 所有图表 (PDF + PNG)
 │   ├── fig1_frequency_dynamics.pdf
 │   ├── fig2_evq_yarn_synergy.pdf
@@ -93,5 +98,5 @@ python scripts/figures/fig3_pe_dominant_scaling.py
 
 - 正文控制在 9 页内 (NeurIPS 2026 限制)
 - 图表优先使用 PDF 格式 (矢量)
-- 保持 anonymous submission mode (`\usepackage[final]{neurips_2026}` 投稿时改为 `[preprint]`)
+- 保持 anonymous submission mode (`\usepackage[nonatbib]{neurips_2026}` + anonymous author block); public non-anonymous preprints should use the official `preprint` option instead.
 - 新增图表同步更新 `docs/overview/PAPER_CLAIMS_MAP.md` 的映射

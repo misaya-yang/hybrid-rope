@@ -7,7 +7,7 @@ Usage:
     python scripts/core_text_phases/run_evq_sweep.py --tier 50m --taus 0.0,0.8 --dry_run
 
 Validates:
-  1. Theorem 2 (degradation): τ=0 ≡ geometric RoPE
+  1. Theorem 2 (degradation): τ=0 gives the midpoint-discretized geometric grid
   2. Waterbed inequality: long-context PPL ↓ ⟹ short-context PPL ↑
   3. Phase collision reduction with increasing τ
   4. Optimal τ range for downstream longinst experiments
@@ -49,6 +49,12 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.lib.rope.schedules import evq_cosh_inv_freq as _canonical_evq_cosh_inv_freq
 
 # ---------------------------------------------------------------------------
 # Device & dtype detection
@@ -145,16 +151,13 @@ def evq_cosh_inv_freq(
 
     Returns inv_freq of shape (head_dim // 2,) in float32.
     """
-    K = head_dim // 2
-    idx = torch.arange(K, dtype=torch.float64)
-    u = (idx + 0.5) / float(K)  # midpoint quantization (paper formula 9)
-    if abs(tau) < 1e-8:
-        phi = u  # geometric limit (Theorem 2), half-step shifted
-    else:
-        sinh_tau = math.sinh(tau)
-        phi = 1.0 - (1.0 / tau) * torch.arcsinh((1.0 - u) * sinh_tau)
-    inv = torch.pow(torch.tensor(float(base), dtype=torch.float64), -phi)
-    return inv.float()
+    return _canonical_evq_cosh_inv_freq(
+        head_dim=head_dim,
+        tau=tau,
+        base=base,
+        midpoint=True,
+        dtype=torch.float64,
+    ).float()
 
 
 def hybrid_evq_inv_freq(
@@ -475,6 +478,7 @@ def _stream_tokenize(
 def load_data(
     tokenizer, max_tokens: int, seq_len: int, dataset: str = "fineweb-edu",
     cache_dir: Optional[str] = None,
+    strict_dataset: bool = False,
 ) -> torch.Tensor:
     """Load training data with automatic fallback and disk cache."""
     # Check disk cache first
@@ -506,6 +510,8 @@ def load_data(
                     return data
 
     candidates = _DATASET_CANDIDATES.get(dataset, _DATASET_CANDIDATES["tinystories"])
+    if strict_dataset:
+        candidates = candidates[:1]
 
     for ds_name, config, text_key in candidates:
         try:
@@ -539,6 +545,10 @@ def load_data(
 
         except Exception as e:
             print(f"  [data] FAILED: {ds_name} — {e}")
+            if strict_dataset:
+                raise RuntimeError(
+                    f"Strict dataset mode failed for {dataset}: {ds_name}"
+                ) from e
             print(f"  [data] Falling back to next candidate...")
             continue
 
@@ -548,6 +558,7 @@ def load_data(
 def load_val(
     tokenizer, max_tokens: int = 5_000_000, dataset: str = "fineweb-edu",
     cache_dir: Optional[str] = None,
+    strict_dataset: bool = False,
 ) -> torch.Tensor:
     """Load validation data (shuffled split for fineweb-edu)."""
     # Check disk cache
@@ -569,6 +580,8 @@ def load_val(
     else:
         candidates = [("roneneldan/TinyStories", None, "text")]
         shuffle_seed = None  # TinyStories has a validation split
+    if strict_dataset:
+        candidates = candidates[:1]
 
     for ds_name, config, text_key in candidates:
         try:
@@ -599,6 +612,10 @@ def load_val(
             return data
         except Exception as e:
             print(f"  [val] FAILED: {ds_name} — {e}")
+            if strict_dataset:
+                raise RuntimeError(
+                    f"Strict validation dataset mode failed for {dataset}: {ds_name}"
+                ) from e
             continue
 
     raise RuntimeError("All validation dataset candidates failed!")
@@ -657,7 +674,7 @@ def maybe_wrap_with_passkey_mix(
     if tokenizer is None:
         raise ValueError("tokenizer is required when passkey_ratio > 0")
 
-    from eval_passkey_scratch import MixedDataset
+    from scripts.supporting_eval.eval_passkey_scratch import MixedDataset
     mixed_data = MixedDataset(
         lm_data=train_data,
         filler_tokens=filler_tokens,
@@ -898,7 +915,7 @@ def run_single(
     passkey_results = {}
     if tokenizer is not None:
         print(f"\n  [passkey] NLL-gap evaluation for {run_id}")
-        from eval_passkey_scratch import eval_passkey_nll_gap
+        from scripts.supporting_eval.eval_passkey_scratch import eval_passkey_nll_gap
         pk_lengths = [L for L in eval_lengths if L >= cfg["seq_len"]][:3]
         passkey_results = eval_passkey_nll_gap(
             model, tokenizer, val_data,
@@ -941,7 +958,7 @@ def run_single(
         # Passkey eval with PI
         if tokenizer is not None:
             print(f"  [PI] Passkey NLL-gap evaluation")
-            from eval_passkey_scratch import eval_passkey_nll_gap
+            from scripts.supporting_eval.eval_passkey_scratch import eval_passkey_nll_gap
             pi_passkey = eval_passkey_nll_gap(
                 model, tokenizer, val_data,
                 lengths=[2048, 4096, 8192],
@@ -991,6 +1008,8 @@ def main() -> None:
     parser.add_argument("--dataset", type=str, default="fineweb-edu",
                         choices=["fineweb-edu", "tinystories"],
                         help="Training data source")
+    parser.add_argument("--strict_dataset", action="store_true",
+                        help="Disable fallback datasets; fail if the requested dataset is unavailable.")
     parser.add_argument("--eval_16k", action="store_true",
                         help="Include 16384 in eval lengths (may OOM)")
     parser.add_argument("--dry_run", action="store_true",
@@ -1002,7 +1021,7 @@ def main() -> None:
         type=float,
         default=None,
         help="Optional passkey training mix ratio (e.g. 0.02 for 2%%). "
-             "If omitted, uses PASSKEY_MIX_RATIO env or defaults to 0.005.",
+             "If omitted, uses PASSKEY_MIX_RATIO env or defaults to 0.0.",
     )
     parser.add_argument("--r_values", type=str, default=None,
                         help="Comma-separated Hybrid r values to sweep (e.g. '0,8,14,16,24,32'). "
@@ -1055,7 +1074,7 @@ def main() -> None:
     cfg["passkey_mix_ratio"] = (
         args.passkey_mix_ratio
         if args.passkey_mix_ratio is not None
-        else resolve_passkey_mix_ratio(default=0.005)
+        else resolve_passkey_mix_ratio(default=0.0)
     )
     if not (0.0 <= cfg["passkey_mix_ratio"] <= 1.0):
         raise ValueError(
@@ -1111,7 +1130,7 @@ def main() -> None:
         print(f"  [override] batch_size={cfg['batch_size']}")
 
     if not args.work_dir:
-        args.work_dir = str(Path.home() / "evq_m4_sweep")
+        args.work_dir = str(Path("results") / "core_text" / f"{args.tier}_sweep")
     work_dir = Path(args.work_dir)
     work_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1131,7 +1150,7 @@ def main() -> None:
     tok = AutoTokenizer.from_pretrained("EleutherAI/gpt-neox-20b")
 
     # Passkey tokenizer sanity check
-    from eval_passkey_scratch import sanity_check_tokenizer
+    from scripts.supporting_eval.eval_passkey_scratch import sanity_check_tokenizer
     print("\n  [check] Passkey tokenizer sanity check:")
     tok_ok = sanity_check_tokenizer(tok)
     if not tok_ok:
@@ -1139,8 +1158,9 @@ def main() -> None:
 
     if not args.dry_run:
         train_data = load_data(tok, cfg["train_tokens"], cfg["seq_len"], args.dataset,
-                               cache_dir=str(work_dir))
-        val_data = load_val(tok, dataset=args.dataset, cache_dir=str(work_dir))
+                               cache_dir=str(work_dir), strict_dataset=args.strict_dataset)
+        val_data = load_val(tok, dataset=args.dataset, cache_dir=str(work_dir),
+                            strict_dataset=args.strict_dataset)
     else:
         train_data = torch.zeros(10, cfg["seq_len"], dtype=torch.long)
         val_data = torch.zeros(50000, dtype=torch.long)

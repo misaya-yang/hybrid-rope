@@ -6,7 +6,7 @@ from __future__ import annotations
 import json
 import math
 from pathlib import Path
-from typing import Dict, Tuple
+from typing import Dict, Optional, Tuple
 
 import torch
 
@@ -91,6 +91,55 @@ def geometric_inv_freq(head_dim: int, base: float, dtype: torch.dtype = torch.fl
     return 1.0 / (float(base) ** (2.0 * idx / float(head_dim)))
 
 
+def evq_cosh_phi(
+    n_freqs: int,
+    tau: float,
+    midpoint: bool = True,
+    dtype: torch.dtype = torch.float64,
+) -> torch.Tensor:
+    """Return the EVQ-Cosh log-frequency quantiles phi_k(tau).
+
+    ``midpoint=True`` matches the grid used in the paper experiments:
+    u_k = (k + 0.5) / K.  With tau=0 this recovers the midpoint-discretized
+    geometric schedule, while ``geometric_inv_freq`` above keeps the standard
+    RoPE endpoint grid u_k = k / K.
+    """
+    if n_freqs <= 0:
+        raise ValueError(f"n_freqs must be positive, got {n_freqs}")
+
+    idx = torch.arange(n_freqs, dtype=dtype)
+    if midpoint:
+        u = (idx + 0.5) / float(n_freqs)
+    else:
+        u = idx / float(n_freqs)
+
+    tau_f = float(tau)
+    if abs(tau_f) < 1e-8:
+        return u
+
+    sinh_tau = math.sinh(tau_f)
+    return 1.0 - (1.0 / tau_f) * torch.asinh((1.0 - u) * sinh_tau)
+
+
+def evq_cosh_inv_freq(
+    head_dim: int,
+    tau: float,
+    base: float = 500000.0,
+    midpoint: bool = True,
+    dtype: torch.dtype = torch.float64,
+) -> torch.Tensor:
+    """Return EVQ-Cosh inverse RoPE frequencies for one attention head."""
+    if head_dim % 2 != 0:
+        raise ValueError(f"head_dim must be even, got {head_dim}")
+    phi = evq_cosh_phi(
+        head_dim // 2,
+        tau=tau,
+        midpoint=midpoint,
+        dtype=dtype,
+    )
+    return torch.pow(torch.tensor(float(base), dtype=dtype), -phi)
+
+
 def smoothstep(x: torch.Tensor) -> torch.Tensor:
     return x * x * (3.0 - 2.0 * x)
 
@@ -102,6 +151,8 @@ def build_inv_freq(
     max_seq_len: int,
     rigid_j0: int = 12,
     anchor_factor: float = 0.0,
+    tau: Optional[float] = None,
+    midpoint: bool = True,
 ) -> torch.Tensor:
     m = canonical_method(method)
     base_inv = geometric_inv_freq(head_dim=head_dim, base=base, dtype=torch.float64)
@@ -178,16 +229,15 @@ def build_inv_freq(
         return base_inv / scale_factor
 
     if m == "evq_cosh":
-        n = head_dim // 2
-        tau = 0.5
-        idx = torch.arange(n, dtype=torch.float64)
-        u = idx / float(n)
-        if tau <= 1e-4:
-            phi = u
-        else:
-            sinh_tau = math.sinh(tau)
-            phi = 1.0 - (1.0 / tau) * torch.asinh((1.0 - u) * sinh_tau)
-        return torch.pow(float(base), -phi)
+        if tau is None:
+            raise ValueError("evq_cosh requires explicit tau; pass tau=... to build_inv_freq")
+        return evq_cosh_inv_freq(
+            head_dim=head_dim,
+            tau=tau,
+            base=base,
+            midpoint=midpoint,
+            dtype=torch.float64,
+        )
 
     if m == "evq_exp":
         n = head_dim // 2
@@ -225,7 +275,7 @@ def default_shape_params(method: str, base: float, max_seq_len: int) -> Dict[str
     if m == "evq_cosh":
         return {
             "schedule": "evq_cosh",
-            "tau": 0.5,
+            "requires_explicit_tau": True,
             "base": float(base),
         }
     if m == "evq_exp":

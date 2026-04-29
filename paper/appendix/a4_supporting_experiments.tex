@@ -6,7 +6,7 @@ The following results extend EVQ beyond the primary MHA setting. Each is scoped 
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.98\linewidth]{fig3_pe_dominant_scaling.pdf}
-  \caption{PE-dominant evidence (visualization of Table~\ref{tab:pe-dominant}). Left: EVQ's closed-form allocation (zero learned parameters) closes more of the $128{\to}8\mathrm{K}$ extrapolation gap than the learned positional-operator baseline. Right: at $L{=}256$, the predicted $\tau^*{=}4.0$ is favored among tested settings, and EVQ4+YaRN outperforms Geo+YaRN across extrapolation ratios.}
+  \caption{PE-dominant evidence (visualization of Table~\ref{tab:pe-dominant}). Left: in the seed-42 $128{\to}8\mathrm{K}$ contrast, EVQ's closed-form allocation (zero learned parameters) attains lower extrapolation PPL than the learned positional-operator baseline. Right: at $L{=}256$, the predicted $\tau^*{=}4.0$ is favored among tested settings, and EVQ4+YaRN outperforms Geo+YaRN across extrapolation ratios.}
   \label{fig:pe-dominant}
 \end{figure}
 
@@ -27,7 +27,7 @@ EVQ4+YaRN  & \textbf{50.9} & \textbf{60.9} & \textbf{84.1} & \textbf{99.6} \\
 \end{table}
 
 \paragraph{MLA: allocation matters more when channels are scarce.}
-EVQ extends to MLA \citep{deepseekv2, deepseekv3}, where only 16 frequency channels carry positional information. On a 432M model (3-seed, 500M tokens, $L_{\mathrm{train}}{=}8192$), EVQ alone reduces $2\times$ extrapolation PPL by $31.1\%$ and outperforms Geo+YaRN at $16\mathrm{K}$. Preliminary evidence under thorough training (1B tokens, single seed) suggests that EVQ's raw advantage reverses ($+11.1\%$) while EVQ+YaRN after fine-tuning still wins ($-2.5\%$)---a $13.6\mathrm{pp}$ swing consistent with the frequency substrate remaining the binding constraint even when raw extrapolation saturates. Multi-seed replication is in progress. Full 3-seed standalone results are in Appendix~\ref{sec:mla-results}.
+EVQ extends to MLA \citep{deepseekv2, deepseekv3}, where only 16 frequency channels carry positional information. On a 432M model (3-seed, 500M tokens, $L_{\mathrm{train}}{=}8192$), EVQ alone reduces $2\times$ extrapolation PPL by $31.1\%$ and outperforms Geo+YaRN at $16\mathrm{K}$. Preliminary evidence under thorough training (1B tokens, single seed) suggests that EVQ's raw advantage reverses ($+11.1\%$) while EVQ+YaRN after fine-tuning still wins ($-2.5\%$)---a $13.6\mathrm{pp}$ swing consistent with the possibility that the frequency substrate remains a constraint even when raw extrapolation saturates. Multi-seed replication is in progress. Full 3-seed standalone results are in Appendix~\ref{sec:mla-results}.
 
 \paragraph{Post-training injection via LoRA (7B scale).}
 As supporting post-hoc evidence, we inject EVQ-Cosh frequencies ($\tau{=}1.414$, the $\tau^*$ predicted for $d_{\mathrm{head}}{=}128$, $L{=}8192$) into LLaMA-3-8B-Instruct \citep{grattafiori2024llama3} and fine-tune with LoRA ($r{=}64{=}K$, $\alpha{=}128$) on LongAlign-10k for 300 steps.

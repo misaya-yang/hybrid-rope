@@ -292,7 +292,7 @@ The scaling law
 \begin{equation}
 \tau^* = \frac{d_{\mathrm{head}}}{\sqrt{L}}
 \end{equation}
-is supported across 99 trained models spanning 27 validation settings (Figure~\ref{fig:tau-sweep}); primary claims rely on the 3-seed anchors within this grid, with 1--2-seed rows extending scope. Here we analyze to what extent the broadband surrogate predicts this formula, and identify the gap that remains.
+is supported across 99 trained models spanning 27 validation settings (Figure~\ref{fig:tau-sweep}); systems and MLA claims rely on 3-seed anchors within this grid, while the PE-dominant diagnostic and 1--2-seed rows extend scope. Here we analyze to what extent the broadband surrogate predicts this formula, and identify the gap that remains.
 
 \paragraph{Numerical characterization of surrogate coefficients.}
 We fit $K_{\mathrm{app}}(\phi_i,\phi_j) = \alpha\delta_{ij}/\Delta\phi + \beta\min(\phi_i,\phi_j)$ to the exact collision kernel $K(\phi_i,\phi_j) = \frac{1}{2L}\bigl[\frac{\sin((\omega_1{-}\omega_2)L)}{\omega_1{-}\omega_2} + \frac{\sin((\omega_1{+}\omega_2)L)}{\omega_1{+}\omega_2}\bigr]$ evaluated at $K = d_{\mathrm{head}}/2$ uniformly spaced channel positions in $[0,1]$. Sweeping across $L \in \{128,\ldots,4096\}$, $d_{\mathrm{head}} \in \{32,64,128,256\}$, and $b \in \{10\mathrm{K}, 100\mathrm{K}, 500\mathrm{K}\}$ yields:
@@ -329,14 +329,14 @@ whose observed best-$\tau$ points are highly correlated with the deployed rule w
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.85\linewidth]{fig6_tau_formula_validation.pdf}
-  \caption{\textbf{Scaling-law sweep over 99 trained models across 27 validation settings.} Each point is a trained model from the Phase-16 3-seed grid or a scoped supporting validation row (detailed in Table~\ref{tab:lambda-cv} and Appendix~\ref{sec:supporting-experiments}); the $x$-axis is the predicted $\tau^* = d_{\mathrm{head}}/\sqrt{L}$ and the $y$-axis is the best observed sweep point for $\tau$ under validation perplexity. Primary claims rely only on the 3-seed primary settings; 1--2-seed rows extend the tested grid but do not anchor the main empirical claims.}
+  \caption{\textbf{Scaling-law sweep over 99 trained models across 27 validation settings.} Each point is a trained model from the Phase-16 3-seed grid or a scoped supporting validation row (detailed in Table~\ref{tab:lambda-cv} and Appendix~\ref{sec:supporting-experiments}); the $x$-axis is the predicted $\tau^* = d_{\mathrm{head}}/\sqrt{L}$ and the $y$-axis is the best observed sweep point for $\tau$ under validation perplexity. Systems and MLA claims rely on 3-seed primary settings; the PE-dominant row and 1--2-seed rows extend the tested grid but are labeled with their seed scope.}
   \label{fig:tau-sweep}
 \end{figure}
 
 \paragraph{Configuration breakdown.} Table~\ref{tab:config-breakdown} decomposes the 27 tested configurations by architecture, seed count, and evidence tier.
 
 \begin{table}[ht]
-\caption{Breakdown of the 27 configurations in the tested grid for $\tau^* = d_{\mathrm{head}}/\sqrt{L}$. Primary claims rely on the 3-seed primary rows; 1--2-seed rows extend scope. The $0.53\times$ modality correction for video DiT is empirical (\S\ref{sec:tau-correction}).}
+\caption{Breakdown of the 27 configurations in the tested grid for $\tau^* = d_{\mathrm{head}}/\sqrt{L}$. Systems and MLA claims rely on 3-seed primary rows; the PE-dominant row and 1--2-seed rows extend scope with the stated seed count. The $0.53\times$ modality correction for video DiT is empirical (\S\ref{sec:tau-correction}).}
 \label{tab:config-breakdown}
 \centering
 \small

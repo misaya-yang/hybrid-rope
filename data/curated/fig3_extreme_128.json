@@ -1,0 +1,36 @@
+{
+  "source": [
+    "docs/exp/2026-02-24_128tok_baseline_report.md",
+    "docs/exp/2026-02-26_full_experiment_report.md",
+    "paper/tables/table4_pe_dominant.tex"
+  ],
+  "protocol": "125M FineWeb-Edu, L_train=128. Geo, DAPE, and EVQ rows use seed 42; learnable tau reports mean/std over seeds 42/137/256.",
+  "rows": {
+    "Geo": {
+      "ppl_128": 184.9,
+      "ppl_8192": 513.7,
+      "extra_params": 0,
+      "seed_scope": "seed 42"
+    },
+    "Learnable $\\tau$": {
+      "ppl_128": 181.2,
+      "ppl_128_std": 1.3,
+      "ppl_8192": 437.9,
+      "ppl_8192_std": 12.2,
+      "extra_params": 1,
+      "seed_scope": "mean over seeds 42/137/256"
+    },
+    "DAPE (32p)": {
+      "ppl_128": 183.6,
+      "ppl_8192": 455.3,
+      "extra_params": 32,
+      "seed_scope": "seed 42"
+    },
+    "EVQ $\\tau$=5.0": {
+      "ppl_128": 182.0,
+      "ppl_8192": 333.7,
+      "extra_params": 0,
+      "seed_scope": "seed 42"
+    }
+  }
+}

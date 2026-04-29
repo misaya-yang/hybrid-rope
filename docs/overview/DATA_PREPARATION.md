@@ -12,10 +12,15 @@
 from datasets import load_dataset
 
 # Streaming mode (推荐, 无需下载全部数据)
-ds = load_dataset("HuggingFaceFW/fineweb-edu", split="train", streaming=True)
+ds = load_dataset(
+    "HuggingFaceFW/fineweb-edu",
+    name="sample-10BT",
+    split="train",
+    streaming=True,
+)
 ```
 
-- **来源**: HuggingFace Hub `HuggingFaceFW/fineweb-edu`
+- **来源**: HuggingFace Hub `HuggingFaceFW/fineweb-edu`, config `sample-10BT`
 - **加载方式**: Streaming (无需本地存储)
 - **Tokenizer**: `EleutherAI/gpt-neox-20b` (vocab_size=50304)
 - **预处理**: 在 `run_evq_sweep.py` 中自动完成 (tokenize → chunk to seq_len → shuffle)
@@ -40,20 +45,16 @@ ds = load_dataset("roneneldan/TinyStories", split="train")
 Phase 14+ 实验在训练中混入 5-10% passkey 检索样本。
 
 ```python
-# 在 run_evq_sweep.py 中内置生成:
-def generate_passkey_sample(seq_len, vocab_size, tokenizer):
-    """
-    生成 passkey retrieval 样本:
-    - 随机 5-digit passkey 插入文本中间
-    - 末尾追加 "The passkey is:" 提示
-    - 用于训练时混合，使模型学习长距离信息检索
-    """
+from scripts.supporting_eval.eval_passkey_scratch import (
+    MixedDataset,
+    make_passkey_training_sample,
+)
 ```
 
-- **生成方式**: 动态生成，无需预下载
-- **实现**: `scripts/core_text_phases/run_evq_sweep.py` 中的 `generate_passkey_sample()`
-- **混合比例**: 5-10% (由 `--passkey_frac` 控制)
-- **用途**: 训练模型的长距离检索能力，passkey 100% 是 EVQ+YaRN 的标志性结果
+- **生成方式**: `make_passkey_training_sample()` 动态生成，无需预下载。
+- **训练混合**: `run_evq_sweep.py` 通过 `maybe_wrap_with_passkey_mix()` 调用 `MixedDataset`；比例由 `--passkey_mix_ratio` 或 `PASSKEY_MIX_RATIO` 控制。
+- **评估指标**: 主表的 PK 指标是 teacher-forced NLL-gap retrieval rate；`eval_passkey_scratch.py` 也包含 autoregressive exact-match 评估入口，但二者不能混写。
+- **用途**: 训练模型的长距离检索能力，passkey NLL-gap 100% 是 EVQ+YaRN 的标志性结果。
 
 ## 4. QuALITY (下游评估)
 

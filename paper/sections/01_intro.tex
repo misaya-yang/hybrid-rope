@@ -8,6 +8,8 @@ We treat training-time frequency-channel allocation as a third RoPE design axis,
 
 \paragraph{Empirical scope.} We report three \emph{primary} stress tests (Primary~I--III in \S\ref{sec:experiments}, 3-seed where indicated): a matched-scale substrate test composing EVQ with YaRN on a $454$M transformer (3-seed); a PE-dominant $128{\to}8\mathrm{K}$ extrapolation test against DAPE \citep{zheng2024dape} (1--3 seed; the learned-PE row is 3-seed, EVQ/Geo/DAPE rows are seed 42); and a scarce-channel test on MLA \citep{deepseekv2, deepseekv3} with $16$ RoPE channels at $432$M (3-seed). We additionally report \emph{robustness} experiments on the same MHA setting, and \emph{supporting/exploratory} single- or two-seed evidence (video DiT, LoRA into LLaMA-3-8B, progressive training) that extends scope rather than anchoring primary claims; tier assignment appears in Table~\ref{tab:evidence-tier}.
 
+These scope choices are part of the claim, not a retreat from it: EVQ does not replace inference-time scaling, but changes the training-time substrate on which methods such as YaRN act. We also do not claim universal downstream superiority; the target is PE-mechanism isolation at endpoints where positional allocation is causally stressed.
+
 \paragraph{Contributions.}
 \begin{itemize}
 \item \textbf{Finite-spectral-budget view.} We identify RoPE training-time frequency-channel allocation as a third design axis, complementary to operator design and inference-time range scaling; geometric RoPE is an inherited allocation convention, not a consequence of the RoPE operator.

@@ -8,7 +8,7 @@
 
 ```
 scripts/
-├── train.py                    核心训练入口 (from-scratch + continued-pretrain)
+├── train.py                    Legacy LoRA/Anchored-Sigmoid 入口 (not primary EVQ-Cosh)
 ├── core_text_phases/           Phase 8–21 主实验链 ⭐
 │   ├── README.md               Phase Map + → Paper 映射
 │   ├── run_evq_sweep.py        核心 τ-sweep 实验 (50M/125M/350M)
@@ -75,17 +75,17 @@ scripts/
 
 ```bash
 conda create -n evq python=3.10 && conda activate evq
-pip install -r requirements.txt
+pip install -r requirements-lock.txt
 ```
 
 ### 运行核心实验
 
 ```bash
 # 50M τ-sweep (~4 小时, 任意 GPU)
-python scripts/core_text_phases/run_evq_sweep.py --tier 50m --seeds 42
+python scripts/core_text_phases/run_evq_sweep.py --tier 50m --seeds 42 --strict_dataset --passkey_mix_ratio 0
 
 # 125M τ-sweep (~8 小时, 16GB+ GPU)
-python scripts/core_text_phases/run_evq_sweep.py --tier 125m --seeds 42,123,7
+python scripts/core_text_phases/run_evq_sweep.py --tier 125m --seeds 42,123,7 --strict_dataset --passkey_mix_ratio 0
 
 # 重新生成论文图表
 python scripts/figures/fig1_neurips.py
@@ -101,7 +101,8 @@ from scripts.lib.rope.schedules import evq_cosh_inv_freq
 # 计算 EVQ-Cosh 频率 (head_dim=64, τ=1.4)
 inv_freq = evq_cosh_inv_freq(head_dim=64, tau=1.4, base=500000.0)
 
-# τ=0.0 等价于 geometric RoPE
+# τ=0.0 是论文实验使用的 midpoint-discretized geometric grid；
+# scripts.lib.rope.schedules.geometric_inv_freq 保留标准 RoPE endpoint grid。
 inv_freq_geo = evq_cosh_inv_freq(head_dim=64, tau=0.0)
 ```
 

@@ -18,7 +18,7 @@ Usage (standalone test):
         --work_dir ~/evq_m4_sweep --tier 50m --tau 1.5
 
 Importable components (used by run_evq_sweep.py):
-    from eval_passkey_scratch import MixedDataset, make_passkey_training_sample
+    from scripts.supporting_eval.eval_passkey_scratch import MixedDataset, make_passkey_training_sample
 """
 
 from __future__ import annotations
@@ -43,9 +43,15 @@ import torch.utils.data
 # ---------------------------------------------------------------------------
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-CORE_TEXT_DIR = SCRIPT_DIR.parent / "core_text_phases"
-sys.path.insert(0, str(CORE_TEXT_DIR))
-from run_evq_sweep import GPT, TIER_CONFIGS, evq_cosh_inv_freq, get_device_and_dtype
+PROJECT_ROOT = SCRIPT_DIR.parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+from scripts.core_text_phases.run_evq_sweep import (
+    GPT,
+    TIER_CONFIGS,
+    evq_cosh_inv_freq,
+    get_device_and_dtype,
+)
 
 DEVICE, DTYPE = get_device_and_dtype()
 USE_AUTOCAST = DEVICE == "cuda" and DTYPE != torch.float32

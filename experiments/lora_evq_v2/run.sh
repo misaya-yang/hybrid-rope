@@ -14,36 +14,38 @@
 
 set -e
 
-# Fix PATH for miniconda (AutoDL)
-export PATH=/root/miniconda3/bin:$PATH
+# Optional: point at a conda install without hardcoding a machine path.
+CONDA_BIN_DIR="${CONDA_BIN_DIR:-${CONDA_PREFIX:-/root/miniconda3}/bin}"
+export PATH="${CONDA_BIN_DIR}:$PATH"
 export PYTHONUNBUFFERED=1
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-CKPT_DIR="${SCRIPT_DIR}/checkpoints/evq_r64_tau1414"
-RESULT_DIR="${SCRIPT_DIR}/results"
+BASE_DIR="${EVQ_LORA_BASE_DIR:-${SCRIPT_DIR}/local}"
+CKPT_DIR="${EVQ_LORA_CKPT:-${SCRIPT_DIR}/checkpoints/evq_r64_tau1414}"
+RESULT_DIR="${EVQ_LORA_RESULT_DIR:-${SCRIPT_DIR}/results}"
 
 # ---- 本地路径 (ModelScope下载) ----
-MODEL="/root/autodl-tmp/models/Meta-Llama-3-8B-Instruct"
-LOCAL_DATA="/root/autodl-tmp/data/longalign_10k/longalign_10k.jsonl"
-WIKITEXT_PATH="/root/autodl-tmp/data/wikitext2/wikitext2_test.txt"
+MODEL="${EVQ_LORA_MODEL:-${BASE_DIR}/models/Meta-Llama-3-8B-Instruct}"
+LOCAL_DATA="${EVQ_LORA_TRAIN_DATA:-${BASE_DIR}/data/longalign_10k/longalign_10k.jsonl}"
+WIKITEXT_PATH="${EVQ_LORA_WIKITEXT:-${BASE_DIR}/data/wikitext2/wikitext2_test.txt}"
 
 # ---- 参数 (可按需修改) ----
-TAU=1.414
-LORA_R=64
-LORA_ALPHA=128
-MAX_STEPS=300
-MAX_SEQ_LEN=8192
+TAU="${EVQ_LORA_TAU:-1.414}"
+LORA_R="${EVQ_LORA_R:-64}"
+LORA_ALPHA="${EVQ_LORA_ALPHA:-128}"
+MAX_STEPS="${EVQ_LORA_MAX_STEPS:-300}"
+MAX_SEQ_LEN="${EVQ_LORA_MAX_SEQ_LEN:-8192}"
 # ---------------------------
 
 # Pre-flight check
 if [ ! -f "${MODEL}/config.json" ]; then
     echo "❌ Model not found at ${MODEL}"
-    echo "   Run: bash server_setup.sh download"
+    echo "   Run: EVQ_LORA_BASE_DIR=${BASE_DIR} python ${SCRIPT_DIR}/download_model_data.py"
     exit 1
 fi
 if [ ! -f "${LOCAL_DATA}" ]; then
     echo "❌ Training data not found at ${LOCAL_DATA}"
-    echo "   Run: bash server_setup.sh download"
+    echo "   Run: EVQ_LORA_BASE_DIR=${BASE_DIR} python ${SCRIPT_DIR}/download_model_data.py"
     exit 1
 fi
 

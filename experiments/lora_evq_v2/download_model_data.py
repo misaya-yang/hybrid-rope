@@ -16,15 +16,20 @@ import json
 import os
 import sys
 import time
+from pathlib import Path
 
-BASE_DIR = "/root/autodl-tmp"
-MODEL_DIR = f"{BASE_DIR}/models/Meta-Llama-3-8B-Instruct"
-DATA_DIR = f"{BASE_DIR}/data/longalign_10k"
-WIKITEXT_DIR = f"{BASE_DIR}/data/wikitext2"
-LONGBENCH_DIR = f"{BASE_DIR}/datasets/longbench"
+DEFAULT_BASE_DIR = str(Path(__file__).resolve().parent / "local")
+BASE_DIR = os.environ.get("EVQ_LORA_BASE_DIR", DEFAULT_BASE_DIR)
+MODEL_DIR = os.environ.get("EVQ_LORA_MODEL", f"{BASE_DIR}/models/Meta-Llama-3-8B-Instruct")
+DATA_DIR = os.environ.get("EVQ_LORA_DATA_DIR", f"{BASE_DIR}/data/longalign_10k")
+WIKITEXT_DIR = os.environ.get("EVQ_LORA_WIKITEXT_DIR", f"{BASE_DIR}/data/wikitext2")
+LONGBENCH_DIR = os.environ.get("EVQ_LORA_LONGBENCH_DIR", f"{BASE_DIR}/datasets/longbench")
 
 # Cached arrow data from previous ModelScope downloads
-MS_LONGALPACA_CACHE = "/root/.cache/modelscope/hub/datasets/AI-ModelScope___long_alpaca-12k"
+MS_LONGALPACA_CACHE = os.environ.get(
+    "MS_LONGALPACA_CACHE",
+    os.path.expanduser("~/.cache/modelscope/hub/datasets/AI-ModelScope___long_alpaca-12k"),
+)
 
 
 def download_model():

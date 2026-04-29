@@ -10,7 +10,7 @@
 |--------|---------|------|---------|---------|---------|
 | Fig 1 | Appendix (a3) | Frequency dynamics + 750M training curves | `scripts/figures/fig1_neurips.py` | Phase 9F (750M, L=2048) inline data | `paper/figs/fig1_frequency_dynamics.pdf` |
 | Fig 2 | §5 Experiments | EVQ × YaRN orthogonal synergy | `scripts/figures/fig2_evq_yarn_orthogonality.py` | `docs/exp/2026-03-03_passkey_mix_results.md` (inline hardcoded) | `paper/figs/fig2_evq_yarn_synergy.pdf` |
-| Fig 3 | §5 Experiments | PE-dominant regime & scaling law | `scripts/figures/fig3_pe_dominant_scaling.py` | `data/evq_128tok_results/results_phase6.json` + `results_checkpoint.json` | `paper/figs/fig3_pe_dominant_scaling.pdf` |
+| Fig 3 | §5 Experiments | PE-dominant regime & scaling law | `scripts/figures/fig3_pe_dominant_scaling.py` | `data/curated/fig3_extreme_128.json` fallback for panel (a); `results/core_text/phase11/results_phase11_{raw,yarn}.json` for panels (b,c) | `paper/figs/fig3_pe_dominant_scaling.pdf` |
 | Fig 4 | §5 Experiments | Phase 17c 454M flagship | `scripts/core_text_phases/phase17c_*.py` | `results/evq_phase17c_results/` | `paper/figs/fig4_phase17c_flagship.pdf` |
 | Fig 5 | §5 Experiments | Downstream QA (Gold NLL) | `scripts/core_text_phases/phase21b_quality_eval_clean.py` | `results/core_text/phase21b/` | `paper/figs/fig5_downstream_qa.pdf` |
 | Fig 6 | §5 Experiments | τ* formula validation (99-run) | `scripts/core_text_phases/phase16_formula_optimality_sweep.py` | `results/core_text/phase16/` | `paper/figs/fig6_tau_formula_validation.pdf` |
@@ -39,8 +39,8 @@
 | ID | Claim | Primary Evidence | Scripts | Seeds | Risk |
 |----|-------|-----------------|---------|-------|------|
 | **C1** | τ*=d_head/√L scaling law | Phase 16 formula sweep (99 runs, 50M/125M) | `phase16_formula_optimality_sweep.py` | 3+ seeds × multi-τ | ✅ Low |
-| **C2** | EVQ ≥ Learnable PE (DAPE-style) | Phase 11b 125M extreme extrap (128→8K) | `phase11b_125m_dape.py` | 3 seeds | ✅ Low |
-| **C3** | EVQ+YaRN >> Geo+YaRN | Phase 14c 350M passkey mix | `phase14c_multiscale_evq_yarn.py` | 3+3 seeds | ✅ Low-Medium |
+| **C2** | PE-dominant DAPE-style diagnostic: EVQ has lower seed-42 8K PPL than Geo/DAPE without learned PE parameters | Phase 11b 125M extreme extrap (128→8K) | `phase11b_125m_dape.py` | 1--3 seeds by row | ⚠️ Medium (diagnostic scope) |
+| **C3** | EVQ increases fixed-scale YaRN leverage vs Geo+YaRN | 454M passkey-mix aggregate; Phase 14c provides 50M/125M supporting rerun | `phase14c_multiscale_evq_yarn.py` (supporting); curated 454M provenance JSON pending | 3+3 seeds | ⚠️ Medium until provenance JSON is shipped |
 | **C4** | 454M Stage 2-3 continued pretrain | Phase 17c 454M (1024→2048) | `phase17c_454m_1024_to_2048_continue.py` | seeds 42-44 | ⚠️ HIGH (single-config) |
 | **C5** | 750M scale-up confirmation | Phase 15 750M (2K→4K) | `phase15_750m_2k_to_4k_continue_ckpt_eval.py` | single-seed | ⚠️ HIGH (single-seed) |
 | **C6** | Downstream NLL advantage | Phase 21b QuALITY eval | `phase21b_quality_eval_clean.py` | n=2086 | ✅ Low (Gold NLL) |
@@ -52,7 +52,7 @@
 | Theorem/Proposition | 论文位置 | Numerical Validation | Script |
 |---------------------|---------|---------------------|--------|
 | Thm 1: EVQ-cosh closed-form | §3 | Phase 16 (99-run) confirms τ* optimality | `phase16_formula_optimality_sweep.py` |
-| Thm 2: τ=0 ≡ geometric | §3 | Verified: `evq_cosh_inv_freq(64, 0.0) == geometric` | `run_evq_sweep.py:151-152` |
+| Thm 2: $\tau{\to}0$ geometric limit | §3 | Verified on the midpoint grid used by EVQ experiments; `geometric_inv_freq` remains the standard endpoint-grid RoPE baseline | `scripts/lib/rope/schedules.py` |
 | Waterbed inequality | §4 | All tiers show bounded short-range cost | `evq_analysis.py` waterbed plot |
 | Phase collision reduction | §4 | Collision scores decrease with optimal τ | `run_evq_sweep.py` collision analysis |
 
@@ -130,5 +130,5 @@
 | 实验报告 | `docs/exp/` (YYYY-MM-DD_slug.md) |
 | 实验结果数据 | `results/core_text/` |
 | 复现指南 | `docs/overview/REPRODUCE.md` |
-| AI Handoff | `internal/AIHANDOFF.md` |
+| Internal handoff notes | `internal/` (excluded from reviewer supplement) |
 | 协作材料 | `team/` |

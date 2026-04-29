@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """
-Definitive LoRA training pipeline for Hybrid-RoPE NeurIPS experiments.
+Legacy LoRA/Anchored-Sigmoid training pipeline.
+
+This file is retained for historical/supporting experiments.  The EVQ-Cosh
+paper's from-scratch primary runs use scripts/core_text_phases/run_evq_sweep.py
+and phase-specific launchers, not this LoRA pipeline.
 
 Two modes are supported via `--attention_mode`:
 1) static: CE-only fallback with Anchored-Sigmoid RoPE injection.
