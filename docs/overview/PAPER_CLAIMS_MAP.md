@@ -10,7 +10,7 @@
 
 | Stable asset | 论文位置 | 描述 | 生成脚本 | 数据来源 | 输出文件 |
 |--------------|---------|------|---------|---------|---------|
-| Main story overview | Theory and Method | Finite spectral budget → closed-form allocation → mechanism stress tests | `scripts/figures/fig0_main_story.py` | generated schematic + paper-reported primary values | `paper/figs/fig0_main_story.pdf` |
+| Method overview | Theory and Method | EVQ-Cosh allocation schematic and collision-envelope intuition | manual/static asset | paper diagram source | `paper/figs/fig_method_overview.pdf` |
 | EVQ × YaRN | Experiments / Primary I | EVQ × YaRN orthogonal synergy | `scripts/figures/fig2_evq_yarn_orthogonality.py` | `docs/exp/2026-03-03_passkey_mix_results.md` (inline hardcoded) | `paper/figs/fig2_evq_yarn_synergy.pdf` |
 | PE-dominant scaling | Appendix supporting PE-dominant section | PE-dominant regime & scaling law | `scripts/figures/fig3_pe_dominant_scaling.py` | `data/curated/fig3_extreme_128.json` fallback for panel (a); `results/core_text/phase11/results_phase11_{raw,yarn}.json` for panels (b,c) | `paper/figs/fig3_pe_dominant_scaling.pdf` |
 | Progressive training | Appendix experiment details | Phase 17c 454M supporting/progressive pattern | `scripts/core_text_phases/phase17c_*.py` | `results/evq_phase17c_results/` | `paper/figs/fig4_phase17c_flagship.pdf` |

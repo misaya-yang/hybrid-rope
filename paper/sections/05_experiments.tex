@@ -11,6 +11,7 @@ Experiments test three questions derived from the variational characterization: 
 Evidence is organized in three tiers (Table~\ref{tab:evidence-tier}). \emph{Primary} (directly tied to central claims): EVQ$\times$YaRN composition (\S\ref{sec:exp-yarn}, 3-seed), PE-dominant extrapolation (\S\ref{sec:exp-pe}, seed-42 diagnostic for Geo/DAPE/EVQ; only the learned-PE comparison row is 3-seed), and MLA (\S\ref{sec:exp-mla}, 3-seed). \emph{Robustness} (3-seed): FineWeb-Edu consistency, base sweep, and capability checks (\S\ref{sec:exp-robust}). \emph{Supporting / exploratory} (1--2 seed): one-seed multi-scale rows, video DiT, LoRA into LLaMA-3-8B, progressive training, and MLA 1B-token (Appendix~\ref{sec:supporting-experiments}). No abstract or introduction claim rests on tier-3 evidence.
 
 \input{tables/table_evidence_tier}
+\FloatBarrier
 
 %% =========================================================================
 %% PRIMARY ANCHOR 1
@@ -18,16 +19,17 @@ Evidence is organized in three tiers (Table~\ref{tab:evidence-tier}). \emph{Prim
 \subsection{Primary I: EVQ$\times$YaRN matched-scale substrate test}
 \label{sec:exp-yarn}
 
-\emph{Substrate vs.\ range stress test.} If EVQ only changed effective range, applying the same YaRN scale should largely erase its advantage; if it changes the training-time substrate, the same rescaling rule should have higher leverage on EVQ than Geo (Table~\ref{tab:evq-yarn}, Fig.~\ref{fig:evq-yarn}). In the $454$M $10\%$ passkey-mix setting ($3$~seeds per config), EVQ+YaRN reaches $100\%$ passkey retrieval at $8\mathrm{K}$ while Geo+YaRN remains at $61\%$, with the advantage persisting at $12$/$16\mathrm{K}$ ($79\%/68\%$ vs.\ $59\%/51\%$; Table~\ref{tab:evq-yarn}); PPL drops from $82.9$ to $70.9$ at $8\mathrm{K}$ and from $157.7$ to $107.5$ at $16\mathrm{K}$. EVQ alone improves over Geo without saturating retrieval. Appendix Table~\ref{tab:phase11-leverage} quantifies the interaction: YaRN gives Geo only $-4.5\%/-3.1\%$ at $4$/$8\mathrm{K}$ but gives EVQ ($\tau{=}4$) $-32.5\%/-40.7\%$; naive NTK-aware scaling becomes destructive at large $\tau$. We read this as EVQ increasing YaRN's matched-scale leverage, not dominance over every tuned-scale YaRN baseline.
+\emph{Substrate vs.\ range stress test.} If EVQ only changed effective range, applying the same YaRN scale should largely erase its advantage; if it changes the training-time substrate, the same rescaling rule should have higher leverage on EVQ than Geo (Table~\ref{tab:evq-yarn}, Fig.~\ref{fig:evq-yarn}). In the $454$M $10\%$ passkey-mix setting ($3$~seeds per config), EVQ+YaRN reaches $100\%$ teacher-forced NLL-gap passkey retrieval at $8\mathrm{K}$ while Geo+YaRN remains at $61\%$, with the advantage persisting at $12$/$16\mathrm{K}$ ($79\%/68\%$ vs.\ $59\%/51\%$; Table~\ref{tab:evq-yarn}); PPL drops from $82.9$ to $70.9$ at $8\mathrm{K}$ and from $157.7$ to $107.5$ at $16\mathrm{K}$. EVQ alone improves over Geo without saturating retrieval. Appendix Table~\ref{tab:phase11-leverage} quantifies the interaction: YaRN gives Geo only $-4.5\%/-3.1\%$ at $4$/$8\mathrm{K}$ but gives EVQ ($\tau{=}4$) $-32.5\%/-40.7\%$; naive NTK-aware scaling becomes destructive at large $\tau$. We read this as EVQ increasing YaRN's matched-scale leverage, not dominance over every tuned-scale YaRN baseline.
 
-\begin{figure}[t]
+\begin{figure}[!h]
   \centering
-  \includegraphics[width=0.68\linewidth]{fig2_evq_yarn_synergy.pdf}
-  \caption{EVQ and YaRN correct orthogonal deficiencies. EVQ expands low-frequency spacing at training time; YaRN rescales positions at inference time. Their combination under matched YaRN scale substantially outperforms Geo+YaRN on both retrieval and PPL.}
+  \includegraphics[width=0.76\linewidth]{fig2_evq_yarn_synergy.pdf}
+  \caption{Primary EVQ$\times$YaRN retrieval anchor. Bars show PK@8K (teacher-forced NLL-gap retrieval) across three seeds in the matched-scale $454$M passkey-mix setting; dots are individual seeds and whiskers show one standard deviation. EVQ+YaRN reaches $100\%$ while Geo+YaRN remains at $61\%$, isolating training-time allocation from inference-time range scaling.}
   \label{fig:evq-yarn}
 \end{figure}
 
 \input{tables/table2_evq_yarn_main}
+\FloatBarrier
 %% Table~\ref{tab:phase11-leverage} moved to Appendix to save body space; still referenced from body.
 
 %% =========================================================================
@@ -39,6 +41,7 @@ Evidence is organized in three tiers (Table~\ref{tab:evidence-tier}). \emph{Prim
 \emph{Allocation-shape stress test.} In a DAPE-style $128{\to}8\mathrm{K}$ protocol \citep{zheng2024dape} where model capacity is deliberately limited, we ask whether allocation shape alone can reduce a PE-dominant extrapolation gap without adding a learned positional operator. Table~\ref{tab:pe-dominant} (\(L_{\mathrm{train}}{=}128, d_{\mathrm{head}}{=}64\)): in the retained seed-42 DAPE-style Geo/DAPE/EVQ contrast, EVQ reaches $333.7$ PPL (vs.\ Geo $513.7$, DAPE $455.3$) with no learned parameters. We read this as evidence that closed-form reallocation can be competitive with learned positional operators in this tested protocol, not as a comprehensive dominance claim over DAPE. A complementary $\tau$-sweep at \(L_{\mathrm{train}}{=}256\) (Appendix Fig.~\ref{fig:pe-dominant}, numbers in Appendix Table~\ref{tab:pe-yarn-l256}) supports that the formula's prediction $\tau^{*}{=}d_{\mathrm{head}}/\sqrt{L}{=}4.0$ is favored among tested settings at both $125$M and $454$M.
 
 \input{tables/table4_pe_dominant.tex}
+\FloatBarrier
 
 %% =========================================================================
 %% PRIMARY ANCHOR 3: MLA (channels-are-scarce regime)
@@ -51,6 +54,6 @@ Evidence is organized in three tiers (Table~\ref{tab:evidence-tier}). \emph{Prim
 %% =========================================================================
 %% ROBUSTNESS + SUPPORTING EVIDENCE (merged; full results in Appendix)
 %% =========================================================================
-\subsection{Robustness and supporting evidence.}
+\subsection{Robustness and supporting evidence}
 \label{sec:exp-robust}
 Multi-scale raw extrapolation (Table~\ref{tab:multiscale}) keeps in-range PPL within ${\pm}1.7\%$ while long-range PPL improves $10$--$46\%$; capability checks (Table~\ref{tab:capability}) confirm non-destructiveness. Supporting (1--2 seed): video DiT ($0.53\times$ post-hoc), LoRA into LLaMA-3-8B ($8$--$19\times$ extrapolation-PPL), progressive training, and a single-seed MLA training-saturation check where the YaRN composition boost grows from $+8.6$~pp at 500M to $+13.6$~pp at 1B despite raw EVQ reversal. Effect attenuates through abstraction layers (raw PPL/NLL/passkey/QA; full breakdown Appendix~\ref{sec:supporting-experiments}), concentrated at the PE layer.

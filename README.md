@@ -44,7 +44,7 @@ python scripts/core_text_phases/run_evq_sweep.py --tier 125m --seeds 42,123,7 --
 ### Reproduce Paper Figures
 
 ```bash
-python scripts/figures/fig0_main_story.py            # Main story overview
+# Main method overview is a static asset: paper/figs/fig_method_overview.pdf
 python scripts/figures/fig1_neurips.py               # Frequency dynamics
 python scripts/figures/fig2_evq_yarn_orthogonality.py  # Fig 2: EVQ×YaRN synergy
 python scripts/figures/fig3_pe_dominant_scaling.py      # Fig 3: PE-dominant scaling
