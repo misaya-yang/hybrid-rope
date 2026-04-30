@@ -119,13 +119,6 @@ REUSE_CACHE_DIRS = [
     for p in os.environ.get("EVQ_PHASE14C_REUSE_DIRS", "").split(os.pathsep)
     if p
 ]
-PHASE14C_350M_DIRS = [
-    Path(p)
-    for p in os.environ.get("EVQ_PHASE14C_350M_DIRS", "").split(os.pathsep)
-    if p
-]
-
-
 # ===================================================================
 # YaRN — exact copy from eval_pe_baselines.py (used in 350M experiment)
 # ===================================================================
@@ -487,7 +480,7 @@ def generate_report(all_results):
     lines.append(f"\n{'='*60}")
     lines.append("  CROSS-SCALE SUMMARY: EVQ+YaRN @8K (the key metric)")
     lines.append(f"{'='*60}")
-    for tier in ["50m", "125m", "350m"]:
+    for tier in ["50m", "125m"]:
         for method_tau, method_name in [(0.0, "Geo"), (1.5, "EVQ")]:
             baseline_vals = []
             yarn_vals = []
@@ -596,18 +589,6 @@ def main():
                 tag = run_tag(tier, tau, seed)
                 result = run_single(tier, tau, seed, train_data, val_data, filler, tok)
                 all_results[tag] = result
-
-    # Load 350M results for cross-scale comparison if explicitly provided.
-    for mix_dir in PHASE14C_350M_DIRS:
-        for tau in TAUS:
-            for seed in SEEDS:
-                tag_350 = run_tag("350m", tau, seed)
-                ckpt_dir = mix_dir / f"350m_tau{tau:.2f}_seed{seed}"
-                result_file = ckpt_dir / "passkey_nll.json"
-                # Also check if we have the allseeds results
-                if tag_350 not in all_results:
-                    # Try to load from the allseeds eval log
-                    pass  # Will be handled by the report generator
 
     # Generate report
     report = generate_report(all_results)

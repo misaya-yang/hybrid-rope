@@ -49,7 +49,7 @@
 | **C2** | PE-dominant DAPE-style diagnostic: EVQ has lower seed-42 8K PPL than Geo/DAPE without learned PE parameters | Phase 11b 125M extreme extrap (128→8K) | `phase11b_125m_dape.py` | 1--3 seeds by row | ⚠️ Medium (diagnostic scope) |
 | **C3** | EVQ increases fixed-scale YaRN leverage vs Geo+YaRN | 454M passkey-mix aggregate; Phase 14c provides 50M/125M supporting rerun | `phase14c_multiscale_evq_yarn.py` (supporting only); curated 454M provenance JSON pending | 3+3 seeds | ⚠️ Medium until provenance JSON is shipped |
 | **C4** | MLA scarce-channel stress test is the third primary empirical anchor | 432M MLA 3-seed run; matched-scale Geo+YaRN comparison | MLA scripts / curated aggregate | 3 seeds | ⚠️ Medium (architecture-specific convention) |
-| **S1** | 454M Stage 2-3 continued pretrain | Phase 17c 454M (1024→2048) | `phase17c_454m_1024_to_2048_continue.py` | seeds 42-44 | Supporting only |
+| **S1** | 454M Stage 2-3 continued pretrain | Phase 17c 454M (1024→2048) | `phase17c_454m_1024_to_2048_continue.py` | single seed | Supporting only |
 | **S2** | 750M scale-up confirmation | Phase 15 750M (2K→4K) | `phase15_750m_2k_to_4k_continue_ckpt_eval.py` | single-seed | Supporting only |
 | **S3** | Downstream NLL advantage | Phase 21b QuALITY eval | `phase21b_quality_eval_clean.py` | n=2086 | Supporting / downstream check |
 
@@ -84,21 +84,16 @@ These rows are appendix supporting/exploratory evidence only; no abstract or int
 | **V10** | Frequency allocation is pure extrapolation effect | 32f eval: ALL 12 configs within 0.0093–0.0102 (<6%); 128f range +18% to -86% | Same checkpoints, 32f eval | Isolation experiment | ✅ Low (decisive) |
 | **V11** | EVQ advantage persists at 3× scale (382M DiT) | 382M h2h: YaRN far -35%, noYaRN far -64%, training loss identical (+0.3%) | `run_dit_temporal.py` (382M config) | Head-to-head | ⚠️ Medium (single-seed) |
 
-### DiT Appendix Tables (paper/appendix/a2_experiment_details.tex)
+### Video/DiT Appendix Tables
+
+Only the rows below are present in the current paper appendix; other video/DiT reports remain external supporting notes and are not packaged as paper tables.
 
 | Table | 描述 | 数据来源 | Key Numbers |
 |-------|------|---------|-------------|
-| `tab:video-temporal` | VideoGPT temporal extrap (PPL, FVD) | `results/supporting_video/` | PPL -27.3%, FVD -1.5% |
 | `tab:dit-h2h` | DiT dual-seed h2h (train/all/far MSE) | `results/video_dit/westd_20260316/` | mean -21%/-15%/-32% |
-| `tab:dit-inference` | DiT inference methods (YaRN/RIFLEx/raw) | `results/video_dit/westd_20260316/riflex_eval_*.json` | EVQ wins all: -37%/-28%/-59% |
-| `tab:dit-timestep` | DiT multi-timestep (t=0.2/0.5/0.8) | Same as dit-inference | -4%/-36%/-27% |
-| `tab:temporal-precision` | Teacher-forced accuracy by region | `results/supporting_video/temporal_precision/` | +3.14% top-1, +5.40% top-5 |
-| `tab:freq-decomp` | Frequency-resolved accuracy delta | Same | P=16: +5.07%, P=32: +3.55% |
 | `tab:quality-nll` | QuALITY Gold NLL (appendix a3) | `results/core_text/phase21b/` | -30.1% @8K |
 | `tab:dit-base1000` | Dead channel validation (base=1000 h2h) | `results/video_dit/westd_20260316/base1000_h2h/` | τ=1.2≈τ=1.5, both -48% far |
-| `tab:dit-base-sweep` | Base sweep (100–50K, YaRN + raw, 6pt) | `results/video_dit/base_sweep_h2h.json` | GEO 11.8× range; EVQ 1.9×; global best EVQ@10K |
-| `tab:dit-32f-isolation` | 32f pure training eval (smoking gun) | Same checkpoints | ALL within 0.0093–0.0102, <6% variation |
-| `tab:dit-382m` | 382M scale-up h2h validation | `results/video_dit/dit_382m_h2h.json` | YaRN far -35%, noYaRN far -64% |
+| `tab:dead-channels` | Dead-channel counts across video models | analytical channel count | 32--50% temporal channels dead |
 
 ### Video Reports & Data
 

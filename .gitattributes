@@ -4,6 +4,8 @@ internal/** export-ignore
 audit_v3/** export-ignore
 audit_v4/** export-ignore
 docs/exp/** export-ignore
+docs/archive/** export-ignore
+docs/tau_algor/PROMPT*.md export-ignore
 scripts/2026-04/** export-ignore
 scripts/mac_train/** export-ignore
 scripts/m4_max_36gb/** export-ignore
@@ -28,6 +30,7 @@ paper/COWORK_FINAL_PROMPT.md export-ignore
 .claude/** export-ignore
 **/__pycache__/** export-ignore
 **/*.pyc export-ignore
+**/*.npz export-ignore
 **/*.aux export-ignore
 **/*.bbl export-ignore
 **/*.blg export-ignore

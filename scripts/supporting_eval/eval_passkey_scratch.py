@@ -473,11 +473,14 @@ def _eval_single_trial(
     full_correct = torch.cat([input_ids, torch.tensor(correct_answer_ids, dtype=torch.long)])
     full_wrong = torch.cat([input_ids, torch.tensor(wrong_answer_ids, dtype=torch.long)])
 
+    # ``probe_start`` is the beginning of the trailing marker; teacher-forced
+    # answer scoring starts after the final probe token.
+    answer_context_pos = len(input_ids) - 1
     nll_correct = _compute_nll_at_positions(
-        model, ctx, full_correct, probe_start, len(correct_answer_ids)
+        model, ctx, full_correct, answer_context_pos, len(correct_answer_ids)
     )
     nll_wrong = _compute_nll_at_positions(
-        model, ctx, full_wrong, probe_start, len(wrong_answer_ids)
+        model, ctx, full_wrong, answer_context_pos, len(wrong_answer_ids)
     )
 
     gap = nll_wrong - nll_correct
