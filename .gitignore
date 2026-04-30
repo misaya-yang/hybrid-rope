@@ -1,5 +1,6 @@
 # LaTeX build artifacts (paper/main.pdf at paper root IS committed)
 paper/build/
+paper/build_aidemo/
 paper/_build_to_delete/
 
 # Python cache
