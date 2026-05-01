@@ -27,10 +27,10 @@ EVQ4+YaRN  & \textbf{50.9} & \textbf{60.9} & \textbf{84.1} & \textbf{99.6} \\
 \end{table}
 
 \paragraph{MLA: allocation matters more when channels are scarce.}
-EVQ extends to MLA \citep{deepseekv2, deepseekv3}, where only 16 frequency channels carry positional information. On a 432M model (3-seed, 500M tokens, $L_{\mathrm{train}}{=}8192$), EVQ alone reduces $2\times$ extrapolation PPL by $31.1\%$ and outperforms Geo+YaRN at $16\mathrm{K}$. Preliminary evidence under thorough training (1B tokens, single seed) suggests that EVQ's raw advantage reverses ($+11.1\%$) while EVQ+YaRN after fine-tuning still wins ($-2.5\%$)---a $13.6\mathrm{pp}$ swing consistent with the possibility that the frequency substrate remains a constraint even when raw extrapolation saturates. Multi-seed replication is in progress. Full 3-seed standalone results are in Appendix~\ref{sec:mla-results}.
+EVQ extends to MLA \citep{deepseekv2, deepseekv3}, where only 16 frequency channels carry positional information. On a 432M model (3-seed, 500M tokens, $L_{\mathrm{train}}{=}8192$), EVQ alone reduces $2\times$ extrapolation PPL by $31.1\%$ and outperforms Geo+YaRN at $16\mathrm{K}$. Supporting single-seed evidence under thorough training (1B tokens) suggests that EVQ's raw advantage reverses ($+11.1\%$) while EVQ+YaRN after fine-tuning still wins ($-2.5\%$)---a $13.6\mathrm{pp}$ swing consistent with the possibility that the frequency substrate remains a constraint even when raw extrapolation saturates. This row is not used as a primary claim. Full 3-seed standalone results are in Appendix~\ref{sec:mla-results}.
 
 \paragraph{Post-training injection via LoRA (7B scale).}
-As supporting post-hoc evidence, we inject EVQ-Cosh frequencies ($\tau{=}1.414$, the $\tau^*$ predicted for $d_{\mathrm{head}}{=}128$, $L{=}8192$) into LLaMA-3-8B-Instruct \citep{grattafiori2024llama3} and fine-tune with LoRA ($r{=}64{=}K$, $\alpha{=}128$) on LongAlign-10k for 300 steps.
+As supporting post-hoc evidence, we inject EVQ-Cosh frequencies ($\tau{=}1.414$, the $\tau^*$ predicted for $d_{\mathrm{head}}{=}128$, $L{=}8192$) into LLaMA-3-8B-Instruct \citep{grattafiori2024llama3} and fine-tune with LoRA ($r{=}64{=}K$, $\alpha{=}128$) on LongAlign-10k \citep{bai2024longalign} for 300 steps.
 
 \begin{table}[ht]
 \caption{EVQ-Cosh LoRA on LLaMA-3-8B-Instruct ($r{=}64$, 300 steps, single seed). EVQ trades a modest in-distribution cost for substantial extrapolation gains.}
@@ -52,7 +52,7 @@ Table~\ref{tab:lora-8b} shows that EVQ-LoRA reduces extrapolation PPL by $8\time
 
 \paragraph{Progressive training (single seed, preliminary).}
 Three-stage progressive training (454M, $512{\to}1024{\to}2048$) is reported as supporting evidence.
-The EVQ+YaRN PPL gap at $16\mathrm{K}$ widens from $-34.6\%$ to $-81.2\%$, driven by Geo+YaRN degradation while EVQ+YaRN remains stable. At Stage~3, functional context reaches $48\mathrm{K}$ ($24\times$ training length) at PPL~$2.63$. After Stage~2, EVQ \emph{raw} (PPL $11.2$ at $16\mathrm{K}$) surpasses EVQ+YaRN at Stage~1 ($16.8$), suggesting that continued training can partially internalize the allocation benefit. This is a single-seed observation; multi-seed replication is in progress.
+The EVQ+YaRN PPL gap at $16\mathrm{K}$ widens from $-34.6\%$ to $-81.2\%$, driven by Geo+YaRN degradation while EVQ+YaRN remains stable. At Stage~3, functional context reaches $48\mathrm{K}$ ($24\times$ training length) at PPL~$2.63$. After Stage~2, EVQ \emph{raw} (PPL $11.2$ at $16\mathrm{K}$) surpasses EVQ+YaRN at Stage~1 ($16.8$), suggesting that continued training can partially internalize the allocation benefit. This single-seed row is not used as a primary claim.
 
 \paragraph{Cross-modal mechanism check: video DiT.}
 In 129.6M DiT head-to-head experiments (2~seeds, shared training run), EVQ wins every metric in both seeds, eliminating optimizer and CUDA confounds. Once the dead-channel bottleneck is removed (base-1000), both $\tau{=}1.2$ and $\tau{=}1.5$ beat Geo by ${\approx}48\%$ on far-frame MSE. This is a supporting mechanism check rather than a standalone video contribution: the collision bottleneck identified by the theory appears across modalities. Full results are in \S\ref{sec:tau-correction}.
@@ -66,7 +66,4 @@ Table~\ref{tab:capability} shows that EVQ is non-destructive when retrieval is a
 \input{tables/table3_capability_passkey}
 
 \FloatBarrier
-\subsection{Compact method comparison}
-\label{sec:appendix-method-comparison}
-
 \input{tables/table_method_comparison}

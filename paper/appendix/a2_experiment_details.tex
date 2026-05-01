@@ -65,7 +65,7 @@ Across all three anchors, the architectural intervention is deliberately minimal
 \subsection{Larger-scale supporting evidence}
 % \label{sec:750m-supporting} % unused
 
-The \(750\mathrm{M}\) `continue@4K' experiment is reported as supporting evidence only. The reason is not that the result is weak; on the contrary, it shows \(16\mathrm{K}\) PPL improving from \(45.1\) to \(24.4\) and \(8\mathrm{K}\) AR exact improving from \(0\%\) to \(77.5\%\). The reason is evidence hygiene: the run is single-seed, and the downstream LongBench comparison is incomplete because the remote dataset download failed during evaluation.
+The \(750\mathrm{M}\) `continue@4K' experiment is reported as supporting evidence only. The reason is not that the result is weak; on the contrary, it shows \(16\mathrm{K}\) PPL improving from \(45.1\) to \(24.4\) and \(8\mathrm{K}\) AR exact improving from \(0\%\) to \(77.5\%\). The reason is evidence hygiene: the run is single-seed, and LongBench is outside the controlled mechanism scope and is not used as a paper claim.
 
 This distinction is important for interpretation. The larger-scale run is best viewed as evidence that the same EVQ pattern persists after continued pretraining at a longer training length, not as the main fairness anchor of the paper. The main fairness anchors remain the multi-seed \(454\mathrm{M}\) comparisons used in the main text.
 
