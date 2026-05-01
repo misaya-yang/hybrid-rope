@@ -56,7 +56,7 @@ The pure-tether branch yields an inverse-CDF warp
 1 - \frac{1}{\tau}
 \operatorname{arcsinh}\!\left((1-u_k)\sinh\tau\right),
 \qquad
-u_k = \frac{k}{K},
+u_k = \frac{k+\tfrac{1}{2}}{K},
 \end{equation}
 and inverse frequencies $b^{-\phi_k(\tau)}$.
 
@@ -72,13 +72,13 @@ For an effective attention-head dimension $d_{\mathrm{eff}}$ and training length
 \label{eq:evq-practical}
 \tau = \frac{d_{\mathrm{eff}}}{\sqrt{L}},
 \qquad
-u_k = \frac{k}{K},
+u_k = \frac{k+\tfrac{1}{2}}{K},
 \qquad
 \omega_k^{\mathrm{EVQ}} = b^{-\phi_k(\tau)},
 \qquad
 K=\frac{d_{\mathrm{rot}}}{2}.
 \end{equation}
-For standard MHA, $d_{\mathrm{eff}}{=}d_{\mathrm{rot}}{=}d_{\mathrm{head}}$; for compressed-RoPE MLA, $K{=}d_{\mathrm{rot}}/2$ counts only the rotary channels while $d_{\mathrm{eff}}$ follows the architecture-specific convention (we take $d_{\mathrm{eff}}{=}d_{\mathrm{head}}$; see \S\ref{sec:exp-mla} and Appendix~\ref{sec:mla-results}). The construction is deliberately minimal: set $\tau$, compute quantiles, evaluate the warp, replace inverse frequencies. No auxiliary loss, no extra parameters, no optimizer dependence. The endpoint grid $u_k{=}k/K$ has the anchoring property $u_0{=}0{\Rightarrow}\phi_0{=}0$ (preserves $\omega_0{=}1$); our implementation uses midpoint quantization $u_k{=}(2k{+}1)/(2K)$, which trades exact anchoring for avoiding endpoint cells. We do not rely on $\omega_0{=}1$ in any trained model, and the endpoint/midpoint choice shifts PPL by ${<}1\%$ across all $K{\geq}16$ settings we tested, well inside the flat empirical basin.
+For standard MHA, $d_{\mathrm{eff}}{=}d_{\mathrm{rot}}{=}d_{\mathrm{head}}$; for compressed-RoPE MLA, $K{=}d_{\mathrm{rot}}/2$ counts only the rotary channels while $d_{\mathrm{eff}}$ follows the architecture-specific convention (we take $d_{\mathrm{eff}}{=}d_{\mathrm{head}}$; see \S\ref{sec:exp-mla} and Appendix~\ref{sec:mla-results}). The construction is deliberately minimal: set $\tau$, compute midpoint quantiles, evaluate the warp, replace inverse frequencies. No auxiliary loss, no extra parameters, no optimizer dependence. The endpoint grid $u_k{=}k/K$ is useful as an analytic anchored variant because $u_0{=}0{\Rightarrow}\phi_0{=}0$ (preserves $\omega_0{=}1$); our deployed implementation uses midpoint quantization in Eq.~\eqref{eq:evq-practical}, which trades exact anchoring for avoiding endpoint cells. We do not rely on $\omega_0{=}1$ in any trained model, and the endpoint/midpoint choice shifts PPL by ${<}1\%$ across all $K{\geq}16$ settings we tested, well inside the flat empirical basin.
 
 EVQ-Cosh changes only the inverse-frequency initialization---distinct from learnable PE approaches that rely on in-distribution training dynamics to discover the allocation through extra parameters. The full recipe is Equation~\eqref{eq:evq-practical} plus $\tau{=}d_{\mathrm{eff}}/\sqrt{L_{\mathrm{train}}}$: zero learned parameters, architecture unchanged.
 
@@ -100,7 +100,7 @@ S_{\chi^2}(\tau) \;=\; c_S\,\frac{\tau^4}{d_{\mathrm{head}}} + O(\tau^6), \quad 
 \qquad
 U(\tau,L) \;=\; \frac{d_{\mathrm{head}}}{L}\bigl[Q_0 + \tau^2 Q_1(L,b) + O(\tau^4)\bigr],
 \]
-with $Q_1(L,b) = \int_0^1 \eta(\phi)\,q(Lb^{-\phi})\,d\phi$, $\eta(\phi) = (1{-}\phi)^2/2{-}1/6$, and $q(x) = 1/2 + \sin(2x)/(4x) - (\sin x/x)^2$ (Appendix~\ref{sec:stiffness-derivation}). The stationary point of $\mathcal{F}(\tau) = \tfrac{1}{2}S_{\chi^2}(\tau) - \lambda\,U(\tau,L)$ therefore satisfies
+with $Q_1(L,b) = \int_0^1 \eta(\phi)\,q(Lb^{-\phi})\,d\phi$, $\eta(\phi) = (1{-}\phi)^2/2{-}1/6$, and $q(x) = 1/2 + \sin(2x)/(4x) - (\sin x/x)^2$ (Appendix~\ref{sec:stiffness-derivation}). The leading-order stationary point of the truncated objective $\mathcal{F}(\tau) = \tfrac{1}{2}S_{\chi^2}(\tau) - \lambda\,U(\tau,L)$ therefore satisfies
 \[
 \tau_*^2 \;=\; 45\,\lambda\,Q_1(L,b)\cdot\frac{d_{\mathrm{head}}^2}{L},
 \qquad \tau_* \;\propto\; \frac{d_{\mathrm{head}}}{\sqrt{L}}.

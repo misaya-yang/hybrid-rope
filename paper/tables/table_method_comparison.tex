@@ -8,13 +8,13 @@
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{lcccccl}
 \toprule
-Method & \shortstack{Train\\alloc.} & \shortstack{Infer\\scale} & \shortstack{Post-hoc/\\search} & Learned & \shortstack{Closed-form\\allocation} & Main axis \\
+Method & \shortstack{Train\\alloc.} & \shortstack{Infer\\scale} & \shortstack{Post-hoc/\\search} & Learned & \shortstack{Variational\\allocation} & Main axis \\
 \midrule
-Geometric RoPE \citep{su2024roformer}        & fixed    & ---        & ---       & ---      & \checkmark & default operator \\
+Geometric RoPE \citep{su2024roformer}        & fixed    & ---        & ---       & ---      & --- & default operator \\
 NTK / PI \citep{roziere2023codellama,chen2024position} & --- & \checkmark & post-hoc  & ---      & --- & global range \\
 YaRN \citep{peng2024yarn}                    & ---      & \checkmark & post-hoc  & ---      & --- & piecewise range \\
-LongRoPE \citep{ding2024longrope}            & ---      & \checkmark & search    & ---      & ---        & range schedule \\
-LongRoPE2 \citep{shang2025longrope2}         & ---      & \checkmark & search    & ---      & ---        & per-channel range \\
+LongRoPE \citep{ding2024longrope}            & ---      & \checkmark & search+adapt & ---      & ---        & progressive range \\
+LongRoPE2 \citep{shang2025longrope2}         & ---      & \checkmark & search+adapt & ---      & ---        & per-channel range \\
 DAPE \citep{zheng2024dape}                   & ---      & ---        & training  & \checkmark & ---        & adaptive operator \\
 FIRE \citep{li2024fire}                      & ---      & ---        & training  & \checkmark & ---        & learned function \\
 VideoRoPE \citep{videorope2025}              & heuristic & \checkmark & design   & ---      & --- & modality-specific \\

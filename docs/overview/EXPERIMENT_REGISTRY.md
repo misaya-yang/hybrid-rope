@@ -11,7 +11,7 @@
 
 | Experiment ID | Hypothesis / Purpose | Model | τ values | Seeds | Entry Script | Output | Status |
 |---------------|----------------------|-------|----------|-------|--------------|--------|--------|
-| `EXP_EVQ_50M_SWEEP` | 验证 EVQ τ 对 PPL 的影响 + phase collision | 50M | 0.0,0.2,0.4,0.6,0.8,1.0,1.5,2.0 | 42 | `scripts/core_text_phases/run_evq_sweep.py --tier 50m` | `docs/exp/2026-02-27_evq_tau_sweep_results.md` | ✅ **Paper-ready** τ=1.5 最优，PPL@16K -10.9%, collision 最低 |
+| `EXP_EVQ_50M_SWEEP` | 验证 EVQ τ 对 PPL 的影响 + phase collision | 50M | 0.0,0.2,0.4,0.6,0.8,1.0,1.5,2.0 | 42 | `scripts/core_text_phases/run_evq_sweep.py --tier 50m` | `docs/exp/2026-02-27_evq_tau_sweep_results.md` | ✅ **Paper-ready** τ=1.5 是 best observed sweep point，PPL@16K -10.9%, collision 最低 |
 | `EXP_EVQ_125M_SWEEP` | 验证 τ scaling + cross-seed 一致性 | 125M | 0.0, 0.2, 1.5 | 42, 137 | `scripts/core_text_phases/run_evq_sweep.py --tier 125m` | `docs/exp/2026-02-27_evq_tau_sweep_results.md` | ✅ **Paper-ready** seed=42 -18.9%, seed=137 -5.8%, 双种子方向一致, 无 waterbed |
 | `EXP_EVQ_8B_LONGINST` | EVQ τ=1.5 在 8B LoRA long-instruction (4-job dual-seed) | Llama-3-8B | 0.0 (baseline), 1.5 (EVQ) | 42,1337 | `scripts/isolated/longinst/run_llama8k_theory_v1.py` | RTX Pro 6000 96GB | 🔴 **下一步** (脚本已就绪) |
 

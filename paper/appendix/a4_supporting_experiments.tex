@@ -6,12 +6,12 @@ The following results extend EVQ beyond the primary MHA setting. Each is scoped 
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.98\linewidth]{fig3_pe_dominant_scaling.pdf}
-  \caption{PE-dominant evidence (visualization of Table~\ref{tab:pe-dominant}). Left: in the seed-42 $128{\to}8\mathrm{K}$ contrast, EVQ's closed-form allocation (zero learned parameters) attains lower extrapolation PPL than the learned positional-operator baseline. Right: at $L{=}256$, the predicted $\tau^*{=}4.0$ is favored among tested settings, and EVQ4+YaRN outperforms Geo+YaRN across extrapolation ratios.}
+  \caption{PE-dominant evidence (visualization of Table~\ref{tab:pe-dominant}). Left: in the seed-42 $128{\to}8\mathrm{K}$ contrast, EVQ's closed-form allocation (zero learned parameters) attains lower extrapolation PPL than the learned positional-operator baseline. Right: at $L{=}256$, 3-seed mean curves show that the predicted $\tau^*{=}4.0$ is favored among tested settings, and EVQ4+YaRN outperforms Geo+YaRN across extrapolation ratios.}
   \label{fig:pe-dominant}
 \end{figure}
 
 \begin{table}[h]
-\caption{$L{=}256$ YaRN composition study (125M, PPL). The predicted $\tau^*{=}4.0$ is the best of the tested settings, and EVQ4+YaRN outperforms Geo+YaRN at every extrapolation ratio. This supplements Table~\ref{tab:pe-dominant} in the main text.}
+\caption{$L{=}256$ YaRN composition study (125M, 3-seed mean PPL). The predicted $\tau^*{=}4.0$ is the best of the tested settings, and EVQ4+YaRN outperforms Geo+YaRN at every extrapolation ratio. This supplements Table~\ref{tab:pe-dominant} in the main text.}
 \label{tab:pe-yarn-l256}
 \centering\small
 \setlength{\tabcolsep}{6pt}

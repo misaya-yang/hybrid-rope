@@ -10,7 +10,7 @@
 | **Geometric / Geo** | 标准 RoPE 频率分配: ω_k = base^(-2k/d)，等价于 EVQ-Cosh 在 τ=0 的退化极限 |
 | **EVQ-Cosh** | 本文提出的闭式频率重分配族: φ_k(τ) = 1 - (1/τ)arcsinh((1-u_k)sinh(τ)) |
 | **τ (tau)** | EVQ-Cosh 的唯一控制参数，控制频率从 geometric 向均匀分布偏移的程度 |
-| **τ*** | 最优 τ 值: τ* = d_head / √L_train |
+| **τ*** | Operating-rule 默认值: τ* = d_head / √L_train；用于选择经验优良 basin，不表示全局最优 |
 | **Progressive YaRN** | Per-channel smoothstep ramp 的上下文窗口扩展方法，保护高频通道 |
 | **NTK-aware YaRN** | Uniform scaling 的 YaRN 变体，本项目中**禁止使用** |
 | **Waterbed trade-off** | EVQ 以有界的短程 PPL 代价换取大幅度长程 PPL 改善 |

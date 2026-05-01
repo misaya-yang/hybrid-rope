@@ -10,7 +10,7 @@ Official code repository for the NeurIPS 2026 submission.
 
 The paper validates three core claims across controlled runs at 50M-750M scale, with explicit evidence tiers in the manuscript:
 
-**Claim 1 - Closed-form solution.** RoPE frequency allocation admits a variational solution `phi_k(tau)` with a single temperature parameter `tau`. Geometric RoPE is the `tau -> 0` limit, making EVQ-Cosh a strict generalization.
+**Claim 1 - Closed-form solution.** RoPE frequency allocation admits a variational solution `phi_k(tau)` with a single temperature parameter `tau`. Geometric RoPE is recovered as the `tau -> 0` limit of the pure-tether sub-family; EVQ-Cosh changes the training-time allocation family without adding learned parameters.
 
 **Claim 2 - PE-dominant diagnostic.** In a DAPE-style `128 -> 8K` protocol at 125M scale, the seed-42 EVQ-Cosh row attains lower extrapolation PPL than the Geo and DAPE-style learned-operator baselines, without adding learned positional parameters.
 
@@ -51,6 +51,8 @@ python scripts/figures/fig3_pe_dominant_scaling.py      # Fig 3: PE-dominant sca
 ```
 
 Outputs are saved to `paper/figs/`.
+
+Figure 3 panel (a) has a curated JSON fallback in `data/curated/`; panels (b,c) require regenerated local Phase 11 result JSONs and are documented in `docs/overview/REPRODUCE.md`.
 
 ---
 
@@ -110,8 +112,8 @@ Every Figure and Table can be traced back to its generating script and source da
 | Stable Paper Asset | Generating Script | Phase |
 |--------------------|-------------------|-------|
 | Multi-scale raw PPL table | `run_evq_sweep.py` | 8 |
-| EVQ+YaRN systems table | 454M aggregate + `phase14c_multiscale_evq_yarn.py` supporting check | 14 |
-| Capability/passkey robustness table | `eval_passkey.py` | 14 |
+| EVQ+YaRN systems table | 454M aggregate + `phase14c_multiscale_evq_yarn.py` supporting check (not the full Table 2 rerun) | 14 |
+| Capability/passkey robustness table | `scripts/supporting_eval/eval_passkey_scratch.py` helpers + `data/curated/table2_evq_yarn_454m_passkey_10pct.json` | 14 |
 | PE-dominant tables | `phase11_L256_extrap.py`, `phase11b_125m_dape.py` | 11 |
 | 750M continue table | `phase15_750m_*.py` | 15 |
 | Frequency dynamics / multiscale waterbed figures | `fig1_neurips.py` | — |
@@ -137,13 +139,13 @@ All training data is streamed from HuggingFace Hub (no pre-download required). S
 
 ## Supplement Packaging
 
-Do not zip the working directory directly: local `results/`, `internal/`, historical runbooks, LaTeX build products, caches, and private machine paths are not part of the reviewer supplement. Build the curated archive with the leak-checking packager:
+Do not zip the working directory directly: local result dumps, historical runbooks, LaTeX build products, caches, and private machine paths are not part of the reviewer supplement. Build the curated archive with the leak-checking packager:
 
 ```bash
 python scripts/package_supplement.py
 ```
 
-The packager copies only the public paper/source paths and fails if common identity or server-path strings are found. Include only curated result JSONs needed by figure scripts, not full checkpoints or local experiment dumps.
+The packager copies only the public paper/source paths and fails if common identity or machine-path strings are found. Include only curated result JSONs needed by figure scripts, not full checkpoints or local experiment dumps.
 
 ---
 

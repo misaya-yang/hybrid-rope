@@ -6,7 +6,7 @@
 
 ## 1. FineWeb-Edu (主训练数据)
 
-所有 from-scratch 预训练实验（Phase 8-17）使用 FineWeb-Edu 作为训练数据。
+主要 from-scratch 预训练实验使用 FineWeb-Edu；部分小规模快速验证和历史 rows 使用 TinyStories，并在对应表格/脚本中单独标注。
 
 ```python
 from datasets import load_dataset
@@ -54,7 +54,7 @@ from scripts.supporting_eval.eval_passkey_scratch import (
 - **生成方式**: `make_passkey_training_sample()` 动态生成，无需预下载。
 - **训练混合**: `run_evq_sweep.py` 通过 `maybe_wrap_with_passkey_mix()` 调用 `MixedDataset`；比例由 `--passkey_mix_ratio` 或 `PASSKEY_MIX_RATIO` 控制。
 - **评估指标**: 主表的 PK 指标是 teacher-forced NLL-gap retrieval rate；`eval_passkey_scratch.py` 也包含 autoregressive exact-match 评估入口，但二者不能混写。
-- **用途**: 训练模型的长距离检索能力，passkey NLL-gap 100% 是 EVQ+YaRN 的标志性结果。
+- **用途**: 训练模型的长距离检索能力；454M、10% passkey mix、matched YaRN scale `s=8`、3-seed 设置下，EVQ+YaRN 的 PK@8K teacher-forced NLL-gap retrieval 为 100%。
 
 ## 4. QuALITY (下游评估)
 
@@ -95,7 +95,7 @@ python scripts/data_prep/tokenize_synth.py
 
 | 数据集 | 论文 Table/Figure | 实验 Phase |
 |--------|------------------|-----------|
-| FineWeb-Edu | Tables 1-6, Figs 2-7 | Phase 8-17 |
-| TinyStories | Table 1 (50M validation) | Phase 8 |
+| FineWeb-Edu | Main primary text experiments and most core/supporting tables | Phase 8-17 where explicitly marked FineWeb-Edu |
+| TinyStories | Table 1 quick/historical validation rows | Phase 8 and selected small-scale checks |
 | Passkey Mix | Tables 2-3, Fig 2 | Phase 14+ |
 | QuALITY | Fig 5 | Phase 21b |

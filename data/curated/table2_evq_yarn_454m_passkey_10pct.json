@@ -1,0 +1,68 @@
+{
+  "source": [
+    "paper/tables/table2_evq_yarn_main.tex",
+    "paper/tables/table3_capability_passkey.tex",
+    "scripts/figures/fig2_evq_yarn_orthogonality.py"
+  ],
+  "curation_note": "Values were transcribed from the validated 2026-03-03 passkey-mix run report into this anonymous reviewer-facing JSON; the original local run report is not required to inspect the table values.",
+  "protocol": {
+    "model": "454M decoder-only transformer",
+    "training_tokens": 100000000,
+    "train_length": 2048,
+    "data": "FineWeb-Edu with 10% synthetic passkey mix",
+    "base": 500000.0,
+    "head_dim": 64,
+    "seeds": [42, 123, 7],
+    "yarn_scale": 8,
+    "pk_metric": "teacher-forced NLL-gap retrieval rate; percentages are reported on a 0-100 scale",
+    "ppl_note": "Table 2 uses full-sequence PPL scoring. Table 3 uses per-document PPL scoring, which changes absolute PPL but not the Geo-to-EVQ ranking."
+  },
+  "table2_full_sequence_summary": {
+    "Geo": {
+      "pk": {"2k": 100, "4k": 59, "8k": 41, "12k": 57, "16k": 51},
+      "ppl": {"2k": 67.2, "8k": 161.9, "12k": 212.0, "16k": 253.2},
+      "pk_8k_seedwise": {"42": 46, "123": 36, "7": 40}
+    },
+    "Geo+YaRN": {
+      "pk": {"2k": 100, "4k": 100, "8k": 61, "12k": 59, "16k": 51},
+      "ppl": {"2k": 68.1, "8k": 82.9, "12k": 118.9, "16k": 157.7},
+      "pk_8k_seedwise": {"42": 62, "123": 58, "7": 64}
+    },
+    "EVQ": {
+      "pk": {"2k": 100, "4k": 69, "8k": 53, "12k": 63, "16k": 50},
+      "ppl": {"2k": 67.9, "8k": 150.3, "12k": 191.8, "16k": 229.5},
+      "pk_8k_seedwise": {"42": 60, "123": 44, "7": 56}
+    },
+    "EVQ+YaRN": {
+      "pk": {"2k": 100, "4k": 100, "8k": 100, "12k": 79, "16k": 68},
+      "ppl": {"2k": 70.7, "8k": 70.9, "12k": 81.4, "16k": 107.5},
+      "pk_8k_seedwise": {"42": 100, "123": 100, "7": 100}
+    }
+  },
+  "table3_per_document_seedwise_no_yarn": {
+    "Geo": {
+      "42": {"pk": {"2k": 100, "4k": 42, "8k": 46, "global": 63}, "ppl": {"2k": 67.4, "4k": 94.9, "8k": 156.5, "16k": 251.9}},
+      "123": {"pk": {"2k": 100, "4k": 74, "8k": 36, "global": 70}, "ppl": {"2k": 66.3, "4k": 100.2, "8k": 170.9, "16k": 278.0}},
+      "7": {"pk": {"2k": 100, "4k": 60, "8k": 40, "global": 67}, "ppl": {"2k": 68.0, "4k": 101.4, "8k": 158.2, "16k": 256.1}}
+    },
+    "EVQ": {
+      "42": {"pk": {"2k": 100, "4k": 82, "8k": 60, "global": 81}, "ppl": {"2k": 68.0, "4k": 95.3, "8k": 152.5, "16k": 240.8}},
+      "123": {"pk": {"2k": 100, "4k": 58, "8k": 44, "global": 67}, "ppl": {"2k": 67.3, "4k": 89.5, "8k": 144.3, "16k": 230.8}},
+      "7": {"pk": {"2k": 100, "4k": 66, "8k": 56, "global": 74}, "ppl": {"2k": 68.3, "4k": 98.1, "8k": 154.0, "16k": 239.9}}
+    }
+  },
+  "table3_per_document_mean_std_no_yarn": {
+    "Geo": {
+      "pk_mean": {"2k": 100.0, "4k": 58.7, "8k": 40.7, "global": 66.7},
+      "pk_std": {"2k": 0.0, "4k": 16.0, "8k": 5.0, "global": 3.5},
+      "ppl_mean": {"2k": 67.2, "4k": 98.8, "8k": 161.9, "16k": 262.0},
+      "ppl_std": {"2k": 0.9, "4k": 3.5, "8k": 7.9, "16k": 14.0}
+    },
+    "EVQ": {
+      "pk_mean": {"2k": 100.0, "4k": 68.7, "8k": 53.3, "global": 74.0},
+      "pk_std": {"2k": 0.0, "4k": 12.2, "8k": 8.3, "global": 7.0},
+      "ppl_mean": {"2k": 67.9, "4k": 94.3, "8k": 150.3, "16k": 237.2},
+      "ppl_std": {"2k": 0.5, "4k": 4.4, "8k": 5.2, "16k": 5.5}
+    }
+  }
+}

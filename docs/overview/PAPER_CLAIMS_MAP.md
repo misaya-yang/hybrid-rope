@@ -11,11 +11,11 @@
 | Stable asset | 论文位置 | 描述 | 生成脚本 | 数据来源 | 输出文件 |
 |--------------|---------|------|---------|---------|---------|
 | Method overview | Theory and Method | EVQ-Cosh allocation schematic and collision-envelope intuition | manual/static asset | paper diagram source | `paper/figs/fig_method_overview.pdf` |
-| EVQ × YaRN | Experiments / Primary I | EVQ × YaRN orthogonal synergy | `scripts/figures/fig2_evq_yarn_orthogonality.py` | `docs/exp/2026-03-03_passkey_mix_results.md` (inline hardcoded) | `paper/figs/fig2_evq_yarn_synergy.pdf` |
-| PE-dominant scaling | Appendix supporting PE-dominant section | PE-dominant regime & scaling law | `scripts/figures/fig3_pe_dominant_scaling.py` | `data/curated/fig3_extreme_128.json` fallback for panel (a); `results/core_text/phase11/results_phase11_{raw,yarn}.json` for panels (b,c) | `paper/figs/fig3_pe_dominant_scaling.pdf` |
+| EVQ × YaRN | Experiments / Primary I | EVQ × YaRN orthogonal synergy | `scripts/figures/fig2_evq_yarn_orthogonality.py` | `data/curated/table2_evq_yarn_454m_passkey_10pct.json` | `paper/figs/fig2_evq_yarn_synergy.pdf` |
+| PE-dominant scaling | Appendix supporting PE-dominant section | PE-dominant regime & scaling-law check | `scripts/figures/fig3_pe_dominant_scaling.py` | `data/curated/fig3_extreme_128.json` fallback for panel (a); regenerate Phase 11 sweeps for panels (b,c) | `paper/figs/fig3_pe_dominant_scaling.pdf` |
 | Progressive training | Appendix experiment details | Phase 17c 454M supporting/progressive pattern | `scripts/core_text_phases/phase17c_*.py` | `results/evq_phase17c_results/` | `paper/figs/fig4_phase17c_flagship.pdf` |
 | Downstream QA | Appendix supporting results | Downstream QA (Gold NLL) | `scripts/core_text_phases/phase21b_quality_eval_clean.py` | `results/core_text/phase21b/` | `paper/figs/fig5_downstream_qa.pdf` |
-| τ* validation | Appendix theory validation | τ* formula validation (99-run) | `scripts/core_text_phases/phase16_formula_optimality_sweep.py` | `results/core_text/phase16/` | `paper/figs/fig6_tau_formula_validation.pdf` |
+| τ* validation | Appendix theory validation | τ* operating-rule validation (99-run sweep basin) | `scripts/core_text_phases/phase16_formula_optimality_sweep.py` | `results/core_text/phase16/` | `paper/figs/fig6_tau_formula_validation.pdf` |
 | Multiscale waterbed | Appendix supporting results | Multiscale waterbed trade-off | `scripts/figures/fig1_neurips.py` (subplot) | Multi-tier PPL results | `paper/figs/fig7_multiscale_waterbed.pdf` |
 | Attn Viz | Appendix supporting results | Attention distance distribution | `scripts/core_text_phases/visualize_attention_distance.py` | 750M checkpoints (EVQ vs Geo) | `paper/figs/attn_*.pdf` |
 | τ-sweep | Appendix supporting results | τ sweep curves (PPL, freq, collision, cross-scale) | `scripts/core_text_phases/evq_analysis.py` | `results/core_text/D_summary.json` | `paper/figs/fig_tau_sweep_*.pdf` |
@@ -30,14 +30,14 @@
 |---------------------|---------------------|---------|------|------------|---------|
 | `paper/tables/table_epistemic_map.tex` | Main body table | Theory and Method | Epistemic status of derivation components | theory audit | — |
 | `paper/tables/table_evidence_tier.tex` | Main body table | Experiments setup | Evidence tier by setting | paper audit | — |
-| `paper/tables/table2_evq_yarn_main.tex` | Main body table | Primary I | EVQ+YaRN main systems result | 454M aggregate + `phase14c_multiscale_evq_yarn.py` supporting check | `docs/exp/2026-03-03_passkey_mix_results.md` |
-| `paper/tables/table4_pe_dominant.tex` | Main body table | Primary II | PE-dominant extreme extrapolation | `phase11c_454m_scaling.py` + `phase11b_125m_dape.py` | `docs/exp/2026-03-04_phase11_L256_results.md` |
+| `paper/tables/table2_evq_yarn_main.tex` | Main body table | Primary I | EVQ+YaRN main systems result | 454M curated aggregate/provenance + `phase14c_multiscale_evq_yarn.py` supporting check | `data/curated/table2_evq_yarn_454m_passkey_10pct.json` |
+| `paper/tables/table4_pe_dominant.tex` | Main body table | Primary II | PE-dominant extreme extrapolation | `phase11b_125m_dape.py`; `phase11c_454m_scaling.py` supports Fig. 3 scaling panels | `data/curated/fig3_extreme_128.json` + Phase 11 regeneration |
 | `paper/tables/table_method_comparison.tex` | Appendix table | Appendix method comparison | Compact method comparison / positioning | literature survey | — |
 | `paper/appendix/a2_experiment_details.tex` (inline) | Appendix table | Appendix experiment details | Reproducibility snapshot | — | — |
 | `paper/tables/table6_750m_continue_supporting.tex` | Appendix table | Appendix experiment details | 750M continued-pretraining support | `phase15_750m_2k_to_4k_continue_ckpt_eval.py` | `docs/exp/2026-03-06_phase15_750m_2k_to_4k_continue_results.md` |
 | `paper/tables/table5_phase11_leverage.tex` | Appendix table | Appendix supporting results | Phase 11 leverage (YaRN asymmetry at L=256) | `phase11_L256_extrap.py` + `phase11_yarn_eval.py` | `docs/exp/2026-03-04_phase11_L256_results.md` |
 | `paper/tables/table1_multiscale_raw_ppl.tex` | Appendix table | Appendix supporting results | Multi-scale raw PPL (50M-750M) | `run_evq_sweep.py` (50M/125M tiers plus curated larger rows) | `docs/exp/2026-02-27_evq_tau_sweep_results.md` |
-| `paper/tables/table3_capability_passkey.tex` | Appendix table | Appendix supporting experiments | Capability preservation / passkey robustness | `eval_passkey.py` | `docs/exp/2026-03-03_passkey_mix_results.md` |
+| `paper/tables/table3_capability_passkey.tex` | Appendix table | Appendix supporting experiments | Capability preservation / passkey robustness | `scripts/supporting_eval/eval_passkey_scratch.py` helpers + curated aggregate | `data/curated/table2_evq_yarn_454m_passkey_10pct.json` |
 
 ---
 
@@ -47,7 +47,7 @@
 |----|-------|-----------------|---------|-------|------|
 | **C1** | EVQ-Cosh is the exact inverse-CDF minimizer of the stated broadband surrogate; τ is a semi-analytic operating rule, not a global optimum | Theory + Phase 16 formula sweep (99 runs, 50M/125M) | `phase16_formula_optimality_sweep.py` | 3+ seeds × multi-τ | ✅ Low |
 | **C2** | PE-dominant DAPE-style diagnostic: EVQ has lower seed-42 8K PPL than Geo/DAPE without learned PE parameters | Phase 11b 125M extreme extrap (128→8K) | `phase11b_125m_dape.py` | 1--3 seeds by row | ⚠️ Medium (diagnostic scope) |
-| **C3** | EVQ increases fixed-scale YaRN leverage vs Geo+YaRN | 454M passkey-mix aggregate; Phase 14c provides 50M/125M supporting rerun | `phase14c_multiscale_evq_yarn.py` (supporting only); curated 454M provenance JSON pending | 3+3 seeds | ⚠️ Medium until provenance JSON is shipped |
+| **C3** | EVQ increases fixed-scale YaRN leverage vs Geo+YaRN | 454M passkey-mix aggregate/provenance; Phase 14c provides 50M/125M supporting rerun | `data/curated/table2_evq_yarn_454m_passkey_10pct.json`; `phase14c_multiscale_evq_yarn.py` is supporting only | 3+3 seeds | ✅ Low for traceability; medium for scope |
 | **C4** | MLA scarce-channel stress test is the third primary empirical anchor | 432M MLA 3-seed run; matched-scale Geo+YaRN comparison | MLA scripts / curated aggregate | 3 seeds | ⚠️ Medium (architecture-specific convention) |
 | **S1** | 454M Stage 2-3 continued pretrain | Phase 17c 454M (1024→2048) | `phase17c_454m_1024_to_2048_continue.py` | single seed | Supporting only |
 | **S2** | 750M scale-up confirmation | Phase 15 750M (2K→4K) | `phase15_750m_2k_to_4k_continue_ckpt_eval.py` | single-seed | Supporting only |
@@ -59,10 +59,10 @@
 
 | Theorem/Proposition | 论文位置 | Numerical Validation | Script |
 |---------------------|---------|---------------------|--------|
-| Thm 1: EVQ-cosh closed-form | Theory and Method | Phase 16 (99-run) confirms τ* optimality | `phase16_formula_optimality_sweep.py` |
+| Thm 1: EVQ-cosh closed-form | Theory and Method | Phase 16 (99-run) validates the τ* operating-rule basin | `phase16_formula_optimality_sweep.py` |
 | Thm 2: $\tau{\to}0$ geometric limit | Theory and Method | Verified on the midpoint grid used by EVQ experiments; `geometric_inv_freq` remains the standard endpoint-grid RoPE baseline | `scripts/lib/rope/schedules.py` |
 | Waterbed inequality | Theory and appendix proof | All tiers show bounded short-range cost | `evq_analysis.py` waterbed plot |
-| Phase collision reduction | Theory and appendix validation | Collision scores decrease with optimal τ | `run_evq_sweep.py` collision analysis |
+| Phase collision reduction | Theory and appendix validation | Collision scores decrease near the selected operating τ | `run_evq_sweep.py` collision analysis |
 
 ---
 
@@ -100,8 +100,8 @@ Only the rows below are present in the current paper appendix; other video/DiT r
 | Experiment | Report | Data | Scripts |
 |-----------|--------|------|---------|
 | DiT 38.8M + 129.6M (cross-run) | `results/video_dit/REPORT_FINAL.md` (v2) | `results/video_dit/20260316_{002758,medium}/` | `run_dit_temporal.py` |
-| DiT τ sweep (cross-run) | `results/video_dit/TAU_SWEEP_HANDOFF.md` | `results/video_dit/20260316_tau_sweep/` (server) | `run_dit_temporal.py --tau` |
-| DiT head-to-head | `results/video_dit/REPORT_FINAL.md` (v2, Part II) | Verbal + server logs | `run_dit_temporal.py` |
+| DiT τ sweep (cross-run) | `results/video_dit/TAU_SWEEP_HANDOFF.md` | Regenerate from the listed script; raw run logs are excluded from the compact supplement | `run_dit_temporal.py --tau` |
+| DiT head-to-head | `results/video_dit/REPORT_FINAL.md` (v2, Part II) | Summary statistics only; raw run logs are excluded from the compact supplement | `run_dit_temporal.py` |
 | VideoGPT teacher-forced | `results/supporting_video/temporal_precision_report.md` | `results/supporting_video/temporal_precision/` | `eval_temporal_precision.py` |
 | Phase collision analysis | — | `results/video_dit/phase_collision_analysis.json` | Theory computation |
 | DiT theory analysis | `DiT_frequency_allocation_analysis.md` (root) | — | — |
@@ -113,7 +113,7 @@ Only the rows below are present in the current paper appendix; other video/DiT r
 | Phase | Question | Paper Role | Key Scripts | → Figure/Table |
 |-------|----------|-----------|-------------|----------------|
 | 8 | Raw EVQ τ-sweep | Theory foundation | `phase8d_scaling_law.py`, `phase8f_multi_seed.py` | `table1_multiscale_raw_ppl.tex`, `fig6_tau_formula_validation.pdf` |
-| 11 | PE-dominant regime | **Primary anchor** | `phase11_L256_extrap.py`, `phase11_yarn_eval.py`, `phase11b_125m_dape.py`, `phase11c_454m_scaling.py` | `table4_pe_dominant.tex`, `table5_phase11_leverage.tex`, `fig3_pe_dominant_scaling.pdf` |
+| 11 | PE-dominant regime | **Primary anchor for Table 4; supporting for L=256/454M scaling panels** | `phase11b_125m_dape.py`, plus `phase11_L256_extrap.py`, `phase11_yarn_eval.py`, `phase11c_454m_scaling.py` as supporting checks | `table4_pe_dominant.tex`, `table5_phase11_leverage.tex`, `fig3_pe_dominant_scaling.pdf` |
 | 14 | EVQ+YaRN synergy | **Primary anchor (454M aggregate); supporting 50M/125M rerun** | `phase14c_multiscale_evq_yarn.py` supports the trend but is not the full Table 2 rerun | `table2_evq_yarn_main.tex`, `table3_capability_passkey.tex`, `fig2_evq_yarn_synergy.pdf` |
 | 15 | 750M scale-up | Supporting | `phase15_750m_2k_to_4k_continue_ckpt_eval.py` | `table6_750m_continue_supporting.tex` |
 | 16 | τ* formula validation | Theory confirmation | `phase16_formula_optimality_sweep.py` | `fig6_tau_formula_validation.pdf`, `table_lambda_cv.tex` |
@@ -135,5 +135,3 @@ Only the rows below are present in the current paper appendix; other video/DiT r
 | 实验报告 | `docs/exp/` (YYYY-MM-DD_slug.md) |
 | 实验结果数据 | `results/core_text/` |
 | 复现指南 | `docs/overview/REPRODUCE.md` |
-| Internal handoff notes | `internal/` (excluded from reviewer supplement) |
-| 协作材料 | `team/` |

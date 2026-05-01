@@ -9,7 +9,7 @@ Component & Status & Role \\
 \midrule
 Broadband surrogate $\mathcal{C}_{\mathrm{app}}$ & Functional approximation of the \emph{collision objective} (not pointwise approximation of the kernel $K$) & Yields a tractable variational problem; functionally checked in Appendix~\ref{sec:surrogate-validation} \\
 ODE and closed-form family & Exact conditional on $\mathcal{C}_{\mathrm{app}}$ & Theoretical core; geometric RoPE is the $\tau{\to}0$ limit of the pure-tether sub-family \\
-Pure-tether branch & Practical branch choice of the stationary ODE & Gives a closed-form invertible quantile warp; forcing term suppressed at typical bases \\
+Pure-tether branch & Practical branch choice of the stationary ODE & Gives a closed-form invertible quantile warp; forcing branch is CDF/$L^1$-suppressed at typical bases, not pointwise; large $\tau$ can amplify warp error \\
 $\tau^*$ scaling rule & Semi-analytic operating-point selector (not a global minimizer) & Moves allocation away from the degenerate $\tau{\to}0$ edge into a wide non-geometric basin \\
 \bottomrule
 \end{tabular}

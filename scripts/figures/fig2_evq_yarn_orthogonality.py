@@ -2,7 +2,7 @@
 Figure 2 for the NeurIPS paper: primary EVQ x YaRN retrieval anchor.
 
 Data source:
-  docs/exp/2026-03-03_passkey_mix_results.md
+  data/curated/table2_evq_yarn_454m_passkey_10pct.json
 
 Only uses the paper-safe 10% passkey-mix, matched YaRN scale=8 block:
   - 454M model
@@ -18,7 +18,9 @@ Output:
 
 from __future__ import annotations
 
+import json
 import os
+from pathlib import Path
 
 import matplotlib
 
@@ -57,14 +59,29 @@ C_EVQ_LIGHT = "#f7ddd8"
 C_GRID = "#d9d9d9"
 C_TEXT = "#333333"
 
+DATA_PATH = (
+    Path(__file__).resolve().parents[2]
+    / "data"
+    / "curated"
+    / "table2_evq_yarn_454m_passkey_10pct.json"
+)
 
-# 10% passkey mix, fair scale=8, seed-wise PK@8K retrieval.
-SEEDWISE_8K = {
-    "Geo": np.array([36, 46, 40], dtype=float),
-    "Geo+YaRN": np.array([58, 62, 64], dtype=float),
-    "EVQ": np.array([44, 60, 56], dtype=float),
-    "EVQ+YaRN": np.array([100, 100, 100], dtype=float),
-}
+
+def load_table2_summary() -> dict[str, dict[str, object]]:
+    """Load reviewer-facing curated values used by Tables 2--3."""
+    payload = json.loads(DATA_PATH.read_text(encoding="utf-8"))
+    return payload["table2_full_sequence_summary"]
+
+
+def load_seedwise_8k(summary: dict[str, dict[str, object]]) -> dict[str, np.ndarray]:
+    seed_order = ("42", "123", "7")
+    return {
+        name: np.array(
+            [summary[name]["pk_8k_seedwise"][seed] for seed in seed_order],
+            dtype=float,
+        )
+        for name in ("Geo", "Geo+YaRN", "EVQ", "EVQ+YaRN")
+    }
 
 
 def bar_style(name: str) -> dict[str, object]:
@@ -83,9 +100,11 @@ def add_gain_bracket(ax: plt.Axes, x0: float, x1: float, y: float, text: str) ->
 
 def main() -> None:
     categories = ["Geo", "Geo+YaRN", "EVQ", "EVQ+YaRN"]
-    means = np.array([SEEDWISE_8K[name].mean() for name in categories])
-    stds = np.array([SEEDWISE_8K[name].std(ddof=1) for name in categories])
-    rounded = np.array([41, 61, 53, 100], dtype=int)
+    summary = load_table2_summary()
+    seedwise_8k = load_seedwise_8k(summary)
+    means = np.array([seedwise_8k[name].mean() for name in categories])
+    stds = np.array([seedwise_8k[name].std(ddof=1) for name in categories])
+    rounded = np.array([summary[name]["pk"]["8k"] for name in categories], dtype=int)
 
     fig, ax = plt.subplots(figsize=(4.9, 2.45), constrained_layout=True)
     x = np.arange(len(categories), dtype=float)
@@ -117,7 +136,7 @@ def main() -> None:
         jitter = np.array([-0.09, 0.0, 0.09])
         ax.scatter(
             np.full(3, x[idx]) + jitter,
-            SEEDWISE_8K[name],
+            seedwise_8k[name],
             color=style["edgecolor"],
             s=18,
             marker="s" if name.startswith("EVQ") else "o",
