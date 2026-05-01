@@ -103,11 +103,11 @@ MLA配置的GEO基线PPL显著高于MHA/GQA（65-67 vs 44-50 @2K）。
 
 | 项目 | 路径 |
 |------|------|
-| 训练脚本 | `/root/autodl-tmp/scripts/core_text_phases/run_gqa_evq_experiment.py` |
-| Phase 1 结果 | `/root/autodl-tmp/gqa_125m_experiment/mha_kv12/results_final.json` |
-| Phase 2 结果 | `/root/autodl-tmp/gqa_125m_experiment/gqa_kv4/results_final.json` |
-| Phase 3 结果 | `/root/autodl-tmp/gqa_125m_experiment/gqa_kv2/results_final.json` |
-| Phase 4 结果 | `/root/autodl-tmp/gqa_125m_experiment/mla_r32/results_final.json` |
-| Phase 5 结果 | `/root/autodl-tmp/gqa_125m_experiment/mla_r16/results_final.json` |
-| Phase 6 结果 | `/root/autodl-tmp/gqa_125m_experiment/gqa_kv2_tau1p5/results_final.json` (进行中) |
+| 训练脚本 | `REMOTE_RUN_ROOT/scripts/core_text_phases/run_gqa_evq_experiment.py` |
+| Phase 1 结果 | `REMOTE_RUN_ROOT/gqa_125m_experiment/mha_kv12/results_final.json` |
+| Phase 2 结果 | `REMOTE_RUN_ROOT/gqa_125m_experiment/gqa_kv4/results_final.json` |
+| Phase 3 结果 | `REMOTE_RUN_ROOT/gqa_125m_experiment/gqa_kv2/results_final.json` |
+| Phase 4 结果 | `REMOTE_RUN_ROOT/gqa_125m_experiment/mla_r32/results_final.json` |
+| Phase 5 结果 | `REMOTE_RUN_ROOT/gqa_125m_experiment/mla_r16/results_final.json` |
+| Phase 6 结果 | `REMOTE_RUN_ROOT/gqa_125m_experiment/gqa_kv2_tau1p5/results_final.json` (not used for paper claims) |
 | 日志 | `phases2to5_v2.log`, `phases4to5.log`, `phase6.log` |

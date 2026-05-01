@@ -97,7 +97,7 @@
 因此，今天专门生成了严格的 FineWeb-Edu 验证 tensor，并显式推到远端：
 
 - 本地: `data/fineweb_val_cache/val_fineweb-edu_5000000_strict.pt`
-- 远端: `/root/autodl-tmp/evq_phase17h_125m_L1024_fixed/data_cache/val_fineweb-edu_5000000.pt`
+- 远端: `REMOTE_RUN_ROOT/evq_phase17h_125m_L1024_fixed/data_cache/val_fineweb-edu_5000000.pt`
 
 ### 2.3 标准 YaRN 的统一口径
 

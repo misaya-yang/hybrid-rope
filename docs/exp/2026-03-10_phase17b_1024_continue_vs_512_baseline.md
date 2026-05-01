@@ -4,7 +4,7 @@
 > 状态: **COMPLETE**
 > 基线报告: `docs/exp/2026-03-09_phase17_evq_yarn_overlay_results.md`
 > 当前 raw eval 本地缓存（gitignored）: `results/core_text/phase17b_1024_continue/final_eval_summary.json`
-> 远端原始产物: `/root/autodl-tmp/evq_phase17b/final_eval_summary.json`
+> 远端原始产物: `REMOTE_RUN_ROOT/evq_phase17b/final_eval_summary.json`
 
 ---
 
@@ -17,7 +17,7 @@
 因此它是一个 **staged continuation before/after** 对照，不是严格的等预算比较。
 
 - 昨天的基线点:
-  - 来自 [`docs/exp/2026-03-09_phase17_evq_yarn_overlay_results.md`](/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/docs/exp/2026-03-09_phase17_evq_yarn_overlay_results.md)
+  - 来自 [`docs/exp/2026-03-09_phase17_evq_yarn_overlay_results.md`](REPO_ROOT/docs/exp/2026-03-09_phase17_evq_yarn_overlay_results.md)
   - 使用 `phase17` 的 `50% checkpoint`
   - 训练长度保持 `L_train=512`
   - raw PPL 评到 `4K / 8K / 16K / 24K / 32K`

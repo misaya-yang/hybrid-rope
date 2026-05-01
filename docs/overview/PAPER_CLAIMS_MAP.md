@@ -28,8 +28,8 @@
 
 | Stable table source | Stable PDF location | 论文位置 | 描述 | 数据来源脚本 | 实验报告 |
 |---------------------|---------------------|---------|------|------------|---------|
-| `paper/tables/table_epistemic_map.tex` | Main body table | Theory and Method | Epistemic status of derivation components | theory audit | — |
-| `paper/tables/table_evidence_tier.tex` | Main body table | Experiments setup | Evidence tier by setting | paper audit | — |
+| `paper/tables/table_epistemic_map.tex` | Main body table | Theory and Method | Epistemic status of derivation components | derivation notes | — |
+| `paper/tables/table_evidence_tier.tex` | Main body table | Experiments setup | Evidence tier by setting | paper-source classification | — |
 | `paper/tables/table2_evq_yarn_main.tex` | Main body table | Primary I | EVQ+YaRN main systems result | 454M curated aggregate/provenance + `phase14c_multiscale_evq_yarn.py` supporting check | `data/curated/table2_evq_yarn_454m_passkey_10pct.json` |
 | `paper/tables/table4_pe_dominant.tex` | Main body table | Primary II | PE-dominant extreme extrapolation | `phase11b_125m_dape.py`; `phase11c_454m_scaling.py` supports Fig. 3 scaling panels | `data/curated/fig3_extreme_128.json` + Phase 11 regeneration |
 | `paper/tables/table_method_comparison.tex` | Appendix table | Appendix method comparison | Compact method comparison / positioning | literature survey | — |

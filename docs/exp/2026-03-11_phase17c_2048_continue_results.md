@@ -8,7 +8,7 @@
 > 结果文件:
 >   - 初始 eval: `results/evq_phase17c_results/phase17c_summary.json`
 >   - 扩展 eval: `results/evq_phase17c_results/phase17c_extended_eval.json`
-> 远端产物: `/root/autodl-tmp/evq_phase17c_2048_continue/`
+> 远端产物: `REMOTE_RUN_ROOT/evq_phase17c_2048_continue/`
 
 ---
 

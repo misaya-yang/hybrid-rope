@@ -64,5 +64,22 @@
       "ppl_mean": {"2k": 67.9, "4k": 94.3, "8k": 150.3, "16k": 237.2},
       "ppl_std": {"2k": 0.5, "4k": 4.4, "8k": 5.2, "16k": 5.5}
     }
+  },
+  "table3_auxiliary_rows": {
+    "pure_fineweb_edu_passkey": {
+      "geo": 55.7,
+      "evq": 56.7,
+      "interpretation": "non-destructive",
+      "note": "Auxiliary pure-FineWeb-Edu control reported only in Table 3; seedwise checkpoint metadata is not packaged."
+    },
+    "mix_5pct_mean_no_yarn": {
+      "Geo": {"pk_mean": {"2k": 100.0, "4k": 63.3, "8k": 54.0, "global": 72.3}},
+      "EVQ": {"pk_mean": {"2k": 100.0, "4k": 68.7, "8k": 56.7, "global": 75.0}}
+    },
+    "mix_5_to_10_delta_at_8k": {
+      "geo_pp": -13.3,
+      "evq_pp": -3.3,
+      "interpretation": "EVQ more robust"
+    }
   }
 }

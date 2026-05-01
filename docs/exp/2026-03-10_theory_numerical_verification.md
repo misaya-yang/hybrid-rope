@@ -1,7 +1,7 @@
 # 理论数值验证报告（M4 Max 本机）
 
 > **日期**: 2026-03-10
-> **状态**: PENDING — 需人工分析确认
+> **状态**: NOT_CITED -- diagnostic note, not used for paper claims
 > **脚本**: `scripts/m4_max_36gb/theory_numerical_verification.py`
 > **结果**: `results/m4_max_36gb/theory_verification_results.json`
 > **环境**: M4 Max, CPU only, numpy + scipy, 运行时间 < 10s
@@ -65,7 +65,7 @@ CDF 反演公式在纯 tether 模型下**精确到机器精度**。
 - τ=1.0 的异常低值可能是 Fisher 项和 tether 项恰好抵消的巧合
 - Fisher 项贡献 O(γ/τ²) 修正 — 但 γ = -2lnb ≈ -26.2 (base=500K)，所以修正并不小
 - **疑问**: 论文的推导链中，CDF 公式是从完整 ODE（含 Fisher）导出的还是仅从 tether 导出的？如果只是 tether 导出，大偏差是预期的；如果声称是完整 ODE 的解，则需要解释为何偏差大
-- **TODO**: 确认 CORE_THEORY.md 中推导链第 5→6 步的精确假设
+- **Check note**: 确认 CORE_THEORY.md 中推导链第 5→6 步的精确假设
 
 ---
 
@@ -92,12 +92,12 @@ CDF 反演公式在纯 tether 模型下**精确到机器精度**。
 1. **R²_mid 最高 0.74，远低于论文的 ">0.99"**
    - 论文的 R²_mid > 0.99 是否使用了不同的距离先验 D(Δ)？
    - 合成 power-law Δ^{-1.5} 可能不是论文中使用的先验
-   - **TODO**: 用 `learnable_evq.py` 的 `measure_distance_distribution()` 从真实 FineWeb-Edu 数据测量 D(Δ)，然后重跑
+   - **Check note**: 用 `learnable_evq.py` 的 `measure_distance_distribution()` 从真实 FineWeb-Edu 数据测量 D(Δ)，然后重跑
 
 2. **α fitting 全部为负值（被 clamp 到 1e-10）**
    - 导致 τ_fit = √(β/α) 炸到 ~10 万，完全不可用
    - 两步拟合方法（先 off-diagonal → β，再 diagonal → α）在合成先验下可能不稳定
-   - **TODO**: 对齐 `learnable_evq.py` 中 `estimate_tau_from_distance_prior()` 的实现，用同样的拟合方法重做
+   - **Check note**: 对齐 `learnable_evq.py` 中 `estimate_tau_from_distance_prior()` 的实现，用同样的拟合方法重做
 
 3. **R² 随 base 递减**: base 越大 R² 越低
    - 物理解释: base 越大 → 频率更分散 → 核矩阵结构更复杂 → 二参数近似更差？
@@ -164,7 +164,7 @@ CORE_THEORY §9 写:
 2. 论文用的 L=4096 但碰撞条件不同（可能没有 2π 因子）
 3. 论文表格中 base=10K 的 "碰撞块占比 9.7%" 对应的 L 值不是 4096
 
-**TODO**: 回查 CORE_THEORY §9 的精确定义，确认 c 是 colliding 还是 non-colliding 的占比
+**Check note**: 回查 CORE_THEORY §9 的精确定义，确认 c 是 colliding 还是 non-colliding 的占比
 
 ### 相对增益 (1-c)/lnb 趋势
 

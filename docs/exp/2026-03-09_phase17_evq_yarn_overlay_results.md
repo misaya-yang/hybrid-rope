@@ -3,10 +3,10 @@
 > 日期: 2026-03-09
 > 状态: **COMPLETE**
 > 服务器: `autodl-container-16864f9d88-db19646c`
-> 训练目录: `/root/autodl-tmp/evq_phase17`
+> 训练目录: `REMOTE_RUN_ROOT/evq_phase17`
 > 评测目录:
-> - raw long eval: `/root/autodl-tmp/evq_phase17/eval_ckpt25_50_long_20260309_135414`
-> - raw + YaRN overlay: `/root/autodl-tmp/evq_phase17/eval_yarn_overlay_20260309_140844`
+> - raw long eval: `REMOTE_RUN_ROOT/evq_phase17/eval_ckpt25_50_long_20260309_135414`
+> - raw + YaRN overlay: `REMOTE_RUN_ROOT/evq_phase17/eval_yarn_overlay_20260309_140844`
 
 ---
 

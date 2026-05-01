@@ -71,7 +71,15 @@ ds = load_dataset("emozilla/quality", split="validation")
 - **评估指标**: Gold NLL (非准确率，因 454M 处于容量地板)
 - **实现**: `scripts/core_text_phases/phase21b_quality_eval_clean.py`
 
-## 5. 预 tokenized 数据 (.pt 文件)
+## 5. LongAlign-10k (supporting LoRA)
+
+Appendix LoRA transfer checks use LongAlign-10k only as supporting post-hoc evidence; it is not a primary claim path.
+
+- **来源**: LongAlign-10k public release.
+- **用途**: LLaMA-3-8B-Instruct LoRA supporting transfer check.
+- **引用**: Bai et al., 2024 (`paper/refs/references.bib`).
+
+## 6. 预 tokenized 数据 (.pt 文件)
 
 部分实验使用预先 tokenized 的 `.pt` 数据文件以加速训练。这些文件不包含在版本控制中（体积过大），但可通过以下方式重新生成：
 
@@ -99,3 +107,4 @@ python scripts/data_prep/tokenize_synth.py
 | TinyStories | Table 1 quick/historical validation rows | Phase 8 and selected small-scale checks |
 | Passkey Mix | Tables 2-3, Fig 2 | Phase 14+ |
 | QuALITY | Fig 5 | Phase 21b |
+| LongAlign-10k | Appendix supporting LoRA transfer check | Supporting post-hoc LoRA experiment |

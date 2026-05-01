@@ -50,8 +50,8 @@ I downloaded the lightweight official V-NIAH-D result bundle and summarized the 
 
 These come from:
 
-- [videorope_official manifest](/Users/yang/projects/hybrid-rope/data/video_temporal/external/videorope_official/manifest.json)
-- [baseline summary script](/Users/yang/projects/hybrid-rope/scripts/video_temporal/summarize_videorope_official_results.py)
+- [videorope_official manifest](REPO_ROOT/data/video_temporal/external/videorope_official/manifest.json)
+- [baseline summary script](REPO_ROOT/scripts/video_temporal/summarize_videorope_official_results.py)
 
 The gap is large enough that “temporal frequency allocation matters” is already an externally anchored premise, not just our own intuition.
 
@@ -59,7 +59,7 @@ The gap is large enough that “temporal frequency allocation matters” is alre
 
 We already had one local synthetic video script:
 
-- [run_video_temporal.py](/Users/yang/projects/hybrid-rope/scripts/video_temporal/run_video_temporal.py)
+- [run_video_temporal.py](REPO_ROOT/scripts/video_temporal/run_video_temporal.py)
 
 That script proves the codebase already has:
 
@@ -91,11 +91,11 @@ This is why the first run should be a controlled synthetic sweep, not an immedia
 
 Prepared with:
 
-- [prepare_moving_mnist_video.py](/Users/yang/projects/hybrid-rope/scripts/data_prep/prepare_moving_mnist_video.py)
+- [prepare_moving_mnist_video.py](REPO_ROOT/scripts/data_prep/prepare_moving_mnist_video.py)
 
 Local cache:
 
-- [moving_mnist_medium manifest](/Users/yang/projects/hybrid-rope/data/video_temporal/generated/moving_mnist_medium/manifest.json)
+- [moving_mnist_medium manifest](REPO_ROOT/data/video_temporal/generated/moving_mnist_medium/manifest.json)
 
 Configuration:
 
@@ -112,11 +112,11 @@ Configuration:
 
 Prepared with:
 
-- [prepare_videorope_assets.py](/Users/yang/projects/hybrid-rope/scripts/data_prep/prepare_videorope_assets.py)
+- [prepare_videorope_assets.py](REPO_ROOT/scripts/data_prep/prepare_videorope_assets.py)
 
 Local asset root:
 
-- [videorope_official](/Users/yang/projects/hybrid-rope/data/video_temporal/external/videorope_official)
+- [videorope_official](REPO_ROOT/data/video_temporal/external/videorope_official)
 
 This includes:
 
@@ -128,7 +128,7 @@ This includes:
 
 ### Main sweep
 
-- [run_video_temporal_allocation_sweep.py](/Users/yang/projects/hybrid-rope/scripts/video_temporal/run_video_temporal_allocation_sweep.py)
+- [run_video_temporal_allocation_sweep.py](REPO_ROOT/scripts/video_temporal/run_video_temporal_allocation_sweep.py)
 
 What it does:
 
@@ -152,8 +152,8 @@ Interpretation:
 
 ### One-command launcher
 
-- [run_phase23_blackwell.sh](/Users/yang/projects/hybrid-rope/scripts/video_temporal/run_phase23_blackwell.sh)
-- [run_phase23_blackwell_10h.sh](/Users/yang/projects/hybrid-rope/scripts/video_temporal/run_phase23_blackwell_10h.sh)
+- [run_phase23_blackwell.sh](REPO_ROOT/scripts/video_temporal/run_phase23_blackwell.sh)
+- [run_phase23_blackwell_10h.sh](REPO_ROOT/scripts/video_temporal/run_phase23_blackwell_10h.sh)
 
 Default run:
 

@@ -1,9 +1,9 @@
 # 128-Token PE Quality Experiment Report
 
 > **Date**: 2026-03-01
-> **Server**: AutoDL RTX 5090 (32GB), ssh -p 12205 root@connect.bjb1.seetacloud.com
+> **Compute**: external GPU worker (details redacted)
 > **Total GPU time**: ~25 minutes (Phase 1: 15m, Phase 2: 6m, Phase 3: 6m)
-> **Results**: `/root/autodl-tmp/evq_128tok/results_checkpoint.json`
+> **Results**: `REMOTE_RUN_ROOT/evq_128tok/results_checkpoint.json`
 
 ---
 
@@ -268,24 +268,24 @@ Spread is only 1.6% (FineWeb) / 2.5% (TinyStories). The learnable τ optimizes t
 
 | File | Path |
 |------|------|
-| Full results JSON | `/root/autodl-tmp/evq_128tok/results_checkpoint.json` |
-| Algorithm 1 prediction | `/root/autodl-tmp/evq_128tok/algorithm1_prediction.json` |
-| Algorithm 1 (max_delta=2048) | `/root/autodl-tmp/evq_128tok/algorithm1_maxdelta2048.json` |
-| Algorithm 1 (max_delta=4096) | `/root/autodl-tmp/evq_128tok/algorithm1_maxdelta4096.json` |
-| Algorithm 1 (TinyStories) | `/root/autodl-tmp/evq_128tok/algorithm1_tinystories_2048.json` |
-| Phase 1 log | `/root/autodl-tmp/evq_128tok/phase1.log` |
-| Phase 2 log | `/root/autodl-tmp/evq_128tok/phase2.log` |
-| Phase 3 log | `/root/autodl-tmp/evq_128tok/phase3.log` |
-| Model checkpoints | `/root/autodl-tmp/evq_128tok/125m_*/model.pt` |
-| τ trajectories | `/root/autodl-tmp/evq_128tok/125m_learnable_*/tau_trajectory.json` |
-| DAPE learned freqs | `/root/autodl-tmp/evq_128tok/125m_dape_*/dape_learned_inv_freq.npy` |
+| Full results JSON | `REMOTE_RUN_ROOT/evq_128tok/results_checkpoint.json` |
+| Algorithm 1 prediction | `REMOTE_RUN_ROOT/evq_128tok/algorithm1_prediction.json` |
+| Algorithm 1 (max_delta=2048) | `REMOTE_RUN_ROOT/evq_128tok/algorithm1_maxdelta2048.json` |
+| Algorithm 1 (max_delta=4096) | `REMOTE_RUN_ROOT/evq_128tok/algorithm1_maxdelta4096.json` |
+| Algorithm 1 (TinyStories) | `REMOTE_RUN_ROOT/evq_128tok/algorithm1_tinystories_2048.json` |
+| Phase 1 log | `REMOTE_RUN_ROOT/evq_128tok/phase1.log` |
+| Phase 2 log | `REMOTE_RUN_ROOT/evq_128tok/phase2.log` |
+| Phase 3 log | `REMOTE_RUN_ROOT/evq_128tok/phase3.log` |
+| Model checkpoints | `REMOTE_RUN_ROOT/evq_128tok/125m_*/model.pt` |
+| τ trajectories | `REMOTE_RUN_ROOT/evq_128tok/125m_learnable_*/tau_trajectory.json` |
+| DAPE learned freqs | `REMOTE_RUN_ROOT/evq_128tok/125m_dape_*/dape_learned_inv_freq.npy` |
 
-### Mini-sweep results (on server)
+### Mini-sweep results (in artifact summary)
 
 | File | Description |
 |------|-------------|
-| `/root/autodl-tmp/evq_minisweep/results_checkpoint.json` | FineWeb τ=0.5,2.0,2.5 |
-| `/root/autodl-tmp/evq_minisweep_ts/results_final.json` | TinyStories τ=0/0.5/1.0/1.5/2.0/2.5 + Learnable |
+| `REMOTE_RUN_ROOT/evq_minisweep/results_checkpoint.json` | FineWeb τ=0.5,2.0,2.5 |
+| `REMOTE_RUN_ROOT/evq_minisweep_ts/results_final.json` | TinyStories τ=0/0.5/1.0/1.5/2.0/2.5 + Learnable |
 
 ### Local (downloaded)
 

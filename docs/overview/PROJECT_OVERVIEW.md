@@ -130,60 +130,56 @@ def evq_cosh_inv_freq(d_head, L, base):
 
 ## 四、实验结果汇总
 
-### 4.1 跨规模 PPL 改善（base=500K, L_train=2048, τ=1.5）
+### 4.1 跨规模 PPL 改善（base=500K，L_train=2048 为主）
 
-| 模型规模 | 数据集 | Δ PPL@2K | Δ PPL@16K |
-|---------|--------|----------|-----------|
-| 50M | TinyStories | -0.3% | **-10.9%** |
-| 125M | TinyStories | -1.7% | **-18.9%** |
-| 350M (3-seed) | FineWeb-Edu | +0.4% | **-13.3%** |
-| 750M | FineWeb-Edu | -1.5% | 待补充 |
+| 模型规模 | 数据集/设置 | Seeds | Δ PPL@2K | Δ PPL@16K |
+|---------|-------------|-------|----------|-----------|
+| 50M | TinyStories | 1 | -0.3% | **-10.9%** |
+| 125M | TinyStories | 1 | -1.7% | **-18.9%** |
+| 454M | TinyStories (Hybrid) | 1 | -0.4% | **-13.7%** |
+| 454M | FineWeb-Edu | 3 | +0.4% | **-13.3%** |
+| 750M continue@4K | mix setting | 1 | +1.2% | **-45.9%** |
 
-**结论**：三个规模方向完全一致。短程代价 ≤ +0.4%（误差范围内），长程改善 10-19%。
+**结论**：短程代价保持在小范围内，长程 PPL 改善在多个规模和设置下方向一致；750M 行按论文表述仅作为 single-seed consistency check。
 
-### 4.2 🔴 核心发现：EVQ + YaRN 超线性协同
+### 4.2 核心发现：EVQ + YaRN 互补
 
-**实验配置**：350M 模型，5% passkey mix，3 seeds，L_train=2048
+**实验配置**：454M 模型，10% passkey mix，3 seeds/config，L_train=2048，matched YaRN scale s=8。
 
-| 方法 | PK@4K | PK@8K | PPL@8K |
-|------|-------|-------|--------|
-| Geometric baseline | 63% | 54% | 156 |
-| Geo + YaRN | 100% | 65% | 82 |
-| EVQ τ=1.5 | 69% | 57% | 152 |
-| **EVQ + YaRN** | **100%** | **100%** | **68** |
+| 方法 | PK@8K | PK@12K | PK@16K | PPL@8K / 16K |
+|------|-------|--------|--------|--------------|
+| Geo | 41±5% | 57% | 51% | 161.9 / 253.2 |
+| Geo + YaRN | 61±3% | 59% | 51% | 82.9 / 157.7 |
+| EVQ τ=1.5 | 53±8% | 63% | 50% | 150.3 / 229.5 |
+| **EVQ + YaRN** | **100±0%** | **79%** | **68%** | **70.9 / 107.5** |
 
-**核心发现**：
-- EVQ+YaRN 在 8K 外推达到 **100%（3-seed 全部，零方差）**
-- Geo+YaRN 只有 65%
-- **超线性叠加**：如果线性叠加应该是 ~76%，实际达到 100%
+**论文定位**：EVQ 不是 YaRN 的替代品；EVQ 改变训练时频率 substrate，YaRN 改变推理时 range scaling，两者是互补的 PE 设计轴。
 
-**论文定位**：EVQ 不是 YaRN 的竞争者，而是让 YaRN 更有效的基础。训练时频率优化 × 推理时位置缩放 = 正交优化维度。
+### 4.3 Passkey Mix 检索能力验证
 
-### 4.3 Passkey Mix 实验（检索能力验证）
+**配置**：90% FineWeb-Edu + 10% synthetic passkey，454M，3 seeds，teacher-forced NLL-gap retrieval。
 
-**配置**：90% FineWeb-Edu + 10% passkey 混合训练
+| 长度/指标 | Geo | EVQ | Δ |
+|-----------|-----|-----|---|
+| 2K retrieval | 100% | 100% | 0 |
+| 4K retrieval | 58.7% | **68.7%** | **+10.0pp** |
+| 8K retrieval | 40.7% | **53.3%** | **+12.7pp** |
+| Global retrieval | 66.7% | **74.0%** | **+7.3pp** |
+| PPL@16K | 262.0 | **237.2** | **-9.5%** |
 
-| 长度 | Geometric | EVQ | Δ |
-|------|-----------|-----|---|
-| 2K（训练内） | 100% | 100% | 0 |
-| 4K（2× 外推） | 42% | **82%** | **+40pp** |
-| 8K（4× 外推） | 46% | 60% | +14pp |
+**解读**：seed-42 的 +40pp 是诊断性大差异，不作为 headline；论文使用 3-seed mean。
 
-**解读**：训练内两者都是 100%，差异纯粹来自外推能力。4K 检索率翻倍是最强的单个实验证据。
+### 4.4 5% vs 10% passkey concentration
 
-### 4.4 5% vs 10% 反对称 Scaling
+同样总 token 量下，passkey 浓度从 5% 到 10%：
 
-同样总 token 量，仅 passkey 浓度从 5%→10%：
+| 效应 @8K | Geo | EVQ |
+|----------|-----|-----|
+| 5% mix retrieval | 54.0% | 56.7% |
+| 10% mix retrieval | 40.7% | 53.3% |
+| Δ | **-13.3pp** | **-3.3pp** |
 
-| 效应 | Geo 4K retrieval | EVQ 4K retrieval |
-|------|-----------------|-----------------|
-| 5% mix | 64% | 60% |
-| 10% mix | 42% | **82%** |
-| **Δ** | **-22pp** ❌ | **+22pp** ✅ |
-
-**解读**：更多 passkey 训练让 Geometric **过拟合**到训练窗口，泛化能力反而下降。EVQ 的频率分配让模型能将训练信号转化为外推泛化能力。
-
-**论文论点**：频率分配质量（而非数据量）是长度泛化的瓶颈。
+**解读**：更密的 retrieval supervision 对 Geo 的 8K generalization 损伤更大；EVQ 的频率分配在该设置下更抗退化。该结果用于 robustness，不升级为 universal data-scaling law。
 
 ### 4.5 750M 训练动态分析
 
@@ -219,23 +215,24 @@ def evq_cosh_inv_freq(d_head, L, base):
 
 1. **理论层**：RoPE 频率分配是变分逆问题，有闭式解；Geometric 是 τ=0 退化点；τ* 由 scaling law 给出
 
-2. **训练时实验层**：50M-750M PPL 改善 10-19%；passkey +40pp；retrieval divergence；反对称 scaling
+2. **训练时实验层**：raw PPL、passkey/NLL-gap retrieval、PE-dominant extrapolation、MLA scarce-channel stress test 共同支持有限频谱预算视角
 
-3. **组合层（Killer Result）**：EVQ + YaRN 8K=100% vs Geo+YaRN=65%。超线性叠加证明 training-time 和 inference-time 是正交优化维度
+3. **组合层**：454M matched-scale EVQ+YaRN 在 8K 达到 100±0% vs Geo+YaRN 61±3%，支持 training-time allocation 与 inference-time scaling 的互补性
 
 ### 5.2 论文 Figure 规划
 
 | Figure | 内容 | 状态 |
 |--------|------|------|
-| **Figure 1（主图）** | 三联图：(a) 频率分配对比 (b) PPL 训练动态 (c) Passkey 训练动态 | ✅ 已完成 |
-| Figure 2（可选） | τ* scaling law / r-sweep Pareto frontier | 待生成 |
+| **Figure 1（主图）** | 方法 schematic 与频率分配直觉 | 完成 |
+| **Figure 2** | EVQ × YaRN matched-scale complementarity | 完成 |
+| Appendix figures | PE-dominant scaling、QuALITY、τ* validation 等 supporting views | 完成 |
 
 ### 5.3 与现有方法的关系
 
 | 方法类别 | 代表 | EVQ 的定位 |
 |---------|------|-----------|
 | Inference-time | PI, NTK-aware, YaRN | **互补**：EVQ 是 training-time 优化，组合使用效果超线性 |
-| Learnable PE | DAPE, Kerple | **替代**：EVQ 是闭式解，零额外参数，不需要学习 |
+| Learnable PE | DAPE, Kerple | **同轴对照**：EVQ 是闭式、零额外参数的 training-time allocation，与 learned PE 保持不同假设 |
 | 其他 RoPE 变体 | xpos, ALiBi | 不同设计空间 |
 
 ---
@@ -247,7 +244,7 @@ def evq_cosh_inv_freq(d_head, L, base):
 | Claim | 证据 | 强度 |
 |-------|------|------|
 | EVQ PPL@8K-16K 优于 Geo | 6/6 runs 全胜 | **A（无争议）** |
-| EVQ+YaRN 8K=100% | 3-seed zero variance | **A+（铁证）** |
+| EVQ+YaRN 8K=100% | 454M matched-scale 3-seed zero variance | **A** |
 | Waterbed 短端代价有限 | 6/6 runs ≤+4.1% | **A** |
 | τ* scaling law | 5 context lengths | **B+** |
 | Base=10K 死区 | 碰撞块理论精确预测 | **A** |
@@ -256,30 +253,28 @@ def evq_cosh_inv_freq(d_head, L, base):
 
 | Claim | 状态 |
 |-------|------|
-| "+40pp passkey" | 3-seed 实际是 +10pp mean，seed=42 是 outlier |
-| "5→10% 反对称 ±22pp" | 单 seed 数据，待 multi-seed 确认 |
-| 750M OOD PPL Hybrid 更差 | 需解释：r=16 配 τ=1.5 是次优配置 |
+| seed-42 large passkey delta | 不作为 headline；论文使用 3-seed +10.0pp/+12.7pp |
+| "5%→10%" robustness | 使用 multi-seed mean，只表述为该设置下更抗退化 |
+| 750M continuation | single-seed consistency check，不作为 primary claim |
 
 ---
 
-## 七、待完成工作
+## 七、后续工作（不作为当前投稿主 claim）
 
 ### 7.1 高优先级
 
-- [ ] 750M multi-seed 确认 retrieval divergence
-- [ ] r=14/τ=2.5 multi-seed 验证（目前 -19.6% PPL@16K 是单 seed）
-- [ ] 论文正文撰写
+- 750M multi-seed retrieval divergence
+- r=14/τ=2.5 multi-seed validation
 
 ### 7.2 中优先级
 
-- [ ] 更多 r 值的 τ-sweep（验证 τ*(r) 修正公式）
-- [ ] Figure 2 生成
-- [ ] CHE benchmark 补充实验（验证极端短序列 regime）
+- 更多 r 值的 τ-sweep（验证 τ*(r) 修正公式）
+- CHE benchmark 补充实验（验证极端短序列 regime）
 
 ### 7.3 低优先级
 
-- [ ] 换 head_dim 验证 τ* 公式中的系数
-- [ ] 与 DAPE 的直接对比实验
+- 换 head_dim 验证 τ* 公式中的系数
+- 与 DAPE 的直接对比实验
 
 ---
 

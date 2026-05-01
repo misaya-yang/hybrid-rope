@@ -149,11 +149,11 @@
 
 **EVQ 下一轮 resume 基座**
 - 远端路径：
-  - `/root/autodl-tmp/evq_phase15_750m_2k_to_4k/seed42/evq1.5_r0_750m_2k_to_4k_continue/checkpoints/step_08719.pt`
+  - `REMOTE_RUN_ROOT/evq_phase15_750m_2k_to_4k/seed42/evq1.5_r0_750m_2k_to_4k_continue/checkpoints/step_08719.pt`
 
 **Geo 对照保留**
 - 远端路径：
-  - `/root/autodl-tmp/evq_phase15_750m_2k_to_4k/seed42/geo_750m_2k_to_4k_continue/checkpoints/step_07629.pt`
+  - `REMOTE_RUN_ROOT/evq_phase15_750m_2k_to_4k/seed42/geo_750m_2k_to_4k_continue/checkpoints/step_07629.pt`
 
 ### 4.2 可删除的中间 checkpoint
 

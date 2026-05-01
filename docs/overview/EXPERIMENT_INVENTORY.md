@@ -10,7 +10,7 @@ Source of truth:
 
 Status legend:
 - `VALID`: protocol-clean, traceable, paper-usable.
-- `PENDING`: incomplete, missing gates, or needs re-run.
+- `NOT_CITED`: excluded from paper claims unless independently revalidated.
 - `INVALID`: broken protocol or wrong scale; do not cite.
 - `DEPRECATED`: explicitly banned for main claims (may be used in failure-mode discussion only).
 
@@ -36,13 +36,13 @@ For each item, keep 6 fields:
 | `EXP_COLLISION_D` | `VALID` | Shape dominates base in collapse regime (e.g., 22x -> 1.08x). | `results/anchored_sigmoid_v3_followup/` | See `results/README.md` + run logs in folder. | Used as "waterbed / collapse" support evidence. |
 | `EXP_ATTN_D_DIST` | `VALID` | Attention distance distribution is approximately power-law. | `results/attention_distribution/` | Use attention probing script referenced by registry. | This is a theory-to-practice bridge; keep layers/sequence sampling documented. |
 
-## PENDING (Must finish gates before citing)
+## NOT_CITED (Excluded from paper claims)
 
 | ID | Status | Claim | Artifacts | Reproduce | Notes |
 |---|---|---|---|---|---|
-| `EXP_8B_FAIR_LORA` | `PENDING` | Fair-protocol 8B comparison under identical injection path and budget. | Artifacts excluded from reviewer supplement; rerun required before citing | `python scripts/run_llama8b_fair_suite.py` / `archives/2026-02-22/scripts/run_overnight_8h.py` | Must pass LongBench parity, full lb21, per-sample traces, and multi-seed before main claims. |
-| `EXP_QWEN_FAST_TUNED_B1_GC` | `PENDING` | Cost-optimized 400-step Qwen baseline/anchored runs. | Artifacts excluded from reviewer supplement; rerun required before citing | `python scripts/train_cross_model_lora_fast_tuned.py` | Not paper-mainline for the strict 8K extension claim; currently running job uses Qwen + WikiText and fails the Llama-3-8B-only red-line audit. |
-| `EXP_PLAN_B_LLAMA3_8K_RECOVERY` | `PENDING` | Recovery pipeline locked to Meta-Llama-3-8B-Instruct with full lb21 + traces. | `artifacts/plan_b_runs/`, `artifacts/plan_b_eval/`, `docs/exp/plan_b_audit_manifest.md` | `python scripts/plan_b_train_anchored_v2.py` then `python scripts/plan_b_eval_longbench.py` | Isolated Plan B created after CRITICAL audit; as of 2026-02-26 code interfaces are landed (`final_lora` adapter compatibility, stress-task knobs, schema lock fields). Claims remain blocked until runs finish and gates pass. |
+| `EXP_8B_FAIR_LORA` | `NOT_CITED` | Fair-protocol 8B comparison under identical injection path and budget. | Artifacts excluded from reviewer supplement; independent revalidation required before citing | `python scripts/run_llama8b_fair_suite.py` / `archives/2026-02-22/scripts/run_overnight_8h.py` | Not used for paper claims. |
+| `EXP_QWEN_FAST_TUNED_B1_GC` | `NOT_CITED` | Cost-optimized 400-step Qwen baseline/anchored runs. | Artifacts excluded from reviewer supplement; independent revalidation required before citing | `python scripts/train_cross_model_lora_fast_tuned.py` | Not paper-mainline for the strict 8K extension claim. |
+| `EXP_PLAN_B_LLAMA3_8K_RECOVERY` | `NOT_CITED` | Recovery pipeline locked to Meta-Llama-3-8B-Instruct with full lb21 + traces. | Excluded from reviewer supplement | `python scripts/plan_b_train_anchored_v2.py` then `python scripts/plan_b_eval_longbench.py` | Not used for paper claims. |
 
 ## INVALID (Do not cite)
 

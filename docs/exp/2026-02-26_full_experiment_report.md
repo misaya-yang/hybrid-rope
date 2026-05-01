@@ -665,10 +665,10 @@ For practitioners choosing τ:
 
 | Data | Path |
 |------|------|
-| Phase 0–3 results | `/root/autodl-tmp/evq_128tok/` |
-| Phase 6 results | `/root/autodl-tmp/evq_phase6/` |
-| Phase 7 results | `/root/autodl-tmp/evq_phase7/` |
-| Phase 8 results | `/root/autodl-tmp/evq_phase8/` |
+| Phase 0–3 results | `REMOTE_RUN_ROOT/evq_128tok/` |
+| Phase 6 results | `REMOTE_RUN_ROOT/evq_phase6/` |
+| Phase 7 results | `REMOTE_RUN_ROOT/evq_phase7/` |
+| Phase 8 results | `REMOTE_RUN_ROOT/evq_phase8/` |
 
 ### Local
 
