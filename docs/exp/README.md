@@ -12,7 +12,7 @@
 
 | 报告 | Claim | → Paper | Seeds | 置信度 |
 |------|-------|---------|-------|-------|
-| `2026-03-03_passkey_mix_results.md` | C3: EVQ+YaRN 100% vs 61-65% | **Fig 2, Tables 2-3** | 3+3 | ★★★★★ |
+| `2026-03-03_passkey_mix_results.md` | C3: matched-scale EVQ+YaRN 100% vs Geo+YaRN ~61% at 8K (10% mix) | **Fig 2, Tables 2-3** | 3/method | ★★★★★ |
 | `2026-03-04_phase11_L256_results.md` | C2: EVQ ≥ Learnable PE | **Fig 3, Tables 4-5** | 3 | ★★★★★ |
 | `2026-03-05_phase11b_125m_results.md` | C2: EVQ vs DAPE | **Fig 3 panel (a)** | 3 | ★★★★★ |
 | `2026-03-09_phase16_formula_optimality_sweep_results.md` | τ* = d_head/√L | **Fig 6** | 99 runs | ★★★★★ |
@@ -52,7 +52,7 @@
 
 | 步骤 | 报告 | 为什么 |
 |------|------|-------|
-| 1 | `2026-03-03_passkey_mix_results.md` | 论文最强结果 (100% vs 61-65%) |
+| 1 | `2026-03-03_passkey_mix_results.md` | Primary I matched-scale EVQ x YaRN result (10% mix: 100% vs ~61%) |
 | 2 | `2026-03-04_phase11_L256_results.md` | PE-dominant regime 主要证据 |
 | 3 | `2026-03-11_phase17c_2048_continue_results.md` | 454M flagship 续训链 |
 | 4 | `2026-03-12_phase21b_454m_full_eval_report.md` | 下游 Gold NLL 证据 |

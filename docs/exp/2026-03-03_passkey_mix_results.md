@@ -1,6 +1,7 @@
 # Passkey Mix 实验结果（2026-03-03）
 
-> **状态**：VALID（全部完成：5%/10% 各 3-seed, PE baselines, EVQ+YaRN 6-seed 全确认）
+> **状态**：VALID historical run report（5%/10% 各 3-seed, PE baselines, EVQ+YaRN 组合完成）
+> **2026-06 audit note**：主论文 Table 2 使用 10% mix、3 seeds/config 的 matched-scale 结果；5%+10% 的 EVQ+YaRN 6/6 观察只作为 supporting context。PK 是 teacher-forced NLL-gap retrieval，不是 autoregressive exact match。
 > **Compute**: 5090 32GB, bf16, SDPA
 > **模型**：350M (454.2M params), 24层, head_dim=64, base=500K
 > **训练**：100M tokens FineWeb-Edu, seq_len=2048, lr=2e-4, cosine schedule
@@ -207,13 +208,13 @@ PPL 优势在 5% 下更大（无 passkey 干扰），10% 下仍显著。EVQ 方�
 
 ---
 
-## 5. 论文论点（全部确认）
+## 5. 论文论点（historical wording; use audited scope in paper）
 
-> **Claim 1 (Superlinear Complementarity)**: Training-time frequency optimization (EVQ) and inference-time length scaling (YaRN) are orthogonal and exhibit superlinear synergy. **6 seeds (5%×3 + 10%×3), scale=8 公平比较**：
+> **Claim 1 (Matched-scale complementarity)**: Training-time frequency optimization (EVQ) and inference-time length scaling (YaRN) show higher leverage in the matched-scale passkey setting. **Primary paper row: 10% mix, 3 seeds/config, scale=8**. The 5% mix rows are supporting context.
 > - Geo+YaRN: 8K retrieval = 61% mean (10%), 65% mean (5%)
 > - EVQ alone: 8K retrieval = 53% mean (10%), 57% mean (5%)
-> - **EVQ+YaRN: 8K retrieval = 100% across ALL 6 seeds, 零方差**
-> - 超线性：100% ≫ max(61%, 57%) — 不可由任一单独因素解释
+> - **EVQ+YaRN: 8K retrieval = 100% in the 10% primary row; 5% rows show the same direction as supporting context**
+> - Audited scope: this supports matched-scale complementarity, not dominance over tuned Geo+YaRN or all inference-time scalers.
 >
 > **Claim 2 (Near-Zero PPL Degradation at 4x Extrapolation)**: EVQ+YaRN achieves PPL@8K ≈ PPL@2K (70.9 vs 70.7), while Geo+YaRN shows normal degradation (82.9 vs 68.1). YaRN's frequency mapping is uniquely efficient on EVQ frequencies.
 >

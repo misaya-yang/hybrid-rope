@@ -1,6 +1,6 @@
 # Paper ↔ Experiment ↔ Script ↔ Results Traceability Map
 
-> 这是整个仓库的导航中枢。从任何论文 Figure/Table 出发，都能在 3 步内找到生成脚本和原始数据。
+> 这是整个仓库的导航中枢。从任何论文 Figure/Table 出发，都应能在 3 步内找到生成脚本、当前可用结果，或明确的缺失-artifact gate。不要把这里的路径清单理解为“所有原始数据已经打包进 compact branch”。
 
 ---
 
@@ -11,7 +11,7 @@
 | Stable asset | 论文位置 | 描述 | 生成脚本 | 数据来源 | 输出文件 |
 |--------------|---------|------|---------|---------|---------|
 | Method overview | Theory and Method | EVQ-Cosh allocation schematic and collision-envelope intuition | manual/static asset | paper diagram source | `paper/figs/fig_method_overview.pdf` |
-| EVQ × YaRN | Experiments / Primary I | EVQ × YaRN orthogonal synergy | `scripts/figures/fig2_evq_yarn_orthogonality.py` | `data/curated/table2_evq_yarn_454m_passkey_10pct.json` | `paper/figs/fig2_evq_yarn_synergy.pdf` |
+| EVQ × YaRN | Experiments / Primary I | EVQ × YaRN matched-scale complementarity | `scripts/figures/fig2_evq_yarn_orthogonality.py` | `data/curated/table2_evq_yarn_454m_passkey_10pct.json` | `paper/figs/fig2_evq_yarn_synergy.pdf` |
 | PE-dominant scaling | Appendix supporting PE-dominant section | PE-dominant regime & scaling-law check | `scripts/figures/fig3_pe_dominant_scaling.py` | `data/curated/fig3_extreme_128.json` fallback for panel (a); regenerate Phase 11 sweeps for panels (b,c) | `paper/figs/fig3_pe_dominant_scaling.pdf` |
 | Progressive training | Appendix experiment details | Phase 17c 454M supporting/progressive pattern | `scripts/core_text_phases/phase17c_*.py` | `results/evq_phase17c_results/` | `paper/figs/fig4_phase17c_flagship.pdf` |
 | Downstream QA | Appendix supporting results | Downstream QA (Gold NLL) | `scripts/core_text_phases/phase21b_quality_eval_clean.py` | `results/core_text/phase21b/` | `paper/figs/fig5_downstream_qa.pdf` |
@@ -43,12 +43,44 @@
 
 ## Core Claims → Evidence Chain
 
+Opus 4.8 audit control center:
+`docs/overview/OPUS48_AUDIT_CONTROL_CENTER.md` is the first stop for the
+reviewer checklist, open P0 gaps, 1B handling rule, and old-document quarantine.
+Requirement-level completion status is tracked in
+`docs/overview/OPUS48_COMPLETION_AUDIT.md`.
+Per-issue resolution status is tracked in
+`docs/overview/OPUS48_ISSUE_RESOLUTION_LEDGER.md`.
+Rebuttal-safe response strategy is tracked in
+`docs/overview/OPUS48_REBUTTAL_RESPONSE_MATRIX.md`.
+External artifact recovery steps are tracked in
+`docs/overview/OPUS48_ARTIFACT_RECOVERY_RUNBOOK.md`.
+
+Reviewer stress-test checklist: `docs/overview/OPUS48_REVIEW_AUDIT_CHECKLIST.md`
+tracks Opus 4.8-style attacks, P0/P1 gaps, 1B MLA reversal handling, and
+rebuttal-safe wording. Treat it as the audit layer on top of this claim map.
+Result provenance manifest: `docs/overview/RESULT_PROVENANCE_MANIFEST.md`
+records current compact-repo evidence, archival branch pointers, and missing
+checkpoint/data-hash gates.
+Historical script status: `docs/overview/HISTORICAL_SCRIPT_STATUS.md` separates
+current reviewer-facing entrypoints from external/server launch wrappers and patch
+records.
+Experiment code/result audit:
+`docs/overview/EXPERIMENT_CODE_RESULT_AUDIT.md` records whether each major row
+has code support, implementation support, and JSON/result artifacts.
+Paper description audit: `docs/overview/PAPER_DESCRIPTION_AUDIT.md` records
+where paper wording is supported, fixed, or still caveated by available code and
+JSON evidence.
+Forensic audit report: `docs/overview/OPUS48_FORENSIC_AUDIT_REPORT.md` follows
+the original Opus 4.8 prompt structure: repo map, 1B provenance, token-count
+audit, eval/data/table provenance, likely causes, scripts added, and minimal
+experiment plan.
+
 | ID | Claim | Primary Evidence | Scripts | Seeds | Risk |
 |----|-------|-----------------|---------|-------|------|
-| **C1** | EVQ-Cosh is the exact inverse-CDF minimizer of the stated broadband surrogate; τ is a semi-analytic operating rule, not a global optimum | Theory + Phase 16 formula sweep (99 runs, 50M/125M) | `phase16_formula_optimality_sweep.py` | 3+ seeds × multi-τ | ✅ Low |
+| **C1** | EVQ-Cosh is the exact inverse-CDF minimizer of the stated broadband surrogate; τ is a semi-analytic operating rule, not a global optimum | Theory + Phase 16 formula sweep (99-run validation claim; compact JSON is incomplete) | `phase16_formula_optimality_sweep.py` | 3+ seeds × multi-τ where packaged/reported | Medium (surrogate and tau-rule scope) |
 | **C2** | PE-dominant DAPE-style diagnostic: EVQ has lower seed-42 8K PPL than Geo/DAPE without learned PE parameters | Phase 11b 125M extreme extrap (128→8K) | `phase11b_125m_dape.py` | 1--3 seeds by row | ⚠️ Medium (diagnostic scope) |
-| **C3** | EVQ increases fixed-scale YaRN leverage vs Geo+YaRN | 454M passkey-mix aggregate/provenance; Phase 14c provides 50M/125M supporting rerun | `data/curated/table2_evq_yarn_454m_passkey_10pct.json`; `phase14c_multiscale_evq_yarn.py` is supporting only | 3+3 seeds | ✅ Low for traceability; medium for scope |
-| **C4** | MLA scarce-channel stress test is the third primary empirical anchor | 432M MLA 3-seed run; matched-scale Geo+YaRN comparison | MLA scripts / curated aggregate | 3 seeds | ⚠️ Medium (architecture-specific convention) |
+| **C3** | EVQ increases fixed-scale YaRN leverage vs Geo+YaRN | 454M passkey-mix aggregate/provenance; Phase 14c provides 50M/125M supporting rerun | `data/curated/table2_evq_yarn_454m_passkey_10pct.json`; `phase14c_multiscale_evq_yarn.py` is supporting only | 3+3 seeds | ⚠️ Medium (matched-scale scope; PK is teacher-forced NLL-gap) |
+| **C4** | MLA scarce-channel stress test is the third primary empirical anchor | 432M MLA 3-seed run; matched-scale Geo+YaRN comparison | `results/eval_3seeds_full_results.json`; MLA eval scripts | 3 seeds | ⚠️ Medium-high (`d_eff=128` is an empirical convention distinct from code `head_dim=64`/`d_rope=32`; 1B/4K supporting reversal is a limitation) |
 | **S1** | 454M Stage 2-3 continued pretrain | Phase 17c 454M (1024→2048) | `phase17c_454m_1024_to_2048_continue.py` | single seed | Supporting only |
 | **S2** | 750M scale-up confirmation | Phase 15 750M (2K→4K) | `phase15_750m_2k_to_4k_continue_ckpt_eval.py` | single-seed | Supporting only |
 | **S3** | Downstream NLL advantage | Phase 21b QuALITY eval | `phase21b_quality_eval_clean.py` | n=2086 | Supporting / downstream check |
@@ -68,20 +100,23 @@
 
 ## Supporting Video/DiT Observations (2026-03-16)
 
-These rows are appendix supporting/exploratory evidence only; no abstract or introduction claim should depend on them.
+These rows are appendix supporting/exploratory evidence only; no abstract,
+introduction, or rebuttal primary claim should depend on them. Scope labels below
+mean "how the row may be used," not that every raw log is packaged in this
+compact branch.
 
 | ID | Supporting observation | Evidence | Scripts | Method | Scope |
 |----|------------------------|----------|---------|--------|-------|
 | **V1** | EVQ-Cosh generalizes to DiT (bidirectional attention) | 129.6M h2h: τ=1.5 wins -21%/-35% | `run_dit_temporal.py` | Head-to-head | Supporting |
 | **V2** | DiT needs different τ*: τ*_DiT ≈ 0.53 × τ*_AR | τ sweep: only 1.5 works, 0.3/0.7/1.2 fail | `run_dit_temporal.py --tau` | Head-to-head | ⚠️ Medium (single-model) |
 | **V3** | Sharp phase transition at τ∈(1.2, 1.5) | h2h: τ=1.2 is 2.8x worse, τ=1.5 is 21% better | `run_dit_temporal.py` | Head-to-head | Need fine-grained sweep |
-| **V4** | Teacher-forced: EVQ +5.4% top-5 accuracy | VideoGPT 268.7M, N=2000, extrap region | `eval_temporal_precision.py` | Teacher-forced | ✅ Low (large N) |
-| **V5** | Advantage scales with temporal frequency | P=16: +8.48%, P=24: +7.63%, P=32: +6.25% | `eval_temporal_precision.py` | FFT decomposition | ✅ Low |
-| **V6** | Dead channel mechanism: base reduction eliminates phase transition | base=1000 h2h: τ=1.2≈τ=1.5, both -48% vs Geo | `run_dit_temporal.py --base 1000` | Head-to-head | ✅ Low (mechanistic) |
-| **V7** | Dead channels are systemic across all major video DiTs | CogVideoX 50%, Wan2.1 42%, Latte 42%, HunyuanVideo 38%, Open-Sora 31% | Pure math (θ_k × T_train < 0.1 rad) | Analytical | ✅ Low (mathematical fact) |
-| **V8** | EVQ robust to base; GEO fragile + non-monotonic | Base sweep 6pt: EVQ 1.9× range vs GEO 11.8× (YaRN); base=50K gap 7.2× | `run_dit_temporal.py --base` | Head-to-head | ✅ Low (6-point sweep) |
-| **V9** | EVQ advantage is training-time, not YaRN artifact | Without YaRN: EVQ -35% to -56% at base≥500 | Same | Head-to-head | ✅ Low |
-| **V10** | Frequency allocation is pure extrapolation effect | 32f eval: ALL 12 configs within 0.0093–0.0102 (<6%); 128f range +18% to -86% | Same checkpoints, 32f eval | Isolation experiment | ✅ Low (decisive) |
+| **V4** | Teacher-forced: EVQ +5.4% top-5 accuracy | VideoGPT 268.7M, N=2000, extrap region | `eval_temporal_precision.py` | Teacher-forced | Supporting; not AR exact |
+| **V5** | Advantage scales with temporal frequency | P=16: +8.48%, P=24: +7.63%, P=32: +6.25% | `eval_temporal_precision.py` | FFT decomposition | Supporting mechanism check |
+| **V6** | Dead channel mechanism: base reduction eliminates phase transition | base=1000 h2h: τ=1.2≈τ=1.5, both -48% vs Geo | `run_dit_temporal.py --base 1000` | Head-to-head | Supporting mechanism check |
+| **V7** | Dead channels are systemic across major video DiTs | CogVideoX 50%, Wan2.1 42%, Latte 42%, HunyuanVideo 38%, Open-Sora 31% | Pure math (θ_k × T_train < 0.1 rad) | Analytical | Supporting analysis |
+| **V8** | EVQ robust to base; GEO fragile + non-monotonic | Base sweep 6pt: EVQ 1.9× range vs GEO 11.8× (YaRN); base=50K gap 7.2× | `run_dit_temporal.py --base` | Head-to-head | Supporting; base-sensitive |
+| **V9** | EVQ advantage is training-time, not only a YaRN artifact in this video setup | Without YaRN: EVQ -35% to -56% at base≥500 | Same | Head-to-head | Supporting; not a text-primary claim |
+| **V10** | Frequency allocation isolates extrapolation behavior in this video setup | 32f eval: ALL 12 configs within 0.0093–0.0102 (<6%); 128f range +18% to -86% | Same checkpoints, 32f eval | Isolation experiment | Supporting; do not call decisive alone |
 | **V11** | EVQ advantage persists at 3× scale (382M DiT) | 382M h2h: YaRN far -35%, noYaRN far -64%, training loss identical (+0.3%) | `run_dit_temporal.py` (382M config) | Head-to-head | ⚠️ Medium (single-seed) |
 
 ### Video/DiT Appendix Tables
@@ -104,7 +139,7 @@ Only the rows below are present in the current paper appendix; other video/DiT r
 | DiT head-to-head | `results/video_dit/REPORT_FINAL.md` (v2, Part II) | Summary statistics only; raw run logs are excluded from the compact supplement | `run_dit_temporal.py` |
 | VideoGPT teacher-forced | `results/supporting_video/temporal_precision_report.md` | `results/supporting_video/temporal_precision/` | `eval_temporal_precision.py` |
 | Phase collision analysis | — | `results/video_dit/phase_collision_analysis.json` | Theory computation |
-| DiT theory analysis | `DiT_frequency_allocation_analysis.md` (root) | — | — |
+| DiT theory analysis | external/root note, not packaged in this compact branch | — | — |
 
 ---
 

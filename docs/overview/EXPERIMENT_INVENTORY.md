@@ -1,5 +1,11 @@
 # Experiment Inventory (Authoritative Index Mirror)
 
+> Audit note (2026-06): this is an older mirror of an older registry. Keep it
+> for historical lookup only. Current reviewer-facing evidence status is in
+> `docs/overview/OPUS48_AUDIT_CONTROL_CENTER.md`,
+> `docs/overview/EXPERIMENT_CODE_RESULT_AUDIT.md`, and
+> `docs/overview/RESULT_PROVENANCE_MANIFEST.md`.
+
 Last updated: 2026-02-25 (21:20 CST)
 
 This file is a **human/AI-friendly index** of experiments, artifacts, and whether they are usable for paper claims.

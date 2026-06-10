@@ -1,5 +1,10 @@
 # EVQ-Cosh: RoPE 频率分配优化项目概述
 
+> **审计状态提示（2026-06）**：本文是早期项目概述，保留作历史/协作背景，
+> 不是当前审稿或 rebuttal 的权威证据源。当前 claim、seed scope、PK 指标、
+> MLA `d_eff` 约定、1B/4K 限制和 provenance 状态，以
+> `docs/overview/OPUS48_AUDIT_CONTROL_CENTER.md` 及其链接的审计文档为准。
+
 > **文档目的**：向合作者同步项目核心理论、实验结果和论文定位
 > **最后更新**：2026-03-04
 > **代码仓库**：`hybrid-rope`

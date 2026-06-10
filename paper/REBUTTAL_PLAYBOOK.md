@@ -1,10 +1,10 @@
-# EVQ-Cosh Rebuttal Playbook: NeurIPS 2025
+# EVQ-Cosh Rebuttal Playbook: NeurIPS 2026
 
 > **Purpose**: Comprehensive pre-rebuttal preparation. For each anticipated reviewer attack, we provide: the attack framing, an honest self-assessment of vulnerability, the defense strategy with specific evidence pointers, and ready-to-paste rebuttal text.
 >
 > **Methodology**: Attacks are derived from (1) the paper's own limitations section, (2) common NeurIPS reviewer patterns for PE/long-context papers, (3) competitive landscape analysis of 2024-2025 PE papers (DAPE, CREAM, FIRE, LongRoPE, Resonance RoPE, VideoRoPE, CoPE, "Round and Round We Go"), and (4) known weaknesses identified in our internal audit.
 >
-> **Last updated**: 2026-03-22
+> **Last updated**: 2026-06-01
 
 ---
 
@@ -31,37 +31,37 @@
 
 ### Attack 1.1: "Evidence is limited to small models (50M-750M). Results may not hold at production scale (7B+)."
 
-**Vulnerability**: MEDIUM. This is our most honest limitation. Primary multi-seed evidence is at 50M-454M. 750M is single-seed. No evidence at >=1B.
+**Vulnerability**: MEDIUM-HIGH. This is our most honest limitation. Primary multi-seed evidence is at 50M-454M. 750M is single-seed. The 1B/4K MLA row is supporting-only and includes a raw EVQ reversal at 8K/16K, so it cannot be used as broad scale validation.
 
 **Defense Strategy**:
 
 (a) **Scale-independence of the mechanism**: EVQ modifies only the RoPE inverse-frequency initialization --- a one-line change that is architecture-agnostic. The theoretical prediction (tau* = d_head / sqrt(L)) depends on d_head and L, not model width or depth. The mechanism operates at the frequency-channel level, which is invariant to model scale.
 
-(b) **5-scale consistency**: We provide the broadest from-scratch PE allocation study in the literature: 50M, 125M, 350M (3-seed), 454M (3-seed progressive), 750M (single-seed). The improvement direction is consistent at every scale, with no sign of diminishing returns. For comparison:
+(b) **Mechanism-scale coverage, with caveats**: We provide a broad from-scratch PE allocation study across 50M, 125M, 350M (3-seed), 454M, and 750M (single-seed/supporting). The primary mechanism stress tests are consistent, but supporting rows should not be described as universal scale validation. For comparison:
 - DAPE (NeurIPS 2024): 125M only
 - FIRE (ICLR 2024): 125M, 350M
 - CREAM (NeurIPS 2024): Llama-2 7B but LoRA fine-tuning only, not from-scratch
 - LongRoPE (ICML 2024): Llama-2/3, Phi-3 --- but these are post-hoc scaling, not from-scratch training
 
-(c) **MLA validation at production-relevant architecture**: Our 432M MLA experiment (3-seed) directly tests the attention mechanism used in DeepSeek-V2/V3. While the model scale is smaller, the architecture (d_rope=32, 16 frequency channels) is identical to production configurations.
+(c) **MLA validation in a production-relevant compressed-RoPE regime**: Our 432M MLA experiment (3-seed) tests the same compressed-RoPE problem family used in DeepSeek-V2/V3. It is not production-identical: our stress test uses d_rope=32/base=500K, while production DeepSeek configurations use different rotary width/base choices. The defensible claim is that scarce rotary channels make allocation quality more visible.
 
 (d) **Cross-architecture transfer**: Llama-3-8B and Qwen-2.5-8B LoRA experiments show EVQ benefits transfer to pretrained 8B models, though these are preliminary.
 
 **Ready-to-paste rebuttal**:
 
-> We acknowledge the scale gap and have stated this explicitly in Limitations. However, we note three mitigating factors: (1) EVQ modifies only the frequency initialization, which is scale-independent by construction --- tau* depends on d_head and L, not model width/depth; (2) our 5-scale chain (50M-750M) is the broadest from-scratch PE study in the literature, exceeding DAPE (125M), FIRE (125M/350M), and all other allocation methods; (3) our MLA experiment directly tests the architecture used in DeepSeek-V3, and the "fewer channels, each more precious" principle suggests EVQ's benefit may actually *increase* at production scale where MLA compresses RoPE to 16-32 channels. We agree that >= 1B validation is an important next step and will prioritize this in future work.
+> We acknowledge the scale gap and have stated this explicitly in Limitations. EVQ modifies only the frequency initialization, so the mechanism is defined at the frequency-channel level rather than by model width/depth. Our evidence is therefore best read as a mechanism study across several small-to-mid-scale settings, not as frontier-scale validation. The MLA experiment tests a production-relevant compressed-RoPE regime, but it is not production-identical. A 1B/4K supporting row also exposes a raw EVQ reversal in the old sparse-channel setup, which we treat as a limitation and a target for artifact-level audit rather than as scale evidence. Production-scale validation remains future work.
 
 ### Attack 1.2: "750M result is single-seed. It could be a lucky run."
 
-**Vulnerability**: LOW-MEDIUM. The 750M result (PPL -45.9% at 16K, AR exact 0%->77.5%) is dramatic enough that noise is unlikely to explain it, but formally it's n=1.
+**Vulnerability**: MEDIUM. The 750M result (PPL -45.9% at 16K, AR exact 0%->77.5%) is large, but formally it is n=1 and should stay supporting-only.
 
 **Defense Strategy**:
 
-The 750M experiment is explicitly labeled as "supporting evidence" in the paper, not a primary claim. The magnitude of the effect (-45.9% PPL, 0% to 77.5% AR exact) far exceeds any plausible seed variance --- our 350M 3-seed results show max inter-seed variance of ~3% at 16K. Additionally, the 750M pattern is qualitatively consistent with every other scale.
+The 750M experiment is explicitly labeled as "supporting evidence" in the paper, not a primary claim. The magnitude of the effect (-45.9% PPL, 0% to 77.5% AR exact) is large relative to the 350M 3-seed variance, but n=1 means it should support directionality only, not precise effect size or durability.
 
 **Ready-to-paste rebuttal**:
 
-> The 750M result is explicitly presented as "single-seed supporting evidence" (Section 5.4). The effect magnitude (-45.9% PPL, 0% to 77.5% AR exact) is an order of magnitude larger than the inter-seed variance observed at 350M 3-seed (~3% at 16K), making reversal due to seed noise implausible. The result's role is to confirm that the improvement direction persists at our largest scale, not to establish a precise effect size.
+> The 750M result is explicitly presented as single-seed supporting evidence. Its role is to show that the mechanism signal can appear beyond the smaller primary runs, not to establish a precise effect size or durability law. We therefore keep the primary claim anchored in multi-seed mechanism stress tests and treat 750M as supporting context.
 
 ---
 
@@ -69,25 +69,25 @@ The 750M experiment is explicitly labeled as "supporting evidence" in the paper,
 
 ### Attack 2.1: "EVQ's advantage may simply be an artifact of insufficient training. With enough training, geometric RoPE would converge to similar performance."
 
-**Vulnerability**: HIGH if Phase 18 YaRN FT composition data is not in the paper. LOW if it is included.
+**Vulnerability**: HIGH unless Phase 18 is scoped carefully, because the same row contains a raw EVQ reversal.
 
 **Defense Strategy**:
 
-This is the single most important attack to defend against, and we have strong evidence:
+This is the single most important attack to answer, and the evidence is mixed:
 
-(a) **Phase 18 structural reversal**: At 4K/1B tokens (fully trained), EVQ *loses* standalone extrapolation by +11.1%. Yet EVQ+YaRN+FT *wins* by -2.5% --- a 13.6 percentage-point structural reversal. This directly demonstrates that even when training closes the standalone gap, EVQ's structural composition advantage persists.
+(a) **Phase 18 structural reversal, scoped carefully**: At 4K/1B tokens, EVQ *loses* standalone 8K extrapolation by +11.1%, while EVQ+YaRN+FT is better than GEO+YaRN+FT at the target length by -2.5%. This is useful evidence that the trained substrate can still matter under YaRN+FT, but it is single-seed, changes train length/data relative to the primary MLA run, and should also be presented as a raw-EVQ failure mode.
 
 (b) **Two-component decomposition**: EVQ's advantage has two separable components:
 - Raw extrapolation benefit: diminishes with training amount (as expected --- more training lets the model compensate for suboptimal frequencies)
-- Structural composition benefit: always present, because YaRN inherits the quality of the training-time frequency layout
+- Structural composition benefit: tested under matched settings, because YaRN inherits the quality of the training-time frequency layout
 
-(c) **Progressive training amplifies, not diminishes**: Three-stage progressive training (512->1024->2048) shows the EVQ+YaRN advantage *growing* from -34.6% to -52.0% to -81.2%. If EVQ were purely an undertraining artifact, progressive training should close the gap, not widen it.
+(c) **Progressive training is supporting context**: Three-stage progressive training (512->1024->2048) shows the EVQ+YaRN advantage *growing* from -34.6% to -52.0% to -81.2%, but the full chain is single-seed and should not be used as primary durability proof.
 
 (d) **MLA training progression**: EVQ's advantage at 16K is -29.0% at 50% training and -31.1% at 100% training --- monotonically increasing, not decreasing. The in-distribution cost simultaneously decreases from +1.4% to +0.9%.
 
 **Ready-to-paste rebuttal**:
 
-> This is an important concern that we address with three lines of evidence. First, our MLA YaRN fine-tuning experiment directly tests this: at 1B tokens (fully trained), EVQ loses standalone extrapolation by +11.1%, yet EVQ+YaRN+FT wins by -2.5% --- a 13.6pp structural reversal. Even if training closes the standalone gap, EVQ provides a structurally better foundation for context extension methods. Second, progressive training (3 stages) *widens* EVQ's advantage from -34.6% to -81.2%, the opposite of what an undertraining artifact would produce. Third, MLA training progression shows EVQ's advantage growing monotonically from 50% to 100% training (-29.0% to -31.1% at 16K). These three independent observations are inconsistent with an undertraining explanation and consistent with EVQ addressing a structural frequency-layout limitation.
+> This is an important concern, and we do not claim that more training universally preserves raw EVQ gains. In fact, the 1B/4K MLA supporting row shows a raw EVQ reversal at 8K/16K, which we treat as a real limitation of that sparse old-frequency setup. The narrower point is that training-time allocation still affects how inference-time scaling acts on the learned substrate: in the same supporting row, EVQ+YaRN+FT remains better than GEO+YaRN+FT at the target length, while the primary 8K/500M MLA run shows a stable 3-seed EVQ benefit at 16K. Progressive and continuation rows are supporting evidence only. Together these data argue against reducing the effect to mere undertraining, but they do not establish universal durability.
 
 ### Attack 2.2: "The models are trained on relatively few tokens (50M-500M tokens). Production models train on trillions of tokens."
 
@@ -99,11 +99,11 @@ This is the single most important attack to defend against, and we have strong e
 
 (b) **The frequency initialization is consumed at step 0**: EVQ changes the initialization of inv_freq, which is used from the very first forward pass. The benefit is architectural, not dependent on training duration.
 
-(c) **Phase 18 evidence**: Even at our longest training run (1B tokens for 432M model), the composition benefit persists. There is no evidence of convergence between EVQ and Geo at any training duration we have tested.
+(c) **Phase 18 evidence, with limitation**: The 1B/4K MLA row shows that raw EVQ can converge toward or lose to Geo in a sparse-frequency window. The target-length EVQ+YaRN+FT comparison remains favorable, but the row should be used as scoped evidence for substrate effects under scaling, not as proof of no convergence.
 
 **Ready-to-paste rebuttal**:
 
-> This concern applies to all PE allocation research: DAPE (NeurIPS 2024) trains at L=128, FIRE at 125M/350M scale. No frequency allocation paper has validated at trillion-token scale. Within our experimental range, we observe no convergence between EVQ and Geo at any training duration (up to 1B tokens for 432M). More critically, the structural composition benefit (Section 5.5) persists even when standalone convergence occurs, suggesting that EVQ's value lies not in raw extrapolation but in providing a better substrate for context extension methods.
+> This concern applies broadly to PE allocation research: DAPE trains in a PE-dominant small-length regime, FIRE at 125M/350M scale, and none of these works establish trillion-token from-scratch behavior. Our evidence should be read as mechanism validation, not production-scale convergence proof. The 1B/4K MLA row is especially informative because raw EVQ loses in early extrapolation, yet target-length EVQ+YaRN+FT remains mildly favorable. This narrows the claim: EVQ's value is not guaranteed raw dominance, but a frequency substrate that can give inference-time scaling higher leverage in the settings we test.
 
 ---
 
@@ -117,15 +117,15 @@ This is the single most important attack to defend against, and we have strong e
 
 (a) **Stage 1 is now multi-seed confirmed**: Seeds 42/43/44 all show consistent EVQ advantage at Stage 1 (PPL@4K: -16.5%, NIAH@1K: +26pp with zero variance).
 
-(b) **Magnitude exceeds plausible noise**: The Stage 3 advantage is -81.2% at 16K. Inter-seed variance at 350M 3-seed is ~3%. A single seed producing an 81.2% advantage by chance is implausible.
+(b) **Magnitude is useful but not definitive**: The Stage 3 advantage is -81.2% at 16K. This is large enough to motivate follow-up, but the full Stage 2-3 pipeline is still single-seed and should not be treated as statistically closed.
 
-(c) **Corroborating evidence from independent experimental lines**: 750M (single-seed, -45.9%), 350M 3-seed (-13.3%), 6-seed passkey (100% vs 61-65%) --- all show the same directional pattern.
+(c) **Corroborating evidence from independent experimental lines**: 750M (single-seed, -45.9%), 350M 3-seed (-13.3%), and passkey-mix EVQ+YaRN vs Geo+YaRN (3 seeds per method; 100% vs about 61%) show the same directional pattern in their scoped settings.
 
 (d) **The progressive widening pattern**: The fact that the advantage monotonically increases (34.6% -> 52.0% -> 81.2%) across stages would be extremely unlikely to occur by chance.
 
 **Ready-to-paste rebuttal**:
 
-> We acknowledge the progressive chain is single-seed for the full pipeline and state this explicitly. However: (1) Stage 1 is multi-seed confirmed (3 seeds, all consistent); (2) the magnitude of -81.2% at Stage 3 far exceeds any plausible seed variance (inter-seed CV is ~3% at 350M); (3) the monotonic widening pattern across 3 stages would require a remarkable coincidence to occur by chance; and (4) the pattern is corroborated by independent experiments at 750M (-45.9%), 350M 3-seed (-13.3%), and 6-seed passkey (100% vs 61-65%). We plan to complete multi-seed validation of Stages 2-3 and will include this in the camera-ready version.
+> We acknowledge the progressive chain is single-seed for the full pipeline and state this explicitly. Stage 1 has multi-seed support, and the later-stage effect size is large, but we use the full progressive chain only as supporting context. The primary claim remains anchored in the matched-scale 454M passkey table and the 3-seed MLA stress test; multi-seed validation of Stages 2-3 would be needed before making a durability claim.
 
 ---
 
@@ -133,7 +133,7 @@ This is the single most important attack to defend against, and we have strong e
 
 ### Attack 4.1: "The entire theory rests on a single approximation (broadband surrogate). If this approximation fails, the derivation is invalid."
 
-**Vulnerability**: LOW. We have extensive numerical validation, but this is the correct theoretical concern to raise.
+**Vulnerability**: MEDIUM. The surrogate derivation is correct conditional on the fitted broadband surrogate, but the reviewer can fairly attack the surrogate-to-trained-model gap.
 
 **Defense Strategy**:
 
@@ -151,15 +151,15 @@ This is the single most important attack to defend against, and we have strong e
 
 ### Attack 4.2: "The scaling law tau* = d_head/sqrt(L) is empirical, not theoretically derived."
 
-**Vulnerability**: LOW-MEDIUM. The scaling law emerges from the theory but the specific functional form is validated empirically.
+**Vulnerability**: MEDIUM. The scaling rule is an operating default/basin selector supported by theory and sweeps, not a theorem of trained attention.
 
 **Defense Strategy**:
 
-The tau* scaling law is derived from the theory as a dimensional analysis prediction (tau has dimensions of [d_head]/[sqrt(L)] from the beta/alpha ratio in the broadband surrogate). The 99-run validation (27 configs x 3 seeds) confirms this prediction with worst-case <1% PPL gap from the empirical optimum.
+The tau* rule should be described as arising from the separate small-τ softmax-transport argument plus empirical sweep validation. The broadband surrogate alone does not force the sqrt(L) exponent, and the flat basin means the rule mainly selects a stable non-geometric operating region.
 
 **Ready-to-paste rebuttal**:
 
-> The tau* = d_head/sqrt(L) scaling law emerges from dimensional analysis of the broadband surrogate parameters (tau = sqrt(beta/alpha), where beta and alpha carry the appropriate dimensions). The specific functional form is then validated by a 99-run sweep (27 configurations x 3 seeds, L in {256, 512, 1024}, d_head in {32, 64, 128}), with worst-case <1% PPL gap from the empirical optimum. We characterize it as an "empirical conjecture supported by theory" rather than a rigorous derivation, which we believe is the honest framing.
+> We treat tau* = d_head/sqrt(L) as an operating default, not a global optimum theorem. The sqrt(L) dependence comes from a separate small-τ softmax-transport argument and is then validated by sweep evidence; the variational surrogate itself gives the closed-form allocation family rather than a complete trained-attention scaling law. The empirical basin is shallow, so the important claim is that a non-geometric allocation is robustly useful in the tested regimes, while direct L_eff^J measurement remains an open validation.
 
 ---
 
@@ -195,15 +195,15 @@ These methods operate on different axes and are not direct competitors:
 
 (b) **We test at multiple scales**: The PE-dominant claim is supported by Phase 0-3 (125M, L=128) AND Phase 11 (454M, L=256). The latter is less extreme.
 
-(c) **EVQ uses 0 extra parameters**: DAPE uses d/2 = 32 learnable parameters. EVQ achieves better extrapolation with zero parameters --- a strictly stronger result.
+(c) **EVQ uses 0 extra parameters**: DAPE uses d/2 = 32 learnable parameters. EVQ's seed-42 diagnostic row is favorable in this protocol, but the comparison should remain seed- and protocol-scoped.
 
 **Ready-to-paste rebuttal**:
 
-> The PE-dominant regime (L=128) is the same setting used in DAPE itself (NeurIPS 2024) and is standard for isolating PE quality from confounds. We additionally validate at L=256 (454M, 3-seed, Phase 11), where EVQ+YaRN achieves -61.7% PPL improvement over Geo+YaRN. The key point is that EVQ achieves this with zero extra parameters, while DAPE uses d/2 learnable parameters --- a strictly stronger result.
+> The PE-dominant regime (L=128) is a deliberately extreme diagnostic for isolating PE quality. In the reported seed-42 Geo/DAPE/EVQ contrast, EVQ is favorable while adding zero learned parameters. We additionally report L=256 supporting evidence. We do not present this as a broad learned-PE dominance result; stronger claims would require additional seeds and tuned learned-PE/range-scaling baselines.
 
 ### Attack 5.3: "VideoRoPE (ICML 2025 Oral) already addresses frequency allocation for video. What does EVQ add?"
 
-**Vulnerability**: LOW. VideoRoPE and EVQ are convergent evidence, not competing methods.
+**Vulnerability**: MEDIUM. VideoRoPE and EVQ are convergent in motivation, but video rows are supporting and should not carry the main text claim.
 
 **Defense Strategy**:
 
@@ -212,11 +212,11 @@ VideoRoPE's core innovation is Low-frequency Temporal Allocation (LTA) --- a heu
 Key differences:
 - VideoRoPE is a heuristic 3D RoPE design for video VLMs; EVQ is a closed-form variational solution for general RoPE
 - VideoRoPE operates at 7B+ scale post-hoc; EVQ is validated from-scratch at 50M-750M
-- EVQ provides a scaling law (tau* = d_head/sqrt(L)); VideoRoPE provides per-axis heuristic rules
+- EVQ provides a closed-form allocation family and an operating tau rule for text RoPE; VideoRoPE provides per-axis heuristic rules
 
 **Ready-to-paste rebuttal**:
 
-> VideoRoPE and EVQ represent convergent evidence from independent approaches. VideoRoPE discovers empirically that temporal dimensions benefit from low-frequency emphasis; EVQ's variational framework provides a theoretical explanation: the optimum (tau > 0) naturally shifts density toward low frequencies. The methods differ in scope: VideoRoPE is a heuristic 3D design for video VLMs, while EVQ is a closed-form solution with a parameter-free scaling law for general RoPE. Our video experiments (Section 6.3, 6.4) show that EVQ's tau* law applies in the video setting, suggesting a unified framework underlying both approaches. We view this convergence as strengthening evidence for the importance of frequency allocation.
+> VideoRoPE and EVQ represent convergent motivation from independent approaches: both point toward low-frequency temporal/long-range allocation as important. The methods differ in scope: VideoRoPE is a heuristic 3D design for video VLMs, while EVQ is a closed-form allocation family for standard RoPE. Our video rows are supporting evidence that frequency allocation matters beyond text, but they should not be used as primary proof of the text tau rule.
 
 ---
 
@@ -231,19 +231,19 @@ Key differences:
 (a) **We have three layers of downstream evidence**:
 - LongBench NLL (13 tasks, 750M): +4.4% / -4.4% symmetric waterbed reversal
 - QuALITY QA (n=2086, 454M): Gold Answer NLL -30% at 2x, accuracy +2.2pp (p~0.02) at 2x
-- Passkey retrieval (350M 6-seed): 100% vs 61-65% at 4x extrapolation
+- Passkey retrieval (3 seeds per method): 100% vs about 61% at 4x extrapolation
 
-(b) **Signal attenuation is expected for infrastructure-level changes**: PE allocation is infrastructure. Its signal propagates: PPL -52% -> Gold NLL -30% -> passkey +60pp -> accuracy +2.2pp. Each abstraction layer attenuates but never reverses the signal. For comparison, DAPE (NeurIPS 2024) was accepted with only PPL and CHE --- no NLL, no downstream accuracy at all.
+(b) **Signal attenuation is expected for infrastructure-level changes**: PE allocation is infrastructure. In our diagnostics, the signal is strongest in PPL and teacher-forced NLL-style metrics, and weaker in end-task accuracy. That attenuation is expected and should be framed as scope, not as a downstream SOTA claim.
 
 (c) **Model capacity confound**: At 454M, QuALITY accuracy is near the 25% random baseline for both models. The model barely learned the task. Gold NLL, as a continuous metric, captures the PE signal that accuracy at capacity floor cannot resolve.
 
 **Ready-to-paste rebuttal**:
 
-> We provide three layers of downstream evidence: (1) LongBench conditional NLL on 13 tasks showing a symmetric +4.4%/-4.4% waterbed reversal; (2) QuALITY QA (n=2086) showing Gold Answer NLL -30% at 2x extrapolation with accuracy +2.2pp (p~0.02); and (3) 6-seed passkey retrieval (100% vs 61-65%). The modest accuracy gains reflect model-capacity limitations (454M is near random baseline on QuALITY), not EVQ limitations --- Gold NLL, a continuous metric, clearly captures the PE signal (-30%). For context, DAPE (NeurIPS 2024) was accepted with only PPL and CHE evaluation, with no NLL or downstream accuracy measurement. We believe our downstream evidence substantially exceeds the current standard for PE allocation papers.
+> We provide three layers of downstream or task-adjacent evidence: (1) LongBench conditional NLL on 13 tasks showing a symmetric +4.4%/-4.4% waterbed reversal; (2) QuALITY QA (n=2086) showing Gold Answer NLL -30% at 2x extrapolation with accuracy +2.2pp (p~0.02); and (3) passkey-mix retrieval with 3 seeds per method (100% vs about 61%). The modest accuracy gains reflect model-capacity limitations (454M is near random baseline on QuALITY), so Gold NLL and teacher-forced NLL-gap retrieval should be described as PE-diagnostic signals rather than full downstream task wins.
 
 ### Attack 6.2: "The waterbed cost (+4.4% at in-distribution) could be unacceptable in production."
 
-**Vulnerability**: LOW. The cost is small and well-characterized.
+**Vulnerability**: MEDIUM. The short-range cost is measured and usually small in our reports, but production acceptability is application-dependent.
 
 **Defense Strategy**:
 
@@ -251,11 +251,11 @@ Key differences:
 
 (b) The waterbed is inherent to the mathematics --- it's the price of redistributing finite channel capacity. The question is whether the trade-off is favorable, and the data consistently shows it is: the long-range gain (up to -45.9% PPL, -30% NLL) vastly outweighs the short-range cost.
 
-(c) In production long-context systems (where L >> L_train), the benefit domain dominates.
+(c) In long-context systems where sequences regularly exceed L_train, the trade-off may be favorable, but this is an application-level decision rather than a theorem.
 
 **Ready-to-paste rebuttal**:
 
-> The waterbed trade-off is inherent to any channel redistribution and is well-characterized in our paper. The +4.4% in-distribution cost (750M zero-shot) is bounded at <=0.4% in PPL terms across all scales, and under fine-tuning (QuALITY), EVQ actually shows better in-distribution NLL (-1.7%). In production long-context systems where sequences regularly exceed L_train, the benefit domain (up to -45.9% PPL, -30% Gold NLL) vastly outweighs the modest short-range cost. We believe honest presentation of this trade-off is a strength of the paper.
+> The waterbed trade-off is inherent to finite channel redistribution and we report it rather than hiding it. In our supporting downstream rows, the in-distribution cost is modest relative to the long-range NLL/PPL gains, but acceptability depends on the target application and context-length distribution. We therefore frame EVQ as a frequency-allocation trade-off, not a universally free production improvement.
 
 ---
 
@@ -263,11 +263,11 @@ Key differences:
 
 ### Attack 7.1: "The MLA model is only 432M. MLA is used at 236B+ in DeepSeek-V3. How does this generalize?"
 
-**Vulnerability**: MEDIUM. Architecture matches production, but scale is much smaller.
+**Vulnerability**: MEDIUM-HIGH. The experiment targets the compressed-RoPE problem family used by MLA, but the exact rotary width/base and model scale are not production-identical.
 
 **Defense Strategy**:
 
-(a) **Architecture fidelity**: Our MLA model uses the same d_rope=32 (16 frequency channels) as production MLA. The frequency allocation problem is defined by d_rope and L, not by total model parameters.
+(a) **Architecture relevance**: Our MLA model uses a compressed RoPE subspace with only 16 frequency channels. This isolates the same "scarce rotary budget" mechanism that motivates the MLA stress test, while the paper should explicitly note that production DeepSeek configurations use different rotary width/base choices.
 
 (b) **The "fewer channels, each more precious" principle**: With only 16 channels, each channel's placement carries more weight. EVQ shows a -31.1% improvement at 2x extrapolation --- larger than typical MHA improvements (-13% to -15%) --- consistent with the prediction that constrained frequency budgets amplify allocation quality.
 
@@ -275,7 +275,7 @@ Key differences:
 
 **Ready-to-paste rebuttal**:
 
-> Our MLA experiment preserves the critical architectural parameters (d_rope=32, 16 frequency channels) that define the frequency allocation problem. The allocation optimization is determined by d_rope and L, not model width/depth --- the 16 channels must cover the same frequency range regardless of whether the model has 432M or 236B parameters. The -31.1% improvement (3-seed) exceeds typical MHA improvements at comparable scales, consistent with the "fewer channels, each more precious" hypothesis. We acknowledge that production-scale MLA validation would strengthen this finding and note this in Limitations.
+> Our MLA experiment is a scarce-channel stress test for the compressed-RoPE problem family used by MLA, not a production-identical DeepSeek reproduction. With only 16 rotary frequency channels, allocation mistakes are amplified, making it a targeted mechanism test for the finite-spectral-budget claim. The -31.1% 16K improvement is 3-seed validated in this setting, but production-scale MLA validation and per-channel convention ablations remain future work.
 
 ### Attack 7.2: "tau choice for MLA (1.414) is based on L=512 reference, not the actual L_train=8192. Is this principled?"
 
@@ -301,20 +301,20 @@ This is an honest area where the theory may need extension: the scaling law may 
 
 **Defense Strategy**:
 
-(a) **Prior work on frequency allocation**: DAPE (NeurIPS 2024) learns frequency parameters via backprop. FIRE learns an implicit mapping via neural network. CREAM manipulates position indices. LongRoPE searches for per-frequency scaling factors. None of these provide a closed-form solution derived from first principles.
+(a) **Prior work on frequency allocation**: DAPE (NeurIPS 2024) learns frequency parameters via backprop. FIRE learns an implicit mapping via neural network. CREAM manipulates position indices. LongRoPE searches for per-frequency scaling factors. The defensible novelty claim is that EVQ provides a closed-form solution for a stated broadband surrogate, not that it is the only conceivable way to redistribute frequencies.
 
 (b) **EVQ's specific novelty**:
-- First variational formulation of the RoPE frequency allocation problem
+- A variational formulation of the RoPE frequency allocation problem
 - First closed-form solution family (EVQ-Cosh) where geometric RoPE is the tau=0 limit
-- First parameter-free scaling law (tau* = d_head/sqrt(L))
-- First demonstration that training-time allocation and inference-time scaling compose multiplicatively
+- A zero-learned-parameter operating rule for selecting tau
+- Evidence that training-time allocation and inference-time scaling compose in matched settings
 - First PE allocation study on MLA
 
 (c) **The geometric limit is new**: Showing that geometric RoPE is a degenerate boundary case of an optimization family --- not just a design choice --- reframes the entire field.
 
 **Ready-to-paste rebuttal**:
 
-> We respectfully disagree. While the motivation of improving RoPE frequencies is shared with prior work, no existing method provides a closed-form derivation from first principles. DAPE learns d/2 parameters via backprop; FIRE uses a neural network; CREAM manipulates indices; LongRoPE uses evolutionary search. EVQ is, to our knowledge, the only method that derives an analytic solution from a variational principle, shows geometric RoPE is its degenerate limit, and provides a parameter-free scaling law. The theoretical contribution is not "redistribute frequencies" but "prove that the optimal redistribution has a specific closed form and that the current default is its boundary case."
+> While the broad motivation of improving RoPE frequencies is shared with prior work, EVQ targets a different cell: a closed-form training-time allocation derived from a stated broadband surrogate, with geometric RoPE recovered as the tau-to-zero limit. DAPE learns d/2 parameters, FIRE uses a neural network, and LongRoPE searches inference-time scaling factors. Our theoretical contribution is not simply "redistribute frequencies," but a compact variational allocation family that can be tested and composed with inference-time scaling.
 
 ### Attack 8.2: "The waterbed inequality is well-known in information theory. Is this a contribution?"
 
@@ -346,7 +346,7 @@ The waterbed inequality in our context is a consequence of the variational optim
 
 **Ready-to-paste rebuttal**:
 
-> This is precisely our point. The geometric default has been used without question since RoFormer (2021) because no principled framework existed for evaluating alternatives. Prior methods that attempted to improve allocation (DAPE, FIRE) added learnable parameters because they lacked theoretical guidance. EVQ's simplicity (zero parameters, one-line change) is a direct consequence of having the correct theoretical framework --- the variational solution tells us exactly what the optimal allocation should be, eliminating the need for learning or search.
+> This is precisely our point. The geometric default has often been treated as neutral infrastructure rather than as an allocation choice. EVQ's simplicity follows from narrowing the problem to a closed-form surrogate optimum: it gives a concrete, zero-learned-parameter allocation to test, while retaining the standard RoPE forward pass. We do not claim this exhausts all possible training-time schedules; it gives a principled and reproducible one.
 
 ### Attack 9.2: "The paper doesn't demonstrate EVQ on any production model or real-world application."
 
@@ -356,13 +356,13 @@ The waterbed inequality in our context is a consequence of the variational optim
 
 (a) **Consistent with the field**: DAPE (NeurIPS 2024) tests at 125M only. FIRE at 125M/350M. Resonance RoPE at synthetic tasks. No PE allocation paper has demonstrated on a production-deployed model.
 
-(b) **Cross-architecture evidence**: We show benefits on GPT-style MHA, MLA (DeepSeek architecture), autoregressive video, bidirectional DiT, and cross-family transfer (Llama-3, Qwen-2.5).
+(b) **Cross-architecture evidence with scope**: We report benefits on GPT-style MHA and the MLA scarce-channel stress test, plus supporting video and cross-family adaptation rows. The LoRA rows remain exploratory because matched Geo+LoRA controls are incomplete.
 
-(c) **Zero-overhead integration**: EVQ requires no architecture changes, no training recipe changes, no inference changes. The barrier to production adoption is minimal.
+(c) **Zero-overhead integration**: EVQ requires no architecture change and no inference-time change beyond the initialized `inv_freq` table. Production adoption still requires validation under the target recipe.
 
 **Ready-to-paste rebuttal**:
 
-> Production deployment is outside the scope of foundational PE research, as it is for all comparable papers (DAPE, FIRE, CREAM, Resonance RoPE). Our contribution is the theoretical framework and empirical validation, not a production system. We note that EVQ's integration cost is uniquely low among PE methods: zero extra parameters, zero hyperparameters, zero architecture changes, zero inference overhead --- a single line of initialization code. This low barrier makes production adoption straightforward.
+> Production deployment is outside the scope of this mechanism paper. Our contribution is the frequency-allocation framework and controlled evidence, not a deployed system. EVQ's integration cost is low -- it changes the initialized inverse-frequency table and keeps the standard RoPE forward pass -- but production adoption should be validated under the target model, data, and range-scaling recipe.
 
 ---
 
@@ -377,14 +377,14 @@ The waterbed inequality in our context is a consequence of the variational optim
 (a) **Multiple independent confirmations of the composition pattern**:
 - Phase 17 (454M, single-seed): -86% average across 4K-32K
 - MLA 3-seed: EVQ+YaRN(s=4) -48.8% at 16K (3-seed validated)
-- Phase 18 YaRN FT: 13.6pp structural reversal (single-seed, but confirmed across undertrained and fully-trained regimes)
-- 6-seed passkey: EVQ+YaRN 100% vs Geo+YaRN 61-65% (6-seed, zero variance)
+- Phase 18 YaRN FT: target-length EVQ+YaRN+FT remains better despite raw EVQ reversal (single-seed; beyond-target lengths are mixed)
+- Passkey mix: EVQ+YaRN 100% vs Geo+YaRN about 61% (3 seeds per method; EVQ row has zero std)
 
-(b) **The direction is consistent across every experimental line**: No experiment has ever shown Geo+YaRN outperforming EVQ+YaRN.
+(b) **The targeted composition direction is consistent in primary matched-scale settings**: The primary matched-scale rows favor EVQ+YaRN, but supporting Phase18 also contains beyond-target lengths where GEO+YaRN+FT is better. Do not claim universal dominance.
 
 **Ready-to-paste rebuttal**:
 
-> The -86% number is from a single-seed experiment, which we acknowledge. However, the composition pattern is confirmed across multiple independent experimental lines: MLA 3-seed (-48.8% at 16K), 6-seed passkey (100% vs 61-65%, zero variance), Phase 18 YaRN FT (13.6pp structural reversal across two training regimes), and progressive training (3 stages, monotonically widening). No experiment across our entire evidence base has shown Geo+YaRN outperforming EVQ+YaRN. The specific -86% magnitude is single-seed, but the qualitative conclusion --- that EVQ provides a multiplicatively better foundation for YaRN --- is supported by multi-seed evidence across multiple architectures and training regimes.
+> The -86% number is from a single-seed supporting experiment, which we acknowledge. The primary composition evidence should instead be the matched-scale 454M passkey table and the 3-seed MLA table: in those settings, YaRN has higher leverage on the EVQ-trained substrate than on Geo. Phase18 is useful as a supporting target-length YaRN+FT comparison, but it also contains beyond-target lengths where GEO+YaRN+FT is better, so it should not be used to claim universal dominance. The defensible conclusion is complementarity under matched tested settings, not that EVQ+YaRN beats every tuned or fine-tuned Geo+YaRN variant.
 
 ### Attack 10.2: "The claim that EVQ and YaRN are 'orthogonal' is not rigorously established."
 
@@ -394,13 +394,13 @@ The waterbed inequality in our context is a consequence of the variational optim
 
 (a) **Mechanistic argument**: EVQ modifies the frequency allocation phi_k (within-band density). YaRN rescales frequencies at inference to cover longer contexts. In log-frequency space, EVQ shifts phi_k below the geometric diagonal (shape correction), while YaRN shifts phi_k above it (range correction). The corrections are additive: phi_{EVQ+YaRN} = phi_{EVQ} + Delta_phi_{YaRN}.
 
-(b) **Empirical confirmation**: The strict dominance hierarchy at every extrapolation length (EVQ+YaRN > EVQ > GEO+YaRN > GEO) demonstrates composition. YaRN provides larger marginal benefit on EVQ than on GEO (-25.6% vs -15.1% at 16K), confirming superlinear interaction.
+(b) **Empirical confirmation**: In the primary MLA table, YaRN provides larger marginal benefit on EVQ than on GEO at 16K (-25.6% vs -15.1%), supporting complementarity under the matched setting. This should not be generalized to every tuned scale, training length, or beyond-target evaluation point.
 
 (c) **We provide a clear figure** (Fig. 4) showing the orthogonal decomposition in log-frequency space.
 
 **Ready-to-paste rebuttal**:
 
-> We use "orthogonal" to mean that EVQ and YaRN address different deficiencies --- shape (within-band density) vs range (beyond L_train coverage). This is formalized in Figure 4: in log-frequency space, EVQ bends phi_k below the diagonal while YaRN shifts phi_k above it, and the corrections are additive. The empirical evidence supports superlinear rather than merely additive composition: YaRN provides -25.6% marginal benefit on EVQ vs -15.1% on GEO at 16K (MLA, 3-seed), indicating that a better frequency substrate amplifies inference-time scaling. We acknowledge that "orthogonal" is used colloquially and the precise interaction mechanism deserves deeper theoretical analysis.
+> We use "orthogonal" to mean that EVQ and YaRN address different deficiencies --- shape (within-band density) vs range (beyond L_train coverage). In log-frequency space, EVQ changes the training-time allocation while YaRN rescales frequencies at inference. The empirical evidence supports complementarity in matched settings: YaRN provides -25.6% marginal benefit on EVQ vs -15.1% on GEO at 16K in the 3-seed MLA table. We acknowledge that "orthogonal" is colloquial rather than a theorem, and that tuned-scale baselines remain an important scope limitation.
 
 ---
 
@@ -412,7 +412,7 @@ The waterbed inequality in our context is a consequence of the variational optim
 
 **Defense Strategy**:
 
-If this concern arises, we can consolidate in the camera-ready:
+If this concern arises, we can consolidate in the revised manuscript:
 1. Theory: Closed-form variational solution, geometric RoPE = tau=0 limit
 2. Systems result: EVQ increases fixed-scale YaRN leverage (multiplicative composition + progressive amplification + structural reversal)
 3. PE-dominant: Closed-form beats learnable PE with 0 parameters
@@ -420,7 +420,7 @@ If this concern arises, we can consolidate in the camera-ready:
 
 **Ready-to-paste rebuttal**:
 
-> Thank you for this feedback. We agree the contribution list can be more focused. The core story is: (1) a theoretical framework yielding a closed-form solution where geometric RoPE is the tau=0 limit; (2) the systems discovery that EVQ unlocks inference-time scaling, with progressive amplification and structural composition robustness; (3) PE-dominant validation showing closed-form allocation beats learnable alternatives; and (4) MLA validation confirming amplified benefit in the compressed-RoPE regime. We will consolidate the contribution list in the camera-ready version.
+> Thank you for this feedback. We agree the contribution list can be more focused. The core story is: (1) a theoretical framework yielding a closed-form allocation family where geometric RoPE is the tau=0 limit; (2) the mechanism evidence that EVQ can give matched inference-time scaling higher leverage; (3) PE-dominant validation showing closed-form allocation is competitive with learned alternatives in the tested diagnostic; and (4) MLA validation showing amplified benefit in a scarce-channel stress test. We will consolidate the contribution list in the revised manuscript.
 
 ### Attack 11.2: "The paper is dense. Some reviewers may find it hard to follow."
 
@@ -450,7 +450,7 @@ We make several deliberate design choices for accessibility:
 
 (a) **The core method is a 6-line function**: The entire EVQ implementation is shown in the paper (Algorithm 1). Any researcher can implement it in minutes.
 
-(b) **132 unit tests validate the implementation**: Covering numerical stability (tau in [1e-8, 20]), gradient correctness (autograd.gradcheck), and independent numpy cross-validation at rtol=1e-6.
+(b) **Focused implementation tests validate the released audit/core paths**: Current repository tests cover the RoPE core schedule, checkpoint-loaded `inv_freq` handling, artifact manifests, training-artifact audits, and audit-doc consistency.
 
 (c) **Full hyperparameters in appendix**: Reproducibility table with all training details.
 
@@ -458,7 +458,7 @@ We make several deliberate design choices for accessibility:
 
 **Ready-to-paste rebuttal**:
 
-> The core EVQ method is a 6-line Python function shown in Algorithm 1, which any researcher can implement in minutes. We provide complete hyperparameters in the appendix and validate our implementation with 132 unit tests covering numerical stability, gradient correctness, and independent numpy cross-validation. We will release our code and test suite upon acceptance, and can provide an anonymous repository during review if desired.
+> The core EVQ method is a short inverse-CDF function shown in Algorithm 1, and the repository includes the schedule API, focused tests, and audit scripts for checkpoint `inv_freq` provenance. We provide hyperparameters in the appendix and will release the reviewer-facing code path needed to reproduce the reported claims, with missing external artifacts represented by sanitized manifests rather than private run roots.
 
 ---
 
@@ -477,7 +477,7 @@ This section provides factual context on recent PE papers for calibrating review
 | **EVQ-Cosh** | **This paper** | **Closed-form variational** | **0** | **50M-750M (5 scales)** | **NLL 13 tasks + QA** | **Yes** |
 
 **Key differentiators**:
-- EVQ is the only allocation method with a closed-form derivation from first principles
+- EVQ provides a closed-form allocation for a stated broadband surrogate
 - EVQ requires 0 extra parameters (vs DAPE's 32, FIRE's ~K)
 - EVQ provides the broadest from-scratch scale chain (5 scales)
 - EVQ is the first allocation method studied on MLA
@@ -493,7 +493,10 @@ This section provides factual context on recent PE papers for calibrating review
 | Resonance RoPE | ACL Findings 2024 | Integer-period snapping | Inference (axis 3) |
 | CoPE | arXiv 2025 | Clipped RoPE + ABF | Inference (axis 3) |
 
-EVQ is orthogonal to all of these. The paper demonstrates explicit composition with YaRN; composition with LongRoPE, Resonance RoPE, and CoPE are predicted to be beneficial and represent future work.
+EVQ is complementary in principle to these inference-time methods because it
+changes the training-time frequency substrate. The paper demonstrates explicit
+composition with YaRN under matched tested settings; composition with LongRoPE,
+Resonance RoPE, and CoPE remains future work.
 
 ### 13.3 Theoretical Analysis Papers
 
@@ -511,7 +514,7 @@ Based on recent PE papers accepted at top venues:
 - **YaRN (ICLR 2024)**: Empirical method, no theory. Bar: practical impact + comprehensive evaluation.
 - **LongRoPE (ICML 2024)**: Evolutionary search, no closed-form. Bar: strong results + practical deployment (Phi-3).
 
-EVQ exceeds the empirical bar set by all of these: broader scale chain, more downstream evidence, and a closed-form theoretical framework that none of the above provide. The main gap vs these papers is production-scale deployment (LongRoPE in Phi-3), which is a deployment rather than research contribution.
+EVQ's evidence profile is different from these papers: stronger on closed-form mechanism and training-time allocation, weaker on production-scale deployment and tuned inference-scaler baselines. That is the right comparison point for rebuttal; do not frame EVQ as simply exceeding every empirical bar.
 
 ---
 
@@ -519,13 +522,13 @@ EVQ exceeds the empirical bar set by all of these: broader scale chain, more dow
 
 | Claim | Key Number | Evidence Strength | Seeds |
 |-------|-----------|:--:|:--:|
-| EVQ+YaRN composition | -86% avg PPL (4K-32K) | Single-seed but consistent across all lines | 1 |
+| EVQ+YaRN composition | -86% avg PPL (4K-32K) | Single-seed supporting; use primary matched-scale tables for rebuttal | 1 |
 | MLA standalone | -31.1% at 16K | Multi-seed, tight CI | 3 |
 | MLA composition (YaRN) | -48.8% at 16K | Multi-seed | 3 |
 | Structural reversal (YaRN FT) | 13.6pp swing | Single-seed, two regimes | 1 |
 | Progressive amplification | -34.6% -> -52.0% -> -81.2% | Single-seed, Stage 1 multi-seed confirmed | 1 (full), 3 (S1) |
-| Passkey EVQ+YaRN | 100% vs 61-65% | Multi-seed, zero variance | 6 |
-| PE-dominant vs DAPE | 333.7 vs 455.3 | Multi-seed | 3 |
+| Passkey EVQ+YaRN | 100% vs about 61% | 3 seeds per method; teacher-forced NLL-gap; EVQ row has zero std | 3/method |
+| PE-dominant vs DAPE | 333.7 vs 455.3 | Seed-42 diagnostic for Geo/DAPE/EVQ; learnable-tau row is multi-seed | 1--3 by row |
 | Cross-scale raw PPL | -13.3% at 16K (350M) | Multi-seed | 3 |
 | Downstream NLL | -30% Gold NLL (QuALITY) | Large n (2086) | 1 (model) |
 | Waterbed | +4.4% / -4.4% | 13 tasks | 1 |
@@ -533,7 +536,7 @@ EVQ exceeds the empirical bar set by all of these: broader scale chain, more dow
 | 750M supporting | -45.9% PPL, 0%->77.5% AR | Single-seed (explicitly labeled) | 1 |
 | Video temporal | -47% PPL at 8x extrap | Multi-seed | 2 |
 | DiT head-to-head | -32% far-frame MSE | Head-to-head (same run) | 2 |
-| 132 unit tests | All pass, 2.32s | Deterministic | - |
+| Focused repo tests | RoPE core, checkpoint `inv_freq`, artifact manifests, audit docs | Deterministic helper coverage | - |
 
 ---
 
@@ -555,15 +558,20 @@ EVQ exceeds the empirical bar set by all of these: broader scale chain, more dow
 
 **Defense Strategy**:
 
-(a) The specific functional form comes from the ratio beta/alpha in the broadband surrogate, not from pure dimensional analysis. The sqrt arises because tau^2 = beta/alpha, and alpha and beta have different L-dependence in the kernel projection.
+(a) The specific functional form should be attributed to the separate small-tau
+softmax-transport argument, not to dimensional analysis alone and not to the
+broadband surrogate alone.
 
-(b) **Empirical discrimination**: The 99-run sweep tests multiple functional forms. tau* = d_head/sqrt(L) provides consistently better predictions than d_head/L (which overestimates tau at large L) or sqrt(d_head/L) (which underestimates tau at large d_head).
+(b) **Empirical support**: The sweep evidence supports the default operating
+region and shows that tau=0 is often outside the useful basin. It should not be
+over-sold as a theorem selecting a unique exponent for all trained attention
+regimes.
 
 (c) **Sensitivity analysis**: At d_head=64, even the worst-case configuration shows <1% PPL gap from the empirical optimum, suggesting the landscape around tau* is shallow. Moderate perturbations of the scaling law (e.g., +/-20%) still give near-optimal results.
 
 **Ready-to-paste rebuttal**:
 
-> The specific d_head/sqrt(L) form emerges from the beta/alpha ratio in the broadband surrogate (tau^2 = beta/alpha, where the two parameters have different L-dependence), not from dimensional analysis alone. The 99-run sweep empirically discriminates this from alternatives: d_head/L systematically overestimates tau at large L, while sqrt(d_head/L) underestimates at large d_head. Importantly, the PPL landscape around tau* is shallow (<1% gap at worst case), so moderate perturbations of the functional form still yield near-optimal results.
+> The d_head/sqrt(L) form should be read as an operating rule supported by a small-tau softmax-transport argument and sweep validation, not as a dimensional-analysis theorem. The sweep evidence is useful because it places the default inside a broad non-geometric basin and separates it from tau=0 in the tested regimes. Direct L_eff^J measurements and additional functional-form ablations would be needed before making a stronger trained-attention scaling claim.
 
 ### Attack 14.3: "Did you test architectures where EVQ fails? Only reporting successes looks like selection bias."
 
@@ -599,7 +607,7 @@ EVQ's cost is exactly one arcsinh call per channel during model initialization. 
 
 **Defense Strategy**:
 
-(a) **Ablation is in the data**: We show EVQ raw (no YaRN), GEO+YaRN, EVQ+YaRN, and GEO raw. The strict dominance hierarchy (EVQ+YaRN > EVQ > GEO+YaRN > GEO at every length) demonstrates that both contribute independently.
+(a) **Ablation is in the data**: We show EVQ raw (no YaRN), GEO+YaRN, EVQ+YaRN, and GEO raw in the matched settings. The primary MLA and passkey rows support higher YaRN leverage on EVQ, while supporting Phase18 reminds us not to generalize this to every beyond-target length.
 
 (b) **Marginal analysis**: YaRN's marginal benefit is larger on EVQ than on GEO (-25.6% vs -15.1% at 16K in MLA). This means EVQ amplifies YaRN's effectiveness, not just passively receives it.
 
@@ -607,7 +615,7 @@ EVQ's cost is exactly one arcsinh call per channel during model initialization. 
 
 **Ready-to-paste rebuttal**:
 
-> The ablation structure (4 conditions: GEO, GEO+YaRN, EVQ, EVQ+YaRN) directly decomposes the contributions. The strict dominance hierarchy at every length shows both contribute independently. Critically, YaRN's marginal benefit is larger on EVQ than on GEO (-25.6% vs -15.1% at 16K), demonstrating that EVQ amplifies YaRN's effectiveness. The reviewer's framing ("warmer start") is precisely our claim: EVQ provides a structurally better frequency substrate for inference-time scaling. The 13.6pp structural reversal under YaRN FT further confirms this --- the composition benefit persists even when the standalone advantage vanishes.
+> The ablation structure (4 conditions: GEO, GEO+YaRN, EVQ, EVQ+YaRN) decomposes the matched-setting contributions. In the 3-seed MLA table, YaRN's marginal benefit is larger on EVQ than on GEO (-25.6% vs -15.1% at 16K), supporting the claim that EVQ gives inference-time scaling a better trained substrate in this setting. The reviewer's framing ("warmer start") is close to our mechanism claim: YaRN rescales the frequencies it inherits. We should not claim this implies universal dominance over tuned Geo+YaRN variants or every beyond-target length.
 
 ---
 
@@ -619,7 +627,7 @@ EVQ's cost is exactly one arcsinh call per channel during model initialization. 
 
 ### Empirically-Oriented Reviewer
 **Likely concerns**: Scale, single-seed, downstream tasks, comparison breadth
-**Strategy**: Lead with the 5-scale chain + MLA 3-seed, compare favorably with DAPE/FIRE/CREAM evidence standards, emphasize the structural reversal
+**Strategy**: Lead with the 454M matched-scale table and MLA 3-seed stress test; use the broader scale chain only as supporting context and acknowledge the structural reversal
 
 ### Systems/Practical Reviewer
 **Likely concerns**: Production relevance, integration cost, deployment experience

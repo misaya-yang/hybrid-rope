@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-Phase 6 validates EVQ-Cosh RoPE across five complementary dimensions: extended τ range, SOTA baselines (YaRN), regime sensitivity (1024-tok), model scaling (50M), and non-PPL metrics (passkey retrieval). **All five experiments confirm EVQ's superiority over geometric RoPE, PI, YaRN, and DAPE.**
+Phase 6 is an early validation report across five complementary dimensions: extended τ range, inference-time PE baselines (YaRN/PI), regime sensitivity (1024-tok), model scaling (50M), and non-PPL metrics (passkey retrieval). **2026-06 audit note:** use this as historical support only. Later paper claims are narrower: EVQ-Cosh is a training-time allocation mechanism, not universal superiority over every tuned baseline.
 
 Key findings:
 1. **No τ peak found** at 128-tok: PPL@8K monotonically decreases to τ=5.0 (FW: -35%, TS: -57% vs Geometric) with negligible PPL@128 degradation (<2%)
@@ -187,7 +187,7 @@ At 128-tok training (PE-dominant regime):
 | 1024 tok | ~2.0 | — | -22% |
 | 2048 tok | ~1.5 | — | — |
 
-The optimal τ decreases as training length increases, but the direction of improvement (EVQ > Geometric) holds universally.
+The optimal τ decreases as training length increases. Historical wording called the improvement universal; the audited paper claim is narrower and treats this as evidence for the tested PE-dominant/early-scaling regimes.
 
 ### Finding 3: Learnable τ Has a Fundamental Limitation
 

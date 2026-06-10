@@ -10,6 +10,12 @@
 >   - 扩展 eval: `results/evq_phase17c_results/phase17c_extended_eval.json`
 > 远端产物: `REMOTE_RUN_ROOT/evq_phase17c_2048_continue/`
 
+> **2026-06 audit note:** This is a single-seed supporting/progressive report.
+> The passkey numbers below include AR-exact evaluation where explicitly stated,
+> but the row should not be promoted into a primary durability or universal
+> EVQ+YaRN claim. Use it as qualitative support for matched-scale substrate
+> effects only.
+
 ---
 
 ## 0. 实验设定
@@ -166,16 +172,16 @@ EVQ+YaRN 在 32K→48K 段 **PPL 反而下降**，说明并非单调退化而是
 
 ## 5. 与论文叙事的对接
 
-### 5.1 可写入论文的核心 claims
+### 5.1 仅可作为 supporting appendix 的 scoped claims
 
 **Claim 1 — EVQ raw extrapolation:**
 > After three-stage length extension (512→1024→2048, 2.5B total tokens), EVQ-Cosh RoPE (τ* = d_head/√L) achieves PPL of 2.48 at 16K—only 6.4% above in-distribution—while geometric RoPE collapses to 13.17 (+470%). EVQ maintains near-flat PPL up to 4× training length.
 
-**Claim 2 — EVQ+YaRN synergy (headline result):**
-> Combined with YaRN overlay, EVQ extends functional context to 48K tokens (24× training length) with PPL ≤ 3.29, an 82% improvement over Geo+YaRN (PPL=14.22). The EVQ+YaRN PPL curve remains essentially flat from 2K to 48K, demonstrating that EVQ's optimized frequency allocation provides a dramatically better foundation for inference-time scaling.
+**Claim 2 — EVQ+YaRN synergy (supporting result):**
+> In this single-seed progressive run, combined with the tested YaRN overlay, EVQ extends functional context to 48K tokens (24× training length) with PPL ≤ 3.29, an 82% improvement over Geo+YaRN (PPL=14.22). This supports the hypothesis that EVQ's trained frequency substrate can give matched inference-time scaling higher leverage.
 
-**Claim 3 — Passkey retrieval:**
-> EVQ+YaRN achieves 100% passkey retrieval across all tested lengths (2K–16K, 40 trials), compared to 60% for Geo+YaRN. This confirms that EVQ's frequency allocation preserves precise positional discrimination at extreme extrapolation ratios.
+**Claim 3 — Passkey retrieval (supporting AR-exact row):**
+> EVQ+YaRN achieves 100% AR-exact passkey retrieval across all tested lengths (2K–16K, 40 trials), compared to 60% for Geo+YaRN. Because this is single-seed, use it as supporting evidence rather than primary proof.
 
 ### 5.2 Table-ready 结果
 

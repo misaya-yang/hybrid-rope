@@ -8,6 +8,12 @@
 > - raw long eval: `REMOTE_RUN_ROOT/evq_phase17/eval_ckpt25_50_long_20260309_135414`
 > - raw + YaRN overlay: `REMOTE_RUN_ROOT/evq_phase17/eval_yarn_overlay_20260309_140844`
 
+> **2026-06 audit note:** This is a historical single-run supporting report.
+> Treat "best practical recipe" language below as scoped to this short-train /
+> long-test overlay setting only. Do not use it as primary evidence of universal
+> EVQ+YaRN dominance; use the 454M 10% passkey-mix Table 2 and the 3-seed MLA
+> table for reviewer-facing matched-scale claims.
+
 ---
 
 ## 0. 实验设置
@@ -62,7 +68,7 @@
 | `Geo 50%` | `+35.6%` |
 | `EVQ 50%` | `+84.9%` |
 
-### 1.3 最强 practical recipe 不是 Geo+YaRN，而是 EVQ+YaRN
+### 1.3 在本轮 short-train / long-test overlay 中，EVQ+YaRN 优于 Geo+YaRN
 
 同一 checkpoint 下，`EVQ+YaRN` 相对 `Geo+YaRN` 的 `4K-32K` 平均优势：
 
@@ -148,9 +154,9 @@
 | `25%` EVQ+YaRN over Geo+YaRN | `+84.6%` | `+90.2%` | `+89.5%` | `+88.8%` | `+83.7%` | `+87.4%` |
 | `50%` EVQ+YaRN over Geo+YaRN | `+86.3%` | `+90.2%` | `+88.8%` | `+86.9%` | `+79.2%` | `+86.3%` |
 
-这个表已经足够支撑 practical claim：
+这个表足够支撑本轮 single-run supporting claim：
 
-> 在短程训练、长程部署的现实设置里，最佳组合是 `EVQ + YaRN`，而不是 `Geo + YaRN`。
+> 在这个短程训练、长程部署的 overlay 设置里，`EVQ + YaRN` 明显优于 `Geo + YaRN`。
 
 ---
 
@@ -188,13 +194,13 @@
 1. **继续用短程目标训练**  
    会让模型更贴合短程分布，因此 raw 长程 extrapolation 会变差。
 
-2. **这不等于 EVQ 在现实 setting 下没用**  
+2. **这不等于 EVQ 在现实 setting 下没用**
    因为实际部署不是只能用 raw，而是可以叠加 inference-time extrapolation 方法。
 
-3. **YaRN 并不会替代 EVQ，而是放大 EVQ 的优势**  
+3. **YaRN 并不会替代 EVQ，而是放大 EVQ 的优势**
    同样的 YaRN overlay，`EVQ` 拿到的收益远大于 `Geo`。
 
-4. **所以 practical recipe 是 EVQ+YaRN**  
+4. **所以本轮 supporting setting 下 EVQ+YaRN 是更强组合**
    如果现实世界训练长度就是短的，那么最合理的结论不是“EVQ 更吃亏”，而是：
    **EVQ provides the better substrate for YaRN.**
 
@@ -212,11 +218,11 @@
 
 - **short-only continued training hurts raw long-context extrapolation for both Geo and EVQ**
 - **but EVQ unlocks much larger YaRN gains than Geo**
-- **therefore EVQ+YaRN, not Geo+YaRN, is the strongest practical recipe in short-train / long-test settings**
+- **therefore EVQ+YaRN is the stronger combination in this short-train / long-test supporting setting**
 
 更短的 paper 句式可以直接写：
 
-> Even when continued short-context training weakens raw long-range extrapolation, EVQ remains the better substrate for inference-time extrapolation: YaRN yields much larger gains on EVQ than on Geo, making EVQ+YaRN the strongest practical combination.
+> Even when continued short-context training weakens raw long-range extrapolation in this supporting run, EVQ remains the better substrate for the tested YaRN overlay: YaRN yields much larger gains on EVQ than on Geo.
 
 ---
 

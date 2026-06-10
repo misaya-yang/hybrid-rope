@@ -19,7 +19,7 @@ Usage:
     python yarn_finetune_eval.py --scale 4 --train_seq_len 8192 \
         --ft_data /root/autodl-tmp/data/train_750m_clean/test_32768.pt
 """
-import os, math, json, time, argparse, gc
+import os, math, json, time, argparse, gc, hashlib
 import numpy as np
 import torch
 import torch.nn as nn
@@ -29,6 +29,54 @@ from pathlib import Path
 
 DEVICE = "cuda"
 DTYPE = torch.bfloat16
+
+
+def tensor_sha256(t):
+    arr = t.detach().float().cpu().contiguous().numpy()
+    return hashlib.sha256(arr.tobytes()).hexdigest()[:16]
+
+
+def require_checkpoint_inv_freq(state_dict, ckpt_path):
+    if not any(k.endswith("attn.rope.inv_freq") for k in state_dict):
+        raise KeyError(f"{ckpt_path} does not contain checkpoint RoPE inv_freq")
+
+
+def checkpoint_inv_freq(model, label):
+    rope = model.get_rope()
+    inv = rope.inv_freq.detach().clone()
+    if inv.numel() == 0 or not torch.isfinite(inv).all():
+        raise ValueError(f"{label}: invalid checkpoint RoPE inv_freq")
+    print(
+        f"  [inv_freq] {label}: n={inv.numel()}, "
+        f"sha256={tensor_sha256(inv)}, first={inv[0].item():.6g}, "
+        f"last={inv[-1].item():.6g}"
+    )
+    return inv
+
+
+def tau_name_candidates(tau):
+    names = []
+    for text in (f"{tau:.3f}", f"{tau:.2f}", f"{tau:g}"):
+        if text not in names:
+            names.append(text)
+    return names
+
+
+def run_dir_candidates(work_dir, tau, seed, tier="350m", attn_type="mla"):
+    names = []
+    for tau_text in tau_name_candidates(tau):
+        names.append(f"{tier}_{attn_type}_tau{tau_text}_seed{seed}")
+    for tau_text in tau_name_candidates(tau):
+        names.append(f"{tier}_tau{tau_text}_seed{seed}")
+    return [work_dir / name for name in dict.fromkeys(names)]
+
+
+def resolve_checkpoint_path(work_dir, tau, seed, ckpt_file, tier="350m", attn_type="mla"):
+    candidates = [d / ckpt_file for d in run_dir_candidates(work_dir, tau, seed, tier, attn_type)]
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate, candidates
+    return candidates[0], candidates
 
 # ---------------------------------------------------------------------------
 # Model (MLA architecture, mirrors run_gqa_evq_experiment.py)
@@ -440,14 +488,17 @@ def main():
 
     all_results = {}
 
-    for tau_name, inv_freq, tau_str in [("GEO", geo_inv, "0.00"), ("EVQ", evq_inv, "1.41")]:
+    for tau_name, inv_freq, tau in [("GEO", geo_inv, 0.0), ("EVQ", evq_inv, 1.414)]:
         ckpt_name = f"model{args.ckpt_suffix}.pt"
-        ckpt_path = work_dir / f"350m_tau{tau_str}_seed{args.seed}" / ckpt_name
+        ckpt_path, ckpt_candidates = resolve_checkpoint_path(
+            work_dir, tau, args.seed, ckpt_name
+        )
         if not ckpt_path.exists():
-            print(f"\n  [SKIP] {ckpt_path} not found")
+            print(f"\n  [SKIP] missing {ckpt_name}; tried: {[str(p) for p in ckpt_candidates]}")
             continue
 
         sd = torch.load(ckpt_path, map_location="cpu", weights_only=True)
+        require_checkpoint_inv_freq(sd, ckpt_path)
 
         print(f"\n{'='*70}")
         print(f"  {tau_name} seed={args.seed}")
@@ -459,6 +510,7 @@ def main():
         model = GPT(cfg, inv_freq)
         model.load_state_dict(sd, strict=True)
         model = model.to(DEVICE)
+        checkpoint_inv_freq(model, f"{tau_name} seed={args.seed} baseline")
         ppl_base = eval_ppl(model, val_data, eval_lengths)
         all_results[f"{tau_name}_baseline"] = ppl_base
         del model; cleanup_gpu()
@@ -468,7 +520,8 @@ def main():
         model = GPT(cfg, inv_freq)
         model.load_state_dict(sd, strict=True)
         model = model.to(DEVICE)
-        yarn_inv, mscale = apply_yarn_scaling(inv_freq, scale, train_seq, base)
+        base_inv = checkpoint_inv_freq(model, f"{tau_name} seed={args.seed} YaRN")
+        yarn_inv, mscale = apply_yarn_scaling(base_inv, scale, train_seq, base)
         rope = model.get_rope()
         rope.inv_freq.copy_(yarn_inv)
         rope.mscale = mscale
@@ -482,9 +535,10 @@ def main():
         model = GPT(cfg, inv_freq)
         model.load_state_dict(sd, strict=True)
         model = model.to(DEVICE)
+        base_inv = checkpoint_inv_freq(model, f"{tau_name} seed={args.seed} YaRN+FT")
 
         # Apply YaRN scaling before FT
-        yarn_inv, mscale = apply_yarn_scaling(inv_freq, scale, train_seq, base)
+        yarn_inv, mscale = apply_yarn_scaling(base_inv, scale, train_seq, base)
         rope = model.get_rope()
         rope.inv_freq.copy_(yarn_inv)
         rope.mscale = mscale

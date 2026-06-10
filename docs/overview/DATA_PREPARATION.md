@@ -1,5 +1,12 @@
 # Data Preparation Guide
 
+> 审计状态提示（2026-06）：主训练数据说明仍适用于当前核心路径，但历史
+> 1B/4K MLA 相关数据制备存在 Pile/OpenWebText/FineWeb/C4 多个变体，并且
+> 可能通过 `fineweb-edu` cache label/symlink 进入训练脚本。不要仅凭 cache
+> 文件名判断真实数据源；1B/4K row 必须以 sanitized artifact manifest 为准。
+> 详见 `docs/overview/OPUS48_FORENSIC_AUDIT_REPORT.md` 和
+> `docs/overview/RESULT_PROVENANCE_MANIFEST.md`。
+
 本文档说明 EVQ-Cosh 实验使用的所有数据集及其获取方式。
 
 ---

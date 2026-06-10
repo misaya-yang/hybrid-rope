@@ -536,7 +536,7 @@ Fitted C = 67.84 vs predicted C = 64 (6% error).
 The scaling law τ*(L) ≈ C/√L is valid **for L ≥ 1024** where the PPL curve actually peaks. For L < 1024, the PPL improvement is monotonically increasing with τ (no peak found) — the PE-dominant regime has no finite optimum.
 
 **Transition model**: There exists a critical length L_crit ≈ 512–1024 where:
-- Below L_crit: PE-dominant, more compression always helps, no τ peak
+- Below L_crit: PE-dominant in this early sweep, larger τ kept helping over the tested range and no finite peak was observed
 - Above L_crit: Model-dominant, peak emerges, τ* ≈ 68/√L
 
 ### 8.4 Practical Usage
