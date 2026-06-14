@@ -25,6 +25,7 @@
 
 | 你要做什么 | 打开 |
 | --- | --- |
+| 7 月真实 reviews 到来后，先按 3-5 个 reviewer 问题快速分流 | `REVIEWER_TRIAGE_PLAYBOOK.md` |
 | 查原文是否逐字保存 | local-only `raw_sources/00_INDEX.md` |
 | 看完整策略和逐条分析 | `REBUTTAL_PREPARATION.md` |
 | 看当前是否满足原始目标 | `COMPLETION_AUDIT.md` |
