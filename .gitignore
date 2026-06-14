@@ -92,6 +92,12 @@ tong-jincheng-skill/
 .codex_tmp/
 .claude/
 
+# Local rebuttal/provenance audit workspaces.
+# These may contain copied server paths, internal reports, and recovery notes.
+# Do not commit them directly; promote only sanitized reviewer artifacts.
+07 - rebuttal/
+RESULT_PROVENANCE_MANIFEST.md
+
 # macOS metadata
 .DS_Store
 **/.DS_Store

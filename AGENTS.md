@@ -77,6 +77,31 @@ Known provenance caveats:
 - Fig. 3 panel (a) has a curated fallback in `data/curated/`; panels (b,c)
   depend on phase11 result JSONs unless additional curated fallbacks are added.
 
+## Current Branch And Audit Hygiene
+
+As of the June 2026 rebuttal audit, the useful local branch topology is:
+
+- `main`: current paper/rebuttal working branch.
+- `backup/2026-03-06`: archival branch used only to recover historical result
+  artifacts.
+
+Do not treat stale `codex/*` or remote-tracking branches as independent evidence
+unless the user explicitly asks for a new branch audit. `main` and
+`origin/main` already contain the current audit stack; the March backup branch
+is an artifact source, not the primary working branch.
+
+Local audit workspaces such as `07 - rebuttal/` and
+`RESULT_PROVENANCE_MANIFEST.md` are intentionally ignored. They may contain
+copied server paths, internal reports, broad code mirrors, and recovery notes.
+Use them for local reasoning only. Do not commit or package them directly; move
+only sanitized, reviewer-grade artifacts into tracked repository locations after
+the user explicitly asks.
+
+For rebuttal-time reruns, do not preemptively rerun supporting experiments.
+The primary evidence is already bounded by the provenance manifest. Supporting
+families such as progressive training, QuALITY, LoRA, video DiT, and 1B/4K MLA
+should be rerun only if a reviewer question requires that specific evidence.
+
 ## Editing Policy
 
 - Prefer minimal, local edits that align with existing style.
