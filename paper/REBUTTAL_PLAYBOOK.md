@@ -69,13 +69,13 @@ The 750M experiment is explicitly labeled as "supporting evidence" in the paper,
 
 ### Attack 2.1: "EVQ's advantage may simply be an artifact of insufficient training. With enough training, geometric RoPE would converge to similar performance."
 
-**Vulnerability**: HIGH unless Phase 18 is scoped carefully, because the same row contains a raw EVQ reversal.
+**Vulnerability**: HIGH unless the 1B/4K MLA schedule-sensitivity row is scoped carefully, because the same row contains a raw EVQ reversal.
 
 **Defense Strategy**:
 
 This is the single most important attack to answer, and the evidence is mixed:
 
-(a) **Phase 18 structural reversal, scoped carefully**: At 4K/1B tokens, EVQ *loses* standalone 8K extrapolation by +11.1%, while EVQ+YaRN+FT is better than GEO+YaRN+FT at the target length by -2.5%. This is useful evidence that the trained substrate can still matter under YaRN+FT, but it is single-seed, changes train length/data relative to the primary MLA run, and should also be presented as a raw-EVQ failure mode.
+(a) **1B/4K structural reversal, scoped carefully**: At 4K/1B tokens, EVQ *loses* standalone 8K extrapolation by +11.1%, while EVQ+YaRN+FT is better than GEO+YaRN+FT at the target length by -2.5%. This is useful evidence that the trained substrate can still matter under YaRN+FT, but it is single-seed, changes train length/data relative to the primary MLA run, and should also be presented as a raw-EVQ failure mode.
 
 (b) **Two-component decomposition**: EVQ's advantage has two separable components:
 - Raw extrapolation benefit: diminishes with training amount (as expected --- more training lets the model compensate for suboptimal frequencies)
@@ -99,7 +99,7 @@ This is the single most important attack to answer, and the evidence is mixed:
 
 (b) **The frequency initialization is consumed at step 0**: EVQ changes the initialization of inv_freq, which is used from the very first forward pass. The benefit is architectural, not dependent on training duration.
 
-(c) **Phase 18 evidence, with limitation**: The 1B/4K MLA row shows that raw EVQ can converge toward or lose to Geo in a sparse-frequency window. The target-length EVQ+YaRN+FT comparison remains favorable, but the row should be used as scoped evidence for substrate effects under scaling, not as proof of no convergence.
+(c) **1B/4K evidence, with limitation**: The 1B/4K MLA row shows that raw EVQ can converge toward or lose to Geo in a sparse-frequency window. The target-length EVQ+YaRN+FT comparison remains favorable, but the row should be used as scoped evidence for substrate effects under scaling, not as proof of no convergence.
 
 **Ready-to-paste rebuttal**:
 
@@ -193,7 +193,7 @@ These methods operate on different axes and are not direct competitors:
 
 (a) **The PE-dominant regime isolates the variable of interest**: At L_train=128, model memorization and data effects are minimized, making frequency layout the dominant variable. This is standard methodology in PE research (DAPE itself uses L=128).
 
-(b) **We test at multiple scales**: The PE-dominant claim is supported by Phase 0-3 (125M, L=128) AND Phase 11 (454M, L=256). The latter is less extreme.
+(b) **We test at multiple scales**: The seed-42 PE-dominant contrast uses 125M at L=128, and a separate 3-seed L=256 sweep provides supporting curves. The two protocols must not be conflated.
 
 (c) **EVQ uses 0 extra parameters**: DAPE uses d/2 = 32 learnable parameters. EVQ's seed-42 diagnostic row is favorable in this protocol, but the comparison should remain seed- and protocol-scoped.
 
@@ -207,7 +207,7 @@ These methods operate on different axes and are not direct competitors:
 
 **Defense Strategy**:
 
-VideoRoPE's core innovation is Low-frequency Temporal Allocation (LTA) --- a heuristic assignment of low-frequency channels to the temporal axis. EVQ provides a complementary theoretical perspective: the variational optimum (tau > 0) naturally shifts density toward low frequencies. The two methods arrive at the same directional conclusion from independent approaches (theory-first vs experiment-first).
+VideoRoPE's core innovation is Low-frequency Temporal Allocation (LTA) --- a heuristic assignment of low-frequency channels to the temporal axis. EVQ makes a different allocation move: it compresses the ultra-low/dead tail and reallocates finite channels into the active spectral band. The comparison is therefore about the shared importance of allocation, not identical directional schedules.
 
 Key differences:
 - VideoRoPE is a heuristic 3D RoPE design for video VLMs; EVQ is a closed-form variational solution for general RoPE
@@ -216,7 +216,7 @@ Key differences:
 
 **Ready-to-paste rebuttal**:
 
-> VideoRoPE and EVQ represent convergent motivation from independent approaches: both point toward low-frequency temporal/long-range allocation as important. The methods differ in scope: VideoRoPE is a heuristic 3D design for video VLMs, while EVQ is a closed-form allocation family for standard RoPE. Our video rows are supporting evidence that frequency allocation matters beyond text, but they should not be used as primary proof of the text tau rule.
+> VideoRoPE and EVQ share the conclusion that the inherited frequency allocation deserves explicit design, but they do not implement the same directional schedule. VideoRoPE is a heuristic 3D design for video VLMs; EVQ is a closed-form allocation family that compresses the ultra-low/dead tail and reallocates channels into the active band. Our video rows are supporting evidence that allocation matters beyond text, not primary proof of the text tau rule.
 
 ---
 
@@ -230,7 +230,7 @@ Key differences:
 
 (a) **We have three layers of downstream evidence**:
 - LongBench NLL (13 tasks, 750M): +4.4% / -4.4% symmetric waterbed reversal
-- QuALITY QA (n=2086, 454M): Gold Answer NLL -30% at 2x, accuracy +2.2pp (p~0.02) at 2x
+- QuALITY QA (n=2086, 454M): Gold Answer NLL -30% at 2x; accuracy remains near the capacity floor and has no stable directional gain across rows
 - Passkey retrieval (3 seeds per method): 100% vs about 61% at 4x extrapolation
 
 (b) **Signal attenuation is expected for infrastructure-level changes**: PE allocation is infrastructure. In our diagnostics, the signal is strongest in PPL and teacher-forced NLL-style metrics, and weaker in end-task accuracy. That attenuation is expected and should be framed as scope, not as a downstream SOTA claim.
@@ -239,7 +239,7 @@ Key differences:
 
 **Ready-to-paste rebuttal**:
 
-> We provide three layers of downstream or task-adjacent evidence: (1) LongBench conditional NLL on 13 tasks showing a symmetric +4.4%/-4.4% waterbed reversal; (2) QuALITY QA (n=2086) showing Gold Answer NLL -30% at 2x extrapolation with accuracy +2.2pp (p~0.02); and (3) passkey-mix retrieval with 3 seeds per method (100% vs about 61%). The modest accuracy gains reflect model-capacity limitations (454M is near random baseline on QuALITY), so Gold NLL and teacher-forced NLL-gap retrieval should be described as PE-diagnostic signals rather than full downstream task wins.
+> We provide three layers of downstream or task-adjacent evidence: (1) LongBench conditional NLL on 13 tasks showing a symmetric +4.4%/-4.4% waterbed reversal; (2) QuALITY QA (n=2086) showing Gold Answer NLL -30% at 2x extrapolation while 4-option accuracy remains near the capacity floor and is not used as positive evidence; and (3) passkey-mix retrieval with 3 seeds per method (100% vs about 61%). Gold NLL and teacher-forced NLL-gap retrieval are PE-diagnostic signals rather than full downstream task wins.
 
 ### Attack 6.2: "The waterbed cost (+4.4% at in-distribution) could be unacceptable in production."
 
@@ -277,19 +277,17 @@ Key differences:
 
 > Our MLA experiment is a scarce-channel stress test for the compressed-RoPE problem family used by MLA, not a production-identical DeepSeek reproduction. With only 16 rotary frequency channels, allocation mistakes are amplified, making it a targeted mechanism test for the finite-spectral-budget claim. The -31.1% 16K improvement is 3-seed validated in this setting, but production-scale MLA validation and per-channel convention ablations remain future work.
 
-### Attack 7.2: "tau choice for MLA (1.414) is based on L=512 reference, not the actual L_train=8192. Is this principled?"
+### Attack 7.2: "The MLA tau choice (1.414) uses d_eff=d_head rather than d_rope. Is this principled?"
 
-**Vulnerability**: MEDIUM. We explicitly note this in mainstory.md but should address it transparently.
+**Vulnerability**: MEDIUM-HIGH. The convention is explicit but the direct d_rope ablation is missing.
 
 **Defense Strategy**:
 
-The tau* = d_head/sqrt(L) scaling law was validated for L in [256, 2048]. Using L=8192 would give tau = 32/sqrt(8192) = 0.354, which is in the low-tau regime where EVQ barely differs from geometric. We used L=512 as a reference from the validated range, giving tau = 1.414. The strong results suggest this choice is effective, though the optimal tau for MLA at L=8192 may differ.
-
-This is an honest area where the theory may need extension: the scaling law may need a saturation or floor correction for very long training lengths, or the relevant "L" for MLA may be an effective length related to d_rope rather than the actual sequence length.
+The reported value is $d_{\mathrm{head}}/\sqrt{L}=128/\sqrt{8192}=1.414$. The rotary grid itself has $d_{\mathrm{rope}}=32$, which would instead give $0.354$. We use $d_{\mathrm{eff}}=d_{\mathrm{head}}$ as a calibrated latent-projection convention; the primary result evaluates allocation sensitivity at that fixed convention and does not identify the optimal MLA operating dimension.
 
 **Ready-to-paste rebuttal**:
 
-> We appreciate this observation. The tau* scaling law was validated for L in [256, 2048]. We used L=512 as a reference from the validated range, yielding tau=1.414. We note in the paper that the optimal tau for MLA at L=8192 may differ and warrants further investigation. One hypothesis is that the relevant "L" for tau* in MLA may scale with d_rope rather than the full sequence length, since the 16 frequency channels have a different effective resolution than 32+ channels in MHA. The strong results at tau=1.414 are encouraging, but we agree this is an area where the scaling law may need refinement for the compressed-RoPE regime.
+> We agree that this is an unablated convention. The reported $\tau=1.414$ is $d_{\mathrm{head}}/\sqrt{8192}$, using $d_{\mathrm{eff}}=d_{\mathrm{head}}$ to reflect latent-projection coupling; $d_{\mathrm{rope}}/\sqrt{8192}$ would give $0.354$. Our 3-seed result establishes allocation sensitivity at the stated convention, not that this convention is optimal. The direct $0.354$ ablation is therefore a priority experiment.
 
 ---
 
@@ -318,15 +316,15 @@ This is an honest area where the theory may need extension: the scaling law may 
 
 ### Attack 8.2: "The waterbed inequality is well-known in information theory. Is this a contribution?"
 
-**Vulnerability**: LOW. We don't claim waterbed is new --- we claim its empirical validation on downstream tasks is new.
+**Vulnerability**: LOW-MEDIUM. The inequality uses standard divergence-comparison machinery; the paper-specific contribution is its spectral-allocation instantiation and scoped empirical checks.
 
 **Defense Strategy**:
 
-The waterbed inequality in our context is a consequence of the variational optimization, not a borrowed result. More importantly, the contribution is the empirical validation: the +4.4%/-4.4% symmetric reversal on 13 LongBench tasks, with task-type decomposition showing QA tasks (requiring precise retrieval) benefiting most. To our knowledge, this is the first direct measurement of the frequency-allocation waterbed effect on real downstream tasks.
+The bound follows by applying standard f-divergence comparison machinery to the paper's spectral-allocation functional. It is useful for quantifying the finite-budget trade-off, but should not be sold as a new information-theoretic inequality. The supporting LongBench NLL reversal is consistent with the trade-off and is not a universal downstream theorem.
 
 **Ready-to-paste rebuttal**:
 
-> The waterbed inequality in our paper is derived as a consequence of the variational optimization (Section 3), not borrowed from information theory. The contribution is not the inequality itself but its empirical validation on downstream tasks: the +4.4%/-4.4% symmetric reversal on 13 LongBench tasks, with task-type decomposition showing QA tasks benefiting up to -16.8%. To our knowledge, this is the first direct measurement of the frequency-allocation waterbed effect on real downstream tasks, providing empirical grounding for the theoretical prediction.
+> We agree that the underlying divergence-comparison machinery is standard. Our contribution is to instantiate it for finite RoPE frequency allocation and connect the resulting trade-off to scoped NLL diagnostics. The supporting LongBench result shows the predicted short/long-range reversal in this setup; we do not claim a new general information-theoretic inequality or universal downstream law.
 
 ---
 
@@ -370,14 +368,14 @@ The waterbed inequality in our context is a consequence of the variational optim
 
 ### Attack 10.1: "The -86% average PPL improvement over Geo+YaRN is from a single-seed experiment. This is unreliable."
 
-**Vulnerability**: MEDIUM. Phase 17 composition data is indeed single-seed.
+**Vulnerability**: MEDIUM. The 454M progressive composition data is indeed single-seed.
 
 **Defense Strategy**:
 
 (a) **Multiple independent confirmations of the composition pattern**:
-- Phase 17 (454M, single-seed): -86% average across 4K-32K
+- 454M progressive run (single-seed): -86% average across 4K-32K
 - MLA 3-seed: EVQ+YaRN(s=4) -48.8% at 16K (3-seed validated)
-- Phase 18 YaRN FT: target-length EVQ+YaRN+FT remains better despite raw EVQ reversal (single-seed; beyond-target lengths are mixed)
+- 1B/4K MLA YaRN FT: target-length EVQ+YaRN+FT remains better despite raw EVQ reversal (single-seed; beyond-target lengths are mixed)
 - Passkey mix: EVQ+YaRN 100% vs Geo+YaRN about 61% (3 seeds per method; EVQ row has zero std)
 
 (b) **The targeted composition direction is consistent in primary matched-scale settings**: The primary matched-scale rows favor EVQ+YaRN, but supporting Phase18 also contains beyond-target lengths where GEO+YaRN+FT is better. Do not claim universal dominance.

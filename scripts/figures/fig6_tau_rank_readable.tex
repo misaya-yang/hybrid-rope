@@ -1,0 +1,46 @@
+\documentclass[tikz,border=3pt]{standalone}
+\usepackage{tikz}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+\definecolor{rankone}{HTML}{009E73}
+\definecolor{ranktwo}{HTML}{0072B2}
+\definecolor{rankthree}{HTML}{E69F00}
+\definecolor{rankfive}{HTML}{D55E00}
+\definecolor{grid}{HTML}{D9D9D9}
+
+\begin{document}
+\begin{tikzpicture}[x=1.25cm,y=0.58cm,font=\sffamily\fontsize{8}{9}\selectfont]
+  \node[font=\bfseries\fontsize{10}{11}\selectfont] at (2.5,10.0)
+    {Rank of predicted $\tau^*=d_{\mathrm{head}}/\sqrt{L}$ in the 99-run sweep};
+
+  \foreach \x in {0,1,2,3,4,5} {
+    \draw[grid,line width=0.35pt] (\x,0.2) -- (\x,9.2);
+    \node[anchor=north] at (\x,0.0) {\x};
+  }
+  \draw[densely dashed,line width=0.7pt] (3,0.2) -- (3,9.2);
+
+  \node[anchor=e] at (-0.18,8.7) {$L{=}256$, $d_{\mathrm{head}}{=}128$};
+  \fill[ranktwo] (0,8.41) rectangle (2,8.99); \node[anchor=west,font=\bfseries] at (2.08,8.7) {2};
+  \node[anchor=e] at (-0.18,7.7) {$L{=}256$, $d_{\mathrm{head}}{=}64$};
+  \fill[rankone] (0,7.41) rectangle (1,7.99); \node[anchor=west,font=\bfseries] at (1.08,7.7) {1};
+  \node[anchor=e] at (-0.18,6.7) {$L{=}256$, $d_{\mathrm{head}}{=}32$};
+  \fill[rankone] (0,6.41) rectangle (1,6.99); \node[anchor=west,font=\bfseries] at (1.08,6.7) {1};
+  \node[anchor=e] at (-0.18,5.7) {$L{=}512$, $d_{\mathrm{head}}{=}128$};
+  \fill[rankone] (0,5.41) rectangle (1,5.99); \node[anchor=west,font=\bfseries] at (1.08,5.7) {1};
+  \node[anchor=e] at (-0.18,4.7) {$L{=}512$, $d_{\mathrm{head}}{=}64$};
+  \fill[rankthree] (0,4.41) rectangle (3,4.99); \node[anchor=west,font=\bfseries] at (3.08,4.7) {3};
+  \node[anchor=e] at (-0.18,3.7) {$L{=}512$, $d_{\mathrm{head}}{=}32$};
+  \fill[rankfive] (0,3.41) rectangle (5,3.99); \node[anchor=west,font=\bfseries] at (5.08,3.7) {5};
+  \node[anchor=e] at (-0.18,2.7) {$L{=}1024$, $d_{\mathrm{head}}{=}128$};
+  \fill[ranktwo] (0,2.41) rectangle (2,2.99); \node[anchor=west,font=\bfseries] at (2.08,2.7) {2};
+  \node[anchor=e] at (-0.18,1.7) {$L{=}1024$, $d_{\mathrm{head}}{=}64$};
+  \fill[ranktwo] (0,1.41) rectangle (2,1.99); \node[anchor=west,font=\bfseries] at (2.08,1.7) {2};
+  \node[anchor=e] at (-0.18,0.7) {$L{=}1024$, $d_{\mathrm{head}}{=}32$};
+  \fill[rankthree] (0,0.41) rectangle (3,0.99); \node[anchor=west,font=\bfseries] at (3.08,0.7) {3};
+
+  \node at (2.5,-0.75) {Rank among swept $\tau$ values (lower is better)};
+  \node[draw=black,rounded corners=1pt,fill=white,align=left,anchor=north west]
+    at (3.35,9.0) {Exact: 3/9\\Top-2: 6/9\\Top-3: 8/9};
+\end{tikzpicture}
+\end{document}

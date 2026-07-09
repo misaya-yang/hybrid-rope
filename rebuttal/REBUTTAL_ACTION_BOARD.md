@@ -187,7 +187,7 @@ Why:
 
 Current status:
 
-- Done: NLL plot regenerated via `scripts/figures/fig5_downstream_qa_nll.py`.
+- Done: NLL plot regenerated via `scripts/figures/build_fig5_downstream_qa.sh` from the tracked TikZ source.
 - Done: `paper/main.pdf` recompiled with Tectonic.
 - Done: page 36 visually checked.
 

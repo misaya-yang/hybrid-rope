@@ -1,23 +1,20 @@
 #!/usr/bin/env python3
 """
-LLaMA-3.2-1B-Instruct Continued Pretraining: GEO vs EVQ-Cosh Head-to-Head
+LLaMA Continued Pretraining: GEO vs EVQ-Cosh Head-to-Head
 
-Full-parameter continued pretraining of Meta-Llama-3.2-1B-Instruct,
+Full-parameter continued pretraining for a Hugging Face LLaMA checkpoint,
 comparing geometric (control) vs EVQ-Cosh (treatment) frequency allocation.
 Full-param is necessary because attention weights are coupled with PE frequencies —
 LoRA can't restructure the core attention-PE interaction.
 
-Model:
-  - Meta-Llama-3.2-1B-Instruct, head_dim=64, rope_theta=500000, native ctx=8192
-  - 32 inv_freq values (head_dim // 2)
-  - ~1.26B params, full-param bf16 fits on single 32GB GPU (~24GB total)
-
-EVQ-Cosh tau: head_dim / sqrt(L_pretrain) = 64 / sqrt(8192) = 0.707
+The script reads head_dim and rope_theta from the checkpoint config and validates
+the packed training length. This prevents a 1B-sized RoPE table from being
+silently injected into an 8B model (or vice versa).
 
 Experiment design:
   Config 1 (GEO): Original geometric inv_freq — control
-  Config 2 (EVQ): EVQ-Cosh tau=0.707 inv_freq — treatment
-  Both: full-param, 2000 steps, seq_len=8192, cosine LR
+  Config 2 (EVQ): EVQ-Cosh tau=head_dim/sqrt(train_seq_len) — treatment
+  Both: full-param, matched steps/sequence length, cosine LR
   Hardware: 2×H800 80GB with DeepSpeed ZeRO-2 (fp32 Adam, zero precision loss)
 
 Evaluation:
@@ -58,6 +55,7 @@ import sys
 import time
 import traceback
 from contextlib import nullcontext
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -90,24 +88,60 @@ def print_rank0(*args, **kwargs):
         print(*args, **kwargs)
 
 # ---------------------------------------------------------------------------
-# Constants
+# Defaults and model-derived rotary geometry
 # ---------------------------------------------------------------------------
 
-HEAD_DIM = 64  # LLaMA-3.2-1B: hidden=2048, heads=32, head_dim=64
-ROPE_THETA = 500_000.0
-NATIVE_CTX = 8192  # original_max_position_embeddings
-N_FREQ = HEAD_DIM // 2  # 32
-
-TRAIN_SEQ_LEN = 8192
+DEFAULT_TRAIN_SEQ_LEN = 8192
 DEFAULT_STEPS = 2000
 DEFAULT_LR = 5e-6  # full-param continued pretraining LR
 DEFAULT_BATCH_SIZE = 1
 DEFAULT_GRAD_ACCUM = 8
 WARMUP_FRACTION = 0.05
 
-EVAL_LENGTHS = [8192, 16384, 32768]
 PASSKEY_TRIALS = 20
-PASSKEY_LENGTHS = [8192, 16384, 32768]
+
+
+@dataclass(frozen=True)
+class RopeGeometry:
+    head_dim: int
+    n_freqs: int
+    rope_theta: float
+    model_max_position_embeddings: int
+
+
+def resolve_rope_geometry(config: Any) -> RopeGeometry:
+    """Infer and validate rotary geometry from a Hugging Face model config."""
+    head_dim = getattr(config, "head_dim", None)
+    if head_dim is None:
+        hidden_size = getattr(config, "hidden_size", None)
+        num_heads = getattr(config, "num_attention_heads", None)
+        if not hidden_size or not num_heads or int(hidden_size) % int(num_heads) != 0:
+            raise ValueError(
+                "Cannot infer head_dim: config needs head_dim or divisible hidden_size/num_attention_heads"
+            )
+        head_dim = int(hidden_size) // int(num_heads)
+    head_dim = int(head_dim)
+    if head_dim <= 0 or head_dim % 2:
+        raise ValueError(f"head_dim must be a positive even integer, got {head_dim}")
+
+    rope_theta = getattr(config, "rope_theta", None)
+    if rope_theta is None:
+        rope_scaling = getattr(config, "rope_scaling", None)
+        if isinstance(rope_scaling, dict):
+            rope_theta = rope_scaling.get("rope_theta")
+    rope_theta = float(rope_theta if rope_theta is not None else 10_000.0)
+    if rope_theta <= 0:
+        raise ValueError(f"rope_theta must be positive, got {rope_theta}")
+
+    model_max = int(getattr(config, "max_position_embeddings", DEFAULT_TRAIN_SEQ_LEN))
+    if model_max <= 0:
+        raise ValueError(f"max_position_embeddings must be positive, got {model_max}")
+    return RopeGeometry(
+        head_dim=head_dim,
+        n_freqs=head_dim // 2,
+        rope_theta=rope_theta,
+        model_max_position_embeddings=model_max,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -213,6 +247,18 @@ def cleanup_gpu():
 # inv_freq patching for LLaMA-3
 # ---------------------------------------------------------------------------
 
+def _validate_inv_freq_shape(
+    existing: torch.Tensor,
+    new_inv_freq: torch.Tensor,
+    module_name: str,
+) -> None:
+    if existing.numel() != new_inv_freq.numel():
+        raise RuntimeError(
+            f"RoPE frequency count mismatch at {module_name}: "
+            f"model={existing.numel()} requested={new_inv_freq.numel()}"
+        )
+
+
 def patch_inv_freq(model: nn.Module, new_inv_freq: torch.Tensor) -> int:
     """Patch rotary embedding inv_freq buffer in-place.
 
@@ -231,6 +277,7 @@ def patch_inv_freq(model: nn.Module, new_inv_freq: torch.Tensor) -> int:
     if hasattr(model.model, "rotary_emb"):
         rope = model.model.rotary_emb
         if hasattr(rope, "inv_freq") and rope.inv_freq is not None:
+            _validate_inv_freq_shape(rope.inv_freq, new_inv_freq, "model.rotary_emb")
             device = rope.inv_freq.device
             # Delete from buffer registry to prevent DeepSpeed bf16 casting
             if "inv_freq" in rope._buffers:
@@ -247,6 +294,11 @@ def patch_inv_freq(model: nn.Module, new_inv_freq: torch.Tensor) -> int:
             if rope is None:
                 continue
             if hasattr(rope, "inv_freq") and rope.inv_freq is not None:
+                _validate_inv_freq_shape(
+                    rope.inv_freq,
+                    new_inv_freq,
+                    "model.layers[*].self_attn.rotary_emb",
+                )
                 device = rope.inv_freq.device
                 if "inv_freq" in rope._buffers:
                     del rope._buffers["inv_freq"]
@@ -271,7 +323,8 @@ def patch_inv_freq_for_eval(model: nn.Module, new_inv_freq: torch.Tensor) -> int
     patched = 0
     for name, module in model.named_modules():
         if hasattr(module, "inv_freq") and module.inv_freq is not None:
-            if torch.is_tensor(module.inv_freq) and module.inv_freq.numel() == len(new_inv_freq):
+            if torch.is_tensor(module.inv_freq):
+                _validate_inv_freq_shape(module.inv_freq, new_inv_freq, name)
                 device = module.inv_freq.device
                 # Remove from buffer registry to prevent DeepSpeed dtype casting
                 if "inv_freq" in getattr(module, "_buffers", {}):
@@ -518,17 +571,21 @@ def eval_ppl(
     model: nn.Module,
     test_data: torch.Tensor,
     base_inv_freq: torch.Tensor,
+    native_ctx: int,
+    head_dim: int,
     label: str = "",
     max_chunks: int = 50,
 ) -> Dict[str, float]:
     """Evaluate perplexity on pre-packed test data.
 
-    For sequences longer than NATIVE_CTX (8192), applies YaRN scaling.
+    For sequences longer than the experiment's training context, applies YaRN scaling.
 
     Args:
         model: The model.
         test_data: Tensor of shape (N, seq_len).
         base_inv_freq: The base inv_freq used during training (geo or evq).
+        native_ctx: Training context used as the extrapolation reference.
+        head_dim: Model head dimension inferred from config.
         label: Description for logging.
         max_chunks: Maximum number of chunks to evaluate.
 
@@ -540,9 +597,9 @@ def eval_ppl(
     seq_len = test_data.shape[1]
 
     # Apply YaRN if extrapolating beyond native context
-    if seq_len > NATIVE_CTX:
-        scale = seq_len / NATIVE_CTX
-        scaled_freq = yarn_inv_freq(base_inv_freq, scale, HEAD_DIM)
+    if seq_len > native_ctx:
+        scale = seq_len / native_ctx
+        scaled_freq = yarn_inv_freq(base_inv_freq, scale, head_dim)
         n_patched = patch_inv_freq_for_eval(model, scaled_freq)
         print(f"    YaRN applied: scale={scale:.1f}x, patched {n_patched} layers")
 
@@ -583,7 +640,7 @@ def eval_ppl(
                 torch.cuda.empty_cache()
 
     # Restore original inv_freq if we applied YaRN
-    if seq_len > NATIVE_CTX:
+    if seq_len > native_ctx:
         patch_inv_freq_for_eval(model, base_inv_freq)
 
     if total_tokens == 0:
@@ -784,10 +841,10 @@ def train_loop(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="LLaMA-3-8B-Instruct continued pretraining: GEO vs EVQ-Cosh"
+        description="LLaMA continued pretraining: GEO vs EVQ-Cosh"
     )
     parser.add_argument("--model_dir", type=str, required=True,
-                        help="Path to Meta-Llama-3-8B-Instruct")
+                        help="Path or Hugging Face ID for a LLaMA checkpoint")
     parser.add_argument("--data_dir", type=str, required=True,
                         help="Directory with train_packed.pt, test_packed.pt, etc.")
     parser.add_argument("--output_dir", type=str, required=True,
@@ -805,7 +862,23 @@ def main():
     parser.add_argument("--local_rank", type=int, default=-1,
                         help="Local rank (auto-set by deepspeed launcher)")
     parser.add_argument("--tau", type=float, default=None,
-                        help="EVQ tau (default: head_dim / sqrt(native_ctx) = 0.707)")
+                        help="EVQ tau (default: inferred head_dim / sqrt(train_seq_len))")
+    parser.add_argument(
+        "--train_seq_len",
+        type=int,
+        default=DEFAULT_TRAIN_SEQ_LEN,
+        help=f"Packed training length and tau reference (default: {DEFAULT_TRAIN_SEQ_LEN})",
+    )
+    parser.add_argument(
+        "--eval_lengths",
+        default=None,
+        help="Comma-separated PPL lengths (default: train_seq_len, 2x, 4x)",
+    )
+    parser.add_argument(
+        "--passkey_lengths",
+        default=None,
+        help="Comma-separated passkey lengths (default: train_seq_len, 2x, 4x)",
+    )
     parser.add_argument("--configs", type=str, default="geo,evq",
                         help="Comma-separated configs to run (default: geo,evq)")
     parser.add_argument("--passkey_trials", type=int, default=PASSKEY_TRIALS,
@@ -830,8 +903,18 @@ def main():
 
     use_grad_ckpt = args.gradient_checkpointing and not args.no_gradient_checkpointing
 
-    # Compute tau
-    tau = args.tau if args.tau is not None else HEAD_DIM / math.sqrt(NATIVE_CTX)
+    if args.train_seq_len <= 0:
+        parser.error("--train_seq_len must be positive")
+
+    from transformers import AutoConfig
+    model_config = AutoConfig.from_pretrained(args.model_dir)
+    geometry = resolve_rope_geometry(model_config)
+    head_dim = geometry.head_dim
+    rope_theta = geometry.rope_theta
+    native_ctx = args.train_seq_len
+
+    # Compute tau from the actual model geometry and requested training context.
+    tau = args.tau if args.tau is not None else head_dim / math.sqrt(native_ctx)
 
     # Configs to run
     config_names = [c.strip().lower() for c in args.configs.split(",")]
@@ -842,16 +925,28 @@ def main():
 
     # Pilot mode adjustments
     if args.pilot:
-        eval_lengths = [8192]
-        passkey_lengths = [8192]
+        eval_lengths = [native_ctx]
+        passkey_lengths = [native_ctx]
         passkey_trials = min(5, args.passkey_trials)
         max_ppl_chunks = min(10, args.max_ppl_chunks)
         print("  PILOT MODE: reduced eval scope")
     else:
-        eval_lengths = EVAL_LENGTHS
-        passkey_lengths = PASSKEY_LENGTHS
+        default_lengths = [native_ctx, 2 * native_ctx, 4 * native_ctx]
+        eval_lengths = (
+            [int(x) for x in args.eval_lengths.split(",")]
+            if args.eval_lengths
+            else default_lengths
+        )
+        passkey_lengths = (
+            [int(x) for x in args.passkey_lengths.split(",")]
+            if args.passkey_lengths
+            else default_lengths
+        )
         passkey_trials = args.passkey_trials
         max_ppl_chunks = args.max_ppl_chunks
+
+    if any(length <= 0 for length in eval_lengths + passkey_lengths):
+        parser.error("All evaluation lengths must be positive")
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -863,9 +958,13 @@ def main():
     world_size = dist.get_world_size() if dist.is_initialized() else 1
     effective_bs = args.batch_size * args.grad_accum * world_size
     print_rank0(sep)
-    print_rank0("  LLaMA-3-8B-Instruct Continued Pretraining: GEO vs EVQ-Cosh")
+    print_rank0("  LLaMA Continued Pretraining: GEO vs EVQ-Cosh")
     print_rank0(sep)
     print_rank0(f"  Model:          {args.model_dir}")
+    print_rank0(f"  Head dim:       {head_dim} ({geometry.n_freqs} frequency pairs)")
+    print_rank0(f"  RoPE theta:     {rope_theta:g}")
+    print_rank0(f"  Model max pos:  {geometry.model_max_position_embeddings}")
+    print_rank0(f"  Train seq len:  {native_ctx}")
     print_rank0(f"  Data dir:       {args.data_dir}")
     print_rank0(f"  Output dir:     {args.output_dir}")
     print_rank0(f"  Configs:        {config_names}")
@@ -892,10 +991,10 @@ def main():
     random.seed(args.seed)
 
     # ── Pre-compute inv_freqs ───────────────────────────────────────
-    geo_freq = geometric_inv_freq(HEAD_DIM, ROPE_THETA)
-    evq_freq = evq_cosh_inv_freq(HEAD_DIM, tau, ROPE_THETA)
+    geo_freq = geometric_inv_freq(head_dim, rope_theta)
+    evq_freq = evq_cosh_inv_freq(head_dim, tau, rope_theta)
 
-    print_rank0("[0] Frequency comparison (first 8 / last 8 of 64):")
+    print_rank0(f"[0] Frequency comparison (first 8 / last 8 of {geometry.n_freqs}):")
     print_rank0(f"    GEO: {geo_freq[:8].tolist()}")
     print_rank0(f"         ... {geo_freq[-8:].tolist()}")
     print_rank0(f"    EVQ: {evq_freq[:8].tolist()}")
@@ -907,11 +1006,15 @@ def main():
     print_rank0("[1] Loading data...")
     train_path = data_dir / "train_packed.pt"
     train_data = load_packed_data(str(train_path), "train")
+    if train_data.ndim != 2 or train_data.shape[1] != native_ctx:
+        raise ValueError(
+            f"Packed train data must have shape (N, {native_ctx}); got {tuple(train_data.shape)}"
+        )
 
     # Load test data for each eval length
     test_datasets = {}
     for L in eval_lengths:
-        if L == TRAIN_SEQ_LEN:
+        if L == native_ctx:
             test_path = data_dir / "test_packed.pt"
         else:
             test_path = data_dir / f"test_{L}.pt"
@@ -968,6 +1071,8 @@ def main():
         # ── Patch inv_freq BEFORE DeepSpeed init ────────────────────
         print_rank0(f"\n  [B] Patching inv_freq ({config_name})...")
         n_patched = patch_inv_freq(model, inv_freq)
+        if n_patched == 0:
+            raise RuntimeError("No rotary inv_freq buffer found; refusing to train an unpatched model")
         print_rank0(f"  Patched {n_patched} rotary layers")
 
         # Verify: get inv_freq from global rotary_emb (transformers >=5.x) or per-layer
@@ -1083,7 +1188,11 @@ def main():
                 for L in eval_lengths:
                     if L in test_datasets:
                         ppl_results[f"L={L}"] = eval_ppl(
-                            eval_model, test_datasets[L], inv_freq,
+                            eval_model,
+                            test_datasets[L],
+                            inv_freq,
+                            native_ctx=native_ctx,
+                            head_dim=head_dim,
                             label=f"{config_name} L={L}",
                             max_chunks=max_ppl_chunks,
                         )
@@ -1091,9 +1200,9 @@ def main():
                 if not args.no_passkey:
                     print(f"\n  [F] Evaluating passkey retrieval ({config_name})...")
                     for L in passkey_lengths:
-                        if L > NATIVE_CTX:
-                            scale = L / NATIVE_CTX
-                            scaled_freq = yarn_inv_freq(inv_freq, scale, HEAD_DIM)
+                        if L > native_ctx:
+                            scale = L / native_ctx
+                            scaled_freq = yarn_inv_freq(inv_freq, scale, head_dim)
                             patch_inv_freq_for_eval(eval_model, scaled_freq)
                         try:
                             passkey_at_L = eval_passkey(
@@ -1106,7 +1215,7 @@ def main():
                             print(f"    ERROR at L={L}: {e}")
                             passkey_results[f"L={L}"] = {"accuracy": -1, "error": str(e)}
                         finally:
-                            if L > NATIVE_CTX:
+                            if L > native_ctx:
                                 patch_inv_freq_for_eval(eval_model, inv_freq)
                             cleanup_gpu()
 
@@ -1120,6 +1229,11 @@ def main():
             "config": config_name,
             "label": config_label,
             "model": args.model_dir,
+            "head_dim": head_dim,
+            "n_freqs": geometry.n_freqs,
+            "rope_theta": rope_theta,
+            "train_seq_len": native_ctx,
+            "model_max_position_embeddings": geometry.model_max_position_embeddings,
             "tau": tau if config_name == "evq" else 0.0,
             "training_mode": "full_param",
             "optimizer": "fp32_adamw_deepspeed" if use_ds else "fp32_adamw",

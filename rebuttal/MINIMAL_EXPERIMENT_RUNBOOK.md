@@ -105,7 +105,8 @@ export EVQ_LORA_CKPT="$EVQ_REBUTTAL_RUN_DIR/checkpoints/evq_r64_tau1414"
 **相关文件**：
 
 - `rebuttal/FIGURE_TABLE_AUDIT.md`
-- `scripts/figures/fig5_downstream_qa_nll.py`
+- `scripts/figures/fig5_downstream_qa_nll.tex`
+- `scripts/figures/build_fig5_downstream_qa.sh`
 - `paper/figs/fig5_downstream_qa.pdf`
 - `paper/figs/fig5_downstream_qa.png`
 - `paper/main.pdf`

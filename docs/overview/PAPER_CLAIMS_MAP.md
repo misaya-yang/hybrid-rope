@@ -14,8 +14,8 @@
 | EVQ × YaRN | Experiments / Primary I | EVQ × YaRN matched-scale complementarity | `scripts/figures/fig2_evq_yarn_orthogonality.py` | `data/curated/table2_evq_yarn_454m_passkey_10pct.json` | `paper/figs/fig2_evq_yarn_synergy.pdf` |
 | PE-dominant scaling | Appendix supporting PE-dominant section | PE-dominant regime & scaling-law check | `scripts/figures/fig3_pe_dominant_scaling.py` | `data/curated/fig3_extreme_128.json` fallback for panel (a); regenerate Phase 11 sweeps for panels (b,c) | `paper/figs/fig3_pe_dominant_scaling.pdf` |
 | Progressive training | Appendix experiment details | Phase 17c 454M supporting/progressive pattern | `scripts/core_text_phases/phase17c_*.py` | `results/evq_phase17c_results/` | `paper/figs/fig4_phase17c_flagship.pdf` |
-| Downstream QA | Appendix supporting results | Downstream QA (Gold NLL) | `scripts/core_text_phases/phase21b_quality_eval_clean.py` | `results/core_text/phase21b/` | `paper/figs/fig5_downstream_qa.pdf` |
-| τ* validation | Appendix theory validation | τ* operating-rule validation (99-run sweep basin) | `scripts/core_text_phases/phase16_formula_optimality_sweep.py` | `results/core_text/phase16/` | `paper/figs/fig6_tau_formula_validation.pdf` |
+| Downstream QA | Appendix supporting results | Downstream QA (Gold NLL) | `scripts/figures/fig5_downstream_qa_nll.tex` + `scripts/figures/build_fig5_downstream_qa.sh` | `docs/exp/2026-03-12_phase21b_454m_full_eval_report.md` (report-backed; exact Gold-NLL JSON absent) | `paper/figs/fig5_downstream_qa.pdf` |
+| τ* validation | Appendix theory validation | Readable rank summary of the 99-run operating-rule sweep | `scripts/figures/fig6_tau_rank_readable.tex` + `scripts/figures/build_fig6_tau_rank.sh` | reported ranks from the 99-run sweep; exact formula-sweep JSON remains incomplete | `paper/figs/fig6_tau_rank_readable.pdf` |
 | Multiscale waterbed | Appendix supporting results | Multiscale waterbed trade-off | `scripts/figures/fig1_neurips.py` (subplot) | Multi-tier PPL results | `paper/figs/fig7_multiscale_waterbed.pdf` |
 | Attn Viz | Appendix supporting results | Attention distance distribution | `scripts/core_text_phases/visualize_attention_distance.py` | 750M checkpoints (EVQ vs Geo) | `paper/figs/attn_*.pdf` |
 | τ-sweep | Appendix supporting results | τ sweep curves (PPL, freq, collision, cross-scale) | `scripts/core_text_phases/evq_analysis.py` | `results/core_text/D_summary.json` | `paper/figs/fig_tau_sweep_*.pdf` |
@@ -126,7 +126,7 @@ Only the rows below are present in the current paper appendix; other video/DiT r
 | Table | 描述 | 数据来源 | Key Numbers |
 |-------|------|---------|-------------|
 | `tab:dit-h2h` | DiT dual-seed h2h (train/all/far MSE) | `results/video_dit/westd_20260316/` | mean -21%/-15%/-32% |
-| `tab:quality-nll` | QuALITY Gold NLL (appendix a3) | `results/core_text/phase21b/` | -30.1% @8K |
+| `tab:quality-nll` | QuALITY Gold NLL (appendix a3) | `docs/exp/2026-03-12_phase21b_454m_full_eval_report.md` (report-backed) | -30.1% @8K; do not substitute the n=200 pilot JSON |
 | `tab:dit-base1000` | Dead channel validation (base=1000 h2h) | `results/video_dit/westd_20260316/base1000_h2h/` | τ=1.2≈τ=1.5, both -48% far |
 | `tab:dead-channels` | Dead-channel counts across video models | analytical channel count | 32--50% temporal channels dead |
 

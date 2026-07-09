@@ -145,6 +145,7 @@ run_ruler_base() {
         --model_name "${MODEL}" \
         --base_only \
         --output_dir "${RESULT_DIR}" \
+        --variant base \
         --context_lengths "4096,8192,16384,32768" \
         --n_trials 20
     echo ""
@@ -158,6 +159,7 @@ run_ruler_evq() {
         --model_name "${MODEL}" \
         --adapter_dir "${CKPT_DIR}" \
         --output_dir "${RESULT_DIR}" \
+        --variant evq_r64_tau1414 \
         --context_lengths "4096,8192,16384,32768" \
         --n_trials 20
     echo ""

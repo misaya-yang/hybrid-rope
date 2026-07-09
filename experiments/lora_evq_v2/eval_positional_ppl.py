@@ -38,6 +38,19 @@ import torch
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 
+def resolve_custom_inv_freq_path(adapter_dir, method: str) -> Optional[Path]:
+    """Return the training-time frequency artifact that evaluation must reuse.
+
+    Both EVQ and geometric LoRA runs may carry a saved table.  Restricting
+    reinjection to the EVQ label silently evaluates legacy geometric controls
+    with a different schedule from the one used in training.
+    """
+    if not adapter_dir or method not in {"geo", "evq"}:
+        return None
+    path = Path(adapter_dir) / "custom_inv_freq.pt"
+    return path if path.exists() else None
+
+
 def load_model(model_name, adapter_dir=None, method="geo", yarn_factor=2.0, bf16=True):
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -68,22 +81,25 @@ def load_model(model_name, adapter_dir=None, method="geo", yarn_factor=2.0, bf16
         model = PeftModel.from_pretrained(model, adapter_dir)
         print(f"[LORA] Loaded adapter from {adapter_dir}")
 
-    # EVQ: inject inv_freq AFTER adapter
-    if method == "evq" and adapter_dir:
-        freq_path = os.path.join(adapter_dir, "custom_inv_freq.pt")
-        if os.path.exists(freq_path):
-            data = torch.load(freq_path, map_location="cpu", weights_only=True)
-            from train_evq_lora import inject_inv_freq, find_rotary_modules, compute_geometric_inv_freq
-            inject_inv_freq(model, data["inv_freq"])
-            # Verify
-            mods = find_rotary_modules(model)
-            if mods:
-                actual = mods[0][1].inv_freq.detach().cpu().to(torch.float64)
-                geo = compute_geometric_inv_freq(128, 500000.0)
-                err_evq = (actual - data["inv_freq"].to(torch.float64)).abs().max().item()
-                err_geo = (actual - geo).abs().max().item()
-                print(f"[ROPE] EVQ injected, τ={data.get('tau','?')}: "
-                      f"{'✅' if err_evq < err_geo else '❌'}")
+    # Reuse the exact training-time table AFTER loading the adapter.
+    freq_path = resolve_custom_inv_freq_path(adapter_dir, method)
+    if freq_path is not None:
+        data = torch.load(freq_path, map_location="cpu", weights_only=True)
+        inv_freq = data["inv_freq"] if isinstance(data, dict) else data
+        from train_evq_lora import inject_inv_freq, find_rotary_modules
+        inject_inv_freq(model, inv_freq)
+        mods = find_rotary_modules(model)
+        if not mods:
+            raise RuntimeError("Frequency artifact exists, but no rotary module was found after load")
+        actual = mods[0][1].inv_freq.detach().cpu().to(torch.float64)
+        expected = inv_freq.detach().cpu().to(torch.float64)
+        max_err = (actual - expected).abs().max().item()
+        if max_err >= 1e-5:
+            raise RuntimeError(
+                f"Training/evaluation RoPE mismatch after reinjection: max_error={max_err:.2e}"
+            )
+        saved_method = data.get("method", method) if isinstance(data, dict) else method
+        print(f"[ROPE] Reused saved {saved_method} training frequencies: max_error={max_err:.2e}")
 
     model.eval()
     return model, tokenizer
@@ -211,6 +227,8 @@ def main():
         method = meta.get("method", meta.get("rope_method", "geo"))
         if method == "evq_cosh":
             method = "evq"
+        elif method == "native_geo":
+            method = "geo"
         yarn_factor = meta.get("yarn_factor", 2.0)
         label = os.path.basename(ckpt_dir)
 

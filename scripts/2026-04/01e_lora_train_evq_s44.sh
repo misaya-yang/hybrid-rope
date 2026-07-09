@@ -18,6 +18,7 @@ echo ">>> EVQ-LoRA seed=44 tau=1.414 | $(date)"
 /root/miniconda3/bin/python -u "${LORA}/train_evq_lora.py" \
     --model_name "${MODEL}" \
     --output_dir "${DIR}" \
+    --rope_method evq_cosh \
     --tau 1.414 \
     --local_data_path "${DATA}" \
     --seed 44 \

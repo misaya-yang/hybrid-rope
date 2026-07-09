@@ -30,7 +30,7 @@ train_all() {
     echo "TRAINING: 3 methods × 3 seeds = 9 runs"
     echo "================================================"
 
-    # ---- Geometric (τ=0) × 3 seeds ----
+    # ---- Native geometric endpoint schedule × 3 seeds ----
     for SEED in 42 43 44; do
         DIR="${CKPT}/geo_s${SEED}"
         if [ -f "${DIR}/adapter_model.safetensors" ]; then
@@ -42,7 +42,7 @@ train_all() {
         python "${SCRIPT_DIR}/train_evq_lora.py" \
             --model_name "${MODEL}" \
             --output_dir "${DIR}" \
-            --tau 0 \
+            --rope_method native_geo \
             --local_data_path "${DATA}" \
             --seed ${SEED} \
             --max_steps 300 \
@@ -69,6 +69,7 @@ train_all() {
         python "${SCRIPT_DIR}/train_evq_lora.py" \
             --model_name "${MODEL}" \
             --output_dir "${DIR}" \
+            --rope_method evq_cosh \
             --tau 1.414 \
             --local_data_path "${DATA}" \
             --seed ${SEED} \

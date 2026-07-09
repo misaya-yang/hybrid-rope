@@ -70,6 +70,7 @@ for LABEL in base geo_s42_s1 evq_s42_s1 geo_s42_s2 geo_s43_s2 geo_s44_s2 evq_s42
         --model_name "${MODEL}" \
         ${ADAPTER_ARG} \
         --output_dir "${RESULT}" \
+        --variant "${LABEL}" \
         --context_lengths "${LENGTHS}" \
         --n_trials ${TRIALS} \
         2>&1 | tee "${RESULT}/log_ruler_${LABEL}.txt"

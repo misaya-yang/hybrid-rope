@@ -66,7 +66,7 @@ Packaged evidence:
 
 | Artifact | Role | SHA256 |
 | --- | --- | --- |
-| `paper/tables/table2_evq_yarn_main.tex` | Paper table | `9b07276a1036cadf0f48f863f5c6f7927a491bd497a78d25b92daef888dccca9` |
+| `paper/tables/table2_evq_yarn_main.tex` | Paper table | `372ac2365ae316a885e556d754268c95e7831aa3df7c81e7decc27d02e560206` |
 | `data/curated/table2_evq_yarn_454m_passkey_10pct.json` | Curated values/protocol | `d2c37769a0a166830d022778bf517c0973eb2ea80a9a87aea3bbadf597cee4ac` |
 | `scripts/supporting_eval/eval_passkey_scratch.py` | PK sample/eval helpers | Recompute before release if cited |
 | `scripts/core_text_phases/run_evq_sweep.py` | Core sweep entrypoint | Recompute before release if cited |
@@ -178,8 +178,8 @@ Packaged evidence:
 | Artifact | Role | SHA256 |
 | --- | --- | --- |
 | `results/eval_3seeds_full_results.json` | Packaged result JSON | `1e44d30bb880e4b7427ae55bd7034782989152bd2afca9217495f9b8ece30953` |
-| `paper/appendix/a3_supporting_results.tex` | Paper MLA appendix table/prose | `7d3b21c202f12e793a5ae4c715329bbb484d85b1501367b74a4fd4c321fd31cf` |
-| `paper/sections/05_experiments.tex` | Main experiment prose | `20daca808842fdc17b3cb8796dcdbac8b7a11aaba0e527c27bce899387a408b1` |
+| `paper/appendix/a3_supporting_results.tex` | Paper MLA appendix table/prose | `b1f8380d6a23b7f109d78ed0606cee7a69649ee4a0413510d05b117e97613715` |
+| `paper/sections/05_experiments.tex` | Main experiment prose | `f2b2294b20769c4bf7b672cd65b4e393e2d36ee8a369d0c9e522612a1501391e` |
 | `scripts/core_text_phases/run_gqa_evq_experiment.py` | Training entrypoint | `51ad863e3cc8193b5345423ca4c197282b317977060e6716db52529362bd94b0` |
 | `scripts/core_text_phases/eval_extended_3seeds.py` | 3-seed eval; explicit checkpoint `inv_freq` audit logging and current/historical run-id resolution | `d0712bf243149ea63e0cc8ddbe3c4bde8d2fb4aadb1a39d85a123e0cab3dd3f0` |
 | `scripts/core_text_phases/yarn_finetune_eval.py` | YaRN+FT supporting eval; explicit checkpoint `inv_freq` audit logging and current/historical run-id resolution | `ae2ae0536a43db4e9b15ffba3b54978b080837dedfe7fbf3918391af362dd471` |
@@ -194,8 +194,8 @@ Packaged evidence:
 | `docs/overview/OPUS48_ISSUE_RESOLUTION_LEDGER.md` | Per-issue resolution state, evidence, and remaining gates | `f2bf3f142b3511b2e1da8160293156e8f4ecebd938218fd0204548dfa8b02ef2` |
 | `docs/overview/OPUS48_REBUTTAL_RESPONSE_MATRIX.md` | Rebuttal-safe answer strategy and forbidden-claim matrix | `75bae5a7c4ef05dcfd93379f38d1ea2cb869c870e3b533f7560298301ac2dae4` |
 | `docs/overview/OPUS48_FORENSIC_AUDIT_REPORT.md` | Prompt-structured forensic audit report | `b51aebe47022b9dce7fe457caf0066b7d4723ceb899b9f3221606d9c048ede7d` |
-| `docs/overview/PAPER_CLAIMS_MAP.md` | Paper-to-experiment traceability map with explicit artifact gates | `4d5569b13567086a281c624c72f2fa285099e20ebc27538ea1aa365943de6eb1` |
-| `paper/REBUTTAL_PLAYBOOK.md` | Scoped rebuttal draft; must not override audit stack | `f7f69c1b71f6e1a3c88124b4dfdec774eee12911840b33e1c7b4aa417f2db92f` |
+| `docs/overview/PAPER_CLAIMS_MAP.md` | Paper-to-experiment traceability map with explicit artifact gates | `c17ee81889a849fb554c4f8e225c69e6944de929d794a220fc6e0c8cb6ee3917` |
+| `paper/REBUTTAL_PLAYBOOK.md` | Scoped rebuttal draft; must not override audit stack | `ef94296fb39c9b6b2e7b22f16c23851d94b6c90d25e9f7cc218d1fd337e6dbe4` |
 | `tests/test_opus48_audit_docs.py` | O48 coverage/link/stale-phrase regression test | `e7e9c1b5cbd82535bfffd0c788c01e9c46bfc6d212468ed15f77a145fb171ecb` |
 
 Current compact-repo gaps:

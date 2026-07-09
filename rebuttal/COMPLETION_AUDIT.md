@@ -269,7 +269,7 @@ These are not just strategy docs; several paper-facing fixes have been applied.
 | `paper/sections/05_experiments.tex` | MLA 1B wording narrowed | avoid saturation robustness overclaim |
 | `paper/appendix/a4_supporting_experiments.tex` | LoRA wording scoped as post-hoc; attribution requires matched Geo+LoRA | avoid false LoRA attribution |
 | `paper/appendix/a2_experiment_details.tex` | token/protocol reproducibility table added | answer training budget/provenance concern |
-| `scripts/figures/fig5_downstream_qa_nll.py` | new NLL figure generator | fix QuALITY figure/table mismatch |
+| `scripts/figures/fig5_downstream_qa_nll.tex` + `build_fig5_downstream_qa.sh` | reproducible vector NLL figure generator | fix QuALITY figure/table mismatch |
 | `paper/figs/fig5_downstream_qa.pdf/png` | regenerated NLL figure | align Figure 8 with Table 21 |
 | `paper/main.pdf` | recompiled after fixes | working PDF reflects trust/scope corrections |
 

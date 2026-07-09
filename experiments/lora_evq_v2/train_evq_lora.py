@@ -76,6 +76,41 @@ def compute_geometric_inv_freq(head_dim: int, base: float) -> torch.Tensor:
     return _canonical_geometric_inv_freq(head_dim=head_dim, base=base, dtype=torch.float64)
 
 
+def build_training_inv_freq(
+    rope_method: str,
+    head_dim: int,
+    base: float,
+    tau: float,
+) -> tuple[torch.Tensor, Dict[str, Any]]:
+    """Build the exact schedule requested by a LoRA training protocol.
+
+    ``tau=0`` on the midpoint EVQ grid is not the native LLaMA geometric
+    schedule: every channel is shifted by half a quantization cell.  Native
+    geometric controls therefore use an explicit method instead of overloading
+    the EVQ temperature.
+    """
+    if rope_method == "native_geo":
+        return compute_geometric_inv_freq(head_dim, base), {
+            "method": "native_geo",
+            "tau": None,
+            "midpoint": False,
+        }
+    if rope_method == "evq_cosh":
+        return compute_evq_cosh_inv_freq(
+            head_dim=head_dim,
+            base=base,
+            tau=tau,
+            midpoint=True,
+        ), {
+            "method": "evq_cosh",
+            "tau": float(tau),
+            "midpoint": True,
+        }
+    raise ValueError(
+        f"Unsupported rope_method={rope_method!r}; expected 'evq_cosh' or 'native_geo'"
+    )
+
+
 # ---------------------------------------------------------------------------
 # RoPE injection
 # ---------------------------------------------------------------------------
@@ -296,8 +331,14 @@ def parse_args():
     p.add_argument("--output_dir", type=str, required=True)
 
     # EVQ-Cosh parameters
+    p.add_argument(
+        "--rope_method",
+        choices=["evq_cosh", "native_geo"],
+        default="evq_cosh",
+        help="Training frequency schedule. Use native_geo for an exact LLaMA geometric control.",
+    )
     p.add_argument("--tau", type=float, default=1.414,
-                   help="EVQ-cosh temperature (theory: d_head/sqrt(L))")
+                   help="EVQ-cosh temperature (ignored for --rope_method native_geo)")
     p.add_argument("--rope_base", type=float, default=500000.0,
                    help="RoPE theta base")
     p.add_argument("--head_dim", type=int, default=128,
@@ -352,14 +393,17 @@ def validate_theory(args) -> Dict[str, Any]:
     tau_theory = args.head_dim / math.sqrt(args.max_seq_len)
     r_ratio = args.lora_r / K
 
+    rope_method = getattr(args, "rope_method", "evq_cosh")
+    tau_match = abs(args.tau - tau_theory) < 0.1 if rope_method == "evq_cosh" else None
     checks = {
+        "rope_method": rope_method,
         "head_dim": args.head_dim,
         "K_channels": K,
         "lora_r": args.lora_r,
         "r_over_K": r_ratio,
         "tau_set": args.tau,
         "tau_theory": round(tau_theory, 4),
-        "tau_match": abs(args.tau - tau_theory) < 0.1,
+        "tau_match": tau_match,
         "phase_transition_safe": args.lora_r >= K,
     }
 
@@ -370,9 +414,10 @@ def validate_theory(args) -> Dict[str, Any]:
     print(f"  K (channels)   = {K}")
     print(f"  LoRA rank r    = {args.lora_r}")
     print(f"  r / K          = {r_ratio:.2f} {'✅' if r_ratio >= 1.0 else '⚠️' if r_ratio >= 0.5 else '❌'}")
-    print(f"  τ (set)        = {args.tau}")
+    print(f"  RoPE method    = {rope_method}")
+    print(f"  τ (set)        = {args.tau if rope_method == 'evq_cosh' else 'n/a'}")
     print(f"  τ* (theory)    = {tau_theory:.4f}")
-    print(f"  τ match        = {'✅' if checks['tau_match'] else '⚠️'}")
+    print(f"  τ match        = {'n/a (native geometric control)' if tau_match is None else '✅' if tau_match else '⚠️'}")
     print(f"  Phase-safe     = {'✅' if checks['phase_transition_safe'] else '❌ DANGER'}")
 
     if r_ratio < 0.5:
@@ -385,12 +430,12 @@ def validate_theory(args) -> Dict[str, Any]:
 
 
 def compute_and_save_inv_freq(args) -> torch.Tensor:
-    """Compute EVQ-cosh frequencies and save for reproducibility."""
-    inv_freq_evq = compute_evq_cosh_inv_freq(
+    """Compute the requested frequencies and save them for reproducibility."""
+    inv_freq, schedule_meta = build_training_inv_freq(
+        rope_method=args.rope_method,
         head_dim=args.head_dim,
         base=args.rope_base,
         tau=args.tau,
-        midpoint=True,
     )
     inv_freq_geo = compute_geometric_inv_freq(args.head_dim, args.rope_base)
 
@@ -398,25 +443,25 @@ def compute_and_save_inv_freq(args) -> torch.Tensor:
     os.makedirs(args.output_dir, exist_ok=True)
     freq_path = os.path.join(args.output_dir, "custom_inv_freq.pt")
     torch.save({
-        "inv_freq": inv_freq_evq,
-        "tau": args.tau,
+        "inv_freq": inv_freq,
+        "tau": schedule_meta["tau"],
         "head_dim": args.head_dim,
         "base": args.rope_base,
-        "method": "evq_cosh",
-        "midpoint": True,
+        "method": schedule_meta["method"],
+        "midpoint": schedule_meta["midpoint"],
     }, freq_path)
     print(f"[FREQ] Saved to {freq_path}")
 
     # Diagnostic comparison
     K = args.head_dim // 2
-    print(f"\n[FREQ] EVQ-cosh vs Geometric comparison (τ={args.tau}):")
-    print(f"  {'Chan':>4s}  {'EVQ':>12s}  {'Geo':>12s}  {'Ratio':>8s}")
+    print(f"\n[FREQ] {schedule_meta['method']} vs native geometric comparison:")
+    print(f"  {'Chan':>4s}  {'Selected':>12s}  {'Geo':>12s}  {'Ratio':>8s}")
     for k in [0, K//4, K//2, 3*K//4, K-1]:
-        e = inv_freq_evq[k].item()
+        e = inv_freq[k].item()
         g = inv_freq_geo[k].item()
         print(f"  {k:4d}  {e:12.6f}  {g:12.6f}  {e/g:8.4f}")
 
-    return inv_freq_evq
+    return inv_freq
 
 
 def main():
@@ -434,6 +479,7 @@ def main():
         print("\n[DRY RUN] Config validated. Exiting without training.")
         config = {
             "model": args.model_name,
+            "rope_method": args.rope_method,
             "tau": args.tau,
             "lora_r": args.lora_r,
             "lora_alpha": args.lora_alpha,
@@ -490,8 +536,8 @@ def main():
 
     model = AutoModelForCausalLM.from_pretrained(args.model_name, **load_kwargs)
 
-    # 5. Inject EVQ-cosh frequencies
-    print("[ROPE] Injecting EVQ-cosh frequencies...")
+    # 5. Inject the exact schedule recorded by this run.
+    print(f"[ROPE] Injecting {args.rope_method} frequencies...")
     inject_result = inject_inv_freq(model, inv_freq)
     print(f"[ROPE] Patched {inject_result['patched_count']} modules: "
           f"{inject_result['changed_modules'][:3]}...")
@@ -585,7 +631,10 @@ def main():
     print(f"\n{'=' * 60}")
     print(f"TRAINING START")
     print(f"  Model:     {args.model_name}")
-    print(f"  RoPE:      EVQ-cosh τ={args.tau}")
+    rope_label = (
+        f"EVQ-cosh τ={args.tau}" if args.rope_method == "evq_cosh" else "native geometric"
+    )
+    print(f"  RoPE:      {rope_label}")
     print(f"  LoRA:      r={args.lora_r}, α={args.lora_alpha}")
     print(f"  Steps:     {args.max_steps}")
     print(f"  Seq len:   {args.max_seq_len}")
@@ -606,8 +655,8 @@ def main():
     # Save experiment metadata
     meta = {
         "model": args.model_name,
-        "rope_method": "evq_cosh",
-        "tau": args.tau,
+        "rope_method": args.rope_method,
+        "tau": args.tau if args.rope_method == "evq_cosh" else None,
         "rope_base": args.rope_base,
         "head_dim": args.head_dim,
         "lora_r": args.lora_r,

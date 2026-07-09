@@ -22,7 +22,7 @@ fable 里的 Figure/Table mismatch 是真实问题。该问题已在本轮修复
 
 Current verified status:
 
-- Regeneration script: `scripts/figures/fig5_downstream_qa_nll.py`.
+- Regeneration sources: `scripts/figures/fig5_downstream_qa_nll.tex` and `scripts/figures/build_fig5_downstream_qa.sh`.
 - Generated assets: `paper/figs/fig5_downstream_qa.pdf`, `paper/figs/fig5_downstream_qa.png`.
 - Compile command: `cd paper && mkdir -p build_tectonic && tectonic -X compile main.tex --outdir build_tectonic && cp build_tectonic/main.pdf main.pdf`.
 - PDF check: `paper/main.pdf` has 41 pages; pypdf font-object scan found no Type3 fonts; References starts on page 10; rendered page 36 shows Figure 8 as Gold-NLL / EVQ relative NLL change.
