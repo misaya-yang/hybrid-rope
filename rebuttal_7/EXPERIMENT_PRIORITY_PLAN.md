@@ -15,6 +15,7 @@ The proposed “7B experiment” remains important, but for rebuttal continuity 
 - Paired-delta audit for existing three-seed primaries (Q15).
 - NTK caveat, exponent/basin boundary, per-head boundary, terminology, worked example, decision guide, video/LoRA claim downgrades (Q10, Q13–Q18).
 - Repair LoRA control/evaluation scripts and generic continued-pretraining geometry validation.
+- Make all LoRA evidence paths fail closed on missing/mismatched frequency artifacts, validate every rotary module, record path-safe artifact hashes, and reject stale checkpoints before reuse.
 
 ### P1 — acceptance-critical server queue
 
@@ -28,10 +29,11 @@ The proposed “7B experiment” remains important, but for rebuttal continuity 
 
 #### P1.2 Tuned-base geometric control and b=10K rule test (Q5–Q6)
 
-- Anchor: choose one existing text protocol and hold architecture, data, tokens, optimizer, and evaluation fixed.
+- Anchor: the same 125M FineWeb-Edu, `L_train=128`, `128→8K` protocol used by Table 4; hold architecture, data order, token budget, optimizer, seeds, and evaluation examples fixed.
 - Geo bases: 10K, 100K, 500K, 2M.
-- At b=10K: compare bare-rule EVQ and explicit `c_pred(L,b)` EVQ against Geo.
-- Metrics: in-range PPL, each extrapolation PPL, NLL-gap retrieval where applicable.
+- EVQ controls: retain EVQ at b=500K; at b=10K compare the bare rule and explicit `c_pred(L,b)` correction against Geo b=10K.
+- Seeds: 42/137/256, shared with P1.1 where the training stack permits reuse.
+- Metrics: PPL@128 and PPL@8K, plus NLL-gap retrieval only if that exact protocol already defines it.
 - Decision rule: report best tuned Geo, not only b=500K; if tuned Geo closes the gap, narrow the claim from shape advantage to regime-dependent allocation control.
 
 #### P1.3 MLA convention screen (Q7)

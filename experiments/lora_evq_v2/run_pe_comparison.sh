@@ -25,6 +25,12 @@ for f in "${MODEL}/config.json" "${DATA}" "${WIKI}"; do
     if [ ! -f "$f" ]; then echo "MISSING: $f"; exit 1; fi
 done
 
+validate_existing() {
+    python "${SCRIPT_DIR}/validate_checkpoint_artifact.py" \
+        --checkpoint "$1" \
+        --expected-method "$2"
+}
+
 train_all() {
     echo "================================================"
     echo "TRAINING: 3 methods × 3 seeds = 9 runs"
@@ -34,6 +40,7 @@ train_all() {
     for SEED in 42 43 44; do
         DIR="${CKPT}/geo_s${SEED}"
         if [ -f "${DIR}/adapter_model.safetensors" ]; then
+            validate_existing "${DIR}" native_geo
             echo "[SKIP] ${DIR} already exists"
             continue
         fi
@@ -55,12 +62,14 @@ train_all() {
         if [ "${SEED}" = "42" ]; then
             # Reuse existing checkpoint
             if [ -f "${CKPT}/evq_r64_tau1414/adapter_model.safetensors" ]; then
+                validate_existing "${CKPT}/evq_r64_tau1414" evq_cosh
                 echo "[SKIP] EVQ seed=42 already exists (evq_r64_tau1414)"
                 continue
             fi
         fi
         DIR="${CKPT}/evq_s${SEED}"
         if [ -f "${DIR}/adapter_model.safetensors" ]; then
+            validate_existing "${DIR}" evq_cosh
             echo "[SKIP] ${DIR} already exists"
             continue
         fi
@@ -81,6 +90,7 @@ train_all() {
     for SEED in 42 43 44; do
         DIR="${CKPT}/yarn_s${SEED}"
         if [ -f "${DIR}/adapter_model.safetensors" ]; then
+            validate_existing "${DIR}" yarn
             echo "[SKIP] ${DIR} already exists"
             continue
         fi

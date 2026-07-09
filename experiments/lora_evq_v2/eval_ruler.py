@@ -42,10 +42,23 @@ import string
 import sys
 import time
 import uuid
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 import torch
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+from train_evq_lora import (
+    inject_inv_freq,
+    load_frequency_artifact,
+    public_artifact_identifier,
+    public_model_identifier,
+    verify_model_inv_freq,
+)
 
 
 def resolve_variant_label(
@@ -65,6 +78,23 @@ def resolve_variant_label(
 
 def ruler_output_name(variant: str) -> str:
     return f"ruler_{variant}.json"
+
+
+def resolve_required_inv_freq_path(
+    adapter_dir: Optional[str],
+    base_only: bool,
+) -> Optional[Path]:
+    """Resolve the mandatory training-time frequency artifact for an adapter."""
+    if base_only:
+        return None
+    if not adapter_dir:
+        raise ValueError("adapter_dir is required unless --base_only is set")
+    path = Path(adapter_dir) / "custom_inv_freq.pt"
+    if not path.is_file():
+        raise FileNotFoundError(
+            "Required custom_inv_freq.pt is missing for adapter evaluation"
+        )
+    return path
 
 
 def verify_loaded_inv_freq(
@@ -354,7 +384,7 @@ def task_variable_tracking(model, tokenizer, ctx_len: int, n_trials: int = 20,
 # ──────────────────────────────────────────────────────────
 
 def load_model(model_name, adapter_dir=None, inv_freq_path=None,
-               load_in_4bit=False, bf16=True):
+               expected_rope_method=None, load_in_4bit=False, bf16=True):
     """Load model for evaluation.
 
     Default: bf16 full precision (no quantization).
@@ -384,20 +414,22 @@ def load_model(model_name, adapter_dir=None, inv_freq_path=None,
         model = PeftModel.from_pretrained(model, adapter_dir)
         print("[LORA] Adapter loaded (no merge, full-precision inference)")
 
-    if inv_freq_path and os.path.exists(inv_freq_path):
-        data = torch.load(inv_freq_path, map_location="cpu", weights_only=True)
-        inv_freq = data["inv_freq"] if isinstance(data, dict) else data
-        from train_evq_lora import inject_inv_freq, find_rotary_modules
+    frequency_provenance = {"method": "model_default", "artifact": None}
+    if inv_freq_path:
+        inv_freq, data, frequency_provenance = load_frequency_artifact(
+            inv_freq_path,
+            expected_method=expected_rope_method,
+        )
         inject_inv_freq(model, inv_freq)
-        mods = find_rotary_modules(model)
-        if not mods:
-            raise RuntimeError("Frequency artifact exists, but no rotary module was found after load")
-        max_error = verify_loaded_inv_freq(mods[0][1].inv_freq, inv_freq)
-        saved_method = data.get("method", "saved schedule") if isinstance(data, dict) else "saved schedule"
-        print(f"[ROPE] Reused saved {saved_method} training frequencies: max_error={max_error:.2e}")
+        verification = verify_model_inv_freq(model, inv_freq)
+        print(
+            f"[ROPE] Reused saved {data['method']} training frequencies: "
+            f"modules={verification['verified_count']}, "
+            f"max_error={verification['max_error']:.2e}"
+        )
 
     model.eval()
-    return model, tokenizer
+    return model, tokenizer, frequency_provenance
 
 
 # ──────────────────────────────────────────────────────────
@@ -420,6 +452,12 @@ def parse_args():
     p.add_argument("--adapter_dir", default=None)
     p.add_argument("--output_dir", default="./results")
     p.add_argument("--base_only", action="store_true")
+    p.add_argument(
+        "--expected_rope_method",
+        choices=["evq_cosh", "native_geo"],
+        default=None,
+        help="Fail unless the saved frequency artifact records this training method",
+    )
     p.add_argument(
         "--variant",
         default=None,
@@ -445,16 +483,13 @@ def main():
     tasks = [t.strip() for t in args.tasks.split(",")]
     n_trials = 5 if args.quick else args.n_trials
 
-    inv_freq_path = None
-    if args.adapter_dir and not args.base_only:
-        c = os.path.join(args.adapter_dir, "custom_inv_freq.pt")
-        if os.path.exists(c):
-            inv_freq_path = c
+    inv_freq_path = resolve_required_inv_freq_path(args.adapter_dir, args.base_only)
 
-    model, tokenizer = load_model(
+    model, tokenizer, frequency_provenance = load_model(
         args.model_name,
         adapter_dir=None if args.base_only else args.adapter_dir,
         inv_freq_path=inv_freq_path,
+        expected_rope_method=args.expected_rope_method,
         load_in_4bit=args.load_in_4bit, bf16=args.bf16)
 
     variant = resolve_variant_label(args.base_only, args.variant, args.adapter_dir)
@@ -507,9 +542,9 @@ def main():
     # ── Save ─────────────────────────────────────────────
     out = {
         "variant": variant,
-        "model": args.model_name,
-        "adapter_dir": None if args.base_only else args.adapter_dir,
-        "inv_freq_path": inv_freq_path,
+        "model": public_model_identifier(args.model_name),
+        "adapter": None if args.base_only else public_artifact_identifier(args.adapter_dir),
+        "frequency_provenance": frequency_provenance,
         "context_lengths": ctx_lengths,
         "n_trials": n_trials,
         "results": results,

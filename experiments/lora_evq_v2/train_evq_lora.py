@@ -19,13 +19,16 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
+import inspect
 import json
 import math
 import os
 import sys
 import time
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
 import torch
@@ -38,6 +41,122 @@ from scripts.lib.rope.schedules import (
     evq_cosh_inv_freq as _canonical_evq_cosh_inv_freq,
     geometric_inv_freq as _canonical_geometric_inv_freq,
 )
+
+
+@dataclass(frozen=True)
+class LoraRopeGeometry:
+    head_dim: int
+    rope_base: float
+
+
+def resolve_model_rope_geometry(
+    config: Any,
+    head_dim_override: Optional[int] = None,
+    rope_base_override: Optional[float] = None,
+) -> LoraRopeGeometry:
+    """Resolve rotary geometry from config, with explicit overrides when requested."""
+    head_dim = head_dim_override if head_dim_override is not None else getattr(config, "head_dim", None)
+    if head_dim is None:
+        hidden_size = getattr(config, "hidden_size", None)
+        num_heads = getattr(config, "num_attention_heads", None)
+        if not hidden_size or not num_heads or int(hidden_size) % int(num_heads) != 0:
+            raise ValueError(
+                "Cannot infer head_dim: config needs head_dim or divisible "
+                "hidden_size/num_attention_heads"
+            )
+        head_dim = int(hidden_size) // int(num_heads)
+    head_dim = int(head_dim)
+    if head_dim <= 0 or head_dim % 2:
+        raise ValueError(f"head_dim must be a positive even integer, got {head_dim}")
+
+    rope_base = rope_base_override
+    if rope_base is None:
+        rope_base = getattr(config, "rope_theta", None)
+        rope_scaling = getattr(config, "rope_scaling", None)
+        if rope_base is None and isinstance(rope_scaling, dict):
+            rope_base = rope_scaling.get("rope_theta")
+    rope_base = float(rope_base if rope_base is not None else 10_000.0)
+    if rope_base <= 0:
+        raise ValueError(f"rope_base must be positive, got {rope_base}")
+    return LoraRopeGeometry(head_dim=head_dim, rope_base=rope_base)
+
+
+def evaluation_strategy_kwargs(training_arguments_cls, value: str = "no") -> Dict[str, str]:
+    """Return the evaluation-strategy keyword supported by this Transformers version."""
+    parameters = inspect.signature(training_arguments_cls.__init__).parameters
+    if "eval_strategy" in parameters:
+        return {"eval_strategy": value}
+    if "evaluation_strategy" in parameters:
+        return {"evaluation_strategy": value}
+    raise RuntimeError("TrainingArguments supports neither eval_strategy nor evaluation_strategy")
+
+
+def public_model_identifier(value: Optional[str]) -> Optional[str]:
+    """Keep public Hub IDs while removing local-machine path prefixes."""
+    if value is None:
+        return None
+    raw = str(value)
+    expanded = Path(raw).expanduser()
+    if expanded.is_absolute() or raw.startswith((".", "~")):
+        return expanded.name
+    return raw
+
+
+def public_artifact_identifier(value: Optional[str]) -> Optional[str]:
+    """Return only the basename of a local artifact path."""
+    if value is None:
+        return None
+    return Path(str(value)).name
+
+
+def load_frequency_artifact(
+    path: Union[os.PathLike, str],
+    expected_method: Optional[str] = None,
+) -> tuple[torch.Tensor, Dict[str, Any], Dict[str, Any]]:
+    """Load and validate a frequency artifact, returning path-safe provenance."""
+    artifact_path = Path(path)
+    if not artifact_path.is_file():
+        raise FileNotFoundError(f"Required frequency artifact not found: {artifact_path.name}")
+
+    data = torch.load(artifact_path, map_location="cpu", weights_only=True)
+    if not isinstance(data, dict) or not torch.is_tensor(data.get("inv_freq")):
+        raise RuntimeError(
+            f"Invalid frequency artifact {artifact_path.name}: expected a metadata dict with inv_freq"
+        )
+    method = data.get("method")
+    if not isinstance(method, str) or not method:
+        raise RuntimeError(f"Invalid frequency artifact {artifact_path.name}: missing method")
+    if expected_method is not None and method != expected_method:
+        raise RuntimeError(
+            f"Frequency artifact method mismatch: expected {expected_method}, found {method}"
+        )
+
+    inv_freq = data["inv_freq"].detach().cpu()
+    if inv_freq.ndim != 1 or inv_freq.numel() == 0:
+        raise RuntimeError(
+            f"Invalid frequency artifact {artifact_path.name}: inv_freq must be a non-empty 1-D tensor"
+        )
+    recorded_head_dim = data.get("head_dim")
+    if recorded_head_dim is not None and int(recorded_head_dim) != 2 * inv_freq.numel():
+        raise RuntimeError(
+            f"Invalid frequency artifact {artifact_path.name}: head_dim={recorded_head_dim} "
+            f"but inv_freq has {inv_freq.numel()} channels"
+        )
+
+    digest = hashlib.sha256()
+    with artifact_path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    provenance = {
+        "artifact": artifact_path.name,
+        "sha256": digest.hexdigest(),
+        "method": method,
+        "head_dim": int(recorded_head_dim) if recorded_head_dim is not None else 2 * inv_freq.numel(),
+        "base": float(data["base"]) if data.get("base") is not None else None,
+        "tau": float(data["tau"]) if data.get("tau") is not None else None,
+        "midpoint": bool(data["midpoint"]) if data.get("midpoint") is not None else None,
+    }
+    return inv_freq, data, provenance
 
 
 # ---------------------------------------------------------------------------
@@ -122,6 +241,35 @@ def find_rotary_modules(model: torch.nn.Module):
         if hasattr(module, "inv_freq") and torch.is_tensor(module.inv_freq):
             out.append((name, module))
     return out
+
+
+def verify_model_inv_freq(
+    model: torch.nn.Module,
+    expected_inv_freq: torch.Tensor,
+    tolerance: float = 1e-5,
+) -> Dict[str, Any]:
+    """Fail unless every rotary module contains the requested frequency table."""
+    modules = find_rotary_modules(model)
+    if not modules:
+        raise RuntimeError("No rotary modules with inv_freq found during verification")
+
+    expected = expected_inv_freq.detach().cpu().reshape(-1).to(torch.float64)
+    max_error = 0.0
+    for name, module in modules:
+        actual = module.inv_freq.detach().cpu().reshape(-1).to(torch.float64)
+        if actual.shape != expected.shape:
+            raise RuntimeError(
+                f"Frequency shape mismatch at {name}: actual={tuple(actual.shape)} "
+                f"expected={tuple(expected.shape)}"
+            )
+        error = (actual - expected).abs().max().item()
+        if error >= tolerance:
+            raise RuntimeError(
+                f"Frequency mismatch at {name}: max_error={error:.2e}, "
+                f"tolerance={tolerance:.2e}"
+            )
+        max_error = max(max_error, error)
+    return {"verified_count": len(modules), "max_error": max_error}
 
 
 def inject_inv_freq(model: torch.nn.Module, inv_freq: torch.Tensor) -> Dict[str, Any]:
@@ -339,10 +487,10 @@ def parse_args():
     )
     p.add_argument("--tau", type=float, default=1.414,
                    help="EVQ-cosh temperature (ignored for --rope_method native_geo)")
-    p.add_argument("--rope_base", type=float, default=500000.0,
-                   help="RoPE theta base")
-    p.add_argument("--head_dim", type=int, default=128,
-                   help="Attention head dimension")
+    p.add_argument("--rope_base", type=float, default=None,
+                   help="RoPE theta base override (default: infer from model config)")
+    p.add_argument("--head_dim", type=int, default=None,
+                   help="Attention head dimension override (default: infer from model config)")
 
     # LoRA
     p.add_argument("--lora_r", type=int, default=64,
@@ -469,6 +617,21 @@ def main():
     if args.no_4bit:
         args.load_in_4bit = False
 
+    # Resolve model-specific rotary geometry before computing or saving a schedule.
+    from transformers import AutoConfig
+    model_config = AutoConfig.from_pretrained(args.model_name, trust_remote_code=True)
+    geometry = resolve_model_rope_geometry(
+        model_config,
+        head_dim_override=args.head_dim,
+        rope_base_override=args.rope_base,
+    )
+    args.head_dim = geometry.head_dim
+    args.rope_base = geometry.rope_base
+    print(
+        f"[ROPE] Resolved model geometry: head_dim={args.head_dim}, "
+        f"rope_base={args.rope_base:g}"
+    )
+
     # 1. Theoretical validation
     theory_checks = validate_theory(args)
 
@@ -478,7 +641,7 @@ def main():
     if args.dry_run:
         print("\n[DRY RUN] Config validated. Exiting without training.")
         config = {
-            "model": args.model_name,
+            "model": public_model_identifier(args.model_name),
             "rope_method": args.rope_method,
             "tau": args.tau,
             "lora_r": args.lora_r,
@@ -542,14 +705,11 @@ def main():
     print(f"[ROPE] Patched {inject_result['patched_count']} modules: "
           f"{inject_result['changed_modules'][:3]}...")
 
-    # Verify injection
-    modules = find_rotary_modules(model)
-    if modules:
-        actual = modules[0][1].inv_freq.detach().cpu().to(torch.float64)
-        expected = inv_freq.cpu().to(torch.float64)
-        max_err = (actual - expected).abs().max().item()
-        print(f"[ROPE] Injection verification: max_error = {max_err:.2e} "
-              f"{'✅' if max_err < 1e-5 else '❌ MISMATCH'}")
+    verification = verify_model_inv_freq(model, inv_freq)
+    print(
+        f"[ROPE] Injection verification: modules={verification['verified_count']}, "
+        f"max_error={verification['max_error']:.2e}"
+    )
 
     # 6. Prepare for LoRA
     if args.load_in_4bit:
@@ -574,12 +734,11 @@ def main():
     print(f"[LORA] Trainable: {trainable:,} / {total:,} ({100*trainable/total:.2f}%)")
 
     # 7. Re-verify inv_freq not overwritten by PEFT
-    modules_after = find_rotary_modules(model)
-    if modules_after:
-        actual_after = modules_after[0][1].inv_freq.detach().cpu().to(torch.float64)
-        max_err_after = (actual_after - inv_freq.cpu().to(torch.float64)).abs().max().item()
-        print(f"[ROPE] Post-PEFT verification: max_error = {max_err_after:.2e} "
-              f"{'✅' if max_err_after < 1e-5 else '❌ PEFT OVERWROTE INV_FREQ!'}")
+    post_peft = verify_model_inv_freq(model, inv_freq)
+    print(
+        f"[ROPE] Post-PEFT verification: modules={post_peft['verified_count']}, "
+        f"max_error={post_peft['max_error']:.2e}"
+    )
 
     # 8. Load data
     data = load_training_data(
@@ -594,29 +753,30 @@ def main():
     val_dataset = TokenizedDataset(data["val"], args.max_seq_len)
 
     # 9. Training
-    training_args = TrainingArguments(
-        output_dir=args.output_dir,
-        max_steps=args.max_steps,
-        per_device_train_batch_size=args.per_device_batch_size,
-        gradient_accumulation_steps=args.gradient_accumulation_steps,
-        learning_rate=args.learning_rate,
-        warmup_steps=args.warmup_steps,
-        weight_decay=args.weight_decay,
-        max_grad_norm=args.max_grad_norm,
-        optim="adamw_torch",
-        lr_scheduler_type="cosine",
-        bf16=args.bf16,
-        fp16=not args.bf16,
-        logging_steps=args.logging_steps,
-        save_strategy="no",
-        evaluation_strategy="no",
-        gradient_checkpointing=True,
-        gradient_checkpointing_kwargs={"use_reentrant": False},
-        report_to="none",
-        seed=args.seed,
-        dataloader_num_workers=4,
-        remove_unused_columns=False,
-    )
+    training_kwargs = {
+        "output_dir": args.output_dir,
+        "max_steps": args.max_steps,
+        "per_device_train_batch_size": args.per_device_batch_size,
+        "gradient_accumulation_steps": args.gradient_accumulation_steps,
+        "learning_rate": args.learning_rate,
+        "warmup_steps": args.warmup_steps,
+        "weight_decay": args.weight_decay,
+        "max_grad_norm": args.max_grad_norm,
+        "optim": "adamw_torch",
+        "lr_scheduler_type": "cosine",
+        "bf16": args.bf16,
+        "fp16": not args.bf16,
+        "logging_steps": args.logging_steps,
+        "save_strategy": "no",
+        "gradient_checkpointing": True,
+        "gradient_checkpointing_kwargs": {"use_reentrant": False},
+        "report_to": "none",
+        "seed": args.seed,
+        "dataloader_num_workers": 4,
+        "remove_unused_columns": False,
+    }
+    training_kwargs.update(evaluation_strategy_kwargs(TrainingArguments))
+    training_args = TrainingArguments(**training_kwargs)
 
     data_collator = PaddingCollator(pad_token_id=tokenizer.pad_token_id)
 
@@ -654,7 +814,7 @@ def main():
 
     # Save experiment metadata
     meta = {
-        "model": args.model_name,
+        "model": public_model_identifier(args.model_name),
         "rope_method": args.rope_method,
         "tau": args.tau if args.rope_method == "evq_cosh" else None,
         "rope_base": args.rope_base,

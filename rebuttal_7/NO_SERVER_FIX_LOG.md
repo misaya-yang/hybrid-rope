@@ -15,6 +15,10 @@
 
 - LoRA training now exposes an explicit `native_geo` method whose standard endpoint schedule is distinct from the EVQ midpoint limit at tau zero.
 - Positional-PPL evaluation resolves and verifies the exact saved training-time inverse-frequency tensor instead of rebuilding a potentially different schedule.
+- All LoRA evaluation entrypoints now fail on missing or method-mismatched frequency artifacts instead of silently evaluating the model-default schedule.
+- Frequency injection is verified across every rotary module, and result JSONs record only path-safe artifact names, schedule metadata, and SHA-256 provenance.
+- LoRA training infers `head_dim` and `rope_theta` from the model configuration unless explicitly overridden, and selects the installed Transformers evaluation-strategy keyword (`eval_strategy` or legacy `evaluation_strategy`).
+- Existing comparison checkpoints are validated against `experiment_meta.json` and `custom_inv_freq.pt` before a launcher is allowed to skip training; affected legacy Geo controls are rejected rather than reused.
 - RULER evaluation requires a variant label and writes provenance-rich, non-colliding result filenames.
 - All LoRA launch wrappers now pass explicit method/variant labels.
 - Generic LLaMA continued pretraining infers head geometry and RoPE base from model configuration, accepts explicit training length, validates packed sequence shape and frequency count, and records the resolved geometry. This prevents silent 32/64-channel and 1B/8B configuration mismatches.
@@ -30,7 +34,7 @@
 
 - Python syntax gate: all touched/core entrypoints passed `python3 -m py_compile`.
 - Shell syntax gate: all touched LoRA launchers and both figure builders passed `bash -n`.
-- Unit tests: 23 non-pytest repository tests passed, including 11 new rebuttal protocol regressions. The separate `tests/test_rope_core.py` pytest gate could not run because this machine has no `pytest` module; `torch` is available.
+- Full test suite: 171/171 passed under the repository `.venv`; this includes 23 focused rebuttal protocol regressions covering fail-closed frequency reuse, provenance, API compatibility, geometry, packed-data length, and stale-checkpoint rejection.
 - LaTeX: bundled Tectonic compiled `paper/main.tex` successfully to a 41-page PDF. The main body ends on page 9 and References starts on page 10. Warnings are known underfull-box/hyperref warnings; no overfull box was reported.
 - PDF: `pdfinfo` reports no custom metadata and the reviewed pages render correctly. A raw `/Type3` marker scan found none; `pdffonts` is unavailable on this machine.
 - Packaging: `python3 scripts/package_supplement.py` produced the curated supplement successfully.

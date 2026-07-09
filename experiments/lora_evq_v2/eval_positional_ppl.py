@@ -37,6 +37,12 @@ import torch
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+from train_evq_lora import (
+    inject_inv_freq,
+    load_frequency_artifact,
+    verify_model_inv_freq,
+)
+
 
 def resolve_custom_inv_freq_path(adapter_dir, method: str) -> Optional[Path]:
     """Return the training-time frequency artifact that evaluation must reuse.
@@ -48,7 +54,11 @@ def resolve_custom_inv_freq_path(adapter_dir, method: str) -> Optional[Path]:
     if not adapter_dir or method not in {"geo", "evq"}:
         return None
     path = Path(adapter_dir) / "custom_inv_freq.pt"
-    return path if path.exists() else None
+    if not path.is_file():
+        raise FileNotFoundError(
+            f"Required custom_inv_freq.pt is missing for {method} adapter evaluation"
+        )
+    return path
 
 
 def load_model(model_name, adapter_dir=None, method="geo", yarn_factor=2.0, bf16=True):
@@ -82,27 +92,27 @@ def load_model(model_name, adapter_dir=None, method="geo", yarn_factor=2.0, bf16
         print(f"[LORA] Loaded adapter from {adapter_dir}")
 
     # Reuse the exact training-time table AFTER loading the adapter.
+    frequency_provenance = {
+        "method": "yarn_scaling" if method == "yarn" else "model_default",
+        "artifact": None,
+    }
     freq_path = resolve_custom_inv_freq_path(adapter_dir, method)
     if freq_path is not None:
-        data = torch.load(freq_path, map_location="cpu", weights_only=True)
-        inv_freq = data["inv_freq"] if isinstance(data, dict) else data
-        from train_evq_lora import inject_inv_freq, find_rotary_modules
+        expected_method = "native_geo" if method == "geo" else "evq_cosh"
+        inv_freq, data, frequency_provenance = load_frequency_artifact(
+            freq_path,
+            expected_method=expected_method,
+        )
         inject_inv_freq(model, inv_freq)
-        mods = find_rotary_modules(model)
-        if not mods:
-            raise RuntimeError("Frequency artifact exists, but no rotary module was found after load")
-        actual = mods[0][1].inv_freq.detach().cpu().to(torch.float64)
-        expected = inv_freq.detach().cpu().to(torch.float64)
-        max_err = (actual - expected).abs().max().item()
-        if max_err >= 1e-5:
-            raise RuntimeError(
-                f"Training/evaluation RoPE mismatch after reinjection: max_error={max_err:.2e}"
-            )
-        saved_method = data.get("method", method) if isinstance(data, dict) else method
-        print(f"[ROPE] Reused saved {saved_method} training frequencies: max_error={max_err:.2e}")
+        verification = verify_model_inv_freq(model, inv_freq)
+        print(
+            f"[ROPE] Reused saved {data['method']} training frequencies: "
+            f"modules={verification['verified_count']}, "
+            f"max_error={verification['max_error']:.2e}"
+        )
 
     model.eval()
-    return model, tokenizer
+    return model, tokenizer, frequency_provenance
 
 
 def eval_positional_ppl(model, tokenizer, text_path, ctx_len=16384):
@@ -192,7 +202,7 @@ def main():
         print(f"  Positional PPL: {label}")
         print(f"{'='*60}")
 
-        model, tokenizer = load_model(
+        model, tokenizer, frequency_provenance = load_model(
             args.model_name, args.adapter_dir,
             method=args.method, yarn_factor=args.yarn_factor)
 
@@ -201,7 +211,12 @@ def main():
         for name, r in results.items():
             print(f"  {name}: PPL={r['ppl']:.2f} (loss={r['loss']:.4f})")
 
-        output = {"label": label, "method": args.method, "results": results}
+        output = {
+            "label": label,
+            "method": args.method,
+            "frequency_provenance": frequency_provenance,
+            "results": results,
+        }
         if args.output:
             os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
             with open(args.output, "w") as f:
@@ -233,12 +248,16 @@ def main():
         label = os.path.basename(ckpt_dir)
 
         print(f"\n--- {label} ({method}) ---")
-        model, tokenizer = load_model(
+        model, tokenizer, frequency_provenance = load_model(
             args.model_name, ckpt_dir,
             method=method, yarn_factor=yarn_factor)
 
         results = eval_positional_ppl(model, tokenizer, args.wikitext_path)
-        all_results[label] = {"method": method, "results": results}
+        all_results[label] = {
+            "method": method,
+            "frequency_provenance": frequency_provenance,
+            "results": results,
+        }
 
         for name, r in results.items():
             print(f"  {name}: PPL={r['ppl']:.2f}")

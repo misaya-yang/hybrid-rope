@@ -101,6 +101,15 @@ WARMUP_FRACTION = 0.05
 PASSKEY_TRIALS = 20
 
 
+def public_model_identifier(value: str) -> str:
+    """Preserve a Hub model ID while stripping local-machine path prefixes."""
+    raw = str(value)
+    expanded = Path(raw).expanduser()
+    if expanded.is_absolute() or raw.startswith((".", "~")):
+        return expanded.name
+    return raw
+
+
 @dataclass(frozen=True)
 class RopeGeometry:
     head_dim: int
@@ -346,6 +355,13 @@ def patch_inv_freq_for_eval(model: nn.Module, new_inv_freq: torch.Tensor) -> int
     return patched
 
 
+def require_patched_rotary_modules(patched_count: int, context: str) -> int:
+    """Fail closed when an intended frequency patch did not reach the model."""
+    if patched_count <= 0:
+        raise RuntimeError(f"No rotary modules were patched for {context}")
+    return patched_count
+
+
 # ---------------------------------------------------------------------------
 # Data loading
 # ---------------------------------------------------------------------------
@@ -361,6 +377,20 @@ def load_packed_data(path: str, label: str = "data") -> torch.Tensor:
     data = torch.load(str(p), map_location="cpu", weights_only=True)
     print_rank0(f"  Loaded {label}: {p.name} — shape {tuple(data.shape)}, "
                f"{data.numel() / 1e6:.1f}M tokens")
+    return data
+
+
+def validate_packed_tensor(
+    data: torch.Tensor,
+    expected_seq_len: int,
+    label: str,
+) -> torch.Tensor:
+    """Validate that a packed dataset matches the protocol length it represents."""
+    if not torch.is_tensor(data) or data.ndim != 2 or data.shape[1] != expected_seq_len:
+        shape = tuple(data.shape) if torch.is_tensor(data) else type(data).__name__
+        raise ValueError(
+            f"Packed {label} data must have shape (N, {expected_seq_len}); got {shape}"
+        )
     return data
 
 
@@ -600,48 +630,56 @@ def eval_ppl(
     if seq_len > native_ctx:
         scale = seq_len / native_ctx
         scaled_freq = yarn_inv_freq(base_inv_freq, scale, head_dim)
-        n_patched = patch_inv_freq_for_eval(model, scaled_freq)
+        n_patched = require_patched_rotary_modules(
+            patch_inv_freq_for_eval(model, scaled_freq),
+            "PPL YaRN scaling",
+        )
         print(f"    YaRN applied: scale={scale:.1f}x, patched {n_patched} layers")
 
     n_chunks = min(len(test_data), max_chunks)
     total_loss = 0.0
     total_tokens = 0
+    completed_chunks = 0
 
     print_rank0(f"    PPL eval{' (' + label + ')' if label else ''}: "
                f"seq_len={seq_len}, chunks={n_chunks} ... ", end="", flush=True)
 
-    for i in range(n_chunks):
-        chunk = test_data[i].unsqueeze(0).to(device)
-        try:
-            with torch.amp.autocast("cuda", dtype=torch.bfloat16):
-                outputs = model(chunk, labels=chunk)
-                if hasattr(outputs, "loss"):
-                    loss = outputs.loss
-                else:
-                    # Manual cross-entropy if model doesn't return loss
-                    logits = outputs if not hasattr(outputs, "logits") else outputs.logits
-                    # Align logits with shifted labels: logits[:, :-1] predicts chunk[:, 1:]
-                    logits = logits[:, :-1, :]
-                    loss = F.cross_entropy(
-                        logits.reshape(-1, logits.size(-1)),
-                        chunk[:, 1:].reshape(-1),
-                    )
-            total_loss += loss.item() * (seq_len - 1)
-            total_tokens += (seq_len - 1)
-        except RuntimeError as e:
-            if "out of memory" in str(e).lower():
-                print(f"OOM at chunk {i}, ", end="", flush=True)
-                cleanup_gpu()
-                break
-            raise
-        finally:
-            del chunk
-            if torch.cuda.is_available():
-                torch.cuda.empty_cache()
-
-    # Restore original inv_freq if we applied YaRN
-    if seq_len > native_ctx:
-        patch_inv_freq_for_eval(model, base_inv_freq)
+    try:
+        for i in range(n_chunks):
+            chunk = test_data[i].unsqueeze(0).to(device)
+            try:
+                with torch.amp.autocast("cuda", dtype=torch.bfloat16):
+                    outputs = model(chunk, labels=chunk)
+                    if hasattr(outputs, "loss"):
+                        loss = outputs.loss
+                    else:
+                        # Manual cross-entropy if model doesn't return loss
+                        logits = outputs if not hasattr(outputs, "logits") else outputs.logits
+                        # Align logits with shifted labels: logits[:, :-1] predicts chunk[:, 1:]
+                        logits = logits[:, :-1, :]
+                        loss = F.cross_entropy(
+                            logits.reshape(-1, logits.size(-1)),
+                            chunk[:, 1:].reshape(-1),
+                        )
+                total_loss += loss.item() * (seq_len - 1)
+                total_tokens += (seq_len - 1)
+                completed_chunks += 1
+            except RuntimeError as e:
+                if "out of memory" in str(e).lower():
+                    print(f"OOM at chunk {i}, ", end="", flush=True)
+                    cleanup_gpu()
+                    break
+                raise
+            finally:
+                del chunk
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
+    finally:
+        if seq_len > native_ctx:
+            require_patched_rotary_modules(
+                patch_inv_freq_for_eval(model, base_inv_freq),
+                "PPL frequency restoration",
+            )
 
     if total_tokens == 0:
         print("FAILED (no chunks evaluated)")
@@ -654,7 +692,7 @@ def eval_ppl(
     return {
         "ppl": round(ppl, 3),
         "loss": round(avg_loss, 6),
-        "n_chunks": n_chunks,
+        "n_chunks": completed_chunks,
         "seq_len": seq_len,
     }
 
@@ -1005,11 +1043,11 @@ def main():
     # ── Load training data ──────────────────────────────────────────
     print_rank0("[1] Loading data...")
     train_path = data_dir / "train_packed.pt"
-    train_data = load_packed_data(str(train_path), "train")
-    if train_data.ndim != 2 or train_data.shape[1] != native_ctx:
-        raise ValueError(
-            f"Packed train data must have shape (N, {native_ctx}); got {tuple(train_data.shape)}"
-        )
+    train_data = validate_packed_tensor(
+        load_packed_data(str(train_path), "train"),
+        expected_seq_len=native_ctx,
+        label="train",
+    )
 
     # Load test data for each eval length
     test_datasets = {}
@@ -1020,7 +1058,11 @@ def main():
             test_path = data_dir / f"test_{L}.pt"
 
         if test_path.exists():
-            test_datasets[L] = load_packed_data(str(test_path), f"test L={L}")
+            test_datasets[L] = validate_packed_tensor(
+                load_packed_data(str(test_path), f"test L={L}"),
+                expected_seq_len=L,
+                label=f"test L={L}",
+            )
         else:
             print_rank0(f"  WARNING: {test_path} not found, skipping PPL eval at L={L}")
     print_rank0()
@@ -1203,7 +1245,10 @@ def main():
                         if L > native_ctx:
                             scale = L / native_ctx
                             scaled_freq = yarn_inv_freq(inv_freq, scale, head_dim)
-                            patch_inv_freq_for_eval(eval_model, scaled_freq)
+                            require_patched_rotary_modules(
+                                patch_inv_freq_for_eval(eval_model, scaled_freq),
+                                "passkey YaRN scaling",
+                            )
                         try:
                             passkey_at_L = eval_passkey(
                                 eval_model, tokenizer, [L],
@@ -1216,7 +1261,10 @@ def main():
                             passkey_results[f"L={L}"] = {"accuracy": -1, "error": str(e)}
                         finally:
                             if L > native_ctx:
-                                patch_inv_freq_for_eval(eval_model, inv_freq)
+                                require_patched_rotary_modules(
+                                    patch_inv_freq_for_eval(eval_model, inv_freq),
+                                    "passkey frequency restoration",
+                                )
                             cleanup_gpu()
 
             if use_ds and dist.is_initialized():
@@ -1228,7 +1276,7 @@ def main():
         result = {
             "config": config_name,
             "label": config_label,
-            "model": args.model_dir,
+            "model": public_model_identifier(args.model_dir),
             "head_dim": head_dim,
             "n_freqs": geometry.n_freqs,
             "rope_theta": rope_theta,
