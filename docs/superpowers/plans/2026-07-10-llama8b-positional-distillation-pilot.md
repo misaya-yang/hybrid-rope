@@ -1,5 +1,11 @@
 # LLaMA-3-8B Positional Distillation Pilot Implementation Plan
 
+> **Audit note (2026-07-10):** this is the original implementation checklist,
+> not the post-audit runtime contract. The canonical protocol is the adjacent
+> design spec plus the fail-closed launcher. The audit changed Geo to a one-step
+> null sentinel, pinned/document-separated data, student-only compilation,
+> resumable training, full validation, and chunked-logit evaluation.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Prepare, test, document, and publish the seed-42 q/k-only positional-distillation pilot without launching a GPU experiment.

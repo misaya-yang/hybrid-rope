@@ -192,7 +192,7 @@
       "families": [
         "supporting_lora_8b"
       ],
-      "sha256": "4c3e5aeaf630c788a52e479471c35d53203071bb50894ec3b9d544ee8edbd576",
+      "sha256": "4af5f0d3e2a0be7781b7c50043d5229b269f912b2dd44ad5199a91678a69f38d",
       "source": "experiments/lora_evq_v2/validate_checkpoint_artifact.py",
       "workspace_path": "code/experiments/lora_evq_v2/validate_checkpoint_artifact.py"
     },

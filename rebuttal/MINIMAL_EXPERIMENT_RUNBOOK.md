@@ -343,35 +343,61 @@ LongAlign 监督目标，无法判断 8K `+30%` 来自频率切换还是窄域�
 **当前状态**：seed-42 脚本、冻结数据协议、四组评测和自动 gate 已准备，
 尚未启动 GPU 实验。
 
-**四组因果拆分**：
+**四组诊断拆分**（不是无 LoRA 实验）：
 
 | Arm | Schedule | Training | 解释 |
 | --- | --- | --- | --- |
 | Base-Geo | native Geo | none | 原模型 |
 | Base-EVQ | EVQ tau 1.414 | none | 直接换频率冲击 |
-| Geo-Distill | native Geo | q/k-only hidden distillation | 优化器/adapter 漂移 |
+| Geo-Null（文件名仍为 Geo-Distill） | native Geo | 1-step q/k hidden null | pipeline/null sentinel |
 | EVQ-Distill | EVQ tau 1.414 | q/k-only hidden distillation | 位置重校准 treatment |
 
-训练只使用固定的 FineWeb-Edu plain-text token 序列和 teacher hidden states；
-没有 LongAlign、token-label CE、任务答案或检索监督。默认 seed 42、300 steps、
-8K、effective batch 8、`r=64`、`alpha=128`、`lr=2e-5`。
+训练只使用固定 revision、document-disjoint 的 FineWeb-Edu plain-text token
+序列和 teacher hidden states；没有 LongAlign、token-label CE、任务答案或检索
+监督。EVQ 为 seed 42、300 steps；Geo teacher/student 初始相同，因此只保留
+1-step null sentinel。两者都是 8K、effective batch 8、`r=64`、`alpha=128`、
+`lr=2e-5`。
+
+这个矩阵去掉了 LongAlign/task supervision 并收窄了 adapter 作用面，但仍然
+使用 q/k LoRA，同时引入 Geo-teacher hidden distillation。它不能单独证明旧表
+的 `+30%` 来自 LoRA、LongAlign、v/o 或学习率，也不能称为 full fine-tuning。
 
 **入口**：
 
 ```bash
+export CUDA_VISIBLE_DEVICES=0
 bash scripts/2026-07/01_lora_positional_distill_seed42.sh prepare
+bash scripts/2026-07/01_lora_positional_distill_seed42.sh benchmark
 bash scripts/2026-07/01_lora_positional_distill_seed42.sh train
 bash scripts/2026-07/01_lora_positional_distill_seed42.sh eval
 ```
 
+RTX PRO 6000 正式跑前，用相同 frozen microbatches 比较 compile on/off；若显存
+有余量，再比较 B2/GA4 与 B4/GA2，始终保持 effective batch 8。正式入口默认
+只 compile student backbone，teacher eager，并记录 CUDA/arch、tokens/s、峰值
+显存与 5 秒间隔 GPU utilization/power。FP8、QLoRA、DDP/FSDP 不进入首轮。
+`benchmark` 使用独立的 12-step non-claim 目录，不得与正式 checkpoint 混用；
+正式 checkpoint 只有在 immutable protocol 和覆盖全部 fresh/resume 段的
+invocation ledger 均通过后才会生成 `claim_ready.json`。
+
 **固定停止条件**：
 
-- Geo-Distill PPL@8K 相对 Base 漂移超过 1%：先查 pipeline；
+- Geo-Null 在 8K/16K/32K 任一长度相对 Base 的绝对漂移超过 1%：先查 pipeline；
 - EVQ-Distill PPL@8K 高于 Base 超过 10%：不补 seed，先诊断 rank/target/LR；
-- 正式通过要求 EVQ 8K cost `<=5%`、16K improvement `>=2x`、32K
-  improvement `>=4x`、表示误差恢复 `>=90%`；
+- 正式通过要求 EVQ 8K cost `<=5%`、相对匹配 Geo-Null 的 16K improvement
+  `>=2x`、32K improvement `>=4x`、表示误差恢复 `>=90%`；
 - quick RULER 不是 A-stage gate。没有 AR capability 提升时，只能说 clean
   positional recovery，不能说 industrial context capability。
+
+必须报告四个 contrast：Base-EVQ − Base-Geo、Geo-Null − Base-Geo、
+EVQ-Distill − Geo-Null、EVQ-Distill − Base-EVQ。只有 exact JSON、WikiText/hash、
+canonical frequency hash、adapter hash、model/tokenizer fingerprint 与 seed scope
+全部通过 fail-closed summary 后，结果才可进入 rebuttal intake。
+
+**与论文旧 LoRA 行的桥接优先级**：如果 rebuttal 要声称旧混杂被关闭，仍需
+原协议的 Base-Geo / Base-EVQ / Geo+LongAlign-LoRA /
+EVQ+LongAlign-LoRA matched block；clean pilot 不能替代它。clean seed-42 成功后
+再决定是否补 43/44，失败或 8K cost `>10%` 时不补 seed。
 
 **相关文件**：
 

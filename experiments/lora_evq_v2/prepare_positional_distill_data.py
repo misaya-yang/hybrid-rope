@@ -13,6 +13,12 @@ from typing import Iterable, Iterator, List, Sequence, Tuple
 import torch
 
 
+FINEWEB_EDU_REVISION = "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9"
+INSTRUCTION_FIELDS = frozenset(
+    {"messages", "instruction", "instructions", "answer", "answers", "output", "response"}
+)
+
+
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
     with Path(path).open("rb") as handle:
@@ -28,6 +34,24 @@ def public_identifier(value: str) -> str:
     return value
 
 
+def tokenizer_source_fingerprint(value: str) -> dict:
+    fingerprint = {"identifier": public_identifier(value)}
+    source = Path(value).expanduser()
+    if source.is_dir():
+        files = {}
+        for name in (
+            "tokenizer.json",
+            "tokenizer.model",
+            "tokenizer_config.json",
+            "special_tokens_map.json",
+        ):
+            path = source / name
+            if path.is_file():
+                files[name] = sha256_file(path)
+        fingerprint["files"] = files
+    return fingerprint
+
+
 def iter_plain_text_jsonl(path: Path) -> Iterator[str]:
     """Yield plain text and fail closed on chat/instruction records."""
     path = Path(path)
@@ -37,6 +61,12 @@ def iter_plain_text_jsonl(path: Path) -> Iterator[str]:
                 continue
             row = json.loads(line)
             text = row.get("text") if isinstance(row, dict) else None
+            forbidden = sorted(INSTRUCTION_FIELDS.intersection(row)) if isinstance(row, dict) else []
+            if forbidden:
+                raise ValueError(
+                    f"{path.name}:{line_number} contains instruction/chat fields "
+                    f"({', '.join(forbidden)}); the clean pilot accepts plain text only"
+                )
             if not isinstance(text, str):
                 raise ValueError(
                     f"{path.name}:{line_number} is not a plain text record; "
@@ -73,6 +103,7 @@ def iter_huggingface_text(
     dataset_config: str,
     split: str,
     text_field: str,
+    revision: str,
     seed: int,
     shuffle_buffer: int,
 ) -> Iterator[str]:
@@ -82,6 +113,7 @@ def iter_huggingface_text(
         "path": dataset_name,
         "split": split,
         "streaming": True,
+        "revision": revision,
     }
     if dataset_config:
         kwargs["name"] = dataset_config
@@ -127,6 +159,38 @@ def collect_fixed_sequences(
     return torch.tensor(rows, dtype=torch.int32), documents_seen
 
 
+def collect_disjoint_train_validation_sequences(
+    tokenizer,
+    texts: Iterable[str],
+    seq_len: int,
+    train_sequences: int,
+    validation_sequences: int,
+) -> Tuple[torch.Tensor, torch.Tensor, dict[str, int]]:
+    """Pack validation and train from disjoint source documents.
+
+    ``collect_fixed_sequences`` consumes the complete document that produces its
+    final row. Calling it twice on the same iterator deliberately discards the
+    first split's residual tokens, so no source document can straddle the split.
+    """
+    text_iterator = iter(texts)
+    validation, validation_documents = collect_fixed_sequences(
+        tokenizer=tokenizer,
+        texts=text_iterator,
+        seq_len=seq_len,
+        total_sequences=validation_sequences,
+    )
+    train, train_documents = collect_fixed_sequences(
+        tokenizer=tokenizer,
+        texts=text_iterator,
+        seq_len=seq_len,
+        total_sequences=train_sequences,
+    )
+    return train, validation, {
+        "validation": validation_documents,
+        "train": train_documents,
+    }
+
+
 def atomic_torch_save(value, path: Path) -> None:
     path = Path(path)
     temporary = path.with_suffix(path.suffix + ".tmp")
@@ -150,6 +214,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output_dir", type=Path, required=True)
     parser.add_argument("--dataset", default="HuggingFaceFW/fineweb-edu")
     parser.add_argument("--dataset_config", default="sample-10BT")
+    parser.add_argument("--dataset_revision", default=FINEWEB_EDU_REVISION)
     parser.add_argument("--split", default="train")
     parser.add_argument("--text_field", default="text")
     parser.add_argument("--local_jsonl", type=Path, default=None)
@@ -194,6 +259,7 @@ def main() -> None:
             dataset_config=args.dataset_config,
             split=args.split,
             text_field=args.text_field,
+            revision=args.dataset_revision,
             seed=args.seed,
             shuffle_buffer=args.shuffle_buffer,
         )
@@ -203,18 +269,17 @@ def main() -> None:
             "config": args.dataset_config,
             "split": args.split,
             "text_field": args.text_field,
+            "revision": args.dataset_revision,
             "shuffle_buffer": args.shuffle_buffer,
         }
 
-    total_sequences = args.validation_sequences + args.train_sequences
-    packed, documents_seen = collect_fixed_sequences(
+    train, validation, document_counts = collect_disjoint_train_validation_sequences(
         tokenizer=tokenizer,
         texts=texts,
         seq_len=args.seq_len,
-        total_sequences=total_sequences,
+        train_sequences=args.train_sequences,
+        validation_sequences=args.validation_sequences,
     )
-    validation = packed[: args.validation_sequences].contiguous()
-    train = packed[args.validation_sequences :].contiguous()
     atomic_torch_save(train, train_path)
     atomic_torch_save(validation, validation_path)
 
@@ -222,14 +287,15 @@ def main() -> None:
         "format_version": 1,
         "purpose": "llama8b_positional_hidden_distillation",
         "source": source,
-        "tokenizer": public_identifier(args.tokenizer),
+        "tokenizer": tokenizer_source_fingerprint(args.tokenizer),
         "seed": args.seed,
         "seq_len": args.seq_len,
         "train_sequences": int(train.shape[0]),
         "validation_sequences": int(validation.shape[0]),
         "train_tokens": int(train.numel()),
         "validation_tokens": int(validation.numel()),
-        "documents_seen": documents_seen,
+        "split_policy": "document_disjoint_validation_then_train",
+        "documents_seen": document_counts,
         "files": {
             "train": {
                 "name": train_path.name,
