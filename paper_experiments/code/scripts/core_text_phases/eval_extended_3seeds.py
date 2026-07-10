@@ -1,0 +1,1 @@
+../../../../scripts/core_text_phases/eval_extended_3seeds.py

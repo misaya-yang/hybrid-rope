@@ -19,7 +19,7 @@ echo ">>> GEO-LoRA seed=42 | $(date)"
 /root/miniconda3/bin/python -u "${LORA}/train_evq_lora.py" \
     --model_name "${MODEL}" \
     --output_dir "${DIR}" \
-    --tau 0 \
+    --rope_method native_geo \
     --local_data_path "${DATA}" \
     --seed 42 \
     --max_steps 300 \

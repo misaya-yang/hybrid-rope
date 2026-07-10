@@ -1,0 +1,1 @@
+../../../../scripts/text_eval/prepare_training_data.py

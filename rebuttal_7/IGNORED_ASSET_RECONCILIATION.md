@@ -21,7 +21,7 @@ The inventory below is the first 2026-07-10 checkout snapshot. Sizes and counts 
 | `.venv/` | 745 MB; 27,871 files | Local Python runtime | Exclude completely; it is reproducible environment noise, not evidence. |
 | caches/build/checkpoints | variable | Bytecode, test caches, TeX intermediates, model weights | Exclude. Regenerate builds; recover checkpoints through sanitized manifests, never by committing them. |
 
-The `07 - rebuttal/all_paper_experiment_code/` subtree contains 853 files and deliberately duplicates code and archival material. It is useful for recovery, but it must not become a second public source tree. The canonical implementation remains under `scripts/` and `experiments/`.
+The `07 - rebuttal/all_paper_experiment_code/` subtree contains 853 files and deliberately duplicates code and archival material. It remains recovery-only and must not become a second public source tree. The new tracked `paper_experiments/` directory solves the reuse problem with a manifest and repository-relative links to canonical files under `scripts/` and `experiments/`; it does not copy ignored archives, results, or server paths.
 
 The ignored root `RESULT_PROVENANCE_MANIFEST.md` and tracked `docs/overview/RESULT_PROVENANCE_MANIFEST.md` are different artifacts. The former is a broad private audit aid; the latter is the reviewer-facing ledger.
 
@@ -53,6 +53,22 @@ The QuALITY aggregate and four base-pilot result JSONs were recovered in a secon
 - Rebuild other locally available families with `python3 scripts/build_rebuttal_evidence_bundle.py --only phase11 --only phase11b --only quality --only base`; the script rejects unexpected source hashes.
 - Validate the portable bundle with `python3 scripts/validate_rebuttal_evidence_bundle.py`.
 - Treat a source mismatch as a new evidence-review event, not as permission to update the expected hash silently.
+
+### Final ignored-result decisions
+
+The final pass rechecked the most likely ignored candidates rather than promoting files by size or filename. The following artifacts are **not promoted**:
+
+| Ignored artifact | What was useful | Why it is not promoted |
+| --- | --- | --- |
+| `results/350m_mla32_results_final.json` | Full seed-42 MLA trial payload and frequency/collision diagnostics | It duplicates the seed-42 portion of the tracked Primary III evidence, is much larger because it retains per-trial passkeys, and does not close the missing matched control, 1B replication, or checkpoint provenance. |
+| `results/PHASE18_YARN_FT_REPORT.md` | Historical YaRN fine-tuning interpretation | It contains machine-specific execution context and report-level claims; the reviewer-safe schedule-sensitivity conclusion is already scoped in the ledgers, while exact promoted result JSON is absent. |
+| `results/PHASE19_TAU1_vs_GEO_REPORT.md` | Historical tau-versus-Geo diagnostic | It is report-only, contains private execution context, and cannot upgrade a primary row without the exact evaluator payload and matching protocol manifest. |
+| `results/PHASE22_23_MLA_TAU_SWEEP_REPORT.md` | Directional MLA tau diagnostics | It is exploratory/report-only and does not supply the direct, replicated `d_eff` convention ablation requested by the reviewers. |
+| `results/core_text/phase21b/phase21b_quality_454m_report.json` | Earlier QuALITY accuracy diagnostic | This is the obsolete `n=200` pilot. The tracked `data/curated/quality_454m_full_eval.json` is the sole source of truth for the `n=2086` Gold-NLL result. |
+| `results/m4_max_36gb/D_*.json` and attention-prior arrays | Partial realistic-distance-prior traces | The summaries contain conflicting fitted values and the cited canonical result JSON is absent (`test3_attention_prior_results.json`). They cannot support a reviewer-facing empirical-prior claim. |
+| legacy LoRA outputs and weights | Historical 8B supporting run | The old geometric control path was invalid; only corrected code and artifact validators are tracked. Old results are not rehabilitated by local availability. |
+
+The Qwen 21-task JSONs are already tracked under `results/qwen_longbench_21task/`; they are negative/supporting evidence and do not become a primary claim. Tracked video-DiT summaries likewise remain supporting. This audit found no ignored result whose promotion would close an open primary control without either duplicating an existing curated artifact or weakening provenance and anonymity.
 
 ## Scientific impact of the recovery
 
@@ -219,7 +235,7 @@ It also prevents two overclaims.
 | P0 | L=128 Geo/DAPE/fixed-EVQ seeds 137/256 | Q3 | Report every seed; downgrade Primary II if direction is unstable. |
 | P0 | Tuned Geo base + base=10K bare/`c_pred` | Q5–Q6 | Same data/tokens/optimizer/seeds; select Geo only on predeclared validation metric. |
 | P0 | MLA tau convention screen, then replication | Q7 | Separate K, d_head, and d_eff; do not tune on final test only. |
-| P0 | Primary I AR exact match | Q9 | Same examples/seeds/checkpoints; report beside NLL-gap retrieval. |
+| DONE | Primary I AR exact match recovery | Q9 | Recovered from the tracked raw payload; report seedwise beside NLL-gap retrieval. |
 | P1 | Measured attention-distance/effective-length analysis | Q8 | Predeclare estimator and sampled model locations. |
 | P1 | Corrected matched 8B Geo/EVQ LoRA rerun | Q18 | Fresh artifacts only; legacy affected Geo results remain invalid. |
 | P1 | 7B second-model fine-tuning | Q18/generalization | Use after or alongside the matched 8B repair; treat as cross-model evidence. |
@@ -279,7 +295,7 @@ The builder intentionally stops if any raw source SHA256 differs. Do not edit ex
 - [ ] The base pilot is described as raw-JSON-backed, single-seed, and not a tuned-base or `c_pred` control.
 - [ ] L=256 Phase11 is not substituted for L=128 Primary II replication.
 - [ ] Fixed-EVQ three-seed recovery is not described as matched Geo/DAPE/EVQ replication.
-- [ ] PK is named teacher-forced NLL-gap retrieval unless AR exact match was actually run.
+- [ ] PK is named teacher-forced NLL-gap retrieval, and the recovered AR exact-match field is reported as a separate endpoint.
 - [ ] No 2B/4B/7B/8B completion is claimed from scripts or historical traces alone.
 - [ ] Bundle validator, unit tests, code smoke checks, leak scan, and curated supplement packager pass.
 - [ ] Final push includes this document, all curated assets, their validators, and the updated provenance ledger.

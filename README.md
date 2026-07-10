@@ -90,6 +90,11 @@ experiments/                Standalone experiment packages
     ├── compare_results.py  Base vs EVQ comparison & LaTeX table
     └── run.sh              One-click runner
 
+paper_experiments/          Manifest-driven index of all paper experiment code
+├── README.md               Scope, caveats, rebuild, and standalone-export guide
+├── MANIFEST.json           Experiment families, canonical paths, and SHA-256 hashes
+└── code/                   Repository-relative links to 94 canonical source files
+
 docs/                       Research documentation
 ├── overview/               Methodology, reproducibility, traceability map
 │   ├── PAPER_CLAIMS_MAP.md Paper↔Script↔Data navigation hub
@@ -108,6 +113,8 @@ tests/                      Unit tests
 ## Paper ↔ Code Traceability
 
 Every Figure and Table can be traced back to its generating script and source data in 3 steps. The full traceability map is at **`docs/overview/PAPER_CLAIMS_MAP.md`**.
+
+For one-folder access to all reported primary and supporting experiment code, use **`paper_experiments/`**. Rebuild its links and hash manifest with `python scripts/build_paper_experiment_workspace.py`; the canonical editable files remain under `scripts/` and `experiments/`.
 
 | Stable Paper Asset | Generating Script | Phase |
 |--------------------|-------------------|-------|

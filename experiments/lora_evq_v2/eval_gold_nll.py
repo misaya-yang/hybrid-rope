@@ -14,6 +14,12 @@ import torch.nn.functional as F
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+from train_evq_lora import (
+    inject_inv_freq,
+    load_frequency_artifact,
+    verify_model_inv_freq,
+)
+
 MODEL_DEFAULT = "/root/autodl-tmp/models/Meta-Llama-3-8B-Instruct"
 CKPT_DEFAULT = "/root/autodl-tmp/lora_evq_v2/checkpoints/evq_r64_tau1414"
 
@@ -31,19 +37,20 @@ def load_model(model_name, adapter_dir=None, inv_freq_path=None, bf16=True):
         from peft import PeftModel
         model = PeftModel.from_pretrained(model, adapter_dir)
         print("[LORA] Adapter loaded")
-    if inv_freq_path and os.path.exists(inv_freq_path):
-        data = torch.load(inv_freq_path, map_location="cpu", weights_only=True)
-        from train_evq_lora import inject_inv_freq, find_rotary_modules, compute_geometric_inv_freq
-        inject_inv_freq(model, data["inv_freq"])
-        mods = find_rotary_modules(model)
-        if mods:
-            actual = mods[0][1].inv_freq.detach().cpu().to(torch.float64)
-            geo = compute_geometric_inv_freq(128, 500000.0)
-            err_evq = (actual - data["inv_freq"].to(torch.float64)).abs().max().item()
-            err_geo = (actual - geo).abs().max().item()
-            print(f"[ROPE] tau={data.get('tau','?')}, {'EVQ' if err_evq < err_geo else 'GEO!'}")
+    frequency_provenance = {"method": "model_default", "artifact": None}
+    if inv_freq_path:
+        inv_freq, data, frequency_provenance = load_frequency_artifact(
+            inv_freq_path,
+            expected_method="evq_cosh",
+        )
+        inject_inv_freq(model, inv_freq)
+        verification = verify_model_inv_freq(model, inv_freq)
+        print(
+            f"[ROPE] {data['method']}: verified={verification['verified_count']}, "
+            f"max_error={verification['max_error']:.2e}"
+        )
     model.eval()
-    return model, tokenizer
+    return model, tokenizer, frequency_provenance
 
 
 def compute_answer_nll(model, tokenizer, context, question, answer, max_len=16384):
@@ -97,18 +104,19 @@ def main():
 
     inv_freq_path = None
     if args.adapter_dir and not args.base_only:
-        c = os.path.join(args.adapter_dir, "custom_inv_freq.pt")
-        if os.path.exists(c):
-            inv_freq_path = c
+        inv_freq_path = os.path.join(args.adapter_dir, "custom_inv_freq.pt")
 
-    model, tokenizer = load_model(
+    model, tokenizer, frequency_provenance = load_model(
         args.model_name,
         adapter_dir=None if args.base_only else args.adapter_dir,
         inv_freq_path=inv_freq_path)
 
     variant = "base" if args.base_only else "evq"
     tasks = [t.strip() for t in args.tasks.split(",")]
-    all_results = {"variant": variant}
+    all_results = {
+        "variant": variant,
+        "frequency_provenance": frequency_provenance,
+    }
     t0 = time.time()
 
     from datasets import load_dataset

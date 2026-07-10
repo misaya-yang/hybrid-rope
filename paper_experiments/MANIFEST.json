@@ -1,0 +1,874 @@
+{
+  "families": {
+    "data_preparation": [
+      "scripts/data_prep/prepare_8k_mixed_500m.py",
+      "scripts/data_prep/prepare_longbench_local_data.py",
+      "scripts/data_prep/prepare_moving_mnist_video.py",
+      "scripts/data_prep/prepare_oscillating_mnist_video.py",
+      "scripts/data_prep/tokenize_synth.py",
+      "scripts/text_eval/prepare_training_data.py"
+    ],
+    "paper_figures": [
+      "scripts/figures/build_fig5_downstream_qa.sh",
+      "scripts/figures/build_fig6_tau_rank.sh",
+      "scripts/figures/fig0_main_story.py",
+      "scripts/figures/fig1_neurips.py",
+      "scripts/figures/fig2_evq_yarn_orthogonality.py",
+      "scripts/figures/fig3_pe_dominant_scaling.py",
+      "scripts/figures/fig5_downstream_qa_nll.tex",
+      "scripts/figures/fig6_tau_rank_readable.tex"
+    ],
+    "primary_i_evq_yarn": [
+      "scripts/core_text_phases/phase14c_multiscale_evq_yarn.py",
+      "scripts/supporting_eval/__init__.py",
+      "scripts/supporting_eval/eval_passkey_scratch.py"
+    ],
+    "primary_ii_pe_dominant": [
+      "scripts/core_text_phases/eval_pe_baselines.py",
+      "scripts/core_text_phases/phase11_L256_extrap.py",
+      "scripts/core_text_phases/phase11_yarn_eval.py",
+      "scripts/core_text_phases/phase11b_125m_dape.py",
+      "scripts/core_text_phases/phase11c_454m_scaling.py"
+    ],
+    "primary_iii_mla": [
+      "scripts/core_text_phases/audit_rope_checkpoint.py",
+      "scripts/core_text_phases/eval_extended_3seeds.py",
+      "scripts/core_text_phases/eval_super_extrap.py",
+      "scripts/core_text_phases/gqa_patch.py",
+      "scripts/core_text_phases/make_artifact_manifest.py",
+      "scripts/core_text_phases/mla_patch.py",
+      "scripts/core_text_phases/run_gqa_evq_experiment.py",
+      "scripts/core_text_phases/yarn_finetune_eval.py"
+    ],
+    "shared_rope_and_training": [
+      "scripts/__init__.py",
+      "scripts/core_text_phases/__init__.py",
+      "scripts/core_text_phases/run_evq_sweep.py",
+      "scripts/lib/__init__.py",
+      "scripts/lib/rope/__init__.py",
+      "scripts/lib/rope/attn_hist.py",
+      "scripts/lib/rope/inject.py",
+      "scripts/lib/rope/learnable_evq.py",
+      "scripts/lib/rope/schedules.py",
+      "scripts/train.py"
+    ],
+    "supporting_lora_8b": [
+      "experiments/lora_evq_v2/compare_results.py",
+      "experiments/lora_evq_v2/download_model_data.py",
+      "experiments/lora_evq_v2/dryrun_validate.py",
+      "experiments/lora_evq_v2/eval_evq_lora.py",
+      "experiments/lora_evq_v2/eval_positional_ppl.py",
+      "experiments/lora_evq_v2/eval_ruler.py",
+      "experiments/lora_evq_v2/run.sh",
+      "experiments/lora_evq_v2/test_evq_yarn.py",
+      "experiments/lora_evq_v2/train_evq_lora.py",
+      "experiments/lora_evq_v2/validate_checkpoint_artifact.py"
+    ],
+    "supporting_text": [
+      "scripts/core_text_phases/eval_longbench_nll.py",
+      "scripts/core_text_phases/phase15_750m_2k_to_4k_continue_ckpt_eval.py",
+      "scripts/core_text_phases/phase17c_454m_1024_to_2048_continue.py",
+      "scripts/core_text_phases/phase17c_extended_eval.py",
+      "scripts/core_text_phases/phase17c_resume_evq.py",
+      "scripts/core_text_phases/phase18_base_generalization_sweep.py",
+      "scripts/core_text_phases/phase21b_quality_eval_clean.py",
+      "scripts/core_text_phases/phase8d_scaling_law.py",
+      "scripts/core_text_phases/phase8f_multi_seed.py",
+      "scripts/core_text_phases/visualize_attention_distance.py",
+      "scripts/supporting_eval/eval_longbench.py",
+      "scripts/supporting_eval/eval_multi_needle.py",
+      "scripts/supporting_eval/eval_niah_heatmap.py",
+      "scripts/supporting_eval/eval_niah_recall.py",
+      "scripts/text_eval/eval_454m_multilength.py",
+      "scripts/text_eval/llama3_continued_pretrain.py"
+    ],
+    "supporting_video_dit": [
+      "scripts/video_temporal/eval_32f_indist.py",
+      "scripts/video_temporal/eval_perframe_accuracy.py",
+      "scripts/video_temporal/eval_riflex.py",
+      "scripts/video_temporal/eval_temporal_precision.py",
+      "scripts/video_temporal/run_dit_temporal.py",
+      "scripts/video_temporal/run_perframe_accuracy.py",
+      "scripts/video_temporal/run_phase23_fvd_verify.py",
+      "scripts/video_temporal/run_video_temporal.py",
+      "scripts/video_temporal/run_video_temporal_allocation_sweep.py",
+      "scripts/video_temporal/theory_predicts_experiment.py",
+      "scripts/video_temporal/theory_predicts_v2.py",
+      "scripts/video_temporal/video_dit.py"
+    ],
+    "theory_and_mechanism": [
+      "scripts/analysis/compute_eta_vp.py",
+      "scripts/analysis/exp_tau_theory_verify.py",
+      "scripts/analysis/tau_direct_optimization.py",
+      "scripts/analysis/tau_exact_derivation.py",
+      "scripts/analysis/tau_position_discrimination.py",
+      "scripts/analysis/tau_scaling_analysis.py",
+      "scripts/analysis/verify_c_coll.py",
+      "scripts/analysis/verify_softmax_transport.py",
+      "scripts/analysis/verify_stiffness_and_regime.py",
+      "scripts/core_text_phases/eval_dsr.py",
+      "scripts/core_text_phases/evq_analysis.py",
+      "scripts/core_text_phases/export_phase16_manifest.py",
+      "scripts/core_text_phases/phase16_formula_optimality_sweep.py",
+      "scripts/m4_max_36gb/theory_numerical_verification.py",
+      "scripts/theory_B_floor_higher_order.py",
+      "scripts/verify_tau_unified.py"
+    ]
+  },
+  "files": [
+    {
+      "families": [
+        "supporting_lora_8b"
+      ],
+      "sha256": "5ac6b33f85933df0799c699c419ee3133d8b2bacce42857191f702cffa688b96",
+      "source": "experiments/lora_evq_v2/compare_results.py",
+      "workspace_path": "code/experiments/lora_evq_v2/compare_results.py"
+    },
+    {
+      "families": [
+        "supporting_lora_8b"
+      ],
+      "sha256": "338394941ad20a76cbef95b60ad40b7043c15d30a6b1f7b135e1bce00202ee4c",
+      "source": "experiments/lora_evq_v2/download_model_data.py",
+      "workspace_path": "code/experiments/lora_evq_v2/download_model_data.py"
+    },
+    {
+      "families": [
+        "supporting_lora_8b"
+      ],
+      "sha256": "95434a6108a890b164157e7e3cac305e8159b8fa1c3eb3ad762784bc4058620f",
+      "source": "experiments/lora_evq_v2/dryrun_validate.py",
+      "workspace_path": "code/experiments/lora_evq_v2/dryrun_validate.py"
+    },
+    {
+      "families": [
+        "supporting_lora_8b"
+      ],
+      "sha256": "7e70763c0ccceea506369718fe85b99ac941ccbc1970528b9db0e1535cf2edfe",
+      "source": "experiments/lora_evq_v2/eval_evq_lora.py",
+      "workspace_path": "code/experiments/lora_evq_v2/eval_evq_lora.py"
+    },
+    {
+      "families": [
+        "supporting_lora_8b"
+      ],
+      "sha256": "77c69f727964799dd551288677d29fd9560de22aa074ee856f0e87903a6bafc3",
+      "source": "experiments/lora_evq_v2/eval_positional_ppl.py",
+      "workspace_path": "code/experiments/lora_evq_v2/eval_positional_ppl.py"
+    },
+    {
+      "families": [
+        "supporting_lora_8b"
+      ],
+      "sha256": "eb0875d9a8dfb39883c099dc4158eda3ce35a87956f976a753f5c8c0cab0d47a",
+      "source": "experiments/lora_evq_v2/eval_ruler.py",
+      "workspace_path": "code/experiments/lora_evq_v2/eval_ruler.py"
+    },
+    {
+      "families": [
+        "supporting_lora_8b"
+      ],
+      "sha256": "35b7a00cd51e893982e8f1dee25eaeae1e4a298e172c4adf15e21e86f1cc0880",
+      "source": "experiments/lora_evq_v2/run.sh",
+      "workspace_path": "code/experiments/lora_evq_v2/run.sh"
+    },
+    {
+      "families": [
+        "supporting_lora_8b"
+      ],
+      "sha256": "dcf00e1a6ba07bde772ee6bd2c87c04f2174a1646eab7eb08694af4ebe996038",
+      "source": "experiments/lora_evq_v2/test_evq_yarn.py",
+      "workspace_path": "code/experiments/lora_evq_v2/test_evq_yarn.py"
+    },
+    {
+      "families": [
+        "supporting_lora_8b"
+      ],
+      "sha256": "1123215bb107f7c3ffbc83f16da0a3ce04f9ebba1c4f9213e3619109fd1b80b4",
+      "source": "experiments/lora_evq_v2/train_evq_lora.py",
+      "workspace_path": "code/experiments/lora_evq_v2/train_evq_lora.py"
+    },
+    {
+      "families": [
+        "supporting_lora_8b"
+      ],
+      "sha256": "4c3e5aeaf630c788a52e479471c35d53203071bb50894ec3b9d544ee8edbd576",
+      "source": "experiments/lora_evq_v2/validate_checkpoint_artifact.py",
+      "workspace_path": "code/experiments/lora_evq_v2/validate_checkpoint_artifact.py"
+    },
+    {
+      "families": [
+        "shared_rope_and_training"
+      ],
+      "sha256": "caf9c86be5a5143b69e5ce68ecac33e2efb634e00481e251fab0942322e8d01e",
+      "source": "scripts/__init__.py",
+      "workspace_path": "code/scripts/__init__.py"
+    },
+    {
+      "families": [
+        "theory_and_mechanism"
+      ],
+      "sha256": "581a28e4374f00b0e6e505197bc7324dcd693db0458fbb4e71b469920ec7522b",
+      "source": "scripts/analysis/compute_eta_vp.py",
+      "workspace_path": "code/scripts/analysis/compute_eta_vp.py"
+    },
+    {
+      "families": [
+        "theory_and_mechanism"
+      ],
+      "sha256": "1b88984050a7c675a59229ea73e4c5aabda763f7dbfce4ced9b52df54cd3d5eb",
+      "source": "scripts/analysis/exp_tau_theory_verify.py",
+      "workspace_path": "code/scripts/analysis/exp_tau_theory_verify.py"
+    },
+    {
+      "families": [
+        "theory_and_mechanism"
+      ],
+      "sha256": "e01011fb2b8dac26228d28b35f6a024a337fbcaaa3faff27ba5746ea98218cf9",
+      "source": "scripts/analysis/tau_direct_optimization.py",
+      "workspace_path": "code/scripts/analysis/tau_direct_optimization.py"
+    },
+    {
+      "families": [
+        "theory_and_mechanism"
+      ],
+      "sha256": "7d7c85c7aa73b5f14329ad8ccd67bb3636cc2ee82a492608b5c4bc4de0061c55",
+      "source": "scripts/analysis/tau_exact_derivation.py",
+      "workspace_path": "code/scripts/analysis/tau_exact_derivation.py"
+    },
+    {
+      "families": [
+        "theory_and_mechanism"
+      ],
+      "sha256": "1a17c493dcfb0ecfac9da58d84257070ed9e68dbc7fcac128b214f0824dd9371",
+      "source": "scripts/analysis/tau_position_discrimination.py",
+      "workspace_path": "code/scripts/analysis/tau_position_discrimination.py"
+    },
+    {
+      "families": [
+        "theory_and_mechanism"
+      ],
+      "sha256": "22495e2069e4a150c527e6d965a8dc8d52e9b6581919e69075393e4cd9719365",
+      "source": "scripts/analysis/tau_scaling_analysis.py",
+      "workspace_path": "code/scripts/analysis/tau_scaling_analysis.py"
+    },
+    {
+      "families": [
+        "theory_and_mechanism"
+      ],
+      "sha256": "213e35e3116d7795b721c17aedb7ae5c9cdaa9310017fdce33cd03b74972f067",
+      "source": "scripts/analysis/verify_c_coll.py",
+      "workspace_path": "code/scripts/analysis/verify_c_coll.py"
+    },
+    {
+      "families": [
+        "theory_and_mechanism"
+      ],
+      "sha256": "dff11d11e7dd8189f3b2087bc0ecab0f23f9c8330f8414d12bafccdc9ef9afc2",
+      "source": "scripts/analysis/verify_softmax_transport.py",
+      "workspace_path": "code/scripts/analysis/verify_softmax_transport.py"
+    },
+    {
+      "families": [
+        "theory_and_mechanism"
+      ],
+      "sha256": "0d5ad8ad7d529eb89e8b21af27b91c060582983bffc80a9aecee4846b4b6c3ab",
+      "source": "scripts/analysis/verify_stiffness_and_regime.py",
+      "workspace_path": "code/scripts/analysis/verify_stiffness_and_regime.py"
+    },
+    {
+      "families": [
+        "shared_rope_and_training"
+      ],
+      "sha256": "8357abeeea427a6a2599d64c5f39a5fd6ee7fd1dc3f0018e255921566cef5b47",
+      "source": "scripts/core_text_phases/__init__.py",
+      "workspace_path": "code/scripts/core_text_phases/__init__.py"
+    },
+    {
+      "families": [
+        "primary_iii_mla"
+      ],
+      "sha256": "9d974b58b44f8b664d9f250cbf6a4d5ec505f5077cb55d1120b4f638f9e53ad9",
+      "source": "scripts/core_text_phases/audit_rope_checkpoint.py",
+      "workspace_path": "code/scripts/core_text_phases/audit_rope_checkpoint.py"
+    },
+    {
+      "families": [
+        "theory_and_mechanism"
+      ],
+      "sha256": "a2fa407ee240e2085d668e00574ffb1036fdded76778d1380a959d366ac3ff62",
+      "source": "scripts/core_text_phases/eval_dsr.py",
+      "workspace_path": "code/scripts/core_text_phases/eval_dsr.py"
+    },
+    {
+      "families": [
+        "primary_iii_mla"
+      ],
+      "sha256": "d0712bf243149ea63e0cc8ddbe3c4bde8d2fb4aadb1a39d85a123e0cab3dd3f0",
+      "source": "scripts/core_text_phases/eval_extended_3seeds.py",
+      "workspace_path": "code/scripts/core_text_phases/eval_extended_3seeds.py"
+    },
+    {
+      "families": [
+        "supporting_text"
+      ],
+      "sha256": "01a66825d78d28432405f0a485deaaa4683627cd4387cfd3fd83d7400317f95f",
+      "source": "scripts/core_text_phases/eval_longbench_nll.py",
+      "workspace_path": "code/scripts/core_text_phases/eval_longbench_nll.py"
+    },
+    {
+      "families": [
+        "primary_ii_pe_dominant"
+      ],
+      "sha256": "10b16d364c7fec0ddf2f1e2457156e52d04778650a8ee41534d89fe429c3a12c",
+      "source": "scripts/core_text_phases/eval_pe_baselines.py",
+      "workspace_path": "code/scripts/core_text_phases/eval_pe_baselines.py"
+    },
+    {
+      "families": [
+        "primary_iii_mla"
+      ],
+      "sha256": "eb24847cec6cc57142815b0af547c89ceb7114028d238f2bc5a5aeeef97f8a04",
+      "source": "scripts/core_text_phases/eval_super_extrap.py",
+      "workspace_path": "code/scripts/core_text_phases/eval_super_extrap.py"
+    },
+    {
+      "families": [
+        "theory_and_mechanism"
+      ],
+      "sha256": "8d457fc9e53385bc87f3ffd072542516244b40030b449fdca403daca4794e1d0",
+      "source": "scripts/core_text_phases/evq_analysis.py",
+      "workspace_path": "code/scripts/core_text_phases/evq_analysis.py"
+    },
+    {
+      "families": [
+        "theory_and_mechanism"
+      ],
+      "sha256": "e6d3d67bb08213b612b6fa6390537809d42cc612865b39a4c273d16515bcc10a",
+      "source": "scripts/core_text_phases/export_phase16_manifest.py",
+      "workspace_path": "code/scripts/core_text_phases/export_phase16_manifest.py"
+    },
+    {
+      "families": [
+        "primary_iii_mla"
+      ],
+      "sha256": "fc85c2f07a0a8773e71427c4a280bd6deffd4944ee8d2f1dfd66f0f59a8339fd",
+      "source": "scripts/core_text_phases/gqa_patch.py",
+      "workspace_path": "code/scripts/core_text_phases/gqa_patch.py"
+    },
+    {
+      "families": [
+        "primary_iii_mla"
+      ],
+      "sha256": "38cb1f687cc08aa23e518a4da2399cece69754446292bd92cb6dee153c0f4099",
+      "source": "scripts/core_text_phases/make_artifact_manifest.py",
+      "workspace_path": "code/scripts/core_text_phases/make_artifact_manifest.py"
+    },
+    {
+      "families": [
+        "primary_iii_mla"
+      ],
+      "sha256": "9b5de6e3c15ec9a634d21e2bd85af8013363719ed6af942d52dc626883148308",
+      "source": "scripts/core_text_phases/mla_patch.py",
+      "workspace_path": "code/scripts/core_text_phases/mla_patch.py"
+    },
+    {
+      "families": [
+        "primary_ii_pe_dominant"
+      ],
+      "sha256": "bbcd720944d1d94362636f110abe206bb59f3c6dea4a7dc33222ff8111e68f2b",
+      "source": "scripts/core_text_phases/phase11_L256_extrap.py",
+      "workspace_path": "code/scripts/core_text_phases/phase11_L256_extrap.py"
+    },
+    {
+      "families": [
+        "primary_ii_pe_dominant"
+      ],
+      "sha256": "1bc0017f33247a0bfe59abe92c157af13c5c334293894b19ca7b7728d3ab8c0f",
+      "source": "scripts/core_text_phases/phase11_yarn_eval.py",
+      "workspace_path": "code/scripts/core_text_phases/phase11_yarn_eval.py"
+    },
+    {
+      "families": [
+        "primary_ii_pe_dominant"
+      ],
+      "sha256": "bd5546482cf70152c73ee9c6603cef2a7d5194afe3282ab0d49c97b26c5ff3d9",
+      "source": "scripts/core_text_phases/phase11b_125m_dape.py",
+      "workspace_path": "code/scripts/core_text_phases/phase11b_125m_dape.py"
+    },
+    {
+      "families": [
+        "primary_ii_pe_dominant"
+      ],
+      "sha256": "290958fee4ce0bb7c9bd098c213efb15c384f51530b8be5160c3f60f62b9f908",
+      "source": "scripts/core_text_phases/phase11c_454m_scaling.py",
+      "workspace_path": "code/scripts/core_text_phases/phase11c_454m_scaling.py"
+    },
+    {
+      "families": [
+        "primary_i_evq_yarn"
+      ],
+      "sha256": "8842cbb7cdfbb7c596b8b8e9d31cb2992b7cc82758d568a18e074a8339b18f92",
+      "source": "scripts/core_text_phases/phase14c_multiscale_evq_yarn.py",
+      "workspace_path": "code/scripts/core_text_phases/phase14c_multiscale_evq_yarn.py"
+    },
+    {
+      "families": [
+        "supporting_text"
+      ],
+      "sha256": "6ef09ab586f7433bf67e54575d23c45459ab96d0ffdbe0d0ce283dd50fd74ded",
+      "source": "scripts/core_text_phases/phase15_750m_2k_to_4k_continue_ckpt_eval.py",
+      "workspace_path": "code/scripts/core_text_phases/phase15_750m_2k_to_4k_continue_ckpt_eval.py"
+    },
+    {
+      "families": [
+        "theory_and_mechanism"
+      ],
+      "sha256": "fe5231bb5ab4fee53eae2e6e53a477ad2026eea1d5127e7cfc282d677f1bb601",
+      "source": "scripts/core_text_phases/phase16_formula_optimality_sweep.py",
+      "workspace_path": "code/scripts/core_text_phases/phase16_formula_optimality_sweep.py"
+    },
+    {
+      "families": [
+        "supporting_text"
+      ],
+      "sha256": "a8175ef6e5988041b0459ec7653a7679a9479a815c317e106099d542de0f5892",
+      "source": "scripts/core_text_phases/phase17c_454m_1024_to_2048_continue.py",
+      "workspace_path": "code/scripts/core_text_phases/phase17c_454m_1024_to_2048_continue.py"
+    },
+    {
+      "families": [
+        "supporting_text"
+      ],
+      "sha256": "35e1b1ec68c92c59d16164ab44ca5b4ee617a539d2bddd9537e542e73726c939",
+      "source": "scripts/core_text_phases/phase17c_extended_eval.py",
+      "workspace_path": "code/scripts/core_text_phases/phase17c_extended_eval.py"
+    },
+    {
+      "families": [
+        "supporting_text"
+      ],
+      "sha256": "48c31567ecdfa400ccac7ad3c0ff2b7cc887fefc0a4a79e6566b2960bb3e8857",
+      "source": "scripts/core_text_phases/phase17c_resume_evq.py",
+      "workspace_path": "code/scripts/core_text_phases/phase17c_resume_evq.py"
+    },
+    {
+      "families": [
+        "supporting_text"
+      ],
+      "sha256": "aef4005e9e317c0123ea058512a8b1e5002bbb34d33481667b5e0a953fe7927e",
+      "source": "scripts/core_text_phases/phase18_base_generalization_sweep.py",
+      "workspace_path": "code/scripts/core_text_phases/phase18_base_generalization_sweep.py"
+    },
+    {
+      "families": [
+        "supporting_text"
+      ],
+      "sha256": "ca898047b21d419622a390a440a389d2714cd2319d83cbbc95ab20f27067c527",
+      "source": "scripts/core_text_phases/phase21b_quality_eval_clean.py",
+      "workspace_path": "code/scripts/core_text_phases/phase21b_quality_eval_clean.py"
+    },
+    {
+      "families": [
+        "supporting_text"
+      ],
+      "sha256": "e58e9107bea4ff9490a88363b50d3ccf8763abae89f1a4be5a1990d8aa464653",
+      "source": "scripts/core_text_phases/phase8d_scaling_law.py",
+      "workspace_path": "code/scripts/core_text_phases/phase8d_scaling_law.py"
+    },
+    {
+      "families": [
+        "supporting_text"
+      ],
+      "sha256": "51b7eba8d8425154ba40a4baaa47100d31b53f8c61d352794a2361c396437042",
+      "source": "scripts/core_text_phases/phase8f_multi_seed.py",
+      "workspace_path": "code/scripts/core_text_phases/phase8f_multi_seed.py"
+    },
+    {
+      "families": [
+        "shared_rope_and_training"
+      ],
+      "sha256": "a5b094f9ec5d5e66ed90f89cc710bbb8fdb399edcc7040d3de9033f225ab470f",
+      "source": "scripts/core_text_phases/run_evq_sweep.py",
+      "workspace_path": "code/scripts/core_text_phases/run_evq_sweep.py"
+    },
+    {
+      "families": [
+        "primary_iii_mla"
+      ],
+      "sha256": "51ad863e3cc8193b5345423ca4c197282b317977060e6716db52529362bd94b0",
+      "source": "scripts/core_text_phases/run_gqa_evq_experiment.py",
+      "workspace_path": "code/scripts/core_text_phases/run_gqa_evq_experiment.py"
+    },
+    {
+      "families": [
+        "supporting_text"
+      ],
+      "sha256": "d7ffe5818cc75c3954deb4b4beb13ef9f2e812680d35b8955439e28bd639887a",
+      "source": "scripts/core_text_phases/visualize_attention_distance.py",
+      "workspace_path": "code/scripts/core_text_phases/visualize_attention_distance.py"
+    },
+    {
+      "families": [
+        "primary_iii_mla"
+      ],
+      "sha256": "ae2ae0536a43db4e9b15ffba3b54978b080837dedfe7fbf3918391af362dd471",
+      "source": "scripts/core_text_phases/yarn_finetune_eval.py",
+      "workspace_path": "code/scripts/core_text_phases/yarn_finetune_eval.py"
+    },
+    {
+      "families": [
+        "data_preparation"
+      ],
+      "sha256": "d200427620a707910d936c9d099229491b7d5d07a1a7c8d197b8c0fdce41351c",
+      "source": "scripts/data_prep/prepare_8k_mixed_500m.py",
+      "workspace_path": "code/scripts/data_prep/prepare_8k_mixed_500m.py"
+    },
+    {
+      "families": [
+        "data_preparation"
+      ],
+      "sha256": "b5a5f9693e4854dd11fd9312dda64b6718e4780d2161836e16443ea4a4fb0507",
+      "source": "scripts/data_prep/prepare_longbench_local_data.py",
+      "workspace_path": "code/scripts/data_prep/prepare_longbench_local_data.py"
+    },
+    {
+      "families": [
+        "data_preparation"
+      ],
+      "sha256": "5eea5319210656c75c00ff2cd3bd9e5f9d616569dba87b3106b8b053a3040356",
+      "source": "scripts/data_prep/prepare_moving_mnist_video.py",
+      "workspace_path": "code/scripts/data_prep/prepare_moving_mnist_video.py"
+    },
+    {
+      "families": [
+        "data_preparation"
+      ],
+      "sha256": "336a9980eeee7bfcf17d36a4954a7bcf9b9586c0ef531a8c468900e33d274707",
+      "source": "scripts/data_prep/prepare_oscillating_mnist_video.py",
+      "workspace_path": "code/scripts/data_prep/prepare_oscillating_mnist_video.py"
+    },
+    {
+      "families": [
+        "data_preparation"
+      ],
+      "sha256": "5b703b13788a8b04a780db3f82b5730ed7a3da3baf2ff8ad19c1eb7a92923d06",
+      "source": "scripts/data_prep/tokenize_synth.py",
+      "workspace_path": "code/scripts/data_prep/tokenize_synth.py"
+    },
+    {
+      "families": [
+        "paper_figures"
+      ],
+      "sha256": "fd75f7a67508d951b067eca036836f68012a27349b368db7412a21cdbec73082",
+      "source": "scripts/figures/build_fig5_downstream_qa.sh",
+      "workspace_path": "code/scripts/figures/build_fig5_downstream_qa.sh"
+    },
+    {
+      "families": [
+        "paper_figures"
+      ],
+      "sha256": "4f0cc62c0ee0e84dbdb8c2448f1425a49d4ed07276f0e51dce807f67270a97ec",
+      "source": "scripts/figures/build_fig6_tau_rank.sh",
+      "workspace_path": "code/scripts/figures/build_fig6_tau_rank.sh"
+    },
+    {
+      "families": [
+        "paper_figures"
+      ],
+      "sha256": "bd446eead585a234b6997322994820152e041ea1b9c6ab6e9cf73d0b726f4e16",
+      "source": "scripts/figures/fig0_main_story.py",
+      "workspace_path": "code/scripts/figures/fig0_main_story.py"
+    },
+    {
+      "families": [
+        "paper_figures"
+      ],
+      "sha256": "66e451a30ea0ebd1f234cdb10caa921701cb061d1501196e001a53abc8ade3bb",
+      "source": "scripts/figures/fig1_neurips.py",
+      "workspace_path": "code/scripts/figures/fig1_neurips.py"
+    },
+    {
+      "families": [
+        "paper_figures"
+      ],
+      "sha256": "282b77eb157e60fba9189cf5e813dab67c18b886aa309a5476d4e4a1e037d94d",
+      "source": "scripts/figures/fig2_evq_yarn_orthogonality.py",
+      "workspace_path": "code/scripts/figures/fig2_evq_yarn_orthogonality.py"
+    },
+    {
+      "families": [
+        "paper_figures"
+      ],
+      "sha256": "61d35ca9c3c1cac2a415e625ff99275f41347aefd4ddc9ac6d634dd2144f4f72",
+      "source": "scripts/figures/fig3_pe_dominant_scaling.py",
+      "workspace_path": "code/scripts/figures/fig3_pe_dominant_scaling.py"
+    },
+    {
+      "families": [
+        "paper_figures"
+      ],
+      "sha256": "80d34fa926fdf366c4bc1f1561ae177d274d2d16fa79e5397b4eed2717e6d09f",
+      "source": "scripts/figures/fig5_downstream_qa_nll.tex",
+      "workspace_path": "code/scripts/figures/fig5_downstream_qa_nll.tex"
+    },
+    {
+      "families": [
+        "paper_figures"
+      ],
+      "sha256": "f56716d9fdf71f038fbff87cd7c905e87e25ef9c70be050334e0be64732eb9c6",
+      "source": "scripts/figures/fig6_tau_rank_readable.tex",
+      "workspace_path": "code/scripts/figures/fig6_tau_rank_readable.tex"
+    },
+    {
+      "families": [
+        "shared_rope_and_training"
+      ],
+      "sha256": "4672967bfff5eb7fd57436e36e2aea5bad221309350dc698e1a709a64bd24302",
+      "source": "scripts/lib/__init__.py",
+      "workspace_path": "code/scripts/lib/__init__.py"
+    },
+    {
+      "families": [
+        "shared_rope_and_training"
+      ],
+      "sha256": "1c3ea3e3f5162c8a6b13e619c85a8d6ea0559518196a5b939d8cdf745753b6fb",
+      "source": "scripts/lib/rope/__init__.py",
+      "workspace_path": "code/scripts/lib/rope/__init__.py"
+    },
+    {
+      "families": [
+        "shared_rope_and_training"
+      ],
+      "sha256": "c304c367abe873e643f038abd48e3b3af5d8aa60b8fd714abd114299130c64dd",
+      "source": "scripts/lib/rope/attn_hist.py",
+      "workspace_path": "code/scripts/lib/rope/attn_hist.py"
+    },
+    {
+      "families": [
+        "shared_rope_and_training"
+      ],
+      "sha256": "f2a59851e844fd51ac6c0bbc67a920d843fe7346a88337a29499910e4318df66",
+      "source": "scripts/lib/rope/inject.py",
+      "workspace_path": "code/scripts/lib/rope/inject.py"
+    },
+    {
+      "families": [
+        "shared_rope_and_training"
+      ],
+      "sha256": "fbdfe2d574f570af9028ae663aa7b0a048970eb1943da5fbbb9262fa66bdc183",
+      "source": "scripts/lib/rope/learnable_evq.py",
+      "workspace_path": "code/scripts/lib/rope/learnable_evq.py"
+    },
+    {
+      "families": [
+        "shared_rope_and_training"
+      ],
+      "sha256": "c217d2651d3fda80f1cf8ef6f29b64a7b53f26fd2a43c3b9a6c25a97bfc5bc0a",
+      "source": "scripts/lib/rope/schedules.py",
+      "workspace_path": "code/scripts/lib/rope/schedules.py"
+    },
+    {
+      "families": [
+        "theory_and_mechanism"
+      ],
+      "sha256": "8af5841db655f7a2cf094cb51c056e0a10e8412be5b917f798712c416b56910c",
+      "source": "scripts/m4_max_36gb/theory_numerical_verification.py",
+      "workspace_path": "code/scripts/m4_max_36gb/theory_numerical_verification.py"
+    },
+    {
+      "families": [
+        "primary_i_evq_yarn"
+      ],
+      "sha256": "4225fb50f6e77925104ecf47090a381dbe13b29aab27c621627b1b14e3042afe",
+      "source": "scripts/supporting_eval/__init__.py",
+      "workspace_path": "code/scripts/supporting_eval/__init__.py"
+    },
+    {
+      "families": [
+        "supporting_text"
+      ],
+      "sha256": "4b80cf0bdea69119aa2216675ea88ad8a61390473417b16e8f543b45864a6c86",
+      "source": "scripts/supporting_eval/eval_longbench.py",
+      "workspace_path": "code/scripts/supporting_eval/eval_longbench.py"
+    },
+    {
+      "families": [
+        "supporting_text"
+      ],
+      "sha256": "7852b1b112b65f321edec895869907c4f7c3fc200a0d1e5ca73206464eb60c90",
+      "source": "scripts/supporting_eval/eval_multi_needle.py",
+      "workspace_path": "code/scripts/supporting_eval/eval_multi_needle.py"
+    },
+    {
+      "families": [
+        "supporting_text"
+      ],
+      "sha256": "74a2c3c338db634161fa9ffc4d4be06e19c2e5a819b006c7b8db98eead82b800",
+      "source": "scripts/supporting_eval/eval_niah_heatmap.py",
+      "workspace_path": "code/scripts/supporting_eval/eval_niah_heatmap.py"
+    },
+    {
+      "families": [
+        "supporting_text"
+      ],
+      "sha256": "4ead208bf46070e3ba69a793c439db26eadc0dc2b04fe6d931a18c6c34e6ca9d",
+      "source": "scripts/supporting_eval/eval_niah_recall.py",
+      "workspace_path": "code/scripts/supporting_eval/eval_niah_recall.py"
+    },
+    {
+      "families": [
+        "primary_i_evq_yarn"
+      ],
+      "sha256": "6970dcaed9d14f1cf4ebb74e1772848c11bce466d4edf0dc2174113c46b4f8d4",
+      "source": "scripts/supporting_eval/eval_passkey_scratch.py",
+      "workspace_path": "code/scripts/supporting_eval/eval_passkey_scratch.py"
+    },
+    {
+      "families": [
+        "supporting_text"
+      ],
+      "sha256": "b4fd8815952fdd17535ce11208c5f1e6745f6458d867205db24e72276f8e1921",
+      "source": "scripts/text_eval/eval_454m_multilength.py",
+      "workspace_path": "code/scripts/text_eval/eval_454m_multilength.py"
+    },
+    {
+      "families": [
+        "supporting_text"
+      ],
+      "sha256": "e4c4fc5b704bcb93de10d11b82a271562b00ec443de63e970e0a1bc3501474fb",
+      "source": "scripts/text_eval/llama3_continued_pretrain.py",
+      "workspace_path": "code/scripts/text_eval/llama3_continued_pretrain.py"
+    },
+    {
+      "families": [
+        "data_preparation"
+      ],
+      "sha256": "2f8200154d59e3ca25201c5bfcf5b0f2305e645ab86dd4852b7498227501270e",
+      "source": "scripts/text_eval/prepare_training_data.py",
+      "workspace_path": "code/scripts/text_eval/prepare_training_data.py"
+    },
+    {
+      "families": [
+        "theory_and_mechanism"
+      ],
+      "sha256": "a48d620666fc3f55c90bec943db8688c3e3c28534ac07ed90d9a705b4d74e7f4",
+      "source": "scripts/theory_B_floor_higher_order.py",
+      "workspace_path": "code/scripts/theory_B_floor_higher_order.py"
+    },
+    {
+      "families": [
+        "shared_rope_and_training"
+      ],
+      "sha256": "7db9c9a7a2aa314a7730b67d523c60207c9d55915f2bd561218487e62931da19",
+      "source": "scripts/train.py",
+      "workspace_path": "code/scripts/train.py"
+    },
+    {
+      "families": [
+        "theory_and_mechanism"
+      ],
+      "sha256": "11dd45c61ffdaeeb59f8c7b00e7a8c59d8dad0d956c4532fabe51b5d6315c20a",
+      "source": "scripts/verify_tau_unified.py",
+      "workspace_path": "code/scripts/verify_tau_unified.py"
+    },
+    {
+      "families": [
+        "supporting_video_dit"
+      ],
+      "sha256": "4bcc6c4cc22492041406f854a03c0e015e86ad1cb2bfc50fd63e7ef815061020",
+      "source": "scripts/video_temporal/eval_32f_indist.py",
+      "workspace_path": "code/scripts/video_temporal/eval_32f_indist.py"
+    },
+    {
+      "families": [
+        "supporting_video_dit"
+      ],
+      "sha256": "117fda2f4d8b6ece6cc5c5811ea46f607a7de3aea72f88bdaddcce3098ee4f4f",
+      "source": "scripts/video_temporal/eval_perframe_accuracy.py",
+      "workspace_path": "code/scripts/video_temporal/eval_perframe_accuracy.py"
+    },
+    {
+      "families": [
+        "supporting_video_dit"
+      ],
+      "sha256": "2677c6dadb0bfc27f13c6d37feb0a731493f48f542bc7f5f3934d2ea7a6e8397",
+      "source": "scripts/video_temporal/eval_riflex.py",
+      "workspace_path": "code/scripts/video_temporal/eval_riflex.py"
+    },
+    {
+      "families": [
+        "supporting_video_dit"
+      ],
+      "sha256": "211776e137ec731068f49c1c37001e5d3819acb8b4b7500ae6e659230f08eefd",
+      "source": "scripts/video_temporal/eval_temporal_precision.py",
+      "workspace_path": "code/scripts/video_temporal/eval_temporal_precision.py"
+    },
+    {
+      "families": [
+        "supporting_video_dit"
+      ],
+      "sha256": "7614e9c25b04b3b9bc9422d5802d6b9a282f2896c66dd2e3b14f5b2a2e1d1bc0",
+      "source": "scripts/video_temporal/run_dit_temporal.py",
+      "workspace_path": "code/scripts/video_temporal/run_dit_temporal.py"
+    },
+    {
+      "families": [
+        "supporting_video_dit"
+      ],
+      "sha256": "f8c07cfc6fb1c4290eaa41d23eebfc33c18569608466ffef20308c62a2c6d2a7",
+      "source": "scripts/video_temporal/run_perframe_accuracy.py",
+      "workspace_path": "code/scripts/video_temporal/run_perframe_accuracy.py"
+    },
+    {
+      "families": [
+        "supporting_video_dit"
+      ],
+      "sha256": "de553da76583b5782f962d8e1581f29ff448238491c53076c84dca49d4064f4c",
+      "source": "scripts/video_temporal/run_phase23_fvd_verify.py",
+      "workspace_path": "code/scripts/video_temporal/run_phase23_fvd_verify.py"
+    },
+    {
+      "families": [
+        "supporting_video_dit"
+      ],
+      "sha256": "0ffd75d3784e220f67d1b0499cc4d66944e2e8315093c56cbceb4da000f66873",
+      "source": "scripts/video_temporal/run_video_temporal.py",
+      "workspace_path": "code/scripts/video_temporal/run_video_temporal.py"
+    },
+    {
+      "families": [
+        "supporting_video_dit"
+      ],
+      "sha256": "7a40b4e5accb44f63dd0e9c2066a08d4c3e996edded1c3d7613c7b3d0ac4a62b",
+      "source": "scripts/video_temporal/run_video_temporal_allocation_sweep.py",
+      "workspace_path": "code/scripts/video_temporal/run_video_temporal_allocation_sweep.py"
+    },
+    {
+      "families": [
+        "supporting_video_dit"
+      ],
+      "sha256": "732eb2ba1a807018c1cf96c40b93350ea6b3b75ab3784f704cad31515733da50",
+      "source": "scripts/video_temporal/theory_predicts_experiment.py",
+      "workspace_path": "code/scripts/video_temporal/theory_predicts_experiment.py"
+    },
+    {
+      "families": [
+        "supporting_video_dit"
+      ],
+      "sha256": "22e78cd5c21947e99144418af5d2ca16d97c7df8795b282d8d0c5c97a931a7d0",
+      "source": "scripts/video_temporal/theory_predicts_v2.py",
+      "workspace_path": "code/scripts/video_temporal/theory_predicts_v2.py"
+    },
+    {
+      "families": [
+        "supporting_video_dit"
+      ],
+      "sha256": "0d7dcf9e998e1661246314f07a707dde077e13248299a75d873572f9d502dde0",
+      "source": "scripts/video_temporal/video_dit.py",
+      "workspace_path": "code/scripts/video_temporal/video_dit.py"
+    }
+  ],
+  "layout": "repo-relative symbolic links to canonical tracked sources",
+  "schema_version": 1
+}

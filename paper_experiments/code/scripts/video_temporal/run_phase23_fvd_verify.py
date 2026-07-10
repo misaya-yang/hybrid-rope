@@ -1,0 +1,1 @@
+../../../../scripts/video_temporal/run_phase23_fvd_verify.py

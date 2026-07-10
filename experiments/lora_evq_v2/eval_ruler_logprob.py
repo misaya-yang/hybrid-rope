@@ -22,6 +22,11 @@ import torch.nn.functional as F
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from eval_ruler import make_haystack, NOISE_SENTENCES
+from train_evq_lora import (
+    inject_inv_freq,
+    load_frequency_artifact,
+    verify_model_inv_freq,
+)
 
 
 def build_context_with_answer(context, question, answer, tokenizer, max_len):
@@ -187,22 +192,21 @@ def load_model(model_name, adapter_dir=None, inv_freq_path=None, bf16=True):
         model = PeftModel.from_pretrained(model, adapter_dir)
         print("[LORA] Adapter loaded")
 
-    if inv_freq_path and os.path.exists(inv_freq_path):
-        data = torch.load(inv_freq_path, map_location="cpu", weights_only=True)
-        inv_freq = data["inv_freq"] if isinstance(data, dict) else data
-        from train_evq_lora import inject_inv_freq, find_rotary_modules, compute_geometric_inv_freq
+    frequency_provenance = {"method": "model_default", "artifact": None}
+    if inv_freq_path:
+        inv_freq, data, frequency_provenance = load_frequency_artifact(
+            inv_freq_path,
+            expected_method="evq_cosh",
+        )
         inject_inv_freq(model, inv_freq)
-        mods = find_rotary_modules(model)
-        if mods:
-            actual = mods[0][1].inv_freq.detach().cpu().to(torch.float64)
-            geo = compute_geometric_inv_freq(128, 500000.0)
-            err_evq = (actual - inv_freq.to(torch.float64)).abs().max().item()
-            err_geo = (actual - geo).abs().max().item()
-            print(f"[ROPE] EVQ (τ={data.get('tau','?')}): "
-                  f"{'✅ EVQ' if err_evq < err_geo else '❌ GEO!'}")
+        verification = verify_model_inv_freq(model, inv_freq)
+        print(
+            f"[ROPE] {data['method']}: verified={verification['verified_count']}, "
+            f"max_error={verification['max_error']:.2e}"
+        )
 
     model.eval()
-    return model, tokenizer
+    return model, tokenizer, frequency_provenance
 
 
 # ──── Main ────
@@ -224,11 +228,9 @@ def main():
 
     inv_freq_path = None
     if args.adapter_dir and not args.base_only:
-        c = os.path.join(args.adapter_dir, "custom_inv_freq.pt")
-        if os.path.exists(c):
-            inv_freq_path = c
+        inv_freq_path = os.path.join(args.adapter_dir, "custom_inv_freq.pt")
 
-    model, tokenizer = load_model(
+    model, tokenizer, frequency_provenance = load_model(
         args.model_name,
         adapter_dir=None if args.base_only else args.adapter_dir,
         inv_freq_path=inv_freq_path)
@@ -291,7 +293,12 @@ def main():
                 row += f"    N/A"
         print(row)
 
-    out = {"variant": variant, "results": results, "eval_time_min": round(elapsed/60, 2)}
+    out = {
+        "variant": variant,
+        "frequency_provenance": frequency_provenance,
+        "results": results,
+        "eval_time_min": round(elapsed/60, 2),
+    }
     path = os.path.join(args.output_dir, f"ruler_logprob_{variant}.json")
     with open(path, "w") as f:
         json.dump(out, f, indent=2)

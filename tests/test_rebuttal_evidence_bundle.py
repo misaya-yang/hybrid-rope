@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CURATED = ROOT / "data" / "curated"
 REBUTTAL = ROOT / "rebuttal_7"
 CORE_ASSET_SUMMARY = REBUTTAL / "LOCAL_CORE_ASSET_PROMOTION_SUMMARY.md"
+GPT_PRO_CROSSWALK = REBUTTAL / "GPT_PRO_RESPONSE_CROSSWALK.md"
 
 EXPECTED_JSON = {
     "learnable_tau_128tok_evidence.json": "report-backed",
@@ -394,6 +395,35 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
         self.assertIn("git switch", text)
         self.assertIn("validate_rebuttal_evidence_bundle.py", text)
 
+    def test_rebuttal_7_indexes_both_review_packets_and_all_gpt_pro_questions(self):
+        readme = (REBUTTAL / "README.md").read_text(encoding="utf-8")
+        self.assertIn("neurips_2026_review_committee_output.md", readme)
+        self.assertIn("REVIEW_COMMITTEE_FULL_V2.md", readme)
+        self.assertIn("GPT_PRO_RESPONSE_CROSSWALK.md", readme)
+
+        text = GPT_PRO_CROSSWALK.read_text(encoding="utf-8")
+        for question in range(1, 18):
+            heading = f"### GPT-Q{question} "
+            self.assertEqual(text.count(heading), 1, heading)
+        self.assertIn("No new experiments", text)
+
+    def test_final_ignored_result_exclusions_are_explicit(self):
+        text = (REBUTTAL / "IGNORED_ASSET_RECONCILIATION.md").read_text(
+            encoding="utf-8"
+        )
+        for artifact in (
+            "350m_mla32_results_final.json",
+            "PHASE18_YARN_FT_REPORT.md",
+            "PHASE19_TAU1_vs_GEO_REPORT.md",
+            "PHASE22_23_MLA_TAU_SWEEP_REPORT.md",
+            "phase21b_quality_454m_report.json",
+            "test3_attention_prior_results.json",
+        ):
+            self.assertIn(artifact, text)
+        self.assertIn("not promoted", text)
+        self.assertIn("n=200", text)
+        self.assertIn("canonical result JSON is absent", text)
+
     def test_core_asset_summary_records_promoted_and_rejected_families(self):
         text = CORE_ASSET_SUMMARY.read_text(encoding="utf-8")
         self.assertIn("Primary I", text)
@@ -412,6 +442,9 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
         self.assertIn(
             "test_rebuttal_evidence_bundle.py", package_supplement.EXCLUDE_NAMES
         )
+        self.assertIn(
+            "test_paper_experiment_workspace.py", package_supplement.EXCLUDE_NAMES
+        )
         with tempfile.TemporaryDirectory() as tmp:
             stage = Path(tmp)
             renamed = stage / "data" / "curated" / "renamed_quarantine.json"
@@ -423,6 +456,15 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
                 package_supplement.scan_for_trace_only(stage),
                 ["data/curated/renamed_quarantine.json"],
             )
+
+    def test_reviewer_supplement_includes_rebuttal_evidence_entrypoints(self):
+        required = {
+            "scripts/core_text_phases/run_gqa_evq_experiment.py",
+            "scripts/core_text_phases/eval_dsr.py",
+            "scripts/core_text_phases/export_phase16_manifest.py",
+            "scripts/core_text_phases/phase18_base_generalization_sweep.py",
+        }
+        self.assertTrue(required.issubset(package_supplement.ALLOWLIST))
 
     def test_phase16_exporter_reconstructs_the_portable_99_row_schema(self):
         with tempfile.TemporaryDirectory() as tmp:

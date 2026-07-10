@@ -20,7 +20,7 @@
 - 用 99-run、base-10K pilot、learnable-tau 记录、MLA channel-count pilot、Primary-I seedwise data 回答审稿人认为“完全缺失”的多项证据；
 - 给出完整 rerun path，说明历史原始件不完整不等于不可复现。
 
-仍需未来重跑才能升级的，是 tuned-YaRN leaderboard、Primary-II full 3-seed table、Primary-I AR exact、MLA direct tau convention ablation 和 trained `L_eff^J/R_F` measurement。这些限制主张强度，但不推翻已报告的 matched-scale、seed-scoped 或 scarce-channel结论。
+仍需未来重跑才能升级的，是 tuned-YaRN leaderboard、Primary-II full 3-seed table、MLA direct tau convention ablation 和 trained `L_eff^J/R_F` measurement。Primary-I AR exact 已从 tracked raw payload 中恢复，不再属于待重跑项。这些限制主张强度，但不推翻已报告的 matched-scale、seed-scoped 或 scarce-channel 结论。
 
 ## 1. What remains defended
 
@@ -41,7 +41,7 @@
 | `L^-1/2` depends on diffuse/Pearson choices; 0.465 vs 0.500 | **Operating-law identity is not the claim; basin membership is.** | 99-run asset gives top-3 8/9 and all optima within 1.5x; paper labels prefactor empirical. | Lead with empirical basin result. Say the exponent is structural within the stated model and the deployed value is a robust default, not unique global optimum. |
 | Pure-tether at tau=4 is not quantitatively controlled | **A missing mechanism diagnostic, not a failed empirical result.** Exact cosh allocation is used in training; the Taylor truncation is not used to generate frequencies. | `scripts/lib/rope/schedules.py`; paper explicitly says forced residual is nonzero | Clarify that empirical PPL/PK results do not assume the Taylor approximation is numerically exact at tau=4. Keep `R_F` as a future falsification test. |
 | Waterbed inequality does not prove PPL tradeoff | **Correct interpretation boundary.** It proves an allocation-divergence bound; PPL tradeoff is empirical. | `paper/sections/03_theory.tex`; multiscale PPL table | Use “consistent with” for PPL, while defending the mathematical bound on its own terms. |
-| Realistic attention-distance prior is untested | **Partly false as a repository claim, but not clean enough for a headline.** Real GPT-2 attention extraction and power-law analysis exist; aggregate fit is strong but heads are heterogeneous. | `scripts/m4_max_36gb/test3_attention_prior.py`; `results/m4_max_36gb/test3_attention_prior_results.json` | Do not overclaim closure. State that the submission’s theorem is conditional and functional exact-kernel validation is the main check; empirical-prior analysis is an available follow-up. |
+| Realistic attention-distance prior is untested | **Not closed by the current reviewer-grade assets.** Local extraction code and partial traces exist, but their summaries are internally inconsistent and the cited canonical result JSON is absent. | `scripts/m4_max_36gb/test3_attention_prior.py`; ignored local traces only | State that the theorem is conditional and functional exact-kernel validation is the current check. Do not present the local prior traces as a completed empirical-prior result. |
 | Global allocation vs per-head specialization | **Valid extension, not a contradiction.** A global initializer and learned per-head dynamics act at different stages. | `results/attention_viz/attention_stats.npz`; paper Fig. 6 | Defend stage distinctness; per-head tau/CARoPE composition remains future work. |
 
 ### R1 ready paragraph
@@ -60,7 +60,7 @@
 | Figure 8/Table 21 inconsistent | **Real presentation error; underlying NLL conclusion survives.** | `data/curated/quality_454m_full_eval.json`; `rebuttal/FIGURE_TABLE_AUDIT.md` | Disclose n=200 stale panel and 26.6→24.6 erratum. State NLL values unchanged and use n=2086 aggregate as source of truth. |
 | Figure 9/Table 20 inconsistent | **Real stale visualization; qualitative multiscale direction survives.** | `paper/tables/table1_multiscale_raw_ppl.tex`; `rebuttal/FIGURE_TABLE_AUDIT.md` | Correct 454M interpretation to -13.3%; -81.2% belongs to progressive training. Keep Table 20 as heterogeneous supporting consistency, not controlled scaling law. |
 | Statistical treatment for Primary I | **Seedwise evidence is already available.** EVQ+YaRN exceeds Geo+YaRN at 8K by +38/+42/+36 pp; EVQ raw exceeds Geo raw by +14/+8/+16 pp. | `data/curated/table2_evq_yarn_454m_passkey_10pct.json` | Report minimum paired direction, not a p-value with n=3. Use mean±std already printed. |
-| PK is not AR exact | **Already defined throughout.** | abstract, Sec. 4.1, curated protocol | Repeat definition. The conclusion is matched-scale teacher-forced retrieval, not generation exactness. |
+| PK is not AR exact | **Metric distinction retained; AR endpoint recovered separately.** At 8K, Geo+YaRN has 61.3% TF retrieval but 0.0% AR exact in all seeds; EVQ+YaRN has 58.0% mean AR exact (58/18/98%). | `data/curated/primary1_evq_yarn_10pct_raw.json` | Report TF NLL-gap retrieval and AR exact side by side. Preserve the wide seed range and do not relabel either endpoint. |
 | 1B reversal means benefit vanishes with training | **Reviewer comparison is confounded.** The 1B run changes L_train from 8K to 4K and data/schedule, and is single seed; it is not a token-only continuation of the primary 500M/8K 3-seed anchor. | `paper/REBUTTAL_PLAYBOOK.md`; `scripts/core_text_phases/run_350m_4k_1b.sh` | Defend the primary conclusion. Present the row as schedule sensitivity and note EVQ+YaRN+FT remains -2.5%; do not call it saturation proof. |
 | Manuscript/repo is not reproducible | **Overstated.** Architecture/config tables, locked requirements, canonical schedule, training/eval entrypoints, data-prep and curated expected outputs exist. Historical raw provenance is not required to rerun. | `docs/overview/REPRODUCE.md`; `docs/overview/DATA_PREPARATION.md`; `scripts/package_supplement.py`; code tests | Answer with exact rerun paths and expected directional gates. Do not volunteer machine-loss history in the rebuttal. |
 
@@ -116,7 +116,7 @@ Concrete paths:
 | --- | --- | --- | --- |
 | P0 if compute is available | Exact L=128 Geo/DAPE matched seeds 137/256 | upgrades the remaining seed-scoped baseline contrast; fixed EVQ already has a 3-seed aggregate | reconstruct the documented L=128 protocol; do not mislabel the current L=256 `phase11b` runner as Table 4 |
 | P1 | Geo/EVQ YaRN scale sweep | upgrades matched-scale conclusion to tuned-scale robustness | adapt existing YaRN evaluators / `phase14c_multiscale_evq_yarn.py` |
-| P1 | Primary I AR exact | adds generation endpoint without changing PK definition | `scripts/core_text_phases/eval_passkey.py` / supporting evaluator |
+| Done | Primary I AR exact recovery | adds the generation endpoint without changing PK definition | recovered tracked Primary-I raw payload |
 | P1 | MLA tau=d_rope/sqrt(L) | tests operating convention directly | `run_gqa_evq_experiment.py` with explicit tau |
 | P2 | trained `L_eff^J` and `R_F` | strengthens theory mechanism rather than empirical conclusion | existing attention extraction/analysis scripts |
 

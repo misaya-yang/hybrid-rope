@@ -2,7 +2,7 @@
 
 ## Decision
 
-The first server allocation should not go directly to a new 7B-family fine-tune. The simulated AC explicitly makes Q1–Q3, Q5, Q7, and Q9 acceptance-critical. Q1–Q2 are now fixed locally; server time should first close Primary II seeds, tuned-base controls, the MLA convention ablation, and Primary I autoregressive evaluation.
+The first server allocation should not go directly to a new 7B-family fine-tune. The simulated AC explicitly makes Q1–Q3, Q5, Q7, and Q9 acceptance-critical. Q1–Q2 are fixed locally and Q9 is closed from the recovered Primary-I raw payload; future server time should first close Primary II seeds, tuned-base controls, and the MLA convention ablation.
 
 The proposed “7B experiment” remains important, but for rebuttal continuity it should be instantiated first as a corrected matched **LLaMA-3-8B-Instruct** LoRA experiment, because that is the model already reported. A new 7B model is useful as a later cross-model test of the rank-threshold hypothesis, not as a replacement for the broken matched control.
 
@@ -44,12 +44,11 @@ The proposed “7B experiment” remains important, but for rebuttal continuity 
 - Metrics: PPL at 8K/16K/24K/32K, both raw and matched YaRN scale.
 - Decision rule: if tau=0.354 is competitive/better, revise the MLA operating convention; regardless of outcome, retain `K=d_rope/2` for quantization.
 
-#### P1.4 Primary I autoregressive exact match (Q9)
+#### Completed locally: Primary I autoregressive exact match (Q9)
 
-- Evaluation-only on the exact three Primary I checkpoints per method.
-- Use identical prompts, depths, trials, decoding parameters, and random seeds across Geo+YaRN and EVQ+YaRN.
-- Report NLL-gap retrieval and AR exact side-by-side; do not overwrite existing evaluation artifacts.
-- Decision rule: abstract may retain `100%` only with the explicit NLL-gap label. AR numbers must remain separate even if lower.
+- The tracked raw payload already contains the separate AR exact field for the exact three Primary-I seeds per method; no rerun is required for the rebuttal.
+- At 8K, Geo+YaRN is 0.0% AR exact in all seeds, while EVQ+YaRN is 58.0% mean (58/18/98%).
+- Report NLL-gap retrieval and AR exact side-by-side. The abstract may retain `100%` only with the explicit teacher-forced NLL-gap label.
 
 #### P1.5 L_eff^J measurement (Q8)
 

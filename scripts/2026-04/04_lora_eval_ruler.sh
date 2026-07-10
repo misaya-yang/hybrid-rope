@@ -56,6 +56,7 @@ for LABEL in base geo_s42_s1 evq_s42_s1 geo_s42_s2 geo_s43_s2 geo_s44_s2 evq_s42
     echo "========================================"
 
     ADAPTER_ARG=""
+    EXPECTED_METHOD_ARG=""
     if [ -z "${ADAPTER}" ]; then
         ADAPTER_ARG="--base_only"
     else
@@ -64,12 +65,19 @@ for LABEL in base geo_s42_s1 evq_s42_s1 geo_s42_s2 geo_s43_s2 geo_s44_s2 evq_s42
             continue
         fi
         ADAPTER_ARG="--adapter_dir ${ADAPTER}"
+        if [[ "${LABEL}" == geo_* ]]; then
+            EXPECTED_METHOD_ARG="--expected_rope_method native_geo"
+        else
+            EXPECTED_METHOD_ARG="--expected_rope_method evq_cosh"
+        fi
     fi
 
     /root/miniconda3/bin/python -u "${LORA}/eval_ruler.py" \
         --model_name "${MODEL}" \
         ${ADAPTER_ARG} \
+        ${EXPECTED_METHOD_ARG} \
         --output_dir "${RESULT}" \
+        --variant "${LABEL}" \
         --context_lengths "${LENGTHS}" \
         --n_trials ${TRIALS} \
         2>&1 | tee "${RESULT}/log_ruler_${LABEL}.txt"

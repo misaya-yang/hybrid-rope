@@ -1,0 +1,1 @@
+../../../../scripts/core_text_phases/make_artifact_manifest.py

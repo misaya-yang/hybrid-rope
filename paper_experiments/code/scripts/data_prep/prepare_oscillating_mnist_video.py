@@ -1,0 +1,1 @@
+../../../../scripts/data_prep/prepare_oscillating_mnist_video.py

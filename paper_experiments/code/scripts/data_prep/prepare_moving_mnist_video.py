@@ -1,0 +1,1 @@
+../../../../scripts/data_prep/prepare_moving_mnist_video.py

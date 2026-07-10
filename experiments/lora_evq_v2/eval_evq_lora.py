@@ -40,6 +40,17 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+from train_evq_lora import (
+    inject_inv_freq,
+    load_frequency_artifact,
+    public_model_identifier,
+    verify_model_inv_freq,
+)
+
 
 # ---------------------------------------------------------------------------
 # Model loading
@@ -89,26 +100,22 @@ def load_model_and_tokenizer(
         model = PeftModel.from_pretrained(model, adapter_dir)
         print("[LORA] Adapter loaded (no merge, full-precision inference)")
 
-    if inv_freq_path and os.path.exists(inv_freq_path):
-        print(f"[ROPE] Loading custom inv_freq from {inv_freq_path}")
-        data = torch.load(inv_freq_path, map_location="cpu", weights_only=True)
-        inv_freq = data["inv_freq"] if isinstance(data, dict) else data
-        from train_evq_lora import inject_inv_freq, find_rotary_modules, compute_geometric_inv_freq
+    frequency_provenance = {"method": "model_default", "artifact": None}
+    if inv_freq_path:
+        inv_freq, data, frequency_provenance = load_frequency_artifact(
+            inv_freq_path,
+            expected_method="evq_cosh",
+        )
         result = inject_inv_freq(model, inv_freq)
-        # Verify injection
-        mods = find_rotary_modules(model)
-        if mods:
-            actual = mods[0][1].inv_freq.detach().cpu().to(torch.float64)
-            expected = inv_freq.detach().cpu().to(torch.float64)
-            geo = compute_geometric_inv_freq(128, 500000.0)
-            err_evq = (actual - expected).abs().max().item()
-            err_geo = (actual - geo).abs().max().item()
-            print(f"[ROPE] Injected into {result['patched_count']} modules (τ={data.get('tau', '?')})")
-            print(f"[ROPE] Verify: vs_EVQ={err_evq:.2e}, vs_GEO={err_geo:.2e} "
-                  f"{'✅ EVQ active' if err_evq < err_geo else '❌ STILL GEOMETRIC!'}")
+        verification = verify_model_inv_freq(model, inv_freq)
+        print(
+            f"[ROPE] Injected into {result['patched_count']} modules "
+            f"({data['method']}); verified={verification['verified_count']}, "
+            f"max_error={verification['max_error']:.2e}"
+        )
 
     model.eval()
-    return model, tokenizer
+    return model, tokenizer, frequency_provenance
 
 
 # ---------------------------------------------------------------------------
@@ -465,12 +472,10 @@ def main():
     # Determine inv_freq path
     inv_freq_path = None
     if args.adapter_dir and not args.base_only:
-        candidate = os.path.join(args.adapter_dir, "custom_inv_freq.pt")
-        if os.path.exists(candidate):
-            inv_freq_path = candidate
+        inv_freq_path = os.path.join(args.adapter_dir, "custom_inv_freq.pt")
 
     # Load model
-    model, tokenizer = load_model_and_tokenizer(
+    model, tokenizer, frequency_provenance = load_model_and_tokenizer(
         model_name=args.model_name,
         adapter_dir=None if args.base_only else args.adapter_dir,
         inv_freq_path=inv_freq_path,
@@ -479,7 +484,11 @@ def main():
     )
 
     variant_name = "base_instruct" if args.base_only else "evq_lora"
-    all_results = {"variant": variant_name, "model": args.model_name}
+    all_results = {
+        "variant": variant_name,
+        "model": public_model_identifier(args.model_name),
+        "frequency_provenance": frequency_provenance,
+    }
 
     # PPL
     if args.eval_ppl and not args.no_ppl:

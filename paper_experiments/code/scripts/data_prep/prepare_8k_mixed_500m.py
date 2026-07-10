@@ -1,0 +1,1 @@
+../../../../scripts/data_prep/prepare_8k_mixed_500m.py

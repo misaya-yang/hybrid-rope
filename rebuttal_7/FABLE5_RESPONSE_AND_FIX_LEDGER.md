@@ -16,7 +16,7 @@ Overall readiness is `draft_with_placeholders`. The response should lead with th
 2. Primary II seeds: Q3.
 3. Nearest-neighbor tuned-base controls: Q5–Q6.
 4. MLA convention ablation: Q7.
-5. Autoregressive exact-match evaluation and metric naming: Q9.
+5. Recovered autoregressive exact match and metric naming: Q9.
 6. Trained-attention validation: Q8.
 
 The proposed 7B-class fine-tuning experiment addresses Q18 and deployment scope, but it is not ahead of the AC-critical items above. Because the submitted supporting row is LLaMA-3-8B-Instruct, the cleanest rebuttal repair is a matched 8B Geo/EVQ rerun; introducing a different 7B family first would add a new confound.
@@ -33,7 +33,7 @@ We audited the QuALITY chain from the recovered full-evaluation aggregate throug
 
 The review packet's `+0.2pp` summary appears to be a transcription/arithmetic error: the printed 8K-raw entries are `26.8 - 24.6 = +2.2pp`. The manuscript nevertheless used that one near-floor row too strongly. We removed it as a downstream endpoint, now list all four rounded accuracy deltas (`+0.7/+2.2/+0.1/-0.4pp`), and state that they have no stable direction. The retained probability-level observation is the 8K-raw gold-answer-NLL change (`3.202→2.239`, `-30.1%`), while QuALITY accuracy is treated as inconclusive.
 
-### Acceptance-critical empirical gaps (F5-Q3, Q5–Q9; placeholders)
+### Acceptance-critical empirical gaps (F5-Q3, Q5–Q8; placeholders)
 
 - **Primary II seeds (Q3):** the submitted Geo/DAPE/EVQ rows remain a seed-42 diagnostic. `[Insert exact 128→8K seeds 137/256, per-seed values, mean/std, and paired deltas.]` The recovered L=256 raw/YaRN three-seed records are portable in `data/curated/phase11_l256_3seed_recovered.json`, but are a different protocol and contain no DAPE row; they cannot substitute for this replication.
 - **Tuned base and b=10K (Q5–Q6):** the recovered raw-backed 151.9M/L=512 seed-42 pilot supports only that the direction appears at base 10K as well as 500K. The acceptance-critical closure still uses the 125M, `L_train=128` anchor with identical data/tokens/optimizer/seeds: `[Insert Geo b∈{10K,100K,500K,2M}, EVQ b=500K, and at b=10K bare-rule versus c_pred results.]`

@@ -10,6 +10,7 @@ tree for common identity and server-path leaks before writing a zip file.
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import shutil
 import zipfile
@@ -43,8 +44,12 @@ ALLOWLIST = [
     "scripts/lib",
     "scripts/core_text_phases/__init__.py",
     "scripts/core_text_phases/run_evq_sweep.py",
+    "scripts/core_text_phases/run_gqa_evq_experiment.py",
+    "scripts/core_text_phases/eval_dsr.py",
     "scripts/core_text_phases/phase14c_multiscale_evq_yarn.py",
     "scripts/core_text_phases/phase16_formula_optimality_sweep.py",
+    "scripts/core_text_phases/export_phase16_manifest.py",
+    "scripts/core_text_phases/phase18_base_generalization_sweep.py",
     "scripts/core_text_phases/phase21b_quality_eval_clean.py",
     "scripts/figures",
     "scripts/supporting_eval/__init__.py",
@@ -55,6 +60,8 @@ ALLOWLIST = [
 EXCLUDE_NAMES = {
     "__pycache__",
     ".DS_Store",
+    "test_paper_experiment_workspace.py",
+    "test_rebuttal_evidence_bundle.py",
     "unused",
 }
 
@@ -109,6 +116,19 @@ def scan_for_leaks(stage: Path) -> list[str]:
     return hits
 
 
+def scan_for_trace_only(stage: Path) -> list[str]:
+    """Reject quarantined evidence even if its filename changes."""
+    hits: list[str] = []
+    for path in sorted(stage.rglob("*.json")):
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+            continue
+        if isinstance(payload, dict) and payload.get("provenance_status") == "trace-only":
+            hits.append(str(path.relative_to(stage)))
+    return hits
+
+
 def write_zip(stage: Path, output: Path) -> None:
     if output.exists():
         output.unlink()
@@ -135,6 +155,12 @@ def main() -> None:
         for hit in hits:
             print(f"LEAK-CHECK-FAIL {hit}")
         raise SystemExit("Supplement leak check failed; archive not written.")
+
+    trace_only_hits = scan_for_trace_only(STAGE)
+    if trace_only_hits:
+        for hit in trace_only_hits:
+            print(f"TRACE-ONLY-CHECK-FAIL {hit}")
+        raise SystemExit("Trace-only evidence must not enter the reviewer supplement.")
 
     write_zip(STAGE, args.output)
     print(f"Wrote {args.output}")

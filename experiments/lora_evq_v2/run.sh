@@ -145,6 +145,7 @@ run_ruler_base() {
         --model_name "${MODEL}" \
         --base_only \
         --output_dir "${RESULT_DIR}" \
+        --variant base \
         --context_lengths "4096,8192,16384,32768" \
         --n_trials 20
     echo ""
@@ -157,7 +158,9 @@ run_ruler_evq() {
     python "${SCRIPT_DIR}/eval_ruler.py" \
         --model_name "${MODEL}" \
         --adapter_dir "${CKPT_DIR}" \
+        --expected_rope_method evq_cosh \
         --output_dir "${RESULT_DIR}" \
+        --variant evq_r64_tau1414 \
         --context_lengths "4096,8192,16384,32768" \
         --n_trials 20
     echo ""
