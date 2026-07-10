@@ -25,6 +25,7 @@ DEFAULT_QUALITY_SOURCE = (
     / "phase21b_quality_454m_full_eval.json"
 )
 DEFAULT_BASE_SOURCE_DIR = ROOT / "results" / "core_text" / "phase18_base_sweep"
+DEFAULT_PHASE11B_SOURCE_DIR = ROOT / "results" / "core_text" / "phase11b"
 DEFAULT_OUTPUT_DIR = ROOT / "data" / "curated"
 
 BASE_RUN_PATHS = {
@@ -38,6 +39,8 @@ EXPECTED_SHA256 = {
     "mla": "1e44d30bb880e4b7427ae55bd7034782989152bd2afca9217495f9b8ece30953",
     "phase11_raw": "6bdf97335365ea3a92c15ff84fc52f292ddad96b0f6e142f8b98199295dffa30",
     "phase11_yarn": "1f9550c46fa5b51b24b4d2e805c4dbbba8d639c19f664e812072bf8659b85321",
+    "phase11b_scaling": "b8ae71708f18b54ed1249c77d26ba2e7aac6d4871a445648487c855740de6d94",
+    "phase11b_dape": "44da360db7e8d0d6f964dde59ca52f294a3005d3cb820b6a066406164ef6f70d",
     "quality": "5fc3254cb7b44a918328056ccd505d01e5539dc596d4c06273c9914ec93e3caa",
     "base_10000_geo": "c367ff7ae073adb2c811a38f223305f96d44789c6fc2b293df2ba1675fc466d0",
     "base_10000_evq": "0821423633d821566bd5414e4fde75bb5a4f175197f8242bd00407d79d7571e5",
@@ -135,6 +138,62 @@ def build_phase11_snapshot(raw_source: Path, yarn_source: Path) -> dict[str, Any
         ),
         "raw_runs": raw,
         "yarn_runs": yarn,
+    }
+
+
+def build_phase11b_snapshot(
+    scaling_source: Path, dape_source: Path
+) -> dict[str, Any]:
+    scaling = load_verified_json(
+        scaling_source, EXPECTED_SHA256["phase11b_scaling"]
+    )
+    dape = load_verified_json(dape_source, EXPECTED_SHA256["phase11b_dape"])
+    if len(scaling) != 9 or len(dape) != 6:
+        raise ValueError("Expected nine scaling and six DAPE Phase11B run records")
+    seeds = sorted({record["seed"] for record in [*scaling.values(), *dape.values()]})
+    if seeds != [42, 137, 256]:
+        raise ValueError("Phase11B sources do not contain seeds [42, 137, 256]")
+    if any(record.get("use_dape") for record in scaling.values()):
+        raise ValueError("Phase11B scaling source unexpectedly contains DAPE runs")
+    if any(not record.get("use_dape") for record in dape.values()):
+        raise ValueError("Phase11B DAPE source unexpectedly contains plain runs")
+    return {
+        "schema_version": 1,
+        "provenance_status": "raw-json-backed",
+        "artifact_role": (
+            "Portable copy of the ignored 125M Phase11B three-seed scaling "
+            "and DAPE-compatibility payloads."
+        ),
+        "sources": {
+            "scaling": {
+                "path_hint": "results/core_text/phase11b/results_125m_scaling.json",
+                "sha256": EXPECTED_SHA256["phase11b_scaling"],
+            },
+            "dape": {
+                "path_hint": "results/core_text/phase11b/results_125m_dape.json",
+                "sha256": EXPECTED_SHA256["phase11b_dape"],
+            },
+        },
+        "protocol": {
+            "model": "125M decoder-only transformer",
+            "train_length": 256,
+            "training_tokens": 100000000,
+            "dataset": "FineWeb-Edu",
+            "base": 500000.0,
+            "head_dim": 64,
+            "seeds": seeds,
+            "eval_lengths": [256, 512, 1024, 2048, 4096, 8192],
+            "dape": "Kerple bias plus learned attention-score MLP refinement",
+        },
+        "claim_boundary": (
+            "This is a separate L_train=256, 100M-token supporting protocol, "
+            "not the L_train=128, 15M-token Primary II Geo/DAPE/EVQ diagnostic. "
+            "It supports cross-scale plain-EVQ behavior and shows that EVQ+DAPE "
+            "does not improve on Geo+DAPE here; it must not be used to claim "
+            "EVQ-DAPE complementarity or to upgrade Primary II to three seeds."
+        ),
+        "scaling_runs": scaling,
+        "dape_runs": dape,
     }
 
 
@@ -298,6 +357,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         type=Path,
         default=phase11_dir / "results_phase11_yarn.json",
     )
+    parser.add_argument(
+        "--phase11b-source-dir", type=Path, default=DEFAULT_PHASE11B_SOURCE_DIR
+    )
     parser.add_argument("--quality-source", type=Path, default=DEFAULT_QUALITY_SOURCE)
     parser.add_argument(
         "--base-source-dir", type=Path, default=DEFAULT_BASE_SOURCE_DIR
@@ -305,7 +367,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--only",
         action="append",
-        choices=("mla", "phase11", "quality", "base"),
+        choices=("mla", "phase11", "phase11b", "quality", "base"),
         help="Build only the selected component; repeat for multiple components.",
     )
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
@@ -314,7 +376,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    components = args.only or ["mla", "phase11", "quality", "base"]
+    components = args.only or ["mla", "phase11", "phase11b", "quality", "base"]
     outputs: list[Path] = []
     if "mla" in components:
         outputs.append(args.output_dir / "table18_mla_3seed_aggregate.json")
@@ -324,6 +386,15 @@ def main() -> None:
         write_json(
             outputs[-1],
             build_phase11_snapshot(args.phase11_raw_source, args.phase11_yarn_source),
+        )
+    if "phase11b" in components:
+        outputs.append(args.output_dir / "phase11b_125m_l256_3seed.json")
+        write_json(
+            outputs[-1],
+            build_phase11b_snapshot(
+                args.phase11b_source_dir / "results_125m_scaling.json",
+                args.phase11b_source_dir / "results_125m_dape.json",
+            ),
         )
     if "quality" in components:
         outputs.append(args.output_dir / "quality_454m_full_eval.json")

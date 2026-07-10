@@ -34,7 +34,7 @@ Phase 8–21 核心文本实验链，直接支撑论文所有 claims。本目录
 | `run_evq_sweep.py` | Table 1, Fig 6 — multi-scale τ-sweep | 50M/125M/350M/500M | multi |
 | `phase11_L256_extrap.py` | Fig 3 (b,c) — PE-dominant raw PPL | 350M | 42,123,7 |
 | `phase11_yarn_eval.py` | Fig 3 (c) — +YaRN PPL curves | 350M | 42,123,7 |
-| `phase11b_125m_dape.py` | Fig 3 (a), Table 4 — EVQ vs DAPE | 125M | 42,123,7 |
+| `phase11b_125m_dape.py` | Fig 3 (a), Table 4 — EVQ vs DAPE | 125M | 42,137,256 |
 | `phase11c_454m_scaling.py` | Table 4 — 454M token scaling | 454M | single |
 | `phase11e_continued_pretrain.py` | Supporting — Geo→EVQ retrofit | 454M | configurable |
 | `phase11f_token_scaling_454m.py` | Supporting — token scaling trend | 454M | configurable |

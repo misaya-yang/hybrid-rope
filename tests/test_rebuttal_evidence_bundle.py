@@ -23,11 +23,13 @@ from scripts.core_text_phases import export_phase16_manifest
 ROOT = Path(__file__).resolve().parents[1]
 CURATED = ROOT / "data" / "curated"
 REBUTTAL = ROOT / "rebuttal_7"
+CORE_ASSET_SUMMARY = REBUTTAL / "LOCAL_CORE_ASSET_PROMOTION_SUMMARY.md"
 
 EXPECTED_JSON = {
     "learnable_tau_128tok_evidence.json": "report-backed",
     "mla_channel_count_125m_pilot.json": "report-backed",
     "phase11_l256_3seed_recovered.json": "raw-json-backed",
+    "phase11b_125m_l256_3seed.json": "raw-json-backed",
     "phase16_99run_manifest.meta.json": "sanitized-run-manifest",
     "quality_454m_full_eval.json": "raw-json-backed",
     "table18_mla_3seed_aggregate.json": "raw-json-backed",
@@ -38,6 +40,7 @@ PUBLIC_BUNDLE_FILES = [
     *(CURATED / name for name in EXPECTED_JSON),
     CURATED / "phase16_99run_manifest.csv",
     REBUTTAL / "IGNORED_ASSET_RECONCILIATION.md",
+    CORE_ASSET_SUMMARY,
 ]
 
 
@@ -88,6 +91,52 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
         )
         self.assertEqual(len(data["raw_runs"]), 9)
         self.assertEqual(len(data["yarn_runs"]), 9)
+
+    def test_phase11b_builder_preserves_all_runs_and_protocol_boundary(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            scaling_source = Path(tmp) / "scaling.json"
+            dape_source = Path(tmp) / "dape.json"
+            scaling = {
+                f"125m_{method}_seed{seed}": {
+                    "run_id": f"125m_{method}_seed{seed}",
+                    "seed": seed,
+                    "ppl": {"256": 70.0, "8192": 200.0},
+                    "use_dape": False,
+                }
+                for method in ("geo", "evq2.0", "evq4.0")
+                for seed in (42, 137, 256)
+            }
+            dape = {
+                f"125m_{method}_dape_seed{seed}": {
+                    "run_id": f"125m_{method}_dape_seed{seed}",
+                    "seed": seed,
+                    "ppl": {"256": 68.0, "8192": 56.0},
+                    "use_dape": True,
+                }
+                for method in ("geo", "evq4.0")
+                for seed in (42, 137, 256)
+            }
+            scaling_source.write_text(json.dumps(scaling), encoding="utf-8")
+            dape_source.write_text(json.dumps(dape), encoding="utf-8")
+            expected = {
+                "phase11b_scaling": hashlib.sha256(
+                    scaling_source.read_bytes()
+                ).hexdigest(),
+                "phase11b_dape": hashlib.sha256(dape_source.read_bytes()).hexdigest(),
+            }
+            with mock.patch.dict(
+                build_rebuttal_evidence_bundle.EXPECTED_SHA256,
+                expected,
+            ):
+                built = build_rebuttal_evidence_bundle.build_phase11b_snapshot(
+                    scaling_source, dape_source
+                )
+
+            self.assertEqual(len(built["scaling_runs"]), 9)
+            self.assertEqual(len(built["dape_runs"]), 6)
+            self.assertEqual(built["protocol"]["seeds"], [42, 137, 256])
+            self.assertIn("L_train=256", built["claim_boundary"])
+            self.assertIn("not", built["claim_boundary"])
 
     def test_quality_asset_is_raw_backed_and_sanitized(self):
         data = load_json("quality_454m_full_eval.json")
@@ -281,6 +330,14 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
         self.assertIn("git fetch origin", text)
         self.assertIn("git switch", text)
         self.assertIn("validate_rebuttal_evidence_bundle.py", text)
+
+    def test_core_asset_summary_records_promoted_and_rejected_families(self):
+        text = CORE_ASSET_SUMMARY.read_text(encoding="utf-8")
+        self.assertIn("Phase11B", text)
+        self.assertIn("L_train=256", text)
+        self.assertIn("L_train=128", text)
+        self.assertIn("not promoted", text)
+        self.assertIn("no paper numbers", text.lower())
 
     def test_reviewer_supplement_includes_raw_base_and_excludes_internal_contract_test(self):
         self.assertNotIn(

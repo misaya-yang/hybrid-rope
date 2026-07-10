@@ -1,0 +1,267 @@
+{
+  "schema_version": 1,
+  "provenance_status": "raw-json-backed",
+  "artifact_role": "Portable copy of the ignored 125M Phase11B three-seed scaling and DAPE-compatibility payloads.",
+  "sources": {
+    "scaling": {
+      "path_hint": "results/core_text/phase11b/results_125m_scaling.json",
+      "sha256": "b8ae71708f18b54ed1249c77d26ba2e7aac6d4871a445648487c855740de6d94"
+    },
+    "dape": {
+      "path_hint": "results/core_text/phase11b/results_125m_dape.json",
+      "sha256": "44da360db7e8d0d6f964dde59ca52f294a3005d3cb820b6a066406164ef6f70d"
+    }
+  },
+  "protocol": {
+    "model": "125M decoder-only transformer",
+    "train_length": 256,
+    "training_tokens": 100000000,
+    "dataset": "FineWeb-Edu",
+    "base": 500000.0,
+    "head_dim": 64,
+    "seeds": [
+      42,
+      137,
+      256
+    ],
+    "eval_lengths": [
+      256,
+      512,
+      1024,
+      2048,
+      4096,
+      8192
+    ],
+    "dape": "Kerple bias plus learned attention-score MLP refinement"
+  },
+  "claim_boundary": "This is a separate L_train=256, 100M-token supporting protocol, not the L_train=128, 15M-token Primary II Geo/DAPE/EVQ diagnostic. It supports cross-scale plain-EVQ behavior and shows that EVQ+DAPE does not improve on Geo+DAPE here; it must not be used to claim EVQ-DAPE complementarity or to upgrade Primary II to three seeds.",
+  "scaling_runs": {
+    "125m_geo_seed42": {
+      "run_id": "125m_geo_seed42",
+      "seed": 42,
+      "ppl": {
+        "256": 72.188,
+        "512": 57.483,
+        "1024": 112.172,
+        "2048": 212.359,
+        "4096": 272.373,
+        "8192": 371.603
+      },
+      "train_time_sec": 898.6,
+      "use_dape": false,
+      "inv_freq_hash": "23123293cf50"
+    },
+    "125m_geo_seed137": {
+      "run_id": "125m_geo_seed137",
+      "seed": 137,
+      "ppl": {
+        "256": 72.79,
+        "512": 56.042,
+        "1024": 110.688,
+        "2048": 207.326,
+        "4096": 251.987,
+        "8192": 336.842
+      },
+      "train_time_sec": 898.7,
+      "use_dape": false,
+      "inv_freq_hash": "23123293cf50"
+    },
+    "125m_geo_seed256": {
+      "run_id": "125m_geo_seed256",
+      "seed": 256,
+      "ppl": {
+        "256": 71.203,
+        "512": 55.688,
+        "1024": 111.565,
+        "2048": 208.413,
+        "4096": 255.438,
+        "8192": 349.639
+      },
+      "train_time_sec": 898.8,
+      "use_dape": false,
+      "inv_freq_hash": "23123293cf50"
+    },
+    "125m_evq2.0_seed42": {
+      "run_id": "125m_evq2.0_seed42",
+      "seed": 42,
+      "ppl": {
+        "256": 73.869,
+        "512": 50.824,
+        "1024": 95.546,
+        "2048": 178.223,
+        "4096": 219.721,
+        "8192": 316.277
+      },
+      "train_time_sec": 899.0,
+      "use_dape": false,
+      "inv_freq_hash": "8cb894ddc2e5"
+    },
+    "125m_evq2.0_seed137": {
+      "run_id": "125m_evq2.0_seed137",
+      "seed": 137,
+      "ppl": {
+        "256": 72.663,
+        "512": 51.313,
+        "1024": 95.409,
+        "2048": 175.664,
+        "4096": 223.11,
+        "8192": 311.088
+      },
+      "train_time_sec": 899.6,
+      "use_dape": false,
+      "inv_freq_hash": "8cb894ddc2e5"
+    },
+    "125m_evq2.0_seed256": {
+      "run_id": "125m_evq2.0_seed256",
+      "seed": 256,
+      "ppl": {
+        "256": 73.749,
+        "512": 49.488,
+        "1024": 84.147,
+        "2048": 155.355,
+        "4096": 187.88,
+        "8192": 285.226
+      },
+      "train_time_sec": 899.9,
+      "use_dape": false,
+      "inv_freq_hash": "8cb894ddc2e5"
+    },
+    "125m_evq4.0_seed42": {
+      "run_id": "125m_evq4.0_seed42",
+      "seed": 42,
+      "ppl": {
+        "256": 73.652,
+        "512": 49.357,
+        "1024": 78.698,
+        "2048": 143.151,
+        "4096": 182.054,
+        "8192": 269.05
+      },
+      "train_time_sec": 899.4,
+      "use_dape": false,
+      "inv_freq_hash": "78ebc7bc32db"
+    },
+    "125m_evq4.0_seed137": {
+      "run_id": "125m_evq4.0_seed137",
+      "seed": 137,
+      "ppl": {
+        "256": 73.769,
+        "512": 47.1,
+        "1024": 75.385,
+        "2048": 132.103,
+        "4096": 165.514,
+        "8192": 245.073
+      },
+      "train_time_sec": 899.5,
+      "use_dape": false,
+      "inv_freq_hash": "78ebc7bc32db"
+    },
+    "125m_evq4.0_seed256": {
+      "run_id": "125m_evq4.0_seed256",
+      "seed": 256,
+      "ppl": {
+        "256": 71.442,
+        "512": 48.071,
+        "1024": 76.194,
+        "2048": 135.55,
+        "4096": 163.24,
+        "8192": 249.958
+      },
+      "train_time_sec": 899.8,
+      "use_dape": false,
+      "inv_freq_hash": "78ebc7bc32db"
+    }
+  },
+  "dape_runs": {
+    "125m_geo_dape_seed42": {
+      "run_id": "125m_geo_dape_seed42",
+      "seed": 42,
+      "ppl": {
+        "256": 68.344,
+        "512": 40.918,
+        "1024": 47.917,
+        "2048": 56.533,
+        "4096": 44.046,
+        "8192": 56.353
+      },
+      "train_time_sec": 1594.8,
+      "use_dape": true,
+      "inv_freq_hash": "23123293cf50"
+    },
+    "125m_geo_dape_seed137": {
+      "run_id": "125m_geo_dape_seed137",
+      "seed": 137,
+      "ppl": {
+        "256": 69.294,
+        "512": 40.041,
+        "1024": 47.397,
+        "2048": 56.739,
+        "4096": 43.253,
+        "8192": 55.675
+      },
+      "train_time_sec": 1593.5,
+      "use_dape": true,
+      "inv_freq_hash": "23123293cf50"
+    },
+    "125m_geo_dape_seed256": {
+      "run_id": "125m_geo_dape_seed256",
+      "seed": 256,
+      "ppl": {
+        "256": 67.864,
+        "512": 40.804,
+        "1024": 48.287,
+        "2048": 55.79,
+        "4096": 43.618,
+        "8192": 55.738
+      },
+      "train_time_sec": 1595.3,
+      "use_dape": true,
+      "inv_freq_hash": "23123293cf50"
+    },
+    "125m_evq4.0_dape_seed42": {
+      "run_id": "125m_evq4.0_dape_seed42",
+      "seed": 42,
+      "ppl": {
+        "256": 68.852,
+        "512": 41.467,
+        "1024": 48.419,
+        "2048": 57.406,
+        "4096": 44.649,
+        "8192": 57.042
+      },
+      "train_time_sec": 1606.3,
+      "use_dape": true,
+      "inv_freq_hash": "78ebc7bc32db"
+    },
+    "125m_evq4.0_dape_seed137": {
+      "run_id": "125m_evq4.0_dape_seed137",
+      "seed": 137,
+      "ppl": {
+        "256": 71.432,
+        "512": 41.06,
+        "1024": 48.56,
+        "2048": 57.448,
+        "4096": 44.301,
+        "8192": 56.488
+      },
+      "train_time_sec": 1609.1,
+      "use_dape": true,
+      "inv_freq_hash": "78ebc7bc32db"
+    },
+    "125m_evq4.0_dape_seed256": {
+      "run_id": "125m_evq4.0_dape_seed256",
+      "seed": 256,
+      "ppl": {
+        "256": 69.409,
+        "512": 41.216,
+        "1024": 48.59,
+        "2048": 57.44,
+        "4096": 44.356,
+        "8192": 57.001
+      },
+      "train_time_sec": 1612.3,
+      "use_dape": true,
+      "inv_freq_hash": "78ebc7bc32db"
+    }
+  }
+}

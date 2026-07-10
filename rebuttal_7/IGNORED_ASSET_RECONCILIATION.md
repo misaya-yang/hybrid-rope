@@ -33,6 +33,7 @@ The ignored root `RESULT_PROVENANCE_MANIFEST.md` and tracked `docs/overview/RESU
 | --- | --- | --- | --- |
 | `data/curated/table18_mla_3seed_aggregate.json` | `raw-json-backed` | SHA256 `1e44d30...30953` | Primary III per-seed/aggregate MLA PPL and matched-scale YaRN analysis. |
 | `data/curated/phase11_l256_3seed_recovered.json` | `raw-json-backed` | Raw SHA256 `6bdf9733...ffa30`; scaling SHA256 `1f9550c4...85321` | L=256 Geo/EVQ/YaRN/NTK archival analysis only; not a substitute for L=128 Primary II replication. |
+| `data/curated/phase11b_125m_l256_3seed.json` | `raw-json-backed` | Scaling SHA256 `b8ae7170...de6d94`; DAPE SHA256 `44da360d...f70d` | L=256/100M three-seed plain scaling and DAPE compatibility; establishes a non-complementarity boundary, not a replacement for L=128 Primary II. |
 | `data/curated/phase16_99run_manifest.csv` | `sanitized-run-manifest` | 99 rows; 45 pilot + 54 confirm; CSV hash in sidecar | Supports the reported basin/rank audit and run coverage, not checkpoint-level reproduction. |
 | `data/curated/learnable_tau_128tok_evidence.json` | `report-backed` | Two tracked experiment reports | Final tau endpoints and reported PPL only; no per-step trajectory claim. |
 | `data/curated/mla_channel_count_125m_pilot.json` | `report-backed` | Tracked 125M compression-ablation report | Single-seed qualitative scarce-channel support; not a d_eff/tau convention ablation. |
@@ -45,19 +46,20 @@ The QuALITY aggregate and four base-pilot result JSONs were recovered in a secon
 
 - Keep `07 - rebuttal/`, broad `results/` outputs, checkpoints, copied repositories, logs, and machine-specific notes ignored.
 - Never use the repository root as a supplement archive.
-- Rebuild only the locally available sources with `python3 scripts/build_rebuttal_evidence_bundle.py --only phase11 --only quality --only base`; the script rejects unexpected source hashes. Rebuilding MLA additionally requires its exact ignored source JSON.
+- Rebuild only the locally available sources with `python3 scripts/build_rebuttal_evidence_bundle.py --only phase11 --only phase11b --only quality --only base`; the script rejects unexpected source hashes. Rebuilding MLA additionally requires its exact ignored source JSON.
 - Validate the portable bundle with `python3 scripts/validate_rebuttal_evidence_bundle.py`.
 - Treat a source mismatch as a new evidence-review event, not as permission to update the expected hash silently.
 
 ## Scientific impact of the recovery
 
-The recovery improves the rebuttal in five concrete ways.
+The recovery improves the rebuttal in six concrete ways.
 
 1. Primary III is now portable at per-seed resolution instead of depending on an ignored local result JSON or a paper-only aggregate.
 2. The 99-run formula-optimality evidence now has a portable run manifest with configurations, metrics, and `inv_freq` hashes.
 3. Phase11 archival records are no longer “missing,” but their protocol boundary is explicit: L=256 evidence cannot be repurposed as the requested L=128 Geo/DAPE/EVQ replication.
-4. QuALITY n=2,086 is raw-JSON-backed rather than report-only, while its near-random accuracy remains explicitly inconclusive.
-5. The base 10K/500K pilot is now source-hashed and portable, establishing only that the observed single-seed direction is not unique to base 500K.
+4. Phase11B now preserves all 15 L=256/100M three-seed runs. Plain EVQ scales consistently, while EVQ+DAPE does not improve on Geo+DAPE, so this evidence limits rather than upgrades the complementarity claim.
+5. QuALITY n=2,086 is raw-JSON-backed rather than report-only, while its near-random accuracy remains explicitly inconclusive.
+6. The base 10K/500K pilot is now source-hashed and portable, establishing only that the observed single-seed direction is not unique to base 500K.
 
 It also prevents two overclaims.
 
@@ -86,7 +88,7 @@ It also prevents two overclaims.
 
 **Status:** `PENDING-EXP`.
 
-**Recovered but insufficient:** `phase11_l256_3seed_recovered.json` contains three seeds for Geo, EVQ tau=2, and EVQ tau=4 at L_train=256. It is a different protocol and contains no DAPE row. The learnable-tau row at L_train=128 is already three-seed, but it is not the fixed Geo/DAPE/EVQ comparison.
+**Recovered but insufficient:** `phase11_l256_3seed_recovered.json` contains three seeds for Geo, EVQ tau=2, and EVQ tau=4 at L_train=256. `phase11b_125m_l256_3seed.json` additionally preserves three-seed Geo+DAPE and EVQ+DAPE rows, but it is a 100M-token L_train=256 protocol and finds no EVQ+DAPE advantage. Neither payload is the fixed L_train=128 Geo/DAPE/EVQ replication. The learnable-tau row at L_train=128 is already three-seed, but it is not that fixed comparison.
 
 **Response:** The submitted Geo/DAPE/EVQ diagnostic remains seed 42. We will not substitute the recovered L=256 sweep. The required closure is two additional matched L_train=128 seeds for Geo, DAPE, and fixed EVQ, with per-seed values and paired deltas; otherwise Primary II stays seed-scoped/supporting.
 
@@ -254,7 +256,7 @@ git pull --ff-only
 This is optional and should only be done on a machine that possesses the exact ignored source files:
 
 ```bash
-python3 scripts/build_rebuttal_evidence_bundle.py --only phase11 --only quality --only base
+python3 scripts/build_rebuttal_evidence_bundle.py --only phase11 --only phase11b --only quality --only base
 python3 scripts/validate_rebuttal_evidence_bundle.py
 ```
 
