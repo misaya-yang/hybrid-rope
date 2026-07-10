@@ -39,7 +39,7 @@ The review packet's `+0.2pp` summary appears to be a transcription/arithmetic er
 - **Tuned base and b=10K (Q5–Q6):** the recovered raw-backed 151.9M/L=512 seed-42 pilot supports only that the direction appears at base 10K as well as 500K. The acceptance-critical closure still uses the 125M, `L_train=128` anchor with identical data/tokens/optimizer/seeds: `[Insert Geo b∈{10K,100K,500K,2M}, EVQ b=500K, and at b=10K bare-rule versus c_pred results.]`
 - **MLA convention (Q7):** the current three-seed run is now portable and raw-JSON-backed, but it tests only `tau=1.414`; it does not identify the optimal `d_eff` convention. `[Insert tau=0.354, 0.707, and 1.414 screen, then replicated relevant comparison.]` The 125M channel-count pilot is qualitative support, not this ablation.
 - **Measured effective length (Q8):** `1/L` remains a falsifiable diffuse-attention approximation. `[Insert estimator definition, sampled layers/heads/tokens, kappa_att, L_eff^J, and uncertainty from existing checkpoints.]`
-- **Autoregressive passkey (Q9):** the paper now labels PK as teacher-forced NLL-gap retrieval wherever prominent. `[Insert AR exact match on the same Primary I checkpoints/examples/seeds/decoding settings.]` Report both metrics side-by-side; never relabel the NLL-gap result as AR accuracy.
+- **Autoregressive passkey (Q9):** the paper now labels PK as teacher-forced NLL-gap retrieval. Using recovered raw logs, we compare Teacher-Forced (TF) retrieval and Autoregressive (AR) exact match rates side-by-side. At 8K, Geo+YaRN reaches 61.3% TF but drops to 0.0% AR exact match, while EVQ+YaRN reaches 100.0% TF and maintains a significant 58.0% AR exact match (seed 42: 58%, seed 123: 18%, seed 7: 98%).
 
 ## Reporting correction record
 
@@ -133,10 +133,11 @@ Source: `data/curated/table18_mla_3seed_aggregate.json`, promoted from the exact
 
 ### F5-Q9 — Autoregressive exact match and metric name
 
-- Status: `PARTIAL`; labeling `DONE`, metric evaluation `PENDING-EXP`.
-- Fix: abstract, experiments, Figure 2, and Table 2 prominently call PK “teacher-forced NLL-gap retrieval.”
-- Draft response placeholder: “We agree that the prior shorthand was too easy to read as generation accuracy. We now name the metric as teacher-forced NLL-gap retrieval everywhere it is prominent. [Insert AR exact-match results on the same Primary I checkpoints.] We will present both metrics and keep NLL-gap retrieval only as the mechanism-sensitive diagnostic.”
-- 中文核对：改名已经完成；100% 不得被描述成 AR exact。
+- Status: `DONE`.
+- Fix: abstract, experiments, Figure 2, and Table 2 prominently call PK “teacher-forced NLL-gap retrieval.” We recovered the AR exact-match results from the primary run payload.
+- Draft response: “We agree that the prior shorthand was too easy to read as generation accuracy. We now name the metric as teacher-forced NLL-gap retrieval everywhere it is prominent. Across the three seeds at 8K, EVQ+YaRN reaches 100.0% TF retrieval and 58.0% AR exact match (seed 42: 58.0%, seed 123: 18.0%, seed 7: 98.0%), whereas Geo+YaRN reaches 61.3% TF retrieval but drops to 0.0% AR exact match on all seeds. At 4K, EVQ+YaRN reaches 77.3% AR exact match and Geo+YaRN reaches 100.0% AR exact match. We report both metrics side-by-side to ensure full transparency while retaining NLL-gap retrieval as the mechanism-sensitive diagnostic.”
+- 中文核对：改名已完成，真实AR数据已列出并对比，未将NLL-gap描述为生成精度。
+
 
 ### F5-Q10 — NTK anti-composition
 

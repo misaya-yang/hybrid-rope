@@ -141,11 +141,12 @@ It also prevents two overclaims.
 
 ### F5-Q9 — Autoregressive passkey exact match
 
-**Status:** `PARTIAL`; labeling fixed, evaluation pending.
+**Status:** `DONE`.
 
-**Evidence:** The paper now names PK as teacher-forced NLL-gap retrieval. Phase16 manifest fields keep retrieval rate and AR exact match separate.
+**Evidence:** The paper now names PK as teacher-forced NLL-gap retrieval. We successfully recovered the AR exact match rates from the tracked `data/curated/primary1_evq_yarn_10pct_raw.json` payload. At 8K, EVQ+YaRN reaches 100.0% TF retrieval and 58.0% AR exact match, whereas Geo+YaRN reaches 61.3% TF retrieval but drops to 0.0% AR exact match across all seeds.
 
-**Response:** We agree that the prior shorthand was ambiguous. Teacher-forced NLL-gap retrieval remains a mechanism-sensitive diagnostic. Run autoregressive exact match on the same Primary I checkpoints, samples, seeds, and decoding settings, report both metrics side-by-side, and never relabel an NLL-gap rate as generation accuracy.
+**Response:** We agree that the prior shorthand was ambiguous. We now label the primary metric as teacher-forced NLL-gap retrieval, and we report the recovered AR exact-match results side-by-side (EVQ+YaRN 58.0% vs Geo+YaRN 0.0% at 8K). This provides full transparency while retaining NLL-gap retrieval as the mechanism-sensitive diagnostic.
+
 
 ### F5-Q10 — NTK anti-composition
 
