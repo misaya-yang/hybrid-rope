@@ -35,6 +35,7 @@ from train_positional_distill import (
     FrozenSequenceDataset,
     FrequencySwitcher,
     causal_backbone,
+    configure_packed_free_causal_sdpa,
     fingerprint_model_source,
     normalized_bucket_hidden_mse,
     position_bucket_ranges,
@@ -299,6 +300,7 @@ def load_candidate(
         low_cpu_mem_usage=True,
     )
     model.config.use_cache = False
+    configure_packed_free_causal_sdpa(model)
     geometry = resolve_model_rope_geometry(model.config)
     if (
         getattr(model.config, "model_type", None) != "llama"

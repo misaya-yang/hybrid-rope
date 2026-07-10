@@ -22,6 +22,8 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
+PACKED_FREE_CAUSAL_SDPA_BACKEND = "evq_packed_free_causal_sdpa"
+
 from prepare_positional_distill_data import sha256_file, tokenizer_source_fingerprint
 from train_evq_lora import (
     build_training_inv_freq,
@@ -324,6 +326,19 @@ def validate_single_gpu_runtime() -> dict:
         "nvidia_driver_and_gpu_uuid": driver_record,
         "cuda_visible_devices": cuda_selector,
     }
+
+
+def configure_packed_free_causal_sdpa(model) -> str:
+    """Use SDPA causal dispatch without Transformers materializing a 4D mask."""
+    from transformers import AttentionInterface
+    from transformers.integrations.sdpa_attention import sdpa_attention_forward
+
+    AttentionInterface.register(
+        PACKED_FREE_CAUSAL_SDPA_BACKEND,
+        sdpa_attention_forward,
+    )
+    model.config._attn_implementation = PACKED_FREE_CAUSAL_SDPA_BACKEND
+    return PACKED_FREE_CAUSAL_SDPA_BACKEND
 
 
 def build_distill_metadata(
@@ -792,6 +807,7 @@ def main() -> None:
         low_cpu_mem_usage=True,
     )
     model.config.use_cache = False
+    configure_packed_free_causal_sdpa(model)
     inject_inv_freq(model, student_inv_freq)
     model = get_peft_model(
         model,

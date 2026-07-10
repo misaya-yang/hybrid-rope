@@ -28,6 +28,7 @@ from experiments.lora_evq_v2.train_positional_distill import (
     build_distill_metadata,
     build_compiled_student_backbone,
     checkpoint_starting_global_step,
+    configure_packed_free_causal_sdpa,
     ensure_immutable_run_protocol,
     fingerprint_model_source,
     normalized_bucket_hidden_mse,
@@ -282,6 +283,38 @@ def test_student_compile_wraps_backbone_without_replacing_model(monkeypatch) -> 
     assert compiled == ("compiled", model.model)
     assert seen == {"backend": "inductor", "mode": "default", "dynamic": False}
     assert isinstance(model.model, torch.nn.Linear)
+
+
+def test_packed_free_causal_sdpa_avoids_materialized_transformers_mask() -> None:
+    from transformers import LlamaConfig, LlamaModel
+    from transformers.masking_utils import create_causal_mask
+
+    config = LlamaConfig(
+        vocab_size=32,
+        hidden_size=16,
+        intermediate_size=32,
+        num_hidden_layers=1,
+        num_attention_heads=2,
+        num_key_value_heads=1,
+        max_position_embeddings=8,
+    )
+    model = LlamaModel(config)
+
+    backend = configure_packed_free_causal_sdpa(model)
+    embeds = torch.zeros((2, 8, 16))
+    positions = torch.arange(8)
+    causal_mask = create_causal_mask(
+        config=model.config,
+        input_embeds=embeds,
+        attention_mask=None,
+        cache_position=positions,
+        past_key_values=None,
+        position_ids=positions.unsqueeze(0),
+    )
+
+    assert backend == "evq_packed_free_causal_sdpa"
+    assert model.config._attn_implementation == backend
+    assert causal_mask is None
 
 
 def test_distill_metadata_records_clean_protocol() -> None:
