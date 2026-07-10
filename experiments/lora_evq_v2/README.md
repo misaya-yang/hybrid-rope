@@ -100,3 +100,59 @@ pre-registered autoregressive/RULER evaluation and replicated seeds.
 These commands have not been run as part of repository preparation. Do not
 quote a result until the raw JSON, frozen-data manifest, checkpoint metadata,
 GPU record, and seed scope have been verified.
+
+## Protocol-matched legacy LongAlign multi-seed fallback
+
+The fallback for the historical LoRA row is deliberately separate from the
+positional-distillation pilot.  It runs six **fresh** adapters only:
+native-Geo and EVQ-Cosh tau 1.414 at seeds 42/43/44.  It never reuses the
+historical `evq_r64_tau1414` directory and does not mix YaRN into the matched
+matrix.
+
+The old downloader is not claim-safe: it can write LongAlpaca-12k under a
+`longalign_10k.jsonl` filename and can write WikiText-103 under a WikiText-2
+filename.  The new path therefore requires explicit source revisions and raw
+SHA-256 values, freezes token IDs once, and rejects every silent fallback.
+
+```bash
+export EVQ_LORA_BASE_DIR=/path/to/external/runtime
+export EVQ_LORA_MODEL=/path/to/Meta-Llama-3-8B-Instruct
+export EVQ_LORA_PYTHON=/path/to/locked/python
+export EVQ_LEGACY_LONGALIGN_JSONL=/path/to/verified/long.jsonl
+export EVQ_LEGACY_LONGALIGN_SHA256=<sha256>
+export EVQ_LEGACY_WIKITEXT_PARQUET=/path/to/verified/test.parquet
+export EVQ_LEGACY_WIKITEXT_SHA256=<sha256>
+
+bash scripts/2026-07/03_lora_longalign_matched_multiseed.sh preflight
+bash scripts/2026-07/03_lora_longalign_matched_multiseed.sh prepare-data
+bash scripts/2026-07/03_lora_longalign_matched_multiseed.sh baseline
+```
+
+`baseline` evaluates Base-Geo and Base-EVQ first.  After inspecting data and
+metric compatibility with the historical row, explicitly unlock the fresh
+seed-42 pair:
+
+```bash
+export EVQ_LEGACY_UNLOCK_SEED42=YES
+bash scripts/2026-07/03_lora_longalign_matched_multiseed.sh seed42
+```
+
+Only after that matched pair is useful should the two remaining pairs run:
+
+```bash
+export EVQ_LEGACY_UNLOCK_REMAINING=YES
+bash scripts/2026-07/03_lora_longalign_matched_multiseed.sh remaining-seeds
+bash scripts/2026-07/03_lora_longalign_matched_multiseed.sh eval
+bash scripts/2026-07/03_lora_longalign_matched_multiseed.sh summarize
+```
+
+All six arms are fixed to q/k/v/o LoRA r64, alpha128, dropout0.05, BF16,
+300 steps, B2/GA4, LR 1e-4, warmup60, full-token causal loss, recovery saves
+every 100 steps (latest two retained), and the same `torch.compile` mode. Automatic resume is allowed
+only when the immutable data/model/protocol identities still match.  The final
+summary reports raw seeds, mean, sample standard deviation, range, and paired
+EVQ-minus-Geo deltas; n=3 is descriptive and is not a significance claim.
+
+Because the original raw file hashes and runtime have not been recovered, the
+honest label is **protocol-matched multi-seed rerun on verified LongAlign-10k**,
+not bitwise reproduction of the historical single-seed row.

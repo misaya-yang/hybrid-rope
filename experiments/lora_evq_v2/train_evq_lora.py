@@ -20,10 +20,12 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.metadata
 import inspect
 import json
 import math
 import os
+import platform
 import sys
 import time
 from dataclasses import dataclass
@@ -42,11 +44,208 @@ from scripts.lib.rope.schedules import (
     geometric_inv_freq as _canonical_geometric_inv_freq,
 )
 
+try:
+    from .legacy_lora_protocol import (
+        canonical_json_sha256,
+        canonical_training_protocol,
+        sha256_file,
+        validate_legacy_protocol,
+        validate_source_receipt,
+    )
+except ImportError:  # direct script execution
+    from legacy_lora_protocol import (
+        canonical_json_sha256,
+        canonical_training_protocol,
+        sha256_file,
+        validate_legacy_protocol,
+        validate_source_receipt,
+    )
+
 
 @dataclass(frozen=True)
 class LoraRopeGeometry:
     head_dim: int
     rope_base: float
+
+
+def validate_strict_legacy_args(args: argparse.Namespace) -> None:
+    """Reject any drift from the historical scientific/runtime contract."""
+    expected = {
+        "max_seq_len": 8192,
+        "max_samples": 8000,
+        "lora_r": 64,
+        "lora_alpha": 128,
+        "lora_dropout": 0.05,
+        "lora_targets": "q_proj,k_proj,v_proj,o_proj",
+        "max_steps": 300,
+        "per_device_batch_size": 2,
+        "gradient_accumulation_steps": 4,
+        "learning_rate": 1e-4,
+        "warmup_steps": 60,
+        "weight_decay": 0.01,
+        "max_grad_norm": 1.0,
+        "save_steps": 100,
+        "bf16": True,
+        "load_in_4bit": False,
+        "compile": True,
+        "compile_mode": "default",
+    }
+    if args.rope_method not in ("native_geo", "evq_cosh"):
+        raise ValueError("strict legacy protocol supports only native_geo and evq_cosh")
+    if args.seed not in (42, 43, 44):
+        raise ValueError("strict legacy protocol requires seed 42, 43, or 44")
+    if args.rope_method == "evq_cosh" and not math.isclose(
+        float(args.tau), 1.414, rel_tol=0.0, abs_tol=1e-12
+    ):
+        raise ValueError("strict legacy EVQ protocol requires tau=1.414")
+    for key, expected_value in expected.items():
+        actual = getattr(args, key)
+        if isinstance(expected_value, float):
+            matches = isinstance(actual, (int, float)) and math.isclose(
+                float(actual), expected_value, rel_tol=0.0, abs_tol=1e-12
+            )
+        else:
+            matches = actual == expected_value
+        if not matches:
+            raise ValueError(
+                f"strict legacy protocol mismatch for {key}: "
+                f"{actual!r} != {expected_value!r}"
+            )
+
+
+def resolve_legacy_resume_checkpoint(
+    output_dir: Union[os.PathLike, str],
+    requested: Optional[str],
+) -> Optional[Path]:
+    """Resolve an explicit checkpoint or the newest internally consistent one."""
+    if requested in (None, "", "none"):
+        return None
+    output_dir = Path(output_dir)
+    if requested != "auto":
+        path = Path(requested)
+        if not path.is_dir():
+            raise FileNotFoundError(f"resume checkpoint not found: {path}")
+        candidates = [path]
+    else:
+        candidates = []
+        for path in output_dir.glob("checkpoint-*"):
+            suffix = path.name.removeprefix("checkpoint-")
+            if path.is_dir() and suffix.isdigit():
+                candidates.append(path)
+        candidates.sort(key=lambda path: int(path.name.removeprefix("checkpoint-")), reverse=True)
+        if not candidates:
+            return None
+    required_files = (
+        "adapter_model.safetensors",
+        "adapter_config.json",
+        "optimizer.pt",
+        "scheduler.pt",
+        "rng_state.pth",
+        "trainer_state.json",
+        "training_args.bin",
+    )
+    for path in candidates:
+        missing = [name for name in required_files if not (path / name).is_file()]
+        if missing:
+            if requested == "auto":
+                continue
+            raise FileNotFoundError(
+                f"resume checkpoint is incomplete ({', '.join(missing)}): {path}"
+            )
+        state_path = path / "trainer_state.json"
+        if not state_path.is_file():
+            if requested == "auto":
+                continue
+            raise FileNotFoundError(f"resume checkpoint lacks trainer_state.json: {path}")
+        state = json.loads(state_path.read_text(encoding="utf-8"))
+        directory_step = int(path.name.removeprefix("checkpoint-"))
+        if int(state.get("global_step", -1)) != directory_step:
+            if requested == "auto":
+                continue
+            raise ValueError(f"resume checkpoint step mismatch: {path}")
+        return path
+    raise RuntimeError("no internally consistent recovery checkpoint was found")
+
+
+def _load_strict_legacy_data(manifest_path: Path) -> tuple[Dict[str, Any], Dict[str, Any]]:
+    manifest_path = Path(manifest_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("objective") != "legacy_longalign_full_token_causal_lm_v2":
+        raise ValueError("prepared data objective is not the legacy LongAlign protocol")
+    validate_source_receipt(manifest.get("source", {}))
+    expected_preparation = {
+        "max_samples": 8000,
+        "max_seq_len": 8192,
+        "minimum_tokens": 64,
+        "validation_ratio": 0.02,
+        "split_seed": 42,
+        "selection_order": "first_supported_rows_before_tokenization",
+        "labels": "all_non_padding_input_tokens",
+        "variable_length": True,
+    }
+    if manifest.get("preparation") != expected_preparation:
+        raise ValueError("prepared legacy LongAlign settings mismatch")
+    loaded: Dict[str, Any] = {}
+    for key in ("tokens", "offsets", "train_indices", "validation_indices"):
+        record = manifest.get("files", {}).get(key, {})
+        path = manifest_path.parent / str(record.get("name", ""))
+        if not path.is_file() or sha256_file(path) != record.get("sha256"):
+            raise ValueError(f"prepared legacy {key} tensor is missing or hash-mismatched")
+        loaded[key] = torch.load(path, map_location="cpu", weights_only=False)
+    return loaded, manifest
+
+
+def _ensure_immutable_protocol(output_dir: Path, protocol: Dict[str, Any]) -> Path:
+    validate_legacy_protocol(protocol)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    path = output_dir / "run_protocol.json"
+    if path.is_file():
+        recorded = json.loads(path.read_text(encoding="utf-8"))
+        if recorded != protocol:
+            raise RuntimeError("legacy run protocol mismatch; use a fresh output directory")
+        return path
+    temporary = path.with_suffix(".json.tmp")
+    temporary.write_text(
+        json.dumps(protocol, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    os.replace(temporary, path)
+    return path
+
+
+def legacy_training_code_sha256() -> str:
+    """Bind resumes and all six arms to the exact training implementation."""
+    paths = (
+        Path(__file__).resolve(),
+        Path(__file__).with_name("legacy_lora_protocol.py").resolve(),
+        (PROJECT_ROOT / "scripts/lib/rope/schedules.py").resolve(),
+    )
+    digest = hashlib.sha256()
+    for path in paths:
+        relative = path.relative_to(PROJECT_ROOT).as_posix().encode("utf-8")
+        digest.update(len(relative).to_bytes(4, "big"))
+        digest.update(relative)
+        digest.update(bytes.fromhex(sha256_file(path)))
+    return digest.hexdigest()
+
+
+def legacy_runtime_identity() -> Dict[str, Any]:
+    packages = {}
+    for name in ("torch", "transformers", "peft", "accelerate", "datasets"):
+        try:
+            packages[name] = importlib.metadata.version(name)
+        except importlib.metadata.PackageNotFoundError:
+            packages[name] = None
+    identity = {
+        "python": platform.python_version(),
+        "platform": platform.platform(),
+        "packages": packages,
+        "torch_cuda": torch.version.cuda,
+    }
+    if torch.cuda.is_available():
+        identity["cuda_device"] = torch.cuda.get_device_name(0)
+        identity["cuda_capability"] = list(torch.cuda.get_device_capability(0))
+    return identity
 
 
 def resolve_model_rope_geometry(
@@ -79,6 +278,30 @@ def resolve_model_rope_geometry(
     if rope_base <= 0:
         raise ValueError(f"rope_base must be positive, got {rope_base}")
     return LoraRopeGeometry(head_dim=head_dim, rope_base=rope_base)
+
+
+def validate_legacy_model_geometry(config: Any, geometry: LoraRopeGeometry) -> None:
+    expected = {
+        "model_type": "llama",
+        "hidden_size": 4096,
+        "num_hidden_layers": 32,
+        "num_attention_heads": 32,
+        "num_key_value_heads": 8,
+        "vocab_size": 128256,
+        "max_position_embeddings": 8192,
+    }
+    for field, value in expected.items():
+        if getattr(config, field, None) != value:
+            raise ValueError(
+                f"strict legacy protocol model geometry mismatch for {field}: "
+                f"{getattr(config, field, None)!r} != {value!r}"
+            )
+    if geometry.head_dim != 128 or not math.isclose(
+        geometry.rope_base, 500_000.0, rel_tol=0.0, abs_tol=1e-6
+    ):
+        raise ValueError("strict legacy protocol requires head_dim=128 and rope_base=500000")
+    if getattr(config, "rope_scaling", None) not in (None, {}):
+        raise ValueError("strict legacy protocol requires unscaled native LLaMA RoPE config")
 
 
 def evaluation_strategy_kwargs(training_arguments_cls, value: str = "no") -> Dict[str, str]:
@@ -450,6 +673,44 @@ class TokenizedDataset(torch.utils.data.Dataset):
         }
 
 
+class CompactTokenizedDataset(torch.utils.data.Dataset):
+    """Variable-length rows backed by one compact int32 token tensor."""
+
+    def __init__(
+        self,
+        tokens: torch.Tensor,
+        offsets: torch.Tensor,
+        indices: torch.Tensor,
+        max_seq_len: int,
+    ):
+        if tokens.ndim != 1 or offsets.ndim != 1 or indices.ndim != 1:
+            raise ValueError("compact legacy tensors must all be one-dimensional")
+        if offsets.numel() < 2 or int(offsets[0]) != 0 or int(offsets[-1]) != tokens.numel():
+            raise ValueError("compact legacy offsets do not cover the token tensor")
+        if not torch.all(offsets[1:] >= offsets[:-1]):
+            raise ValueError("compact legacy offsets must be monotonic")
+        if indices.numel() and (int(indices.min()) < 0 or int(indices.max()) >= offsets.numel() - 1):
+            raise ValueError("compact legacy split indices are out of bounds")
+        self.tokens = tokens
+        self.offsets = offsets
+        self.indices = indices
+        self.max_seq_len = max_seq_len
+
+    def __len__(self):
+        return self.indices.numel()
+
+    def __getitem__(self, idx):
+        row = int(self.indices[idx])
+        start = int(self.offsets[row])
+        end = min(int(self.offsets[row + 1]), start + self.max_seq_len)
+        input_ids = self.tokens[start:end].to(torch.long).tolist()
+        return {
+            "input_ids": input_ids,
+            "attention_mask": [1] * len(input_ids),
+            "labels": list(input_ids),
+        }
+
+
 class PaddingCollator:
     """Pad variable-length samples to the longest in the batch."""
     def __init__(self, pad_token_id: int):
@@ -518,6 +779,18 @@ def parse_args():
     p.add_argument("--max_samples", type=int, default=8000)
     p.add_argument("--local_data_path", type=str, default=None,
                    help="Path to local JSONL data (overrides --dataset_name)")
+    p.add_argument(
+        "--prepared_data_manifest",
+        type=Path,
+        default=None,
+        help="Frozen legacy LongAlign manifest; required by strict protocol mode",
+    )
+    p.add_argument(
+        "--model_manifest",
+        type=Path,
+        default=None,
+        help="Full model-byte manifest; required by strict protocol mode",
+    )
 
     # Quantization (96GB GPU: default bf16 full precision, no quantization needed)
     p.add_argument("--load_in_4bit", action="store_true", default=False,
@@ -531,6 +804,18 @@ def parse_args():
     p.add_argument("--logging_steps", type=int, default=10)
     p.add_argument("--save_steps", type=int, default=100)
     p.add_argument("--bf16", action="store_true", default=True)
+    p.add_argument(
+        "--strict_legacy_protocol",
+        action="store_true",
+        help="Lock the fresh Geo/EVQ 3-seed LongAlign rebuttal protocol",
+    )
+    p.add_argument(
+        "--resume_from_checkpoint",
+        default="none",
+        help="none, auto, or an explicit checkpoint directory",
+    )
+    p.add_argument("--compile", action="store_true", help="Enable torch.compile through Trainer")
+    p.add_argument("--compile_mode", default="default", choices=("default", "reduce-overhead", "max-autotune"))
 
     return p.parse_args()
 
@@ -577,7 +862,7 @@ def validate_theory(args) -> Dict[str, Any]:
     return checks
 
 
-def compute_and_save_inv_freq(args) -> torch.Tensor:
+def compute_and_save_inv_freq(args, preserve_existing: bool = False) -> torch.Tensor:
     """Compute the requested frequencies and save them for reproducibility."""
     inv_freq, schedule_meta = build_training_inv_freq(
         rope_method=args.rope_method,
@@ -590,15 +875,25 @@ def compute_and_save_inv_freq(args) -> torch.Tensor:
     # Save
     os.makedirs(args.output_dir, exist_ok=True)
     freq_path = os.path.join(args.output_dir, "custom_inv_freq.pt")
-    torch.save({
-        "inv_freq": inv_freq,
-        "tau": schedule_meta["tau"],
-        "head_dim": args.head_dim,
-        "base": args.rope_base,
-        "method": schedule_meta["method"],
-        "midpoint": schedule_meta["midpoint"],
-    }, freq_path)
-    print(f"[FREQ] Saved to {freq_path}")
+    if preserve_existing and os.path.exists(freq_path):
+        recorded, _, _ = load_frequency_artifact(
+            freq_path,
+            expected_method=args.rope_method,
+        )
+        if not torch.allclose(recorded.to(torch.float64), inv_freq.to(torch.float64), rtol=0.0, atol=1e-12):
+            raise RuntimeError("existing strict frequency artifact does not match the protocol")
+        inv_freq = recorded.to(torch.float64)
+        print(f"[FREQ] Reusing verified artifact {freq_path}")
+    else:
+        torch.save({
+            "inv_freq": inv_freq,
+            "tau": schedule_meta["tau"],
+            "head_dim": args.head_dim,
+            "base": args.rope_base,
+            "method": schedule_meta["method"],
+            "midpoint": schedule_meta["midpoint"],
+        }, freq_path)
+        print(f"[FREQ] Saved to {freq_path}")
 
     # Diagnostic comparison
     K = args.head_dim // 2
@@ -632,11 +927,50 @@ def main():
         f"rope_base={args.rope_base:g}"
     )
 
+    strict_protocol = None
+    strict_data = None
+    strict_manifest = None
+    if args.strict_legacy_protocol:
+        validate_strict_legacy_args(args)
+        validate_legacy_model_geometry(model_config, geometry)
+        if args.prepared_data_manifest is None or args.model_manifest is None:
+            raise ValueError(
+                "strict legacy mode requires --prepared_data_manifest and --model_manifest"
+            )
+        if args.local_data_path is not None:
+            raise ValueError("strict legacy mode reads only the frozen prepared-data manifest")
+        if not args.model_manifest.is_file():
+            raise FileNotFoundError(args.model_manifest)
+        model_manifest_data = json.loads(args.model_manifest.read_text(encoding="utf-8"))
+        try:
+            from .prepare_legacy_model_manifest import validate_model_manifest
+        except ImportError:
+            from prepare_legacy_model_manifest import validate_model_manifest
+        validate_model_manifest(Path(args.model_name), model_manifest_data, verify_hashes=False)
+        strict_data, strict_manifest = _load_strict_legacy_data(args.prepared_data_manifest)
+        strict_protocol = canonical_training_protocol(
+            method=args.rope_method,
+            seed=args.seed,
+            data_manifest_sha256=sha256_file(args.prepared_data_manifest),
+            model_manifest_sha256=sha256_file(args.model_manifest),
+            code_sha256=legacy_training_code_sha256(),
+        )
+        _ensure_immutable_protocol(Path(args.output_dir), strict_protocol)
+    resume_checkpoint = resolve_legacy_resume_checkpoint(
+        args.output_dir,
+        args.resume_from_checkpoint,
+    )
+    if resume_checkpoint is not None:
+        print(f"[RESUME] CPU preflight selected {resume_checkpoint}")
+
     # 1. Theoretical validation
     theory_checks = validate_theory(args)
 
     # 2. Compute EVQ-cosh frequencies
-    inv_freq = compute_and_save_inv_freq(args)
+    inv_freq = compute_and_save_inv_freq(
+        args,
+        preserve_existing=args.strict_legacy_protocol,
+    )
 
     if args.dry_run:
         print("\n[DRY RUN] Config validated. Exiting without training.")
@@ -664,10 +998,11 @@ def main():
         TrainingArguments,
         Trainer,
         BitsAndBytesConfig,
+        set_seed,
     )
     from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 
-    torch.manual_seed(args.seed)
+    set_seed(args.seed)
 
     # 3. Load tokenizer
     print(f"\n[MODEL] Loading tokenizer: {args.model_name}")
@@ -679,6 +1014,13 @@ def main():
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
         tokenizer.pad_token_id = tokenizer.eos_token_id
+    if args.strict_legacy_protocol:
+        try:
+            from .prepare_positional_distill_data import tokenizer_source_fingerprint
+        except ImportError:
+            from prepare_positional_distill_data import tokenizer_source_fingerprint
+        if strict_manifest["tokenizer"] != tokenizer_source_fingerprint(args.model_name):
+            raise RuntimeError("runtime tokenizer does not match frozen legacy data")
 
     # 4. Load model
     precision = "4-bit QLoRA" if args.load_in_4bit else "bf16 full precision"
@@ -698,6 +1040,7 @@ def main():
         )
 
     model = AutoModelForCausalLM.from_pretrained(args.model_name, **load_kwargs)
+    model.config.use_cache = False
 
     # 5. Inject the exact schedule recorded by this run.
     print(f"[ROPE] Injecting {args.rope_method} frequencies...")
@@ -741,16 +1084,27 @@ def main():
     )
 
     # 8. Load data
-    data = load_training_data(
-        tokenizer=tokenizer,
-        dataset_name=args.local_data_path or args.dataset_name,
-        max_seq_len=args.max_seq_len,
-        max_samples=args.max_samples,
-        cache_dir=args.output_dir,
-    )
+    if args.strict_legacy_protocol:
+        data = strict_data
+    else:
+        data = load_training_data(
+            tokenizer=tokenizer,
+            dataset_name=args.local_data_path or args.dataset_name,
+            max_seq_len=args.max_seq_len,
+            max_samples=args.max_samples,
+            cache_dir=args.output_dir,
+        )
 
-    train_dataset = TokenizedDataset(data["train"], args.max_seq_len)
-    val_dataset = TokenizedDataset(data["val"], args.max_seq_len)
+    if args.strict_legacy_protocol:
+        train_dataset = CompactTokenizedDataset(
+            data["tokens"], data["offsets"], data["train_indices"], args.max_seq_len
+        )
+        val_dataset = CompactTokenizedDataset(
+            data["tokens"], data["offsets"], data["validation_indices"], args.max_seq_len
+        )
+    else:
+        train_dataset = TokenizedDataset(data["train"], args.max_seq_len)
+        val_dataset = TokenizedDataset(data["val"], args.max_seq_len)
 
     # 9. Training
     training_kwargs = {
@@ -767,7 +1121,9 @@ def main():
         "bf16": args.bf16,
         "fp16": not args.bf16,
         "logging_steps": args.logging_steps,
-        "save_strategy": "no",
+        "save_strategy": "steps" if args.strict_legacy_protocol else "no",
+        "save_steps": args.save_steps,
+        "save_total_limit": 2 if args.strict_legacy_protocol else None,
         "gradient_checkpointing": True,
         "gradient_checkpointing_kwargs": {"use_reentrant": False},
         "report_to": "none",
@@ -775,6 +1131,12 @@ def main():
         "dataloader_num_workers": 4,
         "remove_unused_columns": False,
     }
+    if args.strict_legacy_protocol:
+        training_kwargs.update({
+            "torch_compile": args.compile,
+            "torch_compile_backend": "inductor",
+            "torch_compile_mode": args.compile_mode,
+        })
     training_kwargs.update(evaluation_strategy_kwargs(TrainingArguments))
     training_args = TrainingArguments(**training_kwargs)
 
@@ -802,7 +1164,11 @@ def main():
     print(f"{'=' * 60}\n")
 
     t0 = time.time()
-    trainer.train()
+    if resume_checkpoint is not None:
+        print(f"[RESUME] Continuing from {resume_checkpoint}")
+    trainer.train(
+        resume_from_checkpoint=str(resume_checkpoint) if resume_checkpoint is not None else None
+    )
     train_time = time.time() - t0
 
     print(f"\n[DONE] Training completed in {train_time/3600:.2f} hours")
@@ -811,6 +1177,7 @@ def main():
     print("[SAVE] Saving adapter + custom inv_freq...")
     model.save_pretrained(args.output_dir)
     tokenizer.save_pretrained(args.output_dir)
+    trainer.save_state()
 
     # Save experiment metadata
     meta = {
@@ -831,6 +1198,26 @@ def main():
         "train_loss_final": trainer.state.log_history[-1].get("train_loss")
                            if trainer.state.log_history else None,
     }
+    if args.strict_legacy_protocol:
+        adapter_path = Path(args.output_dir) / "adapter_model.safetensors"
+        frequency_path = Path(args.output_dir) / "custom_inv_freq.pt"
+        if trainer.state.global_step != 300:
+            raise RuntimeError(
+                f"strict legacy run ended at step {trainer.state.global_step}, expected 300"
+            )
+        meta.update({
+            "objective": "legacy_longalign_full_token_causal_lm_v2",
+            "status": "complete",
+            "global_step": trainer.state.global_step,
+            "protocol": strict_protocol,
+            "protocol_sha256": canonical_json_sha256(strict_protocol),
+            "adapter_sha256": sha256_file(adapter_path),
+            "frequency_sha256": sha256_file(frequency_path),
+            "data_manifest_sha256": sha256_file(args.prepared_data_manifest),
+            "model_manifest_sha256": sha256_file(args.model_manifest),
+            "code_sha256": legacy_training_code_sha256(),
+            "runtime": legacy_runtime_identity(),
+        })
     meta_path = os.path.join(args.output_dir, "experiment_meta.json")
     with open(meta_path, "w") as f:
         json.dump(meta, f, indent=2, default=str)
