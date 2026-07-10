@@ -28,6 +28,8 @@ CORE_ASSET_SUMMARY = REBUTTAL / "LOCAL_CORE_ASSET_PROMOTION_SUMMARY.md"
 EXPECTED_JSON = {
     "learnable_tau_128tok_evidence.json": "report-backed",
     "mla_channel_count_125m_pilot.json": "report-backed",
+    "primary1_evq_yarn_10pct_raw.json": "raw-json-backed",
+    "primary2_l128_fixed_tau5_3seed.json": "raw-json-backed",
     "phase11_l256_3seed_recovered.json": "raw-json-backed",
     "phase11b_125m_l256_3seed.json": "raw-json-backed",
     "phase16_99run_manifest.meta.json": "sanitized-run-manifest",
@@ -38,6 +40,7 @@ EXPECTED_JSON = {
 
 PUBLIC_BUNDLE_FILES = [
     *(CURATED / name for name in EXPECTED_JSON),
+    CURATED / "eval_3seeds_full_results.json",
     CURATED / "phase16_99run_manifest.csv",
     REBUTTAL / "IGNORED_ASSET_RECONCILIATION.md",
     CORE_ASSET_SUMMARY,
@@ -78,6 +81,60 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
             "EVQ+YaRN(s=2)",
             "EVQ+YaRN(s=4)",
         })
+
+    def test_mla_source_is_reconstructed_byte_for_byte_from_portable_snapshot(self):
+        reconstructed = build_rebuttal_evidence_bundle.reconstruct_mla_source_bytes(
+            CURATED / "table18_mla_3seed_aggregate.json"
+        )
+        self.assertEqual(
+            hashlib.sha256(reconstructed).hexdigest(),
+            "1e44d30bb880e4b7427ae55bd7034782989152bd2afca9217495f9b8ece30953",
+        )
+        self.assertEqual(
+            (CURATED / "eval_3seeds_full_results.json").read_bytes(),
+            reconstructed,
+        )
+
+    def test_primary1_builder_preserves_full_raw_payload_and_recomputes_table_means(self):
+        source = ROOT / "data" / "results_5090b" / "evq_yarn_10pct_allseeds.json"
+        built = build_rebuttal_evidence_bundle.build_primary1_snapshot(source)
+
+        self.assertEqual(built["source"]["sha256"], hashlib.sha256(source.read_bytes()).hexdigest())
+        self.assertEqual(len(built["raw_payload"]["results"]), 6)
+        self.assertEqual(built["protocol"]["seeds"], [7, 42, 123])
+        rows = {row["id"]: row for row in built["recomputed_rows"]}
+        self.assertAlmostEqual(rows["geo_raw"]["ppl_8192_mean"], 161.8626666667)
+        self.assertAlmostEqual(rows["geo_yarn_s8"]["pk_8192_mean"], 0.6133333333)
+        self.assertAlmostEqual(rows["evq_raw"]["pk_8192_mean"], 0.5333333333)
+        self.assertAlmostEqual(rows["evq_yarn_s8"]["ppl_8192_mean"], 70.8506666667)
+
+    def test_primary2_builder_recovers_only_fixed_evq_tau5_three_seed_arm(self):
+        seed42 = (
+            ROOT
+            / "data"
+            / "evq_128tok_results"
+            / "extended_sweep"
+            / "results_final.json"
+        )
+        extra_seeds = (
+            ROOT
+            / "data"
+            / "evq_128tok_results"
+            / "phase7"
+            / "multiseed"
+            / "results_final.json"
+        )
+        built = build_rebuttal_evidence_bundle.build_primary2_tau5_snapshot(
+            seed42, extra_seeds
+        )
+
+        self.assertEqual([run["seed"] for run in built["runs"]], [42, 137, 256])
+        self.assertTrue(all(run["tau"] == 5.0 for run in built["runs"]))
+        self.assertAlmostEqual(built["summary"]["ppl_128_mean"], 182.6046666667)
+        self.assertAlmostEqual(built["summary"]["ppl_8192_mean"], 335.7103333333)
+        self.assertIn("does not recover", built["claim_boundary"])
+        self.assertIn("Geo", built["claim_boundary"])
+        self.assertIn("DAPE", built["claim_boundary"])
 
     def test_phase11_asset_contains_both_nine_run_sources(self):
         data = load_json("phase11_l256_3seed_recovered.json")
@@ -241,6 +298,12 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
         )
         self.assertEqual(args.only, ["phase11", "quality", "base"])
 
+    def test_component_selection_exposes_recovered_primary_assets(self):
+        args = build_rebuttal_evidence_bundle.parse_args(
+            ["--only", "primary1", "--only", "primary2_tau5", "--only", "mla_raw"]
+        )
+        self.assertEqual(args.only, ["primary1", "primary2_tau5", "mla_raw"])
+
     def test_local_phase11_directory_takes_precedence_over_archive(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -333,10 +396,13 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
 
     def test_core_asset_summary_records_promoted_and_rejected_families(self):
         text = CORE_ASSET_SUMMARY.read_text(encoding="utf-8")
+        self.assertIn("Primary I", text)
+        self.assertIn("byte-for-byte", text)
         self.assertIn("Phase11B", text)
         self.assertIn("L_train=256", text)
         self.assertIn("L_train=128", text)
         self.assertIn("not promoted", text)
+        self.assertIn("1B-token MLA", text)
         self.assertIn("no paper numbers", text.lower())
 
     def test_reviewer_supplement_includes_raw_base_and_excludes_internal_contract_test(self):

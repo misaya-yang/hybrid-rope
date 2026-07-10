@@ -1,110 +1,109 @@
-# Local ignored core-asset promotion summary
+# Local core-asset recovery summary
 
-## Decision
+## Corrected decision
 
-The ignored experiment tree was audited for evidence that could materially
-change the paper or rebuttal. The repository should not absorb the complete
-local result tree: it is about 86 GB and is dominated by checkpoints, logs,
-caches, legacy runs, and supporting experiments. This pass promotes one
-additional anonymous, hash-identified payload:
+The full local and branch audit found more decision-critical evidence than the
+first pass reported. This update promotes three additional evidence families
+and keeps the previously promoted Phase11B boundary result. No paper numbers,
+tables, figures, PDFs, or claims were changed.
 
-- `data/curated/phase11b_125m_l256_3seed.json`
+| Question | Corrected finding | Tracked reviewer path |
+| --- | --- | --- |
+| Primary I original raw payload | Found on `backup/2026-03-06`; all six Geo/EVQ seed records, raw/YaRN PPL, teacher-forced PK cells, and distinct AR-exact fields are present. | `data/results_5090b/evq_yarn_10pct_allseeds.json`; portable full-payload copy `data/curated/primary1_evq_yarn_10pct_raw.json`. |
+| Primary II `L_train=128` extra seeds | Partially found: fixed EVQ tau=5 exists for seeds 42/137/256. Matched Geo and DAPE seeds 137/256 were not found. | Two exact archival source JSONs plus `data/curated/primary2_l128_fixed_tau5_3seed.json`. |
+| Primary III MLA three-seed ignored JSON | The old physical path was not recovered, but the complete source object is preserved in the tracked snapshot. Replaying the evaluator's key order and `json.dumps(..., indent=2)` reproduces the old source byte-for-byte and matches its recorded SHA256. | `data/curated/eval_3seeds_full_results.json`, SHA256 `1e44d30...30953`; reconstruction source `data/curated/table18_mla_3seed_aggregate.json`. |
+| 1B-token MLA multi-seed | Not found in current refs, the archival branch, local result trees, or recoverable Git objects. The retained 1B row remains single-seed supporting/schedule-sensitivity evidence. | No multi-seed artifact promoted. |
 
-This is the only newly recovered local family with direct scientific value for
-a core paper boundary. It preserves 15 completed Phase11B runs: nine plain
-Geo/EVQ scaling runs and six Geo+DAPE/EVQ+DAPE runs, all at three seeds.
-No paper numbers, tables, figures, or claims were changed in this pass.
+The earlier statement that the original Primary I raw payload was absent was
+wrong and is superseded by this document. The earlier MLA statement also
+needed precision: the original physical file was absent, but its exact JSON
+bytes are deterministically recoverable from the portable raw-backed snapshot.
 
-## What the promoted Phase11B evidence establishes
+## Scientific value of the recovered assets
 
-Protocol: 125M model, `L_train=256`, 100M training tokens, base 500K, seeds
-42/137/256, and evaluation from 256 through 8K tokens.
+### Primary I is now raw-payload-backed
 
-| Method | PPL@256 | PPL@512 | PPL@1K | PPL@2K | PPL@4K | PPL@8K |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Geo | 72.060 | 56.404 | 111.475 | 209.366 | 259.933 | 352.695 |
-| EVQ tau=2 | 73.427 | 50.542 | 91.701 | 169.747 | 210.237 | 304.197 |
-| EVQ tau=4 | 72.954 | 48.176 | 76.759 | 136.935 | 170.269 | 254.694 |
-| Geo+DAPE | 68.501 | 40.588 | 47.867 | 56.354 | 43.639 | 55.922 |
-| EVQ tau=4+DAPE | 69.898 | 41.248 | 48.523 | 57.431 | 44.435 | 56.844 |
+The restored 59,580-byte source has SHA256
+`1dbec88e...511c` and contains the complete six-run payload for methods Geo and
+EVQ at seeds 7, 42, and 123. Recomputing directly from the raw records gives:
 
-The seed-paired EVQ tau=4 change relative to Geo is +1.24% at 256, then
--14.59%, -31.15%, -34.61%, -34.52%, and -27.78% from 512 through 8K. The
-plain-EVQ scaling direction is consistent across all three seeds.
+| Method/eval | mean PPL@2K | mean PPL@8K | mean teacher-forced PK@8K |
+| --- | ---: | ---: | ---: |
+| Geo raw | 67.214 | 161.863 | 0.407 |
+| Geo + YaRN(s=8) | 68.055 | 82.925 | 0.613 |
+| EVQ raw | 67.869 | 150.279 | 0.533 |
+| EVQ + YaRN(s=8) | 70.716 | 70.851 | 1.000 |
 
-The DAPE result is equally important because it limits the claim: EVQ+DAPE is
-1.38% to 2.04% worse than Geo+DAPE across the evaluated lengths. This protocol
-therefore does not support EVQ-DAPE complementarity. Its defensible use is to
-separate EVQ's zero-learned-parameter frequency allocation from DAPE's learned
-attention-bias/refinement route.
+These recomputed means reproduce the rounded Table 2 values. The raw payload
+also retains autoregressive exact match as a separate field; it does not change
+the paper's definition of PK as teacher-forced NLL-gap retrieval.
 
-## What this evidence does not establish
+### Primary II is partially recovered, not closed
 
-This Phase11B payload is not the submitted Primary II protocol. It uses
-`L_train=256` and 100M tokens, whereas the retained Primary II Geo/DAPE/EVQ
-diagnostic uses `L_train=128` and 15M tokens. It also compares Geo+DAPE with
-EVQ+DAPE, not the exact bare Geo/DAPE/EVQ rows requested for replication.
-Accordingly, it must not:
+The tau=5 fixed-EVQ arm is now raw-backed for seeds 42/137/256 under the exact
+125M, `L_train=128`, 15M-token protocol. Its raw mean/sample-standard-deviation
+is `182.605 +/- 1.144` at 128 tokens and `335.710 +/- 1.745` at 8K.
 
-- upgrade Primary II from seed 42 to a three-seed claim;
-- substitute for the two missing `L_train=128` seeds;
-- be used to claim that EVQ and DAPE are complementary.
+This is useful evidence that the fixed-EVQ row itself is stable across the two
+supplementary seeds. It cannot upgrade the full Primary II comparison because
+matched Geo and DAPE results for seeds 137/256 were not recovered. The honest
+rebuttal statement remains: submitted Geo/DAPE/EVQ comparisons are seed 42,
+with three-seed evidence available only for the fixed EVQ arm and learnable-tau
+endpoints.
 
-## Already tracked before this pass
+### Primary III exact JSON is recoverable
 
-The earlier evidence promotion on `main` already contains the reviewer-safe
-artifacts that matter most:
+`table18_mla_3seed_aggregate.json` contains the evaluator's complete top-level
+source keys in original order: `seeds`, `eval_lengths`, `progression`,
+`extended`, and `summary`. Serializing those keys with the original evaluator
+format produces 8,342 bytes, no trailing newline, and SHA256
+`1e44d30...30953`, exactly matching the previously recorded ignored-source
+identity. The builder and tests now enforce this byte-for-byte reconstruction.
 
-- Primary I EVQ x YaRN Table 2/3 values and seedwise PK@8K values;
-- Primary III three-seed MLA aggregate with exact source hash;
-- Phase11 `L_train=256` Geo/EVQ/YaRN/NTK archival payloads;
-- the 99-run Phase16 basin manifest;
-- the full n=2,086 QuALITY aggregate;
-- the base-10K/base-500K trained-text pilot;
-- report-backed learnable-tau endpoints and scarce-channel pilot evidence.
+This restores the original evaluation JSON, not the missing checkpoints,
+training caches, or per-run training payloads.
 
-The local raw sources for Phase11, QuALITY, the base pilot, and the new
-Phase11B payload are present and match their recorded SHA256 identities. The
-ignored source for the Primary III MLA snapshot is not present at its expected
-local path, but the tracked snapshot retains its exact source hash and
-per-seed values.
+### Phase11B remains supporting boundary evidence
 
-## Families not promoted
+`data/curated/phase11b_125m_l256_3seed.json` remains valuable for a separate
+`L_train=256`, 100M-token protocol: plain EVQ improves long-range PPL across
+three seeds, while EVQ+DAPE is 1.38% to 2.04% worse than Geo+DAPE. It is useful
+to state a non-complementarity boundary, but it is not the submitted
+`L_train=128` Primary II protocol and cannot substitute for its missing matched
+Geo/DAPE seeds.
 
-The following local families were inspected and intentionally not promoted:
+## What was deliberately not promoted
 
-| Family | Decision |
-| --- | --- |
-| Checkpoints, tensor caches, logs, bytecode | Reproducibility/storage noise; keep ignored. |
-| 750M continuation | Single-seed supporting evidence, not a current rebuttal dependency. |
-| Historical LLaMA/Qwen LoRA and LongBench | Old or affected control protocols; do not reuse for the corrected matched 8B claim. |
-| Video DiT | Supporting two-seed modality evidence already summarized; no core rebuttal gap closed. |
-| Weekend tau sweeps | The useful 99-run coverage is already represented by the sanitized Phase16 manifest. |
-| Six zero-byte JSON files | Invalid artifacts; never treat them as completed evidence. |
-| Broad copied audit workspaces and private manifests | Non-portable and potentially machine-specific; keep ignored. |
+- Checkpoints, tensor caches, logs, build artifacts, and broad copied audit
+  workspaces: large, machine-specific, or non-reviewer-grade.
+- Historical LLaMA/Qwen controls affected by old protocol issues: they cannot
+  validate the corrected matched 8B experiment.
+- Single-seed 750M continuation and old 1B-token MLA rows: supporting evidence
+  only; neither closes a current multi-seed reviewer question.
+- Six zero-byte JSON files: invalid artifacts, never completed evidence.
 
 ## Remaining decision-critical gaps
 
-1. Two additional matched `L_train=128` seeds for Primary II Geo/DAPE/fixed
-   EVQ remain the highest-value missing experiment.
-2. The exact original Primary I raw run payload is not present locally; the
-   tracked Table 2/3 artifact is a validated, transcribed evidence snapshot.
-3. The exact ignored raw JSON behind the tracked Primary III MLA snapshot is
-   absent locally, although its portable per-seed snapshot and source hash are
-   tracked.
-4. No reviewer-grade multi-seed 1B-token MLA completion artifact was found.
-5. The corrected matched LLaMA-3-8B Geo/EVQ positional-distillation experiment
-   has scripts and protocol only; it has not been run and has no result payload.
+1. Matched `L_train=128` Geo and DAPE seeds 137/256. Fixed EVQ tau=5 no longer
+   needs recovery, but the comparison still needs those four matched runs.
+2. Reviewer-grade 1B-token MLA multi-seed results. None were found.
+3. Primary I and Primary III checkpoint/data hashes. Raw evaluation payloads
+   are now tracked, but checkpoint-level provenance remains unavailable.
+4. Corrected matched LLaMA-3-8B Geo/EVQ positional-distillation results. The
+   protocol and scripts exist; no new completion is claimed here.
 
 ## Rebuild and validation
 
-On a checkout containing the ignored Phase11B sources:
+All newly recovered source JSONs are tracked, so a fresh checkout can rebuild
+the portable assets without the broad ignored result tree:
 
 ```bash
-python scripts/build_rebuttal_evidence_bundle.py --only phase11b
-python scripts/validate_rebuttal_evidence_bundle.py
-python -m unittest tests.test_rebuttal_evidence_bundle -v
+python3 scripts/build_rebuttal_evidence_bundle.py \
+  --only primary1 --only primary2_tau5 --only mla_raw
+python3 scripts/validate_rebuttal_evidence_bundle.py
+python3 -m unittest tests.test_rebuttal_evidence_bundle -v
 ```
 
-The builder refuses source files whose SHA256 identity differs from the two
-audited raw JSON files.
+The builder rejects any source whose SHA256 differs from the audited archival
+identity, and the validator checks the raw source files and reconstructed MLA
+file independently.

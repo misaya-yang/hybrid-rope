@@ -11,12 +11,29 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import statistics
 from pathlib import Path
 from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_OUTPUT_DIR = ROOT / "data" / "curated"
 DEFAULT_MLA_SOURCE = ROOT / "results" / "eval_3seeds_full_results.json"
+DEFAULT_MLA_SNAPSHOT_SOURCE = DEFAULT_OUTPUT_DIR / "table18_mla_3seed_aggregate.json"
+DEFAULT_PRIMARY1_SOURCE = (
+    ROOT / "data" / "results_5090b" / "evq_yarn_10pct_allseeds.json"
+)
+DEFAULT_PRIMARY2_SEED42_SOURCE = (
+    ROOT / "data" / "evq_128tok_results" / "extended_sweep" / "results_final.json"
+)
+DEFAULT_PRIMARY2_EXTRA_SEEDS_SOURCE = (
+    ROOT
+    / "data"
+    / "evq_128tok_results"
+    / "phase7"
+    / "multiseed"
+    / "results_final.json"
+)
 DEFAULT_QUALITY_SOURCE = (
     ROOT
     / "results"
@@ -26,7 +43,6 @@ DEFAULT_QUALITY_SOURCE = (
 )
 DEFAULT_BASE_SOURCE_DIR = ROOT / "results" / "core_text" / "phase18_base_sweep"
 DEFAULT_PHASE11B_SOURCE_DIR = ROOT / "results" / "core_text" / "phase11b"
-DEFAULT_OUTPUT_DIR = ROOT / "data" / "curated"
 
 BASE_RUN_PATHS = {
     "base_10000_geo": "d64_base10000_geo_tau0.00_seed42/result.json",
@@ -37,6 +53,9 @@ BASE_RUN_PATHS = {
 
 EXPECTED_SHA256 = {
     "mla": "1e44d30bb880e4b7427ae55bd7034782989152bd2afca9217495f9b8ece30953",
+    "primary1": "1dbec88efac6d7442796d81fa1d073e3a76b1388dd815764bcb8b619f234511c",
+    "primary2_seed42": "980246a9950d7e40e39278a4feef8115e6b35a9feb6e1fe1eb190faac1caf1fd",
+    "primary2_extra_seeds": "4fd031f44d966117fa7473eaf405b4503329d81744a6938158fd588901535d47",
     "phase11_raw": "6bdf97335365ea3a92c15ff84fc52f292ddad96b0f6e142f8b98199295dffa30",
     "phase11_yarn": "1f9550c46fa5b51b24b4d2e805c4dbbba8d639c19f664e812072bf8659b85321",
     "phase11b_scaling": "b8ae71708f18b54ed1249c77d26ba2e7aac6d4871a445648487c855740de6d94",
@@ -47,6 +66,8 @@ EXPECTED_SHA256 = {
     "base_500000_geo": "9f495367a7f2975e00278512777978f7b219308534f34f75fa3799fcf1b40d7d",
     "base_500000_evq": "21447e44789fc13b86e8a389ba43f2eab4d31837acd478ac7267134057cee3dc",
 }
+
+MLA_RAW_KEYS = ("seeds", "eval_lengths", "progression", "extended", "summary")
 
 
 def default_phase11_dir(root: Path = ROOT) -> Path:
@@ -106,6 +127,172 @@ def build_mla_snapshot(source: Path) -> dict[str, Any]:
         "progression": payload["progression"],
         "extended": payload["extended"],
         "summary": payload["summary"],
+    }
+
+
+def reconstruct_mla_source_bytes(snapshot_source: Path) -> bytes:
+    """Recreate the evaluator's exact JSON bytes from the portable snapshot."""
+    snapshot = json.loads(snapshot_source.read_text(encoding="utf-8"))
+    missing = [key for key in MLA_RAW_KEYS if key not in snapshot]
+    if missing:
+        raise ValueError(f"MLA snapshot is missing raw source keys: {missing}")
+    payload = {key: snapshot[key] for key in MLA_RAW_KEYS}
+    raw = json.dumps(payload, indent=2).encode("utf-8")
+    actual = hashlib.sha256(raw).hexdigest()
+    if actual != EXPECTED_SHA256["mla"]:
+        raise ValueError(
+            "Reconstructed MLA source identity mismatch: "
+            f"expected {EXPECTED_SHA256['mla']}, got {actual}"
+        )
+    return raw
+
+
+def _passkey_rate_at_length(run: dict[str, Any], length: int) -> float:
+    prefix = f"L={length}_"
+    cells = [
+        cell
+        for key, cell in run["passkey_summary"].items()
+        if key.startswith(prefix)
+    ]
+    if not cells:
+        raise ValueError(f"Passkey payload has no cells for length {length}")
+    return statistics.mean(cell["retrieval_rate"] for cell in cells)
+
+
+def build_primary1_snapshot(source: Path) -> dict[str, Any]:
+    payload = load_verified_json(source, EXPECTED_SHA256["primary1"])
+    results = payload.get("results", {})
+    if len(results) != 6:
+        raise ValueError("Primary I source must contain six method/seed records")
+
+    grouped: dict[str, dict[int, dict[str, Any]]] = {"Geo": {}, "EVQ": {}}
+    for record in results.values():
+        meta = record.get("meta", {})
+        method = meta.get("method")
+        seed = meta.get("seed")
+        if method not in grouped or seed not in (7, 42, 123):
+            raise ValueError("Primary I source has an unexpected method or seed")
+        if meta.get("mix") != "10pct":
+            raise ValueError("Primary I source is not the 10% passkey-mix protocol")
+        grouped[method][seed] = record
+    if any(sorted(records) != [7, 42, 123] for records in grouped.values()):
+        raise ValueError("Primary I source must contain seeds 7, 42, and 123 per method")
+
+    row_specs = (
+        ("geo_raw", "Geo", "baseline"),
+        ("geo_yarn_s8", "Geo", "yarn"),
+        ("evq_raw", "EVQ", "baseline"),
+        ("evq_yarn_s8", "EVQ", "yarn"),
+    )
+    rows = []
+    for row_id, method, mode in row_specs:
+        records = grouped[method]
+        seedwise_pk = {
+            str(seed): _passkey_rate_at_length(records[seed][mode], 8192)
+            for seed in sorted(records)
+        }
+        rows.append(
+            {
+                "id": row_id,
+                "method": method,
+                "evaluation": "raw" if mode == "baseline" else "yarn_s8",
+                "ppl_2048_mean": statistics.mean(
+                    records[seed][mode]["ppl"]["2048"] for seed in records
+                ),
+                "ppl_8192_mean": statistics.mean(
+                    records[seed][mode]["ppl"]["8192"] for seed in records
+                ),
+                "pk_8192_seedwise": seedwise_pk,
+                "pk_8192_mean": statistics.mean(seedwise_pk.values()),
+            }
+        )
+
+    return {
+        "schema_version": 1,
+        "provenance_status": "raw-json-backed",
+        "artifact_role": "Full archival Primary I raw payload with recomputed Table 2 summaries.",
+        "source": {
+            "path": "data/results_5090b/evq_yarn_10pct_allseeds.json",
+            "sha256": EXPECTED_SHA256["primary1"],
+            "git_source": "backup/2026-03-06",
+        },
+        "protocol": {
+            "model": "454M decoder-only transformer",
+            "train_length": 2048,
+            "passkey_mix": "10pct",
+            "yarn_scale": payload["metadata"]["scale"],
+            "seeds": [7, 42, 123],
+            "pk_metric": "teacher-forced NLL-gap retrieval rate",
+        },
+        "claim_boundary": (
+            "Primary I matched-scale EVQ x YaRN evidence. Autoregressive exact "
+            "match is preserved as a distinct raw field and must not be relabeled "
+            "as the reported teacher-forced PK metric."
+        ),
+        "recomputed_rows": rows,
+        "raw_payload": payload,
+    }
+
+
+def build_primary2_tau5_snapshot(
+    seed42_source: Path, extra_seeds_source: Path
+) -> dict[str, Any]:
+    seed42_payload = load_verified_json(
+        seed42_source, EXPECTED_SHA256["primary2_seed42"]
+    )
+    extra_payload = load_verified_json(
+        extra_seeds_source, EXPECTED_SHA256["primary2_extra_seeds"]
+    )
+    selected = [
+        seed42_payload["experiments"]["125m_tau5.00_seed42"],
+        extra_payload["experiments"]["125m_tau5.00_seed137"],
+        extra_payload["experiments"]["125m_tau5.00_seed256"],
+    ]
+    selected.sort(key=lambda record: record["seed"])
+    if [record["seed"] for record in selected] != [42, 137, 256]:
+        raise ValueError("Primary II fixed-tau source must contain seeds 42, 137, 256")
+    if any(record.get("tau") != 5.0 for record in selected):
+        raise ValueError("Primary II recovered arm must contain only fixed tau=5")
+
+    ppl_128 = [record["ppl"]["128"] for record in selected]
+    ppl_8192 = [record["ppl"]["8192"] for record in selected]
+    return {
+        "schema_version": 1,
+        "provenance_status": "raw-json-backed",
+        "artifact_role": "Recovered three-seed fixed-EVQ arm from the L_train=128 diagnostic.",
+        "sources": {
+            "seed42_sweep": {
+                "path": "data/evq_128tok_results/extended_sweep/results_final.json",
+                "sha256": EXPECTED_SHA256["primary2_seed42"],
+            },
+            "extra_seed_sweep": {
+                "path": "data/evq_128tok_results/phase7/multiseed/results_final.json",
+                "sha256": EXPECTED_SHA256["primary2_extra_seeds"],
+            },
+            "git_source": "backup/2026-03-06",
+        },
+        "protocol": {
+            "model": "125M decoder-only transformer",
+            "train_length": 128,
+            "training_tokens": 15000000,
+            "dataset": "FineWeb-Edu",
+            "base": 500000.0,
+            "tau": 5.0,
+            "seeds": [42, 137, 256],
+            "eval_lengths": [128, 256, 512, 1024, 2048, 4096, 8192],
+        },
+        "summary": {
+            "ppl_128_mean": statistics.mean(ppl_128),
+            "ppl_128_sample_std": statistics.stdev(ppl_128),
+            "ppl_8192_mean": statistics.mean(ppl_8192),
+            "ppl_8192_sample_std": statistics.stdev(ppl_8192),
+        },
+        "claim_boundary": (
+            "This recovers the fixed EVQ tau=5 arm only. It does not recover "
+            "matched Geo or DAPE seeds 137/256, so it cannot upgrade the full "
+            "Primary II Geo/DAPE/EVQ comparison to a three-seed claim."
+        ),
+        "runs": selected,
     }
 
 
@@ -343,9 +530,28 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
     )
 
 
+def write_bytes(path: Path, payload: bytes) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(payload)
+
+
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--mla-source", type=Path, default=DEFAULT_MLA_SOURCE)
+    parser.add_argument(
+        "--mla-snapshot-source", type=Path, default=DEFAULT_MLA_SNAPSHOT_SOURCE
+    )
+    parser.add_argument("--primary1-source", type=Path, default=DEFAULT_PRIMARY1_SOURCE)
+    parser.add_argument(
+        "--primary2-seed42-source",
+        type=Path,
+        default=DEFAULT_PRIMARY2_SEED42_SOURCE,
+    )
+    parser.add_argument(
+        "--primary2-extra-seeds-source",
+        type=Path,
+        default=DEFAULT_PRIMARY2_EXTRA_SEEDS_SOURCE,
+    )
     phase11_dir = default_phase11_dir()
     parser.add_argument(
         "--phase11-raw-source",
@@ -367,7 +573,16 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--only",
         action="append",
-        choices=("mla", "phase11", "phase11b", "quality", "base"),
+        choices=(
+            "mla",
+            "mla_raw",
+            "primary1",
+            "primary2_tau5",
+            "phase11",
+            "phase11b",
+            "quality",
+            "base",
+        ),
         help="Build only the selected component; repeat for multiple components.",
     )
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
@@ -381,6 +596,20 @@ def main() -> None:
     if "mla" in components:
         outputs.append(args.output_dir / "table18_mla_3seed_aggregate.json")
         write_json(outputs[-1], build_mla_snapshot(args.mla_source))
+    if "mla_raw" in components:
+        outputs.append(args.output_dir / "eval_3seeds_full_results.json")
+        write_bytes(outputs[-1], reconstruct_mla_source_bytes(args.mla_snapshot_source))
+    if "primary1" in components:
+        outputs.append(args.output_dir / "primary1_evq_yarn_10pct_raw.json")
+        write_json(outputs[-1], build_primary1_snapshot(args.primary1_source))
+    if "primary2_tau5" in components:
+        outputs.append(args.output_dir / "primary2_l128_fixed_tau5_3seed.json")
+        write_json(
+            outputs[-1],
+            build_primary2_tau5_snapshot(
+                args.primary2_seed42_source, args.primary2_extra_seeds_source
+            ),
+        )
     if "phase11" in components:
         outputs.append(args.output_dir / "phase11_l256_3seed_recovered.json")
         write_json(

@@ -21,12 +21,29 @@ CORE_ASSET_SUMMARY = ROOT / "rebuttal_7" / "LOCAL_CORE_ASSET_PROMOTION_SUMMARY.m
 EXPECTED_JSON = {
     "learnable_tau_128tok_evidence.json": "report-backed",
     "mla_channel_count_125m_pilot.json": "report-backed",
+    "primary1_evq_yarn_10pct_raw.json": "raw-json-backed",
+    "primary2_l128_fixed_tau5_3seed.json": "raw-json-backed",
     "phase11_l256_3seed_recovered.json": "raw-json-backed",
     "phase11b_125m_l256_3seed.json": "raw-json-backed",
     "phase16_99run_manifest.meta.json": "sanitized-run-manifest",
     "quality_454m_full_eval.json": "raw-json-backed",
     "table18_mla_3seed_aggregate.json": "raw-json-backed",
     "text_base_10k_500k_pilot.json": "raw-json-backed",
+}
+
+EXPECTED_RAW_SHA256 = {
+    "data/curated/eval_3seeds_full_results.json": (
+        "1e44d30bb880e4b7427ae55bd7034782989152bd2afca9217495f9b8ece30953"
+    ),
+    "data/results_5090b/evq_yarn_10pct_allseeds.json": (
+        "1dbec88efac6d7442796d81fa1d073e3a76b1388dd815764bcb8b619f234511c"
+    ),
+    "data/evq_128tok_results/extended_sweep/results_final.json": (
+        "980246a9950d7e40e39278a4feef8115e6b35a9feb6e1fe1eb190faac1caf1fd"
+    ),
+    "data/evq_128tok_results/phase7/multiseed/results_final.json": (
+        "4fd031f44d966117fa7473eaf405b4503329d81744a6938158fd588901535d47"
+    ),
 }
 
 EXPECTED_PHASE16_FIELDS = [
@@ -136,6 +153,7 @@ def validate_phase16_manifest(csv_path: Path, meta_path: Path) -> list[str]:
 def validate_bundle(require_tracked: bool = True) -> list[str]:
     errors: list[str] = []
     paths = [CURATED / name for name in EXPECTED_JSON]
+    paths.extend(ROOT / rel for rel in EXPECTED_RAW_SHA256)
     csv_path = CURATED / "phase16_99run_manifest.csv"
     paths.extend([csv_path, REBUTTAL_DOC, CORE_ASSET_SUMMARY])
 
@@ -152,6 +170,17 @@ def validate_bundle(require_tracked: bool = True) -> list[str]:
         if actual != status:
             errors.append(
                 f"wrong provenance tier for {name}: expected {status}, got {actual}"
+            )
+
+    for rel, expected in EXPECTED_RAW_SHA256.items():
+        path = ROOT / rel
+        if not path.is_file():
+            errors.append(f"missing: {rel}")
+            continue
+        actual = digest(path)
+        if actual != expected:
+            errors.append(
+                f"raw SHA256 mismatch for {rel}: expected {expected}, got {actual}"
             )
 
     for path in CURATED.glob("*.json"):

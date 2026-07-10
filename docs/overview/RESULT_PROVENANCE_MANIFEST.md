@@ -50,6 +50,9 @@ Portable July reconciliation:
 
 | Artifact | Tier | Artifact SHA256 | Reviewer-use boundary |
 | --- | --- | --- | --- |
+| `data/curated/primary1_evq_yarn_10pct_raw.json` | Raw JSON backed | `51a25d2c72b4808686afd1e0013a9190ab8d5432c8b4604fb43bb134e845485d` | Full Primary I raw payload and recomputed table means; no checkpoint provenance. |
+| `data/curated/primary2_l128_fixed_tau5_3seed.json` | Raw JSON backed | `8759c6c9e37c4efe8f3a0af44dde68393df1f3fdc315b876aff288946fb20320` | Fixed EVQ tau=5 at three seeds; not matched Geo/DAPE replication. |
+| `data/curated/eval_3seeds_full_results.json` | Byte-exact raw JSON | `1e44d30bb880e4b7427ae55bd7034782989152bd2afca9217495f9b8ece30953` | Original Primary III evaluator JSON reconstructed byte-for-byte. |
 | `data/curated/table18_mla_3seed_aggregate.json` | Raw JSON backed | `ad751a26fee43939f644a8ee12e5e50b0003d0d490f790ce1cd85971902ffe8d` | Primary III seedwise/aggregate metrics; no d_eff-convention claim. |
 | `data/curated/phase11_l256_3seed_recovered.json` | Raw JSON backed | `8af8bce33e96f70542d943745bebbbaaa7cc65117587950b75c584f06a2f68db` | L=256 archival Geo/EVQ/scaling records; not L=128 Primary II replication. |
 | `data/curated/phase16_99run_manifest.csv` | Sanitized run manifest | `39ce676ca26967434c0091e09d36824cd16d1a1a204ad464dad0a33aef7b18d5` | Supports run coverage and basin/rank audit; not checkpoint reproduction. |
@@ -88,6 +91,8 @@ Packaged evidence:
 | --- | --- | --- |
 | `paper/tables/table2_evq_yarn_main.tex` | Paper table | `372ac2365ae316a885e556d754268c95e7831aa3df7c81e7decc27d02e560206` |
 | `data/curated/table2_evq_yarn_454m_passkey_10pct.json` | Curated values/protocol | `d2c37769a0a166830d022778bf517c0973eb2ea80a9a87aea3bbadf597cee4ac` |
+| `data/results_5090b/evq_yarn_10pct_allseeds.json` | Exact six-run archival payload | `1dbec88efac6d7442796d81fa1d073e3a76b1388dd815764bcb8b619f234511c` |
+| `data/curated/primary1_evq_yarn_10pct_raw.json` | Portable full-payload copy plus recomputed means | `51a25d2c72b4808686afd1e0013a9190ab8d5432c8b4604fb43bb134e845485d` |
 | `scripts/supporting_eval/eval_passkey_scratch.py` | PK sample/eval helpers | Recompute before release if cited |
 | `scripts/core_text_phases/run_evq_sweep.py` | Core sweep entrypoint | Recompute before release if cited |
 | `scripts/core_text_phases/phase14c_multiscale_evq_yarn.py` | Supporting multiscale check only | Recompute before release if cited |
@@ -96,18 +101,17 @@ Current compact-repo gaps:
 
 - Original per-seed checkpoint hashes are not packaged.
 - Original data artifact hash is not packaged.
-- Original run log is intentionally replaced by curated JSON.
-- The curated JSON is sufficient to inspect reported values, but not to verify
-  checkpoint-level frequency provenance.
+- The complete evaluation payload is now tracked, but original checkpoint and
+  data hashes remain unavailable, so checkpoint-level frequency provenance is
+  still not verifiable.
 
 Branch audit note:
 
 - `backup/2026-03-06` contains archival Table-2-adjacent raw artifacts such as
   `data/results_5090b/evq_yarn_10pct_allseeds.json` and
   `docs/exp/2026-03-03_passkey_mix_results.md`.
-- Those branch artifacts confirm that the curated JSON was distilled from a
-  larger run record, but they are not currently part of the compact main-branch
-  reviewer path.
+- The exact six-run payload has now been promoted into the current reviewer
+  path with its archival SHA256 identity preserved.
 - If reused, sanitize old "6 seed" shorthand: the primary 10% Table 2 row is 3
   seeds per method; the 5% plus 10% EVQ+YaRN observation is supporting context.
 
@@ -146,12 +150,13 @@ Packaged evidence:
 | `paper/tables/table4_pe_dominant.tex` | Paper table | `6075b6f6f5ae39925f030293a145f06b29c689309116aca558463452e6f29331` |
 | `data/curated/fig3_extreme_128.json` | Curated panel/table fallback | `3cbf44eb7166b037ed70b96546c302ab941e7214bdcb20b9477e999c1b9d09ee` |
 | `data/curated/learnable_tau_128tok_evidence.json` | Report-backed seedwise final-tau endpoints | `3873c1bd6dfe2b70eb6eb7ed770946ccd271256174bdee9babd8760df7d7f1cd` |
+| `data/curated/primary2_l128_fixed_tau5_3seed.json` | Raw-backed fixed EVQ tau=5 seeds 42/137/256 | `8759c6c9e37c4efe8f3a0af44dde68393df1f3fdc315b876aff288946fb20320` |
 | `data/curated/phase11_l256_3seed_recovered.json` | Raw-backed L=256 archival payload; distinct protocol | `8af8bce33e96f70542d943745bebbbaaa7cc65117587950b75c584f06a2f68db` |
 
 Current compact-repo gaps:
 
-- Geo/DAPE/EVQ additional seeds are not packaged because those rows are not
-  multi-seed in the current table.
+- Fixed EVQ tau=5 additional seeds are packaged. Matched Geo and DAPE seeds
+  137/256 were not recovered, so the comparison remains seed-42-scoped.
 - Figure 3 panels (b,c) values are preserved in a portable Phase11 snapshot,
   but the existing figure generator is not yet wired to that consolidated
   schema.
@@ -201,6 +206,7 @@ Packaged evidence:
 | Artifact | Role | SHA256 |
 | --- | --- | --- |
 | `data/curated/table18_mla_3seed_aggregate.json` | Raw-backed portable result JSON; embeds ignored-source hash `1e44d30...30953` | `ad751a26fee43939f644a8ee12e5e50b0003d0d490f790ce1cd85971902ffe8d` |
+| `data/curated/eval_3seeds_full_results.json` | Byte-exact evaluator source reconstructed from the portable snapshot | `1e44d30bb880e4b7427ae55bd7034782989152bd2afca9217495f9b8ece30953` |
 | `data/curated/mla_channel_count_125m_pilot.json` | Report-backed single-seed channel-count pilot | `03c690f4f69ce64285ac1015addda402944c5e7bf7ef9490d8a4b39b6ae16ca7` |
 | `paper/appendix/a3_supporting_results.tex` | Paper MLA appendix table/prose | `b1f8380d6a23b7f109d78ed0606cee7a69649ee4a0413510d05b117e97613715` |
 | `paper/sections/05_experiments.tex` | Main experiment prose | `f2b2294b20769c4bf7b672cd65b4e393e2d36ee8a369d0c9e522612a1501391e` |
