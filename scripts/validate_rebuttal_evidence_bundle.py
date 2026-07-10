@@ -16,15 +16,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CURATED = ROOT / "data" / "curated"
 REBUTTAL_DOC = ROOT / "rebuttal_7" / "IGNORED_ASSET_RECONCILIATION.md"
-TRACE_ONLY = ROOT / "rebuttal_7" / "trace_only" / "text_base_10k_500k_pilot.json"
 
 EXPECTED_JSON = {
     "learnable_tau_128tok_evidence.json": "report-backed",
     "mla_channel_count_125m_pilot.json": "report-backed",
     "phase11_l256_3seed_recovered.json": "raw-json-backed",
     "phase16_99run_manifest.meta.json": "sanitized-run-manifest",
-    "quality_454m_full_eval.json": "report-backed",
+    "quality_454m_full_eval.json": "raw-json-backed",
     "table18_mla_3seed_aggregate.json": "raw-json-backed",
+    "text_base_10k_500k_pilot.json": "raw-json-backed",
 }
 
 EXPECTED_PHASE16_FIELDS = [
@@ -135,7 +135,7 @@ def validate_bundle(require_tracked: bool = True) -> list[str]:
     errors: list[str] = []
     paths = [CURATED / name for name in EXPECTED_JSON]
     csv_path = CURATED / "phase16_99run_manifest.csv"
-    paths.extend([csv_path, TRACE_ONLY, REBUTTAL_DOC])
+    paths.extend([csv_path, REBUTTAL_DOC])
 
     for name, status in EXPECTED_JSON.items():
         path = CURATED / name
@@ -151,13 +151,6 @@ def validate_bundle(require_tracked: bool = True) -> list[str]:
             errors.append(
                 f"wrong provenance tier for {name}: expected {status}, got {actual}"
             )
-
-    if not TRACE_ONLY.is_file():
-        errors.append(f"missing: {TRACE_ONLY.relative_to(ROOT)}")
-    else:
-        trace_payload = load_json(TRACE_ONLY)
-        if trace_payload.get("provenance_status") != "trace-only":
-            errors.append("quarantined base pilot is not marked trace-only")
 
     for path in CURATED.glob("*.json"):
         if load_json(path).get("provenance_status") == "trace-only":

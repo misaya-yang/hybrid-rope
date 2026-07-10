@@ -25,25 +25,25 @@ The proposed 7B-class fine-tuning experiment addresses Q18 and deployment scope,
 
 Package readiness: `draft_with_placeholders`. The first item below is ready; the remaining items must retain their visible placeholders until the named artifacts exist.
 
-Portable provenance update: `IGNORED_ASSET_RECONCILIATION.md` records the complete local ignored-asset audit. Primary III and the L=256 Phase11 archive are now raw-JSON-backed in `data/curated/`; the 99-run sweep has a sanitized portable manifest. QuALITY and learnable-tau remain report-backed, and the unrecovered base=10K/500K pilot is `trace-only` and forbidden as rebuttal evidence.
+Portable provenance update: `IGNORED_ASSET_RECONCILIATION.md` records the complete local ignored-asset audit. Primary III, the L=256 Phase11 archive, QuALITY n=2,086 aggregate, and the base=10K/500K pilot are raw-JSON-backed in `data/curated/`; the 99-run sweep has a sanitized portable manifest. Learnable-tau and the MLA channel-count pilot remain report-backed.
 
 ### Reporting integrity (F5-Q1–Q2; ready)
 
-We audited the QuALITY chain from the tracked full-evaluation report through Table 21, Figure 8(a), and the signal-gradient paragraph. Table 21 is the retained result: a seed-42, `n=2086` evaluation of checkpoints initialized at 2K, continued and fine-tuned at 4K, and evaluated at 4K/8K/16K. The former Figure 8(a) instead visualized an obsolete `n=200` accuracy-only pilot, included a 32K point outside the retained full-evaluation table, and had an NLL caption. We replaced it with the four gold-answer-NLL rows from Table 21, explicitly excluded the pilot, and clarified why 4K is in-distribution for this downstream checkpoint. The exact per-example `n=2086` JSON was not recovered in this checkout; we therefore identify these values as tracked-report-backed rather than raw-JSON-backed.
+We audited the QuALITY chain from the recovered full-evaluation aggregate through Table 21, Figure 8(a), and the signal-gradient paragraph. Table 21 is the retained result: a seed-42, `n=2086` evaluation of checkpoints initialized at 2K, continued and fine-tuned at 4K, and evaluated at 4K/8K/16K. The former Figure 8(a) instead visualized an obsolete `n=200` accuracy-only pilot, included a 32K point outside the retained full-evaluation table, and had an NLL caption. We replaced it with the four gold-answer-NLL rows from Table 21, explicitly excluded the pilot, and clarified why 4K is in-distribution for this downstream checkpoint. The tracked snapshot is raw-JSON-backed by the recovered aggregate SHA256 while excluding machine and checkpoint fields.
 
 The review packet's `+0.2pp` summary appears to be a transcription/arithmetic error: the printed 8K-raw entries are `26.8 - 24.6 = +2.2pp`. The manuscript nevertheless used that one near-floor row too strongly. We removed it as a downstream endpoint, now list all four rounded accuracy deltas (`+0.7/+2.2/+0.1/-0.4pp`), and state that they have no stable direction. The retained probability-level observation is the 8K-raw gold-answer-NLL change (`3.202→2.239`, `-30.1%`), while QuALITY accuracy is treated as inconclusive.
 
 ### Acceptance-critical empirical gaps (F5-Q3, Q5–Q9; placeholders)
 
 - **Primary II seeds (Q3):** the submitted Geo/DAPE/EVQ rows remain a seed-42 diagnostic. `[Insert exact 128→8K seeds 137/256, per-seed values, mean/std, and paired deltas.]` The recovered L=256 raw/YaRN three-seed records are portable in `data/curated/phase11_l256_3seed_recovered.json`, but are a different protocol and contain no DAPE row; they cannot substitute for this replication.
-- **Tuned base and b=10K (Q5–Q6):** use the same 125M, `L_train=128` anchor as Table 4, with identical data/tokens/optimizer/seeds. `[Insert Geo b∈{10K,100K,500K,2M}, EVQ b=500K, and at b=10K bare-rule versus c_pred results.]` The recovered branch summary is marked `trace-only` because its raw source is absent; do not cite it.
+- **Tuned base and b=10K (Q5–Q6):** the recovered raw-backed 151.9M/L=512 seed-42 pilot supports only that the direction appears at base 10K as well as 500K. The acceptance-critical closure still uses the 125M, `L_train=128` anchor with identical data/tokens/optimizer/seeds: `[Insert Geo b∈{10K,100K,500K,2M}, EVQ b=500K, and at b=10K bare-rule versus c_pred results.]`
 - **MLA convention (Q7):** the current three-seed run is now portable and raw-JSON-backed, but it tests only `tau=1.414`; it does not identify the optimal `d_eff` convention. `[Insert tau=0.354, 0.707, and 1.414 screen, then replicated relevant comparison.]` The 125M channel-count pilot is qualitative support, not this ablation.
 - **Measured effective length (Q8):** `1/L` remains a falsifiable diffuse-attention approximation. `[Insert estimator definition, sampled layers/heads/tokens, kappa_att, L_eff^J, and uncertainty from existing checkpoints.]`
 - **Autoregressive passkey (Q9):** the paper now labels PK as teacher-forced NLL-gap retrieval wherever prominent. `[Insert AR exact match on the same Primary I checkpoints/examples/seeds/decoding settings.]` Report both metrics side-by-side; never relabel the NLL-gap result as AR accuracy.
 
 ## Reporting correction record
 
-The corrected downstream QA artifact now plots the four gold-answer-NLL rows reported in Table 21, rather than the obsolete 200-sample accuracy pilot. The paper states that the evaluated models were initialized at 2K, continued and fine-tuned at 4K, making 4K in-distribution for this downstream protocol. The full table is the `n=2086`, seed-42 evaluation described in `docs/exp/2026-03-12_phase21b_454m_full_eval_report.md`; the exact per-example `n=2086` result JSON is not present in this checkout, so the table and corrected figure are explicitly report-backed rather than raw-JSON-backed. The tracked `results/core_text/phase21b/phase21b_quality_454m_report.json` is the obsolete `n=200` accuracy-only pilot and is excluded from the corrected table and figure.
+The corrected downstream QA artifact now plots the four gold-answer-NLL rows reported in Table 21, rather than the obsolete 200-sample accuracy pilot. The paper states that the evaluated models were initialized at 2K, continued and fine-tuned at 4K, making 4K in-distribution for this downstream protocol. The full table is the `n=2086`, seed-42 evaluation preserved in `data/curated/quality_454m_full_eval.json`; its source aggregate SHA256 is recorded, while machine and checkpoint fields are omitted. The old `phase21b_quality_454m_report.json` is the obsolete `n=200` accuracy-only pilot and is excluded from the corrected table and figure.
 
 No experimental value was changed beyond correcting the contradictory presentation. The downstream accuracy deltas are `+0.7`, `+2.2`, `+0.1`, and `-0.4` percentage points from the rounded table entries; they are treated as unstable/capacity-limited, not positive evidence. The signal-gradient paragraph now uses the supported gold-answer-NLL change and lists all accuracy deltas instead of cherry-picking `+2.2pp`.
 
@@ -79,7 +79,7 @@ Source: `data/curated/table18_mla_3seed_aggregate.json`, promoted from the exact
 
 - Status: `DONE` locally; provenance caveat retained.
 - Fix: replaced the obsolete accuracy visualization with a vector gold-answer-NLL figure generated by `scripts/figures/fig5_downstream_qa_nll.tex`; synchronized caption, protocol, checkpoint history, `n=2086`, and the exclusion of the old `n=200` pilot.
-- Draft response: “The inconsistency was a real figure-provenance error. The old panel came from an earlier 200-sample accuracy-only pilot, whereas Table 21 summarizes the later full `n=2086` evaluation. We replaced the panel with Table 21's four gold-answer-NLL rows and now state the checkpoint path explicitly: 2K initialization, 4K continuation and QuALITY fine-tuning, then 4K/8K/16K evaluation. The pilot is excluded. The retained values are backed by the tracked full-evaluation report; because the exact per-example JSON is not present in this checkout, we label them report-backed rather than raw-JSON-backed.”
+- Draft response: “The inconsistency was a real figure-provenance error. The old panel came from an earlier 200-sample accuracy-only pilot, whereas Table 21 summarizes the later full `n=2086` evaluation. We replaced the panel with Table 21's four gold-answer-NLL rows and now state the checkpoint path explicitly: 2K initialization, 4K continuation and QuALITY fine-tuning, then 4K/8K/16K evaluation. The pilot is excluded. The recovered aggregate reproduces every retained row and is recorded by source SHA256; accuracy remains near random and is not used as positive evidence.”
 - 中文核对：主动承认图错和来源混用；不能把缺失的全量 JSON 说成已归档。
 
 ### F5-Q2 — Mischaracterized `+2.2pp` signal-gradient statement
@@ -106,14 +106,14 @@ Source: `data/curated/table18_mla_3seed_aggregate.json`, promoted from the exact
 ### F5-Q5 — Tuned geometric base
 
 - Status: `PENDING-EXP`.
-- Existing support: exact-kernel collision scores across bases and video base controls are mechanism support, not a trained-text nearest-neighbor baseline. `rebuttal_7/trace_only/text_base_10k_500k_pilot.json` is quarantined because its claimed raw results are absent and must not be cited.
+- Existing support: `data/curated/text_base_10k_500k_pilot.json` is raw-JSON-backed and shows the single-seed direction at both base 10K and 500K. It is supporting evidence only and does not replace a tuned Geo grid or the requested `c_pred` comparison.
 - Draft response placeholder: “We agree that tuned training-time base is the nearest one-knob control. We will compare Geo at `b∈{10K,100K,2M}` against EVQ at `b=500K` under the same model/data/token budget and report both in-range and extrapolation metrics. The current collision and video base sweeps are complementary mechanism evidence, not substitutes for this control.”
 - 中文核对：不要声称 Table 5 已经回答训练后的 base tuning。
 
 ### F5-Q6 — b=10K external validity
 
 - Status: `PENDING-EXP`; decision rule documented.
-- Fix: Appendix now includes a practitioner guide: use the bare rule only in the tested regime; at smaller base/larger length compute `c_pred(L,b)` and apply the forcing-branch diagnostic. The trace-only pilot neither has recovered raw provenance nor compares bare-rule against `c_pred`.
+- Fix: Appendix now includes a practitioner guide: use the bare rule only in the tested regime; at smaller base/larger length compute `c_pred(L,b)` and apply the forcing-branch diagnostic. The recovered raw-backed pilot is still single-seed and does not compare the bare rule against `c_pred`.
 - Draft response placeholder: “We agree that all trained-text anchors use `b=500K`. The revision now marks the bare rule as regime-conditional and gives the explicit `c_pred(L,b)` fallback. [Insert matched `b=10K` bare versus corrected results.] Until this run exists, we make no trained-text generalization to the LLaMA-default base.”
 - 中文核对：指南已解决误导风险，但外部有效性仍需实验。
 

@@ -33,7 +33,7 @@ The 1B/4K MLA anomaly is not "no code." It is code-backed and report-backed:
 `run_350m_4k_1b.sh` / `run_350m_4k_v2_1b.sh` invoke
 `run_gqa_evq_experiment.py`, and `yarn_finetune_eval.py` implements baseline,
 inference-only YaRN, and YaRN+FT. However, the compact branch does not contain
-the exact 1B baseline or YaRN+FT JSONs behind `PHASE18_YARN_FT_REPORT.md`.
+the exact 1B baseline or YaRN+FT JSONs behind the historical Phase18 report reference.
 Therefore the 1B row is not reviewer-grade provenance and should remain
 supporting-only or be removed from any evidence chain that requires JSON replay.
 
@@ -72,7 +72,7 @@ branch.
 | --- | --- | --- | --- |
 | Code entrypoint | `run_gqa_evq_experiment.py` | same shared entrypoint | `run_350m_mla32_500m.sh`, `run_350m_4k_1b.sh` |
 | Attention | MLA | MLA | launch wrappers pass `--attn_type mla` |
-| Nominal model | 432M/350M-class MLA | 432M/350M-class MLA | `PHASE18_YARN_FT_REPORT.md`; code tier `350m` |
+| Nominal model | 432M/350M-class MLA | 432M/350M-class MLA | paper supporting row; code tier `350m` |
 | Train length | 8192 | 4096 | launch wrappers |
 | Train tokens | 500M | 1B | launch wrappers/report |
 | Seeds | 42, 43, 88 in eval JSON | seed 42 reported; wrapper planned 42,43,88 | current compact branch lacks exact JSON for all 1B seeds |
@@ -84,7 +84,7 @@ branch.
 | Tau interpretation | empirical `d_eff=128` convention | same numeric convention, not same train length | paper wording now scoped |
 | Dataset label | `fineweb-edu` cache label | `fineweb-edu` cache label | code/cache names |
 | Actual data source | likely FineWeb-Edu if no external cache substitution; no data hash in compact tree | report/scripts indicate Pile+OpenWebText v1, with v2/v3/v4/v5 variants also present | data-prep scripts and report |
-| Eval lengths | 8K,16K,20K,24K,28K,32K | 4K,8K,16K,32K and YaRN target/beyond-target lengths | `eval_3seeds_full_results.json`, `PHASE18_YARN_FT_REPORT.md` |
+| Eval lengths | 8K,16K,20K,24K,28K,32K | 4K,8K,16K,32K and YaRN target/beyond-target lengths | portable MLA snapshot, paper supporting row |
 | Scoring | full-sequence random chunks | same family for PPL; YaRN+FT script also uses random chunks | eval scripts |
 | Current JSON | yes: `results/eval_3seeds_full_results.json` | no exact baseline/YaRN+FT JSON found | compact tree scan |
 
@@ -251,7 +251,7 @@ the true source via manifest, not infer it from filename.
 | QuALITY Gold NLL | `results/core_text/phase21b/` | `A` supporting | downstream probability signal, not main task win |
 | LoRA 8B | `experiments/lora_evq_v2/` and supporting result dirs | `B/C` | exploratory only |
 | Video DiT | `results/video_dit/`, `results/supporting_video/` | mixed | supporting only |
-| 1B/4K MLA | `PHASE18_YARN_FT_REPORT.md`, `PHASE19_TAU1_vs_GEO_REPORT.md` | `C` | limitation/root-cause target only |
+| 1B/4K MLA | paper supporting row plus historical external report references | `C` | limitation/root-cause target only |
 
 Manual-copy risks already fixed:
 

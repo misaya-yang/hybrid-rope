@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "provenance_status": "raw-json-backed",
+  "sources": {
+    "base_10000_geo": {
+      "path_hint": "results/core_text/phase18_base_sweep/d64_base10000_geo_tau0.00_seed42/result.json",
+      "sha256": "c367ff7ae073adb2c811a38f223305f96d44789c6fc2b293df2ba1675fc466d0"
+    },
+    "base_10000_evq": {
+      "path_hint": "results/core_text/phase18_base_sweep/d64_base10000_evq_tau2.83_seed42/result.json",
+      "sha256": "0821423633d821566bd5414e4fde75bb5a4f175197f8242bd00407d79d7571e5"
+    },
+    "base_500000_geo": {
+      "path_hint": "results/core_text/phase18_base_sweep/d64_base500000_geo_tau0.00_seed42/result.json",
+      "sha256": "9f495367a7f2975e00278512777978f7b219308534f34f75fa3799fcf1b40d7d"
+    },
+    "base_500000_evq": {
+      "path_hint": "results/core_text/phase18_base_sweep/d64_base500000_evq_tau2.83_seed42/result.json",
+      "sha256": "21447e44789fc13b86e8a389ba43f2eab4d31837acd478ac7267134057cee3dc"
+    }
+  },
+  "protocol": {
+    "model_parameters": 151900000,
+    "train_length": 512,
+    "training_tokens": 50003968,
+    "dataset": "FineWeb-Edu",
+    "head_dim": 64,
+    "seed": 42,
+    "evq_tau": 2.828
+  },
+  "rows": [
+    {
+      "base": 10000,
+      "geo_ppl": {
+        "512": 74.86,
+        "1024": 101.85,
+        "2048": 165.27,
+        "4096": 246.12
+      },
+      "evq_ppl": {
+        "512": 77.57,
+        "1024": 90.05,
+        "2048": 128.44,
+        "4096": 192.39
+      },
+      "evq_relative_change_percent": {
+        "512": 3.62,
+        "1024": -11.59,
+        "2048": -22.28,
+        "4096": -21.83
+      }
+    },
+    {
+      "base": 500000,
+      "geo_ppl": {
+        "512": 73.74,
+        "1024": 105.55,
+        "2048": 185.22,
+        "4096": 284.87
+      },
+      "evq_ppl": {
+        "512": 74.32,
+        "1024": 90.36,
+        "2048": 132.12,
+        "4096": 191.9
+      },
+      "evq_relative_change_percent": {
+        "512": 0.79,
+        "1024": -14.39,
+        "2048": -28.67,
+        "4096": -32.64
+      }
+    }
+  ],
+  "claim_boundary": "Raw-JSON-backed single-seed supporting pilot. It shows that the direction is not unique to base 500K, but it is not a tuned-base sweep, does not compare c_pred at base 10K, and cannot establish the best geometric base."
+}

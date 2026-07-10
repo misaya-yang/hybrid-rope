@@ -55,8 +55,8 @@ Portable July reconciliation:
 | `data/curated/phase16_99run_manifest.csv` | Sanitized run manifest | `39ce676ca26967434c0091e09d36824cd16d1a1a204ad464dad0a33aef7b18d5` | Supports run coverage and basin/rank audit; not checkpoint reproduction. |
 | `data/curated/learnable_tau_128tok_evidence.json` | Report backed | `3873c1bd6dfe2b70eb6eb7ed770946ccd271256174bdee9babd8760df7d7f1cd` | Final tau endpoints, not a per-step trajectory. |
 | `data/curated/mla_channel_count_125m_pilot.json` | Report backed | `03c690f4f69ce64285ac1015addda402944c5e7bf7ef9490d8a4b39b6ae16ca7` | Single-seed qualitative support, not a d_eff/tau ablation. |
-| `data/curated/quality_454m_full_eval.json` | Report backed | `2bdc684578f665a3bbe3342ccbfc4b1a4ae7084bd59226c14bb4f6e129c9e69d` | Correct n=2,086 table/figure values; raw full-evaluation JSON missing. |
-| `rebuttal_7/trace_only/text_base_10k_500k_pilot.json` | Trace only | `f2acd1607c479bac942d463e89a7d369d1fee0215193466c92dd966019a80971` | Internal quarantine only; excluded from the reviewer supplement and forbidden for citation until source JSONs are recovered and hashed. |
+| `data/curated/quality_454m_full_eval.json` | Raw JSON backed | `648442141fc94c06db5143283ea95eb46133dcb2ceda39bbffafa17b738cdb84` | Correct n=2,086 table/figure values; accuracy remains inconclusive. |
+| `data/curated/text_base_10k_500k_pilot.json` | Raw JSON backed | `fbd4c04abdfe13adf8578bc49e40f084942aab8b0e18d207a026208e51ebd6c4` | Single-seed 151.9M supporting pilot; not a tuned-base sweep or `c_pred` control. |
 
 ## M1: Table 2 EVQ x YaRN
 
@@ -211,14 +211,14 @@ Packaged evidence:
 | `scripts/core_text_phases/audit_training_artifacts.py` | Offline train-cache/token-count audit helper | `bb4a89d522557cc1878cfa37b16de9a7a97930228402a49e5fae6c1df5e6edd5` |
 | `scripts/core_text_phases/make_artifact_manifest.py` | Sanitized external artifact manifest helper | `38cb1f687cc08aa23e518a4da2399cece69754446292bd92cb6dee153c0f4099` |
 | `docs/overview/README.md` | Overview docs entrypoint and audit-stack navigation | `4fbd556bcc908e8705e4a88ebdaa5ce5732bf90afbd71ad1cddbbb1b3cb62f0b` |
-| `docs/overview/OPUS48_REBUTTAL_MASTER_BRIEF.md` | Single advisor-facing rebuttal master brief | `f1542757902e787ac6f20c15c27e655c3b2070c59fb3b1034ca46e1a7eb7020e` |
+| `docs/overview/OPUS48_REBUTTAL_MASTER_BRIEF.md` | Single advisor-facing rebuttal master brief | `6c4c5c3fde341fa4fc235c5c44d3490debb5cbd9746b926cd6c235aa27554470` |
 | `docs/overview/OPUS48_AUDIT_CONTROL_CENTER.md` | One-stop Opus 4.8 audit index and P0 checklist | `f84f22056513902888c87f9c52abb07713ac538039406ed7343108b777db5f20` |
 | `docs/overview/OPUS48_ARTIFACT_RECOVERY_RUNBOOK.md` | External artifact recovery commands and acceptance criteria | `4857a2d859f07d0df9c80955dfb6995bf5412a7b4c167cfb0f54dd79ed6faad6` |
 | `docs/overview/OPUS48_COMPLETION_AUDIT.md` | Requirement-level completion and remaining-gap audit | `9ba18985aaf8e50ef459b75bbe9999d12fc584d8d049d26a1bfdf309b56119b4` |
 | `docs/overview/OPUS48_ISSUE_RESOLUTION_LEDGER.md` | Per-issue resolution state, evidence, and remaining gates | `f2bf3f142b3511b2e1da8160293156e8f4ecebd938218fd0204548dfa8b02ef2` |
 | `docs/overview/OPUS48_REBUTTAL_RESPONSE_MATRIX.md` | Rebuttal-safe answer strategy and forbidden-claim matrix | `75bae5a7c4ef05dcfd93379f38d1ea2cb869c870e3b533f7560298301ac2dae4` |
-| `docs/overview/OPUS48_FORENSIC_AUDIT_REPORT.md` | Prompt-structured forensic audit report | `b51aebe47022b9dce7fe457caf0066b7d4723ceb899b9f3221606d9c048ede7d` |
-| `docs/overview/PAPER_CLAIMS_MAP.md` | Paper-to-experiment traceability map with explicit artifact gates | `c17ee81889a849fb554c4f8e225c69e6944de929d794a220fc6e0c8cb6ee3917` |
+| `docs/overview/OPUS48_FORENSIC_AUDIT_REPORT.md` | Prompt-structured forensic audit report | `ec51bb535eb9badc97a0e0d55aa1ccc5e2486e830c813f437403370e71c71a5b` |
+| `docs/overview/PAPER_CLAIMS_MAP.md` | Paper-to-experiment traceability map with explicit artifact gates | `cf9ed462b193a79f1096f73ff9f52153e0ca9d228ca09a37d4da25ebc7f0b293` |
 | `paper/REBUTTAL_PLAYBOOK.md` | Scoped rebuttal draft; must not override audit stack | `ef94296fb39c9b6b2e7b22f16c23851d94b6c90d25e9f7cc218d1fd337e6dbe4` |
 | `tests/test_opus48_audit_docs.py` | O48 coverage/link/stale-phrase regression test | `e7e9c1b5cbd82535bfffd0c788c01e9c46bfc6d212468ed15f77a145fb171ecb` |
 
@@ -274,7 +274,6 @@ Packaged evidence:
 
 | Artifact | Role | SHA256 |
 | --- | --- | --- |
-| `results/PHASE18_YARN_FT_REPORT.md` | Supporting result report | `e00dcc66b943e02f4d9b6992b2e4c81c356625940939ddb227a5f304fda6f61b` |
 | `scripts/core_text_phases/run_350m_4k_1b.sh` | Historical launch script | `0f59e5fa97ddcd4b3ef925e4e2097779e5e425e9a501257b7b11d5a5e3279c05` |
 | `scripts/core_text_phases/yarn_finetune_eval.py` | YaRN+FT eval script | `ae2ae0536a43db4e9b15ffba3b54978b080837dedfe7fbf3918391af362dd471` |
 | `scripts/core_text_phases/audit_rope_checkpoint.py` | Required artifact-audit helper | `9d974b58b44f8b664d9f250cbf6a4d5ec505f5077cb55d1120b4f638f9e53ad9` |
@@ -285,8 +284,8 @@ Current compact-repo gaps:
 
 - Exact checkpoint hashes are not packaged.
 - Exact training data hash is not packaged.
-- Exact baseline and YaRN+FT JSON files are not packaged; the compact branch
-  currently has Markdown reports for this row.
+- Exact baseline and YaRN+FT JSON files are not packaged, and the compact branch
+  does not contain a reviewer-grade result report for this row.
 - Seeds 43 and 88 are not reported for the 1B/4K row.
 - Historical launch script provenance is weaker than primary-table provenance.
 

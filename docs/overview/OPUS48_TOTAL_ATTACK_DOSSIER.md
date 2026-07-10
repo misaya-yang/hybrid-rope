@@ -79,7 +79,7 @@ Evidence state:
 | Layer | State |
 | --- | --- |
 | Training/eval code | Exists; current eval scripts now enforce checkpoint-loaded `inv_freq`. |
-| Markdown report | Exists: `results/PHASE18_YARN_FT_REPORT.md`. |
+| Markdown report | Not tracked in the compact checkout; only the paper supporting summary remains. |
 | Exact compact JSON | Missing. |
 | Checkpoint/data hashes | Missing. |
 | Same-config token scaling | Not established. |

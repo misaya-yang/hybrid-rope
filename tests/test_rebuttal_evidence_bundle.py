@@ -4,34 +4,39 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 import re
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
-from scripts import package_supplement, validate_rebuttal_evidence_bundle
+from scripts import (
+    build_rebuttal_evidence_bundle,
+    package_supplement,
+    validate_rebuttal_evidence_bundle,
+)
 from scripts.core_text_phases import export_phase16_manifest
 
 
 ROOT = Path(__file__).resolve().parents[1]
 CURATED = ROOT / "data" / "curated"
 REBUTTAL = ROOT / "rebuttal_7"
-TRACE_ONLY = REBUTTAL / "trace_only" / "text_base_10k_500k_pilot.json"
 
 EXPECTED_JSON = {
     "learnable_tau_128tok_evidence.json": "report-backed",
     "mla_channel_count_125m_pilot.json": "report-backed",
     "phase11_l256_3seed_recovered.json": "raw-json-backed",
     "phase16_99run_manifest.meta.json": "sanitized-run-manifest",
-    "quality_454m_full_eval.json": "report-backed",
+    "quality_454m_full_eval.json": "raw-json-backed",
     "table18_mla_3seed_aggregate.json": "raw-json-backed",
+    "text_base_10k_500k_pilot.json": "raw-json-backed",
 }
 
 PUBLIC_BUNDLE_FILES = [
     *(CURATED / name for name in EXPECTED_JSON),
     CURATED / "phase16_99run_manifest.csv",
-    TRACE_ONLY,
     REBUTTAL / "IGNORED_ASSET_RECONCILIATION.md",
 ]
 
@@ -49,10 +54,8 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
 
         self.assertTrue((CURATED / "phase16_99run_manifest.csv").is_file())
         self.assertTrue((REBUTTAL / "IGNORED_ASSET_RECONCILIATION.md").is_file())
-        self.assertTrue(TRACE_ONLY.is_file())
-        self.assertEqual(
-            json.loads(TRACE_ONLY.read_text(encoding="utf-8"))["provenance_status"],
-            "trace-only",
+        self.assertFalse(
+            (REBUTTAL / "trace_only" / "text_base_10k_500k_pilot.json").exists()
         )
         for path in CURATED.glob("*.json"):
             self.assertNotEqual(load_json(path.name).get("provenance_status"), "trace-only")
@@ -86,12 +89,119 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
         self.assertEqual(len(data["raw_runs"]), 9)
         self.assertEqual(len(data["yarn_runs"]), 9)
 
-    def test_quality_asset_cannot_masquerade_as_raw_json_backed(self):
+    def test_quality_asset_is_raw_backed_and_sanitized(self):
         data = load_json("quality_454m_full_eval.json")
-        self.assertEqual(data["provenance_status"], "report-backed")
-        self.assertFalse(data["raw_artifact"]["available"])
-        self.assertEqual(data["raw_artifact"]["expected_eval_samples"], 2086)
-        self.assertNotIn("surviving aggregate", json.dumps(data).lower())
+        self.assertEqual(data["provenance_status"], "raw-json-backed")
+        self.assertEqual(
+            data["source"]["sha256"],
+            "5fc3254cb7b44a918328056ccd505d01e5539dc596d4c06273c9914ec93e3caa",
+        )
+        self.assertEqual(data["protocol"]["eval_samples"], 2086)
+        serialized = json.dumps(data).lower()
+        self.assertNotIn("server", serialized)
+        self.assertNotIn("checkpoint", serialized)
+
+    def test_quality_builder_verifies_hash_and_omits_machine_fields(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            source = Path(tmp) / "quality.json"
+            payload = {
+                "setup": {
+                    "model_tier": "454M",
+                    "architecture": "24L/16H/1024d, head_dim=64",
+                    "pretrain_context": 2048,
+                    "continue_train_context": 4096,
+                    "finetune_context": 4096,
+                    "finetune_steps": 2000,
+                    "finetune_seed": 42,
+                    "eval_samples": 2086,
+                    "eval_scoring": "length_normalized_option_nll (4-option accuracy)",
+                    "random_baseline_accuracy": 25.0,
+                    "server": "private-machine",
+                },
+                "models": {"geo": {"checkpoint": "/private/geo.pt"}},
+                "results_raw": {
+                    length: {
+                        "geo_accuracy": 24.0,
+                        "geo_correct": 500,
+                        "geo_gold_nll": 3.0,
+                        "evq_accuracy": 25.0,
+                        "evq_correct": 520,
+                        "evq_gold_nll": 2.0,
+                    }
+                    for length in ("4k", "8k", "16k")
+                },
+                "results_yarn": {
+                    "8k_yarn_scale2": {
+                        "geo_accuracy": 24.0,
+                        "geo_correct": 500,
+                        "geo_gold_nll": 3.0,
+                        "evq_accuracy": 25.0,
+                        "evq_correct": 520,
+                        "evq_gold_nll": 2.0,
+                    }
+                },
+            }
+            source.write_text(json.dumps(payload), encoding="utf-8")
+            digest = hashlib.sha256(source.read_bytes()).hexdigest()
+            with mock.patch.dict(
+                build_rebuttal_evidence_bundle.EXPECTED_SHA256,
+                {"quality": digest},
+            ):
+                built = build_rebuttal_evidence_bundle.build_quality_snapshot(source)
+            self.assertEqual(built["source"]["sha256"], digest)
+            self.assertEqual(len(built["rows"]), 4)
+            self.assertNotIn("private-machine", json.dumps(built))
+            self.assertNotIn("/private/geo.pt", json.dumps(built))
+
+    def test_base_builder_preserves_four_source_hashes_and_scope(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            sources = {}
+            expected = {}
+            for base in (10000, 500000):
+                for method, offset in (("geo", 0.0), ("evq", -10.0)):
+                    key = f"base_{base}_{method}"
+                    path = Path(tmp) / f"{key}.json"
+                    path.write_text(
+                        json.dumps(
+                            {
+                                "ppl": {
+                                    "512": 100.0 + offset,
+                                    "1024": 120.0 + offset,
+                                    "2048": 150.0 + offset,
+                                    "4096": 200.0 + offset,
+                                }
+                            }
+                        ),
+                        encoding="utf-8",
+                    )
+                    sources[key] = path
+                    expected[key] = hashlib.sha256(path.read_bytes()).hexdigest()
+            with mock.patch.dict(
+                build_rebuttal_evidence_bundle.EXPECTED_SHA256,
+                expected,
+            ):
+                built = build_rebuttal_evidence_bundle.build_base_snapshot(sources)
+            self.assertEqual(built["provenance_status"], "raw-json-backed")
+            self.assertEqual(set(built["sources"]), set(expected))
+            self.assertEqual(len(built["rows"]), 2)
+            self.assertIn("single-seed", built["claim_boundary"])
+
+    def test_component_selection_can_skip_missing_mla_source(self):
+        args = build_rebuttal_evidence_bundle.parse_args(
+            ["--only", "phase11", "--only", "quality", "--only", "base"]
+        )
+        self.assertEqual(args.only, ["phase11", "quality", "base"])
+
+    def test_local_phase11_directory_takes_precedence_over_archive(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            local = root / "results" / "core_text" / "phase11"
+            archive = root / "07 - rebuttal" / "all_paper_experiment_code"
+            local.mkdir(parents=True)
+            archive.mkdir(parents=True)
+            self.assertEqual(
+                build_rebuttal_evidence_bundle.default_phase11_dir(root), local
+            )
 
     def test_phase16_manifest_has_all_99_sanitized_run_rows(self):
         path = CURATED / "phase16_99run_manifest.csv"
@@ -172,8 +282,8 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
         self.assertIn("git switch", text)
         self.assertIn("validate_rebuttal_evidence_bundle.py", text)
 
-    def test_reviewer_supplement_excludes_trace_only_and_internal_contract_test(self):
-        self.assertIn(
+    def test_reviewer_supplement_includes_raw_base_and_excludes_internal_contract_test(self):
+        self.assertNotIn(
             "text_base_10k_500k_pilot.json", package_supplement.EXCLUDE_NAMES
         )
         self.assertIn(

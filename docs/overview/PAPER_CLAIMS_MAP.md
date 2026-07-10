@@ -83,7 +83,8 @@ experiment plan.
 | **C4** | MLA scarce-channel stress test is the third primary empirical anchor | 432M MLA 3-seed run; matched-scale Geo+YaRN comparison | `results/eval_3seeds_full_results.json`; MLA eval scripts | 3 seeds | ⚠️ Medium-high (`d_eff=128` is an empirical convention distinct from code `head_dim=64`/`d_rope=32`; 1B/4K supporting reversal is a limitation) |
 | **S1** | 454M Stage 2-3 continued pretrain | Phase 17c 454M (1024→2048) | `phase17c_454m_1024_to_2048_continue.py` | single seed | Supporting only |
 | **S2** | 750M scale-up confirmation | Phase 15 750M (2K→4K) | `phase15_750m_2k_to_4k_continue_ckpt_eval.py` | single-seed | Supporting only |
-| **S3** | Downstream NLL advantage | Phase 21b QuALITY eval | `phase21b_quality_eval_clean.py` | n=2086 | Supporting / downstream check |
+| **S3** | Downstream NLL advantage | Phase 21b QuALITY eval | `phase21b_quality_eval_clean.py`; `data/curated/quality_454m_full_eval.json` | n=2086 | Supporting / raw-JSON-backed downstream check; accuracy inconclusive |
+| **S4** | Text effect is not unique to base 500K | Phase 18 base pilot | `phase18_base_generalization_sweep.py`; `data/curated/text_base_10k_500k_pilot.json` | seed 42 | Supporting only; not a tuned-base or `c_pred` control |
 
 ---
 
@@ -126,7 +127,7 @@ Only the rows below are present in the current paper appendix; other video/DiT r
 | Table | 描述 | 数据来源 | Key Numbers |
 |-------|------|---------|-------------|
 | `tab:dit-h2h` | DiT dual-seed h2h (train/all/far MSE) | `results/video_dit/westd_20260316/` | mean -21%/-15%/-32% |
-| `tab:quality-nll` | QuALITY Gold NLL (appendix a3) | `docs/exp/2026-03-12_phase21b_454m_full_eval_report.md` (report-backed) | -30.1% @8K; do not substitute the n=200 pilot JSON |
+| `tab:quality-nll` | QuALITY Gold NLL (appendix a3) | `data/curated/quality_454m_full_eval.json` (raw-JSON-backed) + tracked report | -30.1% @8K; do not substitute the n=200 pilot JSON |
 | `tab:dit-base1000` | Dead channel validation (base=1000 h2h) | `results/video_dit/westd_20260316/base1000_h2h/` | τ=1.2≈τ=1.5, both -48% far |
 | `tab:dead-channels` | Dead-channel counts across video models | analytical channel count | 32--50% temporal channels dead |
 

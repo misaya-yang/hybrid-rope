@@ -2,7 +2,7 @@
 
 ## Scientific reporting and paper clarity
 
-- Replaced the contradictory QuALITY accuracy plot with a gold-answer-NLL figure aligned to the `n=2086` table and documented the report-backed provenance boundary.
+- Replaced the contradictory QuALITY accuracy plot with a gold-answer-NLL figure aligned to the `n=2086` table and preserved the recovered aggregate as a raw-JSON-backed sanitized snapshot.
 - Removed the unsupported single-number QA-accuracy narrative and retained all four rounded accuracy deltas as a capacity-floor/non-result.
 - Renamed the primary passkey metric prominently as teacher-forced NLL-gap retrieval.
 - Added min-kernel motivation, advance-prediction versus calibration language, realistic-prior and unmeasured-`L_eff^J` limitations, MLA-convention boundaries, and a substantive compute/energy impact paragraph.
@@ -26,7 +26,7 @@
 
 ## Provenance and repository hygiene
 
-- Public claim maps now distinguish report-backed QuALITY values from raw-JSON-backed artifacts and explicitly exclude the old `n=200` pilot.
+- Public claim maps now identify the recovered QuALITY aggregate as raw-JSON-backed and explicitly exclude the old `n=200` pilot.
 - Rebuttal audit documents reference the tracked TikZ/build sources rather than a nonexistent figure generator.
 - Figure build intermediates are temporary; only the source scripts and reviewer-facing PDF/PNG assets are retained.
 
@@ -44,14 +44,14 @@
 
 - Promoted the ignored MLA three-seed and Phase11 archival JSONs into hash-identified, anonymous portable snapshots.
 - Added the 99-run sanitized CSV plus a provenance sidecar and tested the exporter against a reconstructed 45-pilot/54-confirm source tree.
-- Marked QuALITY, learnable-tau, and MLA channel-count evidence as report-backed; no raw/full JSON is implied.
-- Quarantined the unverified base=10K/500K summary under `rebuttal_7/trace_only/` and excluded it from `data/curated/` and the reviewer supplement.
+- Promoted the recovered QuALITY n=2,086 aggregate and four base=10K/500K result JSONs into source-hashed, anonymous curated snapshots.
+- Kept learnable-tau and MLA channel-count evidence report-backed; no raw/full JSON is implied for those rows.
 - Added `IGNORED_ASSET_RECONCILIATION.md` with all 18 Fable5 responses, experiment priority, and company-computer checkout commands.
 
-Fresh gates for this reconciliation:
+Fresh gates after the second-checkout raw promotion:
 
-- Full repository suite: `181 passed` under `.venv/bin/python -m pytest -q`.
+- Full repository suite: `185 passed` under the `aidemo` conda environment with locked `pytest==9.0.2`.
 - Python syntax: core entrypoints plus all new builder/validator/exporter/test files passed `python3 -m py_compile`.
 - Portable bundle: `python3 scripts/validate_rebuttal_evidence_bundle.py --skip-tracked-check` passed before staging.
-- Curated supplement: `/tmp/evq-cosh-supplement-rebuttal-7.zip` was created, passed `unzip -t`, and contains no trace-only base pilot or internal bundle contract test.
+- Curated supplement: `/tmp/evq-cosh-raw-backed-supplement.zip` was created, passed `unzip -t`, includes the raw-backed QuALITY/base assets, and excludes the internal bundle contract test.
 - Paper source was not changed in this reconciliation, so the prior PDF was not regenerated.

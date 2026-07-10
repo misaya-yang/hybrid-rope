@@ -351,7 +351,7 @@
 | 层级 | 状态 |
 | --- | --- |
 | 训练/eval 代码 | 存在。训练 launcher 调 shared MLA entrypoint；YaRN+FT eval script 会写 JSON。 |
-| Markdown report | 存在：`results/PHASE18_YARN_FT_REPORT.md`。 |
+| Markdown report | 当前 compact repo 不存在 reviewer-grade 报告；只保留 supporting limitation 的审计结论。 |
 | exact baseline JSON | 当前 compact repo 缺失。 |
 | exact YaRN+FT JSON | 当前 compact repo 缺失。 |
 | checkpoint `inv_freq` hash | 当前 compact repo 缺失。 |

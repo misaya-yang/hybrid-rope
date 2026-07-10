@@ -10,7 +10,7 @@ Current rebuttal readiness remains `draft_with_placeholders`. The new bundle clo
 
 ## What was inspected
 
-The inventory below is a 2026-07-10 local snapshot. Sizes and counts are operational diagnostics, not scientific evidence.
+The inventory below is the first 2026-07-10 checkout snapshot. Sizes and counts are operational diagnostics, not scientific evidence. A second checkout contained an 86 GB `results/` tree with 1,736 files (1,700 ignored), dominated by checkpoints; it supplied the exact QuALITY, Phase11, Phase16, and base-pilot raw sources promoted below. The size difference does not change the policy: only minimal sanitized snapshots are tracked.
 
 | Ignored family | Local snapshot | Rebuttal value | Decision |
 | --- | ---: | --- | --- |
@@ -36,42 +36,43 @@ The ignored root `RESULT_PROVENANCE_MANIFEST.md` and tracked `docs/overview/RESU
 | `data/curated/phase16_99run_manifest.csv` | `sanitized-run-manifest` | 99 rows; 45 pilot + 54 confirm; CSV hash in sidecar | Supports the reported basin/rank audit and run coverage, not checkpoint-level reproduction. |
 | `data/curated/learnable_tau_128tok_evidence.json` | `report-backed` | Two tracked experiment reports | Final tau endpoints and reported PPL only; no per-step trajectory claim. |
 | `data/curated/mla_channel_count_125m_pilot.json` | `report-backed` | Tracked 125M compression-ablation report | Single-seed qualitative scarce-channel support; not a d_eff/tau convention ablation. |
-| `data/curated/quality_454m_full_eval.json` | `report-backed` | Tracked full-evaluation report | Correct Table 21/Figure 8 values with an explicit missing-raw warning. |
+| `data/curated/quality_454m_full_eval.json` | `raw-json-backed` | Raw SHA256 `5fc3254c...e3caa` | Correct n=2,086 Table 21/Figure 8 values; accuracy remains inconclusive. |
+| `data/curated/text_base_10k_500k_pilot.json` | `raw-json-backed` | Four Phase18 raw JSON hashes embedded in the snapshot | Single-seed trained-text support at base 10K/500K; not a tuned-base or `c_pred` control. |
 
-### Preserved but not rebuttal-usable
-
-`rebuttal_7/trace_only/text_base_10k_500k_pilot.json` is deliberately quarantined outside `data/curated/`. It came from the July recovery branch, but neither its claimed source result JSONs nor a tracked report containing the exact numbers exists in the current checkout. It must not be cited until the raw files are recovered, hashed, and checked. Even then, it would remain a single-seed pilot and would not answer the requested tuned-base or `c_pred` controls.
+The QuALITY aggregate and four base-pilot result JSONs were recovered in a second checkout after the first reconciliation snapshot. Their exact hashes are now enforced by the builder; machine fields and ignored source files remain excluded.
 
 ### Local-only source policy
 
 - Keep `07 - rebuttal/`, broad `results/` outputs, checkpoints, copied repositories, logs, and machine-specific notes ignored.
 - Never use the repository root as a supplement archive.
-- Rebuild the two raw-backed snapshots only with `python3 scripts/build_rebuttal_evidence_bundle.py`; the script rejects unexpected source hashes.
+- Rebuild only the locally available sources with `python3 scripts/build_rebuttal_evidence_bundle.py --only phase11 --only quality --only base`; the script rejects unexpected source hashes. Rebuilding MLA additionally requires its exact ignored source JSON.
 - Validate the portable bundle with `python3 scripts/validate_rebuttal_evidence_bundle.py`.
 - Treat a source mismatch as a new evidence-review event, not as permission to update the expected hash silently.
 
 ## Scientific impact of the recovery
 
-The recovery improves the rebuttal in three concrete ways.
+The recovery improves the rebuttal in five concrete ways.
 
 1. Primary III is now portable at per-seed resolution instead of depending on an ignored local result JSON or a paper-only aggregate.
 2. The 99-run formula-optimality evidence now has a portable run manifest with configurations, metrics, and `inv_freq` hashes.
 3. Phase11 archival records are no longer “missing,” but their protocol boundary is explicit: L=256 evidence cannot be repurposed as the requested L=128 Geo/DAPE/EVQ replication.
+4. QuALITY n=2,086 is raw-JSON-backed rather than report-only, while its near-random accuracy remains explicitly inconclusive.
+5. The base 10K/500K pilot is now source-hashed and portable, establishing only that the observed single-seed direction is not unique to base 500K.
 
 It also prevents two overclaims.
 
-1. QuALITY n=2,086 remains report-backed because the exact full-evaluation JSON was not recovered.
-2. The base=10K/500K pilot remains trace-only because the recovery branch did not carry its claimed raw sources.
+1. Raw QuALITY provenance does not turn near-random accuracy into a positive downstream result.
+2. Raw base-pilot provenance does not turn four single-seed arms into a tuned-base sweep or a `c_pred` control.
 
 ## Fable5 question-by-question response map
 
 ### F5-Q1 — QuALITY table/figure contradiction
 
-**Status:** `DONE` for presentation integrity; raw artifact still missing.
+**Status:** `DONE` for presentation integrity and aggregate provenance.
 
-**Evidence:** `data/curated/quality_454m_full_eval.json` is explicitly report-backed by `docs/exp/2026-03-12_phase21b_454m_full_eval_report.md`. The obsolete n=200 accuracy pilot is not used as the source of the corrected NLL figure.
+**Evidence:** `data/curated/quality_454m_full_eval.json` is rebuilt from the recovered n=2,086 aggregate with source SHA256 `5fc3254c...e3caa`. The obsolete n=200 accuracy pilot is not used as the source of the corrected NLL figure.
 
-**Response:** We audited the QuALITY chain and replaced the contradictory pilot visualization with the four n=2,086 gold-answer-NLL rows retained in Table 21. The checkpoints were initialized at 2K, continued and fine-tuned at 4K, so 4K is in-distribution for this downstream protocol. The exact full-evaluation JSON was not recovered; the correction is therefore report-backed, not raw-JSON-backed.
+**Response:** We audited the QuALITY chain and replaced the contradictory pilot visualization with the four n=2,086 gold-answer-NLL rows retained in Table 21. The recovered aggregate reproduces every retained accuracy, count, and Gold-NLL value. The checkpoints were initialized at 2K, continued and fine-tuned at 4K, so 4K is in-distribution for this downstream protocol. Accuracy remains near random and is not used as positive evidence.
 
 ### F5-Q2 — QuALITY arithmetic and near-random accuracy
 
@@ -101,17 +102,17 @@ It also prevents two overclaims.
 
 **Status:** `PENDING-EXP`.
 
-**Evidence boundary:** The trace-only base pilot is quarantined and cannot answer this question. Static collision analysis and video base sweeps are mechanism support, not a trained-text nearest-neighbor control.
+**Evidence boundary:** The raw-backed 151.9M pilot compares Geo/EVQ at base 10K and 500K for seed 42. It shows the direction is not unique to base 500K, but it does not tune Geo over the reviewer-requested grid and is not the L=128 Primary-II protocol.
 
 **Response:** We agree that base tuning is the nearest one-knob baseline. Run Geo at bases 10K, 100K, 500K, and 2M under the exact 125M/L=128 data, token, optimizer, and seed protocol, then compare the best Geo row against EVQ base=500K in-range and at 8K.
 
 ### F5-Q6 — Trained text at base 10K
 
-**Status:** `PENDING-EXP`.
+**Status:** `PARTIAL`; raw single-seed support recovered, `c_pred` control pending.
 
-**Evidence boundary:** The recovery-branch pilot lacks its raw source and does not compare the bare rule against `c_pred`; it is unusable for the final response.
+**Evidence boundary:** The raw-backed base-10K arm improves PPL relative to Geo at 1K/2K/4K in the 151.9M, L=512, seed-42 pilot, but it does not compare the bare rule against `c_pred` and cannot establish generality by itself.
 
-**Response:** We will not claim trained-text generality at base 10K from the current repository. The clean test is matched Geo, EVQ bare-rule, and EVQ `c_pred(L,b)` at base 10K, with identical seeds/budget and both in-range and extrapolation metrics.
+**Response:** The recovered pilot provides trained-text evidence that the direction survives at base 10K in one matched seed, so the effect is not observed only at base 500K. We still do not claim tuned-base dominance or general base-10K validity; the clean closure is matched Geo, EVQ bare-rule, and EVQ `c_pred(L,b)` with additional seeds and identical budget.
 
 ### F5-Q7 — MLA d_eff convention
 
@@ -253,7 +254,7 @@ git pull --ff-only
 This is optional and should only be done on a machine that possesses the exact ignored source files:
 
 ```bash
-python3 scripts/build_rebuttal_evidence_bundle.py
+python3 scripts/build_rebuttal_evidence_bundle.py --only phase11 --only quality --only base
 python3 scripts/validate_rebuttal_evidence_bundle.py
 ```
 
@@ -262,8 +263,9 @@ The builder intentionally stops if any raw source SHA256 differs. Do not edit ex
 ## Release checklist
 
 - [ ] Every numeric rebuttal insert points to a tracked artifact with an explicit evidence tier.
-- [ ] `trace-only` assets are excluded from final rebuttal claims.
-- [ ] QuALITY is described as report-backed and accuracy-inconclusive.
+- [ ] No `trace-only` asset is used in final rebuttal claims.
+- [ ] QuALITY is described as raw-JSON-backed and accuracy-inconclusive.
+- [ ] The base pilot is described as raw-JSON-backed, single-seed, and not a tuned-base or `c_pred` control.
 - [ ] L=256 Phase11 is not substituted for L=128 Primary II replication.
 - [ ] PK is named teacher-forced NLL-gap retrieval unless AR exact match was actually run.
 - [ ] No 2B/4B/7B/8B completion is claimed from scripts or historical traces alone.

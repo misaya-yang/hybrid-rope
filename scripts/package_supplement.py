@@ -58,7 +58,6 @@ EXCLUDE_NAMES = {
     "__pycache__",
     ".DS_Store",
     "test_rebuttal_evidence_bundle.py",
-    "text_base_10k_500k_pilot.json",
     "unused",
 }
 
