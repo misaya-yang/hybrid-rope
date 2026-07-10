@@ -335,6 +335,54 @@ python scripts/supporting_eval/eval_passkey_scratch.py \
 
 P2 只有在已有 checkpoint/compute/脚本非常近时才做。它们不应成为 rebuttal 成败的默认条件。
 
+### P2.0 LLaMA-3-8B Clean Positional Distillation Pilot
+
+**问题对应**：原 Base vs EVQ-LoRA 两行同时改变 RoPE、LoRA target 和
+LongAlign 监督目标，无法判断 8K `+30%` 来自频率切换还是窄域微调遗忘。
+
+**当前状态**：seed-42 脚本、冻结数据协议、四组评测和自动 gate 已准备，
+尚未启动 GPU 实验。
+
+**四组因果拆分**：
+
+| Arm | Schedule | Training | 解释 |
+| --- | --- | --- | --- |
+| Base-Geo | native Geo | none | 原模型 |
+| Base-EVQ | EVQ tau 1.414 | none | 直接换频率冲击 |
+| Geo-Distill | native Geo | q/k-only hidden distillation | 优化器/adapter 漂移 |
+| EVQ-Distill | EVQ tau 1.414 | q/k-only hidden distillation | 位置重校准 treatment |
+
+训练只使用固定的 FineWeb-Edu plain-text token 序列和 teacher hidden states；
+没有 LongAlign、token-label CE、任务答案或检索监督。默认 seed 42、300 steps、
+8K、effective batch 8、`r=64`、`alpha=128`、`lr=2e-5`。
+
+**入口**：
+
+```bash
+bash scripts/2026-07/01_lora_positional_distill_seed42.sh prepare
+bash scripts/2026-07/01_lora_positional_distill_seed42.sh train
+bash scripts/2026-07/01_lora_positional_distill_seed42.sh eval
+```
+
+**固定停止条件**：
+
+- Geo-Distill PPL@8K 相对 Base 漂移超过 1%：先查 pipeline；
+- EVQ-Distill PPL@8K 高于 Base 超过 10%：不补 seed，先诊断 rank/target/LR；
+- 正式通过要求 EVQ 8K cost `<=5%`、16K improvement `>=2x`、32K
+  improvement `>=4x`、表示误差恢复 `>=90%`；
+- quick RULER 不是 A-stage gate。没有 AR capability 提升时，只能说 clean
+  positional recovery，不能说 industrial context capability。
+
+**相关文件**：
+
+- `experiments/lora_evq_v2/prepare_positional_distill_data.py`
+- `experiments/lora_evq_v2/train_positional_distill.py`
+- `experiments/lora_evq_v2/eval_positional_distill.py`
+- `experiments/lora_evq_v2/summarize_positional_distill.py`
+- `docs/superpowers/specs/2026-07-10-llama8b-positional-distillation-design.md`
+
+结果未完成前，LoRA 仍走 Path B，不得把“脚本已准备”写成新证据。
+
 ### P2.1 MLA Tau Sanity
 
 **问题对应**：R1/R3 可能质疑 MLA 中 `d_eff=d_head` convention，而非 theorem。
@@ -457,6 +505,7 @@ python scripts/core_text_phases/run_gqa_evq_experiment.py \
 | AR exact passkey | `REVIEWER_RESPONSE_SKELETON.md`, `AUTHOR_RESPONSE_PACKET.md` | Add separate AR exact sentence |
 | Learned tau trajectory | `REVIEWER_RESPONSE_SKELETON.md` | Strengthen R1 response |
 | MLA tau sanity | `PAPER_ISSUE_AUDIT.md`, `AUTHOR_RESPONSE_PACKET.md` | Adjust MLA convention/limitation |
+| Clean positional-distillation JSONs | `TABLE23_LORA_WORKSHEET.md`, `AUTHOR_RESPONSE_PACKET.md` | Separate injection shock and adaptation forgetting; supporting-only until multi-seed |
 
 如果 evidence 没有回来：
 
@@ -503,6 +552,7 @@ python scripts/core_text_phases/run_gqa_evq_experiment.py \
 | Primary I tuned Geo+YaRN | Missing | optional if reviewer specifically attacks scale |
 | AR exact PK | Missing | optional if metric attack is severe |
 | Learned tau trajectory | Missing | optional R1 support |
+| LLaMA-8B positional-distillation pilot | Prepared, not run | cleaner diagnosis before any multi-seed LoRA claim |
 
 Final decision rule:
 

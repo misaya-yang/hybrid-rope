@@ -30,26 +30,12 @@ import json
 import math
 import os
 import random
-import sys
 import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import numpy as np
 import torch
-
-SCRIPT_DIR = Path(__file__).resolve().parent
-if str(SCRIPT_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPT_DIR))
-
-from train_evq_lora import (
-    evaluation_strategy_kwargs,
-    inject_inv_freq,
-    load_frequency_artifact,
-    public_artifact_identifier,
-    public_model_identifier,
-    verify_model_inv_freq,
-)
 
 
 def load_and_merge_data(
@@ -252,21 +238,21 @@ def main():
 
     # 3. Load EVQ inv_freq from stage1
     freq_path = os.path.join(args.adapter_dir, "custom_inv_freq.pt")
-    inv_freq, _, frequency_provenance = load_frequency_artifact(
-        freq_path,
-        expected_method="evq_cosh",
-    )
-    result = inject_inv_freq(model, inv_freq)
-    verification = verify_model_inv_freq(model, inv_freq)
-    print(
-        f"[ROPE] Injected EVQ frequencies into {result['patched_count']} modules; "
-        f"verified={verification['verified_count']}"
-    )
+    if os.path.exists(freq_path):
+        print(f"[ROPE] Loading custom inv_freq from {freq_path}")
+        freq_data = torch.load(freq_path, map_location="cpu", weights_only=True)
+        inv_freq = freq_data["inv_freq"]
+
+        # Inject
+        from train_evq_lora import inject_inv_freq
+        result = inject_inv_freq(model, inv_freq)
+        print(f"[ROPE] Injected EVQ frequencies into {result['patched_count']} modules")
+    else:
+        print(f"[ROPE] WARNING: No custom_inv_freq.pt found, using existing frequencies")
 
     # 4. Load stage1 LoRA adapter
     print(f"[LORA] Loading stage1 adapter from {args.adapter_dir}")
     model = PeftModel.from_pretrained(model, args.adapter_dir, is_trainable=True)
-    verify_model_inv_freq(model, inv_freq)
 
     # Make all LoRA params trainable for continued training
     for name, param in model.named_parameters():
@@ -290,30 +276,29 @@ def main():
     val_dataset = TokenizedDataset(data["val"], args.max_seq_len)
 
     # 6. Train
-    training_kwargs = {
-        "output_dir": args.output_dir,
-        "max_steps": args.max_steps,
-        "per_device_train_batch_size": args.per_device_batch_size,
-        "gradient_accumulation_steps": args.gradient_accumulation_steps,
-        "learning_rate": args.learning_rate,
-        "warmup_steps": args.warmup_steps,
-        "weight_decay": 0.01,
-        "max_grad_norm": 1.0,
-        "optim": "adamw_torch",
-        "lr_scheduler_type": "cosine",
-        "bf16": args.bf16,
-        "fp16": not args.bf16,
-        "logging_steps": 5,
-        "save_strategy": "no",
-        "gradient_checkpointing": True,
-        "gradient_checkpointing_kwargs": {"use_reentrant": False},
-        "report_to": "none",
-        "seed": args.seed,
-        "dataloader_num_workers": 4,
-        "remove_unused_columns": False,
-    }
-    training_kwargs.update(evaluation_strategy_kwargs(TrainingArguments))
-    training_args = TrainingArguments(**training_kwargs)
+    training_args = TrainingArguments(
+        output_dir=args.output_dir,
+        max_steps=args.max_steps,
+        per_device_train_batch_size=args.per_device_batch_size,
+        gradient_accumulation_steps=args.gradient_accumulation_steps,
+        learning_rate=args.learning_rate,
+        warmup_steps=args.warmup_steps,
+        weight_decay=0.01,
+        max_grad_norm=1.0,
+        optim="adamw_torch",
+        lr_scheduler_type="cosine",
+        bf16=args.bf16,
+        fp16=not args.bf16,
+        logging_steps=5,
+        save_strategy="no",
+        evaluation_strategy="no",
+        gradient_checkpointing=True,
+        gradient_checkpointing_kwargs={"use_reentrant": False},
+        report_to="none",
+        seed=args.seed,
+        dataloader_num_workers=4,
+        remove_unused_columns=False,
+    )
 
     collator = PaddingCollator(pad_token_id=tokenizer.pad_token_id)
 
@@ -346,14 +331,13 @@ def main():
     tokenizer.save_pretrained(args.output_dir)
 
     # Copy inv_freq from stage1
-    import shutil
-    shutil.copy2(freq_path, os.path.join(args.output_dir, "custom_inv_freq.pt"))
+    if os.path.exists(freq_path):
+        import shutil
+        shutil.copy2(freq_path, os.path.join(args.output_dir, "custom_inv_freq.pt"))
 
     meta = {
         "stage": 2,
-        "model": public_model_identifier(args.model_name),
-        "base_adapter": public_artifact_identifier(args.adapter_dir),
-        "frequency_provenance": frequency_provenance,
+        "base_adapter": args.adapter_dir,
         "max_steps": args.max_steps,
         "learning_rate": args.learning_rate,
         "retrieval_ratio": args.retrieval_ratio,

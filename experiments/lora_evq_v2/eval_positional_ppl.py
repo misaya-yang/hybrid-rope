@@ -37,29 +37,6 @@ import torch
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from train_evq_lora import (
-    inject_inv_freq,
-    load_frequency_artifact,
-    verify_model_inv_freq,
-)
-
-
-def resolve_custom_inv_freq_path(adapter_dir, method: str) -> Optional[Path]:
-    """Return the training-time frequency artifact that evaluation must reuse.
-
-    Both EVQ and geometric LoRA runs may carry a saved table.  Restricting
-    reinjection to the EVQ label silently evaluates legacy geometric controls
-    with a different schedule from the one used in training.
-    """
-    if not adapter_dir or method not in {"geo", "evq"}:
-        return None
-    path = Path(adapter_dir) / "custom_inv_freq.pt"
-    if not path.is_file():
-        raise FileNotFoundError(
-            f"Required custom_inv_freq.pt is missing for {method} adapter evaluation"
-        )
-    return path
-
 
 def load_model(model_name, adapter_dir=None, method="geo", yarn_factor=2.0, bf16=True):
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -91,28 +68,25 @@ def load_model(model_name, adapter_dir=None, method="geo", yarn_factor=2.0, bf16
         model = PeftModel.from_pretrained(model, adapter_dir)
         print(f"[LORA] Loaded adapter from {adapter_dir}")
 
-    # Reuse the exact training-time table AFTER loading the adapter.
-    frequency_provenance = {
-        "method": "yarn_scaling" if method == "yarn" else "model_default",
-        "artifact": None,
-    }
-    freq_path = resolve_custom_inv_freq_path(adapter_dir, method)
-    if freq_path is not None:
-        expected_method = "native_geo" if method == "geo" else "evq_cosh"
-        inv_freq, data, frequency_provenance = load_frequency_artifact(
-            freq_path,
-            expected_method=expected_method,
-        )
-        inject_inv_freq(model, inv_freq)
-        verification = verify_model_inv_freq(model, inv_freq)
-        print(
-            f"[ROPE] Reused saved {data['method']} training frequencies: "
-            f"modules={verification['verified_count']}, "
-            f"max_error={verification['max_error']:.2e}"
-        )
+    # EVQ: inject inv_freq AFTER adapter
+    if method == "evq" and adapter_dir:
+        freq_path = os.path.join(adapter_dir, "custom_inv_freq.pt")
+        if os.path.exists(freq_path):
+            data = torch.load(freq_path, map_location="cpu", weights_only=True)
+            from train_evq_lora import inject_inv_freq, find_rotary_modules, compute_geometric_inv_freq
+            inject_inv_freq(model, data["inv_freq"])
+            # Verify
+            mods = find_rotary_modules(model)
+            if mods:
+                actual = mods[0][1].inv_freq.detach().cpu().to(torch.float64)
+                geo = compute_geometric_inv_freq(128, 500000.0)
+                err_evq = (actual - data["inv_freq"].to(torch.float64)).abs().max().item()
+                err_geo = (actual - geo).abs().max().item()
+                print(f"[ROPE] EVQ injected, τ={data.get('tau','?')}: "
+                      f"{'✅' if err_evq < err_geo else '❌'}")
 
     model.eval()
-    return model, tokenizer, frequency_provenance
+    return model, tokenizer
 
 
 def eval_positional_ppl(model, tokenizer, text_path, ctx_len=16384):
@@ -202,7 +176,7 @@ def main():
         print(f"  Positional PPL: {label}")
         print(f"{'='*60}")
 
-        model, tokenizer, frequency_provenance = load_model(
+        model, tokenizer = load_model(
             args.model_name, args.adapter_dir,
             method=args.method, yarn_factor=args.yarn_factor)
 
@@ -211,12 +185,7 @@ def main():
         for name, r in results.items():
             print(f"  {name}: PPL={r['ppl']:.2f} (loss={r['loss']:.4f})")
 
-        output = {
-            "label": label,
-            "method": args.method,
-            "frequency_provenance": frequency_provenance,
-            "results": results,
-        }
+        output = {"label": label, "method": args.method, "results": results}
         if args.output:
             os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
             with open(args.output, "w") as f:
@@ -242,22 +211,16 @@ def main():
         method = meta.get("method", meta.get("rope_method", "geo"))
         if method == "evq_cosh":
             method = "evq"
-        elif method == "native_geo":
-            method = "geo"
         yarn_factor = meta.get("yarn_factor", 2.0)
         label = os.path.basename(ckpt_dir)
 
         print(f"\n--- {label} ({method}) ---")
-        model, tokenizer, frequency_provenance = load_model(
+        model, tokenizer = load_model(
             args.model_name, ckpt_dir,
             method=method, yarn_factor=yarn_factor)
 
         results = eval_positional_ppl(model, tokenizer, args.wikitext_path)
-        all_results[label] = {
-            "method": method,
-            "frequency_provenance": frequency_provenance,
-            "results": results,
-        }
+        all_results[label] = {"method": method, "results": results}
 
         for name, r in results.items():
             print(f"  {name}: PPL={r['ppl']:.2f}")

@@ -24,7 +24,7 @@ Evidence is tiered in Table~\ref{tab:evidence-tier}. Primary claims use EVQ$\tim
 \begin{figure}[!h]
   \centering
   \includegraphics[width=0.68\linewidth]{fig2_evq_yarn_synergy.pdf}
-  \caption{Primary EVQ$\times$YaRN retrieval anchor. Bars show teacher-forced NLL-gap retrieval at 8K (PK) across three seeds; dots are seeds and whiskers are one standard deviation. EVQ+YaRN reaches $100\%$ while Geo+YaRN remains at $61\%$.}
+  \caption{Primary EVQ$\times$YaRN retrieval anchor. Bars show PK@8K across three seeds; dots are seeds and whiskers are one standard deviation. EVQ+YaRN reaches $100\%$ while Geo+YaRN remains at $61\%$.}
   \label{fig:evq-yarn}
 \end{figure}
 
@@ -38,7 +38,7 @@ Evidence is tiered in Table~\ref{tab:evidence-tier}. Primary claims use EVQ$\tim
 \subsection{Primary II: PE-dominant allocation stress test}
 \label{sec:exp-pe}
 
-\emph{Allocation-shape stress test.} In a DAPE-style $128{\to}8\mathrm{K}$ protocol \citep{zheng2024dape}, we ask whether allocation shape alone can reduce a PE-dominant extrapolation gap without adding a learned positional operator. Table~\ref{tab:pe-dominant}: in the retained seed-42 Geo/DAPE/EVQ contrast, EVQ reaches $333.7$ PPL (vs.\ Geo $513.7$, DAPE $455.3$) with no learned parameters. We read this as competitiveness in this tested protocol, not comprehensive dominance over DAPE. Complementary \(L_{\mathrm{train}}{=}256\) sweeps support the predicted $\tau^{*}{=}4.0$ setting; Appendix Fig.~\ref{fig:pe-dominant} and Table~\ref{tab:pe-yarn-l256} show these supporting curves.
+\emph{Allocation-shape stress test.} In a DAPE-style $128{\to}8\mathrm{K}$ protocol \citep{zheng2024dape}, we ask whether allocation shape alone can reduce a PE-dominant extrapolation gap without adding a learned positional operator. Table~\ref{tab:pe-dominant}: in the retained seed-42 Geo/DAPE/EVQ contrast, EVQ reaches $333.7$ PPL (vs.\ Geo $513.7$, DAPE $455.3$) with no learned parameters. We read this as competitiveness in this tested protocol, not comprehensive dominance over DAPE. Complementary \(L_{\mathrm{train}}{=}256\) sweeps support the predicted $\tau^{*}{=}4.0$ setting; Appendix Fig.~\ref{fig:pe-dominant} and Table~\ref{tab:pe-yarn-l256} show the retained Phase~11 curves.
 
 \input{tables/table4_pe_dominant.tex}
 \FloatBarrier
@@ -49,7 +49,7 @@ Evidence is tiered in Table~\ref{tab:evidence-tier}. Primary claims use EVQ$\tim
 \subsection{Primary III: scarce-channel stress test (MLA)}
 \label{sec:exp-mla}
 
-\emph{Scarce-channel stress test.} MLA \citep{deepseekv2, deepseekv3} compresses RoPE to $d_{\mathrm{rope}}{=}32$ ($16$ channels) vs.\ $64$ in MHA at $d_{\mathrm{head}}{=}128$, where the finite-budget view predicts stronger EVQ effects. For MLA, $d_{\mathrm{rot}}$ determines quantized rotary channels, while $d_{\mathrm{eff}}{=}d_{\mathrm{head}}$ is the calibrated transport-scale convention used in this stress test. On a $432$M MLA transformer trained for $500$M tokens at $L_{\mathrm{train}}{=}8192$ ($3$ seeds), EVQ reduces $2\times$ extrapolation PPL from $138.8$ to $95.6$ ($-31.1\%$) with $+1.1\%$ in-distribution cost, exceeding Geo+YaRN at matched scale $s{=}4$ ($117.9$; Appendix~\ref{sec:mla-results}). This is larger than the matched MHA improvement ($-13.3\%$; Table~\ref{tab:multiscale}), consistent with scarce channels amplifying allocation effects. The result supports allocation sensitivity at the stated convention; it does not identify the optimal MLA $d_{\mathrm{eff}}$, for which the direct $d_{\mathrm{rope}}/\sqrt{L}$ ablation remains required.
+\emph{Scarce-channel stress test.} MLA \citep{deepseekv2, deepseekv3} compresses RoPE to $d_{\mathrm{rope}}{=}32$ ($16$ channels) vs.\ $64$ in MHA at $d_{\mathrm{head}}{=}128$, where the finite-budget view predicts stronger EVQ effects. For MLA, $d_{\mathrm{rot}}$ determines quantized rotary channels, while $d_{\mathrm{eff}}{=}d_{\mathrm{head}}$ is the transport-scale convention. On a $432$M MLA transformer trained for $500$M tokens at $L_{\mathrm{train}}{=}8192$ ($3$ seeds), EVQ reduces $2\times$ extrapolation PPL from $138.8$ to $95.6$ ($-31.1\%$) with $+1.1\%$ in-distribution cost, exceeding Geo+YaRN at matched scale $s{=}4$ ($117.9$; Appendix~\ref{sec:mla-results}). This is larger than the matched MHA improvement ($-13.3\%$; Table~\ref{tab:multiscale}), consistent with scarce channels amplifying allocation effects.
 
 %% =========================================================================
 %% ROBUSTNESS + SUPPORTING EVIDENCE (merged; full results in Appendix)

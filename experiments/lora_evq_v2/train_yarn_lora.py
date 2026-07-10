@@ -22,13 +22,7 @@ import torch
 
 # Reuse data loading and collator from train_evq_lora
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from train_evq_lora import (
-    PaddingCollator,
-    TokenizedDataset,
-    evaluation_strategy_kwargs,
-    load_training_data,
-    public_model_identifier,
-)
+from train_evq_lora import load_training_data, TokenizedDataset, PaddingCollator
 
 LOCAL_BASE = Path(__file__).resolve().parent / "local"
 DEFAULT_MODEL = os.environ.get(
@@ -127,30 +121,29 @@ def main():
     val_dataset = TokenizedDataset(data["val"], args.max_seq_len)
 
     # 5. Train
-    training_kwargs = {
-        "output_dir": args.output_dir,
-        "max_steps": args.max_steps,
-        "per_device_train_batch_size": args.per_device_batch_size,
-        "gradient_accumulation_steps": args.gradient_accumulation_steps,
-        "learning_rate": args.learning_rate,
-        "warmup_steps": args.warmup_steps,
-        "weight_decay": args.weight_decay,
-        "max_grad_norm": 1.0,
-        "optim": "adamw_torch",
-        "lr_scheduler_type": "cosine",
-        "bf16": args.bf16,
-        "fp16": not args.bf16,
-        "logging_steps": args.logging_steps,
-        "save_strategy": "no",
-        "gradient_checkpointing": True,
-        "gradient_checkpointing_kwargs": {"use_reentrant": False},
-        "report_to": "none",
-        "seed": args.seed,
-        "dataloader_num_workers": 4,
-        "remove_unused_columns": False,
-    }
-    training_kwargs.update(evaluation_strategy_kwargs(TrainingArguments))
-    training_args = TrainingArguments(**training_kwargs)
+    training_args = TrainingArguments(
+        output_dir=args.output_dir,
+        max_steps=args.max_steps,
+        per_device_train_batch_size=args.per_device_batch_size,
+        gradient_accumulation_steps=args.gradient_accumulation_steps,
+        learning_rate=args.learning_rate,
+        warmup_steps=args.warmup_steps,
+        weight_decay=args.weight_decay,
+        max_grad_norm=1.0,
+        optim="adamw_torch",
+        lr_scheduler_type="cosine",
+        bf16=args.bf16,
+        fp16=not args.bf16,
+        logging_steps=args.logging_steps,
+        save_strategy="no",
+        evaluation_strategy="no",
+        gradient_checkpointing=True,
+        gradient_checkpointing_kwargs={"use_reentrant": False},
+        report_to="none",
+        seed=args.seed,
+        dataloader_num_workers=4,
+        remove_unused_columns=False,
+    )
 
     collator = PaddingCollator(pad_token_id=tokenizer.pad_token_id)
 
@@ -188,7 +181,7 @@ def main():
         "max_steps": args.max_steps,
         "seed": args.seed,
         "train_time_min": round(train_time / 60, 2),
-        "model": public_model_identifier(args.model_name),
+        "model": args.model_name,
     }
     with open(os.path.join(args.output_dir, "experiment_meta.json"), "w") as f:
         json.dump(meta, f, indent=2)

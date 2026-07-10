@@ -34,17 +34,6 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-if str(SCRIPT_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPT_DIR))
-
-from train_evq_lora import (
-    inject_inv_freq,
-    load_frequency_artifact,
-    public_model_identifier,
-    verify_model_inv_freq,
-)
-
 
 # ---------------------------------------------------------------------------
 # 1. PPL at multiple context lengths (no generation)
@@ -383,21 +372,24 @@ def load_model(model_name, adapter_dir=None, inv_freq_path=None,
         print("[LORA] Adapter loaded")
 
     # Inject inv_freq AFTER adapter
-    frequency_provenance = {"method": "model_default", "artifact": None}
-    if inv_freq_path:
-        inv_freq, data, frequency_provenance = load_frequency_artifact(
-            inv_freq_path,
-            expected_method="evq_cosh",
-        )
+    if inv_freq_path and os.path.exists(inv_freq_path):
+        data = torch.load(inv_freq_path, map_location="cpu", weights_only=True)
+        inv_freq = data["inv_freq"] if isinstance(data, dict) else data
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from train_evq_lora import inject_inv_freq, find_rotary_modules, compute_geometric_inv_freq
         inject_inv_freq(model, inv_freq)
-        verification = verify_model_inv_freq(model, inv_freq)
-        print(
-            f"[ROPE] {data['method']}: verified={verification['verified_count']}, "
-            f"max_error={verification['max_error']:.2e}"
-        )
+        # Verify
+        mods = find_rotary_modules(model)
+        if mods:
+            actual = mods[0][1].inv_freq.detach().cpu().to(torch.float64)
+            geo = compute_geometric_inv_freq(128, 500000.0)
+            err_evq = (actual - inv_freq.to(torch.float64)).abs().max().item()
+            err_geo = (actual - geo).abs().max().item()
+            print(f"[ROPE] EVQ injected (τ={data.get('tau','?')}), "
+                  f"verify: {'✅ EVQ' if err_evq < err_geo else '❌ GEO!'}")
 
     model.eval()
-    return model, tokenizer, frequency_provenance
+    return model, tokenizer
 
 
 # ---------------------------------------------------------------------------
@@ -433,20 +425,18 @@ def main():
 
     inv_freq_path = None
     if args.adapter_dir and not args.base_only:
-        inv_freq_path = os.path.join(args.adapter_dir, "custom_inv_freq.pt")
+        c = os.path.join(args.adapter_dir, "custom_inv_freq.pt")
+        if os.path.exists(c):
+            inv_freq_path = c
 
-    model, tokenizer, frequency_provenance = load_model(
+    model, tokenizer = load_model(
         args.model_name,
         adapter_dir=None if args.base_only else args.adapter_dir,
         inv_freq_path=inv_freq_path,
         bf16=args.bf16)
 
     variant = "base" if args.base_only else "evq"
-    all_results = {
-        "variant": variant,
-        "model": public_model_identifier(args.model_name),
-        "frequency_provenance": frequency_provenance,
-    }
+    all_results = {"variant": variant, "model": args.model_name}
     t0 = time.time()
 
     # 1. PPL

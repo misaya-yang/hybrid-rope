@@ -37,9 +37,7 @@ echo "============================================"
 python "${SCRIPT_DIR}/eval_ruler.py" \
     --model_name "${MODEL}" \
     --adapter_dir "${STAGE2}" \
-    --expected_rope_method evq_cosh \
     --output_dir "${RESULT}" \
-    --variant evq_r64_stage2 \
     --context_lengths "4096,8192,16384" \
     --n_trials 5
 

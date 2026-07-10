@@ -10,7 +10,7 @@ Paper Role:  Fig 3 panel (a) — EVQ vs DAPE learnable PE comparison (Claim C2)
              Table 4 — PE-dominant extreme extrapolation results (125M)
 Input:       FineWeb-Edu streaming data (100M tokens)
 Output:      results/core_text/phase11b/ (JSON per-seed per-method)
-Seeds:       42, 123, 7 (3-seed)
+Seeds:       42, 137, 256 (3-seed)
 """
 
 import json, math, os, sys, time, gc, hashlib

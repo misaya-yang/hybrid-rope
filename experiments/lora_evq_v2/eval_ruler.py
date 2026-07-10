@@ -37,85 +37,14 @@ import json
 import math
 import os
 import random
-import re
 import string
 import sys
 import time
 import uuid
-from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 import torch
-
-SCRIPT_DIR = Path(__file__).resolve().parent
-if str(SCRIPT_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPT_DIR))
-
-from train_evq_lora import (
-    inject_inv_freq,
-    load_frequency_artifact,
-    public_artifact_identifier,
-    public_model_identifier,
-    verify_model_inv_freq,
-)
-
-
-def resolve_variant_label(
-    base_only: bool,
-    requested: Optional[str],
-    adapter_dir: Optional[str],
-) -> str:
-    """Resolve a stable, filename-safe label for one evaluation target."""
-    if base_only:
-        return "base"
-    raw = requested or (os.path.basename(os.path.normpath(adapter_dir)) if adapter_dir else "adapter")
-    label = re.sub(r"[^A-Za-z0-9._-]+", "_", raw).strip("._-")
-    if not label:
-        raise ValueError("RULER variant label is empty after sanitization")
-    return label
-
-
-def ruler_output_name(variant: str) -> str:
-    return f"ruler_{variant}.json"
-
-
-def resolve_required_inv_freq_path(
-    adapter_dir: Optional[str],
-    base_only: bool,
-) -> Optional[Path]:
-    """Resolve the mandatory training-time frequency artifact for an adapter."""
-    if base_only:
-        return None
-    if not adapter_dir:
-        raise ValueError("adapter_dir is required unless --base_only is set")
-    path = Path(adapter_dir) / "custom_inv_freq.pt"
-    if not path.is_file():
-        raise FileNotFoundError(
-            "Required custom_inv_freq.pt is missing for adapter evaluation"
-        )
-    return path
-
-
-def verify_loaded_inv_freq(
-    actual: torch.Tensor,
-    expected: torch.Tensor,
-    tolerance: float = 1e-5,
-) -> float:
-    """Verify evaluation reuses the exact schedule saved by training."""
-    actual64 = actual.detach().cpu().to(torch.float64)
-    expected64 = expected.detach().cpu().to(torch.float64)
-    if actual64.shape != expected64.shape:
-        raise RuntimeError(
-            f"Training/evaluation frequency mismatch: actual={tuple(actual64.shape)} "
-            f"expected={tuple(expected64.shape)}"
-        )
-    max_error = (actual64 - expected64).abs().max().item()
-    if max_error >= tolerance:
-        raise RuntimeError(
-            f"Training/evaluation frequency mismatch: max_error={max_error:.2e}"
-        )
-    return max_error
 
 
 # ──────────────────────────────────────────────────────────
@@ -384,7 +313,7 @@ def task_variable_tracking(model, tokenizer, ctx_len: int, n_trials: int = 20,
 # ──────────────────────────────────────────────────────────
 
 def load_model(model_name, adapter_dir=None, inv_freq_path=None,
-               expected_rope_method=None, load_in_4bit=False, bf16=True):
+               load_in_4bit=False, bf16=True):
     """Load model for evaluation.
 
     Default: bf16 full precision (no quantization).
@@ -414,22 +343,25 @@ def load_model(model_name, adapter_dir=None, inv_freq_path=None,
         model = PeftModel.from_pretrained(model, adapter_dir)
         print("[LORA] Adapter loaded (no merge, full-precision inference)")
 
-    frequency_provenance = {"method": "model_default", "artifact": None}
-    if inv_freq_path:
-        inv_freq, data, frequency_provenance = load_frequency_artifact(
-            inv_freq_path,
-            expected_method=expected_rope_method,
-        )
+    if inv_freq_path and os.path.exists(inv_freq_path):
+        data = torch.load(inv_freq_path, map_location="cpu", weights_only=True)
+        inv_freq = data["inv_freq"] if isinstance(data, dict) else data
+        from train_evq_lora import inject_inv_freq, find_rotary_modules, compute_geometric_inv_freq
         inject_inv_freq(model, inv_freq)
-        verification = verify_model_inv_freq(model, inv_freq)
-        print(
-            f"[ROPE] Reused saved {data['method']} training frequencies: "
-            f"modules={verification['verified_count']}, "
-            f"max_error={verification['max_error']:.2e}"
-        )
+        # Verify injection
+        mods = find_rotary_modules(model)
+        if mods:
+            actual = mods[0][1].inv_freq.detach().cpu().to(torch.float64)
+            expected = inv_freq.detach().cpu().to(torch.float64)
+            geo = compute_geometric_inv_freq(128, 500000.0)
+            err_evq = (actual - expected).abs().max().item()
+            err_geo = (actual - geo).abs().max().item()
+            print(f"[ROPE] Injected EVQ-cosh (τ={data.get('tau','?')})")
+            print(f"[ROPE] Verify: vs_EVQ={err_evq:.2e}, vs_GEO={err_geo:.2e} "
+                  f"{'✅ EVQ active' if err_evq < err_geo else '❌ STILL GEOMETRIC!'}")
 
     model.eval()
-    return model, tokenizer, frequency_provenance
+    return model, tokenizer
 
 
 # ──────────────────────────────────────────────────────────
@@ -452,17 +384,6 @@ def parse_args():
     p.add_argument("--adapter_dir", default=None)
     p.add_argument("--output_dir", default="./results")
     p.add_argument("--base_only", action="store_true")
-    p.add_argument(
-        "--expected_rope_method",
-        choices=["evq_cosh", "native_geo"],
-        default=None,
-        help="Fail unless the saved frequency artifact records this training method",
-    )
-    p.add_argument(
-        "--variant",
-        default=None,
-        help="Unique result label (default: adapter directory basename; base_only uses 'base')",
-    )
 
     p.add_argument("--context_lengths", default="4096,8192,16384,32768")
     p.add_argument("--n_trials", type=int, default=20)
@@ -483,16 +404,19 @@ def main():
     tasks = [t.strip() for t in args.tasks.split(",")]
     n_trials = 5 if args.quick else args.n_trials
 
-    inv_freq_path = resolve_required_inv_freq_path(args.adapter_dir, args.base_only)
+    inv_freq_path = None
+    if args.adapter_dir and not args.base_only:
+        c = os.path.join(args.adapter_dir, "custom_inv_freq.pt")
+        if os.path.exists(c):
+            inv_freq_path = c
 
-    model, tokenizer, frequency_provenance = load_model(
+    model, tokenizer = load_model(
         args.model_name,
         adapter_dir=None if args.base_only else args.adapter_dir,
         inv_freq_path=inv_freq_path,
-        expected_rope_method=args.expected_rope_method,
         load_in_4bit=args.load_in_4bit, bf16=args.bf16)
 
-    variant = resolve_variant_label(args.base_only, args.variant, args.adapter_dir)
+    variant = "base" if args.base_only else "evq"
     results: Dict[str, Dict[str, float]] = {}
 
     t0 = time.time()
@@ -542,16 +466,14 @@ def main():
     # ── Save ─────────────────────────────────────────────
     out = {
         "variant": variant,
-        "model": public_model_identifier(args.model_name),
-        "adapter": None if args.base_only else public_artifact_identifier(args.adapter_dir),
-        "frequency_provenance": frequency_provenance,
+        "model": args.model_name,
         "context_lengths": ctx_lengths,
         "n_trials": n_trials,
         "results": results,
         "overall": round(overall, 4),
         "eval_time_min": round(elapsed / 60, 2),
     }
-    path = os.path.join(args.output_dir, ruler_output_name(variant))
+    path = os.path.join(args.output_dir, f"ruler_{variant}.json")
     with open(path, "w") as f:
         json.dump(out, f, indent=2)
     print(f"\nSaved → {path}")

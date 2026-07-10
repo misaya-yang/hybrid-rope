@@ -2,7 +2,7 @@
 """Extended PPL eval across 3 seeds: GEO, EVQ, +YaRN at 8K-32K.
 Also evaluates 50%/75%/100% checkpoints for training progression analysis.
 Reports mean +/- std for paper."""
-import sys, math, json, time, hashlib
+import sys, math, json, time
 import numpy as np
 import torch
 import torch.nn as nn
@@ -12,53 +12,6 @@ from collections import defaultdict, OrderedDict
 
 DEVICE = "cuda"
 DTYPE = torch.bfloat16
-
-
-def tensor_sha256(t):
-    arr = t.detach().float().cpu().contiguous().numpy()
-    return hashlib.sha256(arr.tobytes()).hexdigest()[:16]
-
-
-def require_checkpoint_inv_freq(state_dict, ckpt_path):
-    if not any(k.endswith("attn.rope.inv_freq") for k in state_dict):
-        raise KeyError(f"{ckpt_path} does not contain checkpoint RoPE inv_freq")
-
-
-def checkpoint_inv_freq(model, label):
-    inv = model.blocks[0].attn.rope.inv_freq.detach().clone()
-    if inv.numel() == 0 or not torch.isfinite(inv).all():
-        raise ValueError(f"{label}: invalid checkpoint RoPE inv_freq")
-    print(
-        f"  [inv_freq] {label}: n={inv.numel()}, "
-        f"sha256={tensor_sha256(inv)}, first={inv[0].item():.6g}, "
-        f"last={inv[-1].item():.6g}"
-    )
-    return inv
-
-
-def tau_name_candidates(tau):
-    names = []
-    for text in (f"{tau:.3f}", f"{tau:.2f}", f"{tau:g}"):
-        if text not in names:
-            names.append(text)
-    return names
-
-
-def run_dir_candidates(work_dir, tau, seed, tier="350m", attn_type="mla"):
-    names = []
-    for tau_text in tau_name_candidates(tau):
-        names.append(f"{tier}_{attn_type}_tau{tau_text}_seed{seed}")
-    for tau_text in tau_name_candidates(tau):
-        names.append(f"{tier}_tau{tau_text}_seed{seed}")
-    return [work_dir / name for name in dict.fromkeys(names)]
-
-
-def resolve_checkpoint_path(work_dir, tau, seed, ckpt_file, tier="350m", attn_type="mla"):
-    candidates = [d / ckpt_file for d in run_dir_candidates(work_dir, tau, seed, tier, attn_type)]
-    for candidate in candidates:
-        if candidate.exists():
-            return candidate, candidates
-    return candidates[0], candidates
 
 # ---------------------------------------------------------------------------
 # Model (mirrors run_gqa_evq_experiment.py MLA architecture)
@@ -267,21 +220,20 @@ def main():
     progression = defaultdict(lambda: defaultdict(dict))
 
     for seed in seeds:
-        for tau_name, inv_freq, tau in [("GEO", geo_inv, 0.0), ("EVQ", evq_inv, 1.414)]:
+        for tau_name, inv_freq, tau_str in [("GEO", geo_inv, "0.00"), ("EVQ", evq_inv, "1.41")]:
+            run_dir = work_dir / f"350m_tau{tau_str}_seed{seed}"
             for ckpt_file in checkpoints:
-                ckpt_path, ckpt_candidates = resolve_checkpoint_path(work_dir, tau, seed, ckpt_file)
+                ckpt_path = run_dir / ckpt_file
                 label = ckpt_labels[ckpt_file]
                 if not ckpt_path.exists():
-                    print(f"  [SKIP] missing {ckpt_file}; tried: {[str(p) for p in ckpt_candidates]}")
+                    print(f"  [SKIP] {ckpt_path}")
                     continue
 
                 print(f"\n--- {tau_name} seed={seed} @ {label} ---")
                 model = GPT(cfg, inv_freq)
                 sd = torch.load(ckpt_path, map_location="cpu", weights_only=True)
-                require_checkpoint_inv_freq(sd, ckpt_path)
                 model.load_state_dict(sd, strict=True)
                 model = model.to(DEVICE)
-                checkpoint_inv_freq(model, f"{tau_name} seed={seed} {label}")
                 ppl = eval_ppl(model, val_data, progression_eval_lengths)
                 progression[tau_name][label][seed] = ppl
                 del model; torch.cuda.empty_cache()
@@ -344,10 +296,10 @@ def main():
     all_per_seed = defaultdict(dict)
 
     for seed in seeds:
-        for tau_name, inv_freq, tau in [("GEO", geo_inv, 0.0), ("EVQ", evq_inv, 1.414)]:
-            ckpt_path, ckpt_candidates = resolve_checkpoint_path(work_dir, tau, seed, "model.pt")
+        for tau_name, inv_freq, tau_str in [("GEO", geo_inv, "0.00"), ("EVQ", evq_inv, "1.41")]:
+            ckpt_path = work_dir / f"350m_tau{tau_str}_seed{seed}" / "model.pt"
             if not ckpt_path.exists():
-                print(f"\n  [SKIP] missing model.pt; tried: {[str(p) for p in ckpt_candidates]}")
+                print(f"\n  [SKIP] {ckpt_path}")
                 continue
 
             print(f"\n{'='*60}")
@@ -356,10 +308,8 @@ def main():
 
             model = GPT(cfg, inv_freq)
             sd = torch.load(ckpt_path, map_location="cpu", weights_only=True)
-            require_checkpoint_inv_freq(sd, ckpt_path)
             model.load_state_dict(sd, strict=True)
             model = model.to(DEVICE)
-            base_inv = checkpoint_inv_freq(model, f"{tau_name} seed={seed} base")
 
             # Base eval
             print(f"--- {tau_name} (base) ---")
@@ -369,8 +319,8 @@ def main():
             # YaRN s=2
             tag2 = f"{tau_name}+YaRN(s=2)"
             print(f"--- {tag2} ---")
-            y2 = yarn_inv_freq(base_inv, 2.0)
-            orig = base_inv.clone()
+            y2 = yarn_inv_freq(inv_freq, 2.0)
+            orig = model.blocks[0].attn.rope.inv_freq.clone()
             model.blocks[0].attn.rope.inv_freq.copy_(y2)
             model.blocks[0].attn.rope._build(max(eval_lengths) + 100)
             ppl2 = eval_ppl(model, val_data, eval_lengths)
@@ -380,7 +330,7 @@ def main():
             # YaRN s=4
             tag4 = f"{tau_name}+YaRN(s=4)"
             print(f"--- {tag4} ---")
-            y4 = yarn_inv_freq(base_inv, 4.0)
+            y4 = yarn_inv_freq(inv_freq, 4.0)
             model.blocks[0].attn.rope.inv_freq.copy_(y4)
             model.blocks[0].attn.rope._build(max(eval_lengths) + 100)
             ppl4 = eval_ppl(model, val_data, eval_lengths)
