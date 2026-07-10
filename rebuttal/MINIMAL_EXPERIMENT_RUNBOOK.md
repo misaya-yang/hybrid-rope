@@ -100,19 +100,16 @@ export EVQ_LORA_CKPT="$EVQ_REBUTTAL_RUN_DIR/checkpoints/evq_r64_tau1414"
 
 **问题对应**：trust / paper hygiene。
 
-**当前状态**：已修复。旧图是 accuracy bars，但 caption/table 是 Gold-answer NLL；现在 figure 已 regenerated 为 NLL plot。
+**当前状态**：问题已确认，但本 rebuttal pass 不修改 PDF。旧图是 n=200 accuracy pilot，caption/table 是 Gold-answer NLL；另有 Table 21 26.6%→24.6% erratum。
 
 **相关文件**：
 
 - `rebuttal/FIGURE_TABLE_AUDIT.md`
-- `scripts/figures/fig5_downstream_qa_nll.py`
-- `paper/figs/fig5_downstream_qa.pdf`
-- `paper/figs/fig5_downstream_qa.png`
-- `paper/main.pdf`
+- `data/curated/quality_454m_full_eval.json`
 
 **允许写的 response**：
 
-- “We thank the reviewer for catching this stale/mislabeled figure. We have replaced the panel with the Gold-answer NLL plot matching Table 21.”
+- “We thank the reviewer for catching this stale/mislabeled figure. The surviving n=2086 aggregate is the source of truth; we will correct the figure and the 26.6%→24.6% table erratum in a revision.”
 
 **禁止写**：
 

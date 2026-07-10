@@ -34,10 +34,10 @@
 | R-06 | Token/provenance visibility has been improved | `paper/appendix/a2_experiment_details.tex:20-31`; `rebuttal/PRIMARY_PROVENANCE_NOTE.md` | We added a compact reproducibility snapshot and separated Table 4's 128-token/15M protocol from Phase 11B's 256-token/100M protocol. | Mixing 15M/128 and 100M/256 as one protocol |
 | R-07 | 1B MLA row is schedule-sensitivity limitation | `paper/tables/table_evidence_tier.tex:18-20`; `paper/appendix/a4_supporting_experiments.tex:29-30` | The 1B row is a single-seed schedule-sensitivity stress check, not saturation robustness. | The 1B row proves robustness to training saturation |
 | R-08 | MLA uses an empirical operating convention, not a theorem from d_rope | `paper/sections/05_experiments.tex:52`; `paper/appendix/a3_supporting_results.tex:6-10` | d_rot determines channel count; the deployed d_eff is an architecture-specific operating convention and direct tau ablations are natural checks. | d_eff=d_head is theoretically derived for MLA |
-| R-09 | QuALITY should be NLL/probability-space supporting evidence, not downstream accuracy win | `paper/appendix/a3_supporting_results.tex:71-101`; `rebuttal/FIGURE_TABLE_AUDIT.md` | Accuracy is near random at 454M; Gold-answer NLL is the useful diagnostic and Figure 8 has been corrected to NLL. | QuALITY proves downstream task improvement |
+| R-09 | QuALITY should be NLL/probability-space supporting evidence, not downstream accuracy win | `data/curated/quality_454m_full_eval.json`; `rebuttal/FIGURE_TABLE_AUDIT.md` | Accuracy is near random at 454M; the n=2086 Gold-answer NLL aggregate is the rebuttal source of truth. | QuALITY proves downstream task improvement |
 | R-10 | LoRA current table is scoped correctly as post-hoc observation | `paper/appendix/a4_supporting_experiments.tex:32-51` | The current two-row table cannot attribute the entire gain to EVQ; matched Geo+LoRA is required for causal attribution. | Base->EVQ-LoRA proves EVQ-specific gain |
 | R-11 | 750M continuation helps rebut “TF metric only” but remains single-seed supporting evidence | `paper/tables/table6_750m_continue_supporting.tex:1-19` | The 750M row shows TF can saturate while AR exact separates; it motivates honest metric separation. | 750M single seed proves full scaling durability |
-| R-12 | Figure/Table trust issue has been fixed | `paper/appendix/a3_supporting_results.tex:92-98`; `paper/main.pdf`; `rebuttal/FIGURE_TABLE_AUDIT.md` | We corrected a stale/mislabeled QuALITY figure so Figure 8 now plots Gold-answer NLL consistent with Table 21. | Reviewer misread the figure |
+| R-12 | Figure/Table trust issue is acknowledged and quantified | `rebuttal/FIGURE_TABLE_AUDIT.md` | Submitted Figure 8/9 are inconsistent; use aggregate/table sources and commit to revision. | Reviewer misread the figure; current PDF is already fixed |
 
 ## 2. Conditional Claims
 
@@ -96,7 +96,7 @@
 | YaRN fixed scale | Valid limitation | Matched-scale substrate test, not tuned baseline dominance. | Geo+YaRN scale sweep. |
 | TF PK not AR exact | Valid limitation | Define PK and separate AR exact. | Primary I AR exact if feasible. |
 | Primary II single seed | Valid scope issue | Seed-42 diagnostic, not broad dominance. | Extra seeds if cheap and same protocol. |
-| Figure 8/Table 21 mismatch | Real trust issue, fixed | Acknowledge stale/mislabeled figure and corrected NLL plot. | Already done in current working PDF. |
+| Figure 8/Table 21 mismatch | Real trust issue; rebuttal response ready | Acknowledge stale/mislabeled figure, 26.6%→24.6% erratum, and n=2086 source of truth. | PDF correction is deferred to revision. |
 | MLA tau=d_rope missing | Valid limitation | Empirical d_eff convention, not theorem. | tau=d_rope/sqrt(L) sanity check. |
 | Base-tuning baseline | Valid practitioner concern | Do not claim best practical schedule. | Text Geo best-b comparison if available. |
 
@@ -190,7 +190,7 @@ If any answer fails, rewrite or delete the paragraph.
 | Objective requirement | Current evidence | Status |
 | --- | --- | --- |
 | 详细阅读 `fable相关资料原文.md` | Source is 277 lines; issues from all sections are represented in this ledger and `PAPER_ISSUE_AUDIT.md` | Satisfied for strategy drafting |
-| 全部材料 MD 化 | local-only `rebuttal/raw_sources/00_INDEX.md` indexes verbatim sources; attachment copies verified byte-for-byte previously | Satisfied |
+| 全部材料 MD 化 | `rebuttal/raw_sources/00_INDEX.md` survives, but the indexed verbatim files are unavailable and prior byte checks are not reproducible here | Not independently satisfied |
 | 认下真正改变局面的新证据 | Geo+LoRA is P0 in this ledger and `REBUTTAL_PREPARATION.md` | Satisfied conceptually; exact numbers missing |
 | 制定 rebuttal 计划 | `REBUTTAL_PREPARATION.md`, `REBUTTAL_ACTION_BOARD.md`, `REBUTTAL_DRAFT_EVIDENCE_SCOPED.md`, this ledger | Satisfied |
 | 制定可能实验 | Section 5 above plus existing action board | Satisfied as prioritized queue |

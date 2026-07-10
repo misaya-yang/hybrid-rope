@@ -60,7 +60,7 @@ Rebuttal 不是二次投稿。每个 response paragraph 必须满足至少一个
 2. LoRA confound addressed: Base / Geo+LoRA / EVQ-LoRA table, if exact numbers are available.
 3. Metric clarified: PK is teacher-forced NLL-gap; AR exact is only named when measured.
 4. Supporting-row relabel: 1B MLA row is schedule-sensitivity limitation, not robustness to training saturation.
-5. Figure/Table correction: QuALITY Figure 8/Table 21 stale/mislabeled figure has been corrected in the working PDF.
+5. Figure/Table correction: acknowledge submitted Figure 8/9 errors and Table 21 erratum; commit to correction in a revision.
 6. Provenance added: total tokens and seed scope for primary rows, using `PRIMARY_PROVENANCE_NOTE.md` and only where traceable.
 
 必须避免：
@@ -352,11 +352,11 @@ Reviewer concern:
 Current evidence:
 
 - Verified in `rebuttal/FIGURE_TABLE_AUDIT.md`.
-- In the stale version, Table 21 was NLL-coherent while Figure 8 was an accuracy figure under an NLL caption. The working PDF now replaces Figure 8 with a Gold-NLL plot.
+- In the submitted version, Table 21 was NLL-coherent while Figure 8 was an accuracy figure under an NLL caption. This rebuttal pass does not replace the PDF; the response commits to correction in a revision.
 
 Response:
 
-> We thank the reviewer for catching the stale/mislabeled QuALITY figure. The table values and text use gold-answer NLL; the figure panel was an older accuracy visualization and should not have been captioned as NLL. We have replaced the figure with a Gold-NLL plot consistent with Table 21, and we do not use QuALITY accuracy as a primary claim.
+> We thank the reviewer for catching the stale/mislabeled QuALITY figure. Figure 8 used the superseded n=200 accuracy pilot under a Gold-NLL caption. The surviving n=2086 aggregate is the source of truth and also shows that the submitted Table 21 8K-raw Geo accuracy should be 24.6% (513/2086), not 26.6%. The Gold-NLL values and conclusions are unchanged. We do not use QuALITY accuracy as a primary claim and will correct the figure and table entry in a revision.
 
 反噬句:
 

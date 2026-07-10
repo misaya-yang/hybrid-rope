@@ -70,7 +70,7 @@ large EVQ/Geo `+YaRN` difference is not explained by "freq came from nowhere."
 | O48-10 | P1 | Partly closed | PE-dominant 64x extrapolation is diagnostic and extreme. | `data/curated/fig3_extreme_128.json` and Table 4 document the diagnostic setup. | Keep as PE-dominant mechanism stress test, not ordinary downstream long-context evidence. |
 | O48-11 | P0 | Partly closed | MLA tau convention is under-specified and had a paper-code naming mismatch. | Current scripts set `head_dim=64`, `d_rope=32`, and run `tau=1.414`; the old paper prose called this `d_eff=d_head=128`. The paper now states `tau=1.414` as an empirical `d_eff=128` operating convention rather than deriving it from code `head_dim` or `d_rope`. | Keep convention explicit and non-theorem. Add direct `tau=d_rope/sqrt(L)` and code-`head_dim/sqrt(L)` ablations if possible. |
 | O48-12 | P0 | Open | Direct MLA `tau=d_rope/sqrt(L)` ablation is named but not reported. | No packaged primary result closes this. `results/PHASE22_23_MLA_TAU_SWEEP_REPORT.md` analyzes related config effects but is not the same ablation. | Either run/report it or remove any implication that it is resolved. |
-| O48-13 | P0 | Open | 1B MLA raw EVQ reverses: EVQ worse at 8K/16K; EVQ+YaRN+FT only mildly better at target. | `results/PHASE18_YARN_FT_REPORT.md` reports raw EVQ worse at 8K/16K for the 1B 4K seed-42 run and small target-length EVQ+YaRN+FT gains. | Treat as limitation and root-cause target. Do not use this row as broad support. |
+| O48-13 | P0 | Open | 1B MLA raw EVQ reverses: EVQ worse at 8K/16K; EVQ+YaRN+FT only mildly better at target. | Summary values survive in the paper/archive, but the original report, JSONs, and checkpoints are unavailable. | Treat as limitation only. Do not use this row as artifact-backed support. |
 | O48-14 | P0 | Open | 1B provenance is not reviewer-grade. | Launch/report artifacts show config drift: 4K train length, data change, seed-42-only reported row, old K16/base500K MLA substrate, and historical script/report mismatches. `EXPERIMENT_CODE_RESULT_AUDIT.md` confirms the code chain exists, but exact 1B baseline and YaRN+FT JSON files plus checkpoint/data hashes are absent from the compact branch. | Import sanitized result/checkpoint/data manifests from the external training environment if available; otherwise keep the row supporting-only. |
 | O48-15 | P1 | Partly closed | Old MLA-32/base500K differs from production-like DeepSeek settings. | `paper/appendix/a3_supporting_results.tex` notes production DeepSeek uses `d_rope=64`, `base=10K`; `results/PHASE22_23_MLA_TAU_SWEEP_REPORT.md` says K16/base500K can reverse patterns. | Rebuttal should avoid saying the old config is production-identical. Call it a scarce-channel stress test. |
 | O48-16 | P1 | Open | LoRA into LLaMA-3-8B lacks matched Geo+LoRA control and has in-distribution cost. | `paper/appendix/a4_supporting_experiments.tex` frames LoRA as supporting only. | Keep supporting-only. Add Geo+LoRA control before using it in rebuttal. |
@@ -91,7 +91,7 @@ large EVQ/Geo `+YaRN` difference is not explained by "freq came from nowhere."
 Primary MLA table:
 
 - Paper location: `paper/appendix/a3_supporting_results.tex`.
-- Result artifact: `results/eval_3seeds_full_results.json`.
+- Aggregate recovery artifact: `data/curated/table18_mla_3seed_aggregate.json`; original per-seed result/checkpoints unavailable.
 - Reported setup: 432M/350M-class MLA stress test, 8K train length, 500M
   tokens, 3 seeds, `d_rope=32`, `base=500K`, matched `+YaRN(s=4)`.
 - Main result: at 16K, EVQ improves raw PPL versus Geo and EVQ+YaRN is best.
@@ -99,7 +99,7 @@ Primary MLA table:
 1B reversal row:
 
 - Launch artifact: `scripts/core_text_phases/run_350m_4k_1b.sh`.
-- Report artifact: `results/PHASE18_YARN_FT_REPORT.md`.
+- Original report artifact: unavailable in this checkout; only summary-level paper/archive references survive.
 - Reported setup: 4K train length, 1B tokens, different data mixture, seed 42
   reported, old MLA-32/K16/base500K substrate.
 - Raw result: EVQ is better at 4K but worse at 8K and 16K.

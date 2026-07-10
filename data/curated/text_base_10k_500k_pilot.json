@@ -1,0 +1,30 @@
+{
+  "source": {
+    "script": "scripts/core_text_phases/phase18_base_generalization_sweep.py",
+    "surviving_results": "results/core_text/phase18_base_sweep/*/result.json"
+  },
+  "protocol": {
+    "model_parameters": 151900000,
+    "train_length": 512,
+    "training_tokens": 50003968,
+    "dataset": "FineWeb-Edu",
+    "head_dim": 64,
+    "seed": 42,
+    "evq_tau": 2.828
+  },
+  "rows": [
+    {
+      "base": 10000,
+      "geo_ppl": {"512": 74.86, "1024": 101.85, "2048": 165.27, "4096": 246.12},
+      "evq_ppl": {"512": 77.57, "1024": 90.05, "2048": 128.44, "4096": 192.39},
+      "evq_relative_change_percent": {"512": 3.62, "1024": -11.59, "2048": -22.28, "4096": -21.83}
+    },
+    {
+      "base": 500000,
+      "geo_ppl": {"512": 73.74, "1024": 105.55, "2048": 185.22, "4096": 284.87},
+      "evq_ppl": {"512": 74.32, "1024": 90.36, "2048": 132.12, "4096": 191.90},
+      "evq_relative_change_percent": {"512": 0.79, "1024": -14.39, "2048": -28.67, "4096": -32.64}
+    }
+  ],
+  "claim_boundary": "This surviving single-seed pilot shows that the EVQ direction persists at the LLaMA-style base 10K as well as base 500K. It is not a complete tuned-base sweep and does not establish the best geometric base. The 8K and 16K entries from the historical evaluator were non-finite and are intentionally omitted."
+}

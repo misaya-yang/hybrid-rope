@@ -327,7 +327,7 @@
 | --- | --- | --- |
 | EVQ-Cosh 是训练期 RoPE frequency allocation。 | `scripts/lib/rope/schedules.py`；paper theory；RoPE core tests。 | 作为机制和实现主张 defend。 |
 | EVQ x YaRN 是 matched-scale substrate/range complementarity。 | `data/curated/table2_evq_yarn_454m_passkey_10pct.json`；`paper/tables/table2_evq_yarn_main.tex`。 | 只 defend fixed matched YaRN scale；不 claim tuned-scaler dominance。 |
-| 8K/500M MLA 是最强系统证据。 | `results/eval_3seeds_full_results.json`；`scripts/core_text_phases/eval_extended_3seeds.py`。 | defend 为 3-seed scarce-channel stress test。 |
+| 8K/500M MLA 是最强系统证据。 | `data/curated/table18_mla_3seed_aggregate.json` 保存论文中的 3-seed mean/std；原 per-seed JSON/checkpoints 已不可用。 | 只能 defend aggregate 级 scarce-channel stress test；不能声称 paired-seed/checkpoint provenance 已恢复。 |
 | 当前 YaRN eval 代码不会“凭空造 freq”。 | `scripts/core_text_phases/eval_extended_3seeds.py`、`scripts/core_text_phases/yarn_finetune_eval.py` 已强制 checkpoint `inv_freq`、clone loaded buffer、打印 hash。 | defend 当前代码路径；历史 checkpoint 仍需离线审计。 |
 | PK metric 已经被正确限定。 | paper/table/docs 已改为 teacher-forced NLL-gap。 | 承认比 AR exact 软；不要把它包装成 exact retrieval。 |
 
@@ -351,7 +351,7 @@
 | 层级 | 状态 |
 | --- | --- |
 | 训练/eval 代码 | 存在。训练 launcher 调 shared MLA entrypoint；YaRN+FT eval script 会写 JSON。 |
-| Markdown report | 存在：`results/PHASE18_YARN_FT_REPORT.md`。 |
+| Markdown report | 当前 checkout 不可用；只有论文/归档文档中的摘要性数字。 |
 | exact baseline JSON | 当前 compact repo 缺失。 |
 | exact YaRN+FT JSON | 当前 compact repo 缺失。 |
 | checkpoint `inv_freq` hash | 当前 compact repo 缺失。 |

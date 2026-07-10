@@ -36,7 +36,7 @@ deployment claim.
 | --- | --- | --- |
 | EVQ is a closed-form, zero-learned-parameter training-time allocation. | `scripts/lib/rope/schedules.py`; paper theory; RoPE tests. | Defend as a mechanism and implementation claim. |
 | EVQ x YaRN Table 2 is a matched-scale substrate/range composition result. | `data/curated/table2_evq_yarn_454m_passkey_10pct.json`; `paper/tables/table2_evq_yarn_main.tex`. | Defend only under fixed matched YaRN scale; PK is teacher-forced NLL-gap. |
-| Primary MLA 8K/500M is the strongest systems stress test. | `results/eval_3seeds_full_results.json`; MLA eval scripts. | Defend as a 3-seed scarce-channel stress test with empirical `d_eff=128` convention. |
+| Primary MLA 8K/500M is the strongest systems stress test. | `data/curated/table18_mla_3seed_aggregate.json`; MLA eval scripts; original per-seed/checkpoints unavailable. | Defend only the printed 3-seed aggregate with empirical `d_eff=128` convention. |
 | PE-dominant Table 4 is a diagnostic. | `data/curated/fig3_extreme_128.json`; `paper/tables/table4_pe_dominant.tex`. | Defend as seed-scoped PE isolation, not broad learned-PE dominance. |
 | YaRN eval frequency source is explicit in current code. | `eval_extended_3seeds.py`; `yarn_finetune_eval.py`; `tests/test_yarn_checkpoint_inv_freq.py`. | Defend current code path; still audit exact historical checkpoints if recovered. |
 
@@ -79,7 +79,7 @@ Evidence state:
 | Layer | State |
 | --- | --- |
 | Training/eval code | Exists; current eval scripts now enforce checkpoint-loaded `inv_freq`. |
-| Markdown report | Exists: `results/PHASE18_YARN_FT_REPORT.md`. |
+| Markdown report | Unavailable in the current checkout; only summary-level references survive. |
 | Exact compact JSON | Missing. |
 | Checkpoint/data hashes | Missing. |
 | Same-config token scaling | Not established. |

@@ -30,7 +30,7 @@ Do not write:
 
 Ready-to-use bullet list:
 
-> We made four concrete clarifications/corrections. First, we added total token budgets and seed scope for the primary anchors: Primary I uses 100M tokens at \(L_{\mathrm{train}}=2048\) with seeds 42/123/7; Primary II Table 4 is the 128-token, 15M-token seed-scoped DAPE-style diagnostic; Phase 11B is a separate 256-token, 100M-token supporting protocol. Second, we relabeled the 1B MLA row as a schedule-sensitivity check rather than robustness to training saturation. Third, we corrected the stale QuALITY figure so Figure 8 now plots Gold-answer NLL, consistent with Table 21. Fourth, we clarified that PK is teacher-forced NLL-gap retrieval unless separately marked AR exact.
+> We make four concrete clarifications/corrections in this response. First, we report total token budgets and seed scope for the primary anchors: Primary I uses 100M tokens at \(L_{\mathrm{train}}=2048\) with seeds 42/123/7; Primary II Table 4 is the 128-token, 15M-token seed-scoped DAPE-style diagnostic; Phase 11B is a separate 256-token, 100M-token supporting protocol. Second, we treat the 1B MLA row as a schedule-sensitivity limitation rather than robustness to training saturation. Third, we acknowledge the stale Figure 8 and the Table 21 erratum and will correct them in a revision. Fourth, PK is teacher-forced NLL-gap retrieval unless separately marked AR exact.
 
 Conditional LoRA bullet:
 
@@ -142,7 +142,7 @@ Do not write:
 
 Ready-to-use:
 
-> We thank the reviewer for catching the stale/mislabeled QuALITY figure. The table values and text use gold-answer NLL; the figure panel was an older accuracy visualization and should not have been captioned as NLL. We have replaced the figure with a Gold-NLL plot consistent with Table 21, and we do not use QuALITY accuracy as a primary claim.
+> We thank the reviewer for catching the stale/mislabeled QuALITY figure. Figure 8 used the superseded n=200 accuracy pilot under a Gold-NLL caption. The surviving n=2086 aggregate is the source of truth and also shows that the submitted Table 21 8K-raw Geo accuracy should be 24.6% (513/2086), not 26.6%. The Gold-NLL values and conclusions are unchanged. We do not use QuALITY accuracy as a primary claim and will correct the figure and table entry in a revision.
 
 Do not write:
 

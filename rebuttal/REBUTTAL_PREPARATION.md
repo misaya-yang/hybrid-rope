@@ -4,7 +4,7 @@
 
 用途：把三份模拟审稿材料、后续模型推理材料、用户新增五条 rebuttal 判断，统一整理成一份可执行的 rebuttal 工作文档。
 
-原始材料归档：local-only `rebuttal/raw_sources/` 是逐份 verbatim 原文归档；local-only `rebuttal/fable相关资料原文.md` 是用户提供的合集原文；local-only `rebuttal/RAW_REVIEW_INPUTS.md` 是之前生成的辅助归档。查原话优先看本地 `raw_sources/`，看合集上下文看本地 `fable相关资料原文.md`，做决策看本文件。
+原始材料状态：`rebuttal/raw_sources/00_INDEX.md` 只保留历史索引，五份 verbatim 文件当前不可用，不能把索引当作可复核原文。用户重新提供的 attachment 才是当前可读的一手材料；做决策使用本文件，但不要把摘要当原文。
 
 后续使用规则：之后所有 rebuttal 审查、实验取舍、论文措辞优化，都优先参考本文件的 scope、反噬措辞黑名单和补实验优先级。若新实验结果进入，先更新本文件的证据矩阵，再决定是否改 paper 或 response。
 
@@ -12,12 +12,7 @@
 
 | Source | 内容 | 本文处理方式 |
 | --- | --- | --- |
-| local-only `raw_sources/00_INDEX.md` | 原文文件、行数、SHA256、附件 byte-for-byte 校验 | 作为查原文入口 |
-| `raw_sources/01_review_panel_a_verbatim.md` | 第一份 reviewer panel 原文 | 只作原文引用，不直接等同策略 |
-| `raw_sources/02_review_panel_b_verbatim.md` | 第二份 reviewer panel 原文 | 只作原文引用，不直接等同策略 |
-| `raw_sources/03_reasoning_attachment_verbatim.md` | 模型推理附件原文 | 只提取行动项；不复写个人身份信息或推理过程到公开材料 |
-| `raw_sources/04_user_five_point_note_verbatim.md` | 用户五条 rebuttal 判断原文 | 作为本文第 1 节主线 |
-| `raw_sources/05_probability_calibration_verbatim.md` | 分数/录用概率校准原文 | 加入总判断和 rebuttal 包价值评估 |
+| local-only `raw_sources/00_INDEX.md` | 历史文件名、行数、SHA256 记录；对应 verbatim 文件当前缺失 | 只作恢复线索，不作为可复核原文 |
 | `fable相关资料原文.md:1-79` | 第一组 reviewer panel + AC；实证优先级清晰 | 提取 P0 实验排序：YaRN sweep、AR exact、Primary II seeds、MLA tau、图表修正 |
 | `fable相关资料原文.md:84-158` | 第二组 reviewer panel + AC；更强对抗 | 提取 R1/R2/R3/AC 共识和 veto 点 |
 | `fable相关资料原文.md:161-189` | 用户五条新证据和反噬判断 | 作为本文第 1 节逐条 MD 化的主线 |
@@ -383,7 +378,7 @@ R1 最强攻击是：
 | YaRN tuned baseline | R2 | Table 2 是 matched scale s=8，不是 tuned Geo+YaRN | 承认 scope，补 Geo+YaRN scale sweep | s in {4,6,8,12,16} 或 {2,4,8,16,32} |
 | NTK reverse composition | R1/R2 | Table 5 note: NTK-aware @32x EVQ4 worse than Geo | 说 composition is YaRN-tested, not universal scaler claim | 主动提一句，避免 “general scaler” |
 | TF PK vs AR exact | R2 | Primary I headline是 teacher-forced NLL-gap；AR exact not tabled | 主动定义，不当成 generation exact | 用 existing evaluator 报 AR exact 或解释 unavailable |
-| Figure/Table mismatch | R2/AC | 已在当前 `paper/main.pdf` 验证并修复：Table 21 是 Gold-NLL 表，Figure 8 已重画为 Gold-NLL / relative NLL change | 主动承认旧图 stale/mislabeled，说明 working PDF 已修正且 Table 21 NLL 是 source of truth | 见 `rebuttal/FIGURE_TABLE_AUDIT.md` |
+| Figure/Table mismatch | R2/AC | submitted Figure 8/9 均存在真实矛盾；本 rebuttal pass 不改 PDF | 主动承认，给出 n=2086 aggregate/Table 20 source of truth，并承诺 revision 修正 | 见 `rebuttal/FIGURE_TABLE_AUDIT.md` |
 | MLA tau convention | R1/R3 | d_eff=d_head 是 convention；tau=d_rope/sqrt(L) sanity check 缺 | 承认 empirical convention | 单 seed tau=0.354 ablation 或列为 limitation |
 | Base-tuning baseline | R2/R3 | 文本主实验 b=500K；text Geo best-b 不清楚 | 承认 practitioner baseline | 如果可行做 Geo base sweep；否则不 claim best-b dominance |
 | Internal terms | R1/presentation | `Habitable Zone`, `Class C2` still appear | 修匿名/清洁文本 | 改为 defined technical terms |
@@ -394,7 +389,7 @@ R1 最强攻击是：
 
 | Priority | 实验/核查 | 类型 | 回应谁 | 成功标准 | 风险 |
 | --- | --- | --- | --- | --- | --- |
-| P0 | Figure 8/Table 21 / QuALITY figure-table fix | 无 GPU | R2/AC | 已完成：图、caption、table、正文数字一致；`paper/main.pdf` page 36 已视觉核验 | 不做会污染所有数字可信度 |
+| P0 | Figure 8/9 rebuttal audit and Table 21 erratum | 无 GPU | R2/AC | 已完成审计与安全回复；PDF 修订留到 revision | 不承认会污染所有数字可信度 |
 | P0 | Table 23 重构为 Base/Geo+LoRA/EVQ-LoRA | 已有结果整理 | R2/R3 | 同一 checkpoint/data/steps/rank/seeds | 数字必须精确 |
 | P0 | Primary I/II token budget/provenance reconciliation | 无 GPU | R2 | token count、seq_len、seed scope 可 trace | Primary II 当前材料有 15M/128 与 100M/256 混线风险 |
 | P1 | Geo+YaRN/Dynamic NTK eval-only for LoRA checkpoint | 纯 eval | R2 | 16K/32K PPL reference | 若 scaler 很强，需要如实 scope |
@@ -477,7 +472,7 @@ R1 最强攻击是：
 | `paper/tables/table_evidence_tier.tex` | 旧版 “MLA 1B-token (robustness to training saturation)” | 已改成 schedule-sensitivity check；response 仍按 limitation 写 |
 | `paper/sections/05_experiments.tex` Primary II | “retained seed-42” 容易暗示挑 seed | 改成 seed-scoped diagnostic，并说明 provenance |
 | `paper/appendix/a1_proofs.tex` | “Habitable Zone”, “Class C2” 未定义 | 删除内部术语或定义成正式 lemma/observation |
-| QuALITY figure/table | 当前 `paper/main.pdf` 已修复 Figure 8/Table 21 mismatch | 主动承认旧图 stale/mislabeled；说明已重画 NLL 图匹配 Table 21 |
+| QuALITY figure/table | submitted Figure 8 stale/mislabeled；Table 21 有 26.6%→24.6% erratum | 主动承认；以 n=2086 aggregate 为 source of truth，并说 will correct in revision |
 | LoRA appendix | 仍缺 Geo+LoRA exact row；旧 “modest cost/causal attribution” 口径会反噬 | 已先改成 post-hoc observation，并声明 attribution requires matched Geo+LoRA；最终仍需用新表替换旧两行口径 |
 | Limitations | 1B raw reversal 说得不够尖锐 | 主动写成 limitation, not support |
 
@@ -487,10 +482,10 @@ R1 最强攻击是：
 
 - [ ] 新建 `rebuttal/` 并保存本综合文档。
 - [ ] 整理三份 review input 成 reviewer issue matrix。
-- [x] 核对当前 `paper/main.pdf` 中 Figure 8 / Table 21 对应源码位置；详见 `rebuttal/FIGURE_TABLE_AUDIT.md`。
-- [x] 重画 `paper/figs/fig5_downstream_qa.pdf/png` 为 Gold-NLL 图并重新编译 `paper/main.pdf`。
-- [x] 把 `paper/tables/table_evidence_tier.tex` 的 1B row 改成 schedule-sensitivity check。
-- [x] 把 LoRA appendix 的两行表口径改成 post-hoc observation，并明确 attribution 需要 matched Geo+LoRA control。
+- [x] 审计 submitted Figure 8/9、Table 20/21 并形成 rebuttal 安全口径；详见 `rebuttal/FIGURE_TABLE_AUDIT.md`。
+- [x] 恢复 n=2086 QuALITY aggregate 和 99-run Phase-16 manifest，不修改 PDF。
+- [x] 在 response 中把 1B row 限定为 schedule-sensitivity limitation。
+- [x] 在 response 中把 LoRA 两行表限定为 post-hoc/supporting，并明确 attribution 需要 matched Geo+LoRA control。
 - [x] 核对 Primary I/II token budget provenance，尤其 Table 4 的 15M/128 vs current phase11b 100M/256 差异。
 - [ ] 把 Geo+LoRA 新结果整理成 Base / Geo+LoRA / EVQ-LoRA 表格，标 seed 和 metrics。
 - [ ] 读取 learned tau trajectory，如果 artifact 存在，抽出 tau-final、轨迹方向、in-range/extrapolation relation。
@@ -1346,17 +1341,17 @@ Reviewer attack：
 
 | 目标要求 | 当前证据 |
 | --- | --- |
-| 全部输入材料 MD 化 | local-only `rebuttal/raw_sources/00_INDEX.md` 已索引 5 份 verbatim 原文；前三份附件 byte-for-byte `cmp=0` |
+| 输入材料恢复状态 | `rebuttal/raw_sources/00_INDEX.md` 仅保留历史索引；五份 verbatim 文件当前不可用，不能声称本 checkout 已逐字校验 |
 | fable 原文逐条阅读 | 本文第 1 节、第 9 节、第 10 节已经按 reviewer/source/issue 拆解 |
 | 先认真正改变局面的新证据 | 本文第 1.1 节把 Geo+LoRA 控制升为 P0；`rebuttal/PAPER_ISSUE_AUDIT.md` 的 I1-I2 对应当前论文 LoRA confound |
 | 制定 rebuttal 计划 | 本文第 2-4、7、12、15 节给出 reviewer matrix、实验优先级、runbook、decision tree |
 | 识别误解与真实硬伤 | 本文第 11 节和 `rebuttal/PAPER_ISSUE_AUDIT.md` 第 2 节已分开列出 |
 | 标出反噬措辞 | 本文第 5 节、第 13 节以及 `rebuttal/PAPER_ISSUE_AUDIT.md` 第 4-6 节已列出 |
 | 对照当前论文实际问题 | `rebuttal/PAPER_ISSUE_AUDIT.md` 已把核心攻击面绑定到当前 `paper/`、`data/curated/`、`docs/exp/` 和脚本行号 |
-| Figure 8 / Table 21 trust fix | 已重画 `paper/figs/fig5_downstream_qa.pdf/png` 为 Gold-NLL 图，已编译 `paper/main.pdf`，page 36 视觉核验通过 |
-| 1B evidence-tier label fix | `paper/tables/table_evidence_tier.tex` 已从 “robustness to training saturation” 改为 schedule-sensitivity check |
+| Figure 8/9 rebuttal trust audit | 已确认 submitted-version errors、26.6%→24.6% erratum 和 safe response；没有修改 PDF |
+| 1B response scope | author response 明确其为 single-seed schedule-sensitivity limitation |
 | Primary token/provenance reconciliation | `rebuttal/PRIMARY_PROVENANCE_NOTE.md` 已确认 Primary I 100M/2048/3 seeds、Primary II Table 4 15M/128 seed scope，并把 Phase 11B 256/100M 分开 |
-| LoRA wording scope fix | `paper/appendix/a4_supporting_experiments.tex` 已把两行 LoRA 表写成 post-hoc adaptation observation，显式报告 +30% cost，并声明 attribution requires matched Geo+LoRA |
+| LoRA response scope | author response 把两行 LoRA 表写成 post-hoc/supporting，并声明 attribution requires matched Geo+LoRA |
 
 ### 17.2 仍未完成，不能假装完成
 

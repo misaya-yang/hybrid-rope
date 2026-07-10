@@ -86,7 +86,7 @@ branch.
 | Actual data source | likely FineWeb-Edu if no external cache substitution; no data hash in compact tree | report/scripts indicate Pile+OpenWebText v1, with v2/v3/v4/v5 variants also present | data-prep scripts and report |
 | Eval lengths | 8K,16K,20K,24K,28K,32K | 4K,8K,16K,32K and YaRN target/beyond-target lengths | `eval_3seeds_full_results.json`, `PHASE18_YARN_FT_REPORT.md` |
 | Scoring | full-sequence random chunks | same family for PPL; YaRN+FT script also uses random chunks | eval scripts |
-| Current JSON | yes: `results/eval_3seeds_full_results.json` | no exact baseline/YaRN+FT JSON found | compact tree scan |
+| Current JSON | aggregate-only: `data/curated/table18_mla_3seed_aggregate.json`; original per-seed JSON unavailable | no exact baseline/YaRN+FT JSON or original report found | compact tree scan and recovery audit |
 
 Judgment: do not call the 1B row a longer-training ablation of the primary MLA
 experiment. It changes at least train length, data source/provenance, seed
@@ -245,7 +245,7 @@ the true source via manifest, not infer it from filename.
 | Table 2 EVQ x YaRN | `data/curated/table2_evq_yarn_454m_passkey_10pct.json` | `A` curated JSON | matched-scale substrate/range complementarity |
 | Table 3 capability/passkey | same curated JSON | `A` curated JSON | teacher-forced retrieval robustness and per-document PPL caveat |
 | Table 4 PE-dominant | `data/curated/fig3_extreme_128.json` plus `phase11b_125m_dape.py` | `A` for retained rows, `B` for full regeneration | seed-42 diagnostic for Geo/DAPE/EVQ |
-| MLA table in appendix | `results/eval_3seeds_full_results.json` | `A` aggregate JSON | strongest scarce-channel stress test, with tau-convention caveat |
+| MLA table in appendix | `data/curated/table18_mla_3seed_aggregate.json` | aggregate-only curated copy | strongest scarce-channel stress test, but paired seeds/checkpoints are unrecovered |
 | Phase 11 leverage table | Phase 11 scripts/docs | `B` | supporting only |
 | Multiscale raw PPL | mixed historical/current docs/results | mixed | supporting unless row is 454M FineWeb-Edu 3-seed |
 | QuALITY Gold NLL | `results/core_text/phase21b/` | `A` supporting | downstream probability signal, not main task win |

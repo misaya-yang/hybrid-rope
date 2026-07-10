@@ -14,9 +14,9 @@
 | EVQ × YaRN | Experiments / Primary I | EVQ × YaRN matched-scale complementarity | `scripts/figures/fig2_evq_yarn_orthogonality.py` | `data/curated/table2_evq_yarn_454m_passkey_10pct.json` | `paper/figs/fig2_evq_yarn_synergy.pdf` |
 | PE-dominant scaling | Appendix supporting PE-dominant section | PE-dominant regime & scaling-law check | `scripts/figures/fig3_pe_dominant_scaling.py` | `data/curated/fig3_extreme_128.json` fallback for panel (a); regenerate Phase 11 sweeps for panels (b,c) | `paper/figs/fig3_pe_dominant_scaling.pdf` |
 | Progressive training | Appendix experiment details | Phase 17c 454M supporting/progressive pattern | `scripts/core_text_phases/phase17c_*.py` | `results/evq_phase17c_results/` | `paper/figs/fig4_phase17c_flagship.pdf` |
-| Downstream QA | Appendix supporting results | Downstream QA (Gold NLL) | `scripts/core_text_phases/phase21b_quality_eval_clean.py` | `results/core_text/phase21b/` | `paper/figs/fig5_downstream_qa.pdf` |
-| τ* validation | Appendix theory validation | τ* operating-rule validation (99-run sweep basin) | `scripts/core_text_phases/phase16_formula_optimality_sweep.py` | `results/core_text/phase16/` | `paper/figs/fig6_tau_formula_validation.pdf` |
-| Multiscale waterbed | Appendix supporting results | Multiscale waterbed trade-off | `scripts/figures/fig1_neurips.py` (subplot) | Multi-tier PPL results | `paper/figs/fig7_multiscale_waterbed.pdf` |
+| Downstream QA | Appendix supporting results | Downstream QA (Gold NLL) | `scripts/core_text_phases/phase21b_quality_eval_clean.py` | `data/curated/quality_454m_full_eval.json` (n=2086 aggregate) | submitted Figure 8 is stale; use aggregate/Table 21 in rebuttal |
+| τ* validation | Appendix theory validation | τ* operating-rule validation (99 planned runs) | `scripts/core_text_phases/export_phase16_manifest.py` | `data/curated/phase16_99run_manifest.csv` | `paper/figs/fig6_tau_formula_validation.pdf` |
+| Multiscale raw PPL | Appendix supporting results | Heterogeneous supporting rows, not a controlled scaling law | table source only | `paper/tables/table1_multiscale_raw_ppl.tex` | submitted Figure 9 mixes protocols; use Table 20 in rebuttal |
 | Attn Viz | Appendix supporting results | Attention distance distribution | `scripts/core_text_phases/visualize_attention_distance.py` | 750M checkpoints (EVQ vs Geo) | `paper/figs/attn_*.pdf` |
 | τ-sweep | Appendix supporting results | τ sweep curves (PPL, freq, collision, cross-scale) | `scripts/core_text_phases/evq_analysis.py` | `results/core_text/D_summary.json` | `paper/figs/fig_tau_sweep_*.pdf` |
 
@@ -77,13 +77,16 @@ experiment plan.
 
 | ID | Claim | Primary Evidence | Scripts | Seeds | Risk |
 |----|-------|-----------------|---------|-------|------|
-| **C1** | EVQ-Cosh is the exact inverse-CDF minimizer of the stated broadband surrogate; τ is a semi-analytic operating rule, not a global optimum | Theory + Phase 16 formula sweep (99-run validation claim; compact JSON is incomplete) | `phase16_formula_optimality_sweep.py` | 3+ seeds × multi-τ where packaged/reported | Medium (surrogate and tau-rule scope) |
+| **C1** | EVQ-Cosh is the exact inverse-CDF minimizer of the stated broadband surrogate; τ is a semi-analytic operating rule, not a global optimum | Theory + sanitized 99-run Phase 16 manifest | `phase16_formula_optimality_sweep.py`, `export_phase16_manifest.py` | pilot seed 42 plus confirmation seeds 137/256 across 9 settings | Medium (surrogate and tau-rule scope) |
 | **C2** | PE-dominant DAPE-style diagnostic: EVQ has lower seed-42 8K PPL than Geo/DAPE without learned PE parameters | Phase 11b 125M extreme extrap (128→8K) | `phase11b_125m_dape.py` | 1--3 seeds by row | ⚠️ Medium (diagnostic scope) |
 | **C3** | EVQ increases fixed-scale YaRN leverage vs Geo+YaRN | 454M passkey-mix aggregate/provenance; Phase 14c provides 50M/125M supporting rerun | `data/curated/table2_evq_yarn_454m_passkey_10pct.json`; `phase14c_multiscale_evq_yarn.py` is supporting only | 3+3 seeds | ⚠️ Medium (matched-scale scope; PK is teacher-forced NLL-gap) |
-| **C4** | MLA scarce-channel stress test is the third primary empirical anchor | 432M MLA 3-seed run; matched-scale Geo+YaRN comparison | `results/eval_3seeds_full_results.json`; MLA eval scripts | 3 seeds | ⚠️ Medium-high (`d_eff=128` is an empirical convention distinct from code `head_dim=64`/`d_rope=32`; 1B/4K supporting reversal is a limitation) |
+| **C4** | MLA scarce-channel stress test is the third primary empirical anchor | 432M MLA aggregate table; original per-seed JSON/checkpoints unavailable | `data/curated/table18_mla_3seed_aggregate.json`; MLA eval scripts | 3-seed mean/std only; paired seed rows unavailable | ⚠️ High provenance caveat (`d_eff=128` is empirical; aggregate does not recover checkpoints or paired deltas; 1B reversal is a limitation) |
 | **S1** | 454M Stage 2-3 continued pretrain | Phase 17c 454M (1024→2048) | `phase17c_454m_1024_to_2048_continue.py` | single seed | Supporting only |
 | **S2** | 750M scale-up confirmation | Phase 15 750M (2K→4K) | `phase15_750m_2k_to_4k_continue_ckpt_eval.py` | single-seed | Supporting only |
 | **S3** | Downstream NLL advantage | Phase 21b QuALITY eval | `phase21b_quality_eval_clean.py` | n=2086 | Supporting / downstream check |
+| **S4** | EVQ direction survives at text base 10K as well as 500K | Phase 18 surviving pilot | `phase18_base_generalization_sweep.py`; `data/curated/text_base_10k_500k_pilot.json` | seed 42 | Supporting only; not a complete tuned-base sweep |
+| **S5** | Within-MLA channel scarcity is directionally consistent | 125M d_rope 32/16 pilot | `run_gqa_evq_experiment.py`; `data/curated/mla_channel_count_125m_pilot.json` | seed 42 | Supporting only; d_rope=16 Geo baseline is weak |
+| **S6** | Learnable tau converges reproducibly to an in-range operating point | 128-token learnable-tau runs | `phase11b_125m_dape.py`; `data/curated/learnable_tau_128tok_evidence.json` | 3 seeds | Mechanism support; not fixed-EVQ replication |
 
 ---
 

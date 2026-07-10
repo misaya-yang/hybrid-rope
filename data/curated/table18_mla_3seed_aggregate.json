@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "evidence_tier": "primary_iii",
+  "provenance_status": "aggregate_only",
+  "curated_from": "paper/appendix/a3_supporting_results.tex",
+  "missing_original": "The original per-seed eval_3seeds_full_results.json and checkpoints are unavailable in this checkout.",
+  "protocol": {
+    "reported_model": "432M MLA transformer",
+    "historical_code_tier": "350m-class",
+    "train_length": 8192,
+    "train_tokens": 500000000,
+    "seeds": [42, 43, 88],
+    "d_rope": 32,
+    "rotary_frequency_channels": 16,
+    "base": 500000,
+    "evq_tau": 1.414,
+    "yarn_scale": 4
+  },
+  "lengths": [8192, 16384, 24576, 32768],
+  "rows": [
+    {
+      "method": "GEO",
+      "ppl_mean": [35.4, 138.8, 241.5, 323.7],
+      "ppl_std": [0.9, 5.5, 2.6, 5.2]
+    },
+    {
+      "method": "GEO+YaRN(s=4)",
+      "ppl_mean": [35.5, 117.9, 204.9, 278.5],
+      "ppl_std": [0.9, 6.5, 6.9, 6.3]
+    },
+    {
+      "method": "EVQ",
+      "ppl_mean": [35.8, 95.6, 204.9, 291.6],
+      "ppl_std": [0.8, 4.1, 14.7, 20.5]
+    },
+    {
+      "method": "EVQ+YaRN(s=4)",
+      "ppl_mean": [35.8, 71.1, 153.2, 236.6],
+      "ppl_std": [0.8, 4.1, 12.5, 15.9]
+    }
+  ],
+  "claim_boundary": "The aggregate preserves the printed table but cannot recover per-seed paired deltas or checkpoint frequency hashes."
+}

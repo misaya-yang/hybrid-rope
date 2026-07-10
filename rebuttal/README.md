@@ -1,12 +1,12 @@
 # EVQ-Cosh Rebuttal Control Room
 
-日期：2026-06-10
+日期：2026-07-10
 
 这不是论文补充材料，也不是第二版投稿。这个文件夹是 rebuttal 作战室：保存原文、证据状态、最小实验队列、危险措辞、Path A/Path B author response。
 
 ## 0. Current Decision
 
-当前默认走 **Path B**：基于已经完成的论文修复和现有 primary evidence 写 rebuttal，不等待尚未完成的 Geo+LoRA。
+当前默认走 **Path B**：只基于现存可核验 evidence 写 rebuttal，不等待尚未完成的 Geo+LoRA，也不在本轮修改已提交 PDF。
 
 原因：当前 workspace 没有可核验的 Base / Geo+LoRA / EVQ-LoRA exact table。没有这张表，就不能把 LoRA 写成“关闭 LoRA confound 和欠训练质疑”的强控制证据。
 
@@ -19,7 +19,8 @@
 
 - 没有 exact Geo+LoRA table：不要写 Path A，但这不是 Path B 的阻塞项。
 - 有 exact Geo+LoRA table：先填 `TABLE23_LORA_WORKSHEET.md`，再升级 `AUTHOR_RESPONSE_PACKET.md`。
-- 不要让 optional P1/P2 实验拖住已经完成的 trust/scope 修复。
+- 本轮所有 `will revise/correct` 都指后续修订；不要写成 current/reviewer-facing PDF 已修复。
+- 不要让 optional P1/P2 实验拖住当前可完成的 trust/scope rebuttal。
 
 ## 1. Start Here
 
@@ -35,21 +36,23 @@
 | 不依赖 Geo+LoRA、只基于当前论文怎么写 | `PATH_B_PAPER_ONLY_BRIEF.md` |
 | 写最终 response | `AUTHOR_RESPONSE_PACKET.md` |
 | 没有 Geo+LoRA 数字时直接用 | `AUTHOR_RESPONSE_PATH_B_COMPACT.md` |
+| 看 Fable5 + GPT-5.6 问题如何由现有资产回答 | `FABLE5_GPT56_ASSET_RESPONSE_MATRIX.md` |
+| 交给 Fable5 做最后复核 | `FABLE5_NONEXPERIMENTAL_REVIEW.md` |
 
 ## 2. What Is Already Done
 
 | Done item | Evidence |
 | --- | --- |
-| 原文 MD 化 | local-only `raw_sources/*.md`; three attachment files checked byte-for-byte with `cmp=0` |
+| 原文索引 | `raw_sources/00_INDEX.md` survives; the five verbatim files are unavailable in this checkout and must not be described as independently verified |
 | 全面 rebuttal plan | `REBUTTAL_PREPARATION.md` |
 | claim 准入账本 | `REBUTTAL_CLAIM_LEDGER.md` |
 | 最小实验 runbook | `MINIMAL_EXPERIMENT_RUNBOOK.md` |
 | Path B author response | `AUTHOR_RESPONSE_PATH_B_COMPACT.md`, `AUTHOR_RESPONSE_PATH_B_READY_DRAFT.md` |
 | Paper-only Path B strategy | `PATH_B_PAPER_ONLY_BRIEF.md` |
-| Figure 8/Table 21 trust fix | `FIGURE_TABLE_AUDIT.md`; regenerated NLL figure |
+| Figure 8/Table 21 + Figure 9/Table 20 rebuttal audit | `FIGURE_TABLE_AUDIT.md`; records submitted-version errors and safe response wording |
 | Primary token/protocol reconciliation | `PRIMARY_PROVENANCE_NOTE.md`; paper appendix token table |
-| 1B MLA relabel | paper wording changed to schedule-sensitivity |
-| LoRA overclaim prevention | appendix wording changed to post-hoc/supporting unless matched Geo+LoRA exists |
+| 1B MLA response scope | rebuttal calls it a single-seed schedule-sensitivity limitation |
+| LoRA overclaim prevention | rebuttal keeps it post-hoc/supporting unless matched Geo+LoRA exists |
 
 ## 3. What Is Still Conditional
 
@@ -121,7 +124,7 @@ If numbers are weak or mixed:
 Use this order for final response:
 
 1. Thank reviewers and state narrow scope.
-2. List trust repairs: Figure NLL fix, token/seed provenance, PK definition, 1B relabel.
+2. Acknowledge trust issues: Figure 8/9 errors, Table 21 erratum, token/seed provenance, PK definition, 1B scope.
 3. Address R2 first:
    - LoRA Path A or Path B;
    - training budget without “overtraining”;
@@ -137,7 +140,7 @@ Use this order for final response:
    - zero-parameter schedule;
    - MLA scarce-channel relevance;
    - downstream benchmark scope.
-6. Close with concrete paper edits, not new grand claims.
+6. Close with concrete revision commitments and evidence boundaries, not new grand claims.
 
 ## 8. Send Gate
 
@@ -150,5 +153,6 @@ Before sending:
 - [ ] 1B row is called schedule-sensitivity, not robustness.
 - [ ] Primary II seed scope is explicit.
 - [ ] Figure/Table correction is acknowledged as our stale/mislabeled figure.
+- [ ] No sentence says the current or reviewer-facing PDF has already been fixed.
 - [ ] No forbidden sentence from Section 5 appears.
 - [ ] Final response answers reviewer questions, not a new paper.

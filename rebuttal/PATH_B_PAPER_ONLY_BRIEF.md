@@ -138,7 +138,7 @@ These are high-value because they repair reviewer trust without needing new expe
 
 | Fix | Why it matters |
 | --- | --- |
-| Figure 8 now plots Gold-answer NLL | removes a real figure/table inconsistency |
+| Figure 8/Table 21 error is explicitly acknowledged | repairs trust in rebuttal; PDF correction is deferred to revision |
 | Appendix token/protocol table added | blocks “you hid training budget” attack |
 | 1B row relabeled schedule-sensitivity | prevents reviewer quoting our own contradiction |
 | LoRA wording scoped to post-hoc | avoids false attribution |

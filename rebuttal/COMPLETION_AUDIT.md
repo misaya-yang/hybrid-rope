@@ -33,12 +33,7 @@
 | `rebuttal/README.md` | 文件夹总入口与 Path A/B 操作门 | control-room status, send gate, file map |
 | `rebuttal/PATH_B_PAPER_ONLY_BRIEF.md` | 不依赖 Geo+LoRA 的 paper-only rebuttal 主线 | Path B paper/current-evidence strategy |
 | `rebuttal/fable相关资料原文.md` | 用户原始合集 | 277 lines |
-| local-only `rebuttal/raw_sources/00_INDEX.md` | 原文索引与校验入口 | lists sources, line counts, SHA256, usage rules |
-| local-only `rebuttal/raw_sources/01_review_panel_a_verbatim.md` | 第一份 attachment 原文 | byte-for-byte `cmp=0` checked against attachment |
-| local-only `rebuttal/raw_sources/02_review_panel_b_verbatim.md` | 第二份 attachment 原文 | byte-for-byte `cmp=0` checked against attachment |
-| local-only `rebuttal/raw_sources/03_reasoning_attachment_verbatim.md` | 模型推理附件原文 | byte-for-byte `cmp=0`; flagged as not public material |
-| local-only `rebuttal/raw_sources/04_user_five_point_note_verbatim.md` | 用户五条判断原文 | hand verbatim extracted from合集 |
-| local-only `rebuttal/raw_sources/05_probability_calibration_verbatim.md` | 概率校准原文 | hand verbatim extracted from合集 |
+| local-only `rebuttal/raw_sources/00_INDEX.md` | 历史原文索引 | lists historical names/line counts/hashes; the five indexed files are unavailable in this checkout |
 | `rebuttal/REBUTTAL_PREPARATION.md` | 综合准备主文档 | 1385 lines; source summary, issue ledger, runbook draft, response snippets |
 | `rebuttal/PAPER_ISSUE_AUDIT.md` | 论文问题审计 | paper-facing risks and fixes |
 | `rebuttal/REBUTTAL_CLAIM_LEDGER.md` | claim准入账本 | ready / conditional / forbidden claims |
@@ -70,17 +65,16 @@ Residual caveat:
 
 ### 2.2 MD化 And Verbatim Preservation
 
-Status: **Proved complete.**
+Status: **Not independently reproducible from this checkout.**
 
 Evidence:
 
-- `raw_sources/01_review_panel_a_verbatim.md`, `02_review_panel_b_verbatim.md`, and `03_reasoning_attachment_verbatim.md` were checked byte-for-byte against the three attachment files.
-- `raw_sources/04_user_five_point_note_verbatim.md` and `05_probability_calibration_verbatim.md` preserve the user-supplied message sections separately.
-- `raw_sources/00_INDEX.md` records file purpose, line counts, hashes, and usage rules.
+- `raw_sources/00_INDEX.md` preserves historical file names, line counts, and recorded hashes.
+- The five indexed verbatim files are absent from the current checkout, so earlier byte-comparison claims cannot be re-run here.
 
 Important boundary:
 
-- `03_reasoning_attachment_verbatim.md` contains identity/thought-process material and must not be copied into public rebuttal, paper, supplement, anonymous material, or pushed commits.
+- Do not reconstruct or publish confidential reviewer/source material from summaries. If originals are recovered, keep them outside the anonymous paper/supplement and verify them separately.
 
 ### 2.3 Rebuttal Plan
 
@@ -206,7 +200,7 @@ Highest-risk forbidden sentences:
 | “EVQ beats tuned YaRN.” | EVQ+YaRN is matched-scale substrate/range evidence |
 | “PK is retrieval accuracy.” | PK is teacher-forced NLL-gap diagnostic |
 | “Geo+LoRA proves EVQ scales industrially.” | Controlled LoRA is an industrial-checkpoint adaptation anchor |
-| “Figure 8 was reviewer misunderstanding.” | The figure was stale/mislabeled and has been fixed |
+| “Figure 8 was reviewer misunderstanding.” | The submitted figure was stale/mislabeled; acknowledge it and commit to correction in a revision |
 | “tau is globally optimal.” | tau is operating default / basin selector |
 
 ### 2.9 Rebuttal Is Not A Second Submission
@@ -259,25 +253,20 @@ Evidence:
 - AC/champion angle: `REBUTTAL_ACTION_BOARD.md` section 4.4 and `REBUTTAL_PREPARATION.md` probability calibration section.
 - Paper-source angle: `PAPER_ISSUE_AUDIT.md`, `FIGURE_TABLE_AUDIT.md`, `PRIMARY_PROVENANCE_NOTE.md`.
 
-## 3. Paper/Artifact Changes Already Made
+## 3. Rebuttal/Artifact Changes Made In This Pass
 
-These are not just strategy docs; several paper-facing fixes have been applied.
+This is a rebuttal-only pass. The submitted PDF, LaTeX, and figure assets were not modified.
 
 | File | Change | Rebuttal reason |
 | --- | --- | --- |
-| `paper/tables/table_evidence_tier.tex` | 1B row relabeled to schedule-sensitivity; unsupported base-sweep wording removed | prevent R2 reversal attack |
-| `paper/sections/05_experiments.tex` | MLA 1B wording narrowed | avoid saturation robustness overclaim |
-| `paper/appendix/a4_supporting_experiments.tex` | LoRA wording scoped as post-hoc; attribution requires matched Geo+LoRA | avoid false LoRA attribution |
-| `paper/appendix/a2_experiment_details.tex` | token/protocol reproducibility table added | answer training budget/provenance concern |
-| `scripts/figures/fig5_downstream_qa_nll.py` | new NLL figure generator | fix QuALITY figure/table mismatch |
-| `paper/figs/fig5_downstream_qa.pdf/png` | regenerated NLL figure | align Figure 8 with Table 21 |
-| `paper/main.pdf` | recompiled after fixes | working PDF reflects trust/scope corrections |
+| `rebuttal/AUTHOR_RESPONSE_PATH_B_READY_DRAFT.md` | full evidence-safe response | answer R1/R2/R3 without unsupported experiments |
+| `rebuttal/AUTHOR_RESPONSE_PATH_B_COMPACT.md` | compact response | response-budget version for Fable5 review |
+| `rebuttal/FIGURE_TABLE_AUDIT.md` | Figure 8/9 and Table 21 erratum audit | acknowledge submitted errors and define sources of truth |
+| `data/curated/quality_454m_full_eval.json` | surviving n=2086 aggregate | supports QuALITY correction without changing PDF |
+| `data/curated/phase16_99run_manifest.csv` | sanitized 99-run manifest | preserves operating-rule sweep provenance |
+| `data/curated/table18_mla_3seed_aggregate.json` | printed mean/std recovery | aggregate only; does not recreate per-seed evidence |
 
-Verification already performed earlier in this work:
-
-- Tectonic compile succeeded after paper edits.
-- PDF gate found 41 pages, no Type 3 fonts, and text containing the new scope/fix terms.
-- `git diff --check` passed for the touched rebuttal/paper/script files.
+Verification for this rebuttal-only pass must cover Markdown consistency, curated-artifact validation, and absence of paper/PDF diffs. It must not be reported as a paper compile or rendered-PDF fix.
 
 Current audit note:
 

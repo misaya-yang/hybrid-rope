@@ -1,42 +1,31 @@
-# EVQ-Cosh Compact Author Response: Path B
+# EVQ-Cosh Compact Author Response — Asset-Grounded
 
-日期：2026-06-10
+日期：2026-07-10
 
-状态：当前默认可用短版。假设没有 Base / Geo+LoRA / EVQ-LoRA exact table，因此 LoRA 不作为主防线。
+状态：可交给 Fable5 压缩/复核的 rebuttal-only 短版。未修改已提交 PDF；“will correct” 指后续修订。
 
-## Compact Draft
+We thank the reviewers for the careful assessment. We retain the paper’s core conclusion at its stated scope: training-time RoPE frequency allocation is a substantive finite-spectral-budget design axis. The cosh family is the exact minimizer of the stated convex broadband surrogate; tau is a separate semi-analytic operating-point selector supported by an empirical basin, not a globally optimal transformer parameter. Primary I is a matched-scale substrate/range test, Primary II is a seed-scoped PE-dominant diagnostic, and Primary III is a three-seed scarce-channel MLA stress test.
 
-We thank the reviewers for the detailed comments. We agree that several rows should be read as mechanism evidence rather than production-scale validation. The central claim is narrower than universal long-context SOTA: EVQ-Cosh changes the training-time RoPE frequency substrate as a finite-spectral-budget allocation, and inference-time range scaling can act differently on that substrate. We will keep the paper framed as a PE mechanism study, not a deployment recipe or a replacement for YaRN/LongRoPE-style range scaling.
+On theory, the submission already separates shape and scale. The surrogate is not presented as the exact oscillatory RoPE kernel; it is validated functionally by 24–92% exact-kernel collision-score reductions over 12 configurations and then by trained PPL/PK outcomes. The practical tau claim is basin membership rather than exponent uniqueness: a 99-run sweep across nine (L,H,d_head) settings ranks the rule exactly first in 3/9, top-2 in 6/9, top-3 in 8/9, with every empirical optimum within 1.5x. The missing trained R_F and L_eff^J measurements remain mechanism tests, but the experiments use the exact cosh inverse-CDF schedule directly rather than a Taylor-truncated approximation.
 
-We made four concrete corrections/clarifications. First, we added total token budgets and seed scope for the primary anchors: Primary I uses 100M tokens at \(L_{\mathrm{train}}=2048\) with seeds 42/123/7; Primary II Table 4 is the 128-token, 15M-token seed-scoped DAPE-style diagnostic; Phase 11B is a separate 256-token, 100M-token supporting protocol; Primary III MLA uses 500M tokens with three seeds. Second, we relabeled the 1B MLA row as a schedule-sensitivity check, not evidence of robustness to training saturation. Third, we corrected the stale/mislabeled QuALITY figure so Figure 8 now plots Gold-answer NLL, consistent with Table 21. Fourth, we clarified that PK denotes teacher-forced NLL-gap retrieval unless explicitly marked AR exact.
+On baseline fairness, Primary I asks whether the same YaRN operation has different leverage on two training-time substrates, not whether EVQ beats the best-tuned Geo+YaRN. Its 8K interaction is consistent in every seed: EVQ+YaRN exceeds Geo+YaRN by +38/+42/+36 pp. We also found an existing 151.9M text pilot at the LLaMA-style base 10K: EVQ improves PPL by -22.28% at 2K and -21.83% at 4K (versus -28.67%/-32.64% at base 500K). This supporting pilot does not replace a complete tuned-base sweep, but it rules out the stronger claim that the effect exists only at base 500K.
 
-On the LoRA row, we agree with the reviewer. The original Base vs EVQ-LoRA table is supporting and cannot by itself isolate EVQ frequency injection from LoRA/LongAlign adaptation. We therefore will not use it as primary evidence. It remains a post-hoc adaptation observation with explicit 8K cost; a matched Geo+LoRA control is the required attribution test. Without that matched table, the LoRA row should not carry the main rebuttal.
+Primary II’s printed Geo/DAPE/fixed-EVQ contrast is seed 42, so the conclusion is the comparison in that tested protocol, not comprehensive DAPE dominance. The EVQ result is not a one-seed anomaly: fixed tau=5 has a separate three-seed PPL@8K aggregate of 335.7±1.7, learned tau converges to 1.1406±0.0034 across three seeds, and an L=256 three-seed sweep favors the predicted operating basin. Geo/DAPE still need matched seeds for a complete uncertainty comparison. The learned-versus-fixed gap is explained by objective mismatch, not optimizer noise: in-range PPL@128 is nearly flat across tau, while 8K PPL continues improving at larger fixed tau, so in-range gradients cannot observe the extrapolation utility.
 
-On training budget, we do not use Chinchilla-style token counts as overtraining thresholds. The narrower empirical point is that the EVQ signal is not explained by the simplest undertraining-only story: in the MLA progression, the long-range gap grows while the in-range cost shrinks, and the 750M continuation row shows a large 16K gap despite low in-range PPL. These results do not establish trillion-token from-scratch durability, but they motivate the scoped mechanism claim and the schedule-sensitivity limitation.
+For MLA, d_eff=d_head is an empirical operating convention rather than a theorem. The direct tau=d_rope/sqrt(L) test remains useful, but scarce-channel support is not limited to a cross-architecture comparison. An existing within-MLA seed-42 pilot changes d_rope from 32 to 16: EVQ changes 8K/16K PPL by -6.3%/-9.1% at d_rope=32 and -47.8%/-47.9% at d_rope=16. We treat the latter cautiously because the Geo baseline is weak; the 432M three-seed MLA aggregate remains the primary evidence.
 
-On YaRN and scalers, Table 2 is a matched-scale substrate comparison, not a tuned-scaler leaderboard. The question is whether the same range-scaling operation has different leverage on a Geo-trained versus EVQ-trained substrate. We will avoid claiming dominance over best-tuned Geo+YaRN, Dynamic NTK, LongRoPE, or LongRoPE2. The NTK-aware row is useful precisely because it shows that composition is scaler-dependent.
+The reviewers are correct about two submitted figures. Figure 8 used a superseded n=200 accuracy pilot under a Gold-NLL caption. The full n=2086 aggregate is the source of truth and shows that Table 21’s 8K-raw Geo accuracy should be 24.6% (513/2086), not 26.6%; the Gold-NLL values and conclusions are unchanged (-30.1% at 8K raw and -21.4% at 16K raw). Figure 9 used an approximately -81.2% value from a separate progressive-training setting, while the corresponding three-seed 454M FineWeb-Edu Table 20 row is -13.3%. Correcting that point changes the plotted magnitude, not Table 20’s directional observation that every individually scoped row shows a long-range improvement. We treat Table 20 as heterogeneous supporting consistency, not a controlled scaling law, and will correct both figures in a revision.
 
-On Primary II, we will make the seed scope explicit. The DAPE-style comparison is a PE-dominant diagnostic stress test, not the sole statistical anchor of the paper. Geo, DAPE, and EVQ are reported under the retained seed-42 protocol, while the learnable-tau row reports a 3-seed mean/std. We do not present this as comprehensive DAPE or learned-PE dominance.
+The 1B MLA reversal also does not constitute a token-only saturation test: relative to the primary 500M/8K three-seed anchor, it changes L_train to 4K as well as data/schedule and is single seed. We report it as schedule sensitivity, not robustness, while noting that EVQ+YaRN+FT remains -2.5%. PK is teacher-forced NLL-gap retrieval unless explicitly labeled AR exact; the paper does not equate it with exact generation. The LoRA row remains supporting because Base versus EVQ-LoRA does not isolate LongAlign/LoRA adaptation without a matched Geo+LoRA control.
 
-On the 1B MLA reversal, we agree that the row should not be described as saturation robustness. It is a single-seed schedule-sensitivity stress check in a scarce-channel MLA regime, not a same-configuration token-scaling ablation. The primary MLA evidence remains the 8K/500M, three-seed scarce-channel stress test. We will discuss the 1B row as a limitation motivating fixed-length continuation or stage-wise re-warp/adaptation.
+Finally, the experiments are reproducible from the current repository. It provides a locked environment, public-data preparation, exact model configurations, canonical schedule code, training/evaluation entrypoints, curated expected aggregates, and focused tests. Historical checkpoints are useful provenance artifacts, but independent reproduction is defined by rerunning the public protocol, not by possessing the original machine.
 
-On theory, we agree that shape and scale should be separated more explicitly. The cosh density is derived for the stated broadband surrogate, while \(\tau\) is an operating-point selector rather than a theorem of global optimality for trained attention. We will state the contribution as a shape-plus-calibrated-scale allocation rule. The learnable-\(\tau\) result is also informative: because the training objective only sees in-range loss, while extrapolation benefit is out of range and the in-range waterbed cost is immediate, gradient-based tau learning need not discover the extrapolation allocation.
+In short, the audits identify real reporting and scope issues, but they do not overturn the three primary conclusions. The response should correct the stale figures and erratum, make the epistemic layers explicit, and use the existing 99-run, base-10K, learnable-tau, MLA-channel, and seedwise Primary-I assets rather than treating them as missing experiments.
 
-On systems relevance, production-scale validation remains future work. The practical contribution is narrower: EVQ-Cosh is a zero-learned-parameter schedule change, the MLA experiment tests a scarce-rotary-channel regime relevant to compressed-attention designs, and the dead-channel audit exposes a diagnostic failure mode that can be applied independently of EVQ adoption. We do not use QuALITY accuracy as a primary benchmark claim; at 454M, accuracy is capacity-limited and near random, while Gold-answer NLL preserves the probability-space signal.
+## Fable5 final checks
 
-Across the reviews, the common concern is not whether frequency allocation is interesting, but whether the current evidence overstates its scope. We agree with that distinction. We therefore narrow the claim to training-time RoPE frequency allocation as a finite-spectral-budget design axis, add provenance/corrections for the main empirical confounds, and relabel supporting stress checks that were too broadly described.
-
-## If More Space Exists
-
-Add only if space permits:
-
-> The progressive MHA row need not contradict the 1B MLA schedule-sensitivity result: the MLA setup has far fewer rotary channels, so K-dependent distortion terms make allocation mismatch more severe in the scarce-channel regime.
-
-## Do Not Add Without New Evidence
-
-- Matched Geo+LoRA attribution claim.
-- Geo+YaRN tuned-scale sweep result.
-- Primary I AR exact result.
-- Primary II additional-seed mean/std.
-- MLA \(\tau=d_{\mathrm{rope}}/\sqrt{L}\) ablation result.
-- Learned-tau trajectory description.
+1. Do not write that partial historical artifact loss makes the experiments non-reproducible.
+2. Do not withdraw the three core conclusions; preserve their matched-scale/seed/protocol scope.
+3. Keep Figure 8/9 as our reporting errors and 26.6%→24.6% as a disclosed erratum.
+4. Do not upgrade the base/MLA pilots into full tuned or multi-seed primary controls.
+5. Do not claim measured compute, memory, or latency savings.

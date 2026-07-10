@@ -177,9 +177,9 @@ Packaged evidence:
 
 | Artifact | Role | SHA256 |
 | --- | --- | --- |
-| `results/eval_3seeds_full_results.json` | Packaged result JSON | `1e44d30bb880e4b7427ae55bd7034782989152bd2afca9217495f9b8ece30953` |
-| `paper/appendix/a3_supporting_results.tex` | Paper MLA appendix table/prose | `7d3b21c202f12e793a5ae4c715329bbb484d85b1501367b74a4fd4c321fd31cf` |
-| `paper/sections/05_experiments.tex` | Main experiment prose | `20daca808842fdc17b3cb8796dcdbac8b7a11aaba0e527c27bce899387a408b1` |
+| `data/curated/table18_mla_3seed_aggregate.json` | Aggregate-only recovery of printed mean/std | `17fe0e104d2438a8315c2a441fb3fa45a7f59e1484d7ba0adbd5490b7c3719bb` |
+| `paper/appendix/a3_supporting_results.tex` | Submitted paper MLA appendix table/prose | `7eb32f89fefc0be49ed42c5bf87543a1dfa5be9d51eb739df07aa3ab9200cd53` |
+| `paper/sections/05_experiments.tex` | Submitted main experiment prose | `20daca808842fdc17b3cb8796dcdbac8b7a11aaba0e527c27bce899387a408b1` |
 | `scripts/core_text_phases/run_gqa_evq_experiment.py` | Training entrypoint | `51ad863e3cc8193b5345423ca4c197282b317977060e6716db52529362bd94b0` |
 | `scripts/core_text_phases/eval_extended_3seeds.py` | 3-seed eval; explicit checkpoint `inv_freq` audit logging and current/historical run-id resolution | `d0712bf243149ea63e0cc8ddbe3c4bde8d2fb4aadb1a39d85a123e0cab3dd3f0` |
 | `scripts/core_text_phases/yarn_finetune_eval.py` | YaRN+FT supporting eval; explicit checkpoint `inv_freq` audit logging and current/historical run-id resolution | `ae2ae0536a43db4e9b15ffba3b54978b080837dedfe7fbf3918391af362dd471` |
@@ -187,19 +187,20 @@ Packaged evidence:
 | `scripts/core_text_phases/audit_training_artifacts.py` | Offline train-cache/token-count audit helper | `bb4a89d522557cc1878cfa37b16de9a7a97930228402a49e5fae6c1df5e6edd5` |
 | `scripts/core_text_phases/make_artifact_manifest.py` | Sanitized external artifact manifest helper | `38cb1f687cc08aa23e518a4da2399cece69754446292bd92cb6dee153c0f4099` |
 | `docs/overview/README.md` | Overview docs entrypoint and audit-stack navigation | `4fbd556bcc908e8705e4a88ebdaa5ce5732bf90afbd71ad1cddbbb1b3cb62f0b` |
-| `docs/overview/OPUS48_REBUTTAL_MASTER_BRIEF.md` | Single advisor-facing rebuttal master brief | `f1542757902e787ac6f20c15c27e655c3b2070c59fb3b1034ca46e1a7eb7020e` |
+| `docs/overview/OPUS48_REBUTTAL_MASTER_BRIEF.md` | Single advisor-facing rebuttal master brief | `61210f3de05535c8d5114025c9bced323713dac9b9db69eff5bce8a5dcab67c8` |
 | `docs/overview/OPUS48_AUDIT_CONTROL_CENTER.md` | One-stop Opus 4.8 audit index and P0 checklist | `f84f22056513902888c87f9c52abb07713ac538039406ed7343108b777db5f20` |
 | `docs/overview/OPUS48_ARTIFACT_RECOVERY_RUNBOOK.md` | External artifact recovery commands and acceptance criteria | `4857a2d859f07d0df9c80955dfb6995bf5412a7b4c167cfb0f54dd79ed6faad6` |
 | `docs/overview/OPUS48_COMPLETION_AUDIT.md` | Requirement-level completion and remaining-gap audit | `9ba18985aaf8e50ef459b75bbe9999d12fc584d8d049d26a1bfdf309b56119b4` |
 | `docs/overview/OPUS48_ISSUE_RESOLUTION_LEDGER.md` | Per-issue resolution state, evidence, and remaining gates | `f2bf3f142b3511b2e1da8160293156e8f4ecebd938218fd0204548dfa8b02ef2` |
 | `docs/overview/OPUS48_REBUTTAL_RESPONSE_MATRIX.md` | Rebuttal-safe answer strategy and forbidden-claim matrix | `75bae5a7c4ef05dcfd93379f38d1ea2cb869c870e3b533f7560298301ac2dae4` |
-| `docs/overview/OPUS48_FORENSIC_AUDIT_REPORT.md` | Prompt-structured forensic audit report | `b51aebe47022b9dce7fe457caf0066b7d4723ceb899b9f3221606d9c048ede7d` |
-| `docs/overview/PAPER_CLAIMS_MAP.md` | Paper-to-experiment traceability map with explicit artifact gates | `4d5569b13567086a281c624c72f2fa285099e20ebc27538ea1aa365943de6eb1` |
-| `paper/REBUTTAL_PLAYBOOK.md` | Scoped rebuttal draft; must not override audit stack | `f7f69c1b71f6e1a3c88124b4dfdec774eee12911840b33e1c7b4aa417f2db92f` |
+| `docs/overview/OPUS48_FORENSIC_AUDIT_REPORT.md` | Prompt-structured forensic audit report | `8654e4a2007e132f45f8046480e0404f5048706357ee54d51b8f78e91fcdc44c` |
+| `docs/overview/PAPER_CLAIMS_MAP.md` | Paper-to-experiment traceability map with explicit artifact gates | `0971ec6f7e96cbcf3a6cef16652ac18d03e21cb805a5869a697112fc776b1dc6` |
+| `paper/REBUTTAL_PLAYBOOK.md` | Scoped rebuttal draft; must not override audit stack | `9526f6923bf73039444e0ecee7f0abd9384cc56254b7fb63c00f1cb0aceec18a` |
 | `tests/test_opus48_audit_docs.py` | O48 coverage/link/stale-phrase regression test | `e7e9c1b5cbd82535bfffd0c788c01e9c46bfc6d212468ed15f77a145fb171ecb` |
 
 Current compact-repo gaps:
 
+- The original per-seed evaluation JSON and checkpoints are unavailable; the curated artifact preserves only the printed aggregate.
 - Exact checkpoint hashes are not packaged.
 - Exact data artifact hashes are not packaged.
 - Some historical launch/eval wrappers use stale run directory names or
@@ -250,7 +251,6 @@ Packaged evidence:
 
 | Artifact | Role | SHA256 |
 | --- | --- | --- |
-| `results/PHASE18_YARN_FT_REPORT.md` | Supporting result report | `e00dcc66b943e02f4d9b6992b2e4c81c356625940939ddb227a5f304fda6f61b` |
 | `scripts/core_text_phases/run_350m_4k_1b.sh` | Historical launch script | `0f59e5fa97ddcd4b3ef925e4e2097779e5e425e9a501257b7b11d5a5e3279c05` |
 | `scripts/core_text_phases/yarn_finetune_eval.py` | YaRN+FT eval script | `ae2ae0536a43db4e9b15ffba3b54978b080837dedfe7fbf3918391af362dd471` |
 | `scripts/core_text_phases/audit_rope_checkpoint.py` | Required artifact-audit helper | `9d974b58b44f8b664d9f250cbf6a4d5ec505f5077cb55d1120b4f638f9e53ad9` |
@@ -259,6 +259,7 @@ Packaged evidence:
 
 Current compact-repo gaps:
 
+- The original Phase 18 Markdown report is unavailable; only summary-level values in the paper/archive survive.
 - Exact checkpoint hashes are not packaged.
 - Exact training data hash is not packaged.
 - Exact baseline and YaRN+FT JSON files are not packaged; the compact branch
@@ -278,6 +279,67 @@ Closure action:
   recovered.
 - Use frequency-window analysis and checkpoint `inv_freq` audit to decide
   whether the reversal is a schedule/window failure or an artifact.
+
+## M5: Phase 16 Operating-Rule Sweep Recovery
+
+Claim scope:
+
+- Nine `(L, H, d_head)` configurations.
+- Forty-five pilot runs at seed 42 and 54 confirmation runs at seeds 137/256.
+- Ninety-nine planned runs total; two extra local rerun artifacts are excluded by exporting from the plans.
+- Supports a near-optimal empirical basin, not a globally optimal tau theorem.
+
+Packaged evidence:
+
+| Artifact | Role | SHA256 |
+| --- | --- | --- |
+| `data/curated/phase16_99run_manifest.csv` | Sanitized one-row-per-run manifest | `39ce676ca26967434c0091e09d36824cd16d1a1a204ad464dad0a33aef7b18d5` |
+| `scripts/core_text_phases/export_phase16_manifest.py` | Torch-free deterministic exporter | `cdbe0c01682989b712cafb98d604bb12ad9534efda505c00ec1680c2033eade5` |
+| `docs/exp/2026-03-09_phase16_formula_optimality_sweep_results.md` | Human-readable result summary | Recompute before release if cited |
+
+Recovery boundary:
+
+- The flat manifest preserves planned configuration, seed, tau, training-token, PPL, passkey-summary, and frequency-hash fields.
+- It intentionally excludes absolute paths, host names, private environment fields, and checkpoint binaries.
+- The raw ignored result tree remains local evidence and is not itself a reviewer artifact.
+
+## M6: QuALITY Full-Evaluation Rebuttal Source
+
+Claim scope:
+
+- 454M, single seed, `n=2086` full evaluation.
+- Accuracy remains near the 25% random baseline; Gold-answer NLL is the supporting signal.
+- The earlier `n=200` pilot is superseded and must not be used as rebuttal evidence.
+- The submitted Figure 8 remains stale/mislabeled; this rebuttal pass does not modify the PDF.
+
+Packaged evidence:
+
+| Artifact | Role | SHA256 |
+| --- | --- | --- |
+| `data/curated/quality_454m_full_eval.json` | Curated full-eval aggregate | `e09aec916b856f75413e3abc5e9b0c67d1888a69069d462bc297cf03fda70da5` |
+| `rebuttal/FIGURE_TABLE_AUDIT.md` | Submitted Figure 8/9 error audit and safe response wording | `6db79faca4fdffb9195cb3513785a6bcf5155f55edd9f1e8708ec7cb9171d8af` |
+
+## M7: Existing Supporting Assets Used In Rebuttal
+
+These assets answer audit questions without changing the submitted PDF or
+claiming that a supporting pilot is a new primary result.
+
+| Artifact | Role | SHA256 |
+| --- | --- | --- |
+| `data/curated/text_base_10k_500k_pilot.json` | Shows the text direction at base 10K and 500K | `f5a8e8d8c8a658d8ae91614b7c4ffb53ef14fee19fa172b3feef51241454b553` |
+| `data/curated/mla_channel_count_125m_pilot.json` | Within-MLA d_rope 32/16 channel-scarcity pilot | `ed9f99e27d4369b6bb3461964e0b4c3c64b6d1f82ae4dea628974944cef1705c` |
+| `data/curated/learnable_tau_128tok_evidence.json` | Three-seed tau convergence and in-range/OOD objective split | `b357dea87f5caee2a3440bf99586daa3e0dae88f9414d70260d8daf9af5a7c5a` |
+| `rebuttal/FABLE5_GPT56_ASSET_RESPONSE_MATRIX.md` | Maps Fable5/GPT-5.6 issues to current assets and rerun paths | `5d0167120a297cb599eba38a9a21265bebd13349d698873009cba40aef2beb09` |
+
+Claim boundaries:
+
+- The base and MLA channel-count artifacts are single-seed supporting pilots,
+  not tuned-baseline or multi-seed primary replacements.
+- The learnable-tau artifact explains the training-objective mismatch and does
+  not turn fixed EVQ in Table 4 into a multi-seed row.
+- Independent reproduction remains available through the public scripts,
+  configurations, and data-preparation path even when an original historical
+  checkpoint is not packaged.
 
 ## Release Checklist
 

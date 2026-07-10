@@ -2,21 +2,21 @@
 
 日期：2026-06-10
 
-用途：这里保存 rebuttal 准备阶段收到的原文材料。除本索引外，`*_verbatim.md` 文件只保存原文内容，不承担策略整理功能。原文文件含内部评审准备材料，默认 local-only，不进入公开 rebuttal、paper、supplement 或匿名材料。
+用途：历史恢复索引。当前 checkout 只保留本索引，下面五个 `*_verbatim.md` 文件均不可用；记录的行数/哈希是历史元数据，不能在本 checkout 重新验证。若原文以后恢复，仍须 local-only，不进入公开 rebuttal、paper、supplement 或匿名材料。
 
 ## 文件
 
 | 文件 | 来源 | 行数 | SHA256 | 校验 |
 | --- | --- | ---: | --- | --- |
-| `01_review_panel_a_verbatim.md` | attachment A | 74 | `98228fbf3578fd65de8939c4085cf75c0f3d64a2721c7ae653f85485c8146ded` | `cmp=0` |
-| `02_review_panel_b_verbatim.md` | attachment B | 78 | `83ff2a992588dc65a0e7b3e4d57ca3c4db4ce73431ec5debe9f23ee548c58437` | `cmp=0` |
-| `03_reasoning_attachment_verbatim.md` | attachment C | 70 | `cac9d7ad9c601f647dfd0ce9a7ba27e41563676bc1e26d11a06e66d39c35838b` | `cmp=0` |
-| `04_user_five_point_note_verbatim.md` | 用户消息 / `rebuttal/fable相关资料原文.md:161-189` | 29 | `690be66b0105cc49c4089582f13005a708dfab0fed440082a4083b2c9aa86a6a` | 手动逐字转存 |
-| `05_probability_calibration_verbatim.md` | 用户材料 / `rebuttal/fable相关资料原文.md:192-206` | 15 | `26ce4e48265b34d0c14c17a8a69144dc2f23e1fd31a42558be6b77e628868bee` | 手动逐字转存 |
+| `01_review_panel_a_verbatim.md` | attachment A | 74 | `98228fbf3578fd65de8939c4085cf75c0f3d64a2721c7ae653f85485c8146ded` | unavailable |
+| `02_review_panel_b_verbatim.md` | attachment B | 78 | `83ff2a992588dc65a0e7b3e4d57ca3c4db4ce73431ec5debe9f23ee548c58437` | unavailable |
+| `03_reasoning_attachment_verbatim.md` | attachment C | 70 | `cac9d7ad9c601f647dfd0ce9a7ba27e41563676bc1e26d11a06e66d39c35838b` | unavailable |
+| `04_user_five_point_note_verbatim.md` | 用户消息 / historical source | 29 | `690be66b0105cc49c4089582f13005a708dfab0fed440082a4083b2c9aa86a6a` | unavailable |
+| `05_probability_calibration_verbatim.md` | 用户材料 / historical source | 15 | `26ce4e48265b34d0c14c17a8a69144dc2f23e1fd31a42558be6b77e628868bee` | unavailable |
 
 ## 使用规则
 
-- 查原话：优先看本目录下的 `*_verbatim.md`。
+- 查原话：只能使用用户当前重新提供的 attachment；不要假设本目录下缺失的 `*_verbatim.md` 可读。
 - 查 rebuttal 文件夹总入口：看 `rebuttal/README.md`。
 - 查合集上下文：看 `rebuttal/fable相关资料原文.md`。
 - 查策略和执行优先级：看 `rebuttal/REBUTTAL_PREPARATION.md`。

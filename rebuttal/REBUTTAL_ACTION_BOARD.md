@@ -52,7 +52,7 @@
 | 混淆 | 为什么危险 | 正确处理 |
 | --- | --- | --- |
 | Geo+LoRA 用户新证据 vs 当前 workspace 无 exact numbers | 这是最改变局面的证据，但没有数字就不能写最终表 | 先用 `TABLE23_LORA_WORKSHEET.md` 收数；response 只写 verified table |
-| Figure/Table mismatch vs reviewer misread | 已验证且已修复，不是 reviewer 误读 | 主动承认旧图 stale/mislabeled，并说明 working PDF 已改为 NLL 图 |
+| Figure/Table mismatch vs reviewer misread | 已验证为 submitted-version error；本轮不改 PDF | 主动承认旧图 stale/mislabeled，给出 source of truth，并承诺 revision 修正 |
 | 1B row vs saturation robustness | 旧 label 会自我反噬，现已改为 schedule-sensitivity check | response 仍要把 1B row 写成 limitation |
 | PK diagnostic vs AR exact retrieval | teacher-forced NLL-gap 不能当 exact generation | 反复定义，AR exact 单独标 |
 | matched-scale YaRN vs tuned baseline | fixed `s=8` 不能代表 best Geo+YaRN | 能 sweep 就报，不能 sweep 就 scope down |
@@ -187,9 +187,9 @@ Why:
 
 Current status:
 
-- Done: NLL plot regenerated via `scripts/figures/fig5_downstream_qa_nll.py`.
-- Done: `paper/main.pdf` recompiled with Tectonic.
-- Done: page 36 visually checked.
+- Done: submitted Figure 8/9 inconsistency audit and Table 21 erratum verification.
+- Done: n=2086 aggregate preserved as the rebuttal source of truth.
+- Not done in this rebuttal pass: PDF/figure regeneration; commit only to correction in a revision.
 
 ### 5.3 Third: Provenance + 1B relabel package
 
