@@ -25,6 +25,8 @@ The proposed 7B-class fine-tuning experiment addresses Q18 and deployment scope,
 
 Package readiness: `draft_with_placeholders`. The first item below is ready; the remaining items must retain their visible placeholders until the named artifacts exist.
 
+Portable provenance update: `IGNORED_ASSET_RECONCILIATION.md` records the complete local ignored-asset audit. Primary III and the L=256 Phase11 archive are now raw-JSON-backed in `data/curated/`; the 99-run sweep has a sanitized portable manifest. QuALITY and learnable-tau remain report-backed, and the unrecovered base=10K/500K pilot is `trace-only` and forbidden as rebuttal evidence.
+
 ### Reporting integrity (F5-Q1–Q2; ready)
 
 We audited the QuALITY chain from the tracked full-evaluation report through Table 21, Figure 8(a), and the signal-gradient paragraph. Table 21 is the retained result: a seed-42, `n=2086` evaluation of checkpoints initialized at 2K, continued and fine-tuned at 4K, and evaluated at 4K/8K/16K. The former Figure 8(a) instead visualized an obsolete `n=200` accuracy-only pilot, included a 32K point outside the retained full-evaluation table, and had an NLL caption. We replaced it with the four gold-answer-NLL rows from Table 21, explicitly excluded the pilot, and clarified why 4K is in-distribution for this downstream checkpoint. The exact per-example `n=2086` JSON was not recovered in this checkout; we therefore identify these values as tracked-report-backed rather than raw-JSON-backed.
@@ -33,9 +35,9 @@ The review packet's `+0.2pp` summary appears to be a transcription/arithmetic er
 
 ### Acceptance-critical empirical gaps (F5-Q3, Q5–Q9; placeholders)
 
-- **Primary II seeds (Q3):** the submitted Geo/DAPE/EVQ rows remain a seed-42 diagnostic. `[Insert exact 128→8K seeds 137/256, per-seed values, mean/std, and paired deltas.]` If the direction is not stable or replication is unavailable, re-tier Primary II as supporting and remove headline language; do not substitute the distinct L=256 sweep.
-- **Tuned base and b=10K (Q5–Q6):** use the same 125M, `L_train=128` anchor as Table 4, with identical data/tokens/optimizer/seeds. `[Insert Geo b∈{10K,100K,500K,2M}, EVQ b=500K, and at b=10K bare-rule versus c_pred results.]` Report the best tuned Geo and both in-range and 8K metrics.
-- **MLA convention (Q7):** the current run tests `tau=1.414`; it does not identify the optimal `d_eff` convention. `[Insert tau=0.354, 0.707, and 1.414 screen, then replicated relevant comparison.]` Keep `K=d_rope/2` separate from the calibrated transport convention.
+- **Primary II seeds (Q3):** the submitted Geo/DAPE/EVQ rows remain a seed-42 diagnostic. `[Insert exact 128→8K seeds 137/256, per-seed values, mean/std, and paired deltas.]` The recovered L=256 raw/YaRN three-seed records are portable in `data/curated/phase11_l256_3seed_recovered.json`, but are a different protocol and contain no DAPE row; they cannot substitute for this replication.
+- **Tuned base and b=10K (Q5–Q6):** use the same 125M, `L_train=128` anchor as Table 4, with identical data/tokens/optimizer/seeds. `[Insert Geo b∈{10K,100K,500K,2M}, EVQ b=500K, and at b=10K bare-rule versus c_pred results.]` The recovered branch summary is marked `trace-only` because its raw source is absent; do not cite it.
+- **MLA convention (Q7):** the current three-seed run is now portable and raw-JSON-backed, but it tests only `tau=1.414`; it does not identify the optimal `d_eff` convention. `[Insert tau=0.354, 0.707, and 1.414 screen, then replicated relevant comparison.]` The 125M channel-count pilot is qualitative support, not this ablation.
 - **Measured effective length (Q8):** `1/L` remains a falsifiable diffuse-attention approximation. `[Insert estimator definition, sampled layers/heads/tokens, kappa_att, L_eff^J, and uncertainty from existing checkpoints.]`
 - **Autoregressive passkey (Q9):** the paper now labels PK as teacher-forced NLL-gap retrieval wherever prominent. `[Insert AR exact match on the same Primary I checkpoints/examples/seeds/decoding settings.]` Report both metrics side-by-side; never relabel the NLL-gap result as AR accuracy.
 
@@ -69,7 +71,7 @@ The calculations below use paired seeds and report effect sizes without signific
 | 24K | -28.02% | -28.25% | -19.51% | -25.26% | -28.25% to -19.51% |
 | 32K | -19.13% | -16.49% | -9.57% | -15.06% | -19.13% to -9.57% |
 
-Source: `results/eval_3seeds_full_results.json`; formula is `100 * (EVQ - Geo) / Geo` within each seed. We do not attach a p-value to `n=3` and do not make significance claims for one- or two-seed supporting rows.
+Source: `data/curated/table18_mla_3seed_aggregate.json`, promoted from the exact ignored source with SHA256 `1e44d30bb880e4b7427ae55bd7034782989152bd2afca9217495f9b8ece30953`; formula is `100 * (EVQ - Geo) / Geo` within each seed. We do not attach a p-value to `n=3` and do not make significance claims for one- or two-seed supporting rows.
 
 ## Question-by-question disposition and draft response
 
@@ -90,35 +92,35 @@ Source: `results/eval_3seeds_full_results.json`; formula is `100 * (EVQ - Geo) /
 ### F5-Q3 — Primary II seeds
 
 - Status: `PENDING-EXP`.
-- Current boundary: Table 4 deliberately retains seed 42 for Geo/DAPE/EVQ; only learnable-tau is three-seed. Existing L=256 sweeps do not silently upgrade the distinct `128→8K`, tau=5 protocol.
+- Current boundary: Table 4 deliberately retains seed 42 for Geo/DAPE/EVQ; only learnable-tau is three-seed. The recovered L=256 raw/YaRN payload contains nine runs per evaluator but no DAPE row and does not silently upgrade the distinct `128→8K`, tau=5 protocol.
 - Draft response placeholder: “We agree that the `128→8K` comparison is under-seeded. The submitted value remains a seed-42 diagnostic, and we do not infer variance from the separate L=256 sweep. [Insert seeds 137/256 with mean/std and paired deltas.] If replication is unavailable by rebuttal, we will re-tier this row as supporting and remove primary/headline language.”
 - 中文核对：必须二选一：补齐同协议种子，或降级；不能拿相邻实验冒充复现。
 
 ### F5-Q4 — Learnable-tau failure and trajectory
 
 - Status: `PARTIAL`.
-- Fix: the paper now explains the advance-prediction/calibration boundary and the waterbed mechanism: in-range loss is flat enough that training has weak extrapolation-directed signal. A local converged-tau trajectory artifact was not found.
-- Draft response placeholder: “Our interpretation is mechanistic rather than a claim of optimizer impossibility: the in-range waterbed cost is locally flat, so the training objective supplies little signal about extrapolation. The analytic rule injects that prior before training. [Insert tau trajectory and converged values after recovering/rerunning the artifact.] Without that artifact, we keep this explanation as a hypothesis.”
+- Fix: the paper now explains the advance-prediction/calibration boundary and waterbed mechanism. The tracked reports preserve final tau values `1.1391/1.1445/1.1383` for seeds `42/137/256`, but no per-step trajectory was recovered.
+- Draft response placeholder: “Across the three reported seeds, learned tau ends at `1.1391/1.1445/1.1383`, while the fixed extrapolation-oriented allocation uses larger tau. This is consistent with weak extrapolation-directed signal from a flat in-range objective. We do not claim optimizer impossibility or trajectory-level convergence without the missing logs. [Insert the trajectory only if recovered or rerun.]”
 - 中文核对：没有轨迹就不能写“实验证明优化器找不到”。
 
 ### F5-Q5 — Tuned geometric base
 
 - Status: `PENDING-EXP`.
-- Existing support: exact-kernel collision scores across bases and video base controls are mechanism support, not a trained-text nearest-neighbor baseline.
+- Existing support: exact-kernel collision scores across bases and video base controls are mechanism support, not a trained-text nearest-neighbor baseline. `rebuttal_7/trace_only/text_base_10k_500k_pilot.json` is quarantined because its claimed raw results are absent and must not be cited.
 - Draft response placeholder: “We agree that tuned training-time base is the nearest one-knob control. We will compare Geo at `b∈{10K,100K,2M}` against EVQ at `b=500K` under the same model/data/token budget and report both in-range and extrapolation metrics. The current collision and video base sweeps are complementary mechanism evidence, not substitutes for this control.”
 - 中文核对：不要声称 Table 5 已经回答训练后的 base tuning。
 
 ### F5-Q6 — b=10K external validity
 
 - Status: `PENDING-EXP`; decision rule documented.
-- Fix: Appendix now includes a practitioner guide: use the bare rule only in the tested regime; at smaller base/larger length compute `c_pred(L,b)` and apply the forcing-branch diagnostic.
+- Fix: Appendix now includes a practitioner guide: use the bare rule only in the tested regime; at smaller base/larger length compute `c_pred(L,b)` and apply the forcing-branch diagnostic. The trace-only pilot neither has recovered raw provenance nor compares bare-rule against `c_pred`.
 - Draft response placeholder: “We agree that all trained-text anchors use `b=500K`. The revision now marks the bare rule as regime-conditional and gives the explicit `c_pred(L,b)` fallback. [Insert matched `b=10K` bare versus corrected results.] Until this run exists, we make no trained-text generalization to the LLaMA-default base.”
 - 中文核对：指南已解决误导风险，但外部有效性仍需实验。
 
 ### F5-Q7 — MLA d_eff convention
 
 - Status: `PENDING-EXP`; claim boundary fixed.
-- Fix: main text and appendix distinguish quantized `d_rope` from the calibrated transport convention `d_eff=d_head` and state that current results do not identify the optimal convention.
+- Fix: main text and appendix distinguish quantized `d_rope` from the calibrated transport convention `d_eff=d_head` and state that current results do not identify the optimal convention. The current three-seed values are portable in `data/curated/table18_mla_3seed_aggregate.json`; the report-backed d_rope=32/16 pilot is not a tau convention test.
 - Draft response placeholder: “We agree this is the key sanity check for Primary III. The reported run tests allocation sensitivity at `tau=1.414`; it does not derive or identify the optimal MLA convention. [Insert `tau=0.354` and intermediate result, ideally replicated after the one-seed screen.] We have revised the claim accordingly.”
 - 中文核对：先承认 convention 未消融，再给结果。
 
@@ -160,7 +162,7 @@ Source: `results/eval_3seeds_full_results.json`; formula is `100 * (EVQ - Geo) /
 ### F5-Q13 — Exponent 0.465 versus 0.500
 
 - Status: `PARTIAL`.
-- Fix: theory now separates advance prediction from calibration and states that the deployable claim is basin membership, not exact exponent identity; the new rank figure makes `3/9` exact, `8/9` top-3 legible.
+- Fix: theory now separates advance prediction from calibration and states that the deployable claim is basin membership, not exact exponent identity; the new rank figure makes `3/9` exact, `8/9` top-3 legible. The underlying 99 sanitized run rows are now portable in `data/curated/phase16_99run_manifest.csv`, but they do not evaluate exponent 0.465 directly.
 - Draft response placeholder: “The `-1/2` exponent is a structural operating rule, not an exact identification result; the Pearson-chi-square sensitivity calculation gives 0.465. Our empirical claim is that the resulting point lands in a flat basin, not that 0.500 is uniquely derived. [Insert matched evaluation of the 0.465 schedule if checkpoint access permits.] We have sharpened this distinction and made the rank counts readable.”
 - 中文核对：不要用 top-3 替代审稿人要求的 0.465 成本；该数字仍待评估。
 
@@ -174,7 +176,7 @@ Source: `results/eval_3seeds_full_results.json`; formula is `100 * (EVQ - Geo) /
 ### F5-Q15 — Paired deltas/statistics
 
 - Status: `DONE` for existing three-seed primaries.
-- Fix: paired deltas and ranges are tabulated above. No formal significance claim is made at `n=3`; one- and two-seed rows stay supporting/exploratory.
+- Fix: paired deltas and ranges are tabulated above, and the Primary III seedwise source is now tracked as a raw-backed portable JSON. No formal significance claim is made at `n=3`; one- and two-seed rows stay supporting/exploratory.
 - Draft response: “We agree that paired effects are more informative than an unqualified significance claim at `n=3`. For Primary I, the three PK@8K paired gains are `+38/+42/+36pp`. For Primary III, EVQ's paired 16K PPL changes are `-33.59/-30.02/-29.75%`, and EVQ+YaRN versus Geo+YaRN gives `-40.95/-39.54/-38.47%`. We report ranges and per-seed values and do not claim significance for smaller-n supporting rows.”
 - 中文核对：最终 rebuttal 需视字数压缩，但数字和基线定义不能丢。
 
@@ -196,7 +198,7 @@ Source: `results/eval_3seeds_full_results.json`; formula is `100 * (EVQ - Geo) /
 
 - Status: `PARTIAL`; hypothesis downgrade and code repair `DONE`, empirical control `PENDING-EXP`.
 - Fix: the appendix calls `r≈d_head/2` a single-model calibration hypothesis, not general rank guidance. The LoRA stack now creates true native-geometric controls; infers head dimension/base from model config; handles old/new Transformers training-argument APIs; requires method-matched frequency artifacts; verifies every rotary module; records path-safe SHA-256 provenance; rejects stale checkpoints before reuse; and uses variant-safe RULER filenames.
-- Draft response placeholder: “We agree that the threshold is calibrated on one LLaMA-3-8B setting and is not general guidance; the revision labels it as a testable hypothesis. We also found and fixed a control-path issue: the old ‘Geo’ wrapper used the EVQ midpoint construction at tau zero rather than native geometric endpoints. [Insert a fresh matched Geo/EVQ+LongAlign rerun from the corrected code, then optionally a second-model/rank sweep.] We will not reuse affected legacy comparisons.”
+- Draft response placeholder: “We agree that the threshold is calibrated on one LLaMA-3-8B setting and is not general guidance; the revision labels it as a testable hypothesis. We also found and fixed a control-path issue: the old ‘Geo’ wrapper used the EVQ midpoint construction at tau zero rather than native geometric endpoints. [Insert a fresh matched 8B Geo/EVQ+LongAlign rerun from the corrected code; use a 7B-family run as additional cross-model evidence, not as a replacement.] We will not reuse affected legacy comparisons.”
 - 中文核对：这是重要代码问题，旧 Geo 结果不能继续当严格 matched control。
 
 ## Final response checks

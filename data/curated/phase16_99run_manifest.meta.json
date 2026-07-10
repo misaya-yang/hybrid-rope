@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "provenance_status": "sanitized-run-manifest",
+  "artifact": "data/curated/phase16_99run_manifest.csv",
+  "sha256": "39ce676ca26967434c0091e09d36824cd16d1a1a204ad464dad0a33aef7b18d5",
+  "row_count": 99,
+  "stages": {
+    "pilot": 45,
+    "confirm": 54
+  },
+  "recovery_commit": "663cae061bfed4a9ec27eecb6cdfd413f97a5d54",
+  "source_bundle": {
+    "available_in_current_checkout": false,
+    "expected_inputs": [
+      "pilot_plan.json",
+      "confirm_plan.json",
+      "runs/*/result.json"
+    ]
+  },
+  "claim_boundary": "The CSV preserves 99 sanitized run rows, configuration fields, metrics, and inv_freq hashes. It is run-manifest evidence, not checkpoint-level reproduction; the original source directory is not present in this checkout."
+}

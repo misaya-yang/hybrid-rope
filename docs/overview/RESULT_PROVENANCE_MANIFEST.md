@@ -33,10 +33,30 @@ before using this manifest as a release artifact.
 Status labels:
 
 - `Curated`: values are available in a reviewer-facing curated artifact.
+- `Raw JSON backed`: the tracked artifact embeds values from an exact recovered
+  source JSON and records that source file's SHA256.
+- `Report backed`: values are transcribed from a tracked narrative report; the
+  exact raw/full-evaluation JSON is unavailable and must not be implied.
+- `Sanitized run manifest`: per-run configuration/metric rows and hashes are
+  portable, but the original source directory/checkpoints are not packaged.
+- `Trace only`: a historical summary survives without enough source provenance
+  for rebuttal use; do not cite its numbers.
 - `Packaged result`: values are available in a result JSON/report in this repo.
 - `Supporting only`: do not use as a primary claim.
 - `Missing`: exact raw artifact/checkpoint/data hash is not present in the
   compact repo.
+
+Portable July reconciliation:
+
+| Artifact | Tier | Artifact SHA256 | Reviewer-use boundary |
+| --- | --- | --- | --- |
+| `data/curated/table18_mla_3seed_aggregate.json` | Raw JSON backed | `ad751a26fee43939f644a8ee12e5e50b0003d0d490f790ce1cd85971902ffe8d` | Primary III seedwise/aggregate metrics; no d_eff-convention claim. |
+| `data/curated/phase11_l256_3seed_recovered.json` | Raw JSON backed | `8af8bce33e96f70542d943745bebbbaaa7cc65117587950b75c584f06a2f68db` | L=256 archival Geo/EVQ/scaling records; not L=128 Primary II replication. |
+| `data/curated/phase16_99run_manifest.csv` | Sanitized run manifest | `39ce676ca26967434c0091e09d36824cd16d1a1a204ad464dad0a33aef7b18d5` | Supports run coverage and basin/rank audit; not checkpoint reproduction. |
+| `data/curated/learnable_tau_128tok_evidence.json` | Report backed | `3873c1bd6dfe2b70eb6eb7ed770946ccd271256174bdee9babd8760df7d7f1cd` | Final tau endpoints, not a per-step trajectory. |
+| `data/curated/mla_channel_count_125m_pilot.json` | Report backed | `03c690f4f69ce64285ac1015addda402944c5e7bf7ef9490d8a4b39b6ae16ca7` | Single-seed qualitative support, not a d_eff/tau ablation. |
+| `data/curated/quality_454m_full_eval.json` | Report backed | `2bdc684578f665a3bbe3342ccbfc4b1a4ae7084bd59226c14bb4f6e129c9e69d` | Correct n=2,086 table/figure values; raw full-evaluation JSON missing. |
+| `rebuttal_7/trace_only/text_base_10k_500k_pilot.json` | Trace only | `f2acd1607c479bac942d463e89a7d369d1fee0215193466c92dd966019a80971` | Internal quarantine only; excluded from the reviewer supplement and forbidden for citation until source JSONs are recovered and hashed. |
 
 ## M1: Table 2 EVQ x YaRN
 
@@ -125,13 +145,16 @@ Packaged evidence:
 | --- | --- | --- |
 | `paper/tables/table4_pe_dominant.tex` | Paper table | `6075b6f6f5ae39925f030293a145f06b29c689309116aca558463452e6f29331` |
 | `data/curated/fig3_extreme_128.json` | Curated panel/table fallback | `3cbf44eb7166b037ed70b96546c302ab941e7214bdcb20b9477e999c1b9d09ee` |
+| `data/curated/learnable_tau_128tok_evidence.json` | Report-backed seedwise final-tau endpoints | `3873c1bd6dfe2b70eb6eb7ed770946ccd271256174bdee9babd8760df7d7f1cd` |
+| `data/curated/phase11_l256_3seed_recovered.json` | Raw-backed L=256 archival payload; distinct protocol | `8af8bce33e96f70542d943745bebbbaaa7cc65117587950b75c584f06a2f68db` |
 
 Current compact-repo gaps:
 
 - Geo/DAPE/EVQ additional seeds are not packaged because those rows are not
   multi-seed in the current table.
-- Figure 3 panels (b,c) still depend on regenerated Phase 11 result JSONs unless
-  additional curated fallbacks are added.
+- Figure 3 panels (b,c) values are preserved in a portable Phase11 snapshot,
+  but the existing figure generator is not yet wired to that consolidated
+  schema.
 
 Branch audit note:
 
@@ -177,7 +200,8 @@ Packaged evidence:
 
 | Artifact | Role | SHA256 |
 | --- | --- | --- |
-| `results/eval_3seeds_full_results.json` | Packaged result JSON | `1e44d30bb880e4b7427ae55bd7034782989152bd2afca9217495f9b8ece30953` |
+| `data/curated/table18_mla_3seed_aggregate.json` | Raw-backed portable result JSON; embeds ignored-source hash `1e44d30...30953` | `ad751a26fee43939f644a8ee12e5e50b0003d0d490f790ce1cd85971902ffe8d` |
+| `data/curated/mla_channel_count_125m_pilot.json` | Report-backed single-seed channel-count pilot | `03c690f4f69ce64285ac1015addda402944c5e7bf7ef9490d8a4b39b6ae16ca7` |
 | `paper/appendix/a3_supporting_results.tex` | Paper MLA appendix table/prose | `b1f8380d6a23b7f109d78ed0606cee7a69649ee4a0413510d05b117e97613715` |
 | `paper/sections/05_experiments.tex` | Main experiment prose | `f2b2294b20769c4bf7b672cd65b4e393e2d36ee8a369d0c9e522612a1501391e` |
 | `scripts/core_text_phases/run_gqa_evq_experiment.py` | Training entrypoint | `51ad863e3cc8193b5345423ca4c197282b317977060e6716db52529362bd94b0` |

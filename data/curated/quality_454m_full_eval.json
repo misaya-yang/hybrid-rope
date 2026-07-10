@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "provenance_status": "report-backed",
+  "experiment": "Phase 21B QuALITY QA full evaluation",
+  "source_report": "docs/exp/2026-03-12_phase21b_454m_full_eval_report.md",
+  "provenance": "Curated from the tracked full-evaluation report; values are not recomputed.",
+  "raw_artifact": {
+    "available": false,
+    "expected_path_hint": "results/core_text/phase21b/phase21b_quality_454m_full_eval.json",
+    "expected_eval_samples": 2086,
+    "note": "The exact per-example/full aggregate JSON was not recovered in this checkout."
+  },
+  "protocol": {
+    "model": "454M decoder-only transformer",
+    "architecture": "24L/16H/1024d, head_dim=64",
+    "pretrain_context": 2048,
+    "continue_train_context": 4096,
+    "finetune_context": 4096,
+    "finetune_steps": 2000,
+    "finetune_seed": 42,
+    "eval_samples": 2086,
+    "eval_scoring": "length_normalized_option_nll",
+    "random_baseline_accuracy": 25.0,
+    "status": "full_eval_complete_except_32k"
+  },
+  "rows": [
+    {
+      "id": "4k_raw",
+      "label": "4K raw",
+      "context_length": 4096,
+      "mode": "raw",
+      "geo": {"accuracy": 26.13, "correct": 545, "gold_nll": 2.2198},
+      "evq": {"accuracy": 26.75, "correct": 558, "gold_nll": 2.1819}
+    },
+    {
+      "id": "8k_raw",
+      "label": "8K raw",
+      "context_length": 8192,
+      "mode": "raw",
+      "geo": {"accuracy": 24.59, "correct": 513, "gold_nll": 3.2021},
+      "evq": {"accuracy": 26.75, "correct": 558, "gold_nll": 2.2392}
+    },
+    {
+      "id": "8k_yarn_s2",
+      "label": "8K YaRN",
+      "context_length": 8192,
+      "mode": "yarn_s2",
+      "geo": {"accuracy": 26.51, "correct": 553, "gold_nll": 2.3893},
+      "evq": {"accuracy": 26.61, "correct": 555, "gold_nll": 2.1949}
+    },
+    {
+      "id": "16k_raw",
+      "label": "16K raw",
+      "context_length": 16384,
+      "mode": "raw",
+      "geo": {"accuracy": 24.07, "correct": 502, "gold_nll": 7.9154},
+      "evq": {"accuracy": 23.68, "correct": 494, "gold_nll": 6.22}
+    }
+  ],
+  "supersedes": {
+    "eval_samples": 200,
+    "status": "superseded_small_sample_pilot",
+    "reason": "The pilot accuracy deltas were inflated by small-sample noise and must not be used in Figure 8."
+  },
+  "scope": "Supporting, report-backed probability-space diagnostic; all accuracy values remain near the 25% random baseline and do not establish a stable accuracy gain."
+}

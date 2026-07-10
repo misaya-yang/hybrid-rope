@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "provenance_status": "report-backed",
+  "raw_artifact": {
+    "available": false,
+    "note": "The tracked experiment report survives; exact checkpoint/result JSONs are not in the portable bundle."
+  },
+  "source": {
+    "report": "docs/exp/2026-03-20_gqa_mla_125m_compression_ablation.md",
+    "script": "scripts/core_text_phases/run_gqa_evq_experiment.py",
+    "launchers": [
+      "scripts/core_text_phases/run_phases4to5.sh",
+      "scripts/core_text_phases/run_phases2to5.sh"
+    ]
+  },
+  "protocol": {
+    "model": "125M decoder-only transformer",
+    "training_tokens": 100000000,
+    "train_length": 2048,
+    "dataset": "FineWeb-Edu",
+    "seed": 42,
+    "evq_tau": 1.414,
+    "head_dim": 64
+  },
+  "mla_rows": [
+    {
+      "d_rope": 32,
+      "frequency_pairs": 16,
+      "geo_ppl": {"2048": 65.47, "4096": 98.53, "8192": 240.1, "16384": 400.2},
+      "evq_ppl": {"2048": 65.59, "4096": 104.0, "8192": 225.1, "16384": 363.7},
+      "evq_relative_change_percent": {"8192": -6.3, "16384": -9.1}
+    },
+    {
+      "d_rope": 16,
+      "frequency_pairs": 8,
+      "geo_ppl": {"2048": 67.13, "4096": 68.07, "8192": 245.5, "16384": 653.4},
+      "evq_ppl": {"2048": 65.92, "4096": 69.84, "8192": 128.2, "16384": 340.4},
+      "evq_relative_change_percent": {"8192": -47.8, "16384": -47.9}
+    }
+  ],
+  "claim_boundary": "This report-backed, single-seed within-architecture channel-count pilot supports only the scarce-channel direction. It is not a direct tau/d_eff convention ablation, does not replace the 432M three-seed primary aggregate, and the weak d_rope=16 geometric baseline makes the large percentage qualitative rather than headline evidence."
+}

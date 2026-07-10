@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "provenance_status": "report-backed",
+  "raw_artifact": {
+    "available": false,
+    "note": "Exact training logs/checkpoints were not recovered into the portable bundle."
+  },
+  "source": [
+    "docs/exp/2026-02-24_128tok_baseline_report.md",
+    "docs/exp/2026-02-26_full_experiment_report.md"
+  ],
+  "protocol": {
+    "model": "125M decoder-only transformer",
+    "train_length": 128,
+    "training_tokens": 15000000,
+    "dataset": "FineWeb-Edu",
+    "base": 500000,
+    "head_dim": 64
+  },
+  "learnable_tau_seedwise": [
+    {"seed": 42, "tau_final": 1.1391, "ppl_128": 182.3, "ppl_2048": 257.9, "ppl_8192": 441.4},
+    {"seed": 137, "tau_final": 1.1445, "ppl_128": 181.6, "ppl_2048": 255.8, "ppl_8192": 448.1},
+    {"seed": 256, "tau_final": 1.1383, "ppl_128": 179.7, "ppl_2048": 242.3, "ppl_8192": 424.4}
+  ],
+  "summary": {
+    "tau_mean": 1.1406,
+    "tau_std": 0.0034,
+    "ppl_8192_mean": 437.9,
+    "ppl_8192_std": 12.3,
+    "fixed_tau_5_multiseed_ppl_8192": {"mean": 335.7, "std": 1.7, "n": 3},
+    "fixed_tau_ppl_128": {"0.0": 184.9, "0.5": 181.9, "1.0": 182.6, "1.5": 183.0},
+    "fixed_tau_ppl_8192": {"0.0": 513.7, "0.5": 524.8, "1.0": 477.5, "1.5": 419.7, "2.0": 406.1, "2.5": 383.3}
+  },
+  "interpretation": "The in-range PPL surface is nearly flat across tau, while the extrapolation optimum moves to larger tau. Training loss therefore provides little signal for the out-of-range objective; the learned parameter converges reproducibly, but to an in-range operating point rather than the extrapolation-optimal fixed allocation.",
+  "claim_boundary": "Report-backed values support reproducible final tau endpoints, not a per-step convergence trajectory or optimizer-independent convergence. The tau=0.01 initialization fell into a softplus dead zone and is excluded from the convergence claim."
+}

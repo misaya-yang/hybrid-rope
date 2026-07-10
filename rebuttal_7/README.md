@@ -13,6 +13,7 @@ The review file is preserved verbatim. The older similarly named review packet i
 ## Working documents
 
 - `FABLE5_RESPONSE_AND_FIX_LEDGER.md`: all 18 questions, dispositions, completed fixes, evidence boundaries, and concise draft responses.
+- `IGNORED_ASSET_RECONCILIATION.md`: complete ignored-asset inventory, portable evidence tiers, all 18 response updates, experiment order, and company-computer handoff.
 - `EXPERIMENT_PRIORITY_PLAN.md`: server-time queue, protocols, decision rules, and the role of the proposed 7B/8B fine-tuning work.
 - `NO_SERVER_FIX_LOG.md`: code, paper, provenance, and presentation fixes completed without new experiments.
 

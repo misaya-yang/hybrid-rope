@@ -39,3 +39,19 @@
 - PDF: `pdfinfo` reports no custom metadata and the reviewed pages render correctly. A raw `/Type3` marker scan found none; `pdffonts` is unavailable on this machine.
 - Packaging: `python3 scripts/package_supplement.py` produced the curated supplement successfully.
 - Authoritative review copy: 224 lines, 37,871 bytes, SHA-256 `520ff82bb04c4d552f1d36a5573ef613fc17d9bb15838b780c8f16de1d751864`.
+
+## 2026-07-10 ignored-asset reconciliation
+
+- Promoted the ignored MLA three-seed and Phase11 archival JSONs into hash-identified, anonymous portable snapshots.
+- Added the 99-run sanitized CSV plus a provenance sidecar and tested the exporter against a reconstructed 45-pilot/54-confirm source tree.
+- Marked QuALITY, learnable-tau, and MLA channel-count evidence as report-backed; no raw/full JSON is implied.
+- Quarantined the unverified base=10K/500K summary under `rebuttal_7/trace_only/` and excluded it from `data/curated/` and the reviewer supplement.
+- Added `IGNORED_ASSET_RECONCILIATION.md` with all 18 Fable5 responses, experiment priority, and company-computer checkout commands.
+
+Fresh gates for this reconciliation:
+
+- Full repository suite: `181 passed` under `.venv/bin/python -m pytest -q`.
+- Python syntax: core entrypoints plus all new builder/validator/exporter/test files passed `python3 -m py_compile`.
+- Portable bundle: `python3 scripts/validate_rebuttal_evidence_bundle.py --skip-tracked-check` passed before staging.
+- Curated supplement: `/tmp/evq-cosh-supplement-rebuttal-7.zip` was created, passed `unzip -t`, and contains no trace-only base pilot or internal bundle contract test.
+- Paper source was not changed in this reconciliation, so the prior PDF was not regenerated.
