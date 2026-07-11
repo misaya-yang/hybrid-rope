@@ -50,7 +50,8 @@ try:
         canonical_training_protocol,
         sha256_file,
         validate_legacy_protocol,
-        validate_source_receipt,
+        validate_legacy_runtime_packages,
+        validate_training_source_receipt,
     )
 except ImportError:  # direct script execution
     from legacy_lora_protocol import (
@@ -58,7 +59,8 @@ except ImportError:  # direct script execution
         canonical_training_protocol,
         sha256_file,
         validate_legacy_protocol,
-        validate_source_receipt,
+        validate_legacy_runtime_packages,
+        validate_training_source_receipt,
     )
 
 
@@ -116,6 +118,9 @@ def validate_strict_legacy_args(args: argparse.Namespace) -> None:
 def resolve_legacy_resume_checkpoint(
     output_dir: Union[os.PathLike, str],
     requested: Optional[str],
+    *,
+    expected_protocol: Optional[Dict[str, Any]] = None,
+    expected_runtime_packages: Optional[Dict[str, str]] = None,
 ) -> Optional[Path]:
     """Resolve an explicit checkpoint or the newest internally consistent one."""
     if requested in (None, "", "none"):
@@ -163,8 +168,97 @@ def resolve_legacy_resume_checkpoint(
             if requested == "auto":
                 continue
             raise ValueError(f"resume checkpoint step mismatch: {path}")
+        if expected_protocol is not None:
+            try:
+                validate_legacy_checkpoint_receipt(
+                    path,
+                    expected_protocol,
+                    expected_runtime_packages,
+                )
+            except (FileNotFoundError, TypeError, ValueError):
+                if requested == "auto":
+                    continue
+                raise
         return path
     raise RuntimeError("no internally consistent recovery checkpoint was found")
+
+
+def current_legacy_runtime_packages() -> Dict[str, str]:
+    """Return and validate the exact package lock used by the legacy control."""
+    packages = {
+        name: importlib.metadata.version(name)
+        for name in ("torch", "transformers", "peft", "accelerate", "datasets", "triton")
+    }
+    return validate_legacy_runtime_packages(packages)
+
+
+def write_legacy_checkpoint_receipt(
+    checkpoint_dir: Union[os.PathLike, str],
+    protocol: Dict[str, Any],
+    runtime_packages: Dict[str, str],
+) -> Path:
+    """Atomically bind a recovery checkpoint to protocol, code, data, and runtime."""
+    checkpoint_dir = Path(checkpoint_dir)
+    protocol = validate_legacy_protocol(protocol)
+    runtime_packages = validate_legacy_runtime_packages(runtime_packages)
+    state_path = checkpoint_dir / "trainer_state.json"
+    if not state_path.is_file():
+        raise FileNotFoundError(f"checkpoint lacks trainer_state.json: {checkpoint_dir}")
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    suffix = checkpoint_dir.name.removeprefix("checkpoint-")
+    if not suffix.isdigit() or int(state.get("global_step", -1)) != int(suffix):
+        raise ValueError(f"checkpoint step mismatch: {checkpoint_dir}")
+    receipt = {
+        "format_version": 1,
+        "global_step": int(suffix),
+        "protocol_sha256": canonical_json_sha256(protocol),
+        "method": protocol["method"],
+        "seed": protocol["seed"],
+        "data_manifest_sha256": protocol["data_manifest_sha256"],
+        "model_manifest_sha256": protocol["model_manifest_sha256"],
+        "code_sha256": protocol["code_sha256"],
+        "runtime_packages": runtime_packages,
+    }
+    path = checkpoint_dir / "checkpoint_receipt.json"
+    temporary = path.with_suffix(".json.tmp")
+    temporary.write_text(
+        json.dumps(receipt, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    os.replace(temporary, path)
+    return path
+
+
+def validate_legacy_checkpoint_receipt(
+    checkpoint_dir: Union[os.PathLike, str],
+    expected_protocol: Dict[str, Any],
+    expected_runtime_packages: Optional[Dict[str, str]],
+) -> Dict[str, Any]:
+    """Reject a resume candidate created under any different experiment state."""
+    checkpoint_dir = Path(checkpoint_dir)
+    expected_protocol = validate_legacy_protocol(expected_protocol)
+    if expected_runtime_packages is None:
+        raise ValueError("strict resume requires expected runtime packages")
+    expected_runtime_packages = validate_legacy_runtime_packages(expected_runtime_packages)
+    path = checkpoint_dir / "checkpoint_receipt.json"
+    if not path.is_file():
+        raise FileNotFoundError(f"checkpoint lacks protocol receipt: {checkpoint_dir}")
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    suffix = checkpoint_dir.name.removeprefix("checkpoint-")
+    expected = {
+        "format_version": 1,
+        "global_step": int(suffix),
+        "protocol_sha256": canonical_json_sha256(expected_protocol),
+        "method": expected_protocol["method"],
+        "seed": expected_protocol["seed"],
+        "data_manifest_sha256": expected_protocol["data_manifest_sha256"],
+        "model_manifest_sha256": expected_protocol["model_manifest_sha256"],
+        "code_sha256": expected_protocol["code_sha256"],
+        "runtime_packages": expected_runtime_packages,
+    }
+    if receipt != expected:
+        raise ValueError(f"checkpoint protocol receipt mismatch: {checkpoint_dir}")
+    return receipt
 
 
 def _load_strict_legacy_data(manifest_path: Path) -> tuple[Dict[str, Any], Dict[str, Any]]:
@@ -172,7 +266,7 @@ def _load_strict_legacy_data(manifest_path: Path) -> tuple[Dict[str, Any], Dict[
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     if manifest.get("objective") != "legacy_longalign_full_token_causal_lm_v2":
         raise ValueError("prepared data objective is not the legacy LongAlign protocol")
-    validate_source_receipt(manifest.get("source", {}))
+    validate_training_source_receipt(manifest.get("source", {}))
     expected_preparation = {
         "max_samples": 8000,
         "max_seq_len": 8192,
@@ -188,11 +282,81 @@ def _load_strict_legacy_data(manifest_path: Path) -> tuple[Dict[str, Any], Dict[
     loaded: Dict[str, Any] = {}
     for key in ("tokens", "offsets", "train_indices", "validation_indices"):
         record = manifest.get("files", {}).get(key, {})
-        path = manifest_path.parent / str(record.get("name", ""))
+        name = str(record.get("name", ""))
+        if not name or Path(name).name != name:
+            raise ValueError(f"prepared legacy {key} path is not a safe basename")
+        path = manifest_path.parent / name
         if not path.is_file() or sha256_file(path) != record.get("sha256"):
             raise ValueError(f"prepared legacy {key} tensor is missing or hash-mismatched")
-        loaded[key] = torch.load(path, map_location="cpu", weights_only=False)
+        loaded[key] = torch.load(path, map_location="cpu", weights_only=True)
+    validate_prepared_training_data(loaded, manifest, vocab_size=128256)
     return loaded, manifest
+
+
+def validate_prepared_training_data(
+    loaded: Dict[str, Any],
+    manifest: Dict[str, Any],
+    *,
+    vocab_size: int,
+) -> None:
+    """Validate frozen tensors fully before loading an 8B model onto the GPU."""
+    tokens = loaded.get("tokens")
+    offsets = loaded.get("offsets")
+    train_indices = loaded.get("train_indices")
+    validation_indices = loaded.get("validation_indices")
+    tensors = {
+        "tokens": tokens,
+        "offsets": offsets,
+        "train_indices": train_indices,
+        "validation_indices": validation_indices,
+    }
+    for name, value in tensors.items():
+        if not torch.is_tensor(value) or value.ndim != 1:
+            raise ValueError(f"prepared legacy {name} must be a 1-D tensor")
+    if offsets.numel() < 2 or int(offsets[0]) != 0 or int(offsets[-1]) != tokens.numel():
+        raise ValueError("prepared legacy offsets do not cover the token tensor")
+    lengths = offsets[1:].to(torch.int64) - offsets[:-1].to(torch.int64)
+    if torch.any(lengths <= 0) or int(lengths.min()) < 64 or int(lengths.max()) > 8192:
+        raise ValueError("prepared legacy row lengths must lie in [64, 8192]")
+    if tokens.numel() == 0 or int(tokens.min()) < 0 or int(tokens.max()) >= vocab_size:
+        raise ValueError("prepared legacy token IDs fall outside the model vocabulary")
+
+    row_count = offsets.numel() - 1
+    normalized_indices: Dict[str, torch.Tensor] = {}
+    for name, value in (
+        ("train_indices", train_indices),
+        ("validation_indices", validation_indices),
+    ):
+        indices = value.to(torch.int64)
+        if indices.numel() == 0:
+            raise ValueError(f"prepared legacy {name} must not be empty")
+        if int(indices.min()) < 0 or int(indices.max()) >= row_count:
+            raise ValueError(f"prepared legacy {name} contains an out-of-range row")
+        if torch.unique(indices).numel() != indices.numel():
+            raise ValueError(f"prepared legacy {name} contains duplicate rows")
+        normalized_indices[name] = indices
+    all_indices = torch.cat(
+        [normalized_indices["train_indices"], normalized_indices["validation_indices"]]
+    )
+    if torch.unique(all_indices).numel() != all_indices.numel():
+        raise ValueError("prepared legacy train and validation splits overlap")
+    if all_indices.numel() != row_count or not torch.equal(
+        torch.sort(all_indices).values,
+        torch.arange(row_count, dtype=torch.int64),
+    ):
+        raise ValueError("prepared legacy splits do not cover every tokenized row exactly once")
+
+    statistics = manifest.get("statistics", {})
+    expected_statistics = {
+        "tokenized_rows": row_count,
+        "train_rows": train_indices.numel(),
+        "validation_rows": validation_indices.numel(),
+        "minimum_length": int(lengths.min()),
+        "maximum_length": int(lengths.max()),
+    }
+    for name, expected in expected_statistics.items():
+        if int(statistics.get(name, -1)) != expected:
+            raise ValueError(f"prepared legacy statistics mismatch for {name}")
 
 
 def _ensure_immutable_protocol(output_dir: Path, protocol: Dict[str, Any]) -> Path:
@@ -229,13 +393,16 @@ def legacy_training_code_sha256() -> str:
     return digest.hexdigest()
 
 
-def legacy_runtime_identity() -> Dict[str, Any]:
-    packages = {}
-    for name in ("torch", "transformers", "peft", "accelerate", "datasets"):
-        try:
-            packages[name] = importlib.metadata.version(name)
-        except importlib.metadata.PackageNotFoundError:
-            packages[name] = None
+def legacy_runtime_identity(
+    validated_packages: Optional[Dict[str, str]] = None,
+) -> Dict[str, Any]:
+    packages: Dict[str, Any] = dict(validated_packages or {})
+    if not packages:
+        for name in ("torch", "transformers", "peft", "accelerate", "datasets", "triton"):
+            try:
+                packages[name] = importlib.metadata.version(name)
+            except importlib.metadata.PackageNotFoundError:
+                packages[name] = None
     identity = {
         "python": platform.python_version(),
         "platform": platform.platform(),
@@ -330,6 +497,20 @@ def public_artifact_identifier(value: Optional[str]) -> Optional[str]:
     if value is None:
         return None
     return Path(str(value)).name
+
+
+def training_dataset_identifier(
+    args: argparse.Namespace,
+    strict_manifest: Optional[Dict[str, Any]],
+) -> str:
+    if strict_manifest is not None:
+        source_id = strict_manifest.get("source", {}).get("source_id")
+        if not isinstance(source_id, str) or not source_id:
+            raise ValueError("strict prepared-data manifest lacks source_id")
+        return source_id
+    if args.local_data_path is not None:
+        return public_artifact_identifier(args.local_data_path) or "local_data"
+    return str(args.dataset_name)
 
 
 def load_frequency_artifact(
@@ -928,6 +1109,7 @@ def main():
     )
 
     strict_protocol = None
+    strict_runtime_packages = None
     strict_data = None
     strict_manifest = None
     if args.strict_legacy_protocol:
@@ -956,9 +1138,13 @@ def main():
             code_sha256=legacy_training_code_sha256(),
         )
         _ensure_immutable_protocol(Path(args.output_dir), strict_protocol)
+        strict_runtime_packages = current_legacy_runtime_packages()
+    dataset_identifier = training_dataset_identifier(args, strict_manifest)
     resume_checkpoint = resolve_legacy_resume_checkpoint(
         args.output_dir,
         args.resume_from_checkpoint,
+        expected_protocol=strict_protocol,
+        expected_runtime_packages=strict_runtime_packages,
     )
     if resume_checkpoint is not None:
         print(f"[RESUME] CPU preflight selected {resume_checkpoint}")
@@ -982,7 +1168,7 @@ def main():
             "lora_alpha": args.lora_alpha,
             "max_steps": args.max_steps,
             "max_seq_len": args.max_seq_len,
-            "dataset": args.dataset_name,
+            "dataset": dataset_identifier,
             "theory": theory_checks,
         }
         config_path = os.path.join(args.output_dir, "config.json")
@@ -997,6 +1183,7 @@ def main():
         AutoTokenizer,
         TrainingArguments,
         Trainer,
+        TrainerCallback,
         BitsAndBytesConfig,
         set_seed,
     )
@@ -1010,6 +1197,7 @@ def main():
         args.model_name,
         trust_remote_code=True,
         use_fast=True,
+        local_files_only=Path(args.model_name).is_dir(),
     )
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
@@ -1029,7 +1217,8 @@ def main():
         "trust_remote_code": True,
         "torch_dtype": torch.bfloat16 if args.bf16 else torch.float16,
         "attn_implementation": "sdpa",
-        "device_map": "auto",
+        "device_map": {"": 0} if args.strict_legacy_protocol else "auto",
+        "local_files_only": Path(args.model_name).is_dir(),
     }
     if args.load_in_4bit:
         load_kwargs["quantization_config"] = BitsAndBytesConfig(
@@ -1040,6 +1229,14 @@ def main():
         )
 
     model = AutoModelForCausalLM.from_pretrained(args.model_name, **load_kwargs)
+    if args.strict_legacy_protocol:
+        device_map = getattr(model, "hf_device_map", None)
+        if not isinstance(device_map, dict) or not device_map:
+            raise RuntimeError("strict legacy model lacks an explicit single-GPU device map")
+        if any(str(device).lower() in {"cpu", "disk"} for device in device_map.values()):
+            raise RuntimeError("strict legacy training forbids CPU or disk offload")
+        if any(str(device).lower() not in {"0", "cuda", "cuda:0"} for device in device_map.values()):
+            raise RuntimeError(f"strict legacy model escaped cuda:0: {device_map}")
     model.config.use_cache = False
 
     # 5. Inject the exact schedule recorded by this run.
@@ -1142,12 +1339,27 @@ def main():
 
     data_collator = PaddingCollator(pad_token_id=tokenizer.pad_token_id)
 
+    callbacks = []
+    if args.strict_legacy_protocol:
+        class LegacyCheckpointReceiptCallback(TrainerCallback):
+            def on_save(self, training_args, state, control, **kwargs):
+                checkpoint_dir = Path(training_args.output_dir) / f"checkpoint-{state.global_step}"
+                write_legacy_checkpoint_receipt(
+                    checkpoint_dir,
+                    strict_protocol,
+                    strict_runtime_packages,
+                )
+                return control
+
+        callbacks.append(LegacyCheckpointReceiptCallback())
+
     trainer = Trainer(
         model=model,
         args=training_args,
         train_dataset=train_dataset,
         eval_dataset=val_dataset,
         data_collator=data_collator,
+        callbacks=callbacks,
     )
 
     print(f"\n{'=' * 60}")
@@ -1160,7 +1372,7 @@ def main():
     print(f"  LoRA:      r={args.lora_r}, α={args.lora_alpha}")
     print(f"  Steps:     {args.max_steps}")
     print(f"  Seq len:   {args.max_seq_len}")
-    print(f"  Data:      {args.dataset_name} ({len(train_dataset)} samples)")
+    print(f"  Data:      {dataset_identifier} ({len(train_dataset)} samples)")
     print(f"{'=' * 60}\n")
 
     t0 = time.time()
@@ -1191,7 +1403,7 @@ def main():
         "lora_targets": target_modules,
         "max_steps": args.max_steps,
         "max_seq_len": args.max_seq_len,
-        "dataset": args.dataset_name,
+        "dataset": dataset_identifier,
         "train_samples": len(train_dataset),
         "train_time_hours": round(train_time / 3600, 3),
         "theory_checks": theory_checks,
@@ -1216,7 +1428,7 @@ def main():
             "data_manifest_sha256": sha256_file(args.prepared_data_manifest),
             "model_manifest_sha256": sha256_file(args.model_manifest),
             "code_sha256": legacy_training_code_sha256(),
-            "runtime": legacy_runtime_identity(),
+            "runtime": legacy_runtime_identity(strict_runtime_packages),
         })
     meta_path = os.path.join(args.output_dir, "experiment_meta.json")
     with open(meta_path, "w") as f:

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import os
@@ -17,7 +18,11 @@ import torch
 
 try:
     from .eval_positional_distill import causal_backbone, chunked_causal_nll
-    from .legacy_lora_protocol import legacy_eval_filename, sha256_file
+    from .legacy_lora_protocol import (
+        legacy_eval_filename,
+        sha256_file,
+        validate_paper_longalpaca_receipt,
+    )
     from .prepare_positional_distill_data import tokenizer_source_fingerprint
     from .prepare_legacy_model_manifest import validate_model_manifest
     from .prepare_legacy_wikitext import (
@@ -39,7 +44,11 @@ try:
     from .validate_legacy_lora_artifact import validate_artifact
 except ImportError:
     from eval_positional_distill import causal_backbone, chunked_causal_nll
-    from legacy_lora_protocol import legacy_eval_filename, sha256_file
+    from legacy_lora_protocol import (
+        legacy_eval_filename,
+        sha256_file,
+        validate_paper_longalpaca_receipt,
+    )
     from prepare_positional_distill_data import tokenizer_source_fingerprint
     from prepare_legacy_model_manifest import validate_model_manifest
     from prepare_legacy_wikitext import (
@@ -63,6 +72,8 @@ except ImportError:
 
 _GEO = re.compile(r"^geo_longalign_s(42|43|44)$")
 _EVQ = re.compile(r"^evq_longalign_tau1414_s(42|43|44)$")
+_LONGALPACA_GEO = re.compile(r"^geo_longalpaca_s(42)$")
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
 def variant_spec(variant: str) -> Dict[str, Any]:
@@ -70,6 +81,11 @@ def variant_spec(variant: str) -> Dict[str, Any]:
         return {"method": "native_geo", "seed": None, "requires_adapter": False}
     if variant == "base_evq_tau1414":
         return {"method": "evq_cosh", "seed": None, "requires_adapter": False}
+    if variant == "base_geo_longalpaca":
+        return {"method": "native_geo", "seed": None, "requires_adapter": False}
+    match = _LONGALPACA_GEO.fullmatch(variant)
+    if match:
+        return {"method": "native_geo", "seed": int(match.group(1)), "requires_adapter": True}
     match = _GEO.fullmatch(variant)
     if match:
         return {"method": "native_geo", "seed": int(match.group(1)), "requires_adapter": True}
@@ -77,6 +93,41 @@ def variant_spec(variant: str) -> Dict[str, Any]:
     if match:
         return {"method": "evq_cosh", "seed": int(match.group(1)), "requires_adapter": True}
     raise ValueError(f"unsupported legacy evaluation variant: {variant}")
+
+
+def validate_variant_training_manifest(
+    variant: str,
+    manifest_path: Path,
+    adapter_meta: Dict[str, Any],
+) -> Dict[str, Any]:
+    """Bind paper-lineage result names to the actual LongAlpaca data bytes."""
+    manifest_path = Path(manifest_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if _LONGALPACA_GEO.fullmatch(variant):
+        validate_paper_longalpaca_receipt(manifest.get("source", {}))
+    expected = adapter_meta.get("data_manifest_sha256")
+    if not isinstance(expected, str) or sha256_file(manifest_path) != expected:
+        raise ValueError("adapter and requested training-data manifests differ")
+    return manifest
+
+
+def legacy_evaluation_code_sha256() -> str:
+    """Bind LongAlpaca result reuse to the exact evaluator implementation."""
+    paths = (
+        Path(__file__).resolve(),
+        Path(__file__).with_name("eval_positional_distill.py").resolve(),
+        Path(__file__).with_name("train_positional_distill.py").resolve(),
+        Path(__file__).with_name("train_evq_lora.py").resolve(),
+        Path(__file__).with_name("legacy_lora_protocol.py").resolve(),
+        (PROJECT_ROOT / "scripts/lib/rope/schedules.py").resolve(),
+    )
+    digest = hashlib.sha256()
+    for path in paths:
+        relative = path.relative_to(PROJECT_ROOT).as_posix().encode("utf-8")
+        digest.update(len(relative).to_bytes(4, "big"))
+        digest.update(relative)
+        digest.update(bytes.fromhex(sha256_file(path)))
+    return digest.hexdigest()
 
 
 def _load_eval_manifest(path: Path) -> tuple[Dict[str, Any], torch.Tensor]:
@@ -118,6 +169,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--eval_manifest", type=Path, required=True)
     parser.add_argument("--variant", required=True)
     parser.add_argument("--adapter_dir", type=Path, default=None)
+    parser.add_argument("--training_data_manifest", type=Path, default=None)
     parser.add_argument("--output_dir", type=Path, required=True)
     parser.add_argument("--lm_head_chunk_tokens", type=int, default=1024)
     parser.add_argument("--validate_only", action="store_true")
@@ -148,6 +200,10 @@ def _validate_existing_result(
     for key, value in expected.items():
         if record.get(key) != value:
             raise ValueError(f"existing evaluation mismatch for {key}")
+    if "longalpaca" in variant and record.get(
+        "evaluation_code_sha256"
+    ) != legacy_evaluation_code_sha256():
+        raise ValueError("existing LongAlpaca evaluation code hash mismatch")
     if record.get("frequency_provenance", {}).get("method") != spec["method"]:
         raise ValueError("existing evaluation frequency method mismatch")
     for length, context in (("8K", 8192), ("16K", 16384), ("32K", 32768)):
@@ -184,6 +240,14 @@ def main() -> None:
         )
         if adapter_meta["model_manifest_sha256"] != sha256_file(args.model_manifest):
             raise ValueError("adapter and evaluator model manifests differ")
+        if _LONGALPACA_GEO.fullmatch(args.variant) and args.training_data_manifest is None:
+            raise ValueError("adapter evaluation requires --training_data_manifest")
+        if args.training_data_manifest is not None:
+            validate_variant_training_manifest(
+                args.variant,
+                args.training_data_manifest,
+                adapter_meta,
+            )
     else:
         adapter_meta = None
     output_path = args.output_dir / legacy_eval_filename(args.variant)
@@ -317,6 +381,7 @@ def main() -> None:
             adapter_meta.get("data_manifest_sha256") if adapter_meta else None
         ),
         "training_code_sha256": adapter_meta.get("code_sha256") if adapter_meta else None,
+        "evaluation_code_sha256": legacy_evaluation_code_sha256(),
         "training_runtime": adapter_meta.get("runtime") if adapter_meta else None,
         "frequency_provenance": frequency_provenance,
         "frequency_verification": {

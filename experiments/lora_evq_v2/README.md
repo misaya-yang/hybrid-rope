@@ -157,6 +157,86 @@ Because the original raw file hashes and runtime have not been recovered, the
 honest label is **protocol-matched multi-seed rerun on verified LongAlign-10k**,
 not bitwise reproduction of the historical single-seed row.
 
+## Paper-lineage LongAlpaca Geo-42 control
+
+Contemporaneous reports identify the submitted EVQ-42 LoRA row's training
+corpus as LongAlpaca-12k.  A fresh control for that paper row must therefore
+use the LongAlpaca lineage, not the verified LongAlign fallback above.
+
+The recovered public LongAlpaca bytes are hash-pinned, but their upstream Hub
+revision was not preserved.  The preparation manifest deliberately labels the
+result `best_effort_reconstruction_from_recovered_public_bytes`; it must not be
+described as bitwise historical reproduction.
+
+Prepare the data on a high-memory CPU machine:
+
+```bash
+export PYTHONPATH=/path/to/runtime/dependencies:/path/to/hybrid-rope
+python experiments/lora_evq_v2/prepare_legacy_longalpaca_data.py \
+  --raw_json /path/to/LongAlpaca-12k_raw.json \
+  --expected_raw_sha256 090b348755c728cfb4b13fa443b54a0cb4e5128a92f142c6a52c5b4ff0f55e1f \
+  --tokenizer /path/to/Meta-Llama-3-8B-Instruct-tokenizer \
+  --output_dir /path/to/runtime/data/longalpaca
+```
+
+The converter streams the large JSON array, reproduces the old downloader's
+messages JSONL format, freezes the first 8,000 accepted samples with the
+historical 8K/64-token filtering and split seed 42, and records hashes for the
+raw bytes, normalized JSONL and every prepared tensor.
+
+The GPU launcher is intentionally Geo-42 only:
+
+```bash
+source /path/to/runtime/env.sh
+bash scripts/2026-07/04_lora_longalpaca_paper_geo_s42.sh preflight
+bash scripts/2026-07/04_lora_longalpaca_paper_geo_s42.sh baseline
+export EVQ_PAPER_UNLOCK_GEO42=YES
+bash scripts/2026-07/04_lora_longalpaca_paper_geo_s42.sh train
+bash scripts/2026-07/04_lora_longalpaca_paper_geo_s42.sh eval
+```
+
+The environment must pin the expected SHA-256 values through
+`EVQ_PAPER_LONGALPACA_MANIFEST_SHA256`,
+`EVQ_PAPER_MODEL_MANIFEST_SHA256`, and
+`EVQ_PAPER_EVAL_MANIFEST_SHA256`.  CPU preflight validates the exact
+LongAlpaca receipt, prepared tensors, WikiText asset, runtime versions, full
+model-byte receipt and exact training arguments.  GPU phases additionally
+require a single BF16-capable Blackwell GPU with at least 90 GiB free memory,
+use a shared exclusive GPU lease across training and evaluation, reject
+CPU/disk offload and silent `torch.compile` disablement, and skip only
+artifacts that pass hash-bound validation.  Every recovery checkpoint carries
+an atomic receipt binding its step to the protocol, code, data/model manifests
+and exact runtime packages; automatic resume ignores any mismatched
+checkpoint.  Evaluation results are also bound to the evaluator code hash.
+Inductor, AOTAutograd and Triton caches are persistent across compatible runs,
+and each invocation keeps a distinct telemetry file.
+
+It uses the submitted row's q/k/v/o LoRA r64, alpha128, dropout0.05, BF16,
+B2/GA4, LR 1e-4, warmup60, 300-step causal-LM protocol with native geometric
+RoPE.  It cannot launch EVQ or another seed.  After the final artifact passes
+validation, checkpoint-100/200 are removed while the final adapter and
+checkpoint-300 remain.
+
+### RTX PRO 6000 Blackwell performance decision
+
+The claim-facing run deliberately keeps the locked BF16 B2/GA4 numerical
+protocol.  Prior telemetry on the same training path was already compute-bound
+(about 97% mean GPU utilization), so extra data-loader workers, pin-memory
+tuning, TF32 toggles or a different AdamW wrapper are unlikely to recover the
+large unused VRAM or materially shorten the run.  The large transient costs are
+instead padded 8K attention and full-vocabulary cross entropy; changing those
+kernels can change numerics and must not be introduced in only one comparison
+arm.
+
+For a future matched Geo/EVQ protocol, benchmark one change at a time after a
+warm-up run: variable-length attention with native GQA support, a Blackwell
+FA4/FlashAttention path, fused linear cross entropy, B4/GA2, and then disabling
+gradient checkpointing.  Select a candidate only if loss/gradient checks remain
+finite, the same prepared sample order is preserved, peak VRAM stays below the
+card limit, and both Geo and EVQ use the identical runtime and kernels.  FP8 or
+NVFP4 is excluded from the current rebuttal control because it is a precision
+protocol change, not a transparent speed toggle.
+
 ### Seed-42 Geo fine-tuning control only
 
 Before spending GPU time on EVQ or additional seeds, the dedicated

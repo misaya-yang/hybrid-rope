@@ -14,6 +14,7 @@ try:
         canonical_json_sha256,
         sha256_file,
         validate_legacy_protocol,
+        validate_legacy_runtime_packages,
     )
 except ImportError:
     from legacy_lora_protocol import (
@@ -21,6 +22,7 @@ except ImportError:
         canonical_json_sha256,
         sha256_file,
         validate_legacy_protocol,
+        validate_legacy_runtime_packages,
     )
 
 
@@ -29,6 +31,7 @@ def validate_legacy_metadata(
     *,
     expected_method: str,
     expected_seed: int,
+    expected_data_manifest_sha256: str | None = None,
 ) -> Dict[str, Any]:
     if metadata.get("objective") != LEGACY_OBJECTIVE:
         raise ValueError("legacy adapter objective mismatch")
@@ -51,8 +54,17 @@ def validate_legacy_metadata(
     for field in ("data_manifest_sha256", "model_manifest_sha256", "code_sha256"):
         if metadata.get(field) != protocol[field]:
             raise ValueError(f"legacy adapter top-level {field} mismatch")
+    if (
+        expected_data_manifest_sha256 is not None
+        and metadata.get("data_manifest_sha256") != expected_data_manifest_sha256
+    ):
+        raise ValueError("legacy adapter training-data manifest mismatch")
     if not isinstance(metadata.get("runtime"), dict):
         raise ValueError("legacy adapter runtime identity is missing")
+    packages = metadata["runtime"].get("packages")
+    if not isinstance(packages, dict):
+        raise ValueError("legacy adapter runtime package identity is missing")
+    validate_legacy_runtime_packages(packages)
     return dict(metadata)
 
 
@@ -72,6 +84,7 @@ def validate_artifact(
     *,
     expected_method: str,
     expected_seed: int,
+    expected_data_manifest_sha256: str | None = None,
 ) -> Dict[str, Any]:
     adapter_dir = Path(adapter_dir)
     required = {
@@ -90,6 +103,7 @@ def validate_artifact(
         metadata,
         expected_method=expected_method,
         expected_seed=expected_seed,
+        expected_data_manifest_sha256=expected_data_manifest_sha256,
     )
     protocol = json.loads(required["protocol"].read_text(encoding="utf-8"))
     validate_legacy_protocol(protocol)
@@ -113,11 +127,13 @@ def main() -> None:
     parser.add_argument("--adapter_dir", type=Path, required=True)
     parser.add_argument("--expected_method", choices=("native_geo", "evq_cosh"), required=True)
     parser.add_argument("--expected_seed", type=int, choices=(42, 43, 44), required=True)
+    parser.add_argument("--expected_data_manifest_sha256")
     args = parser.parse_args()
     metadata = validate_artifact(
         args.adapter_dir,
         expected_method=args.expected_method,
         expected_seed=args.expected_seed,
+        expected_data_manifest_sha256=args.expected_data_manifest_sha256,
     )
     print(json.dumps({
         "status": "valid",

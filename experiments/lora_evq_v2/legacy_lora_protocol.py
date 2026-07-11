@@ -22,6 +22,18 @@ LEGACY_SEEDS = (42, 43, 44)
 OFFICIAL_LONGALIGN_SOURCE = "zai-org/LongAlign-10k"
 OFFICIAL_LONGALIGN_REVISION = "12f17c4baff1001f0d44c4f8feab09ee2ee8c6dc"
 OFFICIAL_LONGALIGN_RAW_SHA256 = "d7a1c39738e645ae1d0f8609a3cd62e50a3fa982e23cb752f64630bdbb7cee08"
+PAPER_LONGALPACA_SOURCE = "Yukang/LongAlpaca-12k"
+PAPER_LONGALPACA_REVISION = "upstream_revision_unresolved"
+PAPER_LONGALPACA_RAW_SHA256 = "090b348755c728cfb4b13fa443b54a0cb4e5128a92f142c6a52c5b4ff0f55e1f"
+PAPER_LONGALPACA_PROVENANCE_STATUS = "best_effort_reconstruction_from_recovered_public_bytes"
+LEGACY_RUNTIME_PACKAGES = {
+    "torch": "2.8.0+cu128",
+    "transformers": "4.57.6",
+    "peft": "0.17.1",
+    "accelerate": "1.10.1",
+    "datasets": "4.5.0",
+    "triton": "3.4.0",
+}
 
 _HEX_64 = re.compile(r"^[0-9a-f]{64}$")
 
@@ -65,6 +77,57 @@ def validate_source_receipt(receipt: Mapping[str, Any]) -> Dict[str, Any]:
     return dict(receipt)
 
 
+def validate_training_source_receipt(receipt: Mapping[str, Any]) -> Dict[str, Any]:
+    """Validate either the pinned official control or the recovered paper lineage.
+
+    The recovered LongAlpaca bytes are hash-pinned, but the upstream Hub
+    revision was not preserved.  The explicit provenance status prevents this
+    best-effort reconstruction from being mislabeled as bitwise historical
+    provenance.
+    """
+    if receipt.get("source_id") == OFFICIAL_LONGALIGN_SOURCE:
+        return validate_source_receipt(receipt)
+    return validate_paper_longalpaca_receipt(receipt)
+
+
+def validate_paper_longalpaca_receipt(receipt: Mapping[str, Any]) -> Dict[str, Any]:
+    """Accept only the recovered, hash-pinned paper-lineage LongAlpaca bytes."""
+    required = {
+        "source_id",
+        "revision",
+        "split",
+        "filename",
+        "raw_sha256",
+        "provenance_status",
+    }
+    missing = sorted(required - set(receipt))
+    if missing:
+        raise ValueError(f"source receipt missing fields: {', '.join(missing)}")
+    expected = {
+        "source_id": PAPER_LONGALPACA_SOURCE,
+        "revision": PAPER_LONGALPACA_REVISION,
+        "split": "train",
+        "filename": "LongAlpaca-12k_raw.json",
+        "raw_sha256": PAPER_LONGALPACA_RAW_SHA256,
+        "provenance_status": PAPER_LONGALPACA_PROVENANCE_STATUS,
+    }
+    for key, value in expected.items():
+        if receipt.get(key) != value:
+            raise ValueError(f"paper LongAlpaca source mismatch for {key}")
+    return dict(receipt)
+
+
+def validate_legacy_runtime_packages(packages: Mapping[str, Any]) -> Dict[str, str]:
+    """Reject package drift before a rented GPU loads the model."""
+    for name, expected in LEGACY_RUNTIME_PACKAGES.items():
+        actual = packages.get(name)
+        if actual != expected:
+            raise ValueError(
+                f"legacy runtime package mismatch for {name}: {actual!r} != {expected!r}"
+            )
+    return {name: str(packages[name]) for name in LEGACY_RUNTIME_PACKAGES}
+
+
 def legacy_run_name(method: str, seed: int) -> str:
     if method not in LEGACY_METHODS:
         raise ValueError(f"unsupported legacy method: {method}")
@@ -75,7 +138,7 @@ def legacy_run_name(method: str, seed: int) -> str:
 
 
 def legacy_eval_filename(variant: str) -> str:
-    allowed = {"base_geo", "base_evq_tau1414"}
+    allowed = {"base_geo", "base_evq_tau1414", "base_geo_longalpaca", "geo_longalpaca_s42"}
     allowed.update(
         legacy_run_name(method, seed)
         for method in LEGACY_METHODS

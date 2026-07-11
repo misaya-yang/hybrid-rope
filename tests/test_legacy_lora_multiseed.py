@@ -1,4 +1,5 @@
 import json
+import inspect
 import math
 import re
 import tempfile
@@ -8,10 +9,16 @@ from pathlib import Path
 
 import torch
 
+from experiments.lora_evq_v2 import legacy_lora_protocol
 from experiments.lora_evq_v2.legacy_lora_protocol import (
     LEGACY_METHODS,
+    LEGACY_RUNTIME_PACKAGES,
     LEGACY_SEEDS,
     OFFICIAL_LONGALIGN_RAW_SHA256,
+    PAPER_LONGALPACA_PROVENANCE_STATUS,
+    PAPER_LONGALPACA_RAW_SHA256,
+    PAPER_LONGALPACA_REVISION,
+    PAPER_LONGALPACA_SOURCE,
     canonical_training_protocol,
     legacy_eval_filename,
     legacy_run_name,
@@ -19,6 +26,10 @@ from experiments.lora_evq_v2.legacy_lora_protocol import (
     validate_complete_matrix,
     validate_legacy_protocol,
     validate_source_receipt,
+    validate_training_source_receipt,
+)
+from experiments.lora_evq_v2.prepare_legacy_longalpaca_data import (
+    convert_longalpaca_records_to_legacy_jsonl,
 )
 from experiments.lora_evq_v2.prepare_legacy_longalign_data import (
     compact_tokenized_row,
@@ -31,6 +42,7 @@ from experiments.lora_evq_v2.validate_legacy_lora_artifact import (
 from experiments.lora_evq_v2.train_evq_lora import (
     LoraRopeGeometry,
     resolve_legacy_resume_checkpoint,
+    training_dataset_identifier,
     validate_legacy_model_geometry,
     validate_strict_legacy_args,
 )
@@ -70,6 +82,65 @@ class LegacyProtocolTests(unittest.TestCase):
             invalid[key] = "unknown"
             with self.assertRaises(ValueError):
                 validate_source_receipt(invalid)
+
+    def test_paper_longalpaca_receipt_is_hash_pinned_and_explicitly_best_effort(self):
+        receipt = {
+            "source_id": PAPER_LONGALPACA_SOURCE,
+            "revision": PAPER_LONGALPACA_REVISION,
+            "split": "train",
+            "filename": "LongAlpaca-12k_raw.json",
+            "raw_sha256": PAPER_LONGALPACA_RAW_SHA256,
+            "provenance_status": PAPER_LONGALPACA_PROVENANCE_STATUS,
+        }
+        self.assertEqual(validate_training_source_receipt(receipt), receipt)
+        for key in ("raw_sha256", "provenance_status"):
+            invalid = dict(receipt)
+            invalid[key] = "unknown"
+            with self.assertRaises(ValueError):
+                validate_training_source_receipt(invalid)
+
+    def test_paper_specific_receipt_rejects_official_longalign(self):
+        self.assertTrue(
+            hasattr(legacy_lora_protocol, "validate_paper_longalpaca_receipt"),
+            "paper launcher needs a LongAlpaca-only receipt validator",
+        )
+        official_longalign = {
+            "source_id": "zai-org/LongAlign-10k",
+            "revision": "12f17c4baff1001f0d44c4f8feab09ee2ee8c6dc",
+            "split": "train",
+            "filename": "long.jsonl",
+            "raw_sha256": OFFICIAL_LONGALIGN_RAW_SHA256,
+        }
+        with self.assertRaises(ValueError):
+            legacy_lora_protocol.validate_paper_longalpaca_receipt(official_longalign)
+
+    def test_locked_runtime_rejects_package_drift(self):
+        self.assertTrue(hasattr(legacy_lora_protocol, "validate_legacy_runtime_packages"))
+        locked = {
+            "torch": "2.8.0+cu128",
+            "transformers": "4.57.6",
+            "peft": "0.17.1",
+            "accelerate": "1.10.1",
+            "datasets": "4.5.0",
+            "triton": "3.4.0",
+        }
+        self.assertEqual(
+            legacy_lora_protocol.validate_legacy_runtime_packages(locked),
+            locked,
+        )
+        drifted = dict(locked, transformers="5.13.0")
+        with self.assertRaises(ValueError):
+            legacy_lora_protocol.validate_legacy_runtime_packages(drifted)
+
+    def test_longalpaca_eval_names_do_not_alias_longalign_results(self):
+        self.assertEqual(
+            legacy_eval_filename("geo_longalpaca_s42"),
+            "eval_geo_longalpaca_s42.json",
+        )
+        self.assertEqual(
+            variant_spec("geo_longalpaca_s42"),
+            {"method": "native_geo", "seed": 42, "requires_adapter": True},
+        )
 
     def test_canonical_protocol_is_exact_and_rejects_drift(self):
         protocol = canonical_training_protocol(
@@ -137,6 +208,34 @@ class LegacyProtocolTests(unittest.TestCase):
 
 
 class FrozenDataTests(unittest.TestCase):
+    def test_longalpaca_conversion_reproduces_legacy_messages_jsonl(self):
+        rows = [
+            {"instruction": "Question", "input": "Context", "output": "Answer"},
+            {"messages": [{"role": "user", "content": "Already normalized"}]},
+            {"unsupported": True},
+        ]
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "legacy.jsonl"
+            stats = convert_longalpaca_records_to_legacy_jsonl(rows, output)
+            records = [json.loads(line) for line in output.read_text(encoding="utf-8").splitlines()]
+        self.assertEqual(stats, {"source_rows_seen": 3, "converted_rows": 2, "unsupported_rows": 1})
+        self.assertEqual(
+            records[0],
+            {"messages": [
+                {"role": "user", "content": "Question\n\nContext"},
+                {"role": "assistant", "content": "Answer"},
+            ]},
+        )
+        self.assertEqual(records[1]["messages"][0]["content"], "Already normalized")
+
+    def test_strict_metadata_uses_manifest_source_not_legacy_default_name(self):
+        args = Namespace(dataset_name="THUDM/LongAlign-10k", local_data_path=None)
+        manifest = {"source": {"source_id": PAPER_LONGALPACA_SOURCE}}
+        self.assertEqual(
+            training_dataset_identifier(args, manifest),
+            PAPER_LONGALPACA_SOURCE,
+        )
+
     def test_first_n_accepted_rows_are_tokenized_and_split_deterministically(self):
         rows = [
             {"messages": [{"role": "user", "content": "one two three"}]},
@@ -163,6 +262,45 @@ class FrozenDataTests(unittest.TestCase):
         self.assertEqual(first["train_indices"].numel(), 1)
         self.assertEqual(first["validation_indices"].numel(), 1)
 
+    def test_strict_tensor_validation_rejects_corrupt_prepared_data(self):
+        from experiments.lora_evq_v2 import train_evq_lora
+
+        self.assertTrue(hasattr(train_evq_lora, "validate_prepared_training_data"))
+        manifest = {
+            "statistics": {
+                "tokenized_rows": 3,
+                "train_rows": 2,
+                "validation_rows": 1,
+                "minimum_length": 64,
+                "maximum_length": 64,
+            }
+        }
+        valid = {
+            "tokens": torch.arange(192, dtype=torch.int32),
+            "offsets": torch.tensor([0, 64, 128, 192], dtype=torch.int64),
+            "train_indices": torch.tensor([0, 2], dtype=torch.int32),
+            "validation_indices": torch.tensor([1], dtype=torch.int32),
+        }
+        train_evq_lora.validate_prepared_training_data(valid, manifest, vocab_size=256)
+        corruptions = []
+        bad_offsets = {key: value.clone() for key, value in valid.items()}
+        bad_offsets["offsets"][2] = 1
+        corruptions.append(bad_offsets)
+        overlapping = {key: value.clone() for key, value in valid.items()}
+        overlapping["validation_indices"][0] = 2
+        corruptions.append(overlapping)
+        out_of_vocab = {key: value.clone() for key, value in valid.items()}
+        out_of_vocab["tokens"][0] = 256
+        corruptions.append(out_of_vocab)
+        for corrupted in corruptions:
+            with self.subTest(corrupted=corrupted):
+                with self.assertRaises(ValueError):
+                    train_evq_lora.validate_prepared_training_data(
+                        corrupted,
+                        manifest,
+                        vocab_size=256,
+                    )
+
 
 class LegacyArtifactTests(unittest.TestCase):
     def test_final_metadata_requires_step_300_and_exact_protocol(self):
@@ -184,10 +322,68 @@ class LegacyArtifactTests(unittest.TestCase):
             "data_manifest_sha256": "1" * 64,
             "model_manifest_sha256": "2" * 64,
             "code_sha256": "f" * 64,
-            "runtime": {"python": "test"},
+            "runtime": {"python": "test", "packages": dict(LEGACY_RUNTIME_PACKAGES)},
         }
         validate_legacy_metadata(metadata, expected_method="native_geo", expected_seed=42)
         metadata["global_step"] = 299
+        with self.assertRaises(ValueError):
+            validate_legacy_metadata(metadata, expected_method="native_geo", expected_seed=42)
+
+    def test_artifact_validator_binds_expected_data_manifest(self):
+        self.assertIn(
+            "expected_data_manifest_sha256",
+            inspect.signature(validate_legacy_metadata).parameters,
+        )
+        protocol = canonical_training_protocol(
+            method="native_geo",
+            seed=42,
+            data_manifest_sha256="1" * 64,
+            model_manifest_sha256="2" * 64,
+            code_sha256="f" * 64,
+        )
+        metadata = {
+            "objective": "legacy_longalign_full_token_causal_lm_v2",
+            "status": "complete",
+            "global_step": 300,
+            "protocol": protocol,
+            "protocol_sha256": "3" * 64,
+            "adapter_sha256": "4" * 64,
+            "frequency_sha256": "5" * 64,
+            "data_manifest_sha256": "1" * 64,
+            "model_manifest_sha256": "2" * 64,
+            "code_sha256": "f" * 64,
+            "runtime": {"python": "test", "packages": dict(LEGACY_RUNTIME_PACKAGES)},
+        }
+        with self.assertRaises(ValueError):
+            validate_legacy_metadata(
+                metadata,
+                expected_method="native_geo",
+                expected_seed=42,
+                expected_data_manifest_sha256="9" * 64,
+            )
+
+    def test_artifact_validator_rejects_runtime_package_drift(self):
+        protocol = canonical_training_protocol(
+            method="native_geo",
+            seed=42,
+            data_manifest_sha256="1" * 64,
+            model_manifest_sha256="2" * 64,
+            code_sha256="f" * 64,
+        )
+        metadata = {
+            "objective": "legacy_longalign_full_token_causal_lm_v2",
+            "status": "complete",
+            "global_step": 300,
+            "protocol": protocol,
+            "protocol_sha256": "3" * 64,
+            "adapter_sha256": "4" * 64,
+            "frequency_sha256": "5" * 64,
+            "data_manifest_sha256": "1" * 64,
+            "model_manifest_sha256": "2" * 64,
+            "code_sha256": "f" * 64,
+            "runtime": {"packages": dict(LEGACY_RUNTIME_PACKAGES)},
+        }
+        metadata["runtime"]["packages"]["transformers"] = "5.13.0"
         with self.assertRaises(ValueError):
             validate_legacy_metadata(metadata, expected_method="native_geo", expected_seed=42)
 
@@ -250,6 +446,63 @@ class LegacyArtifactTests(unittest.TestCase):
                 output / "checkpoint-100",
             )
 
+    def test_strict_resume_rejects_checkpoint_protocol_drift(self):
+        from experiments.lora_evq_v2 import train_evq_lora
+
+        self.assertIn(
+            "expected_protocol",
+            inspect.signature(resolve_legacy_resume_checkpoint).parameters,
+        )
+        self.assertTrue(hasattr(train_evq_lora, "write_legacy_checkpoint_receipt"))
+        protocol = canonical_training_protocol(
+            method="native_geo",
+            seed=42,
+            data_manifest_sha256="1" * 64,
+            model_manifest_sha256="2" * 64,
+            code_sha256="f" * 64,
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary)
+            checkpoint = output / "checkpoint-100"
+            checkpoint.mkdir()
+            (checkpoint / "trainer_state.json").write_text(
+                json.dumps({"global_step": 100}), encoding="utf-8"
+            )
+            for name in (
+                "adapter_model.safetensors",
+                "adapter_config.json",
+                "optimizer.pt",
+                "scheduler.pt",
+                "rng_state.pth",
+                "training_args.bin",
+            ):
+                (checkpoint / name).write_bytes(b"test")
+            train_evq_lora.write_legacy_checkpoint_receipt(
+                checkpoint,
+                protocol,
+                LEGACY_RUNTIME_PACKAGES,
+            )
+            self.assertEqual(
+                resolve_legacy_resume_checkpoint(
+                    output,
+                    "auto",
+                    expected_protocol=protocol,
+                    expected_runtime_packages=LEGACY_RUNTIME_PACKAGES,
+                ),
+                checkpoint,
+            )
+            receipt = checkpoint / "checkpoint_receipt.json"
+            record = json.loads(receipt.read_text(encoding="utf-8"))
+            record["code_sha256"] = "0" * 64
+            receipt.write_text(json.dumps(record), encoding="utf-8")
+            with self.assertRaises(RuntimeError):
+                resolve_legacy_resume_checkpoint(
+                    output,
+                    "auto",
+                    expected_protocol=protocol,
+                    expected_runtime_packages=LEGACY_RUNTIME_PACKAGES,
+                )
+
     def test_strict_geometry_rejects_model_drift(self):
         config = Namespace(
             model_type="llama",
@@ -265,6 +518,14 @@ class LegacyArtifactTests(unittest.TestCase):
         config.num_key_value_heads = 4
         with self.assertRaises(ValueError):
             validate_legacy_model_geometry(config, LoraRopeGeometry(128, 500000.0))
+
+    def test_strict_training_uses_explicit_single_gpu_map(self):
+        source = (
+            Path(__file__).resolve().parents[1]
+            / "experiments/lora_evq_v2/train_evq_lora.py"
+        ).read_text(encoding="utf-8")
+        self.assertIn('"device_map": {"": 0} if args.strict_legacy_protocol else "auto"', source)
+        self.assertIn("CPU or disk offload", source)
 
 
 class LegacyEvaluationTests(unittest.TestCase):
@@ -283,6 +544,51 @@ class LegacyEvaluationTests(unittest.TestCase):
         )
         with self.assertRaises(ValueError):
             variant_spec("historical_evq_seed42")
+
+    def test_longalpaca_evaluation_binds_adapter_to_longalpaca_manifest(self):
+        from experiments.lora_evq_v2 import eval_legacy_lora_matched
+
+        self.assertTrue(
+            hasattr(eval_legacy_lora_matched, "validate_variant_training_manifest")
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "manifest.json"
+            path.write_text(json.dumps({"source": {
+                "source_id": "zai-org/LongAlign-10k",
+                "revision": "12f17c4baff1001f0d44c4f8feab09ee2ee8c6dc",
+                "split": "train",
+                "filename": "long.jsonl",
+                "raw_sha256": OFFICIAL_LONGALIGN_RAW_SHA256,
+            }}), encoding="utf-8")
+            with self.assertRaises(ValueError):
+                eval_legacy_lora_matched.validate_variant_training_manifest(
+                    "geo_longalpaca_s42",
+                    path,
+                    {"data_manifest_sha256": "0" * 64},
+                )
+
+    def test_longalpaca_result_validation_binds_evaluator_code(self):
+        from experiments.lora_evq_v2 import eval_legacy_lora_matched
+
+        self.assertTrue(
+            hasattr(eval_legacy_lora_matched, "legacy_evaluation_code_sha256")
+        )
+        record = self._eval_record("base_geo_longalpaca", None, None, 10.0)
+        record["method"] = "native_geo"
+        record["frequency_provenance"]["method"] = "native_geo"
+        record["evaluation_code_sha256"] = "0" * 64
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "eval_base_geo_longalpaca.json"
+            output.write_text(json.dumps(record), encoding="utf-8")
+            with self.assertRaises(ValueError):
+                eval_legacy_lora_matched._validate_existing_result(
+                    output,
+                    variant="base_geo_longalpaca",
+                    spec={"method": "native_geo", "seed": None},
+                    model_manifest_sha256="7" * 64,
+                    eval_manifest_sha256="6" * 64,
+                    adapter_meta=None,
+                )
 
     def test_summary_requires_all_variants_and_shared_provenance(self):
         records = []
@@ -334,6 +640,54 @@ class LegacyEvaluationTests(unittest.TestCase):
         self.assertIn("eval_variant geo_longalign_s42 native_geo 42", body)
         self.assertNotIn("evq_cosh", body)
         self.assertNotRegex(body, r"\b43\b|\b44\b")
+
+    def test_longalpaca_launcher_only_runs_geo42_and_prunes_intermediate_checkpoints(self):
+        script = (
+            Path(__file__).resolve().parents[1]
+            / "scripts/2026-07/04_lora_longalpaca_paper_geo_s42.sh"
+        ).read_text(encoding="utf-8")
+        self.assertIn("train_arm", script)
+        self.assertIn("--rope_method native_geo", script)
+        self.assertIn("--seed 42", script)
+        self.assertIn("geo_longalpaca_s42", script)
+        self.assertIn("checkpoint-300", script)
+        self.assertIn("checkpoint-200", script)
+        self.assertNotIn("evq_cosh", script)
+        self.assertNotRegex(script, r"--seed (43|44)")
+
+    def test_longalpaca_launcher_runs_exact_dry_run_before_gpu_allocation(self):
+        script = (
+            Path(__file__).resolve().parents[1]
+            / "scripts/2026-07/04_lora_longalpaca_paper_geo_s42.sh"
+        ).read_text(encoding="utf-8")
+        self.assertIn("validate_paper_longalpaca_receipt", script)
+        self.assertIn("verify_hashes=True", script)
+        self.assertIn("--dry_run", script)
+
+    def test_longalpaca_launcher_prevents_duplicate_training_and_records_telemetry(self):
+        script = (
+            Path(__file__).resolve().parents[1]
+            / "scripts/2026-07/04_lora_longalpaca_paper_geo_s42.sh"
+        ).read_text(encoding="utf-8")
+        train_arm = re.search(r"train_arm\(\) \{(?P<body>.*?)\n\}", script, re.S)
+        self.assertIsNotNone(train_arm)
+        body = train_arm.group("body")
+        self.assertIn("flock", body)
+        self.assertIn("--expected_data_manifest_sha256", body)
+        self.assertIn("--loop-ms", body)
+        self.assertRegex(body, r"validated final adapter|validated completed adapter")
+
+    def test_longalpaca_launcher_fail_closes_compile_gpu_lease_and_telemetry(self):
+        script = (
+            Path(__file__).resolve().parents[1]
+            / "scripts/2026-07/04_lora_longalpaca_paper_geo_s42.sh"
+        ).read_text(encoding="utf-8")
+        self.assertIn("TORCHDYNAMO_DISABLE", script)
+        self.assertIn("torch._dynamo.config.suppress_errors", script)
+        self.assertGreaterEqual(script.count('"$LOCK_DIR/gpu.lock"'), 2)
+        self.assertIn("invocation_id", script)
+        self.assertIn("telemetry monitor produced no samples", script)
+        self.assertIn('"model_dir": str(model_dir.resolve())', script)
 
     @staticmethod
     def _eval_record(variant, method, seed, ppl):
