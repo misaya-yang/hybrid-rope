@@ -31,13 +31,13 @@ LOGS="$ROOT/logs"
 TELEMETRY="$ROOT/telemetry"
 PREFLIGHT_DIR="$ROOT/preflight"
 MODEL_HASH_RECEIPT="$PREFLIGHT_DIR/model_hash_verified.json"
-LOCK_DIR="$ROOT/locks"
+GPU_LOCK_FILE="${EVQ_GLOBAL_GPU_LOCK_FILE:-/tmp/evq-lora-single-gpu.lock}"
 export TORCHINDUCTOR_CACHE_DIR="${TORCHINDUCTOR_CACHE_DIR:-$ROOT/compile_cache/torchinductor}"
 export TRITON_CACHE_DIR="${TRITON_CACHE_DIR:-$ROOT/compile_cache/triton}"
 export TORCHINDUCTOR_FX_GRAPH_CACHE=1
 export TORCHINDUCTOR_AUTOGRAD_CACHE=1
 
-mkdir -p "$RESULTS" "$LOGS" "$TELEMETRY" "$PREFLIGHT_DIR" "$LOCK_DIR" \
+mkdir -p "$RESULTS" "$LOGS" "$TELEMETRY" "$PREFLIGHT_DIR" \
   "$TORCHINDUCTOR_CACHE_DIR" "$TRITON_CACHE_DIR"
 
 TRAIN_ARGS=(
@@ -129,6 +129,17 @@ model_dir, manifest_path, receipt_path = map(Path, sys.argv[1:])
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 manifest_sha256 = sha256_file(manifest_path)
 validate_model_manifest(model_dir, manifest, verify_hashes=False)
+model_inventory = [
+    {
+        "name": record["name"],
+        "device": (model_dir / record["name"]).stat().st_dev,
+        "inode": (model_dir / record["name"]).stat().st_ino,
+        "size": (model_dir / record["name"]).stat().st_size,
+        "mtime_ns": (model_dir / record["name"]).stat().st_mtime_ns,
+        "ctime_ns": (model_dir / record["name"]).stat().st_ctime_ns,
+    }
+    for record in manifest["files"]
+]
 receipt = {}
 if receipt_path.is_file():
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
@@ -137,6 +148,7 @@ receipt_is_current = (
     and receipt.get("model") == model_dir.name
     and receipt.get("model_dir") == str(model_dir.resolve())
     and receipt.get("model_manifest_sha256") == manifest_sha256
+    and receipt.get("model_inventory") == model_inventory
 )
 if not receipt_is_current:
     validate_model_manifest(model_dir, manifest, verify_hashes=True)
@@ -145,6 +157,7 @@ if not receipt_is_current:
         "model": model_dir.name,
         "model_dir": str(model_dir.resolve()),
         "model_manifest_sha256": manifest_sha256,
+        "model_inventory": model_inventory,
     }
     temporary = receipt_path.with_suffix(".json.tmp")
     temporary.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -215,8 +228,8 @@ eval_variant() {
     return
   fi
   command -v flock >/dev/null
-  exec 8>"$LOCK_DIR/gpu.lock"
-  flock -n 8 || { echo "GPU is already leased by this experiment root" >&2; exit 1; }
+  exec 8>"$GPU_LOCK_FILE"
+  flock -n 8 || { echo "the host GPU is already leased by another experiment" >&2; exit 1; }
   gpu_preflight
   record_gpu "eval_$variant"
   "$PYTHON" -u "$REPO_ROOT/experiments/lora_evq_v2/eval_legacy_lora_matched.py" \
@@ -235,9 +248,9 @@ train_arm() {
   }
   preflight
   command -v flock >/dev/null
-  exec 9>"$LOCK_DIR/gpu.lock"
-  flock -n 9 || { echo "GPU is already leased by this experiment root" >&2; exit 1; }
-  local manifest_sha256 telemetry_pid="" invocation_id telemetry_path
+  exec 9>"$GPU_LOCK_FILE"
+  flock -n 9 || { echo "the host GPU is already leased by another experiment" >&2; exit 1; }
+  local manifest_sha256 telemetry_pid="" training_pid="" invocation_id telemetry_path
   manifest_sha256="$(sha256sum "$DATA_MANIFEST" | awk '{print $1}')"
   if [[ -f "$CHECKPOINT/adapter_model.safetensors" ]]; then
     "$PYTHON" "$REPO_ROOT/experiments/lora_evq_v2/validate_legacy_lora_artifact.py" \
@@ -253,17 +266,38 @@ train_arm() {
   nvidia-smi --query-gpu=timestamp,utilization.gpu,memory.used,power.draw,temperature.gpu \
     --format=csv,noheader --loop-ms=5000 > "$telemetry_path" &
   telemetry_pid=$!
-  kill -0 "$telemetry_pid" 2>/dev/null || {
-    echo "telemetry monitor failed to start" >&2
+  trap 'if [[ -n "${training_pid:-}" ]]; then kill "$training_pid" 2>/dev/null || true; fi; if [[ -n "${telemetry_pid:-}" ]]; then kill "$telemetry_pid" 2>/dev/null || true; fi' RETURN
+  for _ in 1 2 3 4 5; do
+    test -s "$telemetry_path" && break
+    kill -0 "$telemetry_pid" 2>/dev/null || {
+      echo "telemetry monitor failed before its first sample" >&2
+      exit 1
+    }
+    sleep 1
+  done
+  test -s "$telemetry_path" || {
+    echo "telemetry monitor produced no samples" >&2
     exit 1
   }
-  trap 'if [[ -n "${telemetry_pid:-}" ]]; then kill "$telemetry_pid" 2>/dev/null || true; fi' RETURN
   "$PYTHON" -u "$REPO_ROOT/experiments/lora_evq_v2/train_evq_lora.py" \
-    "${TRAIN_ARGS[@]}" 2>&1 | tee -a "$LOGS/train_geo_longalpaca_s42.log"
-  kill -0 "$telemetry_pid" 2>/dev/null || {
-    echo "telemetry monitor stopped before training completed" >&2
+    "${TRAIN_ARGS[@]}" > >(tee -a "$LOGS/train_geo_longalpaca_s42.log") 2>&1 &
+  training_pid=$!
+  while kill -0 "$training_pid" 2>/dev/null; do
+    if ! kill -0 "$telemetry_pid" 2>/dev/null; then
+      kill "$training_pid" 2>/dev/null || true
+      wait "$training_pid" 2>/dev/null || true
+      training_pid=""
+      echo "telemetry monitor stopped; training was terminated" >&2
+      exit 1
+    fi
+    sleep 5
+  done
+  if ! wait "$training_pid"; then
+    training_pid=""
+    echo "Geo-42 training failed" >&2
     exit 1
-  }
+  fi
+  training_pid=""
   kill "$telemetry_pid" 2>/dev/null || true
   wait "$telemetry_pid" 2>/dev/null || true
   telemetry_pid=""

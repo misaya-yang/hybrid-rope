@@ -491,6 +491,20 @@ class LegacyArtifactTests(unittest.TestCase):
                 ),
                 checkpoint,
             )
+            (checkpoint / "optimizer.pt").write_bytes(b"tampered")
+            with self.assertRaises(RuntimeError):
+                resolve_legacy_resume_checkpoint(
+                    output,
+                    "auto",
+                    expected_protocol=protocol,
+                    expected_runtime_packages=LEGACY_RUNTIME_PACKAGES,
+                )
+            (checkpoint / "optimizer.pt").write_bytes(b"test")
+            train_evq_lora.write_legacy_checkpoint_receipt(
+                checkpoint,
+                protocol,
+                LEGACY_RUNTIME_PACKAGES,
+            )
             receipt = checkpoint / "checkpoint_receipt.json"
             record = json.loads(receipt.read_text(encoding="utf-8"))
             record["code_sha256"] = "0" * 64
@@ -577,6 +591,33 @@ class LegacyEvaluationTests(unittest.TestCase):
         record["method"] = "native_geo"
         record["frequency_provenance"]["method"] = "native_geo"
         record["evaluation_code_sha256"] = "0" * 64
+        record["evaluation_runtime_packages"] = dict(LEGACY_RUNTIME_PACKAGES)
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "eval_base_geo_longalpaca.json"
+            output.write_text(json.dumps(record), encoding="utf-8")
+            with self.assertRaises(ValueError):
+                eval_legacy_lora_matched._validate_existing_result(
+                    output,
+                    variant="base_geo_longalpaca",
+                    spec={"method": "native_geo", "seed": None},
+                    model_manifest_sha256="7" * 64,
+                    eval_manifest_sha256="6" * 64,
+                    adapter_meta=None,
+                )
+
+    def test_longalpaca_result_validation_binds_evaluator_runtime(self):
+        from experiments.lora_evq_v2 import eval_legacy_lora_matched
+
+        record = self._eval_record("base_geo_longalpaca", None, None, 10.0)
+        record["method"] = "native_geo"
+        record["frequency_provenance"]["method"] = "native_geo"
+        record["evaluation_code_sha256"] = (
+            eval_legacy_lora_matched.legacy_evaluation_code_sha256()
+        )
+        record["evaluation_runtime_packages"] = dict(
+            LEGACY_RUNTIME_PACKAGES,
+            transformers="5.13.0",
+        )
         with tempfile.TemporaryDirectory() as temporary:
             output = Path(temporary) / "eval_base_geo_longalpaca.json"
             output.write_text(json.dumps(record), encoding="utf-8")
@@ -684,10 +725,14 @@ class LegacyEvaluationTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         self.assertIn("TORCHDYNAMO_DISABLE", script)
         self.assertIn("torch._dynamo.config.suppress_errors", script)
-        self.assertGreaterEqual(script.count('"$LOCK_DIR/gpu.lock"'), 2)
+        self.assertGreaterEqual(script.count('"$GPU_LOCK_FILE"'), 2)
+        self.assertNotIn('"$LOCK_DIR/gpu.lock"', script)
         self.assertIn("invocation_id", script)
         self.assertIn("telemetry monitor produced no samples", script)
         self.assertIn('"model_dir": str(model_dir.resolve())', script)
+        self.assertIn("EVQ_GLOBAL_GPU_LOCK_FILE", script)
+        self.assertIn("training_pid", script)
+        self.assertIn("model_inventory", script)
 
     @staticmethod
     def _eval_record(variant, method, seed, ppl):

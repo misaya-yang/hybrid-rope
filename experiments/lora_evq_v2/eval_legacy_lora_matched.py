@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.metadata
 import json
 import math
 import os
@@ -21,6 +22,7 @@ try:
     from .legacy_lora_protocol import (
         legacy_eval_filename,
         sha256_file,
+        validate_legacy_runtime_packages,
         validate_paper_longalpaca_receipt,
     )
     from .prepare_positional_distill_data import tokenizer_source_fingerprint
@@ -47,6 +49,7 @@ except ImportError:
     from legacy_lora_protocol import (
         legacy_eval_filename,
         sha256_file,
+        validate_legacy_runtime_packages,
         validate_paper_longalpaca_receipt,
     )
     from prepare_positional_distill_data import tokenizer_source_fingerprint
@@ -119,6 +122,10 @@ def legacy_evaluation_code_sha256() -> str:
         Path(__file__).with_name("train_positional_distill.py").resolve(),
         Path(__file__).with_name("train_evq_lora.py").resolve(),
         Path(__file__).with_name("legacy_lora_protocol.py").resolve(),
+        Path(__file__).with_name("validate_legacy_lora_artifact.py").resolve(),
+        Path(__file__).with_name("prepare_legacy_model_manifest.py").resolve(),
+        Path(__file__).with_name("prepare_legacy_wikitext.py").resolve(),
+        Path(__file__).with_name("prepare_positional_distill_data.py").resolve(),
         (PROJECT_ROOT / "scripts/lib/rope/schedules.py").resolve(),
     )
     digest = hashlib.sha256()
@@ -128,6 +135,16 @@ def legacy_evaluation_code_sha256() -> str:
         digest.update(relative)
         digest.update(bytes.fromhex(sha256_file(path)))
     return digest.hexdigest()
+
+
+def current_legacy_evaluation_runtime_packages() -> Dict[str, str]:
+    packages = {}
+    for name in ("torch", "transformers", "peft", "accelerate", "datasets", "triton"):
+        try:
+            packages[name] = importlib.metadata.version(name)
+        except importlib.metadata.PackageNotFoundError:
+            packages[name] = None
+    return validate_legacy_runtime_packages(packages)
 
 
 def _load_eval_manifest(path: Path) -> tuple[Dict[str, Any], torch.Tensor]:
@@ -204,6 +221,10 @@ def _validate_existing_result(
         "evaluation_code_sha256"
     ) != legacy_evaluation_code_sha256():
         raise ValueError("existing LongAlpaca evaluation code hash mismatch")
+    if "longalpaca" in variant and record.get(
+        "evaluation_runtime_packages"
+    ) != current_legacy_evaluation_runtime_packages():
+        raise ValueError("existing LongAlpaca evaluation runtime mismatch")
     if record.get("frequency_provenance", {}).get("method") != spec["method"]:
         raise ValueError("existing evaluation frequency method mismatch")
     for length, context in (("8K", 8192), ("16K", 16384), ("32K", 32768)):
@@ -382,6 +403,7 @@ def main() -> None:
         ),
         "training_code_sha256": adapter_meta.get("code_sha256") if adapter_meta else None,
         "evaluation_code_sha256": legacy_evaluation_code_sha256(),
+        "evaluation_runtime_packages": current_legacy_evaluation_runtime_packages(),
         "training_runtime": adapter_meta.get("runtime") if adapter_meta else None,
         "frequency_provenance": frequency_provenance,
         "frequency_verification": {

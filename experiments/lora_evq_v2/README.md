@@ -202,12 +202,14 @@ The environment must pin the expected SHA-256 values through
 LongAlpaca receipt, prepared tensors, WikiText asset, runtime versions, full
 model-byte receipt and exact training arguments.  GPU phases additionally
 require a single BF16-capable Blackwell GPU with at least 90 GiB free memory,
-use a shared exclusive GPU lease across training and evaluation, reject
+use a host-global exclusive GPU lease across training and evaluation, reject
 CPU/disk offload and silent `torch.compile` disablement, and skip only
 artifacts that pass hash-bound validation.  Every recovery checkpoint carries
-an atomic receipt binding its step to the protocol, code, data/model manifests
-and exact runtime packages; automatic resume ignores any mismatched
-checkpoint.  Evaluation results are also bound to the evaluator code hash.
+an atomic receipt binding its actual files and step to the protocol, code,
+data/model manifests and exact runtime packages; automatic resume ignores any
+mismatched checkpoint.  Evaluation results are also bound to the evaluator
+dependency hash and full runtime lock.  A failed telemetry monitor terminates
+training instead of allowing an unobserved run to continue.
 Inductor, AOTAutograd and Triton caches are persistent across compatible runs,
 and each invocation keeps a distinct telemetry file.
 

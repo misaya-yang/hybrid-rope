@@ -70,6 +70,17 @@ class LoraRopeGeometry:
     rope_base: float
 
 
+LEGACY_CHECKPOINT_FILES = (
+    "adapter_model.safetensors",
+    "adapter_config.json",
+    "optimizer.pt",
+    "scheduler.pt",
+    "rng_state.pth",
+    "trainer_state.json",
+    "training_args.bin",
+)
+
+
 def validate_strict_legacy_args(args: argparse.Namespace) -> None:
     """Reject any drift from the historical scientific/runtime contract."""
     expected = {
@@ -140,17 +151,8 @@ def resolve_legacy_resume_checkpoint(
         candidates.sort(key=lambda path: int(path.name.removeprefix("checkpoint-")), reverse=True)
         if not candidates:
             return None
-    required_files = (
-        "adapter_model.safetensors",
-        "adapter_config.json",
-        "optimizer.pt",
-        "scheduler.pt",
-        "rng_state.pth",
-        "trainer_state.json",
-        "training_args.bin",
-    )
     for path in candidates:
-        missing = [name for name in required_files if not (path / name).is_file()]
+        missing = [name for name in LEGACY_CHECKPOINT_FILES if not (path / name).is_file()]
         if missing:
             if requested == "auto":
                 continue
@@ -218,6 +220,13 @@ def write_legacy_checkpoint_receipt(
         "model_manifest_sha256": protocol["model_manifest_sha256"],
         "code_sha256": protocol["code_sha256"],
         "runtime_packages": runtime_packages,
+        "files": {
+            name: {
+                "size": (checkpoint_dir / name).stat().st_size,
+                "sha256": sha256_file(checkpoint_dir / name),
+            }
+            for name in LEGACY_CHECKPOINT_FILES
+        },
     }
     path = checkpoint_dir / "checkpoint_receipt.json"
     temporary = path.with_suffix(".json.tmp")
@@ -255,6 +264,13 @@ def validate_legacy_checkpoint_receipt(
         "model_manifest_sha256": expected_protocol["model_manifest_sha256"],
         "code_sha256": expected_protocol["code_sha256"],
         "runtime_packages": expected_runtime_packages,
+        "files": {
+            name: {
+                "size": (checkpoint_dir / name).stat().st_size,
+                "sha256": sha256_file(checkpoint_dir / name),
+            }
+            for name in LEGACY_CHECKPOINT_FILES
+        },
     }
     if receipt != expected:
         raise ValueError(f"checkpoint protocol receipt mismatch: {checkpoint_dir}")
