@@ -5,9 +5,9 @@ set -Eeuo pipefail
 
 PHASE="${1:-}"
 case "$PHASE" in
-  preflight|prepare-data|baseline|seed42|remaining-seeds|eval|summarize) ;;
+  preflight|prepare-data|geo-control|baseline|seed42|remaining-seeds|eval|summarize) ;;
   *)
-    echo "usage: $0 {preflight|prepare-data|baseline|seed42|remaining-seeds|eval|summarize}" >&2
+    echo "usage: $0 {preflight|prepare-data|geo-control|baseline|seed42|remaining-seeds|eval|summarize}" >&2
     exit 2
     ;;
 esac
@@ -132,6 +132,22 @@ PY
   if command -v nvidia-smi >/dev/null; then nvidia-smi -L; fi
 }
 
+run_geo_control() {
+  [[ "${EVQ_LEGACY_UNLOCK_GEO_CONTROL:-NO}" == YES ]] || {
+    echo "geo-control is cost-gated; set EVQ_LEGACY_UNLOCK_GEO_CONTROL=YES explicitly" >&2
+    exit 1
+  }
+  preflight
+  require_file "$MODEL_MANIFEST"
+  require_file "$DATA_DIR/manifest.json"
+  require_file "$EVAL_DATA_DIR/manifest.json"
+  eval_variant base_geo
+  train_arm native_geo 42
+  eval_variant geo_longalign_s42 native_geo 42
+  "$PYTHON" "$REPO_ROOT/experiments/lora_evq_v2/summarize_legacy_geo_control.py" \
+    --results_dir "$RESULTS" --output "$ROOT/legacy_geo_control_summary.json"
+}
+
 case "$PHASE" in
   preflight)
     preflight
@@ -146,6 +162,9 @@ case "$PHASE" in
     "$PYTHON" "$REPO_ROOT/experiments/lora_evq_v2/prepare_legacy_wikitext.py" \
       --parquet "$RAW_WIKITEXT" --expected_raw_sha256 "$RAW_WIKITEXT_SHA256" \
       --tokenizer "$MODEL" --output_dir "$EVAL_DATA_DIR"
+    ;;
+  geo-control)
+    run_geo_control
     ;;
   baseline)
     require_file "$MODEL_MANIFEST"

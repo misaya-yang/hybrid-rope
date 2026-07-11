@@ -1,5 +1,6 @@
 import json
 import math
+import re
 import tempfile
 import unittest
 from argparse import Namespace
@@ -35,6 +36,9 @@ from experiments.lora_evq_v2.train_evq_lora import (
 )
 from experiments.lora_evq_v2.eval_legacy_lora_matched import variant_spec
 from experiments.lora_evq_v2.summarize_legacy_lora_matched import summarize_records
+from experiments.lora_evq_v2.summarize_legacy_geo_control import (
+    summarize_geo_control_records,
+)
 
 
 class FakeTokenizer:
@@ -301,6 +305,35 @@ class LegacyEvaluationTests(unittest.TestCase):
         non_finite[-1]["ppl"]["32K"]["ppl"] = float("nan")
         with self.assertRaises(ValueError):
             summarize_records(non_finite)
+
+    def test_geo_control_summary_isolates_finetuning_drift(self):
+        base = self._eval_record("base_geo", None, None, 10.0)
+        geo = self._eval_record("geo_longalign_s42", "native_geo", 42, 13.0)
+        summary = summarize_geo_control_records([base, geo])
+        self.assertEqual(summary["seed"], 42)
+        self.assertEqual(summary["comparison"], "Geo+LoRA-s42 minus Base-Geo")
+        self.assertTrue(math.isclose(summary["metrics"]["ppl@8K"]["drift_pct"], 30.0))
+        self.assertEqual(summary["metrics"]["ppl@8K"]["base_geo"], 10.0)
+        self.assertEqual(summary["metrics"]["ppl@8K"]["geo_lora"], 13.0)
+        mismatched = json.loads(json.dumps(geo))
+        mismatched["eval_manifest_sha256"] = "f" * 64
+        with self.assertRaises(ValueError):
+            summarize_geo_control_records([base, mismatched])
+
+    def test_geo_control_launcher_cannot_start_evq_or_other_seeds(self):
+        script = (
+            Path(__file__).resolve().parents[1]
+            / "scripts/2026-07/03_lora_longalign_matched_multiseed.sh"
+        ).read_text(encoding="utf-8")
+        match = re.search(r"run_geo_control\(\) \{(?P<body>.*?)\n\}", script, re.S)
+        self.assertIsNotNone(match)
+        body = match.group("body")
+        self.assertIn("preflight", body)
+        self.assertIn("eval_variant base_geo", body)
+        self.assertIn("train_arm native_geo 42", body)
+        self.assertIn("eval_variant geo_longalign_s42 native_geo 42", body)
+        self.assertNotIn("evq_cosh", body)
+        self.assertNotRegex(body, r"\b43\b|\b44\b")
 
     @staticmethod
     def _eval_record(variant, method, seed, ppl):

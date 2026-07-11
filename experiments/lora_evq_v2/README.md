@@ -156,3 +156,22 @@ EVQ-minus-Geo deltas; n=3 is descriptive and is not a significance claim.
 Because the original raw file hashes and runtime have not been recovered, the
 honest label is **protocol-matched multi-seed rerun on verified LongAlign-10k**,
 not bitwise reproduction of the historical single-seed row.
+
+### Seed-42 Geo fine-tuning control only
+
+Before spending GPU time on EVQ or additional seeds, the dedicated
+`geo-control` phase tests whether the historical 8K PPL increase from 7.42 to
+9.63 (about 29.8%) can be explained by the LongAlign/LoRA update itself. It
+runs exactly Base-Geo evaluation, a fresh 300-step native-Geo LoRA seed-42
+training arm, and Geo+LoRA evaluation. It cannot launch EVQ or seeds 43/44.
+
+```bash
+source /path/to/legacy_longalign_lora_v2/env.sh
+export EVQ_LEGACY_UNLOCK_GEO_CONTROL=YES
+bash scripts/2026-07/03_lora_longalign_matched_multiseed.sh geo-control
+```
+
+The output `legacy_geo_control_summary.json` reports 8K/16K/32K PPL drift.
+The pre-registered diagnostic gate treats Geo's 8K drift as matching the
+historical tradeoff when it lies within 5 percentage points of 29.8%. This is
+single-seed attribution evidence, not a replicated effect.
