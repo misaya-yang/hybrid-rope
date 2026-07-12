@@ -3,8 +3,9 @@
 最后更新：2026-07-12（Asia/Shanghai）
 分支：`main`
 仓库整理 checkpoint：`1b97fdc`（`handoff: consolidate repository and rebuttal index [01]`）
+Temporal holdout checkpoint：`5bdec86`（`checkpoint: add temporal holdout evaluation`）
 整理前实验基线：`805878f`（`prepare exact FineWeb 3x1B tensors`）
-状态：仓库结构、paper 清理与 rebuttal control room 已提交到本地 `main`；工作树只保留独立的 LongAlpaca / temporal-holdout 实验开发改动。
+状态：仓库结构、paper 清理、rebuttal control room 与 LongAlpaca / temporal-holdout 评估代码均已提交到 `main`；未新增实验结果或修改论文指标。
 
 本文件是后续 AI 的**第一入口和状态索引**。它只保存可提交的仓库级信息，不保存服务器地址、凭据、私有绝对路径或实时进程信息。
 
@@ -62,34 +63,33 @@ EVQ-Cosh 的窄主张是：RoPE 的有限频率表也是 finite spectral budget�
 - `rebuttal/rebuttal_playbook.md` 是统一策略入口；`REVIEWER_TRIAGE_PLAYBOOK.md` 负责稳定 ID 和映射；Master Ledger 与 theory/LoRA audits 是深层索引。
 - 模拟审稿只能用于内部压力测试，不能当成 reviewer 原话。
 
-## 5. 当前工作树中必须保护的未提交工作
+## 5. Rebuttal-triggered 实验准备
 
-仓库整理、rebuttal consolidation 和 paper cleanup 已在 `1b97fdc` 中保存。以下实验开发仍未提交，不能因“清仓库”而丢弃或混入文档提交：
+仓库整理、rebuttal consolidation 和 paper cleanup 保存在 `1b97fdc`；以下实验准备保存在 `5bdec86`：
 
-1. LongAlpaca paper-lineage launcher：`scripts/2026-07/04_lora_longalpaca_paper_geo_s42.sh` 已有未提交修改，另有新的 EVQ wrapper。
-2. temporal-holdout 开发：新的 evaluator、data-prep 脚本和两个测试文件尚未提交。
+1. `scripts/2026-07/04_lora_longalpaca_paper_geo_s42.sh` 是受控的 Geo/EVQ seed-42 shared driver；`05_lora_longalpaca_paper_evq_s42.sh` 是只允许 preflight/train 的 EVQ wrapper。
+2. `scripts/data_prep/prepare_temporal_holdout_2026.py` 生成冻结、带 hash manifest 的 2026 temporal holdout；不把下载语料或 tokenized packs 提交进仓库。
+3. `eval_temporal_holdout_matched.py` 从同一次 32K forward 汇总 matched 8K/16K prefixes；`eval_temporal_holdout_three_arm.py` 比较 Geo base、Geo+LoRA、EVQ+LoRA 三臂。
+4. `scripts/2026-07/06_lora_temporal_three_arm_eval.sh` 对 adapter、语料 manifest、输出覆盖和 GPU 锁 fail closed。
 
-提交前必须按概念拆分审计；不要使用 `git reset --hard`、`git checkout --` 或 `git clean`。
+这些路径是 reviewer 问题触发后的 supporting evaluation 能力，不是已完成实验，也不是论文已报告证据。运行后必须先做 provenance 与 matched-protocol 审核，才能进入 rebuttal。
 
-## 6. Known issues / current breakage（已知问题）
+## 6. Known issues / current breakage and validation
 
-全量测试当前结果：`288 passed, 1 failed`。
+2026-07-12 在 `.venv` 中新鲜验证：`295 passed, 1 warning`。
 
-失败：
+唯一告警来自本机 Python 的 LibreSSL 2.8.3 与 urllib3 v2 兼容提示；不是测试失败或实验逻辑告警。
 
 ```text
-tests/test_legacy_lora_multiseed.py::LegacyEvaluationTests::
-test_longalpaca_launcher_only_runs_geo42_and_prunes_intermediate_checkpoints
+urllib3 v2 only supports OpenSSL 1.1.1+; ssl module uses LibreSSL 2.8.3
 ```
 
-最小复现：
+同一轮还通过：
 
-```bash
-.venv/bin/python -m pytest \
-  tests/test_legacy_lora_multiseed.py::LegacyEvaluationTests::test_longalpaca_launcher_only_runs_geo42_and_prunes_intermediate_checkpoints -q
-```
-
-原因：测试仍要求 launcher 含字面量 `--rope_method native_geo`，而当前未提交 launcher 使用受控变量 `--rope_method "$ROPE_METHOD"` 支持独立 wrapper。该改动不属于仓库整理，未擅自修复；应由该实验工作流统一决定测试契约。
+- temporal Python entrypoints `py_compile`；
+- rebuttal shell entrypoints `bash -n`；
+- reviewer supplement build 与 ZIP integrity；
+- `git diff --check` 和新增内容敏感信息扫描。
 
 ## 7. 安全验证命令
 
