@@ -8,6 +8,10 @@
 
 ```
 scripts/
+├── 2026-07/                    Rebuttal-time LoRA launchers（受控、按需运行）
+│   ├── 04_lora_longalpaca_paper_geo_s42.sh  Geo seed-42 shared driver
+│   ├── 05_lora_longalpaca_paper_evq_s42.sh  EVQ seed-42 thin wrapper
+│   └── 06_lora_temporal_three_arm_eval.sh   Frozen holdout three-arm gate
 ├── train.py                    Legacy LoRA/Anchored-Sigmoid 入口 (not primary EVQ-Cosh)
 ├── core_text_phases/           Phase 8–21 主实验链 ⭐
 │   ├── README.md               Phase Map + → Paper 映射
@@ -29,6 +33,7 @@ scripts/
 │   └── fig3_pe_dominant_scaling.py  Fig 3: PE-dominant scaling
 ├── data_prep/                  数据预处理
 │   ├── prepare_mixed_prior_dataset_v1.py  FineWeb-Edu tokenization
+│   ├── prepare_temporal_holdout_2026.py  Frozen 2026 temporal holdout packs
 │   ├── prepare_moving_mnist_video.py  Tokenized Moving MNIST video cache
 │   ├── prepare_videorope_assets.py  官方 VideoRoPE 轻量资产下载
 │   └── tokenize_synth.py       合成数据 tokenization
@@ -111,6 +116,8 @@ inv_freq_geo = evq_cosh_inv_freq(head_dim=64, tau=0.0)
 ## 维护规则
 
 - 脚本必须能追溯到论文 Figure/Table 或下一步实验计划，否则不应留在本目录
+- `2026-07/` 的 LoRA / temporal holdout 脚本是 rebuttal-triggered supporting path；
+  未实际运行并完成 provenance 审核前，不得写成论文结果
 - 新实验脚本放入 `core_text_phases/`，命名为 `phase{N}_{desc}.py`
 - 出图脚本放入 `figures/`，命名为 `fig{N}_{desc}.py`
 - 结果输出到 `results/core_text/phase{N}/`

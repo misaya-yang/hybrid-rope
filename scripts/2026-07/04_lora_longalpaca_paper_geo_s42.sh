@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Paper-lineage Geo-42 control for the recovered LongAlpaca-12k bytes.
-# This launcher cannot start EVQ or any additional seed.
+# Shared paper-lineage seed-42 driver for the recovered LongAlpaca-12k bytes.
+# Geo is the default. The EVQ wrapper may change only EVQ_PAPER_ROPE_METHOD.
 set -Eeuo pipefail
 
 PHASE="${1:-}"
@@ -19,13 +19,36 @@ MODEL="${EVQ_LORA_MODEL:?set EVQ_LORA_MODEL}"
 RAW="${EVQ_PAPER_LONGALPACA_JSON:?set EVQ_PAPER_LONGALPACA_JSON}"
 RAW_SHA256="${EVQ_PAPER_LONGALPACA_SHA256:?set EVQ_PAPER_LONGALPACA_SHA256}"
 ROOT="${EVQ_PAPER_LONGALPACA_ROOT:?set EVQ_PAPER_LONGALPACA_ROOT}"
+ROPE_METHOD="${EVQ_PAPER_ROPE_METHOD:-native_geo}"
+case "$ROPE_METHOD" in
+  native_geo)
+    ARM_LABEL="geo_longalpaca_s42"
+    UNLOCK_VALUE="${EVQ_PAPER_UNLOCK_GEO42:-NO}"
+    UNLOCK_HINT="EVQ_PAPER_UNLOCK_GEO42=YES"
+    ;;
+  evq_cosh)
+    ARM_LABEL="evq_longalpaca_tau1414_s42"
+    UNLOCK_VALUE="${EVQ_PAPER_UNLOCK_EVQ42:-NO}"
+    UNLOCK_HINT="EVQ_PAPER_UNLOCK_EVQ42=YES"
+    case "$PHASE" in
+      baseline|eval)
+        echo "EVQ uses the independent 2026 temporal-holdout evaluator; this driver only supports preflight/train" >&2
+        exit 2
+        ;;
+    esac
+    ;;
+  *)
+    echo "EVQ_PAPER_ROPE_METHOD must be native_geo or evq_cosh" >&2
+    exit 2
+    ;;
+esac
 DATA_MANIFEST="$ROOT/data/longalpaca/manifest.json"
 DATA_MANIFEST_SHA256="${EVQ_PAPER_LONGALPACA_MANIFEST_SHA256:?set EVQ_PAPER_LONGALPACA_MANIFEST_SHA256}"
 MODEL_MANIFEST="${EVQ_PAPER_MODEL_MANIFEST:?set EVQ_PAPER_MODEL_MANIFEST}"
 MODEL_MANIFEST_SHA256="${EVQ_PAPER_MODEL_MANIFEST_SHA256:?set EVQ_PAPER_MODEL_MANIFEST_SHA256}"
 EVAL_MANIFEST="${EVQ_PAPER_EVAL_MANIFEST:?set EVQ_PAPER_EVAL_MANIFEST}"
 EVAL_MANIFEST_SHA256="${EVQ_PAPER_EVAL_MANIFEST_SHA256:?set EVQ_PAPER_EVAL_MANIFEST_SHA256}"
-CHECKPOINT="$ROOT/checkpoints/geo_longalpaca_s42"
+CHECKPOINT="$ROOT/checkpoints/$ARM_LABEL"
 RESULTS="$ROOT/results"
 LOGS="$ROOT/logs"
 TELEMETRY="$ROOT/telemetry"
@@ -43,7 +66,7 @@ mkdir -p "$RESULTS" "$LOGS" "$TELEMETRY" "$PREFLIGHT_DIR" \
 TRAIN_ARGS=(
   --model_name "$MODEL"
   --output_dir "$CHECKPOINT"
-  --rope_method native_geo
+  --rope_method "$ROPE_METHOD"
   --tau 1.414
   --lora_r 64 --lora_alpha 128 --lora_dropout 0.05
   --lora_targets q_proj,k_proj,v_proj,o_proj
@@ -242,8 +265,8 @@ eval_variant() {
 }
 
 train_arm() {
-  [[ "${EVQ_PAPER_UNLOCK_GEO42:-NO}" == YES ]] || {
-    echo "Geo-42 is cost-gated; set EVQ_PAPER_UNLOCK_GEO42=YES explicitly" >&2
+  [[ "$UNLOCK_VALUE" == YES ]] || {
+    echo "$ARM_LABEL is cost-gated; set $UNLOCK_HINT explicitly" >&2
     exit 1
   }
   preflight
@@ -254,15 +277,15 @@ train_arm() {
   manifest_sha256="$(sha256sum "$DATA_MANIFEST" | awk '{print $1}')"
   if [[ -f "$CHECKPOINT/adapter_model.safetensors" ]]; then
     "$PYTHON" "$REPO_ROOT/experiments/lora_evq_v2/validate_legacy_lora_artifact.py" \
-      --adapter_dir "$CHECKPOINT" --expected_method native_geo --expected_seed 42 \
+      --adapter_dir "$CHECKPOINT" --expected_method "$ROPE_METHOD" --expected_seed 42 \
       --expected_data_manifest_sha256 "$manifest_sha256"
-    echo "[skip] validated completed adapter: geo_longalpaca_s42"
+    echo "[skip] validated completed adapter: $ARM_LABEL"
     return
   fi
   gpu_preflight
-  record_gpu "geo_longalpaca_s42"
+  record_gpu "$ARM_LABEL"
   invocation_id="$(date -u +%Y%m%dT%H%M%SZ)_$$"
-  telemetry_path="$TELEMETRY/geo_longalpaca_s42_${invocation_id}.csv"
+  telemetry_path="$TELEMETRY/${ARM_LABEL}_${invocation_id}.csv"
   nvidia-smi --query-gpu=timestamp,utilization.gpu,memory.used,power.draw,temperature.gpu \
     --format=csv,noheader --loop-ms=5000 > "$telemetry_path" &
   telemetry_pid=$!
@@ -280,7 +303,7 @@ train_arm() {
     exit 1
   }
   "$PYTHON" -u "$REPO_ROOT/experiments/lora_evq_v2/train_evq_lora.py" \
-    "${TRAIN_ARGS[@]}" > >(tee -a "$LOGS/train_geo_longalpaca_s42.log") 2>&1 &
+    "${TRAIN_ARGS[@]}" > >(tee -a "$LOGS/train_${ARM_LABEL}.log") 2>&1 &
   training_pid=$!
   while kill -0 "$training_pid" 2>/dev/null; do
     if ! kill -0 "$telemetry_pid" 2>/dev/null; then
@@ -294,7 +317,7 @@ train_arm() {
   done
   if ! wait "$training_pid"; then
     training_pid=""
-    echo "Geo-42 training failed" >&2
+    echo "$ARM_LABEL training failed" >&2
     exit 1
   fi
   training_pid=""
@@ -306,7 +329,7 @@ train_arm() {
     exit 1
   }
   "$PYTHON" "$REPO_ROOT/experiments/lora_evq_v2/validate_legacy_lora_artifact.py" \
-    --adapter_dir "$CHECKPOINT" --expected_method native_geo --expected_seed 42 \
+    --adapter_dir "$CHECKPOINT" --expected_method "$ROPE_METHOD" --expected_seed 42 \
     --expected_data_manifest_sha256 "$manifest_sha256"
   require_file "$CHECKPOINT/checkpoint-300/adapter_model.safetensors"
   rm -rf -- "$CHECKPOINT/checkpoint-100" "$CHECKPOINT/checkpoint-200"

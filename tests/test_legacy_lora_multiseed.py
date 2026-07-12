@@ -682,19 +682,31 @@ class LegacyEvaluationTests(unittest.TestCase):
         self.assertNotIn("evq_cosh", body)
         self.assertNotRegex(body, r"\b43\b|\b44\b")
 
-    def test_longalpaca_launcher_only_runs_geo42_and_prunes_intermediate_checkpoints(self):
+    def test_longalpaca_shared_launcher_keeps_seed42_and_method_gates(self):
         script = (
             Path(__file__).resolve().parents[1]
             / "scripts/2026-07/04_lora_longalpaca_paper_geo_s42.sh"
         ).read_text(encoding="utf-8")
         self.assertIn("train_arm", script)
-        self.assertIn("--rope_method native_geo", script)
+        self.assertIn('ROPE_METHOD="${EVQ_PAPER_ROPE_METHOD:-native_geo}"', script)
+        self.assertIn('--rope_method "$ROPE_METHOD"', script)
         self.assertIn("--seed 42", script)
         self.assertIn("geo_longalpaca_s42", script)
+        self.assertIn("evq_longalpaca_tau1414_s42", script)
+        self.assertIn("EVQ_PAPER_UNLOCK_GEO42", script)
+        self.assertIn("EVQ_PAPER_UNLOCK_EVQ42", script)
         self.assertIn("checkpoint-300", script)
         self.assertIn("checkpoint-200", script)
-        self.assertNotIn("evq_cosh", script)
         self.assertNotRegex(script, r"--seed (43|44)")
+
+        wrapper = (
+            Path(__file__).resolve().parents[1]
+            / "scripts/2026-07/05_lora_longalpaca_paper_evq_s42.sh"
+        ).read_text(encoding="utf-8")
+        self.assertIn("export EVQ_PAPER_ROPE_METHOD=evq_cosh", wrapper)
+        self.assertIn('preflight|train', wrapper)
+        self.assertNotIn("baseline|eval", wrapper)
+        self.assertIn('exec "$SCRIPT_DIR/04_lora_longalpaca_paper_geo_s42.sh"', wrapper)
 
     def test_longalpaca_launcher_runs_exact_dry_run_before_gpu_allocation(self):
         script = (
