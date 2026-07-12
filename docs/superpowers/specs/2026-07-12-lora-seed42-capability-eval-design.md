@@ -30,8 +30,9 @@ Checkpoint 200 is out of scope. Only the completed step-300 adapters are used.
 
 ### Short-context retention tasks
 
-- Deterministic subsets of MMLU, ARC-Challenge, HellaSwag, PIQA, and
-  WinoGrande.
+- Deterministic subsets of MMLU, ARC-Challenge, HellaSwag, OpenBookQA, and
+  WinoGrande. OpenBookQA replaces PIQA because the server's Datasets 5.0
+  runtime no longer supports PIQA's dataset-loading script.
 - Score choices by conditional answer likelihood; also report accuracy.
 
 ## Metrics

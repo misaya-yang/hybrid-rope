@@ -92,7 +92,7 @@ MCQA_REVISIONS = {
     "cais/mmlu": "c30699e8356da336a370243923dbaf21066bb9fe",
     "allenai/ai2_arc": "210d026faf9955653af8916fad021475a3f00453",
     "Rowan/hellaswag": "218ec52e09a7e7462a5400043bb9a69a41d06b76",
-    "ybisk/piqa": "2e8ac2dffd59bac8c3c6714948f4c551a0848bb0",
+    "allenai/openbookqa": "388097ea7776314e93a529163e0fea805b8a6454",
     "allenai/winogrande": "01e74176c63542e6b0bcb004dcdea22d94fb67b5",
 }
 ```
@@ -235,13 +235,15 @@ Assert that the CPU launcher contains no CUDA requirement, pins official sources
 Pin the external sources to:
 
 ```text
-NVIDIA/RULER main: 38da79d79519ef87aa46ae804f838e1eab7f86d7
+NVIDIA/RULER rulerv1-ns wrapper: e8bbff677ca2c239640dc90f93310dcf32408c93
+NVIDIA-NeMo/Skills RULER wrapper: f4a3fd8e524acd9abd1fea4387e8f179f6d51cf3
+NVIDIA/RULER data generator used by that wrapper: 38da79d79519ef87aa46ae804f838e1eab7f86d7
 adobe-research/NoLiMa: cb14780b249fecf2851127b2101a062c1b2c6430
 amodaresi/NoLiMa data: 378115b1f136b6ba78f90f78682bc55f70ec3ddd
 THUDM/LongBench: 5e628be450b7e67fb7ae6e201bd6d8f7056f7672
 ```
 
-Use resumable downloads, verify Git commit IDs, generate RULER 8K/16K/32K with the LLaMA tokenizer, download NoLiMa-Hard plus its book haystacks, reuse the existing LongBench v1 extraction, and invoke the Task 1 builder. The final command must run `--validate_only` before reporting success.
+Use the server-side GitHub proxy and `HF_ENDPOINT=https://hf-mirror.com`, verify source commit IDs, generate official RULERv1 8K/16K/32K data with the LLaMA tokenizer, download NoLiMa-Hard plus its book haystacks, reuse the existing LongBench v1 extraction, and invoke the Task 1 builder. The final command must run `--validate_only` before reporting success.
 
 - [ ] **Step 3: Implement the GPU launcher**
 
