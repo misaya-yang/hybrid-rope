@@ -2,6 +2,8 @@
 
 日期：2026-07-11
 
+> **2026-07-13 authority note:** 独立 full-paper audit 进一步确认 `c_coll=1.171` 的验证脚本未执行 optimization，并确认 Phase16 只有 9 个配置、采用不可直接混排的 pilot + selected-confirmation 设计；conditional proxy还必须区分utility通道数 `M` 与stiffness维度 `d_S`，LoRA rank/channel theory与MLA `d_eff=128`解释均撤回。关于 method identity、dimension scaling、collision calibration、Phase16 与最终 survivor set，以 `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` 为准。本文仍作为 ordinary-KL、transport proxy 与 cosh surrogate 的长推导参考。
+
 状态：`internal_verified_working_note`
 
 回复状态：`triage-only / needs_author_input`；候选英文仅是内部组件。只有真实 review 的逐字 trigger 到达、完成 comment mapping 且作者批准后，才可组装进入 author response；不得直接复制发送。

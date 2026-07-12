@@ -1,6 +1,8 @@
 # EVQ-Cosh Rebuttal Playbook — 2026-07-22
 
-最后核对：2026-07-12
+> **2026-07-13 fact gate:** 执行任何 reviewer response 前先读 `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` 与 `REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md`。旧 DAPE、official-YaRN、native-Geo、ordinary-KL、`c_coll` 或 Phase16-27-config 说法不得从本文件或历史材料恢复。
+
+最后核对：2026-07-13
 
 状态：`pre-review / reviewer-response-first / targeted-preparation`
 
@@ -26,7 +28,7 @@
 | \(\tau=d_{\mathrm{eff}}/\sqrt L\) | `paper/sections/03_theory.tex:90-117`; theory audit `:177-199`; existing sweep report | conditional proxy 提供 scaling 动机，经验 flat basin 支持 operating default | 全局最优、参数无关定理或 exact-kernel minimizer |
 | Primary I | `paper/tables/table2_evq_yarn_main.tex`; `data/curated/primary1_evq_yarn_10pct_raw.json` | 454M、3-seed、固定 scale 的 repository-defined progressive range overlay 上，EVQ substrate 获得更高 leverage | tuned/published YaRN dominance |
 | Primary II | `paper/tables/table4_pe_dominant.tex`; `data/curated/fig3_extreme_128.json`; fixed-EVQ 3-seed JSON | seed-42 \(128\to8192\) diagnostic 中，EVQ 优于 Geo 与 32-parameter learnable-frequency control | faithful DAPE comparison 或全表 3-seed结论 |
-| Primary III | `paper/sections/05_experiments.tex:49-52`; `paper/appendix/a3_supporting_results.tex:8-29` | stated \(d_{\mathrm{eff}}\) convention 下的 3-seed scarce-channel sensitivity | optimal MLA rule 或 production-identical DeepSeek result |
+| Primary III | `paper/sections/05_experiments.tex:49-52`; `paper/appendix/a3_supporting_results.tex:8-29` | actual head_dim=64、d_rope=32下的empirical tau=1.414 scarce-channel sensitivity；三seed batch不一致 | `d_eff=d_head`、optimal MLA rule或production-identical DeepSeek result |
 
 Supporting LoRA、video DiT、750M continuation、progressive training 不承担上述核心 claim；evidence tier 见 `paper/tables/table_evidence_tier.tex:12-20`。
 
@@ -235,10 +237,10 @@ C_{\mathrm{norm}}
 | 风险 | 可能问题 | 现有回答 | 暂不做什么 |
 | --- | --- | --- | --- |
 | Primary II single seed | 为什么 seed-42 是 primary？ | 明确是 PE-dominant diagnostic；fixed EVQ额外 seeds不能升级整张表 | 不补 seeds，不把 \(L=256\) 当 replication |
-| tuned scaler / scale | tuned YaRN会否消除优势？是否规模太小？ | 只守 fixed-scale overlay；承认 frontier-scale / tuned baseline缺失 | 不跑无触发的 scale grid；8B 机制实验不用于宣称 tuned-scaler dominance |
+| tuned scaler / scale | official YaRN会否保留优势？是否规模太小？ | 现有结果只守repo fixed-ramp；zero-shot official-formula诊断与matched YaRN training分开 | 不用算子替换冒充faithful YaRN method；真实review触发后按full audit两阶段执行 |
 | metric / capability | 100% PK是否 exact generation？ | PK=TF NLL-gap；同时给已有 8K AR和4K reversal | 不新增 benchmark，不隐藏 seed spread |
 | novelty | 是否只是调 base、插值或 search？ | 用 stage/object/DOF 区分；保持可组合性口径 | 不做 broad related-work rebuttal或组合 zoo |
-| midpoint Geo | 是否非标准 RoPE baseline？ | 承认 matched midpoint control，用于隔离 shape | 不补 native endpoint训练 |
+| midpoint Geo | 是否非标准 RoPE baseline？ | 承认 matched midpoint control，用于隔离 shape | 不用inference schedule swap冒充native baseline；如review触发则matched重训 |
 | MLA \(d_{\mathrm{eff}}\) | 为什么用 \(d_{\mathrm{head}}\)？ | calibrated convention，只支持 stated setting | 不补 ablation，不称 theorem |
 | undertraining | 短 token预算是否制造效应？ | 报 exact budgets、negative/reversal boundary、证据 tier | 不用 supporting LoRA/1B声称已关闭 |
 

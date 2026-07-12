@@ -1,6 +1,8 @@
 # Reviewer Triage Playbook
 
-最后更新：2026-07-12
+最后更新：2026-07-13
+
+> **Fact gate:** 方法身份、理论与协议以 `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` 为准；本文件旧的official-YaRN、DAPE、native-Geo、`d_eff=d_head`或LoRA matched-shape措辞均不得恢复。
 
 - Preparation：`triage_ready`
 - Response package：`needs_author_input`
@@ -37,7 +39,7 @@
 
 **Answer kernel**：直接承认 ordinary baseline-to-perturbed KL 的一阶变分为零，首项是 `O(τ^4)`，撤回旧 `O(τ²)` KL 解释。随后严格分三层：exact cosh surrogate theorem；conditional diffuse probability-transport proxy；empirically calibrated finite-`τ` basin selector。
 
-**Use**：`THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md`；精确定理假设；proxy 的条件；99-run 仅作经验 basin 支持。
+**Use**：`FULL_PAPER_INTEGRITY_AUDIT_20260713.md`；长推导见`THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md`；精确定理假设；区分utility通道数`M`与stiffness维度`d_S`。Phase16只能使用共同三seed weighted-PPL的7/9结果，不能作全局basin证明。
 
 **Avoid**：让 submitted/current paper source 覆盖 7/11 数学审计；说 ordinary KL 导出非零 operating point；说 `τ=d_eff/√L` globally optimal；把 proxy 当 trained-task theorem。
 
@@ -47,11 +49,11 @@
 
 **Trigger**：真实 reviewer 追问 tuned Geo / tuned YaRN、DAPE fidelity、single-seed、MLA convention、LoRA confound，或要求证明 EVQ 胜过最优 scaler。
 
-**Answer kernel**：只守住已隔离的比较。Primary I 是 matched-scale 3-seed substrate/range interaction，不是 separately tuned dominance；Primary II 的 Geo/DAPE/EVQ 是 retained seed-42 diagnostic；Primary III 是 3-seed MLA scarce-channel stress test，`d_eff=d_head` 是 architecture-specific operating convention。fresh Geo LoRA 使用 official LongAlign，historical EVQ 指向 LongAlpaca；无 same-data fresh EVQ pair 时 causal attribution 仍 blocked。
+**Answer kernel**：只守住已隔离的比较。Primary I 是 midpoint-Geo/EVQ 与repo fixed-ramp scaler的3-seed 2x2 factorial contrast，不是official/tuned YaRN；Primary II 的旧DAPE row实际是shared learnable inverse frequencies，retained headline为seed-42 diagnostic；Primary III actual head_dim=64、d_rope=32，tau=1.414为ad-hoc empirical setting且三seed batch不一致。旧LongAlign/LongAlpaca contrast仍不可作因果比较；fresh LongAlpaca pair只匹配training pipeline，native-Geo与midpoint-EVQ非同quantizer。
 
 **Use**：每项的 exact seed / scale / token / metric protocol；matched-scale factorial；Primary III 3-seed结果；LoRA 数据清单与 manifest。
 
-**Avoid**：把额外 EVQ seed 当完整 Geo/DAPE replication；把 matched-scale 写成 tuned-YaRN leaderboard；用不同语料的 Geo/EVQ 计算 causal delta；把 `d_eff` convention 写成 theorem。
+**Avoid**：把额外 EVQ seed 当完整 replication；把shared-frequency row称DAPE；把fixed-ramp写成official/tuned YaRN；用不同语料计算 causal delta；把native-Geo/midpoint-EVQ称纯shape control；把`d_eff=128`写成actual head dimension或theorem。
 
 **Action / readiness**：`CONCESSION + EVIDENCE + BOUNDARY + DEFER`；总体 `PARTIAL`，LoRA attribution 为 `PROVENANCE_BLOCKED`。只有真实 reviewer 点名且 artifact gate 已满足时才升级证据。
 
@@ -59,7 +61,7 @@
 
 **Trigger**：真实 reviewer 问 PK 是否为生成准确率、结果是否代表真实 long-context capability、是否存在反向边界，或是否可作 downstream / production claim。
 
-**Answer kernel**：PK 固定定义为 teacher-forced NLL-gap retrieval，AR exact 必须单列。8K AR exact 为 Geo+YaRN 0/0/0、EVQ+YaRN 58/18/98（mean 58%）；同时披露 4K Geo+YaRN 100%、EVQ+YaRN 77.3% 的反向边界。能力结论限定为已测协议，不升级为通用 downstream、production 或 latency/FLOP 结论。
+**Answer kernel**：PK 固定定义为 teacher-forced NLL-gap retrieval，AR exact 必须单列。按真实方法重标后，8K AR exact 为 Midpoint-Geo+fixed-ramp 0/0/0、EVQ+fixed-ramp 58/18/98（mean 58%）；同时披露4K的100%对77.3%反向边界。能力结论限定为已测协议，不升级为通用 downstream、production 或 latency/FLOP 结论。
 
 **Use**：TF 与 AR 并列；trial / seed scope；4K reversal；Primary I–III 的原始任务定位。
 
@@ -71,7 +73,7 @@
 
 **Trigger**：AC 或 reviewer 问：在理论纠错、baseline 缺口与 reporting 修正后，论文还剩什么可接受贡献？
 
-**Answer kernel**：剩余贡献是 training-time frequency allocation / finite spectral budget 这一第三设计轴，以及一个 closed-form、zero-learned-parameter 的 EVQ-Cosh 实例。证据核心是 Primary I matched-scale 3-seed complementarity、Primary II seed-42 PE-dominant diagnostic、Primary III 3-seed MLA stress test；理论核心只保留 exact surrogate、conditional proxy 与 empirical basin 的分层身份。
+**Answer kernel**：剩余贡献是 training-time frequency allocation / finite spectral budget 这一第三设计轴，以及一个 closed-form、zero-learned-parameter 的 EVQ-Cosh 实例。证据核心是 Primary I对repo fixed-ramp的3-seed differential leverage、Primary II seed-42 midpoint-grid/shared-frequency diagnostic、Primary III heterogeneous-replication MLA stress test；理论核心只保留 exact surrogate、conditional proxy 与 empirical operating point的分层身份。
 
 **Use**：一个窄机制主张；三层理论身份；Primary I–III 的真实证据层级；明确 errata 与未完成控制。
 

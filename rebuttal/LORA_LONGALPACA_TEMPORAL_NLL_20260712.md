@@ -10,9 +10,11 @@
   were independently recomputed.
 - Experimental values changed in the paper: none.
 
+> **2026-07-13 identity correction:** 该实验匹配了model/data/order/LoRA/optimizer/evaluator，但不是同quantizer的纯density-shape control：Geo使用native endpoint frequencies，EVQ使用midpoint quantization。以下“matched”均只指training pipeline matched；方法差异包含quantizer shift与cosh shape，不能只归因于density shape。事实边界以 `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` 为准。
+
 ## Result to use in rebuttal
 
-This is a fresh matched seed-42 comparison after 300 LoRA steps on the frozen
+This is a fresh matched-training-pipeline seed-42 comparison after 300 LoRA steps on the frozen
 LongAlpaca-12k training tensor. Evaluation uses a separately frozen 2026 corpus
 from arXiv, the Federal Register, and Stack Overflow.
 
@@ -27,7 +29,9 @@ The clean reviewer-facing statement is:
 > On a frozen 2026 temporal holdout spanning arXiv, the Federal Register, and
 > Stack Overflow, EVQ+LoRA changes NLL relative to matched Geo+LoRA by +0.390 at
 > 8K, -1.510 at 16K, and -2.048 nats/token at 32K. The 16K and 32K direction is
-> consistent across all 3 domains and all 24 packs.
+> consistent across all 3 domains and all 24 packs. Geo uses native endpoint
+> frequencies while EVQ uses midpoint quantization, so this is not a pure
+> density-shape comparison.
 
 Do not describe the 8K difference as a “48% tradeoff.” PPL is `exp(NLL)`, so a
 percentage computed in PPL space visually inflates the in-window difference and
@@ -42,8 +46,8 @@ reported descriptively, but NLL is the primary comparison.
   EVQ-minus-Geo+LoRA is `+0.201` at 0–4K and `+0.578` at 4–8K, then `-2.868` at
   8–12K, `-3.950` at 12–16K, `-2.550` at 16–24K, and `-2.621` at 24–32K.
 - Geo+LoRA also improves on the untouched Geo base at every prefix and in every
-  pack. That is a general fine-tuning effect; the matched EVQ-minus-Geo+LoRA
-  delta is the incremental frequency-substrate evidence.
+  pack. That is a general fine-tuning effect; the EVQ-minus-Geo+LoRA delta is
+  evidence for the combined schedule intervention, not an isolated cosh-density effect.
 - The test text is not the LongAlpaca training corpus. The result therefore
   supports cross-domain temporal transfer rather than training-set-only PPL
   improvement.
@@ -54,7 +58,8 @@ Both adapters use seed 42, BF16, LoRA rank 64 on q/k/v/o, batch 2 with gradient
 accumulation 4, 8K sequences, 300 optimizer steps, learning rate `1e-4`, the
 same split seed, tokenizer, model bytes, data bytes, objective, optimizer,
 scheduler, checkpointing, and compile mode. Their recorded run protocols differ
-only in `method` and `tau`.
+in `method` and `tau`; scientifically, the method switch also changes native
+endpoint Geo to midpoint EVQ, so it is more than a same-grid tau-only contrast.
 
 | Identity | SHA256 |
 | --- | --- |
@@ -107,7 +112,8 @@ zero-overlap generalization. Timestamp separation is strong evidence of a fresh
 holdout, not proof of zero phrase-level pretraining overlap.
 
 The three-arm design also has no Base-EVQ arm. It supports the end-to-end
-EVQ+LoRA versus Geo+LoRA comparison, not a claim that LoRA alone learned the
+EVQ+LoRA versus Geo+LoRA pipeline comparison, not a pure density-shape claim or
+a claim that LoRA alone learned the
 mechanism. The cost-controlled follow-up trains only EVQ+LoRA seeds 43 and 44 on
 the same frozen data and evaluates each against the already completed Geo+LoRA
 seed-42 reference. Afterward, report EVQ's three-seed stability and show the

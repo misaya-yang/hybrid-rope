@@ -8,7 +8,9 @@ Preparation：**triage_ready**
 
 Response package readiness：**needs_author_input**
 
-Current mode：**triage-only**；截至 2026-07-12，实际 NeurIPS reviews 尚未收到。
+Current mode：**triage-only**；截至 2026-07-13，实际 NeurIPS reviews 尚未收到。
+
+> **2026-07-13 canonical update:** `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` 已完成全论文 method-identity/theory/protocol audit。旧 “YaRN” 实际是 repo-defined fixed-ramp scaler；旧 “DAPE (32p)” 实际是 shared learnable inverse frequencies；核心 Geo 是 midpoint grid；ordinary-KL、`c_coll=1.171` 与 Phase16 “27 configs/all <1%” 解释均不可继续使用。`LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` 已闭环一个新的 matched seed-42 LongAlpaca temporal-NLL protocol，但不替换旧论文 LoRA 表。涉及这些事实时以新审计为准。本总账继续负责 reviewer-question routing，不覆盖新审计。
 
 用途：把最新数学审计、Fable5/GPT Pro 模拟审稿、现有 claim/evidence ledger、报告一致性审计，以及 2026-07-11 的 LoRA Geo-control 结果合并为一份可持续更新的 rebuttal 问题总账。它不是最终 author response，也不是第二篇论文；真实 reviews 到来前只做 triage，真实 reviews 到来后只抽取被实际触发的条目进入回复。
 
@@ -31,8 +33,9 @@ Current mode：**triage-only**；截至 2026-07-12，实际 NeurIPS reviews 尚�
 | --- | --- | --- |
 | Submitted/current wording | submitted artifact 与 `paper/` 当前源码，使用时明确版本 | 只证明该版本“写了什么”；不能覆盖理论数学审计，也不能单独升级实验 provenance |
 | Experiment numbers/provenance | `docs/overview/RESULT_PROVENANCE_MANIFEST.md` 及其指向的 raw-backed artifact | 这是最新实验 provenance；已移出根目录的 2026-06-14 snapshot 只可在 ignored local snapshot 中追溯，不能覆盖它 |
-| Theory correctness | `rebuttal/THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` | ordinary KL、transport proxy、finite-$\tau$ 边界以独立数学审计为准；paper source 不具有覆盖权 |
-| LoRA identity/causality | `rebuttal/LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md` | LongAlign/LongAlpaca identity 与 clean-pair gate 不得被历史 aggregate 覆盖 |
+| Full-paper identity/theory/protocol | `rebuttal/FULL_PAPER_INTEGRITY_AUDIT_20260713.md` | DAPE、YaRN、Geo grid、KL、dimension、Phase16与最终survivor set以此为准 |
+| Theory derivation detail | `rebuttal/THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` | 只作长推导；不得覆盖7/13 audit的`M/d_S`、`c_coll`、LoRA/MLA与Phase16修正 |
+| LoRA identity/causality | `rebuttal/LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md`；`rebuttal/LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` | 旧跨语料contrast无因果性；fresh pair匹配training pipeline但native-Geo/midpoint-EVQ非同quantizer |
 | Rebuttal decision | 本总账；快速分流用 `rebuttal/REVIEWER_TRIAGE_PLAYBOOK.md` | 旧 response 草稿与 action board 只能提供历史上下文，不能自动进入最终回复 |
 | Simulation | `rebuttal/simulated_reviews/` 的字节保真原文 | 只证明内部压力测试问过什么；不是真实 review，也不裁决科学正确性 |
 
@@ -41,7 +44,7 @@ Current mode：**triage-only**；截至 2026-07-12，实际 NeurIPS reviews 尚�
 两项重要 supersession：
 
 - 旧理论草稿中“ordinary baseline-to-perturbed KL 提供 $O(\tau^2)$ gain”的段落已经失效。新的正确身份是：**exact surrogate shape theorem + conditional diffuse probability-transport proxy + empirical finite-$\tau$ deployment rule**。
-- 旧 Path A/B 文档把 LoRA 阻塞描述为“缺 Geo+LoRA exact numbers”。今天 fresh native-Geo 数字已经完整；contemporaneous records 指向历史 EVQ 使用 LongAlpaca-12k，但 exact historical corpus identity 尚未通过 raw hash/runtime 核验，而 fresh Geo 已确认使用 pinned official LongAlign-10k。准确状态是：**Geo result complete; current artifacts do not establish a strict matched pair; fresh matched EVQ-42 完成前不得提出 reviewer-facing causal claim**。
+- 旧 LongAlign-Geo 与历史 LongAlpaca-EVQ contrast仍无因果性。后来完成的 fresh LongAlpaca seed-42 pair匹配model/data/order/LoRA/optimizer/evaluator，但native-Geo与midpoint-EVQ非同quantizer；它只能支持combined schedule intervention，不能称pure density-shape effect，也不替换旧论文表。
 
 ### 0.3 标签
 
@@ -81,8 +84,10 @@ Status 只允许：
 
 | Source | 在本总账中的作用 |
 | --- | --- |
-| rebuttal/THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md | 最新数学事实、KL纠错、三层理论身份和理论send gate |
+| rebuttal/FULL_PAPER_INTEGRITY_AUDIT_20260713.md | 最新方法身份、理论、协议、Phase16与survivor set事实权威 |
+| rebuttal/THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md | KL/proxy/cosh长推导与三层理论send gate；7/13 correction优先 |
 | rebuttal/LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md | 今天fresh Geo结果、LongAlign/LongAlpaca mismatch、clean-pair decision gate |
+| rebuttal/LORA_LONGALPACA_TEMPORAL_NLL_20260712.md | fresh matched-training-pipeline结果及8K/16K/32K NLL；非同quantizer边界由7/13 audit裁决 |
 | rebuttal/simulated_reviews/2026-07-10_fable5_committee_output.md | Fable5内部模拟原文；只用于压力测试触发面 |
 | rebuttal/simulated_reviews/2026-07-10_gpt_pro_committee_full_v2.md | GPT Pro三类模拟reviewer与AC原文；只用于压力测试触发面 |
 | Legacy response / claim / action / figure audits | 有效问题映射、禁句、stop rules 与 errata 已吸收进本总账；原文件删除后只可从 Git 历史追溯，不再作为入口或独立权威 |
@@ -106,19 +111,21 @@ Fable5/GPT Pro 文件是内部模拟与压力测试，不是真实 NeurIPS revie
 
 - 对论文明确写出的强凸 surrogate，cosh density 是唯一、严格正的 mass-one minimizer；
 - closed-form CDF、inverse CDF、$\tau\to0$ geometric limit 与 zero-learned-parameter initializer；
-- Primary I 的 3-seed、matched-scale EVQ $\times$ YaRN substrate/range interaction；
-- Primary II 在明确 seed-42、$128\to8$K 协议下的 PE-dominant diagnostic；
-- Primary III 的 3-seed、432M/500M-token MLA scarce-channel stress result；
-- 99-run 对 operating basin 的经验支持；
+- Primary I 的3-seed midpoint-Geo/EVQ $\times$ repo fixed-ramp 2x2 factorial contrast与differential leverage；
+- Primary II 在明确seed-42、$128\to8$K协议下的midpoint-Geo/EVQ/shared-learnable-frequency diagnostic；
+- Primary III actual head_dim=64、d_rope=32、empirical tau=1.414的paired-within-seed方向性结果，且batch异质；
+- Phase16共同三seed weighted extrapolation PPL中formula相对midpoint-Geo为7/9胜、2/9负；
 - PK 与 AR exact 的严格区分，以及已恢复的 Primary-I AR exact 数据。
 
 必须主动收缩或纠正：
 
 - ordinary-KL scale derivation；
+- official YaRN、official DAPE与native-RoPE comparator身份；
+- `c_coll=1.171` exact-kernel calibration与Phase16 rank/basin结论；
 - shape theorem 与 deployed scale 的统一最优解释；
 - waterbed 到 PPL 的理论跨越；
 - practical $\tau=4$ 的 small-$\tau$ 误差保证；
-- MLA $d_{\mathrm{eff}}=d_{\mathrm{head}}$ 的“理论唯一性”；
+- MLA `d_eff=d_head`（actual head_dim=64而ad-hoc d_eff=128）的事实与理论错误；
 - tuned-base、tuned-YaRN、Primary-II matched seeds、真实 distance prior 和 trained $L_{\mathrm{eff}}^J$；
 - LoRA 历史 EVQ 与 fresh Geo 的因果比较；
 - QuALITY/Figure 9 的提交版 provenance 错误；
@@ -129,10 +136,10 @@ Fable5/GPT Pro 文件是内部模拟与压力测试，不是真实 NeurIPS revie
 真实 reviews 尚未收到，因此 package 先天需要作者输入；下面的 blocker 进一步表示“某类强 claim 不得进入 response”，不是“没有这些实验就不能提交 rebuttal”。
 
 1. **理论文字 blocker**：所有旧 response 中的 ordinary-KL $O(\tau^2)$ 解释必须替换；
-2. **LoRA causal blocker**：fresh EVQ-42 尚未在同一 frozen LongAlign manifest 上完成；
-3. **LoRA provenance blocker**：fresh result JSON、manifest 和 evaluator receipt 尚未进入匿名 tracked bundle；
-4. **trust blocker**：最终回复必须同时披露 Figure 8/Table 21 与 Figure 9/Table 20 的真实来源错误；
-5. **scope blocker**：Primary II、tuned baselines、MLA convention 和 1B row 必须保持当前真实范围。
+2. **identity blocker**：fixed-ramp不得称official YaRN，shared frequencies不得称DAPE，midpoint不得称native Geo；
+3. **theory blocker**：`c_coll`、Phase16 rank/basin、LoRA rank theory与MLA d_eff解释均不得进入回复；
+4. **LoRA boundary**：fresh LongAlpaca结果必须同时报8K退化，且不得称same-quantizer shape control；
+5. **trust/scope blocker**：Figure/QuALITY/video/750M与compute provenance错误必须按7/13 audit保持真实范围。
 
 ### 1.3 最可能改变评分的 18 个问题
 
@@ -142,13 +149,13 @@ Fable5/GPT Pro 文件是内部模拟与压力测试，不是真实 NeurIPS revie
 | 2 | E-08 | fresh Geo 与历史 EVQ 数据不同，LoRA 因果比较是否失效？ | VH | Blocking | PROVENANCE_BLOCKED | fresh EVQ-42 on identical LongAlign；此前不报 EVQ delta |
 | 3 | T-01 | ordinary KL 一阶为零，$L^{-1/2}$ 推导是否错误？ | H–VH | Blocking | THEORY_CORRECTION_PENDING | 承认 order error，重定义 transport proxy |
 | 4 | E-01 | EVQ 是否只是在修复过大的 Geo base？ | VH | Major | PARTIAL | tuned-base 缺口承认；base-10K pilot 只作 supporting |
-| 5 | E-02 | Geo/EVQ 分别调 YaRN 后，Geo 是否追平？ | H–VH | Major | READY_WITH_CONCESSION | 只保 matched-scale interaction；不写 tuned dominance |
+| 5 | E-02 | official YaRN是否保留fixed-ramp下的differential leverage？ | H–VH | Major | PARTIAL | zero-shot公式诊断与matched continuation分开；EVQ arm只称YaRN-derived generalization |
 | 6 | E-03 | Primary II 只有 seed 42，为什么称 primary？ | VH | Major | EXPERIMENT_PENDING | 补 exact protocol seeds，或保持 seed-scoped diagnostic |
-| 7 | E-04 | DAPE-style baseline 是否忠实、充分调参？ | H | Major | PARTIAL | 单独给实现与 tuning boundary；不可由 EVQ extra seeds替代 |
+| 7 | E-04 | DAPE row 是否忠实？ | H | Major | READY_WITH_CONCESSION | 明确不是DAPE，重标shared learnable inv_freq并撤回DAPE-specific interpretation |
 | 8 | T-02 | cosh shape 与 deployed $\tau$ 来自不同模型，是否 post-hoc？ | VH | Major | READY_WITH_CONCESSION | theorem/proxy/calibration 三层拆开 |
 | 9 | T-04 | constant-$\alpha$ + min kernel 是否只为得到 cosh？ | H | Major | PARTIAL | defend conditional theorem + finite-grid functional check |
 | 10 | E-06 | 1B raw reversal 是否说明 500M 增益只是训练暂态？ | H–VH | Major | READY_WITH_CONCESSION | 定位为 schedule sensitivity，不作 durability claim |
-| 11 | E-07 | MLA 为何用 $d_{\mathrm{head}}$，channel scarcity 是否隔离？ | H | Major | EXPERIMENT_PENDING | convention 与 $K$ 分开；direct-$\tau$ screen |
+| 11 | E-07 | MLA 为何把actual head_dim=64写成128？ | H | Major | READY_WITH_CONCESSION | 承认ad-hoc d_eff=128；tau=1.414只作empirical setting，披露batch mismatch |
 | 12 | E-05 | 100% PK 是否只是 teacher-forced 指标？ | VH | Major | READY | 同列 TF 与 AR exact、seed spread 和 4K boundary |
 | 13 | T-05 | practical $\tau=4$ 时 small-$\tau$/pure-tether 为什么可信？ | H | Major | PARTIAL | exact implementation；无 non-asymptotic/forcing guarantee |
 | 14 | P-02 | Figure 8/Table 21 的真实 endpoint 和样本数是什么？ | VH | Major | READY | submitted error + n=2086 source + 26.6→24.6 erratum |

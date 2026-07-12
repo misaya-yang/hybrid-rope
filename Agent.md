@@ -9,11 +9,16 @@ Read this before any LoRA, rebuttal, or paid-GPU experiment.
 - Do not report “ready,” “running,” ETA, or completion without checking the command, process, log, and artifacts.
 - Do not treat code SHA, GPU, runtime, compile, checkpointing, cache, or telemetry as scientific variables.
 - Do not use WikiText-only gains as broad generalization evidence or overclaim a short LoRA run.
+- Do not inherit an official method name from a class, comment, citation, or old report.
+- Trace every named baseline from paper row to artifact, runner, forward path, and pinned official source.
+- Require representative output parity with the official implementation; otherwise use a descriptive local label.
+- Record native endpoint versus midpoint frequency grids; both are geometric but are not the same control.
+- Re-derive leading orders and optimization claims independently before calling a proxy a theorem.
 
 ## Clean Geo/EVQ pair
 
 - Match exact model/tokenizer, LongAlpaca tokens and order, objective/labels, LoRA, BF16, optimizer, steps, B2/GA4, and external evaluator.
-- Within a seed, only the frequency schedule differs: native Geo versus EVQ-Cosh (`tau` only for EVQ).
+- Within a seed, only the frequency schedule may differ; a pure shape claim also requires the same endpoint/midpoint quantizer.
 - Retain seed-42 Geo/EVQ; run only EVQ seeds 43/44 when authorized, using Geo-42 as a labeled fixed reference rather than a paired control.
 - LongAlign remains a separate experiment and cannot fill a LongAlpaca arm.
 

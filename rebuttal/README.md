@@ -1,24 +1,27 @@
 # EVQ-Cosh Rebuttal Control Room
 
-创建：2026-06-10；最后更新：2026-07-12
+创建：2026-06-10；最后更新：2026-07-13
 
 - Preparation：`triage_ready`
 - Response package：`needs_author_input`
-- 当前模式：`triage-only`。截至 2026-07-12，实际 NeurIPS reviews 尚未收到。
+- 当前模式：`triage-only`。截至 2026-07-13，实际 NeurIPS reviews 尚未收到。
 
 本目录是作者内部 rebuttal control room，不是论文、公开补充材料或 reviewer supplement，也不得作为仓库根目录打包。唯一中心主张是：**RoPE 的有限频率表也是 finite spectral budget；EVQ-Cosh 把 training-time frequency allocation 作为 operator design 与 inference-time range scaling 之外的第三个 PE 设计轴。** 这不是 universal long-context SOTA，也不是 YaRN、LongRoPE、DAPE、FIRE 或 learned PE 的替代主张。
 
-## 1. 一个统一策略入口 + 五份分轨材料 + 一个原文索引
+## 1. 统一策略入口、分轨材料与原文索引
 
 | 文件 | 唯一职责 |
 | --- | --- |
 | `rebuttal_playbook.md` | **统一策略入口**：reviewer-response-first 原则、P0/P1/P2、理论边界与最小行动清单 |
+| `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` | **最新事实权威**：DAPE、YaRN、midpoint-Geo、KL、`c_coll`、Phase16、协议与 provenance 的全论文审计；与旧材料冲突时以此为准 |
+| `REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md` | **决策权威**：NeurIPS 可行性、诚实披露、官方政策、公开案例与后续 venue 修复路线 |
 | `frequency_adaptation_8b/` | **定向机制实验**：检验 8B checkpoint 是否能在连续改变 RoPE 频率分配时获得足够任务梯度；它是独立新协议，不替代 LongAlpaca clean pair，也不自动进入 rebuttal |
 | `README.md` | 全局状态、导航与目录安全边界 |
 | `REVIEWER_TRIAGE_PLAYBOOK.md` | 真实 reviews 到来后的最多五项 score-driving concern 分流 |
 | `REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md` | 完整问题、证据、状态与 decision gate 总账 |
-| `THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` | 理论数学权威：exact / conditional proxy / empirical 三层边界 |
+| `THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` | 理论长推导：exact / conditional proxy / empirical 三层边界；方法身份、`c_coll` 与 Phase16 以 2026-07-13 full audit 为准 |
 | `LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md` | fresh Geo 结果、LongAlign/LongAlpaca provenance 与 clean-pair 因果边界 |
+| `LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` | fresh LongAlpaca seed-42 Geo+LoRA/EVQ+LoRA matched-training-pipeline temporal NLL；native-Geo与midpoint-EVQ非同quantizer，仅作 supporting evidence |
 | `raw_sources/00_INDEX.md` | tracked 控制索引；指向 local-only 原文并规定模拟材料隔离规则 |
 
 已删除的旧文档仅可从 Git 历史追溯，不是入口，不得覆盖以上控制文件或最新 provenance。
@@ -29,10 +32,11 @@
 | --- | --- | --- |
 | submitted/current source 写了什么 | 提交件与 `paper/` 当前源码，使用时明确版本 | 只能证明某版本的文字、图表和声明；不能覆盖数学审计，也不能单独证明实验 provenance |
 | 实验数字与 provenance | `docs/overview/RESULT_PROVENANCE_MANIFEST.md` 及其指向的 raw-backed artifacts | 已移出根目录的 2026-06-14 snapshot 只保存在 ignored local snapshot 中，不得恢复为权威 |
-| 理论正确性 | `THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` | submitted/current paper source 只证明“写了什么”，不裁决数学是否正确 |
-| LoRA 因果与数据来源 | `LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md` | fresh Geo 使用 official LongAlign；historical EVQ 指向 LongAlpaca。没有 same-data fresh EVQ pair 前不得作 causal attribution |
+| 全论文事实与方法身份 | `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` | 当前 paper label、旧报告和 class 名不能覆盖实际 forward path 与官方定义 |
+| 理论正确性 | `FULL_PAPER_INTEGRITY_AUDIT_20260713.md`；长推导见 `THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` | submitted/current paper source 只证明“写了什么”，不裁决数学是否正确；旧 theory note 不得覆盖 2026-07-13 的 `c_coll`/Phase16 复核 |
+| LoRA 因果与数据来源 | `LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md`；fresh protocol见 `LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` | 旧 LongAlign/LongAlpaca contrast不可作因果比较；新 LongAlpaca pair虽匹配训练流水线，但native-Geo与midpoint-EVQ非同quantizer、单seed且为teacher-forced NLL，不得称纯shape control或静默替换旧表 |
 | 当前决策与可发送范围 | `REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md`；真实评论的快速映射用 `REVIEWER_TRIAGE_PLAYBOOK.md` | 旧草稿、旧 action board 或单次内部报告不得反向升级 claim |
-| 模拟审稿原文 | `simulated_reviews/` | 只用于内部压力测试；不是真实 NeurIPS reviews，其科学判断已被 2026-07-11 audits 与总账取代 |
+| 模拟审稿原文 | `simulated_reviews/` | 只用于内部压力测试；不是真实 NeurIPS reviews，其科学判断已被 2026-07-13 full audit 与总账取代 |
 
 ## 3. 2026-07-22 真实 review 工作流
 
@@ -46,21 +50,27 @@
 6. 仅在真实评论到达后创建唯一回复文件：`AUTHOR_RESPONSE_20260722.md`。不要恢复多路径草稿入口。
 7. 发送前逐项执行总账与 triage send gate；只回答真实 reviewer 触发的 3–5 个 score-driving concerns。
 
-## 4. 当前五个 P0/P1 边界
+## 4. 当前核心 P0/P1 边界
 
 | 优先级 | 边界 | 必须保留的事实 |
 | --- | --- | --- |
 | P0 | Trust / provenance | submitted、current source、raw-backed result 与 future revision 必须分开；实验 provenance 以 `docs/overview/RESULT_PROVENANCE_MANIFEST.md` 为准 |
 | P0 | KL / shape–scale correctness | ordinary baseline KL 一阶变分为零，从 `O(τ^4)` 开始；保留 exact cosh surrogate theorem、conditional diffuse probability-transport proxy、empirical finite-`τ` basin 三层身份 |
 | P0 | Exact-kernel / surrogate identity | exact kernel 只测 content-independent phase redundancy；cosh 是 stated surrogate 的 optimizer，不是 exact kernel、attention 或 LM objective 的闭式最优解 |
-| P1 | Baseline fairness / replication | Primary I 是 fixed-scale repo-defined progressive overlay；Primary II 的旧 “DAPE” 行实际是 32-parameter learnable-frequency control；Primary III 是 3-seed MLA，`d_eff=d_head` 只是架构 operating convention |
-| P1 | Metric / capability | PK 是 teacher-forced NLL-gap。8K AR exact：Geo+YaRN 0/0/0，EVQ+YaRN 58/18/98（mean 58%）；同时保留 4K Geo+YaRN 100% 对 EVQ+YaRN 77.3% 的反向边界 |
+| P0 | Method identity | Primary I 是 repo-defined fixed-ramp scaler，不是官方 YaRN；Primary II 的旧 “DAPE” 是 shared learnable inverse frequencies，不是 DAPE；不同 MLA scaler也不得共用 YaRN身份 |
+| P0 | Geo identity | 核心 Geo 是 midpoint-discretized geometric grid，不是 native endpoint RoPE；matched shape contrast可保留，standard-RoPE dominance不可保留 |
+| P0 | Collision / Phase16 | `c_coll=1.171` verification未做优化；Phase16是99 runs/9 configs/selected confirmation，不是27-config全3-seed且全部PPL差小于1% |
+| P1 | Baseline fairness / replication | Primary II 是约151.9M、seed-42 headline；Primary III三 seed batch不一致，actual head_dim=64，而`tau=1.414`对应的`d_eff=128`只是ad-hoc convention |
+| P1 | Metric / capability | PK 是 teacher-forced NLL-gap。按真实方法重标后，8K AR exact：Midpoint-Geo+fixed-ramp 0/0/0，EVQ+fixed-ramp 58/18/98（mean 58%）；同时保留 4K 的100%对77.3%反向边界 |
 
 ## 5. 禁止措辞
 
 - “EVQ is universal long-context SOTA.”
 - “EVQ replaces YaRN / LongRoPE / DAPE / FIRE / learned PE.”
+- 把 repo fixed-ramp scaler称为 official YaRN，或把 shared learnable frequencies称为 DAPE。
+- 把 midpoint-Geo称为 native/standard RoPE control。
 - “ordinary KL gives an `O(τ²)` gain”或“ordinary KL derives the deployed optimum.”
+- 用 `c_coll=1.171`、27 configurations或“all <1% PPL”证明公式闭环。
 - “`τ=d_eff/√L` is globally optimal”或“MLA `d_eff=d_head` is a theorem.”
 - “EVQ beats tuned Geo/YaRN”或“the matched-scale result proves tuned dominance.”
 - “Primary II is fully replicated”或把 seed-42 diagnostic 升级成广义 learned-PE dominance。
@@ -79,4 +89,4 @@
 
 ## 7. Consolidation note
 
-2026-07-12 起，`rebuttal_playbook.md` 成为 rebuttal 统一策略入口，本文件只保留导航、状态和安全边界。导航收敛到上面的分轨材料和原文索引。已被 2026-07-11 总账覆盖的旧策略、旧 Path A/B、旧 response、旧 action/runbook 与阶段性 `rebuttal_7/` 文档在本轮删除；历史仍可由 Git 追溯，但不再保留为活跃文件。两份 2026-07-10 模拟审稿已字节不变迁移到 `simulated_reviews/`；它们只提供压力测试原文，不提供真实 reviewer 身份或最新科学裁决。本次 consolidation 不改变任何实验数字。
+2026-07-13 起，`FULL_PAPER_INTEGRITY_AUDIT_20260713.md` 是方法身份、理论与协议事实的最高入口，`REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md` 是决策入口，`rebuttal_playbook.md` 继续承担真实 review 到来后的执行入口。本文件只保留导航、状态和安全边界。两份 2026-07-10 模拟审稿只提供压力测试原文，不提供真实 reviewer 身份或最新科学裁决。本次更新不改变任何实验数字。
