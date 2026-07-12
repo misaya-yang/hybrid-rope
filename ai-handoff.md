@@ -2,8 +2,9 @@
 
 最后更新：2026-07-12（Asia/Shanghai）
 分支：`main`
-HEAD：`805878f`（`prepare exact FineWeb 3x1B tensors`）
-状态：仓库整理与 rebuttal 准备已完成主要结构工作；工作树仍包含未提交的 rebuttal、paper 清理和独立实验开发改动。
+仓库整理 checkpoint：`1b97fdc`（`handoff: consolidate repository and rebuttal index [01]`）
+整理前实验基线：`805878f`（`prepare exact FineWeb 3x1B tensors`）
+状态：仓库结构、paper 清理与 rebuttal control room 已提交到本地 `main`；工作树只保留独立的 LongAlpaca / temporal-holdout 实验开发改动。
 
 本文件是后续 AI 的**第一入口和状态索引**。它只保存可提交的仓库级信息，不保存服务器地址、凭据、私有绝对路径或实时进程信息。
 
@@ -63,12 +64,10 @@ EVQ-Cosh 的窄主张是：RoPE 的有限频率表也是 finite spectral budget�
 
 ## 5. 当前工作树中必须保护的未提交工作
 
-以下内容来自不同工作流，不能因“清仓库”而丢弃或混成一个未经审计的提交：
+仓库整理、rebuttal consolidation 和 paper cleanup 已在 `1b97fdc` 中保存。以下实验开发仍未提交，不能因“清仓库”而丢弃或混入文档提交：
 
-1. rebuttal consolidation：旧 `rebuttal_7/` 与重复草稿删除，新 control-room 文档和模拟原文尚未统一提交。
-2. paper cleanup：只保留 `paper/main.pdf` 作为最终 PDF，清除了 build artifacts、旧样式、旧 playbook 和未引用历史文件。
-3. LongAlpaca paper-lineage launcher：`scripts/2026-07/04_lora_longalpaca_paper_geo_s42.sh` 已有未提交修改，另有新的 EVQ wrapper。
-4. temporal-holdout 开发：新的 evaluator、data-prep 脚本和两个测试文件尚未提交。
+1. LongAlpaca paper-lineage launcher：`scripts/2026-07/04_lora_longalpaca_paper_geo_s42.sh` 已有未提交修改，另有新的 EVQ wrapper。
+2. temporal-holdout 开发：新的 evaluator、data-prep 脚本和两个测试文件尚未提交。
 
 提交前必须按概念拆分审计；不要使用 `git reset --hard`、`git checkout --` 或 `git clean`。
 
