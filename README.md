@@ -6,13 +6,27 @@ Official code repository for the NeurIPS 2026 submission.
 
 ---
 
+## For Agents and Maintainers
+
+Read in this order before changing the repository:
+
+1. **`AGENTS.md`** — scientific, anonymity, editing and Git rules.
+2. **`ai-handoff.md`** — current worktree state, protected unfinished work and known test failure.
+3. **`REPO_MAP.md`** — directory responsibilities and source-of-truth matrix.
+4. **`rebuttal/README.md`** — current NeurIPS rebuttal control room.
+5. **`docs/overview/RESULT_PROVENANCE_MANIFEST.md`** — reviewer-safe result provenance.
+
+Do not create another rebuttal directory, another root provenance manifest, or another paper PDF. Current experiment code is indexed through `paper_experiments/MANIFEST.json`; canonical editable files remain under `scripts/` and `experiments/`.
+
+---
+
 ## Key Results
 
 The paper validates three core claims across controlled runs at 50M-750M scale, with explicit evidence tiers in the manuscript:
 
 **Claim 1 - Closed-form solution.** RoPE frequency allocation admits a variational solution `phi_k(tau)` with a single temperature parameter `tau`. Geometric RoPE is recovered as the `tau -> 0` limit of the pure-tether sub-family; EVQ-Cosh changes the training-time allocation family without adding learned parameters.
 
-**Claim 2 - PE-dominant diagnostic.** In a DAPE-style `128 -> 8K` protocol at 125M scale, the seed-42 EVQ-Cosh row attains lower extrapolation PPL than the Geo and DAPE-style learned-operator baselines, without adding learned positional parameters.
+**Claim 2 - PE-dominant diagnostic.** In the reported `128 -> 8K` protocol at 125M scale, the seed-42 EVQ-Cosh row attains lower extrapolation PPL than Geo and a 32-parameter learnable-frequency control, without adding learned positional parameters. The historical row label must not be presented as a faithful end-to-end DAPE reproduction.
 
 **Claim 3 - EVQ + YaRN matched-scale leverage.** At 4x extrapolation from `L_train=2048`, EVQ + YaRN reaches 100% PK retrieval versus 61% for Geometric + YaRN (454M, 3 seeds per configuration). This is reported as a matched-scale substrate test, not a tuned-YaRN sweep.
 
@@ -61,11 +75,22 @@ Figure 3 panel (a) has a curated JSON fallback in `data/curated/`; panels (b,c) 
 ```
 paper/                      LaTeX source, figures, and tables
 ├── main.tex                NeurIPS submission entry point
-├── sections/               Section .tex files (01_intro … 07_conclusion)
+├── main.pdf                only retained submission PDF
+├── sections/               active sections (01, 02, 03, 05, 06)
 ├── appendix/               Appendix .tex files
-├── tables/                 Table .tex files (stable sources; compiled numbers may shift)
-├── figs/                   All paper figures (PDF + PNG)
+├── tables/                 current Table .tex sources
+├── figs/                   paper figures and reproducibility previews
 └── refs/                   BibTeX references
+
+rebuttal/                   single internal rebuttal control room
+├── rebuttal_playbook.md    response-only strategy entry point
+├── REVIEWER_TRIAGE_PLAYBOOK.md  real-review mapping workflow
+├── REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md  deep question index
+└── README.md               status, authority and security boundary
+
+data/
+├── curated/                tracked reviewer-safe result artifacts
+└── other paths             historical sources or ignored local caches; see data/README.md
 
 scripts/                    Experiment and evaluation code
 ├── train.py                Legacy LoRA/Anchored-Sigmoid entrypoint
@@ -96,14 +121,18 @@ paper_experiments/          Manifest-driven index of all paper experiment code
 └── code/                   Repository-relative links to 94 canonical source files
 
 docs/                       Research documentation
-├── overview/               Methodology, reproducibility, traceability map
+├── overview/               current provenance, claims, reproduction and audit index
 │   ├── PAPER_CLAIMS_MAP.md Paper↔Script↔Data navigation hub
+│   ├── RESULT_PROVENANCE_MANIFEST.md  reviewer-safe evidence authority
 │   ├── REPRODUCE.md        Full reproducibility guide
 │   └── DATA_PREPARATION.md Data source documentation
 ├── exp/                    Experiment reports (YYYY-MM-DD_slug.md)
-└── theory/                 Derivations and validation notes
+├── theory/, tau_algor/     derivations and historical theory validation
+└── archive/                explicitly historical docs
 
-results/                    Experiment output artifacts (gitignored, synced via rsync)
+results/                    tracked historical evidence + ignored new raw outputs
+
+internal/                   historical/private archive; never a current public entry point
 
 tests/                      Unit tests
 ```
@@ -160,8 +189,11 @@ The packager copies only the public paper/source paths and fails if common ident
 
 ```bash
 cd paper
-bash compile_aidemo.sh
+tectonic -X compile main.tex --outdir build_tectonic
+cp build_tectonic/main.pdf main.pdf
 ```
+
+See `paper/README.md` for the verified pdfTeX fallback. `paper/main.pdf` is the only retained submission PDF; build directories are disposable.
 
 ---
 

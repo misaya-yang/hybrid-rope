@@ -15,8 +15,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CURATED = ROOT / "data" / "curated"
-REBUTTAL_DOC = ROOT / "rebuttal_7" / "IGNORED_ASSET_RECONCILIATION.md"
-CORE_ASSET_SUMMARY = ROOT / "rebuttal_7" / "LOCAL_CORE_ASSET_PROMOTION_SUMMARY.md"
 
 EXPECTED_JSON = {
     "learnable_tau_128tok_evidence.json": "report-backed",
@@ -155,7 +153,7 @@ def validate_bundle(require_tracked: bool = True) -> list[str]:
     paths = [CURATED / name for name in EXPECTED_JSON]
     paths.extend(ROOT / rel for rel in EXPECTED_RAW_SHA256)
     csv_path = CURATED / "phase16_99run_manifest.csv"
-    paths.extend([csv_path, REBUTTAL_DOC, CORE_ASSET_SUMMARY])
+    paths.append(csv_path)
 
     for name, status in EXPECTED_JSON.items():
         path = CURATED / name
@@ -192,13 +190,6 @@ def validate_bundle(require_tracked: bool = True) -> list[str]:
             csv_path, CURATED / "phase16_99run_manifest.meta.json"
         )
     )
-
-    if REBUTTAL_DOC.is_file():
-        handoff = REBUTTAL_DOC.read_text(encoding="utf-8")
-        for question in range(1, 19):
-            heading = f"### F5-Q{question} "
-            if handoff.count(heading) != 1:
-                errors.append(f"handoff must contain one heading: {heading.strip()}")
 
     for path in paths:
         if path.is_file() and FORBIDDEN.search(path.read_text(encoding="utf-8")):

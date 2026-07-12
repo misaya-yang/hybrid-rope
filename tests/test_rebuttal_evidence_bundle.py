@@ -22,9 +22,6 @@ from scripts.core_text_phases import export_phase16_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 CURATED = ROOT / "data" / "curated"
-REBUTTAL = ROOT / "rebuttal_7"
-CORE_ASSET_SUMMARY = REBUTTAL / "LOCAL_CORE_ASSET_PROMOTION_SUMMARY.md"
-GPT_PRO_CROSSWALK = REBUTTAL / "GPT_PRO_RESPONSE_CROSSWALK.md"
 
 EXPECTED_JSON = {
     "learnable_tau_128tok_evidence.json": "report-backed",
@@ -43,8 +40,6 @@ PUBLIC_BUNDLE_FILES = [
     *(CURATED / name for name in EXPECTED_JSON),
     CURATED / "eval_3seeds_full_results.json",
     CURATED / "phase16_99run_manifest.csv",
-    REBUTTAL / "IGNORED_ASSET_RECONCILIATION.md",
-    CORE_ASSET_SUMMARY,
 ]
 
 
@@ -60,10 +55,6 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
             self.assertEqual(load_json(name)["provenance_status"], expected_status)
 
         self.assertTrue((CURATED / "phase16_99run_manifest.csv").is_file())
-        self.assertTrue((REBUTTAL / "IGNORED_ASSET_RECONCILIATION.md").is_file())
-        self.assertFalse(
-            (REBUTTAL / "trace_only" / "text_base_10k_500k_pilot.json").exists()
-        )
         for path in CURATED.glob("*.json"):
             self.assertNotEqual(load_json(path.name).get("provenance_status"), "trace-only")
 
@@ -137,18 +128,58 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
         self.assertIn("Geo", built["claim_boundary"])
         self.assertIn("DAPE", built["claim_boundary"])
 
-    def test_phase11_asset_contains_both_nine_run_sources(self):
-        data = load_json("phase11_l256_3seed_recovered.json")
-        self.assertEqual(
-            data["sources"]["raw"]["sha256"],
-            "6bdf97335365ea3a92c15ff84fc52f292ddad96b0f6e142f8b98199295dffa30",
-        )
-        self.assertEqual(
-            data["sources"]["yarn"]["sha256"],
-            "1f9550c46fa5b51b24b4d2e805c4dbbba8d639c19f664e812072bf8659b85321",
-        )
+    def test_phase11_tracked_snapshot_reconstructs_both_source_payloads(self):
+        snapshot = CURATED / "phase11_l256_3seed_recovered.json"
+        data = load_json(snapshot.name)
+
         self.assertEqual(len(data["raw_runs"]), 9)
         self.assertEqual(len(data["yarn_runs"]), 9)
+        self.assertEqual(set(data["raw_runs"]), set(data["yarn_runs"]))
+        for field, source, expected_key in (
+            ("raw_runs", "raw", "phase11_raw"),
+            ("yarn_runs", "yarn", "phase11_yarn"),
+        ):
+            reconstructed = json.dumps(data[field], indent=2).encode("utf-8")
+            reconstructed_sha = hashlib.sha256(reconstructed).hexdigest()
+            self.assertEqual(reconstructed_sha, data["sources"][source]["sha256"])
+            self.assertEqual(
+                reconstructed_sha,
+                build_rebuttal_evidence_bundle.EXPECTED_SHA256[expected_key],
+            )
+
+        self.assertEqual(
+            build_rebuttal_evidence_bundle.validated_phase11_snapshot_bytes(snapshot),
+            snapshot.read_bytes(),
+        )
+
+    def test_phase11_tracked_snapshot_rejects_top_level_tampering(self):
+        snapshot = CURATED / "phase11_l256_3seed_recovered.json"
+        mutations = {
+            "claim_boundary": lambda payload: payload.__setitem__(
+                "claim_boundary", "tampered claim boundary"
+            ),
+            "private_machine_path": lambda payload: payload.__setitem__(
+                "private_machine_path", "/private/training-host/checkpoint.pt"
+            ),
+            "arbitrary_top_level_field": lambda payload: payload.__setitem__(
+                "unexpected_top_level_field", {"status": "tampered"}
+            ),
+        }
+
+        with tempfile.TemporaryDirectory() as tmp:
+            for name, mutate in mutations.items():
+                with self.subTest(mutation=name):
+                    payload = json.loads(snapshot.read_text(encoding="utf-8"))
+                    mutate(payload)
+                    tampered = Path(tmp) / f"phase11_{name}.json"
+                    tampered.write_text(
+                        json.dumps(payload, indent=2) + "\n", encoding="utf-8"
+                    )
+
+                    with self.assertRaises(ValueError):
+                        build_rebuttal_evidence_bundle.validated_phase11_snapshot_bytes(
+                            tampered
+                        )
 
     def test_phase11b_builder_preserves_all_runs_and_protocol_boundary(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -195,6 +226,66 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
             self.assertEqual(built["protocol"]["seeds"], [42, 137, 256])
             self.assertIn("L_train=256", built["claim_boundary"])
             self.assertIn("not", built["claim_boundary"])
+
+    def test_phase11b_tracked_snapshot_reconstructs_both_source_payloads(self):
+        snapshot = CURATED / "phase11b_125m_l256_3seed.json"
+        data = load_json(snapshot.name)
+
+        self.assertEqual(len(data["scaling_runs"]), 9)
+        self.assertEqual(len(data["dape_runs"]), 6)
+        all_runs = [*data["scaling_runs"].values(), *data["dape_runs"].values()]
+        self.assertEqual(sorted({run["seed"] for run in all_runs}), [42, 137, 256])
+        self.assertTrue(
+            all(not run.get("use_dape") for run in data["scaling_runs"].values())
+        )
+        self.assertTrue(
+            all(run.get("use_dape") for run in data["dape_runs"].values())
+        )
+        for field, source, expected_key in (
+            ("scaling_runs", "scaling", "phase11b_scaling"),
+            ("dape_runs", "dape", "phase11b_dape"),
+        ):
+            reconstructed = json.dumps(data[field], indent=2).encode("utf-8")
+            reconstructed_sha = hashlib.sha256(reconstructed).hexdigest()
+            self.assertEqual(reconstructed_sha, data["sources"][source]["sha256"])
+            self.assertEqual(
+                reconstructed_sha,
+                build_rebuttal_evidence_bundle.EXPECTED_SHA256[expected_key],
+            )
+
+        self.assertEqual(
+            build_rebuttal_evidence_bundle.validated_phase11b_snapshot_bytes(snapshot),
+            snapshot.read_bytes(),
+        )
+
+    def test_phase11b_tracked_snapshot_rejects_top_level_tampering(self):
+        snapshot = CURATED / "phase11b_125m_l256_3seed.json"
+        mutations = {
+            "claim_boundary": lambda payload: payload.__setitem__(
+                "claim_boundary", "tampered claim boundary"
+            ),
+            "private_machine_path": lambda payload: payload.__setitem__(
+                "private_machine_path", "/private/training-host/checkpoint.pt"
+            ),
+            "arbitrary_top_level_field": lambda payload: payload.__setitem__(
+                "unexpected_top_level_field", {"status": "tampered"}
+            ),
+        }
+
+        with tempfile.TemporaryDirectory() as tmp:
+            for name, mutate in mutations.items():
+                with self.subTest(mutation=name):
+                    payload = json.loads(snapshot.read_text(encoding="utf-8"))
+                    mutate(payload)
+                    tampered = Path(tmp) / f"phase11b_{name}.json"
+                    tampered.write_text(
+                        json.dumps(payload, indent=2) + "\n", encoding="utf-8"
+                    )
+
+                    with self.assertRaises(ValueError):
+                        build_rebuttal_evidence_bundle.validated_phase11b_snapshot_bytes(
+                            tampered
+                        )
 
     def test_quality_asset_is_raw_backed_and_sanitized(self):
         data = load_json("quality_454m_full_eval.json")
@@ -305,16 +396,59 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
         )
         self.assertEqual(args.only, ["primary1", "primary2_tau5", "mla_raw"])
 
-    def test_local_phase11_directory_takes_precedence_over_archive(self):
+    def test_phase11_defaults_use_tracked_curated_snapshots(self):
+        args = build_rebuttal_evidence_bundle.parse_args([])
+        self.assertEqual(
+            args.phase11_snapshot_source,
+            CURATED / "phase11_l256_3seed_recovered.json",
+        )
+        self.assertEqual(
+            args.phase11b_snapshot_source,
+            CURATED / "phase11b_125m_l256_3seed.json",
+        )
+        self.assertIsNone(args.phase11_raw_source)
+        self.assertIsNone(args.phase11_yarn_source)
+        self.assertIsNone(args.phase11b_scaling_source)
+        self.assertIsNone(args.phase11b_dape_source)
+
+    def test_phase11_raw_import_sources_must_be_provided_in_pairs(self):
+        for option in (
+            "--phase11-raw-source",
+            "--phase11-yarn-source",
+            "--phase11b-scaling-source",
+            "--phase11b-dape-source",
+        ):
+            with self.subTest(option=option), mock.patch("sys.stderr"):
+                with self.assertRaises(SystemExit):
+                    build_rebuttal_evidence_bundle.parse_args(
+                        [option, str(CURATED / "unused.json")]
+                    )
+
+    def test_phase11_default_build_copies_validated_snapshots_byte_for_byte(self):
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            local = root / "results" / "core_text" / "phase11"
-            archive = root / "07 - rebuttal" / "all_paper_experiment_code"
-            local.mkdir(parents=True)
-            archive.mkdir(parents=True)
-            self.assertEqual(
-                build_rebuttal_evidence_bundle.default_phase11_dir(root), local
-            )
+            output_dir = Path(tmp)
+            with mock.patch(
+                "sys.argv",
+                [
+                    "build_rebuttal_evidence_bundle.py",
+                    "--only",
+                    "phase11",
+                    "--only",
+                    "phase11b",
+                    "--output-dir",
+                    str(output_dir),
+                ],
+            ):
+                build_rebuttal_evidence_bundle.main()
+
+            for name in (
+                "phase11_l256_3seed_recovered.json",
+                "phase11b_125m_l256_3seed.json",
+            ):
+                self.assertEqual(
+                    (output_dir / name).read_bytes(),
+                    (CURATED / name).read_bytes(),
+                )
 
     def test_phase16_manifest_has_all_99_sanitized_run_rows(self):
         path = CURATED / "phase16_99run_manifest.csv"
@@ -376,64 +510,43 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
                 validate_rebuttal_evidence_bundle.FORBIDDEN.search(marker), marker
             )
 
-    def test_detailed_handoff_covers_inventory_all_questions_and_company_setup(self):
-        text = (REBUTTAL / "IGNORED_ASSET_RECONCILIATION.md").read_text(
-            encoding="utf-8"
-        )
-        for family in (
-            "07 - rebuttal/",
-            "RESULT_PROVENANCE_MANIFEST.md",
-            ".codex_tmp/",
-            "results/",
-            ".venv/",
-        ):
-            self.assertIn(family, text)
-        for question in range(1, 19):
-            heading = f"### F5-Q{question} "
-            self.assertEqual(text.count(heading), 1, heading)
-        self.assertIn("git fetch origin", text)
-        self.assertIn("git switch", text)
-        self.assertIn("validate_rebuttal_evidence_bundle.py", text)
+    def test_validator_ignores_legacy_rebuttal_prose(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            curated = root / "data" / "curated"
+            curated.mkdir(parents=True)
+            stale_handoff = root / "stale_handoff.md"
+            stale_summary = root / "stale_summary.md"
+            stale_handoff.write_text("incomplete legacy handoff", encoding="utf-8")
+            stale_summary.write_text("legacy summary", encoding="utf-8")
 
-    def test_rebuttal_7_indexes_both_review_packets_and_all_gpt_pro_questions(self):
-        readme = (REBUTTAL / "README.md").read_text(encoding="utf-8")
-        self.assertIn("neurips_2026_review_committee_output.md", readme)
-        self.assertIn("REVIEW_COMMITTEE_FULL_V2.md", readme)
-        self.assertIn("GPT_PRO_RESPONSE_CROSSWALK.md", readme)
+            with mock.patch.multiple(
+                validate_rebuttal_evidence_bundle,
+                ROOT=root,
+                CURATED=curated,
+                EXPECTED_JSON={},
+                EXPECTED_RAW_SHA256={},
+            ):
+                with mock.patch.object(
+                    validate_rebuttal_evidence_bundle,
+                    "REBUTTAL_DOC",
+                    stale_handoff,
+                    create=True,
+                ), mock.patch.object(
+                    validate_rebuttal_evidence_bundle,
+                    "CORE_ASSET_SUMMARY",
+                    stale_summary,
+                    create=True,
+                ), mock.patch.object(
+                    validate_rebuttal_evidence_bundle,
+                    "validate_phase16_manifest",
+                    return_value=[],
+                ):
+                    errors = validate_rebuttal_evidence_bundle.validate_bundle(
+                        require_tracked=False
+                    )
 
-        text = GPT_PRO_CROSSWALK.read_text(encoding="utf-8")
-        for question in range(1, 18):
-            heading = f"### GPT-Q{question} "
-            self.assertEqual(text.count(heading), 1, heading)
-        self.assertIn("No new experiments", text)
-
-    def test_final_ignored_result_exclusions_are_explicit(self):
-        text = (REBUTTAL / "IGNORED_ASSET_RECONCILIATION.md").read_text(
-            encoding="utf-8"
-        )
-        for artifact in (
-            "350m_mla32_results_final.json",
-            "PHASE18_YARN_FT_REPORT.md",
-            "PHASE19_TAU1_vs_GEO_REPORT.md",
-            "PHASE22_23_MLA_TAU_SWEEP_REPORT.md",
-            "phase21b_quality_454m_report.json",
-            "test3_attention_prior_results.json",
-        ):
-            self.assertIn(artifact, text)
-        self.assertIn("not promoted", text)
-        self.assertIn("n=200", text)
-        self.assertIn("canonical result JSON is absent", text)
-
-    def test_core_asset_summary_records_promoted_and_rejected_families(self):
-        text = CORE_ASSET_SUMMARY.read_text(encoding="utf-8")
-        self.assertIn("Primary I", text)
-        self.assertIn("byte-for-byte", text)
-        self.assertIn("Phase11B", text)
-        self.assertIn("L_train=256", text)
-        self.assertIn("L_train=128", text)
-        self.assertIn("not promoted", text)
-        self.assertIn("1B-token MLA", text)
-        self.assertIn("no paper numbers", text.lower())
+            self.assertEqual(errors, [])
 
     def test_reviewer_supplement_includes_raw_base_and_excludes_internal_contract_test(self):
         self.assertNotIn(

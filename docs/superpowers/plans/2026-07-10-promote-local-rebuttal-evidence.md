@@ -1,5 +1,7 @@
 # Promote Local Rebuttal Evidence Implementation Plan
 
+> **Status: archived and superseded (2026-07-12).** This file preserves a historical implementation plan. Its `rebuttal_7/` paths, branch instructions, and recorded gate counts are intentionally historical; use `rebuttal/README.md` and `docs/overview/RESULT_PROVENANCE_MANIFEST.md` for current operations.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Promote the verified local QuALITY and base-sweep raw JSONs into anonymous, reproducible reviewer assets, repair the portable evidence gate, and merge the validated feature branch into local `main`.

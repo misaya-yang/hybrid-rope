@@ -3,7 +3,16 @@
 Start here if you are reviewing the paper, preparing rebuttal text, or checking
 whether an experiment row is supported by code and artifacts.
 
-## Opus 4.8 Audit Stack
+## Current Authority Order
+
+1. `ai-handoff.md` for current worktree state and known breakage.
+2. `rebuttal/README.md` and `rebuttal/rebuttal_playbook.md` for the current response-only workflow.
+3. `docs/overview/RESULT_PROVENANCE_MANIFEST.md` for reviewer-safe result identity and hashes.
+4. `docs/overview/PAPER_CLAIMS_MAP.md`, `docs/overview/REPRODUCE.md`, and `docs/overview/DATA_PREPARATION.md` for navigation and reproduction.
+
+The Opus 4.8 files below are a supporting audit stack. They do not override the 2026-07-11/12 rebuttal theory, provenance, or control-room documents.
+
+## Supporting Opus 4.8 Audit Stack
 
 Read these first for reviewer-facing decisions:
 

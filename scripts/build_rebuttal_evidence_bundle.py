@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Promote selected ignored result JSONs into portable rebuttal evidence.
+"""Build portable rebuttal evidence from verified raw inputs or snapshots.
 
-The source files remain ignored because they are broad local audit artifacts.
-This script verifies their exact SHA256 identities and emits only anonymous,
-repo-relative JSON snapshots that can travel to another checkout.
+Tracked snapshots are the portable defaults. Historical raw result JSONs may be
+provided explicitly; their exact SHA256 identities are verified before output.
 """
 
 from __future__ import annotations
@@ -34,6 +33,12 @@ DEFAULT_PRIMARY2_EXTRA_SEEDS_SOURCE = (
     / "multiseed"
     / "results_final.json"
 )
+DEFAULT_PHASE11_SNAPSHOT_SOURCE = (
+    DEFAULT_OUTPUT_DIR / "phase11_l256_3seed_recovered.json"
+)
+DEFAULT_PHASE11B_SNAPSHOT_SOURCE = (
+    DEFAULT_OUTPUT_DIR / "phase11b_125m_l256_3seed.json"
+)
 DEFAULT_QUALITY_SOURCE = (
     ROOT
     / "results"
@@ -42,7 +47,6 @@ DEFAULT_QUALITY_SOURCE = (
     / "phase21b_quality_454m_full_eval.json"
 )
 DEFAULT_BASE_SOURCE_DIR = ROOT / "results" / "core_text" / "phase18_base_sweep"
-DEFAULT_PHASE11B_SOURCE_DIR = ROOT / "results" / "core_text" / "phase11b"
 
 BASE_RUN_PATHS = {
     "base_10000_geo": "d64_base10000_geo_tau0.00_seed42/result.json",
@@ -56,6 +60,8 @@ EXPECTED_SHA256 = {
     "primary1": "1dbec88efac6d7442796d81fa1d073e3a76b1388dd815764bcb8b619f234511c",
     "primary2_seed42": "980246a9950d7e40e39278a4feef8115e6b35a9feb6e1fe1eb190faac1caf1fd",
     "primary2_extra_seeds": "4fd031f44d966117fa7473eaf405b4503329d81744a6938158fd588901535d47",
+    "phase11_snapshot": "8af8bce33e96f70542d943745bebbbaaa7cc65117587950b75c584f06a2f68db",
+    "phase11b_snapshot": "783fe586b0953b90329a8bf8ce0ccb52e82567eccc8c3d5fe3000bab831515c0",
     "phase11_raw": "6bdf97335365ea3a92c15ff84fc52f292ddad96b0f6e142f8b98199295dffa30",
     "phase11_yarn": "1f9550c46fa5b51b24b4d2e805c4dbbba8d639c19f664e812072bf8659b85321",
     "phase11b_scaling": "b8ae71708f18b54ed1249c77d26ba2e7aac6d4871a445648487c855740de6d94",
@@ -68,22 +74,6 @@ EXPECTED_SHA256 = {
 }
 
 MLA_RAW_KEYS = ("seeds", "eval_lengths", "progression", "extended", "summary")
-
-
-def default_phase11_dir(root: Path = ROOT) -> Path:
-    local = root / "results" / "core_text" / "phase11"
-    if local.is_dir():
-        return local
-    return (
-        root
-        / "07 - rebuttal"
-        / "all_paper_experiment_code"
-        / "branch_archives"
-        / "backup__2026-03-06"
-        / "high_value_artifacts"
-        / "results"
-        / "phase11"
-    )
 
 
 def sha256(path: Path) -> str:
@@ -102,6 +92,93 @@ def load_verified_json(path: Path, expected_sha256: str) -> Any:
             f"expected {expected_sha256}, got {actual}"
         )
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _load_snapshot(
+    path: Path, expected_sha256: str
+) -> tuple[dict[str, Any], bytes]:
+    raw = path.read_bytes()
+    actual = hashlib.sha256(raw).hexdigest()
+    if actual != expected_sha256:
+        raise ValueError(
+            f"Unexpected snapshot identity for {path.name}: "
+            f"expected {expected_sha256}, got {actual}"
+        )
+    payload = json.loads(raw)
+    if not isinstance(payload, dict):
+        raise ValueError(f"Expected a JSON object in snapshot {path.name}")
+    return payload, raw
+
+
+def _verified_embedded_runs(
+    snapshot: dict[str, Any], field: str, source: str, expected_key: str
+) -> dict[str, Any]:
+    runs = snapshot.get(field)
+    if not isinstance(runs, dict):
+        raise ValueError(f"Snapshot field {field} must be a JSON object")
+    source_metadata = snapshot.get("sources", {}).get(source)
+    if not isinstance(source_metadata, dict):
+        raise ValueError(f"Snapshot is missing sources.{source} metadata")
+
+    expected = EXPECTED_SHA256[expected_key]
+    declared = source_metadata.get("sha256")
+    if declared != expected:
+        raise ValueError(
+            f"Snapshot sources.{source}.sha256 mismatch: "
+            f"expected {expected}, got {declared}"
+        )
+    reconstructed = json.dumps(runs, indent=2).encode("utf-8")
+    actual = hashlib.sha256(reconstructed).hexdigest()
+    if actual != expected:
+        raise ValueError(
+            f"Reconstructed {field} identity mismatch: expected {expected}, got {actual}"
+        )
+    return runs
+
+
+def validated_phase11_snapshot_bytes(snapshot_source: Path) -> bytes:
+    """Validate the tracked Phase11 snapshot and return its original bytes."""
+    snapshot, raw = _load_snapshot(
+        snapshot_source, EXPECTED_SHA256["phase11_snapshot"]
+    )
+    raw_runs = _verified_embedded_runs(
+        snapshot, "raw_runs", "raw", "phase11_raw"
+    )
+    yarn_runs = _verified_embedded_runs(
+        snapshot, "yarn_runs", "yarn", "phase11_yarn"
+    )
+    if len(raw_runs) != 9 or len(yarn_runs) != 9:
+        raise ValueError("Expected nine raw and nine YaRN Phase11 run records")
+    if set(raw_runs) != set(yarn_runs):
+        raise ValueError("Phase11 raw and YaRN run identifiers do not match")
+    return raw
+
+
+def validated_phase11b_snapshot_bytes(snapshot_source: Path) -> bytes:
+    """Validate the tracked Phase11B snapshot and return its original bytes."""
+    snapshot, raw = _load_snapshot(
+        snapshot_source, EXPECTED_SHA256["phase11b_snapshot"]
+    )
+    scaling_runs = _verified_embedded_runs(
+        snapshot, "scaling_runs", "scaling", "phase11b_scaling"
+    )
+    dape_runs = _verified_embedded_runs(
+        snapshot, "dape_runs", "dape", "phase11b_dape"
+    )
+    if len(scaling_runs) != 9 or len(dape_runs) != 6:
+        raise ValueError("Expected nine scaling and six DAPE Phase11B run records")
+
+    records = [*scaling_runs.values(), *dape_runs.values()]
+    if any(not isinstance(record, dict) for record in records):
+        raise ValueError("Phase11B run records must be JSON objects")
+    seeds = sorted({record.get("seed") for record in records})
+    if seeds != [42, 137, 256]:
+        raise ValueError("Phase11B snapshot does not contain seeds [42, 137, 256]")
+    if any(record.get("use_dape") is not False for record in scaling_runs.values()):
+        raise ValueError("Phase11B scaling snapshot contains an invalid DAPE flag")
+    if any(record.get("use_dape") is not True for record in dape_runs.values()):
+        raise ValueError("Phase11B DAPE snapshot contains an invalid DAPE flag")
+    return raw
 
 
 def build_mla_snapshot(source: Path) -> dict[str, Any]:
@@ -552,20 +629,28 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         type=Path,
         default=DEFAULT_PRIMARY2_EXTRA_SEEDS_SOURCE,
     )
-    phase11_dir = default_phase11_dir()
+    parser.add_argument(
+        "--phase11-snapshot-source",
+        type=Path,
+        default=DEFAULT_PHASE11_SNAPSHOT_SOURCE,
+    )
     parser.add_argument(
         "--phase11-raw-source",
         type=Path,
-        default=phase11_dir / "results_phase11_raw.json",
+        default=None,
     )
     parser.add_argument(
         "--phase11-yarn-source",
         type=Path,
-        default=phase11_dir / "results_phase11_yarn.json",
+        default=None,
     )
     parser.add_argument(
-        "--phase11b-source-dir", type=Path, default=DEFAULT_PHASE11B_SOURCE_DIR
+        "--phase11b-snapshot-source",
+        type=Path,
+        default=DEFAULT_PHASE11B_SNAPSHOT_SOURCE,
     )
+    parser.add_argument("--phase11b-scaling-source", type=Path, default=None)
+    parser.add_argument("--phase11b-dape-source", type=Path, default=None)
     parser.add_argument("--quality-source", type=Path, default=DEFAULT_QUALITY_SOURCE)
     parser.add_argument(
         "--base-source-dir", type=Path, default=DEFAULT_BASE_SOURCE_DIR
@@ -586,7 +671,19 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Build only the selected component; repeat for multiple components.",
     )
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
-    return parser.parse_args(argv)
+    args = parser.parse_args(argv)
+    if (args.phase11_raw_source is None) != (args.phase11_yarn_source is None):
+        parser.error(
+            "--phase11-raw-source and --phase11-yarn-source must be provided together"
+        )
+    if (args.phase11b_scaling_source is None) != (
+        args.phase11b_dape_source is None
+    ):
+        parser.error(
+            "--phase11b-scaling-source and --phase11b-dape-source "
+            "must be provided together"
+        )
+    return args
 
 
 def main() -> None:
@@ -612,19 +709,32 @@ def main() -> None:
         )
     if "phase11" in components:
         outputs.append(args.output_dir / "phase11_l256_3seed_recovered.json")
-        write_json(
-            outputs[-1],
-            build_phase11_snapshot(args.phase11_raw_source, args.phase11_yarn_source),
-        )
+        if args.phase11_raw_source is None:
+            write_bytes(
+                outputs[-1],
+                validated_phase11_snapshot_bytes(args.phase11_snapshot_source),
+            )
+        else:
+            write_json(
+                outputs[-1],
+                build_phase11_snapshot(
+                    args.phase11_raw_source, args.phase11_yarn_source
+                ),
+            )
     if "phase11b" in components:
         outputs.append(args.output_dir / "phase11b_125m_l256_3seed.json")
-        write_json(
-            outputs[-1],
-            build_phase11b_snapshot(
-                args.phase11b_source_dir / "results_125m_scaling.json",
-                args.phase11b_source_dir / "results_125m_dape.json",
-            ),
-        )
+        if args.phase11b_scaling_source is None:
+            write_bytes(
+                outputs[-1],
+                validated_phase11b_snapshot_bytes(args.phase11b_snapshot_source),
+            )
+        else:
+            write_json(
+                outputs[-1],
+                build_phase11b_snapshot(
+                    args.phase11b_scaling_source, args.phase11b_dape_source
+                ),
+            )
     if "quality" in components:
         outputs.append(args.output_dir / "quality_454m_full_eval.json")
         write_json(outputs[-1], build_quality_snapshot(args.quality_source))

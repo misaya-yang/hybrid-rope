@@ -7,6 +7,7 @@ paper/_build_to_delete/
 # Python cache
 **/__pycache__/
 **/*.pyc
+.pytest_cache/
 
 # Runtime / temp markers
 **/*.pid
@@ -15,6 +16,7 @@ experiment_log.txt
 full_experiment.log
 outputs/
 logs/
+artifacts/
 .tmp_sync/
 
 # Large model / checkpoint binaries
@@ -47,6 +49,11 @@ secrets/
 .secrets/
 *.pw
 *.pw.txt
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+credentials*.json
 
 # Paper LaTeX build artifacts
 paper/*.aux
@@ -59,6 +66,7 @@ paper/*.out
 paper/*.synctex.gz
 paper/*.toc
 paper/*.pdf
+!paper/main.pdf
 paper/*.dvi
 paper/*.nav
 paper/*.snm
@@ -98,6 +106,10 @@ tong-jincheng-skill/
 # Do not commit them directly; promote only sanitized reviewer artifacts.
 07 - rebuttal/
 RESULT_PROVENANCE_MANIFEST.md
+
+# Local verbatim rebuttal inputs may contain reviewer identity or private context.
+# Keep only the sanitized tracked index; never commit these payloads.
+rebuttal/raw_sources/*_verbatim.md
 
 # macOS metadata
 .DS_Store

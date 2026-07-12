@@ -216,17 +216,17 @@ Packaged evidence:
 | `scripts/core_text_phases/audit_rope_checkpoint.py` | Offline checkpoint frequency audit helper | `9d974b58b44f8b664d9f250cbf6a4d5ec505f5077cb55d1120b4f638f9e53ad9` |
 | `scripts/core_text_phases/audit_training_artifacts.py` | Offline train-cache/token-count audit helper | `bb4a89d522557cc1878cfa37b16de9a7a97930228402a49e5fae6c1df5e6edd5` |
 | `scripts/core_text_phases/make_artifact_manifest.py` | Sanitized external artifact manifest helper | `38cb1f687cc08aa23e518a4da2399cece69754446292bd92cb6dee153c0f4099` |
-| `docs/overview/README.md` | Overview docs entrypoint and audit-stack navigation | `4fbd556bcc908e8705e4a88ebdaa5ce5732bf90afbd71ad1cddbbb1b3cb62f0b` |
+| `docs/overview/README.md` | Overview docs entrypoint and audit-stack navigation | `0db854709b80e280822737385eb44e9b94252e3ede2e1f5581412725f85d217d` |
 | `docs/overview/OPUS48_REBUTTAL_MASTER_BRIEF.md` | Single advisor-facing rebuttal master brief | `6c4c5c3fde341fa4fc235c5c44d3490debb5cbd9746b926cd6c235aa27554470` |
 | `docs/overview/OPUS48_AUDIT_CONTROL_CENTER.md` | One-stop Opus 4.8 audit index and P0 checklist | `f84f22056513902888c87f9c52abb07713ac538039406ed7343108b777db5f20` |
 | `docs/overview/OPUS48_ARTIFACT_RECOVERY_RUNBOOK.md` | External artifact recovery commands and acceptance criteria | `4857a2d859f07d0df9c80955dfb6995bf5412a7b4c167cfb0f54dd79ed6faad6` |
-| `docs/overview/OPUS48_COMPLETION_AUDIT.md` | Requirement-level completion and remaining-gap audit | `9ba18985aaf8e50ef459b75bbe9999d12fc584d8d049d26a1bfdf309b56119b4` |
-| `docs/overview/OPUS48_ISSUE_RESOLUTION_LEDGER.md` | Per-issue resolution state, evidence, and remaining gates | `f2bf3f142b3511b2e1da8160293156e8f4ecebd938218fd0204548dfa8b02ef2` |
+| `docs/overview/OPUS48_COMPLETION_AUDIT.md` | Requirement-level completion and remaining-gap audit | `47cc0e18ef33db94a111276afc83dfb552160414b040dbc64104f8530cd5672b` |
+| `docs/overview/OPUS48_ISSUE_RESOLUTION_LEDGER.md` | Per-issue resolution state, evidence, and remaining gates | `e00c2fa901511938dbcca8d523c72f6fc2a18b648d312a57e4cdce3e17b43aa4` |
 | `docs/overview/OPUS48_REBUTTAL_RESPONSE_MATRIX.md` | Rebuttal-safe answer strategy and forbidden-claim matrix | `75bae5a7c4ef05dcfd93379f38d1ea2cb869c870e3b533f7560298301ac2dae4` |
 | `docs/overview/OPUS48_FORENSIC_AUDIT_REPORT.md` | Prompt-structured forensic audit report | `ec51bb535eb9badc97a0e0d55aa1ccc5e2486e830c813f437403370e71c71a5b` |
 | `docs/overview/PAPER_CLAIMS_MAP.md` | Paper-to-experiment traceability map with explicit artifact gates | `cf9ed462b193a79f1096f73ff9f52153e0ca9d228ca09a37d4da25ebc7f0b293` |
-| `paper/REBUTTAL_PLAYBOOK.md` | Scoped rebuttal draft; must not override audit stack | `ef94296fb39c9b6b2e7b22f16c23851d94b6c90d25e9f7cc218d1fd337e6dbe4` |
-| `tests/test_opus48_audit_docs.py` | O48 coverage/link/stale-phrase regression test | `e7e9c1b5cbd82535bfffd0c788c01e9c46bfc6d212468ed15f77a145fb171ecb` |
+| `rebuttal/REVIEWER_TRIAGE_PLAYBOOK.md` | Current compact triage path; only real reviewer triggers may enter the response | `fed36981e22dc1e0b4f7cb884eb4aa3b0fc9abc652ab0dbfcb419e809150d5cb` |
+| `tests/test_opus48_audit_docs.py` | O48 coverage/link/stale-phrase regression test | `9370c31d34d6feacce3a2dc34a9493de550b09364f5f15d9b03347eb1d9ad53d` |
 
 Current compact-repo gaps:
 

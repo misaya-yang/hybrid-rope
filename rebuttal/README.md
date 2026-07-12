@@ -1,154 +1,80 @@
 # EVQ-Cosh Rebuttal Control Room
 
-日期：2026-06-10
+创建：2026-06-10；最后更新：2026-07-12
 
-这不是论文补充材料，也不是第二版投稿。这个文件夹是 rebuttal 作战室：保存原文、证据状态、最小实验队列、危险措辞、Path A/Path B author response。
+- Preparation：`triage_ready`
+- Response package：`needs_author_input`
+- 当前模式：`triage-only`。截至 2026-07-12，实际 NeurIPS reviews 尚未收到。
 
-## 0. Current Decision
+本目录是作者内部 rebuttal control room，不是论文、公开补充材料或 reviewer supplement，也不得作为仓库根目录打包。唯一中心主张是：**RoPE 的有限频率表也是 finite spectral budget；EVQ-Cosh 把 training-time frequency allocation 作为 operator design 与 inference-time range scaling 之外的第三个 PE 设计轴。** 这不是 universal long-context SOTA，也不是 YaRN、LongRoPE、DAPE、FIRE 或 learned PE 的替代主张。
 
-当前默认走 **Path B**：基于已经完成的论文修复和现有 primary evidence 写 rebuttal，不等待尚未完成的 Geo+LoRA。
+## 1. 一个统一策略入口 + 五份分轨材料 + 一个原文索引
 
-原因：当前 workspace 没有可核验的 Base / Geo+LoRA / EVQ-LoRA exact table。没有这张表，就不能把 LoRA 写成“关闭 LoRA confound 和欠训练质疑”的强控制证据。
-
-| Path | 何时使用 | 用哪个草稿 | LoRA 怎么写 |
-| --- | --- | --- | --- |
-| Path A | exact Base / Geo+LoRA / EVQ-LoRA 8K/16K/32K 数字、seed scope、same checkpoint/data/rank/steps 都齐全 | `AUTHOR_RESPONSE_PACKET.md` 的 Path A 段落 | matched control; only Geo+LoRA -> EVQ-LoRA gap attributed to EVQ |
-| Path B | 当前状态，或 Geo+LoRA 数字不可追溯 | `AUTHOR_RESPONSE_PATH_B_COMPACT.md` 或 `AUTHOR_RESPONSE_PATH_B_READY_DRAFT.md` | supporting/post-hoc only; concede attribution requires Geo+LoRA |
-
-快速规则：
-
-- 没有 exact Geo+LoRA table：不要写 Path A，但这不是 Path B 的阻塞项。
-- 有 exact Geo+LoRA table：先填 `TABLE23_LORA_WORKSHEET.md`，再升级 `AUTHOR_RESPONSE_PACKET.md`。
-- 不要让 optional P1/P2 实验拖住已经完成的 trust/scope 修复。
-
-## 1. Start Here
-
-| 你要做什么 | 打开 |
+| 文件 | 唯一职责 |
 | --- | --- |
-| 7 月真实 reviews 到来后，先按 3-5 个 reviewer 问题快速分流 | `REVIEWER_TRIAGE_PLAYBOOK.md` |
-| 查原文是否逐字保存 | local-only `raw_sources/00_INDEX.md` |
-| 看完整策略和逐条分析 | `REBUTTAL_PREPARATION.md` |
-| 看当前是否满足原始目标 | `COMPLETION_AUDIT.md` |
-| 看每句话能不能写 | `REBUTTAL_CLAIM_LEDGER.md` |
-| 看下一步行动取舍 | `REBUTTAL_ACTION_BOARD.md` |
-| 看最小实验怎么跑、怎么停 | `MINIMAL_EXPERIMENT_RUNBOOK.md` |
-| 不依赖 Geo+LoRA、只基于当前论文怎么写 | `PATH_B_PAPER_ONLY_BRIEF.md` |
-| 写最终 response | `AUTHOR_RESPONSE_PACKET.md` |
-| 没有 Geo+LoRA 数字时直接用 | `AUTHOR_RESPONSE_PATH_B_COMPACT.md` |
+| `rebuttal_playbook.md` | **统一策略入口**：response-only 原则、P0/P1/P2、理论边界与最小行动清单 |
+| `README.md` | 全局状态、导航与目录安全边界 |
+| `REVIEWER_TRIAGE_PLAYBOOK.md` | 真实 reviews 到来后的最多五项 score-driving concern 分流 |
+| `REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md` | 完整问题、证据、状态与 decision gate 总账 |
+| `THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` | 理论数学权威：exact / conditional proxy / empirical 三层边界 |
+| `LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md` | fresh Geo 结果、LongAlign/LongAlpaca provenance 与 clean-pair 因果边界 |
+| `raw_sources/00_INDEX.md` | tracked 控制索引；指向 local-only 原文并规定模拟材料隔离规则 |
 
-## 2. What Is Already Done
+已删除的旧文档仅可从 Git 历史追溯，不是入口，不得覆盖以上控制文件或最新 provenance。
 
-| Done item | Evidence |
-| --- | --- |
-| 原文 MD 化 | local-only `raw_sources/*.md`; three attachment files checked byte-for-byte with `cmp=0` |
-| 全面 rebuttal plan | `REBUTTAL_PREPARATION.md` |
-| claim 准入账本 | `REBUTTAL_CLAIM_LEDGER.md` |
-| 最小实验 runbook | `MINIMAL_EXPERIMENT_RUNBOOK.md` |
-| Path B author response | `AUTHOR_RESPONSE_PATH_B_COMPACT.md`, `AUTHOR_RESPONSE_PATH_B_READY_DRAFT.md` |
-| Paper-only Path B strategy | `PATH_B_PAPER_ONLY_BRIEF.md` |
-| Figure 8/Table 21 trust fix | `FIGURE_TABLE_AUDIT.md`; regenerated NLL figure |
-| Primary token/protocol reconciliation | `PRIMARY_PROVENANCE_NOTE.md`; paper appendix token table |
-| 1B MLA relabel | paper wording changed to schedule-sensitivity |
-| LoRA overclaim prevention | appendix wording changed to post-hoc/supporting unless matched Geo+LoRA exists |
+## 2. 权威来源必须分轨
 
-## 3. What Is Still Conditional
-
-| Missing or optional evidence | Needed for | Current fallback |
+| 需要判断什么 | 权威来源 | 不得误用 |
 | --- | --- | --- |
-| Base / Geo+LoRA / EVQ-LoRA exact table | Path A LoRA control | Path B concession; not required for paper-only response |
-| LoRA Geo+YaRN or Dynamic NTK eval-only | answer “raw baseline too weak” | do not claim training-free scaler dominance |
-| Primary I Geo+YaRN scale sweep | answer fixed-scale/tuned-baseline attack | call Table 2 matched-scale diagnostic |
-| Primary I AR exact | answer PK metric attack | define PK as teacher-forced NLL-gap |
-| learned tau trajectory | strengthen R1 | use myopic-loss explanation cautiously |
-| MLA tau sanity | strengthen systems/MLA convention | call d_eff an operating convention |
+| submitted/current source 写了什么 | 提交件与 `paper/` 当前源码，使用时明确版本 | 只能证明某版本的文字、图表和声明；不能覆盖数学审计，也不能单独证明实验 provenance |
+| 实验数字与 provenance | `docs/overview/RESULT_PROVENANCE_MANIFEST.md` 及其指向的 raw-backed artifacts | 已移出根目录的 2026-06-14 snapshot 只保存在 ignored local snapshot 中，不得恢复为权威 |
+| 理论正确性 | `THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` | submitted/current paper source 只证明“写了什么”，不裁决数学是否正确 |
+| LoRA 因果与数据来源 | `LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md` | fresh Geo 使用 official LongAlign；historical EVQ 指向 LongAlpaca。没有 same-data fresh EVQ pair 前不得作 causal attribution |
+| 当前决策与可发送范围 | `REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md`；真实评论的快速映射用 `REVIEWER_TRIAGE_PLAYBOOK.md` | 旧草稿、旧 action board 或单次内部报告不得反向升级 claim |
+| 模拟审稿原文 | `simulated_reviews/` | 只用于内部压力测试；不是真实 NeurIPS reviews，其科学判断已被 2026-07-11 audits 与总账取代 |
 
-## 4. The Rebuttal Posture
+## 3. 2026-07-22 真实 review 工作流
 
-Defend:
+真实 reviews 到来前只做 triage 准备，不创建或预填 author response。
 
-- EVQ-Cosh as a training-time RoPE frequency-allocation mechanism.
-- finite spectral budget / active-band framing.
-- EVQ+YaRN matched-scale substrate/range complementarity.
-- MLA scarce-channel stress test as production-relevant, not production-identical.
-- dead-channel audit and diagnostic value.
+1. local-only 保存每条真实评论的逐字版本，并保留 reviewer / AC 身份标签。
+2. 按 `REVIEWER_TRIAGE_PLAYBOOK.md` 分配稳定 ID；ID 一旦分配，不因排序变化而重编号。
+3. 对每个被触发 concern 填写 `correction / concession / evidence / boundary`，再映射到总账和分轨权威来源。
+4. 需要作者选择、未匿名化新证据或 provenance gate 的条目保持 `needs_author_input`，不得自行补全。
+5. 仅在真实评论到达后创建唯一回复文件：`AUTHOR_RESPONSE_20260722.md`。不要恢复多路径草稿入口。
+6. 发送前逐项执行总账与 triage send gate；只回答真实 reviewer 触发的 3–5 个 score-driving concerns。
 
-Concede or scope:
+## 4. 当前五个 P0/P1 边界
 
-- not universal long-context SOTA;
-- not a YaRN/LongRoPE/DAPE/FIRE replacement;
-- Primary II is seed-scoped diagnostic;
-- PK is teacher-forced NLL-gap unless AR exact is explicitly marked;
-- 1B MLA row is schedule-sensitivity limitation;
-- LoRA is supporting unless matched Geo+LoRA numbers are filled.
+| 优先级 | 边界 | 必须保留的事实 |
+| --- | --- | --- |
+| P0 | Trust / provenance | submitted、current source、raw-backed result 与 future revision 必须分开；实验 provenance 以 `docs/overview/RESULT_PROVENANCE_MANIFEST.md` 为准 |
+| P0 | KL / shape–scale correctness | ordinary baseline KL 一阶变分为零，从 `O(τ^4)` 开始；保留 exact cosh surrogate theorem、conditional diffuse probability-transport proxy、empirical finite-`τ` basin 三层身份 |
+| P0 | Exact-kernel / surrogate identity | exact kernel 只测 content-independent phase redundancy；cosh 是 stated surrogate 的 optimizer，不是 exact kernel、attention 或 LM objective 的闭式最优解 |
+| P1 | Baseline fairness / replication | Primary I 是 fixed-scale repo-defined progressive overlay；Primary II 的旧 “DAPE” 行实际是 32-parameter learnable-frequency control；Primary III 是 3-seed MLA，`d_eff=d_head` 只是架构 operating convention |
+| P1 | Metric / capability | PK 是 teacher-forced NLL-gap。8K AR exact：Geo+YaRN 0/0/0，EVQ+YaRN 58/18/98（mean 58%）；同时保留 4K Geo+YaRN 100% 对 EVQ+YaRN 77.3% 的反向边界 |
 
-## 5. Do Not Write
+## 5. 禁止措辞
 
-These phrases are rebuttal traps:
+- “EVQ is universal long-context SOTA.”
+- “EVQ replaces YaRN / LongRoPE / DAPE / FIRE / learned PE.”
+- “ordinary KL gives an `O(τ²)` gain”或“ordinary KL derives the deployed optimum.”
+- “`τ=d_eff/√L` is globally optimal”或“MLA `d_eff=d_head` is a theorem.”
+- “EVQ beats tuned Geo/YaRN”或“the matched-scale result proves tuned dominance.”
+- “Primary II is fully replicated”或把 seed-42 diagnostic 升级成广义 learned-PE dominance。
+- “PK means autoregressive exact retrieval.”
+- 用 historical LongAlpaca EVQ 与 fresh LongAlign Geo 计算 matched EVQ effect，或写成 controlled causal comparison。
+- 把 2B/4B 历史 trace、无 raw JSON 的 phase label 或旧 MLA `τ` 标签写成 reviewer-grade completion。
+- 把模拟审稿问题称为 reviewer 原话，或声称真实 NeurIPS reviews 已收到。
 
-- “9B tokens is overtraining.”
-- “The 1B row proves robustness to training saturation.”
-- “EVQ beats tuned YaRN.”
-- “PK means exact retrieval.”
-- “Geo+LoRA proves EVQ scales industrially.”
-- “EVQ-LoRA solves long-context LLaMA.”
-- “+30% cost is modest.”
-- “tau is globally optimal.”
-- “Figure 8 was a reviewer misunderstanding.”
-- “MLA is production-identical DeepSeek.”
+## 6. 目录安全
 
-Use `REBUTTAL_CLAIM_LEDGER.md` for safe alternatives.
+- `rebuttal/` 整体不进入 supplement；只将经过匿名化、provenance 核验且被真实 review 触发的 reviewer-grade artifact 单独移入受控 tracked 位置。
+- `raw_sources/00_INDEX.md` 是 tracked 控制索引；其列出的 `*_verbatim.md` payload 是 local-only，不提交、不打包、不公开引用。已移除的 reasoning attachment 不得恢复。
+- `simulated_reviews/` 仅保存字节不变的内部模拟原文，不进入 supplement，也不得伪装为真实 review。
+- 不复制身份、私有机器路径、凭据、内部推理或未匿名化 artifact 到 paper、public docs 或 response。
+- 本轮不改论文、实验数字或数据。仅允许为退役旧目录而解耦 evidence maintenance 脚本与测试；这类维护不得改变任何科学数值或 claim tier。
 
-## 6. If Geo+LoRA Numbers Arrive Later
+## 7. Consolidation note
 
-Do this in order:
-
-1. Fill `TABLE23_LORA_WORKSHEET.md`.
-2. Verify same checkpoint, data, rank, steps, seed scope.
-3. Compute Base -> Geo+LoRA adaptation cost.
-4. Compute Geo+LoRA -> EVQ-LoRA EVQ-incremental difference.
-5. Update `AUTHOR_RESPONSE_PACKET.md` Path A table.
-6. Update `REBUTTAL_CLAIM_LEDGER.md` conditional C-01/C-02 status.
-7. Recheck no Path B concession language remains mixed into the Path A paragraph.
-
-If numbers are weak or mixed:
-
-- do not force Path A;
-- keep LoRA as supporting/cautionary;
-- report the result only if it directly answers a reviewer question.
-
-## 7. Minimal Response Order
-
-Use this order for final response:
-
-1. Thank reviewers and state narrow scope.
-2. List trust repairs: Figure NLL fix, token/seed provenance, PK definition, 1B relabel.
-3. Address R2 first:
-   - LoRA Path A or Path B;
-   - training budget without “overtraining”;
-   - YaRN/tuned scaler scope;
-   - PK vs AR exact;
-   - Primary II seed scope;
-   - 1B schedule sensitivity.
-4. Address R1:
-   - shape vs scale;
-   - learned tau;
-   - NTK-aware limitation.
-5. Address R3:
-   - zero-parameter schedule;
-   - MLA scarce-channel relevance;
-   - downstream benchmark scope.
-6. Close with concrete paper edits, not new grand claims.
-
-## 8. Send Gate
-
-Before sending:
-
-- [ ] Choose Path A or Path B explicitly.
-- [ ] If Path A, every LoRA number is traceable in `TABLE23_LORA_WORKSHEET.md`.
-- [ ] If Path B, remove all controlled-LoRA upgrade language.
-- [ ] PK is defined as teacher-forced NLL-gap.
-- [ ] 1B row is called schedule-sensitivity, not robustness.
-- [ ] Primary II seed scope is explicit.
-- [ ] Figure/Table correction is acknowledged as our stale/mislabeled figure.
-- [ ] No forbidden sentence from Section 5 appears.
-- [ ] Final response answers reviewer questions, not a new paper.
+2026-07-12 起，`rebuttal_playbook.md` 成为 rebuttal 统一策略入口，本文件只保留导航、状态和安全边界。导航收敛到上面的分轨材料和原文索引。已被 2026-07-11 总账覆盖的旧策略、旧 Path A/B、旧 response、旧 action/runbook 与阶段性 `rebuttal_7/` 文档在本轮删除；历史仍可由 Git 追溯，但不再保留为活跃文件。两份 2026-07-10 模拟审稿已字节不变迁移到 `simulated_reviews/`；它们只提供压力测试原文，不提供真实 reviewer 身份或最新科学裁决。本次 consolidation 不改变任何实验数字。

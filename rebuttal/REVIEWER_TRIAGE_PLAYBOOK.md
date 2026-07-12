@@ -1,162 +1,113 @@
-# Reviewer Triage Playbook For July Rebuttal
+# Reviewer Triage Playbook
 
-Date: 2026-06-14
+最后更新：2026-07-12
 
-Purpose: use this as the first rebuttal document when real reviews arrive. It
-is deliberately short because a human reviewer will spend hours, not days, on
-the paper. Do not turn rebuttal into a second paper or an artifact audit unless
-the reviewer explicitly asks for that evidence.
+- Preparation：`triage_ready`
+- Response package：`needs_author_input`
+- 当前模式：`triage-only`。实际 NeurIPS reviews 尚未收到。
 
-## One-Sentence Status
+用途：真实 reviews 到来后，只识别最多五个会改变评分的 concern，并把它们映射到证据、让步和作者决策。不要把模拟审稿当作真实触发器，也不要把 rebuttal 扩写成第二篇论文。
 
-The submission is not in a severe state: the main mechanism claim is defensible,
-but the response must stay narrow and avoid volunteering weak supporting rows.
+中心答复边界：EVQ-Cosh 研究 **training-time frequency allocation / finite spectral budget** 这一第三轴；它与 operator design、inference-time range scaling 互补，不是 universal SOTA 或任何 scaler / learned PE 的替代。
 
-## What We Are Defending
+## Action labels
 
-Defend this:
+- `CORRECTION`：submitted wording、数学解释、指标或 provenance 需要纠正。
+- `CONCESSION`：明确承认当前证据没有覆盖的范围。
+- `EVIDENCE`：只引用已核验且与该问题直接相关的证据。
+- `BOUNDARY`：同时给出 negative / reversal / seed / metric 边界。
+- `AUTHOR_INPUT`：需要作者选择、真实 review 语境或 response budget 决策。
+- `DEFER`：证据未达 reviewer-grade，或真实 review 未触发，不进入回复。
 
-> EVQ-Cosh studies training-time RoPE frequency allocation as a finite-spectral
-> budget design axis, complementary to inference-time range scaling.
+## 1. Trust / provenance
 
-Do not defend this:
+**Trigger**：真实 reviewer 质疑图表来源、版本不一致、复现路径、seed / aggregate 混用，或因一处错误怀疑全部结果。
 
-- EVQ as universal long-context SOTA.
-- EVQ as a YaRN, LongRoPE, DAPE, FIRE, or learned-PE replacement.
-- Supporting rows as primary evidence.
-- The compact anonymous supplement as a full checkpoint/result archive.
+**Answer kernel**：先承认被点名的具体错误或歧义；分开 submitted artifact、current source、raw-backed result 与 future revision；说明哪些 claim 保留、纠正或暂停。实验数字只沿 `docs/overview/RESULT_PROVENANCE_MANIFEST.md` 的最新链路回答。
 
-## The 4 Reviewer Questions To Expect
+**Use**：精确 erratum；artifact / seed / protocol；submitted-versus-current 时态；可匿名核验的 raw-backed provenance。
 
-### 1. Is this more than a tuned RoPE/base/YaRN trick?
+**Avoid**：说“reviewer misunderstood”；用当前源码假装提交件本来正确；用仓库根目录 2026-06-14 旧 snapshot 覆盖最新 manifest；把 paper source 当数学或结果 provenance 权威。
 
-Fast answer:
+**Action / readiness**：`CORRECTION + EVIDENCE + BOUNDARY + AUTHOR_INPUT`；`PARTIAL`。事实链可准备，最终取舍必须等真实原话与作者确认。
 
-- Yes, the paper is about training-time allocation shape, not a new inference
-  scaler.
-- The strongest evidence is matched-scale EVQ x YaRN: same fixed YaRN scale,
-  different trained frequency substrate.
-- We should concede that this is not a tuned Geo+YaRN or LongRoPE leaderboard.
+## 2. KL / shape–scale correctness
 
-Use:
+**Trigger**：真实 reviewer 指出 ordinary KL 一阶为零、追问 `L^{-1/2}`、`τ` 最优性、cosh surrogate 与 deployed scale 是否拼接，或质疑 finite-`τ` 外推。
 
-- Matched-scale EVQ x YaRN result.
-- The theory framing: operator, range scaling, and allocation are separate axes.
+**Answer kernel**：直接承认 ordinary baseline-to-perturbed KL 的一阶变分为零，首项是 `O(τ^4)`，撤回旧 `O(τ²)` KL 解释。随后严格分三层：exact cosh surrogate theorem；conditional diffuse probability-transport proxy；empirically calibrated finite-`τ` basin selector。
 
-Avoid:
+**Use**：`THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md`；精确定理假设；proxy 的条件；99-run 仅作经验 basin 支持。
 
-- "EVQ beats tuned YaRN."
-- "EVQ replaces LongRoPE."
+**Avoid**：让 submitted/current paper source 覆盖 7/11 数学审计；说 ordinary KL 导出非零 operating point；说 `τ=d_eff/√L` globally optimal；把 proxy 当 trained-task theorem。
 
-### 2. Are the experiments strong enough, or are they mostly single-seed?
+**Action / readiness**：`CORRECTION + CONCESSION + EVIDENCE + BOUNDARY`；`THEORY_CORRECTION_PENDING`。无需为这一纠错临时启动 GPU 实验；只有实际 response 使用新三层口径后才能升级状态。
 
-Fast answer:
+## 3. Baseline fairness / replication
 
-- The primary anchors are explicitly tiered.
-- The matched-scale EVQ x YaRN result and MLA are 3-seed anchors.
-- The PE-dominant DAPE-style result is a seed-scoped diagnostic, not broad
-  learned-PE dominance.
-- Video, LoRA, progressive, 750M, and QuALITY are supporting context unless a
-  reviewer asks about that exact issue.
+**Trigger**：真实 reviewer 追问 tuned Geo / tuned YaRN、DAPE fidelity、single-seed、MLA convention、LoRA confound，或要求证明 EVQ 胜过最优 scaler。
 
-Use:
+**Answer kernel**：只守住已隔离的比较。Primary I 是 matched-scale 3-seed substrate/range interaction，不是 separately tuned dominance；Primary II 的 Geo/DAPE/EVQ 是 retained seed-42 diagnostic；Primary III 是 3-seed MLA scarce-channel stress test，`d_eff=d_head` 是 architecture-specific operating convention。fresh Geo LoRA 使用 official LongAlign，historical EVQ 指向 LongAlpaca；无 same-data fresh EVQ pair 时 causal attribution 仍 blocked。
 
-- Evidence-tier table.
-- Matched-scale EVQ x YaRN for substrate/range complementarity.
-- MLA 8K/500M 3-seed result as a scarce-channel stress test.
-- PE-dominant result only with "seed-42 diagnostic" wording.
+**Use**：每项的 exact seed / scale / token / metric protocol；matched-scale factorial；Primary III 3-seed结果；LoRA 数据清单与 manifest。
 
-Avoid:
+**Avoid**：把额外 EVQ seed 当完整 Geo/DAPE replication；把 matched-scale 写成 tuned-YaRN leaderboard；用不同语料的 Geo/EVQ 计算 causal delta；把 `d_eff` convention 写成 theorem。
 
-- Promoting LoRA/video/progressive into primary proof.
-- Calling the 1B/4K MLA row "saturation robustness."
+**Action / readiness**：`CONCESSION + EVIDENCE + BOUNDARY + DEFER`；总体 `PARTIAL`，LoRA attribution 为 `PROVENANCE_BLOCKED`。只有真实 reviewer 点名且 artifact gate 已满足时才升级证据。
 
-### 3. Is PK / downstream evidence overstated?
+## 4. Metric / capability
 
-Fast answer:
+**Trigger**：真实 reviewer 问 PK 是否为生成准确率、结果是否代表真实 long-context capability、是否存在反向边界，或是否可作 downstream / production claim。
 
-- PK in the main tables is teacher-forced NLL-gap retrieval, not autoregressive
-  exact match.
-- AR exact is only used where explicitly labeled.
-- Downstream accuracy is not the main claim; QuALITY is a Gold-NLL supporting
-  check in a capacity-limited 454M setting.
+**Answer kernel**：PK 固定定义为 teacher-forced NLL-gap retrieval，AR exact 必须单列。8K AR exact 为 Geo+YaRN 0/0/0、EVQ+YaRN 58/18/98（mean 58%）；同时披露 4K Geo+YaRN 100%、EVQ+YaRN 77.3% 的反向边界。能力结论限定为已测协议，不升级为通用 downstream、production 或 latency/FLOP 结论。
 
-Use:
+**Use**：TF 与 AR 并列；trial / seed scope；4K reversal；Primary I–III 的原始任务定位。
 
-- The metric definition in the experiments section.
-- The 750M table only if the reviewer specifically asks about AR exact.
+**Avoid**：把 100% PK 称为 exact generation；隐藏 18–98% seed spread 或 4K reversal；用 QuALITY、LoRA、video 等 supporting row 代替 primary capability 证据。
 
-Avoid:
+**Action / readiness**：`CORRECTION + EVIDENCE + BOUNDARY`；`READY`。不得删除不利边界来换取更强标题。
 
-- "PK means exact retrieval."
-- "QuALITY proves downstream task superiority."
+## 5. AC-level remaining contribution
 
-### 4. Is the supplement/reproducibility package enough?
+**Trigger**：AC 或 reviewer 问：在理论纠错、baseline 缺口与 reporting 修正后，论文还剩什么可接受贡献？
 
-Fast answer:
+**Answer kernel**：剩余贡献是 training-time frequency allocation / finite spectral budget 这一第三设计轴，以及一个 closed-form、zero-learned-parameter 的 EVQ-Cosh 实例。证据核心是 Primary I matched-scale 3-seed complementarity、Primary II seed-42 PE-dominant diagnostic、Primary III 3-seed MLA stress test；理论核心只保留 exact surrogate、conditional proxy 与 empirical basin 的分层身份。
 
-- The anonymous supplement is a compact code archive, not a full result dump.
-- It includes the core EVQ schedule implementation, public reproduction paths,
-  figure scripts, and curated JSON for the strongest matched-scale and
-  PE-dominant diagnostic values.
-- It intentionally excludes checkpoints and large result directories.
-- If asked, we should acknowledge that some traceability docs point beyond the
-  compact archive and commit to releasing cleaned launch scripts/manifests with
-  the full release.
+**Use**：一个窄机制主张；三层理论身份；Primary I–III 的真实证据层级；明确 errata 与未完成控制。
 
-Use:
+**Avoid**：universal SOTA；替代 YaRN/LongRoPE/DAPE/FIRE/learned PE；“工业级闭环”；用新 supporting experiment 重写论文身份。
 
-- Core schedule code and unit tests.
-- Curated matched-scale EVQ x YaRN JSON.
-- Curated PE-dominant/Fig.3 panel-a JSON.
-- Reproducibility guide as a compact-path guide, not a full archive manifest.
+**Action / readiness**：`CONCESSION + EVIDENCE + BOUNDARY + AUTHOR_INPUT`；`READY_WITH_CONCESSION`。最终篇幅和是否主动提某项修正由作者在看到真实 reviews 后决定。
 
-Avoid:
+## 真实 reviews 到来后的稳定 ID 工作流
 
-- Claiming the compact supplement already contains every historical script,
-  checkpoint, and result log.
-- Leading with missing artifacts unless the reviewer asks about reproduction.
+1. local-only 冻结 reviewer / AC 原话；模拟审稿不得进入这一步。
+2. 按出现顺序分配 `R1-C01`、`R1-C02`、`R2-C01` 或 `AC-C01`。ID 一经分配永久稳定，之后只改优先级和状态，不重编号。
+3. 把每个 ID 映射到上面一个主 concern；跨类问题指定一个 primary concern，其余写入 `related`。
+4. 每个 ID 使用同一模板：
 
-## Fastest Response Workflow
+```text
+ID:
+Verbatim trigger:
+Primary concern / related:
+Correction:
+Concession:
+Evidence:
+Boundary:
+Action labels:
+Readiness:
+Author decision required:
+```
 
-1. Classify each real review into the 4 questions above.
-2. Answer only the 2-3 questions that drive the score.
-3. Use one paragraph of trust repair before defense if the reviewer flags a
-   figure, metric, seed, or reproduction issue.
-4. Add new experiments only if they answer a specific reviewer question and can
-   be reported with exact numbers.
-5. Delete any sentence that sounds like a broader paper claim than the submitted
-   evidence supports.
+5. `correction / concession / evidence / boundary` 不适用时写 `none`，不得省略以制造已闭环假象。
+6. 只选择影响评分的 3–5 个 ID 进入唯一 `AUTHOR_RESPONSE_20260722.md`；该文件只能在真实 reviews 到来后创建。
 
-## If There Is Time For Only One Concrete Update
+## Send gate
 
-Prepare a compact "supplement clarification" paragraph:
-
-> The anonymous supplement is a compact code archive rather than a full
-> checkpoint/result dump. It contains the EVQ-Cosh schedule implementation,
-> evaluator code, figure scripts, and curated JSON for the matched-scale EVQ x
-> YaRN and PE-dominant diagnostic values. We will release cleaned launch scripts,
-> result manifests, and checkpoint hashes for the larger MLA/supporting runs in
-> the full public release.
-
-Use this only if a reviewer attacks reproducibility or missing scripts. Do not
-volunteer it in the opening if no reviewer asks.
-
-## Final Send Gate
-
-Before sending the rebuttal, check the draft from two angles:
-
-Reviewer angle:
-
-- Does this answer the actual review, not an internal audit concern?
-- Can the reviewer understand the point in one pass?
-- Are we admitting real scope limits instead of arguing around them?
-
-Evidence angle:
-
-- Is every number already in the submitted paper, supplement, or a verified
-  result table?
-- Are supporting rows clearly marked as supporting?
-- Did we avoid exact claims about experiments whose results are not in hand?
-
-If either angle fails, shorten and scope the sentence.
+- [ ] 每段都绑定一个真实、逐字保存的 reviewer / AC trigger。
+- [ ] 所有数字来自最新 provenance manifest 或其 raw-backed artifact。
+- [ ] 理论答复明确撤回 ordinary-KL `O(τ²)` 解释，并保留三层身份。
+- [ ] PK 与 AR exact 分开，且 8K seed spread 与 4K reversal 同时出现。
+- [ ] LoRA 没有跨 LongAlign / LongAlpaca 作 causal attribution。
+- [ ] 没有把模拟原文、deferred run 或历史 trace 写成真实 review / reviewer-grade evidence。
+- [ ] 作者已处理所有 `AUTHOR_INPUT`，response package 才能从 `needs_author_input` 升级。

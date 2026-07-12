@@ -1,33 +1,39 @@
 # Raw Source Index
 
-日期：2026-06-10
+最后更新：2026-07-12
 
-用途：这里保存 rebuttal 准备阶段收到的原文材料。除本索引外，`*_verbatim.md` 文件只保存原文内容，不承担策略整理功能。原文文件含内部评审准备材料，默认 local-only，不进入公开 rebuttal、paper、supplement 或匿名材料。
+状态：`tracked control index / payloads local-only`
 
-## 文件
+本目录只为作者内部核对原文与输入来源。它不是真实 NeurIPS review 记录，不进入 paper、author response、supplement 或 reviewer archive。策略与科学判断分别以 `../REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md` 和 `../THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` 为准。
 
-| 文件 | 来源 | 行数 | SHA256 | 校验 |
-| --- | --- | ---: | --- | --- |
-| `01_review_panel_a_verbatim.md` | attachment A | 74 | `98228fbf3578fd65de8939c4085cf75c0f3d64a2721c7ae653f85485c8146ded` | `cmp=0` |
-| `02_review_panel_b_verbatim.md` | attachment B | 78 | `83ff2a992588dc65a0e7b3e4d57ca3c4db4ce73431ec5debe9f23ee548c58437` | `cmp=0` |
-| `03_reasoning_attachment_verbatim.md` | attachment C | 70 | `cac9d7ad9c601f647dfd0ce9a7ba27e41563676bc1e26d11a06e66d39c35838b` | `cmp=0` |
-| `04_user_five_point_note_verbatim.md` | 用户消息 / `rebuttal/fable相关资料原文.md:161-189` | 29 | `690be66b0105cc49c4089582f13005a708dfab0fed440082a4083b2c9aa86a6a` | 手动逐字转存 |
-| `05_probability_calibration_verbatim.md` | 用户材料 / `rebuttal/fable相关资料原文.md:192-206` | 15 | `26ce4e48265b34d0c14c17a8a69144dc2f23e1fd31a42558be6b77e628868bee` | 手动逐字转存 |
+## 保留的安全 local-only 输入
+
+| 文件 | 允许用途 | 安全边界 |
+| --- | --- | --- |
+| `01_review_panel_a_verbatim.md` | 核对内部模拟 panel A 的原话与问题覆盖 | 不是实际 reviewer 原话；不得公开引用或据此声称 reviews 已收到 |
+| `02_review_panel_b_verbatim.md` | 核对内部模拟 panel B 的原话与问题覆盖 | 不是实际 reviewer 原话；不得公开引用或据此声称 reviews 已收到 |
+| `04_user_five_point_note_verbatim.md` | 核对作者提供的五点准备要求 | 只作内部需求来源；对外表述必须重新匿名化并由证据支持 |
+| `05_probability_calibration_verbatim.md` | 核对作者提供的概率/决策校准材料 | 只作内部 planning 输入；不是 acceptance 概率事实或 reviewer evidence |
+
+以上文件即使内容本身不含明显凭据，也一律按 local-only 处理：不提交、不打包、不复制到公开文档。
+
+## 已退役的 03 reasoning attachment
+
+`03_reasoning_attachment_verbatim.md` 已从受控 source set 移除。不得从历史目录、聊天附件、备份或其他副本恢复，也不得在索引、rebuttal、paper 或 supplement 中转述其中的身份信息或推理过程。
+
+## 模拟审稿原文的新位置
+
+两份 2026-07-10 模拟审稿已字节不变迁移到：
+
+- `../simulated_reviews/2026-07-10_fable5_committee_output.md` — SHA256 `520ff82bb04c4d552f1d36a5573ef613fc17d9bb15838b780c8f16de1d751864`
+- `../simulated_reviews/2026-07-10_gpt_pro_committee_full_v2.md` — SHA256 `07fac44c2080bf0a3440cf092596c0656ee1c2246246e486e5fb3e7ed4b9d942`
+
+这些文件是内部模拟 / pressure test，不是真实 NeurIPS reviews。其原文只用于覆盖潜在攻击面；其中的科学判断已被 2026-07-11 theory、LoRA 与 master-ledger audits supersede。不得把模拟 reviewer 身份、评分、措辞或概率写成真实 review 事实。
 
 ## 使用规则
 
-- 查原话：优先看本目录下的 `*_verbatim.md`。
-- 查 rebuttal 文件夹总入口：看 `rebuttal/README.md`。
-- 查合集上下文：看 `rebuttal/fable相关资料原文.md`。
-- 查策略和执行优先级：看 `rebuttal/REBUTTAL_PREPARATION.md`。
-- 查当前可写 rebuttal 草稿：看 `rebuttal/REBUTTAL_DRAFT_EVIDENCE_SCOPED.md`。
-- 查最终 author response 的双路径写作包：看 `rebuttal/AUTHOR_RESPONSE_PACKET.md`。
-- 查当前无 Geo+LoRA 数字时的无占位符 Path B 草稿：看 `rebuttal/AUTHOR_RESPONSE_PATH_B_READY_DRAFT.md`。
-- 查当前无 Geo+LoRA 数字时的紧凑提交版：看 `rebuttal/AUTHOR_RESPONSE_PATH_B_COMPACT.md`。
-- 查最终 response 前的证据状态和行动取舍：看 `rebuttal/REBUTTAL_ACTION_BOARD.md`。
-- 查最小补实验、停止规则和脚本入口：看 `rebuttal/MINIMAL_EXPERIMENT_RUNBOOK.md`。
-- 查不依赖 Geo+LoRA、只基于当前论文和已完成修复的 rebuttal 主线：看 `rebuttal/PATH_B_PAPER_ONLY_BRIEF.md`。
-- 查原始目标是否逐项满足、哪些仍是条件项：看 `rebuttal/COMPLETION_AUDIT.md`。
-- 查每一句 response 是否可写/条件可写/禁写：看 `rebuttal/REBUTTAL_CLAIM_LEDGER.md`。
-- 查 primary token/seed/protocol provenance：看 `rebuttal/PRIMARY_PROVENANCE_NOTE.md`。
-- 不要把 `03_reasoning_attachment_verbatim.md` 的个人身份信息或推理过程复写进公开 rebuttal、paper、supplement 或匿名材料。
+- 总入口：`../README.md`。
+- 真实 review 到来后的分流：`../REVIEWER_TRIAGE_PLAYBOOK.md`；真实原话必须另行 local-only 保存并分配稳定 ID。
+- 查完整 decision / evidence 状态：`../REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md`。
+- 本索引 `00_INDEX.md` 保持 tracked；其列出的 `*_verbatim.md` payload 不得 commit、package、export 或进入 supplement。
+- 只有匿名化、raw-backed、被真实 review 触发的 reviewer-grade 事实，才可按 README 的分轨权威规则进入最终 response。

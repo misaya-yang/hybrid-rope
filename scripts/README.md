@@ -13,9 +13,9 @@ scripts/
 │   ├── README.md               Phase Map + → Paper 映射
 │   ├── run_evq_sweep.py        核心 τ-sweep 实验 (50M/125M/350M)
 │   ├── phase11_L256_extrap.py  PE-dominant regime
-│   ├── phase11b_125m_dape.py   EVQ vs DAPE 对比
+│   ├── phase11b_125m_dape.py   当前 DAPE-compatibility/supporting runner；不等同于论文旧行的完整复现
 │   ├── phase11c_454m_scaling.py  454M scaling
-│   ├── phase14c_multiscale_evq_yarn.py  EVQ+YaRN synergy ⭐
+│   ├── phase14c_multiscale_evq_yarn.py  supporting multiscale check；不是完整 454M Table 2 reproduction
 │   ├── phase15_750m_*.py       750M continued-pretrain
 │   ├── phase16_formula_optimality_sweep.py  99-run τ* validation
 │   ├── phase17b_*.py           454M Stage 2 (512→1024)
@@ -53,9 +53,9 @@ scripts/
 | 脚本 | 论文 Figure/Table | 描述 |
 |------|------------------|------|
 | `run_evq_sweep.py` | Table 1 | 多尺度 τ-sweep (50M/125M/350M) |
-| `phase14c_multiscale_evq_yarn.py` | Table 2-3, Fig 2 | EVQ+YaRN synergy (passkey 100%) |
+| `phase14c_multiscale_evq_yarn.py` | supporting for Table 2/Fig 2 | multiscale check；完整 454M aggregate 来自 curated artifact |
 | `phase11_L256_extrap.py` | Table 4-5, Fig 3 | PE-dominant regime |
-| `phase11b_125m_dape.py` | Table 4 | EVQ vs DAPE 对比 |
+| `phase11b_125m_dape.py` | supporting compatibility path | 不得把当前 runner 自动等同于旧 Table 4 的 faithful DAPE reproduction |
 | `phase11c_454m_scaling.py` | Table 4 | 454M PE-dominant scaling |
 | `phase15_750m_*.py` | Table 6 | 750M continued-pretrain |
 | `phase16_formula_optimality_sweep.py` | Fig 6 | 99-run τ* formula validation |

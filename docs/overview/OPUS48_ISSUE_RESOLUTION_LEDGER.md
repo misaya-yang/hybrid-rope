@@ -44,7 +44,7 @@ Resolution labels:
 | O48-21 | Resolved for wording | Downstream accuracy is a non-regression/capacity-limited check, not main evidence. | `paper/sections/05_experiments.tex`, `docs/overview/OPUS48_FORENSIC_AUDIT_REPORT.md` | None for current scope. |
 | O48-22 | Experiment-gated | Missing tuned LongRoPE2/CoPE/tuned-scale YaRN baselines are explicit open gaps. | `docs/overview/OPUS48_AUDIT_CONTROL_CENTER.md`, `docs/overview/OPUS48_COMPLETION_AUDIT.md` | Add baselines or concede. |
 | O48-23 | Resolved for wording | Key caveats are promoted into overview/rebuttal docs and old docs are quarantined. | `docs/overview/OPUS48_AUDIT_CONTROL_CENTER.md`, `docs/overview/OPUS48_COMPLETION_AUDIT.md`, old-doc audit notices | Keep paper/rebuttal synced with these caveats. |
-| O48-24 | Resolved for wording | Rebuttal playbook overclaims were rewritten or scoped. | `paper/REBUTTAL_PLAYBOOK.md`, `docs/overview/PAPER_DESCRIPTION_AUDIT.md` | Review again before any final rebuttal submission. |
+| O48-24 | Resolved for wording | The historical paper-local rebuttal playbook was retired; its overclaims remain prohibited in the current triage path. | `rebuttal/REVIEWER_TRIAGE_PLAYBOOK.md`, `docs/overview/PAPER_DESCRIPTION_AUDIT.md` | Review again before any final rebuttal submission. |
 | O48-25 | Resolved in code / Evidence-gated | Eval scripts now use checkpoint-loaded `inv_freq` explicitly and resolve historical/current MLA run IDs; manifest and historical-script docs separate code support from artifact support. | `eval_extended_3seeds.py`, `yarn_finetune_eval.py`, `tests/test_yarn_checkpoint_inv_freq.py`, `docs/overview/HISTORICAL_SCRIPT_STATUS.md` | External artifacts still need sanitized manifests before promotion. |
 
 ## Code-Side Fixes Landed
