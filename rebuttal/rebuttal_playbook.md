@@ -2,14 +2,14 @@
 
 最后核对：2026-07-12
 
-状态：`pre-review / response-only / no-new-experiments`
+状态：`pre-review / reviewer-response-first / targeted-preparation`
 
-用途：真实 reviews 到来后的统一入口。本文只准备如何回答最可能影响评分的问题，不预写完整 rebuttal，不补实验，不扩张论文。
+用途：真实 reviews 到来后的统一入口。本文优先准备如何回答最可能影响评分的问题，不预写完整 rebuttal，不无边界扩张论文。允许提前开展少量、高信息价值、具有明确停止条件的内部实验；未经完整核验且未被 reviewer 实际触发的新结果不得自动进入回复。
 
 ## 0. Rebuttal 的硬原则
 
 1. **只回应真实 reviewer。** 模拟 review、内部审计和外部案例只用于预判，不得伪装成 reviewer trigger。
-2. **不补充任何新实验。** 不新训练、不新评测、不增加 baseline zoo；只能整理、复核和解释提交时已经存在的理论、实验与 artifacts。
+2. **实验服从问题，不服从禁令。** 可以做能直接澄清核心机制、因果对照或现有实验失败原因的高价值实验；不做无明确问题、无匹配控制、无停止条件的训练或 baseline zoo。新结果在完成 provenance、匹配协议和负结果边界核验前只属于内部研究材料。
 3. **不把 rebuttal 当二次投稿。** 不引入新主张、新机制或新的证据层级。
 4. **回答顺序固定为：直接回答 → 现有证据 → 适用边界。** reviewer 没问到的内部问题不主动发散。
 5. **无法由现有证据关闭的问题，明确让步。** 不用 supporting LoRA、视频、progressive training 或单 seed 结果替代缺失的主控制。
@@ -207,7 +207,7 @@ C_{\mathrm{norm}}
 - **现有证据**：本文件 §2；theory audit；Phase 16 只作 basin support。
 - **当前材料**：数学长文充分，短回答尚需压缩。
 - **策略**：明确三层身份；承认 KL order error；不守 global optimality。
-- **需要做的事**：只整理 120–180 词 answer kernel与公式指针，不补推导、不补实验。
+- **需要做的事**：整理 120–180 词 answer kernel与公式指针；不为掩盖理论边界而追加无关推导或实验。
 - **触发信号**：reviewer 点名 \(\tau\)、KL、prefactor、optimality、small-\(tau\) 或 MLA dimension。
 
 #### P0-B — exact kernel、surrogate 与真实优化对象
@@ -217,7 +217,7 @@ C_{\mathrm{norm}}
 - **现有证据**：本文件 §3；`paper/appendix/a1_proofs.tex:108-158,306-329,420-451`。
 - **当前材料**：paper有部分 caveat，但 `c_coll` 表述过强，旧 rebuttal材料没有把 objective gap讲清。
 - **策略**：把 exact kernel定位为 phase-redundancy Gram；把 cosh定位为 surrogate optimizer；只守 directional exact-kernel validation。
-- **需要做的事**：冻结一张 “optimizes / does not optimize” 对照和短回答，不新生成结果。
+- **需要做的事**：冻结一张 “optimizes / does not optimize” 对照和短回答；独立的 8B 机制实验只检验模型能否适应频率重分配，不得冒充 exact-kernel theorem。
 - **触发信号**：reviewer 问 collision kernel、distance prior、surrogate validity、mechanism或 task relation。
 
 #### P0-C — baseline / provenance 触发后的 trust repair
@@ -227,7 +227,7 @@ C_{\mathrm{norm}}
 - **现有证据**：历史 runner `8616af4`；`scripts/text_eval/eval_454m_multilength.py:123-142`; curated raw artifacts。
 - **当前材料**：结果值可追溯，方法 identity 与 end-to-end runner不完整。
 - **策略**：只纠正和收窄：旧 DAPE行 relabel；YaRN称 repo-defined progressive overlay；TF/AR分开；不声称 tuned dominance或 full reproduction。
-- **需要做的事**：准备 factual errata map；不补任何 baseline实验。
+- **需要做的事**：准备 factual errata map；只在能改变因果解释且协议可严格匹配时补最近控制，不启动 broad baseline grid。
 - **触发信号**：reviewer 实际质疑 baseline、seed、metric、code或 reproducibility。
 
 ### P1：有真实风险，但等 reviewer 原话再展开
@@ -235,22 +235,23 @@ C_{\mathrm{norm}}
 | 风险 | 可能问题 | 现有回答 | 暂不做什么 |
 | --- | --- | --- | --- |
 | Primary II single seed | 为什么 seed-42 是 primary？ | 明确是 PE-dominant diagnostic；fixed EVQ额外 seeds不能升级整张表 | 不补 seeds，不把 \(L=256\) 当 replication |
-| tuned scaler / scale | tuned YaRN会否消除优势？是否规模太小？ | 只守 fixed-scale overlay；承认 frontier-scale / tuned baseline缺失 | 不跑 scale grid、不启动 7B/8B实验 |
+| tuned scaler / scale | tuned YaRN会否消除优势？是否规模太小？ | 只守 fixed-scale overlay；承认 frontier-scale / tuned baseline缺失 | 不跑无触发的 scale grid；8B 机制实验不用于宣称 tuned-scaler dominance |
 | metric / capability | 100% PK是否 exact generation？ | PK=TF NLL-gap；同时给已有 8K AR和4K reversal | 不新增 benchmark，不隐藏 seed spread |
 | novelty | 是否只是调 base、插值或 search？ | 用 stage/object/DOF 区分；保持可组合性口径 | 不做 broad related-work rebuttal或组合 zoo |
 | midpoint Geo | 是否非标准 RoPE baseline？ | 承认 matched midpoint control，用于隔离 shape | 不补 native endpoint训练 |
 | MLA \(d_{\mathrm{eff}}\) | 为什么用 \(d_{\mathrm{head}}\)？ | calibrated convention，只支持 stated setting | 不补 ablation，不称 theorem |
 | undertraining | 短 token预算是否制造效应？ | 报 exact budgets、negative/reversal boundary、证据 tier | 不用 supporting LoRA/1B声称已关闭 |
 
-### P2：明确排除
+### P2：当前明确排除
 
-- 新 LoRA、video、progressive、750M、1B/4K、LongRoPE2/FIRE/CARoPE组合实验；
-- 新模型族、production-scale pretraining、更多 seed；
+- 无匹配 Geo 控制、无任务梯度或只做隐藏态蒸馏的新 LoRA 实验；
+- video、progressive、750M、1B/4K、LongRoPE2/FIRE/CARoPE 组合扩张；
+- 新模型族、production-scale pretraining，以及在 seed-42 未给出方向前机械增加 seed；
 - 新 Bessel/forcing/global exact-kernel theorem或 \(L_{\mathrm{eff}}^J\) 测量；
 - broad tuned-base / scaler zoo；
 - 没有真实 reviewer trigger的预制 author response。
 
-排除原因统一为：不能在 rebuttal 中新增实验证据，且这些工作不能直接回答当前最可能的核心理论问题。
+排除原因统一为：这些工作当前不能以足够低的成本直接改变核心机制或因果判断。它们不是被“rebuttal 禁止”，而是没有达到当前的 information-gain gate。
 
 ## 5. 现有 rebuttal 材料怎么用
 
@@ -266,7 +267,7 @@ C_{\mathrm{norm}}
 
 ## 6. 7 月 22 日前的最小行动清单
 
-没有实验队列，只有回答准备：
+回答准备仍是主线，同时只保留一个机制实验队列：
 
 1. **冻结两个理论短答。**
    - \(\tau\)：exact shape / conditional scaling / empirical basin。
@@ -276,9 +277,10 @@ C_{\mathrm{norm}}
    - exact-kernel global minimizer `c_coll=1.171`；
    - exact kernel、PPL或 task loss的 closed-form optimum；
    - waterbed inequality证明 PPL trade-off。
-3. **整理现有证据索引。** 每个 Primary claim只保留 model、length、tokens、seeds、metric、artifact与边界；不产生新数字。
-4. **准备 factual correction map。** DAPE label、repo-defined YaRN-style overlay、TF/AR、Primary II exact-runner缺口；只有 reviewer问到才使用。
-5. **预演 response budget。** 真实 reviews到来后只选 3–5 个 score-driving concerns；其余写 `not triggered`，不进入回复。
+3. **运行有 gate 的 8B 频率适应实验。** 协议见 `frequency_adaptation_8b/SPEC.md`：先在原生 Geo 下确认 answer-only 检索梯度足以让 q/k/v/o LoRA 学会任务，再从同一 checkpoint 分叉 Geo 与 EVQ，通过连续频率路径完成适应；seed-42 无明确能力信号就停止，不把训练启动或 PPL 变化写成成功。这是独立机制协议，不替代 paper-lineage LongAlpaca clean pair。
+4. **整理现有证据索引。** 每个 Primary claim只保留 model、length、tokens、seeds、metric、artifact与边界；新实验数字必须单列 provenance 与 evidence tier。
+5. **准备 factual correction map。** DAPE label、repo-defined YaRN-style overlay、TF/AR、Primary II exact-runner缺口；只有 reviewer问到才使用。
+6. **预演 response budget。** 真实 reviews到来后只选 3–5 个 score-driving concerns；其余写 `not triggered`，不进入回复。
 
 ## 7. 真实 reviews 到来后的条件分支
 
@@ -286,7 +288,7 @@ C_{\mathrm{norm}}
 | --- | --- | --- |
 | \(\tau\)/KL/optimality | §2 + P0-A | 到 basin selector为止，不扩成 trained-task theorem |
 | exact kernel/surrogate/mechanism | §3 + P0-B | 到 directional validation为止，不声称 objective等价 |
-| DAPE/YaRN/baseline | P0-C factual correction | 不补结果、不用近似实现补洞 |
+| DAPE/YaRN/baseline | P0-C factual correction | 不承诺临时结果，不用近似实现补洞；已完成的匹配控制须过 provenance gate |
 | seed/scale/undertraining | P1相应边界 | 现有 evidence tier之外一律让步 |
 | PK/downstream capability | TF/AR + negative boundary | 不新增 benchmark，不泛化到 production |
 | novelty | stage/object/DOF对照 | 不用“orthogonal”回避具体重叠 |
@@ -311,7 +313,7 @@ C_{\mathrm{norm}}
 ## 10. 最终发送门
 
 - [ ] 每段绑定真实 reviewer原话。
-- [ ] 没有新实验、新数字或新 evidence tier。
+- [ ] 任何新实验或新数字都由 reviewer 原话直接触发，并已通过匹配协议、provenance、负结果与 evidence-tier 核验；否则不进入 response。
 - [ ] \(\tau\) 的 exact / conditional / empirical 三层未混写。
 - [ ] ordinary KL一阶为零已正确处理。
 - [ ] exact kernel只称 phase-redundancy proxy；surrogate与 exact diagnostic未写成同一 objective。
