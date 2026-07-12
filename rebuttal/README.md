@@ -12,7 +12,8 @@
 
 | 文件 | 唯一职责 |
 | --- | --- |
-| `rebuttal_playbook.md` | **统一策略入口**：response-only 原则、P0/P1/P2、理论边界与最小行动清单 |
+| `rebuttal_playbook.md` | **统一策略入口**：reviewer-response-first 原则、P0/P1/P2、理论边界与最小行动清单 |
+| `frequency_adaptation_8b/` | **定向机制实验**：检验 8B checkpoint 是否能在连续改变 RoPE 频率分配时获得足够任务梯度；它是独立新协议，不替代 LongAlpaca clean pair，也不自动进入 rebuttal |
 | `README.md` | 全局状态、导航与目录安全边界 |
 | `REVIEWER_TRIAGE_PLAYBOOK.md` | 真实 reviews 到来后的最多五项 score-driving concern 分流 |
 | `REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md` | 完整问题、证据、状态与 decision gate 总账 |
@@ -35,14 +36,15 @@
 
 ## 3. 2026-07-22 真实 review 工作流
 
-真实 reviews 到来前只做 triage 准备，不创建或预填 author response。
+真实 reviews 到来前做 triage 准备和少量有停止条件的定向机制实验，不创建或预填 author response。
 
 1. local-only 保存每条真实评论的逐字版本，并保留 reviewer / AC 身份标签。
 2. 按 `REVIEWER_TRIAGE_PLAYBOOK.md` 分配稳定 ID；ID 一旦分配，不因排序变化而重编号。
 3. 对每个被触发 concern 填写 `correction / concession / evidence / boundary`，再映射到总账和分轨权威来源。
-4. 需要作者选择、未匿名化新证据或 provenance gate 的条目保持 `needs_author_input`，不得自行补全。
-5. 仅在真实评论到达后创建唯一回复文件：`AUTHOR_RESPONSE_20260722.md`。不要恢复多路径草稿入口。
-6. 发送前逐项执行总账与 triage send gate；只回答真实 reviewer 触发的 3–5 个 score-driving concerns。
+4. 新实验只在匹配控制、任务端点、provenance 和负结果边界完整时成为候选证据；此前保持内部研究状态，不得自行写入 response。
+5. 需要作者选择、未匿名化新证据或 provenance gate 的条目保持 `needs_author_input`，不得自行补全。
+6. 仅在真实评论到达后创建唯一回复文件：`AUTHOR_RESPONSE_20260722.md`。不要恢复多路径草稿入口。
+7. 发送前逐项执行总账与 triage send gate；只回答真实 reviewer 触发的 3–5 个 score-driving concerns。
 
 ## 4. 当前五个 P0/P1 边界
 
@@ -73,7 +75,7 @@
 - `raw_sources/00_INDEX.md` 是 tracked 控制索引；其列出的 `*_verbatim.md` payload 是 local-only，不提交、不打包、不公开引用。已移除的 reasoning attachment 不得恢复。
 - `simulated_reviews/` 仅保存字节不变的内部模拟原文，不进入 supplement，也不得伪装为真实 review。
 - 不复制身份、私有机器路径、凭据、内部推理或未匿名化 artifact 到 paper、public docs 或 response。
-- 本轮不改论文、实验数字或数据。仅允许为退役旧目录而解耦 evidence maintenance 脚本与测试；这类维护不得改变任何科学数值或 claim tier。
+- 当前定向实验可以新增 spec、代码和内部运行产物，但不得覆盖论文数字、历史 artifacts 或 claim tier。只有作者明确决定且 reviewer 实际触发后，经过匿名化与 provenance 核验的结果才可进入 response 候选。
 
 ## 7. Consolidation note
 
