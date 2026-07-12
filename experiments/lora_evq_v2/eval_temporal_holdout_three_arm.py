@@ -25,13 +25,13 @@ try:
     from .prepare_positional_distill_data import tokenizer_source_fingerprint
     from .train_evq_lora import (
         build_training_inv_freq,
+        configure_packed_free_causal_sdpa,
         inject_inv_freq,
         load_frequency_artifact,
         resolve_model_rope_geometry,
         validate_legacy_model_geometry,
         verify_model_inv_freq,
     )
-    from .train_positional_distill import configure_packed_free_causal_sdpa
     from .validate_legacy_lora_artifact import validate_artifact
 except ImportError:
     from eval_positional_distill import causal_backbone
@@ -45,14 +45,36 @@ except ImportError:
     from prepare_positional_distill_data import tokenizer_source_fingerprint
     from train_evq_lora import (
         build_training_inv_freq,
+        configure_packed_free_causal_sdpa,
         inject_inv_freq,
         load_frequency_artifact,
         resolve_model_rope_geometry,
         validate_legacy_model_geometry,
         verify_model_inv_freq,
     )
-    from train_positional_distill import configure_packed_free_causal_sdpa
     from validate_legacy_lora_artifact import validate_artifact
+
+
+def temporal_arm_contract(
+    *,
+    geo_seed: int,
+    evq_seed: int,
+) -> dict[str, dict[str, Any]]:
+    """Return a three-arm contract with explicit Geo and EVQ seed identities."""
+    if geo_seed not in (42, 43, 44) or evq_seed not in (42, 43, 44):
+        raise ValueError("temporal evaluation seeds must be 42, 43, or 44")
+    return {
+        "geo_base": {"frequency": "native_geo", "adapter": None},
+        "geo_lora": {
+            "frequency": "native_geo",
+            "adapter": f"geo_longalpaca_s{geo_seed}",
+        },
+        "evq_lora": {
+            "frequency": "evq_cosh",
+            "tau": 1.414,
+            "adapter": f"evq_longalpaca_tau1414_s{evq_seed}",
+        },
+    }
 
 
 def _comparison_record(
@@ -163,6 +185,14 @@ def _json_frequency_metadata(record: Mapping[str, Any]) -> dict[str, Any]:
     return {key: value for key, value in record.items() if key != "inv_freq"}
 
 
+def _flash_only_forward(function, *args, **kwargs):
+    """Run one evaluator forward with no silent SDPA backend fallback."""
+    from torch.nn.attention import SDPBackend, sdpa_kernel
+
+    with sdpa_kernel(SDPBackend.FLASH_ATTENTION):
+        return function(*args, **kwargs)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--model_name", required=True)
@@ -174,6 +204,8 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--lm_head_chunk_tokens", type=int, default=1024)
     parser.add_argument("--max_packs_per_domain", type=int)
+    parser.add_argument("--expected_geo_seed", type=int, choices=(42, 43, 44), default=42)
+    parser.add_argument("--expected_evq_seed", type=int, choices=(42, 43, 44), default=42)
     args = parser.parse_args()
     if args.output.exists():
         raise FileExistsError(args.output)
@@ -200,13 +232,13 @@ def main() -> None:
     geo_metadata = validate_artifact(
         args.geo_adapter_dir,
         expected_method="native_geo",
-        expected_seed=42,
+        expected_seed=args.expected_geo_seed,
         expected_data_manifest_sha256=training_manifest_sha256,
     )
     evq_metadata = validate_artifact(
         args.evq_adapter_dir,
         expected_method="evq_cosh",
-        expected_seed=42,
+        expected_seed=args.expected_evq_seed,
         expected_data_manifest_sha256=training_manifest_sha256,
     )
     for metadata in (geo_metadata, evq_metadata):
@@ -273,19 +305,19 @@ def main() -> None:
     model.eval()
     inject_inv_freq(model, geo_frequency)
     first_ids = next(iter(domains.values()))[1][0:1, :512].to(device=device, dtype=torch.long)
-    pristine_logits = _probe_logits(model, first_ids)
+    pristine_logits = _flash_only_forward(_probe_logits, model, first_ids)
 
     model = PeftModel.from_pretrained(model, args.geo_adapter_dir, adapter_name="geo")
     model.load_adapter(args.evq_adapter_dir, adapter_name="evq")
     model.eval()
     inject_inv_freq(model, geo_frequency)
     with model.disable_adapter():
-        disabled_logits = _probe_logits(model, first_ids)
+        disabled_logits = _flash_only_forward(_probe_logits, model, first_ids)
     model.set_adapter("geo")
-    geo_logits = _probe_logits(model, first_ids)
+    geo_logits = _flash_only_forward(_probe_logits, model, first_ids)
     model.set_adapter("evq")
     inject_inv_freq(model, evq_frequency)
-    evq_logits = _probe_logits(model, first_ids)
+    evq_logits = _flash_only_forward(_probe_logits, model, first_ids)
     disabled_max_error = float((disabled_logits - pristine_logits).abs().max())
     geo_mean_change = float((geo_logits - disabled_logits).abs().mean())
     evq_mean_change = float((evq_logits - disabled_logits).abs().mean())
@@ -301,7 +333,8 @@ def main() -> None:
     model.set_adapter("geo")
     inject_inv_freq(model, geo_frequency)
     geo_initial = verify_model_inv_freq(model, geo_frequency)
-    geo_base = _score_arm(
+    geo_base = _flash_only_forward(
+        _score_arm,
         arm="geo_base",
         model=model,
         backbone=backbone,
@@ -312,7 +345,8 @@ def main() -> None:
         disabled=True,
         max_packs_per_domain=args.max_packs_per_domain,
     )
-    geo_lora = _score_arm(
+    geo_lora = _flash_only_forward(
+        _score_arm,
         arm="geo_lora",
         model=model,
         backbone=backbone,
@@ -328,7 +362,8 @@ def main() -> None:
     model.set_adapter("evq")
     inject_inv_freq(model, evq_frequency)
     evq_initial = verify_model_inv_freq(model, evq_frequency)
-    evq_lora = _score_arm(
+    evq_lora = _flash_only_forward(
+        _score_arm,
         arm="evq_lora",
         model=model,
         backbone=backbone,
@@ -349,10 +384,18 @@ def main() -> None:
     )
     output = {
         "schema": "evq_cosh.temporal_holdout_2026.three_arm_eval.v1",
-        "arm_contract": {
-            "geo_base": {"frequency": "native_geo", "adapter": None},
-            "geo_lora": {"frequency": "native_geo", "adapter": "geo_longalpaca_s42"},
-            "evq_lora": {"frequency": "evq_cosh", "tau": 1.414, "adapter": "evq_longalpaca_tau1414_s42"},
+        "arm_contract": temporal_arm_contract(
+            geo_seed=args.expected_geo_seed,
+            evq_seed=args.expected_evq_seed,
+        ),
+        "seed_design": {
+            "geo_seed": args.expected_geo_seed,
+            "evq_seed": args.expected_evq_seed,
+            "comparison": (
+                "matched_seed"
+                if args.expected_geo_seed == args.expected_evq_seed
+                else "fixed_geo_reference"
+            ),
         },
         "model_manifest_sha256": model_manifest_sha256,
         "training_data_manifest_sha256": training_manifest_sha256,

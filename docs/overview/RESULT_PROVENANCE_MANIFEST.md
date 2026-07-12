@@ -60,6 +60,7 @@ Portable July reconciliation:
 | `data/curated/mla_channel_count_125m_pilot.json` | Report backed | `03c690f4f69ce64285ac1015addda402944c5e7bf7ef9490d8a4b39b6ae16ca7` | Single-seed qualitative support, not a d_eff/tau ablation. |
 | `data/curated/quality_454m_full_eval.json` | Raw JSON backed | `648442141fc94c06db5143283ea95eb46133dcb2ceda39bbffafa17b738cdb84` | Correct n=2,086 table/figure values; accuracy remains inconclusive. |
 | `data/curated/text_base_10k_500k_pilot.json` | Raw JSON backed | `fbd4c04abdfe13adf8578bc49e40f084942aab8b0e18d207a026208e51ebd6c4` | Single-seed 151.9M supporting pilot; not a tuned-base sweep or `c_pred` control. |
+| `data/curated/lora_longalpaca_temporal_s42_20260712.json` | Byte-exact evaluation JSON | `0335415a2245e1fb31149705342e975a016ddddb557a79c364fc4a98c3f89001` | Single-seed supporting cross-domain temporal NLL evidence; not a downstream long-context task or multi-seed claim. |
 
 ## M1: Table 2 EVQ x YaRN
 
@@ -307,6 +308,53 @@ Closure action:
   recovered.
 - Use frequency-window analysis and checkpoint `inv_freq` audit to decide
   whether the reversal is a schedule/window failure or an artifact.
+
+## M5: LLaMA-3-8B LongAlpaca Temporal-Holdout LoRA
+
+Claim scope:
+
+- Supporting only; seed 42.
+- Matched Geo+LoRA and EVQ+LoRA adapters trained for 300 steps on the same
+  frozen LongAlpaca-12k tensor.
+- External 2026 temporal text from arXiv, the Federal Register, and Stack
+  Overflow; 8 disjoint 32K packs per domain.
+- Teacher-forced token NLL on concatenated-document absolute-position packs,
+  not retrieval, QA, generation accuracy, or proof of zero phrase overlap.
+
+Reviewer-safe statement:
+
+> Relative to matched Geo+LoRA, EVQ+LoRA changes temporal-holdout NLL by +0.390
+> at 8K, -1.510 at 16K, and -2.048 nats/token at 32K; the 16K/32K direction is
+> consistent across 3/3 domains and 24/24 packs.
+
+Do not state:
+
+- A “48% PPL tradeoff”; use the additive NLL deltas.
+- Multi-seed confirmation before seeds 43 and 44 finish.
+- Universal long-context transfer or long-range understanding.
+- A pure LoRA mechanism claim; Base-EVQ is not one of the three arms.
+- The configured end-of-day query bound as the actual data-freeze time.
+
+Packaged evidence:
+
+| Artifact | Role | SHA256 |
+| --- | --- | --- |
+| `data/curated/lora_longalpaca_temporal_s42_20260712.json` | Byte-exact three-arm result JSON | `0335415a2245e1fb31149705342e975a016ddddb557a79c364fc4a98c3f89001` |
+| `rebuttal/LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` | NLL interpretation, protocol hashes, and split-run provenance | `6e15ed7a7605bf7b72f62da441039aa4982d2e06ac17105a9fcfe6e415846dba` |
+| `experiments/lora_evq_v2/train_evq_lora.py` | Strict LongAlpaca trainer plus opt-in Flash/GQA path | `62cb3c64b7d5c5bc826b38a82ee283fc13c38369386515f46a8782d86b9fae8f` |
+| `experiments/lora_evq_v2/eval_temporal_holdout_three_arm.py` | Three-arm evaluator and explicit Geo/EVQ seed contract | `3010406191d5c261cce3feb0c422bd27eaf23534f9810442c95d78114ec24d26` |
+| `scripts/2026-07/06_lora_temporal_three_arm_eval.sh` | Fail-closed temporal evaluation launcher | `222e4816eabc089c61992316226058e4277c39efb9bdcd7b0c3cef92fbbd378c` |
+| `scripts/2026-07/07_lora_longalpaca_evq_remaining_seeds.sh` | EVQ-only seeds 43/44 launcher with shared compile caches | `d5a37c176372cc048f26a101b9a33dd276cbde26fbe07d466a0d05f75463f28c` |
+
+Current compact-repo gaps:
+
+- Training tensors, temporal documents/tensors, model weights, adapters,
+  checkpoints, logs, telemetry, and compile caches remain external by design.
+- The LongAlpaca upstream revision is unresolved; recovered public bytes and
+  their raw hash are recorded as best-effort provenance.
+- EVQ+LoRA seeds 43 and 44 are prepared but not yet run. No additional Geo
+  seeds are planned; any future aggregate must describe Geo-42 as a fixed
+  reference rather than a three-seed paired control.
 
 ## Release Checklist
 

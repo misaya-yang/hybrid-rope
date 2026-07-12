@@ -9,6 +9,7 @@ from pathlib import Path
 
 from experiments.lora_evq_v2.eval_temporal_holdout_three_arm import (
     build_three_arm_comparisons,
+    temporal_arm_contract,
 )
 
 
@@ -35,6 +36,16 @@ def _arm(name: str, values: tuple[float, float]) -> dict:
 
 
 class ThreeArmSummaryTests(unittest.TestCase):
+    def test_temporal_arm_contract_is_seed_parameterized(self):
+        contract = temporal_arm_contract(geo_seed=42, evq_seed=43)
+        self.assertEqual(contract["geo_lora"]["adapter"], "geo_longalpaca_s42")
+        self.assertEqual(
+            contract["evq_lora"]["adapter"],
+            "evq_longalpaca_tau1414_s43",
+        )
+        with self.assertRaisesRegex(ValueError, "42, 43, or 44"):
+            temporal_arm_contract(geo_seed=42, evq_seed=45)
+
     def test_reports_geo_adaptation_and_evq_incremental_nll(self):
         arms = {
             "geo_base": _arm("geo_base", (2.0, 4.0)),
@@ -85,6 +96,11 @@ class ThreeArmSummaryTests(unittest.TestCase):
             "refusing to overwrite evaluation",
             "flock -n 9",
             "eval_temporal_holdout_three_arm.py",
+            "EVQ_LONGALPACA_EXPECTED_SEED",
+            "EVQ_GEO_LONGALPACA_EXPECTED_SEED",
+            "EVQ_EVQ_LONGALPACA_EXPECTED_SEED",
+            "--expected_geo_seed",
+            "--expected_evq_seed",
         ):
             self.assertIn(required, launcher)
 

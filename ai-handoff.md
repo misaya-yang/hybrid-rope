@@ -5,7 +5,7 @@
 仓库整理 checkpoint：`1b97fdc`（`handoff: consolidate repository and rebuttal index [01]`）
 Temporal holdout checkpoint：`5bdec86`（`checkpoint: add temporal holdout evaluation`）
 整理前实验基线：`805878f`（`prepare exact FineWeb 3x1B tensors`）
-状态：仓库结构、paper 清理、rebuttal control room 与 LongAlpaca / temporal-holdout 评估代码均已提交到 `main`；未新增实验结果或修改论文指标。
+状态：仓库结构、paper 清理与 rebuttal control room 已在 `main`；LongAlpaca seed-42 temporal-holdout 结果已完成本地审计并进入当前 Codex 分支，未修改论文指标。
 
 本文件是后续 AI 的**第一入口和状态索引**。它只保存可提交的仓库级信息，不保存服务器地址、凭据、私有绝对路径或实时进程信息。
 
@@ -71,8 +71,10 @@ EVQ-Cosh 的窄主张是：RoPE 的有限频率表也是 finite spectral budget�
 2. `scripts/data_prep/prepare_temporal_holdout_2026.py` 生成冻结、带 hash manifest 的 2026 temporal holdout；不把下载语料或 tokenized packs 提交进仓库。
 3. `eval_temporal_holdout_matched.py` 从同一次 32K forward 汇总 matched 8K/16K prefixes；`eval_temporal_holdout_three_arm.py` 比较 Geo base、Geo+LoRA、EVQ+LoRA 三臂。
 4. `scripts/2026-07/06_lora_temporal_three_arm_eval.sh` 对 adapter、语料 manifest、输出覆盖和 GPU 锁 fail closed。
+5. seed-42 结果保存在 `data/curated/lora_longalpaca_temporal_s42_20260712.json`，NLL 解释与边界保存在 `rebuttal/LORA_LONGALPACA_TEMPORAL_NLL_20260712.md`；不要写成“48% PPL tradeoff”。
+6. `scripts/2026-07/07_lora_longalpaca_evq_remaining_seeds.sh` 只训练 EVQ+LoRA seeds 43/44，复用 Geo+LoRA seed 42 作为固定评测参照，并共享持久化 compile cache。
 
-这些路径是 reviewer 问题触发后的 supporting evaluation 能力，不是已完成实验，也不是论文已报告证据。运行后必须先做 provenance 与 matched-protocol 审核，才能进入 rebuttal。
+这些结果仍是 single-seed supporting evidence，不是论文已报告的 primary claim。EVQ seeds 43/44 完成后可报告 EVQ 三 seed 稳定性，但不得写成三 seed paired Geo/EVQ 对照。
 
 ## 6. Known issues / current breakage and validation
 

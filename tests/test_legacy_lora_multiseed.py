@@ -40,7 +40,11 @@ from experiments.lora_evq_v2.validate_legacy_lora_artifact import (
     validate_legacy_metadata,
 )
 from experiments.lora_evq_v2.train_evq_lora import (
+    PACKED_FREE_CAUSAL_SDPA_BACKEND,
     LoraRopeGeometry,
+    PaddingCollator,
+    configure_packed_free_causal_sdpa,
+    packed_free_causal_sdpa_forward,
     resolve_legacy_resume_checkpoint,
     training_dataset_identifier,
     validate_legacy_model_geometry,
@@ -205,6 +209,132 @@ class LegacyProtocolTests(unittest.TestCase):
         self.assertTrue(math.isclose(summary["paired_delta_evq_minus_geo"]["sample_std"], 1.0))
         with self.assertRaises(ValueError):
             paired_metric_summary({42: 1.0}, {43: 1.0})
+
+    def test_right_padded_collator_omits_redundant_attention_mask(self):
+        collator = PaddingCollator(pad_token_id=128001, omit_attention_mask=True)
+        batch = collator([
+            {"input_ids": [1, 2, 3], "attention_mask": [1, 1, 1], "labels": [1, 2, 3]},
+            {"input_ids": [4, 5], "attention_mask": [1, 1], "labels": [4, 5]},
+        ])
+
+        self.assertEqual(set(batch), {"input_ids", "labels"})
+        self.assertEqual(batch["input_ids"].tolist(), [[1, 2, 3], [4, 5, 128001]])
+        self.assertEqual(batch["labels"].tolist(), [[1, 2, 3], [4, 5, -100]])
+
+    def test_mask_free_collator_rejects_noncontiguous_source_masks(self):
+        collator = PaddingCollator(pad_token_id=0, omit_attention_mask=True)
+        for source_mask in ([1, 0, 1], [1, 1, 0]):
+            with self.subTest(source_mask=source_mask):
+                with self.assertRaisesRegex(ValueError, "right-padded full-token"):
+                    collator([
+                        {
+                            "input_ids": [1, 2, 3],
+                            "attention_mask": source_mask,
+                            "labels": [1, 2, 3],
+                        }
+                    ])
+
+    def test_custom_attention_backend_skips_transformers_mask_materialization(self):
+        from transformers import AttentionInterface
+        from transformers.masking_utils import ALL_MASK_ATTENTION_FUNCTIONS
+
+        model = type("Model", (), {"config": type("Config", (), {})()})()
+        backend = configure_packed_free_causal_sdpa(model)
+
+        self.assertEqual(backend, PACKED_FREE_CAUSAL_SDPA_BACKEND)
+        self.assertEqual(model.config._attn_implementation, backend)
+        self.assertIn(backend, AttentionInterface._global_mapping)
+        self.assertNotIn(backend, ALL_MASK_ATTENTION_FUNCTIONS._global_mapping)
+
+    def test_packed_free_backend_preserves_kv_heads_and_enables_gqa(self):
+        from unittest.mock import patch
+
+        module = type("Attention", (), {"num_key_value_groups": 4})()
+        query = torch.randn(2, 32, 5, 8)
+        key = torch.randn(2, 8, 5, 8)
+        value = torch.randn(2, 8, 5, 8)
+        captured = {}
+
+        def fake_sdpa(actual_query, actual_key, actual_value, **kwargs):
+            captured.update({
+                "query_shape": tuple(actual_query.shape),
+                "key_shape": tuple(actual_key.shape),
+                "value_shape": tuple(actual_value.shape),
+                **kwargs,
+            })
+            return torch.zeros_like(actual_query)
+
+        with patch(
+            "torch.nn.functional.scaled_dot_product_attention",
+            side_effect=fake_sdpa,
+        ):
+            output, weights = packed_free_causal_sdpa_forward(
+                module,
+                query,
+                key,
+                value,
+                attention_mask=None,
+            )
+
+        self.assertEqual(captured["query_shape"], (2, 32, 5, 8))
+        self.assertEqual(captured["key_shape"], (2, 8, 5, 8))
+        self.assertEqual(captured["value_shape"], (2, 8, 5, 8))
+        self.assertIsNone(captured["attn_mask"])
+        self.assertTrue(captured["is_causal"])
+        self.assertTrue(captured["enable_gqa"])
+        self.assertEqual(output.shape, (2, 5, 32, 8))
+        self.assertIsNone(weights)
+
+    def test_right_padding_mask_is_redundant_for_valid_causal_queries(self):
+        torch.manual_seed(7)
+        query = torch.randn(2, 4, 5, 8)
+        key = torch.randn(2, 2, 5, 8)
+        value = torch.randn(2, 2, 5, 8)
+        lengths = (3, 5)
+        causal = torch.tril(torch.ones(5, 5, dtype=torch.bool))
+        mask = torch.zeros(2, 1, 5, 5, dtype=torch.bool)
+        for row, length in enumerate(lengths):
+            mask[row, 0] = causal & (torch.arange(5)[None, :] < length)
+        repeated_key = key.repeat_interleave(2, dim=1)
+        repeated_value = value.repeat_interleave(2, dim=1)
+        masked = torch.nn.functional.scaled_dot_product_attention(
+            query, repeated_key, repeated_value, attn_mask=mask
+        )
+        mask_free = torch.nn.functional.scaled_dot_product_attention(
+            query, key, value, is_causal=True, enable_gqa=True
+        )
+
+        for row, length in enumerate(lengths):
+            self.assertTrue(
+                torch.allclose(
+                    masked[row, :, :length],
+                    mask_free[row, :, :length],
+                    rtol=1e-5,
+                    atol=1e-6,
+                )
+            )
+
+    def test_remaining_seed_launcher_trains_only_evq_seeds_43_and_44(self):
+        launcher = (
+            Path(__file__).resolve().parents[1]
+            / "scripts/2026-07/07_lora_longalpaca_evq_remaining_seeds.sh"
+        ).read_text(encoding="utf-8")
+        lower = launcher.lower()
+        self.assertNotIn("longalign", lower)
+        self.assertNotIn("--seed 42", launcher)
+        self.assertNotIn("--rope_method native_geo", launcher)
+        self.assertNotIn("for method in", launcher)
+        for required in (
+            "geo_longalpaca_s42",
+            "evq_longalpaca_tau1414_s${seed}",
+            "--rope_method evq_cosh",
+            "for seed in 43 44",
+            'case "$seed" in',
+            "43|44",
+            "TORCHINDUCTOR_CACHE_DIR",
+            "--packed_free_causal_sdpa",
+        ):
+            self.assertIn(required, launcher)
 
 
 class FrozenDataTests(unittest.TestCase):

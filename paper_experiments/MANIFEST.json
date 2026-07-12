@@ -184,7 +184,7 @@
       "families": [
         "supporting_lora_8b"
       ],
-      "sha256": "ff925777221ea3a72eee9da1084a6b930758909b1338544d984c2393c3b60459",
+      "sha256": "62cb3c64b7d5c5bc826b38a82ee283fc13c38369386515f46a8782d86b9fae8f",
       "source": "experiments/lora_evq_v2/train_evq_lora.py",
       "workspace_path": "code/experiments/lora_evq_v2/train_evq_lora.py"
     },

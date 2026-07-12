@@ -5,6 +5,12 @@ Treat it as a paper-and-reproducibility repository, not as a general software
 project. The main job is to preserve scientific correctness, reviewer trust,
 anonymous submission hygiene, and reproducible reviewer paths.
 
+## Mandatory Experiment Incident Guide
+
+Before any paid-GPU, LoRA, long-context, or rebuttal experiment, read and obey
+`Agent.md`; it defines the minimum scientific and cost-safety rules learned from
+the July 2026 experiment failures.
+
 ## Core Paper Identity
 
 Keep the paper centered on this mechanism claim:

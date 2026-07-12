@@ -19,6 +19,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import importlib.metadata
 import inspect
@@ -43,6 +44,69 @@ from scripts.lib.rope.schedules import (
     evq_cosh_inv_freq as _canonical_evq_cosh_inv_freq,
     geometric_inv_freq as _canonical_geometric_inv_freq,
 )
+
+
+PACKED_FREE_CAUSAL_SDPA_BACKEND = "evq_packed_free_causal_sdpa_v2"
+
+
+def packed_free_causal_sdpa_forward(
+    module: torch.nn.Module,
+    query: torch.Tensor,
+    key: torch.Tensor,
+    value: torch.Tensor,
+    attention_mask: Optional[torch.Tensor],
+    dropout: float = 0.0,
+    scaling: Optional[float] = None,
+    is_causal: Optional[bool] = None,
+    **kwargs,
+) -> tuple[torch.Tensor, None]:
+    """Run full-sequence causal Flash SDPA without a 4D mask or repeated KV.
+
+    This backend is intentionally narrow: the strict LongAlpaca batches contain
+    only full-token examples, padding is added on the right by ``PaddingCollator``,
+    and padded query losses are ignored.  For every valid causal query, the
+    right-padding key mask is therefore redundant.  Failing closed here keeps a
+    future cached/packed/custom-mask caller from silently changing semantics.
+    """
+    del kwargs
+    if attention_mask is not None:
+        raise ValueError("packed-free causal SDPA requires attention_mask=None")
+    if query.ndim != 4 or key.ndim != 4 or value.ndim != 4:
+        raise ValueError("packed-free causal SDPA requires rank-4 Q/K/V tensors")
+    if query.shape[0] != key.shape[0] or key.shape != value.shape:
+        raise ValueError("packed-free causal SDPA received incompatible Q/K/V shapes")
+    if query.shape[-2] != key.shape[-2] or query.shape[-2] <= 1:
+        raise ValueError("packed-free causal SDPA supports full-sequence forwards only")
+    if is_causal is False:
+        raise ValueError("packed-free causal SDPA cannot run non-causal attention")
+
+    groups = int(getattr(module, "num_key_value_groups", 1))
+    if groups < 1 or query.shape[1] != key.shape[1] * groups:
+        raise ValueError("packed-free causal SDPA received an invalid GQA head layout")
+
+    output = torch.nn.functional.scaled_dot_product_attention(
+        query,
+        key,
+        value,
+        attn_mask=None,
+        dropout_p=dropout,
+        scale=scaling,
+        is_causal=True,
+        enable_gqa=groups > 1,
+    )
+    return output.transpose(1, 2).contiguous(), None
+
+
+def configure_packed_free_causal_sdpa(model) -> str:
+    """Register the strict full-sequence Flash/GQA backend on ``model``."""
+    from transformers import AttentionInterface
+
+    AttentionInterface.register(
+        PACKED_FREE_CAUSAL_SDPA_BACKEND,
+        packed_free_causal_sdpa_forward,
+    )
+    model.config._attn_implementation = PACKED_FREE_CAUSAL_SDPA_BACKEND
+    return PACKED_FREE_CAUSAL_SDPA_BACKEND
 
 try:
     from .legacy_lora_protocol import (
@@ -910,17 +974,34 @@ class CompactTokenizedDataset(torch.utils.data.Dataset):
 
 class PaddingCollator:
     """Pad variable-length samples to the longest in the batch."""
-    def __init__(self, pad_token_id: int):
+    def __init__(self, pad_token_id: int, *, omit_attention_mask: bool = False):
         self.pad_token_id = pad_token_id
+        self.omit_attention_mask = omit_attention_mask
 
     def __call__(self, features: List[Dict]) -> Dict[str, torch.Tensor]:
+        if not features:
+            raise ValueError("cannot collate an empty batch")
         max_len = max(len(f["input_ids"]) for f in features)
         batch = {"input_ids": [], "attention_mask": [], "labels": []}
         for f in features:
+            input_ids = list(f["input_ids"])
+            attention_mask = list(f["attention_mask"])
+            labels = list(f["labels"])
+            if self.omit_attention_mask and not (
+                len(input_ids) == len(attention_mask) == len(labels)
+                and attention_mask == [1] * len(input_ids)
+                and labels == input_ids
+            ):
+                raise ValueError(
+                    "mask-free batches require right-padded full-token examples; "
+                    "source rows must contain only ones and labels must equal input_ids"
+                )
             pad_len = max_len - len(f["input_ids"])
-            batch["input_ids"].append(f["input_ids"] + [self.pad_token_id] * pad_len)
-            batch["attention_mask"].append(f["attention_mask"] + [0] * pad_len)
-            batch["labels"].append(f["labels"] + [-100] * pad_len)
+            batch["input_ids"].append(input_ids + [self.pad_token_id] * pad_len)
+            batch["attention_mask"].append(attention_mask + [0] * pad_len)
+            batch["labels"].append(labels + [-100] * pad_len)
+        if self.omit_attention_mask:
+            batch.pop("attention_mask")
         return {k: torch.tensor(v, dtype=torch.long) for k, v in batch.items()}
 
 
@@ -1013,6 +1094,15 @@ def parse_args():
     )
     p.add_argument("--compile", action="store_true", help="Enable torch.compile through Trainer")
     p.add_argument("--compile_mode", default="default", choices=("default", "reduce-overhead", "max-autotune"))
+    p.add_argument(
+        "--packed_free_causal_sdpa",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help=(
+            "Use the strict full-sequence Flash-SDPA/GQA path. This omits the "
+            "redundant right-padding mask and fails closed for other batch shapes."
+        ),
+    )
 
     return p.parse_args()
 
@@ -1185,6 +1275,7 @@ def main():
             "max_steps": args.max_steps,
             "max_seq_len": args.max_seq_len,
             "dataset": dataset_identifier,
+            "packed_free_causal_sdpa": args.packed_free_causal_sdpa,
             "theory": theory_checks,
         }
         config_path = os.path.join(args.output_dir, "config.json")
@@ -1254,6 +1345,9 @@ def main():
         if any(str(device).lower() not in {"0", "cuda", "cuda:0"} for device in device_map.values()):
             raise RuntimeError(f"strict legacy model escaped cuda:0: {device_map}")
     model.config.use_cache = False
+    if args.packed_free_causal_sdpa:
+        backend = configure_packed_free_causal_sdpa(model)
+        print(f"[ATTN] Enabled strict mask-free Flash/GQA backend: {backend}")
 
     # 5. Inject the exact schedule recorded by this run.
     print(f"[ROPE] Injecting {args.rope_method} frequencies...")
@@ -1353,7 +1447,10 @@ def main():
     training_kwargs.update(evaluation_strategy_kwargs(TrainingArguments))
     training_args = TrainingArguments(**training_kwargs)
 
-    data_collator = PaddingCollator(pad_token_id=tokenizer.pad_token_id)
+    data_collator = PaddingCollator(
+        pad_token_id=tokenizer.pad_token_id,
+        omit_attention_mask=args.packed_free_causal_sdpa,
+    )
 
     callbacks = []
     if args.strict_legacy_protocol:
@@ -1394,9 +1491,18 @@ def main():
     t0 = time.time()
     if resume_checkpoint is not None:
         print(f"[RESUME] Continuing from {resume_checkpoint}")
-    trainer.train(
-        resume_from_checkpoint=str(resume_checkpoint) if resume_checkpoint is not None else None
-    )
+    if args.packed_free_causal_sdpa:
+        from torch.nn.attention import SDPBackend, sdpa_kernel
+
+        attention_context = sdpa_kernel(SDPBackend.FLASH_ATTENTION)
+    else:
+        attention_context = contextlib.nullcontext()
+    with attention_context:
+        trainer.train(
+            resume_from_checkpoint=(
+                str(resume_checkpoint) if resume_checkpoint is not None else None
+            )
+        )
     train_time = time.time() - t0
 
     print(f"\n[DONE] Training completed in {train_time/3600:.2f} hours")
@@ -1422,6 +1528,7 @@ def main():
         "dataset": dataset_identifier,
         "train_samples": len(train_dataset),
         "train_time_hours": round(train_time / 3600, 3),
+        "packed_free_causal_sdpa": args.packed_free_causal_sdpa,
         "theory_checks": theory_checks,
         "train_loss_final": trainer.state.log_history[-1].get("train_loss")
                            if trainer.state.log_history else None,
