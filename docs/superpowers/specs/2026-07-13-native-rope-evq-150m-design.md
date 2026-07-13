@@ -75,7 +75,9 @@ from the training prefix. Evaluation refuses the legacy validation hash.
 
 The same frozen validation offsets and Passkey cases are used for every arm and
 operator. Natural-text evaluation reports mean token NLL, PPL, individual
-offset losses, and sample count at 2K, 4K, 8K, and 16K.
+offset losses, and sample count at 2K, 4K, 8K, and 16K. The same forward pass
+also reports NLL/PPL over only the final 2K prediction tokens so that easy
+prefix predictions cannot hide an extrapolation failure near the context tail.
 
 Each checkpoint is evaluated under:
 
@@ -97,9 +99,11 @@ run.
 ## Performance and launch behavior
 
 Training uses a fixed-shape loss module compiled with PyTorch 2.8
-`max-autotune`, persistent `TORCHINDUCTOR_CACHE_DIR`, asynchronous DataLoader
-workers, pinned host memory, non-blocking transfers, and fused AdamW. Batch 60
-both fills the 96GB RTX PRO 6000 substantially and divides 244,140 rows exactly.
+`max-autotune-no-cudagraphs`, persistent `TORCHINDUCTOR_CACHE_DIR`, asynchronous
+DataLoader workers, pinned host memory, non-blocking transfers, and fused AdamW.
+Disabling CUDA graphs avoids retaining an additional fixed-shape workspace on
+top of the large 2K batch while retaining Inductor autotuning. Batch 60 both
+fills the 96GB RTX PRO 6000 substantially and divides 244,140 rows exactly.
 
 The launcher performs all CPU/hash/parity checks before CUDA model allocation,
 then trains both arms sequentially and automatically evaluates the four
@@ -118,4 +122,3 @@ An existing output directory is not overwritten.
   training, and automatic evaluation entrypoints.
 - `tests/test_native_rope_evq_150m.py`: protocol, data, schedule, and operator
   regression tests.
-

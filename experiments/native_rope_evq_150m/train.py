@@ -53,6 +53,11 @@ def tensor_sha256(tensor: torch.Tensor) -> str:
     return hashlib.sha256(value.numpy().tobytes()).hexdigest()
 
 
+def registered_inv_freq_sha256(arm: str) -> str:
+    """Hash the canonical float64 schedule, not a rounded runtime copy."""
+    return tensor_sha256(get_arm_inv_freq(arm))
+
+
 def trainable_state_sha256(model: nn.Module) -> str:
     digest = hashlib.sha256()
     for name, parameter in model.named_parameters():
@@ -276,7 +281,7 @@ def train_arm(args: argparse.Namespace) -> dict[str, Any]:
         )
     initial_hash = trainable_state_sha256(model)
     inv_freq = get_arm_inv_freq(args.arm).float()
-    inv_hash = tensor_sha256(inv_freq.double())
+    inv_hash = registered_inv_freq_sha256(args.arm)
     np.save(output / "inv_freq.npy", inv_freq.numpy())
 
     order = deterministic_row_order(SPEC.train_rows, SPEC.seed)
@@ -440,7 +445,7 @@ def main() -> None:
             "max-autotune",
             "max-autotune-no-cudagraphs",
         ),
-        default="max-autotune",
+        default="max-autotune-no-cudagraphs",
     )
     parser.add_argument("--full_hash_check", action="store_true")
     parser.add_argument("--dry_run", action="store_true")

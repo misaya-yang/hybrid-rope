@@ -12,13 +12,22 @@ from pathlib import Path
 
 import numpy as np
 import torch
+import torch.nn.functional as F
 
+from experiments.native_rope_evq_150m.evaluate import (
+    aggregate_nll,
+    apply_registered_operator,
+    causal_nll_metrics,
+    fixed_validation_offsets,
+    target_yarn_factor,
+)
 from experiments.native_rope_evq_150m.prepare_data import (
     assert_independent_validation,
     compile_passkey_cache,
     validate_data_manifest,
 )
 from experiments.native_rope_evq_150m.protocol import (
+    ARMS,
     LEGACY_PASSKEY_HASH_MULTIPLIER,
     SPEC,
     estimate_parameter_count,
@@ -30,6 +39,8 @@ from experiments.native_rope_evq_150m.train import (
     build_model,
     deterministic_row_order,
     learning_rate_for_step,
+    registered_inv_freq_sha256,
+    tensor_sha256,
     trainable_state_sha256,
     validate_cuda_runtime,
 )
@@ -220,10 +231,99 @@ class TestNativeRopeEvq150MTraining(unittest.TestCase):
             delta=1e-8,
         )
 
+    def test_frequency_metadata_hashes_the_registered_float64_schedule(self):
+        for arm in ARMS:
+            self.assertEqual(
+                registered_inv_freq_sha256(arm),
+                tensor_sha256(get_arm_inv_freq(arm)),
+            )
+
     def test_cuda_runtime_gate_rejects_cpu_mode(self):
         if not torch.cuda.is_available():
             with self.assertRaisesRegex(RuntimeError, "CUDA is required"):
                 validate_cuda_runtime()
+
+
+class TestNativeRopeEvq150MEvaluation(unittest.TestCase):
+    def test_target_matched_yarn_factors(self):
+        self.assertEqual(
+            [target_yarn_factor(length) for length in (2048, 4096, 8192, 16384)],
+            [1.0, 2.0, 4.0, 8.0],
+        )
+        with self.assertRaisesRegex(ValueError, "registered evaluation length"):
+            target_yarn_factor(3072)
+
+    def test_native_operator_is_official_and_evq_operator_is_derived(self):
+        native = get_arm_inv_freq("native_rope")
+        evq = get_arm_inv_freq("endpoint_evq_tau1p5")
+        _, _, native_meta = apply_registered_operator(
+            native, arm="native_rope", operator="yarn", length=8192
+        )
+        _, _, evq_meta = apply_registered_operator(
+            evq, arm="endpoint_evq_tau1p5", operator="yarn", length=8192
+        )
+        self.assertEqual(native_meta["mode"], "official_yarn_native")
+        self.assertIn("official YaRN", native_meta["public_label"])
+        self.assertEqual(evq_meta["mode"], "yarn_derived_virtual_dim")
+        self.assertIn("YaRN-derived", evq_meta["public_label"])
+
+    def test_raw_operator_preserves_substrate(self):
+        inv = get_arm_inv_freq("endpoint_evq_tau1p5")
+        actual, mscale, meta = apply_registered_operator(
+            inv, arm="endpoint_evq_tau1p5", operator="raw", length=16384
+        )
+        self.assertTrue(torch.equal(actual, inv))
+        self.assertEqual(mscale, 1.0)
+        self.assertEqual(meta["mode"], "raw_substrate")
+
+    def test_offsets_are_shared_deterministic_and_valid(self):
+        first = fixed_validation_offsets(5_000_000, 16_384, chunks=8, seed=9999)
+        second = fixed_validation_offsets(5_000_000, 16_384, chunks=8, seed=9999)
+        self.assertEqual(first, second)
+        self.assertEqual(len(first), 8)
+        self.assertEqual(len(set(first)), 8)
+        self.assertTrue(all(0 <= offset <= 5_000_000 - 16_384 for offset in first))
+
+    def test_nll_aggregation_reports_ppl_without_rounding_inputs(self):
+        result = aggregate_nll([2.0, 3.0, 4.0])
+        self.assertEqual(result["sample_count"], 3)
+        self.assertAlmostEqual(result["mean_nll"], 3.0)
+        self.assertAlmostEqual(result["ppl"], math.exp(3.0))
+
+    def test_causal_nll_metrics_separates_full_context_and_last_tokens(self):
+        logits = torch.tensor(
+            [
+                [
+                    [8.0, 0.0],
+                    [8.0, 0.0],
+                    [0.0, 8.0],
+                    [0.0, 8.0],
+                ]
+            ]
+        )
+        targets = torch.tensor([[0, 0, 0, 0]])
+        full, tail = causal_nll_metrics(logits, targets, tail_tokens=2)
+        self.assertGreater(tail, full)
+        self.assertAlmostEqual(
+            full,
+            float(F.cross_entropy(logits.reshape(-1, 2), targets.reshape(-1))),
+        )
+
+    def test_launcher_has_prepare_preflight_run_and_no_private_default_paths(self):
+        launcher = (
+            Path(__file__).resolve().parents[1]
+            / "experiments"
+            / "native_rope_evq_150m"
+            / "run_seed42.sh"
+        )
+        self.assertTrue(launcher.is_file())
+        text = launcher.read_text()
+        for mode in ("prepare)", "preflight)", "run)"):
+            self.assertIn(mode, text)
+        self.assertIn("TORCHINDUCTOR_CACHE_DIR", text)
+        self.assertIn("endpoint_evq_tau1p5", text)
+        self.assertNotIn("/root/autodl-tmp", text)
+        self.assertNotIn("seetacloud", text)
 
 
 if __name__ == "__main__":
