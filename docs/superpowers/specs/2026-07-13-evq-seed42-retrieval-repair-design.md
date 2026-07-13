@@ -101,8 +101,12 @@ dimensions:
 - instruction wording.
 
 Every example is an exact token tensor.  Its registered sequence length
-includes the LLaMA-3 user/assistant boundaries, answer tokens, and EOS.  Prompt
-labels are `-100`; only the 12-token value plus EOS is supervised.
+includes the LLaMA-3 user/assistant boundaries, answer tokens, and EOS.  Each
+complete message is rendered through `apply_chat_template`; empty-user boundary
+tokens and separately tokenized content must not be concatenated as a proxy.
+CPU preparation verifies parity between the full rendered string tokenization
+and `apply_chat_template(..., tokenize=True)` for every produced template.
+Prompt labels are `-100`; only the 12-token value plus EOS is supervised.
 
 Task mix is fixed before seeing results:
 
@@ -218,7 +222,10 @@ Existing code is reused rather than copied where its contract already fits:
 
 - `scripts/lib/rope/official_yarn.py` owns the pinned YaRN operators;
 - `rebuttal/frequency_adaptation_8b` supplies tested answer-mask,
-  counterfactual, exact-distance, tail-logit, and gradient-diagnostic helpers;
+  counterfactual tensor transforms, tail-logit, and gradient-diagnostic helpers;
+  its empty-user chat-boundary splicing and token-piece exact-distance builder
+  are not reused because they are not token-parity-equivalent to a complete
+  LLaMA-3 chat-template render;
 - `experiments/lora_evq_v2/eval_official_yarn_capability.py` is extended to
   report strict/extracted/containment metrics and to select factor 1/2/4
   explicitly without composing factors;

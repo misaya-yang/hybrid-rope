@@ -239,6 +239,13 @@ def test_nonce_partitions_are_pairwise_disjoint(fake_llama_tokenizer):
     assert not (set(pools["train"]) & set(pools["test"]))
     assert not (set(pools["validation"]) & set(pools["test"]))
 
+def test_complete_chat_render_matches_direct_template_tokenization(fake_llama_tokenizer):
+    messages = build_messages("train", before_text="alpha", after_text="beta", key="Key", value="Value")
+    rendered_ids, spans = render_complete_chat(fake_llama_tokenizer, messages)
+    direct = fake_llama_tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=False)
+    assert rendered_ids == direct
+    assert spans["answer_start"] < spans["answer_end"]
+
 def test_repair_bundle_is_exact_length_and_answer_only(sample_bundle):
     validate_bundle(sample_bundle, stage="r8", split="train")
     assert sample_bundle["input_ids"].shape == (256, 8192)
@@ -255,29 +262,38 @@ def test_validation_and_test_have_registered_triplet_counts(prepared_manifest):
 
 Run the focused test file. Expected: import failures for the builder APIs.
 
-- [ ] **Step 3: Implement chat-template boundaries and split-specific wording**
+- [ ] **Step 3: Implement full-message chat rendering and split-specific wording**
 
 ```python
 WORDS = {
-    "train": ("Read the records and return only the current stored value.\n\n", "Record", " stores ", "Return Record", ".\n"),
-    "validation": ("Inspect the entries and answer with only the requested contents.\n\n", "Entry", " contains ", "Contents of Entry", "?\n"),
-    "test": ("Use the document to recover exactly one requested value.\n\n", "Item", " currently holds ", "Recover Item", ".\n"),
+    "train": ("Read the records and return only the current stored value.", "Record", "stores", "Return Record"),
+    "validation": ("Inspect the entries and answer with only the requested contents.", "Entry", "contains", "Contents of Entry"),
+    "test": ("Use the document to recover exactly one requested value.", "Item", "currently holds", "Recover Item"),
 }
 
-def build_template(tokenizer, split: str) -> RetrievalTemplate:
-    if split not in WORDS:
-        raise ValueError("split must be train, validation, or test")
-    user_prefix, assistant_boundary = chat_boundaries(tokenizer)
-    instruction, source_prefix, source_infix, query_prefix, query_suffix = WORDS[split]
-    return RetrievalTemplate(
-        instruction=user_prefix + encode(tokenizer, instruction),
-        source_prefix=encode(tokenizer, "\n" + source_prefix),
-        source_infix=encode(tokenizer, source_infix),
-        source_suffix=encode(tokenizer, ".\n"),
-        query_prefix=encode(tokenizer, "\n" + query_prefix),
-        query_suffix=encode(tokenizer, query_suffix) + assistant_boundary,
+def build_messages(split: str, before_text: str, after_text: str, key: str, value: str) -> list[dict[str, str]]:
+    instruction, noun, verb, query = WORDS[split]
+    content = (
+        f"{instruction}\n\n{before_text}\n{noun} {key} {verb} {value}.\n"
+        f"{after_text}\n{query} {key}."
     )
+    return [{"role": "user", "content": content}, {"role": "assistant", "content": value}]
+
+def render_complete_chat(tokenizer, messages: list[dict[str, str]]) -> tuple[list[int], dict[str, int]]:
+    rendered = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=False)
+    encoded = tokenizer(rendered, add_special_tokens=False, return_offsets_mapping=True)
+    direct = tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=False)
+    if list(encoded["input_ids"]) != list(direct):
+        raise RuntimeError("full chat-template string/token parity failed")
+    return list(direct), locate_source_and_answer_spans(rendered, encoded["offset_mapping"], messages)
 ```
+
+`locate_source_and_answer_spans` identifies the unique source occurrence and
+the final assistant occurrence from character offsets.  Exact sequence length
+and source-to-answer-predictor distance are solved by rendering the complete
+message while monotonically adjusting before/after filler spans; every accepted
+row is measured from the final full-message tokenization.  Do not call the
+empty-user `_chat_boundaries` helper or concatenate separately encoded pieces.
 
 - [ ] **Step 4: Implement nonce and filler partitioning**
 
