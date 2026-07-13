@@ -16,7 +16,9 @@
 | `rebuttal_playbook.md` | **唯一操作入口**：claim disposition、P0/P1/P2、理论边界、实验 gate、作者决策门与发送 QA |
 | `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` | **最新事实权威**：DAPE、YaRN、midpoint-Geo、KL、`c_coll`、Phase16、协议与 provenance 的全论文审计；与旧材料冲突时以此为准 |
 | `REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md` | **政策与决策背景**：NeurIPS 可行性、诚实披露、官方政策、公开案例与后续 venue 修复路线 |
-| `frequency_adaptation_8b/` | **定向机制实验**：检验 8B checkpoint 是否能在连续改变 RoPE 频率分配时获得足够任务梯度；它是独立新协议，不替代 LongAlpaca clean pair，也不自动进入 rebuttal |
+| `EVQ_8K_ONLY_CAPABILITY_TRANSFER_PLAN_20260713.md` | **当前能力转化主计划**：重新审计 phase-observability 假设，并以 physical length 与 position id 均不超过 8K 的 matched Geo/midpoint-Geo/EVQ 训练检验 16K/32K 零样本能力；无新结果 |
+| `evq_seed42_retrieval_repair/` | **已实现但暂停优先启动**：EVQ-only R8/R16 repair；其 16K physical training 与无 Geo control 不能回答严格 8K→8K 外问题，可复用 evaluator/provenance 组件 |
+| `frequency_adaptation_8b/` | **备选机制实现**：连续频率迁移与 E16 训练；当前不作为第一实验，只有 direct 8K-only protocol 出现明确 optimization failure 时再触发 |
 | `README.md` | 全局状态、导航与目录安全边界 |
 | `REVIEWER_TRIAGE_PLAYBOOK.md` | 真实 reviews 到来后的 verbatim comment、稳定 ID 与最多五项 score-driving concern 分流 |
 | `REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md` | **archival risk inventory**：仅用于检索历史攻击面；不再裁决当前事实、实验优先级或发送范围 |
