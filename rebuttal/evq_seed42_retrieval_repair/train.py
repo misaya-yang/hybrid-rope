@@ -37,9 +37,16 @@ from rebuttal.frequency_adaptation_8b.train import (
     require_tail_logits_support,
     tail_answer_cross_entropy,
 )
+from experiments.lora_evq_v2.prepare_positional_distill_data import (
+    tokenizer_source_fingerprint,
+)
 from scripts.lib.rope.official_yarn import official_yarn_on_inv_freq
 
-from .prepare_data import validate_bundle, validate_prepared_dir
+from .prepare_data import (
+    validate_bundle,
+    validate_prepared_dir,
+    validate_tokenizer_identity,
+)
 from .protocol import get_stage, segment_contract
 
 
@@ -550,6 +557,13 @@ def main(argv: Sequence[str] | None = None) -> None:
         args.data_dir,
         stage=args.stage,
         segment=args.segment,
+    )
+    repair_manifest = json.loads(
+        (args.data_dir / "manifest.json").read_text(encoding="utf-8")
+    )
+    validate_tokenizer_identity(
+        repair_manifest.get("tokenizer", {}),
+        tokenizer_source_fingerprint(args.model_name),
     )
     longalpaca_sha = sha256_file(args.longalpaca_manifest)
     model_identity = load_model_identity(args.model_name, args.model_manifest)

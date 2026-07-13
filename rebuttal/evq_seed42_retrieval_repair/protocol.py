@@ -118,6 +118,40 @@ def segment_contract(stage: str, segment: int) -> dict[str, Any]:
     }
 
 
+def evaluation_budget(stage: str) -> dict[str, Any]:
+    """Register the bounded validation workload for one checkpoint.
+
+    The controlled bundle contains 16 three-way groups, passkey contains 25
+    prompts, and the temporal guardrail uses one frozen pack from each of three
+    domains.  Source-removed rows are scored but never generated.
+    """
+    spec = get_stage(stage)
+    controlled_rows = 48
+    passkey_rows = 25
+    temporal_domains = 3
+    temporal_packs_per_domain = 1
+    # Generation performs a second prompt prefill for every generated row.
+    # Count those separately from teacher-forced NLL forwards.
+    total_prefill_equivalents = (
+        controlled_rows
+        + 32
+        + passkey_rows
+        + passkey_rows
+        + temporal_domains * temporal_packs_per_domain
+    )
+    return {
+        "stage": spec.name,
+        "seq_len": spec.seq_len,
+        "controlled_rows": controlled_rows,
+        "controlled_generation_rows": 32,
+        "passkey_rows": passkey_rows,
+        "temporal_domains": temporal_domains,
+        "temporal_packs_per_domain": temporal_packs_per_domain,
+        "input_tokens_per_checkpoint_eval": total_prefill_equivalents * spec.seq_len,
+        "max_generated_tokens": 32 * 16 + passkey_rows * 32,
+    }
+
+
 def extract_first_passkey(text: str) -> str | None:
     """Extract the first standalone eight-digit passkey."""
     match = _PASSKEY_PATTERN.search(str(text))

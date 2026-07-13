@@ -226,9 +226,10 @@ Existing code is reused rather than copied where its contract already fits:
   its empty-user chat-boundary splicing and token-piece exact-distance builder
   are not reused because they are not token-parity-equivalent to a complete
   LLaMA-3 chat-template render;
-- `experiments/lora_evq_v2/eval_official_yarn_capability.py` is extended to
-  report strict/extracted/containment metrics and to select factor 1/2/4
-  explicitly without composing factors;
+- `experiments/lora_evq_v2/eval_official_yarn_capability.py` keeps its existing
+  matched `x2,x4` Geo/EVQ contract and is extended only with separated
+  strict/extracted/containment metrics; the repair evaluator owns the separate
+  one-factor `1/2/4` path and never composes factors;
 - `experiments/lora_evq_v2/eval_temporal_holdout_three_arm.py` remains the
   source of the frozen temporal scoring semantics.
 

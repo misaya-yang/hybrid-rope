@@ -21,16 +21,25 @@ from rebuttal.evq_seed42_retrieval_repair.prepare_data import (
     task_schedule,
     validate_bundle,
     validate_prepared_dir,
+    validate_tokenizer_identity,
     write_bundle_atomic,
     write_manifest,
 )
 from rebuttal.evq_seed42_retrieval_repair.protocol import (
     decide_gate,
+    evaluation_budget,
     extract_first_passkey,
     get_stage,
     registered_factor_for_length,
     score_text_answer,
     segment_contract,
+)
+from rebuttal.evq_seed42_retrieval_repair.evaluate import (
+    build_gate_report,
+    merge_temporal_guardrail,
+    parse_registered_factor,
+    score_generated_tokens,
+    summarize_repair_records,
 )
 from rebuttal.evq_seed42_retrieval_repair import train as repair_train
 from rebuttal.evq_seed42_retrieval_repair.train import (
@@ -476,6 +485,17 @@ def test_artifact_plan_separates_training_segments_and_eval_splits() -> None:
     assert plan["passkey_32768.pt"]["length_semantics"] == "prompt_tokens_before_generation"
 
 
+def test_tokenized_artifacts_are_bound_to_the_exact_tokenizer_files() -> None:
+    recorded = {"identifier": "model", "files": {"tokenizer.json": "a" * 64}}
+
+    assert validate_tokenizer_identity(recorded, recorded) == recorded
+    with pytest.raises(ValueError, match="tokenizer identity"):
+        validate_tokenizer_identity(
+            recorded,
+            {"identifier": "model", "files": {"tokenizer.json": "b" * 64}},
+        )
+
+
 def test_runtime_factor_is_always_derived_from_canonical_evq() -> None:
     canonical, _ = build_training_inv_freq("evq_cosh", 128, 500000.0, 1.414)
 
@@ -650,3 +670,216 @@ def test_gate_transition_binds_every_registered_identity(tmp_path) -> None:
             allowed_statuses={"pass"},
             expected_bindings=stale,
         )
+
+
+def test_evaluation_budget_registers_every_paid_forward_before_gpu_use() -> None:
+    r8 = evaluation_budget("r8")
+    r16 = evaluation_budget("r16")
+
+    assert r8 == {
+        "stage": "r8",
+        "seq_len": 8192,
+        "controlled_rows": 48,
+        "controlled_generation_rows": 32,
+        "passkey_rows": 25,
+        "temporal_domains": 3,
+        "temporal_packs_per_domain": 1,
+        "input_tokens_per_checkpoint_eval": 133 * 8192,
+        "max_generated_tokens": 1312,
+    }
+    assert r16["input_tokens_per_checkpoint_eval"] == 133 * 16384
+
+
+def test_repair_factor_parser_accepts_one_registered_factor_only() -> None:
+    assert parse_registered_factor("1") == 1.0
+    assert parse_registered_factor("2") == 2.0
+    assert parse_registered_factor("4") == 4.0
+    with pytest.raises(ValueError, match="exactly one"):
+        parse_registered_factor("2,4")
+    with pytest.raises(ValueError, match="registered"):
+        parse_registered_factor("8")
+
+
+class _MetricTokenizer:
+    eos_token_id = 2
+
+    def decode(self, token_ids, **_):
+        return " ".join(str(int(token_id)) for token_id in token_ids)
+
+
+def test_generated_token_metrics_separate_prefix_strict_containment_and_eos() -> None:
+    score = score_generated_tokens(
+        [11, 12, 13, 11, 12, 13],
+        [11, 12, 13],
+        _MetricTokenizer(),
+    )
+    assert score["strict_exact"] is False
+    assert score["first_value_exact"] is True
+    assert score["gold_containment"] is True
+    assert score["eos_terminated"] is False
+    assert score["generated_token_count"] == 6
+
+    exact = score_generated_tokens([11, 12, 13, 2], [11, 12, 13], _MetricTokenizer())
+    assert exact["strict_exact"] is True
+    assert exact["eos_terminated"] is True
+    assert exact["generated_token_count"] == 3
+
+
+def _triplet(group: str, task: str, distance: int, *, both: bool, removed: float):
+    return [
+        {
+            "group_id": group,
+            "variant": "original",
+            "task_type": task,
+            "distance": distance,
+            "mean_nll": 1.0,
+            "first_value_exact": both,
+            "finite": True,
+        },
+        {
+            "group_id": group,
+            "variant": "swapped",
+            "task_type": task,
+            "distance": distance,
+            "mean_nll": 1.1,
+            "first_value_exact": both,
+            "finite": True,
+        },
+        {
+            "group_id": group,
+            "variant": "source_removed",
+            "task_type": task,
+            "distance": distance,
+            "mean_nll": removed,
+            "first_value_exact": None,
+            "finite": True,
+        },
+    ]
+
+
+def test_controlled_summary_requires_triplets_and_scores_source_dependence() -> None:
+    records = _triplet("a", "kv", 3000, both=True, removed=1.5)
+    records += _triplet("b", "update", 5000, both=False, removed=0.8)
+
+    summary = summarize_repair_records(records, stage="r8")
+
+    assert summary["groups"] == 2
+    assert summary["pair_consistency"] == 0.5
+    assert summary["source_removal_positive_fraction"] == 0.5
+    assert set(summary["by_task"]) == {"kv", "update"}
+    assert summary["finite"] is True
+    with pytest.raises(ValueError, match="all three variants"):
+        summarize_repair_records(records[:-1], stage="r8")
+
+
+def _temporal(adapter_sha: str, nll: float, *, selection: str = "a" * 64):
+    return {
+        "schema": "evq_cosh.seed42_retrieval_repair_temporal.v1",
+        "stage": "r8",
+        "factor": 1.0,
+        "adapter_sha256": adapter_sha,
+        "temporal_selection_sha256": selection,
+        "summary": {"mean_nll": nll, "finite": True},
+    }
+
+
+def test_temporal_guardrail_requires_same_factor_and_frozen_examples() -> None:
+    merged = merge_temporal_guardrail(
+        "r8", _temporal("a" * 64, 2.0), _temporal("b" * 64, 2.19)
+    )
+    assert merged["temporal_delta_nll"] == pytest.approx(0.19)
+
+    wrong = _temporal("b" * 64, 2.1, selection="c" * 64)
+    with pytest.raises(ValueError, match="selection"):
+        merge_temporal_guardrail("r8", _temporal("a" * 64, 2.0), wrong)
+
+
+def test_gate_report_binds_all_evidence_and_uses_registered_decision() -> None:
+    bindings = {
+        "parent_adapter_sha256": "a" * 64,
+        "checkpoint_adapter_sha256": "b" * 64,
+        "model_manifest_sha256": "c" * 64,
+        "longalpaca_manifest_sha256": "d" * 64,
+        "repair_manifest_sha256": "e" * 64,
+        "validation_bundle_sha256": "f" * 64,
+        "passkey_bundle_sha256": "0" * 64,
+        "operator_tensor_sha256": "1" * 64,
+        "evaluator_code_sha256": "2" * 64,
+        "parent_retrieval_result_sha256": "3" * 64,
+        "retrieval_result_sha256": "4" * 64,
+        "passkey_result_sha256": "5" * 64,
+        "parent_temporal_sha256": "6" * 64,
+        "checkpoint_temporal_sha256": "7" * 64,
+    }
+    report = build_gate_report(
+        stage="r8",
+        segment=1,
+        repair_summary={
+            "pair_consistency": 0.80,
+            "source_removal_positive_fraction": 0.75,
+            "finite": True,
+            "task_types": ["kv", "update"],
+        },
+        passkey_summary={"passkey_containment": 0.52, "finite": True},
+        parent_repair_summary={"pair_consistency": 0.0},
+        parent_temporal=_temporal("a" * 64, 2.0),
+        checkpoint_temporal=_temporal("b" * 64, 2.2),
+        bindings=bindings,
+    )
+
+    assert report["status"] == "pass"
+    assert report["bindings"]["stage"] == "r8"
+    assert report["bindings"]["segment"] == 1
+    assert report["bindings"]["factor"] == 1.0
+    assert set(bindings).issubset(report["bindings"])
+
+
+def test_launcher_has_explicit_non_advancing_commands_and_gpu_lock() -> None:
+    launcher = Path("rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
+
+    for command in (
+        "prepare)",
+        "preflight)",
+        "baseline)",
+        "train-r8)",
+        "gate-r8)",
+        "train-r16)",
+        "gate-r16)",
+        "final)",
+    ):
+        assert command in launcher
+    assert "flock" in launcher
+    assert "nvidia-smi" in launcher
+    assert "--dry-run" in launcher
+
+
+def test_launcher_never_downloads_or_autostarts_the_next_stage() -> None:
+    launcher = Path("rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
+
+    assert "git clone" not in launcher
+    assert "wget " not in launcher
+    assert "curl " not in launcher
+    train_r8 = launcher.split("train-r8)", 1)[1].split(";;", 1)[0]
+    assert "train-r16)" not in train_r8
+    gate_r8 = launcher.split("gate-r8)", 1)[1].split(";;", 1)[0]
+    assert "train-r16)" not in gate_r8
+
+
+def test_launcher_requires_external_paths_without_private_defaults() -> None:
+    launcher = Path("rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
+
+    for variable in (
+        "EVQ_REPAIR_MODEL",
+        "EVQ_REPAIR_MODEL_MANIFEST",
+        "EVQ_REPAIR_LONGALPACA_MANIFEST",
+        "EVQ_REPAIR_PARENT_ADAPTER",
+        "EVQ_REPAIR_FILLER_DIR",
+        "EVQ_REPAIR_TEMPORAL_ROOT",
+        "EVQ_REPAIR_CAPABILITY_DIR",
+        "EVQ_REPAIR_WORK_DIR",
+        "PYTHON_BIN",
+    ):
+        assert variable in launcher
+    private_server_root = "/" + "root/autodl-tmp"
+    assert private_server_root not in launcher
+    assert "connect.westb" not in launcher

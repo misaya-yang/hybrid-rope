@@ -50,6 +50,14 @@ MCQA_SPECS = {
     },
 }
 
+MCQA_ARROW_LAYOUT = {
+    "cais/mmlu": ("cais___mmlu", "mmlu"),
+    "allenai/ai2_arc": ("allenai___ai2_arc", "ai2_arc"),
+    "Rowan/hellaswag": ("Rowan___hellaswag", "hellaswag"),
+    "allenai/openbookqa": ("allenai___openbookqa", "openbookqa"),
+    "allenai/winogrande": ("allenai___winogrande", "winogrande"),
+}
+
 DEFAULT_NOLIMA_TEMPLATE = (
     "You will answer a question based on the following book snippet:\n\n"
     "{haystack}\n\n"
@@ -769,7 +777,25 @@ def build_longbench_examples(
                         },
                     )
                 )
-    return records
+    merged: dict[tuple[str, int, str], dict[str, Any]] = {}
+    for record in records:
+        key = (record["task"], record["target_length"], record["prompt_sha256"])
+        source_id = str(record["source"]["source_id"])
+        if key not in merged:
+            item = dict(record)
+            item["source"] = {
+                **record["source"],
+                "merged_source_ids": [source_id],
+            }
+            merged[key] = item
+            continue
+        item = merged[key]
+        for answer in record["answers"]:
+            if answer not in item["answers"]:
+                item["answers"].append(answer)
+        if source_id not in item["source"]["merged_source_ids"]:
+            item["source"]["merged_source_ids"].append(source_id)
+    return list(merged.values())
 
 
 def _mcqa_values(dataset_name: str, row: Mapping[str, Any]) -> tuple[str, list[str], int]:
@@ -814,6 +840,41 @@ def _mcqa_values(dataset_name: str, row: Mapping[str, Any]) -> tuple[str, list[s
     return question, normalized_choices, normalized_index
 
 
+def mcqa_arrow_path(cache_root: str | Path, dataset_name: str) -> Path:
+    """Resolve one revision-pinned Datasets Arrow file without Hub metadata."""
+    if dataset_name not in MCQA_REVISIONS:
+        raise ValueError(f"MCQA source is not revision-pinned: {dataset_name}")
+    dataset_dir, file_prefix = MCQA_ARROW_LAYOUT[dataset_name]
+    spec = MCQA_SPECS[dataset_name]
+    config = spec["config"] or "default"
+    path = (
+        Path(cache_root)
+        / "datasets"
+        / dataset_dir
+        / config
+        / "0.0.0"
+        / MCQA_REVISIONS[dataset_name]
+        / f"{file_prefix}-{spec['split']}.arrow"
+    )
+    if not path.is_file():
+        raise FileNotFoundError(path)
+    return path
+
+
+def load_local_mcqa_arrow_datasets(
+    cache_root: str | Path,
+    sources: Iterable[str],
+) -> dict[str, Any]:
+    try:
+        from datasets import Dataset
+    except ImportError as exc:
+        raise RuntimeError("the datasets package is required to read MCQA Arrow files") from exc
+    return {
+        dataset_name: Dataset.from_file(str(mcqa_arrow_path(cache_root, dataset_name)))
+        for dataset_name in sources
+    }
+
+
 def load_mcqa_examples(
     tokenizer: Any,
     *,
@@ -822,6 +883,7 @@ def load_mcqa_examples(
     max_prompt_tokens: int = 32768,
     max_examples_per_source: int | None = None,
     cache_dir: str | Path | None = None,
+    local_datasets: Mapping[str, Iterable[Mapping[str, Any]]] | None = None,
 ) -> list[dict[str, Any]]:
     """Load pinned Hugging Face MCQA sources with no unpinned fallback."""
     if dataset_loader is None:
@@ -840,21 +902,26 @@ def load_mcqa_examples(
         if dataset_name not in MCQA_REVISIONS:
             raise ValueError(f"MCQA source is not revision-pinned: {dataset_name}")
         spec = MCQA_SPECS[dataset_name]
-        load_kwargs: dict[str, Any] = {
-            "split": spec["split"],
-            "revision": MCQA_REVISIONS[dataset_name],
-        }
-        if cache_dir is not None:
-            load_kwargs["cache_dir"] = str(cache_dir)
-        try:
-            if spec["config"] is None:
-                dataset = dataset_loader(dataset_name, **load_kwargs)
-            else:
-                dataset = dataset_loader(dataset_name, spec["config"], **load_kwargs)
-        except Exception as exc:
-            raise RuntimeError(
-                f"failed to load requested MCQA source {dataset_name} at revision {MCQA_REVISIONS[dataset_name]}"
-            ) from exc
+        if local_datasets is not None:
+            if dataset_name not in local_datasets:
+                raise FileNotFoundError(f"local MCQA dataset is missing: {dataset_name}")
+            dataset = local_datasets[dataset_name]
+        else:
+            load_kwargs: dict[str, Any] = {
+                "split": spec["split"],
+                "revision": MCQA_REVISIONS[dataset_name],
+            }
+            if cache_dir is not None:
+                load_kwargs["cache_dir"] = str(cache_dir)
+            try:
+                if spec["config"] is None:
+                    dataset = dataset_loader(dataset_name, **load_kwargs)
+                else:
+                    dataset = dataset_loader(dataset_name, spec["config"], **load_kwargs)
+            except Exception as exc:
+                raise RuntimeError(
+                    f"failed to load requested MCQA source {dataset_name} at revision {MCQA_REVISIONS[dataset_name]}"
+                ) from exc
 
         for row_index, row in enumerate(dataset):
             if max_examples_per_source is not None and row_index >= max_examples_per_source:
@@ -1181,11 +1248,18 @@ def prepare_suite(args: argparse.Namespace) -> dict[str, Any]:
     if include_mcqa and not skip_mcqa:
         requested_mcqa = _parse_sequence(_namespace_value(args, "mcqa_sources", default=tuple(MCQA_REVISIONS)), str)
         max_mcqa = _namespace_value(args, "max_mcqa_per_source", default=None)
+        arrow_cache = _namespace_value(args, "mcqa_arrow_cache", default=None)
+        local_datasets = (
+            load_local_mcqa_arrow_datasets(arrow_cache, requested_mcqa)
+            if arrow_cache is not None
+            else None
+        )
         mcqa_rows = load_mcqa_examples(
             tokenizer,
             sources=requested_mcqa,
             max_examples_per_source=max_mcqa,
             cache_dir=_namespace_value(args, "cache_dir", default=None),
+            local_datasets=local_datasets,
         )
         if not mcqa_rows:
             raise ValueError("requested MCQA sources produced no records")
@@ -1221,6 +1295,11 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument("--max-mcqa-per-source", type=int)
     parser.add_argument("--cache-dir", type=Path)
+    parser.add_argument(
+        "--mcqa-arrow-cache",
+        type=Path,
+        help="explicit Hugging Face cache root containing revision-pinned Arrow files",
+    )
     parser.add_argument("--skip-mcqa", action="store_true")
     parser.add_argument("--overwrite", action="store_true")
     parser.set_defaults(seed=42, include_mcqa=True)

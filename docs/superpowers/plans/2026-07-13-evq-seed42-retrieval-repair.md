@@ -511,12 +511,15 @@ def test_correct_passkey_with_trailing_text_is_not_strict_but_is_retrieved():
     assert score["first_value_exact"] is True
     assert score["gold_containment"] is True
 
-def test_official_capability_parser_accepts_registered_identity_factor():
-    assert parse_yarn_factors("1") == (1.0,)
-    assert parse_yarn_factors("2") == (2.0,)
-    assert parse_yarn_factors("4") == (4.0,)
+def test_repair_factor_parser_accepts_one_registered_factor():
+    assert parse_registered_factor("1") == 1.0
+    assert parse_registered_factor("2") == 2.0
+    assert parse_registered_factor("4") == 4.0
     with pytest.raises(ValueError):
-        parse_yarn_factors("2,4")
+        parse_registered_factor("2,4")
+
+def test_legacy_official_capability_parser_keeps_matched_pair():
+    assert parse_yarn_factors("2,4") == (2.0, 4.0)
 
 def test_factor_length_mapping_rejects_composed_or_wrong_context():
     assert registered_factor_for_length(8192) == 1.0
@@ -526,15 +529,18 @@ def test_factor_length_mapping_rejects_composed_or_wrong_context():
 
 - [ ] **Step 2: Run tests and verify RED**
 
-Expected: factor parser tests fail because the existing evaluator requires the tuple `(2, 4)` and reports only one exact metric.
+Expected: the new repair factor parser is missing and the existing evaluator
+still reports only one exact metric.
 
 - [ ] **Step 3: Correct official capability evaluation semantics**
 
-Make one evaluator invocation accept exactly one factor from `{1,2,4}`. Select
-only rows whose registered target length matches that factor. Always transform
-the canonical substrate, never the saved factor-specific runtime tensor.
-Generation records prediction text, generated token count, EOS termination,
-strict exact, first extracted value exact, containment, and gold NLL.
+Keep the existing evaluator's public `--yarn_factors 2,4` contract for the
+matched Geo/EVQ runs. Add a repair-only parser in `evaluate.py` that accepts
+exactly one factor from `{1,2,4}` and selects only rows whose target length
+matches that factor. Always transform the canonical substrate, never the saved
+factor-specific runtime tensor. Generation records prediction text, generated
+token count, EOS termination, strict exact, first extracted value exact,
+containment, and gold NLL.
 
 - [ ] **Step 4: Implement controlled triplet evaluation**
 

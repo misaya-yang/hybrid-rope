@@ -924,6 +924,24 @@ def write_manifest(
     return manifest
 
 
+def validate_tokenizer_identity(
+    recorded: Mapping[str, Any],
+    expected: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Require the exact public tokenizer identifier and local file hashes."""
+    normalized_recorded = {
+        "identifier": recorded.get("identifier"),
+        "files": dict(recorded.get("files", {})),
+    }
+    normalized_expected = {
+        "identifier": expected.get("identifier"),
+        "files": dict(expected.get("files", {})),
+    }
+    if normalized_recorded != normalized_expected:
+        raise ValueError("prepared data tokenizer identity differs from the model tokenizer")
+    return dict(recorded)
+
+
 def validate_prepared_dir(root: Path) -> dict[str, Any]:
     """Hash-check and structurally validate every registered prepared file."""
     root = Path(root)

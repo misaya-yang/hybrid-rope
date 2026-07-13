@@ -296,6 +296,24 @@ def test_longbench_complete_prompt_is_tokenized_as_one_string(tmp_path: Path):
     assert len(rows[0]["prompt_ids"]) == 1
 
 
+def test_longbench_merges_duplicate_prompts_as_reference_variants(tmp_path: Path, fake_tokenizer):
+    source = tmp_path / "narrativeqa.jsonl"
+    source.write_text(
+        "\n".join(
+            [
+                json.dumps({"_id": "a", "context": "same story", "input": "same question", "answers": ["first"]}),
+                json.dumps({"_id": "b", "context": "same story", "input": "same question", "answers": ["second"]}),
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    rows = build_longbench_examples(fake_tokenizer, source, max_prompt_tokens=32768)
+    assert len(rows) == 1
+    assert rows[0]["answers"] == ["first", "second"]
+    assert rows[0]["source"]["merged_source_ids"] == ["a", "b"]
+
+
 def test_requested_longbench_with_no_selected_tasks_fails_without_manifest(tmp_path: Path, fake_tokenizer):
     hotpotqa = tmp_path / "hotpotqa.jsonl"
     hotpotqa.write_text(
@@ -393,6 +411,36 @@ def test_mcqa_loads_every_source_at_the_pinned_revision(fake_tokenizer):
     invalid = dict(rows[0], answers=["not the indexed choice"])
     with pytest.raises(ValueError, match="indexed choice"):
         validate_records([invalid])
+
+
+def test_mcqa_uses_explicit_local_arrow_rows_without_hub_loader(fake_tokenizer):
+    rows = load_mcqa_examples(
+        fake_tokenizer,
+        sources=("cais/mmlu",),
+        dataset_loader=lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("Hub loader called")),
+        local_datasets={
+            "cais/mmlu": [
+                {"question": "Cached?", "choices": ["no", "yes"], "answer": 1}
+            ]
+        },
+    )
+    assert len(rows) == 1
+    assert rows[0]["answers"] == ["yes"]
+    assert rows[0]["source"]["revision"] == MCQA_REVISIONS["cais/mmlu"]
+
+
+def test_mcqa_arrow_cache_resolves_exact_pinned_revision(tmp_path: Path):
+    expected = (
+        tmp_path
+        / "datasets/cais___mmlu/all/0.0.0"
+        / MCQA_REVISIONS["cais/mmlu"]
+        / "mmlu-test.arrow"
+    )
+    expected.parent.mkdir(parents=True)
+    expected.write_bytes(b"arrow")
+    from experiments.lora_evq_v2.prepare_seed42_capability_data import mcqa_arrow_path
+
+    assert mcqa_arrow_path(tmp_path, "cais/mmlu") == expected
 
 
 def test_mcqa_max_examples_must_be_positive(fake_tokenizer):
