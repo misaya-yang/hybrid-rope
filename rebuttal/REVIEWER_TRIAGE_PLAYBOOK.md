@@ -5,21 +5,27 @@
 > **Fact gate:** 方法身份、理论与协议以 `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` 为准；本文件旧的official-YaRN、DAPE、native-Geo、`d_eff=d_head`或LoRA matched-shape措辞均不得恢复。
 
 - Preparation：`triage_ready`
-- Response package：`needs_author_input`
+- Decision：`unclear / high-risk trust repair`
+- Response package：`needs_real_reviews + needs_author_input`
 - 当前模式：`triage-only`。实际 NeurIPS reviews 尚未收到。
 
-用途：真实 reviews 到来后，只识别最多五个会改变评分的 concern，并把它们映射到证据、让步和作者决策。不要把模拟审稿当作真实触发器，也不要把 rebuttal 扩写成第二篇论文。
+用途：真实 reviews 到来后，只识别最多五个会改变评分的 concern，并把逐字评论映射到证据、让步、行动与作者决策。普通回复必须由真实评论触发；唯一例外是作者批准的一条合并 material-integrity disclosure。不要把模拟审稿当作真实触发器，也不要把 rebuttal 扩写成第二篇论文。
 
 中心答复边界：EVQ-Cosh 研究 **training-time frequency allocation / finite spectral budget** 这一第三轴；它与 operator design、inference-time range scaling 互补，不是 universal SOTA 或任何 scaler / learned PE 的替代。
 
 ## Action labels
 
-- `CORRECTION`：submitted wording、数学解释、指标或 provenance 需要纠正。
-- `CONCESSION`：明确承认当前证据没有覆盖的范围。
-- `EVIDENCE`：只引用已核验且与该问题直接相关的证据。
-- `BOUNDARY`：同时给出 negative / reversal / seed / metric 边界。
-- `AUTHOR_INPUT`：需要作者选择、真实 review 语境或 response budget 决策。
-- `DEFER`：证据未达 reviewer-grade，或真实 review 未触发，不进入回复。
+- `CLARIFY_EXISTING`：用现有证据澄清，不产生新主张。
+- `SOFTEN_CLAIM`：收窄或撤回超出证据的 interpretation。
+- `ACCEPT_TEXT`：承认并准备 future manuscript wording correction；不得写成提交件已修订。
+- `ACCEPT_ANALYSIS`：补充与真实问题直接相关的推导或已有结果分析。
+- `ACCEPT_EXPERIMENT`：只有通过 `rebuttal_playbook.md` §8 gate 才可使用。
+- `PARTIAL`：只能回答问题的一部分，必须写明未关闭边界。
+- `AUTHOR_INPUT_NEEDED`：需要作者选择、真实 review 语境或 response budget 决策。
+- `BLOCKING`：事实、provenance或作者决策未满足，不可发送。
+- `OUT_OF_SCOPE`：不改变当前评分问题，或无法在窗口形成 reviewer-grade evidence。
+
+每个条目另设 `Correction / Evidence / Boundary` 字段；它们是回答内容，不再冒充action label。
 
 ## 1. Trust / provenance
 
@@ -31,7 +37,7 @@
 
 **Avoid**：说“reviewer misunderstood”；用当前源码假装提交件本来正确；用仓库根目录 2026-06-14 旧 snapshot 覆盖最新 manifest；把 paper source 当数学或结果 provenance 权威。
 
-**Action / readiness**：`CORRECTION + EVIDENCE + BOUNDARY + AUTHOR_INPUT`；`PARTIAL`。事实链可准备，最终取舍必须等真实原话与作者确认。
+**Action / readiness**：`ACCEPT_TEXT + CLARIFY_EXISTING + SOFTEN_CLAIM + AUTHOR_INPUT_NEEDED`；`PARTIAL`。事实链可准备，最终取舍必须等真实原话与作者确认。若无人点名但错误会污染 accepted record，只能进入作者批准的合并 integrity disclosure 候选。
 
 ## 2. KL / shape–scale correctness
 
@@ -43,7 +49,7 @@
 
 **Avoid**：让 submitted/current paper source 覆盖 7/11 数学审计；说 ordinary KL 导出非零 operating point；说 `τ=d_eff/√L` globally optimal；把 proxy 当 trained-task theorem。
 
-**Action / readiness**：`CORRECTION + CONCESSION + EVIDENCE + BOUNDARY`；`THEORY_CORRECTION_PENDING`。无需为这一纠错临时启动 GPU 实验；只有实际 response 使用新三层口径后才能升级状态。
+**Action / readiness**：`ACCEPT_ANALYSIS + SOFTEN_CLAIM`；`PARTIAL`。无需为这一纠错临时启动 GPU 实验；只有实际 response 使用新三层口径并经作者确认后才能升级状态。
 
 ## 3. Baseline fairness / replication
 
@@ -55,7 +61,7 @@
 
 **Avoid**：把额外 EVQ seed 当完整 replication；把shared-frequency row称DAPE；把fixed-ramp写成official/tuned YaRN；用不同语料计算 causal delta；把native-Geo/midpoint-EVQ称纯shape control；把`d_eff=128`写成actual head dimension或theorem。
 
-**Action / readiness**：`CONCESSION + EVIDENCE + BOUNDARY + DEFER`；总体 `PARTIAL`，LoRA attribution 为 `PROVENANCE_BLOCKED`。只有真实 reviewer 点名且 artifact gate 已满足时才升级证据。
+**Action / readiness**：`SOFTEN_CLAIM + PARTIAL + BLOCKING`；LoRA 默认 `OUT_OF_SCOPE`。只有真实 reviewer 点名且 artifact gate 已满足时才升级证据；不能用新实验恢复错误的官方方法身份。
 
 ## 4. Metric / capability
 
@@ -67,7 +73,7 @@
 
 **Avoid**：把 100% PK 称为 exact generation；隐藏 18–98% seed spread 或 4K reversal；用 QuALITY、LoRA、video 等 supporting row 代替 primary capability 证据。
 
-**Action / readiness**：`CORRECTION + EVIDENCE + BOUNDARY`；`READY`。不得删除不利边界来换取更强标题。
+**Action / readiness**：`CLARIFY_EXISTING + SOFTEN_CLAIM`；事实组件已准备，但真实 trigger 前仍为 `PARTIAL`。不得删除不利边界来换取更强标题。
 
 ## 5. AC-level remaining contribution
 
@@ -79,21 +85,23 @@
 
 **Avoid**：universal SOTA；替代 YaRN/LongRoPE/DAPE/FIRE/learned PE；“工业级闭环”；用新 supporting experiment 重写论文身份。
 
-**Action / readiness**：`CONCESSION + EVIDENCE + BOUNDARY + AUTHOR_INPUT`；`READY_WITH_CONCESSION`。最终篇幅和是否主动提某项修正由作者在看到真实 reviews 后决定。
+**Action / readiness**：`CLARIFY_EXISTING + SOFTEN_CLAIM + AUTHOR_INPUT_NEEDED`；`READY_WITH_CONCESSION`。最终 stance、篇幅和未触发错误的 disclosure 取舍由作者在看到真实 reviews 后决定。
 
 ## 真实 reviews 到来后的稳定 ID 工作流
 
 1. local-only 冻结 reviewer / AC 原话；模拟审稿不得进入这一步。
-2. 按出现顺序分配 `R1-C01`、`R1-C02`、`R2-C01` 或 `AC-C01`。ID 一经分配永久稳定，之后只改优先级和状态，不重编号。
+2. 按出现顺序分配 `R1.1`、`R1.2`、`R2.1` 或 `AC.1`。ID 一经分配永久稳定，之后只改优先级和状态，不重编号。
 3. 把每个 ID 映射到上面一个主 concern；跨类问题指定一个 primary concern，其余写入 `related`。
 4. 每个 ID 使用同一模板：
 
 ```text
 ID:
 Verbatim trigger:
-Primary concern / related:
+Source: reviewer / AC / approved integrity disclosure
+Category / severity:
+Primary concern / related IDs:
+Likelihood / impact:
 Correction:
-Concession:
 Evidence:
 Boundary:
 Action labels:
@@ -101,15 +109,17 @@ Readiness:
 Author decision required:
 ```
 
-5. `correction / concession / evidence / boundary` 不适用时写 `none`，不得省略以制造已闭环假象。
-6. 只选择影响评分的 3–5 个 ID 进入唯一 `AUTHOR_RESPONSE_20260722.md`；该文件只能在真实 reviews 到来后创建。
+5. `correction / evidence / boundary` 不适用时写 `none`，不得省略以制造已闭环假象；`BLOCKING` 与 `AUTHOR_INPUT_NEEDED` 必须显式关闭。
+6. 只选择影响评分的 3–5 个真实评论 ID 进入唯一 `AUTHOR_RESPONSE_20260722.md`；该文件只能在真实 reviews 到来后创建。
+7. 若作者批准未触发的 material-integrity disclosure，使用单独稳定 ID `AC.INTEGRITY.1`，不得伪装成 reviewer concern，也不得拆成多条发散说明。
 
 ## Send gate
 
-- [ ] 每段都绑定一个真实、逐字保存的 reviewer / AC trigger。
+- [ ] 每个普通回答都绑定一个真实、逐字保存的 reviewer / AC trigger；唯一例外是作者批准并明确标记的 `AC.INTEGRITY.1`。
+- [ ] 每份 review 不超过 10,000 characters，不含链接，没有声称上传 revised paper/supplement；OpenReview readers 与双盲检查通过。
 - [ ] 所有数字来自最新 provenance manifest 或其 raw-backed artifact。
 - [ ] 理论答复明确撤回 ordinary-KL `O(τ²)` 解释，并保留三层身份。
 - [ ] PK 与 AR exact 分开，且 8K seed spread 与 4K reversal 同时出现。
 - [ ] LoRA 没有跨 LongAlign / LongAlpaca 作 causal attribution。
 - [ ] 没有把模拟原文、deferred run 或历史 trace 写成真实 review / reviewer-grade evidence。
-- [ ] 作者已处理所有 `AUTHOR_INPUT`，response package 才能从 `needs_author_input` 升级。
+- [ ] 作者已处理所有 `AUTHOR_INPUT_NEEDED` 与 `BLOCKING`，response package 才能从 `needs_real_reviews + needs_author_input` 升级。

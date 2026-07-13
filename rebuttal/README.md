@@ -3,7 +3,8 @@
 创建：2026-06-10；最后更新：2026-07-13
 
 - Preparation：`triage_ready`
-- Response package：`needs_author_input`
+- Decision：`unclear / high-risk trust repair`
+- Response package：`needs_real_reviews + needs_author_input`；当前不可发送
 - 当前模式：`triage-only`。截至 2026-07-13，实际 NeurIPS reviews 尚未收到。
 
 本目录是作者内部 rebuttal control room，不是论文、公开补充材料或 reviewer supplement，也不得作为仓库根目录打包。唯一中心主张是：**RoPE 的有限频率表也是 finite spectral budget；EVQ-Cosh 把 training-time frequency allocation 作为 operator design 与 inference-time range scaling 之外的第三个 PE 设计轴。** 这不是 universal long-context SOTA，也不是 YaRN、LongRoPE、DAPE、FIRE 或 learned PE 的替代主张。
@@ -12,13 +13,13 @@
 
 | 文件 | 唯一职责 |
 | --- | --- |
-| `rebuttal_playbook.md` | **统一策略入口**：reviewer-response-first 原则、P0/P1/P2、理论边界与最小行动清单 |
+| `rebuttal_playbook.md` | **唯一操作入口**：claim disposition、P0/P1/P2、理论边界、实验 gate、作者决策门与发送 QA |
 | `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` | **最新事实权威**：DAPE、YaRN、midpoint-Geo、KL、`c_coll`、Phase16、协议与 provenance 的全论文审计；与旧材料冲突时以此为准 |
-| `REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md` | **决策权威**：NeurIPS 可行性、诚实披露、官方政策、公开案例与后续 venue 修复路线 |
+| `REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md` | **政策与决策背景**：NeurIPS 可行性、诚实披露、官方政策、公开案例与后续 venue 修复路线 |
 | `frequency_adaptation_8b/` | **定向机制实验**：检验 8B checkpoint 是否能在连续改变 RoPE 频率分配时获得足够任务梯度；它是独立新协议，不替代 LongAlpaca clean pair，也不自动进入 rebuttal |
 | `README.md` | 全局状态、导航与目录安全边界 |
-| `REVIEWER_TRIAGE_PLAYBOOK.md` | 真实 reviews 到来后的最多五项 score-driving concern 分流 |
-| `REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md` | 完整问题、证据、状态与 decision gate 总账 |
+| `REVIEWER_TRIAGE_PLAYBOOK.md` | 真实 reviews 到来后的 verbatim comment、稳定 ID 与最多五项 score-driving concern 分流 |
+| `REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md` | **archival risk inventory**：仅用于检索历史攻击面；不再裁决当前事实、实验优先级或发送范围 |
 | `THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` | 理论长推导：exact / conditional proxy / empirical 三层边界；方法身份、`c_coll` 与 Phase16 以 2026-07-13 full audit 为准 |
 | `LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md` | fresh Geo 结果、LongAlign/LongAlpaca provenance 与 clean-pair 因果边界 |
 | `LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` | fresh LongAlpaca seed-42 Geo+LoRA/EVQ+LoRA matched-training-pipeline temporal NLL；native-Geo与midpoint-EVQ非同quantizer，仅作 supporting evidence |
@@ -35,20 +36,21 @@
 | 全论文事实与方法身份 | `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` | 当前 paper label、旧报告和 class 名不能覆盖实际 forward path 与官方定义 |
 | 理论正确性 | `FULL_PAPER_INTEGRITY_AUDIT_20260713.md`；长推导见 `THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` | submitted/current paper source 只证明“写了什么”，不裁决数学是否正确；旧 theory note 不得覆盖 2026-07-13 的 `c_coll`/Phase16 复核 |
 | LoRA 因果与数据来源 | `LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md`；fresh protocol见 `LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` | 旧 LongAlign/LongAlpaca contrast不可作因果比较；新 LongAlpaca pair虽匹配训练流水线，但native-Geo与midpoint-EVQ非同quantizer、单seed且为teacher-forced NLL，不得称纯shape control或静默替换旧表 |
-| 当前决策与可发送范围 | `REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md`；真实评论的快速映射用 `REVIEWER_TRIAGE_PLAYBOOK.md` | 旧草稿、旧 action board 或单次内部报告不得反向升级 claim |
-| 模拟审稿原文 | `simulated_reviews/` | 只用于内部压力测试；不是真实 NeurIPS reviews，其科学判断已被 2026-07-13 full audit 与总账取代 |
+| 当前决策与可发送范围 | `rebuttal_playbook.md`；政策/venue判断见 `REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md`；真实评论映射用 `REVIEWER_TRIAGE_PLAYBOOK.md` | master ledger、旧草稿、旧 action board 或单次内部报告不得反向升级 claim |
+| 模拟审稿原文 | `simulated_reviews/` | 只用于内部压力测试；不是真实 NeurIPS reviews，其科学判断已被 2026-07-13 full audit 与当前 playbook 取代 |
 
 ## 3. 2026-07-22 真实 review 工作流
 
-真实 reviews 到来前做 triage 准备和少量有停止条件的定向机制实验，不创建或预填 author response。
+真实 reviews 到来前只做事实、短答组件和作者决策准备，不创建或预填 author response。新实验不是默认动作；只有能直接回答真实 reviewer 的 score-changing question 且满足 `rebuttal_playbook.md` §8 gate 时才启动。
 
 1. local-only 保存每条真实评论的逐字版本，并保留 reviewer / AC 身份标签。
 2. 按 `REVIEWER_TRIAGE_PLAYBOOK.md` 分配稳定 ID；ID 一旦分配，不因排序变化而重编号。
-3. 对每个被触发 concern 填写 `correction / concession / evidence / boundary`，再映射到总账和分轨权威来源。
-4. 新实验只在匹配控制、任务端点、provenance 和负结果边界完整时成为候选证据；此前保持内部研究状态，不得自行写入 response。
-5. 需要作者选择、未匿名化新证据或 provenance gate 的条目保持 `needs_author_input`，不得自行补全。
-6. 仅在真实评论到达后创建唯一回复文件：`AUTHOR_RESPONSE_20260722.md`。不要恢复多路径草稿入口。
-7. 发送前逐项执行总账与 triage send gate；只回答真实 reviewer 触发的 3–5 个 score-driving concerns。
+3. 对每个 concern 填写 category、severity、action、readiness、evidence、boundary 与 author decision，再映射到分轨权威来源。
+4. 区分 **review-triggered response** 与 **untriggered material-integrity disclosure candidate**。普通回复只回答真实评论；若重大方法身份/理论错误未被点名但会污染 accepted record，由作者决定是否向 AC 作一条合并 disclosure。该建议是诚信判断，不是 Handbook 明文规定的专用流程。
+5. 新实验只在匹配控制、任务端点、provenance 和负结果边界完整时成为候选证据；此前保持内部研究状态，不得自行写入 response。
+6. 需要作者选择、未匿名化新证据或 provenance gate 的条目保持 `needs_author_input`，不得自行补全。
+7. 仅在真实评论到达后创建唯一回复文件：`AUTHOR_RESPONSE_20260722.md`。不要恢复多路径草稿入口。
+8. 每份 review 最多 10,000 characters；response 不放链接、不上传 revised paper/supplement，并检查 OpenReview readers 与双盲信息。最多聚焦 3–5 个 score-driving concerns，另加一条作者批准的合并 integrity disclosure（如确有必要）。
 
 ## 4. 当前核心 P0/P1 边界
 
@@ -85,8 +87,8 @@
 - `raw_sources/00_INDEX.md` 是 tracked 控制索引；其列出的 `*_verbatim.md` payload 是 local-only，不提交、不打包、不公开引用。已移除的 reasoning attachment 不得恢复。
 - `simulated_reviews/` 仅保存字节不变的内部模拟原文，不进入 supplement，也不得伪装为真实 review。
 - 不复制身份、私有机器路径、凭据、内部推理或未匿名化 artifact 到 paper、public docs 或 response。
-- 当前定向实验可以新增 spec、代码和内部运行产物，但不得覆盖论文数字、历史 artifacts 或 claim tier。只有作者明确决定且 reviewer 实际触发后，经过匿名化与 provenance 核验的结果才可进入 response 候选。
+- 当前定向实验可以新增 spec、代码和内部运行产物，但不得覆盖论文数字、历史 artifacts 或 claim tier。只有真实 reviewer trigger、作者明确决定且实验通过 `rebuttal_playbook.md` §8 gate 后，结果才可进入 response 候选。
 
 ## 7. Consolidation note
 
-2026-07-13 起，`FULL_PAPER_INTEGRITY_AUDIT_20260713.md` 是方法身份、理论与协议事实的最高入口，`REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md` 是决策入口，`rebuttal_playbook.md` 继续承担真实 review 到来后的执行入口。本文件只保留导航、状态和安全边界。两份 2026-07-10 模拟审稿只提供压力测试原文，不提供真实 reviewer 身份或最新科学裁决。本次更新不改变任何实验数字。
+2026-07-13 起，`FULL_PAPER_INTEGRITY_AUDIT_20260713.md` 是方法身份、理论与协议事实的最高入口，`rebuttal_playbook.md` 是唯一操作入口，`REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md` 提供政策与venue决策背景。本文件只保留导航、状态和安全边界；master ledger 已降为 archival risk inventory。两份 2026-07-10 模拟审稿只提供压力测试原文，不提供真实 reviewer 身份或最新科学裁决。本次更新不改变任何实验数字。

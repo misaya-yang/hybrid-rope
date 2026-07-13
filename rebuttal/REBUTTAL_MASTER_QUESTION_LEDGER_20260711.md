@@ -2,17 +2,17 @@
 
 日期：2026-07-11
 
-Document status：**living internal document**
+Document status：**ARCHIVAL RISK INVENTORY — NOT A RESPONSE AUTHORITY**
 
 Preparation：**triage_ready**
 
-Response package readiness：**needs_author_input**
+Response package readiness：**superseded by `rebuttal_playbook.md`**
 
 Current mode：**triage-only**；截至 2026-07-13，实际 NeurIPS reviews 尚未收到。
 
-> **2026-07-13 canonical update:** `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` 已完成全论文 method-identity/theory/protocol audit。旧 “YaRN” 实际是 repo-defined fixed-ramp scaler；旧 “DAPE (32p)” 实际是 shared learnable inverse frequencies；核心 Geo 是 midpoint grid；ordinary-KL、`c_coll=1.171` 与 Phase16 “27 configs/all <1%” 解释均不可继续使用。`LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` 已闭环一个新的 matched seed-42 LongAlpaca temporal-NLL protocol，但不替换旧论文 LoRA 表。涉及这些事实时以新审计为准。本总账继续负责 reviewer-question routing，不覆盖新审计。
+> **DO NOT COPY INTO A RESPONSE.** 本文件保留 2026-07-11 时点的广泛攻击面、模拟问题与历史 decision gates，其中多处方法身份、LoRA优先级、实验closure和answer kernel已被后续审计取代。当前事实以 `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` 为准；当前 claim disposition、P0/P1/P2、实验gate和发送范围以 `rebuttal_playbook.md` 为准；真实评论映射以 `REVIEWER_TRIAGE_PLAYBOOK.md` 为准。本文只可用于检索“曾考虑过什么风险”。
 
-用途：把最新数学审计、Fable5/GPT Pro 模拟审稿、现有 claim/evidence ledger、报告一致性审计，以及 2026-07-11 的 LoRA Geo-control 结果合并为一份可持续更新的 rebuttal 问题总账。它不是最终 author response，也不是第二篇论文；真实 reviews 到来前只做 triage，真实 reviews 到来后只抽取被实际触发的条目进入回复。
+用途：保存历史风险覆盖面与来源线索。它不是最终 author response、当前行动板或第二篇论文；真实 reviews 到达后只能把疑似相关条目重新核对到当前fact gate，不能直接抽取旧答案、状态或实验建议。
 
 ---
 
@@ -36,7 +36,7 @@ Current mode：**triage-only**；截至 2026-07-13，实际 NeurIPS reviews 尚�
 | Full-paper identity/theory/protocol | `rebuttal/FULL_PAPER_INTEGRITY_AUDIT_20260713.md` | DAPE、YaRN、Geo grid、KL、dimension、Phase16与最终survivor set以此为准 |
 | Theory derivation detail | `rebuttal/THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` | 只作长推导；不得覆盖7/13 audit的`M/d_S`、`c_coll`、LoRA/MLA与Phase16修正 |
 | LoRA identity/causality | `rebuttal/LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md`；`rebuttal/LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` | 旧跨语料contrast无因果性；fresh pair匹配training pipeline但native-Geo/midpoint-EVQ非同quantizer |
-| Rebuttal decision | 本总账；快速分流用 `rebuttal/REVIEWER_TRIAGE_PLAYBOOK.md` | 旧 response 草稿与 action board 只能提供历史上下文，不能自动进入最终回复 |
+| Rebuttal decision | `rebuttal/rebuttal_playbook.md`；快速分流用 `rebuttal/REVIEWER_TRIAGE_PLAYBOOK.md` | 本总账、旧 response 草稿与 action board 只能提供历史上下文，不能自动进入最终回复 |
 | Simulation | `rebuttal/simulated_reviews/` 的字节保真原文 | 只证明内部压力测试问过什么；不是真实 review，也不裁决科学正确性 |
 
 历史内部报告只用于 provenance 追溯，不能覆盖对应轨道的当前权威。

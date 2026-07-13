@@ -26,7 +26,7 @@
 
 ## 1. NeurIPS 2026 政策边界
 
-官方 [Main Track Handbook](https://neurips.cc/Conferences/2026/MainTrackHandbook) 明确规定：
+截至 2026-07-13，官方 [Main Track Handbook V2026.3](https://neurips.cc/Conferences/2026/MainTrackHandbook) 明确规定：
 
 - rebuttal 期间不能上传修订论文或补充材料；
 - 可以在文本回复中报告新结果；
