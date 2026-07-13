@@ -11,6 +11,7 @@ import pytest
 import torch
 
 from rebuttal.evq_seed42_retrieval_repair.prepare_data import (
+    _key_text,
     artifact_plan,
     build_counterfactual_group,
     build_exact_retrieval_example,
@@ -217,11 +218,31 @@ class CharacterChatTokenizer:
 
     def decode(self, token_ids, **_: object) -> str:
         if isinstance(token_ids, int):
+            if 900 <= token_ids < 930:
+                index = token_ids - 900
+                return f"word{chr(97 + index // 26)}{chr(97 + index % 26)}"
             if 1000 <= token_ids < 1030:
                 index = token_ids - 1000
                 return f" word{chr(97 + index // 26)}{chr(97 + index % 26)}"
             return chr(token_ids)
         return "".join(self.decode(int(token_id)) for token_id in token_ids)
+
+
+class TrimmingAssistantTokenizer(CharacterChatTokenizer):
+    """Mirror templates such as Llama 3 that trim message content."""
+
+    @staticmethod
+    def _render(messages: Sequence[dict[str, str]], add_generation_prompt: bool) -> str:
+        rendered = ""
+        for message in messages:
+            content = message["content"].strip()
+            if message["role"] == "assistant":
+                rendered += f"<assistant>\n{content}§"
+            else:
+                rendered += f"<{message['role']}>\n{content}\n"
+        if add_generation_prompt:
+            rendered += "<assistant>\n"
+        return rendered
 
 
 def test_nonce_pools_are_disjoint_across_split_and_role() -> None:
@@ -242,6 +263,24 @@ def test_nonce_pools_are_disjoint_across_split_and_role() -> None:
     for index, (_, left) in enumerate(items):
         for _, right in items[index + 1 :]:
             assert left.isdisjoint(right)
+
+
+def test_nonce_pools_require_explicit_word_boundaries() -> None:
+    tokenizer = CharacterChatTokenizer()
+    pools = partition_nonce_pools(tokenizer, minimum=4)
+
+    assert all(
+        tokenizer.decode(token_id).startswith(" ")
+        for roles in pools.values()
+        for token_ids in roles.values()
+        for token_id in token_ids
+    )
+
+
+def test_key_text_strips_pool_boundaries_before_validation() -> None:
+    tokenizer = CharacterChatTokenizer()
+
+    assert _key_text(tokenizer, [1000, 1001, 1002]) == "wordaa-wordab-wordac"
 
 
 def test_task_schedule_is_exactly_seventy_five_twenty_five() -> None:
@@ -290,6 +329,28 @@ def test_complete_chat_render_has_direct_template_parity_and_answer_span() -> No
     assert tokenizer.decode(rendered.input_ids[rendered.answer_start : rendered.answer_value_end]) == " valuetwelve"
     assert rendered.input_ids[rendered.answer_end - 1].item() == tokenizer.eos_token_id
     assert rendered.source_value_start < rendered.answer_start
+
+
+def test_complete_chat_render_uses_generation_boundary_when_template_trims_answer() -> None:
+    tokenizer = TrimmingAssistantTokenizer()
+    messages, markers = build_messages(
+        "validation",
+        before_text="alpha",
+        after_text="beta",
+        key_text="keyone",
+        value_text=" valuetwelve",
+    )
+
+    rendered = render_complete_chat(tokenizer, messages, markers)
+
+    assert tokenizer.decode(
+        rendered.input_ids[rendered.answer_start : rendered.answer_value_end]
+    ) == "valuetwelve"
+    assert rendered.answer_start == len(
+        tokenizer.apply_chat_template(
+            messages[:1], tokenize=True, add_generation_prompt=True
+        )
+    )
 
 
 def test_split_wording_is_distinct_and_test_is_not_eval_alias() -> None:

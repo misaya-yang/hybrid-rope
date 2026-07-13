@@ -38,7 +38,8 @@ PASSKEY_BUNDLES = {
     16384: ("passkey_validation_16384.pt", "validation", "passkey_validation"),
     32768: ("passkey_final_32768.pt", "final_test", "passkey_final"),
 }
-_TOKEN_PATTERN = re.compile(r"^ ?[A-Za-z]{3,14}$")
+_TOKEN_PATTERN = re.compile(r"^ [A-Za-z]{3,14}$")
+_KEY_WORD_PATTERN = re.compile(r"^[A-Za-z]{3,14}$")
 
 _WORDING = {
     "train": {
@@ -253,10 +254,6 @@ def render_complete_chat(
     source_value_char_start = source_char_start + source_value_in_line
     source_value_char_end = source_value_char_start + len(source_value)
 
-    answer_char_start = rendered.rfind(answer_value)
-    if answer_char_start < user_start + len(user_content):
-        raise ValueError("assistant answer occurrence could not be isolated")
-    answer_char_end = answer_char_start + len(answer_value)
     source_start, source_end = _char_to_token_span(
         offsets, source_char_start, source_char_end, name="source line"
     )
@@ -266,21 +263,20 @@ def render_complete_chat(
         source_value_char_end,
         name="source value",
     )
-    answer_value_start, answer_value_end = _char_to_token_span(
-        offsets, answer_char_start, answer_char_end, name="assistant answer"
-    )
     answer_start = len(prompt_ids)
-    if answer_value_start != answer_start:
-        raise RuntimeError(
-            f"assistant answer starts at token {answer_value_start}, expected generation boundary {answer_start}"
-        )
     eos_token_id = getattr(tokenizer, "eos_token_id", None)
     if eos_token_id is None or direct_ids[-1] != int(eos_token_id):
         raise RuntimeError("complete chat render must terminate with tokenizer.eos_token_id")
-    if answer_value_end >= len(direct_ids):
-        raise RuntimeError("assistant answer is not followed by EOS")
-    if answer_value_end != len(direct_ids) - 1:
-        raise RuntimeError("assistant answer must be followed by exactly one EOS token")
+    answer_value_end = len(direct_ids) - 1
+    if answer_start >= answer_value_end:
+        raise RuntimeError("complete chat render contains no assistant answer tokens")
+    answer_offsets = offsets[answer_start:answer_value_end]
+    if any(end <= start for start, end in answer_offsets):
+        raise RuntimeError("assistant answer contains an unmapped token")
+    answer_char_start = answer_offsets[0][0]
+    answer_char_end = answer_offsets[-1][1]
+    if rendered[answer_char_start:answer_char_end].strip() != answer_value.strip():
+        raise RuntimeError("assistant answer content differs from the requested value")
     return RenderedChat(
         input_ids=torch.tensor(direct_ids, dtype=torch.int32),
         prompt_length=len(prompt_ids),
@@ -1088,7 +1084,7 @@ def artifact_plan() -> dict[str, dict[str, Any]]:
 
 def _key_text(tokenizer: Any, token_ids: Sequence[int]) -> str:
     words = [_decode_tokens(tokenizer, [token_id]).strip() for token_id in token_ids]
-    if any(not _TOKEN_PATTERN.fullmatch(word) for word in words):
+    if any(not _KEY_WORD_PATTERN.fullmatch(word) for word in words):
         raise ValueError("sampled key token is not an ordinary word")
     return "-".join(words)
 
