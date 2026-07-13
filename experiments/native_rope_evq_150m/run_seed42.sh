@@ -111,7 +111,7 @@ case "$MODE" in
     source "$PREFLIGHT"
     [[ "$DATA_SHA" == "$(file_sha256 "$DATA_MANIFEST")" ]] || { echo "data changed after preflight" >&2; exit 2; }
     [[ "$CODE_SHA" == "$(code_fingerprint)" ]] || { echo "code changed after preflight" >&2; exit 2; }
-    "$PYTHON_BIN" -c 'import torch; assert torch.cuda.is_available(), "CUDA is required"; assert torch.cuda.is_bf16_supported(), "BF16 is required"; p=torch.cuda.get_device_properties(0); m=getattr(p,"total_memory",getattr(p,"total_mem",0)); assert m >= 80*2**30, f"registered batch 60 requires >=80GiB, found {m/2**30:.1f}GiB"; print(p.name, m/2**30)'
+    "$PYTHON_BIN" -c 'import torch; assert torch.cuda.is_available(), "CUDA is required"; assert torch.cuda.is_bf16_supported(), "BF16 is required"; p=torch.cuda.get_device_properties(0); m=getattr(p,"total_memory",getattr(p,"total_mem",0)); assert m >= 30*2**30, f"registered micro-batch 12 requires >=30GiB, found {m/2**30:.1f}GiB"; print(p.name, m/2**30)'
     export TORCHINDUCTOR_CACHE_DIR="${TORCHINDUCTOR_CACHE_DIR:-$EVQ_150M_WORK_DIR/torchinductor_cache}"
     export TORCHINDUCTOR_FX_GRAPH_CACHE=1
     export TORCHINDUCTOR_AUTOTUNE_LOCAL_CACHE=1

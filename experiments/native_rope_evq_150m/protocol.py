@@ -30,6 +30,7 @@ class ExperimentSpec:
     seq_len: int = 2_048
     train_tokens_requested: int = 500_000_000
     batch_size: int = 60
+    micro_batch_size: int = 12
     seed: int = 42
     rope_base: float = 500_000.0
     evq_tau: float = 1.5
@@ -56,6 +57,24 @@ class ExperimentSpec:
         return self.train_rows // self.batch_size
 
     @property
+    def grad_accum_steps(self) -> int:
+        if self.batch_size % self.micro_batch_size:
+            raise RuntimeError(
+                f"batch_size={self.batch_size} must divide micro_batch_size="
+                f"{self.micro_batch_size}"
+            )
+        return self.batch_size // self.micro_batch_size
+
+    @property
+    def micro_steps(self) -> int:
+        if self.train_rows % self.micro_batch_size:
+            raise RuntimeError(
+                f"train_rows={self.train_rows} must divide micro_batch_size="
+                f"{self.micro_batch_size}"
+            )
+        return self.train_rows // self.micro_batch_size
+
+    @property
     def warmup_steps(self) -> int:
         return int(self.optimizer_steps * self.warmup_fraction)
 
@@ -78,6 +97,8 @@ class ExperimentSpec:
             "max_position_embeddings": self.seq_len,
             "seq_len": self.seq_len,
             "batch_size": self.batch_size,
+            "micro_batch_size": self.micro_batch_size,
+            "grad_accum_steps": self.grad_accum_steps,
             "train_tokens": self.train_tokens,
             "lr": self.learning_rate,
             "eval_lengths": [2_048, 4_096, 8_192, 16_384],

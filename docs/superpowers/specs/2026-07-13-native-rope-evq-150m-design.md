@@ -24,8 +24,9 @@ Both arms use the existing `125m` architecture from `run_evq_sweep.py`:
 - training length 2,048, RoPE base 500,000, seed 42;
 - AdamW, learning rate `3e-4`, betas `(0.9, 0.95)`, weight decay `0.1`,
   2% warm-up, cosine decay to `3e-5`, and gradient norm 1.0;
-- batch 60, exactly 4,069 optimizer steps, BF16 autocast, fused AdamW, and no
-  gradient checkpointing.
+- global batch 60 as micro-batch 12 times five gradient-accumulation steps,
+  exactly 4,069 optimizer steps, BF16 autocast, fused AdamW, and no gradient
+  checkpointing.
 
 The arms differ only in the immutable training-time frequency tensor:
 
@@ -112,8 +113,9 @@ Training uses a fixed-shape loss module compiled with PyTorch 2.8
 `max-autotune-no-cudagraphs`, persistent `TORCHINDUCTOR_CACHE_DIR`, asynchronous
 DataLoader workers, pinned host memory, non-blocking transfers, and fused AdamW.
 Disabling CUDA graphs avoids retaining an additional fixed-shape workspace on
-top of the large 2K batch while retaining Inductor autotuning. Batch 60 both
-fills the 96GB RTX PRO 6000 substantially and divides 244,140 rows exactly.
+top of the 2K batch while retaining Inductor autotuning. Micro-batch 12 fits a
+32GB RTX 5090; five equal micro-batches preserve the registered global batch 60,
+and both 12 and 60 divide 244,140 rows exactly.
 
 The launcher performs all CPU/hash/parity checks before CUDA model allocation,
 then trains both arms sequentially and automatically evaluates the four

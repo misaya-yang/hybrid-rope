@@ -13,7 +13,8 @@
 - Do not use the legacy validation hash `85bfe9af77642d5e8995283e12645544c50b6233a33931fa2b1b37ec122e1b7e`.
 - Keep model, seed, initialization, data order, optimizer, precision, and step count matched across arms.
 - Only the endpoint frequency tensor differs between arms.
-- Use `tau=1.5`, `base=500000`, `L_train=2048`, batch 60, and 4,069 steps.
+- Use `tau=1.5`, `base=500000`, `L_train=2048`, global batch 60 as
+  micro-batch 12 x accumulation 5, and 4,069 optimizer steps.
 - Use the old deterministic Passkey selector and marker schema at target ratio 0.02, preserving the historical approximately 10M-token absolute Passkey budget; never use validation filler for training.
 - Label native scaling official YaRN and EVQ scaling YaRN-derived.
 - Complete downloads, tokenization, hashes, tests, and dry runs before GPU launch.

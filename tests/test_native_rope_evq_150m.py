@@ -55,6 +55,9 @@ class TestNativeRopeEvq150MProtocol(unittest.TestCase):
         self.assertEqual(SPEC.train_rows, 244_140)
         self.assertEqual(SPEC.train_tokens, 499_998_720)
         self.assertEqual(SPEC.batch_size, 60)
+        self.assertEqual(SPEC.micro_batch_size, 12)
+        self.assertEqual(SPEC.grad_accum_steps, 5)
+        self.assertEqual(SPEC.micro_steps, 20_345)
         self.assertEqual(SPEC.optimizer_steps, 4_069)
         self.assertEqual(SPEC.seq_len, 2_048)
 
@@ -228,6 +231,7 @@ class TestNativeRopeEvq150MTraining(unittest.TestCase):
             seq_len=64,
             train_tokens_requested=1_024,
             batch_size=4,
+            micro_batch_size=4,
         )
         native = build_model("native_rope", spec=tiny, seed=42)
         evq = build_model("endpoint_evq_tau1p5", spec=tiny, seed=42)

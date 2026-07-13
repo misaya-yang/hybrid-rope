@@ -318,21 +318,36 @@ def _wrong_secret(correct: str, seed: int) -> str:
 
 
 @torch.no_grad()
-def _score_answer_batch(model: GPT, sequences: list[torch.Tensor], answer_len: int) -> list[float]:
-    batch = torch.stack(sequences).to("cuda", non_blocking=True)
-    start = batch.size(1) - int(answer_len) - 1
-    with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
-        logits = model(batch[:, :-1])
-    answer_logits = logits[:, start : start + int(answer_len), :].float()
-    targets = batch[:, start + 1 : start + 1 + int(answer_len)]
-    losses = F.cross_entropy(
-        answer_logits.reshape(-1, answer_logits.size(-1)),
-        targets.reshape(-1),
-        reduction="none",
-    ).view(batch.size(0), int(answer_len))
-    result = losses.mean(dim=1).detach().cpu().tolist()
-    del batch, logits, answer_logits, targets, losses
-    return [float(value) for value in result]
+def _score_answer_batch(
+    model: GPT,
+    sequences: list[torch.Tensor],
+    answer_len: int,
+    *,
+    score_batch_size: int = 2,
+) -> list[float]:
+    """Score long Passkey candidates in bounded inference micro-batches."""
+    result: list[float] = []
+    for offset in range(0, len(sequences), int(score_batch_size)):
+        batch = torch.stack(
+            sequences[offset : offset + int(score_batch_size)]
+        ).to("cuda", non_blocking=True)
+        answer_start = batch.size(1) - int(answer_len) - 1
+        with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
+            logits = model(batch[:, :-1])
+        answer_logits = logits[
+            :, answer_start : answer_start + int(answer_len), :
+        ].float()
+        targets = batch[
+            :, answer_start + 1 : answer_start + 1 + int(answer_len)
+        ]
+        losses = F.cross_entropy(
+            answer_logits.reshape(-1, answer_logits.size(-1)),
+            targets.reshape(-1),
+            reduction="none",
+        ).view(batch.size(0), int(answer_len))
+        result.extend(float(value) for value in losses.mean(dim=1).cpu().tolist())
+        del batch, logits, answer_logits, targets, losses
+    return result
 
 
 @torch.no_grad()
