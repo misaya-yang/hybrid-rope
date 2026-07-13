@@ -5,52 +5,33 @@
 仓库整理 checkpoint：`1b97fdc`（`handoff: consolidate repository and rebuttal index [01]`）
 Temporal holdout checkpoint：`5bdec86`（`checkpoint: add temporal holdout evaluation`）
 整理前实验基线：`805878f`（`prepare exact FineWeb 3x1B tensors`）
-状态：rebuttal prep + 外部 GPU 重训探索在进行；**论文指标与 `data/curated/` 主表数字未改**。见下方 §0（2026-07-13 Grok 会话纪要）。
+状态：rebuttal prep + 151.9M/500M single-seed 机制诊断已完成；**论文指标与主表数字未改**。见下方 §0。
 
 本文件是后续 AI 的**第一入口和状态索引**。它只保存可提交的仓库级信息，不保存服务器地址、凭据、私有绝对路径或实时进程信息。
 
-## 0. 2026-07-13 Grok 会话纪要（外部 worker 探索重训）
+## 0. 2026-07-13 151.9M / 500M single-seed 结果
 
-**性质：** 历史 Primary I 454M checkpoints 不可恢复后的 **from-scratch 重训 / 算子诊断准备**，在外部 GPU worker 上执行。  
-**未做：** 修改 `paper/` 报告数字；晋升新结果进 `data/curated/`；覆盖 provenance 主表。
+**性质：** RTX 5090 小模型机制诊断；不是 RTX Pro 6000 的 LLaMA/LoRA 轨道，也不是 Primary I 多 seed 复现。
+**协议：** Native endpoint RoPE 与 endpoint EVQ (`tau=1.5`)；seed 42；训练长度 2K；499,998,720 tokens；151,898,880 参数；FineWeb-Edu + 2.0177% 显式 Passkey tokens。两臂 initial-trainable hash 与 row-order hash 一致。
 
-### 0.1 做了什么
+### 0.1 已闭合结果
 
-1. **环境与数据**
-   - 在外部 worker 上用 HF 镜像准备 FineWeb-Edu token 缓存：先 **100M train + 2M val**（`seq=2048`），另启 **500M train + 5M val** 后台准备（多 shard parquet 下载 + memmap tokenize）。
-   - Tokenizer：本地 `gpt-neox-20b` 缓存。
-   - 官方 YaRN 参考 pin：`jquesnelle/yarn@995db5b`；native-grid parity（d=64, b=500k, L_orig=2048, s=8 → transition ≈ channels 5–15, mscale≈1.208）通过。
+- 完整六格评测已落盘：`{raw, official/derived YaRN, repo fixed-ramp} × {Native, EVQ}`，2K/4K/8K/16K natural-text NLL/PPL + 100-case Passkey NLL-gap。
+- Raw EVQ 对 Native 的 PPL：4K `-8.6%`、8K `-14.3%`、16K `-16.2%`；4K–16K 均为 8/8 offsets 更低 NLL。
+- Official native-grid YaRN / EVQ virtual-coordinate derived YaRN 把两臂拉到接近相同 PPL；NLL difference-in-differences 为正，因此本次 **不支持 official YaRN 超加性交互**。
+- 该六格表是 2K raw-trained checkpoints 上的 inference-only / non-fine-tuned 算子测试，不是 YaRN 论文的长上下文继续训练复现。Official YaRN 还包含 `mscale` attention-temperature；scale 8 时 rotary amplitude 为 1.208、QK logit factor 约 1.459，可能是两臂都接近饱和的重要原因，需 checkpoint-only ablation 才能拆分。
+- Repo fixed-ramp 是另一个有效 range scaler，且与 EVQ 在 8K/16K 呈明显负 interaction（`-0.329/-0.413` NLL，负值代表 EVQ 获益更多）。它不得称为 official YaRN，且尚未证明相对其他 ramp/by-parts scaler 的新颖性。
+- Passkey 在 2K 训练中被显式监督；其 teacher-forced gap 只能作为机制诊断。Official/derived YaRN 两臂均达 100% sign rate，已饱和；fixed-ramp 为 Native 77% / EVQ 87%。
+- 500M 对 151.9M 仅约 3.29 tokens/parameter：当前 MHA 协议未出现 reversal，但不能声称充分训练或解决训练饱和问题。
 
-2. **训练（seed 42，passkey mix 10%，midpoint-Geo τ=0 vs EVQ τ=1.5）**
-   - **350m（~454M）× 100M tokens**：batch=4 + `torch.compile` + flash SDPA；两臂训完并有 raw eval。
-     - Raw PPL@2K 约 **65**（与论文历史 Primary I undertrain 量级一致；**不是 well-trained LM**）。
-     - Raw 外推：8K EVQ PPL 相对 Geo 约 **−17%**；PK TF global Geo ~71% / EVQ ~85%（单 seed，机制信号，非 multi-seed 表复现）。
-   - **125m（~152M）× 100M tokens**：为更快出方向单独开跑；batch 曾 16 OOM → 8 → 清僵尸后 **batch=12** + compile；工作目录与 350m 分离。
-   - 协议备注：batch/compile 改变 optimizer step 数，与历史 batch=2 的逐步 schedule **不完全同一**。
+权威结果：`rebuttal/NATIVE_ROPE_EVQ_150M_500M_RESULT_20260713.md`。
+清洗后的 raw-backed artifact：`data/curated/native_rope_evq_150m_s42_500m_20260713.json`。
 
-3. **YaRN 算子评测（prep-1 风格）**
-   - 目标：固定 s=8 下 `{none, repo_fixed_ramp, official_formula}` × {Geo, EVQ}。
-   - EVQ 侧在日志中已见：repo_fixed_ramp / official 相对 raw 降低 8K PPL、提高 PK（方向像 scaler leverage）。
-   - **未闭合：** 完整 `eval_operators.json` 未落盘；Geo 臂三算子未完整跑完；中途有 OOM/缺 `datasets`/误杀进程等问题。需在 125m 间隙或结束后 **重跑并写 JSON**。
+### 0.2 评测修复与当前边界
 
-4. **工程教训（给后续 AI）**
-   - 「准备」≠ 杀 GPU 任务；未明示前不要抢占正在跑的评测。
-   - 全量算子评测组合爆炸（2 arms × 3 ops × 多长度 × 多 depth × 10 trials），454M 上可达数十分钟–1h+；应支持断点/只补缺 arm。
-   - 无卡小 cgroup 下勿用 Python list 堆 100M ints；用 memmap + mirror 直链 parquet。
-   - 2K PPL>50 在 100M×454M 协议下预期 undertrain；勿当成训练失败，也勿过度解读为强 LM 证据。
-
-### 0.2 仓库代码侧
-
-- 本会话相关 **临时 runner / watchdog / 数据脚本主要在 worker 上**，未要求晋升为论文主路径。
-- 本地 `main` 工作区按用户要求：**不保留本会话的临时实验改动提交**；仅用本 handoff 记录事实。
-- 若后续要把 official YaRN 算子、compile/flash 训练入口合入仓库，需单独 PR 与测试，且不得默默改论文 claim。
-
-### 0.3 下一步（建议，未授权不执行）
-
-1. 等/收 125m seed42 两臂结果，只作快速机制对照。  
-2. 用已有 350m ckpt **重跑并落盘** YaRN 六格表（fixed s=8；标注 undertrain）。  
-3. 500M token 缓存齐后，再决定是否 125m/350m continuation 或 from-scratch（需用户授权）。  
-4. 任何新数字进入 `data/curated/` 或 paper 前，走 provenance + 用户确认。
+- 首次自动评测只因 PyTorch 2.8 的 `TorchVersion` metadata 被 `weights_only=True` 拒绝而在模型推理前停止；修复仅 allowlist 该安全类型，并让新 checkpoint 保存 plain-string 版本号。模型权重、算子、数据、offset 与 metric 均未改变。
+- 用户已取消后续数据准备；本轮没有启动新的 tokenization、训练或 GPU 任务。
+- 新结果保持 single-seed supporting diagnostic；没有修改 `paper/` 或论文表格数字。
 
 ---
 

@@ -1,6 +1,8 @@
 # Native-RoPE vs Endpoint-EVQ 150M Design
 
-Status: approved on 2026-07-13; no result exists yet.
+Status: completed on 2026-07-13 as a single-seed diagnostic. See
+`rebuttal/NATIVE_ROPE_EVQ_150M_500M_RESULT_20260713.md` and
+`data/curated/native_rope_evq_150m_s42_500m_20260713.json`.
 
 ## Goal
 
@@ -91,12 +93,16 @@ prefix predictions cannot hide an extrapolation failure near the context tail.
 Each checkpoint is evaluated under:
 
 - raw substrate;
-- target-matched range scaling with factor `max(1, L/2048)`.
+- target-matched range scaling with factor `max(1, L/2048)`;
+- the historical repository fixed-ramp operator, separately labeled and never
+  described as official YaRN.
 
 For `native_rope`, the scaled condition uses the exact equations pinned from
 `jquesnelle/yarn@995db5b` and is labeled **official YaRN on native RoPE**. For
 endpoint EVQ, the same equations use virtual frequency coordinates and are
 labeled **YaRN-derived on endpoint EVQ**, not official native-grid YaRN.
+These are inference-only, non-fine-tuned operator cells; they do not reproduce
+the YaRN paper's long-context continuation-training recipe.
 
 Passkey evaluation retains the old marker schema but uses unseen secrets and
 held-out shard-004 filler at depths 10%, 25%, 50%, 75%, and 90%. The primary
@@ -118,9 +124,9 @@ top of the 2K batch while retaining Inductor autotuning. Micro-batch 12 fits a
 and both 12 and 60 divide 244,140 rows exactly.
 
 The launcher performs all CPU/hash/parity checks before CUDA model allocation,
-then trains both arms sequentially and automatically evaluates the four
-arm/operator conditions. It never downloads or tokenizes data in GPU mode.
-An existing output directory is not overwritten.
+then trains both arms sequentially and automatically evaluates the registered
+arm/operator conditions. It never downloads or tokenizes data in GPU mode. An
+existing output directory is not overwritten.
 
 ## Files
 

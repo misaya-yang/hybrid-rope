@@ -20,6 +20,7 @@ from experiments.native_rope_evq_150m.evaluate import (
     apply_registered_operator,
     causal_nll_metrics,
     fixed_validation_offsets,
+    load_weights_only_checkpoint,
     target_yarn_factor,
 )
 from experiments.native_rope_evq_150m.prepare_data import (
@@ -107,6 +108,26 @@ class TestNativeRopeEvq150MProtocol(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "unknown arm"):
             get_arm_inv_freq("geo")
 
+    def test_repo_fixed_ramp_is_registered_as_a_separate_operator(self):
+        native = get_arm_inv_freq("native_rope")
+        fixed, mscale, meta = apply_registered_operator(
+            native,
+            arm="native_rope",
+            operator="repo_fixed_ramp",
+            length=8_192,
+        )
+        official, official_mscale, official_meta = apply_registered_operator(
+            native,
+            arm="native_rope",
+            operator="yarn",
+            length=8_192,
+        )
+        self.assertEqual(mscale, 1.0)
+        self.assertGreater(official_mscale, 1.0)
+        self.assertEqual(meta["mode"], "repo_fixed_ramp")
+        self.assertEqual(official_meta["mode"], "official_yarn_native")
+        self.assertFalse(torch.allclose(fixed, official))
+
 
 class _TinyTokenizer:
     def encode(self, text, add_special_tokens=False):
@@ -181,6 +202,21 @@ class TestNativeRopeEvq150MData(unittest.TestCase):
 
 
 class TestNativeRopeEvq150MTraining(unittest.TestCase):
+    def test_legacy_torch_version_metadata_loads_weights_only(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "legacy.pt"
+            torch.save(
+                {
+                    "model": {"weight": torch.arange(4)},
+                    "metadata": {"torch": torch.__version__},
+                },
+                path,
+            )
+            loaded = load_weights_only_checkpoint(path)
+            self.assertTrue(
+                torch.equal(loaded["model"]["weight"], torch.arange(4))
+            )
+
     def test_rope_preserves_bf16_activation_dtype(self):
         x = torch.randn(1, 2, 4, 8, dtype=torch.bfloat16)
         cos = torch.randn(4, 8, dtype=torch.float32)

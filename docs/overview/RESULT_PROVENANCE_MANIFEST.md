@@ -61,6 +61,7 @@ Portable July reconciliation:
 | `data/curated/quality_454m_full_eval.json` | Raw JSON backed | `648442141fc94c06db5143283ea95eb46133dcb2ceda39bbffafa17b738cdb84` | Correct n=2,086 table/figure values; accuracy remains inconclusive. |
 | `data/curated/text_base_10k_500k_pilot.json` | Raw JSON backed | `fbd4c04abdfe13adf8578bc49e40f084942aab8b0e18d207a026208e51ebd6c4` | Single-seed 151.9M supporting pilot; not a tuned-base sweep or `c_pred` control. |
 | `data/curated/lora_longalpaca_temporal_s42_20260712.json` | Byte-exact evaluation JSON | `0335415a2245e1fb31149705342e975a016ddddb557a79c364fc4a98c3f89001` | Single-seed supporting cross-domain temporal NLL evidence; not a downstream long-context task or multi-seed claim. |
+| `data/curated/native_rope_evq_150m_s42_500m_20260713.json` | Raw JSON backed | `82438325d444ef6ea61520bb411fe60dd75d436655c74e9fc3183aefca6c95ad` | Single-seed 151.9M/500M inference-only diagnostic. Official/derived YaRN and repo fixed-ramp are distinct; not a paper primary result. |
 
 ## M1: Table 2 EVQ x YaRN
 
@@ -226,7 +227,7 @@ Packaged evidence:
 | `docs/overview/OPUS48_REBUTTAL_RESPONSE_MATRIX.md` | Rebuttal-safe answer strategy and forbidden-claim matrix | `75bae5a7c4ef05dcfd93379f38d1ea2cb869c870e3b533f7560298301ac2dae4` |
 | `docs/overview/OPUS48_FORENSIC_AUDIT_REPORT.md` | Prompt-structured forensic audit report | `ec51bb535eb9badc97a0e0d55aa1ccc5e2486e830c813f437403370e71c71a5b` |
 | `docs/overview/PAPER_CLAIMS_MAP.md` | Paper-to-experiment traceability map with explicit artifact gates | `cf9ed462b193a79f1096f73ff9f52153e0ca9d228ca09a37d4da25ebc7f0b293` |
-| `rebuttal/REVIEWER_TRIAGE_PLAYBOOK.md` | Current compact triage path; only real reviewer triggers may enter the response | `fed36981e22dc1e0b4f7cb884eb4aa3b0fc9abc652ab0dbfcb419e809150d5cb` |
+| `rebuttal/REVIEWER_TRIAGE_PLAYBOOK.md` | Current compact triage path; only real reviewer triggers may enter the response | `f1c689830c367fd8a0beed433dbde81d47e91b34a26577a51c3b535923910121` |
 | `tests/test_opus48_audit_docs.py` | O48 coverage/link/stale-phrase regression test | `9370c31d34d6feacce3a2dc34a9493de550b09364f5f15d9b03347eb1d9ad53d` |
 
 Current compact-repo gaps:
@@ -340,7 +341,7 @@ Packaged evidence:
 | Artifact | Role | SHA256 |
 | --- | --- | --- |
 | `data/curated/lora_longalpaca_temporal_s42_20260712.json` | Byte-exact three-arm result JSON | `0335415a2245e1fb31149705342e975a016ddddb557a79c364fc4a98c3f89001` |
-| `rebuttal/LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` | NLL interpretation, protocol hashes, and split-run provenance | `6e15ed7a7605bf7b72f62da441039aa4982d2e06ac17105a9fcfe6e415846dba` |
+| `rebuttal/LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` | NLL interpretation, protocol hashes, and split-run provenance | `19271a2c428cffb5c24ff043b48522b27b0fd329672d1dabc0b99cd32eefc17b` |
 | `experiments/lora_evq_v2/train_evq_lora.py` | Strict LongAlpaca trainer plus opt-in Flash/GQA path | `62cb3c64b7d5c5bc826b38a82ee283fc13c38369386515f46a8782d86b9fae8f` |
 | `experiments/lora_evq_v2/eval_temporal_holdout_three_arm.py` | Three-arm evaluator and explicit Geo/EVQ seed contract | `3010406191d5c261cce3feb0c422bd27eaf23534f9810442c95d78114ec24d26` |
 | `scripts/2026-07/06_lora_temporal_three_arm_eval.sh` | Fail-closed temporal evaluation launcher | `222e4816eabc089c61992316226058e4277c39efb9bdcd7b0c3cef92fbbd378c` |

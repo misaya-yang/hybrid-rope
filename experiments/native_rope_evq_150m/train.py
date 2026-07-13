@@ -198,7 +198,10 @@ def validate_cuda_runtime() -> dict[str, Any]:
         "name": props.name,
         "capability": list(torch.cuda.get_device_capability(0)),
         "total_memory_bytes": int(total_memory),
-        "torch": torch.__version__,
+        # PyTorch 2.8 exposes ``torch.__version__`` as a ``TorchVersion``
+        # string subclass.  Persist a plain string so weights-only checkpoint
+        # loading never needs to unpickle that metadata helper.
+        "torch": str(torch.__version__),
         "cuda": torch.version.cuda,
     }
 

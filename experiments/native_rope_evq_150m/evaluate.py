@@ -26,6 +26,7 @@ from scripts.lib.rope.official_yarn import (
     official_yarn_on_inv_freq,
     official_yarn_on_native_grid,
     parity_vs_official_source,
+    repo_fixed_ramp_inv_freq,
 )
 from scripts.supporting_eval.eval_passkey_scratch import (
     PASSKEY_SUFFIX,
@@ -35,7 +36,21 @@ from scripts.supporting_eval.eval_passkey_scratch import (
 
 EVAL_LENGTHS = (2_048, 4_096, 8_192, 16_384)
 EVAL_DEPTHS = (0.10, 0.25, 0.50, 0.75, 0.90)
-OPERATORS = ("raw", "yarn")
+OPERATORS = ("raw", "yarn", "repo_fixed_ramp")
+
+
+def load_weights_only_checkpoint(path: Path) -> Any:
+    """Load a trusted local checkpoint while allowing PyTorch's version tag.
+
+    Checkpoints produced before the save-side metadata fix may contain
+    ``torch.torch_version.TorchVersion`` because PyTorch 2.8 exposes
+    ``torch.__version__`` as that string subclass.  The model tensors remain
+    weights-only; this narrowly scoped allowlist avoids falling back to unsafe
+    unrestricted pickle loading.
+    """
+
+    with torch.serialization.safe_globals([torch.torch_version.TorchVersion]):
+        return torch.load(path, map_location="cpu", weights_only=True)
 
 
 def target_yarn_factor(length: int) -> float:
@@ -67,6 +82,20 @@ def apply_registered_operator(
                 "native endpoint RoPE"
                 if arm == "native_rope"
                 else "endpoint EVQ-Cosh tau=1.5"
+            ),
+        }
+    if operator == "repo_fixed_ramp":
+        transformed, mscale, meta = repo_fixed_ramp_inv_freq(
+            inv,
+            scale=factor,
+        )
+        return transformed, mscale, {
+            **meta,
+            "operator": operator,
+            "public_label": (
+                "repo-defined fixed-ramp scaler on native endpoint RoPE"
+                if arm == "native_rope"
+                else "repo-defined fixed-ramp scaler on endpoint EVQ-Cosh"
             ),
         }
     if operator != "yarn":
@@ -206,7 +235,7 @@ def _load_checkpoint(arm_dir: Path, arm: str) -> tuple[GPT, dict[str, Any], torc
         raise ValueError(f"checkpoint metadata frequency hash mismatch for {arm}")
 
     model = GPT(SPEC.model_config(), inv.float())
-    payload = torch.load(checkpoint_path, map_location="cpu", weights_only=True)
+    payload = load_weights_only_checkpoint(checkpoint_path)
     state = payload.get("model") if isinstance(payload, dict) else None
     if not isinstance(state, dict):
         raise ValueError(f"checkpoint has no model state: {checkpoint_path}")
@@ -568,7 +597,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "artifact_role": "paired 151.9M native-RoPE versus endpoint-EVQ diagnostic",
         "claim_boundary": (
             "Passkey is explicitly supervised at 2K. Native scaling uses official YaRN; "
-            "EVQ scaling is a YaRN-derived virtual-coordinate generalization."
+            "EVQ scaling is a YaRN-derived virtual-coordinate generalization. The "
+            "repo_fixed_ramp condition is a separate repository-defined scaler and "
+            "is not official YaRN."
         ),
         "data_manifest_sha256": sha256_file(manifest_path),
         "initial_trainable_sha256": next(iter(initial_hashes.values())),
