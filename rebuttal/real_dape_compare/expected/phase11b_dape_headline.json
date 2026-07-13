@@ -1,0 +1,21 @@
+{
+  "source": "data/curated/phase11b_125m_l256_3seed.json",
+  "protocol": {
+    "model": "125M",
+    "L_train": 256,
+    "tokens": 100000000,
+    "seeds": [42, 137, 256],
+    "dape_identity": "Kerple bias plus learned attention-score MLP refinement",
+    "not": "zheng_official_gpt_neox"
+  },
+  "ppl_at_8192_mean": {
+    "geo_plain": 352.695,
+    "evq4_plain": 254.694,
+    "geo_dape": 55.922,
+    "evq4_dape": 56.844
+  },
+  "headline": "Under Kerple+MLP DAPE-ish, EVQ does not improve on Geo; both dominate plain EVQ in absolute PPL.",
+  "evq_wins_vs_real_dape_ish": false,
+  "evq_wins_vs_free_inv_freq_table4": true,
+  "note_table4_dape_is_free_inv_freq": true
+}
