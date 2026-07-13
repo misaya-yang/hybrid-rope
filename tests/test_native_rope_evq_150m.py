@@ -5,10 +5,18 @@ from __future__ import annotations
 
 import math
 import random
+import tempfile
 import unittest
+from pathlib import Path
 
+import numpy as np
 import torch
 
+from experiments.native_rope_evq_150m.prepare_data import (
+    assert_independent_validation,
+    compile_passkey_cache,
+    validate_data_manifest,
+)
 from experiments.native_rope_evq_150m.protocol import (
     LEGACY_PASSKEY_HASH_MULTIPLIER,
     SPEC,
@@ -65,6 +73,78 @@ class TestNativeRopeEvq150MProtocol(unittest.TestCase):
     def test_unknown_arm_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "unknown arm"):
             get_arm_inv_freq("geo")
+
+
+class _TinyTokenizer:
+    def encode(self, text, add_special_tokens=False):
+        del add_special_tokens
+        return [1_000 + (ord(ch) % 200) for ch in str(text)]
+
+
+class TestNativeRopeEvq150MData(unittest.TestCase):
+    def test_compile_passkey_cache_uses_legacy_selector_and_train_row_filler(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            train = np.arange(20 * 64, dtype=np.int64).reshape(20, 64)
+            train_path = root / "train.npy"
+            np.save(train_path, train)
+            result = compile_passkey_cache(
+                train_path=train_path,
+                tokenizer=_TinyTokenizer(),
+                output_dir=root / "prepared",
+                seq_len=64,
+                ratio=0.25,
+            )
+            expected = legacy_passkey_indices(20, ratio=0.25)
+            selected = np.load(result["indices_path"])
+            samples = np.load(result["passkey_path"], mmap_mode="r")
+            self.assertEqual(tuple(selected.tolist()), expected)
+            self.assertEqual(samples.shape, (len(expected), 64))
+            self.assertEqual(samples.dtype, np.int64)
+            # The old helper is deterministic; recompilation must be byte-identical.
+            result2 = compile_passkey_cache(
+                train_path=train_path,
+                tokenizer=_TinyTokenizer(),
+                output_dir=root / "prepared_again",
+                seq_len=64,
+                ratio=0.25,
+            )
+            self.assertEqual(result["passkey_sha256"], result2["passkey_sha256"])
+
+    def test_identical_validation_prefix_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            train = np.arange(128, dtype=np.int64).reshape(2, 64)
+            np.save(root / "train.npy", train)
+            np.save(root / "val.npy", train.reshape(-1)[:80])
+            with self.assertRaisesRegex(ValueError, "overlaps the training prefix"):
+                assert_independent_validation(root / "train.npy", root / "val.npy")
+
+    def test_independent_validation_prefix_passes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            np.save(root / "train.npy", np.arange(128, dtype=np.int64).reshape(2, 64))
+            np.save(root / "val.npy", np.arange(1_000, 1_080, dtype=np.int64))
+            checked = assert_independent_validation(root / "train.npy", root / "val.npy")
+            self.assertEqual(checked, 80)
+
+    def test_manifest_rejects_legacy_validation_and_reused_source_shard(self):
+        base = {
+            "schema_version": 1,
+            "train": {"sha256": SPEC.train_npy_sha256},
+            "passkey": {"selector": "legacy_hash_v1", "ratio": 0.02},
+            "validation": {
+                "sha256": SPEC.forbidden_leaked_val_sha256,
+                "source_shard": "004_00000.parquet",
+            },
+            "train_source_shards": ["000_00000.parquet"],
+        }
+        with self.assertRaisesRegex(ValueError, "forbidden leaked validation"):
+            validate_data_manifest(base, check_files=False)
+        base["validation"]["sha256"] = "a" * 64
+        base["validation"]["source_shard"] = "000_00000.parquet"
+        with self.assertRaisesRegex(ValueError, "also listed as a training source"):
+            validate_data_manifest(base, check_files=False)
 
 
 if __name__ == "__main__":

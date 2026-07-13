@@ -59,6 +59,14 @@ class ExperimentSpec:
     def warmup_steps(self) -> int:
         return int(self.optimizer_steps * self.warmup_fraction)
 
+    @property
+    def train_npy_sha256(self) -> str:
+        return TRAIN_NPY_SHA256
+
+    @property
+    def forbidden_leaked_val_sha256(self) -> str:
+        return FORBIDDEN_LEAKED_VAL_SHA256
+
     def model_config(self) -> dict[str, int | float]:
         return {
             "vocab_size": self.vocab_size,
