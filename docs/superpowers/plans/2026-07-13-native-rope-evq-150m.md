@@ -4,7 +4,7 @@
 
 **Goal:** Prepare and upload a cost-safe, paired 151.9M native-RoPE versus endpoint-EVQ training and evaluation pipeline using the existing 500M FineWeb-Edu cache.
 
-**Architecture:** A pure protocol module binds the model, schedules, hashes, and exact data counts. CPU preparation creates an independent validation tensor and a frozen legacy-format Passkey substitution cache. Training imports the repository GPT architecture but owns a fast fixed-shape compiled loss loop. Evaluation applies raw or pinned YaRN operators and reports natural-text NLL/PPL plus teacher-forced Passkey NLL gaps.
+**Architecture:** A pure protocol module binds the model, schedules, hashes, and exact data counts. CPU preparation creates an independent validation tensor and a frozen legacy-format Passkey substitution cache. Training uses a self-contained, tied-embedding decoder and a fast fixed-shape compiled loss loop. Evaluation applies raw or pinned YaRN operators and reports natural-text NLL/PPL plus teacher-forced Passkey NLL gaps.
 
 **Tech Stack:** Python 3.12, PyTorch 2.8, NumPy memmaps, Transformers tokenizer, shell, pytest; no new dependency.
 
@@ -14,7 +14,7 @@
 - Keep model, seed, initialization, data order, optimizer, precision, and step count matched across arms.
 - Only the endpoint frequency tensor differs between arms.
 - Use `tau=1.5`, `base=500000`, `L_train=2048`, batch 60, and 4,069 steps.
-- Use the old deterministic Passkey selector and marker schema at target ratio 0.02, but never use validation filler for training.
+- Use the old deterministic Passkey selector and marker schema at target ratio 0.02, preserving the historical approximately 10M-token absolute Passkey budget; never use validation filler for training.
 - Label native scaling official YaRN and EVQ scaling YaRN-derived.
 - Complete downloads, tokenization, hashes, tests, and dry runs before GPU launch.
 - Do not modify paper numbers or report a result before both training and evaluation artifacts exist.
@@ -101,4 +101,3 @@ bash experiments/native_rope_evq_150m/run_seed42.sh preflight
 Expected: all tests pass, compilation and shell syntax exit 0, preflight
 confirms CPU-only mode plus all immutable hashes, and no training process is
 started.
-

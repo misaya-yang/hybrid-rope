@@ -56,8 +56,16 @@ Passkey exposure follows the prior repository mechanism:
 - filler comes from the selected training row, never validation data.
 
 For 244,140 rows this selects 4,926 rows, or 10,088,448 Passkey tokens
-(2.0177%). The prepared Passkey tensor and selected-index tensor are shared by
-both arms and hash-bound in a manifest.
+(2.0177%). This deliberately matches the approximately 10M synthetic-token
+budget of the historical 100M-token, 10%-mix Primary-I run. Copying the old
+percentage into a 500M-token run would silently multiply Passkey exposure to
+50M tokens, even though historical 2K retrieval was already saturated.
+
+The old helper used `val_data[:50000]` as training filler. That validation
+contamination is not reproduced: the new cache uses the selected natural
+training row as filler, and evaluation uses a disjoint held-out shard. The
+prepared Passkey tensor and selected-index tensor are shared by both arms and
+hash-bound in a manifest.
 
 ## Validation correction
 
@@ -92,7 +100,9 @@ labeled **YaRN-derived on endpoint EVQ**, not official native-grid YaRN.
 Passkey evaluation retains the old marker schema but uses unseen secrets and
 held-out shard-004 filler at depths 10%, 25%, 50%, 75%, and 90%. The primary
 metric is teacher-forced `NLL_wrong - NLL_correct`; positive values count as
-retrieval. Raw per-case NLL and aggregate retrieval rate are retained.
+retrieval. Because a single-negative sign test has a 50% chance boundary when
+the gap is near zero, the continuous gap and raw per-case NLL are primary; the
+aggregate sign rate is diagnostic only.
 Autoregressive exact match is optional and disabled in the first cost-sensitive
 run.
 
@@ -114,6 +124,8 @@ An existing output directory is not overwritten.
 
 - `experiments/native_rope_evq_150m/protocol.py`: immutable identities and
   validation.
+- `experiments/native_rope_evq_150m/model.py`: self-contained tied-embedding
+  decoder architecture with BF16-preserving RoPE application.
 - `experiments/native_rope_evq_150m/prepare_data.py`: held-out validation and
   frozen Passkey cache.
 - `experiments/native_rope_evq_150m/train.py`: paired compiled training.

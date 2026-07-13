@@ -14,6 +14,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
+from experiments.native_rope_evq_150m.model import GPT as ExperimentGPT, apply_rope
 from experiments.native_rope_evq_150m.evaluate import (
     aggregate_nll,
     apply_registered_operator,
@@ -39,6 +40,7 @@ from experiments.native_rope_evq_150m.train import (
     build_model,
     deterministic_row_order,
     learning_rate_for_step,
+    meta_parameter_count,
     registered_inv_freq_sha256,
     tensor_sha256,
     trainable_state_sha256,
@@ -57,6 +59,7 @@ class TestNativeRopeEvq150MProtocol(unittest.TestCase):
         self.assertEqual(SPEC.seq_len, 2_048)
 
     def test_legacy_passkey_selection_matches_previous_dataset(self):
+        self.assertEqual(SPEC.passkey_mix_ratio, 0.02)
         indices = legacy_passkey_indices(SPEC.train_rows)
         expected = tuple(
             i
@@ -67,6 +70,13 @@ class TestNativeRopeEvq150MProtocol(unittest.TestCase):
         self.assertEqual(indices, expected)
         self.assertEqual(len(indices), 4_926)
         self.assertEqual(len(indices) * SPEC.seq_len, 10_088_448)
+        # The historical Primary-I run used 10% of 100M tokens.  The new
+        # 500M run keeps that approximately 10M-token absolute task budget
+        # instead of multiplying synthetic exposure by five.
+        self.assertLess(
+            abs(len(indices) * SPEC.seq_len - 10_000_000) / 10_000_000,
+            0.01,
+        )
 
     def test_native_arm_is_standard_endpoint_rope(self):
         actual = get_arm_inv_freq("native_rope")
@@ -168,6 +178,13 @@ class TestNativeRopeEvq150MData(unittest.TestCase):
 
 
 class TestNativeRopeEvq150MTraining(unittest.TestCase):
+    def test_rope_preserves_bf16_activation_dtype(self):
+        x = torch.randn(1, 2, 4, 8, dtype=torch.bfloat16)
+        cos = torch.randn(4, 8, dtype=torch.float32)
+        sin = torch.randn(4, 8, dtype=torch.float32)
+        actual = apply_rope(x, cos[None, None], sin[None, None])
+        self.assertEqual(actual.dtype, torch.bfloat16)
+
     def test_row_order_is_a_seeded_shared_permutation(self):
         first = deterministic_row_order(100, seed=42)
         second = deterministic_row_order(100, seed=42)
@@ -175,6 +192,10 @@ class TestNativeRopeEvq150MTraining(unittest.TestCase):
         self.assertTrue(torch.equal(first, second))
         self.assertFalse(torch.equal(first, other))
         self.assertEqual(sorted(first.tolist()), list(range(100)))
+
+    def test_registered_full_model_parameter_count_on_meta_device(self):
+        self.assertEqual(meta_parameter_count("native_rope"), 151_898_880)
+        self.assertEqual(meta_parameter_count("endpoint_evq_tau1p5"), 151_898_880)
 
     def test_memmap_dataset_substitutes_only_registered_rows(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -210,6 +231,7 @@ class TestNativeRopeEvq150MTraining(unittest.TestCase):
         )
         native = build_model("native_rope", spec=tiny, seed=42)
         evq = build_model("endpoint_evq_tau1p5", spec=tiny, seed=42)
+        self.assertIsInstance(native, ExperimentGPT)
         self.assertEqual(
             trainable_state_sha256(native), trainable_state_sha256(evq)
         )
@@ -322,6 +344,7 @@ class TestNativeRopeEvq150MEvaluation(unittest.TestCase):
             self.assertIn(mode, text)
         self.assertIn("TORCHINDUCTOR_CACHE_DIR", text)
         self.assertIn("endpoint_evq_tau1p5", text)
+        self.assertIn('"$PACKAGE_DIR/model.py"', text)
         self.assertNotIn("/root/autodl-tmp", text)
         self.assertNotIn("seetacloud", text)
 

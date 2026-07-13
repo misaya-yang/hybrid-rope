@@ -19,9 +19,9 @@ from experiments.native_rope_evq_150m.prepare_data import (
     sha256_file,
     validate_data_manifest,
 )
+from experiments.native_rope_evq_150m.model import GPT
 from experiments.native_rope_evq_150m.protocol import ARMS, SPEC, get_arm_inv_freq
 from experiments.native_rope_evq_150m.train import tensor_sha256
-from scripts.core_text_phases.run_evq_sweep import GPT
 from scripts.lib.rope.official_yarn import (
     official_yarn_on_inv_freq,
     official_yarn_on_native_grid,
@@ -214,7 +214,8 @@ def _load_checkpoint(arm_dir: Path, arm: str) -> tuple[GPT, dict[str, Any], torc
     allowed_missing = {
         name
         for name in missing
-        if name == "head.weight" or name.endswith(".attn.rope.inv_freq")
+        if name == "lm_head.weight"
+        or name.endswith(".attention.rope.inv_freq")
     }
     if set(missing) != allowed_missing or unexpected:
         raise ValueError(
@@ -434,6 +435,7 @@ def evaluate_passkey(
             summaries[key] = {
                 "mean_nll_gap": sum(gaps) / len(gaps),
                 "retrieval_rate": sum(retrieved) / len(retrieved),
+                "retrieval_rate_chance_boundary": 0.5,
                 "trials": len(gaps),
                 "operator": operator_meta,
             }
@@ -447,12 +449,16 @@ def evaluate_passkey(
             )
     return {
         "metric": "teacher-forced NLL_wrong - NLL_correct",
+        "primary_statistic": "continuous mean_nll_gap",
+        "sign_rate_role": "diagnostic_only",
+        "retrieval_rate_chance_boundary": 0.5,
         "autoregressive_exact_match_run": False,
         "training_secret_overlap": 0,
         "summary": summaries,
         "global": {
             "mean_nll_gap": sum(all_gaps) / len(all_gaps),
             "retrieval_rate": sum(all_retrieved) / len(all_retrieved),
+            "retrieval_rate_chance_boundary": 0.5,
             "trials": len(all_gaps),
         },
         "details": details,

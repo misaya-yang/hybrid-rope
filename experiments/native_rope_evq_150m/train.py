@@ -24,6 +24,7 @@ from experiments.native_rope_evq_150m.prepare_data import (
     sha256_file,
     validate_data_manifest,
 )
+from experiments.native_rope_evq_150m.model import GPT
 from experiments.native_rope_evq_150m.protocol import (
     ARMS,
     SPEC,
@@ -31,7 +32,6 @@ from experiments.native_rope_evq_150m.protocol import (
     estimate_parameter_count,
     get_arm_inv_freq,
 )
-from scripts.core_text_phases.run_evq_sweep import GPT
 
 
 def seed_everything(seed: int) -> None:
@@ -76,6 +76,18 @@ def build_model(
     seed_everything(seed)
     inv_freq = get_arm_inv_freq(arm, spec=spec).float()
     return GPT(spec.model_config(), inv_freq)
+
+
+def meta_parameter_count(
+    arm: str,
+    *,
+    spec: ExperimentSpec = SPEC,
+) -> int:
+    """Count the registered model parameters without allocating model storage."""
+    inv_freq = get_arm_inv_freq(arm, spec=spec).float()
+    with torch.device("meta"):
+        model = GPT(spec.model_config(), inv_freq.to("meta"))
+    return sum(parameter.numel() for parameter in model.parameters())
 
 
 def learning_rate_for_step(step: int, spec: ExperimentSpec = SPEC) -> float:
@@ -242,10 +254,16 @@ def run_dry(
     if train.shape != (SPEC.train_rows, SPEC.seq_len):
         raise ValueError(f"unexpected training tensor shape: {train.shape}")
     inv = get_arm_inv_freq(arm)
+    parameter_count = meta_parameter_count(arm)
+    if parameter_count != estimate_parameter_count():
+        raise RuntimeError(
+            f"parameter count mismatch: {parameter_count} != "
+            f"{estimate_parameter_count()}"
+        )
     report = {
         "arm": arm,
         "dry_run": True,
-        "parameter_count": estimate_parameter_count(),
+        "parameter_count": parameter_count,
         "train_shape": list(train.shape),
         "batch_size": SPEC.batch_size,
         "optimizer_steps": SPEC.optimizer_steps,
@@ -356,6 +374,11 @@ def train_arm(args: argparse.Namespace) -> dict[str, Any]:
         "data_manifest_sha256": sha256_file(manifest_path),
         "passkey_rows": int(manifest["passkey"]["rows"]),
         "passkey_tokens": int(manifest["passkey"]["tokens"]),
+        "passkey_target_ratio": float(manifest["passkey"]["ratio"]),
+        "passkey_budget_rationale": (
+            "approximately 10M synthetic tokens, matching historical "
+            "100M-token x 10% absolute exposure"
+        ),
         "runtime": runtime,
         "python": platform.python_version(),
         "started_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),

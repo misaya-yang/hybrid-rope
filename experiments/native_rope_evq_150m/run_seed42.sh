@@ -30,7 +30,6 @@ paths += [
     root / "experiments/native_rope_evq_150m/run_seed42.sh",
     root / "scripts/lib/rope/official_yarn.py",
     root / "scripts/lib/rope/schedules.py",
-    root / "scripts/core_text_phases/run_evq_sweep.py",
     root / "scripts/supporting_eval/eval_passkey_scratch.py",
     root / "tests/test_native_rope_evq_150m.py",
     root / "tests/test_official_yarn_parity.py",
@@ -80,6 +79,7 @@ case "$MODE" in
     PYTHONPATH="$REPO_ROOT" "$PYTHON_BIN" tests/test_official_yarn_parity.py
     "$PYTHON_BIN" -m py_compile \
       "$PACKAGE_DIR/protocol.py" \
+      "$PACKAGE_DIR/model.py" \
       "$PACKAGE_DIR/prepare_data.py" \
       "$PACKAGE_DIR/train.py" \
       "$PACKAGE_DIR/evaluate.py"
