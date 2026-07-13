@@ -7,6 +7,7 @@ import math
 import random
 import tempfile
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 import numpy as np
@@ -23,6 +24,14 @@ from experiments.native_rope_evq_150m.protocol import (
     estimate_parameter_count,
     get_arm_inv_freq,
     legacy_passkey_indices,
+)
+from experiments.native_rope_evq_150m.train import (
+    FrozenMixedDataset,
+    build_model,
+    deterministic_row_order,
+    learning_rate_for_step,
+    trainable_state_sha256,
+    validate_cuda_runtime,
 )
 from scripts.lib.rope.schedules import geometric_inv_freq
 
@@ -145,6 +154,76 @@ class TestNativeRopeEvq150MData(unittest.TestCase):
         base["validation"]["source_shard"] = "000_00000.parquet"
         with self.assertRaisesRegex(ValueError, "also listed as a training source"):
             validate_data_manifest(base, check_files=False)
+
+
+class TestNativeRopeEvq150MTraining(unittest.TestCase):
+    def test_row_order_is_a_seeded_shared_permutation(self):
+        first = deterministic_row_order(100, seed=42)
+        second = deterministic_row_order(100, seed=42)
+        other = deterministic_row_order(100, seed=43)
+        self.assertTrue(torch.equal(first, second))
+        self.assertFalse(torch.equal(first, other))
+        self.assertEqual(sorted(first.tolist()), list(range(100)))
+
+    def test_memmap_dataset_substitutes_only_registered_rows(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            train = np.arange(8 * 16, dtype=np.int64).reshape(8, 16)
+            passkeys = np.full((2, 16), 9_999, dtype=np.int64)
+            np.save(root / "train.npy", train)
+            np.save(root / "passkeys.npy", passkeys)
+            np.save(root / "indices.npy", np.asarray([2, 6], dtype=np.int64))
+            dataset = FrozenMixedDataset(
+                train_path=root / "train.npy",
+                passkey_path=root / "passkeys.npy",
+                indices_path=root / "indices.npy",
+                expected_rows=8,
+                seq_len=16,
+            )
+            self.assertTrue(torch.equal(dataset[0], torch.from_numpy(train[0])))
+            self.assertTrue(torch.equal(dataset[2], torch.full((16,), 9_999)))
+            self.assertTrue(torch.equal(dataset[6], torch.full((16,), 9_999)))
+
+    def test_trainable_initialization_is_identical_across_frequency_arms(self):
+        tiny = replace(
+            SPEC,
+            vocab_size=128,
+            hidden_size=32,
+            num_layers=2,
+            num_heads=4,
+            head_dim=8,
+            intermediate_size=64,
+            seq_len=64,
+            train_tokens_requested=1_024,
+            batch_size=4,
+        )
+        native = build_model("native_rope", spec=tiny, seed=42)
+        evq = build_model("endpoint_evq_tau1p5", spec=tiny, seed=42)
+        self.assertEqual(
+            trainable_state_sha256(native), trainable_state_sha256(evq)
+        )
+        self.assertFalse(
+            torch.equal(
+                native.blocks[0].attn.rope.inv_freq,
+                evq.blocks[0].attn.rope.inv_freq,
+            )
+        )
+
+    def test_learning_rate_matches_registered_warmup_and_floor(self):
+        self.assertEqual(learning_rate_for_step(0, SPEC), 0.0)
+        self.assertAlmostEqual(
+            learning_rate_for_step(SPEC.warmup_steps, SPEC), SPEC.learning_rate
+        )
+        self.assertAlmostEqual(
+            learning_rate_for_step(SPEC.optimizer_steps - 1, SPEC),
+            SPEC.min_learning_rate,
+            delta=1e-8,
+        )
+
+    def test_cuda_runtime_gate_rejects_cpu_mode(self):
+        if not torch.cuda.is_available():
+            with self.assertRaisesRegex(RuntimeError, "CUDA is required"):
+                validate_cuda_runtime()
 
 
 if __name__ == "__main__":
