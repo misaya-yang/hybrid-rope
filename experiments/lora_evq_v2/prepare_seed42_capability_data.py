@@ -14,8 +14,8 @@ from pathlib import Path
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
 
-SCHEMA = "evq_cosh.seed42_capability_example.v1"
-MANIFEST_SCHEMA = "evq_cosh.seed42_capability_manifest.v1"
+SCHEMA = "evq_cosh.seed42_capability_example.v2"
+MANIFEST_SCHEMA = "evq_cosh.seed42_capability_manifest.v2"
 PROMPT_HASH_ENCODING = "sha256(compact-json-integer-array-v1)"
 
 MCQA_REVISIONS = {
@@ -66,6 +66,7 @@ DEFAULT_NOLIMA_TEMPLATE = (
     "strong, logical inferences.\n\nQuestion: {question}\n\n Return only the "
     "final answer with no additional explanation or reasoning."
 )
+NOLIMA_DEFAULT_SYSTEM_PROMPT = "You are a helpful assistant"
 
 LONGBENCH_PROMPTS = {
     "narrativeqa": (
@@ -105,6 +106,16 @@ RECORD_FIELDS = {
     "answer_index",
     "source",
     "prompt_sha256",
+    "generation_tokens",
+    "scorer",
+}
+
+RULER_TASK_CONTRACTS = {
+    "niah": {"match_type": "all", "generation_tokens": 128},
+    "vt": {"match_type": "all", "generation_tokens": 30},
+    "cwe": {"match_type": "all", "generation_tokens": 120},
+    "fwe": {"match_type": "all", "generation_tokens": 50},
+    "qa": {"match_type": "part", "generation_tokens": 32},
 }
 
 
@@ -157,6 +168,82 @@ def _encode(tokenizer: Any, text: str) -> list[int]:
     return [int(token_id) for token_id in encoded]
 
 
+def _chat_prompt_ids(
+    tokenizer: Any,
+    user_text: str,
+    *,
+    system_text: str | None = None,
+) -> list[int]:
+    """Freeze one complete Instruct chat prompt with string/token parity."""
+    if not hasattr(tokenizer, "apply_chat_template"):
+        raise ValueError("capability preparation requires tokenizer.apply_chat_template")
+    messages = []
+    if system_text:
+        messages.append({"role": "system", "content": str(system_text)})
+    messages.append({"role": "user", "content": str(user_text)})
+    rendered = tokenizer.apply_chat_template(
+        messages, tokenize=False, add_generation_prompt=True
+    )
+    direct = tokenizer.apply_chat_template(
+        messages, tokenize=True, add_generation_prompt=True
+    )
+    if isinstance(direct, Mapping):
+        if "input_ids" not in direct:
+            raise ValueError("chat-template token mapping has no input_ids")
+        direct = direct["input_ids"]
+    direct_ids = direct.tolist() if hasattr(direct, "tolist") else direct
+    if direct_ids and isinstance(direct_ids[0], list):
+        direct_ids = direct_ids[0]
+    rendered_ids = _encode(tokenizer, str(rendered))
+    normalized = [int(token_id) for token_id in direct_ids]
+    if rendered_ids != normalized:
+        raise ValueError("capability full chat-template string/token parity failed")
+    return normalized
+
+
+def _decode_ids(tokenizer: Any, token_ids: Sequence[int]) -> str:
+    if not hasattr(tokenizer, "decode"):
+        raise ValueError("capability preparation requires tokenizer.decode")
+    return str(
+        tokenizer.decode(
+            [int(token_id) for token_id in token_ids],
+            skip_special_tokens=False,
+            clean_up_tokenization_spaces=False,
+        )
+    )
+
+
+def _chat_segmented_prompt_ids(
+    tokenizer: Any,
+    *,
+    prefix_ids: Sequence[int],
+    document_ids: Sequence[int],
+    suffix_ids: Sequence[int],
+    max_prompt_tokens: int,
+    system_text: str | None = None,
+) -> list[int]:
+    """Maximize document tokens while preserving suffix and full chat framing."""
+    fixed = list(prefix_ids) + list(suffix_ids)
+    if len(_chat_prompt_ids(tokenizer, _decode_ids(tokenizer, fixed), system_text=system_text)) > max_prompt_tokens:
+        raise ValueError("chat template plus fixed prompt exceeds max_prompt_tokens")
+    low, high = 0, len(document_ids)
+    best: list[int] | None = None
+    while low <= high:
+        count = (low + high) // 2
+        raw = list(prefix_ids) + list(document_ids[:count]) + list(suffix_ids)
+        candidate = _chat_prompt_ids(
+            tokenizer, _decode_ids(tokenizer, raw), system_text=system_text
+        )
+        if len(candidate) <= int(max_prompt_tokens):
+            best = candidate
+            low = count + 1
+        else:
+            high = count - 1
+    if best is None:
+        raise ValueError("could not fit chat-templated prompt")
+    return best
+
+
 def _prompt_sha256(prompt_ids: Sequence[int]) -> str:
     payload = json.dumps(list(prompt_ids), separators=(",", ":")).encode("ascii")
     return hashlib.sha256(payload).hexdigest()
@@ -200,8 +287,20 @@ def _make_record(
     depth_percent: float | None = None,
     choices: Sequence[str] | None = None,
     answer_index: int | None = None,
+    generation_tokens: int | None = None,
+    scorer: str | None = None,
 ) -> dict[str, Any]:
     normalized_ids = [int(token_id) for token_id in prompt_ids]
+    if generation_tokens is None:
+        generation_tokens = 0 if metric == "mcqa" else (96 if metric == "qa_f1" else 32)
+    if scorer is None:
+        scorer = {
+            "exact_match": "normalized_exact_match",
+            "qa_f1": "longbench_qa_f1",
+            "mcqa": "choice_mean_logprob_accuracy",
+            "contains": "case_sensitive_contains",
+            "ruler_string_match": "pinned_ruler_string_match",
+        }[metric]
     return {
         "schema": SCHEMA,
         "example_id": str(example_id),
@@ -216,6 +315,8 @@ def _make_record(
         "answer_index": None if answer_index is None else int(answer_index),
         "source": dict(source),
         "prompt_sha256": _prompt_sha256(normalized_ids),
+        "generation_tokens": int(generation_tokens),
+        "scorer": str(scorer),
     }
 
 
@@ -253,8 +354,22 @@ def validate_record(record: Mapping[str, Any]) -> dict[str, Any]:
         raise ValueError("answers must contain only strings")
 
     metric = record["metric"]
-    if metric not in {"exact_match", "qa_f1", "mcqa"}:
+    if metric not in {"exact_match", "qa_f1", "mcqa", "contains", "ruler_string_match"}:
         raise ValueError(f"unsupported metric: {metric!r}")
+
+    generation_tokens = record["generation_tokens"]
+    if (
+        isinstance(generation_tokens, bool)
+        or not isinstance(generation_tokens, int)
+        or generation_tokens < 0
+    ):
+        raise ValueError("generation_tokens must be a non-negative integer")
+    if metric == "mcqa" and generation_tokens != 0:
+        raise ValueError("MCQA records must not register generation tokens")
+    if metric != "mcqa" and generation_tokens <= 0:
+        raise ValueError("generative records need a positive generation budget")
+    if not isinstance(record["scorer"], str) or not record["scorer"]:
+        raise ValueError("scorer must be a non-empty string")
 
     depth = record["depth_percent"]
     if depth is not None:
@@ -401,6 +516,8 @@ def build_passkey_examples(
                             "trial": trial,
                         },
                         "prompt_sha256": _prompt_sha256(prompt_ids),
+                        "generation_tokens": 32,
+                        "scorer": "normalized_exact_match",
                     }
                 )
     return rows
@@ -459,12 +576,25 @@ def _ruler_task(row: Mapping[str, Any], path: Path) -> str:
     return path.stem
 
 
+def _ruler_contract(task: str) -> dict[str, Any]:
+    family = str(task).split("_", 1)[0]
+    try:
+        return dict(RULER_TASK_CONTRACTS[family])
+    except KeyError as exc:
+        raise ValueError(f"RULER task {task!r} has no pinned scorer/generation contract") from exc
+
+
 def import_ruler_examples(
     tokenizer: Any,
     paths: str | Path | Iterable[str | Path],
+    *,
+    max_examples_per_task_length: int | None = None,
 ) -> list[dict[str, Any]]:
     """Import official RULER JSONL rows without rewriting prompts or references."""
+    if max_examples_per_task_length is not None and max_examples_per_task_length <= 0:
+        raise ValueError("max_examples_per_task_length must be positive")
     records: list[dict[str, Any]] = []
+    cell_counts: Counter[tuple[str, int]] = Counter()
     for path in _expand_jsonl_sources(paths):
         file_hash = _file_sha256(path)
         for line_index, row in enumerate(load_jsonl(path), start=1):
@@ -481,7 +611,15 @@ def import_ruler_examples(
             if not prompt_ids:
                 raise ValueError(f"RULER row {path}:{line_index} has an empty prompt")
             task = _ruler_task(row, path)
+            contract = _ruler_contract(task)
             target_length = _infer_target_length(row, path, len(prompt_ids))
+            cell = (task, target_length)
+            if (
+                max_examples_per_task_length is not None
+                and cell_counts[cell] >= int(max_examples_per_task_length)
+            ):
+                continue
+            prompt_ids = _chat_prompt_ids(tokenizer, prompt)
             if len(prompt_ids) > target_length:
                 raise ValueError(
                     f"RULER prompt {path}:{line_index} has {len(prompt_ids)} tokens "
@@ -496,9 +634,15 @@ def import_ruler_examples(
                     target_length=target_length,
                     prompt_ids=prompt_ids,
                     answers=answers,
-                    metric="exact_match",
+                    metric="ruler_string_match",
+                    generation_tokens=int(contract["generation_tokens"]),
+                    scorer=f"ruler_string_match_{contract['match_type']}",
                     source={
                         "kind": "official_ruler_jsonl",
+                        "prompt_config": "generic/default",
+                        "match_type": contract["match_type"],
+                        "tokens_to_generate": int(contract["generation_tokens"]),
+                        "length_semantics": "chat_prompt_tokens_before_generation",
                         "file": path.name,
                         "file_sha256": file_hash,
                         "line": line_index,
@@ -506,6 +650,7 @@ def import_ruler_examples(
                     },
                 )
             )
+            cell_counts[cell] += 1
     return records
 
 
@@ -533,8 +678,11 @@ def build_nolima_hard_examples(
     lengths: Iterable[int] = (16384, 32768),
     depths: Iterable[float] = (10, 25, 50, 75, 90),
     seed: int = 42,
+    max_examples_per_length_depth: int | None = None,
 ) -> list[dict[str, Any]]:
     """Build deterministic NoLiMa-Hard prompts from official needles and books."""
+    if max_examples_per_length_depth is not None and max_examples_per_length_depth <= 0:
+        raise ValueError("max_examples_per_length_depth must be positive")
     needle_path = Path(needle_set_path)
     raw_needles = _load_json(needle_path)
     if isinstance(raw_needles, dict):
@@ -558,6 +706,7 @@ def build_nolima_hard_examples(
 
     needle_hash = _file_sha256(needle_path)
     records: list[dict[str, Any]] = []
+    cell_counts: Counter[tuple[int, float]] = Counter()
     for book_index, book_path in enumerate(book_paths):
         book_text = book_path.read_text(encoding="utf-8")
         book_ids = _encode(tokenizer, book_text)
@@ -601,6 +750,13 @@ def build_nolima_hard_examples(
 
                     for target_length in normalized_lengths:
                         for depth_percent in normalized_depths:
+                            cell = (target_length, depth_percent)
+                            if (
+                                max_examples_per_length_depth is not None
+                                and cell_counts[cell]
+                                >= int(max_examples_per_length_depth)
+                            ):
+                                continue
                             row_rng = random.Random(
                                 f"{seed}|{experiment_id}|{question_type}|{test_id}|"
                                 f"{book_index}|{target_length}|{depth_percent:g}"
@@ -625,30 +781,44 @@ def build_nolima_hard_examples(
                             after_haystack = after_haystack.replace("{question}", question)
                             if "{question}" in before_haystack or "{question}" in after_haystack:
                                 raise ValueError("NoLiMa task template has unresolved question")
-                            prefix_text = ((system_prompt + "\n\n") if system_prompt else "") + before_haystack
+                            prefix_text = before_haystack
                             prefix_ids = _encode(tokenizer, prefix_text)
                             suffix_ids = _encode(tokenizer, after_haystack)
                             needle_ids = _encode(tokenizer, f" {needle}\n")
-                            fixed_count = len(prefix_ids) + len(suffix_ids) + len(needle_ids)
-                            if fixed_count > target_length:
-                                raise ValueError(f"NoLiMa fixed prompt exceeds target length {target_length}")
-                            filler_budget = target_length - fixed_count
-                            if len(book_ids) < filler_budget:
-                                raise ValueError(
-                                    f"NoLiMa book {book_name} has {len(book_ids)} tokens; "
-                                    f"{filler_budget} are required for length {target_length}"
-                                )
-                            max_start = len(book_ids) - filler_budget
+                            max_filler = min(len(book_ids), target_length)
+                            max_start = len(book_ids) - max_filler
                             start = row_rng.randrange(max_start + 1) if max_start else 0
-                            filler = book_ids[start : start + filler_budget]
-                            before_count = round(filler_budget * depth_percent / 100.0)
-                            document_ids = filler[:before_count] + needle_ids + filler[before_count:]
-                            prompt_ids = truncate_document_only(
-                                prefix_ids,
-                                document_ids,
-                                suffix_ids,
-                                target_length,
-                            )
+                            filler = book_ids[start : start + max_filler]
+                            low, high = 0, len(filler)
+                            prompt_ids: list[int] | None = None
+                            selected_filler_tokens = 0
+                            while low <= high:
+                                filler_count = (low + high) // 2
+                                before_count = round(
+                                    filler_count * depth_percent / 100.0
+                                )
+                                document_ids = (
+                                    filler[:before_count]
+                                    + needle_ids
+                                    + filler[before_count:filler_count]
+                                )
+                                raw_ids = prefix_ids + document_ids + suffix_ids
+                                candidate = _chat_prompt_ids(
+                                    tokenizer,
+                                    _decode_ids(tokenizer, raw_ids),
+                                    system_text=system_prompt
+                                    or NOLIMA_DEFAULT_SYSTEM_PROMPT,
+                                )
+                                if len(candidate) <= target_length:
+                                    prompt_ids = candidate
+                                    selected_filler_tokens = filler_count
+                                    low = filler_count + 1
+                                else:
+                                    high = filler_count - 1
+                            if prompt_ids is None:
+                                raise ValueError(
+                                    f"NoLiMa fixed chat prompt exceeds target length {target_length}"
+                                )
                             test_name = f"{experiment_id}_{test_id}_{question_type}"
                             records.append(
                                 _make_record(
@@ -656,15 +826,17 @@ def build_nolima_hard_examples(
                                         f"nolima-hard-{_slug(test_name)}-{_slug(book_name)}-"
                                         f"L{target_length}-d{_slug(f'{depth_percent:g}')}"
                                     ),
-                                    suite="nolima_hard",
-                                    task="nolima_hard",
+                                    suite="nolima_hard_exact_context",
+                                    task="nolima_hard_exact_context",
                                     target_length=target_length,
                                     prompt_ids=prompt_ids,
                                     answers=answers,
-                                    metric="exact_match",
+                                    metric="contains",
+                                    generation_tokens=192,
+                                    scorer="nolima_case_sensitive_contains",
                                     depth_percent=depth_percent,
                                     source={
-                                        "kind": "official_nolima_hard",
+                                        "kind": "nolima_hard_adapted_exact_context",
                                         "dataset": "amodaresi/NoLiMa",
                                         "needle_set": needle_path.name,
                                         "needle_set_sha256": needle_hash,
@@ -672,11 +844,18 @@ def build_nolima_hard_examples(
                                         "book_sha256": book_hash,
                                         "test_name": test_name,
                                         "book_token_start": start,
+                                        "book_filler_tokens": selected_filler_tokens,
                                         "selected_character": selected_character,
+                                        "prompt_config": "llama3_full_chat",
+                                        "official_metric": "contains",
+                                        "official_model_max_tokens": 192,
+                                        "length_semantics": "full_chat_prompt_tokens_before_generation",
+                                        "protocol_note": "official scorer and generation budget; adapted exact full-prompt context length",
                                         "seed": seed,
                                     },
                                 )
                             )
+                            cell_counts[cell] += 1
     return records
 
 
@@ -701,16 +880,23 @@ def build_longbench_examples(
     tokenizer: Any,
     paths: str | Path | Iterable[str | Path],
     max_prompt_tokens: int = 32768,
+    min_complete_prompt_tokens: int = 8192,
     diagnostic_lengths: Iterable[int] = (),
+    max_complete_examples_per_task: int | None = None,
 ) -> list[dict[str, Any]]:
     """Freeze complete LongBench v1 prompts plus explicitly requested diagnostics."""
     if max_prompt_tokens <= 0:
         raise ValueError("max_prompt_tokens must be positive")
+    if not 0 < int(min_complete_prompt_tokens) <= int(max_prompt_tokens):
+        raise ValueError("min_complete_prompt_tokens must fit inside max_prompt_tokens")
+    if max_complete_examples_per_task is not None and max_complete_examples_per_task <= 0:
+        raise ValueError("max_complete_examples_per_task must be positive")
     diagnostics = tuple(sorted({int(length) for length in diagnostic_lengths}))
     if any(length <= 0 or length > max_prompt_tokens for length in diagnostics):
         raise ValueError("diagnostic lengths must be within max_prompt_tokens")
 
     records: list[dict[str, Any]] = []
+    complete_counts: Counter[str] = Counter()
     for path in _expand_jsonl_sources(paths):
         file_hash = _file_sha256(path)
         for line_index, row in enumerate(load_jsonl(path), start=1):
@@ -728,8 +914,7 @@ def build_longbench_examples(
             document_ids = _encode(tokenizer, context)
             suffix_ids = _encode(tokenizer, after_context.replace("{input}", question))
             complete_prompt = template.format(context=context, input=question)
-            complete_ids = _encode(tokenizer, complete_prompt)
-            segmented_prompt_length = len(prefix_ids) + len(document_ids) + len(suffix_ids)
+            complete_ids = _chat_prompt_ids(tokenizer, complete_prompt)
             source_id = row.get("_id", row.get("id", line_index - 1))
             common_source = {
                 "kind": "longbench_v1_jsonl",
@@ -738,28 +923,48 @@ def build_longbench_examples(
                 "line": line_index,
                 "source_id": str(source_id),
             }
-            if len(complete_ids) <= max_prompt_tokens:
+            if (
+                int(min_complete_prompt_tokens) <= len(complete_ids) <= max_prompt_tokens
+                and (
+                    max_complete_examples_per_task is None
+                    or complete_counts[task] < int(max_complete_examples_per_task)
+                )
+            ):
+                registered_length = next(
+                    length for length in (8192, 16384, 32768) if len(complete_ids) <= length
+                )
                 records.append(
                     _make_record(
                         example_id=f"longbench-{task}-{_slug(source_id)}-complete",
                         suite="longbench",
                         task=task,
-                        target_length=max_prompt_tokens,
+                        target_length=registered_length,
                         prompt_ids=complete_ids,
                         answers=answers,
                         metric="qa_f1",
-                        source={**common_source, "selection": "complete"},
+                        generation_tokens=128,
+                        scorer="longbench_v1_qa_f1",
+                        source={
+                            **common_source,
+                            "selection": "complete",
+                            "prompt_config": "llama3_full_chat",
+                            "official_max_generation_tokens": 128,
+                            "prompt_tokens": len(complete_ids),
+                            "registered_length_bucket": registered_length,
+                        },
                     )
                 )
+                complete_counts[task] += 1
 
             for target_length in diagnostics:
-                if segmented_prompt_length <= target_length:
+                if len(complete_ids) <= target_length:
                     continue
-                prompt_ids = truncate_document_only(
-                    prefix_ids,
-                    document_ids,
-                    suffix_ids,
-                    target_length,
+                prompt_ids = _chat_segmented_prompt_ids(
+                    tokenizer,
+                    prefix_ids=prefix_ids,
+                    document_ids=document_ids,
+                    suffix_ids=suffix_ids,
+                    max_prompt_tokens=target_length,
                 )
                 records.append(
                     _make_record(
@@ -770,10 +975,14 @@ def build_longbench_examples(
                         prompt_ids=prompt_ids,
                         answers=answers,
                         metric="qa_f1",
+                        generation_tokens=128,
+                        scorer="longbench_v1_qa_f1",
                         source={
                             **common_source,
                             "selection": "fixed_diagnostic",
                             "untruncated_prompt_tokens": len(complete_ids),
+                            "prompt_config": "llama3_full_chat",
+                            "official_max_generation_tokens": 128,
                         },
                     )
                 )
@@ -932,9 +1141,12 @@ def load_mcqa_examples(
             labels = [chr(ord("A") + index) for index in range(len(choices))]
             choice_block = "\n".join(f"{label}. {choice}" for label, choice in zip(labels, choices))
             prompt = f"Question: {question}\n\nChoices:\n{choice_block}\n\nAnswer:"
-            prompt_ids = _encode(tokenizer, prompt)
+            prompt_ids = _chat_prompt_ids(tokenizer, prompt)
             if len(prompt_ids) > max_prompt_tokens:
                 continue
+            target_length = next(
+                length for length in (8192, 16384, 32768) if len(prompt_ids) <= length
+            )
             source_id = row.get("id", row.get("ind", row.get("qID", row_index)))
             task = str(spec["task"])
             records.append(
@@ -942,7 +1154,7 @@ def load_mcqa_examples(
                     example_id=f"mcqa-{task}-{_slug(source_id)}",
                     suite="mcqa",
                     task=task,
-                    target_length=max_prompt_tokens,
+                    target_length=target_length,
                     prompt_ids=prompt_ids,
                     answers=[choices[answer_index]],
                     metric="mcqa",
@@ -956,6 +1168,9 @@ def load_mcqa_examples(
                         "split": spec["split"],
                         "source_id": str(source_id),
                         "row_index": row_index,
+                        "prompt_config": "llama3_full_chat",
+                        "prompt_tokens": len(prompt_ids),
+                        "registered_length_bucket": target_length,
                     },
                 )
             )
@@ -1095,8 +1310,12 @@ def _public_tokenizer_identifier(value: Any) -> str:
 
 
 def _tokenizer_identity(tokenizer: Any, requested: str | Path | None) -> dict[str, Any]:
+    public_requested = _public_tokenizer_identifier(
+        requested if requested is not None else getattr(tokenizer, "name_or_path", "unknown")
+    )
     identity: dict[str, Any] = {
-        "requested": (None if requested is None else _public_tokenizer_identifier(requested)),
+        "identifier": public_requested,
+        "requested": (None if requested is None else public_requested),
         "name_or_path": _public_tokenizer_identifier(getattr(tokenizer, "name_or_path", requested or "unknown")),
         "class": type(tokenizer).__name__,
     }
@@ -1178,20 +1397,31 @@ def prepare_suite(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError("the frozen capability suite requires seed 42")
 
     records_by_file: dict[str, list[dict[str, Any]]] = {}
-    source_revisions: dict[str, Any] = {"passkey": {"generator": "deterministic_passkey", "seed": 42}}
-    passkey_rows = build_passkey_examples(
-        tokenizer,
-        lengths=(8192, 16384, 32768),
-        depths=(10, 25, 50, 75, 90),
-        trials=20,
-        seed=42,
-    )
-    records_by_file["passkey.jsonl"] = passkey_rows
+    source_revisions: dict[str, Any] = {}
+    if not bool(_namespace_value(args, "skip_passkey", default=False)):
+        passkey_rows = build_passkey_examples(
+            tokenizer,
+            lengths=(8192, 16384, 32768),
+            depths=(10, 25, 50, 75, 90),
+            trials=20,
+            seed=42,
+        )
+        records_by_file["passkey.jsonl"] = passkey_rows
+        source_revisions["passkey"] = {
+            "generator": "deterministic_passkey",
+            "seed": 42,
+        }
 
     ruler_requested = _namespace_value(args, "ruler_jsonl", default=()) or ()
     if ruler_requested:
         ruler_paths = _expand_jsonl_sources(ruler_requested)
-        ruler_rows = import_ruler_examples(tokenizer, ruler_paths)
+        ruler_rows = import_ruler_examples(
+            tokenizer,
+            ruler_paths,
+            max_examples_per_task_length=_namespace_value(
+                args, "max_ruler_per_task_length", default=None
+            ),
+        )
         if not ruler_rows:
             raise ValueError("requested RULER sources produced no records")
         records_by_file["ruler.jsonl"] = ruler_rows
@@ -1214,6 +1444,9 @@ def prepare_suite(args: argparse.Namespace) -> dict[str, Any]:
             lengths=nolima_lengths,
             depths=nolima_depths,
             seed=42,
+            max_examples_per_length_depth=_namespace_value(
+                args, "max_nolima_per_length_depth", default=None
+            ),
         )
         if not nolima_rows:
             raise ValueError("requested NoLiMa sources produced no records")
@@ -1237,6 +1470,9 @@ def prepare_suite(args: argparse.Namespace) -> dict[str, Any]:
             longbench_paths,
             max_prompt_tokens=32768,
             diagnostic_lengths=diagnostics,
+            max_complete_examples_per_task=_namespace_value(
+                args, "max_longbench_per_task", default=None
+            ),
         )
         if not longbench_rows:
             raise ValueError("requested LongBench sources produced no selected NarrativeQA or Qasper records")
@@ -1266,6 +1502,21 @@ def prepare_suite(args: argparse.Namespace) -> dict[str, Any]:
         records_by_file["mcqa.jsonl"] = mcqa_rows
         source_revisions["mcqa"] = {dataset: MCQA_REVISIONS[dataset] for dataset in requested_mcqa}
 
+    source_revisions["preparation_selection"] = {
+        "max_ruler_per_task_length": _namespace_value(
+            args, "max_ruler_per_task_length", default=None
+        ),
+        "max_nolima_per_length_depth": _namespace_value(
+            args, "max_nolima_per_length_depth", default=None
+        ),
+        "max_longbench_per_task": _namespace_value(
+            args, "max_longbench_per_task", default=None
+        ),
+        "max_mcqa_per_source": _namespace_value(
+            args, "max_mcqa_per_source", default=None
+        ),
+    }
+
     return write_suite_atomic(
         output_dir=output_dir,
         records_by_file=records_by_file,
@@ -1280,14 +1531,17 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--tokenizer", required=True, help="LLaMA tokenizer path")
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--ruler-jsonl", type=Path, nargs="+", default=())
+    parser.add_argument("--max-ruler-per-task-length", type=int)
     parser.add_argument("--nolima-needle-set", type=Path)
     parser.add_argument("--nolima-books-dir", type=Path)
+    parser.add_argument("--max-nolima-per-length-depth", type=int)
     parser.add_argument("--longbench-jsonl", type=Path, nargs="+", default=())
     parser.add_argument(
         "--longbench-diagnostic-lengths",
         default="",
         help="comma-separated fixed lengths; only the document may be truncated",
     )
+    parser.add_argument("--max-longbench-per-task", type=int)
     parser.add_argument(
         "--mcqa-sources",
         default=",".join(MCQA_REVISIONS),
@@ -1301,6 +1555,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         help="explicit Hugging Face cache root containing revision-pinned Arrow files",
     )
     parser.add_argument("--skip-mcqa", action="store_true")
+    parser.add_argument("--skip-passkey", action="store_true")
     parser.add_argument("--overwrite", action="store_true")
     parser.set_defaults(seed=42, include_mcqa=True)
     return parser.parse_args(argv)

@@ -22,6 +22,8 @@ from experiments.lora_evq_v2.eval_temporal_holdout_matched import (
 from experiments.lora_evq_v2.eval_official_yarn_capability import (
     _score_one_record,
     load_capability_suite,
+    score_capability_prediction,
+    score_generation_metrics,
     select_rows,
     summarize_results,
 )
@@ -34,10 +36,14 @@ from experiments.lora_evq_v2.train_positional_distill import causal_backbone
 from experiments.lora_evq_v2.prepare_positional_distill_data import (
     tokenizer_source_fingerprint,
 )
+from experiments.lora_evq_v2.prepare_legacy_model_manifest import (
+    validate_model_manifest,
+)
 from rebuttal.frequency_adaptation_8b.train import load_model_identity
 from scripts.lib.rope.official_yarn import official_yarn_on_inv_freq
 
 from .prepare_data import (
+    PASSKEY_BUNDLES,
     validate_bundle,
     validate_prepared_dir,
     validate_tokenizer_identity,
@@ -65,11 +71,51 @@ from .train import (
 CONTROLLED_SCHEMA = "evq_cosh.seed42_retrieval_repair_controlled.v1"
 PASSKEY_SCHEMA = "evq_cosh.seed42_retrieval_repair_passkey.v1"
 TEMPORAL_SCHEMA = "evq_cosh.seed42_retrieval_repair_temporal.v1"
+CAPABILITY_SCHEMA = "evq_cosh.seed42_retrieval_repair_capability.v1"
 GATE_PURPOSE = "evq_seed42_retrieval_repair_gate"
+FINAL_REPORT_PURPOSE = "evq_seed42_retrieval_repair_final_report"
+CAPABILITY_BUDGET_PURPOSE = "evq_seed42_retrieval_repair_capability_budget"
+PREFLIGHT_COMPLETE_PURPOSE = "evq_seed42_retrieval_repair_preflight_complete"
+RULER_TASKS = {
+    "niah_single_1",
+    "niah_single_2",
+    "niah_single_3",
+    "niah_multikey_1",
+    "niah_multikey_2",
+    "niah_multikey_3",
+    "niah_multivalue",
+    "niah_multiquery",
+    "vt",
+    "cwe",
+    "fwe",
+    "qa_1",
+    "qa_2",
+}
+MCQA_TASKS = {"mmlu", "arc_challenge", "hellaswag", "openbookqa", "winogrande"}
+LONGBENCH_TASKS = {"narrativeqa", "qasper"}
+NOLIMA_DEPTHS = {10.0, 25.0, 50.0, 75.0, 90.0}
+REQUIRED_CAPABILITY_SUITES = {
+    8192: {"ruler", "mcqa"},
+    16384: {"ruler", "nolima_hard_exact_context"},
+    32768: {"ruler", "nolima_hard_exact_context"},
+}
+CAPABILITY_SUITES = set().union(*REQUIRED_CAPABILITY_SUITES.values()) | {
+    "longbench"
+}
+
+_GATE_EVIDENCE = {
+    "parent_controlled": (CONTROLLED_SCHEMA, "parent_retrieval_result_sha256"),
+    "checkpoint_controlled": (CONTROLLED_SCHEMA, "retrieval_result_sha256"),
+    "passkey_result": (PASSKEY_SCHEMA, "passkey_result_sha256"),
+    "parent_temporal": (TEMPORAL_SCHEMA, "parent_temporal_sha256"),
+    "checkpoint_temporal": (TEMPORAL_SCHEMA, "checkpoint_temporal_sha256"),
+}
 
 _HASH_FIELDS = {
     "parent_adapter_sha256",
+    "parent_adapter_receipt_sha256",
     "checkpoint_adapter_sha256",
+    "checkpoint_adapter_receipt_sha256",
     "model_manifest_sha256",
     "longalpaca_manifest_sha256",
     "repair_manifest_sha256",
@@ -103,7 +149,10 @@ def evaluator_code_sha256() -> str:
         Path(__file__).resolve(),
         Path(__file__).with_name("protocol.py").resolve(),
         Path(__file__).with_name("train.py").resolve(),
+        Path(__file__).with_name("prepare_data.py").resolve(),
         (project_root / "scripts/lib/rope/official_yarn.py").resolve(),
+        (project_root / "experiments/lora_evq_v2/eval_official_yarn_capability.py").resolve(),
+        (project_root / "experiments/lora_evq_v2/prepare_seed42_capability_data.py").resolve(),
     )
     digest = hashlib.sha256()
     for path in paths:
@@ -275,6 +324,80 @@ def summarize_repair_records(
     }
 
 
+def summarize_passkey_records(records: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    """Recompute every passkey aggregate from immutable per-row evidence."""
+    if not records:
+        raise ValueError("passkey evaluation has no rows")
+    answer_tokens = sum(int(row.get("answer_tokens", 0)) for row in records)
+    nll_sum = sum(float(row.get("nll_sum", math.nan)) for row in records)
+    finite = (
+        answer_tokens > 0
+        and math.isfinite(nll_sum)
+        and all(bool(row.get("finite")) for row in records)
+    )
+    if not finite:
+        raise ValueError("passkey result contains non-finite or empty evidence")
+    count = len(records)
+    return {
+        "rows": count,
+        "passkey_strict_exact": sum(bool(row.get("strict_exact")) for row in records)
+        / count,
+        "passkey_first_value_exact": sum(
+            bool(row.get("first_value_exact")) for row in records
+        )
+        / count,
+        "passkey_containment": sum(bool(row.get("gold_containment")) for row in records)
+        / count,
+        "eos_fraction": sum(bool(row.get("eos_terminated")) for row in records) / count,
+        "mean_nll": nll_sum / answer_tokens,
+        "finite": True,
+    }
+
+
+def summarize_temporal_domains(domains: Mapping[str, Any]) -> dict[str, Any]:
+    """Recompute temporal domain and collection NLLs from pack-level evidence."""
+    if len(domains) != 3:
+        raise ValueError("temporal evidence must contain exactly three domains")
+    means = []
+    for name, raw_domain in sorted(domains.items()):
+        if not isinstance(raw_domain, Mapping):
+            raise ValueError(f"temporal domain {name} is not a mapping")
+        packs = raw_domain.get("packs")
+        if not isinstance(packs, list) or not packs:
+            raise ValueError(f"temporal domain {name} has no pack evidence")
+        indices = [int(pack.get("pack_index", -1)) for pack in packs]
+        if len(indices) != len(set(indices)) or any(index < 0 for index in indices):
+            raise ValueError(f"temporal domain {name} has invalid pack indices")
+        nll_sum = sum(float(pack.get("nll_sum", math.nan)) for pack in packs)
+        tokens = sum(int(pack.get("scored_tokens", 0)) for pack in packs)
+        if (
+            tokens <= 0
+            or not math.isfinite(nll_sum)
+            or not all(bool(pack.get("finite")) for pack in packs)
+        ):
+            raise ValueError(f"temporal domain {name} has non-finite pack evidence")
+        mean_nll = nll_sum / tokens
+        expected_domain = {
+            "packs": packs,
+            "nll_sum": nll_sum,
+            "scored_tokens": tokens,
+            "mean_nll": mean_nll,
+            "finite": True,
+        }
+        if dict(raw_domain) != expected_domain:
+            raise ValueError(f"temporal domain {name} aggregate differs from raw packs")
+        means.append(mean_nll)
+    mean_nll = sum(means) / len(means)
+    return {"mean_nll": mean_nll, "finite": math.isfinite(mean_nll)}
+
+
+def _require_json_equal(actual: Any, expected: Any, *, label: str) -> None:
+    left = json.dumps(actual, sort_keys=True, separators=(",", ":"), allow_nan=False)
+    right = json.dumps(expected, sort_keys=True, separators=(",", ":"), allow_nan=False)
+    if left != right:
+        raise ValueError(f"{label} differs from recomputed raw evidence")
+
+
 def merge_temporal_guardrail(
     stage: str,
     parent: Mapping[str, Any],
@@ -337,6 +460,7 @@ def build_gate_report(
     parent_temporal: Mapping[str, Any],
     checkpoint_temporal: Mapping[str, Any],
     bindings: Mapping[str, Any],
+    evidence_files: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Build an uninterpreted gate whose evidence is entirely hash-bound."""
     evidence = _validate_gate_bindings(bindings)
@@ -356,7 +480,7 @@ def build_gate_report(
     }
     parent_summary = {"pair_consistency": parent_repair_summary.get("pair_consistency")}
     decision = decide_gate(stage, summary, parent_summary, segment=int(segment))
-    return {
+    report = {
         "format_version": 1,
         "purpose": GATE_PURPOSE,
         "status": decision["status"],
@@ -371,6 +495,11 @@ def build_gate_report(
         "temporal": temporal,
         "decision": decision,
     }
+    if evidence_files is not None:
+        report["evidence_files"] = {
+            str(name): dict(record) for name, record in sorted(evidence_files.items())
+        }
+    return report
 
 
 def _runtime_contract_for_length(canonical: torch.Tensor, target_length: int) -> dict[str, Any]:
@@ -431,6 +560,7 @@ def _load_eval_identity(args: argparse.Namespace) -> tuple[dict[str, Any], torch
     provenance = {
         "adapter_kind": args.adapter_kind,
         "adapter_sha256": identity["adapter_sha256"],
+        "adapter_receipt_sha256": identity["adapter_receipt_sha256"],
         "model_manifest_sha256": model_identity["manifest_sha256"],
         "longalpaca_manifest_sha256": longalpaca_sha,
         "repair_manifest_sha256": repair_manifest_sha,
@@ -583,6 +713,7 @@ def run_controlled(args: argparse.Namespace) -> dict[str, Any]:
             )
             row.update(score_generated_tokens(generated, full[start : end - 1], tokenizer))
             row["generated_ids"] = generated
+            row["expected_ids"] = _int_tokens(full[start : end - 1])
         else:
             row.update(
                 strict_exact=None,
@@ -606,6 +737,7 @@ def run_controlled(args: argparse.Namespace) -> dict[str, Any]:
         "runtime": runtime,
         "runtime_tensor_sha256": runtime["runtime_tensor_sha256"],
         "evaluator_code_sha256": evaluator_code_sha256(),
+        "eos_token_id": int(tokenizer.eos_token_id),
         "evaluation_budget": evaluation_budget(args.stage),
         "results": rows,
         "summary": summary,
@@ -617,8 +749,10 @@ def run_controlled(args: argparse.Namespace) -> dict[str, Any]:
 def run_passkey(args: argparse.Namespace) -> dict[str, Any]:
     target_length = int(args.target_length)
     factor = registered_factor_for_length(target_length)
-    filename = f"passkey_{target_length}.pt"
+    filename, evaluation_split, _ = PASSKEY_BUNDLES[target_length]
     record, bundle = _bundle_record(args.data_dir, filename)
+    if bundle.get("evaluation_split") != evaluation_split:
+        raise ValueError("passkey bundle does not match its registered evaluation split")
     provenance, canonical, _ = _load_eval_identity(args)
     model, tokenizer, backbone, lm_head, runtime = _load_cuda_model(
         args, canonical, target_length=target_length
@@ -669,33 +803,149 @@ def run_passkey(args: argparse.Namespace) -> dict[str, Any]:
             }
         )
         print(json.dumps({"passkey": f"{index + 1}/{len(bundle['metadata'])}", "depth": metadata["depth_percent"]}), flush=True)
-    finite = all(bool(row["finite"]) for row in rows)
-    summary = {
-        "rows": len(rows),
-        "passkey_strict_exact": sum(bool(row["strict_exact"]) for row in rows) / len(rows),
-        "passkey_first_value_exact": sum(bool(row["first_value_exact"]) for row in rows) / len(rows),
-        "passkey_containment": sum(bool(row["gold_containment"]) for row in rows) / len(rows),
-        "eos_fraction": sum(bool(row["eos_terminated"]) for row in rows) / len(rows),
-        "mean_nll": sum(float(row["nll_sum"]) for row in rows)
-        / sum(int(row["answer_tokens"]) for row in rows),
-        "finite": finite,
-    }
+    summary = summarize_passkey_records(rows)
     output = {
         "schema": PASSKEY_SCHEMA,
         "stage": {8192: "r8", 16384: "r16", 32768: "x4"}[target_length],
         "factor": factor,
         "target_length": target_length,
+        "evaluation_split": evaluation_split,
         **provenance,
         "bundle_file": filename,
         "bundle_sha256": record["sha256"],
         "runtime": runtime,
         "runtime_tensor_sha256": runtime["runtime_tensor_sha256"],
         "evaluator_code_sha256": evaluator_code_sha256(),
+        "eos_token_id": int(tokenizer.eos_token_id),
         "results": rows,
         "summary": summary,
     }
     _atomic_json_dump(output, args.output)
     return output
+
+
+def capability_pilot_budget(
+    rows: Sequence[Mapping[str, Any]], *, target_length: int
+) -> dict[str, Any]:
+    """Validate coverage and register a bounded forward/generation budget."""
+    target_length = int(target_length)
+    selected = [row for row in rows if int(row["target_length"]) == target_length]
+    if not selected:
+        raise ValueError(f"capability suite has no rows at {target_length}")
+    suites = {str(row["suite"]) for row in selected}
+    missing_suites = REQUIRED_CAPABILITY_SUITES[target_length] - suites
+    if missing_suites:
+        raise ValueError(
+            f"capability suite at {target_length} misses required suites: "
+            f"{sorted(missing_suites)}"
+        )
+    ruler_tasks = {str(row["task"]) for row in selected if row["suite"] == "ruler"}
+    if ruler_tasks != RULER_TASKS:
+        raise ValueError(
+            f"RULER task coverage mismatch at {target_length}; "
+            f"missing={sorted(RULER_TASKS - ruler_tasks)}, "
+            f"extra={sorted(ruler_tasks - RULER_TASKS)}"
+        )
+    if target_length == 8192:
+        mcqa_tasks = {str(row["task"]) for row in selected if row["suite"] == "mcqa"}
+        if mcqa_tasks != MCQA_TASKS:
+            raise ValueError(
+                f"MCQA task coverage mismatch; missing={sorted(MCQA_TASKS - mcqa_tasks)}, "
+                f"extra={sorted(mcqa_tasks - MCQA_TASKS)}"
+            )
+    if target_length in {16384, 32768}:
+        nolima_depths = {
+            float(row["depth_percent"])
+            for row in selected
+            if row["suite"] == "nolima_hard_exact_context"
+        }
+        if nolima_depths != NOLIMA_DEPTHS:
+            raise ValueError(
+                f"NoLiMa depth coverage mismatch at {target_length}; "
+                f"missing={sorted(NOLIMA_DEPTHS - nolima_depths)}"
+            )
+    prompt_tokens = 0
+    nll_forwards = 0
+    generation_rows = 0
+    max_generated_tokens = 0
+    counts: dict[str, int] = defaultdict(int)
+    for row in selected:
+        prompt_count = int(row.get("prompt_tokens", len(row.get("prompt_ids", []))))
+        candidates = int(
+            row.get(
+                "answer_candidates",
+                len(row.get("choices") or row.get("answers") or []),
+            )
+        )
+        generation_tokens = int(row.get("generation_tokens", 0))
+        if prompt_count <= 0 or candidates <= 0 or generation_tokens < 0:
+            raise ValueError("capability row has an invalid forward budget")
+        prompt_tokens += prompt_count * (candidates + int(generation_tokens > 0))
+        nll_forwards += candidates
+        generation_rows += int(generation_tokens > 0)
+        max_generated_tokens += generation_tokens
+        counts[f"{row['suite']}::{row['task']}"] += 1
+    return {
+        "target_length": target_length,
+        "factor": registered_factor_for_length(target_length),
+        "selection": "one_row_per_task_length_depth_cell",
+        "rows": len(selected),
+        "nll_forwards": nll_forwards,
+        "generation_rows": generation_rows,
+        "prompt_tokens_across_prefills": prompt_tokens,
+        "max_generated_tokens": max_generated_tokens,
+        "suites": sorted(suites),
+        "task_counts": dict(sorted(counts.items())),
+        "ruler_tasks": sorted(ruler_tasks),
+    }
+
+
+def _capability_budget_receipt(
+    capability_dir: Path,
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    manifest, all_rows = load_capability_suite(capability_dir)
+    budgets = {}
+    selected_rows = []
+    for target_length in (8192, 16384, 32768):
+        length_rows = [
+            row
+            for row in all_rows
+            if int(row["target_length"]) == target_length
+            and str(row["suite"]) in CAPABILITY_SUITES
+        ]
+        selected = select_rows(length_rows, mode="pilot")
+        budgets[str(target_length)] = capability_pilot_budget(
+            selected, target_length=target_length
+        )
+        selected_rows.extend(selected)
+    longbench_tasks = {
+        str(row["task"]) for row in selected_rows if row["suite"] == "longbench"
+    }
+    if longbench_tasks != LONGBENCH_TASKS:
+        raise ValueError(
+            f"LongBench task coverage mismatch; "
+            f"missing={sorted(LONGBENCH_TASKS - longbench_tasks)}, "
+            f"extra={sorted(longbench_tasks - LONGBENCH_TASKS)}"
+        )
+    receipt = {
+        "format_version": 1,
+        "purpose": CAPABILITY_BUDGET_PURPOSE,
+        "status": "bounded_pilot_valid",
+        "capability_manifest_sha256": sha256_file(Path(capability_dir) / "manifest.json"),
+        "manifest_rows": int(manifest["row_count"]),
+        "budgets": budgets,
+        "total": {
+            key: sum(int(budget[key]) for budget in budgets.values())
+            for key in (
+                "rows",
+                "nll_forwards",
+                "generation_rows",
+                "prompt_tokens_across_prefills",
+                "max_generated_tokens",
+            )
+        },
+    }
+    return receipt, selected_rows
 
 
 def run_capability(args: argparse.Namespace) -> dict[str, Any]:
@@ -707,27 +957,16 @@ def run_capability(args: argparse.Namespace) -> dict[str, Any]:
         manifest.get("tokenizer", {}), tokenizer_source_fingerprint(args.model_name)
     )
     length_rows = [
-        row for row in all_rows if int(row["target_length"]) == target_length
+        row
+        for row in all_rows
+        if int(row["target_length"]) == target_length
+        and str(row["suite"]) in CAPABILITY_SUITES
     ]
-    rows = select_rows(length_rows, mode=args.mode) if length_rows else []
+    if args.mode != "pilot":
+        raise ValueError("repair capability evaluation is bounded to mode=pilot")
+    rows = select_rows(length_rows, mode="pilot") if length_rows else []
+    budget = capability_pilot_budget(rows, target_length=target_length)
     provenance, canonical, _ = _load_eval_identity(args)
-    if not rows:
-        output = {
-            "schema": "evq_cosh.seed42_retrieval_repair_capability.v1",
-            "stage": {8192: "r8", 16384: "r16", 32768: "x4"}[target_length],
-            "factor": factor,
-            "target_length": target_length,
-            **provenance,
-            "capability_manifest_sha256": sha256_file(
-                args.capability_dir / "manifest.json"
-            ),
-            "evaluator_code_sha256": evaluator_code_sha256(),
-            "status": "no_registered_rows_at_length",
-            "results": [],
-            "summary": {},
-        }
-        _atomic_json_dump(output, args.output)
-        return output
     model, tokenizer, backbone, lm_head, runtime = _load_cuda_model(
         args, canonical, target_length=target_length
     )
@@ -757,7 +996,7 @@ def run_capability(args: argparse.Namespace) -> dict[str, Any]:
             flush=True,
         )
     output = {
-        "schema": "evq_cosh.seed42_retrieval_repair_capability.v1",
+        "schema": CAPABILITY_SCHEMA,
         "stage": {8192: "r8", 16384: "r16", 32768: "x4"}[target_length],
         "factor": factor,
         "target_length": target_length,
@@ -771,6 +1010,7 @@ def run_capability(args: argparse.Namespace) -> dict[str, Any]:
         "runtime_tensor_sha256": runtime["runtime_tensor_sha256"],
         "evaluator_code_sha256": evaluator_code_sha256(),
         "status": "complete_uninterpreted",
+        "budget": budget,
         "results": results,
         "summary": summarize_results(results),
     }
@@ -949,7 +1189,7 @@ def run_temporal(args: argparse.Namespace) -> dict[str, Any]:
             "mean_nll": nll_sum / scored_tokens,
             "finite": True,
         }
-    mean_nll = sum(float(row["mean_nll"]) for row in domain_results.values()) / len(domain_results)
+    temporal_summary = summarize_temporal_domains(domain_results)
     output = {
         "schema": TEMPORAL_SCHEMA,
         "stage": args.stage,
@@ -961,7 +1201,7 @@ def run_temporal(args: argparse.Namespace) -> dict[str, Any]:
         "runtime_tensor_sha256": runtime["runtime_tensor_sha256"],
         "evaluator_code_sha256": evaluator_code_sha256(),
         "domains": domain_results,
-        "summary": {"mean_nll": mean_nll, "finite": math.isfinite(mean_nll)},
+        "summary": temporal_summary,
     }
     _atomic_json_dump(output, args.output)
     return output
@@ -976,24 +1216,278 @@ def _read_json(path: Path, *, schema: str) -> dict[str, Any]:
     return value
 
 
-def run_gate(args: argparse.Namespace) -> dict[str, Any]:
-    parent_controlled = _read_json(args.parent_controlled, schema=CONTROLLED_SCHEMA)
-    checkpoint_controlled = _read_json(args.checkpoint_controlled, schema=CONTROLLED_SCHEMA)
-    passkey = _read_json(args.passkey_result, schema=PASSKEY_SCHEMA)
-    parent_temporal = _read_json(args.parent_temporal, schema=TEMPORAL_SCHEMA)
-    checkpoint_temporal = _read_json(args.checkpoint_temporal, schema=TEMPORAL_SCHEMA)
-    spec = get_stage(args.stage)
-    records = (parent_controlled, checkpoint_controlled, passkey, parent_temporal, checkpoint_temporal)
-    if any(record.get("stage") != args.stage for record in records):
+_SCHEMAS_BY_KIND = {
+    "controlled": CONTROLLED_SCHEMA,
+    "passkey": PASSKEY_SCHEMA,
+    "temporal": TEMPORAL_SCHEMA,
+    "capability": CAPABILITY_SCHEMA,
+}
+
+
+def _validate_controlled_raw_metrics(
+    rows: Sequence[Mapping[str, Any]], *, eos_token_id: int
+) -> None:
+    for row in rows:
+        if row.get("variant") == "source_removed":
+            continue
+        generated = _int_tokens(row.get("generated_ids", []))
+        expected = _int_tokens(row.get("expected_ids", []))
+        eos_index = generated.index(eos_token_id) if eos_token_id in generated else None
+        content = generated if eos_index is None else generated[:eos_index]
+        recomputed = {
+            "strict_exact": content == expected,
+            "first_value_exact": content[: len(expected)] == expected,
+            "gold_containment": _contains_tokens(content, expected),
+            "eos_terminated": eos_index is not None,
+            "generated_token_count": len(content),
+        }
+        for field, expected_value in recomputed.items():
+            if row.get(field) != expected_value:
+                raise ValueError(f"controlled raw metric mismatch for {field}")
+
+
+def _validate_passkey_raw_metrics(
+    rows: Sequence[Mapping[str, Any]], *, eos_token_id: int
+) -> None:
+    for row in rows:
+        generated = _int_tokens(row.get("generated_ids", []))
+        eos = eos_token_id in generated
+        recomputed = score_text_answer(
+            str(row.get("prediction", "")), str(row.get("answer", "")), eos
+        )
+        for field, expected_value in recomputed.items():
+            if row.get(field) != expected_value:
+                raise ValueError(f"passkey raw metric mismatch for {field}")
+        expected_count = (
+            generated.index(eos_token_id) if eos else len(generated)
+        )
+        if int(row.get("generated_token_count", -1)) != expected_count:
+            raise ValueError("passkey raw generated-token count mismatch")
+
+
+def _validate_capability_raw_metrics(rows: Sequence[Mapping[str, Any]]) -> None:
+    for row in rows:
+        references = row.get("references")
+        contract = row.get("scorer_contract")
+        if not isinstance(references, list) or not references or not isinstance(contract, Mapping):
+            raise ValueError("capability row is missing raw scorer evidence")
+        metric = str(row.get("metric"))
+        if metric == "mcqa":
+            scores = row.get("choice_mean_logprobs")
+            choices = row.get("choices")
+            if not isinstance(scores, list) or not isinstance(choices, list) or len(scores) != len(choices):
+                raise ValueError("MCQA row has invalid choice evidence")
+            predicted = max(range(len(scores)), key=lambda index: float(scores[index]))
+            gold = int(row.get("answer_index", -1))
+            answer_tokens = int(row.get("answer_tokens", 0))
+            if not 0 <= gold < len(scores) or answer_tokens <= 0:
+                raise ValueError("MCQA gold/token evidence is invalid")
+            if int(row.get("prediction_index", -1)) != predicted:
+                raise ValueError("MCQA prediction index differs from raw scores")
+            if float(row.get("metric_score", math.nan)) != float(predicted == gold):
+                raise ValueError("MCQA metric differs from raw scores")
+            wrong_best = max(float(scores[index]) for index in range(len(scores)) if index != gold)
+            margin = float(scores[gold]) - wrong_best
+            if not math.isclose(
+                float(row.get("correct_minus_best_wrong_mean_logprob", math.nan)),
+                margin,
+                rel_tol=0.0,
+                abs_tol=1e-12,
+            ):
+                raise ValueError("MCQA margin differs from raw scores")
+            if not math.isclose(
+                float(row.get("nll_sum", math.nan)),
+                -float(scores[gold]) * answer_tokens,
+                rel_tol=1e-9,
+                abs_tol=1e-9,
+            ):
+                raise ValueError("MCQA NLL differs from raw gold choice score")
+            continue
+        reference_scores = row.get("reference_mean_logprobs")
+        answer_tokens = int(row.get("answer_tokens", 0))
+        if (
+            not isinstance(reference_scores, list)
+            or len(reference_scores) != len(references)
+            or answer_tokens <= 0
+        ):
+            raise ValueError("capability row has invalid reference NLL evidence")
+        selected = max(
+            range(len(reference_scores)), key=lambda index: float(reference_scores[index])
+        )
+        if int(row.get("selected_reference_index", -1)) != selected:
+            raise ValueError("capability selected reference differs from raw scores")
+        if not math.isclose(
+            float(row.get("nll_sum", math.nan)),
+            -float(reference_scores[selected]) * answer_tokens,
+            rel_tol=1e-9,
+            abs_tol=1e-9,
+        ):
+            raise ValueError("capability NLL differs from selected reference score")
+        source = {
+            "match_type": contract.get("match_type"),
+            "official_metric": contract.get("official_metric"),
+        }
+        recomputed_score = score_capability_prediction(
+            metric,
+            str(row.get("prediction", "")),
+            [str(answer) for answer in references],
+            source=source,
+        )
+        if not math.isclose(
+            float(row.get("metric_score", math.nan)),
+            recomputed_score,
+            rel_tol=0.0,
+            abs_tol=1e-12,
+        ):
+            raise ValueError("capability metric differs from raw prediction/references")
+        generation = row.get("generation")
+        if not isinstance(generation, Mapping):
+            raise ValueError("capability row has no generation evidence")
+        metrics = score_generation_metrics(
+            str(row.get("prediction", "")),
+            [str(answer) for answer in references],
+            eos_terminated=bool(generation.get("eos_terminated")),
+            generated_token_count=int(generation.get("generated_token_count", -1)),
+        )
+        for field, expected_value in metrics.items():
+            if generation.get(field) != expected_value:
+                raise ValueError(f"capability generation metric mismatch for {field}")
+
+
+def validate_result_record(record: Mapping[str, Any], *, kind: str) -> dict[str, Any]:
+    """Fail closed by recomputing every persisted aggregate from raw rows."""
+    if kind not in _SCHEMAS_BY_KIND:
+        raise ValueError(f"unknown result kind {kind!r}")
+    value = dict(record)
+    if value.get("schema") != _SCHEMAS_BY_KIND[kind]:
+        raise ValueError(f"{kind} result schema mismatch")
+    if value.get("evaluator_code_sha256") != evaluator_code_sha256():
+        raise ValueError(f"{kind} result evaluator code hash mismatch")
+    stage = str(value.get("stage", ""))
+    if stage in {"r8", "r16"}:
+        factor = get_stage(stage).factor
+    elif stage == "x4":
+        factor = 4.0
+    else:
+        raise ValueError(f"{kind} result stage mismatch")
+    if not math.isclose(float(value.get("factor", math.nan)), factor, abs_tol=1e-12):
+        raise ValueError(f"{kind} result factor mismatch")
+    results = value.get("results")
+    if kind != "temporal" and not isinstance(results, list):
+        raise ValueError(f"{kind} result has no raw rows")
+
+    if kind == "controlled":
+        assert isinstance(results, list)
+        eos_token_id = int(value.get("eos_token_id", -1))
+        if eos_token_id < 0:
+            raise ValueError("controlled result is missing eos_token_id")
+        _validate_controlled_raw_metrics(results, eos_token_id=eos_token_id)
+        split = value.get("split")
+        if split not in {"validation", "test"}:
+            raise ValueError("controlled result split mismatch")
+        expected_rows = 48 if split == "validation" else 96
+        if len(results) != expected_rows:
+            raise ValueError("controlled result row budget mismatch")
+        if value.get("bundle_file") != f"{split}_{stage}.pt":
+            raise ValueError("controlled result bundle filename mismatch")
+        expected_summary = summarize_repair_records(results, stage=stage)
+    elif kind == "passkey":
+        assert isinstance(results, list)
+        eos_token_id = int(value.get("eos_token_id", -1))
+        if eos_token_id < 0:
+            raise ValueError("passkey result is missing eos_token_id")
+        _validate_passkey_raw_metrics(results, eos_token_id=eos_token_id)
+        target_length = int(value.get("target_length", 0))
+        if registered_factor_for_length(target_length) != factor:
+            raise ValueError("passkey result length/factor mismatch")
+        filename, evaluation_split, _ = PASSKEY_BUNDLES[target_length]
+        if value.get("bundle_file") != filename:
+            raise ValueError("passkey result bundle filename mismatch")
+        if value.get("evaluation_split") != evaluation_split:
+            raise ValueError("passkey result evaluation split mismatch")
+        if len(results) != 25:
+            raise ValueError("passkey result row budget mismatch")
+        expected_summary = summarize_passkey_records(results)
+    elif kind == "temporal":
+        selection = value.get("temporal_selection")
+        if not isinstance(selection, Mapping):
+            raise ValueError("temporal result has no frozen selection")
+        if value.get("temporal_selection_sha256") != _json_sha256(selection):
+            raise ValueError("temporal selection hash mismatch")
+        domains = value.get("domains")
+        if not isinstance(domains, Mapping):
+            raise ValueError("temporal result has no domain evidence")
+        selected_domains = selection.get("domains")
+        if not isinstance(selected_domains, Mapping) or set(selected_domains) != set(domains):
+            raise ValueError("temporal result domains differ from frozen selection")
+        for name, raw_domain in domains.items():
+            selected = selected_domains[name]
+            if not isinstance(selected, Mapping):
+                raise ValueError(f"temporal selection for {name} is invalid")
+            selected_indices = [int(index) for index in selected.get("pack_indices", [])]
+            result_indices = [
+                int(pack.get("pack_index", -1)) for pack in raw_domain.get("packs", [])
+            ]
+            if result_indices != selected_indices:
+                raise ValueError(
+                    f"temporal result packs for {name} differ from frozen selection"
+                )
+        expected_summary = summarize_temporal_domains(domains)
+    else:
+        assert isinstance(results, list)
+        _validate_capability_raw_metrics(results)
+        target_length = int(value.get("target_length", 0))
+        if registered_factor_for_length(target_length) != factor:
+            raise ValueError("capability result length/factor mismatch")
+        if value.get("status") != "complete_uninterpreted" or not results:
+            raise ValueError("capability result must contain completed registered rows")
+        if any(
+            int(row.get("target_length", 0)) != target_length
+            or not math.isclose(float(row.get("factor", math.nan)), factor, abs_tol=1e-12)
+            for row in results
+        ):
+            raise ValueError("capability raw row identity mismatch")
+        expected_budget = capability_pilot_budget(results, target_length=target_length)
+        _require_json_equal(
+            value.get("budget"), expected_budget, label="capability budget"
+        )
+        expected_summary = summarize_results(results)
+    _require_json_equal(value.get("summary"), expected_summary, label=f"{kind} summary")
+    return value
+
+
+def validate_result_file(path: Path, *, kind: str) -> dict[str, Any]:
+    path = Path(path)
+    if not path.is_file():
+        raise FileNotFoundError(path)
+    return validate_result_record(
+        json.loads(path.read_text(encoding="utf-8")),
+        kind=kind,
+    )
+
+
+def _gate_input_bindings(
+    *,
+    stage: str,
+    records: Mapping[str, Mapping[str, Any]],
+    paths: Mapping[str, Path],
+) -> dict[str, str]:
+    spec = get_stage(stage)
+    if any(record.get("stage") != stage for record in records.values()):
         raise ValueError("gate input stage mismatch")
-    if any(not math.isclose(float(record.get("factor", math.nan)), spec.factor, abs_tol=1e-12) for record in records):
+    if any(
+        not math.isclose(float(record.get("factor", math.nan)), spec.factor, abs_tol=1e-12)
+        for record in records.values()
+    ):
         raise ValueError("gate input factor mismatch")
-    current_code_sha = evaluator_code_sha256()
-    if any(record.get("evaluator_code_sha256") != current_code_sha for record in records):
-        raise ValueError("gate input evaluator code hash mismatch")
-    shared = (checkpoint_controlled, passkey, checkpoint_temporal)
+    shared = (
+        records["checkpoint_controlled"],
+        records["passkey_result"],
+        records["checkpoint_temporal"],
+    )
     for field in (
         "adapter_sha256",
+        "adapter_receipt_sha256",
         "model_manifest_sha256",
         "longalpaca_manifest_sha256",
         "repair_manifest_sha256",
@@ -1001,38 +1495,142 @@ def run_gate(args: argparse.Namespace) -> dict[str, Any]:
     ):
         if len({record.get(field) for record in shared}) != 1:
             raise ValueError(f"checkpoint gate inputs disagree on {field}")
-    if parent_controlled.get("adapter_sha256") != parent_temporal.get("adapter_sha256"):
-        raise ValueError("parent controlled/temporal adapter mismatch")
-    if parent_controlled.get("model_manifest_sha256") != checkpoint_controlled.get("model_manifest_sha256"):
-        raise ValueError("parent/checkpoint model manifest mismatch")
-    bindings = {
-        "parent_adapter_sha256": parent_controlled["adapter_sha256"],
-        "checkpoint_adapter_sha256": checkpoint_controlled["adapter_sha256"],
-        "model_manifest_sha256": checkpoint_controlled["model_manifest_sha256"],
-        "longalpaca_manifest_sha256": checkpoint_controlled["longalpaca_manifest_sha256"],
-        "repair_manifest_sha256": checkpoint_controlled["repair_manifest_sha256"],
-        "validation_bundle_sha256": checkpoint_controlled["bundle_sha256"],
-        "passkey_bundle_sha256": passkey["bundle_sha256"],
-        "operator_tensor_sha256": checkpoint_controlled["runtime_tensor_sha256"],
-        "evaluator_code_sha256": current_code_sha,
-        "parent_retrieval_result_sha256": sha256_file(args.parent_controlled),
-        "retrieval_result_sha256": sha256_file(args.checkpoint_controlled),
-        "passkey_result_sha256": sha256_file(args.passkey_result),
-        "parent_temporal_sha256": sha256_file(args.parent_temporal),
-        "checkpoint_temporal_sha256": sha256_file(args.checkpoint_temporal),
+    parent_controlled = records["parent_controlled"]
+    parent_temporal = records["parent_temporal"]
+    checkpoint = records["checkpoint_controlled"]
+    passkey = records["passkey_result"]
+    for field in ("adapter_sha256", "adapter_receipt_sha256"):
+        if parent_controlled.get(field) != parent_temporal.get(field):
+            raise ValueError(f"parent controlled/temporal {field} mismatch")
+    for field in (
+        "model_manifest_sha256",
+        "longalpaca_manifest_sha256",
+        "repair_manifest_sha256",
+    ):
+        if parent_controlled.get(field) != checkpoint.get(field):
+            raise ValueError(f"parent/checkpoint {field} mismatch")
+    return {
+        "parent_adapter_sha256": str(parent_controlled["adapter_sha256"]),
+        "parent_adapter_receipt_sha256": str(
+            parent_controlled["adapter_receipt_sha256"]
+        ),
+        "checkpoint_adapter_sha256": str(checkpoint["adapter_sha256"]),
+        "checkpoint_adapter_receipt_sha256": str(
+            checkpoint["adapter_receipt_sha256"]
+        ),
+        "model_manifest_sha256": str(checkpoint["model_manifest_sha256"]),
+        "longalpaca_manifest_sha256": str(checkpoint["longalpaca_manifest_sha256"]),
+        "repair_manifest_sha256": str(checkpoint["repair_manifest_sha256"]),
+        "validation_bundle_sha256": str(checkpoint["bundle_sha256"]),
+        "passkey_bundle_sha256": str(passkey["bundle_sha256"]),
+        "operator_tensor_sha256": str(checkpoint["runtime_tensor_sha256"]),
+        "evaluator_code_sha256": evaluator_code_sha256(),
+        **{
+            binding: sha256_file(paths[role])
+            for role, (_, binding) in _GATE_EVIDENCE.items()
+        },
+    }
+
+
+def run_gate(args: argparse.Namespace) -> dict[str, Any]:
+    paths = {
+        role: Path(getattr(args, role)) for role in _GATE_EVIDENCE
+    }
+    output_parent = Path(args.output).resolve().parent
+    if any(path.resolve().parent != output_parent for path in paths.values()):
+        raise ValueError("gate evidence and gate output must share one result directory")
+    records = {
+        "parent_controlled": validate_result_file(paths["parent_controlled"], kind="controlled"),
+        "checkpoint_controlled": validate_result_file(paths["checkpoint_controlled"], kind="controlled"),
+        "passkey_result": validate_result_file(paths["passkey_result"], kind="passkey"),
+        "parent_temporal": validate_result_file(paths["parent_temporal"], kind="temporal"),
+        "checkpoint_temporal": validate_result_file(paths["checkpoint_temporal"], kind="temporal"),
+    }
+    bindings = _gate_input_bindings(stage=args.stage, records=records, paths=paths)
+    evidence_files = {
+        role: {"path": path.name, "sha256": sha256_file(path)}
+        for role, path in paths.items()
     }
     report = build_gate_report(
         stage=args.stage,
         segment=args.segment,
-        repair_summary=checkpoint_controlled["summary"],
-        passkey_summary=passkey["summary"],
-        parent_repair_summary=parent_controlled["summary"],
-        parent_temporal=parent_temporal,
-        checkpoint_temporal=checkpoint_temporal,
+        repair_summary=records["checkpoint_controlled"]["summary"],
+        passkey_summary=records["passkey_result"]["summary"],
+        parent_repair_summary=records["parent_controlled"]["summary"],
+        parent_temporal=records["parent_temporal"],
+        checkpoint_temporal=records["checkpoint_temporal"],
         bindings=bindings,
+        evidence_files=evidence_files,
     )
     _atomic_json_dump(report, args.output)
     return report
+
+
+def validate_gate_file(path: Path) -> dict[str, Any]:
+    """Hash-check gate evidence and reproduce the decision from raw rows."""
+    path = Path(path)
+    if not path.is_file():
+        raise FileNotFoundError(path)
+    gate = json.loads(path.read_text(encoding="utf-8"))
+    if gate.get("format_version") != 1 or gate.get("purpose") != GATE_PURPOSE:
+        raise RuntimeError("repair gate identity mismatch")
+    decision = gate.get("decision")
+    if not isinstance(decision, Mapping) or gate.get("status") != decision.get("status"):
+        raise RuntimeError("repair gate decision status differs from top-level status")
+    bindings = gate.get("bindings")
+    if not isinstance(bindings, Mapping):
+        raise RuntimeError("repair gate has no bindings")
+    stage = str(bindings.get("stage", ""))
+    segment = int(bindings.get("segment", 0))
+    spec = get_stage(stage)
+    if segment not in (1, 2) or not math.isclose(
+        float(bindings.get("factor", math.nan)), spec.factor, abs_tol=1e-12
+    ):
+        raise RuntimeError("repair gate stage/segment/factor mismatch")
+    _validate_gate_bindings(
+        {key: bindings.get(key) for key in _HASH_FIELDS}
+    )
+    if set(bindings) != {"stage", "segment", "factor", *_HASH_FIELDS}:
+        raise RuntimeError("repair gate has missing or extra bindings")
+    raw_evidence = gate.get("evidence_files")
+    if not isinstance(raw_evidence, Mapping) or set(raw_evidence) != set(_GATE_EVIDENCE):
+        raise RuntimeError("repair gate evidence file set mismatch")
+    records: dict[str, dict[str, Any]] = {}
+    paths: dict[str, Path] = {}
+    for role, (schema, binding_name) in _GATE_EVIDENCE.items():
+        evidence = raw_evidence.get(role)
+        if not isinstance(evidence, Mapping):
+            raise RuntimeError(f"repair gate evidence {role} is invalid")
+        relative = Path(str(evidence.get("path", "")))
+        if relative.is_absolute() or relative.name != str(relative):
+            raise RuntimeError("repair gate evidence paths must be sibling filenames")
+        evidence_path = path.parent / relative
+        digest = sha256_file(evidence_path)
+        if digest != evidence.get("sha256") or digest != bindings.get(binding_name):
+            raise RuntimeError(f"repair gate evidence SHA-256 mismatch for {role}")
+        kind = next(name for name, value in _SCHEMAS_BY_KIND.items() if value == schema)
+        records[role] = validate_result_file(evidence_path, kind=kind)
+        paths[role] = evidence_path
+    expected_bindings = {
+        "stage": stage,
+        "segment": segment,
+        "factor": spec.factor,
+        **_gate_input_bindings(stage=stage, records=records, paths=paths),
+    }
+    _require_json_equal(bindings, expected_bindings, label="gate bindings")
+    expected = build_gate_report(
+        stage=stage,
+        segment=segment,
+        repair_summary=records["checkpoint_controlled"]["summary"],
+        passkey_summary=records["passkey_result"]["summary"],
+        parent_repair_summary=records["parent_controlled"]["summary"],
+        parent_temporal=records["parent_temporal"],
+        checkpoint_temporal=records["checkpoint_temporal"],
+        bindings={key: expected_bindings[key] for key in _HASH_FIELDS},
+        evidence_files=raw_evidence,
+    )
+    _require_json_equal(gate, expected, label="gate report")
+    return gate
 
 
 def check_gate(args: argparse.Namespace) -> dict[str, Any]:
@@ -1043,12 +1641,13 @@ def check_gate(args: argparse.Namespace) -> dict[str, Any]:
         "segment": int(args.segment),
         "factor": get_stage(args.stage).factor,
         "checkpoint_adapter_sha256": checkpoint["adapter_sha256"],
+        "checkpoint_adapter_receipt_sha256": checkpoint["adapter_receipt_sha256"],
         "model_manifest_sha256": sha256_file(args.model_manifest),
         "longalpaca_manifest_sha256": sha256_file(args.longalpaca_manifest),
         "repair_manifest_sha256": repair_manifest_sha,
         "evaluator_code_sha256": evaluator_code_sha256(),
     }
-    gate = json.loads(args.gate.read_text(encoding="utf-8"))
+    gate = validate_gate_file(args.gate)
     bindings = gate.get("bindings")
     if not isinstance(bindings, Mapping):
         raise ValueError("gate has no bindings")
@@ -1066,7 +1665,10 @@ def run_preflight(args: argparse.Namespace) -> dict[str, Any]:
     provenance, canonical, _ = _load_eval_identity(args)
     runtime = _runtime_contract_for_length(canonical, spec.seq_len)
     validation_record, _ = _bundle_record(args.data_dir, f"validation_{args.stage}.pt")
-    passkey_record, _ = _bundle_record(args.data_dir, f"passkey_{spec.seq_len}.pt")
+    passkey_filename, evaluation_split, _ = PASSKEY_BUNDLES[spec.seq_len]
+    passkey_record, passkey_bundle = _bundle_record(args.data_dir, passkey_filename)
+    if passkey_bundle.get("evaluation_split") != evaluation_split:
+        raise ValueError("preflight passkey split mismatch")
     paths = _resolve_temporal_domains(args)
     selection, domains = _load_temporal_selection(
         paths, args.stage, max_packs_per_domain=1
@@ -1082,6 +1684,294 @@ def run_preflight(args: argparse.Namespace) -> dict[str, Any]:
         "temporal_selection_sha256": _json_sha256(selection),
         "evaluation_budget": evaluation_budget(args.stage),
     }
+
+
+def _model_hash_receipt(model_name: str, model_manifest: Path) -> dict[str, Any]:
+    model_dir = Path(model_name).expanduser()
+    manifest_path = Path(model_manifest)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    validate_model_manifest(model_dir, manifest, verify_hashes=True)
+    return {
+        "format_version": 1,
+        "purpose": "evq_seed42_retrieval_repair_model_hash_receipt",
+        "status": "full_hashes_verified",
+        "model": model_dir.name,
+        "model_manifest_sha256": sha256_file(manifest_path),
+        "files": [
+            {"name": row["name"], "size_bytes": int(row["size_bytes"]), "sha256": row["sha256"]}
+            for row in manifest["files"]
+        ],
+    }
+
+
+def run_model_hash(args: argparse.Namespace) -> dict[str, Any]:
+    """Spend CPU time once to verify every model byte before any GPU phase."""
+    receipt = _model_hash_receipt(args.model_name, args.model_manifest)
+    if args.output.exists():
+        recorded = json.loads(args.output.read_text(encoding="utf-8"))
+        _require_json_equal(recorded, receipt, label="model hash receipt")
+    else:
+        _atomic_json_dump(receipt, args.output)
+    return receipt
+
+
+def run_model_receipt_check(args: argparse.Namespace) -> dict[str, Any]:
+    """Cheaply bind a prior full-hash receipt to the current manifest/stat identity."""
+    expected = _model_hash_receipt(args.model_name, args.model_manifest) if args.rehash else None
+    recorded = json.loads(args.receipt.read_text(encoding="utf-8"))
+    if expected is not None:
+        _require_json_equal(recorded, expected, label="model hash receipt")
+    else:
+        identity = load_model_identity(args.model_name, args.model_manifest)
+        if (
+            recorded.get("purpose") != "evq_seed42_retrieval_repair_model_hash_receipt"
+            or recorded.get("status") != "full_hashes_verified"
+            or recorded.get("model_manifest_sha256") != identity["manifest_sha256"]
+            or recorded.get("files") != identity["files"]
+        ):
+            raise ValueError("model hash receipt differs from current model identity")
+    return recorded
+
+
+def run_capability_preflight(args: argparse.Namespace) -> dict[str, Any]:
+    receipt, _ = _capability_budget_receipt(args.capability_dir)
+    if args.output.exists():
+        recorded = json.loads(args.output.read_text(encoding="utf-8"))
+        _require_json_equal(recorded, receipt, label="capability budget receipt")
+    else:
+        _atomic_json_dump(receipt, args.output)
+    return receipt
+
+
+def run_preflight_complete(args: argparse.Namespace) -> dict[str, Any]:
+    """Create or revalidate the receipt that alone authorizes paid GPU phases."""
+    model_receipt = run_model_receipt_check(
+        argparse.Namespace(
+            model_name=args.model_name,
+            model_manifest=args.model_manifest,
+            receipt=args.model_receipt,
+            rehash=False,
+        )
+    )
+    capability_receipt, _ = _capability_budget_receipt(args.capability_dir)
+    recorded_capability = json.loads(
+        args.capability_receipt.read_text(encoding="utf-8")
+    )
+    _require_json_equal(
+        recorded_capability,
+        capability_receipt,
+        label="capability budget receipt",
+    )
+    provenance, canonical, _ = _load_eval_identity(args)
+    paths = _temporal_domains_from_collection(args.temporal_root)
+    temporal = {}
+    runtime = {}
+    for stage in ("r8", "r16"):
+        selection, domains = _load_temporal_selection(
+            paths, stage, max_packs_per_domain=1
+        )
+        _validate_temporal_tokenizers(domains, args.model_name)
+        temporal[stage] = _json_sha256(selection)
+        runtime[stage] = _runtime_contract_for_length(
+            canonical, get_stage(stage).seq_len
+        )["runtime_tensor_sha256"]
+    receipt = {
+        "format_version": 1,
+        "purpose": PREFLIGHT_COMPLETE_PURPOSE,
+        "status": "all_cpu_gates_passed",
+        "model_hash_receipt_sha256": sha256_file(args.model_receipt),
+        "capability_budget_receipt_sha256": sha256_file(args.capability_receipt),
+        "evaluator_code_sha256": evaluator_code_sha256(),
+        "adapter_receipt_sha256": provenance["adapter_receipt_sha256"],
+        "model_manifest_sha256": provenance["model_manifest_sha256"],
+        "longalpaca_manifest_sha256": provenance["longalpaca_manifest_sha256"],
+        "repair_manifest_sha256": provenance["repair_manifest_sha256"],
+        "temporal_selection_sha256": temporal,
+        "runtime_tensor_sha256": runtime,
+        "capability_manifest_sha256": capability_receipt[
+            "capability_manifest_sha256"
+        ],
+        "model_receipt_status": model_receipt["status"],
+    }
+    if args.output.exists():
+        recorded = json.loads(args.output.read_text(encoding="utf-8"))
+        _require_json_equal(recorded, receipt, label="complete preflight receipt")
+    else:
+        _atomic_json_dump(receipt, args.output)
+    return receipt
+
+
+def run_verify_result(args: argparse.Namespace) -> dict[str, Any]:
+    """Validate an existing result before the launcher reuses it."""
+    result = validate_result_file(args.result, kind=args.kind)
+    provenance, _, _ = _load_eval_identity(args)
+    for field, expected in (
+        ("adapter_sha256", provenance["adapter_sha256"]),
+        ("adapter_receipt_sha256", provenance["adapter_receipt_sha256"]),
+        ("model_manifest_sha256", provenance["model_manifest_sha256"]),
+        ("longalpaca_manifest_sha256", provenance["longalpaca_manifest_sha256"]),
+        ("repair_manifest_sha256", provenance["repair_manifest_sha256"]),
+    ):
+        if result.get(field) != expected:
+            raise ValueError(f"existing {args.kind} result differs on {field}")
+    if args.kind in {"controlled", "temporal"}:
+        if args.stage is None or result.get("stage") != args.stage:
+            raise ValueError(f"existing {args.kind} result stage mismatch")
+    if args.kind == "temporal":
+        if args.temporal_root is None or args.max_packs_per_domain is None:
+            raise ValueError(
+                "temporal verification requires --temporal-root and "
+                "--max-packs-per-domain"
+            )
+        max_packs = int(args.max_packs_per_domain)
+        expected_selection, _ = _load_temporal_selection(
+            _temporal_domains_from_collection(args.temporal_root),
+            args.stage,
+            max_packs_per_domain=None if max_packs == 0 else max_packs,
+        )
+        _require_json_equal(
+            result.get("temporal_selection"),
+            expected_selection,
+            label="existing temporal selection",
+        )
+    if args.kind == "controlled":
+        if args.split is None or result.get("split") != args.split:
+            raise ValueError("existing controlled result split mismatch")
+        record, _ = _bundle_record(
+            args.data_dir, f"{args.split}_{args.stage}.pt"
+        )
+        if result.get("bundle_sha256") != record["sha256"]:
+            raise ValueError("existing controlled result bundle hash mismatch")
+    if args.kind in {"passkey", "capability"}:
+        if args.target_length is None or int(result.get("target_length", 0)) != int(
+            args.target_length
+        ):
+            raise ValueError(f"existing {args.kind} result target length mismatch")
+    if args.kind == "passkey":
+        filename, _, _ = PASSKEY_BUNDLES[int(args.target_length)]
+        record, _ = _bundle_record(args.data_dir, filename)
+        if result.get("bundle_sha256") != record["sha256"]:
+            raise ValueError("existing passkey result bundle hash mismatch")
+    if args.kind == "capability":
+        if args.capability_dir is None:
+            raise ValueError("capability verification requires --capability-dir")
+        receipt, _ = _capability_budget_receipt(args.capability_dir)
+        if (
+            result.get("capability_manifest_sha256")
+            != receipt["capability_manifest_sha256"]
+        ):
+            raise ValueError("existing capability result manifest hash mismatch")
+    return {
+        "status": "valid_for_reuse",
+        "kind": args.kind,
+        "result_sha256": sha256_file(args.result),
+        "adapter_receipt_sha256": provenance["adapter_receipt_sha256"],
+    }
+
+
+def _build_final_report(args: argparse.Namespace) -> dict[str, Any]:
+    result_dir = Path(args.result_dir)
+    r8_gate = validate_gate_file(args.r8_gate)
+    r16_gate = validate_gate_file(args.r16_gate)
+    capability_receipt, _ = _capability_budget_receipt(args.capability_dir)
+    specifications = {
+        "test_r8": ("final_test_r8.json", "controlled"),
+        "test_r16": ("final_test_r16.json", "controlled"),
+        "passkey_32768": ("final_passkey_32768.json", "passkey"),
+        "capability_8192": ("final_capability_8192.json", "capability"),
+        "capability_16384": ("final_capability_16384.json", "capability"),
+        "capability_32768": ("final_capability_32768.json", "capability"),
+        "parent_temporal_r16": ("final_parent_temporal_full_r16.json", "temporal"),
+        "checkpoint_temporal_r16": (
+            "final_checkpoint_temporal_full_r16.json",
+            "temporal",
+        ),
+    }
+    results = {}
+    for name, (filename, kind) in specifications.items():
+        path = result_dir / filename
+        record = validate_result_file(path, kind=kind)
+        if kind == "capability" and (
+            record.get("capability_manifest_sha256")
+            != capability_receipt["capability_manifest_sha256"]
+        ):
+            raise ValueError(f"final capability manifest mismatch for {filename}")
+        results[name] = {
+            "file": filename,
+            "sha256": sha256_file(path),
+            "schema": record["schema"],
+            "stage": record["stage"],
+            "factor": record["factor"],
+            "adapter_receipt_sha256": record["adapter_receipt_sha256"],
+            "summary": record["summary"],
+            **({"budget": record["budget"]} if kind == "capability" else {}),
+        }
+    final_receipts = {
+        results[name]["adapter_receipt_sha256"]
+        for name in (
+            "test_r8",
+            "test_r16",
+            "passkey_32768",
+            "capability_8192",
+            "capability_16384",
+            "capability_32768",
+            "checkpoint_temporal_r16",
+        )
+    }
+    if final_receipts != {
+        r16_gate["bindings"]["checkpoint_adapter_receipt_sha256"]
+    }:
+        raise ValueError("final results do not share the selected passing r16 checkpoint")
+    if (
+        results["parent_temporal_r16"]["adapter_receipt_sha256"]
+        != r8_gate["bindings"]["checkpoint_adapter_receipt_sha256"]
+    ):
+        raise ValueError("final temporal parent is not the selected passing r8 checkpoint")
+    parent_temporal = validate_result_file(
+        result_dir / specifications["parent_temporal_r16"][0], kind="temporal"
+    )
+    checkpoint_temporal = validate_result_file(
+        result_dir / specifications["checkpoint_temporal_r16"][0], kind="temporal"
+    )
+    full_selection, _ = _load_temporal_selection(
+        _temporal_domains_from_collection(args.temporal_root),
+        "r16",
+        max_packs_per_domain=None,
+    )
+    for name, record in (
+        ("parent", parent_temporal),
+        ("checkpoint", checkpoint_temporal),
+    ):
+        _require_json_equal(
+            record.get("temporal_selection"),
+            full_selection,
+            label=f"final {name} full temporal selection",
+        )
+    return {
+        "format_version": 1,
+        "purpose": FINAL_REPORT_PURPOSE,
+        "status": "complete_uninterpreted",
+        "evaluator_code_sha256": evaluator_code_sha256(),
+        "selected_gates": {
+            "r8": {"sha256": sha256_file(args.r8_gate), "status": r8_gate["status"]},
+            "r16": {"sha256": sha256_file(args.r16_gate), "status": r16_gate["status"]},
+        },
+        "capability_budget_receipt": capability_receipt,
+        "full_temporal_guardrail": merge_temporal_guardrail(
+            "r16", parent_temporal, checkpoint_temporal
+        ),
+        "results": results,
+    }
+
+
+def run_final_report(args: argparse.Namespace) -> dict[str, Any]:
+    report = _build_final_report(args)
+    if args.output.exists():
+        recorded = json.loads(args.output.read_text(encoding="utf-8"))
+        _require_json_equal(recorded, report, label="final report")
+    else:
+        _atomic_json_dump(report, args.output)
+    return report
 
 
 def _add_common_eval_args(parser: argparse.ArgumentParser) -> None:
@@ -1153,6 +2043,52 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     preflight_source = preflight.add_mutually_exclusive_group(required=True)
     preflight_source.add_argument("--temporal-root", type=Path)
     preflight_source.add_argument("--temporal-domain", action="append")
+
+    model_hash = subparsers.add_parser("model-hash")
+    model_hash.add_argument("--model-name", required=True)
+    model_hash.add_argument("--model-manifest", type=Path, required=True)
+    model_hash.add_argument("--output", type=Path, required=True)
+
+    model_receipt = subparsers.add_parser("model-receipt")
+    model_receipt.add_argument("--model-name", required=True)
+    model_receipt.add_argument("--model-manifest", type=Path, required=True)
+    model_receipt.add_argument("--receipt", type=Path, required=True)
+    model_receipt.add_argument("--rehash", action="store_true")
+
+    capability_preflight = subparsers.add_parser("capability-preflight")
+    capability_preflight.add_argument("--capability-dir", type=Path, required=True)
+    capability_preflight.add_argument("--output", type=Path, required=True)
+
+    preflight_complete = subparsers.add_parser("preflight-complete")
+    _add_common_eval_args(preflight_complete)
+    preflight_complete.add_argument("--capability-dir", type=Path, required=True)
+    preflight_complete.add_argument("--temporal-root", type=Path, required=True)
+    preflight_complete.add_argument("--model-receipt", type=Path, required=True)
+    preflight_complete.add_argument(
+        "--capability-receipt", type=Path, required=True
+    )
+    preflight_complete.add_argument("--output", type=Path, required=True)
+
+    verifier = subparsers.add_parser("verify-result")
+    _add_common_eval_args(verifier)
+    verifier.add_argument(
+        "--kind", choices=("controlled", "passkey", "temporal", "capability"), required=True
+    )
+    verifier.add_argument("--result", type=Path, required=True)
+    verifier.add_argument("--stage", choices=("r8", "r16"))
+    verifier.add_argument("--split", choices=("validation", "test"))
+    verifier.add_argument("--target-length", choices=(8192, 16384, 32768), type=int)
+    verifier.add_argument("--capability-dir", type=Path)
+    verifier.add_argument("--temporal-root", type=Path)
+    verifier.add_argument("--max-packs-per-domain", type=int)
+
+    final_report = subparsers.add_parser("final-report")
+    final_report.add_argument("--result-dir", type=Path, required=True)
+    final_report.add_argument("--r8-gate", type=Path, required=True)
+    final_report.add_argument("--r16-gate", type=Path, required=True)
+    final_report.add_argument("--capability-dir", type=Path, required=True)
+    final_report.add_argument("--temporal-root", type=Path, required=True)
+    final_report.add_argument("--output", type=Path, required=True)
     return parser.parse_args(argv)
 
 
@@ -1172,9 +2108,25 @@ def main(argv: Sequence[str] | None = None) -> None:
         output = check_gate(args)
     elif args.command == "preflight":
         output = run_preflight(args)
+    elif args.command == "model-hash":
+        output = run_model_hash(args)
+    elif args.command == "model-receipt":
+        output = run_model_receipt_check(args)
+    elif args.command == "capability-preflight":
+        output = run_capability_preflight(args)
+    elif args.command == "preflight-complete":
+        output = run_preflight_complete(args)
+    elif args.command == "verify-result":
+        output = run_verify_result(args)
+    elif args.command == "final-report":
+        output = run_final_report(args)
     else:  # pragma: no cover
         raise AssertionError(args.command)
-    print(json.dumps(output if args.command in {"gate", "check-gate", "preflight"} else {
+    print(json.dumps(output if args.command in {
+        "gate", "check-gate", "preflight", "model-hash", "model-receipt",
+        "capability-preflight", "preflight-complete"
+        , "verify-result", "final-report"
+    } else {
         "status": "complete_uninterpreted",
         "schema": output["schema"],
         "output": str(args.output),

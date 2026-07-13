@@ -15,6 +15,7 @@ ADAPTER="${EVQ_GEO_LONGALPACA_ADAPTER:?set EVQ_GEO_LONGALPACA_ADAPTER}"
 TRAINING_MANIFEST="${EVQ_LONGALPACA_MANIFEST:?set EVQ_LONGALPACA_MANIFEST}"
 DATA_ROOT="${EVQ_CAPABILITY_DATA_ROOT:?set EVQ_CAPABILITY_DATA_ROOT to the prepared seed42 capability suite}"
 OUTPUT="${EVQ_OFFICIAL_YARN_OUTPUT:-/tmp/geo_lora_s42_official_yarn_${MODE}.json}"
+GPU_LOCK="${EVQ_GPU_LOCK:-/tmp/evq_lora_eval_gpu.lock}"
 [[ "$(basename "$ADAPTER")" == "geo_longalpaca_s42" ]] || {
   echo "registered Geo adapter must be named geo_longalpaca_s42" >&2
   exit 1
@@ -26,7 +27,7 @@ for path in "$PYTHON" "$MODEL/config.json" "$MODEL_MANIFEST" "$ADAPTER/adapter_m
 done
 test ! -e "$OUTPUT" || { echo "refusing to overwrite evaluation: $OUTPUT" >&2; exit 1; }
 
-exec 9>/tmp/evq_lora_eval_gpu.lock
+exec 9>"$GPU_LOCK"
 flock -n 9 || { echo "GPU is leased by another evaluation" >&2; exit 73; }
 export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTHONPATH="$REPO_ROOT${PYTHONPATH:+:$PYTHONPATH}"
 nvidia-smi -L >/dev/null

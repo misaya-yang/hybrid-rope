@@ -17,6 +17,7 @@ from experiments.lora_evq_v2.prepare_seed42_capability_data import (
     load_mcqa_examples,
     parse_args,
     prepare_suite,
+    _chat_prompt_ids,
     _tokenizer_identity,
     truncate_document_only,
     validate_records,
@@ -34,6 +35,17 @@ class FakeTokenizer:
     def encode(self, text: str, add_special_tokens: bool = False) -> list[int]:
         del add_special_tokens
         return [ord(char) for char in text]
+
+    def decode(self, token_ids, **_: object) -> str:
+        return "".join(chr(int(token_id)) for token_id in token_ids)
+
+    def apply_chat_template(self, messages, *, tokenize, add_generation_prompt):
+        rendered = "".join(
+            f"<{message['role']}>\n{message['content']}\n" for message in messages
+        )
+        if add_generation_prompt:
+            rendered += "<assistant>\n"
+        return self.encode(rendered) if tokenize else rendered
 
 
 @pytest.fixture
@@ -56,6 +68,25 @@ def test_truncate_document_only_preserves_suffix():
 def test_missing_requested_source_fails_closed(tmp_path: Path):
     with pytest.raises(FileNotFoundError):
         load_jsonl(tmp_path / "missing.jsonl")
+
+
+def test_chat_prompt_accepts_batch_encoding_like_mapping(fake_tokenizer):
+    class MappingTokenizer(FakeTokenizer):
+        def apply_chat_template(self, messages, *, tokenize, add_generation_prompt):
+            value = super().apply_chat_template(
+                messages,
+                tokenize=tokenize,
+                add_generation_prompt=add_generation_prompt,
+            )
+            return {"input_ids": value, "attention_mask": [1] * len(value)} if tokenize else value
+
+    tokenizer = MappingTokenizer()
+    assert _chat_prompt_ids(tokenizer, "hello") == FakeTokenizer.apply_chat_template(
+        tokenizer,
+        [{"role": "user", "content": "hello"}],
+        tokenize=True,
+        add_generation_prompt=True,
+    )
 
 
 def test_passkey_grid_has_all_lengths_depths_and_unique_ids(fake_tokenizer):
@@ -97,7 +128,7 @@ def test_ruler_import_preserves_prompt_and_references(tmp_path: Path, fake_token
         json.dumps(
             {
                 "id": "official-1",
-                "task": "s_niah",
+                "task": "niah_single_1",
                 "input": prompt,
                 "outputs": references,
                 "length": 8192,
@@ -110,9 +141,17 @@ def test_ruler_import_preserves_prompt_and_references(tmp_path: Path, fake_token
     rows = import_ruler_examples(fake_tokenizer, [path])
 
     assert len(rows) == 1
-    assert rows[0]["prompt_ids"] == [ord(char) for char in prompt]
+    expected = fake_tokenizer.apply_chat_template(
+        [{"role": "user", "content": prompt}],
+        tokenize=True,
+        add_generation_prompt=True,
+    )
+    assert rows[0]["prompt_ids"] == expected
     assert rows[0]["answers"] == references
     assert rows[0]["target_length"] == 8192
+    assert rows[0]["metric"] == "ruler_string_match"
+    assert rows[0]["source"]["match_type"] == "all"
+    assert rows[0]["generation_tokens"] == 128
 
 
 def test_ruler_infers_task_from_official_directory_layout(tmp_path: Path, fake_tokenizer):
@@ -136,11 +175,15 @@ def test_ruler_infers_task_from_official_directory_layout(tmp_path: Path, fake_t
 
     assert rows[0]["task"] == "niah_single_1"
     assert rows[0]["target_length"] == 8192
-    assert rows[0]["prompt_ids"] == [ord(char) for char in "prompt\nAnswer: "]
+    assert rows[0]["prompt_ids"] == fake_tokenizer.apply_chat_template(
+        [{"role": "user", "content": "prompt\nAnswer: "}],
+        tokenize=True,
+        add_generation_prompt=True,
+    )
 
 
 def test_ruler_rejects_prompt_that_exceeds_declared_length(tmp_path: Path, fake_tokenizer):
-    path = tmp_path / "tiny.jsonl"
+    path = tmp_path / "niah_single_1.jsonl"
     path.write_text(
         json.dumps({"input": "12345", "outputs": ["answer"], "length": 4}) + "\n",
         encoding="utf-8",
@@ -160,6 +203,7 @@ def test_tokenizer_identity_does_not_publish_absolute_local_paths(fake_tokenizer
 
     assert identity["requested"] == "Meta-Llama-3-8B-Instruct"
     assert identity["name_or_path"] == "Meta-Llama-3-8B-Instruct"
+    assert identity["identifier"] == "Meta-Llama-3-8B-Instruct"
 
 
 def test_tokenizer_identity_hashes_local_tokenizer_files(tmp_path: Path, fake_tokenizer):
@@ -171,6 +215,7 @@ def test_tokenizer_identity_hashes_local_tokenizer_files(tmp_path: Path, fake_to
 
     identity = _tokenizer_identity(fake_tokenizer, tokenizer_dir)
 
+    assert identity["identifier"] == "tokenizer"
     assert identity["files"]["tokenizer.json"] == hashlib.sha256(tokenizer_json.read_bytes()).hexdigest()
 
 
@@ -209,6 +254,9 @@ def test_nolima_hard_uses_official_needles_and_book_tokens(tmp_path: Path, fake_
     assert len(rows[0]["prompt_ids"]) == 256
     assert rows[0]["answers"][0] in {"Ada", "Lin"}
     assert rows[0]["source"]["needle_set"] == "needle_set_hard.json"
+    assert rows[0]["suite"] == "nolima_hard_exact_context"
+    assert rows[0]["metric"] == "contains"
+    assert rows[0]["generation_tokens"] == 192
 
 
 def test_longbench_keeps_complete_prompts_and_truncates_only_diagnostics(tmp_path: Path, fake_tokenizer):
@@ -239,6 +287,7 @@ def test_longbench_keeps_complete_prompts_and_truncates_only_diagnostics(tmp_pat
         fake_tokenizer,
         [path],
         max_prompt_tokens=512,
+        min_complete_prompt_tokens=1,
         diagnostic_lengths=(500,),
     )
 
@@ -246,7 +295,7 @@ def test_longbench_keeps_complete_prompts_and_truncates_only_diagnostics(tmp_pat
     diagnostic = [row for row in rows if row["source"]["selection"] == "fixed_diagnostic"]
     assert [row["source"]["source_id"] for row in complete] == ["short"]
     assert len(diagnostic) == 1
-    assert len(diagnostic[0]["prompt_ids"]) == 500
+    assert len(diagnostic[0]["prompt_ids"]) <= 500
 
 
 def test_longbench_directory_selects_only_narrativeqa_and_qasper(tmp_path: Path, fake_tokenizer):
@@ -266,7 +315,12 @@ def test_longbench_directory_selects_only_narrativeqa_and_qasper(tmp_path: Path,
             encoding="utf-8",
         )
 
-    rows = build_longbench_examples(fake_tokenizer, source_dir, max_prompt_tokens=2048)
+    rows = build_longbench_examples(
+        fake_tokenizer,
+        source_dir,
+        max_prompt_tokens=2048,
+        min_complete_prompt_tokens=1,
+    )
 
     assert {row["task"] for row in rows} == {"narrativeqa", "qasper"}
 
@@ -276,6 +330,12 @@ def test_longbench_complete_prompt_is_tokenized_as_one_string(tmp_path: Path):
         def encode(self, text, add_special_tokens=False):
             del add_special_tokens
             return [len(text)]
+
+        def apply_chat_template(self, messages, *, tokenize, add_generation_prompt):
+            rendered = "|".join(message["content"] for message in messages)
+            if add_generation_prompt:
+                rendered += "|assistant"
+            return self.encode(rendered) if tokenize else rendered
 
     path = tmp_path / "narrativeqa.jsonl"
     path.write_text(
@@ -291,7 +351,12 @@ def test_longbench_complete_prompt_is_tokenized_as_one_string(tmp_path: Path):
         encoding="utf-8",
     )
 
-    rows = build_longbench_examples(BoundarySensitiveTokenizer(), path, max_prompt_tokens=10)
+    rows = build_longbench_examples(
+        BoundarySensitiveTokenizer(),
+        path,
+        max_prompt_tokens=10,
+        min_complete_prompt_tokens=1,
+    )
 
     assert len(rows[0]["prompt_ids"]) == 1
 
@@ -308,7 +373,12 @@ def test_longbench_merges_duplicate_prompts_as_reference_variants(tmp_path: Path
         + "\n",
         encoding="utf-8",
     )
-    rows = build_longbench_examples(fake_tokenizer, source, max_prompt_tokens=32768)
+    rows = build_longbench_examples(
+        fake_tokenizer,
+        source,
+        max_prompt_tokens=32768,
+        min_complete_prompt_tokens=1,
+    )
     assert len(rows) == 1
     assert rows[0]["answers"] == ["first", "second"]
     assert rows[0]["source"]["merged_source_ids"] == ["a", "b"]

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Evaluate one seed-42 LoRA substrate with the pinned official YaRN equations.
+"""Evaluate seed-42 LoRA substrates with pinned native/derived YaRN equations.
 
 The evaluator consumes the frozen capability-suite manifest produced by
 ``prepare_seed42_capability_data.py``.  It scores every registered task with
@@ -65,6 +65,49 @@ def sha256_file(path: str | Path) -> str:
     return digest.hexdigest()
 
 
+def _json_sha256(value: Any) -> str:
+    payload = json.dumps(
+        value, sort_keys=True, separators=(",", ":"), ensure_ascii=True
+    ).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def evaluator_code_sha256() -> str:
+    """Bind results to the evaluator, data schema, and YaRN implementation."""
+    repo_root = Path(__file__).resolve().parents[2]
+    files = (
+        Path(__file__).resolve(),
+        repo_root / "experiments/lora_evq_v2/prepare_seed42_capability_data.py",
+        repo_root / "scripts/lib/rope/official_yarn.py",
+    )
+    records = {
+        path.relative_to(repo_root).as_posix(): sha256_file(path) for path in files
+    }
+    return _json_sha256(records)
+
+
+def adapter_artifact_receipt(adapter_dir: str | Path) -> dict[str, Any]:
+    """Hash every adapter/config/frequency artifact needed for reproduction."""
+    root = Path(adapter_dir)
+    names = (
+        "adapter_model.safetensors",
+        "adapter_config.json",
+        "experiment_meta.json",
+        "custom_inv_freq.pt",
+    )
+    files = {}
+    for name in names:
+        path = root / name
+        if not path.is_file():
+            raise FileNotFoundError(path)
+        files[name] = {
+            "sha256": sha256_file(path),
+            "size_bytes": path.stat().st_size,
+        }
+    body = {"format_version": 1, "files": files}
+    return {**body, "receipt_sha256": _json_sha256(body)}
+
+
 def _tensor_sha256(value: torch.Tensor) -> str:
     tensor = value.detach().cpu().to(torch.float64).contiguous()
     digest = hashlib.sha256()
@@ -77,13 +120,13 @@ def parse_yarn_factors(value: str | Iterable[float]) -> tuple[float, ...]:
     pieces = value.split(",") if isinstance(value, str) else list(value)
     factors = tuple(float(piece) for piece in pieces)
     if factors != (2.0, 4.0):
-        raise ValueError("registered official-YaRN capability evaluation requires factors 2 and 4")
+        raise ValueError("registered capability range-scaling evaluation requires factors 2 and 4")
     return factors
 
 
 def capability_arm_contract(substrate: str, factors: Sequence[float]) -> dict[str, Any]:
     if tuple(float(value) for value in factors) != (2.0, 4.0):
-        raise ValueError("arm contract requires official YaRN factors 2 and 4")
+        raise ValueError("arm contract requires registered YaRN factors 2 and 4")
     if substrate == "native_geo":
         return {
             "substrate": substrate,
@@ -96,7 +139,8 @@ def capability_arm_contract(substrate: str, factors: Sequence[float]) -> dict[st
         return {
             "substrate": substrate,
             "adapter": "evq_longalpaca_tau1414_s42",
-            "operator": "official_yarn_on_evq",
+            "operator": "yarn_derived_virtual_dim",
+            "label": "YaRN-derived generalization on the EVQ substrate",
             "factors": [2.0, 4.0],
             "seed": 42,
             "tau": 1.414,
@@ -184,7 +228,7 @@ def apply_official_yarn_runtime(
     )
     modules = find_rotary_modules(model)
     if not modules:
-        raise RuntimeError("no rotary modules were found for official YaRN injection")
+        raise RuntimeError("no rotary modules were found for registered YaRN injection")
     changed = []
     for name, module in modules:
         if module.inv_freq.numel() != transformed.numel():
@@ -389,10 +433,17 @@ def generate_answer_details(
     *,
     prompt_ids: Sequence[int],
     metric: str,
+    generation_tokens: int | None = None,
     device: torch.device,
 ) -> dict[str, Any]:
     input_ids = torch.tensor([[int(token_id) for token_id in prompt_ids]], dtype=torch.long, device=device)
-    max_new_tokens = 32 if metric == "exact_match" else 96
+    max_new_tokens = (
+        int(generation_tokens)
+        if generation_tokens is not None
+        else (32 if metric in {"exact_match", "contains", "ruler_string_match"} else 96)
+    )
+    if max_new_tokens <= 0:
+        raise ValueError("generation_tokens must be positive for generated capability rows")
     output = model.generate(
         input_ids=input_ids,
         attention_mask=torch.ones_like(input_ids),
@@ -424,6 +475,7 @@ def generate_answer(
     *,
     prompt_ids: Sequence[int],
     metric: str,
+    generation_tokens: int | None = None,
     device: torch.device,
 ) -> str:
     """Backward-compatible prediction-only wrapper for existing entrypoints."""
@@ -433,6 +485,7 @@ def generate_answer(
             tokenizer,
             prompt_ids=prompt_ids,
             metric=metric,
+            generation_tokens=generation_tokens,
             device=device,
         )["prediction"]
     )
@@ -478,12 +531,28 @@ def score_generation_metrics(
     }
 
 
-def _score_metric(metric: str, prediction: str, answers: Sequence[str]) -> float:
+def score_capability_prediction(
+    metric: str,
+    prediction: str,
+    answers: Sequence[str],
+    *,
+    source: Mapping[str, Any] | None = None,
+) -> float:
     if metric == "exact_match":
         normalized = _normalize_answer(prediction)
         return float(any(normalized == _normalize_answer(answer) for answer in answers))
     if metric == "qa_f1":
         return max(_qa_f1(prediction, answer) for answer in answers)
+    if metric == "contains":
+        return float(any(str(answer) in str(prediction) for answer in answers))
+    if metric == "ruler_string_match":
+        match_type = None if source is None else source.get("match_type")
+        hits = [float(str(answer).lower() in str(prediction).lower()) for answer in answers]
+        if match_type == "all":
+            return sum(hits) / len(hits)
+        if match_type == "part":
+            return max(hits)
+        raise ValueError("RULER source is missing pinned match_type=all|part")
     raise ValueError(f"generation metric is unsupported: {metric}")
 
 
@@ -506,6 +575,18 @@ def _score_one_record(
         "depth_percent": row.get("depth_percent"),
         "prompt_sha256": row["prompt_sha256"],
         "metric": row["metric"],
+        "generation_tokens": int(row["generation_tokens"]),
+        "scorer": row["scorer"],
+        "prompt_tokens": len(prompt_ids),
+        "answer_candidates": len(
+            row["choices"] if row["metric"] == "mcqa" else row["answers"]
+        ),
+        "references": list(row["answers"]),
+        "scorer_contract": {
+            "scorer": row["scorer"],
+            "match_type": row.get("source", {}).get("match_type"),
+            "official_metric": row.get("source", {}).get("official_metric"),
+        },
     }
     if row["metric"] == "mcqa":
         choices = list(row["choices"])
@@ -534,6 +615,7 @@ def _score_one_record(
             "metric_score": float(predicted == gold),
             "prediction_index": predicted,
             "answer_index": gold,
+            "choices": choices,
             "correct_minus_best_wrong_mean_logprob": gold_score["mean_logprob"] - wrong_best,
             "choice_mean_logprobs": [score["mean_logprob"] for score in choice_scores],
         }
@@ -559,10 +641,16 @@ def _score_one_record(
             tokenizer,
             prompt_ids=prompt_ids,
             metric=row["metric"],
+            generation_tokens=int(row["generation_tokens"]),
             device=device,
         )
         prediction = str(generation_details["prediction"])
-        metric_score = _score_metric(row["metric"], prediction, row["answers"])
+        metric_score = score_capability_prediction(
+            row["metric"],
+            prediction,
+            row["answers"],
+            source=row.get("source"),
+        )
         generation_details.update(
             score_generation_metrics(
                 prediction,
@@ -626,6 +714,7 @@ def main(argv: Sequence[str] | None = None) -> None:
     )
     if adapter_metadata.get("model_manifest_sha256") != model_manifest_sha256:
         raise ValueError("adapter and evaluator model manifests differ")
+    adapter_receipt = adapter_artifact_receipt(args.adapter_dir)
 
     from peft import PeftModel
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -715,12 +804,14 @@ def main(argv: Sequence[str] | None = None) -> None:
             )
 
     output = {
-        "schema": "evq_cosh.seed42_capability_official_yarn_eval.v1",
+        "schema": "evq_cosh.seed42_capability_range_scaling_eval.v1",
         "arm_contract": capability_arm_contract(args.substrate, factors),
         "mode": args.mode,
         "model": Path(args.model_name).name,
         "adapter_dir_name": args.adapter_dir.name,
         "adapter_sha256": adapter_metadata["adapter_sha256"],
+        "adapter_artifact_receipt": adapter_receipt,
+        "evaluator_code_sha256": evaluator_code_sha256(),
         "training_data_manifest_sha256": training_manifest_sha256,
         "model_manifest_sha256": model_manifest_sha256,
         "capability_manifest_sha256": sha256_file(args.data_root / "manifest.json"),
@@ -732,7 +823,7 @@ def main(argv: Sequence[str] | None = None) -> None:
             "metadata": {key: value for key, value in frequency_record.items() if key != "inv_freq"},
             "provenance": frequency_provenance,
         },
-        "official_yarn": operator_records,
+        "range_scaling_operators": operator_records,
         "results": raw_results,
         "summary": summarize_results(raw_results),
         "runtime": {

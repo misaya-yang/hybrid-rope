@@ -29,7 +29,10 @@ from experiments.lora_evq_v2.train_evq_lora import (
     resolve_model_rope_geometry,
     verify_model_inv_freq,
 )
-from experiments.lora_evq_v2.validate_legacy_lora_artifact import validate_artifact
+from experiments.lora_evq_v2.validate_legacy_lora_artifact import (
+    validate_adapter_config,
+    validate_artifact,
+)
 from rebuttal.frequency_adaptation_8b.train import (
     LoraPairDiagnostics,
     TensorAnswerDataset,
@@ -61,6 +64,20 @@ LORA_CONFIG = {
     "dropout": 0.05,
     "targets": ["q_proj", "k_proj", "v_proj", "o_proj"],
 }
+
+
+def _artifact_receipt_sha256(root: Path, filenames: Sequence[str]) -> str:
+    root = Path(root)
+    records = {}
+    for filename in sorted(str(name) for name in filenames):
+        path = root / filename
+        if not path.is_file():
+            raise FileNotFoundError(path)
+        records[filename] = sha256_file(path)
+    encoded = json.dumps(
+        records, sort_keys=True, separators=(",", ":"), allow_nan=False
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
 
 
 def tensor_sha256(value: torch.Tensor) -> str:
@@ -101,9 +118,11 @@ def runtime_frequency_contract(
         else "YaRN-derived generalization on the EVQ substrate"
     )
     operator = dict(operator)
-    if spec.factor > 1.0:
-        operator["mode"] = "yarn_derived_virtual_dim"
-        operator["label"] = label
+    expected_mode = "identity" if spec.factor == 1.0 else "yarn_derived_virtual_dim"
+    if operator.get("mode") != expected_mode:
+        raise RuntimeError(
+            f"runtime operator mode {operator.get('mode')!r} differs from {expected_mode!r}"
+        )
     return {
         "substrate_inv_freq": substrate,
         "runtime_inv_freq": runtime.detach().cpu().to(torch.float64),
@@ -214,6 +233,17 @@ def validate_parent_adapter(
         "kind": "legacy_longalpaca_evq_seed42",
         "directory": adapter_dir.name,
         "adapter_sha256": metadata["adapter_sha256"],
+        "adapter_receipt_sha256": _artifact_receipt_sha256(
+            adapter_dir,
+            (
+                _adapter_model_path(adapter_dir).name,
+                "adapter_config.json",
+                "custom_inv_freq.pt",
+                "experiment_meta.json",
+                "trainer_state.json",
+                "run_protocol.json",
+            ),
+        ),
         "data_manifest_sha256": data_sha,
         "model_manifest_sha256": model_sha,
         "frequency": provenance,
@@ -234,6 +264,9 @@ def validate_gate_transition(
     gate = json.loads(gate_path.read_text(encoding="utf-8"))
     if gate.get("format_version") != 1 or gate.get("purpose") != GATE_PURPOSE:
         raise RuntimeError("repair gate identity mismatch")
+    decision = gate.get("decision")
+    if not isinstance(decision, Mapping) or decision.get("status") != gate.get("status"):
+        raise RuntimeError("repair gate decision status differs from top-level status")
     if gate.get("status") not in allowed_statuses:
         raise RuntimeError(
             f"repair gate status {gate.get('status')!r} is not one of {sorted(allowed_statuses)}"
@@ -263,10 +296,18 @@ def validate_repair_parent(adapter_dir: Path) -> dict[str, Any]:
     adapter_dir = Path(adapter_dir)
     protocol_path = adapter_dir / "run_protocol.json"
     frequency_path = adapter_dir / "frequency_artifact.pt"
-    if not protocol_path.is_file():
-        raise FileNotFoundError(protocol_path)
-    if not frequency_path.is_file():
-        raise FileNotFoundError(frequency_path)
+    config_path = adapter_dir / "adapter_config.json"
+    diagnostics_path = adapter_dir / "frequency_diagnostics.json"
+    state_path = adapter_dir / "trainer_state.json"
+    for required in (
+        protocol_path,
+        frequency_path,
+        config_path,
+        diagnostics_path,
+        state_path,
+    ):
+        if not required.is_file():
+            raise FileNotFoundError(required)
     protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
     if (
         protocol.get("format_version") != 1
@@ -284,6 +325,14 @@ def validate_repair_parent(adapter_dir: Path) -> dict[str, Any]:
             raise RuntimeError(f"repair parent LoRA {field} mismatch")
     adapter_path = _adapter_model_path(adapter_dir)
     adapter_sha = sha256_file(adapter_path)
+    adapter_config = json.loads(config_path.read_text(encoding="utf-8"))
+    validate_adapter_config(adapter_config)
+    trainer_state = json.loads(state_path.read_text(encoding="utf-8"))
+    diagnostics = json.loads(diagnostics_path.read_text(encoding="utf-8"))
+    if int(trainer_state.get("global_step", -1)) != 32:
+        raise RuntimeError("repair parent trainer state does not prove global_step=32")
+    if int(diagnostics.get("global_step", -1)) != 32:
+        raise RuntimeError("repair parent diagnostics do not prove global_step=32")
     artifacts = protocol.get("artifacts")
     if not isinstance(artifacts, Mapping):
         raise RuntimeError("repair parent protocol has no artifact map")
@@ -291,6 +340,20 @@ def validate_repair_parent(adapter_dir: Path) -> dict[str, Any]:
         raise RuntimeError("repair parent adapter SHA-256 mismatch")
     if artifacts.get("frequency_sha256") != sha256_file(frequency_path):
         raise RuntimeError("repair parent frequency artifact SHA-256 mismatch")
+    expected_artifacts = {
+        "adapter_file": adapter_path.name,
+        "adapter_sha256": adapter_sha,
+        "adapter_config_file": "adapter_config.json",
+        "adapter_config_sha256": sha256_file(config_path),
+        "frequency_file": "frequency_artifact.pt",
+        "frequency_sha256": sha256_file(frequency_path),
+        "diagnostics_file": "frequency_diagnostics.json",
+        "diagnostics_sha256": sha256_file(diagnostics_path),
+        "trainer_state_file": "trainer_state.json",
+        "trainer_state_sha256": sha256_file(state_path),
+    }
+    if dict(artifacts) != expected_artifacts:
+        raise RuntimeError("repair parent artifact map is incomplete or inconsistent")
     frequency = torch.load(frequency_path, map_location="cpu", weights_only=True)
     if not isinstance(frequency, Mapping):
         raise RuntimeError("repair parent frequency artifact must be a mapping")
@@ -307,14 +370,70 @@ def validate_repair_parent(adapter_dir: Path) -> dict[str, Any]:
         substrate.to(torch.float64), canonical.to(torch.float64), rtol=0.0, atol=1e-12
     ):
         raise RuntimeError("repair parent substrate is not canonical EVQ")
+    stage = str(protocol.get("stage", ""))
+    segment = int(protocol.get("segment", -1))
+    spec = get_stage(stage)
+    if segment not in (1, 2):
+        raise RuntimeError("repair parent stage/segment contract mismatch")
+    if (
+        frequency.get("format_version") != 1
+        or frequency.get("purpose") != PURPOSE
+        or frequency.get("stage") != stage
+        or int(frequency.get("segment", -1)) != segment
+    ):
+        raise RuntimeError("repair parent frequency identity mismatch")
+    expected_runtime = runtime_frequency_contract(substrate, stage=stage)
+    if not torch.allclose(
+        runtime.to(torch.float64),
+        expected_runtime["runtime_inv_freq"],
+        rtol=0.0,
+        atol=1e-12,
+    ):
+        raise RuntimeError("repair parent runtime tensor differs from registered derivation")
+    for field in ("factor", "mscale"):
+        if not math.isclose(
+            float(frequency.get(field, math.nan)),
+            float(expected_runtime[field]),
+            rel_tol=0.0,
+            abs_tol=1e-12,
+        ):
+            raise RuntimeError(f"repair parent runtime {field} mismatch")
+    if frequency.get("label") != expected_runtime["label"]:
+        raise RuntimeError("repair parent runtime label mismatch")
+    if frequency.get("operator") != expected_runtime["operator"]:
+        raise RuntimeError("repair parent runtime operator mismatch")
+    protocol_frequency = protocol.get("frequency")
+    if not isinstance(protocol_frequency, Mapping):
+        raise RuntimeError("repair parent protocol has no frequency contract")
+    for field in (
+        "factor",
+        "mscale",
+        "label",
+        "operator",
+        "substrate_tensor_sha256",
+        "runtime_tensor_sha256",
+    ):
+        if protocol_frequency.get(field) != expected_runtime[field]:
+            raise RuntimeError(f"repair parent protocol frequency mismatch for {field}")
     return {
         "kind": "repair_checkpoint",
         "directory": adapter_dir.name,
         "adapter_sha256": adapter_sha,
+        "adapter_receipt_sha256": _artifact_receipt_sha256(
+            adapter_dir,
+            (
+                adapter_path.name,
+                "adapter_config.json",
+                "frequency_artifact.pt",
+                "frequency_diagnostics.json",
+                "trainer_state.json",
+                "run_protocol.json",
+            ),
+        ),
         "protocol_sha256": sha256_file(protocol_path),
         "frequency_sha256": sha256_file(frequency_path),
-        "stage": protocol.get("stage"),
-        "segment": int(protocol.get("segment", -1)),
+        "stage": stage,
+        "segment": segment,
         "factor": float(frequency.get("factor", math.nan)),
         "substrate_inv_freq": substrate.detach().cpu().to(torch.float64),
         "runtime_inv_freq": runtime.detach().cpu().to(torch.float64),
@@ -423,7 +542,9 @@ def _gate_for_parent(
     longalpaca_manifest_sha256: str,
     repair_manifest_sha256: str,
 ) -> dict[str, Any]:
-    gate = json.loads(Path(gate_path).read_text(encoding="utf-8"))
+    from .evaluate import validate_gate_file
+
+    gate = validate_gate_file(gate_path)
     bindings = gate.get("bindings")
     if not isinstance(bindings, Mapping):
         raise RuntimeError("repair parent gate has no bindings")
@@ -437,6 +558,9 @@ def _gate_for_parent(
             "segment": expected_segment,
             "factor": 1.0 if expected_stage == "r8" else float(factor),
             "checkpoint_adapter_sha256": parent["adapter_sha256"],
+            "checkpoint_adapter_receipt_sha256": parent[
+                "adapter_receipt_sha256"
+            ],
             "model_manifest_sha256": model_manifest_sha256,
             "longalpaca_manifest_sha256": longalpaca_manifest_sha256,
             "repair_manifest_sha256": repair_manifest_sha256,
@@ -507,7 +631,8 @@ def _validate_completed_output(output_dir: Path) -> dict[str, Any]:
     frequency_path = output_dir / "frequency_artifact.pt"
     diagnostics_path = output_dir / "frequency_diagnostics.json"
     state_path = output_dir / "trainer_state.json"
-    for path in (protocol_path, frequency_path, diagnostics_path, state_path):
+    config_path = output_dir / "adapter_config.json"
+    for path in (protocol_path, frequency_path, diagnostics_path, state_path, config_path):
         if not path.is_file():
             raise FileNotFoundError(path)
     protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
@@ -517,6 +642,7 @@ def _validate_completed_output(output_dir: Path) -> dict[str, Any]:
     artifacts = protocol.get("artifacts", {})
     expected = {
         "adapter_sha256": sha256_file(adapter_path),
+        "adapter_config_sha256": sha256_file(config_path),
         "frequency_sha256": sha256_file(frequency_path),
         "diagnostics_sha256": sha256_file(diagnostics_path),
         "trainer_state_sha256": sha256_file(state_path),
@@ -819,6 +945,8 @@ def main(argv: Sequence[str] | None = None) -> None:
     protocol["artifacts"] = {
         "adapter_file": adapter_path.name,
         "adapter_sha256": sha256_file(adapter_path),
+        "adapter_config_file": "adapter_config.json",
+        "adapter_config_sha256": sha256_file(incomplete / "adapter_config.json"),
         "frequency_file": "frequency_artifact.pt",
         "frequency_sha256": sha256_file(incomplete / "frequency_artifact.pt"),
         "diagnostics_file": "frequency_diagnostics.json",

@@ -8,10 +8,12 @@ import pytest
 import torch
 
 from experiments.lora_evq_v2.eval_official_yarn_capability import (
+    adapter_artifact_receipt,
     apply_official_yarn_runtime,
     capability_arm_contract,
     load_capability_suite,
     parse_yarn_factors,
+    score_capability_prediction,
     select_rows,
     summarize_results,
     validate_adapter_identity_metadata,
@@ -77,8 +79,8 @@ def _write_suite(root: Path) -> list[dict]:
         encoding="utf-8",
     )
     manifest = {
-        "schema": "evq_cosh.seed42_capability_manifest.v1",
-        "example_schema": "evq_cosh.seed42_capability_example.v1",
+        "schema": "evq_cosh.seed42_capability_manifest.v2",
+        "example_schema": "evq_cosh.seed42_capability_example.v2",
         "row_count": len(rows),
         "files": {
             data_path.name: {
@@ -104,7 +106,8 @@ def test_arm_contract_distinguishes_geo_and_evq_substrates():
     assert geo["adapter"] == "geo_longalpaca_s42"
     assert geo["operator"] == "official_yarn"
     assert evq["adapter"] == "evq_longalpaca_tau1414_s42"
-    assert evq["operator"] == "official_yarn_on_evq"
+    assert evq["operator"] == "yarn_derived_virtual_dim"
+    assert evq["label"] == "YaRN-derived generalization on the EVQ substrate"
     assert geo["factors"] == evq["factors"] == [2.0, 4.0]
 
 
@@ -144,6 +147,24 @@ def test_adapter_identity_metadata_is_seed42_and_hash_bound():
             training_manifest_sha256="b" * 64,
             adapter_sha256=digest,
         )
+
+
+def test_adapter_receipt_binds_all_runtime_artifacts(tmp_path: Path):
+    names = (
+        "adapter_model.safetensors",
+        "adapter_config.json",
+        "experiment_meta.json",
+        "custom_inv_freq.pt",
+    )
+    for name in names:
+        (tmp_path / name).write_bytes(name.encode("utf-8"))
+
+    receipt = adapter_artifact_receipt(tmp_path)
+
+    assert set(receipt["files"]) == set(names)
+    original = receipt["receipt_sha256"]
+    (tmp_path / "custom_inv_freq.pt").write_bytes(b"changed")
+    assert adapter_artifact_receipt(tmp_path)["receipt_sha256"] != original
 
 
 def test_apply_runtime_sets_full_yarn_frequency_and_mscale():
@@ -271,16 +292,42 @@ def test_generation_metrics_do_not_collapse_retrieval_into_whole_output_exactnes
     }
 
 
-def test_two_server_entrypoints_fix_the_substrate_and_tmp_output():
+def test_official_ruler_and_nolima_scorers_preserve_their_match_contracts():
+    assert score_capability_prediction(
+        "ruler_string_match",
+        "Found ALPHA and then beta with trailing prose.",
+        ["alpha", "beta"],
+        source={"match_type": "all"},
+    ) == 1.0
+    assert score_capability_prediction(
+        "ruler_string_match",
+        "Only beta appears.",
+        ["alpha", "beta"],
+        source={"match_type": "all"},
+    ) == 0.5
+    assert score_capability_prediction(
+        "ruler_string_match",
+        "Only beta appears.",
+        ["alpha", "beta"],
+        source={"match_type": "part"},
+    ) == 1.0
+    assert score_capability_prediction(
+        "contains", "Answer: Ada.", ["Ada"], source={}
+    ) == 1.0
+    assert score_capability_prediction(
+        "contains", "Answer: ada.", ["Ada"], source={}
+    ) == 0.0
+
+
+def test_unified_server_entrypoint_runs_both_registered_substrates():
     root = Path(__file__).resolve().parents[1]
-    geo = (root / "scripts/2026-07/08_lora_geo_official_yarn_eval.sh").read_text()
-    evq = (root / "scripts/2026-07/09_lora_evq_official_yarn_eval.sh").read_text()
-    assert "--substrate native_geo" in geo
-    assert "geo_longalpaca_s42" in geo
-    assert "--substrate evq_cosh" in evq
-    assert "evq_longalpaca_tau1414_s42" in evq
-    assert "/tmp/" in geo and "/tmp/" in evq
-    assert "--yarn_factors 2,4" in geo and "--yarn_factors 2,4" in evq
-    assert "--model_manifest" in geo and "--model_manifest" in evq
+    script = (root / "scripts/2026-07/09_lora_evq_official_yarn_eval.sh").read_text()
+    assert 'run_arm "$GEO_ADAPTER" native_geo "$GEO_OUTPUT"' in script
+    assert "geo_longalpaca_s42" in script
+    assert 'run_arm "$EVQ_ADAPTER" evq_cosh "$EVQ_OUTPUT"' in script
+    assert "evq_longalpaca_tau1414_s42" in script
+    assert script.count("/tmp/") >= 2
+    assert "--yarn_factors 2,4" in script
+    assert "--model_manifest" in script
     private_server_root = "/" + "root/autodl-tmp"
-    assert private_server_root not in geo and private_server_root not in evq
+    assert private_server_root not in script

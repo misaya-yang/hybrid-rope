@@ -65,7 +65,7 @@ Every record must contain the following fields and a SHA256 over the integer pro
 
 ```python
 {
-    "schema": "evq_cosh.seed42_capability_example.v1",
+    "schema": "evq_cosh.seed42_capability_example.v2",
     "example_id": str,
     "suite": str,
     "task": str,

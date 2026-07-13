@@ -25,7 +25,10 @@ done
 DATA_DIR="$EVQ_REPAIR_WORK_DIR/data"
 CHECKPOINT_DIR="$EVQ_REPAIR_WORK_DIR/checkpoints"
 RESULT_DIR="$EVQ_REPAIR_WORK_DIR/results"
-GPU_LOCK="$EVQ_REPAIR_WORK_DIR/seed42-retrieval-repair.gpu.lock"
+GPU_LOCK="${EVQ_GPU_LOCK:-/tmp/evq_lora_eval_gpu.lock}"
+MODEL_RECEIPT="$EVQ_REPAIR_WORK_DIR/model_hash_receipt.json"
+CAPABILITY_RECEIPT="$EVQ_REPAIR_WORK_DIR/capability_budget_receipt.json"
+PREFLIGHT_RECEIPT="$EVQ_REPAIR_WORK_DIR/preflight_complete.json"
 R8_SELECTED_SEGMENT="${EVQ_REPAIR_R8_SELECTED_SEGMENT:-1}"
 R16_SELECTED_SEGMENT="${EVQ_REPAIR_R16_SELECTED_SEGMENT:-1}"
 
@@ -56,6 +59,25 @@ require_static_inputs() {
 }
 
 require_gpu_lock() {
+  require_file "$MODEL_RECEIPT"
+  require_file "$CAPABILITY_RECEIPT"
+  require_file "$PREFLIGHT_RECEIPT"
+  "$PYTHON_BIN" -m rebuttal.evq_seed42_retrieval_repair.evaluate preflight-complete \
+    --model-name "$EVQ_REPAIR_MODEL" \
+    --model-manifest "$EVQ_REPAIR_MODEL_MANIFEST" \
+    --longalpaca-manifest "$EVQ_REPAIR_LONGALPACA_MANIFEST" \
+    --adapter-dir "$EVQ_REPAIR_PARENT_ADAPTER" \
+    --adapter-kind legacy \
+    --data-dir "$DATA_DIR" \
+    --capability-dir "$EVQ_REPAIR_CAPABILITY_DIR" \
+    --temporal-root "$EVQ_REPAIR_TEMPORAL_ROOT" \
+    --model-receipt "$MODEL_RECEIPT" \
+    --capability-receipt "$CAPABILITY_RECEIPT" \
+    --output "$PREFLIGHT_RECEIPT"
+  "$PYTHON_BIN" -m rebuttal.evq_seed42_retrieval_repair.evaluate model-receipt \
+    --model-name "$EVQ_REPAIR_MODEL" \
+    --model-manifest "$EVQ_REPAIR_MODEL_MANIFEST" \
+    --receipt "$MODEL_RECEIPT"
   command -v flock >/dev/null || { echo "flock is required" >&2; exit 4; }
   command -v nvidia-smi >/dev/null || { echo "nvidia-smi is required" >&2; exit 4; }
   nvidia-smi -L >/dev/null
@@ -69,6 +91,21 @@ print({"cuda": torch.cuda.get_device_name(0), "bf16": True})
 PY
   exec 9>"$GPU_LOCK"
   flock -n 9 || { echo "another EVQ repair GPU command holds $GPU_LOCK" >&2; exit 4; }
+}
+
+verify_result() {
+  local kind="$1" output="$2" adapter="$3" adapter_kind="$4"
+  shift 4
+  "$PYTHON_BIN" -m rebuttal.evq_seed42_retrieval_repair.evaluate verify-result \
+    --kind "$kind" \
+    --result "$output" \
+    --model-name "$EVQ_REPAIR_MODEL" \
+    --model-manifest "$EVQ_REPAIR_MODEL_MANIFEST" \
+    --longalpaca-manifest "$EVQ_REPAIR_LONGALPACA_MANIFEST" \
+    --adapter-dir "$adapter" \
+    --adapter-kind "$adapter_kind" \
+    --data-dir "$DATA_DIR" \
+    "$@"
 }
 
 checkpoint_path() {
@@ -95,6 +132,8 @@ check_gate() {
 run_controlled_eval() {
   local stage="$1" split="$2" adapter="$3" kind="$4" output="$5"
   if [[ -f "$output" ]]; then
+    verify_result controlled "$output" "$adapter" "$kind" \
+      --stage "$stage" --split "$split"
     echo "reuse completed controlled result: $output"
     return
   fi
@@ -113,6 +152,8 @@ run_controlled_eval() {
 run_passkey_eval() {
   local length="$1" adapter="$2" kind="$3" output="$4"
   if [[ -f "$output" ]]; then
+    verify_result passkey "$output" "$adapter" "$kind" \
+      --target-length "$length"
     echo "reuse completed passkey result: $output"
     return
   fi
@@ -130,6 +171,10 @@ run_passkey_eval() {
 run_temporal_eval() {
   local stage="$1" adapter="$2" kind="$3" max_packs="$4" output="$5"
   if [[ -f "$output" ]]; then
+    verify_result temporal "$output" "$adapter" "$kind" \
+      --stage "$stage" \
+      --temporal-root "$EVQ_REPAIR_TEMPORAL_ROOT" \
+      --max-packs-per-domain "$max_packs"
     echo "reuse completed temporal result: $output"
     return
   fi
@@ -149,6 +194,8 @@ run_temporal_eval() {
 run_capability_eval() {
   local length="$1" adapter="$2" output="$3"
   if [[ -f "$output" ]]; then
+    verify_result capability "$output" "$adapter" repair \
+      --target-length "$length" --capability-dir "$EVQ_REPAIR_CAPABILITY_DIR"
     echo "reuse completed capability result: $output"
     return
   fi
@@ -161,7 +208,7 @@ run_capability_eval() {
     --data-dir "$DATA_DIR" \
     --capability-dir "$EVQ_REPAIR_CAPABILITY_DIR" \
     --target-length "$length" \
-    --mode full \
+    --mode pilot \
     --output "$output"
 }
 
@@ -265,6 +312,10 @@ run_stage_gate() {
 
 run_final() {
   local checkpoint r8_parent
+  require_file "$CAPABILITY_RECEIPT"
+  "$PYTHON_BIN" -m rebuttal.evq_seed42_retrieval_repair.evaluate capability-preflight \
+    --capability-dir "$EVQ_REPAIR_CAPABILITY_DIR" \
+    --output "$CAPABILITY_RECEIPT"
   checkpoint="$(checkpoint_path r16 "$R16_SELECTED_SEGMENT")"
   check_gate r16 "$R16_SELECTED_SEGMENT" pass "$checkpoint" "$(gate_path r16 "$R16_SELECTED_SEGMENT")"
   r8_parent="$(checkpoint_path r8 "$R8_SELECTED_SEGMENT")"
@@ -278,7 +329,14 @@ run_final() {
   done
   run_temporal_eval r16 "$r8_parent" repair 0 "$RESULT_DIR/final_parent_temporal_full_r16.json"
   run_temporal_eval r16 "$checkpoint" repair 0 "$RESULT_DIR/final_checkpoint_temporal_full_r16.json"
-  echo "final artifacts complete; no paper claim or metric has been changed"
+  "$PYTHON_BIN" -m rebuttal.evq_seed42_retrieval_repair.evaluate final-report \
+    --result-dir "$RESULT_DIR" \
+    --r8-gate "$(gate_path r8 "$R8_SELECTED_SEGMENT")" \
+    --r16-gate "$(gate_path r16 "$R16_SELECTED_SEGMENT")" \
+    --capability-dir "$EVQ_REPAIR_CAPABILITY_DIR" \
+    --temporal-root "$EVQ_REPAIR_TEMPORAL_ROOT" \
+    --output "$RESULT_DIR/final_report.json"
+  echo "final artifacts and compact report complete; no paper metric has been changed"
 }
 
 usage() {
@@ -317,16 +375,26 @@ case "$command_name" in
     ;;
   preflight)
     require_dir "$DATA_DIR"
+    rm -f "$PREFLIGHT_RECEIPT"
+    "$PYTHON_BIN" -m rebuttal.evq_seed42_retrieval_repair.evaluate model-hash \
+      --model-name "$EVQ_REPAIR_MODEL" \
+      --model-manifest "$EVQ_REPAIR_MODEL_MANIFEST" \
+      --output "$MODEL_RECEIPT"
+    "$PYTHON_BIN" -m rebuttal.evq_seed42_retrieval_repair.evaluate capability-preflight \
+      --capability-dir "$EVQ_REPAIR_CAPABILITY_DIR" \
+      --output "$CAPABILITY_RECEIPT"
     "$PYTHON_BIN" -m py_compile \
       "$REPO_ROOT/rebuttal/evq_seed42_retrieval_repair/protocol.py" \
       "$REPO_ROOT/rebuttal/evq_seed42_retrieval_repair/prepare_data.py" \
       "$REPO_ROOT/rebuttal/evq_seed42_retrieval_repair/train.py" \
       "$REPO_ROOT/rebuttal/evq_seed42_retrieval_repair/evaluate.py" \
+      "$REPO_ROOT/experiments/lora_evq_v2/prepare_seed42_capability_data.py" \
       "$REPO_ROOT/experiments/lora_evq_v2/eval_official_yarn_capability.py" \
       "$REPO_ROOT/scripts/lib/rope/official_yarn.py"
     bash -n "$REPO_ROOT/rebuttal/evq_seed42_retrieval_repair/run_seed42.sh"
     "$PYTHON_BIN" -m pytest \
       "$REPO_ROOT/tests/test_evq_seed42_retrieval_repair.py" \
+      "$REPO_ROOT/tests/test_seed42_capability_data.py" \
       "$REPO_ROOT/tests/test_frequency_adaptation_8b.py" \
       "$REPO_ROOT/tests/test_official_yarn_parity.py" \
       "$REPO_ROOT/tests/test_official_yarn_capability_eval.py" -q
@@ -358,6 +426,18 @@ from experiments.lora_evq_v2.eval_official_yarn_capability import load_capabilit
 manifest, rows = load_capability_suite(os.environ["EVQ_REPAIR_CAPABILITY_DIR"])
 print({"capability_rows": len(rows), "manifest_rows": manifest["row_count"]})
 PY
+    "$PYTHON_BIN" -m rebuttal.evq_seed42_retrieval_repair.evaluate preflight-complete \
+      --model-name "$EVQ_REPAIR_MODEL" \
+      --model-manifest "$EVQ_REPAIR_MODEL_MANIFEST" \
+      --longalpaca-manifest "$EVQ_REPAIR_LONGALPACA_MANIFEST" \
+      --adapter-dir "$EVQ_REPAIR_PARENT_ADAPTER" \
+      --adapter-kind legacy \
+      --data-dir "$DATA_DIR" \
+      --capability-dir "$EVQ_REPAIR_CAPABILITY_DIR" \
+      --temporal-root "$EVQ_REPAIR_TEMPORAL_ROOT" \
+      --model-receipt "$MODEL_RECEIPT" \
+      --capability-receipt "$CAPABILITY_RECEIPT" \
+      --output "$PREFLIGHT_RECEIPT"
     ;;
   baseline)
     run_baseline "${1:?baseline requires r8 or r16}"

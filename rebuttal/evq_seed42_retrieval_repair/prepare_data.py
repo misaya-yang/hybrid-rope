@@ -33,6 +33,11 @@ VALIDATION_GROUPS = 16
 TEST_GROUPS = 32
 PASSKEY_TRIALS_PER_DEPTH = 5
 PASSKEY_DEPTHS = (10, 25, 50, 75, 90)
+PASSKEY_BUNDLES = {
+    8192: ("passkey_validation_8192.pt", "validation", "passkey_validation"),
+    16384: ("passkey_validation_16384.pt", "validation", "passkey_validation"),
+    32768: ("passkey_final_32768.pt", "final_test", "passkey_final"),
+}
 _TOKEN_PATTERN = re.compile(r"^ ?[A-Za-z]{3,14}$")
 
 _WORDING = {
@@ -330,17 +335,21 @@ def partition_nonce_pools(
 
 
 def partition_filler(validation: torch.Tensor) -> dict[str, torch.Tensor]:
-    """Split frozen validation rows into non-overlapping validation/test views."""
+    """Reserve disjoint rows for retrieval and passkey selection/final use."""
     if not torch.is_tensor(validation) or validation.ndim != 2:
         raise ValueError("validation filler must be a two-dimensional tensor")
-    if validation.shape[0] < 2:
-        raise ValueError("validation filler must contain at least two rows")
-    midpoint = int(validation.shape[0]) // 2
-    if midpoint == 0 or midpoint == validation.shape[0]:
-        raise ValueError("validation filler cannot be split into two row regions")
+    if validation.shape[0] < 4:
+        raise ValueError("validation filler must contain at least four rows")
+    rows = int(validation.shape[0])
+    quarter = rows // 4
+    boundaries = (0, quarter, quarter * 2, quarter * 3, rows)
+    if any(left == right for left, right in zip(boundaries, boundaries[1:])):
+        raise ValueError("validation filler cannot be split into four row regions")
     return {
-        "validation": validation[:midpoint].reshape(-1),
-        "test": validation[midpoint:].reshape(-1),
+        "validation": validation[boundaries[0] : boundaries[1]].reshape(-1),
+        "test": validation[boundaries[1] : boundaries[2]].reshape(-1),
+        "passkey_validation": validation[boundaries[2] : boundaries[3]].reshape(-1),
+        "passkey_final": validation[boundaries[3] : boundaries[4]].reshape(-1),
     }
 
 
@@ -474,7 +483,7 @@ def build_counterfactual_group(
     example: RepairExample,
     *,
     swapped_value_text: str,
-    removal_fill_id: int,
+    removal_fill_ids: Sequence[int],
     group_id: str,
 ) -> tuple[RepairExample, RepairExample, RepairExample]:
     """Create position-matched original/swap/source-removal records."""
@@ -517,10 +526,39 @@ def build_counterfactual_group(
         group_id=str(group_id),
     )
 
-    removed_ids = example.rendered.input_ids.clone()
-    removed_ids[example.rendered.source_start : example.rendered.source_end] = int(
-        removal_fill_id
+    source_width = example.rendered.source_end - example.rendered.source_start
+    replacement_ids = torch.tensor(
+        [int(token_id) for token_id in removal_fill_ids], dtype=torch.int32
     )
+    if replacement_ids.shape != (source_width,):
+        raise ValueError("source-removal filler must exactly match the source span")
+    if torch.unique(replacement_ids).numel() < 2:
+        raise ValueError("source-removal filler must be a non-constant natural span")
+    source_ids = example.rendered.input_ids[
+        example.rendered.source_start : example.rendered.source_end
+    ]
+    if torch.equal(source_ids, replacement_ids):
+        raise ValueError("source-removal filler must differ from the source span")
+    forbidden_texts = (
+        example.key_text,
+        example.value_text,
+        swapped_value_text,
+        example.old_value_text,
+    )
+    replacement = replacement_ids.tolist()
+    for text in forbidden_texts:
+        if text is None:
+            continue
+        needle = _token_ids(
+            tokenizer(text, add_special_tokens=False), "source-removal forbidden text"
+        )
+        if len(needle) <= len(replacement) and any(
+            replacement[start : start + len(needle)] == needle
+            for start in range(len(replacement) - len(needle) + 1)
+        ):
+            raise ValueError("source-removal filler contains a retrieval nonce")
+    removed_ids = example.rendered.input_ids.clone()
+    removed_ids[example.rendered.source_start : example.rendered.source_end] = replacement_ids
     removed_rendered = replace(example.rendered, input_ids=removed_ids)
     removed = replace(
         example,
@@ -810,12 +848,15 @@ def _validate_passkey_bundle(
     bundle: Mapping[str, Any],
     *,
     target_length: int,
+    evaluation_split: str,
     expected_rows: int = 25,
 ) -> Mapping[str, Any]:
     if bundle.get("format_version") != FORMAT_VERSION or bundle.get("purpose") != PURPOSE:
         raise ValueError("passkey bundle identity mismatch")
     if bundle.get("length_semantics") != "prompt_tokens_before_generation":
         raise ValueError("passkey bundle length semantics mismatch")
+    if bundle.get("evaluation_split") != evaluation_split:
+        raise ValueError("passkey bundle evaluation split mismatch")
     prompt_ids = bundle.get("prompt_ids")
     metadata = bundle.get("metadata")
     if not torch.is_tensor(prompt_ids) or prompt_ids.dtype != torch.int32 or prompt_ids.ndim != 2:
@@ -839,6 +880,7 @@ def write_passkey_bundle_atomic(
     path: Path,
     *,
     target_length: int,
+    evaluation_split: str,
 ) -> dict[str, Any]:
     """Publish one 25-row prompt-only passkey tensor bundle."""
     if len(rows) != len(PASSKEY_DEPTHS) * PASSKEY_TRIALS_PER_DEPTH:
@@ -847,6 +889,7 @@ def write_passkey_bundle_atomic(
         "format_version": FORMAT_VERSION,
         "purpose": PURPOSE,
         "target_length": int(target_length),
+        "evaluation_split": str(evaluation_split),
         "length_semantics": "prompt_tokens_before_generation",
         "prompt_ids": torch.stack(
             [row["prompt_ids"].to(torch.int32) for row in rows]
@@ -862,7 +905,11 @@ def write_passkey_bundle_atomic(
             for row in rows
         ],
     }
-    _validate_passkey_bundle(bundle, target_length=target_length)
+    _validate_passkey_bundle(
+        bundle,
+        target_length=target_length,
+        evaluation_split=evaluation_split,
+    )
     path = Path(path)
     if path.exists():
         raise FileExistsError(path)
@@ -870,7 +917,11 @@ def write_passkey_bundle_atomic(
     try:
         torch.save(bundle, temporary)
         loaded = torch.load(temporary, map_location="cpu", weights_only=True)
-        _validate_passkey_bundle(loaded, target_length=target_length)
+        _validate_passkey_bundle(
+            loaded,
+            target_length=target_length,
+            evaluation_split=evaluation_split,
+        )
         os.replace(temporary, path)
     finally:
         temporary.unlink(missing_ok=True)
@@ -881,6 +932,7 @@ def write_passkey_bundle_atomic(
         "rows": len(rows),
         "seq_len": int(target_length),
         "target_length": int(target_length),
+        "evaluation_split": str(evaluation_split),
         "length_semantics": "prompt_tokens_before_generation",
     }
 
@@ -984,6 +1036,7 @@ def validate_prepared_dir(root: Path) -> dict[str, Any]:
             _validate_passkey_bundle(
                 loaded,
                 target_length=int(raw_record["target_length"]),
+                evaluation_split=str(raw_record["evaluation_split"]),
                 expected_rows=int(raw_record["rows"]),
             )
         else:
@@ -1021,12 +1074,13 @@ def artifact_plan() -> dict[str, dict[str, Any]]:
             "rows": TEST_GROUPS * 3,
             "seq_len": stage.seq_len,
         }
-    for target_length in (8192, 16384, 32768):
-        plan[f"passkey_{target_length}.pt"] = {
+    for target_length, (filename, evaluation_split, _) in PASSKEY_BUNDLES.items():
+        plan[filename] = {
             "kind": "passkey_bundle",
             "rows": len(PASSKEY_DEPTHS) * PASSKEY_TRIALS_PER_DEPTH,
             "seq_len": target_length,
             "target_length": target_length,
+            "evaluation_split": evaluation_split,
             "length_semantics": "prompt_tokens_before_generation",
         }
     return plan
@@ -1069,6 +1123,46 @@ def _sample_windows(
     )
 
 
+def _sample_removal_fill(
+    tokenizer: Any,
+    filler: torch.Tensor,
+    *,
+    width: int,
+    forbidden_texts: Sequence[str | None],
+    original_ids: torch.Tensor,
+    rng: random.Random,
+) -> list[int]:
+    """Select a same-length natural filler span with no retrieval nonce."""
+    flat = filler.reshape(-1)
+    width = int(width)
+    if width <= 0 or flat.numel() < width:
+        raise ValueError("filler region is too short for source removal")
+    needles = []
+    for text in forbidden_texts:
+        if text is not None:
+            needles.append(
+                _token_ids(tokenizer(text, add_special_tokens=False), "removal nonce")
+            )
+    for _ in range(64):
+        start = rng.randrange(0, flat.numel() - width + 1)
+        candidate = [int(value) for value in flat[start : start + width].tolist()]
+        if len(set(candidate)) < 2:
+            continue
+        if candidate == [int(value) for value in original_ids.tolist()]:
+            continue
+        if any(
+            len(needle) <= width
+            and any(
+                candidate[offset : offset + len(needle)] == needle
+                for offset in range(width - len(needle) + 1)
+            )
+            for needle in needles
+        ):
+            continue
+        return candidate
+    raise ValueError("could not sample a nonce-free natural source-removal span")
+
+
 def _sample_repair_example(
     tokenizer: Any,
     *,
@@ -1079,7 +1173,7 @@ def _sample_repair_example(
     value_pool: Sequence[int],
     filler: torch.Tensor,
     rng: random.Random,
-) -> tuple[RepairExample, str, int]:
+) -> tuple[RepairExample, str, list[int]]:
     """Sample until nonce text survives the real full chat tokenizer."""
     last_error: Exception | None = None
     for _ in range(32):
@@ -1107,8 +1201,18 @@ def _sample_repair_example(
                 task_type=task_type,
                 old_value_text=old_text,
             )
-            removal_id = before[0]
-            return example, swapped_text, removal_id
+            source_ids = example.rendered.input_ids[
+                example.rendered.source_start : example.rendered.source_end
+            ]
+            removal_fill = _sample_removal_fill(
+                tokenizer,
+                filler,
+                width=source_ids.numel(),
+                forbidden_texts=(key_text, value_text, swapped_text, old_text),
+                original_ids=source_ids,
+                rng=rng,
+            )
+            return example, swapped_text, removal_fill
         except (RuntimeError, ValueError) as exc:
             last_error = exc
     raise RuntimeError("failed to sample a token-parity-safe retrieval example after 32 attempts") from last_error
@@ -1155,7 +1259,7 @@ def _build_eval_groups(
     schedule = task_schedule(groups, seed=seed)
     rows: list[RepairExample] = []
     for index, task_type in enumerate(schedule):
-        example, swapped, removal_id = _sample_repair_example(
+        example, swapped, removal_fill = _sample_repair_example(
             tokenizer,
             stage=stage,
             split=split,
@@ -1170,7 +1274,7 @@ def _build_eval_groups(
                 tokenizer,
                 example,
                 swapped_value_text=swapped,
-                removal_fill_id=removal_id,
+                removal_fill_ids=removal_fill,
                 group_id=f"{stage.name}-{split}-{index:04d}",
             )
         )
@@ -1282,14 +1386,20 @@ def prepare_all(
                 )
 
         passkey_rng = random.Random(int(seed) + 900_000)
-        passkey_filler = eval_regions["test"]
         used: set[str] = set()
-        for target_length in (8192, 16384, 32768):
-            filename = f"passkey_{target_length}.pt"
+        for target_length, (
+            filename,
+            evaluation_split,
+            filler_region,
+        ) in PASSKEY_BUNDLES.items():
+            passkey_filler = eval_regions[filler_region]
             rows = []
             window = target_length * 2 + 1024
             if passkey_filler.numel() < window:
-                raise ValueError(f"test filler has too few tokens for {target_length}-token passkeys")
+                raise ValueError(
+                    f"{filler_region} filler has too few tokens for "
+                    f"{target_length}-token passkeys"
+                )
             for depth in PASSKEY_DEPTHS:
                 for _ in range(PASSKEY_TRIALS_PER_DEPTH):
                     while True:
@@ -1315,6 +1425,7 @@ def prepare_all(
                 rows,
                 incomplete / filename,
                 target_length=target_length,
+                evaluation_split=evaluation_split,
             )
 
         write_manifest(

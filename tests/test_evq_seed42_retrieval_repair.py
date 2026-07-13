@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import argparse
+import hashlib
 import math
 import json
 from collections.abc import Sequence
@@ -36,10 +38,16 @@ from rebuttal.evq_seed42_retrieval_repair.protocol import (
 )
 from rebuttal.evq_seed42_retrieval_repair.evaluate import (
     build_gate_report,
+    evaluator_code_sha256,
     merge_temporal_guardrail,
     parse_registered_factor,
+    run_gate,
     score_generated_tokens,
+    summarize_passkey_records,
     summarize_repair_records,
+    summarize_temporal_domains,
+    validate_gate_file,
+    validate_result_file,
 )
 from rebuttal.evq_seed42_retrieval_repair import train as repair_train
 from rebuttal.evq_seed42_retrieval_repair.train import (
@@ -250,10 +258,14 @@ def test_validation_filler_is_split_into_non_overlapping_row_regions() -> None:
     validation = torch.arange(8 * 16, dtype=torch.int32).reshape(8, 16)
     regions = partition_filler(validation)
 
-    assert torch.equal(regions["validation"], validation[:4].reshape(-1))
-    assert torch.equal(regions["test"], validation[4:].reshape(-1))
-    assert regions["validation"].untyped_storage().data_ptr() == validation.untyped_storage().data_ptr()
-    assert regions["test"].untyped_storage().data_ptr() == validation.untyped_storage().data_ptr()
+    assert torch.equal(regions["validation"], validation[:2].reshape(-1))
+    assert torch.equal(regions["test"], validation[2:4].reshape(-1))
+    assert torch.equal(regions["passkey_validation"], validation[4:6].reshape(-1))
+    assert torch.equal(regions["passkey_final"], validation[6:].reshape(-1))
+    assert all(
+        region.untyped_storage().data_ptr() == validation.untyped_storage().data_ptr()
+        for region in regions.values()
+    )
 
 
 def test_complete_chat_render_has_direct_template_parity_and_answer_span() -> None:
@@ -337,7 +349,9 @@ def test_counterfactual_group_preserves_positions_and_changes_only_contract_span
         tokenizer,
         example,
         swapped_value_text=" otheranswer",
-        removal_fill_id=ord("z"),
+        removal_fill_ids=[ord("z") + index % 3 for index in range(
+            example.rendered.source_end - example.rendered.source_start
+        )],
         group_id="g0",
     )
 
@@ -358,7 +372,11 @@ def test_counterfactual_group_preserves_positions_and_changes_only_contract_span
         original.rendered.input_ids[outside_source],
         removed.rendered.input_ids[outside_source],
     )
-    assert torch.all(removed.rendered.input_ids[source_slice] == ord("z"))
+    replacement = removed.rendered.input_ids[source_slice]
+    assert torch.unique(replacement).numel() > 1
+    assert not torch.equal(replacement, original.rendered.input_ids[source_slice])
+    assert "keytwo" not in tokenizer.decode(replacement)
+    assert "valueanswer" not in tokenizer.decode(replacement)
 
 
 def test_bundle_validation_requires_segment_shard_and_answer_tail() -> None:
@@ -481,8 +499,11 @@ def test_artifact_plan_separates_training_segments_and_eval_splits() -> None:
     assert plan["train_r16_segment2.pt"]["rows"] == 64
     assert plan["validation_r8.pt"]["rows"] == 48
     assert plan["test_r8.pt"]["rows"] == 96
-    assert plan["passkey_32768.pt"]["rows"] == 25
-    assert plan["passkey_32768.pt"]["length_semantics"] == "prompt_tokens_before_generation"
+    assert plan["passkey_validation_8192.pt"]["evaluation_split"] == "validation"
+    assert plan["passkey_validation_16384.pt"]["evaluation_split"] == "validation"
+    assert plan["passkey_final_32768.pt"]["rows"] == 25
+    assert plan["passkey_final_32768.pt"]["evaluation_split"] == "final_test"
+    assert plan["passkey_final_32768.pt"]["length_semantics"] == "prompt_tokens_before_generation"
 
 
 def test_tokenized_artifacts_are_bound_to_the_exact_tokenizer_files() -> None:
@@ -583,6 +604,14 @@ def test_parent_validation_calls_full_artifact_check_and_longalpaca_receipt(
         },
         adapter_dir / "custom_inv_freq.pt",
     )
+    (adapter_dir / "adapter_model.safetensors").write_bytes(b"adapter-fixture")
+    for filename in (
+        "adapter_config.json",
+        "experiment_meta.json",
+        "trainer_state.json",
+        "run_protocol.json",
+    ):
+        _write_json(adapter_dir / filename, {"fixture": filename})
     called = {}
 
     def fake_validate_artifact(path, **kwargs):
@@ -635,7 +664,9 @@ def test_gate_transition_binds_every_registered_identity(tmp_path) -> None:
         "segment": 1,
         "factor": 1.0,
         "parent_adapter_sha256": "a" * 64,
+        "parent_adapter_receipt_sha256": "8" * 64,
         "checkpoint_adapter_sha256": "b" * 64,
+        "checkpoint_adapter_receipt_sha256": "9" * 64,
         "model_manifest_sha256": "c" * 64,
         "longalpaca_manifest_sha256": "d" * 64,
         "repair_manifest_sha256": "e" * 64,
@@ -654,6 +685,7 @@ def test_gate_transition_binds_every_registered_identity(tmp_path) -> None:
             "format_version": 1,
             "purpose": "evq_seed42_retrieval_repair_gate",
             "status": "pass",
+            "decision": {"status": "pass"},
             "bindings": bindings,
         },
     )
@@ -669,6 +701,16 @@ def test_gate_transition_binds_every_registered_identity(tmp_path) -> None:
             gate,
             allowed_statuses={"pass"},
             expected_bindings=stale,
+        )
+
+    tampered = json.loads(gate.read_text(encoding="utf-8"))
+    tampered["status"] = "rescue_allowed"
+    _write_json(gate, tampered)
+    with pytest.raises(RuntimeError, match="decision status"):
+        validate_gate_transition(
+            gate,
+            allowed_statuses={"rescue_allowed"},
+            expected_bindings=bindings,
         )
 
 
@@ -726,6 +768,7 @@ def test_generated_token_metrics_separate_prefix_strict_containment_and_eos() ->
 
 
 def _triplet(group: str, task: str, distance: int, *, both: bool, removed: float):
+    generated = [11, 12, 2] if both else [99, 2]
     return [
         {
             "group_id": group,
@@ -734,6 +777,12 @@ def _triplet(group: str, task: str, distance: int, *, both: bool, removed: float
             "distance": distance,
             "mean_nll": 1.0,
             "first_value_exact": both,
+            "strict_exact": both,
+            "gold_containment": both,
+            "eos_terminated": True,
+            "generated_token_count": len(generated) - 1,
+            "generated_ids": generated,
+            "expected_ids": [11, 12],
             "finite": True,
         },
         {
@@ -743,6 +792,12 @@ def _triplet(group: str, task: str, distance: int, *, both: bool, removed: float
             "distance": distance,
             "mean_nll": 1.1,
             "first_value_exact": both,
+            "strict_exact": both,
+            "gold_containment": both,
+            "eos_terminated": True,
+            "generated_token_count": len(generated) - 1,
+            "generated_ids": generated,
+            "expected_ids": [11, 12],
             "finite": True,
         },
         {
@@ -797,7 +852,9 @@ def test_temporal_guardrail_requires_same_factor_and_frozen_examples() -> None:
 def test_gate_report_binds_all_evidence_and_uses_registered_decision() -> None:
     bindings = {
         "parent_adapter_sha256": "a" * 64,
+        "parent_adapter_receipt_sha256": "8" * 64,
         "checkpoint_adapter_sha256": "b" * 64,
+        "checkpoint_adapter_receipt_sha256": "9" * 64,
         "model_manifest_sha256": "c" * 64,
         "longalpaca_manifest_sha256": "d" * 64,
         "repair_manifest_sha256": "e" * 64,
@@ -832,6 +889,191 @@ def test_gate_report_binds_all_evidence_and_uses_registered_decision() -> None:
     assert report["bindings"]["segment"] == 1
     assert report["bindings"]["factor"] == 1.0
     assert set(bindings).issubset(report["bindings"])
+
+
+def _passkey_rows() -> list[dict[str, object]]:
+    return [
+        {
+            "strict_exact": index < 13,
+            "first_value_exact": index < 13,
+            "gold_containment": index < 13,
+            "eos_terminated": index < 13,
+            "answer": "12345678",
+            "prediction": "12345678" if index < 13 else "00000000",
+            "extracted_value": "12345678" if index < 13 else "00000000",
+            "generated_ids": [2] if index < 13 else [],
+            "generated_token_count": 0,
+            "nll_sum": float(index + 1),
+            "answer_tokens": 2,
+            "finite": True,
+        }
+        for index in range(25)
+    ]
+
+
+def _temporal_domains() -> dict[str, object]:
+    return {
+        name: {
+            "packs": [
+                {
+                    "pack_index": 0,
+                    "nll_sum": nll * 10,
+                    "scored_tokens": 10,
+                    "mean_nll": nll,
+                    "finite": True,
+                }
+            ],
+            "nll_sum": nll * 10,
+            "scored_tokens": 10,
+            "mean_nll": nll,
+            "finite": True,
+        }
+        for name, nll in (("a", 1.0), ("b", 2.0), ("c", 3.0))
+    }
+
+
+def _gate_result_records(tmp_path: Path) -> dict[str, Path]:
+    code_sha = evaluator_code_sha256()
+    common = {
+        "stage": "r8",
+        "factor": 1.0,
+        "model_manifest_sha256": "c" * 64,
+        "longalpaca_manifest_sha256": "d" * 64,
+        "repair_manifest_sha256": "e" * 64,
+        "runtime_tensor_sha256": "1" * 64,
+        "evaluator_code_sha256": code_sha,
+    }
+    parent_rows = []
+    checkpoint_rows = []
+    for index in range(16):
+        task = "kv" if index < 12 else "update"
+        distance = 3000 if index % 2 == 0 else 5000
+        parent_rows += _triplet(
+            f"p-{index}", task, distance, both=False, removed=1.5
+        )
+        checkpoint_rows += _triplet(
+            f"c-{index}", task, distance, both=True, removed=1.5
+        )
+    passkey_rows = _passkey_rows()
+    domains = _temporal_domains()
+    selection = {
+        "stage": "r8",
+        "factor": 1.0,
+        "domains": {name: {"pack_indices": [0]} for name in domains},
+    }
+    selection_sha = hashlib.sha256(
+        json.dumps(
+            selection,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=True,
+        ).encode("utf-8")
+    ).hexdigest()
+
+    records = {
+        "parent_controlled": {
+            "schema": "evq_cosh.seed42_retrieval_repair_controlled.v1",
+            **common,
+            "adapter_sha256": "a" * 64,
+            "adapter_receipt_sha256": "8" * 64,
+            "bundle_sha256": "f" * 64,
+            "bundle_file": "validation_r8.pt",
+            "split": "validation",
+            "eos_token_id": 2,
+            "results": parent_rows,
+            "summary": summarize_repair_records(parent_rows, stage="r8"),
+        },
+        "checkpoint_controlled": {
+            "schema": "evq_cosh.seed42_retrieval_repair_controlled.v1",
+            **common,
+            "adapter_sha256": "b" * 64,
+            "adapter_receipt_sha256": "9" * 64,
+            "bundle_sha256": "f" * 64,
+            "bundle_file": "validation_r8.pt",
+            "split": "validation",
+            "eos_token_id": 2,
+            "results": checkpoint_rows,
+            "summary": summarize_repair_records(checkpoint_rows, stage="r8"),
+        },
+        "passkey_result": {
+            "schema": "evq_cosh.seed42_retrieval_repair_passkey.v1",
+            **common,
+            "adapter_sha256": "b" * 64,
+            "adapter_receipt_sha256": "9" * 64,
+            "bundle_sha256": "0" * 64,
+            "bundle_file": "passkey_validation_8192.pt",
+            "evaluation_split": "validation",
+            "target_length": 8192,
+            "eos_token_id": 2,
+            "results": passkey_rows,
+            "summary": summarize_passkey_records(passkey_rows),
+        },
+    }
+    for role, adapter, offset in (
+        ("parent_temporal", "a" * 64, 0.0),
+        ("checkpoint_temporal", "b" * 64, 0.1),
+    ):
+        adjusted = json.loads(json.dumps(domains))
+        for domain in adjusted.values():
+            domain["packs"][0]["nll_sum"] += offset * 10
+            domain["packs"][0]["mean_nll"] += offset
+            domain["nll_sum"] += offset * 10
+            domain["mean_nll"] += offset
+        records[role] = {
+            "schema": "evq_cosh.seed42_retrieval_repair_temporal.v1",
+            **common,
+            "adapter_sha256": adapter,
+            "adapter_receipt_sha256": "8" * 64 if role == "parent_temporal" else "9" * 64,
+            "temporal_selection": selection,
+            "temporal_selection_sha256": selection_sha,
+            "domains": adjusted,
+            "summary": summarize_temporal_domains(adjusted),
+        }
+
+    paths = {}
+    for role, record in records.items():
+        path = tmp_path / f"{role}.json"
+        _write_json(path, record)
+        paths[role] = path
+    return paths
+
+
+def test_gate_recomputes_raw_evidence_and_rejects_tampering(tmp_path) -> None:
+    paths = _gate_result_records(tmp_path)
+    gate_path = tmp_path / "gate.json"
+    args = argparse.Namespace(stage="r8", segment=1, output=gate_path, **paths)
+
+    report = run_gate(args)
+
+    assert report["status"] == report["decision"]["status"] == "pass"
+    assert validate_gate_file(gate_path)["status"] == "pass"
+
+    tampered_gate = json.loads(gate_path.read_text(encoding="utf-8"))
+    tampered_gate["status"] = "stop"
+    _write_json(gate_path, tampered_gate)
+    with pytest.raises((RuntimeError, ValueError), match="status|recompute"):
+        validate_gate_file(gate_path)
+
+    gate_path.unlink()
+    run_gate(args)
+    controlled_path = paths["checkpoint_controlled"]
+    tampered_result = json.loads(controlled_path.read_text(encoding="utf-8"))
+    tampered_result["summary"]["pair_consistency"] = 0.0
+    _write_json(controlled_path, tampered_result)
+    with pytest.raises((RuntimeError, ValueError), match="summary|SHA-256"):
+        validate_gate_file(gate_path)
+
+
+def test_result_validation_recomputes_summary_from_raw_rows(tmp_path) -> None:
+    paths = _gate_result_records(tmp_path)
+    result = paths["passkey_result"]
+
+    assert validate_result_file(result, kind="passkey")["summary"]["rows"] == 25
+    record = json.loads(result.read_text(encoding="utf-8"))
+    record["summary"]["passkey_containment"] = 1.0
+    _write_json(result, record)
+    with pytest.raises(ValueError, match="summary"):
+        validate_result_file(result, kind="passkey")
 
 
 def test_launcher_has_explicit_non_advancing_commands_and_gpu_lock() -> None:
@@ -883,3 +1125,39 @@ def test_launcher_requires_external_paths_without_private_defaults() -> None:
     private_server_root = "/" + "root/autodl-tmp"
     assert private_server_root not in launcher
     assert "connect.westb" not in launcher
+
+
+def test_capability_filter_keeps_optional_longbench_rows() -> None:
+    from rebuttal.evq_seed42_retrieval_repair.evaluate import CAPABILITY_SUITES
+
+    assert "longbench" in CAPABILITY_SUITES
+
+
+def test_launcher_revalidates_temporal_reuse_against_source_selection() -> None:
+    launcher = Path("rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
+
+    assert '--temporal-root "$EVQ_REPAIR_TEMPORAL_ROOT"' in launcher
+    assert '--max-packs-per-domain "$max_packs"' in launcher
+    final_report = launcher.split(" final-report ", 1)[1]
+    assert '--temporal-root "$EVQ_REPAIR_TEMPORAL_ROOT"' in final_report
+
+
+def test_training_and_evaluation_share_one_global_gpu_lock() -> None:
+    training = Path("rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
+    evaluation = Path("scripts/2026-07/09_lora_evq_official_yarn_eval.sh").read_text()
+
+    assignment = 'GPU_LOCK="${EVQ_GPU_LOCK:-/tmp/evq_lora_eval_gpu.lock}"'
+    assert assignment in training
+    assert assignment in evaluation
+
+
+def test_gpu_phases_require_a_content_bound_complete_preflight_receipt() -> None:
+    launcher = Path("rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
+
+    assert 'PREFLIGHT_RECEIPT="$EVQ_REPAIR_WORK_DIR/preflight_complete.json"' in launcher
+    gpu_gate = launcher.split("require_gpu_lock()", 1)[1].split("verify_result()", 1)[0]
+    assert 'require_file "$PREFLIGHT_RECEIPT"' in gpu_gate
+    assert " preflight-complete " in gpu_gate
+    preflight = launcher.split("  preflight)", 1)[1].split("    ;;", 1)[0]
+    assert 'rm -f "$PREFLIGHT_RECEIPT"' in preflight
+    assert preflight.rstrip().endswith('--output "$PREFLIGHT_RECEIPT"')
