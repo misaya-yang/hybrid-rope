@@ -265,7 +265,10 @@ def run_dry(
         "dry_run": True,
         "parameter_count": parameter_count,
         "train_shape": list(train.shape),
-        "batch_size": SPEC.batch_size,
+        "global_batch_size": SPEC.batch_size,
+        "micro_batch_size": SPEC.micro_batch_size,
+        "grad_accum_steps": SPEC.grad_accum_steps,
+        "micro_steps": SPEC.micro_steps,
         "optimizer_steps": SPEC.optimizer_steps,
         "passkey_rows": int(manifest["passkey"]["rows"]),
         "inv_freq_sha256": tensor_sha256(inv),
@@ -314,7 +317,7 @@ def train_arm(args: argparse.Namespace) -> dict[str, Any]:
     workers = max(0, int(args.num_workers))
     loader = DataLoader(
         dataset,
-        batch_size=SPEC.batch_size,
+        batch_size=SPEC.micro_batch_size,
         sampler=order.tolist(),
         num_workers=workers,
         pin_memory=True,
@@ -322,8 +325,8 @@ def train_arm(args: argparse.Namespace) -> dict[str, Any]:
         prefetch_factor=4 if workers > 0 else None,
         drop_last=False,
     )
-    if len(loader) != SPEC.optimizer_steps:
-        raise RuntimeError(f"loader has {len(loader)} steps, expected {SPEC.optimizer_steps}")
+    if len(loader) != SPEC.micro_steps:
+        raise RuntimeError(f"loader has {len(loader)} steps, expected {SPEC.micro_steps}")
 
     model = model.to("cuda")
     loss_module = CausalLanguageModelLoss(model)
@@ -367,6 +370,9 @@ def train_arm(args: argparse.Namespace) -> dict[str, Any]:
         "compile": {"enabled": True, "mode": args.compile_mode},
         "compile_cache": os.environ.get("TORCHINDUCTOR_CACHE_DIR", ""),
         "gradient_checkpointing": False,
+        "global_batch_size": SPEC.batch_size,
+        "micro_batch_size": SPEC.micro_batch_size,
+        "grad_accum_steps": SPEC.grad_accum_steps,
         "initial_trainable_sha256": initial_hash,
         "inv_freq_sha256": inv_hash,
         "row_order_sha256": order_hash,
@@ -390,37 +396,56 @@ def train_arm(args: argparse.Namespace) -> dict[str, Any]:
     started = time.time()
     previous = started
     tokens_since_log = 0
-    for step, batch in enumerate(loader):
-        if tuple(batch.shape) != (SPEC.batch_size, SPEC.seq_len):
-            raise RuntimeError(f"unexpected batch shape at step {step}: {batch.shape}")
-        lr = learning_rate_for_step(step, SPEC)
-        for group in optimizer.param_groups:
-            group["lr"] = lr
+    optimizer_step = 0
+    accumulated_loss = 0.0
+    optimizer.zero_grad(set_to_none=True)
+    for micro_step, batch in enumerate(loader):
+        if tuple(batch.shape) != (SPEC.micro_batch_size, SPEC.seq_len):
+            raise RuntimeError(
+                f"unexpected batch shape at micro-step {micro_step}: {batch.shape}"
+            )
+        if micro_step % SPEC.grad_accum_steps == 0:
+            lr = learning_rate_for_step(optimizer_step, SPEC)
+            for group in optimizer.param_groups:
+                group["lr"] = lr
         batch = batch.to("cuda", non_blocking=True)
-        optimizer.zero_grad(set_to_none=True)
         with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
             loss = compiled(batch)
         if not torch.isfinite(loss):
-            raise RuntimeError(f"non-finite loss at step {step}: {loss.item()}")
-        loss.backward()
+            raise RuntimeError(
+                f"non-finite loss at micro-step {micro_step}: {loss.item()}"
+            )
+        (loss / SPEC.grad_accum_steps).backward()
+        accumulated_loss += float(loss.detach().cpu())
+        tokens_since_log += SPEC.micro_batch_size * (SPEC.seq_len - 1)
+
+        if (micro_step + 1) % SPEC.grad_accum_steps:
+            continue
+
         grad_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         if not torch.isfinite(grad_norm):
-            raise RuntimeError(f"non-finite grad norm at step {step}: {grad_norm.item()}")
+            raise RuntimeError(
+                f"non-finite grad norm at optimizer step {optimizer_step}: "
+                f"{grad_norm.item()}"
+            )
         optimizer.step()
-        tokens_since_log += SPEC.batch_size * (SPEC.seq_len - 1)
+        optimizer.zero_grad(set_to_none=True)
+        mean_loss = accumulated_loss / SPEC.grad_accum_steps
+        accumulated_loss = 0.0
 
-        should_log = step == 0 or (step + 1) % int(args.log_every) == 0
-        if should_log or step + 1 == SPEC.optimizer_steps:
+        completed = optimizer_step + 1
+        should_log = optimizer_step == 0 or completed % int(args.log_every) == 0
+        if should_log or completed == SPEC.optimizer_steps:
             torch.cuda.synchronize()
             now = time.time()
             interval = max(now - previous, 1e-6)
             elapsed = now - started
-            completed = step + 1
             eta = elapsed / completed * (SPEC.optimizer_steps - completed)
             record = {
-                "step": step,
+                "step": optimizer_step,
+                "micro_step": micro_step,
                 "completed_steps": completed,
-                "loss": float(loss.detach().cpu()),
+                "loss": mean_loss,
                 "grad_norm": float(grad_norm.detach().cpu()),
                 "lr": lr,
                 "tokens_per_second": tokens_since_log / interval,
@@ -440,6 +465,13 @@ def train_arm(args: argparse.Namespace) -> dict[str, Any]:
             )
             previous = now
             tokens_since_log = 0
+        optimizer_step += 1
+
+    if optimizer_step != SPEC.optimizer_steps:
+        raise RuntimeError(
+            f"completed {optimizer_step} optimizer steps, expected "
+            f"{SPEC.optimizer_steps}"
+        )
 
     torch.cuda.synchronize()
     metadata["finished_at"] = time.strftime("%Y-%m-%dT%H:%M:%S%z")
