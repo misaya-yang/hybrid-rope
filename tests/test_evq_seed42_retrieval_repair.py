@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import math
+import json
 from collections.abc import Sequence
+from pathlib import Path
 
 import pytest
 import torch
@@ -30,6 +32,21 @@ from rebuttal.evq_seed42_retrieval_repair.protocol import (
     score_text_answer,
     segment_contract,
 )
+from rebuttal.evq_seed42_retrieval_repair import train as repair_train
+from rebuttal.evq_seed42_retrieval_repair.train import (
+    apply_runtime_frequency,
+    runtime_frequency_contract,
+    validate_gate_transition,
+    validate_parent_adapter,
+)
+from experiments.lora_evq_v2.legacy_lora_protocol import (
+    PAPER_LONGALPACA_PROVENANCE_STATUS,
+    PAPER_LONGALPACA_RAW_SHA256,
+    PAPER_LONGALPACA_REVISION,
+    PAPER_LONGALPACA_SOURCE,
+    sha256_file,
+)
+from experiments.lora_evq_v2.train_evq_lora import build_training_inv_freq
 
 
 def _passing_summary(stage: str) -> dict[str, object]:
@@ -457,3 +474,179 @@ def test_artifact_plan_separates_training_segments_and_eval_splits() -> None:
     assert plan["test_r8.pt"]["rows"] == 96
     assert plan["passkey_32768.pt"]["rows"] == 25
     assert plan["passkey_32768.pt"]["length_semantics"] == "prompt_tokens_before_generation"
+
+
+def test_runtime_factor_is_always_derived_from_canonical_evq() -> None:
+    canonical, _ = build_training_inv_freq("evq_cosh", 128, 500000.0, 1.414)
+
+    r8 = runtime_frequency_contract(canonical, stage="r8")
+    r16 = runtime_frequency_contract(canonical, stage="r16")
+
+    assert torch.equal(r8["substrate_inv_freq"], canonical.to(torch.float64))
+    assert torch.equal(r8["runtime_inv_freq"], canonical.to(torch.float64))
+    assert r8["factor"] == 1.0
+    assert r8["mscale"] == 1.0
+    assert r16["factor"] == 2.0
+    assert r16["mscale"] > 1.0
+    assert r16["label"] == "YaRN-derived generalization on the EVQ substrate"
+    assert r16["operator"]["mode"] == "yarn_derived_virtual_dim"
+
+
+class _Rotary(torch.nn.Module):
+    def __init__(self, inv_freq: torch.Tensor):
+        super().__init__()
+        self.register_buffer("inv_freq", inv_freq.clone())
+        self.register_buffer("original_inv_freq", inv_freq.clone())
+        self.attention_scaling = 1.0
+        self.max_seq_len_cached = 8192
+        self._cos_cached = torch.ones(1)
+
+
+class _RotaryModel(torch.nn.Module):
+    def __init__(self, inv_freq: torch.Tensor):
+        super().__init__()
+        self.first = _Rotary(inv_freq)
+        self.second = _Rotary(inv_freq)
+
+
+def test_runtime_frequency_application_sets_tensor_mscale_and_clears_cache() -> None:
+    canonical, _ = build_training_inv_freq("evq_cosh", 128, 500000.0, 1.414)
+    model = _RotaryModel(canonical)
+    contract = runtime_frequency_contract(canonical, stage="r16")
+
+    result = apply_runtime_frequency(model, contract)
+
+    assert result["patched_modules"] == 2
+    for rotary in (model.first, model.second):
+        assert torch.allclose(rotary.inv_freq.double(), contract["runtime_inv_freq"])
+        assert torch.allclose(rotary.original_inv_freq.double(), contract["runtime_inv_freq"])
+        assert rotary.attention_scaling == pytest.approx(contract["mscale"])
+        assert rotary.max_seq_len_cached == 0
+        assert rotary._cos_cached is None
+
+
+def _write_json(path: Path, value: object) -> None:
+    path.write_text(json.dumps(value, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def test_parent_validation_calls_full_artifact_check_and_longalpaca_receipt(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    adapter_dir = tmp_path / "parent"
+    adapter_dir.mkdir()
+    data_manifest = tmp_path / "longalpaca_manifest.json"
+    model_manifest = tmp_path / "model_manifest.json"
+    _write_json(
+        data_manifest,
+        {
+            "source": {
+                "source_id": PAPER_LONGALPACA_SOURCE,
+                "revision": PAPER_LONGALPACA_REVISION,
+                "split": "train",
+                "filename": "LongAlpaca-12k_raw.json",
+                "raw_sha256": PAPER_LONGALPACA_RAW_SHA256,
+                "provenance_status": PAPER_LONGALPACA_PROVENANCE_STATUS,
+            }
+        },
+    )
+    _write_json(model_manifest, {"model": "fake", "files": []})
+    canonical, _ = build_training_inv_freq("evq_cosh", 128, 500000.0, 1.414)
+    torch.save(
+        {
+            "inv_freq": canonical,
+            "method": "evq_cosh",
+            "head_dim": 128,
+            "base": 500000.0,
+            "tau": 1.414,
+            "midpoint": True,
+        },
+        adapter_dir / "custom_inv_freq.pt",
+    )
+    called = {}
+
+    def fake_validate_artifact(path, **kwargs):
+        called.update(path=path, kwargs=kwargs)
+        return {
+            "adapter_sha256": "c" * 64,
+            "data_manifest_sha256": sha256_file(data_manifest),
+            "model_manifest_sha256": sha256_file(model_manifest),
+            "protocol": {"method": "evq_cosh", "seed": 42},
+        }
+
+    monkeypatch.setattr(repair_train, "validate_artifact", fake_validate_artifact)
+
+    identity = validate_parent_adapter(
+        adapter_dir,
+        longalpaca_manifest=data_manifest,
+        model_manifest=model_manifest,
+    )
+
+    assert called["path"] == adapter_dir
+    assert called["kwargs"] == {
+        "expected_method": "evq_cosh",
+        "expected_seed": 42,
+        "expected_data_manifest_sha256": sha256_file(data_manifest),
+    }
+    assert identity["adapter_sha256"] == "c" * 64
+    assert identity["frequency"]["method"] == "evq_cosh"
+
+
+def test_parent_validation_rejects_longalign_receipt_before_training(tmp_path, monkeypatch) -> None:
+    adapter_dir = tmp_path / "parent"
+    adapter_dir.mkdir()
+    data_manifest = tmp_path / "manifest.json"
+    model_manifest = tmp_path / "model.json"
+    _write_json(data_manifest, {"source": {"source_id": "zai-org/LongAlign-10k"}})
+    _write_json(model_manifest, {"files": []})
+    monkeypatch.setattr(repair_train, "validate_artifact", lambda *args, **kwargs: {})
+
+    with pytest.raises((ValueError, KeyError), match="source|receipt"):
+        validate_parent_adapter(
+            adapter_dir,
+            longalpaca_manifest=data_manifest,
+            model_manifest=model_manifest,
+        )
+
+
+def test_gate_transition_binds_every_registered_identity(tmp_path) -> None:
+    bindings = {
+        "stage": "r8",
+        "segment": 1,
+        "factor": 1.0,
+        "parent_adapter_sha256": "a" * 64,
+        "checkpoint_adapter_sha256": "b" * 64,
+        "model_manifest_sha256": "c" * 64,
+        "longalpaca_manifest_sha256": "d" * 64,
+        "repair_manifest_sha256": "e" * 64,
+        "validation_bundle_sha256": "f" * 64,
+        "operator_tensor_sha256": "1" * 64,
+        "evaluator_code_sha256": "2" * 64,
+        "retrieval_result_sha256": "3" * 64,
+        "passkey_result_sha256": "4" * 64,
+        "parent_temporal_sha256": "5" * 64,
+        "checkpoint_temporal_sha256": "6" * 64,
+    }
+    gate = tmp_path / "gate.json"
+    _write_json(
+        gate,
+        {
+            "format_version": 1,
+            "purpose": "evq_seed42_retrieval_repair_gate",
+            "status": "pass",
+            "bindings": bindings,
+        },
+    )
+
+    assert validate_gate_transition(
+        gate,
+        allowed_statuses={"pass"},
+        expected_bindings=bindings,
+    )["status"] == "pass"
+    stale = dict(bindings, repair_manifest_sha256="9" * 64)
+    with pytest.raises(RuntimeError, match="repair_manifest_sha256"):
+        validate_gate_transition(
+            gate,
+            allowed_statuses={"pass"},
+            expected_bindings=stale,
+        )
