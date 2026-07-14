@@ -1,6 +1,6 @@
 # EVQ-Cosh Rebuttal Control Room
 
-创建：2026-06-10；最后更新：2026-07-13
+创建：2026-06-10；最后更新：2026-07-14
 
 - Preparation：`triage_ready`
 - Decision：`unclear / high-risk trust repair`
@@ -16,7 +16,9 @@
 | `rebuttal_playbook.md` | **唯一操作入口**：claim disposition、P0/P1/P2、理论边界、实验 gate、作者决策门与发送 QA |
 | `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` | **最新事实权威**：DAPE、YaRN、midpoint-Geo、KL、`c_coll`、Phase16、协议与 provenance 的全论文审计；与旧材料冲突时以此为准 |
 | `REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md` | **政策与决策背景**：NeurIPS 可行性、诚实披露、官方政策、公开案例与后续 venue 修复路线 |
-| `EVQ_8K_ONLY_CAPABILITY_TRANSFER_PLAN_20260713.md` | **当前能力转化主计划**：重新审计 phase-observability 假设，并以 physical length 与 position id 均不超过 8K 的 matched Geo/midpoint-Geo/EVQ 训练检验 16K/32K 零样本能力；无新结果 |
+| `../docs/superpowers/specs/2026-07-14-lora-industrial-capability-design.md` | **已批准的 LoRA 能力转化实验合同**：先评测现有七个 raw adapter×frequency 组合，再按 gate 进入 matched 8K-only continuation 与 same-base midpoint attribution；无新结果 |
+| `../docs/superpowers/plans/2026-07-14-lora-industrial-capability.md` | **权威实现计划**：文件边界、TDD 步骤、统计单位、停止条件、付费 GPU preflight 与最终验证；执行时不得跳过 gate |
+| `EVQ_8K_ONLY_CAPABILITY_TRANSFER_PLAN_20260713.md` | **理论与方案前置审计**：phase-observability 的 exact/conditional 边界和早期 Stage 0/1 构思；具体实现与执行优先级以 2026-07-14 已批准设计为准 |
 | `evq_seed42_retrieval_repair/` | **已实现但暂停优先启动**：EVQ-only R8/R16 repair；其 16K physical training 与无 Geo control 不能回答严格 8K→8K 外问题，可复用 evaluator/provenance 组件 |
 | `frequency_adaptation_8b/` | **备选机制实现**：连续频率迁移与 E16 训练；当前不作为第一实验，只有 direct 8K-only protocol 出现明确 optimization failure 时再触发 |
 | `README.md` | 全局状态、导航与目录安全边界 |
