@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Stage 2: Teach existing EVQ-LoRA adapter retrieval skills.
+Stage 2: Teach matched Geo/EVQ LoRA adapters retrieval skills.
 
 Loads the 300-step EVQ-LoRA adapter and continues training for ~50 steps
 on a mix of retrieval data (gen_retrieval_mix.py output) + original LongAlpaca
@@ -9,8 +9,8 @@ to prevent catastrophic forgetting.
 Key differences from stage 1:
   - Lower learning rate (2e-5 vs 1e-4) to preserve existing adaptation
   - Short training (50 steps)
-  - Mixed data: 70% retrieval + 30% original LongAlpaca
-  - modules_to_save: embed_tokens + lm_head (LongLoRA finding)
+  - Explicit substrate identity for matched Geo/EVQ continuation
+  - Assistant-answer-only labels instead of prompt-dominated full-token loss
 
 Usage:
     # Generate retrieval data first
@@ -19,6 +19,7 @@ Usage:
     # Stage 2 training
     python train_stage2_retrieval.py \
         --adapter_dir ./checkpoints/evq_r64 \
+        --substrate evq_cosh \
         --retrieval_data retrieval_mix.jsonl \
         --output_dir ./checkpoints/evq_r64_stage2
 """
@@ -43,11 +44,14 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 from train_evq_lora import (
+    build_training_inv_freq,
     evaluation_strategy_kwargs,
     inject_inv_freq,
     load_frequency_artifact,
     public_artifact_identifier,
     public_model_identifier,
+    resolve_model_rope_geometry,
+    sha256_file,
     verify_model_inv_freq,
 )
 
@@ -63,33 +67,36 @@ def load_and_merge_data(
     """Load retrieval + original data, merge with specified ratio."""
 
     def tokenize_messages(messages_list, label: str):
+        def chat_ids(messages, *, add_generation_prompt: bool):
+            encoded = tokenizer.apply_chat_template(
+                messages,
+                tokenize=True,
+                add_generation_prompt=add_generation_prompt,
+            )
+            if hasattr(encoded, "keys"):
+                encoded = encoded["input_ids"]
+            return [int(token_id) for token_id in encoded]
+
         tokenized = []
         for msgs in messages_list:
-            try:
-                text = tokenizer.apply_chat_template(
-                    msgs, tokenize=False, add_generation_prompt=False
-                )
-            except Exception:
-                parts = []
-                for m in msgs:
-                    role = m.get("role", "user")
-                    content = m.get("content", "")
-                    parts.append(
-                        f"<|start_header_id|>{role}<|end_header_id|>\n\n{content}<|eot_id|>"
-                    )
-                text = "<|begin_of_text|>" + "".join(parts)
-
-            enc = tokenizer(
-                text,
-                truncation=True,
-                max_length=max_seq_len,
-                padding=False,
-                return_tensors=None,
-            )
-            if len(enc["input_ids"]) >= 64:
+            if len(msgs) < 2 or msgs[-1].get("role") != "assistant":
+                raise ValueError(f"{label} row does not end with an assistant answer")
+            prompt_ids = chat_ids(msgs[:-1], add_generation_prompt=True)
+            full_ids = chat_ids(msgs, add_generation_prompt=False)
+            if full_ids[: len(prompt_ids)] != prompt_ids:
+                raise ValueError(f"{label} chat template does not preserve the answer boundary")
+            answer_start = len(prompt_ids)
+            if len(full_ids) > max_seq_len:
+                trim = len(full_ids) - max_seq_len
+                if trim >= answer_start:
+                    continue
+                full_ids = full_ids[trim:]
+                answer_start -= trim
+            if len(full_ids) >= 64 and answer_start < len(full_ids):
                 tokenized.append({
-                    "input_ids": enc["input_ids"],
-                    "attention_mask": enc["attention_mask"],
+                    "input_ids": full_ids,
+                    "attention_mask": [1] * len(full_ids),
+                    "labels": [-100] * answer_start + full_ids[answer_start:],
                 })
         print(f"[DATA] {label}: {len(tokenized)} samples tokenized")
         return tokenized
@@ -167,10 +174,11 @@ class TokenizedDataset(torch.utils.data.Dataset):
         item = self.data[idx]
         input_ids = item["input_ids"][:self.max_seq_len]
         attention_mask = item["attention_mask"][:self.max_seq_len]
+        labels = item["labels"][:self.max_seq_len]
         return {
             "input_ids": list(input_ids),
             "attention_mask": list(attention_mask),
-            "labels": list(input_ids),
+            "labels": list(labels),
         }
 
 
@@ -194,6 +202,7 @@ def parse_args():
 
     p.add_argument("--adapter_dir", type=str, required=True,
                     help="Path to stage1 EVQ-LoRA adapter (300 steps)")
+    p.add_argument("--substrate", choices=("native_geo", "evq_cosh"), required=True)
     p.add_argument("--model_name", type=str,
                     default="meta-llama/Meta-Llama-3-8B-Instruct")
     p.add_argument("--output_dir", type=str, required=True)
@@ -223,7 +232,18 @@ def parse_args():
 
 def main():
     args = parse_args()
+    if args.max_steps != 50:
+        raise ValueError("registered stage2 comparison requires exactly 50 optimizer steps")
     torch.manual_seed(args.seed)
+
+    base_meta_path = Path(args.adapter_dir) / "experiment_meta.json"
+    if not base_meta_path.is_file():
+        raise FileNotFoundError(base_meta_path)
+    base_meta = json.loads(base_meta_path.read_text(encoding="utf-8"))
+    if base_meta.get("status") != "complete" or int(base_meta.get("global_step", -1)) != 300:
+        raise ValueError("stage2 source must be a completed step-300 adapter")
+    if base_meta.get("protocol", {}).get("method") != args.substrate:
+        raise ValueError("stage2 source adapter substrate mismatch")
 
     from transformers import (
         AutoModelForCausalLM,
@@ -240,7 +260,18 @@ def main():
         tokenizer.pad_token = tokenizer.eos_token
         tokenizer.pad_token_id = tokenizer.eos_token_id
 
-    # 2. Load base model + stage1 adapter
+    # 2. Materialize the deterministic data mix before reserving the GPU.
+    data = load_and_merge_data(
+        tokenizer=tokenizer,
+        retrieval_path=args.retrieval_data,
+        original_data_path=args.original_data,
+        max_seq_len=args.max_seq_len,
+        retrieval_ratio=args.retrieval_ratio,
+    )
+    train_dataset = TokenizedDataset(data["train"], args.max_seq_len)
+    val_dataset = TokenizedDataset(data["val"], args.max_seq_len)
+
+    # 3. Load base model + stage1 adapter
     print(f"[MODEL] Loading base model (bf16)")
     model = AutoModelForCausalLM.from_pretrained(
         args.model_name,
@@ -250,20 +281,29 @@ def main():
         trust_remote_code=True,
     )
 
-    # 3. Load EVQ inv_freq from stage1
+    # 4. Load the registered inv_freq from stage1
     freq_path = os.path.join(args.adapter_dir, "custom_inv_freq.pt")
     inv_freq, _, frequency_provenance = load_frequency_artifact(
         freq_path,
-        expected_method="evq_cosh",
+        expected_method=args.substrate,
     )
+    geometry = resolve_model_rope_geometry(model.config)
+    canonical, _ = build_training_inv_freq(
+        rope_method=args.substrate,
+        head_dim=geometry.head_dim,
+        base=geometry.rope_base,
+        tau=1.414,
+    )
+    if not torch.allclose(inv_freq.to(torch.float64), canonical, rtol=0.0, atol=1e-12):
+        raise ValueError("stage1 frequency artifact differs from the canonical substrate")
     result = inject_inv_freq(model, inv_freq)
     verification = verify_model_inv_freq(model, inv_freq)
     print(
-        f"[ROPE] Injected EVQ frequencies into {result['patched_count']} modules; "
+        f"[ROPE] Injected {args.substrate} frequencies into {result['patched_count']} modules; "
         f"verified={verification['verified_count']}"
     )
 
-    # 4. Load stage1 LoRA adapter
+    # 5. Load stage1 LoRA adapter
     print(f"[LORA] Loading stage1 adapter from {args.adapter_dir}")
     model = PeftModel.from_pretrained(model, args.adapter_dir, is_trainable=True)
     verify_model_inv_freq(model, inv_freq)
@@ -276,18 +316,6 @@ def main():
     trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
     total = sum(p.numel() for p in model.parameters())
     print(f"[LORA] Trainable: {trainable:,} / {total:,} ({100*trainable/total:.2f}%)")
-
-    # 5. Load mixed data
-    data = load_and_merge_data(
-        tokenizer=tokenizer,
-        retrieval_path=args.retrieval_data,
-        original_data_path=args.original_data,
-        max_seq_len=args.max_seq_len,
-        retrieval_ratio=args.retrieval_ratio,
-    )
-
-    train_dataset = TokenizedDataset(data["train"], args.max_seq_len)
-    val_dataset = TokenizedDataset(data["val"], args.max_seq_len)
 
     # 6. Train
     training_kwargs = {
@@ -350,13 +378,24 @@ def main():
     shutil.copy2(freq_path, os.path.join(args.output_dir, "custom_inv_freq.pt"))
 
     meta = {
+        "schema": "evq_cosh.lora_stage2_retrieval.v1",
+        "status": "complete",
         "stage": 2,
+        "substrate": args.substrate,
         "model": public_model_identifier(args.model_name),
         "base_adapter": public_artifact_identifier(args.adapter_dir),
+        "base_adapter_sha256": sha256_file(os.path.join(args.adapter_dir, "adapter_model.safetensors")),
+        "adapter_sha256": sha256_file(os.path.join(args.output_dir, "adapter_model.safetensors")),
+        "model_manifest_sha256": base_meta.get("model_manifest_sha256"),
+        "training_manifest_sha256": base_meta.get("data_manifest_sha256"),
         "frequency_provenance": frequency_provenance,
         "max_steps": args.max_steps,
         "learning_rate": args.learning_rate,
         "retrieval_ratio": args.retrieval_ratio,
+        "seed": args.seed,
+        "objective": "answer_only_chat_causal_lm",
+        "retrieval_data_sha256": sha256_file(args.retrieval_data),
+        "original_data_sha256": sha256_file(args.original_data) if args.original_data else None,
         "train_samples": len(train_dataset),
         "train_time_min": round(train_time / 60, 2),
     }

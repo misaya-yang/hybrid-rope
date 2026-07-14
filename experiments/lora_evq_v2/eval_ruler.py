@@ -325,7 +325,8 @@ def task_kv_retrieval(model, tokenizer, ctx_len: int, n_trials: int = 20,
     for t in range(n_trials):
         rng = random.Random(seed + t)
         # Fill almost entire context with KV pairs
-        n_pairs = max(10, (ctx_len - 300) // 40)
+        # ponytail: calibrated for this tokenizer; fail closed below if it drifts.
+        n_pairs = max(10, (ctx_len - 300) // 17)
         pairs = [(random_uuid_short(rng), random_uuid_short(rng))
                  for _ in range(n_pairs)]
 
@@ -335,7 +336,11 @@ def task_kv_retrieval(model, tokenizer, ctx_len: int, n_trials: int = 20,
 
         context = f"KEY-VALUE STORE:\n{kv_text}\nEND OF STORE."
         question = f"What is the value mapped to key {qk}? Answer with only the value."
-        ids = build_prompt(context, question, tokenizer, ctx_len)
+        ids = build_prompt(context, question, tokenizer, ctx_len + 512)
+        if not ctx_len - 512 <= ids.shape[1] <= ctx_len:
+            raise RuntimeError(
+                f"KV prompt is not a real {ctx_len}-token case: got {ids.shape[1]} tokens"
+            )
         resp = gen_text(model, tokenizer, ids, max_new=30)
         if qv in resp:
             correct += 1
