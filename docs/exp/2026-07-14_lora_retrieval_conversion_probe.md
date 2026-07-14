@@ -24,6 +24,15 @@ The subsequent attention gate found a real EVQ target-ranking advantage, but
 the matched sparse-conversion pilot did not turn it into retrieval. Target
 block rank is therefore not a sufficient conversion criterion.
 
+A follow-up 5090 causal decomposition shows that the ranking signal is not
+merely correlational. Removing the answer block from the 32 frozen retrieval
+heads worsened EVQ by `+0.5270` NLL and Geo by effectively zero; removing it
+from every head worsened EVQ by `+1.5055` NLL and Geo by effectively zero.
+Dense EVQ therefore uses real, distributed remote-answer information. The
+failure is downstream: that information moves the correct tokens into the top
+thousands, not to top-1, and neither score sparsity nor oracle block inclusion
+closes the remaining readout gap.
+
 ## Geo identity
 
 The `native_geo` arm used here is standard Llama RoPE: its inverse-frequency
@@ -146,35 +155,132 @@ for both arms (`max_abs=0`, identical top-1), so this is not an implementation
 parity failure. The pilot stop conditions fired and the 100-case expansion was
 not run.
 
+## 5090 causal decomposition at 16K
+
+The follow-up reused the same unchanged matched step-300 adapters and the same
+ten passkey cases. Prompt prefill remained dense. Each intervention changed
+only answer-side decode attention, preserved original rotary KV indices, and
+used the same 128-token block geometry. Small absolute differences from the
+earlier RTX Pro 6000 table (at most `0.017` NLL for dense) are cross-GPU numeric
+drift; all causal contrasts below are paired within the 5090 run.
+
+| Answer-side intervention | Geo NLL | Geo change | EVQ NLL | EVQ change | EVQ-minus-Geo effect |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| dense | 15.5093 | -- | 9.0627 | -- | -- |
+| score only on 32 frozen retrieval heads | 15.5090 | -0.0003 | 8.9982 | -0.0645 | -0.0642 |
+| remove gold block on 32 frozen retrieval heads | 15.5090 | -0.0004 | 9.5897 | +0.5270 | +0.5274 |
+| keep only sink, local, and gold on 32 frozen heads | 15.3454 | -0.1639 | 8.8728 | -0.1899 | -0.0260 |
+| remove gold block on every head | 15.4998 | -0.0095 | 10.5683 | +1.5055 | +1.5151 |
+
+All exact-match cells remained 0%. The selected-head deletion hurt EVQ in all
+ten cases, while the all-head deletion also hurt EVQ in all ten cases and at
+every registered needle depth. The selected-head effect is about 35% of the
+all-head effect in magnitude, but the interventions are not additive, so this
+ratio is descriptive rather than a head-wise variance attribution. The causal
+path is distributed beyond the 32 heads selected by best block rank.
+
+The all-head deletion changes EVQ's geometric-mean correct-token probability
+by a factor of `exp(1.5055) = 4.51`; Geo is unchanged. This establishes genuine
+source use, but the EVQ probability is still only `1.16e-4` with the source
+present.
+
+## Matched-budget oracle inclusion
+
+To distinguish selector misses from collateral pruning, a second intervention
+forced the gold block into every head's score-selected set while replacing the
+lowest-score selected block. It therefore kept the score mode's token budget
+exactly fixed.
+
+| Substrate | Dense NLL | Score NLL | Forced-gold NLL | Forced-gold minus score |
+| --- | ---: | ---: | ---: | ---: |
+| Geo | 15.5093 | 14.8298 | 14.8246 | -0.0052 |
+| EVQ | 9.0627 | 9.0586 | 9.0244 | -0.0341 |
+
+Forced inclusion improved EVQ by only `0.0341` NLL relative to ordinary score
+selection, with a substrate interaction of `-0.0289`. Missing the gold block
+is therefore not the main reason global score sparsity fails to convert EVQ
+into exact retrieval. Score sparsity already preserves EVQ's dense NLL; it
+cannot create a decoding policy that dense inference itself lacks.
+
+## Correct-token rank and generation diagnostics
+
+The evaluator additionally recorded strict correct-token rank without storing
+or reporting any passkey text. Percentages below are fractions of all
+teacher-forced answer tokens.
+
+| Arm / intervention | Answer NLL | First-token median rank | Median mean-token rank | Top-10 | Top-100 | Top-1000 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Geo dense | 15.5093 | 33,774.5 | 33,533.5 | 0.0% | 0.0% | 0.0% |
+| EVQ dense | 9.0627 | 2,043.0 | 1,506.3 | 3.3% | 23.3% | 60.0% |
+| EVQ, gold block removed on every head | 10.5683 | 3,781.5 | 4,035.7 | 0.0% | 0.0% | 43.3% |
+
+EVQ moves the target by more than an order of magnitude in rank and the gold
+block causally accounts for a large part of that movement. The first token is
+nevertheless still around rank 2,000, so 0% exact match is not a near-miss at
+top-1. Across all ten cases, generation had zero gold containment, always used
+the full 32-token budget without EOS, and began with the same token.
+
+## Chat-boundary and decode sanity
+
+The frozen passkey builder, unlike the frozen RULER/NoLiMa/LongBench builders,
+stores raw prompt IDs even though LoRA training used the Llama-3 chat template.
+This was tested as a possible harness explanation without changing the frozen
+artifact. The diagnostic added the tokenizer's official five-token user prefix
+and five-token assistant boundary, removed exactly ten filler tokens before the
+query, and kept every prompt at exactly 16,384 tokens with a unique retained
+passkey span.
+
+| Substrate | Raw NLL | Chat-wrapped NLL | Chat exact / containment | Chat first-token median rank |
+| --- | ---: | ---: | ---: | ---: |
+| Geo | 15.5093 | 15.1504 | 0% / 0% | 33,120 |
+| EVQ | 9.0627 | 9.0929 | 0% / 0% | 5,922 |
+
+Chat framing did not restore retrieval. On one chat-wrapped EVQ case, the
+custom KV loop and Transformers `model.generate` produced exactly the same 32
+token IDs. Full-budget custom attention also matched dense logits exactly in
+every run. The zero generation result is therefore not explained by a missing
+chat boundary, an off-by-one KV loop, or the custom attention implementation.
+
 ## Interpretation and stop decision
 
 Lower language-model NLL, recoverable source signal, attention routing, and
-autoregressive answer production are separate gates. The evidence is
-consistent with EVQ improving the first two without automatically solving the
-last two. The attention result sharpens this conclusion: EVQ often keeps the
-target block in the score-selected set, but its median answer-mass gain is only
-1.033 and its answer NLL barely changes. Rank preservation alone does not prove
-that the selected value path is causally sufficient for decoding the answer.
+autoregressive answer production are separate gates. The causal result now
+shows that EVQ improves the first two and that dense inference genuinely uses
+the remote source. It also rejects the proposed dense-dilution explanation at
+16K: deleting the source is highly damaging, while score sparsity and even
+matched-budget oracle inclusion do little. The remaining bottleneck is the
+learned task/readout path that must turn a rank-thousands token into a generated
+answer.
 
 Stop this line. Do not continue the 50-step recipe, expand the sparse pilot, or
-search sparse budgets post hoc on these ten cases. A retrieval-head-only or
-oracle-block intervention would answer a new, narrower causal question and
-requires a separate preregistration.
+search sparse budgets post hoc on these ten cases. The retrieval-head and
+oracle-block interventions have now answered the narrow causal question; more
+sparse variants would not address the observed output-rank bottleneck.
 
 A new 16K retrieval fine-tune would answer a different question--whether the
 model can learn 16K retrieval--and could not support a zero-shot conversion
-claim.
+claim. If that question is pursued, the next controlled experiment should use
+matched true-16K chat-formatted supervision, checkpoint rank/NLL/containment/EM
+early, and stop if EVQ does not move toward top-1 faster than Geo. It should not
+repeat the failed 8K, 50-step recipe.
 
 ## Artifacts and verification
 
 Raw outputs are in the ignored directory
-`results/lora_sparse_conversion_s42_20260714/server_26252/`. The relevant
-source adapters were not overwritten; the two stage-2 adapters were saved as
-separate artifacts.
+`results/lora_sparse_conversion_s42_20260714/`. The relevant source adapters
+were not overwritten; the two stage-2 adapters were saved as separate
+artifacts.
 
 The current-script attention gate is under `phase0_16k_gate_v2/`; the matched
 sparse pilot is under `phase1_16k_passkey_pilot_v2/`; corrected KV generation
 results are under `true16k_kv_n20/`.
+
+The ignored RTX-5090 bundle contains separate raw and sanitized outputs for the
+selected-head causal run, all-head gold deletion, matched-budget oracle
+inclusion, correct-token rank, and chat-boundary diagnostic. A sanitized
+manifest records the SHA256 of each Geo, EVQ, and summary JSON. No passkey text
+is present in the manifest or this report. The manifest SHA256 is
+`e546460030f952047a10fdd8ed46acb9a41a0a31de8b3cd86e8dd3a4e25e521b`.
 
 Verification completed:
 
@@ -187,5 +293,10 @@ Verification completed:
 - the matched dense/score/fixed pilot completed and hit its stop condition;
 - full-budget sparse/dense logits matched exactly for both arms;
 - the latest focused test run passed 8/8 tests;
-- all result files were copied locally before shutdown;
+- all earlier result files were copied locally before the prior shutdown;
+- the 5090 causal code passed 12/12 focused tests locally and on the server;
+- all five 5090 raw-result pairs were copied locally and summarized;
+- full-budget custom attention matched dense logits exactly in every 5090 run;
+- custom KV decode matched Transformers generation exactly for the tested case;
+- the new 5090 instance was intentionally left running at the user's request;
 - no paper file or reported paper number was changed.

@@ -76,6 +76,8 @@ MODEL_CONTRACT = {
     "max_position_embeddings": 8192,
     "rope_theta": 500000.0,
 }
+PASSKEY_QUERY = "\n\nWhat is the retrieval passkey? Return only the passkey."
+CHAT_WRAPPER_MARKER = "EVQ_CHAT_WRAPPER_BOUNDARY_314159"
 
 
 def _atomic_json(path: Path, value: Mapping[str, Any]) -> None:
@@ -152,6 +154,102 @@ def _answer_span(tokenizer: Any, row: Mapping[str, Any]) -> tuple[int, int]:
             f"{row.get('example_id')} has {len(matches)} exact answer spans; expected one"
         )
     return matches[0], matches[0] + len(answer_ids)
+
+
+def _chat_wrapper_tokens(tokenizer: Any) -> tuple[list[int], list[int]]:
+    marker_ids = _answer_ids(tokenizer, CHAT_WRAPPER_MARKER)
+    wrapped = tokenizer.apply_chat_template(
+        [{"role": "user", "content": CHAT_WRAPPER_MARKER}],
+        tokenize=True,
+        add_generation_prompt=True,
+    )
+    if isinstance(wrapped, Mapping):
+        wrapped = wrapped.get("input_ids")
+    wrapped_ids = [int(token_id) for token_id in wrapped]
+    matches = _find_subsequence(wrapped_ids, marker_ids)
+    if len(matches) != 1:
+        raise ValueError("chat wrapper marker is not unique")
+    start = matches[0]
+    prefix, suffix = wrapped_ids[:start], wrapped_ids[start + len(marker_ids) :]
+    probe = "EVQ chat wrapper parity probe."
+    direct = tokenizer.apply_chat_template(
+        [{"role": "user", "content": probe}],
+        tokenize=True,
+        add_generation_prompt=True,
+    )
+    if isinstance(direct, Mapping):
+        direct = direct.get("input_ids")
+    if prefix + _answer_ids(tokenizer, probe) + suffix != [int(value) for value in direct]:
+        raise ValueError("segmented chat wrapper differs from tokenizer.apply_chat_template")
+    return prefix, suffix
+
+
+def _wrap_passkey_prompt_ids(
+    prompt_ids: Sequence[int],
+    *,
+    query_suffix_ids: Sequence[int],
+    chat_prefix_ids: Sequence[int],
+    chat_suffix_ids: Sequence[int],
+) -> list[int]:
+    raw = [int(token_id) for token_id in prompt_ids]
+    query = [int(token_id) for token_id in query_suffix_ids]
+    if not query or raw[-len(query) :] != query:
+        raise ValueError("passkey prompt does not end with the registered query")
+    overhead = len(chat_prefix_ids) + len(chat_suffix_ids)
+    cut_end = len(raw) - len(query)
+    cut_start = cut_end - overhead
+    if overhead <= 0 or cut_start <= 0:
+        raise ValueError("passkey prompt has no safe filler budget for chat framing")
+    wrapped = (
+        [int(token_id) for token_id in chat_prefix_ids]
+        + raw[:cut_start]
+        + query
+        + [int(token_id) for token_id in chat_suffix_ids]
+    )
+    if len(wrapped) != len(raw):
+        raise AssertionError("chat wrapping changed the registered prompt length")
+    return wrapped
+
+
+def _chat_wrap_passkey_rows(
+    tokenizer: Any,
+    rows: Sequence[Mapping[str, Any]],
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    chat_prefix, chat_suffix = _chat_wrapper_tokens(tokenizer)
+    query_ids = _answer_ids(tokenizer, PASSKEY_QUERY)
+    transformed = []
+    for row in rows:
+        raw_prompt = [int(token_id) for token_id in row["prompt_ids"]]
+        answer_span = _answer_span(tokenizer, row)
+        wrapped = _wrap_passkey_prompt_ids(
+            raw_prompt,
+            query_suffix_ids=query_ids,
+            chat_prefix_ids=chat_prefix,
+            chat_suffix_ids=chat_suffix,
+        )
+        cut_start = len(raw_prompt) - len(query_ids) - len(chat_prefix) - len(chat_suffix)
+        if answer_span[1] > cut_start:
+            raise ValueError("chat framing would remove the registered passkey span")
+        updated = dict(row)
+        updated["prompt_ids"] = wrapped
+        updated["prompt_sha256"] = _prompt_sha256(wrapped)
+        updated["source"] = {
+            **dict(row["source"]),
+            "raw_prompt_sha256": row["prompt_sha256"],
+            "prompt_transform": "llama3_chat_wrap_preserve_length_v1",
+        }
+        if len(_find_subsequence(wrapped, _answer_ids(tokenizer, row["answers"][0]))) != 1:
+            raise ValueError("chat-wrapped prompt lost the unique passkey answer")
+        transformed.append(updated)
+    return transformed, {
+        "name": "llama3_chat_wrap_preserve_length_v1",
+        "wrapper_prefix_tokens": len(chat_prefix),
+        "wrapper_suffix_tokens": len(chat_suffix),
+        "removed_filler_tokens": len(chat_prefix) + len(chat_suffix),
+        "prompt_hashes_sha256": _json_sha256(
+            sorted(row["prompt_sha256"] for row in transformed)
+        ),
+    }
 
 
 def _legacy_passkey_rows(tokenizer: Any) -> list[dict[str, Any]]:
@@ -546,6 +644,23 @@ def _block_layout(
     return static, valid_blocks, block_scores, padded_length
 
 
+def _gold_block_bounds(
+    scores: torch.Tensor,
+    config: Mapping[str, int],
+) -> tuple[int, int]:
+    gold_span = config.get("gold_span")
+    if not isinstance(gold_span, (list, tuple)) or len(gold_span) != 2:
+        raise ValueError("gold-block mode requires a two-element gold_span")
+    gold_start, gold_end = (int(value) for value in gold_span)
+    if not 0 <= gold_start < gold_end <= scores.shape[-1]:
+        raise ValueError("gold_span is outside the current KV index space")
+    block_size = int(config["block_size"])
+    return (
+        (gold_start // block_size) * block_size,
+        min(scores.shape[-1], math.ceil(gold_end / block_size) * block_size),
+    )
+
+
 def _sparse_keep_mask(
     scores: torch.Tensor,
     *,
@@ -554,7 +669,39 @@ def _sparse_keep_mask(
 ) -> torch.Tensor:
     if mode in {"dense", "full"}:
         return torch.ones_like(scores, dtype=torch.bool)
-    if mode not in {"score", "fixed"}:
+    if mode == "gold_drop_all":
+        block_start, block_end = _gold_block_bounds(scores, config)
+        keep = torch.ones(scores.shape[-1], dtype=torch.bool, device=scores.device)
+        keep[block_start:block_end] = False
+        return keep.view(1, 1, 1, -1).expand_as(scores)
+    if mode in {"head_score", "gold_drop", "oracle_gold"}:
+        if "selected_query_heads" not in config:
+            raise ValueError(f"{mode} requires selected_query_heads")
+        selected_heads = tuple(int(head) for head in config["selected_query_heads"])
+        if len(set(selected_heads)) != len(selected_heads) or any(
+            head < 0 or head >= scores.shape[1] for head in selected_heads
+        ):
+            raise ValueError("selected_query_heads are invalid")
+        dense = torch.ones_like(scores, dtype=torch.bool)
+        if not selected_heads:
+            return dense
+        selected = torch.zeros(scores.shape[1], dtype=torch.bool, device=scores.device)
+        selected[list(selected_heads)] = True
+        selected = selected.view(1, -1, 1, 1)
+        if mode == "head_score":
+            sparse = _sparse_keep_mask(scores, mode="score", config=config)
+            return torch.where(selected, sparse, dense)
+
+        block_start, block_end = _gold_block_bounds(scores, config)
+        gold_block = torch.zeros(scores.shape[-1], dtype=torch.bool, device=scores.device)
+        gold_block[block_start:block_end] = True
+        if mode == "gold_drop":
+            causal = (~gold_block).view(1, 1, 1, -1).expand_as(scores)
+        else:
+            static = _static_keep(scores.shape[-1], config, scores.device)
+            causal = (static | gold_block).view(1, 1, 1, -1).expand_as(scores)
+        return torch.where(selected, causal, dense)
+    if mode not in {"score", "fixed", "oracle_include_all"}:
         raise ValueError(f"unsupported attention mode: {mode}")
     static, valid_blocks, block_scores, padded_length = _block_layout(scores, config)
     block_size = int(config["block_size"])
@@ -563,7 +710,7 @@ def _sparse_keep_mask(
         return static.view(1, 1, 1, -1).expand_as(scores)
     budget = min(int(config["top_blocks"]), int(candidate_ids.numel()))
     selected = torch.zeros_like(block_scores, dtype=torch.bool)
-    if mode == "score":
+    if mode in {"score", "oracle_include_all"}:
         available = block_scores.masked_fill(
             ~valid_blocks.view(1, 1, 1, -1), float("-inf")
         )
@@ -574,6 +721,25 @@ def _sparse_keep_mask(
         offsets = [min(count - 1, int((index + 0.5) * count / budget)) for index in range(budget)]
         fixed_ids = candidate_ids[torch.tensor(offsets, device=scores.device)]
         selected[..., fixed_ids] = True
+    if mode == "oracle_include_all":
+        block_start, block_end = _gold_block_bounds(scores, config)
+        forced_ids = range(block_start // block_size, math.ceil(block_end / block_size))
+        for forced_id in forced_ids:
+            if not bool(valid_blocks[forced_id]):
+                continue
+            missing = ~selected[..., forced_id]
+            if not bool(missing.any()):
+                continue
+            droppable = block_scores.masked_fill(~selected, float("inf"))
+            for protected_id in forced_ids:
+                droppable[..., protected_id] = float("inf")
+            drop_ids = droppable.argmin(dim=-1, keepdim=True)
+            if not bool(torch.isfinite(droppable.amin(dim=-1)[missing]).all()):
+                raise RuntimeError("oracle_include_all has no replaceable selected block")
+            drop_mask = torch.zeros_like(selected)
+            drop_mask.scatter_(-1, drop_ids, True)
+            selected &= ~(drop_mask & missing.unsqueeze(-1))
+            selected[..., forced_id] |= missing
     selected_tokens = selected.repeat_interleave(block_size, dim=-1)[..., : scores.shape[-1]]
     static_tokens = static.view(1, 1, 1, -1).expand_as(scores)
     if selected_tokens.shape[-1] != scores.shape[-1] or padded_length < scores.shape[-1]:
@@ -625,10 +791,21 @@ def _set_attention_mode(
     *,
     mode: str = "dense",
     config: Mapping[str, int] = SPARSE_CONFIG,
+    retrieval_heads: Sequence[tuple[int, int]] | None = None,
+    gold_span: Sequence[int] | None = None,
 ) -> None:
+    heads_by_layer: defaultdict[int, list[int]] = defaultdict(list)
+    if retrieval_heads is not None:
+        for layer, head in retrieval_heads:
+            heads_by_layer[int(layer)].append(int(head))
     for _, module in _attention_modules(model):
         module.config._attn_implementation = implementation
-        module._evq_sparse_config = {**config, "mode": mode}
+        module_config: dict[str, Any] = {**config, "mode": mode}
+        if retrieval_heads is not None:
+            module_config["selected_query_heads"] = heads_by_layer[int(module.layer_idx)]
+        if gold_span is not None:
+            module_config["gold_span"] = tuple(int(value) for value in gold_span)
+        module._evq_sparse_config = module_config
     model.config._attn_implementation = implementation
 
 
@@ -1080,9 +1257,21 @@ def summarize_phase0(args: argparse.Namespace) -> dict[str, Any]:
     return output
 
 
-def _configure_decode(model: torch.nn.Module, mode: str) -> None:
+def _configure_decode(
+    model: torch.nn.Module,
+    mode: str,
+    *,
+    retrieval_heads: Sequence[tuple[int, int]] | None = None,
+    gold_span: Sequence[int] | None = None,
+) -> None:
     _register_attention()
-    _set_attention_mode(model, ATTENTION_IMPL, mode=mode)
+    _set_attention_mode(
+        model,
+        ATTENTION_IMPL,
+        mode=mode,
+        retrieval_heads=retrieval_heads,
+        gold_span=gold_span,
+    )
 
 
 @torch.inference_mode()
@@ -1123,22 +1312,41 @@ def _decode_logits(
 
 
 @torch.inference_mode()
+def _target_rank(logits: torch.Tensor, label: int) -> int:
+    if logits.ndim != 2 or logits.shape[0] != 1:
+        raise ValueError("target rank requires [1, vocab] logits")
+    if not 0 <= int(label) < logits.shape[-1]:
+        raise ValueError("target label is outside the vocabulary")
+    target_logit = logits[0, int(label)]
+    return int((logits[0] > target_logit).sum().item()) + 1
+
+
+@torch.inference_mode()
 def _answer_nll(
     model: torch.nn.Module,
     prompt_ids: Sequence[int],
     answer_ids: Sequence[int],
     *,
     mode: str,
+    retrieval_heads: Sequence[tuple[int, int]] | None = None,
+    gold_span: Sequence[int] | None = None,
 ) -> dict[str, float | int]:
     past, current = _prefill(model, prompt_ids)
-    _configure_decode(model, mode)
+    _configure_decode(
+        model,
+        mode,
+        retrieval_heads=retrieval_heads,
+        gold_span=gold_span,
+    )
     seen = len(prompt_ids) - 1
     total = 0.0
+    ranks = []
     try:
         for label in answer_ids:
             logits, past = _decode_logits(model, past, current, seen_tokens=seen)
             target = torch.tensor([int(label)], dtype=torch.long, device=logits.device)
             total += float(F.cross_entropy(logits, target, reduction="sum").double().cpu())
+            ranks.append(_target_rank(logits, int(label)))
             current = int(label)
             seen += 1
     finally:
@@ -1147,6 +1355,12 @@ def _answer_nll(
         "nll_sum": total,
         "answer_tokens": len(answer_ids),
         "mean_logprob": -total / len(answer_ids),
+        "first_token_rank": ranks[0],
+        "mean_token_rank": statistics.fmean(ranks),
+        "max_token_rank": max(ranks),
+        "top_10_fraction": statistics.fmean(rank <= 10 for rank in ranks),
+        "top_100_fraction": statistics.fmean(rank <= 100 for rank in ranks),
+        "top_1000_fraction": statistics.fmean(rank <= 1000 for rank in ranks),
     }
 
 
@@ -1469,9 +1683,16 @@ def _generate(
     *,
     mode: str,
     max_new_tokens: int,
+    retrieval_heads: Sequence[tuple[int, int]] | None = None,
+    gold_span: Sequence[int] | None = None,
 ) -> dict[str, Any]:
     past, current = _prefill(model, prompt_ids)
-    _configure_decode(model, mode)
+    _configure_decode(
+        model,
+        mode,
+        retrieval_heads=retrieval_heads,
+        gold_span=gold_span,
+    )
     seen = len(prompt_ids) - 1
     generated = []
     eos = tokenizer.eos_token_id
@@ -1556,13 +1777,24 @@ def _score_phase1_row(
     row: Mapping[str, Any],
     *,
     mode: str,
+    retrieval_heads: Sequence[tuple[int, int]] | None = None,
 ) -> dict[str, Any]:
+    selected_head_modes = {"head_score", "gold_drop", "oracle_gold"}
+    if mode in selected_head_modes and not retrieval_heads:
+        raise ValueError(f"{mode} requires frozen retrieval heads")
+    gold_span = (
+        _answer_span(tokenizer, row)
+        if mode in {"gold_drop", "gold_drop_all", "oracle_gold", "oracle_include_all"}
+        else None
+    )
     answer_scores = [
         _answer_nll(
             model,
             row["prompt_ids"],
             _answer_ids(tokenizer, answer),
             mode=mode,
+            retrieval_heads=retrieval_heads,
+            gold_span=gold_span,
         )
         for answer in row["answers"]
     ]
@@ -1576,6 +1808,8 @@ def _score_phase1_row(
         row["prompt_ids"],
         mode=mode,
         max_new_tokens=int(row["generation_tokens"]),
+        retrieval_heads=retrieval_heads,
+        gold_span=gold_span,
     )
     metric_score = score_capability_prediction(
         row["metric"],
@@ -1603,6 +1837,12 @@ def _score_phase1_row(
         "nll_sum": selected["nll_sum"],
         "answer_tokens": selected["answer_tokens"],
         "mean_logprob": selected["mean_logprob"],
+        "first_token_rank": selected["first_token_rank"],
+        "mean_token_rank": selected["mean_token_rank"],
+        "max_token_rank": selected["max_token_rank"],
+        "top_10_fraction": selected["top_10_fraction"],
+        "top_100_fraction": selected["top_100_fraction"],
+        "top_1000_fraction": selected["top_1000_fraction"],
         "metric_score": metric_score,
         "selected_reference_index": selected_index,
         "reference_mean_logprobs": [score["mean_logprob"] for score in answer_scores],
@@ -1620,9 +1860,35 @@ def run_phase1(args: argparse.Namespace) -> dict[str, Any]:
     if any(str(length) not in gate.get("lengths", {}) for length in target_lengths):
         raise ValueError("Phase 1 requested a length not covered by the passing gate")
     modes = tuple(piece.strip() for piece in args.modes.split(",") if piece.strip())
-    if not modes or any(mode not in {"dense", "score", "fixed"} for mode in modes):
-        raise ValueError("Phase 1 modes must be dense,score,fixed")
+    allowed_modes = {
+        "dense",
+        "score",
+        "fixed",
+        "head_score",
+        "gold_drop",
+        "gold_drop_all",
+        "oracle_gold",
+        "oracle_include_all",
+    }
+    if not modes or any(mode not in allowed_modes for mode in modes):
+        raise ValueError(f"Phase 1 modes must be drawn from {sorted(allowed_modes)}")
+    head_records = gate.get("retrieval_head_contract", {}).get("heads")
+    if not isinstance(head_records, list) or len(head_records) != 32:
+        raise ValueError("Phase 1 requires exactly 32 frozen retrieval heads")
+    retrieval_heads = tuple((int(row["layer"]), int(row["head"])) for row in head_records)
+    if len(set(retrieval_heads)) != len(retrieval_heads):
+        raise ValueError("Phase 1 retrieval-head contract contains duplicates")
+    if any(
+        mode in {"gold_drop", "gold_drop_all", "oracle_gold", "oracle_include_all"}
+        for mode in modes
+    ) and args.dataset != "passkey":
+        raise ValueError("gold-block causal modes require registered passkey needle spans")
+    if args.chat_wrap_passkey and (args.dataset != "passkey" or set(modes) != {"dense"}):
+        raise ValueError("chat-wrap diagnostic is restricted to dense passkey evaluation")
     model, tokenizer, identity = _load_arm_model(args)
+    prompt_transform = {"name": "frozen_prompt_ids"}
+    if args.chat_wrap_passkey:
+        rows, prompt_transform = _chat_wrap_passkey_rows(tokenizer, rows)
     _register_attention()
     sanity_row = min(rows, key=lambda row: int(row["target_length"]))
     dense_logits = _first_step_logits(model, sanity_row["prompt_ids"], mode="dense")
@@ -1646,7 +1912,13 @@ def run_phase1(args: argparse.Namespace) -> dict[str, Any]:
     for row in rows:
         for mode in modes:
             progress += 1
-            result = _score_phase1_row(model, tokenizer, row, mode=mode)
+            result = _score_phase1_row(
+                model,
+                tokenizer,
+                row,
+                mode=mode,
+                retrieval_heads=retrieval_heads,
+            )
             results.append(result)
             print(
                 json.dumps(
@@ -1672,12 +1944,19 @@ def run_phase1(args: argparse.Namespace) -> dict[str, Any]:
         "selection": args.selection,
         "target_lengths": target_lengths,
         "data_sha256": data_hash,
+        "prompt_transform": prompt_transform,
         "phase0_gate_sha256": sha256_file(args.phase0_gate),
+        "retrieval_head_contract": gate["retrieval_head_contract"],
         "adapter": identity,
         "sparse_config": SPARSE_CONFIG,
         "operator_contract": {
             "scope": "answer_side_decode_after_dense_prompt_prefill",
             "score": "exact_per_query_head_max_qk_per_128_token_block",
+            "head_score": "score_sparse_only_on_32_frozen_retrieval_heads_other_heads_dense",
+            "gold_drop": "remove_gold_128_token_block_only_on_frozen_retrieval_heads",
+            "gold_drop_all": "remove_gold_128_token_block_on_all_attention_heads",
+            "oracle_gold": "retain_only_local_sink_and_gold_block_on_frozen_retrieval_heads",
+            "oracle_include_all": "force_gold_block_into_all_head_score_selection_by_replacing_lowest_selected_block",
             "position_handling": "mask_only_original_rotary_kv_indices_no_reordering",
             "efficiency_claim": False,
             "fixed_control": "same_remote_block_budget_uniform_content_independent_blocks",
@@ -1783,6 +2062,7 @@ def summarize_phase1(args: argparse.Namespace) -> dict[str, Any]:
         "data_sha256",
         "phase0_gate_sha256",
         "sparse_config",
+        "prompt_transform",
     ):
         if geo.get(key) != evq.get(key):
             raise ValueError(f"Phase 1 arms differ at {key}")
@@ -1880,6 +2160,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     phase1.add_argument("--selection", choices=("pilot", "full"), default="pilot")
     phase1.add_argument("--lengths", default="16384,32768")
     phase1.add_argument("--modes", default="dense,score,fixed")
+    phase1.add_argument("--chat-wrap-passkey", action="store_true")
 
     phase1_summary = commands.add_parser("summarize-phase1")
     phase1_summary.add_argument("--geo", type=Path, required=True)

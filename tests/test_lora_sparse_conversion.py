@@ -11,7 +11,9 @@ from experiments.lora_evq_v2.eval_sparse_conversion import (
     _register_attention,
     _set_attention_mode,
     _sparse_keep_mask,
+    _target_rank,
     _tokenizer_identity_matches,
+    _wrap_passkey_prompt_ids,
     _validate_config,
     causal_backbone,
     exact_block_attention_forward,
@@ -42,6 +44,26 @@ def test_counterfactual_prompts_are_equal_length_and_remove_the_source():
         prompts["source_removed"][i : i + 2]
         for i in range(len(prompt) - 1)
     ]
+
+
+def test_target_rank_counts_only_strictly_better_logits():
+    logits = torch.tensor([[0.5, 2.0, 2.0, 1.0]])
+    assert _target_rank(logits, 1) == 1
+    assert _target_rank(logits, 2) == 1
+    assert _target_rank(logits, 3) == 3
+
+
+def test_chat_wrap_preserves_length_query_and_wrapper_boundaries():
+    raw = [10, 11, 20, 21, 22, 23, 24, 25, 30, 31]
+    wrapped = _wrap_passkey_prompt_ids(
+        raw,
+        query_suffix_ids=[30, 31],
+        chat_prefix_ids=[1, 2],
+        chat_suffix_ids=[3],
+    )
+
+    assert wrapped == [1, 2, 10, 11, 20, 21, 22, 30, 31, 3]
+    assert len(wrapped) == len(raw)
 
 
 def test_rotary_and_gqa_full_budget_parity():
@@ -97,6 +119,58 @@ def test_score_and_fixed_masks_share_budget_and_probe_gqa_heads():
     assert len(metrics["block_rank"]) == 4
     assert metrics["block_rank"] == [1, 1, 1, 1]
     assert metrics["hit_at"]["16"] == [True, True, True, True]
+
+
+def test_causal_masks_only_change_frozen_retrieval_heads():
+    scores = torch.zeros(1, 4, 1, 16)
+    scores[:, 1, :, 8:12] = 10
+    config = {
+        "block_size": 4,
+        "top_blocks": 1,
+        "local_window": 4,
+        "sink_tokens": 1,
+        "selected_query_heads": [1],
+        "gold_span": (8, 10),
+    }
+    score = _sparse_keep_mask(scores, mode="score", config=config)
+    head_score = _sparse_keep_mask(scores, mode="head_score", config=config)
+    gold_drop = _sparse_keep_mask(scores, mode="gold_drop", config=config)
+    gold_drop_all = _sparse_keep_mask(scores, mode="gold_drop_all", config=config)
+    oracle_gold = _sparse_keep_mask(scores, mode="oracle_gold", config=config)
+
+    assert head_score[:, 1].equal(score[:, 1])
+    assert head_score[:, [0, 2, 3]].all()
+    assert not gold_drop[:, 1, :, 8:12].any()
+    assert gold_drop[:, [0, 2, 3]].all()
+    assert not gold_drop_all[:, :, :, 8:12].any()
+    assert gold_drop_all[:, :, :, :8].all()
+    assert gold_drop_all[:, :, :, 12:].all()
+    assert oracle_gold[:, 1, :, 0].all()
+    assert oracle_gold[:, 1, :, 8:12].all()
+    assert oracle_gold[:, 1, :, 12:16].all()
+    assert not oracle_gold[:, 1, :, 1:8].any()
+    assert oracle_gold[:, [0, 2, 3]].all()
+
+
+def test_oracle_include_all_preserves_score_budget_and_forces_gold_block():
+    scores = torch.zeros(1, 2, 1, 20)
+    scores[:, :, :, 4:8] = 10
+    scores[:, :, :, 8:12] = 5
+    config = {
+        "block_size": 4,
+        "top_blocks": 1,
+        "local_window": 4,
+        "sink_tokens": 1,
+        "gold_span": (8, 10),
+    }
+    score = _sparse_keep_mask(scores, mode="score", config=config)
+    oracle = _sparse_keep_mask(scores, mode="oracle_include_all", config=config)
+
+    assert score.sum(dim=-1).equal(oracle.sum(dim=-1))
+    assert score[:, :, :, 4:8].all()
+    assert not score[:, :, :, 8:12].any()
+    assert not oracle[:, :, :, 4:8].any()
+    assert oracle[:, :, :, 8:12].all()
 
 
 def test_exploratory_16k_gate_requires_evq_topk_separation():
