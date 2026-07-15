@@ -4,13 +4,15 @@
 from __future__ import annotations
 
 import argparse
-from collections import defaultdict
+from collections import Counter, defaultdict
+import copy
 from contextlib import nullcontext
 import hashlib
 import json
 import math
 import os
 from pathlib import Path
+import random
 import statistics
 import time
 from typing import Any, Iterable, Mapping, Sequence
@@ -33,6 +35,7 @@ from experiments.lora_evq_v2.prepare_positional_distill_data import (
     tokenizer_source_fingerprint,
 )
 from experiments.lora_evq_v2.prepare_seed42_capability_data import (
+    _repeat_to_length,
     build_passkey_examples,
     load_jsonl,
 )
@@ -43,6 +46,7 @@ from experiments.lora_evq_v2.train_evq_lora import (
     find_rotary_modules,
     inject_inv_freq,
     load_frequency_artifact,
+    _load_strict_legacy_data,
     resolve_model_rope_geometry,
     verify_model_inv_freq,
 )
@@ -61,6 +65,14 @@ PHASE1_SUMMARY_SCHEMA = "evq_cosh.lora_sparse_conversion_phase1_summary.v1"
 RAW_CAPABILITY_SCHEMA = "evq_cosh.lora_raw_capability_eval.v1"
 CANARY_SCHEMA = "evq_cosh.lora_source_dependence_canary.v1"
 CANARY_SUMMARY_SCHEMA = "evq_cosh.lora_source_dependence_canary_summary.v1"
+READOUT_TRACE_SCHEMA = "evq_cosh.readout_conversion_trace.v1"
+READOUT_TRACE_MANIFEST_SCHEMA = "evq_cosh.readout_conversion_trace_manifest.v1"
+ASSOCIATION_SWAP_TRACE_SCHEMA = "evq_cosh.readout_association_swap_trace.v1"
+ASSOCIATION_SWAP_MANIFEST_SCHEMA = "evq_cosh.readout_association_swap_manifest.v1"
+ASSOCIATION_SWAP_CASE_SCHEMA = "evq_cosh.readout_association_swap_case.v1"
+ASSOCIATION_SWAP_CASE_MANIFEST_SCHEMA = (
+    "evq_cosh.readout_association_swap_case_manifest.v1"
+)
 ATTENTION_IMPL = "evq_exact_block"
 SPARSE_CONFIG = {
     "block_size": 128,
@@ -89,6 +101,15 @@ def _atomic_json(path: Path, value: Mapping[str, Any]) -> None:
         json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
+    os.replace(temporary, path)
+
+
+def _atomic_torch(path: Path, value: Mapping[str, Any]) -> None:
+    if path.exists():
+        raise FileExistsError(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".incomplete")
+    torch.save(dict(value), temporary)
     os.replace(temporary, path)
 
 
@@ -154,6 +175,452 @@ def _answer_span(tokenizer: Any, row: Mapping[str, Any]) -> tuple[int, int]:
             f"{row.get('example_id')} has {len(matches)} exact answer spans; expected one"
         )
     return matches[0], matches[0] + len(answer_ids)
+
+
+def build_association_swap_pair(
+    tokenizer: Any,
+    *,
+    key_a_ids: Sequence[int],
+    key_b_ids: Sequence[int],
+    answer_a_ids: Sequence[int],
+    answer_b_ids: Sequence[int],
+    filler_ids: Sequence[int],
+    first_token_frequency_buckets: Mapping[int, int],
+    target_length: int = 16384,
+    depth_percent: float = 50.0,
+    block_size: int = 128,
+    slot_gap_blocks: int = 2,
+    mirror: bool = False,
+) -> dict[str, Any]:
+    """Build a token-multiset-matched two-key association-swap pair."""
+
+    def tokens(values: Sequence[int], name: str) -> tuple[int, ...]:
+        normalized = tuple(int(value) for value in values)
+        if not normalized or any(value < 0 for value in normalized):
+            raise ValueError(f"{name} must contain non-negative token IDs")
+        return normalized
+
+    key_a = tokens(key_a_ids, "key_a_ids")
+    key_b = tokens(key_b_ids, "key_b_ids")
+    answer_a = tokens(answer_a_ids, "answer_a_ids")
+    answer_b = tokens(answer_b_ids, "answer_b_ids")
+    filler = tokens(filler_ids, "filler_ids")
+    if len(key_a) != len(key_b) or key_a == key_b:
+        raise ValueError("association keys must be distinct and token-length matched")
+    if len(answer_a) != len(answer_b) or answer_a == answer_b:
+        raise ValueError("association answers must be distinct and token-length matched")
+    bucket_a = first_token_frequency_buckets.get(answer_a[0])
+    bucket_b = first_token_frequency_buckets.get(answer_b[0])
+    if bucket_a is None or bucket_b is None or int(bucket_a) != int(bucket_b):
+        raise ValueError("answer first tokens must share a registered frequency bucket")
+    if target_length <= 0 or block_size <= 0 or slot_gap_blocks <= 0:
+        raise ValueError("target length, block size, and slot gap must be positive")
+    if not 0.0 < float(depth_percent) < 100.0:
+        raise ValueError("association depth must be strictly between 0 and 100")
+
+    literal = lambda value: tuple(_answer_ids(tokenizer, value))
+    prefix = literal("Inspect the archive and return only the value for the target entry.\n")
+    record_prefix = literal("\nEntry ")
+    record_infix = literal(" has exact value ")
+    record_suffix = literal(".\n")
+    query_prefix = literal("\nTarget entry ")
+    query_infix = literal("; control entry ")
+    query_suffix = literal(". Return only the target value.")
+
+    def record(key: tuple[int, ...], answer: tuple[int, ...]) -> tuple[int, ...]:
+        return record_prefix + key + record_infix + answer + record_suffix
+
+    query_a = query_prefix + key_a + query_infix + key_b + query_suffix
+    query_b = query_prefix + key_b + query_infix + key_a + query_suffix
+    if len(query_a) != len(query_b) or Counter(query_a) != Counter(query_b):
+        raise ValueError("association queries are not token-multiset matched")
+
+    left_key, left_answer = (key_b, answer_b) if mirror else (key_a, answer_a)
+    right_key, right_answer = (key_a, answer_a) if mirror else (key_b, answer_b)
+    left_record = record(left_key, left_answer)
+    right_record = record(right_key, right_answer)
+    if len(left_record) != len(right_record):
+        raise AssertionError("position-symmetric records have different token lengths")
+    value_offset = len(record_prefix) + len(left_key) + len(record_infix)
+
+    content_end = int(target_length) - len(query_a)
+    maximum_block = (content_end - 1) // int(block_size)
+    center_block = round(float(depth_percent) * maximum_block / 100.0)
+    left_block = center_block - int(slot_gap_blocks)
+    right_block = center_block + int(slot_gap_blocks)
+    if left_block < 0 or right_block > maximum_block:
+        raise ValueError("requested symmetric association slots fall outside the prompt")
+    within_block = int(block_size) // 2
+    left_answer_start = left_block * int(block_size) + within_block
+    right_answer_start = right_block * int(block_size) + within_block
+    if (
+        left_answer_start + len(left_answer) > (left_block + 1) * int(block_size)
+        or right_answer_start + len(right_answer) > (right_block + 1) * int(block_size)
+    ):
+        raise ValueError("an association answer crosses its registered block boundary")
+
+    left_record_start = left_answer_start - value_offset
+    right_record_start = right_answer_start - value_offset
+    before_count = left_record_start - len(prefix)
+    between_count = right_record_start - (left_record_start + len(left_record))
+    after_count = content_end - (right_record_start + len(right_record))
+    if min(before_count, between_count, after_count) < 0:
+        raise ValueError("target length is too short for the symmetric association layout")
+    context = (
+        prefix
+        + tuple(_repeat_to_length(filler, before_count))
+        + left_record
+        + tuple(_repeat_to_length(filler, between_count))
+        + right_record
+        + tuple(_repeat_to_length(filler, after_count))
+    )
+    prompt_a = context + query_a
+    prompt_b = context + query_b
+    if len(prompt_a) != target_length or len(prompt_b) != target_length:
+        raise AssertionError("association builder changed the registered prompt length")
+    if Counter(prompt_a) != Counter(prompt_b):
+        raise AssertionError("association pair changed the prompt token multiset")
+
+    left_span = (left_answer_start, left_answer_start + len(left_answer))
+    right_span = (right_answer_start, right_answer_start + len(right_answer))
+    answer_spans = (
+        {"a": right_span, "b": left_span}
+        if mirror
+        else {"a": left_span, "b": right_span}
+    )
+    for name, answer in (("a", answer_a), ("b", answer_b)):
+        for prompt in (prompt_a, prompt_b):
+            matches = _find_subsequence(prompt, answer)
+            if matches != [answer_spans[name][0]]:
+                raise ValueError(f"answer {name} is not unique at its registered position")
+
+    query_start = len(context)
+    target_key_start = query_start + len(query_prefix)
+    control_key_start = target_key_start + len(key_a) + len(query_infix)
+    return {
+        "prompts": {"query_a": list(prompt_a), "query_b": list(prompt_b)},
+        "prompt_sha256": {
+            "query_a": _prompt_sha256(prompt_a),
+            "query_b": _prompt_sha256(prompt_b),
+        },
+        "answer_ids": {"a": list(answer_a), "b": list(answer_b)},
+        "answer_spans": {name: list(span) for name, span in answer_spans.items()},
+        "gold_spans": {
+            "query_a": list(answer_spans["a"]),
+            "query_b": list(answer_spans["b"]),
+        },
+        "query_key_spans": {
+            "target": [target_key_start, target_key_start + len(key_a)],
+            "control": [control_key_start, control_key_start + len(key_a)],
+        },
+        "slot_blocks": [left_block, right_block],
+        "depth_percent": float(depth_percent),
+        "actual_midpoint_depth_percent": 100.0
+        * (left_answer_start + right_answer_start)
+        / (2.0 * target_length),
+        "first_token_frequency_bucket": int(bucket_a),
+        "mirror": bool(mirror),
+    }
+
+
+def _association_pair_sha256(
+    *,
+    prompts: Sequence[Sequence[int]],
+    candidate_first_token_ids: Sequence[int],
+    gold_spans: Sequence[Sequence[int]],
+    split: str,
+    depth_percent: float,
+    frequency_bucket: int,
+    mirror: bool,
+) -> str:
+    return _json_sha256(
+        {
+            "prompt_sha256": [_prompt_sha256(prompt) for prompt in prompts],
+            "candidate_first_token_ids": [
+                int(value) for value in candidate_first_token_ids
+            ],
+            "gold_spans": [
+                [int(value) for value in span] for span in gold_spans
+            ],
+            "split": str(split),
+            "depth_percent": float(depth_percent),
+            "frequency_bucket": int(frequency_bucket),
+            "mirror": bool(mirror),
+        }
+    )
+
+
+def _association_answer_pairs(
+    counts: torch.Tensor,
+    *,
+    excluded_ids: set[int],
+    seed: int,
+) -> list[tuple[int, int, int]]:
+    if counts.ndim != 1 or bool((counts < 0).any()):
+        raise ValueError("training token counts must be a non-negative vector")
+    grouped: defaultdict[int, list[int]] = defaultdict(list)
+    for token_id in torch.nonzero(counts > 0, as_tuple=False).flatten().tolist():
+        token_id = int(token_id)
+        if token_id in excluded_ids:
+            continue
+        count = int(counts[token_id])
+        bucket = int(math.floor(math.log2(count + 1)))
+        grouped[bucket].append(token_id)
+    rng = random.Random(int(seed))
+    pairs = []
+    for bucket in sorted(grouped):
+        token_ids = grouped[bucket]
+        rng.shuffle(token_ids)
+        pairs.extend(
+            (token_ids[index], token_ids[index + 1], bucket)
+            for index in range(0, len(token_ids) - 1, 2)
+        )
+    rng.shuffle(pairs)
+    return pairs
+
+
+def _training_token_counts(
+    training_data_manifest: Path,
+) -> tuple[torch.Tensor, dict[str, Any], dict[str, Any]]:
+    data, manifest = _load_strict_legacy_data(training_data_manifest)
+    tokens = data["tokens"].to(torch.int64)
+    offsets = data["offsets"].to(torch.int64)
+    counts = torch.bincount(tokens, minlength=MODEL_CONTRACT.get("vocab_size", 128256))
+    for row_index in data["validation_indices"].to(torch.int64).tolist():
+        start, end = (int(offsets[row_index]), int(offsets[row_index + 1]))
+        counts -= torch.bincount(tokens[start:end], minlength=counts.numel())
+    if bool((counts < 0).any()):
+        raise RuntimeError("validation subtraction produced negative training counts")
+    train_lengths = offsets[data["train_indices"] + 1] - offsets[data["train_indices"]]
+    if int(counts.sum()) != int(train_lengths.sum()):
+        raise RuntimeError("training token counts do not match the frozen train split")
+    receipt = {
+        "formula": "floor(log2(count + 1))",
+        "training_token_count": int(counts.sum()),
+        "counts_dtype": str(counts.dtype),
+        "counts_sha256": hashlib.sha256(counts.numpy().tobytes()).hexdigest(),
+        "tokens_sha256": manifest["files"]["tokens"]["sha256"],
+        "offsets_sha256": manifest["files"]["offsets"]["sha256"],
+        "train_indices_sha256": manifest["files"]["train_indices"]["sha256"],
+    }
+    return counts, manifest, receipt
+
+
+def prepare_association_swap_cases(args: argparse.Namespace) -> dict[str, Any]:
+    output_dir = args.output_dir
+    temporary_dir = output_dir.with_name(output_dir.name + ".incomplete")
+    if output_dir.exists() or temporary_dir.exists():
+        raise FileExistsError(output_dir if output_dir.exists() else temporary_dir)
+
+    counts, training_manifest, count_receipt = _training_token_counts(
+        args.training_data_manifest
+    )
+    expected_tokenizer = tokenizer_source_fingerprint(args.model_name)
+    if not _tokenizer_identity_matches(
+        training_manifest.get("tokenizer", {}), expected_tokenizer
+    ):
+        raise ValueError("frozen training tokens use a different tokenizer")
+
+    from transformers import AutoTokenizer
+
+    local = Path(args.model_name).is_dir()
+    tokenizer = AutoTokenizer.from_pretrained(
+        args.model_name,
+        trust_remote_code=True,
+        use_fast=True,
+        local_files_only=local,
+    )
+    if len(tokenizer) != counts.numel():
+        raise ValueError("training token counts do not match tokenizer vocabulary size")
+    filler_ids = _answer_ids(
+        tokenizer,
+        " Unrelated archival material is repeated here solely as fixed filler.",
+    )
+    excluded = {int(value) for value in getattr(tokenizer, "all_special_ids", [])}
+    excluded.update(filler_ids)
+    key_candidates = sorted(
+        (
+            int(token_id)
+            for token_id in torch.nonzero(counts > 0, as_tuple=False).flatten().tolist()
+            if int(token_id) not in excluded
+        ),
+        key=lambda token_id: (-int(counts[token_id]), token_id),
+    )
+    if len(key_candidates) < 2:
+        raise ValueError("frozen training tokens contain fewer than two usable keys")
+    key_a, key_b = key_candidates[:2]
+    excluded.update((key_a, key_b))
+    candidate_pairs = _association_answer_pairs(
+        counts,
+        excluded_ids=excluded,
+        seed=42,
+    )
+
+    target_pairs = 256
+    depths = (10.0, 25.0, 50.0, 75.0, 90.0)
+    records = []
+    split_counts: Counter[str] = Counter()
+    depth_counts: Counter[str] = Counter()
+    bucket_counts: Counter[str] = Counter()
+    temporary_dir.mkdir(parents=True)
+    for answer_a, answer_b, bucket in candidate_pairs:
+        index = len(records)
+        if index == target_pairs:
+            break
+        split = "dev" if index < 128 else "test"
+        split_index = index if split == "dev" else index - 128
+        depth = depths[split_index % len(depths)]
+        mirror = bool(split_index % 2)
+        try:
+            pair = build_association_swap_pair(
+                tokenizer,
+                key_a_ids=[key_a],
+                key_b_ids=[key_b],
+                answer_a_ids=[answer_a],
+                answer_b_ids=[answer_b],
+                filler_ids=filler_ids,
+                first_token_frequency_buckets={answer_a: bucket, answer_b: bucket},
+                target_length=16384,
+                depth_percent=depth,
+                block_size=SPARSE_CONFIG["block_size"],
+                slot_gap_blocks=2,
+                mirror=mirror,
+            )
+        except ValueError:
+            continue
+        prompts = [pair["prompts"]["query_a"], pair["prompts"]["query_b"]]
+        gold_spans = [pair["gold_spans"]["query_a"], pair["gold_spans"]["query_b"]]
+        candidates = [answer_a, answer_b]
+        pair_sha256 = _association_pair_sha256(
+            prompts=prompts,
+            candidate_first_token_ids=candidates,
+            gold_spans=gold_spans,
+            split=split,
+            depth_percent=depth,
+            frequency_bucket=bucket,
+            mirror=mirror,
+        )
+        record_name = f"records/{index:03d}_{pair_sha256}.pt"
+        record_path = temporary_dir / record_name
+        _atomic_torch(
+            record_path,
+            {
+                "schema": ASSOCIATION_SWAP_CASE_SCHEMA,
+                "pair_sha256": pair_sha256,
+                "split": split,
+                "depth_percent": depth,
+                "frequency_bucket": bucket,
+                "mirror": mirror,
+                "prompt_ids": torch.tensor(prompts, dtype=torch.int32),
+                "gold_spans": torch.tensor(gold_spans, dtype=torch.int32),
+                "candidate_first_token_ids": torch.tensor(
+                    candidates, dtype=torch.int32
+                ),
+            },
+        )
+        records.append(
+            {
+                "file": record_name,
+                "sha256": sha256_file(record_path),
+                "size_bytes": record_path.stat().st_size,
+                "pair_sha256": pair_sha256,
+                "split": split,
+                "depth_percent": depth,
+            }
+        )
+        split_counts[split] += 1
+        depth_counts[f"{depth:g}"] += 1
+        bucket_counts[str(bucket)] += 1
+    if len(records) != target_pairs or split_counts != {"dev": 128, "test": 128}:
+        raise RuntimeError("could not build the registered 128-dev/128-test swap set")
+    manifest = {
+        "schema": ASSOCIATION_SWAP_CASE_MANIFEST_SCHEMA,
+        "status": "complete",
+        "seed": 42,
+        "target_length": 16384,
+        "pair_count": len(records),
+        "split_counts": dict(sorted(split_counts.items())),
+        "depth_counts": dict(sorted(depth_counts.items())),
+        "mirror_counts": {"false": 128, "true": 128},
+        "frequency_bucket_counts": dict(sorted(bucket_counts.items())),
+        "frequency": count_receipt,
+        "training_data_manifest_sha256": sha256_file(args.training_data_manifest),
+        "tokenizer": expected_tokenizer,
+        "pair_set_sha256": _json_sha256(
+            [record["pair_sha256"] for record in records]
+        ),
+        "records": records,
+        "script_sha256": _script_sha256(),
+    }
+    _atomic_json(temporary_dir / "manifest.json", manifest)
+    os.replace(temporary_dir, output_dir)
+    return manifest
+
+
+def load_association_swap_cases(
+    root: Path,
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    manifest_path = root / "manifest.json"
+    if not manifest_path.is_file():
+        raise FileNotFoundError(manifest_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if (
+        manifest.get("schema") != ASSOCIATION_SWAP_CASE_MANIFEST_SCHEMA
+        or manifest.get("status") != "complete"
+        or manifest.get("seed") != 42
+        or manifest.get("pair_count") != 256
+        or manifest.get("split_counts") != {"dev": 128, "test": 128}
+    ):
+        raise ValueError("association-swap case manifest contract mismatch")
+    cases = []
+    pair_hashes = []
+    for item in manifest.get("records", []):
+        relative = Path(str(item.get("file", "")))
+        if relative.is_absolute() or ".." in relative.parts:
+            raise ValueError("association-swap case manifest has an unsafe path")
+        path = root / relative
+        if not path.is_file() or sha256_file(path) != item.get("sha256"):
+            raise ValueError(f"association-swap case receipt mismatch: {relative}")
+        case = torch.load(path, map_location="cpu", weights_only=True)
+        prompts = case.get("prompt_ids")
+        spans = case.get("gold_spans")
+        candidates = case.get("candidate_first_token_ids")
+        if (
+            case.get("schema") != ASSOCIATION_SWAP_CASE_SCHEMA
+            or not all(torch.is_tensor(value) for value in (prompts, spans, candidates))
+            or prompts.shape != (2, 16384)
+            or spans.shape != (2, 2)
+            or candidates.shape != (2,)
+        ):
+            raise ValueError("association-swap case tensor contract mismatch")
+        if not torch.equal(torch.sort(prompts[0]).values, torch.sort(prompts[1]).values):
+            raise ValueError("association-swap prompts changed the token multiset")
+        for condition in range(2):
+            start, end = (int(value) for value in spans[condition].tolist())
+            if end != start + 1 or int(prompts[condition, start]) != int(
+                candidates[condition]
+            ):
+                raise ValueError("association-swap gold span does not match its candidate")
+        pair_sha256 = _association_pair_sha256(
+            prompts=prompts.tolist(),
+            candidate_first_token_ids=candidates.tolist(),
+            gold_spans=spans.tolist(),
+            split=str(case.get("split")),
+            depth_percent=float(case.get("depth_percent")),
+            frequency_bucket=int(case.get("frequency_bucket")),
+            mirror=bool(case.get("mirror")),
+        )
+        if pair_sha256 != case.get("pair_sha256") or pair_sha256 != item.get(
+            "pair_sha256"
+        ):
+            raise ValueError("association-swap pair hash mismatch")
+        pair_hashes.append(pair_sha256)
+        cases.append(case)
+    if len(cases) != 256 or len(set(pair_hashes)) != 256:
+        raise ValueError("association-swap cases are incomplete or duplicated")
+    if _json_sha256(pair_hashes) != manifest.get("pair_set_sha256"):
+        raise ValueError("association-swap pair-set hash mismatch")
+    return manifest, cases
 
 
 def _chat_wrapper_tokens(tokenizer: Any) -> tuple[list[int], list[int]]:
@@ -1321,6 +1788,56 @@ def _target_rank(logits: torch.Tensor, label: int) -> int:
     return int((logits[0] > target_logit).sum().item()) + 1
 
 
+def causal_delta_rank(
+    full_logits: torch.Tensor,
+    ablated_logits: torch.Tensor,
+    labels: torch.Tensor | Sequence[int] | int,
+) -> torch.Tensor:
+    """Strict rank of each label under ``full_logits - ablated_logits``."""
+    if full_logits.shape != ablated_logits.shape or full_logits.ndim < 2:
+        raise ValueError("full and ablated logits must share [..., vocab] shape")
+    delta = full_logits.float() - ablated_logits.float()
+    target_shape = delta.shape[:-1]
+    target_ids = torch.as_tensor(labels, dtype=torch.long, device=delta.device)
+    while target_ids.ndim < len(target_shape):
+        target_ids = target_ids.unsqueeze(-1)
+    try:
+        target_ids = torch.broadcast_to(target_ids, target_shape)
+    except RuntimeError as exc:
+        raise ValueError("labels do not broadcast over the non-vocabulary axes") from exc
+    if bool(((target_ids < 0) | (target_ids >= delta.shape[-1])).any()):
+        raise ValueError("causal-delta label is outside the vocabulary")
+    target = delta.gather(-1, target_ids.unsqueeze(-1))
+    return (delta > target).sum(dim=-1) + 1
+
+
+def per_layer_logit_lens(
+    hidden_states: torch.Tensor,
+    *,
+    norm: torch.nn.Module,
+    lm_head: torch.nn.Module,
+) -> torch.Tensor:
+    """Apply the model's final norm and unembedding to per-layer states."""
+    if hidden_states.ndim < 2:
+        raise ValueError("per-layer hidden states require [..., layers, hidden] axes")
+    return lm_head(norm(hidden_states)).float()
+
+
+def per_layer_logit_lens_delta(
+    full_hidden_states: torch.Tensor,
+    ablated_hidden_states: torch.Tensor,
+    *,
+    norm: torch.nn.Module,
+    lm_head: torch.nn.Module,
+) -> torch.Tensor:
+    """Compute ``W_U Norm(h_full_l) - W_U Norm(h_ablate_l)`` per layer."""
+    if full_hidden_states.shape != ablated_hidden_states.shape:
+        raise ValueError("full and ablated per-layer hidden states must have equal shape")
+    return per_layer_logit_lens(
+        full_hidden_states, norm=norm, lm_head=lm_head
+    ) - per_layer_logit_lens(ablated_hidden_states, norm=norm, lm_head=lm_head)
+
+
 @torch.inference_mode()
 def _answer_nll(
     model: torch.nn.Module,
@@ -1735,6 +2252,390 @@ def _first_step_logits(
         return logits.detach().cpu()
     finally:
         del past
+
+
+@torch.inference_mode()
+def _teacher_forced_logit_trace_from_prefill(
+    model: torch.nn.Module,
+    past: Any,
+    current_token: int,
+    answer_ids: Sequence[int],
+    *,
+    seen_tokens: int,
+    mode: str,
+    gold_span: Sequence[int] | None = None,
+) -> dict[str, Any]:
+    """Trace every answer position and layer from an immutable prefill cache."""
+    labels = tuple(int(label) for label in answer_ids)
+    if not labels:
+        raise ValueError("readout trace requires at least one answer token")
+    backbone = causal_backbone(model)
+    layers = getattr(backbone, "layers", None)
+    norm = getattr(backbone, "norm", None)
+    lm_head = model.get_output_embeddings()
+    if not isinstance(layers, torch.nn.ModuleList) or norm is None or lm_head is None:
+        raise RuntimeError("readout trace requires Llama-style layers, final norm, and lm_head")
+
+    branch_past = copy.deepcopy(past)
+    captured: dict[int, torch.Tensor] = {}
+    hooks = []
+
+    def make_hook(layer_index: int):
+        def hook(_module: torch.nn.Module, _inputs: tuple[Any, ...], output: Any) -> None:
+            hidden = output[0] if isinstance(output, (tuple, list)) else output
+            if not torch.is_tensor(hidden) or hidden.ndim != 3:
+                raise RuntimeError("decoder-layer hook did not receive [batch, tokens, hidden]")
+            captured[layer_index] = hidden[:, -1].detach()
+
+        return hook
+
+    for index, layer in enumerate(layers):
+        hooks.append(layer.register_forward_hook(make_hook(index)))
+
+    _configure_decode(model, mode, gold_span=gold_span)
+    current = int(current_token)
+    seen = int(seen_tokens)
+    traces = []
+    parity = []
+    try:
+        for label in labels:
+            captured.clear()
+            final_logits, branch_past = _decode_logits(
+                model,
+                branch_past,
+                current,
+                seen_tokens=seen,
+            )
+            if sorted(captured) != list(range(len(layers))):
+                raise RuntimeError("readout trace did not capture every decoder layer")
+            hidden = torch.stack([captured[index] for index in range(len(layers))])
+            layer_logits = per_layer_logit_lens(hidden, norm=norm, lm_head=lm_head).squeeze(1)
+            parity_logits = per_layer_logit_lens(
+                hidden[-1:], norm=norm, lm_head=lm_head
+            ).squeeze(1)
+            max_abs = float((parity_logits[0] - final_logits[0]).abs().max().cpu())
+            if max_abs > 1e-4:
+                raise RuntimeError(f"final logit-lens parity failed: max_abs={max_abs}")
+            layer_logits[-1] = final_logits[0]
+            traces.append(layer_logits.detach().to(device="cpu", dtype=torch.bfloat16))
+            parity.append(max_abs)
+            current = int(label)
+            seen += 1
+    finally:
+        for hook in hooks:
+            hook.remove()
+        del branch_past
+    return {
+        "logits": torch.stack(traces),
+        "layer_indices": torch.arange(len(layers), dtype=torch.int16),
+        "final_logit_parity_max_abs": max(parity),
+    }
+
+
+@torch.inference_mode()
+def _paired_teacher_forced_logit_traces(
+    model: torch.nn.Module,
+    prompt_ids: Sequence[int],
+    answer_ids: Sequence[int],
+    *,
+    gold_span: Sequence[int],
+) -> dict[str, Any]:
+    """Share one dense prefill across full and all-head gold-ablation branches."""
+    past, current = _prefill(model, prompt_ids)
+    try:
+        full = _teacher_forced_logit_trace_from_prefill(
+            model,
+            past,
+            current,
+            answer_ids,
+            seen_tokens=len(prompt_ids) - 1,
+            mode="dense",
+            gold_span=gold_span,
+        )
+        ablated = _teacher_forced_logit_trace_from_prefill(
+            model,
+            past,
+            current,
+            answer_ids,
+            seen_tokens=len(prompt_ids) - 1,
+            mode="gold_drop_all",
+            gold_span=gold_span,
+        )
+    finally:
+        del past
+    if not torch.equal(full["layer_indices"], ablated["layer_indices"]):
+        raise RuntimeError("full and ablated traces captured different layers")
+    return {"full": full, "ablated": ablated}
+
+
+def run_readout_trace(args: argparse.Namespace) -> dict[str, Any]:
+    """Persist the minimal dense/gold-ablated tensors needed for readout analysis."""
+    output_dir = args.output
+    temporary_dir = output_dir.with_name(output_dir.name + ".incomplete")
+    if output_dir.exists() or temporary_dir.exists():
+        raise FileExistsError(output_dir if output_dir.exists() else temporary_dir)
+
+    _, all_rows = load_passkey_rows(args.data_root)
+    lengths = _parse_ints(args.lengths)
+    trials = _parse_ints(args.trials)
+    rows = _select_passkey_rows(all_rows, lengths=lengths, trials=trials)
+    model, tokenizer, identity = _load_arm_model(args)
+    torch.cuda.reset_peak_memory_stats()
+    started = time.time()
+    records = []
+    temporary_dir.mkdir(parents=True)
+    try:
+        for index, row in enumerate(rows):
+            if len(row["answers"]) != 1:
+                raise ValueError("readout trace requires one registered gold answer per case")
+            answer_ids = _answer_ids(tokenizer, row["answers"][0])
+            gold_span = _answer_span(tokenizer, row)
+            traces = _paired_teacher_forced_logit_traces(
+                model,
+                row["prompt_ids"],
+                answer_ids,
+                gold_span=gold_span,
+            )
+            record_name = f"records/{index:03d}_{row['prompt_sha256']}.pt"
+            record_path = temporary_dir / record_name
+            _atomic_torch(
+                record_path,
+                {
+                    "schema": READOUT_TRACE_SCHEMA,
+                    "substrate": args.substrate,
+                    "prompt_sha256": row["prompt_sha256"],
+                    "target_length": int(row["target_length"]),
+                    "depth_percent": float(row["depth_percent"]),
+                    "gold_token_ids": torch.tensor(answer_ids, dtype=torch.int32),
+                    "layer_indices": traces["full"]["layer_indices"],
+                    "full_logits": traces["full"]["logits"],
+                    "ablated_logits": traces["ablated"]["logits"],
+                    "final_logit_parity_max_abs": max(
+                        traces["full"]["final_logit_parity_max_abs"],
+                        traces["ablated"]["final_logit_parity_max_abs"],
+                    ),
+                },
+            )
+            shape = list(traces["full"]["logits"].shape)
+            records.append(
+                {
+                    "file": record_name,
+                    "sha256": sha256_file(record_path),
+                    "size_bytes": record_path.stat().st_size,
+                    "prompt_sha256": row["prompt_sha256"],
+                    "target_length": int(row["target_length"]),
+                    "depth_percent": float(row["depth_percent"]),
+                    "shape": shape,
+                }
+            )
+            print(
+                json.dumps(
+                    {
+                        "command": "readout-trace",
+                        "substrate": args.substrate,
+                        "progress": f"{index + 1}/{len(rows)}",
+                        "length": row["target_length"],
+                        "depth": row["depth_percent"],
+                    },
+                    sort_keys=True,
+                ),
+                flush=True,
+            )
+        manifest = {
+            "schema": READOUT_TRACE_MANIFEST_SCHEMA,
+            "status": "complete",
+            "measurement_label": "oracle-diagnostic",
+            "single_seed_supporting": True,
+            "substrate": args.substrate,
+            "selection": {"lengths": list(lengths), "trials": list(trials)},
+            "passkey_sha256": PASSKEY_SHA256,
+            "adapter": {
+                key: identity.get(key)
+                for key in (
+                    "substrate",
+                    "adapter_sha256",
+                    "model_manifest_sha256",
+                    "training_manifest_sha256",
+                    "protocol_sha256",
+                    "code_sha256",
+                )
+            },
+            "tensor_contract": {
+                "logits": "bfloat16[answer_position,decoder_layer,vocabulary]",
+                "full": "dense answer-side attention after one shared dense prefill",
+                "ablated": "gold_drop_all answer-side attention after the same dense prefill",
+                "rank": "1 + count(delta_logit > target_delta_logit)",
+            },
+            "records": records,
+            "script_sha256": _script_sha256(),
+            "runtime": {
+                "seconds": time.time() - started,
+                "peak_cuda_memory_bytes": torch.cuda.max_memory_allocated(),
+                "cuda_device": torch.cuda.get_device_name(0),
+                "torch_version": torch.__version__,
+            },
+        }
+        _atomic_json(temporary_dir / "manifest.json", manifest)
+        os.replace(temporary_dir, output_dir)
+    except Exception:
+        raise
+    return manifest
+
+
+def run_association_swap_trace(args: argparse.Namespace) -> dict[str, Any]:
+    output_dir = args.output
+    temporary_dir = output_dir.with_name(output_dir.name + ".incomplete")
+    if output_dir.exists() or temporary_dir.exists():
+        raise FileExistsError(output_dir if output_dir.exists() else temporary_dir)
+
+    case_manifest, cases = load_association_swap_cases(args.cases_root)
+    if case_manifest.get("training_data_manifest_sha256") != sha256_file(
+        args.training_data_manifest
+    ):
+        raise ValueError("association-swap cases use a different training manifest")
+    model, _, identity = _load_arm_model(args)
+    if case_manifest.get("tokenizer") != tokenizer_source_fingerprint(args.model_name):
+        raise ValueError("association-swap cases use a different model tokenizer")
+
+    torch.cuda.reset_peak_memory_stats()
+    started = time.time()
+    records = []
+    actual_input_tokens = 0
+    temporary_dir.mkdir(parents=True)
+    for index, case in enumerate(cases):
+        prompts = case["prompt_ids"]
+        spans = case["gold_spans"]
+        candidates = case["candidate_first_token_ids"]
+        condition_traces = []
+        for condition in range(2):
+            prompt_ids = [int(value) for value in prompts[condition].tolist()]
+            gold_span = [int(value) for value in spans[condition].tolist()]
+            label = int(candidates[condition])
+            condition_traces.append(
+                _paired_teacher_forced_logit_traces(
+                    model,
+                    prompt_ids,
+                    [label],
+                    gold_span=gold_span,
+                )
+            )
+            actual_input_tokens += len(prompt_ids) - 1 + 2
+        layer_indices = condition_traces[0]["full"]["layer_indices"]
+        if any(
+            not torch.equal(layer_indices, traces["full"]["layer_indices"])
+            or not torch.equal(layer_indices, traces["ablated"]["layer_indices"])
+            for traces in condition_traces
+        ):
+            raise RuntimeError("association-swap conditions captured different layers")
+        full_logits = torch.stack(
+            [traces["full"]["logits"][0] for traces in condition_traces]
+        )
+        ablated_logits = torch.stack(
+            [traces["ablated"]["logits"][0] for traces in condition_traces]
+        )
+        pair_sha256 = str(case["pair_sha256"])
+        record_name = f"records/{index:03d}_{pair_sha256}.pt"
+        record_path = temporary_dir / record_name
+        parity = max(
+            max(
+                traces["full"]["final_logit_parity_max_abs"],
+                traces["ablated"]["final_logit_parity_max_abs"],
+            )
+            for traces in condition_traces
+        )
+        _atomic_torch(
+            record_path,
+            {
+                "schema": ASSOCIATION_SWAP_TRACE_SCHEMA,
+                "substrate": args.substrate,
+                "pair_sha256": pair_sha256,
+                "split": str(case["split"]),
+                "depth_percent": float(case["depth_percent"]),
+                "candidate_first_token_ids": candidates.to(torch.int32),
+                "layer_indices": layer_indices,
+                "full_logits": full_logits,
+                "ablated_logits": ablated_logits,
+                "final_logit_parity_max_abs": float(parity),
+            },
+        )
+        records.append(
+            {
+                "file": record_name,
+                "sha256": sha256_file(record_path),
+                "size_bytes": record_path.stat().st_size,
+                "pair_sha256": pair_sha256,
+                "split": str(case["split"]),
+                "depth_percent": float(case["depth_percent"]),
+                "shape": list(full_logits.shape),
+            }
+        )
+        print(
+            json.dumps(
+                {
+                    "command": "association-swap-trace",
+                    "substrate": args.substrate,
+                    "progress": f"{index + 1}/{len(cases)}",
+                    "split": case["split"],
+                    "depth": case["depth_percent"],
+                },
+                sort_keys=True,
+            ),
+            flush=True,
+        )
+    expected_input_tokens = 256 * 2 * (16384 - 1 + 2)
+    if actual_input_tokens != expected_input_tokens:
+        raise RuntimeError(
+            f"association-swap input budget mismatch: {actual_input_tokens}"
+        )
+    manifest = {
+        "schema": ASSOCIATION_SWAP_MANIFEST_SCHEMA,
+        "status": "complete",
+        "measurement_label": "oracle-diagnostic",
+        "single_seed_supporting": True,
+        "paper_claim": False,
+        "substrate": args.substrate,
+        "case_manifest_sha256": sha256_file(args.cases_root / "manifest.json"),
+        "pair_set_sha256": case_manifest["pair_set_sha256"],
+        "selection": {
+            "seed": 42,
+            "target_length": 16384,
+            "dev_pairs": 128,
+            "test_pairs": 128,
+        },
+        "adapter": {
+            key: identity.get(key)
+            for key in (
+                "substrate",
+                "adapter_sha256",
+                "model_manifest_sha256",
+                "training_manifest_sha256",
+                "protocol_sha256",
+                "code_sha256",
+            )
+        },
+        "tensor_contract": {
+            "logits": "bfloat16[query_condition,decoder_layer,vocabulary]",
+            "query_condition": ["query_a", "query_b"],
+            "full": "dense answer-side attention after one shared dense prefill",
+            "ablated": "gold_drop_all answer-side attention after the same dense prefill",
+        },
+        "budget": {
+            "shared_16k_prefills_this_arm": 512,
+            "actual_input_tokens_this_arm": actual_input_tokens,
+            "matched_two_arm_actual_input_tokens": 2 * actual_input_tokens,
+        },
+        "records": records,
+        "script_sha256": _script_sha256(),
+        "runtime": {
+            "seconds": time.time() - started,
+            "peak_cuda_memory_bytes": torch.cuda.max_memory_allocated(),
+            "cuda_device": torch.cuda.get_device_name(0),
+            "torch_version": torch.__version__,
+        },
+    }
+    _atomic_json(temporary_dir / "manifest.json", manifest)
+    os.replace(temporary_dir, output_dir)
+    return manifest
 
 
 def _phase1_rows(args: argparse.Namespace) -> tuple[str, list[dict[str, Any]]]:
@@ -2167,6 +3068,21 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     phase1_summary.add_argument("--evq", type=Path, required=True)
     phase1_summary.add_argument("--output", type=Path, required=True)
 
+    readout_trace = commands.add_parser("readout-trace")
+    _add_arm_arguments(readout_trace)
+    readout_trace.add_argument("--data-root", type=Path, required=True)
+    readout_trace.add_argument("--lengths", default="16384")
+    readout_trace.add_argument("--trials", default="0,1")
+
+    prepare_swap = commands.add_parser("prepare-association-swap")
+    prepare_swap.add_argument("--model-name", required=True)
+    prepare_swap.add_argument("--training-data-manifest", type=Path, required=True)
+    prepare_swap.add_argument("--output-dir", type=Path, required=True)
+
+    swap_trace = commands.add_parser("association-swap-trace")
+    _add_arm_arguments(swap_trace)
+    swap_trace.add_argument("--cases-root", type=Path, required=True)
+
     raw_capability = commands.add_parser("raw-capability")
     _add_arm_arguments(raw_capability)
     raw_capability.add_argument(
@@ -2223,6 +3139,12 @@ def main(argv: Sequence[str] | None = None) -> None:
         result = run_phase1(args)
     elif args.command == "summarize-phase1":
         result = summarize_phase1(args)
+    elif args.command == "readout-trace":
+        result = run_readout_trace(args)
+    elif args.command == "prepare-association-swap":
+        result = prepare_association_swap_cases(args)
+    elif args.command == "association-swap-trace":
+        result = run_association_swap_trace(args)
     elif args.command == "raw-capability":
         result = run_raw_capability(args)
     elif args.command == "counterfactual-canary":

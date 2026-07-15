@@ -24,6 +24,9 @@ Read this before any LoRA, rebuttal, or paid-GPU experiment.
 
 ## Execution and GPU
 
+- **GPU-on is experiment-only.** Never start a paid GPU until every required code file, model, adapter, dataset/tensor, manifest/hash, output path, environment, and launch command is present and validated in no-GPU mode. If anything is missing or mismatched after startup, shut the instance down immediately, finish preparation off-GPU, and restart only when the experiment can launch without debugging, data preparation, or artifact transfer.
+- Run all SHA-256 checks, path discovery, downloads, copying, compilation, tests, dry-runs, token counting, case generation, and result-transfer preparation in no-GPU mode. A GPU session may only source a completed READY receipt and immediately execute its frozen experiment command.
+- After durable experiment outputs exist, shut the GPU down before analysis, packaging, result transfer, figure generation, or report writing only when no further authorized GPU experiment remains and the user has not explicitly asked to keep the instance running. Explicit keep-running instructions take precedence between contiguous experiment stages.
 - Record execution metadata per run, but never require global equality; FP8/FP4, quantization, packing, sample-order, label, or batch changes are new protocols.
 - Before GPU startup, finish data/model/eval hashes, dry-run/tests, launch command, paths, compile cache, and automatic evaluation.
 - Once GPU is on, launch within five minutes or recommend shutdown; then verify PID, first optimizer step, loss, speed, memory/utilization, and ETA.
