@@ -262,7 +262,7 @@ Likelihood 是 reviewer 实际提出的相对可能性；Impact 是回答失败�
 | --- | --- | --- | --- |
 | PK / capability | 100% PK是否就是生成式exact retrieval或通用长上下文能力？ | PK只定义为teacher-forced NLL-gap；AR exact单列，同时报告8K seed spread与4K reversal | `CLARIFY_EXISTING`；无需新benchmark，reviewer明确要求某endpoint后再评估 |
 | Primary II single seed | 为什么把seed-42 diagnostic作为primary？ | 承认整张comparator table未多seed；额外fixed-EVQ seeds不能升级全表 | `SOFTEN_CLAIM`；不机械补seed，除非reviewer把matched replication列为明确升分条件 |
-| Official YaRN / native endpoint | faithful YaRN或standard RoPE下方向是否仍在？ | 当前未知；fixed-ramp与midpoint结论不能外推 | `PARTIAL`；只有明确trigger且满足full-audit §6 parity/matched-training gate才考虑实验 |
+| Official YaRN / native endpoint | faithful YaRN或standard RoPE下方向是否仍在？ | 已跑 single-seed component ablation（`EVQ_YARN_COMPONENT_ABLATION_20260714.md`）：abundant MHA 下 official-YaRN 的**频率校正**（非 mscale）抹平 EVQ gap，证实 complementarity 撤回并给出机制；scarce MLA 激进外推处（scale 8/16）**未抹平**（EVQ+full 8K 71.6<85.5）。只支持机制方向，不恢复 complementarity；P2/P3 已否证 | `PARTIAL + SUPPORTING`；deploy-on-trigger；边界见 ablation 文档（single-seed、L=512、τ 未重推、PPL-only、modest 外推仍被抹平） |
 | MLA convention | 为什么用 \(d_{\mathrm{eff}}=128\)，是否验证公式？ | actual head_dim=64、d_rope=32；\(\tau=1.414\)只作ad-hoc empirical setting | `SOFTEN_CLAIM`；不补dimension ablation，不称theorem |
 | Undertraining / scale | 短训练预算是否制造优势，能否泛化到重预训练模型？ | 报exact budget与负/反向边界；现有8B LoRA不能关闭因果问题 | `PARTIAL`；reviewer把heavy-pretrained adaptation设为关键判据时，才考虑已spec化8B机制实验 |
 | LoRA / downstream | 频率重分配在LLaMA-3-8B下是否真的可学、是否改善任务？ | fresh LongAlpaca pair是single-seed teacher-forced NLL，8K更差且quantizer不匹配 | 默认 `OUT_OF_SCOPE`；若使用必须完整报告8K harm，不能称pure-shape control |
@@ -289,8 +289,21 @@ Likelihood 是 reviewer 实际提出的相对可能性；Impact 是回答失败�
 | `REVIEWER_TRIAGE_PLAYBOOK.md` | **流程入口** | 真实reviews到达后保存verbatim trigger、分配稳定ID、记录action/readiness |
 | `REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md` | **archival / 部分过时** | 只用于找历史攻击面；不得复制answer kernel、实验优先级或旧方法身份 |
 | `LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md`与`LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` | **supporting-only** | reviewer点名LoRA时才启用；必须同时披露quantizer差异、single seed与8K harm |
+| `EVQ_YARN_COMPONENT_ABLATION_20260714.md`（源：`data/curated/native_rope_evq_150m_s42_500m_20260713.json`、`results/mla_yarn_short_s42_20260714/`、`docs/exp/2026-07-14_mla_k16_short_context_yarn_ablation.md`） | **主动实验 / supporting-only** | official-YaRN 被 trigger 时启用；单seed机制证据；确认 complementarity 撤回并支持 scarce-channel 方向；不升级 primary、不恢复 complementarity |
 | `frequency_adaptation_8b/` | **独立机制实验队列** | 不是rebuttal默认要求，不修复paper-lineage comparator或theory错误 |
 | `simulated_reviews/` | **内部压力测试** | 不是真实opinion、score或trigger，不进入最终response |
+
+### 5.1 主动实验状态（proactive component experiments）
+
+以下实验由内部 audit 触发（对应 P1 "Official YaRN / native endpoint" 与 P0-D remaining-contribution），把之前标为"未知"的 official-YaRN 方向变成有边界的机制证据。全部 single-seed / supporting、deploy-on-trigger，不升级 primary、不恢复已撤回的 complementarity。
+
+| 实验 | 状态 | 结论（含边界） | Disposition |
+| --- | --- | --- | --- |
+| MHA K=32 four-arm 分解（500M 六格 + 同 checkpoint 四算子） | 完成 | abundant 通道下 official-YaRN 的**频率校正**抹平 EVQ gap（mscale 不抹）→ 证实 complementarity 撤回并给机制 | 确认 WITHDRAW 并附机制；trigger 时用 |
+| MLA K=16 four-arm 分解（`mla_yarn_short_s42_20260714`） | 完成 | scarce + 激进外推（scale 8/16）处频率校正**未抹平**，EVQ+full>Native+full；但 P2/P3 被否证、modest 外推被抹平、PPL-only、L=512、τ 未重推、单seed | 支持 scarce-channel 机制方向；trigger 时用；不升级 Primary III |
+| Sparse-attention 转换实验（EVQ 干净远程底座 + score-based 稀疏选择 → 检索/QA） | 计划中 / 未跑 | 假设：dense 下远程信号被 softmax 稀释；稀疏选择读干净的远程 q·k 分数，把 PPL 兑现成任务能力 | 属 P0-D "usable→good" 缺口；受 §8 gate 约束；真实 trigger 或 camera-ready 方向研究，非默认 rebuttal 任务 |
+
+τ=5.66 重推的 MLA 复跑（关闭"τ 未按公式设"的 reviewer 缺口）为可选硬化项，同样 deploy-on-trigger。
 
 当前真正缺失的不是另一份大文档，而是：真实reviews、作者对integrity disclosure的决定、每个实际trigger对应的短答案，以及未闭合provenance项的诚实边界。
 

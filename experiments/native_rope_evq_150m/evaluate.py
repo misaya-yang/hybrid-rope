@@ -37,6 +37,12 @@ from scripts.supporting_eval.eval_passkey_scratch import (
 EVAL_LENGTHS = (2_048, 4_096, 8_192, 16_384)
 EVAL_DEPTHS = (0.10, 0.25, 0.50, 0.75, 0.90)
 OPERATORS = ("raw", "yarn", "repo_fixed_ramp")
+YARN_ABLATION_OPERATORS = (
+    ("raw", False, False),
+    ("freq_only", True, False),
+    ("mscale_only", False, True),
+    ("full", True, True),
+)
 
 
 def load_weights_only_checkpoint(path: Path) -> Any:
@@ -67,11 +73,94 @@ def apply_registered_operator(
     arm: str,
     operator: str,
     length: int,
+    use_frequency_transform: bool | None = None,
+    use_attention_scaling: bool | None = None,
 ) -> tuple[torch.Tensor, float, dict[str, Any]]:
     if arm not in ARMS:
         raise ValueError(f"unknown arm {arm!r}")
     factor = target_yarn_factor(length)
     inv = inv_freq.detach().cpu().to(torch.float64).view(-1)
+    explicit_components = (
+        use_frequency_transform is not None or use_attention_scaling is not None
+    )
+    if explicit_components:
+        if not isinstance(use_frequency_transform, bool) or not isinstance(
+            use_attention_scaling, bool
+        ):
+            raise ValueError("both YaRN component switches must be explicit booleans")
+        expected = {
+            name: (frequency, scaling)
+            for name, frequency, scaling in YARN_ABLATION_OPERATORS
+        }
+        if operator not in expected:
+            raise ValueError(f"unknown YaRN ablation operator {operator!r}")
+        if expected[operator] != (
+            use_frequency_transform,
+            use_attention_scaling,
+        ):
+            raise ValueError(f"operator {operator!r} does not match its component switches")
+        if not use_frequency_transform and not use_attention_scaling:
+            return inv.clone(), 1.0, {
+                "mode": "raw_substrate",
+                "operator": operator,
+                "scale": factor,
+                "mscale": 1.0,
+                "use_frequency_transform": False,
+                "use_attention_scaling": False,
+                "public_label": (
+                    "native endpoint RoPE"
+                    if arm == "native_rope"
+                    else "endpoint EVQ-Cosh tau=1.5"
+                ),
+            }
+        if arm == "native_rope":
+            transformed, official_mscale, meta = official_yarn_on_native_grid(
+                head_dim=SPEC.head_dim,
+                base=SPEC.rope_base,
+                scale=factor,
+                original_max_position_embeddings=SPEC.seq_len,
+                beta_fast=32.0,
+                beta_slow=1.0,
+            )
+            full_label = "official YaRN on native endpoint RoPE"
+        else:
+            transformed, official_mscale, meta = official_yarn_on_inv_freq(
+                inv,
+                head_dim=SPEC.head_dim,
+                base=SPEC.rope_base,
+                scale=factor,
+                original_max_position_embeddings=SPEC.seq_len,
+                beta_fast=32.0,
+                beta_slow=1.0,
+            )
+            full_label = "YaRN-derived on endpoint EVQ-Cosh"
+        runtime_inv = transformed if use_frequency_transform else inv.clone()
+        runtime_mscale = official_mscale if use_attention_scaling else 1.0
+        metadata = dict(meta)
+        metadata.update(
+            {
+                "operator": operator,
+                "target_length": int(length),
+                "scale": factor,
+                "official_mscale": float(official_mscale),
+                "mscale": float(runtime_mscale),
+                "use_frequency_transform": use_frequency_transform,
+                "use_attention_scaling": use_attention_scaling,
+                "public_label": (
+                    full_label
+                    if use_frequency_transform and use_attention_scaling
+                    else (
+                        f"{full_label} (frequency transform only)"
+                        if use_frequency_transform
+                        else f"official YaRN mscale only on {arm}"
+                    )
+                ),
+            }
+        )
+        if not use_frequency_transform:
+            metadata["source_yarn_mode"] = metadata["mode"]
+            metadata["mode"] = "yarn_mscale_only"
+        return runtime_inv, float(runtime_mscale), metadata
     if operator == "raw":
         return inv.clone(), 1.0, {
             "mode": "raw_substrate",
@@ -143,6 +232,48 @@ def apply_registered_operator(
     return transformed, float(mscale), metadata
 
 
+def validate_checkpoint_identity(
+    arm_dir: Path,
+    arm: str,
+    reference_metadata: dict[str, Any],
+) -> dict[str, Any]:
+    inv_path = arm_dir / "inv_freq.npy"
+    checkpoint_path = arm_dir / "model.pt"
+    meta_path = arm_dir / "train_meta.json"
+    for path in (inv_path, checkpoint_path, meta_path):
+        if not path.is_file():
+            raise FileNotFoundError(path)
+    inv = torch.from_numpy(np.load(inv_path, allow_pickle=False)).to(torch.float64)
+    expected_inv = get_arm_inv_freq(arm)
+    if not torch.allclose(inv, expected_inv, atol=1e-7, rtol=1e-6):
+        raise ValueError(f"{arm} inv_freq.npy does not match the registered schedule")
+    metadata = json.loads(meta_path.read_text())
+    actual_checkpoint_sha = sha256_file(checkpoint_path)
+    if actual_checkpoint_sha != metadata.get("checkpoint_sha256"):
+        raise ValueError(f"checkpoint sha256 mismatch for {arm}")
+    required_equal = (
+        "arm",
+        "seed",
+        "checkpoint_sha256",
+        "inv_freq_sha256",
+        "initial_trainable_sha256",
+        "row_order_sha256",
+        "data_manifest_sha256",
+    )
+    for key in required_equal:
+        if metadata.get(key) != reference_metadata.get(key):
+            raise ValueError(f"checkpoint metadata {key} mismatch for {arm}")
+    expected_tensor_sha = tensor_sha256(expected_inv)
+    if metadata.get("inv_freq_sha256") != expected_tensor_sha:
+        raise ValueError(f"checkpoint metadata frequency hash mismatch for {arm}")
+    return {
+        "checkpoint_sha256": actual_checkpoint_sha,
+        "inv_freq_sha256": expected_tensor_sha,
+        "train_meta": metadata,
+        "inv_freq": inv,
+    }
+
+
 def fixed_validation_offsets(
     validation_tokens: int,
     length: int,
@@ -211,11 +342,11 @@ def set_runtime_rope(
     value = inv_freq.to(device=rope.inv_freq.device, dtype=rope.inv_freq.dtype)
     if value.shape != rope.inv_freq.shape:
         raise ValueError(f"inv_freq shape {value.shape} != model shape {rope.inv_freq.shape}")
+    if not hasattr(rope, "attention_scaling"):
+        raise RuntimeError("registered rotary module has no attention_scaling field")
     rope.inv_freq.copy_(value)
+    rope.attention_scaling = float(mscale)
     rope._build(int(max_position))
-    if abs(float(mscale) - 1.0) > 1e-12:
-        rope.cos_c.mul_(float(mscale))
-        rope.sin_c.mul_(float(mscale))
 
 
 def _load_checkpoint(arm_dir: Path, arm: str) -> tuple[GPT, dict[str, Any], torch.Tensor]:
@@ -262,12 +393,20 @@ def evaluate_natural_text(
     arm: str,
     operator: str,
     chunks: int,
+    lengths: tuple[int, ...] = EVAL_LENGTHS,
+    use_frequency_transform: bool | None = None,
+    use_attention_scaling: bool | None = None,
 ) -> dict[str, Any]:
     model.eval()
     output: dict[str, Any] = {}
-    for length in EVAL_LENGTHS:
+    for length in lengths:
         inv, mscale, operator_meta = apply_registered_operator(
-            base_inv, arm=arm, operator=operator, length=length
+            base_inv,
+            arm=arm,
+            operator=operator,
+            length=length,
+            use_frequency_transform=use_frequency_transform,
+            use_attention_scaling=use_attention_scaling,
         )
         set_runtime_rope(
             model,
@@ -390,6 +529,9 @@ def evaluate_passkey(
     arm: str,
     operator: str,
     trials: int,
+    lengths: tuple[int, ...] = EVAL_LENGTHS,
+    use_frequency_transform: bool | None = None,
+    use_attention_scaling: bool | None = None,
 ) -> dict[str, Any]:
     model.eval()
     filler = torch.from_numpy(
@@ -401,9 +543,14 @@ def evaluate_passkey(
     all_gaps: list[float] = []
     all_retrieved: list[bool] = []
 
-    for length in EVAL_LENGTHS:
+    for length in lengths:
         inv, mscale, operator_meta = apply_registered_operator(
-            base_inv, arm=arm, operator=operator, length=length
+            base_inv,
+            arm=arm,
+            operator=operator,
+            length=length,
+            use_frequency_transform=use_frequency_transform,
+            use_attention_scaling=use_attention_scaling,
         )
         set_runtime_rope(
             model,

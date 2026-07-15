@@ -33,6 +33,7 @@ class RotaryEmbedding(nn.Module):
                 f"inv_freq must have shape {(int(dim) // 2,)}, got {inv_freq.shape}"
             )
         self.register_buffer("inv_freq", inv_freq)
+        self.attention_scaling = 1.0
         self._build(int(max_seq))
 
     def _build(self, seq_len: int) -> None:
@@ -48,7 +49,12 @@ class RotaryEmbedding(nn.Module):
     def forward(self, length: int) -> tuple[torch.Tensor, torch.Tensor]:
         if int(length) > self._max:
             self._build(int(length))
-        return self.cos_c[: int(length)], self.sin_c[: int(length)]
+        cos = self.cos_c[: int(length)]
+        sin = self.sin_c[: int(length)]
+        if float(self.attention_scaling) != 1.0:
+            cos = cos * float(self.attention_scaling)
+            sin = sin * float(self.attention_scaling)
+        return cos, sin
 
 
 def rotate_half(x: torch.Tensor) -> torch.Tensor:

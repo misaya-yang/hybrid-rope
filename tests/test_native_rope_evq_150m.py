@@ -14,7 +14,12 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from experiments.native_rope_evq_150m.model import GPT as ExperimentGPT, apply_rope
+from experiments.native_rope_evq_150m import evaluate as evaluate_module
+from experiments.native_rope_evq_150m.model import (
+    GPT as ExperimentGPT,
+    RotaryEmbedding,
+    apply_rope,
+)
 from experiments.native_rope_evq_150m.evaluate import (
     aggregate_nll,
     apply_registered_operator,
@@ -224,6 +229,18 @@ class TestNativeRopeEvq150MTraining(unittest.TestCase):
         actual = apply_rope(x, cos[None, None], sin[None, None])
         self.assertEqual(actual.dtype, torch.bfloat16)
 
+    def test_rotary_attention_scaling_is_explicit_and_resettable(self):
+        rope = RotaryEmbedding(8, 16, torch.ones(4))
+        raw_cos, raw_sin = rope(8)
+        rope.attention_scaling = 1.2
+        scaled_cos, scaled_sin = rope(8)
+        self.assertTrue(torch.allclose(scaled_cos, raw_cos * 1.2))
+        self.assertTrue(torch.allclose(scaled_sin, raw_sin * 1.2))
+        rope.attention_scaling = 1.0
+        reset_cos, reset_sin = rope(8)
+        self.assertTrue(torch.equal(reset_cos, raw_cos))
+        self.assertTrue(torch.equal(reset_sin, raw_sin))
+
     def test_row_order_is_a_seeded_shared_permutation(self):
         first = deterministic_row_order(100, seed=42)
         second = deterministic_row_order(100, seed=42)
@@ -337,6 +354,92 @@ class TestNativeRopeEvq150MEvaluation(unittest.TestCase):
         self.assertTrue(torch.equal(actual, inv))
         self.assertEqual(mscale, 1.0)
         self.assertEqual(meta["mode"], "raw_substrate")
+
+    def test_yarn_components_are_independently_switchable(self):
+        for arm in ARMS:
+            base = get_arm_inv_freq(arm)
+            raw, raw_mscale, _ = apply_registered_operator(
+                base,
+                arm=arm,
+                operator="raw",
+                length=16_384,
+                use_frequency_transform=False,
+                use_attention_scaling=False,
+            )
+            freq, freq_mscale, _ = apply_registered_operator(
+                base,
+                arm=arm,
+                operator="freq_only",
+                length=16_384,
+                use_frequency_transform=True,
+                use_attention_scaling=False,
+            )
+            mscale, mscale_value, _ = apply_registered_operator(
+                base,
+                arm=arm,
+                operator="mscale_only",
+                length=16_384,
+                use_frequency_transform=False,
+                use_attention_scaling=True,
+            )
+            full, full_mscale, full_meta = apply_registered_operator(
+                base,
+                arm=arm,
+                operator="full",
+                length=16_384,
+                use_frequency_transform=True,
+                use_attention_scaling=True,
+            )
+            self.assertTrue(torch.equal(raw, base))
+            self.assertEqual(raw_mscale, 1.0)
+            self.assertTrue(torch.equal(mscale, base))
+            self.assertGreater(mscale_value, 1.0)
+            self.assertTrue(torch.equal(freq, full))
+            self.assertEqual(freq_mscale, 1.0)
+            self.assertEqual(mscale_value, full_mscale)
+            self.assertEqual(full_meta["use_frequency_transform"], True)
+            self.assertEqual(full_meta["use_attention_scaling"], True)
+
+    def test_checkpoint_identity_rejects_changed_bytes(self):
+        self.assertTrue(hasattr(evaluate_module, "validate_checkpoint_identity"))
+        validate_checkpoint_identity = evaluate_module.validate_checkpoint_identity
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            arm = "native_rope"
+            np.save(root / "inv_freq.npy", get_arm_inv_freq(arm).numpy())
+            checkpoint = root / "model.pt"
+            checkpoint.write_bytes(b"registered checkpoint")
+            checkpoint_sha = __import__("hashlib").sha256(
+                checkpoint.read_bytes()
+            ).hexdigest()
+            metadata = {
+                "arm": arm,
+                "seed": 42,
+                "checkpoint_sha256": checkpoint_sha,
+                "inv_freq_sha256": tensor_sha256(get_arm_inv_freq(arm)),
+                "initial_trainable_sha256": "a" * 64,
+                "row_order_sha256": "b" * 64,
+                "data_manifest_sha256": "c" * 64,
+            }
+            (root / "train_meta.json").write_text(__import__("json").dumps(metadata))
+            identity = validate_checkpoint_identity(root, arm, metadata)
+            self.assertEqual(identity["checkpoint_sha256"], checkpoint_sha)
+            checkpoint.write_bytes(b"changed checkpoint")
+            with self.assertRaisesRegex(ValueError, "checkpoint sha256 mismatch"):
+                validate_checkpoint_identity(root, arm, metadata)
+
+    def test_ablation_attribution_uses_registered_sign_convention(self):
+        from experiments.native_rope_evq_150m import evaluate_yarn_ablation
+
+        self.assertTrue(hasattr(evaluate_yarn_ablation, "attribution_row"))
+        row = evaluate_yarn_ablation.attribution_row(
+            native_raw=5.0,
+            evq_raw=4.0,
+            native_operator=3.0,
+            evq_operator=2.5,
+        )
+        self.assertEqual(row["substrate_gap"], 0.5)
+        self.assertEqual(row["interaction"], 0.5)
 
     def test_offsets_are_shared_deterministic_and_valid(self):
         first = fixed_validation_offsets(5_000_000, 16_384, chunks=8, seed=9999)
