@@ -1,8 +1,8 @@
 # EVQ-Cosh Rebuttal Playbook — 2026-07-22
 
-> **2026-07-13 fact gate:** 任何 reviewer response 都必须先经过 `FULL_PAPER_INTEGRITY_AUDIT_20260713.md`。旧 DAPE、official-YaRN、native-Geo、ordinary-KL、`c_coll`、Phase16-27-config、LoRA-rank 或 MLA-`d_eff` 口径不得从历史材料恢复。
+> **2026-07-16 fact gate:** 任何 reviewer response 都必须先经过 `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` 与 `FIRST_PRINCIPLES_REBUTTAL_REASSESSMENT_20260716.md`。旧 DAPE、official-YaRN、native-Geo、ordinary-KL、`c_coll`、Phase16-27-config、LoRA-rank、MLA-`d_eff` 或“pure-shape control”口径不得从历史材料恢复。
 
-最后核对：2026-07-13
+最后核对：2026-07-16
 
 - 工作模式：`triage-only`
 - 决策状态：`unclear / high-risk trust repair`
@@ -37,7 +37,9 @@
 | 需要判断什么 | 当前权威 | 不能替代它的材料 |
 | --- | --- | --- |
 | 方法身份、数学正确性、协议事实 | `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` | paper wording、旧类名、旧 rebuttal 草稿 |
-| 详细数学推导 | `THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md`，受 7 月 13 日 fact gate 约束 | Phase16、simulation 或经验 sweep |
+| 最优性、\(\tau\)、PDF可见性与三门机制 | `FIRST_PRINCIPLES_REBUTTAL_REASSESSMENT_20260716.md` | model-free collision、单次PPL或LoRA正向切片 |
+| 频率最优性与 \(\tau\) 详细边界 | `THEORY_FREQUENCY_OPTIMALITY_AND_TAU_20260716.md`，与 first-principles reassessment 互相校验 | 旧 ordinary-KL 推导、异质 sweep fit 或 model-free task claim |
+| 其他详细数学推导 | `THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md`，受 7 月 13/16 日 fact gate 约束 | Phase16、simulation 或经验 sweep |
 | 数字与 provenance | `docs/overview/RESULT_PROVENANCE_MANIFEST.md` 及其 raw-backed artifacts | 汇总表、历史 trace、服务器口头记录 |
 | 政策与 venue 决策 | `REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md` | 旧年份 rebuttal 规则 |
 | 真实评论的映射与发送 QA | `REVIEWER_TRIAGE_PLAYBOOK.md` | simulated reviews、master ledger |
@@ -48,22 +50,23 @@
 | --- | --- | --- | --- |
 | Frequency allocation 是第三 PE 轴 | `paper/sections/01_intro.tex`；`paper/sections/02_related.tex`；canonical schedule `scripts/lib/rope/schedules.py` | EVQ 在训练前改变有限 RoPE frequency table，不改变 rotation operator | universal long-context SOTA、range-scaler替代品或容量定理 |
 | Cosh allocation family | `paper/sections/03_theory.tex`；`paper/appendix/a1_proofs.tex`；full audit §3 | 给定 stated convex surrogate，cosh density 是唯一正的归一化最小解 | exact RoPE kernel、attention、LM objective 或 PPL 的闭式最优解 |
-| Deployed \(\tau\) | theory audit；full audit §3；现有 sweep | \(d/\sqrt L\) 是 conditional phase-transport scaling motivation；unit prefactor与finite-\(\tau\)是经验 basin selection | ordinary-KL theorem、global optimum或trained-task theorem |
+| Allocation optimality | first-principles reassessment §2 | 不存在task-independent optimum；geometric在uniform log-frequency coverage/quantization等对称目标下严格最优，cosh只在stated surrogate内严格最优 | “geometric generally suboptimal”或“cosh is the RoPE/task optimum” |
+| Deployed \(\tau\) | first-principles reassessment §3；theory audit；现有 sweep | 真实task-local optimum依赖\(A_{task}/B_{task}\)；\(d/\sqrt L\)只是在额外diffuse/channel/dimension假设下的conditional proxy与经验basin selector | ordinary-KL theorem、global optimum、exact-collision optimum或trained-task theorem |
 | Primary I | `paper/tables/table2_evq_yarn_main.tex`；`data/curated/primary1_evq_yarn_10pct_raw.json` | 454M、3-seed、midpoint-Geo/EVQ × repo fixed-ramp 的 2×2 factorial contrast与 differential leverage | official/tuned YaRN complementarity或formal interaction |
 | Primary II | `paper/tables/table4_pe_dominant.tex`；历史 runner锚点 `8616af4`；curated artifacts | 约151.9M、seed-42 的 midpoint-Geo / EVQ / learnable-shared-frequency diagnostic | faithful DAPE comparison、125M protocol或全表多seed |
 | Primary III | `paper/sections/05_experiments.tex`；`paper/appendix/a3_supporting_results.tex`；full audit §4 | actual head_dim=64、d_rope=32下，empirical \(\tau=1.414\) 的 scarce-channel方向性结果；三seed协议异质 | \(d_{\mathrm{eff}}=128\) theorem、strict same-protocol replication或production-identical MLA |
 
-Supporting LoRA、video DiT、750M continuation、QuALITY、progressive training 不承担上述核心 claim。
+Supporting LoRA、video DiT、750M continuation、QuALITY、progressive training 不承担上述核心 claim。2026-07-15 registered QA 已否证当前 EVQ-LoRA 的 practical capability claim，不能用16K/32K PPL稳定性覆盖。
 
 ### 1.3 Claim disposition
 
 | Disposition | 内容 | Rebuttal 动作 |
 | --- | --- | --- |
-| **DEFEND** | finite spectral budget / training-time frequency allocation 这一设计视角；给定 convex surrogate 的 exact cosh optimizer；closed-form、zero-learned-parameter schedule | `CLARIFY_EXISTING`：给清楚对象、假设和边界 |
+| **DEFEND** | finite spectral budget / training-time frequency allocation 这一设计视角；给定 convex surrogate 的 exact cosh optimizer；closed-form、zero-learned-parameter schedule | `CLARIFY_EXISTING`：给清楚对象、假设和边界；不暗示task-independent optimality |
 | **DEFEND, NARROWLY** | Primary I 的 local 2×2 contrast；Primary II seed-42 diagnostic；Primary III heterogeneous scarce-channel result | `PARTIAL + SOFTEN_CLAIM`：只守实际 protocol 与 evidence tier |
 | **RELABEL** | YaRN → repo-defined fixed-ramp scaler；DAPE (32p) → learnable shared inv_freq (32p)；Geo → Midpoint-Geo；PK → teacher-forced NLL-gap；Primary II 125M → about 151.9M | `ACCEPT_TEXT + CLARIFY_EXISTING`：数值未变，但旧方法/指标解释撤回 |
-| **WITHDRAW** | official-YaRN complementarity、official-DAPE comparison、native/standard-RoPE dominance、ordinary-KL对deployed \(\tau\)的推导、`c_coll=1.171`、Phase16 `27 configs/all <1%`、LoRA rank/channel theorem、MLA \(d_{\mathrm{eff}}=128\) theorem | `SOFTEN_CLAIM + BLOCKING`：不得用新增实验或换名恢复 |
-| **SUPPORTING ONLY** | fresh LongAlpaca single-seed NLL、old LoRA、QuALITY、video、750M、progressive | 只有被真实 review 直接触发且同时披露负边界时使用；否则 `OUT_OF_SCOPE` |
+| **WITHDRAW** | official-YaRN complementarity、official-DAPE comparison、native/standard-RoPE dominance、fixed-extrema/fixed-span pure-shape interpretation、ordinary-KL对deployed \(\tau\)的推导、`c_coll=1.171`、Phase16 `27 configs/all <1%`、LoRA rank/channel theorem、MLA \(d_{\mathrm{eff}}=128\) theorem | `SOFTEN_CLAIM + BLOCKING`：不得用新增实验或换名恢复 |
+| **SUPPORTING ONLY** | registered 303-example negative QA、fresh LongAlpaca single-seed NLL、retrieval/readout causal diagnostics、old LoRA、QuALITY、video、750M、progressive | 只有被真实 review 直接触发且同时披露负边界时使用；否则 `OUT_OF_SCOPE` |
 | **DEFER** | faithful DAPE training、native-endpoint + official-YaRN full comparison、broad tuned-scaler grid、新模型族、完整 task-kernel theorem | 不是 7 月 22 日前默认任务；reviewer明确设为score-changing criterion时再评估 |
 
 ### 1.4 Reporting / protocol correction index
@@ -101,7 +104,24 @@ Supporting LoRA、video DiT、750M continuation、QuALITY、progressive training
 
 存在性、唯一性、正性、边界条件、CDF、inverse CDF 与 \(\tau\to0\) geometric limit 在 stated problem 下成立。这一结果决定 cosh allocation family；它没有决定 trained task 的最佳 finite \(\tau\)。
 
-### 2.2 Conditional：scaling structure
+### 2.2 Strict：真实 task-local optimum 的形式
+
+令 \(\theta=\tau^2\)。对固定模型和指定task risk，Geo附近可写成
+
+\[
+R(\theta)=R_0+A_{\mathrm{task}}\theta
++\tfrac12B_{\mathrm{task}}\theta^2+o(\theta^2).
+\]
+
+若 \(B_{\mathrm{task}}>0\)，约束 \(\theta\ge0\) 下
+
+\[
+\tau_*^2=[-A_{\mathrm{task}}/B_{\mathrm{task}}]_+.
+\]
+
+这里的梯度与曲率依赖数据、trained Q/K幅度、distance distribution、attention routing和task loss；允许权重重训时，曲率还包含weight-adaptation Schur complement。因此不知道这些对象时，不存在只由 \(d,L\) 决定的task-universal \(\tau\)。这不是新的closed-form recipe，而是当前理论缺失量的最窄正确表达。
+
+### 2.3 Conditional：scaling structure
 
 在 diffuse softmax、固定或各向同性 channel amplitude、channel additivity、small \(\theta=\tau^2\)、tested-grid \(Q_1>0\) 等假设下，phase-variance transport proxy
 
@@ -110,23 +130,31 @@ U_{\mathrm{tr}}(\rho;L)
 =\frac{M}{L}\int q(Lb^{-\phi})\rho(\phi)\,d\phi
 \]
 
-对 \(\theta\) 有非零一阶 variation。与 \(O(\tau^4)\) allocation stiffness平衡，可在额外 dimension-identification 假设下给出 \(\tau\propto d/\sqrt L\) 的 leading-order structure。这里的 \(q(x)\) 是 uniform-distance cosine phase variance，不是 attention loss、ordinary KL 或 LM loss。
+对 \(\theta\) 有非零一阶 variation。若stiffness明确取 \(\theta^2/(90d_S)\)，则该proxy的局部stationary point为
 
-### 2.3 Empirical：deployed operating point
+\[
+\tau_*^2=45\lambda Q_1(L,b)M d_S/L.
+\]
+
+只有再令 \(M\propto d\) 且 \(d_S\propto d\)，才能给出 \(\tau\propto d/\sqrt L\)。这里的 \(q(x)\) 是 uniform-distance cosine phase variance，不是 attention loss、ordinary KL 或 LM loss；一致的per-channel归一化还可能消去线性dimension factor。稀疏/局部attention下应有条件地用有效支持或directional softmax-Jacobian quantity替代nominal \(L\)。
+
+### 2.4 Empirical：deployed operating point
 
 理论没有唯一决定：
 
 - unit prefactor；
 - practical finite \(\tau\)，尤其超出small-\(\tau\)区间的设置；
 - Pearson \(\chi^2\) stiffness这一 modeling choice；
-- trained attention 的 \(L_{\mathrm{eff}}^J\)；
+- trained attention 中 directional \(c^\top J(p)^2c\) 能否安全简化；
 - MLA 中将 \(d_{\mathrm{eff}}\) 设为某个 architecture dimension 的约定。
 
 因此唯一安全口径是：
 
 > The cosh allocation family is theory-derived; the \(d/\sqrt L\) dependence is conditionally proxy-motivated; the deployed unit-prefactor \(\tau\) is an empirically supported basin selector.
 
-### 2.4 Ordinary-KL correction
+现有三个常用经验点也不能写成clean scaling-law verification：\(L=128\) 的最佳测试点 \(\tau=5\) 位于sweep边界；\(L=1024\) 只有粗网格；\(L=2048\) 的峰值定位相对较强但仍非完整多seed sweep。它们混合模型、数据、预算和外推倍数，只支持“useful \(\tau\) 随训练长度增加总体下降”的方向。small-\(\tau\) stiffness在 \(\tau=2/4\) 的审计相对误差约为97%/252%，不能定量解释practical regime。
+
+### 2.5 Ordinary-KL correction
 
 若 \(z_\theta=z_0+\theta g+O(\theta^2)\)，则
 
@@ -138,9 +166,9 @@ D_{KL}(p_0\|p_\theta)
 
 ordinary baseline-to-perturbed KL 的一阶 variation 为零。提交稿把 \(O(\tau^2)\) term 称为 ordinary post-softmax KL gain 是 order/identity error；两个 \(O(\tau^4)\) 项不能导出小而非零的 optimum。安全动作是承认错误，把 \(q/L\) 限定为 probability-displacement / Fisher-transport proxy，而不是用 sweep 证明旧推导。
 
-### 2.5 Triggered answer kernel
+### 2.6 Triggered answer kernel
 
-> We agree that the deployed \(\tau\) is not an end-to-end theoretical optimum. The exact result is the cosh density for our stated convex surrogate. Separately, under a diffuse-softmax, channel-additive phase-transport proxy, the leading balance motivates the \(d/\sqrt L\) scaling. We also identified that calling its linear term an ordinary KL gain was incorrect: ordinary baseline-to-perturbed KL starts at \(O(\tau^4)\). We therefore treat \(\tau=d_{\mathrm{eff}}/\sqrt L\) as a proxy-motivated, empirically supported basin selector, not a global optimum or trained-task theorem.
+> We agree that the deployed \(\tau\) is not an end-to-end theoretical optimum. The exact result is the cosh density for our stated convex surrogate. For a specified trained task, the local optimum depends on task-specific loss derivatives, \(\tau_*^2=[-A_{task}/B_{task}]_+\), which we have not estimated. Separately, under a diffuse-softmax, channel-additive phase-transport proxy and additional dimension identifications, the leading balance motivates the \(d/\sqrt L\) scaling. We also identified that calling its linear term an ordinary KL gain was incorrect: ordinary baseline-to-perturbed KL starts at \(O(\tau^4)\). We therefore treat \(\tau=d_{\mathrm{eff}}/\sqrt L\) as a proxy-motivated, empirically supported basin selector, not a global optimum or trained-task theorem.
 
 只有真实 review 触发 \(\tau\)、KL、prefactor或optimality时，才按原话裁剪使用；不能整段预填到最终 response。
 
@@ -202,9 +230,21 @@ K_{\mathrm{app}}(\phi,\psi)
 
 不得说 EVQ closed-form minimizes exact RoPE kernel、full attention loss、LM objective、PPL，或所有真实 distance priors 下的 collision。
 
-### 3.5 Triggered answer kernel
+### 3.5 Finite-grid shape / extrema / span boundary
 
-> Our exact kernel is a content-independent Gram kernel of RoPE cosine phase responses under a specified distance prior, so it measures redundancy among finite phase channels rather than the full attention or language-model objective. The \(\delta+\min\) model is a tractable surrogate for a diagonal concentration penalty and cumulative low-frequency overlap; the cosh density is the exact minimizer of that surrogate, not of the oscillatory kernel itself. Existing diagnostics show that the resulting fixed allocation reduces normalized channel collision, but this is directional validation, not objective equivalence. Operationally, EVQ reallocates near-static low-frequency channels toward frequencies with more phase variation over the training window.
+对实际inverse-CDF map
+
+\[
+\phi_\tau(u)=1-\tau^{-1}\operatorname{asinh}((1-u)\sinh\tau),
+\]
+
+当 \(u\in(0,1),\tau>0\) 时严格有 \(\phi_\tau(u)<u\)。因此midpoint EVQ不只改变density shape，也把所有离散频率向高频移动并改变finite-\(K\) extrema与realized span。代表性设置 \(K=32,b=500\mathrm K,\tau=4\) 中，最高/最低采样频率约变为midpoint-Geo的1.17/3.17倍，natural-log span约从12.71缩到11.71。
+
+所以submitted control只能称“shared midpoint-quantile convention下的schedule intervention”，不能称fixed-extrema/fixed-span pure-shape causal isolation。若reviewer问“是否只是range/base effect”，最小判别是加入与EVQ realized extrema匹配的uniform log-frequency control，再将 `Geo-original -> Geo-span-matched` 与 `Geo-span-matched -> EVQ` 分开；不能用same quantile grid代替这个控制。
+
+### 3.6 Triggered answer kernel
+
+> Our exact kernel is a content-independent Gram kernel of RoPE cosine phase responses under a specified distance prior, so it measures redundancy among finite phase channels rather than the full attention or language-model objective. The \(\delta+\min\) model is a tractable surrogate for a diagonal concentration penalty and cumulative low-frequency overlap; the cosh density is the exact minimizer of that surrogate, not of the oscillatory kernel itself. Existing diagnostics show that the resulting fixed allocation reduces normalized channel collision, but this is directional validation, not objective equivalence. The finite midpoint implementation also changes realized extrema and span, so the submitted comparison establishes a schedule intervention, not fixed-span pure-shape causality.
 
 若 reviewer 问“理论贡献还剩什么”，只答：**一个明确、可解的 frequency-allocation surrogate及其closed-form optimizer，加上对phase-redundancy和trained behavior的分层验证**。不声称kernel-to-task闭环。
 
@@ -264,8 +304,8 @@ Likelihood 是 reviewer 实际提出的相对可能性；Impact 是回答失败�
 | Primary II single seed | 为什么把seed-42 diagnostic作为primary？ | 承认整张comparator table未多seed；额外fixed-EVQ seeds不能升级全表 | `SOFTEN_CLAIM`；不机械补seed，除非reviewer把matched replication列为明确升分条件 |
 | Official YaRN / native endpoint | faithful YaRN或standard RoPE下方向是否仍在？ | 已跑 single-seed component ablation（`EVQ_YARN_COMPONENT_ABLATION_20260714.md`）：abundant MHA 下 official-YaRN 的**频率校正**（非 mscale）抹平 EVQ gap，证实 complementarity 撤回并给出机制；scarce MLA 激进外推处（scale 8/16）**未抹平**（EVQ+full 8K 71.6<85.5）。只支持机制方向，不恢复 complementarity；P2/P3 已否证 | `PARTIAL + SUPPORTING`；deploy-on-trigger；边界见 ablation 文档（single-seed、L=512、τ 未重推、PPL-only、modest 外推仍被抹平） |
 | MLA convention | 为什么用 \(d_{\mathrm{eff}}=128\)，是否验证公式？ | actual head_dim=64、d_rope=32；\(\tau=1.414\)只作ad-hoc empirical setting | `SOFTEN_CLAIM`；不补dimension ablation，不称theorem |
-| Undertraining / scale | 短训练预算是否制造优势，能否泛化到重预训练模型？ | 报exact budget与负/反向边界；现有8B LoRA不能关闭因果问题 | `PARTIAL`；reviewer把heavy-pretrained adaptation设为关键判据时，才考虑已spec化8B机制实验 |
-| LoRA / downstream | 频率重分配在LLaMA-3-8B下是否真的可学、是否改善任务？ | fresh LongAlpaca pair是single-seed teacher-forced NLL，8K更差且quantizer不匹配 | 默认 `OUT_OF_SCOPE`；若使用必须完整报告8K harm，不能称pure-shape control |
+| Undertraining / scale | 短训练预算是否制造优势，能否泛化到重预训练模型？ | 报exact budget与负/反向边界；现有8B结果显示强training-time coadaptation与readout bottleneck，不能把small-model PPL外推成mature-model capability | `PARTIAL`；先用已有inference-only causal evidence；不再默认启动8B训练 |
+| LoRA / downstream | 频率重分配在LLaMA-3-8B下是否真的可学、是否改善任务？ | registered 303-example QA为negative：EVQ-LoRA task-macro F1 0.1126 vs Native-LoRA 0.2110，差值-0.0984、95% CI [-0.1297,-0.0697]；缺口集中\(\le8\)K，\(>8\)K各臂接近floor；同时16/32K temporal PPL更稳 | 默认 `OUT_OF_SCOPE`；reviewer点名时必须把task negative、8K harm、long-PPL positive与single-seed/two-task边界一起报告，不能称capability gain或pure-shape control |
 | Novelty / related work | 是否只是调base、插值、搜索或既有scaler变体？ | 用intervention stage、optimized object与自由度区分；不声称替代或数学正交 | `CLARIFY_EXISTING + ADD_CITATION`；只回应reviewer点名的最近工作 |
 
 ### P2 — 当前明确排除
@@ -274,7 +314,8 @@ Likelihood 是 reviewer 实际提出的相对可能性；Impact 是回答失败�
 - faithful DAPE重训练、production-scale pretraining或新下游benchmark；
 - video、750M、progressive、QuALITY或旧LoRA的预防性复跑；
 - 新Bessel/forcing/global exact-kernel theorem或 \(L_{\mathrm{eff}}^J\) 测量；
-- 无匹配Geo control、无任务梯度或只做隐藏态蒸馏的LoRA；
+- 重复失败的8K/50-step retrieval recipe、继续扫sparse budget/block/selector、temperature/beam/top-p或宽\(\tau\)网格；
+- 无matched span/Geo control、无任务梯度或只做隐藏态蒸馏的LoRA；
 - 没有真实reviewer trigger的预制author response。
 
 这些工作不是被绝对禁止，而是当前不能直接改变一个已触发的评分问题，或无法在 rebuttal 窗口达到 reviewer-grade。若真实 review 给出明确升分判据，再按 `question -> discriminating result -> stop rule -> provenance` 评估。
@@ -288,9 +329,11 @@ Likelihood 是 reviewer 实际提出的相对可能性；Impact 是回答失败�
 | `THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` | **内容充分但不能直接发送** | 只提取与真实问题对应的最短推导；受7月13日审计覆盖 |
 | `REVIEWER_TRIAGE_PLAYBOOK.md` | **流程入口** | 真实reviews到达后保存verbatim trigger、分配稳定ID、记录action/readiness |
 | `REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md` | **archival / 部分过时** | 只用于找历史攻击面；不得复制answer kernel、实验优先级或旧方法身份 |
-| `LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md`与`LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` | **supporting-only** | reviewer点名LoRA时才启用；必须同时披露quantizer差异、single seed与8K harm |
+| `FIRST_PRINCIPLES_REBUTTAL_REASSESSMENT_20260716.md` | **充分 / canonical reasoning gate** | optimality、\(\tau\)、PDF可见性、shape/span与representation-routing-readout判断以此为准；不是可直接发送的response |
+| `THEORY_FREQUENCY_OPTIMALITY_AND_TAU_20260716.md` | **充分 / focused theory audit** | 按目标区分 geometric/cosh 最优性，给出ordinary-KL、task-local \(\tau\)、normalization、finite-grid 与异质 sweep 边界；只按真review trigger裁剪 |
+| `LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md`、`LORA_LONGALPACA_TEMPORAL_NLL_20260712.md`、`../docs/exp/2026-07-14_lora_retrieval_conversion_probe.md`、`../docs/exp/2026-07-15_lora_qa16k_three_arm_results.md` | **supporting-only / capability claim negative** | reviewer点名LoRA时才启用；必须同时披露quantizer差异、single seed、\(\le8\)K task harm、\(>8\)K floor及PPL/能力分离 |
 | `EVQ_YARN_COMPONENT_ABLATION_20260714.md`（源：`data/curated/native_rope_evq_150m_s42_500m_20260713.json`、`results/mla_yarn_short_s42_20260714/`、`docs/exp/2026-07-14_mla_k16_short_context_yarn_ablation.md`） | **主动实验 / supporting-only** | official-YaRN 被 trigger 时启用；单seed机制证据；确认 complementarity 撤回并支持 scarce-channel 方向；不升级 primary、不恢复 complementarity |
-| `frequency_adaptation_8b/` | **独立机制实验队列** | 不是rebuttal默认要求，不修复paper-lineage comparator或theory错误 |
+| `frequency_adaptation_8b/` | **paused / archival mechanism implementation** | registered QA与readout diagnostics已给出negative gate；不再作为默认实验队列，也不修复paper-lineage comparator或theory错误 |
 | `simulated_reviews/` | **内部压力测试** | 不是真实opinion、score或trigger，不进入最终response |
 
 ### 5.1 主动实验状态（proactive component experiments）
@@ -301,20 +344,24 @@ Likelihood 是 reviewer 实际提出的相对可能性；Impact 是回答失败�
 | --- | --- | --- | --- |
 | MHA K=32 four-arm 分解（500M 六格 + 同 checkpoint 四算子） | 完成 | abundant 通道下 official-YaRN 的**频率校正**抹平 EVQ gap（mscale 不抹）→ 证实 complementarity 撤回并给机制 | 确认 WITHDRAW 并附机制；trigger 时用 |
 | MLA K=16 four-arm 分解（`mla_yarn_short_s42_20260714`） | 完成 | scarce + 激进外推（scale 8/16）处频率校正**未抹平**，EVQ+full>Native+full；但 P2/P3 被否证、modest 外推被抹平、PPL-only、L=512、τ 未重推、单seed | 支持 scarce-channel 机制方向；trigger 时用；不升级 Primary III |
-| Sparse-attention 转换实验（EVQ 干净远程底座 + score-based 稀疏选择 → 检索/QA） | 计划中 / 未跑 | 假设：dense 下远程信号被 softmax 稀释；稀疏选择读干净的远程 q·k 分数，把 PPL 兑现成任务能力 | 属 P0-D "usable→good" 缺口；受 §8 gate 约束；真实 trigger 或 camera-ready 方向研究，非默认 rebuttal 任务 |
+| 8B retrieval/readout causal decomposition | 完成 | EVQ提高remote block hit/rank，gold-block removal对EVQ有因果影响；但forced-gold、sparse selector和8K/50-step tune均未转化为EM，首token仍约rank 2K | supporting-only；定位representation/routing signal与readout failure；停止该recipe |
+| Sparse-attention 转换实验 | 完成 / negative stop | score sparsity帮助Geo更多，EVQ/Geo均0% EM；oracle gold inclusion仅给EVQ约0.034 NLL改善，dense dilution不是当前主瓶颈 | 不扩100-case、不扫budget/block/selector；reviewer点名sparse时报告negative boundary |
+| Registered 303-example 16K-max QA | 完成 / negative gate | EVQ-LoRA显著差于Native-LoRA，aggregate deficit集中\(\le8\)K；\(>8\)K三臂均接近floor；long PPL稳定未转成QA | capability claim false；仅reviewer点名8B/downstream时完整部署 |
+| Span-matched schedule + frozen task-risk decomposition | ready-to-spec / not run | 分开`Geo-original -> Geo-span-matched`的range/span效应与`Geo-span-matched -> EVQ`的shape效应，并估计真实task loss对\(\theta=\tau^2\)的局部方向 | 只有reviewer把pure-shape或surrogate-to-task relation设为score-changing criterion时启动；正负都必须报告 |
 
-τ=5.66 重推的 MLA 复跑（关闭"τ 未按公式设"的 reviewer 缺口）为可选硬化项，同样 deploy-on-trigger。
+不再把 \(\tau=5.66\) MLA复跑当作默认硬化项：当前公式本身不是task theorem，重推一个公式值不能关闭method-identity或optimality问题。只有reviewer明确要求该历史setting的sensitivity时才评估。
 
 当前真正缺失的不是另一份大文档，而是：真实reviews、作者对integrity disclosure的决定、每个实际trigger对应的短答案，以及未闭合provenance项的诚实边界。
 
 ## 6. 7 月 22 日前最小行动清单
 
 1. **作者确认 survivor stance。** 统一采用本文件§1.3，不再在不同回复中恢复official DAPE/YaRN、native Geo或global-\(\tau\)口径。
-2. **作者决定 integrity disclosure。** 若reviews未触发已确认的material errors，是否向AC发一条合并说明；建议覆盖comparator identity、Geo discretization、ordinary-KL/`c_coll`，并视实际review相关性决定是否加入Phase16 reporting correction。
+2. **作者决定 integrity disclosure。** 若reviews未触发已确认的material errors，是否向AC发一条合并说明；建议最小覆盖comparator identity、Geo discretization、ordinary-KL、`c_coll`与Phase16 reporting correction；若Primary II/III仍作为core，再加入真实model/optimizer/head/batch/`d_eff`事实。
 3. **冻结三个短核。** comparator-identity correction 120–180词；\(\tau\)/kernel correction 120–180词；remaining-contribution 100–140词。它们只是组件，真实评论前不组装final response。
-4. **冻结一页事实索引。** 直接复用full audit、manifest和本文件，不再新建平行ledger。每项只保留submitted location、actual method/protocol、unchanged number、withdrawn interpretation和surviving claim。
+4. **冻结一页事实索引。** 直接复用full audit、first-principles reassessment、manifest和本文件，不再新建平行ledger。每项只保留submitted location、actual method/protocol、unchanged number、withdrawn interpretation和surviving claim。
 5. **7月22日先做verbatim mapping。** 读完所有reviews和meta-review后，最多选择3–5个score-driving concerns；逐条分配稳定ID，再决定篇幅和实验。
-6. **不把8B实验列为rebuttal必做。** 只有reviewer明确要求heavy-pretrained adaptation，并且结果会改变回答、时间与provenance gate可满足时才启动；否则保留为论文后续研究。
+6. **冻结实验队列而不是启动GPU campaign。** 第一候选是span-matched schedule/frozen task-risk分析；第二候选是现有adapter×runtime-frequency的paired QA cross；只有真实reviewer给出score-changing criterion且§8 gate满足时启动。
+7. **停止已否证路线。** 不重复8K/50-step tune、不扩sparse pilot、不做宽8B LoRA/LongBench sweep。只有Stage 0/1定位出明确readout bottleneck后，true-16K source-dependent matched supervision才是新的研究问题，不能回证submitted zero-shot claim。
 
 ### 6.1 已冻结的内部组件，不是 final response
 
@@ -326,7 +373,7 @@ Remaining-contribution kernel（只在P0-D trigger中裁剪使用）：
 
 > After these corrections, the contribution is narrower but still concrete: RoPE exposes a finite frequency-allocation budget that can be designed at training time, separately from the rotation operator and inference-time range transforms. EVQ-Cosh provides a closed-form, zero-learned-parameter allocation whose shape is the exact optimizer of a stated convex surrogate. Its empirical support is limited to the audited midpoint-grid, fixed-ramp, shared-frequency, and scarce-channel protocols; we do not claim faithful DAPE/YaRN comparison, native-RoPE dominance, or an end-to-end optimality theorem.
 
-理论组件见§2.5与§3.5。真实评论到达前不得把这些段落拼成通用“全错说明”；必须按trigger删除无关内容并满足10,000-character budget。
+理论组件见§2.6与§3.6。真实评论到达前不得把这些段落拼成通用“全错说明”；必须按trigger删除无关内容并满足10,000-character budget。
 
 ## 7. 真实 reviews 到来后的工作流
 
@@ -364,8 +411,11 @@ Future manuscript action (only if author-approved; never claim already revised):
 按当前状态：
 
 - ordinary-KL、`c_coll`、DAPE/YaRN/Geo identity：**实验不能修复，只能纠正**；
-- official YaRN / native endpoint：只有full audit §6的parity与matched continuation设计可能回答，zero-shot operator swap不能称faithful method；
-- 8B frequency adaptation：只回答“重预训练checkpoint在直接任务梯度下能否适应频率重分配”，不能证明paper主结果、exact-kernel theorem或standard-RoPE superiority；
+- pure-shape / range confound：首选同\(K\)、同realized extrema的uniform Geo control；shared midpoint quantile grid本身不隔离span；
+- surrogate-to-task relation：首选现有checkpoint上的paired finite-\(\theta\) task-risk/rank/generation测量，不先训练新模型；
+- official YaRN / native endpoint：现有single-seed component result只作triggered mechanism evidence，不能称faithful submitted comparison或恢复complementarity；
+- 8B frequency adaptation：registered QA已经给出negative practical gate；新训练只回答新的capability-learning问题，不能证明paper主结果、exact-kernel theorem或standard-RoPE superiority；
+- sparse attention：现有matched pilot与oracle inclusion已否定当前dense-dilution解释，停止参数搜索；
 - broad baseline、new downstream、video/750M rerun：默认 `OUT_OF_SCOPE`。
 
 ## 9. 条件分支
@@ -374,9 +424,10 @@ Future manuscript action (only if author-approved; never claim already revised):
 | --- | --- | --- |
 | \(\tau\) / KL / optimality | §2 + P0-B | basin selector，不扩成trained-task theorem |
 | kernel / surrogate / mechanism | §3 + P0-B | directional validation，不声称objective equivalence |
+| pure shape / base / spectral range | §3.5 + first-principles reassessment §2.4 | submitted是schedule intervention；没有span-matched control就不声称pure-shape causality |
 | DAPE / YaRN / Geo fidelity | §1.3 + P0-A | relabel与withdraw，不用近似新实验补洞 |
 | seed / protocol / reproducibility | P0-C + manifest | exact artifact边界，不声称full reproduction |
-| PK / downstream capability | P1 metric row | TF/AR与negative boundary，不泛化production |
+| PK / downstream capability | P1 metric row + 2026-07-14/15 reports | TF/AR与negative QA boundary；PPL/routing不替代readout/generation |
 | novelty / significance | P0-D + P1 novelty row | finite-budget mechanism，不恢复撤回部分 |
 | reviewer未触发material errors | 作者决策门 | 最多一条合并AC disclosure，不向每份review发散 |
 | reviewer要求大规模新实验 | §8 | 若无法在窗口形成matched reviewer-grade result，明确scope并defer |
@@ -393,17 +444,20 @@ Future manuscript action (only if author-approved; never claim already revised):
 
 1. surrogate 与 exact phase kernel没有pointwise、operator-norm或shared-minimizer theorem；只有结构动机与directional validation。
 2. phase kernel不是full RoPE attention/task objective；trained amplitudes、sin/cos pair、distance prior和optimization dynamics均未闭合。
-3. \(d/\sqrt L\) unit prefactor与practical finite \(\tau\)是经验的；conditional proxy不能消除这一点。
-4. official DAPE/YaRN与native endpoint baseline没有在原提交协议中实现；rebuttal内不能靠relabeled近似恢复。
-5. Primary II single-seed、Primary III heterogeneous replication、Phase16 selected-confirmation与reproduction closure会限制trust。
-6. reviewer可能认为纠错后的理论—任务链过松或empirical scope过窄。这是应接受的评分风险，不能靠发散回答解决。
+3. midpoint EVQ同时改变shape、finite-grid extrema、span与active-channel behavior；submitted control没有隔离pure-shape effect。
+4. \(d/\sqrt L\) unit prefactor与practical finite \(\tau\)是经验的；task-local \(A_{task}/B_{task}\)、effective support和dimension identity均未测。
+5. official DAPE/YaRN与native endpoint baseline没有在原提交协议中实现；rebuttal内不能靠relabeled近似恢复。
+6. Primary II single-seed、Primary III heterogeneous replication、Phase16 selected-confirmation与reproduction closure会限制trust。
+7. official YaRN在abundant MHA中抹平gap；8B registered QA为negative；当前证据没有真实下游能力提升。
+8. reviewer可能认为纠错后的理论—任务链过松或empirical scope过窄。这是应接受的评分风险，不能靠发散回答解决。
 
 ## 12. 中文核对：作者必须明确的决定
 
 - [ ] 同意 survivor stance：主张收缩到finite spectral budget、exact surrogate family和受限empirical signals。
 - [ ] 决定若reviewer未点名，是否仍向AC合并披露material comparator/theory errors。
+- [ ] 接受submitted midpoint comparison不是fixed-span pure-shape control，并决定是否只在reviewer trigger后启动span-matched诊断。
 - [ ] 确认任何disclosure不把current/future revision写成submitted paper已修复。
-- [ ] 确认8B实验不是默认rebuttal任务，只在真实trigger与§8 gate同时满足时启动。
+- [ ] 确认registered 8B QA practical claim为negative；不再把新8B训练当默认rebuttal任务。
 - [ ] 真实reviews与meta-review到达后，逐字材料已local-only冻结并完成稳定ID映射。
 - [ ] 所有 `AUTHOR_INPUT_NEEDED` 已由论文作者确认，才允许package从NOT READY升级。
 
@@ -415,9 +469,11 @@ Future manuscript action (only if author-approved; never claim already revised):
 - [ ] submitted、current source、raw-backed fact与future correction时态分开。
 - [ ] 所有数字来自最新provenance manifest或其raw-backed artifact。
 - [ ] \(\tau\)的exact / conditional / empirical三层未混写；ordinary KL一阶为零。
+- [ ] 未把geometric写成generally suboptimal；cosh optimality只绑定stated surrogate；task-local optimum依赖\(A_{task}/B_{task}\)。
 - [ ] exact kernel只称phase-redundancy proxy；surrogate与exact diagnostic未写成同一objective。
+- [ ] midpoint EVQ的extrema/span变化已披露；没有span-matched control时未声称pure-shape causality。
 - [ ] 未引用`c_coll=1.171`、27 configs/all<1%、LoRA-rank或MLA-`d_eff`旧理论。
 - [ ] DAPE、YaRN、Midpoint-Geo、PK、Primary II model size、seed/batch/protocol身份准确。
-- [ ] supporting LoRA若出现，同时披露single seed、quantizer差异、teacher-forced NLL与8K harm。
+- [ ] supporting LoRA若出现，同时披露single seed、quantizer差异、teacher-forced NLL、registered QA negative、\(\le8\)K harm与\(>8\)K floor。
 - [ ] 没有universal SOTA、global optimum、tuned dominance、production readiness或end-to-end theory closure。
 - [ ] 没有声称已上传或已完成NeurIPS不允许的paper/supplement revision。

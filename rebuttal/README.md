@@ -1,11 +1,11 @@
 # EVQ-Cosh Rebuttal Control Room
 
-创建：2026-06-10；最后更新：2026-07-14
+创建：2026-06-10；最后更新：2026-07-16
 
 - Preparation：`triage_ready`
 - Decision：`unclear / high-risk trust repair`
 - Response package：`needs_real_reviews + needs_author_input`；当前不可发送
-- 当前模式：`triage-only`。截至 2026-07-13，实际 NeurIPS reviews 尚未收到。
+- 当前模式：`triage-only`。截至 2026-07-16，实际 NeurIPS reviews 尚未收到。
 
 本目录是作者内部 rebuttal control room，不是论文、公开补充材料或 reviewer supplement，也不得作为仓库根目录打包。唯一中心主张是：**RoPE 的有限频率表也是 finite spectral budget；EVQ-Cosh 把 training-time frequency allocation 作为 operator design 与 inference-time range scaling 之外的第三个 PE 设计轴。** 这不是 universal long-context SOTA，也不是 YaRN、LongRoPE、DAPE、FIRE 或 learned PE 的替代主张。
 
@@ -15,9 +15,12 @@
 | --- | --- |
 | `rebuttal_playbook.md` | **唯一操作入口**：claim disposition、P0/P1/P2、理论边界、实验 gate、作者决策门与发送 QA |
 | `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` | **最新事实权威**：DAPE、YaRN、midpoint-Geo、KL、`c_coll`、Phase16、协议与 provenance 的全论文审计；与旧材料冲突时以此为准 |
+| `FIRST_PRINCIPLES_REBUTTAL_REASSESSMENT_20260716.md` | **最新推理权威**：PDF-only可见性、主动/被动披露、geometric/cosh最优性、\(\tau\)重推导、shape/span confound、representation-routing-readout三门机制与最小实验队列 |
+| `THEORY_FREQUENCY_OPTIMALITY_AND_TAU_20260716.md` | **理论分层专稿（复核后）**：均匀/cosh最优性目标表、ordinary-KL否证、transport proxy条件导出、\(\tau_{\mathrm{surr}}\) vs \(\tau_{\mathrm{deploy}}\) 幂次分拆、可守/必撤清单；与 first-principles 文互补，冲突时以数学自洽+full audit为准 |
 | `REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md` | **政策与决策背景**：NeurIPS 可行性、诚实披露、官方政策、公开案例与后续 venue 修复路线 |
-| `../docs/superpowers/specs/2026-07-14-lora-industrial-capability-design.md` | **已批准的 LoRA 能力转化实验合同**：先评测现有七个 raw adapter×frequency 组合，再按 gate 进入 matched 8K-only continuation 与 same-base midpoint attribution；无新结果 |
-| `../docs/superpowers/plans/2026-07-14-lora-industrial-capability.md` | **权威实现计划**：文件边界、TDD 步骤、统计单位、停止条件、付费 GPU preflight 与最终验证；执行时不得跳过 gate |
+| `../docs/exp/2026-07-14_lora_retrieval_conversion_probe.md` | **8B机制事实**：runtime/adaptor cross、remote-source causal use、sparse/oracle/readout诊断与negative stop；停止8K/50-step和sparse-search路线 |
+| `../docs/exp/2026-07-15_lora_qa16k_three_arm_results.md` | **8B能力事实**：registered 303-example QA negative；EVQ-LoRA显著差于Native-LoRA，缺口集中\(\le8\)K，\(>8\)K各臂接近floor；PPL稳定不等于能力 |
+| `../docs/superpowers/specs/2026-07-14-lora-industrial-capability-design.md` | **archival experiment contract**：记录结果产生前的gate与endpoint；实际裁决已被2026-07-14/15结果覆盖，不再作为继续训练授权 |
 | `EVQ_8K_ONLY_CAPABILITY_TRANSFER_PLAN_20260713.md` | **理论与方案前置审计**：phase-observability 的 exact/conditional 边界和早期 Stage 0/1 构思；具体实现与执行优先级以 2026-07-14 已批准设计为准 |
 | `evq_seed42_retrieval_repair/` | **已实现但暂停优先启动**：EVQ-only R8/R16 repair；其 16K physical training 与无 Geo control 不能回答严格 8K→8K 外问题，可复用 evaluator/provenance 组件 |
 | `frequency_adaptation_8b/` | **备选机制实现**：连续频率迁移与 E16 训练；当前不作为第一实验，只有 direct 8K-only protocol 出现明确 optimization failure 时再触发 |
@@ -39,8 +42,8 @@
 | submitted/current source 写了什么 | 提交件与 `paper/` 当前源码，使用时明确版本 | 只能证明某版本的文字、图表和声明；不能覆盖数学审计，也不能单独证明实验 provenance |
 | 实验数字与 provenance | `docs/overview/RESULT_PROVENANCE_MANIFEST.md` 及其指向的 raw-backed artifacts | 已移出根目录的 2026-06-14 snapshot 只保存在 ignored local snapshot 中，不得恢复为权威 |
 | 全论文事实与方法身份 | `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` | 当前 paper label、旧报告和 class 名不能覆盖实际 forward path 与官方定义 |
-| 理论正确性 | `FULL_PAPER_INTEGRITY_AUDIT_20260713.md`；长推导见 `THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` | submitted/current paper source 只证明“写了什么”，不裁决数学是否正确；旧 theory note 不得覆盖 2026-07-13 的 `c_coll`/Phase16 复核 |
-| LoRA 因果与数据来源 | `LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md`；fresh protocol见 `LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` | 旧 LongAlign/LongAlpaca contrast不可作因果比较；新 LongAlpaca pair虽匹配训练流水线，但native-Geo与midpoint-EVQ非同quantizer、单seed且为teacher-forced NLL，不得称纯shape control或静默替换旧表 |
+| 理论正确性 | `FULL_PAPER_INTEGRITY_AUDIT_20260713.md`；最优性/\(\tau\)分层见 `THEORY_FREQUENCY_OPTIMALITY_AND_TAU_20260716.md` 与 `FIRST_PRINCIPLES_REBUTTAL_REASSESSMENT_20260716.md`；长推导见 `THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` | submitted/current paper source只证明“写了什么”；surrogate theorem、exact collision、ordinary KL、task risk与经验basin不得混成一条闭环 |
+| LoRA 因果与能力 | `LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md`、`LORA_LONGALPACA_TEMPORAL_NLL_20260712.md`、2026-07-14 retrieval report、2026-07-15 registered QA report | 旧cross-corpus contrast不可作因果比较；long-position PPL/source routing不能替代readout/generation；不得选择性省略registered QA negative或\(\le8\)K harm |
 | 当前决策与可发送范围 | `rebuttal_playbook.md`；政策/venue判断见 `REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md`；真实评论映射用 `REVIEWER_TRIAGE_PLAYBOOK.md` | master ledger、旧草稿、旧 action board 或单次内部报告不得反向升级 claim |
 | 模拟审稿原文 | `simulated_reviews/` | 只用于内部压力测试；不是真实 NeurIPS reviews，其科学判断已被 2026-07-13 full audit 与当前 playbook 取代 |
 
@@ -64,11 +67,14 @@
 | P0 | Trust / provenance | submitted、current source、raw-backed result 与 future revision 必须分开；实验 provenance 以 `docs/overview/RESULT_PROVENANCE_MANIFEST.md` 为准 |
 | P0 | KL / shape–scale correctness | ordinary baseline KL 一阶变分为零，从 `O(τ^4)` 开始；保留 exact cosh surrogate theorem、conditional diffuse probability-transport proxy、empirical finite-`τ` basin 三层身份 |
 | P0 | Exact-kernel / surrogate identity | exact kernel 只测 content-independent phase redundancy；cosh 是 stated surrogate 的 optimizer，不是 exact kernel、attention 或 LM objective 的闭式最优解 |
+| P0 | Allocation optimality | geometric在uniform log-frequency coverage/quantization等目标下可严格最优；不存在task-independent最优表；cosh optimality只绑定stated surrogate |
 | P0 | Method identity | Primary I 是 repo-defined fixed-ramp scaler，不是官方 YaRN；Primary II 的旧 “DAPE” 是 shared learnable inverse frequencies，不是 DAPE；不同 MLA scaler也不得共用 YaRN身份 |
-| P0 | Geo identity | 核心 Geo 是 midpoint-discretized geometric grid，不是 native endpoint RoPE；matched shape contrast可保留，standard-RoPE dominance不可保留 |
+| P0 | Geo identity | 核心 Geo 是 midpoint-discretized geometric grid，不是 native endpoint RoPE；shared-quantile schedule contrast可保留，standard-RoPE dominance不可保留 |
+| P0 | Shape / span identity | midpoint EVQ同时移动finite-grid extrema，且不保持realized span（代表性 \(\tau=4\) 设置中缩窄）；submitted比较是shared-quantile schedule intervention，不是fixed-span pure-shape causal isolation |
 | P0 | Collision / Phase16 | `c_coll=1.171` verification未做优化；Phase16是99 runs/9 configs/selected confirmation，不是27-config全3-seed且全部PPL差小于1% |
 | P1 | Baseline fairness / replication | Primary II 是约151.9M、seed-42 headline；Primary III三 seed batch不一致，actual head_dim=64，而`tau=1.414`对应的`d_eff=128`只是ad-hoc convention |
 | P1 | Metric / capability | PK 是 teacher-forced NLL-gap。按真实方法重标后，8K AR exact：Midpoint-Geo+fixed-ramp 0/0/0，EVQ+fixed-ramp 58/18/98（mean 58%）；同时保留 4K 的100%对77.3%反向边界 |
+| P1 | 8B capability | registered 303-example QA为negative，缺口集中\(\le8\)K；\(>8\)K各臂接近floor。16/32K PPL和remote routing改善只能作mechanism evidence |
 
 ## 5. 禁止措辞
 
@@ -76,12 +82,14 @@
 - “EVQ replaces YaRN / LongRoPE / DAPE / FIRE / learned PE.”
 - 把 repo fixed-ramp scaler称为 official YaRN，或把 shared learnable frequencies称为 DAPE。
 - 把 midpoint-Geo称为 native/standard RoPE control。
+- 把submitted midpoint comparison称为fixed-extrema/fixed-span “pure shape” control，或笼统声称geometric本身generally suboptimal。
 - “ordinary KL gives an `O(τ²)` gain”或“ordinary KL derives the deployed optimum.”
 - 用 `c_coll=1.171`、27 configurations或“all <1% PPL”证明公式闭环。
 - “`τ=d_eff/√L` is globally optimal”或“MLA `d_eff=d_head` is a theorem.”
 - “EVQ beats tuned Geo/YaRN”或“the matched-scale result proves tuned dominance.”
 - “Primary II is fully replicated”或把 seed-42 diagnostic 升级成广义 learned-PE dominance。
 - “PK means autoregressive exact retrieval.”
+- 用16K/32K temporal PPL、block hit/rank或source-removal effect宣称8B downstream capability improvement。
 - 用 historical LongAlpaca EVQ 与 fresh LongAlign Geo 计算 matched EVQ effect，或写成 controlled causal comparison。
 - 把 2B/4B 历史 trace、无 raw JSON 的 phase label 或旧 MLA `τ` 标签写成 reviewer-grade completion。
 - 把模拟审稿问题称为 reviewer 原话，或声称真实 NeurIPS reviews 已收到。
@@ -96,4 +104,4 @@
 
 ## 7. Consolidation note
 
-2026-07-13 起，`FULL_PAPER_INTEGRITY_AUDIT_20260713.md` 是方法身份、理论与协议事实的最高入口，`rebuttal_playbook.md` 是唯一操作入口，`REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md` 提供政策与venue决策背景。本文件只保留导航、状态和安全边界；master ledger 已降为 archival risk inventory。两份 2026-07-10 模拟审稿只提供压力测试原文，不提供真实 reviewer 身份或最新科学裁决。本次更新不改变任何实验数字。
+2026-07-16 起，`FULL_PAPER_INTEGRITY_AUDIT_20260713.md` 是方法身份、协议与raw-fact gate，`FIRST_PRINCIPLES_REBUTTAL_REASSESSMENT_20260716.md` 是optimality、\(\tau\)、PDF可见性与三门机制的reasoning gate，`rebuttal_playbook.md` 仍是唯一操作入口，`REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md` 提供政策与venue决策背景。本文件只保留导航、状态和安全边界；master ledger 已降为 archival risk inventory。两份 2026-07-10 模拟审稿只提供压力测试原文，不提供真实 reviewer 身份或最新科学裁决。本次更新不改变任何论文或实验数字。
