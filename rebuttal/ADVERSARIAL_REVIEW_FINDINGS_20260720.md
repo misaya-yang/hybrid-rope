@@ -3,6 +3,15 @@
 Date: 2026-07-20 (rebuttal deadline 2026-07-22; real reviews not yet received).
 Status: `internal_adversarial_review`. Modifies no paper number.
 
+> **Superseded in part (2026-07-20).** A strong-model adjudication
+> (`STRONG_MODEL_THEORY_VERDICT_20260720.md`) confirmed most theory findings but
+> corrected four premises. The authoritative stance is
+> `THEORY_STANCE_CONSOLIDATED_20260720.md`; where the two disagree, it wins —
+> notably T6/Q6 (kernels (i)≡(ii); my "three kernels" premise was wrong),
+> T7/Q7 (amplification is sinh τ/τ = 6.82 at τ=4, not 13.6), T3/Q3 (a
+> normalization-independent observable DOES exist: the Phase16 d-sweep), and
+> T5/Q5(b) (a non-circular weight w=q(Lb^{−φ}) DOES exist, though not cosh-specific).
+
 Method: a 4-phase multi-agent audit (5 deep-readers → 6 adversarial lenses →
 consolidation → per-finding verification) produced 49 raw findings; these were
 de-duplicated and compared against the existing self-audits. Below, each item is
