@@ -1,11 +1,12 @@
 # EVQ-Cosh Rebuttal Control Room
 
-创建：2026-06-10；最后更新：2026-07-14
+创建：2026-06-10；最后更新：2026-07-20
 
 - Preparation：`triage_ready`
 - Decision：`unclear / high-risk trust repair`
 - Response package：`needs_real_reviews + needs_author_input`；当前不可发送
-- 当前模式：`triage-only`。截至 2026-07-13，实际 NeurIPS reviews 尚未收到。
+- 当前模式：`triage-only`。截至 2026-07-20，实际 NeurIPS reviews 尚未收到；deadline 2026-07-22。
+- 2026-07-20：完成 07-14/07-15 新实验裁决与理论独立复核，见 `EXPERIMENT_THEORY_REVIEW_20260720.md`；playbook 已同步（QA16K registered negative、sparse-conversion 负结果 + 因果定位、residual pilot inert、fixed-ramp 机制归因、`T₁` typo）。
 
 本目录是作者内部 rebuttal control room，不是论文、公开补充材料或 reviewer supplement，也不得作为仓库根目录打包。唯一中心主张是：**RoPE 的有限频率表也是 finite spectral budget；EVQ-Cosh 把 training-time frequency allocation 作为 operator design 与 inference-time range scaling 之外的第三个 PE 设计轴。** 这不是 universal long-context SOTA，也不是 YaRN、LongRoPE、DAPE、FIRE 或 learned PE 的替代主张。
 
@@ -15,6 +16,7 @@
 | --- | --- |
 | `rebuttal_playbook.md` | **唯一操作入口**：claim disposition、P0/P1/P2、理论边界、实验 gate、作者决策门与发送 QA |
 | `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` | **最新事实权威**：DAPE、YaRN、midpoint-Geo、KL、`c_coll`、Phase16、协议与 provenance 的全论文审计；与旧材料冲突时以此为准 |
+| `EXPERIMENT_THEORY_REVIEW_20260720.md` | **07-14→07-15 实验裁决 + 理论独立复核**：QA16K registered negative、sparse-conversion/causal decomposition、residual pilot、fixed-ramp probe 的 disposition 与 mandatory-disclosure 配对；理论复核确认既有 audit 并新增 `T₁` typo 与 collision-divergence 重述；三 gate 机制链 kernel |
 | `REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md` | **政策与决策背景**：NeurIPS 可行性、诚实披露、官方政策、公开案例与后续 venue 修复路线 |
 | `../docs/superpowers/specs/2026-07-14-lora-industrial-capability-design.md` | **已批准的 LoRA 能力转化实验合同**：先评测现有七个 raw adapter×frequency 组合，再按 gate 进入 matched 8K-only continuation 与 same-base midpoint attribution；无新结果 |
 | `../docs/superpowers/plans/2026-07-14-lora-industrial-capability.md` | **权威实现计划**：文件边界、TDD 步骤、统计单位、停止条件、付费 GPU preflight 与最终验证；执行时不得跳过 gate |

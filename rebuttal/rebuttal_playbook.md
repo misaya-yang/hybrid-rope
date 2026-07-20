@@ -1,8 +1,10 @@
 # EVQ-Cosh Rebuttal Playbook — 2026-07-22
 
 > **2026-07-13 fact gate:** 任何 reviewer response 都必须先经过 `FULL_PAPER_INTEGRITY_AUDIT_20260713.md`。旧 DAPE、official-YaRN、native-Geo、ordinary-KL、`c_coll`、Phase16-27-config、LoRA-rank 或 MLA-`d_eff` 口径不得从历史材料恢复。
+>
+> **2026-07-20 experiment gate:** 07-14/07-15 新实验的裁决以 `EXPERIMENT_THEORY_REVIEW_20260720.md` 为准。凡引用 LoRA PPL 优势，必须同时给出 QA16K registered negative（EVQ−Native task-macro F1 −0.0984，95% CI [−0.1297, −0.0697]）与 8K PPL harm；凡引用 hit@16/rank/因果 source-use，必须同时给出 0% exact match 与 sparse/forced-gold 转化失败。legacy KV "95%@16K" 已判定无效（prompt 实际 ~6.8K tokens），永不引用。
 
-最后核对：2026-07-13
+最后核对：2026-07-20
 
 - 工作模式：`triage-only`
 - 决策状态：`unclear / high-risk trust repair`
@@ -37,6 +39,7 @@
 | 需要判断什么 | 当前权威 | 不能替代它的材料 |
 | --- | --- | --- |
 | 方法身份、数学正确性、协议事实 | `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` | paper wording、旧类名、旧 rebuttal 草稿 |
+| 07-14/07-15 新实验裁决与理论复核增量 | `EXPERIMENT_THEORY_REVIEW_20260720.md`（独立重推导确认既有 audit；新增 `T₁` typo、collision-divergence 重述、三 gate 机制链） | 单个实验报告不得脱离其 disposition 与 mandatory-disclosure 配对单独引用 |
 | 详细数学推导 | `THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md`，受 7 月 13 日 fact gate 约束 | Phase16、simulation 或经验 sweep |
 | 数字与 provenance | `docs/overview/RESULT_PROVENANCE_MANIFEST.md` 及其 raw-backed artifacts | 汇总表、历史 trace、服务器口头记录 |
 | 政策与 venue 决策 | `REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md` | 旧年份 rebuttal 规则 |
@@ -260,12 +263,13 @@ Likelihood 是 reviewer 实际提出的相对可能性；Impact 是回答失败�
 
 | 风险 | Reviewer 可能如何问 | 当前最稳回答 | 材料状态 / 何时启动额外工作 |
 | --- | --- | --- | --- |
-| PK / capability | 100% PK是否就是生成式exact retrieval或通用长上下文能力？ | PK只定义为teacher-forced NLL-gap；AR exact单列，同时报告8K seed spread与4K reversal | `CLARIFY_EXISTING`；无需新benchmark，reviewer明确要求某endpoint后再评估 |
+| PK / capability | 100% PK是否就是生成式exact retrieval或通用长上下文能力？ | PK只定义为teacher-forced NLL-gap；AR exact单列，同时报告8K seed spread与4K reversal。8B 侧现有直接生成式证据：三 gate 机制链（signal-preservation PASS、addressing PASS、readout/task FAIL；review 20260720 §3.1），QA16K registered negative 与 0% 16K exact 必须随任何 capability 措辞给出 | `CLARIFY_EXISTING + PARTIAL`；无需新benchmark，reviewer明确要求某endpoint后再评估 |
+| "PPL 是唯一货币" 追问 | 低 PPL 不等于能力，你们只有 PPL？ | 直接承认：registered QA gate 为负、16K exact ≈0；同时给出因果证据（gold-drop +1.5055 NLL、rank 33,775→2,043）说明信号存在而 readout 未转化；PK relabel 与 AR exact 已单列 | `ACCEPT_ANALYSIS + CLARIFY_EXISTING`；用 review 20260720 §3.1 kernel，不再跑新 benchmark |
 | Primary II single seed | 为什么把seed-42 diagnostic作为primary？ | 承认整张comparator table未多seed；额外fixed-EVQ seeds不能升级全表 | `SOFTEN_CLAIM`；不机械补seed，除非reviewer把matched replication列为明确升分条件 |
 | Official YaRN / native endpoint | faithful YaRN或standard RoPE下方向是否仍在？ | 已跑 single-seed component ablation（`EVQ_YARN_COMPONENT_ABLATION_20260714.md`）：abundant MHA 下 official-YaRN 的**频率校正**（非 mscale）抹平 EVQ gap，证实 complementarity 撤回并给出机制；scarce MLA 激进外推处（scale 8/16）**未抹平**（EVQ+full 8K 71.6<85.5）。只支持机制方向，不恢复 complementarity；P2/P3 已否证 | `PARTIAL + SUPPORTING`；deploy-on-trigger；边界见 ablation 文档（single-seed、L=512、τ 未重推、PPL-only、modest 外推仍被抹平） |
 | MLA convention | 为什么用 \(d_{\mathrm{eff}}=128\)，是否验证公式？ | actual head_dim=64、d_rope=32；\(\tau=1.414\)只作ad-hoc empirical setting | `SOFTEN_CLAIM`；不补dimension ablation，不称theorem |
 | Undertraining / scale | 短训练预算是否制造优势，能否泛化到重预训练模型？ | 报exact budget与负/反向边界；现有8B LoRA不能关闭因果问题 | `PARTIAL`；reviewer把heavy-pretrained adaptation设为关键判据时，才考虑已spec化8B机制实验 |
-| LoRA / downstream | 频率重分配在LLaMA-3-8B下是否真的可学、是否改善任务？ | fresh LongAlpaca pair是single-seed teacher-forced NLL，8K更差且quantizer不匹配 | 默认 `OUT_OF_SCOPE`；若使用必须完整报告8K harm，不能称pure-shape control |
+| LoRA / downstream | 频率重分配在LLaMA-3-8B下是否真的可学、是否改善任务？ | fresh LongAlpaca pair是single-seed teacher-forced NLL，8K更差且quantizer不匹配。**QA16K three-arm registered gate 为负**：task-macro F1 EVQ 0.1126 vs Native-LoRA 0.2110（Δ −0.0984，CI 排除 0），deficit 集中在 ≤8K，>8K 全臂 floor；50-step micro-tune、sparse selection、forced-gold 均未转化 | 默认 `OUT_OF_SCOPE`；若被触发，**先报 negative 再报 16K/32K PPL**，附三 gate 机制链与 8K harm，不能称pure-shape control |
 | Novelty / related work | 是否只是调base、插值、搜索或既有scaler变体？ | 用intervention stage、optimized object与自由度区分；不声称替代或数学正交 | `CLARIFY_EXISTING + ADD_CITATION`；只回应reviewer点名的最近工作 |
 
 ### P2 — 当前明确排除
@@ -290,6 +294,8 @@ Likelihood 是 reviewer 实际提出的相对可能性；Impact 是回答失败�
 | `REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md` | **archival / 部分过时** | 只用于找历史攻击面；不得复制answer kernel、实验优先级或旧方法身份 |
 | `LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md`与`LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` | **supporting-only** | reviewer点名LoRA时才启用；必须同时披露quantizer差异、single seed与8K harm |
 | `EVQ_YARN_COMPONENT_ABLATION_20260714.md`（源：`data/curated/native_rope_evq_150m_s42_500m_20260713.json`、`results/mla_yarn_short_s42_20260714/`、`docs/exp/2026-07-14_mla_k16_short_context_yarn_ablation.md`） | **主动实验 / supporting-only** | official-YaRN 被 trigger 时启用；单seed机制证据；确认 complementarity 撤回并支持 scarce-channel 方向；不升级 primary、不恢复 complementarity |
+| `EXPERIMENT_THEORY_REVIEW_20260720.md` | **充分 / 07-14→07-15 实验裁决 + 理论独立复核** | 新实验（QA16K、sparse conversion、causal decomposition、residual pilot、fixed-ramp probe）只能连同其 disposition 与 mandatory-disclosure 配对使用；理论侧新增 `T₁` typo 与 collision-divergence 重述 |
+| `docs/exp/2026-07-15_lora_qa16k_three_arm_results.md`、`docs/exp/2026-07-14_lora_retrieval_conversion_probe.md` | **registered negative + 因果机制 / supporting-only** | LoRA/capability 被 trigger 时启用；负结果先行；不得只引 PPL 或 rank 改善 |
 | `frequency_adaptation_8b/` | **独立机制实验队列** | 不是rebuttal默认要求，不修复paper-lineage comparator或theory错误 |
 | `simulated_reviews/` | **内部压力测试** | 不是真实opinion、score或trigger，不进入最终response |
 
@@ -301,7 +307,11 @@ Likelihood 是 reviewer 实际提出的相对可能性；Impact 是回答失败�
 | --- | --- | --- | --- |
 | MHA K=32 four-arm 分解（500M 六格 + 同 checkpoint 四算子） | 完成 | abundant 通道下 official-YaRN 的**频率校正**抹平 EVQ gap（mscale 不抹）→ 证实 complementarity 撤回并给机制 | 确认 WITHDRAW 并附机制；trigger 时用 |
 | MLA K=16 four-arm 分解（`mla_yarn_short_s42_20260714`） | 完成 | scarce + 激进外推（scale 8/16）处频率校正**未抹平**，EVQ+full>Native+full；但 P2/P3 被否证、modest 外推被抹平、PPL-only、L=512、τ 未重推、单seed | 支持 scarce-channel 机制方向；trigger 时用；不升级 Primary III |
-| Sparse-attention 转换实验（EVQ 干净远程底座 + score-based 稀疏选择 → 检索/QA） | 计划中 / 未跑 | 假设：dense 下远程信号被 softmax 稀释；稀疏选择读干净的远程 q·k 分数，把 PPL 兑现成任务能力 | 属 P0-D "usable→good" 缺口；受 §8 gate 约束；真实 trigger 或 camera-ready 方向研究，非默认 rebuttal 任务 |
+| Repo fixed-ramp 机制 probe（07-14） | 完成 | 宽幅 `scale^r` smoothstep 承载几乎全部 interaction；official linear shared-index **反转** substrate 排序；full official/derived YaRN 绝对 PPL 仍最优；不声称 ramp 新颖性 | fixed-ramp 被 trigger 时的机制归因；trigger 时用 |
+| Sparse-attention 转换实验（EVQ 干净远程底座 + score-based 稀疏选择 → 检索/QA） | **已跑 / 负结果** | 10-case pilot：score-mode NLL DiD `-0.6659`（稀疏帮 Geo 更多）；forced-gold 仅 `-0.0341`；停止条件已触发，100-case 扩展未跑。5090 causal decomposition 确认信号存在（gold-drop-all `+1.5055` NLL、rank 33,775→2,043）但 readout 未转化 | P0-D "usable→good" 缺口**已有负答案 + 因果定位**；trigger 时按 review 20260720 §3.1 三 gate 链报告；不再扫 sparse 超参 |
+| QA16K three-arm（`qa16k_three_arm_s42_20260715`） | **完成 / registered gate 负** | EVQ-LoRA task-macro F1 0.1126 vs Native-LoRA 0.2110（Δ −0.0984，CI [−0.1297,−0.0697]）；deficit 集中 ≤8K；>8K 全臂 floor 且子集 task-skewed | LoRA/capability trigger 时 mandatory disclosure；单 seed、两任务、不改论文数字 |
+| Residual-RoPE pilot v6（07-15） | 完成 / 负（inert） | 三臂输出 byte-identical（Qasper F1 0.5534；16K passkey 全 0；zero-gate parity 0.0）；branch 未分化 | 不作任何方向的证据；不再以该预算重跑 |
+| Readout-conversion Z0（07-15） | **进行中 / 不可引用** | 仅有 5-case raw first-step logit records（oracle-diagnostic 标签）；Z0/Z1 判定分析未产出 | 分析落地并过 kill condition 前，任何 rebuttal 组件不得引用 |
 
 τ=5.66 重推的 MLA 复跑（关闭"τ 未按公式设"的 reviewer 缺口）为可选硬化项，同样 deploy-on-trigger。
 
@@ -397,6 +407,8 @@ Future manuscript action (only if author-approved; never claim already revised):
 4. official DAPE/YaRN与native endpoint baseline没有在原提交协议中实现；rebuttal内不能靠relabeled近似恢复。
 5. Primary II single-seed、Primary III heterogeneous replication、Phase16 selected-confirmation与reproduction closure会限制trust。
 6. reviewer可能认为纠错后的理论—任务链过松或empirical scope过窄。这是应接受的评分风险，不能靠发散回答解决。
+7. 8B conversion 轨道的 registered QA gate 为负：EVQ-LoRA 在 ≤8K QA 上明显差于 matched native control，>8K 全臂 floor。若 reviewer 追问 downstream capability，诚实答案是"信号保存与 addressing 有因果证据、readout/task 转化当前失败"。这会限制 significance 评分，只能如实呈现，不能用 PPL 数字冲淡。
+8. `T₁` 闭式在附录中有 factor-τ typo（数值验证脚本正确）；若 reviewer 核对代数，承认为排版错误即可，不影响 identity 与 `T₂` corollary。
 
 ## 12. 中文核对：作者必须明确的决定
 

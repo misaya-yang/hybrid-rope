@@ -1,6 +1,13 @@
 # AI Handoff — EVQ-Cosh NeurIPS 2026
 
-最后更新：2026-07-13（Asia/Shanghai）
+最后更新：2026-07-20（Asia/Shanghai）
+
+## -1. 2026-07-20 pre-deadline review（最新）
+
+- 07-14/07-15 实验已全部裁决：QA16K three-arm **registered gate 负**（EVQ-LoRA task-macro F1 0.1126 vs Native-LoRA 0.2110）；sparse-conversion pilot 负 + 5090 causal decomposition 定位 readout 瓶颈（gold-drop-all `+1.5055` NLL、rank 33,775→2,043）；residual-RoPE pilot v6 inert；repo fixed-ramp 机制归因完成；readout-conversion Z0 仅有 raw records，**不可引用**。
+- 理论独立复核确认既有 audit（ordinary-KL `O(τ⁴)`、`c_coll` 反例 `C(13.05)=0.042` vs `C(3.31)=28.18`、SFT `Λ₀` 不一致），新增两项：附录 `T₁` 闭式 factor-τ typo（identity 与 `T₂` corollary 不受影响）；collision-only 最优点 `c≈4.7` 与 trained-PPL basin `c≈1` 的 divergence 可作为诚实机制答案。
+- 权威文档：`rebuttal/EXPERIMENT_THEORY_REVIEW_20260720.md`；playbook 与 README 已同步。真实 reviews 截至 2026-07-20 未收到；deadline 2026-07-22。
+- 未闭合 action：作者批准 capability kernel 与 disclosure 配对；07-14/07-15 curated artifacts 尚未登记 provenance manifest；论文数字未改。
 分支：`main`
 仓库整理 checkpoint：`1b97fdc`（`handoff: consolidate repository and rebuttal index [01]`）
 Temporal holdout checkpoint：`5bdec86`（`checkpoint: add temporal holdout evaluation`）
