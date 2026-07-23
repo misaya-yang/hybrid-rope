@@ -1,0 +1,3 @@
+work/
+*.incomplete
+__pycache__/

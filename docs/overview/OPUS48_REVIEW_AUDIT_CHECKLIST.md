@@ -81,7 +81,7 @@ large EVQ/Geo `+YaRN` difference is not explained by "freq came from nowhere."
 | O48-21 | P2 | Partly closed | Downstream task accuracy is weak/limited. | `paper/sections/05_experiments.tex` says downstream accuracy is non-regression, not primary. | Rebuttal should lead with PE diagnostics, not downstream wins. |
 | O48-22 | P1 | Open | Missing tuned LongRoPE2/CoPE/tuned-scale YaRN baselines. | No complete packaged baseline suite for these alternatives. | Concede baseline gap or add a small, clearly scoped control. |
 | O48-23 | P2 | Partly closed | Appendix-heavy presentation; main text may under-deliver caveats. | The main text has several caveats, but key fragilities live in appendix/results docs. | Promote the most important caveats into main/rebuttal prose. |
-| O48-24 | P0 | Partly closed | Rebuttal playbook overclaims. | The retired paper-local playbook had risky statements: no convergence with Geo, no Geo+YaRN outperforming EVQ+YaRN, and PE-dominant as multi-seed. Current triage authority is `rebuttal/REVIEWER_TRIAGE_PLAYBOOK.md`. | Keep reviewing before use; do not paste old aggressive language into rebuttal. |
+| O48-24 | P0 | Partly closed | Rebuttal playbook overclaims. | The retired paper-local playbook had risky statements: no convergence with Geo, no Geo+YaRN outperforming EVQ+YaRN, and PE-dominant as multi-seed. The pre-review triage template is archived; current authority is `rebuttal/rebuttal_0723/README.md`. | Keep reviewing before use; do not paste old aggressive language into rebuttal. |
 | O48-25 | P0 | Partly closed | Experimental chain has script/artifact drift. | Current scripts and reports had drift in run IDs, passkey mix defaults, compile behavior, intermediate checkpoint names, and remote eval entrypoints. `eval_extended_3seeds.py` and `yarn_finetune_eval.py` now explicitly hash checkpoint-loaded `inv_freq` and resolve both current and historical MLA run IDs; `RESULT_PROVENANCE_MANIFEST.md`, `EXPERIMENT_CODE_RESULT_AUDIT.md`, and `HISTORICAL_SCRIPT_STATUS.md` separate evidence, code support, and historical wrappers. | Import sanitized manifests for recovered artifacts and avoid citing historical wrappers as canonical reproduction commands. |
 
 ## Deep Dive A: 1B MLA Reversal
@@ -290,7 +290,7 @@ but it should not carry the main claim.
 
 ### Immediate text/doc fixes, no new experiments
 
-- [x] Retire the paper-local playbook and preserve the corrected boundaries in `rebuttal/REVIEWER_TRIAGE_PLAYBOOK.md`.
+- [x] Retire the paper-local playbook and preserve the corrected boundaries in `rebuttal/pre_rebuttal/REVIEWER_TRIAGE_PLAYBOOK.md`.
 - [x] Add a 1B 4K MLA limitation sentence wherever Phase18 is mentioned in
   paper-facing docs.
 - [x] Ensure every PK mention says teacher-forced NLL-gap unless AR exact match is

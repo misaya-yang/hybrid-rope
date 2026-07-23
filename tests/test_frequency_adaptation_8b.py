@@ -17,7 +17,7 @@ def _load(module_name: str):
 
 
 def test_default_phases_hold_physical_tokens_per_step_constant() -> None:
-    curriculum = _load("rebuttal.frequency_adaptation_8b.curriculum")
+    curriculum = _load("rebuttal.pre_rebuttal.frequency_adaptation_8b.curriculum")
 
     expected = {
         "warmup": (4096, 8, 64, 512),
@@ -35,7 +35,7 @@ def test_default_phases_hold_physical_tokens_per_step_constant() -> None:
 
 
 def test_log_frequency_homotopy_has_exact_endpoints_and_geometric_midpoint() -> None:
-    curriculum = _load("rebuttal.frequency_adaptation_8b.curriculum")
+    curriculum = _load("rebuttal.pre_rebuttal.frequency_adaptation_8b.curriculum")
     native = torch.tensor([1.0, 0.1, 0.01], dtype=torch.float64)
     target = torch.tensor([0.8, 0.2, 0.04], dtype=torch.float64)
 
@@ -55,13 +55,13 @@ def test_log_frequency_homotopy_has_exact_endpoints_and_geometric_midpoint() -> 
     ],
 )
 def test_log_frequency_homotopy_fails_closed(native, target, message: str) -> None:
-    curriculum = _load("rebuttal.frequency_adaptation_8b.curriculum")
+    curriculum = _load("rebuttal.pre_rebuttal.frequency_adaptation_8b.curriculum")
     with pytest.raises(ValueError, match=message):
         curriculum.log_frequency_homotopy(native, target, 0.5)
 
 
 def test_answer_only_labels_mask_prompt_and_supervise_only_answer_span() -> None:
-    curriculum = _load("rebuttal.frequency_adaptation_8b.curriculum")
+    curriculum = _load("rebuttal.pre_rebuttal.frequency_adaptation_8b.curriculum")
 
     labels = curriculum.answer_only_labels(
         torch.tensor([10, 11, 12, 13, 14, 15]),
@@ -73,7 +73,7 @@ def test_answer_only_labels_mask_prompt_and_supervise_only_answer_span() -> None
 
 
 def test_answer_only_labels_reject_empty_or_out_of_bounds_answer() -> None:
-    curriculum = _load("rebuttal.frequency_adaptation_8b.curriculum")
+    curriculum = _load("rebuttal.pre_rebuttal.frequency_adaptation_8b.curriculum")
     tokens = torch.tensor([1, 2, 3])
 
     with pytest.raises(ValueError, match="answer span"):
@@ -83,7 +83,7 @@ def test_answer_only_labels_reject_empty_or_out_of_bounds_answer() -> None:
 
 
 def test_rotary_pair_energy_uses_llama_half_split_pairing() -> None:
-    curriculum = _load("rebuttal.frequency_adaptation_8b.curriculum")
+    curriculum = _load("rebuttal.pre_rebuttal.frequency_adaptation_8b.curriculum")
     row_energy = torch.tensor([1, 2, 3, 4, 10, 20, 30, 40], dtype=torch.float64)
 
     pair_energy = curriculum.half_split_pair_energy(row_energy, head_dim=4)
@@ -93,7 +93,7 @@ def test_rotary_pair_energy_uses_llama_half_split_pairing() -> None:
 
 
 def test_exact_distance_example_is_fixed_length_and_answer_only() -> None:
-    prepare_data = _load("rebuttal.frequency_adaptation_8b.prepare_data")
+    prepare_data = _load("rebuttal.pre_rebuttal.frequency_adaptation_8b.prepare_data")
     template = prepare_data.RetrievalTemplate(
         instruction=(1, 2),
         source_prefix=(3,),
@@ -126,7 +126,7 @@ def test_exact_distance_example_is_fixed_length_and_answer_only() -> None:
 
 
 def test_update_example_keeps_old_value_before_relevant_source() -> None:
-    prepare_data = _load("rebuttal.frequency_adaptation_8b.prepare_data")
+    prepare_data = _load("rebuttal.pre_rebuttal.frequency_adaptation_8b.prepare_data")
     template = prepare_data.RetrievalTemplate(
         instruction=(1,),
         source_prefix=(2,),
@@ -155,7 +155,7 @@ def test_update_example_keeps_old_value_before_relevant_source() -> None:
 
 
 def test_build_template_uses_real_chat_generation_boundary() -> None:
-    prepare_data = _load("rebuttal.frequency_adaptation_8b.prepare_data")
+    prepare_data = _load("rebuttal.pre_rebuttal.frequency_adaptation_8b.prepare_data")
 
     class Tokenizer:
         eos_token_id = 99
@@ -177,7 +177,7 @@ def test_build_template_uses_real_chat_generation_boundary() -> None:
 
 
 def test_build_template_accepts_batch_encoding_chat_template_output() -> None:
-    prepare_data = _load("rebuttal.frequency_adaptation_8b.prepare_data")
+    prepare_data = _load("rebuttal.pre_rebuttal.frequency_adaptation_8b.prepare_data")
 
     class Tokenizer:
         eos_token_id = 99
@@ -198,7 +198,7 @@ def test_build_template_accepts_batch_encoding_chat_template_output() -> None:
 
 
 def test_counterfactual_triplet_preserves_positions_and_changes_only_contract_spans() -> None:
-    prepare_data = _load("rebuttal.frequency_adaptation_8b.prepare_data")
+    prepare_data = _load("rebuttal.pre_rebuttal.frequency_adaptation_8b.prepare_data")
     template = prepare_data.RetrievalTemplate(
         instruction=(1,),
         source_prefix=(2,),
@@ -244,7 +244,7 @@ def test_counterfactual_triplet_preserves_positions_and_changes_only_contract_sp
 
 
 def test_phase_frequency_endpoints_keep_geo_matched_and_evq_exact() -> None:
-    train = _load("rebuttal.frequency_adaptation_8b.train")
+    train = _load("rebuttal.pre_rebuttal.frequency_adaptation_8b.train")
     native = torch.tensor([1.0, 0.1], dtype=torch.float64)
     evq = torch.tensor([0.8, 0.2], dtype=torch.float64)
 
@@ -262,7 +262,7 @@ def test_phase_frequency_endpoints_keep_geo_matched_and_evq_exact() -> None:
 
 
 def test_frequency_transition_reaches_exact_target_on_last_optimizer_step() -> None:
-    train = _load("rebuttal.frequency_adaptation_8b.train")
+    train = _load("rebuttal.pre_rebuttal.frequency_adaptation_8b.train")
     native = torch.tensor([1.0, 0.1], dtype=torch.float64)
     evq = torch.tensor([0.8, 0.2], dtype=torch.float64)
     transition = train.FrequencyTransition(native, evq, steps=5)
@@ -273,7 +273,7 @@ def test_frequency_transition_reaches_exact_target_on_last_optimizer_step() -> N
 
 
 def test_effective_lora_update_energy_uses_output_rotary_rows() -> None:
-    train = _load("rebuttal.frequency_adaptation_8b.train")
+    train = _load("rebuttal.pre_rebuttal.frequency_adaptation_8b.train")
     lora_a = torch.eye(2, dtype=torch.float64)
     lora_b = torch.tensor(
         [
@@ -297,7 +297,7 @@ def test_effective_lora_update_energy_uses_output_rotary_rows() -> None:
 
 
 def test_tensor_answer_dataset_materializes_only_answer_labels() -> None:
-    train = _load("rebuttal.frequency_adaptation_8b.train")
+    train = _load("rebuttal.pre_rebuttal.frequency_adaptation_8b.train")
     bundle = {
         "format_version": 1,
         "phase": "warmup",
@@ -316,7 +316,7 @@ def test_tensor_answer_dataset_materializes_only_answer_labels() -> None:
 
 
 def test_tail_answer_cross_entropy_uses_only_causal_answer_predictors() -> None:
-    train = _load("rebuttal.frequency_adaptation_8b.train")
+    train = _load("rebuttal.pre_rebuttal.frequency_adaptation_8b.train")
     input_ids = torch.tensor([[1, 2, 3, 4]])
     labels = torch.tensor([[-100, -100, 3, 4]])
     # The retained tail has hidden positions [1, 2, 3]. Positions 1 and 2
@@ -331,7 +331,7 @@ def test_tail_answer_cross_entropy_uses_only_causal_answer_predictors() -> None:
 
 
 def test_tail_answer_cross_entropy_rejects_non_tail_supervision() -> None:
-    train = _load("rebuttal.frequency_adaptation_8b.train")
+    train = _load("rebuttal.pre_rebuttal.frequency_adaptation_8b.train")
     input_ids = torch.tensor([[1, 2, 3, 4]])
     labels = torch.tensor([[-100, 2, -100, 4]])
     tail_logits = torch.zeros((1, 3, 8))
@@ -341,7 +341,7 @@ def test_tail_answer_cross_entropy_rejects_non_tail_supervision() -> None:
 
 
 def test_stack_and_validate_bundle_preserve_exact_phase_contract() -> None:
-    prepare_data = _load("rebuttal.frequency_adaptation_8b.prepare_data")
+    prepare_data = _load("rebuttal.pre_rebuttal.frequency_adaptation_8b.prepare_data")
     template = prepare_data.RetrievalTemplate(
         instruction=(1,),
         source_prefix=(2,),
@@ -384,7 +384,7 @@ def test_stack_and_validate_bundle_preserve_exact_phase_contract() -> None:
 
 
 def test_teacher_forced_answer_metrics_use_causal_shift() -> None:
-    evaluate = _load("rebuttal.frequency_adaptation_8b.evaluate")
+    evaluate = _load("rebuttal.pre_rebuttal.frequency_adaptation_8b.evaluate")
     input_ids = torch.tensor([1, 2, 3, 4])
     logits = torch.full((4, 8), -10.0)
     logits[1, 3] = 10.0  # token at position 1 predicts answer token 3 at position 2
@@ -402,7 +402,7 @@ def test_teacher_forced_answer_metrics_use_causal_shift() -> None:
 
 
 def test_counterfactual_summary_is_group_paired() -> None:
-    evaluate = _load("rebuttal.frequency_adaptation_8b.evaluate")
+    evaluate = _load("rebuttal.pre_rebuttal.frequency_adaptation_8b.evaluate")
     records = [
         evaluate.ScoredRecord("g0", "original", "kv", 1000, 0.2, True),
         evaluate.ScoredRecord("g0", "swapped", "kv", 1000, 0.3, True),

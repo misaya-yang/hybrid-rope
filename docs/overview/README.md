@@ -6,7 +6,8 @@ whether an experiment row is supported by code and artifacts.
 ## Current Authority Order
 
 1. `ai-handoff.md` for current worktree state and known breakage.
-2. `rebuttal/README.md` and `rebuttal/rebuttal_playbook.md` for the current response-only workflow.
+2. `rebuttal/README.md` and `rebuttal/rebuttal_0723/README.md` for the
+   current response-only workflow; `rebuttal/pre_rebuttal/` is historical.
 3. `docs/overview/RESULT_PROVENANCE_MANIFEST.md` for reviewer-safe result identity and hashes.
 4. `docs/overview/PAPER_CLAIMS_MAP.md`, `docs/overview/REPRODUCE.md`, and `docs/overview/DATA_PREPARATION.md` for navigation and reproduction.
 

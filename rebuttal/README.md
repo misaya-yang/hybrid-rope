@@ -1,107 +1,44 @@
-# EVQ-Cosh Rebuttal Control Room
+# EVQ-Cosh rebuttal workspace
 
-创建：2026-06-10；最后更新：2026-07-16
+最后更新：2026-07-24
 
-- Preparation：`triage_ready`
-- Decision：`unclear / high-risk trust repair`
-- Response package：`needs_real_reviews + needs_author_input`；当前不可发送
-- 当前模式：`triage-only`。截至 2026-07-16，实际 NeurIPS reviews 尚未收到。
+这里现在只承担目录分流，不再保存一份与真实审稿并行的“大总账”。
 
-本目录是作者内部 rebuttal control room，不是论文、公开补充材料或 reviewer supplement，也不得作为仓库根目录打包。唯一中心主张是：**RoPE 的有限频率表也是 finite spectral budget；EVQ-Cosh 把 training-time frequency allocation 作为 operator design 与 inference-time range scaling 之外的第三个 PE 设计轴。** 这不是 universal long-context SOTA，也不是 YaRN、LongRoPE、DAPE、FIRE 或 learned PE 的替代主张。
+## 当前状态
 
-## 1. 统一策略入口、分轨材料与原文索引
+- 已收到并逐字归档 Reviewer `27bE` 的正式 review：评分 3、置信度 4。
+- 仓库内目前只有这一份可逐字核验的正式 review。0723 实验计划中对
+  `zWsa`、`Dz6s` 的概括不是原始 review source，补齐原文前不得当作 reviewer
+  原话。
+- 尚未形成可发送的 author response。
+- `rebuttal_0723/` 内两个实验包目前只有协议和代码；仓库内没有训练结果或
+  reviewer-grade result artifact。
+- 当前实验协议已把含混的 `Geo` 拆成 `Std-Geo` 与 `Paper-Geo`，主比较固定
+  为 `Paper-Geo vs EVQ-Cosh`，并修复 checkpoint `inv_freq` 持久化/加载
+  保护。没有修改论文正文或任何实验数字。
 
-| 文件 | 唯一职责 |
-| --- | --- |
-| `rebuttal_playbook.md` | **唯一操作入口**：claim disposition、P0/P1/P2、理论边界、实验 gate、作者决策门与发送 QA |
-| `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` | **最新事实权威**：DAPE、YaRN、midpoint-Geo、KL、`c_coll`、Phase16、协议与 provenance 的全论文审计；与旧材料冲突时以此为准 |
-| `FIRST_PRINCIPLES_REBUTTAL_REASSESSMENT_20260716.md` | **最新推理权威**：PDF-only可见性、主动/被动披露、geometric/cosh最优性、\(\tau\)重推导、shape/span confound、representation-routing-readout三门机制与最小实验队列 |
-| `THEORY_FREQUENCY_OPTIMALITY_AND_TAU_20260716.md` | **理论分层专稿（复核后）**：均匀/cosh最优性目标表、ordinary-KL否证、transport proxy条件导出、\(\tau_{\mathrm{surr}}\) vs \(\tau_{\mathrm{deploy}}\) 幂次分拆、可守/必撤清单；与 first-principles 文互补，冲突时以数学自洽+full audit为准 |
-| `REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md` | **政策与决策背景**：NeurIPS 可行性、诚实披露、官方政策、公开案例与后续 venue 修复路线 |
-| `../docs/exp/2026-07-14_lora_retrieval_conversion_probe.md` | **8B机制事实**：runtime/adaptor cross、remote-source causal use、sparse/oracle/readout诊断与negative stop；停止8K/50-step和sparse-search路线 |
-| `../docs/exp/2026-07-15_lora_qa16k_three_arm_results.md` | **8B能力事实**：registered 303-example QA negative；EVQ-LoRA显著差于Native-LoRA，缺口集中\(\le8\)K，\(>8\)K各臂接近floor；PPL稳定不等于能力 |
-| `../docs/superpowers/specs/2026-07-14-lora-industrial-capability-design.md` | **archival experiment contract**：记录结果产生前的gate与endpoint；实际裁决已被2026-07-14/15结果覆盖，不再作为继续训练授权 |
-| `EVQ_8K_ONLY_CAPABILITY_TRANSFER_PLAN_20260713.md` | **理论与方案前置审计**：phase-observability 的 exact/conditional 边界和早期 Stage 0/1 构思；具体实现与执行优先级以 2026-07-14 已批准设计为准 |
-| `evq_seed42_retrieval_repair/` | **已实现但暂停优先启动**：EVQ-only R8/R16 repair；其 16K physical training 与无 Geo control 不能回答严格 8K→8K 外问题，可复用 evaluator/provenance 组件 |
-| `frequency_adaptation_8b/` | **备选机制实现**：连续频率迁移与 E16 训练；当前不作为第一实验，只有 direct 8K-only protocol 出现明确 optimization failure 时再触发 |
-| `README.md` | 全局状态、导航与目录安全边界 |
-| `REVIEWER_TRIAGE_PLAYBOOK.md` | 真实 reviews 到来后的 verbatim comment、稳定 ID 与最多五项 score-driving concern 分流 |
-| `REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md` | **archival risk inventory**：仅用于检索历史攻击面；不再裁决当前事实、实验优先级或发送范围 |
-| `THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` | 理论长推导：exact / conditional proxy / empirical 三层边界；方法身份、`c_coll` 与 Phase16 以 2026-07-13 full audit 为准 |
-| `LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md` | fresh Geo 结果、LongAlign/LongAlpaca provenance 与 clean-pair 因果边界 |
-| `LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` | fresh LongAlpaca seed-42 Geo+LoRA/EVQ+LoRA matched-training-pipeline temporal NLL；native-Geo与midpoint-EVQ非同quantizer，仅作 supporting evidence |
-| `NATIVE_ROPE_EVQ_150M_500M_RESULT_20260713.md` | 151.9M、500M-token、seed-42 Native-RoPE/endpoint-EVQ 六格诊断；区分 official/derived YaRN 与 repo fixed-ramp，单 seed supporting only |
-| `raw_sources/00_INDEX.md` | tracked 控制索引；指向 local-only 原文并规定模拟材料隔离规则 |
+## 目录
 
-已删除的旧文档仅可从 Git 历史追溯，不是入口，不得覆盖以上控制文件或最新 provenance。
-
-## 2. 权威来源必须分轨
-
-| 需要判断什么 | 权威来源 | 不得误用 |
+| 路径 | 作用 | 权限 |
 | --- | --- | --- |
-| submitted/current source 写了什么 | 提交件与 `paper/` 当前源码，使用时明确版本 | 只能证明某版本的文字、图表和声明；不能覆盖数学审计，也不能单独证明实验 provenance |
-| 实验数字与 provenance | `docs/overview/RESULT_PROVENANCE_MANIFEST.md` 及其指向的 raw-backed artifacts | 已移出根目录的 2026-06-14 snapshot 只保存在 ignored local snapshot 中，不得恢复为权威 |
-| 全论文事实与方法身份 | `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` | 当前 paper label、旧报告和 class 名不能覆盖实际 forward path 与官方定义 |
-| 理论正确性 | `FULL_PAPER_INTEGRITY_AUDIT_20260713.md`；最优性/\(\tau\)分层见 `THEORY_FREQUENCY_OPTIMALITY_AND_TAU_20260716.md` 与 `FIRST_PRINCIPLES_REBUTTAL_REASSESSMENT_20260716.md`；长推导见 `THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` | submitted/current paper source只证明“写了什么”；surrogate theorem、exact collision、ordinary KL、task risk与经验basin不得混成一条闭环 |
-| LoRA 因果与能力 | `LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md`、`LORA_LONGALPACA_TEMPORAL_NLL_20260712.md`、2026-07-14 retrieval report、2026-07-15 registered QA report | 旧cross-corpus contrast不可作因果比较；long-position PPL/source routing不能替代readout/generation；不得选择性省略registered QA negative或\(\le8\)K harm |
-| 当前决策与可发送范围 | `rebuttal_playbook.md`；政策/venue判断见 `REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md`；真实评论映射用 `REVIEWER_TRIAGE_PLAYBOOK.md` | master ledger、旧草稿、旧 action board 或单次内部报告不得反向升级 claim |
-| 模拟审稿原文 | `simulated_reviews/` | 只用于内部压力测试；不是真实 NeurIPS reviews，其科学判断已被 2026-07-13 full audit 与当前 playbook 取代 |
+| [`rebuttal_0723/`](rebuttal_0723/README.md) | 当前真实审稿周期的唯一入口：原始 review、concern mapping、获批实验及结果状态 | 当前 |
+| [`pre_rebuttal/`](pre_rebuttal/README.md) | 真实 reviews 到来前的理论审计、风险清单、模拟审稿、旧实验方案和旧实现 | 历史参考 |
 
-## 3. 2026-07-22 真实 review 工作流
+根目录不再放单独的 rebuttal 策略文档。真实问题从
+`rebuttal_0723/00_REVIEWER_27BE_OFFICIAL_REVIEW.md` 开始；历史材料只有在
+当前 concern 明确触发时才回查。
 
-真实 reviews 到来前只做事实、短答组件和作者决策准备，不创建或预填 author response。新实验不是默认动作；只有能直接回答真实 reviewer 的 score-changing question 且满足 `rebuttal_playbook.md` §8 gate 时才启动。
+## 当前执行原则
 
-1. local-only 保存每条真实评论的逐字版本，并保留 reviewer / AC 身份标签。
-2. 按 `REVIEWER_TRIAGE_PLAYBOOK.md` 分配稳定 ID；ID 一旦分配，不因排序变化而重编号。
-3. 对每个 concern 填写 category、severity、action、readiness、evidence、boundary 与 author decision，再映射到分轨权威来源。
-4. 区分 **review-triggered response** 与 **untriggered material-integrity disclosure candidate**。普通回复只回答真实评论；若重大方法身份/理论错误未被点名但会污染 accepted record，由作者决定是否向 AC 作一条合并 disclosure。该建议是诚信判断，不是 Handbook 明文规定的专用流程。
-5. 新实验只在匹配控制、任务端点、provenance 和负结果边界完整时成为候选证据；此前保持内部研究状态，不得自行写入 response。
-6. 需要作者选择、未匿名化新证据或 provenance gate 的条目保持 `needs_author_input`，不得自行补全。
-7. 仅在真实评论到达后创建唯一回复文件：`AUTHOR_RESPONSE_20260722.md`。不要恢复多路径草稿入口。
-8. 每份 review 最多 10,000 characters；response 不放链接、不上传 revised paper/supplement，并检查 OpenReview readers 与双盲信息。最多聚焦 3–5 个 score-driving concerns，另加一条作者批准的合并 integrity disclosure（如确有必要）。
+1. 先回答 reviewer 实际提出的问题，不把 rebuttal 扩成第二次投稿。
+2. reviewer 原话、仓库事实、拟议动作、已完成证据必须分栏记录。
+3. 方法身份或数学错误不能靠新实验修复。若回答涉及对应内容，必须使用审计后
+   的窄口径。
+4. 新实验只有在直接区分 score-changing 假设、协议已冻结、运行产物可追溯时
+   才可能进入回复。代码存在不等于结果存在，外部机器状态也不等于仓库证据。
+5. 模拟审稿和宽实验计划只能提供检索线索，不得冒充正式 review 或已批准任务。
+6. `rebuttal/` 整体不得直接打进 reviewer supplement；任何对外 artifact 仍需
+   匿名化和 provenance gate。
 
-## 4. 当前核心 P0/P1 边界
-
-| 优先级 | 边界 | 必须保留的事实 |
-| --- | --- | --- |
-| P0 | Trust / provenance | submitted、current source、raw-backed result 与 future revision 必须分开；实验 provenance 以 `docs/overview/RESULT_PROVENANCE_MANIFEST.md` 为准 |
-| P0 | KL / shape–scale correctness | ordinary baseline KL 一阶变分为零，从 `O(τ^4)` 开始；保留 exact cosh surrogate theorem、conditional diffuse probability-transport proxy、empirical finite-`τ` basin 三层身份 |
-| P0 | Exact-kernel / surrogate identity | exact kernel 只测 content-independent phase redundancy；cosh 是 stated surrogate 的 optimizer，不是 exact kernel、attention 或 LM objective 的闭式最优解 |
-| P0 | Allocation optimality | geometric在uniform log-frequency coverage/quantization等目标下可严格最优；不存在task-independent最优表；cosh optimality只绑定stated surrogate |
-| P0 | Method identity | Primary I 是 repo-defined fixed-ramp scaler，不是官方 YaRN；Primary II 的旧 “DAPE” 是 shared learnable inverse frequencies，不是 DAPE；不同 MLA scaler也不得共用 YaRN身份 |
-| P0 | Geo identity | 核心 Geo 是 midpoint-discretized geometric grid，不是 native endpoint RoPE；shared-quantile schedule contrast可保留，standard-RoPE dominance不可保留 |
-| P0 | Shape / span identity | midpoint EVQ同时移动finite-grid extrema，且不保持realized span（代表性 \(\tau=4\) 设置中缩窄）；submitted比较是shared-quantile schedule intervention，不是fixed-span pure-shape causal isolation |
-| P0 | Collision / Phase16 | `c_coll=1.171` verification未做优化；Phase16是99 runs/9 configs/selected confirmation，不是27-config全3-seed且全部PPL差小于1% |
-| P1 | Baseline fairness / replication | Primary II 是约151.9M、seed-42 headline；Primary III三 seed batch不一致，actual head_dim=64，而`tau=1.414`对应的`d_eff=128`只是ad-hoc convention |
-| P1 | Metric / capability | PK 是 teacher-forced NLL-gap。按真实方法重标后，8K AR exact：Midpoint-Geo+fixed-ramp 0/0/0，EVQ+fixed-ramp 58/18/98（mean 58%）；同时保留 4K 的100%对77.3%反向边界 |
-| P1 | 8B capability | registered 303-example QA为negative，缺口集中\(\le8\)K；\(>8\)K各臂接近floor。16/32K PPL和remote routing改善只能作mechanism evidence |
-
-## 5. 禁止措辞
-
-- “EVQ is universal long-context SOTA.”
-- “EVQ replaces YaRN / LongRoPE / DAPE / FIRE / learned PE.”
-- 把 repo fixed-ramp scaler称为 official YaRN，或把 shared learnable frequencies称为 DAPE。
-- 把 midpoint-Geo称为 native/standard RoPE control。
-- 把submitted midpoint comparison称为fixed-extrema/fixed-span “pure shape” control，或笼统声称geometric本身generally suboptimal。
-- “ordinary KL gives an `O(τ²)` gain”或“ordinary KL derives the deployed optimum.”
-- 用 `c_coll=1.171`、27 configurations或“all <1% PPL”证明公式闭环。
-- “`τ=d_eff/√L` is globally optimal”或“MLA `d_eff=d_head` is a theorem.”
-- “EVQ beats tuned Geo/YaRN”或“the matched-scale result proves tuned dominance.”
-- “Primary II is fully replicated”或把 seed-42 diagnostic 升级成广义 learned-PE dominance。
-- “PK means autoregressive exact retrieval.”
-- 用16K/32K temporal PPL、block hit/rank或source-removal effect宣称8B downstream capability improvement。
-- 用 historical LongAlpaca EVQ 与 fresh LongAlign Geo 计算 matched EVQ effect，或写成 controlled causal comparison。
-- 把 2B/4B 历史 trace、无 raw JSON 的 phase label 或旧 MLA `τ` 标签写成 reviewer-grade completion。
-- 把模拟审稿问题称为 reviewer 原话，或声称真实 NeurIPS reviews 已收到。
-
-## 6. 目录安全
-
-- `rebuttal/` 整体不进入 supplement；只将经过匿名化、provenance 核验且被真实 review 触发的 reviewer-grade artifact 单独移入受控 tracked 位置。
-- `raw_sources/00_INDEX.md` 是 tracked 控制索引；其列出的 `*_verbatim.md` payload 是 local-only，不提交、不打包、不公开引用。已移除的 reasoning attachment 不得恢复。
-- `simulated_reviews/` 仅保存字节不变的内部模拟原文，不进入 supplement，也不得伪装为真实 review。
-- 不复制身份、私有机器路径、凭据、内部推理或未匿名化 artifact 到 paper、public docs 或 response。
-- 当前定向实验可以新增 spec、代码和内部运行产物，但不得覆盖论文数字、历史 artifacts 或 claim tier。只有真实 reviewer trigger、作者明确决定且实验通过 `rebuttal_playbook.md` §8 gate 后，结果才可进入 response 候选。
-
-## 7. Consolidation note
-
-2026-07-16 起，`FULL_PAPER_INTEGRITY_AUDIT_20260713.md` 是方法身份、协议与raw-fact gate，`FIRST_PRINCIPLES_REBUTTAL_REASSESSMENT_20260716.md` 是optimality、\(\tau\)、PDF可见性与三门机制的reasoning gate，`rebuttal_playbook.md` 仍是唯一操作入口，`REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md` 提供政策与venue决策背景。本文件只保留导航、状态和安全边界；master ledger 已降为 archival risk inventory。两份 2026-07-10 模拟审稿只提供压力测试原文，不提供真实 reviewer 身份或最新科学裁决。本次更新不改变任何论文或实验数字。
+项目级操作边界见 [`Agent.md`](../Agent.md)，论文与 reviewer-safe 结果的事实
+边界见 `docs/overview/RESULT_PROVENANCE_MANIFEST.md`。

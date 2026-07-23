@@ -1,7 +1,7 @@
 # Native-RoPE vs Endpoint-EVQ 150M Design
 
 Status: completed on 2026-07-13 as a single-seed diagnostic. See
-`rebuttal/NATIVE_ROPE_EVQ_150M_500M_RESULT_20260713.md` and
+`rebuttal/pre_rebuttal/NATIVE_ROPE_EVQ_150M_500M_RESULT_20260713.md` and
 `data/curated/native_rope_evq_150m_s42_500m_20260713.json`.
 
 ## Goal

@@ -33,7 +33,7 @@ docs/
 6. **`overview/METHODOLOGY.md`** → EVQ-Cosh 方法论、评估协议（若与 audit stack 冲突则降级）
 7. **`overview/TERMS_AND_PROTOCOLS.md`** → 统一术语表和命名规范
 8. **`exp/README.md`** → 实验报告索引
-9. **`theory/THEORY_MATH_VALIDATION.md`** → 历史理论数值验证；rebuttal 数学以 `rebuttal/THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` 为准
+9. **`theory/THEORY_MATH_VALIDATION.md`** → 历史理论数值验证；rebuttal 数学以 `rebuttal/pre_rebuttal/THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` 为准
 
 ### 复现实验
 

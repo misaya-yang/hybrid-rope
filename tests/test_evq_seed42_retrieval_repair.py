@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 import torch
 
-from rebuttal.evq_seed42_retrieval_repair.prepare_data import (
+from rebuttal.pre_rebuttal.evq_seed42_retrieval_repair.prepare_data import (
     _key_text,
     artifact_plan,
     build_counterfactual_group,
@@ -28,7 +28,7 @@ from rebuttal.evq_seed42_retrieval_repair.prepare_data import (
     write_bundle_atomic,
     write_manifest,
 )
-from rebuttal.evq_seed42_retrieval_repair.protocol import (
+from rebuttal.pre_rebuttal.evq_seed42_retrieval_repair.protocol import (
     decide_gate,
     evaluation_budget,
     extract_first_passkey,
@@ -37,7 +37,7 @@ from rebuttal.evq_seed42_retrieval_repair.protocol import (
     score_text_answer,
     segment_contract,
 )
-from rebuttal.evq_seed42_retrieval_repair.evaluate import (
+from rebuttal.pre_rebuttal.evq_seed42_retrieval_repair.evaluate import (
     build_gate_report,
     evaluator_code_sha256,
     merge_temporal_guardrail,
@@ -50,8 +50,8 @@ from rebuttal.evq_seed42_retrieval_repair.evaluate import (
     validate_gate_file,
     validate_result_file,
 )
-from rebuttal.evq_seed42_retrieval_repair import train as repair_train
-from rebuttal.evq_seed42_retrieval_repair.train import (
+from rebuttal.pre_rebuttal.evq_seed42_retrieval_repair import train as repair_train
+from rebuttal.pre_rebuttal.evq_seed42_retrieval_repair.train import (
     apply_runtime_frequency,
     runtime_frequency_contract,
     validate_gate_transition,
@@ -1138,7 +1138,7 @@ def test_result_validation_recomputes_summary_from_raw_rows(tmp_path) -> None:
 
 
 def test_launcher_has_explicit_non_advancing_commands_and_gpu_lock() -> None:
-    launcher = Path("rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
+    launcher = Path("rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
 
     for command in (
         "prepare)",
@@ -1157,7 +1157,7 @@ def test_launcher_has_explicit_non_advancing_commands_and_gpu_lock() -> None:
 
 
 def test_launcher_never_downloads_or_autostarts_the_next_stage() -> None:
-    launcher = Path("rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
+    launcher = Path("rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
 
     assert "git clone" not in launcher
     assert "wget " not in launcher
@@ -1169,7 +1169,7 @@ def test_launcher_never_downloads_or_autostarts_the_next_stage() -> None:
 
 
 def test_launcher_requires_external_paths_without_private_defaults() -> None:
-    launcher = Path("rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
+    launcher = Path("rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
 
     for variable in (
         "EVQ_REPAIR_MODEL",
@@ -1189,13 +1189,13 @@ def test_launcher_requires_external_paths_without_private_defaults() -> None:
 
 
 def test_capability_filter_keeps_optional_longbench_rows() -> None:
-    from rebuttal.evq_seed42_retrieval_repair.evaluate import CAPABILITY_SUITES
+    from rebuttal.pre_rebuttal.evq_seed42_retrieval_repair.evaluate import CAPABILITY_SUITES
 
     assert "longbench" in CAPABILITY_SUITES
 
 
 def test_launcher_revalidates_temporal_reuse_against_source_selection() -> None:
-    launcher = Path("rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
+    launcher = Path("rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
 
     assert '--temporal-root "$EVQ_REPAIR_TEMPORAL_ROOT"' in launcher
     assert '--max-packs-per-domain "$max_packs"' in launcher
@@ -1204,7 +1204,7 @@ def test_launcher_revalidates_temporal_reuse_against_source_selection() -> None:
 
 
 def test_training_and_evaluation_share_one_global_gpu_lock() -> None:
-    training = Path("rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
+    training = Path("rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
     evaluation = Path("scripts/2026-07/09_lora_evq_official_yarn_eval.sh").read_text()
 
     assignment = 'GPU_LOCK="${EVQ_GPU_LOCK:-/tmp/evq_lora_eval_gpu.lock}"'
@@ -1213,7 +1213,7 @@ def test_training_and_evaluation_share_one_global_gpu_lock() -> None:
 
 
 def test_gpu_phases_require_a_content_bound_complete_preflight_receipt() -> None:
-    launcher = Path("rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
+    launcher = Path("rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
 
     assert 'PREFLIGHT_RECEIPT="$EVQ_REPAIR_WORK_DIR/preflight_complete.json"' in launcher
     gpu_gate = launcher.split("require_gpu_lock()", 1)[1].split("verify_result()", 1)[0]

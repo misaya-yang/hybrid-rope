@@ -1,11 +1,13 @@
 # AI Handoff — EVQ-Cosh NeurIPS 2026
 
-最后更新：2026-07-13（Asia/Shanghai）
+最后更新：2026-07-24（Asia/Shanghai）
 分支：`main`
 仓库整理 checkpoint：`1b97fdc`（`handoff: consolidate repository and rebuttal index [01]`）
 Temporal holdout checkpoint：`5bdec86`（`checkpoint: add temporal holdout evaluation`）
 整理前实验基线：`805878f`（`prepare exact FineWeb 3x1B tensors`）
-状态：rebuttal prep + 151.9M/500M single-seed 机制诊断已完成；**论文指标与主表数字未改**。见下方 §0。
+状态：Reviewer 27bE 正式 review 已归档；当前 rebuttal 入口已迁移到
+`rebuttal/rebuttal_0723/`，历史准备位于 `rebuttal/pre_rebuttal/`。
+151.9M/500M single-seed 机制诊断仍是 supporting evidence；**论文指标与主表数字未改**。
 
 本文件是后续 AI 的**第一入口和状态索引**。它只保存可提交的仓库级信息，不保存服务器地址、凭据、私有绝对路径或实时进程信息。
 
@@ -24,7 +26,7 @@ Temporal holdout checkpoint：`5bdec86`（`checkpoint: add temporal holdout eval
 - Passkey 在 2K 训练中被显式监督；其 teacher-forced gap 只能作为机制诊断。Official/derived YaRN 两臂均达 100% sign rate，已饱和；fixed-ramp 为 Native 77% / EVQ 87%。
 - 500M 对 151.9M 仅约 3.29 tokens/parameter：当前 MHA 协议未出现 reversal，但不能声称充分训练或解决训练饱和问题。
 
-权威结果：`rebuttal/NATIVE_ROPE_EVQ_150M_500M_RESULT_20260713.md`。
+权威结果：`rebuttal/pre_rebuttal/NATIVE_ROPE_EVQ_150M_500M_RESULT_20260713.md`。
 清洗后的 raw-backed artifact：`data/curated/native_rope_evq_150m_s42_500m_20260713.json`。
 
 ### 0.2 评测修复与当前边界
@@ -40,14 +42,17 @@ Temporal holdout checkpoint：`5bdec86`（`checkpoint: add temporal holdout eval
 1. `AGENTS.md`：科学主张、匿名性、编辑和 Git 硬规则。
 2. `ai-handoff.md`：当前状态、未提交工作和已知故障。
 3. `REPO_MAP.md`：目录职责、source of truth 和禁止混用的层级。
-4. `rebuttal/README.md`：7 月 22 日 rebuttal control room 总入口。
-5. `rebuttal/rebuttal_playbook.md`：真实 reviews 到来后的统一 response-only 策略。
-6. `docs/overview/RESULT_PROVENANCE_MANIFEST.md`：实验数字与 artifact provenance 的最高权威。
-7. `paper/README.md`：论文源码与唯一最终 PDF 的边界。
+4. `Agent.md`：当前 reviewer、实验授权与 GPU 硬边界。
+5. `rebuttal/README.md`：当前/历史两层目录分流。
+6. `rebuttal/rebuttal_0723/README.md`：当前真实审稿周期的唯一操作入口。
+7. `rebuttal/rebuttal_0723/00_REVIEWER_27BE_OFFICIAL_REVIEW.md`：当前唯一逐字正式 review。
+8. `docs/overview/RESULT_PROVENANCE_MANIFEST.md`：实验数字与 artifact provenance 的最高权威。
+9. `paper/README.md`：论文源码与唯一最终 PDF 的边界。
 
 如果这些材料冲突，优先级是：
 
-`AGENTS.md` → 最新 provenance / theory audit → rebuttal control room → paper 当前源码 → 历史报告。
+`AGENTS.md` → `Agent.md` → 正式 review → 最新 provenance / theory audit →
+paper 当前源码 → pre-rebuttal 历史报告。
 
 ## 2. 项目身份与不可漂移的主张
 
@@ -81,12 +86,12 @@ EVQ-Cosh 的窄主张是：RoPE 的有限频率表也是 finite spectral budget�
 
 ## 4. Rebuttal 当前状态
 
-- Preparation：`triage_ready`。
+- Preparation：`official_review_received / triage_only`。
 - Response package：`needs_author_input`。
-- Mode：`pre-review / triage-only / response-only`。
-- 截至 2026-07-12，实际 NeurIPS reviews 尚未收到。
-- 真实 reviews 到来后只选择 3–5 个 score-driving concerns；不要恢复多路径 response 草稿。
-- `rebuttal/rebuttal_playbook.md` 是统一策略入口；`REVIEWER_TRIAGE_PLAYBOOK.md` 负责稳定 ID 和映射；Master Ledger 与 theory/LoRA audits 是深层索引。
+- Mode：`post-review / triage-only / response-only`。
+- Reviewer 27bE 的评分 3、置信度 4 review 已逐字归档；仓库内尚无其他 reviewer 的逐字 source。
+- 当前只围绕 `R27bE.1`–`R27bE.5` 组织回答；补齐其他 review 后再做跨 reviewer 排序。
+- `rebuttal/rebuttal_0723/README.md` 是统一策略入口；`pre_rebuttal/` 中的 playbook、ledger 与 theory/LoRA audits 只作历史事实底稿。
 - 模拟审稿只能用于内部压力测试，不能当成 reviewer 原话。
 
 ## 5. Rebuttal-triggered 实验准备
@@ -97,7 +102,7 @@ EVQ-Cosh 的窄主张是：RoPE 的有限频率表也是 finite spectral budget�
 2. `scripts/data_prep/prepare_temporal_holdout_2026.py` 生成冻结、带 hash manifest 的 2026 temporal holdout；不把下载语料或 tokenized packs 提交进仓库。
 3. `eval_temporal_holdout_matched.py` 从同一次 32K forward 汇总 matched 8K/16K prefixes；`eval_temporal_holdout_three_arm.py` 比较 Geo base、Geo+LoRA、EVQ+LoRA 三臂。
 4. `scripts/2026-07/06_lora_temporal_three_arm_eval.sh` 对 adapter、语料 manifest、输出覆盖和 GPU 锁 fail closed。
-5. seed-42 结果保存在 `data/curated/lora_longalpaca_temporal_s42_20260712.json`，NLL 解释与边界保存在 `rebuttal/LORA_LONGALPACA_TEMPORAL_NLL_20260712.md`；不要写成“48% PPL tradeoff”。
+5. seed-42 结果保存在 `data/curated/lora_longalpaca_temporal_s42_20260712.json`，NLL 解释与边界保存在 `rebuttal/pre_rebuttal/LORA_LONGALPACA_TEMPORAL_NLL_20260712.md`；不要写成“48% PPL tradeoff”。
 6. `scripts/2026-07/07_lora_longalpaca_evq_remaining_seeds.sh` 只训练 EVQ+LoRA seeds 43/44，复用 Geo+LoRA seed 42 作为固定评测参照，并共享持久化 compile cache。
 
 这些结果仍是 single-seed supporting evidence，不是论文已报告的 primary claim。EVQ seeds 43/44 完成后可报告 EVQ 三 seed 稳定性，但不得写成三 seed paired Geo/EVQ 对照。

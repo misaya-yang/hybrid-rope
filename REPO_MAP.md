@@ -1,6 +1,6 @@
 # Repository Map
 
-最后更新：2026-07-12
+最后更新：2026-07-24
 
 本文件只回答三个问题：去哪里读、哪里可以改、哪一层能支持 reviewer-facing claim。
 
@@ -9,7 +9,7 @@
 | 路径 | 职责 | 状态 / 规则 |
 | --- | --- | --- |
 | `paper/` | 当前 LaTeX source、图表、参考文献、唯一 `main.pdf` | 投稿层；不要放 rebuttal、audit 或 build 副本 |
-| `rebuttal/` | 7 月 22 日 response-only control room | 内部准备；不进入 supplement；入口见 `rebuttal/README.md` |
+| `rebuttal/` | response-only control room | `rebuttal_0723/` 为当前真实审稿周期；`pre_rebuttal/` 为历史准备；不进入 supplement |
 | `data/curated/` | 可跟踪、匿名化、reviewer-safe 的小型结果 artifact | reviewer-facing evidence 层；边界由 provenance manifest 决定 |
 | `docs/overview/` | 当前 claims、provenance、复现、术语与审计索引 | 决策文档层；先读其中 `README.md` |
 | `paper_experiments/` | 94 个 paper experiment source 的 manifest-driven 视图 | 只浏览/导出；canonical code 仍在 `scripts/`、`experiments/` |
@@ -32,8 +32,8 @@
 | 某个数字能否用于 rebuttal | `docs/overview/RESULT_PROVENANCE_MANIFEST.md` |
 | 核心实验代码在哪里 | `paper_experiments/MANIFEST.json` → canonical `scripts/` / `experiments/` |
 | EVQ-Cosh schedule 的实现 | `scripts/lib/rope/schedules.py` |
-| 真实 reviews 到来后先做什么 | `rebuttal/rebuttal_playbook.md` → `REVIEWER_TRIAGE_PLAYBOOK.md` |
-| 理论批评怎么回答 | `rebuttal/THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` |
+| 当前真实 review 与行动状态 | `rebuttal/rebuttal_0723/README.md` → `00_REVIEWER_27BE_OFFICIAL_REVIEW.md` |
+| 理论批评的历史事实底稿 | `rebuttal/pre_rebuttal/THEORY_FREQUENCY_OPTIMALITY_AND_TAU_20260716.md` |
 | 当前 AI 应接着做什么 | `ai-handoff.md` |
 
 ## 3. 证据层级
@@ -80,11 +80,14 @@ historical/local evidence
 ### Rebuttal
 
 - `rebuttal/README.md`
-- `rebuttal/rebuttal_playbook.md`
-- `rebuttal/REVIEWER_TRIAGE_PLAYBOOK.md`
-- `rebuttal/REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md`
-- `rebuttal/THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md`
-- `rebuttal/LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md`
+- `rebuttal/rebuttal_0723/README.md`
+- `rebuttal/rebuttal_0723/00_REVIEWER_27BE_OFFICIAL_REVIEW.md`
+- `rebuttal/pre_rebuttal/README.md`
+- `rebuttal/pre_rebuttal/rebuttal_playbook.md`
+- `rebuttal/pre_rebuttal/REVIEWER_TRIAGE_PLAYBOOK.md`
+- `rebuttal/pre_rebuttal/REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md`
+- `rebuttal/pre_rebuttal/THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md`
+- `rebuttal/pre_rebuttal/LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md`
 
 ## 5. Data 与 results 放置规则
 
@@ -115,7 +118,7 @@ historical/local evidence
 | 论文图 | `paper/figs/`；生成脚本在 `scripts/figures/` |
 | 当前高层文档 | `docs/overview/` |
 | 实验报告 | `docs/exp/` |
-| rebuttal 策略 | `rebuttal/`，只能有一个入口 |
+| 当前 rebuttal 策略与 review | `rebuttal/rebuttal_0723/`；根 `rebuttal/README.md` 只做分流 |
 
 ## 8. 不应重新出现的根级内容
 

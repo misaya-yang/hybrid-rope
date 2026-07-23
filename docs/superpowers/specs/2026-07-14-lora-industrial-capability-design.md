@@ -28,11 +28,11 @@ Authoritative inputs for this design are:
 
 - `data/curated/lora_longalpaca_temporal_s42_20260712.json` for the raw-backed
   seed-42 temporal result;
-- `rebuttal/LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` for its interpretation and
+- `rebuttal/pre_rebuttal/LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` for its interpretation and
   schedule-quantizer boundary;
-- `rebuttal/FULL_PAPER_INTEGRITY_AUDIT_20260713.md` for rejected LoRA-rank and
+- `rebuttal/pre_rebuttal/FULL_PAPER_INTEGRITY_AUDIT_20260713.md` for rejected LoRA-rank and
   paper-claim theory;
-- `rebuttal/EVQ_8K_ONLY_CAPABILITY_TRANSFER_PLAN_20260713.md` for the detailed
+- `rebuttal/pre_rebuttal/EVQ_8K_ONLY_CAPABILITY_TRANSFER_PLAN_20260713.md` for the detailed
   phase-observability audit;
 - `Agent.md` for model/data identity and paid-GPU safety.
 

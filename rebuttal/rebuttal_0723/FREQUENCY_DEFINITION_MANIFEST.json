@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "identity": "rebuttal_0723_geo_rope_frequency_contract",
+  "hash_dtype": "float32",
+  "construction_dtype": "float64",
+  "historical_setting": {
+    "base": 500000.0,
+    "head_dim": 64,
+    "K": 32
+  },
+  "methods": {
+    "Std-Geo": {
+      "method_id": "std_geo",
+      "quantiles": "u_k = k/K",
+      "frequency": "omega_k = b^(-k/K)",
+      "first_channels": [
+        1.0,
+        0.6636012196540833,
+        0.44036659598350525,
+        0.2922278344631195
+      ],
+      "last_channels": [
+        1.0313385246263351e-05,
+        6.843975370429689e-06,
+        4.541670477919979e-06,
+        3.01385807688348e-06
+      ],
+      "sha256": "23123293cf5011a65b7b217d61f42aaa57ecea912482c4ef9a6cc9bce12444cf"
+    },
+    "Paper-Geo": {
+      "method_id": "paper_geo",
+      "quantiles": "u_k = (k+1/2)/K",
+      "frequency": "omega_k = b^(-(k+1/2)/K)",
+      "first_channels": [
+        0.8146172165870667,
+        0.5405809879302979,
+        0.3587302267551422,
+        0.2380538135766983
+      ],
+      "last_channels": [
+        8.401461855100933e-06,
+        5.575220257014735e-06,
+        3.6997230381530244e-06,
+        2.4551407022954663e-06
+      ],
+      "sha256": "88654f1fe2a414d38b1cc7e5a1c0e119e168eaa1118934d865b5b5004b858139",
+      "paper_over_std_frequency": 0.8146172338565447,
+      "paper_over_std_wavelength": 1.2275703955658044,
+      "single_base_equivalence": null,
+      "channelwise_effective_base": "b_eff(k)=b^(1+1/(2k)) for k>0; no solution at k=0"
+    },
+    "EVQ-Cosh": {
+      "method_id": "evq_cosh",
+      "quantiles": "u_k = (k+1/2)/K",
+      "phi": "phi_k(tau) = 1 - asinh((1-u_k)sinh(tau))/tau",
+      "frequency": "omega_k = b^(-phi_k(tau))",
+      "tau_zero_limit": "Paper-Geo",
+      "receipts": {
+        "submitted_primary_ii_tau5": {
+          "tau": 5.0,
+          "first_channels": [
+            0.9595150351524353,
+            0.8816264271736145,
+            0.8077777028083801,
+            0.7378856539726257
+          ],
+          "last_channels": [
+            0.0030333080794662237,
+            0.001266169361770153,
+            0.0003425502800382674,
+            2.6861207516049035e-05
+          ],
+          "sha256": "1749296c29fa0662b0fae9ecabcb9ace39146fef611556f550e7ac260d9eaff6"
+        },
+        "fmrope_l256_tau4": {
+          "tau": 4.0,
+          "first_channels": [
+            0.9496814012527466,
+            0.8543727397918701,
+            0.765927791595459,
+            0.684059739112854
+          ],
+          "last_channels": [
+            0.0007673610234633088,
+            0.0002752995933406055,
+            6.597787432838231e-05,
+            7.789300070726313e-06
+          ],
+          "sha256": "78ebc7bc32db94cc453737e5cfcaa4f20545ddb226dc1f30a135d3d3a0bc1dc3"
+        },
+        "shape_l128_rule_tau5p656854": {
+          "tau": 5.656854249492381,
+          "first_channels": [
+            0.9641281962394714,
+            0.8946117162704468,
+            0.8280392289161682,
+            0.7643794417381287
+          ],
+          "last_channels": [
+            0.0059096976183354855,
+            0.0027137522120028734,
+            0.0008365323883481324,
+            7.196132355602458e-05
+          ],
+          "sha256": "a8d9e8ebd6fe1b4f0361a08f22e3e73abe717a4c075bf8f7e0d1ce064e4a7656"
+        }
+      }
+    }
+  },
+  "historical_evidence": {
+    "training_code": {
+      "git_commit": "8616af49d1bbba0cc7386e35a1fed83600949b2d",
+      "path": "submission/code/run_evq_sweep.py",
+      "formula": "u=(idx+0.5)/K; tau=0 sets phi=u; float32 saved buffer"
+    },
+    "primary_ii_result_record": {
+      "git_commit": "8616af49d1bbba0cc7386e35a1fed83600949b2d",
+      "path": "data/evq_128tok_results/results_final.json",
+      "run_id": "125m_tau0.00_seed42",
+      "recorded_sha256_prefix": "88654f1fe2a414d3",
+      "recorded_maximum": 0.81461722,
+      "recorded_minimum": 2.46e-06
+    },
+    "byte_identical_saved_frequency_artifact": {
+      "git_commit": "8616af49d1bbba0cc7386e35a1fed83600949b2d",
+      "path": "data/evq_128tok_results/scaling_50m/50m_tau0.00_seed42/inv_freq.npy",
+      "sha256": "88654f1fe2a414d38b1cc7e5a1c0e119e168eaa1118934d865b5b5004b858139"
+    },
+    "primary_ii_evq_tau5_frequency_artifact": {
+      "git_commit": "8616af49d1bbba0cc7386e35a1fed83600949b2d",
+      "path": "data/evq_128tok_results/extended_sweep/125m_tau5.00_seed42/inv_freq.npy",
+      "sha256": "1749296c29fa0662b0fae9ecabcb9ace39146fef611556f550e7ac260d9eaff6"
+    },
+    "primary_i_training_lineage": {
+      "git_commit": "46e443fc1b8ebb08de8ef5cbaf8caee92d03fcb9",
+      "training_code": "scripts/m4_evq_sweep/run_evq_sweep.py",
+      "result_path": "data/results_5090b/evq_yarn_10pct_allseeds.json",
+      "geo_setting": "tau=0.0 through the same midpoint builder",
+      "checkpoint_bytes": "not_available_in_repository"
+    },
+    "checkpoint_byte_audit": "not_available_in_repository"
+  },
+  "scope_note": "Phase11/11B L=256 supporting Geo used Std-Geo and is not the Paper-Geo lineage."
+}

@@ -206,22 +206,22 @@ to save GPU cost.
 
 New focused package:
 
-- `rebuttal/evq_seed42_retrieval_repair/protocol.py`: immutable phase, budget,
+- `rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/protocol.py`: immutable phase, budget,
   gate, metric, and artifact contracts;
-- `rebuttal/evq_seed42_retrieval_repair/prepare_data.py`: deterministic
+- `rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/prepare_data.py`: deterministic
   three-way data preparation and manifest validation;
-- `rebuttal/evq_seed42_retrieval_repair/train.py`: continuation from a
+- `rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/train.py`: continuation from a
   validated EVQ parent, factor-specific runtime injection, answer-only loss,
   and atomic checkpoint provenance;
-- `rebuttal/evq_seed42_retrieval_repair/evaluate.py`: controlled triplet,
+- `rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/evaluate.py`: controlled triplet,
   passkey, temporal guardrail, and gate aggregation;
-- `rebuttal/evq_seed42_retrieval_repair/run_seed42.sh`: explicit CPU prepare,
+- `rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/run_seed42.sh`: explicit CPU prepare,
   preflight, baseline, R8, R16, gate, and final commands.
 
 Existing code is reused rather than copied where its contract already fits:
 
 - `scripts/lib/rope/official_yarn.py` owns the pinned YaRN operators;
-- `rebuttal/frequency_adaptation_8b` supplies tested answer-mask,
+- `rebuttal/pre_rebuttal/frequency_adaptation_8b` supplies tested answer-mask,
   counterfactual tensor transforms, tail-logit, and gradient-diagnostic helpers;
   its empty-user chat-boundary splicing and token-piece exact-distance builder
   are not reused because they are not token-parity-equivalent to a complete
@@ -264,13 +264,13 @@ python -m pytest \
   tests/test_official_yarn_capability_eval.py -q
 
 python -m py_compile \
-  rebuttal/evq_seed42_retrieval_repair/protocol.py \
-  rebuttal/evq_seed42_retrieval_repair/prepare_data.py \
-  rebuttal/evq_seed42_retrieval_repair/train.py \
-  rebuttal/evq_seed42_retrieval_repair/evaluate.py \
+  rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/protocol.py \
+  rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/prepare_data.py \
+  rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/train.py \
+  rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/evaluate.py \
   experiments/lora_evq_v2/eval_official_yarn_capability.py
 
-bash -n rebuttal/evq_seed42_retrieval_repair/run_seed42.sh
+bash -n rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/run_seed42.sh
 ```
 
 The upload copies only the reviewed files.  It does not synchronize or delete

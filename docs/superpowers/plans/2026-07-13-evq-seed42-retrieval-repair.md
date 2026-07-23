@@ -31,8 +31,8 @@
 ### Task 1: Pure stage, metric, and gate contracts
 
 **Files:**
-- Create: `rebuttal/evq_seed42_retrieval_repair/__init__.py`
-- Create: `rebuttal/evq_seed42_retrieval_repair/protocol.py`
+- Create: `rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/__init__.py`
+- Create: `rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/protocol.py`
 - Create: `tests/test_evq_seed42_retrieval_repair.py`
 
 **Interfaces:**
@@ -64,7 +64,7 @@ conda run --no-capture-output -n aidemo python -m pytest \
   tests/test_evq_seed42_retrieval_repair.py -q
 ```
 
-Expected: collection fails because `rebuttal.evq_seed42_retrieval_repair.protocol` does not exist.
+Expected: collection fails because `rebuttal.pre_rebuttal.evq_seed42_retrieval_repair.protocol` does not exist.
 
 - [ ] **Step 3: Implement stage and segment contracts**
 
@@ -210,8 +210,8 @@ Expected: all selected tests pass.
 
 ```bash
 git add \
-  rebuttal/evq_seed42_retrieval_repair/__init__.py \
-  rebuttal/evq_seed42_retrieval_repair/protocol.py \
+  rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/__init__.py \
+  rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/protocol.py \
   tests/test_evq_seed42_retrieval_repair.py
 git commit -m "feat: define evq retrieval repair protocol"
 ```
@@ -221,7 +221,7 @@ git commit -m "feat: define evq retrieval repair protocol"
 ### Task 2: Deterministic three-way CPU data builder
 
 **Files:**
-- Create: `rebuttal/evq_seed42_retrieval_repair/prepare_data.py`
+- Create: `rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/prepare_data.py`
 - Modify: `tests/test_evq_seed42_retrieval_repair.py`
 
 **Interfaces:**
@@ -337,7 +337,7 @@ conda run --no-capture-output -n aidemo python -m pytest \
   tests/test_evq_seed42_retrieval_repair.py \
   tests/test_frequency_adaptation_8b.py -q
 conda run --no-capture-output -n aidemo python -m py_compile \
-  rebuttal/evq_seed42_retrieval_repair/prepare_data.py
+  rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/prepare_data.py
 ```
 
 Expected: all pass.
@@ -346,7 +346,7 @@ Expected: all pass.
 
 ```bash
 git add \
-  rebuttal/evq_seed42_retrieval_repair/prepare_data.py \
+  rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/prepare_data.py \
   tests/test_evq_seed42_retrieval_repair.py
 git commit -m "feat: prepare evq retrieval repair data"
 ```
@@ -356,7 +356,7 @@ git commit -m "feat: prepare evq retrieval repair data"
 ### Task 3: EVQ parent validation and continuation trainer
 
 **Files:**
-- Create: `rebuttal/evq_seed42_retrieval_repair/train.py`
+- Create: `rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/train.py`
 - Modify: `tests/test_evq_seed42_retrieval_repair.py`
 
 **Interfaces:**
@@ -472,9 +472,9 @@ conda run --no-capture-output -n aidemo python -m pytest \
   tests/test_evq_seed42_retrieval_repair.py \
   tests/test_frequency_adaptation_8b.py \
   tests/test_official_yarn_parity.py -q
-conda run --no-capture-output -n aidemo python -m rebuttal.evq_seed42_retrieval_repair.train --help
+conda run --no-capture-output -n aidemo python -m rebuttal.pre_rebuttal.evq_seed42_retrieval_repair.train --help
 conda run --no-capture-output -n aidemo python -m py_compile \
-  rebuttal/evq_seed42_retrieval_repair/train.py
+  rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/train.py
 ```
 
 Expected: all pass without CUDA or model loading.
@@ -483,7 +483,7 @@ Expected: all pass without CUDA or model loading.
 
 ```bash
 git add \
-  rebuttal/evq_seed42_retrieval_repair/train.py \
+  rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/train.py \
   tests/test_evq_seed42_retrieval_repair.py
 git commit -m "feat: add evq retrieval continuation trainer"
 ```
@@ -493,7 +493,7 @@ git commit -m "feat: add evq retrieval continuation trainer"
 ### Task 4: Corrected evaluator and gate report
 
 **Files:**
-- Create: `rebuttal/evq_seed42_retrieval_repair/evaluate.py`
+- Create: `rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/evaluate.py`
 - Modify: `experiments/lora_evq_v2/eval_official_yarn_capability.py`
 - Modify: `tests/test_evq_seed42_retrieval_repair.py`
 - Modify: `tests/test_official_yarn_capability_eval.py`
@@ -573,7 +573,7 @@ conda run --no-capture-output -n aidemo python -m pytest \
   tests/test_official_yarn_parity.py \
   tests/test_frequency_adaptation_8b.py -q
 conda run --no-capture-output -n aidemo python -m py_compile \
-  rebuttal/evq_seed42_retrieval_repair/evaluate.py \
+  rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/evaluate.py \
   experiments/lora_evq_v2/eval_official_yarn_capability.py
 ```
 
@@ -583,7 +583,7 @@ Expected: all pass.
 
 ```bash
 git add \
-  rebuttal/evq_seed42_retrieval_repair/evaluate.py \
+  rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/evaluate.py \
   experiments/lora_evq_v2/eval_official_yarn_capability.py \
   tests/test_evq_seed42_retrieval_repair.py \
   tests/test_official_yarn_capability_eval.py
@@ -595,7 +595,7 @@ git commit -m "fix: separate retrieval and output-format metrics"
 ### Task 5: Explicit cost-safe launcher
 
 **Files:**
-- Create: `rebuttal/evq_seed42_retrieval_repair/run_seed42.sh`
+- Create: `rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/run_seed42.sh`
 - Modify: `tests/test_evq_seed42_retrieval_repair.py`
 
 **Interfaces:**
@@ -606,14 +606,14 @@ git commit -m "fix: separate retrieval and output-format metrics"
 
 ```python
 def test_launcher_has_explicit_non_advancing_commands():
-    text = Path("rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
+    text = Path("rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
     for command in ("prepare", "preflight", "baseline", "train-r8", "gate-r8", "train-r16", "gate-r16", "final"):
         assert command in text
     assert "flock" in text
     assert "nvidia-smi" in text
 
 def test_launcher_never_downloads_or_autostarts_next_stage():
-    text = Path("rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
+    text = Path("rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/run_seed42.sh").read_text()
     assert "git clone" not in text
     assert "wget " not in text
     assert "curl " not in text
@@ -656,7 +656,7 @@ requires `rescue_allowed` from segment 1.
 - [ ] **Step 5: Run shell and focused tests**
 
 ```bash
-bash -n rebuttal/evq_seed42_retrieval_repair/run_seed42.sh
+bash -n rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/run_seed42.sh
 conda run --no-capture-output -n aidemo python -m pytest \
   tests/test_evq_seed42_retrieval_repair.py -q
 ```
@@ -667,7 +667,7 @@ Expected: all pass.
 
 ```bash
 git add \
-  rebuttal/evq_seed42_retrieval_repair/run_seed42.sh \
+  rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/run_seed42.sh \
   tests/test_evq_seed42_retrieval_repair.py
 git commit -m "feat: add gated evq repair launcher"
 ```
@@ -694,13 +694,13 @@ conda run --no-capture-output -n aidemo python -m pytest \
   tests/test_official_yarn_capability_eval.py -q
 
 conda run --no-capture-output -n aidemo python -m py_compile \
-  rebuttal/evq_seed42_retrieval_repair/protocol.py \
-  rebuttal/evq_seed42_retrieval_repair/prepare_data.py \
-  rebuttal/evq_seed42_retrieval_repair/train.py \
-  rebuttal/evq_seed42_retrieval_repair/evaluate.py \
+  rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/protocol.py \
+  rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/prepare_data.py \
+  rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/train.py \
+  rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/evaluate.py \
   experiments/lora_evq_v2/eval_official_yarn_capability.py
 
-bash -n rebuttal/evq_seed42_retrieval_repair/run_seed42.sh
+bash -n rebuttal/pre_rebuttal/evq_seed42_retrieval_repair/run_seed42.sh
 git diff --check
 ```
 

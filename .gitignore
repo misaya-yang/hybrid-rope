@@ -109,7 +109,7 @@ RESULT_PROVENANCE_MANIFEST.md
 
 # Local verbatim rebuttal inputs may contain reviewer identity or private context.
 # Keep only the sanitized tracked index; never commit these payloads.
-rebuttal/raw_sources/*_verbatim.md
+rebuttal/pre_rebuttal/raw_sources/*_verbatim.md
 
 # macOS metadata
 .DS_Store

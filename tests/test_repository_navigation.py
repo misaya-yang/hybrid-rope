@@ -13,7 +13,10 @@ class RepositoryNavigationTests(unittest.TestCase):
             "ai-handoff.md",
             "REPO_MAP.md",
             "rebuttal/README.md",
-            "rebuttal/rebuttal_playbook.md",
+            "rebuttal/rebuttal_0723/README.md",
+            "rebuttal/rebuttal_0723/00_REVIEWER_27BE_OFFICIAL_REVIEW.md",
+            "rebuttal/pre_rebuttal/README.md",
+            "rebuttal/pre_rebuttal/rebuttal_playbook.md",
             "docs/overview/RESULT_PROVENANCE_MANIFEST.md",
             "paper_experiments/MANIFEST.json",
         ):
@@ -25,7 +28,8 @@ class RepositoryNavigationTests(unittest.TestCase):
             "AGENTS.md",
             "REPO_MAP.md",
             "rebuttal/README.md",
-            "rebuttal/rebuttal_playbook.md",
+            "rebuttal/rebuttal_0723/README.md",
+            "rebuttal/rebuttal_0723/00_REVIEWER_27BE_OFFICIAL_REVIEW.md",
             "docs/overview/RESULT_PROVENANCE_MANIFEST.md",
             "paper/main.pdf",
             "Known issues / current breakage",
@@ -44,8 +48,22 @@ class RepositoryNavigationTests(unittest.TestCase):
 
     def test_only_one_rebuttal_control_room_exists(self):
         self.assertTrue((ROOT / "rebuttal").is_dir())
+        self.assertTrue((ROOT / "rebuttal" / "pre_rebuttal").is_dir())
+        self.assertTrue((ROOT / "rebuttal" / "rebuttal_0723").is_dir())
         self.assertFalse((ROOT / "rebuttal_7").exists())
         self.assertFalse((ROOT / "07 - rebuttal").exists())
+        for retired_top_level in (
+            "rebuttal_playbook.md",
+            "FULL_PAPER_INTEGRITY_AUDIT_20260713.md",
+            "REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md",
+            "evq_seed42_retrieval_repair",
+            "frequency_adaptation_8b",
+            "simulated_reviews",
+        ):
+            self.assertFalse(
+                (ROOT / "rebuttal" / retired_top_level).exists(),
+                retired_top_level,
+            )
 
     def test_paper_has_one_root_pdf_and_no_retired_root_files(self):
         self.assertEqual(
