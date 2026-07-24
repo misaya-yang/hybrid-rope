@@ -19,25 +19,41 @@ Temporal holdout checkpoint：`5bdec86`（`checkpoint: add temporal holdout eval
   聚合 raw-backed JSON 为
   `rebuttal/rebuttal_0723/native_attention_shape_l128_results_20260724.json`。
   结果支持 allocation shape 轴，但明确不支持 Cosh 唯一最优。
-- 下一项 MLA scarcity 包位于
-  `rebuttal/rebuttal_0723/mla_scarcity_5090/`，目前只有冻结代码和本地测试，
-  没有训练结果。它固定 50.1M 参数、`d_rope=64`、`d_nope=0`，只把 active
-  frequency pairs 从 32 改为 8；inactive pair 使用零频率恒等旋转，避免
-  legacy `d_rope` 变化同时改变参数量和 key projection path。
-- seed 42 是 selection-only 六臂 gate；只有 PASS 才运行 seeds 43/88。
-  primary 是 raw tail NLL 的 range/shape decomposition；YaRN 仅为身份清楚的
-  secondary diagnostic。
-- 存储规则：训练低于 8 GiB free 直接拒绝；100M 权重立即剪除；200M/300M
-  只有在匹配 evaluation JSON 和 checkpoint hash 通过后才逐 run 删除。原始
-  JSON/JSONL、cleanup receipt、schedule sidecar 与终态前共享 compile cache
-  必须保留。当前实验服务器不可连接，未执行远端删除。
+- MLA scarcity 包位于
+  `rebuttal/rebuttal_0723/mla_scarcity_5090/`。50.1M 固定架构的 seed-42
+  六臂、selection/test 和 YaRN 诊断均已完成；汇总为
+  `mla_scarcity_seed42_result_20260724.json`。
+- 原注册 gate 形式上 PASS，但 K=8/8K 的 range control 从 native 3.9915
+  崩到 6.2195 NLL；EVQ 虽恢复到 4.6437，仍比 native 差 0.6522 NLL
+  （约 1.92x PPL）。K=32/8K 也差 0.0382 NLL。独立 test 与 selection
+  一致，因此冻结 `DO_NOT_EXPAND_SEEDS`，未运行 seed 43/88。
+- YaRN secondary 在 K=8 呈长外推方向性增益（16K -0.1161 NLL、32K
+  -0.7797），但 native 使用 active-grid official equations，EVQ 使用
+  virtual-coordinate derived transform；只能称 single-seed deployment
+  diagnostic，不能恢复 raw 或 official-YaRN complementarity claim。
+- 六臂共训练 73.81 分钟，平均 406.3K tokens/s。12 个 200M/300M 权重均在
+  test JSON/checkpoint hash 通过后删除；终态 checkpoint/incomplete 均为 0。
+  终态曾回传 99 个结果文件并生成 manifest，实例已关机；当前本机只能定位到
+  sanitized aggregate 和 manifest hash，原 99-file bundle 已不可发现，不能
+  声称当前仍可逐文件访问。
 - RTX 5090 的已验证性能基线已记录到
   `docs/overview/RTX5090_BLACKWELL_PROFILE.md`。后续训练默认复用
   BF16、`torch.compile(default)`、Flash-only SDPA、fused AdamW、
   `expandable_segments` 和持久 TorchInductor cache，但每个新 workload
   仍须先做 discarded probe，不能照搬 batch size。
-- 本轮新鲜门禁：相关 MLA/shape/core 共 `165 passed`，`py_compile`、
-  `bash -n`、`git diff --check` 与新增内容泄漏扫描通过。尚未提交或推送。
+- 本轮 MLA 包服务器测试为 `16 passed`；本地 `py_compile`、`bash -n`、
+  `git diff --check`、聚合 JSON/原始结果数字 parity 与新增内容泄漏扫描通过。
+  尚未提交或推送。
+- 下一候选实验已收敛到
+  `rebuttal/rebuttal_0723/MLA_YARN_OPERATOR_PARITY_5090_PLAN.md`：K=8/K=32
+  × native/EVQ 四训练臂，共用同一 official-index correction mask 与同一
+  `mscale`，隔离真正的 substrate×range interaction。离线 protocol、
+  fresh-anchor generator、双 READY、fail-closed seed/test 门、seed-42 gate、
+  三 seed summary、cleanup、低频 sleep monitor、PASS/STOP 自动报告和单一
+  launcher 已完成；最终 summary 直接保留 paired-anchor effects，并将 seed
+  CI 与 practical gate 分开；本地相关 `44 passed`。
+  目标服务器尚未生成 fresh anchors/READY，也没有启动 GPU，当前仍不是
+  启动授权。
 
 ## 0. 2026-07-13 151.9M / 500M single-seed 结果
 

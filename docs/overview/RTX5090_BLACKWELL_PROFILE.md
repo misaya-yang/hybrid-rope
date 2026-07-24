@@ -61,7 +61,19 @@ GPU utilization during training was 99–100%, approximately 31.4 GiB reported
 process memory and 575–576 W. The shared cache materially reduced later compile
 startup.
 
+Across the six complete 299,892,736-token runs, mean sustained throughput was
+406,311 tokens/s (range 405,765–406,593), and total training-loop time was
+73.81 minutes. Each run peaked at 32,171,420,160 allocated CUDA bytes. The
+five-step probes therefore overestimated sustained end-to-end training
+throughput by 5.3%; use complete-run throughput for cost estimates after the
+first arm finishes.
+
 These numbers validate this workload only. For another model, preserve the
 scientific global batch unless the protocol explicitly changes it, then tune
 micro-batch/accumulation with discarded probes rather than guessing from free
 memory.
+
+For the registered MLA operator-parity follow-up, evaluation uses 8/4/2/1
+windows at 4K/8K/16K/32K. This keeps every inference forward at no more than
+32K total input tokens, preserves per-window NLL, and reduces launch overhead.
+It is an evaluation-only execution optimization, not a training variable.

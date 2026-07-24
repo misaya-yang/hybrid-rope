@@ -348,10 +348,10 @@ than range under scarcity” only if, at 300M tokens:
 - the 1x EVQ cost is no more than `+0.02 NLL`;
 - the effect does not reverse from 200M to 300M.
 
-Stop after the seed-42 gate if these conditions are clearly missed. Estimated
-5090 cost is about 1.8–2.5 hours for the gate and 5–7 hours for all 18 runs,
-to be replaced by the launcher's compiled steady-state K=8/K=32 probe and then
-refreshed from the first completed run's measured throughput.
+Stop after the seed-42 gate if these conditions are clearly missed. The
+discarded compiled probes measured 427.5K–428.0K tokens/s. The six real runs
+later averaged 406.3K tokens/s and required 73.81 training minutes in total;
+the short probe therefore overestimated sustained throughput by 5.3%.
 
 The model-free preflight uses
 `K(delta)=mean_k cos(delta*omega_k)` over active frequencies only. At
@@ -374,7 +374,174 @@ conservative maximum of fifteen simultaneous checkpoints, below 4 GiB. Full
 checkpoints are deleted only after their raw evaluation JSONs and hashes pass.
 The 100M diagnostic weight is pruned immediately; 200M/300M weights are
 evaluated and deleted per run. Raw rows, receipts, schedule sidecars, and the
-shared TorchInductor cache remain. No MLA scarcity training result exists yet.
+shared TorchInductor cache remain.
+
+### 8.1 Execution and terminal decision
+
+All six seed-42 arms completed on one RTX 5090. Each arm consumed exactly
+299,892,736 tokens. BF16, Flash-only SDPA, `torch.compile(default)`, fused
+AdamW, micro/global batch 32, and the shared compile cache were active. Mean
+training throughput was 406,311 tokens/s; all losses remained finite; each run
+peaked at 32,171,420,160 allocated CUDA bytes. The six training loops required
+4,428.5 seconds (73.81 minutes), excluding the small evaluation and checkpoint
+serialization overhead.
+
+The originally registered selection gate returned `PASS`: at 8K/K=8,
+range-matched uniform collapsed to NLL 6.2005, while EVQ recovered to 4.6179,
+producing a nominal shape gain of 1.5827 NLL and a positive scarcity
+interaction. This gate was incomplete as a practical decision rule, however:
+native RoPE was substantially better at 3.9505 NLL, and EVQ was also worse
+than native at K=32.
+
+Before reading the disjoint test anchors, a terminal decision was frozen:
+do not run seeds 43/88, regardless of the test result. The additional practical
+criteria were:
+
+- EVQ must beat native at the primary 2x endpoint for K=8;
+- EVQ must beat native at the primary 2x endpoint for K=32;
+- the positive interaction must not be created only by catastrophic failure of
+  the range-only control.
+
+All three criteria failed on selection. The decision receipt SHA-256 is
+`2a72bbb2656c99a8a74dfc32bd949d5e1fa1aca36c5efc7a9d093db9cbabb370`.
+Only then were the 32 disjoint test anchors read.
+
+### 8.2 Disjoint test result: raw substrates
+
+The following values are 300M-checkpoint tail NLL on the disjoint test split.
+`A_K` is native-minus-range NLL, `S_K` is range-minus-EVQ NLL, and
+`EVQ-Native < 0` is the practical win condition.
+
+| K | length | Native | Range | EVQ | `A_K` | `S_K` | EVQ-Native |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 8 | 4K | 3.9033 | 3.8969 | 3.8933 | +0.0064 | +0.0036 | **-0.0100** |
+| 8 | 8K | **3.9915** | 6.2195 | 4.6437 | -2.2280 | +1.5758 | **+0.6522** |
+| 8 | 16K | **6.7859** | 6.7283 | 6.8992 | +0.0576 | -0.1709 | **+0.1133** |
+| 8 | 32K | 6.9244 | **6.7060** | 6.7552 | +0.2184 | -0.0492 | **-0.1692** |
+| 32 | 4K | 3.8704 | **3.8642** | 3.8687 | +0.0063 | -0.0046 | -0.0017 |
+| 32 | 8K | **4.9115** | 4.9240 | 4.9497 | -0.0125 | -0.0257 | +0.0382 |
+| 32 | 16K | 5.9648 | 6.0178 | **5.9626** | -0.0530 | +0.0552 | -0.0022 |
+| 32 | 32K | **6.1597** | 6.1952 | 6.2158 | -0.0355 | -0.0206 | +0.0560 |
+
+The test split reproduces the selection diagnosis almost exactly. At K=8/8K,
+the selection and test EVQ-minus-native gaps are +0.6674 and +0.6522 NLL,
+respectively; the shape gains are +1.5827 and +1.5758. Thus this is not
+selection-anchor overfitting. It is a real, highly non-monotonic phase pattern:
+the range control fails specifically at 8K, EVQ partially repairs that bad
+control, but native remains much better. The +0.6522 NLL gap means EVQ PPL is
+1.92 times native PPL at the registered primary endpoint.
+
+At K=32, all raw differences are much smaller and allocation-shape signs vary
+with length. The test result therefore does **not** reproduce a practical raw
+EVQ advantage under scarcity, and it does not justify twelve confirmatory
+training runs. The earlier historical 432M/K=16 result remains a valid result
+for its stated protocol, but this fresh 50M fixed-architecture experiment does
+not generalize it.
+
+The 200M checkpoint has the same primary direction: EVQ-minus-native is
++0.6111 NLL for K=8 and +0.0028 for K=32 at 8K. Training longer to 300M does
+not repair the primary raw gap. At 4K, EVQ is slightly better than native
+(-0.0100/-0.0017 NLL for K=8/K=32), so the failure is not training divergence
+or an in-domain collapse.
+
+### 8.3 Inference-time YaRN diagnostic
+
+The retained 300M weights were also evaluated with the registered
+inference-time operators before cleanup. K=32 native uses full standard
+official YaRN. K=8 native applies the same official equations to the active
+native grid and identity-pads the fixed capacity. EVQ uses the explicitly
+labeled virtual-coordinate YaRN-derived transform; it is **not** official
+YaRN, so the cross-arm delta is a deployment diagnostic rather than an
+official-YaRN parity claim.
+
+| K | length | Native + YaRN NLL | EVQ + derived YaRN NLL | EVQ-Native | PPL change |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 8 | 4K | 3.9033 | **3.8933** | -0.0100 | -1.0% |
+| 8 | 8K | 3.9064 | **3.8926** | -0.0138 | -1.4% |
+| 8 | 16K | 4.0900 | **3.9739** | -0.1161 | -11.0% |
+| 8 | 32K | 4.9827 | **4.2030** | -0.7797 | -54.1% |
+| 32 | 4K | 3.8704 | **3.8687** | -0.0017 | -0.2% |
+| 32 | 8K | 3.8638 | **3.8622** | -0.0017 | -0.2% |
+| 32 | 16K | 3.8980 | **3.8944** | -0.0036 | -0.4% |
+| 32 | 32K | 3.9504 | **3.9418** | -0.0086 | -0.9% |
+
+This secondary result is directionally interesting: under the respective
+YaRN transforms, the scarce K=8 EVQ substrate gains grow with extrapolation,
+whereas K=32 is nearly tied. It is consistent with the historical observation
+that a scarce substrate can interact with aggressive range scaling. It cannot
+rescue the failed raw-scarcity claim, prove a pure superlinear interaction, or
+restore the submitted official-YaRN identity: the two substrates receive
+different, clearly labeled operator mappings, and the result is single seed.
+
+### 8.4 Provenance, cleanup, and revised gate rule
+
+The sanitized aggregate is
+`mla_scarcity_seed42_result_20260724.json`. Its exact-number parity was checked
+against all retrieved raw evaluation JSONs at terminal time. That retrieval
+contained 99 files (1.87 MB), with six train receipts, 12 selection
+evaluations, 12 test raw evaluations, four YaRN evaluations, and six cleanup
+receipts. Its manifest SHA-256 is
+`b8af9d91431056f4b5a89fbf4d1863bc3d6846734cb427720abb1c5d044b605a`.
+The 99-file bundle is no longer discoverable in the current local workspace;
+only the sanitized aggregate, recorded hashes and report remain locally
+verifiable. Do not claim current per-file access to the historical bundle.
+
+All twelve 200M/300M checkpoints were deleted only after the corresponding
+test JSON and checkpoint SHA-256 checks passed. The terminal audit recorded
+zero checkpoints and zero incomplete files. Seeds 43/88 were not started, and
+the paid instance was shut down after result retrieval.
+
+Future mechanism gates must add two conditions that this run exposed:
+
+1. the proposed method must beat the meaningful native baseline at the primary
+   endpoint, not merely beat a matched control;
+2. an interaction cannot pass when it is dominated by catastrophic failure of
+   one control at one oscillatory length.
+
+For strongly oscillatory RoPE evaluations, report every registered length and
+consider an aggregate across log-spaced lengths; never promote a favorable
+single-length sign as a monotonic extrapolation law.
+
+### 8.5 Registered shared-operator follow-up
+
+The next experiment is now implemented but has not run. It removes the operator
+identity confound by training only Native and EVQ at K=8/K=32, then applying
+the same official native-index correction coefficients and the same `mscale`
+to both substrates. On EVQ this remains an explicitly labeled shared-index
+component control, not official YaRN.
+
+The seed-42 gate uses fresh selection windows disjoint from every previously
+observed 32K window. It requires EVQ to beat native under the shared operator at
+both 16K and 32K, a mean advantage and interaction of at least 0.05 NLL,
+positive scarcity interaction, bounded 4K cost for both K values, no native
+control degradation above 0.05 NLL for either K, and agreeing 200M/300M
+directions. Seeds 43/88 and the fresh test split are inaccessible before PASS.
+Only raw/shared-full are evaluated at 200M for this direction check; all six
+registered operator components are evaluated at 300M, reducing total registered
+inference work by one third without changing a primary estimand.
+Evaluation batches are 8/4/2/1 windows at 4K/8K/16K/32K, so each forward sees
+at most 32K tokens—the same token volume as the already validated single 32K
+path—while retaining independent per-window NLL. This cuts forward-launch count
+by 53%.
+
+The native identity check uses exact registered checkpoint-table equality and
+exact official mask/`mscale` parity. Because the registered schedule is stored
+in FP32 while the equation audit is evaluated in FP64, runtime output may
+differ by at most one FP32 ULP; this tolerance is not used to infer method
+identity. The target-server data manifest and READY receipts do not yet exist,
+so this section records implementation status, not a result or launch approval.
+Both terminal paths now render a hash-backed Markdown report automatically.
+Monitoring reads one compact artifact snapshot every five minutes and does not
+stream logs; live PID/GPU health remains a separate one-time post-launch check.
+
+The 0.05-NLL gate is a practical-effect floor (about 4.9% lower PPL), not a
+significance threshold. Final inference uses training seeds as the independent
+units and reports t-based seed-level intervals separately. All per-anchor paired
+effects are retained for audit, but windows are explicitly labeled repeated
+measurements rather than pseudo-seeds. The earlier 99-file retrieval bundle is
+not currently discoverable in the local workspace, so its aggregate means and
+recorded hashes remain evidence, but it is not used to retrofit a variance-based
+MDE.
 
 ## 9. Rebuttal-ready claim decisions
 
@@ -392,9 +559,10 @@ shared TorchInductor cache remain. No MLA scarcity training result exists yet.
    whereas FMRoPE and YaRN-derived evaluation assume a declared target length.
    Do not present these as interchangeable contracts or claim EVQ replaces
    inference-time scaling.
-7. **Promote cautiously:** scarce rotary channels are a plausible practical
-   advantage zone, but the historical scaler is not official YaRN and the
-   new range-vs-shape interaction study is not yet complete.
+7. **Do not promote the fresh raw scarcity claim:** the seed-42 test shows that
+   the registered K=8 interaction came from collapse of the range control, while
+   raw EVQ remained worse than native at 2x. The YaRN-derived K=8 trend is
+   supporting-only and operator-qualified; no additional seeds were run.
 8. **Keep separate:** these results answer mechanism attribution and
    held-out-configuration robustness. They do not replace the planned
    larger-model/RULER evidence.

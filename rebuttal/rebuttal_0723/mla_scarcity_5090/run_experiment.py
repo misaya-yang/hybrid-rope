@@ -331,6 +331,33 @@ class CausalLanguageModelLoss(nn.Module):
         )
 
 
+def per_sequence_nll(
+    logits: torch.Tensor,
+    targets: torch.Tensor,
+    *,
+    tail_tokens: int,
+) -> tuple[torch.Tensor, torch.Tensor, int]:
+    if (
+        logits.ndim != 3
+        or targets.ndim != 2
+        or logits.shape[:2] != targets.shape
+    ):
+        raise ValueError("logits/targets have incompatible sequence shapes")
+    per_token = F.cross_entropy(
+        logits.reshape(-1, logits.size(-1)),
+        targets.reshape(-1),
+        reduction="none",
+    ).view(targets.size(0), targets.size(1))
+    tail = min(int(tail_tokens), int(targets.size(1)))
+    if tail <= 0:
+        raise ValueError("tail token count must be positive")
+    return (
+        per_token.mean(dim=1),
+        per_token[:, -tail:].mean(dim=1),
+        tail,
+    )
+
+
 def build_model(frequency_pairs: int, arm: str, seed: int) -> GPT:
     seed_everything(seed)
     inv, _ = training_inv_freq(arm, frequency_pairs)
@@ -393,6 +420,71 @@ def _load_manifest(
         check_prefix=bool(prefix_hash_check),
     )
     return manifest
+
+
+def enforce_nested_operator_parity_phase(
+    manifest: dict[str, Any],
+    work_dir: Path,
+    *,
+    seed: int,
+    split: str | None = None,
+) -> None:
+    """Fail closed for the follow-up protocol that reuses this trainer."""
+    nested = manifest.get("operator_parity")
+    if not isinstance(nested, dict):
+        return
+    nested_protocol = nested.get("protocol_sha256")
+    if (
+        not isinstance(nested_protocol, str)
+        or len(nested_protocol) != 64
+    ):
+        raise RuntimeError(
+            "operator-parity manifest lacks a valid protocol identity"
+        )
+    current_seed = int(seed)
+    if split == "selection" and current_seed != GATE_SEED:
+        raise RuntimeError(
+            "operator-parity selection is restricted to seed 42"
+        )
+    requires_pass = current_seed != GATE_SEED or split == "test"
+    if not requires_pass:
+        return
+    gate_path = (
+        Path(work_dir).resolve() / "operator_parity_gate.json"
+    )
+    if not gate_path.is_file():
+        raise RuntimeError(
+            "operator-parity confirmatory work requires a PASS seed-42 gate"
+        )
+    gate_record = json.loads(gate_path.read_text())
+    ready_path = (
+        Path(work_dir).resolve() / "operator_parity_ready.json"
+    )
+    if not ready_path.is_file():
+        raise RuntimeError(
+            "operator-parity confirmatory work requires its READY receipt"
+        )
+    parity_ready = json.loads(ready_path.read_text())
+    expected = {
+        "status": "PASS",
+        "protocol_sha256": nested_protocol,
+        "selection_split_only": True,
+        "test_split_read": False,
+        "evaluation_code_sha256": parity_ready.get(
+            "evaluation_code_sha256"
+        ),
+        "ready_receipt_sha256": sha256_file(ready_path),
+    }
+    if (
+        parity_ready.get("status") != "READY"
+        or parity_ready.get("protocol_sha256") != nested_protocol
+    ):
+        raise RuntimeError("operator-parity READY identity mismatch")
+    for key, value in expected.items():
+        if gate_record.get(key) != value:
+            raise RuntimeError(
+                f"operator-parity confirmatory gate mismatch: {key}"
+            )
 
 
 def validate_cuda_runtime() -> dict[str, Any]:
@@ -756,6 +848,11 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
         full_hash_check=bool(args.full_hash_check),
         prefix_hash_check=False,
     )
+    enforce_nested_operator_parity_phase(
+        manifest,
+        args.work_dir,
+        seed=seed,
+    )
     output = _run_dir(args.work_dir, pairs, arm, seed)
     if output.exists() and any(output.iterdir()):
         raise FileExistsError(f"refusing to overwrite non-empty run: {output}")
@@ -1093,6 +1190,12 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
         full_hash_check=bool(args.full_hash_check),
         prefix_hash_check=False,
     )
+    enforce_nested_operator_parity_phase(
+        manifest,
+        args.work_dir,
+        seed=seed,
+        split=split,
+    )
     output = _run_dir(args.work_dir, pairs, arm, seed)
     checkpoint = output / f"checkpoint_{stage}.pt"
     if not checkpoint.is_file():
@@ -1124,6 +1227,22 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
     validation = np.load(
         manifest["validation"]["path"], mmap_mode="r", allow_pickle=False
     ).reshape(-1)
+    nested_parity = manifest.get("operator_parity")
+    evaluation_batch_sizes = {
+        str(length): 1 for length in SPEC.eval_lengths
+    }
+    if isinstance(nested_parity, dict):
+        registered_batches = nested_parity.get("evaluation_batch_sizes")
+        if not isinstance(registered_batches, dict):
+            raise ValueError(
+                "operator-parity manifest lacks evaluation batch sizes"
+            )
+        evaluation_batch_sizes = {
+            str(length): int(registered_batches.get(str(length), 0))
+            for length in SPEC.eval_lengths
+        }
+        if any(value <= 0 for value in evaluation_batch_sizes.values()):
+            raise ValueError("invalid operator-parity evaluation batch size")
     base_inv = model_inv_freq(model).to(torch.float64)
     model = model.to("cuda").eval()
     rows: list[dict[str, Any]] = []
@@ -1146,40 +1265,56 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
             )
             operators[str(length)] = {
                 **operator_metadata,
+                "evaluation_batch_size": evaluation_batch_sizes[
+                    str(length)
+                ],
                 "runtime_inv_freq_sha256": tensor_sha256(
                     runtime_inv.float()
                 ),
             }
-            for anchor_index, endpoint in enumerate(anchors.tolist()):
-                start = int(endpoint) - int(length)
-                tokens = np.array(
-                    validation[start : int(endpoint)],
-                    dtype=np.int64,
-                    copy=True,
+            endpoint_values = anchors.tolist()
+            evaluation_batch = evaluation_batch_sizes[str(length)]
+            for batch_start in range(
+                0, len(endpoint_values), evaluation_batch
+            ):
+                current_endpoints = endpoint_values[
+                    batch_start : batch_start + evaluation_batch
+                ]
+                tokens = np.stack(
+                    [
+                        np.array(
+                            validation[
+                                int(endpoint) - int(length) : int(endpoint)
+                            ],
+                            dtype=np.int64,
+                            copy=True,
+                        )
+                        for endpoint in current_endpoints
+                    ]
                 )
-                batch = torch.from_numpy(tokens).unsqueeze(0).to("cuda")
+                batch = torch.from_numpy(tokens).to("cuda")
                 with torch.amp.autocast("cuda", dtype=torch.bfloat16):
                     logits = model(batch[:, :-1])
                     targets = batch[:, 1:]
-                    per_token = F.cross_entropy(
-                        logits.reshape(-1, logits.size(-1)),
-                        targets.reshape(-1),
-                        reduction="none",
+                    full_nll, tail_nll, tail = per_sequence_nll(
+                        logits,
+                        targets,
+                        tail_tokens=SPEC.eval_tail_tokens,
                     )
-                    full_nll = per_token.mean()
-                    tail = min(SPEC.eval_tail_tokens, targets.numel())
-                    tail_nll = per_token[-tail:].mean()
-                rows.append(
-                    {
-                        "length": length,
-                        "anchor_index": anchor_index,
-                        "anchor_endpoint": int(endpoint),
-                        "full_nll": float(full_nll),
-                        "tail_nll": float(tail_nll),
-                        "tail_tokens": tail,
-                    }
-                )
-                del batch, logits, targets, per_token
+                full_values = full_nll.detach().cpu().tolist()
+                tail_values = tail_nll.detach().cpu().tolist()
+                for offset, endpoint in enumerate(current_endpoints):
+                    rows.append(
+                        {
+                            "length": length,
+                            "anchor_index": batch_start + offset,
+                            "anchor_endpoint": int(endpoint),
+                            "full_nll": float(full_values[offset]),
+                            "tail_nll": float(tail_values[offset]),
+                            "tail_tokens": tail,
+                        }
+                    )
+                del batch, logits, targets, full_nll, tail_nll
             torch.cuda.empty_cache()
     summary: dict[str, Any] = {}
     for length in SPEC.eval_lengths:
@@ -1220,6 +1355,7 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
             "teacher-forced causal NLL; primary tail NLL covers the final "
             "4096 targets of each fixed held-out window"
         ),
+        "evaluation_batch_sizes": evaluation_batch_sizes,
         "operators": operators,
         "summary": summary,
         "rows": rows,

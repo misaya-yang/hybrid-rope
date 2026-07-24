@@ -237,6 +237,97 @@ def official_yarn_on_inv_freq(
     return out, mscale, meta
 
 
+def shared_index_yarn_control_on_inv_freq(
+    inv_freq: torch.Tensor,
+    *,
+    head_dim: int,
+    base: float,
+    scale: float,
+    original_max_position_embeddings: int = 2048,
+    beta_fast: float = 32.0,
+    beta_slow: float = 1.0,
+    extrapolation_factor: float = 1.0,
+    attn_factor: float = 1.0,
+) -> Tuple[torch.Tensor, float, Dict[str, Any]]:
+    """Apply one fixed official-index YaRN mask to any frequency table.
+
+    This is an attribution control, not a new official-YaRN definition. The
+    correction bounds and linear mask are computed once from the native
+    ``head_dim/base`` channel indices, then the same per-index interpolation
+    coefficients and the same official ``mscale`` are applied to ``inv_freq``.
+
+    On a native endpoint geometric table this is exactly official YaRN. On
+    EVQ or another non-native table it must be labeled a shared-index
+    YaRN-component control, never official YaRN.
+    """
+    inv = inv_freq.to(dtype=torch.float64).view(-1)
+    n_freq = int(head_dim) // 2
+    if int(head_dim) <= 0 or int(head_dim) % 2:
+        raise ValueError("head_dim must be a positive even integer")
+    if inv.numel() != n_freq:
+        raise ValueError(
+            f"inv_freq has {inv.numel()} entries; expected {n_freq}"
+        )
+    if scale <= 1.0:
+        native = native_endpoint_inv_freq(head_dim, base)
+        return inv.clone(), 1.0, {
+            "mode": "identity",
+            "label": "identity (scale<=1)",
+            "scale": float(scale),
+            "mscale": 1.0,
+            "official_on_input": bool(torch.equal(inv, native)),
+            "shared_index_mask": True,
+            "index_extrapolation_weights": [1.0] * n_freq,
+        }
+
+    low, high = find_correction_range(
+        beta_fast,
+        beta_slow,
+        head_dim,
+        base,
+        original_max_position_embeddings,
+    )
+    ramp = linear_ramp_mask(float(low), float(high), n_freq)
+    inv_freq_mask = (1.0 - ramp) * float(extrapolation_factor)
+    inv_inter = inv / float(scale)
+    out = inv_inter * (1.0 - inv_freq_mask) + inv * inv_freq_mask
+    mscale = yarn_mscale(float(scale), attn_factor=attn_factor)
+    native = native_endpoint_inv_freq(head_dim, base)
+    official_on_input = bool(torch.equal(inv, native))
+    return out, mscale, {
+        "mode": (
+            "official_yarn_native"
+            if official_on_input
+            else "shared_index_yarn_component_control"
+        ),
+        "label": (
+            "official YaRN equations (native endpoint geometric grid)"
+            if official_on_input
+            else (
+                "shared-index YaRN-component control "
+                "(NOT official YaRN on this input)"
+            )
+        ),
+        "scale": float(scale),
+        "mscale": float(mscale),
+        "low": int(low),
+        "high": int(high),
+        "beta_fast": float(beta_fast),
+        "beta_slow": float(beta_slow),
+        "original_max_position_embeddings": int(
+            original_max_position_embeddings
+        ),
+        "extrapolation_factor": float(extrapolation_factor),
+        "attn_factor": float(attn_factor),
+        "n_freq": int(n_freq),
+        "official_on_input": official_on_input,
+        "shared_index_mask": True,
+        "index_extrapolation_weights": [
+            float(value) for value in inv_freq_mask
+        ],
+    }
+
+
 def repo_fixed_ramp_inv_freq(
     inv_freq: torch.Tensor,
     *,

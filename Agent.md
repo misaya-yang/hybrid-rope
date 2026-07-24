@@ -18,8 +18,12 @@
 - 当前数值结论入口是
   `rebuttal/rebuttal_0723/EXPERIMENT_REPORT_20260724.md`；其中
   shape/base/FMRoPE 结果已完成，但必须保留报告中的负面边界。
-- `rebuttal/rebuttal_0723/mla_scarcity_5090/` 只有冻结代码与本地测试，
-  尚无训练结果。
+- `rebuttal/rebuttal_0723/mla_scarcity_5090/` 的 seed-42 六臂与独立 test
+  已完成。形式 shape gate PASS，但实际 native-advantage gate 失败；不得启动
+  seed 43/88 或称 raw scarce-channel practical advantage。
+- `MLA_YARN_OPERATOR_PARITY_5090_PLAN.md` 的离线 runner、门控、汇总与测试
+  已完成；但目标服务器尚无 fresh anchors 或 READY。必须先在无卡模式完成
+  `preflight` 并核验双 receipt，才能开 GPU。
 - 外部服务器上可能存在的数据、preflight 或进程必须现场核验；本地代码存在、
   过去的口头状态或远端路径均不等于已完成证据。
 - 所有 7 月 23 日前材料已移入 `rebuttal/pre_rebuttal/`。它们是事实底稿和
@@ -133,6 +137,9 @@ simulated-review 路线均位于 `rebuttal/pre_rebuttal/`，默认不启动。
 - 代码、preflight、GPU 进程和 checkpoint 都不是结果；只有通过冻结协议、
   evaluation、raw artifact 和 provenance gate 的产物才可候选进入 response。
 - Null/negative 结果仍然是有效结果，不得只报告有利长度、seed 或 metric。
+- 实验 gate 必须同时检查 proposed method 是否优于有意义的 native baseline。
+  若 positive interaction 主要来自某个 control 单点崩坏，不能据此扩 seed 或
+  宣称 practical advantage；强振荡结果必须报告所有注册长度。
 
 ## 6. Never repeat
 

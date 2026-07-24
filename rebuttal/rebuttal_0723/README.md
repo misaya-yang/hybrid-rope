@@ -15,13 +15,18 @@
    undertraining、held-out base/head、native-Geo 与 real-shape 结果必须连同
    各节 claim boundary 使用。native/real-shape 聚合原始结果另存为
    `native_attention_shape_l128_results_20260724.json`。
-3. `mla_scarcity_5090/` 是下一项已冻结且通过本地测试的实验代码，尚无训练
-   结果。它固定模型参数量，只改变 active frequency-pair budget；不得把
-   code-ready 写成 evidence-ready。
-4. `EVQ_Cosh_NeurIPS2026_Rebuttal_Experiment_Design.md` 是宽方案库，不是运行
+3. `mla_scarcity_5090/` 的 seed-42 六臂、selection/test 与 YaRN 诊断已完成。
+   注册 shape gate 虽为 PASS，但 K=8/8K 的正 interaction 来自 range control
+   崩坏；raw EVQ 仍比 native 差 0.6522 NLL。因此终止多 seed 扩展，不能写成
+   practical scarce-channel advantage。
+4. `MLA_YARN_OPERATOR_PARITY_5090_PLAN.md` 是针对上述结果的新 2×2 设计：
+   native/EVQ 共用同一 YaRN index mask 与 `mscale`。离线 runner、门控与测试
+   已完成，但目标服务器尚无 fresh anchors/READY；CPU preflight 通过前不得
+   启动 GPU。
+5. `EVQ_Cosh_NeurIPS2026_Rebuttal_Experiment_Design.md` 是宽方案库，不是运行
    授权。它假设 96GB RTX Pro 6000，并把 1.5B/4B-token/RULER 设为 P0；这些
    假设与当前 5090 路线和 response-only 原则不一致。
-5. `../pre_rebuttal/` 只提供事实底稿、推导和历史负结果。若与正式 review 或
+6. `../pre_rebuttal/` 只提供事实底稿、推导和历史负结果。若与正式 review 或
    更新后的实验 artifact 冲突，不得覆盖后者。
 
 0723 宽计划中提到的 `zWsa`、`Dz6s` 原始 review 当前不在仓库。补齐逐字来源
@@ -43,7 +48,7 @@
 | --- | --- | --- | --- |
 | `fmrope_125m_l256/` | FMRoPE 的 train/inference base retarget 是否解释 EVQ 效果 | 结果已汇总；FMRoPE/YaRN range scaling 明显强于 raw schedules | 方法级小模型诊断；不能称 EVQ 替代 range scaling |
 | `reviewer27be_shape_base/` | Paper-Geo/EVQ、tau、matched shape、held-out base/head 与 native Std-RoPE | 三 seed 结果已汇总；native/real-shape 聚合 JSON 已跟踪 | 回答 shape/base 归因，同时证明 Cosh 不唯一最优 |
-| `mla_scarcity_5090/` | 稀缺 active frequency budget 下 shape gain 是否超过 range gain | spec/code/tests present；no training result | seed-42 gate 与三 seed test 完成后才可支持 scarce-budget interaction |
+| `mla_scarcity_5090/` | 稀缺 active frequency budget 下 shape gain 是否超过 range gain | seed-42 六臂与独立 test 已完成；不扩 seed | raw practical claim 未通过；YaRN-derived K=8 长外推趋势仅作 single-seed/operator-qualified supporting diagnostic |
 | `../../experiments/rebuttal_2026/sft_distillation/` | 为 Paper-Geo/EVQ 生成完全相同的通用短上下文能力 SFT 数据 | code + offline dry-run present；API audit not yet run | 先 100 条人工门禁，再 3000/400/400 pilot；不使用或模仿 RULER |
 
 这些从零训练包都使用全参数训练，使频率表从 step 1 参与 attention；它们没有
@@ -78,8 +83,8 @@
    优先级判断。
 2. 先写 `R27bE.1/.3/.4` 的短回答骨架，明确 correction、existing evidence、
    remaining limitation。
-3. 若启动 MLA scarcity，只允许在数据、环境、磁盘与 READY receipt 离线验证后
-   运行 seed-42 gate；gate 未通过不得扩到 seed 43/88。
+3. MLA scarcity 已终止：不得因原注册 gate 的形式 PASS 重启 seed 43/88；
+   实际 native-advantage 门禁失败，详见实验报告第 8 节。
 4. 新结果先做 raw artifact/provenance 审核，再决定是否进入 response；现有
    shape/base 结果也必须保持报告中的负面边界。
 5. 不自动启动 1.5B/4B-token/RULER campaign；只有原始 reviewer 文本与预算

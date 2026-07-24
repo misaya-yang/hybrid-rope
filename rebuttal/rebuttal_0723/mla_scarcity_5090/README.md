@@ -3,6 +3,19 @@
 This package tests whether EVQ's internal allocation-shape contribution grows
 when the number of **active rotary-frequency pairs** is scarce.
 
+## Terminal result (2026-07-24)
+
+The seed-42 six-arm gate and disjoint test evaluation completed. The registered
+shape-only gate returned `PASS`, but the practical native-baseline gate failed:
+at K=8/8K the range control collapsed to 6.2195 NLL, EVQ recovered to 4.6437,
+and native remained much better at 3.9915. K=32 EVQ was also 0.0382 NLL worse
+than native at 8K. Seeds 43/88 were therefore not run.
+
+The aggregate is `../mla_scarcity_seed42_result_20260724.json`; full analysis
+and the operator-qualified YaRN diagnostic are in section 8 of
+`../EXPERIMENT_REPORT_20260724.md`. Do not rerun `confirm` from the historical
+formal `PASS` gate: the later decision receipt supersedes expansion.
+
 ## Frozen comparison
 
 - 50.1M-parameter MLA model, `L_train=4096`, base 500K, no passkey mixture.
