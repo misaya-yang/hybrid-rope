@@ -172,16 +172,20 @@ Known provenance caveats:
 
 ## Current Branch And Audit Hygiene
 
-As of the June 2026 rebuttal audit, the useful local branch topology is:
+`main` and `origin/main` are the sole project source of truth. All paper,
+rebuttal, experiment, evidence, and agent-rule decisions must be based on the
+checked-out `main` state. A branch that differs from `main` is not authoritative
+until its relevant commits are reviewed and merged into `main`.
 
-- `main`: current paper/rebuttal working branch.
+- `main`: canonical working and publishing branch.
 - `backup/2026-03-06`: archival branch used only to recover historical result
   artifacts.
+- `codex/*`: temporary or historical work branches; never use them as an
+  independent evidence source or project baseline.
 
-Do not treat stale `codex/*` or remote-tracking branches as independent evidence
-unless the user explicitly asks for a new branch audit. `main` and
-`origin/main` already contain the current audit stack; the March backup branch
-is an artifact source, not the primary working branch.
+Do not treat stale branches or remote-tracking branches as current evidence
+unless the user explicitly asks for a branch audit. Resolve any useful branch
+content into `main` before relying on it.
 
 Local raw evidence such as
 `rebuttal/pre_rebuttal/seed42_lora_eval_20260713/raw/` and the retired root
@@ -305,9 +309,13 @@ the curated packager is the authoritative supplement path.
 
 ## Git Workflow
 
-- Do not push directly to `main`.
-- Use `codex/...` branches for Codex work unless the user explicitly requests
-  another branch.
+- Work from `main`; synchronize it with `origin/main` before editing or
+  committing.
+- Commit project changes on `main` unless the user explicitly requests a
+  temporary branch.
+- Push `main` only after the user explicitly requests publication.
+- Temporary `codex/...` branches may be used for isolation, but their relevant
+  commits must be merged into `main` before they are treated as project state.
 - Preserve user changes. Never reset or checkout away work you did not create.
 - If `origin/main` advances, merge or rebase before final push and regenerate
   `paper/main.pdf` from the merged source.
