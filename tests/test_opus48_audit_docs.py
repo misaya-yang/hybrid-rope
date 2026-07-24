@@ -62,7 +62,7 @@ class Opus48AuditDocsTests(unittest.TestCase):
         files = (
             list((ROOT / "paper").glob("**/*.tex"))
             + [
-                ROOT / "rebuttal" / "REVIEWER_TRIAGE_PLAYBOOK.md",
+                ROOT / "rebuttal" / "pre_rebuttal" / "REVIEWER_TRIAGE_PLAYBOOK.md",
                 OVERVIEW / "PAPER_CLAIMS_MAP.md",
             ]
         )

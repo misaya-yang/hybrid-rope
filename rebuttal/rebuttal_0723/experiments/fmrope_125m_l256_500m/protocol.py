@@ -6,6 +6,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import os
 from dataclasses import asdict, dataclass
 from typing import Any
 
@@ -43,8 +44,7 @@ ARM_CONDITIONS = {
 
 @dataclass(frozen=True)
 class ExperimentSpec:
-    # This is the repository's historical "125M" configuration. The exact
-    # tied-embedding parameter count is 151,898,880 and is always reported.
+    model_tier: str = "151m"
     vocab_size: int = 50_304
     hidden_size: int = 768
     num_layers: int = 12
@@ -120,11 +120,30 @@ class ExperimentSpec:
         }
 
     def fingerprint(self) -> str:
-        payload = json.dumps(asdict(self), sort_keys=True, separators=(",", ":"))
+        values = asdict(self)
+        values.pop("model_tier")
+        payload = json.dumps(values, sort_keys=True, separators=(",", ":"))
         return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
-SPEC = ExperimentSpec()
+_model_tier = os.environ.get("FMR_MODEL_TIER", "151m")
+if _model_tier not in ("151m", "350m"):
+    raise ValueError("FMR_MODEL_TIER must be 151m or 350m")
+_seed = int(os.environ.get("FMR_SEED", "42"))
+if _seed not in (42, 137, 256):
+    raise ValueError("FMR_SEED must be one of 42, 137, or 256")
+if _model_tier == "350m":
+    SPEC = ExperimentSpec(
+        model_tier="350m",
+        num_layers=33,
+        requested_train_tokens=1_000_000_000,
+        seed=_seed,
+        learning_rate=3e-4,
+        min_learning_rate=3e-5,
+        warmup_steps=1_525,
+    )
+else:
+    SPEC = ExperimentSpec(seed=_seed)
 
 
 def estimate_parameter_count(spec: ExperimentSpec = SPEC) -> int:

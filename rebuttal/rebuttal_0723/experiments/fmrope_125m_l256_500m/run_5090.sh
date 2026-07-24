@@ -39,6 +39,23 @@ export OMP_NUM_THREADS="$CPU_THREADS"
 export MKL_NUM_THREADS="$CPU_THREADS"
 export OPENBLAS_NUM_THREADS="$CPU_THREADS"
 export NUMEXPR_NUM_THREADS="$CPU_THREADS"
+export PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:True}"
+export FMR_MODEL_TIER="${FMR_MODEL_TIER:-151m}"
+case "$FMR_MODEL_TIER" in
+  151m|350m) ;;
+  *)
+    echo "FMR_MODEL_TIER must be 151m or 350m" >&2
+    exit 2
+    ;;
+esac
+export FMR_SEED="${FMR_SEED:-42}"
+case "$FMR_SEED" in
+  42|137|256) ;;
+  *)
+    echo "FMR_SEED must be one of 42, 137, or 256" >&2
+    exit 2
+    ;;
+esac
 
 require_var() {
   local name="$1"
@@ -64,7 +81,12 @@ case "$MODE" in
     FMR_DATA_DIR="${FMR_DATA_DIR:-$FMR_WORK_DIR/data}"
     mkdir -p "$FMR_DATA_DIR"
     cd "$REPO_ROOT"
-    if [[ -n "${FMR_SOURCE_MANIFEST:-}" ]]; then
+    if [[ -n "${FMR_RETARGET_MANIFEST:-}" ]]; then
+      PYTHONPATH="$REPO_ROOT" "$PYTHON_BIN" \
+        -m rebuttal.rebuttal_0723.experiments.fmrope_125m_l256_500m.prepare \
+        --retarget_manifest "$FMR_RETARGET_MANIFEST" \
+        --output_dir "$FMR_DATA_DIR"
+    elif [[ -n "${FMR_SOURCE_MANIFEST:-}" ]]; then
       PYTHONPATH="$REPO_ROOT" "$PYTHON_BIN" \
         -m rebuttal.rebuttal_0723.experiments.fmrope_125m_l256_500m.prepare \
         --source_manifest "$FMR_SOURCE_MANIFEST" \
@@ -96,6 +118,7 @@ case "$MODE" in
     }
     mkdir -p "$FMR_WORK_DIR/logs"
     cd "$REPO_ROOT"
+    ARMS="${FMR_ARMS:-paper_geo_base500k fmrope_base256 evq_cosh_tau4_paper_grid_base500k}"
     PYTHONPATH="$REPO_ROOT" "$PYTHON_BIN" tests/test_fmrope_125m_l256_500m.py
     "$PYTHON_BIN" -m py_compile \
       "$SCRIPT_DIR/protocol.py" \
@@ -110,6 +133,7 @@ case "$MODE" in
       --data_manifest "$DATA_MANIFEST" \
       --full_hash_check \
       --verify_full_initialization \
+      --arms $ARMS \
       | tee "$FMR_WORK_DIR/preflight.json"
     ;;
 
@@ -133,6 +157,7 @@ import sys
 from pathlib import Path
 
 from rebuttal.rebuttal_0723.experiments.fmrope_125m_l256_500m.prepare import sha256_file
+from rebuttal.rebuttal_0723.experiments.fmrope_125m_l256_500m.protocol import SPEC
 from rebuttal.rebuttal_0723.experiments.fmrope_125m_l256_500m.run_experiment import code_fingerprint
 
 receipt = json.loads(Path(sys.argv[1]).read_text())
@@ -143,6 +168,12 @@ if receipt.get("code_sha256") != code_fingerprint():
     raise SystemExit("code changed after CPU preflight")
 if receipt.get("data_manifest_sha256") != sha256_file(manifest):
     raise SystemExit("data manifest changed after CPU preflight")
+if receipt.get("protocol_sha256") != SPEC.fingerprint():
+    raise SystemExit("seed/protocol changed after CPU preflight")
+if receipt.get("seed") != SPEC.seed:
+    raise SystemExit("seed changed after CPU preflight")
+if receipt.get("model_tier") != SPEC.model_tier:
+    raise SystemExit("model tier changed after CPU preflight")
 print("frozen preflight receipt: PASS")
 PY
     "$PYTHON_BIN" - <<'PY'
@@ -158,9 +189,44 @@ PY
     export TORCHINDUCTOR_FX_GRAPH_CACHE=1
     export TORCHINDUCTOR_AUTOTUNE_LOCAL_CACHE=1
     mkdir -p "$TORCHINDUCTOR_CACHE_DIR" "$FMR_WORK_DIR/logs"
-    COMPILE_MODE="${FMR_COMPILE_MODE:-max-autotune-no-cudagraphs}"
+    COMPILE_MODE="${FMR_COMPILE_MODE:-default}"
     NUM_WORKERS="${FMR_NUM_WORKERS:-8}"
     ARMS="${FMR_ARMS:-paper_geo_base500k fmrope_base256 evq_cosh_tau4_paper_grid_base500k}"
+    set -- $ARMS
+    PROBE_ARM="$1"
+    PROBE_PATH="$FMR_WORK_DIR/gpu_probe_${PROBE_ARM}.json"
+    if [[ ! -s "$PROBE_PATH" ]]; then
+      PYTHONPATH="$REPO_ROOT" "$PYTHON_BIN" \
+        -m rebuttal.rebuttal_0723.experiments.fmrope_125m_l256_500m.run_experiment probe-gpu \
+        --arm "$PROBE_ARM" \
+        --data_manifest "$DATA_MANIFEST" \
+        --work_dir "$FMR_WORK_DIR" \
+        --compile_mode "$COMPILE_MODE" \
+        --timed_steps 5 \
+        2>&1 | tee "$FMR_WORK_DIR/logs/gpu_probe_${PROBE_ARM}.log"
+    fi
+    PYTHONPATH="$REPO_ROOT" "$PYTHON_BIN" - "$PROBE_PATH" "$PROBE_ARM" "$COMPILE_MODE" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+from rebuttal.rebuttal_0723.experiments.fmrope_125m_l256_500m.protocol import SPEC
+from rebuttal.rebuttal_0723.experiments.fmrope_125m_l256_500m.run_experiment import code_fingerprint
+
+receipt = json.loads(Path(sys.argv[1]).read_text())
+expected = {
+    "status": "PASS",
+    "discarded_probe": True,
+    "arm": sys.argv[2],
+    "compile_mode": sys.argv[3],
+    "protocol_sha256": SPEC.fingerprint(),
+    "code_sha256": code_fingerprint(),
+}
+for key, value in expected.items():
+    if receipt.get(key) != value:
+        raise SystemExit(f"GPU probe receipt mismatch: {key}")
+print("discarded GPU probe: PASS")
+PY
     for arm in $ARMS; do
       PYTHONPATH="$REPO_ROOT" "$PYTHON_BIN" \
         -m rebuttal.rebuttal_0723.experiments.fmrope_125m_l256_500m.run_experiment train \
@@ -194,6 +260,73 @@ PY
     exec "$0" run
     ;;
 
+  exact-range)
+    export FMR_ARMS="fmrope_base256 anchored_cosh_tau4_fmrope_range"
+    exec "$0" run
+    ;;
+
+  prepare-350m)
+    export FMR_MODEL_TIER=350m
+    export FMR_SEED=42
+    exec "$0" prepare
+    ;;
+
+  preflight-350m)
+    export FMR_MODEL_TIER=350m
+    export FMR_SEED=42
+    export FMR_ARMS="fmrope_base256 anchored_cosh_tau4_fmrope_range"
+    exec "$0" preflight
+    ;;
+
+  run-350m)
+    export FMR_MODEL_TIER=350m
+    export FMR_SEED=42
+    exec "$0" exact-range
+    ;;
+
+  preflight-multiseed)
+    require_var FMR_WORK_DIR
+    assert_cpu_only
+    ROOT_WORK_DIR="$FMR_WORK_DIR"
+    SHARED_DATA_DIR="${FMR_DATA_DIR:-$ROOT_WORK_DIR/data}"
+    for seed in ${FMR_SEEDS:-137 256}; do
+      FMR_SEED="$seed" \
+      FMR_MODEL_TIER=151m \
+      FMR_WORK_DIR="$ROOT_WORK_DIR/seed_${seed}" \
+      FMR_DATA_DIR="$SHARED_DATA_DIR" \
+      FMR_ARMS="fmrope_base256 anchored_cosh_tau4_fmrope_range" \
+        "$0" preflight
+    done
+    ;;
+
+  run-multiseed)
+    require_var FMR_WORK_DIR
+    ROOT_WORK_DIR="$FMR_WORK_DIR"
+    SHARED_DATA_DIR="${FMR_DATA_DIR:-$ROOT_WORK_DIR/data}"
+    export TORCHINDUCTOR_CACHE_DIR="${TORCHINDUCTOR_CACHE_DIR:-$ROOT_WORK_DIR/torchinductor_cache}"
+    for seed in ${FMR_SEEDS:-137 256}; do
+      FMR_SEED="$seed" \
+      FMR_MODEL_TIER=151m \
+      FMR_WORK_DIR="$ROOT_WORK_DIR/seed_${seed}" \
+      FMR_DATA_DIR="$SHARED_DATA_DIR" \
+        "$0" exact-range
+    done
+    ;;
+
+  aggregate-multiseed)
+    require_var FMR_WORK_DIR
+    require_var FMR_SEED42_COMPARISON
+    cd "$REPO_ROOT"
+    PYTHONPATH="$REPO_ROOT" "$PYTHON_BIN" \
+      -m rebuttal.rebuttal_0723.experiments.fmrope_125m_l256_500m.run_experiment \
+      aggregate-exact-range \
+      --inputs \
+        "$FMR_SEED42_COMPARISON" \
+        "$FMR_WORK_DIR/seed_137/evaluation/results.json" \
+        "$FMR_WORK_DIR/seed_256/evaluation/results.json" \
+      --output_dir "$FMR_WORK_DIR/multiseed"
+    ;;
+
   evaluate)
     require_var FMR_WORK_DIR
     FMR_DATA_DIR="${FMR_DATA_DIR:-$FMR_WORK_DIR/data}"
@@ -208,7 +341,7 @@ PY
     ;;
 
   *)
-    echo "usage: $0 {prepare|preflight|run|evq2|evaluate}" >&2
+    echo "usage: $0 {prepare|prepare-350m|preflight|run|evq2|exact-range|preflight-350m|run-350m|preflight-multiseed|run-multiseed|aggregate-multiseed|evaluate}" >&2
     exit 2
     ;;
 esac

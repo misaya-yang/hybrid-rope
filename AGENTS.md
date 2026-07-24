@@ -13,12 +13,16 @@ use a separate root `Agent.md`.
 Before designing, running, or writing about a rebuttal, LoRA, long-context, or
 paid-GPU experiment, read this file and then:
 
-1. `rebuttal/rebuttal_0723/theory_results/EVQ_COSH_REBUTTAL_PRINCIPLES.md` for AC concerns,
+1. `rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md` for the
+   exact reviewer/AC concern being answered.
+2. `rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md` for the reviewer-facing
+   evidence selection, concern routing, and important-experiment status.
+3. `rebuttal/rebuttal_0723/theory_results/EVQ_COSH_REBUTTAL_PRINCIPLES.md` for
    method positioning, theory boundaries, experiment design, stopping rules,
    and output format.
-2. `rebuttal/rebuttal_0723/README.md` for the current evidence index and
-   experiment-package status.
-3. The relevant experiment plan, protocol, manifest, and report.
+4. `rebuttal/rebuttal_0723/README.md` for the current directory and
+   experiment-package index.
+5. The relevant experiment plan, protocol, manifest, and standalone report.
 
 Every experiment proposal must begin with:
 
@@ -33,10 +37,12 @@ If an experiment cannot answer the first line, do not run it.
 ## Project routing summary
 
 - Current rebuttal workspace: `rebuttal/rebuttal_0723/`.
-- Formal reviewer source: `00_REVIEWER_27BE_OFFICIAL_REVIEW.md`, stable IDs
+- Formal reviewer source: `00_REVIEWER_SCORES_AND_AC_METAREVIEW.md`, stable IDs
   `R27bE.1`-`R27bE.5`.
-- AC source: `01_AC_METAREVIEW.md`; its provenance is not equivalent to the
+- AC source: `00_REVIEWER_SCORES_AND_AC_METAREVIEW.md`; its provenance is not equivalent to the
   formal reviewer source until independently verified.
+- Reviewer-facing evidence/playbook: `01_REBUTTAL_PLAYBOOK.md`; update it when
+  an important rebuttal experiment is admitted, stopped, or reclassified.
 - Current numeric result entry: `theory_results/EXPERIMENT_REPORT_20260724.md`.
 - Frequency identity contract: `theory_results/FREQUENCY_DEFINITION_MANIFEST.json` and
   `experiments/geo_rope_contract.py`.
@@ -46,8 +52,9 @@ If an experiment cannot answer the first line, do not run it.
 
 The current rebuttal directory has one stable layout:
 
-- Root: `README.md`, `00_REVIEWER_27BE_OFFICIAL_REVIEW.md`, and
-  `01_AC_METAREVIEW.md` only. Reviewer and AC sources stay at the top level.
+- Root: `README.md`, `00_REVIEWER_SCORES_AND_AC_METAREVIEW.md`, and
+  `01_REBUTTAL_PLAYBOOK.md` only. Reviewer, AC, and response-routing sources stay
+  at the top level.
 - `rebuttal/rebuttal_0723/theory_results/`: principles, theory/planning notes,
   result reports, manifests, and curated result JSONs.
 - `rebuttal/rebuttal_0723/experiments/`: experiment packages, helper code, and
@@ -58,6 +65,21 @@ The current rebuttal directory has one stable layout:
 Keep claims narrow. Do not upgrade supporting, single-seed, or diagnostic
 evidence to universal optimum, production-scale SOTA, or downstream capability
 without matching artifacts and provenance.
+
+## Rebuttal evidence synchronization rule
+
+`01_REBUTTAL_PLAYBOOK.md` is reviewer-facing: prioritize the clearest,
+strongest, most directly useful evidence and omit irrelevant internal detail.
+Selection must not hide a limitation whose omission would make a claim
+misleading.
+
+Every experiment that directly serves a current reviewer or AC concern must be
+represented twice: a standalone Markdown record under
+`rebuttal/rebuttal_0723/theory_results/` owns protocol, numbers, uncertainty,
+and provenance; the corresponding row in
+`rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md` owns reviewer-facing selection,
+concern mapping, status, and safe wording. Do not cite an experiment in a
+response until both entries are present and agree.
 
 The detailed claim guardrails remain here: submitted "YaRN" is a repository-
 defined fixed-index smooth-ramp scaler, submitted "DAPE" is layer-shared
@@ -81,6 +103,41 @@ free-space check, and post-launch verification. If required code or inputs are
 missing, stop the GPU session and prepare them offline. Read
 `docs/overview/RTX5090_BLACKWELL_PROFILE.md`; do not silently fall back to math
 attention.
+
+### Blackwell experiment execution contract
+
+Apply this contract to RTX 5090 and RTX Pro 6000 runs. They share the same
+Blackwell-oriented optimization family, but never assume that their usable
+memory, best batch size, compile mode, throughput, or kernel eligibility is
+identical.
+
+1. Freeze scientific variables first: model and schedule, data/token order,
+   seed, sequence length, token budget, optimizer/LR schedule, global batch,
+   precision, evaluation anchors, and metrics. A matched rerun also preserves
+   micro-batch and gradient accumulation unless the protocol explicitly permits
+   an execution-only change.
+2. Default runtime stack is BF16 autocast, native-architecture PyTorch/CUDA,
+   Flash-only SDPA, fused AdamW, TF32 matmul, `expandable_segments`, and a
+   persistent TorchInductor cache. Disable math, memory-efficient, and cuDNN
+   SDPA fallbacks so an ineligible Flash shape fails visibly.
+3. Reuse the fastest completed receipt for the same model, sequence length,
+   micro-batch, and attention shape. Otherwise run one compile step plus at
+   least five discarded steady-state steps before training. Probe permitted
+   compile modes and micro-batches; do not assume `torch.compile(default)` or a
+   nearly full GPU is fastest.
+4. Select by sustained tokens/second with finite loss and stable utilization,
+   not allocated-memory percentage. Low memory with high utilization is valid;
+   high memory is not itself an optimization target. Do not restart a healthy
+   registered run merely to fill memory.
+5. Record GPU name, compute capability, PyTorch/CUDA versions, compiled
+   architectures, precision, SDPA backend state, compile mode, cache path,
+   sequence/global/micro batch, accumulation, compile latency, steady
+   throughput, peak memory, first-step loss, and ETA. Probe estimates are
+   provisional; replace them with complete-run throughput after the first arm.
+6. RTX Pro 6000 remains subject to the full no-GPU READY gate. RTX 5090 may use
+   the scoped exception above, but missing code/data still must not become paid
+   debugging. Neither machine shuts down automatically unless the user
+   explicitly requests it for that run.
 
 ## Evidence, change, and reporting discipline
 

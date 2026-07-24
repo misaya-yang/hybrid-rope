@@ -1,10 +1,11 @@
 # EVQ-Cosh rebuttal experiment report — 2026-07-24
 
-Status: **final through the native-grid/attention-shape diagnostic**. The
+Status: **final through the completed Section 13 diagnostics**. The
 Reviewer 27bE experiments, the 100M-token FMRoPE diagnostic, the EVQ-Cosh x
 FMRoPE arm, the separately registered 500M-token undertraining check, and the
 three-seed native Std-RoPE/real-shape study are complete. The MLA scarcity
-study in Section 8 is a verified design, not a completed new result.
+study in Section 8 is complete as a stopped single-seed diagnostic; it is not
+primary evidence and does not change a paper table.
 
 No paper table value is changed by this report. These are fresh rebuttal
 experiments and must not be numerically merged with historical Primary-II rows.
@@ -696,3 +697,46 @@ not simply maximize density near a single analytic band.
 This remains post-hoc, single-seed, small-model mechanistic evidence. The
 per-pair interventions are not additive, the oracle selector uses natural-text
 NLL, and no downstream capability or paper-level claim follows from it.
+
+## 12. Exact-range Cosh allocation at 500M tokens
+
+A new seed-42 arm matched the existing FMRoPE checkpoint's sampled frequency
+extrema and log-span exactly, changing only the finite-\(K\) interior spacing
+to endpoint-normalized Cosh at \(\tau=4\). It reused the 151.9M model, 500M-token
+protocol, initialization, token order and 32 frozen anchors.
+
+Cosh minus uniform FMRoPE tail NLL is:
+
+| range condition | 256 | 512 | 1K | 2K |
+| --- | ---: | ---: | ---: | ---: |
+| Fixed training range | +0.0328 | **-0.4775** | **-0.2050** | **-0.1128** |
+| Target-matched range | +0.0328 | +0.0611 | +0.1818 | +0.2786 |
+
+**Decision: `SHAPE_EFFECT_WITHOUT_TARGET_SYNERGY`.** Interior allocation has a
+material effect after exact range matching: Cosh improves every fixed-range OOD
+length. But once both schedules receive target-aware retargeting, uniform
+FMRoPE is better at every length. This supports allocation as a distinct
+finite-channel variable, not empirical orthogonality, additive gains, or
+universal Cosh optimality. Full protocol and provenance are in
+`MATCHED_RANGE_COSH_500M_S42_20260724.md`.
+
+## 13. Training-free finite-\(K\) tau selector
+
+An exact discrete selector minimized the worst squared RoPE Gram collision
+within the training-distance law, within the declared target-distance law, and
+across the two. It uses only \(B,K,L_{\mathrm{train}}\), the actual grid and an
+explicit target workload; it reads no model result or checkpoint statistic.
+
+On the nine Phase16 configurations, the selector returned
+\(\tau^\star=13.13\)--13.34 and was evaluated through the nearest retained
+five-arm pilot checkpoint:
+
+| metric | repaired selector | old formula | fixed \(\tau=0\) |
+| --- | ---: | ---: | ---: |
+| Mean relative PPL regret | 5.44% | **4.69%** | 8.08% |
+| Top-2 basin entries | 1/9 | **5/9** | — |
+
+**Decision: `STATIC_GRAM_SELECTOR_FAILED`.** The historical gate required a
+clear improvement over the old rule before three prospective configurations.
+It failed, so no new training was run. The complete method and falsification
+report are in `TRAINING_FREE_TAU_SELECTOR_20260724.md`.

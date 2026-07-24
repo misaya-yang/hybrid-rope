@@ -218,17 +218,17 @@ Packaged evidence:
 | `scripts/core_text_phases/audit_rope_checkpoint.py` | Offline checkpoint frequency audit helper | `9d974b58b44f8b664d9f250cbf6a4d5ec505f5077cb55d1120b4f638f9e53ad9` |
 | `scripts/core_text_phases/audit_training_artifacts.py` | Offline train-cache/token-count audit helper | `bb4a89d522557cc1878cfa37b16de9a7a97930228402a49e5fae6c1df5e6edd5` |
 | `scripts/core_text_phases/make_artifact_manifest.py` | Sanitized external artifact manifest helper | `38cb1f687cc08aa23e518a4da2399cece69754446292bd92cb6dee153c0f4099` |
-| `docs/overview/README.md` | Overview docs entrypoint and audit-stack navigation | `0db854709b80e280822737385eb44e9b94252e3ede2e1f5581412725f85d217d` |
+| `docs/overview/README.md` | Overview docs entrypoint and audit-stack navigation | `4c09ac8e2fcec887b6afa5a9df0b0aabb7ecf06e7b5da56473fc125eca360a0c` |
 | `docs/overview/OPUS48_REBUTTAL_MASTER_BRIEF.md` | Single advisor-facing rebuttal master brief | `6c4c5c3fde341fa4fc235c5c44d3490debb5cbd9746b926cd6c235aa27554470` |
 | `docs/overview/OPUS48_AUDIT_CONTROL_CENTER.md` | One-stop Opus 4.8 audit index and P0 checklist | `f84f22056513902888c87f9c52abb07713ac538039406ed7343108b777db5f20` |
 | `docs/overview/OPUS48_ARTIFACT_RECOVERY_RUNBOOK.md` | External artifact recovery commands and acceptance criteria | `4857a2d859f07d0df9c80955dfb6995bf5412a7b4c167cfb0f54dd79ed6faad6` |
-| `docs/overview/OPUS48_COMPLETION_AUDIT.md` | Requirement-level completion and remaining-gap audit | `47cc0e18ef33db94a111276afc83dfb552160414b040dbc64104f8530cd5672b` |
-| `docs/overview/OPUS48_ISSUE_RESOLUTION_LEDGER.md` | Per-issue resolution state, evidence, and remaining gates | `e00c2fa901511938dbcca8d523c72f6fc2a18b648d312a57e4cdce3e17b43aa4` |
+| `docs/overview/OPUS48_COMPLETION_AUDIT.md` | Requirement-level completion and remaining-gap audit | `7bd0a553e92282e79789f7a4ef794c4697982c0ff4c70ccb3c87b4638c3505b1` |
+| `docs/overview/OPUS48_ISSUE_RESOLUTION_LEDGER.md` | Per-issue resolution state, evidence, and remaining gates | `c35e2da763df5815cf57b189d29a6c3cba0727df604fecd6b223530f5c2bcf9c` |
 | `docs/overview/OPUS48_REBUTTAL_RESPONSE_MATRIX.md` | Rebuttal-safe answer strategy and forbidden-claim matrix | `75bae5a7c4ef05dcfd93379f38d1ea2cb869c870e3b533f7560298301ac2dae4` |
 | `docs/overview/OPUS48_FORENSIC_AUDIT_REPORT.md` | Prompt-structured forensic audit report | `ec51bb535eb9badc97a0e0d55aa1ccc5e2486e830c813f437403370e71c71a5b` |
 | `docs/overview/PAPER_CLAIMS_MAP.md` | Paper-to-experiment traceability map with explicit artifact gates | `cf9ed462b193a79f1096f73ff9f52153e0ca9d228ca09a37d4da25ebc7f0b293` |
-| `rebuttal/REVIEWER_TRIAGE_PLAYBOOK.md` | Current compact triage path; only real reviewer triggers may enter the response | `f1c689830c367fd8a0beed433dbde81d47e91b34a26577a51c3b535923910121` |
-| `tests/test_opus48_audit_docs.py` | O48 coverage/link/stale-phrase regression test | `9370c31d34d6feacce3a2dc34a9493de550b09364f5f15d9b03347eb1d9ad53d` |
+| `rebuttal/pre_rebuttal/REVIEWER_TRIAGE_PLAYBOOK.md` | Historical compact triage path; current response routing lives in `rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md` | `f4cb20ee636c5b020ebac735f6fd39da44691972cc1cb25cbafede0593ee6bac` |
+| `tests/test_opus48_audit_docs.py` | O48 coverage/link/stale-phrase regression test | `844153d49998e8a23a8547bf3159d994ac7ec24af304150b3cbb2342353ac2b7` |
 
 Current compact-repo gaps:
 
@@ -341,7 +341,7 @@ Packaged evidence:
 | Artifact | Role | SHA256 |
 | --- | --- | --- |
 | `data/curated/lora_longalpaca_temporal_s42_20260712.json` | Byte-exact three-arm result JSON | `0335415a2245e1fb31149705342e975a016ddddb557a79c364fc4a98c3f89001` |
-| `rebuttal/LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` | NLL interpretation, protocol hashes, and split-run provenance | `19271a2c428cffb5c24ff043b48522b27b0fd329672d1dabc0b99cd32eefc17b` |
+| `rebuttal/pre_rebuttal/LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` | NLL interpretation, protocol hashes, and split-run provenance | `19271a2c428cffb5c24ff043b48522b27b0fd329672d1dabc0b99cd32eefc17b` |
 | `experiments/lora_evq_v2/train_evq_lora.py` | Strict LongAlpaca trainer plus opt-in Flash/GQA path | `62cb3c64b7d5c5bc826b38a82ee283fc13c38369386515f46a8782d86b9fae8f` |
 | `experiments/lora_evq_v2/eval_temporal_holdout_three_arm.py` | Three-arm evaluator and explicit Geo/EVQ seed contract | `3010406191d5c261cce3feb0c422bd27eaf23534f9810442c95d78114ec24d26` |
 | `scripts/2026-07/06_lora_temporal_three_arm_eval.sh` | Fail-closed temporal evaluation launcher | `222e4816eabc089c61992316226058e4277c39efb9bdcd7b0c3cef92fbbd378c` |

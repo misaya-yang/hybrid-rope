@@ -16,17 +16,18 @@ rebuttal 入口为 `rebuttal/rebuttal_0723/`，历史准备位于
 
 - 当前完整实验结论入口：
   `rebuttal/rebuttal_0723/theory_results/EXPERIMENT_REPORT_20260724.md`。
-- Reviewer 与 AC 权威入口分别为
-  `rebuttal/rebuttal_0723/00_REVIEWER_27BE_OFFICIAL_REVIEW.md` 和
-  `rebuttal/rebuttal_0723/01_AC_METAREVIEW.md`。AC 文本由作者提供，当前
-  没有独立 URL/hash。
+- 当前 reviewer-facing evidence/action ledger：
+  `rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md`。
+- Reviewer 与 AC 统一入口为
+  `rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md`。Reviewer 部分有
+  OpenReview 来源哈希；AC 文本由作者提供，当前没有独立 URL/hash。
 - Phase16 本机 99-run raw 已重新核对：
   `rebuttal/rebuttal_0723/theory_results/PHASE16_99RUN_RAW_REANALYSIS_20260724.md`。
   Formula tau 对 midpoint-Geo 为 7/9 配置均值获胜，但对 pilot-selected
   neighbor 的 held-out 比较仅 3/9 获胜；只能称 fallible operating prior。
 - native Std-RoPE / matched shape / attention-derived shape 的三 seed 结果已完成；
   聚合 raw-backed JSON 为
-  `rebuttal/rebuttal_0723/native_attention_shape_l128_results_20260724.json`。
+  `rebuttal/rebuttal_0723/theory_results/native_attention_shape_l128_results_20260724.json`。
   结果支持 allocation shape 轴，但明确不支持 Cosh 唯一最优。
 - MLA scarcity 包位于
   `rebuttal/rebuttal_0723/experiments/mla_scarcity_5090/`。50.1M 固定架构的 seed-42
@@ -47,7 +48,7 @@ rebuttal 入口为 `rebuttal/rebuttal_0723/`，历史准备位于
   声称当前仍可逐文件访问。
 - RTX 5090 的已验证性能基线已记录到
   `docs/overview/RTX5090_BLACKWELL_PROFILE.md`。后续训练默认复用
-  BF16、`torch.compile(default)`、Flash-only SDPA、fused AdamW、
+  BF16、probe/receipt 选出的 `torch.compile` 模式、Flash-only SDPA、fused AdamW、
   `expandable_segments` 和持久 TorchInductor cache，但每个新 workload
   仍须先做 discarded probe，不能照搬 batch size。
 - 本轮 MLA 包服务器测试为 `16 passed`；本地 `py_compile`、`bash -n`、
@@ -55,12 +56,58 @@ rebuttal 入口为 `rebuttal/rebuttal_0723/`，历史准备位于
   这些结果与验证记录已进入当前仓库历史。
 - 当前最直接对应 `R27bE.1/.4` 与 `AC.1/.3` 的候选是
   `rebuttal/rebuttal_0723/theory_results/ROPE_RANGE_SHAPE_MAPPING_THEORY_AND_5090_PLAN_20260724.md`：
-  matched range 下训练 Geo / Anchored-Cosh / Anchored-Exp 三臂，先跑 seed 42
-  gate，再决定是否扩 seed；当前只有方案，尚无 runner/READY 或 GPU 结果。
+  复用既有 FMR range baseline 的 seed-42 Anchored-Cosh matched-range arm
+  已完成。fixed range 下 Cosh 在 512/1K/2K 改善
+  0.478/0.205/0.113 NLL；target-retarget 后反而差
+  0.061/0.182/0.279 NLL。Anchored-Exp 不扩；matched-range 多 seed
+  确认已于 2026-07-24 启动，运行状态见下节。
+- `rebuttal/rebuttal_0723/theory_results/TRAINING_FREE_TAU_SELECTOR_20260724.md`
+  已完成 exact finite-K Gram collision selector：Phase16 九配置平均 PPL
+  regret 5.44%，旧公式 4.69%，top-2 basin 1/9 vs 5/9。历史 gate 失败，
+  因此未运行三个 prospective 配置，也不提出新的经验 tau 公式。
 - 较早的
   `rebuttal/rebuttal_0723/theory_results/MLA_YARN_OPERATOR_PARITY_5090_PLAN.md` 及 runner
   保留为 operator-parity 备选，但尚无 fresh anchors/READY，不应与上述
   range/shape 计划并行抢占 GPU。
+
+## 0B. Exact-range 多 seed 与 350M 自动队列 handoff
+
+**注册协议：**
+`rebuttal/rebuttal_0723/experiments/fmrope_125m_l256_500m/SPEC.md`。
+本节记录可同步的运行状态；服务器地址、凭据和私有绝对路径不得写入仓库。
+
+- 151.9M 确认组：训练 seeds `137/256`，每个 seed 只跑
+  `fmrope_base256` 与 `anchored_cosh_tau4_fmrope_range` 两臂；完成后与
+  已有 seed-42 comparison 聚合为三训练 seed 结果。
+- 350M scale-transfer：seed 42、`350,112,000` 参数、相同两臂。训练流实际
+  消费 `999,948,288` tokens，严格拆成不重叠的
+  `[0,499974144)` 与 `[499974144,999948288)` 两段；两臂使用完全相同的
+  A→B 顺序。
+- 2026-07-24 19:43（Asia/Shanghai）运行快照：seed 137 的 FMR 臂正在训练，
+  约 `167.8K tokens/s`、GPU 利用率约 `98%`；1B 数据在 CPU/网络侧并行准备。
+- 远端队列顺序已经固定：四个 151.9M 缺失臂 → seed 137/256 评测 →
+  三 seed 聚合 → 等待 350M `READY` → 350M 两臂与评测。小模型运行目录的
+  code fingerprint 已冻结；在其评测结束前不得向该运行副本同步代码。
+- 时间预算：从上述快照起，小模型剩余约 `3–4 h`；350M 双臂按参数量缩放
+  预计另需 `8–11 h`（含首次编译与评测）。建议自动关机设为从快照起
+  `16 h`，即约 2026-07-25 11:45，给吞吐波动留出约一小时以上余量。
+- 完成标志：
+  `fmrope_exact_range_multiseed_20260724/multiseed/summary.json` 以及
+  `fmrope_exact_range_350m_s42_1b_20260724/evaluation/results.json`。
+  先检查这两个产物和队列日志，再复制回本地、写解释报告。
+- 故障边界：runner 会拒绝覆盖任何非空 arm 目录，不能在失败后直接重跑整个
+  队列。应先确认哪些 arm 已有完整 `model.pt`、metadata 和 evaluation，再只
+  重跑缺失臂；不删除已完成 checkpoint，不把 incomplete 目录当成结果。
+
+换机后的最小验证：
+
+```bash
+python -m py_compile \
+  rebuttal/rebuttal_0723/experiments/fmrope_125m_l256_500m/{protocol,prepare,run_experiment}.py
+bash -n \
+  rebuttal/rebuttal_0723/experiments/fmrope_125m_l256_500m/{run_5090,run_full_queue_5090,prepare_350m_background}.sh
+python tests/test_fmrope_125m_l256_500m.py
+```
 
 ## 0. 2026-07-13 151.9M / 500M single-seed 结果
 
@@ -95,8 +142,8 @@ rebuttal 入口为 `rebuttal/rebuttal_0723/`，历史准备位于
 3. `REPO_MAP.md`：目录职责、source of truth 和禁止混用的层级。
 4. `rebuttal/README.md`：当前/历史两层目录分流。
 6. `rebuttal/rebuttal_0723/README.md`：当前真实审稿周期的唯一操作入口。
-7. `rebuttal/rebuttal_0723/00_REVIEWER_27BE_OFFICIAL_REVIEW.md`：Reviewer 27bE 原文。
-8. `rebuttal/rebuttal_0723/01_AC_METAREVIEW.md`：AC 原文与来源边界。
+7. `rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md`：Reviewer 27bE 原文、评分、AC 原文与来源边界。
+8. `rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md`：精选证据、回答路线与重要实验状态。
 9. `docs/overview/RESULT_PROVENANCE_MANIFEST.md`：实验数字与 artifact provenance 的最高权威。
 10. `paper/README.md`：论文源码与唯一最终 PDF 的边界。
 

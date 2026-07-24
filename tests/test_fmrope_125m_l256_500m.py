@@ -3,7 +3,11 @@
 
 from __future__ import annotations
 
+import json
+import tempfile
 import unittest
+from pathlib import Path
+from types import SimpleNamespace
 
 import torch
 
@@ -16,6 +20,7 @@ from rebuttal.rebuttal_0723.experiments.fmrope_125m_l256_500m.protocol import (
     training_inv_freq,
 )
 from rebuttal.rebuttal_0723.experiments.fmrope_125m_l256_500m.run_experiment import (
+    aggregate_exact_range,
     meta_parameter_count,
     summarize_records,
 )
@@ -29,15 +34,28 @@ from rebuttal.rebuttal_0723.experiments.geo_rope_contract import (
 
 class TestProtocol(unittest.TestCase):
     def test_budget_and_parameter_count(self):
-        self.assertEqual(estimate_parameter_count(), 151_898_880)
-        self.assertEqual(SPEC.optimizer_steps, 7_629)
-        self.assertEqual(SPEC.train_rows, 1_953_024)
-        self.assertEqual(SPEC.train_tokens, 499_974_144)
-        self.assertEqual(SPEC.prediction_tokens, 498_021_120)
-        self.assertEqual(SPEC.micro_steps, 30_516)
-        self.assertEqual(SPEC.warmup_steps, 762)
+        expected_parameters = {
+            "151m": 151_898_880,
+            "350m": 350_112_000,
+        }[SPEC.model_tier]
+        self.assertEqual(estimate_parameter_count(), expected_parameters)
+        expected_budget = {
+            "151m": (7_629, 1_953_024, 499_974_144, 498_021_120, 30_516, 762),
+            "350m": (15_258, 3_906_048, 999_948_288, 996_042_240, 61_032, 1_525),
+        }[SPEC.model_tier]
+        self.assertEqual(
+            (
+                SPEC.optimizer_steps,
+                SPEC.train_rows,
+                SPEC.train_tokens,
+                SPEC.prediction_tokens,
+                SPEC.micro_steps,
+                SPEC.warmup_steps,
+            ),
+            expected_budget,
+        )
         for arm in ARMS:
-            self.assertEqual(meta_parameter_count(arm), 151_898_880)
+            self.assertEqual(meta_parameter_count(arm), expected_parameters)
 
     def test_registered_training_schedules(self):
         self.assertTrue(
@@ -128,6 +146,48 @@ class TestProtocol(unittest.TestCase):
         self.assertEqual(set(summary["aggregate"]), {arm})
         self.assertFalse(summary["paired"])
         self.assertIn("Range-anchored Cosh", markdown)
+
+    def test_three_seed_exact_range_aggregate_uses_training_seeds(self):
+        comparisons = {
+            "anchored_cosh_fixed_minus_fmrope_fixed": -0.2,
+            "anchored_cosh_target_minus_fmrope_target": 0.1,
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            inputs = []
+            for seed in (42, 137, 256):
+                paired = {
+                    name: {
+                        str(length): {
+                            "mean_left_minus_right_tail_nll": value
+                        }
+                        for length in SPEC.eval_lengths
+                    }
+                    for name, value in comparisons.items()
+                }
+                path = root / f"seed_{seed}.json"
+                path.write_text(
+                    json.dumps(
+                        {
+                            "seed": seed,
+                            "data_manifest_sha256": "0" * 64,
+                            "eval_lengths": list(SPEC.eval_lengths),
+                            "summary": {"paired": paired},
+                        }
+                    )
+                )
+                inputs.append(path)
+            output = aggregate_exact_range(
+                SimpleNamespace(
+                    inputs=inputs,
+                    output_dir=root / "aggregate",
+                )
+            )
+            self.assertEqual(
+                output["decision"],
+                "THREE_SEED_SHAPE_EFFECT_WITHOUT_TARGET_SYNERGY",
+            )
+            self.assertEqual(output["seeds"], [42, 137, 256])
 
 
 if __name__ == "__main__":

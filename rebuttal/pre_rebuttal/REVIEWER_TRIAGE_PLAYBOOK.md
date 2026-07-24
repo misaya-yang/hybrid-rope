@@ -1,7 +1,7 @@
 # Reviewer Triage Playbook
 
 > **2026-07-24 archive notice:** 这是 pre-review 通用模板。当前真实 concern
-> mapping 已在 `../rebuttal_0723/00_REVIEWER_27BE_OFFICIAL_REVIEW.md`；
+> mapping 已在 `../rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md`；
 > 本文件不得覆盖正式 reviewer 原文或稳定 ID。
 
 最后更新：2026-07-13

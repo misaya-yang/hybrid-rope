@@ -86,8 +86,8 @@ rebuttal/                   single internal rebuttal control room
 ├── README.md               current/archive routing index
 ├── rebuttal_0723/          official review, AC metareview, current reports and runners
 │   ├── README.md           current-cycle evidence and action index
-│   ├── 00_REVIEWER_27BE_OFFICIAL_REVIEW.md
-│   └── 01_AC_METAREVIEW.md
+│   ├── 00_REVIEWER_SCORES_AND_AC_METAREVIEW.md
+│   └── 01_REBUTTAL_PLAYBOOK.md
 └── pre_rebuttal/           historical audits, plans, simulations and supporting evidence
     └── README.md           archive/reuse index
 

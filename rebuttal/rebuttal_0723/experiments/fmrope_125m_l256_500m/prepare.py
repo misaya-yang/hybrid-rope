@@ -10,6 +10,7 @@ import os
 import random
 import subprocess
 import time
+from dataclasses import replace
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -394,7 +395,11 @@ def validate_experiment_manifest(
 ) -> None:
     if int(manifest.get("schema_version", -1)) != SCHEMA_VERSION:
         raise ValueError("experiment manifest schema_version mismatch")
-    if manifest.get("protocol_sha256") != SPEC.fingerprint():
+    compatible_protocols = {
+        SPEC.fingerprint(),
+        replace(SPEC, seed=42).fingerprint(),
+    }
+    if manifest.get("protocol_sha256") not in compatible_protocols:
         raise ValueError("experiment manifest protocol fingerprint mismatch")
     if manifest.get("frequency_contract") != frequency_contract():
         raise ValueError("experiment manifest frequency contract mismatch")
@@ -563,6 +568,24 @@ def _finalize_manifest(
             "values": anchors.tolist(),
         },
     }
+    if SPEC.model_tier == "350m":
+        half = SPEC.train_tokens // 2
+        if SPEC.train_tokens != 2 * 499_974_144:
+            raise RuntimeError("350M protocol must contain two exact 500M segments")
+        manifest["train"]["segments"] = [
+            {
+                "name": "A",
+                "token_start": 0,
+                "token_stop": half,
+                "tokens": half,
+            },
+            {
+                "name": "B",
+                "token_start": half,
+                "token_stop": SPEC.train_tokens,
+                "tokens": half,
+            },
+        ]
     manifest_path = output / "data_manifest.json"
     _write_json(manifest_path, manifest)
     validate_experiment_manifest(
@@ -761,10 +784,46 @@ def prepare_fresh(
     )
 
 
+def retarget_experiment_manifest(
+    source_manifest_path: Path, output_dir: Path
+) -> dict[str, Any]:
+    """Reuse immutable L=256 tensors under a new model-tier protocol."""
+    if torch.cuda.is_available():
+        raise RuntimeError(
+            "data manifest retargeting must run before the paid GPU is enabled"
+        )
+    source_path = source_manifest_path.resolve()
+    source = json.loads(source_path.read_text())
+    train_path = Path(source["train"]["path"]).resolve()
+    validation_path = Path(source["validation"]["path"]).resolve()
+    for label, path in (
+        ("training tensor", train_path),
+        ("validation tensor", validation_path),
+    ):
+        if not path.is_file():
+            raise FileNotFoundError(f"{label} is missing: {path}")
+    return _finalize_manifest(
+        train_path=train_path,
+        validation_path=validation_path,
+        output_dir=output_dir,
+        data_origin={
+            "kind": "retargeted_registered_l256_tensors",
+            "source_manifest_sha256": sha256_file(source_path),
+        },
+        validation_source_shard=str(
+            source.get("validation", {}).get("source_shard", "")
+        ),
+        validation_source_revision=str(
+            source.get("validation", {}).get("source_revision", "")
+        ),
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     source = parser.add_mutually_exclusive_group()
     source.add_argument("--source_manifest", type=Path)
+    source.add_argument("--retarget_manifest", type=Path)
     source.add_argument("--fresh", action="store_true")
     parser.add_argument("--output_dir", type=Path)
     parser.add_argument("--download_dir", type=Path)
@@ -787,6 +846,10 @@ def main() -> None:
     if args.source_manifest is not None:
         manifest = prepare_from_source_manifest(
             args.source_manifest, args.output_dir
+        )
+    elif args.retarget_manifest is not None:
+        manifest = retarget_experiment_manifest(
+            args.retarget_manifest, args.output_dir
         )
     elif args.fresh:
         if args.download_dir is None:

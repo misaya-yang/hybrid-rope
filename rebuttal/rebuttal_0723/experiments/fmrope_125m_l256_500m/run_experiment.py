@@ -270,12 +270,68 @@ def meta_parameter_count(
     return sum(parameter.numel() for parameter in model.parameters())
 
 
+def configure_cuda_kernels() -> dict[str, Any]:
+    torch.set_float32_matmul_precision("high")
+    torch.backends.cuda.matmul.allow_tf32 = True
+    torch.backends.cudnn.allow_tf32 = True
+    reduced_bf16 = getattr(
+        torch.backends.cuda.matmul,
+        "allow_bf16_reduced_precision_reduction",
+        None,
+    )
+    if reduced_bf16 is not None:
+        torch.backends.cuda.matmul.allow_bf16_reduced_precision_reduction = True
+    torch.backends.cuda.enable_flash_sdp(True)
+    torch.backends.cuda.enable_mem_efficient_sdp(False)
+    torch.backends.cuda.enable_math_sdp(False)
+    if hasattr(torch.backends.cuda, "enable_cudnn_sdp"):
+        torch.backends.cuda.enable_cudnn_sdp(False)
+    flash_available_fn = getattr(
+        torch.backends.cuda, "is_flash_attention_available", None
+    )
+    if flash_available_fn is not None and not flash_available_fn():
+        raise RuntimeError("PyTorch reports Flash SDPA unavailable")
+    result = {
+        "flash_sdp_enabled": bool(torch.backends.cuda.flash_sdp_enabled()),
+        "mem_efficient_sdp_enabled": bool(
+            torch.backends.cuda.mem_efficient_sdp_enabled()
+        ),
+        "math_sdp_enabled": bool(torch.backends.cuda.math_sdp_enabled()),
+        "cudnn_sdp_enabled": (
+            bool(torch.backends.cuda.cudnn_sdp_enabled())
+            if hasattr(torch.backends.cuda, "cudnn_sdp_enabled")
+            else None
+        ),
+    }
+    if result["flash_sdp_enabled"] is not True or any(
+        result[key] is True
+        for key in (
+            "mem_efficient_sdp_enabled",
+            "math_sdp_enabled",
+            "cudnn_sdp_enabled",
+        )
+    ):
+        raise RuntimeError(f"Flash-only SDPA gate failed: {result}")
+    return result
+
+
 def validate_cuda_runtime() -> dict[str, Any]:
     if not torch.cuda.is_available():
         raise RuntimeError("CUDA is required for training/evaluation")
     if not torch.cuda.is_bf16_supported():
         raise RuntimeError("the registered run requires BF16-capable CUDA")
     props = torch.cuda.get_device_properties(0)
+    capability = torch.cuda.get_device_capability(0)
+    architecture = f"sm_{capability[0]}{capability[1]}"
+    compiled_architectures = list(torch.cuda.get_arch_list())
+    if compiled_architectures and not any(
+        item == architecture or item.startswith(architecture + "a")
+        for item in compiled_architectures
+    ):
+        raise RuntimeError(
+            f"PyTorch build lacks native {architecture}; compiled for "
+            f"{compiled_architectures}"
+        )
     total_memory = getattr(
         props, "total_memory", getattr(props, "total_mem", 0)
     )
@@ -284,12 +340,18 @@ def validate_cuda_runtime() -> dict[str, Any]:
             f"registered micro-batch requires >=30 GiB, found "
             f"{int(total_memory) / 2**30:.1f} GiB"
         )
+    if not hasattr(torch, "compile"):
+        raise RuntimeError("torch.compile is unavailable")
     return {
         "name": props.name,
-        "capability": list(torch.cuda.get_device_capability(0)),
+        "capability": list(capability),
+        "architecture": architecture,
+        "compiled_architectures": compiled_architectures,
         "total_memory_bytes": int(total_memory),
         "torch": str(torch.__version__),
         "cuda": torch.version.cuda,
+        "kernels": configure_cuda_kernels(),
+        "torch_compile_available": True,
     }
 
 
@@ -298,12 +360,13 @@ def run_preflight(
     *,
     full_hash_check: bool,
     verify_full_initialization: bool,
+    arms: tuple[str, ...] = ARMS,
 ) -> dict[str, Any]:
     manifest = _load_manifest(
         manifest_path, full_hash_check=bool(full_hash_check)
     )
     parameter_counts = {
-        arm: meta_parameter_count(arm) for arm in ARMS
+        arm: meta_parameter_count(arm) for arm in arms
     }
     expected = estimate_parameter_count()
     if set(parameter_counts.values()) != {expected}:
@@ -313,7 +376,7 @@ def run_preflight(
 
     initial_hashes: dict[str, str] = {}
     if verify_full_initialization:
-        for arm in ARMS:
+        for arm in arms:
             model = build_model(arm)
             initial_hashes[arm] = trainable_state_sha256(model)
             del model
@@ -324,7 +387,7 @@ def run_preflight(
             )
 
     schedule_report: dict[str, Any] = {}
-    for arm in ARMS:
+    for arm in arms:
         train_inv = training_inv_freq(arm)
         schedule_report[arm] = {
             "train_sha256": tensor_sha256(train_inv),
@@ -354,6 +417,8 @@ def run_preflight(
 
     report = {
         "status": "PASS",
+        "model_tier": SPEC.model_tier,
+        "seed": SPEC.seed,
         "protocol_sha256": SPEC.fingerprint(),
         "code_sha256": code_fingerprint(),
         "data_manifest_sha256": sha256_file(manifest_path),
@@ -375,6 +440,88 @@ def run_preflight(
         "frequency_contract": frequency_contract(),
         "schedules": schedule_report,
     }
+    print(json.dumps(report, indent=2, sort_keys=True))
+    return report
+
+
+def probe_gpu(args: argparse.Namespace) -> dict[str, Any]:
+    """Run one compile step plus discarded steady-state steps."""
+    runtime = validate_cuda_runtime()
+    manifest = _load_manifest(
+        Path(args.data_manifest).resolve(), full_hash_check=False
+    )
+    output = Path(args.work_dir).resolve() / f"gpu_probe_{args.arm}.json"
+    if output.exists():
+        raise FileExistsError(f"refusing to overwrite GPU probe: {output}")
+    source = np.load(
+        manifest["train"]["path"], mmap_mode="r", allow_pickle=False
+    ).reshape(-1)
+    token_count = SPEC.micro_batch_size * SPEC.train_length
+    batch = torch.from_numpy(
+        np.array(source[:token_count], dtype=np.int64, copy=True).reshape(
+            SPEC.micro_batch_size, SPEC.train_length
+        )
+    ).to("cuda")
+    model = build_model(args.arm).to("cuda")
+    loss_module = torch.compile(
+        CausalLanguageModelLoss(model),
+        mode=args.compile_mode,
+        dynamic=False,
+        fullgraph=False,
+    )
+    optimizer = torch.optim.AdamW(
+        model.parameters(),
+        lr=SPEC.learning_rate,
+        betas=(0.9, 0.95),
+        weight_decay=SPEC.weight_decay,
+        fused=True,
+    )
+    torch.cuda.reset_peak_memory_stats()
+
+    def step() -> torch.Tensor:
+        with torch.autocast("cuda", dtype=torch.bfloat16):
+            loss = loss_module(batch)
+        if not torch.isfinite(loss):
+            raise RuntimeError(f"non-finite probe loss: {loss.item()}")
+        loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+        optimizer.step()
+        optimizer.zero_grad(set_to_none=True)
+        return loss
+
+    started = time.time()
+    loss = step()
+    torch.cuda.synchronize()
+    compile_seconds = time.time() - started
+    timed_steps = int(args.timed_steps)
+    if timed_steps < 5:
+        raise ValueError("the registered probe requires at least five timed steps")
+    started = time.time()
+    for _ in range(timed_steps):
+        loss = step()
+    torch.cuda.synchronize()
+    timed_seconds = time.time() - started
+    timed_tokens = timed_steps * token_count
+    tokens_per_second = timed_tokens / timed_seconds
+    report = {
+        "status": "PASS",
+        "discarded_probe": True,
+        "arm": args.arm,
+        "compile_mode": args.compile_mode,
+        "timed_steps": timed_steps,
+        "compile_step_seconds": compile_seconds,
+        "timed_seconds": timed_seconds,
+        "timed_tokens": timed_tokens,
+        "tokens_per_second": tokens_per_second,
+        "estimated_train_seconds": SPEC.train_tokens / tokens_per_second,
+        "loss": float(loss.detach()),
+        "peak_cuda_memory_bytes": int(torch.cuda.max_memory_allocated()),
+        "protocol_sha256": SPEC.fingerprint(),
+        "code_sha256": code_fingerprint(),
+        "data_manifest_sha256": sha256_file(args.data_manifest),
+        "runtime": runtime,
+    }
+    _write_json(output, report)
     print(json.dumps(report, indent=2, sort_keys=True))
     return report
 
@@ -456,6 +603,7 @@ def train_arm(args: argparse.Namespace) -> dict[str, Any]:
         "validation_sha256": manifest["validation"]["sha256"],
         "anchors_sha256": manifest["anchors"]["sha256"],
         "seed": SPEC.seed,
+        "model_tier": SPEC.model_tier,
         "parameter_count": parameter_count,
         "model_config": SPEC.model_config(),
         "training_inv_freq_sha256": inv_hash,
@@ -1110,8 +1258,8 @@ def summarize_records(
     lines.extend(
         [
             "",
-            "Single seed (42). This is a matched rebuttal diagnostic, not a "
-            "general performance claim.",
+            f"Single seed ({SPEC.seed}). This is a matched rebuttal "
+            "diagnostic, not a general performance claim.",
             "",
         ]
     )
@@ -1231,6 +1379,7 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
         "data_manifest_sha256": current_manifest_sha,
         "runtime": runtime,
         "seed": SPEC.seed,
+        "model_tier": SPEC.model_tier,
         "arms": list(selected_arms),
         "eval_lengths": list(SPEC.eval_lengths),
         "eval_length_definition": (
@@ -1242,8 +1391,8 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
         "records": records,
         "summary": summary,
         "claim_boundary": (
-            "single-seed matched diagnostic; FMRoPE is paper-faithful local "
-            "implementation; YaRN cell is inference-only"
+            f"single-seed ({SPEC.seed}) matched diagnostic; FMRoPE is "
+            "paper-faithful local implementation; YaRN cell is inference-only"
         ),
     }
     _write_json(output_dir / "results.json", payload)
@@ -1318,6 +1467,151 @@ def compare_results(args: argparse.Namespace) -> dict[str, Any]:
     return payload
 
 
+def aggregate_exact_range(args: argparse.Namespace) -> dict[str, Any]:
+    """Aggregate the registered exact-range contrast across training seeds."""
+    payloads = []
+    for path_arg in args.inputs:
+        path = Path(path_arg).resolve()
+        payload = json.loads(path.read_text())
+        payloads.append((path, payload))
+
+    expected_seeds = (42, 137, 256)
+    seeds = tuple(sorted(int(payload.get("seed", -1)) for _, payload in payloads))
+    if seeds != expected_seeds:
+        raise ValueError(
+            f"exact-range aggregate requires seeds {expected_seeds}, got {seeds}"
+        )
+    if len({payload["data_manifest_sha256"] for _, payload in payloads}) != 1:
+        raise ValueError("multi-seed inputs use different data manifests")
+    if len({tuple(payload["eval_lengths"]) for _, payload in payloads}) != 1:
+        raise ValueError("multi-seed inputs use different evaluation lengths")
+
+    comparison_names = (
+        "anchored_cosh_fixed_minus_fmrope_fixed",
+        "anchored_cosh_target_minus_fmrope_target",
+    )
+    by_seed: dict[int, dict[str, Any]] = {}
+    for _, payload in payloads:
+        seed = int(payload["seed"])
+        paired = payload.get("summary", {}).get("paired", {})
+        missing = [name for name in comparison_names if name not in paired]
+        if missing:
+            raise ValueError(
+                f"seed {seed} is missing exact-range comparisons: {missing}"
+            )
+        by_seed[seed] = {name: paired[name] for name in comparison_names}
+
+    # 95% two-sided Student-t critical value for three independent seeds.
+    t95_df2 = 4.302652729911275
+    aggregate: dict[str, Any] = {}
+    lengths = tuple(int(value) for value in payloads[0][1]["eval_lengths"])
+    for name in comparison_names:
+        aggregate[name] = {}
+        for length in lengths:
+            values = [
+                float(
+                    by_seed[seed][name][str(length)][
+                        "mean_left_minus_right_tail_nll"
+                    ]
+                )
+                for seed in expected_seeds
+            ]
+            mean = statistics.fmean(values)
+            stdev = statistics.stdev(values)
+            half_width = t95_df2 * stdev / math.sqrt(len(values))
+            aggregate[name][str(length)] = {
+                "seed_values": {
+                    str(seed): value
+                    for seed, value in zip(expected_seeds, values)
+                },
+                "mean_nll_difference": mean,
+                "stdev_across_seeds": stdev,
+                "paired_t_95_ci": [mean - half_width, mean + half_width],
+                "cosh_wins": sum(value < 0 for value in values),
+                "n_training_seeds": len(values),
+            }
+
+    fixed = aggregate["anchored_cosh_fixed_minus_fmrope_fixed"]
+    target = aggregate["anchored_cosh_target_minus_fmrope_target"]
+    ood_lengths = tuple(length for length in lengths if length > SPEC.train_length)
+    decision = (
+        "THREE_SEED_SHAPE_EFFECT_WITHOUT_TARGET_SYNERGY"
+        if all(fixed[str(length)]["cosh_wins"] == 3 for length in ood_lengths)
+        and all(target[str(length)]["cosh_wins"] == 0 for length in ood_lengths)
+        else "THREE_SEED_RESULT_MIXED"
+    )
+    output = {
+        "schema_version": 1,
+        "created_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+        "status": "PASS",
+        "decision": decision,
+        "three_seed_supporting": True,
+        "paper_claim": False,
+        "seeds": list(expected_seeds),
+        "eval_lengths": list(lengths),
+        "data_manifest_sha256": payloads[0][1]["data_manifest_sha256"],
+        "sources": [
+            {
+                "seed": int(payload["seed"]),
+                "sha256": sha256_file(path),
+            }
+            for path, payload in payloads
+        ],
+        "aggregate": aggregate,
+        "claim_boundary": (
+            "post-submission three-seed matched-range diagnostic; training "
+            "seeds are the independent units"
+        ),
+    }
+
+    labels = (
+        ("Fixed training range", comparison_names[0]),
+        ("Target-matched range", comparison_names[1]),
+    )
+    lines = [
+        "# Three-seed exact-range allocation result",
+        "",
+        "Cosh minus uniform FMRoPE tail NLL; negative favors Cosh.",
+        "",
+        "| condition | "
+        + " | ".join(f"L={length}" for length in lengths)
+        + " |",
+        "| --- | " + " | ".join("---:" for _ in lengths) + " |",
+    ]
+    for label, name in labels:
+        values = [
+            aggregate[name][str(length)]["mean_nll_difference"]
+            for length in lengths
+        ]
+        lines.append(
+            f"| {label}, 3-seed mean | "
+            + " | ".join(f"{value:+.4f}" for value in values)
+            + " |"
+        )
+    lines.extend(
+        [
+            "",
+            f"Decision: `{decision}`.",
+            "",
+            "Intervals in the JSON are paired t intervals across the three "
+            "independent training seeds; evaluation anchors are not treated "
+            "as independent seeds.",
+            "",
+        ]
+    )
+
+    output_dir = Path(args.output_dir).resolve()
+    if output_dir.exists() and any(output_dir.iterdir()):
+        raise FileExistsError(
+            f"refusing to overwrite non-empty output: {output_dir}"
+        )
+    output_dir.mkdir(parents=True, exist_ok=True)
+    _write_json(output_dir / "summary.json", output)
+    (output_dir / "REPORT.md").write_text("\n".join(lines))
+    print("\n".join(lines))
+    return output
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -1327,6 +1621,23 @@ def main() -> None:
     preflight_parser.add_argument("--full_hash_check", action="store_true")
     preflight_parser.add_argument(
         "--verify_full_initialization", action="store_true"
+    )
+    preflight_parser.add_argument("--arms", nargs="+", choices=ARMS)
+
+    probe_parser = subparsers.add_parser("probe-gpu")
+    probe_parser.add_argument("--arm", choices=ARMS, required=True)
+    probe_parser.add_argument("--data_manifest", type=Path, required=True)
+    probe_parser.add_argument("--work_dir", type=Path, required=True)
+    probe_parser.add_argument("--timed_steps", type=int, default=5)
+    probe_parser.add_argument(
+        "--compile_mode",
+        choices=(
+            "default",
+            "reduce-overhead",
+            "max-autotune",
+            "max-autotune-no-cudagraphs",
+        ),
+        default="default",
     )
 
     train_parser = subparsers.add_parser("train")
@@ -1343,7 +1654,7 @@ def main() -> None:
             "max-autotune",
             "max-autotune-no-cudagraphs",
         ),
-        default="max-autotune-no-cudagraphs",
+        default="default",
     )
     train_parser.add_argument("--no_compile", action="store_true")
     train_parser.add_argument("--full_hash_check", action="store_true")
@@ -1360,6 +1671,12 @@ def main() -> None:
     compare_parser.add_argument("--new_results", type=Path, required=True)
     compare_parser.add_argument("--output_dir", type=Path, required=True)
 
+    aggregate_parser = subparsers.add_parser("aggregate-exact-range")
+    aggregate_parser.add_argument(
+        "--inputs", type=Path, nargs=3, required=True
+    )
+    aggregate_parser.add_argument("--output_dir", type=Path, required=True)
+
     args = parser.parse_args()
     if args.command == "preflight":
         run_preflight(
@@ -1368,13 +1685,18 @@ def main() -> None:
             verify_full_initialization=bool(
                 args.verify_full_initialization
             ),
+            arms=tuple(args.arms or ARMS),
         )
+    elif args.command == "probe-gpu":
+        probe_gpu(args)
     elif args.command == "train":
         train_arm(args)
     elif args.command == "evaluate":
         evaluate(args)
     elif args.command == "compare":
         compare_results(args)
+    elif args.command == "aggregate-exact-range":
+        aggregate_exact_range(args)
     else:
         raise AssertionError(args.command)
 

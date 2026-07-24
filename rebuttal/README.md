@@ -24,8 +24,8 @@
 | [`pre_rebuttal/`](pre_rebuttal/README.md) | 真实 reviews 到来前的理论审计、风险清单、模拟审稿、旧实验方案和旧实现 | 历史参考 |
 
 根目录不再放单独的 rebuttal 策略文档。真实问题从
-`rebuttal_0723/00_REVIEWER_27BE_OFFICIAL_REVIEW.md` 和
-`rebuttal_0723/01_AC_METAREVIEW.md` 开始；历史材料只有在当前 concern
+`rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md` 开始，随后由
+`rebuttal_0723/01_REBUTTAL_PLAYBOOK.md` 路由精选证据与行动；历史材料只有在当前 concern
 明确触发时才回查。
 
 ## 当前执行原则
