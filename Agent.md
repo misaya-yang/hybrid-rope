@@ -15,9 +15,11 @@
 - 0723 宽实验计划对 `zWsa`、`Dz6s` 的描述不是仓库内原始 review。补齐原文
   和来源哈希前，不得称为 reviewer 原话或据此宣称“必须做”某个实验。
 - 尚未形成可发送的 author response。
-- 当前两个窄实验包只有 spec/code，仓库内没有训练结果：
-  - `rebuttal/rebuttal_0723/fmrope_125m_l256/`
-  - `rebuttal/rebuttal_0723/reviewer27be_shape_base/`
+- 当前数值结论入口是
+  `rebuttal/rebuttal_0723/EXPERIMENT_REPORT_20260724.md`；其中
+  shape/base/FMRoPE 结果已完成，但必须保留报告中的负面边界。
+- `rebuttal/rebuttal_0723/mla_scarcity_5090/` 只有冻结代码与本地测试，
+  尚无训练结果。
 - 外部服务器上可能存在的数据、preflight 或进程必须现场核验；本地代码存在、
   过去的口头状态或远端路径均不等于已完成证据。
 - 所有 7 月 23 日前材料已移入 `rebuttal/pre_rebuttal/`。它们是事实底稿和
@@ -28,10 +30,10 @@
 | Concern | 回答重点 | 当前边界 |
 | --- | --- | --- |
 | `R27bE.1` | 分开 exact surrogate、pure-tether choice、conditional small-\(\tau\) proxy 与 empirical deployment rule | 不再声称端到端理论闭环 |
-| `R27bE.2` | 如实列出模型规模、base 和架构覆盖；held-out base/`d_head` 可做定向补充 | 当前没有新的大模型结果 |
+| `R27bE.2` | 如实列出模型规模、base 和架构覆盖；held-out base/`d_head` 已有定向补充 | 当前没有新的大模型结果 |
 | `R27bE.3` | 纠正 submitted “DAPE” 的实际身份，并用 fixed-schedule controls 回答 shape 问题 | 旧行实际只是 shared learnable `inv_freq`，不能继续当 DAPE head-to-head |
-| `R27bE.4` | predicted/tuned \(\tau\) 与 matched non-cosh schedule | `reviewer27be_shape_base/shape_l128` 是直接协议，尚无结果 |
-| `R27bE.5` | held-out base=1M、`d_head=128`；大模型部分明确保持 open | `heldout_b1m_d128` 只回答前半问 |
+| `R27bE.4` | predicted/tuned \(\tau\) 与 matched non-cosh schedule | 三 seed 结果支持 shape 轴，但不支持 Cosh 唯一最优 |
+| `R27bE.5` | held-out base=1M、`d_head=128` 已回答；大模型部分明确保持 open | 前半问已完成，生产规模仍缺 |
 
 回答只围绕 reviewer 实际问题展开。不要因为仓库里有旧材料，就把 YaRN、
 RULER、LoRA、所有理论错误和所有 supporting 结果塞进每条回复。
@@ -177,6 +179,10 @@ simulated-review 路线均位于 `rebuttal/pre_rebuttal/`，默认不启动。
   preparation off GPU.
 - After launch, verify PID, first optimizer step, finite loss, speed,
   memory/utilization and ETA. Never launch another arm without permission.
+- Before launch record `df`/largest artifacts and enforce the experiment's
+  free-space floor. Delete full checkpoints only after matching evaluation
+  JSONs and hashes pass; retain raw metrics and cleanup receipts. Keep a shared
+  compile cache only until the registered suite is terminal.
 - Record execution metadata, but do not require irrelevant global equality.
   FP8/FP4, quantization, packing, sample order, labels or scientific batch
   changes create a new protocol.

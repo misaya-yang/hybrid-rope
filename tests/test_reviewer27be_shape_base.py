@@ -22,6 +22,7 @@ from rebuttal.rebuttal_0723.reviewer27be_shape_base.prepare import (
 )
 from rebuttal.rebuttal_0723.reviewer27be_shape_base.protocol import (
     SHAPE_CORE_ARMS,
+    SHAPE_REAL_ARMS,
     SHAPE_TAU_ARMS,
     ExperimentSpec,
     SPECS,
@@ -84,12 +85,28 @@ def test_shape_controls_match_registered_invariants() -> None:
         assert not torch.allclose(value, target, atol=1e-8, rtol=1e-8)
 
 
+def test_real_rope_shapes_match_native_span_and_deformation() -> None:
+    geo, _ = schedule_phi("shape_l128", "std_geo")
+    evq, _ = schedule_phi("shape_l128", "native_evq_span_rule")
+    target_rms = torch.sqrt(torch.mean((evq - geo).square()))
+    for arm in SHAPE_REAL_ARMS:
+        value, metadata = schedule_phi("shape_l128", arm)
+        assert value[0] == pytest.approx(float(geo[0]), abs=1e-14)
+        assert value[-1] == pytest.approx(float(geo[-1]), abs=1e-14)
+        achieved = torch.sqrt(torch.mean((value - geo).square()))
+        assert achieved == pytest.approx(float(target_rms), abs=1e-12)
+        assert metadata["grid"] == "native Std-RoPE endpoint/span matched"
+        assert torch.all(torch.diff(value) > 0)
+
+
 def test_tau_scan_and_seed_scope_are_separate() -> None:
     assert set(SHAPE_CORE_ARMS).issubset(arms_for_suite("shape_l128"))
     assert set(SHAPE_TAU_ARMS).issubset(arms_for_suite("shape_l128"))
     assert seeds_for_arm("shape_l128", "evq_tau4") == (42,)
     assert seeds_for_arm("shape_l128", "power_matched") == (42, 137, 256)
-    assert seeds_for_arm("shape_l128", "std_geo") == (42,)
+    assert seeds_for_arm("shape_l128", "std_geo") == (42, 137, 256)
+    for arm in SHAPE_REAL_ARMS:
+        assert seeds_for_arm("shape_l128", arm) == (42, 137, 256)
     assert seeds_for_arm("heldout_b1m_d128", "paper_geo") == (42, 137, 256)
 
 

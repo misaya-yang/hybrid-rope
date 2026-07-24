@@ -155,6 +155,24 @@ run_heldout() {
     --suite heldout_b1m_d128 --work_dir "${WORK_DIR}"
 }
 
+run_native_shapes() {
+  local arms=(
+    std_geo native_evq_span_rule native_exp_span_matched
+    exact_kernel_uniform_span_matched
+    attention_kernel_stdgeo42_span_matched
+  )
+  local arm seed
+  probe_suite shape_l128
+  for seed in 42 137 256; do
+    for arm in "${arms[@]}"; do
+      run_one shape_l128 "${arm}" "${seed}"
+    done
+  done
+  run_logged summarize_native_shapes \
+    "${PYTHON_BIN}" -m "${RUNNER}" summarize \
+    --suite shape_l128 --work_dir "${WORK_DIR}"
+}
+
 cd "${REPO_ROOT}"
 case "${MODE}" in
   preflight)
@@ -170,6 +188,11 @@ case "${MODE}" in
     preflight
     run_heldout
     ;;
+  native-shapes)
+    require_gpu
+    preflight
+    run_native_shapes
+    ;;
   all)
     require_gpu
     preflight
@@ -177,7 +200,7 @@ case "${MODE}" in
     run_heldout
     ;;
   *)
-    echo "usage: $0 {preflight|shape|heldout|all}" >&2
+    echo "usage: $0 {preflight|shape|heldout|native-shapes|all}" >&2
     exit 64
     ;;
 esac

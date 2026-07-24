@@ -80,6 +80,8 @@ def trainable_state_sha256(model: nn.Module) -> str:
 def code_fingerprint() -> str:
     paths = (
         PACKAGE_DIR / "protocol.py",
+        PACKAGE_DIR / "derive_real_rope_shapes.py",
+        PACKAGE_DIR / "real_rope_schedules.py",
         PACKAGE_DIR / "prepare.py",
         PACKAGE_DIR / "run_experiment.py",
         PACKAGE_DIR / "run_5090.sh",

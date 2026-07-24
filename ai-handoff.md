@@ -11,6 +11,29 @@ Temporal holdout checkpoint：`5bdec86`（`checkpoint: add temporal holdout eval
 
 本文件是后续 AI 的**第一入口和状态索引**。它只保存可提交的仓库级信息，不保存服务器地址、凭据、私有绝对路径或实时进程信息。
 
+## 0A. 2026-07-24 最新结果与下一实验
+
+- 当前完整实验结论入口：
+  `rebuttal/rebuttal_0723/EXPERIMENT_REPORT_20260724.md`。
+- native Std-RoPE / matched shape / attention-derived shape 的三 seed 结果已完成；
+  聚合 raw-backed JSON 为
+  `rebuttal/rebuttal_0723/native_attention_shape_l128_results_20260724.json`。
+  结果支持 allocation shape 轴，但明确不支持 Cosh 唯一最优。
+- 下一项 MLA scarcity 包位于
+  `rebuttal/rebuttal_0723/mla_scarcity_5090/`，目前只有冻结代码和本地测试，
+  没有训练结果。它固定 50.1M 参数、`d_rope=64`、`d_nope=0`，只把 active
+  frequency pairs 从 32 改为 8；inactive pair 使用零频率恒等旋转，避免
+  legacy `d_rope` 变化同时改变参数量和 key projection path。
+- seed 42 是 selection-only 六臂 gate；只有 PASS 才运行 seeds 43/88。
+  primary 是 raw tail NLL 的 range/shape decomposition；YaRN 仅为身份清楚的
+  secondary diagnostic。
+- 存储规则：训练低于 8 GiB free 直接拒绝；100M 权重立即剪除；200M/300M
+  只有在匹配 evaluation JSON 和 checkpoint hash 通过后才逐 run 删除。原始
+  JSON/JSONL、cleanup receipt、schedule sidecar 与终态前共享 compile cache
+  必须保留。当前实验服务器不可连接，未执行远端删除。
+- 本轮新鲜门禁：相关 MLA/shape/core 共 `165 passed`，`py_compile`、
+  `bash -n`、`git diff --check` 与新增内容泄漏扫描通过。尚未提交或推送。
+
 ## 0. 2026-07-13 151.9M / 500M single-seed 结果
 
 **性质：** RTX 5090 小模型机制诊断；不是 RTX Pro 6000 的 LLaMA/LoRA 轨道，也不是 Primary I 多 seed 复现。

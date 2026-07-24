@@ -18,16 +18,21 @@ from rebuttal.rebuttal_0723.geo_rope_contract import (
     build_training_inv_freq,
     frequency_receipt,
 )
+from rebuttal.rebuttal_0723.reviewer27be_shape_base.real_rope_schedules import (
+    DERIVATION_METRICS,
+    SCHEDULES as REAL_ROPE_SCHEDULES,
+    SOURCE as REAL_ROPE_SOURCE,
+)
 from scripts.lib.rope.schedules import evq_cosh_phi
 
 
 SEEDS = (42, 137, 256)
 TAU_GRID = (0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 5.656854249492381, 6.0, 7.0)
 
-# Seed 42 supplies the pre-registered tau scan.  The core shape arms are
-# repeated at three seeds.  Std-Geo is the requested small ablation; the main
-# paper-faithful comparison is Paper-Geo versus EVQ-Cosh on the same midpoint
-# quantizer.
+# Seed 42 supplies the pre-registered tau scan.  The core shape arms and the
+# native-endpoint Std-Geo reference are repeated at three seeds.  Paper-Geo
+# versus EVQ-Cosh remains the paper-lineage midpoint comparison; Std-Geo is the
+# standard-RoPE deployment reference.
 SHAPE_TAU_ARMS = (
     "paper_geo",
     "evq_tau1",
@@ -47,8 +52,19 @@ SHAPE_CORE_ARMS = (
     "exp_matched",
 )
 SHAPE_REFERENCE_ARMS = ("std_geo",)
+SHAPE_REAL_ARMS = (
+    "native_evq_span_rule",
+    "native_exp_span_matched",
+    "exact_kernel_uniform_span_matched",
+    "attention_kernel_stdgeo42_span_matched",
+)
 SHAPE_ARMS = tuple(
-    dict.fromkeys(SHAPE_REFERENCE_ARMS + SHAPE_TAU_ARMS + SHAPE_CORE_ARMS)
+    dict.fromkeys(
+        SHAPE_REFERENCE_ARMS
+        + SHAPE_TAU_ARMS
+        + SHAPE_CORE_ARMS
+        + SHAPE_REAL_ARMS
+    )
 )
 HELDOUT_ARMS = ("paper_geo", "evq_rule")
 
@@ -174,7 +190,11 @@ def arms_for_suite(suite: str) -> tuple[str, ...]:
 def seeds_for_arm(suite: str, arm: str) -> tuple[int, ...]:
     if suite == "heldout_b1m_d128":
         return SEEDS
-    if arm in SHAPE_CORE_ARMS:
+    if (
+        arm in SHAPE_CORE_ARMS
+        or arm in SHAPE_REFERENCE_ARMS
+        or arm in SHAPE_REAL_ARMS
+    ):
         return SEEDS
     return (42,)
 
@@ -276,6 +296,40 @@ def schedule_phi(
             "grid": "native endpoint u=k/K",
             "role": "small Std-Geo ablation",
             "method_identity": "Std-Geo",
+        }
+    if arm in SHAPE_REAL_ARMS:
+        if (
+            spec.head_dim != REAL_ROPE_SOURCE["head_dim"]
+            or spec.train_length != REAL_ROPE_SOURCE["train_length"]
+            or spec.rope_base != REAL_ROPE_SOURCE["base"]
+        ):
+            raise ValueError("frozen real-RoPE schedule contract mismatch")
+        phi = torch.tensor(REAL_ROPE_SCHEDULES[arm], dtype=dtype)
+        source = (
+            "closed-form native-grid EVQ rule"
+            if arm == "native_evq_span_rule"
+            else (
+                "deformation-matched exponential control"
+                if arm == "native_exp_span_matched"
+                else (
+                    "exact cosine-kernel collision optimization"
+                    if arm == "exact_kernel_uniform_span_matched"
+                    else "Std-RoPE seed-42 selection-attention prior"
+                )
+            )
+        )
+        return phi, {
+            "family": arm,
+            "grid": "native Std-RoPE endpoint/span matched",
+            "matched_to": "native_evq_span_rule",
+            "derivation": source,
+            "derivation_metrics": DERIVATION_METRICS[arm],
+            "attention_prior_sha256": REAL_ROPE_SOURCE[
+                "attention_prior_sha256"
+            ],
+            "selection_only": (
+                arm == "attention_kernel_stdgeo42_span_matched"
+            ),
         }
 
     tau = _arm_tau(arm, spec)
