@@ -31,6 +31,11 @@ Temporal holdout checkpoint：`5bdec86`（`checkpoint: add temporal holdout eval
   只有在匹配 evaluation JSON 和 checkpoint hash 通过后才逐 run 删除。原始
   JSON/JSONL、cleanup receipt、schedule sidecar 与终态前共享 compile cache
   必须保留。当前实验服务器不可连接，未执行远端删除。
+- RTX 5090 的已验证性能基线已记录到
+  `docs/overview/RTX5090_BLACKWELL_PROFILE.md`。后续训练默认复用
+  BF16、`torch.compile(default)`、Flash-only SDPA、fused AdamW、
+  `expandable_segments` 和持久 TorchInductor cache，但每个新 workload
+  仍须先做 discarded probe，不能照搬 batch size。
 - 本轮新鲜门禁：相关 MLA/shape/core 共 `165 passed`，`py_compile`、
   `bash -n`、`git diff --check` 与新增内容泄漏扫描通过。尚未提交或推送。
 

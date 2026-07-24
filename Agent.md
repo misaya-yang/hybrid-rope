@@ -183,6 +183,10 @@ simulated-review 路线均位于 `rebuttal/pre_rebuttal/`，默认不启动。
   free-space floor. Delete full checkpoints only after matching evaluation
   JSONs and hashes pass; retain raw metrics and cleanup receipts. Keep a shared
   compile cache only until the registered suite is terminal.
+- RTX 5090 后续训练默认先读
+  `docs/overview/RTX5090_BLACKWELL_PROFILE.md`：优先 BF16、
+  `torch.compile(default)`、fused AdamW、持久 Inductor cache 和
+  Flash-only SDPA；先丢弃式 probe，禁止静默退回 math attention。
 - Record execution metadata, but do not require irrelevant global equality.
   FP8/FP4, quantization, packing, sample order, labels or scientific batch
   changes create a new protocol.
