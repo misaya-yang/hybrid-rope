@@ -9,15 +9,15 @@ import pytest
 import torch
 import torch.nn.functional as F
 
-import rebuttal.rebuttal_0723.mla_scarcity_5090.run_experiment as run_module
-from rebuttal.rebuttal_0723.mla_scarcity_5090.analyze_schedules import (
+import rebuttal.rebuttal_0723.experiments.mla_scarcity_5090.run_experiment as run_module
+from rebuttal.rebuttal_0723.experiments.mla_scarcity_5090.analyze_schedules import (
     build_diagnostics,
 )
-from rebuttal.rebuttal_0723.mla_scarcity_5090.prepare import (
+from rebuttal.rebuttal_0723.experiments.mla_scarcity_5090.prepare import (
     choose_disjoint_anchor_endpoints,
     sha256_file,
 )
-from rebuttal.rebuttal_0723.mla_scarcity_5090.protocol import (
+from rebuttal.rebuttal_0723.experiments.mla_scarcity_5090.protocol import (
     ARMS,
     FREQUENCY_PAIRS,
     SEEDS,
@@ -26,7 +26,7 @@ from rebuttal.rebuttal_0723.mla_scarcity_5090.protocol import (
     schedule_phi,
     training_inv_freq,
 )
-from rebuttal.rebuttal_0723.mla_scarcity_5090.run_experiment import (
+from rebuttal.rebuttal_0723.experiments.mla_scarcity_5090.run_experiment import (
     _runtime_operator,
     build_model,
     checkpoint_storage_budget,

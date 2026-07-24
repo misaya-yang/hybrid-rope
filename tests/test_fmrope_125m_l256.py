@@ -15,14 +15,14 @@ from unittest import mock
 import numpy as np
 import torch
 
-from rebuttal.rebuttal_0723.fmrope_125m_l256.prepare import (
+from rebuttal.rebuttal_0723.experiments.fmrope_125m_l256.prepare import (
     choose_eval_anchors,
     download_verified_file,
     sha256_token_prefix,
     tokenize_batches_to_npy,
     token_prefix_bounds,
 )
-from rebuttal.rebuttal_0723.fmrope_125m_l256.protocol import (
+from rebuttal.rebuttal_0723.experiments.fmrope_125m_l256.protocol import (
     ARMS,
     ARM_CONDITIONS,
     SPEC,
@@ -31,7 +31,7 @@ from rebuttal.rebuttal_0723.fmrope_125m_l256.protocol import (
     runtime_frequency,
     training_inv_freq,
 )
-from rebuttal.rebuttal_0723.fmrope_125m_l256.run_experiment import (
+from rebuttal.rebuttal_0723.experiments.fmrope_125m_l256.run_experiment import (
     CausalLanguageModelLoss,
     FlatPrefixDataset,
     _load_checkpoint,
@@ -46,7 +46,7 @@ from rebuttal.rebuttal_0723.fmrope_125m_l256.run_experiment import (
     summarize_records,
     trainable_state_sha256,
 )
-from rebuttal.rebuttal_0723.geo_rope_contract import (
+from rebuttal.rebuttal_0723.experiments.geo_rope_contract import (
     EVQ_COSH,
     HISTORICAL_PAPER_GEO_SHA256_FLOAT32,
     PAPER_GEO,
@@ -195,7 +195,7 @@ class TestProtocol(unittest.TestCase):
         manifest = json.loads(
             (
                 Path(__file__).parents[1]
-                / "rebuttal/rebuttal_0723/FREQUENCY_DEFINITION_MANIFEST.json"
+                / "rebuttal/rebuttal_0723/theory_results/FREQUENCY_DEFINITION_MANIFEST.json"
             ).read_text()
         )
         schedules = {
@@ -295,7 +295,7 @@ class TestDataAndInitialization(unittest.TestCase):
                 )
 
             with mock.patch(
-                "rebuttal.rebuttal_0723.fmrope_125m_l256."
+                "rebuttal.rebuttal_0723.experiments.fmrope_125m_l256."
                 "run_experiment.build_model",
                 side_effect=wrong_constructor,
             ):

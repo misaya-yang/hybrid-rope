@@ -7,17 +7,19 @@ import unittest
 
 import torch
 
-from rebuttal.rebuttal_0723.fmrope_125m_l256_500m.protocol import (
+from rebuttal.rebuttal_0723.experiments.fmrope_125m_l256_500m.protocol import (
     ARMS,
     SPEC,
+    anchored_cosh_inv_freq,
     estimate_parameter_count,
     runtime_frequency,
     training_inv_freq,
 )
-from rebuttal.rebuttal_0723.fmrope_125m_l256_500m.run_experiment import (
+from rebuttal.rebuttal_0723.experiments.fmrope_125m_l256_500m.run_experiment import (
     meta_parameter_count,
+    summarize_records,
 )
-from rebuttal.rebuttal_0723.geo_rope_contract import (
+from rebuttal.rebuttal_0723.experiments.geo_rope_contract import (
     EVQ_COSH,
     PAPER_GEO,
     build_training_inv_freq,
@@ -76,6 +78,56 @@ class TestProtocol(unittest.TestCase):
             )
             self.assertEqual(scale, 1.0)
             self.assertEqual(meta["inference_base"], float(length))
+
+    def test_anchored_cosh_preserves_fmrope_range(self):
+        arm = "anchored_cosh_tau4_fmrope_range"
+        train = training_inv_freq(arm)
+        geo = std_geo_inv_freq(SPEC.head_dim, SPEC.fmrope_train_base)
+        self.assertEqual(float(train[0]), float(geo[0]))
+        self.assertEqual(float(train[-1]), float(geo[-1]))
+        self.assertFalse(torch.equal(train, geo))
+        self.assertTrue(torch.all(torch.diff(train) < 0))
+        for length in SPEC.eval_lengths:
+            target, scale, meta = runtime_frequency(
+                arm, "target_matched_range", length
+            )
+            expected = anchored_cosh_inv_freq(
+                SPEC.head_dim, float(length), SPEC.evq_tau
+            )
+            target_geo = std_geo_inv_freq(SPEC.head_dim, float(length))
+            self.assertTrue(torch.equal(target, expected))
+            self.assertEqual(float(target[0]), float(target_geo[0]))
+            self.assertEqual(float(target[-1]), float(target_geo[-1]))
+            self.assertEqual(scale, 1.0)
+            self.assertEqual(meta["inference_base"], float(length))
+        fixed, _, _ = runtime_frequency(
+            arm, "fixed_train_range", SPEC.train_length
+        )
+        target, _, _ = runtime_frequency(
+            arm, "target_matched_range", SPEC.train_length
+        )
+        self.assertTrue(torch.equal(fixed, target))
+
+    def test_single_arm_summary_does_not_require_old_checkpoints(self):
+        arm = "anchored_cosh_tau4_fmrope_range"
+        records = []
+        for condition in ("fixed_train_range", "target_matched_range"):
+            for length in SPEC.eval_lengths:
+                records.append(
+                    {
+                        "arm": arm,
+                        "condition": condition,
+                        "length": length,
+                        "anchor": 10_000,
+                        "full_nll": 4.0,
+                        "tail_nll": 4.0,
+                        "tail_target_sha256": "0" * 64,
+                    }
+                )
+        summary, markdown = summarize_records(records, arms=(arm,))
+        self.assertEqual(set(summary["aggregate"]), {arm})
+        self.assertFalse(summary["paired"])
+        self.assertIn("Range-anchored Cosh", markdown)
 
 
 if __name__ == "__main__":

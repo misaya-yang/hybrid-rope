@@ -20,10 +20,10 @@ try:
 except ModuleNotFoundError:  # CPU-only repository checks may omit torch.
     torch = None
 
-from rebuttal.rebuttal_0723.mla_yarn_operator_parity_5090 import (
+from rebuttal.rebuttal_0723.experiments.mla_yarn_operator_parity_5090 import (
     prepare,
 )
-from rebuttal.rebuttal_0723.mla_yarn_operator_parity_5090.protocol import (
+from rebuttal.rebuttal_0723.experiments.mla_yarn_operator_parity_5090.protocol import (
     BASE_TRAINING_PROTOCOL_SHA256,
     FREQUENCY_PAIRS,
     OPERATORS,
@@ -213,7 +213,7 @@ class TestFreshAnchors(unittest.TestCase):
 
 class TestArtifactStatus(unittest.TestCase):
     def test_status_moves_from_offline_to_ready_running_and_stop(self):
-        from rebuttal.rebuttal_0723.mla_yarn_operator_parity_5090.status import (
+        from rebuttal.rebuttal_0723.experiments.mla_yarn_operator_parity_5090.status import (
             build_status,
         )
 
@@ -259,7 +259,7 @@ class TestArtifactStatus(unittest.TestCase):
             self.assertTrue(stopped["terminal"])
 
     def test_stop_report_keeps_negative_decision_and_provenance(self):
-        from rebuttal.rebuttal_0723.mla_yarn_operator_parity_5090.report import (
+        from rebuttal.rebuttal_0723.experiments.mla_yarn_operator_parity_5090.report import (
             render_markdown,
         )
 
@@ -293,7 +293,7 @@ class TestArtifactStatus(unittest.TestCase):
 @unittest.skipUnless(torch is not None, "PyTorch is not installed")
 class TestRuntimeOperatorIdentity(unittest.TestCase):
     def test_anchor_effects_are_paired_and_retained(self):
-        from rebuttal.rebuttal_0723.mla_yarn_operator_parity_5090.run_experiment import (
+        from rebuttal.rebuttal_0723.experiments.mla_yarn_operator_parity_5090.run_experiment import (
             _anchor_effect_stats,
             _paired_tail_differences,
         )
@@ -347,7 +347,7 @@ class TestRuntimeOperatorIdentity(unittest.TestCase):
             _paired_tail_differences(native, evq, length=16)
 
     def test_batched_nll_preserves_independent_window_values(self):
-        from rebuttal.rebuttal_0723.mla_scarcity_5090.run_experiment import (
+        from rebuttal.rebuttal_0723.experiments.mla_scarcity_5090.run_experiment import (
             per_sequence_nll,
         )
 
@@ -373,10 +373,10 @@ class TestRuntimeOperatorIdentity(unittest.TestCase):
             )
 
     def test_native_checkpoint_has_one_ulp_official_output_parity(self):
-        from rebuttal.rebuttal_0723.mla_scarcity_5090.protocol import (
+        from rebuttal.rebuttal_0723.experiments.mla_scarcity_5090.protocol import (
             training_inv_freq,
         )
-        from rebuttal.rebuttal_0723.mla_yarn_operator_parity_5090.run_experiment import (
+        from rebuttal.rebuttal_0723.experiments.mla_yarn_operator_parity_5090.run_experiment import (
             runtime_operator,
         )
         from scripts.lib.rope.official_yarn import (
@@ -424,10 +424,10 @@ class TestRuntimeOperatorIdentity(unittest.TestCase):
                 )
 
     def test_arm_identity_is_not_inferred_from_close_values(self):
-        from rebuttal.rebuttal_0723.mla_scarcity_5090.protocol import (
+        from rebuttal.rebuttal_0723.experiments.mla_scarcity_5090.protocol import (
             training_inv_freq,
         )
-        from rebuttal.rebuttal_0723.mla_yarn_operator_parity_5090.run_experiment import (
+        from rebuttal.rebuttal_0723.experiments.mla_yarn_operator_parity_5090.run_experiment import (
             runtime_operator,
         )
 
@@ -498,7 +498,7 @@ class TestRuntimeOperatorIdentity(unittest.TestCase):
         return rows
 
     def test_gate_rejects_collapse_in_either_native_budget(self):
-        from rebuttal.rebuttal_0723.mla_yarn_operator_parity_5090 import (
+        from rebuttal.rebuttal_0723.experiments.mla_yarn_operator_parity_5090 import (
             run_experiment,
         )
 
@@ -541,7 +541,7 @@ class TestRuntimeOperatorIdentity(unittest.TestCase):
                         )
 
     def test_underlying_trainer_fails_closed_before_pass_gate(self):
-        from rebuttal.rebuttal_0723.mla_scarcity_5090.run_experiment import (
+        from rebuttal.rebuttal_0723.experiments.mla_scarcity_5090.run_experiment import (
             enforce_nested_operator_parity_phase,
         )
 
@@ -652,7 +652,7 @@ class TestRuntimeOperatorIdentity(unittest.TestCase):
         return rows
 
     def test_summary_requires_all_seeds_and_builds_claim_gate(self):
-        from rebuttal.rebuttal_0723.mla_yarn_operator_parity_5090 import (
+        from rebuttal.rebuttal_0723.experiments.mla_yarn_operator_parity_5090 import (
             run_experiment,
         )
 
@@ -692,7 +692,7 @@ class TestRuntimeOperatorIdentity(unittest.TestCase):
             )
             self.assertEqual(len(result["per_seed_primary"]), 3)
             self.assertEqual(len(result["aggregates"]), 8)
-            from rebuttal.rebuttal_0723.mla_yarn_operator_parity_5090.report import (
+            from rebuttal.rebuttal_0723.experiments.mla_yarn_operator_parity_5090.report import (
                 render_markdown,
             )
 

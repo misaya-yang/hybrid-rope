@@ -8,7 +8,7 @@ import unittest
 
 import torch
 
-from rebuttal.rebuttal_0723.fmrope_evq_combo_l256.protocol import (
+from rebuttal.rebuttal_0723.experiments.fmrope_evq_combo_l256.protocol import (
     ARMS,
     ARM_CONDITIONS,
     SPEC,
@@ -16,15 +16,15 @@ from rebuttal.rebuttal_0723.fmrope_evq_combo_l256.protocol import (
     runtime_frequency,
     training_inv_freq,
 )
-from rebuttal.rebuttal_0723.fmrope_evq_combo_l256.run_experiment import (
+from rebuttal.rebuttal_0723.experiments.fmrope_evq_combo_l256.run_experiment import (
     build_model,
     meta_parameter_count,
     trainable_state_sha256,
 )
-from rebuttal.rebuttal_0723.fmrope_125m_l256.run_experiment import (
+from rebuttal.rebuttal_0723.experiments.fmrope_125m_l256.run_experiment import (
     build_model as build_parent_model,
 )
-from rebuttal.rebuttal_0723.geo_rope_contract import (
+from rebuttal.rebuttal_0723.experiments.geo_rope_contract import (
     EVQ_COSH,
     build_training_inv_freq,
 )

@@ -9,9 +9,9 @@
 - Reviewer `27bE` 的正式 review 已逐字归档：评分 3、置信度 4。
 - AC metareview 已单独归档；其文本由作者提供，但当前工作区没有独立 URL 或
   payload hash，因此不能伪称已做外部来源校验。
-- 当前数值总入口为 `rebuttal_0723/EXPERIMENT_REPORT_20260724.md`；Phase16
+- 当前数值总入口为 `rebuttal_0723/theory_results/EXPERIMENT_REPORT_20260724.md`；Phase16
   99-run 的重新审计单独记录在
-  `rebuttal_0723/PHASE16_99RUN_RAW_REANALYSIS_20260724.md`。
+  `rebuttal_0723/theory_results/PHASE16_99RUN_RAW_REANALYSIS_20260724.md`。
 - 尚未形成可发送的 author response，也没有修改论文正文或主表数字。
 - 仓库内仍没有其他 reviewer 的逐字 source。0723 宽计划中对 `zWsa`、
   `Dz6s` 的概括不得当作 reviewer 原话。
@@ -40,5 +40,5 @@
 6. `rebuttal/` 整体不得直接打进 reviewer supplement；任何对外 artifact 仍需
    匿名化和 provenance gate。
 
-项目级操作边界见 [`Agent.md`](../Agent.md)，论文与 reviewer-safe 结果的事实
+项目级操作边界见 [`AGENTS.md`](../AGENTS.md)，论文与 reviewer-safe 结果的事实
 边界见 `docs/overview/RESULT_PROVENANCE_MANIFEST.md`。

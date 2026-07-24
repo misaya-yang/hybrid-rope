@@ -16,6 +16,7 @@
 | `THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` | ordinary-KL 与 transport proxy 的长推导 | 细节参考；若与 7/13、7/16 审计冲突，以后者为准 |
 | `rebuttal_playbook.md` | 回答结构、实验 gate、禁止措辞和 integrity disclosure 候选 | 它是 pre-review 快照，不再是“唯一操作入口” |
 | `REVIEWER_TRIAGE_PLAYBOOK.md` | stable-ID 和 evidence/boundary/action 字段模板 | 当前 concern IDs 以正式 review 文件为准 |
+| `CHANNEL_FREQUENCY_BINDING_TPIG_FUTURE_WORK_20260724.md` | signed phase utility、NoPE--RoPE gate 与 phase-only factorial 的后续机制假设 | 内部 EVQ-v2 备忘录；T-PIG 是新 operator，不进入当前 rebuttal |
 
 ## 只在 reviewer 明确触发时复用
 

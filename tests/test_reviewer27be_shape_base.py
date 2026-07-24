@@ -7,20 +7,20 @@ import numpy as np
 import pytest
 import torch
 
-import rebuttal.rebuttal_0723.reviewer27be_shape_base.prepare as prepare_module
-import rebuttal.rebuttal_0723.reviewer27be_shape_base.protocol as protocol_module
-import rebuttal.rebuttal_0723.reviewer27be_shape_base.run_experiment as run_module
-from rebuttal.rebuttal_0723.geo_rope_contract import (
+import rebuttal.rebuttal_0723.experiments.reviewer27be_shape_base.prepare as prepare_module
+import rebuttal.rebuttal_0723.experiments.reviewer27be_shape_base.protocol as protocol_module
+import rebuttal.rebuttal_0723.experiments.reviewer27be_shape_base.run_experiment as run_module
+from rebuttal.rebuttal_0723.experiments.geo_rope_contract import (
     HISTORICAL_PAPER_GEO_SHA256_FLOAT32,
     std_geo_inv_freq,
 )
-from rebuttal.rebuttal_0723.reviewer27be_shape_base.prepare import (
+from rebuttal.rebuttal_0723.experiments.reviewer27be_shape_base.prepare import (
     build_manifest,
     choose_disjoint_anchors,
     sha256_file,
     validate_manifest,
 )
-from rebuttal.rebuttal_0723.reviewer27be_shape_base.protocol import (
+from rebuttal.rebuttal_0723.experiments.reviewer27be_shape_base.protocol import (
     SHAPE_CORE_ARMS,
     SHAPE_REAL_ARMS,
     SHAPE_TAU_ARMS,
@@ -33,7 +33,7 @@ from rebuttal.rebuttal_0723.reviewer27be_shape_base.protocol import (
     seeds_for_arm,
     training_inv_freq,
 )
-from rebuttal.rebuttal_0723.reviewer27be_shape_base.run_experiment import (
+from rebuttal.rebuttal_0723.experiments.reviewer27be_shape_base.run_experiment import (
     _load_checkpoint,
     _model_inv_freq,
     _save_checkpoint,

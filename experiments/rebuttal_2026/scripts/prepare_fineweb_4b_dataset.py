@@ -249,7 +249,7 @@ def download_verified_parquet_shard(
     expected_size: int,
     modelscope_repo: str,
 ) -> dict[str, Any]:
-    """Download one dataset shard by the Agent.md ModelScope/aria2 strategy."""
+    """Download one dataset shard by the AGENTS.md ModelScope/aria2 strategy."""
     destination.parent.mkdir(parents=True, exist_ok=True)
     if destination.is_file():
         size = destination.stat().st_size

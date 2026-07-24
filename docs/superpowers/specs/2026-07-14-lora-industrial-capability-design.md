@@ -34,7 +34,7 @@ Authoritative inputs for this design are:
   paper-claim theory;
 - `rebuttal/pre_rebuttal/EVQ_8K_ONLY_CAPABILITY_TRANSFER_PLAN_20260713.md` for the detailed
   phase-observability audit;
-- `Agent.md` for model/data identity and paid-GPU safety.
+- `AGENTS.md` for model/data identity and paid-GPU safety.
 
 The completed LongAlpaca seed-42 experiment is a matched training-pipeline
 comparison on LLaMA-3-8B-Instruct. On a 2026 temporal holdout, EVQ+LoRA relative

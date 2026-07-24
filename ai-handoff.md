@@ -15,13 +15,13 @@ rebuttal 入口为 `rebuttal/rebuttal_0723/`，历史准备位于
 ## 0A. 2026-07-24 最新结果与下一实验
 
 - 当前完整实验结论入口：
-  `rebuttal/rebuttal_0723/EXPERIMENT_REPORT_20260724.md`。
+  `rebuttal/rebuttal_0723/theory_results/EXPERIMENT_REPORT_20260724.md`。
 - Reviewer 与 AC 权威入口分别为
   `rebuttal/rebuttal_0723/00_REVIEWER_27BE_OFFICIAL_REVIEW.md` 和
   `rebuttal/rebuttal_0723/01_AC_METAREVIEW.md`。AC 文本由作者提供，当前
   没有独立 URL/hash。
 - Phase16 本机 99-run raw 已重新核对：
-  `rebuttal/rebuttal_0723/PHASE16_99RUN_RAW_REANALYSIS_20260724.md`。
+  `rebuttal/rebuttal_0723/theory_results/PHASE16_99RUN_RAW_REANALYSIS_20260724.md`。
   Formula tau 对 midpoint-Geo 为 7/9 配置均值获胜，但对 pilot-selected
   neighbor 的 held-out 比较仅 3/9 获胜；只能称 fallible operating prior。
 - native Std-RoPE / matched shape / attention-derived shape 的三 seed 结果已完成；
@@ -29,7 +29,7 @@ rebuttal 入口为 `rebuttal/rebuttal_0723/`，历史准备位于
   `rebuttal/rebuttal_0723/native_attention_shape_l128_results_20260724.json`。
   结果支持 allocation shape 轴，但明确不支持 Cosh 唯一最优。
 - MLA scarcity 包位于
-  `rebuttal/rebuttal_0723/mla_scarcity_5090/`。50.1M 固定架构的 seed-42
+  `rebuttal/rebuttal_0723/experiments/mla_scarcity_5090/`。50.1M 固定架构的 seed-42
   六臂、selection/test 和 YaRN 诊断均已完成；汇总为
   `mla_scarcity_seed42_result_20260724.json`。
 - 原注册 gate 形式上 PASS，但 K=8/8K 的 range control 从 native 3.9915
@@ -54,11 +54,11 @@ rebuttal 入口为 `rebuttal/rebuttal_0723/`，历史准备位于
   `git diff --check`、聚合 JSON/原始结果数字 parity 与新增内容泄漏扫描通过。
   这些结果与验证记录已进入当前仓库历史。
 - 当前最直接对应 `R27bE.1/.4` 与 `AC.1/.3` 的候选是
-  `rebuttal/rebuttal_0723/ROPE_RANGE_SHAPE_MAPPING_THEORY_AND_5090_PLAN_20260724.md`：
+  `rebuttal/rebuttal_0723/theory_results/ROPE_RANGE_SHAPE_MAPPING_THEORY_AND_5090_PLAN_20260724.md`：
   matched range 下训练 Geo / Anchored-Cosh / Anchored-Exp 三臂，先跑 seed 42
   gate，再决定是否扩 seed；当前只有方案，尚无 runner/READY 或 GPU 结果。
 - 较早的
-  `rebuttal/rebuttal_0723/MLA_YARN_OPERATOR_PARITY_5090_PLAN.md` 及 runner
+  `rebuttal/rebuttal_0723/theory_results/MLA_YARN_OPERATOR_PARITY_5090_PLAN.md` 及 runner
   保留为 operator-parity 备选，但尚无 fresh anchors/READY，不应与上述
   range/shape 计划并行抢占 GPU。
 
@@ -93,8 +93,7 @@ rebuttal 入口为 `rebuttal/rebuttal_0723/`，历史准备位于
 1. `AGENTS.md`：科学主张、匿名性、编辑和 Git 硬规则。
 2. `ai-handoff.md`：当前状态、未提交工作和已知故障。
 3. `REPO_MAP.md`：目录职责、source of truth 和禁止混用的层级。
-4. `Agent.md`：当前 reviewer、实验授权与 GPU 硬边界。
-5. `rebuttal/README.md`：当前/历史两层目录分流。
+4. `rebuttal/README.md`：当前/历史两层目录分流。
 6. `rebuttal/rebuttal_0723/README.md`：当前真实审稿周期的唯一操作入口。
 7. `rebuttal/rebuttal_0723/00_REVIEWER_27BE_OFFICIAL_REVIEW.md`：Reviewer 27bE 原文。
 8. `rebuttal/rebuttal_0723/01_AC_METAREVIEW.md`：AC 原文与来源边界。
@@ -103,8 +102,8 @@ rebuttal 入口为 `rebuttal/rebuttal_0723/`，历史准备位于
 
 如果这些材料冲突，优先级是：
 
-`AGENTS.md` → `Agent.md` → 正式 review → 最新 provenance / theory audit →
-paper 当前源码 → pre-rebuttal 历史报告。
+`AGENTS.md` → rebuttal principles → 正式 review → 最新 provenance / theory
+audit → paper 当前源码 → pre-rebuttal 历史报告。
 
 ## 2. 项目身份与不可漂移的主张
 
