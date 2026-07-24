@@ -2,31 +2,49 @@
 
 最后更新：2026-07-24
 
-状态：`official_review_received / triage_only / no_response_yet`
+状态：`official_review_received / ac_metareview_received / triage_only / no_response_yet`
 
 本目录是当前 rebuttal 的唯一操作入口。先固定 reviewer 实际问了什么，再决定
 是否使用历史分析或新实验；不得反过来从已有材料拼一个泛化答辩。
+
+## 0. 核心索引
+
+| 文件 | 作用 | 权威边界 |
+| --- | --- | --- |
+| `00_REVIEWER_27BE_OFFICIAL_REVIEW.md` | Reviewer 27bE 原文与 `R27bE.1`–`R27bE.5` | 带 OpenReview revision URL 与 source payload hash |
+| `01_AC_METAREVIEW.md` | AC 原文与 `AC.1`–`AC.4` | 作者提供文本；当前无独立 URL/hash |
+| `EXPERIMENT_REPORT_20260724.md` | 0723–0724 数值结果总入口 | 所有正负结果必须连同各节 claim boundary 使用 |
+| `PHASE16_99RUN_RAW_REANALYSIS_20260724.md` | 99-run raw 的共同 metric 重算 | 支持 fallible prior；不支持 near-optimal scaling law |
+| `ROPE_RANGE_SHAPE_MAPPING_THEORY_AND_5090_PLAN_20260724.md` | range/shape 可识别性与 matched-range 三臂计划 | 新实验尚未运行 |
+| `MLA_YARN_OPERATOR_PARITY_5090_PLAN.md` | MLA operator-parity 后续设计 | 尚无 fresh anchors/READY，不是 GPU 启动授权 |
+| `FREQUENCY_DEFINITION_MANIFEST.json` / `geo_rope_contract.py` | Paper-Geo、Std-Geo 与 EVQ 频率身份及 guard | 实现身份，不是实验结果 |
 
 ## 1. 当前证据权限
 
 1. `00_REVIEWER_27BE_OFFICIAL_REVIEW.md` 是仓库内目前唯一逐字、带来源哈希的
    正式 review，稳定 ID 为 `R27bE.1`–`R27bE.5`。
-2. `EXPERIMENT_REPORT_20260724.md` 是当前数值结论入口；FMRoPE、500M
+2. `01_AC_METAREVIEW.md` 是当前 AC 权威入口，但其 source URL/hash 尚未
+   独立核验，不能与 Reviewer 27bE 的 provenance 等同。
+3. `EXPERIMENT_REPORT_20260724.md` 是当前数值结论入口；FMRoPE、500M
    undertraining、held-out base/head、native-Geo 与 real-shape 结果必须连同
    各节 claim boundary 使用。native/real-shape 聚合原始结果另存为
    `native_attention_shape_l128_results_20260724.json`。
-3. `mla_scarcity_5090/` 的 seed-42 六臂、selection/test 与 YaRN 诊断已完成。
+4. `PHASE16_99RUN_RAW_REANALYSIS_20260724.md` 已从本机 99-run raw 重算共同
+   PPL metric：formula tau 对 midpoint-Geo 为 7/9 配置均值获胜，但对
+   pilot-selected neighbor 的 held-out 比较仅 3/9 获胜。不得恢复
+   `near-optimal across the grid`。
+5. `mla_scarcity_5090/` 的 seed-42 六臂、selection/test 与 YaRN 诊断已完成。
    注册 shape gate 虽为 PASS，但 K=8/8K 的正 interaction 来自 range control
    崩坏；raw EVQ 仍比 native 差 0.6522 NLL。因此终止多 seed 扩展，不能写成
    practical scarce-channel advantage。
-4. `MLA_YARN_OPERATOR_PARITY_5090_PLAN.md` 是针对上述结果的新 2×2 设计：
+6. `MLA_YARN_OPERATOR_PARITY_5090_PLAN.md` 是针对上述结果的新 2×2 设计：
    native/EVQ 共用同一 YaRN index mask 与 `mscale`。离线 runner、门控与测试
    已完成，但目标服务器尚无 fresh anchors/READY；CPU preflight 通过前不得
    启动 GPU。
-5. `EVQ_Cosh_NeurIPS2026_Rebuttal_Experiment_Design.md` 是宽方案库，不是运行
+7. `EVQ_Cosh_NeurIPS2026_Rebuttal_Experiment_Design.md` 是宽方案库，不是运行
    授权。它假设 96GB RTX Pro 6000，并把 1.5B/4B-token/RULER 设为 P0；这些
    假设与当前 5090 路线和 response-only 原则不一致。
-6. `../pre_rebuttal/` 只提供事实底稿、推导和历史负结果。若与正式 review 或
+8. `../pre_rebuttal/` 只提供事实底稿、推导和历史负结果。若与正式 review、AC 或
    更新后的实验 artifact 冲突，不得覆盖后者。
 
 0723 宽计划中提到的 `zWsa`、`Dz6s` 原始 review 当前不在仓库。补齐逐字来源
@@ -47,13 +65,25 @@
 | 包 | 直接问题 | 仓库状态 | 允许的结论 |
 | --- | --- | --- | --- |
 | `fmrope_125m_l256/` | FMRoPE 的 train/inference base retarget 是否解释 EVQ 效果 | 结果已汇总；FMRoPE/YaRN range scaling 明显强于 raw schedules | 方法级小模型诊断；不能称 EVQ 替代 range scaling |
+| `fmrope_125m_l256_500m/` | 增加训练 token 是否修复 100M undertraining | 500M 路线与报告已登记 | 只能解释该小模型训练预算 |
+| `fmrope_evq_combo_l256/` | EVQ 与 target-aware FMR range 的组合 | 已完成并写入总报告 | 现有组合不支持协同或性能优越性 |
 | `reviewer27be_shape_base/` | Paper-Geo/EVQ、tau、matched shape、held-out base/head 与 native Std-RoPE | 三 seed 结果已汇总；native/real-shape 聚合 JSON 已跟踪 | 回答 shape/base 归因，同时证明 Cosh 不唯一最优 |
-| `mla_scarcity_5090/` | 稀缺 active frequency budget 下 shape gain 是否超过 range gain | seed-42 六臂与独立 test 已完成；不扩 seed | raw practical claim 未通过；YaRN-derived K=8 长外推趋势仅作 single-seed/operator-qualified supporting diagnostic |
+| `mla_scarcity_5090/` + `mla_scarcity_seed42_result_20260724.json` | 稀缺 active frequency budget 下 shape gain 是否超过 range gain | seed-42 六臂与独立 test 已完成；不扩 seed | raw practical claim 未通过；YaRN-derived K=8 长外推趋势仅作 single-seed/operator-qualified supporting diagnostic |
+| `mla_yarn_operator_parity_5090/` | native/EVQ 共用 YaRN mask/mscale 的 operator parity | runner 已准备；没有 fresh anchors/READY | 仅是备选执行包，不是结果 |
 | `../../experiments/rebuttal_2026/sft_distillation/` | 为 Paper-Geo/EVQ 生成完全相同的通用短上下文能力 SFT 数据 | code + offline dry-run present；API audit not yet run | 先 100 条人工门禁，再 3000/400/400 pilot；不使用或模仿 RULER |
 
 这些从零训练包都使用全参数训练，使频率表从 step 1 参与 attention；它们没有
 把 8B 预训练模型能否被短 LoRA 重写混入频率分配比较。反过来，它们也不能回答
 生产规模模型是否迁移。
+
+## 3A. AC 映射
+
+| ID | 核心问题 | 当前证据 | 仍缺什么 |
+| --- | --- | --- | --- |
+| `AC.1` | 相对 FMRoPE/dead-frequency 的新颖性 | FMRoPE 小模型对照已完成，并暴露 raw EVQ 的 range/shape 混合 | matched-range shape 结果与准确 related-work positioning |
+| `AC.2` | 规模、benchmark 与下游不足 | 当前仍以小模型机制诊断为主；8B LoRA 未形成能力提升 | 更强 benchmark 或更大模型的受控证据 |
+| `AC.3` | surrogate/cosh/operating rule 未闭环 | pre-rebuttal 理论审计和 Phase16 重算已收窄 claim | Geo/Cosh/Exp matched-range 归因 |
+| `AC.4` | 只有 score-changing 证据才可能改变推荐 | 当前负结果和边界已完整保留 | 在预算内先跑 seed-42 gate，再决定是否扩展 |
 
 ## 4. 回答与披露边界
 
@@ -79,13 +109,15 @@
 
 ## 5. 下一步顺序
 
-1. 补齐其余正式 reviews 的逐字文件和来源哈希；未补齐前不做“全 reviewer”
+1. 先围绕 `AC.1/.3` 完成 matched-range
+   `Geo / Anchored-Cosh / Anchored-Exp` seed-42 gate；不再追加 raw-tau sweep。
+2. 补齐其余正式 reviews 的逐字文件和来源哈希；未补齐前不做“全 reviewer”
    优先级判断。
-2. 先写 `R27bE.1/.3/.4` 的短回答骨架，明确 correction、existing evidence、
+3. 先写 `R27bE.1/.3/.4` 的短回答骨架，明确 correction、existing evidence、
    remaining limitation。
-3. MLA scarcity 已终止：不得因原注册 gate 的形式 PASS 重启 seed 43/88；
+4. MLA scarcity 已终止：不得因原注册 gate 的形式 PASS 重启 seed 43/88；
    实际 native-advantage 门禁失败，详见实验报告第 8 节。
-4. 新结果先做 raw artifact/provenance 审核，再决定是否进入 response；现有
+5. 新结果先做 raw artifact/provenance 审核，再决定是否进入 response；现有
    shape/base 结果也必须保持报告中的负面边界。
-5. 不自动启动 1.5B/4B-token/RULER campaign；只有原始 reviewer 文本与预算
+6. 不自动启动 1.5B/4B-token/RULER campaign；只有原始 reviewer/AC 文本与预算
    共同证明其 score-changing 价值时重新立项。

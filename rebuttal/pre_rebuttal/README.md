@@ -26,6 +26,7 @@
 | `LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md` | 揭示 LongAlign/LongAlpaca 跨协议比较无因果性 | 不能用旧 contrast 证明 EVQ |
 | `LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` | matched-training-pipeline 的 temporal NLL 信号 | native-Geo 与 midpoint-EVQ 非同 quantizer；只证明 NLL，不证明能力 |
 | `EVQ_8K_ONLY_CAPABILITY_TRANSFER_PLAN_20260713.md` | phase observability、representation/routing/readout 的机制假设 | 后续 registered QA 已给出负结果；不得继续作为默认最高优先级 |
+| `seed42_lora_eval_20260713/REPORT.md` | 8B LongAlpaca LoRA 的 temporal NLL、RULER-style 与 official-YaRN pilot 汇总 | single-seed supporting；raw 仍本地 ignored，不能把 PPL 改善写成检索能力 |
 | `REBUTTAL_VIABILITY_AND_VENUE_PLAN_20260713.md` | 诚信披露和 venue 决策背景 | 不是 reviewer-facing 文本，也不是当前政策的自动替代品 |
 | `evq_seed42_retrieval_repair/` | evaluator、mask、provenance 和 fail-closed 组件 | 旧 8B repair 路线，不是当前获批实验 |
 | `frequency_adaptation_8b/` | 连续迁移、E16 训练与诊断组件 | 过度混合训练体制和频率效应，当前不启动 |
@@ -45,6 +46,7 @@
 | `REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md` | 宽攻击面索引；内容过多且部分已过时，不得恢复为当前 action board |
 | `simulated_reviews/` | 内部压力测试，不是真实 reviewer 意见 |
 | `raw_sources/` | 历史本地输入控制；`*_verbatim.md` 保持 ignored，不提交、不打包 |
+| `seed42_lora_eval_20260713/raw/` | 从旧根级 `07 - rebuttal/` 迁入的本地运行日志与 metadata；保持 ignored |
 
 ## 已失效的旧结论
 

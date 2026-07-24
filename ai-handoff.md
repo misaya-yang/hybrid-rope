@@ -5,8 +5,9 @@
 仓库整理 checkpoint：`1b97fdc`（`handoff: consolidate repository and rebuttal index [01]`）
 Temporal holdout checkpoint：`5bdec86`（`checkpoint: add temporal holdout evaluation`）
 整理前实验基线：`805878f`（`prepare exact FineWeb 3x1B tensors`）
-状态：Reviewer 27bE 正式 review 已归档；当前 rebuttal 入口已迁移到
-`rebuttal/rebuttal_0723/`，历史准备位于 `rebuttal/pre_rebuttal/`。
+状态：Reviewer 27bE 正式 review 与 AC metareview 已分文件归档；当前
+rebuttal 入口为 `rebuttal/rebuttal_0723/`，历史准备位于
+`rebuttal/pre_rebuttal/`。
 151.9M/500M single-seed 机制诊断仍是 supporting evidence；**论文指标与主表数字未改**。
 
 本文件是后续 AI 的**第一入口和状态索引**。它只保存可提交的仓库级信息，不保存服务器地址、凭据、私有绝对路径或实时进程信息。
@@ -15,6 +16,14 @@ Temporal holdout checkpoint：`5bdec86`（`checkpoint: add temporal holdout eval
 
 - 当前完整实验结论入口：
   `rebuttal/rebuttal_0723/EXPERIMENT_REPORT_20260724.md`。
+- Reviewer 与 AC 权威入口分别为
+  `rebuttal/rebuttal_0723/00_REVIEWER_27BE_OFFICIAL_REVIEW.md` 和
+  `rebuttal/rebuttal_0723/01_AC_METAREVIEW.md`。AC 文本由作者提供，当前
+  没有独立 URL/hash。
+- Phase16 本机 99-run raw 已重新核对：
+  `rebuttal/rebuttal_0723/PHASE16_99RUN_RAW_REANALYSIS_20260724.md`。
+  Formula tau 对 midpoint-Geo 为 7/9 配置均值获胜，但对 pilot-selected
+  neighbor 的 held-out 比较仅 3/9 获胜；只能称 fallible operating prior。
 - native Std-RoPE / matched shape / attention-derived shape 的三 seed 结果已完成；
   聚合 raw-backed JSON 为
   `rebuttal/rebuttal_0723/native_attention_shape_l128_results_20260724.json`。
@@ -43,17 +52,15 @@ Temporal holdout checkpoint：`5bdec86`（`checkpoint: add temporal holdout eval
   仍须先做 discarded probe，不能照搬 batch size。
 - 本轮 MLA 包服务器测试为 `16 passed`；本地 `py_compile`、`bash -n`、
   `git diff --check`、聚合 JSON/原始结果数字 parity 与新增内容泄漏扫描通过。
-  尚未提交或推送。
-- 下一候选实验已收敛到
-  `rebuttal/rebuttal_0723/MLA_YARN_OPERATOR_PARITY_5090_PLAN.md`：K=8/K=32
-  × native/EVQ 四训练臂，共用同一 official-index correction mask 与同一
-  `mscale`，隔离真正的 substrate×range interaction。离线 protocol、
-  fresh-anchor generator、双 READY、fail-closed seed/test 门、seed-42 gate、
-  三 seed summary、cleanup、低频 sleep monitor、PASS/STOP 自动报告和单一
-  launcher 已完成；最终 summary 直接保留 paired-anchor effects，并将 seed
-  CI 与 practical gate 分开；本地相关 `44 passed`。
-  目标服务器尚未生成 fresh anchors/READY，也没有启动 GPU，当前仍不是
-  启动授权。
+  这些结果与验证记录已进入当前仓库历史。
+- 当前最直接对应 `R27bE.1/.4` 与 `AC.1/.3` 的候选是
+  `rebuttal/rebuttal_0723/ROPE_RANGE_SHAPE_MAPPING_THEORY_AND_5090_PLAN_20260724.md`：
+  matched range 下训练 Geo / Anchored-Cosh / Anchored-Exp 三臂，先跑 seed 42
+  gate，再决定是否扩 seed；当前只有方案，尚无 runner/READY 或 GPU 结果。
+- 较早的
+  `rebuttal/rebuttal_0723/MLA_YARN_OPERATOR_PARITY_5090_PLAN.md` 及 runner
+  保留为 operator-parity 备选，但尚无 fresh anchors/READY，不应与上述
+  range/shape 计划并行抢占 GPU。
 
 ## 0. 2026-07-13 151.9M / 500M single-seed 结果
 
@@ -89,9 +96,10 @@ Temporal holdout checkpoint：`5bdec86`（`checkpoint: add temporal holdout eval
 4. `Agent.md`：当前 reviewer、实验授权与 GPU 硬边界。
 5. `rebuttal/README.md`：当前/历史两层目录分流。
 6. `rebuttal/rebuttal_0723/README.md`：当前真实审稿周期的唯一操作入口。
-7. `rebuttal/rebuttal_0723/00_REVIEWER_27BE_OFFICIAL_REVIEW.md`：当前唯一逐字正式 review。
-8. `docs/overview/RESULT_PROVENANCE_MANIFEST.md`：实验数字与 artifact provenance 的最高权威。
-9. `paper/README.md`：论文源码与唯一最终 PDF 的边界。
+7. `rebuttal/rebuttal_0723/00_REVIEWER_27BE_OFFICIAL_REVIEW.md`：Reviewer 27bE 原文。
+8. `rebuttal/rebuttal_0723/01_AC_METAREVIEW.md`：AC 原文与来源边界。
+9. `docs/overview/RESULT_PROVENANCE_MANIFEST.md`：实验数字与 artifact provenance 的最高权威。
+10. `paper/README.md`：论文源码与唯一最终 PDF 的边界。
 
 如果这些材料冲突，优先级是：
 
@@ -123,7 +131,7 @@ EVQ-Cosh 的窄主张是：RoPE 的有限频率表也是 finite spectral budget�
 | Primary I：EVQ × fixed-scale YaRN | `data/curated/primary1_evq_yarn_10pct_raw.json`; provenance manifest M1 | 454M、3 seeds、teacher-forced NLL-gap PK；不是 tuned-YaRN dominance |
 | Primary II：PE-dominant diagnostic | `data/curated/fig3_extreme_128.json`; provenance manifest M2 | Geo/DAPE-style/EVQ 保留 seed 42；不得升级为完整 3-seed learned-PE dominance |
 | Primary III：MLA scarce-channel stress test | `data/curated/eval_3seeds_full_results.json`; `table18_mla_3seed_aggregate.json` | 3 seeds；`d_eff` 是 stated operating convention，不是 theorem |
-| 99-run basin | `data/curated/phase16_99run_manifest.csv` | empirical basin/rank support，不证明 ordinary KL 或 global optimality |
+| 99-run basin | `data/curated/phase16_99run_manifest.csv`; current raw reanalysis | Formula-vs-Geo 7/9，但 held-out neighbor 仅 3/9；不证明 near-optimality、ordinary KL 或 global optimum |
 | 论文提交件 | `paper/main.pdf` | 唯一根级 paper PDF；41 页；不得用历史 PDF 覆盖 |
 
 `data/curated/` 的每个文件都已跟踪；完整用途和 SHA256 以 `docs/overview/RESULT_PROVENANCE_MANIFEST.md` 为准。
@@ -134,6 +142,7 @@ EVQ-Cosh 的窄主张是：RoPE 的有限频率表也是 finite spectral budget�
 - Response package：`needs_author_input`。
 - Mode：`post-review / triage-only / response-only`。
 - Reviewer 27bE 的评分 3、置信度 4 review 已逐字归档；仓库内尚无其他 reviewer 的逐字 source。
+- AC metareview 已按作者提供文本单独归档；当前缺独立 source URL/hash。
 - 当前只围绕 `R27bE.1`–`R27bE.5` 组织回答；补齐其他 review 后再做跨 reviewer 排序。
 - `rebuttal/rebuttal_0723/README.md` 是统一策略入口；`pre_rebuttal/` 中的 playbook、ledger 与 theory/LoRA audits 只作历史事实底稿。
 - 模拟审稿只能用于内部压力测试，不能当成 reviewer 原话。

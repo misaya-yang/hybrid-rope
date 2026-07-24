@@ -96,12 +96,12 @@ unless the user explicitly asks for a new branch audit. `main` and
 `origin/main` already contain the current audit stack; the March backup branch
 is an artifact source, not the primary working branch.
 
-Local audit workspaces such as `07 - rebuttal/` and
+Local raw evidence such as
+`rebuttal/pre_rebuttal/seed42_lora_eval_20260713/raw/` and the retired root
 `RESULT_PROVENANCE_MANIFEST.md` are intentionally ignored. They may contain
 copied server paths, internal reports, broad code mirrors, and recovery notes.
-Use them for local reasoning only. Do not commit or package them directly; move
-only sanitized, reviewer-grade artifacts into tracked repository locations after
-the user explicitly asks.
+Use them for local reasoning only. Do not commit or package them directly;
+promote only sanitized, reviewer-grade artifacts after the user explicitly asks.
 
 For rebuttal-time reruns, do not preemptively rerun supporting experiments.
 The primary evidence is already bounded by the provenance manifest. Supporting

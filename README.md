@@ -83,10 +83,13 @@ paper/                      LaTeX source, figures, and tables
 └── refs/                   BibTeX references
 
 rebuttal/                   single internal rebuttal control room
-├── rebuttal_playbook.md    response-only strategy entry point
-├── REVIEWER_TRIAGE_PLAYBOOK.md  real-review mapping workflow
-├── REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md  deep question index
-└── README.md               status, authority and security boundary
+├── README.md               current/archive routing index
+├── rebuttal_0723/          official review, AC metareview, current reports and runners
+│   ├── README.md           current-cycle evidence and action index
+│   ├── 00_REVIEWER_27BE_OFFICIAL_REVIEW.md
+│   └── 01_AC_METAREVIEW.md
+└── pre_rebuttal/           historical audits, plans, simulations and supporting evidence
+    └── README.md           archive/reuse index
 
 data/
 ├── curated/                tracked reviewer-safe result artifacts

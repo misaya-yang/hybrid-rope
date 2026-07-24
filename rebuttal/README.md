@@ -6,27 +6,27 @@
 
 ## 当前状态
 
-- 已收到并逐字归档 Reviewer `27bE` 的正式 review：评分 3、置信度 4。
-- 仓库内目前只有这一份可逐字核验的正式 review。0723 实验计划中对
-  `zWsa`、`Dz6s` 的概括不是原始 review source，补齐原文前不得当作 reviewer
-  原话。
-- 尚未形成可发送的 author response。
-- `rebuttal_0723/` 内两个实验包目前只有协议和代码；仓库内没有训练结果或
-  reviewer-grade result artifact。
-- 当前实验协议已把含混的 `Geo` 拆成 `Std-Geo` 与 `Paper-Geo`，主比较固定
-  为 `Paper-Geo vs EVQ-Cosh`，并修复 checkpoint `inv_freq` 持久化/加载
-  保护。没有修改论文正文或任何实验数字。
+- Reviewer `27bE` 的正式 review 已逐字归档：评分 3、置信度 4。
+- AC metareview 已单独归档；其文本由作者提供，但当前工作区没有独立 URL 或
+  payload hash，因此不能伪称已做外部来源校验。
+- 当前数值总入口为 `rebuttal_0723/EXPERIMENT_REPORT_20260724.md`；Phase16
+  99-run 的重新审计单独记录在
+  `rebuttal_0723/PHASE16_99RUN_RAW_REANALYSIS_20260724.md`。
+- 尚未形成可发送的 author response，也没有修改论文正文或主表数字。
+- 仓库内仍没有其他 reviewer 的逐字 source。0723 宽计划中对 `zWsa`、
+  `Dz6s` 的概括不得当作 reviewer 原话。
 
 ## 目录
 
 | 路径 | 作用 | 权限 |
 | --- | --- | --- |
-| [`rebuttal_0723/`](rebuttal_0723/README.md) | 当前真实审稿周期的唯一入口：原始 review、concern mapping、获批实验及结果状态 | 当前 |
+| [`rebuttal_0723/`](rebuttal_0723/README.md) | 当前真实审稿周期的唯一入口：review、AC、concern mapping、实验与结果状态 | 当前 |
 | [`pre_rebuttal/`](pre_rebuttal/README.md) | 真实 reviews 到来前的理论审计、风险清单、模拟审稿、旧实验方案和旧实现 | 历史参考 |
 
 根目录不再放单独的 rebuttal 策略文档。真实问题从
-`rebuttal_0723/00_REVIEWER_27BE_OFFICIAL_REVIEW.md` 开始；历史材料只有在
-当前 concern 明确触发时才回查。
+`rebuttal_0723/00_REVIEWER_27BE_OFFICIAL_REVIEW.md` 和
+`rebuttal_0723/01_AC_METAREVIEW.md` 开始；历史材料只有在当前 concern
+明确触发时才回查。
 
 ## 当前执行原则
 

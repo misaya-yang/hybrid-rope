@@ -32,7 +32,7 @@
 | 某个数字能否用于 rebuttal | `docs/overview/RESULT_PROVENANCE_MANIFEST.md` |
 | 核心实验代码在哪里 | `paper_experiments/MANIFEST.json` → canonical `scripts/` / `experiments/` |
 | EVQ-Cosh schedule 的实现 | `scripts/lib/rope/schedules.py` |
-| 当前真实 review 与行动状态 | `rebuttal/rebuttal_0723/README.md` → `00_REVIEWER_27BE_OFFICIAL_REVIEW.md` |
+| 当前真实 review、AC 与行动状态 | `rebuttal/rebuttal_0723/README.md` → `00_REVIEWER_27BE_OFFICIAL_REVIEW.md` + `01_AC_METAREVIEW.md` |
 | 理论批评的历史事实底稿 | `rebuttal/pre_rebuttal/THEORY_FREQUENCY_OPTIMALITY_AND_TAU_20260716.md` |
 | 当前 AI 应接着做什么 | `ai-handoff.md` |
 
@@ -82,6 +82,9 @@ historical/local evidence
 - `rebuttal/README.md`
 - `rebuttal/rebuttal_0723/README.md`
 - `rebuttal/rebuttal_0723/00_REVIEWER_27BE_OFFICIAL_REVIEW.md`
+- `rebuttal/rebuttal_0723/01_AC_METAREVIEW.md`
+- `rebuttal/rebuttal_0723/EXPERIMENT_REPORT_20260724.md`
+- `rebuttal/rebuttal_0723/PHASE16_99RUN_RAW_REANALYSIS_20260724.md`
 - `rebuttal/pre_rebuttal/README.md`
 - `rebuttal/pre_rebuttal/rebuttal_playbook.md`
 - `rebuttal/pre_rebuttal/REVIEWER_TRIAGE_PLAYBOOK.md`

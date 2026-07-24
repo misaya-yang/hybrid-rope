@@ -15,8 +15,10 @@ class RepositoryNavigationTests(unittest.TestCase):
             "rebuttal/README.md",
             "rebuttal/rebuttal_0723/README.md",
             "rebuttal/rebuttal_0723/00_REVIEWER_27BE_OFFICIAL_REVIEW.md",
+            "rebuttal/rebuttal_0723/01_AC_METAREVIEW.md",
             "rebuttal/pre_rebuttal/README.md",
             "rebuttal/pre_rebuttal/rebuttal_playbook.md",
+            "rebuttal/pre_rebuttal/seed42_lora_eval_20260713/REPORT.md",
             "docs/overview/RESULT_PROVENANCE_MANIFEST.md",
             "paper_experiments/MANIFEST.json",
         ):
@@ -30,6 +32,7 @@ class RepositoryNavigationTests(unittest.TestCase):
             "rebuttal/README.md",
             "rebuttal/rebuttal_0723/README.md",
             "rebuttal/rebuttal_0723/00_REVIEWER_27BE_OFFICIAL_REVIEW.md",
+            "rebuttal/rebuttal_0723/01_AC_METAREVIEW.md",
             "docs/overview/RESULT_PROVENANCE_MANIFEST.md",
             "paper/main.pdf",
             "Known issues / current breakage",

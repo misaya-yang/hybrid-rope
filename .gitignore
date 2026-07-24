@@ -101,10 +101,9 @@ tong-jincheng-skill/
 .codex_tmp/
 .claude/
 
-# Local rebuttal/provenance audit workspaces.
-# These may contain copied server paths, internal reports, and recovery notes.
-# Do not commit them directly; promote only sanitized reviewer artifacts.
-07 - rebuttal/
+# Local rebuttal/provenance raw evidence.
+# Keep raw logs and copied metadata local; the sanitized report is tracked.
+rebuttal/pre_rebuttal/seed42_lora_eval_20260713/raw/
 RESULT_PROVENANCE_MANIFEST.md
 
 # Local verbatim rebuttal inputs may contain reviewer identity or private context.
