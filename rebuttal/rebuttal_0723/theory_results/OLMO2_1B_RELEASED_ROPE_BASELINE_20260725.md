@@ -4,6 +4,18 @@ Date: 2026-07-25
 
 Status: **paired step-1,000 Geo/EVQ evaluation complete / single training trajectory**
 
+Evidence tier: **post-submission raw-hash-backed / reviewer-usable**
+
+Source-hierarchy note: the sibling
+`olmo2_1b_released_rope_baseline_20260725.json` is an earlier
+`released_native_rope_baselines_only` snapshot. Its statement that no EVQ
+result is included describes that JSON's deliberately native-only scope; it
+does not contradict or own the later paired EVQ result. This report, together
+with the retained Geo raw-result, EVQ checkpoint, EVQ raw/per-token, paired
+comparison, and evaluation-anchor hashes below, is the canonical owner for the
+completed Geo/EVQ comparison. Do not downgrade this result to conditional
+because the native-only JSON does not duplicate the later EVQ fields.
+
 ## Reviewer or AC concern addressed
 
 `R27bE.2`, `R27bE.5`, `AC.2`, and `AC.4`: test whether EVQ changes
@@ -181,8 +193,8 @@ must be motivated separately rather than inferred from PPL.
 
 ## Provenance
 
-- Curated aggregate:
-  `olmo2_1b_released_rope_baseline_20260725.json`.
+- Native-only released-baseline snapshot (not the owner of the later EVQ
+  comparison): `olmo2_1b_released_rope_baseline_20260725.json`.
 - Released Geo step-1,000 raw result SHA256:
   `34ad3eebb266c0bb8b47fefb026422942b04f9b4d6b8fe920ec7da1bc3cbdd7a`.
 - EVQ step-1,000 checkpoint SHA256:

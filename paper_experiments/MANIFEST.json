@@ -160,7 +160,7 @@
       "families": [
         "supporting_lora_8b"
       ],
-      "sha256": "eb0875d9a8dfb39883c099dc4158eda3ce35a87956f976a753f5c8c0cab0d47a",
+      "sha256": "7a6868ac7dddb33b00b2dccb4a92c51b0e103c6093ec1f9f1cd69f7044719921",
       "source": "experiments/lora_evq_v2/eval_ruler.py",
       "workspace_path": "code/experiments/lora_evq_v2/eval_ruler.py"
     },

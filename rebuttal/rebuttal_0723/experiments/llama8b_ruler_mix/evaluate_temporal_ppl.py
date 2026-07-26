@@ -92,10 +92,16 @@ def verify_adapter(root: Path, expected_method: str) -> dict[str, Any]:
             raise FileNotFoundError(path)
     result = json.loads(result_path.read_text(encoding="utf-8"))
     metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    allowed_statuses = {
+        "LLAMA8B_PHYSICAL_8K_RULER_MIX_COMPLETE_V1",
+        "LLAMA8B_FRESH_EVQ_COUNTERFACTUAL_COMPLETE_V1",
+    }
+    result_method = result.get("method")
+    if result_method is None:
+        result_method = result.get("scientific_contract", {}).get("method")
     if (
-        result.get("status")
-        != "LLAMA8B_PHYSICAL_8K_RULER_MIX_COMPLETE_V1"
-        or result.get("method") != expected_method
+        result.get("status") not in allowed_statuses
+        or result_method != expected_method
         or metadata.get("status") != "complete"
         or metadata.get("method") != expected_method
     ):
@@ -107,14 +113,19 @@ def verify_adapter(root: Path, expected_method: str) -> dict[str, Any]:
         != result["frequency_artifact_sha256"]
     ):
         raise RuntimeError("adapted EVQ frequency hash drift")
+    training_view_manifest_sha256 = result.get(
+        "training_view_manifest_sha256"
+    )
+    if training_view_manifest_sha256 is None:
+        training_view_manifest_sha256 = result["training_view"][
+            "manifest_sha256"
+        ]
     return {
         "adapter_sha256": result["adapter_sha256"],
         "frequency_sha256": result["frequency_artifact_sha256"],
         "result_sha256": sha256_file(result_path),
         "metadata_sha256": sha256_file(metadata_path),
-        "training_view_manifest_sha256": result["training_view"][
-            "manifest_sha256"
-        ],
+        "training_view_manifest_sha256": training_view_manifest_sha256,
     }
 
 

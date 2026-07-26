@@ -2,7 +2,8 @@
 
 Date: 2026-07-26
 
-Status: **internal theory synthesis / design only / not a reviewer-facing result**
+Status: **internal theory synthesis / archived design only / not an execution
+queue or reviewer-facing result**
 
 Concern mapping: `R27bE.2`, `R27bE.5`, `AC.2`
 
@@ -12,21 +13,20 @@ Concern mapping: `R27bE.2`, `R27bE.5`, `AC.2`
    adaptation length on a mature 8B model without sacrificing its native 8K
    behavior?
 2. **Existing evidence.** Across mature Llama-8B adaptation, mature OLMo-2 1B
-   adaptation, and a matched OLMo-2 1B from-scratch trajectory, EVQ repeatedly
-   pays an in-window NLL cost and improves longer-window NLL. It converts one
-   2× NIAH task after matched task-family adaptation, but current 4× RULER
-   behavior remains at or near zero.
-3. **Smallest missing evidence.** One matched arm must retain the final
-   Native-LoRA 8K endpoint while producing nonzero autoregressive 32K behavior
-   on held-out rows. Lower 32K NLL alone is insufficient.
-4. **Smallest executable plan.** First finish the already-running matched
-   Native-LoRA control. If the expected crossover is confirmed, test one fixed
-   EVQ arm with physical-8K, phase-covered 1×/2×/4× routing supervision and a
-   pre-registered 8K no-harm constraint. Do not begin with a schedule sweep.
-5. **Stop condition.** Stop if the candidate cannot match Native-LoRA at 8K,
-   does not improve the existing EVQ 16K result, or remains zero on all
-   pre-registered 32K autoregressive canaries. Do not interpret a PPL-only
-   improvement as 4× capability.
+   adaptation, and a same-initialization/same-scientific-recipe OLMo-2 1B
+   from-scratch comparison with different trainer stacks, EVQ repeatedly pays
+   an in-window NLL cost and improves longer-window NLL. The completed matched
+   Llama-8B RULER study supports a task-family-adapted 2× endpoint, while
+   current 4× RULER behavior remains zero.
+3. **Smallest missing evidence.** No additional evidence is required for the
+   current rebuttal. A future 4× claim would require a matched arm that retains
+   the Native-LoRA 8K endpoint while producing nonzero autoregressive 32K
+   behavior on held-out rows; lower 32K NLL alone is insufficient.
+4. **Smallest executable plan.** None for the current response cycle. The
+   phase-covered or residual proposals below are archived future-research
+   designs and are not authorized rebuttal experiments.
+5. **Stop condition.** Do not run the archived designs during the current
+   rebuttal. Do not interpret a PPL-only improvement as 4× capability.
 
 Here “4×” always means **8K physical adaptation to 32K evaluation**, not a
 fourfold score improvement. “8K better” means a matched no-harm condition
@@ -73,28 +73,21 @@ At the same 2.097B-token checkpoint, EVQ-minus-Geo NLL is
 at 4K, 8K, and 16K. This is weaker than the mature-model contrast but has the
 same crossover direction without a post-hoc LoRA transplant.
 
-### 2.4 Current Llama-8B physical-8K RULER experiment
+### 2.4 Completed Llama-8B physical-8K RULER experiment
 
-The live, not-yet-promoted EVQ arm repeats the probability crossover:
+The matched Native/EVQ 516-step continuation is complete. Under identical
+physical-8K supervision over the same 13 RULER families, official macro is:
 
-| Prefix | Bare Native NLL | EVQ plus RULER-mix LoRA NLL | Delta |
-| --- | ---: | ---: | ---: |
-| 8K | 2.0729 | 2.5068 | +0.4339 |
-| 16K | 5.0144 | 3.4689 | -1.5455 |
-| 32K | 7.3089 | 5.0994 | -2.2094 |
+| Prefix | Native-LoRA | EVQ-LoRA |
+| --- | ---: | ---: |
+| 8K | 94.44% | 77.60% |
+| 16K | 0.295% | 14.03% |
+| 32K | 10/13 task cells completed, all zero | 0% over all 13 tasks |
 
-Its complete 13-task RULER official macro is 77.60%/14.03%/0% at
-8K/16K/32K. The untouched Native model is 91.82%/0%/0%. This comparison is
-not matched adaptation; the matched Native-LoRA continuation is currently
-running and owns the attribution test. These live numbers must not enter a
-reviewer response until raw outputs and a standalone report are promoted.
-
-At step 375 of 516, the matched Native continuation has a last-25-step mean
-training loss of 0.6695 versus 0.8733 for EVQ at the identical step. Native is
-lower at every logged checkpoint from step 25 through 375. This is live
-optimization evidence, not a final evaluation result, but it supports the
-prediction that the Native substrate is easier to fit inside the training
-window.
+This is single-seed, task-family-adapted evidence. It supports a bounded 2×
+endpoint and confirms an in-window/long-window trade-off; it does not establish
+unseen-task transfer or 4× capability. The canonical owner is
+`LLAMA8B_MATCHED_RULER_MIX_20260726.md`.
 
 ### 2.5 Stable inference from all four observations
 
@@ -338,8 +331,8 @@ attention parameterization and may complicate FlashAttention. It is EVQ-v2
 research, not rebuttal evidence for the submitted fixed table.
 
 A two-profile deployment—Native-LoRA at no more than 8K and EVQ-LoRA above
-8K—is an even lower-risk envelope once the matched Native run is complete.
-It is not one universal model and must not be described as raw EVQ dominance.
+8K—remains a future deployment design. It is not one universal model and must
+not be described as raw EVQ dominance.
 
 ## 7. Training objective for 4× capability
 
@@ -431,25 +424,27 @@ position-bin shortcuts rather than a distance-stable binding.
 This technique trains target phases; final evidence must still use true
 physical 16K/32K sequences.
 
-## 9. Pre-registered decision path
+## 9. Archived future-research decision path
 
-### Gate 0: finish the matched Native-LoRA arm
+The gates below are retained only as design history. The matched control is
+complete, the current rebuttal does not require a new 4× experiment, and none
+of the later gates is authorized for execution.
 
-Required outputs:
+### Gate 0: completed matched Native-LoRA arm
+
+Completed outputs:
 
 - 8K/16K/32K natural-text NLL;
 - complete 13-task official and strict RULER scores;
 - the same frozen evaluation rows as EVQ;
 - final adapter, frequency, data, and output hashes.
 
-Interpretation:
+Observed interpretation:
 
-- Native wins 8K and EVQ wins 16K while both fail 32K: confirmed
-  range/capability trade-off; proceed only if 4× evidence is essential.
-- Native also wins 16K: the current EVQ curriculum has no capability advantage;
-  stop method extension.
-- EVQ matches Native at 8K and wins 16K: no hybrid is needed; test only the
-  phase-covered continuation.
+- Native wins at 8K, EVQ wins at 16K, and neither arm provides defensible 32K
+  capability.
+- This confirms the tested range/capability trade-off. It does not create a
+  current rebuttal need for a hybrid or phase-covered continuation.
 
 ### Gate 1: one unchanged-EVQ phase-covered screen
 
@@ -494,8 +489,8 @@ more \(\tau\), or more examples from one task.
 
 The analysis predicts:
 
-1. Matched Native-LoRA will learn the 8K RULER mixture at least as fast as full
-   EVQ and will likely retain a higher 8K official score.
+1. Observed: matched Native-LoRA retains a higher 8K official score than full
+   EVQ under the tested continuation.
 2. Full EVQ will retain a relative 16K/32K natural-text NLL advantage.
 3. Ordinary 8K task-family training without target-phase coverage will remain
    weak or zero at 32K.
@@ -517,8 +512,8 @@ be retroactively presented as the submitted method.
 
 For rebuttal:
 
-- the current matched Native/EVQ Llama experiment may become supporting
-  mature-model task-adaptation evidence after raw promotion;
+- the completed matched Native/EVQ Llama experiment is supporting
+  mature-model task-family-adaptation evidence under its standalone owner;
 - a phase-covered full-EVQ continuation would be combined
   EVQ-plus-adaptation evidence;
 - a tail or residual hybrid belongs to future method development;

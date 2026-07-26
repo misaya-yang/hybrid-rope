@@ -1,20 +1,24 @@
 # EVQ-Cosh rebuttal workspace
 
-最后更新：2026-07-24
+最后更新：2026-07-26
 
 这里现在只承担目录分流，不再保存一份与真实审稿并行的“大总账”。
 
 ## 当前状态
 
-- Reviewer `27bE` 的正式 review 已逐字归档：评分 3、置信度 4。
-- AC metareview 已单独归档；其文本由作者提供，但当前工作区没有独立 URL 或
-  payload hash，因此不能伪称已做外部来源校验。
+- 正式面板已逐字归档于
+  `rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md`：
+  - AC `XLtL` metareview；
+  - Reviewer `Dz6s`：4（Borderline accept），置信度 3；
+  - Reviewer `zWsa`：2（Reject），置信度 5；
+  - Reviewer `27bE`：3（Borderline reject），置信度 4，并保留 payload hash。
+- `Dz6s` / `zWsa` / AC 当前为作者粘贴的 OpenReview 原文；工作区内尚无它们的
+  独立 payload hash，不得伪称已做外部哈希校验。
 - 当前数值总入口为 `rebuttal_0723/theory_results/EXPERIMENT_REPORT_20260724.md`；Phase16
   99-run 的重新审计单独记录在
   `rebuttal_0723/theory_results/PHASE16_99RUN_RAW_REANALYSIS_20260724.md`。
 - 尚未形成可发送的 author response，也没有修改论文正文或主表数字。
-- 仓库内仍没有其他 reviewer 的逐字 source。0723 宽计划中对 `zWsa`、
-  `Dz6s` 的概括不得当作 reviewer 原话。
+- `pre_rebuttal/` 中的模拟 Reviewer 1/2/3 不是 OpenReview 正式源。
 
 ## 目录
 

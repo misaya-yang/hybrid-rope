@@ -1,7 +1,13 @@
 # LLaMA-3-8B matched counterfactual continuation — rebuttal plan
 
-Status: **design only / no result / no GPU authorization**
+Status: **archived design only / no current rebuttal need / do not run**
 Primary concerns: `R27bE.2`, `R27bE.5`, `AC.2`, `AC.4`
+
+> **Supersession notice.** The current rebuttal core is already sendable from
+> the completed matched OLMo counterfactual endpoint plus the separate matched
+> LLaMA natural-LM and RULER endpoints. No matched LLaMA counterfactual run is
+> required or authorized. The protocol below is retained only as future
+> experimental-design history and is not an action queue or current evidence.
 
 ## 1. Required five-line decision record
 
@@ -14,21 +20,16 @@ Primary concerns: `R27bE.2`, `R27bE.5`, `AC.2`, `AC.4`
    `0.295%` for Native-LoRA and `14.03%` for EVQ-LoRA, but uses ordinary
    answer-only supervision. OLMo-2 1.485B shows that paired counterfactual
    routing can convert 4K training into 8K strict exact.
-3. **Smallest missing evidence.** Apply the same causal source-supervision
-   principle to the two already matched RULER-family endpoints, without
-   changing their frequency tables, model, LoRA capacity, physical training
-   length, or evaluator.
-4. **Smallest executable plan.** Continue one Native RULER-family adapter and
-   one EVQ RULER-family adapter for the same 300 physical-8K steps on one
-   frozen counterfactual task-family mixture, then evaluate matched
-   8K/16K/32K RULER, disjoint source swaps, and temporal NLL. Their step-0
-   states are the completed ordinary-CE controls; do not retrain a third
-   cosmetic control.
-5. **Stop condition.** Stop if either arm cannot learn the frozen 8K canary, if
-   EVQ has no 16K source-causal or autoregressive advantage over Native, or if
-   the only improvement is teacher-forced NLL.
+3. **Smallest missing evidence.** None for the current rebuttal. A matched
+   LLaMA counterfactual pair would answer only a narrower future attribution
+   question.
+4. **Smallest executable plan.** No execution is authorized in the current
+   response cycle. The historical design below would continue one Native and
+   one EVQ RULER-family adapter only if a later research decision reopens it.
+5. **Stop condition.** Stop at design status for the current rebuttal; do not
+   launch either arm.
 
-## 2. Why this is the missing experiment
+## 2. Historical rationale for the archived design
 
 The current evidence chain is already nearly complete:
 
@@ -40,9 +41,9 @@ The current evidence chain is already nearly complete:
 \text{8B task-family 2x length transfer}.
 \]
 
-The remaining ambiguity is whether explicit causal source supervision makes
-the 8B result stronger and more reproducible, rather than whether another
-frequency mechanism should be invented. This plan therefore:
+A narrower future ambiguity is whether explicit causal source supervision
+makes the 8B result stronger and more reproducible, rather than whether
+another frequency mechanism should be invented. The archived design therefore:
 
 - keeps Native and EVQ frequencies fixed at the two existing parent values;
 - starts from the matched ordinary-CE RULER-family pair, whose complete

@@ -1,420 +1,189 @@
-# Codex Agent Guide
+# AGENTS.md — EVQ-Cosh (NeurIPS 2026)
 
-This repository is the working tree for the EVQ-Cosh NeurIPS 2026 submission.
-Treat it as a paper-and-reproducibility repository, not as a general software
-project. The main job is to preserve scientific correctness, reviewer trust,
-anonymous submission hygiene, and reproducible reviewer paths.
+Paper-and-reproducibility repo for **Submission 11628 / EVQ-Cosh**.
+Not a general software project. Priorities: scientific correctness, reviewer
+trust, anonymous hygiene, reproducible evidence paths.
 
-## Hard prohibition: do not modify the paper
+This file is the **only** project-level agent instruction. Do not add a second
+root `Agent.md`. Long operational detail lives in the index links below—do not
+duplicate it here.
 
-Agents must not modify, create, delete, move, format, or regenerate any file
-under `paper/`, including LaTeX sources, tables, figures, bibliography files,
-build artifacts, and `paper/main.pdf`. Reading and auditing paper files is
-allowed.
+---
 
-If a task appears to require a paper change, stop and ask the user instead of
-editing. The only exception is a future user instruction that explicitly names
-the paper file or paper scope to be changed and explicitly overrides this
-prohibition. A request to review, use, align with, summarize, or optimize a
-paper hook, rebuttal, playbook, narrative, or evidence does **not** authorize
-paper edits.
+## 0. Core principles (non-negotiable)
 
-## Master routing and experiment guide
+### P1 — Rebuttal answers only what reviewers asked
 
-This `AGENTS.md` is the sole project-level instruction file. Do not create or
-use a separate root `Agent.md`.
+- Respond **only** to retained reviewer/AC concerns in
+  `rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md`.
+- **No over-extension:** no new research program, no EVQ-v2, no extra benchmarks,
+  no side narratives that do not map to a stable concern ID.
+- If evidence is not needed to answer a named concern, do not run it, do not
+  lead with it, and do not pad the response with it.
+- Simulated reviews and internal audits are not new official concerns.
 
-Before designing, running, or writing about a rebuttal, LoRA, long-context, or
-paid-GPU experiment, read this file and then:
+### P2 — Prepare fully offline before any server / GPU job
 
-1. `rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md` for the
-   exact reviewer/AC concern being answered.
-2. `rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md` for the reviewer-facing
-   evidence selection, concern routing, and important-experiment status.
-3. `rebuttal/rebuttal_0723/theory_results/EVQ_COSH_REBUTTAL_PRINCIPLES.md` for
-   method positioning, theory boundaries, experiment design, stopping rules,
-   and output format.
-4. `rebuttal/rebuttal_0723/README.md` for the current directory and
-   experiment-package index.
-5. The relevant experiment plan, protocol, manifest, and standalone report.
+- **Zero idle GPU:** code, data, hashes, configs, entry command, output paths,
+  env, stop condition, and free-space check must be ready **before** the job
+  starts. Validate off-GPU first (READY / preflight for paid GPUs).
+- Do not use the machine to debug missing scripts, missing data, or undefined
+  protocols. If anything is missing → stop, prepare offline, then launch.
+- Cost-first: minimize GPU-seconds to answer the scientific question; no
+  symmetry reruns or “look busy” probes.
 
-Every experiment proposal must begin with:
+---
 
-1. Reviewer or AC concern addressed.
-2. Existing evidence.
-3. Smallest missing evidence.
-4. Smallest executable plan.
-5. Stop condition.
+## 1. Hard rules
 
-If an experiment cannot answer the first line, do not run it.
+### Paper is read-only
 
-## Project routing summary
+Do **not** modify, create, delete, move, format, compile, or regenerate anything
+under `paper/` (sources, tables, figures, bib, build artifacts, `main.pdf`).
+Reading/auditing is allowed.
 
-- Current rebuttal workspace: `rebuttal/rebuttal_0723/`.
-- Formal reviewer source: `00_REVIEWER_SCORES_AND_AC_METAREVIEW.md`, stable IDs
-  `R27bE.1`-`R27bE.5`.
-- AC source: `00_REVIEWER_SCORES_AND_AC_METAREVIEW.md`; its provenance is not equivalent to the
-  formal reviewer source until independently verified.
-- Reviewer-facing evidence/playbook: `01_REBUTTAL_PLAYBOOK.md`; update it when
-  an important rebuttal experiment is admitted, stopped, or reclassified.
-- Current numeric result entry: `theory_results/EXPERIMENT_REPORT_20260724.md`.
-- Frequency identity contract: `theory_results/FREQUENCY_DEFINITION_MANIFEST.json` and
-  `experiments/geo_rope_contract.py`.
-- Historical facts and pre-rebuttal material: `rebuttal/pre_rebuttal/`; these
-  are not the current action queue.
-- Wide plans are proposal libraries, not execution authorization.
+- `paper/` is the restored submitted-paper tree from `994f618` (identical to
+  submission baseline `cb7d83e`). Repository cleanup, branch reorganization,
+  and rebuttal work must preserve the directory byte-for-byte.
+- Never move, rename, replace, flatten, or partially copy `paper/`; treat the
+  whole directory as one immutable root.
+- Need a paper change → **stop and ask**.
+- Override only if the user **explicitly names** the paper file/scope **and**
+  overrides this ban.
+- Review / rebuttal / playbook / narrative / evidence work does **not** authorize
+  paper edits.
 
-The current rebuttal directory has one stable layout:
+**Submitted PDF and sources:** `paper/main.pdf` and the rest of `paper/`.
 
-- Root: `README.md`, `00_REVIEWER_SCORES_AND_AC_METAREVIEW.md`, and
-  `01_REBUTTAL_PLAYBOOK.md` only. Reviewer, AC, and response-routing sources stay
-  at the top level.
-- `rebuttal/rebuttal_0723/theory_results/`: principles, theory/planning notes,
-  result reports, manifests, and curated result JSONs.
-- `rebuttal/rebuttal_0723/experiments/`: experiment packages, helper code, and
-  shell launchers.
-- Repository-level `tests/` remains the test location; do not duplicate it under
-  the rebuttal workspace.
+### Do not invent science
 
-Keep claims narrow. Do not upgrade supporting, single-seed, or diagnostic
-evidence to universal optimum, production-scale SOTA, or downstream capability
-without matching artifacts and provenance.
+- No fabricated numbers, experiments, or metric edits.
+- No silent upgrade of single-seed / supporting / diagnostic rows to primary or SOTA.
+- Negative results and protocol limits stay visible when they bound a claim.
+- Filenames and labels ≠ method identity; use tensors, hashes, raw/curated owners.
 
-## Rebuttal evidence synchronization rule
+### Do not touch without explicit ask
 
-`01_REBUTTAL_PLAYBOOK.md` is reviewer-facing: prioritize the clearest,
-strongest, most directly useful evidence and omit irrelevant internal detail.
-Selection must not hide a limitation whose omission would make a claim
-misleading.
+`internal/`, `results/`, `audit_v3/`, `audit_v4/`, `.codex/`, `.claude/`.
+Do not commit secrets, private paths, checkpoints, caches, or bytecode.
 
-Every experiment that directly serves a current reviewer or AC concern must be
-represented twice: a standalone Markdown record under
-`rebuttal/rebuttal_0723/theory_results/` owns protocol, numbers, uncertainty,
-and provenance; the corresponding row in
-`rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md` owns reviewer-facing selection,
-concern mapping, status, and safe wording. Do not cite an experiment in a
-response until both entries are present and agree.
+---
 
-The detailed claim guardrails remain here: submitted "YaRN" is a repository-
-defined fixed-index smooth-ramp scaler, submitted "DAPE" is layer-shared
-learnable inverse frequencies, Cosh is unique only for the stated convex
-surrogate, and `tau=d_head/sqrt(L_train)` is an empirical operating default.
-Passkey is teacher-forced NLL-gap retrieval unless an artifact explicitly reports
-autoregressive exact match. Preserve negative results and protocol limits.
-
-## GPU exception and evidence gate
-
-GPU use is experiment-only. For paid GPUs other than RTX 5090, require a
-completed READY receipt and no-GPU preflight before launch. Validate the code,
-model, data, hashes, output path, environment, and exact command off GPU; then
-verify PID, first optimizer step, finite loss, throughput, memory, utilization,
-ETA, free space, raw metrics, and cleanup receipts.
-
-RTX 5090 is the local diagnostic exception: a scoped probe may reuse existing
-code and a temporary script without a pre-existing READY receipt. It still
-requires a named reviewer/AC concern, a bounded command, a stop condition, a
-free-space check, and post-launch verification. If required code or inputs are
-missing, stop the GPU session and prepare them offline. Read
-`docs/overview/RTX5090_BLACKWELL_PROFILE.md`; do not silently fall back to math
-attention.
-
-### Blackwell experiment execution contract
-
-Apply this contract to RTX 5090 and RTX Pro 6000 runs. They share the same
-Blackwell-oriented optimization family, but never assume that their usable
-memory, best batch size, compile mode, throughput, or kernel eligibility is
-identical.
-
-**Cost-first core principle:** minimize the total paid GPU time and cost needed
-to answer the scientific question. Use the fastest known stable execution path,
-and never rerun a completed arm merely to make runtime details look symmetric.
-
-1. Match the broad scientific contract: model/checkpoint and intervention,
-   dataset and split, effective training budget and objective, optimizer/LR
-   semantics, and evaluation samples/metrics. Micro-batch, accumulation,
-   checkpointing, compile mode, kernel, allocator, dataloader, evaluation
-   batching, and other numerically valid runtime choices are execution details;
-   they may differ across arms and do not by themselves require a rerun.
-2. Prefer the fastest verified native-architecture stack for the active shape.
-   BF16 autocast, Flash-only SDPA, fused AdamW, TF32 matmul,
-   `expandable_segments`, and a persistent TorchInductor cache are strong
-   starting points, not symmetry requirements.
-3. Reuse the fastest completed receipt for the same or sufficiently similar
-   shape. If none exists, use the shortest discarded probe needed to establish
-   eligibility, finite loss, memory fit, and useful throughput; do not spend GPU
-   time on a fixed probe grid once one configuration is clearly sufficient.
-4. Select by estimated total GPU seconds/cost to completion, including compile
-   and evaluation overhead, subject to finite loss and stable execution. Do not
-   optimize allocated-memory percentage, and do not restart a healthy run for
-   cosmetic parity or marginal theoretical cleanliness.
-5. Record GPU name, compute capability, PyTorch/CUDA versions, compiled
-   architectures, precision, SDPA backend state, compile mode, cache path,
-   sequence/global/micro batch, accumulation, compile latency, steady
-   throughput, peak memory, first-step loss, and ETA. Probe estimates are
-   provisional; replace them with complete-run throughput when it becomes
-   available without adding a dedicated rerun.
-6. RTX Pro 6000 remains subject to the full no-GPU READY gate. RTX 5090 may use
-   the scoped exception above, but missing code/data still must not become paid
-   debugging. Neither machine shuts down automatically unless the user
-   explicitly requests it for that run.
-
-## Evidence, change, and reporting discipline
-
-- Treat code, configs, logs, raw artifacts, and provenance as facts; filenames,
-  comments, and old reports do not establish method identity.
-- Before an in-place frequency/schedule patch, clone every tensor intended as
-  the pre-patch reference. For any derived hybrid, assert the realized tensor
-  hash against an independently reconstructed expected hash; labels and index
-  metadata are not method-identity evidence.
-- Separate reviewer request, repository fact, proposed action, and completed
-  evidence. A negative result is still a result.
-- Preserve unrelated worktree changes. Do not edit `internal/`, `results/`,
-  `audit_v3/`, `audit_v4/`, `.codex/`, or `.claude/` unless explicitly asked.
-- Do not commit secrets, private machine paths, checkpoints, caches, build
-  folders, or generated bytecode.
-- Verify at the same level as the claim. Agent behavior requires transcript and
-  tool evidence; tests or HTTP 200 alone are insufficient.
-- Before claiming completion, report passed, failed, skipped, and unverified
-  checks. For paper changes, state whether numbers changed and whether the PDF
-  was regenerated.
-
-## Core Paper Identity
-
-Keep the paper centered on this mechanism claim:
+## 2. Core paper identity
 
 > RoPE is not only a positional operator or a range-scaling target; it is also a
-> finite spectral budget. EVQ-Cosh identifies training-time frequency allocation
-> shape as a third PE design axis, complementary to operator design and
-> inference-time range scaling.
+> **finite spectral budget**. EVQ-Cosh is a **closed-form, zero-learned-parameter**
+> **training-time frequency-grid allocation**—a third PE design axis, complementary
+> to operator design and inference-time range scaling.
 
-Do not reframe the paper as universal long-context SOTA, a YaRN/LongRoPE
-replacement, or a learned-PE replacement. EVQ changes the training-time
-frequency substrate on which inference-time scaling acts.
+**Do not** reframe as: universal long-context SOTA; YaRN/LongRoPE/FMRoPE/DAPE
+replacement; or learned-PE replacement.
 
-Primary evidence tiers in the main text:
+**Primary tiers (submitted):**
+I EVQ×YaRN matched-scale · II PE-dominant (Geo/DAPE/EVQ seed-42 diagnostic) ·
+III MLA scarce-channel. Supporting stays supporting (DiT, LoRA-8B, progressive,
+750M, QuALITY, …).
 
-- Primary I: EVQ x YaRN matched-scale substrate/range complementarity.
-- Primary II: PE-dominant DAPE-style extrapolation; Geo/DAPE/EVQ rows are the
-  retained seed-42 protocol unless explicitly marked otherwise.
-- Primary III: MLA scarce-channel stress test; `d_rot` counts quantized rotary
-  channels, while `d_eff=d_head` is an architecture-specific operating-rule
-  convention, not a theorem.
+**Hard claim guardrails**
 
-Supporting evidence such as video DiT, LoRA into LLaMA-3-8B, progressive
-training, and 750M continuation must remain supporting/exploratory unless the
-user explicitly asks for a new evidence audit.
+| Topic | Rule |
+| --- | --- |
+| YaRN (submitted) | Repo fixed-index smooth-ramp scaler unless artifact says otherwise |
+| DAPE (submitted row) | Layer-shared learnable inv-freq; not pure shape attribution |
+| Cosh uniqueness | Only for stated convex surrogate \(C_{\mathrm{app}}\) |
+| \(\tau=d/\sqrt{L}\) | Operating default / basin prior—not global optimum |
+| Passkey (PK) | Teacher-forced **NLL-gap** unless marked AR exact |
+| FMRoPE direct control | Fixed-range: allocation identifiable; retargeted: range methods can win; do not claim replacement or universal dominance |
+| Novelty bar | Related theme ≠ same method (same standard as AdamW / YaRN vs NTK) |
 
-## Hard Claim Rules
+---
 
-- Do not add experiments, invent results, or change reported metric values.
-- Do not silently upgrade single-seed or supporting rows into primary claims.
-- Do not say EVQ replaces YaRN, LongRoPE, LongRoPE2, DAPE, FIRE, or learned PE.
-- Do not describe `tau=d_eff/sqrt(L)` as globally optimal. It is an operating
-  default / basin selector with derived scaling structure and empirical support.
-- Define PK as teacher-forced NLL-gap retrieval unless a result is explicitly
-  marked autoregressive exact match.
-- Preserve the finite-spectral-budget narrative and the closed-form,
-  zero-learned-parameter training-time allocation framing.
+## 3. Rebuttal routing (mandatory order)
 
-## Important Files
+Workspace: `rebuttal/rebuttal_0723/`.
 
-Paper:
+| Step | File | Role |
+| ---: | --- | --- |
+| 1 | `00_REVIEWER_SCORES_AND_AC_METAREVIEW.md` | Official panel text + stable IDs |
+| 2 | `01_REBUTTAL_PLAYBOOK.md` | Reviewer-facing evidence, status, safe wording |
+| 3 | `theory_results/EVQ_COSH_REBUTTAL_PRINCIPLES.md` | Method / theory / stop rules |
+| 4 | `README.md` | Package layout + experiment index |
+| 5 | Standalone report + plan under `theory_results/` / `experiments/` | Protocol, numbers, provenance |
 
-- `paper/main.tex`
-- `paper/sections/01_intro.tex`
-- `paper/sections/02_related.tex`
-- `paper/sections/03_theory.tex`
-- `paper/sections/05_experiments.tex`
-- `paper/sections/06_limitations.tex`
-- `paper/appendix/a1_proofs.tex`
-- `paper/appendix/a2_experiment_details.tex`
-- `paper/appendix/a3_supporting_results.tex`
-- `paper/appendix/a4_supporting_experiments.tex`
-- `paper/tables/*.tex`
+**Panel (stable IDs in `00_…`):**
+Dz6s (`RDz6s.*`) · zWsa (`RzWsa.*`) · 27bE (`R27bE.*`) · AC XLtL (`AC.*`).
+Do not cite pre-rebuttal simulated Reviewer 1/2/3 as OpenReview sources.
+AC/`Dz6s`/`zWsa` text may be author-pasted exports; only use wording in `00_…`.
 
-Code and reproduction:
+**Every experiment proposal must open with:**
+(1) concern ID · (2) existing evidence · (3) smallest missing · (4) smallest plan ·
+(5) stop condition.
+If (1) is empty → **do not run** (P1).
+If (4) is not fully prepared offline → **do not launch GPU** (P2).
 
-- `scripts/lib/rope/schedules.py` is the canonical EVQ-Cosh schedule API.
-- `scripts/core_text_phases/run_evq_sweep.py` is the core text sweep entrypoint.
-- `scripts/core_text_phases/phase14c_multiscale_evq_yarn.py` is a supporting
-  multiscale check, not the full 454M Table 2 reproduction.
-- `scripts/supporting_eval/eval_passkey_scratch.py` owns passkey sample/eval
-  helpers.
-- `scripts/package_supplement.py` is the curated reviewer-supplement packager.
-- `docs/overview/PAPER_CLAIMS_MAP.md`, `docs/overview/REPRODUCE.md`, and
-  `docs/overview/DATA_PREPARATION.md` must stay synchronized with paper claims.
+**Evidence sync:** anything cited in a response needs
+(1) standalone owner under `theory_results/` **and**
+(2) matching playbook row. Both must agree.
 
-Known provenance caveats:
+**Layout:** root routing files are `README` + `00_` + `01_` + `02_`; results in `theory_results/`;
+code in `experiments/`; tests stay in repo `tests/`.
 
-- Table 2 still benefits from a curated 454M per-seed provenance JSON.
-- Fig. 3 panel (a) has a curated fallback in `data/curated/`; panels (b,c)
-  depend on phase11 result JSONs unless additional curated fallbacks are added.
+---
 
-## Current Branch And Audit Hygiene
+## 4. Work hygiene (short)
 
-`main` and `origin/main` are the sole project source of truth. All paper,
-rebuttal, experiment, evidence, and agent-rule decisions must be based on the
-checked-out `main` state. A branch that differs from `main` is not authoritative
-until its relevant commits are reviewed and merged into `main`.
+- Facts = code, configs, logs, raw/curated artifacts, hashes.
+- Before in-place frequency patches: clone reference tensors; hash hybrids.
+- Separate: reviewer request · repo fact · proposal · completed evidence.
+- Preserve unrelated worktree changes.
+- Verify at claim strength (transcript/tooling for agent claims).
+- Completion report: passed / failed / skipped / unverified.
+- User language: usually Chinese; lead with concrete status.
+- Prefer minimal edits; `main` is source of truth (see index for git).
 
-- `main`: canonical working and publishing branch.
-- `backup/2026-03-06`: archival branch used only to recover historical result
-  artifacts.
-- `codex/*`: temporary or historical work branches; never use them as an
-  independent evidence source or project baseline.
+---
 
-Do not treat stale branches or remote-tracking branches as current evidence
-unless the user explicitly asks for a branch audit. Resolve any useful branch
-content into `main` before relying on it.
+## 5. Index — details live elsewhere
 
-Local raw evidence such as
-`rebuttal/pre_rebuttal/seed42_lora_eval_20260713/raw/` and the retired root
-`RESULT_PROVENANCE_MANIFEST.md` are intentionally ignored. They may contain
-copied server paths, internal reports, broad code mirrors, and recovery notes.
-Use them for local reasoning only. Do not commit or package them directly;
-promote only sanitized, reviewer-grade artifacts after the user explicitly asks.
+| Need | Go here |
+| --- | --- |
+| Claim map / provenance | `docs/overview/PAPER_CLAIMS_MAP.md`, `docs/overview/RESULT_PROVENANCE_MANIFEST.md` |
+| Reproduce / data | `docs/overview/REPRODUCE.md`, `DATA_PREPARATION.md` |
+| GPU / Blackwell / cost-first runs | `docs/overview/RTX5090_BLACKWELL_PROFILE.md` |
+| Positive/negative evidence ledgers | `rebuttal/rebuttal_0723/theory_results/REVIEWER_USABLE_EVIDENCE_LEDGER_*.md`, `INTERNAL_NEGATIVE_AND_DIAGNOSTIC_LEDGER_*.md` |
+| Numeric rebuttal entry | `rebuttal/rebuttal_0723/theory_results/EXPERIMENT_REPORT_20260724.md` |
+| Frequency identity | `theory_results/FREQUENCY_DEFINITION_MANIFEST.json`, `experiments/geo_rope_contract.py` |
+| Canonical schedule API | `scripts/lib/rope/schedules.py` |
+| Core sweep / passkey helpers | `scripts/core_text_phases/run_evq_sweep.py`, `scripts/supporting_eval/eval_passkey_scratch.py` |
+| Reviewer supplement zip | `scripts/package_supplement.py` (never zip repo root) |
+| Pre-rebuttal (history only) | `rebuttal/pre_rebuttal/` — not the action queue |
+| Repo map / handoff | `REPO_MAP.md`, `README.md` |
+| LaTeX build (only if paper ban overridden) | `paper/compile_aidemo.sh`; preferred tectonic from `paper/` |
+| Smoke tests | `tests/test_rope_core.py`; py_compile schedules + core entrypoints |
 
-For rebuttal-time reruns, do not preemptively rerun supporting experiments.
-The primary evidence is already bounded by the provenance manifest. Supporting
-families such as progressive training, QuALITY, LoRA, video DiT, and 1B/4K MLA
-should be rerun only if a reviewer question requires that specific evidence.
+### GPU (one paragraph; enforces P2)
 
-## Editing Policy
+Experiment-only. **Prepare everything offline first—no idle GPU.** Paid GPU ≠
+5090: READY receipt + offline preflight first. RTX 5090: scoped diagnostic
+exception (named concern, bound command, stop, free space, verify)—see
+`RTX5090_BLACKWELL_PROFILE.md`. No silent math-attention fallback. Cost-first:
+minimal GPU-seconds to answer the concern; runtime micro-details need not match
+across arms.
 
-- Prefer minimal, local edits that align with existing style.
-- Use `apply_patch` for manual edits.
-- Do not touch `internal/`, `results/`, `audit_v3/`, `audit_v4/`, `.codex/`, or
-  `.claude/` unless the user explicitly asks.
-- Do not commit local audit reports, build folders, caches, checkpoints, or
-  generated bytecode.
-- Only after the user explicitly overrides the paper prohibition: keep source
-  changes and regenerated artifacts conceptually separate in the report; if
-  `paper/main.pdf` changes, say what compile produced it.
-- Only after that explicit override: if editing `.tex`, recompile when feasible
-  and report the gate status.
-- Only after that explicit override: if editing paper figure scripts or data,
-  regenerate the figure or state clearly why it was not regenerated.
-- If editing public docs, avoid references to private machines, internal notes,
-  local paths, or non-anonymous author identity.
+### Git (one paragraph)
 
-## LaTeX Build Guidance
+Work on `main`; sync `origin/main` before serious edits. Commit on `main` unless
+asked for a temp branch. Push only on explicit request. Never reset/checkout away
+user work. Temporary `codex/*` is not an evidence baseline until merged.
 
-This section is reference-only. Do not run these commands or write their
-outputs unless the user has explicitly overridden the paper prohibition above.
+---
 
-Preferred paper gate from `paper/`:
+## 6. Default agent behavior
 
-```bash
-tectonic -X compile main.tex --outdir build_tectonic
-cp build_tectonic/main.pdf main.pdf
-```
-
-If the bundled Tectonic executable is available in the Codex environment, use
-that path. Otherwise use the system `tectonic` if installed.
-
-The verified pdfTeX wrapper is:
-
-```bash
-cd paper
-bash compile_aidemo.sh
-COPY_MAIN=1 bash compile_aidemo.sh
-```
-
-`compile_aidemo.sh` writes `paper/build_aidemo/main.pdf` by default and copies
-to `paper/main.pdf` only when `COPY_MAIN=1`.
-
-Avoid ad-hoc `pdflatex` from the repository root. Prior local runs hit TeX Live
-PK/font and auxiliary-file failure modes. Keep LaTeX intermediates inside a
-build directory.
-
-PDF gate checks:
-
-```bash
-pdfinfo paper/main.pdf
-pdffonts paper/main.pdf | rg "Type 3|Type3" || true
-for p in $(seq 1 12); do
-  pdftotext -f "$p" -l "$p" paper/main.pdf - | rg -q '^References$|^References\b' && echo "References page $p"
-done
-```
-
-Expected current gate: total PDF around 40 pages, references starting on page
-10, no custom metadata, no Type 3 fonts. Underfull boxes and the `lineno.sty`
-UTF-8 warning are known non-blocking warnings unless they become overfull or
-layout-breaking.
-
-## Code Verification
-
-Useful smoke checks:
-
-```bash
-python -m py_compile \
-  scripts/lib/rope/schedules.py \
-  scripts/core_text_phases/run_evq_sweep.py \
-  scripts/core_text_phases/phase14c_multiscale_evq_yarn.py \
-  scripts/supporting_eval/eval_passkey_scratch.py \
-  experiments/lora_evq_v2/train_evq_lora.py \
-  scripts/package_supplement.py
-```
-
-If the `aidemo` conda environment is available:
-
-```bash
-conda run --no-capture-output -n aidemo python -c "import torch; from scripts.lib.rope.schedules import evq_cosh_inv_freq, build_inv_freq; a=evq_cosh_inv_freq(head_dim=64,tau=1.5,base=500000.0); b=build_inv_freq('evq_cosh', head_dim=64, base=500000.0, max_seq_len=8192, tau=1.5); assert a.shape == (32,); assert torch.isfinite(a).all(); assert torch.allclose(a,b); print('core_rope_smoke ok')"
-```
-
-Run unit tests only in an environment with both `torch` and `pytest`:
-
-```bash
-python -m pytest tests/test_rope_core.py -q
-```
-
-If tests cannot run because the active Python lacks `torch` or `pytest`, report
-that as an environment limitation rather than a test pass.
-
-## Supplement and Security
-
-Never archive the repository root for reviewer supplement. Use:
-
-```bash
-python scripts/package_supplement.py --output /tmp/evq-cosh-supplement.zip
-```
-
-Before committing or packaging, scan new/staged content for leaks:
-
-```bash
-git diff --cached -U0 | rg -n "^\+.*(misaya|hejaz|sshpass|seetacloud|/Users/|/root/autodl-tmp|wandb\.ai|BEGIN .*PRIVATE|OPENAI_API_KEY|HF_TOKEN|GITHUB_TOKEN|api[_-]?key|password|secret)" || true
-```
-
-If this scan only hits denylist strings inside `scripts/package_supplement.py`,
-that is expected. Real identity paths, secrets, private hosts, or internal audit
-text must not be committed.
-
-`.gitattributes` contains `export-ignore` rules for private or risky paths, but
-the curated packager is the authoritative supplement path.
-
-## Git Workflow
-
-- Work from `main`; synchronize it with `origin/main` before editing or
-  committing.
-- Commit project changes on `main` unless the user explicitly requests a
-  temporary branch.
-- Push `main` only after the user explicitly requests publication.
-- Temporary `codex/...` branches may be used for isolation, but their relevant
-  commits must be merged into `main` before they are treated as project state.
-- Preserve user changes. Never reset or checkout away work you did not create.
-- If `origin/main` advances, merge or rebase before final push. Regenerate
-  `paper/main.pdf` only when the user has explicitly overridden the paper
-  prohibition above.
-- Leave `audit_v3/` and `audit_v4/` untracked unless explicitly requested.
-- After staging, run `git diff --cached --stat` and `git diff --cached --check`.
-- Commit messages should be terse and factual.
-
-## Communication With The User
-
-- The user usually asks in Chinese; concise Chinese final reports are preferred.
-- Lead with concrete status: files changed, commands run, gates passed/failed,
-  and remaining caveats.
-- Do not claim a compile/test passed unless it was freshly run in the current
-  turn.
-- For reviews, list findings first by severity with file/line evidence.
-- For paper work, explicitly state whether any experimental numbers changed.
+1. Read this file → apply **P1/P2** → route via §3 before any rebuttal/GPU work.
+2. Prefer playbook-selected evidence that answers a **named** concern; never hide
+   a claim-limiting bound; never over-extend the rebuttal story.
+3. Do not invent score changes or “reviewer missed X” attacks.
+4. If blocked (paper ban, missing provenance, unclear concern, incomplete
+   offline prep), **ask** once—do not invent detours that burn GPU or rewrite
+   the paper.

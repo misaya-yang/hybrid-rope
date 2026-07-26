@@ -156,8 +156,11 @@ C_{\mathrm{app}}.
   macro 为 Native-LoRA 0.295%、EVQ-LoRA 14.03%；它是 single-seed
   task-family adaptation。32K EVQ 为 0，Native-LoRA 仅完成 10/13 cells 且均
   为 0。
-- 当前没有完成的 LLaMA counterfactual-training arm；LLaMA gold deletion 与
-  source/frequency swaps 是 evaluation intervention。
+- 当前已有一条 fresh、single-seed、EVQ-only 的 LLaMA
+  counterfactual-training arm，但没有完成 matched Native/EVQ
+  counterfactual pair。已有 matched LLaMA natural-LM 与 RULER 对照分别使用
+  ordinary full-token LM 与 answer-only task-family supervision，不能称为
+  counterfactual-trained；fresh 单臂也不能承担 EVQ-specific causal attribution。
 - 这些结果不推翻 Cosh 在 \(C_{\mathrm{app}}\) 下的条件定理。
 
 ---
@@ -208,10 +211,15 @@ superiority。OLMo-2 1B Instruct 已补上一个 8K NIAH top-1 readout endpoint�
 能力。clean unseen-task transfer、matched schedule attribution 与 broader
 downstream accuracy 仍未闭合。
 
-独立的 OLMo-2 1.485B from-scratch 2.1B-token 数值报告已经存在，但当前
-Markdown、curated JSON 与本地 raw 状态冲突。完成 provenance reconciliation
-前必须标为 conditional，不得与上述成熟 Instruct LoRA 结果混淆，也不得把任一
-结果写成方法首次具有广泛适用性。
+独立的 OLMo-2 1.485B from-scratch 2.097B-token step-1,000 结果是
+post-submission raw-hash-backed reviewer evidence：canonical Markdown owner
+登记了 completed paired comparison，以及 Geo raw、EVQ checkpoint、EVQ
+raw/per-token NLL、paired comparison 与 evaluation-anchor hashes。相邻 JSON
+明确是 `released_native_rope_baselines_only` 快照，其中 “No EVQ result is
+included” 只描述该 JSON 的 scope，不构成 owner 冲突。正确边界是
+same-initialization/same-scientific-recipe、single trajectory、trainer stacks
+不同；trainer 差异不是把结果降为 conditional 的理由。该结果回答
+natural-text LM scale transfer，不得与成熟 Instruct LoRA capability 结果混淆。
 
 不得用明显欠训练、无法完成任务的模型强行跑下游，然后将无意义结果作为核心证据。
 

@@ -52,24 +52,30 @@ the real run/transfer timestamps, raw packages, and metadata are reconciled.
 | `EVQ_Cosh_NeurIPS2026_Rebuttal_Experiment_Design.md` | `SUPERSEDED` wide plan | Not an execution queue. It refers to unpromoted reviewer identities and a broader campaign than the retained concerns require. |
 | `ROPE_RANGE_SHAPE_MAPPING_THEORY_AND_5090_PLAN_20260724.md` | `SUPERSEDED` plan | The exact-range experiment it proposed has completed at the author-confirmed level. Use the standalone exact-range owner instead. |
 | `OLMO2_MATURITY_ADAPTATION_NEXT_EXPERIMENT_20260726.md` | `SUPERSEDED` plan | Progressive morph was later tested and failed the screen; do not reopen it from this document. |
-| `EVQ_4X_AND_8K_NO_HARM_THEORY_20260726.md` | `INTERNAL_DIAGNOSTIC` with stale live status | Retain only no-harm/design reasoning. Its “matched Native still running” statements are superseded by the completed LLaMA matched report. |
+| `EVQ_4X_AND_8K_NO_HARM_THEORY_20260726.md` | `INTERNAL_DIAGNOSTIC / ARCHIVED_DESIGN` | Retain only no-harm/design reasoning. Its empirical status now points to the completed LLaMA matched owner; its later gates are not an action queue. |
 | `TAU_TRUE_ROLE_AND_OPERATING_RULE_AUDIT.md` | `INTERNAL_DIAGNOSTIC` | Retain derivations and audit history; use Phase16 and the compact positive/negative ledgers for response routing. |
 | `MLA_YARN_OPERATOR_PARITY_5090_PLAN.md` | `DESIGN_ONLY` deferred | Not active rebuttal evidence or GPU authorization. |
 | `MATCHED_RANGE_COSH_500M_S42_20260724.md` | retained provenance owner | Keep until the three-seed raw aggregate is promoted. It is not the headline aggregate. |
 | `OLMO2_N100_GAP_STRUCTURE_AUDIT_20260726.md` | retained guardrail owner | Keep while the main conversion report and playbook rely on its distance decomposition. |
 
-## 4. Current contradictions and their resolution
+## 4. Status clarifications and remaining gates
 
-### 4.1 OLMo step-1,000 scratch status
+### 4.1 OLMo step-1,000 scratch source hierarchy — resolved
 
-The Markdown report contains the completed EVQ step-1,000 comparison, while
-the curated JSON still says that no EVQ result is included. The playbook also
-previously called the experiment both complete and pending.
+The sibling JSON is explicitly scoped to
+`released_native_rope_baselines_only`; its statement that no EVQ result is
+included describes that native-only snapshot. The later standalone Markdown
+owner records the completed Geo/EVQ comparison and retains hashes for the Geo
+raw result, EVQ checkpoint, EVQ raw result, per-token NLL, paired comparison,
+and evaluation anchors.
 
-**Resolution:** classify it as `PENDING_PROMOTION`. The numeric paragraph may
-remain in the positive ledger as a conditional draft, but it is not sendable
-until a curated owner contains the EVQ result and the retained raw hashes are
-reconciled.
+**Resolution:** classify the paired result as
+`POST_SUBMISSION_RAW_HASH_BACKED`. It is reviewer-usable as a
+single-trajectory, same-initialization/same-scientific-recipe natural-text LM
+comparison. The different HF versus AI2 trainer implementations remain an
+adjacent claim boundary; they are not a status or promotion blocker. Do not
+again interpret the native-only JSON as a contradiction or require it to
+duplicate the later paired-result fields.
 
 ### 4.2 Exact-range three-seed status
 
@@ -105,12 +111,13 @@ evidence.
 
 ### 4.5 “Counterfactual” wording
 
-Only the OLMo 300-step routing stage uses pairwise counterfactual loss.
-Neither the OLMo 13-task continuation nor any completed LLaMA training uses
-counterfactual loss.
+The OLMo 300-step routing stage and a later fresh EVQ-only LLaMA arm use
+pairwise counterfactual loss. The OLMo 13-task continuation and the matched
+LLaMA natural-LM/RULER studies do not.
 
-**Resolution:** reserve “counterfactual-trained” for the OLMo routing parent.
-Describe LLaMA gold deletion and swaps as evaluation interventions.
+**Resolution:** name the exact arm. Do not describe either matched LLaMA
+Native/EVQ protocol as counterfactual-trained, and do not use the fresh
+EVQ-only arm as a matched causal comparison.
 
 ### 4.6 Submitted exact-kernel corroboration
 
@@ -144,12 +151,12 @@ corresponding broad claim is not made.
 ## 6. Open internal work, not current rebuttal evidence
 
 1. Promote the exact-range three-seed raw aggregate.
-2. Reconcile the 1.485B scratch Markdown/JSON/raw package.
-3. Correct future-dated OLMo metadata.
-4. Complete a genuinely counterfactual-trained LLaMA Native/EVQ pair only if
-   the authors decide the marginal evidence is worth the GPU cost.
-5. Complete the three missing Native-LoRA 32K RULER cells only if a full 32K
+2. Correct future-dated OLMo metadata.
+3. Retain the proposed matched LLaMA Native/EVQ counterfactual pair as
+   `DESIGN_ONLY`. It is not current evidence, is not required by the sendable
+   rebuttal core, and must not be run during the current response cycle.
+4. Complete the three missing Native-LoRA 32K RULER cells only if a full 32K
    control is necessary; the current ten completed cells and EVQ result are
    already zero.
-6. Keep EVQ-v2 residual/hybrid/DC research outside the submitted-method
+5. Keep EVQ-v2 residual/hybrid/DC research outside the submitted-method
    rebuttal.
