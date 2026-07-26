@@ -27,6 +27,8 @@ We test, *symbolically*, the user's claims:
 We use SymPy with no shortcuts.  Each step prints intermediate results.
 """
 
+from pathlib import Path
+
 from sympy import (
     symbols, Function, diff, simplify, expand, exp, log, sinh, cosh,
     atan, asinh, sqrt, integrate, Symbol, Rational, pi,
@@ -491,8 +493,8 @@ print("-" * 78)
 
 # Read the table from the paper file at lines 117-148.
 import re
-with open('/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/'
-          'paper/appendix/a1_proofs.tex') as f:
+repo_root = Path(__file__).resolve().parents[5]
+with (repo_root / 'paper/appendix/a1_proofs.tex').open() as f:
     paper_text = f.read()
 # Pattern for "($-X\%$)" inside table.
 percentages = re.findall(r"\$-(\d+)\\%\$", paper_text[

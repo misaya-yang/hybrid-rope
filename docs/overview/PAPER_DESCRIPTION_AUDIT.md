@@ -2,7 +2,7 @@
 
 Purpose: audit whether the paper text says only what the experiment code and
 JSON/result artifacts can support. This is the paper-description layer on top of
-`OPUS48_REVIEW_AUDIT_CHECKLIST.md` and
+`rebuttal/rebuttal_0723/theory_results/EVQ_COSH_REBUTTAL_PRINCIPLES.md` and
 `EXPERIMENT_CODE_RESULT_AUDIT.md`.
 
 ## Summary

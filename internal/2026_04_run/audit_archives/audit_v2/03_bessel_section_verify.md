@@ -4,7 +4,7 @@
 new \subsection{Why constant α (...)}\label{sec:why-constant-alpha} of
 `paper/appendix/a1_proofs.tex` (commit a358d6d / 2b33a59 — current `main`).
 All work performed with sympy 1.14 plus scipy 1.17 in
-`/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/audit_v2/scripts/verify_bessel_substitution.py`.
+`internal/2026_04_run/audit_archives/audit_v2/scripts/verify_bessel_substitution.py`.
 No reuse of paper-side scripts.
 
 **Severity tags:** P0 = math error in the published paper / hand-wave a
@@ -395,7 +395,7 @@ optional rebuttal-stage adds; the section is paper-ready.
 
 ## Reproducibility
 
-- Script: `/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/audit_v2/scripts/verify_bessel_substitution.py`
+- Script: `internal/2026_04_run/audit_archives/audit_v2/scripts/verify_bessel_substitution.py`
 - Runs in ~3s on M4 Max with sympy 1.14 + scipy 1.17.
 - All sympy expressions produce identity diffs of 0 (or 8.9e-16 in
   numerical Bessel-equation checks).

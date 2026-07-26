@@ -2,7 +2,7 @@
 
 > **审计状态提示（2026-06）**：本文是早期实验登记表，保留为历史索引。
 > 它不再是论文/rebuttal 的唯一权威来源。当前 reviewer-facing 证据状态以
-> `docs/overview/OPUS48_AUDIT_CONTROL_CENTER.md`,
+> `rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md`,
 > `docs/overview/EXPERIMENT_CODE_RESULT_AUDIT.md`, and
 > `docs/overview/RESULT_PROVENANCE_MANIFEST.md` 为准。
 > 早期 `Paper-ready` 标签必须重新按 code/result/JSON/checkpoint provenance 审核。

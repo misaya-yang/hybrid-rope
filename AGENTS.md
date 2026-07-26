@@ -139,7 +139,7 @@ code in `experiments/`; tests stay in repo `tests/`.
 - Verify at claim strength (transcript/tooling for agent claims).
 - Completion report: passed / failed / skipped / unverified.
 - User language: usually Chinese; lead with concrete status.
-- Prefer minimal edits; `main` is source of truth (see index for git).
+- Prefer minimal edits; `main_0726` is the active rebuttal source of truth.
 
 ---
 
@@ -172,9 +172,10 @@ across arms.
 
 ### Git (one paragraph)
 
-Work on `main`; sync `origin/main` before serious edits. Commit on `main` unless
-asked for a temp branch. Push only on explicit request. Never reset/checkout away
-user work. Temporary `codex/*` is not an evidence baseline until merged.
+Work on `main_0726`; sync `origin/main_0726` before serious edits. `main` and
+`backup/main-restored-paper-20260726` are preserved pre-cleanup baselines, not
+the active rebuttal queue. Push only on explicit request. Never reset/checkout
+away user work. Temporary `codex/*` is not an evidence baseline until merged.
 
 ---
 

@@ -24,9 +24,7 @@ paper/_build_to_delete/** export-ignore
 paper/EDIT_CHANGELOG.md export-ignore
 paper/COWORK_FINAL_PROMPT.md export-ignore
 rebuttal/** export-ignore
-ai-handoff.md export-ignore
 REPO_MAP.md export-ignore
-agent_logs/** export-ignore
 .codex/** export-ignore
 .claude/** export-ignore
 **/__pycache__/** export-ignore

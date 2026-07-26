@@ -9,8 +9,7 @@ the τ²_* prefactor.
 **Reproducibility.** All numerics done from scratch in
 `audit/scripts/04_q_x_verify.py` and `audit/scripts/04_Q1_grid.py`,
 using `scipy.integrate.quad` (no reuse of paper code). Python:
-`/Users/misaya.yanghejazfs.com.au/miniconda3/envs/ai_gateway/bin/python`
-(scipy 1.17, numpy). Severity tags: P0 = numerical/algebraic
+an environment with scipy 1.17 and numpy. Severity tags: P0 = numerical/algebraic
 inconsistency body↔appendix; P1 = wording divergence / convention drift
 / prefactor disagreement; P2 = stylistic.
 

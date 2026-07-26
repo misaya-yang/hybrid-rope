@@ -2,7 +2,7 @@
 
 > 目的：把**理论严谨性**、**正文叙事优先级**、**主图主表资产**统一到一张可执行矩阵上。
 > 原则：先决定“什么是 paper-grade primary claim”，再决定图表和正文怎么分配版面。
-> 理论高标准来源：`/Users/misaya.yanghejazfs.com.au/AI-Imam-pdf/EVQ_Cosh_Theory_Optimized_Rigorous_2026.tex`
+> 理论高标准来源：外部作者持有的 rigorous-theory source（仓库未跟踪）
 
 ---
 
@@ -15,10 +15,10 @@
 
 ## Submission implementation
 
-- Canonical anonymous submission plan:
-  [NEURIPS_SUBMISSION_PLAN.md](/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/paper_draft/NEURIPS_SUBMISSION_PLAN.md)
-- Implemented review-version skeleton:
-  [main.tex](/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/paper_draft/submission/main.tex)
+- Historical anonymous submission plan:
+  `paper_draft/NEURIPS_SUBMISSION_PLAN.md` (not tracked)
+- Historical review-version skeleton:
+  `paper_draft/submission/main.tex` (not tracked)
 
 ---
 
@@ -79,7 +79,7 @@
 | 位置 | 资产 | 作用 |
 |------|------|------|
 | 主图 1 | **Figure 2** `fig2_evq_yarn_synergy.*` | 直接承载 `EVQ+YaRN >> Geo+YaRN` |
-| 主图 2 | **Figure 3** | [fig3_pe_dominant_scaling.pdf](/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/paper_draft/figs/fig3_pe_dominant_scaling.pdf)；承载 DAPE-style extreme extrapolation + Phase 11 `τ*` 直观确认 |
+| 主图 2 | **Figure 3** | `paper/figs/fig3_pe_dominant_scaling.pdf`；承载 DAPE-style extreme extrapolation + Phase 11 `τ*` 直观确认 |
 | Supporting 图 | Figure 1 `fig1_frequency_dynamics.*` | 给机制和 750M dynamics，不再承担主 headline |
 | Rebuttal / mechanism 图 | Figure 4（待做） | 把 `base=10K` 负面结果转成理论证据 |
 | 主表 1 | Table 1 | 跨规模 raw PPL 一致性 |

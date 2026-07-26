@@ -43,21 +43,12 @@
 
 ## Core Claims → Evidence Chain
 
-Opus 4.8 audit control center:
-`docs/overview/OPUS48_AUDIT_CONTROL_CENTER.md` is the first stop for the
-reviewer checklist, open P0 gaps, 1B handling rule, and old-document quarantine.
-Requirement-level completion status is tracked in
-`docs/overview/OPUS48_COMPLETION_AUDIT.md`.
-Per-issue resolution status is tracked in
-`docs/overview/OPUS48_ISSUE_RESOLUTION_LEDGER.md`.
-Rebuttal-safe response strategy is tracked in
-`docs/overview/OPUS48_REBUTTAL_RESPONSE_MATRIX.md`.
-External artifact recovery steps are tracked in
-`docs/overview/OPUS48_ARTIFACT_RECOVERY_RUNBOOK.md`.
-
-Reviewer stress-test checklist: `docs/overview/OPUS48_REVIEW_AUDIT_CHECKLIST.md`
-tracks Opus 4.8-style attacks, P0/P1 gaps, 1B MLA reversal handling, and
-rebuttal-safe wording. Treat it as the audit layer on top of this claim map.
+Reviewer and AC authority:
+`rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md`.
+Response and evidence routing:
+`rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md`.
+Method and theory boundaries:
+`rebuttal/rebuttal_0723/theory_results/EVQ_COSH_REBUTTAL_PRINCIPLES.md`.
 Result provenance manifest: `docs/overview/RESULT_PROVENANCE_MANIFEST.md`
 records current compact-repo evidence, archival branch pointers, and missing
 checkpoint/data-hash gates.
@@ -70,10 +61,6 @@ has code support, implementation support, and JSON/result artifacts.
 Paper description audit: `docs/overview/PAPER_DESCRIPTION_AUDIT.md` records
 where paper wording is supported, fixed, or still caveated by available code and
 JSON evidence.
-Forensic audit report: `docs/overview/OPUS48_FORENSIC_AUDIT_REPORT.md` follows
-the original Opus 4.8 prompt structure: repo map, 1B provenance, token-count
-audit, eval/data/table provenance, likely causes, scripts added, and minimal
-experiment plan.
 
 | ID | Claim | Primary Evidence | Scripts | Seeds | Risk |
 |----|-------|-----------------|---------|-------|------|

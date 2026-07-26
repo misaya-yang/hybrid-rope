@@ -229,7 +229,7 @@ first establishes that allocation shape adds value once range is controlled.
 - `data/curated/phase16_99run_manifest.csv`
 - `scripts/core_text_phases/phase16_formula_optimality_sweep.py`
 - `scripts/core_text_phases/export_phase16_manifest.py`
-- `rebuttal/pre_rebuttal/FULL_PAPER_INTEGRITY_AUDIT_20260713.md`
+- `rebuttal/rebuttal_0723/theory_results/EVQ_COSH_REBUTTAL_PRINCIPLES.md`
 - `rebuttal/pre_rebuttal/FIRST_PRINCIPLES_REBUTTAL_REASSESSMENT_20260716.md`
 - `rebuttal/pre_rebuttal/THEORY_FREQUENCY_OPTIMALITY_AND_TAU_20260716.md`
 - `rebuttal/rebuttal_0723/theory_results/ROPE_RANGE_SHAPE_MAPPING_THEORY_AND_5090_PLAN_20260724.md`

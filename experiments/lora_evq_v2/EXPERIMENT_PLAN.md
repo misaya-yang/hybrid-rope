@@ -2,9 +2,9 @@
 
 > **Historical proposal, not the executed or current rebuttal protocol.** This
 > file contains superseded 4-bit/600-step/batch-4 assumptions. The current clean
-> diagnostic is defined by
-> `docs/superpowers/specs/2026-07-10-llama8b-positional-distillation-design.md`;
-> the paper's old LoRA row remains provenance-limited supporting evidence.
+> diagnostic is owned by the current standalone reports under
+> `rebuttal/rebuttal_0723/theory_results/`; the paper's old LoRA row remains
+> provenance-limited supporting evidence.
 
 > **日期**: 2026-03-31
 > **目标**: 证明 EVQ-cosh LoRA (r=64, τ=1.414) 在长上下文任务上远胜 base Instruct 模型 (≥15%)

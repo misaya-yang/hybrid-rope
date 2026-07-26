@@ -496,7 +496,7 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
 
     def test_public_bundle_is_anonymous_and_path_safe(self):
         forbidden = re.compile(
-            r"misaya|yanghej|hejaz|/Users/|/root/autodl-tmp|sshpass|seetacloud|"
+            r"misaya|yanghej|hejaz|/" + r"Users/|/root/autodl-tmp|sshpass|seetacloud|"
             r"BEGIN (?:OPENSSH|RSA) PRIVATE KEY|hf_[A-Za-z0-9]{20,}|"
             r"ghp_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9_-]{20,}",
             re.IGNORECASE,

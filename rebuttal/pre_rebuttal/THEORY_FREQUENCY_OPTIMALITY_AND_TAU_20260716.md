@@ -6,7 +6,12 @@
 
 范围：纯理论。不修改代码、不修改论文实验数字、不引入新实验。
 
-权威关系：方法身份、Phase16、`c_coll`、DAPE/YaRN 等事实以 `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` 为准；ordinary-KL / transport proxy 长推导见 `THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md`；策略与机制全景见 `FIRST_PRINCIPLES_REBUTTAL_REASSESSMENT_20260716.md`。本文在上述材料之上，**重梳并修补逻辑链**，专答两问：
+权威关系：当前方法身份、Phase16、`c_coll`、DAPE/YaRN 等边界以
+`../rebuttal_0723/theory_results/EVQ_COSH_REBUTTAL_PRINCIPLES.md` 和当前
+evidence ledgers 为准；ordinary-KL / transport proxy 长推导见
+`THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md`；策略与机制全景见
+`FIRST_PRINCIPLES_REBUTTAL_REASSESSMENT_20260716.md`。本文在上述材料之上，
+**重梳并修补逻辑链**，专答两问：
 
 1. 均匀（geometric）分配是否“就是最优”？cosh 非均匀在何种意义上最优？
 2. \(\tau = d/\sqrt{L}\) 能否从第一性原理推出？与经验轨迹是否同构？
@@ -27,7 +32,7 @@
 | Surrogate 定义、严格凸、边界条件与 cosh 解 | `paper/sections/03_theory.tex:21-46`；`paper/appendix/a1_proofs.tex:4-50` |
 | Inverse-CDF 与 midpoint 实现 | `paper/sections/03_theory.tex:50-65`；`scripts/lib/rope/schedules.py:94-140` |
 | 提交稿 \(\tau\) / KL / stiffness 原叙事 | `paper/sections/03_theory.tex:90-117`；`paper/appendix/a1_proofs.tex:297-403` |
-| 方法身份、`c_coll`、Phase16 与 provenance 纠错 | `rebuttal/pre_rebuttal/FULL_PAPER_INTEGRITY_AUDIT_20260713.md:119-206,280-296` |
+| 方法身份、`c_coll`、Phase16 与 provenance 边界 | `rebuttal/rebuttal_0723/theory_results/EVQ_COSH_REBUTTAL_PRINCIPLES.md` |
 | 早期 \(L=128/1024/2048\) sweep | `docs/exp/2026-02-26_full_experiment_report.md:150-220,511-552`；`docs/exp/2026-02-27_evq_tau_sweep_results.md:9-54` |
 
 ---

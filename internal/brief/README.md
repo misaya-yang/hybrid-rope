@@ -6,7 +6,8 @@ This directory contains standalone PDF briefs that summarize the current EVQ-Cos
 
 - `evq_cosh_core_brief.tex`: English source
 - `evq_cosh_core_brief.pdf`: compiled English PDF
-- `evq_cosh_core_brief_zh.tex`: Chinese source built around `paper_draft/CORE_THEORY.md` and the rigorous theory file at `/Users/misaya.yanghejazfs.com.au/AI-Imam-pdf/EVQ_Cosh_Theory_Optimized_Rigorous_2026.tex`
+- `evq_cosh_core_brief_zh.tex`: Chinese source built around the historical
+  `paper_draft/CORE_THEORY.md` and an external author-held rigorous-theory source
 - `evq_cosh_core_brief_zh.pdf`: compiled Chinese PDF
 
 ## Scope

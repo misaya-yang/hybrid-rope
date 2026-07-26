@@ -3,10 +3,10 @@
 ## Status
 
 Forward-looking plan for a single RTX Pro 6000 (96 GB). Single-seed discovery
-only; no paper number changes. It extends
-`docs/superpowers/specs/2026-07-14-lora-industrial-capability-design.md` to a
-128K-native model, and it deliberately BREAKS that design's "raw schedule only,
-no scaler" invariant, because a 128K model's long-context ability IS a
+only; no paper number changes. It extends the archived 2026-07-14 industrial
+capability design to a 128K-native model, and it deliberately BREAKS that
+design's "raw schedule only, no scaler" invariant, because a 128K model's
+long-context ability IS a
 frequency scaler (YaRN). The matched baseline here is therefore YaRN, not raw
 Geo. All feasibility and tau numbers below are produced by
 `scripts/analysis/industrial_128k_feasibility.py`, whose coverage

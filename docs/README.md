@@ -12,8 +12,7 @@ docs/
 ├── exp/            实验报告 (YYYY-MM-DD_slug.md 格式)
 ├── theory/         理论推导与数值验证
 ├── tau_algor/      tau/scaling 的历史推导与诊断
-├── archive/        明确退役的文档
-└── superpowers/    已执行计划的历史记录，不是当前入口
+└── archive/        明确退役的文档
 ```
 
 ---
@@ -22,7 +21,7 @@ docs/
 
 ### 快速入门 (10 min)
 
-1. **`ai-handoff.md`** → 当前工作树、已知问题和继续位置
+1. **`rebuttal/rebuttal_0723/README.md`** → 当前 rebuttal 状态和继续位置
 2. **`REPO_MAP.md`** → 目录职责与 source-of-truth
 3. **`overview/README.md`** → 当前 overview 权威顺序
 4. **`overview/PAPER_CLAIMS_MAP.md`** → 论文↔实验↔脚本↔结果导航

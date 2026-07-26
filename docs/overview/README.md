@@ -5,28 +5,24 @@ whether an experiment row is supported by code and artifacts.
 
 ## Current Authority Order
 
-1. `ai-handoff.md` for current worktree state and known breakage.
-2. `rebuttal/README.md` and `rebuttal/rebuttal_0723/README.md` for the
-   current response-only workflow; `rebuttal/pre_rebuttal/` is historical.
-3. `docs/overview/RESULT_PROVENANCE_MANIFEST.md` for reviewer-safe result identity and hashes.
-4. `docs/overview/PAPER_CLAIMS_MAP.md`, `docs/overview/REPRODUCE.md`, and `docs/overview/DATA_PREPARATION.md` for navigation and reproduction.
+1. `rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md` for
+   retained reviewer and AC concerns.
+2. `rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md` for current response and
+   evidence routing.
+3. `rebuttal/rebuttal_0723/theory_results/EVQ_COSH_REBUTTAL_PRINCIPLES.md`
+   for method and theory boundaries.
+4. `docs/overview/RESULT_PROVENANCE_MANIFEST.md` for reviewer-safe result
+   identity and hashes.
+5. `docs/overview/PAPER_CLAIMS_MAP.md`, `docs/overview/REPRODUCE.md`, and
+   `docs/overview/DATA_PREPARATION.md` for navigation and reproduction.
 
-The Opus 4.8 files below are a supporting audit stack. They do not override the 2026-07-11/12 rebuttal theory, provenance, or control-room documents.
-
-## Supporting Opus 4.8 Audit Stack
-
-Read these first for reviewer-facing decisions:
+## Reviewer-Facing Checks
 
 | Question | File |
 | --- | --- |
-| What single Markdown should I send to an advisor? | `docs/overview/OPUS48_REBUTTAL_MASTER_BRIEF.md` |
-| What is the current reviewer-safe position? | `docs/overview/OPUS48_AUDIT_CONTROL_CENTER.md` |
-| What did Opus 4.8 attack? | `docs/overview/OPUS48_REVIEW_AUDIT_CHECKLIST.md` |
-| How was each issue handled? | `docs/overview/OPUS48_ISSUE_RESOLUTION_LEDGER.md` |
-| How should rebuttal answer each attack? | `docs/overview/OPUS48_REBUTTAL_RESPONSE_MATRIX.md` |
-| Which requirements are covered and which remain open? | `docs/overview/OPUS48_COMPLETION_AUDIT.md` |
-| What is the detailed 1B/MLA forensic audit? | `docs/overview/OPUS48_FORENSIC_AUDIT_REPORT.md` |
-| How do we recover external artifacts to close P0 gates? | `docs/overview/OPUS48_ARTIFACT_RECOVERY_RUNBOOK.md` |
+| What did reviewers and the AC actually ask? | `rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md` |
+| What evidence and wording answer each concern? | `rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md` |
+| What is ready, conditional, negative, or pending? | `rebuttal/rebuttal_0723/theory_results/REVIEWER_USABLE_EVIDENCE_LEDGER_20260726.md` and `INTERNAL_NEGATIVE_AND_DIAGNOSTIC_LEDGER_20260726.md` |
 | Does a row have code, implementation, and JSON/result support? | `docs/overview/EXPERIMENT_CODE_RESULT_AUDIT.md` |
 | Does paper wording stay within evidence? | `docs/overview/PAPER_DESCRIPTION_AUDIT.md` |
 | Which files/hashes support current claims? | `docs/overview/RESULT_PROVENANCE_MANIFEST.md` |
@@ -57,12 +53,13 @@ Read these first for reviewer-facing decisions:
 
 ## Historical Docs
 
-The following files are useful for background, but they predate the Opus 4.8
-audit stack and must not override it:
+The following files are useful for background, but they predate the current
+reviewer/AC routing and must not override it:
 
 - `docs/overview/PROJECT_OVERVIEW.md`
 - `docs/overview/EXPERIMENT_REGISTRY.md`
 - `docs/overview/EXPERIMENT_INVENTORY.md`
 - `docs/overview/METHODOLOGY.md`
 
-If these disagree with the Opus 4.8 audit stack, use the audit stack.
+If these disagree with the current rebuttal playbook, evidence ledgers, or
+provenance manifest, use the current sources.

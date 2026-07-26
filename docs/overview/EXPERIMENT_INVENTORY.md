@@ -2,7 +2,7 @@
 
 > Audit note (2026-06): this is an older mirror of an older registry. Keep it
 > for historical lookup only. Current reviewer-facing evidence status is in
-> `docs/overview/OPUS48_AUDIT_CONTROL_CENTER.md`,
+> `rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md`,
 > `docs/overview/EXPERIMENT_CODE_RESULT_AUDIT.md`, and
 > `docs/overview/RESULT_PROVENANCE_MANIFEST.md`.
 

@@ -10,7 +10,7 @@
   were independently recomputed.
 - Experimental values changed in the paper: none.
 
-> **2026-07-13 identity correction:** 该实验匹配了model/data/order/LoRA/optimizer/evaluator，但不是同quantizer的纯density-shape control：Geo使用native endpoint frequencies，EVQ使用midpoint quantization。以下“matched”均只指training pipeline matched；方法差异包含quantizer shift与cosh shape，不能只归因于density shape。事实边界以 `FULL_PAPER_INTEGRITY_AUDIT_20260713.md` 为准。
+> **2026-07-13 identity correction:** 该实验匹配了model/data/order/LoRA/optimizer/evaluator，但不是同quantizer的纯density-shape control：Geo使用native endpoint frequencies，EVQ使用midpoint quantization。以下“matched”均只指training pipeline matched；方法差异包含quantizer shift与cosh shape，不能只归因于density shape。事实边界以 `../rebuttal_0723/01_REBUTTAL_PLAYBOOK.md` 为准。
 
 ## Result to use in rebuttal
 

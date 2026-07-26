@@ -12,7 +12,7 @@
 
 Files:
 
-- Modify: `rebuttal/pre_rebuttal/rebuttal_playbook.md`
+- Modify: `rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md`
 - Modify: `rebuttal/README.md`
 
 Actions:
@@ -24,7 +24,7 @@ Actions:
 Verification:
 
 ```bash
-rg -n "no-new-experiments|不补充任何新实验|不启动 7B/8B实验|新 LoRA、video" rebuttal/pre_rebuttal/rebuttal_playbook.md rebuttal/README.md
+rg -n "no-new-experiments|不补充任何新实验|不启动 7B/8B实验|新 LoRA、video" rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md rebuttal/README.md
 ```
 
 Expected: no categorical ban remains.

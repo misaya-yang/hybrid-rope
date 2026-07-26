@@ -342,7 +342,8 @@ The strongest honest rebuttal is not a larger pile of results. It is a precise s
 
 ## 7. Source index
 
-- Method/theory/protocol audit: `FULL_PAPER_INTEGRITY_AUDIT_20260713.md`
+- Current method/theory/protocol boundaries:
+  `../rebuttal_0723/theory_results/EVQ_COSH_REBUTTAL_PRINCIPLES.md`
 - Long mathematical audit: `THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md`
 - Official-YaRN component follow-up: `EVQ_YARN_COMPONENT_ABLATION_20260714.md`
 - DAPE identity and DAPE-ish follow-up: `real_dape_compare/FINDINGS.md`

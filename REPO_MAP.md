@@ -1,6 +1,9 @@
 # Repository Map
 
-最后更新：2026-07-24
+最后更新：2026-07-26
+
+当前工作分支为 `main_0726`。`main` 与
+`backup/main-restored-paper-20260726` 保留清理前、已恢复投稿版 `paper/` 的快照。
 
 本文件只回答三个问题：去哪里读、哪里可以改、哪一层能支持 reviewer-facing claim。
 
@@ -8,7 +11,7 @@
 
 | 路径 | 职责 | 状态 / 规则 |
 | --- | --- | --- |
-| `paper/` | 当前 LaTeX source、图表、参考文献、唯一 `main.pdf` | 投稿层；不要放 rebuttal、audit 或 build 副本 |
+| `paper/` | 已恢复的投稿版 LaTeX source、图表、参考文献、唯一 `main.pdf` | 整体只读；不得修改、编译、移动、删减或重新生成 |
 | `rebuttal/` | response-only control room | `rebuttal_0723/` 为当前真实审稿周期；`pre_rebuttal/` 为历史准备；不进入 supplement |
 | `data/curated/` | 可跟踪、匿名化、reviewer-safe 的小型结果 artifact | reviewer-facing evidence 层；边界由 provenance manifest 决定 |
 | `docs/overview/` | 当前 claims、provenance、复现、术语与审计索引 | 决策文档层；先读其中 `README.md` |
@@ -34,7 +37,7 @@
 | EVQ-Cosh schedule 的实现 | `scripts/lib/rope/schedules.py` |
 | 当前真实 review、AC 与行动状态 | `rebuttal/rebuttal_0723/README.md` → `00_REVIEWER_SCORES_AND_AC_METAREVIEW.md` + `01_REBUTTAL_PLAYBOOK.md` |
 | 理论批评的历史事实底稿 | `rebuttal/pre_rebuttal/THEORY_FREQUENCY_OPTIMALITY_AND_TAU_20260716.md` |
-| 当前 AI 应接着做什么 | `ai-handoff.md` |
+| 当前 AI 应接着做什么 | `rebuttal/rebuttal_0723/README.md` → `01_REBUTTAL_PLAYBOOK.md` |
 
 ## 3. 证据层级
 
@@ -83,13 +86,12 @@ historical/local evidence
 - `rebuttal/rebuttal_0723/README.md`
 - `rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md`
 - `rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md`
+- `rebuttal/rebuttal_0723/02_RESPONSE_QUESTIONS_AND_OUTCOMES.md`
 - `rebuttal/rebuttal_0723/theory_results/EXPERIMENT_REPORT_20260724.md`
 - `rebuttal/rebuttal_0723/theory_results/PHASE16_99RUN_RAW_REANALYSIS_20260724.md`
 - `rebuttal/pre_rebuttal/README.md`
-- `rebuttal/pre_rebuttal/rebuttal_playbook.md`
-- `rebuttal/pre_rebuttal/REVIEWER_TRIAGE_PLAYBOOK.md`
-- `rebuttal/pre_rebuttal/REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md`
 - `rebuttal/pre_rebuttal/THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md`
+- `rebuttal/pre_rebuttal/THEORY_FREQUENCY_OPTIMALITY_AND_TAU_20260716.md`
 - `rebuttal/pre_rebuttal/LORA_GEO_CONTROL_RESULT_AUDIT_20260711.md`
 
 ## 5. Data 与 results 放置规则
@@ -107,18 +109,19 @@ historical/local evidence
 - `.codex_tmp/phase17_454m_L512_2B.py` 等小脚本是 provenance clue，不是 reviewer-grade completion。
 - `results/legacy/`：明确不属于当前核心 submission path。
 
-这些目录通过索引隔离，不应为了“整洁”而无审计地移动或删除。
+旧代理日志、模拟审稿、重复 playbook、过时 handoff 和历史审计壳已从
+`main_0726` 移除；需要追溯时从 `main` 或备份分支读取，不要重新复制回当前入口。
 
 ## 7. 新文件该放哪里
 
 | 文件类型 | 位置 |
 | --- | --- |
 | 新主实验 runner | `scripts/core_text_phases/` |
-| rebuttal-only launcher | `scripts/2026-07/`，并在 handoff 标明 |
+| rebuttal-only launcher | `rebuttal/rebuttal_0723/experiments/`，并由同目录 README/standalone owner 索引 |
 | 复用型 RoPE 实现 | `scripts/lib/rope/` |
 | 数据准备 | `scripts/data_prep/` |
 | 独立模型实验包 | `experiments/<package>/` |
-| 论文图 | `paper/figs/`；生成脚本在 `scripts/figures/` |
+| 论文图生成脚本 | `scripts/figures/`；不得在本分支写入只读 `paper/figs/` |
 | 当前高层文档 | `docs/overview/` |
 | 实验报告 | `docs/exp/` |
 | 当前 rebuttal 策略与 review | `rebuttal/rebuttal_0723/`；根 `rebuttal/README.md` 只做分流 |

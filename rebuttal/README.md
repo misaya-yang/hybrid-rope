@@ -18,14 +18,15 @@
   99-run 的重新审计单独记录在
   `rebuttal_0723/theory_results/PHASE16_99RUN_RAW_REANALYSIS_20260724.md`。
 - 尚未形成可发送的 author response，也没有修改论文正文或主表数字。
-- `pre_rebuttal/` 中的模拟 Reviewer 1/2/3 不是 OpenReview 正式源。
+- `pre_rebuttal/` 只保留可复用的历史理论、结果说明和实验包；它不是
+  OpenReview 正式源或当前 action queue。
 
 ## 目录
 
 | 路径 | 作用 | 权限 |
 | --- | --- | --- |
 | [`rebuttal_0723/`](rebuttal_0723/README.md) | 当前真实审稿周期的唯一入口：review、AC、concern mapping、实验与结果状态 | 当前 |
-| [`pre_rebuttal/`](pre_rebuttal/README.md) | 真实 reviews 到来前的理论审计、风险清单、模拟审稿、旧实验方案和旧实现 | 历史参考 |
+| [`pre_rebuttal/`](pre_rebuttal/README.md) | 真实 reviews 到来前且仍可复用的理论审计、结果说明和实验实现 | 历史参考 |
 
 根目录不再放单独的 rebuttal 策略文档。真实问题从
 `rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md` 开始，随后由
@@ -40,7 +41,7 @@
    的窄口径。
 4. 新实验只有在直接区分 score-changing 假设、协议已冻结、运行产物可追溯时
    才可能进入回复。代码存在不等于结果存在，外部机器状态也不等于仓库证据。
-5. 模拟审稿和宽实验计划只能提供检索线索，不得冒充正式 review 或已批准任务。
+5. 历史计划只能提供检索线索，不得冒充正式 review、已批准任务或完成结果。
 6. `rebuttal/` 整体不得直接打进 reviewer supplement；任何对外 artifact 仍需
    匿名化和 provenance gate。
 

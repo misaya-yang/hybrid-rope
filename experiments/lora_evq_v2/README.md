@@ -87,9 +87,10 @@ export EVQ_POSITIONAL_GRADIENT_CHECKPOINTING=1
 `eval` evaluates Base-Geo, Base-EVQ, Geo-Null, and EVQ-Distill at
 8K/16K/32K, measures all 128 held-out sequences, computes the LM head in
 memory-bounded chunks, and writes
-`positional_distill_summary.json`. The fixed gates are documented in
-`docs/superpowers/specs/2026-07-10-llama8b-positional-distillation-design.md`.
-Quick RULER is deliberately outside the A-stage pass/fail gates.
+`positional_distill_summary.json`. This is a historical pilot, not a current
+rebuttal gate; current LLaMA evidence and protocol owners live under
+`rebuttal/rebuttal_0723/theory_results/`. Quick RULER is deliberately outside
+the A-stage pass/fail gates.
 
 This pilot does not remove LoRA, does not reproduce the original LongAlign
 protocol, and cannot by itself close the old Table 23 confound. A successful

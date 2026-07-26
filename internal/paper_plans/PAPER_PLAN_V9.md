@@ -1,6 +1,9 @@
 # NeurIPS v9 论文写作规划（Definitive）
 
-> **Canonical note**：匿名投稿版的当前唯一正式执行计划已迁移到 [NEURIPS_SUBMISSION_PLAN.md](/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/paper_draft/NEURIPS_SUBMISSION_PLAN.md)，实际提交骨架位于 [paper_draft/submission/main.tex](/Users/misaya.yanghejazfs.com.au/neurIPS-2026/hybrid-rope/paper_draft/submission/main.tex)。本文件保留为历史工作笔记，不再作为红线来源。
+> **Canonical note**：匿名投稿版当时的执行计划位于历史
+> `paper_draft/NEURIPS_SUBMISSION_PLAN.md`，提交骨架位于历史
+> `paper_draft/submission/main.tex`。这些路径当前未跟踪；本文件只保留为历史工作
+> 笔记，不再作为红线来源。
 
 > **硬性目标**：正文 ≤ 9 页（Title/Abstract 到 Conclusion 末尾），References 不计，Appendix 不计
 > **当前 v8 问题诊断**：正文约 13 页，Abstract 269 words（应 ≤150），段落冗余，自吹式语言（"This is one of the paper's strongest results"），bullet list 过多

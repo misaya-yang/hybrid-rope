@@ -4,6 +4,10 @@ Official code repository for the NeurIPS 2026 submission.
 
 **TL;DR** - We derive a closed-form variational solution for RoPE frequency allocation and show that the one-parameter EVQ-Cosh family, under the same fixed YaRN scale, reaches 100% PK retrieval at 8K on a 454M passkey-mix setting where geometric RoPE + YaRN remains at 61%. PK/passkey denotes teacher-forced NLL-gap retrieval unless explicitly marked as autoregressive exact match.
 
+**Active branch:** `main_0726` is the rebuttal-focused workspace. `main` and
+`backup/main-restored-paper-20260726` preserve the restored submitted-paper
+baseline from before this branch was pruned.
+
 ---
 
 ## For Agents and Maintainers
@@ -11,10 +15,11 @@ Official code repository for the NeurIPS 2026 submission.
 Read in this order before changing the repository:
 
 1. **`AGENTS.md`** — scientific, anonymity, editing and Git rules.
-2. **`ai-handoff.md`** — current worktree state, protected unfinished work and known test failure.
-3. **`REPO_MAP.md`** — directory responsibilities and source-of-truth matrix.
-4. **`rebuttal/README.md`** — current NeurIPS rebuttal control room.
-5. **`docs/overview/RESULT_PROVENANCE_MANIFEST.md`** — reviewer-safe result provenance.
+2. **`rebuttal/rebuttal_0723/README.md`** — current-cycle control room.
+3. **`rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md`** — retained reviewer/AC concerns.
+4. **`rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md`** — evidence and response routing.
+5. **`REPO_MAP.md`** — directory responsibilities and source-of-truth matrix.
+6. **`docs/overview/RESULT_PROVENANCE_MANIFEST.md`** — reviewer-safe result provenance.
 
 Do not create another rebuttal directory, another root provenance manifest, or another paper PDF. Current experiment code is indexed through `paper_experiments/MANIFEST.json`; canonical editable files remain under `scripts/` and `experiments/`.
 
@@ -55,16 +60,12 @@ python scripts/core_text_phases/run_evq_sweep.py --tier 125m --seeds 42,123,7 --
 
 `requirements.txt` keeps broad lower bounds for portability; `requirements-lock.txt` records the paper validation environment. Use `--strict_dataset` for paper reproduction so FineWeb-Edu failures do not silently fall back to another corpus.
 
-### Reproduce Paper Figures
+### Paper Figure Sources
 
-```bash
-# Main method overview is a static asset: paper/figs/fig_method_overview.pdf
-python scripts/figures/fig1_neurips.py               # Frequency dynamics
-python scripts/figures/fig2_evq_yarn_orthogonality.py  # Fig 2: EVQ×YaRN synergy
-python scripts/figures/fig3_pe_dominant_scaling.py      # Fig 3: PE-dominant scaling
-```
-
-Outputs are saved to `paper/figs/`.
+Figure-generation code remains under `scripts/figures/`, and its source/data
+mapping remains in `docs/overview/PAPER_CLAIMS_MAP.md`. Do not run a command
+that writes into `paper/` on this branch: the complete submitted-paper tree is
+immutable.
 
 Figure 3 panel (a) has a curated JSON fallback in `data/curated/`; panels (b,c) require regenerated local Phase 11 result JSONs and are documented in `docs/overview/REPRODUCE.md`.
 
@@ -87,8 +88,11 @@ rebuttal/                   single internal rebuttal control room
 ├── rebuttal_0723/          official review, AC metareview, current reports and runners
 │   ├── README.md           current-cycle evidence and action index
 │   ├── 00_REVIEWER_SCORES_AND_AC_METAREVIEW.md
-│   └── 01_REBUTTAL_PLAYBOOK.md
-└── pre_rebuttal/           historical audits, plans, simulations and supporting evidence
+│   ├── 01_REBUTTAL_PLAYBOOK.md
+│   ├── 02_RESPONSE_QUESTIONS_AND_OUTCOMES.md
+│   ├── theory_results/     standalone evidence owners and theory boundaries
+│   └── experiments/        rebuttal-only code and launchers
+└── pre_rebuttal/           retained audits, result notes and reusable experiment packages
     └── README.md           archive/reuse index
 
 data/
@@ -188,15 +192,11 @@ The packager copies only the public paper/source paths and fails if common ident
 
 ---
 
-## Building the Paper
+## Submitted Paper Archive
 
-```bash
-cd paper
-tectonic -X compile main.tex --outdir build_tectonic
-cp build_tectonic/main.pdf main.pdf
-```
-
-See `paper/README.md` for the verified pdfTeX fallback. `paper/main.pdf` is the only retained submission PDF; build directories are disposable.
+`paper/` is restored from the submitted-paper tree and is read-only on
+`main_0726`: do not modify, format, compile, regenerate, move, or partially
+replace it. `paper/main.pdf` is the retained submission PDF.
 
 ---
 

@@ -5,7 +5,7 @@
 > `d_rope=32`, `tau=1.414`，论文现在将其表述为经验 `d_eff=128`
 > operating convention，而不是从 `head_dim` 或 `d_rope` 推导出的定理。
 > 1B/4K MLA、LoRA、video 和 progressive rows 均按 supporting/diagnostic
-> evidence 处理；详见 `docs/overview/OPUS48_AUDIT_CONTROL_CENTER.md`。
+> evidence 处理；详见 `rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md`。
 
 > 最后更新: 2026-03-13
 > 供学术发表与审稿复现参考的底层机制说明。

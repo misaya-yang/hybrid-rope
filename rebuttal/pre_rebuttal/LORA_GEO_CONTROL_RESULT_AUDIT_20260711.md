@@ -1,6 +1,6 @@
 # LoRA Geo-Control Result and Provenance Audit
 
-> **2026-07-13 status update:** 本文对旧 LongAlign/LongAlpaca cross-protocol contrast 的否定仍成立。后来完成的 `LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` 闭环了一个新的 matched-training-pipeline seed-42 comparison，但 Geo为native endpoint、EVQ为midpoint，仍不是same-quantizer pure density-shape control；最新总边界见 `FULL_PAPER_INTEGRITY_AUDIT_20260713.md`。
+> **2026-07-13 status update:** 本文对旧 LongAlign/LongAlpaca cross-protocol contrast 的否定仍成立。后来完成的 `LORA_LONGALPACA_TEMPORAL_NLL_20260712.md` 闭环了一个新的 matched-training-pipeline seed-42 comparison，但 Geo为native endpoint、EVQ为midpoint，仍不是same-quantizer pure density-shape control；当前总边界见 `../rebuttal_0723/01_REBUTTAL_PLAYBOOK.md`。
 
 **Date:** 2026-07-11
 **Status:** internal rebuttal analysis; result-bearing but not yet a reviewer-facing claim

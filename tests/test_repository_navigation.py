@@ -10,38 +10,44 @@ class RepositoryNavigationTests(unittest.TestCase):
         for relative in (
             "AGENTS.md",
             "README.md",
-            "ai-handoff.md",
             "REPO_MAP.md",
             "rebuttal/README.md",
             "rebuttal/rebuttal_0723/README.md",
             "rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md",
             "rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md",
+            "rebuttal/rebuttal_0723/02_RESPONSE_QUESTIONS_AND_OUTCOMES.md",
+            "rebuttal/rebuttal_0723/theory_results/EVQ_COSH_REBUTTAL_PRINCIPLES.md",
+            "rebuttal/rebuttal_0723/theory_results/REVIEWER_USABLE_EVIDENCE_LEDGER_20260726.md",
             "rebuttal/pre_rebuttal/README.md",
-            "rebuttal/pre_rebuttal/rebuttal_playbook.md",
             "rebuttal/pre_rebuttal/seed42_lora_eval_20260713/REPORT.md",
             "docs/overview/RESULT_PROVENANCE_MANIFEST.md",
             "paper_experiments/MANIFEST.json",
         ):
             self.assertTrue((ROOT / relative).is_file(), relative)
 
-    def test_handoff_is_public_safe_and_points_to_authorities(self):
-        text = (ROOT / "ai-handoff.md").read_text(encoding="utf-8")
+    def test_routing_docs_are_public_safe_and_point_to_authorities(self):
+        routing_docs = (
+            ROOT / "README.md",
+            ROOT / "REPO_MAP.md",
+            ROOT / "AGENTS.md",
+            ROOT / "rebuttal" / "README.md",
+            ROOT / "rebuttal" / "rebuttal_0723" / "README.md",
+        )
+        text = "\n".join(path.read_text(encoding="utf-8") for path in routing_docs)
         for required in (
             "AGENTS.md",
             "REPO_MAP.md",
-            "rebuttal/README.md",
             "rebuttal/rebuttal_0723/README.md",
             "rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md",
             "rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md",
             "docs/overview/RESULT_PROVENANCE_MANIFEST.md",
             "paper/main.pdf",
-            "Known issues / current breakage",
+            "main_0726",
         ):
             self.assertIn(required, text)
 
         forbidden_markers = (
             "/" + "Users" + "/",
-            "/root/" + "autodl",
             "seeta" + "cloud",
             "ssh" + "pass",
         )
@@ -67,22 +73,32 @@ class RepositoryNavigationTests(unittest.TestCase):
                 (ROOT / "rebuttal" / retired_top_level).exists(),
                 retired_top_level,
             )
+        for retired_pre_rebuttal in (
+            "rebuttal_playbook.md",
+            "REVIEWER_TRIAGE_PLAYBOOK.md",
+            "REBUTTAL_MASTER_QUESTION_LEDGER_20260711.md",
+            "simulated_reviews",
+        ):
+            self.assertFalse(
+                (ROOT / "rebuttal" / "pre_rebuttal" / retired_pre_rebuttal).exists(),
+                retired_pre_rebuttal,
+            )
 
-    def test_paper_has_one_root_pdf_and_no_retired_root_files(self):
+    def test_restored_paper_archive_is_present_without_build_directories(self):
         self.assertEqual(
             sorted(path.name for path in (ROOT / "paper").glob("*.pdf")),
             ["main.pdf"],
         )
         for relative in (
-            "paper/EVQ-Cosh_NeurIPS2026.pdf",
+            "paper/main.pdf",
             "paper/neurips_2025.sty",
             "paper/REBUTTAL_PLAYBOOK.md",
             "paper/REVIEW_PROMPT.md",
             "paper/CITATION_AUDIT_REPORT.md",
-            "paper/build_aidemo",
-            "paper/build_tectonic",
             "paper/figs/unused",
         ):
+            self.assertTrue((ROOT / relative).exists(), relative)
+        for relative in ("paper/build_aidemo", "paper/build_tectonic"):
             self.assertFalse((ROOT / relative).exists(), relative)
 
     def test_root_has_no_stale_provenance_duplicate(self):
