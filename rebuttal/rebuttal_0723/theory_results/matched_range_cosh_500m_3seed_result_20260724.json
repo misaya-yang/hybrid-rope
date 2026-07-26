@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "experiment": "exact_range_cosh_vs_uniform_fmrope_500m",
+  "date": "2026-07-24",
+  "status": "AUTHOR_CONFIRMED_AGGREGATE_PENDING_LOCAL_RAW_PROMOTION",
+  "paper_claim": false,
+  "post_submission": true,
+  "comparison": "cosh_minus_uniform_fmrope",
+  "training_seeds": [
+    42,
+    137,
+    256
+  ],
+  "protocol": {
+    "model_parameters": 151898880,
+    "training_length": 256,
+    "training_tokens_per_arm": 499974144,
+    "evaluation_anchor_count": 32,
+    "evaluation_tail_tokens": 128,
+    "matched_within_seed_pair": [
+      "sampled_highest_frequency",
+      "sampled_lowest_frequency",
+      "log_frequency_span",
+      "model_architecture",
+      "trainable_initialization",
+      "token_order",
+      "optimizer",
+      "training_budget",
+      "frozen_evaluation_anchors"
+    ],
+    "only_changed_variable": "the_30_interior_frequency_locations"
+  },
+  "fixed_training_range": {
+    "metric": "paired_final_128_token_teacher_forced_nll",
+    "lengths": {
+      "512": {
+        "mean_delta": -0.3159,
+        "cosh_favoring_training_seeds": 3,
+        "training_seed_count": 3
+      },
+      "1024": {
+        "mean_delta": -0.1949,
+        "cosh_favoring_training_seeds": 3,
+        "training_seed_count": 3
+      },
+      "2048": {
+        "mean_delta": -0.1674,
+        "cosh_favoring_training_seeds": 3,
+        "training_seed_count": 3
+      }
+    }
+  },
+  "target_retargeted_range": {
+    "reported_mean_direction": "uniform_fmrope_favored_at_every_tested_ood_length",
+    "reported_numeric_deltas": null,
+    "per_seed_direction_counts": null
+  },
+  "interpretation": {
+    "supported": "In this protocol, finite training-time interior allocation is separately identifiable and cannot be reduced to scalar base or sampled range selection.",
+    "deployment_boundary": "The author-reported three-seed mean favors target-aware range transport at every tested retargeted OOD length.",
+    "not_supported": [
+      "additive_gain_with_fmrope",
+      "empirical_orthogonality",
+      "universal_cosh_optimality",
+      "superiority_over_target_aware_range_transport"
+    ]
+  },
+  "provenance": {
+    "aggregate_source": "author_supplied_in_current_task",
+    "local_raw_aggregate_present": false,
+    "local_per_seed_values_present": false,
+    "confidence_intervals_present": false,
+    "aggregation_code": "rebuttal/rebuttal_0723/experiments/fmrope_125m_l256_500m/run_experiment.py",
+    "seed_42_standalone_report": "rebuttal/rebuttal_0723/theory_results/MATCHED_RANGE_COSH_500M_S42_20260724.md"
+  }
+}

@@ -4,6 +4,11 @@ Date: 2026-07-24
 
 Status: **complete / single-seed supporting diagnostic**
 
+Reviewer-facing aggregate note: the completed three-training-seed result is
+summarized in `MATCHED_RANGE_COSH_500M_3SEED_20260724.md`. This file remains the
+raw-backed seed-42 provenance record and should not be used as the aggregate
+headline.
+
 ## Question
 
 When the sampled frequency extrema and log-span are exactly matched to the

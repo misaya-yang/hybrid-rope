@@ -50,6 +50,10 @@ does not reuse or claim continuity with historical runs named “350M.”
   micro-batch 64, BF16/Flash-only/compiled/fused-AdamW. The stream is two
   contiguous, non-overlapping 499,974,144-token segments:
   `[0,499974144)` and `[499974144,999948288)`.
+- Data order: pinned FineWeb-Edu revision
+  `87f09149ef4734204d70ed1d046ddc9ca3f2b8f9`, unshuffled shard `000`
+  followed by shard `001`, truncated only after 999,948,288 tokens. Validation
+  remains the disjoint pinned shard `004`.
 - Optimizer: both 350M arms use the same registered `3e-4` peak and `3e-5`
   minimum learning rates.
 - Evaluation: the same 32 frozen anchors, lengths, tail-128 NLL, and

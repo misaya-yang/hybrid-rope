@@ -40,6 +40,11 @@ FRESH_SOURCE_FILES = {
         "sha256": "33557ddd87a07a4ae6fcaf7a4789c7b484e5cc0c273ca12a65b74200e6d8748b",
     },
 }
+FRESH_350M_CONTINUATION_FILE = {
+    "relative_path": "sample/10BT/001_00000.parquet",
+    "size": 2_152_222_432,
+    "sha256": "3fcf2dc69cd52503986276d3d2d26a8c356d0f2ea28a0de4fdbda8cf87755693",
+}
 TOKENIZER_REPO = "EleutherAI/gpt-neox-20b"
 TOKENIZER_REVISION = "c292233c833e336628618a88a648727eb3dff0a7"
 TOKENIZER_FILES = {
@@ -651,9 +656,12 @@ def prepare_fresh(
         if tokenizer_dir is not None
         else downloads / "tokenizer_gpt_neox_20b"
     )
-    train_path = (
-        output
-        / f"train_fineweb-edu_shard000_{SPEC.train_tokens}_l{SPEC.train_length}.npy"
+    train_source_label = (
+        "shards000-001" if SPEC.model_tier == "350m" else "shard000"
+    )
+    train_path = output / (
+        f"train_fineweb-edu_{train_source_label}_{SPEC.train_tokens}"
+        f"_l{SPEC.train_length}.npy"
     )
     validation_path = (
         output
@@ -665,8 +673,12 @@ def prepare_fresh(
                 f"refusing to overwrite prepared artifact: {path}"
             )
 
+    source_specs = dict(FRESH_SOURCE_FILES)
+    if SPEC.model_tier == "350m":
+        source_specs["train_continuation"] = FRESH_350M_CONTINUATION_FILE
+
     source_records: dict[str, dict[str, Any]] = {}
-    for role, expected in FRESH_SOURCE_FILES.items():
+    for role, expected in source_specs.items():
         relative_path = str(expected["relative_path"])
         destination = downloads / "fineweb_edu" / relative_path
         source_records[role] = {
@@ -714,10 +726,18 @@ def prepare_fresh(
         )
     tokenizer.model_max_length = 1 << 60
 
+    train_source_paths = [Path(source_records["train"]["path"])]
+    if "train_continuation" in source_records:
+        train_source_paths.append(
+            Path(source_records["train_continuation"]["path"])
+        )
+    train_text_batches = (
+        texts
+        for source_path in train_source_paths
+        for texts in _parquet_text_batches(source_path)
+    )
     train_tokenization = tokenize_batches_to_npy(
-        text_batches=_parquet_text_batches(
-            Path(source_records["train"]["path"])
-        ),
+        text_batches=train_text_batches,
         tokenizer=tokenizer,
         output_path=train_path,
         token_count=SPEC.train_tokens,
@@ -763,8 +783,13 @@ def prepare_fresh(
             },
             "selection": {
                 "train": (
-                    "unshuffled shard-000 document order; concatenate document "
-                    "token IDs without added separators; exact registered prefix"
+                    "unshuffled shard-000 then shard-001 document order; "
+                    "concatenate document token IDs without added separators; "
+                    "exact registered prefix"
+                    if SPEC.model_tier == "350m"
+                    else "unshuffled shard-000 document order; concatenate "
+                    "document token IDs without added separators; exact "
+                    "registered prefix"
                 ),
                 "validation": (
                     "unshuffled shard-004 document order; concatenate document "

@@ -5,6 +5,20 @@ Treat it as a paper-and-reproducibility repository, not as a general software
 project. The main job is to preserve scientific correctness, reviewer trust,
 anonymous submission hygiene, and reproducible reviewer paths.
 
+## Hard prohibition: do not modify the paper
+
+Agents must not modify, create, delete, move, format, or regenerate any file
+under `paper/`, including LaTeX sources, tables, figures, bibliography files,
+build artifacts, and `paper/main.pdf`. Reading and auditing paper files is
+allowed.
+
+If a task appears to require a paper change, stop and ask the user instead of
+editing. The only exception is a future user instruction that explicitly names
+the paper file or paper scope to be changed and explicitly overrides this
+prohibition. A request to review, use, align with, summarize, or optimize a
+paper hook, rebuttal, playbook, narrative, or evidence does **not** authorize
+paper edits.
+
 ## Master routing and experiment guide
 
 This `AGENTS.md` is the sole project-level instruction file. Do not create or
@@ -111,29 +125,34 @@ Blackwell-oriented optimization family, but never assume that their usable
 memory, best batch size, compile mode, throughput, or kernel eligibility is
 identical.
 
-1. Freeze scientific variables first: model and schedule, data/token order,
-   seed, sequence length, token budget, optimizer/LR schedule, global batch,
-   precision, evaluation anchors, and metrics. A matched rerun also preserves
-   micro-batch and gradient accumulation unless the protocol explicitly permits
-   an execution-only change.
-2. Default runtime stack is BF16 autocast, native-architecture PyTorch/CUDA,
-   Flash-only SDPA, fused AdamW, TF32 matmul, `expandable_segments`, and a
-   persistent TorchInductor cache. Disable math, memory-efficient, and cuDNN
-   SDPA fallbacks so an ineligible Flash shape fails visibly.
-3. Reuse the fastest completed receipt for the same model, sequence length,
-   micro-batch, and attention shape. Otherwise run one compile step plus at
-   least five discarded steady-state steps before training. Probe permitted
-   compile modes and micro-batches; do not assume `torch.compile(default)` or a
-   nearly full GPU is fastest.
-4. Select by sustained tokens/second with finite loss and stable utilization,
-   not allocated-memory percentage. Low memory with high utilization is valid;
-   high memory is not itself an optimization target. Do not restart a healthy
-   registered run merely to fill memory.
+**Cost-first core principle:** minimize the total paid GPU time and cost needed
+to answer the scientific question. Use the fastest known stable execution path,
+and never rerun a completed arm merely to make runtime details look symmetric.
+
+1. Match the broad scientific contract: model/checkpoint and intervention,
+   dataset and split, effective training budget and objective, optimizer/LR
+   semantics, and evaluation samples/metrics. Micro-batch, accumulation,
+   checkpointing, compile mode, kernel, allocator, dataloader, evaluation
+   batching, and other numerically valid runtime choices are execution details;
+   they may differ across arms and do not by themselves require a rerun.
+2. Prefer the fastest verified native-architecture stack for the active shape.
+   BF16 autocast, Flash-only SDPA, fused AdamW, TF32 matmul,
+   `expandable_segments`, and a persistent TorchInductor cache are strong
+   starting points, not symmetry requirements.
+3. Reuse the fastest completed receipt for the same or sufficiently similar
+   shape. If none exists, use the shortest discarded probe needed to establish
+   eligibility, finite loss, memory fit, and useful throughput; do not spend GPU
+   time on a fixed probe grid once one configuration is clearly sufficient.
+4. Select by estimated total GPU seconds/cost to completion, including compile
+   and evaluation overhead, subject to finite loss and stable execution. Do not
+   optimize allocated-memory percentage, and do not restart a healthy run for
+   cosmetic parity or marginal theoretical cleanliness.
 5. Record GPU name, compute capability, PyTorch/CUDA versions, compiled
    architectures, precision, SDPA backend state, compile mode, cache path,
    sequence/global/micro batch, accumulation, compile latency, steady
    throughput, peak memory, first-step loss, and ETA. Probe estimates are
-   provisional; replace them with complete-run throughput after the first arm.
+   provisional; replace them with complete-run throughput when it becomes
+   available without adding a dedicated rerun.
 6. RTX Pro 6000 remains subject to the full no-GPU READY gate. RTX 5090 may use
    the scoped exception above, but missing code/data still must not become paid
    debugging. Neither machine shuts down automatically unless the user
@@ -143,6 +162,10 @@ identical.
 
 - Treat code, configs, logs, raw artifacts, and provenance as facts; filenames,
   comments, and old reports do not establish method identity.
+- Before an in-place frequency/schedule patch, clone every tensor intended as
+  the pre-patch reference. For any derived hybrid, assert the realized tensor
+  hash against an independently reconstructed expected hash; labels and index
+  metadata are not method-identity evidence.
 - Separate reviewer request, repository fact, proposed action, and completed
   evidence. A negative result is still a result.
 - Preserve unrelated worktree changes. Do not edit `internal/`, `results/`,
@@ -264,15 +287,20 @@ should be rerun only if a reviewer question requires that specific evidence.
   `.claude/` unless the user explicitly asks.
 - Do not commit local audit reports, build folders, caches, checkpoints, or
   generated bytecode.
-- Keep source changes and regenerated artifacts conceptually separate in the
-  report. If `paper/main.pdf` changes, say what compile produced it.
-- If editing `.tex`, recompile when feasible and report the gate status.
-- If editing figure scripts or data, regenerate the figure or state clearly why
-  it was not regenerated.
+- Only after the user explicitly overrides the paper prohibition: keep source
+  changes and regenerated artifacts conceptually separate in the report; if
+  `paper/main.pdf` changes, say what compile produced it.
+- Only after that explicit override: if editing `.tex`, recompile when feasible
+  and report the gate status.
+- Only after that explicit override: if editing paper figure scripts or data,
+  regenerate the figure or state clearly why it was not regenerated.
 - If editing public docs, avoid references to private machines, internal notes,
   local paths, or non-anonymous author identity.
 
 ## LaTeX Build Guidance
+
+This section is reference-only. Do not run these commands or write their
+outputs unless the user has explicitly overridden the paper prohibition above.
 
 Preferred paper gate from `paper/`:
 
@@ -374,8 +402,9 @@ the curated packager is the authoritative supplement path.
 - Temporary `codex/...` branches may be used for isolation, but their relevant
   commits must be merged into `main` before they are treated as project state.
 - Preserve user changes. Never reset or checkout away work you did not create.
-- If `origin/main` advances, merge or rebase before final push and regenerate
-  `paper/main.pdf` from the merged source.
+- If `origin/main` advances, merge or rebase before final push. Regenerate
+  `paper/main.pdf` only when the user has explicitly overridden the paper
+  prohibition above.
 - Leave `audit_v3/` and `audit_v4/` untracked unless explicitly requested.
 - After staging, run `git diff --cached --stat` and `git diff --cached --check`.
 - Commit messages should be terse and factual.

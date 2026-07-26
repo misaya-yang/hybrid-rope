@@ -28,7 +28,7 @@
 \omega_i=b^{-u_i}.
 \]
 
-FMRoPE 类方法主要改变全局 base/range：
+FMRoPE 的几何网格通过 base 选择或 retarget 改变可用 range：
 
 \[
 \omega_i=b(T)^{-u_i}.
@@ -40,11 +40,18 @@ EVQ-Cosh 固定 nominal base，改变指数位置：
 \omega_i=b^{-\phi_\tau(u_i)}.
 \]
 
-因此两者：
+NTK-aware、YaRN 与 LongRoPE 类方法还可能按 channel 非均匀地 transport 或
+search 既有频谱；不能笼统写成“所有 range 方法只改变一个 scalar”。EVQ 的
+区别应按优化对象、作用阶段与构造方式表述：
 
 - 研究动机存在重合；
 - 都关注 RoPE 频率利用和长外推；
-- 但优化变量、参数空间和构造方法不同。
+- FMRoPE/YaRN/LongRoPE 回答 target range selection、transport 或 post-hoc
+  adaptation；
+- learned-frequency 方法在训练中优化 \(O(K)\) 个频率自由度；
+- EVQ 在训练前把有限 grid allocation 写成显式变分对象，并以闭式
+  inverse-CDF 固定频率表；
+- 因此优化变量、作用阶段、参数空间和构造方法不同。
 
 不得把“FMRoPE 性能更强”推导为“EVQ 没有技术新颖性”。
 
@@ -52,10 +59,15 @@ EVQ-Cosh 固定 nominal base，改变指数位置：
 
 EVQ 的技术贡献应限定为：
 
-- 把训练期频率分配作为独立设计变量；
+- 把有限训练期频率 grid allocation 作为明确优化对象；
 - 使用变分代理目标得到闭式 inverse-CDF allocation；
 - 在固定 nominal base 下产生非几何指数网格；
 - 不增加可学习参数。
+
+最窄且最强的新颖性表述是“首次对 standard RoPE 的有限训练期 grid
+allocation 给出显式变分构造与闭式、零学习参数的 inverse-CDF
+realization”。不得扩大为“首次改变 interior frequency”或“首次闭式非几何
+RoPE schedule”。
 
 ---
 
@@ -85,10 +97,10 @@ C_{\mathrm{app}}.
 
 是经验平坦盆地中的 deployable default，不是真实模型目标的精确全局最优。
 
-新增 sweep 的作用是证明：
+新增 sweep 的作用是界定：
 
-- 默认规则落在良好 basin；
-- 当前主要问题不是简单的 \(\tau\) 数值选错。
+- 在一个直接选择实验中，默认规则落在良好 basin；
+- 跨配置证据表明它仍是 fallible prior，不能排除其他 \(\tau\) 或 schedule。
 
 ### 3.3 训练模型上的经验结论
 
@@ -102,9 +114,11 @@ C_{\mathrm{app}}.
 
 后续工作必须接受以下事实，不得反复重新争论：
 
-- EVQ 稳定优于未缩放的几何 RoPE。
-- EVQ 在 held-out base=1M、\(d_{\mathrm{head}}=128\)、三 seed 下保持外推收益。
-- 独立调优的最佳 \(\tau\) 接近公式预测。
+- 在已登记的多项 raw-schedule 文本协议中，EVQ 的外推 NLL 优于对应未缩放
+  Geo；这不是跨模型、跨长度的普遍支配。
+- 报告中的 held-out base=1M、\(d_{\mathrm{head}}=128\)、三 seed 结果保持
+  外推收益，但专属 raw/per-seed aggregate 仍待 promotion。
+- 一个独立 sweep 的最佳 \(\tau\) 接近公式预测；更广重算证明该规则会失败。
 - 没有一种静态 schedule 在所有长度上最优。
 - EVQ-Cosh 在部分短距离最好。
 - matched exponential 在部分中距离最好。
@@ -112,6 +126,38 @@ C_{\mathrm{app}}.
 - two-band 尚未证明跨模型、跨数据普适。
 - target-aware FMRoPE/YaRN 类 range scaling 明显强于 raw EVQ。
 - 朴素 EVQ+FMRoPE 没有稳定协同。
+- exact-range seeds 42/137/256 已完成：在 sampled extrema、log-span 与
+  within-seed training protocol 完全匹配、只改 30 个 interior positions 时，
+  fixed-range Cosh-minus-uniform-FMRoPE 三 seed 均值为
+  \(-0.3159/-0.1949/-0.1674\)（512/1K/2K），三 seed 全部同方向。
+- 两张 exact-range grids 都按目标长度 retarget 后，三个 OOD 长度的三 seed
+  均值全部偏向 uniform FMRoPE；这是否定 additive synergy，不是否定
+  allocation 的可识别性。
+- 上述 exact-range aggregate 当前由作者确认，tracked tree 尚缺完整 retained
+  raw aggregate、per-seed contrasts、hashes 与 CI；promotion 前不得增加
+  统计显著性措辞。
+- EVQ 的适用性证据覆盖 standard MHA、scarce-channel MLA、bidirectional 3D-RoPE
+  video DiT、progressive/continued training 与成熟 8B Q/K/V/O LoRA adaptation。
+- 8B 证据支持 long-position probability、remote source dependence 与 routing，
+  但尚未稳定转化为 top-1 generation、QA accuracy 或整体 LongBench 提升。
+- post-submission OLMo-2 1B Instruct（实际 1.485B 参数）的 matched 4K-only
+  counterfactual LoRA 已在同一
+  8K `niah_single_1` n=100 集上得到 Native 0/100、EVQ 69/100 strict
+  autoregressive exact；第二 EVQ training seed 为 67/100。它关闭一个 2x
+  NIAH readout endpoint，但训练和测试共享 official generator family，不等于
+  完整 RULER、未见任务或广泛 downstream。
+- 一条后续 single-seed continuation 明确加入 4K-only
+  VT/CWE/FWE/QA generator-family supervision，并保留 NIAH/LongAlign replay；
+  它在 disjoint generated rows 上得到完整 13-task RULER
+  0.3751/0.2129/0.0613（4K/8K/16K）。这是 task-adapted capability 与
+  length transfer，不是 clean unseen-task transfer，也没有 matched Native
+  continuation 支持 pure-EVQ attribution。
+- matched LLaMA-3-8B physical-8K 13-family continuation 在 16K 的 official
+  macro 为 Native-LoRA 0.295%、EVQ-LoRA 14.03%；它是 single-seed
+  task-family adaptation。32K EVQ 为 0，Native-LoRA 仅完成 10/13 cells 且均
+  为 0。
+- 当前没有完成的 LLaMA counterfactual-training arm；LLaMA gold deletion 与
+  source/frequency swaps 是 evaluation intervention。
 - 这些结果不推翻 Cosh 在 \(C_{\mathrm{app}}\) 下的条件定理。
 
 ---
@@ -124,10 +170,16 @@ C_{\mathrm{app}}.
 
 应说明：
 
-- FMRoPE 改变 base/range；
-- EVQ 改变指数位置和通道分配；
+- FMRoPE 选择或 retarget 几何 grid 的 base/range；
+- YaRN/LongRoPE 可非均匀移动 channel，但其对象是 target transport 或
+  post-hoc search/adaptation；
+- EVQ 在训练前改变有限 grid 的指数位置和通道分配，并从显式 surrogate
+  闭式构造；
 - 两者不是同一个参数化；
-- 直接比较表明 target-aware range scaling 更强，但不消除 allocation 作为独立设计变量的技术新颖性。
+- exact-range 三 seed 直接表明，在 sampled range 完全相同时只改 interior
+  positions 仍改变训练后 NLL；
+- target-aware range scaling 更强，但不消除 allocation 作为可识别训练期
+  设计变量的技术新颖性。
 
 ### 对理论归因
 
@@ -140,11 +192,26 @@ C_{\mathrm{app}}.
 
 ### 对规模和评测
 
-优先补：
+按 evidence ladder 回答：
 
-- 严格 matched 的更大模型实验；
-- 更强但模型具备基本能力的评测；
-- 已有跨架构、MLA、视频或较大模型证据的清晰整理。
+1. frequency allocation；
+2. language-model probability；
+3. gold-answer probability；
+4. causal remote-source use / attention routing；
+5. autoregressive readout；
+6. downstream accuracy。
+
+已有跨架构、MLA、video DiT、progressive/continued training 和成熟 8B LoRA
+证据说明适用范围不局限于小模型从头训练；但不同 tier 不得汇总成 universal
+superiority。OLMo-2 1B Instruct 已补上一个 8K NIAH top-1 readout endpoint；
+并在明确 task-family adaptation 后补出完整 13-task RULER 的 4K–16K
+能力。clean unseen-task transfer、matched schedule attribution 与 broader
+downstream accuracy 仍未闭合。
+
+独立的 OLMo-2 1.485B from-scratch 2.1B-token 数值报告已经存在，但当前
+Markdown、curated JSON 与本地 raw 状态冲突。完成 provenance reconciliation
+前必须标为 conditional，不得与上述成熟 Instruct LoRA 结果混淆，也不得把任一
+结果写成方法首次具有广泛适用性。
 
 不得用明显欠训练、无法完成任务的模型强行跑下游，然后将无意义结果作为核心证据。
 

@@ -1,6 +1,8 @@
 # EVQ-Cosh rebuttal experiment report — 2026-07-24
 
-Status: **final through the completed Section 13 diagnostics**. The
+Status: **final through the completed Section 13 diagnostics, with the
+Section 12 three-seed aggregate author-confirmed and pending local raw
+promotion**. The
 Reviewer 27bE experiments, the 100M-token FMRoPE diagnostic, the EVQ-Cosh x
 FMRoPE arm, the separately registered 500M-token undertraining check, and the
 three-seed native Std-RoPE/real-shape study are complete. The MLA scarcity
@@ -700,25 +702,55 @@ NLL, and no downstream capability or paper-level claim follows from it.
 
 ## 12. Exact-range Cosh allocation at 500M tokens
 
-A new seed-42 arm matched the existing FMRoPE checkpoint's sampled frequency
-extrema and log-span exactly, changing only the finite-\(K\) interior spacing
-to endpoint-normalized Cosh at \(\tau=4\). It reused the 151.9M model, 500M-token
-protocol, initialization, token order and 32 frozen anchors.
+### 12.1 Three-training-seed method-identification result
 
-Cosh minus uniform FMRoPE tail NLL is:
+The completed exact-range comparison matches, within each seed pair, the
+sampled highest frequency, sampled lowest frequency, log-frequency span,
+151.9M architecture, trainable initialization, token order, optimizer,
+499,974,144-token budget, and 32 frozen anchors. Only the \(K-2=30\) interior
+frequency locations differ between FMRoPE's geometric uniform-in-log grid and
+the endpoint-normalized Cosh grid at \(\tau=4\).
+
+The author-confirmed aggregate is:
+
+| fixed training range: Cosh minus uniform FMRoPE | 512 | 1K | 2K |
+| --- | ---: | ---: | ---: |
+| Three-training-seed mean tail NLL | **-0.3159** | **-0.1949** | **-0.1674** |
+| Training seeds favoring Cosh | **3/3** | **3/3** | **3/3** |
+
+The authors also report that, when both grids are retargeted to the evaluation
+length, the three-seed mean favors uniform FMRoPE at every tested OOD length.
+The retained local aggregate does not yet contain the retargeted numeric means,
+per-seed values, or confidence intervals, so none is reconstructed here.
+
+**Decision: `THREE_SEED_SHAPE_EFFECT_WITHOUT_TARGET_SYNERGY`.** With scalar
+sampled-range degrees of freedom held fixed, interior allocation remains a
+material and directionally consistent training-time variable. Target-aware
+the author-reported three-seed mean nevertheless favors target-aware range
+transport in the tested retargeted deployment.
+This identifies distinct optimization decisions; it does not establish
+empirical orthogonality, additivity, universal Cosh optimality, or superiority
+over FMRoPE.
+
+The aggregate and its current provenance boundary are owned by
+`MATCHED_RANGE_COSH_500M_3SEED_20260724.md` and
+`matched_range_cosh_500m_3seed_result_20260724.json`. Their current status is
+`AUTHOR_CONFIRMED_AGGREGATE_PENDING_LOCAL_RAW_PROMOTION`; external use requires
+obtaining and promoting a raw three-seed aggregate with per-seed contrasts,
+hashes, and training-seed confidence intervals.
+
+### 12.2 Retained seed-42 raw-backed result
+
+The seed-42 raw-backed values are retained for provenance:
 
 | range condition | 256 | 512 | 1K | 2K |
 | --- | ---: | ---: | ---: | ---: |
 | Fixed training range | +0.0328 | **-0.4775** | **-0.2050** | **-0.1128** |
 | Target-matched range | +0.0328 | +0.0611 | +0.1818 | +0.2786 |
 
-**Decision: `SHAPE_EFFECT_WITHOUT_TARGET_SYNERGY`.** Interior allocation has a
-material effect after exact range matching: Cosh improves every fixed-range OOD
-length. But once both schedules receive target-aware retargeting, uniform
-FMRoPE is better at every length. This supports allocation as a distinct
-finite-channel variable, not empirical orthogonality, additive gains, or
-universal Cosh optimality. Full protocol and provenance are in
-`MATCHED_RANGE_COSH_500M_S42_20260724.md`.
+Full seed-42 protocol and hashes remain in
+`MATCHED_RANGE_COSH_500M_S42_20260724.md`; these single-seed values are not the
+reviewer-facing aggregate headline.
 
 ## 13. Training-free finite-\(K\) tau selector
 

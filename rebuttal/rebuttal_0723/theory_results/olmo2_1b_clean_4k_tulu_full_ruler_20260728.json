@@ -1,0 +1,168 @@
+{
+  "status": "NEGATIVE_CLEAN_FULL_RULER_COMPLETE",
+  "concerns": [
+    "R27bE.2",
+    "R27bE.5",
+    "AC.2"
+  ],
+  "claim_boundary": "This clean arm contains no explicitly added custom binding or RULER benchmark rows. It tests full-RULER transfer after 4K-only LongAlign plus official-source Tulu adaptation; it does not establish that the upstream corpora are semantically free of every retrieval-like example.",
+  "model": {
+    "id": "allenai/OLMo-2-0425-1B-Instruct",
+    "checkpoint_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f"
+  },
+  "frequency": {
+    "name": "evq_endpoint_cosh",
+    "tau": 2.0,
+    "inv_freq_sha256_float32": "917a52426b4ac986545c8ec73b115daae3c6515d6b9047f09d30c972ea1a4607"
+  },
+  "training": {
+    "maximum_sequence_length": 4096,
+    "adaptation": "QKVO LoRA rank 64 alpha 128",
+    "stage_a": {
+      "source": "official LongAlign frozen 4K view",
+      "objective": "full-token next-token cross entropy",
+      "steps": 611,
+      "supervised_tokens": 20016360,
+      "seed": 20260725,
+      "adapter_sha256": "47e72c5e58be443a3f088787b58df415538f7cdb12e9f76d799dbb2b85155ee0"
+    },
+    "stage_b": {
+      "source": "allenai/tulu-3-sft-olmo-2-mixture-0225",
+      "source_revision": "d91a0785ade02942520280fb484866fce41e448f",
+      "objective": "assistant content and EOS only",
+      "passes": 1,
+      "steps": 496,
+      "rows": 3968,
+      "supervised_tokens": 1667032,
+      "seed": 20260728,
+      "explicit_custom_binding_or_ruler_training_rows": 0,
+      "ready_receipt_sha256": "abe59548b893fa97b4282eaf8d386421b9631784ae61dbbfc44cde7a1ed37d30",
+      "adapter_sha256": "c3454e03f6a8c90d581e994dd0954f1079e820b3ece237692023b7708af3ccd9"
+    }
+  },
+  "tulu_validation": {
+    "before_mean_nll": 1.2634595939366622,
+    "after_mean_nll": 1.1410027120115316
+  },
+  "natural_text_nll": {
+    "4096": 2.5766136422753334,
+    "8192": 2.736212268471718,
+    "16384": 2.9713999703526497
+  },
+  "evaluation": {
+    "decode": "greedy autoregressive",
+    "metric": "official task-specific RULER string matching",
+    "samples_per_task_length": 20,
+    "tasks": 13,
+    "lengths": [
+      4096,
+      8192,
+      16384
+    ],
+    "generated_examples": 780,
+    "controls": {
+      "4096": "untouched Native RoPE",
+      "8192": "untouched Native plus official Transformers YaRN factor 2",
+      "16384": "untouched Native plus official Transformers YaRN factor 4"
+    },
+    "macro_official_task_score": {
+      "4096": {
+        "clean_evq": 0.09743589743589744,
+        "control": 0.653525641025641,
+        "delta": -0.5560897435897436
+      },
+      "8192": {
+        "clean_evq": 0.04006410256410257,
+        "control": 0.5871794871794871,
+        "delta": -0.5471153846153845
+      },
+      "16384": {
+        "clean_evq": 0.020512820512820513,
+        "control": 0.09083333333333334,
+        "delta": -0.07032051282051282
+      }
+    },
+    "positive_cells_vs_control": 0,
+    "total_cells": 39,
+    "cells": {
+      "cwe": {
+        "4096": [0.0, 0.005, -0.005],
+        "8192": [0.0, 0.075, -0.075],
+        "16384": [0.0, 0.01, -0.01]
+      },
+      "fwe": {
+        "4096": [0.31666666666666665, 0.48333333333333334, -0.16666666666666669],
+        "8192": [0.08333333333333333, 0.48333333333333334, -0.4],
+        "16384": [0.11666666666666665, 0.18333333333333332, -0.06666666666666667]
+      },
+      "niah_multikey_1": {
+        "4096": [0.25, 0.85, -0.6],
+        "8192": [0.15, 0.75, -0.6],
+        "16384": [0.0, 0.05, -0.05]
+      },
+      "niah_multikey_2": {
+        "4096": [0.0, 0.95, -0.95],
+        "8192": [0.0, 0.75, -0.75],
+        "16384": [0.0, 0.05, -0.05]
+      },
+      "niah_multikey_3": {
+        "4096": [0.0, 0.6, -0.6],
+        "8192": [0.0, 0.2, -0.2],
+        "16384": [0.0, 0.0, 0.0]
+      },
+      "niah_multiquery": {
+        "4096": [0.05, 0.725, -0.6749999999999999],
+        "8192": [0.0375, 0.8125, -0.775],
+        "16384": [0.0, 0.0375, -0.0375]
+      },
+      "niah_multivalue": {
+        "4096": [0.05, 0.4625, -0.41250000000000003],
+        "8192": [0.0, 0.4125, -0.4125],
+        "16384": [0.0, 0.05, -0.05]
+      },
+      "niah_single_1": {
+        "4096": [0.15, 1.0, -0.85],
+        "8192": [0.0, 1.0, -1.0],
+        "16384": [0.0, 0.2, -0.2]
+      },
+      "niah_single_2": {
+        "4096": [0.05, 0.95, -0.8999999999999999],
+        "8192": [0.0, 1.0, -1.0],
+        "16384": [0.0, 0.15, -0.15]
+      },
+      "niah_single_3": {
+        "4096": [0.0, 1.0, -1.0],
+        "8192": [0.0, 1.0, -1.0],
+        "16384": [0.0, 0.0, 0.0]
+      },
+      "qa_1": {
+        "4096": [0.15, 0.7, -0.5499999999999999],
+        "8192": [0.1, 0.7, -0.6],
+        "16384": [0.05, 0.2, -0.15000000000000002]
+      },
+      "qa_2": {
+        "4096": [0.25, 0.5, -0.25],
+        "8192": [0.15, 0.35, -0.19999999999999998],
+        "16384": [0.1, 0.25, -0.15]
+      },
+      "vt": {
+        "4096": [0.0, 0.27, -0.27],
+        "8192": [0.0, 0.1, -0.1],
+        "16384": [0.0, 0.0, 0.0]
+      }
+    },
+    "cell_value_order": [
+      "clean_evq",
+      "control",
+      "delta"
+    ]
+  },
+  "provenance": {
+    "training_results_sha256": "d96688b07a2b1b55113ebf1c88b3a05aa6e94ec73a8785cb5c71d399aa5a72c8",
+    "training_complete_sha256": "1699f85768512445e1752429199e0d65e8fba4a86b4288e349ba026e89100aa3",
+    "ruler_ready_sha256": "e530f2858adea241a02f907a67c005ba35d97612fe1f38b3568f345b8e37cecf",
+    "control_summary_sha256": "464bd2167d758621b8be03c4345ebd40950e78159c97b3862df93a1a30d699d5",
+    "evidence_archive_name": "olmo2_clean_4k_tulu_full_ruler_s20260728.tar.gz",
+    "evidence_archive_sha256": "0bc43a412d08d890897001d9a147c81ffaa550d58e78e0bb88f8352be4f93dd6"
+  }
+}
