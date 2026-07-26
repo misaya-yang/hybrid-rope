@@ -42,7 +42,7 @@ AC does not score; it states what would **materially change the recommendation**
 | Field | Content |
 | --- | --- |
 | **Ask** | Stronger scale, stronger benchmarks, base sensitivity, real tasks — not only small-model diagnostics. |
-| **Existing answer** | Submitted Primary I–III package + **OLMo-2 1.485B** CF AR/NIAH + 13-task family RULER + **matched LLaMA-8B** NLL/RULER + submitted Appendix D, Table 23 8B anchor + the raw-hash-backed 1.485B step-0→1,000 run. Held-out base **1M** remains conditional. Endpoint taxonomy: NLL ≠ AR ≠ RULER ≠ QA. |
+| **Existing answer** | Submitted Primary I–III package + **OLMo-2 1.485B** CF AR/NIAH + 13-task family RULER + **matched LLaMA-8B** NLL/RULER + submitted Appendix D, Table 23 8B anchor + the raw-hash-backed 1.485B step-0→1,000 run. The M4 exact-range factorial adds two-base, three-head-dimension mechanistic coverage. Endpoint taxonomy: NLL ≠ AR ≠ RULER ≠ QA. |
 | **Best numbers** | OLMo 8K strict NIAH **0/100 vs 69/100, 67/100**; LLaMA 16K RULER **0.295% vs 14.03%**; OLMo RULER **37.5 / 21.3 / 6.1%** at 4K/8K/16K. |
 | **Gap** | Task-family adapted (not clean unseen-task). 4× weak/zero. Multi-seed controlled pretrain still strongest **below 1B**. No broad instruction-following / production suite. |
 | **Outcome** | **PARTIALLY CLOSED.** Enough for “not only 454M PPL toys”; **not** “production generality.” |
@@ -52,8 +52,8 @@ AC does not score; it states what would **materially change the recommendation**
 | Field | Content |
 | --- | --- |
 | **Ask** | Separate exact theory, modeling choices, empirical τ, matched analytic schedules; disentangle allocation from parameterization. |
-| **Existing answer** | Four epistemic layers (Table-1 discipline). Independent τ sweep (selected 5; rule 5.657 within **0.0119 NLL**). Fixed zero-param non-Cosh schedules (uniform/power/exponential/two-band). Cosh **not** unique optimum of trained NLL. |
-| **Best numbers** | EVQ−Geo **−0.256/−0.305/−0.223/−0.238** at 1K–8K (3/3 seeds). Exponential can beat Cosh at means. |
+| **Existing answer** | Four epistemic layers (Table-1 discipline). Independent τ sweep (selected 5; rule 5.657 within **0.0119 NLL**). The three-seed M4 factorial fixes sampled extrema/log-span across two bases, two training lengths, and three head dimensions while comparing Cosh multipliers and a deformation-matched exponential. |
+| **Best numbers** | Formula-Cosh/\(1.25\times\)-Cosh/matched-exponential minus Geo weighted OOD NLL **−0.009879/−0.012100/−0.010619**; \(1.25\times\) Cosh favors 10/12 configurations. |
 | **Gap** | Small-τ asymptotics ≠ τ≈4 theorem. Rule is fallible basin prior. |
 | **Outcome** | **ANSWERABLE NOW** if claims stay narrow (allocation axis + useful default, not global Cosh optimum). |
 
@@ -113,7 +113,7 @@ zWsa states **when score would increase**. Answer these in order.
 | Field | Content |
 | --- | --- |
 | **Ask** | Matched settings; **advantages or complementarity** both raise score. |
-| **Existing answer** | Dual result meets **complementarity** criterion. Seed-42 exact-range sendable; 3-seed after promotion. Deployment: retargeted FMR stronger. |
+| **Existing answer** | Dual result meets **complementarity** criterion. The seed-42 study is the direct target-aware FMRoPE control; the three-seed M4 factorial strengthens fixed-range allocation identification across base/length/head settings. Deployment: retargeted FMR remains stronger. |
 | **Outcome** | **Meet stated bar for complementarity.** Do not claim pure dominance. |
 
 ### 3.3 `RzWsa.3` — RULER (or effective context)
@@ -151,24 +151,24 @@ zWsa states **when score would increase**. Answer these in order.
 | Field | Content |
 | --- | --- |
 | **Ask** | Persist across bases, head dims, scales (esp. \(b\ge 500\mathrm{K}\), larger \(d_{\mathrm{head}}\)). |
-| **Existing answer** | **Not “only 500K ever.”** Principal body text = 500K. **Also:** an author-confirmed but not externally promoted held-out **1M + d=128** aggregate; Phase18 pilot **10K vs 500K** (seed 42); FMR **base 256**; video DiT multi-base (supporting); mature models in the 500K-class regime. Scale: 1.485B/8B mature. Do not quote the held-out aggregate's exact numbers. |
-| **Wording trap** | Do **not** say “single calibration only” as if no other bases exist; say **“primary multi-seed text density centered on 500K, with held-out/pilot elsewhere.”** |
-| **Outcome** | **PARTIALLY CLOSED.** Strongest controlled multi-seed still small; base coverage real but tiered. |
+| **Existing answer** | The three-seed M4 exact-range factorial directly covers bases **500K/1M**, training lengths **256/1024**, and \(d_{\mathrm{head}}=32/64/128\), while the separate 1.485B/8B experiments answer scale. |
+| **Wording trap** | Do not convert the 50.9M factorial into scale evidence or claim uniform improvement in every configuration; use it for base/head robustness and attribution. |
+| **Outcome** | **ANSWERED AT TWO TIERS:** M4 for controlled base/head variation; 1.485B/8B for scale. |
 
 ### 4.3 `R27bE.3` — DAPE confounds shape vs capacity / tuning
 
 | Field | Content |
 | --- | --- |
 | **Ask** | Operator fixed; only fixed schedules vary; DAPE tuning budget unclear. |
-| **Existing answer** | **Direct tuning answer:** the reported DAPE row received a dedicated PE-learning-rate sweep at `10x` and `100x`; the better `100x` row was reported (`455.3` PPL@8K versus `477.7`, both seed 42). Attribution then moves to fixed zero-parameter schedules (Geo / EVQ / uniform / power / exponential / two-band) under the same operator and training protocol. |
-| **Outcome** | **ANSWERABLE NOW.** The tuning-budget question is direct; fixed schedules answer the deeper shape-vs-capacity concern. |
+| **Existing answer** | **Direct tuning answer:** the reported DAPE row received a dedicated PE-learning-rate sweep at `10x` and `100x`; the better `100x` row was reported (`455.3` PPL@8K versus `477.7`, both seed 42). Attribution then moves to the M4 exact-range factorial: same operator, initialization, data/order, optimizer, budget, sampled extrema, and log-span; only interior frequencies differ. |
+| **Outcome** | **ANSWERABLE NOW.** The tuning-budget question is direct; M4 removes learned capacity and scalar range from the shape-attribution comparison. |
 
 ### 4.4 `R27bE.4` — Independent τ + matched non-Cosh schedules
 
 | Field | Content |
 | --- | --- |
 | **Ask** | Explicit ablation: tuned τ under Cosh; alternative schedules at matched τ. |
-| **Existing answer** | Done in `EXPERIMENT_REPORT` §2–3. Rule near selected; non-Cosh can win. |
+| **Existing answer** | Direct sweep: selected \(\tau=5\), rule \(5.657\) within `0.0119 NLL`. M4: the best \(0.75\times/1.00\times/1.25\times\) Cosh multiplier varies across configurations (2/4/6 wins), and the deformation-matched exponential is competitive. |
 | **Outcome** | **CLOSED for the requested ablation type** (with fallible-rule honesty). |
 
 ### 4.5 `R27bE.5` — Held-out base + larger pre-specified scratch
@@ -176,8 +176,8 @@ zWsa states **when score would increase**. Answer these in order.
 | Field | Content |
 | --- | --- |
 | **Ask** | Held-out base config **and** larger-scale pre-specified training run. |
-| **Existing answer** | **Held-out half:** base 1M, \(d_{\mathrm{head}}=128\), 3 seeds remains author-confirmed but not promoted for external numbers. **Scratch half:** OLMo step-1000 is post-submission raw-hash-backed and reviewer-usable: same public step-0 initialization, official scientific recipe, reconstructed seed-6198 data prefix, 1,000 steps, and 2.097B counted tokens. Geo/EVQ PPL is `161.19/167.45`, `163.88/156.87`, and `182.73/159.64` at 4K/8K/16K. |
-| **Outcome** | **LARGER PRE-SPECIFIED RUN ANSWERED; HELD-OUT BASE PARTIAL.** The scratch result is one trajectory and uses different trainer implementations, so call it same-initialization/same-scientific-recipe rather than bitwise paired. The sibling JSON is native-only and is not a promotion conflict. |
+| **Existing answer** | **Base/head branch:** the new M4 factorial includes base 1M across two training lengths, three head dimensions, and three seeds under exact-range controls. **Scratch branch:** OLMo step-1000 is post-submission raw-hash-backed and reviewer-usable: same public step-0 initialization, scientific recipe, data-order prefix, 1,000 steps, and 2.097B counted tokens. Geo/EVQ PPL is `161.19/167.45`, `163.88/156.87`, and `182.73/159.64` at 4K/8K/16K. |
+| **Outcome** | **BOTH REQUESTED BRANCHES ANSWERED AT THEIR PROPER TIERS.** M4 is mechanistic base/head evidence; OLMo is one large early-training trajectory with different trainer implementations, so call it same-initialization/same-scientific-recipe rather than bitwise paired. |
 
 **27bE panel judgment:** highest realistic move **3 → 4** if theory + fixed
 schedules + the direct DAPE tuning answer + raw-hash-backed scratch + mature
@@ -193,14 +193,14 @@ Flattened list for drafting / paste audit. Every item maps to a stable ID in `00
 | # | ID | One-line question | Response status | Send now? |
 | ---: | --- | --- | --- | --- |
 | 1 | `AC.1` / `RzWsa.1` | Novelty vs FMRoPE / dead channels? | Dual-knob identity + cite Oka | **Yes** |
-| 2 | `AC.1` / `RzWsa.2` | Matched FMRoPE comparison? | Seed-42 exact-range; dual result | **Yes** (s42); 3-seed after promote |
+| 2 | `AC.1` / `RzWsa.2` | Matched FMRoPE comparison? | Seed-42 direct FMR control; M4 fixed-range factorial support | **Yes** |
 | 3 | `AC.2` / `RDz6s.1` | Real tasks / less diagnostic? | AR NIAH + RULER + mature NLL | **Yes**, collar limits |
 | 4 | `AC.2` / `RzWsa.3` | RULER? | OLMo + LLaMA family RULER | **Yes**, task-adapted |
 | 5 | `AC.2` / `RzWsa.4` / `R27bE.2` | ~1B–7B scale? | 1.485B + 8B | **Yes**, not multi-seed pretrain |
-| 6 | `AC.2` / `R27bE.2`/`.5` | Other bases / held-out base? | Tiered inventory; held-out 1M aggregate not promoted | **Partial**; do not quote held-out numbers |
+| 6 | `AC.2` / `R27bE.2`/`.5` | Other bases / held-out base? | M4 exact-range 500K/1M factorial across three head dimensions | **Yes**, mechanistic tier |
 | 7 | `AC.3` / `RDz6s.3` / `R27bE.1` | Separate theory layers? | Table-1 + text | **Yes** |
-| 8 | `AC.3` / `R27bE.4` | Independent τ + non-Cosh schedules? | Report §2–3 | **Yes** |
-| 9 | `AC.3` / `R27bE.3` | Shape vs DAPE capacity? | Concede + fixed schedules | **Yes** |
+| 8 | `AC.3` / `R27bE.4` | Independent τ + non-Cosh schedules? | Direct sweep + M4 Cosh multipliers/matched exponential | **Yes** |
+| 9 | `AC.3` / `R27bE.3` | Shape vs DAPE capacity? | DAPE budget answer + M4 exact-range schedules | **Yes** |
 | 10 | `RDz6s.2` | Optimized Geo+YaRN baseline? | Narrow to matched-scale interaction | **Yes** (narrow) |
 | 11 | `R27bE.5` | Larger pre-specified scratch? | 1.485B step-0→1,000, 2.097B tokens | **Yes**, single trajectory |
 | 12 | `AC.4` | Material decision change package? | 1+2+3–5 in order | **Yes as package** |
@@ -232,6 +232,7 @@ Flattened list for drafting / paste audit. Every item maps to a stable ID in `00
 | Evidence | Answers | Grade |
 | --- | --- | --- |
 | Independent τ sweep | `R27bE.1`/`.4`, `AC.3` | Ready |
+| M4 exact-range factorial, 3 seeds / 12 configurations | `R27bE.1`–`.4`, `AC.1/.3`, `RzWsa.1/.2` | Workstation-raw-backed; core attribution |
 | Fixed non-Cosh schedules 3-seed | `R27bE.3`/`.4` | Ready |
 | Held-out base 1M / d=128 3-seed | `R27bE.2`/`.5` | AUTHOR_CONFIRMED_NOT_PROMOTED; no external numbers |
 | Phase18 base 10K vs 500K seed-42 | base not unique to 500K | Supporting |
@@ -267,14 +268,15 @@ Flattened list for drafting / paste audit. Every item maps to a stable ID in `00
 3. Universal Cosh / τ optimality.
 4. Production multi-seed large-scale pretrain generality.
 5. Clean 4× AR / broad unseen-task transfer.
-6. CONDITIONAL three-seed exact-range aggregate or held-out-base aggregate as promoted evidence.
+6. The older CONDITIONAL 151.9M three-seed exact-range or held-out-base
+   aggregates as if they were the M4 owner.
 
 ### 7.3 Score-path summary (not a prediction)
 
 | Reviewer | Now | Best defendable move | What drives it | What still blocks |
 | --- | ---: | --- | --- | --- |
 | `Dz6s` | 4 | **4 → 5 target** | Mature endpoints + theory clarity | Still limited real-world breadth |
-| `27bE` | 3 | **3 → 4** | Layers + schedules + DAPE tuning + scratch + 1.485B/8B | Held-out-base owner; small multi-seed core |
+| `27bE` | 3 | **3 → 4** | M4 exact-range/tau/non-Cosh attribution + DAPE tuning + scratch + 1.485B/8B | M4 remains mechanistic; large scratch remains one trajectory |
 | `zWsa` | 2 | **2 → 3** | Novelty dual-knob + RULER + scale | Conf 5; no FMR dominance; task-adapted |
 | AC | meta | Soften rejection risk | Package of 1–3 above | Generality / novelty residual |
 
@@ -288,7 +290,7 @@ rerun the completed scratch experiment.
 | Reviewer | Lead with | Then | Collar |
 | --- | --- | --- | --- |
 | **zWsa** | Novelty distinction + direct FMR control | RULER + 1.485B/8B | No replacement; task-adapted; 4× open |
-| **27bE** | Four layers + τ + non-Cosh schedules | DAPE tuning; scratch; mature scale | Rule fallible; held-out base partial |
+| **27bE** | M4 exact-range attribution + τ sensitivity | DAPE tuning; scratch; mature scale | Rule fallible; M4 is mechanistic |
 | **Dz6s** | Endpoint taxonomy + mature AR/RULER | Matched YaRN narrowed; theory layers | Not optimized-YaRN contest |
 | **AC** | Map to `AC.1`→`.4` in that priority | Point to same evidence | Remaining limits in one paragraph |
 
@@ -302,6 +304,7 @@ rerun the completed scratch experiment.
 | Strategy / wording | `01_REBUTTAL_PLAYBOOK.md` |
 | This inventory | `02_RESPONSE_QUESTIONS_AND_OUTCOMES.md` |
 | Numeric entry | `theory_results/EXPERIMENT_REPORT_20260724.md` |
+| M4 exact-range factorial | `theory_results/M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md` |
 | Exact-range s42 | `theory_results/MATCHED_RANGE_COSH_500M_S42_20260724.md` |
 | Exact-range 3-seed | `theory_results/MATCHED_RANGE_COSH_500M_3SEED_20260724.md` (CONDITIONAL) |
 | Paste drafts (Desktop) | `~/Desktop/EVQ_COSH_OPTIMIZED_REBUTTAL_DRAFTS.md` |

@@ -17,6 +17,10 @@ older summaries.
 - `POST_SUB_RAW_HASH_BACKED`: completed post-submission evidence with a
   standalone protocol/result owner and retained raw or artifact hashes; usable
   externally with the stated endpoint, seed, and control boundary.
+- `POST_SUB_WORKSTATION_RAW_BACKED`: completed post-submission evidence with a
+  standalone report here and raw/per-run owners retained on the author
+  workstation; usable after the selected numbers are checked once against
+  that owner.
 - `SUPPORTING`: usable only with the stated single-seed, task-family, or
   endpoint boundary.
 - `CONDITIONAL`: do not quote externally until the named promotion conflict is
@@ -28,6 +32,7 @@ older summaries.
 
 | ID | Concern | Result | Status | Mandatory adjacent boundary | Evidence owner |
 | --- | --- | --- | --- | --- | --- |
+| `E-M4-EXACT-FACTORIAL` | `R27bE.1/.2/.3/.4`, `AC.1/.3`, `RzWsa.1/.2` | In a three-seed factorial over two bases, two training lengths, and three head dimensions, all schedules share exactly the sampled extrema and log-span. Formula-Cosh, \(1.25\times\) Cosh, and deformation-matched exponential minus uniform Geo weighted \(2\times/4\times/8\times\) OOD NLL are `-0.009879/-0.012100/-0.010619`; \(1.25\times\) Cosh favors 10/12 configurations. | `POST_SUB_WORKSTATION_RAW_BACKED` | This is a 50.9M short-budget mechanistic NLL control, not scale or capability. Formula-Cosh and the matched exponential are not empirically separated; the best Cosh multiplier varies across configurations. | `M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md` |
 | `E-SHAPE-3S` | `R27bE.1/.3/.4`, `AC.3` | In the 151.9M fixed-schedule study, EVQ improves over Paper-Geo at 1K/2K/4K/8K by `-0.256/-0.305/-0.223/-0.238` mean tail NLL, with 3/3 seeds in the same direction. Native-endpoint controls also preserve a positive allocation effect. | `READY_INTERNAL` | Matched exponential and an attention-derived two-band schedule are stronger at some lengths. This supports allocation as a design variable, not universal Cosh optimality. | `EXPERIMENT_REPORT_20260724.md` §§3,7 and `native_attention_shape_l128_results_20260724.json` |
 | `E-TAU` | `R27bE.1/.4`, `AC.3` | In one independently selected sweep, \(\tau=5\) is selected and the rule value \(5.657\) is within `0.0119` NLL. | `READY_INTERNAL` | Other configurations show that the rule is fallible. It is a practical basin prior, not a trained-model optimum or theorem. | `EXPERIMENT_REPORT_20260724.md` §2 and `PHASE16_99RUN_RAW_REANALYSIS_20260724.md` |
 | `E-HELDOUT` | `R27bE.2/.5`, `AC.2` | At held-out base \(1\)M and \(d_{\mathrm{head}}=128\), EVQ-minus-Paper-Geo NLL is `-0.8018/-0.6640/-0.4329/-0.2871/-0.2117` at 1K/2K/4K/8K/16K, with 3/3 seeds agreeing. | `CONDITIONAL` | EVQ is worse at the 512-token training length by `+0.0694` NLL; base, head dimension, and training length change together; the checkout lacks a dedicated raw/per-seed aggregate owner. | `EXPERIMENT_REPORT_20260724.md` §4 |
@@ -85,10 +90,12 @@ The following additional sentence is reviewer-usable:
 
 ## 5. Current promotion gates
 
-1. Promote exact-range per-seed raw values, hashes, and training-seed
-   uncertainty before quoting `E-EXACT-RANGE-3S` externally.
-2. Add a dedicated held-out base/head raw or curated aggregate before treating
-   `E-HELDOUT` as portable reviewer evidence.
+1. Promote the older 151.9M exact-range per-seed raw values, hashes, and
+   training-seed uncertainty before quoting `E-EXACT-RANGE-3S` externally;
+   use `E-M4-EXACT-FACTORIAL` for the core multi-configuration attribution.
+2. Add a dedicated owner before treating the older `E-HELDOUT` result as
+   portable reviewer evidence; use the M4 factorial for the core two-base,
+   multi-head-dimension mechanism claim.
 3. Correct future-dated OLMo report metadata before external use.
 4. Commit the selected standalone owners, curated JSONs, playbook, and these
    ledgers to `main`; untracked worktree artifacts are not canonical evidence.

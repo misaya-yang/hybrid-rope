@@ -30,8 +30,10 @@ documents; they do not replace protocol, raw hashes, or uncertainty.
    (three-seed), submitted 750M strict AR, 8B LoRA, and video-DiT breadth.
    For the DAPE question, answer the verified `10x/100x` PE-learning-rate
    sweep directly; use fixed schedules for shape attribution.
-2. **Theory attribution:** four epistemic layers; independent τ sweep; fixed
-   non-Cosh schedules (allocation axis, not Cosh universal optimum).
+2. **Theory attribution:** four epistemic layers; independent τ sweep; the
+   three-seed M4 exact-range factorial across base/length/head settings; and a
+   deformation-matched non-Cosh schedule (allocation axis, not Cosh universal
+   optimum).
 3. **FMRoPE:** concede missing citation; training-grid allocation ≠ range
    retarget; controlled comparison with honest retargeted-FMRoPE boundary.
 4. **Stronger eval / scale:** mature 1.485B/8B AR and RULER under task-family
@@ -49,6 +51,7 @@ documents; they do not replace protocol, raw hashes, or uncertainty.
 
 | Owner | Role | Status |
 | --- | --- | --- |
+| `theory_results/M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md` | Three-seed exact-range Cosh/non-Cosh factorial across base, training length, and head dimension | Completed workstation-backed mechanistic owner; core attribution evidence |
 | `theory_results/EXPERIMENT_REPORT_20260724.md` | Fixed schedules, \(\tau\), held-out base/head, native-span controls, FMR boundary | Active numeric entry |
 | `theory_results/MATCHED_RANGE_COSH_500M_3SEED_20260724.md` + JSON | Exact-range, three-seed interior-allocation identification | Conditional: raw/per-seed promotion pending |
 | `theory_results/MATCHED_RANGE_COSH_500M_S42_20260724.md` | Seed-42 raw-backed exact-range control | Reviewer-usable, single seed |
@@ -106,17 +109,19 @@ summarized in a ledger.
 
 ## 6. Optional promotion gates
 
-1. Exact-range three-seed per-seed raw/hash/CI promotion.
-2. Promotion of the held-out base/head aggregate if its exact numbers are to
-   enter the response.
+1. Promotion of the older 151.9M exact-range three-seed per-seed raw/hash/CI
+   bundle if that separate result is ever used.
+2. Promotion of the older held-out base/head aggregate if that separate result
+   is ever used.
 3. Correction of future-dated OLMo metadata before using those specific
    future-dated owners.
 4. Promotion of selected untracked reports, JSONs, and experiment packages to
    canonical `main`.
 
-None of these gates blocks the current core response. The step-1,000 scratch
-result is already reviewer-usable; the native-only JSON does not supersede its
-later canonical Markdown owner. No new LLaMA counterfactual experiment is
-required or authorized.
+None of these gates blocks the current core response. The M4 factorial owns the
+core multi-configuration exact-range attribution; the older 151.9M aggregates
+remain optional. The step-1,000 scratch result is already reviewer-usable; the
+native-only JSON does not supersede its later canonical Markdown owner. No new
+LLaMA counterfactual experiment is required or authorized.
 
 No file under `paper/` is modified by this workspace organization.

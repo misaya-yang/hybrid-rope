@@ -136,6 +136,12 @@ C_{\mathrm{app}}.
 - 上述 exact-range aggregate 当前由作者确认，tracked tree 尚缺完整 retained
   raw aggregate、per-seed contrasts、hashes 与 CI；promotion 前不得增加
   统计显著性措辞。
+- 独立的 M4 exact-range factorial 已完成 50.9M、三 seed、两个 base、
+  两个训练长度和三个 head dimension 的 `180/180` 主臂及 `12/12`
+  边界臂。所有 schedule 的 sampled extrema 与 log-span 相同；公式 Cosh、
+  \(1.25\times\) Cosh 和 deformation-matched exponential 相对 Geo 的
+  weighted OOD NLL 为 `-0.009879/-0.012100/-0.010619`。该结果用于
+  fixed-range shape attribution，不取代大模型或能力证据。
 - EVQ 的适用性证据覆盖 standard MHA、scarce-channel MLA、bidirectional 3D-RoPE
   video DiT、progressive/continued training 与成熟 8B Q/K/V/O LoRA adaptation。
 - 8B 证据支持 long-position probability、remote source dependence 与 routing，
@@ -179,8 +185,9 @@ C_{\mathrm{app}}.
 - EVQ 在训练前改变有限 grid 的指数位置和通道分配，并从显式 surrogate
   闭式构造；
 - 两者不是同一个参数化；
-- exact-range 三 seed 直接表明，在 sampled range 完全相同时只改 interior
-  positions 仍改变训练后 NLL；
+- M4 exact-range 三 seed factorial 直接表明，在 sampled range 完全相同时
+  只改 interior positions 仍改变训练后 NLL，并把该结论扩展到两个 base、
+  两个训练长度和三个 head dimension；
 - target-aware range scaling 更强，但不消除 allocation 作为可识别训练期
   设计变量的技术新颖性。
 
@@ -190,7 +197,8 @@ C_{\mathrm{app}}.
 
 - Cosh 唯一性只属于代理目标；
 - \(\tau\) 是 operating rule；
-- tuned-\(\tau\)、非 Cosh schedules、held-out base/head 实验补充了 finite-\(\tau\) 和方法归因证据；
+- direct tuned-\(\tau\) sweep 与 M4 的 Cosh-multiplier、matched
+  exponential、base/head factorial 共同补充 finite-\(\tau\) 和方法归因证据；
 - 不存在静态 schedule 全长度支配。
 
 ### 对规模和评测

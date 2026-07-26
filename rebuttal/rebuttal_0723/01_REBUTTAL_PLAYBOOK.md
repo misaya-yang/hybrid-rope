@@ -44,6 +44,7 @@ omit a boundary whose absence would make the selected claim misleading.
 | --- | --- |
 | `SUBMITTED` | Present in the submitted manuscript; keep its original seed, control, and endpoint tier. |
 | `POST_SUB_RAW_HASH_BACKED` | Completed after submission with a standalone owner and retained raw/artifact hashes; reviewer-usable with its stated boundary. |
+| `POST_SUB_WORKSTATION_RAW_BACKED` | Completed after submission with a standalone report in this repository and raw/per-run owners retained on the author workstation; reviewer-usable after the selected numbers are checked once against that owner. |
 | `AUTHOR_CONFIRMED_NOT_PROMOTED` | Direction or aggregate is known, but the portable raw/per-seed owner is incomplete; do not quote its exact numbers. |
 | `CONDITIONAL` | A named provenance or metadata gate remains; exclude from the core response. |
 | `DESIGN_ONLY` | Plan or proposed experiment, not evidence. |
@@ -55,8 +56,8 @@ The core response is **sendable now**. It can use:
 
 - submitted 454M EVQ×YaRN, 432M MLA, 750M strict autoregressive, 8B LoRA,
   and exploratory video-DiT evidence;
-- post-submission \(\tau\), fixed-schedule, DAPE-budget, and raw-backed
-  seed-42 exact-range controls;
+- post-submission \(\tau\), DAPE-budget, raw-backed seed-42 FMRoPE control,
+  and the completed three-seed M4 exact-range factorial;
 - post-submission 1.485B OLMo counterfactual NLL and strict NIAH;
 - post-submission OLMo 13-task RULER-family evidence;
 - post-submission matched LLaMA-3-8B natural-LM and RULER evidence; and
@@ -64,8 +65,8 @@ The core response is **sendable now**. It can use:
 
 Do not make the core response depend on:
 
-- the three-seed exact-range aggregate;
-- exact held-out-base numbers;
+- the older unpromoted 151.9M three-seed exact-range or held-out-base
+  aggregates; the M4 factorial supersedes them for the core attribution claim;
 - future-dated OLMo long-gap metadata;
 - the fresh EVQ-only LLaMA counterfactual arm; or
 - any planned matched LLaMA counterfactual experiment.
@@ -129,9 +130,14 @@ paragraphs relevant to their own concerns.
 > public OLMo-2 step-0 initialization. After 1,000 steps and exactly
 > 2.097B counted tokens, Geo/EVQ PPL on the same 128 document-disjoint PG-19
 > rows was 161.19/167.45 at 4K, 163.88/156.87 at 8K, and 182.73/159.64 at
-> 16K. Finally, independent \(\tau\), fixed analytic-schedule, and matched-range
-> controls separate the allocation effect from learned capacity and scalar
-> range selection. These results support EVQ-Cosh as a zero-parameter
+> 16K. Finally, in a three-seed 50.9M exact-range factorial over two bases,
+> two training lengths, and three head dimensions, every schedule had
+> identical sampled frequency extrema and log-span. Relative to Geo, weighted
+> \(2\times/4\times/8\times\) OOD NLL changed by -0.0099 for formula-Cosh,
+> -0.0121 for \(1.25\times\) Cosh, and -0.0106 for a
+> deformation-matched exponential; the \(1.25\times\) arm improved in 10/12
+> configurations. This isolates interior allocation from learned capacity and
+> scalar range selection. These results support EVQ-Cosh as a zero-parameter
 > training-time frequency-grid allocation method; they do not claim universal
 > long-context superiority or replacement of target-aware range methods.
 
@@ -141,6 +147,8 @@ Why this opening works:
   diagnostics;
 - it keeps strict generation, RULER, and PPL as separate endpoints;
 - it uses the completed scratch result at its correct evidence tier; and
+- it answers the AC's matched analytic-schedule attribution request with a
+  multi-configuration, three-seed exact-range control; and
 - it states the precise 2×/4× capability boundary next to the capability
   claim.
 
@@ -223,6 +231,15 @@ range selection, not a universal win or an additive-synergy claim.
 
 **Owner:** `theory_results/MATCHED_RANGE_COSH_500M_S42_20260724.md`.
 
+**Cross-configuration support:** The separate M4 exact-range factorial holds
+the sampled extrema and log span fixed across two bases, two training lengths,
+three head dimensions, and three seeds. The \(1.25\times\) Cosh and
+deformation-matched exponential arms improve weighted OOD NLL over uniform Geo
+by `-0.012100` and `-0.010619`, respectively. This strengthens the
+identifiability of interior allocation, but it is not a target-aware FMRoPE
+deployment comparison; the seed-42 control above remains the direct FMRoPE
+answer.
+
 **Recommended English:**
 
 > We agree that FMRoPE is directly relevant and should have been cited and
@@ -272,16 +289,34 @@ positional-parameter learning-rate multipliers of `10×` and `100×`; the
 reported `100×` choice gives PPL@8K `455.3`, versus `477.7` at `10×`, both
 seed 42. This directly answers the tuning-budget question.
 
-**Shape attribution:** Learned capacity remains a confound regardless of the
-budget answer. The fixed, zero-parameter schedule study keeps the positional
-operator and training protocol fixed. EVQ-minus-Geo mean tail NLL is
-`-0.256/-0.305/-0.223/-0.238` at 1K/2K/4K/8K, with 3/3 seeds in the same
-direction. Exponential and attention-derived two-band schedules are stronger
-at some lengths. Thus allocation matters; Cosh is not claimed to be
-universally optimal.
+**Exact-range shape attribution:** Learned capacity remains a confound in the
+DAPE comparison regardless of the tuning-budget answer. The completed M4
+factorial removes it: all schedules use the same operator, trainable
+initialization, token order, optimizer, training budget, evaluation offsets,
+sampled frequency extrema, and log span; only the interior finite-\(K\)
+locations differ. It covers two bases, two training lengths, three head
+dimensions, and three seeds (`180/180` main runs plus `12/12` boundary runs).
+
+On the pre-specified weighted \(2\times/4\times/8\times\) natural-text NLL:
+
+- formula-Cosh minus Geo is `-0.009879` and favors Cosh in 7/12
+  configurations;
+- \(1.25\times\) Cosh minus Geo is `-0.012100` and favors Cosh in 10/12;
+- deformation-matched exponential minus Geo is `-0.010619` and favors the
+  exponential in 9/12; and
+- formula-Cosh minus exponential is `+0.000740`, with no resolved empirical
+  separation.
+
+The best Cosh multiplier varies across configurations:
+`0.75×/1.00×/1.25× = 2/4/6` wins. This is the exact answer to the requested
+\(\tau\)-sensitivity and non-Cosh ablation: fixed range is insufficient to
+erase the allocation effect, while neither Cosh nor the bare coefficient is a
+universal empirical optimum. This is a 50.9M mechanistic NLL control; scale and
+capability are answered separately by the 1.485B/8B evidence.
 
 **Best owners:**
 
+- `theory_results/M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md`
 - `theory_results/EXPERIMENT_REPORT_20260724.md`
 - `theory_results/PHASE16_99RUN_RAW_REANALYSIS_20260724.md`
 - `docs/exp/2026-02-24_128tok_baseline_report.md`
@@ -295,16 +330,26 @@ universally optimal.
 > direct sweep, the selected \(\tau=5\) and the rule value 5.657 differ by only
 > 0.0119 selection NLL. The broader 99-run audit also shows why we do not call
 > the rule optimal: it often selects a useful basin but is not consistently
-> better than a neighboring empirical choice.
+> better than a neighboring empirical choice. In a broader three-seed
+> exact-range factorial, the best Cosh multiplier varied across configurations
+> (`0.75×/1.00×/1.25×` won 2/4/6 of 12 settings), further supporting the rule
+> as an operating default rather than a point optimum.
 >
 > The submitted DAPE row was separately tested with 10× and 100×
 > positional-parameter learning-rate multipliers; the reported 100× setting
-> obtained 455.3 PPL@8K versus 477.7 at 10×. To remove learned capacity from
-> the allocation-shape question, we additionally compared fixed
-> zero-parameter schedules under the same operator and training protocol.
-> EVQ improved over Geo at all four extrapolation lengths, while exponential
-> and two-band schedules were stronger at some lengths. This supports
-> allocation as a design axis, not universal Cosh optimality.
+> obtained 455.3 PPL@8K versus 477.7 at 10×. To remove learned capacity and
+> scalar range from the allocation-shape question, we completed a three-seed
+> factorial over two bases, two training lengths, and three head dimensions.
+> Every schedule had identical sampled frequency extrema and log-span; only
+> the interior finite-\(K\) locations differed. Formula-Cosh,
+> \(1.25\times\) Cosh, and a deformation-matched exponential changed weighted
+> \(2\times/4\times/8\times\) OOD NLL relative to Geo by -0.0099, -0.0121,
+> and -0.0106, respectively; the \(1.25\times\) Cosh arm favored 10/12
+> configurations. We did not resolve an empirical difference between
+> formula-Cosh and the matched exponential. Thus interior allocation is an
+> identifiable training-time design variable, while Cosh is a closed-form,
+> zero-parameter instance rather than a claim of universal empirical
+> optimality.
 
 ### 3.4 Does EVQ complement range scaling without claiming tuned dominance?
 
@@ -349,7 +394,7 @@ strict autoregressive exact, and RULER are not interchangeable.
 | Video DiT, submitted Table 14 | `SUBMITTED` | 129M/382M exploratory breadth evidence | Cross-modal scope only; not production video or primary evidence | submitted Table 14 |
 | LLaMA-3-8B LoRA, submitted Appendix D Table 23 | `SUBMITTED` | untouched Base/EVQ-LoRA PPL: 8K `7.42/9.63`, 16K `176.3/21.5`, 32K `1942.5/104.3` | Single seed; unmatched PPL scale anchor, not attribution or capability | submitted Appendix D, Table 23 |
 | Direct \(\tau\) sweep | `POST_SUB_RAW_HASH_BACKED` | selected `5` vs rule `5.657`: `0.0119` selection-NLL gap | One direct sweep; rule is a fallible basin prior | `EXPERIMENT_REPORT_20260724.md`; `PHASE16_99RUN_RAW_REANALYSIS_20260724.md` |
-| Fixed analytic schedules | `POST_SUB_RAW_HASH_BACKED` | EVQ−Geo NLL `-0.256/-0.305/-0.223/-0.238` at 1K/2K/4K/8K, 3/3 direction | Other fixed schedules are stronger at some lengths | `EXPERIMENT_REPORT_20260724.md` |
+| 50.9M exact-range factorial | `POST_SUB_WORKSTATION_RAW_BACKED` | 3 seeds, 12 base/length/head configurations: formula-Cosh/\(1.25\times\)-Cosh/matched-exponential minus Geo weighted OOD NLL `-0.009879/-0.012100/-0.010619`; \(1.25\times\) Cosh favors 10/12 configurations | Mechanistic NLL attribution, not scale or capability; matched exponential is competitive | `M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md` |
 | Exact-range Cosh vs FMRoPE | `POST_SUB_RAW_HASH_BACKED` | seed 42 Cosh−FMR NLL `-0.47750/-0.20499/-0.11284` at 512/1K/2K | Endpoint-normalized, single seed; target-retargeted FMR is stronger | `MATCHED_RANGE_COSH_500M_S42_20260724.md` |
 | OLMo-2 1.485B matched CF natural LM | `POST_SUB_RAW_HASH_BACKED` | Native/EVQ NLL: 4K `2.235/2.548`, 8K `3.735/2.703`, 16K `4.851/2.925` | Teacher-forced NLL; one matched training seed; in-window cost | `OLMO2_1B_4K_ONLY_ROUTING_CONVERSION_20260726.md` |
 | OLMo-2 1.485B strict NIAH | `POST_SUB_RAW_HASH_BACKED` | 8K exact Native/matched-EVQ `0/100 vs 69/100`; independent EVQ seed `67/100` | Same generator family, disjoint rows/values; 16K screen only `0/20 vs 1/20` | same owner |
@@ -357,8 +402,6 @@ strict autoregressive exact, and RULER are not interchangeable.
 | LLaMA-3-8B matched ordinary LM | `SUPPORTING` | EVQ−Native NLL 8K/16K/32K `+0.390/-1.510/-2.048` | Single-seed teacher-forced probability result; separate from RULER protocol | `EVQ_8B_ADAPTATION_EVIDENCE_20260724.md` |
 | LLaMA-3-8B matched RULER | `SUPPORTING` + `NEGATIVE` at 4× | Native/EVQ macro 8K `94.44/77.60%`; 16K `0.295/14.03%`; 32K EVQ `0%`, Native 10/13 completed and all zero | One continuation seed; same 13 families; task-adapted 2×, not unseen-task | `LLAMA8B_MATCHED_RULER_MIX_20260726.md` |
 | OLMo-2 1.485B scratch step-1,000 | `POST_SUB_RAW_HASH_BACKED` | Geo/EVQ PPL 4K `161.19/167.45`, 8K `163.88/156.87`, 16K `182.73/159.64`; `122/128`, `126/128` docs favor EVQ at 8K/16K | One early-training trajectory; different trainer stacks; LM only | `OLMO2_1B_RELEASED_ROPE_BASELINE_20260725.md` |
-| Held-out base/head aggregate | `AUTHOR_CONFIRMED_NOT_PROMOTED` | Direction available internally | Exact numbers excluded until a dedicated raw/per-seed owner exists | `EXPERIMENT_REPORT_20260724.md` §4 |
-| Three-seed exact-range aggregate | `AUTHOR_CONFIRMED_NOT_PROMOTED` | Direction available internally | Use raw-backed seed-42 control instead | `MATCHED_RANGE_COSH_500M_3SEED_20260724.md` |
 
 ## 5. Reviewer-specific response order
 
@@ -406,12 +449,10 @@ Order:
 Order:
 
 1. finite-\(\tau\) scaling versus coefficient;
-2. direct \(\tau\) sweep and 99-run limitation;
+2. direct \(\tau\) sweep and the cross-configuration M4 sensitivity result;
 3. DAPE `10×/100×` budget answer;
-4. fixed non-Cosh schedules;
-5. 1.485B \(d_{\rm head}=128\), base-500K scratch run;
-6. state held-out-base numbers remain excluded rather than substituting a
-   different result.
+4. exact-range Cosh/non-Cosh attribution across base and head dimension;
+5. 1.485B \(d_{\rm head}=128\), base-500K scratch run.
 
 **Copy-ready response:**
 
@@ -423,17 +464,25 @@ Order:
 > calibrated empirically. In a direct sweep, selected \(\tau=5\) and the rule
 > value 5.657 differ by only 0.0119 selection NLL. Across the broader 99-run
 > audit the rule is useful but fallible, so we do not call it globally or
-> approximately optimal.
+> approximately optimal. The new exact-range factorial gives the requested
+> cross-configuration sensitivity test: the \(0.75\times\), \(1.00\times\),
+> and \(1.25\times\) Cosh multipliers are best in 2/4/6 of 12
+> configurations, respectively.
 >
 > The submitted DAPE row did receive a dedicated tuning budget: positional
 > learning-rate multipliers 10× and 100× were tested, and the reported 100×
 > setting obtained PPL@8K 455.3 versus 477.7 at 10×. Because learned capacity
-> still confounds shape attribution, we added fixed zero-parameter controls
-> under the same operator and training protocol. EVQ-minus-Geo NLL is
-> -0.256/-0.305/-0.223/-0.238 at 1K/2K/4K/8K with 3/3 seeds agreeing, while
-> exponential and two-band schedules are stronger at some lengths. This
-> establishes allocation as an independent axis without asserting universal
-> Cosh optimality.
+> still confounds that comparison, we completed a three-seed exact-range
+> factorial over two bases, two training lengths, and three head dimensions.
+> Every schedule has identical sampled frequency extrema and log-span; only
+> the interior finite-\(K\) locations differ. Formula-Cosh,
+> \(1.25\times\) Cosh, and a deformation-matched exponential change weighted
+> \(2\times/4\times/8\times\) OOD NLL relative to uniform Geo by -0.0099,
+> -0.0121, and -0.0106, respectively; the \(1.25\times\) arm favors 10/12
+> configurations. We do not resolve a difference between formula-Cosh and
+> the matched exponential. This establishes allocation as an independent
+> training-time axis while treating Cosh as a closed-form, zero-parameter
+> instance rather than a universal empirical optimum.
 >
 > We also completed the requested larger pre-specified run on OLMo-2
 > (1,484,916,736 parameters, \(d_{\rm head}=128\), base 500K) from the public
@@ -465,8 +514,11 @@ Do not debate whether the reviewer should have noticed the submitted 8B row.
 > matching sampled extrema, log span, initialization, data order, optimizer,
 > budget, and evaluation anchors, endpoint-normalized fixed-range
 > Cosh-minus-uniform-FMRoPE NLL is -0.4775/-0.2050/-0.1128 at 512/1K/2K.
-> When both schedules are
-> target-retargeted, FMRoPE is stronger, so our claim is distinct
+> A separate three-seed exact-range factorial over two bases, two training
+> lengths, and three head dimensions also keeps sampled extrema and log-span
+> identical; \(1.25\times\) Cosh improves weighted OOD NLL over uniform Geo
+> by 0.0121 and favors 10/12 configurations. When both schedules are
+> target-retargeted, FMRoPE is stronger, so our claim is identifiable
 > interior-allocation leverage rather than FMRoPE replacement.
 >
 > We also added the two requested evaluation axes. On matched
@@ -489,9 +541,9 @@ gates:
 
 | AC gate | Status | Decisive evidence | Remaining boundary |
 | --- | --- | --- | --- |
-| `AC.1` novelty + direct comparison | Answered | formula-level distinction; raw-backed seed-42 exact-range control | single seed; target-retargeted FMR can be stronger |
+| `AC.1` novelty + direct comparison | Answered | formula-level distinction; seed-42 direct FMRoPE control; three-seed M4 exact-range factorial | target-retargeted FMR can be stronger |
 | `AC.2` stronger scale/evaluation | Answered at supporting tier | 1.485B strict NIAH, matched 8B RULER, 1.485B scratch, submitted 750M/8B anchors | task-family 2×; mature 4× unsolved; mostly single seed |
-| `AC.3` attribution | Answered | direct \(\tau\) sweep, 99-run audit, DAPE budget, fixed analytic schedules | rule fallible; Cosh not universal |
+| `AC.3` attribution | Answered | direct \(\tau\) sweep, DAPE budget, and the three-seed exact-range Cosh/non-Cosh factorial across base/length/head configurations | rule is a basin prior; Cosh is not empirically unique |
 | `AC.4` recommendation conjunction | Answered with bounded claims | all three gates above are backed by completed evidence | no universal SOTA or range-method replacement claim |
 
 **Copy-ready AC note:**
@@ -501,9 +553,11 @@ gates:
 > interior-allocation contribution, and provide a matched-range control whose
 > opposite target-retargeted outcome also bounds the claim. Second, we add
 > pretrained 1.485B and 8B strict autoregressive/RULER evidence plus a
-> completed 1.485B step-0 to step-1,000 training comparison. Third, independent
-> \(\tau\), DAPE-budget, and fixed analytic-schedule studies separate the
-> operating rule, learned capacity, and allocation shape. We therefore ask
+> completed 1.485B step-0 to step-1,000 training comparison. Third, a
+> three-seed exact-range factorial over two bases, two training lengths, and
+> three head dimensions separates interior allocation from scalar range and
+> learned capacity; its Cosh sensitivity and deformation-matched exponential
+> arm also bound the operating rule and method-family claim. We therefore ask
 > that EVQ-Cosh be assessed as a simple zero-parameter training-time allocation
 > axis with bounded mature-model evidence, not as a claim of universal
 > long-context SOTA or replacement of target-aware scaling.
@@ -530,8 +584,9 @@ LLaMA supplies separate matched natural-LM and task-family RULER endpoints.
 | --- | --- | --- |
 | “EVQ is the first method to optimize frequencies/exponents.” | LongRoPE and other work search or alter per-channel frequencies; the priority claim is unnecessarily broad. | “EVQ provides a fixed-base, closed-form nonlinear allocation of interior exponent locations.” |
 | “EVQ is better than/replaces FMRoPE or YaRN.” | The target-retargeted FMR control reverses; submitted YaRN is fixed-scale. | “The tested allocation and range choices are separately identifiable; the same fixed range transform has substrate-dependent leverage.” |
-| “Cosh or \(\tau=d_{\rm eff}/\sqrt L\) is optimal.” | Fixed alternatives can win and the 99-run rule is fallible. | “Cosh is the solution to the stated surrogate; the rule is an empirically calibrated basin prior.” |
+| “Cosh or \(\tau=d_{\rm eff}/\sqrt L\) is optimal.” | The M4 factorial finds different best Cosh multipliers across configurations, and the matched exponential is competitive. | “Cosh is the solution to the stated surrogate; the rule is an empirically calibrated operating default.” |
 | “The theory exactly predicts finite \(\tau\).” | It supplies a scaling structure, not the finite \(O(1)\) coefficient. | “\(\tau=c(\Pi)d_{\rm eff}/\sqrt{L_{\rm train}}\), with \(c(\Pi)\) calibrated empirically.” |
+| “The historical EVQ gains are proven not to come from range.” | The endpoint-normalized factorial isolates a real fixed-range shape effect but does not decompose every earlier result. | “A scalar range change is not necessary for an allocation-shape effect.” |
 | “PPL improvement proves long-context ability.” | NLL/PPL is teacher-forced probability, not generation. | Report strict NIAH or RULER separately. |
 | “The two OLMo EVQ seeds are 136/200.” | They share the same evaluation rows and only one is paired with Native. | “One matched pair is 0/100 versus 69/100; an independent EVQ training seed scores 67/100.” |
 | “OLMo full RULER is a matched EVQ improvement.” | No Native arm received that continuation mixture. | “A separate single-seed EVQ RULER-family continuation reached …” |
@@ -549,29 +604,32 @@ misleading. They do not answer a retained reviewer concern.
 
 The core response remains `sendable` only if all items below pass:
 
-1. Use the raw-backed seed-42 exact-range result; do not quote the
-   unpromoted three-seed exact-range aggregate.
-2. Do not quote exact held-out-base numbers until a dedicated raw/per-seed
-   owner exists. The completed 1.485B scratch run answers the separate
-   larger-run branch, not the held-out-base branch.
-3. Keep the scratch row as `POST_SUB_RAW_HASH_BACKED`; retain
+1. Use the M4 factorial for the three-seed exact-range, \(\tau\)-sensitivity,
+   non-Cosh, base, and head-dimension attribution claims; keep the seed-42
+   matched-range study as the direct target-retargeted FMRoPE comparison.
+2. Before posting, check the selected M4 values once against the workstation
+   `summary.json` and `frequency_audit.json`; the repository standalone owner
+   is `M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md`.
+3. Do not substitute the older unpromoted 151.9M exact-range or held-out-base
+   aggregates for the M4 result.
+4. Keep the scratch row as `POST_SUB_RAW_HASH_BACKED`; retain
    single-trajectory, different-trainer-stack, early-budget, and LM-only
    boundaries next to that claim.
-4. Do not use future-dated OLMo long-gap results until their metadata is
+5. Do not use future-dated OLMo long-gap results until their metadata is
    reconciled.
-5. Keep submitted and post-submission evidence explicitly separated.
-6. Keep OLMo natural NLL, strict NIAH, and RULER continuation as three
+6. Keep submitted and post-submission evidence explicitly separated.
+7. Keep OLMo natural NLL, strict NIAH, and RULER continuation as three
    distinct endpoints/protocol statements.
-7. Keep LLaMA ordinary-LM NLL and the 516-step RULER continuation separate.
-8. State the LLaMA 32K/4× negative result next to the positive 16K RULER
+8. Keep LLaMA ordinary-LM NLL and the 516-step RULER continuation separate.
+9. State the LLaMA 32K/4× negative result next to the positive 16K RULER
    result; state the OLMo 16K/4× weakness next to its 8K capability result.
-9. Answer the DAPE tuning-budget question with `10×/100×`; use fixed
-   schedules for allocation-shape attribution.
-10. Do not use the fresh EVQ-only LLaMA counterfactual arm in the core
+10. Answer the DAPE tuning-budget question with `10×/100×`; use the M4
+    exact-range schedules for allocation-shape attribution.
+11. Do not use the fresh EVQ-only LLaMA counterfactual arm in the core
     response, and do not run the design-only matched counterfactual plan.
-11. Verify every posted number once against the named standalone owner after
+12. Verify every posted number once against the named standalone owner after
     final character-limit editing.
-12. Keep each reviewer response within 10,000 characters, plain Markdown, no
+13. Keep each reviewer response within 10,000 characters, plain Markdown, no
     links or attachments.
 
 If an optional conditional row is added, the package immediately changes to
