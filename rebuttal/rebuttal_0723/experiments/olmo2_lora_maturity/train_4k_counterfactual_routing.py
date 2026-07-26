@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import os
@@ -93,6 +94,151 @@ class RoutingPairView:
         for name, expected_digest in self.manifest["files"].items():
             if sha256_file(path / name) != expected_digest:
                 raise RuntimeError(f"routing data hash drift: {path / name}")
+        self.rows = [
+            json.loads(line)
+            for line in (path / "rows.jsonl").read_text(
+                encoding="utf-8"
+            ).splitlines()
+            if line.strip()
+        ]
+        if len(self.rows) != expected[0]:
+            raise RuntimeError("routing metadata row-count drift")
+        self.source_starts = np.empty(expected[0], dtype=np.int64)
+        self.source_stops = np.empty(expected[0], dtype=np.int64)
+        self.answer_starts = np.empty(expected[0], dtype=np.int64)
+        self.active_lengths = np.empty(expected[0], dtype=np.int64)
+        for index, row in enumerate(self.rows):
+            answer_start = int(row["answer_start"])
+            active_length = int(row["source_length"])
+            if not 0 < answer_start < active_length <= LENGTH:
+                raise RuntimeError("routing active-length metadata drift")
+            starts = []
+            stops = []
+            for variant, token_key in (
+                (0, "gold_token_ids"),
+                (1, "alternate_token_ids"),
+            ):
+                pattern = [int(value) for value in row[token_key]]
+                sequence = self.input_ids[index, variant, :answer_start]
+                occurrences = [
+                    start
+                    for start in range(
+                        0, answer_start - len(pattern) + 1
+                    )
+                    if sequence[
+                        start : start + len(pattern)
+                    ].tolist()
+                    == pattern
+                ]
+                if len(occurrences) != 1:
+                    raise RuntimeError(
+                        "routing source value is not uniquely recoverable"
+                    )
+                starts.append(int(occurrences[0]))
+                stops.append(int(occurrences[0] + len(pattern)))
+            if starts[0] != starts[1] or stops[0] != stops[1]:
+                raise RuntimeError(
+                    "counterfactual pair source geometry drift"
+                )
+            if (
+                not np.array_equal(
+                    self.input_ids[index, 0, : starts[0]],
+                    self.input_ids[index, 1, : starts[1]],
+                )
+                or not np.array_equal(
+                    self.input_ids[index, 0, stops[0] : answer_start],
+                    self.input_ids[index, 1, stops[1] : answer_start],
+                )
+            ):
+                raise RuntimeError(
+                    "counterfactual prompt differs outside source value"
+                )
+            if not stops[0] < answer_start:
+                raise RuntimeError("source does not precede answer query")
+            self.source_starts[index] = starts[0]
+            self.source_stops[index] = stops[0]
+            self.answer_starts[index] = answer_start
+            self.active_lengths[index] = active_length
+
+
+def source_gap_position_ids(
+    *,
+    view: RoutingPairView,
+    row_indices: np.ndarray,
+    target_lengths: np.ndarray,
+) -> tuple[torch.Tensor, list[dict[str, int]], bytes]:
+    """Insert one virtual gap after the source while preserving local steps."""
+
+    row_indices = np.asarray(row_indices, dtype=np.int64)
+    target_lengths = np.asarray(target_lengths, dtype=np.int64)
+    if row_indices.shape != target_lengths.shape:
+        raise RuntimeError("virtual target-length shape drift")
+    physical = np.arange(LENGTH - 1, dtype=np.int64)
+    pair_positions = np.broadcast_to(
+        physical, (len(row_indices), LENGTH - 1)
+    ).copy()
+    receipts: list[dict[str, int]] = []
+    for local_index, (row_index, target_length) in enumerate(
+        zip(row_indices.tolist(), target_lengths.tolist())
+    ):
+        active_length = int(view.active_lengths[row_index])
+        active_context = active_length - 1
+        source_start = int(view.source_starts[row_index])
+        source_stop = int(view.source_stops[row_index])
+        answer_start = int(view.answer_starts[row_index])
+        if target_length not in {LENGTH, 2 * LENGTH, 4 * LENGTH}:
+            raise RuntimeError("unsupported virtual target-length bucket")
+        if target_length < active_length:
+            raise RuntimeError("virtual target shorter than active sequence")
+        extra = int(target_length - LENGTH)
+        if extra:
+            pair_positions[
+                local_index, source_stop:active_context
+            ] += extra
+        final_active = int(
+            pair_positions[local_index, active_context - 1]
+        )
+        if active_context < LENGTH - 1:
+            pair_positions[
+                local_index, active_context:
+            ] = final_active
+        active = pair_positions[local_index, :active_context]
+        if (
+            int(active[0]) != 0
+            or int(active[-1]) != active_context - 1 + extra
+            or np.any(np.diff(active) <= 0)
+            or np.any(np.diff(active[:source_stop]) != 1)
+            or np.any(np.diff(active[source_stop:]) != 1)
+        ):
+            raise RuntimeError("virtual source-gap position contract drift")
+        prediction_index = answer_start - 1
+        physical_gap = prediction_index - source_start
+        virtual_gap = (
+            int(pair_positions[local_index, prediction_index])
+            - source_start
+        )
+        if virtual_gap != physical_gap + extra:
+            raise RuntimeError("realized source-query gap drift")
+        receipts.append(
+            {
+                "row": int(row_index),
+                "target_length": int(target_length),
+                "active_length": active_length,
+                "source_start": source_start,
+                "source_stop": source_stop,
+                "answer_prediction_index": prediction_index,
+                "physical_gap": physical_gap,
+                "virtual_gap": virtual_gap,
+                "maximum_active_position_id": final_active,
+            }
+        )
+    flattened = np.repeat(pair_positions, 2, axis=0)
+    payload = flattened.tobytes(order="C")
+    return (
+        torch.from_numpy(flattened).to("cuda", non_blocking=True),
+        receipts,
+        payload,
+    )
 
 
 def routing_batch(
@@ -185,6 +331,7 @@ def evaluate_routing(
     rows: int,
     pair_batch_size: int,
     margin: float,
+    target_length: int = LENGTH,
 ) -> dict[str, Any]:
     n = min(int(rows), len(view.input_ids))
     totals = {
@@ -204,10 +351,20 @@ def evaluate_routing(
         contexts, labels, alternate_labels, _ = routing_batch(
             view=view, row_indices=indices
         )
+        position_ids = None
+        if int(target_length) != LENGTH:
+            position_ids, _, _ = source_gap_position_ids(
+                view=view,
+                row_indices=indices,
+                target_lengths=np.full(
+                    len(indices), int(target_length), dtype=np.int64
+                ),
+            )
         mask = labels != -100
         with torch.autocast("cuda", dtype=torch.bfloat16):
             hidden = model.model(
                 input_ids=contexts,
+                position_ids=position_ids,
                 use_cache=False,
                 return_dict=False,
             )[0]
@@ -250,7 +407,7 @@ def evaluate_routing(
         totals["margin_satisfied"] += int(
             (preference >= float(margin)).sum()
         )
-        del contexts, labels, alternate_labels, hidden, logits
+        del contexts, labels, alternate_labels, hidden, logits, position_ids
     count = int(totals["tokens"])
     source_count = int(totals["source_tokens"])
     return {
@@ -272,6 +429,12 @@ def evaluate_routing(
         "margin_satisfied_fraction": (
             totals["margin_satisfied"] / source_count
         ),
+        "position_policy": (
+            "contiguous"
+            if int(target_length) == LENGTH
+            else "single_source_query_block_gap"
+        ),
+        "virtual_target_length": int(target_length),
     }
 
 
@@ -291,6 +454,8 @@ def train(
     compile_mode: str,
     seed: int,
     log_path: Path,
+    virtual_target_length: int = 0,
+    virtual_bucket_weights: tuple[int, int, int] = (1, 1, 2),
 ) -> dict[str, Any]:
     if int(micro_batch_size) % 2:
         raise ValueError("micro-batch-size must be even")
@@ -331,6 +496,14 @@ def train(
     family_steps = {"routing": 0, "natural": 0}
     supervised_tokens = {"routing": 0, "natural": 0}
     recent_losses: list[float] = []
+    position_hash = hashlib.sha256()
+    position_bucket_counts = {
+        str(LENGTH): 0,
+        str(2 * LENGTH): 0,
+        str(4 * LENGTH): 0,
+    }
+    virtual_gap_min: int | None = None
+    virtual_gap_max: int | None = None
     model.train()
     torch.cuda.reset_peak_memory_stats()
 
@@ -360,8 +533,45 @@ def train(
                 ) = routing_batch(
                     view=routing_view, row_indices=indices
                 )
+                position_ids = None
+                if int(virtual_target_length):
+                    weights = torch.tensor(
+                        virtual_bucket_weights, dtype=torch.float64
+                    )
+                    buckets = torch.multinomial(
+                        weights,
+                        num_samples=pair_batch_size,
+                        replacement=True,
+                        generator=generator,
+                    ).numpy()
+                    target_lengths = np.asarray(
+                        (LENGTH, 2 * LENGTH, 4 * LENGTH),
+                        dtype=np.int64,
+                    )[buckets]
+                    position_ids, exposures, payload = (
+                        source_gap_position_ids(
+                            view=routing_view,
+                            row_indices=indices,
+                            target_lengths=target_lengths,
+                        )
+                    )
+                    position_hash.update(payload)
+                    for exposure in exposures:
+                        bucket = str(exposure["target_length"])
+                        position_bucket_counts[bucket] += 1
+                        gap = int(exposure["virtual_gap"])
+                        virtual_gap_min = (
+                            gap
+                            if virtual_gap_min is None
+                            else min(virtual_gap_min, gap)
+                        )
+                        virtual_gap_max = (
+                            gap
+                            if virtual_gap_max is None
+                            else max(virtual_gap_max, gap)
+                        )
                 with torch.autocast("cuda", dtype=torch.bfloat16):
-                    hidden = backbone(contexts)
+                    hidden = backbone(contexts, position_ids)
                     raw_loss, metrics = routing_objective(
                         model=model,
                         hidden=hidden,
@@ -385,8 +595,9 @@ def train(
                     objective="full",
                 )
                 alternate_labels = None
+                position_ids = None
                 with torch.autocast("cuda", dtype=torch.bfloat16):
-                    hidden = backbone(contexts)
+                    hidden = backbone(contexts, None)
                     raw_loss = natural_loss_module(
                         model.lm_head.weight,
                         hidden.reshape(-1, hidden.shape[-1]),
@@ -406,6 +617,8 @@ def train(
             del contexts, labels, hidden, raw_loss, loss
             if alternate_labels is not None:
                 del alternate_labels
+            if position_ids is not None:
+                del position_ids
         grad_norm = torch.nn.utils.clip_grad_norm_(parameters, 1.0)
         optimizer.step()
         mean_loss = float(np.mean(raw_losses))
@@ -490,6 +703,17 @@ def train(
         "precision": "bf16_autocast",
         "optimizer": "fused_adamw",
         "natural_loss_backend": "liger_fused_linear_cross_entropy",
+        "position_policy": (
+            "contiguous"
+            if not int(virtual_target_length)
+            else "single_source_query_block_gap"
+        ),
+        "virtual_target_length": int(virtual_target_length),
+        "virtual_bucket_weights": list(virtual_bucket_weights),
+        "position_bucket_counts": position_bucket_counts,
+        "virtual_gap_min": virtual_gap_min,
+        "virtual_gap_max": virtual_gap_max,
+        "realized_position_stream_sha256": position_hash.hexdigest(),
     }
 
 
@@ -529,6 +753,14 @@ def parse_args() -> argparse.Namespace:
         default="max-autotune-no-cudagraphs",
     )
     parser.add_argument("--natural-eval-rows", type=int, default=16)
+    parser.add_argument("--virtual-target-length", type=int, default=0)
+    parser.add_argument(
+        "--virtual-bucket-weights",
+        type=int,
+        nargs=3,
+        default=(1, 1, 2),
+        metavar=("W4K", "W8K", "W16K"),
+    )
     parser.add_argument("--seed", type=int, default=20_260_725)
     return parser.parse_args()
 
@@ -541,6 +773,14 @@ def main() -> None:
         raise ValueError("counterfactual margin must be positive")
     if float(args.counterfactual_margin_weight) <= 0:
         raise ValueError("counterfactual margin weight must be positive")
+    if int(args.virtual_target_length) not in {0, 4 * LENGTH}:
+        raise ValueError("virtual target length must be 0 or 16384")
+    if (
+        len(args.virtual_bucket_weights) != 3
+        or any(int(value) < 0 for value in args.virtual_bucket_weights)
+        or sum(int(value) for value in args.virtual_bucket_weights) <= 0
+    ):
+        raise ValueError("invalid virtual bucket weights")
     output = args.output.resolve()
     if output.exists():
         raise FileExistsError(output)
@@ -685,6 +925,19 @@ def main() -> None:
         pair_batch_size=2,
         margin=float(args.counterfactual_margin),
     )
+    initial_virtual_calibration = None
+    if int(args.virtual_target_length):
+        initial_virtual_calibration = {
+            str(target): evaluate_routing(
+                model=model,
+                view=calibration_view,
+                rows=16,
+                pair_batch_size=2,
+                margin=float(args.counterfactual_margin),
+                target_length=target,
+            )
+            for target in (2 * LENGTH, 4 * LENGTH)
+        }
     training = train(
         model=model,
         routing_view=routing_view,
@@ -704,6 +957,10 @@ def main() -> None:
         compile_mode=args.compile_mode,
         seed=int(args.seed),
         log_path=output / "train_log.jsonl",
+        virtual_target_length=int(args.virtual_target_length),
+        virtual_bucket_weights=tuple(
+            int(value) for value in args.virtual_bucket_weights
+        ),
     )
     final_calibration = evaluate_routing(
         model=model,
@@ -712,6 +969,19 @@ def main() -> None:
         pair_batch_size=2,
         margin=float(args.counterfactual_margin),
     )
+    final_virtual_calibration = None
+    if int(args.virtual_target_length):
+        final_virtual_calibration = {
+            str(target): evaluate_routing(
+                model=model,
+                view=calibration_view,
+                rows=len(calibration_view.input_ids),
+                pair_batch_size=2,
+                margin=float(args.counterfactual_margin),
+                target_length=target,
+            )
+            for target in (2 * LENGTH, 4 * LENGTH)
+        }
     natural_nll = evaluate_natural_nll(
         model=model,
         background_dir=args.background_dir.resolve(),
@@ -732,12 +1002,22 @@ def main() -> None:
         "rank": int(args.rank),
         "alpha": float(args.alpha),
         "training_sequence_length": LENGTH,
-        "stage": "counterfactual_source_routing_4k",
+        "stage": (
+            "counterfactual_source_routing_virtual_gap_16k"
+            if int(args.virtual_target_length)
+            else "counterfactual_source_routing_4k"
+        ),
         "parent_adapter_sha256": sha256_file(parent_adapter),
         "routing_data_sha256": sha256_file(
             routing_root / "manifest.json"
         ),
         "seed": int(args.seed),
+        "position_policy": (
+            "contiguous"
+            if not int(args.virtual_target_length)
+            else "single_source_query_block_gap"
+        ),
+        "virtual_target_length": int(args.virtual_target_length),
     }
     adapter_sha = save_adapter(
         output / "adapter.pt", model, None, adapter_metadata
@@ -745,7 +1025,12 @@ def main() -> None:
     receipt = {
         "status": "OLMO2_4K_COUNTERFACTUAL_ROUTING_COMPLETE",
         "metric_boundary": (
-            "paired source-content swaps and natural replay use only "
+            "paired source-content swaps use one source/query block gap "
+            "with 4K/8K/16K virtual position buckets while natural replay "
+            "uses contiguous 4K positions; strict 8K/16K evaluation uses "
+            "real physical sequences"
+            if int(args.virtual_target_length)
+            else "paired source-content swaps and natural replay use only "
             "positions 0..4095; 8K/16K remain evaluation-only"
         ),
         "script_sha256": sha256_file(Path(__file__).resolve()),
@@ -769,13 +1054,23 @@ def main() -> None:
         },
         "runtime": runtime,
         "initial_routing_calibration": initial_calibration,
+        "initial_virtual_routing_calibration": (
+            initial_virtual_calibration
+        ),
         "training": training,
         "final_routing_calibration": final_calibration,
+        "final_virtual_routing_calibration": (
+            final_virtual_calibration
+        ),
         "natural_nll": natural_nll,
         "protocol": {
             "frequency": args.frequency,
             "hard_maximum_training_length": LENGTH,
-            "hard_maximum_training_position_id": LENGTH - 1,
+            "hard_maximum_training_position_id": (
+                4 * LENGTH - 2
+                if int(args.virtual_target_length)
+                else LENGTH - 1
+            ),
             "steps": int(args.steps),
             "family_pattern": list(FAMILY_PATTERN),
             "micro_batch_size": int(args.micro_batch_size),
@@ -793,6 +1088,16 @@ def main() -> None:
                 args.counterfactual_margin_weight
             ),
             "compile_mode": args.compile_mode,
+            "position_policy": (
+                "contiguous"
+                if not int(args.virtual_target_length)
+                else "single_source_query_block_gap"
+            ),
+            "virtual_target_length": int(args.virtual_target_length),
+            "virtual_bucket_weights": [
+                int(value)
+                for value in args.virtual_bucket_weights
+            ],
         },
     }
     atomic_json(output / "results.json", receipt)

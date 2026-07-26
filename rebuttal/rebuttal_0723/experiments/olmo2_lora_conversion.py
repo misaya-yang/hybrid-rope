@@ -161,9 +161,14 @@ class TrainingBackbone(nn.Module):
         super().__init__()
         self.model = model
 
-    def forward(self, input_ids: torch.Tensor) -> torch.Tensor:
+    def forward(
+        self,
+        input_ids: torch.Tensor,
+        position_ids: torch.Tensor | None = None,
+    ) -> torch.Tensor:
         return self.model(
             input_ids=input_ids,
+            position_ids=position_ids,
             use_cache=False,
             return_dict=False,
         )[0]
