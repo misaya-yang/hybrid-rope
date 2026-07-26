@@ -15,6 +15,7 @@ from typing import Any
 import numpy as np
 import torch
 import torch.nn.functional as F
+from transformers import AutoTokenizer
 
 from rebuttal.rebuttal_0723.experiments.olmo2_lora_conversion import (
     TrainingBackbone,
@@ -57,10 +58,19 @@ PAIR_COLLECTION_STATUSES = {
     "OLMO2_4K_COUNTERFACTUAL_NATURAL_MULTIQUERY_DATA_PREPARED",
 }
 NATURAL_MULTIQUERY_READY_STATUS = "OLMO2_4K_NATURAL_MULTIQUERY_READY"
+VIRTUAL_QUERY_GAP_READY_STATUS = "OLMO2_4K_VIRTUAL_QUERY_GAP_READY"
+TRAIN_QUERY_MARKER = "Which access code belongs to"
+CALIBRATION_QUERY_MARKER = "Return the identifier assigned to"
 
 
 class RoutingPairView:
-    def __init__(self, path: Path) -> None:
+    def __init__(
+        self,
+        path: Path,
+        *,
+        require_virtual_geometry: bool = False,
+        query_marker_token_ids: tuple[int, ...] | None = None,
+    ) -> None:
         self.path = path
         self.manifest = json.loads(
             (path / "manifest.json").read_text(encoding="utf-8")
@@ -103,15 +113,34 @@ class RoutingPairView:
         ]
         if len(self.rows) != expected[0]:
             raise RuntimeError("routing metadata row-count drift")
+        self.virtual_geometry_ready = False
+        if not require_virtual_geometry:
+            return
+        if int(self.manifest["queries_per_sequence"]) != 1:
+            raise RuntimeError(
+                "virtual query-gap training supports one query per sequence"
+            )
+        if not query_marker_token_ids:
+            raise RuntimeError("virtual query-gap marker tokens are required")
+        marker = list(query_marker_token_ids)
         self.source_starts = np.empty(expected[0], dtype=np.int64)
         self.source_stops = np.empty(expected[0], dtype=np.int64)
+        self.query_starts = np.empty(expected[0], dtype=np.int64)
         self.answer_starts = np.empty(expected[0], dtype=np.int64)
         self.active_lengths = np.empty(expected[0], dtype=np.int64)
         for index, row in enumerate(self.rows):
             answer_start = int(row["answer_start"])
-            active_length = int(row["source_length"])
+            answer_tokens = int(row["answer_tokens"])
+            active_length = answer_start + answer_tokens + 1
             if not 0 < answer_start < active_length <= LENGTH:
                 raise RuntimeError("routing active-length metadata drift")
+            label_masks = self.labels[index] != -100
+            expected_mask = np.zeros((2, LENGTH), dtype=bool)
+            expected_mask[
+                :, answer_start : answer_start + answer_tokens
+            ] = True
+            if not np.array_equal(label_masks, expected_mask):
+                raise RuntimeError("routing answer-label geometry drift")
             starts = []
             stops = []
             for variant, token_key in (
@@ -155,90 +184,283 @@ class RoutingPairView:
                 )
             if not stops[0] < answer_start:
                 raise RuntimeError("source does not precede answer query")
+            query_starts = []
+            for variant in range(2):
+                sequence = self.input_ids[
+                    index, variant, :answer_start
+                ]
+                occurrences = [
+                    start
+                    for start in range(
+                        0, answer_start - len(marker) + 1
+                    )
+                    if sequence[
+                        start : start + len(marker)
+                    ].tolist()
+                    == marker
+                ]
+                if len(occurrences) != 1:
+                    raise RuntimeError(
+                        "routing query boundary is not uniquely recoverable"
+                    )
+                query_starts.append(int(occurrences[0]))
+            if query_starts[0] != query_starts[1]:
+                raise RuntimeError(
+                    "counterfactual pair query geometry drift"
+                )
+            if not stops[0] <= query_starts[0] < answer_start:
+                raise RuntimeError(
+                    "routing source/query semantic order drift"
+                )
             self.source_starts[index] = starts[0]
             self.source_stops[index] = stops[0]
+            self.query_starts[index] = query_starts[0]
             self.answer_starts[index] = answer_start
             self.active_lengths[index] = active_length
+        self.virtual_geometry_ready = True
 
 
-def source_gap_position_ids(
+def query_gap_position_array(
     *,
     view: RoutingPairView,
     row_indices: np.ndarray,
-    target_lengths: np.ndarray,
-) -> tuple[torch.Tensor, list[dict[str, int]], bytes]:
-    """Insert one virtual gap after the source while preserving local steps."""
+    query_offsets: np.ndarray,
+) -> tuple[np.ndarray, list[dict[str, int]]]:
+    """Shift the semantic query block without revealing the gold source."""
 
     row_indices = np.asarray(row_indices, dtype=np.int64)
-    target_lengths = np.asarray(target_lengths, dtype=np.int64)
-    if row_indices.shape != target_lengths.shape:
-        raise RuntimeError("virtual target-length shape drift")
+    query_offsets = np.asarray(query_offsets, dtype=np.int64)
+    if row_indices.shape != query_offsets.shape:
+        raise RuntimeError("virtual query-offset shape drift")
+    if not view.virtual_geometry_ready:
+        raise RuntimeError("virtual query-gap geometry is unavailable")
     physical = np.arange(LENGTH - 1, dtype=np.int64)
     pair_positions = np.broadcast_to(
         physical, (len(row_indices), LENGTH - 1)
     ).copy()
     receipts: list[dict[str, int]] = []
-    for local_index, (row_index, target_length) in enumerate(
-        zip(row_indices.tolist(), target_lengths.tolist())
+    for local_index, (row_index, query_offset) in enumerate(
+        zip(row_indices.tolist(), query_offsets.tolist())
     ):
         active_length = int(view.active_lengths[row_index])
-        active_context = active_length - 1
+        active_context = min(active_length, LENGTH - 1)
         source_start = int(view.source_starts[row_index])
         source_stop = int(view.source_stops[row_index])
+        query_start = int(view.query_starts[row_index])
         answer_start = int(view.answer_starts[row_index])
-        if target_length not in {LENGTH, 2 * LENGTH, 4 * LENGTH}:
-            raise RuntimeError("unsupported virtual target-length bucket")
-        if target_length < active_length:
-            raise RuntimeError("virtual target shorter than active sequence")
-        extra = int(target_length - LENGTH)
-        if extra:
+        if not 0 <= query_offset <= 3 * LENGTH + 1:
+            raise RuntimeError("virtual query offset is outside 16K support")
+        if query_offset:
             pair_positions[
-                local_index, source_stop:active_context
-            ] += extra
-        final_active = int(
-            pair_positions[local_index, active_context - 1]
-        )
-        if active_context < LENGTH - 1:
-            pair_positions[
-                local_index, active_context:
-            ] = final_active
-        active = pair_positions[local_index, :active_context]
+                local_index, query_start:
+            ] += int(query_offset)
+        positions = pair_positions[local_index]
+        active = positions[:active_context]
         if (
             int(active[0]) != 0
-            or int(active[-1]) != active_context - 1 + extra
-            or np.any(np.diff(active) <= 0)
-            or np.any(np.diff(active[:source_stop]) != 1)
-            or np.any(np.diff(active[source_stop:]) != 1)
+            or np.any(np.diff(positions) <= 0)
+            or np.any(np.diff(positions[:query_start]) != 1)
+            or np.any(np.diff(positions[query_start:]) != 1)
+            or int(positions[-1]) >= 4 * LENGTH
         ):
-            raise RuntimeError("virtual source-gap position contract drift")
+            raise RuntimeError("virtual query-gap position contract drift")
+        jump = int(positions[query_start] - positions[query_start - 1])
+        if jump != int(query_offset) + 1:
+            raise RuntimeError("virtual query-boundary jump drift")
         prediction_index = answer_start - 1
-        physical_gap = prediction_index - source_start
-        virtual_gap = (
-            int(pair_positions[local_index, prediction_index])
-            - source_start
+        physical_near = prediction_index - (source_stop - 1)
+        physical_far = prediction_index - source_start
+        virtual_near = (
+            int(positions[prediction_index])
+            - int(positions[source_stop - 1])
         )
-        if virtual_gap != physical_gap + extra:
-            raise RuntimeError("realized source-query gap drift")
+        virtual_far = (
+            int(positions[prediction_index])
+            - int(positions[source_start])
+        )
+        if (
+            virtual_near != physical_near + int(query_offset)
+            or virtual_far != physical_far + int(query_offset)
+        ):
+            raise RuntimeError("realized query/source gap drift")
         receipts.append(
             {
                 "row": int(row_index),
-                "target_length": int(target_length),
+                "physical_sequence_length": LENGTH,
+                "query_offset": int(query_offset),
                 "active_length": active_length,
                 "source_start": source_start,
                 "source_stop": source_stop,
+                "query_start": query_start,
                 "answer_prediction_index": prediction_index,
-                "physical_gap": physical_gap,
-                "virtual_gap": virtual_gap,
-                "maximum_active_position_id": final_active,
+                "physical_gap_near": physical_near,
+                "physical_gap_far": physical_far,
+                "virtual_gap_near": virtual_near,
+                "virtual_gap_far": virtual_far,
+                "virtual_query_prediction_position": int(
+                    positions[prediction_index]
+                ),
+                "maximum_active_position_id": int(
+                    positions[active_context - 1]
+                ),
+                "position_array_sha256": hashlib.sha256(
+                    positions.astype("<i8", copy=False).tobytes(order="C")
+                ).hexdigest(),
             }
         )
+    return pair_positions, receipts
+
+
+def query_gap_position_ids(
+    *,
+    view: RoutingPairView,
+    row_indices: np.ndarray,
+    query_offsets: np.ndarray,
+) -> tuple[torch.Tensor, list[dict[str, int]], bytes]:
+    pair_positions, receipts = query_gap_position_array(
+        view=view,
+        row_indices=row_indices,
+        query_offsets=query_offsets,
+    )
     flattened = np.repeat(pair_positions, 2, axis=0)
+    if not np.array_equal(flattened[0::2], flattened[1::2]):
+        raise RuntimeError(
+            "counterfactual variants do not share query positions"
+        )
     payload = flattened.tobytes(order="C")
     return (
         torch.from_numpy(flattened).to("cuda", non_blocking=True),
         receipts,
         payload,
     )
+
+
+def _deterministic_band_values(
+    *,
+    low: int,
+    high: int,
+    count: int,
+    seed: int,
+    label: str,
+) -> np.ndarray:
+    if not 0 <= low <= high or count < 0:
+        raise ValueError("invalid deterministic offset band")
+    width = int(high - low + 1)
+    digest = hashlib.sha256(
+        f"evq-query-gap-v1\0{int(seed)}\0{label}".encode("ascii")
+    ).digest()
+    start = int.from_bytes(digest[:8], "little") % width
+    stride = 1 + int.from_bytes(digest[8:16], "little") % width
+    while math.gcd(stride, width) != 1:
+        stride = 1 if stride == width else stride + 1
+    values = (
+        low
+        + (
+            start
+            + stride * np.arange(int(count), dtype=np.int64)
+        )
+        % width
+    )
+    if len(np.unique(values)) != min(int(count), width):
+        raise RuntimeError("deterministic offset band coverage drift")
+    return values.astype("<i8", copy=False)
+
+
+def deterministic_query_offset_stream(
+    *,
+    seed: int,
+    routing_steps: int,
+) -> np.ndarray:
+    """Return four row-independent offsets per routing optimizer step."""
+
+    routing_steps = int(routing_steps)
+    if routing_steps <= 0:
+        raise ValueError("routing steps must be positive")
+    transition_count = routing_steps // 2
+    transition = _deterministic_band_values(
+        low=1,
+        high=LENGTH,
+        count=transition_count,
+        seed=seed,
+        label="transition",
+    )
+    middle = _deterministic_band_values(
+        low=LENGTH + 1,
+        high=2 * LENGTH,
+        count=routing_steps,
+        seed=seed,
+        label="middle",
+    )
+    far = _deterministic_band_values(
+        low=2 * LENGTH + 1,
+        high=3 * LENGTH + 1,
+        count=2 * routing_steps,
+        seed=seed,
+        label="far",
+    )
+    stream: list[int] = []
+    transition_cursor = 0
+    for routing_ordinal in range(routing_steps):
+        low_offset = 0
+        if routing_ordinal % 2:
+            low_offset = int(transition[transition_cursor])
+            transition_cursor += 1
+        local = [
+            low_offset,
+            int(middle[routing_ordinal]),
+            int(far[2 * routing_ordinal]),
+            int(far[2 * routing_ordinal + 1]),
+        ]
+        digest = hashlib.sha256(
+            (
+                "evq-query-gap-order-v1\0"
+                f"{int(seed)}\0{routing_ordinal}"
+            ).encode("ascii")
+        ).digest()
+        order = sorted(range(4), key=lambda index: (digest[index], index))
+        stream.extend(local[index] for index in order)
+    if transition_cursor != transition_count:
+        raise RuntimeError("deterministic transition cursor drift")
+    values = np.asarray(stream, dtype="<i8")
+    expected = {
+        "contiguous": (routing_steps + 1) // 2,
+        "transition": routing_steps // 2,
+        "middle": routing_steps,
+        "far": 2 * routing_steps,
+    }
+    actual = {
+        "contiguous": int((values == 0).sum()),
+        "transition": int(
+            ((values >= 1) & (values <= LENGTH)).sum()
+        ),
+        "middle": int(
+            (
+                (values >= LENGTH + 1)
+                & (values <= 2 * LENGTH)
+            ).sum()
+        ),
+        "far": int(
+            (
+                (values >= 2 * LENGTH + 1)
+                & (values <= 3 * LENGTH + 1)
+            ).sum()
+        ),
+    }
+    if actual != expected or len(values) != 4 * routing_steps:
+        raise RuntimeError("deterministic query-offset quota drift")
+    return values
+
+
+def query_offset_band(offset: int) -> str:
+    if offset == 0:
+        return "contiguous"
+    if 1 <= offset <= LENGTH:
+        return "transition"
+    if LENGTH + 1 <= offset <= 2 * LENGTH:
+        return "middle"
+    if 2 * LENGTH + 1 <= offset <= 3 * LENGTH + 1:
+        return "far"
+    raise RuntimeError("query offset lies outside registered bands")
 
 
 def routing_batch(
@@ -331,7 +553,7 @@ def evaluate_routing(
     rows: int,
     pair_batch_size: int,
     margin: float,
-    target_length: int = LENGTH,
+    query_offset: int = 0,
 ) -> dict[str, Any]:
     n = min(int(rows), len(view.input_ids))
     totals = {
@@ -344,6 +566,8 @@ def evaluate_routing(
         "preference_sum": 0.0,
         "preference_positive": 0,
         "margin_satisfied": 0,
+        "virtual_gap_near_min": None,
+        "virtual_gap_far_max": None,
     }
     model.eval()
     for start in range(0, n, int(pair_batch_size)):
@@ -352,13 +576,30 @@ def evaluate_routing(
             view=view, row_indices=indices
         )
         position_ids = None
-        if int(target_length) != LENGTH:
-            position_ids, _, _ = source_gap_position_ids(
+        exposures: list[dict[str, int]] = []
+        if int(query_offset):
+            position_ids, exposures, _ = query_gap_position_ids(
                 view=view,
                 row_indices=indices,
-                target_lengths=np.full(
-                    len(indices), int(target_length), dtype=np.int64
+                query_offsets=np.full(
+                    len(indices), int(query_offset), dtype=np.int64
                 ),
+            )
+            batch_near = min(
+                row["virtual_gap_near"] for row in exposures
+            )
+            batch_far = max(
+                row["virtual_gap_far"] for row in exposures
+            )
+            totals["virtual_gap_near_min"] = (
+                batch_near
+                if totals["virtual_gap_near_min"] is None
+                else min(totals["virtual_gap_near_min"], batch_near)
+            )
+            totals["virtual_gap_far_max"] = (
+                batch_far
+                if totals["virtual_gap_far_max"] is None
+                else max(totals["virtual_gap_far_max"], batch_far)
             )
         mask = labels != -100
         with torch.autocast("cuda", dtype=torch.bfloat16):
@@ -431,10 +672,14 @@ def evaluate_routing(
         ),
         "position_policy": (
             "contiguous"
-            if int(target_length) == LENGTH
-            else "single_source_query_block_gap"
+            if not int(query_offset)
+            else "semantic_query_block_gap"
         ),
-        "virtual_target_length": int(target_length),
+        "physical_sequence_length": LENGTH,
+        "query_offset": int(query_offset),
+        "virtual_gap_near_min": totals["virtual_gap_near_min"],
+        "virtual_gap_far_max": totals["virtual_gap_far_max"],
+        "capability_endpoint": False,
     }
 
 
@@ -497,13 +742,39 @@ def train(
     supervised_tokens = {"routing": 0, "natural": 0}
     recent_losses: list[float] = []
     position_hash = hashlib.sha256()
+    exposure_hash = hashlib.sha256()
     position_bucket_counts = {
-        str(LENGTH): 0,
-        str(2 * LENGTH): 0,
-        str(4 * LENGTH): 0,
+        "contiguous": 0,
+        "transition": 0,
+        "middle": 0,
+        "far": 0,
     }
-    virtual_gap_min: int | None = None
-    virtual_gap_max: int | None = None
+    virtual_gap_near_min: int | None = None
+    virtual_gap_far_max: int | None = None
+    query_offset_stream: np.ndarray | None = None
+    query_offset_stream_sha256: str | None = None
+    query_offset_cursor = 0
+    if int(virtual_target_length):
+        if (
+            int(virtual_target_length) != 4 * LENGTH
+            or tuple(int(value) for value in virtual_bucket_weights)
+            != (1, 1, 2)
+            or pair_batch_size != 2
+            or int(gradient_accumulation_steps) != 2
+        ):
+            raise RuntimeError("locked virtual query-gap contract drift")
+        routing_steps = sum(
+            FAMILY_PATTERN[(step - 1) % len(FAMILY_PATTERN)]
+            == "routing"
+            for step in range(1, int(steps) + 1)
+        )
+        query_offset_stream = deterministic_query_offset_stream(
+            seed=int(seed),
+            routing_steps=routing_steps,
+        )
+        query_offset_stream_sha256 = hashlib.sha256(
+            query_offset_stream.tobytes(order="C")
+        ).hexdigest()
     model.train()
     torch.cuda.reset_peak_memory_stats()
 
@@ -518,7 +789,9 @@ def train(
         optimizer.zero_grad(set_to_none=True)
         raw_losses = []
         metric_rows: list[dict[str, float]] = []
-        for _ in range(int(gradient_accumulation_steps)):
+        for accumulation_index in range(
+            int(gradient_accumulation_steps)
+        ):
             if family == "routing":
                 indices = torch.randint(
                     len(routing_view.input_ids),
@@ -535,40 +808,68 @@ def train(
                 )
                 position_ids = None
                 if int(virtual_target_length):
-                    weights = torch.tensor(
-                        virtual_bucket_weights, dtype=torch.float64
-                    )
-                    buckets = torch.multinomial(
-                        weights,
-                        num_samples=pair_batch_size,
-                        replacement=True,
-                        generator=generator,
-                    ).numpy()
-                    target_lengths = np.asarray(
-                        (LENGTH, 2 * LENGTH, 4 * LENGTH),
+                    if query_offset_stream is None:
+                        raise RuntimeError(
+                            "virtual query-offset stream is missing"
+                        )
+                    stop = query_offset_cursor + pair_batch_size
+                    query_offsets = np.asarray(
+                        query_offset_stream[
+                            query_offset_cursor:stop
+                        ],
                         dtype=np.int64,
-                    )[buckets]
+                    )
+                    if len(query_offsets) != pair_batch_size:
+                        raise RuntimeError(
+                            "virtual query-offset stream exhausted early"
+                        )
+                    query_offset_cursor = stop
                     position_ids, exposures, payload = (
-                        source_gap_position_ids(
+                        query_gap_position_ids(
                             view=routing_view,
                             row_indices=indices,
-                            target_lengths=target_lengths,
+                            query_offsets=query_offsets,
                         )
                     )
                     position_hash.update(payload)
-                    for exposure in exposures:
-                        bucket = str(exposure["target_length"])
-                        position_bucket_counts[bucket] += 1
-                        gap = int(exposure["virtual_gap"])
-                        virtual_gap_min = (
-                            gap
-                            if virtual_gap_min is None
-                            else min(virtual_gap_min, gap)
+                    for pair_slot, exposure in enumerate(exposures):
+                        bucket = query_offset_band(
+                            int(exposure["query_offset"])
                         )
-                        virtual_gap_max = (
-                            gap
-                            if virtual_gap_max is None
-                            else max(virtual_gap_max, gap)
+                        position_bucket_counts[bucket] += 1
+                        near = int(exposure["virtual_gap_near"])
+                        far = int(exposure["virtual_gap_far"])
+                        virtual_gap_near_min = (
+                            near
+                            if virtual_gap_near_min is None
+                            else min(virtual_gap_near_min, near)
+                        )
+                        virtual_gap_far_max = (
+                            far
+                            if virtual_gap_far_max is None
+                            else max(virtual_gap_far_max, far)
+                        )
+                        exposure_hash.update(
+                            np.asarray(
+                                [
+                                    step,
+                                    accumulation_index,
+                                    pair_slot,
+                                    int(indices[pair_slot]),
+                                    int(exposure["query_offset"]),
+                                    int(exposure["source_start"]),
+                                    int(exposure["source_stop"]),
+                                    int(exposure["query_start"]),
+                                    int(
+                                        exposure[
+                                            "answer_prediction_index"
+                                        ]
+                                    ),
+                                    near,
+                                    far,
+                                ],
+                                dtype="<i8",
+                            ).tobytes(order="C")
                         )
                 with torch.autocast("cuda", dtype=torch.bfloat16):
                     hidden = backbone(contexts, position_ids)
@@ -670,6 +971,14 @@ def train(
 
     torch.cuda.synchronize()
     elapsed = time.perf_counter() - started
+    if query_offset_stream is not None:
+        if query_offset_cursor != len(query_offset_stream):
+            raise RuntimeError(
+                "virtual query-offset stream was not fully consumed"
+            )
+        realized_total = sum(position_bucket_counts.values())
+        if realized_total != len(query_offset_stream):
+            raise RuntimeError("virtual query-offset count drift")
     return {
         "steps": int(steps),
         "family_pattern": list(FAMILY_PATTERN),
@@ -706,14 +1015,24 @@ def train(
         "position_policy": (
             "contiguous"
             if not int(virtual_target_length)
-            else "single_source_query_block_gap"
+            else "semantic_query_block_continuous_gap"
         ),
         "virtual_target_length": int(virtual_target_length),
         "virtual_bucket_weights": list(virtual_bucket_weights),
         "position_bucket_counts": position_bucket_counts,
-        "virtual_gap_min": virtual_gap_min,
-        "virtual_gap_max": virtual_gap_max,
-        "realized_position_stream_sha256": position_hash.hexdigest(),
+        "virtual_gap_near_min": virtual_gap_near_min,
+        "virtual_gap_far_max": virtual_gap_far_max,
+        "query_offset_stream_sha256": query_offset_stream_sha256,
+        "realized_position_stream_sha256": (
+            None
+            if query_offset_stream is None
+            else position_hash.hexdigest()
+        ),
+        "realized_exposure_stream_sha256": (
+            None
+            if query_offset_stream is None
+            else exposure_hash.hexdigest()
+        ),
     }
 
 
@@ -804,20 +1123,26 @@ def main() -> None:
         raise RuntimeError("routing collection violates the 4K contract")
     experiment_ready = None
     experiment_ready_path = None
-    if (
+    natural_multiquery = (
         routing_manifest.get("status")
         == "OLMO2_4K_COUNTERFACTUAL_NATURAL_MULTIQUERY_DATA_PREPARED"
-    ):
+    )
+    virtual_query_gap = bool(int(args.virtual_target_length))
+    if natural_multiquery or virtual_query_gap:
         if args.experiment_ready_receipt is None:
             raise RuntimeError(
-                "natural multi-query training requires an experiment READY "
-                "receipt"
+                "this experiment requires a matching READY receipt"
             )
         experiment_ready_path = args.experiment_ready_receipt.resolve()
         experiment_ready = json.loads(
             experiment_ready_path.read_text(encoding="utf-8")
         )
-        if experiment_ready.get("status") != NATURAL_MULTIQUERY_READY_STATUS:
+        expected_ready_status = (
+            VIRTUAL_QUERY_GAP_READY_STATUS
+            if virtual_query_gap
+            else NATURAL_MULTIQUERY_READY_STATUS
+        )
+        if experiment_ready.get("status") != expected_ready_status:
             raise RuntimeError("experiment READY status drift")
         if Path(experiment_ready["run_output"]).resolve() != output:
             raise RuntimeError("experiment READY output path drift")
@@ -831,6 +1156,14 @@ def main() -> None:
             != sha256_file(routing_root / "manifest.json")
         ):
             raise RuntimeError("experiment READY routing-data hash drift")
+        if virtual_query_gap and (
+            experiment_ready["inputs"]["conversion"]["sha256"]
+            != sha256_file(
+                Path(__file__).resolve().parents[1]
+                / "olmo2_lora_conversion.py"
+            )
+        ):
+            raise RuntimeError("experiment READY conversion hash drift")
     if (
         sha256_file(checkpoint / "tokenizer.json")
         != routing_manifest["tokenizer_sha256"]
@@ -845,9 +1178,33 @@ def main() -> None:
             raise RuntimeError(
                 f"routing collection manifest drift: {name}"
             )
-    routing_view = RoutingPairView(routing_root / "train")
+    tokenizer = AutoTokenizer.from_pretrained(
+        checkpoint,
+        local_files_only=True,
+        trust_remote_code=False,
+    )
+    require_virtual_geometry = bool(int(args.virtual_target_length))
+    routing_view = RoutingPairView(
+        routing_root / "train",
+        require_virtual_geometry=require_virtual_geometry,
+        query_marker_token_ids=tuple(
+            int(value)
+            for value in tokenizer(
+                TRAIN_QUERY_MARKER,
+                add_special_tokens=False,
+            ).input_ids
+        ),
+    )
     calibration_view = RoutingPairView(
-        routing_root / "calibration"
+        routing_root / "calibration",
+        require_virtual_geometry=require_virtual_geometry,
+        query_marker_token_ids=tuple(
+            int(value)
+            for value in tokenizer(
+                CALIBRATION_QUERY_MARKER,
+                add_special_tokens=False,
+            ).input_ids
+        ),
     )
 
     model = load_model(checkpoint)
@@ -913,6 +1270,37 @@ def main() -> None:
             "natural_eval_rows": int(args.natural_eval_rows),
             "seed": int(args.seed),
         }
+        if virtual_query_gap:
+            routing_steps = sum(
+                FAMILY_PATTERN[(step - 1) % len(FAMILY_PATTERN)]
+                == "routing"
+                for step in range(1, int(args.steps) + 1)
+            )
+            query_offset_stream = deterministic_query_offset_stream(
+                seed=int(args.seed),
+                routing_steps=routing_steps,
+            )
+            expected_protocol.update(
+                {
+                    "position_policy": (
+                        "semantic_query_block_continuous_gap"
+                    ),
+                    "virtual_target_length": int(
+                        args.virtual_target_length
+                    ),
+                    "virtual_bucket_weights": [
+                        int(value)
+                        for value in args.virtual_bucket_weights
+                    ],
+                    "routing_optimizer_steps": routing_steps,
+                    "routing_pair_exposures": int(
+                        len(query_offset_stream)
+                    ),
+                    "query_offset_stream_sha256": hashlib.sha256(
+                        query_offset_stream.tobytes(order="C")
+                    ).hexdigest(),
+                }
+            )
         if experiment_ready["protocol"] != expected_protocol:
             raise RuntimeError("experiment READY protocol drift")
     output.mkdir(parents=True)
@@ -928,15 +1316,15 @@ def main() -> None:
     initial_virtual_calibration = None
     if int(args.virtual_target_length):
         initial_virtual_calibration = {
-            str(target): evaluate_routing(
+            f"query_offset_{offset}": evaluate_routing(
                 model=model,
                 view=calibration_view,
                 rows=16,
                 pair_batch_size=2,
                 margin=float(args.counterfactual_margin),
-                target_length=target,
+                query_offset=offset,
             )
-            for target in (2 * LENGTH, 4 * LENGTH)
+            for offset in (LENGTH, 2 * LENGTH, 3 * LENGTH + 1)
         }
     training = train(
         model=model,
@@ -972,15 +1360,15 @@ def main() -> None:
     final_virtual_calibration = None
     if int(args.virtual_target_length):
         final_virtual_calibration = {
-            str(target): evaluate_routing(
+            f"query_offset_{offset}": evaluate_routing(
                 model=model,
                 view=calibration_view,
                 rows=len(calibration_view.input_ids),
                 pair_batch_size=2,
                 margin=float(args.counterfactual_margin),
-                target_length=target,
+                query_offset=offset,
             )
-            for target in (2 * LENGTH, 4 * LENGTH)
+            for offset in (LENGTH, 2 * LENGTH, 3 * LENGTH + 1)
         }
     natural_nll = evaluate_natural_nll(
         model=model,
@@ -1003,7 +1391,7 @@ def main() -> None:
         "alpha": float(args.alpha),
         "training_sequence_length": LENGTH,
         "stage": (
-            "counterfactual_source_routing_virtual_gap_16k"
+            "counterfactual_routing_semantic_query_gap_16k"
             if int(args.virtual_target_length)
             else "counterfactual_source_routing_4k"
         ),
@@ -1015,7 +1403,7 @@ def main() -> None:
         "position_policy": (
             "contiguous"
             if not int(args.virtual_target_length)
-            else "single_source_query_block_gap"
+            else "semantic_query_block_continuous_gap"
         ),
         "virtual_target_length": int(args.virtual_target_length),
     }
@@ -1025,10 +1413,12 @@ def main() -> None:
     receipt = {
         "status": "OLMO2_4K_COUNTERFACTUAL_ROUTING_COMPLETE",
         "metric_boundary": (
-            "paired source-content swaps use one source/query block gap "
-            "with 4K/8K/16K virtual position buckets while natural replay "
-            "uses contiguous 4K positions; strict 8K/16K evaluation uses "
-            "real physical sequences"
+            "paired source-content swaps use physical 4K sequences and a "
+            "gold-independent semantic query-block offset spanning "
+            "positions through 16K; natural replay stays contiguous 4K. "
+            "Virtual calibration is teacher-forced and is not a capability "
+            "endpoint; strict capability requires separate real physical "
+            "8K/16K autoregressive evaluation"
             if int(args.virtual_target_length)
             else "paired source-content swaps and natural replay use only "
             "positions 0..4095; 8K/16K remain evaluation-only"
@@ -1067,7 +1457,7 @@ def main() -> None:
             "frequency": args.frequency,
             "hard_maximum_training_length": LENGTH,
             "hard_maximum_training_position_id": (
-                4 * LENGTH - 2
+                4 * LENGTH - 1
                 if int(args.virtual_target_length)
                 else LENGTH - 1
             ),
@@ -1091,7 +1481,7 @@ def main() -> None:
             "position_policy": (
                 "contiguous"
                 if not int(args.virtual_target_length)
-                else "single_source_query_block_gap"
+                else "semantic_query_block_continuous_gap"
             ),
             "virtual_target_length": int(args.virtual_target_length),
             "virtual_bucket_weights": [
