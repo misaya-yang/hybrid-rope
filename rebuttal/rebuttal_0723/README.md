@@ -1,6 +1,6 @@
 # Rebuttal 0723
 
-Last audited: 2026-07-26
+Last audited: 2026-07-27
 Status: `review_received / internal_draft / sendable_core`
 
 This directory is the single working entry point for the current rebuttal.
@@ -53,6 +53,7 @@ documents; they do not replace protocol, raw hashes, or uncertainty.
 | --- | --- | --- |
 | `theory_results/M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md` | Three-seed exact-range Cosh/non-Cosh factorial across base, training length, and head dimension | Completed workstation-backed mechanistic owner; core attribution evidence |
 | `theory_results/EXPERIMENT_REPORT_20260724.md` | Fixed schedules, \(\tau\), held-out base/head, native-span controls, FMR boundary | Active numeric entry |
+| `theory_results/M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md` + curated JSON | 50.9M exact-range factorial over base, training length, head dimension, \(\tau\), and matched exponential | Raw/hash-backed supporting/mechanistic evidence |
 | `theory_results/MATCHED_RANGE_COSH_500M_3SEED_20260724.md` + JSON | Exact-range, three-seed interior-allocation identification | Conditional: raw/per-seed promotion pending |
 | `theory_results/MATCHED_RANGE_COSH_500M_S42_20260724.md` | Seed-42 raw-backed exact-range control | Reviewer-usable, single seed |
 | `theory_results/PHASE16_99RUN_RAW_REANALYSIS_20260724.md` | Fallible operating-rule audit | Active guardrail |

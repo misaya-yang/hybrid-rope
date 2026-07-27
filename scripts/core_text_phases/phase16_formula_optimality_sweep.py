@@ -283,12 +283,10 @@ def load_local_wikitext_tokens(tokenizer, split: str, max_tokens: int) -> torch.
     root = Path.home() / ".cache" / "huggingface" / "datasets" / "wikitext" / "wikitext-2-raw-v1" / "0.0.0"
     if not root.exists():
         raise SweepError(f"Local wikitext cache not found at {root}")
-    candidates = sorted(root.iterdir())
+    candidates = sorted(root.glob(f"*/wikitext-{split}.arrow"))
     if not candidates:
-        raise SweepError(f"No local wikitext versions under {root}")
-    arrow_path = candidates[-1] / f"wikitext-{split}.arrow"
-    if not arrow_path.exists():
-        raise SweepError(f"Expected local arrow file missing: {arrow_path}")
+        raise SweepError(f"No cached wikitext-{split}.arrow under {root}")
+    arrow_path = candidates[-1]
     ds = HFDataset.from_file(str(arrow_path))
     ids: List[int] = []
     for row in ds:
@@ -941,7 +939,13 @@ def load_or_init_model(
     cfg: Dict[str, Any],
     checkpoint_path: Path,
 ) -> Tuple[GPT, Optional[Dict[str, Any]]]:
-    inv_freq = evq_cosh_inv_freq(spec.head_dim, spec.tau)
+    inv_freq_builder = getattr(ctx, "inv_freq_builder", None)
+    inv_freq = (
+        inv_freq_builder(spec)
+        if inv_freq_builder is not None
+        else evq_cosh_inv_freq(spec.head_dim, spec.tau)
+    )
+    set_seed(spec.seed)
     model = GPT(cfg, inv_freq).to(DEVICE)
     if checkpoint_path.exists():
         state = torch.load(checkpoint_path, map_location=DEVICE)
@@ -980,6 +984,13 @@ def safe_checkpoint(
     tmp = path.with_suffix(path.suffix + ".tmp")
     torch.save(payload, tmp)
     tmp.replace(path)
+    if getattr(spec, "save_milestones", False) and step > 0:
+        total_steps = max(1, math.ceil(spec.train_tokens / batch_plan.tokens_per_step))
+        milestone = round(100 * step / total_steps)
+        if milestone in {25, 50, 75}:
+            milestone_path = path.with_name(f"checkpoint_{milestone:03d}.pt")
+            if not milestone_path.exists():
+                os.link(path, milestone_path)
 
 
 def train_one_run(
@@ -1369,7 +1380,11 @@ def execute_run(ctx: SweepContext, spec: RunSpec) -> Dict[str, Any]:
                 "head_dim": spec.head_dim,
                 "tau": spec.tau,
                 "theory_tau": spec.theory_tau,
-                "inv_freq_hash": sha256_tensor(evq_cosh_inv_freq(spec.head_dim, spec.tau)),
+                "inv_freq_hash": sha256_tensor(
+                    getattr(ctx, "inv_freq_builder", lambda value: evq_cosh_inv_freq(
+                        value.head_dim, value.tau
+                    ))(spec)
+                ),
                 "batch_plan": asdict(batch_plan),
                 "train_time_sec": round(train_elapsed, 2),
                 "eval_time_sec": round(eval_elapsed, 2),

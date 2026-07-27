@@ -2,7 +2,7 @@
 
 日期：2026-07-26
 
-证据等级：**supporting / mechanistic，50.9M，三 seeds**
+证据等级：**POST_SUB_RAW_HASH_BACKED；supporting / mechanistic，50.9M，三 seeds**
 
 论文边界：不修改主表，不升级为大模型或下游能力证据
 
@@ -55,8 +55,8 @@ span，只允许中间 \(K-2\) 个频率的位置发生变化。主实验完成
 | 边界 \(\tau\) follow-up | 12 | 12 | 完成 |
 | 总训练 | 192 | 192 | 完成，0 failed |
 | final-checkpoint fixed-range PPL | 180 主臂 + 12 边界臂 | 完成 | 本报告主体 |
-| runtime target-range / cross-swap | 已预注册 | 0 | 尚未完成 |
-| milestone 25/50/75% dynamics | 已预注册 | 0 | replay gate 停止 |
+| runtime target-range / cross-swap | 已预注册 | 0 | 未执行；权重已在证据固化后清理 |
+| milestone 25/50/75% dynamics | 已预注册 | 0 | replay gate 停止；权重已清理 |
 
 主 factorial 从 `2026-07-24 20:31` 运行到 `2026-07-26 11:23`，
 累计训练时间约 `38.87 h`。12 个边界臂从 `2026-07-26 11:42`
@@ -368,12 +368,17 @@ bitwise 相同。第一个 replay：
   `460.5651/460.5692`。
 
 这更符合 MPS kernel 的非 bitwise deterministic 漂移，而不是训练
-协议接错；它不否定现有 final checkpoints，但意味着：
+协议接错；它不否定清理前已经得到的 fixed-range 指标，但意味着：
 
 - 不能把 replay 产生的里程碑 checkpoint 当成与原件完全相同；
 - 25/50/75% dynamics 暂不报告；
-- final-checkpoint target-range、runtime-shape cross-swap 还未执行；
+- final-checkpoint target-range、runtime-shape cross-swap 未执行；
 - 自动重试服务已停止，避免继续无效循环。
+
+在 reviewer-grade JSON、per-run `spec.json` / `result.json` 和本报告完成
+固化后，用户于 2026-07-27 明确授权清理本实验权重。因此未完成的
+cross-swap 和 milestone dynamics 现在不能从原 checkpoint 补跑；这不
+改变已经保存的 fixed-range 数值，但缩小了后续可追溯范围。
 
 ## 9. 对 rebuttal 的直接意义
 
@@ -414,22 +419,24 @@ bitwise 相同。第一个 replay：
 
 按收益 / 成本排序：
 
-1. **直接对现有 192 个 final checkpoints 做 inference-only
-   fixed-range / target-range / Geo-Cosh cross-swap。** 这不依赖
-   milestone replay，应从 follow-up 流程中拆开执行。
-2. **里程碑 dynamics 暂停。** 若确实需要，可把 gate 改成预注册的
-   数值容差加最终 PPL parity，而不能把不一致权重伪装成 bitwise
-   replay；修改协议后必须明确记录。
-3. **不要继续扩大静态 \(\tau\) sweep。** 当前证据已经足够判断旧公式
+1. **不补跑 cross-swap 或 milestone dynamics。** 原权重已按授权
+   清理；只有 reviewer 明确要求该归因时，才重训一个预注册的最小
+   子集，不能把新权重伪装成原 checkpoint。
+2. **不要继续扩大静态 \(\tau\) sweep。** 当前证据已经足够判断旧公式
    不是稳定 optimum；下一步应研究依赖 \(B,K,L_{\rm train}\) 和目标
    距离分布的 training-free calibration，而不是拟合新的经验回归式。
-4. **将较大模型实验用于 scale transfer。** 不再让一个大模型实验
+3. **将较大模型实验用于 scale transfer。** 不再让一个大模型实验
    同时承担 allocation、range、\(\tau\) 与 downstream conversion
    四个问题。
 
 ## 11. 结果来源
 
-- Raw final checkpoints / per-run JSON：
+- Reviewer-grade curated evidence：
+  `rebuttal/rebuttal_0723/theory_results/m4_exact_range_factorial_evidence_20260726.json`
+  （192 个 per-run spec/PPL、源 JSON hashes、完整 frequency receipts、
+  configuration-level statistics；SHA256
+  `858710ff52488a0b1d1e0a9a35af9f7658ed974d1b59ff59cc9c89fa2ce9abda`）
+- Raw per-run `spec.json` / `result.json`（final checkpoints 已按授权清理）：
   `results/theory/phase16_exact_range_factorial_m4_20260724/runs/`
 - 主实验自动汇总：
   `results/theory/phase16_exact_range_factorial_m4_20260724/reports/summary.json`
@@ -443,3 +450,24 @@ bitwise 相同。第一个 replay：
   `scripts/core_text_phases/phase16_exact_range_followup_m4.py`
 - 预注册：
   `rebuttal/rebuttal_0723/theory_results/M4_EXACT_RANGE_FACTORIAL_PREREG_20260725.md`
+
+## 12. 权重清理回执
+
+2026-07-27，在确认 curated evidence 可解析、包含 `192/192` 个结果且
+SHA256 与上文一致后，清理了本实验、对应 milestone/smoke，以及上次
+Phase16 99-run/smoke 的模型权重：
+
+- 删除权重文件：`583`；
+- 删除逻辑字节：`356,326,225,622`；
+- APFS 可用空间：`185 GiB` → `517 GiB`，实际增加约 `332 GiB`；
+- 本实验正式 runs 保留：`192 result.json + 192 spec.json`；
+- 上次 99-run 保留：`99 result.json + 99 spec.json`；
+- 保留全部报告、日志、频率 audit、curated evidence 和源代码；
+- 未触碰其他实验目录或数据缓存。
+
+清理范围仅限：
+
+- `results/theory/phase16_exact_range_factorial_m4_20260724/{runs,milestone_replays}/`
+- `results/theory/phase16_exact_range_factorial_m4_20260724_smoke/runs/`
+- `results/theory/phase16_formula_optimality_sweep_local_m4_wikitext/runs/`
+- `results/theory/phase16_formula_optimality_sweep_smoke/runs/`
