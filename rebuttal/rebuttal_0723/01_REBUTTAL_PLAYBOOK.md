@@ -1,6 +1,6 @@
 # EVQ-Cosh Rebuttal Playbook
 
-Last audited: 2026-07-26
+Last audited: 2026-07-27
 Mode: `outcome-first / reviewer-specific / claim-local disclosure`
 Readiness: **`sendable`**, provided the core route below is used and the
 conditional rows remain excluded.
@@ -57,6 +57,8 @@ The core response is **sendable now**. It can use:
   and exploratory video-DiT evidence;
 - post-submission \(\tau\), fixed-schedule, DAPE-budget, and raw-backed
   seed-42 exact-range controls;
+- the raw/hash-backed 50.9M exact-range factorial over two bases, two training
+  lengths, three head dimensions, three seeds, and matched analytic schedules;
 - post-submission 1.485B OLMo counterfactual NLL and strict NIAH;
 - post-submission OLMo 13-task RULER-family evidence;
 - post-submission matched LLaMA-3-8B natural-LM and RULER evidence; and
@@ -64,8 +66,8 @@ The core response is **sendable now**. It can use:
 
 Do not make the core response depend on:
 
-- the three-seed exact-range aggregate;
-- exact held-out-base numbers;
+- the separate unpromoted 151.9M/500M three-seed exact-range aggregate;
+- the older unpromoted 151.9M held-out-base numbers;
 - future-dated OLMo long-gap metadata;
 - the fresh EVQ-only LLaMA counterfactual arm; or
 - any planned matched LLaMA counterfactual experiment.
@@ -223,6 +225,23 @@ range selection, not a universal win or an additive-synergy claim.
 
 **Owner:** `theory_results/MATCHED_RANGE_COSH_500M_S42_20260724.md`.
 
+**Expanded exact-range evidence:** A separate 50.9M factorial is now
+`POST_SUB_RAW_HASH_BACKED`: two bases (`500K/1M`), two training lengths
+(`256/1024`), three head dimensions (`32/64/128`), and three paired seeds.
+With sampled extrema and log-span fixed, formula-Cosh, `1.25×` Cosh, and
+RMS-deformation-matched exponential minus Geo weighted OOD NLL are
+`-0.009879/-0.012100/-0.010619`. The `1.25×` Cosh and exponential arms favor
+the non-uniform allocation in `10/12` and `9/12` structural configurations.
+Formula-Cosh minus matched exponential is only `+0.000740`; the formula point
+is the best preregistered Cosh multiplier in only `4/12` configurations.
+This is supporting/mechanistic evidence: it strengthens allocation
+identifiability across base/head settings, while directly ruling out universal
+Cosh or formula-\(\tau\) optimality.
+
+**Expanded owner:**
+`theory_results/M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md` and
+`theory_results/m4_exact_range_factorial_evidence_20260726.json`.
+
 **Recommended English:**
 
 > We agree that FMRoPE is directly relevant and should have been cited and
@@ -235,8 +254,12 @@ range selection, not a universal win or an additive-synergy claim.
 > matched; only the 30 interior frequencies differ. Endpoint-normalized
 > fixed-range Cosh-minus-uniform-FMRoPE NLL is -0.4775/-0.2050/-0.1128 at
 > 512/1K/2K. When both schedules are target-retargeted, FMRoPE is stronger.
-> We therefore claim an identifiable training-time allocation variable, not
-> replacement of or universal superiority over target-aware range methods.
+> In a separate three-seed exact-range factorial spanning bases 500K/1M and
+> head dimensions 32/64/128, preregistered \(1.25\times\) Cosh and
+> deformation-matched exponential improve weighted OOD NLL over Geo by
+> 0.0121 and 0.0106. We therefore claim an identifiable training-time
+> allocation variable, not replacement of or universal superiority over
+> target-aware range methods.
 
 ### 3.3 Are finite \(\tau\), Cosh, and the DAPE result actually attributable?
 
@@ -267,6 +290,14 @@ configuration means and 18/27 seed pairs, but beats the neighboring empirical
 pilot in only 3/9 means and 8/18 available pairs. It is therefore a useful but
 fallible basin selector.
 
+The exact-range factorial makes that boundary sharper. The formula point is
+the best of the preregistered `0.75×/1.0×/1.25×` Cosh arms in only `4/12`
+structural configurations; `1.25×` wins `6/12` and `0.75×` wins `2/12`.
+At the two preregistered extremes, formula \(\tau=1\) prefers
+\(1.5\times\tau\), whereas formula \(\tau=8\) prefers
+\(0.75\times\tau\). The rule remains a deployable default, not a point
+optimizer.
+
 **Direct answer on DAPE tuning:** Yes. The submitted DAPE row received
 positional-parameter learning-rate multipliers of `10×` and `100×`; the
 reported `100×` choice gives PPL@8K `455.3`, versus `477.7` at `10×`, both
@@ -280,10 +311,19 @@ direction. Exponential and attention-derived two-band schedules are stronger
 at some lengths. Thus allocation matters; Cosh is not claimed to be
 universally optimal.
 
+The stricter exact-range factorial removes the remaining endpoint/span
+confound and directly includes a non-Cosh arm. Across 12 structural
+configurations, preregistered `1.25×` Cosh and RMS-matched exponential improve
+weighted OOD NLL over Geo by `0.012100` and `0.010619`; formula-Cosh and
+matched exponential are indistinguishable at `+0.000740` NLL. This supports
+the allocation axis while rejecting Cosh uniqueness.
+
 **Best owners:**
 
 - `theory_results/EXPERIMENT_REPORT_20260724.md`
 - `theory_results/PHASE16_99RUN_RAW_REANALYSIS_20260724.md`
+- `theory_results/M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md`
+- `theory_results/m4_exact_range_factorial_evidence_20260726.json`
 - `docs/exp/2026-02-24_128tok_baseline_report.md`
 
 **Recommended English:**
@@ -296,6 +336,15 @@ universally optimal.
 > 0.0119 selection NLL. The broader 99-run audit also shows why we do not call
 > the rule optimal: it often selects a useful basin but is not consistently
 > better than a neighboring empirical choice.
+>
+> We further ran a three-seed exact-range factorial over bases 500K/1M,
+> training lengths 256/1024, and head dimensions 32/64/128. The formula point
+> is the best preregistered Cosh multiplier in only 4/12 structural
+> configurations. Preregistered \(1.25\times\) Cosh and
+> deformation-matched exponential improve weighted OOD NLL over Geo by
+> 0.0121 and 0.0106, while formula-Cosh and matched exponential differ by only
+> 0.0007. This identifies allocation independently of range, but does not
+> support universal Cosh or formula-\(\tau\) optimality.
 >
 > The submitted DAPE row was separately tested with 10× and 100×
 > positional-parameter learning-rate multipliers; the reported 100× setting
@@ -351,6 +400,7 @@ strict autoregressive exact, and RULER are not interchangeable.
 | Direct \(\tau\) sweep | `POST_SUB_RAW_HASH_BACKED` | selected `5` vs rule `5.657`: `0.0119` selection-NLL gap | One direct sweep; rule is a fallible basin prior | `EXPERIMENT_REPORT_20260724.md`; `PHASE16_99RUN_RAW_REANALYSIS_20260724.md` |
 | Fixed analytic schedules | `POST_SUB_RAW_HASH_BACKED` | EVQ−Geo NLL `-0.256/-0.305/-0.223/-0.238` at 1K/2K/4K/8K, 3/3 direction | Other fixed schedules are stronger at some lengths | `EXPERIMENT_REPORT_20260724.md` |
 | Exact-range Cosh vs FMRoPE | `POST_SUB_RAW_HASH_BACKED` | seed 42 Cosh−FMR NLL `-0.47750/-0.20499/-0.11284` at 512/1K/2K | Endpoint-normalized, single seed; target-retargeted FMR is stronger | `MATCHED_RANGE_COSH_500M_S42_20260724.md` |
+| M4 exact-range factorial | `POST_SUB_RAW_HASH_BACKED` | 12 structural configs × 3 seeds: `1.25×` Cosh/Exp−Geo weighted OOD NLL `-0.012100/-0.010619`; formula-Cosh−Exp `+0.000740` | 50.9M supporting/mechanistic; natural-text NLL only; formula point wins 4/12 Cosh comparisons | `M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md`; curated per-run JSON |
 | OLMo-2 1.485B matched CF natural LM | `POST_SUB_RAW_HASH_BACKED` | Native/EVQ NLL: 4K `2.235/2.548`, 8K `3.735/2.703`, 16K `4.851/2.925` | Teacher-forced NLL; one matched training seed; in-window cost | `OLMO2_1B_4K_ONLY_ROUTING_CONVERSION_20260726.md` |
 | OLMo-2 1.485B strict NIAH | `POST_SUB_RAW_HASH_BACKED` | 8K exact Native/matched-EVQ `0/100 vs 69/100`; independent EVQ seed `67/100` | Same generator family, disjoint rows/values; 16K screen only `0/20 vs 1/20` | same owner |
 | OLMo-2 13-task RULER continuation | `SUPPORTING` | official macro 4K/8K/16K `37.51/21.29/6.13%` | Single EVQ continuation; RULER-family supervised; no matched Native continuation | `OLMO2_1B_4K_RULER_FAMILY_ADAPTATION_20260726.md` |
@@ -358,7 +408,7 @@ strict autoregressive exact, and RULER are not interchangeable.
 | LLaMA-3-8B matched RULER | `SUPPORTING` + `NEGATIVE` at 4× | Native/EVQ macro 8K `94.44/77.60%`; 16K `0.295/14.03%`; 32K EVQ `0%`, Native 10/13 completed and all zero | One continuation seed; same 13 families; task-adapted 2×, not unseen-task | `LLAMA8B_MATCHED_RULER_MIX_20260726.md` |
 | OLMo-2 1.485B scratch step-1,000 | `POST_SUB_RAW_HASH_BACKED` | Geo/EVQ PPL 4K `161.19/167.45`, 8K `163.88/156.87`, 16K `182.73/159.64`; `122/128`, `126/128` docs favor EVQ at 8K/16K | One early-training trajectory; different trainer stacks; LM only | `OLMO2_1B_RELEASED_ROPE_BASELINE_20260725.md` |
 | Held-out base/head aggregate | `AUTHOR_CONFIRMED_NOT_PROMOTED` | Direction available internally | Exact numbers excluded until a dedicated raw/per-seed owner exists | `EXPERIMENT_REPORT_20260724.md` §4 |
-| Three-seed exact-range aggregate | `AUTHOR_CONFIRMED_NOT_PROMOTED` | Direction available internally | Use raw-backed seed-42 control instead | `MATCHED_RANGE_COSH_500M_3SEED_20260724.md` |
+| 151.9M/500M three-seed exact-range aggregate | `AUTHOR_CONFIRMED_NOT_PROMOTED` | Direction available internally | Distinct from the promoted 50.9M M4 factorial; use seed-42 raw control or M4 owner | `MATCHED_RANGE_COSH_500M_3SEED_20260724.md` |
 
 ## 5. Reviewer-specific response order
 
@@ -407,10 +457,11 @@ Order:
 
 1. finite-\(\tau\) scaling versus coefficient;
 2. direct \(\tau\) sweep and 99-run limitation;
-3. DAPE `10×/100×` budget answer;
-4. fixed non-Cosh schedules;
-5. 1.485B \(d_{\rm head}=128\), base-500K scratch run;
-6. state held-out-base numbers remain excluded rather than substituting a
+3. multi-base/head exact-range factorial and matched exponential;
+4. DAPE `10×/100×` budget answer;
+5. fixed non-Cosh schedules;
+6. 1.485B \(d_{\rm head}=128\), base-500K scratch run;
+7. state the older 151.9M held-out-base numbers remain excluded rather than substituting a
    different result.
 
 **Copy-ready response:**
@@ -424,6 +475,15 @@ Order:
 > value 5.657 differ by only 0.0119 selection NLL. Across the broader 99-run
 > audit the rule is useful but fallible, so we do not call it globally or
 > approximately optimal.
+>
+> We also completed a three-seed exact-range factorial over bases 500K/1M,
+> training lengths 256/1024, and head dimensions 32/64/128. With sampled
+> extrema and log-span fixed, preregistered \(1.25\times\) Cosh and
+> deformation-matched exponential improve weighted OOD NLL over Geo by
+> 0.0121 and 0.0106. Formula-Cosh and matched exponential differ by only
+> 0.0007, and the formula point wins only 4/12 Cosh comparisons. Thus
+> interior allocation is identifiable, but neither Cosh nor the formula point
+> is universally optimal.
 >
 > The submitted DAPE row did receive a dedicated tuning budget: positional
 > learning-rate multipliers 10× and 100× were tested, and the reported 100×
@@ -449,7 +509,8 @@ Order:
 Order the reply exactly like the reviewer's four questions:
 
 1. cite Oka et al. and define the narrow distinction;
-2. give the raw-backed seed-42 matched-range control;
+2. give the raw-backed seed-42 matched-range control and the promoted
+   three-seed multi-base/head exact-range factorial;
 3. give matched 8B RULER plus bounded OLMo RULER;
 4. give 1.485B and 8B scale evidence.
 
@@ -465,6 +526,9 @@ Do not debate whether the reviewer should have noticed the submitted 8B row.
 > matching sampled extrema, log span, initialization, data order, optimizer,
 > budget, and evaluation anchors, endpoint-normalized fixed-range
 > Cosh-minus-uniform-FMRoPE NLL is -0.4775/-0.2050/-0.1128 at 512/1K/2K.
+> A separate three-seed exact-range factorial spanning bases 500K/1M and head
+> dimensions 32/64/128 also finds `1.25×` Cosh and matched exponential gains
+> of 0.0121 and 0.0106 weighted OOD NLL over Geo.
 > When both schedules are
 > target-retargeted, FMRoPE is stronger, so our claim is distinct
 > interior-allocation leverage rather than FMRoPE replacement.
@@ -489,9 +553,9 @@ gates:
 
 | AC gate | Status | Decisive evidence | Remaining boundary |
 | --- | --- | --- | --- |
-| `AC.1` novelty + direct comparison | Answered | formula-level distinction; raw-backed seed-42 exact-range control | single seed; target-retargeted FMR can be stronger |
+| `AC.1` novelty + direct comparison | Answered | formula-level distinction; seed-42 direct control; raw-backed three-seed multi-base/head exact-range factorial | 50.9M factorial is supporting; target-retargeted FMR can be stronger |
 | `AC.2` stronger scale/evaluation | Answered at supporting tier | 1.485B strict NIAH, matched 8B RULER, 1.485B scratch, submitted 750M/8B anchors | task-family 2×; mature 4× unsolved; mostly single seed |
-| `AC.3` attribution | Answered | direct \(\tau\) sweep, 99-run audit, DAPE budget, fixed analytic schedules | rule fallible; Cosh not universal |
+| `AC.3` attribution | Answered | direct \(\tau\) sweep, 99-run audit, DAPE budget, fixed schedules, M4 exact-range matched exponential | formula wins 4/12; Cosh not universal |
 | `AC.4` recommendation conjunction | Answered with bounded claims | all three gates above are backed by completed evidence | no universal SOTA or range-method replacement claim |
 
 **Copy-ready AC note:**
@@ -549,11 +613,13 @@ misleading. They do not answer a retained reviewer concern.
 
 The core response remains `sendable` only if all items below pass:
 
-1. Use the raw-backed seed-42 exact-range result; do not quote the
-   unpromoted three-seed exact-range aggregate.
-2. Do not quote exact held-out-base numbers until a dedicated raw/per-seed
-   owner exists. The completed 1.485B scratch run answers the separate
-   larger-run branch, not the held-out-base branch.
+1. The promoted 50.9M M4 exact-range factorial may be quoted only with its
+   supporting/mechanistic, natural-text-NLL, and non-universal-\(\tau\)
+   boundaries. The separate 151.9M/500M three-seed exact-range aggregate
+   remains unpromoted; use its raw-backed seed-42 owner instead.
+2. Do not quote the older 151.9M held-out-base numbers until their dedicated
+   raw/per-seed owner exists. M4 supplies a separate base-1M/head-dimension
+   supporting control; the 1.485B scratch run answers the larger-run branch.
 3. Keep the scratch row as `POST_SUB_RAW_HASH_BACKED`; retain
    single-trajectory, different-trainer-stack, early-budget, and LM-only
    boundaries next to that claim.

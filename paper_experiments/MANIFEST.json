@@ -424,7 +424,7 @@
       "families": [
         "theory_and_mechanism"
       ],
-      "sha256": "fe5231bb5ab4fee53eae2e6e53a477ad2026eea1d5127e7cfc282d677f1bb601",
+      "sha256": "5fb93fd6d3fc3cdba6b794b989b93df4e696d172f3fa2bf343800d59b7896927",
       "source": "scripts/core_text_phases/phase16_formula_optimality_sweep.py",
       "workspace_path": "code/scripts/core_text_phases/phase16_formula_optimality_sweep.py"
     },
