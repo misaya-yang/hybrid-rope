@@ -113,8 +113,8 @@ zWsa states **when score would increase**. Answer these in order.
 | Field | Content |
 | --- | --- |
 | **Ask** | Matched settings; **advantages or complementarity** both raise score. |
-| **Existing answer** | Dual result meets **complementarity** criterion. The seed-42 study is the direct target-aware FMRoPE control; the three-seed M4 factorial strengthens fixed-range allocation identification across base/length/head settings. Deployment: retargeted FMR remains stronger. |
-| **Outcome** | **Meet stated bar for complementarity.** Do not claim pure dominance. |
+| **Existing answer** | Take route (a), **advantage under exact-range control**, not route (b). The seed-42 study is the direct FMRoPE control (Cosh wins 32/32, 27/32, 22/32 anchors when only the 30 interior frequencies change); the three-seed M4 factorial extends the direction across base/length/head. Deployment: retargeted FMR remains stronger. |
+| **Outcome** | **Meet the stated bar for "clear advantage under matched settings."** Do **not** claim complementarity with FMRoPE — `G-FMR-DEPLOY` records no stable additivity, and a registered combination arm exists, so "show EVQ+FMRoPE vs FMRoPE" would have to be answered negatively. Complementarity belongs to the YaRN result (submitted Table 3, fixed \(s=8\)); see `01_` §3.2 and §3.4. |
 
 ### 3.3 `RzWsa.3` — RULER (or effective context)
 
@@ -160,8 +160,9 @@ zWsa states **when score would increase**. Answer these in order.
 | Field | Content |
 | --- | --- |
 | **Ask** | Operator fixed; only fixed schedules vary; DAPE tuning budget unclear. |
-| **Existing answer** | **Direct tuning answer:** the reported DAPE row received a dedicated PE-learning-rate sweep at `10x` and `100x`; the better `100x` row was reported (`455.3` PPL@8K versus `477.7`, both seed 42). Attribution then moves to the M4 exact-range factorial: same operator, initialization, data/order, optimizer, budget, sampled extrema, and log-span; only interior frequencies differ. |
-| **Outcome** | **ANSWERABLE NOW.** The tuning-budget question is direct; M4 removes learned capacity and scalar range from the shape-attribution comparison. |
+| **Existing answer** | **Identity correction comes first.** The submitted row labeled "DAPE" is a 32-parameter **layer-shared learnable `inv_freq`** baseline, not the DAPE attention operator (`real_dape_compare/run_dape_compare.py` identity rules; `FINDINGS.md`; `FIRST_PRINCIPLES_REBUTTAL_REASSESSMENT_20260716.md` §55; `EVQ_TRUE_OBJECTIVE_ULTRA_AUDIT.md` §264). Relabel proactively and withdraw every DAPE-specific competitiveness reading. The `10x`/`100x` sweep (`455.3` vs `477.7` PPL@8K, seed 42) documents that **learned-frequency baseline's** tuning budget. Attribution then moves to fixed zero-parameter schedules and the M4 exact-range factorial: same operator, initialization, data/order, optimizer, budget, sampled extrema, and log-span; only interior frequencies differ. |
+| **Prepared follow-up** | Phase 11B Kerple+MLP DAPE-ish, 3 seeds: plain Geo/EVQ `352.7/254.7` PPL@8K; `+DAPE-ish` `55.9/56.8`. EVQ adds nothing on top of the adaptive-bias operator. No official Zheng reproduction exists. `FINDINGS.md`: do not hide this if asked. |
+| **Outcome** | **ANSWERABLE NOW, BUT ONLY AFTER THE RELABEL.** `00_`'s own response line for this ID already required "correct the method identity where necessary"; earlier drafts dropped it. Sending any tuning-based defence of "the DAPE row" is blocking. |
 
 ### 4.4 `R27bE.4` — Independent τ + matched non-Cosh schedules
 

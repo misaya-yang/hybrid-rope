@@ -16,6 +16,7 @@ concerns.
 | 1 | `00_REVIEWER_SCORES_AND_AC_METAREVIEW.md` | Authoritative retained concern text and stable IDs |
 | 2 | `01_REBUTTAL_PLAYBOOK.md` | Result-first response strategy, concern routes, English wording, and send gate |
 | 3 | `02_RESPONSE_QUESTIONS_AND_OUTCOMES.md` | Numbered full-panel question inventory, existing answers, and final send outcomes |
+| 3b | `03_STRATEGY_REVIEW_AND_OPTIMIZATION.md` | External-view critique of the response strategy; its P0/P1 items are applied in `01_` |
 | 4 | `theory_results/REVIEWER_USABLE_EVIDENCE_LEDGER_20260726.md` | Compact positive-evidence index with exact numbers and mandatory limits |
 | 5 | `theory_results/INTERNAL_NEGATIVE_AND_DIAGNOSTIC_LEDGER_20260726.md` | One consolidated index for negative, diagnostic, superseded, and design-only material |
 | 6 | `theory_results/EVQ_COSH_REBUTTAL_PRINCIPLES.md` | Method identity, theory boundaries, experiment rules, and stopping logic |
