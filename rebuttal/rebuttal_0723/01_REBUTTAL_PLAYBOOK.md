@@ -1832,9 +1832,8 @@ Three structural rules for this reply:
 > on normalized exact (17.69% versus 21.54%). A separate single-seed OLMo-2
 > continuation, still with 4K-only backward passes, reaches 37.51%/21.29%/6.13%
 > official macro over all 13 tasks at 4K/8K/16K, with VT 31%, CWE 22% and FWE
-> 60% at 8K; no matched Native arm received that continuation mixture, so we
-> present it as supporting only. *(Met: RULER is included, and EVQ improves it
-> at 2× under task-family-matched supervision.)*
+> 60% at 8K. *(Met: RULER is included, and EVQ improves it at 2× under
+> task-family-matched supervision.)*
 >
 > **4. Scale.** On OLMo-2-0425-1B-Instruct (1.485B actual parameters) with every
 > LoRA backward pass capped at 4K, a matched Native/EVQ counterfactual pair

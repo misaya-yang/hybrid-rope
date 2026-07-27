@@ -6,7 +6,7 @@ The distinction is read off the frequency-table formula. In ω_i = b^(-u_i) with
 
 **2. Direct controlled comparison.** The exact-range control shows this is not a notational difference. With the highest sampled frequency, the lowest sampled frequency, the log span, the initialization, the token order, the optimizer, the budget and all 32 evaluation anchors held identical, and only the 30 interior frequencies changed, the endpoint-normalized Cosh interior allocation improves fixed-range OOD NLL by 0.478/0.205/0.113 at 512/1K/2K, winning 32/32, 27/32 and 22/32 anchors. A three-seed factorial reproduces the direction under the same constraint across bases 500K/1M, training lengths 256/1024 and head dimensions 32/64/128, with the pre-specified 1.25× Cosh and deformation-matched exponential arms favoring the non-geometric allocation in 10/12 and 9/12 structural configurations. Since every quantity a scalar base can set is held fixed, the effect is not attributable to base or range selection.
 
-We implement the FMRoPE rule exactly as specified in §6.1 of that paper: θ_train = L_train, θ_infer = L_target, ω_i(θ) = θ^(-2i/d). Under target retargeting the ordering reverses (+0.061/+0.182/+0.279) and that rule obtains lower NLL, which is what a target-aware range method is for. The requested comparison is positive where it isolates the claimed variable, and the reversal bounds the claim to fixed-range allocation advantage rather than universal superiority.
+We did not identify a public author implementation as of 23 July, so we used a paper-faithful reimplementation of the rule specified in §6.1: θ_train = L_train, θ_infer = L_target, ω_i(θ) = θ^(-2i/d). Under target retargeting the ordering reverses (+0.061/+0.182/+0.279) and that rule obtains lower NLL, which is what a target-aware range method is for. The requested comparison is positive where it isolates the claimed variable, and the reversal bounds the claim to fixed-range allocation advantage rather than universal superiority.
 
 **3. Stronger evaluation.** The metareview names five gaps; the response addresses each.
 
@@ -16,7 +16,7 @@ We implement the FMRoPE rule exactly as specified in §6.1 of that paper: θ_tra
 
 *Real downstream tasks.* Two of those 13 families are built from real-document QA datasets — SQuAD v2 and HotpotQA distractor, with human-written questions over real passages. At 16K, Native-LoRA's normalized-exact score is zero on all 13 tasks while EVQ-LoRA has normalized-exact successes including the HotpotQA task, so the effect reaches real-document multi-hop QA and not needle retrieval alone.
 
-*Base frequencies.* Beyond the 500K/1M factorial above, a suite held out from the submitted calibration at base 1M and d_head = 128 has all three seeds agreeing at every length and every paired 95% interval excluding zero.
+*Base frequencies.* The exact-range factorial above crosses bases 500K/1M and head dimensions 32/64/128 under the same pinned-range construction, so its cross-configuration direction is not confined to the submitted base or head dimension.
 
 *Diverse architectures.* The submission already reported a 432M scarce-channel MLA study over three seeds, where with only 16 rotary channels PPL@16K goes from 138.8±5.5 to 95.6±4.1 and to 71.1±4.1 with the same fixed s = 4 transform (Table 18), plus 129M/382M bidirectional 3D-RoPE video-DiT experiments (Table 14), an 8B LLaMA-3 LoRA evaluation (Appendix D, Table 23) and a 750M continuation whose 8K strict autoregressive exact goes from 0% to 77.5% with PPL@16K from 45.1 to 24.4 (Table 12).
 
