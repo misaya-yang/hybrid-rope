@@ -1,6 +1,6 @@
 # Existing Real-Document QA Evidence
 
-Status: **completed matched evidence — no new experiment required**
+Status: **completed matched evidence — selective Q/K follow-up added**
 
 Concerns: `RDz6s.1`, `AC.2`
 
@@ -27,6 +27,34 @@ This supports matched, task-adapted length transfer, including real-document
 QA endpoints. It does not establish unseen-task transfer, broad real-world
 superiority, or pure interior-shape attribution. Native's large 4K advantage
 must remain adjacent to the 8K/16K result.
+
+## Selective Q/K phase-adaptation follow-up — 2026-07-29
+
+Two new adapters were trained independently from the matched Native and EVQ
+Stage-A parents. Each freezes the inherited V/O LoRA tensors bitwise and
+continues only the existing Q/K LoRA tensors for 300 steps. The QA and RULER
+adapters are separate weights.
+
+On held-out 2WikiMultiHopQA with deterministic answer-filtered distractor
+filling, Native/EVQ token-F1 is `25.99%/24.84%` at 4K,
+`0.07%/21.48%` at 8K, and `0%/8.57%` at 16K. Exact match is
+`22.0%/21.5%`, `0%/17.5%`, and `0%/4.0%`, respectively. This protocol is a
+controlled task-family long-QA endpoint, not the unmodified LongBench
+leaderboard protocol.
+
+On the independent 13-family RULER adapters, Native/EVQ official macro is
+`72.19%/42.44%` at 4K, `2.02%/31.63%` at 8K, and `0.38%/5.03%` at 16K.
+The EVQ 4K result improves substantially over its Stage-A parent (`11.09%`)
+but remains below matched Native; do not describe it as complete 4K
+restoration.
+
+The canonical owner, complete protocol, hashes, machine-readable metrics, and
+all per-example generations are:
+
+`theory_results/OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729.md`
+
+This follow-up is recorded evidence but is not synchronized into the
+reviewer-facing `paste/` responses by this task.
 
 ---
 
@@ -101,13 +129,15 @@ and ended at validation NLL `0.5020`. Its evaluation contains all 39 cells and
 
 ## Claude Opus 5 handoff — 2026-07-28
 
-This experiment is complete. **Do not rerun it.** Use the following read order:
+The original matched continuation and the selective Q/K follow-up are
+complete. **Do not rerun them.** Use the following read order:
 
-1. `theory_results/OLMO2_1B_MATCHED_RULER_CONTINUATION_20260727.md`;
-2. the `E-OLMO-RULER-FAMILY` row in
+1. `theory_results/OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729.md`;
+2. `theory_results/OLMO2_1B_MATCHED_RULER_CONTINUATION_20260727.md`;
+3. the `E-OLMO-RULER-FAMILY` row in
    `theory_results/REVIEWER_USABLE_EVIDENCE_LEDGER_20260726.md`;
-3. `01_REBUTTAL_PLAYBOOK.md`;
-4. the four reviewer-facing files listed in **Status** above.
+4. `01_REBUTTAL_PLAYBOOK.md`;
+5. the four reviewer-facing files listed in **Status** above.
 
 The reviewer-facing matched Native/EVQ official RULER macro is:
 
@@ -125,6 +155,12 @@ nonzero on 10 of 13 tasks, including VT (`31%`), CWE (`22%`), FWE (`60%`),
 SQuAD (`10%`), and HotpotQA (`25%`). At 16K, Native is zero on all 13 tasks;
 EVQ remains nonzero on seven task cells, including FWE (`50%`), SQuAD (`10%`),
 and HotpotQA (`10%`).
+
+The newer selective Q/K follow-up is a different, independently trained pair:
+Native/EVQ RULER macro is `72.19%/42.44%` at 4K,
+`2.02%/31.63%` at 8K, and `0.38%/5.03%` at 16K. Its separate 2Wiki QA pair
+nearly matches 4K while preserving EVQ-only 8K/16K transfer. Do not splice
+numbers across the two protocols.
 
 Mandatory claim boundaries:
 
