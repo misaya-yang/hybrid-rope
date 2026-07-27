@@ -67,6 +67,7 @@ documents; they do not replace protocol, raw hashes, or uncertainty.
 | --- | --- | --- |
 | `theory_results/OLMO2_1B_4K_ONLY_ROUTING_CONVERSION_20260726.md` | 1.485B actual-parameter, 4K-only counterfactual LoRA; NLL and 8K strict exact | Positive, task-family matched |
 | `theory_results/OLMO2_1B_4K_RULER_FAMILY_ADAPTATION_20260726.md` + JSON | Complete 13-task 4K/8K/16K task-family-adapted RULER | Positive supporting, single seed |
+| `theory_results/OLMO2_1B_MATCHED_RULER_CONTINUATION_20260727.md` | Matched Native/EVQ physical-4K, 13-family continuation at 1.485B | Positive 2×/4× length transfer; Native 4K boundary |
 | `theory_results/EVQ_8B_ADAPTATION_EVIDENCE_20260724.md` | Matched LLaMA-8B NLL, remote-source dependence, rank, and QA boundary | Positive mechanism/supporting |
 | `theory_results/LLAMA8B_MATCHED_RULER_MIX_20260726.md` + JSON | Matched LLaMA-8B Native/EVQ 8K/16K RULER-family adaptation | Positive 2× supporting; 32K negative |
 | `theory_results/OLMO2_1B_RELEASED_ROPE_BASELINE_20260725.md` | 1.485B step-0→1,000 from-scratch scale-transfer comparison | Post-submission raw-hash-backed; single trajectory |

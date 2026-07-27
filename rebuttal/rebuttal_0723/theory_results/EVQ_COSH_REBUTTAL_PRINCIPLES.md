@@ -152,12 +152,13 @@ C_{\mathrm{app}}.
   autoregressive exact；第二 EVQ training seed 为 67/100。它关闭一个 2x
   NIAH readout endpoint，但训练和测试共享 official generator family，不等于
   完整 RULER、未见任务或广泛 downstream。
-- 一条后续 single-seed continuation 明确加入 4K-only
+- matched Native/EVQ single-seed continuation 明确加入 4K-only
   VT/CWE/FWE/QA generator-family supervision，并保留 NIAH/LongAlign replay；
-  它在 disjoint generated rows 上得到完整 13-task RULER
-  0.3751/0.2129/0.0613（4K/8K/16K）。这是 task-adapted capability 与
-  length transfer，不是 clean unseen-task transfer，也没有 matched Native
-  continuation 支持 pure-EVQ attribution。
+  Native/EVQ 完整 13-task RULER official macro 为
+  0.8216/0.3751（4K）、0.0008/0.2129（8K）和
+  0/0.0613（16K）。Native 在训练长度内更强，EVQ 提供 2×/4×
+  task-adapted length transfer；这不是 clean unseen-task transfer 或
+  pure interior-shape attribution。
 - matched LLaMA-3-8B physical-8K 13-family continuation 在 16K 的 official
   macro 为 Native-LoRA 0.295%、EVQ-LoRA 14.03%；它是 single-seed
   task-family adaptation。32K EVQ 为 0，Native-LoRA 仅完成 10/13 cells 且均

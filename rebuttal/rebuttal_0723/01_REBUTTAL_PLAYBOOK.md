@@ -356,17 +356,16 @@ in the response on the AC's *third* priority.
 > We make no claim that EVQ beats or replaces FMRoPE.
 >
 > **(3) Stronger evaluation.** On OLMo-2-0425-1B-Instruct (1.485B actual
-> parameters) with every LoRA backward pass capped at 4K, a matched Native/EVQ
-> counterfactual pair scored 0/100 versus 69/100 strict autoregressive exact on
-> the official 8K `niah_single_1` task, and a second independently trained EVQ
-> seed scored 67/100. On a fresh set where *every* source-to-answer gap exceeds
-> the 4K training support, Native is 0/100 and the two EVQ adapters are 49/100
-> and 48/100. On LLaMA-3-8B with identical physical-8K supervision over the
-> same 13 RULER families, EVQ raises 16K official RULER macro from 0.295% to
-> 14.03%: Native is at essentially zero while EVQ retains nontrivial
-> capability. These are 2× extrapolation results in which the capability goes
-> from absent to measurable under task-family-matched supervision; we do not
-> present 14% macro as a usable long-context system.
+> parameters), with every backward pass capped at 4K and identical 13-family
+> continuation, Native/EVQ official RULER macro is 82.16%/37.51% at 4K,
+> 0.08%/21.29% at 8K and 0%/6.13% at 16K: Native fits the training length
+> better, while EVQ supplies the 2×/4× length transfer. A separate matched
+> counterfactual pair scores 0/100 versus 69/100 strict autoregressive exact on
+> the official 8K `niah_single_1` task, with a second EVQ seed at 67/100. On
+> LLaMA-3-8B with identical physical-8K supervision over the same 13 RULER
+> families, EVQ raises 16K official macro from 0.295% to 14.03%. These are
+> task-family-adapted length-transfer results; we do not present the resulting
+> macro scores as a usable long-context system.
 >
 > Across all three of these settings the EVQ−Geo gap grows monotonically with
 > the extrapolation ratio — at 1.485B from scratch, +0.0724/+0.0381 NLL at
@@ -430,8 +429,8 @@ Why this opening works:
 
 - 1.485B OLMo supplies matched 4K-trained natural-text NLL and strict 8K
   autoregressive NIAH;
-- a separate OLMo continuation supplies all 13 official RULER families, but
-  without a matched Native continuation;
+- a matched OLMo continuation supplies all 13 official RULER families and
+  separates in-window fitting from 2×/4× length transfer;
 - 8B LLaMA supplies a matched natural-LM comparison and, in a separate
   protocol, a matched 13-family RULER comparison;
 - the submitted paper already supplied a single-seed 8B probability-scale
@@ -602,6 +601,7 @@ branch of `R27bE.5` is answered independently by the M4 factorial.
 
 - `theory_results/OLMO2_1B_4K_ONLY_ROUTING_CONVERSION_20260726.md`
 - `theory_results/OLMO2_1B_4K_RULER_FAMILY_ADAPTATION_20260726.md`
+- `theory_results/OLMO2_1B_MATCHED_RULER_CONTINUATION_20260727.md`
 - `theory_results/EVQ_8B_ADAPTATION_EVIDENCE_20260724.md`
 - `theory_results/LLAMA8B_MATCHED_RULER_MIX_20260726.md`
 - `theory_results/OLMO2_1B_RELEASED_ROPE_BASELINE_20260725.md`
@@ -617,6 +617,11 @@ branch of `R27bE.5` is answered independently by the M4 factorial.
 > independently trained EVQ seed scored 67/100 ([57.3, 75.4]%), i.e. the two
 > EVQ seeds fall inside each other's intervals. The initial 16K screen was only
 > 0/20 versus 1/20.
+>
+> Under an identical physical-4K continuation over all 13 RULER families,
+> OLMo-2 Native/EVQ official macro was 82.16%/37.51% at 4K,
+> 0.08%/21.29% at 8K and 0%/6.13% at 16K. Native learned the in-window
+> distribution more strongly; EVQ supplied the 2×/4× length transfer.
 >
 > Separately, with identical physical-8K supervision over the same 13 RULER
 > families, LLaMA-3-8B Native/EVQ 16K official macro was 0.295% versus 14.03%.
@@ -1358,7 +1363,7 @@ strict autoregressive exact, and RULER are not interchangeable.
 | M4 exact-range factorial | `POST_SUB_RAW_HASH_BACKED` | 12 structural configs × 3 seeds: `1.25×` Cosh/Exp−Geo weighted OOD NLL `-0.012100/-0.010619`; formula-Cosh−Exp `+0.000740` | 50.9M supporting/mechanistic; natural-text NLL only; formula point wins 4/12 Cosh comparisons | `M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md`; curated per-run JSON |
 | OLMo-2 1.485B matched CF natural LM | `POST_SUB_RAW_HASH_BACKED` | Native/EVQ NLL: 4K `2.235/2.548`, 8K `3.735/2.703`, 16K `4.851/2.925` | Teacher-forced NLL; one matched training seed; in-window cost | `OLMO2_1B_4K_ONLY_ROUTING_CONVERSION_20260726.md` |
 | OLMo-2 1.485B strict NIAH | `POST_SUB_RAW_HASH_BACKED` | 8K exact Native/matched-EVQ `0/100 vs 69/100`; independent EVQ seed `67/100` | Same generator family, disjoint rows/values; 16K screen only `0/20 vs 1/20` | same owner |
-| OLMo-2 13-task RULER continuation | `SUPPORTING` | official macro 4K/8K/16K `37.51/21.29/6.13%` | Single EVQ continuation; RULER-family supervised; no matched Native continuation | `OLMO2_1B_4K_RULER_FAMILY_ADAPTATION_20260726.md` |
+| OLMo-2 13-task matched RULER continuation | `POST_SUB_RAW_HASH_BACKED` | Native/EVQ official macro: 4K `82.16/37.51%`, 8K `0.08/21.29%`, 16K `0/6.13%` | One continuation seed; RULER-family supervised; Native wins strongly in-window, EVQ at 2×/4× | `OLMO2_1B_MATCHED_RULER_CONTINUATION_20260727.md` |
 | LLaMA-3-8B matched ordinary LM | `SUPPORTING` | EVQ−Native NLL 8K/16K/32K `+0.390/-1.510/-2.048` | Single-seed teacher-forced probability result; separate from RULER protocol | `EVQ_8B_ADAPTATION_EVIDENCE_20260724.md` |
 | LLaMA-3-8B matched RULER | `SUPPORTING` + `NEGATIVE` at 4× | Native/EVQ macro 8K `94.44/77.60%`; 16K `0.295/14.03%`; 32K EVQ `0%`, Native 10/13 completed and all zero | One continuation seed; same 13 families; task-adapted 2×, not unseen-task | `LLAMA8B_MATCHED_RULER_MIX_20260726.md` |
 | OLMo-2 1.485B scratch step-1,000 | `POST_SUB_RAW_HASH_BACKED` | Geo/EVQ PPL 4K `161.19/167.45`, 8K `163.88/156.87`, 16K `182.73/159.64`; `122/128`, `126/128` docs favor EVQ at 8K/16K | One early-training trajectory; different trainer stacks; LM only | `OLMO2_1B_RELEASED_ROPE_BASELINE_20260725.md` |
@@ -1829,11 +1834,14 @@ Three structural rules for this reply:
 > training length itself, so in-window rather than extrapolation — the two
 > metrics disagree and we report both: Native leads on official macro (94.44%
 > versus 77.60%), which credits partial and substring matches, while EVQ leads
-> on normalized exact (17.69% versus 21.54%). A separate single-seed OLMo-2
-> continuation, still with 4K-only backward passes, reaches 37.51%/21.29%/6.13%
-> official macro over all 13 tasks at 4K/8K/16K, with VT 31%, CWE 22% and FWE
-> 60% at 8K. *(Met: RULER is included, and EVQ improves it at 2× under
-> task-family-matched supervision.)*
+> on normalized exact (17.69% versus 21.54%). We independently obtain the same
+> length-transfer pattern on OLMo-2 (1.485B actual parameters), with all
+> backward passes capped at physical 4K. Under an identical 13-family
+> continuation, Native/EVQ official macro is 82.16%/37.51% at 4K,
+> 0.08%/21.29% at 8K and 0%/6.13% at 16K. Native learns the in-window task
+> distribution more strongly, whereas EVQ retains capability beyond the
+> training length. *(Met: matched RULER improves at 2× on both mature-model
+> scales.)*
 >
 > **4. Scale.** On OLMo-2-0425-1B-Instruct (1.485B actual parameters) with every
 > LoRA backward pass capped at 4K, a matched Native/EVQ counterfactual pair
@@ -2110,7 +2118,7 @@ LLaMA supplies separate matched natural-LM and task-family RULER endpoints.
 | “The theory exactly predicts finite \(\tau\).” | It supplies a scaling structure, not the finite \(O(1)\) coefficient. | “\(\tau=c(\Pi)d_{\rm eff}/\sqrt{L_{\rm train}}\), with \(c(\Pi)\) calibrated empirically.” |
 | “PPL improvement proves long-context ability.” | NLL/PPL is teacher-forced probability, not generation. | Report strict NIAH or RULER separately. |
 | “The two OLMo EVQ seeds are 136/200.” | They share the same evaluation rows and only one is paired with Native. | “One matched pair is 0/100 versus 69/100; an independent EVQ training seed scores 67/100.” |
-| “OLMo full RULER is a matched EVQ improvement.” | No Native arm received that continuation mixture. | “A separate single-seed EVQ RULER-family continuation reached …” |
+| “OLMo full RULER shows universal EVQ superiority.” | Native is substantially stronger at the 4K training length, while EVQ wins at 8K/16K. | “Under matched 4K continuation, Native wins in-window and EVQ supplies the 2×/4× length transfer.” |
 | “LLaMA shows unseen-task or zero-shot transfer.” | Training and evaluation rows are disjoint, but the 13 generator families are shared. | “Task-family-adapted 2× transfer.” |
 | “The submitted 8B row is a matched control.” | It compares untouched Base with EVQ-LoRA. | “A submitted single-seed PPL scale anchor; a separate post-submission protocol provides matched Native/EVQ controls.” |
 | “The scratch run is conditional or lacks EVQ raw evidence.” | This reverses the owner hierarchy and discards completed hashed evidence. | Use the unified `POST_SUB_RAW_HASH_BACKED` classification in §1.4. |

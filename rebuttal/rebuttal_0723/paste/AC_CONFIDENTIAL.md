@@ -16,7 +16,7 @@ We would also note that being parameter-free does not identify a mechanism: posi
 
 The review states that "the model sizes evaluated in this paper are too small" and asks for validation "on models of at least approximately 1B to 7B parameters". The submitted version reports an 8B LLaMA-3 LoRA evaluation in Appendix D, Table 23, a 750M continuation with strict autoregressive retrieval in Table 12, a 432M scarce-channel MLA study in Table 18, and 129M/382M bidirectional 3D-RoPE video-DiT experiments in Table 14.
 
-The metareview's "concentrated on relatively small models … diverse architectures" language appears to follow from this premise. The response additionally provides matched Native/EVQ comparisons at 1.485B and 8B: 0/100 versus 69/100 strict autoregressive first-number exact at 8K on OLMo-2, with a second independently trained EVQ seed at 67/100, and 16K RULER macro of 0.295% versus 14.03% on LLaMA-3-8B.
+The metareview's "concentrated on relatively small models … diverse architectures" language appears to follow from this premise. The response additionally provides matched Native/EVQ comparisons at 1.485B and 8B. On OLMo-2, 8K strict autoregressive first-number exact is 0/100 versus 69/100, with a second independently trained EVQ seed at 67/100; under identical physical-4K supervision over all 13 RULER families, 8K official macro is 0.08% versus 21.29% and 16K is 0% versus 6.13%. On LLaMA-3-8B, 16K RULER macro is 0.295% versus 14.03%.
 
 **3. The dead-channel and related-work premises.**
 

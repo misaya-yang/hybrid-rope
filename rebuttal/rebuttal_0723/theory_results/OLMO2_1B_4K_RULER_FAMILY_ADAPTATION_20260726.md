@@ -3,6 +3,10 @@
 Status: **complete single-seed supporting result**  
 Concerns: `R27bE.2`, `R27bE.5`, `AC.2`
 
+> 2026-07-27 update: this file preserves the original EVQ-only continuation
+> receipt. The matched Native continuation has since completed; use
+> `OLMO2_1B_MATCHED_RULER_CONTINUATION_20260727.md` for Native/EVQ claims.
+
 ## Decision record
 
 1. **Concern addressed.** Can a mature approximately 1B EVQ model convert
