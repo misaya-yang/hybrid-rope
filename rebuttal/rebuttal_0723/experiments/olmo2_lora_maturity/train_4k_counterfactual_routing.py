@@ -10,7 +10,7 @@ import math
 import os
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import numpy as np
 import torch
@@ -37,7 +37,13 @@ from rebuttal.rebuttal_0723.experiments.small_model_lora_conversion import (
     sha256_file,
 )
 
-from .prepare_4k_routing_pairs import LENGTH
+from .prepare_4k_routing_pairs import (
+    LENGTH,
+    OLMO2_EOS_TOKEN_ID,
+    ROOT_STATUS,
+    SET_STATUS,
+    SUPERVISION_CONTRACT,
+)
 from .train_4k_stage_a import ready_checkpoint_digest
 from .train_screen import (
     apply_frequency,
@@ -50,17 +56,45 @@ from .train_screen import (
 
 FAMILY_PATTERN = ("routing", "routing", "natural")
 PAIR_SET_STATUSES = {
-    "OLMO2_4K_COUNTERFACTUAL_ROUTING_SET_PREPARED",
+    SET_STATUS,
     "OLMO2_4K_COUNTERFACTUAL_NATURAL_MULTIQUERY_SET_PREPARED",
 }
 PAIR_COLLECTION_STATUSES = {
-    "OLMO2_4K_COUNTERFACTUAL_ROUTING_DATA_PREPARED",
+    ROOT_STATUS,
     "OLMO2_4K_COUNTERFACTUAL_NATURAL_MULTIQUERY_DATA_PREPARED",
 }
 NATURAL_MULTIQUERY_READY_STATUS = "OLMO2_4K_NATURAL_MULTIQUERY_READY"
-VIRTUAL_QUERY_GAP_READY_STATUS = "OLMO2_4K_VIRTUAL_QUERY_GAP_READY"
+VIRTUAL_QUERY_GAP_READY_STATUS = (
+    "OLMO2_4K_QUERY_GAP_EOS_REPAIR_READY_V1"
+)
 TRAIN_QUERY_MARKER = "Which access code belongs to"
 CALIBRATION_QUERY_MARKER = "Return the identifier assigned to"
+
+
+def bound_code_sha256() -> dict[str, str]:
+    trainer = Path(__file__).resolve()
+    maturity_root = trainer.parent
+    experiments_root = maturity_root.parent
+    paths = {
+        "trainer": trainer,
+        "routing_data_contract": (
+            maturity_root / "prepare_4k_routing_pairs.py"
+        ),
+        "training_primitives": maturity_root / "train_screen.py",
+        "checkpoint_contract": maturity_root / "train_4k_stage_a.py",
+        "lora_conversion": experiments_root / "olmo2_lora_conversion.py",
+        "adapter_loader": (
+            experiments_root / "olmo2_lora_ood_factorial.py"
+        ),
+        "shared_training_utils": (
+            experiments_root / "small_model_lora_conversion.py"
+        ),
+        "evq_contract": experiments_root / "olmo2_1b_evq" / "contract.py",
+    }
+    return {
+        name: sha256_file(path)
+        for name, path in sorted(paths.items())
+    }
 
 
 class RoutingPairView:
@@ -75,7 +109,8 @@ class RoutingPairView:
         self.manifest = json.loads(
             (path / "manifest.json").read_text(encoding="utf-8")
         )
-        if self.manifest.get("status") not in PAIR_SET_STATUSES:
+        status = self.manifest.get("status")
+        if status not in PAIR_SET_STATUSES:
             raise RuntimeError(f"routing set is not prepared: {path}")
         if (
             int(self.manifest["maximum_training_length"]) != LENGTH
@@ -84,6 +119,32 @@ class RoutingPairView:
             or int(self.manifest["queries_per_sequence"]) < 1
         ):
             raise RuntimeError("routing set violates the 4K contract")
+        self.single_query_v2 = status == SET_STATUS
+        if self.single_query_v2 and (
+            int(self.manifest.get("format_version", -1)) != 2
+            or self.manifest.get("supervision_contract")
+            != SUPERVISION_CONTRACT
+            or int(self.manifest.get("eos_token_id", -1))
+            != OLMO2_EOS_TOKEN_ID
+            or self.manifest.get("final_eos_supervised") is not True
+            or self.manifest.get(
+                "labels_only_cover_answer_and_final_eos"
+            )
+            is not True
+        ):
+            raise RuntimeError(
+                "routing set lacks the answer-plus-immediate-EOS contract"
+            )
+        if not self.single_query_v2 and (
+            int(self.manifest.get("format_version", -1)) != 1
+            or self.manifest.get("final_eos_supervised") is not True
+            or self.manifest.get(
+                "labels_only_cover_answers_and_final_eos"
+            )
+            is not True
+        ):
+            raise RuntimeError("natural multi-query contract drift")
+        self.eos_token_id = OLMO2_EOS_TOKEN_ID
         self.input_ids = np.load(
             path / "input_ids.npy", mmap_mode="r", allow_pickle=False
         )
@@ -113,10 +174,100 @@ class RoutingPairView:
         ]
         if len(self.rows) != expected[0]:
             raise RuntimeError("routing metadata row-count drift")
+        if self.single_query_v2:
+            answer_token_total = 0
+            eos_token_total = 0
+            supervised_token_total = 0
+            for index, row in enumerate(self.rows):
+                answer_start = int(row["answer_start"])
+                answer_tokens = int(row["answer_tokens"])
+                eos_position = answer_start + answer_tokens
+                active_length = eos_position + 1
+                if not 0 < answer_start < active_length <= LENGTH:
+                    raise RuntimeError(
+                        "routing active-length metadata drift"
+                    )
+                if int(row.get("eos_position", -1)) != eos_position:
+                    raise RuntimeError(
+                        "routing EOS-position metadata drift"
+                    )
+                if int(row.get("supervised_tokens", -1)) != (
+                    answer_tokens + 1
+                ):
+                    raise RuntimeError(
+                        "routing supervised-token metadata drift"
+                    )
+                label_masks = self.labels[index] != -100
+                expected_mask = np.zeros((2, LENGTH), dtype=bool)
+                expected_mask[:, answer_start:active_length] = True
+                if not np.array_equal(label_masks, expected_mask):
+                    raise RuntimeError(
+                        "routing answer-plus-EOS label geometry drift"
+                    )
+                for variant, token_key in (
+                    (0, "gold_token_ids"),
+                    (1, "alternate_token_ids"),
+                ):
+                    answer_ids = np.asarray(
+                        [int(value) for value in row[token_key]],
+                        dtype=np.int32,
+                    )
+                    if len(answer_ids) != answer_tokens:
+                        raise RuntimeError(
+                            "routing answer-token metadata drift"
+                        )
+                    observed_labels = self.labels[
+                        index,
+                        variant,
+                        answer_start:eos_position,
+                    ]
+                    observed_inputs = self.input_ids[
+                        index,
+                        variant,
+                        answer_start:eos_position,
+                    ]
+                    if (
+                        not np.array_equal(observed_labels, answer_ids)
+                        or not np.array_equal(
+                            observed_inputs,
+                            answer_ids.astype(np.uint32),
+                        )
+                    ):
+                        raise RuntimeError(
+                            "routing answer labels drift"
+                        )
+                eos_labels = self.labels[index, :, eos_position]
+                eos_inputs = self.input_ids[index, :, eos_position]
+                if (
+                    not np.all(eos_labels == self.eos_token_id)
+                    or not np.all(eos_inputs == self.eos_token_id)
+                ):
+                    raise RuntimeError("routing final-EOS label drift")
+                answer_token_total += 2 * answer_tokens
+                eos_token_total += 2
+                supervised_token_total += 2 * (answer_tokens + 1)
+            if (
+                answer_token_total
+                != int(self.manifest["supervised_answer_tokens"])
+                or eos_token_total
+                != int(self.manifest["supervised_eos_tokens"])
+                or supervised_token_total
+                != int(
+                    self.manifest[
+                        "supervised_answer_and_eos_tokens"
+                    ]
+                )
+            ):
+                raise RuntimeError(
+                    "routing supervised-token aggregate drift"
+                )
         self.virtual_geometry_ready = False
         if not require_virtual_geometry:
             return
-        if int(self.manifest["queries_per_sequence"]) != 1:
+        if (
+            not self.single_query_v2
+            or int(self.manifest["queries_per_sequence"]) != 1
+        ):
             raise RuntimeError(
                 "virtual query-gap training supports one query per sequence"
             )
@@ -134,13 +285,6 @@ class RoutingPairView:
             active_length = answer_start + answer_tokens + 1
             if not 0 < answer_start < active_length <= LENGTH:
                 raise RuntimeError("routing active-length metadata drift")
-            label_masks = self.labels[index] != -100
-            expected_mask = np.zeros((2, LENGTH), dtype=bool)
-            expected_mask[
-                :, answer_start : answer_start + answer_tokens
-            ] = True
-            if not np.array_equal(label_masks, expected_mask):
-                raise RuntimeError("routing answer-label geometry drift")
             starts = []
             stops = []
             for variant, token_key in (
@@ -499,18 +643,46 @@ def routing_objective(
     hidden: torch.Tensor,
     labels: torch.Tensor,
     alternate_labels: torch.Tensor,
+    eos_token_id: int,
     margin: float,
     margin_weight: float,
+    termination_weight: float,
 ) -> tuple[torch.Tensor, dict[str, float]]:
     mask = labels != -100
     selected_hidden = hidden[mask]
     gold = labels[mask]
     alternate = alternate_labels[mask]
-    logits = F.linear(selected_hidden, model.lm_head.weight).float()
-    answer_ce = F.cross_entropy(logits, gold)
-    source_mask = gold != alternate
+    logits = model.lm_head(selected_hidden).float()
+    termination_mask = gold.eq(int(eos_token_id))
+    answer_mask = ~termination_mask
+    if not torch.any(answer_mask) or not torch.any(termination_mask):
+        raise RuntimeError(
+            "routing batch must contain answer and terminal-EOS targets"
+        )
+    answer_logits = logits[answer_mask]
+    answer_gold = gold[answer_mask]
+    termination_logits = logits[termination_mask]
+    termination_gold = gold[termination_mask]
+    eos_id = int(eos_token_id)
+    answer_eos_logits = answer_logits[:, eos_id]
+    answer_gold_logits = answer_logits.gather(
+        1, answer_gold[:, None]
+    ).squeeze(1)
+    termination_eos_logits = termination_logits[:, eos_id]
+    termination_max_non_eos = torch.maximum(
+        termination_logits[:, :eos_id].amax(dim=-1),
+        termination_logits[:, eos_id + 1 :].amax(dim=-1),
+    )
+    answer_ce = F.cross_entropy(answer_logits, answer_gold)
+    termination_ce = F.cross_entropy(
+        termination_logits, termination_gold
+    )
+    combined_ce = F.cross_entropy(logits, gold)
+    source_mask = answer_mask & gold.ne(alternate)
     if not torch.any(source_mask):
         raise RuntimeError("paired routing batch has no source-dependent labels")
+    if torch.any(termination_mask & gold.ne(alternate)):
+        raise RuntimeError("terminal EOS leaked into counterfactual margin")
     source_logits = logits[source_mask]
     source_gold = gold[source_mask]
     source_alternate = alternate[source_mask]
@@ -522,23 +694,63 @@ def routing_objective(
     ).squeeze(1)
     preference = gold_logits - alternate_logits
     counterfactual = F.softplus(float(margin) - preference).mean()
-    total = answer_ce + float(margin_weight) * counterfactual
+    total = (
+        answer_ce
+        + float(termination_weight) * termination_ce
+        + float(margin_weight) * counterfactual
+    )
     with torch.no_grad():
         metrics = {
+            "combined_target_ce": float(combined_ce),
             "answer_ce": float(answer_ce),
+            "termination_eos_ce": float(termination_ce),
             "counterfactual_loss": float(counterfactual),
             "preference_mean": float(preference.mean()),
             "preference_positive_fraction": float(
                 (preference > 0).float().mean()
             ),
-            "token_exact": float(
+            "combined_target_token_exact": float(
                 logits.argmax(dim=-1).eq(gold).float().mean()
+            ),
+            "answer_token_exact": float(
+                answer_logits.argmax(dim=-1)
+                .eq(answer_gold)
+                .float()
+                .mean()
+            ),
+            "termination_eos_exact": float(
+                termination_logits.argmax(dim=-1)
+                .eq(termination_gold)
+                .float()
+                .mean()
+            ),
+            "answer_gold_minus_eos_margin_mean": float(
+                (answer_gold_logits - answer_eos_logits).mean()
+            ),
+            "answer_gold_minus_eos_margin_min": float(
+                (answer_gold_logits - answer_eos_logits).min()
+            ),
+            "termination_eos_minus_max_non_eos_margin_mean": float(
+                (
+                    termination_eos_logits
+                    - termination_max_non_eos
+                ).mean()
+            ),
+            "termination_eos_minus_max_non_eos_margin_min": float(
+                (
+                    termination_eos_logits
+                    - termination_max_non_eos
+                ).min()
             ),
             "source_token_exact": float(
                 source_logits.argmax(dim=-1)
                 .eq(source_gold)
                 .float()
                 .mean()
+            ),
+            "answer_tokens": float(answer_gold.numel()),
+            "termination_eos_tokens": float(
+                termination_gold.numel()
             ),
             "source_tokens": float(source_gold.numel()),
         }
@@ -557,10 +769,16 @@ def evaluate_routing(
 ) -> dict[str, Any]:
     n = min(int(rows), len(view.input_ids))
     totals = {
-        "tokens": 0,
-        "nll_sum": 0.0,
-        "exact": 0,
-        "ranks": [],
+        "combined_tokens": 0,
+        "combined_nll_sum": 0.0,
+        "combined_exact": 0,
+        "answer_tokens": 0,
+        "answer_nll_sum": 0.0,
+        "answer_exact": 0,
+        "answer_ranks": [],
+        "termination_tokens": 0,
+        "termination_nll_sum": 0.0,
+        "termination_exact": 0,
         "source_tokens": 0,
         "source_exact": 0,
         "preference_sum": 0.0,
@@ -609,14 +827,24 @@ def evaluate_routing(
                 use_cache=False,
                 return_dict=False,
             )[0]
-            logits = F.linear(
-                hidden[mask], model.lm_head.weight
-            ).float()
+            logits = model.lm_head(hidden[mask]).float()
         gold = labels[mask]
         alternate = alternate_labels[mask]
         nll = F.cross_entropy(logits, gold, reduction="none")
-        ranks = rank_of(logits, gold)
-        source_mask = gold != alternate
+        termination_mask = gold.eq(int(view.eos_token_id))
+        answer_mask = ~termination_mask
+        if not torch.any(answer_mask) or not torch.any(termination_mask):
+            raise RuntimeError(
+                "routing calibration lacks answer or EOS targets"
+            )
+        answer_logits = logits[answer_mask]
+        answer_gold = gold[answer_mask]
+        answer_nll = nll[answer_mask]
+        answer_ranks = rank_of(answer_logits, answer_gold)
+        termination_logits = logits[termination_mask]
+        termination_gold = gold[termination_mask]
+        termination_nll = nll[termination_mask]
+        source_mask = answer_mask & gold.ne(alternate)
         if not torch.any(source_mask):
             raise RuntimeError(
                 "paired routing calibration has no source-dependent labels"
@@ -633,15 +861,34 @@ def evaluate_routing(
             ).squeeze(1)
         )
         count = int(gold.numel())
-        totals["tokens"] += count
-        totals["nll_sum"] += float(nll.sum())
-        totals["exact"] += int(logits.argmax(dim=-1).eq(gold).sum())
+        answer_count = int(answer_gold.numel())
+        termination_count = int(termination_gold.numel())
+        totals["combined_tokens"] += count
+        totals["combined_nll_sum"] += float(nll.sum())
+        totals["combined_exact"] += int(
+            logits.argmax(dim=-1).eq(gold).sum()
+        )
+        totals["answer_tokens"] += answer_count
+        totals["answer_nll_sum"] += float(answer_nll.sum())
+        totals["answer_exact"] += int(
+            answer_logits.argmax(dim=-1).eq(answer_gold).sum()
+        )
+        totals["termination_tokens"] += termination_count
+        totals["termination_nll_sum"] += float(
+            termination_nll.sum()
+        )
+        totals["termination_exact"] += int(
+            termination_logits.argmax(dim=-1)
+            .eq(termination_gold)
+            .sum()
+        )
         totals["source_tokens"] += int(source_gold.numel())
         totals["source_exact"] += int(
             source_logits.argmax(dim=-1).eq(source_gold).sum()
         )
-        totals["ranks"].extend(
-            int(value) for value in ranks.detach().cpu().tolist()
+        totals["answer_ranks"].extend(
+            int(value)
+            for value in answer_ranks.detach().cpu().tolist()
         )
         totals["preference_sum"] += float(preference.sum())
         totals["preference_positive"] += int((preference > 0).sum())
@@ -649,17 +896,33 @@ def evaluate_routing(
             (preference >= float(margin)).sum()
         )
         del contexts, labels, alternate_labels, hidden, logits, position_ids
-    count = int(totals["tokens"])
+    count = int(totals["combined_tokens"])
+    answer_count = int(totals["answer_tokens"])
+    termination_count = int(totals["termination_tokens"])
     source_count = int(totals["source_tokens"])
     return {
         "pairs": n,
-        "answer_tokens": count,
-        "mean_answer_nll": totals["nll_sum"] / count,
-        "token_exact": totals["exact"] / count,
+        "supervised_answer_and_eos_tokens": count,
+        "mean_supervised_answer_and_eos_nll": (
+            totals["combined_nll_sum"] / count
+        ),
+        "supervised_answer_and_eos_token_exact": (
+            totals["combined_exact"] / count
+        ),
+        "answer_tokens": answer_count,
+        "mean_answer_nll": totals["answer_nll_sum"] / answer_count,
+        "answer_token_exact": totals["answer_exact"] / answer_count,
+        "termination_eos_tokens": termination_count,
+        "mean_termination_eos_nll": (
+            totals["termination_nll_sum"] / termination_count
+        ),
+        "termination_eos_exact": (
+            totals["termination_exact"] / termination_count
+        ),
         "source_answer_tokens": source_count,
         "source_token_exact": totals["source_exact"] / source_count,
         "median_full_vocab_rank": float(
-            np.median(totals["ranks"])
+            np.median(totals["answer_ranks"])
         ),
         "mean_counterfactual_preference": (
             totals["preference_sum"] / source_count
@@ -696,20 +959,51 @@ def train(
     warmup_steps: int,
     margin: float,
     margin_weight: float,
+    termination_weight: float,
     compile_mode: str,
     seed: int,
     log_path: Path,
     virtual_target_length: int = 0,
     virtual_bucket_weights: tuple[int, int, int] = (1, 1, 2),
+    family_pattern: tuple[str, ...] = FAMILY_PATTERN,
+    calibration_rows_during_training: int = 8,
+    checkpoint_steps: tuple[int, ...] = (),
+    checkpoint_callback: (
+        Callable[[int, Any], dict[str, Any]] | None
+    ) = None,
 ) -> dict[str, Any]:
     if int(micro_batch_size) % 2:
         raise ValueError("micro-batch-size must be even")
+    if (
+        not family_pattern
+        or any(value not in {"routing", "natural"} for value in family_pattern)
+        or int(calibration_rows_during_training) < 0
+    ):
+        raise ValueError("invalid training family/calibration contract")
+    checkpoint_steps = tuple(int(value) for value in checkpoint_steps)
+    if (
+        tuple(sorted(set(checkpoint_steps))) != checkpoint_steps
+        or any(
+            value < 1 or value > int(steps)
+            for value in checkpoint_steps
+        )
+        or bool(checkpoint_steps) != (checkpoint_callback is not None)
+    ):
+        raise ValueError("invalid checkpoint-selection contract")
     pair_batch_size = int(micro_batch_size) // 2
-    natural_view = load_fixed_view(natural_view_path)
-    if natural_view.input_ids.shape[1] != LENGTH:
+    uses_natural = "natural" in family_pattern
+    natural_view = (
+        load_fixed_view(natural_view_path) if uses_natural else None
+    )
+    if (
+        natural_view is not None
+        and natural_view.input_ids.shape[1] != LENGTH
+    ):
         raise RuntimeError("natural replay violates the 4K contract")
-    natural_rows = torch.from_numpy(
-        natural_view.training_rows.copy()
+    natural_rows = (
+        None
+        if natural_view is None
+        else torch.from_numpy(natural_view.training_rows.copy())
     )
     parameters = [
         parameter
@@ -724,7 +1018,7 @@ def train(
         dynamic=False,
         mode=compile_mode,
     )
-    natural_loss_module = fused_loss_module()
+    natural_loss_module = fused_loss_module() if uses_natural else None
     optimizer = torch.optim.AdamW(
         parameters,
         lr=float(learning_rate),
@@ -751,9 +1045,13 @@ def train(
     }
     virtual_gap_near_min: int | None = None
     virtual_gap_far_max: int | None = None
+    maximum_observed_position_id = LENGTH - 2
     query_offset_stream: np.ndarray | None = None
     query_offset_stream_sha256: str | None = None
     query_offset_cursor = 0
+    checkpoint_history: list[dict[str, Any]] = []
+    selected_step: int | None = None
+    actual_steps = 0
     if int(virtual_target_length):
         if (
             int(virtual_target_length) != 4 * LENGTH
@@ -764,7 +1062,7 @@ def train(
         ):
             raise RuntimeError("locked virtual query-gap contract drift")
         routing_steps = sum(
-            FAMILY_PATTERN[(step - 1) % len(FAMILY_PATTERN)]
+            family_pattern[(step - 1) % len(family_pattern)]
             == "routing"
             for step in range(1, int(steps) + 1)
         )
@@ -779,7 +1077,7 @@ def train(
     torch.cuda.reset_peak_memory_stats()
 
     for step in range(1, int(steps) + 1):
-        family = FAMILY_PATTERN[(step - 1) % len(FAMILY_PATTERN)]
+        family = family_pattern[(step - 1) % len(family_pattern)]
         family_steps[family] += 1
         lr = cosine_lr(
             step, int(steps), int(warmup_steps), float(learning_rate)
@@ -849,6 +1147,10 @@ def train(
                             if virtual_gap_far_max is None
                             else max(virtual_gap_far_max, far)
                         )
+                        maximum_observed_position_id = max(
+                            maximum_observed_position_id,
+                            int(exposure["maximum_active_position_id"]),
+                        )
                         exposure_hash.update(
                             np.asarray(
                                 [
@@ -878,11 +1180,21 @@ def train(
                         hidden=hidden,
                         labels=labels,
                         alternate_labels=alternate_labels,
+                        eos_token_id=routing_view.eos_token_id,
                         margin=float(margin),
                         margin_weight=float(margin_weight),
+                        termination_weight=float(termination_weight),
                     )
                 metric_rows.append(metrics)
             else:
+                if (
+                    natural_view is None
+                    or natural_rows is None
+                    or natural_loss_module is None
+                ):
+                    raise RuntimeError(
+                        "natural family selected without a natural view"
+                    )
                 indices = natural_rows[
                     torch.randint(
                         len(natural_rows),
@@ -922,10 +1234,33 @@ def train(
                 del position_ids
         grad_norm = torch.nn.utils.clip_grad_norm_(parameters, 1.0)
         optimizer.step()
+        actual_steps = step
         mean_loss = float(np.mean(raw_losses))
         recent_losses.append(mean_loss)
 
-        if step == 1 or step % 25 == 0 or step == int(steps):
+        checkpoint_outcome = None
+        if step in checkpoint_steps:
+            if checkpoint_callback is None:
+                raise RuntimeError("checkpoint callback disappeared")
+            checkpoint_outcome = dict(checkpoint_callback(step, model))
+            if (
+                int(checkpoint_outcome.get("step", -1)) != step
+                or not isinstance(
+                    checkpoint_outcome.get("passed"), bool
+                )
+            ):
+                raise RuntimeError("checkpoint callback contract drift")
+            checkpoint_history.append(checkpoint_outcome)
+            model.train()
+            if checkpoint_outcome["passed"]:
+                selected_step = step
+
+        if (
+            step == 1
+            or step % 25 == 0
+            or step == int(steps)
+            or step in checkpoint_steps
+        ):
             torch.cuda.synchronize()
             now = time.perf_counter()
             row: dict[str, Any] = {
@@ -948,6 +1283,9 @@ def train(
                 "peak_memory_allocated_bytes": int(
                     torch.cuda.max_memory_allocated()
                 ),
+                "peak_memory_reserved_bytes": int(
+                    torch.cuda.max_memory_reserved()
+                ),
             }
             if metric_rows:
                 for name in metric_rows[0]:
@@ -956,11 +1294,16 @@ def train(
                             [metrics[name] for metrics in metric_rows]
                         )
                     )
-            if step in {100, 200, int(steps)}:
+            if checkpoint_outcome is not None:
+                row["checkpoint_selection"] = checkpoint_outcome
+            if (
+                int(calibration_rows_during_training) > 0
+                and step in {100, 200, int(steps)}
+            ):
                 row["routing_calibration"] = evaluate_routing(
                     model=model,
                     view=calibration_view,
-                    rows=8,
+                    rows=int(calibration_rows_during_training),
                     pair_batch_size=2,
                     margin=float(margin),
                 )
@@ -968,20 +1311,49 @@ def train(
             append_jsonl(log_path, row)
             last_log_time = now
             last_log_tokens = processed_tokens
+        if selected_step == step:
+            break
 
     torch.cuda.synchronize()
     elapsed = time.perf_counter() - started
     if query_offset_stream is not None:
-        if query_offset_cursor != len(query_offset_stream):
+        expected_cursor = (
+            int(family_steps["routing"])
+            * pair_batch_size
+            * int(gradient_accumulation_steps)
+        )
+        if query_offset_cursor != expected_cursor:
             raise RuntimeError(
-                "virtual query-offset stream was not fully consumed"
+                "virtual query-offset stream prefix consumption drift"
             )
         realized_total = sum(position_bucket_counts.values())
-        if realized_total != len(query_offset_stream):
+        if realized_total != query_offset_cursor:
             raise RuntimeError("virtual query-offset count drift")
+    consumed_query_offset_prefix_sha256 = (
+        None
+        if query_offset_stream is None
+        else hashlib.sha256(
+            query_offset_stream[:query_offset_cursor].tobytes(order="C")
+        ).hexdigest()
+    )
     return {
-        "steps": int(steps),
-        "family_pattern": list(FAMILY_PATTERN),
+        "steps": int(actual_steps),
+        "maximum_steps": int(steps),
+        "actual_steps": int(actual_steps),
+        "selected_step": selected_step,
+        "stopped_early": bool(
+            selected_step is not None and selected_step < int(steps)
+        ),
+        "checkpoint_steps": list(checkpoint_steps),
+        "checkpoint_history": checkpoint_history,
+        "checkpoint_selection_required": bool(checkpoint_steps),
+        "checkpoint_selection_passed": (
+            selected_step is not None if checkpoint_steps else None
+        ),
+        "family_pattern": list(family_pattern),
+        "calibration_rows_during_training": int(
+            calibration_rows_during_training
+        ),
         "family_steps": family_steps,
         "supervised_tokens": supervised_tokens,
         "processed_input_tokens": processed_tokens,
@@ -994,6 +1366,7 @@ def train(
         ),
         "learning_rate": float(learning_rate),
         "warmup_steps": int(warmup_steps),
+        "termination_weight": float(termination_weight),
         "counterfactual_margin": float(margin),
         "counterfactual_margin_weight": float(margin_weight),
         "compile_mode": compile_mode,
@@ -1011,7 +1384,11 @@ def train(
         ),
         "precision": "bf16_autocast",
         "optimizer": "fused_adamw",
-        "natural_loss_backend": "liger_fused_linear_cross_entropy",
+        "natural_loss_backend": (
+            "liger_fused_linear_cross_entropy"
+            if uses_natural
+            else "not_used"
+        ),
         "position_policy": (
             "contiguous"
             if not int(virtual_target_length)
@@ -1022,7 +1399,14 @@ def train(
         "position_bucket_counts": position_bucket_counts,
         "virtual_gap_near_min": virtual_gap_near_min,
         "virtual_gap_far_max": virtual_gap_far_max,
+        "maximum_observed_position_id": int(
+            maximum_observed_position_id
+        ),
         "query_offset_stream_sha256": query_offset_stream_sha256,
+        "consumed_query_offset_prefix_sha256": (
+            consumed_query_offset_prefix_sha256
+        ),
+        "consumed_query_offset_values": int(query_offset_cursor),
         "realized_position_stream_sha256": (
             None
             if query_offset_stream is None
@@ -1036,6 +1420,92 @@ def train(
     }
 
 
+def registered_protocol(
+    args: argparse.Namespace,
+    *,
+    virtual_query_gap: bool,
+) -> dict[str, Any]:
+    result: dict[str, Any] = {
+        "frequency": args.frequency,
+        "steps": int(args.steps),
+        "hard_maximum_training_length": LENGTH,
+        "maximum_physical_training_sequence_length": LENGTH,
+        "maximum_physical_token_index": LENGTH - 1,
+        "family_pattern": list(FAMILY_PATTERN),
+        "micro_batch_size": int(args.micro_batch_size),
+        "gradient_accumulation_steps": int(
+            args.gradient_accumulation_steps
+        ),
+        "global_batch_size": int(
+            args.micro_batch_size
+            * args.gradient_accumulation_steps
+        ),
+        "rank": int(args.rank),
+        "alpha": float(args.alpha),
+        "learning_rate": float(args.learning_rate),
+        "warmup_steps": int(args.warmup_steps),
+        "counterfactual_margin": float(
+            args.counterfactual_margin
+        ),
+        "counterfactual_margin_weight": float(
+            args.counterfactual_margin_weight
+        ),
+        "termination_weight": float(args.termination_weight),
+        "compile_mode": args.compile_mode,
+        "natural_eval_rows": int(args.natural_eval_rows),
+        "natural_retention_lengths": [LENGTH],
+        "natural_retention_tail_tokens": 1_024,
+        "natural_retention_baseline": (
+            "same_loaded_parent_before_any_repair_step"
+        ),
+        "seed": int(args.seed),
+    }
+    if virtual_query_gap:
+        routing_steps = sum(
+            FAMILY_PATTERN[(step - 1) % len(FAMILY_PATTERN)]
+            == "routing"
+            for step in range(1, int(args.steps) + 1)
+        )
+        query_offset_stream = deterministic_query_offset_stream(
+            seed=int(args.seed),
+            routing_steps=routing_steps,
+        )
+        result.update(
+            {
+                "position_policy": (
+                    "semantic_query_block_continuous_gap"
+                ),
+                "virtual_target_length": int(
+                    args.virtual_target_length
+                ),
+                "virtual_bucket_weights": [
+                    int(value)
+                    for value in args.virtual_bucket_weights
+                ],
+                "maximum_allowed_position_id": 4 * LENGTH - 1,
+                "maximum_realized_position_id": 4 * LENGTH - 1,
+                "routing_data_format_version": 2,
+                "supervision_contract": SUPERVISION_CONTRACT,
+                "supervision": (
+                    "answer_ce_plus_weighted_immediate_eos_ce"
+                ),
+                "eos_token_id": OLMO2_EOS_TOKEN_ID,
+                "final_eos_supervised": True,
+                "counterfactual_margin_scope": (
+                    "answer_tokens_where_gold_differs"
+                ),
+                "routing_optimizer_steps": routing_steps,
+                "routing_pair_exposures": int(
+                    len(query_offset_stream)
+                ),
+                "query_offset_stream_sha256": hashlib.sha256(
+                    query_offset_stream.tobytes(order="C")
+                ).hexdigest(),
+            }
+        )
+    return result
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--checkpoint", type=Path, required=True)
@@ -1045,6 +1515,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--background-dir", type=Path, required=True)
     parser.add_argument("--ready-receipt", type=Path, required=True)
     parser.add_argument("--experiment-ready-receipt", type=Path)
+    parser.add_argument("--parent-exact-baseline-result", type=Path)
+    parser.add_argument("--parent-exact-baseline-examples", type=Path)
+    parser.add_argument("--parent-exact-baseline-run-manifest", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
         "--frequency", choices=("native", "evq"), required=True
@@ -1061,6 +1534,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--counterfactual-margin", type=float, default=1.0)
     parser.add_argument(
         "--counterfactual-margin-weight", type=float, default=0.5
+    )
+    parser.add_argument(
+        "--termination-weight",
+        type=float,
+        default=1.0,
+        help=(
+            "Weight on immediate terminal-EOS CE, separate from answer CE."
+        ),
     )
     parser.add_argument(
         "--compile-mode",
@@ -1092,6 +1573,8 @@ def main() -> None:
         raise ValueError("counterfactual margin must be positive")
     if float(args.counterfactual_margin_weight) <= 0:
         raise ValueError("counterfactual margin weight must be positive")
+    if float(args.termination_weight) <= 0:
+        raise ValueError("termination weight must be positive")
     if int(args.virtual_target_length) not in {0, 4 * LENGTH}:
         raise ValueError("virtual target length must be 0 or 16384")
     if (
@@ -1119,6 +1602,25 @@ def main() -> None:
         != LENGTH
         or int(routing_manifest["hard_maximum_training_position_id"])
         != LENGTH - 1
+        or (
+            routing_manifest.get("status") == ROOT_STATUS
+            and (
+                int(routing_manifest.get("format_version", -1)) != 2
+                or routing_manifest.get("supervision_contract")
+                != SUPERVISION_CONTRACT
+                or int(routing_manifest.get("eos_token_id", -1))
+                != OLMO2_EOS_TOKEN_ID
+                or routing_manifest.get("final_eos_supervised") is not True
+                or routing_manifest.get(
+                    "labels_only_cover_answer_and_final_eos"
+                )
+                is not True
+                or routing_manifest.get(
+                    "answer_string_tokenizer_roundtrip_exact"
+                )
+                is not True
+            )
+        )
     ):
         raise RuntimeError("routing collection violates the 4K contract")
     experiment_ready = None
@@ -1128,6 +1630,7 @@ def main() -> None:
         == "OLMO2_4K_COUNTERFACTUAL_NATURAL_MULTIQUERY_DATA_PREPARED"
     )
     virtual_query_gap = bool(int(args.virtual_target_length))
+    parent_exact_baseline_receipt = None
     if natural_multiquery or virtual_query_gap:
         if args.experiment_ready_receipt is None:
             raise RuntimeError(
@@ -1164,6 +1667,104 @@ def main() -> None:
             )
         ):
             raise RuntimeError("experiment READY conversion hash drift")
+        if (
+            experiment_ready.get("bound_code_sha256")
+            != bound_code_sha256()
+        ):
+            raise RuntimeError("experiment READY bound-code hash drift")
+        if (
+            experiment_ready["inputs"]["checkpoint"][
+                "composite_sha256"
+            ]
+            != checkpoint_digest
+            or experiment_ready["inputs"]["checkpoint"][
+                "ready_receipt"
+            ]["sha256"]
+            != sha256_file(ready_receipt)
+        ):
+            raise RuntimeError("experiment READY checkpoint input drift")
+        natural_path = (
+            args.prepared_data.resolve() / "longalign_paired_L4096"
+        )
+        natural_ready = experiment_ready["inputs"]["natural_replay"]
+        if Path(natural_ready["path"]).resolve() != natural_path:
+            raise RuntimeError("experiment READY natural-replay path drift")
+        for filename, entry in natural_ready["files"].items():
+            if sha256_file(natural_path / filename) != entry["sha256"]:
+                raise RuntimeError(
+                    f"experiment READY natural-replay drift: {filename}"
+                )
+        background_path = args.background_dir.resolve()
+        background_ready = experiment_ready["inputs"]["background"]
+        if Path(background_ready["path"]).resolve() != background_path:
+            raise RuntimeError("experiment READY background path drift")
+        for filename, entry in background_ready["files"].items():
+            if sha256_file(background_path / filename) != entry["sha256"]:
+                raise RuntimeError(
+                    f"experiment READY background drift: {filename}"
+                )
+        baseline_paths = (
+            args.parent_exact_baseline_result,
+            args.parent_exact_baseline_examples,
+            args.parent_exact_baseline_run_manifest,
+        )
+        if virtual_query_gap and any(
+            path is None for path in baseline_paths
+        ):
+            raise RuntimeError(
+                "query-gap EOS repair requires the registered parent "
+                "full-string exact baseline before training"
+            )
+        if virtual_query_gap:
+            baseline_result_path = (
+                args.parent_exact_baseline_result.resolve()
+            )
+            baseline_examples_path = (
+                args.parent_exact_baseline_examples.resolve()
+            )
+            baseline_manifest_path = (
+                args.parent_exact_baseline_run_manifest.resolve()
+            )
+            baseline = json.loads(
+                baseline_result_path.read_text(encoding="utf-8")
+            )
+            baseline_manifest = json.loads(
+                baseline_manifest_path.read_text(encoding="utf-8")
+            )
+            ready_sha = sha256_file(experiment_ready_path)
+            parent_sha = sha256_file(args.parent_adapter.resolve())
+            if (
+                baseline.get("status")
+                != "OLMO2_INSTRUCT_RULER_EXACT_SCREEN_COMPLETE_V2"
+                or baseline.get("experiment_ready_receipt_sha256")
+                != ready_sha
+                or baseline.get("adapter", {}).get("sha256")
+                != parent_sha
+                or baseline.get("run_manifest_sha256")
+                != sha256_file(baseline_manifest_path)
+                or baseline.get("results", {}).get("examples_sha256")
+                != sha256_file(baseline_examples_path)
+                or baseline_manifest.get("experiment_role")
+                != "parent_exact_baseline"
+                or baseline_manifest.get(
+                    "experiment_ready_receipt_sha256"
+                )
+                != ready_sha
+                or baseline_manifest.get("adapter_sha256") != parent_sha
+            ):
+                raise RuntimeError(
+                    "registered parent exact baseline receipt drift"
+                )
+            parent_exact_baseline_receipt = {
+                "result_sha256": sha256_file(baseline_result_path),
+                "examples_sha256": sha256_file(
+                    baseline_examples_path
+                ),
+                "run_manifest_sha256": sha256_file(
+                    baseline_manifest_path
+                ),
+                "adapter_sha256": parent_sha,
+            }
     if (
         sha256_file(checkpoint / "tokenizer.json")
         != routing_manifest["tokenizer_sha256"]
@@ -1183,6 +1784,15 @@ def main() -> None:
         local_files_only=True,
         trust_remote_code=False,
     )
+    if (
+        tokenizer.eos_token_id != OLMO2_EOS_TOKEN_ID
+        or (
+            routing_manifest.get("status") == ROOT_STATUS
+            and int(routing_manifest["eos_token_id"])
+            != int(tokenizer.eos_token_id)
+        )
+    ):
+        raise RuntimeError("routing/tokenizer EOS contract drift")
     require_virtual_geometry = bool(int(args.virtual_target_length))
     routing_view = RoutingPairView(
         routing_root / "train",
@@ -1241,71 +1851,25 @@ def main() -> None:
             raise RuntimeError(
                 f"parent adapter metadata drift for {name}"
             )
-    if experiment_ready is not None:
-        expected_protocol = {
-            "frequency": args.frequency,
-            "steps": int(args.steps),
-            "hard_maximum_training_length": LENGTH,
-            "hard_maximum_training_position_id": LENGTH - 1,
-            "family_pattern": list(FAMILY_PATTERN),
-            "micro_batch_size": int(args.micro_batch_size),
-            "gradient_accumulation_steps": int(
-                args.gradient_accumulation_steps
-            ),
-            "global_batch_size": int(
-                args.micro_batch_size
-                * args.gradient_accumulation_steps
-            ),
-            "rank": int(args.rank),
-            "alpha": float(args.alpha),
-            "learning_rate": float(args.learning_rate),
-            "warmup_steps": int(args.warmup_steps),
-            "counterfactual_margin": float(
-                args.counterfactual_margin
-            ),
-            "counterfactual_margin_weight": float(
-                args.counterfactual_margin_weight
-            ),
-            "compile_mode": args.compile_mode,
-            "natural_eval_rows": int(args.natural_eval_rows),
-            "seed": int(args.seed),
-        }
-        if virtual_query_gap:
-            routing_steps = sum(
-                FAMILY_PATTERN[(step - 1) % len(FAMILY_PATTERN)]
-                == "routing"
-                for step in range(1, int(args.steps) + 1)
-            )
-            query_offset_stream = deterministic_query_offset_stream(
-                seed=int(args.seed),
-                routing_steps=routing_steps,
-            )
-            expected_protocol.update(
-                {
-                    "position_policy": (
-                        "semantic_query_block_continuous_gap"
-                    ),
-                    "virtual_target_length": int(
-                        args.virtual_target_length
-                    ),
-                    "virtual_bucket_weights": [
-                        int(value)
-                        for value in args.virtual_bucket_weights
-                    ],
-                    "routing_optimizer_steps": routing_steps,
-                    "routing_pair_exposures": int(
-                        len(query_offset_stream)
-                    ),
-                    "query_offset_stream_sha256": hashlib.sha256(
-                        query_offset_stream.tobytes(order="C")
-                    ).hexdigest(),
-                }
-            )
-        if experiment_ready["protocol"] != expected_protocol:
-            raise RuntimeError("experiment READY protocol drift")
+    run_protocol = registered_protocol(
+        args,
+        virtual_query_gap=virtual_query_gap,
+    )
+    if (
+        experiment_ready is not None
+        and experiment_ready["protocol"] != run_protocol
+    ):
+        raise RuntimeError("experiment READY protocol drift")
     output.mkdir(parents=True)
     runtime = configure_cuda()
     model.to("cuda")
+    initial_natural_nll = evaluate_natural_nll(
+        model=model,
+        background_dir=args.background_dir.resolve(),
+        lengths=(LENGTH,),
+        rows=int(args.natural_eval_rows),
+        tail_tokens=1_024,
+    )
     initial_calibration = evaluate_routing(
         model=model,
         view=calibration_view,
@@ -1342,6 +1906,7 @@ def main() -> None:
         warmup_steps=int(args.warmup_steps),
         margin=float(args.counterfactual_margin),
         margin_weight=float(args.counterfactual_margin_weight),
+        termination_weight=float(args.termination_weight),
         compile_mode=args.compile_mode,
         seed=int(args.seed),
         log_path=output / "train_log.jsonl",
@@ -1353,7 +1918,7 @@ def main() -> None:
     final_calibration = evaluate_routing(
         model=model,
         view=calibration_view,
-        rows=len(calibration_view.input_ids),
+        rows=16,
         pair_batch_size=2,
         margin=float(args.counterfactual_margin),
     )
@@ -1363,20 +1928,44 @@ def main() -> None:
             f"query_offset_{offset}": evaluate_routing(
                 model=model,
                 view=calibration_view,
-                rows=len(calibration_view.input_ids),
+                rows=16,
                 pair_batch_size=2,
                 margin=float(args.counterfactual_margin),
                 query_offset=offset,
             )
             for offset in (LENGTH, 2 * LENGTH, 3 * LENGTH + 1)
         }
-    natural_nll = evaluate_natural_nll(
+    final_natural_nll = evaluate_natural_nll(
         model=model,
         background_dir=args.background_dir.resolve(),
-        lengths=(4_096, 8_192, 16_384),
+        lengths=(LENGTH,),
         rows=int(args.natural_eval_rows),
         tail_tokens=1_024,
     )
+    natural_nll = {
+        "baseline": {
+            "adapter_sha256": sha256_file(parent_adapter),
+            "timing": "before_any_repair_optimizer_step",
+            "cells": initial_natural_nll,
+        },
+        "candidate": {
+            "timing": "after_final_repair_optimizer_step",
+            "cells": final_natural_nll,
+        },
+        "delta_candidate_minus_baseline": {
+            "L4096_mean_nll": (
+                float(final_natural_nll["L4096"]["mean_nll"])
+                - float(initial_natural_nll["L4096"]["mean_nll"])
+            ),
+            "L4096_tail_mean_nll": (
+                float(final_natural_nll["L4096"]["tail_mean_nll"])
+                - float(
+                    initial_natural_nll["L4096"]["tail_mean_nll"]
+                )
+            ),
+        },
+        "capability_endpoint": False,
+    }
     adapter_metadata = {
         "base_checkpoint_sha256": checkpoint_digest,
         "frequency": args.frequency,
@@ -1391,9 +1980,9 @@ def main() -> None:
         "alpha": float(args.alpha),
         "training_sequence_length": LENGTH,
         "stage": (
-            "counterfactual_routing_semantic_query_gap_16k"
+            "counterfactual_routing_semantic_query_gap_16k_eos_v2"
             if int(args.virtual_target_length)
-            else "counterfactual_source_routing_4k"
+            else "counterfactual_source_routing_4k_eos_v2"
         ),
         "parent_adapter_sha256": sha256_file(parent_adapter),
         "routing_data_sha256": sha256_file(
@@ -1406,12 +1995,20 @@ def main() -> None:
             else "semantic_query_block_continuous_gap"
         ),
         "virtual_target_length": int(args.virtual_target_length),
+        "supervision_contract": SUPERVISION_CONTRACT,
+        "eos_token_id": OLMO2_EOS_TOKEN_ID,
+        "final_eos_supervised": True,
+        "termination_weight": float(args.termination_weight),
     }
     adapter_sha = save_adapter(
         output / "adapter.pt", model, None, adapter_metadata
     )
     receipt = {
-        "status": "OLMO2_4K_COUNTERFACTUAL_ROUTING_COMPLETE",
+        "status": (
+            "OLMO2_4K_QUERY_GAP_EOS_REPAIR_COMPLETE_V1"
+            if int(args.virtual_target_length)
+            else "OLMO2_4K_COUNTERFACTUAL_ROUTING_EOS_V2_COMPLETE"
+        ),
         "metric_boundary": (
             "paired source-content swaps use physical 4K sequences and a "
             "gold-independent semantic query-block offset spanning "
@@ -1424,6 +2021,7 @@ def main() -> None:
             "positions 0..4095; 8K/16K remain evaluation-only"
         ),
         "script_sha256": sha256_file(Path(__file__).resolve()),
+        "bound_code_sha256": bound_code_sha256(),
         "checkpoint": str(checkpoint),
         "checkpoint_sha256": checkpoint_digest,
         "ready_receipt_sha256": sha256_file(ready_receipt),
@@ -1436,10 +2034,24 @@ def main() -> None:
         "parent_adapter": str(parent_adapter),
         "parent_adapter_sha256": sha256_file(parent_adapter),
         "adapter_sha256": adapter_sha,
+        "parent_exact_baseline": parent_exact_baseline_receipt,
         "routing_data": {
             "path": str(routing_root),
             "manifest_sha256": sha256_file(
                 routing_root / "manifest.json"
+            ),
+            "format_version": int(routing_manifest["format_version"]),
+            "status": routing_manifest["status"],
+            "supervision_contract": routing_manifest.get(
+                "supervision_contract"
+            ),
+            "eos_token_id": routing_manifest.get("eos_token_id"),
+            "final_eos_supervised": True,
+            "labels_only_cover_answer_and_final_eos": True,
+            "answer_string_tokenizer_roundtrip_exact": (
+                routing_manifest.get(
+                    "answer_string_tokenizer_roundtrip_exact"
+                )
             ),
         },
         "runtime": runtime,
@@ -1453,42 +2065,7 @@ def main() -> None:
             final_virtual_calibration
         ),
         "natural_nll": natural_nll,
-        "protocol": {
-            "frequency": args.frequency,
-            "hard_maximum_training_length": LENGTH,
-            "hard_maximum_training_position_id": (
-                4 * LENGTH - 1
-                if int(args.virtual_target_length)
-                else LENGTH - 1
-            ),
-            "steps": int(args.steps),
-            "family_pattern": list(FAMILY_PATTERN),
-            "micro_batch_size": int(args.micro_batch_size),
-            "gradient_accumulation_steps": int(
-                args.gradient_accumulation_steps
-            ),
-            "rank": int(args.rank),
-            "alpha": float(args.alpha),
-            "learning_rate": float(args.learning_rate),
-            "warmup_steps": int(args.warmup_steps),
-            "counterfactual_margin": float(
-                args.counterfactual_margin
-            ),
-            "counterfactual_margin_weight": float(
-                args.counterfactual_margin_weight
-            ),
-            "compile_mode": args.compile_mode,
-            "position_policy": (
-                "contiguous"
-                if not int(args.virtual_target_length)
-                else "semantic_query_block_continuous_gap"
-            ),
-            "virtual_target_length": int(args.virtual_target_length),
-            "virtual_bucket_weights": [
-                int(value)
-                for value in args.virtual_bucket_weights
-            ],
-        },
+        "protocol": run_protocol,
     }
     atomic_json(output / "results.json", receipt)
     print(

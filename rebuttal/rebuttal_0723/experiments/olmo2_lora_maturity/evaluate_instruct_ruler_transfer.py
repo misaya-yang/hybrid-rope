@@ -52,12 +52,56 @@ from rebuttal.rebuttal_0723.experiments.olmo2_lora_ood_factorial import (
 
 
 RESULT_STATUS = "OLMO2_INSTRUCT_RULER_TRANSFER_COMPLETE"
+RETENTION_READY_STATUS = "OLMO2_4K_RETENTION_READY_V1"
+RUN_MANIFEST_STATUS = "OLMO2_4K_RETENTION_EVAL_RUN_V1"
+LENGTH = 4_096
+
+
+def bound_code_sha256() -> dict[str, str]:
+    evaluator = Path(__file__).resolve()
+    maturity_root = evaluator.parent
+    experiments_root = maturity_root.parent
+    paths = {
+        "evaluator": evaluator,
+        "screen_frequency": (
+            maturity_root / "evaluate_instruct_ruler_screen.py"
+        ),
+        "hybrid_import_dependency": (
+            maturity_root / "olmo2_exact_method.py"
+        ),
+        "data_contract": (
+            maturity_root / "prepare_instruct_ruler_transfer.py"
+        ),
+        "checkpoint_contract": maturity_root / "train_4k_stage_a.py",
+        "frequency_application": maturity_root / "train_screen.py",
+        "greedy_generation_and_row_identity": (
+            experiments_root / "olmo2_1b_evq" / "evaluate_ruler.py"
+        ),
+        "evq_contract": experiments_root / "olmo2_1b_evq" / "contract.py",
+        "lora_conversion": experiments_root / "olmo2_lora_conversion.py",
+        "adapter_loader": (
+            experiments_root / "olmo2_lora_ood_factorial.py"
+        ),
+    }
+    return {
+        name: sha256_file(path)
+        for name, path in sorted(paths.items())
+    }
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--ready-receipt", type=Path, required=True)
+    parser.add_argument("--experiment-ready-receipt", type=Path)
+    parser.add_argument(
+        "--experiment-role",
+        choices=(
+            "candidate",
+            "immediate_parent",
+            "pre_query_gap_parent",
+        ),
+    )
     parser.add_argument("--data-root", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
@@ -467,6 +511,21 @@ def _load_completed(
     return completed
 
 
+def _validate_or_create_run_manifest(
+    path: Path,
+    expected: dict[str, Any],
+) -> None:
+    if path.is_file():
+        observed = json.loads(path.read_text(encoding="utf-8"))
+        if observed != expected:
+            raise RuntimeError(
+                "retention output belongs to a different adapter, "
+                "dataset, or protocol"
+            )
+        return
+    atomic_json(path, expected)
+
+
 def main() -> None:
     args = parse_args()
     tasks = (
@@ -482,6 +541,7 @@ def main() -> None:
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     examples_path = output / "examples.jsonl"
+    run_manifest_path = output / "run_manifest.json"
     checkpoint = args.checkpoint.resolve()
     ready_receipt = args.ready_receipt.resolve()
     checkpoint_digest = ready_checkpoint_digest(
@@ -500,6 +560,123 @@ def main() -> None:
     selected_lengths = tuple(
         sorted(set(int(row["_nominal_length"]) for row in rows))
     )
+    adapter_path = (
+        None if args.adapter is None else args.adapter.resolve()
+    )
+    experiment_ready_path = (
+        None
+        if args.experiment_ready_receipt is None
+        else args.experiment_ready_receipt.resolve()
+    )
+    experiment_ready_sha256 = (
+        None
+        if experiment_ready_path is None
+        else sha256_file(experiment_ready_path)
+    )
+    if experiment_ready_path is not None:
+        experiment_ready = json.loads(
+            experiment_ready_path.read_text(encoding="utf-8")
+        )
+        role = str(args.experiment_role)
+        if (
+            experiment_ready.get("status") != RETENTION_READY_STATUS
+            or role not in experiment_ready["registered_outputs"]
+            or output
+            != Path(
+                experiment_ready["registered_outputs"][role]
+            ).resolve()
+            or experiment_ready["evaluator"]["sha256"]
+            != sha256_file(Path(__file__).resolve())
+            or experiment_ready.get("evaluator_bound_code_sha256")
+            != bound_code_sha256()
+            or experiment_ready["inputs"]["checkpoint"][
+                "composite_sha256"
+            ]
+            != checkpoint_digest
+            or experiment_ready["inputs"]["checkpoint"][
+                "ready_receipt_sha256"
+            ]
+            != sha256_file(ready_receipt)
+            or experiment_ready["inputs"]["data"]["manifest_sha256"]
+            != data_receipt["manifest_sha256"]
+            or {
+                key: value["sha256"]
+                for key, value in experiment_ready["inputs"]["data"][
+                    "cells"
+                ].items()
+            }
+            != {
+                task: data_receipt["cells"][task][str(LENGTH)][
+                    "sha256"
+                ]
+                for task in selected_tasks
+            }
+            or adapter_path is None
+            or sha256_file(adapter_path)
+            != experiment_ready["registered_adapters"][role]["sha256"]
+        ):
+            raise RuntimeError("retention experiment READY drift")
+    elif args.experiment_role is not None:
+        raise RuntimeError("retention role requires an experiment READY")
+
+    run_manifest = {
+        "status": RUN_MANIFEST_STATUS,
+        "checkpoint_sha256": checkpoint_digest,
+        "ready_receipt_sha256": sha256_file(ready_receipt),
+        "experiment_ready_receipt_sha256": experiment_ready_sha256,
+        "experiment_role": args.experiment_role,
+        "bound_code_sha256": bound_code_sha256(),
+        "data_manifest_sha256": data_receipt["manifest_sha256"],
+        "data_cells": {
+            task: data_receipt["cells"][task][str(LENGTH)]["sha256"]
+            for task in selected_tasks
+        },
+        "frequency": str(args.frequency),
+        "adapter_sha256": (
+            None if adapter_path is None else sha256_file(adapter_path)
+        ),
+        "rank": int(args.rank),
+        "alpha": float(args.alpha),
+        "tasks": list(selected_tasks),
+        "lengths": list(selected_lengths),
+        "limit_per_cell": int(args.limit_per_cell),
+        "greedy": True,
+        "decode_skip_special_tokens": True,
+        "decode_cleanup": False,
+    }
+    if examples_path.exists() != run_manifest_path.exists():
+        raise RuntimeError(
+            "retention examples and run manifest must be resumed together"
+        )
+    _validate_or_create_run_manifest(run_manifest_path, run_manifest)
+    completed = _load_completed(examples_path)
+    expected_rows = {
+        (
+            str(row["_task"]),
+            int(row["_nominal_length"]),
+            int(row["_local_index"]),
+        ): row
+        for row in rows
+    }
+    for key, result in completed.items():
+        if key not in expected_rows:
+            raise RuntimeError(f"completed retention row is outside run: {key}")
+        source = expected_rows[key]
+        if (
+            result.get("row_sha256")
+            != row_sha256(
+                {
+                    name: value
+                    for name, value in source.items()
+                    if not name.startswith("_")
+                }
+            )
+            or result.get("references")
+            != [str(value) for value in source["outputs"]]
+            or result.get("official_metric")
+            != str(TASK_CONFIGS[str(source["_task"])]["official_metric"])
+        ):
+            raise RuntimeError(f"completed retention row identity drift: {key}")
 
     configure_cuda()
     tokenizer = AutoTokenizer.from_pretrained(
@@ -623,7 +800,6 @@ def main() -> None:
     model.config.use_cache = True
     model.eval()
     model.to("cuda")
-    completed = _load_completed(examples_path)
     expected = len(rows)
     torch.cuda.reset_peak_memory_stats()
 
@@ -663,9 +839,14 @@ def main() -> None:
             )
             torch.cuda.synchronize()
             elapsed = time.perf_counter() - started
+            generated_token_ids = [
+                int(value)
+                for value in output_ids[0].detach().cpu().tolist()
+            ]
             prediction = tokenizer.decode(
-                output_ids[0].detach().cpu(),
+                generated_token_ids,
                 skip_special_tokens=True,
+                clean_up_tokenization_spaces=False,
             )
             references = [str(value) for value in row["outputs"]]
             metric = str(TASK_CONFIGS[task]["official_metric"])
@@ -693,6 +874,7 @@ def main() -> None:
                 "input_tokens": int(input_ids.numel()),
                 "maximum_generation_tokens": generation_tokens,
                 "generated_tokens": int(output_ids.numel()),
+                "generated_token_ids": generated_token_ids,
                 "prediction": prediction,
                 "references": references,
                 "official_metric": metric,
@@ -786,7 +968,12 @@ def main() -> None:
         ),
         "checkpoint": str(checkpoint),
         "checkpoint_sha256": checkpoint_digest,
+        "script_sha256": sha256_file(Path(__file__).resolve()),
+        "bound_code_sha256": bound_code_sha256(),
+        "run_manifest_sha256": sha256_file(run_manifest_path),
         "ready_receipt_sha256": sha256_file(ready_receipt),
+        "experiment_ready_receipt_sha256": experiment_ready_sha256,
+        "experiment_role": args.experiment_role,
         "frequency": frequency,
         "adapter": adapter_receipt,
         "data": data_receipt,
@@ -795,6 +982,8 @@ def main() -> None:
             "lengths": list(selected_lengths),
             "limit_per_cell": int(args.limit_per_cell),
             "greedy": True,
+            "decode_skip_special_tokens": True,
+            "decode_cleanup": False,
             "training_length": (
                 4_096 if adapter_receipt is not None else None
             ),

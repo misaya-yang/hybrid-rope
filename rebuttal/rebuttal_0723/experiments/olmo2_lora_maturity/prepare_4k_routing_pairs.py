@@ -22,6 +22,10 @@ from .prepare_instruct_ruler_screen import RULER_COMMIT
 LENGTH = 4_096
 GENERATION_RESERVE = 128
 NUM_KEYS = 8
+SET_STATUS = "OLMO2_4K_COUNTERFACTUAL_ROUTING_SET_PREPARED_V2"
+ROOT_STATUS = "OLMO2_4K_COUNTERFACTUAL_ROUTING_DATA_PREPARED_V2"
+SUPERVISION_CONTRACT = "numeric_answer_plus_immediate_eos_v1"
+OLMO2_EOS_TOKEN_ID = 100_257
 TRAIN_TEMPLATE = (
     "An access-code registry is embedded below. Memorize which number "
     "belongs to each handle.\n{context}\nWhich access code belongs to "
@@ -124,6 +128,16 @@ def prompt_ids(
     return [int(value) for value in chat + prefix]
 
 
+def decoded_answer(tokenizer: Any, token_ids: list[int]) -> str:
+    return str(
+        tokenizer.decode(
+            token_ids,
+            skip_special_tokens=True,
+            clean_up_tokenization_spaces=False,
+        )
+    )
+
+
 def choose_alternate(
     *,
     tokenizer: Any,
@@ -147,6 +161,8 @@ def choose_alternate(
             ).input_ids
         ]
         if len(alternate_ids) != len(gold_ids):
+            continue
+        if decoded_answer(tokenizer, alternate_ids) != alternate:
             continue
         swapped = dict(row)
         swapped["input"] = row["input"].replace(gold, alternate, 1)
@@ -219,6 +235,10 @@ def build_pair_set(
             ]
             if not gold_ids:
                 raise RuntimeError("empty gold answer tokenization")
+            if decoded_answer(tokenizer, gold_ids) != gold:
+                raise RuntimeError(
+                    "gold answer does not round-trip exactly through tokenizer"
+                )
             original_prompt_ids = prompt_ids(tokenizer, row)
             (
                 alternate,
@@ -266,8 +286,11 @@ def build_pair_set(
                 labels[
                     index,
                     variant_index,
-                    answer_start : answer_start + len(answer_ids),
-                ] = np.asarray(answer_ids, dtype=np.int32)
+                    answer_start : answer_start + len(answer_ids) + 1,
+                ] = np.asarray(
+                    [*answer_ids, int(eos_id)],
+                    dtype=np.int32,
+                )
                 starts.append(answer_start)
             if starts[0] != starts[1]:
                 raise RuntimeError("counterfactual answer geometry drift")
@@ -284,6 +307,8 @@ def build_pair_set(
                         "alternate_token_ids": alternate_ids,
                         "answer_start": starts[0],
                         "answer_tokens": len(gold_ids),
+                        "eos_position": starts[0] + len(gold_ids),
+                        "supervised_tokens": len(gold_ids) + 1,
                         "source_token_position_answer": int(
                             row["token_position_answer"]
                         ),
@@ -295,15 +320,17 @@ def build_pair_set(
             )
     input_ids.flush()
     labels.flush()
-    expected_labels = 2 * sum(answer_lengths)
+    expected_labels = 2 * sum(length + 1 for length in answer_lengths)
     actual_labels = int((labels != -100).sum())
     if actual_labels != expected_labels:
         raise RuntimeError(
             f"routing label count drift: {actual_labels}"
         )
     manifest = {
-        "format_version": 1,
-        "status": "OLMO2_4K_COUNTERFACTUAL_ROUTING_SET_PREPARED",
+        "format_version": 2,
+        "status": SET_STATUS,
+        "supervision_contract": SUPERVISION_CONTRACT,
+        "eos_token_id": int(eos_id),
         "purpose": purpose,
         "shape": [len(rows), 2, LENGTH],
         "variant_names": ["sourced", "value_swapped"],
@@ -311,13 +338,18 @@ def build_pair_set(
         "maximum_training_length": LENGTH,
         "queries_per_sequence": 1,
         "key_value_blocks_per_sequence": NUM_KEYS,
-        "answer_only": True,
+        "answer_and_eos_only": True,
+        "final_eos_supervised": True,
+        "labels_only_cover_answer_and_final_eos": True,
+        "answer_string_tokenizer_roundtrip_exact": True,
         "counterfactual_value_swap": True,
         "minimum_answer_tokens": min(answer_lengths),
         "maximum_answer_tokens": max(answer_lengths),
         "minimum_prompt_tokens": min(prompt_lengths),
         "maximum_prompt_tokens": max(prompt_lengths),
-        "supervised_answer_tokens": actual_labels,
+        "supervised_answer_tokens": 2 * sum(answer_lengths),
+        "supervised_eos_tokens": 2 * len(answer_lengths),
+        "supervised_answer_and_eos_tokens": actual_labels,
         "seed": int(seed),
         "files": {
             "input_ids.npy": sha256_file(output / "input_ids.npy"),
@@ -350,6 +382,12 @@ def main() -> None:
         local_files_only=True,
         trust_remote_code=False,
     )
+    if (
+        int(tokenizer.bos_token_id) != 100_257
+        or int(tokenizer.eos_token_id) != 100_257
+        or int(tokenizer.pad_token_id) != 100_277
+    ):
+        raise RuntimeError("OLMo-2 tokenizer special-token contract drift")
     empty_raw = len(
         tokenizer("", add_special_tokens=False).input_ids
     )
@@ -401,8 +439,10 @@ def main() -> None:
         purpose="counterfactual_routing_calibration",
     )
     receipt = {
-        "format_version": 1,
-        "status": "OLMO2_4K_COUNTERFACTUAL_ROUTING_DATA_PREPARED",
+        "format_version": 2,
+        "status": ROOT_STATUS,
+        "supervision_contract": SUPERVISION_CONTRACT,
+        "eos_token_id": int(tokenizer.eos_token_id),
         "ruler_commit": commit,
         "checkpoint": str(checkpoint),
         "tokenizer_sha256": sha256_file(
@@ -410,6 +450,9 @@ def main() -> None:
         ),
         "hard_maximum_training_length": LENGTH,
         "hard_maximum_training_position_id": LENGTH - 1,
+        "final_eos_supervised": True,
+        "labels_only_cover_answer_and_final_eos": True,
+        "answer_string_tokenizer_roundtrip_exact": True,
         "train_eval_values_disjoint": True,
         "official_eval_template_used_for_training": False,
         "templates": {

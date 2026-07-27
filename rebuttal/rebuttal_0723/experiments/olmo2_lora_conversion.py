@@ -50,6 +50,7 @@ from rebuttal.rebuttal_0723.experiments.small_model_lora_conversion import (
 
 ADAPTATIONS = (
     "baseline",
+    "qk_answer",
     "qv_answer",
     "qkvo_answer",
     "qkvo_causal_margin",
@@ -86,20 +87,23 @@ def install_adaptation(
     adaptation: str,
     rank: int,
     alpha: float,
+    *,
+    qk_output_mask: torch.Tensor | None = None,
 ) -> ReadoutAdapter | None:
     for parameter in model.parameters():
         parameter.requires_grad_(False)
     use_qv = adaptation.startswith("qv_")
+    use_qk = adaptation.startswith("qk_")
     use_qkvo = adaptation.startswith("qkvo_")
-    if use_qv or use_qkvo:
+    if use_qv or use_qk or use_qkvo:
         for layer in model.model.layers:
             attention = layer.self_attn
-            names = ("q_proj", "v_proj") if use_qv else (
-                "q_proj",
-                "k_proj",
-                "v_proj",
-                "o_proj",
-            )
+            if use_qv:
+                names = ("q_proj", "v_proj")
+            elif use_qk:
+                names = ("q_proj", "k_proj")
+            else:
+                names = ("q_proj", "k_proj", "v_proj", "o_proj")
             for name in names:
                 setattr(
                     attention,
@@ -108,6 +112,11 @@ def install_adaptation(
                         getattr(attention, name),
                         rank=rank,
                         alpha=alpha,
+                        output_mask=(
+                            qk_output_mask
+                            if name in {"q_proj", "k_proj"}
+                            else None
+                        ),
                     ),
                 )
     readout = None

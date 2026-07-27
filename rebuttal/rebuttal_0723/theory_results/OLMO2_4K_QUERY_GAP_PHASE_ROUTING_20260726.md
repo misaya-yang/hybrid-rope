@@ -2,22 +2,35 @@
 
 ## Status and claim boundary
 
-- Run state: **completed**.
-- Internal evidence tier: **POST_SUB_RAW_HASH_BACKED**.
+- Run state: training and registered first-number evaluation are complete;
+  final capability validation is **incomplete**.
+- Internal evidence tier: **AUTHOR_CONFIRMED_NOT_PROMOTED** until the stopped
+  instance is explicitly restarted and its raw prediction JSONL files are
+  recovered and frozen locally.
 - Reviewer-promotion state: **not yet promoted**; the remote raw artifacts
   must be frozen into a sanitized local evidence package before these numbers
   enter the rebuttal or playbook.
 - Supported claim: with only physical 4K training sequences, a semantic
-  query-gap QKVO LoRA continuation transfers to real physical 8K and 16K
-  greedy autoregressive `niah_single_1` evaluation.
+  query-gap QKVO LoRA continuation improves real physical 8K and 16K greedy
+  autoregressive **first-number answer extraction** on `niah_single_1`.
 - Unsupported claims: unseen-task transfer, general RULER transfer, full
-  response exact match, multi-seed stability, or universal long-context
-  capability.
+  response exact match, absence of catastrophic forgetting, multi-seed
+  stability, or universal long-context capability.
 
-The primary capability metric is **first-number exact**: the first complete
+The executed metric is **first-number exact**: the first complete
 decimal number produced by greedy autoregressive generation must equal the
-reference answer. It is stricter than substring match, but it is not full
-generated-string exact match.
+reference answer. This is an answer-extraction metric, not full generated-
+string exact match, and must not be described simply as “strict exact.”
+
+Two decision-critical checks remain unresolved:
+
+1. full generated-string exact was not computed;
+2. broad 4K retention was not evaluated, so catastrophic forgetting is not
+   excluded by the 20-row NIAH result or natural-text NLL.
+
+The prediction JSONL files were not copied locally before shutdown. No
+full-string number may be reconstructed or guessed from the aggregate
+receipts.
 
 ## Scientific question
 
@@ -69,7 +82,7 @@ mechanism diagnostic, not a capability endpoint.
 Contiguous held-out calibration remained high: source-token exact changed
 from 97.92% to 95.15%, with median rank 1 before and after.
 
-## Real physical autoregressive results
+## Real physical autoregressive answer-extraction results
 
 All rows below use continuous physical contexts and greedy autoregressive
 generation. The query-gap arm is frozen during evaluation.
@@ -118,7 +131,7 @@ physical 4K routing data. Performance still declines at the longest gaps;
 `6/29` beyond 12,288 tokens is a material boundary and must remain adjacent
 to any 16K aggregate.
 
-## NLL is not the capability explanation
+## NLL is not the answer-extraction explanation
 
 | Arm | 4K mean NLL | 8K mean NLL | 16K mean NLL |
 | --- | ---: | ---: | ---: |
@@ -128,8 +141,8 @@ to any 16K aggregate.
 
 The contiguous control has slightly lower natural-text NLL than the query-gap
 arm at all three lengths, yet obtains `68/100` versus `95/100` at 8K and
-`0/100` versus `51/100` at 16K. The capability difference therefore cannot
-be inferred from, or explained by, the small NLL difference.
+`0/100` versus `51/100` at 16K. The first-number answer-extraction difference
+therefore cannot be inferred from, or explained by, the small NLL difference.
 
 ## Narrow causal interpretation
 
@@ -137,15 +150,16 @@ The result supports the following bounded conclusion:
 
 > For this EVQ QKVO LoRA parent and same-family NIAH protocol, explicit
 > source-conditioned supervision at target query-source RoPE phases is the
-> intervention that enables substantial transfer from physical 4K training
-> sequences to continuous physical 8K/16K autoregressive retrieval.
+> intervention that improves first-number answer extraction from physical 4K
+> training sequences to continuous physical 8K/16K autoregressive prompts.
 
 The matched contiguous arm rules out the explanation that another 100 steps
-of the same counterfactual data are sufficient. The real continuous
-8K/16K evaluation also rules out success that exists only when the artificial
-query-boundary jump is present. It does not isolate relative phase from every
-other effect of moving the entire query block, and it does not reproduce the
-16K key count or attention competition during training.
+of the same counterfactual data are sufficient for the observed first-number
+gain. The real continuous 8K/16K evaluation also shows that this gain is not
+restricted to prompts containing the artificial query-boundary jump. It does
+not establish full-response correctness, isolate relative phase from every
+other effect of moving the entire query block, or reproduce the 16K key count
+and attention competition during training.
 
 ## Mandatory limitations
 
@@ -154,8 +168,9 @@ other effect of moving the entire query block, and it does not reproduce the
 2. Training and evaluation use the same official numeric
    `niah_single_1` task family with disjoint rows and identities. This is
    task-family transfer across lengths, not unseen-task transfer.
-3. The primary metric is strict first-generated-number exact, not full
-   response-string exact; generations may continue after the correct answer.
+3. The executed metric is first-generated-number exact, not full
+   response-string exact. Full-string exact is unresolved and cannot be
+   recovered from the aggregate receipts.
 4. Physical training remains 4K, so the intervention teaches target relative
    phases without exposing the model to a physical 16K attention denominator
    or distractor load.
@@ -164,7 +179,8 @@ other effect of moving the entire query block, and it does not reproduce the
 6. The paired test values describe fixed evaluation rows for a single
    training seed. Do not use multi-seed significance language.
 7. 4K retention is a 20-row task-family screen plus natural NLL,
-   not a broad instruction, RULER, or downstream no-harm result.
+   not a broad instruction, RULER, or downstream no-harm result. Catastrophic
+   forgetting therefore remains unresolved.
 8. No matched Native/YaRN query-gap arm was run. This result identifies the
    intervention on the EVQ parent; it does not establish that only EVQ can
    benefit from target-phase supervision.
@@ -199,11 +215,15 @@ other effect of moving the entire query block, and it does not reproduce the
 
 Before reviewer use:
 
-1. freeze the listed raw JSONL/JSON receipts and their hashes into a sanitized
-   local evidence package;
-2. verify the frozen hashes against this ledger;
-3. synchronize the reviewer-usable evidence ledger and playbook;
-4. state the single-seed and same-task-family boundaries adjacent to the
+1. restart the stopped instance only with explicit user authorization, recover
+   the raw prediction JSONL files, and freeze them into a sanitized local
+   evidence package;
+2. compute and report full generated-string exact from those raw predictions;
+3. run or identify a suitable broad 4K retention evaluation before making a
+   no-forgetting claim;
+4. verify the frozen hashes against this ledger;
+5. synchronize the reviewer-usable evidence ledger and playbook;
+6. state the single-seed and same-task-family boundaries adjacent to the
    result;
-5. omit row-level significance language if the response cannot explain that
+7. omit row-level significance language if the response cannot explain that
    it is not training-seed uncertainty.
