@@ -1,0 +1,236 @@
+{
+  "failure_category_definitions": {
+    "correct_answer_not_retrieved": "neither first-number exact nor official reference substring",
+    "correct_answer_then_continued": "the clean first generated number is correct and the decoded continuation contains additional content",
+    "eos_readout_failure": "the complete decoded string equals the reference but terminal EOS is absent",
+    "format_error": "the reference appears under the official substring metric or first-number extraction, but not as a clean complete answer followed by extra output",
+    "incomplete_answer_token_sequence": "generated content is a strict prefix of the canonical reference token sequence"
+  },
+  "four_k_retention": {
+    "natural_text": {
+      "nll_delta": -0.003925196826457977,
+      "parent_nll": 2.548033408820629,
+      "parent_ppl": 12.781942194718544,
+      "ppl_delta": -0.05007330086721318,
+      "query_gap_nll": 2.544108211994171,
+      "query_gap_ppl": 12.731868893851331
+    },
+    "parent_to_query_gap_counts": {
+      "exact_generation_pass": {
+        "delta": 0,
+        "parent": 0,
+        "query_gap": 0
+      },
+      "first_number_exact": {
+        "delta": -1,
+        "parent": 99,
+        "query_gap": 98
+      },
+      "full_string_exact": {
+        "delta": 0,
+        "parent": 0,
+        "query_gap": 0
+      },
+      "official_string_match": {
+        "delta": 0,
+        "parent": 100,
+        "query_gap": 100
+      },
+      "terminal_eos": {
+        "delta": 13,
+        "parent": 66,
+        "query_gap": 79
+      }
+    },
+    "scope": "same-family niah_single_1 plus the frozen natural-text NLL set; not broad instruction or downstream retention"
+  },
+  "old_result_reproduction": {
+    "first_number_exact_counts": {
+      "16384": 51,
+      "8192": 95
+    },
+    "official_string_match_counts": {
+      "16384": 57,
+      "8192": 98
+    },
+    "same_adapter": true,
+    "same_data_manifest": true,
+    "same_greedy_max_new_tokens_128_protocol": true
+  },
+  "pre_query_gap_parent_4k": {
+    "by_length": {
+      "4096": {
+        "counts": {
+          "answer_continues": 99,
+          "answer_eos_token_exact": 0,
+          "exact_generation_pass": 0,
+          "first_number_exact": 99,
+          "full_string_exact": 0,
+          "official_string_match": 100,
+          "terminal_eos": 66
+        },
+        "examples": 100,
+        "failure_categories": {
+          "correct_answer_then_continued": 99,
+          "format_error": 1
+        },
+        "generated_token_count_distribution": {
+          "128": 34,
+          "5": 65,
+          "6": 1
+        },
+        "rates": {
+          "answer_continues": 0.99,
+          "answer_eos_token_exact": 0.0,
+          "exact_generation_pass": 0.0,
+          "first_number_exact": 0.99,
+          "full_string_exact": 0.0,
+          "official_string_match": 1.0,
+          "terminal_eos": 0.66
+        }
+      }
+    },
+    "natural_text_nll_ppl": {
+      "16384": {
+        "mean_nll": 2.9244646951556206,
+        "perplexity": 18.624253727777532,
+        "rows": 16,
+        "tokens": 262128
+      },
+      "4096": {
+        "mean_nll": 2.548033408820629,
+        "perplexity": 12.781942194718544,
+        "rows": 16,
+        "tokens": 65520
+      },
+      "8192": {
+        "mean_nll": 2.7032920345664024,
+        "perplexity": 14.928797034084814,
+        "rows": 16,
+        "tokens": 131056
+      }
+    }
+  },
+  "primary_decision": {
+    "label": "stop_new_experiments_and_retain_first_number_length_transfer_result",
+    "minimal_readout_repair_authorized": false,
+    "reason": "No tested length has any full-string-plus-terminal-EOS success, and the 16K cell contains 43/100 retrieval failures plus 6/100 format failures. The registered content-success prerequisite for repair is not met.",
+    "selection": 3
+  },
+  "query_gap_adapter": {
+    "by_length": {
+      "16384": {
+        "counts": {
+          "answer_continues": 51,
+          "answer_eos_token_exact": 0,
+          "exact_generation_pass": 0,
+          "first_number_exact": 51,
+          "full_string_exact": 0,
+          "official_string_match": 57,
+          "terminal_eos": 0
+        },
+        "examples": 100,
+        "failure_categories": {
+          "correct_answer_not_retrieved": 43,
+          "correct_answer_then_continued": 51,
+          "format_error": 6
+        },
+        "generated_token_count_distribution": {
+          "128": 100
+        },
+        "rates": {
+          "answer_continues": 0.51,
+          "answer_eos_token_exact": 0.0,
+          "exact_generation_pass": 0.0,
+          "first_number_exact": 0.51,
+          "full_string_exact": 0.0,
+          "official_string_match": 0.57,
+          "terminal_eos": 0.0
+        }
+      },
+      "4096": {
+        "counts": {
+          "answer_continues": 98,
+          "answer_eos_token_exact": 0,
+          "exact_generation_pass": 0,
+          "first_number_exact": 98,
+          "full_string_exact": 0,
+          "official_string_match": 100,
+          "terminal_eos": 79
+        },
+        "examples": 100,
+        "failure_categories": {
+          "correct_answer_then_continued": 98,
+          "format_error": 2
+        },
+        "generated_token_count_distribution": {
+          "128": 21,
+          "16": 1,
+          "5": 76,
+          "6": 1,
+          "7": 1
+        },
+        "rates": {
+          "answer_continues": 0.98,
+          "answer_eos_token_exact": 0.0,
+          "exact_generation_pass": 0.0,
+          "first_number_exact": 0.98,
+          "full_string_exact": 0.0,
+          "official_string_match": 1.0,
+          "terminal_eos": 0.79
+        }
+      },
+      "8192": {
+        "counts": {
+          "answer_continues": 95,
+          "answer_eos_token_exact": 0,
+          "exact_generation_pass": 0,
+          "first_number_exact": 95,
+          "full_string_exact": 0,
+          "official_string_match": 98,
+          "terminal_eos": 16
+        },
+        "examples": 100,
+        "failure_categories": {
+          "correct_answer_not_retrieved": 2,
+          "correct_answer_then_continued": 95,
+          "format_error": 3
+        },
+        "generated_token_count_distribution": {
+          "128": 84,
+          "5": 16
+        },
+        "rates": {
+          "answer_continues": 0.95,
+          "answer_eos_token_exact": 0.0,
+          "exact_generation_pass": 0.0,
+          "first_number_exact": 0.95,
+          "full_string_exact": 0.0,
+          "official_string_match": 0.98,
+          "terminal_eos": 0.16
+        }
+      }
+    },
+    "natural_text_nll_ppl": {
+      "16384": {
+        "mean_nll": 2.9141566157341003,
+        "perplexity": 18.43325952409038,
+        "rows": 16,
+        "tokens": 262128
+      },
+      "4096": {
+        "mean_nll": 2.544108211994171,
+        "perplexity": 12.731868893851331,
+        "rows": 16,
+        "tokens": 65520
+      },
+      "8192": {
+        "mean_nll": 2.6967422142624855,
+        "perplexity": 14.831335621951416,
+        "rows": 16,
+        "tokens": 131056
+      }
+    }
+  },
+  "status": "EVQ_QUERY_GAP_FINAL_DIAGNOSTIC_COMPLETE"
+}

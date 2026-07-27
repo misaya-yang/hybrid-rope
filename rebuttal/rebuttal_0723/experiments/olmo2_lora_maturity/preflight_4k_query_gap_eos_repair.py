@@ -625,9 +625,9 @@ def main() -> None:
     receipt = {
         "status": VIRTUAL_QUERY_GAP_READY_STATUS,
         "objective": (
-            "repair immediate terminal EOS with a low-disturbance continuation "
-            "while preserving and independently remeasuring the existing "
-            "query-gap retrieval behavior"
+            "convert the frozen query-gap parent's retrieved answer prefixes "
+            "into complete answers with immediate EOS while directly "
+            "supervising the realized source-to-answer gaps that failed most"
         ),
         "existing_evidence": (
             "The frozen parent adapter has strong first-number extraction "
@@ -635,12 +635,14 @@ def main() -> None:
             "usually continues after the correct number."
         ),
         "smallest_missing_evidence": (
-            "Whether explicit answer-plus-immediate-EOS supervision converts "
-            "that retrieval into literal full-string exact plus terminal EOS."
+            "Whether one answer-plus-immediate-EOS continuation stratified by "
+            "realized 0-4K, 4-8K, 8-12K, and 12-16K gaps converts the parent "
+            "prefix behavior into literal full-string exact plus terminal EOS."
         ),
         "smallest_executable_plan": (
             "One 32-step low-LR continuation from the frozen successful "
-            "query-gap adapter, followed by one disjoint n=8 exact gate."
+            "query-gap adapter with a fixed 1:1:2:4 realized-gap curriculum, "
+            "followed by one disjoint n=8 exact gate."
         ),
         "stop_condition": (
             "If the n=8 literal full-string-plus-EOS gate fails, do not run "

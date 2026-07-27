@@ -28,12 +28,18 @@ MODEL_SHA256 = (
 EVQ_SHA256 = (
     "917a52426b4ac986545c8ec73b115daae3c6515d6b9047f09d30c972ea1a4607"
 )
+NATIVE_SHA256 = (
+    "dde15c31724177356ae954d6e11fb337e6fccef56e4520a905cac3f0d9885b34"
+)
+LEGACY_EVQ_ONLY_GATE_SHA256 = (
+    "36988e5a2ba83b1286510998e2afeaa26a5b6979b769c1c0e776da9f3e110e2f"
+)
 TRAINING_STATUS = "OLMO2_4K_QUERY_GAP_EOS_REPAIR_COMPLETE_V1"
-EVALUATION_STATUS = "OLMO2_INSTRUCT_RULER_EXACT_SCREEN_COMPLETE_V2"
+EVALUATION_STATUS = "OLMO2_INSTRUCT_RULER_EXACT_SCREEN_COMPLETE_V3"
 SUPERVISION_CONTRACT = "numeric_answer_plus_immediate_eos_v1"
 OLMO2_EOS_TOKEN_ID = 100_257
-EXAMPLE_SCHEMA_VERSION = 2
-RUN_MANIFEST_STATUS = "OLMO2_INSTRUCT_RULER_EXACT_SCREEN_RUN_V2"
+EXAMPLE_SCHEMA_VERSION = 3
+RUN_MANIFEST_STATUS = "OLMO2_INSTRUCT_RULER_EXACT_SCREEN_RUN_V3"
 GENERATION_TOKENS = 128
 SCREEN_POLICY = {
     4_096: {"examples": 8, "minimum_exact_generation_passes": 8},
@@ -219,6 +225,7 @@ def exact_screen_gate(
     parent_evaluation: dict[str, Any],
     *,
     expected_parent_sha256: str,
+    expected_frequency: str = "evq",
     raw_rows: list[dict[str, Any]],
     run_manifest: dict[str, Any],
     parent_raw_rows: list[dict[str, Any]],
@@ -255,6 +262,25 @@ def exact_screen_gate(
         raise RuntimeError(
             "gate lacks immutable parent, READY, or evaluator bindings"
         )
+    current_gate_bound = bound_code_sha256()
+    ready_gate_bound = experiment_ready.get("gate_bound_code_sha256", {})
+    current_gate_binding = (
+        experiment_ready["gate"]["sha256"] == gate_script_sha256
+        and ready_gate_bound == current_gate_bound
+    )
+    legacy_native_gate_binding = (
+        expected_frequency == "native"
+        and experiment_ready["gate"]["sha256"]
+        == LEGACY_EVQ_ONLY_GATE_SHA256
+        and ready_gate_bound.get("gate")
+        == LEGACY_EVQ_ONLY_GATE_SHA256
+        and all(
+            ready_gate_bound.get(name) == digest
+            for name, digest in current_gate_bound.items()
+            if name != "gate"
+        )
+        and gate_script_sha256 == current_gate_bound["gate"]
+    )
     if (
         experiment_ready.get("status")
         != "OLMO2_4K_QUERY_GAP_EOS_REPAIR_READY_V1"
@@ -268,9 +294,7 @@ def exact_screen_gate(
         != training.get("script_sha256")
         or experiment_ready["evaluator"]["sha256"]
         != evaluation.get("script_sha256")
-        or experiment_ready["gate"]["sha256"] != gate_script_sha256
-        or experiment_ready.get("gate_bound_code_sha256")
-        != bound_code_sha256()
+        or not (current_gate_binding or legacy_native_gate_binding)
         or experiment_ready.get("bound_code_sha256")
         != training.get("bound_code_sha256")
         or experiment_ready.get("evaluator_bound_code_sha256")
@@ -283,6 +307,15 @@ def exact_screen_gate(
     ):
         raise RuntimeError("training/evaluation/READY binding drift")
 
+    expected_frequency_identity = {
+        "evq": ("evq_endpoint_cosh", EVQ_SHA256),
+        "native": ("native_endpoint_rope", NATIVE_SHA256),
+    }
+    if expected_frequency not in expected_frequency_identity:
+        raise RuntimeError("unsupported expected frequency")
+    expected_frequency_name, expected_frequency_sha256 = (
+        expected_frequency_identity[expected_frequency]
+    )
     training_frequency = training.get("frequency", {})
     evaluation_frequency = evaluation.get("frequency", {})
     parent_evaluation_frequency = parent_evaluation.get("frequency", {})
@@ -292,10 +325,13 @@ def exact_screen_gate(
         ("parent_evaluation", parent_evaluation_frequency),
     ):
         if (
-            frequency.get("active_frequency") != "evq_endpoint_cosh"
-            or frequency.get("active_sha256_float32") != EVQ_SHA256
+            frequency.get("active_frequency") != expected_frequency_name
+            or frequency.get("active_sha256_float32")
+            != expected_frequency_sha256
         ):
-            raise RuntimeError(f"{label} is not the frozen EVQ table")
+            raise RuntimeError(
+                f"{label} is not the frozen {expected_frequency} table"
+            )
 
     protocol = training.get("protocol", {})
     if (
@@ -307,7 +343,7 @@ def exact_screen_gate(
         or int(protocol.get("maximum_allowed_position_id", -1))
         != 16_383
         or protocol.get("position_policy")
-        != "semantic_query_block_continuous_gap"
+        != "semantic_query_block_realized_gap_curriculum"
         or protocol.get("supervision_contract")
         != SUPERVISION_CONTRACT
         or protocol.get("supervision")
@@ -353,20 +389,21 @@ def exact_screen_gate(
     adapter_metadata = adapter.get("metadata", {})
     if (
         adapter_metadata.get("base_checkpoint_sha256") != MODEL_SHA256
-        or adapter_metadata.get("frequency") != "evq"
-        or adapter_metadata.get("frequency_sha256_float32") != EVQ_SHA256
+        or adapter_metadata.get("frequency") != expected_frequency
+        or adapter_metadata.get("frequency_sha256_float32")
+        != expected_frequency_sha256
         or adapter_metadata.get("adaptation") != "qkvo_answer"
         or int(adapter_metadata.get("training_sequence_length", -1))
         != 4_096
         or adapter_metadata.get("final_eos_supervised") is not True
         or adapter_metadata.get("stage")
-        != "counterfactual_routing_semantic_query_gap_16k_eos_v2"
+        != "counterfactual_routing_realized_gap_16k_eos_v2"
         or adapter_metadata.get("parent_adapter_sha256")
         != expected_parent_sha256
         or adapter_metadata.get("routing_data_sha256")
         != routing_data.get("manifest_sha256")
         or adapter_metadata.get("position_policy")
-        != "semantic_query_block_continuous_gap"
+        != "semantic_query_block_realized_gap_curriculum"
         or adapter_metadata.get("supervision_contract")
         != SUPERVISION_CONTRACT
         or int(adapter_metadata.get("eos_token_id", -1))
@@ -382,8 +419,9 @@ def exact_screen_gate(
     parent_metadata = parent_adapter.get("metadata", {})
     if (
         parent_metadata.get("base_checkpoint_sha256") != MODEL_SHA256
-        or parent_metadata.get("frequency") != "evq"
-        or parent_metadata.get("frequency_sha256_float32") != EVQ_SHA256
+        or parent_metadata.get("frequency") != expected_frequency
+        or parent_metadata.get("frequency_sha256_float32")
+        != expected_frequency_sha256
         or parent_metadata.get("adaptation") != "qkvo_answer"
         or int(parent_metadata.get("rank", -1)) != 64
         or float(parent_metadata.get("alpha", -1.0)) != 128.0
@@ -434,7 +472,7 @@ def exact_screen_gate(
         != experiment_ready.get("evaluator_bound_code_sha256")
         or run_manifest.get("data_manifest_sha256")
         != evaluation.get("data", {}).get("manifest_sha256")
-        or run_manifest.get("frequency") != "evq"
+        or run_manifest.get("frequency") != expected_frequency
         or run_manifest.get("adapter_sha256")
         != training.get("adapter_sha256")
         or run_manifest.get("adaptation") != "qkvo_answer"
@@ -529,6 +567,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--evaluation-examples", type=Path, required=True)
     parser.add_argument("--evaluation-run-manifest", type=Path, required=True)
     parser.add_argument("--expected-parent-sha256", required=True)
+    parser.add_argument(
+        "--expected-frequency",
+        choices=("evq", "native"),
+        default="evq",
+    )
     parser.add_argument("--output", type=Path, required=True)
     return parser.parse_args()
 
@@ -677,6 +720,7 @@ def main() -> None:
         evaluation,
         parent_evaluation,
         expected_parent_sha256=str(args.expected_parent_sha256),
+        expected_frequency=str(args.expected_frequency),
         raw_rows=raw_rows,
         run_manifest=run_manifest,
         parent_raw_rows=parent_raw_rows,

@@ -595,6 +595,123 @@ def deterministic_query_offset_stream(
     return values
 
 
+def deterministic_realized_gap_target_stream(
+    *,
+    seed: int,
+    routing_steps: int,
+) -> np.ndarray:
+    """Return a 1:1:2:4 stream of realized source-to-answer gap targets."""
+
+    routing_steps = int(routing_steps)
+    if routing_steps <= 0:
+        raise ValueError("routing steps must be positive")
+    transition_count = routing_steps // 2
+    transition = _deterministic_band_values(
+        low=LENGTH,
+        high=2 * LENGTH - 1,
+        count=transition_count,
+        seed=seed,
+        label="realized-transition",
+    )
+    middle = _deterministic_band_values(
+        low=2 * LENGTH,
+        high=3 * LENGTH - 1,
+        count=routing_steps,
+        seed=seed,
+        label="realized-middle",
+    )
+    far = _deterministic_band_values(
+        low=3 * LENGTH,
+        high=4 * LENGTH - 305,
+        count=2 * routing_steps,
+        seed=seed,
+        label="realized-far",
+    )
+    stream: list[int] = []
+    transition_cursor = 0
+    for routing_ordinal in range(routing_steps):
+        low_target = -1
+        if routing_ordinal % 2:
+            low_target = int(transition[transition_cursor])
+            transition_cursor += 1
+        local = [
+            low_target,
+            int(middle[routing_ordinal]),
+            int(far[2 * routing_ordinal]),
+            int(far[2 * routing_ordinal + 1]),
+        ]
+        digest = hashlib.sha256(
+            (
+                "evq-realized-gap-order-v1\0"
+                f"{int(seed)}\0{routing_ordinal}"
+            ).encode("ascii")
+        ).digest()
+        order = sorted(range(4), key=lambda index: (digest[index], index))
+        stream.extend(local[index] for index in order)
+    if transition_cursor != transition_count:
+        raise RuntimeError("deterministic transition cursor drift")
+    values = np.asarray(stream, dtype="<i8")
+    expected = {
+        "contiguous": (routing_steps + 1) // 2,
+        "transition": routing_steps // 2,
+        "middle": routing_steps,
+        "far": 2 * routing_steps,
+    }
+    actual = {
+        "contiguous": int((values == -1).sum()),
+        "transition": int(
+            ((values >= LENGTH) & (values < 2 * LENGTH)).sum()
+        ),
+        "middle": int(
+            ((values >= 2 * LENGTH) & (values < 3 * LENGTH)).sum()
+        ),
+        "far": int(
+            ((values >= 3 * LENGTH) & (values < 4 * LENGTH)).sum()
+        ),
+    }
+    if actual != expected or len(values) != 4 * routing_steps:
+        raise RuntimeError("deterministic realized-gap quota drift")
+    return values
+
+
+def realized_gap_query_offsets(
+    *,
+    view: RoutingPairView,
+    row_indices: np.ndarray,
+    gap_targets: np.ndarray,
+) -> np.ndarray:
+    """Convert row-conditioned realized-gap targets to query offsets."""
+
+    row_indices = np.asarray(row_indices, dtype=np.int64)
+    gap_targets = np.asarray(gap_targets, dtype=np.int64)
+    if row_indices.shape != gap_targets.shape:
+        raise RuntimeError("realized-gap target shape drift")
+    offsets = np.zeros_like(gap_targets)
+    for local_index, (row_index, target) in enumerate(
+        zip(row_indices.tolist(), gap_targets.tolist())
+    ):
+        if target == -1:
+            continue
+        answer_start = int(view.answer_starts[row_index])
+        source_stop = int(view.source_stops[row_index])
+        active_length = int(view.active_lengths[row_index])
+        physical_gap = (answer_start - 1) - (source_stop - 1)
+        if target < physical_gap:
+            raise RuntimeError("realized-gap target is below physical gap")
+        maximum_offset = min(
+            3 * LENGTH + 1,
+            4 * LENGTH - min(active_length, LENGTH - 1),
+        )
+        offset = min(int(target - physical_gap), int(maximum_offset))
+        realized_gap = physical_gap + offset
+        if realized_gap < 0 or realized_gap >= 4 * LENGTH:
+            raise RuntimeError("realized query gap is outside 16K support")
+        if query_gap_band(realized_gap) != query_gap_band(target):
+            raise RuntimeError("realized query gap missed its target band")
+        offsets[local_index] = offset
+    return offsets
+
+
 def query_offset_band(offset: int) -> str:
     if offset == 0:
         return "contiguous"
@@ -605,6 +722,18 @@ def query_offset_band(offset: int) -> str:
     if 2 * LENGTH + 1 <= offset <= 3 * LENGTH + 1:
         return "far"
     raise RuntimeError("query offset lies outside registered bands")
+
+
+def query_gap_band(gap: int) -> str:
+    if 0 <= gap < LENGTH:
+        return "contiguous"
+    if LENGTH <= gap < 2 * LENGTH:
+        return "transition"
+    if 2 * LENGTH <= gap < 3 * LENGTH:
+        return "middle"
+    if 3 * LENGTH <= gap < 4 * LENGTH:
+        return "far"
+    raise RuntimeError("realized query gap lies outside registered bands")
 
 
 def routing_batch(
@@ -1046,9 +1175,9 @@ def train(
     virtual_gap_near_min: int | None = None
     virtual_gap_far_max: int | None = None
     maximum_observed_position_id = LENGTH - 2
-    query_offset_stream: np.ndarray | None = None
-    query_offset_stream_sha256: str | None = None
-    query_offset_cursor = 0
+    gap_target_stream: np.ndarray | None = None
+    gap_target_stream_sha256: str | None = None
+    gap_target_cursor = 0
     checkpoint_history: list[dict[str, Any]] = []
     selected_step: int | None = None
     actual_steps = 0
@@ -1066,12 +1195,12 @@ def train(
             == "routing"
             for step in range(1, int(steps) + 1)
         )
-        query_offset_stream = deterministic_query_offset_stream(
+        gap_target_stream = deterministic_realized_gap_target_stream(
             seed=int(seed),
             routing_steps=routing_steps,
         )
-        query_offset_stream_sha256 = hashlib.sha256(
-            query_offset_stream.tobytes(order="C")
+        gap_target_stream_sha256 = hashlib.sha256(
+            gap_target_stream.tobytes(order="C")
         ).hexdigest()
     model.train()
     torch.cuda.reset_peak_memory_stats()
@@ -1106,22 +1235,27 @@ def train(
                 )
                 position_ids = None
                 if int(virtual_target_length):
-                    if query_offset_stream is None:
+                    if gap_target_stream is None:
                         raise RuntimeError(
-                            "virtual query-offset stream is missing"
+                            "realized-gap target stream is missing"
                         )
-                    stop = query_offset_cursor + pair_batch_size
-                    query_offsets = np.asarray(
-                        query_offset_stream[
-                            query_offset_cursor:stop
+                    stop = gap_target_cursor + pair_batch_size
+                    gap_targets = np.asarray(
+                        gap_target_stream[
+                            gap_target_cursor:stop
                         ],
                         dtype=np.int64,
                     )
-                    if len(query_offsets) != pair_batch_size:
+                    if len(gap_targets) != pair_batch_size:
                         raise RuntimeError(
-                            "virtual query-offset stream exhausted early"
+                            "realized-gap target stream exhausted early"
                         )
-                    query_offset_cursor = stop
+                    gap_target_cursor = stop
+                    query_offsets = realized_gap_query_offsets(
+                        view=routing_view,
+                        row_indices=indices,
+                        gap_targets=gap_targets,
+                    )
                     position_ids, exposures, payload = (
                         query_gap_position_ids(
                             view=routing_view,
@@ -1131,11 +1265,10 @@ def train(
                     )
                     position_hash.update(payload)
                     for pair_slot, exposure in enumerate(exposures):
-                        bucket = query_offset_band(
-                            int(exposure["query_offset"])
-                        )
-                        position_bucket_counts[bucket] += 1
+                        target = int(gap_targets[pair_slot])
                         near = int(exposure["virtual_gap_near"])
+                        bucket = query_gap_band(near)
+                        position_bucket_counts[bucket] += 1
                         far = int(exposure["virtual_gap_far"])
                         virtual_gap_near_min = (
                             near
@@ -1158,6 +1291,7 @@ def train(
                                     accumulation_index,
                                     pair_slot,
                                     int(indices[pair_slot]),
+                                    target,
                                     int(exposure["query_offset"]),
                                     int(exposure["source_start"]),
                                     int(exposure["source_stop"]),
@@ -1316,24 +1450,24 @@ def train(
 
     torch.cuda.synchronize()
     elapsed = time.perf_counter() - started
-    if query_offset_stream is not None:
+    if gap_target_stream is not None:
         expected_cursor = (
             int(family_steps["routing"])
             * pair_batch_size
             * int(gradient_accumulation_steps)
         )
-        if query_offset_cursor != expected_cursor:
+        if gap_target_cursor != expected_cursor:
             raise RuntimeError(
-                "virtual query-offset stream prefix consumption drift"
+                "realized-gap target stream prefix consumption drift"
             )
         realized_total = sum(position_bucket_counts.values())
-        if realized_total != query_offset_cursor:
-            raise RuntimeError("virtual query-offset count drift")
-    consumed_query_offset_prefix_sha256 = (
+        if realized_total != gap_target_cursor:
+            raise RuntimeError("realized-gap target count drift")
+    consumed_gap_target_prefix_sha256 = (
         None
-        if query_offset_stream is None
+        if gap_target_stream is None
         else hashlib.sha256(
-            query_offset_stream[:query_offset_cursor].tobytes(order="C")
+            gap_target_stream[:gap_target_cursor].tobytes(order="C")
         ).hexdigest()
     )
     return {
@@ -1392,7 +1526,7 @@ def train(
         "position_policy": (
             "contiguous"
             if not int(virtual_target_length)
-            else "semantic_query_block_continuous_gap"
+            else "semantic_query_block_realized_gap_curriculum"
         ),
         "virtual_target_length": int(virtual_target_length),
         "virtual_bucket_weights": list(virtual_bucket_weights),
@@ -1402,19 +1536,19 @@ def train(
         "maximum_observed_position_id": int(
             maximum_observed_position_id
         ),
-        "query_offset_stream_sha256": query_offset_stream_sha256,
-        "consumed_query_offset_prefix_sha256": (
-            consumed_query_offset_prefix_sha256
+        "gap_target_stream_sha256": gap_target_stream_sha256,
+        "consumed_gap_target_prefix_sha256": (
+            consumed_gap_target_prefix_sha256
         ),
-        "consumed_query_offset_values": int(query_offset_cursor),
+        "consumed_gap_target_values": int(gap_target_cursor),
         "realized_position_stream_sha256": (
             None
-            if query_offset_stream is None
+            if gap_target_stream is None
             else position_hash.hexdigest()
         ),
         "realized_exposure_stream_sha256": (
             None
-            if query_offset_stream is None
+            if gap_target_stream is None
             else exposure_hash.hexdigest()
         ),
     }
@@ -1466,14 +1600,14 @@ def registered_protocol(
             == "routing"
             for step in range(1, int(args.steps) + 1)
         )
-        query_offset_stream = deterministic_query_offset_stream(
+        gap_target_stream = deterministic_realized_gap_target_stream(
             seed=int(args.seed),
             routing_steps=routing_steps,
         )
         result.update(
             {
                 "position_policy": (
-                    "semantic_query_block_continuous_gap"
+                    "semantic_query_block_realized_gap_curriculum"
                 ),
                 "virtual_target_length": int(
                     args.virtual_target_length
@@ -1496,10 +1630,10 @@ def registered_protocol(
                 ),
                 "routing_optimizer_steps": routing_steps,
                 "routing_pair_exposures": int(
-                    len(query_offset_stream)
+                    len(gap_target_stream)
                 ),
-                "query_offset_stream_sha256": hashlib.sha256(
-                    query_offset_stream.tobytes(order="C")
+                "gap_target_stream_sha256": hashlib.sha256(
+                    gap_target_stream.tobytes(order="C")
                 ).hexdigest(),
             }
         )
@@ -1735,7 +1869,7 @@ def main() -> None:
             parent_sha = sha256_file(args.parent_adapter.resolve())
             if (
                 baseline.get("status")
-                != "OLMO2_INSTRUCT_RULER_EXACT_SCREEN_COMPLETE_V2"
+                != "OLMO2_INSTRUCT_RULER_EXACT_SCREEN_COMPLETE_V3"
                 or baseline.get("experiment_ready_receipt_sha256")
                 != ready_sha
                 or baseline.get("adapter", {}).get("sha256")
@@ -1980,7 +2114,7 @@ def main() -> None:
         "alpha": float(args.alpha),
         "training_sequence_length": LENGTH,
         "stage": (
-            "counterfactual_routing_semantic_query_gap_16k_eos_v2"
+            "counterfactual_routing_realized_gap_16k_eos_v2"
             if int(args.virtual_target_length)
             else "counterfactual_source_routing_4k_eos_v2"
         ),
@@ -1992,7 +2126,7 @@ def main() -> None:
         "position_policy": (
             "contiguous"
             if not int(args.virtual_target_length)
-            else "semantic_query_block_continuous_gap"
+            else "semantic_query_block_realized_gap_curriculum"
         ),
         "virtual_target_length": int(args.virtual_target_length),
         "supervision_contract": SUPERVISION_CONTRACT,

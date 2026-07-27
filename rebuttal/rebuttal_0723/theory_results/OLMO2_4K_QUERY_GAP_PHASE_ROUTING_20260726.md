@@ -2,14 +2,17 @@
 
 ## Status and claim boundary
 
-- Run state: training and registered first-number evaluation are complete;
-  final capability validation is **incomplete**.
-- Internal evidence tier: **AUTHOR_CONFIRMED_NOT_PROMOTED** until the stopped
-  instance is explicitly restarted and its raw prediction JSONL files are
-  recovered and frozen locally.
-- Reviewer-promotion state: **not yet promoted**; the remote raw artifacts
-  must be frozen into a sanitized local evidence package before these numbers
-  enter the rebuttal or playbook.
+- Run state: the original query-gap +100 training, registered first-number
+  evaluation, and pre-repair strict raw-token re-evaluation are complete.
+- Evidence tier: **POST_SUB_RAW_HASH_BACKED** for the original
+  first-generated-number length transfer; **NEGATIVE** for the original
+  query-gap +100 adapter's complete expected-string plus terminal-EOS
+  endpoint.
+- Supersession state: a later, explicitly authorized 32-step
+  answer-plus-immediate-EOS continuation and its matched Native chain are
+  complete. Their final capability and retention evidence is owned by
+  `EVQ_QUERY_GAP_FINAL_DIAGNOSTIC.md`; the pre-repair `0/100` endpoint below
+  must not be presented as the final adapter's result.
 - Supported claim: with only physical 4K training sequences, a semantic
   query-gap QKVO LoRA continuation improves real physical 8K and 16K greedy
   autoregressive **first-number answer extraction** on `niah_single_1`.
@@ -22,15 +25,25 @@ decimal number produced by greedy autoregressive generation must equal the
 reference answer. This is an answer-extraction metric, not full generated-
 string exact match, and must not be described simply as “strict exact.”
 
-Two decision-critical checks remain unresolved:
+The pre-repair strict re-evaluation resolves the original adapter's
+raw-output gap:
 
-1. full generated-string exact was not computed;
-2. broad 4K retention was not evaluated, so catastrophic forgetting is not
-   excluded by the 20-row NIAH result or natural-text NLL.
+1. complete expected-string exact plus terminal EOS is `0/100` at 8K and
+   `0/100` at 16K;
+2. the 16K cell contains `43/100` retrieval failures and `6/100` format
+   errors, so a readout-only repair is not justified;
+3. broad 4K retention remains unresolved; the available frozen 4K
+   same-family check is parent `99/100` versus query-gap `98/100`
+   first-number exact, with `0/100` complete-string-plus-EOS for both.
 
-The prediction JSONL files were not copied locally before shutdown. No
-full-string number may be reconstructed or guessed from the aggregate
-receipts.
+The canonical pre-repair diagnostic, raw generations, metrics, and lineage
+are in `EVQ_QUERY_GAP_FINAL_DIAGNOSTIC.md`'s historical-baseline section and
+`evq_query_gap_final_diagnostic_20260727/`.
+
+The final +32 chain, matched Native control, complete raw generations,
+retention matrix, and machine-readable lineage are in
+`EVQ_QUERY_GAP_FINAL_DIAGNOSTIC.md` and
+`evq_query_gap_realized_eos32_20260728/`.
 
 ## Scientific question
 
@@ -168,9 +181,11 @@ and attention competition during training.
 2. Training and evaluation use the same official numeric
    `niah_single_1` task family with disjoint rows and identities. This is
    task-family transfer across lengths, not unseen-task transfer.
-3. The executed metric is first-generated-number exact, not full
-   response-string exact. Full-string exact is unresolved and cannot be
-   recovered from the aggregate receipts.
+3. For the original query-gap +100 adapter, the positive metric is
+   first-generated-number exact, while pre-repair strict raw-token
+   re-evaluation obtains `0/100` complete expected-string plus terminal EOS
+   at both 8K and 16K. Do not apply that pre-repair boundary to the final +32
+   adapter.
 4. Physical training remains 4K, so the intervention teaches target relative
    phases without exposing the model to a physical 16K attention denominator
    or distractor load.
@@ -178,12 +193,13 @@ and attention competition during training.
    12,288–16,079 tokens.
 6. The paired test values describe fixed evaluation rows for a single
    training seed. Do not use multi-seed significance language.
-7. 4K retention is a 20-row task-family screen plus natural NLL,
-   not a broad instruction, RULER, or downstream no-harm result. Catastrophic
-   forgetting therefore remains unresolved.
-8. No matched Native/YaRN query-gap arm was run. This result identifies the
-   intervention on the EVQ parent; it does not establish that only EVQ can
-   benefit from target-phase supervision.
+7. For the original query-gap +100 adapter, 4K retention is a 100-row
+   same-family check plus natural NLL. The final +32 chain has a separate
+   13-family retention matrix and short-context MCQA diagnostic in the final
+   owner.
+8. No matched Native/YaRN arm was run for the original +100 result. A matched
+   Native +100+32 downstream chain was later completed; use the final owner
+   for any Native/EVQ comparison.
 9. No downstream QA, multi-key RULER, variable tracking, or unseen benchmark
    result is established by this experiment.
 
@@ -200,6 +216,10 @@ and attention competition during training.
 | Query-gap n=20 result | `831fe7aff762c04dc0fab83b5b92b9d7997017f14f020a40b45c009e8784e11e` |
 | Query-gap n=100 examples | `46ab4511d511aafba1214f64e38da0fe4cbc919c22e002d7e8b20f82aae21c48` |
 | Query-gap n=100 result | `6c87b7eb5b07880c33225ef05bf4d1e76830297c2e2db145e3ec113b7e9c09b2` |
+| Strict query-gap raw generations, 4K/8K/16K | `09e579558b632326ce86a7acc027c431603a69debc34ded9628eafc031c11774` |
+| Strict query-gap metrics | `65ce8d54b32ec876624a6d9be72df323211f0472caadb472ddd98981aa2f26c4` |
+| Strict query-gap lineage | `38a07b09742a8c876be0fc86cbf7451ffb1d3637b065f984c67a800b0551522f` |
+| Strict parent 4K raw generations | `e4be3047c0865aa99c062c502c1bd7d5c340e81de4ca8ba79a95b2c4eb0c9a45` |
 | Contiguous READY receipt | `4e568bcae59a0cf9d63cfbcb16a92523ce38d578f2e1ca69b565a17cccadd9fb` |
 | Contiguous training result | `c5bd8f01ca5afb2cf4f85cc96b9d8edfa42e61a76781f67931960d6dcada82f2` |
 | Contiguous adapter | `8e26819cf2adb9b4c613dfff4b31a2e67944fb661a1f2b062ddd7ec8127324ab` |
@@ -211,19 +231,17 @@ and attention competition during training.
 | Row-matched n=20 manifest | `6e6f99457c02f55367e57b50daeff763a941291780d1d22bf369af9fb033ffc6` |
 | Row-matched n=100 manifest | `274f5df85420aabde38191a3bc7da7d466eb13bff69f0fde5ad618aea3f07511` |
 
-## Promotion gate
+## Reviewer-use gate
 
 Before reviewer use:
 
-1. restart the stopped instance only with explicit user authorization, recover
-   the raw prediction JSONL files, and freeze them into a sanitized local
-   evidence package;
-2. compute and report full generated-string exact from those raw predictions;
-3. run or identify a suitable broad 4K retention evaluation before making a
-   no-forgetting claim;
-4. verify the frozen hashes against this ledger;
-5. synchronize the reviewer-usable evidence ledger and playbook;
-6. state the single-seed and same-task-family boundaries adjacent to the
-   result;
-7. omit row-level significance language if the response cannot explain that
+1. use `EVQ_QUERY_GAP_FINAL_DIAGNOSTIC.md` for the final adapter and matched
+   Native evidence;
+2. if the original +100 result is discussed, describe it only as
+   first-generated-number length transfer and identify the `0/100`
+   complete-string-plus-EOS endpoint as pre-repair;
+3. do not make a broad no-forgetting claim;
+4. state the single-seed, target-range-phase-exposure, and same-task-family
+   boundaries;
+5. omit row-level significance language if the response cannot explain that
    it is not training-seed uncertainty.

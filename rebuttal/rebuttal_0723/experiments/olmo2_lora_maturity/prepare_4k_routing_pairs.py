@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import random
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -47,6 +48,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--train-rows", type=int, default=1_024)
     parser.add_argument("--calibration-rows", type=int, default=128)
     parser.add_argument("--seed", type=int, default=20_260_725)
+    parser.add_argument(
+        "--reuse-raw-from",
+        type=Path,
+        help=(
+            "Reuse the frozen raw RULER rows from an existing routing-data "
+            "root; only rebuild labels and manifests."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -112,6 +121,29 @@ def generate_rows(
     if len(rows) != int(count):
         raise RuntimeError(f"generated row count drift: {len(rows)}")
     return path, rows
+
+
+def reuse_rows(
+    *,
+    source_root: Path,
+    output: Path,
+    relative_path: Path,
+    expected_count: int,
+) -> tuple[Path, list[dict[str, Any]]]:
+    source = source_root / relative_path
+    if not source.is_file():
+        raise FileNotFoundError(source)
+    destination = output / relative_path
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(source, destination)
+    rows = [
+        json.loads(line)
+        for line in destination.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    if len(rows) != int(expected_count):
+        raise RuntimeError(f"reused raw row count drift: {len(rows)}")
+    return destination, rows
 
 
 def prompt_ids(
@@ -398,26 +430,64 @@ def main() -> None:
         )
     )
     chat_overhead = empty_chat - empty_raw
-    raw_train_path, train_rows = generate_rows(
-        ruler_root=ruler_root,
-        checkpoint=checkpoint,
-        output=output / "raw_train",
-        name="routing_train",
-        template=TRAIN_TEMPLATE,
-        count=int(args.train_rows),
-        seed=int(args.seed) + 11_000,
-        chat_overhead=chat_overhead,
-    )
-    raw_calibration_path, calibration_rows = generate_rows(
-        ruler_root=ruler_root,
-        checkpoint=checkpoint,
-        output=output / "raw_calibration",
-        name="routing_calibration",
-        template=CALIBRATION_TEMPLATE,
-        count=int(args.calibration_rows),
-        seed=int(args.seed) + 22_000,
-        chat_overhead=chat_overhead,
-    )
+    if args.reuse_raw_from is None:
+        raw_train_path, train_rows = generate_rows(
+            ruler_root=ruler_root,
+            checkpoint=checkpoint,
+            output=output / "raw_train",
+            name="routing_train",
+            template=TRAIN_TEMPLATE,
+            count=int(args.train_rows),
+            seed=int(args.seed) + 11_000,
+            chat_overhead=chat_overhead,
+        )
+        raw_calibration_path, calibration_rows = generate_rows(
+            ruler_root=ruler_root,
+            checkpoint=checkpoint,
+            output=output / "raw_calibration",
+            name="routing_calibration",
+            template=CALIBRATION_TEMPLATE,
+            count=int(args.calibration_rows),
+            seed=int(args.seed) + 22_000,
+            chat_overhead=chat_overhead,
+        )
+        raw_source = None
+    else:
+        raw_source = args.reuse_raw_from.resolve()
+        source_manifest = json.loads(
+            (raw_source / "manifest.json").read_text(encoding="utf-8")
+        )
+        if (
+            source_manifest.get("status")
+            != "OLMO2_4K_COUNTERFACTUAL_ROUTING_DATA_PREPARED"
+            or int(source_manifest.get("format_version", -1)) != 1
+            or source_manifest.get("templates", {}).get("train")
+            != TRAIN_TEMPLATE
+            or source_manifest.get("templates", {}).get("calibration")
+            != CALIBRATION_TEMPLATE
+        ):
+            raise RuntimeError("reused routing-data source contract drift")
+        raw_train_path, train_rows = reuse_rows(
+            source_root=raw_source,
+            output=output,
+            relative_path=Path(source_manifest["raw"]["train"]["path"]),
+            expected_count=int(args.train_rows),
+        )
+        raw_calibration_path, calibration_rows = reuse_rows(
+            source_root=raw_source,
+            output=output,
+            relative_path=Path(
+                source_manifest["raw"]["calibration"]["path"]
+            ),
+            expected_count=int(args.calibration_rows),
+        )
+        if (
+            sha256_file(raw_train_path)
+            != source_manifest["raw"]["train"]["sha256"]
+            or sha256_file(raw_calibration_path)
+            != source_manifest["raw"]["calibration"]["sha256"]
+        ):
+            raise RuntimeError("reused raw routing-data hash drift")
     train_values = {str(row["outputs"][0]) for row in train_rows}
     calibration_values = {
         str(row["outputs"][0]) for row in calibration_rows
@@ -455,6 +525,9 @@ def main() -> None:
         "answer_string_tokenizer_roundtrip_exact": True,
         "train_eval_values_disjoint": True,
         "official_eval_template_used_for_training": False,
+        "raw_rows_reused_from": (
+            None if raw_source is None else str(raw_source)
+        ),
         "templates": {
             "train": TRAIN_TEMPLATE,
             "calibration": CALIBRATION_TEMPLATE,

@@ -256,6 +256,48 @@ def test_routing_objective_separates_answer_eos_and_margin() -> None:
     )
 
 
+def test_realized_gap_curriculum_hits_registered_bands() -> None:
+    targets = train.deterministic_realized_gap_target_stream(
+        seed=20260728,
+        routing_steps=22,
+    )
+    assert len(targets) == 88
+    assert int((targets == -1).sum()) == 11
+    assert int(
+        ((targets >= 4096) & (targets < 8192)).sum()
+    ) == 11
+    assert int(
+        ((targets >= 8192) & (targets < 12288)).sum()
+    ) == 22
+    assert int(
+        ((targets >= 12288) & (targets < 16384)).sum()
+    ) == 44
+
+    view = SimpleNamespace(
+        answer_starts=np.asarray([3960, 3900, 3800, 3700]),
+        source_stops=np.asarray([3000, 2000, 1000, 500]),
+        active_lengths=np.asarray([3964, 3904, 3804, 3704]),
+    )
+    row_indices = np.arange(4, dtype=np.int64)
+    selected_targets = np.asarray([-1, 5000, 9000, 14000])
+    offsets = train.realized_gap_query_offsets(
+        view=view,
+        row_indices=row_indices,
+        gap_targets=selected_targets,
+    )
+    physical = (
+        view.answer_starts[row_indices] - view.source_stops[row_indices]
+    )
+    realized = physical + offsets
+    assert [train.query_gap_band(int(value)) for value in realized] == [
+        "contiguous",
+        "transition",
+        "middle",
+        "far",
+    ]
+    assert realized[1:].tolist() == selected_targets[1:].tolist()
+
+
 def test_exact_generation_requires_whole_string_and_terminal_eos() -> None:
     exact = evaluate.exact_generation_metrics(
         prediction="1234567",
@@ -362,7 +404,9 @@ def _gate_receipts() -> tuple[dict[str, object], dict[str, object]]:
             "maximum_allowed_position_id": 16383,
             "hard_maximum_training_length": 4096,
             "virtual_target_length": 16384,
-            "position_policy": "semantic_query_block_continuous_gap",
+            "position_policy": (
+                "semantic_query_block_realized_gap_curriculum"
+            ),
             "supervision_contract": exact_gate.SUPERVISION_CONTRACT,
             "supervision": (
                 "answer_ce_plus_weighted_immediate_eos_ce"
@@ -395,12 +439,12 @@ def _gate_receipts() -> tuple[dict[str, object], dict[str, object]]:
                 "training_sequence_length": 4096,
                 "final_eos_supervised": True,
                 "stage": (
-                    "counterfactual_routing_semantic_query_gap_16k_eos_v2"
+                    "counterfactual_routing_realized_gap_16k_eos_v2"
                 ),
                 "parent_adapter_sha256": parent_sha,
                 "routing_data_sha256": routing_sha,
                 "position_policy": (
-                    "semantic_query_block_continuous_gap"
+                    "semantic_query_block_realized_gap_curriculum"
                 ),
                 "supervision_contract": (
                     exact_gate.SUPERVISION_CONTRACT

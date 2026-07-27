@@ -1,0 +1,89 @@
+{
+  "adapters": {
+    "pre_query_gap_parent": {
+      "sha256": "95ceeb70117c73233915760a9756b9b2a98416ec188b125054da8ced75cad16a",
+      "training_result_sha256": "78843a65df9c5d40883f48b78941e376fd332e4c10500d9b67d42156975cfbde"
+    },
+    "query_gap_plus_100": {
+      "adaptation": "qkvo_answer",
+      "alpha": 128.0,
+      "frequency": "evq_endpoint_cosh",
+      "frequency_sha256_float32": "917a52426b4ac986545c8ec73b115daae3c6515d6b9047f09d30c972ea1a4607",
+      "parent_sha256": "95ceeb70117c73233915760a9756b9b2a98416ec188b125054da8ced75cad16a",
+      "rank": 64,
+      "sha256": "a0ccd2cf141300ba4489882dda1324b2f237e65444a9a71d687e8c5fad57ae8b",
+      "training_result_sha256": "ac66dca2aaa9e35cbf10c117eabe1ce0e293249e1f80bd0e05b0be54f9548e3e"
+    }
+  },
+  "checkpoint": {
+    "actual_parameters": "1.485B",
+    "composite_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f",
+    "model": "OLMo-2-0425-1B-Instruct"
+  },
+  "evaluation_data": {
+    "files": {
+      "16384": "75d85b0d2102b4c97c12cb8c347dc05a30ebc6d1c43ad8794c47820d8790b820",
+      "4096": "aadb70c4a3c00b29c4161edbd407dd70a13a15e55e0d1e52f8eadc24e550c565",
+      "8192": "dc0c6614a1459fa9842ba3559d76704ab13c6da2ce49af2d84e246b428265c5b"
+    },
+    "lengths": [
+      4096,
+      8192,
+      16384
+    ],
+    "manifest_sha256": "274f5df85420aabde38191a3bc7da7d466eb13bff69f0fde5ad618aea3f07511",
+    "row_identity": "the 8K/16K row set is identical to the old 95/51 receipt",
+    "rows_per_length": 100,
+    "task": "niah_single_1"
+  },
+  "evaluation_protocol": {
+    "analysis_script_sha256": "b9c07eed560e09f0317b4b42768b1969e5a3cbe9e00da25dc754be74de6b45f7",
+    "complete_decoded_continuation_saved": true,
+    "decode_cleanup": false,
+    "greedy": true,
+    "maximum_new_tokens": 128,
+    "other_special_tokens_removed": false,
+    "parent_evaluator_sha256": "8ed00b1e82f998bf96b7abe4faf9c6af3af69251cd51f2c93a703a1f6fc86e4a",
+    "physical_position_ids": "contiguous 0..input_tokens-1; no virtual query gap at evaluation",
+    "query_evaluator_sha256": "63b89298a522a5f0c9ff5792a73bec73f8bdf5edb9e4de83171b59f478a4b8fa",
+    "query_generation_code_sha256": "4ef9a425611566f5ae8991e0c82d87e66d1e705e7feb14d300307c98a711719e",
+    "raw_generated_token_ids_saved": true,
+    "terminal_eos_removed_only_for_visible_string_decode": true
+  },
+  "retained_artifacts": {
+    "classification_sha256": "e14aa9384e5aca7c85538c6f312c104afa68a7b2039f4249e2333d8e2ddf1d5a",
+    "metrics_sha256": "65ce8d54b32ec876624a6d9be72df323211f0472caadb472ddd98981aa2f26c4",
+    "old_8k16k_result_sha256": "6c87b7eb5b07880c33225ef05bf4d1e76830297c2e2db145e3ec113b7e9c09b2",
+    "parent_4k_raw_generations_sha256": "e4be3047c0865aa99c062c502c1bd7d5c340e81de4ca8ba79a95b2c4eb0c9a45",
+    "parent_4k_result_sha256": "e5bc2ddf40e739be497049b169f07f4f7408a481e2a39fad29662206826bede6",
+    "parent_4k_run_manifest_sha256": "977acb19cfe916c867f5b73bcf5bd8a2da1e408ebd43d205f4a23f3061f6c37d",
+    "query_raw_generations_sha256": "09e579558b632326ce86a7acc027c431603a69debc34ded9628eafc031c11774",
+    "query_run_manifest_sha256": "7b703b3b27b7ab84139d6f99917ac32922b7391eebed77945a6e5202ea48c20e"
+  },
+  "runtime": {
+    "capability": [
+      12,
+      0
+    ],
+    "cuda": "12.8",
+    "flash_sdp_enabled": true,
+    "math_sdp_enabled": false,
+    "mem_efficient_sdp_enabled": false,
+    "name": "NVIDIA GeForce RTX 5090",
+    "peak_memory_allocated_bytes": 4408584704,
+    "peak_memory_reserved_bytes": 4563402752,
+    "torch": "2.8.0+cu128"
+  },
+  "status": "EVQ_QUERY_GAP_FINAL_LINEAGE_VERIFIED",
+  "training_position_contract": {
+    "hard_maximum_training_position_id": 16383,
+    "physical_input_tokens": 3276000,
+    "physical_sequence_length_maximum": 4096,
+    "position_policy": "semantic_query_block_continuous_gap",
+    "query_offset_stream_sha256": "1b1a42992948378f4f51b3a8f26d92320cf6fdbcefc2608ff45a82b33df76087",
+    "query_offsets": "context/source remain contiguous; final semantic query block, answer prefix, and teacher-forced answer shift together under a deterministic 0..12289 offset stream",
+    "realized_exposure_stream_sha256": "130823bfdce1e0234931c30aea69c8eaa9d77533b274163749ee89f4cb512e6c",
+    "realized_position_stream_sha256": "f5a9d39bc3e67e57aac058a5b6c2c17caf868dcfefa816ae925f5a62fd283726",
+    "virtual_target_length": 16384
+  }
+}

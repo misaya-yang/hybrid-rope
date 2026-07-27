@@ -85,6 +85,7 @@ documents; they do not replace protocol, raw hashes, or uncertainty.
 Use `theory_results/INTERNAL_NEGATIVE_AND_DIAGNOSTIC_LEDGER_20260726.md`
 instead of browsing these files as an action queue. Important owners include:
 
+- `EVQ_QUERY_GAP_FINAL_DIAGNOSTIC.md`;
 - `OLMO2_N100_GAP_STRUCTURE_AUDIT_20260726.md`;
 - `OLMO2_1B_CLEAN_4K_TULU_FULL_RULER_20260728.md`;
 - `OLMO2_1B_NON_RULER_ADAPTATION_SEARCH_20260731.md`;

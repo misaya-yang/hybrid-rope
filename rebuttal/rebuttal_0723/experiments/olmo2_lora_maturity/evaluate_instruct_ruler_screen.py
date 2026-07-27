@@ -432,10 +432,11 @@ def validate_actual_prompt_geometry(
     if not cells:
         raise RuntimeError("prompt-geometry validation received no rows")
     if any(
-        int(cell["far_gap_rows"]) < 1 for cell in cells.values()
+        int(length) > 4_096 and int(cell["far_gap_rows"]) < 1
+        for length, cell in cells.items()
     ):
         raise RuntimeError(
-            "each physical long-context cell requires at least one "
+            "each extrapolation cell requires at least one "
             "source-to-generation gap beyond the 3933-token training support"
         )
     geometry_payload = json.dumps(
@@ -2230,7 +2231,7 @@ def main() -> None:
             for row in selected
             if row["far_gap_beyond_training_support"] is True
         ]
-        if not far_gap_selected:
+        if length > 4_096 and not far_gap_selected:
             raise RuntimeError(
                 f"L{length} exact cell lacks a far-gap example"
             )
@@ -2249,11 +2250,15 @@ def main() -> None:
             )
             / len(selected),
             "far_gap_examples": len(far_gap_selected),
-            "far_gap_exact_generation_pass": sum(
-                float(row["exact_generation_pass"])
-                for row in far_gap_selected
-            )
-            / len(far_gap_selected),
+            "far_gap_exact_generation_pass": (
+                None
+                if not far_gap_selected
+                else sum(
+                    float(row["exact_generation_pass"])
+                    for row in far_gap_selected
+                )
+                / len(far_gap_selected)
+            ),
             "exact_generation_pass": sum(
                 float(row["exact_generation_pass"]) for row in selected
             )

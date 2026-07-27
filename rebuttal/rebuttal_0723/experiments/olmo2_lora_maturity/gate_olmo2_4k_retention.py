@@ -27,6 +27,9 @@ MODEL_SHA256 = (
 EVQ_SHA256 = (
     "917a52426b4ac986545c8ec73b115daae3c6515d6b9047f09d30c972ea1a4607"
 )
+NATIVE_SHA256 = (
+    "dde15c31724177356ae954d6e11fb337e6fccef56e4520a905cac3f0d9885b34"
+)
 IMMEDIATE_PARENT_SHA256 = (
     "a0ccd2cf141300ba4489882dda1324b2f237e65444a9a71d687e8c5fad57ae8b"
 )
@@ -116,6 +119,7 @@ def _validate_result(
     adapter_sha256: str,
     label: str,
     decode_generated: Callable[[list[int]], str],
+    expected_frequency: str = "evq",
 ) -> dict[str, list[float]]:
     if (
         result.get("status") != TRANSFER_STATUS
@@ -123,17 +127,30 @@ def _validate_result(
         or result.get("adapter", {}).get("sha256") != adapter_sha256
     ):
         raise RuntimeError(f"{label} result identity drift")
+    frequency_identities = {
+        "evq": ("evq_endpoint_cosh", EVQ_SHA256),
+        "native": ("native_endpoint_rope", NATIVE_SHA256),
+    }
+    if expected_frequency not in frequency_identities:
+        raise RuntimeError("unsupported retention frequency")
+    expected_frequency_name, expected_frequency_sha256 = (
+        frequency_identities[expected_frequency]
+    )
     frequency = result.get("frequency", {})
     if (
-        frequency.get("active_frequency") != "evq_endpoint_cosh"
-        or frequency.get("active_sha256_float32") != EVQ_SHA256
+        frequency.get("active_frequency") != expected_frequency_name
+        or frequency.get("active_sha256_float32")
+        != expected_frequency_sha256
     ):
-        raise RuntimeError(f"{label} did not evaluate frozen EVQ")
+        raise RuntimeError(
+            f"{label} did not evaluate frozen {expected_frequency}"
+        )
     metadata = result["adapter"].get("metadata", {})
     if (
         metadata.get("base_checkpoint_sha256") != MODEL_SHA256
-        or metadata.get("frequency") != "evq"
-        or metadata.get("frequency_sha256_float32") != EVQ_SHA256
+        or metadata.get("frequency") != expected_frequency
+        or metadata.get("frequency_sha256_float32")
+        != expected_frequency_sha256
         or metadata.get("adaptation") != "qkvo_answer"
         or int(metadata.get("rank", -1)) != 64
         or float(metadata.get("alpha", -1.0)) != 128.0
