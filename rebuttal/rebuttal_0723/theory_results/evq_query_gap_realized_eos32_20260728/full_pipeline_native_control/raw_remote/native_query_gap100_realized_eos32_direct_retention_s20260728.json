@@ -1,0 +1,280 @@
+{
+  "capability_gate_status": "STOP",
+  "direct_parent_retention": {
+    "comparison": "direct_parent_retention",
+    "family_checks": {
+      "niah": {
+        "candidate": 0.80625,
+        "delta": 0.0,
+        "parent": 0.80625,
+        "passed": true
+      },
+      "operations": {
+        "candidate": 0.1416666666666667,
+        "delta": 0.005555555555555591,
+        "parent": 0.1361111111111111,
+        "passed": true
+      },
+      "qa": {
+        "candidate": 0.35,
+        "delta": 0.0,
+        "parent": 0.35,
+        "passed": true
+      }
+    },
+    "global": {
+      "candidate": 0.5826923076923077,
+      "delta": 0.0012820512820512775,
+      "parent": 0.5814102564102565,
+      "passed": true
+    },
+    "passed": true,
+    "task_checks": {
+      "cwe": {
+        "candidate": 0.025,
+        "checks": {
+          "loss_rows_at_most_wins_plus_2": true,
+          "lost_mass_at_most_2": true,
+          "mean_delta_at_least_minus_0p10": true,
+          "nonzero_when_parent_mean_ge_0p10": true,
+          "retains_80pct_parent_mass_when_parent_mass_ge_5": true
+        },
+        "delta": 0.0,
+        "loss_rows": 0,
+        "lost_mass": 0.0,
+        "parent": 0.025,
+        "parent_mass": 0.5,
+        "passed": true,
+        "retained_parent_mass_fraction": 1.0,
+        "win_rows": 0
+      },
+      "fwe": {
+        "candidate": 0.4,
+        "checks": {
+          "loss_rows_at_most_wins_plus_2": true,
+          "lost_mass_at_most_2": true,
+          "mean_delta_at_least_minus_0p10": true,
+          "nonzero_when_parent_mean_ge_0p10": true,
+          "retains_80pct_parent_mass_when_parent_mass_ge_5": true
+        },
+        "delta": 0.01666666666666672,
+        "loss_rows": 0,
+        "lost_mass": 0.0,
+        "parent": 0.3833333333333333,
+        "parent_mass": 7.666666666666666,
+        "passed": true,
+        "retained_parent_mass_fraction": 1.0,
+        "win_rows": 1
+      },
+      "niah_multikey_1": {
+        "candidate": 0.9,
+        "checks": {
+          "loss_rows_at_most_wins_plus_2": true,
+          "lost_mass_at_most_2": true,
+          "mean_delta_at_least_minus_0p10": true,
+          "nonzero_when_parent_mean_ge_0p10": true,
+          "retains_80pct_parent_mass_when_parent_mass_ge_5": true
+        },
+        "delta": 0.050000000000000044,
+        "loss_rows": 0,
+        "lost_mass": 0.0,
+        "parent": 0.85,
+        "parent_mass": 17.0,
+        "passed": true,
+        "retained_parent_mass_fraction": 1.0,
+        "win_rows": 1
+      },
+      "niah_multikey_2": {
+        "candidate": 0.65,
+        "checks": {
+          "loss_rows_at_most_wins_plus_2": true,
+          "lost_mass_at_most_2": true,
+          "mean_delta_at_least_minus_0p10": true,
+          "nonzero_when_parent_mean_ge_0p10": true,
+          "retains_80pct_parent_mass_when_parent_mass_ge_5": true
+        },
+        "delta": -0.04999999999999993,
+        "loss_rows": 2,
+        "lost_mass": 2.0,
+        "parent": 0.7,
+        "parent_mass": 14.0,
+        "passed": true,
+        "retained_parent_mass_fraction": 0.8571428571428571,
+        "win_rows": 1
+      },
+      "niah_multikey_3": {
+        "candidate": 0.3,
+        "checks": {
+          "loss_rows_at_most_wins_plus_2": true,
+          "lost_mass_at_most_2": true,
+          "mean_delta_at_least_minus_0p10": true,
+          "nonzero_when_parent_mean_ge_0p10": true,
+          "retains_80pct_parent_mass_when_parent_mass_ge_5": true
+        },
+        "delta": 0.0,
+        "loss_rows": 1,
+        "lost_mass": 1.0,
+        "parent": 0.3,
+        "parent_mass": 6.0,
+        "passed": true,
+        "retained_parent_mass_fraction": 0.8333333333333334,
+        "win_rows": 1
+      },
+      "niah_multiquery": {
+        "candidate": 0.775,
+        "checks": {
+          "loss_rows_at_most_wins_plus_2": true,
+          "lost_mass_at_most_2": true,
+          "mean_delta_at_least_minus_0p10": true,
+          "nonzero_when_parent_mean_ge_0p10": true,
+          "retains_80pct_parent_mass_when_parent_mass_ge_5": true
+        },
+        "delta": 0.0,
+        "loss_rows": 1,
+        "lost_mass": 0.25,
+        "parent": 0.775,
+        "parent_mass": 15.5,
+        "passed": true,
+        "retained_parent_mass_fraction": 0.9838709677419355,
+        "win_rows": 1
+      },
+      "niah_multivalue": {
+        "candidate": 0.825,
+        "checks": {
+          "loss_rows_at_most_wins_plus_2": true,
+          "lost_mass_at_most_2": true,
+          "mean_delta_at_least_minus_0p10": true,
+          "nonzero_when_parent_mean_ge_0p10": true,
+          "retains_80pct_parent_mass_when_parent_mass_ge_5": true
+        },
+        "delta": 0.0,
+        "loss_rows": 1,
+        "lost_mass": 0.25,
+        "parent": 0.825,
+        "parent_mass": 16.5,
+        "passed": true,
+        "retained_parent_mass_fraction": 0.9848484848484849,
+        "win_rows": 1
+      },
+      "niah_single_1": {
+        "candidate": 1.0,
+        "checks": {
+          "loss_rows_at_most_wins_plus_2": true,
+          "lost_mass_at_most_2": true,
+          "mean_delta_at_least_minus_0p10": true,
+          "nonzero_when_parent_mean_ge_0p10": true,
+          "retains_80pct_parent_mass_when_parent_mass_ge_5": true
+        },
+        "delta": 0.0,
+        "loss_rows": 0,
+        "lost_mass": 0.0,
+        "parent": 1.0,
+        "parent_mass": 20.0,
+        "passed": true,
+        "retained_parent_mass_fraction": 1.0,
+        "win_rows": 0
+      },
+      "niah_single_2": {
+        "candidate": 1.0,
+        "checks": {
+          "loss_rows_at_most_wins_plus_2": true,
+          "lost_mass_at_most_2": true,
+          "mean_delta_at_least_minus_0p10": true,
+          "nonzero_when_parent_mean_ge_0p10": true,
+          "retains_80pct_parent_mass_when_parent_mass_ge_5": true
+        },
+        "delta": 0.0,
+        "loss_rows": 0,
+        "lost_mass": 0.0,
+        "parent": 1.0,
+        "parent_mass": 20.0,
+        "passed": true,
+        "retained_parent_mass_fraction": 1.0,
+        "win_rows": 0
+      },
+      "niah_single_3": {
+        "candidate": 1.0,
+        "checks": {
+          "loss_rows_at_most_wins_plus_2": true,
+          "lost_mass_at_most_2": true,
+          "mean_delta_at_least_minus_0p10": true,
+          "nonzero_when_parent_mean_ge_0p10": true,
+          "retains_80pct_parent_mass_when_parent_mass_ge_5": true
+        },
+        "delta": 0.0,
+        "loss_rows": 0,
+        "lost_mass": 0.0,
+        "parent": 1.0,
+        "parent_mass": 20.0,
+        "passed": true,
+        "retained_parent_mass_fraction": 1.0,
+        "win_rows": 0
+      },
+      "qa_1": {
+        "candidate": 0.45,
+        "checks": {
+          "loss_rows_at_most_wins_plus_2": true,
+          "lost_mass_at_most_2": true,
+          "mean_delta_at_least_minus_0p10": true,
+          "nonzero_when_parent_mean_ge_0p10": true,
+          "retains_80pct_parent_mass_when_parent_mass_ge_5": true
+        },
+        "delta": 0.0,
+        "loss_rows": 0,
+        "lost_mass": 0.0,
+        "parent": 0.45,
+        "parent_mass": 9.0,
+        "passed": true,
+        "retained_parent_mass_fraction": 1.0,
+        "win_rows": 0
+      },
+      "qa_2": {
+        "candidate": 0.25,
+        "checks": {
+          "loss_rows_at_most_wins_plus_2": true,
+          "lost_mass_at_most_2": true,
+          "mean_delta_at_least_minus_0p10": true,
+          "nonzero_when_parent_mean_ge_0p10": true,
+          "retains_80pct_parent_mass_when_parent_mass_ge_5": true
+        },
+        "delta": 0.0,
+        "loss_rows": 0,
+        "lost_mass": 0.0,
+        "parent": 0.25,
+        "parent_mass": 5.0,
+        "passed": true,
+        "retained_parent_mass_fraction": 1.0,
+        "win_rows": 0
+      },
+      "vt": {
+        "candidate": 0.0,
+        "checks": {
+          "loss_rows_at_most_wins_plus_2": true,
+          "lost_mass_at_most_2": true,
+          "mean_delta_at_least_minus_0p10": true,
+          "nonzero_when_parent_mean_ge_0p10": true,
+          "retains_80pct_parent_mass_when_parent_mass_ge_5": true
+        },
+        "delta": 0.0,
+        "loss_rows": 0,
+        "lost_mass": 0.0,
+        "parent": 0.0,
+        "parent_mass": 0.0,
+        "passed": true,
+        "retained_parent_mass_fraction": 1.0,
+        "win_rows": 0
+      }
+    }
+  },
+  "gate": "OLMO2_4K_DIRECT_RETENTION_V1",
+  "natural_nll_vs_direct_parent": {
+    "ceiling": 0.1,
+    "mean_nll_delta": 0.0019534677267074585,
+    "passed": true,
+    "tail_mean_nll_delta": 0.0025801286101341248
+  },
+  "overall_4k_retention_pass": true,
+  "post_stop_retention_diagnostic": true,
+  "scope": "fixed 13-task 4K RULER matrix and matched 4K natural NLL against the candidate's direct parent",
+  "status": "PASS"
+}

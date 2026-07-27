@@ -1,0 +1,59 @@
+{
+  "comparisons": {
+    "evq": {
+      "candidate_macro_accuracy": 0.31000000000000005,
+      "macro_delta": -0.004999999999999949,
+      "parent_macro_accuracy": 0.315,
+      "passed": true,
+      "tasks": {
+        "arc_challenge": {
+          "candidate": 0.28,
+          "delta": -0.009999999999999953,
+          "parent": 0.29,
+          "passed": true
+        },
+        "mmlu": {
+          "candidate": 0.34,
+          "delta": 0.0,
+          "parent": 0.34,
+          "passed": true
+        }
+      }
+    },
+    "native": {
+      "candidate_macro_accuracy": 0.315,
+      "macro_delta": 0.0050000000000000044,
+      "parent_macro_accuracy": 0.31,
+      "passed": true,
+      "tasks": {
+        "arc_challenge": {
+          "candidate": 0.38,
+          "delta": 0.030000000000000027,
+          "parent": 0.35,
+          "passed": true
+        },
+        "mmlu": {
+          "candidate": 0.25,
+          "delta": -0.020000000000000018,
+          "parent": 0.27,
+          "passed": true
+        }
+      }
+    }
+  },
+  "gate": "OLMO2_MCQA_RETENTION_GATE_V1",
+  "ready_receipt": "/root/autodl-tmp/olmo2_1b_longalign_assets/receipts/olmo2_mcqa_retention_ready_v2_s20260728.json",
+  "ready_receipt_sha256": "e0b41dec23ff5624c6ae9e715abe7f082f01f4f28d251b39af2cb5b79aec968e",
+  "result_sha256": {
+    "evq_candidate": "11627fe2e22100c365ae5491b3d36275cf9bb9e117fada932da037577c4d4580",
+    "evq_parent": "4b7c02033b9a5af5987d8b8b90f06bc95a5b3e66aee67fa361cbea05e95676ad",
+    "native_candidate": "a70e3d124c14b4ce773ea92e177d3f2e8d2bf75f7dc79eb9d46e38f42f5c13f6",
+    "native_parent": "95937c04d40e3397e1a1a04db2e4dc1a5eb1e43d15da958c5389739bf4aee309"
+  },
+  "scope": "matched parent-to-final general-capability retention on frozen MMLU and ARC-Challenge choice-logprob diagnostics",
+  "status": "PASS",
+  "thresholds": {
+    "macro_accuracy_delta_min": -0.05,
+    "per_task_accuracy_delta_min": -0.1
+  }
+}

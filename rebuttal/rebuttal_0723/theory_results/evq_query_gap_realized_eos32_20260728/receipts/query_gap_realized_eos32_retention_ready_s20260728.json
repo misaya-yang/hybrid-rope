@@ -1,0 +1,409 @@
+{
+  "authorization": "READY is offline evidence only and does not authorize GPU use.",
+  "environment": {
+    "python": "3.12.3",
+    "torch": "2.8.0+cu128"
+  },
+  "evaluator": {
+    "bytes": 36272,
+    "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/code_query_gap_final_20260727/rebuttal/rebuttal_0723/experiments/olmo2_lora_maturity/evaluate_instruct_ruler_transfer.py",
+    "sha256": "0d494c3a14ac5bfce8b22224cf0771b9c131a5ac982ba38b09dd7fc57d4a3a59"
+  },
+  "evaluator_bound_code_sha256": {
+    "adapter_loader": "0a53481bc4a304e4180e15347a4fd79aff0685ca3a32874dcab9a3bfe5e417b0",
+    "checkpoint_contract": "697fae3b005707aa1ff06b49242ed268298751c09b97179246bb8ea92e1a81da",
+    "data_contract": "e5e380b33be7df06c042b96d9ecf4a0dc39b2481b8ad55a81fe023d5cb1787ac",
+    "evaluator": "0d494c3a14ac5bfce8b22224cf0771b9c131a5ac982ba38b09dd7fc57d4a3a59",
+    "evq_contract": "907ec18cde47eb5c7c8dae2c05d9f5e1995c66da4cac3f79db2fb006740d5296",
+    "frequency_application": "092daf93d5ddb00bd6bfccfd4f514373eefe9f93791f31dc5e2c84969b38f1b8",
+    "greedy_generation_and_row_identity": "4ef9a425611566f5ae8991e0c82d87e66d1e705e7feb14d300307c98a711719e",
+    "hybrid_import_dependency": "daf66271c58e7785c8429cec1d86b69d753024ee2fd6870c4c2db55c40cb8075",
+    "lora_conversion": "76130bfde5539b016ea1f830be6ff99f32c104afe1c87209d6ecd811a1a6b541",
+    "screen_frequency": "8ed00b1e82f998bf96b7abe4faf9c6af3af69251cd51f2c93a703a1f6fc86e4a"
+  },
+  "gate": {
+    "bytes": 21342,
+    "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/code_query_gap_final_20260727/rebuttal/rebuttal_0723/experiments/olmo2_lora_maturity/gate_olmo2_4k_retention.py",
+    "sha256": "8d3e58c0b2138444e838853b582a312f3321cc8cee5335a32c35f0352dc3f438"
+  },
+  "inputs": {
+    "checkpoint": {
+      "composite_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f",
+      "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/models/OLMo-2-0425-1B-Instruct",
+      "ready_receipt_sha256": "3988096b444212439ce288787a26c5a35104c73345aed61688ccbb5f544ab22d"
+    },
+    "data": {
+      "cells": {
+        "cwe": {
+          "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/data/ruler_full_merged_n20_s20260802/cells/cwe/L4096/test.jsonl",
+          "rows": 20,
+          "selected_rows": 20,
+          "sha256": "cbd63bcf7696d59307cc2dfeaef49c36401338347a74ab3108944f32de01f42e"
+        },
+        "fwe": {
+          "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/data/ruler_full_merged_n20_s20260802/cells/fwe/L4096/test.jsonl",
+          "rows": 20,
+          "selected_rows": 20,
+          "sha256": "a86fcfb091e7d40314fb3db7c04b801c2ba9a33b00752b5e6280a6bb1881d0a8"
+        },
+        "niah_multikey_1": {
+          "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/data/ruler_full_merged_n20_s20260802/cells/niah_multikey_1/L4096/test.jsonl",
+          "rows": 20,
+          "selected_rows": 20,
+          "sha256": "c1c3c540ffaabdc1781702131006f69938c3dffeaa509744b3c26852c156af4f"
+        },
+        "niah_multikey_2": {
+          "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/data/ruler_full_merged_n20_s20260802/cells/niah_multikey_2/L4096/test.jsonl",
+          "rows": 20,
+          "selected_rows": 20,
+          "sha256": "04500e217ec97bfa4ad5ede05e3022c8185459947d45c119d34960880dead935"
+        },
+        "niah_multikey_3": {
+          "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/data/ruler_full_merged_n20_s20260802/cells/niah_multikey_3/L4096/test.jsonl",
+          "rows": 20,
+          "selected_rows": 20,
+          "sha256": "18ac9fd8d8474ada7bb3a7480d52ec8fed50e5820e847afef6843fc3a4d6685b"
+        },
+        "niah_multiquery": {
+          "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/data/ruler_full_merged_n20_s20260802/cells/niah_multiquery/L4096/test.jsonl",
+          "rows": 20,
+          "selected_rows": 20,
+          "sha256": "70573eb21ad9e122a1d175c79e2c83c5e65a884a4ab45455aae6a43164886f7d"
+        },
+        "niah_multivalue": {
+          "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/data/ruler_full_merged_n20_s20260802/cells/niah_multivalue/L4096/test.jsonl",
+          "rows": 20,
+          "selected_rows": 20,
+          "sha256": "5b011a5f013d35e7ac38caf7d61b9704ff18f65930971c471064edf663b1dc45"
+        },
+        "niah_single_1": {
+          "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/data/ruler_full_merged_n20_s20260802/cells/niah_single_1/L4096/test.jsonl",
+          "rows": 20,
+          "selected_rows": 20,
+          "sha256": "be5ba03fa462b030ef1eea47b82e6c3268daf7850285127ddd155e42319f7ba0"
+        },
+        "niah_single_2": {
+          "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/data/ruler_full_merged_n20_s20260802/cells/niah_single_2/L4096/test.jsonl",
+          "rows": 20,
+          "selected_rows": 20,
+          "sha256": "ef0141f7c615d2f3eaca95ef44e990c9d82a5e542d016fe3df9f12a1a1ab54d2"
+        },
+        "niah_single_3": {
+          "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/data/ruler_full_merged_n20_s20260802/cells/niah_single_3/L4096/test.jsonl",
+          "rows": 20,
+          "selected_rows": 20,
+          "sha256": "83ffaafb96459b4388ed8f367e24b431292ea9fdb0fc98959e61ea4837391733"
+        },
+        "qa_1": {
+          "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/data/ruler_full_merged_n20_s20260802/cells/qa_1/L4096/test.jsonl",
+          "rows": 20,
+          "selected_rows": 20,
+          "sha256": "87478e97d505821318df1bd925abba1429b4f8cebe7c5dc07f1bd2125ba75bde"
+        },
+        "qa_2": {
+          "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/data/ruler_full_merged_n20_s20260802/cells/qa_2/L4096/test.jsonl",
+          "rows": 20,
+          "selected_rows": 20,
+          "sha256": "4b6382b3c22d892f01a211fa12efc6582986b3911e4721c813e00bfb6f437e47"
+        },
+        "vt": {
+          "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/data/ruler_full_merged_n20_s20260802/cells/vt/L4096/test.jsonl",
+          "rows": 20,
+          "selected_rows": 20,
+          "sha256": "ba3d5cf4ff6d5430c405e00d39e5849e7ca6fc50e2c18fd98c82290858a92180"
+        }
+      },
+      "manifest_sha256": "886d94731af31f30698204caa9f30045887c9333d6327e2e1c33555ed57da68c",
+      "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/data/ruler_full_merged_n20_s20260802",
+      "ruler_commit": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+      "tokenizer_sha256": "73fd5254624f39a88e3faac6a8e11300fc3c735ed37880d4f4f08db898eaecca"
+    },
+    "exact_gate": {
+      "bytes": 1812,
+      "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/gates/query_gap_realized_eos32_n8_s20260728.json",
+      "sha256": "688b98ce7adad35a4d529dd3395dfafba87377ff6d7f0671585ee0f8046251f4"
+    },
+    "training_result": {
+      "bytes": 19878,
+      "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/runs/instruct_evq_query_gap_realized_eos32_s20260728/results.json",
+      "sha256": "fb9002e29ba19198b88114b64b264573683bc1f72d238653a5990270711464e1"
+    }
+  },
+  "objective": "After exact+EOS admission, test whether the repair adds no catastrophic 4K forgetting relative to a0ccd and whether the full query-gap pipeline retains 4K capability relative to 95ce.",
+  "protocol": {
+    "arms": [
+      "candidate",
+      "immediate_parent",
+      "pre_query_gap_parent"
+    ],
+    "family_delta_floor": -0.05,
+    "global_delta_floor": -0.05,
+    "greedy": true,
+    "lengths": [
+      4096
+    ],
+    "maximum_excess_loss_rows": 2,
+    "maximum_task_lost_mass": 2.0,
+    "minimum_retained_parent_mass": 0.8,
+    "natural_nll_delta_ceiling": 0.1,
+    "primary_metric": "official_task_score",
+    "row_pairing_required": true,
+    "rows_per_task": 20,
+    "task_delta_floor": -0.1,
+    "tasks": [
+      "niah_single_1",
+      "niah_single_2",
+      "niah_single_3",
+      "niah_multikey_1",
+      "niah_multikey_2",
+      "niah_multikey_3",
+      "niah_multivalue",
+      "niah_multiquery",
+      "vt",
+      "cwe",
+      "fwe",
+      "qa_1",
+      "qa_2"
+    ]
+  },
+  "registered_adapters": {
+    "candidate": {
+      "bytes": 67151633,
+      "metadata": {
+        "adaptation": "qkvo_answer",
+        "adaptation_description": "qkvo_r64_alpha128",
+        "alpha": 128.0,
+        "base_checkpoint_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f",
+        "eos_token_id": 100257,
+        "final_eos_supervised": true,
+        "frequency": "evq",
+        "frequency_sha256_float32": "917a52426b4ac986545c8ec73b115daae3c6515d6b9047f09d30c972ea1a4607",
+        "parent_adapter_sha256": "a0ccd2cf141300ba4489882dda1324b2f237e65444a9a71d687e8c5fad57ae8b",
+        "position_policy": "semantic_query_block_realized_gap_curriculum",
+        "rank": 64,
+        "routing_data_sha256": "4a2d792fa6f1b6c4dfd6c4d24ad99069f81c3d5b9f8a7334ea6090cb25c52cac",
+        "seed": 20260728,
+        "stage": "counterfactual_routing_realized_gap_16k_eos_v2",
+        "supervision_contract": "numeric_answer_plus_immediate_eos_v1",
+        "termination_weight": 1.0,
+        "training_sequence_length": 4096,
+        "virtual_target_length": 16384
+      },
+      "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/runs/instruct_evq_query_gap_realized_eos32_s20260728/adapter.pt",
+      "sha256": "2119c8c5683f2b244c3dd9a1f3b2587c50eeb81314a82ec0dacd47f2ec889550",
+      "state_tensors": 128
+    },
+    "immediate_parent": {
+      "bytes": 67151441,
+      "metadata": {
+        "adaptation": "qkvo_answer",
+        "adaptation_description": "qkvo_r64_alpha128",
+        "alpha": 128.0,
+        "base_checkpoint_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f",
+        "frequency": "evq",
+        "frequency_sha256_float32": "917a52426b4ac986545c8ec73b115daae3c6515d6b9047f09d30c972ea1a4607",
+        "parent_adapter_sha256": "95ceeb70117c73233915760a9756b9b2a98416ec188b125054da8ced75cad16a",
+        "position_policy": "semantic_query_block_continuous_gap",
+        "rank": 64,
+        "routing_data_sha256": "83a745b25893a73749dd85ff66dea5b305be6e4e6dcf16a5d0e13cae935ec63b",
+        "seed": 20260728,
+        "stage": "counterfactual_routing_semantic_query_gap_16k",
+        "training_sequence_length": 4096,
+        "virtual_target_length": 16384
+      },
+      "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/runs/instruct_evq_query_gap_canary100_s20260728/adapter.pt",
+      "sha256": "a0ccd2cf141300ba4489882dda1324b2f237e65444a9a71d687e8c5fad57ae8b",
+      "state_tensors": 128
+    },
+    "pre_query_gap_parent": {
+      "bytes": 67151313,
+      "metadata": {
+        "adaptation": "qkvo_answer",
+        "adaptation_description": "qkvo_r64_alpha128",
+        "alpha": 128.0,
+        "base_checkpoint_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f",
+        "frequency": "evq",
+        "frequency_sha256_float32": "917a52426b4ac986545c8ec73b115daae3c6515d6b9047f09d30c972ea1a4607",
+        "parent_adapter_sha256": "47e72c5e58be443a3f088787b58df415538f7cdb12e9f76d799dbb2b85155ee0",
+        "rank": 64,
+        "routing_data_sha256": "83a745b25893a73749dd85ff66dea5b305be6e4e6dcf16a5d0e13cae935ec63b",
+        "seed": 20260725,
+        "stage": "counterfactual_routing_4k",
+        "training_sequence_length": 4096
+      },
+      "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/runs/instruct_evq_counterfactual_routing_4k_300_s20260725/adapter.pt",
+      "sha256": "95ceeb70117c73233915760a9756b9b2a98416ec188b125054da8ced75cad16a",
+      "state_tensors": 128
+    }
+  },
+  "registered_commands": {
+    "candidate": [
+      "/root/miniconda3/bin/python",
+      "-m",
+      "rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.evaluate_instruct_ruler_transfer",
+      "--checkpoint",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/models/OLMo-2-0425-1B-Instruct",
+      "--ready-receipt",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/receipts/instruct_4k_conversion_ready.json",
+      "--experiment-ready-receipt",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/receipts/query_gap_realized_eos32_retention_ready_s20260728.json",
+      "--experiment-role",
+      "candidate",
+      "--data-root",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/data/ruler_full_merged_n20_s20260802",
+      "--output",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/evals/query_gap_realized_eos32_retention_candidate_s20260728",
+      "--frequency",
+      "evq",
+      "--adapter",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/runs/instruct_evq_query_gap_realized_eos32_s20260728/adapter.pt",
+      "--rank",
+      "64",
+      "--alpha",
+      "128",
+      "--tasks",
+      "niah_single_1",
+      "niah_single_2",
+      "niah_single_3",
+      "niah_multikey_1",
+      "niah_multikey_2",
+      "niah_multikey_3",
+      "niah_multivalue",
+      "niah_multiquery",
+      "vt",
+      "cwe",
+      "fwe",
+      "qa_1",
+      "qa_2",
+      "--lengths",
+      "4096",
+      "--limit-per-cell",
+      "20"
+    ],
+    "immediate_parent": [
+      "/root/miniconda3/bin/python",
+      "-m",
+      "rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.evaluate_instruct_ruler_transfer",
+      "--checkpoint",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/models/OLMo-2-0425-1B-Instruct",
+      "--ready-receipt",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/receipts/instruct_4k_conversion_ready.json",
+      "--experiment-ready-receipt",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/receipts/query_gap_realized_eos32_retention_ready_s20260728.json",
+      "--experiment-role",
+      "immediate_parent",
+      "--data-root",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/data/ruler_full_merged_n20_s20260802",
+      "--output",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/evals/query_gap_realized_eos32_retention_immediate_parent_s20260728",
+      "--frequency",
+      "evq",
+      "--adapter",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/runs/instruct_evq_query_gap_canary100_s20260728/adapter.pt",
+      "--rank",
+      "64",
+      "--alpha",
+      "128",
+      "--tasks",
+      "niah_single_1",
+      "niah_single_2",
+      "niah_single_3",
+      "niah_multikey_1",
+      "niah_multikey_2",
+      "niah_multikey_3",
+      "niah_multivalue",
+      "niah_multiquery",
+      "vt",
+      "cwe",
+      "fwe",
+      "qa_1",
+      "qa_2",
+      "--lengths",
+      "4096",
+      "--limit-per-cell",
+      "20"
+    ],
+    "pre_query_gap_parent": [
+      "/root/miniconda3/bin/python",
+      "-m",
+      "rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.evaluate_instruct_ruler_transfer",
+      "--checkpoint",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/models/OLMo-2-0425-1B-Instruct",
+      "--ready-receipt",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/receipts/instruct_4k_conversion_ready.json",
+      "--experiment-ready-receipt",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/receipts/query_gap_realized_eos32_retention_ready_s20260728.json",
+      "--experiment-role",
+      "pre_query_gap_parent",
+      "--data-root",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/data/ruler_full_merged_n20_s20260802",
+      "--output",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/evals/query_gap_realized_eos32_retention_pre_parent_s20260728",
+      "--frequency",
+      "evq",
+      "--adapter",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/runs/instruct_evq_counterfactual_routing_4k_300_s20260725/adapter.pt",
+      "--rank",
+      "64",
+      "--alpha",
+      "128",
+      "--tasks",
+      "niah_single_1",
+      "niah_single_2",
+      "niah_single_3",
+      "niah_multikey_1",
+      "niah_multikey_2",
+      "niah_multikey_3",
+      "niah_multivalue",
+      "niah_multiquery",
+      "vt",
+      "cwe",
+      "fwe",
+      "qa_1",
+      "qa_2",
+      "--lengths",
+      "4096",
+      "--limit-per-cell",
+      "20"
+    ],
+    "retention_gate": [
+      "/root/miniconda3/bin/python",
+      "-m",
+      "rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.gate_olmo2_4k_retention",
+      "--training-result",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/runs/instruct_evq_query_gap_realized_eos32_s20260728/results.json",
+      "--exact-gate",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/gates/query_gap_realized_eos32_n8_s20260728.json",
+      "--experiment-ready-receipt",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/receipts/query_gap_realized_eos32_retention_ready_s20260728.json",
+      "--candidate-result",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/evals/query_gap_realized_eos32_retention_candidate_s20260728/results.json",
+      "--candidate-examples",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/evals/query_gap_realized_eos32_retention_candidate_s20260728/examples.jsonl",
+      "--immediate-parent-result",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/evals/query_gap_realized_eos32_retention_immediate_parent_s20260728/results.json",
+      "--immediate-parent-examples",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/evals/query_gap_realized_eos32_retention_immediate_parent_s20260728/examples.jsonl",
+      "--pre-parent-result",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/evals/query_gap_realized_eos32_retention_pre_parent_s20260728/results.json",
+      "--pre-parent-examples",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/evals/query_gap_realized_eos32_retention_pre_parent_s20260728/examples.jsonl",
+      "--output",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/gates/query_gap_realized_eos32_retention_s20260728.json"
+    ]
+  },
+  "registered_outputs": {
+    "candidate": "/root/autodl-tmp/olmo2_1b_longalign_assets/evals/query_gap_realized_eos32_retention_candidate_s20260728",
+    "immediate_parent": "/root/autodl-tmp/olmo2_1b_longalign_assets/evals/query_gap_realized_eos32_retention_immediate_parent_s20260728",
+    "pre_query_gap_parent": "/root/autodl-tmp/olmo2_1b_longalign_assets/evals/query_gap_realized_eos32_retention_pre_parent_s20260728"
+  },
+  "registered_working_directory": "/root/autodl-tmp/olmo2_1b_longalign_assets/code_query_gap_final_20260727",
+  "required_execution_order": [
+    "candidate",
+    "immediate_parent",
+    "pre_query_gap_parent",
+    "retention_gate"
+  ],
+  "scope_boundary": "This is a fixed 13-task 4K RULER and matched natural-NLL gate; it is not global retention relative to untouched OLMo-2.",
+  "status": "OLMO2_4K_RETENTION_READY_V1"
+}

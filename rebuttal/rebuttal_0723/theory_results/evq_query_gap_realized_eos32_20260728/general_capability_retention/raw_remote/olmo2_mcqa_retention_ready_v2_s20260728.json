@@ -1,0 +1,201 @@
+{
+  "adapters": {
+    "evq_candidate": {
+      "frequency": "evq",
+      "metadata": {
+        "adaptation": "qkvo_answer",
+        "adaptation_description": "qkvo_r64_alpha128",
+        "alpha": 128.0,
+        "base_checkpoint_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f",
+        "eos_token_id": 100257,
+        "final_eos_supervised": true,
+        "frequency": "evq",
+        "frequency_sha256_float32": "917a52426b4ac986545c8ec73b115daae3c6515d6b9047f09d30c972ea1a4607",
+        "parent_adapter_sha256": "a0ccd2cf141300ba4489882dda1324b2f237e65444a9a71d687e8c5fad57ae8b",
+        "position_policy": "semantic_query_block_realized_gap_curriculum",
+        "rank": 64,
+        "routing_data_sha256": "4a2d792fa6f1b6c4dfd6c4d24ad99069f81c3d5b9f8a7334ea6090cb25c52cac",
+        "seed": 20260728,
+        "stage": "counterfactual_routing_realized_gap_16k_eos_v2",
+        "supervision_contract": "numeric_answer_plus_immediate_eos_v1",
+        "termination_weight": 1.0,
+        "training_sequence_length": 4096,
+        "virtual_target_length": 16384
+      },
+      "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/runs/instruct_evq_query_gap_realized_eos32_s20260728/adapter.pt",
+      "sha256": "2119c8c5683f2b244c3dd9a1f3b2587c50eeb81314a82ec0dacd47f2ec889550"
+    },
+    "evq_parent": {
+      "frequency": "evq",
+      "metadata": {
+        "adaptation": "qkvo_answer",
+        "adaptation_description": "qkvo_r64_alpha128",
+        "alpha": 128.0,
+        "base_checkpoint_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f",
+        "frequency": "evq",
+        "frequency_sha256_float32": "917a52426b4ac986545c8ec73b115daae3c6515d6b9047f09d30c972ea1a4607",
+        "parent_adapter_sha256": "95ceeb70117c73233915760a9756b9b2a98416ec188b125054da8ced75cad16a",
+        "position_policy": "semantic_query_block_continuous_gap",
+        "rank": 64,
+        "routing_data_sha256": "83a745b25893a73749dd85ff66dea5b305be6e4e6dcf16a5d0e13cae935ec63b",
+        "seed": 20260728,
+        "stage": "counterfactual_routing_semantic_query_gap_16k",
+        "training_sequence_length": 4096,
+        "virtual_target_length": 16384
+      },
+      "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/runs/instruct_evq_query_gap_canary100_s20260728/adapter.pt",
+      "sha256": "a0ccd2cf141300ba4489882dda1324b2f237e65444a9a71d687e8c5fad57ae8b"
+    },
+    "native_candidate": {
+      "frequency": "native",
+      "metadata": {
+        "adaptation": "qkvo_answer",
+        "adaptation_description": "qkvo_r64_alpha128",
+        "alpha": 128.0,
+        "base_checkpoint_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f",
+        "eos_token_id": 100257,
+        "final_eos_supervised": true,
+        "frequency": "native",
+        "frequency_sha256_float32": "dde15c31724177356ae954d6e11fb337e6fccef56e4520a905cac3f0d9885b34",
+        "parent_adapter_sha256": "c140874fe00849fb9a51a8528dcf6f55215cc28f9e22f6bdf3f649f2ce421dbb",
+        "position_policy": "semantic_query_block_realized_gap_curriculum",
+        "rank": 64,
+        "routing_data_sha256": "4a2d792fa6f1b6c4dfd6c4d24ad99069f81c3d5b9f8a7334ea6090cb25c52cac",
+        "seed": 20260728,
+        "stage": "counterfactual_routing_realized_gap_16k_eos_v2",
+        "supervision_contract": "numeric_answer_plus_immediate_eos_v1",
+        "termination_weight": 1.0,
+        "training_sequence_length": 4096,
+        "virtual_target_length": 16384
+      },
+      "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/runs/instruct_native_query_gap100_realized_eos32_s20260728/adapter.pt",
+      "sha256": "8b8ffc577b09a146a8bff5699a81cd550a96f275c2ffc9d556f9a24ec6f6a929"
+    },
+    "native_parent": {
+      "frequency": "native",
+      "metadata": {
+        "adaptation": "qkvo_answer",
+        "adaptation_description": "qkvo_r64_alpha128",
+        "alpha": 128.0,
+        "base_checkpoint_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f",
+        "frequency": "native",
+        "frequency_sha256_float32": "dde15c31724177356ae954d6e11fb337e6fccef56e4520a905cac3f0d9885b34",
+        "parent_adapter_sha256": "6570ab94aec68431dd4e261eb3ef342ef72253357aa65a0d37b0a018df2f3f8d",
+        "position_policy": "semantic_query_block_continuous_gap",
+        "rank": 64,
+        "routing_data_sha256": "83a745b25893a73749dd85ff66dea5b305be6e4e6dcf16a5d0e13cae935ec63b",
+        "seed": 20260728,
+        "stage": "counterfactual_routing_semantic_query_gap_16k",
+        "training_sequence_length": 4096,
+        "virtual_target_length": 16384
+      },
+      "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/runs/instruct_native_query_gap_canary100_s20260728/adapter.pt",
+      "sha256": "c140874fe00849fb9a51a8528dcf6f55215cc28f9e22f6bdf3f649f2ce421dbb"
+    }
+  },
+  "alpha": 128.0,
+  "bound_code_sha256": {
+    "adapter_loader": "0a53481bc4a304e4180e15347a4fd79aff0685ca3a32874dcab9a3bfe5e417b0",
+    "evaluator": "8f6f44f4bde32cd0666f3f75d488c5895e1e6bc7a99e17d4a0b6a4d1741ef4ab",
+    "frequency": "092daf93d5ddb00bd6bfccfd4f514373eefe9f93791f31dc5e2c84969b38f1b8",
+    "model_loader": "76130bfde5539b016ea1f830be6ff99f32c104afe1c87209d6ecd811a1a6b541"
+  },
+  "budget": {
+    "arms": 4,
+    "no_parameter_sweep": true,
+    "no_training": true,
+    "rows_per_arm": 200,
+    "total_rows": 800
+  },
+  "checkpoint": {
+    "composite_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f",
+    "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/models/OLMo-2-0425-1B-Instruct",
+    "ready_receipt": "/root/autodl-tmp/olmo2_1b_longalign_assets/receipts/instruct_4k_conversion_ready.json",
+    "ready_receipt_sha256": "3988096b444212439ce288787a26c5a35104c73345aed61688ccbb5f544ab22d"
+  },
+  "commands": {
+    "evq_candidate": [
+      "/root/autodl-tmp/evq_5090_eval_bundle/runtime/bin/python",
+      "-m",
+      "rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.evaluate_olmo2_mcqa_retention",
+      "evaluate",
+      "--ready-receipt",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/receipts/olmo2_mcqa_retention_ready_v2_s20260728.json",
+      "--role",
+      "evq_candidate"
+    ],
+    "evq_parent": [
+      "/root/autodl-tmp/evq_5090_eval_bundle/runtime/bin/python",
+      "-m",
+      "rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.evaluate_olmo2_mcqa_retention",
+      "evaluate",
+      "--ready-receipt",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/receipts/olmo2_mcqa_retention_ready_v2_s20260728.json",
+      "--role",
+      "evq_parent"
+    ],
+    "gate": [
+      "/root/autodl-tmp/evq_5090_eval_bundle/runtime/bin/python",
+      "-m",
+      "rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.evaluate_olmo2_mcqa_retention",
+      "gate",
+      "--ready-receipt",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/receipts/olmo2_mcqa_retention_ready_v2_s20260728.json",
+      "--output",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/gates/olmo2_mcqa_retention_v2_s20260728.json"
+    ],
+    "native_candidate": [
+      "/root/autodl-tmp/evq_5090_eval_bundle/runtime/bin/python",
+      "-m",
+      "rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.evaluate_olmo2_mcqa_retention",
+      "evaluate",
+      "--ready-receipt",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/receipts/olmo2_mcqa_retention_ready_v2_s20260728.json",
+      "--role",
+      "native_candidate"
+    ],
+    "native_parent": [
+      "/root/autodl-tmp/evq_5090_eval_bundle/runtime/bin/python",
+      "-m",
+      "rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.evaluate_olmo2_mcqa_retention",
+      "evaluate",
+      "--ready-receipt",
+      "/root/autodl-tmp/olmo2_1b_longalign_assets/receipts/olmo2_mcqa_retention_ready_v2_s20260728.json",
+      "--role",
+      "native_parent"
+    ]
+  },
+  "concern": "verify that the 4K-only query-gap/EOS continuation does not cause broad general knowledge or reasoning degradation",
+  "data": {
+    "manifest_sha256": "313a16bc6852629bbfa6d0b4c0253862650c670d018d3d5b8282c908c6cae963",
+    "root": "/root/autodl-tmp/olmo2_1b_longalign_assets/data/mcqa_retention_mmlu_arc_n100_s20260728",
+    "row_count": 200,
+    "selected_rows": 200,
+    "tasks": {
+      "arc_challenge": {
+        "available_rows": 100,
+        "selected_identity_sha256": "45b55a697c1bde684daa1b31469ef84cb0feaf47e5532b58c1cebc68ba02760f",
+        "selected_rows": 100,
+        "selection": "lexicographically smallest prompt_sha256, then example_id"
+      },
+      "mmlu": {
+        "available_rows": 100,
+        "selected_identity_sha256": "87f2d53c1922a86514e78c4743f6346a67fc7520062af6bb13bb613b330ddc2a",
+        "selected_rows": 100,
+        "selection": "lexicographically smallest prompt_sha256, then example_id"
+      }
+    }
+  },
+  "gate_output": "/root/autodl-tmp/olmo2_1b_longalign_assets/gates/olmo2_mcqa_retention_v2_s20260728.json",
+  "limit_per_task": 100,
+  "outputs": {
+    "evq_candidate": "/root/autodl-tmp/olmo2_1b_longalign_assets/evals/mcqa_retention_evq_candidate_s20260728",
+    "evq_parent": "/root/autodl-tmp/olmo2_1b_longalign_assets/evals/mcqa_retention_evq_parent_s20260728",
+    "native_candidate": "/root/autodl-tmp/olmo2_1b_longalign_assets/evals/mcqa_retention_native_candidate_s20260728",
+    "native_parent": "/root/autodl-tmp/olmo2_1b_longalign_assets/evals/mcqa_retention_native_parent_s20260728"
+  },
+  "purpose": "matched general-capability retention on frozen MMLU and ARC-Challenge; not a long-context capability claim",
+  "rank": 64,
+  "status": "OLMO2_MCQA_RETENTION_READY_V1",
+  "stop_condition": "stop after all four matched arms and one fixed retention gate"
+}

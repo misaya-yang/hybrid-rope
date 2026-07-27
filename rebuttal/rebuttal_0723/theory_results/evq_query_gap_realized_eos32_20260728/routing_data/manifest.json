@@ -1,0 +1,117 @@
+{
+  "answer_string_tokenizer_roundtrip_exact": true,
+  "checkpoint": "/root/autodl-tmp/olmo2_1b_longalign_assets/models/OLMo-2-0425-1B-Instruct",
+  "eos_token_id": 100257,
+  "final_eos_supervised": true,
+  "format_version": 2,
+  "hard_maximum_training_length": 4096,
+  "hard_maximum_training_position_id": 4095,
+  "labels_only_cover_answer_and_final_eos": true,
+  "official_eval_template_used_for_training": false,
+  "raw": {
+    "calibration": {
+      "path": "raw_calibration/routing_calibration/test.jsonl",
+      "sha256": "d4df5c33d444f57f16b2c1885cf469c85915316e83de745bdd331b1d39b53db3"
+    },
+    "train": {
+      "path": "raw_train/routing_train/test.jsonl",
+      "sha256": "947f8d483a577ea9337ae7f7067e5e559d37e4c4e696c0b6f400cbc5798137cb"
+    }
+  },
+  "raw_rows_reused_from": "/root/autodl-tmp/olmo2_1b_longalign_assets/data/routing_pairs_4k_v1",
+  "ruler_commit": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+  "sets": {
+    "calibration": {
+      "manifest": {
+        "answer_and_eos_only": true,
+        "answer_string_tokenizer_roundtrip_exact": true,
+        "counterfactual_value_swap": true,
+        "eos_token_id": 100257,
+        "files": {
+          "input_ids.npy": "506322c12fb07a6c0bc233da152a20d9727b5961865c5741868af4e396b344d8",
+          "labels.npy": "c1e28d53a5c8589f2e0e68ea8ff3a75c6ea9cb1d6f4440b683fd4bf698770aca",
+          "rows.jsonl": "15ce2bb934f3edc41440ba776fb560c2b97e383bc05b50e86e6bdd3d9d03d7f1"
+        },
+        "final_eos_supervised": true,
+        "format_version": 2,
+        "key_value_blocks_per_sequence": 8,
+        "labels_only_cover_answer_and_final_eos": true,
+        "maximum_answer_tokens": 3,
+        "maximum_prompt_tokens": 3966,
+        "maximum_training_length": 4096,
+        "maximum_training_position_id": 4095,
+        "minimum_answer_tokens": 3,
+        "minimum_prompt_tokens": 3945,
+        "purpose": "counterfactual_routing_calibration",
+        "queries_per_sequence": 1,
+        "seed": 20304725,
+        "shape": [
+          128,
+          2,
+          4096
+        ],
+        "status": "OLMO2_4K_COUNTERFACTUAL_ROUTING_SET_PREPARED_V2",
+        "supervised_answer_and_eos_tokens": 1024,
+        "supervised_answer_tokens": 768,
+        "supervised_eos_tokens": 256,
+        "supervision_contract": "numeric_answer_plus_immediate_eos_v1",
+        "variant_names": [
+          "sourced",
+          "value_swapped"
+        ]
+      },
+      "manifest_sha256": "16b13d9d1717c2fba053963726744a7641bd9093bd09019a6e690df596c9809e",
+      "path": "calibration"
+    },
+    "train": {
+      "manifest": {
+        "answer_and_eos_only": true,
+        "answer_string_tokenizer_roundtrip_exact": true,
+        "counterfactual_value_swap": true,
+        "eos_token_id": 100257,
+        "files": {
+          "input_ids.npy": "86a99e58d4c5c6df339f3b310dd0230977db2a2d8fefdfabc7a621e624fd5a97",
+          "labels.npy": "0499b13126727bd4a3a071b4fad020f15aa620587e9467cde9379790a1ccbd8e",
+          "rows.jsonl": "41e8d111c9f4ac9e5ad35c852f78be2ccd1e71e4068fa83187113193aeedf5e9"
+        },
+        "final_eos_supervised": true,
+        "format_version": 2,
+        "key_value_blocks_per_sequence": 8,
+        "labels_only_cover_answer_and_final_eos": true,
+        "maximum_answer_tokens": 3,
+        "maximum_prompt_tokens": 3968,
+        "maximum_training_length": 4096,
+        "maximum_training_position_id": 4095,
+        "minimum_answer_tokens": 3,
+        "minimum_prompt_tokens": 3353,
+        "purpose": "counterfactual_routing_training",
+        "queries_per_sequence": 1,
+        "seed": 20293725,
+        "shape": [
+          1024,
+          2,
+          4096
+        ],
+        "status": "OLMO2_4K_COUNTERFACTUAL_ROUTING_SET_PREPARED_V2",
+        "supervised_answer_and_eos_tokens": 8192,
+        "supervised_answer_tokens": 6144,
+        "supervised_eos_tokens": 2048,
+        "supervision_contract": "numeric_answer_plus_immediate_eos_v1",
+        "variant_names": [
+          "sourced",
+          "value_swapped"
+        ]
+      },
+      "manifest_sha256": "3b0b0eff9a61e65d84ad4431b3fd556585d54761f06d226a4f90b12d72a31408",
+      "path": "train"
+    }
+  },
+  "status": "OLMO2_4K_COUNTERFACTUAL_ROUTING_DATA_PREPARED_V2",
+  "supervision_contract": "numeric_answer_plus_immediate_eos_v1",
+  "templates": {
+    "calibration": "Study the following ledger of named identifiers.\n{context}\nReturn the identifier assigned to {query}. The special magic {type_needle_v} for {query} mentioned in the provided text are",
+    "train": "An access-code registry is embedded below. Memorize which number belongs to each handle.\n{context}\nWhich access code belongs to {query}? The special magic {type_needle_v} for {query} mentioned in the provided text are"
+  },
+  "tokenizer_sha256": "73fd5254624f39a88e3faac6a8e11300fc3c735ed37880d4f4f08db898eaecca",
+  "train_eval_values_disjoint": true
+}

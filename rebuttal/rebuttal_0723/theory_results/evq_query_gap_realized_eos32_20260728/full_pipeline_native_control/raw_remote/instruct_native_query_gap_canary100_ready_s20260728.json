@@ -1,0 +1,222 @@
+{
+  "authorization": "User explicitly authorized the matched Native +100 run in the active goal.",
+  "derived_from_evq_ready_receipt_sha256": "da1d6c69a7a413737df4dc9b59666f27400a77bf74450fdf1a89dd757d74735c",
+  "inputs": {
+    "checkpoint": {
+      "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/models/OLMo-2-0425-1B-Instruct",
+      "tokenizer_sha256": "73fd5254624f39a88e3faac6a8e11300fc3c735ed37880d4f4f08db898eaecca"
+    },
+    "conversion": {
+      "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/code/rebuttal/rebuttal_0723/experiments/olmo2_lora_conversion.py",
+      "sha256": "3934acf3c40f0a4ee18379db222e336f08b971a8590da248fef6e7869429708a"
+    },
+    "parent_adapter": {
+      "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/runs/instruct_native_counterfactual_routing_4k_300_s20260725/adapter.pt",
+      "sha256": "6570ab94aec68431dd4e261eb3ef342ef72253357aa65a0d37b0a018df2f3f8d"
+    },
+    "routing_data": {
+      "manifest": {
+        "sha256": "83a745b25893a73749dd85ff66dea5b305be6e4e6dcf16a5d0e13cae935ec63b"
+      },
+      "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/data/routing_pairs_4k_v1"
+    }
+  },
+  "preflight": {
+    "all_rows_checked": true,
+    "counterfactual_pair_position_ids_identical": true,
+    "geometry": {
+      "calibration": {
+        "bounds": [
+          {
+            "maximum_position_id": 4094,
+            "maximum_virtual_gap_far": 3902,
+            "minimum_virtual_gap_near": 101,
+            "offset": 0
+          },
+          {
+            "maximum_position_id": 4095,
+            "maximum_virtual_gap_far": 3903,
+            "minimum_virtual_gap_near": 102,
+            "offset": 1
+          },
+          {
+            "maximum_position_id": 8190,
+            "maximum_virtual_gap_far": 7998,
+            "minimum_virtual_gap_near": 4197,
+            "offset": 4096
+          },
+          {
+            "maximum_position_id": 8191,
+            "maximum_virtual_gap_far": 7999,
+            "minimum_virtual_gap_near": 4198,
+            "offset": 4097
+          },
+          {
+            "maximum_position_id": 12286,
+            "maximum_virtual_gap_far": 12094,
+            "minimum_virtual_gap_near": 8293,
+            "offset": 8192
+          },
+          {
+            "maximum_position_id": 12287,
+            "maximum_virtual_gap_far": 12095,
+            "minimum_virtual_gap_near": 8294,
+            "offset": 8193
+          },
+          {
+            "maximum_position_id": 16383,
+            "maximum_virtual_gap_far": 16191,
+            "minimum_virtual_gap_near": 12390,
+            "offset": 12289
+          }
+        ],
+        "query_start_max": 3932,
+        "query_start_min": 3919,
+        "rows": 128
+      },
+      "train": {
+        "bounds": [
+          {
+            "maximum_position_id": 4094,
+            "maximum_virtual_gap_far": 3926,
+            "minimum_virtual_gap_near": 53,
+            "offset": 0
+          },
+          {
+            "maximum_position_id": 4095,
+            "maximum_virtual_gap_far": 3927,
+            "minimum_virtual_gap_near": 54,
+            "offset": 1
+          },
+          {
+            "maximum_position_id": 8190,
+            "maximum_virtual_gap_far": 8022,
+            "minimum_virtual_gap_near": 4149,
+            "offset": 4096
+          },
+          {
+            "maximum_position_id": 8191,
+            "maximum_virtual_gap_far": 8023,
+            "minimum_virtual_gap_near": 4150,
+            "offset": 4097
+          },
+          {
+            "maximum_position_id": 12286,
+            "maximum_virtual_gap_far": 12118,
+            "minimum_virtual_gap_near": 8245,
+            "offset": 8192
+          },
+          {
+            "maximum_position_id": 12287,
+            "maximum_virtual_gap_far": 12119,
+            "minimum_virtual_gap_near": 8246,
+            "offset": 8193
+          },
+          {
+            "maximum_position_id": 16383,
+            "maximum_virtual_gap_far": 16215,
+            "minimum_virtual_gap_near": 12342,
+            "offset": 12289
+          }
+        ],
+        "query_start_max": 3940,
+        "query_start_min": 3326,
+        "rows": 1024
+      }
+    },
+    "physical_sequence_length": 4096,
+    "query_offset_independent_of_source": true
+  },
+  "protocol": {
+    "alpha": 128.0,
+    "compile_mode": "max-autotune-no-cudagraphs",
+    "counterfactual_margin": 1.0,
+    "counterfactual_margin_weight": 0.5,
+    "family_pattern": [
+      "routing",
+      "routing",
+      "natural"
+    ],
+    "frequency": "native",
+    "global_batch_size": 8,
+    "gradient_accumulation_steps": 2,
+    "hard_maximum_training_length": 4096,
+    "hard_maximum_training_position_id": 4095,
+    "learning_rate": 5e-05,
+    "micro_batch_size": 4,
+    "natural_eval_rows": 16,
+    "position_policy": "semantic_query_block_continuous_gap",
+    "query_offset_stream_sha256": "1b1a42992948378f4f51b3a8f26d92320cf6fdbcefc2608ff45a82b33df76087",
+    "rank": 64,
+    "routing_optimizer_steps": 67,
+    "routing_pair_exposures": 268,
+    "seed": 20260728,
+    "steps": 100,
+    "virtual_bucket_weights": [
+      1,
+      1,
+      2
+    ],
+    "virtual_target_length": 16384,
+    "warmup_steps": 20
+  },
+  "registered_command": [
+    "/root/miniconda3/bin/python",
+    "-m",
+    "rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.train_4k_counterfactual_routing",
+    "--checkpoint",
+    "/root/autodl-tmp/olmo2_1b_longalign_assets/models/OLMo-2-0425-1B-Instruct",
+    "--parent-adapter",
+    "/root/autodl-tmp/olmo2_1b_longalign_assets/runs/instruct_native_counterfactual_routing_4k_300_s20260725/adapter.pt",
+    "--prepared-data",
+    "/root/autodl-tmp/olmo2_1b_longalign_assets/data/prepared_maturity_v1",
+    "--routing-data",
+    "/root/autodl-tmp/olmo2_1b_longalign_assets/data/routing_pairs_4k_v1",
+    "--background-dir",
+    "/root/autodl-tmp/olmo2_1b_longalign_assets/data/probe_background_v1",
+    "--ready-receipt",
+    "/root/autodl-tmp/olmo2_1b_longalign_assets/receipts/instruct_4k_conversion_ready.json",
+    "--experiment-ready-receipt",
+    "/root/autodl-tmp/olmo2_1b_longalign_assets/receipts/instruct_native_query_gap_canary100_ready_s20260728.json",
+    "--output",
+    "/root/autodl-tmp/olmo2_1b_longalign_assets/runs/instruct_native_query_gap_canary100_s20260728",
+    "--frequency",
+    "native",
+    "--steps",
+    "100",
+    "--micro-batch-size",
+    "4",
+    "--gradient-accumulation-steps",
+    "2",
+    "--rank",
+    "64",
+    "--alpha",
+    "128",
+    "--learning-rate",
+    "5e-5",
+    "--warmup-steps",
+    "20",
+    "--counterfactual-margin",
+    "1.0",
+    "--counterfactual-margin-weight",
+    "0.5",
+    "--compile-mode",
+    "max-autotune-no-cudagraphs",
+    "--natural-eval-rows",
+    "16",
+    "--virtual-target-length",
+    "16384",
+    "--virtual-bucket-weights",
+    "1",
+    "1",
+    "2",
+    "--seed",
+    "20260728"
+  ],
+  "run_output": "/root/autodl-tmp/olmo2_1b_longalign_assets/runs/instruct_native_query_gap_canary100_s20260728",
+  "status": "OLMO2_4K_VIRTUAL_QUERY_GAP_READY",
+  "trainer": {
+    "path": "/root/autodl-tmp/olmo2_1b_longalign_assets/code/rebuttal/rebuttal_0723/experiments/olmo2_lora_maturity/train_4k_counterfactual_routing.py",
+    "sha256": "8b3b45330f1ecd1abe7e897436ad542ffbe03280a5b2d0f50542e77c801167e7"
+  }
+}

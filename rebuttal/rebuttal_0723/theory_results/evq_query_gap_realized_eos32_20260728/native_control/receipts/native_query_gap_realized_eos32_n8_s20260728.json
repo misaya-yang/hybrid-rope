@@ -1,0 +1,67 @@
+{
+  "checks": {
+    "L16384_exact_generation_at_least_2_of_8": false,
+    "L4096_exact_generation_at_least_8_of_8": false,
+    "L8192_exact_generation_at_least_6_of_8": false
+  },
+  "counts": {
+    "16384": {
+      "answer_eos_token_exact": 0,
+      "eos_terminated": 0,
+      "exact_generation_passes": 0,
+      "examples": 8,
+      "full_string_exact": 0,
+      "minimum_exact_generation_passes": 2
+    },
+    "4096": {
+      "answer_eos_token_exact": 7,
+      "eos_terminated": 8,
+      "exact_generation_passes": 7,
+      "examples": 8,
+      "full_string_exact": 7,
+      "minimum_exact_generation_passes": 8
+    },
+    "8192": {
+      "answer_eos_token_exact": 0,
+      "eos_terminated": 8,
+      "exact_generation_passes": 0,
+      "examples": 8,
+      "full_string_exact": 0,
+      "minimum_exact_generation_passes": 6
+    }
+  },
+  "expanded_evaluation_authorized": false,
+  "gate": "OLMO2_MINIMAL_FULL_STRING_EXACT_EOS_V1",
+  "ignored_for_admission": [
+    "first_number_exact",
+    "official_string_match",
+    "NLL",
+    "PPL"
+  ],
+  "parent_baseline_counts": {
+    "16384": {
+      "answer_eos_token_exact": 0,
+      "eos_terminated": 0,
+      "exact_generation_passes": 0,
+      "examples": 8,
+      "full_string_exact": 0
+    },
+    "4096": {
+      "answer_eos_token_exact": 0,
+      "eos_terminated": 8,
+      "exact_generation_passes": 0,
+      "examples": 8,
+      "full_string_exact": 0
+    },
+    "8192": {
+      "answer_eos_token_exact": 0,
+      "eos_terminated": 0,
+      "exact_generation_passes": 0,
+      "examples": 8,
+      "full_string_exact": 0
+    }
+  },
+  "purpose": "admission to expanded evaluation only; not final capability or no-catastrophic-forgetting evidence",
+  "status": "STOP",
+  "success_metric": "literal whole decoded generated string exact with observed terminal EOS"
+}

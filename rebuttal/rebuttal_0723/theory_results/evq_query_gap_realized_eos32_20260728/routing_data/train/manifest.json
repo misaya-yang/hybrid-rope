@@ -1,0 +1,38 @@
+{
+  "answer_and_eos_only": true,
+  "answer_string_tokenizer_roundtrip_exact": true,
+  "counterfactual_value_swap": true,
+  "eos_token_id": 100257,
+  "files": {
+    "input_ids.npy": "86a99e58d4c5c6df339f3b310dd0230977db2a2d8fefdfabc7a621e624fd5a97",
+    "labels.npy": "0499b13126727bd4a3a071b4fad020f15aa620587e9467cde9379790a1ccbd8e",
+    "rows.jsonl": "41e8d111c9f4ac9e5ad35c852f78be2ccd1e71e4068fa83187113193aeedf5e9"
+  },
+  "final_eos_supervised": true,
+  "format_version": 2,
+  "key_value_blocks_per_sequence": 8,
+  "labels_only_cover_answer_and_final_eos": true,
+  "maximum_answer_tokens": 3,
+  "maximum_prompt_tokens": 3968,
+  "maximum_training_length": 4096,
+  "maximum_training_position_id": 4095,
+  "minimum_answer_tokens": 3,
+  "minimum_prompt_tokens": 3353,
+  "purpose": "counterfactual_routing_training",
+  "queries_per_sequence": 1,
+  "seed": 20293725,
+  "shape": [
+    1024,
+    2,
+    4096
+  ],
+  "status": "OLMO2_4K_COUNTERFACTUAL_ROUTING_SET_PREPARED_V2",
+  "supervised_answer_and_eos_tokens": 8192,
+  "supervised_answer_tokens": 6144,
+  "supervised_eos_tokens": 2048,
+  "supervision_contract": "numeric_answer_plus_immediate_eos_v1",
+  "variant_names": [
+    "sourced",
+    "value_swapped"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "example_schema": "evq_cosh.seed42_capability_example.v2",
+  "files": {
+    "mcqa.jsonl": {
+      "prompt_length_tokens": {
+        "max": 146,
+        "min": 45
+      },
+      "row_count": 200,
+      "sha256": "2d8f82ad9988f139b510f47a82dfabf32d357839b08062002028a0b58f6060c9",
+      "size_bytes": 222606,
+      "task_counts": {
+        "arc_challenge": 100,
+        "mmlu": 100
+      }
+    }
+  },
+  "prompt_hash_encoding": "sha256(compact-json-integer-array-v1)",
+  "prompt_length_tokens": {
+    "max": 146,
+    "min": 45
+  },
+  "row_count": 200,
+  "schema": "evq_cosh.seed42_capability_manifest.v2",
+  "source_revisions": {
+    "mcqa": {
+      "allenai/ai2_arc": "210d026faf9955653af8916fad021475a3f00453",
+      "cais/mmlu": "c30699e8356da336a370243923dbaf21066bb9fe"
+    },
+    "preparation_selection": {
+      "max_longbench_per_task": null,
+      "max_mcqa_per_source": 100,
+      "max_nolima_per_length_depth": null,
+      "max_ruler_per_task_length": null
+    }
+  },
+  "task_counts": {
+    "arc_challenge": 100,
+    "mmlu": 100
+  },
+  "tokenizer": {
+    "bos_token_id": 100257,
+    "class": "GPT2TokenizerFast",
+    "eos_token_id": 100257,
+    "files": {
+      "special_tokens_map.json": "78afb564e81264029b25f9caf24bda2521d5bdaeff5cd3fdbc01d3da2e8ce2f2",
+      "tokenizer.json": "73fd5254624f39a88e3faac6a8e11300fc3c735ed37880d4f4f08db898eaecca",
+      "tokenizer_config.json": "50c412c57d832057a3d5db42064c741f751e570f7c8788f037bfb0d2dd6e5f49"
+    },
+    "identifier": "OLMo-2-0425-1B-Instruct",
+    "name_or_path": "OLMo-2-0425-1B-Instruct",
+    "pad_token_id": 100277,
+    "requested": "OLMo-2-0425-1B-Instruct",
+    "vocab_size": 100278
+  }
+}
