@@ -628,7 +628,12 @@ def main() -> None:
         "bound_code_sha256": bound_code_sha256(),
         "data_manifest_sha256": data_receipt["manifest_sha256"],
         "data_cells": {
-            task: data_receipt["cells"][task][str(LENGTH)]["sha256"]
+            task: {
+                str(length): data_receipt["cells"][task][str(length)][
+                    "sha256"
+                ]
+                for length in selected_lengths
+            }
             for task in selected_tasks
         },
         "frequency": str(args.frequency),
