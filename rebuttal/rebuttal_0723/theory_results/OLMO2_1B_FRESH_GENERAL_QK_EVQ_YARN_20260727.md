@@ -156,6 +156,28 @@ Official YaRN is the Transformers operator including its attention scaling.
 The repository control is a fixed-index 20%–90% smoothstep ramp without that
 attention scaling. It is never described as official YaRN.
 
+## Additional-ablation decision
+
+The registered matrix already covers the decision-critical controls:
+
+1. an untouched-base 4K capability anchor;
+2. matched fresh Native/EVQ Q/K-only training from the same base;
+3. generic-training/test exact-overlap checks;
+4. raw, official-YaRN, and repository fixed-ramp evaluation on the same
+   adapters and test rows.
+
+No Q-only/K-only, V/O, rank, learning-rate, loss, or task-family-supervision
+sweep is justified for this rebuttal question. Those experiments would change
+adapter capacity or introduce new task supervision without improving the
+Native-versus-EVQ attribution supplied by the paired Q/K protocol.
+
+A second training seed is conditional rather than automatic: it is warranted
+only if the completed single-seed matrix shows a reviewer-facing EVQ advantage
+on both 2Wiki and complete RULER at the same target length while retaining
+most 4K capability. If that joint gate fails, the correct action is to report
+the bounded single-seed tradeoff and stop, not search for a favorable seed or
+add another training intervention.
+
 ## Claim boundary and send gate
 
 - Evidence tier remains `DESIGN_ONLY_OR_PENDING` until the capability matrix
