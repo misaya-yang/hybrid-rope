@@ -130,6 +130,11 @@ def parse_args() -> argparse.Namespace:
         default=4_096,
     )
     parser.add_argument("--adapter", type=Path)
+    parser.add_argument(
+        "--adaptation",
+        choices=("qkvo_answer", "qk_answer"),
+        default="qkvo_answer",
+    )
     parser.add_argument("--rank", type=int, default=64)
     parser.add_argument("--alpha", type=float, default=128.0)
     parser.add_argument("--tasks", nargs="+")
@@ -385,6 +390,7 @@ def validate_adapter_training_substrate(
     checkpoint_digest: str,
     frequency_name: str,
     frequency_sha256: str,
+    adaptation: str,
     rank: int,
     alpha: float,
 ) -> None:
@@ -392,7 +398,7 @@ def validate_adapter_training_substrate(
         "base_checkpoint_sha256": checkpoint_digest,
         "frequency": frequency_name,
         "frequency_sha256_float32": frequency_sha256,
-        "adaptation": "qkvo_answer",
+        "adaptation": adaptation,
         "rank": int(rank),
         "alpha": float(alpha),
         "training_sequence_length": 4_096,
@@ -637,6 +643,20 @@ def main() -> None:
             for task in selected_tasks
         },
         "frequency": str(args.frequency),
+        "yarn_factor": (
+            float(args.yarn_factor)
+            if "yarn" in str(args.frequency)
+            or "fixed_ramp" in str(args.frequency)
+            else None
+        ),
+        "yarn_original_max_position_embeddings": (
+            int(args.yarn_original_max_position_embeddings)
+            if "official_yarn" in str(args.frequency)
+            else None
+        ),
+        "adaptation": (
+            str(args.adaptation) if adapter_path is not None else None
+        ),
         "adapter_sha256": (
             None if adapter_path is None else sha256_file(adapter_path)
         ),
@@ -733,7 +753,7 @@ def main() -> None:
     if args.adapter is not None:
         readout = install_adaptation(
             model,
-            "qkvo_answer",
+            str(args.adaptation),
             rank=int(args.rank),
             alpha=float(args.alpha),
         )
@@ -752,6 +772,7 @@ def main() -> None:
                 frequency_sha256=tensor_sha256(
                     endpoint_geo_inv_freq()
                 ),
+                adaptation=str(args.adaptation),
                 rank=int(args.rank),
                 alpha=float(args.alpha),
             )
@@ -766,6 +787,7 @@ def main() -> None:
                 frequency_sha256=tensor_sha256(
                     endpoint_evq_inv_freq()
                 ),
+                adaptation=str(args.adaptation),
                 rank=int(args.rank),
                 alpha=float(args.alpha),
             )
@@ -776,7 +798,7 @@ def main() -> None:
                 "frequency_sha256_float32": frequency[
                     "geo_sha256_float32"
                 ],
-                "adaptation": "qkvo_answer",
+                "adaptation": str(args.adaptation),
                 "rank": int(args.rank),
                 "alpha": float(args.alpha),
                 "training_sequence_length": 4_096,
@@ -794,6 +816,7 @@ def main() -> None:
                 frequency_name=str(args.frequency),
                 rank=int(args.rank),
                 alpha=float(args.alpha),
+                adaptation=str(args.adaptation),
             )
         adapter_receipt = {
             "path": str(adapter_path),
@@ -991,6 +1014,22 @@ def main() -> None:
             "decode_cleanup": False,
             "training_length": (
                 4_096 if adapter_receipt is not None else None
+            ),
+            "adaptation": (
+                str(args.adaptation)
+                if adapter_receipt is not None
+                else None
+            ),
+            "yarn_factor": (
+                float(args.yarn_factor)
+                if "yarn" in str(args.frequency)
+                or "fixed_ramp" in str(args.frequency)
+                else None
+            ),
+            "yarn_original_max_position_embeddings": (
+                int(args.yarn_original_max_position_embeddings)
+                if "official_yarn" in str(args.frequency)
+                else None
             ),
             "attention": "flash_only_custom_kv_cache",
             "precision": "bf16_weights_and_autocast",

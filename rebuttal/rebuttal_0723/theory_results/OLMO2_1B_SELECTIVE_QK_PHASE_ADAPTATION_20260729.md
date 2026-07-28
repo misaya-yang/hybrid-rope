@@ -43,6 +43,10 @@ LoRA weights differ because they are trained under those respective frequency
 tables; that divergence is an outcome of the intervention, not an additional
 experimental variable.
 
+Put plainly, the scientific comparison is original RoPE versus EVQ-Cosh. It
+is not an ablation of one internal coordinate within EVQ-Cosh, and the final
+trained adapters are not expected to be bitwise identical.
+
 The long-range exposure is implemented with explicit position IDs, so this
 must not be described as training without long-position exposure.
 

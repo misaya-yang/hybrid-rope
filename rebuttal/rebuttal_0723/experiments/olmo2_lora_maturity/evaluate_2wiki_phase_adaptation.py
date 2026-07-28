@@ -22,6 +22,11 @@ from rebuttal.rebuttal_0723.experiments.olmo2_lora_conversion import (
     install_adaptation,
     load_model,
 )
+from rebuttal.rebuttal_0723.experiments.olmo2_1b_evq.contract import (
+    endpoint_evq_inv_freq,
+    endpoint_geo_inv_freq,
+    tensor_sha256,
+)
 from rebuttal.rebuttal_0723.experiments.olmo2_lora_ood_factorial import (
     load_adapter,
 )
@@ -35,6 +40,13 @@ from .phase_adaptation import LENGTH
 from .prepare_2wiki_phase_data import STATUS as DATA_STATUS
 from .train_4k_stage_a import ready_checkpoint_digest
 from .train_screen import apply_frequency
+from .evaluate_instruct_ruler_transfer import (
+    apply_evq_official_yarn,
+    apply_repo_fixed_ramp,
+    official_yarn_config,
+    validate_adapter_training_substrate,
+    verify_official_yarn,
+)
 
 
 RESULT_STATUS = "OLMO2_2WIKI_PHASE_EVALUATION_COMPLETE_V1"
@@ -46,14 +58,34 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--checkpoint-ready-receipt", type=Path, required=True)
     parser.add_argument("--data-root", type=Path, required=True)
-    parser.add_argument("--adapter", type=Path, required=True)
+    parser.add_argument("--adapter", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--role", required=True)
     parser.add_argument(
-        "--frequency", choices=("native", "evq"), required=True
+        "--frequency",
+        choices=(
+            "native",
+            "evq",
+            "official_yarn",
+            "evq_official_yarn",
+            "repo_fixed_ramp",
+            "evq_repo_fixed_ramp",
+        ),
+        required=True,
+    )
+    parser.add_argument(
+        "--adaptation",
+        choices=("qkvo_answer", "qk_answer"),
+        default="qkvo_answer",
     )
     parser.add_argument("--rank", type=int, default=64)
     parser.add_argument("--alpha", type=float, default=128.0)
+    parser.add_argument("--yarn-factor", type=float, default=4.0)
+    parser.add_argument(
+        "--yarn-original-max-position-embeddings",
+        type=int,
+        default=4_096,
+    )
     parser.add_argument(
         "--budgets",
         type=int,
@@ -319,6 +351,22 @@ def load_rows(root: Path, limit: int) -> tuple[dict[str, Any], list[Any]]:
     return manifest, rows[: int(limit)]
 
 
+def load_completed(path: Path) -> dict[tuple[int, int], dict[str, Any]]:
+    if not path.is_file():
+        return {}
+    completed: dict[tuple[int, int], dict[str, Any]] = {}
+    with path.open("r", encoding="utf-8") as handle:
+        for line in handle:
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            key = (int(row["budget"]), int(row["local_index"]))
+            if key in completed:
+                raise RuntimeError(f"duplicate completed 2Wiki row: {key}")
+            completed[key] = row
+    return completed
+
+
 def main() -> None:
     args = parse_args()
     budgets = tuple(int(value) for value in args.budgets)
@@ -328,10 +376,9 @@ def main() -> None:
     ):
         raise ValueError("budgets must be an ordered subset of 4K/8K/16K")
     output = args.output.resolve()
-    if output.exists():
-        raise FileExistsError(output)
-    output.mkdir(parents=True)
+    output.mkdir(parents=True, exist_ok=True)
     examples_path = output / "examples.jsonl"
+    run_manifest_path = output / "run_manifest.json"
 
     checkpoint = args.checkpoint.resolve()
     checkpoint_digest = ready_checkpoint_digest(
@@ -339,6 +386,77 @@ def main() -> None:
     )
     data_root = args.data_root.resolve()
     data_manifest, rows = load_rows(data_root, int(args.limit))
+    adapter_argument = (
+        None if args.adapter is None else args.adapter.resolve()
+    )
+    run_manifest = {
+        "status": "OLMO2_2WIKI_PHASE_EVAL_RUN_V1",
+        "script_sha256": sha256_file(Path(__file__).resolve()),
+        "frequency_helper_sha256": sha256_file(
+            Path(__file__).resolve().parent
+            / "evaluate_instruct_ruler_transfer.py"
+        ),
+        "checkpoint_sha256": checkpoint_digest,
+        "checkpoint_ready_receipt_sha256": sha256_file(
+            args.checkpoint_ready_receipt.resolve()
+        ),
+        "data_manifest_sha256": sha256_file(
+            data_root / "manifest.json"
+        ),
+        "evaluation_rows_sha256": sha256_file(
+            data_root / "evaluation_rows.jsonl"
+        ),
+        "adapter_sha256": (
+            None
+            if adapter_argument is None
+            else sha256_file(adapter_argument)
+        ),
+        "role": str(args.role),
+        "frequency": str(args.frequency),
+        "adaptation": (
+            str(args.adaptation)
+            if adapter_argument is not None
+            else None
+        ),
+        "rank": int(args.rank),
+        "alpha": float(args.alpha),
+        "budgets": list(budgets),
+        "limit": int(args.limit),
+        "fill_to_budget": bool(args.fill_to_budget),
+        "yarn_factor": (
+            float(args.yarn_factor)
+            if "yarn" in str(args.frequency)
+            or "fixed_ramp" in str(args.frequency)
+            else None
+        ),
+        "yarn_original_max_position_embeddings": (
+            int(args.yarn_original_max_position_embeddings)
+            if "official_yarn" in str(args.frequency)
+            else None
+        ),
+        "max_new_tokens": MAX_NEW_TOKENS,
+        "greedy": True,
+    }
+    if examples_path.exists() != run_manifest_path.exists():
+        raise RuntimeError(
+            "2Wiki examples and run manifest must be resumed together"
+        )
+    if run_manifest_path.is_file():
+        observed = json.loads(
+            run_manifest_path.read_text(encoding="utf-8")
+        )
+        if observed != run_manifest:
+            raise RuntimeError("2Wiki resume run-manifest drift")
+    else:
+        atomic_json(run_manifest_path, run_manifest)
+    completed_rows = load_completed(examples_path)
+    expected_keys = {
+        (budget, local_index)
+        for budget in budgets
+        for local_index in range(len(rows))
+    }
+    if not set(completed_rows).issubset(expected_keys):
+        raise RuntimeError("2Wiki completed rows escape registered matrix")
     tokenizer = AutoTokenizer.from_pretrained(
         checkpoint,
         local_files_only=True,
@@ -346,35 +464,98 @@ def main() -> None:
     )
     if tokenizer.eos_token_id is None:
         raise RuntimeError("tokenizer EOS is unavailable")
-    model = load_model(checkpoint)
-    frequency = apply_frequency(model, args.frequency)
-    readout = install_adaptation(
-        model,
-        "qkvo_answer",
-        rank=int(args.rank),
-        alpha=float(args.alpha),
-    )
-    if readout is not None:
-        raise RuntimeError("2Wiki evaluation forbids a readout")
-    adapter_path = args.adapter.resolve()
-    adapter_metadata = load_adapter(adapter_path, model, None)
-    expected_adapter = {
-        "base_checkpoint_sha256": checkpoint_digest,
-        "frequency": args.frequency,
-        "frequency_sha256_float32": frequency[
-            "active_sha256_float32"
-        ],
-        "adaptation": "qkvo_answer",
-        "rank": int(args.rank),
-        "alpha": float(args.alpha),
-        "training_sequence_length": LENGTH,
-    }
-    for name, expected in expected_adapter.items():
-        if adapter_metadata.get(name) != expected:
-            raise RuntimeError(
-                f"adapter metadata drift for {name}: "
-                f"{adapter_metadata.get(name)!r} != {expected!r}"
+    model_config = None
+    if args.frequency in {"official_yarn", "evq_official_yarn"}:
+        model_config = official_yarn_config(
+            checkpoint,
+            factor=float(args.yarn_factor),
+            original_max_position_embeddings=int(
+                args.yarn_original_max_position_embeddings
+            ),
+        )
+    model = load_model(checkpoint, config=model_config)
+    if args.frequency in {"official_yarn", "evq_official_yarn"}:
+        official_yarn = verify_official_yarn(model, model_config)
+        frequency = (
+            official_yarn
+            if args.frequency == "official_yarn"
+            else apply_evq_official_yarn(
+                model, model_config, official_yarn
             )
+        )
+    elif args.frequency in {
+        "repo_fixed_ramp",
+        "evq_repo_fixed_ramp",
+    }:
+        frequency = apply_repo_fixed_ramp(
+            model,
+            substrate=(
+                "native"
+                if args.frequency == "repo_fixed_ramp"
+                else "evq"
+            ),
+            factor=float(args.yarn_factor),
+        )
+    else:
+        frequency = apply_frequency(model, args.frequency)
+    adapter_path = None
+    adapter_metadata = None
+    if adapter_argument is not None:
+        readout = install_adaptation(
+            model,
+            str(args.adaptation),
+            rank=int(args.rank),
+            alpha=float(args.alpha),
+        )
+        if readout is not None:
+            raise RuntimeError("2Wiki evaluation forbids a readout")
+        adapter_path = adapter_argument
+        adapter_metadata = load_adapter(adapter_path, model, None)
+        if args.frequency in {"official_yarn", "repo_fixed_ramp"}:
+            validate_adapter_training_substrate(
+                adapter_metadata,
+                checkpoint_digest=checkpoint_digest,
+                frequency_name="native",
+                frequency_sha256=tensor_sha256(
+                    endpoint_geo_inv_freq()
+                ),
+                adaptation=str(args.adaptation),
+                rank=int(args.rank),
+                alpha=float(args.alpha),
+            )
+        elif args.frequency in {
+            "evq_official_yarn",
+            "evq_repo_fixed_ramp",
+        }:
+            validate_adapter_training_substrate(
+                adapter_metadata,
+                checkpoint_digest=checkpoint_digest,
+                frequency_name="evq",
+                frequency_sha256=tensor_sha256(
+                    endpoint_evq_inv_freq()
+                ),
+                adaptation=str(args.adaptation),
+                rank=int(args.rank),
+                alpha=float(args.alpha),
+            )
+        else:
+            expected_adapter = {
+                "base_checkpoint_sha256": checkpoint_digest,
+                "frequency": args.frequency,
+                "frequency_sha256_float32": frequency[
+                    "active_sha256_float32"
+                ],
+                "adaptation": str(args.adaptation),
+                "rank": int(args.rank),
+                "alpha": float(args.alpha),
+                "training_sequence_length": LENGTH,
+            }
+            for name, expected in expected_adapter.items():
+                if adapter_metadata.get(name) != expected:
+                    raise RuntimeError(
+                        f"adapter metadata drift for {name}: "
+                        f"{adapter_metadata.get(name)!r} != {expected!r}"
+                    )
     runtime = configure_cuda()
     configure_ruler_flash_attention(model)
     model.config.use_cache = True
@@ -383,7 +564,7 @@ def main() -> None:
     torch.cuda.reset_peak_memory_stats()
 
     cells: dict[str, dict[str, Any]] = {}
-    with examples_path.open("w", encoding="utf-8") as handle:
+    with examples_path.open("a", encoding="utf-8") as handle:
         for budget in budgets:
             sums = {
                 "token_f1": 0.0,
@@ -396,92 +577,125 @@ def main() -> None:
                 "filled": 0,
             }
             for local_index, row in enumerate(rows):
-                if args.fill_to_budget:
-                    filler, filler_identities = answer_filtered_filler(
-                        row_index=local_index,
-                        rows=rows,
-                    )
-                    input_ids, truncation = fill_user_prompt_to_budget(
-                        tokenizer=tokenizer,
-                        prompt=str(row["prompt"]),
-                        budget=budget,
-                        filler=filler,
-                        filler_identities=filler_identities,
-                    )
+                key = (budget, local_index)
+                if key in completed_rows:
+                    result = completed_rows[key]
+                    if (
+                        result.get("source_id") != row["source_id"]
+                        or result.get("source_row_sha256")
+                        != row["source_row_sha256"]
+                        or result.get("qa_identity_sha256")
+                        != row["qa_identity_sha256"]
+                        or result.get("references")
+                        != [str(value) for value in row["answers"]]
+                        or result.get("role") != str(args.role)
+                    ):
+                        raise RuntimeError(
+                            f"completed 2Wiki row identity drift: {key}"
+                        )
                 else:
-                    input_ids, truncation = truncate_user_prompt(
-                        tokenizer=tokenizer,
-                        prompt=str(row["prompt"]),
-                        budget=budget,
+                    if args.fill_to_budget:
+                        filler, filler_identities = (
+                            answer_filtered_filler(
+                                row_index=local_index,
+                                rows=rows,
+                            )
+                        )
+                        input_ids, truncation = (
+                            fill_user_prompt_to_budget(
+                                tokenizer=tokenizer,
+                                prompt=str(row["prompt"]),
+                                budget=budget,
+                                filler=filler,
+                                filler_identities=filler_identities,
+                            )
+                        )
+                    else:
+                        input_ids, truncation = truncate_user_prompt(
+                            tokenizer=tokenizer,
+                            prompt=str(row["prompt"]),
+                            budget=budget,
+                        )
+                    input_ids = input_ids.to("cuda")
+                    started = time.perf_counter()
+                    output_ids = greedy_generate(
+                        model,
+                        input_ids,
+                        max_new_tokens=MAX_NEW_TOKENS,
+                        eos_token_id=int(tokenizer.eos_token_id),
                     )
-                input_ids = input_ids.to("cuda")
-                started = time.perf_counter()
-                output_ids = greedy_generate(
-                    model,
-                    input_ids,
-                    max_new_tokens=MAX_NEW_TOKENS,
-                    eos_token_id=int(tokenizer.eos_token_id),
-                )
-                torch.cuda.synchronize()
-                elapsed = time.perf_counter() - started
-                generated = [
-                    int(value)
-                    for value in output_ids[0].detach().cpu().tolist()
-                ]
-                terminal_eos = float(
-                    bool(generated)
-                    and generated[-1] == int(tokenizer.eos_token_id)
-                )
-                prediction = tokenizer.decode(
-                    generated,
-                    skip_special_tokens=True,
-                    clean_up_tokenization_spaces=False,
-                ).strip()
-                references = [str(value) for value in row["answers"]]
-                f1 = token_f1(prediction, references)
-                exact = normalized_exact(prediction, references)
-                result = {
-                    "role": str(args.role),
-                    "budget": budget,
-                    "local_index": local_index,
-                    "source_id": row["source_id"],
-                    "source_row_sha256": row["source_row_sha256"],
-                    "qa_identity_sha256": row["qa_identity_sha256"],
-                    "references": references,
-                    "prediction": prediction,
-                    "generated_token_ids": generated,
-                    "generated_tokens": len(generated),
-                    "token_f1": f1,
-                    "normalized_exact": exact,
-                    "terminal_eos": terminal_eos,
-                    "empty_prediction": float(not prediction),
-                    "truncation": truncation,
-                    "elapsed_seconds": elapsed,
-                }
-                handle.write(
-                    json.dumps(
-                        result, ensure_ascii=False, sort_keys=True
+                    torch.cuda.synchronize()
+                    elapsed = time.perf_counter() - started
+                    generated = [
+                        int(value)
+                        for value in output_ids[0].detach().cpu().tolist()
+                    ]
+                    terminal_eos = float(
+                        bool(generated)
+                        and generated[-1]
+                        == int(tokenizer.eos_token_id)
                     )
-                    + "\n"
+                    prediction = tokenizer.decode(
+                        generated,
+                        skip_special_tokens=True,
+                        clean_up_tokenization_spaces=False,
+                    ).strip()
+                    references = [
+                        str(value) for value in row["answers"]
+                    ]
+                    f1 = token_f1(prediction, references)
+                    exact = normalized_exact(prediction, references)
+                    result = {
+                        "role": str(args.role),
+                        "budget": budget,
+                        "local_index": local_index,
+                        "source_id": row["source_id"],
+                        "source_row_sha256": row["source_row_sha256"],
+                        "qa_identity_sha256": row[
+                            "qa_identity_sha256"
+                        ],
+                        "references": references,
+                        "prediction": prediction,
+                        "generated_token_ids": generated,
+                        "generated_tokens": len(generated),
+                        "token_f1": f1,
+                        "normalized_exact": exact,
+                        "terminal_eos": terminal_eos,
+                        "empty_prediction": float(not prediction),
+                        "truncation": truncation,
+                        "elapsed_seconds": elapsed,
+                    }
+                    handle.write(
+                        json.dumps(
+                            result, ensure_ascii=False, sort_keys=True
+                        )
+                        + "\n"
+                    )
+                    handle.flush()
+                    print(
+                        f"{args.role} L={budget} "
+                        f"{local_index + 1}/{len(rows)} "
+                        f"f1={f1:.3f} exact={exact:.0f} "
+                        f"eos={terminal_eos:.0f}",
+                        flush=True,
+                    )
+                truncation = result["truncation"]
+                sums["token_f1"] += float(result["token_f1"])
+                sums["normalized_exact"] += float(
+                    result["normalized_exact"]
                 )
-                handle.flush()
-                sums["token_f1"] += f1
-                sums["normalized_exact"] += exact
-                sums["terminal_eos"] += terminal_eos
-                sums["empty_prediction"] += float(not prediction)
-                sums["elapsed_seconds"] += elapsed
+                sums["terminal_eos"] += float(result["terminal_eos"])
+                sums["empty_prediction"] += float(
+                    result["empty_prediction"]
+                )
+                sums["elapsed_seconds"] += float(
+                    result["elapsed_seconds"]
+                )
                 sums["input_tokens"] += int(
                     truncation["chat_input_tokens"]
                 )
                 sums["truncated"] += int(truncation["truncated"])
                 sums["filled"] += int(truncation.get("filled", False))
-                print(
-                    f"{args.role} L={budget} "
-                    f"{local_index + 1}/{len(rows)} "
-                    f"f1={f1:.3f} exact={exact:.0f} "
-                    f"eos={terminal_eos:.0f}",
-                    flush=True,
-                )
             cells[str(budget)] = {
                 "examples": len(rows),
                 "mean_token_f1": sums["token_f1"] / len(rows),
@@ -513,6 +727,12 @@ def main() -> None:
         "role": str(args.role),
         "checkpoint": str(checkpoint),
         "checkpoint_sha256": checkpoint_digest,
+        "script_sha256": sha256_file(Path(__file__).resolve()),
+        "frequency_helper_sha256": sha256_file(
+            Path(__file__).resolve().parent
+            / "evaluate_instruct_ruler_transfer.py"
+        ),
+        "run_manifest_sha256": sha256_file(run_manifest_path),
         "data": {
             "path": str(data_root),
             "manifest_sha256": sha256_file(
@@ -524,8 +744,14 @@ def main() -> None:
             "source": data_manifest["evaluation"],
         },
         "adapter": {
-            "path": str(adapter_path),
-            "sha256": sha256_file(adapter_path),
+            "path": (
+                None if adapter_path is None else str(adapter_path)
+            ),
+            "sha256": (
+                None
+                if adapter_path is None
+                else sha256_file(adapter_path)
+            ),
             "metadata": adapter_metadata,
         },
         "frequency": frequency,
@@ -537,6 +763,22 @@ def main() -> None:
             "chat_template": "checkpoint_native",
             "truncation": "middle",
             "fill_to_budget": bool(args.fill_to_budget),
+            "adaptation": (
+                str(args.adaptation)
+                if adapter_path is not None
+                else None
+            ),
+            "yarn_factor": (
+                float(args.yarn_factor)
+                if "yarn" in str(args.frequency)
+                or "fixed_ramp" in str(args.frequency)
+                else None
+            ),
+            "yarn_original_max_position_embeddings": (
+                int(args.yarn_original_max_position_embeddings)
+                if "official_yarn" in str(args.frequency)
+                else None
+            ),
             "distractor_answer_filter": (
                 "normalized reference absent as a complete phrase from each "
                 "appended context; yes/no references are exempt because "
