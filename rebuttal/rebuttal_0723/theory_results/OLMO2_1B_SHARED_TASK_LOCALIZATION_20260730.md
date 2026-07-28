@@ -1,8 +1,8 @@
 # OLMo-2 1.485B Shared QA/RULER Task Localization
 
 Date: 2026-07-30
-Status: `RUNNING / NOT YET REVIEWER-USABLE`
-Evidence tier: `DESIGN_ONLY_OR_PENDING`
+Status: `SCREEN COMPLETE / FULL LONG-ROUTE EVALUATION RUNNING`
+Evidence tier: `POST_SUB_RAW_HASH_BACKED_SCREEN_ONLY`
 
 ## Question
 
@@ -55,21 +55,64 @@ successful separate continuation while sharing one natural-replay stream.
 This is task-family adaptation on held-out rows, not clean unseen-task
 transfer.
 
-## Runtime state
+## Executed training
 
-The EVQ arm passed READY and entered a real optimizer step:
+Both matched 500-step continuations completed:
 
-- step 1 loss: `4.542545318603516`;
-- step 1 gradient norm before clipping: `23.58408546447754`;
-- peak allocated memory at step 1: `23,290,729,472` bytes;
-- first-step family: `phase_2wiki`;
-- loss was finite.
+| Field | Native | EVQ |
+| --- | ---: | ---: |
+| Final adapter SHA-256 | `bf0aaeaa3e4e4221f622ea2586d760c47c9c694d315847bad96eba214ff942d3` | `24f484b988a5f083c03552b60ae3f5bebe18d49760f399fa793de39710dad769` |
+| Processed input tokens | 16,380,000 | 16,380,000 |
+| Optimizer steps | 500 | 500 |
+| Measured training seconds | 555.53 | 728.87 |
+| Measured input tokens/s | 29,485.47 | 22,473.12 |
+| Peak allocated bytes | 22,280,460,800 | 23,290,729,472 |
 
-The matched Native arm is READY and registered to start automatically after
-successful EVQ completion. Strict 4K/8K screens are registered to run
-immediately after both arms complete.
+The executed arms match exactly on:
 
-## Decision gate
+- selection stream:
+  `96534060023a1b26dce504f7056efe6fac2d9e7aa9dc7ed44e4bde2ea86bb480`;
+- position stream:
+  `2e535b05b443393f1f98549ae2442acd1e11f29b5e67692dd24ddfee41ee46f3`;
+- exposure stream:
+  `df4889359fe0ecd719afee7a61b0451013a2e7817d970b91e82de4ff0a3c8a3d`;
+- 200/200/100 2Wiki/RULER/natural steps;
+- 800/800/1,600 contiguous/8K-phase/16K-phase sequence exposures;
+- 16,380,000 processed input tokens and the complete optimizer protocol.
+
+Each task contributes 400/400/800 contiguous/8K-phase/16K-phase sequence
+exposures. The only active method difference remains the Native versus EVQ
+frequency substrate and the resulting learned adapter.
+
+The post-training 32-row teacher-forced diagnostics are:
+
+| View | Offset | Native NLL | EVQ NLL |
+| --- | ---: | ---: | ---: |
+| 2Wiki | 0 | 0.3527 | 0.5219 |
+| 2Wiki | 4,096 | 1.1681 | 0.7799 |
+| 2Wiki | 12,289 | 2.1311 | 1.2197 |
+| RULER13 | 0 | 0.3014 | 1.8482 |
+| RULER13 | 4,096 | 2.0817 | 2.8493 |
+| RULER13 | 12,289 | 2.6424 | 3.1437 |
+
+These values diagnose the optimization trajectory; they are not capability
+results.
+
+## Strict autoregressive screen
+
+The screen uses 50 held-out 2Wiki rows per length and two held-out examples
+per RULER family and length. Every result passed a strict identity gate over
+checkpoint, adapter SHA, frequency substrate, data manifest, evaluator hash,
+protocol, cell coverage, and raw-generation hash.
+
+| Endpoint | Native 4K | EVQ 4K | Native 8K | EVQ 8K |
+| --- | ---: | ---: | ---: | ---: |
+| 2Wiki token F1 | 36.27% | 21.50% | 0.95% | 15.19% |
+| 2Wiki normalized exact | 32.0% | 16.0% | 0% | 10.0% |
+| 2Wiki terminal EOS | 100% | 100% | 30.0% | 100% |
+| 13-family RULER official macro | 70.38% | 34.36% | 7.37% | 22.24% |
+
+## Decision gates and stop decisions
 
 The shared adapter is useful only if all of the following hold:
 
@@ -80,7 +123,29 @@ The shared adapter is useful only if all of the following hold:
 5. Native/EVQ selection, position, exposure, family-count, and protocol
    receipts match.
 
-If the screen fails, stop this shared route without a ratio, seed, rank, or
-loss sweep. The valid conclusion would be that separate task localization is
-supported, while a single adapter has not been shown to carry both task
-families.
+The single-path gate fails because EVQ trails Native by 14.77 percentage
+points on 4K 2Wiki F1 and by 36.03 points on 4K RULER. It nevertheless passes
+the long-route portion of the gate: at 8K, EVQ has higher 2Wiki F1 and exact
+match, 100% terminal EOS, and a 14.87-point RULER advantage over the matched
+Native continuation.
+
+No ratio, seed, rank, learning-rate, or loss sweep is authorized. The complete
+4K/8K/16K single-path matrix is stopped.
+
+## Request-length routing follow-up
+
+The screen supports evaluating one non-training deployment alternative:
+
+- registered total context budget at most 4K: untouched Native RoPE with the
+  adapter disabled;
+- evaluated 8K and 16K total context budgets: EVQ-Cosh with this one shared
+  QA/RULER Q/K adapter enabled for the entire request.
+
+The choice is made before prefill; it does not switch a KV cache mid-request,
+use dual attention, or add another training intervention. It is a
+deterministic two-path deployment policy, not a single pure-EVQ configuration.
+
+A full matched 8K/16K evaluation is running for both shared Native and shared
+EVQ adapters. Only after those outputs and the untouched-Native 4K component
+are hash-validated may a routed composite be reported. Until then, this
+owner remains screening evidence and is not reviewer-usable as a full result.

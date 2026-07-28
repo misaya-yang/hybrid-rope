@@ -15,6 +15,10 @@ matched 4K multi-hop QA while retaining a large EVQ advantage at 8K and
 non-zero EVQ capability at 16K. On 13-family RULER, it raises EVQ's 4K macro
 from `11.09%` to `42.44%`, but Native remains higher at `72.19%`.
 
+The scientific comparison is directly Native RoPE versus EVQ-Cosh: the two
+arms use the same continuation and evaluation contract, and the active method
+variable is the frequency table.
+
 This is a continuation of a Q/K/V/O Stage-A adapter, not a fresh pure-Q/K
 adapter. It keeps the original model weights frozen and verifies inherited V/O
 LoRA tensors bitwise before and after training.
@@ -166,7 +170,9 @@ parent, yet remains 29.75 points below the matched Native arm.
 > 1.485B model is avoidable. From matched Native and EVQ Stage-A parents, we
 > froze the inherited V/O LoRA tensors and continued only Q/K LoRA, using
 > complete answer-plus-EOS supervision and physical training sequences no
-> longer than 4K. On held-out 2WikiMultiHopQA prompts, Native/EVQ obtain
+> longer than 4K. The continuation and evaluation contracts are the same; the
+> active method variable is the original Native RoPE versus EVQ-Cosh frequency
+> table. On held-out 2WikiMultiHopQA prompts, Native/EVQ obtain
 > 25.99/24.84 token-F1 at 4K, but 0.07/21.48 at 8K and 0/8.57 at 16K
 > (200 examples per length). Exact match is 22.0/21.5% at 4K, 0/17.5% at 8K,
 > and 0/4.0% at 16K. The protocol uses deterministic 2Wiki distractor filling
@@ -177,7 +183,8 @@ parent, yet remains 29.75 points below the matched Native arm.
 ## Reviewer-facing RULER wording
 
 > We also applied the same Q/K-only phase adaptation independently to all 13
-> RULER families. Native/EVQ official macro is 72.19/42.44% at 4K,
+> RULER families, with original Native RoPE versus EVQ-Cosh as the active
+> method variable. Native/EVQ official macro is 72.19/42.44% at 4K,
 > 2.02/31.63% at 8K, and 0.38/5.03% at 16K (20 examples per family and
 > length). Relative to the EVQ Stage-A parent, this raises the 4K macro from
 > 11.09% to 42.44% and the 8K macro from 5.74% to 31.63%. We therefore view
