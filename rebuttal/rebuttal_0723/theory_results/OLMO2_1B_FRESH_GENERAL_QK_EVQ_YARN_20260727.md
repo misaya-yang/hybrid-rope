@@ -142,7 +142,17 @@ unaltered LongBench leaderboard run.
 
 ### Complete 13-family RULER
 
-`PENDING_MATRIX`
+Completed raw-substrate cells:
+
+| Arm | 4K official macro | 8K official macro | 16K official macro |
+| --- | ---: | ---: | ---: |
+| Untouched Native base | 65.16% | not evaluated | not evaluated |
+| Native fresh Q/K LoRA | 58.53% | 0% | 0% |
+| EVQ fresh Q/K LoRA | 6.12% | 3.96% | 2.38% |
+
+Fresh generic-data EVQ adaptation therefore produces small non-zero 8K/16K
+scores, but at a severe 4K cost and at low absolute capability. It does not
+support a broad task-capability extrapolation claim.
 
 The endpoint uses all 13 families, 20 examples per family-length cell, greedy
 autoregressive generation, and the official family-specific string-match
@@ -155,6 +165,19 @@ score. RULER is reported separately from NLL/PPL.
 Official YaRN is the Transformers operator including its attention scaling.
 The repository control is a fixed-index 20%–90% smoothstep ramp without that
 attention scaling. It is never described as official YaRN.
+
+The completed factor-2 official-YaRN cells are:
+
+| Training substrate + evaluation transform | 4K official macro | 8K official macro |
+| --- | ---: | ---: |
+| Native fresh Q/K + official YaRN | 61.06% | 52.19% |
+| EVQ fresh Q/K + official YaRN | 11.05% | 6.99% |
+
+At the tested fixed factor, official YaRN strongly restores and extends the
+Native-trained adapter but only modestly improves the EVQ-trained adapter.
+Thus this completed cell does not show additional EVQ substrate leverage when
+combined with official YaRN. Factor-4 and repository fixed-ramp cells remain
+pending.
 
 ## Additional-ablation decision
 
