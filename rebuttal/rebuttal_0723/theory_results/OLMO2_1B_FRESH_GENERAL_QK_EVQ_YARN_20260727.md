@@ -2,12 +2,19 @@
 
 ## Status
 
-`RUNNING / NOT YET REVIEWER-USABLE`
+`POST_SUB_RAW_HASH_BACKED / SELECTED MATRIX COMPLETE`
 
-The matched training arms and contamination gate are complete. The registered
-autoregressive 2WikiMultiHopQA, complete 13-family RULER, official YaRN, and
-repository fixed-ramp matrix is still running. This owner must not be promoted
-until every registered cell, raw-generation hash, and final summary is present.
+The matched training arms, exact-overlap gate, raw 2WikiMultiHopQA, complete
+13-family RULER, factor-2 official Transformers YaRN, and factor-2 repository
+fixed-ramp controls are complete. Each capability cell retains full
+generations, a run manifest, and hashes.
+
+The wider transform-by-factor-by-benchmark matrix registered at preflight was
+stopped after the decision gate. Factor 4 and transformed 2Wiki cells were not
+run because the completed factor-2 complete-family RULER results already
+settled the operator question and the generic EVQ arm failed the joint
+capability/retention gate. This report promotes only the completed cells below;
+it does not imply that the wider matrix ran.
 
 Relevant retained concerns: `RDz6s.1`, `RDz6s.2`, `RzWsa.3`, `RzWsa.4`,
 `R27bE.2`, `R27bE.5`, `AC.2`, and `AC.4`.
@@ -20,10 +27,16 @@ inheriting a Q/K/V/O adapter or training on 2Wiki/RULER task-family rows. It
 also asks whether official YaRN or the repository fixed-index smooth-ramp
 transform changes the Native-versus-EVQ result.
 
-The downstream answer remains pending. The completed teacher-forced endpoint
-already shows a clear tradeoff: Native has lower 4K natural-text NLL, while EVQ
-has lower 8K and 16K NLL. This is probability-modeling evidence only and is not
-treated as QA, retrieval, or RULER capability.
+The answer is negative for broad task transfer from generic Q/K adaptation.
+EVQ has lower 8K/16K natural-text NLL, but its raw 2Wiki and complete-family
+RULER capability remains low and carries a severe 4K cost. The tested
+factor-2 official YaRN transform strongly improves the Native-trained adapter
+at 8K RULER but not the EVQ-trained composite. The repository fixed ramp
+behaves differently from official YaRN and leaves both 8K scores low.
+
+Thus, generic Q/K adaptation can improve long-position probability modeling
+without creating broad autoregressive task capability. NLL/PPL and capability
+remain separate endpoints throughout this owner.
 
 ## Registered matched protocol
 
@@ -99,85 +112,87 @@ Interpretation: under the matched generic-data Q/K-only protocol, EVQ pays a
 material in-window modeling cost but degrades much less at 2× and 4× context.
 These numbers do not establish autoregressive task capability.
 
-## Registered capability matrix
+## Executed capability matrix
 
-The following cells are registered and must all be resolved before promotion:
+The preflight registered a wider matrix. The following table distinguishes
+completed evidence from cells deliberately stopped by the decision gate.
 
-1. untouched Native base at 4K;
-2. Native fresh-QK and EVQ fresh-QK at 4K/8K/16K;
-3. Native/EVQ substrates with official Transformers YaRN at factor 2 for
-   4K/8K and factor 4 for 4K/16K;
-4. Native/EVQ substrates with the repository fixed-index smooth-ramp
-   transform under the same factors and lengths.
-
-### Completed Native anchors
-
-The completed Native-side cells establish the inherited-capability and
-generic-LoRA baselines while the EVQ and range-transform cells continue.
-
-| 2WikiMultiHopQA arm | 4K F1 | 4K exact | 4K terminal EOS | 8K F1 / exact | 16K F1 / exact |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Untouched Native base | 27.64% | 22.00% | 97.50% | not evaluated | not evaluated |
-| Native fresh Q/K LoRA | 25.47% | 21.00% | 99.00% | 0.13% / 0% | 0.10% / 0% |
-
-| RULER arm | 4K official macro | 8K official macro | 16K official macro |
-| --- | ---: | ---: | ---: |
-| Untouched Native base | 65.16% | not evaluated | not evaluated |
-| Native fresh Q/K LoRA | 58.53% | 0% | 0% |
-
-Thus, fresh generic-data Q/K LoRA causes a modest in-range decline relative to
-the untouched base but does not itself create long-context task capability.
-The Native-versus-EVQ and transform conclusions remain pending until the
-registered counterpart cells finish.
+| Benchmark | Component | Evaluation operator | Lengths | n per cell | Status |
+| --- | --- | --- | --- | ---: | --- |
+| 2Wiki | untouched Native, adapter off | Native | 4K | 200 | complete |
+| 2Wiki | Native fresh Q/K | Native | 4K/8K/16K | 200 | complete |
+| 2Wiki | EVQ fresh Q/K | EVQ | 4K/8K/16K | 200 | complete |
+| RULER13 | untouched Native, adapter off | Native | 4K | 20/family | complete |
+| RULER13 | Native fresh Q/K | Native | 4K/8K/16K | 20/family | complete |
+| RULER13 | EVQ fresh Q/K | EVQ | 4K/8K/16K | 20/family | complete |
+| RULER13 | Native fresh Q/K | official Transformers YaRN, factor 2 | 4K/8K | 20/family | complete |
+| RULER13 | EVQ fresh Q/K | EVQ + official-YaRN per-index transform, factor 2 | 4K/8K | 20/family | complete |
+| RULER13 | Native fresh Q/K | repository fixed ramp, factor 2 | 4K/8K | 20/family | complete |
+| RULER13 | EVQ fresh Q/K | EVQ + repository fixed ramp, factor 2 | 4K/8K | 20/family | complete |
+| 2Wiki transforms; factor-4 transforms | registered wider matrix | corresponding transform | 4K/8K or 4K/16K | — | stopped; not run |
 
 ### 2WikiMultiHopQA
 
-`PENDING_MATRIX`
+Each cell contains 200 greedy autoregressive generations. Values are
+token-F1 / normalized exact / terminal EOS.
 
-The endpoint uses 200 examples per cell, greedy autoregressive generation,
-normalized token F1, normalized exact match, terminal EOS, and full generated
-token IDs. Deterministic answer-filtered distractor filling reaches the
-registered physical budgets; this is a task-family long-QA protocol, not an
-unaltered LongBench leaderboard run.
+| Component | 4K | 8K | 16K |
+| --- | ---: | ---: | ---: |
+| Untouched Native, adapter off | 27.64 / 22.00 / 97.50% | not evaluated | not evaluated |
+| Native fresh Q/K | 25.47 / 21.00 / 99.00% | 0.13 / 0 / 0% | 0.10 / 0 / 0% |
+| EVQ fresh Q/K | 15.56 / 4.50 / 92.00% | 6.49 / 0.50 / 46.00% | 1.11 / 0 / 4.00% |
+
+Deterministic answer-filtered distractor filling produces mean input lengths
+of 4,063.96, 8,159.86, and 16,351.86 tokens. This is a controlled
+task-family long-QA protocol, not the unmodified LongBench leaderboard
+protocol.
+
+EVQ retains more QA signal than Native at 8K, but the absolute result is weak:
+only `1/200` rows is exact and terminal EOS is `46%`. At 16K exact match is
+zero. The 4K cost is also material. This is not broad downstream capability.
 
 ### Complete 13-family RULER
 
-Completed raw-substrate cells:
+The endpoint uses all 13 families, 20 held-out examples per family-length
+cell, greedy autoregressive generation, and the official family-specific
+string-match score.
 
-| Arm | 4K official macro | 8K official macro | 16K official macro |
+| Component | 4K official macro | 8K official macro | 16K official macro |
 | --- | ---: | ---: | ---: |
-| Untouched Native base | 65.16% | not evaluated | not evaluated |
-| Native fresh Q/K LoRA | 58.53% | 0% | 0% |
-| EVQ fresh Q/K LoRA | 6.12% | 3.96% | 2.38% |
+| Untouched Native, adapter off | 65.16% | not evaluated | not evaluated |
+| Native fresh Q/K | 58.53% | 0% | 0% |
+| EVQ fresh Q/K | 6.12% | 3.96% | 2.38% |
 
-Fresh generic-data EVQ adaptation therefore produces small non-zero 8K/16K
-scores, but at a severe 4K cost and at low absolute capability. It does not
-support a broad task-capability extrapolation claim.
-
-The endpoint uses all 13 families, 20 examples per family-length cell, greedy
-autoregressive generation, and the official family-specific string-match
-score. RULER is reported separately from NLL/PPL.
+Generic-data EVQ adaptation produces small non-zero 8K/16K scores but loses
+most inherited 4K RULER capability. It does not support broad task transfer
+from generic Q/K adaptation.
 
 ### Official YaRN versus repository fixed ramp
 
-`PENDING_MATRIX`
-
-Official YaRN is the Transformers operator including its attention scaling.
-The repository control is a fixed-index 20%–90% smoothstep ramp without that
-attention scaling. It is never described as official YaRN.
-
-The completed factor-2 official-YaRN cells are:
+These are evaluation-only transforms applied to the completed generic
+adapters on the same RULER rows.
 
 | Training substrate + evaluation transform | 4K official macro | 8K official macro |
 | --- | ---: | ---: |
-| Native fresh Q/K + official YaRN | 61.06% | 52.19% |
-| EVQ fresh Q/K + official YaRN | 11.05% | 6.99% |
+| Native fresh Q/K + official Transformers YaRN | 61.06% | 52.19% |
+| EVQ fresh Q/K + official-YaRN composite | 11.05% | 6.99% |
+| Native fresh Q/K + repository fixed ramp | 60.62% | 1.03% |
+| EVQ fresh Q/K + repository fixed-ramp composite | 7.56% | 3.81% |
 
-At the tested fixed factor, official YaRN strongly restores and extends the
-Native-trained adapter but only modestly improves the EVQ-trained adapter.
-Thus this completed cell does not show additional EVQ substrate leverage when
-combined with official YaRN. Factor-4 and repository fixed-ramp cells remain
-pending.
+The two operators are not interchangeable. The tested official YaRN
+factor-2 transform strongly restores and extends the Native-trained adapter,
+whereas the repository fixed ramp leaves the Native 8K score near zero. On
+the EVQ substrate, neither composite yields broad capability. These results
+do not support additional EVQ substrate leverage under official YaRN.
+
+Operator identities:
+
+| Report label | Exact identity |
+| --- | --- |
+| official Transformers YaRN | Installed Transformers YaRN initializer plus its realized attention scaling |
+| EVQ + official-YaRN composite | EVQ substrate multiplied by the exact realized official-YaRN per-index scaler; official attention scaling retained |
+| repository fixed ramp | Repository-defined 20%–90% fixed-index smoothstep scaler, attention scaling 1.0; not official YaRN |
+| EVQ + repository fixed-ramp composite | The same repository scaler applied to the EVQ substrate; not official YaRN |
 
 ## Additional-ablation decision
 
@@ -189,22 +204,16 @@ The registered matrix already covers the decision-critical controls:
 4. raw, official-YaRN, and repository fixed-ramp evaluation on the same
    adapters and test rows.
 
-No Q-only/K-only, V/O, rank, learning-rate, loss, or task-family-supervision
-sweep is justified for this rebuttal question. Those experiments would change
-adapter capacity or introduce new task supervision without improving the
-Native-versus-EVQ attribution supplied by the paired Q/K protocol.
-
-A second training seed is conditional rather than automatic: it is warranted
-only if the completed single-seed matrix shows a reviewer-facing EVQ advantage
-on both 2Wiki and complete RULER at the same target length while retaining
-most 4K capability. If that joint gate fails, the correct action is to report
-the bounded single-seed tradeoff and stop, not search for a favorable seed or
-add another training intervention.
+The pre-specified joint gate fails: EVQ does not show a reviewer-facing
+advantage on both 2Wiki and complete-family RULER at one target length while
+retaining most 4K capability. Therefore no second seed, factor-4 expansion,
+transformed-QA matrix, Q-only/K-only, V/O, rank, learning-rate, loss, or data
+ratio sweep is justified. The bounded single-seed result is final.
 
 ## Claim boundary and send gate
 
-- Evidence tier remains `DESIGN_ONLY_OR_PENDING` until the capability matrix
-  and raw hashes close; it can then become `POST_SUB_RAW_HASH_BACKED`.
+- The completed selected cells are `POST_SUB_RAW_HASH_BACKED`; cells stopped
+  by the decision gate are not evidence.
 - The experiment is single-seed.
 - Any 4K deficit must sit next to an 8K positive.
 - Any weak or negative 16K result must sit next to the 8K result it limits.
@@ -217,4 +226,46 @@ add another training intervention.
 - This is not a direct FMRoPE comparison and does not support universal SOTA,
   universal no-harm, or replacement of range-scaling methods.
 
-Do not cite this owner while any `PENDING_MATRIX` marker remains.
+## Artifact provenance
+
+Core identities:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Base checkpoint composite | `36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f` |
+| Native fresh-Q/K adapter | `3b8735c9b0cd6b65238f256ce0d9395c6e835be9ba7583fca485bc1e675c4740` |
+| EVQ fresh-Q/K adapter | `26157b7b586449bcc1a3ad5ff574ae4428640a047bc3fdad90a40e71d2653c79` |
+| Native frequency tensor | `dde15c31724177356ae954d6e11fb337e6fccef56e4520a905cac3f0d9885b34` |
+| EVQ frequency tensor | `917a52426b4ac986545c8ec73b115daae3c6515d6b9047f09d30c972ea1a4607` |
+| Downstream READY receipt | `b910e5053c188e5f40e663005eeb098ffc1daa4851754e853a98d0d7d75dc334` |
+| Completion receipt | `e3d0081164366ed2e3c64ade52bfdc0e49ad2c1a9e722243d5b5d3eda39380df` |
+
+Each row below is `results / examples / run-manifest` SHA-256:
+
+| Evaluated component | Artifact SHA-256 values |
+| --- | --- |
+| 2Wiki untouched Native 4K | `3a836250d4d2f32cc5498f9a967e85bd159ec6d636d52579912cb85a6d100a2a` / `d17044cc81081f4471555c5a08c80e84cbb27233b0ac70b1a249dac6e009590b` / `e5c87ce5623b27d7c47c99f325774fcd76a7a654425bb61cc5a80c2c12da24fb` |
+| 2Wiki Native fresh Q/K | `db6cddb98ad3f086eeaad75f6da280d66f50d605b4df80d2849e7b7c38a247ef` / `b2dddd0adc053b5cb42126d5d0eb77affda552890bd99db2f39e8e1344fffbd3` / `f8a785cbf98a90e3f855d6847eeae76a256c55bc815ef9d7eb2d8afba80bc6bd` |
+| 2Wiki EVQ fresh Q/K | `130e72b02597529c5dd7ac7f847ef7102cdff476d1d643523c1064c8d12e2a51` / `2b9c56b611cacc1586b151261e39700b4da8f138772f07b9bc13362fe78adb7c` / `fae58f5cf1f7703a95add90c654d95b0f624ec17c4d8d29e8aaab16cd434fc7a` |
+| RULER untouched Native 4K | `6880005fda82956e977ab65547fa06ffb7c77d09043ad7503a0c05d59e2d5d45` / `a46e92f0364e7b932f3b8a95e6aaac9c120277cf971693153433a4ab455a7acb` / `f48581dc8566fcefc4267d8d94fb443f0550c63cc7c9400650f3def7fc7fa794` |
+| RULER Native raw | `805cdaa9e6548f3f5543da7620bd4599fadfcc77c362d3ce84077ee39f91459c` / `c1158bc395b2a4c1927df1392bf40201267bf2ddb55fba929ead2d84d3ccb4db` / `67b4390e22634570933618081055c8500d757142c384b37e8920c6a417ca0aab` |
+| RULER EVQ raw | `4df05747bb0bf3f8d80c02ba5fc7de51f781382fd9e8f26120536606d40ceb3e` / `c170a856a9b0d9dbe0e6102ac8efbb168afe43fd1f30d0c4ba208656575870c7` / `d7c0132044c0a6b6958020158d966d2de9519fe119c7b7134490018f2f7da1e0` |
+| RULER Native + official YaRN | `946151cd9900eac0918b938a9606ae2d53c6b4c730742da81552dad2b679b6d5` / `9d197e96bfdd8bc168c682f06e20e9720afb7ecf2edcb023b1281a5bb9b2c00d` / `a135d563a7e892114934436b6c147dc05f01da8fe6190562ce0733d72ed53466` |
+| RULER EVQ + official-YaRN composite | `54b2b351ac2c470cc74988f49bcba92d20f94f5dd3380ce093659382ee2be707` / `792441d7a2fde8c28253e63986d99b02c25e53d6a5e9f443951ba1b2749a132e` / `280fbd305461cc67d9c52db068c84ed4779404bb97c5839e7242663d4d480b26` |
+| RULER Native + repository ramp | `53b86b07a0263ddc4d0704b1cf52a8f2c9a16e668d8e6510684f00cff5eb9b88` / `525e2fb745de4b9ff8b7e94437cbc49f33db32d3e9ef81de73b7795e0a8e35f6` / `5de849b30d8c274b0db76cfd75e1fba3e28f0bc0e7f7b09061550973e8b94efc` |
+| RULER EVQ + repository-ramp composite | `037f67b11d7353a722536dd9cf5fa6a863a9142c14b6c448fe96b6f1929e111d` / `5b3b8329d0180e74d7a1d4343a29c43a7ba0c898fb08f4572cb1d496b2f4cbfa` / `50bd97fdb6336287706ecdc8c81285bc9bea6aaca26f1a2cabe5f1f4c1736c05` |
+
+## Reviewer-facing wording
+
+> Starting from the untouched OLMo-2 1.485B checkpoint, we trained matched
+> fresh Q/K-only LoRA adapters on generic LongAlign/Tulu data, with every
+> physical training sequence at most 4K and no 2Wiki or RULER-family
+> supervision. EVQ lowers natural-text NLL relative to Native at 8K/16K
+> (3.088/3.382 versus 3.932/5.108), but this probability gain does not become
+> broad task capability: EVQ obtains only 6.12/3.96/2.38% complete-family
+> RULER macro at 4K/8K/16K and 15.56/6.49/1.11% token-F1 on the controlled
+> 2Wiki protocol, with 4.5/0.5/0% exact match. Under the tested factor-2
+> official Transformers YaRN transform, Native/EVQ RULER macro is
+> 61.06/11.05% at 4K and 52.19/6.99% at 8K. We therefore treat generic Q/K
+> adaptation as evidence that long-position NLL and autoregressive task
+> capability must be separated, not as a general downstream-transfer result.
