@@ -110,6 +110,26 @@ The following cells are registered and must all be resolved before promotion:
 4. Native/EVQ substrates with the repository fixed-index smooth-ramp
    transform under the same factors and lengths.
 
+### Completed Native anchors
+
+The completed Native-side cells establish the inherited-capability and
+generic-LoRA baselines while the EVQ and range-transform cells continue.
+
+| 2WikiMultiHopQA arm | 4K F1 | 4K exact | 4K terminal EOS | 8K F1 / exact | 16K F1 / exact |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Untouched Native base | 27.64% | 22.00% | 97.50% | not evaluated | not evaluated |
+| Native fresh Q/K LoRA | 25.47% | 21.00% | 99.00% | 0.13% / 0% | 0.10% / 0% |
+
+| RULER arm | 4K official macro | 8K official macro | 16K official macro |
+| --- | ---: | ---: | ---: |
+| Untouched Native base | 65.16% | not evaluated | not evaluated |
+| Native fresh Q/K LoRA | 58.53% | 0% | 0% |
+
+Thus, fresh generic-data Q/K LoRA causes a modest in-range decline relative to
+the untouched base but does not itself create long-context task capability.
+The Native-versus-EVQ and transform conclusions remain pending until the
+registered counterpart cells finish.
+
 ### 2WikiMultiHopQA
 
 `PENDING_MATRIX`
