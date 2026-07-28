@@ -37,6 +37,12 @@ Both arms use:
 - complete answer-plus-immediate-EOS supervision;
 - physical training sequences no longer than 4K.
 
+The only active method variable between the matched arms is the frequency
+table: the original Native RoPE table versus the EVQ-Cosh table. The resulting
+LoRA weights differ because they are trained under those respective frequency
+tables; that divergence is an outcome of the intervention, not an additional
+experimental variable.
+
 The long-range exposure is implemented with explicit position IDs, so this
 must not be described as training without long-position exposure.
 
@@ -177,7 +183,8 @@ parent, yet remains 29.75 points below the matched Native arm.
 It does not establish:
 
 - clean unseen-task transfer;
-- a pure Cosh-only causal effect;
+- a decomposition of which individual coordinates or geometric properties
+  inside the complete EVQ-Cosh frequency table cause the observed effect;
 - universal long-context superiority;
 - multi-seed stability;
 - structural or bitwise identity to Native at 4K.
