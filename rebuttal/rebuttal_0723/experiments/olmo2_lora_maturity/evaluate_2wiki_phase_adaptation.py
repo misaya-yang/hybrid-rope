@@ -30,6 +30,9 @@ from rebuttal.rebuttal_0723.experiments.olmo2_1b_evq.contract import (
 from rebuttal.rebuttal_0723.experiments.olmo2_lora_ood_factorial import (
     load_adapter,
 )
+from rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.evq_attention_restoration import (
+    install_qkv_lora,
+)
 from rebuttal.rebuttal_0723.experiments.small_model_lora_conversion import (
     atomic_json,
     configure_cuda,
@@ -75,7 +78,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--adaptation",
-        choices=("qkvo_answer", "qk_answer"),
+        choices=(
+            "qkvo_answer",
+            "qk_answer",
+            "qkv_attention_restoration",
+        ),
         default="qkvo_answer",
     )
     parser.add_argument("--rank", type=int, default=64)
@@ -501,12 +508,20 @@ def main() -> None:
     adapter_path = None
     adapter_metadata = None
     if adapter_argument is not None:
-        readout = install_adaptation(
-            model,
-            str(args.adaptation),
-            rank=int(args.rank),
-            alpha=float(args.alpha),
-        )
+        if args.adaptation == "qkv_attention_restoration":
+            install_qkv_lora(
+                model,
+                rank=int(args.rank),
+                alpha=float(args.alpha),
+            )
+            readout = None
+        else:
+            readout = install_adaptation(
+                model,
+                str(args.adaptation),
+                rank=int(args.rank),
+                alpha=float(args.alpha),
+            )
         if readout is not None:
             raise RuntimeError("2Wiki evaluation forbids a readout")
         adapter_path = adapter_argument

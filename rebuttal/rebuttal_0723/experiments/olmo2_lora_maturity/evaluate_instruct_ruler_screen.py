@@ -58,6 +58,9 @@ from rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.olmo2_length_gated_m
     install_length_gated_eos_vocab_row_head,
     install_length_gated_qkvo,
 )
+from rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.evq_attention_restoration import (
+    install_qkv_lora,
+)
 
 
 SUPPORTED_DATA_STATUSES = (
@@ -185,6 +188,7 @@ def parse_args() -> argparse.Namespace:
         choices=(
             "qkvo_answer",
             "qk_answer",
+            "qkv_attention_restoration",
             "length_gated_qkvo_answer",
             LENGTH_GATED_EOS_ADAPTATION,
         ),
@@ -2006,13 +2010,21 @@ def main() -> None:
                         "length-gated method was not installed"
                     )
             else:
-                readout = install_adaptation(
-                    model,
-                    args.adaptation,
-                    rank=int(args.rank),
-                    alpha=float(args.alpha),
-                    qk_output_mask=qk_output_mask,
-                )
+                if args.adaptation == "qkv_attention_restoration":
+                    install_qkv_lora(
+                        model,
+                        rank=int(args.rank),
+                        alpha=float(args.alpha),
+                    )
+                    readout = None
+                else:
+                    readout = install_adaptation(
+                        model,
+                        args.adaptation,
+                        rank=int(args.rank),
+                        alpha=float(args.alpha),
+                        qk_output_mask=qk_output_mask,
+                    )
                 if readout is not None:
                     raise RuntimeError("RULER screen does not admit a readout")
             adapter_metadata = load_adapter(adapter_path, model, None)
