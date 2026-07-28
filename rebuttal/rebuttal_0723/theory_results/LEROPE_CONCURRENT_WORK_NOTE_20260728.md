@@ -68,34 +68,39 @@ NIAH(2.52B,YaRN,到 32k):"LeRoPE outperforms both RoPE and p-RoPE at every evalu
 
 ---
 
-### ④ 【最重要的一条,2026-07-28 补】方向吻合 —— 而且这验证的是 surrogate,不是外推
+### ④ 【2026-07-28 修订 — 原版本错误,已重写】同一权衡的两个相反方向
 
-**我们的目标函数是碰撞,不是外推。** C_app 是 broadband phase-collision 泛函,推导里没有长度泛化这个概念;外推只是我们选的读数。
+**⚠️ 先撤回一个错误判断。** 初稿写过"方向吻合,同一机制在不同读数上显形"。**错。** 两篇的模式是**相反**的:LeRoPE 窗口内赢、naive 外推更差;我们窗口内付代价、窗口外得收益。相反的模式不可能是同一机制的两个读数。
 
-**闭式解(Theorem 1)**:
+**EVQ 实际做的(τ=4,b=500K,已数值验算 φ_k = 1 − arcsinh((1−u)sinh τ)/τ):**
 
-    ρ_τ(φ) = τ·cosh(τ(1−φ)) / sinh(τ)
+| u(几何位置) | 几何波长 | EVQ 波长 |
+|---|---:|---:|
+| 0.5 | 707 | **9.7** |
+| 0.75 | 4,000 | **76** |
+| 0.9 | 34,000 | **1,720** |
+| 0.99 | 380,000 | **206,000** |
 
-在 φ∈[0,1] 上**单调递减**。φ=0 → u=0 → ω=b⁰ = **最高频**(密度最大);φ=1 → **最低频**(密度最小)。
-**→ cosh 把通道密度往高频端挪,弱化低频端。**
+**EVQ 把预算挤向短波长(高频)端,长波长区只留稀疏覆盖(端点仍被 pin 住)。**
 
-**LeRoPE 学出来的**:低频(高波长)带被推向 0,高频带略微加快。
-**→ 同一方向:压低频、保高频。**
+**机制(能同时解释外推收益和窗口内代价):**
 
-**意义**:LeRoPE **只优化分布内 loss**,却独立收敛到我们碰撞分析开出的同一方向。**这是机制在另一个读数上显形,而且去掉了长度泛化这个混淆因素。**
+以"该通道在训练中跑过几个完整周期"划分 —
+- **波长 ≪ L_train**:训练中转过很多圈 → 超出 L 后进入**已走过的相位区域**,行为是训练 territory 的重复 → **外推稳**
+- **波长 ≫ L_train**:训练中连一圈都没转完 → 超出 L 后相位进入**从未见过的区域** → **外推崩溃点**
 
-**这正对 AC metareview 里那句**:"the connection between **the surrogate objective, the cosh allocation**, and the recommended operating rule remains **only partially validated**" —— LeRoPE 提供的是这一段的外部独立验证(52M–2.5B,从零训练,跨 seed 一致)。
+→ EVQ 把预算从"从未被完整激励"的通道搬到"被激励很多次"的通道 → **外推稳**
+→ 同时,中慢速通道正是窗口内最细的单调位置分辨率来源,抽稀它们 → **窗口内代价**
 
-**⚠️ 机制不同,必须同时说清楚:**
+这与 C_app 的 Green 核 min(φ,ψ) 一致:该核惩罚**两个都慢**的通道对 —— 波长 10 万与 20 万的通道在任何真实上下文里都近似常数,**是重复品**。几何分配把预算浪费在这堆重复品上。
 
-| | 对低频带做什么 |
-|---|---|
-| EVQ-Cosh | **重分配** —— 所有通道保留,密度往高频挪 |
-| LeRoPE | **压制** —— 低频带频率推向 0,等于移除 |
+**LeRoPE 的反向选择:** 优化分布内 → 学出 **λ ≈ 2.205·L_train** 的 dominant band,波长卡在训练窗口上,窗口内单调位置信号最干净。他们自己说该 band 的 logit 贡献是周期 2.2·L_train 的负半周正弦,**"on relative distances beyond those seen during training, the contribution becomes positive"** → 超出训练长度翻号 → naive 外推崩得比 RoPE 更狠。
 
-LeRoPE 自己承认终点接近 partial-RoPE:"p-RoPE can be interpreted as a coarse approximation of final LeRoPE frequencies, preserving faster frequencies while suppressing slower ones"。
+**结论:LeRoPE 把赌注压在恰好 = L_train 的尺度;EVQ 把赌注从那个尺度撤走。同一权衡,相反方向。**
 
-**→ 可说"同一方向",不可说"同一个解"。我们没做过形状对比。**
+**这个框架对 rebuttal 的价值:** 它把我们的 in-window cost 从"缺陷"变成"该权衡的另一端",并且有一篇独立论文从相反方向验证了这个权衡是结构性的、不是我们方法的毛病。
+
+**🚫 仍然不能说:** EVQ 表 ≈ LeRoPE 表(方向就不同,更别说形状);LeRoPE 验证了 EVQ 的外推。
 
 ---
 
@@ -150,7 +155,7 @@ EVQ-Cosh:闭式初始化,零参数,不需要发现过程。
 >
 > First, the learned frequencies converge to a **non-geometric** profile that is consistent across seeds and scales, and the point of departure from the geometric grid tracks the training length.
 >
-> Second, the direction of that departure is the one our collision surrogate prescribes: the low-frequency end is de-emphasised while the fast bands are preserved. Our objective is phase collision, not length generalisation — extrapolation is a readout we chose, not the target — so an in-distribution result of this kind speaks to the surrogate directly. We note the mechanisms differ: EVQ-Cosh redistributes a fixed channel budget, whereas LeRoPE drives the slowest bands toward zero, which the authors themselves relate to p-RoPE. We claim directional agreement, not a matching allocation; we have not compared the two profiles.
+> Second, the two methods traverse the same trade-off from opposite ends, which we think clarifies rather than complicates the picture. LeRoPE optimises in-distribution loss and converges on a dominant band at a wavelength of roughly 2.2 times the training length; the authors report that this band's logit contribution changes sign beyond trained distances, and that LeRoPE degrades more sharply than RoPE under naive extrapolation. EVQ-Cosh moves budget away from that scale, which costs in-window resolution and is why we report an in-window trade-off. The trade-off between in-window resolution and behaviour beyond the training window therefore appears to be structural, and is now visible from two directions in independent work.
 >
 > Third, and directly on the confound Reviewer 27bE identified: training with those frequencies **frozen** — zero learned positional parameters — captures **63.6%** of the gain, while p-RoPE captures 10.4%. Most of the benefit is in the table, not in learning it.
 >
@@ -166,3 +171,102 @@ EVQ-Cosh:闭式初始化,零参数,不需要发现过程。
 2. **三轴分类需要加一行**:learned/searched frequency(LeRoPE、LongRoPE 的 per-channel search)是第四类,或者放在第三轴内部区分"学出来的 vs 解析构造的"。
 3. **我们的 `free_inv_freq` 对照获得了新意义** —— 它是 LeRoPE 类方法在**外推 regime** 下的表现。LeRoPE 自己说 naive 外推更差,和我们 455.3 vs EVQ 333.7 的方向**一致**,不矛盾。这条在下一版可以正面写。
 4. **最有价值的潜在实验**:EVQ 的闭式表 vs Fixed-LeRoPE 的学出表,在同一 OOD 基准上对比。若接近 → "闭式解逼近搜索解";若不同 → 两者优化不同目标。**现在不做,下一轮做。**
+
+---
+
+## 7. 【2026-07-28】由 LeRoPE 引出的下一篇研究议程
+
+**状态:假设,未验证。以下所有数值均已复算(τ* = d_head/√L_train,来源 `scripts/analysis/unification_plot*.py`、`verify_softmax_transport.py`;b=500K;λ = 2π·b^φ)。**
+
+### 7.0 先撤回两个说法(2026-07-28 同日自查)
+
+**撤回 A:「EVQ 抽稀了 L 尺度频带,这就是 in-window 代价的来源」** —— 数值不支持。
+
+EVQ 相对几何的通道密度 ρ(φ) = τ·cosh(τ(1−φ))/sinh(τ):
+
+| 波长 | τ=2(OLMo-2 实际值) | τ=4 |
+|---:|---:|---:|
+| 23 | 1.71× | 2.68× |
+| 322 | 1.19× | 1.21× |
+| 2,305 | 0.92× | 0.67× |
+| **8,563 ≈ 2.2·L(L=4096)** | **0.79×** | 0.46× |
+| 61,300 | 0.65× | 0.27× |
+| 3,141,593 | 0.55× | 0.15× |
+
+**EVQ 的削减集中在 λ ≫ 任何部署长度的区域** —— 即在真实上下文中近似常数、彼此高度重复的通道。**这正是 C_app 的 Green 核 min(φ,ψ) 所惩罚的对象(两个都慢的通道对),机制自洽。** L 尺度频带在 τ=2 下只削到 0.79×,很轻。
+
+**撤回 B:「窗口内代价」是一个东西** —— 是两个,不能混:
+
+| 观测 | 量级 | 归因 |
+|---|---|---|
+| OLMo-2 1.485B 从头训 @4K NLL | **+0.0381** | 真·分配代价。与 0.79× 轻度削减量级一致 |
+| LoRA 换表后 RULER macro 82.16→37.51 | 巨大 | **换表适配失配**(模型由几何预训练),非分配内禀属性;Q/K-only 探的正是这个 |
+
+**→ 论文层面这是好消息:分配本身的窗口内代价很小。下一版应把这两者明确分开陈述。**
+
+### 7.1 保留的核心二分(这可能是下一版理论章节的骨架)
+
+在长距离 d 处,波长 λ 的通道 cos(2πd/λ):
+
+| | 长距离状态 | 
+|---|---|
+| **λ ≪ d** | **行为良好但有歧义** —— 相位值训练中见过无数次,模型响应定义良好;但多个 d 映到同一相位 |
+| **λ ≫ d** | **无歧义但未受训** —— 近似单调,但相位进入训练中从未到达的区间 |
+
+**外推失效有两个独立来源:歧义(aliasing)和未受训(OOD phase)。现有工作没有把它们分开度量。**
+
+- EVQ 押注「行为良好但有歧义」侧,同时删掉冗余的极慢通道
+- p-RoPE 删的是慢端(减少未受训项)
+- LeRoPE 押注恰好 λ≈2.205·L_train(窗口内无歧义且受训),超出即翻号
+
+**这个二分能同时安置四种方法,比现在论文里的单一碰撞叙事解释力强。**
+
+### 7.2 实验 A(零成本,最高优先)—— τ 摆动是否是「对准 λ*」
+
+**动机:** LeRoPE leave-one-out:zero 掉 dominant band(λ≈2.205·L_train)增加 loss **0.762 nats**,第二名 band 26 只有 **0.069 nats** —— **11 倍**。若窗口内位置信号如此集中于单一波长,则**通道落点精度**比该区域密度更重要。
+
+我们的表**没有任何机制把通道钉在 λ\* 上**,落点是副产品:
+
+| L_train | λ*=2.205L | EVQ 最近通道/λ* | 几何最近通道/λ* |
+|---:|---:|---:|---:|
+| 512 | 1,129 | **0.86×** | 0.94× |
+| 1,024 | 2,258 | 1.16× | 1.06× |
+| 2,048 | 4,516 | 1.04× | 1.09× |
+| 4,096 | 9,032 | 1.02× | 0.91× |
+| 8,192 | 18,063 | 1.11× | 1.03× |
+
+(d_head=128, K=64, b=500K, τ=d_head/√L)
+
+**假设 H1:** 21 个配置中经验选出的 τ,与「哪个 τ 使某通道最接近 2.205·L_train」相关。
+
+**做法:** 纯 post-hoc,数据已在仓库。对每个配置,在 τ ∈ {0.75,1.0,1.25,1.5}× 上算 min_k |log(λ_k/λ*)|,与实际选中的倍数做秩相关。
+
+**若成立** → **那个 0.75×–1.5× 的摆动不是噪声,是 schedule 在对准 λ\*。这直接补上 27bE 咬得最狠的洞(推导给出标度形式但给不出常数)。**
+**若不成立** → 干净地排除一个解释,成本为零。
+
+⚠️ **本轮 rebuttal 不用。** 即使成立也是新论证,讨论期引入新机制主张风险高于收益。
+
+### 7.3 实验 B —— 钉住 λ* 的保留带(zero-parameter 变体)
+
+**设计:** K 个通道中,把一个通道解析地钉在 λ = c·L_train(c 由 LeRoPE 报的 2.205 起步,或从我们自己的数据标定),其余 K−1 个按 cosh 分配。仍然闭式、零参数、无 target。
+
+**预期:** 若 H1 成立,应消掉大部分 +0.0381 的从头训 in-window 代价而不动外推收益。
+**若 H1 不成立,本实验多半也无效 —— 先做 A 再做 B。**
+
+**注意:** 这里的 c 依赖 L_train 而非 L_target,**不会引入 FMRoPE 式的 target 依赖**(我们在 AC_PUBLIC / AC_CONFIDENTIAL 中把「不需要 L_target」作为区分点,该性质必须保住)。
+
+### 7.4 实验 C —— 把「歧义」与「未受训」分开度量
+
+按 λ 相对部署距离 d 分组,分别消融:
+- 组 1(λ ≪ d):制造 aliasing
+- 组 2(λ ≳ L_train):制造未受训相位
+
+测各组对长距离 NLL 的边际贡献。**若两条曲线随 d 的走向不同 → 二分成立,可作为下一版的核心图。**
+
+### 7.5 ❌ 已否决的想法(留档,避免重走)
+
+**「外推时低频更重要,把高频置零(→NoPE)」** —— 方向反了。高频通道在长距离处相位是训练中反复见过的,模型响应定义良好,只是有歧义;把它们关掉后只剩**未受训**的慢通道,而那正是外推崩溃的来源。p-RoPE(删慢端)与 LeRoPE 对 p-RoPE 的解读("preserving faster frequencies while suppressing slower ones")都指向相反方向。
+
+### 7.6 优先级
+
+**A(零成本,先做)→ 视 A 结果决定 B → C 作为下一版理论图。全部在本轮讨论期之外。**
