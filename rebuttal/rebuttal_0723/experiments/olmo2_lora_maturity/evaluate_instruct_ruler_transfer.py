@@ -52,6 +52,20 @@ from rebuttal.rebuttal_0723.experiments.olmo2_lora_ood_factorial import (
 from rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.evq_attention_restoration import (
     install_qkv_lora,
 )
+from .native_protected_evq import (
+    ADAPTATION_NAME as NATIVE_PROTECTED_ADAPTATION,
+    FREQUENCY_NAME as NATIVE_PROTECTED_FREQUENCY,
+    apply_native_protected_evq,
+    install_masked_qk_lora,
+)
+from .train_4k_native_protected_evq import load_selection
+from .far_only_evq_residual import (
+    ADAPTATION_NAME as FAR_ONLY_EVQ_ADAPTATION,
+    install_far_only_evq_residual,
+    load_far_only_adapter,
+    peek_far_only_adapter,
+    route_for_budget,
+)
 
 
 RESULT_STATUS = "OLMO2_INSTRUCT_RULER_TRANSFER_COMPLETE"
@@ -82,6 +96,15 @@ def bound_code_sha256() -> dict[str, str]:
         ),
         "evq_contract": experiments_root / "olmo2_1b_evq" / "contract.py",
         "lora_conversion": experiments_root / "olmo2_lora_conversion.py",
+        "native_protected_method": (
+            maturity_root / "native_protected_evq.py"
+        ),
+        "native_protected_receipt_loader": (
+            maturity_root / "train_4k_native_protected_evq.py"
+        ),
+        "far_only_evq_method": (
+            maturity_root / "far_only_evq_residual.py"
+        ),
         "adapter_loader": (
             experiments_root / "olmo2_lora_ood_factorial.py"
         ),
@@ -123,6 +146,7 @@ def parse_args() -> argparse.Namespace:
             "hybrid_evq_low24",
             "hybrid_evq_low32",
             "hybrid_evq_low40",
+            NATIVE_PROTECTED_FREQUENCY,
         ),
         required=True,
     )
@@ -139,11 +163,19 @@ def parse_args() -> argparse.Namespace:
             "qkvo_answer",
             "qk_answer",
             "qkv_attention_restoration",
+            NATIVE_PROTECTED_ADAPTATION,
+            FAR_ONLY_EVQ_ADAPTATION,
         ),
         default="qkvo_answer",
     )
     parser.add_argument("--rank", type=int, default=64)
     parser.add_argument("--alpha", type=float, default=128.0)
+    parser.add_argument("--selection-receipt", type=Path)
+    parser.add_argument(
+        "--protected-arm",
+        choices=("protected", "full-evq-control"),
+        default="protected",
+    )
     parser.add_argument("--tasks", nargs="+")
     parser.add_argument("--lengths", type=int, nargs="+")
     parser.add_argument("--limit-per-cell", type=int, default=20)
@@ -576,6 +608,51 @@ def main() -> None:
     adapter_path = (
         None if args.adapter is None else args.adapter.resolve()
     )
+    selection_path = (
+        None
+        if args.selection_receipt is None
+        else args.selection_receipt.resolve()
+    )
+    if (
+        args.frequency == NATIVE_PROTECTED_FREQUENCY
+        and selection_path is None
+    ):
+        raise RuntimeError(
+            "Native-protected EVQ evaluation requires --selection-receipt"
+        )
+    if (
+        args.adaptation == NATIVE_PROTECTED_ADAPTATION
+        and (
+            adapter_path is None
+            or args.frequency != NATIVE_PROTECTED_FREQUENCY
+        )
+    ):
+        raise RuntimeError(
+            "masked Q/K restoration requires its adapter and frequency"
+        )
+    if (
+        args.adaptation == FAR_ONLY_EVQ_ADAPTATION
+        and (
+            adapter_path is None
+            or args.frequency != "native"
+        )
+    ):
+        raise RuntimeError(
+            "far-only EVQ residual requires its adapter and Native global RoPE"
+        )
+    far_only_config = (
+        peek_far_only_adapter(adapter_path)[0]
+        if (
+            adapter_path is not None
+            and args.adaptation == FAR_ONLY_EVQ_ADAPTATION
+        )
+        else None
+    )
+    selected_protected = (
+        load_selection(selection_path)[1]
+        if args.frequency == NATIVE_PROTECTED_FREQUENCY
+        else None
+    )
     experiment_ready_path = (
         None
         if args.experiment_ready_receipt is None
@@ -667,8 +744,26 @@ def main() -> None:
         "adapter_sha256": (
             None if adapter_path is None else sha256_file(adapter_path)
         ),
+        "selection_receipt_sha256": (
+            None
+            if selection_path is None
+            else sha256_file(selection_path)
+        ),
+        "protected_arm": (
+            str(args.protected_arm)
+            if args.frequency == NATIVE_PROTECTED_FREQUENCY
+            else None
+        ),
         "rank": int(args.rank),
         "alpha": float(args.alpha),
+        "far_only_evq_config": (
+            None
+            if far_only_config is None
+            else {
+                name: value
+                for name, value in vars(far_only_config).items()
+            }
+        ),
         "tasks": list(selected_tasks),
         "lengths": list(selected_lengths),
         "limit_per_cell": int(args.limit_per_cell),
@@ -748,6 +843,13 @@ def main() -> None:
             ),
             factor=float(args.yarn_factor),
         )
+    elif args.frequency == NATIVE_PROTECTED_FREQUENCY:
+        applied = (
+            selected_protected
+            if args.protected_arm == "protected"
+            else ()
+        )
+        frequency = apply_native_protected_evq(model, applied)
     elif str(args.frequency).startswith("hybrid_"):
         frequency = apply_screen_frequency(
             model,
@@ -758,7 +860,35 @@ def main() -> None:
         frequency = apply_frequency(model, str(args.frequency))
     adapter_receipt = None
     if args.adapter is not None:
-        if args.adaptation == "qkv_attention_restoration":
+        output_mask = None
+        far_only_loaded = False
+        if args.adaptation == FAR_ONLY_EVQ_ADAPTATION:
+            if far_only_config is None:
+                raise RuntimeError("far-only EVQ configuration is missing")
+            install_far_only_evq_residual(model, far_only_config)
+            readout = None
+            far_only_loaded = True
+        elif args.adaptation == NATIVE_PROTECTED_ADAPTATION:
+            if (
+                args.frequency != NATIVE_PROTECTED_FREQUENCY
+                or selection_path is None
+            ):
+                raise RuntimeError(
+                    "masked Q/K restoration requires Native-protected EVQ"
+                )
+            applied = (
+                selected_protected
+                if args.protected_arm == "protected"
+                else ()
+            )
+            _, output_mask = install_masked_qk_lora(
+                model,
+                protected_pairs=applied,
+                rank=int(args.rank),
+                alpha=float(args.alpha),
+            )
+            readout = None
+        elif args.adaptation == "qkv_attention_restoration":
             install_qkv_lora(
                 model,
                 rank=int(args.rank),
@@ -775,8 +905,25 @@ def main() -> None:
         if readout is not None:
             raise RuntimeError("RULER transfer does not admit a readout")
         adapter_path = args.adapter.resolve()
-        adapter_metadata = load_adapter(adapter_path, model, None)
-        if args.frequency in {
+        adapter_metadata = (
+            load_far_only_adapter(
+                adapter_path,
+                model,
+                expected_checkpoint_sha256=checkpoint_digest,
+            )
+            if far_only_loaded
+            else load_adapter(adapter_path, model, None)
+        )
+        if far_only_loaded:
+            if (
+                adapter_metadata.get("adaptation")
+                != FAR_ONLY_EVQ_ADAPTATION
+                or adapter_metadata.get("global_frequency") != "native"
+                or adapter_metadata.get("residual_frequency")
+                != "endpoint_evq_cosh"
+            ):
+                raise RuntimeError("far-only EVQ adapter metadata drift")
+        elif args.frequency in {
             "official_yarn",
             "repo_fixed_ramp",
         }:
@@ -806,6 +953,27 @@ def main() -> None:
                 rank=int(args.rank),
                 alpha=float(args.alpha),
             )
+        elif args.frequency == NATIVE_PROTECTED_FREQUENCY:
+            expected_metadata = {
+                "base_checkpoint_sha256": checkpoint_digest,
+                "frequency": NATIVE_PROTECTED_FREQUENCY,
+                "frequency_sha256_float32": frequency[
+                    "active_sha256_float32"
+                ],
+                "adaptation": NATIVE_PROTECTED_ADAPTATION,
+                "rank": int(args.rank),
+                "alpha": float(args.alpha),
+                "training_sequence_length": 4_096,
+                "qk_output_mask_sha256": tensor_sha256(output_mask),
+                "protected_native_pair_indices": frequency[
+                    "protected_native_pair_indices"
+                ],
+            }
+            for name, expected in expected_metadata.items():
+                if adapter_metadata.get(name) != expected:
+                    raise RuntimeError(
+                        f"Native-protected adapter metadata drift for {name}"
+                    )
         elif str(args.frequency).startswith("hybrid_"):
             expected_metadata = {
                 "base_checkpoint_sha256": checkpoint_digest,
@@ -850,6 +1018,11 @@ def main() -> None:
         for row in rows:
             task = str(row["_task"])
             length = int(row["_nominal_length"])
+            route_enabled = (
+                route_for_budget(model, length)
+                if args.adaptation == FAR_ONLY_EVQ_ADAPTATION
+                else None
+            )
             local_index = int(row["_local_index"])
             generation_tokens = int(row["_generation_tokens"])
             key = (task, length, local_index)
@@ -927,6 +1100,7 @@ def main() -> None:
                     reference_recall == 1.0
                 ),
                 "elapsed_seconds": elapsed,
+                "far_only_evq_route_enabled": route_enabled,
             }
             handle.write(
                 json.dumps(result, ensure_ascii=False, sort_keys=True)
@@ -1033,6 +1207,16 @@ def main() -> None:
             "adaptation": (
                 str(args.adaptation)
                 if adapter_receipt is not None
+                else None
+            ),
+            "selection_receipt_sha256": (
+                None
+                if selection_path is None
+                else sha256_file(selection_path)
+            ),
+            "protected_arm": (
+                str(args.protected_arm)
+                if args.frequency == NATIVE_PROTECTED_FREQUENCY
                 else None
             ),
             "yarn_factor": (

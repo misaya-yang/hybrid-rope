@@ -50,6 +50,20 @@ from .evaluate_instruct_ruler_transfer import (
     validate_adapter_training_substrate,
     verify_official_yarn,
 )
+from .native_protected_evq import (
+    ADAPTATION_NAME as NATIVE_PROTECTED_ADAPTATION,
+    FREQUENCY_NAME as NATIVE_PROTECTED_FREQUENCY,
+    apply_native_protected_evq,
+    install_masked_qk_lora,
+)
+from .train_4k_native_protected_evq import load_selection
+from .far_only_evq_residual import (
+    ADAPTATION_NAME as FAR_ONLY_EVQ_ADAPTATION,
+    install_far_only_evq_residual,
+    load_far_only_adapter,
+    peek_far_only_adapter,
+    route_for_budget,
+)
 
 
 RESULT_STATUS = "OLMO2_2WIKI_PHASE_EVALUATION_COMPLETE_V1"
@@ -73,6 +87,7 @@ def parse_args() -> argparse.Namespace:
             "evq_official_yarn",
             "repo_fixed_ramp",
             "evq_repo_fixed_ramp",
+            NATIVE_PROTECTED_FREQUENCY,
         ),
         required=True,
     )
@@ -82,11 +97,19 @@ def parse_args() -> argparse.Namespace:
             "qkvo_answer",
             "qk_answer",
             "qkv_attention_restoration",
+            NATIVE_PROTECTED_ADAPTATION,
+            FAR_ONLY_EVQ_ADAPTATION,
         ),
         default="qkvo_answer",
     )
     parser.add_argument("--rank", type=int, default=64)
     parser.add_argument("--alpha", type=float, default=128.0)
+    parser.add_argument("--selection-receipt", type=Path)
+    parser.add_argument(
+        "--protected-arm",
+        choices=("protected", "full-evq-control"),
+        default="protected",
+    )
     parser.add_argument("--yarn-factor", type=float, default=4.0)
     parser.add_argument(
         "--yarn-original-max-position-embeddings",
@@ -396,12 +419,69 @@ def main() -> None:
     adapter_argument = (
         None if args.adapter is None else args.adapter.resolve()
     )
+    selection_argument = (
+        None
+        if args.selection_receipt is None
+        else args.selection_receipt.resolve()
+    )
+    if (
+        args.frequency == NATIVE_PROTECTED_FREQUENCY
+        and selection_argument is None
+    ):
+        raise RuntimeError(
+            "Native-protected EVQ evaluation requires --selection-receipt"
+        )
+    if (
+        args.adaptation == NATIVE_PROTECTED_ADAPTATION
+        and (
+            adapter_argument is None
+            or args.frequency != NATIVE_PROTECTED_FREQUENCY
+        )
+    ):
+        raise RuntimeError(
+            "masked Q/K restoration requires its adapter and frequency"
+        )
+    if (
+        args.adaptation == FAR_ONLY_EVQ_ADAPTATION
+        and (
+            adapter_argument is None
+            or args.frequency != "native"
+        )
+    ):
+        raise RuntimeError(
+            "far-only EVQ residual requires its adapter and Native global RoPE"
+        )
+    far_only_config = (
+        peek_far_only_adapter(adapter_argument)[0]
+        if (
+            adapter_argument is not None
+            and args.adaptation == FAR_ONLY_EVQ_ADAPTATION
+        )
+        else None
+    )
+    selected_protected = (
+        load_selection(selection_argument)[1]
+        if args.frequency == NATIVE_PROTECTED_FREQUENCY
+        else None
+    )
     run_manifest = {
         "status": "OLMO2_2WIKI_PHASE_EVAL_RUN_V1",
         "script_sha256": sha256_file(Path(__file__).resolve()),
         "frequency_helper_sha256": sha256_file(
             Path(__file__).resolve().parent
             / "evaluate_instruct_ruler_transfer.py"
+        ),
+        "native_protected_method_sha256": sha256_file(
+            Path(__file__).resolve().parent
+            / "native_protected_evq.py"
+        ),
+        "native_protected_receipt_loader_sha256": sha256_file(
+            Path(__file__).resolve().parent
+            / "train_4k_native_protected_evq.py"
+        ),
+        "far_only_evq_method_sha256": sha256_file(
+            Path(__file__).resolve().parent
+            / "far_only_evq_residual.py"
         ),
         "checkpoint_sha256": checkpoint_digest,
         "checkpoint_ready_receipt_sha256": sha256_file(
@@ -418,6 +498,16 @@ def main() -> None:
             if adapter_argument is None
             else sha256_file(adapter_argument)
         ),
+        "selection_receipt_sha256": (
+            None
+            if selection_argument is None
+            else sha256_file(selection_argument)
+        ),
+        "protected_arm": (
+            str(args.protected_arm)
+            if args.frequency == NATIVE_PROTECTED_FREQUENCY
+            else None
+        ),
         "role": str(args.role),
         "frequency": str(args.frequency),
         "adaptation": (
@@ -427,6 +517,14 @@ def main() -> None:
         ),
         "rank": int(args.rank),
         "alpha": float(args.alpha),
+        "far_only_evq_config": (
+            None
+            if far_only_config is None
+            else {
+                name: value
+                for name, value in vars(far_only_config).items()
+            }
+        ),
         "budgets": list(budgets),
         "limit": int(args.limit),
         "fill_to_budget": bool(args.fill_to_budget),
@@ -503,12 +601,40 @@ def main() -> None:
             ),
             factor=float(args.yarn_factor),
         )
+    elif args.frequency == NATIVE_PROTECTED_FREQUENCY:
+        applied = (
+            selected_protected
+            if args.protected_arm == "protected"
+            else ()
+        )
+        frequency = apply_native_protected_evq(model, applied)
     else:
         frequency = apply_frequency(model, args.frequency)
     adapter_path = None
     adapter_metadata = None
     if adapter_argument is not None:
-        if args.adaptation == "qkv_attention_restoration":
+        output_mask = None
+        far_only_loaded = False
+        if args.adaptation == FAR_ONLY_EVQ_ADAPTATION:
+            if far_only_config is None:
+                raise RuntimeError("far-only EVQ configuration is missing")
+            install_far_only_evq_residual(model, far_only_config)
+            readout = None
+            far_only_loaded = True
+        elif args.adaptation == NATIVE_PROTECTED_ADAPTATION:
+            applied = (
+                selected_protected
+                if args.protected_arm == "protected"
+                else ()
+            )
+            _, output_mask = install_masked_qk_lora(
+                model,
+                protected_pairs=applied,
+                rank=int(args.rank),
+                alpha=float(args.alpha),
+            )
+            readout = None
+        elif args.adaptation == "qkv_attention_restoration":
             install_qkv_lora(
                 model,
                 rank=int(args.rank),
@@ -525,8 +651,25 @@ def main() -> None:
         if readout is not None:
             raise RuntimeError("2Wiki evaluation forbids a readout")
         adapter_path = adapter_argument
-        adapter_metadata = load_adapter(adapter_path, model, None)
-        if args.frequency in {"official_yarn", "repo_fixed_ramp"}:
+        adapter_metadata = (
+            load_far_only_adapter(
+                adapter_path,
+                model,
+                expected_checkpoint_sha256=checkpoint_digest,
+            )
+            if far_only_loaded
+            else load_adapter(adapter_path, model, None)
+        )
+        if far_only_loaded:
+            if (
+                adapter_metadata.get("adaptation")
+                != FAR_ONLY_EVQ_ADAPTATION
+                or adapter_metadata.get("global_frequency") != "native"
+                or adapter_metadata.get("residual_frequency")
+                != "endpoint_evq_cosh"
+            ):
+                raise RuntimeError("far-only EVQ adapter metadata drift")
+        elif args.frequency in {"official_yarn", "repo_fixed_ramp"}:
             validate_adapter_training_substrate(
                 adapter_metadata,
                 checkpoint_digest=checkpoint_digest,
@@ -565,6 +708,17 @@ def main() -> None:
                 "alpha": float(args.alpha),
                 "training_sequence_length": LENGTH,
             }
+            if args.frequency == NATIVE_PROTECTED_FREQUENCY:
+                expected_adapter.update(
+                    {
+                        "qk_output_mask_sha256": tensor_sha256(
+                            output_mask
+                        ),
+                        "protected_native_pair_indices": frequency[
+                            "protected_native_pair_indices"
+                        ],
+                    }
+                )
             for name, expected in expected_adapter.items():
                 if adapter_metadata.get(name) != expected:
                     raise RuntimeError(
@@ -581,6 +735,11 @@ def main() -> None:
     cells: dict[str, dict[str, Any]] = {}
     with examples_path.open("a", encoding="utf-8") as handle:
         for budget in budgets:
+            route_enabled = (
+                route_for_budget(model, budget)
+                if args.adaptation == FAR_ONLY_EVQ_ADAPTATION
+                else None
+            )
             sums = {
                 "token_f1": 0.0,
                 "normalized_exact": 0.0,
@@ -727,6 +886,7 @@ def main() -> None:
                 "mean_input_tokens": sums["input_tokens"] / len(rows),
                 "truncated_examples": int(sums["truncated"]),
                 "filled_examples": int(sums["filled"]),
+                "far_only_evq_route_enabled": route_enabled,
             }
 
     result = {

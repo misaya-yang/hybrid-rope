@@ -176,6 +176,13 @@ EVQ-Cosh:闭式初始化,零参数,不需要发现过程。
 
 ## 7. 【2026-07-28】由 LeRoPE 引出的下一篇研究议程
 
+> **后续实验设计更新。** 本节的单一 `2.205L` 锚点只保留为历史构思，
+> 不是 GPU 启动依据。成熟 OLMo 的直接 EVQ 表本来就含邻近频带，而“存在该
+> 频率”不等于模型使用该通道。当前可执行、可证伪版本先测 Native 模型真实
+> post-RoPE attention 的逐频带 leave-one-out KL；只有重要性集中且 split
+> 稳定才保护该经验子集。完整注册见
+> `OLMO2_NATIVE_IMPORTANCE_PROTECTED_EVQ_HYPOTHESIS_20260728.md`。
+
 **状态:假设,未验证。以下所有数值均已复算(τ* = d_head/√L_train,来源 `scripts/analysis/unification_plot*.py`、`verify_softmax_transport.py`;b=500K;λ = 2π·b^φ)。**
 
 ### 7.0 先撤回两个说法(2026-07-28 同日自查)
