@@ -28,6 +28,36 @@ RULER_TASKS = (
     "qa_1",
     "qa_2",
 )
+EXPECTED_ACTIVE_FREQUENCY = {
+    "native": "native_endpoint_rope",
+    "evq": "evq_endpoint_cosh",
+    "official_yarn": "official_transformers_yarn",
+    "evq_official_yarn": (
+        "evq_endpoint_cosh_plus_official_transformers_yarn"
+    ),
+    "repo_fixed_ramp": "native_plus_repo_fixed_index_smooth_ramp",
+    "evq_repo_fixed_ramp": "evq_plus_repo_fixed_index_smooth_ramp",
+}
+EXPECTED_ACTIVE_FREQUENCY_SHA256 = {
+    ("native", None): (
+        "dde15c31724177356ae954d6e11fb337e6fccef56e4520a905cac3f0d9885b34"
+    ),
+    ("evq", None): (
+        "917a52426b4ac986545c8ec73b115daae3c6515d6b9047f09d30c972ea1a4607"
+    ),
+    ("official_yarn", 2.0): (
+        "8accc312855e440d24c9a3542a1cbff45a64774460c7aa7fd8513dc26c333039"
+    ),
+    ("evq_official_yarn", 2.0): (
+        "45c4484495368a8dfc5b4fcc6f6efad446e004782a0625897457c25dad006d01"
+    ),
+    ("repo_fixed_ramp", 2.0): (
+        "1355e594f8e72953c5ee73ac78df5a7779c239c8b7f4273cd2ab05c7e35c6bbf"
+    ),
+    ("evq_repo_fixed_ramp", 2.0): (
+        "d11ddab909667b882ef59c465ed1a70bb98e25fa278635f1f7067ba3ffa9ed0d"
+    ),
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -76,6 +106,22 @@ def load_json(path: Path) -> dict[str, Any]:
     return value
 
 
+def load_jsonl(path: Path) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for line_number, line in enumerate(
+        path.read_text(encoding="utf-8").splitlines(), start=1
+    ):
+        if not line.strip():
+            continue
+        value = json.loads(line)
+        if not isinstance(value, dict):
+            raise RuntimeError(
+                f"expected JSON object at {path}:{line_number}"
+            )
+        rows.append(value)
+    return rows
+
+
 def require_equal(actual: Any, expected: Any, name: str) -> None:
     if actual != expected:
         raise RuntimeError(
@@ -88,6 +134,44 @@ def require_probability(value: Any, name: str) -> float:
     if not math.isfinite(number) or not 0.0 <= number <= 1.0:
         raise RuntimeError(f"invalid probability {name}: {number}")
     return number
+
+
+def require_sha256(value: Any, name: str) -> str:
+    text = str(value)
+    if len(text) != 64 or any(
+        character not in "0123456789abcdef" for character in text
+    ):
+        raise RuntimeError(f"invalid SHA-256 {name}: {text!r}")
+    return text
+
+
+def current_ruler_bound_code_sha256() -> dict[str, str]:
+    maturity_root = Path(__file__).resolve().parent
+    experiments_root = maturity_root.parent
+    paths = {
+        "evaluator": maturity_root / "evaluate_instruct_ruler_transfer.py",
+        "screen_frequency": (
+            maturity_root / "evaluate_instruct_ruler_screen.py"
+        ),
+        "hybrid_import_dependency": maturity_root / "olmo2_exact_method.py",
+        "data_contract": (
+            maturity_root / "prepare_instruct_ruler_transfer.py"
+        ),
+        "checkpoint_contract": maturity_root / "train_4k_stage_a.py",
+        "frequency_application": maturity_root / "train_screen.py",
+        "greedy_generation_and_row_identity": (
+            experiments_root / "olmo2_1b_evq" / "evaluate_ruler.py"
+        ),
+        "evq_contract": experiments_root / "olmo2_1b_evq" / "contract.py",
+        "lora_conversion": experiments_root / "olmo2_lora_conversion.py",
+        "adapter_loader": (
+            experiments_root / "olmo2_lora_ood_factorial.py"
+        ),
+    }
+    return {
+        name: sha256_file(path)
+        for name, path in sorted(paths.items())
+    }
 
 
 def validate_common(
@@ -132,10 +216,27 @@ def validate_common(
         args.data_manifest_sha256,
         "result data manifest",
     )
-    if not result.get("frequency", {}).get("active_frequency"):
-        raise RuntimeError("missing realized active frequency")
-    if not result.get("frequency", {}).get("active_sha256_float32"):
-        raise RuntimeError("missing realized frequency hash")
+    frequency = result.get("frequency", {})
+    require_equal(
+        frequency.get("active_frequency"),
+        EXPECTED_ACTIVE_FREQUENCY[args.frequency],
+        "realized active frequency",
+    )
+    active_frequency_sha = require_sha256(
+        frequency.get("active_sha256_float32"),
+        "realized frequency tensor",
+    )
+    expected_frequency_key = (args.frequency, args.yarn_factor)
+    if expected_frequency_key not in EXPECTED_ACTIVE_FREQUENCY_SHA256:
+        raise RuntimeError(
+            "no independent realized-frequency anchor for "
+            f"{expected_frequency_key!r}"
+        )
+    require_equal(
+        active_frequency_sha,
+        EXPECTED_ACTIVE_FREQUENCY_SHA256[expected_frequency_key],
+        "independently anchored realized frequency tensor",
+    )
 
     require_equal(
         manifest.get("checkpoint_sha256"),
@@ -205,6 +306,10 @@ def validate_common(
             args.adapter_training_frequency,
             "adapter training frequency",
         )
+        require_sha256(
+            metadata.get("frequency_sha256_float32"),
+            "adapter training frequency tensor",
+        )
         require_equal(
             metadata.get("adaptation"),
             args.adaptation,
@@ -213,6 +318,68 @@ def validate_common(
         require_equal(metadata.get("rank"), args.rank, "adapter rank")
         require_equal(
             float(metadata.get("alpha")), args.alpha, "adapter alpha"
+        )
+        require_equal(
+            metadata.get("training_sequence_length"),
+            4096,
+            "adapter training sequence length",
+        )
+        if args.frequency in {"native", "evq"}:
+            require_equal(
+                active_frequency_sha,
+                metadata.get("frequency_sha256_float32"),
+                "active/training frequency tensor",
+            )
+
+    if args.benchmark == "2wiki":
+        current_evaluator_sha = sha256_file(
+            Path(__file__).resolve().parent
+            / "evaluate_2wiki_phase_adaptation.py"
+        )
+        require_equal(
+            args.evaluator_sha256,
+            current_evaluator_sha,
+            "READY/current 2Wiki evaluator",
+        )
+        current_frequency_helper_sha = sha256_file(
+            Path(__file__).resolve().parent
+            / "evaluate_instruct_ruler_transfer.py"
+        )
+        require_equal(
+            result.get("frequency_helper_sha256"),
+            manifest.get("frequency_helper_sha256"),
+            "2Wiki frequency-helper dependency",
+        )
+        frequency_helper_sha = require_sha256(
+            result.get("frequency_helper_sha256"),
+            "2Wiki frequency-helper dependency",
+        )
+        require_equal(
+            frequency_helper_sha,
+            current_frequency_helper_sha,
+            "current 2Wiki frequency-helper dependency",
+        )
+    else:
+        current_bound_code = current_ruler_bound_code_sha256()
+        require_equal(
+            args.evaluator_sha256,
+            current_bound_code["evaluator"],
+            "READY/current RULER evaluator",
+        )
+        bound_code = result.get("bound_code_sha256")
+        if not isinstance(bound_code, dict) or not bound_code:
+            raise RuntimeError("missing RULER bound-code receipt")
+        require_equal(
+            bound_code,
+            manifest.get("bound_code_sha256"),
+            "RULER bound-code dependencies",
+        )
+        for name, digest in bound_code.items():
+            require_sha256(digest, f"RULER dependency {name}")
+        require_equal(
+            bound_code,
+            current_bound_code,
+            "current RULER bound-code dependencies",
         )
 
     return {
@@ -231,6 +398,7 @@ def validate_common(
 
 def validate_two_wiki(
     args: argparse.Namespace,
+    root: Path,
     manifest: dict[str, Any],
     result: dict[str, Any],
 ) -> dict[str, Any]:
@@ -265,12 +433,50 @@ def validate_two_wiki(
         set(cells), {str(value) for value in lengths}, "2Wiki cells"
     )
     metrics: dict[str, Any] = {}
+    raw_rows = load_jsonl(root / "examples.jsonl")
+    raw_by_cell: dict[int, list[dict[str, Any]]] = {
+        length: [] for length in lengths
+    }
+    observed_keys: set[tuple[int, int]] = set()
+    for row in raw_rows:
+        budget = int(row.get("budget"))
+        local_index = int(row.get("local_index"))
+        key = (budget, local_index)
+        if key in observed_keys:
+            raise RuntimeError(f"duplicate 2Wiki raw row: {key}")
+        observed_keys.add(key)
+        if budget not in raw_by_cell or not 0 <= local_index < args.limit:
+            raise RuntimeError(f"2Wiki raw row escaped matrix: {key}")
+        if args.expected_role is not None:
+            require_equal(
+                row.get("role"), args.expected_role, f"2Wiki role {key}"
+            )
+        truncation = row.get("truncation")
+        if not isinstance(truncation, dict):
+            raise RuntimeError(f"missing 2Wiki truncation receipt: {key}")
+        chat_tokens = int(truncation.get("chat_input_tokens"))
+        target_tokens = int(budget) - int(manifest.get("max_new_tokens"))
+        if not 0 <= target_tokens - chat_tokens <= 2:
+            raise RuntimeError(
+                f"2Wiki physical budget drift {key}: "
+                f"chat={chat_tokens}, target={target_tokens}"
+            )
+        raw_by_cell[budget].append(row)
+    require_equal(
+        len(raw_rows),
+        args.limit * len(lengths),
+        "2Wiki raw row count",
+    )
     for length in lengths:
         cell = cells[str(length)]
         require_equal(
             cell.get("examples"), args.limit, f"2Wiki L{length} rows"
         )
-        metrics[str(length)] = {
+        raw_cell = raw_by_cell[length]
+        require_equal(
+            len(raw_cell), args.limit, f"2Wiki raw L{length} rows"
+        )
+        cell_metrics = {
             "mean_token_f1": require_probability(
                 cell.get("mean_token_f1"), f"2Wiki L{length} F1"
             ),
@@ -281,6 +487,25 @@ def validate_two_wiki(
                 cell.get("terminal_eos"), f"2Wiki L{length} EOS"
             ),
         }
+        for name, raw_name in (
+            ("mean_token_f1", "token_f1"),
+            ("normalized_exact", "normalized_exact"),
+            ("terminal_eos", "terminal_eos"),
+        ):
+            raw_mean = sum(
+                require_probability(
+                    row.get(raw_name), f"2Wiki raw L{length} {raw_name}"
+                )
+                for row in raw_cell
+            ) / len(raw_cell)
+            if not math.isclose(
+                cell_metrics[name], raw_mean, rel_tol=0.0, abs_tol=1e-12
+            ):
+                raise RuntimeError(
+                    f"2Wiki L{length} {name} aggregate drift: "
+                    f"{cell_metrics[name]} != {raw_mean}"
+                )
+        metrics[str(length)] = cell_metrics
     require_equal(
         result["results"].get("examples"),
         args.limit * len(lengths),
@@ -291,6 +516,7 @@ def validate_two_wiki(
 
 def validate_ruler(
     args: argparse.Namespace,
+    root: Path,
     manifest: dict[str, Any],
     result: dict[str, Any],
 ) -> dict[str, Any]:
@@ -318,6 +544,41 @@ def validate_ruler(
 
     cells = result.get("results", {}).get("cells", {})
     require_equal(set(cells), set(RULER_TASKS), "RULER cell tasks")
+    raw_rows = load_jsonl(root / "examples.jsonl")
+    raw_by_cell: dict[tuple[str, int], list[dict[str, Any]]] = {
+        (task, length): [] for task in RULER_TASKS for length in lengths
+    }
+    observed_keys: set[tuple[str, int, int]] = set()
+    for row in raw_rows:
+        task = str(row.get("task"))
+        length = int(row.get("nominal_length"))
+        local_index = int(row.get("local_index"))
+        key = (task, length, local_index)
+        if key in observed_keys:
+            raise RuntimeError(f"duplicate RULER raw row: {key}")
+        observed_keys.add(key)
+        if (
+            (task, length) not in raw_by_cell
+            or not 0 <= local_index < args.limit
+        ):
+            raise RuntimeError(f"RULER raw row escaped matrix: {key}")
+        input_tokens = int(row.get("input_tokens"))
+        generation_tokens = int(row.get("maximum_generation_tokens"))
+        if (
+            input_tokens <= 0
+            or generation_tokens <= 0
+            or input_tokens + generation_tokens > length
+        ):
+            raise RuntimeError(
+                f"RULER physical budget drift {key}: "
+                f"input={input_tokens}, generation={generation_tokens}"
+            )
+        raw_by_cell[(task, length)].append(row)
+    require_equal(
+        len(raw_rows),
+        args.limit * len(lengths) * len(RULER_TASKS),
+        "RULER raw row count",
+    )
     by_length = {str(length): [] for length in lengths}
     for task in RULER_TASKS:
         task_cells = cells[task]
@@ -333,12 +594,31 @@ def validate_ruler(
                 args.limit,
                 f"RULER {task} L{length} rows",
             )
-            by_length[str(length)].append(
-                require_probability(
-                    cell.get("official_task_score"),
-                    f"RULER {task} L{length}",
-                )
+            cell_score = require_probability(
+                cell.get("official_task_score"),
+                f"RULER {task} L{length}",
             )
+            raw_cell = raw_by_cell[(task, length)]
+            require_equal(
+                len(raw_cell),
+                args.limit,
+                f"RULER raw {task} L{length} rows",
+            )
+            raw_score = sum(
+                require_probability(
+                    row.get("official_task_score"),
+                    f"RULER raw {task} L{length}",
+                )
+                for row in raw_cell
+            ) / len(raw_cell)
+            if not math.isclose(
+                cell_score, raw_score, rel_tol=0.0, abs_tol=1e-12
+            ):
+                raise RuntimeError(
+                    f"RULER {task} L{length} aggregate drift: "
+                    f"{cell_score} != {raw_score}"
+                )
+            by_length[str(length)].append(cell_score)
     require_equal(
         result["results"].get("examples"),
         args.limit * len(lengths) * len(RULER_TASKS),
@@ -357,9 +637,9 @@ def main() -> None:
     result = load_json(root / "results.json")
     artifacts = validate_common(args, root, manifest, result)
     metrics = (
-        validate_two_wiki(args, manifest, result)
+        validate_two_wiki(args, root, manifest, result)
         if args.benchmark == "2wiki"
-        else validate_ruler(args, manifest, result)
+        else validate_ruler(args, root, manifest, result)
     )
     print(
         json.dumps(

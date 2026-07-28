@@ -10,11 +10,12 @@ fixed-ramp controls are complete. Each capability cell retains full
 generations, a run manifest, and hashes.
 
 The wider transform-by-factor-by-benchmark matrix registered at preflight was
-stopped after the decision gate. Factor 4 and transformed 2Wiki cells were not
-run because the completed factor-2 complete-family RULER results already
-settled the operator question and the generic EVQ arm failed the joint
-capability/retention gate. This report promotes only the completed cells below;
-it does not imply that the wider matrix ran.
+stopped after the factor-2 results settled the operator question and the
+generic EVQ arm failed the capability/retention decision rule. Native
+official-YaRN factor 4 started but was stopped incomplete at `506/520` RULER
+rows; it has no `results.json` and no aggregate is promoted. The other
+factor-4 and transformed-2Wiki cells were not run. This report promotes only
+the completed cells below.
 
 Relevant retained concerns: `RDz6s.1`, `RDz6s.2`, `RzWsa.3`, `RzWsa.4`,
 `R27bE.2`, `R27bE.5`, `AC.2`, and `AC.4`.
@@ -129,18 +130,19 @@ completed evidence from cells deliberately stopped by the decision gate.
 | RULER13 | EVQ fresh Q/K | EVQ + official-YaRN per-index transform, factor 2 | 4K/8K | 20/family | complete |
 | RULER13 | Native fresh Q/K | repository fixed ramp, factor 2 | 4K/8K | 20/family | complete |
 | RULER13 | EVQ fresh Q/K | EVQ + repository fixed ramp, factor 2 | 4K/8K | 20/family | complete |
-| 2Wiki transforms; factor-4 transforms | registered wider matrix | corresponding transform | 4K/8K or 4K/16K | — | stopped; not run |
+| Native official-YaRN factor 4 | registered wider matrix | official Transformers YaRN | 4K/16K | 20/family | stopped incomplete at 506/520; no aggregate |
+| Other factor-4 and transformed-2Wiki cells | registered wider matrix | corresponding transform | 4K/8K or 4K/16K | — | not run |
 
 ### 2WikiMultiHopQA
 
 Each cell contains 200 greedy autoregressive generations. Values are
-token-F1 / normalized exact / terminal EOS.
+token-F1 / normalized exact / terminal EOS; all values are percentages.
 
 | Component | 4K | 8K | 16K |
 | --- | ---: | ---: | ---: |
-| Untouched Native, adapter off | 27.64 / 22.00 / 97.50% | not evaluated | not evaluated |
-| Native fresh Q/K | 25.47 / 21.00 / 99.00% | 0.13 / 0 / 0% | 0.10 / 0 / 0% |
-| EVQ fresh Q/K | 15.56 / 4.50 / 92.00% | 6.49 / 0.50 / 46.00% | 1.11 / 0 / 4.00% |
+| Untouched Native, adapter off | 27.64 / 22.00 / 97.50 | not evaluated | not evaluated |
+| Native fresh Q/K | 25.47 / 21.00 / 99.00 | 0.13 / 0 / 0 | 0.10 / 0 / 0 |
+| EVQ fresh Q/K | 15.56 / 4.50 / 92.00 | 6.49 / 0.50 / 46.00 | 1.11 / 0 / 4.00 |
 
 Deterministic answer-filtered distractor filling produces mean input lengths
 of 4,063.96, 8,159.86, and 16,351.86 tokens. This is a controlled
@@ -167,6 +169,24 @@ Generic-data EVQ adaptation produces small non-zero 8K/16K scores but loses
 most inherited 4K RULER capability. It does not support broad task transfer
 from generic Q/K adaptation.
 
+All family-level official scores are shown below.
+
+| Family | Base 4K | Native 4K | EVQ 4K | Native 8K | EVQ 8K | Native 16K | EVQ 16K |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| cwe | 0.50% | 1.00% | 0% | 0% | 1.50% | 0% | 1.00% |
+| fwe | 48.33% | 41.67% | 23.33% | 0% | 20.00% | 0% | 30.00% |
+| niah_multikey_1 | 85.00% | 85.00% | 15.00% | 0% | 10.00% | 0% | 0% |
+| niah_multikey_2 | 95.00% | 90.00% | 0% | 0% | 0% | 0% | 0% |
+| niah_multikey_3 | 60.00% | 15.00% | 0% | 0% | 0% | 0% | 0% |
+| niah_multiquery | 70.00% | 76.25% | 2.50% | 0% | 2.50% | 0% | 0% |
+| niah_multivalue | 46.25% | 60.00% | 3.75% | 0% | 2.50% | 0% | 0% |
+| niah_single_1 | 100.00% | 100.00% | 5.00% | 0% | 0% | 0% | 0% |
+| niah_single_2 | 95.00% | 100.00% | 0% | 0% | 0% | 0% | 0% |
+| niah_single_3 | 100.00% | 95.00% | 0% | 0% | 0% | 0% | 0% |
+| qa_1 | 70.00% | 60.00% | 10.00% | 0% | 5.00% | 0% | 0% |
+| qa_2 | 50.00% | 30.00% | 20.00% | 0% | 10.00% | 0% | 0% |
+| vt | 27.00% | 7.00% | 0% | 0% | 0% | 0% | 0% |
+
 ### Official YaRN versus repository fixed ramp
 
 These are evaluation-only transforms applied to the completed generic
@@ -179,20 +199,27 @@ adapters on the same RULER rows.
 | Native fresh Q/K + repository fixed ramp | 60.62% | 1.03% |
 | EVQ fresh Q/K + repository fixed-ramp composite | 7.56% | 3.81% |
 
-The two operators are not interchangeable. The tested official YaRN
-factor-2 transform strongly restores and extends the Native-trained adapter,
-whereas the repository fixed ramp leaves the Native 8K score near zero. On
-the EVQ substrate, neither composite yields broad capability. These results
-do not support additional EVQ substrate leverage under official YaRN.
+The two operators are not interchangeable. The tested official YaRN factor-2
+transform partially recovers the Native-trained adapter at 4K and yields
+`52.19%` at 8K, whereas the repository fixed ramp leaves the Native 8K score
+near zero. On the EVQ substrate, neither composite yields broad capability.
+These results do not support additional EVQ substrate leverage under official
+YaRN.
 
 Operator identities:
 
-| Report label | Exact identity |
-| --- | --- |
-| official Transformers YaRN | Installed Transformers YaRN initializer plus its realized attention scaling |
-| EVQ + official-YaRN composite | EVQ substrate multiplied by the exact realized official-YaRN per-index scaler; official attention scaling retained |
-| repository fixed ramp | Repository-defined 20%–90% fixed-index smoothstep scaler, attention scaling 1.0; not official YaRN |
-| EVQ + repository fixed-ramp composite | The same repository scaler applied to the EVQ substrate; not official YaRN |
+| Report label | Exact identity | Realized frequency SHA-256 | Attention scale |
+| --- | --- | --- | ---: |
+| official Transformers YaRN | Installed Transformers YaRN initializer | `8accc312855e440d24c9a3542a1cbff45a64774460c7aa7fd8513dc26c333039` | `1.0693147181` |
+| EVQ + official-YaRN composite | EVQ substrate multiplied by the exact realized official-YaRN per-index scaler | `45c4484495368a8dfc5b4fcc6f6efad446e004782a0625897457c25dad006d01` | `1.0693147181` |
+| repository fixed ramp | Repository-defined 20%–90% fixed-index smoothstep scaler; not official YaRN | `1355e594f8e72953c5ee73ac78df5a7779c239c8b7f4273cd2ab05c7e35c6bbf` | `1.0` |
+| EVQ + repository fixed-ramp composite | The same repository scaler applied to the EVQ substrate; not official YaRN | `d11ddab909667b882ef59c465ed1a70bb98e25fa278635f1f7067ba3ffa9ed0d` | `1.0` |
+
+The official-YaRN cells ran with Transformers `4.57.6`; the executed
+`transformers/modeling_rope_utils.py` SHA-256 is
+`55cc0c8cb76f592ab178b4662adcbdf4ad5012bb0b4249c0a96603141f18e9ac`.
+The repository fixed-ramp helper SHA-256 is
+`814deec59fa7e3ee39becb3174bfb69d0d85fbbbac06b8b46484ef4b3e90d99c`.
 
 ## Additional-ablation decision
 
@@ -204,16 +231,19 @@ The registered matrix already covers the decision-critical controls:
 4. raw, official-YaRN, and repository fixed-ramp evaluation on the same
    adapters and test rows.
 
-The pre-specified joint gate fails: EVQ does not show a reviewer-facing
-advantage on both 2Wiki and complete-family RULER at one target length while
-retaining most 4K capability. Therefore no second seed, factor-4 expansion,
-transformed-QA matrix, Q-only/K-only, V/O, rank, learning-rate, loss, or data
-ratio sweep is justified. The bounded single-seed result is final.
+The post-hoc decision rule fails: EVQ does not show a reviewer-facing advantage
+on both 2Wiki and complete-family RULER at one target length while retaining
+most 4K capability. The preflight READY receipt registered the wider matrix and
+identity/runtime stop conditions, but did not pre-register this capability
+rule. No second seed, further factor-4 expansion, transformed-QA matrix,
+Q-only/K-only, V/O, rank, learning-rate, loss, or data-ratio sweep is
+scientifically justified by the completed results. The bounded single-seed
+result is final.
 
 ## Claim boundary and send gate
 
 - The completed selected cells are `POST_SUB_RAW_HASH_BACKED`; cells stopped
-  by the decision gate are not evidence.
+  by the decision rule are not evidence.
 - The experiment is single-seed.
 - Any 4K deficit must sit next to an 8K positive.
 - Any weak or negative 16K result must sit next to the 8K result it limits.
@@ -228,6 +258,19 @@ ratio sweep is justified. The bounded single-seed result is final.
 
 ## Artifact provenance
 
+The selected `10/10` completed components pass the strengthened post-hoc
+validator over checkpoint, adapter metadata, training length, independently
+anchored realized frequency, recorded evaluator/helper or bound-code identity,
+data manifest, cell coverage, unique per-example row identity, physical token
+budget, aggregate recomputation, and results/examples/run-manifest hashes.
+
+The EVQ 2Wiki process completed all 4K and 8K rows, then stopped on a CUDA OOM
+caused by a competing process before the 16K cell. The registered evaluator
+resumed fail-closed: it required an identical run manifest, verified every
+completed row's source/QA identity and role, reused the completed rows, and
+generated only the missing 16K rows. The final gate requires exactly 600
+unique rows and recomputes every aggregate from raw generations.
+
 Core identities:
 
 | Artifact | SHA-256 |
@@ -238,7 +281,17 @@ Core identities:
 | Native frequency tensor | `dde15c31724177356ae954d6e11fb337e6fccef56e4520a905cac3f0d9885b34` |
 | EVQ frequency tensor | `917a52426b4ac986545c8ec73b115daae3c6515d6b9047f09d30c972ea1a4607` |
 | Downstream READY receipt | `b910e5053c188e5f40e663005eeb098ffc1daa4851754e853a98d0d7d75dc334` |
-| Completion receipt | `e3d0081164366ed2e3c64ade52bfdc0e49ad2c1a9e722243d5b5d3eda39380df` |
+| Strict validation receipt | `5b5541efc9d67e0eec2dc3a4b88a3b3d11613221c553883d77638a73037e5774` |
+| Completion receipt | `b425f0d3848a60d0b5c5efb13aff3b549c3bda119e1f5a83f713ee9dad802e0c` |
+| Initial EVQ 2Wiki failure log | `8fc81f82a3353408350e0ab55b3c3ae0cf120568672b4217f10940a4c494e012` |
+| Frozen EVQ 2Wiki resume log | `763167562ac722fc2a085ef2850aa63f78eb29ef811500aa279af620e4be80b8` |
+
+The excluded Native official-YaRN factor-4 partial trace contains `506`
+examples with examples/run-manifest SHA-256
+`14e71766f1de8bc0d42adf38d49da065f30b835b05e14ba639408f14ac8da229`
+and
+`a4a56a4d34e7949b79f859711b0020dcf5a5e401fb8cdd0c37600f71796f1216`.
+It has no aggregate owner and is not used as evidence.
 
 Each row below is `results / examples / run-manifest` SHA-256:
 
@@ -257,15 +310,18 @@ Each row below is `results / examples / run-manifest` SHA-256:
 
 ## Reviewer-facing wording
 
-> Starting from the untouched OLMo-2 1.485B checkpoint, we trained matched
-> fresh Q/K-only LoRA adapters on generic LongAlign/Tulu data, with every
-> physical training sequence at most 4K and no 2Wiki or RULER-family
+> Starting from the untouched OLMo-2 1.485B checkpoint, we trained one matched
+> seed of fresh Q/K-only LoRA adapters on generic LongAlign/Tulu data, with
+> every physical training sequence at most 4K and no 2Wiki or RULER-family
 > supervision. EVQ lowers natural-text NLL relative to Native at 8K/16K
 > (3.088/3.382 versus 3.932/5.108), but this probability gain does not become
-> broad task capability: EVQ obtains only 6.12/3.96/2.38% complete-family
-> RULER macro at 4K/8K/16K and 15.56/6.49/1.11% token-F1 on the controlled
-> 2Wiki protocol, with 4.5/0.5/0% exact match. Under the tested factor-2
-> official Transformers YaRN transform, Native/EVQ RULER macro is
-> 61.06/11.05% at 4K and 52.19/6.99% at 8K. We therefore treat generic Q/K
-> adaptation as evidence that long-position NLL and autoregressive task
-> capability must be separated, not as a general downstream-transfer result.
+> broad task capability. Native/EVQ complete-family RULER macro is
+> 58.53/6.12% at 4K, 0/3.96% at 8K, and 0/2.38% at 16K; Native/EVQ 2Wiki
+> token-F1 is 25.47/15.56% at 4K, 0.13/6.49% at 8K, and 0.10/1.11% at 16K.
+> The 2Wiki endpoint deterministically fills prompts with answer-filtered
+> distractors and is not the unmodified LongBench leaderboard protocol. Under
+> the tested factor-2 official Transformers YaRN transform, Native/EVQ RULER
+> macro is 61.06/11.05% at 4K and 52.19/6.99% at 8K. We therefore treat
+> generic Q/K adaptation as evidence that long-position NLL and autoregressive
+> task capability must be separated, not as a general downstream-transfer
+> result.

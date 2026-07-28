@@ -18,20 +18,23 @@ ruler_data="$asset_base/data/ruler_full_merged_n20_s20260802"
 runs="$asset_base/runs"
 registered_root="$runs/general_qk_downstream_eval_s20260727"
 completion_receipt="$runs/general_qk_shared_completion_receipt.json"
+strict_validation_receipt="$runs/general_qk_strict_validation_receipt_s20260730.json"
 screen_gate="$runs/general_qk_shared_task_screen_gate_s20260730.json"
 evq_run="$runs/general_qk_evq_shared_task_phase500_s20260730"
 native_run="$runs/general_qk_native_shared_task_phase500_s20260730"
+script_path=$(realpath "${BASH_SOURCE[0]}")
+validator_path="$code_root/rebuttal/rebuttal_0723/experiments/olmo2_lora_maturity/validate_qk_eval_result.py"
+completion_controller_path="$code_root/rebuttal/rebuttal_0723/experiments/olmo2_lora_maturity/run_shared_qk_completion.sh"
 
-wait_seconds=0
-while [[ ! -f "$completion_receipt" ]] && kill -0 "$prior_pid" 2>/dev/null; do
-  if (( wait_seconds >= 7200 )); then
-    echo "PRIOR_CONTROLLER_TIMEOUT pid=$prior_pid" >&2
-    exit 3
-  fi
+if kill -0 "$prior_pid" 2>/dev/null; then
+  prior_cmdline=$(tr '\0' ' ' <"/proc/$prior_pid/cmdline")
+  [[ "$prior_cmdline" == *run_shared_qk_completion* ]]
+fi
+while kill -0 "$prior_pid" 2>/dev/null; do
   sleep 3
-  wait_seconds=$((wait_seconds + 3))
 done
 test -f "$completion_receipt"
+test -f "$strict_validation_receipt"
 test -f "$screen_gate"
 
 cd "$code_root"
@@ -41,13 +44,16 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
 mapfile -t identities < <(
   "$python_bin" - "$evq_run/results.json" "$native_run/results.json" \
-    "$downstream_ready" "$screen_gate" "$completion_receipt" <<'PY'
+    "$downstream_ready" "$screen_gate" "$completion_receipt" \
+    "$strict_validation_receipt" "$validator_path" \
+    "$completion_controller_path" <<'PY'
 import hashlib
 import json
 import pathlib
 import sys
 
-evq_path, native_path, ready_path, gate_path, completion_path = map(
+evq_path, native_path, ready_path, gate_path, completion_path, \
+    strict_path, validator_path, completion_controller_path = map(
     pathlib.Path, sys.argv[1:]
 )
 evq = json.loads(evq_path.read_text())
@@ -55,13 +61,80 @@ native = json.loads(native_path.read_text())
 ready = json.loads(ready_path.read_text())
 gate = json.loads(gate_path.read_text())
 completion = json.loads(completion_path.read_text())
+strict = json.loads(strict_path.read_text())
 gate_sha = hashlib.sha256(gate_path.read_bytes()).hexdigest()
+evq_train_sha = hashlib.sha256(evq_path.read_bytes()).hexdigest()
+native_train_sha = hashlib.sha256(native_path.read_bytes()).hexdigest()
+strict_sha = hashlib.sha256(strict_path.read_bytes()).hexdigest()
+validator_sha = hashlib.sha256(validator_path.read_bytes()).hexdigest()
+completion_controller_sha = hashlib.sha256(
+    completion_controller_path.read_bytes()
+).hexdigest()
 if (
     completion.get("status")
-    != "SHARED_QK_COMPLETION_PIPELINE_COMPLETE_V1"
+    != "SHARED_QK_COMPLETION_PIPELINE_COMPLETE_V2"
     or completion.get("artifacts", {}).get(str(gate_path)) != gate_sha
 ):
     raise RuntimeError("prior completion receipt or screen-gate hash drift")
+if gate.get("status") != "SHARED_QK_SCREEN_GATE_V2":
+    raise RuntimeError("screen-gate status drift")
+if completion.get("shared_single_path_gate_passed") != bool(
+    gate.get("passed")
+):
+    raise RuntimeError("completion/screen-gate decision drift")
+if completion.get("length_route_screen_passed") is not True:
+    raise RuntimeError("completion receipt did not pass length-route screen")
+if (
+    completion.get("artifacts", {}).get(str(strict_path)) != strict_sha
+    or completion.get("validator_sha256") != validator_sha
+    or completion.get("controller_script_sha256")
+    != completion_controller_sha
+):
+    raise RuntimeError("completion strict-validator lineage drift")
+if (
+    strict.get("status")
+    != "GENERAL_QK_SELECTED_MATRIX_STRICT_VALIDATION_COMPLETE_V1"
+    or strict.get("component_count") != 10
+    or strict.get("validator_sha256") != validator_sha
+    or strict.get("controller_script_sha256")
+    != completion_controller_sha
+):
+    raise RuntimeError("strict-validation receipt drift")
+for path, digest in (
+    (evq_path, evq_train_sha),
+    (native_path, native_train_sha),
+):
+    if completion.get("artifacts", {}).get(str(path)) != digest:
+        raise RuntimeError(f"completion training-result drift: {path}")
+expected_lineage = {
+    "checkpoint_sha256": evq.get("checkpoint_sha256"),
+    "evq_adapter_sha256": evq.get("adapter_sha256"),
+    "native_adapter_sha256": native.get("adapter_sha256"),
+    "evq_training_result_sha256": evq_train_sha,
+    "native_training_result_sha256": native_train_sha,
+}
+for name, expected in expected_lineage.items():
+    if gate.get("lineage", {}).get(name) != expected:
+        raise RuntimeError(f"screen-gate lineage drift: {name}")
+screen_expectations = {
+    "qa_evq": evq.get("adapter_sha256"),
+    "ruler_evq": evq.get("adapter_sha256"),
+    "qa_native": native.get("adapter_sha256"),
+    "ruler_native": native.get("adapter_sha256"),
+}
+for name, expected_adapter in screen_expectations.items():
+    artifact = gate.get("screen_results", {}).get(name)
+    if not isinstance(artifact, dict):
+        raise RuntimeError(f"missing screen artifact: {name}")
+    path = pathlib.Path(artifact["path"])
+    if hashlib.sha256(path.read_bytes()).hexdigest() != artifact["sha256"]:
+        raise RuntimeError(f"screen artifact hash drift: {name}")
+    payload = json.loads(path.read_text())
+    if (
+        payload.get("checkpoint_sha256") != evq.get("checkpoint_sha256")
+        or payload.get("adapter", {}).get("sha256") != expected_adapter
+    ):
+        raise RuntimeError(f"screen artifact lineage drift: {name}")
 long_checks = (
     "qa_8k_evq_f1_gt_native",
     "qa_8k_evq_exact_gt_native",
@@ -254,6 +327,10 @@ validate_ruler \
   "$native_run/results.json" \
   "$downstream_ready" \
   "$screen_gate" \
+  "$completion_receipt" \
+  "$strict_validation_receipt" \
+  "$script_path" \
+  "$validator_path" \
   "$runs/length_routed_shared_qk_metrics_s20260730.json" <<'PY'
 import hashlib
 import json
@@ -262,7 +339,8 @@ import sys
 
 qa_base_path, qa_evq_path, qa_native_path, ruler_base_path, \
     ruler_evq_path, ruler_native_path, evq_train_path, native_train_path, \
-    ready_path, gate_path, output = map(pathlib.Path, sys.argv[1:])
+    ready_path, gate_path, completion_path, strict_path, script_path, \
+    validator_path, output = map(pathlib.Path, sys.argv[1:])
 
 
 def load(path):
@@ -271,6 +349,15 @@ def load(path):
 
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def artifact_set(result_path):
+    root = result_path.parent
+    return {
+        "results_sha256": sha(result_path),
+        "examples_sha256": sha(root / "examples.jsonl"),
+        "run_manifest_sha256": sha(root / "run_manifest.json"),
+    }
 
 
 def qa_cell(payload, length):
@@ -395,6 +482,10 @@ receipt = {
             "ruler": ready["bound_code_sha256"]["ruler_evaluator"],
         },
         "screen_gate_sha256": sha(gate_path),
+        "completion_receipt_sha256": sha(completion_path),
+        "strict_validation_receipt_sha256": sha(strict_path),
+        "route_script_sha256": sha(script_path),
+        "validator_sha256": sha(validator_path),
         "screen_long_checks": {
             name: value
             for name, value in screen["checks"].items()
@@ -422,10 +513,12 @@ receipt = {
             "processed_input_tokens": evq_train["training"][
                 "processed_input_tokens"
             ],
+            "native_training_result_sha256": sha(native_train_path),
+            "evq_training_result_sha256": sha(evq_train_path),
         },
     },
     "component_artifacts": {
-        str(path): sha(path)
+        str(path.parent): artifact_set(path)
         for path in (
             qa_base_path,
             qa_evq_path,
