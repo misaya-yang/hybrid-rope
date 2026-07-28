@@ -54,6 +54,13 @@ from .train_screen import (
 
 RESULT_STATUS = "OLMO2_4K_PHASE_ADAPTATION_COMPLETE_V1"
 FAMILY_PATTERN = ("phase", "phase", "natural")
+SHARED_FAMILY_PATTERN = (
+    "phase_2wiki",
+    "phase_ruler",
+    "phase_2wiki",
+    "phase_ruler",
+    "natural",
+)
 TRAINABLE_SCOPE = "continue_parent_qk_lora_only"
 
 
@@ -63,11 +70,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--checkpoint-ready-receipt", type=Path, required=True)
     parser.add_argument("--parent-adapter", type=Path, required=True)
     parser.add_argument("--training-view", type=Path, required=True)
+    parser.add_argument("--ruler-training-view", type=Path)
     parser.add_argument("--natural-view", type=Path, required=True)
     parser.add_argument("--ready-receipt", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
         "--frequency", choices=("native", "evq"), required=True
+    )
+    parser.add_argument(
+        "--parent-adaptation",
+        choices=("qkvo_answer", "qk_answer"),
+        default="qkvo_answer",
     )
     parser.add_argument("--steps", type=int, default=300)
     parser.add_argument("--micro-batch-size", type=int, default=4)
@@ -92,13 +105,31 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def family_pattern(args: argparse.Namespace) -> tuple[str, ...]:
+    return (
+        SHARED_FAMILY_PATTERN
+        if args.ruler_training_view is not None
+        else FAMILY_PATTERN
+    )
+
+
 def registered_protocol(args: argparse.Namespace) -> dict[str, Any]:
     return {
         "frequency": str(args.frequency),
+        "parent_adaptation": str(args.parent_adaptation),
         "trainable_scope": TRAINABLE_SCOPE,
-        "frozen_parent_projections": ["v_proj", "o_proj"],
+        "frozen_parent_projections": (
+            ["v_proj", "o_proj"]
+            if args.parent_adaptation == "qkvo_answer"
+            else []
+        ),
         "steps": int(args.steps),
-        "family_pattern": list(FAMILY_PATTERN),
+        "family_pattern": list(family_pattern(args)),
+        "task_views": (
+            ["2wiki", "ruler13"]
+            if args.ruler_training_view is not None
+            else ["single"]
+        ),
         "micro_batch_size": int(args.micro_batch_size),
         "gradient_accumulation_steps": int(
             args.gradient_accumulation_steps
@@ -224,6 +255,31 @@ def _freeze_parent_vo_and_validate_qk(
     }
 
 
+def _validate_qk_parent(
+    model: Any,
+) -> dict[str, Any]:
+    trainable = trainable_named_parameters(model, None)
+    names = [name for name, _ in trainable]
+    if (
+        len(names) != 64
+        or any(
+            ".q_proj." not in name and ".k_proj." not in name
+            for name in names
+        )
+    ):
+        raise RuntimeError("Q/K-parent trainable scope escaped Q/K")
+    return {
+        "scope": TRAINABLE_SCOPE,
+        "parameter_names": names,
+        "parameter_tensors": len(names),
+        "parameters": int(
+            sum(parameter.numel() for _, parameter in trainable)
+        ),
+        "frozen_projection_parameter_tensors": 0,
+        "frozen_projection_parameters": 0,
+    }
+
+
 def _assert_vo_unchanged_and_enable_full_save(
     model: Any,
     snapshot: dict[str, torch.Tensor],
@@ -248,6 +304,7 @@ def verify_ready(
     args: argparse.Namespace,
     checkpoint_digest: str,
     view: PhaseAdaptationView,
+    ruler_view: PhaseAdaptationView | None,
 ) -> dict[str, Any]:
     path = args.ready_receipt.resolve()
     receipt = json.loads(path.read_text(encoding="utf-8"))
@@ -264,6 +321,15 @@ def verify_ready(
         != sha256_file(view.root / "manifest.json")
     ):
         raise RuntimeError("phase-adaptation READY receipt drift")
+    ruler_receipt = receipt["inputs"].get("ruler_training_view")
+    if (ruler_view is None) != (ruler_receipt is None):
+        raise RuntimeError("shared-task READY view presence drift")
+    if (
+        ruler_view is not None
+        and ruler_receipt["manifest_sha256"]
+        != sha256_file(ruler_view.root / "manifest.json")
+    ):
+        raise RuntimeError("shared-task RULER view drift")
     natural = args.natural_view.resolve()
     for name, entry in receipt["inputs"]["natural_view"][
         "files"
@@ -354,6 +420,16 @@ def main() -> None:
         checkpoint, args.checkpoint_ready_receipt.resolve()
     )
     view = PhaseAdaptationView(args.training_view.resolve())
+    ruler_view = (
+        PhaseAdaptationView(args.ruler_training_view.resolve())
+        if args.ruler_training_view is not None
+        else None
+    )
+    if (
+        ruler_view is not None
+        and "RULER13" not in ruler_view.manifest["status"]
+    ):
+        raise RuntimeError("shared-task secondary view is not RULER13")
     natural_view = load_fixed_view(args.natural_view.resolve())
     if natural_view.input_ids.shape[1] != LENGTH:
         raise RuntimeError("natural replay violates physical-4K contract")
@@ -361,6 +437,7 @@ def main() -> None:
         args=args,
         checkpoint_digest=checkpoint_digest,
         view=view,
+        ruler_view=ruler_view,
     )
     seed_everything(int(args.seed))
     runtime = configure_cuda()
@@ -368,7 +445,7 @@ def main() -> None:
     frequency = apply_frequency(model, args.frequency)
     readout = install_adaptation(
         model,
-        "qkvo_answer",
+        str(args.parent_adaptation),
         rank=int(args.rank),
         alpha=float(args.alpha),
     )
@@ -382,7 +459,7 @@ def main() -> None:
         "frequency_sha256_float32": frequency[
             "active_sha256_float32"
         ],
-        "adaptation": "qkvo_answer",
+        "adaptation": str(args.parent_adaptation),
         "rank": int(args.rank),
         "alpha": float(args.alpha),
         "training_sequence_length": LENGTH,
@@ -393,7 +470,14 @@ def main() -> None:
                 f"parent metadata drift for {name}: "
                 f"{parent_metadata.get(name)!r} != {expected!r}"
             )
-    frozen_vo, trainable_scope = _freeze_parent_vo_and_validate_qk(model)
+    frozen_vo: dict[str, torch.Tensor] | None
+    if args.parent_adaptation == "qkvo_answer":
+        frozen_vo, trainable_scope = _freeze_parent_vo_and_validate_qk(
+            model
+        )
+    else:
+        frozen_vo = None
+        trainable_scope = _validate_qk_parent(model)
 
     incomplete.mkdir(parents=True)
     model.to("cuda")
@@ -411,22 +495,36 @@ def main() -> None:
         mode=args.compile_mode,
     )
     loss_module = fused_loss_module()
-    validation_rows = view.validation_rows[
-        : min(int(args.validation_rows), len(view.validation_rows))
-    ]
     validation_offsets = (0, LENGTH, 3 * LENGTH + 1)
-    validation_before = {
-        str(offset): evaluate_phase_view(
-            model=model,
-            backbone=backbone,
-            loss_module=loss_module,
-            view=view,
-            rows=validation_rows,
-            batch_size=int(args.micro_batch_size),
-            offset=offset,
-        )
-        for offset in validation_offsets
-    }
+
+    def validate_one(active_view: PhaseAdaptationView) -> dict[str, Any]:
+        rows = active_view.validation_rows[
+            : min(
+                int(args.validation_rows),
+                len(active_view.validation_rows),
+            )
+        ]
+        return {
+            str(offset): evaluate_phase_view(
+                model=model,
+                backbone=backbone,
+                loss_module=loss_module,
+                view=active_view,
+                rows=rows,
+                batch_size=int(args.micro_batch_size),
+                offset=offset,
+            )
+            for offset in validation_offsets
+        }
+
+    validation_before = (
+        {
+            "2wiki": validate_one(view),
+            "ruler13": validate_one(ruler_view),
+        }
+        if ruler_view is not None
+        else validate_one(view)
+    )
 
     optimizer = torch.optim.AdamW(
         parameters,
@@ -442,13 +540,19 @@ def main() -> None:
     )
     position_hash = hashlib.sha256()
     exposure_hash = hashlib.sha256()
+    selection_hash = hashlib.sha256()
     bucket_counts = {
         "contiguous_4k": 0,
         "phase_to_8k": 0,
         "phase_to_16k": 0,
     }
-    family_steps = {"phase": 0, "natural": 0}
-    family_supervised = {"phase": 0, "natural": 0}
+    task_bucket_counts = {
+        "2wiki": dict.fromkeys(bucket_counts, 0),
+        "ruler13": dict.fromkeys(bucket_counts, 0),
+    }
+    pattern = family_pattern(args)
+    family_steps = {name: 0 for name in pattern}
+    family_supervised = {name: 0 for name in pattern}
     processed_tokens = 0
     recent: list[float] = []
     started = time.perf_counter()
@@ -458,7 +562,7 @@ def main() -> None:
     torch.cuda.reset_peak_memory_stats()
 
     for step in range(1, int(args.steps) + 1):
-        family = FAMILY_PATTERN[(step - 1) % len(FAMILY_PATTERN)]
+        family = pattern[(step - 1) % len(pattern)]
         family_steps[family] += 1
         lr = cosine_lr(
             step,
@@ -473,15 +577,33 @@ def main() -> None:
         for accumulation_index in range(
             int(args.gradient_accumulation_steps)
         ):
-            if family == "phase":
+            if family.startswith("phase"):
+                active_view = (
+                    ruler_view
+                    if family == "phase_ruler"
+                    else view
+                )
+                if active_view is None:
+                    raise RuntimeError("phase family has no registered view")
                 local = torch.randint(
-                    len(view.training_rows),
+                    len(active_view.training_rows),
                     (int(args.micro_batch_size),),
                     generator=generator,
                 ).numpy()
-                indices = view.training_rows[local]
+                indices = active_view.training_rows[local]
                 contexts, labels, supervised = phase_batch(
-                    view=view, indices=indices
+                    view=active_view, indices=indices
+                )
+                selection_hash.update(family.encode("ascii"))
+                selection_hash.update(b"\0")
+                selection_hash.update(
+                    np.asarray(
+                        [step, accumulation_index],
+                        dtype="<i8",
+                    ).tobytes(order="C")
+                )
+                selection_hash.update(
+                    np.asarray(indices, dtype="<i8").tobytes(order="C")
                 )
                 offsets = deterministic_offset_batch(
                     seed=int(args.seed),
@@ -491,7 +613,7 @@ def main() -> None:
                 )
                 position_ids, receipts, payload = (
                     position_ids_for_offsets(
-                        view=view,
+                        view=active_view,
                         indices=indices,
                         offsets=offsets,
                     )
@@ -500,6 +622,12 @@ def main() -> None:
                 for slot, receipt in enumerate(receipts):
                     bucket = offset_bucket(int(offsets[slot]))
                     bucket_counts[bucket] += 1
+                    task_name = (
+                        "ruler13"
+                        if family == "phase_ruler"
+                        else "2wiki"
+                    )
+                    task_bucket_counts[task_name][bucket] += 1
                     exposure_hash.update(
                         np.asarray(
                             [
@@ -525,6 +653,17 @@ def main() -> None:
                     generator=generator,
                 )
                 indices = natural_rows[local].numpy()
+                selection_hash.update(family.encode("ascii"))
+                selection_hash.update(b"\0")
+                selection_hash.update(
+                    np.asarray(
+                        [step, accumulation_index],
+                        dtype="<i8",
+                    ).tobytes(order="C")
+                )
+                selection_hash.update(
+                    np.asarray(indices, dtype="<i8").tobytes(order="C")
+                )
                 contexts, labels, supervised = natural_batch(
                     view=natural_view,
                     indices=indices,
@@ -588,18 +727,14 @@ def main() -> None:
             last_log_tokens = processed_tokens
 
     model.eval()
-    validation_after = {
-        str(offset): evaluate_phase_view(
-            model=model,
-            backbone=backbone,
-            loss_module=loss_module,
-            view=view,
-            rows=validation_rows,
-            batch_size=int(args.micro_batch_size),
-            offset=offset,
-        )
-        for offset in validation_offsets
-    }
+    validation_after = (
+        {
+            "2wiki": validate_one(view),
+            "ruler13": validate_one(ruler_view),
+        }
+        if ruler_view is not None
+        else validate_one(view)
+    )
     elapsed = time.perf_counter() - started
     metadata = {
         "base_checkpoint_sha256": checkpoint_digest,
@@ -607,9 +742,10 @@ def main() -> None:
         "frequency_sha256_float32": frequency[
             "active_sha256_float32"
         ],
-        "adaptation": "qkvo_answer",
+        "adaptation": str(args.parent_adaptation),
         "adaptation_description": (
-            f"qkvo_parent_qk_only_continuation_r{int(args.rank)}_"
+            f"{str(args.parent_adaptation)}_parent_qk_only_continuation_"
+            f"r{int(args.rank)}_"
             f"alpha{float(args.alpha):g}"
         ),
         "continuation_trainable_scope": TRAINABLE_SCOPE,
@@ -621,20 +757,29 @@ def main() -> None:
         "training_view_manifest_sha256": sha256_file(
             view.root / "manifest.json"
         ),
+        "ruler_training_view_manifest_sha256": (
+            sha256_file(ruler_view.root / "manifest.json")
+            if ruler_view is not None
+            else None
+        ),
         "ready_receipt_sha256": sha256_file(
             args.ready_receipt.resolve()
         ),
         "seed": int(args.seed),
     }
-    frozen_vo_sha256_after = _assert_vo_unchanged_and_enable_full_save(
-        model,
-        frozen_vo,
-    )
-    if (
-        frozen_vo_sha256_after
-        != trainable_scope["frozen_projection_sha256_before"]
-    ):
-        raise RuntimeError("frozen parent V/O digest changed")
+    frozen_vo_sha256_after: str | None = None
+    if frozen_vo is not None:
+        frozen_vo_sha256_after = (
+            _assert_vo_unchanged_and_enable_full_save(
+                model,
+                frozen_vo,
+            )
+        )
+        if (
+            frozen_vo_sha256_after
+            != trainable_scope["frozen_projection_sha256_before"]
+        ):
+            raise RuntimeError("frozen parent V/O digest changed")
     adapter_sha = save_adapter(
         incomplete / "adapter.pt", model, None, metadata
     )
@@ -659,6 +804,17 @@ def main() -> None:
             ),
             "manifest": view.manifest,
         },
+        "ruler_training_view": (
+            {
+                "path": str(ruler_view.root),
+                "manifest_sha256": sha256_file(
+                    ruler_view.root / "manifest.json"
+                ),
+                "manifest": ruler_view.manifest,
+            }
+            if ruler_view is not None
+            else None
+        ),
         "ready_receipt": {
             "path": str(args.ready_receipt.resolve()),
             "sha256": sha256_file(args.ready_receipt.resolve()),
@@ -670,7 +826,9 @@ def main() -> None:
             "frozen_projection_sha256_after": (
                 frozen_vo_sha256_after
             ),
-            "frozen_projection_bitwise_unchanged": True,
+            "frozen_projection_bitwise_unchanged": (
+                frozen_vo is not None
+            ),
         },
         "bound_code_sha256": bound_code_sha256(),
         "frequency": frequency,
@@ -687,7 +845,9 @@ def main() -> None:
             "tokens_per_second": processed_tokens / elapsed,
             "position_stream_sha256": position_hash.hexdigest(),
             "exposure_stream_sha256": exposure_hash.hexdigest(),
+            "selection_stream_sha256": selection_hash.hexdigest(),
             "position_bucket_counts": bucket_counts,
+            "task_position_bucket_counts": task_bucket_counts,
             "peak_memory_allocated_bytes": int(
                 torch.cuda.max_memory_allocated()
             ),

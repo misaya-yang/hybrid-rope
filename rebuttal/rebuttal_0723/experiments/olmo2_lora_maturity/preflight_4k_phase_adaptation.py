@@ -31,11 +31,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--checkpoint-ready-receipt", type=Path, required=True)
     parser.add_argument("--parent-adapter", type=Path, required=True)
     parser.add_argument("--training-view", type=Path, required=True)
+    parser.add_argument("--ruler-training-view", type=Path)
     parser.add_argument("--natural-view", type=Path, required=True)
     parser.add_argument("--ready-receipt", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
         "--frequency", choices=("native", "evq"), required=True
+    )
+    parser.add_argument(
+        "--parent-adaptation",
+        choices=("qkvo_answer", "qk_answer"),
+        default="qkvo_answer",
     )
     parser.add_argument("--steps", type=int, default=300)
     parser.add_argument("--micro-batch-size", type=int, default=4)
@@ -85,6 +91,11 @@ def main() -> None:
     checkpoint_ready = args.checkpoint_ready_receipt.resolve()
     parent = args.parent_adapter.resolve()
     training_view = PhaseAdaptationView(args.training_view.resolve())
+    ruler_training_view = (
+        PhaseAdaptationView(args.ruler_training_view.resolve())
+        if args.ruler_training_view is not None
+        else None
+    )
     natural_view = args.natural_view.resolve()
     ready = args.ready_receipt.resolve()
     output = args.output.resolve()
@@ -100,6 +111,26 @@ def main() -> None:
         or int(args.steps) <= 0
         or training_view.manifest["tokenizer_sha256"]
         != sha256_file(checkpoint / "tokenizer.json")
+        or (
+            ruler_training_view is not None
+            and (
+                training_view.manifest["status"]
+                != "OLMO2_4K_2WIKI_PHASE_DATA_PREPARED_V1"
+                or training_view.manifest.get(
+                    "train_eval_qa_identity_overlap"
+                )
+                != 0
+                or ruler_training_view.manifest["tokenizer_sha256"]
+                != sha256_file(checkpoint / "tokenizer.json")
+                or "RULER13"
+                not in ruler_training_view.manifest["status"]
+                or ruler_training_view.manifest.get(
+                    "exact_train_eval_row_overlap"
+                )
+                != 0
+                or ruler_training_view.root == training_view.root
+            )
+        )
     ):
         raise RuntimeError("phase-adaptation preflight contract drift")
     checkpoint_digest = ready_checkpoint_digest(
@@ -112,7 +143,7 @@ def main() -> None:
     expected_parent = {
         "base_checkpoint_sha256": checkpoint_digest,
         "frequency": args.frequency,
-        "adaptation": "qkvo_answer",
+        "adaptation": str(args.parent_adaptation),
         "rank": int(args.rank),
         "alpha": float(args.alpha),
         "training_sequence_length": LENGTH,
@@ -151,6 +182,8 @@ def main() -> None:
         str(output),
         "--frequency",
         str(args.frequency),
+        "--parent-adaptation",
+        str(args.parent_adaptation),
         "--steps",
         str(args.steps),
         "--micro-batch-size",
@@ -172,6 +205,13 @@ def main() -> None:
         "--seed",
         str(args.seed),
     ]
+    if ruler_training_view is not None:
+        command.extend(
+            [
+                "--ruler-training-view",
+                str(ruler_training_view.root),
+            ]
+        )
     receipt = {
         "status": READY_STATUS,
         "authorization_boundary": (
@@ -205,6 +245,23 @@ def main() -> None:
                 "training_rows": len(training_view.training_rows),
                 "validation_rows": len(training_view.validation_rows),
             },
+            "ruler_training_view": (
+                {
+                    "path": str(ruler_training_view.root),
+                    "manifest_sha256": sha256_file(
+                        ruler_training_view.root / "manifest.json"
+                    ),
+                    "status": ruler_training_view.manifest["status"],
+                    "training_rows": len(
+                        ruler_training_view.training_rows
+                    ),
+                    "validation_rows": len(
+                        ruler_training_view.validation_rows
+                    ),
+                }
+                if ruler_training_view is not None
+                else None
+            ),
             "natural_view": {
                 "path": str(natural_view),
                 "files": natural_files,
