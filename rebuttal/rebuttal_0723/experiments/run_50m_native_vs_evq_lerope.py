@@ -4,8 +4,8 @@
 The experiment is deliberately narrow:
 
 * train from scratch on 15M FineWeb-Edu tokens at physical length 128;
-* compare standard endpoint Native RoPE against paper-grid EVQ-Cosh (tau=5);
-* in the EVQ arm, learn one log-scale for every frequency band;
+* compare fixed Native/EVQ and their learned-frequency controls;
+* test an EVQ arm that learns only training-window-observed frequency bands;
 * evaluate paired PPL at 128, 256, and 512 tokens.
 
 The 32 LeRoPE-style scalars are shared across all layers and heads,
@@ -44,11 +44,18 @@ from scripts.lib.rope.schedules import (
 )
 
 
-METHOD_ID = "50m_native_vs_evq_lerope_full_band_v2"
+METHOD_ID = "50m_rope_frequency_allocation_suite_v3"
 PREPARED_STATUS = "50M_NATIVE_EVQ_LEROPE_PREPARED_NO_GPU_V1"
 READY_STATUS = "50M_NATIVE_EVQ_LEROPE_RUNTIME_READY_V1"
 RESULT_STATUS = "50M_NATIVE_EVQ_LEROPE_COMPLETE_V1"
 ARMS = ("native", "evq_lerope")
+ALL_ARMS = (
+    "native",
+    "evq_fixed",
+    "native_lerope",
+    "evq_lerope",
+    "evq_observed_lerope",
+)
 
 
 @dataclass(frozen=True)
@@ -166,31 +173,35 @@ def selected_lerope_band(
 
 
 class SelectiveRotaryEmbedding(nn.Module):
-    """Native fixed RoPE or EVQ with shared per-band log scalars."""
+    """Fixed or learned Native/EVQ frequency allocation."""
 
     def __init__(self, protocol: Protocol, arm: str) -> None:
         super().__init__()
-        if arm not in ARMS:
+        if arm not in ALL_ARMS:
             raise ValueError(f"unknown arm: {arm}")
         self.protocol = protocol
         self.arm = arm
         base = (
             native_inv_freq(protocol)
-            if arm == "native"
+            if arm in ("native", "native_lerope")
             else evq_inv_freq(protocol)
         )
         self.register_buffer("base_inv_freq", base, persistent=True)
         selection = selected_lerope_band(protocol, base)
         self.selected_band = int(selection["index"])
-        mask = (
-            torch.ones_like(base)
-            if arm == "evq_lerope"
-            else torch.zeros_like(base)
-        )
+        if arm in ("native_lerope", "evq_lerope"):
+            mask = torch.ones_like(base)
+        elif arm == "evq_observed_lerope":
+            rotations = (
+                protocol.train_length * base / (2.0 * math.pi)
+            )
+            mask = (rotations >= 1.0).to(base.dtype)
+        else:
+            mask = torch.zeros_like(base)
         self.register_buffer("learnable_mask", mask, persistent=True)
         self.log_frequency_scale = nn.Parameter(
             torch.zeros_like(base, dtype=torch.float32),
-            requires_grad=(arm == "evq_lerope"),
+            requires_grad=bool(mask.any()),
         )
 
     def current_inv_freq(self) -> torch.Tensor:
@@ -494,7 +505,7 @@ def optimizer_for(
         "weight_decay": protocol.weight_decay,
         "lr_scale": 1.0,
     }]
-    if model.arm == "evq_lerope":
+    if model.rope.log_frequency_scale.requires_grad:
         groups.append({
             "params": frequency,
             "weight_decay": 0.0,
@@ -507,7 +518,9 @@ def optimizer_for(
         fused=(device.type == "cuda"),
     )
     return optimizer, ordinary, (
-        frequency if model.arm == "evq_lerope" else []
+        frequency
+        if model.rope.log_frequency_scale.requires_grad
+        else []
     )
 
 
@@ -603,6 +616,13 @@ def train_arm(
                 frequency, protocol.frequency_gradient_clip
             )
         optimizer.step()
+        current_frequency = model.rope.current_inv_freq().detach()
+        if not bool(
+            torch.all(current_frequency[:-1] > current_frequency[1:])
+        ):
+            raise RuntimeError(
+                f"frequency ordering failed in {arm} at step {step}"
+            )
         mean_loss = float(np.mean(step_losses))
         losses.append(mean_loss)
         if step == 1 or step % 50 == 0 or step == protocol.optimizer_steps:
@@ -640,6 +660,21 @@ def train_arm(
     final_frequency = model.rope.current_inv_freq().detach().cpu()
     receipt = {
         "arm": arm,
+        "learnable_frequency_bands": [
+            int(index)
+            for index in torch.nonzero(
+                model.rope.learnable_mask, as_tuple=False
+            ).flatten().cpu()
+        ],
+        "frozen_frequency_bands": [
+            int(index)
+            for index in torch.nonzero(
+                model.rope.learnable_mask == 0, as_tuple=False
+            ).flatten().cpu()
+        ],
+        "learnable_mask_sha256_float32": tensor_sha256(
+            model.rope.learnable_mask.float()
+        ),
         "parameter_count": sum(
             parameter.numel() for parameter in model.parameters()
         ),
@@ -779,6 +814,20 @@ def protocol_receipt(
                     rtol=0.0,
                 )
             ),
+            "arm_definitions": {
+                "native": "fixed standard endpoint geometric RoPE",
+                "evq_fixed": "fixed paper-midpoint EVQ-Cosh",
+                "native_lerope": (
+                    "Native initialization with all per-band log scales learned"
+                ),
+                "evq_lerope": (
+                    "EVQ initialization with all per-band log scales learned"
+                ),
+                "evq_observed_lerope": (
+                    "EVQ initialization; learn only bands completing at least "
+                    "one cycle inside L_train; freeze slower bands"
+                ),
+            },
         },
         "data": {
             "train_path": str(train_data.resolve()),
@@ -810,10 +859,17 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--mode",
-        choices=("prepare", "smoke", "train", "train-arm", "aggregate"),
+        choices=(
+            "prepare",
+            "frequency-preflight",
+            "smoke",
+            "train",
+            "train-arm",
+            "aggregate",
+        ),
         required=True,
     )
-    parser.add_argument("--arm", choices=ARMS)
+    parser.add_argument("--arm", choices=ALL_ARMS)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--train-data", type=Path, required=True)
     parser.add_argument("--validation-data", type=Path, required=True)
@@ -891,6 +947,91 @@ def paired_result(
     }
 
 
+def run_frequency_preflight(
+    *,
+    protocol: Protocol,
+    contract: dict[str, Any],
+    prepared_receipt: Path,
+    train_path: Path,
+    output: Path,
+) -> dict[str, Any]:
+    if output.exists():
+        raise FileExistsError(output)
+    output.mkdir(parents=True)
+    rows = load_training_rows(train_path, protocol)
+    checks: dict[str, Any] = {}
+    initial_hashes: dict[str, str] = {}
+    for arm in ALL_ARMS:
+        set_seed(protocol.seed)
+        model = GPT(protocol, arm)
+        initial_hashes[arm] = trainable_state_sha256(model)
+        base = model.rope.base_inv_freq.detach()
+        mask = model.rope.learnable_mask.detach()
+        learned = torch.nonzero(mask, as_tuple=False).flatten()
+        frozen = torch.nonzero(mask == 0, as_tuple=False).flatten()
+        check: dict[str, Any] = {
+            "base_strictly_decreasing": bool(
+                torch.all(base[:-1] > base[1:])
+            ),
+            "base_sha256_float32": tensor_sha256(base.float()),
+            "learnable_bands": [int(index) for index in learned],
+            "frozen_bands": [int(index) for index in frozen],
+            "mask_sha256_float32": tensor_sha256(mask.float()),
+            "frequency_parameter_requires_grad": (
+                model.rope.log_frequency_scale.requires_grad
+            ),
+        }
+        if model.rope.log_frequency_scale.requires_grad:
+            batch = rows[:2, :16]
+            loss = F.cross_entropy(
+                model(batch[:, :-1]).reshape(-1, protocol.vocab_size),
+                batch[:, 1:].reshape(-1),
+            )
+            loss.backward()
+            gradient = model.rope.log_frequency_scale.grad
+            if gradient is None or not torch.isfinite(gradient).all():
+                raise RuntimeError(f"{arm} frequency gradient is invalid")
+            learned_norm = float(
+                torch.linalg.vector_norm(gradient[mask.bool()])
+            )
+            frozen_max = float(
+                gradient[~mask.bool()].abs().max()
+                if bool((mask == 0).any())
+                else torch.tensor(0.0)
+            )
+            if learned_norm == 0.0 or frozen_max != 0.0:
+                raise RuntimeError(f"{arm} gradient-mask contract failed")
+            check["gradient"] = {
+                "loss": float(loss.detach()),
+                "learned_l2_norm": learned_norm,
+                "frozen_max_abs": frozen_max,
+            }
+        checks[arm] = check
+        del model
+    if len(set(initial_hashes.values())) != 1:
+        raise RuntimeError("ordinary initialization differs across arms")
+    observed = checks["evq_observed_lerope"]
+    expected_learned = list(range(22))
+    expected_frozen = list(range(22, protocol.head_dim // 2))
+    if (
+        observed["learnable_bands"] != expected_learned
+        or observed["frozen_bands"] != expected_frozen
+    ):
+        raise RuntimeError("observed-band partition drift")
+    receipt = {
+        "status": "50M_EVQ_OBSERVED_BAND_OFFLINE_READY_V1",
+        "classification": "OFFLINE_PREFLIGHT_NOT_RESULT",
+        "contract": contract,
+        "prepared_receipt_sha256": file_sha256(prepared_receipt),
+        "ordinary_initialization_sha256": next(
+            iter(initial_hashes.values())
+        ),
+        "checks": checks,
+    }
+    atomic_json(output / "frequency_preflight.json", receipt)
+    return receipt
+
+
 def main() -> None:
     args = parse_args()
     protocol = Protocol(seed=args.seed)
@@ -920,6 +1061,16 @@ def main() -> None:
     prepared = verify_prepared(
         args.prepared_receipt.resolve(), contract
     )
+    if args.mode == "frequency-preflight":
+        receipt = run_frequency_preflight(
+            protocol=protocol,
+            contract=contract,
+            prepared_receipt=args.prepared_receipt.resolve(),
+            train_path=train_path,
+            output=args.output.resolve(),
+        )
+        print(json.dumps(receipt, indent=2, sort_keys=True))
+        return
     if args.mode == "aggregate":
         if args.arm is not None:
             raise RuntimeError("aggregate mode does not accept --arm")
