@@ -1,40 +1,72 @@
 # 讨论期补充 Official Comment — 定稿
 
-日期:2026-08-03 · 讨论期截止 2026-08-03 AOE · 四条,全部 < 5,000 字符
+2026-08-03 · 截止 8 月 3 日 AOE · 四条,共 2116 词(PC 上限 >10,000 词)
 
 ## 发什么
 
-| 序 | 文件 | 发到 | 唯一职能 | 建议标题 |
-|---|---|---|---|---|
-| 1 | `01_AC.md` | AC | 把第三条件锚回**原稿 Table 1**(AC 自己夸的那一点),在其每一行下补经验层;+ 远程内容机制;+ 逐结果种子核算;+ 收窄后的正面主张 | `Three additions that did not fit the character limit` |
-| 2 | `02_27bE.md` | 27bE | 他**一个 8B/下游数字都没拿到**,而 `R27bE.2` 问的正是产线规模 | `The scale evidence that sits in the other threads` |
-| 3 | `03_Dz6s.md` | Dz6s | 他从没见过 FMRoPE 论证与 exact-range 控制 —— 而那是 metareview 第一条件 | `The FMRoPE comparison, which your review did not raise` |
-| 4 | `04_zWsa.md` | zWsa | Oka **自己**在 §6.3 承认 L_target 依赖是 "a practical limitation";+ 零参数归因阶梯 | `Two additions, both checkable against the sources` |
+| 序 | 文件 | 发到 | 字符 | 内容 → 对应谁的原话 |
+|---|---|---|---:|---|
+| 1 | `01_AC.md` | Meta Review 下(公开) | 2175 | 收窄后的主张 + 四条不主张 → `AC.4`;指向四张表的去向 |
+| 2 | `02_27bE.md` | Reviewer 27bE | 3851 | **Table 6** 操作点前因子经精确核校验 → `R27bE.1`;**Table 17** base sweep → `R27bE.2`;8B / 1.485B → `R27bE.2/.5` |
+| 3 | `03_Dz6s.md` | Reviewer Dz6s | 4849 | **Table 21** QuALITY 2,086 真实文档题 → `RDz6s.1`;**Table 19** YaRN leverage(含不利的 NTK 行)→ `RDz6s.2`;FMRoPE + exact-range → metareview 第一条件 |
+| 4 | `04_zWsa.md` | Reviewer zWsa | 2561 | Oka **自己** §6.3 承认 L_target 是 "practical limitation" → `RzWsa.1`;零参数阶梯 → `RzWsa.2` |
 
-## 每条为什么不是重复(已逐数字核验)
+**顺序:AC → 27bE → Dz6s → zWsa。** 四个表单可同时开着,先后不影响。
 
-对每份补充的每个数字,核对是否已出现在该收件人**已发**的那份里。定稿保留的全部为新增。
+**标题(终稿)**
 
-| 收件人 | 新增内容 | 已剔除的重复 |
-|---|---|---|
-| AC | Table 1 锚定、24–92%、0.75×–1.5×、p=0.836、1.506、64.06、4.691、69/100、77.5%、+0.0381 | 三条件总表(与已发正文 100% 重合);+0.0381 在同一份内出现两次 |
-| 27bE | 14.03、98/100、82.16、176.3、22.0%、1.506、64.06、4.691、69/100 | +0.0381(其已发 §5 有) |
-| Dz6s | 0.478、32/32、+0.061、0.529、Barbero | 1.506、64.06(其已发那份有);"你的三点促成了…"式回顾 |
-| zWsa | §6.3 "practical limitation"、−0.256 阶梯、p=0.836、24–92%、1.506 | 0.478、32/32、14.03、98/100、82.16、176.3、94.44、Barbero(其已发那份全有) |
+- AC:`What this cycle leaves us claiming, and what it does not`
+- 27bE:`Two results from the submitted version, and the scale evidence`
+- Dz6s:`Two submitted tables bearing on your first two concerns`
+- zWsa:`Two additions, both checkable against the sources`
 
-## ⛔ 安全红线(已执行)
+标题一律描述内容。**不含 "should have"、"posted where"、"confidential" 等自贬或流程性措辞** —— 那会把我们的疏漏或发帖机制做成头条。
 
-- **不得引用三种子 exact-range 的 −0.3159/−0.1949/−0.1674** —— 证据台账标 `CONDITIONAL`(缺 per-seed raw、hash、training-seed CI)。四份中均未出现。
-- 不引入任何新实验或未发表结果 —— 全部来自原稿或已发内容。
-- 不要求任何人改分或重新权衡他人评审。
-- 不主动展开 32 参数基线的历史标签、YaRN 实现版本。被直接问到才答(见 `../DISCUSSION_PHASE_FOLLOWUP_PLAYBOOK.md` §6)。
+## PC 规则(已核,2026-07 官方澄清)
 
-## 一致性(已核)
+- "rebuttal" 与 "official comment" 两个按钮**等价**
+- **允许多条,合计上限一万词以上**
+- metareview 的回复应发在**审稿人能看到**的地方(我们首轮走了 AC-Confidential,故补公开版;但这一点只在正文第一句轻描,不进标题)
+- **不得放任何链接**;不得含身份信息
+- **AC 在讨论期不回复作者是常态**,其沉默不携带信号
 
-- 同一数字在四份中同值,无一处对 A 说了对 B 相反的话
-- 四份各自保留自曝边界:retarget 下 FMRoPE 更强(AC/Dz6s/zWsa)、Cosh 非普适(AC/zWsa)、in-window 两种代价(AC/27bE)、证据分层(AC/27bE)
-- 四份都开门见山说明"为什么这条现在才出现",不含"我们再补充一下"式无信息开场
+## 四条硬约束(逐项已复检)
 
-## 发送顺序
+1. **不重复已发内容。** 对 AC 用五份合集比对(他读过全部),对审稿人用各自那份。零重复。
+2. **不提无人问及的话题。** in-window / 82.16 / +0.0381 / waterbed / unseen-task / 32K 可用性 —— 四份中出现次数全为 0。
+3. **数据来源准确。** 引用的每个表号已用作者下载的提交版 PDF 逐个定位到页码。
+4. **总-分结构 + 沟通感。** 三份审稿人稿开头均为可核的自陈:回头对着评审重读自己的回复,发现原稿里有该指没指的东西。
 
-**AC → 27bE → Dz6s → zWsa。** 决策者先,摇摆票次之。
+## 表号(提交版 PDF 逐个核验)
+
+| 表 | 页 | 内容 |
+|---|---:|---|
+| 3 | 8 | Training-time and inference-time positional optimization |
+| 5 | 16 | Functional surrogate validation(12 配置) |
+| 6 | 18 | Collision-score validation of the operating-point prefactor c |
+| 12 | 29 | 750M continued pretraining |
+| 17 | 32 | Base sweep(video DiT) |
+| 18 | 33 | MLA validation(3-seed) |
+| 19 | 33 | Matched-scale YaRN leverage at L=256 |
+| 20 | 34 | Multi-scale raw length generalization |
+| 21 | 35 | QuALITY QA(454M, n=2086, single seed) |
+| 23 | 37 | EVQ-Cosh LoRA on LLaMA-3-8B-Instruct |
+
+## ⛔ 红线
+
+- 三种子 exact-range `−0.3159/−0.1949/−0.1674` 台账标 `CONDITIONAL`,**不得外引**。四份中均无。
+- **Table 19 的种子数在提交版中未声明**,不得写"three seeds"。已改为"with the dispersions shown there"。
+- 不引入任何新实验或未发表对象;不含链接;不要求任何人改分或重新权衡他人评审。
+- 32 参数基线的历史标签、YaRN 实现版本:被直接问到才答,见 `../DISCUSSION_PHASE_FOLLOWUP_PLAYBOOK.md` §6。
+
+## 已否决
+
+- **LeRoPE(arXiv 2607.10134)整段已删。** 我们自己的三级阶梯是"每臂零参数、构造上同预算";LeRoPE 的 frozen 臂是 learn-then-freeze,**是更弱的对照**。拿弱证据撑强证据,论证方向反了,且其"全学 100% vs 冻结 63.6%"藏着"学习更强"的反驳。→ camera-ready 必引;若 27bE 再提学习基线 confound,届时作为答问拿出。笔记见 `../theory_results/LEROPE_CONCURRENT_WORK_NOTE_20260728.md`
+- **"新颖性标准"类比论证(AdamW/YaRN)** —— 那是在告诉审稿人该用什么标准判断,对信心 5 的审稿人只会激怒
+- **waterbed / O(τ⁴) 有界 in-range 代价** —— 原稿 `a1_proofs.tex` §waterbed-proof + Table 20 属实且有力,但防的是没人发动的攻击。转入 playbook 备答
+
+## 交接段(四份统一)
+
+结尾一律为:**这轮工作因这些评审而存在 → 我们守到期限结束 → 有疑问宁可现在答掉,不愿它悬着。**
+
+不含任何责备、催促、或对沉默的暗示。

@@ -1,0 +1,172 @@
+{
+  "arms": {
+    "evq": {
+      "adapter_sha256": "8ea0423473793bb8f2ccfed46f25e67c44cd75011620542664246fa598d0c780",
+      "code_sha256": "cacaf7dfdba9adc03319433ad28adb7e64df3fc6bff0da6903a0e8ad88b1e0fb",
+      "folder": "causal_evq_cosh",
+      "manifest_status": "complete",
+      "measurement_label": "oracle-diagnostic",
+      "passkey_sha256": "21f365daed1b77e06b0a870ccb20f4965cba454c802f48dd48825c8f7ff2990d",
+      "protocol_sha256": "3481354d8ca3472429908b62df9ba52396187284174e5cf2af10451c2a8f2a9e",
+      "records_declared": 10,
+      "records_missing": [
+        {
+          "depth_percent": 50.0,
+          "file": "records/005_aab0eff75097c8394f32d3b96d89b89e20c9019765587d84288fda9bb1f019fe.pt"
+        },
+        {
+          "depth_percent": 75.0,
+          "file": "records/006_49c028d11b7ae960c5ad068a55f043ae715945c308fda6c8db9099c8e0342e11.pt"
+        },
+        {
+          "depth_percent": 75.0,
+          "file": "records/007_3d7e96afc9fe0b41105c8d05716e11c86e78b6487a90b504d81b50d0b3df0213.pt"
+        },
+        {
+          "depth_percent": 90.0,
+          "file": "records/008_91966618e960e669f9c156c6cb2e96bcc3cbed02ecacb76503417ae2543eb9df.pt"
+        },
+        {
+          "depth_percent": 90.0,
+          "file": "records/009_a23a7e84b1dd93a75d8c01dd4a008f498ec589efb7afc071b8e6c863196d7f4d.pt"
+        }
+      ],
+      "records_present": 5,
+      "script_sha256": "1d1ccc52bf52c38f8f4f83d108fd582c5299f35b86d000f02c9ff9ef28fc3a9a",
+      "single_seed_supporting": true,
+      "substrate": "evq_cosh"
+    },
+    "geo": {
+      "adapter_sha256": "0e7efa6e83e74166a3ae5a0db6997124f881badcd7ddbdcae49cb6d211ebec9a",
+      "code_sha256": "cacaf7dfdba9adc03319433ad28adb7e64df3fc6bff0da6903a0e8ad88b1e0fb",
+      "folder": "causal_native_geo",
+      "manifest_status": "complete",
+      "measurement_label": "oracle-diagnostic",
+      "passkey_sha256": "21f365daed1b77e06b0a870ccb20f4965cba454c802f48dd48825c8f7ff2990d",
+      "protocol_sha256": "ec427686d56a66d00b92079d6abb566cebf18da100c1a170635199962eedead5",
+      "records_declared": 10,
+      "records_missing": [
+        {
+          "depth_percent": 75.0,
+          "file": "records/006_49c028d11b7ae960c5ad068a55f043ae715945c308fda6c8db9099c8e0342e11.pt"
+        },
+        {
+          "depth_percent": 75.0,
+          "file": "records/007_3d7e96afc9fe0b41105c8d05716e11c86e78b6487a90b504d81b50d0b3df0213.pt"
+        },
+        {
+          "depth_percent": 90.0,
+          "file": "records/008_91966618e960e669f9c156c6cb2e96bcc3cbed02ecacb76503417ae2543eb9df.pt"
+        },
+        {
+          "depth_percent": 90.0,
+          "file": "records/009_a23a7e84b1dd93a75d8c01dd4a008f498ec589efb7afc071b8e6c863196d7f4d.pt"
+        }
+      ],
+      "records_present": 6,
+      "script_sha256": "1d1ccc52bf52c38f8f4f83d108fd582c5299f35b86d000f02c9ff9ef28fc3a9a",
+      "single_seed_supporting": true,
+      "substrate": "native_geo"
+    }
+  },
+  "evq_only": [],
+  "gate_passed": true,
+  "geo_only": [
+    {
+      "depth_percent": 50.0,
+      "prompt_sha256": "aab0eff75097c8394f32d3b96d89b89e20c9019765587d84288fda9bb1f019fe"
+    }
+  ],
+  "hard_failures": [],
+  "matched_pairs": [
+    {
+      "depth_percent": 10.0,
+      "evq_file": "records/000_6cd995c675a4a2ebe7e28c6753b5f14fcbaf8f380ac18f8c7f7218e0e55ff4b8.pt",
+      "geo_file": "records/000_6cd995c675a4a2ebe7e28c6753b5f14fcbaf8f380ac18f8c7f7218e0e55ff4b8.pt",
+      "gold_token_ids": [
+        24963,
+        4146,
+        1114
+      ],
+      "prompt_sha256": "6cd995c675a4a2ebe7e28c6753b5f14fcbaf8f380ac18f8c7f7218e0e55ff4b8",
+      "target_length": 16384
+    },
+    {
+      "depth_percent": 10.0,
+      "evq_file": "records/001_06800fdee903d0587afca1a9cb82c1a7f86a35084fc8adaa0dbe5ed47fed84c2.pt",
+      "geo_file": "records/001_06800fdee903d0587afca1a9cb82c1a7f86a35084fc8adaa0dbe5ed47fed84c2.pt",
+      "gold_token_ids": [
+        20936,
+        17228,
+        1135
+      ],
+      "prompt_sha256": "06800fdee903d0587afca1a9cb82c1a7f86a35084fc8adaa0dbe5ed47fed84c2",
+      "target_length": 16384
+    },
+    {
+      "depth_percent": 25.0,
+      "evq_file": "records/002_933bec9a691d087076e420e784ed25c820c0ed4911235e4a2d9f9320d472938e.pt",
+      "geo_file": "records/002_933bec9a691d087076e420e784ed25c820c0ed4911235e4a2d9f9320d472938e.pt",
+      "gold_token_ids": [
+        20077,
+        18775,
+        1644
+      ],
+      "prompt_sha256": "933bec9a691d087076e420e784ed25c820c0ed4911235e4a2d9f9320d472938e",
+      "target_length": 16384
+    },
+    {
+      "depth_percent": 25.0,
+      "evq_file": "records/003_c4b929f0a3fc5acbfb492f25a434328425c96a7cd11b346148dc14ada268d0c1.pt",
+      "geo_file": "records/003_c4b929f0a3fc5acbfb492f25a434328425c96a7cd11b346148dc14ada268d0c1.pt",
+      "gold_token_ids": [
+        15935,
+        23467,
+        5332
+      ],
+      "prompt_sha256": "c4b929f0a3fc5acbfb492f25a434328425c96a7cd11b346148dc14ada268d0c1",
+      "target_length": 16384
+    },
+    {
+      "depth_percent": 50.0,
+      "evq_file": "records/004_8c28ff35b194afba23cd2d11a5d5c08f253f6d21d481d49a35752f310f3be612.pt",
+      "geo_file": "records/004_8c28ff35b194afba23cd2d11a5d5c08f253f6d21d481d49a35752f310f3be612.pt",
+      "gold_token_ids": [
+        7322,
+        12378,
+        3487
+      ],
+      "prompt_sha256": "8c28ff35b194afba23cd2d11a5d5c08f253f6d21d481d49a35752f310f3be612",
+      "target_length": 16384
+    }
+  ],
+  "phase0_crossmatch": [
+    {
+      "phase0_example_id": "passkey-L16384-d10p0-t00-s42",
+      "prompt_sha256": "6cd995c675a4a2ebe7e28c6753b5f14fcbaf8f380ac18f8c7f7218e0e55ff4b8"
+    },
+    {
+      "phase0_example_id": "passkey-L16384-d10p0-t01-s42",
+      "prompt_sha256": "06800fdee903d0587afca1a9cb82c1a7f86a35084fc8adaa0dbe5ed47fed84c2"
+    },
+    {
+      "phase0_example_id": "passkey-L16384-d25p0-t00-s42",
+      "prompt_sha256": "933bec9a691d087076e420e784ed25c820c0ed4911235e4a2d9f9320d472938e"
+    },
+    {
+      "phase0_example_id": "passkey-L16384-d25p0-t01-s42",
+      "prompt_sha256": "c4b929f0a3fc5acbfb492f25a434328425c96a7cd11b346148dc14ada268d0c1"
+    },
+    {
+      "phase0_example_id": "passkey-L16384-d50p0-t00-s42",
+      "prompt_sha256": "8c28ff35b194afba23cd2d11a5d5c08f253f6d21d481d49a35752f310f3be612"
+    }
+  ],
+  "phase0_root": "results/lora_sparse_conversion_s42_20260714",
+  "repo_root": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope",
+  "trace_root": "results/readout_conversion_s42_20260715/raw",
+  "warnings": [
+    "[C1] evq: 5/10 manifest records are absent locally (depths [50.0, 75.0, 90.0]); the remote run was complete, this machine holds a subset",
+    "[C1] geo: 4/10 manifest records are absent locally (depths [75.0, 90.0]); the remote run was complete, this machine holds a subset"
+  ]
+}
