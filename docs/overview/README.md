@@ -22,7 +22,7 @@ whether an experiment row is supported by code and artifacts.
 | --- | --- |
 | What did reviewers and the AC actually ask? | `rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md` |
 | What evidence and wording answer each concern? | `rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md` |
-| What is ready, conditional, negative, or pending? | `rebuttal/rebuttal_0723/theory_results/REVIEWER_USABLE_EVIDENCE_LEDGER_20260726.md` and `INTERNAL_NEGATIVE_AND_DIAGNOSTIC_LEDGER_20260726.md` |
+| What is ready, conditional, negative, or pending? | `rebuttal/rebuttal_0723/theory_results/REVIEWER_USABLE_EVIDENCE_LEDGER_20260726.md` |
 | Does a row have code, implementation, and JSON/result support? | `docs/overview/EXPERIMENT_CODE_RESULT_AUDIT.md` |
 | Does paper wording stay within evidence? | `docs/overview/PAPER_DESCRIPTION_AUDIT.md` |
 | Which files/hashes support current claims? | `docs/overview/RESULT_PROVENANCE_MANIFEST.md` |

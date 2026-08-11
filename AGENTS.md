@@ -16,17 +16,47 @@ Active rebuttal branch: `main_0726`. `main` and
 
 ## 1. Rebuttal principles
 
-### 1.1 Objective
+### 1.1 Objective and the two document classes
 
-Maximize the probability of a favorable reviewer or AC decision subject to:
+**The objective is one thing: maximize the probability of acceptance.**
 
-- no fabricated data, experiments, provenance, statistics, or completion state;
-- no materially misleading omission in the specific claim being made;
-- the retained reviewer/AC questions and conference response rules;
-- the evidence that is actually completed and traceable.
+Exactly two constraints bind it. Nothing anywhere in this file may be read as a
+third.
+
+1. **No fabrication.** No invented data, experiments, provenance, statistics,
+   completion state, or citations; no claim of a result that was not run; no
+   sentence that is false as written. Evidence used must be completed and
+   traceable to an owner.
+2. **No junk experiments.** Do not run experiments to pad a narrative, make it
+   symmetric, or accumulate benchmarks. See §1.7.
+
+Conference format, length, and anonymity rules are hard limits because
+violating them forfeits the objective, not because they are separate values.
+
+Every other rule in this file — every boundary, caveat, disclosure convention,
+tier, and hedge — is **subordinate** to the objective. Where a rule appears to
+require weakening our own case without constraint 1 or 2 forcing it, the rule is
+wrong and the objective wins. A future agent that finds such a rule still
+written here should delete it rather than comply with it.
+
+**Two document classes carry two different disclosure standards.** Collapsing
+them is what cost Submission 11628 a 2/3/4 opening panel: every reviewer
+condition was substantively met, and the replies volunteered enough unrequested
+failures that no reviewer moved.
+
+| Class | Examples | Disclosure standard |
+| --- | --- | --- |
+| **Internal audit** | evidence owners, `01_REBUTTAL_PLAYBOOK.md`, status records, this file | Exhaustive. Record every negative, reversal, boundary and failed arm. This is how we avoid deceiving ourselves. |
+| **Outward-facing** | reviewer replies, AC comments, official comments, camera-ready prose | Answer what was asked. A boundary enters only by the §1.2 admission test. |
+
+An internal record that a result has a limit constrains **what you may claim**.
+It does not obligate you to **volunteer that limit** to a reviewer who did not
+ask. Those are two different acts and only the first is mandatory. Never treat a
+negative record as a writing input for an outward-facing document; it is a
+filter applied to a draft, never a source of new sentences.
 
 Write for a busy human decision-maker. Lead with the strongest result that
-directly answers the concern, state the nearest material boundary, and stop.
+directly answers the concern, and stop.
 
 ### 1.2 Question-first contract
 
@@ -41,15 +71,54 @@ directly answers the concern, state the nearest material boundary, and stop.
 - Answer only the question asked. Do not introduce simulated-review concerns,
   internal-audit questions, implementation history, abandoned experiments, or
   future-work ideas unless they are needed to make the exact answer accurate.
-- Do not volunteer unrelated failures. Do disclose a negative result or
-  protocol limitation when omitting it would materially misstate the scope of
-  the positive claim being used.
 - Calmly resurface overlooked submitted evidence. Never say that a reviewer
   “missed,” “ignored,” or should be embarrassed by an experiment.
 - Do not use reviewer psychology, social pressure, or accusations as strategy.
   The leverage must come from relevance, evidence, and clear closure.
 
-### 1.3 Evidence contract
+**Boundary admission test.** A negative result, in-window cost, longer-range
+reversal, metric disagreement, or protocol limit may enter an outward-facing
+document only if at least one of these holds:
+
+1. **this** reviewer or the AC asked about that specific thing — quote their
+   sentence in the draft before writing the boundary;
+2. omitting it would make a sentence you are actually writing **false** — not
+   merely incomplete, false as written;
+3. it is needed to defeat a **stronger** attack you would otherwise face, and
+   you can name that attack.
+
+Disqualified reasons, all of which were used in the 11628 replies: “a reader
+might discover it later”, “another reviewer asked about it”, “our internal
+record says this result has a boundary”, “it feels dishonest to omit it”.
+
+If a boundary fails all three tests, do not write it — and do not write the
+positive claim in a form that would need it. **The fix for an unqualifiable
+claim is to narrow the claim, not to append a confession.**
+
+### 1.3 Score-move contract
+
+Reviewer-stated score-change conditions are public commitments made in front of
+the AC. They outrank every other use of response space.
+
+- Grep every review for `score would increase`, `would be helpful`,
+  `at a minimum`, `my evaluation would improve`, `if the authors`. List them
+  verbatim before drafting.
+- Each condition gets **one** answer: the single strongest number that satisfies
+  it, then stop. Do not attach a second result, a contrasting metric, an
+  additional model, or a related experiment the reviewer did not request.
+- Meet a low bar literally. “Even a small-scale comparison would help” means
+  small scale is pre-approved; do not apologize for it and do not over-deliver
+  into territory that invites new questions.
+- Never disclaim a path the reviewer opened. If they wrote “advantage **or**
+  complementarity”, delivering neither, or arguing against one, is a
+  self-inflicted loss.
+- Correct a reviewer's factual error about the submission in the **first
+  sentence** of the relevant answer, not buried at the end of a long section.
+- Before sending, re-read each condition and ask: *reading only my reply, would
+  this reviewer conclude the condition is met?* If they must hunt for it,
+  restructure.
+
+### 1.4 Evidence contract
 
 Every external claim must map to:
 
@@ -59,7 +128,10 @@ Every external claim must map to:
 4. an evidence tier;
 5. an exact seed scope;
 6. a standalone owner or submitted-paper source;
-7. the nearest material limitation.
+7. its nearest material limitation, **known to the author and recorded
+   internally**. Item 7 governs how far the claim may be pushed; it is not an
+   instruction to print the limitation in the outward-facing text. Whether it
+   is printed is decided by the §1.2 admission test.
 
 Use these evidence tiers without collapsing them:
 
@@ -98,20 +170,41 @@ Reviewer-facing evidence synchronization:
   protocol, seeds, and wording;
 - raw/hash promotion gates must be closed before a conditional number is used.
 
-### 1.4 Response structure
+### 1.5 Known identity traps
+
+Data-identity facts, not disclosure requirements. These say which number is
+which; they never obligate outward-facing text. Getting one wrong is a
+correctness error, and several are unrecoverable from filenames alone.
+
+| Trap | The fact |
+| --- | --- |
+| Historical hybrid frequency tensors | Runs before the in-place EVQ patch aliased the Native reference; labels do not match realized hashes. No success or failure conclusion may be drawn from those runs. |
+| OLMo query-gap adapter generations | The pre-repair `+100` adapter gives `95/100` @8K and `51/100` @16K on first-number exact, but `0/100` on strict raw-token complete-string-plus-EOS. The final `+100+32` adapter is the one at `100/98/60`. Never apply pre-repair numbers to the final adapter. |
+| OLMo strict-retrieval `69/67` vs `49/48` | `69/67` is the original 8K n=100 set, which mixes within- and beyond-training-gap rows. `49/48` is a fresh set where every gap exceeds training support. Use each only for its own claim. |
+| LLaMA temporal tables | Two tables use different adapters and controls: a 300-step matched LongAlpaca Native-LoRA vs EVQ-LoRA, and a 516-step RULER-family EVQ-LoRA vs untouched Native. Do not combine the first's control with the second, or call the second matched Native-LoRA evidence. |
+| “Counterfactual” wording | The OLMo 300-step routing stage and the fresh EVQ-only LLaMA arm use pairwise counterfactual loss. The OLMo 13-task continuation and the matched LLaMA natural-LM/RULER studies do not. Name the exact arm. |
+| Exact-range three-seed aggregate | `AUTHOR_CONFIRMED` only. Local raw/per-seed values and confidence intervals are absent. Do not call it raw-backed or statistically significant. |
+| OLMo scratch comparison | Same initialization and scientific recipe; the released checkpoint came from the upstream distributed trainer and the EVQ branch from a single-GPU loop. Never state it as bitwise paired. |
+
+### 1.6 Response structure
 
 For each concern, write in this order:
 
-1. **Direct answer** — answer the literal question in the first sentence.
-2. **Evidence** — give the smallest decisive result set.
+1. **Direct answer** — answer the literal question in the first sentence, and
+   make that sentence carry the shape of the result. If the result improves
+   out-of-window and costs in-window, the verdict sentence says so; a verdict
+   that its own table contradicts is worse than no verdict.
+2. **Evidence** — give the smallest decisive result set. Smallest is a
+   requirement, not a preference: every extra number is a new attack surface.
 3. **Interpretation** — state exactly what the result establishes.
-4. **Boundary** — give the nearest limitation required for accuracy.
+4. **Boundary** — **only if the §1.2 admission test passes.** Otherwise this
+   step is skipped and the claim in step 3 is narrowed instead.
 5. **Closure** — ask whether the evidence resolves the named concern.
 
-Use result-first openings for scale and evaluation questions. For submitted
-evidence that lacked a requested control, state both facts: the submitted
-experiment is a bounded scale anchor, and the post-submission matched control
-answers the attribution question.
+Use result-first openings for scale and evaluation questions. When a reviewer's
+premise about the submission is factually wrong, lead the answer by correcting
+it with the submitted evidence — that is the highest-leverage sentence
+available, and it belongs first, not last.
 
 Decision logic:
 
@@ -120,13 +213,17 @@ Decision logic:
 - Borderline-reject/theory reviewer: answer requested ablations and separate
   theorem, modeling assumption, scaling structure, empirical calibration, and
   trained-model evidence.
-- High-confidence reject: follow stated score-change conditions in order,
-  concede valid gaps narrowly, and make the AC record technically clear.
+- High-confidence reject: follow stated score-change conditions in order. Make
+  one clean early concession on any error that is genuinely ours — it buys
+  standing to be firm everywhere else — and concede nothing further. Give them
+  a route to change position that does not require admitting they were wrong:
+  a quote from the work *they* cited, applying *their* standard, is worth more
+  than any argument of ours.
 - AC: summarize each decision-critical condition as answered, partial, or
   unresolved. Do not substitute more results for an unresolved novelty or
   control question.
 
-### 1.5 Rebuttal experiment triage
+### 1.7 Rebuttal experiment triage
 
 Before proposing any experiment, write:
 
@@ -141,20 +238,47 @@ experiment merely to make a narrative symmetric, accumulate benchmarks, or
 turn rebuttal into a second paper. Prefer owner/provenance repair when the
 missing piece is evidence promotion rather than a scientific result.
 
-### 1.6 Send gate
+### 1.8 Send gate
 
 Do not call a package sendable until all of the following hold:
 
 - every number has an owner, protocol, endpoint, and seed scope;
 - every matched-control claim is truly matched at the stated scientific level;
 - every capability claim uses a capability endpoint;
-- a material in-range cost or longer-range reversal is adjacent to the positive
-  claim it bounds;
+- every material in-range cost or longer-range reversal is **recorded
+  internally against the claim it bounds**, and any instance that appears in the
+  outward-facing text has passed the §1.2 admission test;
 - pending/design-only work is absent from completed-evidence prose;
 - no unsupported significance, universal-optimum, or SOTA language remains;
 - partial evidence is not described as closing a concern;
 - internal paths, identities, machine details, and process notes are removed;
-- the response fits the current NeurIPS format and character limit.
+- the response fits the current format and character limit.
+
+**Hostile-reviewer scan — run on every outward-facing draft, per recipient.**
+
+1. Highlight every sentence that concedes a failure, cost, reversal, or metric
+   disagreement. For each, name which of the three §1.2 tests it passes and
+   quote the reviewer sentence that triggered it. No quote, no sentence.
+2. Read the reply as the recipient, in isolation from the other replies. Ask
+   what they will remember. If the memorable content is our concessions rather
+   than our answers, the draft has failed regardless of its accuracy.
+3. Check every verdict sentence against the table beneath it. `Included, and it
+   improves.` above a table showing a 2× in-window regression is the failure
+   mode to look for.
+4. Check that same-named metrics from different runs, adapters, or training
+   branches are never adjacent and unlabeled. Two numbers from two branches
+   under one header read as catastrophic variance.
+5. Grep the draft: `narrower`, `not solved`, `we did not run`, `cannot rule
+   out`, `one limitation is`, `it is possible that`, `we would expect`. Every
+   hit needs a §1.2 justification or gets cut.
+
+**Length discipline.** Response space is not free; it dilutes. The 11628
+package sent roughly 40k characters across five documents, and every
+condition-satisfied signal sat next to unrequested negatives. When the panel's
+conditions are met, the correct reply is short. Cut in this order: cross-section
+pointers, restatements of the opening verdict, protocol recitations already
+implied by “matched”, hedges. Never cut a number, a control description, or a
+concession that passed §1.2.
 
 If an unsupported optional claim can be removed, remove it. If it is
 decision-critical, mark the response as needing author input.
@@ -341,18 +465,21 @@ Core identity:
 Do not reframe EVQ-Cosh as universal long-context SOTA, a replacement for
 YaRN/LongRoPE/FMRoPE/DAPE, or a learned-PE replacement.
 
-| Topic | Required boundary |
+These are **claim ceilings**: they bound what may be asserted. None of them is
+an instruction to print a caveat. Whether any caveat appears in outward-facing
+text is decided solely by the §1.2 admission test.
+
+| Topic | Must not claim beyond |
 | --- | --- |
 | Submitted YaRN | Repository-defined fixed-index smooth-ramp scaler unless a specific artifact verifies another implementation |
-| DAPE/tuning question | Answer the verified tuning budget and executed control from its owner; do not infer method identity or pure shape attribution beyond the artifact |
-| Cosh | Unique only for the stated convex surrogate \(C_{\mathrm{app}}\), not for trained task loss |
-| Finite \(\tau\) | Use \(\tau=c(\Pi)d_{\mathrm{eff}}/\sqrt{L_{\mathrm{train}}}\): theory supplies the scaling structure, while the finite \(O(1)\) coefficient \(c(\Pi)\) is empirically calibrated and may depend on train/target lengths, base/range, grid convention, model/data/objective, and selection metric |
+| DAPE/tuning question | The verified tuning budget and executed control from its owner; do not infer method identity or pure shape attribution beyond the artifact |
+| Cosh | Uniqueness holds for the stated convex surrogate \(C_{\mathrm{app}}\), not for trained task loss |
+| Finite \(\tau\) | \(\tau=c(\Pi)d_{\mathrm{eff}}/\sqrt{L_{\mathrm{train}}}\): theory supplies the scaling structure; the finite \(O(1)\) coefficient is empirically calibrated |
 | \(\tau\) rule | Operating prior/basin selector, not a global or near-optimal prescription |
 | Passkey | Teacher-forced NLL-gap unless an owner explicitly reports strict autoregressive exact match |
 | FMRoPE | Range control and allocation shape are distinct tested knobs; do not claim replacement or universal dominance |
-| RULER/NIAH | Keep task-family adaptation separate from clean unseen-task transfer |
-| Longer range | A material 32K/4× negative must sit next to any 2× positive it limits |
-| Scratch comparison | Same initialization/scientific recipe may be stated only with the recorded trainer-stack boundary; never say bitwise paired |
+| RULER/NIAH | Do not present task-family adaptation as clean unseen-task transfer |
+| Scratch comparison | Same initialization/scientific recipe; never say bitwise paired |
 
 Primary submitted evidence remains primary; LoRA-8B, DiT, progressive training,
 750M continuation, and other supporting rows remain supporting unless their
@@ -385,7 +512,7 @@ Source map:
 | Current send decision and response selection | `rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md` |
 | Method/theory/experiment boundaries | `rebuttal/rebuttal_0723/theory_results/EVQ_COSH_REBUTTAL_PRINCIPLES.md` |
 | Reviewer-usable evidence status | `rebuttal/rebuttal_0723/theory_results/REVIEWER_USABLE_EVIDENCE_LEDGER_20260726.md` |
-| Negative/diagnostic/superseded status | `rebuttal/rebuttal_0723/theory_results/INTERNAL_NEGATIVE_AND_DIAGNOSTIC_LEDGER_20260726.md` |
+| Data-identity traps (which number is which) | §1.5 of this file |
 | Frequency identity | `rebuttal/rebuttal_0723/theory_results/FREQUENCY_DEFINITION_MANIFEST.json` and `rebuttal/rebuttal_0723/experiments/geo_rope_contract.py` |
 | Submitted claim/code mapping | `docs/overview/PAPER_CLAIMS_MAP.md`, `docs/overview/RESULT_PROVENANCE_MANIFEST.md`, and `paper_experiments/MANIFEST.json` |
 | Canonical schedule API | `scripts/lib/rope/schedules.py` |

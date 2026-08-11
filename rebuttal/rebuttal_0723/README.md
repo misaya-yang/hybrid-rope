@@ -18,7 +18,7 @@ concerns.
 | 3 | `02_RESPONSE_QUESTIONS_AND_OUTCOMES.md` | Numbered full-panel question inventory, existing answers, and final send outcomes |
 | 3b | `03_STRATEGY_REVIEW_AND_OPTIMIZATION.md` | External-view critique of the response strategy; its P0/P1 items are applied in `01_` |
 | 4 | `theory_results/REVIEWER_USABLE_EVIDENCE_LEDGER_20260726.md` | Compact positive-evidence index with exact numbers and mandatory limits |
-| 5 | `theory_results/INTERNAL_NEGATIVE_AND_DIAGNOSTIC_LEDGER_20260726.md` | One consolidated index for negative, diagnostic, superseded, and design-only material |
+| 5 | `AGENTS.md` §1.5 | Data-identity traps: which number belongs to which run/adapter |
 | 6 | `theory_results/EVQ_COSH_REBUTTAL_PRINCIPLES.md` | Method identity, theory boundaries, experiment rules, and stopping logic |
 
 The full reports below remain evidence owners. The two ledgers are routing
@@ -82,8 +82,9 @@ documents; they do not replace protocol, raw hashes, or uncertainty.
 
 ## 4. Negative and internal owners
 
-Use `theory_results/INTERNAL_NEGATIVE_AND_DIAGNOSTIC_LEDGER_20260726.md`
-instead of browsing these files as an action queue. Important owners include:
+These are evidence owners, not an action queue. Read `AGENTS.md` §1.1 first:
+nothing in these files is a writing input for an outward-facing document.
+Important owners include:
 
 - `EVQ_QUERY_GAP_FINAL_DIAGNOSTIC.md`;
 - `OLMO2_N100_GAP_STRUCTURE_AUDIT_20260726.md`;
