@@ -1,4 +1,4 @@
-# paper-2027 — ICML 2027 submission package
+# paper-2027 — ICLR 2027 submission package
 
 EVQ-Cosh, rebuilt from the NeurIPS 2026 submission (`../paper/`) plus the
 rebuttal-cycle evidence in `../rebuttal/rebuttal_0723/`.
@@ -13,44 +13,41 @@ Build: `./compile.sh`（`make -f build.mk` 也行；远程工具写不了名为 
 先读：
 
 - [`research/README.md`](research/README.md) — 研究索引、阅读顺序与 owner 路由
-- [`research/ICML2027_RESEARCH_SYNTHESIS_20260819.md`](research/ICML2027_RESEARCH_SYNTHESIS_20260819.md) — 当前重构决策与中稿优先原则
+- [`research/ICLR2027_THEORY_ARCHITECTURE.md`](research/ICLR2027_THEORY_ARCHITECTURE.md) — **理论重写蓝图**：attention 第一性原理链、cosh 的准确地位、in-window/外推的可支持措辞、9 页定理清单
+- [`research/ICLR2027_REVIEW_AND_EVIDENCE_AUDIT.md`](research/ICLR2027_REVIEW_AND_EVIDENCE_AUDIT.md) — 审稿意见逐条落地审计 + 5 月后证据清单
+- [`research/ICML2027_RESEARCH_SYNTHESIS_20260819.md`](research/ICML2027_RESEARCH_SYNTHESIS_20260819.md) — 当前重构决策与中稿优先原则（venue 名沿用历史命名）
 - [`research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)
 
 这些文件是内部审计与续作交接，不是可直接复制进正文的 outward-facing 文案。
 
 ---
 
-## ⚠️ 先读这条：会议与截稿日期对不上
+## 会议与格式（已定，2026-08-19 核实）
 
-你给的日期是 **9/18 摘要 + 9/25 正文**。查证结果：
+目标是 **ICLR 2027**：摘要 **2026-09-18 AoE**、正文 **2026-09-25 AoE**。
+（ICML 2027 官方 CFP 至今未发布；9/25 这个日期只属于 ICLR。）
 
-| | ICML 2027 | ICLR 2027 |
+| 项 | 要求 | 本包状态 |
 |---|---|---|
-| CFP 状态 | **未发布**（icml.cc `/Conferences/2027` 返回 404） | 已发布 |
-| 摘要截稿 | 未公布 | **2026-09-18 AoE** |
-| 正文截稿 | 未公布，按往年节奏约 **2027 年 1 月下旬**（ICML 2026 是 1/28） | **2026-09-25 AoE** |
-| 地点 | 南美（Future Meetings 页只写了 "2027 — South America"） | — |
-| 正文页数 | 8 页 | 9 页（discussion 阶段可到 10） |
-| 必需声明 | Impact Statement | AI use statement |
+| 模板 | 官方 `iclr-2027-style-files.zip` | ✅ 原样放在包内（`iclr2027_conference.sty/.bst`、`natbib.sty`、`fancyhdr.sty`、`math_commands.tex`） |
+| 版式 | 单栏 | ✅ |
+| 正文页数 | ≤ **9** 页（rebuttal/camera-ready 放宽到 10） | ✅ 正文结束于第 9 页（`compile.sh` 硬门禁） |
+| 参考文献 / 附录 | 不计页数 | ✅ |
+| AI use statement | **必需**，单独一节，不计页数 | ✅ `sections/08_ai_use.tex` |
+| Ethics statement | 推荐 | ✅ `sections/06_ethics.tex` |
+| Reproducibility statement | 推荐 | ✅ `sections/07_reproducibility.tex` |
+| 双盲 | 作者不得出现 | ✅ `\iclrfinalcopy` 保持注释；`compile.sh` 检查 |
 
-**你说的 9/18 + 9/25 精确等于 ICLR 2027 的两个截稿日。** 这份包按你的要求做的是
-**ICML 格式（8 页 + Impact Statement）**。如果目标其实是 ICLR 2027，需要改的只有
-三处：换 `iclr2027_conference.sty`、正文放宽到 9 页、把 `sections/06_impact.tex`
-改成 AI use statement。正文内容本身不用动。
+**AI use statement 需要作者本人过目定稿**：`sections/08_ai_use.tex` 按 ICLR 2027
+AI Policy 的 required / recommended 两类清单写成，逐句都必须对本项目为真。
 
-另外提醒一句 dual submission：ICML/ICLR 都禁止与其它会议**并行**在审。
-NeurIPS 9/24 出结果、9/25 截稿，只有在 9/24 确认被拒之后提交才不构成并行投稿——
-摘要阶段（9/18）通常不算，但这条边界建议自己再确认一次。
+原 ICML 双栏 8 页模板与旧 `main.tex` 保留在 `venue_icml_fallback/`，正文不依赖它们。
 
-## ⚠️ 模板是占位版
+### dual submission 提醒
 
-ICML 2027 官方 style 包还没发布。`icml2027.sty` / `icml2027.bst` 是把**官方
-ICML 2026** 文件的年份/卷号字符串替换后得到的；`icml2026.sty` / `icml2026.bst`
-原封不动保留在旁边作为权威参照。`icml2027.sty` 里 `\ICML@appearing` 的卷号写的是
-`PMLR 3XX`，已加注释标记为 PLACEHOLDER。**官方 icml2027.zip 一发布就整包换掉，
-正文不需要任何改动。**
-
----
+ICLR 与 NeurIPS 都禁止并行在审。NeurIPS 11628 的作者通知日是 **2026-09-24**，
+晚于 ICLR 摘要截稿 **09-18**。在 09-24 之前向 ICLR 提交（含摘要）需要先主动撤回
+NeurIPS 稿；这是作者本人的决定，本包不替你做。
 
 ## 这一版改了什么（对应审稿意见）
 
@@ -83,8 +80,8 @@ wavelength-derived band boundaries，也没有独立 attention-logit mscale。
 
 ```
 main.tex                    正文入口；顶部有 venue note
-icml2027.sty / .bst         占位模板（由官方 2026 版派生）
-icml2026.sty / .bst         官方原版，作参照与回退
+iclr2027_conference.sty/.bst  官方 ICLR 2027 模板（原样）
+venue_icml_fallback/        旧 ICML 模板与旧 main.tex，未被引用
 compile.sh / build.mk       构建 + 自动合规检查（页数/未定义引用/溢出/匿名性）
 sections/
   01_intro.tex              重写：spectral budget → identification → derivation → scale
@@ -92,7 +89,7 @@ sections/
   03_theory.tex             分层：surrogate theorem → inverse CDF → operating rule
   04_experiments.tex        重写：exact-range → mature endpoints → attribution → composition
   05_discussion.tex         围绕 finite spectral budget 收束
-  06_impact.tex             新增（ICML 必需）
+  06_ethics.tex / 07_reproducibility.tex / 08_ai_use.tex  ICLR 声明（不计页数）
 tables/
   table_layers.tex          新增：三层参数化
   table_m4.tex              新增：exact-range factorial
@@ -115,12 +112,12 @@ appendix/
 
 ## 构建报告会检查什么
 
-`./compile.sh` 需要完整 TeX Live/MacTeX；结束时打印正文结束页（ICML 上限 8）、
+`./compile.sh` 优先用 pdflatex，本机没有时自动回退 tectonic；结束时打印正文结束页（ICLR 上限 9）、
 未定义引用数、最严重的 overfull hbox、匿名性、字体和文件大小；任一硬门禁失败
 都会非零退出。正文结束页由 `sections/05_discussion.tex`
-末尾的 `\label{page:bodyend}` 定位——**别删那一行**。
+后的 `\label{page:bodyend}` 定位（现在在 `main.tex` 里）——**别删那一行**。
 
 ## 已知的取舍
 
-- 当前正文标签落在第 8 页，已用满 ICML 上限；不要再增加低杠杆内容。
+- 当前正文结束于第 9 页，已用满 ICLR 上限；每新增一段都必须指名替换对象。
 - Fig. 2 用的是各 owner 报告里的数字，生成脚本里写了来源；改数字要连脚本一起改。

@@ -1,6 +1,82 @@
 \section{Proof Details}
 \label{sec:proofs}
 
+\subsection{Subspace geometry: cross-Gram, budget identity, and collapse}
+\label{sec:geometry-proofs}
+
+\paragraph{Closed-form cross-Gram.} For $\Delta\sim\mathrm{Unif}[0,L]$ and
+$x_\omega(\Delta)=[\cos(\omega\Delta)\ \ \sin(\omega\Delta)]$, write
+$d=(\omega{-}\nu)L$, $s=(\omega{+}\nu)L$, $a(t)=\sin t/t$ and
+$b_\star(t)=(1{-}\cos t)/t$. Expanding the products of sinusoids and integrating
+termwise gives
+\begin{equation}
+H_{\omega\nu}=\mathbb E[x_\omega^\top x_\nu]=\frac12
+\begin{bmatrix}
+a(d)+a(s) & b_\star(s)-b_\star(d)\\
+b_\star(s)+b_\star(d) & a(d)-a(s)
+\end{bmatrix},
+\label{eq:cross-gram}
+\end{equation}
+and $S_\omega=H_{\omega\omega}$. Since $Q_{\omega\nu}=S_\omega^{-1/2}H_{\omega\nu}S_\nu^{-1/2}$
+is the whitened cross-Gram of two two-dimensional subspaces, its singular values
+are the canonical correlations, and $c_{\omega\nu}=\frac12\|Q_{\omega\nu}\|_F^2$
+is invariant under $x_\omega\mapsto x_\omega O$ for any invertible $O$ (in
+particular under rotation of the phase inside a pair), because $S_\omega$
+transforms congruently and the whitening cancels $O$.
+
+\begin{proof}[Proof of Theorem~\ref{thm:budget}]
+$R$ is the block matrix with blocks $R_{ij}=Q_{\omega_i\omega_j}$ and
+$R_{ii}=I_2$. Hence $\operatorname{tr}R=\sum_{i=1}^K\operatorname{tr}I_2=2K$.
+For the second moment,
+$\operatorname{tr}(R^2)=\sum_{i,j}\operatorname{tr}(R_{ij}R_{ji})
+=\sum_i\operatorname{tr}(I_2)+\sum_{i\neq j}\|Q_{\omega_i\omega_j}\|_F^2
+=2K+2K(K-1)\bar c$, using $R_{ji}=R_{ij}^\top$ and the definition
+$\bar c=\frac{1}{K(K-1)}\sum_{i\neq j}c_{\omega_i\omega_j}$ with
+$\|Q_{ij}\|_F^2=2c_{ij}$. Dividing gives \eqref{eq:budget-identity}.
+\end{proof}
+
+The identity is exact and involves only the mean of the pairwise redundancies;
+it does not claim that $\bar c$ determines the Shannon effective rank or the
+log-determinant, which retain higher-order multi-subspace dependence.
+
+\begin{proof}[Proof of Proposition~\ref{prop:collapse}]
+With $t=\Delta/L$ and $x=\omega L$, $\cos(xt)=1-x^2t^2/2+O(x^4)$ and
+$\sin(xt)/x=t-x^2t^3/6+O(x^4)$, so after rescaling the second coordinate the
+basis of $V_\omega$ tends to $\{1,\Delta\}$. Substituting these expansions into
+\eqref{eq:cross-gram} and whitening, the leading deficit between two slow
+subspaces is $2-\|Q_{x,y}\|_F^2=\frac{19}{12600}(x^2-y^2)^2+O(\epsilon^6)$;
+numerically at $x{=}0.05,y{=}0.10$ the exact-to-leading ratio is $1.00058$. For
+the softmax metric, $F=\operatorname{diag}(p)-pp^\top$ satisfies $F\mathbf1=0$,
+so constants are annihilated; centring by $\mathbb E_p$ and rescaling gives
+$\overline{\sin(\omega\Delta)}/\omega\to\Delta-\mathbb E_p\Delta$ and
+$-2\overline{\cos(\omega\Delta)}/\omega^2\to\Delta^2-\mathbb E_p\Delta^2$,
+which span the centred limit whenever $p$ has nondegenerate support on at least
+three distances.
+\end{proof}
+
+\subsection{Post-hoc transplant obstruction}
+\label{sec:obstruction-proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:obstruction}]
+Both $R_\Omega$ and $R_{\Omega'}$ are block-diagonal with $2\times2$ rotation
+blocks, hence $R_\Omega(0)=R_{\Omega'}(0)=I$. Evaluating the hypothesis at
+$\Delta{=}0$ gives $A^\top B=I$, so $B=A^{-\top}$ and the hypothesis becomes the
+similarity $A^\top R_{\Omega'}(\Delta)A^{-\top}=R_\Omega(\Delta)$ on an interval.
+Each side is the exponential of a constant generator, $R_\Omega(\Delta)=\exp(\Delta G_\Omega)$
+with $G_\Omega=\bigoplus_k \omega_k J$, $J=\left[\begin{smallmatrix}0&-1\\1&0\end{smallmatrix}\right]$.
+Differentiating at $\Delta{=}0$ gives $A^\top G_{\Omega'}A^{-\top}=G_\Omega$, so
+the generators are similar and share a spectrum. The spectrum of $G_\Omega$ is
+$\{\pm i\omega_k\}_{k\le K}$ with multiplicity, so the frequency multisets agree
+up to sign and permutation; the remaining freedom is a change of basis inside
+each two-dimensional block. For integer positions the same argument applies
+modulo the $2\pi$ alias.
+\end{proof}
+
+This is an exact statement about \emph{fixed, position-independent, invertible}
+compensation. It does not bound approximate compensation obtained by retraining
+on finite data, nor does it constrain nonlinear maps or the V/O and residual
+paths.
+
 \subsection{Collision-only surrogate stationary density}
 
 This subsection proves Theorem~\ref{thm:ode} directly from the collision-only surrogate functional; the forced Fisher extension is treated separately in~\S\ref{subsec:fisher-ext}. Starting from the formal surrogate kernel
@@ -354,6 +430,44 @@ an $O(\tau^4)$ stiffness and yields
 The equality $c{=}1$ in the deployed rule is then evaluated by trained-model
 controls as described in \S\ref{sec:lambda-cv}; it is not obtained from the
 fitted $\beta/\alpha$ ratio.
+
+\subsection{Post-softmax operating-point model}
+\label{sec:softmax-transport}
+
+The deployed scale is selected by a model separate from the surrogate that
+selects the shape. We state it here rather than in the main text because its
+small-$\tau$ expansion does not certify the deployed finite $\tau$.
+
+\begin{proposition}[Semi-analytic operating-point scaling]
+\label{prop:softmax-transport}
+On the pure-tether family, assuming $Q_1(L,b)>0$ and a diffuse post-softmax
+baseline $p_0{=}1/L$, the Pearson-$\chi^2$ channel-load stiffness and the
+post-softmax transport utility admit small-$\tau$ expansions
+$S_{\chi^2}(\tau) = c_S\tau^4/\dhd + O(\tau^6)$ with $c_S{=}\tfrac{1}{45}$, and
+$U(\tau,L) = (\dhd/L)[Q_0 + \tau^2 Q_1(L,b) + O(\tau^4)]$, where
+$Q_1(L,b) = \int_0^1 \eta(\phi)q(Lb^{-\phi})d\phi$,
+$\eta(\phi) = (1{-}\phi)^2/2 - 1/6$ and
+$q(x) = 1/2 + \sin(2x)/(4x) - (\sin x/x)^2$. The leading-order stationary point
+of $\mathcal{F}(\tau) = \tfrac12 S_{\chi^2}(\tau) - \lambda U(\tau,L)$ satisfies
+\[
+\tau_*^2 = 45\lambda Q_1(L,b)\cdot\frac{\dhd^2}{L},
+\qquad \tau_* \propto \frac{\dhd}{\sqrt{L}}.
+\]
+\end{proposition}
+
+The explicit $\dhd/\sqrt{L}$ factor is modulated by $Q_1(L,b)$, so this is a
+scaling structure rather than a pure power law, and the prefactor
+$c(\Pi){=}\sqrt{45\lambda Q_1(L,b)}$ remains convention- and
+protocol-dependent. Two caveats bound what the proposition supports. The
+expansion is a small-$\tau$ statement, whereas the deployed configurations use
+$\tau$ near $4$; at those values the exact cosh warp is evaluated directly and
+the series only motivates the functional form. The diffuse baseline $p_0{=}1/L$
+is also a modelling assumption: trained attention is neither uniform nor
+stationary across heads, and the softmax-Jacobian effective window
+$L_{\mathrm{eff}}^J$ of \S\ref{sec:leff-derivation} is the object that would
+replace it, but we do not measure it here. The deployed $c{=}1$ is therefore an
+empirical operating default, evaluated by the trained-model controls of
+\S\ref{sec:exp-tau}, not a consequence of this proposition.
 
 \subsection{Stiffness functional derivation}
 \label{sec:stiffness-derivation}

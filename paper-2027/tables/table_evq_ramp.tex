@@ -1,4 +1,4 @@
-\begin{table}[t]
+\begin{table}[tb]
 \caption{\textbf{Substrate $\times$ range composition}
 ($454$M, $\Ltr{=}2048$, $10\%$ passkey mix, $3$ seeds). $\rs{}$ is our
 fixed-index smooth-ramp scaler (\S\ref{sec:exp-setup}), applied at the
@@ -6,10 +6,9 @@ fixed-index smooth-ramp scaler (\S\ref{sec:exp-setup}), applied at the
 NLL-gap retrieval; PK@$8$K is mean$\pm$std, other entries are $3$-seed means.}
 \label{tab:evq-ramp}
 \centering
-\scriptsize
+\small
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{0.95}
-\resizebox{\linewidth}{!}{%
 \begin{tabular}{@{}lccccc@{}}
 \toprule
 Method & PK@$8$K & PK@$12$K & PK@$16$K & PPL@$8$K & PPL@$16$K \\
@@ -20,5 +19,4 @@ Geo$+\rs{}$ & $61{\scriptstyle\pm3}$\% & 59\% & 51\% & 82.9 & 157.7 \\
 \textbf{\evq{}$+\rs{}$} & $\mathbf{100{\scriptstyle\pm0}}$\textbf{\%} & \textbf{79\%} & \textbf{68\%} & \textbf{70.9} & \textbf{107.5} \\
 \bottomrule
 \end{tabular}%
-}
 \end{table}

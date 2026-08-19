@@ -1,13 +1,12 @@
-\begin{table}[t]
+\begin{table}[tb]
 \centering
-\scriptsize
+\small
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{0.95}
 \caption{Nonexclusive interventions on $\omega_i=b^{-u_i}$. Methods may act at
-multiple levels; learned and searched tables differ from \evq{} in how their
-channel-wise frequencies are obtained.}
+several levels; learned and searched tables differ from \evq{} in how their
+channel frequencies are obtained, not in whether allocation matters.}
 \label{tab:layers}
-\resizebox{\linewidth}{!}{%
 \begin{tabular}{@{}clll@{}}
 \toprule
  & Controlled object & Typical stage & Representative methods \\
@@ -17,5 +16,4 @@ channel-wise frequencies are obtained.}
 3 & channel frequencies $\{\omega_i\}$ & before / during training & \textbf{\evq{}}, LeRoPE, AdaRoPE \\
 \bottomrule
 \end{tabular}
-}
 \end{table}

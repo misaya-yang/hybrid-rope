@@ -1,33 +1,42 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  EVQ-Cosh --- ICML 2027 submission
+%  EVQ-Cosh --- ICLR 2027 submission
 %
 %  Build:  ./compile.sh          (or: make -f build.mk)
 %
-%  IMPORTANT / VENUE NOTE
-%  ----------------------
-%  ICML 2027 had not released its official style package at the time this
-%  file was written.  `icml2027.sty` here is the OFFICIAL ICML 2026 style
-%  file with year/volume strings substituted; `icml2026.sty` is kept
-%  unmodified alongside it as the authoritative reference.  When the real
-%  icml2027.zip is published, drop in the official .sty/.bst and rebuild.
-%  Nothing else in this document depends on the substitution.
+%  VENUE
+%  -----
+%  ICLR 2027.  Abstract deadline 2026-09-18 AoE, full paper 2026-09-25 AoE.
+%  Official style files (iclr2027_conference.sty/.bst, fancyhdr.sty,
+%  natbib.sty, math_commands.tex) are the unmodified contents of
+%  https://media.iclr.cc/Conferences/ICLR2027/iclr-2027-style-files.zip
+%
+%  HARD FORMAT RULES (enforced by compile.sh)
+%    * main text <= 9 pages (10 only at rebuttal / camera ready)
+%    * references and appendix do not count toward the limit
+%    * AI use statement is REQUIRED and does not count toward the limit
+%    * Ethics and Reproducibility statements are recommended, do not count
+%    * double blind: no author names, no de-anonymising links
+%
+%  The previous ICML-formatted template files are preserved unused in
+%  venue_icml_fallback/ .
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass{article}
+\PassOptionsToPackage{table}{xcolor}
+\usepackage{iclr2027_conference,times}
 
+\usepackage[T1]{fontenc}
 \usepackage{microtype}
 \usepackage{graphicx}
 \usepackage{subcaption}
 \usepackage{booktabs}
 \usepackage{multirow}
-\usepackage[table]{xcolor}
+\usepackage{xcolor}
 \usepackage{placeins}
-\usepackage{hyperref}
-
-\newcommand{\theHalgorithm}{\arabic{algorithm}}
-
-% Blind submission version. For a preprint use [preprint]; camera-ready [accepted].
-\usepackage{icml2027}
+\usepackage{url}
+% plain hyperref draws coloured boxes around every link; use subtle colours instead
+\usepackage[colorlinks=true,linkcolor=black!70!blue,citecolor=black!70!blue,
+            urlcolor=black!60!blue,filecolor=black!60!blue]{hyperref}
 
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -35,7 +44,7 @@
 \usepackage{amsthm}
 
 \theoremstyle{plain}
-\newtheorem{theorem}{Theorem}[section]
+\newtheorem{theorem}{Theorem}
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{corollary}[theorem]{Corollary}
@@ -44,6 +53,13 @@
 \newtheorem{assumption}[theorem]{Assumption}
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
+
+% float packing: single-column ICLR body is tight, allow denser float pages
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}
+\renewcommand{\floatpagefraction}{0.85}
+\renewcommand{\dbltopfraction}{0.95}
 
 \graphicspath{{figs/}}
 
@@ -54,52 +70,23 @@
 \newcommand{\drot}{d_{\mathrm{rot}}}
 \newcommand{\Ltr}{L_{\mathrm{train}}}
 \newcommand{\Capp}{\mathcal{C}_{\mathrm{app}}}
-% "RS" = the fixed-index smooth-ramp range scaler used in all range-scaling
-% arms.  See sections/04_experiments.tex, paragraph "The range-scaling arm".
+% "RAMP" = the fixed-index smooth-ramp range scaler used in all range-scaling
+% arms.  See sections/04_experiments.tex, paragraph "Range-scaling arm".
 \newcommand{\rs}{\textsc{Ramp}}
 
-\icmltitlerunning{RoPE Has a Spectral Budget}
+\title{RoPE Has a Spectral Budget}
+
+% Authors must not appear in the submitted version.
+\author{Anonymous authors\\Paper under double-blind review}
+
+%\iclrfinalcopy % Uncomment for camera-ready version, but NOT for submission.
 
 \begin{document}
 
-\twocolumn[
-\icmltitle{RoPE Has a Spectral Budget}
-
-\icmlsetsymbol{equal}{*}
-
-\begin{icmlauthorlist}
-\icmlauthor{Anonymous}{anon}
-\end{icmlauthorlist}
-
-\icmlaffiliation{anon}{Anonymous Institution}
-\icmlcorrespondingauthor{Anonymous}{anon@example.com}
-
-\icmlkeywords{rotary position embedding, long context, positional encoding, frequency allocation}
-
-\vskip 0.3in
-]
-
-\printAffiliationsAndNotice{}
+\maketitle
 
 \begin{abstract}
-RoPE has a finite spectral budget: each head must place only $K=\drot/2$
-rotary frequencies before training. The standard geometric table spends this
-budget uniformly in log-frequency, while long-context methods usually alter or
-transport its range; we ask whether interior allocation still matters when
-that range is fixed. In a $151.9$M exact-range matched pair, only the $30$
-interior frequencies differ, and endpoint-normalized Cosh minus the uniform
-grid changes trained-model OOD NLL by $-0.478/-0.205/-0.113$ at
-$512$/$1$K/$2$K. In a separate $12$-configuration, three-seed factorial,
-pre-specified Cosh and matched-exponential allocations beat the uniform grid
-in $10/12$ and $9/12$ configurations. We then formulate a convex variational
-collision surrogate whose unique minimiser is a cosh density; quantising its
-inverse CDF gives \evq{}, a closed-form schedule with no learned parameters
-and geometric RoPE as its $\tau{\to}0$ limit. The allocation remains binding
-at mature scale. On a $1.485$B checkpoint, Native and \evq{} receive identical
-Q/K-only adaptation and identical phase exposure through $16$K; their $8$K
-RULER scores are $2.02\%$ and $31.63\%$. A matched $8$B continuation reaches
-$14.03\%$ versus $0.295\%$ at $16$K. Thus range determines where the spectrum
-lies, while allocation determines how a finite set of channels occupies it.
+\input{sections/00_abstract}
 \end{abstract}
 
 \input{sections/01_intro}
@@ -108,16 +95,23 @@ lies, while allocation determines how a finite set of channels occupies it.
 \input{sections/04_experiments}
 \input{sections/05_discussion}
 
-\section*{Impact Statement}
-\input{sections/06_impact}
+%% ---- main text ends here; everything below is exempt from the page limit ----
+\label{page:bodyend}
 
-\bibliographystyle{icml2027}
+\subsection*{Ethics statement}
+\input{sections/06_ethics}
+
+\subsection*{Reproducibility statement}
+\input{sections/07_reproducibility}
+
+\subsection*{AI use statement}
+\input{sections/08_ai_use}
+
+\bibliographystyle{iclr2027_conference}
 \bibliography{refs/references}
 
 \newpage
 \appendix
-\onecolumn
-
 
 \input{appendix/a1_proofs}
 \input{appendix/a2_experiment_details}

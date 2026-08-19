@@ -21,48 +21,50 @@ sharper question: \emph{at a fixed spectral range, is the allocation of the
 finite interior channels an independent training-time variable, and can it be
 chosen in closed form?}
 
-We answer the first part with an exact-range identification experiment
-(\S\ref{sec:exp-identify}). The two arms share the sampled highest and lowest
-frequencies, log-span, model initialisation, token order, optimiser, training
-budget, and evaluation anchors. Only the $K{-}2=30$ interior frequencies move.
-After training, endpoint-normalised cosh minus the uniform-in-log grid changes OOD NLL by
-$-0.4775/-0.2050/-0.1128$ at $512$/$1$K/$2$K in the seed-$42$
-matched pair. In a separate $12$-configuration, three-seed factorial,
-pre-specified non-uniform allocations are favored in $10/12$ and $9/12$
-configurations. Allocation changes what the model learns even when the range
-is held fixed.
+We answer this in three steps. First we make the budget exact
+(\S\ref{sec:theory}). A rotary pair is a two-dimensional subspace, not a cosine
+feature, so the right measure of redundancy between two channels is the
+canonical correlation between their subspaces; block-whitening all $K$ pairs
+gives the identity $r_2 = 2K/(1+(K{-}1)\bar c)$, in which the nominal budget
+$2K$ is deflated by the mean redundancy $\bar c$ alone. Geometric RoPE spends a
+great deal on redundancy: at $L{=}4096$ with $b{=}5{\times}10^5$ and $K{=}64$,
+the $24$ slowest pairs occupy $48$ nominal dimensions but only $2.00$ effective
+ones. Because $\bar c$ is the single quantity allocation can move once $K$ and
+the endpoints are pinned, this turns \emph{interior allocation} into a
+well-posed variable rather than a heuristic.
 
-The second part becomes a variational problem. We represent a frequency table
-by a density $\rho(\phi)$ over log-frequency and minimise a convex broadband
-collision surrogate. Its unique constrained minimiser is a cosh density; its
-inverse CDF yields \evq{}, a one-parameter analytic warp that changes only the
-RoPE inverse-frequency initialisation (\S\ref{sec:theory}). It adds no learned
-parameters, auxiliary loss, or search, and recovers geometric RoPE as
-$\tau\to0$. A softmax-transport analysis supplies the scaling
-$\tau\propto\deff/\sqrt{\Ltr}$; the finite coefficient is calibrated as an
-operating point and tested across the factorial.
+Second, we test whether that variable is real for a trained model. In an
+exact-range identification experiment (\S\ref{sec:exp-identify}) two arms share
+the sampled highest and lowest frequencies, log-span, initialisation, token
+order, optimiser, training budget, and evaluation anchors; only the $K{-}2=30$
+interior frequencies move. After training, endpoint-normalised cosh minus the
+uniform-in-log grid changes OOD NLL by $-0.478/-0.205/-0.113$ at $512$/$1$K/$2$K
+in the seed-$42$ matched pair, and a separate $12$-configuration, three-seed
+factorial replicates the direction in $10/12$ and $9/12$ configurations for two
+structurally different non-uniform schedules.
 
-The effect also survives beyond mechanism-scale controls
-(\S\ref{sec:exp-mature}). On OLMo-2 ($1.485$B), Native and \evq{} receive the
-same $300$-step Q/K-only continuation, data, module budget, and
-$4$K/$8$K/$16$K phase exposure; the active method variable is the frequency
-table. At $8$K, Native/\evq{} scores are $2.02/31.63\%$ on RULER and
-$0/17.5\%$ exact on held-out 2WikiMultiHopQA. Matching long-phase exposure
-therefore does not erase the frequency-substrate effect. On LLaMA-3-8B, a
-separate matched physical-$8$K continuation moves $16$K RULER from
-$0.295\%$ to $14.03\%$. These experiments carry the identified variable to
-mature checkpoints and autoregressive effective-context tasks.
+Third, we bound what the geometry explains. Static identifiability is necessary
+but not sufficient: in a frozen $50$M diagnostic, substituting the \evq{} table
+at inference raises stable rank from $4.57$ to $12.54$ while perplexity degrades
+from $7.14$ to $76.20$, and the table$\times$weights interaction on LM loss is
+$5.9\times$ the size of either main effect. We prove that this is structural ---
+no fixed, position-independent invertible Q/K map can absorb a nontrivial table
+change exactly --- so a table is a coordinate system fixed before training, and
+the weights learn coefficients in it.
 
-\paragraph{What this paper establishes.}
-\begin{itemize}\itemsep1pt\parskip0pt
-\item \textbf{The axis.} Exact-range controls identify interior frequency
-allocation independently of base and span, with cross-configuration
-replication (\S\ref{sec:exp-identify}).
-\item \textbf{The construction.} A convex variational surrogate yields the
-closed-form, zero-learned-parameter \evq{} schedule and recovers geometric
-RoPE as a limit (\S\ref{sec:theory}).
-\item \textbf{The mature attribution.} Phase-matched $1.485$B adaptation and
-matched $8$B adaptation show that the frequency substrate remains consequential
-for greedy multi-hop QA and RULER-family evaluation
-(\S\ref{sec:exp-mature}).
-\end{itemize}
+Against this backdrop \evq{} is a construction, not the theory's unique answer.
+Representing a table by a density over log-frequency and minimising a convex
+collision surrogate gives a cosh density whose inverse CDF quantises to a
+closed-form warp of the RoPE inverse-frequency initialisation
+(\S\ref{sec:construction}). It adds no learned parameters, auxiliary loss, or
+search, and recovers geometric RoPE as $\tau\to0$; we use it as a reproducible,
+zero-parameter intervention on the allocation axis.
+
+The effect survives beyond mechanism-scale controls (\S\ref{sec:exp-mature}). On
+OLMo-2 ($1.485$B), Native and \evq{} receive the same $300$-step Q/K-only
+continuation, data, module budget, and $4$K/$8$K/$16$K phase exposure; the active
+method variable is the frequency table. At $8$K, Native/\evq{} scores are
+$2.02/31.63\%$ on RULER and $0/17.5\%$ exact on held-out 2WikiMultiHopQA.
+Matching long-phase exposure therefore does not erase the frequency-substrate
+effect. On LLaMA-3-8B, a separate matched physical-$8$K continuation moves $16$K
+RULER from $0.295\%$ to $14.03\%$.

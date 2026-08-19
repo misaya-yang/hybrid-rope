@@ -1,0 +1,22 @@
+A RoPE head must place a finite number of rotary frequencies, $K=\drot/2$,
+before training begins. We show that this budget is literally a dimension count.
+Each frequency is a two-dimensional subspace rather than a cosine feature, and
+block-whitening their pairwise canonical correlations yields the exact identity
+$r_2 = 2K/(1+(K{-}1)\bar c)$: a table's usable positional dimension is deflated
+by the mean redundancy $\bar c$ and by nothing else. Geometric RoPE spends
+heavily on redundancy --- at a $4$K context, $24$ of $64$ pairs occupy $48$
+nominal dimensions worth $2.00$ effective ones. Holding $K$ and the sampled
+endpoints fixed leaves interior allocation as the only remaining handle on
+$\bar c$, and it is a real one: in a $151.9$M exact-range matched pair in which
+only the $30$ interior frequencies differ, trained-model OOD NLL moves by
+$-0.478/-0.205/-0.113$ at $512$/$1$K/$2$K, with the direction replicated across
+a $12$-configuration, three-seed factorial. Static geometry alone does not
+predict trained behaviour --- substituting tables at inference can raise stable
+rank from $4.57$ to $12.54$ while perplexity degrades from $7.14$ to $76.20$ ---
+and we prove that no fixed invertible Q/K map absorbs a table change exactly. The
+table is a coordinate system fixed before training. As a controlled, zero-parameter
+intervention on this axis we use \evq{}, the closed-form schedule obtained by
+quantising the inverse CDF of a convex surrogate's minimiser. It remains binding
+at scale: on a $1.485$B checkpoint given identical Q/K-only adaptation and
+identical phase exposure, $8$K RULER is $2.02\%$ versus $31.63\%$, and a matched
+$8$B continuation reaches $14.03\%$ versus $0.295\%$ at $16$K.

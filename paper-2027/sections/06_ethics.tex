@@ -1,11 +1,12 @@
 This work introduces no new dataset, deployed system, or human-subject
-component. It changes only the initialization of the RoPE inverse-frequency
+component. It changes only the initialisation of the RoPE inverse-frequency
 table and adds no learned parameters, so it is inexpensive to audit, ablate,
-or revert.
+or revert. All models, corpora, and evaluation suites used here are public
+research artefacts used within their stated licences.
 
 A better allocated frequency table may reduce the adaptation or inference
-effort required for a target context range. The same mechanism could also be
-used to extend the context capabilities of language or video models, with the
+effort required to reach a target context range, and the same mechanism could
+be used to extend the context capability of language or video models, with the
 general risks associated with stronger generative models. Our evaluations
 measure positional and long-context endpoints, not factual reliability or
 safety; deployment claims require application-specific evaluation.

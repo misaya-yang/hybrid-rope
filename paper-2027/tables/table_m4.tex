@@ -1,19 +1,16 @@
-\begin{table}[t]
+\begin{table}[tb]
 \centering
-\scriptsize
+\small
 \setlength{\tabcolsep}{2.5pt}
 \renewcommand{\arraystretch}{0.92}
-\caption{\textbf{Exact-range factorial} ($50.9$M, $2$
-bases $\times$ $2$ training lengths $\times$ $3$ head dimensions $=12$
-configurations, $3$ seeds). Twelve additional boundary-$\tau$ arms are
-discussed in \S\ref{sec:exp-tau}. All
-arms share sampled extrema and log-span with Geo. Metric: weighted OOD NLL over
-$2\times/4\times/8\times$, paired within configuration and seed, equally
-weighted over configurations. CIs are $10{,}000$ configuration-level
-bootstraps; $p$ is a two-sided exact sign-flip over all $2^{12}$ assignments
-and is not adjusted across arm contrasts.}
+\caption{\textbf{Exact-range factorial} ($50.9$M; $2$ bases $\times$ $2$
+training lengths $\times$ $3$ head dimensions $={}12$ configurations, $3$ seeds).
+All arms share sampled extrema and log-span with Geo. Metric: weighted OOD NLL
+over $2\times/4\times/8\times$, paired within configuration and seed. CIs are
+$10{,}000$ configuration-level bootstraps; $p$ is a two-sided exact sign-flip
+over all $2^{12}$ assignments, unadjusted across contrasts
+(App.~\ref{sec:identification-details}).}
 \label{tab:m4}
-\resizebox{\linewidth}{!}{%
 \begin{tabular}{@{}lcccc@{}}
 \toprule
 Contrast & $\Delta$NLL & 95\% CI & $\Delta{<}0$ configs & $p$ \\
@@ -27,5 +24,4 @@ Matched exponential $-$ Geo & $-0.01062$ & $[-0.021,-0.001]$ & $9/12$ & $0.071$ 
 Cosh (rule) $-$ exponential & $+0.00074$ & $[-0.006,0.008]$ & $7/12$ & $0.836$ \\
 \bottomrule
 \end{tabular}
-}
 \end{table}

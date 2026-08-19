@@ -1,0 +1,14 @@
+\evq{} is fully specified by Eq.~\eqref{eq:warp} and Eq.~\eqref{eq:evq-practical}:
+the schedule is a pure function of $(\tau,K)$ that replaces the inverse-frequency
+buffer, with no learned parameters, auxiliary loss, or search, so any RoPE
+implementation can reproduce the intervention in a few lines without access to
+our training code. Complete proofs of Theorems~\ref{thm:budget}, \ref{thm:obstruction} and
+\ref{thm:ode}, Proposition~\ref{prop:collapse},
+Corollary~\ref{cor:quantiles} and Lemma~\ref{lem:budget-crossing}, together
+with every stated assumption, are in App.~\ref{sec:proofs}. The identification protocol,
+including how sampled extrema and log-span are pinned, the exact pre-registered
+factorial design, and the corpora used by each arm, is in
+App.~\ref{sec:identification-details}; the mature-scale adaptation protocols, module
+budgets, phase-exposure mixtures, and evaluation harness settings are in
+App.~\ref{sec:mature-details}; remaining architectures and hyperparameters are
+in App.~\ref{sec:supporting-experiments}. Seed scope is stated with every result.

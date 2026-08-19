@@ -1,0 +1,22 @@
+\begin{table}[tb]
+\centering
+\small
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{0.95}
+\caption{\textbf{Static geometry does not predict trained behaviour.} Two
+$50$M models trained with the geometric and \evq{} tables, each evaluated under
+both runtime tables with all parameters frozen ($1{,}920$ head--query
+observations; no training, no GPU). The worst cell is also the one whose static
+stable rank improves most.}
+\label{tab:coadapt}
+\begin{tabular}{@{}llcc@{}}
+\toprule
+Trained weights & Runtime table & PPL & Stable rank $r_2$ \\
+\midrule
+Geo   & Geo   & $\mathbf{7.14}$ & $4.57$ \\
+Geo   & \evq{} & $76.20$ & $\mathbf{12.54}$ \\
+\evq{} & Geo   & $23.05$ & $4.57$ \\
+\evq{} & \evq{} & $\mathbf{7.16}$ & $12.54$ \\
+\bottomrule
+\end{tabular}
+\end{table}

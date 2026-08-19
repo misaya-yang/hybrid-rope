@@ -11,6 +11,10 @@ which spectral degrees of freedom it controls.
 \input{tables/table_layers}
 
 \paragraph{Context-range extension.}
+Relative position information can be injected additively, through learned or
+biased attention terms \citep{shaw2018self,press2022alibi,chi2022kerple}, or
+multiplicatively through rotation \citep{su2024roformer,sun2022xpos}; we take
+the rotary operator as given and ask only where its frequencies are placed.
 Position interpolation rescales positions to keep rotary phases within the
 training range \citep{chen2024position}. YaRN, SelfExtend, PoSE, and CLEX refine
 this extension through frequency-dependent scaling, remapped positions, or
@@ -66,8 +70,7 @@ than a fixed RoPE table.
 
 \paragraph{Evaluation.}
 Long-context evaluation spans retrieval diagnostics and task suites
-\citep{bai2024longbench,hsieh2024ruler}. Information can be lost despite being
-present in the prompt \citep{liu2024lost}, and positional interventions can
-mitigate this failure \citep{zhang2024found}. We use PE-dominant diagnostics for
-mechanism and RULER for effective-context claims, while keeping task-family
-adaptation distinct from unseen-task transfer.
+\citep{bai2024longbench,hsieh2024ruler}, and information can be lost despite
+being present in the prompt \citep{liu2024lost,zhang2024found}. We use
+PE-dominant diagnostics for mechanism and RULER for effective-context claims,
+keeping task-family adaptation distinct from unseen-task transfer.

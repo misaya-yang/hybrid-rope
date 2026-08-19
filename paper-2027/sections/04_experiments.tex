@@ -4,33 +4,22 @@
 \subsection{Setup and endpoints}
 \label{sec:exp-setup}
 
-We test a sequence of increasingly demanding questions: whether allocation is
-identifiable at fixed spectral range; whether the effect survives from $50.9$M
-to $8$B; which parts of the closed-form prescription the data support; and
-whether the same range operator behaves differently on the resulting
-substrates. NLL/PPL, teacher-forced NLL-gap retrieval, causal source use,
-strict autoregressive exact match, task F1/exact match, and RULER macro remain
-separate endpoints throughout. \evq{} changes only the training-time frequency
-table and adds no learned parameters.
+NLL/PPL, teacher-forced NLL-gap retrieval, causal source use, strict
+autoregressive exact match, task F1/exact match, and RULER macro are kept as
+separate endpoints throughout; \evq{} changes only the training-time frequency
+table. Controlled from-scratch runs use fixed GPT-style decoder stacks
+\citep{radford2019gpt2}; corpora, hyperparameters and seed scope are in
+App.~\ref{sec:supporting-experiments} and with each result.
 
-The controlled from-scratch runs use fixed GPT-style decoder stacks
-\citep{radford2019gpt2}, with per-experiment corpora and hyperparameters in
-App.~\ref{sec:supporting-experiments}. Seed scope is reported with each result.
-
-\paragraph{Range-scaling arm.} All arms labelled $+\rs{}$ use our fixed-index
-smooth-ramp scaler from the NTK-by-parts / YaRN family \citep{peng2024yarn}.
-The same implementation and scale are applied to Geo and \evq{}, isolating
-substrate-dependent leverage of that fixed operator. It is not an official
-YaRN reproduction or a jointly tuned range-method comparison; the exact rule
-is given in App.~\ref{sec:ramp-scaler}.
+\paragraph{Range-scaling arm.} Arms labelled $+\rs{}$ use our fixed-index
+smooth-ramp scaler from the NTK-by-parts / YaRN family \citep{peng2024yarn},
+applied identically to Geo and \evq{} so that only the substrate differs. It is
+not an official YaRN reproduction or a jointly tuned range-method comparison
+(App.~\ref{sec:ramp-scaler}).
 
 %% =========================================================================
 \subsection{Identifying the allocation axis}
 \label{sec:exp-identify}
-
-\emph{Question.} Is training-time allocation separable from base and range
-selection at all, or is the observed effect a reparameterisation of scalar
-range quantities?
 
 \paragraph{Protocol.} In the seed-$42$ pair, two $151.9$M models
 share architecture, trainable initialisation, token order, optimiser, LR
@@ -42,17 +31,16 @@ Their sampled extrema and log-frequency span are identical, so only the
 $K{-}2=30$ interior frequencies move. We measure paired final-$128$-token
 teacher-forced NLL.
 
-\begin{figure}[t]
+\begin{figure}[tb]
   \centering
-  \includegraphics[width=0.99\linewidth]{fig_identification.pdf}
-  \caption{\textbf{Allocation is identifiable.} (a)~With sampled extrema and log-span pinned, moving only the $30$
-  interior frequencies shifts trained-model OOD NLL (blue, seed $42$); the same contrast
-  reverses once \emph{both} grids are target-retargeted (red). Seed-42 anchors under fixed range:
-  $32/32$, $27/32$, $22/32$; under retargeting, $5/32$, $1/32$, $2/32$.
-  (b)~In a separate three-seed, $12$-configuration factorial, the
-  $1.25\times$ Cosh and matched-exponential arms favor non-uniform allocation
-  in $10/12$ and $9/12$ configurations; the formula point ($1.00\times$,
-  purple) is not the best of its own family.}
+  \includegraphics[width=0.72\linewidth]{fig_identification.pdf}
+  \caption{\textbf{Allocation is identifiable.} (a)~With sampled extrema and
+  log-span pinned, moving only the $30$ interior frequencies shifts trained-model
+  OOD NLL (blue, seed $42$; anchors $32/32$, $27/32$, $22/32$); the contrast
+  reverses once \emph{both} grids are target-retargeted (red; $5/32$, $1/32$,
+  $2/32$). (b)~In a separate three-seed, $12$-configuration factorial the
+  $1.25\times$ Cosh and matched-exponential arms favour non-uniform allocation in
+  $10/12$ and $9/12$ configurations.}
   \label{fig:identification}
 \end{figure}
 
@@ -87,10 +75,6 @@ track the target.
 \subsection{Phase-matched attribution at mature scale}
 \label{sec:exp-mature}
 
-\emph{Question.} Once long-range phase exposure is held constant, does the
-frequency table remain a binding variable on $1$B--$8$B checkpoints and
-autoregressive effective-context tasks?
-
 \paragraph{$1.485$B: matching phase exposure does not erase the gap.}
 On OLMo-2-0425-1B-Instruct \citep{olmo2furious}, Native and \evq{} start from
 their matched Stage-A parents, freeze inherited V/O LoRA tensors, and continue
@@ -105,64 +89,62 @@ at $8$K: exposure alone cannot explain the $15.7\times$ score gap.
 
 \paragraph{$1.485$B held-out multi-hop QA.}
 The same Q/K-only design, trained independently for 2WikiMultiHopQA, gives
-Native/\evq{} exact match of $22.0/21.5\%$ at $4$K, $0/17.5\%$ at $8$K,
-and $0/4.0\%$ at $16$K on $200$ held-out examples per length
+Native/\evq{} exact match of $22.0/21.5\%$ at $4$K, $0/17.5\%$ at $8$K, and
+$0/4.0\%$ at $16$K on $200$ held-out examples per length
 \citep{bai2024longbench}; token F1 is $25.99/24.84\%$, $0.07/21.48\%$, and
-$0/8.57\%$.  Thus the two substrates acquire nearly identical in-window QA
-while only \evq{} carries that capability to the longer positions.  The
-prompts use the official questions and contexts with deterministic,
-answer-filtered distractor filling to realise each length.
+$0/8.57\%$. The two substrates acquire nearly identical in-window QA while only
+\evq{} carries that capability to the longer positions.
 
 \input{tables/table_mature}
 
 \paragraph{Independent $1.485$B generation and language modelling.}
 A matched rank-$64$ Q/K/V/O continuation \citep{hu2022lora} moves $8$K
 \texttt{niah\_single\_1} strict first-generated-number exact from $0/100$ to
-$69/100$; an independently trained \evq{} seed gives $67/100$.  On a disjoint
-set where every source-to-generation gap exceeds the largest training gap,
-the scores are $0/100$ versus $49/100$ and $48/100$.  The same matched seed
-changes natural-text NLL from $3.735/4.851$ to $2.703/2.925$ at $8$/$16$K.
-Separately, a same-initialisation step-$0\!\rightarrow\!1{,}000$ trajectory over
-$2.097$B tokens yields \evq{}-minus-Geo NLL of
-$+0.072/+0.038/-0.044/-0.135$ at $2$/$4$/$8$/$16$K, with $122/128$ and
-$126/128$ held-out documents favouring \evq{} at $8$K and $16$K.
+$69/100$, with $67/100$ for an independently trained \evq{} seed; on a disjoint
+set whose source-to-generation gaps all exceed the largest training gap the
+scores are $0/100$ versus $49/100$ and $48/100$, and natural-text NLL moves from
+$3.735/4.851$ to $2.703/2.925$ at $8$/$16$K. A same-initialisation, same-recipe
+step-$0\!\rightarrow\!1{,}000$ trajectory over $2.097$B tokens --- not a bitwise
+paired run, since the two arms use different trainer stacks --- gives
+\evq{}-minus-Geo NLL of $+0.072/+0.038/-0.044/-0.135$ at $2$/$4$/$8$/$16$K, with
+$122/128$ and $126/128$ held-out documents favouring \evq{} at $8$/$16$K.
 
 \paragraph{$8$B causal source use and RULER.} On LLaMA-3-8B-Instruct
 \citep{grattafiori2024llama3}, matched seed-$42$ ordinary-LM adaptation gives
-\evq{}-minus-Native-LoRA NLL of $+0.390/-1.510/-2.048$ at
-$8$/$16$/$32$K. On ten frozen true-$16$K retrieval cases from this protocol,
-median target-block hit@$16$ over $32$ heads rises from $18.75\%$ to
-$64.06\%$; deleting the remote gold block changes NLL by $-0.0095$ for Native
-and $+1.5055$ for \evq{}, establishing causal source use in this diagnostic.
+\evq{}-minus-Native-LoRA NLL of $+0.390/-1.510/-2.048$ at $8$/$16$/$32$K. On ten
+frozen true-$16$K retrieval cases, median target-block hit@$16$ over $32$ heads
+rises from $18.75\%$ to $64.06\%$, and deleting the remote gold block changes NLL
+by $-0.0095$ for Native against $+1.5055$ for \evq{}: causal source use, not
+merely attention mass.
 A separate identical physical-$8$K, $13$-family adaptation yields official
 macro $94.44/77.60\%$ at $8$K and $0.295/14.03\%$ at $16$K; normalized exact
 is $17.69/21.54\%$ and $0/1.54\%$, respectively
 (App.~Table~\ref{tab:ruler}).
 
-\paragraph{Scope.} The 2Wiki and RULER rows are disjoint from training but use
-the same task families, so they measure task-adapted length transfer.  Each
-matched mature-scale protocol uses one training seed per arm; the second OLMo
-\evq{} seed replicates only strict NIAH.  The $8$B deletion study and RULER
-continuation are separate protocols.
+\paragraph{Scope.} The 2Wiki and RULER rows are disjoint from training but share
+its task families, so they measure task-adapted length transfer; the $8$B
+deletion study and RULER continuation are separate protocols.
 
 %% =========================================================================
 \subsection{Attributing the schedule and operating rule}
 \label{sec:exp-tau}
 
-\emph{Question.} Do the trained-model gains identify cosh or the formula value
-of $\tau$, rather than the broader allocation axis?
-
-\paragraph{The rule selects a basin, not a point optimum.} Across the $12$
-factorial configurations, the formula point is the best of the three
-pre-specified cosh multipliers in $4$; $1.25\times$ wins $6$ and $0.75\times$
-wins $2$. At the pre-specified boundaries, formula $\tau{=}1$ prefers
-$1.5\times$, whereas formula $\tau{=}8$ prefers $0.75\times$. An independent
-sweep selects $\tau{=}5$, with the rule value $5.657$ only $0.0119$ NLL away.
-Thus $\tau{=}\deff/\sqrt{\Ltr}$ is a search-free basin selector, while the
-finite coefficient is empirical.
+\paragraph{The rule selects a basin, not a point optimum.} Across $21$
+configurations spanning both a $99$-run sweep and the exact-range factorial, the
+empirically selected $\tau$ never leaves a $0.75\times$--$1.5\times$ window
+around the rule value; an independent sweep selects $\tau{=}5$ with the rule
+value $5.657$ only $0.0119$ NLL away. Inside that window the best point moves
+with the configuration: over the $12$ factorial configurations the rule is best
+in $4$, $1.25\times$ in $6$ and $0.75\times$ in $2$, and the two pre-specified
+boundary arms land at $1.5\times$ (formula $\tau{=}1$) and $0.75\times$ (formula
+$\tau{=}8$). Thus $\tau{=}\deff/\sqrt{\Ltr}$ is a search-free basin selector
+whose finite coefficient is empirical.
 
 \paragraph{Cosh is a derived instance, not the only effective shape.} The
-exact-range deformation-matched exponential improves over Geo in $9/12$
+\emph{matched exponential} is the arm $\rho\propto e^{-\tau'\phi}$ whose
+parameter is fixed so that its $L^1$ deformation from the uniform density equals
+that of rule-cosh, so the two arms move the same amount of budget with different
+curvature. It improves over Geo in $9/12$
 configurations and is not separated from rule-cosh: cosh-minus-exponential is
 $+0.00074$ NLL, bootstrap $[-0.0055,0.0075]$, exact sign-flip $p{=}0.836$.
 The empirical result identifies interior allocation. Cosh contributes a
@@ -172,29 +154,14 @@ its tuning budget appear in App.~\ref{sec:pe-dominant}; shape attribution rests
 on the fixed schedules above.
 
 %% =========================================================================
-\subsection{Composition under range scaling and channel scarcity}
-\label{sec:exp-substrate}
-
-\paragraph{Same operator, different substrate.} We next ask whether a fixed
-range operator has substrate-dependent leverage. On a $454$M model with
-$\Ltr{=}2048$ and a $10\%$ passkey mix ($3$ seeds),
+\paragraph{The substrate persists under range scaling and channel scarcity.}
+Two composition checks close the section. A fixed range operator has
+substrate-dependent leverage: on a $454$M model ($\Ltr{=}2048$, $3$ seeds),
 $\evq{}+\rs{}$ reaches $100{\pm}0\%$ teacher-forced NLL-gap retrieval at $8$K
-against $61{\pm}3\%$ for $\mathrm{Geo}+\rs{}$. At $12$K/$16$K the scores are
-$79/68\%$ versus $59/51\%$, and PPL is $70.9/107.5$ versus $82.9/157.7$
-(Table~\ref{tab:evq-ramp}). This is substrate-dependent leverage of the tested
-fixed $s{=}8$ operator. \citet{karypis2026lerope} independently report the
-same qualitative interaction for a learned non-geometric table.
-
-\input{tables/table_evq_ramp}
-
-%% =========================================================================
-\paragraph{Scarce-channel MLA.}\label{sec:exp-mla}
-MLA \citep{deepseekv2, deepseekv3} provides a direct test with few rotary
-frequencies. The $432$M configuration uses $\dhd{=}64$,
-$\drot{=}32$ ($16$ frequency pairs), $d_{\mathrm{nope}}{=}32$, and KV rank
-$256$; it trains at $\Ltr{=}8192$ for $500$M tokens with learning rate
-$2\times10^{-4}$. Across three seeds, the pre-specified $\tau{=}1.414$ schedule
-changes $2\times$ extrapolation PPL from $138.8$ to $95.6$ ($-31.1\%$), with
-$+0.9\%$ at the training length (App.~\ref{sec:mla-results}). Thus the
-allocation effect persists when only $16$ rotary frequency pairs are
-available.
+against $61{\pm}3\%$ for $\mathrm{Geo}+\rs{}$, and \citet{karypis2026lerope}
+independently report the same qualitative interaction for a learned
+non-geometric table. Under channel scarcity, a $432$M MLA with only $16$ rotary
+pairs improves $2\times$ extrapolation PPL from $138.8$ to $95.6$ ($-31.1\%$) at
+$+0.9\%$ in-window cost across three seeds. Both are leverage results for the
+tested fixed operators, not claims over tuned range methods
+(App.~\ref{sec:ramp-results}, \ref{sec:mla-results}).
