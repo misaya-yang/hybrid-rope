@@ -1,0 +1,29 @@
+\section{Supporting Experiments (from Main Text)}
+\label{sec:supporting-experiments}
+
+The following results record additional submitted protocols with their seed
+scope.
+
+\begin{table}[h]
+\caption{$L{=}256$ \rs{} composition study (125M, 3-seed mean PPL). Among the
+tested settings, $\tau{=}4.0$ has the lowest mean PPL at every reported
+extrapolation ratio.}
+\label{tab:pe-yarn-l256}
+\centering\small
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Method (\(L{=}256\)) & 4$\times$ & 8$\times$ & 16$\times$ & 32$\times$ \\
+\midrule
+Geo+\rs{} & 60.7 & 97.5 & 190.4 & 260.2 \\
+\evq{} ($\tau{=}2$)+\rs{} & 51.6 & 66.7 & 107.9 & 141.7 \\
+\evq{} ($\tau{=}4$)+\rs{} & \textbf{50.9} & \textbf{60.9} & \textbf{84.1} & \textbf{99.6} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Cross-modal scope.}
+In two 129.6M DiT shared-run comparisons, the EVQ branch has lower denoising
+MSE on train, all extrapolation frames, and far extrapolation frames in both
+seeds. Full values and the one-seed base diagnostic are in
+\S\ref{sec:video-dit}.

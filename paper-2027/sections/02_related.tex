@@ -1,0 +1,73 @@
+\section{Related Work}
+\label{sec:related}
+
+Write the RoPE table as $\omega_i=b^{-u_i}$, with the geometric grid
+$u_i=2i/\drot$. Prior work changes several, nonexclusive parts of this
+parameterization: it transports a pretrained spectrum to a longer range, changes
+the scalar base, or changes the frequencies assigned to individual channels
+(Table~\ref{tab:layers}). This decomposition separates when a method acts from
+which spectral degrees of freedom it controls.
+
+\input{tables/table_layers}
+
+\paragraph{Context-range extension.}
+Position interpolation rescales positions to keep rotary phases within the
+training range \citep{chen2024position}. YaRN, SelfExtend, PoSE, and CLEX refine
+this extension through frequency-dependent scaling, remapped positions, or
+extension-time training \citep{peng2024yarn,jin2024selfextend,zhu2024pose,chen2024clex}.
+LongRoPE and LongRoPE2 search channel-wise rescaling factors for pretrained
+models \citep{ding2024longrope,shang2025longrope2}. These methods may combine
+several intervention levels; their common goal is to transport a learned model
+to a declared longer context. Bounds based on the RoPE base characterize limits
+of this regime \citep{xu2024base}.
+
+\paragraph{Base frequency and emergent bands.}
+RoPE models use the geometric spectrum non-uniformly. Barbero et al. identify
+frequency-localized structure in query and key norms and introduce partial RoPE,
+which removes the slowest rotations \citep{barbero2025round}. Oka et al. show
+that the high-norm band's location depends jointly on the scalar base and the
+training length \citep{oka2026fmrope}. Their FMRoPE rule sets $b=L_{\mathrm{train}}$
+during training or fine-tuning and may retarget $b$ to the evaluated length at
+inference. Thus FMRoPE moves the geometric spectrum by changing one scalar while
+retaining a uniform exponent grid. By contrast, an exact-range allocation test
+can hold the endpoints and log-frequency span fixed while changing only the
+interior grid (\S\ref{sec:exp-identify}).
+
+\paragraph{Learning and constructing frequency tables.}
+LeRoPE learns one log-scale per frequency band, shared across layers and heads,
+and reports consistent non-geometric profiles on a 52M--2.5B model ladder
+\citep{karypis2026lerope}. In its 217M ablation, retraining with a frequency
+table frozen from an independent LeRoPE run retains $63.6\%$ of the full
+validation-perplexity gain over RoPE, compared with $10.4\%$ for partial RoPE.
+This isolates substantial value in the fixed table, although obtaining that
+table still requires a separate learned run. AdaRoPE instead learns per-head
+frequencies together with head-specific, length-dependent attention scaling
+\citep{wang2026adarope}. Recent analysis further shows that the frequencies used
+by a trained model depend on the relative-distance structure of its training
+data, with the preferred frequency varying inversely with dependency width
+\citep{wu2026datashapes}.
+
+Resonance RoPE analytically snaps each wavelength to a nearby integer period to close
+phase gaps during interpolation, producing a fixed non-geometric table that
+can be combined with range scaling \citep{wang2024resonance}. \evq{} instead
+derives an interior allocation density from a variational objective and tests
+that variable with the sampled range held fixed.
+
+\paragraph{EVQ-Cosh.}
+\evq{} addresses a different fixed-table objective: it warps the exponent grid before
+training using the closed-form solution of a stated variational surrogate. The
+result is shared across heads, introduces no learned positional parameters, and
+does not require a deployment target. It therefore complements range extension
+and differs from LeRoPE and AdaRoPE in how the non-geometric table is obtained,
+not in whether frequency allocation matters. Alternatives that learn a broader
+positional function, including DAPE, FIRE, and FoPE
+\citep{zheng2024dape,li2024fire,hua2025fope}, change a larger functional object
+than a fixed RoPE table.
+
+\paragraph{Evaluation.}
+Long-context evaluation spans retrieval diagnostics and task suites
+\citep{bai2024longbench,hsieh2024ruler}. Information can be lost despite being
+present in the prompt \citep{liu2024lost}, and positional interventions can
+mitigate this failure \citep{zhang2024found}. We use PE-dominant diagnostics for
+mechanism and RULER for effective-context claims, while keeping task-family
+adaptation distinct from unseen-task transfer.

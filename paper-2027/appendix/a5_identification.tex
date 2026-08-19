@@ -1,0 +1,142 @@
+\section{Identification protocol and provenance}
+\label{sec:identification-details}
+
+\subsection{Exact-range control at $151.9$M}
+
+\paragraph{What is pinned.} The control is designed so that every scalar
+quantity a base/range method can express is identical between arms. Within each
+seed pair the two arms share: model architecture ($151{,}898{,}880$
+parameters); trainable initialisation; training length $256$; token order;
+optimiser, LR schedule, global and micro batch; training budget
+($499{,}974{,}144$ tokens, $7{,}629$ optimiser steps); the $32$ frozen
+evaluation anchors; the sampled highest frequency; the sampled lowest
+frequency; and the log-frequency span. The single free variable is the location
+of the $K{-}2 = 30$ interior frequencies.
+
+\paragraph{Arms.} \emph{Baseline:} a paper-faithful reimplementation of the
+uniform-in-log exponent grid specified in \S6.1 of \citet{oka2026fmrope}, at
+training base $256$. We did not identify a public author implementation when
+implementing the control, so the comparison is against the rule as published,
+not an official-code reproduction. \emph{Intervention:}
+endpoint-normalised cosh interior spacing at $\tau{=}4$. Note that the
+endpoint-normalised cosh arm is \emph{not} identical to the deployed midpoint
+\evq{} grid of Eq.~\eqref{eq:evq-practical}, whose $\tau$ also shifts the
+sampled extrema; endpoint normalisation is what makes the exact-range control
+possible, and this is a shape diagnostic rather than a deployment
+configuration.
+
+\paragraph{Evaluation.} Two conditions. \texttt{fixed}: each checkpoint retains
+its training range. \texttt{target-matched}: the range is set to the declared
+evaluation length while preserving each arm's normalised interior spacing.
+Metric is paired final-$128$-token teacher-forced NLL over the $32$ frozen
+anchors; reported PPL is $\exp(\mathrm{mean\ NLL})$.
+
+\paragraph{Seed-42 absolute values.} Under \texttt{fixed} range, PPL is
+$28.386/142.851/342.056/564.353$ (uniform) against
+$29.331/88.615/278.659/504.131$ (cosh) at $256/512/1{,}024/2{,}048$. Under
+\texttt{target-matched} range, $28.386/28.038/35.209/100.111$ (uniform) against
+$29.331/29.804/42.230/132.271$. Cosh wins $32/32$, $27/32$, $22/32$ anchors at
+$512/1$K/$2$K under \texttt{fixed}, and only $5/32$, $1/32$, $2/32$ under
+\texttt{target-matched}.
+
+\paragraph{Reading.} The \texttt{fixed} column identifies the optimisation
+variable: interior allocation is not reducible to scalar base/range selection.
+The \texttt{target-matched} column bounds the deployment claim: when range
+transport is available to both arms, target-aware retargeting is the stronger
+lever in this protocol. Both are reported in the body
+(\S\ref{sec:exp-identify}).
+
+\subsection{Exact-range factorial at $50.9$M}
+
+\paragraph{Design.} The schedule arms, including the $1.25\times$ multiplier,
+were specified before any result was inspected. Grid: $2$ bases $\times$
+$2$ training lengths $\times$ $3$ head dimensions $=12$ structural
+configurations; $5$ schedules (Geo, anchored cosh at $0.75\times$, $1.00\times$
+[the formula point], $1.25\times$, and a deformation-matched exponential);
+$3$ seeds. Main factorial $180/180$ completed, boundary-$\tau$ follow-up
+$12/12$ completed, covering the complete pre-specified matrix.
+
+\paragraph{Metric.} Weighted OOD NLL over $2L/4L/8L$,
+\[
+\bar N_{\mathrm{OOD}}
+= \frac{\sum_{r\in\{2,4,8\}}\log_2(r+1)\,N_{rL}}
+       {\sum_{r\in\{2,4,8\}}\log_2(r+1)},
+\]
+paired within structural configuration and seed, averaged within seed, then
+equally weighted over the $12$ configurations. The statistical unit is the
+configuration. Equivalent-PPL figures quoted anywhere are
+$\exp(\mathrm{mean\ NLL})$, never an arithmetic mean of raw PPL.
+
+\paragraph{Absolute values.} Mean weighted OOD NLL (equivalent PPL): Geo
+$6.211973$ ($498.68$); cosh $0.75\times$ $6.202858$ ($494.16$); cosh
+$1.00\times$ $6.202094$ ($493.78$); cosh $1.25\times$ $6.199873$ ($492.69$);
+matched exponential $6.201354$ ($493.42$).
+
+\paragraph{Boundary-$\tau$ arms.} At formula $\tau{=}1$ the $1.5\times$ arm is
+better; at formula $\tau{=}8$ the $0.75\times$ arm is. Optima move inward from
+both ends, which bounds the formula's implied range but does not yield a
+replacement closed-form rule.
+
+\paragraph{Scope limit.} This is a short-budget $50.9$M mechanistic NLL
+control trained on a deterministically repeated local WikiText-2 raw stream ---
+not a large-scale pre-training distribution, and a different corpus from the
+$151.9$M control and from the from-scratch runs. It is not scale evidence and
+not capability evidence, and its effect size is not comparable to the $151.9$M
+single-configuration contrast: the factorial establishes cross-configuration
+\emph{direction}, whereas the $151.9$M control provides the effect size within
+its configuration.
+
+\section{The fixed-index ramp scaler}
+\label{sec:ramp-scaler}
+
+Every arm marked $+\rs{}$ in this paper uses our fixed-index smooth-ramp range
+scaler from the NTK-by-parts family that includes YaRN
+\citep{peng2024yarn}. It is used as a fixed-scale substrate control, not as a
+reproduction or tuning study of reference YaRN.
+
+Its role is a fixed-scale substrate control: it is held
+\emph{identical} across the arms being compared --- same implementation, same
+fixed cut indices, same scale $s$ --- so that the only difference between
+$\mathrm{Geo}+\rs{}$ and $\evq{}+\rs{}$ is the training-time table each
+substrate presents to the same operator. It therefore measures
+substrate-dependent leverage at the fixed tested scale, rather than tuned
+range-method performance.
+
+\paragraph{Implemented components.} For $K$ frequency channels, the scaler
+uses fixed channel-index cut points
+$k_{\mathrm{lo}}=\lfloor0.20K\rfloor$ and
+$k_{\mathrm{hi}}=\lfloor0.90K\rfloor$. Between them it applies the cubic
+smoothstep $r(x)=x^2(3-2x)$ and replaces each inverse frequency $\omega_k$ by
+\[
+\omega_k\big/\left(s^{r_k}t^{r_k/2}\right),
+\qquad t=1+0.07\log_2 s.
+\]
+Thus an interpolation ramp is present, but its boundaries are fixed by channel
+index rather than YaRN's wavelength-derived $\beta_{\mathrm{fast}}/
+\beta_{\mathrm{slow}}$ rule. The factor $t$ is folded into frequency scaling;
+there is no separate attention-logit magnitude scaling. These differences are
+why we label the operator \rs{} rather than YaRN.
+
+\section{Learned-frequency comparator}
+\label{sec:pe-dominant}
+
+\input{tables/table_pe_dominant}
+
+The $32$-parameter arm in Table~\ref{tab:pe-dominant} is a layer-shared
+learnable inverse-frequency baseline: one learned scalar per frequency band,
+shared across layers and heads. It received a dedicated positional-parameter
+learning-rate sweep at $10\times$ and $100\times$ the base rate, and the
+stronger $100\times$ setting is the $455.3$ row. This answers a tuning-budget
+question but not the attribution question: a learned-parameter arm cannot
+isolate allocation shape from parameterisation, which is why
+\S\ref{sec:exp-identify} uses fixed zero-parameter schedules under an identical
+operator instead, and why no allocation-shape claim in this paper depends on
+this table.
+
+On method identity: DAPE \citep{zheng2024dape} is a learned positional
+\emph{operator}, whereas this comparator learns inverse frequencies directly
+and belongs to the learned-\emph{table} family later studied at scale by
+\citet{karypis2026lerope}. The distinction matters for what the row can be read
+as evidence for. Read as a learned-table comparison, its direction is
+consistent with the independent finding that learned tables degrade more
+sharply than standard RoPE under naive extrapolation.

@@ -1,0 +1,33 @@
+\begin{table*}[t]
+\centering
+\small
+\setlength{\tabcolsep}{5.5pt}
+\renewcommand{\arraystretch}{0.96}
+\caption{\textbf{Mature-scale effective-context results.} Columns are relative
+to each model's physical training cap ($4$K for OLMo-2, $8$K for LLaMA-3-8B).
+OLMo Native and \evq{} receive identical Q/K-only adaptation and phase
+exposure; LLaMA receives identical Q/K/V/O adaptation.  RULER is official
+macro and 2Wiki is greedy normalized exact.  One matched training seed is used
+per arm; the parenthetical NIAH result is an independent \evq{} training-seed
+replication.}
+\label{tab:mature}
+\begin{tabular}{@{}llccc@{}}
+\toprule
+Model / protocol & Endpoint and arm & $1\times$ & $2\times$ & $4\times$ \\
+\midrule
+\multirow{4}{*}{OLMo-2 $1.485$B, selective Q/K}
+ & RULER: Native & $\mathbf{72.19\%}$ & $2.02\%$ & $0.38\%$ \\
+ & RULER: \evq{} & $42.44\%$ & $\mathbf{31.63\%}$ & $\mathbf{5.03\%}$ \\
+ & 2Wiki exact: Native & $\mathbf{22.0\%}$ & $0\%$ & $0\%$ \\
+ & 2Wiki exact: \evq{} & $21.5\%$ & $\mathbf{17.5\%}$ & $\mathbf{4.0\%}$ \\
+\addlinespace[2pt]
+\multirow{2}{*}{OLMo-2 $1.485$B, Q/K/V/O}
+ & NIAH first-number exact: Native & --- & $0/100$ & --- \\
+ & NIAH first-number exact: \evq{} & --- & $\mathbf{69/100}$ ($67/100$) & --- \\
+\addlinespace[2pt]
+\multirow{2}{*}{LLaMA-3-8B, Q/K/V/O}
+ & RULER: Native & $\mathbf{94.44\%}$ & $0.295\%$ & --- \\
+ & RULER: \evq{} & $77.60\%$ & $\mathbf{14.03\%}$ & --- \\
+\bottomrule
+\end{tabular}
+\end{table*}

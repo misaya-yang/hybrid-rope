@@ -1,0 +1,85 @@
+\section{Mature-scale protocols}
+\label{sec:mature-details}
+
+\input{tables/table_ruler}
+
+\subsection{OLMo-2 $1.485$B}
+
+\paragraph{Matched routing conversion.}
+We use OLMo-2-0425-1B-Instruct \citep{olmo2furious} ($1.485$B actual
+parameters) with rank-$64$, alpha-$128$ Q/K/V/O LoRA \citep{hu2022lora}.
+Native and \evq{} share the checkpoint, training rows and order, token budget,
+optimizer, and evaluation rows; the fixed frequency substrate is the intended
+intervention. Every backward pass contains at most $4$K physical tokens, but
+explicit position IDs expose target-range relative phases. This is therefore a
+physical-memory cap, not phase-free $4$K training. On $8$K
+\texttt{niah\_single\_1}, strict first-generated-number exact is $0/100$
+for Native and $69/100$ for the matched \evq{} seed; an independently trained
+\evq{} seed scores $67/100$ on the same rows. The two \evq{} results are
+training-seed replications on a shared evaluation set. Natural-text NLL and the distinct
+autoregressive endpoint are reported separately in Table~\ref{tab:mature}.
+
+\paragraph{Selective Q/K phase adaptation.}
+To test a less intrusive mature-checkpoint adaptation, we start independently
+from the matched Native and \evq{} Stage-A parents, freeze every inherited V/O
+LoRA tensor (verified bitwise), and continue only the existing Q/K tensors for
+$300$ steps. Both arms use the same $1{:}1{:}2$ mixture of continuous-$4$K,
+target-$8$K, and target-$16$K phase exposure, complete answer-plus-EOS
+supervision, and physical sequences no longer than $4$K; long phases again use
+explicit position IDs. On $200$ held-out 2WikiMultiHopQA rows per length,
+Native/\evq{} exact match is $22.0/21.5\%$ at $4$K, $0/17.5\%$ at $8$K, and
+$0/4.0\%$ at $16$K. Prompts retain the official question and context and are
+deterministically filled with answer-filtered 2Wiki distractors to reach the
+target length. Thus this is held-out task-family length transfer, not an
+unmodified LongBench leaderboard result. The RULER adapters are independent of
+the QA adapters: Table~\ref{tab:ruler} reports both the earlier $276$-step
+full-Q/K/V/O continuation and the $300$-step selective-Q/K continuation, each
+trained over all $13$ families.
+
+\paragraph{Family-level in-window structure.}
+For the selective-Q/K RULER adapters at $4$K, the official-score changes
+(\evq{} minus Native) for
+\texttt{niah\_single\_1/2/3} are $-5/0/-60$ percentage points, averaging
+$-21.67$.  The changes for
+\texttt{niah\_multikey\_1/2/3}, \texttt{niah\_multivalue}, and
+\texttt{niah\_multiquery} are $-65/-95/-50/-26.25/-25$, averaging $-52.25$.
+This split is a post-hoc mechanism diagnostic over one matched seed, not a
+separate benchmark claim; it motivates the multi-reference prediction in
+\S\ref{sec:discussion}.
+
+\paragraph{From initialisation.}
+Starting from the public step-$0$ initialisation, one $2.097$B-token \evq{}
+trajectory reaches PPL $167.45/156.87/159.64$ against the released Geo
+step-$1{,}000$ checkpoint's $161.19/163.88/182.73$ at $4$/$8$/$16$K.
+The paired \evq{}-minus-Geo NLL is $+0.0381/-0.0437/-0.1351$, with
+$122/128$ and $126/128$ held-out documents favouring \evq{} at $8$K and
+$16$K. This is one same-initialisation, same-scientific-recipe trajectory:
+\evq{} used a reviewed single-GPU HF loop, whereas the released Geo checkpoint
+used the original distributed trainer. This row evaluates natural-text LM;
+capability is evaluated by the separate autoregressive protocols above.
+
+\subsection{LLaMA-3-8B-Instruct}
+
+\paragraph{Probability and causal source use.}
+In the matched seed-$42$, $300$-step Q/K/V/O LoRA protocol, \evq{}-minus-Native
+NLL is $+0.390/-1.510/-2.048$ at $8$/$16$/$32$K. On ten frozen true-$16$K
+passkey cases, median target-block hit@16 over $32$ retrieval heads rises from
+$18.75\%$ to $64.06\%$. Removing the remote gold block from every head changes
+NLL by $-0.0095$ for Native and $+1.5055$ for \evq{}. These are matched
+teacher-forced probability and causal-routing measurements; autoregressive
+task accuracy is evaluated separately.
+
+\paragraph{RULER-family continuation.}
+A separate $516$-step continuation uses identical physical-$8$K supervision
+over all $13$ RULER families, with one seed per arm and disjoint generated
+training/evaluation rows. At $16$K, Native/\evq{} official macro is
+$0.295/14.03\%$ and normalized exact is $0/1.54\%$. At the $8$K training
+length the metrics disagree, so Table~\ref{tab:ruler} reports both official
+macro ($94.44/77.60\%$) and normalized exact ($17.69/21.54\%$).
+
+\paragraph{Endpoint scope.}
+NLL, attention routing, strict autoregressive exact match, multi-hop QA, and
+RULER remain separate endpoints. The 2Wiki and RULER continuations use the
+same task families at train and test with disjoint rows, so they establish
+task-adapted length transfer, not unseen-task transfer. The natural-text and
+routing rows make no task-transfer claim.

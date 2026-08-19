@@ -1,0 +1,51 @@
+\section{Discussion}
+\label{sec:discussion}
+
+RoPE assigns a finite number of rotary channels to a continuous spectral
+range. The exact-range experiment shows that this assignment is not fixed by
+the operator, its base, or its sampled endpoints: moving only the interior
+channels changes the trained model. Frequency allocation is therefore a
+design decision, not an implementation detail. \evq{} supplies one
+closed-form, zero-learned-parameter allocation derived from a stated
+variational objective.
+
+This view also clarifies where allocation enters the modeling pipeline.
+Allocation shapes the frequency table on which a model is trained or adapted;
+range transport acts on that table at inference time. Their effects need not
+be interchangeable. The fixed-scaler and MLA results show that the substrate
+still matters after a range operator is applied and when only a small rotary
+subspace is available, while the mature-model results show that the same choice
+survives beyond scratch-model diagnostics.
+
+The phase-matched OLMo experiment separates allocation from phase exposure.
+Both arms receive the same target-$8$K/$16$K position exposure, continuation
+data, update budget, and trainable modules, yet Native reaches only $2.02\%$
+RULER at $8$K against $31.63\%$ for \evq{}.  In this matched protocol,
+long-phase exposure is therefore not a substitute for the table on which those
+phases are learned.  The near
+tie on $4$K 2Wiki exact ($22.0/21.5\%$) also shows that the in-window trade is
+task-dependent rather than a uniform loss of capability.
+
+The budget accounting in \S\ref{sec:budget-shift} makes that trade concrete.
+For the $1.485$B configuration at $\tau=2$, \evq{} moves $11$ of $64$ channels
+into wavelengths that complete a training-window cycle, while the intermediate
+$L<\lambda\le M$ region changes from $10$ to $8$ channels.  The family-level
+RULER scores show a corresponding structure: in a post-hoc split restricted to
+the explicitly named NIAH families, the three single-needle families change by
+$-21.7$ percentage points on average at $4$K, whereas the five
+multi-key/value/query families change by $-52.3$ points.  This does not identify
+individual channels, but it gives a falsifiable prediction: allocations that
+thin the intermediate-wavelength region should pay more on simultaneous
+multi-reference resolution than on single-reference retrieval.
+
+The theory contributes the allocation family and the
+$\deff/\sqrt{\Ltr}$ scaling structure; the finite coefficient is an operating
+choice inside an empirically broad basin rather than a trained-loss optimum.
+This separation is useful beyond \evq{} itself: operator design, spectral
+allocation, and deployment-time transport can be studied as distinct,
+composable parts of a positional-encoding system. The central implication is
+that a RoPE table spends a finite spectral budget, and its interior placement
+should be chosen deliberately before that budget is transported to a new
+range.
+
+\label{page:bodyend}

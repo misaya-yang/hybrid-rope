@@ -1,0 +1,553 @@
+\section{Proof Details}
+\label{sec:proofs}
+
+\subsection{Collision-only surrogate stationary density}
+
+This subsection proves Theorem~\ref{thm:ode} directly from the collision-only surrogate functional; the forced Fisher extension is treated separately in~\S\ref{subsec:fisher-ext}. Starting from the formal surrogate kernel
+\begin{equation}
+K_{\mathrm{app}}(\phi,\psi)=\alpha\delta(\phi-\psi)+\beta\min(\phi,\psi),
+\end{equation}
+the main-text collision functional is~\eqref{eq:Capp}, which under the mass normalization $\int_0^1\rho=1$ with Lagrange multiplier $\nu$ has constrained first variation
+\begin{equation}
+\alpha\rho(\phi) + \beta\,g(\phi) + \nu = 0,\qquad
+g(\phi) = \int_0^1 \rho(\psi)\min(\phi,\psi)\,d\psi.
+\end{equation}
+\paragraph{Existence.}
+For rigor, view $\mathcal{C}_{\mathrm{app}}$ first as a functional on $L^2([0,1])$ and minimize over $\mathcal{A}=\{\rho\in L^2([0,1]):\rho\ge0\ {\rm a.e.},\int_0^1\rho=1\}$. The $\alpha\|\rho\|_2^2$ term is coercive and weakly lower semicontinuous, the Green-kernel term is positive semidefinite and continuous, and the mass/nonnegativity constraints are weakly closed. A minimizer therefore exists by the direct method. Strict convexity gives uniqueness. The Euler solution derived below is strictly positive, so the nonnegativity constraint is inactive a posteriori and the classical $C^2$ derivation is justified.
+
+Direct differentiation of $g$ gives
+\begin{align}
+g'(\phi)
+&=
+\int_\phi^1 \rho(\psi)\,d\psi,
+&
+g''(\phi)
+&=
+-\rho(\phi).
+\end{align}
+Differentiating the first variation twice in $\phi$ eliminates $\nu$ (a constant) and yields the homogeneous ODE
+\begin{equation}
+\rho''(\phi) - \tau^2\rho(\phi) = 0,\qquad \tau = \sqrt{\beta/\alpha}.
+\label{eq:homogeneous-ode}
+\end{equation}
+Evaluating the pre-differentiated stationarity together with $g(0){=}0$, $g'(1){=}0$, and $\int_0^1\rho = 1$ gives the derivative boundary conditions
+\begin{equation}
+\rho'(0) = -\tau^2,\qquad \rho'(1) = 0,
+\label{eq:bcs}
+\end{equation}
+since differentiating $\alpha\rho(\phi)+\beta g(\phi)+\nu = 0$ once and evaluating at $\phi{=}1$ gives $\alpha\rho'(1)+\beta g'(1) = 0$ hence $\rho'(1){=}0$, and at $\phi{=}0$ gives $\alpha\rho'(0)+\beta g'(0) = 0$ with $g'(0) = \int_0^1\rho = 1$, so $\rho'(0) = -\beta/\alpha = -\tau^2$. Substituting $\rho(\phi) = C_1\cosh(\tau\phi)+C_2\sinh(\tau\phi)$ into~\eqref{eq:homogeneous-ode} and~\eqref{eq:bcs} together with $\int_0^1\rho = 1$ gives the unique positive interior stationary density
+\begin{equation}
+\rho_\tau(\phi) \;=\; \frac{\tau\,\cosh(\tau(1-\phi))}{\sinh\tau},
+\label{eq:rho-tau-closed}
+\end{equation}
+which is main-text Theorem~\ref{thm:ode}. The mass constraint $\int\rho{=}1$ is not lost: it enters the boundary condition at $\phi{=}0$ via $g'(0){=}\int_0^1\rho{=}1$. Positivity holds on the closed interval since $\rho_\tau(\phi){\geq}\rho_\tau(1){=}\tau/\sinh\tau{>}0$ for $\tau{>}0$ (with $\rho_\tau(0){=}\tau\coth\tau{>}0$); the inequality constraint $\rho{>}0$ is therefore inactive throughout $[0,1]$ and the unconstrained Euler--Lagrange solution coincides with the KKT-constrained solution. For the degenerate case $\beta{=}0$ the ODE reduces to $\rho''{=}0$ with $\rho'(0){=}\rho'(1){=}0$ and $\int\rho{=}1$, forcing $\rho\equiv 1$, which is also the $\tau{\to}0$ limit of~\eqref{eq:rho-tau-closed}.
+
+\paragraph{Convexity / PSD of $\mathcal{C}_{\mathrm{app}}$.} For $\alpha{>}0$ and $\beta{\geq}0$, the surrogate is convex because both quadratic terms are positive semidefinite. The diagonal $\alpha{\int}\rho^2$ is manifestly PSD on $L^2$, and the Green-kernel cross term satisfies the identity
+\begin{equation}
+\iint_{[0,1]^2} f(\phi)\,f(\psi)\,\min(\phi,\psi)\,d\phi\,d\psi \;=\; \int_0^1 \!\left(\int_s^1 f(u)\,du\right)^{\!2}\!ds \;\geq\; 0.
+\label{eq:min-kernel-psd}
+\end{equation}
+Thus the stationary density obtained above is the unique constrained \emph{minimizer} (not merely a critical point), and the surrogate is well-defined as a quadratic functional on $L^2([0,1])\supset C^2([0,1])$ with no further regularity assumption needed for the $\delta$-component. Conditional on $\mathcal{C}_{\mathrm{app}}$, this derivation is exact.
+
+\subsection{Forced Fisher extension}
+\label{subsec:fisher-ext}
+
+Adding a Fisher utility $-\mu\!\int\rho(\phi)\,b^{-2\phi}\,d\phi$ to $\mathcal{C}_{\mathrm{app}}$ modifies the constrained stationarity to $\alpha\rho+\beta g -\mu b^{-2\phi}+\nu = 0$, whose twice-differentiated form is
+\begin{equation}
+\rho''(\phi) - \tau^2\rho(\phi) = \gamma\,b^{-2\phi},
+\label{eq:forced-ode}
+\end{equation}
+with $\gamma$ set by the Fisher multiplier's sign convention. The non-resonant general solution ($\tau\neq 2\log b$) is
+\begin{equation}
+\rho_{\mathrm{full}}(\phi)
+=
+C_1\cosh(\tau\phi)+C_2\sinh(\tau\phi)+\frac{\gamma}{(2\log b)^2-\tau^2}\,b^{-2\phi}.
+\end{equation}
+At resonance, $\tau=2\log b$, the forcing profile $b^{-2\phi}$ coincides with one homogeneous mode. The particular solution is then
+\begin{equation}
+\delta\rho_F^{\mathrm{part}}(\phi)
+= -\frac{\gamma}{2\tau}\,\phi e^{-\tau\phi},
+\end{equation}
+with the homogeneous constants again fixed by the boundary and mass conditions. All bounds below containing $(s^2-\tau^2)^{-1}$ are non-resonant bounds and should be read with $|s^2-\tau^2|^{-1}$; they are not uniform as $\tau\to 2\log b$.
+EVQ-Cosh is the $\gamma{=}0$ homogeneous branch. The forced term is a controlled but nonzero residual; its magnitude and the corresponding warp-amplification caveat are bounded in~\S\ref{sec:pure-tether-bound}.
+
+\subsection{Closed-form solution and geometric limit}
+
+The non-resonant ODE has the closed-form solution
+\begin{equation}
+\rho^*(\phi)=C_1\cosh(\tau\phi)+C_2\sinh(\tau\phi)+P\,b^{-2\phi}.
+\end{equation}
+The first two terms span the homogeneous solution of \(\rho''-\tau^2\rho=0\), and the final term is a particular solution induced by the Fisher-weighted source \(b^{-2\phi}\). This decomposition is the source of the main paper's ``tether + pulse'' interpretation.
+
+To translate the density into RoPE frequencies, write the cumulative map
+\begin{equation}
+F(\phi)=\int_0^\phi \rho^*(s)\,ds,
+\end{equation}
+normalize it to \([0,1]\), and invert at the discrete quantiles \(u_k=k/K\). In the pure-tether branch this inversion has the closed form
+\begin{equation}
+\phi_k(\tau)
+=
+1-\frac{1}{\tau}\operatorname{arcsinh}\!\left((1-u_k)\sinh\tau\right).
+\end{equation}
+To recover geometric RoPE, expand \(\sinh\tau\approx\tau\) as \(\tau\to 0\). Then
+\begin{equation}
+\phi_k(\tau)\to 1-\frac{1}{\tau}\operatorname{arcsinh}((1-u_k)\tau)\to u_k,
+\end{equation}
+which is exactly the uniform quantile map.
+
+This also shows why the high-frequency end remains effectively anchored: for \(u_0=0\), one has \(\phi_0(\tau)=0\) exactly, so the leading inverse frequency remains \(b^0=1\), matching geometric RoPE.
+
+\subsection{Why the pure-tether branch}
+
+The full stationary density contains three terms: a hyperbolic tether (\(\cosh, \sinh\)) and a particular solution \(Pb^{-2\phi}\). The practical EVQ method uses only the pure-tether branch, justified on two grounds.
+
+\textbf{(1) Closed-form invertibility.} The pure-tether density \(\rho(\phi)\propto\cosh(\tau(1-\phi))\) admits an analytically invertible CDF, yielding the closed-form warp \(\phi_k(\tau)\). Including the \(b^{-2\phi}\) term destroys this invertibility and requires numerical root-finding.
+
+\textbf{(2) Conditional CDF control.} Under the slowly varying Fisher-coefficient assumption in Appendix~\ref{sec:pure-tether-bound}, the forcing profile is confined to a boundary layer: $\|q_s\|_1=(1-e^{-s})/s=O(1/\log b)$. This yields an $O(1/\log b)$ $L^1$/CDF residual, not a pointwise bound. Inverse-CDF inversion can further amplify that residual by $1/\inf\rho_\tau\sim\sinh\tau/\tau$. Thus the pure-tether branch is adopted for its closed form; the residual analysis states when that choice is controlled and does not identify a trained-loss optimum.
+
+\subsection{Why constant \texorpdfstring{$\alpha$}{alpha} (and not the continuum stationary-phase coefficient)}
+\label{sec:why-constant-alpha}
+
+A stationary-phase treatment of the exact kernel gives a $\phi$-dependent diagonal coefficient rather than the constant coefficient used in $\mathcal{C}_{\mathrm{app}}$. With $\lambda_b{:=}\ln b$, its leading form is $\alpha_{\mathrm{sp}}(\phi){=}(\pi D_0/L\lambda_b)b^\phi$. Writing the finite-grid coefficient as $\alpha_K{:=}1/(2K)$, the discrepancy is
+\begin{equation}
+\int_0^1 \rho^2(\phi)\bigl[\alpha_K - \alpha_{\mathrm{sp}}(\phi)\bigr]d\phi
+\;=\; \frac{\|\rho\|_2^2}{2K} \;-\; \frac{\pi D_0}{L\lambda_b}\!\int_0^1\!\rho^2(\phi)\,b^{\phi}\,d\phi,
+\label{eq:const-vs-sp}
+\end{equation}
+which is not a higher-order correction at the deployed finite grids. Replacing $\alpha$ by $\alpha_{\mathrm{sp}}(\phi)$ produces a different variable-coefficient Euler--Lagrange equation. We use constant $\alpha$ because it is the finite-grid surrogate that yields a positive density with an elementary inverse CDF; this is a modelling decision, not a continuum asymptotic claim. Its empirical check is therefore functional: whether the resulting schedule also reduces the separately evaluated exact-kernel collision score.
+
+\subsection{Surrogate quality: functional validation}
+\label{sec:surrogate-validation}
+
+The broadband surrogate $K_{\mathrm{app}} = \alpha\delta + \beta\min$ is the
+primary approximation behind the closed-form density; selecting the pure-tether
+branch and a finite operating point are additional modeling choices. We test the
+surrogate functionally rather than pointwise against the oscillatory exact kernel
+$K(\phi_1,\phi_2) = \int D(\Delta)\cos(\omega(\phi_1)\Delta)\cos(\omega(\phi_2)\Delta)\,d\Delta$:
+does the derived allocation also reduce the collision objective under $K$? This
+checks the direction selected by the homogeneous branch; it does not bound the
+omitted Fisher-forcing residual.
+
+Table~\ref{tab:surrogate-validation} answers affirmatively. For a uniform distance prior $D(\Delta) = 1/L$ on $[0, L]$, we compute the exact kernel $K$ at the discrete allocation points for both geometric and EVQ, then evaluate the normalized collision score $C = \sum_{i<j} K_{ij}^2/(K_{ii}K_{jj})$ and effective spectral rank (exponential of the Shannon entropy of the eigenvalue distribution). These diagnostics use the inclusive grid $u_k=k/(K-1)$; they test the allocation direction but are not a direct validation of the deployed midpoint grid. The $12$ reported configurations comprise a six-length text sweep at fixed $b{=}500$K and $K{=}32$, two additional text bases at $L{=}2048$, and four video bases at $L{=}32$ and $K{=}16$; this is not a Cartesian sweep over every listed factor.
+
+\begin{table}[ht]
+\caption{Functional surrogate check on the inclusive $u_k{=}k/(K{-}1)$ diagnostic grid. EVQ reduces collision and increases effective rank under the \emph{exact} kernel $K$ in all 12 tested configurations. This is a direction check, not a pointwise approximation or a deployed-grid identity test.}
+\label{tab:surrogate-validation}
+\centering
+\small
+\begin{tabular}{@{}l r r r r r@{}}
+\toprule
+& \multicolumn{2}{c}{Collision $C$} & & \multicolumn{2}{c}{Eff.\ rank} \\
+\cmidrule(lr){2-3} \cmidrule(lr){5-6}
+Configuration & GEO & EVQ ($\Delta_C$) & & GEO & EVQ \\
+\midrule
+\multicolumn{6}{@{}l}{\emph{Text: $K{=}32$, $b{=}500\mathrm{K}$, sweep $L$}} \\
+\quad $L{=}128$ & 226.3 & 17.7 ($-92\%$) & & 2.5 & 17.0 \\
+\quad $L{=}256$ & 192.6 & 27.6 ($-86\%$) & & 3.0 & 13.9 \\
+\quad $L{=}512$ & 163.2 & 43.3 ($-73\%$) & & 3.6 & 10.8 \\
+\quad $L{=}1024$ & 133.9 & 59.0 ($-56\%$) & & 4.4 & 8.8 \\
+\quad $L{=}2048$ & 109.0 & 67.5 ($-38\%$) & & 5.4 & 8.0 \\
+\quad $L{=}4096$ & 87.0 & 66.3 ($-24\%$) & & 6.6 & 8.1 \\
+\midrule
+\multicolumn{6}{@{}l}{\emph{Text: $K{=}32$, $L{=}2048$, sweep $b$}} \\
+\quad $b{=}10\mathrm{K}$ & 34.8 & 19.2 ($-45\%$) & & 13.0 & 17.3 \\
+\quad $b{=}100\mathrm{K}$ & 79.4 & 47.0 ($-41\%$) & & 7.1 & 10.4 \\
+\midrule
+\multicolumn{6}{@{}l}{\emph{Video: $K{=}16$, $L{=}32$, sweep $b$}} \\
+\quad $b{=}100$ & 22.6 & 14.2 ($-37\%$) & & 4.8 & 6.4 \\
+\quad $b{=}1\mathrm{K}$ & 42.3 & 28.0 ($-34\%$) & & 2.8 & 3.9 \\
+\quad $b{=}10\mathrm{K}$ & 55.4 & 39.8 ($-28\%$) & & 2.2 & 2.9 \\
+\quad $b{=}50\mathrm{K}$ & 63.3 & 47.2 ($-26\%$) & & 2.0 & 2.5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+EVQ reduces collision under the exact kernel in all 12 configurations ($24\%$--$92\%$), and effective rank increases in every row. In the fixed-base text sweep, the relative reduction grows as $L$ shortens. The separate base sweeps remain positive but are not monotone in $b$.
+
+\subsection{Exact higher-order displacement floor}
+\label{sec:floor-higher-order}
+
+The one-channel mid-displacement threshold admits an exact Taylor series in $1/K$ that is fully closed-form (no empirical calibration).
+
+\begin{proposition}[Higher-order floor]
+\label{prop:floor-higher-order}
+For the EVQ-Cosh mapping with $K = d_{\mathrm{rot}}/2$ channels, as
+$N/K\to0$ the $N$-channel mid-displacement threshold satisfies
+\begin{equation}
+\tau_{\mathrm{floor}}(N, K) \;=\; 4\sqrt{\frac{N}{K}}\left[1 + \frac{N}{2K} + \frac{241}{120}\left(\frac{N}{K}\right)^{\!2} + O\!\left((N/K)^3\right)\right].
+\end{equation}
+All coefficients are derived from the Taylor series
+\(\Delta\varphi(1/2, \tau) = -\tau^2/16 + \tau^4/256 + 17\tau^6/30720 + O(\tau^8)\),
+whose coefficients $(-1/16,\, +1/256,\, +17/30720)$ are exact rationals from the expansion of $\operatorname{arcsinh}(\sinh\tau/2)/\tau$ (Appendix script \texttt{theory\_B\_floor\_higher\_order.py}; verified symbolically).
+\end{proposition}
+
+\paragraph{Accuracy.} For $N{=}1$, against the exact floor obtained by solving $|\Delta\varphi(1/2,\tau)|=1/K$, the leading term has relative error $3.85\%$ at $K{=}16$ and $0.10\%$ at $K{=}512$; including both displayed correction terms reduces the error to $0.088\%$ at $K{=}16$, $1.56{\times}10^{-4}\%$ at $K{=}128$, and $2.41{\times}10^{-6}\%$ at $K{=}512$. All constants come from the cosh geometry.
+
+\subsection{Single-crossing budget shift}
+\label{sec:budget-crossing-proof}
+
+\begin{proof}[Proof of Lemma~\ref{lem:budget-crossing}]
+For $\tau>0$, $\rho_\tau(\phi)=\tau\cosh(\tau(1-\phi))/\sinh\tau$ is
+strictly decreasing on $[0,1)$, with
+$\rho_\tau(0)=\tau\coth\tau>1$ and
+$\rho_\tau(1)=\tau/\sinh\tau<1$.  Hence the crossing is unique, and solving
+$\rho_\tau(\phi_c)=1$ gives~\eqref{eq:budget-crossing}.  To bound it, expand
+\[
+\frac{\sinh\tau}{\tau}
+=\sum_{n\ge0}\frac{\tau^{2n}}{(2n+1)!}
+\ge \sum_{n\ge0}\frac{\tau^{2n}}{3^n(2n)!}
+=\cosh\!\left(\frac{\tau}{\sqrt3}\right),
+\]
+where the coefficient-wise inequality is $3^n\ge2n+1$.  Monotonicity of
+$\operatorname{arcosh}$ yields
+$\operatorname{arcosh}(\sinh\tau/\tau)\ge\tau/\sqrt3$, proving the bound.
+The three-region masses follow directly from
+$F_\tau(\phi)=1-\sinh(\tau(1-\phi))/\sinh\tau$ at
+$\phi_L=\log(L/2\pi)/\log b$ and $\phi_M=\log(M/2\pi)/\log b$.
+\end{proof}
+
+\subsection{Waterbed envelope and corollary}
+\label{sec:waterbed-proof}
+
+\paragraph{Setup.} With $\rho{>}0$, $\int_0^1\rho{=}1$, $U(d\phi){=}d\phi$, $P_\rho(d\phi){=}\rho\,d\phi$, $\delta\rho{=}\rho{-}1$, and $M_\rho(s){=}\int_s^1\delta\rho\,du$, define the waterbed functional
+\begin{equation}
+\mathcal{W}(\rho) \;\coloneqq\; \alpha\,\chi^2(U\|P_\rho) + \beta\int_0^1 M_\rho(s)^2\,ds,\qquad \chi^2(U\|P_\rho) = \int_0^1 \frac{(1-\rho)^2}{\rho}\,d\phi.
+\label{eq:waterbed-functional}
+\end{equation}
+The first term is the Pearson divergence of $U$ from $P_\rho$ (equivalently, $\int 1/\rho - 1$); the second is the integrated squared cumulative error, which arises from the $\min$-kernel off-diagonal covariance in $K_{\mathrm{app}}$.
+
+\begin{proposition}[Waterbed inequality]
+\label{prop:waterbed}
+Let $D_B(\rho) = -\int_0^1\log\rho(\phi)\,d\phi$ be the Burg entropy deficit. Then
+\begin{equation}
+\mathcal{W}(\rho) \;\ge\; \alpha\,F_{*}(D_B(\rho)),\qquad F_{*}(d) \;=\; \inf_{\rho>0,\,\int\rho=1,\,-\int\log\rho=d}\left[\int_0^1\frac{1}{\rho}-1\right],
+\label{eq:waterbed-tight}
+\end{equation}
+with equality $\mathcal{W}(\rho) = 0$ if and only if $\rho \equiv 1$ (geometric RoPE). A readable corollary via R\'enyi monotonicity is
+\begin{equation}
+\mathcal{W}(\rho) \;\ge\; \alpha\bigl(e^{D_B(\rho)} - 1\bigr).
+\label{eq:waterbed-corollary}
+\end{equation}
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Since $\beta\int M_\rho^2\ge 0$, $\mathcal{W}(\rho)\ge\alpha\chi^2(U\|P_\rho)$. For fixed $D_B(\rho){=}d$, the sharp lower envelope of $\chi^2$ over all densities is the Csisz\'ar--Vajda $f$-divergence comparison $F_{*}$, whose extremizer is a two-level density $X=1/\rho\in\{a,c\}$ with mass-normalization and entropy-deficit constraints. For the corollary, $1+\chi^2(U\|P_\rho) = \int 1/\rho\,\mathbb{E}_{U}[\cdot] \ge e^{D_1(U\|P_\rho)} = e^{D_B(\rho)}$ by R\'enyi-2 $\ge$ R\'enyi-1. Equality at $\rho{\equiv}1$ is immediate from both sides vanishing.
+\end{proof}
+
+\paragraph{EVQ evaluation.} For $\rho_\tau(\phi) = \tau\cosh(\tau(1{-}\phi))/\sinh\tau$ (Eq.~\eqref{eq:S-chi2-evq} below uses the un-normalized integral; cf.\ \S\ref{sec:chi2-load} ``Normalization convention''),
+\begin{align}
+D_B(\rho_\tau) \;&=\; \log\tfrac{\sinh\tau}{\tau} - \tfrac{1}{\tau}\int_0^\tau\log\cosh y\,dy \;=\; \tfrac{\tau^4}{90} - \tfrac{8\tau^6}{2835} + O(\tau^8),\label{eq:D-B-evq}\\
+S_{\chi^2}(\rho_\tau) \;&=\; \tfrac{\sinh\tau}{\tau^2}\arctan(\sinh\tau) - 1 \;=\; \tfrac{\tau^4}{45} - \tfrac{2\tau^6}{315} + O(\tau^8),\label{eq:S-chi2-evq}\\
+\int_0^1 M_{\rho_\tau}(s)^2\,ds \;&=\; \tfrac{2\tau^4}{945} + O(\tau^6).\label{eq:M-rho-evq}
+\end{align}
+Combining,
+\begin{equation}
+\mathcal{W}(\rho_\tau) \;=\; \left(\frac{\alpha}{45}+\frac{2\beta}{945}\right)\tau^4 + O(\tau^6),\qquad \mathcal{W}(\rho_{\tau_*}) \;=\; O\!\left(\frac{d_{\mathrm{head}}^4}{(L_{\mathrm{eff}}^{J})^2}\right).
+\label{eq:waterbed-evq-scale}
+\end{equation}
+The centered companion functional is $O(\tau^4)$. It is not the value difference of $\mathcal{C}_{\mathrm{app}}$ itself and does not determine trained-model NLL.
+
+\subsection{Surrogate self-consistency theorem}
+\label{sec:self-consistency}
+
+The surrogate $\mathcal{C}_{\mathrm{app}}$ contains two integral terms $T_1(\tau) = \int_0^1 \rho^2\,d\phi$ and $T_2(\tau) = \int_0^1\!\!\int_0^1 \rho(\phi)\rho(\psi)\min(\phi,\psi)\,d\phi\,d\psi$, where $\rho(\phi) = \tau\cosh(\tau(1{-}\phi))/\sinh\tau$ is the normalized cosh density.
+
+\begin{theorem}[Surrogate self-consistency]
+\label{thm:self-consistency}
+For all $\tau > 0$:
+\begin{equation}
+\tau^2 T_2(\tau) + T_1(\tau) = \tau\coth\tau.
+\label{eq:self-consistency}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The Green's function $g(\phi) = \int_0^1 \rho(\psi)\min(\phi,\psi)\,d\psi$ satisfies $g''(\phi) = -\rho(\phi)$ with $g(0) = 0$, $g'(1) = 0$ (from the $\min$ kernel structure; see~\S\ref{sec:proofs}). Define $h(\phi) = \rho(0) - \rho(\phi)$. Then $h'' = -\rho''$, and under the pure-tether ODE $\rho'' = \tau^2\rho$ this gives $h'' = -\tau^2\rho$, with $h(0) = 0$ and $h'(0) = -\rho'(0)$.
+
+Define $f(\phi) = \tau^2 g(\phi) - h(\phi)$. Then $f'' = \tau^2 g'' - h'' = -\tau^2\rho - (-\tau^2\rho) = 0$, so $f$ is linear in $\phi$. The boundary values give $f(0) = \tau^2 g(0) - h(0) = 0$ and $f'(0) = \tau^2 g'(0) + \rho'(0) = \tau^2 - \tau^2 = 0$ (using $g'(0) = \int_0^1\rho = 1$ and $\rho'(0) = -\tau^2$ from the pure-tether density). Hence $f \equiv 0$, yielding $\tau^2 g(\phi) = h(\phi) = \rho(0) - \rho(\phi)$, i.e.,
+\begin{equation}
+g(\phi) = \frac{\rho(0) - \rho(\phi)}{\tau^2}.
+\label{eq:green-identity}
+\end{equation}
+Integrating against $\rho$:
+\begin{equation}
+T_2 = \int_0^1 \rho(\phi)\,g(\phi)\,d\phi = \frac{1}{\tau^2}\bigl[\rho(0)\underbrace{\int_0^1\!\rho}_{=1} - T_1\bigr]
+= \frac{\rho(0) - T_1}{\tau^2}.
+\end{equation}
+Since $\rho(0) = \tau\cosh\tau/\sinh\tau = \tau\coth\tau$, rearranging gives~\eqref{eq:self-consistency}.
+\end{proof}
+
+An immediate corollary follows.
+
+\begin{corollary}[Closed-form $T_2$]
+\begin{equation}
+T_2(\tau) = \frac{\sinh 2\tau - 2\tau}{4\tau\sinh^2\tau}.
+% \label{eq:T2-closed} % unused
+\end{equation}
+\end{corollary}
+
+This follows by substituting
+$T_1(\tau)=\tau^2(1+\sinh(2\tau)/(2\tau))/(2\sinh^2\tau)$ and
+$\rho(0)=\tau\coth\tau$ into the theorem.
+
+The identity is an exact internal check on the two surrogate energy terms; it makes no trained-loss claim.
+
+\subsection{From scaling structure to an operating default}
+\label{sec:lambda-cv}
+
+The post-softmax model uses
+$\mathcal{F}(\tau)=\tfrac12S_{\chi^2}(\tau)-\lambda U(\tau,L)$ with
+$S_{\chi^2}(\tau)=\tau^4/(45d_{\mathrm{head}})+O(\tau^6)$ and
+$U(\tau,L)=(d_{\mathrm{head}}/L)[Q_0+\tau^2Q_1(L,b)+O(\tau^4)]$.
+Its leading stationary balance is
+\begin{equation}
+\tau_*^2=45\lambda Q_1(L,b)\frac{d_{\mathrm{head}}^2}{L}.
+\label{eq:tau-leading-balance}
+\end{equation}
+Thus the model supplies the powers of $d_{\mathrm{head}}$ and $L$; the
+finite coefficient $c(\Pi)=\sqrt{45\lambda Q_1}$ depends on the chosen
+utility, base, and protocol. Setting $c{=}1$ is the deployed zero-search
+convention, not an independently derived constant.
+
+Here
+\[
+q(x)=\tfrac12+\frac{\sin(2x)}{4x}-\left(\frac{\sin x}{x}\right)^2
+=\operatorname{Var}_{t\sim U[0,1]}[\cos(xt)]
+\]
+and $Q_1(L,b)=\int_0^1\eta(\phi)q(Lb^{-\phi})\,d\phi$. This is a
+specified phase-variance utility. It should not be identified with the exact
+oscillatory collision objective or the trained-transformer loss.
+
+The finite-$\tau$ evidence is deliberately empirical. A staged 99-run study
+contains nine small-model configurations and 27 formula-versus-Geo seed pairs,
+not 27 independent configurations. The default beats midpoint-Geo in $7/9$
+configuration means and $18/27$ pairs, but beats a pilot-selected neighbouring
+value in only $3/9$ held-out configuration means. In the separate exact-range
+factorial, the formula point is the best pre-specified Cosh multiplier in
+$4/12$ structural configurations. These audits establish the correct role of
+$c{=}1$: a useful, fallible basin initialisation.
+
+\subsection{Scaling analysis of \texorpdfstring{$\tau^*$}{tau*}: from surrogate to operating point}
+\label{sec:tau-scaling}
+
+\paragraph{Numerical characterization of surrogate coefficients.}
+We fit $K_{\mathrm{app}}(\phi_i,\phi_j) = \alpha\delta_{ij}/\Delta\phi + \beta\min(\phi_i,\phi_j)$ to the exact collision kernel $K(\phi_i,\phi_j) = \frac{1}{2L}\bigl[\frac{\sin((\omega_1{-}\omega_2)L)}{\omega_1{-}\omega_2} + \frac{\sin((\omega_1{+}\omega_2)L)}{\omega_1{+}\omega_2}\bigr]$ evaluated at $K = d_{\mathrm{head}}/2$ uniformly spaced channel positions in $[0,1]$. Sweeping across $L \in \{128,\ldots,4096\}$, $d_{\mathrm{head}} \in \{32,64,128,256\}$, and $b \in \{10\mathrm{K}, 100\mathrm{K}, 500\mathrm{K}\}$ yields:
+\begin{equation}
+\alpha \;\approx\; \frac{1}{2K} \;=\; \frac{1}{d_{\mathrm{head}}},
+\qquad
+\beta \;\sim\; L^{-0.22},\; O(1).
+\end{equation}
+The diagonal coefficient $\alpha$ is set by the kernel's diagonal value ($K(\phi,\phi) \approx 1/2$ for most channels) times the channel spacing $\Delta\phi = 1/K$. Crucially, $\alpha$ depends on $d_{\mathrm{head}}$ through the discretization ($K = d_{\mathrm{head}}/2$) and is nearly independent of $L$. The off-diagonal coefficient $\beta$ has weak power-law decay with $L$ and negligible $d_{\mathrm{head}}$ dependence.
+
+\paragraph{The two parameters called $\tau$.}
+Substituting into $\tau_{\mathrm{surr}} = \sqrt{\beta/\alpha}$:
+\begin{equation}
+\tau_{\mathrm{surr}} = \sqrt{\beta \cdot d_{\mathrm{head}}} \;\sim\; \sqrt{d_{\mathrm{head}}} \cdot L^{-0.11}.
+\end{equation}
+This fitted-ratio scaling is neither the deployed rule nor evidence for it. The
+broadband surrogate selects the Cosh family; the separate post-softmax model in
+Proposition~\ref{prop:softmax-transport} balances an $O(\tau^2)$ utility with
+an $O(\tau^4)$ stiffness and yields
+\begin{equation}
+\tau_*^2 \propto \frac{d_{\mathrm{eff}}^2}{L}.
+\end{equation}
+The equality $c{=}1$ in the deployed rule is then evaluated by trained-model
+controls as described in \S\ref{sec:lambda-cv}; it is not obtained from the
+fitted $\beta/\alpha$ ratio.
+
+\subsection{Stiffness functional derivation}
+\label{sec:stiffness-derivation}
+
+The softmax transport objective in Proposition~\ref{prop:softmax-transport} requires choosing a stiffness functional $S(\tau)$ measuring the cost of departing from uniform density. We test a one-parameter family $S_p(\tau) = \frac{1}{d_{\mathrm{head}}}\int_0^1 (\rho_\tau - 1)^2/\rho_\tau^p\,d\phi$ using exact (non-Taylor) integrals of the normalized cosh density $\rho_\tau(\phi) = \tau\cosh(\tau(1{-}\phi))/\sinh\tau$.
+
+\begin{table}[ht]
+\caption{$L$-exponent $\gamma$ (defined by $\tau_* \propto L^{-\gamma}$) under different stiffness functionals, computed via exact numerical optimization over $L \in [128, 4096]$. Target: $\gamma = 0.500$.}
+\label{tab:stiffness-sweep}
+\centering
+\small
+\begin{tabular}{@{}l c c l@{}}
+\toprule
+Stiffness & $p$ & $\gamma$ & Note \\
+\midrule
+$L^2$ norm $\int(\rho{-}1)^2$ & 0 & 0.626 & Original choice \\
+Geometric mean & 0.5 & 0.561 & \\
+Exponent-matched diagnostic & 0.80 & 0.498 & Sensitivity analysis, not used in deployment \\
+\textbf{Pearson $\chi^2$} & \textbf{1.0} & \textbf{0.465} & Channel-load variance penalty (axioms) \\
+\midrule
+KL divergence & --- & 0.710 & Worse than $L^2$ \\
+Reverse KL & --- & 0.581 & \\
+Jeffreys & --- & 0.621 & $\approx L^2$ \\
+R\'enyi ($\alpha{=}2$) & --- & 0.807 & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Why $\chi^2$.} Two independent arguments favor $p{=}1$. (1)~\emph{Attention-load asymmetry}: each frequency channel at density $\rho(\phi)$ bears per-channel attention load ${\propto}1/\rho$; weighting the squared departure by this load yields $\int(\rho{-}1)^2/\rho = \chi^2$. (2)~\emph{Discrete-grid effect}: the continuous $L^2$ integral, evaluated on EVQ's non-uniform cosh-quantile grid, naturally acquires a $1/\rho$ Jacobian factor, producing discrete $\chi^2$.
+
+\paragraph{Closed form.} For $p{=}1$, the stiffness admits
+\begin{equation}
+S_{\chi^2}(\tau) = \frac{1}{d_{\mathrm{head}}}\!\left[\frac{\sinh\tau\cdot\arctan(\sinh\tau)}{\tau^2} - 1\right],
+\end{equation}
+verified numerically to relative error ${<}7{\times}10^{-6}$.
+
+\paragraph{Exponent-matched diagnostic.} As a sensitivity analysis, one can ask which member of the $S_p$ family would match the target exponent $\tau_* \propto 1/\sqrt{L}$ exactly over this grid. The resulting $S_{\mathrm{derived}}(\tau)$ lies near $p \approx 0.85$ (high-resolution sweep; consistent with $0.80$ from the coarser grid), close to but distinct from the Pearson $\chi^2$ choice $p{=}1$. We do not use this as a derivation of the stiffness; it is reported as sensitivity analysis. The full sweep is reproduced by \texttt{scripts/analysis/verify\_stiffness\_and\_regime.py} (pure NumPy, ${\sim}60$s).
+
+\subsection{Effective window \texorpdfstring{$L_{\mathrm{eff}}^{J}$}{L\_eff\^J} via softmax-Jacobian Rayleigh quotient}
+\label{sec:leff-derivation}
+
+\paragraph{From density perturbation to RoPE frequency shift.}
+The EVQ pure-tether CDF is $F_\tau(\phi) = 1 - \sinh(\tau(1{-}\phi))/\sinh\tau$, with inverse-CDF warp $\Phi_\tau(u) = 1 - \tau^{-1}\operatorname{arsinh}((1{-}u)\sinh\tau)$. Setting $\theta{=}\tau^2$ and expanding $\rho_\tau(\phi) = 1 + \theta\, a(\phi) + O(\theta^2)$ with $a(\phi) = (1{-}\phi)^2/2 - 1/6$, the quantile displacement takes the closed form
+\begin{equation}
+\Phi_\tau(u) \;=\; u + \tau^2\, h(u) + O(\tau^4), \qquad h(u) \;=\; -\!\int_0^u a(v)\,dv \;=\; -\tfrac{1}{6}u(1{-}u)(2{-}u),
+\label{eq:quantile-displacement}
+\end{equation}
+so RoPE frequencies perturb as $\omega_k(\tau) = \omega_k^{(0)}[1 - \tau^2(\log b)\,h(u_k) + O(\tau^4)]$ with $\omega_k^{(0)}{=}b^{-u_k}$. Hence $\dot\omega_k \coloneqq \partial_{\theta}\omega_k|_{\tau=0} = -(\log b)\,\omega_k^{(0)} h(u_k)$.
+
+\paragraph{Explicit RoPE logit transport direction.}
+Fix a layer/head and query $i$; write each $2$D RoPE pair as $q_{i,k}^{\mathbb{C}} = q_{i,2k{-}1}{+}iq_{i,2k}$, $k_{j,k}^{\mathbb{C}} = k_{j,2k{-}1}{+}ik_{j,2k}$, and $\alpha_{ij,k} = q_{i,k}^{\mathbb{C}}\overline{k_{j,k}^{\mathbb{C}}} = C_{ij,k} + iD_{ij,k}$. With relative position $r_{ij}$ and attention scale $s_{\mathrm{att}}$, the RoPE logit is $z_{ij}^{\mathrm{rope}}(\tau) = s_{\mathrm{att}}^{-1}\operatorname{Re}\sum_{k}\alpha_{ij,k}\exp(i r_{ij}\omega_k(\tau))$. The leading logit transport direction $g_i(j) \coloneqq \partial_\theta z_{ij}^{\mathrm{rope}}|_{\tau=0}$ has the closed form
+\begin{equation}
+g_i(j) \;=\; \frac{(\log b)\,r_{ij}}{s_{\mathrm{att}}}\sum_{k=1}^{K} \omega_k^{(0)}\,h(u_k)\!\left[\,C_{ij,k}\sin(r_{ij}\omega_k^{(0)}) + D_{ij,k}\cos(r_{ij}\omega_k^{(0)})\,\right].
+\label{eq:g-closed-form}
+\end{equation}
+This is the Fr\'echet derivative of the logit with respect to the EVQ allocation perturbation at fixed activations. A finite-$\tau$ implementation that avoids first-order phase expansion at large $r_{ij}\omega$ is
+\begin{equation}
+g_i^{(\tau)}(j) \;=\; \frac{1}{s_{\mathrm{att}}\tau^2}\operatorname{Re}\sum_{k=1}^{K}\alpha_{ij,k}\!\left[\exp(ir_{ij}b^{-\Phi_\tau(u_k)}) - \exp(ir_{ij}b^{-u_k})\right],
+\label{eq:g-finite-tau}
+\end{equation}
+with $g_i(j) = \lim_{\tau\to 0} g_i^{(\tau)}(j)$.
+
+\paragraph{Primary definition: Rayleigh quotient of the softmax Jacobian.}
+For the trained attention distribution $p_i(j)$ on keys $j\!\in\!\mathcal{K}_i$, $J_{\mathrm{sm}}(p_i) = \mathrm{diag}(p_i) - p_ip_i^\top$ satisfies
+$g_i^\top J_{\mathrm{sm}}(p_i) g_i = \mathrm{Var}_{j\sim p_i}[g_i(j)] = \tfrac{1}{2}\sum_{j,k} p_i(j)p_i(k)(g_i(j)-g_i(k))^2.$
+Since $J_{\mathrm{sm}}(p_i)\mathbf{1}{=}0$, we center $g_i$ by the key-wise mean operator $P_i$. The effective length is then defined by the \emph{ratio-of-means}
+\begin{equation}
+\frac{1}{L_{\mathrm{eff}}^{J}} \;=\; \kappa_{\mathrm{att}} \;=\; \frac{\mathbb{E}_{\ell,h,i}\!\left[\,g_i^\top J_{\mathrm{sm}}(p_i)g_i\,\right]}{\mathbb{E}_{\ell,h,i}\!\left[\,\|P_i g_i\|_2^2\,\right]},
+\label{eq:leff-ratio-of-means}
+\end{equation}
+This is the directional curvature of the \emph{schedule-change} KL: for
+$p_\epsilon=\operatorname{softmax}(z+\epsilon g)$,
+$D_{\mathrm{KL}}(p\|p_\epsilon)=\tfrac12\epsilon^2g^\top
+J_{\mathrm{sm}}(p)g+O(\epsilon^3)$, and for diffuse $p{=}1/L$ the quotient
+reduces to $1/L$. The phase-variance utility $Q_1$ in
+Proposition~\ref{prop:softmax-transport} is a distinct pairwise positional
+functional. Replacing its $1/L$ factor by $1/L_{\mathrm{eff}}^J$ is therefore
+a possible modelling extension, not a consequence of the KL identity and not
+an empirical result used by the paper.
+
+\subsection{Pure-tether branch: Fisher-forcing coefficient and residual bound}
+\label{sec:pure-tether-bound}
+
+\paragraph{Setup.} The full stationary ODE under $\mathcal{C}_{\mathrm{app}}$ plus a Fisher utility is $\rho''-\tau^2\rho = \gamma\,b^{-2\phi}$. Writing $s{=}2\log b$ and $q_s(\phi){=}e^{-s\phi}$, the pure-tether branch $\rho_{\mathrm{EVQ}}(\phi) = \tau\cosh(\tau(1{-}\phi))/\sinh\tau$ solves the homogeneous problem; the full solution is $\rho_{\mathrm{full}} = \rho_{\mathrm{EVQ}} + \delta\rho_{F}$.
+
+\paragraph{Explicit form of $\gamma(b)$.} The Fisher utility in the Euler equation $\alpha\rho + \beta(G\rho) - \lambda_F V_b + \nu = 0$ has $V_b(\phi) = \eta_F(\phi)\,b^{-2\phi}$, where $\eta_F(\phi)$ is the activation-conditioned Fisher coefficient with
+\begin{equation}
+\eta_F(\phi_k) \;=\; \frac{1}{2\,s_{\mathrm{att}}^2}\,\mathbb{E}_{\ell,h,i,j}\!\left[\,w_{\ell h ij}\,|\alpha_{\ell h ij,k}|^2\,\right],\qquad \alpha_{\ell h ij,k} \;=\; q_{i,k}^{\mathbb{C}}\,\overline{k_{j,k}^{\mathbb{C}}}.
+\label{eq:eta-F}
+\end{equation}
+Using $(G\rho)''{=}-\rho$, differentiating the Euler equation twice gives $\rho'' - \tau^2\rho = (\lambda_F/\alpha) V_b''$. For slowly varying $\eta_F$ compared with $e^{-s\phi}$,
+\begin{equation}
+\boxed{\;\gamma(b) \;=\; \frac{\lambda_F}{\alpha}\,\bar\eta_F\,s^2
+\left[1+O\!\left(\tfrac{|\eta_F'|}{s\bar\eta_F}
++\tfrac{|\eta_F''|}{s^2\bar\eta_F}\right)\right],\qquad s=2\log b.\;}
+\label{eq:gamma-explicit}
+\end{equation}
+The full $\eta_F(\phi)$-local version is $\gamma_{\mathrm{loc}}(\phi;b) = (\lambda_F/\alpha)[\eta_F''(\phi) - 2s\eta_F'(\phi) + s^2\eta_F(\phi)]$.
+
+\paragraph{Suppression is L$^1$/CDF, not pointwise.} The particular solution $\delta\rho_{F}^{\mathrm{part}} = \gamma(b)\,q_s/(s^2-\tau^2)$ combined with~\eqref{eq:gamma-explicit} gives pointwise amplitude
+\begin{equation}
+\delta\rho_{F}^{\mathrm{part}}(\phi) \;\approx\; \frac{\lambda_F\bar\eta_F}{\alpha}\,\frac{s^2}{s^2-\tau^2}\,e^{-s\phi},
+\label{eq:delta-rho-F-pointwise}
+\end{equation}
+so the $(s^2-\tau^2)^{-1}$ factor is cancelled by the $s^2$ in $\gamma(b)$, and $\delta\rho_{F}^{\mathrm{part}}$ is \emph{not} pointwise small in $s$. The true suppression comes from the boundary-layer width of $q_s$: $\|q_s\|_1 = (1-e^{-s})/s = O(1/\log b)$ and $\|q_s\|_2 = O(1/\sqrt{\log b})$. Let $C_{\mathrm{bc}}^{(p)}(\tau)$ denote the finite $L^p$ operator norm of the homogeneous correction enforcing the boundary and mass constraints, away from resonance. Then
+\begin{align}
+\|\rho_{\mathrm{full}}-\rho_{\mathrm{EVQ}}\|_1 \;&\le\; C_{\mathrm{bc}}^{(1)}(\tau)\;\frac{\lambda_F\bar\eta_F}{\alpha}\,\frac{s^2}{|s^2-\tau^2|}\,\frac{1-e^{-s}}{s} \;=\; O\!\left(\tfrac{1}{\log b}\right),\label{eq:tether-L1-correct}\\
+\|\rho_{\mathrm{full}}-\rho_{\mathrm{EVQ}}\|_2 \;&\le\; C_{\mathrm{bc}}^{(2)}(\tau)\;\frac{\lambda_F\bar\eta_F}{\alpha}\,\frac{s^2}{|s^2-\tau^2|}\,\sqrt{\tfrac{1-e^{-2s}}{2s}} \;=\; O\!\left(\tfrac{1}{\sqrt{\log b}}\right),
+\label{eq:tether-L2-correct}
+\end{align}
+and the CDF-level error is $\|F_{\mathrm{full}}-F_{\mathrm{EVQ}}\|_\infty \le \|\delta\rho_{F}\|_1 = O(1/\log b)$. For fixed Fisher coefficient and away from resonance, forcing is therefore small in CDF / $L^1$ transport at large $b$, but not necessarily pointwise small near $\phi{=}0$.
+
+\paragraph{Warp amplification at large $\tau$.} Via the inverse-CDF map,
+\begin{equation}
+\|\phi_{\mathrm{full}}-\phi_{\mathrm{EVQ}}\|_\infty \;\le\; \frac{\|\delta\rho_{F}\|_1}{\inf_\phi \rho_{\mathrm{full}}(\phi)}, \qquad \inf_\phi \rho_{\mathrm{EVQ}}(\phi) \;=\; \frac{\tau}{\sinh\tau},
+\label{eq:warp-bound}
+\end{equation}
+so, when the residual is small enough that $\rho_{\mathrm{full}}$ remains positive and comparable to $\rho_{\mathrm{EVQ}}$, CDF perturbations can be amplified at the scale $\sinh\tau/\tau$. The bound does not justify omitting the forcing branch at large $\tau$.
+
+\paragraph{Dimensionless diagnostic.} Using $\|\rho_{\mathrm{EVQ}}-1\|_2 = \tau^2/\sqrt{45}+O(\tau^4)$ and $\Gamma_b \coloneqq (\lambda_F\bar\eta_F/\alpha)\,s^2/(|s^2-\tau^2|\tau^2)$, the $L^2$-level ratio is
+\begin{equation}
+R_F \;\coloneqq\; \frac{\|\rho_{\mathrm{full}}-\rho_{\mathrm{EVQ}}\|_2}{\|\rho_{\mathrm{EVQ}}-1\|_2} \;\le\; C_{\mathrm{bc}}^{(2)}\,\Gamma_b\,\sqrt{45}\,\sqrt{\tfrac{1-e^{-2s}}{2s}} \;=\; O\!\left(\tfrac{1}{\sqrt{\log b}}\right).
+\label{eq:RF}
+\end{equation}
+
+\paragraph{Second-order utility deficit.} Let $A_\tau$ be the constrained
+Hessian of the surrogate on zero-mass perturbations and let $q_s^\perp$ be the
+projection of $q_s$ onto that tangent space. The full branch improves the
+quadratic objective by
+\begin{equation}
+\Delta_F \;=\; \tfrac{1}{2}\gamma(b)^2\,\langle q_s^\perp,\,A_\tau^{-1} q_s^\perp\rangle,
+\label{eq:tether-deficit}
+\end{equation}
+so dropping the forcing term is $O(\gamma(b)^2)$: if $R_F\!\le\!r$, the missed correction is $O(r^2)$ relative to the tether deformation energy.
+
+\subsection{Channel-load motivation for Pearson \texorpdfstring{$\chi^2$}{chi2}}
+\label{sec:chi2-load}
+
+\paragraph{Normalization convention.} Throughout this paper, $S_{\chi^2}(\tau)$ denotes the $d_{\mathrm{head}}$-normalized stiffness $S_{\chi^2}(\tau){:=}\frac{1}{d_{\mathrm{head}}}\!\int_0^1\!(1{-}\rho_\tau)^2/\rho_\tau\,d\phi$, with leading expansion $\tau^4/(45\,d_{\mathrm{head}}){+}O(\tau^6)$ consistent with Proposition~\ref{prop:softmax-transport}. Identities below that produce a bare $\tau^4/45$ leading coefficient apply to $d_{\mathrm{head}}\,S_{\chi^2}(\tau)$ (the un-normalized integral); the $d_{\mathrm{head}}$ factor enters via the surrogate diagonal $\alpha{=}1/d_{\mathrm{rot}}$ ($={}1/d_{\mathrm{head}}$ for MHA via \S\ref{sec:tau-scaling}; ${=}1/d_{\mathrm{rot}}$ for compressed-RoPE MLA via \S\ref{sec:mla-results}).
+
+\paragraph{Channel-load axioms.} Inverse-CDF quantization places channels with cell width $\ell(\phi){=}1/\rho(\phi)$ and samples channels according to $dP_\rho{=}\rho\,d\phi$. Under the modeling axioms (i)~channel-measure averaging, (ii)~load $\ell$ as the primitive local quantity, (iii)~second central moment, (iv)~uniform density has zero stiffness, (v)~local additivity, the canonical load-variance penalty is
+\begin{equation}
+S(\rho) \;=\; \mathrm{Var}_{\phi\sim\rho\,d\phi}\!\left[\,\tfrac{1}{\rho(\phi)}\,\right] \;=\; \int_0^1 \frac{(1-\rho(\phi))^2}{\rho(\phi)}\,d\phi \;=\; S_{\chi^2}(\rho).
+\label{eq:chi2-load-identity}
+\end{equation}
+We treat this as a canonical motivated choice under the stated axioms, not a uniqueness claim.
+
+\paragraph{Load-moment exponent.} Distinct from the weighted-$L^2$ family $S_p(\tau){=}\frac{1}{d_{\mathrm{head}}}\int(\rho_\tau{-}1)^2/\rho_\tau^p\,d\phi$ used in Table~\ref{tab:stiffness-sweep} (where Pearson $\chi^2$ is $p{=}1$), we also examine a load-moment family $S^{\mathrm{mom}}_p(\rho){=}\mathbb{E}_\rho[(1/\rho{-}1)^p]$. Substituting the EVQ cosh density and minimizing $S^{\mathrm{mom}}_p{-}\lambda U$ gives $\tau^{2(p-1)}\asymp d_{\mathrm{head}}^2/L_{\mathrm{eff}}^{J}$, hence $\tau^{*}\propto (L_{\mathrm{eff}}^{J})^{-1/(2p-2)}$; only $p{=}2$ yields the observed $L^{-1/2}$ exponent within this family. The two families parametrize different $f$-divergence neighborhoods and need not match on the finite-$\tau$ grid.
+
+\paragraph{$f$-divergences at finite $\tau$.} Smooth $f$-divergences (KL, Jeffreys, R\'enyi) are locally quadratic around $\rho{=}1$. Over the finite grid used in Table~\ref{tab:stiffness-sweep}, however, their fitted exponents range from $0.58$ to $0.81$. This is model sensitivity, not a trained-PPL comparison.
+
+\subsection{Discrete-channel transport gap and the MLA channel-scarcity mechanism}
+\label{sec:discrete-continuous-gap}
+
+\paragraph{Setup.} Inverse-CDF quantization replaces the continuous density $\rho$ by an atomic measure. Let $F(\phi){=}\int_0^\phi\rho$, $Q(u){=}F^{-1}(u)$, midpoint grid $u_k{=}(k{-}\tfrac{1}{2})/K$, and $\phi_k{=}Q(u_k)$. The empirical channel measure is $\mu_K{=}K^{-1}\sum_{k=1}^{K}\delta_{\phi_k}$. Direct $\|\rho_K-\rho\|$ is ill-posed: one cannot subtract an atomic measure from a density. We therefore work in Wasserstein distance for transport and in a quantile-cell histogram $\rho_K$ for density.
+
+\paragraph{Transport bounds.} Assume $0<m\le\rho\le M$ and $\|\rho'\|_\infty\le B$; then $Q$ is $(1/m)$-Lipschitz. The midpoint quantization errors satisfy
+\begin{equation}
+W_\infty(\mu_K,\mu_\rho) \;\le\; \frac{1}{2Km}, \qquad W_1(\mu_K,\mu_\rho) \;\le\; \frac{1}{4Km}.
+\label{eq:wasserstein-bound}
+\end{equation}
+Defining the quantile-cell histogram $\rho_K(\phi){=}1/(K|I_k|)$ on $I_k{=}[Q((k{-}1)/K),\,Q(k/K)]$, the histogram density satisfies
+\begin{equation}
+\|\rho_K-\rho\|_1 \;\le\; \frac{B}{Km}, \qquad \|\rho_K-\rho\|_\infty \;\le\; \frac{B}{Km}.
+\label{eq:density-bound}
+\end{equation}
+
+\paragraph{Application to EVQ-Cosh.} For $\rho_\tau(\phi)=\tau\cosh(\tau(1{-}\phi))/\sinh\tau$, $m_\tau=\tau/\sinh\tau$ and $B_\tau=\tau^2$. Substituting,
+\begin{equation}
+W_1(\mu_{K,\tau},\mu_{\rho_\tau}) \;\le\; \frac{\sinh\tau}{4K\tau}, \qquad \|\rho_{K,\tau}-\rho_\tau\|_1 \;\le\; \frac{\tau\sinh\tau}{K} \;=\; \frac{\tau^2}{K}+O\!\left(\tfrac{\tau^4}{K}\right).
+\label{eq:evq-discrete-bound}
+\end{equation}
+
+\paragraph{Kernel-integrated errors.} For a smooth two-variable kernel $K_{\mathrm{sm}}$ with Lipschitz constant $L_K$ in each argument,
+\begin{equation}
+\left|\iint K_{\mathrm{sm}}\,d\mu_K\,d\mu_K - \iint K_{\mathrm{sm}}\,d\mu_\rho\,d\mu_\rho\right| \;\le\; \frac{L_K}{2Km} + O(K^{-2}).
+\label{eq:kernel-bound}
+\end{equation}
+The singular $\delta$-component of $K_{\mathrm{app}}$ must be interpreted as a cell average (not as a literal atom-kernel pairing), after which the bound applies to the smoothed kernel.
+
+\paragraph{High-resolution distortion.} For a smooth weighted distortion $w$,
+\begin{equation}
+\mathcal{D}_K[\rho] \;\approx\; \frac{1}{12K^2}\int_0^1 \frac{w(\phi)}{\rho(\phi)^2}\,d\phi + O(K^{-3}).
+\label{eq:high-res-distortion}
+\end{equation}
+This is the finite-channel mechanism: a shaped $\rho$ can reduce the weighted inverse-density load $\int w/\rho^2$; the absolute benefit scales as $K^{-2}$ for smooth quantization error and as $K^{-1}$ for transport/kernel terms.
+
+\paragraph{Channel scarcity amplifies the density-shape correction.} The
+standard MHA configuration has $d_{\mathrm{head}}{=}d_{\mathrm{rope}}{=}64$
+and $K{=}32$; the MLA study has $d_{\mathrm{head}}{=}64$,
+$d_{\mathrm{rope}}{=}32$, $d_{\mathrm{nope}}{=}32$ and $K{=}16$. Halving
+$K$ scales the $K^{-2}$ component of the distortion bound by $4\times$ and
+the $K^{-1}$ component by $2\times$. The observed MLA gain
+(\S\ref{sec:exp-mla}) is a test of the predicted direction, not a controlled
+quantitative test of either bound.
+
+\paragraph{Caveat.} At large $\tau$, $m_\tau{=}\tau/\sinh\tau$ becomes small and the $1/(Km_\tau)$ factor grows. The transport bounds can therefore become vacuous in the same regime where the Fisher-residual analysis no longer guarantees a small warp error (\S\ref{sec:pure-tether-bound}).

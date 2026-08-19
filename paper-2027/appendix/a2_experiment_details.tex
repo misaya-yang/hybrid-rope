@@ -1,0 +1,148 @@
+\section{Experimental Details}
+
+\subsection{Scope of this appendix}
+
+The exact-range and mature-model primary protocols are documented separately in
+Apps.~\ref{sec:identification-details} and~\ref{sec:mature-details}. This
+section records the submitted scratch-model and cross-modal experiments that
+remain supporting evidence for the substrate--range and cross-modal scope
+claims. The learned-frequency comparator appears in
+App.~\ref{sec:pe-dominant}.
+
+\subsection{Reproducibility snapshot}
+
+\begin{table}[ht]
+\caption{Compact reproducibility summary for supporting scratch-model experiments.}
+\centering
+\small
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Setting & Train length & Scale & Seeds & Main datasets \\
+\midrule
+EVQ\(\times\)\rs{} & 2048 & 454M & 3 + 3 & FineWeb-Edu + 10\% passkey mix \\
+MLA & 8192 & 432M & 3 & FineWeb-Edu \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:hyperparams} lists the training hyperparameters shared across
+the supporting text experiments.
+
+\begin{table}[ht]
+\caption{Training hyperparameters for the supporting scratch text experiments.}
+\label{tab:hyperparams}
+\centering\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+Parameter & Value \\
+\midrule
+Optimizer & AdamW ($\beta_1{=}0.9$, $\beta_2{=}0.95$, $\epsilon{=}10^{-8}$) \\
+Learning rate & $6{\times}10^{-4}$ (50M), $3{\times}10^{-4}$ (125M), $2{\times}10^{-4}$ (454M/MLA/750M) \\
+LR schedule & Cosine decay to $0.1\times$ peak LR \\
+Warmup & $2\%$ of total steps (linear) \\
+Batch size (seqs) & 32 (50M), 16 (125M), 2--4 (454M/750M), 6 (MLA) \\
+Weight decay & $0.1$ \\
+Gradient clipping & max-norm $1.0$ \\
+Dropout & $0.0$ \\
+Sequence packing & Contiguous, no cross-document masking \\
+\midrule
+\multicolumn{2}{@{}l}{\emph{Video DiT (129.6M)}} \\
+Optimizer & AdamW ($\beta_1{=}0.9$, $\beta_2{=}0.95$) \\
+RoPE base & $10{,}000$ (temporal axis) \\
+Activation & GELU (tanh approx.) \\
+\midrule
+\multicolumn{2}{@{}l}{\emph{MLA (432M)}} \\
+LR / warmup & $2{\times}10^{-4}$ / $2\%$ of steps \\
+Training tokens & 500M \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Within each text comparison, the architecture, optimizer, data order, and
+training loop are fixed, and the only intervention is the initialized
+inverse-frequency table. The scratch-text experiments use base
+$b{=}500\mathrm{K}$ unless stated otherwise.
+
+\subsection{Larger-scale supporting evidence}
+
+The \(750\mathrm{M}\) `continue@4K' experiment starts both arms from the same
+2K geometric checkpoint and applies a 500M-token continuation with either the
+geometric or EVQ table (seed 42). At 16K, PPL is \(45.1\) versus \(24.4\); on
+40 passkey trials at 8K, strict autoregressive exact match is \(0\%\) versus
+\(77.5\%\). This is a single-seed post-hoc continuation result, not a
+from-scratch allocation control.
+
+\input{tables/table6_750m_continue_supporting}
+
+\subsection{Modality-dependent \texorpdfstring{$\tau$}{tau} correction for video DiT}
+\label{sec:tau-correction}
+
+The text-style reference used for this sweep gives
+$\tau{=}K_t/\sqrt{T}=2.83$ for $K_t{=}16$ and $T{=}32$, whereas the best tested
+Video DiT point is $\tau{=}1.5$ ($0.53\times$). We use this empirical
+correction only to select the supporting video configuration; the sweep does
+not derive a modality-general coefficient.
+
+\subsection{Cross-modal evidence: video DiT with bidirectional attention}
+\label{sec:video-dit}
+
+We evaluate a 129.6M video diffusion transformer with bidirectional attention
+and 3D RoPE on Oscillating Moving MNIST
+\citep{srivastava2015unsupervised}. Training uses 32 frames; evaluation uses
+128 frames ($4\times$) with temporal \rs{}. For each seed, the geometric and
+EVQ-Cosh ($\tau{=}1.5$) branches are trained in the same head-to-head run.
+
+Table~\ref{tab:dit-h2h} reports two independent seeds. The within-seed
+contrasts favor EVQ on train, all-frame extrapolation, and far-frame
+extrapolation MSE in both runs; the two-seed mean deltas are $-26\%$, $-16\%$,
+and $-33\%$. This is a cross-modal scope check, not an estimate of a general
+video effect size.
+
+\begin{table}[ht]
+\caption{DiT head-to-head evaluation (129.6M, bidirectional attention, 3D RoPE). Each seed is one shared-run comparison; values are denoising MSE at $t{=}0.5$.}
+\label{tab:dit-h2h}
+\centering
+\small
+\begin{tabular}{@{}l l r r r@{}}
+\toprule
+Seed & Metric (\rs{}) & Geo ($\tau{=}0$) & EVQ ($\tau{=}1.5$) & $\Delta$ \\
+\midrule
+42 & Train MSE & 0.00911 & \textbf{0.00720} & $-21\%$ \\
+42 & All extrap & 0.00724 & \textbf{0.00606} & $-16\%$ \\
+42 & Far extrap & 0.00989 & \textbf{0.00639} & $-35\%$ \\
+\midrule
+137 & Train MSE & 0.01113 & \textbf{0.00761} & $-32\%$ \\
+137 & All extrap & 0.00713 & \textbf{0.00598} & $-16\%$ \\
+137 & Far extrap & 0.00856 & \textbf{0.00601} & $-30\%$ \\
+\midrule
+\multicolumn{2}{@{}l}{Mean $\Delta$} & & & $-26\%$ / $-16\%$ / $-33\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Low-phase-channel diagnostic.}
+At base${}=10{,}000$, six of the 16 temporal frequencies accumulate less than
+$0.1$ rad over the 32 training frames. In the pre-specified diagnostic,
+$\tau{=}1.2$ leaves 11/16 channels above this threshold (effective rank 9),
+whereas $\tau{=}1.5$ leaves 12/16 (rank 10). Repeating the head-to-head
+comparison at base${=}1{,}000$ places 13/16 geometric channels above the
+threshold. In this single-seed run, $\tau{=}1.2$ and $\tau{=}1.5$ differ by
+less than $0.3\%$ on the reported metrics and both improve far-frame MSE by
+about $48\%$ relative to Geo. This is consistent with the diagnostic; it is
+not an equivalence or causal estimate.
+
+\begin{table}[ht]
+\caption{Base${}=1{,}000$ DiT head-to-head (129.6M, seed 42, \rs{}). The two EVQ settings are within $0.3\%$ on the reported metrics in this run.}
+\label{tab:dit-base1000}
+\centering
+\small
+\begin{tabular}{@{}l r r r r@{}}
+\toprule
+$\tau$ & Train MSE & All extrap & Far extrap & $\Delta_\text{far}$ vs Geo \\
+\midrule
+0.0 (Geo) & 0.02037 & 0.01274 & 0.01646 & --- \\
+1.2 & \textbf{0.00933} & \textbf{0.00820} & \textbf{0.00859} & $-48\%$ \\
+1.5 & \textbf{0.00930} & 0.00822 & \textbf{0.00858} & $-48\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}

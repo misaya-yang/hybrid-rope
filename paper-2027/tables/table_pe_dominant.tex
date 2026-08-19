@@ -1,0 +1,28 @@
+\begin{table}[h]
+\caption{Learned-frequency comparator ($125$M, $\Ltr{=}128$, FineWeb-Edu,
+$128\to8$K). Geo, learned-inv-freq, and \evq{} are seed $42$; learnable-$\tau$
+is $3$-seed (42/137/256). \textbf{We rest no allocation-shape attribution on
+this table} (\S\ref{sec:exp-tau}): the learned-inv-freq arm carries $32$
+trainable parameters, so any gap confounds allocation shape with
+parameterisation and optimisation effort. The arm is a layer-shared learnable
+inverse-frequency baseline --- one learned scalar per band, shared across
+layers and heads --- and therefore belongs to the learned-\emph{table} family
+\citep{karypis2026lerope} rather than the learned positional-\emph{operator}
+family \citep{zheng2024dape}.}
+\label{tab:pe-dominant}
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{0.92}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Method ($128\!\rightarrow\!8$K) & Extra params & PPL@$128$ & PPL@$8$K & $\Delta$ vs Geo \\
+\midrule
+Geo & 0 & 184.9 & 513.7 & --- \\
+Learnable $\tau$ & 1 & $\mathbf{181.2{\scriptstyle\,\pm 1.3}}$ & $437.9{\scriptstyle\,\pm 12.2}$ & $-14.8\%$ \\
+Learned inv-freq (layer-shared) & 32 & 183.6 & 455.3 & $-11.4\%$ \\
+\quad same, $10\times$ positional LR & 32 & --- & 477.7 & $-7.0\%$ \\
+\evq{} & 0 & 182.0 & \textbf{333.7} & $\mathbf{-35.0\%}$ \\
+\bottomrule
+\end{tabular}
+\end{table}

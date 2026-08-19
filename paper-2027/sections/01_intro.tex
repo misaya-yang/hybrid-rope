@@ -1,0 +1,68 @@
+\section{Introduction}
+\label{sec:intro}
+
+RoPE has a spectral budget. Each attention head receives only
+$K=\drot/2$ rotary frequency channels, and those channels must be placed before
+the model sees a token. Standard geometric RoPE \citep{su2024roformer} makes a
+specific allocation: it spaces the channels uniformly in log-frequency,
+$\omega_i=b^{-2i/\drot}$. Because this table is inherited across model families
+--- from LLaMA-3 and Qwen2.5 to DeepSeek-V3 and video DiTs
+\citep{grattafiori2024llama3,qwen2024qwen25,deepseekv3,videorope2025} --- its
+allocation is easily mistaken for part of the rotary operator itself.
+
+Recent work makes the distinction consequential. Positional interpolation,
+YaRN, and LongRoPE-style search transport a realised spectrum toward a target
+context \citep{chen2024position,peng2024yarn,ding2024longrope,
+shang2025longrope2}; FMRoPE retargets the geometric band through its base
+\citep{oka2026fmrope}; LeRoPE instead learns the individual frequencies and
+finds stable non-geometric tables \citep{karypis2026lerope}. Range, transport,
+and learning all show that the default table is not sacrosanct. They leave a
+sharper question: \emph{at a fixed spectral range, is the allocation of the
+finite interior channels an independent training-time variable, and can it be
+chosen in closed form?}
+
+We answer the first part with an exact-range identification experiment
+(\S\ref{sec:exp-identify}). The two arms share the sampled highest and lowest
+frequencies, log-span, model initialisation, token order, optimiser, training
+budget, and evaluation anchors. Only the $K{-}2=30$ interior frequencies move.
+After training, endpoint-normalised cosh minus the uniform-in-log grid changes OOD NLL by
+$-0.4775/-0.2050/-0.1128$ at $512$/$1$K/$2$K in the seed-$42$
+matched pair. In a separate $12$-configuration, three-seed factorial,
+pre-specified non-uniform allocations are favored in $10/12$ and $9/12$
+configurations. Allocation changes what the model learns even when the range
+is held fixed.
+
+The second part becomes a variational problem. We represent a frequency table
+by a density $\rho(\phi)$ over log-frequency and minimise a convex broadband
+collision surrogate. Its unique constrained minimiser is a cosh density; its
+inverse CDF yields \evq{}, a one-parameter analytic warp that changes only the
+RoPE inverse-frequency initialisation (\S\ref{sec:theory}). It adds no learned
+parameters, auxiliary loss, or search, and recovers geometric RoPE as
+$\tau\to0$. A softmax-transport analysis supplies the scaling
+$\tau\propto\deff/\sqrt{\Ltr}$; the finite coefficient is calibrated as an
+operating point and tested across the factorial.
+
+The effect also survives beyond mechanism-scale controls
+(\S\ref{sec:exp-mature}). On OLMo-2 ($1.485$B), Native and \evq{} receive the
+same $300$-step Q/K-only continuation, data, module budget, and
+$4$K/$8$K/$16$K phase exposure; the active method variable is the frequency
+table. At $8$K, Native/\evq{} scores are $2.02/31.63\%$ on RULER and
+$0/17.5\%$ exact on held-out 2WikiMultiHopQA. Matching long-phase exposure
+therefore does not erase the frequency-substrate effect. On LLaMA-3-8B, a
+separate matched physical-$8$K continuation moves $16$K RULER from
+$0.295\%$ to $14.03\%$. These experiments carry the identified variable to
+mature checkpoints and autoregressive effective-context tasks.
+
+\paragraph{What this paper establishes.}
+\begin{itemize}\itemsep1pt\parskip0pt
+\item \textbf{The axis.} Exact-range controls identify interior frequency
+allocation independently of base and span, with cross-configuration
+replication (\S\ref{sec:exp-identify}).
+\item \textbf{The construction.} A convex variational surrogate yields the
+closed-form, zero-learned-parameter \evq{} schedule and recovers geometric
+RoPE as a limit (\S\ref{sec:theory}).
+\item \textbf{The mature attribution.} Phase-matched $1.485$B adaptation and
+matched $8$B adaptation show that the frequency substrate remains consequential
+for greedy multi-hop QA and RULER-family evaluation
+(\S\ref{sec:exp-mature}).
+\end{itemize}

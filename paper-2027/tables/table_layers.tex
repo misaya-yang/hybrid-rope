@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{0.95}
+\caption{Nonexclusive interventions on $\omega_i=b^{-u_i}$. Methods may act at
+multiple levels; learned and searched tables differ from \evq{} in how their
+channel-wise frequencies are obtained.}
+\label{tab:layers}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}clll@{}}
+\toprule
+ & Controlled object & Typical stage & Representative methods \\
+\midrule
+1 & deployed phases / spectrum & context extension & PI, YaRN, LongRoPE \\
+2 & scalar base $b$ & training or inference & FMRoPE \\
+3 & channel frequencies $\{\omega_i\}$ & before / during training & \textbf{\evq{}}, LeRoPE, AdaRoPE \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
