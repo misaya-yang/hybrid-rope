@@ -1,16 +1,84 @@
-# AGENTS.md — EVQ-Cosh NeurIPS 2026
+# AGENTS.md — RoPE spectral-budget research and ICML 2027
 
-This is a paper-and-reproducibility repository for Submission 11628, not a
-general software project. The priorities are reviewer decision leverage,
-scientific truth, provenance, anonymous hygiene, reproducibility, and GPU-cost
-discipline.
+This is a paper-and-reproducibility repository descended from NeurIPS 2026
+Submission 11628, not a general software project. The active manuscript is now
+the ICML 2027 package under `paper-2027/`. The priorities are reviewer decision
+leverage, scientific truth, provenance, anonymous hygiene, reproducibility, and
+GPU-cost discipline.
 
 This file is the only project-level agent instruction. Do not create a second
 root `Agent.md`. Keep volatile experiment status and rebuttal numbers in their
 canonical owners, not here.
 
-Active rebuttal branch: `main_0726`. `main` and
+Active branch: `main_0726`. `main` and
 `backup/main-restored-paper-20260726` are preserved pre-cleanup baselines.
+
+---
+
+## 0. Active paper workspace
+
+- **`paper-2027/` is the only active manuscript workspace.** Unless the user
+  explicitly names another target, route paper writing, theory integration,
+  tables, figures, formatting, and compilation there.
+- `paper/` remains the immutable NeurIPS 2026 submission baseline under §3.1.
+  Never redirect an active-paper request into `paper/`.
+- Before a major claim, theory, or narrative rewrite, read
+  `paper-2027/research/README.md`, then
+  `paper-2027/research/ICML2027_RESEARCH_SYNTHESIS_20260819.md`. Follow its
+  links to the canonical full-RoPE report and evidence owners needed for the
+  exact claim. Do not start from an untracked analysis draft or an ignored
+  `results/` report.
+- Keep durable paper-facing research reports under `paper-2027/research/`.
+  Keep reusable executable diagnostics under `scripts/analysis/`; do not paste
+  exploratory code or machine-local output into the manuscript.
+- Current research framing: finite full-RoPE spectral-basis geometry and
+  training co-adaptation are the general claim. EVQ-Cosh is a closed-form,
+  zero-learned-parameter constructive instance, not a universal optimum.
+- The report above is **internal audit material**, not outward-facing prose.
+  Promotion into the manuscript still requires exact evidence, claim-boundary,
+  anonymity, and page-budget checks.
+
+### 0.1 ICML 2027 objective and writing stance
+
+- **The sole objective is to maximize the probability of ICML 2027
+  acceptance**, subject to no fabrication and no experiments that cannot
+  change a decision-relevant claim.
+- Treat this as a strong theory paper with substantial experimental support.
+  The writing must make that strength obvious to a busy human reviewer; do not
+  make the manuscript read like an evidence ledger, extended rebuttal, agent
+  status report, or AI-generated audit.
+- Use the strongest accurate framing and confident packaging. Do not invent
+  results, splice protocols, or claim unsupported universality, SOTA, or
+  statistical significance.
+- A decisive controlled single-seed result is usable. Record seed scope
+  exactly in the internal owner; do not automatically weaken outward prose
+  with a generic single-seed caveat. State the scope outwardly only when the
+  venue requires it or omission would make the claim false.
+- Use the full eight-page allowance by replacing low-leverage material. Do not
+  compress a strong theorem or decisive result merely to make the paper
+  shorter, and do not stack new theory on top of stale material.
+- Lead with one memorable claim, one coherent theory-to-evidence chain, and the
+  strongest result for each layer. Internal audits are exhaustive; outward
+  prose is selective, accurate, and written in plain human language.
+
+### 0.2 Current claim architecture
+
+> A finite RoPE table is a training-time coordinate system. Its full sin/cos
+> subspace geometry bounds positional identifiability, while model weights
+> co-adapt to the table used during training.
+
+- Main theory: canonical full-RoPE collision, exact stable-rank identity,
+  low-frequency collapse, and exact post-hoc transplant obstruction.
+- Main identification: exact-range and M4 own the pure interior-allocation
+  claim.
+- Co-adaptation: the exact obstruction and 50M 2x2 own frozen-retrofit
+  diagnosis.
+- Mature evidence: matched 1.485B and 8B protocols own scale and effective
+  context.
+- EVQ-Cosh is the closed-form constructive instance and controlled
+  intervention. It is not the general theory's unique answer.
+- LeRoPE is required related work and external learned/fixed-table evidence;
+  it does not validate EVQ's mechanism or establish a matched comparison.
 
 ---
 
@@ -149,8 +217,11 @@ Hard rules:
 - Prefer raw artifacts and canonical reports over filenames, comments, or old
   narrative summaries.
 - It is legitimate to use the strongest relevant result from a declared
-  protocol. State single-seed versus multi-seed exactly; do not splice
-  incompatible protocols or selectively average runs.
+  protocol. Record single-seed versus multi-seed exactly in the internal owner;
+  outward prose need not volunteer the seed count when the result is decisive
+  and the narrower sentence remains true. Do not splice incompatible protocols
+  or selectively average runs, and do not use unsupported significance
+  language.
 - Say “same” only for fields verified identical. Say “matched” only when the
   intended scientific contract is genuinely matched.
 - Separate NLL/PPL, teacher-forced routing or gold-token probability, strict
@@ -458,9 +529,10 @@ build artifacts, and `paper/main.pdf`.
 
 Core identity:
 
-> RoPE is also a finite spectral budget. EVQ-Cosh is a closed-form,
-> zero-learned-parameter training-time frequency-grid allocation axis,
-> complementary to positional-operator design and inference-time range scaling.
+> A finite RoPE table is a training-time spectral coordinate system. Its full
+> sin/cos subspace geometry bounds positional identifiability, and model weights
+> co-adapt to the table. EVQ-Cosh is a closed-form,
+> zero-learned-parameter constructive instance of the allocation axis.
 
 Do not reframe EVQ-Cosh as universal long-context SOTA, a replacement for
 YaRN/LongRoPE/FMRoPE/DAPE, or a learned-PE replacement.
@@ -471,6 +543,10 @@ text is decided solely by the §1.2 admission test.
 
 | Topic | Must not claim beyond |
 | --- | --- |
+| Full-RoPE collision/rank | Phase-invariant static subspace redundancy and effective dimension; never an extrapolation or LM-quality predictor by itself |
+| Low-frequency collapse | Slow frequencies become mutually redundant in the stated metric; do not call them unused, dead, or freely reclaimable without a trained-model intervention |
+| Frozen retrofit | Exact constant invertible Q/K compensation is obstructed for unequal frequency multisets; this is not an impossibility theorem for approximate retraining or new operators |
+| Co-adaptation | 50M 2x2 and mature adaptation support strong table-by-weights interaction; do not turn a frozen mismatch into an intrinsic EVQ training cost |
 | Submitted YaRN | Repository-defined fixed-index smooth-ramp scaler unless a specific artifact verifies another implementation |
 | DAPE/tuning question | The verified tuning budget and executed control from its owner; do not infer method identity or pure shape attribution beyond the artifact |
 | Cosh | Uniqueness holds for the stated convex surrogate \(C_{\mathrm{app}}\), not for trained task loss |
@@ -479,6 +555,9 @@ text is decided solely by the §1.2 admission test.
 | Passkey | Teacher-forced NLL-gap unless an owner explicitly reports strict autoregressive exact match |
 | FMRoPE | Range control and allocation shape are distinct tested knobs; do not claim replacement or universal dominance |
 | RULER/NIAH | Do not present task-family adaptation as clean unseen-task transfer |
+| Multi-source split | Post-hoc mechanism diagnostic, not proof that one spectral region uniquely owns multi-reference resolution |
+| Dependency spectrum | The current \(r^{-2.4}\) result is a small CPU pilot and internal falsification tool, not a universal demand law or paper claim |
+| LeRoPE | External evidence that learned and fixed tables carry value; do not claim EVQ approximates it, it validates EVQ extrapolation, or either method dominates without a matched comparison |
 | Scratch comparison | Same initialization/scientific recipe; never say bitwise paired |
 
 Primary submitted evidence remains primary; LoRA-8B, DiT, progressive training,
@@ -488,6 +567,26 @@ current owner and playbook explicitly promote them.
 ---
 
 ## 5. Mandatory routing
+
+Before any `paper-2027/` theory, claim, or narrative work, read in this order:
+
+1. `AGENTS.md`;
+2. `paper-2027/research/README.md`;
+3. `paper-2027/research/ICML2027_RESEARCH_SYNTHESIS_20260819.md`;
+4. the canonical technical report or audit linked for the claim;
+5. the current manuscript section and the raw/canonical evidence owner.
+
+Research source map:
+
+| Need | Source |
+| --- | --- |
+| Current claim architecture and rejected directions | `paper-2027/research/ICML2027_RESEARCH_SYNTHESIS_20260819.md` |
+| Full-RoPE Gram, canonical collision, stable rank, collapse, 50M 2x2, base controls | `paper-2027/research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md` |
+| Independent full-RoPE audit provenance and defects | `paper-2027/research/audits/FULL_ROPE_CLAUDE_AUDIT_20260819.md` |
+| Dependency-spectrum audit provenance and limits | `paper-2027/research/audits/DEPENDENCY_SPECTRUM_CLAUDE_AUDIT_20260819.md` |
+| Exact post-hoc compensation obstruction | `rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md` |
+| Matched phase-exposure mature result | `rebuttal/rebuttal_0723/theory_results/OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729.md` |
+| LeRoPE verified facts and withdrawn interpretations | `rebuttal/rebuttal_0723/theory_results/LEROPE_CONCURRENT_WORK_NOTE_20260728.md` |
 
 Before rebuttal work, read in this order:
 

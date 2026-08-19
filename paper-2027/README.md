@@ -7,6 +7,19 @@ Build: `./compile.sh`（`make -f build.mk` 也行；远程工具写不了名为 
 
 ---
 
+## 内部研究入口
+
+后续论文工作的默认目录就是 `paper-2027/`。在改核心 claim、理论骨架或实验叙事前，
+先读：
+
+- [`research/README.md`](research/README.md) — 研究索引、阅读顺序与 owner 路由
+- [`research/ICML2027_RESEARCH_SYNTHESIS_20260819.md`](research/ICML2027_RESEARCH_SYNTHESIS_20260819.md) — 当前重构决策与中稿优先原则
+- [`research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)
+
+这些文件是内部审计与续作交接，不是可直接复制进正文的 outward-facing 文案。
+
+---
+
 ## ⚠️ 先读这条：会议与截稿日期对不上
 
 你给的日期是 **9/18 摘要 + 9/25 正文**。查证结果：
