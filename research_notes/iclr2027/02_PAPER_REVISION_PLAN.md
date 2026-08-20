@@ -1,13 +1,15 @@
-# 论文修改计划(条件启动:2026-09-24 NeurIPS 决定日分支)
+# 论文修改计划（历史预案，已由 `paper-2027/` 取代）
 
-创建:2026-08-06 · 修订:2026-08-06(改为条件启动)· 状态:`PLANNING_ONLY`
+创建:2026-08-06 · 修订:2026-08-19(政策纠正)· 状态:`SUPERSEDED_BY_PAPER_2027`
 基线稿:`paper/`(NeurIPS 11628 提交版,只读,一字不动)。
 
 ## 0. 启动条件(先于一切)
 
-- **D = 2026-09-24(NeurIPS 作者通知,AoE)。D 之前:不创建新稿目录、不写任何正文、不向任何 venue 提交。**
-- **Accept 分支**:本文件降级为 camera-ready 增强清单 —— 只执行不改论文结构的行(§2 中 FMRoPE related-work 补充与对照表、RULER 补表、basin 图、机制章图),遵守 NeurIPS camera-ready 规则。
-- **Reject 分支**:启动完整转投。目标 venue 默认 **ICML 2027**(未官宣,第三方估计 2027-01 中下旬,以官网为准);ICLR 2027 不可行的日历原因见 00 §1。新稿目录届时创建,命名 `paper_icml2027/`(或按最终 venue)。
+- **D = 2026-09-24(NeurIPS 作者通知,AoE)。** ICLR 官方 FAQ 允许 D 前提交
+  abstract；ICLR 全文截止是 2026-09-25 AoE。
+- **Accept 分支**:NeurIPS camera-ready 与 ICLR 独立续作分开处理；ICLR 稿以
+  第三人称引用已接收工作并明确新旧贡献边界。
+- **Reject 分支**:继续当前 `paper-2027/` 的 ICLR 2027 提交。
 - §1–§4 的内容 venue 无关,两分支共用;§5 里程碑以 D-相对周表示。
 
 ---

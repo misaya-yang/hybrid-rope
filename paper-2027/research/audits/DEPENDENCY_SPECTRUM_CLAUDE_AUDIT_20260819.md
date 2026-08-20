@@ -69,7 +69,7 @@ universal density rule does not depend on that number.
 - Use internally to demote any unmeasured demand-prior or universal density
   story.
 - Do not add the \(r^{-2.4}\) pilot, new \(\rho^*\), or a resonance optimizer
-  to the ICML paper during the current rewrite.
+  to the ICLR paper during the current rewrite.
 - If later promoted, first freeze the metric definition and run multiple
   batches with layer/head distributions and a direct relationship to a
   decision-relevant LM endpoint. This is optional future work, not a blocker

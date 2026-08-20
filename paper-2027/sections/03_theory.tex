@@ -4,21 +4,21 @@
 \begin{figure}[tb]
   \centering
   \includegraphics[width=\linewidth]{fig_method_overview.pdf}
-  \caption{\textbf{\evq{} frequency allocation.} Geometric RoPE spaces channels
-  uniformly in log-frequency; \evq{} applies a closed-form inverse-CDF warp that
-  reallocates the same \emph{number} of channels toward wavelengths completing a
-  training-window cycle. Rotation, architecture, and optimiser are unchanged.}
+  \caption{\textbf{From finite-basis geometry to trained use.}
+  (a)~At $L{=}4096$, $24$ slow geometric pairs occupy $48$ nominal dimensions
+  but only $2.00$ stable-rank dimensions. (b)~\evq{} is a closed-form
+  inverse-CDF warp of the finite table. (c)~Fixed-range training identifies
+  interior allocation, while frozen table swaps reveal weight--table
+  co-adaptation.}
   \label{fig:method-overview}
 \end{figure}
 
-Figure~\ref{fig:method-overview} summarises the construction. We keep three
-layers apart, because they carry different epistemic weight: \emph{exact}
-statements about the geometry a finite table can express
-(\S\ref{sec:subspaces}--\S\ref{sec:coordinate}); a \emph{modelling choice} that
-turns one of them into a closed-form schedule (\S\ref{sec:construction}); and an
-\emph{empirical} operating point. No experimental claim in
-\S\ref{sec:experiments} rests on the first layer alone --- indeed
-\S\ref{sec:coordinate} shows it cannot.
+Figure~\ref{fig:method-overview} separates three layers: exact statements about
+the static geometry of a finite table (\S\ref{sec:subspaces}--\S\ref{sec:budget});
+an exact obstruction and an empirical diagnostic for how trained weights use
+that table (\S\ref{sec:coordinate}); and a modelling choice that produces one
+closed-form construction (\S\ref{sec:construction}). The layers are connected,
+but none is substituted for another.
 
 \subsection{A finite table is a set of two-dimensional subspaces}
 \label{sec:subspaces}
@@ -71,14 +71,13 @@ r_2(R)=\frac{(\operatorname{tr}R)^2}{\operatorname{tr}(R^2)}
 \end{equation}
 \end{theorem}
 
-The nominal budget $2K$ is deflated by the average pairwise redundancy, and by
-nothing else. This is the sense in which RoPE has a spectral budget, and it
-names the variable a schedule acts on: \emph{once $K$ and the sampled endpoints
-are fixed, allocation moves exactly one quantity, $\bar c$}. The exact-range
-experiment of \S\ref{sec:exp-identify} manipulates precisely that. Note also
-what \eqref{eq:budget-identity} does not do: it is symmetric in the frequencies
-and cannot single out a particular density shape --- a prediction
-\S\ref{sec:exp-tau} confirms.
+The denominator exactly characterises this particular static dimension summary:
+larger mean pairwise redundancy lowers $r_2$. Allocation changes the entire Gram
+spectrum, however, and $\bar c$ is neither a language-model metric nor a complete
+summary of Shannon rank or log-determinant. The exact-range experiment of
+\S\ref{sec:exp-identify} therefore does not assume that $\bar c$ predicts loss;
+it tests directly whether changing the interior table at fixed $K$ and sampled
+range changes the trained model.
 
 The deflation is concentrated at the slow end.
 
@@ -113,8 +112,8 @@ while perplexity degrades from $7.14$ to $76.20$.
 
 \input{tables/table_coadapt}
 
-Two consequences discipline the rest of the paper. First, no static criterion
---- collision, stable rank, or log-determinant --- may serve as a proxy for
+Two consequences discipline the rest of the paper. First, static criteria such
+as collision, stable rank, and log-determinant do not by themselves predict
 trained quality, so every task claim in \S\ref{sec:experiments} is made on
 trained models. Second, the two \emph{self-consistent} systems are essentially
 tied in-window ($7.14$ vs.\ $7.16$) while both mismatched cells collapse: on LM
@@ -123,45 +122,44 @@ interaction is $-3.537$, about $5.9\times$ larger (configuration-level bootstrap
 CI $[-5.17,-3.04]$). The table behaves as a coordinate system fixed before
 training, with the weights learning coefficients in it.
 
-This is not a tuning failure that a better adapter would remove.
-
 \begin{theorem}[Post-hoc transplant obstruction]
 \label{thm:obstruction}
 Let $R_\Omega(\Delta)$ be the block-rotation operator of a frequency multiset
 $\Omega$. If position-independent invertible maps $A,B$ satisfy
-$A^\top R_{\Omega'}(\Delta)B = R_\Omega(\Delta)$ for all $\Delta$ in a set
-containing an open interval, then $\Omega'$ and $\Omega$ have the same frequency
-multiset, up to sign, permutation, and change of basis inside a pair.
+$A^\top R_{\Omega'}(\Delta)B = R_\Omega(\Delta)$ for all $\Delta$ in an open
+interval containing zero, then $\Omega'$ and $\Omega$ have the same frequency
+multiset, up to sign and permutation. Repeated frequencies may mix within their
+full equal-frequency invariant subspace.
 \end{theorem}
 
 The proof is short: $\Delta{=}0$ gives $A^\top B = I$, so the relation becomes a
 similarity $A^\top R_{\Omega'}A^{-\top}=R_\Omega$; differentiating at zero makes
 the generators similar, and similarity preserves the spectrum $\{\pm i\omega_k\}$
 (App.~\ref{sec:proofs}). A nontrivial table change therefore cannot be absorbed
-exactly by any fixed linear Q/K compensation, and the in-window cost of
-retrofitting a pretrained checkpoint is structural rather than an artefact of
-insufficient adaptation. The theorem does not rule out approximate repair by
-retraining, nonlinear maps, or the V/O and residual paths --- which is what the
-adaptation protocols of \S\ref{sec:exp-mature} do.
+exactly by this broad class of fixed linear Q/K compensation. The theorem does
+not quantify approximate error and does not rule out repair on a finite
+distribution by retraining, nonlinear maps, or V/O and residual paths. It
+separates exact function preservation from the adaptation protocols of
+\S\ref{sec:exp-mature}; it does not declare those protocols futile.
 
 \subsection{A closed-form allocation}
 \label{sec:construction}
 
 A positive density $\rho\in C^2([0,1])$ with $\int_0^1\rho=1$ induces a discrete
 allocation by inverse-CDF quantisation, $\phi_k=F_\rho^{-1}(u_k)$; geometric RoPE
-is $\rho\equiv1$. Choosing $\rho$ needs a tractable proxy for $\bar c$. The exact
-kernel is oscillatory and is not pointwise approximated by a smooth two-term
-model, so we analyse the convex surrogate
+is $\rho\equiv1$. The exact canonical-correlation objective is oscillatory and
+does not yield the following density in closed form. We instead retain the
+convex modelling surrogate
 \begin{equation}
 \Capp[\rho]=\frac{\alpha}{2}\int_0^1\!\rho^2\,d\phi
  +\frac{\beta}{2}\iint_{[0,1]^2}\!\!\rho(\phi)\rho(\psi)\min(\phi,\psi)\,d\phi\,d\psi,
 \label{eq:Capp}
 \end{equation}
-with $\alpha,\beta>0$ fitted to the exact kernel on a finite channel grid
-(App.~\ref{sec:tau-scaling}). The diagonal term penalises channel-load
-concentration; $\min(\phi,\psi)$ is the Green kernel of $-\partial_\phi^2$ and
-penalises pairs of channels that are \emph{both} slow --- the regime
-Prop.~\ref{prop:collapse} identifies as redundant.
+with $\alpha,\beta>0$. The diagonal term penalises channel-load concentration;
+$\min(\phi,\psi)$ is the Green kernel of $-\partial_\phi^2$ and encodes a
+penalty for pairs of channels that are both slow, matching the direction of
+Prop.~\ref{prop:collapse}. We do not claim that \eqref{eq:Capp} is a quantitative
+approximation to the full canonical-correlation objective.
 
 \begin{theorem}[Stationary allocation under the surrogate]
 \label{thm:ode}
@@ -187,50 +185,29 @@ $F_\tau(\phi)=1-\sinh(\tau(1{-}\phi))/\sinh\tau$, so
 which tends to $u_k$ as $\tau\to0$, recovering the uniform-log midpoint grid.
 \end{corollary}
 
-The full stationary density also admits a Fisher-forced particular solution; we
-deploy the homogeneous \emph{pure-tether} branch \eqref{eq:rho-tau} because it
-alone has an analytically invertible CDF (App.~\ref{subsec:fisher-ext}).
+The theorem selects the Cosh family conditional on \eqref{eq:Capp}; it does not
+select the finite member used by a model. The practical $\tau$ below is a
+separately modelled and empirically calibrated operating parameter, not a value
+derived by fitting $\sqrt{\beta/\alpha}$ to the full-RoPE geometry.
 
 \paragraph{The recipe, and the status of $\tau$.} With $\deff$ the effective head
-dimension, equal to $\dhd$ for the full-rotary architectures studied here,
+dimension, equal to $\dhd$ for the full-rotary architectures studied here, and
+$\Pi$ denoting the training protocol,
 \begin{equation}
 \label{eq:evq-practical}
-\tau = \deff/\sqrt{\Ltr},\qquad
+\tau = c(\Pi)\deff/\sqrt{\Ltr},\qquad
 u_k = (k+\tfrac12)/K,\qquad
 \omega_k^{\mathrm{EVQ}} = b^{-\phi_k(\tau)} .
 \end{equation}
 Set $\tau$, evaluate \eqref{eq:warp}, replace the inverse frequencies: no
 auxiliary loss, no extra parameters, no declared deployment length. A
-post-softmax transport model supplies the $\deff/\sqrt{\Ltr}$ form but not its
-constant, and its small-$\tau$ expansion does not certify the deployed
-$\tau\!\approx\!4$ regime (App.~\ref{sec:leff-derivation}); we therefore treat
-$c{=}1$ as a zero-search default, and across the $21$ configurations of
-\S\ref{sec:exp-tau} the selected $\tau$ never leaves a $0.75\times$--$1.5\times$
-window around it. Finally, two grids appear below and are \emph{not}
+post-softmax transport model supplies the $\deff/\sqrt{\Ltr}$ scaling structure
+but not the finite coefficient $c(\Pi)$ (App.~\ref{sec:leff-derivation}); the
+experiments use $c(\Pi){=}1$ as an operating default, not a global prescription.
+Across the $21$ configurations of \S\ref{sec:exp-tau}, the best tested $\tau$
+stays within a $0.75\times$--$1.5\times$ window around that value. Finally, two grids
+appear below and are \emph{not}
 interchangeable: \evq{} deploys the midpoint grid of \eqref{eq:warp}, while the
 endpoint-normalised variant $u_k{=}k/K$ ($\phi_0{=}0$ preserves $\omega_0{=}1$)
 is a shape diagnostic used where a control must pin the sampled extrema exactly,
 as in \S\ref{sec:exp-identify}.
-
-\subsection{Where the finite budget moves}
-\label{sec:budget-shift}
-
-In wavelength $\lambda(\phi)=2\pi b^\phi$, a training span $L$ and evaluation
-ceiling $M{>}L$ split the axis into three regions: $\lambda\le L$ completes at
-least one cycle during training; $L<\lambda\le M$ varies across the target window
-without completing one; $\lambda>M$ completes none even at the ceiling.
-
-\begin{lemma}[Single-crossing budget shift]
-\label{lem:budget-crossing}
-For every $\tau>0$, $\rho_\tau$ crosses the uniform density exactly once, at
-$\phi_c(\tau)=1-\tau^{-1}\operatorname{arcosh}(\sinh\tau/\tau)\le1-1/\sqrt3\approx0.4226$.
-\end{lemma}
-
-For OLMo-2 ($b{=}5{\times}10^5$, $L{=}4096$, $M{=}32768$) the boundaries
-$\phi_L{=}0.494$ and $\phi_M{=}0.652$ lie to the right of that universal bound,
-so at $\tau{=}2$ the $64$-pair table moves from $32/10/22$ channels to
-$43/8/13$: eleven channels bought for the completed-cycle region by spending
-density in both longer-wavelength regions. This is an exact budget statement,
-not a trained-loss theorem, and it yields the falsifiable prediction tested in
-\S\ref{sec:discussion}. Proof and a divergence inequality are in
-App.~\ref{sec:waterbed-proof}.

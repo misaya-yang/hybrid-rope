@@ -1,6 +1,8 @@
 # ICLR 2027 理论架构：从 attention 第一性原理到有限谱预算
 
-- **状态**：canonical 理论决策文档，供 `sections/03_theory.tex` 重写使用
+- **状态**：历史理论设计探索；当前 claim 与写作边界以
+  `ICLR2027_RESEARCH_SYNTHESIS_20260819.md` 和
+  `FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md` 为准
 - **日期**：2026-08-19
 - **回答的是用户提出的第 3、4 号问题**：
   - Q3 非几何分配的理论没完善——理论上应能做到 in-window 不输 LeRoPE、外推强于原始 RoPE；
@@ -163,7 +165,8 @@ exact sign-flip \(p=0.836\)；owner `M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md
 
 > **这是写作上的关键转向**：不要把它当成「我们的形状没被验证」的负结果。
 > 它是**轴命题的正面证据**：两族形状完全不同、但都把预算从慢端搬向快端的
-> 固定 schedule，同时打赢 uniform（10/12 与 9/12），且彼此打平。
+> 固定 schedule，预注册的 `1.25x` cosh 与 exponential 分别打赢 uniform
+>（10/12 与 9/12）；公式 cosh 是 7/12，且与 exponential 打平。
 > 能被识别的是**分配方向**，不是某条特定曲线。cosh 的独特之处不是它更优，
 > 而是它是这条轴上**唯一有闭式、零参数、且以几何 RoPE 为极限**的代表点。
 > 一句话正文写法见 §6。
@@ -219,7 +222,8 @@ interaction `[-5.165,-3.039]`。
 A^\top R_{\Omega'}(\Delta)B=R_\Omega(\Delta)
 \]
 在某个含开区间的 \(\Delta\) 集上恒成立，则 \(\Omega'\) 与 \(\Omega\) 必须有相同的
-frequency multiset（仅允许符号、排列、pair 内基变换；整数位置额外允许 \(2\pi\) alias）。
+frequency multiset（仅允许符号与排列；若频率重复，相似变换可在整个等频不变
+子空间内混合；整数位置额外允许 \(2\pi\) alias）。
 
 证明：\(\Delta=0\) 给出 \(A^\top B=I\)；于是
 \(A^\top R_{\Omega'}(\Delta)A^{-\top}=R_\Omega(\Delta)\)；在零点求导得两个 block
@@ -424,9 +428,10 @@ L6 的反例表（静态 rank 涨而 PPL 崩）与 L7 的交互项 \(-3.5367\)�
 
 **关于 cosh 的地位**（替换现行「Cosh is a derived instance」段）：
 > The empirical result identifies an axis, not a curve. Two structurally
-> different pre-specified families — the cosh solution of \(\Capp\) and a
-> deformation-matched exponential — both beat the uniform grid (10/12 and 9/12)
-> and are not separated from each other (\(+0.00074\) NLL, \(p=0.836\)). What the
+> different pre-specified schedules — the \(1.25\times\) cosh member and a
+> deformation-matched exponential — beat the uniform grid (10/12 and 9/12)
+> configurations. Separately, formula-cosh and the matched exponential are not
+> separated (\(+0.00074\) NLL, \(p=0.836\)). What the
 > data identify is the direction in which a finite budget is moved. Cosh is the
 > member of that direction that is available in closed form, adds no learned
 > parameter, and degenerates exactly to geometric RoPE as \(\tau\to0\).

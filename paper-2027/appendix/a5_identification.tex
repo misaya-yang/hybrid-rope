@@ -15,9 +15,9 @@ of the $K{-}2 = 30$ interior frequencies.
 
 \paragraph{Arms.} \emph{Baseline:} a paper-faithful reimplementation of the
 uniform-in-log exponent grid specified in \S6.1 of \citet{oka2026fmrope}, at
-training base $256$. We did not identify a public author implementation when
-implementing the control, so the comparison is against the rule as published,
-not an official-code reproduction. \emph{Intervention:}
+training base $256$. No public author implementation was available, so the
+baseline implements the published rule rather than reproducing author code.
+\emph{Intervention:}
 endpoint-normalised cosh interior spacing at $\tau{=}4$. Note that the
 endpoint-normalised cosh arm is \emph{not} identical to the deployed midpoint
 \evq{} grid of Eq.~\eqref{eq:evq-practical}, whose $\tau$ also shifts the
@@ -77,14 +77,13 @@ better; at formula $\tau{=}8$ the $0.75\times$ arm is. Optima move inward from
 both ends, which bounds the formula's implied range but does not yield a
 replacement closed-form rule.
 
-\paragraph{Scope limit.} This is a short-budget $50.9$M mechanistic NLL
-control trained on a deterministically repeated local WikiText-2 raw stream ---
-not a large-scale pre-training distribution, and a different corpus from the
-$151.9$M control and from the from-scratch runs. It is not scale evidence and
-not capability evidence, and its effect size is not comparable to the $151.9$M
-single-configuration contrast: the factorial establishes cross-configuration
-\emph{direction}, whereas the $151.9$M control provides the effect size within
-its configuration.
+\paragraph{Scope.} This is a short-budget $50.9$M mechanistic NLL control
+trained on a deterministically repeated WikiText-2 raw stream, a different
+corpus from the $151.9$M control and from the mature-scale runs. The effect
+sizes are therefore not comparable: the factorial establishes
+cross-configuration \emph{direction}, and the $151.9$M control provides the
+effect size within its configuration. Scale is evaluated separately in
+\S\ref{sec:exp-mature}.
 
 \section{The fixed-index ramp scaler}
 \label{sec:ramp-scaler}

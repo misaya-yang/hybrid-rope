@@ -156,12 +156,9 @@ $1/\omega{=}707$ to $9.69$, and $u{=}0.9$ from $134{,}609$ to $1{,}720$.
 The deployed midpoint grid therefore changes sampled extrema and span at finite
 $K$; the exact-range experiments anchor those quantities explicitly. At
 $\tau{=}2$, $\rho_\tau(0.1){=}1.71$ and $\rho_\tau(1){=}0.55$, while the band
-$1/\omega{=}2048$ has relative density $0.76$. Thus thinning concentrates on
-channels with $1/\omega\gg\Ltr$ while preserving more of the training-scale
-band. This motivates a directional prediction: channels with $1/\omega\ll\Ltr$
-complete many periods during training, so positions beyond $\Ltr$ land in
-already-trained phase regions, while channels with $1/\omega\gg\Ltr$ never
-complete one and extrapolate into unseen phase. Moving budget toward the former
-should favour extrapolation, while any in-window cost must be measured after
-training. The surrogate does not assign the much larger mismatch observed when
-a pretrained model is retrofitted with a new table.
+$1/\omega{=}2048$ has relative density $0.76$. Thus the finite grid thins most
+strongly at scales much slower than the training window while retaining more of
+the training-scale band. This is table arithmetic, not a task-loss prediction:
+the exact-range experiments measure the trained allocation effect, and
+Table~\ref{tab:coadapt} separately measures incompatibility after a frozen
+post-hoc swap.

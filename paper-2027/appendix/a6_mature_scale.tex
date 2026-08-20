@@ -34,24 +34,20 @@ target length. Thus this is held-out task-family length transfer, not an
 unmodified LongBench leaderboard result. The RULER adapters are independent of
 the QA adapters: Table~\ref{tab:ruler} reports both the earlier $276$-step
 full-Q/K/V/O continuation and the $300$-step selective-Q/K continuation, each
-trained over all $13$ families.
-
-\paragraph{Family-level in-window structure.}
-For the selective-Q/K RULER adapters at $4$K, the official-score changes
-(\evq{} minus Native) for
-\texttt{niah\_single\_1/2/3} are $-5/0/-60$ percentage points, averaging
-$-21.67$.  The changes for
-\texttt{niah\_multikey\_1/2/3}, \texttt{niah\_multivalue}, and
-\texttt{niah\_multiquery} are $-65/-95/-50/-26.25/-25$, averaging $-52.25$.
-This split is a post-hoc mechanism diagnostic over one matched seed, not a
-separate benchmark claim; it motivates the multi-reference prediction in
-\S\ref{sec:discussion}.
+trained over all $13$ families. Evaluation uses $20$ examples per family and
+length. A paired family-stratified bootstrap over the tracked Q/K-only
+per-example predictions gives \evq{}-minus-Native official-scorer macro differences
+of $-29.75$ points at $4$K (95\% CI $[-34.42,-24.85]$), $+29.61$ at $8$K
+($[26.54,32.74]$), and $+4.65$ at $16$K ($[3.17,6.38]$). These intervals
+condition on the single trained pair and quantify evaluation-row uncertainty,
+not training-seed variability.
 
 \paragraph{From initialisation.}
 Starting from the public step-$0$ initialisation, one $2.097$B-token \evq{}
 trajectory reaches PPL $167.45/156.87/159.64$ against the released Geo
 step-$1{,}000$ checkpoint's $161.19/163.88/182.73$ at $4$/$8$/$16$K.
-The paired \evq{}-minus-Geo NLL is $+0.0381/-0.0437/-0.1351$, with
+The \evq{}-minus-Geo NLL is
+$+0.0724/+0.0381/-0.0437/-0.1351$ at $2$/$4$/$8$/$16$K, with
 $122/128$ and $126/128$ held-out documents favouring \evq{} at $8$K and
 $16$K. This is one same-initialisation, same-scientific-recipe trajectory:
 \evq{} used a reviewed single-GPU HF loop, whereas the released Geo checkpoint
@@ -72,10 +68,11 @@ task accuracy is evaluated separately.
 \paragraph{RULER-family continuation.}
 A separate $516$-step continuation uses identical physical-$8$K supervision
 over all $13$ RULER families, with one seed per arm and disjoint generated
-training/evaluation rows. At $16$K, Native/\evq{} official macro is
+training/evaluation rows. Evaluation uses $20$ examples per family and length.
+At $16$K, Native/\evq{} official-scorer macro is
 $0.295/14.03\%$ and normalized exact is $0/1.54\%$. At the $8$K training
 length the metrics disagree, so Table~\ref{tab:ruler} reports both official
-macro ($94.44/77.60\%$) and normalized exact ($17.69/21.54\%$).
+scorer macro ($94.44/77.60\%$) and normalized exact ($17.69/21.54\%$).
 
 \paragraph{Endpoint scope.}
 NLL, attention routing, strict autoregressive exact match, multi-hop QA, and

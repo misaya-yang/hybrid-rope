@@ -1,8 +1,8 @@
-# AGENTS.md — RoPE spectral-budget research and ICML 2027
+# AGENTS.md — RoPE spectral-budget research and ICLR 2027
 
 This is a paper-and-reproducibility repository descended from NeurIPS 2026
 Submission 11628, not a general software project. The active manuscript is now
-the ICML 2027 package under `paper-2027/`. The priorities are reviewer decision
+the ICLR 2027 package under `paper-2027/`. The priorities are reviewer decision
 leverage, scientific truth, provenance, anonymous hygiene, reproducibility, and
 GPU-cost discipline.
 
@@ -24,23 +24,24 @@ Active branch: `main_0726`. `main` and
   Never redirect an active-paper request into `paper/`.
 - Before a major claim, theory, or narrative rewrite, read
   `paper-2027/research/README.md`, then
-  `paper-2027/research/ICML2027_RESEARCH_SYNTHESIS_20260819.md`. Follow its
+  `paper-2027/research/ICLR2027_RESEARCH_SYNTHESIS_20260819.md`. Follow its
   links to the canonical full-RoPE report and evidence owners needed for the
   exact claim. Do not start from an untracked analysis draft or an ignored
   `results/` report.
 - Keep durable paper-facing research reports under `paper-2027/research/`.
   Keep reusable executable diagnostics under `scripts/analysis/`; do not paste
   exploratory code or machine-local output into the manuscript.
-- Current research framing: finite full-RoPE spectral-basis geometry and
-  training co-adaptation are the general claim. EVQ-Cosh is a closed-form,
+- Current research framing: fixed-range interior allocation is an independent
+  training-time variable, explained through finite full-RoPE spectral-basis
+  geometry and training co-adaptation. EVQ-Cosh is a closed-form,
   zero-learned-parameter constructive instance, not a universal optimum.
 - The report above is **internal audit material**, not outward-facing prose.
   Promotion into the manuscript still requires exact evidence, claim-boundary,
   anonymity, and page-budget checks.
 
-### 0.1 ICML 2027 objective and writing stance
+### 0.1 ICLR 2027 objective and writing stance
 
-- **The sole objective is to maximize the probability of ICML 2027
+- **The sole objective is to maximize the probability of ICLR 2027
   acceptance**, subject to no fabrication and no experiments that cannot
   change a decision-relevant claim.
 - Treat this as a strong theory paper with substantial experimental support.
@@ -54,7 +55,7 @@ Active branch: `main_0726`. `main` and
   exactly in the internal owner; do not automatically weaken outward prose
   with a generic single-seed caveat. State the scope outwardly only when the
   venue requires it or omission would make the claim false.
-- Use the full eight-page allowance by replacing low-leverage material. Do not
+- Use the full nine-page allowance by replacing low-leverage material. Do not
   compress a strong theorem or decisive result merely to make the paper
   shorter, and do not stack new theory on top of stale material.
 - Lead with one memorable claim, one coherent theory-to-evidence chain, and the
@@ -63,9 +64,9 @@ Active branch: `main_0726`. `main` and
 
 ### 0.2 Current claim architecture
 
-> A finite RoPE table is a training-time coordinate system. Its full sin/cos
-> subspace geometry bounds positional identifiability, while model weights
-> co-adapt to the table used during training.
+> Even with the sampled spectral range fixed, a finite RoPE table's interior
+> allocation changes its full sin/cos subspace geometry and trained behaviour.
+> Model weights co-adapt to the table used during training.
 
 - Main theory: canonical full-RoPE collision, exact stable-rank identity,
   low-frequency collapse, and exact post-hoc transplant obstruction.
@@ -529,9 +530,10 @@ build artifacts, and `paper/main.pdf`.
 
 Core identity:
 
-> A finite RoPE table is a training-time spectral coordinate system. Its full
-> sin/cos subspace geometry bounds positional identifiability, and model weights
-> co-adapt to the table. EVQ-Cosh is a closed-form,
+> Even at fixed sampled range, a finite RoPE table's interior allocation is a
+> training-time design variable. Its full sin/cos geometry characterizes static
+> positional-basis redundancy, and model weights co-adapt to the table.
+> EVQ-Cosh is a closed-form,
 > zero-learned-parameter constructive instance of the allocation axis.
 
 Do not reframe EVQ-Cosh as universal long-context SOTA, a replacement for
@@ -572,7 +574,7 @@ Before any `paper-2027/` theory, claim, or narrative work, read in this order:
 
 1. `AGENTS.md`;
 2. `paper-2027/research/README.md`;
-3. `paper-2027/research/ICML2027_RESEARCH_SYNTHESIS_20260819.md`;
+3. `paper-2027/research/ICLR2027_RESEARCH_SYNTHESIS_20260819.md`;
 4. the canonical technical report or audit linked for the claim;
 5. the current manuscript section and the raw/canonical evidence owner.
 
@@ -580,7 +582,7 @@ Research source map:
 
 | Need | Source |
 | --- | --- |
-| Current claim architecture and rejected directions | `paper-2027/research/ICML2027_RESEARCH_SYNTHESIS_20260819.md` |
+| Current claim architecture and rejected directions | `paper-2027/research/ICLR2027_RESEARCH_SYNTHESIS_20260819.md` |
 | Full-RoPE Gram, canonical collision, stable rank, collapse, 50M 2x2, base controls | `paper-2027/research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md` |
 | Independent full-RoPE audit provenance and defects | `paper-2027/research/audits/FULL_ROPE_CLAUDE_AUDIT_20260819.md` |
 | Dependency-spectrum audit provenance and limits | `paper-2027/research/audits/DEPENDENCY_SPECTRUM_CLAUDE_AUDIT_20260819.md` |

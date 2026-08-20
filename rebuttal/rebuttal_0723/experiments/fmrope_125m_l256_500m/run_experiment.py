@@ -43,7 +43,7 @@ from rebuttal.rebuttal_0723.experiments.fmrope_125m_l256_500m.protocol import (
 def _find_repo_root(start: Path) -> Path:
     for candidate in (start, *start.parents):
         if (
-            (candidate / "AGENTS.md").is_file()
+            (candidate / "requirements.txt").is_file()
             and (candidate / "scripts/lib/rope/schedules.py").is_file()
         ):
             return candidate

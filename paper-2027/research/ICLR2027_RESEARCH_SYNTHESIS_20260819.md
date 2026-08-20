@@ -1,6 +1,7 @@
-# ICML 2027 research synthesis: finite RoPE basis and co-adaptation
+# ICLR 2027 research synthesis: finite RoPE basis and co-adaptation
 
-- **Status:** canonical internal decision memo for the next manuscript rewrite
+- **Status:** canonical internal decision memo; architecture implemented in the
+  active manuscript and retained as its claim/evidence contract
 - **Date:** 2026-08-19
 - **Scope:** theory architecture, evidence routing, related-work positioning,
   and acceptance-oriented writing decisions
@@ -18,22 +19,24 @@ the table and model weights co-adapt. EVQ-Cosh is a simple analytic table that
 exposes and exploits this allocation axis; it is not the universal optimizer
 of full-RoPE geometry or language-model loss.
 
-This is a stronger ICML paper than either “we found a better extrapolation
+This is a stronger ICLR paper than either “we found a better extrapolation
 schedule” or “cosh minimizes our surrogate.” It joins real theory, controlled
 identification, mature-model evidence, and a clear relationship to LeRoPE.
 
 ## 2. Recommended central claim
 
-> **A finite RoPE table is a training-time coordinate system: its
-> two-dimensional spectral geometry limits positional identifiability, and
-> model weights co-adapt to the table used during training.**
+> **Even at a fixed spectral range, the interior allocation of a finite RoPE
+> table is an independent training-time design variable: it changes the full
+> sin/cos subspace geometry and trained behaviour, while model weights co-adapt
+> to the table used during training.**
 
 | Clause | Evidence | Status |
 | --- | --- | --- |
 | Each frequency is a 2D sin/cos subspace | full self/cross Gram | proved |
-| Phase-invariant redundancy bounds static effective dimension | canonical correlations + exact stable-rank identity | proved |
+| Phase-invariant redundancy exactly determines stable rank \(r_2\) | canonical correlations + exact stable-rank identity | proved |
 | Interior placement changes what is learned at fixed range | exact-range + M4 | completed empirical evidence |
-| Weights co-adapt to the training table | exact transplant obstruction + 50M 2x2 + Fixed-LeRoPE | proved exact case + completed empirical evidence |
+| Weights co-adapt to the training table | exact transplant obstruction + 50M 2x2 | proved exact case + completed empirical evidence |
+| A fixed table learned elsewhere can transfer value into a new training run | Fixed-LeRoPE | external primary-source evidence |
 
 ## 3. Theory that survives adversarial review
 
@@ -120,8 +123,9 @@ operating choice.
 The exact-range study fixes sampled endpoints and log span and moves only 30
 interior frequencies. The seed-42 effect is
 `-0.47750/-0.20499/-0.11284` NLL at `512/1K/2K`. M4 then supplies a separate
-12-configuration, three-seed direction check: the non-uniform Cosh and matched
-exponential arms beat uniform in `10/12` and `9/12` configurations.
+12-configuration, three-seed direction check: the pre-specified `1.25x` Cosh
+and matched exponential arms beat uniform in `10/12` and `9/12`
+configurations; the formula point beats uniform in `7/12`.
 
 This owns the claim that allocation is not reducible to scalar base or range.
 
@@ -200,7 +204,7 @@ all channels to one frequency, and its candidate density rankings depend on
 the chosen kernel. The checkpoint pilot measures a steep local gradient
 spectrum, approximately \(r^{-2.4}\) on one small sample, but that object mixes
 content, softmax probability, downstream gradients, and trained-model state.
-It is not a new ICML claim without a promoted owner.
+It is not a new ICLR claim without a promoted owner.
 
 ## 7. Claims to reject
 
@@ -214,7 +218,7 @@ It is not a new ICML claim without a promoted owner.
   attention-derived solution.
 - LeRoPE and EVQ are the same mechanism from opposite ends.
 
-## 8. Recommended eight-page architecture
+## 8. Recommended nine-page architecture
 
 1. **Introduction:** finite table as a training-time spectral coordinate
    system; exact-range result; mature-scale headline.
@@ -227,16 +231,16 @@ It is not a new ICML claim without a promoted owner.
    \(\tau\) derivation move to the appendix.
 5. **Experiments:** exact-range/M4 first; 50M 2x2 if it fits; 1.485B and 8B
    mature evidence next.
-6. **Discussion:** static identifiability versus trained use; LeRoPE
-   complementarity; multi-source pattern only as a diagnostic.
+6. **Discussion:** static identifiability versus trained use; exact versus
+   approximate retrofit; range transport and LeRoPE complementarity.
 
-Use the full eight-page allowance by replacing low-leverage material. Do not
+Use the full nine-page allowance by replacing low-leverage material. Do not
 compress a strong result merely to create empty space, and do not stack the new
 theory on top of the old surrogate-heavy narrative.
 
 ## 9. Acceptance-first writing principles
 
-- The objective is to maximize ICML 2027 acceptance probability, subject only
+- The objective is to maximize ICLR 2027 acceptance probability, subject only
   to scientific truth and avoiding experiments that cannot change the paper.
 - The work is already a strong theory paper with substantial experiments. The
   writing must make that strength legible instead of sounding like an audit,
@@ -277,14 +281,14 @@ theory on top of the old surrogate-heavy narrative.
 - EVQ-Cosh: constructive instance and controlled intervention.
 - LeRoPE: external learned-table and fixed-table evidence, not mechanism
   equivalence.
-- Main text: result-first, human-readable, eight pages fully used.
+- Main text: result-first, human-readable, nine pages fully used.
 
 ### FILE_LEDGER
 
 | Path | Role | State |
 | --- | --- | --- |
 | `paper-2027/research/README.md` | durable research index | created |
-| `paper-2027/research/ICML2027_RESEARCH_SYNTHESIS_20260819.md` | canonical rewrite decision memo | created |
+| `paper-2027/research/ICLR2027_RESEARCH_SYNTHESIS_20260819.md` | canonical rewrite decision memo | created |
 | `paper-2027/research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md` | canonical technical report | existing |
 | `paper-2027/research/audits/FULL_ROPE_CLAUDE_AUDIT_20260819.md` | independent-audit record | created |
 | `paper-2027/research/audits/DEPENDENCY_SPECTRUM_CLAUDE_AUDIT_20260819.md` | dependency-audit record | created |
@@ -303,21 +307,21 @@ theory on top of the old surrogate-heavy narrative.
 
 ### RISKY_REGIONS
 
-- `paper-2027/sections/03_theory.tex`: currently centered on the old
-  cosine-only surrogate narrative; replace rather than append.
-- `paper-2027/appendix/a1_proofs.tex`: proof identities and rank definitions
-  must be unified before claims are moved into the main text.
+- `paper-2027/sections/03_theory.tex`: keep the full-RoPE geometry primary and
+  the surrogate explicitly conditional; do not restore the cosine-only theory.
+- `paper-2027/appendix/a1_proofs.tex`: preserve the exact-vs-modelled boundary
+  and keep removed auxiliary theory out of the main narrative.
 - `paper-2027/sections/04_experiments.tex`: keep pure allocation,
   co-adaptation, and mature persistence as distinct causal layers.
-- `paper-2027/sections/05_discussion.tex`: multi-source split is diagnostic,
-  not an exclusive mechanism theorem.
+- `paper-2027/sections/05_discussion.tex`: keep one theory-to-evidence chain;
+  do not restore the post-hoc multi-source mechanism split.
 - `results/dependency_spectrum_audit_20260819/`: ignored/volatile raw output;
   cite the durable audit record and recheck raw files before promotion.
-- Page budget: the body is already eight pages; every addition needs a named
+- Page budget: the body is already nine pages; every addition needs a named
   replacement.
 
 ## 11. Next action
 
-The next implementation turn should rewrite the paper skeleton and theory
-section around the architecture above, then reflow the eight-page body before
-polishing language or adding experiments.
+Keep the architecture fixed. Future turns should audit owner consistency,
+official ICLR format, page flow, citations, anonymity, and source/PDF
+reproducibility before considering any additional result.

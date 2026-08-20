@@ -54,6 +54,10 @@ which span the centred limit whenever $p$ has nondegenerate support on at least
 three distances.
 \end{proof}
 
+The reported $r_2{=}2.00$ for the 24 slow pairs uses the uniform separation
+prior above. Other priors change that static numerical Gram; the fixed-range
+trained-model contrast of \S\ref{sec:exp-identify} does not use this prior.
+
 \subsection{Post-hoc transplant obstruction}
 \label{sec:obstruction-proof}
 
@@ -67,9 +71,10 @@ with $G_\Omega=\bigoplus_k \omega_k J$, $J=\left[\begin{smallmatrix}0&-1\\1&0\en
 Differentiating at $\Delta{=}0$ gives $A^\top G_{\Omega'}A^{-\top}=G_\Omega$, so
 the generators are similar and share a spectrum. The spectrum of $G_\Omega$ is
 $\{\pm i\omega_k\}_{k\le K}$ with multiplicity, so the frequency multisets agree
-up to sign and permutation; the remaining freedom is a change of basis inside
-each two-dimensional block. For integer positions the same argument applies
-modulo the $2\pi$ alias.
+up to sign and permutation. When a frequency is repeated, similarity may mix
+the entire equal-frequency invariant subspace; it need not preserve the original
+two-dimensional block decomposition. For integer positions the same argument
+applies modulo the $2\pi$ alias.
 \end{proof}
 
 This is an exact statement about \emph{fixed, position-independent, invertible}
@@ -261,6 +266,16 @@ whose coefficients $(-1/16,\, +1/256,\, +17/30720)$ are exact rationals from the
 
 \subsection{Single-crossing budget shift}
 \label{sec:budget-crossing-proof}
+
+\begin{lemma}[Single-crossing budget shift]
+\label{lem:budget-crossing}
+For every $\tau>0$, $\rho_\tau$ crosses the uniform density exactly once, at
+\begin{equation}
+\phi_c(\tau)=1-\tau^{-1}\operatorname{arcosh}(\sinh\tau/\tau)
+\le 1-1/\sqrt3.
+\label{eq:budget-crossing}
+\end{equation}
+\end{lemma}
 
 \begin{proof}[Proof of Lemma~\ref{lem:budget-crossing}]
 For $\tau>0$, $\rho_\tau(\phi)=\tau\cosh(\tau(1-\phi))/\sinh\tau$ is
@@ -661,7 +676,7 @@ and $K{=}32$; the MLA study has $d_{\mathrm{head}}{=}64$,
 $d_{\mathrm{rope}}{=}32$, $d_{\mathrm{nope}}{=}32$ and $K{=}16$. Halving
 $K$ scales the $K^{-2}$ component of the distortion bound by $4\times$ and
 the $K^{-1}$ component by $2\times$. The observed MLA gain
-(\S\ref{sec:exp-mla}) is a test of the predicted direction, not a controlled
+(\S\ref{sec:mla-results}) is a test of the predicted direction, not a controlled
 quantitative test of either bound.
 
 \paragraph{Caveat.} At large $\tau$, $m_\tau{=}\tau/\sinh\tau$ becomes small and the $1/(Km_\tau)$ factor grows. The transport bounds can therefore become vacuous in the same regime where the Fisher-residual analysis no longer guarantees a small warp error (\S\ref{sec:pure-tether-bound}).

@@ -25,17 +25,20 @@ several intervention levels; their common goal is to transport a learned model
 to a declared longer context. Bounds based on the RoPE base characterize limits
 of this regime \citep{xu2024base}.
 
-\paragraph{Base frequency and emergent bands.}
-RoPE models use the geometric spectrum non-uniformly. Barbero et al. identify
-frequency-localized structure in query and key norms and introduce partial RoPE,
-which removes the slowest rotations \citep{barbero2025round}. Oka et al. show
-that the high-norm band's location depends jointly on the scalar base and the
-training length \citep{oka2026fmrope}. Their FMRoPE rule sets $b=L_{\mathrm{train}}$
-during training or fine-tuning and may retarget $b$ to the evaluated length at
-inference. Thus FMRoPE moves the geometric spectrum by changing one scalar while
-retaining a uniform exponent grid. By contrast, an exact-range allocation test
-can hold the endpoints and log-frequency span fixed while changing only the
-interior grid (\S\ref{sec:exp-identify}).
+\paragraph{Frequency use, scalar base, and operator geometry.}
+Trained RoPE exhibits frequency-localized query/key norms; partial RoPE removes
+the slowest rotations \citep{barbero2025round}. \mbox{Frequency Entropy} measures
+rotational-pair utilization and identifies redundant extreme-entropy dimensions
+\citep{oka2026frequencyentropy}; controlled access experiments causally link
+available frequencies to positional versus symbolic behaviour
+\citep{urrutia2026decoupling}. FMRoPE instead shifts the geometric spectrum by
+setting the scalar base from training or evaluation length while retaining a
+uniform exponent grid \citep{oka2026fmrope}. At a broader operator level, GRAPE
+recovers RoPE as canonical planar group actions and generalizes their generators
+and subspaces \citep{zhang2026grape}. Our identification keeps the rotary
+operator, sampled endpoints, and log-span fixed, moves only finite interior
+frequencies, and pairs trained comparisons with an exact frozen-transplant
+obstruction (\S\ref{sec:exp-identify}).
 
 \paragraph{Learning and constructing frequency tables.}
 LeRoPE learns one log-scale per frequency band, shared across layers and heads,

@@ -5,6 +5,10 @@ rebuttal-cycle evidence in `../rebuttal/rebuttal_0723/`.
 
 Build: `./compile.sh`（`make -f build.mk` 也行；远程工具写不了名为 `Makefile` 的文件，所以叫 `build.mk`）。产物：`main.pdf`。
 
+匿名补充包：`python ../scripts/package_supplement.py --profile iclr2027`。
+该 profile 只收录当前论文源码、两张使用中的图、频率实现、关键分析/识别脚本、
+最小测试和已清洗的 machine-readable evidence，并在写 ZIP 前执行身份与密钥扫描。
+
 ---
 
 ## 内部研究入口
@@ -13,10 +17,10 @@ Build: `./compile.sh`（`make -f build.mk` 也行；远程工具写不了名为 
 先读：
 
 - [`research/README.md`](research/README.md) — 研究索引、阅读顺序与 owner 路由
-- [`research/ICLR2027_THEORY_ARCHITECTURE.md`](research/ICLR2027_THEORY_ARCHITECTURE.md) — **理论重写蓝图**：attention 第一性原理链、cosh 的准确地位、in-window/外推的可支持措辞、9 页定理清单
-- [`research/ICLR2027_REVIEW_AND_EVIDENCE_AUDIT.md`](research/ICLR2027_REVIEW_AND_EVIDENCE_AUDIT.md) — 审稿意见逐条落地审计 + 5 月后证据清单
-- [`research/ICML2027_RESEARCH_SYNTHESIS_20260819.md`](research/ICML2027_RESEARCH_SYNTHESIS_20260819.md) — 当前重构决策与中稿优先原则（venue 名沿用历史命名）
+- [`research/ICLR2027_RESEARCH_SYNTHESIS_20260819.md`](research/ICLR2027_RESEARCH_SYNTHESIS_20260819.md) — 当前 claim 架构、证据路由与否决方向
 - [`research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)
+- [`research/ICLR2027_THEORY_ARCHITECTURE.md`](research/ICLR2027_THEORY_ARCHITECTURE.md) — 早期理论设计探索；以 synthesis 和 canonical report 为准
+- [`research/ICLR2027_REVIEW_AND_EVIDENCE_AUDIT.md`](research/ICLR2027_REVIEW_AND_EVIDENCE_AUDIT.md) — 历史审稿吸收审计；其中已完成项以当前源码为准
 
 这些文件是内部审计与续作交接，不是可直接复制进正文的 outward-facing 文案。
 
@@ -25,7 +29,7 @@ Build: `./compile.sh`（`make -f build.mk` 也行；远程工具写不了名为 
 ## 会议与格式（已定，2026-08-19 核实）
 
 目标是 **ICLR 2027**：摘要 **2026-09-18 AoE**、正文 **2026-09-25 AoE**。
-（ICML 2027 官方 CFP 至今未发布；9/25 这个日期只属于 ICLR。）
+官方 Author Guide 与 CFP 已于 2026-08-19 复核。
 
 | 项 | 要求 | 本包状态 |
 |---|---|---|
@@ -38,16 +42,23 @@ Build: `./compile.sh`（`make -f build.mk` 也行；远程工具写不了名为 
 | Reproducibility statement | 推荐 | ✅ `sections/07_reproducibility.tex` |
 | 双盲 | 作者不得出现 | ✅ `\iclrfinalcopy` 保持注释；`compile.sh` 检查 |
 
-**AI use statement 需要作者本人过目定稿**：`sections/08_ai_use.tex` 按 ICLR 2027
-AI Policy 的 required / recommended 两类清单写成，逐句都必须对本项目为真。
+**AI use statement 已由作者于 2026-08-19 确认**：`sections/08_ai_use.tex`
+按 ICLR 2027 AI Policy 的 required / recommended 两类清单写成，作者确认
+逐句对本项目为真。如此后 AI 使用范围变更，提交前同步更新。
 
 原 ICML 双栏 8 页模板与旧 `main.tex` 保留在 `venue_icml_fallback/`，正文不依赖它们。
 
 ### dual submission 提醒
 
-ICLR 与 NeurIPS 都禁止并行在审。NeurIPS 11628 的作者通知日是 **2026-09-24**，
-晚于 ICLR 摘要截稿 **09-18**。在 09-24 之前向 ICLR 提交（含摘要）需要先主动撤回
-NeurIPS 稿；这是作者本人的决定，本包不替你做。
+ICLR 2027 FAQ 明确允许 NeurIPS 待定期间先提交 ICLR 摘要，重复投稿检查只针对
+全文。NeurIPS 11628 于 **2026-09-24 AoE** 通知，早于 ICLR 全文截止
+**2026-09-25 AoE**，因此时间线本身不要求提前撤稿。
+
+当前 ICLR 稿已对 `../paper/` 做逐项差异审计：中心理论、固定范围识别、
+table--weights co-adaptation 与成熟模型证据都是新主线，EVQ-Cosh 降为其中一个
+构造性实例；当前判定为独立续作，而非 substantially similar 的重投。若
+NeurIPS 接收，在 ICLR 全文中以第三人称引用已接收工作并明确新增贡献；
+若拒稿，无需这一引用动作。
 
 ## 这一版改了什么（对应审稿意见）
 
@@ -84,11 +95,12 @@ iclr2027_conference.sty/.bst  官方 ICLR 2027 模板（原样）
 venue_icml_fallback/        旧 ICML 模板与旧 main.tex，未被引用
 compile.sh / build.mk       构建 + 自动合规检查（页数/未定义引用/溢出/匿名性）
 sections/
-  01_intro.tex              重写：spectral budget → identification → derivation → scale
+  00_abstract.tex           fixed-range allocation → co-adaptation → mature scale
+  01_intro.tex              单一主线：full basis → identification → trained use
   02_related.tex            重写：FMRoPE / LeRoPE / AdaRoPE 准确定位
-  03_theory.tex             分层：surrogate theorem → inverse CDF → operating rule
-  04_experiments.tex        重写：exact-range → mature endpoints → attribution → composition
-  05_discussion.tex         围绕 finite spectral budget 收束
+  03_theory.tex             full sin/cos geometry → obstruction → closed-form construction
+  04_experiments.tex        exact-range/M4 → mature endpoints → operating-rule attribution
+  05_discussion.tex         static basis、trained use、range transport 与 LeRoPE
   06_ethics.tex / 07_reproducibility.tex / 08_ai_use.tex  ICLR 声明（不计页数）
 tables/
   table_layers.tex          新增：三层参数化

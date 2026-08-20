@@ -1,4 +1,4 @@
-"""Build the ICML method overview from analytic schedules and verified headline results."""
+"""Build the ICLR method overview from analytic schedules and verified headline results."""
 
 from pathlib import Path
 
@@ -37,59 +37,48 @@ plt.rcParams.update({
 })
 
 base, K, tau = 500_000.0, 64, 2.0
-L, M = 4096, 32768
+L = 4096
 k = np.arange(K)
-phi_geo = k / K
+phi_geo = k / (K - 1)
 phi_evq = evq_phi(k, K, tau)
-phi_L = np.log(L / (2 * np.pi)) / np.log(base)
-phi_M = np.log(M / (2 * np.pi)) / np.log(base)
+phi_slow = np.log(L) / np.log(base)
+slow = base ** (-phi_geo) * L <= 1
 
-
-def counts(phi: np.ndarray) -> tuple[int, int, int]:
-    wavelength = 2 * np.pi * base**phi
-    return (
-        int(np.sum(wavelength <= L)),
-        int(np.sum((wavelength > L) & (wavelength <= M))),
-        int(np.sum(wavelength > M)),
-    )
-
-
-assert counts(phi_geo) == (32, 10, 22)
-assert counts(phi_evq) == (43, 8, 13)
+assert int(np.sum(slow)) == 24
 assert np.all(np.diff(phi_evq) > 0)
 
 fig = plt.figure(figsize=(7.25, 2.12))
 gs = fig.add_gridspec(1, 3, width_ratios=[1.35, 0.9, 1.35], wspace=0.36)
 
-# (a) The actual finite-channel budget in a mature configuration.
+# (a) Low-frequency collapse in a standard finite table.
 ax = fig.add_subplot(gs[0, 0])
-ax.axvspan(0, phi_L, color="#EAF3FA", zorder=0)
-ax.axvspan(phi_L, phi_M, color="#FFF2D9", zorder=0)
-ax.axvspan(phi_M, 1, color="#F1EDF7", zorder=0)
-ax.axvline(phi_L, color="#A6ADB4", lw=0.65, ls="--")
-ax.axvline(phi_M, color="#A6ADB4", lw=0.65, ls="--")
-ax.scatter(phi_geo, np.full(K, 0.67), s=7.5, color=BLUE, edgecolor="white", lw=0.22, zorder=3)
-ax.scatter(phi_evq, np.full(K, 0.28), s=8.0, marker="s", color=ORANGE,
-           edgecolor="white", lw=0.22, zorder=3)
-ax.text(-0.025, 0.67, "Geo", ha="right", va="center", color=BLUE, weight="bold")
-ax.text(-0.025, 0.28, "EVQ", ha="right", va="center", color=ORANGE, weight="bold")
-centers = [phi_L / 2, (phi_L + phi_M) / 2, (phi_M + 1) / 2]
-headers = ["completed cycle", "transition", "slow at 32K"]
-for x, header in zip(centers, headers):
-    ax.text(x, 0.98, header, ha="center", va="top", fontsize=6.3, color=INK)
-for x, g, e in zip(centers, counts(phi_geo), counts(phi_evq)):
-    ax.text(x, 0.04, f"{g} → {e}", ha="center", va="bottom", fontsize=7,
-            color=INK, weight="bold")
-ax.text(0.5, -0.17, "same 64 channels; different allocation",
+ax.axvspan(0, phi_slow, color="#EAF3FA", zorder=0)
+ax.axvspan(phi_slow, 1, color="#FBE9E5", zorder=0)
+ax.axvline(phi_slow, color="#A6ADB4", lw=0.7, ls="--")
+ax.scatter(phi_geo[~slow], np.full(np.sum(~slow), 0.62), s=8.0,
+           color=BLUE, edgecolor="white", lw=0.22, zorder=3)
+ax.scatter(phi_geo[slow], np.full(np.sum(slow), 0.62), s=8.0,
+           color=ORANGE, edgecolor="white", lw=0.22, zorder=3)
+ax.text(phi_slow / 2, 0.93, "40 faster pairs", ha="center", va="top",
+        fontsize=7, color=BLUE, weight="bold")
+ax.text((phi_slow + 1) / 2, 0.93, "24 slow pairs", ha="center", va="top",
+        fontsize=7, color=ORANGE, weight="bold")
+ax.text((phi_slow + 1) / 2, 0.28,
+        "48 nominal dimensions\n"
+        r"$\longrightarrow\ r_2=2.00$",
+        ha="center", va="center", fontsize=7.2, color=INK,
+        bbox=dict(boxstyle="round,pad=0.30", facecolor="white",
+                  edgecolor="#D8A79B", lw=0.7))
+ax.text(0.5, -0.17, r"slow means $\omega L\leq1$; redundant, not unused",
         transform=ax.transAxes, ha="center", color=MUTED, style="italic")
-ax.set_xlim(-0.08, 1.01)
+ax.set_xlim(-0.01, 1.01)
 ax.set_ylim(0, 1.03)
 ax.set_yticks([])
-ax.set_xticks([0, phi_L, phi_M, 1])
-ax.set_xticklabels(["fast", r"$\lambda=L$", r"$\lambda=M$", "slow"])
+ax.set_xticks([0, phi_slow, 1])
+ax.set_xticklabels(["fast", r"$\omega L=1$", "slow"])
 ax.tick_params(axis="x", length=2.5, pad=2)
 ax.spines[["left", "right", "top"]].set_visible(False)
-ax.set_title("(a) A finite spectral budget", weight="bold", pad=5)
+ax.set_title("(a) Static low-frequency collapse", weight="bold", pad=5)
 
 # (b) Closed-form inverse-CDF construction.
 ax = fig.add_subplot(gs[0, 1])
@@ -112,7 +101,7 @@ ax.legend(frameon=False, loc="upper left", handlelength=1.7, borderpad=0.1)
 ax.grid(color="#E5E8EB", lw=0.5)
 ax.set_title("(b) Closed form", weight="bold", pad=5)
 
-# (c) The two controls that isolate the scientific claim.
+# (c) The controls that connect geometry to trained behaviour.
 ax = fig.add_subplot(gs[0, 2])
 ax.axis("off")
 box = dict(boxstyle="round,pad=0.42", facecolor="#F7F9FB", edgecolor="#C7D0D8", lw=0.75)
@@ -125,13 +114,13 @@ ax.text(0.5, 0.77,
 ax.annotate("", xy=(0.5, 0.49), xytext=(0.5, 0.57),
             arrowprops=dict(arrowstyle="-|>", color=ORANGE, lw=1.35))
 ax.text(0.5, 0.26,
-        "MATCH PHASE EXPOSURE AT 1.485B\n"
-        "same Q/K adaptation and 4K/8K/16K phases\n"
-        "8K RULER: 2.02% → 31.63%",
+        "CROSS WEIGHTS × RUNTIME TABLE\n"
+        "self-consistent PPL: 7.14 / 7.16\n"
+        "post-hoc swaps: 76.20 / 23.05",
         ha="center", va="center", color=INK, bbox=box, linespacing=1.28)
-ax.text(0.5, 0.02, "allocation remains binding under both controls",
+ax.text(0.5, 0.02, "allocation is real; trained use is table-conditioned",
         ha="center", va="bottom", color=ORANGE, weight="bold")
-ax.set_title("(c) Two controls isolate allocation", weight="bold", pad=5)
+ax.set_title("(c) Identification and co-adaptation", weight="bold", pad=5)
 
 fig.savefig(OUT, bbox_inches="tight", pad_inches=0.025)
 print(f"wrote {OUT}")

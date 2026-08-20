@@ -2,7 +2,7 @@
 
 - **日期：** 2026-08-19
 - **状态：** 理论与 CPU 诊断已完成；新总 claim 尚未写入论文正文
-- **用途：** ICML 2027 核心理论重构、证据路由和跨上下文续作
+- **用途：** ICLR 2027 核心理论重构、证据路由和跨上下文续作
 
 ## 技术摘要
 
@@ -513,7 +513,8 @@ A^\top R_{\Omega'}(\Delta)B=R_\Omega(\Delta)
 \]
 
 对某个含开区间的 \(\Delta\) 集合恒成立，则 \(\Omega'\) 与 \(\Omega\) 必须
-拥有相同 frequency multiset，仅允许符号、排列与 pair 内基变换。
+拥有相同 frequency multiset，仅允许符号与排列。频率重复时，相似变换可在整个
+等频不变子空间内混合，而不必保留原始的二维 pair 分块。
 
 证明已记录在
 `rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md`：
@@ -552,8 +553,8 @@ EVQ-Cosh 保留三个角色：
   `-0.47750/-0.20499/-0.11284`，三 seed aggregate 的原始 per-seed 文件仍缺失，
   所以不使用未拥有的置信区间或显著性语言。
 - **M4 factorial：** 12 structural configurations × 3 seeds；1.25× Cosh 在
-  `10/12`、matched exponential 在 `9/12` 配置优于 uniform；Cosh 与 Exp
-  差 `+0.000740 NLL`、`p=.836`。支持 non-geometric allocation axis，不支持
+  `10/12`、matched exponential 在 `9/12` 配置优于 uniform；formula Cosh
+  与 Exp 差 `+0.000740 NLL`、`p=.836`。支持 non-geometric allocation axis，不支持
   Cosh shape 唯一性。
 - **1.485B phase-matched adaptation：** Native 与 EVQ 使用相同 Q/K adaptation
   和 phase exposure；8K RULER `2.02 vs 31.63`。支持训练期 table 约束不能由
@@ -632,7 +633,8 @@ CUDA_VISIBLE_DEVICES='' conda run --no-capture-output -n aidemo \
 5. base-only control 是 frozen-checkpoint 推理诊断，不等于从头以该 base 训练。
 6. LeRoPE 是并行工作；不能暗示我们的表优于其 learned/fixed tables，因为没有
    matched direct comparison。
-7. 官方 ICML 2027 模板尚未发布；`paper-2027/icml2027.*` 仍是占位版。
+7. ICLR 2027 官方模板已逐文件核验；旧 ICML 模板仅保留在
+   `paper-2027/venue_icml_fallback/`，不参与构建。
 
 ---
 

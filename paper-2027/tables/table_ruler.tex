@@ -5,7 +5,8 @@
 \renewcommand{\arraystretch}{0.91}
 \caption{\textbf{RULER $13$-family scores (\%).}
 Within each protocol, continuation data and evaluation are matched and one seed
-is used per arm. OLMo Q/K-only freezes inherited V/O LoRA and trains only the
+is used per arm; evaluation uses $20$ examples per family and length. OLMo
+Q/K-only freezes inherited V/O LoRA and trains only the
 tensors RoPE acts on; LLaMA uses matched Q/K/V/O LoRA. Training and evaluation
 rows are disjoint but share the $13$ generator families: task-adapted length
 transfer, not unseen-task transfer.}
@@ -16,16 +17,16 @@ transfer, not unseen-task transfer.}
 Model / protocol & Arm / metric & $1\times$ & $2\times$ & $4\times$ \\
 \midrule
 \multirow{2}{*}{OLMo-2 $1.485$B, full Q/K/V/O ($4$K cap)}
- & Native, official macro & $\mathbf{82.16}$ & $0.08$ & $0$ \\
- & \evq{}, official macro & $37.51$ & $\mathbf{21.29}$ & $\mathbf{6.13}$ \\
+ & Native, official-scorer macro & $\mathbf{82.16}$ & $0.08$ & $0$ \\
+ & \evq{}, official-scorer macro & $37.51$ & $\mathbf{21.29}$ & $\mathbf{6.13}$ \\
 \addlinespace[2pt]
 \multirow{2}{*}{OLMo-2 $1.485$B, Q/K-only ($4$K cap)}
- & Native, official macro & $\mathbf{72.19}$ & $2.02$ & $0.38$ \\
- & \evq{}, official macro & $42.44$ & $\mathbf{31.63}$ & $\mathbf{5.03}$ \\
+ & Native, official-scorer macro & $\mathbf{72.19}$ & $2.02$ & $0.38$ \\
+ & \evq{}, official-scorer macro & $42.44$ & $\mathbf{31.63}$ & $\mathbf{5.03}$ \\
 \addlinespace[2pt]
 \multirow{4}{*}{LLaMA-3-8B, Q/K/V/O ($8$K cap)}
- & Native, official macro & $\mathbf{94.44}$ & $0.295$ & --- \\
- & \evq{}, official macro & $77.60$ & $\mathbf{14.03}$ & --- \\
+ & Native, official-scorer macro & $\mathbf{94.44}$ & $0.295$ & --- \\
+ & \evq{}, official-scorer macro & $77.60$ & $\mathbf{14.03}$ & --- \\
  & Native, normalized exact & $17.69$ & $0$ & --- \\
  & \evq{}, normalized exact & $\mathbf{21.54}$ & $\mathbf{1.54}$ & --- \\
 \bottomrule

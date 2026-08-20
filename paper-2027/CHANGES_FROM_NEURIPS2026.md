@@ -1,4 +1,4 @@
-# NeurIPS 2026 (#11628) → ICML 2027：逐条对照
+# NeurIPS 2026 (#11628) → ICLR 2027：逐条对照
 
 **这份文档不进 PDF。** 它记录每个改动对应哪条审稿意见，以及每个数字的 owner 文件。
 
@@ -19,17 +19,39 @@
 
 ## 2. 结构改动
 
-| | NeurIPS 2026 | ICML 2027 |
+| | NeurIPS 2026 | ICLR 2027 |
 |---|---|---|
 | 标题 | EVQ-Cosh: Variational Frequency Allocation for RoPE | **RoPE Has a Spectral Budget** |
-| Primary I | EVQ×YaRN 454M | **exact-range 识别实验**（151.9M raw-backed seed 42 + 50.9M 12-config × 3-seed factorial）|
-| Primary II | PE-dominant vs DAPE | **成熟模型 1.485B / 8B + RULER** |
-| Primary III | MLA 432M | schedule / $\tau$ attribution（M4 + matched exponential）|
-| Primary IV | — | EVQ×RAMP 454M + MLA scarce-channel evidence |
+| Primary theory | Cosh surrogate | **full sin/cos subspace geometry、stable-rank identity、low-frequency collapse、exact transplant obstruction** |
+| Primary I | EVQ×YaRN 454M | **exact-range allocation identification**（151.9M raw-backed seed 42 + 50.9M 12-config × 3-seed factorial）|
+| Primary II | PE-dominant vs DAPE | **50M table-by-weights co-adaptation + 1.485B / 8B RULER** |
+| Construction | Cosh as general answer | **EVQ-Cosh as one closed-form, zero-learned-parameter instance** |
 | 退役 | — | PE-dominant learned-parameter 对照 → App. E |
 | Related Work | 三轴（operator / inference / allocation-analysis）| 非互斥 intervention levels + learned tables（LeRoPE / AdaRoPE）|
-| 正文页数 | 9（NeurIPS）| 8（ICML；上限 8）|
-| 尾部 | NeurIPS Checklist | **Impact Statement** |
+| 正文页数 | 9（NeurIPS）| 9（ICLR submission 上限）|
+| 尾部 | NeurIPS Checklist | **AI use / Ethics / Reproducibility statements** |
+
+### 2.1 Dual-submission distinctness audit（2026-08-19）
+
+对比对象是 NeurIPS baseline `paper/main.pdf`
+(`fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`) 与当前
+ICLR PDF `paper-2027/main.pdf`
+(`1976db729a45d58002d6a73b2f6c2ad8a663095bd24d508820f13b100d8faa23`)。
+
+- 科学主线：旧稿的主贡献是 EVQ-Cosh 构造、操作规则与三类机制实验；
+  新稿的主贡献是 full-sin/cos 有限基几何、exact stable-rank identity、
+  low-frequency collapse、exact transplant obstruction、fixed-range
+  identification、$50$M $2\times2$ co-adaptation 与 $1.485$B/$8$B 证据链。
+- 方法与证据边界：EVQ-Cosh 及部分旧实验仍保留，但前者已明确降为
+  新理论轴上的一个构造性实例，后者主要作为附录支持，不再承担新稿的
+  中心识别主张。
+- 机械文本检查（只是 sanity check，不代替科学内容判定）：精确
+  $8$-word shingles 在新稿九页主文中的重合率为 $1.02\%$；含引用与附录的
+  全文为 $18.14\%$，后者包含保留的构造、实验细节和支持证据。
+
+结论：当前稿是有共同方法根基但主 claim、主理论与主证据均已更换的独立续作，
+不是旧稿的文本或结果重包装。若 NeurIPS 接收，ICLR 稿需以第三人称引用该工作并
+明确贡献边界；这是引用与定位要求，不是由时间线产生的撤稿要求。
 
 ## 3. 两处必改问题的处理
 

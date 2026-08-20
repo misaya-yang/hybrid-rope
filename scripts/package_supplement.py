@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a curated anonymous NeurIPS supplement archive.
+"""Build a curated anonymous reviewer supplement archive.
 
 This intentionally does not archive the repository root.  It copies only the
 paper source, public EVQ-Cosh library code, primary reproduction entrypoints,
@@ -18,10 +18,13 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_OUTPUT = ROOT / "evq-cosh-neurips2026-supplement.zip"
+DEFAULT_OUTPUTS = {
+    "neurips2026": ROOT / "evq-cosh-neurips2026-supplement.zip",
+    "iclr2027": ROOT / "rope-spectral-budget-iclr2027-supplement.zip",
+}
 STAGE = ROOT / "build_supplement"
 
-ALLOWLIST = [
+NEURIPS2026_ALLOWLIST = [
     "README.md",
     "requirements.txt",
     "requirements-lock.txt",
@@ -56,6 +59,65 @@ ALLOWLIST = [
     "scripts/supporting_eval/eval_passkey_scratch.py",
     "tests",
 ]
+
+ICLR2027_ALLOWLIST = [
+    "README.md",
+    "requirements.txt",
+    "requirements-lock.txt",
+    "pytest.ini",
+    ".github/workflows/smoke.yml",
+    "docs/overview/REPRODUCE.md",
+    "docs/overview/DATA_PREPARATION.md",
+    "docs/overview/PAPER_CLAIMS_MAP.md",
+    "data/curated",
+    "paper-2027/main.tex",
+    "paper-2027/iclr2027_conference.sty",
+    "paper-2027/iclr2027_conference.bst",
+    "paper-2027/natbib.sty",
+    "paper-2027/fancyhdr.sty",
+    "paper-2027/algorithm.sty",
+    "paper-2027/algorithmic.sty",
+    "paper-2027/math_commands.tex",
+    "paper-2027/sections",
+    "paper-2027/appendix",
+    "paper-2027/tables",
+    "paper-2027/refs",
+    "paper-2027/figs/fig_method_overview.pdf",
+    "paper-2027/figs/fig_identification.pdf",
+    "paper-2027/figs/make_fig_method_overview.py",
+    "paper-2027/figs/make_fig_identification.py",
+    "scripts/__init__.py",
+    "scripts/lib",
+    "scripts/analysis/full_rope_collision_audit.py",
+    "scripts/analysis/attention_fisher_50m_probe.py",
+    "scripts/analysis/base_only_50m_control.py",
+    "scripts/analysis/ruler_family_bootstrap.py",
+    "scripts/core_text_phases/__init__.py",
+    "scripts/core_text_phases/run_evq_sweep.py",
+    "scripts/core_text_phases/eval_dsr.py",
+    "scripts/core_text_phases/phase16_formula_optimality_sweep.py",
+    "scripts/core_text_phases/phase16_exact_range_factorial_m4.py",
+    "scripts/supporting_eval/__init__.py",
+    "scripts/supporting_eval/eval_passkey_scratch.py",
+    "tests/test_rope_core.py",
+    "tests/test_fmrope_125m_l256_500m.py",
+    "experiments/native_rope_evq_150m/model.py",
+    "rebuttal/rebuttal_0723/experiments/geo_rope_contract.py",
+    "rebuttal/rebuttal_0723/experiments/fmrope_125m_l256_500m/__init__.py",
+    "rebuttal/rebuttal_0723/experiments/fmrope_125m_l256_500m/prepare.py",
+    "rebuttal/rebuttal_0723/experiments/fmrope_125m_l256_500m/protocol.py",
+    "rebuttal/rebuttal_0723/experiments/fmrope_125m_l256_500m/run_experiment.py",
+    "rebuttal/rebuttal_0723/theory_results/m4_exact_range_factorial_evidence_20260726.json",
+    "rebuttal/rebuttal_0723/theory_results/llama8b_matched_ruler_mix_20260726.json",
+    "rebuttal/rebuttal_0723/theory_results/olmo2_qk_phase_adaptation_20260729/metrics.json",
+    "rebuttal/rebuttal_0723/theory_results/olmo2_qk_phase_adaptation_20260729/ruler13_native_examples.jsonl",
+    "rebuttal/rebuttal_0723/theory_results/olmo2_qk_phase_adaptation_20260729/ruler13_evq_examples.jsonl",
+]
+
+PROFILES = {
+    "neurips2026": NEURIPS2026_ALLOWLIST,
+    "iclr2027": ICLR2027_ALLOWLIST,
+}
 
 EXCLUDE_NAMES = {
     "__pycache__",
@@ -139,15 +201,17 @@ def write_zip(stage: Path, output: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--profile", choices=PROFILES, default="neurips2026")
+    parser.add_argument("--output", type=Path)
     parser.add_argument("--keep-stage", action="store_true")
     args = parser.parse_args()
+    output = args.output or DEFAULT_OUTPUTS[args.profile]
 
     if STAGE.exists():
         shutil.rmtree(STAGE)
     STAGE.mkdir(parents=True)
 
-    for rel in ALLOWLIST:
+    for rel in PROFILES[args.profile]:
         copy_item(rel, STAGE)
 
     hits = scan_for_leaks(STAGE)
@@ -162,8 +226,8 @@ def main() -> None:
             print(f"TRACE-ONLY-CHECK-FAIL {hit}")
         raise SystemExit("Trace-only evidence must not enter the reviewer supplement.")
 
-    write_zip(STAGE, args.output)
-    print(f"Wrote {args.output}")
+    write_zip(STAGE, output)
+    print(f"Wrote {output}")
 
     if not args.keep_stage:
         shutil.rmtree(STAGE)

@@ -3,7 +3,7 @@
 #   ./compile.sh            full build + compliance report
 #   ./compile.sh clean      remove build artefacts
 #
-# Engine: pdflatex if present, else tectonic (this machine has tectonic only).
+# Engine: pdflatex if present, else tectonic.
 # NOTE on tectonic: it runs XeTeX, so line breaking can differ by a line or two
 # from a pdflatex build.  Treat a body ending exactly on page 9 as tight, not
 # safe; re-check on a full TeX Live install before submitting.
@@ -56,9 +56,11 @@ for req in "AI use statement" "Ethics statement" "Reproducibility statement"; do
 done
 
 # --- 3. undefined references / citations ---
-UNDEF=$( { grep -oE "(Reference|Citation) .[^']*. undefined" "$MAIN.log" || true; } | sort -u | wc -l | tr -d " ")
+UNDEF=$(grep -Ec '^LaTeX Warning: (Reference|Citation).*undefined' "$MAIN.log" || true)
+UNDEF=${UNDEF:-0}
 echo "undefined refs/cites   : $UNDEF"
-{ grep -oE "(Reference|Citation) .[^']*. undefined" "$MAIN.log" || true; } | sort -u | sed 's/^/    /'
+grep -E '^LaTeX Warning: (Reference|Citation).*undefined' "$MAIN.log" \
+  | sort -u | sed 's/^/    /' || true
 [ "$UNDEF" -eq 0 ] || FAIL=1
 
 # --- 4. layout overflow ---

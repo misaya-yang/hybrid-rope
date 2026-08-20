@@ -204,6 +204,24 @@ The latter would require a different Native-local plus far-only EVQ residual
 attention operator. That design is not the intervention tested here and would
 constitute a new attention method rather than ordinary EVQ-LoRA.
 
+## Evaluation-row uncertainty reanalysis
+
+A deterministic paired family-stratified bootstrap resamples the 20 matched
+rows within each of the 13 family/length cells, recomputes each family mean,
+and then recomputes the official macro. With 10,000 draws and seed `20260820`,
+the EVQ-minus-Native macro differences are:
+
+| Length | Difference (percentage points) | 95% evaluation bootstrap CI |
+| --- | ---: | ---: |
+| 4K | -29.75 | [-34.42, -24.85] |
+| 8K | +29.61 | [+26.54, +32.74] |
+| 16K | +4.65 | [+3.17, +6.38] |
+
+These intervals condition on the single trained adapter pair. They quantify
+finite evaluation-row uncertainty, not training-seed variability. The analysis
+is reproduced by `scripts/analysis/ruler_family_bootstrap.py` (SHA-256
+`b7470c4b9f1d47b5b6e28dd1dd39c606b2e525d5463ab881e083dff3ea824f56`).
+
 ## Provenance
 
 The machine-readable metrics and full per-example generations are in

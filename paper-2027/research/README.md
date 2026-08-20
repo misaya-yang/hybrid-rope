@@ -1,4 +1,4 @@
-# ICML 2027 research index
+# ICLR 2027 research index
 
 This directory is the durable internal research layer for the active
 `paper-2027/` manuscript. It is not submission prose. Raw experiments remain
@@ -10,7 +10,7 @@ entire NeurIPS rebuttal history.
 
 1. [`../../AGENTS.md`](../../AGENTS.md) — project rules, acceptance objective,
    evidence boundaries, and paper-work routing.
-2. [`ICML2027_RESEARCH_SYNTHESIS_20260819.md`](ICML2027_RESEARCH_SYNTHESIS_20260819.md)
+2. [`ICLR2027_RESEARCH_SYNTHESIS_20260819.md`](ICLR2027_RESEARCH_SYNTHESIS_20260819.md)
    — current claim architecture and the decision record for the coming rewrite.
 3. [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)
    — canonical derivations, finite-K counterexamples, 50M 2x2 probe,
@@ -24,11 +24,12 @@ entire NeurIPS rebuttal history.
 
 ## Current paper-facing decision
 
-The general claim is no longer “EVQ-Cosh is the optimal RoPE table.” It is:
+The paper's central claim is no longer “EVQ-Cosh is the optimal RoPE table.” It is:
 
-> A finite RoPE table is a training-time coordinate system. Its full sin/cos
-> subspace geometry bounds positional identifiability, while model weights
-> co-adapt to the table used during training.
+> Even at a fixed spectral range, the interior allocation of a finite RoPE
+> table is an independent training-time design variable. It changes the full
+> sin/cos subspace geometry and trained behaviour, while model weights co-adapt
+> to the table they see during training.
 
 EVQ-Cosh remains a closed-form, zero-learned-parameter construction and a
 controlled intervention for identifying the allocation axis. It is not the

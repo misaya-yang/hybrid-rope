@@ -1,33 +1,37 @@
 \section{Discussion}
 \label{sec:discussion}
 
-RoPE assigns a finite number of rotary channels to a continuous spectral range,
-and Theorem~\ref{thm:budget} says what that costs: usable positional dimension
-is the nominal $2K$ deflated by the mean redundancy $\bar c$. The exact-range
-experiment shows the deflation is not fixed by the operator, its base, or its
-sampled endpoints --- moving only the interior channels changes the trained
-model. Frequency allocation is a design decision, not an implementation detail,
-and \evq{} is one closed-form, zero-parameter way to exercise it.
+A finite RoPE table has two properties that should not be conflated. Its full
+sin/cos Gram determines a static positional basis, for which
+Theorem~\ref{thm:budget} gives an exact stable-rank accounting. Its trained
+value depends on how model weights use that basis. The exact-range controls
+connect these layers without identifying them: holding the sampled range fixed
+while moving only interior channels changes the trained model, but a table with
+higher static rank can still be catastrophically wrong for weights trained in
+another coordinate system.
 
-Allocation and range transport act at different times on different objects:
-allocation shapes the table a model is trained or adapted on, transport acts on
-that table at inference. The $\rs{}$ and MLA results show the substrate still
-matters after a range operator is applied and when few rotary pairs exist, and
-the phase-matched OLMo experiment separates allocation from exposure --- both
-arms receive identical target-$8$K/$16$K positions, data, updates, and trainable
-modules, yet Native reaches $2.02\%$ RULER at $8$K against $31.63\%$. The near
-tie at $4$K on 2Wiki exact ($22.0/21.5\%$) shows the in-window trade is
-task-dependent rather than a uniform loss of capability.
+This distinction explains why allocation must be installed during training or
+adaptation. The $50$M factorial crossing and mature-model comparisons show
+strong table-by-weights dependence, while Theorem~\ref{thm:obstruction} rules
+out exact preservation by fixed invertible Q/K maps when frequency multisets
+differ. The theorem does not preclude approximate retraining; instead it says
+why post-hoc replacement and training under a table are different
+interventions. The small from-initialisation in-window NLL differences and the
+large frozen-swap failures are therefore compatible.
 
-The budget accounting of \S\ref{sec:budget-shift} makes that trade falsifiable:
-thinning the intermediate $L<\lambda\le M$ band should cost more on simultaneous
-multi-reference resolution than on single-reference retrieval, and a post-hoc
-split of the named NIAH families agrees in direction ($-21.7$ against $-52.3$
-points at $4$K). What the theory supplies is a budget identity, its slow-end collapse, and an
-exact obstruction to repairing a table swap after training; what it does not
-supply is a preferred curve or a certified operating point. That division is the
-durable part: operator design,
-spectral allocation, and deployment-time transport are distinct, composable
-parts of a positional-encoding system. A RoPE table spends a finite spectral
-budget, and where its interior channels land should be chosen deliberately,
-before that budget is transported.
+Allocation also differs from range transport. The former chooses which finite
+channels a model trains against; the latter changes how a realised spectrum is
+deployed at a target length. In the exact-range experiment, target-aware
+retargeting is the stronger lever once range is allowed to vary. LeRoPE supplies
+the complementary learned-table result: a table obtained in one run retains
+substantial value when frozen for a new training run
+\citep{karypis2026lerope}. Our contribution is the phase-invariant finite-basis
+geometry, fixed-range causal identification, exact frozen-retrofit obstruction,
+and a closed-form point on the allocation axis.
+
+No static geometry in this paper is an extrapolation guarantee, and neither the
+surrogate nor the experiments make Cosh a unique task optimum. \evq{} is useful
+because it is analytic, zero-learned-parameter, and reproducible. The broader
+result is simpler: at finite $K$, interior frequency placement is part of the
+training design, and evaluating it requires both basis geometry and the model
+trained to use that basis.
