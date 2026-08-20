@@ -40,8 +40,14 @@ class TestProtocol(unittest.TestCase):
         }[SPEC.model_tier]
         self.assertEqual(estimate_parameter_count(), expected_parameters)
         expected_budget = {
-            "151m": (7_629, 1_953_024, 499_974_144, 498_021_120, 30_516, 762),
-            "350m": (15_258, 3_906_048, 999_948_288, 996_042_240, 61_032, 1_525),
+            "151m": (
+                7_629, 1_953_024, 499_974_144, 498_021_120,
+                7_629 * SPEC.grad_accum_steps, 762,
+            ),
+            "350m": (
+                15_258, 3_906_048, 999_948_288, 996_042_240,
+                15_258 * SPEC.grad_accum_steps, 1_525,
+            ),
         }[SPEC.model_tier]
         self.assertEqual(
             (

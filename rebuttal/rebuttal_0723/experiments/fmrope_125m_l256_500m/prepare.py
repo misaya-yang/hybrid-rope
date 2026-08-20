@@ -400,9 +400,10 @@ def validate_experiment_manifest(
 ) -> None:
     if int(manifest.get("schema_version", -1)) != SCHEMA_VERSION:
         raise ValueError("experiment manifest schema_version mismatch")
+    # The prepared tensors depend on the global batch and row order, not on
+    # how that batch is split across gradient-accumulation micro-steps.
     compatible_protocols = {
-        SPEC.fingerprint(),
-        replace(SPEC, seed=42).fingerprint(),
+        replace(SPEC, seed=42, micro_batch_size=64).fingerprint(),
     }
     if manifest.get("protocol_sha256") not in compatible_protocols:
         raise ValueError("experiment manifest protocol fingerprint mismatch")

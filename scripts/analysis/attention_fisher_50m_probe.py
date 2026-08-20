@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
 import math
@@ -84,6 +85,77 @@ def _empirical_fisher(jacobian: torch.Tensor, logit_gradient: torch.Tensor) -> t
     """Per-head (J^T g_z)(J^T g_z)^T for the observed LM-loss gradient."""
     projected = torch.einsum("hn,hnd->hd", logit_gradient, jacobian)
     return torch.einsum("hi,hj->hij", projected, projected)
+
+
+def _kappa_att(
+    probabilities: list[torch.Tensor],
+    directions: list[torch.Tensor],
+) -> dict[str, float]:
+    """Eq. (37), using ratio-of-means over aligned head-query observations."""
+    if len(probabilities) != len(directions) or not probabilities:
+        raise ValueError("kappa inputs must be non-empty and aligned")
+    numerators = []
+    denominators = []
+    for probability, direction in zip(probabilities, directions):
+        probability = probability.double()
+        direction = direction.double()
+        if probability.shape != direction.shape or probability.ndim != 1:
+            raise ValueError("each kappa observation must be an aligned vector")
+        if not torch.isclose(probability.sum(), torch.tensor(1.0, dtype=torch.float64)):
+            raise ValueError("attention probability does not sum to one")
+        weighted_mean = torch.sum(probability * direction)
+        numerator = torch.sum(probability * direction.square()) - weighted_mean.square()
+        centered = direction - direction.mean()
+        denominator = torch.sum(centered.square())
+        numerators.append(max(float(numerator), 0.0))
+        denominators.append(float(denominator))
+    mean_numerator = float(np.mean(numerators))
+    mean_denominator = float(np.mean(denominators))
+    if mean_denominator <= 0.0:
+        raise FloatingPointError("zero unweighted direction variance")
+    kappa = mean_numerator / mean_denominator
+    if not math.isfinite(kappa) or kappa <= 0.0:
+        raise FloatingPointError(f"invalid kappa_att: {kappa}")
+    return {
+        "mean_attention_weighted_variance": mean_numerator,
+        "mean_unweighted_centered_norm_sq": mean_denominator,
+        "kappa_att": kappa,
+        "L_eff_J": 1.0 / kappa,
+        "observations": len(probabilities),
+    }
+
+
+def _spearman(left: list[float], right: list[float]) -> float:
+    """Spearman correlation with average ranks for ties."""
+    def ranks(values: list[float]) -> np.ndarray:
+        array = np.asarray(values, dtype=np.float64)
+        order = np.argsort(array, kind="mergesort")
+        result = np.empty(len(array), dtype=np.float64)
+        start = 0
+        while start < len(array):
+            stop = start + 1
+            while stop < len(array) and array[order[stop]] == array[order[start]]:
+                stop += 1
+            result[order[start:stop]] = (start + stop - 1) / 2.0
+            start = stop
+        return result
+
+    left_rank = ranks(left)
+    right_rank = ranks(right)
+    if np.std(left_rank) == 0.0 or np.std(right_rank) == 0.0:
+        return float("nan")
+    return float(np.corrcoef(left_rank, right_rank)[0, 1])
+
+
+def _kappa_self_check() -> None:
+    probability = [torch.full((4,), 0.25, dtype=torch.float64)]
+    direction = [torch.tensor([-2.0, -0.5, 1.0, 3.0], dtype=torch.float64)]
+    baseline = _kappa_att(probability, direction)["kappa_att"]
+    shifted_scaled = _kappa_att(probability, [7.0 * direction[0] + 11.0])["kappa_att"]
+    if not math.isclose(baseline, 0.25, abs_tol=1e-12):
+        raise AssertionError("uniform-attention kappa must equal 1/L")
+    if not math.isclose(baseline, shifted_scaled, abs_tol=1e-12):
+        raise AssertionError("kappa must be invariant to global shift and scale of g")
 
 
 def _summary(values: list[float] | np.ndarray) -> dict[str, float]:
@@ -221,6 +293,8 @@ def _probe_arm(
     path: Path,
     runtime_inv_freq: torch.Tensor,
     runtime_table: str,
+    baseline_inv_freq: torch.Tensor,
+    alternative_inv_freq: torch.Tensor,
     validation: torch.Tensor,
     starts: np.ndarray,
     query_positions: tuple[int, ...],
@@ -261,6 +335,11 @@ def _probe_arm(
     parity_error = None
     lm_parity_error = None
     frequency_derivative_error = None
+    finite_swap_formula_error = None
+    kappa_indices: list[tuple[int, int, int, int]] = []
+    kappa_probabilities: list[torch.Tensor] = []
+    kappa_first_order_directions: list[torch.Tensor] = []
+    kappa_finite_swap_directions: list[torch.Tensor] = []
     low_frequency_phase = (1.0, 0.5, 0.25, 0.125)
     low_frequency_deficits = {value: [] for value in low_frequency_phase}
     causal_mask = torch.triu(torch.ones((length, length), dtype=torch.bool), diagonal=1)
@@ -344,6 +423,8 @@ def _probe_arm(
                 gradient = capture["logits"].grad[0, :, query_position, :count].detach().double()
                 query = capture["query"][0].detach().double()
                 key = capture["key"][0].detach().double()
+                raw_query = capture["raw_query"][0].detach().double()
+                raw_key = capture["raw_key"][0].detach().double()
 
                 entropy = torch.exp(
                     -torch.sum(
@@ -369,6 +450,78 @@ def _probe_arm(
                     * inv_freq.double()[None, None, :]
                     / math.sqrt(head_dim)
                 )
+
+                raw_q1 = raw_query[:, query_position, :pairs]
+                raw_q2 = raw_query[:, query_position, pairs:]
+                raw_k1 = raw_key[:, :count, :pairs]
+                raw_k2 = raw_key[:, :count, pairs:]
+                real_alpha = raw_q1[:, None] * raw_k1 + raw_q2[:, None] * raw_k2
+                imag_alpha = raw_q2[:, None] * raw_k1 - raw_q1[:, None] * raw_k2
+                baseline_phase = torch.outer(delta, baseline_inv_freq.double())
+                alternative_phase = torch.outer(delta, alternative_inv_freq.double())
+                u = torch.arange(pairs, dtype=torch.float64) / pairs
+                h = -u * (1.0 - u) * (2.0 - u) / 6.0
+                first_order_direction = torch.sum(
+                    delta[None, :, None]
+                    * baseline_inv_freq.double()[None, None, :]
+                    * h[None, None, :]
+                    * (
+                        real_alpha * baseline_phase.sin()[None]
+                        + imag_alpha * baseline_phase.cos()[None]
+                    ),
+                    dim=-1,
+                ) / math.sqrt(head_dim)
+                finite_swap_direction = torch.sum(
+                    real_alpha
+                    * (alternative_phase.cos() - baseline_phase.cos())[None]
+                    - imag_alpha
+                    * (alternative_phase.sin() - baseline_phase.sin())[None],
+                    dim=-1,
+                ) / math.sqrt(head_dim)
+                for head in range(heads):
+                    kappa_indices.append((window_index, query_position, layer, head))
+                    kappa_probabilities.append(probability[head].clone())
+                    kappa_first_order_directions.append(
+                        first_order_direction[head].clone()
+                    )
+                    kappa_finite_swap_directions.append(
+                        finite_swap_direction[head].clone()
+                    )
+
+                if finite_swap_formula_error is None:
+                    key_positions = torch.arange(count, dtype=torch.float64)
+
+                    def rotated_scores(inv: torch.Tensor) -> torch.Tensor:
+                        query_phase = query_position * inv.double()
+                        key_phase = torch.outer(key_positions, inv.double())
+                        rotated_q1 = (
+                            raw_q1[0] * query_phase.cos()
+                            - raw_q2[0] * query_phase.sin()
+                        )
+                        rotated_q2 = (
+                            raw_q2[0] * query_phase.cos()
+                            + raw_q1[0] * query_phase.sin()
+                        )
+                        rotated_k1 = (
+                            raw_k1[0] * key_phase.cos()
+                            - raw_k2[0] * key_phase.sin()
+                        )
+                        rotated_k2 = (
+                            raw_k2[0] * key_phase.cos()
+                            + raw_k1[0] * key_phase.sin()
+                        )
+                        return torch.sum(
+                            rotated_q1[None] * rotated_k1
+                            + rotated_q2[None] * rotated_k2,
+                            dim=-1,
+                        ) / math.sqrt(head_dim)
+
+                    direct = rotated_scores(alternative_inv_freq) - rotated_scores(
+                        baseline_inv_freq
+                    )
+                    finite_swap_formula_error = float(
+                        torch.max(torch.abs(direct - finite_swap_direction[0]))
+                    )
                 matrices = {
                     "bare_softmax": _softmax_fisher(bare, probability),
                     "bare_empirical": _empirical_fisher(bare, gradient),
@@ -435,6 +588,10 @@ def _probe_arm(
         raise AssertionError(
             f"log-frequency Jacobian finite-difference check failed: {frequency_derivative_error}"
         )
+    if finite_swap_formula_error is None or finite_swap_formula_error > 2e-5:
+        raise AssertionError(
+            f"finite table-swap direction check failed: {finite_swap_formula_error}"
+        )
     for name in accumulators:
         accumulators[name] /= observations
         for layer in range(layers):
@@ -500,6 +657,7 @@ def _probe_arm(
             "manual_vs_sdpa_max_abs": parity_error,
             "manual_vs_fused_lm_loss_abs": lm_parity_error,
             "log_frequency_jacobian_finite_difference_max_abs": frequency_derivative_error,
+            "finite_table_swap_direction_max_abs": finite_swap_formula_error,
             "attention_effective_keys_mean": float(np.mean(attention_entropy)),
             "attention_effective_keys_median": float(np.median(attention_entropy)),
             "attention_max_probability_mean": float(np.mean(attention_max)),
@@ -529,6 +687,12 @@ def _probe_arm(
     internal = {
         "query_group_matrices": query_groups,
         "sampled_query_losses": np.asarray(sampled_query_losses, dtype=np.float64),
+        "kappa": {
+            "indices": kappa_indices,
+            "probabilities": kappa_probabilities,
+            "first_order_directions": kappa_first_order_directions,
+            "finite_swap_directions": kappa_finite_swap_directions,
+        },
     }
     return public, internal
 
@@ -553,9 +717,198 @@ def _effect_summary(values: np.ndarray) -> dict[str, float]:
     }
 
 
+def _kappa_outputs(
+    arms: dict[str, dict[str, object]],
+    internal: dict[str, dict[str, object]],
+    keys: dict[str, str],
+) -> dict[str, object]:
+    reference_alias = "geo_weights_geo_table"
+    reference = internal[keys[reference_alias]]["kappa"]
+    indices = reference["indices"]
+    directions = {
+        "first_order": reference["first_order_directions"],
+        "finite_swap": reference["finite_swap_directions"],
+    }
+    for alias, key in keys.items():
+        if internal[key]["kappa"]["indices"] != indices:
+            raise ValueError(f"kappa observation alignment changed for {alias}")
+
+    labels = {
+        "geo_weights_geo_table": ("Geo", "Geo", True),
+        "geo_weights_evq_table": ("Geo", "EVQ", False),
+        "evq_weights_geo_table": ("EVQ", "Geo", False),
+        "evq_weights_evq_table": ("EVQ", "EVQ", True),
+    }
+    cells = {}
+    layer_rows = []
+    head_rows = []
+    unique_layers = sorted({row[2] for row in indices})
+    unique_heads = sorted({row[3] for row in indices})
+    for alias, key in keys.items():
+        probabilities = internal[key]["kappa"]["probabilities"]
+        weights, table, self_consistent = labels[alias]
+        cell = {
+            "weights": weights,
+            "runtime_table": table,
+            "self_consistent": self_consistent,
+            "ppl": arms[key]["lm"]["ppl"],
+            "ln_ppl": arms[key]["lm"]["loss"],
+            "r2_static": arms[key]["static_geometry"]["block_whitened_stable_rank"],
+        }
+        for variant, values in directions.items():
+            cell[variant] = _kappa_att(probabilities, values)
+        cells[alias] = cell
+
+        for layer in unique_layers:
+            selected = [position for position, row in enumerate(indices) if row[2] == layer]
+            record = {
+                "cell": alias,
+                "weights": weights,
+                "runtime_table": table,
+                "layer": layer,
+            }
+            for variant, values in directions.items():
+                result = _kappa_att(
+                    [probabilities[position] for position in selected],
+                    [values[position] for position in selected],
+                )
+                record[f"kappa_att_{variant}"] = result["kappa_att"]
+                record[f"L_eff_J_{variant}"] = result["L_eff_J"]
+            layer_rows.append(record)
+
+        for layer in unique_layers:
+            for head in unique_heads:
+                selected = [
+                    position
+                    for position, row in enumerate(indices)
+                    if row[2] == layer and row[3] == head
+                ]
+                record = {
+                    "cell": alias,
+                    "weights": weights,
+                    "runtime_table": table,
+                    "layer": layer,
+                    "head": head,
+                }
+                for variant, values in directions.items():
+                    result = _kappa_att(
+                        [probabilities[position] for position in selected],
+                        [values[position] for position in selected],
+                    )
+                    record[f"kappa_att_{variant}"] = result["kappa_att"]
+                    record[f"L_eff_J_{variant}"] = result["L_eff_J"]
+                head_rows.append(record)
+
+    aliases = list(keys)
+    ln_ppl = [float(cells[alias]["ln_ppl"]) for alias in aliases]
+    robustness = {}
+    orderings = {}
+    for variant in directions:
+        values = [float(cells[alias][variant]["kappa_att"]) for alias in aliases]
+        self_values = [
+            float(cells[alias][variant]["kappa_att"])
+            for alias in aliases
+            if cells[alias]["self_consistent"]
+        ]
+        mismatch_values = [
+            float(cells[alias][variant]["kappa_att"])
+            for alias in aliases
+            if not cells[alias]["self_consistent"]
+        ]
+        separated = (
+            max(self_values) < min(mismatch_values)
+            or min(self_values) > max(mismatch_values)
+        )
+        rho = _spearman(values, ln_ppl)
+        order = [alias for _, alias in sorted(zip(values, aliases))]
+        orderings[variant] = order
+        robustness[variant] = {
+            "spearman_kappa_vs_ln_ppl": rho,
+            "absolute_spearman_is_one": math.isclose(abs(rho), 1.0, abs_tol=1e-12),
+            "self_consistent_vs_mismatch_separated": separated,
+            "tier1_pass": math.isclose(abs(rho), 1.0, abs_tol=1e-12) and separated,
+            "ascending_kappa_order": order,
+            "self_consistent_kappa_range": [min(self_values), max(self_values)],
+            "mismatch_kappa_range": [min(mismatch_values), max(mismatch_values)],
+        }
+    rankings_agree = orderings["first_order"] == orderings["finite_swap"]
+    selected = "first_order" if rankings_agree else "finite_swap"
+    return {
+        "definition": (
+            "kappa_att = mean[Var_{j~p_i}(g_i(j))] / "
+            "mean[||P_i g_i||_2^2]; ratio-of-means over layer/head/query"
+        ),
+        "g_reference_cell": reference_alias,
+        "g_fixed_across_all_four_cells": True,
+        "first_order_direction": "Eq. (35), baseline Geo frequencies and h(u)",
+        "finite_swap_direction": "Eq. (36), realized Geo-to-EVQ table difference",
+        "cells": cells,
+        "per_layer": layer_rows,
+        "per_layer_head": head_rows,
+        "robustness": {
+            **robustness,
+            "rankings_agree": rankings_agree,
+            "selected_primary_by_preregistered_rule": selected,
+            "selected_primary_tier1_pass": robustness[selected]["tier1_pass"],
+        },
+    }
+
+
+def _write_csv(path: Path, rows: list[dict[str, object]]) -> None:
+    if not rows:
+        raise ValueError(f"refusing to write empty CSV: {path}")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def _write_kappa_outputs(output_dir: Path, result: dict[str, object]) -> None:
+    kappa = result["kappa_att"]
+    selected = kappa["robustness"]["selected_primary_by_preregistered_rule"]
+    table_rows = []
+    for cell_name, cell in kappa["cells"].items():
+        table_rows.append({
+            "cell": cell_name,
+            "weights": cell["weights"],
+            "runtime_table": cell["runtime_table"],
+            "self_consistent": cell["self_consistent"],
+            "ppl": cell["ppl"],
+            "ln_ppl": cell["ln_ppl"],
+            "r2_static": cell["r2_static"],
+            "kappa_att": cell[selected]["kappa_att"],
+            "L_eff_J": cell[selected]["L_eff_J"],
+            "selected_direction": selected,
+            "kappa_att_first_order": cell["first_order"]["kappa_att"],
+            "L_eff_J_first_order": cell["first_order"]["L_eff_J"],
+            "kappa_att_finite_swap": cell["finite_swap"]["kappa_att"],
+            "L_eff_J_finite_swap": cell["finite_swap"]["L_eff_J"],
+        })
+    _write_csv(output_dir / "tier1_table2.csv", table_rows)
+    _write_csv(output_dir / "tier1_per_layer.csv", kappa["per_layer"])
+    _write_csv(output_dir / "tier1_per_head.csv", kappa["per_layer_head"])
+    robustness_rows = []
+    for variant in ("first_order", "finite_swap"):
+        record = kappa["robustness"][variant]
+        robustness_rows.append({
+            "direction": variant,
+            "spearman_kappa_vs_ln_ppl": record["spearman_kappa_vs_ln_ppl"],
+            "absolute_spearman_is_one": record["absolute_spearman_is_one"],
+            "self_consistent_vs_mismatch_separated": record[
+                "self_consistent_vs_mismatch_separated"
+            ],
+            "tier1_pass": record["tier1_pass"],
+            "ascending_kappa_order": "|".join(record["ascending_kappa_order"]),
+            "selected_primary": variant == selected,
+        })
+    _write_csv(output_dir / "tier1_robustness.csv", robustness_rows)
+
+
 def run(length: int, windows: int, bootstrap_samples: int = 500) -> dict[str, object]:
     if length != 512 or windows < 2:
         raise ValueError("this frozen probe requires length=512 and at least two windows")
+    _kappa_self_check()
     validation_path = RUN_ROOT / "val_tinystories_5000000.pt"
     validation = torch.load(validation_path, map_location="cpu", weights_only=True)
     if validation.ndim != 1 or len(validation) < length:
@@ -579,6 +932,8 @@ def run(length: int, windows: int, bootstrap_samples: int = 500) -> dict[str, ob
                 path,
                 runtime_inv_freq,
                 table,
+                tables["geometric_tau0"],
+                tables["evq_cosh_tau2.83"],
                 validation,
                 starts,
                 query_positions,
@@ -712,6 +1067,7 @@ def run(length: int, windows: int, bootstrap_samples: int = 500) -> dict[str, ob
         }
         for metric, effects in bootstrap_effects.items()
     }
+    kappa = _kappa_outputs(arms, internal, keys)
     return {
         "status": "CPU_ONLY_COMPLETE",
         "interpretation_boundary": (
@@ -738,6 +1094,7 @@ def run(length: int, windows: int, bootstrap_samples: int = 500) -> dict[str, ob
         "aggregate_factorial": aggregate_factorial,
         "layer_head_factorial": layer_head_factorial,
         "query_bootstrap_factorial": bootstrap,
+        "kappa_att": kappa,
     }
 
 
@@ -751,10 +1108,13 @@ def main() -> None:
         type=Path,
         default=Path("/tmp/attention_fisher_50m_probe_20260819.json"),
     )
+    parser.add_argument("--kappa-output-dir", type=Path)
     args = parser.parse_args()
     result = run(args.length, args.windows, args.bootstrap_samples)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+    if args.kappa_output_dir is not None:
+        _write_kappa_outputs(args.kappa_output_dir, result)
     print(json.dumps({"status": result["status"], "output": str(args.output.resolve())}, indent=2))
 
 

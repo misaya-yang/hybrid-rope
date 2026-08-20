@@ -4,9 +4,10 @@
 - **Target:** ICLR 2027
 - **Active manuscript:** `paper-2027/`
 - **Branch:** `main_0726`
-- **Status:** manuscript optimization complete for the current evidence set;
-  waiting for user-supplied independent AI cross-reviews before another
-  decision-relevant revision pass
+- **Status:** one independent optimization report has been verified and a
+  decision-relevant manuscript pass is complete; the registered exact-range
+  multi-seed replication is running and remains outside the paper until its
+  raw results and owner are complete
 - **Internal only:** this file must not enter the anonymous supplement
 
 ## 1. First principle
@@ -79,9 +80,12 @@ causal claim.
 
 - Title: *RoPE Has a Spectral Budget*.
 - Body: 9 pages; PDF: 29 pages total, US Letter.
-- Four active figures:
+- Four main-text figures:
   `fig_method_overview.pdf`, `fig_identification.pdf`,
   `fig_mature_crossover.pdf`, and `fig_frequency_geometry.pdf`.
+- The frequency-geometry figure now appears beside the spectral-budget result;
+  the redundant related-work taxonomy table was removed and replaced by an
+  explicit three-part contribution statement.
 - The first page explicitly separates support from allocation and shows that
   anchored/deployed Cosh have the same normalized `z`.
 - Identification, co-adaptation, mature-scale, and range-composition evidence
@@ -93,8 +97,19 @@ causal claim.
   it.
 - LeRoPE is cited and positioned as learned/fixed-table evidence, not as
   mechanism validation or a matched comparison.
+- CoPE, RoPE-ID, and MHRoPE/MRoPE-I are now positioned against the exact
+  fixed-support interior-allocation control.
+- The 2026-08-20 optimization report's proposed protocol-invariant
+  `1x--2x crossover law` was not adopted: it pools incompatible models,
+  endpoints, metrics, and adaptations. Its proposed M4 redundancy--effect
+  regression was independently checked and was flat: Spearman rho was
+  approximately `0.05--0.08` with `p=0.81--0.87` for slow-pair count and
+  canonical-rank deficit. Static geometry therefore remains a redundancy
+  accounting, not a trained-effect predictor.
 
-## 5. Internal negative result that must not become a paper claim
+## 5. Internal negative results that must not become paper claims
+
+### 5.1 LeRoPE profile oracle
 
 The CPU-only LeRoPE profile-oracle test is complete and falsifies the proposed
 shortcut. With A.15-compatible unsigned structural softmax curvature,
@@ -111,15 +126,42 @@ Correct conclusion: this unsigned local curvature is not the required
 trajectory-aware LM-risk object. Do not turn the negative audit into outward
 mechanism prose or a new optimization campaign.
 
+### 5.2 Attention-measure kappa probe
+
+The preregistered CPU-only Table 2 probe is complete on the original 1,920
+head-query observations. The numerical direction `g` was frozen from the
+Geo-weights/Geo-table reference cell; each of the four cells supplied only its
+own attention distribution, and Eq. (37) used ratio-of-means aggregation.
+
+- the first-order Eq. (35) direction gives Spearman `rho=+1.0` against log PPL
+  and separates the two self-consistent cells from the two mismatches;
+- the realised finite Geo-to-EVQ swap gives `rho=-0.2` and does not separate
+  self-consistent from mismatched cells;
+- the two rankings disagree, so the preregistered finite-tau rule selects
+  Branch C: the attention-measure hypothesis fails its go/no-go gate.
+
+The finite-swap expression matches direct rotated-logit subtraction to
+`1.78e-15`, and a deterministic rerun reproduced the complete kappa payload
+hash. The durable owner is
+`research/KAPPA_ATTENTION_MEASURE_AUDIT_20260820.md`; raw receipts remain in
+the ignored `../results/kappa_att/` layer. Do not promote the attractive
+first-order ranking, search layer/head subsets, or tune a new direction.
+
+Tier 2 was not executed: the canonical M4 owner records that the 12-config
+weights were cleaned after evidence freezing, and no compatible checkpoints
+remain locally. The surviving evidence JSON cannot recover attention
+probabilities. The blocked audit is recorded in the durable owner; unrelated
+weekend-sweep checkpoints must not be substituted.
+
 ## 6. Current validation receipt
 
 Current artifacts:
 
 | Artifact | Receipt |
 | --- | --- |
-| `main.pdf` | SHA-256 `185af7984cd23fce6e118fb40c67f7e5ac9ee6f4d8d8dc9b135d05c63d9a28e8`; 736,159 bytes |
+| `main.pdf` | SHA-256 `ddc50f1b0af7546ada534cb9e358a5a40f6619de5f7b08f22e929408480bdda9`; 734,427 bytes |
 | Existing anonymous supplement | `rope-spectral-budget-iclr2027-supplement.zip`; SHA-256 `f2af442ac27ad283fff1d5791c28c61bbed55af3e142ce723db8fc26830f68e9`; ZIP integrity clean; predates this documentation refresh |
-| Documentation-refresh package dry run | SHA-256 `dc093b9fc173eb4e46ac6723abd731b7c3055d1cb790506639a55010fe258388`; leak scan and ZIP integrity passed; internal `HANDOFF.md` excluded; existing user-owned archive was not overwritten |
+| Current package dry run | SHA-256 `356806b4c2f74e32f797d58493ce600f50c8d3c39342b74a60f5d811e56aa20c`; 912,414 bytes; leak scan and ZIP integrity passed; internal `HANDOFF.md` excluded; existing user-owned archive was not overwritten |
 | Build gates | 9-page body, 29 total, 0 undefined refs/cites, 0 pt overfull, anonymous, US Letter, Type-3=0, all fonts embedded |
 | Focused scientific tests | 243 passed |
 | Supplement tests | 25 passed |
@@ -150,21 +192,25 @@ conda run --no-capture-output -n aidemo \
 
 ## 7. Worktree and authority boundary
 
-At this snapshot, local `main_0726` and `origin/main_0726` point to
-`db7e670490da096916d9bb02ba55c42f9b1109ca`, but the worktree intentionally
-contains a large uncommitted manuscript/figure/package batch. No commit, push,
-stage, reset, stash, branch switch, or cleanup is authorized by this handoff.
+Local `main_0726` remains an uncommitted working tree. The current batch
+contains the manuscript optimization plus the authorized exact-range runtime
+optimization; no commit, push, stage, reset, stash, branch switch, or cleanup
+is authorized by this handoff.
 
 Preserve all untracked analysis outputs and LaTeX build products unless the
 user explicitly asks to remove or package them. `paper/` must remain
 byte-for-byte unchanged.
 
-No GPU training, GPU evaluation, paid run, or remote action is currently
-authorized.
+The user explicitly authorized the 151.9M exact-range multi-seed run for seeds
+137 and 256. It uses the shared prepared data, global batch 256, micro-batch
+128, accumulation 2, and `max-autotune-no-cudagraphs`; the first formal arm is
+healthy with finite loss and approximately 183K token/s. This is running
+evidence, not a result. Do not promote it until both seeds, both arms,
+evaluation, aggregation, raw hashes, and the canonical owner are complete.
 
 ## 8. Next action
 
-Wait for the user to provide the independent AI cross-review reports. Then:
+For another independent AI cross-review:
 
 1. extract only concrete alleged defects or score ceilings;
 2. verify each against the PDF, source, theorem, and owner;
@@ -172,6 +218,12 @@ Wait for the user to provide the independent AI cross-review reports. Then:
    ceiling and the technical-reviewer ceiling;
 4. propose the smallest replacement-level change for each real issue;
 5. do not modify the manuscript for noise or unverified speculation.
+
+When the active multi-seed experiment completes, first freeze its raw outputs,
+hashes, runtime receipts, and aggregate owner. Only then decide whether it
+strengthens, narrows, or leaves unchanged the exact-range sentence; never
+describe the current manuscript result retroactively as multi-seed before that
+gate closes.
 
 Before submission, still requires author action:
 

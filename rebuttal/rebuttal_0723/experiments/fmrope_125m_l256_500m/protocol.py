@@ -132,18 +132,22 @@ if _model_tier not in ("151m", "350m"):
 _seed = int(os.environ.get("FMR_SEED", "42"))
 if _seed not in (42, 137, 256):
     raise ValueError("FMR_SEED must be one of 42, 137, or 256")
+_micro_batch_size = int(os.environ.get("FMR_MICRO_BATCH_SIZE", "64"))
+if _micro_batch_size not in (64, 128, 256):
+    raise ValueError("FMR_MICRO_BATCH_SIZE must be 64, 128, or 256")
 if _model_tier == "350m":
     SPEC = ExperimentSpec(
         model_tier="350m",
         num_layers=33,
         requested_train_tokens=1_000_000_000,
+        micro_batch_size=_micro_batch_size,
         seed=_seed,
         learning_rate=3e-4,
         min_learning_rate=3e-5,
         warmup_steps=1_525,
     )
 else:
-    SPEC = ExperimentSpec(seed=_seed)
+    SPEC = ExperimentSpec(seed=_seed, micro_batch_size=_micro_batch_size)
 
 
 def estimate_parameter_count(spec: ExperimentSpec = SPEC) -> int:

@@ -15,9 +15,9 @@ This distinction explains why allocation must be installed during training or
 adaptation. The $50$M factorial crossing and mature-model comparisons show
 strong table-by-weights dependence, while Theorem~\ref{thm:obstruction} rules
 out exact preservation by fixed invertible Q/K maps when frequency multisets
-differ. The theorem does not preclude approximate retraining; instead it says
-why post-hoc replacement and training under a table are different
-interventions. The small from-initialisation in-window NLL differences and the
+differ. Its exact scope explains why post-hoc replacement and training under a
+table are different interventions, while the adaptation results quantify how
+much low-rank retraining can recover. The small from-initialisation in-window NLL differences and the
 large frozen-swap failures are therefore compatible.
 
 Allocation also differs from range transport. The former chooses which finite
@@ -34,10 +34,12 @@ support/allocation decomposition, phase-invariant finite-basis geometry,
 fixed-support causal identification, exact frozen-retrofit obstruction, and a
 closed-form point on the allocation axis.
 
-No static geometry in this paper is an extrapolation guarantee, and neither the
-surrogate nor the experiments make Cosh a unique task optimum. \evq{} is useful
-because it is analytic, zero-learned-parameter, and reproducible. The broader
-result is simpler: at finite $K$, interior frequency placement is part of the
-training design. The exact-range pair establishes that fact, the factorial
-shows it is not unique to Cosh, and the mature-model protocols show that the
-resulting effective-context shift survives scale and low-rank adaptation.
+Static geometry characterises positional-basis redundancy; trained comparisons
+establish extrapolation and task behaviour. \evq{} is useful because it is
+analytic, zero-learned-parameter, and reproducible, while the factorial shows
+that Cosh is not the only effective allocation. The broader result is simpler:
+at finite $K$, interior frequency placement is part of the training design.
+Practically, support, allocation, and deployment-time range transport should be
+chosen as separate coordinates, and a non-geometric allocation should be
+installed during training or adaptation rather than swapped into frozen
+weights.

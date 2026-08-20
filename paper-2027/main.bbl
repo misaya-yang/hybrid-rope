@@ -1,4 +1,4 @@
-\begin{thebibliography}{34}
+\begin{thebibliography}{37}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -78,6 +78,14 @@ Ermo Hua et~al.
   Learning}, 2025.
 \newblock arXiv:2412.17739.
 
+\bibitem[Huang et~al.(2026)Huang, Liu, Song, Hou, Chang, Lin, and
+  Bai]{qwen2026mhrope}
+Jie Huang, Xuejing Liu, Sibo Song, Ruibing Hou, Hong Chang, Junyang Lin, and
+  Shuai Bai.
+\newblock Revisiting multimodal positional encoding in vision--language models.
+\newblock In \emph{International Conference on Learning Representations}, 2026.
+\newblock arXiv:2510.23095.
+
 \bibitem[Jin et~al.(2024)Jin, Han, Yang, Jiang, Liu, Chang, Chen, and
   Hu]{jin2024selfextend}
 Hongye Jin, Xiaotian Han, Jingfeng Yang, Zhimeng Jiang, Zirui Liu, Chia-Yuan
@@ -93,6 +101,12 @@ Petros Karypis, Sean O'Brien, Shreyas Kadekodi, Rui Zhu, and Julian McAuley.
 \newblock {LeRoPE}: Learnable {RoPE} frequencies improve language modeling.
 \newblock \emph{arXiv preprint arXiv:2607.10134}, 2026.
 \newblock URL \url{https://arxiv.org/abs/2607.10134}.
+
+\bibitem[Li et~al.(2026)Li, Ren, Yuille, and Wang]{li2026copeclipped}
+Haoran Li, Sucheng Ren, Alan Yuille, and Feng Wang.
+\newblock {CoPE}: Clipped {RoPE} as a scalable free lunch for long context
+  {LLMs}.
+\newblock \emph{arXiv preprint arXiv:2602.05258}, 2026.
 
 \bibitem[Li et~al.(2024)Li, You, Guruganesh, Ainslie, Ontanon, Zaheer, Sanghai,
   Yang, Kumar, and Bhojanapalli]{li2024fire}
@@ -211,6 +225,13 @@ Suyuchen Wang, Ivan Kobyzev, Peng Lu, Mehdi Rezagholizadeh, and Bang Liu.
   language models.
 \newblock In \emph{Findings of the Association for Computational Linguistics:
   ACL 2024}, 2024.
+
+\bibitem[Wertheimer et~al.(2026)Wertheimer, Zhang, Liu, Yin, and
+  Wang]{wertheimer2026frayed}
+Davis Wertheimer, Aozhong Zhang, Derrick Liu, Penghang Yin, and Naigang Wang.
+\newblock Frayed {RoPE} and long inputs: A geometric perspective.
+\newblock \emph{arXiv preprint arXiv:2603.18017}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2603.18017}.
 
 \bibitem[Wu et~al.(2026)Wu, Liu, and Jadbabaie]{wu2026datashapes}
 Xinyi Wu, Siyuan Liu, and Ali Jadbabaie.

@@ -1,4 +1,5 @@
 \section{Experimental Details}
+\label{sec:experiment-details}
 
 \subsection{Scope of this appendix}
 
@@ -19,7 +20,7 @@ App.~\ref{sec:pe-dominant}.
 \toprule
 Setting & Train length & Scale & Seeds & Main datasets \\
 \midrule
-EVQ\(\times\)\rs{} & 2048 & 454M & 3 + 3 & FineWeb-Edu + 10\% passkey mix \\
+EVQ ($\tau{=}1.414$)$\times$\rs{} & 2048 & 454M & 3 + 3 & FineWeb-Edu + 10\% passkey mix \\
 MLA & 8192 & 432M & 3 & FineWeb-Edu \\
 \bottomrule
 \end{tabular}
@@ -69,7 +70,8 @@ The \(750\mathrm{M}\) `continue@4K' experiment starts both arms from the same
 2K geometric checkpoint and applies a 500M-token continuation with either the
 geometric or EVQ table (seed 42). At 16K, PPL is \(45.1\) versus \(24.4\); on
 40 passkey trials at 8K, strict autoregressive exact match is \(0\%\) versus
-\(77.5\%\). This is a single-seed post-hoc continuation result, not a
+\(77.5\%\). The EVQ continuation uses a fixed midpoint Cosh table with
+$\tau{=}1.5$. This is a single-seed post-hoc continuation result, not a
 from-scratch allocation control.
 
 \input{tables/table6_750m_continue_supporting}
@@ -127,12 +129,12 @@ $\tau{=}1.2$ leaves 11/16 channels above this threshold (effective rank 9),
 whereas $\tau{=}1.5$ leaves 12/16 (rank 10). Repeating the head-to-head
 comparison at base${=}1{,}000$ places 13/16 geometric channels above the
 threshold. In this single-seed run, $\tau{=}1.2$ and $\tau{=}1.5$ differ by
-less than $0.3\%$ on the reported metrics and both improve far-frame MSE by
+less than $0.4\%$ on the reported metrics and both improve far-frame MSE by
 about $48\%$ relative to Geo. This is consistent with the diagnostic; it is
 not an equivalence or causal estimate.
 
 \begin{table}[ht]
-\caption{Base${}=1{,}000$ DiT head-to-head (129.6M, seed 42, \rs{}). The two EVQ settings are within $0.3\%$ on the reported metrics in this run.}
+\caption{Base${}=1{,}000$ DiT head-to-head (129.6M, seed 42, \rs{}). The two EVQ settings are within $0.4\%$ on the reported metrics in this run.}
 \label{tab:dit-base1000}
 \centering
 \small
@@ -162,16 +164,3 @@ the training-scale band. This is table arithmetic, not a task-loss prediction:
 the exact-range experiments measure the trained allocation effect, and
 Table~\ref{tab:coadapt} separately measures incompatibility after a frozen
 post-hoc swap.
-
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.96\linewidth]{fig_frequency_geometry.pdf}
-  \caption{\textbf{What finite frequency allocation changes.}
-  (a)~For $K{=}32$ and $\tau{=}4$, endpoint normalisation preserves the
-  standard grid's sampled extrema while moving every interior log-frequency;
-  the deployed midpoint grid is shown separately. (b)~For standard RoPE with
-  $L{=}4096$, $b{=}5{\times}10^5$, and $K{=}64$, canonical full-subspace
-  redundancy concentrates in the $23$ pairs satisfying $\omega L\le1$.
-  The heatmap is static geometry, not a task-loss predictor.}
-  \label{fig:frequency-geometry}
-\end{figure}

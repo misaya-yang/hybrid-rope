@@ -16,8 +16,8 @@
 Figure~\ref{fig:method-overview} makes the paper's three steps explicit:
 separate support from allocation, describe the resulting finite basis, and
 measure the weights trained to use it. The closed-form construction of
-\S\ref{sec:construction} supplies one reproducible allocation, not a substitute
-for either geometry or trained-model evidence.
+\S\ref{sec:construction} supplies one reproducible allocation; geometry and
+trained-model comparisons establish what that allocation changes.
 
 \subsection{A finite table is a set of two-dimensional subspaces}
 \label{sec:subspaces}
@@ -26,6 +26,13 @@ Let $\phi \in [0,1]$ parameterise log-frequency, $\omega(\phi) = b^{-\phi}$, let
 $\drot$ be the number of rotated dimensions and $K = \drot/2$ the number of
 rotary pairs ($\drot{=}\dhd$ for standard MHA, smaller for compressed-RoPE
 architectures such as MLA).
+
+We reserve $z$ for the support-normalised coordinate in
+Eq.~\eqref{eq:table-decomposition}. Standard implementations use raw geometric
+exponents $u_k=k/K$, while deployed \evq{} uses midpoint quantiles
+$u_k=(k+1/2)/K$; endpoint-inclusive grids used for static diagnostics are
+labelled explicitly. Normalising the sampled geometric endpoints gives
+$z_k=k/(K-1)$.
 
 Equation~\eqref{eq:table-decomposition} is a coordinate identity for any
 ordered positive table with nonzero span. In the geometric family
@@ -77,13 +84,12 @@ r_2(R)=\frac{(\operatorname{tr}R)^2}{\operatorname{tr}(R^2)}
 \end{equation}
 \end{theorem}
 
-The denominator exactly characterises this particular static dimension summary:
-larger mean pairwise redundancy lowers $r_2$. Allocation changes the entire Gram
-spectrum, however, and $\bar c$ is neither a language-model metric nor a complete
-summary of Shannon rank or log-determinant. Block whitening also removes
-per-channel energy and conditioning, leaving trained Q/K coefficients outside
-the statistic. The exact-range experiment of \S\ref{sec:exp-identify} therefore
-does not assume that $\bar c$ predicts loss; it tests the trained effect directly.
+The denominator exactly characterises this static dimension summary: larger
+mean pairwise redundancy lowers $r_2$. Allocation changes the entire Gram
+spectrum, while block whitening removes per-channel energy, conditioning, and
+the trained Q/K coefficients. We therefore use $r_2$ to account for positional
+basis redundancy and the exact-range experiment of \S\ref{sec:exp-identify} to
+measure trained behaviour.
 
 The deflation is concentrated at the slow end.
 
@@ -104,17 +110,30 @@ $r_2 = 2.00$: about $96\%$ of that sub-budget is redundant. Slow channels are
 \emph{redundant}, not unused --- they still carry content, and
 Prop.~\ref{prop:collapse} says only that many of them describe nearly the same
 positional direction.
-This common long-context failure mode motivates allocating a finite table, but
-it is not asserted to be the specific mechanism of the $b{=}256$ exact-range
-control; the full subspace geometry applies away from the asymptotic threshold.
+This common long-context failure mode motivates allocating a finite table; the
+full subspace geometry, rather than the asymptotic threshold alone, covers the
+$b{=}256$ exact-range control.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.94\linewidth]{fig_frequency_geometry.pdf}
+  \caption{\textbf{Where a finite frequency table spends its budget.}
+  (a)~Endpoint normalisation preserves sampled support while moving every
+  interior log-frequency; the deployed midpoint table is shown separately.
+  (b)~For standard RoPE at $L{=}4096$, $b{=}5{\times}10^5$, and $K{=}64$,
+  phase-invariant full-subspace redundancy concentrates in the $23$ pairs with
+  $\omega L\le1$.}
+  \label{fig:frequency-geometry}
+\end{figure}
 
 \subsection{The table is a training-time coordinate system}
 \label{sec:coordinate}
 
 Theorem~\ref{thm:budget} constrains what a table can express. It does not
 predict what a trained model does with one, and the gap is not small. In a
-frozen $50$M diagnostic ($L{=}512$, $b{=}5{\times}10^5$; no training, no
-gradient) we cross two trained weight sets with two runtime tables
+frozen $50$M diagnostic ($L{=}512$, $b{=}5{\times}10^5$,
+$\tau_{\mathrm{EVQ}}{=}2.83$; no training, no gradient) we cross two trained
+weight sets with two runtime tables
 (Table~\ref{tab:coadapt}). Substituting \evq{} for the geometric table at
 inference \emph{raises} the block-whitened $r_2$ from $4.57$ to $12.54$
 while perplexity degrades from $7.14$ to $76.20$.
@@ -127,7 +146,7 @@ trained quality, so every task claim in \S\ref{sec:experiments} is made on
 trained models. Second, the two \emph{self-consistent} systems are essentially
 tied in-window ($7.14$ vs.\ $7.16$) while both mismatched cells collapse: on LM
 loss the table and weight main effects are $+0.599$ and $-0.597$, and their
-interaction is $-3.537$, about $5.9\times$ larger (configuration-level bootstrap
+interaction contrast is $-3.537$ (configuration-level bootstrap
 CI $[-5.17,-3.04]$). The table behaves as a coordinate system fixed before
 training, with the weights learning coefficients in it.
 
@@ -145,20 +164,18 @@ The proof is short: $\Delta{=}0$ gives $A^\top B = I$, so the relation becomes a
 similarity $A^\top R_{\Omega'}A^{-\top}=R_\Omega$; differentiating at zero makes
 the generators similar, and similarity preserves the spectrum $\{\pm i\omega_k\}$
 (App.~\ref{sec:proofs}). A nontrivial table change therefore cannot be absorbed
-exactly by this broad class of fixed linear Q/K compensation. The theorem does
-not quantify approximate error and does not rule out repair on a finite
-distribution by retraining, nonlinear maps, or V/O and residual paths. It
-separates exact function preservation from the adaptation protocols of
-\S\ref{sec:exp-mature}; it does not declare those protocols futile.
+exactly by this broad class of fixed linear Q/K compensation. Its scope is
+exact function preservation; the finite-distribution protocols of
+\S\ref{sec:exp-mature} directly measure the complementary case of repair by
+retraining Q/K or broader low-rank paths.
 
 \subsection{A closed-form allocation}
 \label{sec:construction}
 
 A positive density $\rho\in C^2([0,1])$ with $\int_0^1\rho=1$ induces a discrete
 allocation by inverse-CDF quantisation, $\phi_k=F_\rho^{-1}(u_k)$; geometric RoPE
-is $\rho\equiv1$. The exact canonical-correlation objective is oscillatory and
-does not yield the following density in closed form. We instead retain the
-convex modelling surrogate
+is $\rho\equiv1$. The exact canonical-correlation objective is oscillatory. To
+obtain a closed-form construction, we use the convex modelling surrogate
 \begin{equation}
 \Capp[\rho]=\frac{\alpha}{2}\int_0^1\!\rho^2\,d\phi
  +\frac{\beta}{2}\iint_{[0,1]^2}\!\!\rho(\phi)\rho(\psi)\min(\phi,\psi)\,d\phi\,d\psi,
@@ -167,8 +184,9 @@ convex modelling surrogate
 with $\alpha,\beta>0$. The diagonal term penalises channel-load concentration;
 $\min(\phi,\psi)$ is the Green kernel of $-\partial_\phi^2$ and encodes a
 penalty for pairs of channels that are both slow, matching the direction of
-Prop.~\ref{prop:collapse}. We do not claim that \eqref{eq:Capp} is a quantitative
-approximation to the full canonical-correlation objective.
+Prop.~\ref{prop:collapse}. The full geometry and the surrogate play distinct
+roles: the former measures redundancy, while the latter supplies an analytic
+allocation family.
 
 \begin{theorem}[Stationary allocation under the surrogate]
 \label{thm:ode}
@@ -194,10 +212,10 @@ $F_\tau(\phi)=1-\sinh(\tau(1{-}\phi))/\sinh\tau$, so
 which tends to $u_k$ as $\tau\to0$, recovering the uniform-log midpoint grid.
 \end{corollary}
 
-The theorem selects the Cosh family conditional on \eqref{eq:Capp}; it does not
-select the finite member used by a model. The practical $\tau$ below is a
-separately modelled and empirically calibrated operating parameter, not a value
-derived by fitting $\sqrt{\beta/\alpha}$ to the full-RoPE geometry.
+The theorem selects the Cosh family within \eqref{eq:Capp}. The practical
+$\tau$ below is selected by a separate operating-point model and empirical
+calibration rather than by fitting $\sqrt{\beta/\alpha}$ to the full-RoPE
+geometry.
 
 \paragraph{The recipe, and the status of $\tau$.} With $\deff$ the effective head
 dimension, equal to $\dhd$ for the full-rotary architectures studied here, and
@@ -211,10 +229,11 @@ u_k = (k+\tfrac12)/K,\qquad
 Set $\tau$, evaluate \eqref{eq:warp}, replace the inverse frequencies: no
 auxiliary loss, no extra parameters, no declared deployment length. A
 post-softmax transport model supplies the $\deff/\sqrt{\Ltr}$ scaling structure
-but not the finite coefficient $c(\Pi)$ (App.~\ref{sec:leff-derivation}); the
-experiments use $c(\Pi){=}1$ as an operating default, not a global prescription.
-Across the $21$ configurations of \S\ref{sec:exp-tau}, the best tested $\tau$
-stays within a $0.75\times$--$1.5\times$ window around that value. The deployed
+but not the finite coefficient $c(\Pi)$
+(Apps.~\ref{sec:softmax-transport}--\ref{sec:leff-derivation}); the
+experiments use $c(\Pi){=}1$ as a zero-search operating default.
+Section~\ref{sec:exp-tau} tests that coefficient directly: it is the best of
+three registered Cosh multipliers in $4/12$ factorial configurations. The deployed
 midpoint table has raw exponent positions $q_k=\phi_k(\tau)$. The exact-range
 diagnostic uses
 $z_k=(q_k-q_0)/(q_{K-1}-q_0)$ in

@@ -10,7 +10,7 @@ separate endpoints throughout. \evq{} installs a different frequency table
 before training; every trained system is evaluated with its own table.
 Controlled from-scratch runs use fixed GPT-style decoder stacks
 \citep{radford2019gpt2}; corpora, hyperparameters and seed scope are in
-App.~\ref{sec:supporting-experiments} and with each result.
+App.~\ref{sec:experiment-details} and with each result.
 
 %% =========================================================================
 \subsection{Identifying the allocation axis}
@@ -65,8 +65,9 @@ In a separate $454$M three-seed composition test, applying the same fixed-scale
 \rs{} transform changes $8$K teacher-forced NLL-gap passkey retrieval from $41\%$ to $61\%$ on Geo
 but from $53\%$ to $100\%$ on \evq{}; $8$K PPL becomes $82.9$ versus $70.9$
 (App.~Table~\ref{tab:evq-ramp}). Thus the leverage of a shared range operation
-depends on the table seen during training. This is a YaRN-family composition
-test, not a claim of superiority over a separately tuned range method. The
+depends on the table seen during training. This experiment isolates substrate
+dependence under one shared YaRN-family operation; separately tuned range
+methods answer a different deployment question. The
 target-retargeted exact-range condition and its deployment boundary are
 reported in App.~\ref{sec:identification-details}.
 
@@ -80,8 +81,9 @@ trajectory over $2.097$B tokens gives \evq{}-minus-Geo NLL of
 $+0.072/+0.038/-0.044/-0.135$ at $2$/$4$/$8$/$16$K, with $122/128$ and
 $126/128$ held-out documents favouring \evq{} at $8$/$16$K. The released Geo
 checkpoint and \evq{} arm use different trainer implementations, so this is
-not a bitwise-paired comparison. Its role is scale persistence for natural-text
-modelling, not causal identification or task capability.
+same-initialisation, same-scientific-recipe rather than bitwise-paired evidence.
+It establishes scale persistence for natural-text modelling; causal
+identification and task capability are measured by separate protocols.
 
 \paragraph{$8$B with $300$ adaptation steps.}
 On LLaMA-3-8B-Instruct \citep{grattafiori2024llama3}, matched rank-$64$
@@ -91,7 +93,7 @@ direction holds on all $24$ frozen natural-text packs and all three source
 domains. At true $16$K, median target-block hit@16 rises from $18.75\%$ to
 $64.06\%$, and deleting the remote gold block changes NLL by
 $-0.0095/+1.5055$. This is matched probability and causal source-use evidence,
-not by itself top-1 task accuracy.
+while the task protocols below evaluate autoregressive accuracy.
 
 \paragraph{$1.485$B capability conversion with Q/K-only adaptation.}
 Starting from matched OLMo-2 Stage-A parents, both arms freeze inherited V/O
@@ -115,8 +117,8 @@ length transfer rather than unseen-task transfer.
 \begin{figure}[tb]
   \centering
   \includegraphics[width=\linewidth]{fig_mature_crossover.pdf}
-  \caption{\textbf{The same effective-context shift appears under distinct
-  scale protocols.} (a)~Natural-text PPL crosses beyond the physical cap in a
+  \caption{\textbf{Training allocation shifts effective context across scale
+  protocols.} (a)~Natural-text PPL crosses beyond the physical cap in a
   $1.485$B from-initialisation trajectory and matched $8$B LoRA. (b)~Matched
   OLMo Q/K-only adaptation preserves $4$K 2Wiki exact while transferring it to
   $8$K/$16$K. (c)~Separate task-adapted RULER runs show the same crossover.
@@ -129,14 +131,14 @@ length transfer rather than unseen-task transfer.
 \subsection{Attributing the schedule and operating rule}
 \label{sec:exp-tau}
 
-\paragraph{The rule selects a basin, not a point optimum.} Across $21$
-configurations in two studies, the best tested $\tau$ stays within a
-$0.75\times$--$1.5\times$ window around the operating rule. An independent
+\paragraph{The rule selects a basin, not a point optimum.} An independent
 sweep selects $\tau{=}5$ against a rule value of $5.657$, a $0.0119$ NLL
-difference. Within the factorial, the rule is the best of the three tested Cosh
-multipliers in $4/12$ configurations, while $1.25\times$ and $0.75\times$ are
-best in $6/12$ and $2/12$. The scaling structure is useful; its finite
-coefficient is empirical.
+difference. Within the factorial, the rule is the best of three registered
+Cosh multipliers in $4/12$ configurations, while $1.25\times$ and
+$0.75\times$ are best in $6/12$ and $2/12$. At the two formula-boundary
+configurations, the best tested multiplier moves toward the interior but lies
+at the edge of the tested grid. The scaling structure identifies an operating
+basin; its finite coefficient remains empirical.
 
 \paragraph{Cosh is a derived instance, not the only effective shape.} The
 \emph{matched exponential} uses the endpoint-normalised quantile curve
@@ -147,7 +149,7 @@ It improves over Geo in $9/12$
 configurations and is not separated from rule-cosh: cosh-minus-exponential is
 $+0.00074$ NLL, bootstrap $[-0.0055,0.0075]$, exact sign-flip $p{=}0.836$.
 The empirical result identifies interior allocation. Cosh contributes a
-closed-form, zero-learned-parameter solution of the stated convex surrogate, not a
-uniqueness claim for trained objectives. Shape attribution therefore rests on
+closed-form, zero-learned-parameter solution of the stated convex surrogate.
+Shape attribution therefore rests on
 the fixed analytic schedules above, where parameter count and
 optimisation effort are identical by construction.

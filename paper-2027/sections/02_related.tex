@@ -4,12 +4,9 @@
 Write $x_k=-\log\omega_k=a+Rz_k$ as in
 Eq.~\eqref{eq:table-decomposition}. Prior work changes several, nonexclusive
 parts of this parameterisation: it transports realised phases, changes support
-$(a,R)$, or changes the normalised interior allocation $z$
-(Table~\ref{tab:layers}). This decomposition separates when a method acts from
-which spectral degrees of freedom it controls; it does not require a method to
-occupy only one row.
-
-\input{tables/table_layers}
+$(a,R)$, or changes the normalised interior allocation $z$.
+This decomposition separates when a method acts from which spectral degrees of
+freedom it controls; the interventions are nonexclusive and composable.
 
 \paragraph{Context-range extension.}
 Relative position information can be injected additively, through learned or
@@ -40,6 +37,14 @@ and subspaces \citep{zhang2026grape}. Our identification keeps the rotary
 operator, sampled endpoints, and log-span fixed, moves only finite interior
 frequencies, and pairs trained comparisons with an exact frozen-transplant
 obstruction (\S\ref{sec:exp-identify}).
+
+CoPE softly clips slow rotations, while RoPE-ID applies high-frequency RoPE to
+a subset of channels for long-input robustness
+\citep{li2026copeclipped,wertheimer2026frayed}. In multimodal models,
+MHRoPE and MRoPE-I treat frequency coverage across positional axes as a design
+principle \citep{qwen2026mhrope}. These methods alter frequency behaviour,
+channel participation, or axis assignment; our fixed-support control instead
+moves only the interior entries of a fully rotary one-dimensional table.
 
 \paragraph{Learning and constructing frequency tables.}
 LeRoPE learns one log-scale per frequency band, shared across layers and heads,

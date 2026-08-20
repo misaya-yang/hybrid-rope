@@ -56,6 +56,7 @@ universal solution of full-RoPE geometry, task loss, or extrapolation.
 | Multi-source RULER split | `../../nonuniform-alloc/RESEARCH_MEMO.md` and the RULER owner | Discussion/appendix diagnostic |
 | Dependency-gradient spectrum pilot | dependency-spectrum audit record | Internal only unless promoted by a new owner |
 | LeRoPE profile-oracle falsification | `LEROPE_PROFILE_ORACLE_AUDIT_20260820.md` | Internal only; $w^{1/3}$ does not predict the published profile |
+| Attention-measure $\kappa_{\mathrm{att}}$ falsification | `KAPPA_ATTENTION_MEASURE_AUDIT_20260820.md` | Internal only; finite-swap Tier 1 fails the preregistered ordering gate |
 
 ## Maintenance rules
 

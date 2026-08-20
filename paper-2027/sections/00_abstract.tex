@@ -1,21 +1,19 @@
-A scalar RoPE base fixes a log-frequency span; it does not determine how a
-finite budget of $K$ rotary pairs is spent inside that span. Writing
-$x_k=-\log\omega_k=a+Rz_k$ separates spectral support $(a,R)$ from the
-normalised interior allocation $z$. We show that $z$ is an independent
-training-time design variable. In a $151.9$M exact-range control, fixing
-$a$, $R$, initialisation, data order, and optimisation while moving only the
-$30$ interior frequencies changes OOD NLL by
-$-0.478/-0.205/-0.113$ at $512$/$1$K/$2$K. A separate $12$-configuration,
-three-seed factorial finds the same non-uniform direction for two different
-analytic shapes in $10/12$ and $9/12$ configurations. Full sin/cos subspace
-geometry gives a phase-invariant account of finite-table redundancy, while a
-$50$M $2\times2$ crossing shows why geometry alone is insufficient:
-self-consistent weight--table pairs have PPL $7.14/7.16$, but post-hoc swaps
-reach $76.20/23.05$. We prove the corresponding exact obstruction for fixed
-invertible Q/K compensation. \evq{} is one closed-form,
-zero-learned-parameter allocation on this axis. The same effective-context
-shift persists at scale: a $1.485$B from-initialisation trajectory crosses in
-favour of \evq{} at $8$K/$16$K; matched $300$-step adaptation at $8$B reduces
-PPL from $108.96$ to $24.07$ at $16$K; and matched Q/K-only adaptation at
-$1.485$B preserves $4$K 2Wiki exact match ($22.0/21.5\%$) while changing the
-$8$K result from $0$ to $17.5\%$.
+A scalar RoPE base fixes log-frequency support, but not how a finite budget of
+$K$ rotary pairs is allocated inside it. Writing
+$x_k=-\log\omega_k=a+Rz_k$ separates support $(a,R)$ from normalised interior
+allocation $z$. We show that $z$ is an independent training-time design
+variable. In a $151.9$M exact-range control, initialisation, data order,
+optimisation, and both sampled endpoints are fixed; moving only the $30$
+interior frequencies reduces OOD NLL by $0.478$ at $2\times$ the training
+length. A separate $12$-configuration, three-seed factorial repeats the
+non-uniform direction for both Cosh and deformation-matched exponential
+allocations. Full sin/cos subspace geometry then gives an exact,
+phase-invariant accounting of finite-table redundancy. The table must be
+learned with the weights: self-consistent weight--table pairs have PPL
+$7.14/7.16$, whereas frozen swaps reach $76.20/23.05$. Separately, we prove
+that unequal frequency multisets cannot be absorbed exactly by fixed
+invertible Q/K maps. \evq{} is one closed-form, zero-learned-parameter
+construction on this allocation axis. The resulting effective-context shift
+persists at scale: matched $8$B adaptation reduces $16$K PPL from $108.96$ to
+$24.07$, while matched $1.485$B Q/K-only adaptation preserves $4$K 2Wiki exact
+match and changes the $8$K result from $0$ to $17.5\%$.
