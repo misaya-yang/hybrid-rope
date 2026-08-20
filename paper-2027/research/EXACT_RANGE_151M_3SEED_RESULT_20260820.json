@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "experiment": "exact_range_cosh_vs_uniform_fmrope_151m_500m_tokens",
+  "date": "2026-08-20",
+  "status": "COMPLETE_RAW_HASH_RECEIPTED",
+  "paper_claim": true,
+  "post_submission": true,
+  "paper_role": "primary_fixed_support_interior_allocation_identification",
+  "supersedes_for_outward_use": "rebuttal/rebuttal_0723/theory_results/matched_range_cosh_500m_3seed_result_20260724.json",
+  "comparison": "anchored_cosh_minus_uniform_fmrope_tail_nll",
+  "training_seeds": [42, 137, 256],
+  "protocol": {
+    "model_parameters": 151898880,
+    "training_length": 256,
+    "training_tokens_per_arm": 499974144,
+    "optimizer_steps": 7629,
+    "evaluation_lengths": [256, 512, 1024, 2048],
+    "evaluation_anchor_count": 32,
+    "evaluation_tail_tokens": 128,
+    "baseline": "paper_faithful_uniform_in_log_fmrope_base_256",
+    "intervention": "endpoint_normalized_cosh_tau_4",
+    "only_changed_scientific_variable_within_seed_pair": "the_30_interior_frequency_locations",
+    "global_batch_sequences": 256,
+    "seed_42_micro_batch_and_accumulation": [64, 4],
+    "seed_137_256_micro_batch_and_accumulation": [128, 2],
+    "aggregation_unit": "training_seed"
+  },
+  "uncertainty": {
+    "method": "two_sided_student_t_interval_across_three_training_seeds",
+    "degrees_of_freedom": 2,
+    "critical_value_95": 4.302652729911275,
+    "interpretation": "descriptive_with_n_3_no_generic_significance_claim"
+  },
+  "fixed_training_range": {
+    "256": {
+      "seed_values": {"42": 0.032759063, "137": 0.029025115, "256": 0.016798005},
+      "anchor_win_rates": {"42": 0.3125, "137": 0.34375, "256": 0.40625},
+      "mean_nll_difference": 0.026194061,
+      "stdev_across_training_seeds": 0.008348652,
+      "paired_t_95_ci": [0.005454858, 0.046933263],
+      "cosh_favoring_training_seeds": 0,
+      "training_seed_count": 3,
+      "equivalent_ppl_ratio": 1.02654,
+      "equivalent_ppl_change_percent": 2.654
+    },
+    "512": {
+      "seed_values": {"42": -0.477501452, "137": -0.270500794, "256": -0.094181113},
+      "anchor_win_rates": {"42": 1.0, "137": 0.9375, "256": 0.65625},
+      "mean_nll_difference": -0.280727786,
+      "stdev_across_training_seeds": 0.191864703,
+      "paired_t_95_ci": [-0.75734613, 0.195890557],
+      "cosh_favoring_training_seeds": 3,
+      "training_seed_count": 3,
+      "equivalent_ppl_ratio": 0.755234,
+      "equivalent_ppl_change_percent": -24.477
+    },
+    "1024": {
+      "seed_values": {"42": -0.204985037, "137": -0.19088459, "256": -0.132105887},
+      "anchor_win_rates": {"42": 0.84375, "137": 0.78125, "256": 0.75},
+      "mean_nll_difference": -0.175991838,
+      "stdev_across_training_seeds": 0.038654731,
+      "paired_t_95_ci": [-0.272015512, -0.079968164],
+      "cosh_favoring_training_seeds": 3,
+      "training_seed_count": 3,
+      "equivalent_ppl_ratio": 0.838625,
+      "equivalent_ppl_change_percent": -16.138
+    },
+    "2048": {
+      "seed_values": {"42": -0.112843767, "137": -0.180826515, "256": -0.143473938},
+      "anchor_win_rates": {"42": 0.6875, "137": 0.84375, "256": 0.78125},
+      "mean_nll_difference": -0.14571474,
+      "stdev_across_training_seeds": 0.034046724,
+      "paired_t_95_ci": [-0.230291491, -0.061137989],
+      "cosh_favoring_training_seeds": 3,
+      "training_seed_count": 3,
+      "equivalent_ppl_ratio": 0.864404,
+      "equivalent_ppl_change_percent": -13.56
+    }
+  },
+  "target_matched_range": {
+    "256": {
+      "seed_values": {"42": 0.032759063, "137": 0.029025115, "256": 0.016798005},
+      "anchor_win_rates": {"42": 0.3125, "137": 0.34375, "256": 0.40625},
+      "mean_nll_difference": 0.026194061,
+      "stdev_across_training_seeds": 0.008348652,
+      "paired_t_95_ci": [0.005454858, 0.046933263],
+      "cosh_favoring_training_seeds": 0,
+      "training_seed_count": 3,
+      "equivalent_ppl_ratio": 1.02654,
+      "equivalent_ppl_change_percent": 2.654
+    },
+    "512": {
+      "seed_values": {"42": 0.06109041, "137": 0.052570835, "256": 0.067289382},
+      "anchor_win_rates": {"42": 0.15625, "137": 0.3125, "256": 0.21875},
+      "mean_nll_difference": 0.060316876,
+      "stdev_across_training_seeds": 0.007389701,
+      "paired_t_95_ci": [0.041959841, 0.07867391],
+      "cosh_favoring_training_seeds": 0,
+      "training_seed_count": 3,
+      "equivalent_ppl_ratio": 1.062173,
+      "equivalent_ppl_change_percent": 6.217
+    },
+    "1024": {
+      "seed_values": {"42": 0.181823365, "137": 0.155599415, "256": 0.344166435},
+      "anchor_win_rates": {"42": 0.03125, "137": 0.0, "256": 0.0},
+      "mean_nll_difference": 0.227196405,
+      "stdev_across_training_seeds": 0.102144089,
+      "paired_t_95_ci": [-0.026543577, 0.480936388],
+      "cosh_favoring_training_seeds": 0,
+      "training_seed_count": 3,
+      "equivalent_ppl_ratio": 1.255076,
+      "equivalent_ppl_change_percent": 25.508
+    },
+    "2048": {
+      "seed_values": {"42": 0.278573841, "137": 0.39924413, "256": 0.700963058},
+      "anchor_win_rates": {"42": 0.0625, "137": 0.0, "256": 0.0},
+      "mean_nll_difference": 0.459593676,
+      "stdev_across_training_seeds": 0.217565423,
+      "paired_t_95_ci": [-0.080868797, 1.000056149],
+      "cosh_favoring_training_seeds": 0,
+      "training_seed_count": 3,
+      "equivalent_ppl_ratio": 1.58343,
+      "equivalent_ppl_change_percent": 58.343
+    }
+  },
+  "decision": "THREE_SEED_FIXED_SUPPORT_ALLOCATION_EFFECT_WITHOUT_TARGET_MATCHED_GAIN",
+  "claim_boundary": {
+    "supported": [
+      "interior_allocation_is_separately_identifiable_at_fixed_sampled_support",
+      "fixed_range_ood_direction_replicates_across_three_training_seeds",
+      "small_in_window_cost_and_consistent_ood_gain_form_an_effective_context_shift"
+    ],
+    "not_supported": [
+      "universal_cosh_optimality",
+      "additive_gain_with_target_aware_fmrope",
+      "mature_scale_capability_from_this_control_alone",
+      "evaluation_anchors_as_independent_seeds",
+      "generic_statistical_significance_claims"
+    ]
+  },
+  "source_hashes": {
+    "seed_42_comparison_json": "801792f062fe680afe1570fbf23ed710d77be0659c03a3924361b79ccbf334b1",
+    "seed_137_evaluation_results_json": "6a5ab42b783b2ea98428e379ab49ba7264401c3ec8533a44a0a40c0d65196e48",
+    "seed_256_evaluation_results_json": "23a0dd0698f2f72089767602df3449975a83278292692c0518d7608a3f6c8947"
+  },
+  "new_run_data_receipts": {
+    "dataset_revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+    "tokenizer_revision": "c292233c833e336628618a88a648727eb3dff0a7",
+    "train_array_sha256": "3dde6bd292685e189fe6d172693ce7cd93963f60eeeff80d48cc5c4371837bea",
+    "train_used_prefix_sha256": "66ee82396750d2c2fe9ab0a678092383a46ad28290983d091bd83895d5f83e60",
+    "validation_sha256": "be564fa673da684d989752576c2d9cebf7d4ae3235a4751a1a281712623cb3e0",
+    "anchors_sha256": "a6716d6e8c348494c517540c167f6a2b43a16eb4377af2c395d12e34734493b3",
+    "manifest_sha256": "2c4b1c0ec6993a4065a666dd04c26f1c3439e812de25e49cbf5d21b106ab9433",
+    "manifest_protocol_sha256": "d92da1b8a4ba92cb9bee5bcd28c2d73282bc0bedfc38adf164dc9693a42d188d"
+  },
+  "completion": {
+    "wrapper_exit_code": 0,
+    "new_arm_train_seconds_total": 10941.546764612198,
+    "new_arm_gpu_hours_total": 3.0393185457256105,
+    "hardware": "NVIDIA GeForce RTX 5090",
+    "errors_detected": []
+  }
+}

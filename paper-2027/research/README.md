@@ -14,13 +14,16 @@ entire NeurIPS rebuttal history.
    and the only active next-action queue.
 3. [`ICLR2027_RESEARCH_SYNTHESIS_20260819.md`](ICLR2027_RESEARCH_SYNTHESIS_20260819.md)
    — implemented claim architecture and its decision record.
-4. [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)
+4. [`EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](EXACT_RANGE_151M_3SEED_RESULT_20260820.md)
+   — completed raw-hash-receipted three-training-seed fixed-support result;
+   companion JSON owns the paper-facing aggregate values.
+5. [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)
    — canonical derivations, finite-K counterexamples, 50M 2x2 probe,
    base-only controls, and LeRoPE positioning.
-5. [`audits/FULL_ROPE_CLAUDE_AUDIT_20260819.md`](audits/FULL_ROPE_CLAUDE_AUDIT_20260819.md)
+6. [`audits/FULL_ROPE_CLAUDE_AUDIT_20260819.md`](audits/FULL_ROPE_CLAUDE_AUDIT_20260819.md)
    — verified contribution and known defects of the independent Claude
    full-RoPE audit.
-6. [`audits/DEPENDENCY_SPECTRUM_CLAUDE_AUDIT_20260819.md`](audits/DEPENDENCY_SPECTRUM_CLAUDE_AUDIT_20260819.md)
+7. [`audits/DEPENDENCY_SPECTRUM_CLAUDE_AUDIT_20260819.md`](audits/DEPENDENCY_SPECTRUM_CLAUDE_AUDIT_20260819.md)
    — verified contribution and limits of the independent dependency-spectrum
    audit.
 
@@ -49,7 +52,7 @@ universal solution of full-RoPE geometry, task loss, or extrapolation.
 | Full sin/cos geometry, canonical collision, stable-rank identity | `FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md` | Main theory |
 | Low-frequency collapse and softmax-centered limit | same report | Main theory |
 | Exact post-hoc Q/K compensation obstruction | `../../rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md` | Main theory |
-| Pure interior-allocation identification | exact-range owner + M4 owner, routed through the synthesis | Main experiment |
+| Pure interior-allocation identification | `EXACT_RANGE_151M_3SEED_RESULT_20260820.md` + companion JSON + M4 owner | Main experiment; new three-seed result supersedes the unpromoted author-confirmed aggregate |
 | Matched mature phase exposure | `../../rebuttal/rebuttal_0723/theory_results/OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729.md` | Main experiment |
 | 50M weights-by-table interaction | canonical full-RoPE report and `../../scripts/analysis/attention_fisher_50m_probe.py` | Co-adaptation diagnostic |
 | LeRoPE facts and Fixed-LeRoPE 63.6% | `../../rebuttal/rebuttal_0723/theory_results/LEROPE_CONCURRENT_WORK_NOTE_20260728.md` plus the primary paper | Related work |

@@ -4,10 +4,10 @@
 - **Target:** ICLR 2027
 - **Active manuscript:** `paper-2027/`
 - **Branch:** `main_0726`
-- **Status:** one independent optimization report has been verified and a
-  decision-relevant manuscript pass is complete; the registered exact-range
-  multi-seed replication is running and remains outside the paper until its
-  raw results and owner are complete
+- **Status:** the decision-relevant manuscript pass is complete and the
+  registered exact-range three-seed replication has finished successfully;
+  its raw-hash-receipted internal owner is frozen, while manuscript integration
+  remains the next authoring step
 - **Internal only:** this file must not enter the anonymous supplement
 
 ## 1. First principle
@@ -75,6 +75,14 @@ The strongest human-readable headlines currently in the manuscript are:
 
 Do not pool these protocols or imply that one result owns another result's
 causal claim.
+
+The first exact-range headline above is the current seed-42 manuscript text,
+not the completed replication. The new three-seed owner reports
+`-0.281/-0.176/-0.146` at `512/1K/2K`, with `3/3` training seeds favoring Cosh
+at every OOD length and an in-domain cost of `+0.026` NLL. Use
+`research/EXACT_RANGE_151M_3SEED_RESULT_20260820.md` and its companion JSON for
+the next manuscript pass; do not retain or average the older author-confirmed
+aggregate.
 
 ## 4. Implemented manuscript state
 
@@ -166,6 +174,7 @@ Current artifacts:
 | Focused scientific tests | 243 passed |
 | Supplement tests | 25 passed |
 | Isolated extracted package | paper build passed; 142 focused tests passed; all four figures regenerated |
+| Exact-range three-seed run | wrapper exit `0`; seeds 137/256 both arms and evaluations complete; result JSON SHA-256 `6a5ab42b...` / `23a0dd06...`; no OOM/NaN/traceback |
 
 The immutable NeurIPS baseline remains `../paper/main.pdf`, SHA-256
 `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`.
@@ -192,21 +201,31 @@ conda run --no-capture-output -n aidemo \
 
 ## 7. Worktree and authority boundary
 
-Local `main_0726` remains an uncommitted working tree. The current batch
-contains the manuscript optimization plus the authorized exact-range runtime
-optimization; no commit, push, stage, reset, stash, branch switch, or cleanup
-is authorized by this handoff.
+The exact-range result-freeze batch is limited to the new internal report and
+companion JSON plus this handoff and the research index. The user authorized
+this documentation batch to be committed and pushed on `main_0726`; no raw
+checkpoints, machine paths, ignored result trees, or `paper/` changes belong in
+that commit.
 
 Preserve all untracked analysis outputs and LaTeX build products unless the
 user explicitly asks to remove or package them. `paper/` must remain
 byte-for-byte unchanged.
 
-The user explicitly authorized the 151.9M exact-range multi-seed run for seeds
-137 and 256. It uses the shared prepared data, global batch 256, micro-batch
-128, accumulation 2, and `max-autotune-no-cudagraphs`; the first formal arm is
-healthy with finite loss and approximately 183K token/s. This is running
-evidence, not a result. Do not promote it until both seeds, both arms,
-evaluation, aggregation, raw hashes, and the canonical owner are complete.
+The authorized 151.9M exact-range replication for seeds 137 and 256 is
+complete. It used the shared prepared data, global batch 256, micro-batch 128,
+accumulation 2, and `max-autotune-no-cudagraphs`; all four new arms ran at
+approximately 183K token/s. Together with the historical seed-42 comparison,
+the raw-hash-receipted aggregate is:
+
+- fixed range, Cosh minus FMRoPE NLL:
+  `-0.28073/-0.17599/-0.14571` at `512/1K/2K`, `3/3` seeds each;
+- target-matched range: `+0.06032/+0.22720/+0.45959`, `0/3` Cosh wins;
+- training length: `+0.02619` NLL for Cosh.
+
+The whole-file manifest receipt differs from the historical seed-42 receipt;
+the user confirmed the scientific experiment identity, and the owner records
+the semantic protocol and paired receipts rather than requiring byte-identical
+manifest metadata. Do not rerun for receipt-level symmetry.
 
 ## 8. Next action
 
@@ -219,11 +238,18 @@ For another independent AI cross-review:
 4. propose the smallest replacement-level change for each real issue;
 5. do not modify the manuscript for noise or unverified speculation.
 
-When the active multi-seed experiment completes, first freeze its raw outputs,
-hashes, runtime receipts, and aggregate owner. Only then decide whether it
-strengthens, narrows, or leaves unchanged the exact-range sentence; never
-describe the current manuscript result retroactively as multi-seed before that
-gate closes.
+For the next manuscript pass:
+
+1. replace the seed-42 exact-range numbers in the abstract, introduction,
+   identification figure, experiment paragraph, and appendix as one atomic
+   change;
+2. use `-0.281/-0.176/-0.146` and `3/3` direction consistency, retaining the
+   `+0.026` in-domain cost and the target-matched boundary;
+3. show per-seed points so the 512-length heterogeneity remains visible;
+4. update the appendix batch geometry for seed 42 (`64x4`) versus seeds
+   137/256 (`128x2`), all at global batch 256;
+5. rebuild, package, and visually inspect after text and figure agree with the
+   new owner.
 
 Before submission, still requires author action:
 
