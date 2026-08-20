@@ -1,9 +1,15 @@
 # Rebuttal 0723
 
 Last audited: 2026-07-27
-Status: `review_received / internal_draft / sendable_core`
+Status: **archived NeurIPS 2026 review/evidence workspace**
 
-This directory is the single working entry point for the current rebuttal.
+> **Superseded as an action queue.** The active ICLR 2027 handoff is
+> `../../paper-2027/HANDOFF.md`. Keep using this directory's
+> `theory_results/` as canonical owners where the current research index
+> routes here, but do not revive its response status, pending experiments, or
+> score strategy as current work.
+
+This directory was the single working entry point for the NeurIPS rebuttal.
 Start from the retained full OpenReview panel in
 `00_REVIEWER_SCORES_AND_AC_METAREVIEW.md` (AC `XLtL`, reviewers `Dz6s`,
 `zWsa`, `27bE`), then select only evidence that directly answers those
@@ -24,7 +30,7 @@ concerns.
 The full reports below remain evidence owners. The two ledgers are routing
 documents; they do not replace protocol, raw hashes, or uncertainty.
 
-## 2. Current response spine (wide, four blocks)
+## 2. Historical response spine (wide, four blocks)
 
 1. **Submitted mechanism package:** Primary I EVQ×YaRN (three-seed,
    fixed-transform substrate leverage), Primary III MLA scarce-channel

@@ -2,7 +2,8 @@
 
 - **Status:** canonical internal decision memo; architecture implemented in the
   active manuscript and retained as its claim/evidence contract
-- **Date:** 2026-08-19
+- **Created:** 2026-08-19
+- **Last synchronized with manuscript:** 2026-08-20
 - **Scope:** theory architecture, evidence routing, related-work positioning,
   and acceptance-oriented writing decisions
 - **Not submission prose:** all numbers must still be checked against their
@@ -29,6 +30,20 @@ identification, mature-model evidence, and a clear relationship to LeRoPE.
 > table is an independent training-time design variable: it changes the full
 > sin/cos subspace geometry and trained behaviour, while model weights co-adapt
 > to the table used during training.**
+
+The paper-facing coordinate form is
+
+\[
+x_k=-\log\omega_k=a+Rz_k,\qquad z_0=0,\ z_{K-1}=1.
+\]
+
+Here $(a,R)$ is sampled spectral support and $z$ is the normalized interior
+allocation.  In the geometric family, $z_k=k/(K-1)$, so fixing $(a,R)$ fixes
+the whole table.  The exact-range intervention changes only $z$.  The anchored
+and deployed Cosh tables share exactly the same normalized $z$; anchoring
+changes only the support embedding.  An "effective body base", median
+wavelength, or slow-channel count is a summary of $z$, not an unheld scalar
+confound.
 
 | Clause | Evidence | Status |
 | --- | --- | --- |
@@ -131,10 +146,13 @@ This owns the claim that allocation is not reducible to scalar base or range.
 
 ### 4.2 Mature scale
 
-With the same Q/K continuation and the same 4K/8K/16K phase exposure, the
-1.485B Native/EVQ 8K RULER result is `2.02/31.63%`. The 8B matched adaptation
-gives `0.295/14.03%` at 16K. These are decisive effect sizes and should be
-written result-first.
+The scale story is a sequence, not a pooled effect estimate.  A 1.485B
+same-initialisation/same-scientific-recipe trajectory crosses in favour of EVQ
+at 8K/16K.  Matched 300-step LLaMA-3-8B LoRA changes 16K/32K PPL from
+`108.958/991.475` to `24.068/127.911`.  Matched OLMo Q/K-only adaptation keeps
+4K 2Wiki exact at `22.0/21.5%` while producing `0/17.5%` at 8K.  Separate
+RULER task-adaptation runs provide the 1.485B `2.02/31.63%` at 8K and 8B
+`0.295/14.03%` at 16K.  Each protocol keeps its own endpoint and seed scope.
 
 Single seed is not an automatic reason to hide a large controlled result.
 Seed scope remains exact in the internal owner. The outward manuscript need
@@ -217,8 +235,12 @@ It is not a new ICLR claim without a promoted owner.
 - \(\rho^*=\sqrt p\), \(p^{1/3}\), or another smooth density is a universal
   attention-derived solution.
 - LeRoPE and EVQ are the same mechanism from opposite ends.
+- The unsigned A.15 structural-curvature density $\rho\propto w^{1/3}$ predicts
+  LeRoPE's learned profile.  The CPU-only oracle audit places it beyond EVQ in
+  the direction away from LeRoPE; a signed, trajectory-aware LM-risk object
+  would be required instead.
 
-## 8. Recommended nine-page architecture
+## 8. Implemented nine-page architecture
 
 1. **Introduction:** finite table as a training-time spectral coordinate
    system; exact-range result; mature-scale headline.
@@ -293,6 +315,7 @@ theory on top of the old surrogate-heavy narrative.
 | `paper-2027/research/audits/FULL_ROPE_CLAUDE_AUDIT_20260819.md` | independent-audit record | created |
 | `paper-2027/research/audits/DEPENDENCY_SPECTRUM_CLAUDE_AUDIT_20260819.md` | dependency-audit record | created |
 | `AGENTS.md` | project objective, routing, and claim boundaries | modified |
+| `paper-2027/HANDOFF.md` | sole volatile manuscript/build/next-action state | current |
 | `paper-2027/README.md` | active-package entrypoint | modified |
 
 ### REJECTED_APPROACHES
@@ -322,6 +345,10 @@ theory on top of the old surrogate-heavy narrative.
 
 ## 11. Next action
 
-Keep the architecture fixed. Future turns should audit owner consistency,
-official ICLR format, page flow, citations, anonymity, and source/PDF
-reproducibility before considering any additional result.
+Keep the architecture fixed while independent AI cross-reviews are pending.
+When the user supplies them, treat them as adversarial hypotheses: verify each
+alleged defect against the PDF, source, theorem, and owner; rank only verified
+issues by positive-reviewer score ceiling, technical-reviewer score ceiling,
+human readability, and submission validity. Make replacement-level changes
+only for issues that can affect acceptance. Do not launch a new experiment or
+expand the story merely because an external model proposes one.

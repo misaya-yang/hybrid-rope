@@ -54,7 +54,8 @@ which span the centred limit whenever $p$ has nondegenerate support on at least
 three distances.
 \end{proof}
 
-The reported $r_2{=}2.00$ for the 24 slow pairs uses the uniform separation
+The reported $r_2{=}2.00$ for the $23$ slow pairs uses the standard
+$u_k{=}k/K$ grid and the uniform separation
 prior above. Other priors change that static numerical Gram; the fixed-range
 trained-model contrast of \S\ref{sec:exp-identify} does not use this prior.
 
@@ -74,7 +75,11 @@ $\{\pm i\omega_k\}_{k\le K}$ with multiplicity, so the frequency multisets agree
 up to sign and permutation. When a frequency is repeated, similarity may mix
 the entire equal-frequency invariant subspace; it need not preserve the original
 two-dimensional block decomposition. For integer positions the same argument
-applies modulo the $2\pi$ alias.
+is replaced by a one-step spectral argument: evaluating at $\Delta=0$ again
+gives $B=A^{-\top}$, while $\Delta=1$ makes $R_{\Omega'}(1)$ and
+$R_\Omega(1)$ similar. Their eigenvalue multisets
+$\{e^{\pm i\omega_k}\}$ therefore agree, which identifies frequencies up to
+sign, permutation, and the $2\pi$ alias.
 \end{proof}
 
 This is an exact statement about \emph{fixed, position-independent, invertible}
@@ -84,7 +89,8 @@ paths.
 
 \subsection{Collision-only surrogate stationary density}
 
-This subsection proves Theorem~\ref{thm:ode} directly from the collision-only surrogate functional; the forced Fisher extension is treated separately in~\S\ref{subsec:fisher-ext}. Starting from the formal surrogate kernel
+This subsection proves Theorem~\ref{thm:ode} directly from the stated
+collision-only surrogate functional. Starting from the formal surrogate kernel
 \begin{equation}
 K_{\mathrm{app}}(\phi,\psi)=\alpha\delta(\phi-\psi)+\beta\min(\phi,\psi),
 \end{equation}
@@ -130,72 +136,12 @@ which is main-text Theorem~\ref{thm:ode}. The mass constraint $\int\rho{=}1$ is 
 \end{equation}
 Thus the stationary density obtained above is the unique constrained \emph{minimizer} (not merely a critical point), and the surrogate is well-defined as a quadratic functional on $L^2([0,1])\supset C^2([0,1])$ with no further regularity assumption needed for the $\delta$-component. Conditional on $\mathcal{C}_{\mathrm{app}}$, this derivation is exact.
 
-\subsection{Forced Fisher extension}
-\label{subsec:fisher-ext}
-
-Adding a Fisher utility $-\mu\!\int\rho(\phi)\,b^{-2\phi}\,d\phi$ to $\mathcal{C}_{\mathrm{app}}$ modifies the constrained stationarity to $\alpha\rho+\beta g -\mu b^{-2\phi}+\nu = 0$, whose twice-differentiated form is
-\begin{equation}
-\rho''(\phi) - \tau^2\rho(\phi) = \gamma\,b^{-2\phi},
-\label{eq:forced-ode}
-\end{equation}
-with $\gamma$ set by the Fisher multiplier's sign convention. The non-resonant general solution ($\tau\neq 2\log b$) is
-\begin{equation}
-\rho_{\mathrm{full}}(\phi)
-=
-C_1\cosh(\tau\phi)+C_2\sinh(\tau\phi)+\frac{\gamma}{(2\log b)^2-\tau^2}\,b^{-2\phi}.
-\end{equation}
-At resonance, $\tau=2\log b$, the forcing profile $b^{-2\phi}$ coincides with one homogeneous mode. The particular solution is then
-\begin{equation}
-\delta\rho_F^{\mathrm{part}}(\phi)
-= -\frac{\gamma}{2\tau}\,\phi e^{-\tau\phi},
-\end{equation}
-with the homogeneous constants again fixed by the boundary and mass conditions. All bounds below containing $(s^2-\tau^2)^{-1}$ are non-resonant bounds and should be read with $|s^2-\tau^2|^{-1}$; they are not uniform as $\tau\to 2\log b$.
-EVQ-Cosh is the $\gamma{=}0$ homogeneous branch. The forced term is a controlled but nonzero residual; its magnitude and the corresponding warp-amplification caveat are bounded in~\S\ref{sec:pure-tether-bound}.
-
-\subsection{Closed-form solution and geometric limit}
-
-The non-resonant ODE has the closed-form solution
-\begin{equation}
-\rho^*(\phi)=C_1\cosh(\tau\phi)+C_2\sinh(\tau\phi)+P\,b^{-2\phi}.
-\end{equation}
-The first two terms span the homogeneous solution of \(\rho''-\tau^2\rho=0\), and the final term is a particular solution induced by the Fisher-weighted source \(b^{-2\phi}\). This decomposition is the source of the main paper's ``tether + pulse'' interpretation.
-
-To translate the density into RoPE frequencies, write the cumulative map
-\begin{equation}
-F(\phi)=\int_0^\phi \rho^*(s)\,ds,
-\end{equation}
-normalize it to \([0,1]\), and invert at the discrete quantiles \(u_k=k/K\). In the pure-tether branch this inversion has the closed form
-\begin{equation}
-\phi_k(\tau)
-=
-1-\frac{1}{\tau}\operatorname{arcsinh}\!\left((1-u_k)\sinh\tau\right).
-\end{equation}
-To recover geometric RoPE, expand \(\sinh\tau\approx\tau\) as \(\tau\to 0\). Then
-\begin{equation}
-\phi_k(\tau)\to 1-\frac{1}{\tau}\operatorname{arcsinh}((1-u_k)\tau)\to u_k,
-\end{equation}
-which is exactly the uniform quantile map.
-
-This also shows why the high-frequency end remains effectively anchored: for \(u_0=0\), one has \(\phi_0(\tau)=0\) exactly, so the leading inverse frequency remains \(b^0=1\), matching geometric RoPE.
-
-\subsection{Why the pure-tether branch}
-
-The full stationary density contains three terms: a hyperbolic tether (\(\cosh, \sinh\)) and a particular solution \(Pb^{-2\phi}\). The practical EVQ method uses only the pure-tether branch, justified on two grounds.
-
-\textbf{(1) Closed-form invertibility.} The pure-tether density \(\rho(\phi)\propto\cosh(\tau(1-\phi))\) admits an analytically invertible CDF, yielding the closed-form warp \(\phi_k(\tau)\). Including the \(b^{-2\phi}\) term destroys this invertibility and requires numerical root-finding.
-
-\textbf{(2) Conditional CDF control.} Under the slowly varying Fisher-coefficient assumption in Appendix~\ref{sec:pure-tether-bound}, the forcing profile is confined to a boundary layer: $\|q_s\|_1=(1-e^{-s})/s=O(1/\log b)$. This yields an $O(1/\log b)$ $L^1$/CDF residual, not a pointwise bound. Inverse-CDF inversion can further amplify that residual by $1/\inf\rho_\tau\sim\sinh\tau/\tau$. Thus the pure-tether branch is adopted for its closed form; the residual analysis states when that choice is controlled and does not identify a trained-loss optimum.
-
-\subsection{Why constant \texorpdfstring{$\alpha$}{alpha} (and not the continuum stationary-phase coefficient)}
-\label{sec:why-constant-alpha}
-
-A stationary-phase treatment of the exact kernel gives a $\phi$-dependent diagonal coefficient rather than the constant coefficient used in $\mathcal{C}_{\mathrm{app}}$. With $\lambda_b{:=}\ln b$, its leading form is $\alpha_{\mathrm{sp}}(\phi){=}(\pi D_0/L\lambda_b)b^\phi$. Writing the finite-grid coefficient as $\alpha_K{:=}1/(2K)$, the discrepancy is
-\begin{equation}
-\int_0^1 \rho^2(\phi)\bigl[\alpha_K - \alpha_{\mathrm{sp}}(\phi)\bigr]d\phi
-\;=\; \frac{\|\rho\|_2^2}{2K} \;-\; \frac{\pi D_0}{L\lambda_b}\!\int_0^1\!\rho^2(\phi)\,b^{\phi}\,d\phi,
-\label{eq:const-vs-sp}
-\end{equation}
-which is not a higher-order correction at the deployed finite grids. Replacing $\alpha$ by $\alpha_{\mathrm{sp}}(\phi)$ produces a different variable-coefficient Euler--Lagrange equation. We use constant $\alpha$ because it is the finite-grid surrogate that yields a positive density with an elementary inverse CDF; this is a modelling decision, not a continuum asymptotic claim. Its empirical check is therefore functional: whether the resulting schedule also reduces the separately evaluated exact-kernel collision score.
+\paragraph{Why this branch.}
+The main construction uses the homogeneous Cosh solution because its CDF is
+analytically invertible. Adding a task-dependent forcing term would produce a
+different, generally numerical allocation. We therefore test the closed-form
+branch functionally below rather than treating it as an approximation to an
+unknown trained-loss optimum.
 
 \subsection{Surrogate quality: functional validation}
 \label{sec:surrogate-validation}
@@ -203,16 +149,16 @@ which is not a higher-order correction at the deployed finite grids. Replacing $
 The broadband surrogate $K_{\mathrm{app}} = \alpha\delta + \beta\min$ is the
 primary approximation behind the closed-form density; selecting the pure-tether
 branch and a finite operating point are additional modeling choices. We test the
-surrogate functionally rather than pointwise against the oscillatory exact kernel
-$K(\phi_1,\phi_2) = \int D(\Delta)\cos(\omega(\phi_1)\Delta)\cos(\omega(\phi_2)\Delta)\,d\Delta$:
+surrogate functionally rather than pointwise against the closed-form cosine-feature kernel
+$K_{\cos}(\phi_1,\phi_2) = \int D(\Delta)\cos(\omega(\phi_1)\Delta)\cos(\omega(\phi_2)\Delta)\,d\Delta$:
 does the derived allocation also reduce the collision objective under $K$? This
 checks the direction selected by the homogeneous branch; it does not bound the
 omitted Fisher-forcing residual.
 
-Table~\ref{tab:surrogate-validation} answers affirmatively. For a uniform distance prior $D(\Delta) = 1/L$ on $[0, L]$, we compute the exact kernel $K$ at the discrete allocation points for both geometric and EVQ, then evaluate the normalized collision score $C = \sum_{i<j} K_{ij}^2/(K_{ii}K_{jj})$ and effective spectral rank (exponential of the Shannon entropy of the eigenvalue distribution). These diagnostics use the inclusive grid $u_k=k/(K-1)$; they test the allocation direction but are not a direct validation of the deployed midpoint grid. The $12$ reported configurations comprise a six-length text sweep at fixed $b{=}500$K and $K{=}32$, two additional text bases at $L{=}2048$, and four video bases at $L{=}32$ and $K{=}16$; this is not a Cartesian sweep over every listed factor.
+Table~\ref{tab:surrogate-validation} answers affirmatively. For a uniform distance prior $D(\Delta) = 1/L$ on $[0, L]$, we compute $K_{\cos}$ at the discrete allocation points for both geometric and EVQ, then evaluate the normalized collision score $C = \sum_{i<j} K_{ij}^2/(K_{ii}K_{jj})$ and effective spectral rank (exponential of the Shannon entropy of the eigenvalue distribution). These diagnostics use the inclusive grid $u_k=k/(K-1)$; they test the allocation direction but are not a direct validation of either the full block-whitened sin/cos objective or the deployed midpoint grid. The $12$ reported configurations comprise a six-length text sweep at fixed $b{=}500$K and $K{=}32$, two additional text bases at $L{=}2048$, and four video bases at $L{=}32$ and $K{=}16$; this is not a Cartesian sweep over every listed factor.
 
 \begin{table}[ht]
-\caption{Functional surrogate check on the inclusive $u_k{=}k/(K{-}1)$ diagnostic grid. EVQ reduces collision and increases effective rank under the \emph{exact} kernel $K$ in all 12 tested configurations. This is a direction check, not a pointwise approximation or a deployed-grid identity test.}
+\caption{Functional surrogate check on the inclusive $u_k{=}k/(K{-}1)$ diagnostic grid. EVQ reduces collision and increases effective rank under the closed-form cosine-feature kernel $K_{\cos}$ in all 12 tested configurations. This is a direction check, not a pointwise approximation, full-subspace validation, or deployed-grid identity test.}
 \label{tab:surrogate-validation}
 \centering
 \small
@@ -243,26 +189,7 @@ Configuration & GEO & EVQ ($\Delta_C$) & & GEO & EVQ \\
 \end{tabular}
 \end{table}
 
-EVQ reduces collision under the exact kernel in all 12 configurations ($24\%$--$92\%$), and effective rank increases in every row. In the fixed-base text sweep, the relative reduction grows as $L$ shortens. The separate base sweeps remain positive but are not monotone in $b$.
-
-\subsection{Exact higher-order displacement floor}
-\label{sec:floor-higher-order}
-
-The one-channel mid-displacement threshold admits an exact Taylor series in $1/K$ that is fully closed-form (no empirical calibration).
-
-\begin{proposition}[Higher-order floor]
-\label{prop:floor-higher-order}
-For the EVQ-Cosh mapping with $K = d_{\mathrm{rot}}/2$ channels, as
-$N/K\to0$ the $N$-channel mid-displacement threshold satisfies
-\begin{equation}
-\tau_{\mathrm{floor}}(N, K) \;=\; 4\sqrt{\frac{N}{K}}\left[1 + \frac{N}{2K} + \frac{241}{120}\left(\frac{N}{K}\right)^{\!2} + O\!\left((N/K)^3\right)\right].
-\end{equation}
-All coefficients are derived from the Taylor series
-\(\Delta\varphi(1/2, \tau) = -\tau^2/16 + \tau^4/256 + 17\tau^6/30720 + O(\tau^8)\),
-whose coefficients $(-1/16,\, +1/256,\, +17/30720)$ are exact rationals from the expansion of $\operatorname{arcsinh}(\sinh\tau/2)/\tau$ (Appendix script \texttt{theory\_B\_floor\_higher\_order.py}; verified symbolically).
-\end{proposition}
-
-\paragraph{Accuracy.} For $N{=}1$, against the exact floor obtained by solving $|\Delta\varphi(1/2,\tau)|=1/K$, the leading term has relative error $3.85\%$ at $K{=}16$ and $0.10\%$ at $K{=}512$; including both displayed correction terms reduces the error to $0.088\%$ at $K{=}16$, $1.56{\times}10^{-4}\%$ at $K{=}128$, and $2.41{\times}10^{-6}\%$ at $K{=}512$. All constants come from the cosh geometry.
+EVQ reduces collision under $K_{\cos}$ in all 12 configurations ($24\%$--$92\%$), and effective rank increases in every row. In the fixed-base text sweep, the relative reduction grows as $L$ shortens. The separate base sweeps remain positive but are not monotone in $b$.
 
 \subsection{Single-crossing budget shift}
 \label{sec:budget-crossing-proof}

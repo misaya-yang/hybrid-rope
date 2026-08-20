@@ -3,17 +3,18 @@
 \small
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{0.95}
-\caption{Nonexclusive interventions on $\omega_i=b^{-u_i}$. FMRoPE changes the
-scalar base/range; our exact-range control identifies interior allocation;
-LeRoPE and AdaRoPE learn tables.}
+\caption{Nonexclusive interventions on a finite RoPE table. With
+$x_k=-\log\omega_k=a+Rz_k$, support is $(a,R)$ and $z$ is the normalised
+interior allocation. Our exact-range control changes only $z$.}
 \label{tab:layers}
 \begin{tabular}{@{}clll@{}}
 \toprule
- & Controlled object & Typical stage & Representative methods \\
+ & Primary object & What is held fixed & Representative methods \\
 \midrule
-1 & deployed phases / spectrum & context extension & PI, YaRN, LongRoPE \\
-2 & scalar base $b$ & training or inference & FMRoPE \\
-3 & channel frequencies $\{\omega_i\}$ & before / during training & \textbf{\evq{}}, LeRoPE, AdaRoPE \\
+1 & deployed phases & trained weights/table & PI, YaRN, LongRoPE \\
+2 & support $(a,R)$ & geometric $z$ & FMRoPE / scalar base \\
+3 & allocation $z_{1:K-2}$ & support $(a,R)$ & \textbf{exact-range \evq{}} \\
+4 & full table $\{\omega_k\}$ & operator family & LeRoPE, AdaRoPE \\
 \bottomrule
 \end{tabular}
 \end{table}

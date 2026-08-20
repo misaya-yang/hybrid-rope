@@ -72,7 +72,8 @@ awk -v w="$WORST" 'BEGIN { exit !(w > 5) }' && FAIL=1 || true
 
 # --- 5. anonymity (ICLR is double blind; de-anonymised PDFs are desk rejected)
 echo -n "anonymity scan         : "
-if grep -rqiE "github\.com/[a-z0-9_-]+|acknowledg(e|ment)|/Users/|/root/|autodl" \
+USER_HOME_PATTERN='/''Users/'
+if grep -rqiE "github\.com/[a-z0-9_-]+|acknowledg(e|ment)|${USER_HOME_PATTERN}|/root/|autodl" \
     main.tex sections/ appendix/ tables/ refs/ 2>/dev/null; then
   echo "[CHECK - possible deanonymising string]"; FAIL=1
 else

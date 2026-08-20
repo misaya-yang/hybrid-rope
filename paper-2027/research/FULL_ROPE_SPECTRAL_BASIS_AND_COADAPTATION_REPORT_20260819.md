@@ -1,8 +1,11 @@
 # Full-RoPE 有限谱基、Attention 使用与训练共适应
 
-- **日期：** 2026-08-19
-- **状态：** 理论与 CPU 诊断已完成；新总 claim 尚未写入论文正文
-- **用途：** ICLR 2027 核心理论重构、证据路由和跨上下文续作
+- **创建日期：** 2026-08-19
+- **最后同步正文：** 2026-08-20
+- **状态：** 理论与 CPU 诊断已完成；新 claim architecture 已写入当前
+  `paper-2027/` 正文。易变状态与下一步以 `../HANDOFF.md` 为准
+- **用途：** ICLR 2027 核心理论、证据路由和 claim boundary 的 canonical
+  internal report
 
 ## 技术摘要
 
@@ -198,6 +201,12 @@ V_\omega\longrightarrow\operatorname{span}\{1,\Delta\}.
 | 16 | 6 | 12 | 2.0001 | 1.056 | 83.33% |
 | 32 | 12 | 24 | 2.0001 | 1.072 | 91.67% |
 | 64 | 24 | 48 | 2.0002 | 1.079 | 95.83% |
+
+This table uses the endpoint-inclusive diagnostic grid
+$u_k{=}k/(K{-}1)$ so that the physical endpoints are exactly $[1/b,1]$.
+The standard RoPE implementation instead uses $u_k{=}k/K$; at $K{=}64$ it has
+$23$ slow pairs ($46$ nominal dimensions) with $r_2{=}2.00013$.  The active
+manuscript reports this standard-grid count.
 
 解释：把每个 pair 当抽象子空间并白化后，许多低频 pairs 共同只提供约二维；
 保留原始特征能量时，sine 能量还随 \(\omega^2\) 消失，所以 raw effective rank
@@ -478,6 +487,13 @@ geometry intervention，而是破坏已形成的共适应。
 “\(2.205L\) 确证 EVQ 机制”等叙事。安全表述仅是：LeRoPE 独立证明 frequency
 table 是值得设计的变量，并用 Fixed-LeRoPE 证明固定表携带显著价值。
 
+2026-08-20 的 CPU-only profile-oracle audit 进一步否决了
+$\rho\propto w^{1/3}$ 的捷径：用 A.15-compatible unsigned structural softmax
+curvature 得到的 profile 比 EVQ 更偏向快频，shape RMSE 到 EVQ/LeRoPE 为
+`0.177/0.347`，沿 EVQ→LeRoPE 轴投影为 `-0.957`。该结果只说明当前 $w$
+定义不对；它不能被写成 LeRoPE 机制结论。若继续，需要 signed、
+training-trajectory-aware LM risk derivative。
+
 ---
 
 ## 8. 可投稿的 claim architecture
@@ -488,6 +504,19 @@ table 是值得设计的变量，并用 Fixed-LeRoPE 证明固定表携带显著
 > hyperparameter. Its phase-invariant subspace geometry bounds positional
 > identifiability, while the coefficients that exploit this basis co-adapt with
 > the table during training.**
+
+投稿正文应先给出唯一的坐标分解
+
+\[
+x_k=-\log\omega_k=a+Rz_k,\qquad z_0=0,\ z_{K-1}=1.
+\]
+
+其中 $(a,R)$ 是 sampled support，$z$ 是归一化 interior allocation。标准
+geometric family 固定 $z_k=k/(K-1)$，因此固定 $(a,R)$ 后不存在第二个 scalar
+base 可以复现非几何内部表。所谓 median/effective base、完整转周期通道数都是
+$z$ 的函数，可用于机制分析，不能作为“第三轴不存在”的混杂解释。Exact-range
+anchored Cosh 与 deployed midpoint Cosh 的 raw support 不同，但归一化后的 $z$
+严格相同；前者是后者的 support-controlled identification arm。
 
 这个 claim 的每个分句都有独立证据：
 
@@ -561,6 +590,12 @@ EVQ-Cosh 保留三个角色：
   long-phase exposure 单独替代。
 - **8B matched adaptation：** 16K RULER `0.295 vs 14.03`。支持频率 substrate
   差异在成熟模型中持续存在；不单独证明 full theory。
+- **8B matched 300-step LoRA：** Native/EVQ PPL 为
+  `108.958/24.068` @16K、`991.475/127.911` @32K；这是 matched probability
+  与 causal-source-use evidence，不与独立的 516-step RULER protocol 拼接。
+- **同一 YaRN-style range 操作：** 454M 三 seed 中，同一固定 scale 对 Geo 与
+  EVQ 的恢复幅度显著不同。它支持 substrate-dependent composition，不冒充
+  official/tuned YaRN benchmark，也不替代 exact-range 对 $z$ 的因果识别。
 
 论文中必须继续分开：
 
@@ -638,31 +673,30 @@ CUDA_VISIBLE_DEVICES='' conda run --no-capture-output -n aidemo \
 
 ---
 
-## 12. 推荐下一步
+## 12. 当前处置与下一步
 
-按中稿杠杆排序：
+本报告原先要求的两个最高杠杆动作已经完成：exact retrofit obstruction
+已进入 theorem/proof，正文也已按 full-RoPE geometry → exact-range
+identification → co-adaptation → mature persistence → constructive instance
+重排。
 
-1. **把已证明的 exact retrofit obstruction 写入论文。** 统一符号、补入正式
-   theorem/proof，并保持 approximate-retraining 边界。
-2. **重排论文骨架。** full-RoPE geometry → collapse/retrofit theory → exact-range
-   training identification → mature persistence → EVQ constructive instance。
-3. **做逐 token empirical-Fisher robustness。** 仅验证诊断排序，禁止据此优化
-   新 frequency schedule；它不是正文重构的前置条件。
-4. **CPU seed-43/44 的 \(2\times2\) 仅作可选稳健性。** 当前效应量已足以支撑
-   诊断，不得把额外 seed 变成无必要的投稿阻塞项。
-5. **若以后授权新训练，最小训练证据是 matched Geo-base500K / Geo-base8K /
-   fixed-range non-geometric 三臂。** 未授权前不得启动。
+当前不继续扩展机制或启动实验。等待用户提供独立 AI 交叉审稿后：
 
-进一步问题：
-
-- principal-angle retrofit bound 能否在真实 content-weighted operator 上保持可计算？
-- Fixed-LeRoPE 学出表与解析 base-only/EVQ 表的主要差异来自 scale 还是 interior
-  placement？
-- 训练期间何时形成 table-specific Q/K usage，早期轨迹能否预测最终共适应？
+1. 把每个批评还原成可核验的 theorem、protocol、number 或 human-readability
+   问题；
+2. 只保留会影响正向 reviewer 上限、技术 reviewer 上限、可读性或投稿有效性的
+   问题；
+3. 优先替换低杠杆内容，不在九页正文上叠加；
+4. 逐 token empirical-Fisher、额外 50M seeds、principal-angle approximate
+   bound 与 matched base-training arms 均为可选研究，不是当前投稿门槛，也未获
+   GPU 授权。
 
 ---
 
-## 13. Agent continuation packet
+## 13. Durable continuation packet
+
+本节保留稳定的 theory boundary；当前文件状态、hash、验证收据和 next action
+只看 `../HANDOFF.md`。
 
 ### NON_NEGOTIABLE_CONSTRAINTS
 
@@ -693,12 +727,12 @@ CUDA_VISIBLE_DEVICES='' conda run --no-capture-output -n aidemo \
 | Path | Role | State |
 | --- | --- | --- |
 | `paper-2027/research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md` | canonical internal report | created |
-| `scripts/analysis/full_rope_collision_audit.py` | static theory/numerics | created, untracked at report time |
-| `scripts/analysis/attention_fisher_50m_probe.py` | task-sensitive \(2\times2\) | created, untracked at report time |
-| `scripts/analysis/base_only_50m_control.py` | base-only controls | created, untracked at report time |
-| `AGENTS.md` | active-workspace routing | modified |
-| `paper-2027/README.md` | research entrypoint | modified |
-| `paper-2027/main.tex` and manuscript sources | active manuscript | unchanged by this audit |
+| `scripts/analysis/full_rope_collision_audit.py` | static theory/numerics | tracked canonical diagnostic |
+| `scripts/analysis/attention_fisher_50m_probe.py` | task-sensitive \(2\times2\) | tracked canonical diagnostic |
+| `scripts/analysis/base_only_50m_control.py` | base-only controls | tracked canonical diagnostic |
+| `AGENTS.md` | stable objective, routing, and claim boundaries | current |
+| `paper-2027/HANDOFF.md` | volatile manuscript/build/next-action state | current |
+| `paper-2027/main.tex` and manuscript sources | active manuscript | architecture implemented |
 
 ### REJECTED_APPROACHES
 
@@ -712,15 +746,15 @@ CUDA_VISIBLE_DEVICES='' conda run --no-capture-output -n aidemo \
 
 ### RISKY_REGIONS
 
-- `paper-2027/sections/03_theory.tex`：当前仍以 \(\mathcal C_{\rm app}\)/Cosh 为
-  主骨架；大改时应替换而不是叠加，并准确限定已证明 exact retrofit theorem。
+- `paper-2027/sections/03_theory.tex`：full-RoPE geometry 与 exact retrofit
+  theorem 已是主骨架；不要恢复 surrogate-first 叙事。
 - `paper-2027/sections/02_related.tex`：LeRoPE 定位当前安全；不要从旧内部 note
   复制撤回内容。
 - `paper-2027/sections/04_experiments.tex`：不要把 exact-range、mature adaptation
   和 50M retrofit 合并成一个因果层级。
-- `scripts/analysis/`：新脚本当前是内部诊断；提交前需清除机器路径、checkpoint
-  identity 和非匿名输出。
-- Page budget：正文已用满 8 页；新理论必须替换旧低杠杆内容，而不是叠加。
+- `scripts/analysis/`：诊断脚本仍是内部证据层；只有 supplement allowlist
+  明确纳入的匿名脚本才进入 reviewer package。
+- Page budget：正文已用满 9 页；任何新增内容必须指名替换对象。
 
 ### VERIFICATION_CHECKS FOR NEXT AGENT
 

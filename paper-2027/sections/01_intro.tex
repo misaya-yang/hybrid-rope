@@ -2,77 +2,66 @@
 \label{sec:intro}
 
 RoPE has a spectral budget. Each attention head receives only
-$K=\drot/2$ rotary frequency pairs, fixed before training, and standard RoPE
-spends them on the geometric table $\omega_i=b^{-2i/\drot}$
-\citep{su2024roformer}. That choice is reused across model families---including
-LLaMA-3, Qwen2.5, DeepSeek-V3, and video DiTs
-\citep{grattafiori2024llama3,qwen2024qwen25,deepseekv3,videorope2025}---so the
-table is easily mistaken for part of the rotary operator rather than a design
-decision.
+$K=\drot/2$ rotary pairs before training, but the familiar scalar base specifies
+only their support. For an ordered table define
+\begin{equation}
+x_k=-\log\omega_k=a+Rz_k,
+\qquad z_0=0,\quad z_{K-1}=1,
+\label{eq:table-decomposition}
+\end{equation}
+where $a=x_0$, $R=x_{K-1}-x_0$, and $z$ is the normalised allocation inside the
+sampled log-frequency span. Standard geometric RoPE fixes
+$z_k=k/(K-1)$. Thus the base sets the span, while $z$ determines how the finite
+channels spend it.
 
-Long-context methods expose several distinct decisions. Position
+This decomposition separates decisions that are often conflated. Position
 interpolation, YaRN, and LongRoPE transport a trained spectrum toward a target
 range \citep{chen2024position,peng2024yarn,ding2024longrope,shang2025longrope2};
-FMRoPE changes the scalar base while retaining a geometric exponent grid
-\citep{oka2026fmrope}; LeRoPE learns individual frequencies and obtains stable
-non-geometric tables \citep{karypis2026lerope}. We isolate the variable between
-these cases: \emph{with the sampled endpoints and log-frequency span fixed,
-does the placement of the finite interior channels still change what a model
-learns?}
+FMRoPE changes scalar support while retaining a geometric exponent grid
+\citep{oka2026fmrope}; LeRoPE and AdaRoPE learn broader frequency tables
+\citep{karypis2026lerope,wang2026adarope}. These interventions can be composed
+and need not act on only one coordinate. Our question is narrower and exactly
+controlled: \emph{with $a$ and $R$ fixed, does changing only the $K-2$
+interior entries of $z$ change what a model learns?}
 
-It does. Our central claim is that interior allocation is an independent
-training-time variable even at fixed spectral range. We first make the finite
-budget precise (\S\ref{sec:theory}). A rotary frequency contributes a
-two-dimensional sin/cos subspace, not one cosine feature. Canonical
-correlations between these subspaces give a phase-invariant redundancy
-$c_{ij}$, and block-whitening all pairs yields
+It does. In a $151.9$M matched pair, initialisation, data order, optimiser,
+budget, evaluation anchors, and both sampled endpoints are identical; moving
+only $30$ interior frequencies changes OOD NLL by
+$-0.478/-0.205/-0.113$ at $512$/$1$K/$2$K
+(\S\ref{sec:exp-identify}). The anchored intervention is not a different
+shape from deployed \evq{}: it is the affine support normalisation of the same
+midpoint Cosh quantiles and therefore has exactly the same $z$. A separate
+$50.9$M, $12$-configuration, three-seed factorial finds the non-uniform
+direction for both $1.25\times$ Cosh ($10/12$) and a deformation-matched
+exponential ($9/12$). Their difference is unresolved. This is the key
+distinction: the result identifies an allocation axis, not a privileged curve.
+
+We next ask what that axis means for a trained model
+(\S\ref{sec:theory}). Each rotary frequency contributes a two-dimensional
+sin/cos subspace. Canonical correlations give phase-invariant redundancy, and
+block whitening yields the exact finite-basis identity
 \[
 r_2(R)=\frac{2K}{1+(K-1)\bar c}.
 \]
-This is an exact identity for the static positional basis. It also reveals a
-sharp failure of geometric allocation: at $L{=}4096$, $b{=}5{\times}10^5$, and
-$K{=}64$, the $24$ slowest pairs span $48$ nominal dimensions but have stable
-rank $2.00$. They are mutually redundant, not necessarily unused.
+In a standard $4$K table, $23$ slow pairs occupy $46$ nominal dimensions but
+have Rényi-$2$ effective rank $2.00$. This is a static redundancy statement,
+not a predictor of language-model loss. Indeed, crossing two $50$M weight sets
+with two runtime tables leaves the self-consistent systems at PPL $7.14/7.16$
+but sends post-hoc swaps to $76.20/23.05$. We prove the exact counterpart:
+unequal frequency multisets cannot be absorbed by fixed,
+position-independent invertible Q/K maps. A RoPE table is therefore a
+training-time coordinate system whose coefficients are learned with it.
 
-We then identify allocation in trained models
-(\S\ref{sec:exp-identify}). In a $151.9$M matched pair, the sampled highest and
-lowest frequencies, log-span, initialisation, token order, optimiser, budget,
-and evaluation anchors are identical; only $K{-}2=30$ interior frequencies
-move. An endpoint-normalised Cosh diagnostic---not the deployed midpoint
-\evq{} grid---minus the uniform-in-log grid changes OOD NLL by
-$-0.478/-0.205/-0.113$ at $512$/$1$K/$2$K. A separate $50.9$M factorial over
-two bases, two training lengths, three head dimensions, and three seeds finds
-the non-uniform direction in $10/12$ configurations for the pre-specified
-$1.25\times$ Cosh and $9/12$ for a deformation-matched exponential. The two
-analytic shapes are not empirically
-separated; the result identifies the allocation axis, not a unique curve.
+The same effective-context shift recurs beyond the identification models
+(\S\ref{sec:exp-mature}). A $1.485$B from-initialisation trajectory crosses
+from a small $2$K/$4$K cost to lower $8$K/$16$K NLL. In matched $300$-step
+LLaMA-3-8B LoRA, \evq{} changes PPL from $6.82/108.96/991.48$ to
+$10.07/24.07/127.91$ at $8$K/$16$K/$32$K. In independently matched OLMo-2
+Q/K-only task adaptation, Native/\evq{} 2Wiki exact is $22.0/21.5\%$ at $4$K
+but $0/17.5\%$ at $8$K. These protocols test persistence and capability
+conversion; the exact-range pair remains the causal owner of $z$.
 
-Static geometry alone cannot select a table for a trained model. Crossing two
-$50$M weight sets with the geometric and \evq{} runtime tables raises the
-static stable rank from $4.57$ to $12.54$ in the worst mismatch while PPL
-degrades from $7.14$ to $76.20$. The two self-consistent systems remain at
-$7.14$ and $7.16$, whereas both post-hoc swaps fail. We prove the exact
-counterpart: unequal frequency multisets cannot be absorbed by fixed,
-position-independent invertible Q/K maps. The table is therefore a coordinate
-system to which weights co-adapt during training, not a plug-in statistic.
-
-Within this theory, \evq{} has a constructive role. A convex
-surrogate for allocating density in log-frequency has a unique Cosh minimiser;
-inverse-CDF quantisation gives a closed-form table with geometric RoPE as the
-$\tau\to0$ limit. This supplies a reproducible, zero-learned-parameter
-construction and controlled intervention. It does not claim full-RoPE,
-language-model, or universal optimality.
-
-Finally, the table-conditioned effect persists at mature scale
-(\S\ref{sec:exp-mature}). OLMo-2 Native and \evq{} systems receive the same
-$300$-step Q/K-only continuation and the same $4$K/$8$K/$16$K phase exposure;
-their $8$K RULER scores are $2.02/31.63\%$, and held-out 2Wiki exact is
-$0/17.5\%$. A separate matched LLaMA-3-8B physical-$8$K continuation reaches
-$0.295/14.03\%$ RULER at $16$K. Together, the theory, exact-range controls,
-co-adaptation diagnostic, and mature-model comparisons establish one chain:
-finite interior allocation changes both the positional basis and the trained
-system that uses it.
-
-The exact-range pair owns causal identification, the three-seed factorial owns
-cross-configuration replication, and the mature-model runs test scale rather
-than estimate the primary effect.
+Finally, a convex modelling surrogate yields a closed-form Cosh density and
+inverse-CDF table with geometric RoPE as the $\tau\to0$ limit. \evq{} is thus
+a reproducible, zero-learned-parameter point on the allocation axis, not a
+claim of full-RoPE, language-model, or universal optimality.

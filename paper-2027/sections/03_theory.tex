@@ -4,21 +4,20 @@
 \begin{figure}[tb]
   \centering
   \includegraphics[width=\linewidth]{fig_method_overview.pdf}
-  \caption{\textbf{From finite-basis geometry to trained use.}
-  (a)~At $L{=}4096$, $24$ slow geometric pairs occupy $48$ nominal dimensions
-  but only $2.00$ stable-rank dimensions. (b)~\evq{} is a closed-form
-  inverse-CDF warp of the finite table. (c)~Fixed-range training identifies
-  interior allocation, while frozen table swaps reveal weight--table
-  co-adaptation.}
+  \caption{\textbf{Support does not determine allocation.}
+  (a)~Equation~\eqref{eq:table-decomposition} separates support $(a,R)$ from
+  normalised interior allocation $z$. (b)~Anchored Cosh and deployed midpoint
+  \evq{} have exactly the same $z$ after support normalisation. (c)~The table
+  is learned with the weights: self-consistent pairs remain near PPL $7$,
+  while frozen post-hoc swaps fail.}
   \label{fig:method-overview}
 \end{figure}
 
-Figure~\ref{fig:method-overview} separates three layers: exact statements about
-the static geometry of a finite table (\S\ref{sec:subspaces}--\S\ref{sec:budget});
-an exact obstruction and an empirical diagnostic for how trained weights use
-that table (\S\ref{sec:coordinate}); and a modelling choice that produces one
-closed-form construction (\S\ref{sec:construction}). The layers are connected,
-but none is substituted for another.
+Figure~\ref{fig:method-overview} makes the paper's three steps explicit:
+separate support from allocation, describe the resulting finite basis, and
+measure the weights trained to use it. The closed-form construction of
+\S\ref{sec:construction} supplies one reproducible allocation, not a substitute
+for either geometry or trained-model evidence.
 
 \subsection{A finite table is a set of two-dimensional subspaces}
 \label{sec:subspaces}
@@ -27,6 +26,13 @@ Let $\phi \in [0,1]$ parameterise log-frequency, $\omega(\phi) = b^{-\phi}$, let
 $\drot$ be the number of rotated dimensions and $K = \drot/2$ the number of
 rotary pairs ($\drot{=}\dhd$ for standard MHA, smaller for compressed-RoPE
 architectures such as MLA).
+
+Equation~\eqref{eq:table-decomposition} is a coordinate identity for any
+ordered positive table with nonzero span. In the geometric family
+$z_k=k/(K-1)$, so fixing $(a,R)$ fixes every channel. A second table with the
+same support and different interior $z$ therefore cannot be represented by a
+different scalar base. Quantities such as median wavelength or the number of
+channels completing a cycle are summaries of $z$, not omitted scalar controls.
 
 A rotary pair contributes $f_\omega(\Delta) = C\cos(\omega\Delta) +
 D\sin(\omega\Delta)$ to the relative-position attention logit, with $C,D$ set by
@@ -63,7 +69,7 @@ blocks $I_2$. Write $\bar c$ for the mean of the $c_{ij}$.
 \begin{theorem}[Spectral budget identity]
 \label{thm:budget}
 $\operatorname{tr}R = 2K$ and $\operatorname{tr}(R^2)=2K[1+(K{-}1)\bar c]$, so the
-Rényi-$2$ (stable) effective dimension of the positional basis is exactly
+Rényi-$2$ effective rank of the positional basis is exactly
 \begin{equation}
 r_2(R)=\frac{(\operatorname{tr}R)^2}{\operatorname{tr}(R^2)}
       =\frac{2K}{1+(K-1)\bar c}.
@@ -74,10 +80,10 @@ r_2(R)=\frac{(\operatorname{tr}R)^2}{\operatorname{tr}(R^2)}
 The denominator exactly characterises this particular static dimension summary:
 larger mean pairwise redundancy lowers $r_2$. Allocation changes the entire Gram
 spectrum, however, and $\bar c$ is neither a language-model metric nor a complete
-summary of Shannon rank or log-determinant. The exact-range experiment of
-\S\ref{sec:exp-identify} therefore does not assume that $\bar c$ predicts loss;
-it tests directly whether changing the interior table at fixed $K$ and sampled
-range changes the trained model.
+summary of Shannon rank or log-determinant. Block whitening also removes
+per-channel energy and conditioning, leaving trained Q/K coefficients outside
+the statistic. The exact-range experiment of \S\ref{sec:exp-identify} therefore
+does not assume that $\bar c$ predicts loss; it tests the trained effect directly.
 
 The deflation is concentrated at the slow end.
 
@@ -92,12 +98,15 @@ direction, the centred limit is
 $\operatorname{span}\{\Delta-\mathbb E_p\Delta,\ \Delta^2-\mathbb E_p\Delta^2\}$.
 \end{proposition}
 
-Concretely, at $L{=}4096$, $b{=}5{\times}10^5$, $K{=}64$ the $24$ pairs with
-$\omega L\le1$ occupy $48$ nominal dimensions but have block-whitened
+Concretely, at $L{=}4096$, $b{=}5{\times}10^5$, $K{=}64$ the $23$ pairs with
+$\omega L\le1$ occupy $46$ nominal dimensions but have block-whitened
 $r_2 = 2.00$: about $96\%$ of that sub-budget is redundant. Slow channels are
 \emph{redundant}, not unused --- they still carry content, and
 Prop.~\ref{prop:collapse} says only that many of them describe nearly the same
 positional direction.
+This common long-context failure mode motivates allocating a finite table, but
+it is not asserted to be the specific mechanism of the $b{=}256$ exact-range
+control; the full subspace geometry applies away from the asymptotic threshold.
 
 \subsection{The table is a training-time coordinate system}
 \label{sec:coordinate}
@@ -107,13 +116,13 @@ predict what a trained model does with one, and the gap is not small. In a
 frozen $50$M diagnostic ($L{=}512$, $b{=}5{\times}10^5$; no training, no
 gradient) we cross two trained weight sets with two runtime tables
 (Table~\ref{tab:coadapt}). Substituting \evq{} for the geometric table at
-inference \emph{raises} the block-whitened stable rank from $4.57$ to $12.54$
+inference \emph{raises} the block-whitened $r_2$ from $4.57$ to $12.54$
 while perplexity degrades from $7.14$ to $76.20$.
 
 \input{tables/table_coadapt}
 
 Two consequences discipline the rest of the paper. First, static criteria such
-as collision, stable rank, and log-determinant do not by themselves predict
+as collision, effective rank, and log-determinant do not by themselves predict
 trained quality, so every task claim in \S\ref{sec:experiments} is made on
 trained models. Second, the two \emph{self-consistent} systems are essentially
 tied in-window ($7.14$ vs.\ $7.16$) while both mismatched cells collapse: on LM
@@ -205,9 +214,11 @@ post-softmax transport model supplies the $\deff/\sqrt{\Ltr}$ scaling structure
 but not the finite coefficient $c(\Pi)$ (App.~\ref{sec:leff-derivation}); the
 experiments use $c(\Pi){=}1$ as an operating default, not a global prescription.
 Across the $21$ configurations of \S\ref{sec:exp-tau}, the best tested $\tau$
-stays within a $0.75\times$--$1.5\times$ window around that value. Finally, two grids
-appear below and are \emph{not}
-interchangeable: \evq{} deploys the midpoint grid of \eqref{eq:warp}, while the
-endpoint-normalised variant $u_k{=}k/K$ ($\phi_0{=}0$ preserves $\omega_0{=}1$)
-is a shape diagnostic used where a control must pin the sampled extrema exactly,
-as in \S\ref{sec:exp-identify}.
+stays within a $0.75\times$--$1.5\times$ window around that value. The deployed
+midpoint table has raw exponent positions $q_k=\phi_k(\tau)$. The exact-range
+diagnostic uses
+$z_k=(q_k-q_0)/(q_{K-1}-q_0)$ in
+Eq.~\eqref{eq:table-decomposition}. It therefore preserves the deployed table's
+normalised Cosh shape exactly while replacing only its support embedding so that
+the sampled extrema match Geo. This is the distinction between identifying $z$
+and evaluating the complete deployed table.

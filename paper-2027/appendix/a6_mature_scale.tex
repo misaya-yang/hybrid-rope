@@ -16,8 +16,9 @@ physical-memory cap, not phase-free $4$K training. On $8$K
 \texttt{niah\_single\_1}, strict first-generated-number exact is $0/100$
 for Native and $69/100$ for the matched \evq{} seed; an independently trained
 \evq{} seed scores $67/100$ on the same rows. The two \evq{} results are
-training-seed replications on a shared evaluation set. Natural-text NLL and the distinct
-autoregressive endpoint are reported separately in Table~\ref{tab:mature}.
+training-seed replications on a shared evaluation set. Natural-text NLL and the
+distinct autoregressive endpoints are kept separate in the discussion below
+and in Table~\ref{tab:ruler}.
 
 \paragraph{Selective Q/K phase adaptation.}
 To test a less intrusive mature-checkpoint adaptation, we start independently
@@ -63,7 +64,9 @@ passkey cases, median target-block hit@16 over $32$ retrieval heads rises from
 $18.75\%$ to $64.06\%$. Removing the remote gold block from every head changes
 NLL by $-0.0095$ for Native and $+1.5055$ for \evq{}. These are matched
 teacher-forced probability and causal-routing measurements; autoregressive
-task accuracy is evaluated separately.
+task accuracy is evaluated separately. Descriptive Native/\evq{} PPL is
+$6.817/10.068$, $108.958/24.068$, and $991.475/127.911$ at those lengths;
+NLL remains the primary comparison because PPL ratios amplify large losses.
 
 \paragraph{RULER-family continuation.}
 A separate $516$-step continuation uses identical physical-$8$K supervision

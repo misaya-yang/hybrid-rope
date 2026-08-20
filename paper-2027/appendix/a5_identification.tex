@@ -13,17 +13,33 @@ evaluation anchors; the sampled highest frequency; the sampled lowest
 frequency; and the log-frequency span. The single free variable is the location
 of the $K{-}2 = 30$ interior frequencies.
 
+The optimiser is fused AdamW with $\beta_1{=}0.9$, $\beta_2{=}0.95$, weight
+decay $0.01$, and gradient clipping at $1.0$. Peak/minimum learning rates are
+$6\times10^{-4}/6\times10^{-5}$ with $762$ warmup steps and cosine decay.
+Global/micro batch sizes are $256/64$ sequences (four accumulation steps),
+each of length $256$.
+
 \paragraph{Arms.} \emph{Baseline:} a paper-faithful reimplementation of the
 uniform-in-log exponent grid specified in \S6.1 of \citet{oka2026fmrope}, at
 training base $256$. No public author implementation was available, so the
 baseline implements the published rule rather than reproducing author code.
 \emph{Intervention:}
 endpoint-normalised cosh interior spacing at $\tau{=}4$. Note that the
-endpoint-normalised cosh arm is \emph{not} identical to the deployed midpoint
-\evq{} grid of Eq.~\eqref{eq:evq-practical}, whose $\tau$ also shifts the
-sampled extrema; endpoint normalisation is what makes the exact-range control
-possible, and this is a shape diagnostic rather than a deployment
-configuration.
+endpoint-normalised arm and deployed midpoint \evq{} are different support
+embeddings of the \emph{same normalised shape}: both use midpoint Cosh
+quantiles $q_k$, and the diagnostic removes only their affine endpoint degrees
+of freedom. This normalisation is what makes the exact-range control possible.
+
+Concretely, let $q_k{=}\Phi_\tau((k+\tfrac12)/K)$,
+$s_k{=}(q_k-q_0)/(q_{K-1}-q_0)$, and
+$R{=}((K-1)/K)\log B$.  The intervention uses
+\begin{equation}
+\omega_k^{\mathrm{anchor}}=\exp(-R s_k),
+\qquad
+\omega_k^{\mathrm{Geo}}=\exp\!\left(-R\frac{k}{K-1}\right).
+\label{eq:exact-range-grid}
+\end{equation}
+Hence $k{=}0,K{-}1$ match exactly and only the $K{-}2$ interior entries differ.
 
 \paragraph{Evaluation.} Two conditions. \texttt{fixed}: each checkpoint retains
 its training range. \texttt{target-matched}: the range is set to the declared
@@ -85,13 +101,14 @@ cross-configuration \emph{direction}, and the $151.9$M control provides the
 effect size within its configuration. Scale is evaluated separately in
 \S\ref{sec:exp-mature}.
 
-\section{The fixed-index ramp scaler}
+\section{The YaRN-style range scaler}
 \label{sec:ramp-scaler}
 
-Every arm marked $+\rs{}$ in this paper uses our fixed-index smooth-ramp range
-scaler from the NTK-by-parts family that includes YaRN
-\citep{peng2024yarn}. It is used as a fixed-scale substrate control, not as a
-reproduction or tuning study of reference YaRN.
+Every arm marked $+\rs{}$ uses the same fixed-index smooth-ramp member of the
+NTK-by-parts/YaRN family \citep{peng2024yarn}: high-frequency channels are
+left nearly unchanged and lower-frequency channels receive progressively more
+range scaling. Its role is a fixed-scale substrate control, not a claim that
+the tested scale is independently optimal for either substrate.
 
 Its role is a fixed-scale substrate control: it is held
 \emph{identical} across the arms being compared --- same implementation, same
@@ -128,7 +145,7 @@ learning-rate sweep at $10\times$ and $100\times$ the base rate, and the
 stronger $100\times$ setting is the $455.3$ row. This answers a tuning-budget
 question but not the attribution question: a learned-parameter arm cannot
 isolate allocation shape from parameterisation, which is why
-\S\ref{sec:exp-identify} uses fixed zero-parameter schedules under an identical
+\S\ref{sec:exp-identify} uses fixed analytic schedules under an identical
 operator instead, and why no allocation-shape claim in this paper depends on
 this table.
 

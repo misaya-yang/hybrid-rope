@@ -1,12 +1,13 @@
 \section{Related Work}
 \label{sec:related}
 
-Write the RoPE table as $\omega_i=b^{-u_i}$, with the geometric grid
-$u_i=2i/\drot$. Prior work changes several, nonexclusive parts of this
-parameterization: it transports a pretrained spectrum to a longer range, changes
-the scalar base, or changes the frequencies assigned to individual channels
+Write $x_k=-\log\omega_k=a+Rz_k$ as in
+Eq.~\eqref{eq:table-decomposition}. Prior work changes several, nonexclusive
+parts of this parameterisation: it transports realised phases, changes support
+$(a,R)$, or changes the normalised interior allocation $z$
 (Table~\ref{tab:layers}). This decomposition separates when a method acts from
-which spectral degrees of freedom it controls.
+which spectral degrees of freedom it controls; it does not require a method to
+occupy only one row.
 
 \input{tables/table_layers}
 

@@ -53,7 +53,7 @@ require an author decision or final manual review.
       scripts, evaluation contracts, and exact-range configs needed for claims.
       The `iclr2027` packager profile passed its leak scan, ZIP integrity test,
       isolated paper build, RULER reanalysis, and 142 focused tests on
-      2026-08-19.
+      2026-08-20.
 
 ## Author actions before submission
 

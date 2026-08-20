@@ -1,5 +1,10 @@
 # NeurIPS 2026 #11628 Rebuttal — 交接说明
 
+> **归档提示（2026-08-20）：** 这是 2026-07 NeurIPS rebuttal 的历史快照，
+> 其中的“当前状态”“剩余判断”“待提交文件”和概率估计均已过期。当前 ICLR
+> 2027 唯一交接入口是 `../../paper-2027/HANDOFF.md`。本文件只用于追溯当时
+> 的 response 决策，不能覆盖当前 `AGENTS.md`、hand-off 或 evidence owner。
+
 最后更新:2026-07-27。接手前**先读完第 1 节**,那是不可谈判的部分。
 
 工作目录:`~/paper_project/hybrid-rope/rebuttal/rebuttal_0723/`

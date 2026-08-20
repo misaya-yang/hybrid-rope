@@ -162,3 +162,16 @@ the training-scale band. This is table arithmetic, not a task-loss prediction:
 the exact-range experiments measure the trained allocation effect, and
 Table~\ref{tab:coadapt} separately measures incompatibility after a frozen
 post-hoc swap.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.96\linewidth]{fig_frequency_geometry.pdf}
+  \caption{\textbf{What finite frequency allocation changes.}
+  (a)~For $K{=}32$ and $\tau{=}4$, endpoint normalisation preserves the
+  standard grid's sampled extrema while moving every interior log-frequency;
+  the deployed midpoint grid is shown separately. (b)~For standard RoPE with
+  $L{=}4096$, $b{=}5{\times}10^5$, and $K{=}64$, canonical full-subspace
+  redundancy concentrates in the $23$ pairs satisfying $\omega L\le1$.
+  The heatmap is static geometry, not a task-loss predictor.}
+  \label{fig:frequency-geometry}
+\end{figure}

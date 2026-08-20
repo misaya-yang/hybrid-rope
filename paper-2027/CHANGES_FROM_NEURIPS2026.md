@@ -36,7 +36,7 @@
 对比对象是 NeurIPS baseline `paper/main.pdf`
 (`fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`) 与当前
 ICLR PDF `paper-2027/main.pdf`
-(`1976db729a45d58002d6a73b2f6c2ad8a663095bd24d508820f13b100d8faa23`)。
+(`185af7984cd23fce6e118fb40c67f7e5ac9ee6f4d8d8dc9b135d05c63d9a28e8`)。
 
 - 科学主线：旧稿的主贡献是 EVQ-Cosh 构造、操作规则与三类机制实验；
   新稿的主贡献是 full-sin/cos 有限基几何、exact stable-rank identity、
@@ -81,9 +81,10 @@ ICLR PDF `paper-2027/main.pdf`
 仓库里那个实现按 `AGENTS.md` 的说法是 *repository-defined fixed-index smooth-ramp
 scaler*。本版做法：
 
-- 全文（正文 + 附录 + 表格 + 图注）里我们自己那支一律写作 `\rs{}`（渲染为 RAMP），
-  共替换 51 处。引用 YaRN 论文本身的地方（`\citep{peng2024yarn}`、Table 1）
-  保持不变；重复且已漂移的 method-comparison 表已从附录和源包删除。
+- 全文（正文 + 附录 + 表格 + 图注）里该支统一写作 `\rs{}`（渲染为
+  `YaRN-style`）。正文直接使用其 range-composition 含义；附录一次性说明固定
+  index 边界与 reference implementation 的差别。重复且已漂移的
+  method-comparison 表已从附录和源包删除。
 - §4.1 加了专门一段声明它不是 YaRN 参考实现，作用只是「同一算子、同一 scale、
   两种训练期表」的受控比较；并明说没跑 (substrate, s) 联合 sweep。
 - App. F 完整说明作用域，含**三条明确不支持的主张**。

@@ -1,0 +1,212 @@
+V1 Gram exact-vs-direct max abs err: 9.48e-14  PASS
+   self cos-sin cross term: 1.53e-16  PASS
+V2 canon-corr vs whitened cross-Gram svals max err: 1.53e-14  PASS
+V3 max_phase cos-overlap vs sigma_1 max err: 1.67e-16  PASS (grid-res limited)
+   cos-only overlap across phase shift 1.3 rad: 0.270 (<1 => cos-only kernel is phase-dependent; subspace metric gives 1.000)
+V4 logdet identity (w=0.05,0.09): LHS=16.4836 RHS=16.4836 rel err 2.16e-16  PASS
+V4 logdet identity (w=0.5,0.7): LHS=16.6035 RHS=16.6035 rel err 2.14e-16  PASS
+V4 logdet identity (w=2.3,2.31): LHS=12.4822 RHS=12.4822 rel err 7.12e-16  PASS
+V5 collapse rate: (1 - s_i^2) / (wL)^4 should approach constants as wL->0
+       wL | (1-s1^2)/(wL)^4 | (1-s2^2)/(wL)^4
+     0.02 |        0.001904 |        0.022213
+     0.05 |        0.001904 |        0.022222
+     0.10 |        0.001906 |        0.022254
+     0.20 |        0.001911 |        0.022381
+     0.50 |        0.001947 |        0.023276
+     1.00 |        0.002082 |        0.026454
+     2.00 |        0.002719 |        0.030620
+   L-sweep at wL=0.2 (ratios should be ~L-independent):
+     L=  256: 0.001897  0.022216
+     L=  512: 0.001904  0.022304
+     L= 1024: 0.001908  0.022348
+     L= 2048: 0.001910  0.022370
+     L= 4096: 0.001911  0.022381
+   ratio drift over c in [0.02,0.5]: s1 2.23%, s2 4.73% PASS (both converge to constants; (wL)^4 rate confirmed)
+   constants: (1-s1^2)/(wL)^4 -> ~0.001904 (sin-direction, =1/525), (1-s2^2)/(wL)^4 -> ~0.022213 (cos-direction, =1/45)
+
+V6 effective rank of positional basis, L=4096:
+                    alloc |   K |       b | n(wL<=1) | erank_raw | erank_whit | logdet_er |      cond
+                geometric |  16 |   10000 |       2 |     23.24 |      23.58 |    243.35 |  3.45e+11
+                evq t=1.4 |  16 |   10000 |       2 |     26.26 |      26.62 |   1247.41 |  1.19e+09
+                evq t=2.5 |  16 |   10000 |       1 |     29.50 |      29.66 |   3257.78 |  1.82e+03
+                geometric |  32 |   10000 |       4 |     37.91 |      38.29 |      4.95 |  3.64e+12
+                evq t=1.4 |  32 |   10000 |       3 |     45.82 |      46.15 |     69.37 |  4.89e+13
+                evq t=2.5 |  32 |   10000 |       2 |     55.78 |      56.00 |   1317.14 |  1.54e+13
+                geometric |  64 |   10000 |       7 |     58.19 |      58.63 |      0.17 |  7.11e+13
+                evq t=1.4 |  64 |   10000 |       5 |     75.76 |      76.19 |      3.96 |  5.63e+12
+                evq t=2.5 |  64 |   10000 |       3 |    101.14 |     101.50 |    173.55 |  1.23e+13
+                geometric |  16 |  500000 |       6 |     11.51 |      13.45 |      0.10 |  6.28e+11
+                evq t=1.4 |  16 |  500000 |       5 |     15.56 |      17.32 |      2.32 |  6.73e+12
+                evq t=2.5 |  16 |  500000 |       3 |     21.72 |      23.08 |     91.38 |  3.88e+11
+                geometric |  32 |  500000 |      12 |     16.51 |      19.12 |      0.00 |  1.08e+12
+                evq t=1.4 |  32 |  500000 |       9 |     24.00 |      26.70 |      0.15 |  4.21e+14
+                evq t=2.5 |  32 |  500000 |       6 |     37.42 |      39.76 |     13.04 |  1.60e+11
+                geometric |  64 |  500000 |      24 |     22.67 |      26.11 |      0.00 |  1.78e+13
+                evq t=1.4 |  64 |  500000 |      18 |     35.63 |      39.58 |      0.01 |  6.54e+12
+                evq t=2.5 |  64 |  500000 |      11 |     61.75 |      65.56 |      1.58 |  1.06e+14
+   (full rank baseline = 2K; raw Gram reflects energy scales, whitened Gram reflects subspace geometry only)
+[05:17:23] finK_compare.py: finite-K frequency-allocation comparison
+[05:17:23] == sanity checks ==
+[05:17:23] (i) geometric K=64 b=5e5 L=4096 symmetric: erank_raw=22.6656 (expect ~22.67), erank_whit=26.1112 (expect ~26.11) -> PASS
+[05:17:23] (ii) EVQ tau=0 vs geometric max|dw| = 0.00e+00 -> PASS
+[05:17:23]     L=256: max abs err = 1.43e-11
+[05:17:23]     L=4096: max abs err = 2.89e-08
+[05:17:23]     L=16384: max abs err = 4.62e-07
+[05:17:23] (iii) causal Gram closed-form vs direct -> PASS
+[05:17:23] (iv) C_full vectorized=0.020480 vs SVD-loop=0.020480 -> PASS
+[05:17:23] (v) causal-block canonical correlations <= 1: max=1.0000000000 -> PASS
+[05:17:23] (vi) pair w=(0.13,0.29): causal-block svals=[0.004222 0.001879], symmetric canon_corr=[0.002061 0.000894] (both in [0,1])
+[05:17:23] == sanity: ALL PASS
+[05:17:23] == optimization (training causal grid) ==
+[05:17:23] config K16 K=16 b=500000 L=4096: objective cos
+[05:17:23]     cos seed=0: f=1.000027 nit=36 success=True
+[05:17:23]     cos seed=1: f=1.000027 nit=8 success=True
+[05:17:24]     cos seed=2: f=2.000026 nit=28 success=True
+[05:17:24]     cos after coordinate polish: f=1.000027 (L-BFGS-B best was 1.000027)
+[05:17:24]   saved opt_K16_cos.npy  (f: baseline=21.834083 -> final=1.000027)
+[05:17:24] config K16 K=16 b=500000 L=4096: objective full
+[05:17:24]     full seed=0: f=1.002409 nit=90 success=True
+[05:17:24]     full seed=1: f=1.001202 nit=39 success=True
+[05:17:24]     full seed=2: f=1.001190 nit=65 success=True
+[05:17:24]     full after coordinate polish: f=1.001184 (L-BFGS-B best was 1.001190)
+[05:17:24]   saved opt_K16_full.npy  (f: baseline=28.616613 -> final=1.001184)
+[05:17:24] config K16 K=16 b=500000 L=4096: objective logdet
+[05:17:24]     logdet seed=0: f=27.345165 nit=92 success=True
+[05:17:24]     logdet seed=1: f=27.345283 nit=55 success=True
+[05:17:25]     logdet seed=2: f=27.345146 nit=79 success=True
+[05:17:25]     logdet after coordinate polish: f=27.345027 (L-BFGS-B best was 27.345146)
+[05:17:25]   saved opt_K16_logdet.npy  (f: baseline=172.145665 -> final=27.345027)
+[05:17:25] config K32 K=32 b=500000 L=4096: objective cos
+[05:17:25]     cos seed=0: f=1.000115 nit=49 success=True
+[05:17:25]     cos seed=1: f=1.000114 nit=26 success=True
+[05:17:25]     cos seed=2: f=1.000114 nit=49 success=True
+[05:17:25]     cos after coordinate polish: f=1.000114 (L-BFGS-B best was 1.000114)
+[05:17:25]   saved opt_K32_cos.npy  (f: baseline=95.962673 -> final=1.000114)
+[05:17:25] config K32 K=32 b=500000 L=4096: objective full
+[05:17:26]     full seed=0: f=1.011112 nit=90 success=True
+[05:17:27]     full seed=1: f=1.011112 nit=84 success=True
+[05:17:28]     full seed=2: f=1.011533 nit=131 success=True
+[05:17:29]     full after coordinate polish: f=1.011005 (L-BFGS-B best was 1.011112)
+[05:17:29]   saved opt_K32_full.npy  (f: baseline=124.184798 -> final=1.011005)
+[05:17:29] config K32 K=32 b=500000 L=4096: objective logdet
+[05:17:29]     logdet seed=0: f=27.364873 nit=97 success=True
+[05:17:30]     logdet seed=1: f=27.364889 nit=90 success=True
+[05:17:31]     logdet seed=2: f=27.365212 nit=164 success=True
+[05:17:31]     logdet after coordinate polish: f=27.364095 (L-BFGS-B best was 27.364873)
+[05:17:31]   saved opt_K32_logdet.npy  (f: baseline=411.071740 -> final=27.364095)
+[05:17:31] config K64 K=64 b=500000 L=4096: objective cos
+[05:17:32]     cos seed=0: f=2.000437 nit=45 success=True
+[05:17:33]     cos seed=1: f=1.000473 nit=49 success=True
+[05:17:34]     cos seed=2: f=1.000473 nit=92 success=True
+[05:17:35]     cos after coordinate polish: f=1.000473 (L-BFGS-B best was 1.000473)
+[05:17:35]   saved opt_K64_cos.npy  (f: baseline=400.922763 -> final=1.000473)
+[05:17:35] config K64 K=64 b=500000 L=4096: objective full
+[05:17:47]     full seed=0: f=2.094807 nit=170 success=False
+[05:17:58]     full seed=1: f=1.096779 nit=163 success=True
+[05:18:10]     full seed=2: f=2.126999 nit=157 success=False
+[05:18:11]     full after coordinate polish: f=1.094265 (L-BFGS-B best was 1.096779)
+[05:18:11]   saved opt_K64_full.npy  (f: baseline=516.700875 -> final=1.094265)
+[05:18:11] config K64 K=64 b=500000 L=4096: objective logdet
+[05:18:15]     logdet seed=0: f=105.039775 nit=54 success=False
+[05:18:19]     logdet seed=1: f=27.534134 nit=160 success=False
+[05:18:23]     logdet seed=2: f=73.322709 nit=54 success=False
+[05:18:24]     logdet after coordinate polish: f=27.528133 (L-BFGS-B best was 27.534134)
+[05:18:24]   saved opt_K64_logdet.npy  (f: baseline=938.434959 -> final=27.528133)
+[05:18:24] config K64_b1e4 K=64 b=10000 L=4096: objective cos
+[05:18:24]     cos seed=0: f=1.000474 nit=37 success=True
+[05:18:24]     cos seed=1: f=1.000480 nit=24 success=True
+[05:18:25]     cos seed=2: f=1.000477 nit=29 success=True
+[05:18:25]     cos after coordinate polish: f=1.000474 (L-BFGS-B best was 1.000474)
+[05:18:25]   saved opt_K64_b1e4_cos.npy  (f: baseline=115.723471 -> final=1.000474)
+[05:18:25] config K64_b1e4 K=64 b=10000 L=4096: objective full
+[05:18:31]     full seed=0: f=1.101141 nit=89 success=True
+[05:18:37]     full seed=1: f=1.100097 nit=79 success=True
+[05:18:44]     full seed=2: f=1.095299 nit=104 success=True
+[05:18:46]     full after coordinate polish: f=1.094034 (L-BFGS-B best was 1.095299)
+[05:18:46]   saved opt_K64_b1e4_full.npy  (f: baseline=199.185593 -> final=1.094034)
+[05:18:46] config K64_b1e4 K=64 b=10000 L=4096: objective logdet
+[05:18:50]     logdet seed=0: f=27.500536 nit=162 success=False
+[05:18:53]     logdet seed=1: f=27.504040 nit=133 success=True
+[05:18:57]     logdet seed=2: f=27.507535 nit=156 success=False
+[05:18:58]     logdet after coordinate polish: f=27.496423 (L-BFGS-B best was 27.500536)
+[05:18:58]   saved opt_K64_b1e4_logdet.npy  (f: baseline=670.755343 -> final=27.496423)
+[05:18:58] config K32_L1024 K=32 b=500000 L=1024: objective cos
+[05:18:58]     cos seed=0: f=2.001763 nit=40 success=True
+[05:18:58]     cos seed=1: f=3.001760 nit=50 success=True
+[05:18:58]     cos seed=2: f=2.001761 nit=57 success=True
+[05:18:58]     cos after coordinate polish: f=2.001761 (L-BFGS-B best was 2.001761)
+[05:18:58]   saved opt_K32_L1024_cos.npy  (f: baseline=146.185114 -> final=2.001761)
+[05:18:58] config K32_L1024 K=32 b=500000 L=1024: objective full
+[05:19:00]     full seed=0: f=1.172628 nit=97 success=False
+[05:19:01]     full seed=1: f=1.178509 nit=124 success=True
+[05:19:03]     full seed=2: f=1.177561 nit=118 success=True
+[05:19:03]     full after coordinate polish: f=1.171144 (L-BFGS-B best was 1.172628)
+[05:19:03]   saved opt_K32_L1024_full.npy  (f: baseline=180.543516 -> final=1.171144)
+[05:19:03] config K32_L1024 K=32 b=500000 L=1024: objective logdet
+[05:19:04]     logdet seed=0: f=248.554827 nit=51 success=False
+[05:19:05]     logdet seed=1: f=94.387331 nit=40 success=True
+[05:19:06]     logdet seed=2: f=27.687859 nit=115 success=True
+[05:19:06]     logdet after coordinate polish: f=27.676512 (L-BFGS-B best was 27.687859)
+[05:19:06]   saved opt_K32_L1024_logdet.npy  (f: baseline=501.066076 -> final=27.676512)
+[05:19:06] == evaluation at L, 2L, 4L ==
+[05:19:06]   K16 geometric        done
+[05:19:07]   K16 EVQ-Cosh tau=0.5 done
+[05:19:07]   K16 EVQ-Cosh tau=1.0 done
+[05:19:07]   K16 EVQ-Cosh tau=1.4 done
+[05:19:07]   K16 EVQ-Cosh tau=2.0 done
+[05:19:08]   K16 EVQ-Cosh tau=2.5 done
+[05:19:08]   K16 EVQ-Cosh tau=3.0 done
+[05:19:08]   K16 cos-opt          done
+[05:19:08]   K16 full-opt         done
+[05:19:08]   K16 logdet-opt       done
+[05:19:09]   K16 uniform          done
+[05:19:10]   K32 geometric        done
+[05:19:11]   K32 EVQ-Cosh tau=0.5 done
+[05:19:11]   K32 EVQ-Cosh tau=1.0 done
+[05:19:12]   K32 EVQ-Cosh tau=1.4 done
+[05:19:13]   K32 EVQ-Cosh tau=2.0 done
+[05:19:14]   K32 EVQ-Cosh tau=2.5 done
+[05:19:15]   K32 EVQ-Cosh tau=3.0 done
+[05:19:17]   K32 cos-opt          done
+[05:19:18]   K32 full-opt         done
+[05:19:19]   K32 logdet-opt       done
+[05:19:20]   K32 uniform          done
+[05:19:24]   K64 geometric        done
+[05:19:28]   K64 EVQ-Cosh tau=0.5 done
+[05:19:32]   K64 EVQ-Cosh tau=1.0 done
+[05:19:36]   K64 EVQ-Cosh tau=1.4 done
+[05:19:40]   K64 EVQ-Cosh tau=2.0 done
+[05:19:44]   K64 EVQ-Cosh tau=2.5 done
+[05:19:48]   K64 EVQ-Cosh tau=3.0 done
+[05:19:53]   K64 cos-opt          done
+[05:19:57]   K64 full-opt         done
+[05:20:01]   K64 logdet-opt       done
+[05:20:05]   K64 uniform          done
+[05:20:10]   K64_b1e4 geometric        done
+[05:20:14]   K64_b1e4 EVQ-Cosh tau=0.5 done
+[05:20:18]   K64_b1e4 EVQ-Cosh tau=1.0 done
+[05:20:22]   K64_b1e4 EVQ-Cosh tau=1.4 done
+[05:20:29]   K64_b1e4 EVQ-Cosh tau=2.0 done
+[05:20:36]   K64_b1e4 EVQ-Cosh tau=2.5 done
+[05:20:42]   K64_b1e4 EVQ-Cosh tau=3.0 done
+[05:20:48]   K64_b1e4 cos-opt          done
+[05:20:52]   K64_b1e4 full-opt         done
+[05:20:56]   K64_b1e4 logdet-opt       done
+[05:21:01]   K64_b1e4 uniform          done
+[05:21:01]   K32_L1024 geometric        done
+[05:21:01]   K32_L1024 EVQ-Cosh tau=0.5 done
+[05:21:02]   K32_L1024 EVQ-Cosh tau=1.0 done
+[05:21:02]   K32_L1024 EVQ-Cosh tau=1.4 done
+[05:21:02]   K32_L1024 EVQ-Cosh tau=2.0 done
+[05:21:02]   K32_L1024 EVQ-Cosh tau=2.5 done
+[05:21:03]   K32_L1024 EVQ-Cosh tau=3.0 done
+[05:21:03]   K32_L1024 cos-opt          done
+[05:21:03]   K32_L1024 full-opt         done
+[05:21:04]   K32_L1024 logdet-opt       done
+[05:21:04]   K32_L1024 uniform          done
+[05:21:04]   total rows: 165
+[05:21:04]   wrote /Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/analysis/full_rope_audit/finK_K16.csv
+[05:21:04]   wrote /Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/analysis/full_rope_audit/finK_K32.csv
+[05:21:04]   wrote /Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/analysis/full_rope_audit/finK_K64.csv
+[05:21:04]   wrote /Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/analysis/full_rope_audit/finK_results.md
+[05:21:04] TOTAL TIME 220.6s

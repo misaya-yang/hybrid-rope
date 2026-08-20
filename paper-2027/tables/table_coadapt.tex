@@ -6,12 +6,12 @@
 \caption{\textbf{Static geometry does not predict trained behaviour.} Two
 seed-$42$ $50$M models trained with the geometric and \evq{} tables, each
 evaluated under both runtime tables with all parameters frozen ($1{,}920$
-head--query observations). The worst cell is also the one whose static stable
-rank improves most.}
+head--query observations). The worst cell is also the one whose static
+$r_2$ improves most.}
 \label{tab:coadapt}
 \begin{tabular}{@{}llcc@{}}
 \toprule
-Trained weights & Runtime table & PPL & Stable rank $r_2$ \\
+Trained weights & Runtime table & PPL & Rényi-$2$ rank $r_2$ \\
 \midrule
 Geo   & Geo   & $\mathbf{7.14}$ & $4.57$ \\
 Geo   & \evq{} & $76.20$ & $\mathbf{12.54}$ \\

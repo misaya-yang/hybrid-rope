@@ -6,8 +6,19 @@ rebuttal-cycle evidence in `../rebuttal/rebuttal_0723/`.
 Build: `./compile.sh`（`make -f build.mk` 也行；远程工具写不了名为 `Makefile` 的文件，所以叫 `build.mk`）。产物：`main.pdf`。
 
 匿名补充包：`python ../scripts/package_supplement.py --profile iclr2027`。
-该 profile 只收录当前论文源码、两张使用中的图、频率实现、关键分析/识别脚本、
+该 profile 只收录当前论文源码、四张使用中的图、频率实现、关键分析/识别脚本、
 最小测试和已清洗的 machine-readable evidence，并在写 ZIP 前执行身份与密钥扫描。
+
+---
+
+## 当前交接
+
+先读 [`HANDOFF.md`](HANDOFF.md)。它是唯一记录当前稿件 hash、验证收据、
+worktree 边界和下一步的文档；本 README 只保留稳定的包结构与构建说明。
+`HANDOFF.md` 是内部文件，匿名 supplement 会刻意排除；导出包读者可跳过本节。
+
+第一性原理和最高优先级是最大化 ICLR 2027 录用概率。当前阶段不继续做推测性
+扩写或新实验，等待用户提供独立 AI 交叉审稿，再对具体问题逐项核验和按决策杠杆排序。
 
 ---
 
@@ -16,6 +27,7 @@ Build: `./compile.sh`（`make -f build.mk` 也行；远程工具写不了名为 
 后续论文工作的默认目录就是 `paper-2027/`。在改核心 claim、理论骨架或实验叙事前，
 先读：
 
+- [`HANDOFF.md`](HANDOFF.md) — 当前稿件、验证与下一步
 - [`research/README.md`](research/README.md) — 研究索引、阅读顺序与 owner 路由
 - [`research/ICLR2027_RESEARCH_SYNTHESIS_20260819.md`](research/ICLR2027_RESEARCH_SYNTHESIS_20260819.md) — 当前 claim 架构、证据路由与否决方向
 - [`research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)
@@ -26,7 +38,7 @@ Build: `./compile.sh`（`make -f build.mk` 也行；远程工具写不了名为 
 
 ---
 
-## 会议与格式（已定，2026-08-19 核实）
+## 会议与格式（2026-08-19 核实；提交前必须实时复核）
 
 目标是 **ICLR 2027**：摘要 **2026-09-18 AoE**、正文 **2026-09-25 AoE**。
 官方 Author Guide 与 CFP 已于 2026-08-19 复核。
@@ -75,13 +87,12 @@ NeurIPS 接收，在 ICLR 全文中以第三人称引用已接收工作并明确
    **不再承担任何 allocation-shape 归因**，退到附录 E，并按其真实身份标注为
    learned-**table** 家族（LeRoPE 那一类），明确区别于 learned positional
    **operator**（DAPE/FIRE）。归因全部转到 Primary I 的零参数固定 schedule 对照。
-3. **YaRN 那一支重命名了。** 全文（含附录、表格）里我们自己那个实现一律写作
-   `\rs{}`（渲染为 RAMP），并在 §4.1 和附录 F 明确声明：这是我们自己实现的
-   fixed-index smooth-ramp scaler，属于 NTK-by-parts / YaRN 家族但**不是** YaRN
-   参考实现，结论只能读作"同一算子在两种训练期频率表上的杠杆差异"，不能读作
-   YaRN benchmark。引用 YaRN 论文本身的地方保持不变。
+3. **Range-composition 身份写清楚。** 全文用 `\rs{}` 渲染为
+   `YaRN-style`：它保留高频并渐进缩放低频，直接承担“同一 range 操作在两种
+   训练表上的杠杆差异”这条证据。附录只保留一次实现说明：固定索引边界、
+   smoothstep 和固定 scale；不把它称为逐式官方复现或 tuned YaRN benchmark。
 
-## RAMP 实现身份
+## YaRN-style 实现身份
 
 App. F 已按真实代码补全：固定 20%–90% channel-index 边界、cubic
 smoothstep，并把 `1+0.07 log2(s)` 折入频率缩放；它没有 YaRN 的
@@ -105,19 +116,23 @@ sections/
 tables/
   table_layers.tex          新增：三层参数化
   table_m4.tex              新增：exact-range factorial
-  table_mature.tex          新增：1.485B / 8B
+  table_mature.tex          成熟模型数值源表（正文改用 crossover 图）
   table_ruler.tex           新增：RULER 13-family
-  table_evq_ramp.tex        原 table2，YaRN→RAMP
+  table_evq_ramp.tex        同一 YaRN-style range 操作的 substrate 交叉
   table_pe_dominant.tex     原 table4，重新标注，移入附录
 figs/
   fig_method_overview.pdf   重写：有限预算 → 闭式构造 → 两项关键控制
   make_fig_method_overview.py  生成脚本（含几何计数断言）
   fig_identification.pdf    新增，exact-range 识别主图
   make_fig_identification.py  生成脚本（数字来源写在 docstring 里）
+  fig_mature_crossover.pdf  新增：1.485B / 8B effective-context crossover
+  make_fig_mature_crossover.py  生成脚本（数值来自成熟模型 owners）
+  fig_frequency_geometry.pdf  新增：频率位置与 full-subspace redundancy
+  make_fig_frequency_geometry.py  生成脚本（复用 full-RoPE audit）
 appendix/
-  a1_proofs.tex             沿用（已做 YaRN→RAMP 与 additivity 措辞修正）
-  a2_experiment_details.tex 沿用（已做 YaRN→RAMP、DAPE-style→PE-dominant）
-  a5_identification.tex     新增：识别协议与 provenance + RAMP 真实实现 + learned comparator
+  a1_proofs.tex             核心证明与操作规则推导
+  a2_experiment_details.tex supporting scratch / video protocols
+  a5_identification.tex     识别协议 + YaRN-style 实现 + learned comparator
   a6_mature_scale.tex       新增：成熟模型协议、2Wiki、RULER、causal source-use
   a3/a4_supporting*.tex     沿用
 ```

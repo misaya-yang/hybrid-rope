@@ -71,6 +71,9 @@ ICLR2027_ALLOWLIST = [
     "docs/overview/PAPER_CLAIMS_MAP.md",
     "data/curated",
     "paper-2027/main.tex",
+    "paper-2027/README.md",
+    "paper-2027/compile.sh",
+    "paper-2027/build.mk",
     "paper-2027/iclr2027_conference.sty",
     "paper-2027/iclr2027_conference.bst",
     "paper-2027/natbib.sty",
@@ -84,8 +87,12 @@ ICLR2027_ALLOWLIST = [
     "paper-2027/refs",
     "paper-2027/figs/fig_method_overview.pdf",
     "paper-2027/figs/fig_identification.pdf",
+    "paper-2027/figs/fig_mature_crossover.pdf",
+    "paper-2027/figs/fig_frequency_geometry.pdf",
     "paper-2027/figs/make_fig_method_overview.py",
     "paper-2027/figs/make_fig_identification.py",
+    "paper-2027/figs/make_fig_mature_crossover.py",
+    "paper-2027/figs/make_fig_frequency_geometry.py",
     "scripts/__init__.py",
     "scripts/lib",
     "scripts/analysis/full_rope_collision_audit.py",
@@ -118,6 +125,8 @@ PROFILES = {
     "neurips2026": NEURIPS2026_ALLOWLIST,
     "iclr2027": ICLR2027_ALLOWLIST,
 }
+# Backward-compatible name used by existing supplement contract tests.
+ALLOWLIST = NEURIPS2026_ALLOWLIST
 
 EXCLUDE_NAMES = {
     "__pycache__",

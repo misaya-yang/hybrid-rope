@@ -1,14 +1,15 @@
 \section{Discussion}
 \label{sec:discussion}
 
-A finite RoPE table has two properties that should not be conflated. Its full
-sin/cos Gram determines a static positional basis, for which
-Theorem~\ref{thm:budget} gives an exact stable-rank accounting. Its trained
-value depends on how model weights use that basis. The exact-range controls
-connect these layers without identifying them: holding the sampled range fixed
-while moving only interior channels changes the trained model, but a table with
-higher static rank can still be catastrophically wrong for weights trained in
-another coordinate system.
+A finite RoPE table exposes support $(a,R)$ and normalised allocation $z$.
+Scalar ``effective base'', median wavelength, and cycle counts are useful
+summaries of $z$, but they do not reproduce a non-geometric table while its
+endpoints remain fixed. The exact-range controls identify this remaining degree
+of freedom directly. Its full sin/cos Gram determines a static positional basis,
+for which Theorem~\ref{thm:budget} gives an exact Rényi-$2$ effective-rank
+accounting; its trained value depends on how model weights use that basis. A
+table with higher static rank can therefore still be catastrophically wrong for
+weights trained in another coordinate system.
 
 This distinction explains why allocation must be installed during training or
 adaptation. The $50$M factorial crossing and mature-model comparisons show
@@ -21,17 +22,22 @@ large frozen-swap failures are therefore compatible.
 
 Allocation also differs from range transport. The former chooses which finite
 channels a model trains against; the latter changes how a realised spectrum is
-deployed at a target length. In the exact-range experiment, target-aware
-retargeting is the stronger lever once range is allowed to vary. LeRoPE supplies
-the complementary learned-table result: a table obtained in one run retains
-substantial value when frozen for a new training run
-\citep{karypis2026lerope}. Our contribution is the phase-invariant finite-basis
-geometry, fixed-range causal identification, exact frozen-retrofit obstruction,
-and a closed-form point on the allocation axis.
+deployed at a target length. The same \rs{} transform has substantially
+different leverage on Geo and \evq{} substrates, so a shared range operation
+does not erase the training table. Conversely, the target-retargeted diagnostic
+in App.~\ref{sec:identification-details} shows that target-aware support control
+can be the stronger deployment lever. These are two composable coordinates,
+not competing names for one scalar. LeRoPE supplies the complementary learned
+result: a table obtained in one run retains substantial value when frozen for a
+new training run \citep{karypis2026lerope}. Our contribution is the explicit
+support/allocation decomposition, phase-invariant finite-basis geometry,
+fixed-support causal identification, exact frozen-retrofit obstruction, and a
+closed-form point on the allocation axis.
 
 No static geometry in this paper is an extrapolation guarantee, and neither the
 surrogate nor the experiments make Cosh a unique task optimum. \evq{} is useful
 because it is analytic, zero-learned-parameter, and reproducible. The broader
 result is simpler: at finite $K$, interior frequency placement is part of the
-training design, and evaluating it requires both basis geometry and the model
-trained to use that basis.
+training design. The exact-range pair establishes that fact, the factorial
+shows it is not unique to Cosh, and the mature-model protocols show that the
+resulting effective-context shift survives scale and low-rank adaptation.
