@@ -32,6 +32,9 @@ entire NeurIPS rebuttal history.
 7. [`audits/DEPENDENCY_SPECTRUM_CLAUDE_AUDIT_20260819.md`](audits/DEPENDENCY_SPECTRUM_CLAUDE_AUDIT_20260819.md)
    — verified contribution and limits of the independent dependency-spectrum
    audit.
+8. [`audits/ICLR2027_NARRATIVE_REFLECTION_20260821.md`](audits/ICLR2027_NARRATIVE_REFLECTION_20260821.md)
+   — internal diagnosis of why the stronger ICLR science currently reads less
+   persuasively than the narrower NeurIPS version, plus locked rewrite rules.
 
 ## Current paper-facing decision
 
