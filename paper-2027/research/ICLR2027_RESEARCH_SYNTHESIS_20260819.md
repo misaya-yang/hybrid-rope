@@ -27,7 +27,7 @@ identification, mature-model evidence, and a clear relationship to LeRoPE.
 ## 2. Recommended central claim
 
 > **Even at a fixed spectral range, the interior allocation of a finite RoPE
-> table is an independent training-time design variable: it changes the full
+> table is a separately identifiable training-time design variable: it changes the full
 > sin/cos subspace geometry and trained behaviour, while model weights co-adapt
 > to the table used during training.**
 
@@ -136,23 +136,29 @@ operating choice.
 ### 4.1 Pure allocation
 
 The exact-range study fixes sampled endpoints and log span and moves only 30
-interior frequencies. The seed-42 effect is
-`-0.47750/-0.20499/-0.11284` NLL at `512/1K/2K`. M4 then supplies a separate
-12-configuration, three-seed direction check: the pre-specified `1.25x` Cosh
-and matched exponential arms beat uniform in `10/12` and `9/12`
-configurations; the formula point beats uniform in `7/12`.
+interior frequencies. Across three paired training seeds, Cosh-minus-uniform
+NLL is `+0.026` at the training length and
+`-0.281/-0.176/-0.146` at `512/1K/2K`; all three seeds favour Cosh at every OOD
+length. The raw-hash-receipted owner is
+`EXACT_RANGE_151M_3SEED_RESULT_20260820.md` and its companion JSON. M4 then
+supplies a separate 12-configuration, three-seed direction check: the
+pre-specified `1.25x` Cosh and matched exponential arms beat uniform in `10/12`
+and `9/12` configurations; the formula point beats uniform in `7/12`.
 
 This owns the claim that allocation is not reducible to scalar base or range.
 
-### 4.2 Mature scale
+### 4.2 Training-stage, scale, and capability persistence
 
-The scale story is a sequence, not a pooled effect estimate.  A 1.485B
-same-initialisation/same-scientific-recipe trajectory crosses in favour of EVQ
-at 8K/16K.  Matched 300-step LLaMA-3-8B LoRA changes 16K/32K PPL from
-`108.958/991.475` to `24.068/127.911`.  Matched OLMo Q/K-only adaptation keeps
-4K 2Wiki exact at `22.0/21.5%` while producing `0/17.5%` at 8K.  Separate
-RULER task-adaptation runs provide the 1.485B `2.02/31.63%` at 8K and 8B
-`0.295/14.03%` at 16K.  Each protocol keeps its own endpoint and seed scope.
+The training-scale story stops at the `1.485B`
+same-initialisation/same-scientific-recipe comparison, which crosses in favour
+of EVQ at 8K/16K. It is preceded by a three-seed `432M` scarce-channel MLA
+from-scratch study and a `750M` full-parameter continuation from a shared 2K
+checkpoint. The `8B` evidence is a separate matched LoRA adaptation, not a
+pretraining-scale point: it changes 16K/32K PPL from `108.958/991.475` to
+`24.068/127.911`. Matched OLMo Q/K-only adaptation keeps 4K 2Wiki exact at
+`22.0/21.5%` while producing `0/17.5%` at 8K. Separate RULER task-adaptation
+runs provide the 1.485B `2.02/31.63%` at 8K and 8B `0.295/14.03%` at 16K.
+Each protocol keeps its own endpoint and seed scope; none is pooled.
 
 Single seed is not an automatic reason to hide a large controlled result.
 Seed scope remains exact in the internal owner. The outward manuscript need
@@ -244,16 +250,21 @@ It is not a new ICLR claim without a promoted owner.
 
 1. **Introduction:** finite table as a training-time spectral coordinate
    system; exact-range result; mature-scale headline.
-2. **Related work:** range transport, scalar base, learned/searched tables,
+2. **Result-first overview:** three-seed fixed-support control, the `1.485B`
+   same-recipe PPL crossover, real-document QA, and a separately labelled `8B`
+   adaptation callout.
+3. **Related work:** range transport, scalar base, learned/searched tables,
    fixed analytic constructions; LeRoPE stated early and accurately.
-3. **Theory:** full-RoPE canonical collision, exact stable-rank identity,
+4. **Theory:** full-RoPE canonical collision, exact stable-rank identity,
    low-frequency collapse, exact transplant obstruction.
-4. **Construction:** compress \(\mathcal C_{\mathrm{app}}\), inverse-CDF Cosh,
+5. **Construction:** compress \(\mathcal C_{\mathrm{app}}\), inverse-CDF Cosh,
    and the operating convention into a short subsection; proofs and detailed
    \(\tau\) derivation move to the appendix.
-5. **Experiments:** exact-range/M4 first; 50M 2x2 if it fits; 1.485B and 8B
-   mature evidence next.
-6. **Discussion:** static identifiability versus trained use; exact versus
+6. **Experiments:** exact-range/M4 first; `432M` scarce-channel MLA, `750M`
+   full-parameter continuation, and the `1.485B` from-initialisation comparison
+   establish training-stage/scale persistence; `1.485B` and `8B` adaptations
+   then establish protocol-specific capability.
+7. **Discussion:** static identifiability versus trained use; exact versus
    approximate retrofit; range transport and LeRoPE complementarity.
 
 Use the full nine-page allowance by replacing low-leverage material. Do not

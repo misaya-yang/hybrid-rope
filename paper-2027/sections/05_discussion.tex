@@ -12,22 +12,24 @@ table with higher static rank can therefore still be catastrophically wrong for
 weights trained in another coordinate system.
 
 This distinction explains why allocation must be installed during training or
-adaptation. The $50$M factorial crossing and mature-model comparisons show
-strong table-by-weights dependence, while Theorem~\ref{thm:obstruction} rules
+adaptation. The $50$M table-by-weights crossing shows strong co-adaptation,
+while the mature-model comparisons show persistence after training or
+adaptation; Theorem~\ref{thm:obstruction} rules
 out exact preservation by fixed invertible Q/K maps when frequency multisets
 differ. Its exact scope explains why post-hoc replacement and training under a
 table are different interventions, while the adaptation results quantify how
-much low-rank retraining can recover. The small from-initialisation in-window NLL differences and the
-large frozen-swap failures are therefore compatible.
+much low-rank retraining can recover. The modest from-initialisation trade-off
+and strong frozen table-by-weights interaction are therefore compatible.
 
 Allocation also differs from range transport. The former chooses which finite
 channels a model trains against; the latter changes how a realised spectrum is
 deployed at a target length. The same \rs{} transform has substantially
 different leverage on Geo and \evq{} substrates, so a shared range operation
-does not erase the training table. Conversely, the target-retargeted diagnostic
-in App.~\ref{sec:identification-details} shows that target-aware support control
-can be the stronger deployment lever. These are two composable coordinates,
-not competing names for one scalar. LeRoPE supplies the complementary learned
+does not erase the training table. The target-retargeted diagnostic in
+App.~\ref{sec:identification-details} further shows that support and allocation
+interact under deployment. Holding one fixed identifies the other; together
+they form separate coordinates of the empirical design. LeRoPE
+supplies the complementary learned
 result: a table obtained in one run retains substantial value when frozen for a
 new training run \citep{karypis2026lerope}. Our contribution is the explicit
 support/allocation decomposition, phase-invariant finite-basis geometry,
@@ -36,10 +38,9 @@ closed-form point on the allocation axis.
 
 Static geometry characterises positional-basis redundancy; trained comparisons
 establish extrapolation and task behaviour. \evq{} is useful because it is
-analytic, zero-learned-parameter, and reproducible, while the factorial shows
-that Cosh is not the only effective allocation. The broader result is simpler:
+analytic, zero-learned-parameter, and reproducible, while the factorial extends
+the direction to another fixed analytic allocation. The broader result is simpler:
 at finite $K$, interior frequency placement is part of the training design.
 Practically, support, allocation, and deployment-time range transport should be
-chosen as separate coordinates, and a non-geometric allocation should be
-installed during training or adaptation rather than swapped into frozen
-weights.
+chosen jointly but evaluated separately, with non-geometric allocation
+installed during training or adaptation.

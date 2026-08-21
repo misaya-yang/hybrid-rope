@@ -22,18 +22,22 @@ require an author decision or final manual review.
 
 ## Scientific consistency
 
-- [x] The central claim is fixed-range interior allocation as an independent
-      training-time variable; EVQ-Cosh is a closed-form constructive instance,
-      not a universal optimum.
+- [x] The central claim is fixed-range interior allocation as a separately
+      identifiable training-time variable; EVQ-Cosh is a closed-form
+      constructive instance, not a universal optimum.
 - [x] Static full-RoPE geometry is described as positional-basis geometry, not
       an LM-quality or extrapolation predictor.
 - [x] Exact-range, M4, 50M table-by-weights, OLMo-2, and LLaMA protocols remain
       separate; no cross-protocol averaging or seed splicing.
 - [x] Teacher-forced NLL/PPL, strict autoregressive exact, 2Wiki, RULER, and
       causal source-use endpoints remain distinct.
-- [x] Exact-range three-seed aggregate is not labelled raw-backed or used with
-      unsupported confidence intervals; the body uses raw-backed seed 42 plus
-      the independent raw-backed M4 factorial.
+- [x] Exact-range uses the completed raw-hash-receipted three-training-seed
+      owner. Per-seed points remain visible; evaluation anchors are not counted
+      as independent seeds and no generic significance claim is made.
+- [x] The $1.485$B from-initialisation result is presented as a
+      same-initialisation/same-scientific-recipe comparison with different
+      trainer implementations; $8$B is labelled matched adaptation, not a
+      pretraining-scale trend.
 - [x] The transplant theorem is limited to exact, fixed,
       position-independent invertible Q/K compensation.
 - [x] LeRoPE is positioned as learned/fixed-table evidence; no claim says it

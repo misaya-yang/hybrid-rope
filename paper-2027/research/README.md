@@ -33,7 +33,7 @@ This architecture is implemented in the active manuscript. The paper's central
 claim is no longer “EVQ-Cosh is the optimal RoPE table.” It is:
 
 > Even at a fixed spectral range, the interior allocation of a finite RoPE
-> table is an independent training-time design variable. It changes the full
+> table is a separately identifiable training-time design variable. It changes the full
 > sin/cos subspace geometry and trained behaviour, while model weights co-adapt
 > to the table they see during training.
 

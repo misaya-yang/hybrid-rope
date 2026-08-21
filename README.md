@@ -14,12 +14,17 @@ scope.
 The current paper's central claim is:
 
 > Even at fixed sampled spectral support, the normalized interior allocation
-> of a finite RoPE table is an independent training-time variable. It changes
+> of a finite RoPE table is a separately identifiable training-time variable. It changes
 > full sin/cos subspace geometry and trained behaviour, while model weights
 > co-adapt to the table used during training.
 
 EVQ-Cosh is one closed-form, zero-learned-parameter construction on this axis,
 not a universal optimum.
+
+Terminology follows the manuscript: `Geo` is a geometric training baseline;
+`Native` is an unmodified pretrained-model baseline; `YaRN-style` denotes the
+repository's fixed-index range operator, while `YaRN` names the cited method.
+The distinct MLA transform is the `MLA wavelength-blend operator`.
 
 ## Start here
 

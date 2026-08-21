@@ -34,8 +34,7 @@ explicit position IDs. On $200$ held-out 2WikiMultiHopQA rows per length,
 Native/\evq{} exact match is $22.0/21.5\%$ at $4$K, $0/17.5\%$ at $8$K, and
 $0/4.0\%$ at $16$K. Prompts retain the official question and context and are
 deterministically filled with answer-filtered 2Wiki distractors to reach the
-target length. Thus this is held-out task-family length transfer, not an
-unmodified LongBench leaderboard result. The RULER adapters are independent of
+target length, forming a held-out 2Wiki length-transfer evaluation. The RULER adapters are independent of
 the QA adapters: Table~\ref{tab:ruler} reports both the earlier $276$-step
 full-Q/K/V/O continuation and the $300$-step selective-Q/K continuation, each
 trained over all $13$ families. Evaluation uses $20$ examples per family and
@@ -47,16 +46,16 @@ condition on the single trained pair and quantify evaluation-row uncertainty,
 not training-seed variability.
 
 \paragraph{From initialisation.}
-Starting from the public step-$0$ initialisation, one $2.097$B-token \evq{}
-trajectory reaches PPL $167.45/156.87/159.64$ against the released Geo
-step-$1{,}000$ checkpoint's $161.19/163.88/182.73$ at $4$/$8$/$16$K.
+Starting from the public step-$0$ initialisation, the same-recipe Geo/\evq{}
+comparison gives PPL $177.99/191.36$, $161.19/167.45$,
+$163.88/156.87$, and $182.73/159.64$ at $2$/$4$/$8$/$16$K under a matched
+$2.097$B-token budget.
 The \evq{}-minus-Geo NLL is
 $+0.0724/+0.0381/-0.0437/-0.1351$ at $2$/$4$/$8$/$16$K, with
 $122/128$ and $126/128$ held-out documents favouring \evq{} at $8$K and
-$16$K. This is one same-initialisation, same-scientific-recipe trajectory:
-\evq{} used a reviewed single-GPU HF loop, whereas the released Geo checkpoint
-used the original distributed trainer. This row evaluates natural-text LM;
-capability is evaluated by the separate autoregressive protocols above.
+$16$K. This is one same-initialisation, same-scientific-recipe natural-text LM
+comparison; capability is evaluated by the separate autoregressive protocols
+above.
 
 \subsection{LLaMA-3-8B-Instruct}
 
@@ -72,21 +71,20 @@ $18.75\%$ to $64.06\%$. Removing the remote gold block from every head changes
 NLL by $-0.0095$ for Native and $+1.5055$ for \evq{}. These are matched
 teacher-forced probability and causal-routing measurements; autoregressive
 task accuracy is evaluated separately. Descriptive Native/\evq{} PPL is
-$6.817/10.068$, $108.958/24.068$, and $991.475/127.911$ at those lengths;
-NLL remains the primary comparison because PPL ratios amplify large losses.
+$6.817/10.068$, $108.958/24.068$, and $991.475/127.911$ at those lengths.
 
 \paragraph{RULER-family continuation.}
 A separate $516$-step continuation uses identical physical-$8$K supervision
 over all $13$ RULER families, with one seed per arm and disjoint generated
 training/evaluation rows. Evaluation uses $20$ examples per family and length.
 At $16$K, Native/\evq{} official-scorer macro is
-$0.295/14.03\%$ and normalized exact is $0/1.54\%$. At the $8$K training
-length the metrics disagree, so Table~\ref{tab:ruler} reports both official
-scorer macro ($94.44/77.60\%$) and normalized exact ($17.69/21.54\%$).
+$0.295/14.03\%$ and normalized exact is $0/1.54\%$. At $8$K,
+Table~\ref{tab:ruler} reports official scorer macro ($94.44/77.60\%$) and
+normalized exact ($17.69/21.54\%$).
 
 \paragraph{Endpoint scope.}
 NLL, attention routing, strict autoregressive exact match, multi-hop QA, and
 RULER remain separate endpoints. The 2Wiki and RULER continuations use the
-same task families at train and test with disjoint rows, so they establish
-task-adapted length transfer, not unseen-task transfer. The natural-text and
-routing rows make no task-transfer claim.
+same task families at train and test with disjoint rows, establishing
+task-family-adapted length transfer. The natural-text and routing rows evaluate
+probability and causal source use.

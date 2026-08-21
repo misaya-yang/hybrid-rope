@@ -61,7 +61,7 @@ old handover.
 The memorable claim is:
 
 > Even at fixed sampled spectral support, the normalized interior allocation
-> of a finite RoPE table is an independent training-time variable. It changes
+> of a finite RoPE table is a separately identifiable training-time variable. It changes
 > full sin/cos subspace geometry and trained behaviour, while model weights
 > co-adapt to the table used during training.
 
@@ -77,8 +77,10 @@ x_k=-\log\omega_k=a+Rz_k,\qquad z_0=0,\quad z_{K-1}=1.
 - Full sin/cos canonical collision, the stable-rank identity, low-frequency
   collapse, and the exact transplant obstruction own the theory.
 - The 50M 2x2 crossing owns frozen-retrofit/co-adaptation diagnosis.
-- The 1.485B and 8B protocols own mature-scale persistence and capability
-  endpoints; they do not replace the exact-range causal control.
+- The training-scale trend stops at the 1.485B same-initialisation,
+  same-scientific-recipe comparison. The 8B protocols are matched adaptation
+  and capability evidence, not pretraining-scale points. Neither replaces the
+  exact-range causal control.
 - Do not confuse a **causal owner** with the paper's empirical core.
   The small controlled arms above isolate identification and mechanism; they
   are not the whole empirical story. The systems pillar must keep the strongest
@@ -150,6 +152,30 @@ Internal and outward-facing documents have different jobs:
 | Internal audit/handoff/owner | Record every material negative, reversal, protocol limit, and uncertainty |
 | Manuscript/reviewer response | Select only decision-relevant, accurate material; narrow a claim instead of appending irrelevant self-criticism |
 
+### Outward disclosure and nomenclature
+
+- Do not proactively surface internal weaknesses, failed probes, future plans,
+  speculative objections, or audit-style caveats in the abstract, manuscript,
+  figures, or reviewer response. Include a limitation only when it is required
+  to keep the adjacent claim scientifically true, satisfy venue policy, or
+  prevent a material protocol misread. Narrow the claim first and state its
+  supported role positively. Internal owners and the handoff remain exhaustive.
+- This is a presentation rule, not permission to hide requested evidence,
+  falsify protocol identity, or make a stronger claim than the owner supports.
+- Nomenclature is locked:
+  - `Geo` is the geometric frequency-table baseline in from-scratch or
+    continued-training comparisons.
+  - `Native` is the unmodified model-native RoPE/checkpoint baseline in mature
+    pretrained-model adaptation or retrofit comparisons. Never use `Geo` and
+    `Native` interchangeably.
+  - The exact-range paper-faithful FMRoPE arm is `uniform FMRoPE` (or
+    `uniform-in-log`), not `Native`.
+  - `\rs{}` renders as `YaRN-style` and denotes only the repository's
+    fixed-index range operator. Plain `YaRN` is reserved for the cited reference
+    method. The run-specific MLA operator is `MLA wavelength-blend operator`;
+    never call it `YaRN-style`, `RAMP`, or `legacy scaler`.
+  - Use `\evq{}` / `EVQ-Cosh` consistently for the proposed fixed table.
+
 Before accepting a cross-review recommendation, classify it as one of:
 
 1. **score-ceiling issue** — could keep a positive reviewer from the next
@@ -184,7 +210,7 @@ Keep these identity traps separate:
 | --- | --- |
 | OLMo retrieval | `98/100`, `69/67`, and `49/48` belong to different adapters/endpoints or datasets; never present them as seed variance |
 | LLaMA temporal results | 300-step matched natural-LM LoRA and 516-step RULER-family adaptation are separate protocols |
-| Exact-range three-seed aggregate | Author-confirmed only; absent local per-seed raw values cannot support significance language |
+| Exact-range three-seed aggregate | Use the raw-hash-receipted 2026-08-20 owner and companion JSON; do not splice or retain the older author-confirmed aggregate, count anchors as seeds, or claim generic significance from three training seeds |
 | OLMo scratch | Same initialization/scientific recipe, not bitwise paired trainer execution |
 | Learned inverse-frequency row | A 32-parameter learned table, not DAPE and not the owner of fixed-shape attribution |
 

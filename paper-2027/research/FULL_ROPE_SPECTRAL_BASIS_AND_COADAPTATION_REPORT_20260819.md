@@ -578,9 +578,10 @@ EVQ-Cosh 保留三个角色：
 本轮理论不替换以下已验证实验，而是重新解释它们：
 
 - **Exact-range identification：** 固定最高频、最低频和 log-span，只移动
-  30 个 interior frequencies；seed-42 owner 报告的 tail-NLL 差为
-  `-0.47750/-0.20499/-0.11284`，三 seed aggregate 的原始 per-seed 文件仍缺失，
-  所以不使用未拥有的置信区间或显著性语言。
+  30 个 interior frequencies；已完成的 raw-hash-receipted 三训练种子 owner
+  报告 Cosh-minus-uniform tail-NLL 为 `+0.026` @256，并在
+  `512/1K/2K` 为 `-0.281/-0.176/-0.146`，三个种子在每个 OOD 长度都同方向。
+  512 的幅度异质性保留为逐种子点，不使用 generic significance language。
 - **M4 factorial：** 12 structural configurations × 3 seeds；1.25× Cosh 在
   `10/12`、matched exponential 在 `9/12` 配置优于 uniform；formula Cosh
   与 Exp 差 `+0.000740 NLL`、`p=.836`。支持 non-geometric allocation axis，不支持

@@ -25,6 +25,13 @@
 > `e869228`; venue conversion and the full-RoPE rewrite were subsequently
 > executed. Use current source plus `ICLR2027_RESEARCH_SYNTHESIS_20260819.md`
 > for present state, not the line-numbered findings below.
+>
+> **2026-08-20 supersession note.** The raw-hash-receipted three-seed
+> exact-range owner and the result-first evidence overview now supersede this
+> audit's seed-42 headline, `fig_identification`, `fig_mature_crossover`, and
+> `table_mature` paths. Those names below describe the audited snapshot only;
+> current routing is in `HANDOFF.md` and
+> `EXACT_RANGE_151M_3SEED_RESULT_20260820.md`.
 
 ## 0. Two facts that frame everything below
 
@@ -150,7 +157,7 @@ Submission date 2026-05-01. Everything below is dated after it. "In draft?" cite
 | `OLMO2_1B_NON_RULER_ADAPTATION_SEARCH_20260731.md` | Seven-arm search for clean transfer | best 4K screen `0.1167`, best 8K `0.0750`, against length-matched controls `0.5700` / `0.5125`; one-token curriculum failed its own held-out task | No | (c) internal — **but see §5 item 2.** `INWINDOW_PRESERVATION_ROUTE_AUDIT_20260731.md` §1 shows all seven arms are "in-place replacement + post-hoc adaptation", i.e. seven independent confirmations of the transplant theorem. If the theorem enters the paper, a *one-line* aggregate ("seven adaptation variants in this class all fail, consistent with Thm. X") is a strength, not a confession. Reporting the arms individually is not |
 | `OLMO2_POSTHOC_..._OBSTRUCTION` (again) | see §2.1 | — | — | — |
 | `mla_scarcity_seed42_result_20260724.json` | Post-submission K=8 MLA scarcity test | `claim_gate: DOES_NOT_SUPPORT_PRACTICAL_SCARCE_CHANNEL_ADVANTAGE`; at K=8, 8K `evq_minus_native = +0.667` NLL | No | (c) **Hard red line, §4.1.** The draft's MLA claim is correctly narrowed to K=16 persistence (`04_experiments.tex:196-199`) and the NeurIPS "scarcer channels ⇒ allocation matters more" claim is gone. Keep it gone |
-| `results/.../432M MLA 3-seed` via `a3_supporting_results.tex` | K=16 MLA, 3 seeds | PPL@16K `138.8±5.5 → 95.6±4.1` (`−31.1%`), `+0.9%` @8K | Yes — `04_experiments.tex:191-199`, `a3_supporting_results.tex` | Keep. `DISCUSSION_PHASE_FOLLOWUP_PLAYBOOK.md` §8: the `71.1` figure is **EVQ+legacy scaler**, not pure EVQ — the draft's Table complies |
+| `results/.../432M MLA 3-seed` via `a3_supporting_results.tex` | K=16 MLA, 3 seeds | PPL@16K `138.8±5.5 → 95.6±4.1` (`−31.1%`), `+0.9%` @8K | Yes — `04_experiments.tex:191-199`, `a3_supporting_results.tex` | Keep. `DISCUSSION_PHASE_FOLLOWUP_PLAYBOOK.md` §8: the `71.1` figure is **EVQ + MLA wavelength-blend operator**, not pure EVQ — the draft's table complies |
 
 ## 2.3 Concurrent work and never-run designs
 
@@ -185,7 +192,7 @@ credibility signal.
 | P7 | "A third will report the 1.485B result **with its single-trajectory and trainer boundaries in line**" — `REVIEWER_27bE.md:49` (5) | Yes | ✅ `a6_mature_scale.tex:50-59` states both. **Kept** |
 | P8 | "§6 will state that the evidence supports the allocation axis and a closed-form zero-search operating point, **not universal optimality of Cosh or of the τ default**" — `REVIEWER_27bE.md:49` (6) | Yes | ✅ `04_experiments.tex:164-172`, `05_discussion.tex:41-45`. **Kept** |
 | P9 | "§5 will restate the YaRN result as **substrate dependence**" — `REVIEWER_Dz6s.md:44` (5), and "We … will state it that way rather than as complementarity" — `REVIEWER_Dz6s.md:38` | Yes | ✅ `04_experiments.tex:178-186`, `05_discussion.tex:15-17`, and the operator is renamed `\rs{}` throughout. **Kept** |
-| P10 | "**The revision will state precisely which range transform each experiment applies.**" — `REVIEWER_zWsa.md:46` (4) | Yes | ✅ `\rs{}` everywhere + `a5_identification.tex:89-118` + the MLA legacy scaler is named as such (`a3_supporting_results.tex:17-19,38-40`). **Kept** |
+| P10 | "**The revision will state precisely which range transform each experiment applies.**" — `REVIEWER_zWsa.md:46` (4) | Yes | ✅ `\rs{}` everywhere + `a5_identification.tex:89-118` + the distinct MLA wavelength-blend operator is named as such (`a3_supporting_results.tex:17-19,38-40`). **Kept** |
 | P11 | "§6 will report the in-window trade-off, **metric dependence** and the **adaptation-scope ablation**" — `REVIEWER_Dz6s.md:44` (6), `REVIEWER_zWsa.md:46` (6) | Yes | ⚠️ In-window ✅ (`04_experiments.tex:126-127`, `tables/table_mature.tex`); metric dependence ✅ (`a6_mature_scale.tex:76-78`); **adaptation-scope ablation is present only as two unconnected table rows** (`table_ruler.tex:19-24`) — the sentence "restricting adaptation to Q/K raises 4K macro 37.51 → 42.44 and 8K 21.29 → 31.63" appears nowhere. **Partly broken, and this one is a lost asset, not just a lost promise** — see §5 item 6 |
 | P12 | "The revision will state seed counts inline for every result rather than in aggregate." — prepared answer `DISCUSSION_PHASE_FOLLOWUP_PLAYBOOK.md` X-1; sent form in `FINAL_AC.md` §C | Yes | ✅ Over-delivered (`table_mature.tex:10-12`, `table_ruler.tex:7-8`, `04_experiments.tex:143-145`). Trim the duplicate — §4.2 item 2 |
 | P13 | "[the DAPE label] correction will appear in the revision" — **prepared but never sent** (`DISCUSSION_PHASE_FOLLOWUP_PLAYBOOK.md` 27-1; `REBUTTAL_HANDOVER.md` §1.2 records that `paste/` contains zero occurrences of "DAPE") | No — nothing was promised outwardly | ✅ Handled anyway and handled well. `CHANGES_FROM_NEURIPS2026.md` §3.1 records the deliberate decision **not** to print "an earlier draft mislabelled this" in the PDF, on the grounds that it would hint at dual submission. **Endorse that decision** |
@@ -224,8 +231,8 @@ These are the ones where narrowing the claim is the only legal move.
    `a5_identification.tex:16-20` and `04_experiments.tex:38-40` comply.
 3. **No official YaRN reproduction.** The repository operator is a fixed-index
    smooth-ramp scaler (`AGENTS.md` §4). `\rs{}` naming + `a5_identification.tex:105-118`
-   comply. The MLA `117.9` row is that architecture's *legacy wavelength-blend
-   scaler* and must not be relabelled as YaRN or as a matched-range control
+   comply. The MLA `117.9` row uses that architecture's *MLA wavelength-blend
+   operator* and remains distinct from the paper's YaRN-style operator
    (`CHANGES_FROM_NEURIPS2026.md` §7 D); `a3_supporting_results.tex:17-19,38-40`
    comply.
 4. **The 32-parameter row is not DAPE.** It is a layer-shared learnable

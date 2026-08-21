@@ -1,19 +1,20 @@
-A scalar RoPE base fixes log-frequency support, but not how a finite budget of
-$K$ rotary pairs is allocated inside it. Writing
+RoPE is usually controlled by a scalar base, but a finite table must also
+decide how $K$ rotary pairs are allocated inside the sampled support. Writing
 $x_k=-\log\omega_k=a+Rz_k$ separates support $(a,R)$ from normalised interior
-allocation $z$. We show that $z$ is an independent training-time design
-variable. In a $151.9$M exact-range control, initialisation, data order,
-optimisation, and both sampled endpoints are fixed; moving only the $30$
-interior frequencies reduces OOD NLL by $0.478$ at $2\times$ the training
-length. A separate $12$-configuration, three-seed factorial repeats the
-non-uniform direction for both Cosh and deformation-matched exponential
-allocations. Full sin/cos subspace geometry then gives an exact,
-phase-invariant accounting of finite-table redundancy. The table must be
-learned with the weights: self-consistent weight--table pairs have PPL
-$7.14/7.16$, whereas frozen swaps reach $76.20/23.05$. Separately, we prove
-that unequal frequency multisets cannot be absorbed exactly by fixed
-invertible Q/K maps. \evq{} is one closed-form, zero-learned-parameter
-construction on this allocation axis. The resulting effective-context shift
-persists at scale: matched $8$B adaptation reduces $16$K PPL from $108.96$ to
-$24.07$, while matched $1.485$B Q/K-only adaptation preserves $4$K 2Wiki exact
-match and changes the $8$K result from $0$ to $17.5\%$.
+allocation $z$. We show that $z$ is a separately identifiable training-time
+variable. Across three paired $151.9$M runs, changing only the $30$ interior
+frequencies consistently shifts modelling quality from the training window
+toward longer contexts. Full sin/cos subspace geometry gives an exact,
+phase-invariant accounting of finite-table redundancy, while an exact
+transplant obstruction and a weight--table crossing show why the table must be
+learned with the weights. \evq{} is one closed-form, zero-learned-parameter
+intervention on this axis. Under complete-table protocols, the same
+effective-context crossover recurs in three-seed $432$M scarce-channel MLA,
+$750$M full-parameter continuation, and a $1.485$B
+same-initialisation/same-scientific-recipe comparison, where Geo/\evq{} $16$K
+PPL is $182.73/159.64$. Separately, matched $8$B adaptation supports
+mature-model transfer and causal use of remote evidence; $1.485$B Q/K-only
+adaptation carries real-document multi-hop QA beyond its physical training
+window. Interior allocation is therefore a practical part of long-context
+training, distinct from but interacting with support selection and
+inference-time range transport.

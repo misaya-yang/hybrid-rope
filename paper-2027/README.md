@@ -86,17 +86,18 @@ NeurIPS 接收，在 ICLR 全文中以第三人称引用已接收工作并明确
    （32 参数、layer-shared 可学习 inverse-frequency）。现在：正文里
    **不再承担任何 allocation-shape 归因**，退到附录 E，并按其真实身份标注为
    learned-**table** 家族（LeRoPE 那一类），明确区别于 learned positional
-   **operator**（DAPE/FIRE）。归因全部转到 Primary I 的零参数固定 schedule 对照。
+   **operator**（DAPE/FIRE）。归因全部转到 exact-range/M4 的零参数固定
+   schedule 对照。
 3. **Range-composition 身份写清楚。** 全文用 `\rs{}` 渲染为
-   `YaRN-style`：它保留高频并渐进缩放低频，直接承担“同一 range 操作在两种
-   训练表上的杠杆差异”这条证据。附录只保留一次实现说明：固定索引边界、
-   smoothstep 和固定 scale；不把它称为逐式官方复现或 tuned YaRN benchmark。
+   `YaRN-style`，专指仓库固定索引 range operator：它保留高频并渐进缩放低频，
+   承担“同一 range 操作在两种训练表上的杠杆差异”这条证据。引用方法始终写
+   `YaRN`，两者不混用。
 
 ## YaRN-style 实现身份
 
-App. F 已按真实代码补全：固定 20%–90% channel-index 边界、cubic
-smoothstep，并把 `1+0.07 log2(s)` 折入频率缩放；它没有 YaRN 的
-wavelength-derived band boundaries，也没有独立 attention-logit mscale。
+App. D 按真实代码定义该算子：固定 20%–90% channel-index 边界、cubic
+smoothstep，并把 `1+0.07 log2(s)` 折入频率缩放。所有 composition 对照使用
+完全相同的 `\rs{}` 实现、cut indices 和 scale。
 
 ## 目录
 
@@ -106,27 +107,24 @@ iclr2027_conference.sty/.bst  官方 ICLR 2027 模板（原样）
 venue_icml_fallback/        旧 ICML 模板与旧 main.tex，未被引用
 compile.sh / build.mk       构建 + 自动合规检查（页数/未定义引用/溢出/匿名性）
 sections/
-  00_abstract.tex           fixed-range allocation → co-adaptation → mature scale
-  01_intro.tex              单一主线：full basis → identification → trained use
+  00_abstract.tex           fixed-support identification → 1.485B trend → capability
+  01_intro.tex              结果首屏：因果控制 → 训练趋势 → 下游与 trained use
   02_related.tex            重写：FMRoPE / LeRoPE / AdaRoPE 准确定位
   03_theory.tex             full sin/cos geometry → obstruction → closed-form construction
-  04_experiments.tex        exact-range/M4 → mature endpoints → operating-rule attribution
+  04_experiments.tex        exact-range → scarce budget/scale → capability → schedule scope
   05_discussion.tex         static basis、trained use、range transport 与 LeRoPE
   06_ethics.tex / 07_reproducibility.tex / 08_ai_use.tex  ICLR 声明（不计页数）
 tables/
   table_layers.tex          新增：三层参数化
   table_m4.tex              新增：exact-range factorial
-  table_mature.tex          成熟模型数值源表（正文改用 crossover 图）
   table_ruler.tex           新增：RULER 13-family
   table_evq_ramp.tex        同一 YaRN-style range 操作的 substrate 交叉
   table_pe_dominant.tex     原 table4，重新标注，移入附录
 figs/
+  fig_evidence_overview.pdf 新增：三种子控制 → 1.485B PPL → 下游/8B adapted callout
+  make_fig_evidence_overview.py  生成脚本（冻结 owner 数值与断言）
   fig_method_overview.pdf   重写：有限预算 → 闭式构造 → 两项关键控制
   make_fig_method_overview.py  生成脚本（含几何计数断言）
-  fig_identification.pdf    新增，exact-range 识别主图
-  make_fig_identification.py  生成脚本（数字来源写在 docstring 里）
-  fig_mature_crossover.pdf  新增：1.485B / 8B effective-context crossover
-  make_fig_mature_crossover.py  生成脚本（数值来自成熟模型 owners）
   fig_frequency_geometry.pdf  新增：频率位置与 full-subspace redundancy
   make_fig_frequency_geometry.py  生成脚本（复用 full-RoPE audit）
 appendix/

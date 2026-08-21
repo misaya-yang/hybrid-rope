@@ -56,15 +56,14 @@
 
 ### Active figures
 
+- `paper-2027/figs/make_fig_evidence_overview.py`
 - `paper-2027/figs/make_fig_method_overview.py`
-- `paper-2027/figs/make_fig_identification.py`
-- `paper-2027/figs/make_fig_mature_crossover.py`
 - `paper-2027/figs/make_fig_frequency_geometry.py`
 
 ### Canonical evidence routing
 
 - `paper-2027/research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`
-- `rebuttal/rebuttal_0723/theory_results/MATCHED_RANGE_COSH_500M_S42_20260724.md`
+- `paper-2027/research/EXACT_RANGE_151M_3SEED_RESULT_20260820.md`
 - `rebuttal/rebuttal_0723/theory_results/M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md`
 - `rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md`
 - `rebuttal/rebuttal_0723/theory_results/OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729.md`

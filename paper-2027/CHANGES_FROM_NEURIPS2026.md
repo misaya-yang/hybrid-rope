@@ -11,8 +11,8 @@
 | ID | 意见 | 本版怎么答 | 位置 |
 |---|---|---|---|
 | `AC.1` `RzWsa.1` `RzWsa.2` | 与 FMRoPE (Oka et al., ICLR 2026) 重合；未引用；缺直接对照 | ① 引用并单列为 Layer 2；② 三层参数化把「移动频段位置」和「频段内部分配」分开；③ exact-range 对照就是与 uniform FMRoPE 网格的直接受控比较；④ dead-channel 归因回 Barbero et al.（Oka 自己也这么归） | §2 + Table 1 + §4.2 + App. E |
-| `AC.2` `RDz6s.1` `RzWsa.3` `RzWsa.4` `R27bE.2` `R27bE.5` | 规模太小、benchmark 太弱、缺 1B–7B、缺 RULER | 新增 **Primary II**：OLMo-2 1.485B（4K physical cap）+ LLaMA-3-8B + RULER 13-family + step-0 从头训对照 | §4.3 + Table 5/6 + App. F |
-| `AC.3` `RDz6s.3` `R27bE.1` `R27bE.4` | surrogate→cosh→operating rule 链条只部分验证；allocation 未与 tuning/parameterization 解耦；要求独立调 τ 和 matched non-cosh schedule | **Primary I** 直接做这件事：exact-range 控制 + 12 配置 factorial，含 0.75×/1.0×/1.25× cosh 与 deformation-matched exponential；结论（含否定结论）写进正文 §4.6 | §4.2 + §4.6 + Table 4 |
+| `AC.2` `RDz6s.1` `RzWsa.3` `RzWsa.4` `R27bE.2` `R27bE.5` | 规模太小、benchmark 太弱、缺 1B–7B、缺 RULER | 以自然证据链呈现：432M scarce-channel MLA、750M full-parameter continuation、1.485B from-initialisation PPL 对比；另列 1.485B/8B matched adaptation、2Wiki、RULER 与 causal source use | §1 + §4.3–4.4 + App. F |
+| `AC.3` `RDz6s.3` `R27bE.1` `R27bE.4` | surrogate→cosh→operating rule 链条只部分验证；allocation 未与 tuning/parameterization 解耦；要求独立调 τ 和 matched non-cosh schedule | exact-range 三种子控制 + 12 配置 factorial，含 0.75×/1.0×/1.25× cosh 与 deformation-matched exponential；完整表和边界臂在附录 | §4.2 + App. E |
 | `R27bE.3` | DAPE 对照混淆了 allocation shape 与 parameterization/optimization effort | **认下并退役**：该行移入附录、按真实身份重新标注、正文明确声明不承担归因 | §4.6 + App. E |
 | `RDz6s.2` | matched YaRN scale 不足以定论，tuned Geo+YaRN 可能追平 | 明说：这是同一算子在两种 substrate 上的杠杆差异，不是对 tuned range method 的支配；并明说没跑 (substrate, s) 联合 sweep | §4.1 §4.4 + App. F |
 | `AC.4` | 只有清晰的 novelty + 受控对照 + 更强评测才可能改推荐 | 三样都在正文，且四条边界（cosh 非唯一 / τ 非最优 / 不替代 range transport / task-adapted）写在正文而非附录 | §1 §4.6 §5 |
@@ -22,9 +22,9 @@
 | | NeurIPS 2026 | ICLR 2027 |
 |---|---|---|
 | 标题 | EVQ-Cosh: Variational Frequency Allocation for RoPE | **RoPE Has a Spectral Budget** |
-| Primary theory | Cosh surrogate | **full sin/cos subspace geometry、stable-rank identity、low-frequency collapse、exact transplant obstruction** |
-| Primary I | EVQ×YaRN 454M | **exact-range allocation identification**（151.9M raw-backed seed 42 + 50.9M 12-config × 3-seed factorial）|
-| Primary II | PE-dominant vs DAPE | **50M table-by-weights co-adaptation + 1.485B / 8B RULER** |
+| Theory | Cosh surrogate | **full sin/cos subspace geometry、stable-rank identity、low-frequency collapse、exact transplant obstruction** |
+| Causal identification | EVQ×YaRN 454M | **151.9M raw-hash-receipted 3-seed exact-range + 50.9M 12-config × 3-seed factorial** |
+| Scale and capability | PE-dominant vs DAPE | **432M MLA、750M full continuation、1.485B from-init PPL；另列 1.485B / 8B adaptation 与下游** |
 | Construction | Cosh as general answer | **EVQ-Cosh as one closed-form, zero-learned-parameter instance** |
 | 退役 | — | PE-dominant learned-parameter 对照 → App. E |
 | Related Work | 三轴（operator / inference / allocation-analysis）| 非互斥 intervention levels + learned tables（LeRoPE / AdaRoPE）|
@@ -64,7 +64,7 @@ ICLR PDF `paper-2027/main.pdf`
 
 1. **正文不再依赖它。** §4.6 明说：任何带学习参数的对照都无法分离 allocation shape
    与 parameterization/optimization effort，所以「不把任何 allocation-shape 归因
-   压在这一行上」。归因整体转到 Primary I 的零参数固定 schedule 对照。
+   压在这一行上」。归因整体转到 exact-range/M4 的零参数固定 schedule 对照。
 2. **按真实身份重新标注。** 表格里改成 "Learned inv-freq (layer-shared), 32 params"，
    并在 caption 和 App. E 里说明它属于 learned-**table** 家族（LeRoPE 那一支），
    不属于 learned positional-**operator** 家族。
@@ -93,12 +93,13 @@ scaler*。本版做法：
 
 ## 4. 正文新增数字与 owner 文件
 
-所有数字来自 `../rebuttal/rebuttal_0723/theory_results/`，未做任何再推导。
+数字来自当前 research owner 或 `../rebuttal/rebuttal_0723/theory_results/`；图中
+PPL 只做 owner 明确允许的同协议比值/转录，不跨协议聚合。
 
 | 正文位置 | 数字 | Owner |
 |---|---|---|
-| §4.2, Fig.2a | seed-42 −0.4775/−0.2050/−0.1128；anchors 32/32, 27/32, 22/32 | `MATCHED_RANGE_COSH_500M_S42_20260724.md` |
-| §4.2 boundary | target-matched +0.061/+0.182/+0.279；retarget 下 5/32,1/32,2/32 | 同上 |
+| §1/§4.2, Fig.1a | 三种子 fixed-range mean +0.026/−0.281/−0.176/−0.146；每个 OOD 长度 3/3 同方向 | `paper-2027/research/EXACT_RANGE_151M_3SEED_RESULT_20260820.{md,json}` |
+| §4.2 boundary | 三种子 target-matched mean +0.060/+0.227/+0.460 @512/1K/2K；0/3 Cosh wins | 同上 |
 | §4.2, Table 4 | factorial −0.009115 / −0.009879 / −0.012100 / −0.010619；CI；sign-flip p | `M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md` |
 | §4.6 | 1.0× 只赢 4/12，1.25× 赢 6，0.75× 赢 2；边界臂 | 同上（从 12 条 structural rows 重算） |
 | §4.6 | cosh − exponential +0.000740，p=0.836 | 同上 |
@@ -120,8 +121,8 @@ scaler*。本版做法：
 - 不称使用了官方 FMRoPE 实现（不存在）；exact-range 对照写作 uniform-in-log 网格对照。
 - 不把 task-family adaptation 说成 unseen-task transfer——正文 §4.3 有专门一段。
 - scratch 对照写作 same-initialization / same-scientific-recipe，**不写 bitwise paired**。
-- effect size 归 seed-42，cross-configuration direction 归 M4 factorial，两者数量级差
-  约 40×，正文明说不做定量调和。
+- exact-range effect size 归 raw-hash-receipted 三训练种子 owner；M4 只负责跨配置
+  和替代 analytic shape 的方向，不做跨协议效应量调和。
 - full-string+EOS 与 strict first-number 是不同实验，附录里分开写，不并排。
 - 未把 video-DiT / progressive / 750M 从 supporting 升级。
 
@@ -129,8 +130,8 @@ scaler*。本版做法：
 
 1. **EVQ 闭式表 vs Fixed-LeRoPE 学出表** 在同一 OOD 基准上的直接对照。§5 已把它写成
    下一步最有信息量的实验，但没跑。
-2. `E-EXACT-RANGE-3S` 和 `E-HELDOUT` 仍未完成 promotion，因此已从公开
-   摘要、正文、表格和 Fig.2 删除；promotion 后才能重新评估是否加入。
+2. `E-EXACT-RANGE-3S` 已由 2026-08-20 raw-hash-receipted owner 取代并进入正文；
+   `E-HELDOUT` 仍未完成独立 owner promotion，继续不进入公开 claim。
 3. OLMo future-dated filename 已由 owner 解释为 run label；正文使用的是带实际日期
    和 raw hashes 的 owner。
 4. M4 curated JSON 的 summary 字段与逐配置明细存在内部漂移：12 条
@@ -152,7 +153,7 @@ scaler*。本版做法：
 | 2 | **量级** | 「effect size 比 151.9M 低**两个数量级**」 | 实际 32–48×。改为 "roughly $40\times$ smaller"，与 handover §4 的「40×」一致 |
 | 3 | **假陈述** | evidence-tier caption「摘要和 intro 的任何主张都不压在单 seed 行上」 | 假的——摘要的 RULER 21.3%/0.08% 和 AR exact 0/100 都是单 seed。改为「识别结果全程三 seed；成熟模型行按构造是 1–2 seed，引用处都标了 seed 数」 |
 | 4 | **不该报的数** | RULER 表里 LLaMA Native 32K 报了 `0` | owner 明写「a 13-task Native-LoRA 32K macro **must not be reported**」（3 个 shard 没启动）。表里改为 `n/r` 并在 caption 说明 |
-| 5 | **缺语料声明** | Primary I factorial 没写用的什么数据 | owner: WikiText-2 raw stream，确定性重复。已写进 App. E 的 scope limit，并说明与 151.9M 控制、from-scratch 跑的语料**不同** |
+| 5 | **缺语料声明** | M4 factorial 没写用的什么数据 | owner: WikiText-2 raw stream，确定性重复。已写进 App. E 的 scope limit，并说明与 151.9M 控制、from-scratch 跑的语料**不同** |
 
 以及四条**过度声明**，已改为源文件允许的强度：
 
@@ -161,7 +162,7 @@ scaler*。本版做法：
 | A | 「RULER 4K 的差距是 retrofit adaptation mismatch，是两个效应不是一个」 | 唯一支撑是 from-scratch 的 **NLL** 行，其 owner 明写「It is not yet a capability result … no RULER score has been produced」 | 改为：from-scratch 行**只**给出 LM endpoint 上的窗口内代价上界；retrofit 解释标为 hypothesis，并明说该 checkpoint 没有 RULER 分数 |
 | B | 窗口内代价只报 4K 的 `+0.038` | 同一张表 2K 是 `+0.0724`，且只有 3/128 文档 favour EVQ | 2K 数字已加进正文、表 5 和 App. F |
 | C | 「baseline 是 FMRoPE 的 uniform-in-log grid」 | handover §1.4：不能暗示用了官方实现（不存在） | 改为 "a paper-faithful reimplementation of the rule specified in §6.1"，并在 App. E 明说没有官方实现可用 |
-| D | MLA 的 117.9 那一支标成 `Geo+RAMP` | owner 称其为 **Legacy MLA wavelength scaler**，且「must not be relabeled as official YaRN or as a matched-range control」 | 改为 "this architecture's legacy wavelength-blend scaler"，并明说它不是全文用的那个 `\rs{}`，也不是 matched-range control |
+| D | MLA 的 117.9 那一支曾标成 `Geo+RAMP` | owner 对应的是 **MLA wavelength-blend operator** | 统一为 `MLA wavelength-blend operator`，并与全文的 `\rs{}` / `YaRN-style` 身份分开 |
 
 另外统一使用 `pre-specified before results were inspected`，不再使用暗示外部登记的
 措辞。

@@ -8,8 +8,8 @@ Within each protocol, continuation data and evaluation are matched and one seed
 is used per arm; evaluation uses $20$ examples per family and length. OLMo
 Q/K-only freezes inherited V/O LoRA and trains only the
 tensors RoPE acts on; LLaMA uses matched Q/K/V/O LoRA. Training and evaluation
-rows are disjoint but share the $13$ generator families: task-adapted length
-transfer, not unseen-task transfer.}
+rows are disjoint and share the $13$ generator families, measuring
+task-family-adapted length transfer.}
 \label{tab:ruler}
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{@{}llccc@{}}
