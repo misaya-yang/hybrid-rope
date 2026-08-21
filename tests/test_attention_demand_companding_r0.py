@@ -80,7 +80,7 @@ def test_tiny_olmo2_streaming_backend(tmp_path):
         length=32,
         windows=2,
         queries=4,
-        batch_size=1,
+        batch_size=2,
         model=model_dir,
         model_revision="tiny-test",
     )
@@ -90,3 +90,5 @@ def test_tiny_olmo2_streaming_backend(tmp_path):
     assert metadata["attention_mass_conservation_max_abs"] < 1e-4
     assert arrays["mass"].shape == (2, 4, 32)
     assert arrays["window_global_mass"].shape == (2, 32)
+    assert arrays["q_pair_l2_mean"].shape == (2, 4, 4)
+    assert arrays["k_pair_l2_mean"].shape == (2, 4, 4)

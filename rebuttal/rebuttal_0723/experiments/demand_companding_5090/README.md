@@ -22,8 +22,8 @@ rho_lambda(delta) ∝ ((1 - lambda) * m(delta) + lambda) ** (1/3)
 The finite table uses endpoint-inclusive inverse-CDF quantiles
 `u_k = k/(K-1)`. The mapping is deliberately in the same direction:
 increasing `delta` maps to increasing normalised log-frequency `phi`. Every
-table has `phi[0]=0`, `phi[-1]=1`, positive frequencies, and the same endpoint
-support `omega=[1, 1/base]`.
+table has `phi[0]=0`, `phi[-1]=1`, positive frequencies, and the same native
+RoPE endpoint support `omega=[1, base^(-(K-1)/K)]`.
 
 ## R1' controls
 

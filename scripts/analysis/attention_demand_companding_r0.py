@@ -119,23 +119,39 @@ def pack_windows(windows: list[torch.Tensor], batch_size: int) -> list[torch.Ten
 
 
 class ExactDistanceAccumulator:
-    def __init__(self, layers: int, heads: int, length: int) -> None:
+    def __init__(self, layers: int, heads: int, length: int, head_dim: int) -> None:
         self.mass = np.zeros((layers, heads, length), dtype=np.float64)
         self.opportunities = np.zeros(length, dtype=np.float64)
         self.window_global_mass: list[np.ndarray] = []
-        self._window_start = np.zeros(length, dtype=np.float64)
+        self._batch_window_mass: np.ndarray | None = None
+        self.q_pair_l2_sum = np.zeros((layers, heads, head_dim // 2), dtype=np.float64)
+        self.k_pair_l2_sum = np.zeros_like(self.q_pair_l2_sum)
+        self.pair_norm_count = np.zeros(layers, dtype=np.int64)
 
-    def begin_window(self) -> None:
-        self._window_start = self.mass.sum(axis=(0, 1)).copy()
+    def begin_window(self, batch: int) -> None:
+        self._batch_window_mass = np.zeros((batch, self.mass.shape[-1]), dtype=np.float64)
 
     def end_window(self) -> None:
-        self.window_global_mass.append(
-            self.mass.sum(axis=(0, 1)) - self._window_start
-        )
+        if self._batch_window_mass is None:
+            raise RuntimeError("begin_window must precede end_window")
+        self.window_global_mass.extend(self._batch_window_mass)
+        self._batch_window_mass = None
 
     def add_opportunities(self, positions: np.ndarray, batch: int) -> None:
         for position in positions:
             self.opportunities[: int(position) + 1] += batch
+
+    def add_pair_norms(self, layer: int, query: torch.Tensor, key: torch.Tensor) -> None:
+        if query.shape != key.shape or query.ndim != 4 or query.shape[-1] % 2:
+            raise ValueError("query/key must share shape [B,H,L,D] with even D")
+        batch, heads, length, head_dim = query.shape
+        if heads != self.q_pair_l2_sum.shape[1] or head_dim // 2 != self.q_pair_l2_sum.shape[2]:
+            raise ValueError("query/key shape does not match pair-norm accumulator")
+        q_norm = torch.linalg.vector_norm(query.float().reshape(batch, heads, length, -1, 2), dim=-1)
+        k_norm = torch.linalg.vector_norm(key.float().reshape(batch, heads, length, -1, 2), dim=-1)
+        self.q_pair_l2_sum[layer] += q_norm.sum(dim=(0, 2)).cpu().numpy()
+        self.k_pair_l2_sum[layer] += k_norm.sum(dim=(0, 2)).cpu().numpy()
+        self.pair_norm_count[layer] += batch * length
 
     def add(
         self,
@@ -166,6 +182,19 @@ class ExactDistanceAccumulator:
             values.permute(1, 0, 2, 3).reshape(heads, -1),
         )
         self.mass[layer] += histogram.cpu().numpy()
+        if self._batch_window_mass is None or len(self._batch_window_mass) != batch:
+            raise RuntimeError("attention batch does not match begin_window")
+        per_sequence = torch.zeros(
+            (batch, self.mass.shape[-1]),
+            dtype=torch.float32,
+            device=probability.device,
+        )
+        per_sequence.scatter_add_(
+            1,
+            index[None].expand(batch, -1, -1).reshape(batch, -1),
+            values.sum(dim=1).reshape(batch, -1),
+        )
+        self._batch_window_mass += per_sequence.cpu().numpy()
 
 
 def _project_state(path: Path, *, mmap: bool = False) -> dict[str, torch.Tensor]:
@@ -209,7 +238,7 @@ def collect_project_gpt(args: argparse.Namespace) -> tuple[dict[str, Any], dict[
     model = model.to(device).eval().requires_grad_(False)
     layers = len(model.blocks)
     heads = model.blocks[0].attn.nh
-    accumulator = ExactDistanceAccumulator(layers, heads, args.length)
+    accumulator = ExactDistanceAccumulator(layers, heads, args.length, model.blocks[0].attn.hd)
     handles = []
 
     def make_hook(layer: int):
@@ -223,6 +252,7 @@ def collect_project_gpt(args: argparse.Namespace) -> tuple[dict[str, Any], dict[
             cosine, sine = module.rope(length)
             query = apply_rope(query, cosine[None, None], sine[None, None])
             key = apply_rope(key, cosine[None, None], sine[None, None])
+            accumulator.add_pair_norms(layer, query, key)
             selected = query[:, :, positions]
             score = torch.matmul(selected, key.transpose(-1, -2)) / math.sqrt(module.hd)
             qpos = torch.as_tensor(positions, device=score.device)
@@ -238,7 +268,7 @@ def collect_project_gpt(args: argparse.Namespace) -> tuple[dict[str, Any], dict[
     started = time.perf_counter()
     with torch.inference_mode():
         for batch in batches:
-            accumulator.begin_window()
+            accumulator.begin_window(len(batch))
             accumulator.add_opportunities(positions, len(batch))
             hidden = model.emb(batch.to(device))
             for block in model.blocks:
@@ -282,6 +312,8 @@ def collect_project_gpt(args: argparse.Namespace) -> tuple[dict[str, Any], dict[
         "opportunities": accumulator.opportunities,
         "window_global_mass": np.stack(accumulator.window_global_mass),
         "inv_freq": inv_freq.double().numpy(),
+        "q_pair_l2_mean": accumulator.q_pair_l2_sum / accumulator.pair_norm_count[:, None, None],
+        "k_pair_l2_mean": accumulator.k_pair_l2_sum / accumulator.pair_norm_count[:, None, None],
     }
     return metadata, arrays
 
@@ -316,7 +348,7 @@ def collect_native_151m(args: argparse.Namespace) -> tuple[dict[str, Any], dict[
         raise RuntimeError(f"state-dict mismatch: {loaded}")
     model.extend_rope(args.length)
     model = model.to(device).eval().requires_grad_(False)
-    accumulator = ExactDistanceAccumulator(12, 12, args.length)
+    accumulator = ExactDistanceAccumulator(12, 12, args.length, 64)
     handles = []
 
     def make_hook(layer: int):
@@ -330,6 +362,7 @@ def collect_native_151m(args: argparse.Namespace) -> tuple[dict[str, Any], dict[
             cosine, sine = module.rope(length)
             query = apply_rope(query, cosine[None, None], sine[None, None])
             key = apply_rope(key, cosine[None, None], sine[None, None])
+            accumulator.add_pair_norms(layer, query, key)
             selected = query[:, :, positions]
             score = torch.matmul(selected, key.transpose(-1, -2)) / math.sqrt(module.head_dim)
             qpos = torch.as_tensor(positions, device=score.device)
@@ -349,7 +382,7 @@ def collect_native_151m(args: argparse.Namespace) -> tuple[dict[str, Any], dict[
     started = time.perf_counter()
     with torch.inference_mode():
         for batch in batches:
-            accumulator.begin_window()
+            accumulator.begin_window(len(batch))
             accumulator.add_opportunities(positions, len(batch))
             hidden = model.embedding(batch.to(device))
             for block in model.blocks:
@@ -392,6 +425,8 @@ def collect_native_151m(args: argparse.Namespace) -> tuple[dict[str, Any], dict[
         "opportunities": accumulator.opportunities,
         "window_global_mass": np.stack(accumulator.window_global_mass),
         "inv_freq": inv_freq.double().numpy(),
+        "q_pair_l2_mean": accumulator.q_pair_l2_sum / accumulator.pair_norm_count[:, None, None],
+        "k_pair_l2_mean": accumulator.k_pair_l2_sum / accumulator.pair_norm_count[:, None, None],
     }
     return metadata, arrays
 
@@ -421,7 +456,7 @@ def collect_hf_olmo2(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str
     modules = [layer.self_attn for layer in backbone.layers]
     layers = len(modules)
     heads = modules[0].config.num_attention_heads
-    accumulator = ExactDistanceAccumulator(layers, heads, args.length)
+    accumulator = ExactDistanceAccumulator(layers, heads, args.length, modules[0].head_dim)
     handles = []
 
     def make_hook(layer: int):
@@ -435,6 +470,7 @@ def collect_hf_olmo2(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str
             key = key.view(batch, length, -1, module.head_dim).transpose(1, 2)
             query, key = apply_rotary_pos_emb(query, key, cosine, sine)
             key = repeat_kv(key, module.num_key_value_groups)
+            accumulator.add_pair_norms(layer, query, key)
             selected = query[:, :, positions]
             score = torch.matmul(selected, key.transpose(-1, -2)) * module.scaling
             qpos = torch.as_tensor(positions, device=score.device)
@@ -452,7 +488,7 @@ def collect_hf_olmo2(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str
     started = time.perf_counter()
     with torch.inference_mode():
         for batch in batches:
-            accumulator.begin_window()
+            accumulator.begin_window(len(batch))
             accumulator.add_opportunities(positions, len(batch))
             backbone(input_ids=batch.to(device), use_cache=False, return_dict=True)
             accumulator.end_window()
@@ -504,6 +540,8 @@ def collect_hf_olmo2(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str
         "opportunities": accumulator.opportunities,
         "window_global_mass": np.stack(accumulator.window_global_mass),
         "inv_freq": realized.astype(np.float64),
+        "q_pair_l2_mean": accumulator.q_pair_l2_sum / accumulator.pair_norm_count[:, None, None],
+        "k_pair_l2_mean": accumulator.k_pair_l2_sum / accumulator.pair_norm_count[:, None, None],
     }
     return metadata, arrays
 
@@ -520,10 +558,7 @@ def write_collection(path: Path, metadata: dict[str, Any], arrays: dict[str, np.
 def load_collection(path: Path) -> tuple[dict[str, Any], dict[str, np.ndarray]]:
     with np.load(path, allow_pickle=False) as payload:
         metadata = json.loads(str(payload["metadata"]))
-        arrays = {
-            key: np.asarray(payload[key])
-            for key in ("mass", "opportunities", "window_global_mass", "inv_freq")
-        }
+        arrays = {key: np.asarray(payload[key]) for key in payload.files if key != "metadata"}
     return metadata, arrays
 
 
@@ -766,6 +801,25 @@ def analyze_collection(
 
     long_mass = float(global_mass[length // 2 :].sum() / global_mass.sum())
     phase = phase_regimes(arrays["inv_freq"], length)
+    frequency_band: dict[str, Any] = {"status": "NOT_COLLECTED"}
+    if "q_pair_l2_mean" in arrays and "k_pair_l2_mean" in arrays:
+        q_pair = np.asarray(arrays["q_pair_l2_mean"], dtype=np.float64)
+        k_pair = np.asarray(arrays["k_pair_l2_mean"], dtype=np.float64)
+        if q_pair.shape != k_pair.shape or q_pair.ndim != 3:
+            raise ValueError("pair-norm arrays must share shape [layers,heads,pairs]")
+        q_band = np.argmax(q_pair, axis=-1)
+        k_band = np.argmax(k_pair, axis=-1)
+        frequency_band = {
+            "status": "QK_PAIR_L2_PROFILE_COMPLETE",
+            "interpretation": "descriptive high-norm 2D-pair profile; not causal use or a positional/symbolic score",
+            "q_pair_l2_global_mean": q_pair.mean(axis=(0, 1)).tolist(),
+            "k_pair_l2_global_mean": k_pair.mean(axis=(0, 1)).tolist(),
+            "q_band_index_per_layer_head": q_band.tolist(),
+            "k_band_index_per_layer_head": k_band.tolist(),
+            "q_band_index_mean": float(q_band.mean()),
+            "k_band_index_mean": float(k_band.mean()),
+            "pair_count": int(q_pair.shape[-1]),
+        }
     return {
         "status": "R0_ATTENTION_OCCUPANCY_COMPLETE",
         "interpretation_boundary": (
@@ -796,6 +850,7 @@ def analyze_collection(
             "per_layer_H_endpoint_mass_no_self": per_layer_h,
             "per_layer_head_H_endpoint_mass_no_self": per_head_h,
         },
+        "frequency_band": frequency_band,
         "bootstrap_primary_H": bootstrap_headroom(
             arrays["window_global_mass"],
             length,

@@ -174,8 +174,8 @@ def load_r0_profile(path: str | Path, *, m_path: str | None = None, delta_path: 
             if isinstance(candidate, Mapping):
                 record = candidate
     m = _as_vector(raw_m, label="m")
-    if (m < 0).any():
-        raise ValueError("m must be non-negative")
+    if (m <= 0).any():
+        raise ValueError("m must be strictly positive")
 
     if delta_path is not None:
         raw_delta = _get_path(payload, delta_path)

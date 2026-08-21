@@ -662,12 +662,13 @@ def quartic_density_solution(
     for _ in range(int(max_outer_iter)):
         mid = 0.5 * (lo + hi)
         roots_mid, mass_mid = evaluate(mid)
+        if abs(mass_mid - 1.0) <= mass_atol + mass_rtol:
+            lo = hi = mid
+            break
         if mass_mid > 1.0:
             lo = mid
         else:
             hi = mid
-        if abs(mass_mid - 1.0) <= mass_atol + mass_rtol:
-            break
     multiplier = 0.5 * (lo + hi)
     roots_final, mass_final = evaluate(multiplier)
     if abs(mass_final - 1.0) > mass_atol + mass_rtol:
@@ -1369,7 +1370,9 @@ def run_self_checks() -> dict[str, Any]:
     assert minimum_spacing(np.array([0.0, 0.0, 1.0])) == 0.0
 
     alpha = 2.5
-    tau = 1.0e-3
+    # tau=1e-3 makes the O(tau^4) signal comparable to float64 subtraction
+    # round-off; 5e-3 remains asymptotic while giving a stable numerical check.
+    tau = 5.0e-3
     capp = capp_components(x, cosh_density(x, tau), alpha=alpha, beta=0.0)
     uniform_alpha = capp_components(x, np.ones_like(x), alpha=alpha, beta=0.0)["value"]
     observed_coeff = (capp["value"] - uniform_alpha) / tau**4

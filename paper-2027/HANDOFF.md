@@ -4,8 +4,9 @@
 - **Target:** ICLR 2027
 - **Active manuscript:** `paper-2027/`
 - **Branch:** `main_0726`
-- **Status:** accepted-paper narrative rewrite integrated; manuscript,
-  figures, and reviewer supplement are validated and committed
+- **Status:** acceptance-oriented narrative rewrite integrated and validated;
+  attention-aware method discovery is complete for two internal seeds and
+  remains uncommitted
 - **Internal only:** exclude this file from the anonymous supplement
 
 ## 1. First principle
@@ -130,9 +131,9 @@ and `MLA wavelength-blend operator` for the run-specific MLA transform.
 
 ### Three-seed fixed-support control
 
-- Cosh minus uniform NLL at `256/512/1K/2K`:
+- Anchored EVQ-Cosh minus FMRoPE NLL at `256/512/1K/2K`:
   `+0.026/-0.281/-0.176/-0.146`.
-- Every training seed favours Cosh at every OOD length.
+- Every training seed favours anchored EVQ-Cosh at every OOD length.
 - The $512$ magnitude is heterogeneous and remains visible as per-seed points.
 - Target-matched means at `512/1K/2K`:
   `+0.060/+0.227/+0.460`; FMRoPE is favoured by `3/3` seeds.
@@ -179,7 +180,38 @@ Owners:
 `research/LEROPE_PROFILE_ORACLE_AUDIT_20260820.md` and
 `research/KAPPA_ATTENTION_MEASURE_AUDIT_20260820.md`.
 
-## 6. Validation receipt
+## 6. Attention-aware method discovery
+
+This work is internal and does not change the current manuscript.
+
+- R0 measured attention-distance occupancy from causally masked attention on
+  the mature Native OLMo-2 1.485B Instruct checkpoint and paired seed-137
+  151.9M FMRoPE and anchored EVQ-Cosh checkpoints. The profiles were
+  non-uniform but did not pass the registered multi-peak gate.
+- Mapping distance bins directly to frequency demand was falsified: the
+  seed-137 candidate worsened tail NLL at 512 and 1K.
+- The operator-aware replacement uses
+  $m(\phi)=\mathbb E[1-\cos(\omega(\phi)\Delta)]$ and
+  $\rho\propto(0.9m+0.1)^{1/3}$ at fixed endpoints.
+- Phase-chord minus FMRoPE tail NLL at 256/512/1K/2K is
+  `-0.008/-0.237/-0.152/-0.215` for method-selection seed 137 and
+  `+0.010/-0.084/-0.160/-0.195` for the schedule-frozen seed-42 confirmation.
+  The two-seed means are `+0.001/-0.161/-0.156/-0.205`.
+- Both seeds improve all three OOD endpoints over FMRoPE, and the average
+  in-window cost is nearly removed. The strict gate of retaining at least 80%
+  of anchored EVQ-Cosh gain at every OOD length fails because the seed-42 512
+  effect is smaller. Decision: `PROMISING_PARETO_SHIFT_NOT_PAPER_READY`.
+- Canonical internal navigation:
+  `research/attention-aware-retrofit/README.md`; completed report:
+  `research/attention-aware-retrofit/EXPERIMENT_REPORT_20260821.md`; compact
+  machine-path-free result receipt: `research/attention-aware-retrofit/evidence/RESULTS_20260821.json`.
+- Seed 42 completed 7,629 steps and 499,974,144 tokens; its four-length
+  evaluation completed. No seed 256, R1, R3, or mature-model adaptation was
+  launched. The authorised GPU instance was shut down after artifacts were
+  receipted locally; raw machine outputs remain on its stopped data volume and
+  no remote run remains active.
+
+## 7. Validation receipt
 
 | Check | Result |
 | --- | --- |
@@ -192,13 +224,14 @@ Owners:
 | Isolated package | exact-range entrypoint opened; all three figures regenerated in the dry run; paper rebuilt; 142 tests passed |
 | Visual QA | all 9 body pages inspected; Figure 1 callout is legible, Figure 2 follows the Theory heading, and Figure 3 has no black heatmap field |
 | Immutable NeurIPS PDF | SHA-256 `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772` |
+| Attention-aware internal checks | 33 focused tests passed; phase-demand self-test and report-metric assertions passed |
 
 The final reviewer package is
 `rope-spectral-budget-iclr2027-supplement.zip` at the repository root.
 
 Use Conda `aidemo` for PyTorch/pytest checks.
 
-## 7. Worktree and next action
+## 8. Worktree and next action
 
 - The acceptance-audit integration is local and uncommitted; do not publish it
   unless the user explicitly requests commit/push.
@@ -208,11 +241,15 @@ Use Conda `aidemo` for PyTorch/pytest checks.
 - Do not start new training or GPU evaluation from this handoff.
 - Immediate submission work must first make the completed evidence as strong
   and readable as possible without unsupported SOTA language.
-- The next authorised research priority is matched multi-seed $1.485$B
-  adaptation on RTX 5090-class hardware, after freezing an exact protocol.
-  The method goal is to combine in-window retention and extrapolation by
-  incorporating the attention mechanism into spectral allocation, then adapt
-  existing RoPE checkpoints with a small update.
+- The next research question is mature-model preservation, not another blind
+  whole-table swap. Reuse the existing Stage-D leave-one-pair-out attention-KL
+  diagnostic to determine whether Native dependence is localised by pair,
+  head, or layer; do not assume a 50/50 `d_head` split. Compare the smallest
+  measured protected-complement design with a compact Native-plus-phase
+  residual before matched 1.485B LoRA.
+- If phase-chord is to become a paper-facing training-time method, seed 256 is
+  its smallest missing replication. Do not launch it or mature-model GPU work
+  without a frozen protocol and explicit authorisation.
 - Treat the present $8$B results as evidence, not as the solved retrofit: the
   natural-LM arm improves long-position PPL and routing but does not establish
   simultaneous in-window retention and downstream improvement. Do not schedule

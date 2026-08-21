@@ -60,7 +60,9 @@ def test_geo_cosh_and_demand_tables_share_anchored_support(tmp_path: Path) -> No
         assert receipt["support"]["phi_min"] == 0.0
         assert receipt["support"]["phi_max"] == 1.0
         assert receipt["support"]["omega_max"] == 1.0
-        assert receipt["support"]["omega_min"] == pytest.approx(1.0 / 500_000, abs=1e-12)
+        assert receipt["support"]["omega_min"] == pytest.approx(
+            500_000 ** (-(32 - 1) / 32), abs=1e-12
+        )
         assert len(receipt["inv_freq"]) == 32
 
 

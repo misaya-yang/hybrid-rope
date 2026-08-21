@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "status": "COMPLETE_TWO_SEED_INTERNAL",
+  "paper_claim": false,
+  "decision": "PROMISING_PARETO_SHIFT_NOT_PAPER_READY",
+  "method": {
+    "name": "phase_chord_lambda_0p1",
+    "demand_kernel": "E_delta[1-cos(omega(phi)*delta)]",
+    "density": "((0.9*m)+0.1)^(1/3), normalized",
+    "fixed_support": true,
+    "training_inv_freq_sha256": "59def48cf1e6c76697e0edb186cdf83554e3cfea0a2d5e07f7fbd2f3f4d2df93",
+    "schedule_source_seed": 137,
+    "seed_42_schedule_frozen_before_training": true
+  },
+  "protocol": {
+    "model_parameters": 151898880,
+    "training_length": 256,
+    "training_tokens": 499974144,
+    "optimizer_steps": 7629,
+    "global_batch_sequences": 256,
+    "evaluation_lengths": [256, 512, 1024, 2048],
+    "evaluation_anchors_per_length": 32,
+    "evaluation_tail_tokens": 128,
+    "within_seed_matching": "candidate and controls use the same seed-specific row order, stored-token prefix, validation set, anchors, and scientific optimization contract",
+    "cross_seed_boundary": "seed 137 and seed 42 intentionally retain their own row order and micro-batch geometry; they are training-seed replications, not bitwise-identical executions",
+    "seed_137": {
+      "micro_batch_size": 128,
+      "grad_accum_steps": 2,
+      "protocol_sha256": "8135dc4dfb7e89290db6cd235cafab6ad39cc987e54d0a3661d999ebb36b2f48",
+      "row_order_sha256": "92d6045016802742f763eea191fc09cc49f4e0caa03f38908030c86896fef5ff",
+      "checkpoint_sha256": "74ac54e46f107873f82d897253d60bd42b91358f59808600724e316ac5cd69e0",
+      "train_seconds": 2780.5447375774384
+    },
+    "seed_42": {
+      "micro_batch_size": 64,
+      "grad_accum_steps": 4,
+      "protocol_sha256": "d92da1b8a4ba92cb9bee5bcd28c2d73282bc0bedfc38adf164dc9693a42d188d",
+      "row_order_sha256": "c6fc5b4d7dea51134ad609ca87864e54b8cf46c169838cd08e1a20b9bcf47452",
+      "checkpoint_sha256": "04da7caa8db8f779ca12e4219466ef815d6444435c3886594d3e58d662cade50",
+      "train_seconds": 2813.1573984622955
+    },
+    "shared_receipts": {
+      "code_sha256": "32cbdc546928d137cd671498e9eb23fe55fe44f15cd8efea0a3eaf97db3266ed",
+      "train_used_prefix_sha256": "66ee82396750d2c2fe9ab0a678092383a46ad28290983d091bd83895d5f83e60",
+      "validation_sha256": "be564fa673da684d989752576c2d9cebf7d4ae3235a4751a1a281712623cb3e0",
+      "anchors_sha256": "a6716d6e8c348494c517540c167f6a2b43a16eb4377af2c395d12e34734493b3"
+    }
+  },
+  "r0": {
+    "mature_olmo2_1p485b": {
+      "sequences": 1024,
+      "length": 4096,
+      "layers": 16,
+      "heads": 16,
+      "H_median": 0.373195637581293,
+      "long_half_attention_mass": 0.14149250683070388,
+      "at_least_two_peaks": false
+    },
+    "seed_137_fmrope": {
+      "sequences": 1024,
+      "length": 256,
+      "layers": 12,
+      "heads": 12,
+      "H_median": 0.5454720192478896,
+      "long_half_attention_mass": 0.09105400864949273,
+      "at_least_two_peaks": false
+    },
+    "seed_137_anchored_evq_cosh": {
+      "sequences": 1024,
+      "length": 256,
+      "layers": 12,
+      "heads": 12,
+      "H_median": 0.5410048294292742,
+      "long_half_attention_mass": 0.10177693857723433,
+      "at_least_two_peaks": false
+    },
+    "automatic_shape_gate": false,
+    "interpretation": "attention-distance occupancy is descriptive and is not an identified per-frequency demand or causal decomposition"
+  },
+  "tail_nll": {
+    "lengths": [256, 512, 1024, 2048],
+    "direct_distance_seed_137": [
+      3.332814149558544,
+      5.014627620577812,
+      5.8580015152692795,
+      6.349451869726181
+    ],
+    "direct_distance_minus_fmrope_seed_137": [
+      -0.007109895348549,
+      0.073492094874382,
+      0.089995577931405,
+      -0.019826233386993
+    ],
+    "fmrope_seed_137": [
+      3.339924044907093,
+      4.94113552570343,
+      5.768005937337875,
+      6.369278103113174
+    ],
+    "anchored_evq_cosh_seed_137": [
+      3.3689491599798203,
+      4.6706347316503525,
+      5.57712134718895,
+      6.188451588153839
+    ],
+    "phase_chord_seed_137": [
+      3.331685535609722,
+      4.70415922254324,
+      5.6160305589437485,
+      6.154089629650116
+    ],
+    "phase_chord_minus_fmrope_seed_137": [
+      -0.008238509297371,
+      -0.23697630316019,
+      -0.151975378394127,
+      -0.215188473463058
+    ],
+    "fmrope_seed_42": [
+      3.345893196761608,
+      4.961800321936607,
+      5.834973722696304,
+      6.335680291056633
+    ],
+    "anchored_evq_cosh_seed_42": [
+      3.378652259707451,
+      4.484298869967461,
+      5.629988685250282,
+      6.222836524248123
+    ],
+    "phase_chord_seed_42": [
+      3.355540670454502,
+      4.877753496170044,
+      5.675417318940163,
+      6.140427365899086
+    ],
+    "phase_chord_minus_fmrope_seed_42": [
+      0.009647473692894,
+      -0.084046825766563,
+      -0.159556403756141,
+      -0.195252925157547
+    ],
+    "phase_chord_minus_fmrope_two_seed_mean": [
+      0.000704482197762,
+      -0.160511564463377,
+      -0.155765891075134,
+      -0.205220699310303
+    ],
+    "anchored_evq_cosh_minus_fmrope_two_seed_mean": [
+      0.030892089009285,
+      -0.374001123011112,
+      -0.197934813797474,
+      -0.146835140883923
+    ]
+  },
+  "gates": {
+    "seed_42_training_window_delta_le_0p01": true,
+    "both_seeds_improve_all_ood_lengths_over_fmrope": true,
+    "retain_80_percent_of_anchored_evq_cosh_gain_at_every_ood_length": false,
+    "paper_promotion": false
+  },
+  "source_receipts": {
+    "r0_olmo2_analysis_sha256": "99c574a3ff69bf87f97036f63b6fad2890990517fcbb3f445569c97ad56fee1d",
+    "r0_seed137_fmrope_analysis_sha256": "735bc1882efad8c83527d8a75c8e19e2fa1646d9cf0bca73b3fdd49b62b54a84",
+    "r0_seed137_anchored_evq_cosh_analysis_sha256": "8125beae0171ca9be548ddd00322fec81a6e7cf54eaf0545d5b416a310f3d95e",
+    "direct_distance_seed137_results_sha256": "a6fcf955e2c20145da43050b2493a51fb069d66a23a73f4758e6abcb75d42e5d",
+    "phase_chord_demand_sha256": "5ef61561df8cdab80c7bd41c01e9eb16f91ae6ab866f8c936957ac32d0f8586d",
+    "phase_chord_schedule_sha256": "672102648c16b7c54903d744cfc28fa5180c14128bae674f660b21f5822024e0",
+    "seed137_control_results_sha256": "6a5ab42b783b2ea98428e379ab49ba7264401c3ec8533a44a0a40c0d65196e48",
+    "phase_chord_seed137_results_sha256": "7091d500b6c3fb223f85b1f1dd3ba0b24cae524fba966eb5379db707ca13d630",
+    "phase_chord_seed137_train_meta_sha256": "34bb9db4dfd6fba70efdd67d447be75b69a9f9da988b0b425738d99da9c50347",
+    "phase_chord_seed42_results_sha256": "0ada1aa27fee7be6dd07d1e584aecccdbc1d0256f6158c09eba8d1e1ecd8f0dd",
+    "phase_chord_seed42_train_meta_sha256": "5a9d76837f8fad8a38c9c9f4fede70b9c8ad239499ce1fb39074afcb59d36050",
+    "seed42_control_owner": "results/fmrope_evq2_500m_s42_20260724/comparison/comparison.json",
+    "seed42_control_owner_sha256": "801792f062fe680afe1570fbf23ed710d77be0659c03a3924361b79ccbf334b1"
+  },
+  "claim_boundary": [
+    "seed 137 selected the schedule and is not an independent confirmation",
+    "seed 42 is a schedule-frozen training-seed confirmation",
+    "two seeds do not support a generic significance statement",
+    "the result does not establish mature-model retention or downstream capability",
+    "raw machine outputs remain with the stopped compute-instance owner; this compact receipt removes machine-specific paths"
+  ]
+}

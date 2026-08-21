@@ -6,6 +6,12 @@ with their canonical owners; this directory records the decisions, proofs,
 audits, and evidence routing needed to write the paper without replaying the
 entire NeurIPS rebuttal history.
 
+## Current research
+
+- [`attention-aware-retrofit/`](attention-aware-retrofit/) — active work on
+  phase-chord allocation and mature-model retrofit. Its `README.md` is the
+  research memo; the dated experiment report records executed evidence.
+
 ## Read order
 
 1. [`../../AGENTS.md`](../../AGENTS.md) — project rules, acceptance objective,
