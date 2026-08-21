@@ -68,7 +68,7 @@ ax.set_xticks(ratios, [r"$1\times$", r"$2\times$", r"$4\times$", r"$8\times$"])
 ax.set_ylim(-0.57, 0.10)
 ax.set_yticks([-0.5, -0.25, 0])
 ax.set_xlabel("relative to training length")
-ax.set_ylabel(r"$\Delta$NLL (Cosh $-$ uniform)")
+ax.set_ylabel(r"$\Delta$NLL (anchored EVQ-Cosh $-$ FMRoPE)")
 ax.set_title("(a) Fixed support, interior allocation", loc="left", weight="bold")
 ax.legend(frameon=False, loc="lower right", fontsize=5.9, handlelength=1.5)
 ax.grid(axis="y", color=GRID, lw=0.45)
@@ -105,7 +105,7 @@ ax.set_xlim(-0.18, 1.18)
 ax.set_ylim(-38, 8)
 ax.set_yticks([-30, -15, 0])
 ax.set_xlabel("evaluation length")
-ax.set_ylabel("PPL change, EVQ vs Geo (%)")
+ax.set_ylabel("PPL change, EVQ-Cosh vs Geo (%)")
 ax.set_title("(b) 432M MLA, $K=16$", loc="left", weight="bold")
 ax.legend(frameon=False, loc="lower left", fontsize=5.9, handlelength=1.5)
 ax.grid(axis="y", color=GRID, lw=0.45)
@@ -131,9 +131,12 @@ for bars, values, color in (
 ax.legend([bars_native, bars_evq], ["Native", "EVQ-Cosh"], frameon=False,
           ncol=2, loc="upper left", fontsize=5.3, handlelength=0.9,
           columnspacing=0.8, handletextpad=0.35, borderaxespad=0.15)
-ax.text(0.98, 0.82, r"8B deletion: $\Delta$NLL $-0.01\;\to\;+1.51$",
-        transform=ax.transAxes, ha="right", color=ORANGE, fontsize=5.4,
-        weight="bold")
+ax.text(0.98, 0.78,
+        "8B causal deletion\n" + r"$\Delta$NLL: $-0.01 \rightarrow +1.51$",
+        transform=ax.transAxes, ha="right", va="top", color=ORANGE,
+        fontsize=6.3, weight="bold",
+        bbox={"boxstyle": "round,pad=0.22", "facecolor": "white",
+              "edgecolor": ORANGE, "linewidth": 0.65})
 ax.set_xticks(x, [r"$1\times$", r"$2\times$", r"$4\times$"])
 ax.set_ylim(0, 33)
 ax.set_xlabel("relative to 4K physical cap")

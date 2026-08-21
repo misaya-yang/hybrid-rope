@@ -80,8 +80,6 @@ from run_evq_sweep import (  # noqa: E402
     load_val,
     set_seed,
 )
-from eval_dsr import compute_summary as compute_dsr_summary  # noqa: E402
-from eval_dsr import eval_dsr_single_model  # noqa: E402
 from eval_passkey_scratch import (  # noqa: E402
     MixedDataset,
     eval_passkey_nll_gap,
@@ -1206,6 +1204,11 @@ def safe_eval_dsr(
 ) -> Tuple[Optional[Dict[str, Any]], Optional[Dict[str, Any]]]:
     if spec.dsr_trials <= 0 or not spec.dsr_distances:
         return None, None
+    # Exact-range and report-only paths do not use DSR. Keep its historical
+    # baseline dependencies out of those entrypoints until evaluation begins.
+    from eval_dsr import compute_summary as compute_dsr_summary
+    from eval_dsr import eval_dsr_single_model
+
     inv_freq = evq_cosh_inv_freq(spec.head_dim, spec.tau)
     trials = int(spec.dsr_trials)
     for attempt in range(1, 4):

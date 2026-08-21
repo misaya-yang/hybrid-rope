@@ -9,8 +9,8 @@
 - **Supersedes for outward use:** the author-confirmed, locally unpromoted
   aggregate in
   `../../rebuttal/rebuttal_0723/theory_results/MATCHED_RANGE_COSH_500M_3SEED_20260724.md`
-- **Not submission prose:** update the manuscript only after choosing the final
-  figure/table presentation
+- **Paper integration:** the active manuscript uses this frozen three-seed
+  result; this owner remains authoritative for future wording changes
 
 ## 1. Decision
 
@@ -20,13 +20,13 @@ The registered replication succeeds.
 > interior frequencies changes trained-model behavior across independent
 > training seeds.
 
-At the fixed training range, endpoint-normalized Cosh minus uniform FMRoPE
+At the fixed training range, anchored EVQ-Cosh minus FMRoPE
 tail NLL is `-0.28073/-0.17599/-0.14571` at `512/1K/2K`. All three training
-seeds favor Cosh at every OOD length. At the 256-token training length, Cosh
+seeds favor anchored EVQ-Cosh at every OOD length. At the 256-token training length, anchored EVQ-Cosh
 has a small, consistent `+0.02619` NLL cost.
 
 When both grids are target-matched, the ordering reverses in all three seeds:
-Cosh minus FMRoPE is `+0.06032/+0.22720/+0.45959` at `512/1K/2K`. The result
+Anchored EVQ-Cosh minus FMRoPE is `+0.06032/+0.22720/+0.45959` at `512/1K/2K`. The result
 therefore identifies interior allocation as a training-time variable but does
 not establish additive gain over target-aware range transport.
 
@@ -42,8 +42,8 @@ every scalar support quantity has been pinned.
 - Training budget per arm: `499,974,144` tokens, `7,629` optimizer steps.
 - Evaluation: 32 frozen anchors at `256/512/1024/2048`; primary metric is the
   paired final-128-token teacher-forced NLL.
-- Baseline: paper-faithful uniform-in-log FMRoPE grid at training base 256.
-- Intervention: endpoint-normalized Cosh spacing at `tau=4`.
+- Baseline: paper-faithful FMRoPE grid at training base 256.
+- Intervention: anchored EVQ-Cosh at `tau=4`.
 - Held fixed within each seed pair: architecture, trainable initialization,
   row order, optimizer, LR schedule, global batch, token budget, evaluation
   anchors, sampled maximum and minimum frequencies, and log-frequency span.
@@ -62,12 +62,12 @@ each new seed pair, every frozen scientific hash listed in Section 7 matches.
 
 ## 3. Primary fixed-range result
 
-Negative values favor the Cosh interior allocation. The 95% intervals use a
+Negative values favor anchored EVQ-Cosh. The 95% intervals use a
 two-sided Student-t interval across the three independent training seeds
 (`df=2`, `t=4.3026527`). With only three seeds, they are descriptive
 uncertainty summaries, not a basis for significance language.
 
-| Length | Seed 42 | Seed 137 | Seed 256 | Mean | SD across seeds | 95% t interval | Cosh wins | `exp(mean delta)-1` |
+| Length | Seed 42 | Seed 137 | Seed 256 | Mean | SD across seeds | 95% t interval | Anchored EVQ-Cosh wins | `exp(mean delta)-1` |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | 256 | +0.03276 | +0.02903 | +0.01680 | +0.02619 | 0.00835 | `[+0.00545,+0.04693]` | 0/3 | +2.65% |
 | 512 | -0.47750 | -0.27050 | -0.09418 | **-0.28073** | 0.19186 | `[-0.75735,+0.19589]` | **3/3** | **-24.48%** |
@@ -82,7 +82,7 @@ length is statistically established from three seeds.
 
 ### Anchor-level direction
 
-The per-seed fractions of the 32 paired evaluation anchors favoring Cosh are:
+The per-seed fractions of the 32 paired evaluation anchors favoring anchored EVQ-Cosh are:
 
 | Length | Seed 42 | Seed 137 | Seed 256 |
 | ---: | ---: | ---: | ---: |
@@ -97,9 +97,9 @@ three training seeds as the uncertainty unit.
 
 ## 4. Target-matched deployment boundary
 
-Positive values favor uniform FMRoPE.
+Positive values favor FMRoPE.
 
-| Length | Seed 42 | Seed 137 | Seed 256 | Mean | SD across seeds | 95% t interval | Cosh wins | `exp(mean delta)-1` |
+| Length | Seed 42 | Seed 137 | Seed 256 | Mean | SD across seeds | 95% t interval | Anchored EVQ-Cosh wins | `exp(mean delta)-1` |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | 256 | +0.03276 | +0.02903 | +0.01680 | +0.02619 | 0.00835 | `[+0.00545,+0.04693]` | 0/3 | +2.65% |
 | 512 | +0.06109 | +0.05257 | +0.06729 | **+0.06032** | 0.00739 | `[+0.04196,+0.07867]` | 0/3 | +6.22% |
@@ -139,7 +139,7 @@ numbers.
 
 ### Not supported
 
-- Cosh is the unique or universal allocation optimum.
+- EVQ-Cosh is the unique or universal allocation optimum.
 - Allocation is additive or synergistic with target-aware FMRoPE in this
   protocol.
 - This 151.9M control alone establishes mature-scale capability.
@@ -149,14 +149,14 @@ numbers.
 ### Recommended manuscript sentence
 
 > Across three paired training seeds, moving only the 30 interior frequencies
-> changes Cosh-minus-FMRoPE OOD NLL by
+> changes anchored EVQ-Cosh minus FMRoPE OOD NLL by
 > `-0.281/-0.176/-0.146` at `2x/4x/8x`, with all three seed contrasts favoring
-> Cosh at every OOD length, at an in-domain cost of `+0.026` NLL.
+> anchored EVQ-Cosh at every OOD length, at an in-domain cost of `+0.026` NLL.
 
 The abstract, introduction, identification figure, experiment paragraph, and
-identification appendix currently report the seed-42 vector and should be
-replaced together in one manuscript integration pass. The target-matched row
-belongs in the appendix or discussion boundary rather than the abstract.
+identification appendix are synchronized to this three-seed result. The
+target-matched row remains an appendix/discussion boundary rather than an
+abstract result.
 
 ## 7. Completion and provenance receipt
 
@@ -189,7 +189,7 @@ completion.
 
 ### Within-seed paired receipts
 
-| Seed | Initial trainable | Row order | Protocol | FMRoPE frequency | Cosh frequency |
+| Seed | Initial trainable | Row order | Protocol | FMRoPE frequency | Anchored EVQ-Cosh frequency |
 | ---: | --- | --- | --- | --- | --- |
 | 137 | `c88c6abc...97dcb` | `92d60450...ef5ff` | `8135dc4d...b2f48` | `06adcd40...d6b04` | `e0b20171...8a0eb` |
 | 256 | `214007eb...e78d` | `c19e9371...611b` | `2b776fd1...ee0f` | `06adcd40...d6b04` | `e0b20171...8a0eb` |

@@ -5,7 +5,7 @@
 
 \subsection{OLMo-2 $1.485$B}
 
-All OLMo-2 \evq{} arms use the endpoint Cosh table with $\tau{=}2$ and base
+All OLMo-2 \evq{} arms use endpoint quantisation with $\tau{=}2$ and base
 $500{,}000$; the frequency tensor is fixed throughout each continuation.
 
 \paragraph{Matched routing conversion.}
@@ -60,9 +60,9 @@ above.
 
 \subsection{LLaMA-3-8B-Instruct}
 
-Both LLaMA protocols use the midpoint Cosh table with $\tau{=}1.414$; their
-training objectives, adapters, and endpoints remain separate as described
-below.
+The \evq{} arm in both LLaMA protocols uses midpoint quantisation with
+$\tau{=}1.414$; Native retains the pretrained model's original frequency table.
+The training objectives, adapters, and endpoints remain separate below.
 
 \paragraph{Probability and causal source use.}
 In the matched seed-$42$, $300$-step Q/K/V/O LoRA protocol, \evq{}-minus-Native

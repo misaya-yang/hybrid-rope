@@ -44,9 +44,10 @@ With $t=\Delta/L$ and $x=\omega L$, $\cos(xt)=1-x^2t^2/2+O(x^4)$ and
 $\sin(xt)/x=t-x^2t^3/6+O(x^4)$, so after rescaling the second coordinate the
 basis of $V_\omega$ tends to $\{1,\Delta\}$. Substituting these expansions into
 \eqref{eq:cross-gram} and whitening, the leading deficit between two slow
-subspaces is $2-\|Q_{x,y}\|_F^2=\frac{19}{12600}(x^2-y^2)^2+O(\epsilon^6)$;
+subspaces is $2-\|Q_{x,y}\|_F^2=\frac{19}{12600}(x^2-y^2)^2+O(\epsilon^6)$,
+where $\epsilon=\max\{|x|,|y|\}\to0$;
 numerically at $x{=}0.05,y{=}0.10$ the exact-to-leading ratio is $1.00058$. For
-the softmax metric, $F=\operatorname{diag}(p)-pp^\top$ satisfies $F\mathbf1=0$,
+the softmax metric with fixed $p$, $F=\operatorname{diag}(p)-pp^\top$ satisfies $F\mathbf1=0$,
 so constants are annihilated; centring by $\mathbb E_p$ and rescaling gives
 $\overline{\sin(\omega\Delta)}/\omega\to\Delta-\mathbb E_p\Delta$ and
 $-2\overline{\cos(\omega\Delta)}/\omega^2\to\Delta^2-\mathbb E_p\Delta^2$,
@@ -87,10 +88,10 @@ compensation. It does not bound approximate compensation obtained by retraining
 on finite data, nor does it constrain nonlinear maps or the V/O and residual
 paths.
 
-\subsection{Collision-only surrogate stationary density}
+\subsection{Proof of the closed-form variational optimum}
 
 This subsection proves Theorem~\ref{thm:ode} directly from the stated
-collision-only surrogate functional. Starting from the formal surrogate kernel
+variational objective. Starting from the kernel
 \begin{equation}
 K_{\mathrm{app}}(\phi,\psi)=\alpha\delta(\phi-\psi)+\beta\min(\phi,\psi),
 \end{equation}
@@ -155,10 +156,10 @@ does the derived allocation also reduce the collision objective under $K$? This
 checks the direction selected by the homogeneous branch; it does not bound the
 omitted Fisher-forcing residual.
 
-Table~\ref{tab:surrogate-validation} answers affirmatively. For a uniform distance prior $D(\Delta) = 1/L$ on $[0, L]$, we compute $K_{\cos}$ at the discrete allocation points for both geometric and EVQ, then evaluate the normalized collision score $C = \sum_{i<j} K_{ij}^2/(K_{ii}K_{jj})$ and effective spectral rank (exponential of the Shannon entropy of the eigenvalue distribution). These diagnostics use the inclusive grid $u_k=k/(K-1)$; they test the allocation direction but are not a direct validation of either the full block-whitened sin/cos objective or the deployed midpoint grid. The $12$ reported configurations comprise a six-length text sweep at fixed $b{=}500$K and $K{=}32$, two additional text bases at $L{=}2048$, and four video bases at $L{=}32$ and $K{=}16$; this is not a Cartesian sweep over every listed factor.
+Table~\ref{tab:surrogate-validation} answers affirmatively. For a uniform distance prior $D(\Delta) = 1/L$ on $[0, L]$, we compute $K_{\cos}$ at the discrete allocation points for Geo and \evq{}, then evaluate the normalized collision score $C = \sum_{i<j} K_{ij}^2/(K_{ii}K_{jj})$ and effective spectral rank (exponential of the Shannon entropy of the eigenvalue distribution). These diagnostics use the inclusive grid $u_k=k/(K-1)$; they test the allocation direction but are not a direct validation of either the full block-whitened sin/cos objective or the deployed midpoint grid. The $12$ reported configurations comprise a six-length text sweep at fixed $b{=}500$K and $K{=}32$, two additional text bases at $L{=}2048$, and four video bases at $L{=}32$ and $K{=}16$; this is not a Cartesian sweep over every listed factor.
 
 \begin{table}[ht]
-\caption{Functional surrogate check on the inclusive $u_k{=}k/(K{-}1)$ diagnostic grid. EVQ reduces collision and increases effective rank under the closed-form cosine-feature kernel $K_{\cos}$ in all 12 tested configurations. This is a direction check, not a pointwise approximation, full-subspace validation, or deployed-grid identity test.}
+\caption{Functional surrogate check on the inclusive $u_k{=}k/(K{-}1)$ diagnostic grid. \evq{} reduces collision and increases effective rank under the closed-form cosine-feature kernel $K_{\cos}$ in all 12 tested configurations. This is a direction check, not a pointwise approximation, full-subspace validation, or deployed-grid identity test.}
 \label{tab:surrogate-validation}
 \centering
 \small
@@ -189,7 +190,7 @@ Configuration & Geo & \evq{} ($\Delta_C$) & & Geo & \evq{} \\
 \end{tabular}
 \end{table}
 
-EVQ reduces collision under $K_{\cos}$ in all 12 configurations ($24\%$--$92\%$), and effective rank increases in every row. In the fixed-base text sweep, the relative reduction grows as $L$ shortens. The separate base sweeps remain positive but are not monotone in $b$.
+\evq{} reduces collision under $K_{\cos}$ in all 12 configurations ($24\%$--$92\%$), and effective rank increases in every row. In the fixed-base text sweep, the relative reduction grows as $L$ shortens. The separate base sweeps remain positive but are not monotone in $b$.
 
 \subsection{Single-crossing budget shift}
 \label{sec:budget-crossing-proof}
@@ -252,7 +253,7 @@ with equality $\mathcal{W}(\rho) = 0$ if and only if $\rho \equiv 1$ (geometric 
 Since $\beta\int M_\rho^2\ge 0$, $\mathcal{W}(\rho)\ge\alpha\chi^2(U\|P_\rho)$. For fixed $D_B(\rho){=}d$, the sharp lower envelope of $\chi^2$ over all densities is the Csisz\'ar--Vajda $f$-divergence comparison $F_{*}$, whose extremizer is a two-level density $X=1/\rho\in\{a,c\}$ with mass-normalization and entropy-deficit constraints. For the corollary, $1+\chi^2(U\|P_\rho) = \int 1/\rho\,\mathbb{E}_{U}[\cdot] \ge e^{D_1(U\|P_\rho)} = e^{D_B(\rho)}$ by R\'enyi-2 $\ge$ R\'enyi-1. Equality at $\rho{\equiv}1$ is immediate from both sides vanishing.
 \end{proof}
 
-\paragraph{EVQ evaluation.} For $\rho_\tau(\phi) = \tau\cosh(\tau(1{-}\phi))/\sinh\tau$ (Eq.~\eqref{eq:S-chi2-evq} below uses the un-normalized integral; cf.\ \S\ref{sec:chi2-load} ``Normalization convention''),
+\paragraph{\evq{} evaluation.} For $\rho_\tau(\phi) = \tau\cosh(\tau(1{-}\phi))/\sinh\tau$ (Eq.~\eqref{eq:S-chi2-evq} below uses the un-normalized integral; cf.\ \S\ref{sec:chi2-load} ``Normalization convention''),
 \begin{align}
 D_B(\rho_\tau) \;&=\; \log\tfrac{\sinh\tau}{\tau} - \tfrac{1}{\tau}\int_0^\tau\log\cosh y\,dy \;=\; \tfrac{\tau^4}{90} - \tfrac{8\tau^6}{2835} + O(\tau^8),\label{eq:D-B-evq}\\
 S_{\chi^2}(\rho_\tau) \;&=\; \tfrac{\sinh\tau}{\tau^2}\arctan(\sinh\tau) - 1 \;=\; \tfrac{\tau^4}{45} - \tfrac{2\tau^6}{315} + O(\tau^8),\label{eq:S-chi2-evq}\\
@@ -336,14 +337,16 @@ and $Q_1(L,b)=\int_0^1\eta(\phi)q(Lb^{-\phi})\,d\phi$. This is a
 specified phase-variance utility. It should not be identified with the exact
 oscillatory collision objective or the trained-transformer loss.
 
-The finite-$\tau$ evidence is deliberately empirical. A staged 99-run study
-contains nine small-model configurations and 27 formula-versus-Geo seed pairs,
-not 27 independent configurations. The default beats midpoint-Geo in $7/9$
-configuration means and $18/27$ pairs, but beats a pilot-selected neighbouring
-value in only $3/9$ held-out configuration means. In the separate exact-range
-factorial, the formula point is the best pre-specified Cosh multiplier in
-$4/12$ structural configurations. These audits establish the correct role of
-$c{=}1$: a useful, fallible basin initialisation.
+The finite-$\tau$ evidence tests a configuration-independent zero-search prior
+rather than a per-configuration point optimum. In a staged 99-run study, the
+default beats the midpoint-discretised Geo baseline in $7/9$ configuration
+means and $18/27$ seed pairs. The evaluated neighbours use the discrete ratios
+$0.75\times$, $1.25\times$, or $1.5\times$ of the formula; the independent
+exact-range factorial tests $0.75\times$, $1.00\times$, and $1.25\times$.
+Their ordering varies across configurations. These are tested multipliers, not
+bounds on a continuous basin. The evidence supports $c{=}1$ as a useful
+zero-search prior relative to that Geo baseline; it does not identify a
+per-configuration point optimum.
 
 \subsection{Scaling analysis of \texorpdfstring{$\tau^*$}{tau*}: from surrogate to operating point}
 \label{sec:tau-scaling}
@@ -438,7 +441,7 @@ R\'enyi ($\alpha{=}2$) & --- & 0.807 & \\
 \end{tabular}
 \end{table}
 
-\paragraph{Why $\chi^2$.} Two independent arguments favor $p{=}1$. (1)~\emph{Attention-load asymmetry}: each frequency channel at density $\rho(\phi)$ bears per-channel attention load ${\propto}1/\rho$; weighting the squared departure by this load yields $\int(\rho{-}1)^2/\rho = \chi^2$. (2)~\emph{Discrete-grid effect}: the continuous $L^2$ integral, evaluated on EVQ's non-uniform cosh-quantile grid, naturally acquires a $1/\rho$ Jacobian factor, producing discrete $\chi^2$.
+\paragraph{Why $\chi^2$.} Two independent arguments favor $p{=}1$. (1)~\emph{Attention-load asymmetry}: each frequency channel at density $\rho(\phi)$ bears per-channel attention load ${\propto}1/\rho$; weighting the squared departure by this load yields $\int(\rho{-}1)^2/\rho = \chi^2$. (2)~\emph{Discrete-grid effect}: the continuous $L^2$ integral, evaluated on the non-uniform \evq{} grid, naturally acquires a $1/\rho$ Jacobian factor, producing discrete $\chi^2$.
 
 \paragraph{Closed form.} For $p{=}1$, the stiffness admits
 \begin{equation}
@@ -452,7 +455,7 @@ verified numerically to relative error ${<}7{\times}10^{-6}$.
 \label{sec:leff-derivation}
 
 \paragraph{From density perturbation to RoPE frequency shift.}
-The EVQ pure-tether CDF is $F_\tau(\phi) = 1 - \sinh(\tau(1{-}\phi))/\sinh\tau$, with inverse-CDF warp $\Phi_\tau(u) = 1 - \tau^{-1}\operatorname{arsinh}((1{-}u)\sinh\tau)$. Setting $\theta{=}\tau^2$ and expanding $\rho_\tau(\phi) = 1 + \theta\, a(\phi) + O(\theta^2)$ with $a(\phi) = (1{-}\phi)^2/2 - 1/6$, the quantile displacement takes the closed form
+The \evq{} pure-tether CDF is $F_\tau(\phi) = 1 - \sinh(\tau(1{-}\phi))/\sinh\tau$, with inverse-CDF warp $\Phi_\tau(u) = 1 - \tau^{-1}\operatorname{arsinh}((1{-}u)\sinh\tau)$. Setting $\theta{=}\tau^2$ and expanding $\rho_\tau(\phi) = 1 + \theta\, a(\phi) + O(\theta^2)$ with $a(\phi) = (1{-}\phi)^2/2 - 1/6$, the quantile displacement takes the closed form
 \begin{equation}
 \Phi_\tau(u) \;=\; u + \tau^2\, h(u) + O(\tau^4), \qquad h(u) \;=\; -\!\int_0^u a(v)\,dv \;=\; -\tfrac{1}{6}u(1{-}u)(2{-}u),
 \label{eq:quantile-displacement}
@@ -465,7 +468,7 @@ Fix a layer/head and query $i$; write each $2$D RoPE pair as $q_{i,k}^{\mathbb{C
 g_i(j) \;=\; \frac{(\log b)\,r_{ij}}{s_{\mathrm{att}}}\sum_{k=1}^{K} \omega_k^{(0)}\,h(u_k)\!\left[\,C_{ij,k}\sin(r_{ij}\omega_k^{(0)}) + D_{ij,k}\cos(r_{ij}\omega_k^{(0)})\,\right].
 \label{eq:g-closed-form}
 \end{equation}
-This is the Fr\'echet derivative of the logit with respect to the EVQ allocation perturbation at fixed activations. A finite-$\tau$ implementation that avoids first-order phase expansion at large $r_{ij}\omega$ is
+This is the Fr\'echet derivative of the logit with respect to the \evq{} allocation perturbation at fixed activations. A finite-$\tau$ implementation that avoids first-order phase expansion at large $r_{ij}\omega$ is
 \begin{equation}
 g_i^{(\tau)}(j) \;=\; \frac{1}{s_{\mathrm{att}}\tau^2}\operatorname{Re}\sum_{k=1}^{K}\alpha_{ij,k}\!\left[\exp(ir_{ij}b^{-\Phi_\tau(u_k)}) - \exp(ir_{ij}b^{-u_k})\right],
 \label{eq:g-finite-tau}
@@ -487,8 +490,9 @@ J_{\mathrm{sm}}(p)g+O(\epsilon^3)$, and for diffuse $p{=}1/L$ the quotient
 reduces to $1/L$. The phase-variance utility $Q_1$ in
 Proposition~\ref{prop:softmax-transport} is a distinct pairwise positional
 functional. Replacing its $1/L$ factor by $1/L_{\mathrm{eff}}^J$ is therefore
-a possible modelling extension, not a consequence of the KL identity and not
-an empirical result used by the paper.
+a possible attention-conditioned refinement rather than a consequence of the
+KL identity. The empirical claims in this paper use the registered
+length-based operating rule.
 
 \subsection{Pure-tether branch: Fisher-forcing coefficient and residual bound}
 \label{sec:pure-tether-bound}
@@ -557,7 +561,7 @@ S(\rho) \;=\; \mathrm{Var}_{\phi\sim\rho\,d\phi}\!\left[\,\tfrac{1}{\rho(\phi)}\
 \end{equation}
 We treat this as a canonical motivated choice under the stated axioms, not a uniqueness claim.
 
-\paragraph{Load-moment exponent.} Distinct from the weighted-$L^2$ family $S_p(\tau){=}\frac{1}{d_{\mathrm{head}}}\int(\rho_\tau{-}1)^2/\rho_\tau^p\,d\phi$ used in Table~\ref{tab:stiffness-sweep} (where Pearson $\chi^2$ is $p{=}1$), we also examine a load-moment family $S^{\mathrm{mom}}_p(\rho){=}\mathbb{E}_\rho[(1/\rho{-}1)^p]$. Substituting the EVQ cosh density and minimizing $S^{\mathrm{mom}}_p{-}\lambda U$ gives $\tau^{2(p-1)}\asymp d_{\mathrm{head}}^2/L_{\mathrm{eff}}^{J}$, hence $\tau^{*}\propto (L_{\mathrm{eff}}^{J})^{-1/(2p-2)}$; only $p{=}2$ yields the observed $L^{-1/2}$ exponent within this family. The two families parametrize different $f$-divergence neighborhoods and need not match on the finite-$\tau$ grid.
+\paragraph{Load-moment exponent.} Distinct from the weighted-$L^2$ family $S_p(\tau){=}\frac{1}{d_{\mathrm{head}}}\int(\rho_\tau{-}1)^2/\rho_\tau^p\,d\phi$ used in Table~\ref{tab:stiffness-sweep} (where Pearson $\chi^2$ is $p{=}1$), we also examine a load-moment family $S^{\mathrm{mom}}_p(\rho){=}\mathbb{E}_\rho[(1/\rho{-}1)^p]$. Substituting the \evq{} density and minimizing $S^{\mathrm{mom}}_p{-}\lambda U$ gives $\tau^{2(p-1)}\asymp d_{\mathrm{head}}^2/L_{\mathrm{eff}}^{J}$, hence $\tau^{*}\propto (L_{\mathrm{eff}}^{J})^{-1/(2p-2)}$; only $p{=}2$ yields the observed $L^{-1/2}$ exponent within this family. The two families parametrize different $f$-divergence neighborhoods and need not match on the finite-$\tau$ grid.
 
 \paragraph{$f$-divergences at finite $\tau$.} Smooth $f$-divergences (KL, Jeffreys, R\'enyi) are locally quadratic around $\rho{=}1$. Over the finite grid used in Table~\ref{tab:stiffness-sweep}, however, their fitted exponents range from $0.58$ to $0.81$. This is model sensitivity, not a trained-PPL comparison.
 

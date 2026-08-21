@@ -328,15 +328,16 @@ Numbers from `MATCHED_RANGE_COSH_500M_S42_20260724.md`. This is the single
 highest-value rewrite in the section: same facts, and the reviewer who offered
 "advantage **or** complementarity" now gets both.
 
-**5. `sections/03_theory.tex:214-219` and `sections/04_experiments.tex:155-158`** —
-both open with `4/12`.
-> Current (`03_theory.tex:216-218`): `In one direct selection sweep, selected $\tau{=}5$ and the rule value $5.657$ differ by $0.0119$ selection NLL. Under the stricter exact-range factorial the rule is the best pre-specified Cosh multiplier in $4/12$ structural configurations ($0.75\times/1.25\times$ win $2/12$ and $6/12$).`
-> Replace with: `Across $21$ configurations in two independent studies the empirically selected $\tau$ never leaves a $0.75\times$--$1.5\times$ window around the rule value, and every pre-specified multiplier inside that window beats the uniform grid (Table~\ref{tab:m4}). One direct selection sweep selects $\tau{=}5$ against a rule value of $5.657$, a $0.0119$ selection-NLL difference. Within the window the rule is the best of the three tested multipliers in $4/12$ configurations, so it selects a basin rather than a point optimum; \S\ref{sec:exp-tau} gives the breakdown.`
-Containment figure from `PHASE16_99RUN_RAW_REANALYSIS_20260724.md` +
-`M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md` as quoted in `REVIEWER_27bE.md` §2.
-Apply the same reordering at `04_experiments.tex:155-158`, and keep the `3/9`
-against the pilot-selected neighbour there (playbook 27-3 requires it to travel
-with the containment claim).
+**5. Finite-$\tau$ wording — superseded after owner recheck.**
+The earlier recommendation to call $0.75\times$--$1.5\times$ a verified basin
+was too strong. `PHASE16_99RUN_RAW_REANALYSIS_20260724.md` confirms only one
+pilot-selected neighbour per configuration; those discrete neighbour ratios
+are $0.75\times$, $1.25\times$, or $1.5\times$. M4 separately tests
+$0.75\times$, $1.00\times$, and $1.25\times$, plus two endpoint-specific
+boundary arms. These grids neither certify every value in a continuous interval
+nor locate its bounds. The outward text therefore treats $c{=}1$ as a useful
+but fallible zero-search operating prior relative to Geo, not a verified basin
+or near-optimal selector.
 
 **6. `sections/03_theory.tex:139-141`** — an opaque disclaimer where the paper's
 sharpest structural point should be.

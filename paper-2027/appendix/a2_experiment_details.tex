@@ -16,14 +16,16 @@ App.~\ref{sec:pe-dominant}.
 \caption{Compact reproducibility summary for supporting scratch-model experiments.}
 \centering
 \small
+\resizebox{\linewidth}{!}{%
 \begin{tabular}{@{}lllll@{}}
 \toprule
 Setting & Train length & Scale & Seeds & Main datasets \\
 \midrule
-EVQ ($\tau{=}1.414$)$\times$\rs{} & 2048 & 454M & 3 + 3 & FineWeb-Edu + 10\% passkey mix \\
+\evq{} ($\tau{=}1.414$)$\times$\rs{} & 2048 & 454M & 3 + 3 & FineWeb-Edu + 10\% passkey mix \\
 MLA & 8192 & 432M & 3 & FineWeb-Edu \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
 Table~\ref{tab:hyperparams} lists the training hyperparameters shared across
@@ -70,8 +72,8 @@ The \(750\mathrm{M}\) `continue@4K' experiment starts both arms from the same
 2K Geo checkpoint and applies a 500M-token continuation with either the Geo or
 \evq{} table (seed 42). At 16K, PPL is \(45.1\) versus \(24.4\); on
 40 passkey trials at 8K, strict autoregressive exact match is \(0\%\) versus
-\(77.5\%\). The \evq{} continuation uses a fixed midpoint Cosh table with
-$\tau{=}1.5$. This is a single-seed full-parameter continuation from a shared
+\(77.5\%\). The \evq{} continuation uses midpoint quantisation with
+$\tau{=}1.5$. Both arms are full-parameter continuations from the shared
 checkpoint.
 
 \input{tables/table6_750m_continue_supporting}
@@ -126,7 +128,7 @@ $0.1$ rad over the 32 training frames. In the pre-specified diagnostic,
 $\tau{=}1.2$ leaves 11/16 channels above this threshold (effective rank 9),
 whereas $\tau{=}1.5$ leaves 12/16 (rank 10). Repeating the head-to-head
 comparison at base${=}1{,}000$ places 13/16 geometric channels above the
-threshold. In this single-seed run, $\tau{=}1.2$ and $\tau{=}1.5$ differ by
+threshold. At seed 42, $\tau{=}1.2$ and $\tau{=}1.5$ differ by
 less than $0.4\%$ on the reported metrics and both improve far-frame MSE by
 about $48\%$ relative to Geo, supporting the same low-phase-channel diagnostic.
 

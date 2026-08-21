@@ -1,59 +1,54 @@
 \section{Discussion}
 \label{sec:discussion}
 
-A finite RoPE table exposes two choices: support $(a,R)$ and normalised
-allocation $z$. Scalar ``effective base'', median wavelength, and cycle counts
-summarise $z$, but none reproduces a non-geometric table whose endpoints are
-fixed. The exact-range intervention identifies this degree of freedom
-directly. Theorem~\ref{thm:budget} then accounts for redundancy in the resulting
-sin/cos basis through its Rényi-$2$ effective rank. In contrast, trained value
-depends on how Q/K weights use that basis: a table can have higher static rank
-and still be wrong for weights trained in another coordinate system.
+The main finding is that a RoPE base does not exhaust the design of a finite
+frequency table. Support $(a,R)$ determines the sampled interval; allocation
+$z$ determines how many channels are spent in each part of it. A scalar-base
+sweep explores only the geometric path $z_k=k/(K{-}1)$, whereas the
+fixed-support intervention moves outside that path without changing either
+endpoint. The resulting change in trained behaviour makes allocation a real
+design variable rather than an alternative notation for base selection.
 
-\paragraph{Why the axis matters.}
-A scalar-base sweep explores only the geometric path
-$z_k=k/(K{-}1)$; every non-geometric allocation lies outside that path, even
-when the sampled endpoints are unchanged. This is more than a change of
-coordinates on paper. The fixed-support intervention changes what the model
-learns, and the effect becomes consequential when a long range must be represented
-by few rotary pairs. The $432$M MLA result makes that regime concrete: with
-$K{=}16$, changing the allocation leaves the training-length PPL nearly fixed
-but lowers $16$K PPL in every seed. Learned-frequency methods can also search
-beyond the geometric path, but they combine the table choice with an additional
-optimization problem. A closed-form allocation instead makes the design
-decision explicit, reproducible, and testable without learned positional
-parameters.
+\paragraph{Why the discovery matters.}
+The spectral-budget identity reveals the pressure behind this variable. Slow
+geometric pairs collapse onto nearly the same positional subspace, so nominal
+rotary dimension can substantially overstate effective positional dimension.
+The effect becomes most visible when channels are scarce: with $K{=}16$, the
+three-seed $432$M MLA comparison lowers $16$K PPL in every seed. A closed-form
+allocation makes this finite-budget decision explicit and reproducible, while
+learned-frequency methods combine the table choice with an additional
+optimization problem.
 
-The scale experiments answer a different practical question: whether the
-effective-context shift survives realistic ways of obtaining a model. It
-appears after full-parameter continuation from a shared checkpoint at $750$M,
-in a from-initialisation trajectory at $1.485$B, and after low-rank adaptation
-of pretrained models. Their common pattern is not uniform dominance but a
-redistribution of modelling quality from the training window toward longer
-contexts. This is precisely the trade a spectral budget is meant to expose.
+The same effective-context crossover survives realistic model-building paths.
+It appears under a shared \rs{} operator at $454$M, full-parameter continuation
+from a common checkpoint at $750$M, a from-initialisation comparison at
+$1.485$B, and low-rank adaptation of pretrained models. These protocols do not
+serve as substitutes for the fixed-support control; they show that the
+identified variable remains consequential across architecture, training stage,
+and scale. The $8$B evidence is adaptation rather than a pretraining-scale
+point, and its remote-block deletion result adds a causal capability endpoint:
+the improved long-position probability depends on the distant source.
 
-This is why allocation belongs in training or adaptation. The $50$M
-table-by-weights crossing shows that the coefficients co-adapt to their table,
-and Theorem~\ref{thm:obstruction} gives the exact obstruction: fixed invertible
-Q/K maps cannot preserve all relative-position logits when the frequency
-multisets differ. Post-hoc replacement and training with a table are therefore
-different interventions. The mature-model results show that low-rank
-adaptation can still exploit a new allocation without changing the operator.
+Allocation must be present while the model learns how to use it. The $50$M
+weight--table crossing shows that a post-hoc table with better static rank can
+still destroy perplexity, and Theorem~\ref{thm:obstruction} identifies the exact
+obstruction: fixed invertible Q/K maps cannot preserve all relative-position
+logits across unequal frequency multisets. Training or adaptation is therefore
+part of the intervention, not an implementation nuisance.
 
-Allocation is also different from range transport. The former chooses which
-finite channels the model learns to use; the latter redeploys a realised
-spectrum at a target length. The same \rs{} transform has different leverage
-on Geo and \evq{} substrates, and the target-retargeted diagnostic in
-App.~\ref{sec:identification-details} shows that the two choices interact.
-Holding support fixed identifies allocation; choosing them jointly remains a
-deployment decision. LeRoPE provides complementary evidence from learning: a
-table obtained in one run retains substantial value when frozen for a new
-training run \citep{karypis2026lerope}. Here, the closed-form construction
-removes the learned-table search while the fixed-support control isolates what
-the table changes.
+Support selection and range transport remain complementary. The former chooses
+the sampled spectrum, allocation chooses its finite internal resolution, and a
+range operator redeploys the learned spectrum at a target length. The common
+\rs{} operator has greater leverage on the \evq{} substrate, while the
+target-retargeted control in App.~\ref{sec:identification-details} confirms that
+support and allocation interact when chosen jointly. LeRoPE supplies compatible
+evidence from optimization: a table learned in one run retains substantial
+value when frozen for a new training run \citep{karypis2026lerope}. Here, the
+closed-form construction removes that table-search stage and the fixed-support
+experiment identifies what the table itself changes.
 
-The broader result is simple. At finite $K$, interior frequency placement is
-part of the training design. Support says which frequencies are available;
-allocation says how the head spends them. Both should be chosen with the
-deployment range in mind, but the allocation must be present while the model
-learns how to use its positional basis.
+RoPE has a spectral budget because every head has finitely many rotary pairs.
+Geometric spacing is one way to spend that budget, not a neutral consequence of
+the rotary operator. Once support and allocation are separated, the latter can
+be analyzed, controlled, and improved as a first-class part of long-context
+training.

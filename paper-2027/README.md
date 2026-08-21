@@ -6,7 +6,7 @@ rebuttal-cycle evidence in `../rebuttal/rebuttal_0723/`.
 Build: `./compile.sh`（`make -f build.mk` 也行；远程工具写不了名为 `Makefile` 的文件，所以叫 `build.mk`）。产物：`main.pdf`。
 
 匿名补充包：`python ../scripts/package_supplement.py --profile iclr2027`。
-该 profile 只收录当前论文源码、四张使用中的图、频率实现、关键分析/识别脚本、
+该 profile 只收录当前论文源码、三张使用中的图、频率实现、关键分析/识别脚本、
 最小测试和已清洗的 machine-readable evidence，并在写 ZIP 前执行身份与密钥扫描。
 
 ---
@@ -128,7 +128,7 @@ figs/
   fig_frequency_geometry.pdf  新增：频率位置与 full-subspace redundancy
   make_fig_frequency_geometry.py  生成脚本（复用 full-RoPE audit）
 appendix/
-  a1_proofs.tex             核心证明与操作规则推导
+  a1_proofs.tex             核心证明与 operating-rule 支撑推导
   a2_experiment_details.tex supporting scratch / video protocols
   a5_identification.tex     识别协议 + YaRN-style 实现 + learned comparator
   a6_mature_scale.tex       新增：成熟模型协议、2Wiki、RULER、causal source-use

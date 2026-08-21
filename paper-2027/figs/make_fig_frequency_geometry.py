@@ -8,6 +8,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.patches import Rectangle
 
 
@@ -22,11 +23,19 @@ BLUE = "#2F6DAA"
 ORANGE = "#D35F45"
 GREEN = "#2A8C6A"
 INK = "#17212B"
+REDUNDANCY_CMAP = LinearSegmentedColormap.from_list(
+    "redundancy_blue",
+    ["#F8FBFD", "#E3EFF7", "#AED2E5", "#6EA6CC", BLUE],
+)
+REDUNDANCY_CMAP.set_bad("#FFFFFF")
 
 
 def midpoint_cosh(pairs: int, tau: float) -> np.ndarray:
     u = (np.arange(pairs) + 0.5) / pairs
     return 1.0 - np.arcsinh((1.0 - u) * np.sinh(tau)) / tau
+
+
+assert np.count_nonzero(midpoint_cosh(64, 4.0) <= 0.5) == 55
 
 
 plt.rcParams.update({
@@ -55,9 +64,10 @@ anchored = ((pairs - 1) / pairs) * (
 )
 
 ax = axes[0]
-ax.plot(k, geo, color=BLUE, marker="o", ms=2.8, lw=1.3, label="standard Geo")
+ax.plot(k, geo, color=BLUE, marker="o", ms=2.8, lw=1.3,
+        label="FMRoPE")
 ax.plot(k, anchored, color=GREEN, marker="o", ms=2.8, lw=1.5,
-        label="endpoint-normalised Cosh")
+        label="anchored EVQ-Cosh")
 ax.plot(k, deployed, color=ORANGE, marker="o", ms=2.5, lw=1.2, ls="--",
         label="deployed midpoint EVQ-Cosh")
 for index in [0, pairs - 1]:
@@ -86,13 +96,15 @@ slow_indices = np.flatnonzero(slow)
 assert len(slow_indices) == 23 and slow_indices[0] == 41
 
 ax = axes[1]
-image = ax.imshow(affinity, origin="lower", cmap="magma", vmin=0, vmax=1,
+image = ax.imshow(affinity, origin="lower", cmap=REDUNDANCY_CMAP, vmin=0, vmax=1,
                   interpolation="nearest")
-ax.add_patch(Rectangle((40.5, 40.5), 23, 23, fill=False, edgecolor="#39D0B1",
+ax.add_patch(Rectangle((40.5, 40.5), 23, 23, fill=False, edgecolor=ORANGE,
                        lw=1.4))
 ax.annotate("23 slow pairs\nshare ~2 dimensions", (51.5, 51.5),
-            xytext=(10, 53), color="white", fontsize=7.0, weight="bold",
-            arrowprops=dict(arrowstyle="->", color="white", lw=0.8))
+            xytext=(8, 53), color=INK, fontsize=7.0, weight="bold",
+            bbox=dict(boxstyle="round,pad=0.20", facecolor="white",
+                      edgecolor="none", alpha=0.9),
+            arrowprops=dict(arrowstyle="->", color=ORANGE, lw=0.9))
 ax.set_xlabel("frequency-pair index")
 ax.set_ylabel("frequency-pair index")
 ax.set_title("(b) Phase-invariant subspace redundancy", weight="bold")

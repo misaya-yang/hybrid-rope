@@ -58,14 +58,11 @@ NEURIPS2026_ALLOWLIST = [
 ]
 
 ICLR2027_ALLOWLIST = [
-    "README.md",
     "requirements.txt",
     "requirements-lock.txt",
     "pytest.ini",
-    ".github/workflows/smoke.yml",
     "data/curated",
     "paper-2027/main.tex",
-    "paper-2027/README.md",
     "paper-2027/compile.sh",
     "paper-2027/build.mk",
     "paper-2027/iclr2027_conference.sty",
@@ -93,7 +90,6 @@ ICLR2027_ALLOWLIST = [
     "scripts/analysis/ruler_family_bootstrap.py",
     "scripts/core_text_phases/__init__.py",
     "scripts/core_text_phases/run_evq_sweep.py",
-    "scripts/core_text_phases/eval_dsr.py",
     "scripts/core_text_phases/phase16_formula_optimality_sweep.py",
     "scripts/core_text_phases/phase16_exact_range_factorial_m4.py",
     "scripts/supporting_eval/__init__.py",
@@ -116,6 +112,14 @@ ICLR2027_ALLOWLIST = [
 PROFILES = {
     "neurips2026": NEURIPS2026_ALLOWLIST,
     "iclr2027": ICLR2027_ALLOWLIST,
+}
+
+PROFILE_RENAMED_FILES = {
+    "iclr2027": {
+        "paper-2027/SUPPLEMENT_README.md": "README.md",
+        "paper-2027/research/EXACT_RANGE_151M_3SEED_RESULT_20260820.json":
+            "data/curated/exact_range_151m_3seed_result.json",
+    },
 }
 # Backward-compatible name used by existing supplement contract tests.
 ALLOWLIST = NEURIPS2026_ALLOWLIST
@@ -170,6 +174,15 @@ def copy_item(rel: str, stage: Path) -> None:
         shutil.copy2(src, dst)
 
 
+def copy_renamed_file(src_rel: str, dst_rel: str, stage: Path) -> None:
+    src = ROOT / src_rel
+    if not src.is_file():
+        raise FileNotFoundError(f"renamed supplement file does not exist: {src_rel}")
+    dst = stage / dst_rel
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(src, dst)
+
+
 def scan_for_leaks(stage: Path) -> list[str]:
     hits: list[str] = []
     for path in sorted(p for p in stage.rglob("*") if p.is_file()):
@@ -214,6 +227,8 @@ def main() -> None:
 
     for rel in PROFILES[args.profile]:
         copy_item(rel, STAGE)
+    for src_rel, dst_rel in PROFILE_RENAMED_FILES.get(args.profile, {}).items():
+        copy_renamed_file(src_rel, dst_rel, STAGE)
 
     hits = scan_for_leaks(STAGE)
     if hits:

@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "status": "PINNED_READ_ONLY_SOURCE_MANIFEST",
+  "sources": [
+    {
+      "path": "rebuttal/rebuttal_0723/theory_results/OLMO2_1B_OVERNIGHT_EXPERIMENT_SUMMARY_20260726.md",
+      "sha256": "79db229ed7a019a2226d5fda3aad612c6622e6debf531ccf3218fcb2adbfdfac",
+      "role": "seven_arm_negative_summary"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/theory_results/olmo2_1b_non_ruler_adaptation_search_20260731.json",
+      "sha256": "e1b809f0654c399ea5af555c3aa947757e068df8157e7a25eefc47f0631c03a6",
+      "role": "seven_arm_negative_numeric_owner"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md",
+      "sha256": "8aadd5bf518d7f2f82850db1aa6301ade4cdfe7368be5d9cae353e7849d8305b",
+      "role": "exact_transplant_obstruction"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/theory_results/OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729.md",
+      "sha256": "dea04bfbfe87a94a54e63c6d2c65abfbb4af2610ced83f205cc19a35c96a7660",
+      "role": "matched_qk_only_owner"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/experiments/olmo2_lora_maturity/EVQ_ATTENTION_RESTORATION_SPEC.md",
+      "sha256": "bce4ad9a722b8934f60aa59d2261e7a617e2aa78d762724caeadd4c870aa9209",
+      "role": "attention_restoration_spec"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/experiments/olmo2_lora_maturity/FAR_ONLY_EVQ_RESIDUAL_SPEC.md",
+      "sha256": "cfc030113f4b2ed33c5a2502a71d66345edbb9a880d5ca3d13164a7f2c70e653",
+      "role": "far_only_residual_spec"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/experiments/olmo2_lora_maturity/OLMO2_1B_EVQ_ATTENTION_FUNCTION_RESTORATION_PLAN_20260728.md",
+      "sha256": "48781bf1da1cc8495e03247e48f181662a3f1457599830f096c3a66b13028908",
+      "role": "bounded_restoration_plan"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/theory_results/OLMO2_NATIVE_IMPORTANCE_PROTECTED_EVQ_HYPOTHESIS_20260728.md",
+      "sha256": "57683f77e83f46a2b7927f7c1ca866139e1a8ffad192c62c41ac6885f05f89ab",
+      "role": "protected_subspace_hypothesis"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/theory_results/INWINDOW_PRESERVATION_ROUTE_AUDIT_20260731.md",
+      "sha256": "7ff1495c51742e4259b7e013a9ea7c4970d91502250ef6286447982cba6e39ae",
+      "role": "inwindow_route_audit"
+    }
+  ]
+}

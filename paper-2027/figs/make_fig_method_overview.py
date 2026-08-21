@@ -80,12 +80,12 @@ ax.legend(frameon=False, fontsize=5.9, loc="upper left", handlelength=1.6,
           borderpad=0.1, labelspacing=0.22)
 ax.set_title("(a) Support vs. allocation", weight="bold", pad=5)
 
-# (b) Anchored and deployed EVQ share exactly the same normalised shape.
+# (b) Anchored and deployed EVQ-Cosh share the same normalised shape.
 ax = fig.add_subplot(grid[0, 1])
 ax.plot(k, uniform_z, color=BLUE, lw=1.25, marker="o", ms=2.4,
-        label="Geo allocation")
+        label="uniform allocation")
 ax.plot(k, cosh_z, color=GREEN, lw=1.65, marker="o", ms=2.4,
-        label="anchored Cosh")
+        label="anchored EVQ-Cosh")
 ax.scatter(k[::3], deployed_normalised[::3], marker="x", s=18,
            color=ORANGE, lw=0.8, zorder=5, label="deployed, normalised")
 ax.scatter([0, schedule_pairs - 1], cosh_z[[0, -1]], s=28,
@@ -118,15 +118,11 @@ for row in range(2):
 for index in range(2):
     ax.add_patch(Rectangle((index - 0.48, index - 0.48), 0.96, 0.96,
                            fill=False, edgecolor=GREEN, lw=1.6))
-ax.set_xticks([0, 1], ["Geo", "EVQ"])
-ax.set_yticks([0, 1], ["Geo", "EVQ"])
+ax.set_xticks([0, 1], ["Geo", "EVQ-\nCosh"])
+ax.set_yticks([0, 1], ["Geo", "EVQ-\nCosh"])
 ax.set_xlabel("runtime table")
-ax.set_ylabel("trained weights")
+ax.set_ylabel("trained weights", labelpad=10)
 ax.tick_params(length=0)
-ax.text(0.5, -0.25, "self-consistent", transform=ax.transAxes, ha="center",
-        color=GREEN, weight="bold")
-ax.text(0.5, -0.38, "post-hoc swaps fail", transform=ax.transAxes, ha="center",
-        color=ORANGE, weight="bold")
 ax.set_title("(c) Co-adaptation (PPL)", weight="bold", pad=5)
 
 fig.savefig(OUT, bbox_inches="tight", pad_inches=0.025)

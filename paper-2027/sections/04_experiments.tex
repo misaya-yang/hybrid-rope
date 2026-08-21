@@ -1,11 +1,10 @@
 \section{Experiments}
 \label{sec:experiments}
 
-The experiments answer three questions in sequence: whether $z$ is identifiable
-at fixed support, whether its effect remains relevant across architectures and
-training stages, and whether it changes usable behaviour after mature-model
-adaptation. We report NLL/PPL, retrieval, QA, RULER, and causal source use
-within their respective protocols rather than aggregating unlike endpoints.
+The fixed-support control first isolates allocation from support. We then ask
+whether the same intervention remains consequential when rotary channels are
+scarce, when range scaling is applied, and when models are obtained by
+continuation or adaptation. Each protocol retains its own metric and control.
 
 %% =========================================================================
 \subsection{Identifying allocation at fixed support}
@@ -17,31 +16,32 @@ trainable initialisation, token order, optimiser, LR schedule, global batch, a
 $499{,}974{,}144$-token budget, and $32$ frozen evaluation anchors. The
 baseline implements the uniform-in-log rule of
 \citet[\S6.1]{oka2026fmrope} at training base $256$; the intervention uses
-endpoint-normalised Cosh spacing with $\tau{=}4$. Because their sampled extrema
+anchored \evq{} with $\tau{=}4$, obtained by normalising its quantiles to the
+FMRoPE endpoints. Because their sampled extrema
 and log-frequency span coincide, only the $K{-}2=30$ interior frequencies
 move. Support normalisation also preserves the deployed Cosh table's $z$ in
 Eq.~\eqref{eq:table-decomposition}.
 
 \paragraph{Result.}
-Cosh-minus-uniform NLL is $+0.026$ at the $256$-token training length and
+Every training seed favours anchored \evq{} at every OOD length. The
+anchored \evq{} minus FMRoPE NLL difference is $+0.026$ at the
+$256$-token training length and
 $-0.281/-0.176/-0.146$ at $512$/$1$K/$2$K
-(Fig.~\ref{fig:evidence-overview}a). Notably, all three training seeds favour
-Cosh at every OOD length. No geometric base can reproduce this intervention
+(Fig.~\ref{fig:evidence-overview}a). No geometric base can reproduce this intervention
 once the sampled support is pinned: \emph{fixed support $+$ different $z$
 $\Rightarrow$ different trained-model behaviour.}
 
 \paragraph{Cross-configuration and shape breadth.}
 A pre-specified $50.9$M factorial then spans two bases, two training lengths,
 three head dimensions, and three paired seeds. Across its $12$ structural
-configurations, $1.25\times$ Cosh and a deformation-matched exponential favour
+configurations, anchored \evq{} at $1.25\times$ rule strength and a deformation-matched exponential favour
 non-uniform allocation in $10/12$ and $9/12$ cases
 (App.~Table~\ref{tab:m4}). The $151.9$M control supplies the replicated direct
-effect; the factorial shows that its direction is neither configuration- nor
-Cosh-specific. App.~\ref{sec:identification-details} reports the
-target-retargeted condition.
+effect; the matched exponential shows that the direction is not tied to \evq{}
+alone. Full results appear in App.~\ref{sec:identification-details}.
 
 %% =========================================================================
-\subsection{A finite budget survives architecture and scale}
+\subsection{A finite budget survives architecture, range scaling, and scale}
 \label{sec:exp-mature}
 
 \paragraph{Scarce-channel MLA.}
@@ -52,20 +52,25 @@ $138.8/95.6$: a $31.1\%$ reduction, with every seed favouring \evq{}
 (Fig.~\ref{fig:evidence-overview}b; App.~Table~\ref{tab:mla}). The result
 directly links the finite-$K$ view to a scarce-budget stress test.
 
-\paragraph{Persistence across training stages and scale.}
-The same crossover appears after full-parameter continuation. Starting both
+\paragraph{Range composition.}
+Allocation remains visible after applying the same range operator. In a $454$M
+three-seed MHA study, a fixed \rs{} operator raises $8$K teacher-forced
+retrieval from $41\%$ to $61\%$ on Geo and from $53\%$ to $100\%$ on \evq{}
+(App.~Table~\ref{tab:evq-ramp}). The operator is identical; its leverage depends
+on the table that shaped the weights during training.
+
+\paragraph{Continuation and training-scale trend.}
+The crossover also appears after full-parameter continuation. Starting both
 $750$M arms from a shared $2$K Geo checkpoint and continuing all parameters for
 $500$M tokens at $4$K gives Geo/\evq{} PPL $22.0/22.3$ at $4$K but
 $45.1/24.4$ at $16$K; strict autoregressive exact retrieval at $8$K changes
 from $0\%$ to $77.5\%$ (App.~Table~\ref{tab:750m}). At $1.485$B, a
 same-initialisation, same-scientific-recipe from-initialisation comparison with
-a $2.097$B-token budget crosses from $161.19/167.45$ at the $4$K training cap
-to $163.88/156.87$ and $182.73/159.64$ at $8$K/$16$K; $122/128$ and $126/128$
-held-out documents favour \evq{} at those lengths. Finally, in a $454$M
-three-seed MHA study, applying the same fixed-scale \rs{} transform raises
-$8$K teacher-forced retrieval from $41\%$ to $61\%$ on Geo and from $53\%$ to
-$100\%$ on \evq{} (App.~Table~\ref{tab:evq-ramp}). Range transport acts on a
-table whose allocation has already shaped the weights.
+a $2.097$B-token budget crosses in favour of \evq{} at $8$K and $16$K;
+$122/128$ and $126/128$ held-out documents favour it at those lengths. Exact
+PPL values and protocol details appear in App.~\ref{sec:mature-details}. This is
+the end of the full-parameter training-scale trend; the $8$B evidence below is
+adaptation.
 
 %% =========================================================================
 \subsection{From effective context to remote-content use}
@@ -78,8 +83,9 @@ optimiser, trainable count, and $4$K/$8$K/$16$K phase exposure; physical
 sequences remain at most $4$K. On held-out 2WikiMultiHopQA, Native/\evq{}
 token-F1 is $25.99/24.84\%$ at $4$K, $0.07/21.48\%$ at $8$K, and
 $0/8.57\%$ at $16$K (Fig.~\ref{fig:evidence-overview}c)
-\citep{bai2024longbench}. Thus Q/K adaptation preserves the in-window QA score
-while only the \evq{} arm carries substantial answer overlap to $8$K. An
+\citep{bai2024longbench}. Thus Q/K adaptation keeps the in-window QA score
+close to Native while only the \evq{} arm carries substantial answer overlap
+to $8$K. An
 independent continuation over all $13$ RULER families shows the same $2\times$
 direction, with official macro $2.02/31.63\%$ at $8$K
 \citep{hsieh2024ruler}; all lengths and exact-match values appear in
@@ -102,15 +108,15 @@ extrapolation, and far-frame MSE in both runs
 (App.~\ref{sec:video-dit}), extending the evidence to bidirectional 3D RoPE.
 
 %% =========================================================================
-\subsection{What is schedule-specific}
+\subsection{Beyond a single formula}
 \label{sec:exp-tau}
 
-The finite-$\tau$ rule selects an operating basin without search. An
-independent sweep chooses $\tau{=}5$ rather than the rule value $5.657$, a
-$0.0119$ NLL difference; across the factorial and boundary arms, the best
-tested multipliers remain within $0.75\times$--$1.5\times$ of the rule.
-Moreover, a deformation-matched exponential improves in $9/12$
-configurations. The empirical direction therefore belongs to non-uniform
-allocation rather than learned capacity or Cosh alone; Cosh supplies the
-closed-form solution of the stated surrogate. App.~\ref{sec:identification-details}
-contains the full multiplier, boundary, and matched-shape results.
+Two controls separate the allocation effect from the particular \evq{} formula.
+A deformation-matched exponential improves in $9/12$ factorial configurations,
+while the three pre-specified \evq{} multipliers ($0.75\times$, $1.00\times$,
+$1.25\times$) all reduce aggregate weighted OOD NLL relative to Geo. Their
+ordering varies by configuration, so $c{=}1$ is used as a zero-search operating
+prior rather than a tuned point optimum. Non-uniform allocation supplies the
+empirical direction, and \evq{} supplies a closed-form member of that design
+space. Full multiplier, boundary, and matched-shape results appear in
+App.~\ref{sec:identification-details}.

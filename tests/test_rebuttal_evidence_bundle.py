@@ -25,6 +25,7 @@ CURATED = ROOT / "data" / "curated"
 
 EXPECTED_JSON = {
     "learnable_tau_128tok_evidence.json": "report-backed",
+    "llama8b_causal_source_use_s42_20260714.json": "report-backed",
     "mla_channel_count_125m_pilot.json": "report-backed",
     "primary1_evq_yarn_10pct_raw.json": "raw-json-backed",
     "primary2_l128_fixed_tau5_3seed.json": "raw-json-backed",
@@ -73,6 +74,34 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
             "EVQ+YaRN(s=2)",
             "EVQ+YaRN(s=4)",
         })
+
+    def test_llama8b_causal_source_snapshot_matches_report_receipts(self):
+        data = load_json("llama8b_causal_source_use_s42_20260714.json")
+        receipts = data["source_receipts"]
+        sources = {
+            "canonical_owner_sha256": (
+                ROOT
+                / "rebuttal/rebuttal_0723/theory_results/"
+                "EVQ_8B_ADAPTATION_EVIDENCE_20260724.md"
+            ),
+            "temporal_aggregate_sha256": (
+                CURATED / "lora_longalpaca_temporal_s42_20260712.json"
+            ),
+            "causal_routing_report_sha256": (
+                ROOT / "docs/exp/2026-07-14_lora_retrieval_conversion_probe.md"
+            ),
+        }
+        for receipt, source in sources.items():
+            self.assertEqual(
+                receipts[receipt],
+                hashlib.sha256(source.read_bytes()).hexdigest(),
+            )
+        causal = data["true_16k_remote_source_use"]
+        self.assertEqual(causal["frozen_case_count"], 10)
+        self.assertEqual(
+            causal["nll_change_after_all_head_gold_block_deletion"],
+            {"native": -0.0095, "evq": 1.5055},
+        )
 
     def test_mla_source_is_reconstructed_byte_for_byte_from_portable_snapshot(self):
         reconstructed = build_rebuttal_evidence_bundle.reconstruct_mla_source_bytes(
@@ -578,6 +607,32 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
             "scripts/core_text_phases/phase18_base_generalization_sweep.py",
         }
         self.assertTrue(required.issubset(package_supplement.ALLOWLIST))
+
+    def test_iclr_supplement_uses_reviewer_readme_and_exact_range_artifact(self):
+        self.assertNotIn("README.md", package_supplement.ICLR2027_ALLOWLIST)
+        self.assertNotIn(
+            ".github/workflows/smoke.yml",
+            package_supplement.ICLR2027_ALLOWLIST,
+        )
+        renamed = package_supplement.PROFILE_RENAMED_FILES["iclr2027"]
+        self.assertEqual(renamed["paper-2027/SUPPLEMENT_README.md"], "README.md")
+        self.assertEqual(
+            renamed[
+                "paper-2027/research/EXACT_RANGE_151M_3SEED_RESULT_20260820.json"
+            ],
+            "data/curated/exact_range_151m_3seed_result.json",
+        )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            stage = Path(tmp)
+            for src, dst in renamed.items():
+                package_supplement.copy_renamed_file(src, dst, stage)
+            self.assertTrue((stage / "README.md").is_file())
+            artifact = json.loads(
+                (stage / "data/curated/exact_range_151m_3seed_result.json")
+                .read_text(encoding="utf-8")
+            )
+            self.assertEqual(artifact["training_seeds"], [42, 137, 256])
 
     def test_phase16_exporter_reconstructs_the_portable_99_row_schema(self):
         with tempfile.TemporaryDirectory() as tmp:

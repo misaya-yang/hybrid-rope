@@ -120,17 +120,20 @@ Amirhossein Kazemnejad, Inkit Padhi, Karthikeyan~Natesan Ramamurthy, Payel Das,
   volume~36, 2023.
 \newblock URL \url{https://openreview.net/forum?id=Drrl2gcjzl}.
 
-\bibitem[Li et~al.(2026)Li, Ren, Yuille, and Wang]{li2026copeclipped}
+\bibitem[Li et~al.(2026{\natexlab{a}})Li, Ren, Yuille, and
+  Wang]{li2026copeclipped}
 Haoran Li, Sucheng Ren, Alan Yuille, and Feng Wang.
 \newblock {CoPE}: Clipped {RoPE} as a scalable free lunch for long context
   {LLMs}.
-\newblock \emph{arXiv preprint arXiv:2602.05258}, 2026.
+\newblock \emph{arXiv preprint arXiv:2602.05258}, 2026{\natexlab{a}}.
 
-\bibitem[Li et~al.(2025)Li, Zhao, and Sproat]{li2025repo}
-Huayang Li, Tianyu Zhao, and Richard Sproat.
+\bibitem[Li et~al.(2026{\natexlab{b}})Li, Zhao, Cai, and Sproat]{li2026repo}
+Huayang Li, Tianyu Zhao, Deng Cai, and Richard Sproat.
 \newblock {RePo}: Language models with context re-positioning.
-\newblock \emph{arXiv preprint arXiv:2512.14391}, 2025.
+\newblock In \emph{Proceedings of the 43rd International Conference on Machine
+  Learning}, 2026{\natexlab{b}}.
 \newblock URL \url{https://arxiv.org/abs/2512.14391}.
+\newblock arXiv:2512.14391.
 
 \bibitem[Li et~al.(2024)Li, You, Guruganesh, Ainslie, Ontanon, Zaheer, Sanghai,
   Yang, Kumar, and Bhojanapalli]{li2024fire}
@@ -167,7 +170,7 @@ Yui Oka, Kentaro Hanafusa, Taku Hasegawa, Kyosuke Nishida, and Kuniko Saito.
 
 \bibitem[Oka et~al.(2026{\natexlab{b}})Oka, Saito, Nishida, and
   Saito]{oka2026fmrope}
-Yui Oka, Istumi Saito, Kyosuke Nishida, and Kuniko Saito.
+Yui Oka, Itsumi Saito, Kyosuke Nishida, and Kuniko Saito.
 \newblock Frequency bands in {RoPE}: Base frequency and context length shape
   the interpolation--extrapolation trade-off.
 \newblock In \emph{International Conference on Learning Representations
@@ -236,7 +239,8 @@ Qingyuan Tian, Wenhong Zhu, Xiaoran Liu, Xiaofeng Wang, and Rui Wang.
   Pasten, and Rojas]{urrutia2026decoupling}
 Felipe Urrutia, Jorge Salas, Alexander Kozachinskiy, Cristian Buc~Calderon,
   Hector Pasten, and Cristobal Rojas.
-\newblock Decoupling positional and symbolic attention in transformers.
+\newblock Decoupling positional and symbolic attention behavior in
+  transformers.
 \newblock In \emph{International Conference on Learning Representations
   (ICLR)}, 2026.
 \newblock URL \url{https://openreview.net/forum?id=V38yAoqddQ}.

@@ -4,8 +4,8 @@
 - **Target:** ICLR 2027
 - **Active manuscript:** `paper-2027/`
 - **Branch:** `main_0726`
-- **Status:** Opus-5 cross-review prose/flagship rewrite committed and pushed;
-  publication state is owned by Git history and the remote branch
+- **Status:** accepted-paper narrative rewrite integrated; manuscript,
+  figures, and reviewer supplement are validated and committed
 - **Internal only:** exclude this file from the anonymous supplement
 
 ## 1. First principle
@@ -31,7 +31,8 @@ The outward evidence chain is now:
    transplant obstruction, and the $50$M table-by-weights crossing explain why
    the table is learned with the weights;
 3. the three-seed $432$M scarce-channel MLA result is the systems flagship;
-   $750$M full-parameter continuation and a $1.485$B
+   the $454$M three-seed YaRN-style composition restores the strongest completed
+   substrate result; $750$M full-parameter continuation and a $1.485$B
    same-initialisation/same-scientific-recipe comparison extend the
    training-stage and scale trend;
 4. matched $1.485$B Q/K-only adaptation supplies real-document QA and RULER;
@@ -55,15 +56,20 @@ and `MLA wavelength-blend operator` for the run-specific MLA transform.
 ## 3. Implemented manuscript state
 
 - Title: *RoPE Has a Spectral Budget*.
-- Abstract: about 180 source words; one flagship effect size, the three-seed
-  $432$M MLA $16$K PPL reduction of `31.1%`. The $1.485$B from-initialisation
-  result remains trend evidence rather than the abstract headline.
+- Abstract: 186 source words. It opens with the geometric redundancy tax
+  (`23` slow pairs, `46` nominal dimensions, $r_2=2.00$), then gives the
+  three-seed fixed-support identification and the $432$M MLA $16$K PPL
+  reduction of `31.1%`. The $1.485$B from-initialisation result remains trend
+  evidence; $8$B is explicitly adaptation.
 - Page 2 opens with `fig_evidence_overview.pdf`:
   - three-seed fixed-support per-seed curves and mean;
   - three-seed $432$M, $K=16$ relative-PPL crossover;
   - $1.485$B 2Wiki token-F1 plus an $8$B adapted
     remote-block-ablation callout.
 - The existing method-overview and frequency-geometry figures remain.
+- The frequency-geometry heatmap now uses a white-to-blue sequential palette;
+  the previous black low-redundancy field is removed and the slow-pair block is
+  highlighted in orange.
 - The old identification and mature-crossover figures and their generators are
   removed; the unused mature table is removed.
 - The M4 table is in the identification appendix; the body retains its
@@ -72,12 +78,24 @@ and `MLA wavelength-blend operator` for the run-specific MLA transform.
 - The prose declares endpoint/protocol roles once, then presents a hierarchy
   rather than repeating defensive `separate`/`matched` qualifiers. The main
   capability endpoint is 2Wiki token-F1; exact match remains in App. F.
-- Finite-$\tau$ and matched-exponential detail is compressed in the body and
-  retained in the appendix.
+- Finite-$\tau$ is presented as a zero-search operating prior, not a basin
+  bound or point-optimum selector. The ratios $0.75\times$, $1.25\times$, and
+  $1.5\times$ are discrete tested neighbours; they do not certify every value
+  in that interval.
+- The full theory appendix is retained: geometry,
+  transplant obstruction, surrogate validation, waterbed/self-consistency,
+  operating-rule scaling, stiffness, $L_{\mathrm{eff}}^J$, Fisher forcing,
+  and discrete-channel transport. The $3/9$ neighbour comparison is retained
+  as evidence that the rule is not a dependable per-configuration optimum;
+  its separate value is avoiding a search while often improving on Geo.
 - Discussion says support and allocation are distinct but interacting; it does
   not claim additive gains under range retargeting. It now explains why scalar
   base search cannot reach non-geometric allocation and why the $K=16$ result
   makes the axis practically consequential.
+- The target-matched reversal is framed next to its mechanism: retargeting
+  changes absolute phase coverage, so target-specific support and allocation
+  should be selected jointly; the fixed condition remains the identification
+  owner.
 - The AI-use statement remains unchanged. Its current wording was previously
   author-confirmed as complete and literally true; the external suggestion to
   assert author-only theorem statements/proof strategies was not adopted
@@ -88,6 +106,25 @@ and `MLA wavelength-blend operator` for the run-specific MLA transform.
   broader operator/logit analyses; RePo marks content-dependent position
   assignment; Kazemnejad et al. supplies the general length-generalization
   context. GRAPE, Urrutia et al., and xPos were already present.
+- The abstract separates the $1.485$B from-initialisation trajectory from its
+  independent Q/K adaptation; EVQ-Cosh's fast-end allocation direction is
+  stated before the theory.
+- Exact-range naming is locked to FMRoPE versus anchored EVQ-Cosh; `Geo`
+  remains reserved for geometric training baselines, and `Native` for
+  unmodified pretrained-model baselines.
+- Figures, axes, captions, and tables spell out `EVQ-Cosh`; the repository
+  range operator is always `YaRN-style`, and the run-specific MLA operator is
+  always `MLA wavelength-blend operator`. Deprecated descriptive aliases are
+  absent from outward sources.
+- Proposition~2 now defines its asymptotic variable and softmax-support
+  condition. Theorem~4 is explicitly a continuum-surrogate result whose
+  deployed table is a finite midpoint quantisation.
+- Figure~2 is fixed in place immediately after the Theory opening rather than
+  floating above the section; Figure~1 now separates the $8$B LoRA deletion
+  callout from the $1.485$B QA panel.
+- The reviewer supplement now has a public README, the machine-readable
+  exact-range three-seed aggregate, a runnable exact-range entrypoint, and no
+  stale figures, internal handoff links, or broken packaged CI commands.
 
 ## 4. Canonical paper-facing values
 
@@ -98,7 +135,7 @@ and `MLA wavelength-blend operator` for the run-specific MLA transform.
 - Every training seed favours Cosh at every OOD length.
 - The $512$ magnitude is heterogeneous and remains visible as per-seed points.
 - Target-matched means at `512/1K/2K`:
-  `+0.060/+0.227/+0.460`; uniform FMRoPE is favoured by `3/3` seeds.
+  `+0.060/+0.227/+0.460`; FMRoPE is favoured by `3/3` seeds.
 - Owner: `research/EXACT_RANGE_151M_3SEED_RESULT_20260820.{md,json}`.
 
 ### Scale and capability roles
@@ -110,11 +147,23 @@ and `MLA wavelength-blend operator` for the run-specific MLA transform.
   AR exact `0/77.5%` at $8$K.
 - $1.485$B from initialisation: same initialisation, architecture, scientific
   recipe, reconstructed data-order prefix, counted-token budget, and evaluation
-  rows; different trainer implementations. Geo/EVQ PPL is
+  rows; different trainer implementations. Geo/EVQ-Cosh PPL is
   `177.99/191.36`, `161.19/167.45`, `163.88/156.87`, `182.73/159.64` at
   $2$/$4$/$8$/$16$K.
 - $8$B: matched LoRA adaptation only. Keep its natural-text probability,
   RULER, attention-hit, and remote-block-ablation endpoints separate.
+
+Seed inventory for the mature/supporting arms:
+
+- the $50$M weights-by-table co-adaptation crossing, $750$M continuation, and
+  $1.485$B from-initialisation comparison each currently have one paired
+  training trajectory;
+- the $1.485$B selective Q/K, 2Wiki, and RULER results use one matched
+  Native/EVQ-Cosh trained pair; routing conversion has a second independent
+  EVQ-Cosh seed but not a second complete Native/EVQ-Cosh pair;
+- the $8$B natural-LM/remote-deletion and RULER protocols use one seed per arm;
+- the main Video-DiT comparison has two seeds, while the base-1000 diagnostic
+  uses seed 42.
 
 ## 5. Internal negative results
 
@@ -134,34 +183,43 @@ Owners:
 
 | Check | Result |
 | --- | --- |
-| Final PDF | SHA-256 `29421c1678e797da0da4003c5692eeab9ea071b844aefc0062b9abacb0b7562d`; 688,299 bytes |
-| Layout gates | 9 body pages, 29 total, US Letter, 0 undefined refs/cites, 0 pt overfull, anonymous |
+| Final PDF | SHA-256 `3de9a4c2cb9acb6d9135143ca6055335d35ca2b7619531027a4dda7eff17c4a7`; 691,054 bytes |
+| Layout gates | 9 body pages, 30 total, US Letter, 0 undefined refs/cites, 0 pt overfull, anonymous |
 | Fonts | Type-3 `0`; all fonts embedded |
-| Outward terminology scan | no `GEO`, `RAMP`, `legacy scaler`, or `EVQ+YaRN` in manuscript/appendix sources; locked identities verified |
-| Focused scientific tests | 243 passed |
-| Paper-workspace tests | 3 passed |
-| Anonymous package dry run | SHA-256 `46b72c3d7cbcfa68a248a06e8a5f38bf0a3ba376e20d420b323b934efaaf248b`; 851,750 bytes; ZIP integrity clean |
-| Isolated package | all three figures regenerated; paper rebuilt; 142 tests passed |
-| Visual QA | all 9 body pages inspected at rendered resolution; new Figure 1 labels and callout are readable |
+| Outward terminology scan | no `uniform FMRoPE`, `anchored Cosh`, `smooth-ramp scaler`, `range scaler`, `MLA blend`, `RAMP`, or `EVQ+YaRN`; locked identities verified |
+| Focused scientific/package/workspace tests | 223 passed |
+| Anonymous root package | SHA-256 `00170422f0e4449103b4b1751e231736f77d0f167f2e2a480a14c4d27e580cef`; 842,953 bytes; ZIP integrity clean |
+| Isolated package | exact-range entrypoint opened; all three figures regenerated in the dry run; paper rebuilt; 142 tests passed |
+| Visual QA | all 9 body pages inspected; Figure 1 callout is legible, Figure 2 follows the Theory heading, and Figure 3 has no black heatmap field |
 | Immutable NeurIPS PDF | SHA-256 `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772` |
 
-The final package dry run is
-`/tmp/rope-spectral-budget-iclr2027-citation-repair.zip`. The existing root supplement
-was not overwritten.
+The final reviewer package is
+`rope-spectral-budget-iclr2027-supplement.zip` at the repository root.
 
 Use Conda `aidemo` for PyTorch/pytest checks.
 
 ## 7. Worktree and next action
 
-- The Opus prose rewrite is local and uncommitted; do not publish it unless the
-  user explicitly requests commit/push.
-- `paper-2027/DOCUMENT_TEXT_MAP.md` is an unrelated untracked file that appeared
-  during this turn. It was not created or modified by this work and must remain
-  outside any future staging scope unless the user identifies its owner.
+- The acceptance-audit integration is local and uncommitted; do not publish it
+  unless the user explicitly requests commit/push.
+- `AGENTS.md` contains the user-owned acceptance-first rules plus the corrected
+  finite-tau, nomenclature, disclosure, and research-frontier guardrails.
 - `paper/` remains immutable and unchanged.
 - Do not start new training or GPU evaluation from this handoff.
+- Immediate submission work must first make the completed evidence as strong
+  and readable as possible without unsupported SOTA language.
+- The next authorised research priority is matched multi-seed $1.485$B
+  adaptation on RTX 5090-class hardware, after freezing an exact protocol.
+  The method goal is to combine in-window retention and extrapolation by
+  incorporating the attention mechanism into spectral allocation, then adapt
+  existing RoPE checkpoints with a small update.
+- Treat the present $8$B results as evidence, not as the solved retrofit: the
+  natural-LM arm improves long-position PPL and routing but does not establish
+  simultaneous in-window retention and downstream improvement. Do not schedule
+  $8$B multi-seed by default; reconsider it only after the new method passes
+  smaller gates or suitable higher-memory hardware is explicitly authorised.
 - For the next independent review, extract only concrete score-ceiling,
   technical-credibility, or readability defects and verify them against the
   PDF and owners before editing.
-- Before submission: author visual review, live policy/deadline recheck,
-  OpenReview title/abstract equality, and durable root-supplement regeneration.
+- Before submission: author visual review, live policy/deadline recheck, and
+  OpenReview title/abstract equality.

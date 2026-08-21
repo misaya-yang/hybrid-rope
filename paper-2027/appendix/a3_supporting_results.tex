@@ -14,28 +14,30 @@ frequency allocation at fixed architecture.
 
 \begin{table}[ht]
 \caption{MLA validation (432M, $d_{\mathrm{rope}}{=}32$, 3-seed mean
-$\pm$ std). Rows marked ``MLA blend'' use this run's wavelength-blend
+$\pm$ std). Rows marked ``MLA wavelength-blend'' use this run's wavelength-blend
 operator, which is distinct from \rs{}.}
 \label{tab:mla}
 \centering
 \small
+\resizebox{\linewidth}{!}{%
 \begin{tabular}{@{}l r r r r@{}}
 \toprule
 Method & PPL@8K & PPL@16K & PPL@24K & PPL@32K \\
 \midrule
 Geo & $35.4{\pm}0.9$ & $138.8{\pm}5.5$ & $241.5{\pm}2.6$ & $323.7{\pm}5.2$ \\
-Geo+MLA blend ($s=4$) & $35.5{\pm}0.9$ & $117.9{\pm}6.5$ & $204.9{\pm}6.9$ & $278.5{\pm}6.3$ \\
+Geo + MLA wavelength-blend ($s=4$) & $35.5{\pm}0.9$ & $117.9{\pm}6.5$ & $204.9{\pm}6.9$ & $278.5{\pm}6.3$ \\
 \textbf{\evq{}} & $35.8{\pm}0.8$ & $\mathbf{95.6{\pm}4.1}$ & $204.9{\pm}14.7$ & $291.6{\pm}20.5$ \\
-\textbf{\evq{}+MLA blend ($s=4$)} & $35.8{\pm}0.8$ & $\mathbf{71.1{\pm}4.1}$ & $\mathbf{153.2{\pm}12.5}$ & $\mathbf{236.6{\pm}15.9}$ \\
+\textbf{\evq{} + MLA wavelength-blend ($s=4$)} & $35.8{\pm}0.8$ & $\mathbf{71.1{\pm}4.1}$ & $\mathbf{153.2{\pm}12.5}$ & $\mathbf{236.6{\pm}15.9}$ \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
 \evq{} reduces 16K PPL by $31.1\%$ ($138.8\to95.6$), while 8K PPL changes by
-$+1.1\%$. All three training seeds favour \evq{} at 16K. The \evq{}+MLA-blend
+$+1.1\%$. All three training seeds favour \evq{} at 16K. The \evq{} plus MLA wavelength-blend
 row has the lowest mean PPL at 16K and beyond. These rows establish the tested
 ordering for this architecture and protocol.
 
-\subsection{Composition with the \rs{} range scaler}
+\subsection{Composition with \rs{}}
 \label{sec:ramp-results}
 \input{tables/table_evq_ramp}
