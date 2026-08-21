@@ -39,6 +39,7 @@ from rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.prepare_data import 
 from .prepare_instruct_ruler_transfer import (
     DATA_STATUS,
     TASK_CONFIGS,
+    chat_input_ids,
 )
 from rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.train_4k_stage_a import (
     ready_checkpoint_digest,
@@ -60,8 +61,8 @@ from .native_protected_evq import (
 )
 from .train_4k_native_protected_evq import load_selection
 from .far_only_evq_residual import (
-    ADAPTATION_NAME as FAR_ONLY_EVQ_ADAPTATION,
-    install_far_only_evq_residual,
+    ADAPTATION_NAME as FAR_PASS_CHORD_ADAPTATION,
+    install_far_pass_chord_residual,
     load_far_only_adapter,
     peek_far_only_adapter,
     route_for_budget,
@@ -102,7 +103,7 @@ def bound_code_sha256() -> dict[str, str]:
         "native_protected_receipt_loader": (
             maturity_root / "train_4k_native_protected_evq.py"
         ),
-        "far_only_evq_method": (
+        "far_pass_chord_method": (
             maturity_root / "far_only_evq_residual.py"
         ),
         "adapter_loader": (
@@ -164,7 +165,7 @@ def parse_args() -> argparse.Namespace:
             "qk_answer",
             "qkv_attention_restoration",
             NATIVE_PROTECTED_ADAPTATION,
-            FAR_ONLY_EVQ_ADAPTATION,
+            FAR_PASS_CHORD_ADAPTATION,
         ),
         default="qkvo_answer",
     )
@@ -631,20 +632,20 @@ def main() -> None:
             "masked Q/K restoration requires its adapter and frequency"
         )
     if (
-        args.adaptation == FAR_ONLY_EVQ_ADAPTATION
+        args.adaptation == FAR_PASS_CHORD_ADAPTATION
         and (
             adapter_path is None
             or args.frequency != "native"
         )
     ):
         raise RuntimeError(
-            "far-only EVQ residual requires its adapter and Native global RoPE"
+            "far-pass chord residual requires its adapter and Native RoPE"
         )
     far_only_config = (
         peek_far_only_adapter(adapter_path)[0]
         if (
             adapter_path is not None
-            and args.adaptation == FAR_ONLY_EVQ_ADAPTATION
+            and args.adaptation == FAR_PASS_CHORD_ADAPTATION
         )
         else None
     )
@@ -744,6 +745,7 @@ def main() -> None:
         "adapter_sha256": (
             None if adapter_path is None else sha256_file(adapter_path)
         ),
+        "parent_adapter_sha256": None,
         "selection_receipt_sha256": (
             None
             if selection_path is None
@@ -756,7 +758,7 @@ def main() -> None:
         ),
         "rank": int(args.rank),
         "alpha": float(args.alpha),
-        "far_only_evq_config": (
+        "far_pass_chord_config": (
             None
             if far_only_config is None
             else {
@@ -862,10 +864,10 @@ def main() -> None:
     if args.adapter is not None:
         output_mask = None
         far_only_loaded = False
-        if args.adaptation == FAR_ONLY_EVQ_ADAPTATION:
+        if args.adaptation == FAR_PASS_CHORD_ADAPTATION:
             if far_only_config is None:
-                raise RuntimeError("far-only EVQ configuration is missing")
-            install_far_only_evq_residual(model, far_only_config)
+                raise RuntimeError("far-pass chord configuration is missing")
+            install_far_pass_chord_residual(model, far_only_config)
             readout = None
             far_only_loaded = True
         elif args.adaptation == NATIVE_PROTECTED_ADAPTATION:
@@ -917,12 +919,16 @@ def main() -> None:
         if far_only_loaded:
             if (
                 adapter_metadata.get("adaptation")
-                != FAR_ONLY_EVQ_ADAPTATION
+                != FAR_PASS_CHORD_ADAPTATION
                 or adapter_metadata.get("global_frequency") != "native"
-                or adapter_metadata.get("residual_frequency")
-                != "endpoint_evq_cosh"
+                or adapter_metadata.get("residual_frequency", {}).get(
+                    "augmented_head_dimension"
+                )
+                != 160
+                or adapter_metadata.get("parent_adapter_sha256")
+                is not None
             ):
-                raise RuntimeError("far-only EVQ adapter metadata drift")
+                raise RuntimeError("far-pass chord adapter metadata drift")
         elif args.frequency in {
             "official_yarn",
             "repo_fixed_ramp",
@@ -1020,7 +1026,7 @@ def main() -> None:
             length = int(row["_nominal_length"])
             route_enabled = (
                 route_for_budget(model, length)
-                if args.adaptation == FAR_ONLY_EVQ_ADAPTATION
+                if args.adaptation == FAR_PASS_CHORD_ADAPTATION
                 else None
             )
             local_index = int(row["_local_index"])
@@ -1028,11 +1034,11 @@ def main() -> None:
             key = (task, length, local_index)
             if key in completed:
                 continue
-            chat_ids = tokenizer.apply_chat_template(
+            chat_ids = chat_input_ids(tokenizer.apply_chat_template(
                 [{"role": "user", "content": row["input"]}],
                 add_generation_prompt=True,
                 return_tensors="pt",
-            )
+            ))
             prefix_ids = tokenizer(
                 row.get("answer_prefix", ""),
                 add_special_tokens=False,

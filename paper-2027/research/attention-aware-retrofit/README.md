@@ -8,7 +8,13 @@
 
 Executed results are summarized in
 [`EXPERIMENT_REPORT_20260821.md`](EXPERIMENT_REPORT_20260821.md); the compact
-machine-path-free receipt is indexed under [`evidence/`](evidence/).
+machine-path-free receipt is indexed under [`evidence/`](evidence/). The
+prepared but unexecuted mature-model finite-path audit is owned by
+[`FUNCTION_MORPH_PREFLIGHT_20260821.md`](FUNCTION_MORPH_PREFLIGHT_20260821.md).
+The current single-arm retrofit protocol is owned by
+[`FAR_PASS_CHORD_RESIDUAL_PREFLIGHT_20260821.md`](FAR_PASS_CHORD_RESIDUAL_PREFLIGHT_20260821.md).
+Its completed ablation chain and stop decision are now owned by
+[`FAR_PASS_CHORD_EXPERIMENT_REPORT_20260821.md`](FAR_PASS_CHORD_EXPERIMENT_REPORT_20260821.md).
 
 ## 1. The two problems are different
 
@@ -155,6 +161,12 @@ first matrix.
 
 ## 4. Escalation route: an additive positional residual
 
+Implementation update: the full-table rotation-difference sketch below is
+historical motivation. The registered experiment uses the narrower
+`I-R(Delta)` far-pass chord operator and fixed 8-pair no-wrap band in
+`FAR_PASS_CHORD_RESIDUAL_PREFLIGHT_20260821.md`; that owner supersedes the
+implementation details in this section.
+
 If the measured protected-subspace route still loses too much Native
 capability, keep the
 entire Native term and learn an additive positional residual:
@@ -219,6 +231,14 @@ benefit, do not start the mature adaptation.
 
 ## 6. LoRA and training objective
 
+**Executed update.** The Q/K-only, learned V/O transport, first-token-weighted,
+and physical continuous-8K variants have now run. All improved at least one
+teacher-forced probability or rank endpoint, but the final physical-8K arm
+still obtained only `1/64` first-token top-1 and `0/64` strict answer-plus-EOS.
+The CE-only route is stopped. The objective below remains historical design
+context; any resumption must first add direct source-position alignment on the
+independent natural rows, not another frequency/rank/gain sweep.
+
 The minimum trainable scope is Q/K residual projections plus scalar or
 per-layer gates. Native Q/K/V/O and the entire Native attention path remain
 frozen. V/O freezing is important because the objective is to repair routing,
@@ -256,6 +276,19 @@ gate. A relative-distance gate is scientifically cleaner but should not force a
 custom quadratic attention path.
 
 ## 7. Experimental ladder and stop rules
+
+### R4-M0: mature finite function-morph audit
+
+- Candidates: the OLMo R0 phase-chord table, a non-attention-aware
+  endpoint/RMS-log-displacement-matched control, and anchored EVQ-Cosh.
+- Path: finite log-frequency morphs at `t={0,.05,.25,.5,.75,1}`.
+- Report: per-example Native-teacher forward KL and tail-token NLL delta at
+  4K, 8K, and 16K; teacher-forced only.
+- Stop if phase-chord does not dominate the matched control on the measured
+  4K-cost/far-NLL tradeoff. This diagnostic does not gate the residual route.
+- Current state: exact code, assets, targets, and no-GPU receipt are frozen,
+  but the audit is deprioritized and is not a prerequisite for the practical
+  LoRA route. GPU evaluation has not been authorized or run.
 
 ### R4-0: zero-training operator audit
 
@@ -317,12 +350,19 @@ slice. Do not make 8B multi-seed the default.
 
 ## 9. Decision
 
-The next mature-model experiment should not be another whole-table swap with a
-new curriculum. First identify the smallest Native subspace that carries the
-measured in-window function and the granularity at which that function is
-localized: pair, head, or layer. A 50/50 `d_head` split is one frozen-shock
-candidate, not a conclusion. Only the lowest-shock split proceeds to masked
-Q/K LoRA; the additive residual branch remains the escalation route. Before
-GPU work, both must pass the short-cost/far-benefit and frequency-spacing
-audit. The current phase-chord result is the enabling signal, not yet a
-mature-model claim.
+The first objective is practical mature-model LoRA, not another whole-table
+swap or another table-ranking experiment. Freeze the released Native model as
+the main attention path, preserve its short-request route exactly, and add the
+registered 8-pair `I-R(Delta)` far-pass chord Q/K residual through one softmax
+with zero-padded residual values. Train the one residual arm on an independent
+FineWeb-Edu natural-span retrieval view; RULER remains held-out evaluation.
+Because the complete 8K+16K RULER evaluation costs only minutes under the
+completed runtime receipt, it runs the full 20 rows per family rather than
+adding a noisy subsample gate. It does not sweep rank, gain, frequency band, pair count, or
+training length.
+
+The finite whole-table morph audit remains available but is not a prerequisite.
+Stage-D protection and conditional table construction are fallback diagnostics
+only if the residual route fails for a localized, measurable reason. The
+current phase-chord result is useful training-time evidence, not the blocker
+for solving LoRA practicality.

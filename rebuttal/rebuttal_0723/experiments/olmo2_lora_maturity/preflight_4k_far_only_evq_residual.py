@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create the no-GPU preparation receipt for far-only EVQ residual training."""
+"""Create the no-GPU receipt for released-Native chord training."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ import argparse
 import importlib.metadata
 import importlib.util
 import json
+import sys
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -17,9 +18,12 @@ from rebuttal.rebuttal_0723.experiments.small_model_lora_conversion import (
 )
 
 from .far_only_evq_residual import METHOD_ID, PREPARED_STATUS
+from .continuous_8k_adaptation import Continuous8KView
 from .phase_adaptation import PhaseAdaptationView
 from .train_4k_far_only_evq_residual import (
+    TRAINING_VIEW_MANIFEST_SHA256,
     bound_code_sha256,
+    load_training_view,
     registered_protocol,
 )
 from .train_4k_stage_a import ready_checkpoint_digest
@@ -34,21 +38,30 @@ TRAINER_MODULE = (
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--checkpoint", type=Path, required=True)
+    parser.add_argument(
+        "--training-mode",
+        choices=("phase_gap_4k", "continuous_8k"),
+        default="phase_gap_4k",
+    )
     parser.add_argument("--checkpoint-ready-receipt", type=Path, required=True)
     parser.add_argument("--training-view", type=Path, required=True)
     parser.add_argument("--prepared-output", type=Path, required=True)
     parser.add_argument("--smoke-output", type=Path, required=True)
     parser.add_argument("--run-output", type=Path, required=True)
-    parser.add_argument("--steps", type=int, default=100)
-    parser.add_argument("--micro-batch-size", type=int, default=1)
+    parser.add_argument("--steps", type=int, default=300)
+    parser.add_argument("--micro-batch-size", type=int, default=4)
     parser.add_argument(
-        "--gradient-accumulation-steps", type=int, default=4
+        "--gradient-accumulation-steps", type=int, default=2
     )
     parser.add_argument("--projection-rank", type=int, default=64)
-    parser.add_argument("--residual-head-dim", type=int, default=128)
+    parser.add_argument("--residual-pairs", type=int, default=8)
     parser.add_argument("--initial-logit-gain", type=float, default=0.1)
+    parser.add_argument("--content-value-dim", type=int, default=0)
+    parser.add_argument("--content-projection-rank", type=int, default=64)
+    parser.add_argument("--initial-content-gain", type=float, default=0.1)
+    parser.add_argument("--first-token-loss-weight", type=float)
     parser.add_argument("--learning-rate", type=float, default=5e-5)
-    parser.add_argument("--warmup-steps", type=int, default=10)
+    parser.add_argument("--warmup-steps", type=int, default=20)
     parser.add_argument(
         "--compile-mode",
         choices=(
@@ -56,23 +69,29 @@ def parse_args() -> argparse.Namespace:
             "default",
             "max-autotune-no-cudagraphs",
         ),
-        default="none",
+        default="max-autotune-no-cudagraphs",
     )
     parser.add_argument("--validation-rows", type=int, default=16)
-    parser.add_argument("--seed", type=int, default=20_260_804)
+    parser.add_argument("--seed", type=int, default=20_260_821)
     return parser.parse_args()
 
 
 def _trainer_args(args: argparse.Namespace) -> SimpleNamespace:
     return SimpleNamespace(
+        training_view=args.training_view,
+        training_mode=str(args.training_mode),
         steps=int(args.steps),
         micro_batch_size=int(args.micro_batch_size),
         gradient_accumulation_steps=int(
             args.gradient_accumulation_steps
         ),
         projection_rank=int(args.projection_rank),
-        residual_head_dim=int(args.residual_head_dim),
+        residual_pairs=int(args.residual_pairs),
         initial_logit_gain=float(args.initial_logit_gain),
+        content_value_dim=int(args.content_value_dim),
+        content_projection_rank=int(args.content_projection_rank),
+        initial_content_gain=float(args.initial_content_gain),
+        first_token_loss_weight=args.first_token_loss_weight,
         learning_rate=float(args.learning_rate),
         warmup_steps=int(args.warmup_steps),
         compile_mode=str(args.compile_mode),
@@ -85,7 +104,7 @@ def _input_receipt(
     *,
     args: argparse.Namespace,
     checkpoint_sha256: str,
-    view: PhaseAdaptationView,
+    view: PhaseAdaptationView | Continuous8KView,
 ) -> dict[str, Any]:
     return {
         "checkpoint": {
@@ -117,11 +136,14 @@ def command(
         args.smoke_output if mode == "smoke" else args.run_output
     )
     values = [
-        "python",
+        sys.executable,
         "-m",
         TRAINER_MODULE,
         "--mode",
         mode,
+        "--training-mode",
+        str(args.training_mode),
+        "--authorize",
         "--checkpoint",
         str(args.checkpoint.resolve()),
         "--checkpoint-ready-receipt",
@@ -140,10 +162,16 @@ def command(
         str(args.gradient_accumulation_steps),
         "--projection-rank",
         str(args.projection_rank),
-        "--residual-head-dim",
-        str(args.residual_head_dim),
+        "--residual-pairs",
+        str(args.residual_pairs),
         "--initial-logit-gain",
         str(args.initial_logit_gain),
+        "--content-value-dim",
+        str(args.content_value_dim),
+        "--content-projection-rank",
+        str(args.content_projection_rank),
+        "--initial-content-gain",
+        str(args.initial_content_gain),
         "--learning-rate",
         str(args.learning_rate),
         "--warmup-steps",
@@ -155,6 +183,13 @@ def command(
         "--seed",
         str(args.seed),
     ]
+    if args.first_token_loss_weight is not None:
+        values.extend(
+            [
+                "--first-token-loss-weight",
+                str(args.first_token_loss_weight),
+            ]
+        )
     if mode == "train":
         values.extend(
             [
@@ -172,18 +207,35 @@ def command(
 
 def main() -> None:
     args = parse_args()
-    if int(args.steps) != 100:
-        raise ValueError("registered first run requires exactly 100 steps")
+    if int(args.steps) != 300:
+        raise ValueError("registered first run requires exactly 300 steps")
+    expected_shape = (
+        (2, 4)
+        if str(args.training_mode) == "continuous_8k"
+        else (4, 2)
+    )
     if (
-        int(args.micro_batch_size) != 1
-        or int(args.gradient_accumulation_steps) != 4
-    ):
-        raise ValueError("registered first run requires micro 1 / accum 4")
+        int(args.micro_batch_size),
+        int(args.gradient_accumulation_steps),
+    ) != expected_shape:
+        raise ValueError(
+            "registered run requires micro/accum "
+            f"{expected_shape[0]}/{expected_shape[1]}"
+        )
     if (
         int(args.projection_rank) != 64
-        or int(args.residual_head_dim) != 128
+        or int(args.residual_pairs) != 8
     ):
-        raise ValueError("registered first run requires rank 64 / D128")
+        raise ValueError("registered first run requires rank 64 / 8 pairs")
+    if int(args.content_value_dim) not in {0, 32}:
+        raise ValueError("registered content value dim must be zero or 32")
+    if int(args.content_projection_rank) != 64:
+        raise ValueError("registered content projection rank must be 64")
+    if (
+        args.first_token_loss_weight is not None
+        and float(args.first_token_loss_weight) != 0.5
+    ):
+        raise ValueError("registered weighted run requires first-token weight 0.5")
     for path in (
         args.prepared_output,
         args.smoke_output,
@@ -198,7 +250,16 @@ def main() -> None:
         args.checkpoint.resolve(),
         args.checkpoint_ready_receipt.resolve(),
     )
-    view = PhaseAdaptationView(args.training_view.resolve())
+    trainer_args = _trainer_args(args)
+    view = load_training_view(trainer_args)
+    if (
+        str(args.training_mode) == "phase_gap_4k"
+        and
+        TRAINING_VIEW_MANIFEST_SHA256 is not None
+        and sha256_file(view.root / "manifest.json")
+        != TRAINING_VIEW_MANIFEST_SHA256
+    ):
+        raise RuntimeError("registered RULER training-view manifest drift")
     dependencies = {}
     for module_name, distribution_name in (
         ("torch", "torch"),
@@ -212,7 +273,7 @@ def main() -> None:
         dependencies[distribution_name] = importlib.metadata.version(
             distribution_name
         )
-    protocol = registered_protocol(_trainer_args(args))
+    protocol = registered_protocol(trainer_args)
     receipt = {
         "status": PREPARED_STATUS,
         "classification": "NO_GPU_PREPARATION_NOT_EXPERIMENT_RESULT",
@@ -233,12 +294,17 @@ def main() -> None:
             "run_directory": str(args.run_output.resolve()),
         },
         "commands": {
+            "required_environment": {
+                "OLMO_FAR_PASS_CHORD_GPU_AUTHORIZED": "1",
+                "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True",
+                "TORCHINDUCTOR_CACHE_DIR": "<persistent-data-disk-path>",
+            },
             "smoke": command(mode="smoke", args=args),
             "train_after_smoke_passes": command(mode="train", args=args),
         },
         "stop_conditions": [
             "short Native route is not bitwise deterministic",
-            "Flash-only BF16 augmented D256 attention is ineligible",
+            "Flash-only BF16 augmented D160 attention is ineligible",
             "active loss or gradients are non-finite or zero",
             "augmented prefill/decode cache width differs",
             "full training protocol or input hash differs from this receipt",

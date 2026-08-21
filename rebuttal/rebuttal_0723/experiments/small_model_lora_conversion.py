@@ -98,6 +98,7 @@ def configure_cuda() -> dict[str, Any]:
     torch.set_float32_matmul_precision("high")
     torch.backends.cuda.matmul.allow_tf32 = True
     torch.backends.cudnn.allow_tf32 = True
+    torch.backends.cuda.matmul.allow_bf16_reduced_precision_reduction = True
     torch.backends.cuda.enable_flash_sdp(True)
     torch.backends.cuda.enable_mem_efficient_sdp(False)
     torch.backends.cuda.enable_math_sdp(False)
@@ -109,10 +110,18 @@ def configure_cuda() -> dict[str, Any]:
         "capability": list(capability),
         "torch": torch.__version__,
         "cuda": torch.version.cuda,
+        "arch_list": list(torch.cuda.get_arch_list()),
+        "active_arch": f"sm_{capability[0]}{capability[1]}",
+        "bf16_supported": bool(torch.cuda.is_bf16_supported()),
         "flash_sdp_enabled": bool(torch.backends.cuda.flash_sdp_enabled()),
         "math_sdp_enabled": bool(torch.backends.cuda.math_sdp_enabled()),
         "mem_efficient_sdp_enabled": bool(
             torch.backends.cuda.mem_efficient_sdp_enabled()
+        ),
+        "cudnn_sdp_enabled": bool(
+            torch.backends.cuda.cudnn_sdp_enabled()
+            if hasattr(torch.backends.cuda, "cudnn_sdp_enabled")
+            else False
         ),
     }
 

@@ -50,6 +50,7 @@ from .evaluate_instruct_ruler_transfer import (
     validate_adapter_training_substrate,
     verify_official_yarn,
 )
+from .prepare_instruct_ruler_transfer import chat_input_ids
 from .native_protected_evq import (
     ADAPTATION_NAME as NATIVE_PROTECTED_ADAPTATION,
     FREQUENCY_NAME as NATIVE_PROTECTED_FREQUENCY,
@@ -58,8 +59,8 @@ from .native_protected_evq import (
 )
 from .train_4k_native_protected_evq import load_selection
 from .far_only_evq_residual import (
-    ADAPTATION_NAME as FAR_ONLY_EVQ_ADAPTATION,
-    install_far_only_evq_residual,
+    ADAPTATION_NAME as FAR_PASS_CHORD_ADAPTATION,
+    install_far_pass_chord_residual,
     load_far_only_adapter,
     peek_far_only_adapter,
     route_for_budget,
@@ -98,7 +99,7 @@ def parse_args() -> argparse.Namespace:
             "qk_answer",
             "qkv_attention_restoration",
             NATIVE_PROTECTED_ADAPTATION,
-            FAR_ONLY_EVQ_ADAPTATION,
+            FAR_PASS_CHORD_ADAPTATION,
         ),
         default="qkvo_answer",
     )
@@ -194,11 +195,11 @@ def truncate_user_prompt(
             skip_special_tokens=True,
             clean_up_tokenization_spaces=False,
         )
-        chat_ids = tokenizer.apply_chat_template(
+        chat_ids = chat_input_ids(tokenizer.apply_chat_template(
             [{"role": "user", "content": content}],
             add_generation_prompt=True,
             return_tensors="pt",
-        )
+        ))
         if int(chat_ids.shape[1]) + MAX_NEW_TOKENS <= int(budget):
             break
         allowed = len(candidate) - max(
@@ -322,11 +323,11 @@ def fill_user_prompt_to_budget(
             clean_up_tokenization_spaces=False,
         )
         content = prefix + context + filler_text + suffix
-        chat_ids = tokenizer.apply_chat_template(
+        chat_ids = chat_input_ids(tokenizer.apply_chat_template(
             [{"role": "user", "content": content}],
             add_generation_prompt=True,
             return_tensors="pt",
-        )
+        ))
         length = int(chat_ids.shape[1])
         if length <= target:
             best_ids = chat_ids
@@ -442,20 +443,20 @@ def main() -> None:
             "masked Q/K restoration requires its adapter and frequency"
         )
     if (
-        args.adaptation == FAR_ONLY_EVQ_ADAPTATION
+        args.adaptation == FAR_PASS_CHORD_ADAPTATION
         and (
             adapter_argument is None
             or args.frequency != "native"
         )
     ):
         raise RuntimeError(
-            "far-only EVQ residual requires its adapter and Native global RoPE"
+            "far-pass chord residual requires its adapter and Native RoPE"
         )
     far_only_config = (
         peek_far_only_adapter(adapter_argument)[0]
         if (
             adapter_argument is not None
-            and args.adaptation == FAR_ONLY_EVQ_ADAPTATION
+            and args.adaptation == FAR_PASS_CHORD_ADAPTATION
         )
         else None
     )
@@ -479,7 +480,7 @@ def main() -> None:
             Path(__file__).resolve().parent
             / "train_4k_native_protected_evq.py"
         ),
-        "far_only_evq_method_sha256": sha256_file(
+        "far_pass_chord_method_sha256": sha256_file(
             Path(__file__).resolve().parent
             / "far_only_evq_residual.py"
         ),
@@ -498,6 +499,7 @@ def main() -> None:
             if adapter_argument is None
             else sha256_file(adapter_argument)
         ),
+        "parent_adapter_sha256": None,
         "selection_receipt_sha256": (
             None
             if selection_argument is None
@@ -517,7 +519,7 @@ def main() -> None:
         ),
         "rank": int(args.rank),
         "alpha": float(args.alpha),
-        "far_only_evq_config": (
+        "far_pass_chord_config": (
             None
             if far_only_config is None
             else {
@@ -615,10 +617,10 @@ def main() -> None:
     if adapter_argument is not None:
         output_mask = None
         far_only_loaded = False
-        if args.adaptation == FAR_ONLY_EVQ_ADAPTATION:
+        if args.adaptation == FAR_PASS_CHORD_ADAPTATION:
             if far_only_config is None:
-                raise RuntimeError("far-only EVQ configuration is missing")
-            install_far_only_evq_residual(model, far_only_config)
+                raise RuntimeError("far-pass chord configuration is missing")
+            install_far_pass_chord_residual(model, far_only_config)
             readout = None
             far_only_loaded = True
         elif args.adaptation == NATIVE_PROTECTED_ADAPTATION:
@@ -663,12 +665,16 @@ def main() -> None:
         if far_only_loaded:
             if (
                 adapter_metadata.get("adaptation")
-                != FAR_ONLY_EVQ_ADAPTATION
+                != FAR_PASS_CHORD_ADAPTATION
                 or adapter_metadata.get("global_frequency") != "native"
-                or adapter_metadata.get("residual_frequency")
-                != "endpoint_evq_cosh"
+                or adapter_metadata.get("residual_frequency", {}).get(
+                    "augmented_head_dimension"
+                )
+                != 160
+                or adapter_metadata.get("parent_adapter_sha256")
+                is not None
             ):
-                raise RuntimeError("far-only EVQ adapter metadata drift")
+                raise RuntimeError("far-pass chord adapter metadata drift")
         elif args.frequency in {"official_yarn", "repo_fixed_ramp"}:
             validate_adapter_training_substrate(
                 adapter_metadata,
@@ -737,7 +743,7 @@ def main() -> None:
         for budget in budgets:
             route_enabled = (
                 route_for_budget(model, budget)
-                if args.adaptation == FAR_ONLY_EVQ_ADAPTATION
+                if args.adaptation == FAR_PASS_CHORD_ADAPTATION
                 else None
             )
             sums = {

@@ -1,18 +1,23 @@
 #!/usr/bin/env python3
-"""Native-preserving far-query EVQ-Cosh attention residual.
+"""Native-preserving far-query chord high-pass attention residual.
 
 Short requests delegate to the untouched OLMo-2 attention module.  Long
 requests use one augmented Q/K attention score and one softmax:
 
     score = <q_native, k_native> / sqrt(d)
-          + gate(position_q) * gain * <q_evq, k_evq> / sqrt(d)
+          + gate(position_q) * gain * <u, (I-R_omega(delta)) v> / sqrt(d)
 
-The residual Q/K coordinates use the exact endpoint EVQ-Cosh frequency table.
-Values are zero-padded in the residual coordinates, so the augmented SDPA
-returns the ordinary Native value aggregation in its first ``d`` coordinates.
+The residual frequencies are eight fixed log-spaced wavelengths from 2x to
+10x the 16K target length.  They have no phase wrap through 16K.  The scalar
+bilinear response contains both sine and ``1-cos`` terms; its isotropic squared
+energy is proportional to the phase-chord kernel ``1-cos(omega*delta)``.  It
+is exactly zero at delta zero.  Values are zero-padded in the residual
+coordinates, so the augmented SDPA returns the ordinary Native value
+aggregation in its first ``d`` coordinates.
 
-This is a post-hoc EVQ residual extension.  It does not replace the submitted
-full-EVQ frequency table and is not evidence until a registered run completes.
+This is a new post-hoc attention operator inspired by the phase-chord result.
+It is not EVQ-Cosh validation and is not evidence until a registered run
+completes.
 """
 
 from __future__ import annotations
@@ -36,67 +41,164 @@ from transformers.models.olmo2.modeling_olmo2 import (
 
 from rebuttal.rebuttal_0723.experiments.olmo2_1b_evq.contract import (
     MODEL_CONTRACT,
-    TAU,
-    assert_frequency_contract,
-    endpoint_evq_inv_freq,
     endpoint_geo_inv_freq,
     tensor_sha256,
 )
 
 
-METHOD_ID = "native_preserving_far_query_evq_residual_v1"
-ADAPTATION_NAME = "far_only_evq_residual"
-PREPARED_STATUS = "OLMO2_FAR_ONLY_EVQ_RESIDUAL_PREPARED_NO_GPU"
-READY_STATUS = "OLMO2_FAR_ONLY_EVQ_RESIDUAL_GPU_READY"
-RESULT_STATUS = "OLMO2_FAR_ONLY_EVQ_RESIDUAL_COMPLETE"
+METHOD_ID = "native_preserving_far_pass_chord_residual_v1"
+ADAPTATION_NAME = "far_pass_chord_residual"
+PREPARED_STATUS = "OLMO2_FAR_PASS_CHORD_RESIDUAL_PREPARED_NO_GPU"
+READY_STATUS = "OLMO2_FAR_PASS_CHORD_RESIDUAL_GPU_READY"
+RESULT_STATUS = "OLMO2_FAR_PASS_CHORD_RESIDUAL_COMPLETE"
 ADAPTER_FORMAT_VERSION = 1
+TARGET_LONG_LENGTH = 16_384
+RESIDUAL_PAIRS = 8
+WAVELENGTH_MIN = 2.0 * TARGET_LONG_LENGTH
+WAVELENGTH_MAX = 10.0 * TARGET_LONG_LENGTH
+
+
+def _rope_theta(config: Any) -> float:
+    """Read the Native base across Transformers 4.x and 5.x configs."""
+
+    value = getattr(config, "rope_theta", None)
+    if value is None:
+        parameters = getattr(config, "rope_parameters", None)
+        if not isinstance(parameters, dict):
+            raise RuntimeError("OLMo-2 config has no RoPE base")
+        value = parameters.get("rope_theta")
+    if value is None:
+        raise RuntimeError("OLMo-2 config has no rope_theta")
+    return float(value)
+
+
+def far_pass_inv_freq(
+    *,
+    pairs: int = RESIDUAL_PAIRS,
+    wavelength_min: float = WAVELENGTH_MIN,
+    wavelength_max: float = WAVELENGTH_MAX,
+    dtype: torch.dtype = torch.float32,
+) -> torch.Tensor:
+    """Return the registered no-wrap logarithmic far-pass frequencies."""
+
+    count = int(pairs)
+    lower = float(wavelength_min)
+    upper = float(wavelength_max)
+    if count < 2 or not 0.0 < lower < upper:
+        raise ValueError("invalid far-pass wavelength grid")
+    ratio = (upper / lower) ** (1.0 / float(count - 1))
+    wavelength = torch.tensor(
+        [lower * ratio**index for index in range(count)],
+        dtype=torch.float64,
+    )
+    frequency = (2.0 * math.pi / wavelength).to(dtype=dtype)
+    if not bool(torch.all(frequency[:-1] > frequency[1:])):
+        raise RuntimeError("far-pass frequencies are not strictly decreasing")
+    return frequency
+
+
+def _uniform_chord_mean(
+    frequency: torch.Tensor,
+    *,
+    start: float,
+    end: float,
+) -> torch.Tensor:
+    values = frequency.to(dtype=torch.float64)
+    width = float(end) - float(start)
+    if width <= 0.0:
+        raise ValueError("chord interval must have positive width")
+    return 1.0 - (
+        torch.sin(values * float(end))
+        - torch.sin(values * float(start))
+    ) / (values * width)
+
+
+def far_pass_frequency_receipt() -> dict[str, Any]:
+    frequency = far_pass_inv_freq()
+    wavelength = 2.0 * math.pi / frequency.to(dtype=torch.float64)
+    near = _uniform_chord_mean(frequency, start=0.0, end=4_096.0)
+    far = _uniform_chord_mean(
+        frequency, start=4_096.0, end=float(TARGET_LONG_LENGTH)
+    )
+    return {
+        "pairs": RESIDUAL_PAIRS,
+        "residual_dimension": 2 * RESIDUAL_PAIRS,
+        "augmented_head_dimension": 128 + 4 * RESIDUAL_PAIRS,
+        "wavelength_tokens": wavelength.tolist(),
+        "inv_freq": frequency.to(dtype=torch.float32).tolist(),
+        "inv_freq_sha256_float32": tensor_sha256(frequency.float()),
+        "maximum_phase_at_16k": float(
+            frequency.max().double() * TARGET_LONG_LENGTH
+        ),
+        "mean_near_chord_0_4k": float(near.mean()),
+        "mean_far_chord_4k_16k": float(far.mean()),
+        "far_to_near_ratio": float(far.mean() / near.mean()),
+        "selection": (
+            "8 log-spaced wavelengths over [2*L_target,10*L_target]; "
+            "no phase wrap through L_target"
+        ),
+    }
 
 
 @dataclass(frozen=True)
-class FarOnlyEVQConfig:
+class FarPassChordConfig:
     """Immutable method configuration saved with every adapter."""
 
     threshold_position: int = 4_096
     projection_rank: int = 64
-    residual_head_dim: int = 128
+    residual_pairs: int = RESIDUAL_PAIRS
     initial_logit_gain: float = 0.1
     rms_norm_eps: float = 1e-6
-    rope_theta: float = 500_000.0
-    evq_tau: float = TAU
-    initialization_seed: int = 20_260_804
+    wavelength_min: float = WAVELENGTH_MIN
+    wavelength_max: float = WAVELENGTH_MAX
+    initialization_seed: int = 20_260_821
+    content_value_dim: int = 0
+    content_projection_rank: int = 64
+    initial_content_gain: float = 0.1
+
+    @property
+    def residual_dim(self) -> int:
+        return 2 * int(self.residual_pairs)
+
+    @property
+    def augmented_head_dim(self) -> int:
+        return 128 + 2 * self.residual_dim
 
     def validate(self, model_config: Any | None = None) -> None:
         if int(self.threshold_position) != 4_096:
             raise ValueError("registered method requires threshold position 4096")
         if int(self.projection_rank) <= 0:
             raise ValueError("projection rank must be positive")
-        if int(self.residual_head_dim) <= 0 or (
-            int(self.residual_head_dim) % 2
-        ):
-            raise ValueError("residual head dimension must be positive and even")
+        if int(self.residual_pairs) != RESIDUAL_PAIRS:
+            raise ValueError(
+                f"registered method requires {RESIDUAL_PAIRS} residual pairs"
+            )
         if not 0.0 < float(self.initial_logit_gain) <= 1.0:
             raise ValueError("initial logit gain must lie in (0, 1]")
         if float(self.rms_norm_eps) <= 0.0:
             raise ValueError("RMSNorm epsilon must be positive")
-        if float(self.rope_theta) <= 1.0:
-            raise ValueError("RoPE base must exceed one")
-        if float(self.evq_tau) <= 0.0:
-            raise ValueError("EVQ tau must be positive")
-        if model_config is not None:
-            native_head_dim = int(
-                getattr(
-                    model_config,
-                    "head_dim",
-                    int(model_config.hidden_size)
-                    // int(model_config.num_attention_heads),
-                )
+        if (
+            float(self.wavelength_min) != WAVELENGTH_MIN
+            or float(self.wavelength_max) != WAVELENGTH_MAX
+        ):
+            raise ValueError("registered far-pass wavelength range drift")
+        if self.augmented_head_dim != 160:
+            raise ValueError("registered augmented head dimension must be 160")
+        if self.augmented_head_dim % 8 or self.augmented_head_dim > 256:
+            raise ValueError("augmented head dimension is not Flash eligible")
+        if int(self.content_value_dim) not in {
+            0,
+            2 * int(self.residual_dim),
+        }:
+            raise ValueError(
+                "content value width must be zero or fill all added dims"
             )
-            if int(self.residual_head_dim) != native_head_dim:
-                raise ValueError(
-                    "registered residual head dimension must equal Native "
-                    f"head dimension ({self.residual_head_dim} != "
-                    f"{native_head_dim})"
-                )
+        if int(self.content_projection_rank) <= 0:
+            raise ValueError("content projection rank must be positive")
+        if not 0.0 < float(self.initial_content_gain) <= 1.0:
+            raise ValueError("initial content gain must lie in (0, 1]")
+        # The strict OLMo-2 head-dimension check belongs to installation.
+        # Tiny CPU contract models intentionally use a smaller Native head.
 
 
 class LowRankResidualProjection(nn.Module):
@@ -151,7 +253,7 @@ def _cache_head_width(
         return None
     if not isinstance(past_key_values, DynamicCache):
         raise RuntimeError(
-            "far-only EVQ residual currently admits only DynamicCache"
+            "far-pass chord residual currently admits only DynamicCache"
         )
     layer = past_key_values.layers[layer_index]
     keys = getattr(layer, "keys", None)
@@ -160,14 +262,14 @@ def _cache_head_width(
     return int(keys.shape[-1])
 
 
-class FarOnlyEVQAttention(nn.Module):
+class FarPassChordAttention(nn.Module):
     """Wrap one OLMo-2 attention layer without changing its Native path."""
 
     def __init__(
         self,
         native_attention: nn.Module,
         *,
-        method_config: FarOnlyEVQConfig,
+        method_config: FarPassChordConfig,
     ) -> None:
         super().__init__()
         method_config.validate(native_attention.config)
@@ -190,9 +292,7 @@ class FarOnlyEVQAttention(nn.Module):
         self.scaling = float(native_attention.scaling)
         self.attention_dropout = float(native_attention.attention_dropout)
         self.is_causal = bool(native_attention.is_causal)
-        residual_width = (
-            self.num_heads * int(method_config.residual_head_dim)
-        )
+        residual_width = self.num_heads * int(method_config.residual_dim)
         self.residual_q = LowRankResidualProjection(
             input_dim=int(self.config.hidden_size),
             output_dim=residual_width,
@@ -209,18 +309,46 @@ class FarOnlyEVQAttention(nn.Module):
                 dtype=torch.float32,
             )
         )
-        inv_freq = endpoint_evq_inv_freq(
-            head_dim=int(method_config.residual_head_dim),
-            base=float(method_config.rope_theta),
-            tau=float(method_config.evq_tau),
+        self.residual_v: LowRankResidualProjection | None = None
+        self.residual_o: LowRankResidualProjection | None = None
+        self.raw_content_gain: nn.Parameter | None = None
+        content_dim = int(method_config.content_value_dim)
+        if content_dim:
+            content_width = self.num_heads * content_dim
+            self.residual_v = LowRankResidualProjection(
+                input_dim=int(self.config.hidden_size),
+                output_dim=content_width,
+                rank=int(method_config.content_projection_rank),
+            )
+            self.residual_o = LowRankResidualProjection(
+                input_dim=content_width,
+                output_dim=int(self.config.hidden_size),
+                rank=int(method_config.content_projection_rank),
+            )
+            self.raw_content_gain = nn.Parameter(
+                torch.tensor(
+                    _inverse_softplus(method_config.initial_content_gain),
+                    dtype=torch.float32,
+                )
+            )
+        inv_freq = far_pass_inv_freq(
+            pairs=int(method_config.residual_pairs),
+            wavelength_min=float(method_config.wavelength_min),
+            wavelength_max=float(method_config.wavelength_max),
             dtype=torch.float32,
         )
-        self.register_buffer("evq_inv_freq", inv_freq, persistent=True)
+        self.register_buffer("chord_inv_freq", inv_freq, persistent=True)
         self.route_enabled = False
 
     @property
     def logit_gain(self) -> torch.Tensor:
         return F.softplus(self.raw_logit_gain)
+
+    @property
+    def content_gain(self) -> torch.Tensor:
+        if self.raw_content_gain is None:
+            raise RuntimeError("content transport is disabled")
+        return F.softplus(self.raw_content_gain)
 
     def set_route(self, enabled: bool) -> None:
         self.route_enabled = bool(enabled)
@@ -232,7 +360,7 @@ class FarOnlyEVQAttention(nn.Module):
     ) -> tuple[torch.Tensor, torch.Tensor]:
         if position_ids.ndim != 2:
             raise RuntimeError("position_ids must have shape [batch, sequence]")
-        inv = self.evq_inv_freq[None, :, None].float().expand(
+        inv = self.chord_inv_freq[None, :, None].float().expand(
             position_ids.shape[0], -1, 1
         )
         inv = inv.to(hidden_states.device)
@@ -260,15 +388,15 @@ class FarOnlyEVQAttention(nn.Module):
         cached_width = _cache_head_width(
             past_key_values, self.layer_idx
         )
-        expected_cache_width = (
-            self.head_dim + int(self.method_config.residual_head_dim)
+        expected_cache_width = self.head_dim + 2 * int(
+            self.method_config.residual_dim
         )
         if (
             cached_width is not None
             and cached_width != expected_cache_width
         ):
             raise RuntimeError(
-                "cannot enable EVQ residual on a Native-width cache"
+                "cannot enable chord residual on a Native-width cache"
             )
         input_shape = hidden_states.shape[:-1]
         native_shape = (*input_shape, -1, self.head_dim)
@@ -291,7 +419,7 @@ class FarOnlyEVQAttention(nn.Module):
             native_sin,
         )
 
-        residual_dim = int(self.method_config.residual_head_dim)
+        residual_dim = int(self.method_config.residual_dim)
         residual_shape = (*input_shape, -1, residual_dim)
         query_residual = self.residual_q(hidden_states).view(
             residual_shape
@@ -312,7 +440,7 @@ class FarOnlyEVQAttention(nn.Module):
         residual_cos, residual_sin = self._residual_cos_sin(
             hidden_states, position_ids
         )
-        query_residual, key_residual = apply_rotary_pos_emb(
+        query_rotated, key_rotated = apply_rotary_pos_emb(
             query_residual,
             key_residual,
             residual_cos,
@@ -326,12 +454,34 @@ class FarOnlyEVQAttention(nn.Module):
             device=query_residual.device,
             dtype=query_residual.dtype,
         )
-        query_residual = query_residual * query_gate * gain_root
-        key_residual = key_residual * gain_root
+        query_unrotated = query_residual * query_gate * gain_root
+        query_rotated = -query_rotated * query_gate * gain_root
+        key_unrotated = key_residual * gain_root
+        key_rotated = key_rotated * gain_root
 
-        query_states = torch.cat((query_native, query_residual), dim=-1)
-        key_states = torch.cat((key_native, key_residual), dim=-1)
-        value_states = F.pad(value_native, (0, residual_dim))
+        # The two added dot products equal
+        #   u_q^T v_t - (R(p_q)u_q)^T(R(p_t)v_t)
+        # = u_q^T[I-R(omega*(p_t-p_q))]v_t.
+        query_states = torch.cat(
+            (query_native, query_unrotated, query_rotated), dim=-1
+        )
+        key_states = torch.cat(
+            (key_native, key_unrotated, key_rotated), dim=-1
+        )
+        content_dim = int(self.method_config.content_value_dim)
+        if content_dim:
+            if self.residual_v is None:
+                raise RuntimeError("content value projection is missing")
+            content_shape = (*input_shape, -1, content_dim)
+            value_residual = self.residual_v(hidden_states).view(
+                content_shape
+            ).transpose(1, 2)
+            value_states = torch.cat(
+                (value_native, value_residual.to(value_native.dtype)),
+                dim=-1,
+            )
+        else:
+            value_states = F.pad(value_native, (0, 2 * residual_dim))
 
         if past_key_values is not None:
             cache_kwargs = {
@@ -362,14 +512,30 @@ class FarOnlyEVQAttention(nn.Module):
             scaling=self.scaling,
             **kwargs,
         )
-        if int(attention_output.shape[-1]) != self.head_dim + residual_dim:
+        if int(attention_output.shape[-1]) != expected_cache_width:
             raise RuntimeError("augmented attention output width drift")
-        attention_output = attention_output[..., : self.head_dim]
-        attention_output = attention_output.reshape(
+        native_output = attention_output[..., : self.head_dim]
+        native_output = native_output.reshape(
             *input_shape, -1
         ).contiguous()
-        attention_output = self.native_attention.o_proj(attention_output)
-        return attention_output, attention_weights
+        native_output = self.native_attention.o_proj(native_output)
+        if content_dim:
+            if self.residual_o is None:
+                raise RuntimeError("content output projection is missing")
+            residual_output = attention_output[..., self.head_dim :]
+            residual_output = residual_output.reshape(
+                *input_shape, -1
+            ).contiguous()
+            residual_output = self.residual_o(residual_output)
+            output_gate = query_gate.squeeze(1)
+            content_gain = self.content_gain.to(
+                device=residual_output.device,
+                dtype=residual_output.dtype,
+            )
+            native_output = native_output + (
+                residual_output * output_gate * content_gain
+            )
+        return native_output, attention_weights
 
     def forward(
         self,
@@ -387,7 +553,7 @@ class FarOnlyEVQAttention(nn.Module):
             )
             if cached_width is not None and cached_width != self.head_dim:
                 raise RuntimeError(
-                    "cannot disable EVQ residual on an augmented cache"
+                    "cannot disable chord residual on an augmented cache"
                 )
             return self.native_attention(
                 hidden_states=hidden_states,
@@ -398,7 +564,7 @@ class FarOnlyEVQAttention(nn.Module):
                 **kwargs,
             )
         if position_ids is None:
-            raise RuntimeError("active EVQ residual requires position_ids")
+            raise RuntimeError("active chord residual requires position_ids")
         return self._active_forward(
             hidden_states=hidden_states,
             position_embeddings=position_embeddings,
@@ -417,9 +583,9 @@ def _target_layers(model: nn.Module) -> list[tuple[int, nn.Module]]:
     return [(index, layer) for index, layer in enumerate(layers)]
 
 
-def install_far_only_evq_residual(
+def install_far_pass_chord_residual(
     model: nn.Module,
-    method_config: FarOnlyEVQConfig,
+    method_config: FarPassChordConfig,
     *,
     strict_model_contract: bool = True,
 ) -> dict[str, Any]:
@@ -439,7 +605,7 @@ def install_far_only_evq_residual(
                     // int(model.config.num_attention_heads),
                 )
             ),
-            "rope_theta": float(model.config.rope_theta),
+            "rope_theta": _rope_theta(model.config),
         }
         expected = {
             name: MODEL_CONTRACT[name]
@@ -457,11 +623,11 @@ def install_far_only_evq_residual(
     with torch.random.fork_rng(devices=[]):
         torch.manual_seed(int(method_config.initialization_seed))
         for index, layer in _target_layers(model):
-            if isinstance(layer.self_attn, FarOnlyEVQAttention):
-                raise RuntimeError("far-only EVQ residual is already installed")
+            if isinstance(layer.self_attn, FarPassChordAttention):
+                raise RuntimeError("far-pass chord residual is already installed")
             if int(layer.self_attn.layer_idx) != index:
                 raise RuntimeError("OLMo-2 attention layer index drift")
-            layer.self_attn = FarOnlyEVQAttention(
+            layer.self_attn = FarPassChordAttention(
                 layer.self_attn,
                 method_config=method_config,
             )
@@ -486,6 +652,11 @@ def far_only_trainable_named_parameters(
         ".residual_k.a",
         ".residual_k.b",
         ".raw_logit_gain",
+        ".residual_v.a",
+        ".residual_v.b",
+        ".residual_o.a",
+        ".residual_o.b",
+        ".raw_content_gain",
     )
     values = [
         (name, parameter)
@@ -496,7 +667,7 @@ def far_only_trainable_named_parameters(
         not name.endswith(allowed_suffixes)
         for name, _ in values
     ):
-        raise RuntimeError("trainable scope escaped far-only EVQ residual")
+        raise RuntimeError("trainable scope escaped far-pass chord residual")
     return values
 
 
@@ -508,72 +679,85 @@ def validate_far_only_installation(
     wrappers = [
         module
         for module in model.modules()
-        if isinstance(module, FarOnlyEVQAttention)
+        if isinstance(module, FarPassChordAttention)
     ]
     expected_layers = int(model.config.num_hidden_layers)
     if len(wrappers) != expected_layers:
         raise RuntimeError(
-            f"expected {expected_layers} EVQ residual layers, got "
+            f"expected {expected_layers} chord residual layers, got "
             f"{len(wrappers)}"
         )
     configs = {wrapper.method_config for wrapper in wrappers}
     if len(configs) != 1:
-        raise RuntimeError("far-only EVQ configuration differs across layers")
+        raise RuntimeError("far-pass chord configuration differs across layers")
     method_config = configs.pop()
-    expected_evq = endpoint_evq_inv_freq(
-        head_dim=int(method_config.residual_head_dim),
-        base=float(method_config.rope_theta),
-        tau=float(method_config.evq_tau),
+    expected_chord = far_pass_inv_freq(
+        pairs=int(method_config.residual_pairs),
+        wavelength_min=float(method_config.wavelength_min),
+        wavelength_max=float(method_config.wavelength_max),
         dtype=torch.float32,
     )
     for wrapper in wrappers:
-        observed = wrapper.evq_inv_freq.detach().cpu().float()
-        if not torch.equal(observed, expected_evq):
+        observed = wrapper.chord_inv_freq.detach().cpu().float()
+        if not torch.equal(observed, expected_chord):
             raise RuntimeError(
-                f"EVQ residual frequency drift at layer {wrapper.layer_idx}"
+                f"chord residual frequency drift at layer {wrapper.layer_idx}"
             )
     named = far_only_trainable_named_parameters(model)
-    expected_tensors = 5 * expected_layers
+    content_enabled = int(method_config.content_value_dim) > 0
+    expected_tensors = (10 if content_enabled else 5) * expected_layers
     if len(named) != expected_tensors:
         raise RuntimeError(
             f"expected {expected_tensors} residual tensors, got {len(named)}"
         )
     global_native_hash = None
+    trainable_parameters = int(
+        sum(parameter.numel() for _, parameter in named)
+    )
     if strict_model_contract:
         native = model.model.rotary_emb.inv_freq.detach().cpu().float()
         expected_native = endpoint_geo_inv_freq()
         if not torch.equal(native, expected_native):
             raise RuntimeError("global Native RoPE buffer was modified")
         global_native_hash = tensor_sha256(native)
-        frequency_contract = assert_frequency_contract()
-        if (
-            tensor_sha256(expected_evq)
-            != frequency_contract["evq_sha256_float32"]
-        ):
-            raise RuntimeError("residual EVQ tensor is not the registered table")
+        registered = far_pass_frequency_receipt()
+        if tensor_sha256(expected_chord) != registered[
+            "inv_freq_sha256_float32"
+        ]:
+            raise RuntimeError("residual chord tensor is not registered")
+        expected_parameters = 9_961_504 if content_enabled else 4_718_608
+        if trainable_parameters != expected_parameters:
+            raise RuntimeError(
+                "registered far-pass trainable-parameter count drift: "
+                f"{trainable_parameters}"
+            )
     return {
         "trainable_parameter_tensors": len(named),
-        "trainable_parameters": int(
-            sum(parameter.numel() for _, parameter in named)
-        ),
+        "trainable_parameters": trainable_parameters,
         "parameter_names": [name for name, _ in named],
         "global_rope": "native_untouched",
         "global_native_inv_freq_sha256_float32": global_native_hash,
-        "residual_rope": "endpoint_evq_cosh",
-        "residual_inv_freq_sha256_float32": tensor_sha256(expected_evq),
+        "residual_operator": "far_pass_I_minus_R_phase_chord",
+        "content_transport": (
+            "learned_augmented_value_and_long_query_output"
+            if content_enabled
+            else "zero_padded_values"
+        ),
+        "residual_frequency_receipt": far_pass_frequency_receipt(),
+        "residual_inv_freq_sha256_float32": tensor_sha256(expected_chord),
     }
 
 
-def set_far_only_evq_route(model: nn.Module, enabled: bool) -> None:
+def set_far_pass_chord_route(model: nn.Module, enabled: bool) -> None:
     wrappers = [
         module
         for module in model.modules()
-        if isinstance(module, FarOnlyEVQAttention)
+        if isinstance(module, FarPassChordAttention)
     ]
     expected = int(model.config.num_hidden_layers)
     if len(wrappers) != expected:
         raise RuntimeError(
-            f"expected {expected} EVQ residual layers, got {len(wrappers)}"
+            f"expected {expected} chord residual layers, got {len(wrappers)}"
         )
     for wrapper in wrappers:
         wrapper.set_route(bool(enabled))
@@ -583,10 +767,10 @@ def route_for_budget(model: nn.Module, total_budget: int) -> bool:
     wrappers = [
         module
         for module in model.modules()
-        if isinstance(module, FarOnlyEVQAttention)
+        if isinstance(module, FarPassChordAttention)
     ]
     if not wrappers:
-        raise RuntimeError("far-only EVQ residual is not installed")
+        raise RuntimeError("far-pass chord residual is not installed")
     thresholds = {
         int(wrapper.method_config.threshold_position)
         for wrapper in wrappers
@@ -594,7 +778,7 @@ def route_for_budget(model: nn.Module, total_budget: int) -> bool:
     if len(thresholds) != 1:
         raise RuntimeError("residual threshold differs across layers")
     enabled = int(total_budget) > thresholds.pop()
-    set_far_only_evq_route(model, enabled)
+    set_far_pass_chord_route(model, enabled)
     return enabled
 
 
@@ -618,6 +802,41 @@ def _tensor_bundle_sha256(
             value.reshape(-1).view(torch.uint8).numpy().tobytes()
         )
     return digest.hexdigest()
+
+
+def load_frozen_parent_adapter(
+    path: Path,
+    model: nn.Module,
+) -> dict[str, Any]:
+    """Load a standard repository LoRA before installing the residual."""
+
+    from rebuttal.rebuttal_0723.experiments.olmo2_lora_conversion import (
+        trainable_named_parameters,
+    )
+
+    payload = torch.load(path, map_location="cpu", weights_only=True)
+    state = payload.get("state")
+    if not isinstance(state, dict):
+        raise RuntimeError("parent adapter has no tensor state")
+    expected = dict(trainable_named_parameters(model, None))
+    if set(state) != set(expected):
+        raise RuntimeError(
+            "parent adapter parameter mismatch: "
+            f"missing={sorted(set(expected)-set(state))}, "
+            f"extra={sorted(set(state)-set(expected))}"
+        )
+    with torch.no_grad():
+        for name, parameter in expected.items():
+            source = state[name]
+            if tuple(source.shape) != tuple(parameter.shape):
+                raise RuntimeError(f"parent adapter shape drift for {name}")
+            parameter.copy_(
+                source.to(device=parameter.device, dtype=parameter.dtype)
+            )
+    metadata = payload.get("metadata", {})
+    if not isinstance(metadata, dict):
+        raise RuntimeError("parent adapter metadata is malformed")
+    return dict(metadata)
 
 
 def save_far_only_adapter(
@@ -644,16 +863,16 @@ def save_far_only_adapter(
     return _sha256_file(path)
 
 
-def peek_far_only_adapter(path: Path) -> tuple[FarOnlyEVQConfig, dict[str, Any]]:
+def peek_far_only_adapter(path: Path) -> tuple[FarPassChordConfig, dict[str, Any]]:
     payload = torch.load(path, map_location="cpu", weights_only=True)
     if (
         int(payload.get("format_version", -1)) != ADAPTER_FORMAT_VERSION
         or payload.get("method_id") != METHOD_ID
         or not isinstance(payload.get("metadata"), dict)
     ):
-        raise RuntimeError("far-only EVQ adapter identity drift")
+        raise RuntimeError("far-pass chord adapter identity drift")
     metadata = payload["metadata"]
-    config = FarOnlyEVQConfig(**metadata["method_config"])
+    config = FarPassChordConfig(**metadata["method_config"])
     config.validate()
     return config, metadata
 
@@ -669,7 +888,7 @@ def load_far_only_adapter(
     wrappers = [
         module
         for module in model.modules()
-        if isinstance(module, FarOnlyEVQAttention)
+        if isinstance(module, FarPassChordAttention)
     ]
     if len(wrappers) != int(model.config.num_hidden_layers):
         raise RuntimeError("install residual wrappers before loading adapter")
@@ -680,16 +899,16 @@ def load_far_only_adapter(
         and metadata.get("base_checkpoint_sha256")
         != expected_checkpoint_sha256
     ):
-        raise RuntimeError("far-only EVQ base checkpoint drift")
+        raise RuntimeError("far-pass chord base checkpoint drift")
     state = payload["state"]
     if payload.get("state_sha256") != _tensor_bundle_sha256(
         list(state.items())
     ):
-        raise RuntimeError("far-only EVQ adapter tensor digest drift")
+        raise RuntimeError("far-pass chord adapter tensor digest drift")
     expected = dict(far_only_trainable_named_parameters(model))
     if set(state) != set(expected):
         raise RuntimeError(
-            "far-only EVQ adapter parameter names do not match installation"
+            "far-pass chord adapter parameter names do not match installation"
         )
     with torch.no_grad():
         for name, parameter in expected.items():

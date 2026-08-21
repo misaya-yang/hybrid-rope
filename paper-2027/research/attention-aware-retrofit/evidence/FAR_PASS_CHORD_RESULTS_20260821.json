@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "status": "COMPLETE_INTERNAL_NEGATIVE",
+  "paper_claim": false,
+  "decision": "STOP_CURRENT_CE_ONLY_RETROFIT_ROUTE",
+  "checkpoint": {
+    "name": "OLMo-2-0425-1B-Instruct",
+    "parameters": 1485000000,
+    "composite_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f"
+  },
+  "method": {
+    "method_id": "native_preserving_far_pass_chord_residual_v1",
+    "short_route": "requests_with_total_budget_at_most_4096_delegate_to_untouched_Native_attention",
+    "long_route": "single_augmented_qkv_single_softmax",
+    "native_head_dimension": 128,
+    "augmented_head_dimension": 160,
+    "residual_pairs": 8,
+    "residual_inv_freq_sha256_float32": "b824981602b75f5c7007e34d6a88f581996da7a7833f458ffd8b3aabcb5b5533",
+    "wavelength_support_tokens": [32768, 163840],
+    "maximum_phase_at_16k": 3.1415927410125732,
+    "short_native_smoke_bitwise_exact": true
+  },
+  "data": {
+    "source_tensor_sha256": "5981658487ff344095ae740b1245c2d4488c034bfa79a8605a680b5796b7af05",
+    "phase_gap_4k_manifest_sha256": "6293d0dbb15235a9ba2faf22be8f07176cab377b1490ef01c04c2163c0fb2852",
+    "continuous_8k_manifest_sha256": "3f5527ce7b9fdc2029948f140904735c50202bc16f62549df9f486de40ee030a",
+    "training_family": "FineWeb-Edu natural-document unique-anchor copy",
+    "ruler_or_niah_training_rows": 0,
+    "answer_contract": "eight source tokens plus immediate EOS"
+  },
+  "runs": {
+    "qk_gap": {
+      "trainable_parameters": 4718608,
+      "steps": 300,
+      "processed_input_tokens": 9828000,
+      "adapter_sha256": "8d68e097d7a8f05d850922e27a9f955fc0c4cd74b5c0892d3e0440a4a3d7bbc7",
+      "results_sha256": "44720f8de78879fcb35e82a67923c804ad0534b553cb525907f2eff376c8175c",
+      "teacher_forced_nll": {
+        "8k_before": 8.37648743391037,
+        "8k_after": 7.532834470272064,
+        "16k_before": 8.484993040561676,
+        "16k_after": 7.142381370067596
+      },
+      "teacher_forced_full_exact": {"8k": 0.0, "16k": 0.0},
+      "fresh_core4_ruler_macro": {"8k": 0.0, "16k": 0.0},
+      "fresh_core4_ruler_results_sha256": "db734c3f54624c6166e5e2600a9038a49b01870bdfda2fa67775833e87b4c408"
+    },
+    "native_core4_control": {
+      "fresh_core4_ruler_macro": {"8k": 0.0, "16k": 0.0},
+      "fresh_core4_ruler_results_sha256": "c7579818ebe533ca7bd542d3e53e11d8c20ab14f50bbce6e4e4cf701e17907fd"
+    },
+    "qkvo_gap": {
+      "trainable_parameters": 9961504,
+      "steps": 300,
+      "processed_input_tokens": 9828000,
+      "adapter_sha256": "2607e257c0e6ea6e4d9d2992c324da46c66f9c3232a2c00b7766910ac9474fd9",
+      "results_sha256": "d08c93401cab98637c79351c84017e514ca7d137b93f099a43243d6625b34149",
+      "teacher_forced_nll": {
+        "8k_before": 8.370446145534515,
+        "8k_after": 4.956095993518829,
+        "16k_before": 8.48065060377121,
+        "16k_after": 5.826957732439041
+      },
+      "teacher_forced_first_token_top1_64": {"8k": 0.0, "16k": 0.0},
+      "teacher_forced_full_exact_64": {"8k": 0.0, "16k": 0.0},
+      "fresh_core4_ruler_macro": {"8k": 0.0, "16k": 0.0},
+      "diagnostic_sha256": "6428159806caf932d5db73d2436644142626aa5cd113840d20af80e41b916624",
+      "fresh_core4_ruler_results_sha256": "784020f0e556daf04b29b15e6b368bae03f9f5bcc3f6686e03ecbc7058d2bf12"
+    },
+    "qkvo_gap_first_token_weighted": {
+      "trainable_parameters": 9961504,
+      "first_answer_token_loss_weight": 0.5,
+      "steps": 300,
+      "processed_input_tokens": 9828000,
+      "adapter_sha256": "4c00e3583366b554f8e193eefcb61bdf763a9a3db1ddf2451e98205f87aedcd0",
+      "results_sha256": "8a9c0278e49b3542d0a24e54573790a36f37e5c22267d5f791da5c640aea55c6",
+      "teacher_forced_nll": {
+        "8k_before": 8.370446145534515,
+        "8k_after": 5.358662724494934,
+        "16k_before": 8.48065060377121,
+        "16k_after": 6.13708359003067
+      },
+      "teacher_forced_first_token_top1_count_64": {"8k": 1, "16k": 1},
+      "teacher_forced_median_first_token_rank_64": {"8k": 288.5, "16k": 309.5},
+      "teacher_forced_full_exact_64": {"8k": 0.0, "16k": 0.0},
+      "diagnostic_sha256": "3302b8477ab49ce97d8f2696ad8bd1e22b7bdb04c733f0fbcacf28573ff113cf"
+    },
+    "qkvo_continuous_8k_first_token_weighted": {
+      "trainable_parameters": 9961504,
+      "first_answer_token_loss_weight": 0.5,
+      "steps": 300,
+      "processed_input_tokens": 19658400,
+      "elapsed_seconds": 769.2585817538202,
+      "tokens_per_second": 25554.99602640913,
+      "peak_memory_allocated_bytes": 25428228096,
+      "adapter_sha256": "99abb3c91b09bad1d9d5dc083cb0a2aa9ba098a30c63e2600c4d78a0aad73f72",
+      "results_sha256": "ee2e0107d1e13862d521d0c2bdd6d3a82ae4f3e63ebc7341565f53d0cfef0354",
+      "teacher_forced_nll": {
+        "8k_before": 7.995691806077957,
+        "8k_after": 5.864767760038376
+      },
+      "teacher_forced_full_exact_16": 0.0,
+      "autoregressive_first_token_top1_count_64": 1,
+      "autoregressive_median_first_token_rank_64": 63.0,
+      "autoregressive_full_answer_plus_eos_exact_count_64": 0,
+      "generation_diagnostic_sha256": "7e1d39b14f1dd5c7241883a2adf9c837c840f2cfc9477e46e087ba32dce91537"
+    }
+  },
+  "interpretation": {
+    "supported": [
+      "The exact short Native dispatch and Flash-compatible long route are implemented and GPU-ready.",
+      "QK score residuals, learned V/O transport, first-token reweighting, and physical continuous-8K exposure all improve some teacher-forced probability or rank endpoints.",
+      "None of the four trained variants establishes strict autoregressive natural-span retrieval capability."
+    ],
+    "not_supported": [
+      "The far-pass chord residual solves mature-model long-context adaptation.",
+      "Teacher-forced NLL improvement implies autoregressive capability.",
+      "Any advantage is attributable specifically to the non-geometric chord table."
+    ],
+    "next_gate": "Directly supervise source-position retrieval before any further frequency, gain, rank, learning-rate, or seed sweep."
+  }
+}

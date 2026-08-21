@@ -13,3 +13,9 @@ Seed-42 FMRoPE/anchored-EVQ-Cosh controls remain owned by
 paper-facing three-seed control remains
 `../../EXACT_RANGE_151M_3SEED_RESULT_20260820.json`. These files do not supersede
 either canonical owner.
+
+`FAR_PASS_CHORD_RESULTS_20260821.json` is the machine-path-free receipt for
+the completed mature-checkpoint retrofit ablation chain. It records the
+QK-only, QKVO, first-token-weighted, and physical continuous-8K arms together
+with strict generation gates and raw-artifact hashes. The chain is an internal
+negative and does not supersede any paper-facing mature-model owner.

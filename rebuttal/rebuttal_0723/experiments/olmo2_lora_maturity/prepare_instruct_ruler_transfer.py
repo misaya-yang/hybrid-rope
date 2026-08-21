@@ -169,6 +169,15 @@ TASK_CONFIGS: dict[str, dict[str, Any]] = {
 DEFAULT_TASKS = tuple(TASK_CONFIGS)
 
 
+def chat_input_ids(value: Any) -> Any:
+    """Normalize Transformers 4.x tensors/lists and 5.x BatchEncoding."""
+
+    if isinstance(value, dict):
+        return value["input_ids"]
+    input_ids = getattr(value, "input_ids", None)
+    return value if input_ids is None else input_ids
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ruler-root", type=Path, required=True)
@@ -307,10 +316,10 @@ def main() -> None:
         tokenizer("", add_special_tokens=False).input_ids
     )
     empty_chat = len(
-        tokenizer.apply_chat_template(
+        chat_input_ids(tokenizer.apply_chat_template(
             [{"role": "user", "content": ""}],
             add_generation_prompt=True,
-        )
+        ))
     )
     chat_overhead = empty_chat - empty_raw
     if not 8 <= chat_overhead <= 16:
@@ -364,10 +373,10 @@ def main() -> None:
                 )
             prompt_lengths: list[int] = []
             for row in rows:
-                chat_ids = tokenizer.apply_chat_template(
+                chat_ids = chat_input_ids(tokenizer.apply_chat_template(
                     [{"role": "user", "content": row["input"]}],
                     add_generation_prompt=True,
-                )
+                ))
                 prefix_ids = tokenizer(
                     row.get("answer_prefix", ""),
                     add_special_tokens=False,

@@ -1,6 +1,13 @@
 # OLMo-2 1.485B Native-preserving far-query EVQ residual
 
-Status: `DESIGN_ONLY_RUNTIME_UNVERIFIED`
+Status: `SUPERSEDED_DESIGN_ONLY_DO_NOT_RUN`
+
+This full-spectrum EVQ-dot residual was superseded on 2026-08-21 by the
+far-pass phase-chord residual owned at
+`paper-2027/research/attention-aware-retrofit/FAR_PASS_CHORD_RESIDUAL_PREFLIGHT_20260821.md`.
+The implementation path is retained for repository compatibility but now
+implements the superseding registered operator. Do not use the historical
+protocol or commands below.
 
 This is an EVQ-Cosh method: the added residual Q/K coordinates use the exact
 fixed endpoint EVQ-Cosh non-geometric frequency tensor (`base=500000`,

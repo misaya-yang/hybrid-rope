@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare a 4K natural-span retrieval curriculum independent of RULER."""
+"""Prepare physical continuous-8K natural-span retrieval rows."""
 
 from __future__ import annotations
 
@@ -10,15 +10,15 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+import torch
 
 from rebuttal.rebuttal_0723.experiments.small_model_lora_conversion import (
     atomic_json,
     sha256_file,
 )
 
-
-LENGTH = 4_096
-STATUS = "OLMO2_4K_NATURAL_SPAN_PHASE_DATA_PREPARED_V1"
+from .continuous_8k_adaptation import DATA_STATUS, LENGTH
+from .prepare_4k_natural_span_retrieval import occurrences, tokenizer_digest
 
 
 def parse_args() -> argparse.Namespace:
@@ -26,44 +26,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--source-view", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--rows", type=int, default=1_920)
-    parser.add_argument("--validation-rows", type=int, default=128)
+    parser.add_argument("--rows", type=int, default=512)
+    parser.add_argument("--validation-rows", type=int, default=64)
     parser.add_argument("--anchor-tokens", type=int, default=8)
     parser.add_argument("--answer-tokens", type=int, default=8)
     parser.add_argument("--position-bins", type=int, default=16)
-    parser.add_argument("--seed", type=int, default=20_260_730)
+    parser.add_argument("--seed", type=int, default=20_260_821)
     return parser.parse_args()
-
-
-def tokenizer_digest(checkpoint: Path) -> dict[str, Any]:
-    files = {}
-    for name in (
-        "tokenizer.json",
-        "tokenizer_config.json",
-        "special_tokens_map.json",
-    ):
-        path = checkpoint / name
-        if not path.is_file():
-            raise FileNotFoundError(path)
-        files[name] = {
-            "bytes": int(path.stat().st_size),
-            "sha256": sha256_file(path),
-        }
-    digest = hashlib.sha256()
-    for name in sorted(files):
-        digest.update(name.encode("utf-8"))
-        digest.update(bytes.fromhex(files[name]["sha256"]))
-    return {"files": files, "composite_sha256": digest.hexdigest()}
-
-
-def occurrences(sequence: np.ndarray, needle: np.ndarray) -> int:
-    if len(needle) == 0 or len(needle) > len(sequence):
-        return 0
-    first = np.flatnonzero(sequence[: len(sequence) - len(needle) + 1] == needle[0])
-    return sum(
-        bool(np.array_equal(sequence[index : index + len(needle)], needle))
-        for index in first
-    )
 
 
 def main() -> None:
@@ -75,10 +44,6 @@ def main() -> None:
         raise FileExistsError(output)
     if int(args.rows) <= int(args.validation_rows):
         raise ValueError("rows must exceed validation rows")
-    if int(args.anchor_tokens) < 4 or int(args.answer_tokens) < 1:
-        raise ValueError("invalid anchor/answer width")
-    if int(args.position_bins) < 2:
-        raise ValueError("position bins must be at least two")
 
     from transformers import AutoTokenizer
 
@@ -91,53 +56,14 @@ def main() -> None:
         or int(tokenizer.pad_token_id) != 100_277
     ):
         raise RuntimeError("OLMo tokenizer special-token contract drift")
-
-    if source.is_file():
-        import torch
-
-        loaded = torch.load(source, map_location="cpu", weights_only=True)
-        if not isinstance(loaded, torch.Tensor):
-            raise RuntimeError("token source must contain one tensor")
-        source_ids = loaded.detach().cpu().numpy()
-        source_lengths = np.full(
-            source_ids.shape[0], source_ids.shape[1], dtype=np.int32
-        )
-        candidates = np.arange(source_ids.shape[0], dtype=np.int64)
-        source_manifest = {
-            "source": "pretokenized_fineweb_edu_tensor",
-            "sha256": sha256_file(source),
-        }
-        source_receipt = {
-            "kind": "pretokenized_fineweb_edu_tensor",
-            "path": str(source),
-            "sha256": sha256_file(source),
-        }
-    else:
-        source_ids = np.load(
-            source / "input_ids.npy", mmap_mode="r", allow_pickle=False
-        )
-        source_lengths = np.load(
-            source / "lengths.npy", mmap_mode="r", allow_pickle=False
-        )
-        source_split = np.load(
-            source / "split.npy", mmap_mode="r", allow_pickle=False
-        )
-        source_manifest = json.loads(
-            (source / "manifest.json").read_text(encoding="utf-8")
-        )
-        candidates = np.flatnonzero(source_split == 0)
-        source_receipt = {
-            "kind": "frozen_token_view",
-            "path": str(source),
-            "manifest_sha256": sha256_file(source / "manifest.json"),
-            "input_ids_sha256": sha256_file(source / "input_ids.npy"),
-        }
-    if source_ids.ndim != 2 or source_ids.shape[1] < LENGTH:
-        raise RuntimeError("source view is shorter than 4K")
-    if len(candidates) < int(args.rows):
-        raise RuntimeError(
-            f"requested {args.rows} rows from {len(candidates)} source rows"
-        )
+    loaded = torch.load(source, map_location="cpu", weights_only=True)
+    if not isinstance(loaded, torch.Tensor) or loaded.ndim != 2:
+        raise RuntimeError("source view must contain one rank-two tensor")
+    source_ids = loaded.detach().cpu().numpy()
+    if source_ids.shape[1] != 4_096:
+        raise RuntimeError("continuous-8K source requires packed 4K rows")
+    if source_ids.shape[0] < 2 * int(args.rows):
+        raise RuntimeError("continuous-8K source has too few rows")
 
     prefix = tokenizer.encode(
         (
@@ -147,9 +73,7 @@ def main() -> None:
         ),
         add_special_tokens=False,
     )
-    query_prefix = tokenizer.encode(
-        "\n\nAnchor:\n", add_special_tokens=False
-    )
+    query_prefix = tokenizer.encode("\n\nAnchor:\n", add_special_tokens=False)
     query_suffix = tokenizer.encode(
         (
             "\n\nReturn only the text immediately following that anchor."
@@ -166,11 +90,11 @@ def main() -> None:
         + 1
     )
     passage_tokens = LENGTH - overhead
-    if passage_tokens < 3_000:
-        raise RuntimeError("retrieval prompt leaves too little passage")
+    if passage_tokens < 8_000:
+        raise RuntimeError("continuous-8K prompt leaves too little passage")
 
     rng = np.random.default_rng(int(args.seed))
-    chosen = rng.permutation(candidates)[: int(args.rows)]
+    chosen = rng.permutation(source_ids.shape[0])[: 2 * int(args.rows)]
     inputs = np.full(
         (int(args.rows), LENGTH),
         int(tokenizer.pad_token_id),
@@ -181,47 +105,42 @@ def main() -> None:
     query_starts = np.zeros(int(args.rows), dtype=np.int32)
     active_lengths = np.full(int(args.rows), LENGTH, dtype=np.int32)
     lengths = np.full(int(args.rows), LENGTH, dtype=np.int32)
-    metadata = []
+    metadata: list[dict[str, Any]] = []
     forbidden = {
         int(tokenizer.bos_token_id),
         int(tokenizer.eos_token_id),
         int(tokenizer.pad_token_id),
     }
+    usable_end = min(
+        3_900,
+        passage_tokens
+        - int(args.anchor_tokens)
+        - int(args.answer_tokens)
+        - 8,
+    )
 
-    for row_index, source_row in enumerate(chosen):
-        available = int(source_lengths[int(source_row)])
-        if available < passage_tokens:
-            raise RuntimeError(f"source row too short: {source_row}")
+    for row_index in range(int(args.rows)):
+        source_rows = chosen[2 * row_index : 2 * row_index + 2]
+        joined = np.concatenate(
+            [source_ids[int(value)] for value in source_rows]
+        ).astype(np.int64, copy=False)
         built = None
         target_bin = row_index % int(args.position_bins)
-        for attempt in range(128):
-            start = int(
-                rng.integers(0, available - passage_tokens + 1)
-            )
+        for _ in range(128):
+            start = int(rng.integers(0, len(joined) - passage_tokens + 1))
             passage = np.asarray(
-                source_ids[
-                    int(source_row), start : start + passage_tokens
-                ],
-                dtype=np.int64,
-            )
-            usable = (
-                passage_tokens
-                - int(args.anchor_tokens)
-                - int(args.answer_tokens)
-                - 32
+                joined[start : start + passage_tokens], dtype=np.int64
             )
             local = 16 + int(
                 round(
-                    usable
+                    (usable_end - 16)
                     * target_bin
                     / max(int(args.position_bins) - 1, 1)
                 )
             )
             local += int(rng.integers(-8, 9))
-            local = max(8, min(local, usable + 16))
-            anchor = passage[
-                local : local + int(args.anchor_tokens)
-            ]
+            local = max(8, min(local, usable_end))
+            anchor = passage[local : local + int(args.anchor_tokens)]
             answer = passage[
                 local
                 + int(args.anchor_tokens) : local
@@ -233,9 +152,7 @@ def main() -> None:
                 or any(int(token) in forbidden for token in answer)
                 or occurrences(passage, anchor) != 1
             ):
-                target_bin = int(
-                    rng.integers(0, int(args.position_bins))
-                )
+                target_bin = int(rng.integers(0, int(args.position_bins)))
                 continue
             sequence = np.asarray(
                 [
@@ -250,20 +167,17 @@ def main() -> None:
                 dtype=np.int64,
             )
             if len(sequence) != LENGTH:
-                raise RuntimeError("retrieval sequence length drift")
+                raise RuntimeError("continuous-8K sequence length drift")
             built = (sequence, start, local, anchor, answer)
             break
         if built is None:
-            raise RuntimeError(
-                f"failed to construct unique natural anchor: {source_row}"
-            )
+            raise RuntimeError(f"failed to build row {row_index}")
         sequence, start, local, anchor, answer = built
         inputs[row_index] = sequence.astype(np.uint32)
         query_start = len(prefix) + passage_tokens
         query_starts[row_index] = query_start
         masks[
-            row_index,
-            LENGTH - int(args.answer_tokens) - 1 :,
+            row_index, LENGTH - int(args.answer_tokens) - 1 :
         ] = 1
         labels[row_index, masks[row_index] == 1] = inputs[
             row_index, masks[row_index] == 1
@@ -271,7 +185,7 @@ def main() -> None:
         metadata.append(
             {
                 "row": row_index,
-                "source_row": int(source_row),
+                "source_rows": [int(value) for value in source_rows],
                 "source_window_start": int(start),
                 "anchor_position_in_passage": int(local),
                 "position_bin": int(target_bin),
@@ -286,18 +200,14 @@ def main() -> None:
         )
 
     split = np.zeros(int(args.rows), dtype=np.uint8)
-    validation = rng.permutation(int(args.rows))[
-        : int(args.validation_rows)
-    ]
+    validation = rng.permutation(int(args.rows))[: int(args.validation_rows)]
     split[validation] = 1
     output.mkdir(parents=True)
     np.save(output / "input_ids.npy", inputs, allow_pickle=False)
     np.save(output / "assistant_mask.npy", masks, allow_pickle=False)
     np.save(output / "labels.npy", labels, allow_pickle=False)
     np.save(output / "query_starts.npy", query_starts, allow_pickle=False)
-    np.save(
-        output / "active_lengths.npy", active_lengths, allow_pickle=False
-    )
+    np.save(output / "active_lengths.npy", active_lengths, allow_pickle=False)
     np.save(output / "lengths.npy", lengths, allow_pickle=False)
     np.save(output / "split.npy", split, allow_pickle=False)
     with (output / "rows.jsonl").open("w", encoding="utf-8") as handle:
@@ -321,32 +231,30 @@ def main() -> None:
             "sha256": sha256_file(path),
         }
     manifest = {
-        "status": STATUS,
+        "status": DATA_STATUS,
         "format_version": 1,
-        "view": "natural_span_retrieval_L4096",
+        "view": "continuous_natural_span_retrieval_L8192",
         "shape": [int(args.rows), LENGTH],
         "physical_storage_length": LENGTH,
         "hard_maximum_training_length": LENGTH,
         "hard_maximum_training_position_id": LENGTH - 1,
+        "position_ids": "contiguous_zero_based",
         "labels_only_cover_answer_and_final_eos": True,
         "pad_token_id": int(tokenizer.pad_token_id),
         "training_rows": int(args.rows) - int(args.validation_rows),
         "validation_rows": int(args.validation_rows),
-        "length_statistics": {
-            "minimum": LENGTH,
-            "median": float(LENGTH),
-            "maximum": LENGTH,
-        },
         "supervision": {
             "objective": "copy_natural_span_after_unique_anchor",
             "assistant_tokens_per_row": int(args.answer_tokens) + 1,
             "anchor_tokens": int(args.anchor_tokens),
             "answer_tokens": int(args.answer_tokens),
+            "anchor_support": "first_physical_4k",
             "position_bins": int(args.position_bins),
         },
         "source": {
-            **source_receipt,
-            "source_manifest": source_manifest.get("source"),
+            "kind": "paired_pretokenized_fineweb_edu_4k_tensor",
+            "path": str(source),
+            "sha256": sha256_file(source),
         },
         "tokenizer": tokenizer_digest(checkpoint),
         "ruler_or_niah_rows": 0,

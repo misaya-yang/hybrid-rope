@@ -206,10 +206,30 @@ This work is internal and does not change the current manuscript.
   `research/attention-aware-retrofit/EXPERIMENT_REPORT_20260821.md`; compact
   machine-path-free result receipt: `research/attention-aware-retrofit/evidence/RESULTS_20260821.json`.
 - Seed 42 completed 7,629 steps and 499,974,144 tokens; its four-length
-  evaluation completed. No seed 256, R1, R3, or mature-model adaptation was
-  launched. The authorised GPU instance was shut down after artifacts were
-  receipted locally; raw machine outputs remain on its stopped data volume and
-  no remote run remains active.
+  evaluation completed. No seed 256, R1, or R3 was launched. The subsequent
+  mature-model far-pass chord adaptation is a separate completed internal
+  negative described below; it does not change the phase-chord table's
+  training-time evidence.
+- A candidate-specific mature-model finite function-morph audit is now
+  prepared on a separate no-GPU host. It freezes phase-chord, an
+  endpoint/RMS-log-displacement-matched non-attention control, and anchored
+  EVQ-Cosh over six finite morph points at 4K/8K/16K. The no-GPU receipt passed,
+  but no checkpoint was loaded and no GPU evaluation or training ran. Owner:
+  `research/attention-aware-retrofit/FUNCTION_MORPH_PREFLIGHT_20260821.md`.
+  It is retained but deprioritized; do not spend GPU time on it before the
+  Native-preserving residual-LoRA gate.
+- The released-Native far-pass chord gate and three targeted repairs have now
+  completed. The chain tested QK-only, learned V/O content transport,
+  first-token-weighted CE, and physical continuous-8K exposure. The final arm
+  trained 9.96M parameters for 300 steps / 19.658M input tokens and reduced
+  held-out 8K teacher-forced NLL from `7.996` to `5.865`, but strict generation
+  was only `1/64` first-token top-1 and `0/64` answer-plus-EOS. The earlier
+  QK-only and QKVO gap arms scored `0.0` on the fresh official core-4 RULER
+  subset at 8K/16K; released Native was also floor-valued. Decision:
+  `STOP_CURRENT_CE_ONLY_RETROFIT_ROUTE`. Owner:
+  `research/attention-aware-retrofit/FAR_PASS_CHORD_EXPERIMENT_REPORT_20260821.md`;
+  compact receipt:
+  `research/attention-aware-retrofit/evidence/FAR_PASS_CHORD_RESULTS_20260821.json`.
 
 ## 7. Validation receipt
 
@@ -225,6 +245,9 @@ This work is internal and does not change the current manuscript.
 | Visual QA | all 9 body pages inspected; Figure 1 callout is legible, Figure 2 follows the Theory heading, and Figure 3 has no black heatmap field |
 | Immutable NeurIPS PDF | SHA-256 `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772` |
 | Attention-aware internal checks | 33 focused tests passed; phase-demand self-test and report-metric assertions passed |
+| Mature function-morph preflight | 4 contract tests passed under remote Python 3.12; all assets and 18 morph tables hash-bound; CUDA unavailable/uninitialised and model not loaded |
+| Far-pass chord implementation | 15 focused tests passed locally; server smoke verified short-route bitwise identity, Flash-only BF16 D160 attention, augmented KV-cache decode, and 160/160 nonzero-gradient tensors |
+| Far-pass chord experiment | Four 300-step arms completed; all losses/gradients finite; final strict continuous-8K gate `1/64` first token and `0/64` answer-plus-EOS; current route stopped |
 
 The final reviewer package is
 `rope-spectral-budget-iclr2027-supplement.zip` at the repository root.
@@ -241,12 +264,14 @@ Use Conda `aidemo` for PyTorch/pytest checks.
 - Do not start new training or GPU evaluation from this handoff.
 - Immediate submission work must first make the completed evidence as strong
   and readable as possible without unsupported SOTA language.
-- The next research question is mature-model preservation, not another blind
-  whole-table swap. Reuse the existing Stage-D leave-one-pair-out attention-KL
-  diagnostic to determine whether Native dependence is localised by pair,
-  head, or layer; do not assume a 50/50 `d_head` split. Compare the smallest
-  measured protected-complement design with a compact Native-plus-phase
-  residual before matched 1.485B LoRA.
+- The far-pass chord CE-only route is complete and stopped. Do not repeat it
+  with another seed or sweep frequencies, ranks, gains, learning rates, or
+  steps. Preserve its exact-Native length dispatch and single-softmax D160
+  implementation as infrastructure. If mature retrofit work resumes, the
+  smallest missing mechanism test is direct source-position alignment on the
+  same independent natural rows, followed by strict answer-plus-EOS. RULER,
+  2Wiki, matched content-only attribution, and replication become eligible
+  only after that internal capability gate is positive.
 - If phase-chord is to become a paper-facing training-time method, seed 256 is
   its smallest missing replication. Do not launch it or mature-model GPU work
   without a frozen protocol and explicit authorisation.
