@@ -250,9 +250,10 @@ It is not a new ICLR claim without a promoted owner.
 
 1. **Introduction:** finite table as a training-time spectral coordinate
    system; exact-range result; mature-scale headline.
-2. **Result-first overview:** three-seed fixed-support control, the `1.485B`
-   same-recipe PPL crossover, real-document QA, and a separately labelled `8B`
-   adaptation callout.
+2. **Result-first overview:** three-seed fixed-support control, the three-seed
+   `432M` scarce-channel flagship, `1.485B` real-document QA, and an `8B`
+   adaptation callout. The `1.485B` from-initialisation PPL comparison remains
+   visible as scale-trend evidence rather than the visual headline.
 3. **Related work:** range transport, scalar base, learned/searched tables,
    fixed analytic constructions; LeRoPE stated early and accurately.
 4. **Theory:** full-RoPE canonical collision, exact stable-rank identity,

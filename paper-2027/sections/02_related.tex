@@ -5,8 +5,8 @@ Write $x_k=-\log\omega_k=a+Rz_k$ as in
 Eq.~\eqref{eq:table-decomposition}. Prior work changes several, nonexclusive
 parts of this parameterisation: it transports realised phases, changes support
 $(a,R)$, or changes the normalised interior allocation $z$.
-This decomposition separates when a method acts from which spectral degrees of
-freedom it controls; the interventions are nonexclusive and composable.
+This view distinguishes the stage at which a method acts from the spectral
+degree it controls; the interventions are nonexclusive and composable.
 
 \paragraph{Context-range extension.}
 Relative position information can be injected additively, through learned or
@@ -18,10 +18,11 @@ training range \citep{chen2024position}. YaRN, SelfExtend, PoSE, and CLEX refine
 this extension through frequency-dependent scaling, remapped positions, or
 extension-time training \citep{peng2024yarn,jin2024selfextend,zhu2024pose,chen2024clex}.
 LongRoPE and LongRoPE2 search channel-wise rescaling factors for pretrained
-models \citep{ding2024longrope,shang2025longrope2}. These methods may combine
-several intervention levels; their common goal is to transport a learned model
-to a declared longer context. Bounds based on the RoPE base characterize limits
-of this regime \citep{xu2024base}.
+models \citep{ding2024longrope,shang2025longrope2}, while MrRoPE interprets
+channel-wise transformations as mixed-radix conversion and derives
+training-free extensions \citep{tian2026mrrope}. These methods transport a
+learned model to a declared longer context. Bounds based on the RoPE base
+characterize limits of this regime \citep{xu2024base}.
 
 \paragraph{Frequency use, scalar base, and operator geometry.}
 Trained RoPE exhibits frequency-localized query/key norms; partial RoPE removes
@@ -33,7 +34,10 @@ available frequencies to positional versus symbolic behaviour
 setting the scalar base from training or evaluation length while retaining a
 uniform exponent grid \citep{oka2026fmrope}. At a broader operator level, GRAPE
 recovers RoPE as canonical planar group actions and generalizes their generators
-and subspaces \citep{zhang2026grape}. Our identification keeps the rotary
+and subspaces \citep{zhang2026grape}; Selective RoPE instead learns
+input-dependent rotation angles \citep{movahedi2026selectiverope}. Analyses of
+attention logits further distinguish additive and multiplicative positional
+biases \citep{gu2026deconstructing}. Our identification keeps the rotary
 operator, sampled endpoints, and log-span fixed, moves only finite interior
 frequencies, and pairs trained comparisons with an exact frozen-transplant
 obstruction (\S\ref{sec:exp-identify}).
@@ -53,7 +57,7 @@ and reports consistent non-geometric profiles on a 52M--2.5B model ladder
 table frozen from an independent LeRoPE run retains $63.6\%$ of the full
 validation-perplexity gain over RoPE, compared with $10.4\%$ for partial RoPE.
 This isolates substantial value in the fixed table, although obtaining that
-table still requires a separate learned run. AdaRoPE instead learns per-head
+table still requires an optimization run. AdaRoPE instead learns per-head
 frequencies together with head-specific, length-dependent attention scaling
 \citep{wang2026adarope}. Recent analysis further shows that the frequencies used
 by a trained model depend on the relative-distance structure of its training
@@ -67,19 +71,21 @@ derives an interior allocation density from a variational objective and tests
 that variable with the sampled range held fixed.
 
 \paragraph{EVQ-Cosh.}
-\evq{} addresses a different fixed-table objective: it warps the exponent grid before
-training using the closed-form solution of a stated variational surrogate. The
-result is shared across heads, introduces no learned positional parameters, and
-does not require a deployment target. It therefore complements range extension
-and differs from LeRoPE and AdaRoPE in how the non-geometric table is obtained,
-not in whether frequency allocation matters. Alternatives that learn a broader
-positional function, including DAPE, FIRE, and FoPE
-\citep{zheng2024dape,li2024fire,hua2025fope}, change a larger functional object
-than a fixed RoPE table.
+\evq{} addresses a different fixed-table objective: it warps the exponent grid
+before training using the closed-form solution of a stated variational
+surrogate. The result is shared across heads, introduces no learned positional
+parameters, and does not require a deployment target. In contrast to LeRoPE and
+AdaRoPE, the non-geometric table is obtained analytically; range-extension
+methods can still operate on the resulting substrate. Alternatives that learn a broader
+positional function, including DAPE, FIRE, FoPE, and content-dependent context
+re-positioning \citep{zheng2024dape,li2024fire,hua2025fope,li2025repo}, change a
+larger functional object than a fixed RoPE table.
 
 \paragraph{Evaluation.}
-Long-context evaluation spans retrieval diagnostics and task suites
-\citep{bai2024longbench,hsieh2024ruler}, and information can be lost despite
+Positional encoding choice materially affects length generalization
+\citep{kazemnejad2023impact}. Long-context evaluation spans retrieval
+diagnostics and task suites \citep{bai2024longbench,hsieh2024ruler}, and
+information can be lost despite
 being present in the prompt \citep{liu2024lost,zhang2024found}. We use
 PE-dominant diagnostics for mechanism and RULER for effective-context claims,
 labelling the reported RULER endpoint as task-family-adapted length transfer.

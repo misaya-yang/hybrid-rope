@@ -53,6 +53,8 @@ universal solution of full-RoPE geometry, task loss, or extrapolation.
 | Low-frequency collapse and softmax-centered limit | same report | Main theory |
 | Exact post-hoc Q/K compensation obstruction | `../../rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md` | Main theory |
 | Pure interior-allocation identification | `EXACT_RANGE_151M_3SEED_RESULT_20260820.md` + companion JSON + M4 owner | Main experiment; new three-seed result supersedes the unpromoted author-confirmed aggregate |
+| Scarce-budget systems flagship | `../../data/curated/table18_mla_3seed_aggregate.json` | Main experiment; three-seed $432$M MLA, $K=16$ |
+| Training-stage and scale persistence | `../../docs/exp/2026-03-06_phase15_750m_2k_to_4k_continue_results.md` + `../../rebuttal/rebuttal_0723/theory_results/OLMO2_1B_RELEASED_ROPE_BASELINE_20260725.md` | Main experiment; $750$M continuation and $1.485$B from-init trend |
 | Matched mature phase exposure | `../../rebuttal/rebuttal_0723/theory_results/OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729.md` | Main experiment |
 | 50M weights-by-table interaction | canonical full-RoPE report and `../../scripts/analysis/attention_fisher_50m_probe.py` | Co-adaptation diagnostic |
 | LeRoPE facts and Fixed-LeRoPE 63.6% | `../../rebuttal/rebuttal_0723/theory_results/LEROPE_CONCURRENT_WORK_NOTE_20260728.md` plus the primary paper | Related work |

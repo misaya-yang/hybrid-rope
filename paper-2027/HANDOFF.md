@@ -1,10 +1,10 @@
 # ICLR 2027 active handoff
 
-- **Updated:** 2026-08-20
+- **Updated:** 2026-08-21
 - **Target:** ICLR 2027
 - **Active manuscript:** `paper-2027/`
 - **Branch:** `main_0726`
-- **Status:** result-first evidence-chain rewrite complete and verified;
+- **Status:** Opus-5 cross-review prose/flagship rewrite committed and pushed;
   publication state is owned by Git history and the remote branch
 - **Internal only:** exclude this file from the anonymous supplement
 
@@ -30,9 +30,10 @@ The outward evidence chain is now:
 2. full sin/cos subspace geometry, the exact stable-rank identity, the exact
    transplant obstruction, and the $50$M table-by-weights crossing explain why
    the table is learned with the weights;
-3. three-seed $432$M scarce-channel MLA, $750$M full-parameter continuation,
-   and a $1.485$B same-initialisation/same-scientific-recipe comparison show
-   training-stage and scale persistence;
+3. the three-seed $432$M scarce-channel MLA result is the systems flagship;
+   $750$M full-parameter continuation and a $1.485$B
+   same-initialisation/same-scientific-recipe comparison extend the
+   training-stage and scale trend;
 4. matched $1.485$B Q/K-only adaptation supplies real-document QA and RULER;
    separate matched $8$B LoRA supplies mature-model probability and causal
    remote-source-use evidence;
@@ -54,12 +55,13 @@ and `MLA wavelength-blend operator` for the run-specific MLA transform.
 ## 3. Implemented manuscript state
 
 - Title: *RoPE Has a Spectral Budget*.
-- Abstract: 184 words; one flagship comparison, $1.485$B PPL
-  `182.73 -> 159.64` at $16$K; no compressed result ledger.
+- Abstract: about 180 source words; one flagship effect size, the three-seed
+  $432$M MLA $16$K PPL reduction of `31.1%`. The $1.485$B from-initialisation
+  result remains trend evidence rather than the abstract headline.
 - Page 2 opens with `fig_evidence_overview.pdf`:
   - three-seed fixed-support per-seed curves and mean;
-  - direct Geo/EVQ $1.485$B PPL crossover;
-  - $1.485$B 2Wiki exact plus a separately labelled $8$B adapted
+  - three-seed $432$M, $K=16$ relative-PPL crossover;
+  - $1.485$B 2Wiki token-F1 plus an $8$B adapted
     remote-block-ablation callout.
 - The existing method-overview and frequency-geometry figures remain.
 - The old identification and mature-crossover figures and their generators are
@@ -67,10 +69,25 @@ and `MLA wavelength-blend operator` for the run-specific MLA transform.
 - The M4 table is in the identification appendix; the body retains its
   `10/12` and `9/12` cross-configuration/shape result.
 - $432$M MLA and $750$M full-parameter continuation are visible in the body.
+- The prose declares endpoint/protocol roles once, then presents a hierarchy
+  rather than repeating defensive `separate`/`matched` qualifiers. The main
+  capability endpoint is 2Wiki token-F1; exact match remains in App. F.
 - Finite-$\tau$ and matched-exponential detail is compressed in the body and
   retained in the appendix.
 - Discussion says support and allocation are distinct but interacting; it does
-  not claim additive gains under range retargeting.
+  not claim additive gains under range retargeting. It now explains why scalar
+  base search cannot reach non-geometric allocation and why the $K=16$ result
+  makes the axis practically consequential.
+- The AI-use statement remains unchanged. Its current wording was previously
+  author-confirmed as complete and literally true; the external suggestion to
+  assert author-only theorem statements/proof strategies was not adopted
+  without a new factual confirmation.
+- Related Work now closes the verified citation gaps without becoming an
+  inventory: MrRoPE is positioned as training-free mixed-radix range
+  conversion; Selective RoPE and Deconstructing Positional Information mark
+  broader operator/logit analyses; RePo marks content-dependent position
+  assignment; Kazemnejad et al. supplies the general length-generalization
+  context. GRAPE, Urrutia et al., and xPos were already present.
 
 ## 4. Canonical paper-facing values
 
@@ -117,27 +134,30 @@ Owners:
 
 | Check | Result |
 | --- | --- |
-| Final PDF | SHA-256 `098eed6dc7bbf5606df99831be010a054d882eb6934f8226be1e1b789c855a05`; 683,696 bytes |
+| Final PDF | SHA-256 `29421c1678e797da0da4003c5692eeab9ea071b844aefc0062b9abacb0b7562d`; 688,299 bytes |
 | Layout gates | 9 body pages, 29 total, US Letter, 0 undefined refs/cites, 0 pt overfull, anonymous |
 | Fonts | Type-3 `0`; all fonts embedded |
 | Outward terminology scan | no `GEO`, `RAMP`, `legacy scaler`, or `EVQ+YaRN` in manuscript/appendix sources; locked identities verified |
 | Focused scientific tests | 243 passed |
 | Paper-workspace tests | 3 passed |
-| Anonymous package dry run | SHA-256 `9cc039bd88956bed2fce73abb02a810312aba9dda06c55f1e02cfcb2adfb1621`; 851,673 bytes; ZIP integrity clean |
+| Anonymous package dry run | SHA-256 `46b72c3d7cbcfa68a248a06e8a5f38bf0a3ba376e20d420b323b934efaaf248b`; 851,750 bytes; ZIP integrity clean |
 | Isolated package | all three figures regenerated; paper rebuilt; 142 tests passed |
-| Visual QA | all 9 body pages plus exact-range appendix tables inspected; Figure 1 legend/callout collision corrected and rechecked |
+| Visual QA | all 9 body pages inspected at rendered resolution; new Figure 1 labels and callout are readable |
 | Immutable NeurIPS PDF | SHA-256 `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772` |
 
 The final package dry run is
-`/tmp/rope-spectral-budget-iclr2027-reviewed.zip`. The existing root supplement
+`/tmp/rope-spectral-budget-iclr2027-citation-repair.zip`. The existing root supplement
 was not overwritten.
 
 Use Conda `aidemo` for PyTorch/pytest checks.
 
 ## 7. Worktree and next action
 
-- This handoff describes the validated publication state; verify the current
-  local and remote SHA before any later release action.
+- The Opus prose rewrite is local and uncommitted; do not publish it unless the
+  user explicitly requests commit/push.
+- `paper-2027/DOCUMENT_TEXT_MAP.md` is an unrelated untracked file that appeared
+  during this turn. It was not created or modified by this work and must remain
+  outside any future staging scope unless the user identifies its owner.
 - `paper/` remains immutable and unchanged.
 - Do not start new training or GPU evaluation from this handoff.
 - For the next independent review, extract only concrete score-ceiling,

@@ -2,7 +2,7 @@
 
 Sources:
   - EXACT_RANGE_151M_3SEED_RESULT_20260820.json
-  - OLMO2_1B_RELEASED_ROPE_BASELINE_20260725.md
+  - table18_mla_3seed_aggregate.json
   - OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729.md
   - EVQ_8B_ADAPTATION_EVIDENCE_20260724.md
 """
@@ -73,38 +73,47 @@ ax.set_title("(a) Fixed support, interior allocation", loc="left", weight="bold"
 ax.legend(frameon=False, loc="lower right", fontsize=5.9, handlelength=1.5)
 ax.grid(axis="y", color=GRID, lw=0.45)
 
-# (b) The largest from-initialization comparison: same scientific recipe.
-lengths = np.array([2, 4, 8, 16])
-geo_ppl = np.array([177.99, 161.19, 163.88, 182.73])
-evq_ppl = np.array([191.36, 167.45, 156.87, 159.64])
+# (b) Scarce-channel MLA: training seed is again the unit.
+mla_geo = np.array([
+    [34.509, 141.069],
+    [36.374, 132.528],
+    [35.451, 142.825],
+])
+mla_evq = np.array([
+    [35.065, 93.686],
+    [36.642, 92.742],
+    [35.617, 100.336],
+])
+mla_relative = 100 * (mla_evq / mla_geo - 1)
+mla_mean = mla_relative.mean(axis=0)
 ax = axes[1]
-ax.axvspan(4.1, 16.8, color="#F7EFE9", zorder=0)
-ax.axvline(4, color=MUTED, lw=0.7, ls="--")
-ax.plot(lengths, geo_ppl, color=MUTED, marker="o", ms=3.6, lw=1.45,
-        label="Geo")
-ax.plot(lengths, evq_ppl, color=BLUE, marker="s", ms=3.6, lw=1.65,
-        label="EVQ-Cosh")
-ax.annotate("Geo 182.7", (16, geo_ppl[-1]), xytext=(-4, 5),
-            textcoords="offset points", ha="right", color=MUTED, fontsize=6.0)
-ax.annotate("EVQ 159.6", (16, evq_ppl[-1]), xytext=(-4, -10),
-            textcoords="offset points", ha="right", color=BLUE, fontsize=6.0,
-            weight="bold")
-ax.text(10.2, 195.2, "beyond 4K", color=ORANGE, fontsize=6.0,
+ax.axhspan(-38, 0, color="#F1F5F8", zorder=0)
+ax.axhline(0, color=INK, lw=0.7, zorder=1)
+for values in mla_relative:
+    ax.plot([0, 1], values, color=SEED, marker="o", ms=2.6, lw=0.85,
+            zorder=2)
+ax.plot([0, 1], mla_mean, color=BLUE, marker="s", ms=4.2, lw=1.7,
+        label="mean (3 seeds)", zorder=3)
+ax.text(0, mla_mean[0] + 2.0, f"{mla_mean[0]:+.1f}%", color=MUTED,
+        fontsize=6.0, ha="center")
+ax.text(1, mla_mean[1] - 2.4, f"{mla_mean[1]:.1f}%", color=BLUE,
+        fontsize=6.2, ha="center", va="top", weight="bold")
+ax.text(1, -22.5, "3/3", color=BLUE, fontsize=5.9,
         ha="center", weight="bold")
-ax.text(0.97, 0.04, "focused PPL scale", transform=ax.transAxes,
-        color=MUTED, fontsize=5.6, ha="right")
-ax.set_xticks(lengths, ["2K", "4K", "8K", "16K"])
-ax.set_xlim(1.4, 16.6)
-ax.set_ylim(148, 198)
+ax.set_xticks([0, 1], ["8K (train)", "16K (2×)"])
+ax.set_xlim(-0.18, 1.18)
+ax.set_ylim(-38, 8)
+ax.set_yticks([-30, -15, 0])
 ax.set_xlabel("evaluation length")
-ax.set_ylabel("PPL")
-ax.set_title("(b) 1.485B from initialization", loc="left", weight="bold")
+ax.set_ylabel("PPL change, EVQ vs Geo (%)")
+ax.set_title("(b) 432M MLA, $K=16$", loc="left", weight="bold")
+ax.legend(frameon=False, loc="lower left", fontsize=5.9, handlelength=1.5)
 ax.grid(axis="y", color=GRID, lw=0.45)
 
-# (c) Real-document QA plus a separate mature-model causal-use check.
+# (c) Real-document QA plus a mature-model causal-use check.
 x = np.arange(3)
-native_2wiki = np.array([22.0, 0.0, 0.0])
-evq_2wiki = np.array([21.5, 17.5, 4.0])
+native_2wiki = np.array([25.99, 0.07, 0.0])
+evq_2wiki = np.array([24.84, 21.48, 8.57])
 width = 0.34
 ax = axes[2]
 bars_native = ax.bar(x - width / 2, native_2wiki, width, color="#D8DDE1",
@@ -117,7 +126,7 @@ for bars, values, color in (
 ):
     for bar, value in zip(bars, values):
         ax.text(bar.get_x() + bar.get_width() / 2, value + 0.6,
-                f"{value:g}", ha="center", va="bottom", fontsize=5.8,
+                f"{value:.1f}", ha="center", va="bottom", fontsize=5.8,
                 color=color, weight="bold" if color == BLUE else None)
 ax.legend([bars_native, bars_evq], ["Native", "EVQ-Cosh"], frameon=False,
           ncol=2, loc="upper left", fontsize=5.3, handlelength=0.9,
@@ -126,9 +135,9 @@ ax.text(0.98, 0.82, r"8B deletion: $\Delta$NLL $-0.01\;\to\;+1.51$",
         transform=ax.transAxes, ha="right", color=ORANGE, fontsize=5.4,
         weight="bold")
 ax.set_xticks(x, [r"$1\times$", r"$2\times$", r"$4\times$"])
-ax.set_ylim(0, 29)
+ax.set_ylim(0, 33)
 ax.set_xlabel("relative to 4K physical cap")
-ax.set_ylabel("2Wiki exact match (%)")
+ax.set_ylabel("2Wiki token-F1 (%)")
 ax.set_title("(c) 1.485B real-document QA", loc="left", weight="bold")
 ax.grid(axis="y", color=GRID, lw=0.45)
 
@@ -140,9 +149,11 @@ fig.tight_layout(w_pad=1.05)
 assert np.allclose(exact_mean, [0.026194061, -0.280727786,
                                 -0.175991838, -0.145714740], atol=5e-10)
 assert np.all(exact_seed[:, 1:] < 0)
+assert np.allclose(mla_mean, [0.93873862, -31.11944897], atol=1e-7)
+assert np.all(mla_relative[:, 1] < 0)
 assert np.isclose(100 * (24.068 / 108.958 - 1), -77.91, atol=0.02)
-assert np.allclose(native_2wiki, [22.0, 0.0, 0.0])
-assert np.allclose(evq_2wiki, [21.5, 17.5, 4.0])
+assert np.allclose(native_2wiki, [25.99, 0.07, 0.0])
+assert np.allclose(evq_2wiki, [24.84, 21.48, 8.57])
 
 fig.savefig(OUT, bbox_inches="tight", pad_inches=0.025)
 print(f"wrote {OUT}")

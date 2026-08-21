@@ -1,20 +1,18 @@
-RoPE is usually controlled by a scalar base, but a finite table must also
-decide how $K$ rotary pairs are allocated inside the sampled support. Writing
-$x_k=-\log\omega_k=a+Rz_k$ separates support $(a,R)$ from normalised interior
-allocation $z$. We show that $z$ is a separately identifiable training-time
-variable. Across three paired $151.9$M runs, changing only the $30$ interior
-frequencies consistently shifts modelling quality from the training window
-toward longer contexts. Full sin/cos subspace geometry gives an exact,
-phase-invariant accounting of finite-table redundancy, while an exact
-transplant obstruction and a weight--table crossing show why the table must be
-learned with the weights. \evq{} is one closed-form, zero-learned-parameter
-intervention on this axis. Under complete-table protocols, the same
-effective-context crossover recurs in three-seed $432$M scarce-channel MLA,
-$750$M full-parameter continuation, and a $1.485$B
-same-initialisation/same-scientific-recipe comparison, where Geo/\evq{} $16$K
-PPL is $182.73/159.64$. Separately, matched $8$B adaptation supports
-mature-model transfer and causal use of remote evidence; $1.485$B Q/K-only
-adaptation carries real-document multi-hop QA beyond its physical training
-window. Interior allocation is therefore a practical part of long-context
-training, distinct from but interacting with support selection and
-inference-time range transport.
+RoPE is usually specified by a scalar base, yet a finite attention head must
+also decide how its $K$ rotary pairs are distributed within that support. We
+write $x_k=-\log\omega_k=a+Rz_k$, separating sampled support $(a,R)$ from
+normalised interior allocation $z$. In a three-seed fixed-support control,
+moving only $30$ interior frequencies consistently shifts modelling quality
+from the training window toward longer contexts, making $z$ a separately
+identifiable training-time variable. Full sin/cos subspace geometry gives an
+exact, phase-invariant account of finite-table redundancy; an exact transplant
+obstruction and a weight--table crossing then show why model weights co-adapt
+to the table. We instantiate this axis with \evq{}, a closed-form schedule
+with no learned positional parameters. In a three-seed $432$M MLA stress test
+with only $16$ rotary frequencies, \evq{} leaves in-window PPL essentially
+unchanged and lowers $16$K PPL by $31.1\%$. The crossover recurs under
+full-parameter training through $1.485$B. At $1.485$B, low-rank adaptation
+carries multi-hop QA beyond the physical training window; at $8$B, adaptation
+produces causal use of remote source content. Interior allocation is thus a
+practical part of long-context training, alongside support selection and range
+transport.

@@ -107,7 +107,7 @@ iclr2027_conference.sty/.bst  官方 ICLR 2027 模板（原样）
 venue_icml_fallback/        旧 ICML 模板与旧 main.tex，未被引用
 compile.sh / build.mk       构建 + 自动合规检查（页数/未定义引用/溢出/匿名性）
 sections/
-  00_abstract.tex           fixed-support identification → 1.485B trend → capability
+  00_abstract.tex           fixed-support identification → 432M flagship → mature capability
   01_intro.tex              结果首屏：因果控制 → 训练趋势 → 下游与 trained use
   02_related.tex            重写：FMRoPE / LeRoPE / AdaRoPE 准确定位
   03_theory.tex             full sin/cos geometry → obstruction → closed-form construction
@@ -121,7 +121,7 @@ tables/
   table_evq_ramp.tex        同一 YaRN-style range 操作的 substrate 交叉
   table_pe_dominant.tex     原 table4，重新标注，移入附录
 figs/
-  fig_evidence_overview.pdf 新增：三种子控制 → 1.485B PPL → 下游/8B adapted callout
+  fig_evidence_overview.pdf 三种子控制 → 432M K=16 旗舰 → 下游/8B adapted callout
   make_fig_evidence_overview.py  生成脚本（冻结 owner 数值与断言）
   fig_method_overview.pdf   重写：有限预算 → 闭式构造 → 两项关键控制
   make_fig_method_overview.py  生成脚本（含几何计数断言）

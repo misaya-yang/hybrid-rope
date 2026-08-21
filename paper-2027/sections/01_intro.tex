@@ -1,101 +1,100 @@
 \section{Introduction}
 \label{sec:intro}
 
-RoPE has a spectral budget. Each attention head receives only
-$K=\drot/2$ rotary pairs before training, but the familiar scalar base specifies
-only their support. For an ordered table define
+RoPE has a spectral budget. Each attention head receives exactly
+$K=\drot/2$ rotary pairs, but the familiar scalar base specifies only the
+spectral interval they occupy. Formally, for an ordered table we write
 \begin{equation}
 x_k=-\log\omega_k=a+Rz_k,
 \qquad z_0=0,\quad z_{K-1}=1,
 \label{eq:table-decomposition}
 \end{equation}
 where $a=x_0$, $R=x_{K-1}-x_0$, and $z$ is the normalised allocation inside the
-sampled log-frequency span. Standard geometric RoPE fixes
-$z_k=k/(K-1)$.
+sampled log-frequency span. Standard geometric RoPE fixes $z_k=k/(K-1)$, so
+the base determines the entire table only within that geometric family.
 
 \paragraph{Our view: support says which frequencies are available; allocation
 says how a finite head spends them.}
-The scalar base sets the span, while $z$ determines how the finite channels use
-it. This distinction matters only at finite $K$, exactly where every deployed
-attention head operates.
+Support fixes what frequencies are available; $z$ determines how the finite
+channels use them. The distinction is most consequential at finite $K$, the
+regime in which every attention head operates.
 
-This decomposition separates decisions that are often conflated. Position
+The same parameterisation clarifies where existing methods act. Position
 interpolation, YaRN, and LongRoPE transport a trained spectrum toward a target
 range \citep{chen2024position,peng2024yarn,ding2024longrope,shang2025longrope2};
 FMRoPE changes scalar support while retaining a geometric exponent grid
-\citep{oka2026fmrope}; LeRoPE and AdaRoPE learn broader frequency tables
-\citep{karypis2026lerope,wang2026adarope}. These interventions can be composed
-and need not act on only one coordinate. Our question is narrower and exactly
-controlled: \emph{with $a$ and $R$ fixed, does changing only the $K-2$
-interior entries of $z$ change what a model learns?}
+\citep{oka2026fmrope}; LeRoPE and AdaRoPE optimize broader frequency tables
+\citep{karypis2026lerope,wang2026adarope}. These interventions may combine
+coordinates. In contrast, our controlled question fixes $a$ and $R$:
+\emph{does moving only the $K-2$ interior entries of $z$ change what a model
+learns?}
 
-It does. Across three paired $151.9$M training seeds, moving only those $30$
+It does. Across three paired $151.9$M training seeds, moving only $30$
 frequencies changes mean OOD NLL by $-0.281/-0.176/-0.146$ at
-$2\times/4\times/8\times$, with every seed favouring Cosh at every OOD length,
-at a $+0.026$ in-window cost (\S\ref{sec:exp-identify}). The anchored
-intervention is the affine support normalisation of the deployed midpoint Cosh
-quantiles and therefore has exactly the same $z$. A separate $50.9$M,
-$12$-configuration, three-seed factorial finds the non-uniform direction for
-both $1.25\times$ Cosh ($10/12$) and a deformation-matched exponential
-($9/12$). Two distinct fixed analytic shapes therefore reproduce the
-non-uniform direction and identify the allocation axis across analytic curves.
+$2\times/4\times/8\times$, at a $+0.026$ in-window cost
+(\S\ref{sec:exp-identify}). Every seed agrees at every OOD length. The
+intervention is an affine support normalisation of the deployed Cosh quantiles,
+which preserves their normalised $z$ while matching the uniform baseline's
+sampled endpoints. Moreover, a $50.9$M factorial spanning $12$ structural
+configurations finds the same non-uniform direction for both $1.25\times$ Cosh
+($10/12$) and a deformation-matched exponential ($9/12$). Allocation is thus
+identifiable beyond one formula or one training seed.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{fig_evidence_overview.pdf}
-  \caption{\textbf{From fixed-support identification to mature-model
-  capability.} (a)~At fixed sampled support, all three $151.9$M training seeds
-  pay a small in-window cost and favour Cosh at every OOD length; blue is the
-  training-seed mean. (b)~Under the same initialisation/scientific recipe,
-  data-order prefix, $2.097$B-token budget, and evaluation rows, the $1.485$B
-  comparison crosses beyond its $4$K cap. (c)~Matched $1.485$B Q/K-only adaptation preserves $4$K 2Wiki
-  exact match while transferring it to $8$K/$16$K; the callout is a separate
-  matched $8$B LoRA causal-source-use check. Panel (a) identifies $z$;
-  panels (b,c) test complete-table persistence and capability. Protocols are
-  not pooled.}
+  \caption{\textbf{Allocation is identifiable, consequential under a tight
+  budget, and usable at mature scale.} (a)~At fixed sampled support, all three
+  $151.9$M training seeds favour Cosh at every OOD length. (b)~With only
+  $K{=}16$ rotary frequencies, the three-seed $432$M MLA comparison is nearly
+  unchanged at its $8$K training length and reduces PPL by $31.1\%$ at $16$K.
+  (c)~Q/K adaptation at $1.485$B preserves $4$K 2Wiki token-F1 while carrying
+  it to $8$K/$16$K; the callout reports an $8$B LoRA causal-source-use
+  intervention. The panels establish identification, finite-budget relevance,
+  and capability, respectively.}
   \label{fig:evidence-overview}
 \end{figure}
 \FloatBarrier
 
-The same in-window/long-range crossover then appears under complementary
-complete-table protocols (Fig.~\ref{fig:evidence-overview}). A three-seed
-$432$M MLA stress test uses only $K{=}16$ rotary frequencies; a $750$M
-full-parameter continuation starts both arms from the same $2$K Geo checkpoint;
-and a $1.485$B comparison uses the same initialisation, scientific recipe,
-data-order prefix, counted-token budget, and evaluation rows. The $1.485$B
-Geo/\evq{} PPL is $161.19/167.45$ at the $4$K training cap but
-$182.73/159.64$ at $16$K. Separately, matched $1.485$B Q/K-only adaptation
-transfers real-document multi-hop QA beyond its physical window, while matched
-$8$B LoRA provides mature-model probability and causal remote-source-use
-evidence. The training protocols establish architecture and training-stage
-persistence through $1.485$B; the separate adaptations establish capability at
-$1.485$B and $8$B. The fixed-support study remains the causal owner of $z$.
+The controlled result establishes that the axis exists; Figure~\ref{fig:evidence-overview}b
+shows why it matters. In a $432$M MLA transformer with only $K{=}16$, Geo and
+\evq{} are nearly tied at the $8$K training length, whereas all three seeds
+favour \evq{} at $16$K. The crossover also survives later training stages and
+larger models. A $750$M full-parameter continuation from a shared $2$K Geo
+checkpoint changes $16$K PPL from $45.1$ to $24.4$, and a $1.485$B
+from-initialisation trajectory crosses at $8$K and favours \evq{} on $126/128$
+held-out documents at $16$K. Finally, the Q/K adaptation in
+Figure~\ref{fig:evidence-overview}c transfers multi-hop QA beyond its physical
+training window, while the $8$B intervention shows that the remote source is
+causally used. These larger protocols test persistence and capability; the
+fixed-support control identifies $z$.
 
-We next ask what that axis means for a trained model
-(\S\ref{sec:theory}). Each rotary frequency contributes a two-dimensional
-sin/cos subspace. Canonical correlations give phase-invariant redundancy, and
-block whitening yields the exact finite-basis identity
+Why can rearranging a fixed support change a trained model? Each rotary
+frequency contributes a two-dimensional sin/cos subspace
+(\S\ref{sec:theory}). Canonical correlations measure redundancy without
+choosing a content phase, and block whitening yields the finite-basis identity
 \[
 r_2(R)=\frac{2K}{1+(K-1)\bar c}.
 \]
 In a standard $4$K table, $23$ slow pairs occupy $46$ nominal dimensions but
 have Rényi-$2$ effective rank $2.00$. This is a static redundancy statement,
-whose trained consequences must be measured. A weight--table crossing shows
-that self-consistent systems remain usable while post-hoc swaps fail. We prove
-the exact counterpart: unequal frequency multisets cannot be absorbed by fixed,
-position-independent invertible Q/K maps. A RoPE table is therefore a
-training-time coordinate system whose coefficients are learned with it.
+not a task-loss predictor. The missing link is co-adaptation: a weight--table
+crossing leaves the two self-consistent systems usable but breaks both post-hoc
+swaps. Consistently, unequal frequency multisets cannot be absorbed by fixed,
+position-independent invertible Q/K maps. The table is a coordinate system
+whose coefficients are learned with it.
 
-Finally, a convex modelling surrogate yields a closed-form Cosh density and
-inverse-CDF table with geometric RoPE as the $\tau\to0$ limit. \evq{} is thus
-a reproducible, zero-learned-parameter point on the allocation axis.
+A convex modelling surrogate then supplies a constructive point on this axis:
+the Cosh density and its inverse-CDF table are closed form, with geometric RoPE
+as the $\tau\to0$ limit. \evq{} is reproducible and adds no learned positional
+parameters.
 
 \paragraph{Contributions.}
-(i) We separate sampled support from interior allocation and identify the
-latter with a three-seed fixed-support causal control.
-(ii) We give a phase-invariant finite-basis geometry, an exact effective-rank
-identity, and an exact frozen-transplant obstruction, paired with direct
-co-adaptation evidence.
-(iii) We derive a closed-form analytic allocation and show that the resulting
-effective-context shift persists through $1.485$B from-initialisation training,
-with separate matched $1.485$B and $8$B capability evidence.
+(i) A support/allocation parameterisation and a three-seed fixed-support
+intervention identify interior allocation as a training variable.
+(ii) Phase-invariant full-RoPE geometry yields an exact effective-rank identity;
+an exact frozen-transplant obstruction and a weight--table crossing connect
+that basis to training co-adaptation.
+(iii) A closed-form analytic allocation produces the predicted
+effective-context shift in a three-seed scarce-budget test, with training
+evidence through $1.485$B and capability evidence at $1.485$B and $8$B.

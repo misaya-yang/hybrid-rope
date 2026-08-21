@@ -1,4 +1,4 @@
-\begin{thebibliography}{36}
+\begin{thebibliography}{41}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -54,6 +54,14 @@ Aaron Grattafiori, Abhimanyu Dubey, Abhinav Jauhri, et~al.
 \newblock The {Llama} 3 herd of models.
 \newblock \emph{arXiv preprint arXiv:2407.21783}, 2024.
 
+\bibitem[Gu et~al.(2026)Gu, Chen, Zhang, Zhang, and Hu]{gu2026deconstructing}
+Zihan Gu, Ruoyu Chen, Han Zhang, Hua Zhang, and Yue Hu.
+\newblock Deconstructing positional information: From attention logits to
+  training biases.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2026.
+\newblock URL \url{https://openreview.net/forum?id=D0u0glT060}.
+
 \bibitem[Hsieh et~al.(2024)Hsieh, Sun, Kriman, Acharya, Rekesh, Jia, Zhang, and
   Ginsburg]{hsieh2024ruler}
 Cheng-Ping Hsieh, Simeng Sun, Samuel Kriman, Shantanu Acharya, Dima Rekesh, Fei
@@ -102,11 +110,27 @@ Petros Karypis, Sean O'Brien, Shreyas Kadekodi, Rui Zhu, and Julian McAuley.
 \newblock \emph{arXiv preprint arXiv:2607.10134}, 2026.
 \newblock URL \url{https://arxiv.org/abs/2607.10134}.
 
+\bibitem[Kazemnejad et~al.(2023)Kazemnejad, Padhi, Ramamurthy, Das, and
+  Reddy]{kazemnejad2023impact}
+Amirhossein Kazemnejad, Inkit Padhi, Karthikeyan~Natesan Ramamurthy, Payel Das,
+  and Siva Reddy.
+\newblock The impact of positional encoding on length generalization in
+  transformers.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~36, 2023.
+\newblock URL \url{https://openreview.net/forum?id=Drrl2gcjzl}.
+
 \bibitem[Li et~al.(2026)Li, Ren, Yuille, and Wang]{li2026copeclipped}
 Haoran Li, Sucheng Ren, Alan Yuille, and Feng Wang.
 \newblock {CoPE}: Clipped {RoPE} as a scalable free lunch for long context
   {LLMs}.
 \newblock \emph{arXiv preprint arXiv:2602.05258}, 2026.
+
+\bibitem[Li et~al.(2025)Li, Zhao, and Sproat]{li2025repo}
+Huayang Li, Tianyu Zhao, and Richard Sproat.
+\newblock {RePo}: Language models with context re-positioning.
+\newblock \emph{arXiv preprint arXiv:2512.14391}, 2025.
+\newblock URL \url{https://arxiv.org/abs/2512.14391}.
 
 \bibitem[Li et~al.(2024)Li, You, Guruganesh, Ainslie, Ontanon, Zaheer, Sanghai,
   Yang, Kumar, and Bhojanapalli]{li2024fire}
@@ -123,6 +147,15 @@ Nelson~F. Liu, Kevin Lin, John Hewitt, Ashwin Paranjape, Michele Bevilacqua,
 \newblock Lost in the middle: How language models use long contexts.
 \newblock \emph{Transactions of the Association for Computational Linguistics},
   12:\penalty0 157--173, 2024.
+
+\bibitem[Movahedi et~al.(2026)Movahedi, Carstensen, Afzal, Hutter, Orvieto, and
+  Cevher]{movahedi2026selectiverope}
+Sajad Movahedi, Timur Carstensen, Arshia Afzal, Frank Hutter, Antonio Orvieto,
+  and Volkan Cevher.
+\newblock Selective rotary position embedding.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2026.
+\newblock URL \url{https://openreview.net/forum?id=AQo1SEElNb}.
 
 \bibitem[Oka et~al.(2026{\natexlab{a}})Oka, Hanafusa, Hasegawa, Nishida, and
   Saito]{oka2026frequencyentropy}
@@ -191,6 +224,13 @@ Yutao Sun, Li~Dong, Barun Patra, Shuming Ma, Shaohan Huang, Alon Benhaim,
 \newblock A length-extrapolatable transformer.
 \newblock In \emph{Proceedings of the 61st Annual Meeting of the Association
   for Computational Linguistics}, 2023.
+
+\bibitem[Tian et~al.(2026)Tian, Zhu, Liu, Wang, and Wang]{tian2026mrrope}
+Qingyuan Tian, Wenhong Zhu, Xiaoran Liu, Xiaofeng Wang, and Rui Wang.
+\newblock {MrRoPE}: Mixed-radix rotary position embedding.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2026.
+\newblock URL \url{https://openreview.net/forum?id=1J63FJYJKg}.
 
 \bibitem[Urrutia et~al.(2026)Urrutia, Salas, Kozachinskiy, Buc~Calderon,
   Pasten, and Rojas]{urrutia2026decoupling}
