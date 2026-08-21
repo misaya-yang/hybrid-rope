@@ -230,6 +230,9 @@ This work is internal and does not change the current manuscript.
   `research/attention-aware-retrofit/FAR_PASS_CHORD_EXPERIMENT_REPORT_20260821.md`;
   compact receipt:
   `research/attention-aware-retrofit/evidence/FAR_PASS_CHORD_RESULTS_20260821.json`.
+  All final result/adapter/diagnostic hashes were rechecked, no incomplete run
+  directory remained, and the authorised GPU instance was shut down. Raw
+  artifacts remain on its stopped persistent data volume.
 
 ## 7. Validation receipt
 
@@ -246,7 +249,7 @@ This work is internal and does not change the current manuscript.
 | Immutable NeurIPS PDF | SHA-256 `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772` |
 | Attention-aware internal checks | 33 focused tests passed; phase-demand self-test and report-metric assertions passed |
 | Mature function-morph preflight | 4 contract tests passed under remote Python 3.12; all assets and 18 morph tables hash-bound; CUDA unavailable/uninitialised and model not loaded |
-| Far-pass chord implementation | 15 focused tests passed locally; server smoke verified short-route bitwise identity, Flash-only BF16 D160 attention, augmented KV-cache decode, and 160/160 nonzero-gradient tensors |
+| Far-pass chord implementation | 106 related tests passed locally; the focused 15 also passed on the server. Smoke verified short-route bitwise identity, Flash-only BF16 D160 attention, augmented KV-cache decode, and 160/160 nonzero-gradient tensors |
 | Far-pass chord experiment | Four 300-step arms completed; all losses/gradients finite; final strict continuous-8K gate `1/64` first token and `0/64` answer-plus-EOS; current route stopped |
 
 The final reviewer package is
