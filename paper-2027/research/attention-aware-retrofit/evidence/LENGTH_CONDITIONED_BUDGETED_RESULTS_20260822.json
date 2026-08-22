@@ -1,0 +1,133 @@
+{
+  "status": "LENGTH_CONDITIONED_BUDGETED_RETROFIT_CORE_COMPLETE_BREADTH_INTERRUPTED",
+  "date": "2026-08-22",
+  "evidence_boundary": "Single released checkpoint. Core-4 RULER used for method selection; LongBench 2Wiki was held out; RULER-13 was interrupted before GPU evaluation.",
+  "checkpoint": {
+    "name": "OLMo-2-0425-1B-Instruct",
+    "parameters": 1485000000,
+    "weight_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f"
+  },
+  "method": {
+    "name": "length-conditioned uniqueness-budgeted retrofit",
+    "reference_length": 4096,
+    "short_branch": "exact Native rotary module and Native attention scaling",
+    "long_frequency_formula": "move_k=(1-normalized_uniqueness_k)^2; omega_prime_k=omega_k*(1-move_k)+(omega_k/s)*move_k",
+    "long_attention_amplitude": "1+0.1*ln(s)",
+    "learned_parameters": 0,
+    "training_tokens": 0,
+    "profiles": {
+      "8192": {
+        "factor": 2.0,
+        "table_sha256_float32": "f94a34381cfb3d05621db41bd3778779b16812246c392bd645013a1a06f80814",
+        "attention_amplitude": 1.0693147180559945
+      },
+      "16384": {
+        "factor": 4.0,
+        "table_sha256_float32": "a435d75441444bcea39b73d9cf530005249dc5afdc3cfb5a60fda10ef33312d3",
+        "attention_amplitude": 1.138629436111989
+      }
+    }
+  },
+  "ruler_core4": {
+    "data_manifest_sha256": "6f64aa6bb44821f52015c868b1f13d07a17a5f710b7645a9e0fb3fb86ac09d37",
+    "tasks": [
+      "niah_single_1",
+      "niah_multikey_2",
+      "niah_multikey_3",
+      "vt"
+    ],
+    "rows_per_task": 20,
+    "metric": "official task-specific RULER score",
+    "macro": {
+      "native": {"8192": 0.0, "16384": 0.0},
+      "native_with_matched_amplitude": {"8192": 0.0, "16384": 0.0},
+      "budgeted_frequency_only": {"8192": 0.4, "16384": 0.115},
+      "official_transformers_yarn": {"8192": 0.5375, "16384": 0.0125},
+      "frozen_method": {"8192": 0.5825, "16384": 0.4}
+    },
+    "frozen_method_per_task": {
+      "8192": {
+        "niah_single_1": 1.0,
+        "niah_multikey_2": 0.8,
+        "niah_multikey_3": 0.5,
+        "vt": 0.03
+      },
+      "16384": {
+        "niah_single_1": 1.0,
+        "niah_multikey_2": 0.55,
+        "niah_multikey_3": 0.0,
+        "vt": 0.05
+      }
+    },
+    "factorial_interaction": {
+      "formula": "joint-frequency_only-scaling_only+native",
+      "8192": 0.1825,
+      "16384": 0.285
+    },
+    "post_freeze_attention_coefficient_sensitivity": {
+      "0.08": {"8192": 0.5375, "16384": 0.315},
+      "0.10": {"8192": 0.5825, "16384": 0.4},
+      "0.12": {"8192": 0.585, "16384": 0.4275}
+    }
+  },
+  "longbench_2wiki": {
+    "rows": 200,
+    "method_selection": false,
+    "physical_budget_invariant": "Pending raw-row recheck that input_tokens+32<=nominal_length because the evaluated untruncated fast path checked raw prompt length before chat-template overhead.",
+    "metric": "normalized token F1; normalized exact auxiliary",
+    "results": {
+      "native_4096": {"token_f1": 0.2655858206, "normalized_exact": 0.205, "truncated_rows": 175},
+      "official_transformers_yarn_8192": {"token_f1": 0.2774352453, "normalized_exact": 0.21, "truncated_rows": 54},
+      "frozen_method_8192": {"token_f1": 0.2678836561, "normalized_exact": 0.205, "truncated_rows": 54},
+      "official_transformers_yarn_16384": {"token_f1": 0.2585452968, "normalized_exact": 0.205, "truncated_rows": 1},
+      "frozen_method_16384": {"token_f1": 0.2639093262, "normalized_exact": 0.21, "truncated_rows": 1}
+    }
+  },
+  "runtime_parity": {
+    "short_physical_tokens": 4096,
+    "short_hidden_bitwise_equal": true,
+    "short_logits_bitwise_equal": true,
+    "short_max_abs_delta": 0.0,
+    "parameter_count_unchanged": true,
+    "long_branch_bitwise_equal_to_direct_operator": true,
+    "learned_parameters": 0
+  },
+  "interrupted_ruler13_extension": {
+    "status": "PLATFORM_SHUTDOWN_BEFORE_GPU_EVALUATION",
+    "expected_data_cells": 26,
+    "last_verified_generated_cells": 18,
+    "final_manifest_verified": false,
+    "gpu_evaluation_arms_started": false,
+    "planned_arms_per_length": [
+      "native",
+      "official_transformers_yarn",
+      "frozen_method"
+    ],
+    "selection_policy": "The nine tasks outside core-4 are confirmation-only; no result may change p=2 or coefficient 0.10."
+  },
+  "result_json_sha256": {
+    "core4_native_8192": "f1ee3b62456715a0bbd2af5799f99c39323206051adb643364b93a13205cb77a",
+    "core4_native_16384": "8e074f0a94c01fcf39eee8b2f877fd7848416a784be9cdda8b4f534b67fa1edd",
+    "core4_native_amplitude_8192": "abae9c40f32b8f5e873088bb87375edb070066c3054e4c4f1a37411c74183249",
+    "core4_native_amplitude_16384": "60655f4d858d75009a13083abc90b8d1ee4ffbd5280620e85d3b019ac9736b8e",
+    "core4_frequency_only_8192": "9055e7d08ffd106d4ac36fe3bd83fb08241f1e77b13a0efd5100f22de30fcfba",
+    "core4_frequency_only_16384": "7da663bffff33eb2ba5176109bedc512ac42b09f63a996fc2a3d77bc55b020fe",
+    "core4_official_yarn_8192": "974dc70c47b4ffa8df617b31505d5775a9a5dc85a886767907df846b51296a88",
+    "core4_official_yarn_16384": "44b723012ca1673c24b33bd22c8cfc9c1e639755e8e7cf10bff4c3585d5d658d",
+    "core4_frozen_method_8192": "df634b0dee59dc0bc971eb236d2751a095b1fbfeea96ab6cadd3c257e16c73e4",
+    "core4_frozen_method_16384": "eeeb4722e960850ee4f9e0187097736bfdaa205634682be84cf3b5b0e6b0210c",
+    "2wiki_native_4096": "473072306044b3fe9a069a5671456168ff076e6e6dfd061848142a30a70f9ea2",
+    "2wiki_official_yarn_8192": "b30513d3ff2a276f908fdbbaf908e1d36dcac58cdadf1219eb83dd2a5ca9ebdd",
+    "2wiki_official_yarn_16384": "9f97a3aa581994188a0527e237380591251d85715ee8d4b6d46c04206a73bfc2",
+    "2wiki_frozen_method_8192": "43133cabeb7849e69019b8b9c711bc397a633b6e5acdebf37ec4cfa0563d0b69",
+    "2wiki_frozen_method_16384": "8f717f1c5aa8294fbbd6a1989ff31f5c761c5b812965698dba3e7b2df5e0068b"
+  },
+  "claim_limits": [
+    "The positive interaction is protocol-specific and does not establish a monotone length law.",
+    "Zero RULER score for Native plus amplitude is an assay floor, not proof of unchanged logits.",
+    "The inherited 0.10 coefficient is matched, not derived or measured for OLMo-2.",
+    "No multi-checkpoint or cross-model generalization claim is supported.",
+    "The 2Wiki physical-budget invariant must be rechecked on raw rows before manuscript promotion; violating cells require rerun.",
+    "RULER-13 is incomplete and supplies no result yet."
+  ]
+}

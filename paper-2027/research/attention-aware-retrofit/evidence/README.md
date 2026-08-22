@@ -19,3 +19,10 @@ the completed mature-checkpoint retrofit ablation chain. It records the
 QK-only, QKVO, first-token-weighted, and physical continuous-8K arms together
 with strict generation gates and raw-artifact hashes. The chain is an internal
 negative and does not supersede any paper-facing mature-model owner.
+
+`LENGTH_CONDITIONED_BUDGETED_RESULTS_20260822.json` records the completed
+zero-training core-4 factorial, held-out 2Wiki result, exact short-route parity,
+and raw receipt hashes. The 2Wiki raw-row physical-budget invariant remains a
+required pre-promotion recheck. The receipt also records that the RULER-13
+breadth extension was interrupted by platform shutdown before any GPU
+evaluation; the partial data preparation is not a result.

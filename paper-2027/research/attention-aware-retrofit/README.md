@@ -1,6 +1,6 @@
 # Attention-aware phase allocation and mature-model retrofit agenda
 
-- **Date:** 2026-08-21
+- **Date:** 2026-08-22
 - **Status:** internal research memo; not manuscript evidence
 - **Purpose:** define the shortest route from the current spectral-budget result
   to (i) a fixed table that improves both in-window and extrapolation behavior,
@@ -15,6 +15,17 @@ The current single-arm retrofit protocol is owned by
 [`FAR_PASS_CHORD_RESIDUAL_PREFLIGHT_20260821.md`](FAR_PASS_CHORD_RESIDUAL_PREFLIGHT_20260821.md).
 Its completed ablation chain and stop decision are now owned by
 [`FAR_PASS_CHORD_EXPERIMENT_REPORT_20260821.md`](FAR_PASS_CHORD_EXPERIMENT_REPORT_20260821.md).
+
+**Superseding mature-retrofit update.** The current practical candidate is now
+the zero-training, length-conditioned uniqueness-budgeted operator owned by
+[`LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md`](LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md).
+It uses the exact Native route through 4K and a frozen non-geometric table plus
+matched deterministic attention amplitude at 8K/16K. Core-4 RULER and exact
+runtime parity are complete; the 2Wiki generation is complete with one raw
+physical-budget invariant pending recheck. The RULER-13 extension was
+interrupted by platform shutdown during data preparation and has no result.
+The historical adapter agenda below remains useful for explaining prior
+failures, but it no longer owns the next action.
 
 ## 1. The two problems are different
 
@@ -350,19 +361,18 @@ slice. Do not make 8B multi-seed the default.
 
 ## 9. Decision
 
-The first objective is practical mature-model LoRA, not another whole-table
-swap or another table-ranking experiment. Freeze the released Native model as
-the main attention path, preserve its short-request route exactly, and add the
-registered 8-pair `I-R(Delta)` far-pass chord Q/K residual through one softmax
-with zero-padded residual values. Train the one residual arm on an independent
-FineWeb-Edu natural-span retrieval view; RULER remains held-out evaluation.
-Because the complete 8K+16K RULER evaluation costs only minutes under the
-completed runtime receipt, it runs the full 20 rows per family rather than
-adding a noisy subsample gate. It does not sweep rank, gain, frequency band, pair count, or
-training length.
+Stop treating a trained adapter as a prerequisite. The current candidate has
+zero learned parameters and zero training tokens: Native is preserved by
+construction for requests through 4K, while the frozen uniqueness-budgeted
+table and matched amplitude provide the long route. The immediate action is a
+confirmation-only RULER-13 evaluation on the fixed `p=2`, `c=0.10` method,
+Native, and the official Transformers YaRN operator. Results may not reopen
+table or gain selection.
 
-The finite whole-table morph audit remains available but is not a prerequisite.
-Stage-D protection and conditional table construction are fallback diagnostics
-only if the residual route fails for a localized, measurable reason. The
-current phase-chord result is useful training-time evidence, not the blocker
-for solving LoRA practicality.
+The completed far-pass chord, headwise LoRA, transport-scalar, and CPU-axis
+studies remain internal negative or diagnostic evidence. Do not repeat them,
+and do not promote the unsupported claims that a layer-global rank is evenly
+divided across heads, that OLMo-2 has a measured five-nat logit gap, or that two
+lengths establish a monotone interaction law. A trained `cI+BA` residual is
+eligible only if a later capability endpoint exposes a gap that the current
+zero-training method cannot cover.

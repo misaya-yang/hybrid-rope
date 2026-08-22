@@ -10,7 +10,10 @@ entire NeurIPS rebuttal history.
 
 - [`attention-aware-retrofit/`](attention-aware-retrofit/) — active work on
   phase-chord allocation and mature-model retrofit. Its `README.md` is the
-  research memo; the dated experiment report records executed evidence.
+  research memo; the current zero-training mature-checkpoint owner is
+  `LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md` (core-4 and runtime
+  parity complete; 2Wiki raw length check pending; RULER-13 interrupted before
+  evaluation).
 
 ## Read order
 
