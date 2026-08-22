@@ -10,6 +10,7 @@ import time
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 import torch
 from transformers import AutoConfig, AutoTokenizer
 from transformers.modeling_rope_utils import ROPE_INIT_FUNCTIONS
@@ -140,6 +141,11 @@ def parse_args() -> argparse.Namespace:
             "evq_official_yarn",
             "repo_fixed_ramp",
             "evq_repo_fixed_ramp",
+            "budgeted_s2_p1",
+            "budgeted_s2_p2",
+            "budgeted_s4_p1",
+            "budgeted_s4_p2",
+            "custom_non_geometric",
             "hybrid_evq_low4",
             "hybrid_evq_low8",
             "hybrid_evq_low12",
@@ -150,6 +156,24 @@ def parse_args() -> argparse.Namespace:
             NATIVE_PROTECTED_FREQUENCY,
         ),
         required=True,
+    )
+    parser.add_argument(
+        "--frequency-table",
+        type=Path,
+        help=(
+            "Frozen float32 .npy table required by budgeted/custom modes; "
+            "the realized tensor and file are hash-receipted."
+        ),
+    )
+    parser.add_argument(
+        "--frequency-label",
+        help="Receipt label required for custom_non_geometric.",
+    )
+    parser.add_argument(
+        "--attention-scaling",
+        type=float,
+        default=1.0,
+        help="Deterministic long-context RoPE amplitude multiplier.",
     )
     parser.add_argument("--yarn-factor", type=float, default=4.0)
     parser.add_argument(
@@ -244,13 +268,30 @@ def official_yarn_config(
         original_max_position_embeddings
     ):
         raise RuntimeError("native max position embedding drift")
-    config.rope_scaling = {
+    native_rope = dict(getattr(config, "rope_parameters", None) or {})
+    native_theta = getattr(config, "rope_theta", None)
+    if native_theta is None:
+        native_theta = native_rope.get("rope_theta")
+    if native_theta is None:
+        native_theta = dict(getattr(config, "rope_scaling", None) or {}).get(
+            "rope_theta"
+        )
+    if native_theta is None or float(native_theta) != 500_000.0:
+        raise RuntimeError("Native OLMo-2 rope theta drift")
+    yarn_parameters = {
         "rope_type": "yarn",
         "factor": float(factor),
         "original_max_position_embeddings": int(
             original_max_position_embeddings
         ),
+        "rope_theta": float(native_theta),
     }
+    # Transformers 5 stores the active rotary contract in ``rope_parameters``
+    # while older versions read ``rope_scaling``/``rope_theta``. Bind all
+    # three views to the same verified Native theta.
+    config.rope_theta = float(native_theta)
+    config.rope_scaling = dict(yarn_parameters)
+    config.rope_parameters = dict(yarn_parameters)
     config.max_position_embeddings = int(
         round(original_max_position_embeddings * factor)
     )
@@ -424,6 +465,60 @@ def apply_repo_fixed_ramp(
     }
 
 
+def apply_frozen_frequency_table(
+    model: Any,
+    *,
+    table_path: Path,
+    identity: str,
+    attention_scaling: float = 1.0,
+) -> dict[str, Any]:
+    """Install one frozen, hash-bound inverse-frequency table."""
+    resolved = table_path.resolve()
+    values = np.load(resolved, allow_pickle=False)
+    if values.dtype != np.float32 or values.shape != (64,):
+        raise RuntimeError(
+            "frozen frequency table must be float32 with shape [64]"
+        )
+    active = torch.from_numpy(np.ascontiguousarray(values)).float()
+    if (
+        not torch.isfinite(active).all()
+        or torch.any(active <= 0)
+        or not torch.all(active[:-1] > active[1:])
+    ):
+        raise RuntimeError("frozen frequency table is invalid")
+    if not math.isfinite(float(attention_scaling)) or float(attention_scaling) <= 0.0:
+        raise RuntimeError("attention scaling must be finite and positive")
+    rotary = model.model.rotary_emb
+    native = rotary.inv_freq.detach().cpu().float()
+    expected_native = endpoint_geo_inv_freq()
+    if not torch.equal(native, expected_native):
+        raise RuntimeError("released checkpoint native RoPE frequency drift")
+    with torch.no_grad():
+        rotary.inv_freq.copy_(
+            active.to(
+                device=rotary.inv_freq.device,
+                dtype=rotary.inv_freq.dtype,
+            )
+        )
+    if hasattr(rotary, "original_inv_freq"):
+        rotary.original_inv_freq = rotary.inv_freq.detach().clone()
+    rotary.attention_scaling = float(attention_scaling)
+    realized = rotary.inv_freq.detach().cpu().float()
+    if not torch.equal(realized, active):
+        raise RuntimeError("realized frozen frequency table drift")
+    return {
+        "active_frequency": identity,
+        "active_sha256_float32": tensor_sha256(realized),
+        "source_frequency": "native_endpoint_rope",
+        "source_sha256_float32": tensor_sha256(native),
+        "table_path": str(resolved),
+        "table_file_sha256": sha256_file(resolved),
+        "table_dtype": str(values.dtype),
+        "table_shape": list(values.shape),
+        "attention_scaling": float(attention_scaling),
+    }
+
+
 def validate_adapter_training_substrate(
     metadata: dict[str, Any],
     *,
@@ -574,6 +669,41 @@ def _validate_or_create_run_manifest(
 
 def main() -> None:
     args = parse_args()
+    if (args.frequency in {
+        "budgeted_s2_p1",
+        "budgeted_s2_p2",
+        "budgeted_s4_p1",
+        "budgeted_s4_p2",
+        "custom_non_geometric",
+    }) != (
+        args.frequency_table is not None
+    ):
+        raise RuntimeError(
+            "budgeted frequency requires --frequency-table and no other "
+            "frequency accepts it"
+        )
+    if (args.frequency == "custom_non_geometric") != (
+        args.frequency_label is not None
+    ):
+        raise RuntimeError(
+            "custom_non_geometric requires --frequency-label and no other "
+            "frequency accepts it"
+        )
+    if (
+        float(args.attention_scaling) != 1.0
+        and args.frequency
+        not in {
+            "budgeted_s2_p1",
+            "budgeted_s2_p2",
+            "budgeted_s4_p1",
+            "budgeted_s4_p2",
+            "custom_non_geometric",
+        }
+    ):
+        raise RuntimeError(
+            "explicit attention scaling is registered only for frozen "
+            "non-geometric tables"
+        )
     tasks = (
         tuple(str(task) for task in args.tasks)
         if args.tasks is not None
@@ -728,6 +858,13 @@ def main() -> None:
             for task in selected_tasks
         },
         "frequency": str(args.frequency),
+        "frequency_label": args.frequency_label,
+        "attention_scaling": float(args.attention_scaling),
+        "frequency_table_sha256": (
+            sha256_file(args.frequency_table.resolve())
+            if args.frequency_table is not None
+            else None
+        ),
         "yarn_factor": (
             float(args.yarn_factor)
             if "yarn" in str(args.frequency)
@@ -844,6 +981,23 @@ def main() -> None:
                 else "evq"
             ),
             factor=float(args.yarn_factor),
+        )
+    elif args.frequency in {
+        "budgeted_s2_p1",
+        "budgeted_s2_p2",
+        "budgeted_s4_p1",
+        "budgeted_s4_p2",
+        "custom_non_geometric",
+    }:
+        frequency = apply_frozen_frequency_table(
+            model,
+            table_path=args.frequency_table,
+            identity=(
+                str(args.frequency_label)
+                if args.frequency == "custom_non_geometric"
+                else f"uniqueness_{args.frequency}"
+            ),
+            attention_scaling=float(args.attention_scaling),
         )
     elif args.frequency == NATIVE_PROTECTED_FREQUENCY:
         applied = (
@@ -1237,6 +1391,7 @@ def main() -> None:
                 else None
             ),
             "attention": "flash_only_custom_kv_cache",
+            "attention_scaling": float(args.attention_scaling),
             "precision": "bf16_weights_and_autocast",
             "task_generation_tokens": {
                 task: int(TASK_CONFIGS[task]["tokens_to_generate"])

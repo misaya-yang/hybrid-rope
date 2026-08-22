@@ -1,0 +1,470 @@
+#!/usr/bin/env python3
+"""Held-out 2Wiki evaluation for frozen zero-training RoPE operators."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import re
+import string
+import tempfile
+import time
+import zipfile
+from pathlib import Path
+from typing import Any, Mapping, Sequence
+
+import numpy as np
+import torch
+from transformers import AutoTokenizer
+
+from scripts.lib.rope.length_conditioned_budgeted import (
+    install_length_conditioned_rope,
+    matched_attention_scaling,
+)
+from rebuttal.rebuttal_0723.experiments.olmo2_1b_evq.evaluate_ruler import (
+    configure_cuda,
+    configure_ruler_flash_attention,
+    greedy_generate,
+)
+from rebuttal.rebuttal_0723.experiments.olmo2_lora_conversion import load_model
+from rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.evaluate_instruct_ruler_transfer import (
+    apply_frequency,
+    official_yarn_config,
+    verify_official_yarn,
+)
+from rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.train_4k_stage_a import (
+    ready_checkpoint_digest,
+)
+STATUS = "FROZEN_ZERO_TRAINING_2WIKI_COMPLETE"
+OFFICIAL_2WIKI_MEMBER = "2wikimqa.jsonl"
+OFFICIAL_2WIKI_PROMPT = (
+    "Answer the question based on the given passages. Only give me the "
+    "answer and do not output any other words.\n\n"
+    "The following are given passages.\n{context}\n\n"
+    "Answer the question based on the given passages. Only give me the "
+    "answer and do not output any other words.\n\n"
+    "Question: {question}\nAnswer:"
+)
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def canonical_sha256(value: Any) -> str:
+    return hashlib.sha256(
+        json.dumps(
+            value,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False,
+        ).encode("utf-8")
+    ).hexdigest()
+
+
+def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+    path = path.resolve()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+    with tempfile.NamedTemporaryFile(
+        dir=path.parent,
+        prefix=path.name + ".",
+        mode="w",
+        encoding="utf-8",
+        delete=False,
+    ) as handle:
+        temporary = Path(handle.name)
+        handle.write(payload)
+        handle.flush()
+        os.fsync(handle.fileno())
+    temporary.replace(path)
+
+
+def atomic_append_jsonl(path: Path, row: Mapping[str, Any]) -> None:
+    path = path.resolve()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    previous = path.read_bytes() if path.exists() else b""
+    line = (
+        json.dumps(dict(row), sort_keys=True, ensure_ascii=False) + "\n"
+    ).encode("utf-8")
+    with tempfile.NamedTemporaryFile(
+        dir=path.parent,
+        prefix=path.name + ".",
+        mode="wb",
+        delete=False,
+    ) as handle:
+        temporary = Path(handle.name)
+        handle.write(previous)
+        handle.write(line)
+        handle.flush()
+        os.fsync(handle.fileno())
+    temporary.replace(path)
+
+
+def normalize_2wiki(text: str) -> str:
+    value = re.sub(r"\b(a|an|the)\b", " ", str(text).lower())
+    value = "".join(
+        character for character in value
+        if character not in string.punctuation
+    )
+    return " ".join(value.split())
+
+
+def token_f1(prediction: str, references: Sequence[str]) -> float:
+    pred = normalize_2wiki(prediction).split()
+    best = 0.0
+    for reference in references:
+        gold = normalize_2wiki(reference).split()
+        if not pred or not gold:
+            continue
+        overlap = sum(
+            min(pred.count(token), gold.count(token))
+            for token in set(pred)
+        )
+        if overlap:
+            precision = overlap / len(pred)
+            recall = overlap / len(gold)
+            best = max(best, 2 * precision * recall / (precision + recall))
+    return float(best)
+
+
+def normalized_exact(prediction: str, references: Sequence[str]) -> float:
+    value = normalize_2wiki(prediction)
+    return float(any(value == normalize_2wiki(ref) for ref in references))
+
+
+def load_official_2wiki_rows(path: Path) -> dict[str, Any]:
+    with zipfile.ZipFile(path.resolve()) as archive:
+        candidates = [
+            name for name in archive.namelist()
+            if name == OFFICIAL_2WIKI_MEMBER
+            or name.endswith("/" + OFFICIAL_2WIKI_MEMBER)
+        ]
+        if len(candidates) != 1:
+            raise RuntimeError(
+                f"expected one official 2Wiki member, got {candidates}"
+            )
+        member = candidates[0]
+        rows = [
+            json.loads(line)
+            for line in archive.read(member).decode("utf-8").splitlines()
+            if line.strip()
+        ]
+    if len(rows) != 200:
+        raise RuntimeError(
+            f"LongBench 2wikimqa must contain 200 rows, got {len(rows)}"
+        )
+    for index, row in enumerate(rows):
+        if (
+            not isinstance(row, dict)
+            or not isinstance(row.get("input"), str)
+            or not isinstance(row.get("answers"), list)
+        ):
+            raise RuntimeError(f"malformed official 2Wiki row {index}")
+    return {
+        "dataset": "THUDM/LongBench:2wikimqa",
+        "zip_sha256": sha256_file(path),
+        "member": member,
+        "rows": rows,
+        "rows_sha256": canonical_sha256(rows),
+    }
+
+
+def _chat_ids(tokenizer: Any, prompt: str) -> list[int]:
+    value = tokenizer.apply_chat_template(
+        [{"role": "user", "content": prompt}],
+        add_generation_prompt=True,
+        return_tensors="pt",
+    )
+    if isinstance(value, Mapping):
+        value = value.get("input_ids")
+        if value is None:
+            raise RuntimeError("chat template output lacks input_ids")
+    if getattr(value, "ndim", None) == 2:
+        return [int(item) for item in value[0].tolist()]
+    return [int(item) for item in value]
+
+
+def _fit_chat_prompt(
+    tokenizer: Any,
+    prompt: str,
+    length: int,
+    max_new_tokens: int,
+) -> tuple[list[int], bool]:
+    raw = list(tokenizer(prompt, add_special_tokens=False).input_ids)
+    if len(raw) + max_new_tokens <= length:
+        return _chat_ids(tokenizer, prompt), False
+    candidate = raw
+    while True:
+        content = tokenizer.decode(
+            candidate,
+            skip_special_tokens=True,
+            clean_up_tokenization_spaces=False,
+        )
+        ids = _chat_ids(tokenizer, content)
+        if len(ids) + max_new_tokens <= length:
+            return ids, True
+        allowed = len(candidate) - (len(ids) + max_new_tokens - length)
+        if allowed <= 64:
+            raise RuntimeError(f"2Wiki query cannot fit physical L{length}")
+        head = allowed // 2
+        candidate = raw[:head] + raw[-(allowed - head):]
+
+
+def build_2wiki_jobs(
+    tokenizer: Any,
+    package: Mapping[str, Any],
+    *,
+    lengths: Sequence[int],
+) -> list[dict[str, Any]]:
+    jobs: list[dict[str, Any]] = []
+    for index, source in enumerate(package["rows"]):
+        prompt = OFFICIAL_2WIKI_PROMPT.format(
+            context=str(source["context"]),
+            question=str(source["input"]),
+        )
+        source_hash = canonical_sha256(source)
+        for length in lengths:
+            ids, truncated = _fit_chat_prompt(
+                tokenizer,
+                prompt,
+                int(length),
+                max_new_tokens=32,
+            )
+            row_id = f"2wikimqa:{source_hash}:L{int(length)}"
+            jobs.append({
+                "row_id": row_id,
+                "nominal_length": int(length),
+                "input_ids": ids,
+                "references": [str(value) for value in source["answers"]],
+                "max_new_tokens": 32,
+                "truncated": truncated,
+                "row_sha256": canonical_sha256({
+                    "row_id": row_id,
+                    "source": source_hash,
+                    "length": int(length),
+                    "input_ids": ids,
+                }),
+                "source_row_sha256": source_hash,
+                "source_index": index,
+            })
+    return jobs
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--checkpoint", type=Path, required=True)
+    parser.add_argument("--ready-receipt", type=Path, required=True)
+    parser.add_argument("--longbench-zip", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--length", type=int, choices=(4096, 8192, 16384), required=True)
+    parser.add_argument(
+        "--frequency",
+        choices=("native", "official_yarn", "budgeted"),
+        required=True,
+    )
+    parser.add_argument("--factor", type=float, default=1.0)
+    parser.add_argument("--table", type=Path)
+    parser.add_argument("--table-name")
+    parser.add_argument("--limit", type=int, default=200)
+    return parser.parse_args()
+
+
+def _load_completed(path: Path) -> dict[str, dict]:
+    rows: dict[str, dict] = {}
+    if not path.is_file():
+        return rows
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        row = json.loads(line)
+        row_id = str(row["row_id"])
+        if row_id in rows:
+            raise RuntimeError(f"duplicate completed 2Wiki row: {row_id}")
+        rows[row_id] = row
+    return rows
+
+
+def main() -> int:
+    args = parse_args()
+    if args.frequency == "native" and (args.length != 4096 or args.factor != 1.0):
+        raise RuntimeError("Native owner is registered only at 4K/factor one")
+    if args.frequency == "official_yarn" and args.factor <= 1.0:
+        raise RuntimeError("official YaRN requires factor > 1")
+    if args.frequency == "budgeted":
+        if args.table is None or not args.table_name or args.factor <= 1.0:
+            raise RuntimeError("budgeted method requires table, name, and factor > 1")
+        if int(round(4096 * float(args.factor))) != int(args.length):
+            raise RuntimeError("budgeted factor/length mismatch")
+    elif args.table is not None or args.table_name is not None:
+        raise RuntimeError("only budgeted method accepts a frozen table")
+    if not 1 <= int(args.limit) <= 200:
+        raise RuntimeError("2Wiki limit must be in [1,200]")
+
+    output = args.output.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    checkpoint = args.checkpoint.resolve()
+    checkpoint_sha = ready_checkpoint_digest(checkpoint, args.ready_receipt.resolve())
+    package = load_official_2wiki_rows(args.longbench_zip.resolve())
+    tokenizer = AutoTokenizer.from_pretrained(
+        checkpoint,
+        local_files_only=True,
+        trust_remote_code=False,
+    )
+    jobs = build_2wiki_jobs(tokenizer, package, lengths=(int(args.length),))[
+        : int(args.limit)
+    ]
+    jobs_sha = canonical_sha256(
+        [{key: value for key, value in job.items() if key != "input_ids"} for job in jobs]
+    )
+
+    configure_cuda()
+    model_config = (
+        official_yarn_config(
+            checkpoint,
+            factor=float(args.factor),
+            original_max_position_embeddings=4096,
+        )
+        if args.frequency == "official_yarn"
+        else None
+    )
+    model = load_model(checkpoint, config=model_config)
+    state = None
+    if args.frequency == "official_yarn":
+        method = verify_official_yarn(model, model_config)
+    elif args.frequency == "native":
+        method = apply_frequency(model, "native")
+    else:
+        values = np.load(args.table.resolve(), allow_pickle=False)
+        if values.dtype != np.float32 or values.shape != (64,):
+            raise RuntimeError("budgeted table must be float32 [64]")
+        state, method = install_length_conditioned_rope(
+            model,
+            long_inv_freq=torch.from_numpy(np.ascontiguousarray(values)),
+            long_attention_scaling=matched_attention_scaling(float(args.factor)),
+            long_name=str(args.table_name),
+            reference_length=4096,
+            long_context_budget=int(args.length),
+        )
+        state.force_for_budget(int(args.length))
+        method["table_path"] = str(args.table.resolve())
+        method["table_file_sha256"] = sha256_file(args.table.resolve())
+    model.config.max_position_embeddings = int(args.length)
+    configure_ruler_flash_attention(model)
+    model.config.use_cache = True
+    model.eval().to("cuda")
+    torch.cuda.reset_peak_memory_stats()
+
+    rows_path = output / "examples.jsonl"
+    completed = _load_completed(rows_path)
+    expected = {str(job["row_id"]): job for job in jobs}
+    for row_id, row in completed.items():
+        if row_id not in expected or row.get("row_sha256") != expected[row_id]["row_sha256"]:
+            raise RuntimeError(f"completed 2Wiki row identity drift: {row_id}")
+    eos_token_id = tokenizer.eos_token_id
+    for ordinal, job in enumerate(jobs, start=1):
+        row_id = str(job["row_id"])
+        if row_id in completed:
+            continue
+        if state is not None:
+            state.force_for_budget(int(args.length))
+        input_ids = torch.tensor(
+            [list(job["input_ids"])], dtype=torch.long, device="cuda"
+        )
+        started = time.perf_counter()
+        generated = greedy_generate(
+            model,
+            input_ids,
+            max_new_tokens=int(job["max_new_tokens"]),
+            eos_token_id=eos_token_id,
+        )[0].detach().cpu().tolist()
+        prediction = tokenizer.decode(
+            generated,
+            skip_special_tokens=True,
+            clean_up_tokenization_spaces=False,
+        )
+        row = {
+            "ordinal": ordinal,
+            "row_id": row_id,
+            "row_sha256": str(job["row_sha256"]),
+            "source_index": int(job["source_index"]),
+            "source_row_sha256": str(job["source_row_sha256"]),
+            "nominal_length": int(args.length),
+            "input_tokens": len(job["input_ids"]),
+            "input_sha256": canonical_sha256(job["input_ids"]),
+            "truncated": bool(job["truncated"]),
+            "references": list(job["references"]),
+            "prediction": prediction,
+            "generated_token_ids": [int(value) for value in generated],
+            "generated_tokens": len(generated),
+            "token_f1": token_f1(prediction, job["references"]),
+            "normalized_exact": normalized_exact(prediction, job["references"]),
+            "elapsed_seconds": time.perf_counter() - started,
+        }
+        atomic_append_jsonl(rows_path, row)
+        completed[row_id] = row
+        if ordinal == 1 or ordinal % 20 == 0 or ordinal == len(jobs):
+            print(
+                f"{ordinal}/{len(jobs)} F1={row['token_f1']:.3f} "
+                f"exact={row['normalized_exact']:.0f} input={row['input_tokens']}",
+                flush=True,
+            )
+
+    rows = [completed[str(job["row_id"])] for job in jobs]
+    token_f1_macro = float(np.mean([row["token_f1"] for row in rows]))
+    exact_macro = float(np.mean([row["normalized_exact"] for row in rows]))
+    receipt = {
+        "status": STATUS,
+        "metric_boundary": "Official LongBench-style normalized token F1; normalized exact is auxiliary.",
+        "checkpoint": str(checkpoint),
+        "checkpoint_sha256": checkpoint_sha,
+        "ready_receipt_sha256": sha256_file(args.ready_receipt.resolve()),
+        "longbench": {
+            key: value for key, value in package.items() if key != "rows"
+        },
+        "jobs_sha256": jobs_sha,
+        "method": method,
+        "protocol": {
+            "frequency": str(args.frequency),
+            "factor": float(args.factor),
+            "nominal_length": int(args.length),
+            "rows": len(rows),
+            "max_new_tokens": 32,
+            "method_selection": False,
+            "greedy": True,
+        },
+        "results": {
+            "token_f1_macro": token_f1_macro,
+            "normalized_exact_macro": exact_macro,
+            "input_tokens_min": min(int(row["input_tokens"]) for row in rows),
+            "input_tokens_max": max(int(row["input_tokens"]) for row in rows),
+            "truncated_rows": sum(bool(row["truncated"]) for row in rows),
+            "examples_sha256": sha256_file(rows_path),
+        },
+        "runtime": {
+            "torch": torch.__version__,
+            "cuda": torch.version.cuda,
+            "device": torch.cuda.get_device_name(0),
+            "peak_memory_reserved_bytes": int(torch.cuda.max_memory_reserved()),
+        },
+        "code_sha256": {
+            "evaluator": sha256_file(Path(__file__).resolve()),
+            "length_conditioned_runtime": sha256_file(
+                Path(__file__).resolve().parents[4]
+                / "scripts/lib/rope/length_conditioned_budgeted.py"
+            ),
+        },
+    }
+    atomic_json(output / "results.json", receipt)
+    print(json.dumps(receipt, indent=2, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
