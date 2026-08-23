@@ -68,7 +68,7 @@ for n,d,L,b,t in CFG:
     te=brentq(lambda u: Psi(u,L,b)-2*lamC*d**2/L, 1e-3, 20.0, xtol=1e-8)
     print(f"{n:22s} {ps:6.3f} {Q1:9.5f} {Q1c:9.5f} {100*(Q1c-Q1)/Q1:6.1f} "
           f"{c:7.4f} {c*d/np.sqrt(L):8.3f} {t:8.3f} {te:9.3f}")
-print("\nkappa_att audit (research/KAPPA_ATTENTION_MEASURE_AUDIT_20260820.md), L_train=512, d_eff=64:")
+print("\nkappa_att audit (research/audits/KAPPA_ATTENTION_MEASURE_AUDIT_20260820.md), L_train=512, d_eff=64:")
 for n,k in [("Geo/Geo",4.6476e-4),("Geo/EVQ",2.53131e-3),("EVQ/Geo",1.14364e-3),("EVQ/EVQ",5.3535e-4)]:
     Le=1/k; print(f"   {n:9s} kappa={k:.5e}  L_eff={Le:7.1f}  L_eff/L={Le/512:5.2f}  tau*=d/sqrt(L_eff)={64/np.sqrt(Le):.3f}")
 print(f"   => contractive fixed point tau^sc ~ 1.43 = {1.43/2.83:.2f} x the deployed rule")

@@ -11,7 +11,7 @@
 
 > **Post-handoff update:** the axis falsification below still stands, but its
 > adapter-first next-step judgement is superseded by
-> `LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md`. A matched GPU
+> `../results/LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md`. A matched GPU
 > crossing found that the frozen budgeted table plus deterministic length-only
 > attention scaling reaches 0.5825 at 8K and 0.4000 at 16K, while Native plus
 > the same scaling remains 0 at both lengths. The missing object was attention
@@ -122,6 +122,6 @@ the *adapter*, not the table:
   stage1 -> stage2 boundary with no traceback while the box was oversubscribed
   and while this session killed its own 192 workers. Cause not established;
   they need relaunching, with thread limits exported.
-- Server layout: `/root/autodl-tmp/rope_transport_20260822/analysis/rope_transport/`,
-  frozen manifest at
-  `/root/autodl-tmp/iclr_next_runs/phase_adarope_20260822/assets/target_manifest.json`.
+- Raw analysis outputs and the frozen target manifest remain on the original
+  evaluation host; this owner records their identities without publishing the
+  host's private filesystem layout.

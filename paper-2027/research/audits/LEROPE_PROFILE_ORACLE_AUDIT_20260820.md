@@ -147,7 +147,7 @@ support-aware RMSE interval is `6.224–6.265` for the oracle, compared with
 \(\alpha=-0.944\), oracle-to-EVQ shape RMSE `0.174`, and oracle-to-LeRoPE
 shape RMSE `0.345`.
 
-![LeRoPE profile oracle](../figs/fig_lerope_profile_oracle.pdf)
+![LeRoPE profile oracle](../../figs/fig_lerope_profile_oracle.pdf)
 
 ## 5. Scientific verdict
 

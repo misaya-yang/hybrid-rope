@@ -6,7 +6,7 @@
 - **Question:** can measured attention demand be transformed through the RoPE
   operator to obtain a fixed-support table that improves both the training
   window and extrapolation?
-- **Evidence receipt:** [`evidence/RESULTS_20260821.json`](evidence/RESULTS_20260821.json)
+- **Evidence receipt:** [`../evidence/RESULTS_20260821.json`](../evidence/RESULTS_20260821.json)
 
 ## 1. Protocol
 
@@ -193,4 +193,4 @@ and diagnostic. If this table is later promoted, seed 256 is the smallest
 missing replication.
 
 The next mature-model research route is specified separately in
-[`README.md`](README.md).
+[`../README.md`](../README.md).

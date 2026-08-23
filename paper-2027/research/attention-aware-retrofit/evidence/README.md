@@ -31,6 +31,15 @@ evaluation; the partial data preparation is not a result.
 target-aware routing receipt as the current deployment owner. It records the
 same-hardware Native, official YaRN factor-four, target-aware oracle, and binary
 Native/s4 natural-context matrix; full 200-row 2Wiki; core-4 RULER; exact route
-parity; confirmation-only full RULER-13; the failed stateless boundary-slope
-and smallest-covering policies; and hashes for every raw result receipt. It is
-internal evidence pending an authorised manuscript promotion.
+parity; confirmation-only full RULER-13; full 200-row Qasper; the failed
+stateless boundary-slope and smallest-covering policies; and hashes for every
+raw result receipt. It is internal evidence pending an authorised manuscript
+promotion.
+
+`SAME_SUPPORT_FROZEN_CHECKPOINT_RESULTS_20260823.json` records the completed
+fixed-endpoint geometric/nearest-ramp/derived controls on OLMo and Qwen, the
+model-relative table identities, evaluation-row sensitivity intervals, the
+two-seed 151.9M weights-by-runtime-table crossing, and the corrected Qwen 128K
+extension. Its mature-checkpoint comparisons are fixed-checkpoint causal
+interventions on `z`, not from-training estimates or a new interpolation-family
+claim.

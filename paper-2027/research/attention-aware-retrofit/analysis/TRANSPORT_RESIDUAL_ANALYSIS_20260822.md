@@ -155,7 +155,8 @@ identity.
 
 ## 7. Consequence for the next experiment
 
-The registered ADaRoPE tournament (`PHASE_ADAROPE_LORA_PREFLIGHT_20260822.md`)
+The registered ADaRoPE tournament
+(`../preflights/PHASE_ADAROPE_LORA_PREFLIGHT_20260822.md`)
 should not spend GPU on `phase_chord` as a mature-model retrofit direction, and
 has no arm at all for the operator family that owns this repository's only
 zero-training positive result. The smallest change that makes it decisive is to

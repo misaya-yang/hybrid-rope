@@ -18,7 +18,8 @@ worktree 边界和下一步的文档；本 README 只保留稳定的包结构与
 `HANDOFF.md` 是内部文件，匿名 supplement 会刻意排除；导出包读者可跳过本节。
 
 第一性原理和最高优先级是最大化 ICLR 2027 录用概率。当前阶段不继续做推测性
-扩写或新实验，等待用户提供独立 AI 交叉审稿，再对具体问题逐项核验和按决策杠杆排序。
+扩写或无闸门实验。固定支撑成熟模型控制与 151.9M crossing 已完成，但仍是
+internal case study，尚未改写正文；当前决策与下一步只看 `HANDOFF.md`。
 
 ---
 
@@ -31,8 +32,9 @@ worktree 边界和下一步的文档；本 README 只保留稳定的包结构与
 - [`research/README.md`](research/README.md) — 研究索引、阅读顺序与 owner 路由
 - [`research/ICLR2027_RESEARCH_SYNTHESIS_20260819.md`](research/ICLR2027_RESEARCH_SYNTHESIS_20260819.md) — 当前 claim 架构、证据路由与否决方向
 - [`research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)
-- [`research/ICLR2027_THEORY_ARCHITECTURE.md`](research/ICLR2027_THEORY_ARCHITECTURE.md) — 早期理论设计探索；以 synthesis 和 canonical report 为准
-- [`research/ICLR2027_REVIEW_AND_EVIDENCE_AUDIT.md`](research/ICLR2027_REVIEW_AND_EVIDENCE_AUDIT.md) — 历史审稿吸收审计；其中已完成项以当前源码为准
+- [`research/attention-aware-retrofit/README.md`](research/attention-aware-retrofit/README.md) — retrofit 的 results / evidence / analysis / preflight 分层入口
+- [`research/audits/README.md`](research/audits/README.md) — 内部审计索引
+- [`research/external-reviews/README.md`](research/external-reviews/README.md) — 外部模型复核；不是 canonical evidence
 
 这些文件是内部审计与续作交接，不是可直接复制进正文的 outward-facing 文案。
 
@@ -133,6 +135,11 @@ appendix/
   a5_identification.tex     识别协议 + YaRN-style 实现 + learned comparator
   a6_mature_scale.tex       新增：成熟模型协议、2Wiki、RULER、causal source-use
   a3/a4_supporting*.tex     沿用
+research/
+  README.md                 唯一研究路由与 owner 索引
+  attention-aware-retrofit/ results / evidence / analysis / theory / preflights
+  audits/                   内部审计与已证伪代理指标
+  external-reviews/         外部模型复核，永不直接升级 claim
 ```
 
 ## 构建报告会检查什么

@@ -2,353 +2,293 @@
 
 - **Updated:** 2026-08-23
 - **Target:** ICLR 2027
-- **Active manuscript:** `paper-2027/`
 - **Branch:** `main_0726`
-- **Status:** acceptance-oriented narrative rewrite remains integrated and
-  validated; a new zero-training binary Native/s4 retrofit has completed a
-  same-hardware formal natural-context matrix, full RULER-13 confirmation, and
-  full 200-row 2Wiki. It is internal and has not yet changed the manuscript.
-- **Internal only:** exclude this file from the anonymous supplement
+- **Active manuscript:** `paper-2027/`
+- **Immutable baseline:** `paper/`
+- **Current status:** the nine-page manuscript source/scientific content remains
+  unchanged and has been rebuilt successfully; the latest fixed-support
+  mature-checkpoint controls, 151.9M crossing, full
+  Qasper owner repair, code, and evidence receipts are complete and indexed but
+  have not been promoted into the manuscript. No GPU task is running or queued.
+- **Internal only:** exclude this file from the anonymous supplement.
 
-## 1. First principle
+## 1. Start here
 
-Maximise ICLR 2027 acceptance probability inside three hard constraints:
-scientific truth, submission validity, and decision leverage. Add or retain
-material only when it changes a likely reviewer ceiling, technical credibility,
-human comprehension, or venue validity.
+Read in this order:
+
+1. [`../AGENTS.md`](../AGENTS.md) — stable scientific, submission, safety, and
+   workspace rules.
+2. This file — live state and the only action queue.
+3. [`README.md`](README.md) — stable manuscript/build layout.
+4. [`research/README.md`](research/README.md) — canonical claim/evidence routing.
+5. [`research/attention-aware-retrofit/README.md`](research/attention-aware-retrofit/README.md)
+   — current retrofit result, evidence, analysis, theory, and preflight layers.
+
+Do not start from an external review, the newest date, an ignored result, or a
+preflight. If this handoff conflicts with a dated owner, verify the owner and
+raw/hash receipt before changing a claim.
 
 ## 2. Current paper story
 
-The paper separates sampled support from normalised interior allocation,
+The paper's central object is
 
 \[
-x_k=-\log\omega_k=a+Rz_k.
+x_k=-\log\omega_k=a+Rz_k,
 \]
 
-The outward evidence chain is now:
+where `(a,R)` is sampled spectral support and `z` is normalized interior
+allocation. The outward evidence chain is:
 
-1. a raw-hash-receipted three-seed $151.9$M fixed-support control identifies
-   $z$ independently of sampled support;
-2. full sin/cos subspace geometry, the exact stable-rank identity, the exact
-   transplant obstruction, and the $50$M table-by-weights crossing explain why
-   the table is learned with the weights;
-3. the three-seed $432$M scarce-channel MLA result is the systems flagship;
-   the $454$M three-seed YaRN-style composition restores the strongest completed
-   substrate result; $750$M full-parameter continuation and a $1.485$B
-   same-initialisation/same-scientific-recipe comparison extend the
-   training-stage and scale trend;
-4. matched $1.485$B Q/K-only adaptation supplies real-document QA and RULER;
-   separate matched $8$B LoRA supplies mature-model probability and causal
-   remote-source-use evidence;
-5. target-aware retargeting is stronger in the target-matched exact-range
-   condition, so support and allocation are distinct but interacting rather
-   than additive coordinates.
+1. the raw-hash-receipted three-seed 151.9M exact-range experiment identifies
+   `z` while holding support fixed;
+2. full sin/cos geometry, the exact transplant obstruction, and the 50M
+   weights-by-table crossing explain static redundancy and training
+   co-adaptation;
+3. the three-seed 432M scarce-channel MLA result is the systems flagship, with
+   454M, 750M, and 1.485B evidence retaining their actual protocol roles;
+4. matched 1.485B and separate 8B adaptation studies provide mature capability
+   evidence, not pretraining-scale evidence;
+5. EVQ-Cosh remains one closed-form intervention on the allocation axis, not a
+   universal optimum.
 
-The training-scale trend stops at $1.485$B. The $8$B results are adaptation
-evidence and must never be described as pretraining-scale evidence.
+The new frozen-checkpoint case study is compatible with this story but is not
+yet part of it. Its defensible claim is that fixed-support `z` remains
+consequential after pretraining and that a model-relative split can be derived
+without task labels. It does **not** establish a new interpolation family,
+universal best profile, or generic superiority to YaRN.
 
-Outward-facing text follows two locked presentation rules. It narrows claims
-instead of volunteering internal negatives or speculative objections, while
-retaining every disclosure required for scientific truth and venue validity.
-It also keeps protocol identities distinct: `Geo` for geometric training
-baselines, `Native` for unmodified pretrained-model baselines, `YaRN-style`
-for the repository fixed-index range operator, `YaRN` for the cited method,
-and `MLA wavelength-blend operator` for the run-specific MLA transform.
+Use locked nomenclature from `AGENTS.md`: `Geo`, `Native`, `FMRoPE`,
+`anchored EVQ-Cosh`, `YaRN-style`, cited `YaRN`, and `MLA wavelength-blend
+operator` are not interchangeable.
 
-## 3. Implemented manuscript state
+## 3. Canonical owner map
+
+| Scientific question | Canonical owner | Claim ceiling |
+| --- | --- | --- |
+| Current claim architecture | [`research/ICLR2027_RESEARCH_SYNTHESIS_20260819.md`](research/ICLR2027_RESEARCH_SYNTHESIS_20260819.md) | architecture and routing, not a replacement for raw owners |
+| Pure fixed-support training identification | [`research/EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](research/EXACT_RANGE_151M_3SEED_RESULT_20260820.md) and companion JSON | three training seeds; fixed support only |
+| Full-RoPE geometry and 50M co-adaptation | [`research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md) | static basis theory plus diagnostic crossing |
+| Exact frozen Q/K obstruction | `../rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md` | exact static compensation only |
+| Mature fixed-support `z` controls | [`research/attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](research/attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) | internal frozen-checkpoint case study |
+| Practical zero-training session policy | [`research/attention-aware-retrofit/results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`](research/attention-aware-retrofit/results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md) | internal single-model deployment/capability result |
+| Retrofit receipts | [`research/attention-aware-retrofit/evidence/README.md`](research/attention-aware-retrofit/evidence/README.md) | compact hashes/metrics; raw artifacts remain external |
+| Audits and falsified internal proxies | [`research/audits/README.md`](research/audits/README.md) | validity/negative evidence, never upgraded claims |
+| External-model reviews | [`research/external-reviews/README.md`](research/external-reviews/README.md) | untrusted analysis input only |
+
+The complete central systems/mature evidence routes remain in
+[`research/README.md`](research/README.md); do not duplicate them here.
+
+## 4. Latest completed science
+
+### 4.1 Same-support frozen checkpoints
+
+At factor four, every geometric/ramp/derived arm fixes the same frequency
+endpoints and attention amplitude. Only interior `z` changes.
+
+| Model / protocol | Native | YaRN-4 | same-support geometric | nearest ramp | corrected derived |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Qwen2.5-1.5B core-4 64K, n=20 | 0.5450 | 0.6025 | 0.5775 | 0.6400 | **0.6650** |
+| OLMo-2-1B unseen-nine 16K, n=20 | 0.0000 | 0.0794 | 0.0056 | **0.6104** | 0.6047 |
+| Qwen2.5-1.5B core-4 128K, n=20 | 0.4350 | 0.4650 | 0.4550 | not run | **0.5400** |
+
+Interpretation:
+
+- fixed-support interior allocation has a large causal effect in the stated
+  frozen-checkpoint protocols;
+- the detailed uniqueness profile is not separately identified: its nearest
+  label-free ramp matches it under the registered gate;
+- Qwen's old stride-16 table contained a numerical alias. At 128K it inflated
+  `0.5400` to `0.6175`; the old value is invalid as a corrected-profile result;
+- row-bootstrap intervals condition on one checkpoint/task set and are not
+  model-, task-population-, or training-seed uncertainty.
+
+### 4.2 151.9M weights-by-runtime-table crossing
+
+Two paired training seeds cross FMRoPE/anchored-Cosh weights with derived long
+tables on 32 fixed FineWeb-Edu anchors. At 1K, two-seed mean tail NLL is:
+
+| Frozen weights | FMRoPE-derived | Cosh-derived | geometric |
+| --- | ---: | ---: | ---: |
+| FMRoPE-trained | **3.426** | 5.776 | 3.429 |
+| anchored-Cosh-trained | 4.455 | **3.479** | 4.177 |
+
+Crossover interactions are `3.400/3.251` NLL for seeds 137/256. This supports
+weights/table compatibility and co-adaptation; it does not replace the
+three-seed exact-range training estimate or prove either runtime profile
+globally optimal.
+
+### 4.3 Practical zero-training owner and natural context
+
+The session policy chooses exact Native only when the observed prefill plus
+generation budget fits the model's Native window; otherwise it installs one
+frozen long profile before prefill for the complete KV-cache lifetime. It has
+zero learned parameters and zero training tokens.
+
+- OLMo full-200 Qasper 16K token F1: binary `0.2457` versus YaRN `0.1803`;
+- OLMo full-200 2Wiki 16K token F1: binary `0.2666` versus YaRN `0.2569`, with
+  the paired interval including zero;
+- OLMo RULER-13: binary/YaRN `0.6772/0.2382` at 8K and `0.5440/0.0588` at 16K;
+- exact Native short-route output parity is constructive, but short-route
+  selection is not itself the source of every natural-task gain.
+
+RULER remains task-family adaptation, not unseen natural-task transfer.
+
+### 4.4 Evidence identities
+
+- same-support report SHA-256:
+  `b91cc22301c66c223e053c2c7e2d76b76c8c0fba3e3876a0459ce7ce4279921a`;
+- same-support receipt SHA-256:
+  `9681a02fd6a9be9fa0746b6d8f10590b66022a53f3505380503bcc99a6702e00`;
+- session-policy report SHA-256:
+  `d01ee4b0bc94014b6d167d40e8fab11875333632de21170cd3fb57c706a057db`;
+- session-policy receipt SHA-256:
+  `19f40021a5b7677faeb8519ad4f145fd3cb9ab81aaf30d6558cf6c7bfc561421`;
+- raw local copy root: external archive
+  `hybrid-rope-results/same-support-controls-20260823` (outside the repository);
+- the authorized GPU instance was confirmed `已关机`; SSH is no longer
+  reachable.
+
+## 5. Manuscript and package state
 
 - Title: *RoPE Has a Spectral Budget*.
-- Abstract: 186 source words. It opens with the geometric redundancy tax
-  (`23` slow pairs, `46` nominal dimensions, $r_2=2.00$), then gives the
-  three-seed fixed-support identification and the $432$M MLA $16$K PPL
-  reduction of `31.1%`. The $1.485$B from-initialisation result remains trend
-  evidence; $8$B is explicitly adaptation.
-- Page 2 opens with `fig_evidence_overview.pdf`:
-  - three-seed fixed-support per-seed curves and mean;
-  - three-seed $432$M, $K=16$ relative-PPL crossover;
-  - $1.485$B 2Wiki token-F1 plus an $8$B adapted
-    remote-block-ablation callout.
-- The existing method-overview and frequency-geometry figures remain.
-- The frequency-geometry heatmap now uses a white-to-blue sequential palette;
-  the previous black low-redundancy field is removed and the slow-pair block is
-  highlighted in orange.
-- The old identification and mature-crossover figures and their generators are
-  removed; the unused mature table is removed.
-- The M4 table is in the identification appendix; the body retains its
-  `10/12` and `9/12` cross-configuration/shape result.
-- $432$M MLA and $750$M full-parameter continuation are visible in the body.
-- The prose declares endpoint/protocol roles once, then presents a hierarchy
-  rather than repeating defensive `separate`/`matched` qualifiers. The main
-  capability endpoint is 2Wiki token-F1; exact match remains in App. F.
-- Finite-$\tau$ is presented as a zero-search operating prior, not a basin
-  bound or point-optimum selector. The ratios $0.75\times$, $1.25\times$, and
-  $1.5\times$ are discrete tested neighbours; they do not certify every value
-  in that interval.
-- The full theory appendix is retained: geometry,
-  transplant obstruction, surrogate validation, waterbed/self-consistency,
-  operating-rule scaling, stiffness, $L_{\mathrm{eff}}^J$, Fisher forcing,
-  and discrete-channel transport. The $3/9$ neighbour comparison is retained
-  as evidence that the rule is not a dependable per-configuration optimum;
-  its separate value is avoiding a search while often improving on Geo.
-- Discussion says support and allocation are distinct but interacting; it does
-  not claim additive gains under range retargeting. It now explains why scalar
-  base search cannot reach non-geometric allocation and why the $K=16$ result
-  makes the axis practically consequential.
-- The target-matched reversal is framed next to its mechanism: retargeting
-  changes absolute phase coverage, so target-specific support and allocation
-  should be selected jointly; the fixed condition remains the identification
-  owner.
-- The AI-use statement remains unchanged. Its current wording was previously
-  author-confirmed as complete and literally true; the external suggestion to
-  assert author-only theorem statements/proof strategies was not adopted
-  without a new factual confirmation.
-- Related Work now closes the verified citation gaps without becoming an
-  inventory: MrRoPE is positioned as training-free mixed-radix range
-  conversion; Selective RoPE and Deconstructing Positional Information mark
-  broader operator/logit analyses; RePo marks content-dependent position
-  assignment; Kazemnejad et al. supplies the general length-generalization
-  context. GRAPE, Urrutia et al., and xPos were already present.
-- The abstract separates the $1.485$B from-initialisation trajectory from its
-  independent Q/K adaptation; EVQ-Cosh's fast-end allocation direction is
-  stated before the theory.
-- Exact-range naming is locked to FMRoPE versus anchored EVQ-Cosh; `Geo`
-  remains reserved for geometric training baselines, and `Native` for
-  unmodified pretrained-model baselines.
-- Figures, axes, captions, and tables spell out `EVQ-Cosh`; the repository
-  range operator is always `YaRN-style`, and the run-specific MLA operator is
-  always `MLA wavelength-blend operator`. Deprecated descriptive aliases are
-  absent from outward sources.
-- Proposition~2 now defines its asymptotic variable and softmax-support
-  condition. Theorem~4 is explicitly a continuum-surrogate result whose
-  deployed table is a finite midpoint quantisation.
-- Figure~2 is fixed in place immediately after the Theory opening rather than
-  floating above the section; Figure~1 now separates the $8$B LoRA deletion
-  callout from the $1.485$B QA panel.
-- The reviewer supplement now has a public README, the machine-readable
-  exact-range three-seed aggregate, a runnable exact-range entrypoint, and no
-  stale figures, internal handoff links, or broken packaged CI commands.
+- The body ends on page 9; the current Tectonic build has 31 total US-Letter
+  pages.
+- The current manuscript already presents fixed-support identification,
+  full-basis theory, co-adaptation, the 432M MLA flagship, scale persistence,
+  and mature adaptation/capability evidence.
+- The latest frozen-checkpoint case study is **not** in the body, appendix,
+  figures, or tables.
+- `paper-2027/main.pdf` SHA-256:
+  `61e9b665645e434c814b33b7779081e5fd7234a46fad7b24cf0a5c4b44fc9781`;
+  size `455492` bytes.
+- Current anonymous supplement SHA-256:
+  `7a1b37d7c6a205c0cb9d56ba64482b78ac90a7e39045bf1cb58d7cb27273bc3a`;
+  size `852343` bytes; ZIP integrity is clean.
+- Immutable `paper/main.pdf` SHA-256:
+  `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`.
 
-## 4. Canonical paper-facing values
+The AI-use statement has author-confirmed coverage and must not be shortened or
+cosmetically rewritten without renewed confirmation and a current policy
+check.
 
-### Three-seed fixed-support control
+## 6. Workspace and Git state
 
-- Anchored EVQ-Cosh minus FMRoPE NLL at `256/512/1K/2K`:
-  `+0.026/-0.281/-0.176/-0.146`.
-- Every training seed favours anchored EVQ-Cosh at every OOD length.
-- The $512$ magnitude is heterogeneous and remains visible as per-seed points.
-- Target-matched means at `512/1K/2K`:
-  `+0.060/+0.227/+0.460`; FMRoPE is favoured by `3/3` seeds.
-- Owner: `research/EXACT_RANGE_151M_3SEED_RESULT_20260820.{md,json}`.
+The research tree now has explicit layers:
 
-### Scale and capability roles
+```text
+paper-2027/research/
+  README.md                         single research router
+  attention-aware-retrofit/
+    README.md                       retrofit router and current decision
+    results/                        completed owners only
+    evidence/                       compact receipts
+    analysis/                       mechanisms and falsifications
+    theory/                         dated agendas/derivations
+    preflights/                     preregistrations and revoked protocols
+  audits/                           internal validity audits
+  external-reviews/                 non-canonical model reviews
+  three_completions/                supplementary derivations and scripts
+```
 
-- $432$M MLA: three-seed from scratch, $K=16$; PPL `35.4/35.8` at $8$K
-  and `138.8/95.6` at $16$K.
-- $750$M: single-seed full-parameter $2$K$\rightarrow4$K continuation from a
-  shared Geo checkpoint; not from scratch. PPL `45.1/24.4` at $16$K and strict
-  AR exact `0/77.5%` at $8$K.
-- $1.485$B from initialisation: same initialisation, architecture, scientific
-  recipe, reconstructed data-order prefix, counted-token budget, and evaluation
-  rows; different trainer implementations. Geo/EVQ-Cosh PPL is
-  `177.99/191.36`, `161.19/167.45`, `163.88/156.87`, `182.73/159.64` at
-  $2$/$4$/$8$/$16$K.
-- $8$B: matched LoRA adaptation only. Keep its natural-text probability,
-  RULER, attention-hit, and remote-block-ablation endpoints separate.
+Temporary clutter was moved, not deleted, to the external recoverable archive
+`hybrid-rope-results/workspace-cleanup-20260823/obsolete/`:
+an obsolete private-path readiness receipt, a byte-duplicate verifier ZIP, and
+`.DS_Store`. Reproducible Tectonic scratch files were moved to the adjacent
+`generated-paper-build/` archive, and `.gitignore` now excludes those active
+paper build transients.
 
-Seed inventory for the mature/supporting arms:
+Git snapshot at cleanup start:
 
-- the $50$M weights-by-table co-adaptation crossing, $750$M continuation, and
-  $1.485$B from-initialisation comparison each currently have one paired
-  training trajectory;
-- the $1.485$B selective Q/K, 2Wiki, and RULER results use one matched
-  Native/EVQ-Cosh trained pair; routing conversion has a second independent
-  EVQ-Cosh seed but not a second complete Native/EVQ-Cosh pair;
-- the $8$B natural-LM/remote-deletion and RULER protocols use one seed per arm;
-- the main Video-DiT comparison has two seeds, while the base-1000 diagnostic
-  uses seed 42.
+- branch/upstream: `main_0726`, local and upstream both
+  `4498d4c7a55f62751615077671b470157ec2ff45`, ahead/behind `0/0`;
+- the worktree contains the current code, report, receipt, index, and handoff
+  changes described here;
+- no commit, push, pull, rebase, reset, stash, branch switch, or remote change
+  was performed because the user did not explicitly authorize Git mutation;
+- unrelated source data and `paper/` were preserved.
 
-## 5. Internal negative results
+Important implementation additions:
 
-- The LeRoPE structural-curvature oracle moves away from the published LeRoPE
-  profile; do not promote it.
-- The finite-swap $\kappa_{\mathrm{att}}$ probe fails the preregistered Tier-1
-  ordering gate; do not promote the attractive first-order ranking or search
-  subsets.
-- Static rank remains positional-basis accounting, not an LM-quality or
-  extrapolation predictor.
+- `scripts/analysis/rope_transport/same_support_controls.py` — SHA-256
+  `9b77ac431a7f6be8d31e70034b0902f234e5c947773afca3cc7f557d38fd0049`;
+- `scripts/eval/target_free_ruler_smoke.py` — SHA-256
+  `c2612c0c111c509d20e6db8831ecab0a628f5bbcca964452fd2cf7d1d0c8d010`;
+- `scripts/eval/evaluate_151m_same_support_retrofit.py` — SHA-256
+  `64e510d2ae663363bf1e51b45f6e8fbeb33ab8f440c7a888dc382849eb639953`;
+- `tests/test_same_support_rope_controls.py`.
 
-Owners:
-`research/LEROPE_PROFILE_ORACLE_AUDIT_20260820.md` and
-`research/KAPPA_ATTENTION_MEASURE_AUDIT_20260820.md`.
-
-## 6. Attention-aware method discovery
-
-This work is internal and does not change the current manuscript.
-
-- R0 measured attention-distance occupancy from causally masked attention on
-  the mature Native OLMo-2 1.485B Instruct checkpoint and paired seed-137
-  151.9M FMRoPE and anchored EVQ-Cosh checkpoints. The profiles were
-  non-uniform but did not pass the registered multi-peak gate.
-- Mapping distance bins directly to frequency demand was falsified: the
-  seed-137 candidate worsened tail NLL at 512 and 1K.
-- The operator-aware replacement uses
-  $m(\phi)=\mathbb E[1-\cos(\omega(\phi)\Delta)]$ and
-  $\rho\propto(0.9m+0.1)^{1/3}$ at fixed endpoints.
-- Phase-chord minus FMRoPE tail NLL at 256/512/1K/2K is
-  `-0.008/-0.237/-0.152/-0.215` for method-selection seed 137 and
-  `+0.010/-0.084/-0.160/-0.195` for the schedule-frozen seed-42 confirmation.
-  The two-seed means are `+0.001/-0.161/-0.156/-0.205`.
-- Both seeds improve all three OOD endpoints over FMRoPE, and the average
-  in-window cost is nearly removed. The strict gate of retaining at least 80%
-  of anchored EVQ-Cosh gain at every OOD length fails because the seed-42 512
-  effect is smaller. Decision: `PROMISING_PARETO_SHIFT_NOT_PAPER_READY`.
-- Canonical internal navigation:
-  `research/attention-aware-retrofit/README.md`; completed report:
-  `research/attention-aware-retrofit/EXPERIMENT_REPORT_20260821.md`; compact
-  machine-path-free result receipt: `research/attention-aware-retrofit/evidence/RESULTS_20260821.json`.
-- Seed 42 completed 7,629 steps and 499,974,144 tokens; its four-length
-  evaluation completed. No seed 256, R1, or R3 was launched. The subsequent
-  mature-model far-pass chord adaptation is a separate completed internal
-  negative described below; it does not change the phase-chord table's
-  training-time evidence.
-- A candidate-specific mature-model finite function-morph audit is now
-  prepared on a separate no-GPU host. It freezes phase-chord, an
-  endpoint/RMS-log-displacement-matched non-attention control, and anchored
-  EVQ-Cosh over six finite morph points at 4K/8K/16K. The no-GPU receipt passed,
-  but no checkpoint was loaded and no GPU evaluation or training ran. Owner:
-  `research/attention-aware-retrofit/FUNCTION_MORPH_PREFLIGHT_20260821.md`.
-  It is retained but deprioritized; do not spend GPU time on it before the
-  Native-preserving residual-LoRA gate.
-- The released-Native far-pass chord gate and three targeted repairs have now
-  completed. The chain tested QK-only, learned V/O content transport,
-  first-token-weighted CE, and physical continuous-8K exposure. The final arm
-  trained 9.96M parameters for 300 steps / 19.658M input tokens and reduced
-  held-out 8K teacher-forced NLL from `7.996` to `5.865`, but strict generation
-  was only `1/64` first-token top-1 and `0/64` answer-plus-EOS. The earlier
-  QK-only and QKVO gap arms scored `0.0` on the fresh official core-4 RULER
-  subset at 8K/16K; released Native was also floor-valued. Decision:
-  `STOP_CURRENT_CE_ONLY_RETROFIT_ROUTE`. Owner:
-  `research/attention-aware-retrofit/FAR_PASS_CHORD_EXPERIMENT_REPORT_20260821.md`;
-  compact receipt:
-  `research/attention-aware-retrofit/evidence/FAR_PASS_CHORD_RESULTS_20260821.json`.
-  All final result/adapter/diagnostic hashes were rechecked, no incomplete run
-  directory remained, and the authorised GPU instance was shut down. Raw
-  artifacts remain on its stopped persistent data volume.
-- The current mature-checkpoint candidate no longer requires LoRA. It dispatches
-  requests through 4K to the exact Native rotary module and uses a frozen
-  uniqueness-budgeted `p=2` table plus the matched inherited attention
-  amplitude `1+0.1 ln(s)` at 8K/16K. It has zero learned parameters and zero
-  training tokens. Owner:
-  `research/attention-aware-retrofit/LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md`;
-  compact receipt:
-  `research/attention-aware-retrofit/evidence/LENGTH_CONDITIONED_BUDGETED_RESULTS_20260822.json`.
-- On the frozen core-4 subset, Native is `0/0`, the official Transformers YaRN
-  operator is `0.5375/0.0125`, and the frozen method is `0.5825/0.4000` at
-  8K/16K. The 2x2 frequency-by-amplitude interactions are `+0.1825/+0.2850`.
-  These are protocol-specific interactions, not a two-point scaling law.
-- On held-out 200-row 2Wiki, frozen-method token F1 is `0.2679/0.2639` at
-  8K/16K, versus `0.2656` for truncated Native 4K and `0.2774/0.2585` for the
-  official reference. The differences are descriptive, not significance
-  claims. The physical 4K short route is bitwise equal to Native in hidden
-  state and logits; the long routes are bitwise equal to their direct frozen
-  operators. Before paper promotion, verify every raw 2Wiki row satisfies
-  `input_tokens + 32 <= nominal_length`; the old untruncated fast path checked
-  raw prompt length before chat-template overhead.
-- CPU table/transport scalars do not rank RULER and must not select another
-  method. The one-turn floor is the decisive counterexample. The tested
-  2.097M-parameter headwise rank-16 Q/K adapter scored `0.3875` versus `0.4000`
-  for its zero-training parent and does not establish that training is needed.
-  Do not state that a layer-global rank-64 is independently rank-4 per head,
-  that no number of optimization steps can help any adapter, or that OLMo-2
-  has a measured five-nat logit gap.
-- The 2026-08-23 result supersedes target-length routing as the practical
-  mature-checkpoint candidate. It selects exact Native when
-  `prefill_tokens + max_new_tokens <= L_native` and otherwise selects one
-  deployment-frozen budgeted-s4 profile for the request's KV-cache lifetime.
-  It has no external `L_target`, no learned parameters, and no training tokens.
-  Owner:
-  `research/attention-aware-retrofit/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`;
-  compact receipt:
-  `research/attention-aware-retrofit/evidence/SESSION_BINARY_S4_REAL_CONTEXT_RESULTS_20260823.json`.
-  The report/receipt SHA-256 values are
-  `ea397633ac171ffee40b38e28fb7feb499409d7d07e7656d4bbee5ab2b916410` and
-  `48819b0fd266d921c10697b66506add981ab755d3b21e7b0630d788afec57968`.
-- Same-RTX-4090 core-4 RULER is `0.7175/0.4075` for the binary method versus
-  `0.2225/0.0125` for official YaRN factor four at 8K/16K. Full 200-row 16K
-  2Wiki token F1 is `0.2666` versus `0.2569`; only one row is truncated. In the
-  smaller formal natural-context matrix, the binary method improves the 2x
-  six-task macro from `0.2127` to `0.2858` and PG-19 NLL from `3.4404` to
-  `3.1060`; at 4x its task macro is slightly lower (`0.2497` vs `0.2559`) while
-  PG-19 NLL is better (`3.0977` vs `3.7955`). These are descriptive single-model
-  results, not universal dominance.
-- The stateless boundary-slope operator scored `0.0/0.0` on core-4 RULER and is
-  stopped. The smallest-covering Native/s2/s4 router matched all `386/386` CPU
-  bucket decisions but scored only `0.2473` on full 2Wiki, below binary
-  Native/s4 (`0.2666`) and fixed s4 (`0.2774`); coverage is not a performance
-  selector.
-- A fresh v5 RULER-13 dataset completed all 26 cells; all eight core-4 cell
-  hashes match the selection data exactly. On the nine confirmation-only tasks,
-  Native/YaRN-factor-4/binary macros are `0.0000/0.2452/0.6594` at 8K and
-  `0.0000/0.0794/0.6047` at 16K. Binary versus YaRN wins/ties/losses are
-  `8/0/1` and `9/0/0`. Merging untouched core-4 gives full-13 macros
-  `0.0000/0.2382/0.6772` at 8K and `0.0000/0.0588/0.5440` at 16K. The data
-  manifest SHA-256 is
-  `431ad942eead911da4693a4ab7428085fd04e63d6914fc8831c3d5b0cc88c239`.
+This repository does not use root `agent_logs/`; project rules designate this
+file as the sole volatile handoff. No parallel log hierarchy was created.
 
 ## 7. Validation receipt
 
-| Check | Result |
-| --- | --- |
-| Final PDF | SHA-256 `3de9a4c2cb9acb6d9135143ca6055335d35ca2b7619531027a4dda7eff17c4a7`; 691,054 bytes |
-| Layout gates | 9 body pages, 30 total, US Letter, 0 undefined refs/cites, 0 pt overfull, anonymous |
-| Fonts | Type-3 `0`; all fonts embedded |
-| Outward terminology scan | no `uniform FMRoPE`, `anchored Cosh`, `smooth-ramp scaler`, `range scaler`, `MLA blend`, `RAMP`, or `EVQ+YaRN`; locked identities verified |
-| Focused scientific/package/workspace tests | 223 passed |
-| Anonymous root package | SHA-256 `00170422f0e4449103b4b1751e231736f77d0f167f2e2a480a14c4d27e580cef`; 842,953 bytes; ZIP integrity clean |
-| Isolated package | exact-range entrypoint opened; all three figures regenerated in the dry run; paper rebuilt; 142 tests passed |
-| Visual QA | all 9 body pages inspected; Figure 1 callout is legible, Figure 2 follows the Theory heading, and Figure 3 has no black heatmap field |
-| Immutable NeurIPS PDF | SHA-256 `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772` |
-| Attention-aware internal checks | 33 focused tests passed; phase-demand self-test and report-metric assertions passed |
-| Mature function-morph preflight | 4 contract tests passed under remote Python 3.12; all assets and 18 morph tables hash-bound; CUDA unavailable/uninitialised and model not loaded |
-| Far-pass chord implementation | 106 related tests passed locally; the focused 15 also passed on the server. Smoke verified short-route bitwise identity, Flash-only BF16 D160 attention, augmented KV-cache decode, and 160/160 nonzero-gradient tensors |
-| Far-pass chord experiment | Four 300-step arms completed; all losses/gradients finite; final strict continuous-8K gate `1/64` first token and `0/64` answer-plus-EOS; current route stopped |
-| Zero-training binary retrofit | 36 combined focused tests passed; observed-request routing matched 386/386 frozen rows; binary 1x output parity is 120/120 versus Native and 4x parity is 138/138 versus direct s4; same-hardware formal, full RULER-13, and full 2Wiki results complete |
+Final cleanup verification:
 
-The final reviewer package is
-`rope-spectral-budget-iclr2027-supplement.zip` at the repository root.
+- 38 focused same-support/session/context/downstream tests passed under local
+  system Python 3.9;
+- changed Python entrypoints pass `py_compile`;
+- both retrofit evidence JSON files parse;
+- remote/local SHA-256 parity was verified for completed GPU results;
+- all local Markdown links under `paper-2027/` resolve (`0` missing);
+- `compile.sh` passed every gate under Tectonic: body page 9, 31 total pages,
+  US Letter, no undefined references/citations, `0pt` worst overfull box,
+  anonymous, no Type-3 or unembedded fonts;
+- the curated supplement rebuilt, passes `unzip -t`, and contains no handoff,
+  external-review bundle, temp receipt, `.DS_Store`, or redundant verifier ZIP;
+- `git diff --check` passes;
+- `paper/` remains unchanged at PDF SHA-256
+  `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`.
 
-Use Conda `aidemo` for PyTorch/pytest checks.
+Local Conda `aidemo` is unavailable; do not misreport that environment
+limitation as a repository failure.
 
-## 8. Worktree and next action
+## 8. Next decision and stop list
 
-- Git state is a live property; verify branch, upstream, and worktree rather
-  than inferring commit status from this handoff.
-- `AGENTS.md` contains the user-owned acceptance-first rules plus the corrected
-  finite-tau, nomenclature, disclosure, and research-frontier guardrails.
-- `paper/` remains immutable and unchanged.
-- Do not start new training or a gain/table/routing sweep from this handoff.
-- Immediate submission work must first make the completed evidence as strong
-  and readable as possible without unsupported SOTA language.
-- The far-pass chord CE-only route and the CPU table-axis searches are complete
-  and stopped. Do not repeat them or sweep frequencies, ranks, gains, learning
-  rates, or steps.
-- The old v1-v3 RULER-13 preparations remain historical failures; v5 supersedes
-  them with a complete hash-bound confirmation. Do not rerun or use RULER-13 to
-  reopen method selection.
-- The next method-level generalisation is the same binary policy on a second
-  released mature checkpoint with a materially different Native window,
-  preferably 32K. Freeze the model-relative policy and natural-context protocol
-  before authorising GPU work; do not tune another OLMo table or gain.
-- If phase-chord is to become a paper-facing training-time method, seed 256 is
-  its smallest missing replication. Do not launch it or mature-model GPU work
-  without a frozen protocol and explicit authorisation.
-- Treat the present $8$B results as evidence, not as the solved retrofit: the
-  natural-LM arm improves long-position PPL and routing but does not establish
-  simultaneous in-window retention and downstream improvement. Do not schedule
-  $8$B multi-seed by default; reconsider it only after the new method passes
-  smaller gates or suitable higher-memory hardware is explicitly authorised.
-- For the next independent review, extract only concrete score-ceiling,
-  technical-credibility, or readability defects and verify them against the
-  PDF and owners before editing.
-- Before submission: author visual review, live policy/deadline recheck, and
-  OpenReview title/abstract equality.
+### Author decision with highest leverage
+
+Decide whether the frozen-checkpoint case study enters the ICLR submission.
+If yes, use it as a compact empirical corollary to the existing fixed-support
+claim, not as a standalone ``better YaRN'' method:
+
+1. replace lower-leverage body text rather than exceeding nine pages;
+2. expose the causal decomposition: support fixed, amplitude fixed, `z`
+   changed, nearest-ramp control, then weights/table crossing;
+3. add accurate recent related work, including Jet-Long;
+4. report the aliased Qwen correction and keep row-bootstrap scope explicit;
+5. give natural Qasper/2Wiki results their actual heterogeneous roles.
+
+If the case study is not promoted, retain it as internal evidence and make no
+manuscript change.
+
+### Optional evidence only after explicit authorization
+
+The highest-value missing external test is one preregistered same-support
+geometric/ramp/derived comparison on a natural OLMo long-document task and one
+natural Qwen task. It is not authorized or queued.
+
+### Stop list
+
+- no more table, beta, gain, rank, step-count, or RULER sweeps;
+- do not resume the CE-only far-pass residual route;
+- do not execute revoked source-selection protocols;
+- do not cite the old aliased Qwen `0.6175` as corrected evidence;
+- do not merge exact-range, co-adaptation, frozen retrofit, and mature
+  capability into one causal estimand;
+- do not edit, compile, move, or regenerate `paper/`;
+- do not commit or push without explicit user authorization.
+
+### Remaining submission actions
+
+- author visual review of the final PDF;
+- live ICLR policy/deadline and dual-submission recheck;
+- OpenReview title/abstract equality check;
+- decide case-study promotion before changing manuscript prose.
+
+## 9. Known issues / current breakage
+
+- The organized worktree is intentionally uncommitted pending explicit Git
+  authorization.
+- Raw GPU rows/checkpoints are outside the repository; compact hash receipts are
+  tracked research artifacts.
+- Local Conda `aidemo` is unavailable; system-Python focused checks passed.
+- No scientific result is known incomplete. No paid instance remains running.

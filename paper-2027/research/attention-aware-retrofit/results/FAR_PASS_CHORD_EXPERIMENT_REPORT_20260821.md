@@ -4,7 +4,7 @@
 - **Status:** complete internal negative; not manuscript evidence
 - **Decision:** stop the present CE-only retrofit route
 - **Machine-path-free receipt:**
-  [`evidence/FAR_PASS_CHORD_RESULTS_20260821.json`](evidence/FAR_PASS_CHORD_RESULTS_20260821.json)
+  [`../evidence/FAR_PASS_CHORD_RESULTS_20260821.json`](../evidence/FAR_PASS_CHORD_RESULTS_20260821.json)
 
 ## 1. Decision first
 

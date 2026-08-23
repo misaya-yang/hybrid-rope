@@ -4,7 +4,7 @@ Status: `SUPERSEDED_DESIGN_ONLY_DO_NOT_RUN`
 
 This full-spectrum EVQ-dot residual was superseded on 2026-08-21 by the
 far-pass phase-chord residual owned at
-`paper-2027/research/attention-aware-retrofit/FAR_PASS_CHORD_RESIDUAL_PREFLIGHT_20260821.md`.
+`paper-2027/research/attention-aware-retrofit/preflights/FAR_PASS_CHORD_RESIDUAL_PREFLIGHT_20260821.md`.
 The implementation path is retained for repository compatibility but now
 implements the superseding registered operator. Do not use the historical
 protocol or commands below.

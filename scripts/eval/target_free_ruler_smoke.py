@@ -42,6 +42,9 @@ from scripts.analysis.export_uniqueness_budgeted_tables import (
     conditional_pair_uniqueness,
     float32_sha256,
 )
+from scripts.analysis.rope_transport.same_support_controls import (
+    build_same_support_controls,
+)
 from scripts.eval.target_free_formal_eval import (
     METHODS,
     load_method_model,
@@ -54,6 +57,11 @@ from scripts.lib.rope.length_conditioned_budgeted import matched_attention_scali
 
 STATUS = "TARGET_FREE_RULER_SMOKE_COMPLETE"
 DEFAULT_TASKS = ("niah_single_1", "niah_multikey_2", "niah_multikey_3", "vt")
+CONTROL_METHODS = (
+    "converged_budgeted_s4",
+    "same_support_geometric_s4",
+    "nearest_yarn_ramp_s4",
+)
 
 
 def atomic_json(path: Path, value: Any) -> None:
@@ -78,7 +86,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--data-root", type=Path, required=True)
-    parser.add_argument("--method", choices=METHODS, required=True)
+    parser.add_argument(
+        "--method",
+        choices=tuple(METHODS) + CONTROL_METHODS,
+        required=True,
+    )
     parser.add_argument("--tasks", nargs="+", default=list(DEFAULT_TASKS))
     parser.add_argument("--lengths", type=int, nargs="+", default=(8192, 16384))
     parser.add_argument("--limit-per-cell", type=int, default=20)
@@ -126,8 +138,8 @@ def load_cross_model_method(
     native_context_length: int,
     expected_active_sha256: str | None,
 ) -> tuple[Any, dict[str, Any]]:
-    if method not in {"native", "official_yarn", "session_binary_s4"}:
-        raise RuntimeError("cross-model smoke supports only Native, YaRN-4, and binary s4")
+    if method not in {"native", "official_yarn", "session_binary_s4", *CONTROL_METHODS}:
+        raise RuntimeError("unsupported generic RULER method")
     config = AutoConfig.from_pretrained(
         checkpoint,
         local_files_only=True,
@@ -218,6 +230,33 @@ def load_cross_model_method(
             "order_crossings_retained": True,
             "transfer_policy": "literal frozen formula; no sorting or projection",
         }
+    elif method in CONTROL_METHODS:
+        controls = build_same_support_controls(
+            native.astype(np.float64),
+            native_context_length=int(native_context_length),
+            factor=4.0,
+        )
+        table, control_receipt = controls[method]
+        active_hash = float32_sha256(table)
+        if expected_active_sha256 is None or active_hash != str(expected_active_sha256):
+            raise RuntimeError(
+                f"same-support control hash drift: {active_hash} != {expected_active_sha256}"
+            )
+        with torch.no_grad():
+            rotary.inv_freq.copy_(torch.from_numpy(table).to(rotary.inv_freq))
+        if hasattr(rotary, "original_inv_freq"):
+            rotary.original_inv_freq = rotary.inv_freq.detach().clone()
+        rotary.attention_scaling = matched_attention_scaling(4.0)
+        model.config.max_position_embeddings = int(native_context_length * 4)
+        receipt = {
+            "method": method,
+            "scientific_role": "fixed-support fixed-amplitude interior-allocation control",
+            "model_type": str(config.model_type),
+            "native_context_length": int(native_context_length),
+            "native_sha256_float32": native_hash,
+            "attention_scaling": float(rotary.attention_scaling),
+            **control_receipt,
+        }
     else:
         model.config.max_position_embeddings = int(native_context_length * 4)
         receipt = {
@@ -293,7 +332,7 @@ def main() -> int:
             str(args.method),
             native_context_length=native_context_length,
         )
-        if is_olmo
+        if is_olmo and args.method not in CONTROL_METHODS
         else load_cross_model_method(
             checkpoint,
             str(args.method),

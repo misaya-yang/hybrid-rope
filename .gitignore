@@ -37,6 +37,9 @@ artifacts/
 # Results are synced between machines via rsync, not git
 # To sync: rsync -avz --exclude='*.pt' --exclude='*.npy' results/ <remote>:results/
 results/
+# Exception: the retrofit research "results/" holds canonical markdown owners,
+# not rsync'd experiment artifacts, and must stay tracked.
+!paper-2027/research/attention-aware-retrofit/results/
 
 # Packaging artifacts
 **/*.tar.gz
@@ -113,6 +116,17 @@ rebuttal/pre_rebuttal/raw_sources/*_verbatim.md
 # macOS metadata
 .DS_Store
 **/.DS_Store
+
+# Active-paper build transients. Keep the tracked PDF/BIB outputs explicit;
+# these files are reproducible compiler scratch state.
+paper-2027/main.aux
+paper-2027/main.blg
+paper-2027/main.log
+paper-2027/main.out
+paper-2027/main.fls
+paper-2027/main.fdb_latexmk
+paper-2027/main.synctex.gz
+paper-2027/main.xdv
 
 # No stray PDFs at repo root — PDFs live under paper/ or internal/<month>/
 /*.pdf

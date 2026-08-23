@@ -54,6 +54,7 @@ evidence archive, not the current action queue.
 | Static finite-basis theory | full sin/cos Gram, canonical correlations, stable-rank identity, low-frequency collapse |
 | Training co-adaptation | exact transplant obstruction + 50M weight/table crossing |
 | Mature-scale persistence | 1.485B from-initialization and OLMo/LLaMA adaptation protocols |
+| Frozen-checkpoint case study | same-support geometric/ramp/derived controls on OLMo and Qwen + 151.9M crossing |
 | Constructive instance | fixed analytic EVQ-Cosh table |
 | Range composition | same fixed-scale `YaRN-style` transform on Geo and EVQ substrates |
 
@@ -96,7 +97,10 @@ and validation receipts live in [`paper-2027/HANDOFF.md`](paper-2027/HANDOFF.md)
 
 ```text
 paper-2027/                 active ICLR 2027 manuscript and internal handoff
-  research/                 canonical theory, audits, and evidence routing
+  research/                 canonical theory and evidence routing
+    attention-aware-retrofit/  results, evidence, analyses, theory, preflights
+    audits/                 internal validity audits and falsifications
+    external-reviews/       non-canonical external-model review bundles
 paper/                      immutable NeurIPS 2026 submission baseline
 rebuttal/rebuttal_0723/     historical NeurIPS review and evidence owners
 scripts/lib/rope/           canonical RoPE schedule implementation

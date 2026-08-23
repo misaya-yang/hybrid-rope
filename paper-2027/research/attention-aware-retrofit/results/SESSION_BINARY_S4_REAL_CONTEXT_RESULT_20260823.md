@@ -134,9 +134,11 @@ The binary method's 2x heterogeneity is important:
 | NarrativeQA | 0.0069 | 0.0312 | 0.2125 | **0.2500** |
 | Qasper | 0.0396 | 0.1485 | **0.2031** | 0.1056 |
 
-S4 is not uniformly better than s2; Qasper is the clear counterexample.  The
-claim is that one frozen s4 profile gives the stronger deployable aggregate and
-removes target-length routing, not that it is optimal for every task.
+S4 is not uniformly better than s2 in this small matrix: the 20-row 2x Qasper
+cell is the clearest counterexample.  It is not the definitive Qasper result;
+the matched full-200 evaluation below reverses its direction relative to YaRN.
+The claim is that one frozen s4 profile gives the stronger deployable aggregate
+and removes target-length routing, not that it is optimal for every task.
 
 ### 5.2 Full 200-row 2Wiki, same hardware
 
@@ -151,7 +153,30 @@ The binary policy pays `0.0108` F1 relative to applying s4 even to short rows,
 but it retains the exact Native short path by construction and remains `+0.0097`
 above YaRN factor four.
 
-### 5.3 Core-4 RULER, same hardware
+### 5.3 Full 200-row Qasper, same hardware
+
+| Operator | Token F1 | Normalized exact | Native/s4 route counts |
+| --- | ---: | ---: | ---: |
+| official YaRN factor 4 | 0.1803 | 0.110 | n/a |
+| **binary Native/s4** | **0.2457** | **0.115** | 70 / 130 |
+
+All 200 input rows match between arms by source-row hash, input hash, input
+token count, and truncation status; both arms truncate the same three rows and
+use the same evaluator hash. Binary wins on both routing subsets separately:
+`0.3454` versus `0.2517` on the 70 Native-routed rows and `0.1921` versus
+`0.1418` on the 130 s4-routed rows. The paired row difference is `+0.0654`
+token F1 with a 4,000-resample evaluation-row interval `[+0.0219,+0.1102]`.
+This interval conditions on one checkpoint and one task; it is not model- or
+task-population uncertainty.
+
+Raw `results.json` SHA-256 values are
+`e8101c8cdc00c9b3c3394d66736de8e87a4cac9bb4b9a9421a57e57ba3179240`
+for YaRN and
+`04ea9e2aa503378e2a8008f7e20b16bded1820d2c054c588d52eaa44ea43ccfe`
+for binary. They were independently copied and rehashed before this owner was
+updated.
+
+### 5.4 Core-4 RULER, same hardware
 
 | Operator | 8K | 16K |
 | --- | ---: | ---: |
@@ -166,7 +191,7 @@ Binary-method per-task scores are:
 | 8K | 1.00 | 0.95 | 0.30 | 0.62 |
 | 16K | 1.00 | 0.60 | 0.00 | 0.03 |
 
-### 5.4 Confirmation-only RULER-13 breadth
+### 5.5 Confirmation-only RULER-13 breadth
 
 After freezing the method on core-4, a fresh complete 13-task dataset was
 generated at the same seed and protocol. All eight regenerated core-4 cell
@@ -219,8 +244,8 @@ does not turn RULER into evidence of unseen natural-task transfer.
 This is a strong internal result on one released 1.485B checkpoint.  It uses
 deterministic zero-training operators, so there are no training seeds to pool,
 but evaluation sampling is still limited: most formal cells contain 20 rows.
-The 200-row 2Wiki result is broader for one task only.  No statistical
-significance or cross-model universality is claimed.
+The 200-row 2Wiki and Qasper results are broader for two tasks only. No
+statistical significance or cross-model universality is claimed.
 
 The method should be promoted to the paper only after the owner and manuscript
 are updated together.  The outward claim ceiling is:
@@ -229,9 +254,11 @@ are updated together.  The outward claim ceiling is:
 > using one frozen non-geometric long-context profile selected only by whether
 > the observed request exceeds the model's Native window.  On the tested OLMo-2
 > checkpoint this zero-training policy is stronger than a one-deployment YaRN
-> factor-four control on core-4 RULER and full 2Wiki, with mixed task-level
-> results on the smaller formal LongBench matrix.
+> factor-four control on core-4 RULER and full Qasper, while full 2Wiki and the
+> smaller formal LongBench matrix show mixed task-level effects.
 
-The next high-value generalization is one second mature checkpoint with a
-different Native window (preferably 32K), using the same relative binary policy
-and natural-context protocol.  Another OLMo table/gain sweep is not justified.
+The second mature checkpoint with a different Native window is now complete on
+the frozen Qwen RULER protocol and is owned by the same-support control report.
+The next high-value generalization, if this case study is promoted, is a frozen
+natural-context protocol on that checkpoint. Another OLMo table/gain sweep is
+not justified.

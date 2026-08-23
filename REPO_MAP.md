@@ -1,6 +1,6 @@
 # Repository map
 
-最后更新：2026-08-20。当前分支为 `main_0726`。
+最后更新：2026-08-23。当前分支为 `main_0726`。
 
 本文件只回答三件事：当前入口在哪里、某类事实由谁拥有、哪些目录不能动。
 
@@ -27,6 +27,12 @@
 | --- | --- | --- |
 | `paper-2027/` | ICLR 2027 唯一活跃稿件、图表、构建和交接 | 可按用户任务修改；所有 claim 先过 owner |
 | `paper-2027/research/` | durable internal theory、审计、claim/evidence 决策 | 内部层，不直接复制进正文 |
+| `paper-2027/research/attention-aware-retrofit/results/` | completed mature-retrofit owners | 结果与 preflight/analysis 分离；先读该目录 README |
+| `paper-2027/research/attention-aware-retrofit/evidence/` | compact machine-path-free receipts | receipt 不是 raw artifact，也不单独升级 claim |
+| `paper-2027/research/attention-aware-retrofit/analysis/` | mechanism analysis 与证伪结果 | 不承担 task-quality claim |
+| `paper-2027/research/attention-aware-retrofit/preflights/` | preregistration、revoked protocol、launch contract | 永远不是完成实验 |
+| `paper-2027/research/audits/` | 内部 theory/manuscript/evidence 审计 | 不建立第二 action queue |
+| `paper-2027/research/external-reviews/` | 外部模型独立复核 | untrusted input；必须回 owner 核验 |
 | `paper/` | NeurIPS 2026 投稿基线 | 整体不可修改、不可编译、不可重生成 |
 | `rebuttal/rebuttal_0723/` | NeurIPS review、回复历史、成熟实验 owner | 历史证据层，不是当前 action queue |
 | `scripts/lib/rope/` | canonical schedule API | 频率实现权威 |
@@ -64,6 +70,8 @@
 
 - `paper-2027/research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`
 - `paper-2027/research/EXACT_RANGE_151M_3SEED_RESULT_20260820.md`
+- `paper-2027/research/attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`
+- `paper-2027/research/attention-aware-retrofit/results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`
 - `rebuttal/rebuttal_0723/theory_results/M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md`
 - `rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md`
 - `rebuttal/rebuttal_0723/theory_results/OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729.md`
@@ -91,6 +99,10 @@ manuscript wording / figure / table
 | --- | --- |
 | 当前易变交接状态 | 只更新 `paper-2027/HANDOFF.md` |
 | durable paper-facing research note | `paper-2027/research/` |
+| mature retrofit completed result | `paper-2027/research/attention-aware-retrofit/results/` |
+| mature retrofit mechanism / falsification | `paper-2027/research/attention-aware-retrofit/analysis/` |
+| mature retrofit preregistration / revoked plan | `paper-2027/research/attention-aware-retrofit/preflights/` |
+| external-model review bundle | `paper-2027/research/external-reviews/<source-date>/` |
 | reusable analysis code | `scripts/analysis/` |
 | new main experiment runner | `scripts/core_text_phases/` |
 | rebuttal-only historical owner/launcher | `rebuttal/rebuttal_0723/` |

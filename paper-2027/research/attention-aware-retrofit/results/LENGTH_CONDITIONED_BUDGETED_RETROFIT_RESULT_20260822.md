@@ -180,7 +180,7 @@ hash is identical. Report the nine-task confirmation macro separately from the
 complete 13-task macro, at 8K and 16K separately, regardless of outcome.
 
 The compact machine-path-free receipt is
-`evidence/LENGTH_CONDITIONED_BUDGETED_RESULTS_20260822.json`, SHA-256
+`../evidence/LENGTH_CONDITIONED_BUDGETED_RESULTS_20260822.json`, SHA-256
 `f92332a4d9c0d6c92e2bb2296c876a32001aee88b7057ff422db9c2b9fb1a311`.
 
 ## Raw receipt hashes

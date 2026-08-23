@@ -24,6 +24,7 @@
     "formal_rows": 386,
     "formal_cell_contract": "at most 20 rows per available task and relative-length cell",
     "full_2wiki_rows": 200,
+    "full_qasper_rows": 200,
     "ruler_rows_per_task_length": 20,
     "ruler_full13_manifest_sha256": "431ad942eead911da4693a4ab7428085fd04e63d6914fc8831c3d5b0cc88c239"
   },
@@ -49,6 +50,28 @@
     "session_binary_s4": {"token_f1": 0.26659583411757326, "normalized_exact": 0.205, "route_counts": {"native": 24, "s2": 0, "s4": 176}},
     "fixed_budgeted_s4": {"token_f1": 0.2774331357048748, "normalized_exact": 0.22},
     "truncated_rows_each": 1
+  },
+  "full_qasper_same_hardware": {
+    "metric": "normalized token F1; normalized exact auxiliary",
+    "official_yarn_factor4": {
+      "token_f1": 0.18029483410173344,
+      "normalized_exact": 0.11
+    },
+    "session_binary_s4": {
+      "token_f1": 0.24573261793888468,
+      "normalized_exact": 0.115,
+      "route_counts": {
+        "native": 70,
+        "s4": 130
+      }
+    },
+    "paired_row_difference": 0.06543778383715126,
+    "paired_row_bootstrap_ci95": [
+      0.021914696097346593,
+      0.11016243363738377
+    ],
+    "bootstrap_resamples": 4000,
+    "truncated_rows_each": 3
   },
   "ruler_core4_same_hardware": {
     "metric": "official task score macro",
@@ -87,6 +110,8 @@
     "full_2wiki_session_binary": "ca67a18a229098e7d10f395e8e39ce4549671ebfa8c3d9bf5e840cf25e33f6cc",
     "full_2wiki_fixed_s4": "77ef67a306b0158646d4c8d011b41271c6c8d9dba1eacf9f5f704ae70db58110",
     "full_2wiki_yarn4": "4286e4241d38a7f947d49a1aebfa8bc24da8a96d252de24155cb4f1337251a2b",
+    "full_qasper_session_binary": "04ea9e2aa503378e2a8008f7e20b16bded1820d2c054c588d52eaa44ea43ccfe",
+    "full_qasper_yarn4": "e8101c8cdc00c9b3c3394d66736de8e87a4cac9bb4b9a9421a57e57ba3179240",
     "ruler_session_binary_8k": "d7b5df84d52b40e1d63835dcf3cc85e672ae8ab3b531813aba5f2c2a6e28cd60",
     "ruler_session_binary_16k": "7fd4782d0c88fdb2caa6b8451d3599d11d52cee344107c3272e6554d7798d9b4",
     "ruler_yarn4_8k": "1450bfda36664ecade7555749a2809484e40932f635ecf7c98e018dbaef5cef8",

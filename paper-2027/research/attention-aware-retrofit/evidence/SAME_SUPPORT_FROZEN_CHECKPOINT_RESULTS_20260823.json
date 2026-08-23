@@ -1,0 +1,130 @@
+{
+  "status": "SAME_SUPPORT_FROZEN_CHECKPOINT_CONTROLS_COMPLETE",
+  "date": "2026-08-23",
+  "evidence_role": "internal_fixed_support_causal_case_study",
+  "claim_boundary": {
+    "mature_checkpoint": "frozen-checkpoint sensitivity and compatibility at fixed sampled support",
+    "small_model": "two-seed weights-by-runtime-table co-adaptation replication",
+    "not_established": [
+      "new interpolation operator family",
+      "universal best profile",
+      "task-population or model-population uncertainty",
+      "identity between frozen retrofit and from-training estimands"
+    ]
+  },
+  "implementation_sha256": {
+    "same_support_controls": "9b77ac431a7f6be8d31e70034b0902f234e5c947773afca3cc7f557d38fd0049",
+    "mature_evaluator": "c2612c0c111c509d20e6db8831ecab0a628f5bbcca964452fd2cf7d1d0c8d010",
+    "small_model_evaluator": "64e510d2ae663363bf1e51b45f6e8fbeb33ab8f440c7a888dc382849eb639953"
+  },
+  "table_sha256_float32": {
+    "olmo": {
+      "derived": "a435d75441444bcea39b73d9cf530005249dc5afdc3cfb5a60fda10ef33312d3",
+      "same_support_geometric": "2754c9c233fe6f65686e86189c4cee94b75efac0bd8df19f140f3e575ffb723f",
+      "nearest_ramp": "be76ee4cfb8524ef5d52660b4dd63e7331f53ac9f788305c4fc3dcface7817f1",
+      "nearest_ramp_pair_bounds": [20, 22]
+    },
+    "qwen": {
+      "derived": "3512335e408c279896a84b5b555b8be5ca3b62a70eb300f3ec866c5b5aa141d0",
+      "same_support_geometric": "4046a441284959f8d6f635a690b0f3e9ea2b4c18cd8b43eae20ce57463714db8",
+      "nearest_ramp": "c5e4576ac4fee4b60b6a887cecdb1c3f4cc33971b83645bc8fb95ce96658b9c9",
+      "nearest_ramp_pair_bounds": [28, 31]
+    }
+  },
+  "mature_checkpoint_results": {
+    "qwen_core4_64k_n20": {
+      "metric": "mean of four official task scores",
+      "native": {"macro": 0.545, "results_sha256": "6603e448df2b5f0ada076303cc5a0b3d95c5a1d1b6708c78d77121a17c28fc26"},
+      "official_yarn_factor4": {"macro": 0.6025, "results_sha256": "557ff5e26db42c27af8b5c0f737e2081afdb0251c93fc7c66ebc02de6d111b4f"},
+      "old_aliased_derived": {"macro": 0.67, "results_sha256": "a0b175bbef4d4aa2887362fc1f5285aaa79fa985920617ffadbd31b1f5e30351"},
+      "corrected_derived": {"macro": 0.665, "results_sha256": "a9764abd2bc8512135228f465535c6d73a2d7c7a92e6f07b28df6ff1ac82e843"},
+      "same_support_geometric": {"macro": 0.5775, "results_sha256": "7eac9dcc5dd5e65e2449fbc7672bfaf37e4282ac5d3d17bafcf20883acf23c8f"},
+      "nearest_ramp": {"macro": 0.64, "results_sha256": "632307fe78f39e04542651b288819bb7016905fa8950f7d73e42548443d3c782"},
+      "paired_row_bootstrap": {
+        "seed": 20260823,
+        "resamples": 20000,
+        "scope": "within-task evaluation rows on one checkpoint and fixed task set",
+        "derived_minus_geometric": {"difference": 0.0875, "ci95": [0.0025, 0.175], "mass_at_or_below_zero": 0.0233},
+        "derived_minus_nearest_ramp": {"difference": 0.025, "ci95": [-0.0525, 0.1], "mass_at_or_below_zero": 0.2676},
+        "derived_minus_official_yarn": {"difference": 0.0625, "ci95": [-0.005, 0.1325], "mass_at_or_below_zero": 0.0349},
+        "derived_minus_old_aliased": {"difference": -0.005, "ci95": [-0.07, 0.0575]}
+      }
+    },
+    "olmo_unseen9_16k_n20": {
+      "metric": "mean of nine official task scores",
+      "official_yarn_factor4": {"macro": 0.07935185185185185, "results_sha256": "95c365c974ab61d30501526031e936b54e8d82a02fbe451a30aa4d4adec837bf"},
+      "derived": {"macro": 0.6047222222222222, "results_sha256": "7d2d8ceca310daa5a2f49398f46c64a37c44ec8e01745064c4c60e847bec4da3"},
+      "same_support_geometric": {"macro": 0.005555555555555556, "results_sha256": "e9274471e168762aca69c27fd7d17c9f0a836ca8855f7751ef95123bfb394e5b"},
+      "nearest_ramp": {"macro": 0.6103703703703702, "results_sha256": "2e890029e89fc53d72a3219536aa21f4f7e6820289fb92aa4fc24d838cca1ec6"},
+      "paired_row_bootstrap": {
+        "seed": 20260823,
+        "resamples": 20000,
+        "scope": "within-task evaluation rows on one checkpoint and fixed confirmation task set",
+        "derived_minus_geometric": {"difference": 0.5991666666666666, "ci95": [0.5487962962962963, 0.647962962962963]},
+        "nearest_ramp_minus_geometric": {"difference": 0.6048148148148148, "ci95": [0.5559236111111111, 0.6541666666666667]},
+        "derived_minus_nearest_ramp": {"difference": -0.005648148148148148, "ci95": [-0.046391203703703705, 0.03453703703703704]},
+        "derived_minus_official_yarn": {"difference": 0.5253703703703704, "ci95": [0.4699074074074074, 0.5795393518518516]}
+      }
+    },
+    "qwen_core4_128k_n20": {
+      "native": {"macro": 0.435, "results_sha256": "16fea6af90e13bd696fe2b0ca065bb5539765d32713fb226fc92faff33346329"},
+      "official_yarn_factor4": {"macro": 0.4650000000000001, "results_sha256": "355aa628b5fe917d0193623f9c789e8cd5fb24469ab0870c5f27db581da0daa8"},
+      "old_aliased_derived": {"macro": 0.6174999999999999, "results_sha256": "2009e6c929bf3be98bc9c67f61e26ac30d1f69d42f26a99d2d42153823b83bd1"},
+      "same_support_geometric": {"macro": 0.455, "results_sha256": "3d84c83d394dd819a85e071e42a1c684bde45ff2ea6a9cae98b3df2960caff06"},
+      "corrected_derived": {"macro": 0.54, "results_sha256": "2f2c3ff648f885cfeef5d7a34d57c0c49f4a084238ff0064cd2bd06a36b2bfef"},
+      "paired_row_bootstrap": {
+        "seed": 20260823,
+        "resamples": 20000,
+        "corrected_minus_old_aliased": {"difference": -0.0775, "ci95": [-0.15, -0.005]},
+        "corrected_minus_same_support_geometric": {"difference": 0.085, "ci95": [-0.01, 0.18]},
+        "corrected_minus_official_yarn": {"difference": 0.075, "ci95": [-0.0125, 0.1625]},
+        "corrected_minus_native": {"difference": 0.105, "ci95": [0.0275, 0.185]}
+      }
+    }
+  },
+  "small_model_crossing": {
+    "raw_receipt_sha256": "9304752d885d73af38262958f033843c642f394a448e2306fbfb57a4e1996e22",
+    "checkpoint_seeds": [137, 256],
+    "anchors": 32,
+    "tail_tokens": 128,
+    "lengths": [512, 1024],
+    "mean_tail_nll_two_seed_length1024": {
+      "fmrope_weights": {
+        "fmrope_derived": 3.4264323711395264,
+        "cosh_derived": 5.775900103151798,
+        "same_support_geometric": 3.4292640164494514
+      },
+      "anchored_cosh_weights": {
+        "fmrope_derived": 4.454919379204512,
+        "cosh_derived": 3.47904472053051,
+        "same_support_geometric": 4.177154567092657
+      }
+    },
+    "budgeted_crossover_interaction": {
+      "definition": "[L(W_F,T_C)-L(W_F,T_F)]-[L(W_C,T_C)-L(W_C,T_F)]",
+      "length512": {"seed137": 2.6629523187875748, "seed256": 2.5642652809619904},
+      "length1024": {"seed137": 3.399742268025875, "seed256": 3.250942513346672}
+    },
+    "checkpoint_sha256": {
+      "seed137_fmrope": "ae065557f4f14ee4f221b551a32b5b8e7c41c495c742005cd5dab9ef3db1cf9d",
+      "seed137_anchored_cosh": "b99224608cfc1e3bb743e8ebfca6da38ec3affedd9dac640c410d31277405669",
+      "seed256_fmrope": "841724fafb21f2b4a4bfa8459ee78a7d4cdc5c495fb4aa1876adf237a93e802a",
+      "seed256_anchored_cosh": "1387f28fe2190a59d922f33a68743dac5c21ef7d670db78e1d38d96118f72c09"
+    }
+  },
+  "natural_context_addendum": {
+    "olmo_qasper_full200_16k": {
+      "official_yarn_factor4": {"token_f1": 0.18029483410173344, "results_sha256": "e8101c8cdc00c9b3c3394d66736de8e87a4cac9bb4b9a9421a57e57ba3179240"},
+      "session_binary_s4": {"token_f1": 0.24573261793888468, "results_sha256": "04ea9e2aa503378e2a8008f7e20b16bded1820d2c054c588d52eaa44ea43ccfe"},
+      "paired_difference": 0.06543778383715126,
+      "paired_evaluation_row_ci95": [0.021914696097346593, 0.11016243363738377]
+    }
+  },
+  "limitations": [
+    "RULER is task-family adaptation, not unseen natural-task transfer",
+    "row bootstraps condition on one fixed checkpoint and task set",
+    "the 151.9M crossing has two training seeds on the available server",
+    "nearest ramp matches the detailed derived profile on both mature models",
+    "the mature result is not evidence that its installed z would train the best model"
+  ]
+}
