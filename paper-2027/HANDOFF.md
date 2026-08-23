@@ -1,13 +1,13 @@
 # ICLR 2027 active handoff
 
-- **Updated:** 2026-08-22
+- **Updated:** 2026-08-23
 - **Target:** ICLR 2027
 - **Active manuscript:** `paper-2027/`
 - **Branch:** `main_0726`
 - **Status:** acceptance-oriented narrative rewrite remains integrated and
-  validated; a zero-training mature-checkpoint retrofit has completed core-4
-  RULER and runtime parity; 2Wiki needs one raw length-invariant recheck;
-  RULER-13 was interrupted before evaluation by platform shutdown
+  validated; a new zero-training binary Native/s4 retrofit has completed a
+  same-hardware formal natural-context matrix, full RULER-13 confirmation, and
+  full 200-row 2Wiki. It is internal and has not yet changed the manuscript.
 - **Internal only:** exclude this file from the anonymous supplement
 
 ## 1. First principle
@@ -261,10 +261,39 @@ This work is internal and does not change the current manuscript.
   Do not state that a layer-global rank-64 is independently rank-4 per head,
   that no number of optimization steps can help any adapter, or that OLMo-2
   has a measured five-nat logit gap.
-- The RULER-13 breadth extension was frozen to Native, official Transformers
-  YaRN, and the `p=2`, `c=0.10` method at each length. At least `18/26` fresh
-  data cells were verified before platform shutdown; no final manifest and no
-  GPU arm completed. This is an interrupted preparation, not a result.
+- The 2026-08-23 result supersedes target-length routing as the practical
+  mature-checkpoint candidate. It selects exact Native when
+  `prefill_tokens + max_new_tokens <= L_native` and otherwise selects one
+  deployment-frozen budgeted-s4 profile for the request's KV-cache lifetime.
+  It has no external `L_target`, no learned parameters, and no training tokens.
+  Owner:
+  `research/attention-aware-retrofit/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`;
+  compact receipt:
+  `research/attention-aware-retrofit/evidence/SESSION_BINARY_S4_REAL_CONTEXT_RESULTS_20260823.json`.
+  The report/receipt SHA-256 values are
+  `ea397633ac171ffee40b38e28fb7feb499409d7d07e7656d4bbee5ab2b916410` and
+  `48819b0fd266d921c10697b66506add981ab755d3b21e7b0630d788afec57968`.
+- Same-RTX-4090 core-4 RULER is `0.7175/0.4075` for the binary method versus
+  `0.2225/0.0125` for official YaRN factor four at 8K/16K. Full 200-row 16K
+  2Wiki token F1 is `0.2666` versus `0.2569`; only one row is truncated. In the
+  smaller formal natural-context matrix, the binary method improves the 2x
+  six-task macro from `0.2127` to `0.2858` and PG-19 NLL from `3.4404` to
+  `3.1060`; at 4x its task macro is slightly lower (`0.2497` vs `0.2559`) while
+  PG-19 NLL is better (`3.0977` vs `3.7955`). These are descriptive single-model
+  results, not universal dominance.
+- The stateless boundary-slope operator scored `0.0/0.0` on core-4 RULER and is
+  stopped. The smallest-covering Native/s2/s4 router matched all `386/386` CPU
+  bucket decisions but scored only `0.2473` on full 2Wiki, below binary
+  Native/s4 (`0.2666`) and fixed s4 (`0.2774`); coverage is not a performance
+  selector.
+- A fresh v5 RULER-13 dataset completed all 26 cells; all eight core-4 cell
+  hashes match the selection data exactly. On the nine confirmation-only tasks,
+  Native/YaRN-factor-4/binary macros are `0.0000/0.2452/0.6594` at 8K and
+  `0.0000/0.0794/0.6047` at 16K. Binary versus YaRN wins/ties/losses are
+  `8/0/1` and `9/0/0`. Merging untouched core-4 gives full-13 macros
+  `0.0000/0.2382/0.6772` at 8K and `0.0000/0.0588/0.5440` at 16K. The data
+  manifest SHA-256 is
+  `431ad942eead911da4693a4ab7428085fd04e63d6914fc8831c3d5b0cc88c239`.
 
 ## 7. Validation receipt
 
@@ -283,7 +312,7 @@ This work is internal and does not change the current manuscript.
 | Mature function-morph preflight | 4 contract tests passed under remote Python 3.12; all assets and 18 morph tables hash-bound; CUDA unavailable/uninitialised and model not loaded |
 | Far-pass chord implementation | 106 related tests passed locally; the focused 15 also passed on the server. Smoke verified short-route bitwise identity, Flash-only BF16 D160 attention, augmented KV-cache decode, and 160/160 nonzero-gradient tensors |
 | Far-pass chord experiment | Four 300-step arms completed; all losses/gradients finite; final strict continuous-8K gate `1/64` first token and `0/64` answer-plus-EOS; current route stopped |
-| Zero-training retrofit | 36 focused evaluator/runtime/table-rebuild tests passed locally; the CPU exporter reproduces both evaluated `.npy` hashes; real OLMo parity is bitwise exact for the 4K Native branch and both configured long operators; core-4 complete, 2Wiki raw length check pending, RULER-13 interrupted before evaluation |
+| Zero-training binary retrofit | 36 combined focused tests passed; observed-request routing matched 386/386 frozen rows; binary 1x output parity is 120/120 versus Native and 4x parity is 138/138 versus direct s4; same-hardware formal, full RULER-13, and full 2Wiki results complete |
 
 The final reviewer package is
 `rope-spectral-budget-iclr2027-supplement.zip` at the repository root.
@@ -297,22 +326,19 @@ Use Conda `aidemo` for PyTorch/pytest checks.
 - `AGENTS.md` contains the user-owned acceptance-first rules plus the corrected
   finite-tau, nomenclature, disclosure, and research-frontier guardrails.
 - `paper/` remains immutable and unchanged.
-- Do not start new training or a gain/table sweep from this handoff. The only
-  registered continuation is the confirmation-only RULER-13 matrix below.
+- Do not start new training or a gain/table/routing sweep from this handoff.
 - Immediate submission work must first make the completed evidence as strong
   and readable as possible without unsupported SOTA language.
 - The far-pass chord CE-only route and the CPU table-axis searches are complete
   and stopped. Do not repeat them or sweep frequencies, ranks, gains, learning
   rates, or steps.
-- On a restarted instance, inspect the persistent RULER-13 v3 output. If no
-  complete verified 26-cell manifest exists, prepare a fresh versioned output;
-  never promote the partial directory. Compare core-4 cell hashes against the
-  completed selection manifest. Reuse old core-4 predictions only on exact cell
-  identity; otherwise rerun all 13 tasks. At each length run exactly Native,
-  official Transformers YaRN, and frozen `p=2`, `c=0.10`.
-- Report the nine unseen confirmation tasks separately from full-13, with
-  per-task scores and task-level win/tie/loss versus both controls. Keep 8K and
-  16K macros separate. No full-13 outcome may reopen method selection.
+- The old v1-v3 RULER-13 preparations remain historical failures; v5 supersedes
+  them with a complete hash-bound confirmation. Do not rerun or use RULER-13 to
+  reopen method selection.
+- The next method-level generalisation is the same binary policy on a second
+  released mature checkpoint with a materially different Native window,
+  preferably 32K. Freeze the model-relative policy and natural-context protocol
+  before authorising GPU work; do not tune another OLMo table or gain.
 - If phase-chord is to become a paper-facing training-time method, seed 256 is
   its smallest missing replication. Do not launch it or mature-model GPU work
   without a frozen protocol and explicit authorisation.

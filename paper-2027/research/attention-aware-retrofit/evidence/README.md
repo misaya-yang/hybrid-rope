@@ -26,3 +26,11 @@ and raw receipt hashes. The 2Wiki raw-row physical-budget invariant remains a
 required pre-promotion recheck. The receipt also records that the RULER-13
 breadth extension was interrupted by platform shutdown before any GPU
 evaluation; the partial data preparation is not a result.
+
+`SESSION_BINARY_S4_REAL_CONTEXT_RESULTS_20260823.json` supersedes the earlier
+target-aware routing receipt as the current deployment owner. It records the
+same-hardware Native, official YaRN factor-four, target-aware oracle, and binary
+Native/s4 natural-context matrix; full 200-row 2Wiki; core-4 RULER; exact route
+parity; confirmation-only full RULER-13; the failed stateless boundary-slope
+and smallest-covering policies; and hashes for every raw result receipt. It is
+internal evidence pending an authorised manuscript promotion.

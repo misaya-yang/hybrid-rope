@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare held-out official-RULER transfer tasks for OLMo-2 Instruct."""
+"""Prepare held-out official-RULER transfer tasks for instruct checkpoints."""
 
 from __future__ import annotations
 
@@ -18,7 +18,9 @@ from .prepare_data import atomic_json, sha256_file
 
 RULER_COMMIT = "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a"
 DATA_STATUS = "OLMO2_INSTRUCT_RULER_TRANSFER_PREPARED"
+GENERIC_DATA_STATUS = "INSTRUCT_RULER_TRANSFER_PREPARED"
 DEFAULT_LENGTHS = (4_096, 8_192, 16_384)
+SUPPORTED_LENGTHS = DEFAULT_LENGTHS + (32_768, 65_536, 131_072)
 
 
 def _niah(
@@ -197,6 +199,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--samples-per-cell", type=int, default=100)
     parser.add_argument("--seed", type=int, default=20_260_727)
+    parser.add_argument(
+        "--data-status",
+        choices=(DATA_STATUS, GENERIC_DATA_STATUS),
+        default=DATA_STATUS,
+    )
     return parser.parse_args()
 
 
@@ -289,8 +296,8 @@ def main() -> None:
         raise RuntimeError("tasks must be unique")
     if not lengths or tuple(sorted(set(lengths))) != lengths:
         raise RuntimeError("lengths must be unique and ascending")
-    if any(length not in DEFAULT_LENGTHS for length in lengths):
-        raise RuntimeError("only 4K/8K/16K transfer data is supported")
+    if any(length not in SUPPORTED_LENGTHS for length in lengths):
+        raise RuntimeError(f"supported transfer lengths are {SUPPORTED_LENGTHS}")
     if not 1 <= int(args.samples_per_cell) <= 500:
         raise RuntimeError("samples-per-cell must be in [1, 500]")
     if output.exists():
@@ -322,10 +329,8 @@ def main() -> None:
         ))
     )
     chat_overhead = empty_chat - empty_raw
-    if not 8 <= chat_overhead <= 16:
-        raise RuntimeError(
-            f"unexpected OLMo chat overhead: {chat_overhead}"
-        )
+    if not 0 <= chat_overhead < min(lengths):
+        raise RuntimeError(f"invalid chat-template overhead: {chat_overhead}")
 
     synthetic = root / "scripts" / "data" / "synthetic"
     sys.path.insert(0, str(synthetic))
@@ -405,7 +410,7 @@ def main() -> None:
 
     receipt = {
         "format_version": 1,
-        "status": DATA_STATUS,
+        "status": str(args.data_status),
         "metric": "official task-specific RULER scoring",
         "suite": "official RULER synthetic.yaml complete 13-task matrix",
         "ruler_commit": actual_commit,

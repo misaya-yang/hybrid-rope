@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Held-out 2Wiki evaluation for frozen zero-training RoPE operators."""
+"""Held-out LongBench QA evaluation for frozen zero-training RoPE operators."""
 
 from __future__ import annotations
 
@@ -19,9 +19,15 @@ import numpy as np
 import torch
 from transformers import AutoTokenizer
 
+from scripts.analysis.export_uniqueness_budgeted_tables import (
+    build_default_tables,
+    float32_sha256,
+)
+from scripts.eval.target_free_formal_eval import set_target_aware_factor
 from scripts.lib.rope.length_conditioned_budgeted import (
     install_length_conditioned_rope,
     matched_attention_scaling,
+    select_observed_session_factor,
 )
 from rebuttal.rebuttal_0723.experiments.olmo2_1b_evq.evaluate_ruler import (
     configure_cuda,
@@ -38,6 +44,7 @@ from rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.train_4k_stage_a imp
     ready_checkpoint_digest,
 )
 STATUS = "FROZEN_ZERO_TRAINING_2WIKI_COMPLETE"
+GENERIC_STATUS = "FROZEN_ZERO_TRAINING_LONGBENCH_QA_COMPLETE"
 OFFICIAL_2WIKI_MEMBER = "2wikimqa.jsonl"
 OFFICIAL_2WIKI_PROMPT = (
     "Answer the question based on the given passages. Only give me the "
@@ -47,6 +54,23 @@ OFFICIAL_2WIKI_PROMPT = (
     "answer and do not output any other words.\n\n"
     "Question: {question}\nAnswer:"
 )
+TASK_PROMPTS = {
+    "2wikimqa": OFFICIAL_2WIKI_PROMPT,
+    "qasper": (
+        "You are given a scientific article and a question. Answer the question "
+        "as concisely as you can, using a single phrase or sentence if possible. "
+        "If the question cannot be answered based on the information in the "
+        "article, write \"unanswerable\". If the question is a yes/no question, "
+        "answer \"yes\", \"no\", or \"unanswerable\". Do not provide any "
+        "explanation.\n\nArticle: {context}\n\n Answer the question based on the "
+        "above article as concisely as you can, using a single phrase or sentence "
+        "if possible. If the question cannot be answered based on the information "
+        "in the article, write \"unanswerable\". If the question is a yes/no "
+        "question, answer \"yes\", \"no\", or \"unanswerable\". Do not provide "
+        "any explanation.\n\nQuestion: {input}\n\nAnswer:"
+    ),
+}
+TASK_GENERATION_TOKENS = {"2wikimqa": 32, "qasper": 128}
 
 
 def sha256_file(path: Path) -> str:
@@ -139,16 +163,16 @@ def normalized_exact(prediction: str, references: Sequence[str]) -> float:
     return float(any(value == normalize_2wiki(ref) for ref in references))
 
 
-def load_official_2wiki_rows(path: Path) -> dict[str, Any]:
+def load_official_2wiki_rows(path: Path, *, task: str = "2wikimqa") -> dict[str, Any]:
+    member_name = f"{task}.jsonl"
     with zipfile.ZipFile(path.resolve()) as archive:
         candidates = [
             name for name in archive.namelist()
-            if name == OFFICIAL_2WIKI_MEMBER
-            or name.endswith("/" + OFFICIAL_2WIKI_MEMBER)
+            if name == member_name or name.endswith("/" + member_name)
         ]
         if len(candidates) != 1:
             raise RuntimeError(
-                f"expected one official 2Wiki member, got {candidates}"
+                f"expected one official {task} member, got {candidates}"
             )
         member = candidates[0]
         rows = [
@@ -158,7 +182,7 @@ def load_official_2wiki_rows(path: Path) -> dict[str, Any]:
         ]
     if len(rows) != 200:
         raise RuntimeError(
-            f"LongBench 2wikimqa must contain 200 rows, got {len(rows)}"
+            f"LongBench {task} must contain 200 rows, got {len(rows)}"
         )
     for index, row in enumerate(rows):
         if (
@@ -168,7 +192,7 @@ def load_official_2wiki_rows(path: Path) -> dict[str, Any]:
         ):
             raise RuntimeError(f"malformed official 2Wiki row {index}")
     return {
-        "dataset": "THUDM/LongBench:2wikimqa",
+        "dataset": f"THUDM/LongBench:{task}",
         "zip_sha256": sha256_file(path),
         "member": member,
         "rows": rows,
@@ -222,11 +246,13 @@ def build_2wiki_jobs(
     package: Mapping[str, Any],
     *,
     lengths: Sequence[int],
+    task: str = "2wikimqa",
 ) -> list[dict[str, Any]]:
     jobs: list[dict[str, Any]] = []
     for index, source in enumerate(package["rows"]):
-        prompt = OFFICIAL_2WIKI_PROMPT.format(
+        prompt = TASK_PROMPTS[task].format(
             context=str(source["context"]),
+            input=str(source["input"]),
             question=str(source["input"]),
         )
         source_hash = canonical_sha256(source)
@@ -235,15 +261,15 @@ def build_2wiki_jobs(
                 tokenizer,
                 prompt,
                 int(length),
-                max_new_tokens=32,
+                max_new_tokens=TASK_GENERATION_TOKENS[task],
             )
-            row_id = f"2wikimqa:{source_hash}:L{int(length)}"
+            row_id = f"{task}:{source_hash}:L{int(length)}"
             jobs.append({
                 "row_id": row_id,
                 "nominal_length": int(length),
                 "input_ids": ids,
                 "references": [str(value) for value in source["answers"]],
-                "max_new_tokens": 32,
+                "max_new_tokens": TASK_GENERATION_TOKENS[task],
                 "truncated": truncated,
                 "row_sha256": canonical_sha256({
                     "row_id": row_id,
@@ -263,10 +289,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--ready-receipt", type=Path, required=True)
     parser.add_argument("--longbench-zip", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--task", choices=tuple(TASK_PROMPTS), default="2wikimqa")
     parser.add_argument("--length", type=int, choices=(4096, 8192, 16384), required=True)
     parser.add_argument(
         "--frequency",
-        choices=("native", "official_yarn", "budgeted"),
+        choices=(
+            "native",
+            "official_yarn",
+            "budgeted",
+            "session_adaptive",
+            "session_binary_s4",
+        ),
         required=True,
     )
     parser.add_argument("--factor", type=float, default=1.0)
@@ -304,6 +337,11 @@ def main() -> int:
             raise RuntimeError("budgeted factor/length mismatch")
     elif args.table is not None or args.table_name is not None:
         raise RuntimeError("only budgeted method accepts a frozen table")
+    if (
+        args.frequency in {"session_adaptive", "session_binary_s4"}
+        and float(args.factor) != 1.0
+    ):
+        raise RuntimeError("session selection does not accept a target factor")
     if not 1 <= int(args.limit) <= 200:
         raise RuntimeError("2Wiki limit must be in [1,200]")
 
@@ -311,13 +349,21 @@ def main() -> int:
     output.mkdir(parents=True, exist_ok=True)
     checkpoint = args.checkpoint.resolve()
     checkpoint_sha = ready_checkpoint_digest(checkpoint, args.ready_receipt.resolve())
-    package = load_official_2wiki_rows(args.longbench_zip.resolve())
+    package = load_official_2wiki_rows(
+        args.longbench_zip.resolve(),
+        task=str(args.task),
+    )
     tokenizer = AutoTokenizer.from_pretrained(
         checkpoint,
         local_files_only=True,
         trust_remote_code=False,
     )
-    jobs = build_2wiki_jobs(tokenizer, package, lengths=(int(args.length),))[
+    jobs = build_2wiki_jobs(
+        tokenizer,
+        package,
+        lengths=(int(args.length),),
+        task=str(args.task),
+    )[
         : int(args.limit)
     ]
     jobs_sha = canonical_sha256(
@@ -335,11 +381,37 @@ def main() -> int:
         else None
     )
     model = load_model(checkpoint, config=model_config)
+    native_inv = model.model.rotary_emb.inv_freq.detach().cpu().float().clone()
+    session_tables = {}
     state = None
     if args.frequency == "official_yarn":
         method = verify_official_yarn(model, model_config)
     elif args.frequency == "native":
         method = apply_frequency(model, "native")
+    elif args.frequency in {"session_adaptive", "session_binary_s4"}:
+        session_tables = build_default_tables()
+        binary = args.frequency == "session_binary_s4"
+        method = {
+            "method": (
+                "native_or_frozen_s4_observed_request_rope"
+                if binary
+                else "observed_request_session_adaptive_budgeted_rope"
+            ),
+            "selection": (
+                "Native within L_native; frozen s4 beyond L_native"
+                if binary
+                else "smallest frozen profile covering prefill_tokens plus max_new_tokens"
+            ),
+            "requires_L_target": False,
+            "native_context_length": 4096,
+            "supported_factors": [1, 4] if binary else [1, 2, 4],
+            "cache_policy": "profile fixed before prefill for the KV-cache lifetime",
+            "native_inv_freq_sha256_float32": float32_sha256(native_inv.numpy()),
+            "long_table_sha256_float32": {
+                str(int(factor)): float32_sha256(values)
+                for factor, values in sorted(session_tables.items())
+            },
+        }
     else:
         values = np.load(args.table.resolve(), allow_pickle=False)
         if values.dtype != np.float32 or values.shape != (64,):
@@ -374,6 +446,22 @@ def main() -> int:
             continue
         if state is not None:
             state.force_for_budget(int(args.length))
+        active_profile = None
+        if args.frequency in {"session_adaptive", "session_binary_s4"}:
+            selected_factor = select_observed_session_factor(
+                prefill_tokens=len(job["input_ids"]),
+                max_new_tokens=int(job["max_new_tokens"]),
+                native_context_length=4096,
+                supported_factors=(
+                    (1, 4) if args.frequency == "session_binary_s4" else (1, 2, 4)
+                ),
+            )
+            active_profile = set_target_aware_factor(
+                model,
+                selected_factor,
+                session_tables,
+                native_inv,
+            )
         input_ids = torch.tensor(
             [list(job["input_ids"])], dtype=torch.long, device="cuda"
         )
@@ -391,6 +479,7 @@ def main() -> int:
         )
         row = {
             "ordinal": ordinal,
+            "task": str(args.task),
             "row_id": row_id,
             "row_sha256": str(job["row_sha256"]),
             "source_index": int(job["source_index"]),
@@ -406,6 +495,7 @@ def main() -> int:
             "token_f1": token_f1(prediction, job["references"]),
             "normalized_exact": normalized_exact(prediction, job["references"]),
             "elapsed_seconds": time.perf_counter() - started,
+            "active_profile": active_profile,
         }
         atomic_append_jsonl(rows_path, row)
         completed[row_id] = row
@@ -420,7 +510,7 @@ def main() -> int:
     token_f1_macro = float(np.mean([row["token_f1"] for row in rows]))
     exact_macro = float(np.mean([row["normalized_exact"] for row in rows]))
     receipt = {
-        "status": STATUS,
+        "status": STATUS if args.task == "2wikimqa" else GENERIC_STATUS,
         "metric_boundary": "Official LongBench-style normalized token F1; normalized exact is auxiliary.",
         "checkpoint": str(checkpoint),
         "checkpoint_sha256": checkpoint_sha,
@@ -431,11 +521,12 @@ def main() -> int:
         "jobs_sha256": jobs_sha,
         "method": method,
         "protocol": {
+            "task": str(args.task),
             "frequency": str(args.frequency),
             "factor": float(args.factor),
             "nominal_length": int(args.length),
             "rows": len(rows),
-            "max_new_tokens": 32,
+            "max_new_tokens": TASK_GENERATION_TOKENS[str(args.task)],
             "method_selection": False,
             "greedy": True,
         },
@@ -446,6 +537,13 @@ def main() -> int:
             "input_tokens_max": max(int(row["input_tokens"]) for row in rows),
             "truncated_rows": sum(bool(row["truncated"]) for row in rows),
             "examples_sha256": sha256_file(rows_path),
+            "selected_factor_counts": {
+                str(factor): sum(
+                    row.get("active_profile", {}).get("multiplier") == factor
+                    for row in rows
+                )
+                for factor in (1, 2, 4)
+            } if args.frequency in {"session_adaptive", "session_binary_s4"} else None,
         },
         "runtime": {
             "torch": torch.__version__,

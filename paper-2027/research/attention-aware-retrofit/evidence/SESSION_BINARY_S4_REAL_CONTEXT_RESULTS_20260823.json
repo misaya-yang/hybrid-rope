@@ -1,0 +1,111 @@
+{
+  "status": "SESSION_BINARY_S4_REAL_CONTEXT_COMPLETE",
+  "date": "2026-08-23",
+  "evidence_role": "internal_zero_training_mature_checkpoint_result",
+  "model": {
+    "identity": "OLMo-2-0425-1B-Instruct",
+    "parameters": 1485000000,
+    "weight_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f",
+    "native_context_length": 4096
+  },
+  "method": {
+    "identity": "native_or_frozen_s4_observed_request_rope",
+    "selection": "Native when prefill_tokens plus max_new_tokens is at most L_native; frozen budgeted s4 otherwise",
+    "requires_L_target": false,
+    "supported_factors": [1, 4],
+    "cache_policy": "profile fixed before prefill for the KV-cache lifetime",
+    "learned_parameters": 0,
+    "training_tokens": 0,
+    "s4_table_sha256_float32": "a435d75441444bcea39b73d9cf530005249dc5afdc3cfb5a60fda10ef33312d3",
+    "s4_attention_scaling": 1.138629436111989
+  },
+  "data": {
+    "token_manifest_sha256": "74022bf36d444a1735baab72bda0312b9867dd38c9f85ece376049b5f35f66f3",
+    "formal_rows": 386,
+    "formal_cell_contract": "at most 20 rows per available task and relative-length cell",
+    "full_2wiki_rows": 200,
+    "ruler_rows_per_task_length": 20,
+    "ruler_full13_manifest_sha256": "431ad942eead911da4693a4ab7428085fd04e63d6914fc8831c3d5b0cc88c239"
+  },
+  "formal_task_macro": {
+    "metric": "mean of available task-level scores; PG-19 excluded",
+    "task_counts": {"x1": 5, "x2": 6, "x4": 6},
+    "native": {"x1": 0.3424125475475065, "x2": 0.06610674506777697, "x4": 0.021048353151113027},
+    "official_yarn_factor4": {"x1": 0.317303468848245, "x2": 0.21272658226657512, "x4": 0.25592796222049335},
+    "target_aware_oracle": {"x1": 0.3424125475475065, "x2": 0.263065055265787, "x4": 0.24967365212470796},
+    "session_binary_s4": {"x1": 0.3424125475475065, "x2": 0.28579654719812814, "x4": 0.24967365212470796}
+  },
+  "formal_pg19_tail_nll": {
+    "lower_is_better": true,
+    "native": {"x1": 2.9711915493011474, "x2": 7.102921748161316, "x4": 7.205002975463867},
+    "official_yarn_factor4": {"x1": 3.387956607341766, "x2": 3.44042546749115, "x4": 3.795519304275513},
+    "target_aware_oracle": {"x1": 2.9711915493011474, "x2": 2.974611926078796, "x4": 3.097696101665497},
+    "session_binary_s4": {"x1": 2.9711915493011474, "x2": 3.105994999408722, "x4": 3.097696101665497}
+  },
+  "full_2wiki_same_hardware": {
+    "metric": "normalized token F1; normalized exact auxiliary",
+    "session_adaptive_min_cover": {"token_f1": 0.247265367965368, "normalized_exact": 0.175, "route_counts": {"native": 24, "s2": 121, "s4": 55}},
+    "official_yarn_factor4": {"token_f1": 0.2568581681476418, "normalized_exact": 0.2},
+    "session_binary_s4": {"token_f1": 0.26659583411757326, "normalized_exact": 0.205, "route_counts": {"native": 24, "s2": 0, "s4": 176}},
+    "fixed_budgeted_s4": {"token_f1": 0.2774331357048748, "normalized_exact": 0.22},
+    "truncated_rows_each": 1
+  },
+  "ruler_core4_same_hardware": {
+    "metric": "official task score macro",
+    "stateless_boundary_slope": {"x2": 0.0, "x4": 0.0},
+    "official_yarn_factor4": {"x2": 0.22249999999999998, "x4": 0.0125},
+    "session_binary_s4": {"x2": 0.7175, "x4": 0.40750000000000003}
+  },
+  "ruler_unseen9_confirmation_same_hardware": {
+    "native": {"x2": 0.0, "x4": 0.0},
+    "official_yarn_factor4": {"x2": 0.24518518518518523, "x4": 0.07935185185185185},
+    "session_binary_s4": {"x2": 0.6593518518518519, "x4": 0.6047222222222222},
+    "session_binary_vs_yarn_win_tie_loss": {"x2": [8, 0, 1], "x4": [9, 0, 0]}
+  },
+  "ruler_full13_same_hardware": {
+    "native": {"x2": 0.0, "x4": 0.0},
+    "official_yarn_factor4": {"x2": 0.2382051282051282, "x4": 0.05878205128205129},
+    "session_binary_s4": {"x2": 0.6772435897435898, "x4": 0.5440384615384615},
+    "session_binary_vs_yarn_win_tie_loss": {"x2": [12, 0, 1], "x4": [12, 1, 0]}
+  },
+  "parity": {
+    "session_binary_x1_vs_native": {"exact_rows": 120, "rows": 120},
+    "session_binary_x4_vs_target_aware_s4": {"exact_rows": 138, "rows": 138},
+    "session_adaptive_limit1_vs_oracle": {"exact_rows": 20, "rows": 20},
+    "cpu_observed_request_profile_matches": {"matches": 386, "rows": 386}
+  },
+  "raw_result_sha256": {
+    "formal_native_a": "5ef88f45458ab026d15123fbe53ee57b94706dae6eb0b96a7fde18d5812b9eb7",
+    "formal_native_b": "d4dfc6be2b25944c00a4d02e933e930b4adc36698ac977ee7bac6aac2a1c7094",
+    "formal_yarn4_a": "f9ed003b26c7e05e2d771c928b8a2e7aec54ebf01d9151e98f2bf4f0398dda15",
+    "formal_yarn4_b": "b92eadeab60aa9ed4992fa2f8e32d1cfcba6f9112a05b99bc196c49dba42c611",
+    "formal_target_aware_a": "e1fe697fa33541d842b9fa9c991ef6020d2d7b9821e300ca09a7ea051cb5ad43",
+    "formal_target_aware_b": "647ae386bfb128c2b6df23bd0aa610acf8e3a6e162ebdef2cde0c797680ac829",
+    "formal_session_binary_a": "336a81233339b2d96491edbf6af075ace071e4b5f943331799e23894d7c3dee6",
+    "formal_session_binary_b": "3c6708fd765898a1b02a4fb9dd562d94736bcd70f6b0aa4d5538948897b7e252",
+    "full_2wiki_session_adaptive": "c7c3e8b45733f77ef37affb2d3f792a8a1776e19381c7cad98a7b8572acd443a",
+    "full_2wiki_session_binary": "ca67a18a229098e7d10f395e8e39ce4549671ebfa8c3d9bf5e840cf25e33f6cc",
+    "full_2wiki_fixed_s4": "77ef67a306b0158646d4c8d011b41271c6c8d9dba1eacf9f5f704ae70db58110",
+    "full_2wiki_yarn4": "4286e4241d38a7f947d49a1aebfa8bc24da8a96d252de24155cb4f1337251a2b",
+    "ruler_session_binary_8k": "d7b5df84d52b40e1d63835dcf3cc85e672ae8ab3b531813aba5f2c2a6e28cd60",
+    "ruler_session_binary_16k": "7fd4782d0c88fdb2caa6b8451d3599d11d52cee344107c3272e6554d7798d9b4",
+    "ruler_yarn4_8k": "1450bfda36664ecade7555749a2809484e40932f635ecf7c98e018dbaef5cef8",
+    "ruler_yarn4_16k": "b57a2d6b67d1635bb8cf8c7810d92e491850311175db8b191d433ad921fe8c74",
+    "ruler_stateless_target_free_8k": "363e4cb14a6964d2b461428d9cd9adf6f64747fc20fd156cb301121a48e24be1",
+    "ruler_stateless_target_free_16k": "6728343273551e247b8c17bc90332ef3a47920ed412b1a7be9471add5e8f9c0d",
+    "ruler_unseen9_session_binary_8k": "b1c4a1c3ab905f225082f0df365d54aba9dbef538391e6ad789d187a0f84e392",
+    "ruler_unseen9_session_binary_16k": "7d2d8ceca310daa5a2f49398f46c64a37c44ec8e01745064c4c60e847bec4da3",
+    "ruler_unseen9_yarn4_8k": "c97fb3675c17c6ace34a06528762a9964018c0c378b46251bf29380028445d23",
+    "ruler_unseen9_yarn4_16k": "95c365c974ab61d30501526031e936b54e8d82a02fbe451a30aa4d4adec837bf",
+    "ruler_unseen9_native_8k": "832605cfcff802eb1df3d48824e939930a566ff154cf18adf204e81af3c608e8",
+    "ruler_unseen9_native_16k": "a1a82ff4c571d176081697a576de6457d16a3db418a6c2affa5cf5f55d6df0a4"
+  },
+  "limitations": [
+    "single released model/checkpoint",
+    "most formal cells contain 20 rows",
+    "NarrativeQA x1 unavailable, NarrativeQA x2 has 8 rows, Qasper x4 has 18 rows",
+    "binary s4 does not beat YaRN factor four on the six-task 4x macro",
+    "RULER is an engineering retrieval assay, not unseen-task transfer",
+    "no cross-model or universal-optimality claim"
+  ]
+}

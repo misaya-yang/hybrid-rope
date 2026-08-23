@@ -146,6 +146,10 @@ def ruler_flash_forward(
             "RULER Flash-only attention only admits full prefill or "
             "single-token KV-cache decode"
         )
+    query_heads = int(query.shape[-3])
+    key_heads = int(key.shape[-3])
+    if query_heads % key_heads != 0:
+        raise RuntimeError("RULER Flash-only attention received incompatible GQA heads")
     output = F.scaled_dot_product_attention(
         query,
         key,
@@ -154,6 +158,7 @@ def ruler_flash_forward(
         dropout_p=float(dropout),
         scale=scaling,
         is_causal=query_length > 1,
+        enable_gqa=query_heads != key_heads,
     )
     return output.transpose(1, 2).contiguous(), None
 

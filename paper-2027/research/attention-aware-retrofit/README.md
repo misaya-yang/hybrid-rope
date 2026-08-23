@@ -16,16 +16,19 @@ The current single-arm retrofit protocol is owned by
 Its completed ablation chain and stop decision are now owned by
 [`FAR_PASS_CHORD_EXPERIMENT_REPORT_20260821.md`](FAR_PASS_CHORD_EXPERIMENT_REPORT_20260821.md).
 
-**Superseding mature-retrofit update.** The current practical candidate is now
-the zero-training, length-conditioned uniqueness-budgeted operator owned by
-[`LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md`](LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md).
-It uses the exact Native route through 4K and a frozen non-geometric table plus
-matched deterministic attention amplitude at 8K/16K. Core-4 RULER and exact
-runtime parity are complete; the 2Wiki generation is complete with one raw
-physical-budget invariant pending recheck. The RULER-13 extension was
-interrupted by platform shutdown during data preparation and has no result.
-The historical adapter agenda below remains useful for explaining prior
-failures, but it no longer owns the next action.
+**Superseding mature-retrofit update.** The current practical candidate is the
+zero-training binary Native/s4 session policy owned by
+[`SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`](SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md).
+It calls exact Native when the observed request fits the model's own Native
+window and otherwise uses one deployment-frozen budgeted-s4 table and matched
+amplitude for the request's entire KV-cache lifetime. It does not receive an
+  external `L_target`. Same-hardware core-4 RULER, a 386-row formal natural-context
+  matrix, full 200-row 2Wiki, and confirmation-only full RULER-13 comparisons
+  are complete. The earlier
+[`LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md`](LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md)
+is the target-aware precursor, not the current deployment owner. The historical
+adapter agenda below remains useful for explaining prior failures, but it no
+longer owns the next action.
 
 ## 1. The two problems are different
 
@@ -362,12 +365,13 @@ slice. Do not make 8B multi-seed the default.
 ## 9. Decision
 
 Stop treating a trained adapter as a prerequisite. The current candidate has
-zero learned parameters and zero training tokens: Native is preserved by
-construction for requests through 4K, while the frozen uniqueness-budgeted
-table and matched amplitude provide the long route. The immediate action is a
-confirmation-only RULER-13 evaluation on the fixed `p=2`, `c=0.10` method,
-Native, and the official Transformers YaRN operator. Results may not reopen
-table or gain selection.
+zero learned parameters and zero training tokens: Native is preserved exactly
+inside each model's own window, while one deployment-frozen s4 table and
+matched amplitude handle every long request. The stateless boundary-slope
+operator and smallest-covering Native/s2/s4 router are stopped by completed
+negative results. Do not reopen table, gain, or routing selection on this OLMo
+checkpoint. The next method-level gate is the same binary policy on a second
+mature checkpoint with a different Native window, preferably 32K.
 
 The completed far-pass chord, headwise LoRA, transport-scalar, and CPU-axis
 studies remain internal negative or diagnostic evidence. Do not repeat them,

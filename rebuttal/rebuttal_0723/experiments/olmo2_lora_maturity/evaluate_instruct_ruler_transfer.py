@@ -39,6 +39,7 @@ from rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.prepare_data import 
 )
 from .prepare_instruct_ruler_transfer import (
     DATA_STATUS,
+    GENERIC_DATA_STATUS,
     TASK_CONFIGS,
     chat_input_ids,
 )
@@ -556,7 +557,7 @@ def _validate_data(
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     manifest_path = root / "manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    if manifest.get("status") != DATA_STATUS:
+    if manifest.get("status") not in {DATA_STATUS, GENERIC_DATA_STATUS}:
         raise RuntimeError("RULER transfer data status drift")
     if Path(manifest["checkpoint"]).resolve() != checkpoint.resolve():
         raise RuntimeError("RULER transfer checkpoint drift")

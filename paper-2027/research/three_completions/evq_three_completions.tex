@@ -1,0 +1,1006 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\sloppy
+\usepackage{amsmath,amssymb,amsthm,bm,booktabs,mathtools,xcolor,hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{assumption}[theorem]{Assumption}
+\newcommand{\evq}{\textsc{EVQ-Cosh}}
+\newcommand{\dhd}{d_{\mathrm{head}}}
+\newcommand{\deff}{d_{\mathrm{eff}}}
+\newcommand{\drot}{d_{\mathrm{rot}}}
+\newcommand{\Ltr}{L_{\mathrm{train}}}
+\newcommand{\Leff}{L_{\mathrm{eff}}^{J}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Rot}{Rot}
+\DeclareMathOperator{\spn}{span}
+
+\title{Three completions of the \evq{} theory:\\
+a constant-free $\tau$, a LoRA rank floor, and a prior-robustness audit}
+\author{Derivations against \texttt{paper-2027}, App.~A.1/A.8/A.10/A.12 and Thm.~3}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent Three derivations built only from objects already in the manuscript.
+\textbf{(I)} The protocol constant $c(\Pi)$ in $\tau=c(\Pi)\deff/\sqrt{\Ltr}$ is removed.
+The softmax-Jacobian window $\Leff$ replaces $L$ \emph{exactly} (not approximately) in the
+A.10 utility, and the coefficient $Q_1(L,b)$ admits a closed form
+$Q_1=\tfrac{1}{12}\varphi_*(1-\varphi_*)(2-\varphi_*)+O(\log^{-2}b)$
+with $\varphi_*=\log(L/x_0)/\log b$ and a universal $x_0=2.0743$.
+The resulting rule has zero free constants and reproduces every deployed $\tau$ in the paper to
+$5$--$9\%$ (exactly at $L{=}512$) --- with one exception, the $b{=}256$ fixed-support control,
+which sits on the formula's degeneracy locus. $c{=}1$ turns out to be not a convention but the
+\emph{ceiling} of the model, attained only on the curve $b=(L/x_0)^{(3+\sqrt3)/2}$.
+Feeding in the repository's existing $\kappa_{\mathrm{att}}$ audit gives $\Leff/\Ltr\approx4$ ---
+attention locality \emph{lengthens} this window, because the transport direction vanishes on near
+keys --- and the fixed point of the self-consistent equation lands at
+$\tau\approx0.5\times$ the deployed rule, a multiplier no reported sweep covers.
+\textbf{(II)} Theorem~3 is upgraded to a quantitative rank floor: a rank-$r$ Q/K LoRA
+leaves a subspace of codimension $\le 2r$ on which the un-repaired transplant survives verbatim,
+which forces $r\ge\drot/2$ for exact single-distance repair and
+$r\ge(1-\eta)\sum_k s_k/8$ with $s_k=2(1-\operatorname{Re}\psi_\mu(\omega_k-\omega_k'))$
+for $\eta$-approximate repair; the small-shift limit of $\sum_k s_k$ is
+$\sigma_\mu^2 K\,W_2^2(\Omega,\Omega')$. The deployed $r{=}64$ sits exactly at the exact-repair
+floor and $\approx3\times$ above the $90\%$ floor. The rank analysis does \emph{not} separate
+allocation from support --- it separates \emph{slow-only} from \emph{full-band}.
+\textbf{(III)} App.~A.1 generalises verbatim once $(\sin t/t,\,(1-\cos t)/t)$ is read as
+$(\operatorname{Re}\psi_\mu,\operatorname{Im}\psi_\mu)$. The $r_2{=}2.00$ slow-collapse figure is
+prior-robust. But under a Zipf prior with tail index $\alpha\ge1.5$ the $r_2(\tau)$ curve acquires
+an interior maximum at $\tau\approx3.5$--$6$: high-frequency overload is real. It never reverses the
+Geo/\evq{} ordering, but it erases the margin --- and it agrees with Part~I that the deployed
+$\tau$ is on the high side. The ceiling is diagnosed exactly: the A.10 utility is diagonal in the
+channel index, so it cannot see the overload term at all, and the agreement is a coincidence of
+sign rather than a derivation.
+\end{abstract}
+
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Part I: a self-consistent \texorpdfstring{$\tau$}{tau}}
+\label{sec:tau}
+
+\subsection{Setting and standing assumptions}
+
+Write $\theta=\tau^2$. From App.~A.12, the \evq{} density perturbation is
+$\rho_\tau(\phi)=1+\theta\,a(\phi)+O(\theta^2)$ with $a(\phi)=\tfrac{(1-\phi)^2}{2}-\tfrac16$, so
+$\int_0^1 a=0$ (mass conservation). From App.~A.10--A.11 the two competing terms are the
+Pearson-$\chi^2$ channel-load stiffness and the post-softmax phase-variance utility,
+\begin{equation}
+S_{\chi^2}(\tau)=\frac{\tilde S(\tau)}{\deff},\quad
+\tilde S(\tau)=\frac{\sinh\tau\,\arctan(\sinh\tau)}{\tau^2}-1=\frac{\tau^4}{45}+O(\tau^6),
+\qquad
+U(\tau)=\frac{\deff}{L}\!\int_0^1\!\!\rho_\tau(\phi)\,q(Lb^{-\phi})\,d\phi,
+\label{eq:SU}
+\end{equation}
+with $q(x)=\Var_{t\sim U[0,1]}[\cos(xt)]=\tfrac12+\tfrac{\sin 2x}{4x}-(\tfrac{\sin x}{x})^2$,
+$q(x)=x^4/45+O(x^6)$ and $q(\infty)=\tfrac12$. Expanding $\rho_\tau$ recovers the paper's
+$U=(\deff/L)[Q_0+\tau^2Q_1+O(\tau^4)]$ with
+$Q_0=\int_0^1 q(Lb^{-\phi})d\phi$, $Q_1=\int_0^1 a(\phi)q(Lb^{-\phi})d\phi$,
+and stationarity of $\mathcal F=\tfrac12 S_{\chi^2}-\lambda U$ gives
+$\tau_*^2=45\lambda Q_1\deff^2/L$, i.e.\ $c(\Pi)=\sqrt{45\lambda Q_1(L,b)}$.
+
+Two structural facts about \eqref{eq:SU} drive everything below.
+The $\deff$ in $U$ is a \emph{channel count} ($K=\deff/2$ rotary pairs, each contributing $q$);
+the $1/L$ is a \emph{key count} (the number of positions the budget must resolve), inherited from
+the diffuse baseline $p_0=1/L$. These are two different objects and only coincide when attention is
+uniform on the window.
+
+\begin{assumption}[standing]\label{as:I}
+\emph{(A1)} $\lambda>0$ is a fixed exchange rate between load and utility.
+\emph{(A2)} $\deff=\drot$ (MHA: $=\dhd$; compressed-RoPE MLA: $=d_{\mathrm{rope}}$), matching App.~A.13.
+\emph{(A3)} Frozen-Jacobian: the trained attention distributions $p_i$ and the logit transport
+directions $g_i$ of App.~A.12 are evaluated on the $\tau{=}0$ substrate and held fixed while $\tau$ varies.
+\emph{(A4)} $\E_{\ell,h,i}\|P_ig_i\|_2^2>0$, i.e.\ the transport direction is not $p_i$-a.s.\ constant.
+\end{assumption}
+
+\subsection{Why the obvious route to a constant-free \texorpdfstring{$\tau$}{tau} fails}
+
+The natural first attempt is to delete $\lambda$ by replacing the soft penalty with a trust region
+on the attention displacement itself, using the KL identity of App.~A.12. It cannot work, for a
+reason worth recording.
+
+\begin{lemma}[Order degeneracy of the two second-order costs]\label{lem:degeneracy}
+Under Assumption~\ref{as:I}, the \evq{} warp displaces the attention distribution by
+\[
+D_{\mathrm{KL}}\!\left(p\,\|\,p_\tau\right)=\tfrac12\theta^2\,\E\!\left[g^\top J_{\mathrm{sm}}(p)g\right]+O(\theta^3)
+=\tfrac{\tau^4}{2}\cdot\frac{\E\|P g\|_2^2}{\Leff}+O(\tau^6),
+\]
+which is $O(\tau^4)$ --- the same order as the channel-load stiffness
+$S_{\chi^2}(\tau)=\tau^4/(45\deff)+O(\tau^6)$. Their ratio is $\tau$-independent at leading order.
+Consequently no criterion built only from these two objects (their ratio, or a trust region
+$D_{\mathrm{KL}}\le\delta$) can select a finite $\tau$ with the observed scaling: the trust region
+gives $\tau\propto\delta^{1/4}(\Leff)^{1/4}$, wrong in both exponent and sign.
+\end{lemma}
+
+\begin{proof}
+$g=\partial_\theta z|_{\tau=0}$ by definition (App.~A.12, Eq.~(g-closed-form)), so the schedule
+change is $\delta z=\theta g+O(\theta^2)$ and $p_\theta=\mathrm{softmax}(z+\theta g)$. The KL
+expansion is the definition of the softmax Fisher metric; the second equality is
+$\E[g^\top J_{\mathrm{sm}}g]=\kappa_{\mathrm{att}}\E\|Pg\|^2$, i.e.\ the ratio-of-means definition
+\eqref{eq:kappa} below. $S_{\chi^2}$ is App.~A.11. The ratio of the two is
+$45\deff\,\E\|Pg\|^2/(2\Leff)$, free of $\tau$. Solving $\tfrac12\tau^4\E\|Pg\|^2/\Leff=\delta$
+gives the stated scaling.
+\end{proof}
+
+So a $\tau^2$-order utility is structurally necessary, and A.10 supplies exactly that. The route to
+a constant-free rule is therefore not to remove $\lambda$ but to \emph{derive the entire $(L,b)$
+dependence of $c$}, leaving $\lambda$ as one universal number fixed once by a normalisation
+convention.
+
+\subsection{\texorpdfstring{$\Leff$}{Leff} replaces \texorpdfstring{$1/L$}{1/L} exactly}
+
+Recall the primary definition of App.~A.12,
+\begin{equation}
+\frac{1}{\Leff}=\kappa_{\mathrm{att}}
+=\frac{\E_{\ell,h,i}\!\left[g_i^\top J_{\mathrm{sm}}(p_i)g_i\right]}
+       {\E_{\ell,h,i}\!\left[\|P_i g_i\|_2^2\right]},
+\qquad J_{\mathrm{sm}}(p)=\mathrm{diag}(p)-pp^\top .
+\label{eq:kappa}
+\end{equation}
+
+\begin{proposition}[Exact reduction, not an approximation]\label{prop:exact-uniform}
+Let $p$ be uniform on a key set of size $L$ and let $Pg\ne0$. Then $\kappa_{\mathrm{att}}=1/L$
+\emph{exactly}, for every $g$, with no expansion and no genericity assumption.
+\end{proposition}
+
+\begin{proof}
+$g^\top J_{\mathrm{sm}}(p)g=\Var_{j\sim p}[g(j)]=\tfrac1L\sum_j(g_j-\bar g)^2$ while
+$\|Pg\|_2^2=\sum_j(g_j-\bar g)^2$. The ratio is $1/L$ identically. (Verified numerically to machine
+precision at $L=16,256,4096$.)
+\end{proof}
+
+This is the licence for the substitution. The $1/L$ in $U$ counts keys; \eqref{eq:kappa} is the
+softmax-weighted count of keys, and \emph{it agrees with $1/L$ on the nose} when attention is
+diffuse. Two distinct lengths must now be distinguished, however:
+\begin{itemize}
+\item $\Leff$ --- the \textbf{effective key count} (normalisation), entering as $\kappa_{\mathrm{att}}$;
+\item $L_{\mathrm{rng}}$ --- the \textbf{effective phase range}, entering inside $q(\omega L_{\mathrm{rng}})$,
+i.e.\ the largest relative distance whose phase must be resolved.
+\end{itemize}
+Under $p=\mathrm{Unif}$ these coincide with $\Ltr$. Under a heavy-tailed attention profile they do
+not: $\Leff$ measures concentration, $L_{\mathrm{rng}}$ measures reach. This distinction returns in
+\S\ref{sec:conflict}.
+
+\subsection{Closed form for \texorpdfstring{$Q_1(L,b)$}{Q1}}
+
+$q$ is a soft step: $q(x)=x^4/45$ for $x\ll1$ and $q\to\tfrac12$ for $x\gg1$, with the transition
+at $\omega L\sim1$ --- precisely the collapse threshold of Prop.~2 (low-frequency collapse). In the
+substitution $x=Lb^{-\phi}$ the transition occupies a $\phi$-window of width $O(1/\log b)$, so for
+large $b$ the step is sharp on the $\phi$ axis. This makes $Q_0,Q_1$ elementary.
+
+\begin{proposition}[Closed-form utility coefficients]\label{prop:Q1}
+Let $x_0>0$ be the unique root of the log-moment balance
+\begin{equation}
+\int_0^\infty\!\left[q(x)-\tfrac12\mathbf 1\{x>x_0\}\right]\frac{dx}{x}=0,
+\qquad x_0=2.0743\ldots
+\label{eq:x0}
+\end{equation}
+and set $\varphi_*(L,b)=\min\{1,\ \log(L/x_0)/\log b\}$, $g(\varphi)=\varphi(1-\varphi)(2-\varphi)$.
+Then as $b\to\infty$ with $\varphi_*$ fixed in $(0,1)$,
+\begin{equation}
+Q_0(L,b)=\tfrac12\varphi_*+O(\log^{-2}b),\qquad
+\boxed{\;Q_1(L,b)=\tfrac{1}{12}\,g(\varphi_*)+O(\log^{-2}b).\;}
+\label{eq:Q1closed}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Substituting $x=Lb^{-\phi}$ gives $d\phi=-d\log x/\log b$ and
+$Q_1=\frac{1}{\log b}\int_{L/b}^{L}a\!\left(\tfrac{\log(L/x)}{\log b}\right)q(x)\,d\log x$.
+Because $a\in C^\infty$ varies on the $\phi$-scale $1$ while $q$ varies on the $\phi$-scale
+$1/\log b$, Taylor-expanding $a$ about $\varphi_*$ inside the transition window gives
+\[
+Q_1=\tfrac12\!\int_0^{\varphi_*}\!\!a(\phi)\,d\phi
+\;+\;\frac{a(\varphi_*)}{\log b}\underbrace{\int_0^\infty\!\left[q-\tfrac12\mathbf 1\{x>x_0\}\right]\frac{dx}{x}}_{=0\ \text{by }\eqref{eq:x0}}
+\;+\;O(\log^{-2}b).
+\]
+The choice \eqref{eq:x0} annihilates the $O(1/\log b)$ term, which is why the remainder is
+$O(\log^{-2}b)$. Finally $\int_0^u a=\tfrac16 u(1-u)(2-u)=\tfrac16 g(u)$ by direct integration,
+giving \eqref{eq:Q1closed}; $Q_0$ is the same computation with $a\equiv1$. Uniqueness of $x_0$
+follows from strict monotonicity of the left side of \eqref{eq:x0} in $x_0$.
+\end{proof}
+
+\begin{table}[t]\centering\small
+\caption{Accuracy of the closed form \eqref{eq:Q1closed} against numerical quadrature of
+$Q_1=\int_0^1a(\phi)q(Lb^{-\phi})d\phi$. Predicted error order $\log^{-2}b$ is
+$0.58\%$ at $b{=}5\times10^5$, matching the observed $0.4$--$0.5\%$.}
+\label{tab:Q1}
+\begin{tabular}{lrrrrrrr}
+\toprule
+configuration & $L$ & $b$ & $\varphi_*$ & $Q_1$ (exact) & $Q_1$ \eqref{eq:Q1closed} & err. & $Q_0$ exact/closed\\
+\midrule
+50M diagnostic       & 512  & $5{\times}10^5$ & 0.420 & 0.03192 & 0.03207 & $+0.5\%$ & 0.2099 / 0.2099\\
+151.9M fixed-support & 256  & 256             & 0.868 & 0.01069 & 0.01078 & $+0.8\%$ & 0.4333 / 0.4342\\
+432M MLA             & 8192 & $5{\times}10^5$ & 0.631 & 0.02646 & 0.02656 & $+0.4\%$ & 0.3155 / 0.3155\\
+750M / OLMo-2 1.485B & 4096 & $5{\times}10^5$ & 0.578 & 0.02878 & 0.02889 & $+0.4\%$ & 0.2891 / 0.2891\\
+LLaMA-3-8B           & 8192 & $5{\times}10^5$ & 0.631 & 0.02646 & 0.02656 & $+0.4\%$ & 0.3155 / 0.3155\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{remark}[Interpretation of $x_0$]
+$x_0=2.074$ is the utility-weighted resolution threshold: a channel counts as ``resolved'' when
+$\omega L\gtrsim2$, i.e.\ when its wavelength is below $\approx 3L$. The paper's informal
+$\omega L\le1$ cut used in the $r_2{=}2.00$ example is the same threshold read off the
+\emph{geometry}; $x_0$ is its \emph{utility}-weighted counterpart. Note also the exact identity
+$\int_0^1a=0$: if every channel lies on one side of the threshold ($\varphi_*\in\{0,1\}$) then
+$Q_1=0$ identically. \textbf{The first-order utility of \evq{} comes entirely from the existence of
+a resolution boundary inside the band}, which is Prop.~2 (collapse) re-derived from the
+operating-point side.
+\end{remark}
+
+\subsection{The self-consistent equation}
+
+\begin{theorem}[Self-consistent operating point]\label{thm:selfconsistent}
+Under Assumption~\ref{as:I}, replace $1/L$ in $U$ by $\kappa_{\mathrm{att}}=1/\Leff$ and
+$L$ inside $q$ by $L_{\mathrm{rng}}$, and use the exact (non-truncated) $\tilde S$ of \eqref{eq:SU}.
+Let $W(\tau)=\int_0^1\rho_\tau(\phi)q(L_{\mathrm{rng}}b^{-\phi})d\phi$. Then every interior
+stationary point of $\mathcal F(\tau)=\tfrac12S_{\chi^2}(\tau)-\lambda U(\tau)$ satisfies the
+\textbf{self-consistency equation}
+\begin{equation}
+\boxed{\;\Psi(\tau_*)\;=\;\frac{2\lambda\,\deff^2}{\Leff},\qquad
+\Psi(\tau):=\frac{\tilde S'(\tau)}{W'(\tau)}.\;}
+\label{eq:selfconsistent}
+\end{equation}
+$\Psi$ is strictly increasing on $(0,\infty)$ with $\Psi(0^+)=0$ and $\Psi(\infty)=\infty$
+(verified numerically over $\tau\in[0.2,8]$ for all paper configurations), so $\tau_*$ exists and is
+unique. Its small-$\tau$ expansion, $\Psi(\tau)=2\tau^2/(45Q_1)+O(\tau^4)$, reproduces
+\begin{equation}
+\tau_*^2=\frac{45\lambda\,Q_1(L_{\mathrm{rng}},b)\,\deff^2}{\Leff},
+\qquad\text{i.e.}\qquad
+\tau_*=\sqrt{45\lambda Q_1}\;\frac{\deff}{\sqrt{\Leff}} .
+\label{eq:tau-fo}
+\end{equation}
+This equation is self-consistent in the strict sense: $\Leff$ on the right depends, through the
+trained $p_i$, on the substrate built with $\tau_*$; \eqref{eq:selfconsistent} is a fixed point in
+$\tau$, solved in practice by one measure--rebuild iteration.
+\end{theorem}
+
+\begin{proof}
+$\partial_\tau\mathcal F=0$ reads $\tfrac{1}{2\deff}\tilde S'(\tau)=\lambda\frac{\deff}{\Leff}W'(\tau)$;
+rearranging gives \eqref{eq:selfconsistent}. The expansion uses $\tilde S'=4\tau^3/45+O(\tau^5)$ and
+$W'=2\tau Q_1+O(\tau^3)$ from $\rho_\tau=1+\tau^2a+O(\tau^4)$.
+\end{proof}
+
+\subsection{Removing the constant}
+
+\eqref{eq:tau-fo} still carries $\lambda$. Combining it with Prop.~\ref{prop:Q1},
+\begin{equation}
+c(\Pi)=\sqrt{45\lambda Q_1}=\sqrt{\tfrac{45\lambda}{12}\,g(\varphi_*)},
+\qquad g(\varphi)=\varphi(1-\varphi)(2-\varphi).
+\label{eq:c-closed}
+\end{equation}
+The function $g$ on $[0,1]$ is maximised at $\varphi_{\max}=1-1/\sqrt3$ with
+$g_{\max}=g(\varphi_{\max})=\tfrac{2}{3\sqrt3}=\tfrac{2\sqrt3}{9}=0.38490$ (exact). This gives
+$c(\Pi)$ a hard ceiling, and the ceiling is what fixes $\lambda$.
+
+\begin{corollary}[Constant-free operating rule]\label{cor:zeroconst}
+Adopt the normalisation ``the rule is exact at the best-conditioned configuration'',
+i.e.\ $c=1$ when $\varphi_*=\varphi_{\max}$. This forces $\lambda=\tfrac{12}{45g_{\max}}=\tfrac{4}{15g_{\max}}=0.6928$ and yields
+\begin{equation}
+\boxed{\;\tau_*=\frac{\deff}{\sqrt{\Leff}}\sqrt{\frac{g(\varphi_*)}{g_{\max}}}
+=\frac{\deff}{\sqrt{\Leff}}\sqrt{\tfrac{3\sqrt3}{2}\,\varphi_*(1-\varphi_*)(2-\varphi_*)},
+\qquad \varphi_*=\min\Big\{1,\tfrac{\log(L_{\mathrm{rng}}/x_0)}{\log b}\Big\}. \;}
+\label{eq:zeroconst}
+\end{equation}
+No protocol constant remains. In particular $c(\Pi)\le1$ always, with equality
+\textbf{iff} $b=(L_{\mathrm{rng}}/x_0)^{1/\varphi_{\max}}=(L_{\mathrm{rng}}/x_0)^{(3+\sqrt3)/2}$.
+\end{corollary}
+
+This is the substantive change to the paper's claim. $c(\Pi)$ is \emph{not} a
+free, protocol-dependent number. Its entire $(L,b)$ dependence is closed-form; only a single
+universal normalisation remains, and $c{=}1$ is the model's maximum rather than a typical value.
+
+\begin{table}[t]\centering\small
+\caption{Constant-free rule \eqref{eq:zeroconst} against the deployed $\tau$, evaluated at
+$\Leff=L_{\mathrm{rng}}=\Ltr$ (uniform-attention hypothesis).}
+\label{tab:tau}
+\begin{tabular}{lrrrrrrr}
+\toprule
+configuration & $\deff$ & $\Ltr$ & $b$ & $\varphi_*$ & $c(\Pi)$ & $\tau$ predicted & $\tau$ deployed\\
+\midrule
+50M diagnostic        & 64  & 512  & $5{\times}10^5$ & 0.420 & 1.000 & 2.828 & 2.830\\
+432M MLA ($\drot{=}32$)& 32 & 8192 & $5{\times}10^5$ & 0.631 & 0.910 & 0.322 & 0.354\\
+750M continuation     & 64  & 4096 & $5{\times}10^5$ & 0.578 & 0.949 & 0.949 & 1.000\\
+OLMo-2 1.485B         & 128 & 4096 & $5{\times}10^5$ & 0.578 & 0.949 & 1.898 & 2.000\\
+LLaMA-3-8B            & 128 & 8192 & $5{\times}10^5$ & 0.631 & 0.910 & 1.287 & 1.414\\
+\midrule
+\textbf{151.9M fixed-support} & 64 & 256 & \textbf{256} & \textbf{0.868} & \textbf{0.580} & \textbf{2.318} & \textbf{4.000}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Is \texorpdfstring{$\tau=\deff/\sqrt{\Ltr}$}{tau=deff/sqrt(Ltrain)} a strict first-order approximation?}
+
+\begin{theorem}[Split verdict]\label{thm:verdict}
+Let attention be uniform on the training window, $p_i=1/\Ltr$.
+\begin{enumerate}
+\item[\textup{(a)}] \textbf{Confirmed, and stronger than first order.} The length dependence
+$\tau_*\propto\deff/\sqrt{\Ltr}$ is \emph{exact}, not a first-order approximation:
+by Prop.~\ref{prop:exact-uniform}, $\Leff=\Ltr$ identically, and $L_{\mathrm{rng}}=\Ltr$ by
+definition of the window. The only approximation in the paper's rule is the small-$\tau$
+truncation of \eqref{eq:selfconsistent}, and this is numerically benign: solving
+\eqref{eq:selfconsistent} exactly (no Taylor series in either $\tilde S$ or $W$) shifts $\tau_*$ by
+$+6\%$ to $+8\%$ at the paper's operating points, even though the quartic truncation of $\tilde S$
+alone is off by a factor $0.28$--$0.79$ there. The errors in $\tilde S'$ and $W'$ cancel to leading
+order in the ratio $\Psi$.
+\item[\textup{(b)}] \textbf{Refuted.} $c=1$ does \emph{not} follow. By \eqref{eq:c-closed},
+$c(\Pi)$ is a nonconstant function of $(L,b)$ through $\varphi_*$, and requiring $c\equiv1$ across
+the paper's configurations forces $\lambda$ to vary by a factor $2.99$. Excluding the $b{=}256$
+control, the required $\lambda$ varies only over $[0.696,0.840]$ (a factor $1.21$), so
+$c\approx1$ is a good approximation on the $b{=}5{\times}10^5$ family --- but it is an
+approximation to the ceiling, not a derived identity.
+\end{enumerate}
+\end{theorem}
+
+\begin{table}[t]\centering\small
+\caption{Exact solution of \eqref{eq:selfconsistent} versus the first-order rule, with $\lambda$
+calibrated once at $(L,b)=(4096,5{\times}10^5)$. The last column shows how badly the quartic
+truncation of the stiffness alone fails at the deployed $\tau$ --- and how little it matters.}
+\label{tab:exact}
+\begin{tabular}{lrrrr}
+\toprule
+configuration & $\tau$ deployed & $\tau$ first-order & $\tau$ exact & $\tilde S_{\text{exact}}/(\tau^4/45)$\\
+\midrule
+50M diagnostic       & 2.830 & 2.979 & 2.991 & 0.373\\
+432M MLA             & 0.354 & 0.339 & 0.343 & 0.966\\
+750M continuation    & 1.000 & 1.000 & 1.082 & 0.785\\
+OLMo-2 1.485B        & 2.000 & 2.000 & 2.158 & 0.507\\
+LLaMA-3-8B           & 1.414 & 1.356 & 1.494 & 0.656\\
+\midrule
+151.9M fixed-support & 4.000 & 2.438 & 2.428 & 0.284\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Where the approximation fails completely}
+
+\begin{proposition}[Failure boundaries]\label{prop:failure}
+The rule $\tau=c\,\deff/\sqrt{\Ltr}$ degenerates in four distinct ways.
+\begin{enumerate}
+\item[\textup{(F1)}] \textbf{Band degeneracy, $\varphi_*\to0$ or $1$.} $Q_1\to0$ and $\tau_*\to0$:
+if every channel is on one side of the resolution threshold there is no first-order gain from
+reallocation, because $\int_0^1a=0$. The boundary $\varphi_*=1$ is $b=x_0L\approx2.07L$.
+\emph{The paper's own fixed-support control sits on this locus}: $b{=}256$, $L{=}256$ gives
+$\varphi_*=0.868$ and $c=0.58$, so the deployed $\tau{=}4$ overshoots the model's optimum
+($2.32$--$2.43$) by $1.6$--$1.7\times$. That the control nonetheless favours \evq{} at $\tau{=}4$ is
+therefore evidence \emph{against} the operating-point model at that configuration, not for it ---
+and it is the cleanest place in the paper to test whether the mechanism is the modelled one.
+\item[\textup{(F2)}] \textbf{Rayleigh-quotient degeneracy.} If $P_ig_i\to0$ --- attention on a single
+key, or on keys at a single relative distance --- then \eqref{eq:kappa} is $0/0$ and $\Leff$ is
+undefined. Assumption (A4) is not cosmetic: $g_i(j)\propto r_{ij}\times(\cdot)$ vanishes at
+$r_{ij}=0$, so a head that attends only to a narrow band of distances has a nearly constant $g_i$
+and an ill-conditioned $\Leff$. The estimator must be reported with $\E\|P_ig_i\|^2$ alongside it.
+\item[\textup{(F3)}] \textbf{Large-$\tau$ truncation.} At $\tau{=}4$ the exact stiffness is $0.28$
+times its quartic. This is harmless for $\tau_*$ (Table~\ref{tab:exact}) but \emph{not} for any
+statement about the value of $\mathcal F$, e.g.\ the waterbed scale
+$\mathcal W(\rho_{\tau_*})=O(\dhd^4/(\Leff)^2)$ in App.~A.6, which inherits the full $0.28$ error.
+\item[\textup{(F4)}] \textbf{Decoupling of $\Leff$ from $L_{\mathrm{rng}}$.} The substitution repairs
+the key-count normalisation only. When attention is heavy-tailed the two lengths diverge and the
+formula's prescription conflicts with the geometry; see \S\ref{sec:conflict}.
+\end{enumerate}
+\end{proposition}
+
+\subsection{The measurement already exists, and it points the other way}
+\label{sec:audit}
+
+\eqref{eq:zeroconst} makes $\Leff$ falsifiable, and the repository already contains the
+falsification: \texttt{research/KAPPA\_ATTENTION\_}\allowbreak\texttt{MEASURE\_AUDIT\_20260820.md}
+(implementation \texttt{scripts/analysis/attention\_fisher\_50m\_probe.py}) measures
+$\kappa_{\mathrm{att}}$ on the four cells of the frozen $50$M co-adaptation probe at $L{=}512$,
+with the direction $g$ computed once on the Geo cell and held fixed --- exactly Assumption (A3).
+Reading $\Leff=1/\kappa_{\mathrm{att}}$ off the first-order column:
+
+\begin{center}\small
+\begin{tabular}{llrrrr}
+\toprule
+weights & table & PPL & $\kappa_{\mathrm{att}}$ & $\Leff$ & $\Leff/\Ltr$\\
+\midrule
+Geo & Geo & 7.141 & $4.648{\times}10^{-4}$ & 2152 & 4.20\\
+Geo & \evq{} & 76.20 & $2.531{\times}10^{-3}$ & 395 & 0.77\\
+\evq{} & Geo & 23.05 & $1.144{\times}10^{-3}$ & 874 & 1.71\\
+\evq{} & \evq{} & 7.160 & $5.354{\times}10^{-4}$ & 1868 & 3.65\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Two facts follow, one of which reverses an intuition that would otherwise have been natural here.
+
+\begin{proposition}[The transport direction vanishes where attention concentrates]\label{prop:sign}
+By App.~A.12, $g_i(j)=\frac{(\log b)\,r_{ij}}{s_{\mathrm{att}}}\sum_k\omega_k^{(0)}h(u_k)[\,\cdot\,]$,
+so $g_i(j)=O(r_{ij})$ as $r_{ij}\to0$ and $g_i(i)=0$ exactly. Trained attention places most of its
+mass at small $|r_{ij}|$, i.e.\ precisely where $|g_i|$ is smallest. Hence
+$\Var_{p_i}[g_i]<\frac{1}{n}\|P_ig_i\|^2$ and $\kappa_{\mathrm{att}}<1/n$, i.e.\
+$\boxed{\Leff>\Ltr}$: \textbf{attention locality makes the softmax-Jacobian window
+\emph{longer}, not shorter.} The measurement confirms this: against a uniform-attention reference
+of $\kappa_0\in[1/512,\,1/269]$ for this probe's causal query geometry
+(query positions $63,127,255,383,511$), the two self-consistent cells measure
+$\kappa_{\mathrm{att}}$ a factor $4.2$--$8$ \emph{smaller}.
+\end{proposition}
+
+This inverts the naive reading of \eqref{eq:zeroconst}. One is tempted to argue ``real attention is
+concentrated, so $\Leff\ll\Ltr$, so the deployed $\tau$ is too small''. The opposite is true.
+
+\begin{corollary}[The $50$M fixed point]\label{cor:fixedpoint}
+At the $50$M configuration $\varphi_*=0.420\approx\varphi_{\max}$, so $c(\Pi)=1.000$ exactly and
+\eqref{eq:zeroconst} reduces to $\tau_*=\deff/\sqrt{\Leff}$. Substituting the two self-consistent
+measurements,
+\[
+\tau_*=\frac{64}{\sqrt{2152}}=1.380\ \ (\text{Geo substrate}),\qquad
+\tau_*=\frac{64}{\sqrt{1868}}=1.481\ \ (\evq{}\ \tau{=}2.83\ \text{substrate}).
+\]
+The map $\tau\mapsto\Leff(\tau)\mapsto\deff/\sqrt{\Leff}$ is therefore strongly contractive here
+($[0,2.83]\mapsto[1.38,1.48]$), with fixed point
+\[
+\boxed{\ \tau^{\mathrm{sc}}\approx1.43\ =\ 0.51\times\ \text{the deployed rule}.\ }
+\]
+\end{corollary}
+
+\paragraph{A concrete, untested prediction.} The manuscript's multiplier sweeps evaluate
+$0.75\times$, $1.00\times$, $1.25\times$ and $1.50\times$ the rule. \textbf{The self-consistent
+formula predicts the optimum at $\approx0.5\times$, which no reported sweep covers.} If the
+$\Leff/\Ltr\approx4$ ratio is not special to $50$M, the same halving applies everywhere:
+$\tau\approx1.0$ for OLMo-2 1.485B rather than $2$, $\approx0.7$ for LLaMA-3-8B rather than
+$1.414$. Adding a $0.5\times$ arm to the existing $99$-run staged study is the single cheapest
+decisive test of this note.
+
+\paragraph{Honest carry-over of the audit's own verdict.} The audit's preregistered promotion test
+was whether $\kappa_{\mathrm{att}}$ \emph{ranks trained PPL across the four cells}. The first-order
+direction does ($\rho{=}{+}1.0$); the finite-swap direction does not ($\rho{=}{-}0.2$); the
+preregistered rule therefore selected Branch~C and $\kappa_{\mathrm{att}}$ was not promoted. That
+verdict concerns $\kappa_{\mathrm{att}}$ \emph{as a PPL predictor}. The use here is different and
+weaker: $\kappa_{\mathrm{att}}$ enters \eqref{eq:selfconsistent} only as the \emph{normalisation}
+of a diagonal utility, replacing an assumed $p_0{=}1/L$ by a measured one, and
+Prop.~\ref{prop:exact-uniform} shows the replacement is exact at the point where the two agree.
+The disagreement between the two directions is nevertheless a real caveat: it bounds how much
+weight the fixed point of Cor.~\ref{cor:fixedpoint} can carry until a $0.5\times$ training arm
+exists.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Part II: a LoRA rank floor from the transplant obstruction}
+\label{sec:rank}
+
+\subsection{Setup}
+
+Work in head coordinates on $\R^{\drot}$, $K=\drot/2$. Let
+$R_\Omega(\Delta)=\bigoplus_{k=1}^K\Rot(\omega_k\Delta)$ and
+$D(\Delta):=R_\Omega(\Delta)-R_{\Omega'}(\Delta)$, $\delta_k:=\omega_k-\omega_k'$ under the
+monotone (sorted) pairing, which is the $W_p$-optimal coupling of the two frequency multisets in
+one dimension. A rank-$r$ LoRA gives effective maps $A=W_Q+\Delta Q$, $B=W_K+\Delta K$ with
+$\rank\Delta Q,\rank\Delta K\le r$; take $W_Q=W_K=I$ in head coordinates (the general case only
+adds fixed invertible factors, which do not change ranks).
+
+\subsection{The residual is low rank, uniformly in \texorpdfstring{$\Delta$}{Delta}}
+
+\begin{lemma}[Rank-$2r$ residual]\label{lem:rank2r}
+For every $\Delta$, $\ \rank\!\left(A^\top R_{\Omega'}(\Delta)B-R_{\Omega'}(\Delta)\right)\le 2r$.
+\end{lemma}
+\begin{proof}
+$A^\top RB-R=\Delta Q^\top RB+R\,\Delta K$, a sum of two matrices of rank $\le r$.
+(Verified numerically: equality holds generically.)
+\end{proof}
+
+\begin{theorem}[Frozen subspace]\label{thm:frozen}
+Let $\mathcal N=\ker\Delta Q\cap\ker\Delta K$, so $\dim\mathcal N\ge\drot-2r$, and let $P$ be the
+orthogonal projector onto $\mathcal N$. Then for every $\Delta$,
+\begin{equation}
+P\left(A^\top R_{\Omega'}(\Delta)B\right)P \;=\; P\,R_{\Omega'}(\Delta)\,P ,
+\label{eq:frozen}
+\end{equation}
+that is, \textbf{on a subspace of codimension at most $2r$ the adapted head reproduces the
+un-repaired transplanted table verbatim}. Consequently, for every $\Delta$,
+\begin{equation}
+\left\|A^\top R_{\Omega'}(\Delta)B-R_\Omega(\Delta)\right\|_F\;\ge\;\left\|P\,D(\Delta)\,P\right\|_F .
+\label{eq:lb-basic}
+\end{equation}
+\end{theorem}
+\begin{proof}
+For $v,w\in\mathcal N$: $v^\top A^\top R_{\Omega'}Bw=(Av)^\top R_{\Omega'}(Bw)=v^\top R_{\Omega'}w$
+since $Av=v$, $Bw=w$. This is \eqref{eq:frozen}; subtracting $PR_\Omega P$ and using
+$\|M\|_F\ge\|PMP\|_F$ gives \eqref{eq:lb-basic}. (Verified numerically to $10^{-15}$.)
+\end{proof}
+
+This is the precise sense in which ``Theorem~3's obstruction remains in the principal subspace''.
+It is not a metaphor: the obstruction survives \emph{exactly}, on an explicitly identified subspace
+whose codimension is the LoRA budget.
+
+\subsection{The mismatch spectrum}
+
+\begin{lemma}[Block spectrum]\label{lem:blockspec}
+$D(\Delta)$ is block diagonal with $k$-th block $\Rot(\omega_k\Delta)-\Rot(\omega_k'\Delta)
+=2\sin(\delta_k\Delta/2)\cdot O_k(\Delta)$ for an orthogonal $O_k$. Hence
+$\sigma(D(\Delta))=\{2|\sin(\delta_k\Delta/2)|\}_{k\le K}$, each with multiplicity two, and
+\begin{equation}
+\|D(\Delta)\|_F^2=2\sum_{k=1}^K 4\sin^2(\delta_k\Delta/2),
+\qquad
+\E_{\Delta\sim\mu}\|D\|_F^2=2\sum_k s_k,\quad
+s_k:=2\bigl(1-\operatorname{Re}\psi_\mu(\delta_k)\bigr)\in[0,4],
+\label{eq:sk}
+\end{equation}
+where $\psi_\mu$ is the characteristic function of the evaluation distribution of relative
+distances. (Verified numerically to $10^{-10}$.)
+\end{lemma}
+
+\begin{corollary}[Exact-repair floor]\label{cor:exactfloor}
+If $A^\top R_{\Omega'}(\Delta)B=R_\Omega(\Delta)$ at a single distance $\Delta$ with
+$\delta_k\Delta\notin2\pi\mathbb Z$ for all $k$, then Lemma~\ref{lem:rank2r} forces
+$\rank D(\Delta)\le 2r$, and $\rank D(\Delta)=2K$, so
+\begin{equation}
+\boxed{\;r\;\ge\;K=\drot/2.\;}
+\end{equation}
+By Theorem~3 no finite $r$ achieves this simultaneously for all $\Delta$ in an interval.
+Since a global LoRA factors every head's update through one shared $r$-dimensional input subspace,
+the bound must hold for every head at once.
+\end{corollary}
+
+For $\dhd=128$ (OLMo-2 1.485B, LLaMA-3-8B) this reads $r\ge64$, and the paper deploys $r=64$:
+\emph{the empirical rank sits exactly on the exact-repair floor, with zero slack.}
+
+\subsection{Approximate repair: the quantitative bound}
+
+\begin{theorem}[Rank floor for $\eta$-approximate repair]\label{thm:rankfloor}
+Let $\mu$ be the evaluation distribution of relative distances and $s_k$ as in \eqref{eq:sk}.
+Then for any rank-$r$ Q/K LoRA,
+\begin{equation}
+\E_{\Delta\sim\mu}\bigl\|A^\top R_{\Omega'}(\Delta)B-R_\Omega(\Delta)\bigr\|_F^2
+\;\ge\;2\sum_{k}s_k-16\,r .
+\label{eq:rigorous}
+\end{equation}
+Hence leaving relative residual energy at most $\eta$ requires
+\begin{equation}
+\boxed{\;r\;\ge\;\frac{(1-\eta)}{8}\sum_{k=1}^K s_k
+\;=\;\frac{1-\eta}{4}\Bigl(K-\textstyle\sum_k\operatorname{Re}\psi_\mu(\delta_k)\Bigr).\;}
+\label{eq:rmin}
+\end{equation}
+A sharper (non-uniform) version replaces the crude $\max_k$ step: with $s_{(1)}\ge\dots\ge s_{(K)}$,
+$r\ge\tfrac12\min\{m:\sum_{k\le m}s_{(k)}\ge(1-\eta)\sum_ks_k\}$ whenever the ordering of
+$|\sin(\delta_k\Delta/2)|$ is $\Delta$-independent (i.e.\ $\max_k|\delta_k|\cdot\sup\mathrm{supp}\,\mu\le\pi$).
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{thm:frozen} it suffices to bound $\|PD(\Delta)P\|_F$ from below with
+$\mathrm{codim}\,\mathcal N\le2r$. Write $PDP=D-(I-P)D-PD(I-P)$; the two subtracted terms have rank
+$\le 2r$ each, so $PDP$ differs from $D$ by a matrix of rank $\le4r$ and Weyl's inequality for
+singular values gives $\sigma_j(PDP)\ge\sigma_{j+4r}(D)$ (verified numerically). Summing squares,
+$\|PDP\|_F^2\ge\sum_{j>4r}\sigma_j(D)^2$. By Lemma~\ref{lem:blockspec} the discarded $4r$ singular
+values correspond to at most $2r$ channels, each contributing at most
+$2\cdot 4\sin^2(\cdot)\le8$; hence
+$\|PDP\|_F^2\ge\|D\|_F^2-16r$ pointwise in $\Delta$. Taking $\E_\mu$ gives \eqref{eq:rigorous},
+and $\eta$-repair requires $2\sum s_k-16r\le\eta\cdot2\sum s_k$. The sharper version follows by
+keeping the sorted tail instead of the crude $\max$.
+\end{proof}
+
+\subsection{The Wasserstein form}
+
+The user-facing question --- how does the spectral discrepancy between $\Omega$ and $\Omega'$
+control $r_{\min}$ --- is answered by the two regimes of $s_k=2(1-\operatorname{Re}\psi_\mu(\delta_k))$.
+
+\begin{corollary}[Small-shift regime: $W_2$ controls the floor]\label{cor:W2}
+Let $\sigma_\mu^2=\E_\mu[\Delta^2]<\infty$ and suppose $|\delta_k|\sigma_\mu\ll1$ for all $k$. Then
+$s_k=\delta_k^2\sigma_\mu^2+O(\delta_k^4\E\Delta^4)$ and, since the sorted coupling is
+$W_p$-optimal in $\R$,
+\begin{equation}
+\sum_k s_k=\sigma_\mu^2\sum_k\delta_k^2+O(\cdot)=\sigma_\mu^2\,K\,W_2^2(\Omega,\Omega')+O(\cdot),
+\qquad\text{so}\qquad
+r_{\min}\ \ge\ \frac{(1-\eta)\,\sigma_\mu^2\,K\,W_2^2(\Omega,\Omega')}{8}.
+\end{equation}
+\end{corollary}
+
+\begin{corollary}[Saturated regime: a decorrelated-channel count]\label{cor:sat}
+If $|\delta_k|\sigma_\mu\gtrsim1$ then $s_k\to2$ and each such channel is fully decorrelated by the
+transplant. With $K_{\mathrm{sat}}=\#\{k:\operatorname{Re}\psi_\mu(\delta_k)\approx0\}$,
+$r_{\min}\ge(1-\eta)K_{\mathrm{sat}}/4$. The crossover between the regimes is governed by $W_\infty$:
+saturation begins once $W_\infty(\Omega,\Omega')\gtrsim1/\sigma_\mu$.
+\end{corollary}
+
+So the precise answer is: \emph{$W_2^2$ controls the floor in the perturbative regime, $W_\infty$
+controls where that description stops, and beyond it the floor is a count of decorrelated channels.}
+$\sum_ks_k=2K-2\sum_k\operatorname{Re}\psi_\mu(\delta_k)$ is the object that interpolates, and it is
+computable in closed form for any $\mu$ from Prop.~\ref{prop:cross-gram} below.
+
+\subsection{Numerical evaluation}
+
+\begin{table}[t]\centering\small
+\caption{Mismatch energy and rank floors for $K{=}64$, $b{=}5{\times}10^5$, evaluation prior
+$\mathrm{Unif}[1,8192]$. The last row uses $\mu=\mathrm{Unif}[1,256]$ instead. $r(f)$ is the smallest $r$ whose $2r$ worst-matched channels carry a
+fraction $f$ of $\sum_ks_k$ (the sharp bound of Theorem~\ref{thm:rankfloor}).}
+\label{tab:rank}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lrrrrr}
+\toprule
+intervention $\Omega\to\Omega'$ & $\E_\mu\|D\|_F^2$ & $r(50\%)$ & $r(90\%)$ & $r(99\%)$ & rigorous \eqref{eq:rmin}, $\eta{=}0$\\
+\midrule
+Native $\to$ \evq{}($\tau{=}1.414$) & 181.8 & 12 & 21 & 24 & 11.4\\
+Native $\to$ \evq{}($\tau{=}4$)     & 238.5 & 15 & 27 & 30 & 14.9\\
+support only: $b:5{\times}10^5\to5{\times}10^6$ & 160.4 & 10 & 18 & 22 & 10.0\\
+support only: PI, all $\omega/4$    & 164.2 & 10 & 19 & 22 & 10.3\\
+\textbf{\textsc{YaRN}-style: only $\omega L{<}1$ rescaled} & \textbf{1.07} & \textbf{1} & \textbf{3} & \textbf{6} & \textbf{0.07}\\
+\midrule
+151.9M control: FMRoPE $\to$ anchored \evq{}($\tau{=}4$), $K{=}32$, $\mu=\mathrm{Unif}[1,256]$ & 119.3 & 8 & 14 & 15 & 7.5\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+Three readings, one of which corrects an attractive but false expectation.
+
+\paragraph{(1) Slow-only range operators are rank-cheap, and this is Prop.~2 cashing out.}
+The \textsc{YaRN}-style intervention --- rescale only the channels with $\omega L<1$, leaving the
+fast channels alone --- has $170\times$ less mismatch energy and is $90\%$-repairable at $r=3$,
+versus $r\approx20$ for a full-band change. This is not a coincidence: those channels are exactly
+the ones the paper shows have block-whitened $r_2=2.00$. \textbf{The rank needed to repair an
+intervention is the effective rank of the subspace the intervention acts on}, so an intervention
+confined to a two-dimensional positional subspace is absorbed by a rank-$2$--$3$ update. This is a
+new corollary of the paper's own Prop.~2 and it explains, without any new assumption, why
+range-transport methods survive with near-zero adaptation while table changes do not.
+
+\paragraph{(2) The rank analysis does \emph{not} separate allocation from support.}
+It would be convenient if \evq{} (allocation) were rank-expensive and a base change (support) were
+rank-cheap; that would give the ``third axis'' a rank-theoretic proof. It is false:
+$r(90\%)$ is $21$ for \evq{} and $18$--$19$ for a base change or PI, because all three move every
+channel. The seam the rank analysis actually cuts along is \emph{slow-only vs.\ full-band}. This
+should be stated rather than elided --- claiming otherwise is checkable in ten lines of NumPy.
+
+\paragraph{(3) A falsifiable prediction.}
+The floors say the knee is at $r\approx20$--$27$ for the 8B protocol, and that $r\le8$ recovers
+only $27$--$37\%$ of the mismatch energy. Re-running the existing 8B adaptation at
+$r\in\{4,8,16,32,64\}$ should show a knee near $r\approx20$ and a collapse at $r\le8$. This costs
+one sweep on an existing pipeline and would convert Theorem~3 from a qualitative obstruction into a
+quantitative, measured one.
+
+\subsection{A sharpening of Theorem 3}
+
+\begin{proposition}[Three distances suffice]\label{prop:thm3sharp}
+Assume $A,B$ invertible and position-independent, $A^\top R_{\Omega'}(\Delta_i)B=R_\Omega(\Delta_i)$
+for $\Delta_0=0$ and two further distances $\Delta_1,\Delta_2$ with $\Delta_2/\Delta_1\notin\mathbb Q$,
+the frequencies within each table distinct, and the eigenvalue matching induced at $\Delta_1$ and at
+$\Delta_2$ given by the same permutation. Then $\Omega'=\Omega$ up to sign and permutation.
+\end{proposition}
+\begin{proof}
+$\Delta_0=0$ gives $A^\top B=I$, hence $B=A^{-\top}$ and $S R_{\Omega'}(\Delta_i)S^{-1}=R_\Omega(\Delta_i)$
+with $S=A^\top$. Similarity preserves spectra, so
+$\{e^{\pm i\omega_k'\Delta_i}\}=\{e^{\pm i\omega_k\Delta_i}\}$ for $i=1,2$. Under the common-matching
+hypothesis, for each $k$ there are integers $m,n$ with
+$\omega_k'-\omega_k=2\pi m/\Delta_1=2\pi n/\Delta_2$, so $m/n=\Delta_1/\Delta_2\notin\mathbb Q$,
+forcing $m=n=0$.
+\end{proof}
+This tightens the manuscript's hypothesis (``an open interval'', or integer positions up to the
+$2\pi$ alias) to a finite, protocol-realisable set of distances, which matters because
+finite-distribution protocols are what the mature-scale experiments actually measure.
+
+\subsection{The ceiling of Part II}
+\label{sec:ceiling2}
+
+Everything above bounds \textbf{emulation}: making the $\Omega'$ model compute the $\Omega$ model's
+function. LoRA fine-tuning does \textbf{re-adaptation}: it minimises the LM loss \emph{in the
+$\Omega'$ coordinate system}, and nothing forces it to pass through the $\Omega$ solution. The
+paper's own co-adaptation result --- that the two self-consistent pairs are tied at PPL $\approx7$
+while both mismatched cells collapse --- says precisely that a good $\Omega'$ solution exists; the
+obstruction only says you cannot get there by \emph{copying} the $\Omega$ one.
+
+So no linear-algebraic argument can produce a rank floor for the quantity the experiments measure.
+Breaking this ceiling requires bounding
+$\min_{\rank\Delta W\le r}\mathcal L(W+\Delta W)$ from below, which needs a
+loss-landscape tool, not a spectral one: a rank-restricted Fisher/NTK capacity bound
+(the achievable loss decrease is controlled by the trace of the Fisher information restricted to
+the rank-$r$ tangent manifold), or a statistical-dimension argument for the class of functions a
+rank-$r$-perturbed head can express on the training distribution.
+
+There is, however, an honest intermediate claim that the manuscript can make now, and that
+Theorem~\ref{thm:frozen} supports exactly:
+\begin{quote}
+\emph{On a subspace of codimension $\le2r$ the adapted head is bit-identical to the naive
+transplant. Any capability that requires modifying the head's positional response on more than $2r$
+independent directions is therefore unreachable at rank $r$, regardless of the training objective.}
+\end{quote}
+
+\begin{remark}[An explanation the paper currently lacks]
+The 8B LoRA results show in-window PPL \emph{degrading} ($6.82\to10.07$ at 8K) while long-range PPL
+improves by $8\times$ ($991\to128$ at 32K). Theorem~\ref{thm:frozen} plus Table~\ref{tab:rank}
+predicts exactly this asymmetry: the long-range response lives in the slow-channel subspace, which
+has effective rank $2$ and is therefore repaired first and almost for free; the in-window response
+lives in the fast channels, which are mutually near-orthogonal and consume rank one-for-one. A
+rank-$r$ budget spent greedily therefore buys long range before it buys in-window fidelity. This is
+a mechanism, testable by the rank sweep above.
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Part III: non-uniform separation priors}
+\label{sec:prior}
+
+\subsection{App.~A.1 is prior-agnostic}
+
+\begin{proposition}[Cross-Gram for an arbitrary separation prior]\label{prop:cross-gram}
+Let $\mu$ be any distribution on relative separations with characteristic function
+$\psi_\mu(t)=A(t)+iB(t)$, $A(t)=\E_\mu\cos(t\Delta)$, $B(t)=\E_\mu\sin(t\Delta)$. Then with
+$d=\omega-\nu$, $s=\omega+\nu$ and $x_\omega(\Delta)=[\cos\omega\Delta\ \ \sin\omega\Delta]$,
+\begin{equation}
+H_{\omega\nu}=\E_\mu[x_\omega^\top x_\nu]=\frac12
+\begin{bmatrix} A(d)+A(s) & B(s)-B(d)\\ B(s)+B(d) & A(d)-A(s)\end{bmatrix},
+\qquad S_\omega=H_{\omega\omega}.
+\label{eq:general-gram}
+\end{equation}
+App.~A.1's formula is the special case $\mu=\mathrm{Unif}[0,L]$, for which
+$A(t)=\sin(tL)/(tL)$ and $B(t)=(1-\cos tL)/(tL)$, i.e.\ the paper's $a$ and $b_\star$.
+\end{proposition}
+\begin{proof}
+Product-to-sum on each of the four entries and linearity of $\E_\mu$.
+\end{proof}
+
+Two immediate consequences worth stating in the manuscript.
+\emph{(i) The spectral budget identity is prior-independent.} Theorem~1
+($r_2(R)=2K/[1+(K-1)\bar c]$) uses only $R_{ii}=I_2$ and $R_{ji}=R_{ij}^\top$, both of which hold
+for \eqref{eq:general-gram} whenever $S_\omega\succ0$. Nothing about the uniform prior enters.
+\emph{(ii) The whole of App.~A.1 becomes a one-line substitution}
+$(a,b_\star)\mapsto(\operatorname{Re}\psi_\mu,\operatorname{Im}\psi_\mu)$, which is a cheap and
+strengthening edit.
+
+\subsection{The collapse coefficient for an arbitrary prior}
+
+\begin{theorem}[General low-frequency collapse rate]\label{thm:collapse-general}
+Let $\mu$ have finite sixth moment $m_j=\E_\mu[\Delta^j]$ and support on at least four points, let
+$G_0=\begin{psmallmatrix}1&m_1\\m_1&m_2\end{psmallmatrix}\succ0$ be the Gram of
+$V_0=\spn\{1,\Delta\}$ in $L^2(\mu)$, let $\Pi_0^\perp$ be the $L^2(\mu)$-orthogonal projection off
+$V_0$, and let $M$ be the $2\times2$ Gram of the pair
+$\bigl(-\tfrac12\Pi_0^\perp\Delta^2,\ -\tfrac16\Pi_0^\perp\Delta^3\bigr)$. Then as
+$\epsilon=\max\{\omega,\nu\}\sqrt{m_2}\to0$,
+\begin{equation}
+2-\bigl\|Q_{\omega\nu}\bigr\|_F^2=\Lambda(\mu)\,(\omega^2-\nu^2)^2+O(\epsilon^6),
+\qquad \boxed{\ \Lambda(\mu)=\tr\!\left(G_0^{-1}M\right).\ }
+\label{eq:Lambda}
+\end{equation}
+For $\mu=\mathrm{Unif}[0,L]$ this evaluates to $\Lambda=\tfrac{19}{12600}L^4$, recovering
+App.~A.1's $2-\|Q\|_F^2=\tfrac{19}{12600}(x^2-y^2)^2$ with $x=\omega L$, $y=\nu L$.
+\end{theorem}
+
+\begin{proof}
+Parameterise by $\theta=\omega^2$ and take the (non-orthonormal) basis
+$u_1(\theta)=\cos(\omega\Delta)$, $u_2(\theta)=\sin(\omega\Delta)/\omega$ of $V_\theta$, which is
+smooth in $\theta$ with $V_0=\spn\{1,\Delta\}$ and
+$\dot u_1=-\Delta^2/2$, $\dot u_2=-\Delta^3/6$ at $\theta=0$. The sum of squared sines of the
+principal angles between two nearby $2$-planes $V_\theta,V_{\theta'}$ equals
+$(\theta-\theta')^2\|\Pi_0^\perp\dot U\,G_0^{-1/2}\|_F^2+O(|\theta|^3)$, where $\dot U=[\dot u_1,\dot u_2]$
+and $G_0^{-1/2}$ whitens the base-point basis; the whitening is exactly the $S^{-1/2}$ in
+$Q=S_\omega^{-1/2}HS_\nu^{-1/2}$, and $2-\|Q\|_F^2=\sum_i\sin^2\varphi_i$. Expanding the norm gives
+$\tr(G_0^{-1}M)$, and $(\theta-\theta')^2=(\omega^2-\nu^2)^2$.
+\end{proof}
+
+\paragraph{Verification.} Numerically, $\Lambda(\mathrm{Unif}[0,1])=1.5079516\times10^{-3}$ against
+$19/12600=1.5079365\times10^{-3}$ (agreement to $1\times10^{-5}$ relative), and the leading term
+matches the exact $2-\|Q\|_F^2$ to $0.06\%$ at $(\omega,\nu)=(0.05,0.10)$ --- the manuscript's own
+quoted check ($1.00058$). Theorem~\ref{thm:collapse-general} therefore reproduces App.~A.1 exactly
+and extends it to every prior with finite sixth moment.
+
+\paragraph{The paper's headline figure survives.} Computing the block-whitened $r_2$ of the $23$
+pairs with $\omega L\le1$ at $L{=}4096$, $b{=}5{\times}10^5$, $K{=}64$ under
+$\mu_\alpha\propto\Delta^{-\alpha}$ on $[1,L]$ gives $r_2=2.000$ at $\alpha=0,1,2$ alike
+($\bar c\ge0.9998$ in every case). \textbf{The $r_2=2.00$ collapse claim is prior-robust and can be
+stated as such.} This is worth one sentence in the manuscript, because it is the claim a reviewer is
+most likely to attack on prior-realism grounds.
+
+\subsection{What changes: fast-end redundancy}
+
+\begin{proposition}[Fast-pair redundancy is the prior's characteristic function]\label{prop:fastpair}
+If $\psi_\mu(\omega+\nu)\to0$ (both channels fast relative to the prior's resolution), then
+$S_\omega,S_\nu\to\tfrac12I$ and \eqref{eq:general-gram} gives
+$Q_{\omega\nu}\to\begin{psmallmatrix}A(d)&-B(d)\\B(d)&A(d)\end{psmallmatrix}$, hence
+\begin{equation}
+c_{\omega\nu}\;\longrightarrow\;\bigl|\psi_\mu(\omega-\nu)\bigr|^2 .
+\label{eq:fastpair}
+\end{equation}
+\end{proposition}
+(Numerically exact to $5$ digits at $\alpha=0$; $8\%$ at $\alpha=1$ and $12\%$ at $\alpha=2$, where
+the hypothesis $\psi_\mu(s)\approx0$ is itself violated.)
+
+\eqref{eq:fastpair} is the whole story of Task~3. Packing channels at the fast end buys independence
+only as fast as $|\psi_\mu|$ decays, and $|\psi_\mu|$ decays at a rate set by the tail index.
+
+\begin{theorem}[Tail-index limits]\label{thm:tails}
+Let $\mu_\alpha$ have density $\propto\Delta^{-\alpha}$ on $[1,L]$.
+\begin{enumerate}
+\item[\textup{(i)}] $\alpha<1$: $|\psi_{\mu_\alpha}(t)|\sim(1-\alpha)\Gamma(1-\alpha)\,(tL)^{\alpha-1}$
+for $tL\gg1$. Power decay with exponent $1-\alpha$; $\alpha=0$ recovers $|\sin(tL)/(tL)|\sim(tL)^{-1}$.
+\item[\textup{(ii)}] $\alpha\to1$ (Zipf): for $1/L\ll t\ll1$,
+$\displaystyle A(t)=\frac{\mathrm{Ci}(tL)-\mathrm{Ci}(t)}{\log L}
+=\frac{\log(1/t)-\gamma}{\log L}+O\!\Bigl(\frac{1}{t L\log L}\Bigr)$:
+\textbf{logarithmic decay}. Redundancy between two fast channels separated by $d$ is
+$c\approx[\log(1/d)/\log L]^2$, which is $O(1)$ for all $d\ll1$.
+\item[\textup{(iii)}] $1<\alpha<3$, $\alpha\ne2$: $\psi_{\mu_\alpha}(t)=1-c_\alpha|t|^{\alpha-1}+O(t^2)$
+as $t\to0$ (the standard non-analytic Pareto term; at $\alpha=2$ it is $|t|\log(1/|t|)$).
+\textbf{$|\psi|\to1$, i.e.\ redundancy $\to1$, at rate $|t|^{\alpha-1}$.}
+\item[\textup{(iv)}] $\alpha>3$: $\psi(t)=1-\tfrac12 m_2t^2+O(t^4)$ with $m_2=O(1)$. The prior has a
+finite intrinsic scale $\sigma_\mu=\sqrt{m_2}\ll L$, and the resolution threshold $\omega L\approx x_0$
+of \S\ref{sec:tau} becomes $\omega\sigma_\mu\approx x_0$: a strictly larger fraction of the table is
+in the collapsed regime.
+\end{enumerate}
+\end{theorem}
+
+So the heavy tail acts on the geometry in \emph{two opposite directions}: it pushes the collapse
+threshold to higher $\omega$ (which argues for \evq{} more strongly), and it flattens $|\psi_\mu|$
+at the fast end so that packing channels there stops buying independence (which argues against).
+The net effect must be computed.
+
+\subsection{The overload turnover}
+
+\begin{table}[t]\centering\small
+\caption{Block-whitened R\'enyi-$2$ effective rank $r_2$ of the full $K{=}64$ table at $L{=}4096$,
+$b{=}5{\times}10^5$, under $\mu_\alpha\propto\Delta^{-\alpha}$ on $[1,L]$. $\tau=0$ is the geometric
+midpoint table. Bold marks the maximiser.}
+\label{tab:overload}
+\begin{tabular}{lrrrrrrrrrr}
+\toprule
+$\alpha$ & $\tau{=}0$ & $1$ & $2$ & $3$ & $3.5$ & $4$ & $5$ & $6$ & $8$ & $12$\\
+\midrule
+$0.0$ & 7.84 & 9.81 & 17.27 & 34.23 & 47.27 & 62.56 & 93.17 & 113.65 & 127.31 & \textbf{127.81}\\
+$0.5$ & 7.52 & 9.34 & 16.09 & 30.81 & 41.89 & 54.63 & 80.62 & 99.59 & 115.40 & \textbf{119.07}\\
+$1.0$ & 5.43 & 6.32 & 8.91 & 12.58 & 14.48 & 16.22 & 19.05 & 21.01 & 23.12 & \textbf{24.14}\\
+$1.5$ & 3.75 & 4.04 & 4.64 & 5.17 & 5.35 & 5.47 & 5.61 & \textbf{5.66} & 5.64 & 5.44\\
+$2.0$ & 3.22 & 3.37 & 3.63 & 3.79 & \textbf{3.82} & \textbf{3.82} & 3.80 & 3.76 & 3.65 & 3.46\\
+$2.5$ & 2.92 & 3.02 & 3.18 & \textbf{3.25} & \textbf{3.25} & 3.24 & 3.20 & 3.15 & 3.05 & 2.89\\
+$3.0$ & 2.57 & 2.64 & 2.76 & 2.83 & \textbf{2.84} & \textbf{2.84} & 2.82 & 2.79 & 2.72 & 2.61\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{proposition}[High-frequency overload]\label{prop:overload}
+Under $\mu_\alpha$, the map $\tau\mapsto r_2$ is
+\emph{(a)} monotone increasing and saturating at $2K$ for $\alpha\le1$, so the static criterion
+alone selects no finite $\tau$; and
+\emph{(b)} unimodal with an interior maximum for $\alpha\ge1.5$, at
+$\tau^\star\approx6,\,4,\,3.5,\,3.5$ for $\alpha=1.5,2,2.5,3$.
+The mechanism is Prop.~\ref{prop:fastpair} plus Theorem~\ref{thm:tails}(iii): for
+$1<\alpha<3$ the fast-end pairwise redundancy approaches $1$ like $|\omega-\nu|^{\alpha-1}$
+instead of decaying like $|\omega-\nu|^{-1}$, so concentrating channels at the fast end past
+$\tau^\star$ costs more in mutual redundancy than it gains in resolution.
+\end{proposition}
+
+\paragraph{Verdict on the overload question.} High-frequency overload is \textbf{real} and appears
+for $\alpha\gtrsim1.5$; it is \textbf{invisible} under the uniform prior used in App.~A.1, where
+$r_2$ is monotone in $\tau$ and the criterion is degenerate. But it \textbf{does not reverse the
+ordering}: \evq{} $\ge$ Geo at every $\alpha$ tested, with the margin shrinking from $8.0\times$
+($\alpha{=}0$, $\tau{=}4$) to $2.9\times$ ($\alpha{=}1$) to $1.17\times$ ($\alpha{=}2$) to
+$1.11\times$ ($\alpha{=}2.5$). \textbf{The mitigation of slow-frequency collapse survives under a
+Zipf prior; the magnitude of the benefit does not.} Two honest statements follow for the manuscript:
+the static advantage quoted at $\alpha{=}0$ is an upper bound on what a realistic prior would show,
+and the deployed $\tau\in[0.35,4]$ happens to lie below or near $\tau^\star(\alpha)$ for every
+$\alpha\ge1.5$, so the deployed operating points are not in the overload region.
+
+\begin{lemma}[Prior-side ceiling]\label{lem:ceiling}
+Let $\tilde X\in\R^{n\times2K}$ be the $\sqrt{\mu}$-weighted, block-whitened feature matrix and
+$M=\tilde X\tilde X^\top$. Since $\tr(M^2)\ge\sum_iM_{ii}^2$,
+\begin{equation}
+r_2(R)\;\le\;\frac{\bigl(\sum_iM_{ii}\bigr)^2}{\sum_iM_{ii}^2}.
+\end{equation}
+Numerically at $L{=}4096$, $K{=}64$ this ceiling is $\approx4000$ at $\alpha{=}0$ (inactive),
+$71$--$93$ at $\alpha{=}1$, and $6.8$--$8.4$ at $\alpha{=}2$, against measured $r_2$ of $3.3$--$3.8$:
+\textbf{under a heavy tail the prior, not the table, becomes the binding constraint on positional
+rank}. Note that the naive participation ratio $1/\sum_i\mu_i^2$ (which is $2.5$ at $\alpha{=}2$)
+is \emph{not} a valid ceiling --- whitening reweights the rare long distances --- and should not be
+quoted as one.
+\end{lemma}
+
+\subsection{Agreement with Part I, and the limitation that remains}
+\label{sec:conflict}
+
+The two halves of this note reach the operating point by disjoint routes, and it is worth checking
+whether they agree. They do --- but only once the measurement of \S\ref{sec:audit} is used in place
+of the intuition.
+
+\paragraph{The apparent conflict.} Read naively, \eqref{eq:zeroconst} says
+$\tau_*\propto\deff/\sqrt{\Leff}$, so concentrated attention ($\Leff$ small) should push $\tau$
+\emph{up} without bound, while Prop.~\ref{prop:overload} says a concentrated separation prior makes
+the redundancy-optimal $\tau$ turn over and settle at $O(1)$. These are opposite prescriptions.
+
+\paragraph{The conflict dissolves.} Prop.~\ref{prop:sign} shows the naive reading has the sign
+wrong: because $g_i(j)=O(r_{ij})$, attention locality \emph{raises} $\Leff$, and the measured
+$\Leff/\Ltr\approx4$ pushes $\tau$ \emph{down} by a factor $\approx0.5$
+(Cor.~\ref{cor:fixedpoint}). Prop.~\ref{prop:overload} also pushes $\tau$ down: at $\alpha\ge1.5$
+the deployed $\tau\in[0.35,4]$ already sits at or below $\tau^\star(\alpha)\in[3.5,6]$, and the
+static margin at $\tau=4$ has shrunk by $7\times$ relative to $\alpha{=}0$. \textbf{Two independent
+routes --- a measured softmax-Jacobian normalisation and a static Gram computation under a
+realistic prior --- both say the deployed $\tau$ is on the high side, by roughly a factor two.}
+This is evidence, not proof: the routes are not independent of the same modelling choices, and the
+$0.5\times$ training arm that would decide it does not exist.
+
+\paragraph{The limitation that survives.}
+
+\begin{proposition}[Diagnosis]\label{prop:diagnosis}
+The A.10 utility $U(\tau)=\deff\kappa_{\mathrm{att}}\int\rho_\tau(\phi)q(\omega(\phi)L_{\mathrm{rng}})\,d\phi$
+is \textbf{diagonal in the channel index}: a $\rho$-weighted sum of per-channel phase variances,
+with no cross-channel term. The cross-channel term is $c_{\omega\nu}$, and by
+Prop.~\ref{prop:fastpair} it equals $|\psi_\mu(\omega-\nu)|^2$, negligible under $\mu_0$
+(decay $(|\omega-\nu|L)^{-1}$) but $O(1)$ under $\mu_\alpha$, $\alpha\ge1$. Substituting $\Leff$
+for $L$ repairs the \emph{normalisation} of the diagonal term and leaves the \emph{omitted}
+off-diagonal term untouched. The operating-point model therefore cannot see the overload of
+Prop.~\ref{prop:overload} at all: its agreement with the geometry in \S\ref{sec:conflict} is a
+coincidence of sign, not a derivation.
+\end{proposition}
+
+This is the theoretical ceiling of Part~I. The constant-free rule \eqref{eq:zeroconst} is only
+trustworthy while the separation prior is close enough to uniform that the off-diagonal term is
+negligible --- and the very regime where the $\Leff$ substitution changes the answer is the regime
+where that condition fails.
+
+\paragraph{What would break it.} The surrogate $K_{\mathrm{app}}=\alpha\delta+\beta\min(\phi,\psi)$
+was fitted (App.~A.9) to the collision kernel of the \emph{uniform} prior. The $\min$ kernel is the
+Green function of $-\partial_\phi^2$ --- a short-range, local operator --- and that locality is what
+turns the Euler equation into an ODE and the answer into a $\cosh$. Under $\mu_1$,
+Prop.~\ref{prop:fastpair} and Theorem~\ref{thm:tails}(ii) give
+\begin{equation}
+c_{\omega\nu}\approx\left[\frac{\log(1/|\omega-\nu|)}{\log L}\right]^2 ,
+\end{equation}
+a \textbf{logarithmically singular, long-range kernel}. The corresponding variational problem is
+not a Green's-function ODE but a \textbf{logarithmic-energy / equilibrium-measure problem} in the
+sense of potential theory. The relevant tools are the Frostman equilibrium measure and Riesz-energy
+minimisation, and the qualitative prediction they make is concrete and different: the minimiser of
+a logarithmic energy on an interval is the \emph{arcsine} law
+$\rho(\phi)\propto[\phi(1-\phi)]^{-1/2}$, which piles mass at \emph{both} ends of the band. The
+heavy-tail-optimal allocation should therefore be an arcsine-type density tilted toward the fast
+end, not a monotone $\cosh$ --- a two-sided table with a depleted middle. That is fully specified
+and costs nothing to test: evaluate $r_2$ under $\mu_\alpha$ for an arcsine-tilted table and
+compare against $\rho_\tau$ at its own $\tau^\star(\alpha)$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Summary}
+
+\paragraph{What now stands on firmer ground.}
+$c(\Pi)$ is not a protocol constant: its full $(L,b)$ dependence is
+$c=\sqrt{g(\varphi_*)/g_{\max}}$ with $g(\varphi)=\varphi(1-\varphi)(2-\varphi)$,
+$g_{\max}=2\sqrt3/9$, $\varphi_*=\log(L/2.074)/\log b$, and this reproduces every deployed $\tau$
+in the paper to $5$--$9\%$ with no fitting. $c=1$ is the model's ceiling, attained on
+$b=(L/x_0)^{(3+\sqrt3)/2}$. The repository's own $\kappa_{\mathrm{att}}$ audit supplies the missing
+input: $\Leff/\Ltr\approx4$ on both self-consistent $50$M cells, giving a contractive fixed point at
+$\tau\approx1.43$, i.e.\ $0.51\times$ the deployed rule. Theorem~3 upgrades from a qualitative obstruction to an explicit
+frozen subspace of codimension $\le2r$, giving $r\ge\drot/2$ for exact single-distance repair
+(the deployed $r{=}64$ sits exactly there) and $r\ge(1-\eta)\sum_ks_k/8$ in general, with
+$\sum_ks_k\to\sigma_\mu^2KW_2^2(\Omega,\Omega')$ in the small-shift limit. App.~A.1 becomes
+prior-agnostic by a one-line substitution, the $r_2{=}2.00$ figure is prior-robust, and the
+$19/12600$ coefficient is recovered as the uniform case of $\Lambda(\mu)=\tr(G_0^{-1}M)$.
+
+\paragraph{What is refuted or must be softened.}
+$c=1$ does not follow from the model (F1--F4), and once the measured $\Leff$ is used the rule
+overshoots by $\approx2\times$. The $b{=}256$ fixed-support control sits on the
+formula's degeneracy locus and its deployed $\tau{=}4$ is $1.7\times$ the model's optimum. The rank
+analysis does \emph{not} separate allocation from support --- it separates slow-only from full-band.
+High-frequency overload is real for $\alpha\ge1.5$ and erases most of the static \evq{} margin,
+though it never reverses the ordering.
+
+\paragraph{The two ceilings, stated plainly.}
+(1) The obstruction bounds \emph{emulation}, not \emph{re-adaptation}, and closing that gap needs a
+rank-restricted Fisher/NTK capacity bound rather than linear algebra.
+(2) The operating-point utility is diagonal in the channel index; under a heavy-tailed prior the
+omitted off-diagonal term dominates, and the $\Leff$ substitution repairs only the normalisation.
+The fact that Parts~I and III both end up pushing $\tau$ down by $\approx2\times$ is therefore
+corroboration by two routes, not a derivation. Closing \emph{that} gap requires re-deriving the
+surrogate under the realistic prior,
+where the kernel is logarithmic rather than Green, and the natural tool is equilibrium-measure /
+logarithmic-potential theory --- with the concrete prediction that the optimum becomes arcsine-type
+rather than $\cosh$.
+
+\paragraph{Three cheap experiments this note implies.}
+(i) Add a $\tau=0.5\times$ arm to the existing staged multiplier study --- the self-consistent
+fixed point built from the repository's own $\kappa_{\mathrm{att}}$ measurement predicts the
+optimum there, and no reported sweep goes below $0.75\times$.
+(ii) Sweep the 8B LoRA rank over $\{4,8,16,32,64\}$ and look for the predicted knee at $r\approx20$.
+(iii) Recompute the App.~A.1 diagnostics under $\mu_\alpha$ with $\alpha$ measured from the training
+corpus's attention statistics, and report the $\alpha$-conditioned $r_2$ margin instead of the
+$\alpha{=}0$ one.
+
+\paragraph{Reproduction.} Every number in this note is produced by
+\texttt{verify\_three\_completions.py} (pure NumPy/SciPy, ${\sim}30$\,s CPU), which also runs the
+five lemma verifications of \S\ref{sec:rank} to machine precision.
+
+\end{document}

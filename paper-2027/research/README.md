@@ -11,9 +11,11 @@ entire NeurIPS rebuttal history.
 - [`attention-aware-retrofit/`](attention-aware-retrofit/) — active work on
   phase-chord allocation and mature-model retrofit. Its `README.md` is the
   research memo; the current zero-training mature-checkpoint owner is
-  `LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md` (core-4 and runtime
-  parity complete; 2Wiki raw length check pending; RULER-13 interrupted before
-  evaluation).
+  `SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`: exact Native inside the
+  model's own window and one frozen budgeted-s4 profile beyond it, selected
+  from observed request tokens without an external `L_target`. Same-hardware
+  full RULER-13, formal natural-context, and full 200-row 2Wiki comparisons
+  are complete; this remains internal until manuscript promotion is authorised.
 
 ## Read order
 

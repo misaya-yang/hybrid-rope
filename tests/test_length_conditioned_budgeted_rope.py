@@ -11,6 +11,7 @@ from scripts.lib.rope.length_conditioned_budgeted import (
     RequestBudgetState,
     install_length_conditioned_rope,
     matched_attention_scaling,
+    select_observed_session_factor,
 )
 from scripts.analysis.export_uniqueness_budgeted_tables import (
     EXPECTED_DEFAULT_HASHES,
@@ -127,6 +128,50 @@ def test_matched_attention_scaling_values() -> None:
     assert matched_attention_scaling(1.0) == 1.0
     assert matched_attention_scaling(2.0) == pytest.approx(1.0693147180559945)
     assert matched_attention_scaling(4.0) == pytest.approx(1.138629436111989)
+
+
+def test_observed_session_factor_uses_model_relative_boundaries() -> None:
+    assert select_observed_session_factor(
+        prefill_tokens=4000,
+        max_new_tokens=64,
+        native_context_length=4096,
+    ) == 1
+    assert select_observed_session_factor(
+        prefill_tokens=8150,
+        max_new_tokens=32,
+        native_context_length=4096,
+    ) == 2
+    assert select_observed_session_factor(
+        prefill_tokens=8150,
+        max_new_tokens=64,
+        native_context_length=4096,
+    ) == 4
+    assert select_observed_session_factor(
+        prefill_tokens=64000,
+        max_new_tokens=512,
+        native_context_length=32768,
+    ) == 2
+    assert select_observed_session_factor(
+        prefill_tokens=4000,
+        max_new_tokens=64,
+        native_context_length=4096,
+        supported_factors=(1, 4),
+    ) == 1
+    assert select_observed_session_factor(
+        prefill_tokens=4096,
+        max_new_tokens=1,
+        native_context_length=4096,
+        supported_factors=(1, 4),
+    ) == 4
+
+
+def test_observed_session_factor_fails_beyond_frozen_profiles() -> None:
+    with pytest.raises(ValueError, match="beyond the largest supported profile"):
+        select_observed_session_factor(
+            prefill_tokens=16384,
+            max_new_tokens=1,
+            native_context_length=4096,
+        )
 
 
 def test_frozen_default_tables_rebuild_to_registered_hashes() -> None:

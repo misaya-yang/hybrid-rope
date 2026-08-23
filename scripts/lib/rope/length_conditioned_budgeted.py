@@ -34,6 +34,42 @@ def matched_attention_scaling(factor: float) -> float:
     return 1.0 + 0.1 * math.log(float(factor))
 
 
+def select_observed_session_factor(
+    *,
+    prefill_tokens: int,
+    max_new_tokens: int,
+    native_context_length: int,
+    supported_factors: tuple[int, ...] = (1, 2, 4),
+) -> int:
+    """Select the smallest frozen profile covering an observed request.
+
+    This serving decision uses quantities already present before prefill, not
+    a separately chosen target length.  The selected profile must remain fixed
+    for the lifetime of the request's KV cache.
+    """
+
+    prefill = int(prefill_tokens)
+    generation = int(max_new_tokens)
+    native = int(native_context_length)
+    factors = tuple(int(value) for value in supported_factors)
+    if prefill <= 0:
+        raise ValueError("prefill_tokens must be positive")
+    if generation < 0:
+        raise ValueError("max_new_tokens cannot be negative")
+    if native <= 0:
+        raise ValueError("native_context_length must be positive")
+    if not factors or factors != tuple(sorted(set(factors))) or factors[0] != 1:
+        raise ValueError("supported_factors must be sorted, unique, and start at one")
+    required = prefill + generation
+    for factor in factors:
+        if required <= native * factor:
+            return factor
+    raise ValueError(
+        f"observed request requires {required} tokens, beyond the largest "
+        f"supported profile ({native * factors[-1]})"
+    )
+
+
 @dataclass
 class RequestBudgetState:
     reference_length: int = 4096
