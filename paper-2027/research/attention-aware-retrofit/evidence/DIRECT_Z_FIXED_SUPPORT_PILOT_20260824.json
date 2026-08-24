@@ -1,0 +1,81 @@
+{
+  "status": "DIRECT_Z_FIXED_SUPPORT_PILOT_STOPPED_V1",
+  "date": "2026-08-24",
+  "scientific_passed": false,
+  "decision": "stop the two-design-row, 62-effective-degree direct-z calibration protocol before downstream evaluation",
+  "checkpoint": {
+    "identity": "released OLMo-2-0425-1B-Instruct",
+    "composite_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f",
+    "config_sha256": "0d15ebb6cb8d998513b46ef337214176a6fd59fe5f16b30387c70d5f87795a9c",
+    "model_weight_updates": 0
+  },
+  "data": {
+    "identity": "four independently prepared FineWeb-Edu 8192-token rows",
+    "tensor_sha256": "fee58b60c30af33f32156453ae710508fb915534cc47aa250fc9fd3016c7ef57",
+    "receipt_sha256": "67f5718192d2fcece25379a0fa677f17cbed531b8feca19fb9ad29b59da11dd2",
+    "design_rows": [0, 1],
+    "heldout_rows": [2, 3]
+  },
+  "protocol": {
+    "native_length": 4096,
+    "target_ratio": 2,
+    "target_length": 8192,
+    "same_table_at_1x_and_2x": true,
+    "attention_scaling": 1.0,
+    "sampled_support": "exact Native endpoints and log span",
+    "trainable_gap_logits": 63,
+    "effective_z_degrees_of_freedom": 62,
+    "optimizer_steps": 10,
+    "learning_rate": 0.003,
+    "nll_scope": "teacher-forced final 64-token tail at each 1x/2x endpoint",
+    "allocation_prior_used_for_selection": false,
+    "collision_used_for_selection": false,
+    "heldout_1x_max_regression_gate": 0.05,
+    "heldout_2x_mean_improvement_required": true,
+    "heldout_2x_max_regression_gate": 0.05
+  },
+  "initialization": {
+    "native_nll_parity_max_abs_delta": 0.0,
+    "native_table_sha256_float32": "dde15c31724177356ae954d6e11fb337e6fccef56e4520a905cac3f0d9885b34"
+  },
+  "candidate": {
+    "table_sha256_float32": "eb8521ed4e925ad7f88293ea6dd655fa7725dbdbe51ea2b54b23cbe774ea92fc",
+    "table_file_sha256": "5ec246f1471097a7a38f146180ab6c897f23374b922dc646b6bcd2ba255a83d7",
+    "maximum_normalized_coordinate_shift": 0.0009750159665805613,
+    "fixed_support": true,
+    "candidate_differs_from_native": true
+  },
+  "results": {
+    "design_delta_nll_2x": [-0.31525516510009766, -0.18338584899902344],
+    "heldout_delta_nll_1x": [0.0203249454498291, 0.0015697479248046875],
+    "heldout_delta_nll_2x": [0.08228921890258789, -0.13068008422851562],
+    "heldout_delta_nll_1x_mean": 0.010947346687316895,
+    "heldout_delta_nll_1x_max": 0.0203249454498291,
+    "heldout_delta_nll_2x_mean": -0.024195432662963867,
+    "heldout_delta_nll_2x_max": 0.08228921890258789,
+    "gates": {
+      "candidate_differs_from_native": true,
+      "heldout_1x_no_harm": true,
+      "heldout_2x_mean_improves": true,
+      "heldout_2x_no_large_row_regression": false
+    }
+  },
+  "runtime": {
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "torch": "2.8.0+cu128",
+    "flash_only": true,
+    "elapsed_seconds": 10.075720988214016,
+    "peak_allocated_bytes": 18310821376,
+    "peak_reserved_bytes": 18488492032
+  },
+  "implementation_sha256": {
+    "optimizer": "9a2be7a75d90e6c3edccf0a483e82856e4a72af66a272a38175a730d4db1c1a2",
+    "parameterization": "e30308579946c8c685e3855ca347fe1b43c38e6babe93c7970fb252bf8d95291"
+  },
+  "raw_artifact_sha256": {
+    "result_json": "0f87777e314cf0dc3839c98e0c11dc11e2d94a32e9cfa8169606ee3afec9a0ca",
+    "progress_jsonl": "631ca6af7874b66a0a97c9e00197e6bdbeb468743d709613880724fdac70eed1",
+    "smoke_result_json": "911f3cf6cfc807912c8dd0c1ddd6034d001f0278e2672666ff4b785a757c5723"
+  },
+  "claim_boundary": "single checkpoint, one ratio, one optimizer seed, two design documents and two held-out documents; candidate screen only, not capability evidence or a new causal identification"
+}

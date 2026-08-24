@@ -103,6 +103,36 @@ The 2026-08-24 wording/package pass established:
 These checks establish build/package health, not scientific acceptance,
 OpenReview upload, or publication.
 
+### 2026-08-24/25 authorised GPU update
+
+The explicitly authorised RTX 5090 window completed three bounded internal
+studies without changing reviewer-facing manuscript source:
+
+- a learned direct-`z` mature-checkpoint pilot failed its per-row held-out 2x
+  robustness gate and stopped before downstream tasks;
+- two zero-parameter, fixed-Native-support static tables improved PG-19 2x
+  directionally but failed the 1x no-harm gate, strengthening the need for an
+  exact-Native short route rather than rejecting training-time EVQ-Cosh;
+- the completed Native/s4 policy was confirmed on new FineWeb-Edu shard002.
+  On the disjoint 512-document set it is exactly Native on every 4K row and
+  improves every row at 8K/16K by mean `-4.0953/-4.4393` tail NLL. Matched
+  fixed-support controls show geometric is slightly better at 8K but worse by
+  `+4.4560` at 16K, while nearest-ramp minus derived is only
+  `+0.00051/+0.00056`, with paired intervals containing zero. A static/session
+  control separately attributes 4K retention to routing.
+
+Canonical reports and machine receipts are under
+`research/attention-aware-retrofit/{results,evidence}/`. Raw rows remain in
+the ignored external-result owner. A new system-disk corpus contains exactly
+`1,000,000,000` tokens from FineWeb-Edu shards002/003, which are absent from
+the historical local 000/001/004 shard set; its token file SHA-256 is
+`223e466b1e829675e027e900fa4dbb8b0ff2e851f70d0c9ef301b1fec944b284`.
+
+The mechanism accounting remains strict: Native/session is bundled policy
+persistence; geometric/ramp/derived at fixed support, gain, and route owns the
+`z` contrast; derived/ramp owns profile detail; static/session with one long
+table owns routing. YaRN is an external reference, not the mechanism claim.
+
 ## 5. Workspace and ownership
 
 The published set spans the manuscript, research owners/receipts, evaluator

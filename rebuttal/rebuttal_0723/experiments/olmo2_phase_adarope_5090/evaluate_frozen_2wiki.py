@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import re
 import string
@@ -33,6 +34,9 @@ from rebuttal.rebuttal_0723.experiments.olmo2_1b_evq.evaluate_ruler import (
     configure_cuda,
     configure_ruler_flash_attention,
     greedy_generate,
+)
+from rebuttal.rebuttal_0723.experiments.olmo2_1b_evq.contract import (
+    endpoint_geo_inv_freq,
 )
 from rebuttal.rebuttal_0723.experiments.olmo2_lora_conversion import load_model
 from rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.evaluate_instruct_ruler_transfer import (
@@ -300,12 +304,16 @@ def parse_args() -> argparse.Namespace:
             "budgeted",
             "session_adaptive",
             "session_binary_s4",
+            "external_static",
+            "external_session",
         ),
         required=True,
     )
     parser.add_argument("--factor", type=float, default=1.0)
     parser.add_argument("--table", type=Path)
     parser.add_argument("--table-name")
+    parser.add_argument("--expected-table-sha256")
+    parser.add_argument("--long-attention-scaling", type=float, default=1.0)
     parser.add_argument("--limit", type=int, default=200)
     return parser.parse_args()
 
@@ -331,13 +339,21 @@ def main() -> int:
         raise RuntimeError("Native owner is registered only at 4K/factor one")
     if args.frequency == "official_yarn" and args.factor <= 1.0:
         raise RuntimeError("official YaRN requires factor > 1")
-    if args.frequency == "budgeted":
+    if args.frequency in {"budgeted", "external_static", "external_session"}:
         if args.table is None or not args.table_name or args.factor <= 1.0:
-            raise RuntimeError("budgeted method requires table, name, and factor > 1")
+            raise RuntimeError("external table method requires table, name, and factor > 1")
         if int(round(4096 * float(args.factor))) != int(args.length):
-            raise RuntimeError("budgeted factor/length mismatch")
+            raise RuntimeError("external table factor/length mismatch")
+        if args.frequency in {"external_static", "external_session"}:
+            if not args.expected_table_sha256:
+                raise RuntimeError("external method requires --expected-table-sha256")
+            if (
+                not math.isfinite(float(args.long_attention_scaling))
+                or float(args.long_attention_scaling) <= 0.0
+            ):
+                raise RuntimeError("external method requires positive attention scaling")
     elif args.table is not None or args.table_name is not None:
-        raise RuntimeError("only budgeted method accepts a frozen table")
+        raise RuntimeError("only external-table methods accept a frozen table")
     if (
         args.frequency in {"session_adaptive", "session_binary_s4"}
         and float(args.factor) != 1.0
@@ -345,6 +361,26 @@ def main() -> int:
         raise RuntimeError("session selection does not accept a target factor")
     if not 1 <= int(args.limit) <= 200:
         raise RuntimeError("2Wiki limit must be in [1,200]")
+
+    external_values = None
+    if args.frequency in {"external_static", "external_session"}:
+        external_values = np.load(args.table.resolve(), allow_pickle=False)
+        expected_native = endpoint_geo_inv_freq().numpy()
+        if (
+            external_values.dtype != np.float32
+            or external_values.shape != expected_native.shape
+            or not np.isfinite(external_values).all()
+            or not np.all(external_values[:-1] > external_values[1:])
+            or external_values[0] != np.float32(expected_native[0])
+            or external_values[-1] != np.float32(expected_native[-1])
+            or float32_sha256(external_values)
+            != str(args.expected_table_sha256)
+        ):
+            raise RuntimeError("external table identity drift")
+        external_values = np.ascontiguousarray(
+            external_values,
+            dtype="<f4",
+        )
 
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
@@ -389,21 +425,41 @@ def main() -> int:
         method = verify_official_yarn(model, model_config)
     elif args.frequency == "native":
         method = apply_frequency(model, "native")
-    elif args.frequency in {"session_adaptive", "session_binary_s4"}:
+    elif args.frequency in {"session_adaptive", "session_binary_s4", "external_session"}:
         session_tables = build_default_tables()
-        binary = args.frequency == "session_binary_s4"
+        binary = args.frequency in {"session_binary_s4", "external_session"}
+        if args.frequency == "external_session":
+            assert external_values is not None
+            if not np.array_equal(
+                external_values[[0, -1]], native_inv.numpy()[[0, -1]]
+            ):
+                raise RuntimeError("runtime Native support differs from external receipt")
+            session_tables = {4.0: external_values}
         method = {
             "method": (
-                "native_or_frozen_s4_observed_request_rope"
-                if binary
+                "native_or_external_table_observed_request_rope"
+                if args.frequency == "external_session"
+                else "native_or_frozen_s4_observed_request_rope"
+                if args.frequency == "session_binary_s4"
                 else "observed_request_session_adaptive_budgeted_rope"
             ),
             "selection": (
-                "Native within L_native; frozen s4 beyond L_native"
-                if binary
+                "Native within L_native; frozen external table beyond L_native"
+                if args.frequency == "external_session"
+                else "Native within L_native; frozen s4 beyond L_native"
+                if args.frequency == "session_binary_s4"
                 else "smallest frozen profile covering prefill_tokens plus max_new_tokens"
             ),
             "requires_L_target": False,
+            "runtime_requires_request_target": False,
+            "construction_horizon_bound_by_external_receipt": (
+                args.frequency == "external_session"
+            ),
+            "construction_table_factor": (
+                float(args.factor)
+                if args.frequency == "external_session"
+                else None
+            ),
             "native_context_length": 4096,
             "supported_factors": [1, 4] if binary else [1, 2, 4],
             "cache_policy": "profile fixed before prefill for the KV-cache lifetime",
@@ -412,6 +468,52 @@ def main() -> int:
                 str(int(factor)): float32_sha256(values)
                 for factor, values in sorted(session_tables.items())
             },
+            "table_name": str(args.table_name) if args.frequency == "external_session" else None,
+            "expected_table_sha256_float32": (
+                str(args.expected_table_sha256)
+                if args.frequency == "external_session"
+                else None
+            ),
+            "table_file_sha256": (
+                sha256_file(args.table.resolve())
+                if args.frequency == "external_session"
+                else None
+            ),
+            "long_attention_scaling": (
+                float(args.long_attention_scaling)
+                if args.frequency == "external_session"
+                else None
+            ),
+        }
+    elif args.frequency == "external_static":
+        assert external_values is not None
+        if not np.array_equal(
+            external_values[[0, -1]], native_inv.numpy()[[0, -1]]
+        ):
+            raise RuntimeError("runtime Native support differs from external receipt")
+        rotary = model.model.rotary_emb
+        with torch.no_grad():
+            rotary.inv_freq.copy_(torch.from_numpy(external_values).to(rotary.inv_freq))
+        if hasattr(rotary, "original_inv_freq"):
+            rotary.original_inv_freq = rotary.inv_freq.detach().clone()
+        rotary.attention_scaling = float(args.long_attention_scaling)
+        method = {
+            "method": "external_static_fixed_support_z",
+            "selection": "one frozen external table at every evaluated length",
+            "requires_L_target": False,
+            "runtime_requires_request_target": False,
+            "construction_horizon_bound_by_external_receipt": True,
+            "construction_table_factor": float(args.factor),
+            "native_context_length": 4096,
+            "native_inv_freq_sha256_float32": float32_sha256(native_inv.numpy()),
+            "active_sha256_float32": float32_sha256(external_values),
+            "expected_table_sha256_float32": str(args.expected_table_sha256),
+            "table_name": str(args.table_name),
+            "table_file_sha256": sha256_file(args.table.resolve()),
+            "fixed_native_sampled_support": True,
+            "attention_scaling": float(args.long_attention_scaling),
+            "model_weight_updates": 0,
+            "evaluation_parameter_updates": 0,
         }
     else:
         values = np.load(args.table.resolve(), allow_pickle=False)
@@ -428,6 +530,13 @@ def main() -> int:
         state.force_for_budget(int(args.length))
         method["table_path"] = str(args.table.resolve())
         method["table_file_sha256"] = sha256_file(args.table.resolve())
+    method_table_sha256 = None
+    if args.frequency == "budgeted":
+        method_table_sha256 = str(method["long_branch"]["inv_freq_sha256_float32"])
+    elif args.frequency == "external_static":
+        method_table_sha256 = str(method["active_sha256_float32"])
+    elif args.frequency == "external_session":
+        method_table_sha256 = str(method["long_table_sha256_float32"]["4"])
     model.config.max_position_embeddings = int(args.length)
     configure_ruler_flash_attention(model)
     model.config.use_cache = True
@@ -438,7 +547,14 @@ def main() -> int:
     completed = _load_completed(rows_path)
     expected = {str(job["row_id"]): job for job in jobs}
     for row_id, row in completed.items():
-        if row_id not in expected or row.get("row_sha256") != expected[row_id]["row_sha256"]:
+        if (
+            row_id not in expected
+            or row.get("row_sha256") != expected[row_id]["row_sha256"]
+            or (
+                args.frequency in {"budgeted", "external_static", "external_session"}
+                and row.get("method_table_sha256_float32") != method_table_sha256
+            )
+        ):
             raise RuntimeError(f"completed 2Wiki row identity drift: {row_id}")
     eos_token_id = tokenizer.eos_token_id
     for ordinal, job in enumerate(jobs, start=1):
@@ -448,13 +564,15 @@ def main() -> int:
         if state is not None:
             state.force_for_budget(int(args.length))
         active_profile = None
-        if args.frequency in {"session_adaptive", "session_binary_s4"}:
+        if args.frequency in {"session_adaptive", "session_binary_s4", "external_session"}:
             selected_factor = select_observed_session_factor(
                 prefill_tokens=len(job["input_ids"]),
                 max_new_tokens=int(job["max_new_tokens"]),
                 native_context_length=4096,
                 supported_factors=(
-                    (1, 4) if args.frequency == "session_binary_s4" else (1, 2, 4)
+                    (1, 4)
+                    if args.frequency in {"session_binary_s4", "external_session"}
+                    else (1, 2, 4)
                 ),
             )
             active_profile = set_target_aware_factor(
@@ -497,6 +615,7 @@ def main() -> int:
             "normalized_exact": normalized_exact(prediction, job["references"]),
             "elapsed_seconds": time.perf_counter() - started,
             "active_profile": active_profile,
+            "method_table_sha256_float32": method_table_sha256,
         }
         atomic_append_jsonl(rows_path, row)
         completed[row_id] = row
@@ -544,7 +663,7 @@ def main() -> int:
                     for row in rows
                 )
                 for factor in (1, 2, 4)
-            } if args.frequency in {"session_adaptive", "session_binary_s4"} else None,
+            } if args.frequency in {"session_adaptive", "session_binary_s4", "external_session"} else None,
         },
         "runtime": {
             "torch": torch.__version__,

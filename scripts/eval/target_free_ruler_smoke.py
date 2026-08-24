@@ -36,6 +36,9 @@ from rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.prepare_instruct_rul
     TASK_CONFIGS,
     chat_input_ids,
 )
+from rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.train_4k_stage_a import (
+    ready_checkpoint_digest,
+)
 from scripts.analysis.export_uniqueness_budgeted_tables import (
     build_default_tables,
     causal_distance_measure,
@@ -46,8 +49,10 @@ from scripts.analysis.rope_transport.same_support_controls import (
     build_same_support_controls,
 )
 from scripts.eval.target_free_formal_eval import (
+    EXPECTED_CHECKPOINT_SHA256,
     METHODS,
     load_method_model,
+    set_external_table_branch,
     set_target_aware_factor,
     sha256_file,
     validate_checkpoint,
@@ -61,6 +66,8 @@ CONTROL_METHODS = (
     "converged_budgeted_s4",
     "same_support_geometric_s4",
     "nearest_yarn_ramp_s4",
+    "external_table_static",
+    "external_table_session",
 )
 
 
@@ -97,6 +104,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--native-context-length", type=int, default=4096)
     parser.add_argument("--expected-weight-sha256")
     parser.add_argument("--expected-active-sha256")
+    parser.add_argument("--skip-checkpoint-rehash", action="store_true")
+    parser.add_argument("--checkpoint-ready-receipt", type=Path)
+    parser.add_argument("--table", type=Path)
+    parser.add_argument("--table-name")
+    parser.add_argument(
+        "--table-support",
+        choices=("native", "native_div_factor"),
+    )
+    parser.add_argument("--table-factor", type=float, default=4.0)
+    parser.add_argument("--long-attention-scaling", type=float)
     parser.add_argument("--output", type=Path, required=True)
     return parser.parse_args()
 
@@ -137,6 +154,11 @@ def load_cross_model_method(
     *,
     native_context_length: int,
     expected_active_sha256: str | None,
+    external_table: Path | None = None,
+    external_table_name: str | None = None,
+    external_table_support: str | None = None,
+    external_table_factor: float = 4.0,
+    external_attention_scaling: float | None = None,
 ) -> tuple[Any, dict[str, Any]]:
     if method not in {"native", "official_yarn", "session_binary_s4", *CONTROL_METHODS}:
         raise RuntimeError("unsupported generic RULER method")
@@ -220,7 +242,10 @@ def load_cross_model_method(
             "requires_L_target": False,
             "native_context_length": int(native_context_length),
             "native_sha256_float32": native_hash,
-            "active_sha256_float32": active_hash,
+            "long_table_sha256_float32": active_hash,
+            "initial_active_sha256_float32": (
+                active_hash if method == "external_table_static" else native_hash
+            ),
             "attention_scaling": float(rotary.attention_scaling),
             "exponent": 2.0,
             "factor": 4.0,
@@ -229,6 +254,70 @@ def load_cross_model_method(
             "order_crossing_indices": crossing_indices,
             "order_crossings_retained": True,
             "transfer_policy": "literal frozen formula; no sorting or projection",
+        }
+    elif method in {"external_table_static", "external_table_session"}:
+        if (
+            external_table is None
+            or not str(external_table_name or "").strip()
+            or external_table_support not in {"native", "native_div_factor"}
+            or external_attention_scaling is None
+            or not math.isfinite(float(external_attention_scaling))
+            or float(external_attention_scaling) <= 0.0
+        ):
+            raise RuntimeError("external table method has an incomplete identity")
+        table = np.load(external_table.resolve(), allow_pickle=False)
+        expected_slow = (
+            np.float32(native[-1])
+            if external_table_support == "native"
+            else np.float32(np.float32(native[-1]) / float(external_table_factor))
+        )
+        if (
+            table.dtype != np.dtype("float32")
+            or table.shape != native.shape
+            or not np.isfinite(table).all()
+            or not np.all(table[:-1] > table[1:])
+            or table[0] != np.float32(native[0])
+            or table[-1] != expected_slow
+        ):
+            raise RuntimeError("external table has an invalid support identity")
+        active_hash = float32_sha256(table)
+        if (
+            expected_active_sha256 is not None
+            and active_hash != str(expected_active_sha256)
+        ):
+            raise RuntimeError("external table hash drift")
+        if method == "external_table_static":
+            with torch.no_grad():
+                rotary.inv_freq.copy_(torch.from_numpy(table).to(rotary.inv_freq))
+            if hasattr(rotary, "original_inv_freq"):
+                rotary.original_inv_freq = rotary.inv_freq.detach().clone()
+            rotary.attention_scaling = float(external_attention_scaling)
+        model.config.max_position_embeddings = int(
+            native_context_length * float(external_table_factor)
+        )
+        receipt = {
+            "method": str(method),
+            "table_name": str(external_table_name),
+            "scientific_role": (
+                "zero-model-weight-update receipt-bound mature-checkpoint table"
+            ),
+            "model_type": str(config.model_type),
+            "native_context_length": int(native_context_length),
+            "native_sha256_float32": native_hash,
+            "active_sha256_float32": active_hash,
+            "table_support": str(external_table_support),
+            "long_attention_scaling": float(external_attention_scaling),
+            "initial_branch": (
+                "external_long" if method == "external_table_static" else "exact_native"
+            ),
+            "table_factor": float(external_table_factor),
+            "requires_L_target": False,
+            "runtime_requires_request_target": False,
+            "construction_horizon_bound_by_external_receipt": True,
+            "construction_table_factor": float(external_table_factor),
+            "evaluation_parameter_updates": 0,
+            "model_weight_updates": 0,
+            "table_provenance": "receipt-bound external artifact",
         }
     elif method in CONTROL_METHODS:
         controls = build_same_support_controls(
@@ -275,6 +364,40 @@ def load_cross_model_method(
 
 def main() -> int:
     args = parse_args()
+    external_methods = {"external_table_static", "external_table_session"}
+    if args.method in external_methods and (
+        args.table is None
+        or not str(args.table_name or "").strip()
+        or args.table_support is None
+        or args.long_attention_scaling is None
+        or not math.isfinite(float(args.long_attention_scaling))
+        or float(args.long_attention_scaling) <= 0.0
+        or not math.isfinite(float(args.table_factor))
+        or float(args.table_factor) <= 1.0
+    ):
+        raise ValueError("external table method has an incomplete identity")
+    if args.skip_checkpoint_rehash and args.checkpoint_ready_receipt is None:
+        raise ValueError("--skip-checkpoint-rehash requires --checkpoint-ready-receipt")
+    external_hash = None
+    external_file_hash = None
+    external_probe: np.ndarray | None = None
+    if args.method in external_methods:
+        assert args.table is not None
+        external_probe = np.load(args.table.expanduser().resolve(), allow_pickle=False)
+        if (
+            external_probe.dtype != np.dtype("float32")
+            or external_probe.shape != (64,)
+            or not np.isfinite(external_probe).all()
+            or not np.all(external_probe[:-1] > external_probe[1:])
+        ):
+            raise RuntimeError("external table must be finite decreasing float32")
+        external_hash = float32_sha256(external_probe)
+        external_file_hash = sha256_file(args.table.expanduser().resolve())
+        if (
+            args.expected_active_sha256 is not None
+            and external_hash != str(args.expected_active_sha256)
+        ):
+            raise RuntimeError("external table hash drift")
     configure_cuda()
     checkpoint = args.checkpoint.resolve()
     config_probe = AutoConfig.from_pretrained(
@@ -283,11 +406,22 @@ def main() -> int:
         trust_remote_code=False,
     )
     is_olmo = str(config_probe.model_type) == "olmo2"
-    checkpoint_sha = (
-        validate_checkpoint(checkpoint)
-        if is_olmo
-        else generic_weight_sha256(checkpoint, args.expected_weight_sha256)
-    )
+    checkpoint_ready_sha256 = None
+    if is_olmo and args.skip_checkpoint_rehash:
+        assert args.checkpoint_ready_receipt is not None
+        ready_path = args.checkpoint_ready_receipt.expanduser().resolve()
+        checkpoint_sha = ready_checkpoint_digest(checkpoint, ready_path)
+        checkpoint_ready_sha256 = sha256_file(ready_path)
+        if checkpoint_sha != EXPECTED_CHECKPOINT_SHA256:
+            raise RuntimeError("released OLMo checkpoint READY digest drift")
+        checkpoint_rehashed = False
+    else:
+        checkpoint_sha = (
+            validate_checkpoint(checkpoint)
+            if is_olmo
+            else generic_weight_sha256(checkpoint, args.expected_weight_sha256)
+        )
+        checkpoint_rehashed = True
     native_context_length = int(args.native_context_length)
     tasks = tuple(str(value) for value in args.tasks)
     lengths = tuple(sorted(int(value) for value in args.lengths))
@@ -307,6 +441,8 @@ def main() -> int:
     run_manifest = {
         "status": "TARGET_FREE_RULER_SMOKE_FROZEN",
         "checkpoint_sha256": checkpoint_sha,
+        "checkpoint_rehashed_this_run": checkpoint_rehashed,
+        "checkpoint_ready_receipt_sha256": checkpoint_ready_sha256,
         "data_manifest_sha256": data_receipt["manifest_sha256"],
         "method": str(args.method),
         "tasks": list(tasks),
@@ -315,6 +451,12 @@ def main() -> int:
         "model_type": str(config_probe.model_type),
         "native_context_length": native_context_length,
         "expected_active_sha256": args.expected_active_sha256,
+        "table_name": args.table_name,
+        "table_support": args.table_support,
+        "table_factor": float(args.table_factor),
+        "table_sha256_float32": external_hash,
+        "table_file_sha256": external_file_hash,
+        "long_attention_scaling": args.long_attention_scaling,
         "script_sha256": sha256_file(Path(__file__).resolve()),
     }
     run_manifest_path = output / "run_manifest.json"
@@ -338,6 +480,11 @@ def main() -> int:
             str(args.method),
             native_context_length=native_context_length,
             expected_active_sha256=args.expected_active_sha256,
+            external_table=args.table,
+            external_table_name=args.table_name,
+            external_table_support=args.table_support,
+            external_table_factor=float(args.table_factor),
+            external_attention_scaling=args.long_attention_scaling,
         )
     )
     torch.cuda.reset_peak_memory_stats()
@@ -397,6 +544,24 @@ def main() -> int:
             generation_tokens = int(row["_generation_tokens"])
             if input_ids.shape[1] + generation_tokens > length:
                 raise RuntimeError(f"{task} exceeds L{length}")
+            if args.method == "external_table_session":
+                assert native_inv is not None and external_probe is not None
+                use_long = input_ids.shape[1] + generation_tokens > native_context_length
+                active_receipt = set_external_table_branch(
+                    model,
+                    use_long=use_long,
+                    table=np.ascontiguousarray(external_probe, dtype="<f4"),
+                    native=native_inv,
+                    table_name=str(args.table_name),
+                    attention_scaling=float(args.long_attention_scaling),
+                )
+                active_receipt.update({
+                    "selection": "exact Native within L_native; frozen external table beyond",
+                    "requires_L_target": False,
+                    "cache_policy": "profile fixed before prefill for the KV-cache lifetime",
+                    "observed_prefill_tokens": int(input_ids.shape[1]),
+                    "requested_max_new_tokens": generation_tokens,
+                })
             started = time.perf_counter()
             output_ids = greedy_generate(
                 model,

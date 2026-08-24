@@ -1,0 +1,43 @@
+{
+  "status": "ZERO_PARAMETER_SINGLE_TABLE_GATE_COMPLETE_V1",
+  "date": "2026-08-24",
+  "checkpoint_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f",
+  "protocol": {
+    "same_static_table_at_1x_and_2x": true,
+    "fixed_native_sampled_support": true,
+    "attention_scaling": 1.0,
+    "learned_parameters": 0,
+    "optimizer_steps": 0,
+    "uses_L_target": false,
+    "rows_per_cell": 20,
+    "metric": "teacher-forced tail NLL"
+  },
+  "results": {
+    "native": {"1x": 2.9711915493011474, "2x": 7.102921748161316},
+    "anchored_evq_cosh_tau2": {
+      "table_sha256_float32": "99abdf73a0ec5f2019cc1d1039918d9e2e63d6f8f0737763e5ed6d2cca958245",
+      "1x": 6.949163508415222,
+      "2x": 6.849630331993103,
+      "delta_1x": 3.9779719591140747,
+      "delta_2x": -0.2532914161682127,
+      "passed": false
+    },
+    "protected_band_tau2": {
+      "table_sha256_float32": "1f5c06a6b43d727783e7e83870c046b077c90f62ac83318a1b8204209f259098",
+      "protected_pair_indices": [32, 33, 34, 35, 36, 37, 38],
+      "1x": 3.663341593742371,
+      "2x": 6.9184166431427006,
+      "delta_1x": 0.6921500444412237,
+      "delta_2x": -0.18450510501861523,
+      "passed": false
+    }
+  },
+  "decision": "both analytic tables improve the 2x direction but violate the registered +0.05 1x no-harm gate; stop before capability evaluation and retain Native/long routing",
+  "raw_sha256": {
+    "anchored_result": "5106ca1503772d43692091a39eded7587597b6563ec2d3e1c9d483d8c32f69b0",
+    "protected_result": "133c44ba544d8dc12464e9110c6b19dd7d02c60c6ae8a5f9101184e3a19ec54a",
+    "anchored_builder_receipt": "87a33b7f653653e73adfa0c5f9052d772c320c78f2765f08221f61a0b3d1f570",
+    "protected_builder_receipt": "9ac20bf0378c9846dcbac90c259ac0195b1872f3579e9dd3eb9f9fd1a0c2771f"
+  },
+  "claim_boundary": "one frozen OLMo checkpoint and PG-19 NLL; not a universal impossibility result or training-time EVQ-Cosh evidence"
+}

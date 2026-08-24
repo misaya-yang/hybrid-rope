@@ -51,3 +51,20 @@ two-seed 151.9M weights-by-runtime-table crossing, and the corrected Qwen 128K
 extension. Its mature-checkpoint comparisons are fixed-checkpoint causal
 interventions on `z`, not from-training estimates or a new interpolation-family
 claim.
+
+`DIRECT_Z_FIXED_SUPPORT_PILOT_20260824.json` records the stopped mature-
+checkpoint direct-`z` calibration pilot. The candidate improved mean held-out
+2x tail NLL but failed its per-row regression gate, so no downstream task was
+run. It is a method-selection negative, not a replacement for the exact-range
+or same-support causal owners.
+
+`ZERO_PARAMETER_SINGLE_TABLE_RESULTS_20260824.json` records the two analytic
+single-static-table PG-19 gates. Both improve 2x directionally and both fail
+the registered 1x retention gate; this negative supports Native/long routing,
+not a rejection of training-time EVQ-Cosh.
+
+`FRESH_FINEWEB_S4_RESULTS_20260824.json` records the new-shard natural-NLL
+study and the separate bundled-policy, fixed-support allocation, profile-detail,
+and routing contrasts. Its 128- and 512-document subsets are disjoint, and the
+same run produced a hash-bound, system-disk corpus of exactly one billion new
+FineWeb-Edu tokens from shards absent from the historical local shard set.

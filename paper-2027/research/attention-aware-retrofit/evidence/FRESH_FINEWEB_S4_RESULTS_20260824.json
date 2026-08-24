@@ -1,0 +1,67 @@
+{
+  "status": "FRESH_FINEWEB_S4_GENERALIZATION_COMPLETE_V1",
+  "date": "2026-08-24",
+  "checkpoint_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f",
+  "data": {
+    "evaluation_source": "FineWeb-Edu sample/10BT/002_00000.parquet",
+    "evaluation_source_sha256": "547ae182d132c9f06b6ce63149567208ea9f57630bfd9b1a2938e504f0c9ebd7",
+    "historical_shards_excluded": ["000_00000", "001_00000", "004_00000"],
+    "holdout128_skip_eligible_documents": 32,
+    "holdout512_skip_eligible_documents": 160,
+    "tail_tokens_per_row": 1024,
+    "one_billion_token_receipt_sha256": "8d4ca97bd85594771d8e755d6afbeaf9cad4e3843e6324bc1ee51938ae8c5ec4",
+    "one_billion_tokens": 1000000000,
+    "one_billion_documents": 996463,
+    "one_billion_source_sha256": [
+      "547ae182d132c9f06b6ce63149567208ea9f57630bfd9b1a2938e504f0c9ebd7",
+      "22184e6eb25759ddd97783751ffc73e1705dfa2542e630dae1f2a8bac8ee6ddb"
+    ],
+    "one_billion_tokens_file_sha256": "223e466b1e829675e027e900fa4dbb8b0ff2e851f70d0c9ef301b1fec944b284"
+  },
+  "holdout128": {
+    "native_mean_nll": {"1x": 2.753843783400953, "2x": 7.002340942621231, "4x": 7.270347245037556},
+    "session_s4_mean_nll": {"1x": 2.753843783400953, "2x": 2.866208016872406, "4x": 2.7868493366986513},
+    "session_minus_native": {"1x": 0.0, "2x": -4.136132925748825, "4x": -4.483497908338904},
+    "paired_bootstrap_95": {"1x": [0.0, 0.0], "2x": [-4.253900725441054, -4.021939596533776], "4x": [-4.61403317800723, -4.357179670012556]},
+    "session_better_rows": {"1x_exact": 128, "2x": 128, "4x": 128}
+  },
+  "holdout512": {
+    "native_mean_nll": {"1x": 2.688612588099204, "2x": 6.909873453900218, "4x": 7.162946465425193},
+    "session_s4_mean_nll": {"1x": 2.688612588099204, "2x": 2.8145401865476742, "4x": 2.723694773449097},
+    "session_minus_native": {"1x": 0.0, "2x": -4.095333267352544, "4x": -4.4392516919760965},
+    "paired_bootstrap_95": {"1x": [0.0, 0.0], "2x": [-4.149396936740959, -4.042053473321721], "4x": [-4.508538669736299, -4.371260183490813]},
+    "session_better_rows": {"1x_exact": 512, "2x": 512, "4x": 512},
+    "least_favorable_delta": {"2x": -2.300602436065674, "4x": -2.0215511322021484}
+  },
+  "fixed_support_z_controls_holdout512": {
+    "held_fixed": ["factor-four sampled support", "attention gain", "Native/long route", "checkpoint", "rows", "runtime"],
+    "changed": "interior allocation z",
+    "geometric_minus_derived": {
+      "2x": -0.028815001365728676,
+      "2x_bootstrap_95": [-0.03217374033119995, -0.025502554533886723],
+      "4x": 4.455995472089853,
+      "4x_bootstrap_95": [4.380362660101673, 4.531664639031805]
+    },
+    "ramp_minus_derived": {
+      "2x": 0.0005107470788061619,
+      "2x_bootstrap_95": [-0.00028492669225670396, 0.001311238622292876],
+      "4x": 0.000560216954909265,
+      "4x_bootstrap_95": [-0.00019967630505561828, 0.0013258069666335353]
+    }
+  },
+  "routing_control_holdout128": {
+    "held_fixed": "derived s4 long table",
+    "changed": "static at 1x versus exact-Native session route",
+    "static_minus_session_1x": 0.1235856469720602,
+    "long_values_identical": true
+  },
+  "raw_sha256": {
+    "holdout128_summary": "c484e12007d3bf1fdcef94a149edd40b8f432edae350cefd5f14dd7109f5a5e5",
+    "holdout512_summary": "fd669aeab7787c0c5e3e8dc0723a4933f3f31a3322a0b57739f54717ddcc91a6",
+    "holdout512_native": "25723a6ff6672c920af977c5b7a705fef08960162f3c0f994f93c9d2169ccfb7",
+    "holdout512_session_s4": "4925d77cbcfdb9cd16fd7b93358e9070a92a7f3b9444ef5123f1ae52f0fcb650",
+    "holdout512_geometric": "cd6fe33ce2b779e743cc4c9e3665f52cbe102ec1902da4853b03978e496d8297",
+    "holdout512_ramp": "e4351561a5f4b8674d3e79314d71b4979c3727e1d48a98808e8f6a3584661df2"
+  },
+  "claim_boundary": "teacher-forced natural-text tail NLL on deterministic subsets of one new shard and one checkpoint; bundled policy persistence, fixed-support z attribution, profile-detail, and routing estimands remain separate"
+}

@@ -33,6 +33,9 @@ from rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.evaluate_instruct_ru
     official_yarn_config,
     verify_official_yarn,
 )
+from rebuttal.rebuttal_0723.experiments.olmo2_lora_maturity.train_4k_stage_a import (
+    ready_checkpoint_digest,
+)
 from scripts.analysis.export_uniqueness_budgeted_tables import (
     build_default_tables,
     causal_distance_measure,
@@ -65,6 +68,8 @@ METHODS = (
     "session_adaptive",
     "session_binary_s4",
     "target_free_anchored",
+    "external_table_static",
+    "external_table_session",
 )
 BUCKET_TO_MULTIPLIER = {"retention": 1, "near": 2, "far": 4}
 
@@ -140,6 +145,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--factors", type=float, nargs="+", default=(2.0, 4.0))
     parser.add_argument("--label")
     parser.add_argument("--limit-per-cell", type=int, default=0)
+    parser.add_argument("--table", type=Path)
+    parser.add_argument("--table-name")
+    parser.add_argument(
+        "--table-support",
+        choices=("native", "native_div_factor"),
+    )
+    parser.add_argument("--long-attention-scaling", type=float)
+    parser.add_argument("--expected-active-sha256")
+    parser.add_argument("--skip-checkpoint-rehash", action="store_true")
+    parser.add_argument("--checkpoint-ready-receipt", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--preflight-only", action="store_true")
     return parser.parse_args()
@@ -157,6 +172,21 @@ def validate_args(args: argparse.Namespace) -> None:
         raise ValueError("formal one-deployment YaRN control is frozen at factor four")
     if args.method == "target_aware" and tuple(float(v) for v in args.factors) != (2.0, 4.0):
         raise ValueError("target-aware oracle is frozen to factors two and four")
+    external = args.method in {"external_table_static", "external_table_session"}
+    if external and (
+        args.table is None
+        or not str(args.table_name or "").strip()
+        or args.table_support is None
+        or args.long_attention_scaling is None
+        or not math.isfinite(float(args.long_attention_scaling))
+        or float(args.long_attention_scaling) <= 0.0
+    ):
+        raise ValueError(
+            "external table methods require --table, --table-name, "
+            "--table-support, and positive --long-attention-scaling"
+        )
+    if args.skip_checkpoint_rehash and args.checkpoint_ready_receipt is None:
+        raise ValueError("--skip-checkpoint-rehash requires --checkpoint-ready-receipt")
 
 
 def validate_checkpoint(checkpoint: Path) -> str:
@@ -330,6 +360,33 @@ def set_target_aware_factor(
     }
 
 
+def set_external_table_branch(
+    model: Any,
+    *,
+    use_long: bool,
+    table: np.ndarray,
+    native: torch.Tensor,
+    table_name: str,
+    attention_scaling: float,
+) -> dict[str, Any]:
+    """Install either exact Native or one receipt-bound external table."""
+
+    rotary = model.model.rotary_emb
+    active = torch.from_numpy(table).float() if use_long else native
+    scaling = float(attention_scaling) if use_long else 1.0
+    with torch.no_grad():
+        rotary.inv_freq.copy_(active.to(rotary.inv_freq))
+    if hasattr(rotary, "original_inv_freq"):
+        rotary.original_inv_freq = rotary.inv_freq.detach().clone()
+    rotary.attention_scaling = scaling
+    return {
+        "identity": str(table_name) if use_long else "native",
+        "branch": "external_long" if use_long else "exact_native",
+        "table_sha256_float32": float32_sha256(active.cpu().numpy()),
+        "attention_scaling": scaling,
+    }
+
+
 def completed_keys(path: Path) -> set[tuple[str, str, int]]:
     if not path.is_file():
         return set()
@@ -385,6 +442,29 @@ def main() -> int:
                 limit_per_cell=int(args.limit_per_cell),
             )
         )
+    external_methods = {"external_table_static", "external_table_session"}
+    external: np.ndarray | None = None
+    external_hash: str | None = None
+    external_file_hash: str | None = None
+    if args.method in external_methods:
+        assert args.table is not None
+        table_path = args.table.expanduser().resolve()
+        external = np.load(table_path, allow_pickle=False)
+        if (
+            external.dtype != np.dtype("float32")
+            or external.shape != (64,)
+            or not np.isfinite(external).all()
+            or not np.all(external[:-1] > external[1:])
+        ):
+            raise RuntimeError("external table must be finite decreasing float32")
+        external = np.ascontiguousarray(external, dtype="<f4")
+        external_hash = float32_sha256(external)
+        external_file_hash = sha256_file(table_path)
+        if (
+            args.expected_active_sha256 is not None
+            and external_hash != str(args.expected_active_sha256)
+        ):
+            raise RuntimeError("external table hash drift")
     if args.preflight_only:
         counts: dict[str, int] = {}
         session_factor_matches = 0
@@ -399,8 +479,16 @@ def main() -> int:
             )
             key = f"{task}:x{multiplier}"
             counts[key] = counts.get(key, 0) + 1
-            if args.method in {"session_adaptive", "session_binary_s4"}:
-                supported = (1, 4) if args.method == "session_binary_s4" else (1, 2, 4)
+            if args.method in {
+                "session_adaptive",
+                "session_binary_s4",
+                "external_table_session",
+            }:
+                supported = (
+                    (1, 4)
+                    if args.method in {"session_binary_s4", "external_table_session"}
+                    else (1, 2, 4)
+                )
                 selected_factor = observed_session_factor(
                     row,
                     native_length,
@@ -408,7 +496,7 @@ def main() -> int:
                 )
                 expected_factor = (
                     1 if multiplier == 1 else 4
-                    if args.method == "session_binary_s4"
+                    if args.method in {"session_binary_s4", "external_table_session"}
                     else multiplier
                 )
                 if selected_factor != expected_factor:
@@ -429,18 +517,31 @@ def main() -> int:
             "cells": counts,
             "cuda_initialized": False,
             "checkpoint_loaded": False,
+            "external_table_sha256_float32": external_hash,
+            "external_table_file_sha256": external_file_hash,
             "session_factor_matches": session_factor_matches,
             "selected_session_factors": selected_session_factors,
         }, indent=2, sort_keys=True))
         return 0
     configure_cuda()
-    checkpoint_sha = validate_checkpoint(checkpoint)
+    checkpoint_ready_sha256 = None
+    if args.skip_checkpoint_rehash:
+        assert args.checkpoint_ready_receipt is not None
+        ready_path = args.checkpoint_ready_receipt.expanduser().resolve()
+        checkpoint_sha = ready_checkpoint_digest(checkpoint, ready_path)
+        checkpoint_ready_sha256 = sha256_file(ready_path)
+        if checkpoint_sha != EXPECTED_CHECKPOINT_SHA256:
+            raise RuntimeError("released OLMo checkpoint READY digest drift")
+    else:
+        checkpoint_sha = validate_checkpoint(checkpoint)
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     examples_path = output / "examples.jsonl"
     run_manifest = {
         "status": "TARGET_FREE_REAL_CONTEXT_RUN_FROZEN",
         "checkpoint_sha256": checkpoint_sha,
+        "checkpoint_rehashed_this_run": not bool(args.skip_checkpoint_rehash),
+        "checkpoint_ready_receipt_sha256": checkpoint_ready_sha256,
         "token_manifest_sha256": sha256_file(token_manifest_path),
         "method": str(args.method),
         "tasks": sorted(tasks),
@@ -448,6 +549,11 @@ def main() -> int:
         "factor": float(args.factor),
         "factors": [float(value) for value in args.factors],
         "label": args.label,
+        "table_name": args.table_name,
+        "table_support": args.table_support,
+        "table_sha256_float32": external_hash,
+        "table_file_sha256": external_file_hash,
+        "long_attention_scaling": args.long_attention_scaling,
         "limit_per_cell": int(args.limit_per_cell),
         "script_sha256": sha256_file(Path(__file__).resolve()),
     }
@@ -475,11 +581,48 @@ def main() -> int:
         if hasattr(model.model.rotary_emb, "inv_freq")
         else None
     )
-    target_tables = (
-        build_default_tables()
-        if args.method in {"target_aware", "session_adaptive", "session_binary_s4"}
-        else {}
-    )
+    if args.method in external_methods:
+        assert native_inv is not None
+        assert external is not None and external_hash is not None
+        native_array = native_inv.numpy()
+        expected_slow = (
+            np.float32(native_array[-1])
+            if args.table_support == "native"
+            else np.float32(np.float32(native_array[-1]) / float(args.factor))
+        )
+        if (
+            external.shape != native_array.shape
+            or external[0] != np.float32(native_array[0])
+            or external[-1] != expected_slow
+        ):
+            raise RuntimeError("external table support identity drift")
+        target_tables = {}
+        method_receipt.update({
+            "method": str(args.method),
+            "table_name": str(args.table_name),
+            "active_sha256_float32": external_hash,
+            "table_support": str(args.table_support),
+            "long_attention_scaling": float(args.long_attention_scaling),
+            "selection": (
+                "external table at every evaluated length"
+                if args.method == "external_table_static"
+                else "exact Native within L_native; one frozen external table beyond"
+            ),
+            "requires_L_target": False,
+            "runtime_requires_request_target": False,
+            "construction_horizon_bound_by_external_receipt": True,
+            "construction_table_factor": float(args.factor),
+            "evaluation_parameter_updates": 0,
+            "model_weight_updates": 0,
+            "table_provenance": "receipt-bound external artifact",
+        })
+        model.config.max_position_embeddings = int(native_length * max(multipliers))
+    else:
+        target_tables = (
+            build_default_tables()
+            if args.method in {"target_aware", "session_adaptive", "session_binary_s4"}
+            else {}
+        )
     completed = completed_keys(examples_path)
     eos_token_id = tokenizer.eos_token_id
     for ordinal, row in enumerate(rows, start=1):
@@ -489,13 +632,56 @@ def main() -> int:
         if key in completed:
             continue
         active_receipt = None
-        if args.method in {"target_aware", "session_adaptive", "session_binary_s4"}:
+        if args.method in external_methods:
+            assert native_inv is not None and external is not None
+            use_long = (
+                True
+                if args.method == "external_table_static"
+                else observed_session_factor(
+                    row,
+                    native_length,
+                    supported_factors=(1, 4),
+                )
+                == 4
+            )
+            if args.method == "external_table_session" and use_long != (multiplier > 1):
+                raise RuntimeError("external session policy disagrees with frozen route")
+            active_receipt = set_external_table_branch(
+                model,
+                use_long=use_long,
+                table=external,
+                native=native_inv,
+                table_name=str(args.table_name),
+                attention_scaling=float(args.long_attention_scaling),
+            )
+            active_receipt.update({
+                "selection": (
+                    "external table at every evaluated length"
+                    if args.method == "external_table_static"
+                    else "exact Native within L_native; one frozen external table beyond"
+                ),
+                "requires_L_target": False,
+                "cache_policy": "profile fixed before prefill for the KV-cache lifetime",
+                "observed_prefill_tokens": len(row["input_ids"]),
+                "requested_max_new_tokens": (
+                    0 if family == "pg19" else int(row["generation_reserve"])
+                ),
+            })
+        elif args.method in {
+            "target_aware",
+            "session_adaptive",
+            "session_binary_s4",
+        }:
             assert native_inv is not None
             active_multiplier = (
                 observed_session_factor(
                     row,
                     native_length,
-                    supported_factors=(1, 4) if args.method == "session_binary_s4" else (1, 2, 4),
+                    supported_factors=(
+                        (1, 4)
+                        if args.method == "session_binary_s4"
+                        else (1, 2, 4)
+                    ),
                 )
                 if args.method in {"session_adaptive", "session_binary_s4"}
                 else multiplier

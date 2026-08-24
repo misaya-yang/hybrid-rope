@@ -37,6 +37,24 @@ the body and Appendix F.2; the complete session policy owns the separate Qasper
 appendix endpoint. No GPU experiment is queued, and another table, gain, rank,
 or RULER sweep is explicitly stopped.
 
+The later direct-`z` calibration pilot is a completed negative method gate, not
+a third live owner. It improved mean held-out 2x tail NLL but violated its
+per-row robustness gate; see
+[`results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md`](results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md).
+Its PG-19, RULER, LoRA, and full-task queue was not run.
+This branch-local stop does not supersede or block the completed zero-training
+Native/s4 policy above.
+
+A subsequent new-shard natural-NLL study separates the practical policy from
+its mechanisms; see
+[`results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`](results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md).
+The bundled Native/s4 policy persists on fresh FineWeb-Edu rows, while matched
+fixed-support controls attribute the 4x effect to interior allocation, show
+that a nearest ramp matches the derived profile, and identify exact Native
+session routing as the in-window retention mechanism. The failed analytic
+single-static-table gate is recorded separately and does not replace the
+session-policy owner.
+
 ## Read order
 
 1. The conceptual foundation linked above.
