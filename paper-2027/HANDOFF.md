@@ -3,12 +3,12 @@
 - **Updated:** 2026-08-24
 - **Target:** ICLR 2027
 - **Branch / upstream:** `main_0726` / `origin/main_0726`
-- **HEAD:** `fac94b6` locally and upstream
+- **Published content commit:** `79aa93218154a959afc979476c4de004316f16bf`
 - **Active manuscript:** `paper-2027/`
 - **Immutable baseline:** `paper/`
 - **Status:** manuscript, owner repairs, reviewer-facing wording pass, PDF, and
-  anonymous supplement are locally validated. The worktree remains uncommitted;
-  no commit, push, OpenReview upload, GPU run, or submission is implied.
+  anonymous supplement are validated, committed, and pushed. This is Git
+  publication only; no OpenReview upload, GPU run, or submission is implied.
 - **Internal only:** exclude this file from the anonymous supplement.
 
 ## 1. Cold-start order
@@ -105,11 +105,11 @@ OpenReview upload, or publication.
 
 ## 5. Workspace and ownership
 
-The worktree contains a single uncommitted repair/promotion set spanning the
-manuscript, research owners/receipts, evaluator guard/tests, packager, curated
-supplement, and this handoff. Preserve all unrelated edits and inspect the exact
-scope before any Git operation. No commit or push has been performed for this
-set.
+The published set spans the manuscript, research owners/receipts, evaluator
+guard/tests, packager, curated supplement, and documentation cleanup. Preserve
+unrelated edits and inspect branch, upstream, and worktree live before any
+future Git operation; this file intentionally avoids a self-invalidating current
+HEAD field.
 
 The 2026-08-24 documentation cleanup removed the unreferenced tracked
 `DOCUMENT_TEXT_MAP.md`, which duplicated the LaTeX manuscript, and marked
@@ -144,8 +144,8 @@ Highest-leverage author actions:
 2. Recheck live ICLR policy, deadlines, dual-submission state, and author
    profile requirements immediately before submission.
 3. Confirm OpenReview title and abstract exactly match the final PDF.
-4. Commit and push only after explicit authorization and a scoped staging/leak
-   review.
+4. Keep future Git publication approval-gated and repeat the scoped
+   staging/leak review.
 
 Stop list:
 
@@ -162,7 +162,7 @@ Stop list:
 
 ## 7. Known open state
 
-- The current repair/manuscript/package set is uncommitted.
+- The current repair/manuscript/package set was published to `main_0726`.
 - Raw GPU artifacts remain external; compact tracked receipts own only their
   stated hashes and metrics.
 - No promoted scientific result is known incomplete. Remaining work is author
