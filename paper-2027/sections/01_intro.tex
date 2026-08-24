@@ -25,15 +25,18 @@ subspace. A geometric table therefore spends more than one third of its rotary
 pairs on near-duplicate slow positional directions. This is the spectral-budget
 problem studied here.
 
-Most long-context methods act on another coordinate. Position interpolation,
-YaRN, and LongRoPE transport a trained spectrum toward a target range
+Long-context methods already produce many non-geometric frequency tables, but
+they generally change support and interior placement together. Position
+interpolation rescales the entire spectrum; YaRN and LongRoPE transport
+channels toward a target range
 \citep{chen2024position,peng2024yarn,ding2024longrope,shang2025longrope2};
 FMRoPE changes scalar support while retaining a geometric exponent grid
-\citep{oka2026fmrope}. Learned methods such as LeRoPE and AdaRoPE show that
-broader frequency tables can be useful \citep{karypis2026lerope,wang2026adarope}.
-What remains unidentified is the finite allocation itself: if both sampled
-endpoints and the log-frequency span are fixed, can moving only the interior
-frequencies change what a model learns?
+\citep{oka2026fmrope}. Learned methods such as LeRoPE and AdaRoPE optimize a
+broader table jointly with model weights
+\citep{karypis2026lerope,wang2026adarope}. Because support and interior
+placement change together, these comparisons do not isolate the effect of $z$
+at fixed support: if both sampled endpoints and the log-frequency span are
+fixed, can moving only the interior frequencies change what a model learns?
 
 It can. In a paired three-seed control, anchored \evq{} moves
 only $30$ interior frequencies relative to FMRoPE. Every seed favours
@@ -42,39 +45,49 @@ the non-uniform allocation at every evaluated OOD length
 can reproduce the intervention. Interior allocation $z$ is therefore a genuine
 training variable, not a disguised base change.
 
-We turn this finding into a construction with \evq{}. A convex variational
-problem has a unique Cosh density whose inverse CDF gives the frequency table in
-closed form. The density concentrates samples toward phase-resolved fast
-frequencies: at $K{=}64$ and $\tau{=}4$, $55$ of the $64$ midpoint quantiles lie
-in the fast half of the log-frequency span. The RoPE operator, architecture,
-and optimiser remain unchanged, and the construction adds no learned
-positional parameters.
+We make the identified degree of freedom constructive with \evq{}. A convex
+variational surrogate of the collision geometry has a unique Cosh minimizer
+whose inverse CDF gives the frequency table in closed form. Evaluated under the
+closed-form cosine-feature kernel, the resulting allocations reduce collision
+and increase the kernel's Shannon effective rank in every tested configuration
+(App.~\ref{sec:surrogate-validation}). The solution concentrates samples toward
+phase-resolved fast frequencies: at $K{=}64$ and $\tau{=}4$, $55$ of the $64$
+midpoint quantiles lie in the fast half of the log-frequency span. The RoPE
+operator, architecture, and optimiser remain unchanged, and the construction
+adds no learned positional parameters.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{fig_evidence_overview.pdf}
-  \caption{\textbf{Allocation changes learned behaviour at fixed support and
-  effective context at scale.} (a)~Moving only interior frequencies improves
-  every OOD length in all three $151.9$M training seeds. (b)~With only
-  $K{=}16$ rotary frequencies, three-seed $432$M MLA reduces $16$K PPL by
-  $31.1\%$. (c)~At $1.485$B, Q/K adaptation carries real-document QA beyond
+  \caption{\textbf{Controlled identification and systems evidence.}
+  (a)~Moving only interior frequencies improves every OOD length in all three
+  $151.9$M training seeds. (b)~Training the complete \evq{} table with only
+  $K{=}16$ rotary frequencies reduces $16$K PPL by $31.1\%$ over three $432$M
+  MLA seeds. (c)~At $1.485$B, Q/K adaptation carries real-document QA beyond
   the physical training window; the callout reports a separate $8$B adaptation
-  in which deleting the distant gold block sharply raises \evq{} NLL.}
+  in which blocking answer-side attention to the distant gold block sharply
+  raises \evq{} NLL without moving any token or rotary index.}
   \label{fig:evidence-overview}
 \end{figure}
 \FloatBarrier
 
-The controlled experiment establishes the variable; the scale ladder shows
-that it matters. Under scarce-channel $432$M MLA, all three seeds favour
-\evq{} at $16$K. In a separate $454$M three-seed MHA study, the same fixed
-\rs{} operator reaches $100\%$ teacher-forced retrieval on an \evq{} substrate
-versus $61\%$ on Geo, showing that range transport inherits the table learned
-by the weights. The crossover reappears after $750$M full-parameter continuation
-from a shared checkpoint and in a same-initialisation $1.485$B
-from-initialisation comparison. Finally, matched adaptation carries multi-hop
-QA beyond the $1.485$B arm's physical training window, while an $8$B deletion
-intervention shows that the distant source is causally used. The training-scale
-trend ends at $1.485$B; the $8$B result is mature-model adaptation evidence.
+The controlled experiment identifies $z$; the remaining studies test the
+resulting table under realistic model-building paths. Under scarce-channel $432$M
+MLA, all three seeds favour \evq{} at $16$K. In a separate $454$M three-seed
+MHA study, the same fixed \rs{} operator reaches $100\%$ teacher-forced
+retrieval on an \evq{} substrate versus $61\%$ on Geo, showing that range
+transport inherits the table learned by the weights. Separately, the
+in-window-to-long-range crossover seen in MLA reappears after $750$M
+full-parameter continuation from a shared checkpoint and in a
+same-initialisation $1.485$B from-initialisation comparison. A frozen
+fixed-support intervention on mature OLMo and Qwen checkpoints then changes
+only $z$, showing that the same coordinate remains consequential after
+pretraining. Finally, matched adaptation carries multi-hop QA beyond the
+$1.485$B arm's physical training window, while an $8$B decode-attention
+intervention shows that the distant source is causally used with prompt tokens
+and rotary indices fixed. Together, these studies carry the fixed-support
+finding from full-parameter training through $1.485$B to mature-model
+adaptation at $8$B.
 
 The theory explains why this pattern is coherent. Each rotary frequency is a
 two-dimensional sin/cos subspace. Canonical correlations expose overlap between
@@ -95,7 +108,8 @@ identify allocation with a three-seed fixed-support intervention.
 (ii) We characterize the resulting full-RoPE basis through a phase-invariant
 effective-rank identity, low-frequency collapse, and an exact frozen-transplant
 obstruction.
-(iii) We derive a closed-form, zero-learned-parameter allocation and show its
-effective-context advantage across scarce-channel training, range composition,
-full-parameter continuation, training through $1.485$B, and adaptation at
-$1.485$B and $8$B.
+(iii) We derive the unique closed-form optimum of the allocation surrogate,
+verify its direction under the exact cosine-feature kernel, and show the
+construction's consequences across scarce-channel training, range composition,
+full-parameter continuation, training through $1.485$B, and mature-checkpoint
+interventions and adaptation.

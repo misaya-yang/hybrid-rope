@@ -28,6 +28,12 @@
     "ruler_rows_per_task_length": 20,
     "ruler_full13_manifest_sha256": "431ad942eead911da4693a4ab7428085fd04e63d6914fc8831c3d5b0cc88c239"
   },
+  "provenance_receipts": {
+    "row_budget_audit": "LONGBENCH_ROW_BUDGET_AUDIT_20260823.json",
+    "method_selection_ledger": "METHOD_SELECTION_LEDGER_20260823.json",
+    "qasper_role": "post-policy-freeze natural-task evaluation",
+    "2wiki_role": "exploratory bundled-policy evidence"
+  },
   "formal_task_macro": {
     "metric": "mean of available task-level scores; PG-19 excluded",
     "task_counts": {"x1": 5, "x2": 6, "x4": 6},

@@ -1,16 +1,18 @@
 # Released-Native far-pass phase-chord residual
 
 - **Date:** 2026-08-21
-- **Status:** `NO_GPU_READY / TRAINING_DATA_COMPLETE / GPU_SMOKE_PENDING`
-- **Role:** internal next-experiment owner; not manuscript evidence
+- **Status at registration:** `NO_GPU_READY / TRAINING_DATA_COMPLETE / GPU_SMOKE_PENDING`
+- **Current status:** executed; route stopped by
+  `../results/FAR_PASS_CHORD_EXPERIMENT_REPORT_20260821.md`
+- **Role:** historical preregistration; not an action queue or manuscript evidence
 - **Base:** OLMo-2-0425-1B-Instruct, Native RoPE
 - **Frozen parent:** unmodified released Native checkpoint; no inherited
   adapter or historical binary artifact
 
 ## Decision
 
-The next paid experiment is one Native-preserving far-pass chord residual
-arm. It replaces the superseded full-spectrum EVQ residual design. No
+At registration, the next paid experiment was one Native-preserving far-pass
+chord residual arm. It replaced the superseded full-spectrum EVQ residual design. No
 whole-table morph audit, Stage-D protection diagnostic, phase-chord seed 256,
 8B run, parameter sweep, or external-method gate precedes it.
 

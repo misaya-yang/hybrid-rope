@@ -177,7 +177,7 @@ full-basis theory, and a closed-form zero-learned-parameter point on that axis.
 Second, the new replacement should not be sold as a new YaRN family. Its value
 is that it turns the paper's allocation analysis into a deterministic mature
 checkpoint intervention, and that same-support controls show the outcome is
-not explained by endpoint extension alone. Its nearest label-free ramp matches
+not explained by endpoint extension alone. Its nearest movement-profile ramp matches
 the detailed derived profile in the completed gates, so profile-detail novelty
 is not supported.
 
@@ -190,7 +190,7 @@ is not supported.
 | Do weights co-adapt to the table? | factorial protocol | trained weights \(\times\) runtime table | 50M 2x2 and two-seed 151.9M crossing | table/weight compatibility is strong and exact arbitrary transplantation is obstructed |
 | Does attention gain act independently of the table? | checkpoint and tasks | table \(\times\) gain | mature 2x2 owner | no in the tested cells; softmax couples them and the interaction is large |
 | Does interior allocation still matter with mature weights frozen? | support, amplitude, checkpoint, rows, decoding | geometric versus non-geometric \(z\) | OLMo/Qwen same-support owner | yes in the stated frozen RULER protocols |
-| Is the detailed derived uniqueness curve necessary? | same frozen controls | derived curve versus nearest label-free ramp | same-support owner | no evidence of necessity; the ramp matches under the registered gate |
+| Is the detailed derived uniqueness curve necessary? | same frozen controls | derived curve versus nearest movement-profile ramp | same-support owner | no evidence of necessity; the ramp matches under the registered gate |
 | Can a no-training deployment preserve the Native path? | checkpoint and request | session route | session-policy owner | exact OLMo Native short-route parity and one frozen long route are demonstrated |
 | Is the replacement universally better on natural tasks? | — | — | Qasper, 2Wiki, formal LongBench, PG-19 | no; natural-task effects are heterogeneous and model/task generality remains bounded |
 
@@ -254,8 +254,9 @@ The completed controls separate them:
 - **same-support geometric:** identical fast/slow endpoints and amplitude, but
   a log-linear interior; algebraically the corresponding scalar-base/NTK-aware
   control for the standard geometric Native tables used here;
-- **nearest label-free ramp:** identical endpoints and amplitude, with the
-  closest discrete linear-ramp profile;
+- **nearest movement-profile ramp:** identical endpoints and amplitude, with
+  the discrete linear ramp minimising movement-profile MSE to the derived
+  profile;
 - **derived table:** identical endpoints and amplitude, with the full
   model-relative profile;
 - **frequency \(\times\) gain 2x2:** separates the table and attention-amplitude
@@ -305,7 +306,7 @@ It also has explicit limits:
 - natural-document evidence is strong on full Qasper, null/mixed on other
   endpoints, and absent for the Qwen checkpoint;
 - the detailed uniqueness curve is not identified beyond its much simpler
-  nearest ramp;
+  nearest movement-profile ramp;
 - RULER remains task-family adaptation, not unseen natural-task transfer.
 
 ### 5.4 Relationship to Jet-Long and other zero-shot work
@@ -414,7 +415,7 @@ trained weights W remain fixed throughout the mature comparison
 ```
 
 The matching result table should answer four questions, in order: geometric
-same support, nearest ramp, full derived profile, and Native-route/natural-data
+same support, nearest movement-profile ramp, full derived profile, and Native-route/natural-data
 retention. A long baseline leaderboard without the held-fixed columns would
 weaken the result.
 
@@ -438,7 +439,7 @@ weaken the result.
 - table and gain interact in the tested mature-model cells;
 - same-support geometric versus non-geometric tables separate strongly on
   OLMo and directionally on Qwen under the completed protocols;
-- the nearest label-free ramp is not separated from the detailed derived
+- the nearest movement-profile ramp is not separated from the detailed derived
   profile;
 - the OLMo binary policy has exact Native short-route parity, strong RULER and
   full-Qasper results, and heterogeneous natural-task outcomes.
@@ -455,7 +456,7 @@ weaken the result.
 
 - whether the split transfers to additional architectures/pair counts;
 - whether a natural Qwen task reproduces the fixed-support direction;
-- whether another label-free allocation beats the nearest ramp;
+- whether another label-free allocation beats the nearest movement-profile ramp;
 - whether the zero-training replacement improves a broad natural-task
   population;
 - how to derive attention gain from held-out model statistics rather than an

@@ -1,0 +1,60 @@
+{
+  "date": "2026-08-23",
+  "status": "ROW_BUDGET_AUDIT_COMPLETE",
+  "scope": "Post-chat-template input tokens plus the task generation reserve for every completed full-200 Qasper and 2Wiki arm",
+  "evaluated_evaluator_sha256": "c2612c0c111c509d20e6db8831ecab0a628f5bbcca964452fd2cf7d1d0c8d010",
+  "post_audit_repaired_evaluator_sha256": "7bdb7be045db1ef8d7e3c08fbdf291298d3f2a3972c137e35d7b74a6e375113a",
+  "rerun_required": false,
+  "groups": {
+    "2wiki_full200": {
+      "all_arm_row_contracts_identical": true,
+      "generation_reserve": 32,
+      "max_input_tokens": 16352,
+      "max_total_tokens": 16384,
+      "minimum_slack_tokens": 0,
+      "rows_per_arm": 200,
+      "truncated_rows_per_arm": 1,
+      "violating_rows_per_arm": 0,
+      "row_contract_sha256": "9967fc67cd0f9c3dedb97b6e57198b10bc5eb5a04f015c29214a1c12ef54ddf2",
+      "arms": {
+        "official_yarn_factor4": {
+          "examples_sha256": "99e5a0438fea17658e9cf215b94b1e34984a3671b0d99150b93d10ffab08d11b",
+          "results_sha256": "4286e4241d38a7f947d49a1aebfa8bc24da8a96d252de24155cb4f1337251a2b"
+        },
+        "fixed_budgeted_s4": {
+          "examples_sha256": "a2b36675ffabb37529f99500f4e7c87182cea07e57a2fa72097a1c4ffbab95dd",
+          "results_sha256": "77ef67a306b0158646d4c8d011b41271c6c8d9dba1eacf9f5f704ae70db58110"
+        },
+        "session_adaptive_min_cover": {
+          "examples_sha256": "9b13469f91326b77889a2fb527eda51571ea0b9eff83282220e0480000d500a5",
+          "results_sha256": "c7c3e8b45733f77ef37affb2d3f792a8a1776e19381c7cad98a7b8572acd443a"
+        },
+        "session_binary_s4": {
+          "examples_sha256": "0902d29b6fc3260b98df741c03dda59feef7757827d86b2fd27b6f611751d4e6",
+          "results_sha256": "ca67a18a229098e7d10f395e8e39ce4549671ebfa8c3d9bf5e840cf25e33f6cc"
+        }
+      }
+    },
+    "qasper_full200": {
+      "all_arm_row_contracts_identical": true,
+      "generation_reserve": 128,
+      "max_input_tokens": 16256,
+      "max_total_tokens": 16384,
+      "minimum_slack_tokens": 0,
+      "rows_per_arm": 200,
+      "truncated_rows_per_arm": 3,
+      "violating_rows_per_arm": 0,
+      "row_contract_sha256": "62d39953a10219d9a248c3b470fd1f8a9dec15618c26e47f9e99372fc270ba15",
+      "arms": {
+        "official_yarn_factor4": {
+          "examples_sha256": "655e70fc03d0047d583a55df353ef264802bcece6ab904ce741ad810142e9ee0",
+          "results_sha256": "e8101c8cdc00c9b3c3394d66736de8e87a4cac9bb4b9a9421a57e57ba3179240"
+        },
+        "session_binary_s4": {
+          "examples_sha256": "7619ea30b6a6fb9b50f25a8953f1b531ba8d59dd45188800a53129a3a99b32d3",
+          "results_sha256": "04ea9e2aa503378e2a8008f7e20b16bded1820d2c054c588d52eaa44ea43ccfe"
+        }
+      }
+    }
+  }
+}

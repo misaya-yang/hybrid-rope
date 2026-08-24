@@ -1,8 +1,10 @@
 This work introduces no new dataset, deployed system, or human-subject
-component. It changes only the initialisation of the RoPE inverse-frequency
-table and adds no learned parameters, so it is inexpensive to audit, ablate,
-or revert. All models, corpora, and evaluation suites used here are public
-research artefacts used within their stated licences.
+component. The proposed training-time construction changes only the RoPE
+inverse-frequency table and adds no learned parameters; the mature-checkpoint
+studies use the frozen-table or LoRA interventions stated in their protocols.
+The table construction remains inexpensive to audit, ablate, or revert. All
+models, corpora, and evaluation suites used here are public research artefacts
+used within their stated licences.
 
 A better allocated frequency table may reduce the adaptation or inference
 effort required to reach a target context range, and the same mechanism could

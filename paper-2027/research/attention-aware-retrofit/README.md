@@ -17,7 +17,7 @@ Two owners are live:
 1. [`results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md)
    owns the causal paper-upgrade case study. At fixed support and amplitude,
    interior exponent allocation `z` changes frozen OLMo and Qwen behaviour; a
-   nearest label-free ramp matches the detailed derived profile, so this is not
+   nearest movement-profile ramp matches the detailed derived profile, so this is not
    a new interpolation-family claim. Its 151.9M two-seed crossing supports
    weights/table co-adaptation.
 2. [`results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`](results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md)
@@ -32,8 +32,10 @@ separate matched protocols; they are not one pooled factorial. Do not describe
 the complete policy as a pure `z` experiment, and do not describe the controls
 as separate modules that must be deployed in sequence.
 
-Neither result is in the manuscript yet. No GPU experiment is currently
-queued. Another table, gain, rank, or RULER sweep is explicitly stopped.
+The same-support result is routed as a compact frozen-checkpoint corollary in
+the body and Appendix F.2; the complete session policy owns the separate Qasper
+appendix endpoint. No GPU experiment is queued, and another table, gain, rank,
+or RULER sweep is explicitly stopped.
 
 ## Read order
 

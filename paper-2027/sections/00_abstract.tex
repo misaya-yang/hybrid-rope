@@ -1,18 +1,20 @@
-RoPE specifies a rotation, but not how a finite head should spend its frequency
-channels. We show that the standard geometric table pays a severe redundancy
-tax: in a representative $4$K configuration, $23$ slow frequency pairs occupy
-$46$ nominal dimensions but have R\'enyi-$2$ effective rank $2.00$. Writing
+RoPE specifies rotations but not how a finite head should spend its frequency
+channels. We show that geometric spacing spends many slow pairs on nearly
+duplicate positional subspaces: in a representative $4$K setting, $46$
+nominal dimensions have R\'enyi-$2$ effective rank $2.00$. Writing
 $x_k=-\log\omega_k=a+Rz_k$ separates sampled support $(a,R)$ from interior
-allocation $z$ and exposes the latter as an independent training variable. We
-instantiate this variable with \evq{}, a closed-form fast-end allocation that
-changes only the inverse-frequency table and adds no learned positional
-parameters. In a three-seed fixed-support intervention, moving $30$ interior
-frequencies while preserving both sampled endpoints improves every evaluated
-OOD length in every seed. Full sin/cos subspace geometry gives an exact account
-of the redundancy, while a frozen-transplant obstruction and a weight--table
-crossing explain why the table and weights co-adapt. With only $16$ rotary
-frequencies, three-seed $432$M MLA reduces $16$K PPL by $31.1\%$. The advantage
-persists under $454$M \rs{} composition, $750$M full-parameter continuation,
-and a $1.485$B from-initialisation comparison. Separate $8$B adaptation produces
-causal dependence on distant source content. Frequency allocation is therefore
-a first-class long-context training decision, not an implementation detail.
+allocation $z$. A three-seed fixed-support intervention moves only $30$
+interior frequencies and improves every evaluated OOD length in every seed,
+establishing $z$ as an independent training variable. Canonical correlations
+make the full sin/cos redundancy phase invariant. A tractable convex surrogate
+then yields \evq{}, its unique closed-form Cosh minimiser; the predicted
+reallocation reduces collision under the exact cosine-feature RoPE kernel in
+every tested configuration. A weight--table crossing and exact transplant
+obstruction explain co-adaptation. With only $16$ frequencies, three-seed
+$432$M MLA lowers $16$K PPL by $31.1\%$. Long-range gains persist under $454$M
+range composition, $750$M full-parameter continuation, and a $1.485$B
+from-initialisation comparison. Frozen fixed-support interventions on OLMo and
+Qwen show that allocation remains actionable after pretraining, while a
+separate $8$B position-preserving attention intervention establishes causal use
+of distant source content. Frequency allocation is therefore a first-class
+long-context design decision.

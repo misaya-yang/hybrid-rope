@@ -678,8 +678,9 @@ def _fit_chat_prompt(
     tokenizer: Any, prompt: str, length: int, max_new_tokens: int,
 ) -> tuple[list[int], bool]:
     raw = list(tokenizer(prompt, add_special_tokens=False).input_ids)
-    if len(raw) + max_new_tokens <= length:
-        return _chat_ids(tokenizer, prompt), False
+    ids = _chat_ids(tokenizer, prompt)
+    if len(ids) + max_new_tokens <= length:
+        return ids, False
     candidate = raw
     while True:
         content = tokenizer.decode(

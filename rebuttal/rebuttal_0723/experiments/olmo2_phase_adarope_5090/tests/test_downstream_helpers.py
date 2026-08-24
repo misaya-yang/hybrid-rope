@@ -8,6 +8,7 @@ import pytest
 import torch
 
 from rebuttal.rebuttal_0723.experiments.olmo2_phase_adarope_5090 import evaluate_downstream as downstream
+from rebuttal.rebuttal_0723.experiments.olmo2_phase_adarope_5090 import evaluate_frozen_2wiki as frozen_qa
 
 
 def test_strict_eos_boundary_requires_one_terminal_eos() -> None:
@@ -137,6 +138,30 @@ def test_official_2wiki_loader_requires_exact_200_rows(tmp_path: Path) -> None:
     assert package["dataset"] == "THUDM/LongBench:2wikimqa"
     assert package["member"] == "data/2wikimqa.jsonl"
     assert len(package["rows"]) == 200
+
+
+@pytest.mark.parametrize("module", [downstream, frozen_qa])
+def test_chat_prompt_budget_includes_template_overhead(module: object) -> None:
+    class Encoding:
+        def __init__(self, size: int) -> None:
+            self.input_ids = list(range(size))
+
+    class Tokenizer:
+        def __call__(self, prompt: str, *, add_special_tokens: bool) -> Encoding:
+            assert add_special_tokens is False
+            return Encoding(len(prompt))
+
+        def apply_chat_template(self, messages: list[dict[str, str]], **_: object) -> torch.Tensor:
+            return torch.arange(len(messages[0]["content"]) + 10).unsqueeze(0)
+
+        def decode(self, ids: list[int], **_: object) -> str:
+            return "x" * len(ids)
+
+    ids, truncated = module._fit_chat_prompt(  # type: ignore[attr-defined]
+        Tokenizer(), "x" * 100, length=110, max_new_tokens=5,
+    )
+    assert truncated is True
+    assert len(ids) + 5 == 110
 
 
 def test_2wiki_scores_match_longbench_normalization() -> None:

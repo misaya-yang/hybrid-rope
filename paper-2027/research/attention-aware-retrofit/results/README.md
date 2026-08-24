@@ -8,7 +8,7 @@ isolates fixed-support allocation.
 
 | Owner | Status | Decision / maximum claim |
 | --- | --- | --- |
-| [`SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) | current causal owner | Fixed-support `z` affects two frozen mature checkpoints; nearest ramp matches detailed profile; 151.9M crossing supports co-adaptation. Not a new operator family or universal optimum. |
+| [`SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) | current causal owner | Fixed-support `z` affects two frozen mature checkpoints; the nearest movement-profile ramp matches the detailed profile; 151.9M crossing supports co-adaptation. Not a new operator family or universal optimum. |
 | [`SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`](SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md) | current practical owner | Zero-training, session-static Native/long routing preserves the exact short path and improves the stated OLMo protocols. Not universal dominance. |
 | [`LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md`](LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md) | superseded precursor | Target-aware Native/s2/s4 and initial zero-training factorial; retained for provenance, not the deployment owner. |
 | [`JOINT_MECHANISM_REPORT_20260822.md`](JOINT_MECHANISM_REPORT_20260822.md) | supporting mechanism | Frequency allocation and amplitude interact through softmax. Two lengths do not establish a scaling law. |

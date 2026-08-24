@@ -20,9 +20,14 @@ extension-time training \citep{peng2024yarn,jin2024selfextend,zhu2024pose,chen20
 LongRoPE and LongRoPE2 search channel-wise rescaling factors for pretrained
 models \citep{ding2024longrope,shang2025longrope2}, while MrRoPE interprets
 channel-wise transformations as mixed-radix conversion and derives
-training-free extensions \citep{tian2026mrrope}. These methods transport a
-learned model to a declared longer context. Bounds based on the RoPE base
-characterize limits of this regime \citep{xu2024base}.
+training-free extensions \citep{tian2026mrrope}. Jet-Long instead combines a
+Native local window with a dynamically rescaled remote window, using an
+inclusion--exclusion attention merge and on-the-fly cache correction
+\citep{tang2026jetlong}. These methods transport a learned model to longer
+contexts. Our frozen-checkpoint corollary retains one session-static table and
+standard rotary attention; its claim is fixed-support sensitivity to $z$, not
+a new dynamic extension operator. Bounds based on the RoPE base characterize
+limits of this regime \citep{xu2024base}.
 
 \paragraph{Frequency use, scalar base, and operator geometry.}
 Trained RoPE exhibits frequency-localized query/key norms; partial RoPE removes

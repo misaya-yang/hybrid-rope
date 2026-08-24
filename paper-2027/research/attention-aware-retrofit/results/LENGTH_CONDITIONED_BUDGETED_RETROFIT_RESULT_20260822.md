@@ -1,11 +1,10 @@
 # Length-conditioned uniqueness-budgeted retrofit
 
 - **Date:** 2026-08-22
-- **Status:** core-4 RULER and runtime parity complete; held-out 2Wiki generation
-  complete with one physical-budget invariant pending recheck; RULER-13 data
-  preparation interrupted by platform shutdown before evaluation
-- **Evidence role:** prospective mature-checkpoint zero-training retrofit result;
-  not yet manuscript evidence
+- **Status:** superseded precursor. Core-4 RULER, runtime parity, and held-out
+  2Wiki completed; the 2026-08-23 row-budget audit closed the pending invariant
+  with `rerun_required=false`. RULER-13 preparation ended before evaluation.
+- **Evidence role:** historical precursor to the session-policy owner
 - **Checkpoint:** released OLMo-2-0425-1B-Instruct, weight SHA-256
   `36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f`
 - **Learned parameters / training tokens / search on 2Wiki:** `0 / 0 / none`
@@ -113,10 +112,10 @@ descriptive, not significance claims. No natural multi-hop QA collapse is
 observed.
 
 A post-run code audit found that the untruncated fast path checked raw prompt
-tokens before adding chat-template overhead. Before manuscript promotion, the
-raw rows must be rechecked for `input_tokens + 32 <= nominal_length`; any
-violating cell must be rerun with the corrected check. This limitation does not
-affect the RULER or runtime-parity results.
+tokens before adding chat-template overhead. The 2026-08-23 audit subsequently
+verified every completed row after rendering: no row violates the physical
+input-plus-generation budget, so no rerun is required. The closure receipt is
+`../evidence/LONGBENCH_ROW_BUDGET_AUDIT_20260823.json`.
 
 ## Practical preservation receipt
 

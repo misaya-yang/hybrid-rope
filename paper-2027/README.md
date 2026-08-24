@@ -17,9 +17,8 @@ Build: `./compile.sh`（`make -f build.mk` 也行；远程工具写不了名为 
 worktree 边界和下一步的文档；本 README 只保留稳定的包结构与构建说明。
 `HANDOFF.md` 是内部文件，匿名 supplement 会刻意排除；导出包读者可跳过本节。
 
-第一性原理和最高优先级是最大化 ICLR 2027 录用概率。当前阶段不继续做推测性
-扩写或无闸门实验。固定支撑成熟模型控制与 151.9M crossing 已完成，但仍是
-internal case study，尚未改写正文；当前决策与下一步只看 `HANDOFF.md`。
+第一性原理和最高优先级是最大化 ICLR 2027 录用概率。动态状态、当前决策与
+下一步只在 `HANDOFF.md` 维护，本 README 不重复。
 
 ---
 
@@ -74,26 +73,12 @@ table--weights co-adaptation 与成熟模型证据都是新主线，EVQ-Cosh 降
 NeurIPS 接收，在 ICLR 全文中以第三人称引用已接收工作并明确新增贡献；
 若拒稿，无需这一引用动作。
 
-## 这一版改了什么（对应审稿意见）
+## 当前稿件与历史迁移
 
-完整对照见 `CHANGES_FROM_NEURIPS2026.md`。三句话版本：
-
-1. **实验主线重排。** 第一块是 **exact-range 识别实验**——钉死最高频、
-   最低频、log-span，只动中间 30 个频率。这是回答 AC.1/AC.3/RzWsa.1/R27bE.3
-   的那个实验，现在是全文的骨架，标题换成了 *RoPE Has a Spectral Budget*。
-   第二块汇总 1.485B / 8B 的 strict generation、2Wiki、RULER 与
-   causal source-use；第三块负责 schedule / $\tau$ 归因；第四块汇总
-   fixed-scaler substrate leverage 与 MLA scarce-channel evidence。
-2. **DAPE 那一行处理掉了。** 原 Table 4 标为 "DAPE" 的实际是 `free_inv_freq`
-   （32 参数、layer-shared 可学习 inverse-frequency）。现在：正文里
-   **不再承担任何 allocation-shape 归因**，退到附录 E，并按其真实身份标注为
-   learned-**table** 家族（LeRoPE 那一类），明确区别于 learned positional
-   **operator**（DAPE/FIRE）。归因全部转到 exact-range/M4 的零参数固定
-   schedule 对照。
-3. **Range-composition 身份写清楚。** 全文用 `\rs{}` 渲染为
-   `YaRN-style`，专指仓库固定索引 range operator：它保留高频并渐进缩放低频，
-   承担“同一 range 操作在两种训练表上的杠杆差异”这条证据。引用方法始终写
-   `YaRN`，两者不混用。
+当前 story、证据角色、PDF/package receipt 和下一步只在 `HANDOFF.md`
+维护；canonical owner 路由只在 `research/README.md` 维护。
+`CHANGES_FROM_NEURIPS2026.md` 是 2026-08-19 的历史迁移记录，其中的
+section locator 和 PDF hash 不作为当前状态使用。
 
 ## YaRN-style 实现身份
 
@@ -117,7 +102,6 @@ sections/
   05_discussion.tex         static basis、trained use、range transport 与 LeRoPE
   06_ethics.tex / 07_reproducibility.tex / 08_ai_use.tex  ICLR 声明（不计页数）
 tables/
-  table_layers.tex          新增：三层参数化
   table_m4.tex              新增：exact-range factorial
   table_ruler.tex           新增：RULER 13-family
   table_evq_ramp.tex        同一 YaRN-style range 操作的 substrate 交叉

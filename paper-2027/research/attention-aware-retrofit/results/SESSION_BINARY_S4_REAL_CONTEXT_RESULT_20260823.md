@@ -1,7 +1,8 @@
 # Native-or-frozen-s4 zero-training retrofit
 
 - **Date:** 2026-08-23
-- **Status:** complete internal result; not yet manuscript evidence
+- **Status:** complete internal owner; bounded policy endpoint routed to
+  Appendix F.2
 - **Decision:** retain the binary Native/s4 session policy; reject the
   stateless boundary-slope operator and the smallest-covering-profile router
 - **Model:** released OLMo-2-0425-1B-Instruct, 1.485B parameters
@@ -117,6 +118,13 @@ The full 2Wiki comparison uses all 200 official rows, one 16K service window,
 32 generated tokens, and only one truncated row.  The core-4 RULER check uses
 20 rows per task at each length and official task-specific scoring.  RULER is
 an engineering/retrieval assay, not unseen-task transfer.
+
+The canonical raw-row audit rechecks token counts after chat-template
+rendering. Every 2Wiki arm satisfies `input_tokens + 32 <= 16384`, and every
+Qasper arm satisfies `input_tokens + 128 <= 16384`; no completed row exceeds
+the physical budget. The method-selection ledger records Qasper as a
+post-policy-freeze endpoint and the final 2Wiki policy comparison as
+exploratory bundled-policy evidence.
 
 ## 5. Results
 
@@ -249,7 +257,7 @@ does not turn RULER into evidence of unseen natural-task transfer.
   `21/21` before the full 2Wiki run.
 - No model parameter was added or trained.
 
-## 7. Evidence boundary and paper decision
+## 7. Evidence boundary and manuscript routing
 
 This is a strong internal result on one released 1.485B checkpoint.  It uses
 deterministic zero-training operators, so there are no training seeds to pool,
@@ -257,8 +265,8 @@ but evaluation sampling is still limited: most formal cells contain 20 rows.
 The 200-row 2Wiki and Qasper results are broader for two tasks only. No
 statistical significance or cross-model universality is claimed.
 
-The method should be promoted to the paper only after the owner and manuscript
-are updated together.  The outward claim ceiling is:
+The owner and manuscript were updated together on 2026-08-24. The outward
+claim ceiling remains:
 
 > A mature checkpoint can preserve its Native short-context path exactly while
 > using one frozen non-geometric long-context profile selected only by whether
@@ -269,6 +277,6 @@ are updated together.  The outward claim ceiling is:
 
 The second mature checkpoint with a different Native window is now complete on
 the frozen Qwen RULER protocol and is owned by the same-support control report.
-The next high-value generalization, if this case study is promoted, is a frozen
-natural-context protocol on that checkpoint. Another OLMo table/gain sweep is
-not justified.
+The next high-value generalization would be a frozen natural-context protocol
+on that checkpoint. It is not currently authorized; another OLMo table/gain
+sweep remains stopped.

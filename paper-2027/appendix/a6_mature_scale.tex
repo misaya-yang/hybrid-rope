@@ -5,8 +5,8 @@
 
 \subsection{OLMo-2 $1.485$B}
 
-All OLMo-2 \evq{} arms use endpoint quantisation with $\tau{=}2$ and base
-$500{,}000$; the frequency tensor is fixed throughout each continuation.
+All OLMo-2 \evq{} arms use the endpoint grid $u_k{=}k/K$ with $\tau{=}2$ and
+base $500{,}000$; the frequency tensor is fixed throughout each continuation.
 
 \paragraph{Matched routing conversion.}
 We use OLMo-2-0425-1B-Instruct \citep{olmo2furious} ($1.485$B actual
@@ -24,9 +24,9 @@ distinct autoregressive endpoints are kept separate in the discussion below
 and in Table~\ref{tab:ruler}.
 
 \paragraph{Selective Q/K phase adaptation.}
-To test a less intrusive mature-checkpoint adaptation, we start independently
-from the matched Native and \evq{} Stage-A parents, freeze every inherited V/O
-LoRA tensor (verified bitwise), and continue only the existing Q/K tensors for
+To test a less intrusive mature-checkpoint adaptation, we start from the
+protocol-matched Native and \evq{} Stage-A parents, freeze every inherited V/O
+LoRA tensor within each arm (verified bitwise), and continue only the existing Q/K tensors for
 $300$ steps. Both arms use the same $1{:}1{:}2$ mixture of continuous-$4$K,
 target-$8$K, and target-$16$K phase exposure, complete answer-plus-EOS
 supervision, and physical sequences no longer than $4$K; long phases again use
@@ -58,6 +58,59 @@ $16$K. This is one same-initialisation, same-scientific-recipe natural-text LM
 comparison; capability is evaluated by the separate autoregressive protocols
 above.
 
+\subsection{Frozen fixed-support allocation}
+\label{sec:frozen-fixed-support}
+
+\begin{table}[ht]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\caption{\textbf{Frozen fixed-support intervention.} Macro score (\%); higher
+is better. Each row is a separate fixed-checkpoint comparison on its stated
+RULER task set.}
+\label{tab:frozen-fixed-support}
+\begin{tabular}{@{}llrrr@{}}
+\toprule
+Checkpoint & Endpoint & Geometric & Movement ramp & Frozen derived \\
+\midrule
+OLMo-2 1.485B & unseen-nine, 16K & 0.56 & 61.04 & 60.47 \\
+Qwen2.5-1.5B & core-four, 64K & 57.75 & 64.00 & 66.50 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The mature-checkpoint intervention in Table~\ref{tab:frozen-fixed-support}
+holds both models frozen. For each checkpoint, all three tables contain
+$64$ rotary pairs and share the Native fast endpoint and the Native slow
+endpoint divided by four. They also share the factor-four attention amplitude
+$1+0.1\ln4$, evaluation rows, greedy decoder, precision, and hardware. The
+same-support geometric arm is log-linear between the endpoints. The nearest
+movement-profile ramp is the discrete YaRN-family linear ramp minimising
+movement-profile MSE to the frozen derived table; its choice uses no task
+labels. The remaining arm installs the frozen derived interior allocation.
+
+OLMo-2-0425-1B-Instruct uses nine confirmation-only RULER tasks at $16$K,
+$20$ rows per task. Qwen2.5-1.5B-Instruct uses the four development RULER tasks
+at $64$K, also with $20$ rows per task; it evaluates a factor-four table at
+twice the Native context length. Row resampling conditions on each fixed
+checkpoint and task set. Both non-geometric allocations produce the large OLMo
+recovery. The derived-minus-geometric intervals are $[54.88,64.80]$ points for
+OLMo and $[0.25,17.50]$ points for Qwen; the paired derived-minus-ramp intervals
+contain zero on both models. The control therefore attributes the effect to
+fixed-support reallocation while leaving profile-specific ordering unresolved.
+
+The complete OLMo deployment policy is a separate, bundled intervention: it
+uses exact Native when observed prefill plus generation reserve fits the Native
+window and otherwise chooses one frozen factor-four table and amplitude before
+prefill, without changing the route during the KV-cache lifetime. It adds no
+learned parameters or training tokens. On a post-policy-freeze, full-$200$
+Qasper evaluation at $16$K, this policy obtains token F1 $24.57\%$ versus
+$18.03\%$ for official Transformers YaRN factor four. Both arms use identical
+rows, and every post-chat input plus its $128$-token generation reserve fits
+within $16$K. This row evaluates the complete deployment policy on natural
+context; Table~\ref{tab:frozen-fixed-support} provides the allocation-only
+contrast.
+
 \subsection{LLaMA-3-8B-Instruct}
 
 The \evq{} arm in both LLaMA protocols uses midpoint quantisation with
@@ -68,10 +121,12 @@ The training objectives, adapters, and endpoints remain separate below.
 In the matched seed-$42$, $300$-step Q/K/V/O LoRA protocol, \evq{}-minus-Native
 NLL is $+0.390/-1.510/-2.048$ at $8$/$16$/$32$K. On ten frozen true-$16$K
 passkey cases, median target-block hit@16 over $32$ retrieval heads rises from
-$18.75\%$ to $64.06\%$. Removing the remote gold block from every head changes
-NLL by $-0.0095$ for Native and $+1.5055$ for \evq{}. These are matched
-teacher-forced probability and causal-routing measurements; autoregressive
-task accuracy is evaluated separately. Descriptive Native/\evq{} PPL is
+$18.75\%$ to $64.06\%$. Blocking answer-side decode attention to the remote
+gold block in every head preserves all prompt tokens, original rotary KV
+indices, and the $128$-token block geometry; it changes NLL by $-0.0095$ for
+Native and $+1.5055$ for \evq{}. These are matched teacher-forced probability
+and position-preserving causal-routing measurements; autoregressive task
+accuracy is evaluated separately. Descriptive Native/\evq{} PPL is
 $6.817/10.068$, $108.958/24.068$, and $991.475/127.911$ at those lengths.
 
 \paragraph{RULER-family continuation.}

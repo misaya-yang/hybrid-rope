@@ -19,7 +19,7 @@ new inference-time operator family.
    `0.6047`. On Qwen at 64K, the corresponding scores are `0.5775` and
    `0.6650`.
 2. The detailed uniqueness profile is not identified as necessary. A
-   label-free nearest linear-ramp projection scores `0.6104` on OLMo and
+   label-free nearest movement-profile ramp scores `0.6104` on OLMo and
    `0.6400` on Qwen; its paired evaluation-row interval against the full
    profile includes zero on both models. The frozen-checkpoint contribution is
    therefore the model-relative derivation of the useful split location, not
@@ -76,8 +76,8 @@ checkpoint, evaluation rows, decoding, precision, and hardware fixed. They
 change only the interior `z`:
 
 - **geometric:** `z_k=k/(K-1)`, a pure log-linear table between the endpoints;
-- **nearest ramp:** the closest discrete YaRN-family linear ramp to the
-  derived table, selected from table distance without task labels;
+- **nearest movement-profile ramp:** the discrete YaRN-family linear ramp that
+  minimises movement-profile MSE to the derived table, without task labels;
 - **derived:** phase-resolved conditional uniqueness with model-relative
   resolution and exact endpoint pinning.
 
@@ -121,7 +121,7 @@ All cells contain 20 identical evaluation rows.
 | Native | 0.5450 |
 | official YaRN factor four | 0.6025 |
 | same-support geometric | 0.5775 |
-| nearest label-free ramp | 0.6400 |
+| nearest movement-profile ramp | 0.6400 |
 | **corrected derived allocation** | **0.6650** |
 
 The paired row bootstrap uses 20,000 within-task resamples with seed
@@ -131,12 +131,12 @@ checkpoint, model, or task-population uncertainty.
 | Contrast | Difference | 95% interval | Bootstrap mass at or below zero |
 | --- | ---: | --- | ---: |
 | derived - geometric | +0.0875 | [+0.0025, +0.1750] | 0.0233 |
-| derived - nearest ramp | +0.0250 | [-0.0525, +0.1000] | 0.2676 |
+| derived - movement-profile ramp | +0.0250 | [-0.0525, +0.1000] | 0.2676 |
 | derived - official YaRN | +0.0625 | [-0.0050, +0.1325] | 0.0349 |
-| nearest ramp - official YaRN | +0.0375 | [-0.0325, +0.1075] | not used for a claim |
+| movement-profile ramp - official YaRN | +0.0375 | [-0.0325, +0.1075] | not used for a claim |
 
 The decision gate passes for fixed-support `z` sensitivity and fails for
-profile-detail novelty. The full profile and its nearest ramp are practically
+profile-detail novelty. The full profile and its nearest movement-profile ramp are practically
 equivalent under the preregistered `0.03` gate.
 
 ### 3.2 OLMo-2-0425-1B, Native 4K, unseen-nine RULER at 16K
@@ -150,13 +150,13 @@ Every task contains 20 rows.
 | official YaRN factor four | 0.0794 |
 | same-support geometric | 0.0056 |
 | **derived allocation** | **0.6047** |
-| nearest label-free ramp | 0.6104 |
+| nearest movement-profile ramp | 0.6104 |
 
 | Contrast | Difference | 95% paired row-bootstrap interval |
 | --- | ---: | --- |
 | derived - geometric | +0.5992 | [+0.5488, +0.6480] |
-| nearest ramp - geometric | +0.6048 | [+0.5559, +0.6542] |
-| derived - nearest ramp | -0.0056 | [-0.0464, +0.0345] |
+| movement-profile ramp - geometric | +0.6048 | [+0.5559, +0.6542] |
+| derived - movement-profile ramp | -0.0056 | [-0.0464, +0.0345] |
 | derived - official YaRN | +0.5254 | [+0.4699, +0.5795] |
 
 The OLMo result makes the fixed-support causal claim much stronger: a scalar
@@ -230,7 +230,7 @@ The experiment answers the likely reviewer objection in layers:
    tables have identical endpoints; OLMo differs by `+0.599` macro.
 2. **Is it only YaRN amplitude?** No. Amplitude is identical in every control.
 3. **Is the detailed uniqueness curve itself the invention?** Not supported.
-   A nearest linear ramp matches it on both models.
+   A nearest movement-profile ramp matches it on both models.
 4. **Is the split task-tuned?** No. The ramp boundaries are a label-free
    projection of the frozen derived table: pairs `20->22` for OLMo and
    `28->31` for Qwen.
@@ -254,7 +254,7 @@ table rather than reconstructed from method names:
 | Does interior allocation matter in training? | support, recipe, seed pairing | FMRoPE versus anchored Cosh `z` | 151.9M three-seed exact-range |
 | Do weights learn that coordinate system? | frozen weights/table factorial | cross weights and runtime table | 50M 2x2 plus this 151.9M replication |
 | Does `z` still matter after pretraining? | support, amplitude, checkpoint, rows | geometric versus non-geometric `z` | this OLMo/Qwen study |
-| Is the detailed new curve necessary? | same controls | nearest ramp versus full profile | this study; answer is no |
+| Is the detailed new curve necessary? | same controls | nearest movement-profile ramp versus full profile | this study; answer is no |
 
 The introduction should not rely on the phrase “non-geometric is new.” It
 should define `z` before naming EVQ-Cosh, say that prior scaling rules can also

@@ -35,9 +35,9 @@ $\bar c=\frac{1}{K(K-1)}\sum_{i\neq j}c_{\omega_i\omega_j}$ with
 $\|Q_{ij}\|_F^2=2c_{ij}$. Dividing gives \eqref{eq:budget-identity}.
 \end{proof}
 
-The identity is exact and involves only the mean of the pairwise redundancies;
-it does not claim that $\bar c$ determines the Shannon effective rank or the
-log-determinant, which retain higher-order multi-subspace dependence.
+The identity determines R\'enyi-$2$ rank exactly from the mean pairwise
+redundancy. Shannon effective rank and log-determinant retain higher-order
+multi-subspace dependence on the full spectrum.
 
 \begin{proof}[Proof of Proposition~\ref{prop:collapse}]
 With $t=\Delta/L$ and $x=\omega L$, $\cos(xt)=1-x^2t^2/2+O(x^4)$ and
@@ -57,8 +57,9 @@ three distances.
 
 The reported $r_2{=}2.00$ for the $23$ slow pairs uses the standard
 $u_k{=}k/K$ grid and the uniform separation
-prior above. Other priors change that static numerical Gram; the fixed-range
-trained-model contrast of \S\ref{sec:exp-identify} does not use this prior.
+prior above. Other priors change that static numerical Gram. The fixed-range
+trained-model contrast of \S\ref{sec:exp-identify} instead follows its paired
+empirical protocol.
 
 \subsection{Post-hoc transplant obstruction}
 \label{sec:obstruction-proof}
@@ -83,10 +84,9 @@ $\{e^{\pm i\omega_k}\}$ therefore agree, which identifies frequencies up to
 sign, permutation, and the $2\pi$ alias.
 \end{proof}
 
-This is an exact statement about \emph{fixed, position-independent, invertible}
-compensation. It does not bound approximate compensation obtained by retraining
-on finite data, nor does it constrain nonlinear maps or the V/O and residual
-paths.
+This exact statement covers \emph{fixed, position-independent, invertible}
+compensation. Approximate retraining on finite data, nonlinear maps, and changes
+to V/O or the residual path are separate intervention classes.
 
 \subsection{Proof of the closed-form variational optimum}
 
@@ -147,25 +147,24 @@ unknown trained-loss optimum.
 \subsection{Surrogate quality: functional validation}
 \label{sec:surrogate-validation}
 
-The broadband surrogate $K_{\mathrm{app}} = \alpha\delta + \beta\min$ is the
-primary approximation behind the closed-form density; selecting the pure-tether
-branch and a finite operating point are additional modeling choices. We test the
-surrogate functionally rather than pointwise against the closed-form cosine-feature kernel
+The broadband surrogate $K_{\mathrm{app}} = \alpha\delta + \beta\min$ supplies
+the closed-form density. We validate its allocation functionally against the closed-form cosine-feature kernel
 $K_{\cos}(\phi_1,\phi_2) = \int D(\Delta)\cos(\omega(\phi_1)\Delta)\cos(\omega(\phi_2)\Delta)\,d\Delta$:
 does the derived allocation also reduce the collision objective under $K$? This
-checks the direction selected by the homogeneous branch; it does not bound the
-omitted Fisher-forcing residual.
+directly tests whether the improvement direction survives the exact oscillatory
+kernel; the Fisher-forcing residual is analysed separately in
+\S\ref{sec:pure-tether-bound}.
 
-Table~\ref{tab:surrogate-validation} answers affirmatively. For a uniform distance prior $D(\Delta) = 1/L$ on $[0, L]$, we compute $K_{\cos}$ at the discrete allocation points for Geo and \evq{}, then evaluate the normalized collision score $C = \sum_{i<j} K_{ij}^2/(K_{ii}K_{jj})$ and effective spectral rank (exponential of the Shannon entropy of the eigenvalue distribution). These diagnostics use the inclusive grid $u_k=k/(K-1)$; they test the allocation direction but are not a direct validation of either the full block-whitened sin/cos objective or the deployed midpoint grid. The $12$ reported configurations comprise a six-length text sweep at fixed $b{=}500$K and $K{=}32$, two additional text bases at $L{=}2048$, and four video bases at $L{=}32$ and $K{=}16$; this is not a Cartesian sweep over every listed factor.
+Table~\ref{tab:surrogate-validation} answers affirmatively. For a uniform distance prior $D(\Delta) = 1/L$ on $[0, L]$, we compute $K_{\cos}$ at the discrete allocation points for Geo and \evq{}, then evaluate the normalized collision score $C = \sum_{i<j} K_{ij}^2/(K_{ii}K_{jj})$ and Shannon effective rank (the exponential of the eigenvalue distribution's Shannon entropy). The inclusive grid $u_k=k/(K-1)$ exposes the complete diagnostic interval. This exact-kernel test complements the phase-invariant full sin/cos geometry of Theorem~\ref{thm:budget}; trained midpoint tables are evaluated in \S\ref{sec:experiments}. The $12$ reported configurations comprise a six-length text sweep at fixed $b{=}500$K and $K{=}32$, two additional text bases at $L{=}2048$, and four video bases at $L{=}32$ and $K{=}16$.
 
 \begin{table}[ht]
-\caption{Functional surrogate check on the inclusive $u_k{=}k/(K{-}1)$ diagnostic grid. \evq{} reduces collision and increases effective rank under the closed-form cosine-feature kernel $K_{\cos}$ in all 12 tested configurations. This is a direction check, not a pointwise approximation, full-subspace validation, or deployed-grid identity test.}
+\caption{Functional surrogate check on the inclusive $u_k{=}k/(K{-}1)$ diagnostic grid. \evq{} reduces collision and increases Shannon effective rank under the closed-form cosine-feature kernel $K_{\cos}$ in all 12 tested configurations. Theorem~\ref{thm:budget} supplies the complementary phase-invariant full-subspace geometry; \S\ref{sec:experiments} evaluates trained midpoint tables.}
 \label{tab:surrogate-validation}
 \centering
 \small
 \begin{tabular}{@{}l r r r r r@{}}
 \toprule
-& \multicolumn{2}{c}{Collision $C$} & & \multicolumn{2}{c}{Eff.\ rank} \\
+& \multicolumn{2}{c}{Collision $C$} & & \multicolumn{2}{c}{Shannon rank} \\
 \cmidrule(lr){2-3} \cmidrule(lr){5-6}
 Configuration & Geo & \evq{} ($\Delta_C$) & & Geo & \evq{} \\
 \midrule
@@ -190,7 +189,7 @@ Configuration & Geo & \evq{} ($\Delta_C$) & & Geo & \evq{} \\
 \end{tabular}
 \end{table}
 
-\evq{} reduces collision under $K_{\cos}$ in all 12 configurations ($24\%$--$92\%$), and effective rank increases in every row. In the fixed-base text sweep, the relative reduction grows as $L$ shortens. The separate base sweeps remain positive but are not monotone in $b$.
+\evq{} reduces collision under $K_{\cos}$ in all 12 configurations ($24\%$--$92\%$), and Shannon effective rank increases in every row. In the fixed-base text sweep, the relative reduction grows as $L$ shortens. The separate base sweeps remain positive but are not monotone in $b$.
 
 \subsection{Single-crossing budget shift}
 \label{sec:budget-crossing-proof}
@@ -264,7 +263,8 @@ Combining,
 \mathcal{W}(\rho_\tau) \;=\; \left(\frac{\alpha}{45}+\frac{2\beta}{945}\right)\tau^4 + O(\tau^6),\qquad \mathcal{W}(\rho_{\tau_*}) \;=\; O\!\left(\frac{d_{\mathrm{head}}^4}{(L_{\mathrm{eff}}^{J})^2}\right).
 \label{eq:waterbed-evq-scale}
 \end{equation}
-The centered companion functional is $O(\tau^4)$. It is not the value difference of $\mathcal{C}_{\mathrm{app}}$ itself and does not determine trained-model NLL.
+The centered companion functional is $O(\tau^4)$. The value difference of
+$\mathcal{C}_{\mathrm{app}}$ and trained-model NLL are evaluated separately.
 
 \subsection{Surrogate self-consistency theorem}
 \label{sec:self-consistency}
@@ -309,7 +309,8 @@ This follows by substituting
 $T_1(\tau)=\tau^2(1+\sinh(2\tau)/(2\tau))/(2\sinh^2\tau)$ and
 $\rho(0)=\tau\coth\tau$ into the theorem.
 
-The identity is an exact internal check on the two surrogate energy terms; it makes no trained-loss claim.
+The identity checks the two surrogate energy terms exactly; trained-loss
+evidence is supplied by \S\ref{sec:experiments}.
 
 \subsection{From scaling structure to an operating default}
 \label{sec:lambda-cv}
@@ -326,27 +327,28 @@ Its leading stationary balance is
 Thus the model supplies the powers of $d_{\mathrm{head}}$ and $L$; the
 finite coefficient $c(\Pi)=\sqrt{45\lambda Q_1}$ depends on the chosen
 utility, base, and protocol. Setting $c{=}1$ is the deployed zero-search
-convention, not an independently derived constant.
+convention fixed before training; the finite coefficient remains
+protocol-dependent.
 
 Here
 \[
 q(x)=\tfrac12+\frac{\sin(2x)}{4x}-\left(\frac{\sin x}{x}\right)^2
 =\operatorname{Var}_{t\sim U[0,1]}[\cos(xt)]
 \]
-and $Q_1(L,b)=\int_0^1\eta(\phi)q(Lb^{-\phi})\,d\phi$. This is a
-specified phase-variance utility. It should not be identified with the exact
-oscillatory collision objective or the trained-transformer loss.
+and $Q_1(L,b)=\int_0^1\eta(\phi)q(Lb^{-\phi})\,d\phi$. This specified
+phase-variance utility supplies the scaling model; the exact oscillatory
+collision objective and trained-transformer loss are evaluated separately.
 
-The finite-$\tau$ evidence tests a configuration-independent zero-search prior
-rather than a per-configuration point optimum. In a staged 99-run study, the
+The finite-$\tau$ evidence evaluates a configuration-independent zero-search
+prior. In a staged 99-run study, the
 default beats the midpoint-discretised Geo baseline in $7/9$ configuration
 means and $18/27$ seed pairs. The evaluated neighbours use the discrete ratios
 $0.75\times$, $1.25\times$, or $1.5\times$ of the formula; the independent
 exact-range factorial tests $0.75\times$, $1.00\times$, and $1.25\times$.
-Their ordering varies across configurations. These are tested multipliers, not
-bounds on a continuous basin. The evidence supports $c{=}1$ as a useful
-zero-search prior relative to that Geo baseline; it does not identify a
-per-configuration point optimum.
+Their ordering varies across configurations. These tested multipliers sample
+the formula point and its registered neighbours. The evidence supports $c{=}1$ as a useful
+zero-search prior relative to that Geo baseline. Continuous basin boundaries
+and per-configuration point optima remain outside this discrete design.
 
 \subsection{Scaling analysis of \texorpdfstring{$\tau^*$}{tau*}: from surrogate to operating point}
 \label{sec:tau-scaling}
@@ -365,16 +367,15 @@ Substituting into $\tau_{\mathrm{surr}} = \sqrt{\beta/\alpha}$:
 \begin{equation}
 \tau_{\mathrm{surr}} = \sqrt{\beta \cdot d_{\mathrm{head}}} \;\sim\; \sqrt{d_{\mathrm{head}}} \cdot L^{-0.11}.
 \end{equation}
-This fitted-ratio scaling is neither the deployed rule nor evidence for it. The
-broadband surrogate selects the Cosh family; the separate post-softmax model in
+This fitted-ratio scaling is an explanatory diagnostic. The broadband
+surrogate selects the Cosh family; the separate post-softmax model in
 Proposition~\ref{prop:softmax-transport} balances an $O(\tau^2)$ utility with
 an $O(\tau^4)$ stiffness and yields
 \begin{equation}
 \tau_*^2 \propto \frac{d_{\mathrm{eff}}^2}{L}.
 \end{equation}
-The equality $c{=}1$ in the deployed rule is then evaluated by trained-model
-controls as described in \S\ref{sec:lambda-cv}; it is not obtained from the
-fitted $\beta/\alpha$ ratio.
+The trained-model controls in \S\ref{sec:lambda-cv} evaluate the independently
+fixed choice $c{=}1$.
 
 \subsection{Post-softmax operating-point model}
 \label{sec:softmax-transport}
@@ -403,16 +404,14 @@ of $\mathcal{F}(\tau) = \tfrac12 S_{\chi^2}(\tau) - \lambda U(\tau,L)$ satisfies
 The explicit $\dhd/\sqrt{L}$ factor is modulated by $Q_1(L,b)$, so this is a
 scaling structure rather than a pure power law, and the prefactor
 $c(\Pi){=}\sqrt{45\lambda Q_1(L,b)}$ remains convention- and
-protocol-dependent. Two caveats bound what the proposition supports. The
-expansion is a small-$\tau$ statement, whereas the deployed configurations use
-$\tau$ near $4$; at those values the exact cosh warp is evaluated directly and
-the series only motivates the functional form. The diffuse baseline $p_0{=}1/L$
-is also a modelling assumption: trained attention is neither uniform nor
-stationary across heads, and the softmax-Jacobian effective window
-$L_{\mathrm{eff}}^J$ of \S\ref{sec:leff-derivation} is the object that would
-replace it, but we do not measure it here. The deployed $c{=}1$ is therefore an
-empirical operating default, evaluated by the trained-model controls of
-\S\ref{sec:exp-tau}, not a consequence of this proposition.
+protocol-dependent. The proposition supplies a small-$\tau$ scaling model; the
+deployed configurations near $\tau{=}4$ use the exact Cosh warp, with the series
+motivating its functional form. Its diffuse baseline $p_0{=}1/L$ is a modelling
+assumption. The softmax-Jacobian effective window $L_{\mathrm{eff}}^J$ of
+\S\ref{sec:leff-derivation} gives the corresponding attention-conditioned
+object for non-uniform, head-dependent attention. The trained-model controls in
+App.~\ref{sec:identification-details} evaluate the independently fixed empirical
+default $c{=}1$.
 
 \subsection{Stiffness functional derivation}
 \label{sec:stiffness-derivation}
@@ -449,7 +448,7 @@ S_{\chi^2}(\tau) = \frac{1}{d_{\mathrm{head}}}\!\left[\frac{\sinh\tau\cdot\arcta
 \end{equation}
 verified numerically to relative error ${<}7{\times}10^{-6}$.
 
-\paragraph{Exponent-matched diagnostic.} As a sensitivity analysis, one can ask which member of the $S_p$ family would match the target exponent $\tau_* \propto 1/\sqrt{L}$ exactly over this grid. The resulting $S_{\mathrm{derived}}(\tau)$ lies near $p \approx 0.85$ (high-resolution sweep; consistent with $0.80$ from the coarser grid), close to but distinct from the Pearson $\chi^2$ choice $p{=}1$. We do not use this as a derivation of the stiffness; it is reported as sensitivity analysis. The full sweep is reproduced by \texttt{scripts/analysis/verify\_stiffness\_and\_regime.py} (pure NumPy, ${\sim}60$s).
+\paragraph{Exponent-matched diagnostic.} As a sensitivity analysis, one can ask which member of the $S_p$ family would match the target exponent $\tau_* \propto 1/\sqrt{L}$ exactly over this grid. The resulting $S_{\mathrm{derived}}(\tau)$ lies near $p \approx 0.85$ (high-resolution sweep; consistent with $0.80$ from the coarser grid), close to but distinct from the Pearson $\chi^2$ choice $p{=}1$. This diagnostic records exponent sensitivity; the channel-load argument above supplies the stiffness. The full sweep is reproduced by \texttt{scripts/analysis/verify\_stiffness\_and\_regime.py} (pure NumPy, ${\sim}60$s).
 
 \subsection{Effective window \texorpdfstring{$L_{\mathrm{eff}}^{J}$}{L\_eff\^J} via softmax-Jacobian Rayleigh quotient}
 \label{sec:leff-derivation}
@@ -475,7 +474,7 @@ g_i^{(\tau)}(j) \;=\; \frac{1}{s_{\mathrm{att}}\tau^2}\operatorname{Re}\sum_{k=1
 \end{equation}
 with $g_i(j) = \lim_{\tau\to 0} g_i^{(\tau)}(j)$.
 
-\paragraph{Primary definition: Rayleigh quotient of the softmax Jacobian.}
+\paragraph{Attention-conditioned definition: Rayleigh quotient of the softmax Jacobian.}
 For the trained attention distribution $p_i(j)$ on keys $j\!\in\!\mathcal{K}_i$, $J_{\mathrm{sm}}(p_i) = \mathrm{diag}(p_i) - p_ip_i^\top$ satisfies
 $g_i^\top J_{\mathrm{sm}}(p_i) g_i = \mathrm{Var}_{j\sim p_i}[g_i(j)] = \tfrac{1}{2}\sum_{j,k} p_i(j)p_i(k)(g_i(j)-g_i(k))^2.$
 Since $J_{\mathrm{sm}}(p_i)\mathbf{1}{=}0$, we center $g_i$ by the key-wise mean operator $P_i$. The effective length is then defined by the \emph{ratio-of-means}
@@ -489,10 +488,9 @@ $D_{\mathrm{KL}}(p\|p_\epsilon)=\tfrac12\epsilon^2g^\top
 J_{\mathrm{sm}}(p)g+O(\epsilon^3)$, and for diffuse $p{=}1/L$ the quotient
 reduces to $1/L$. The phase-variance utility $Q_1$ in
 Proposition~\ref{prop:softmax-transport} is a distinct pairwise positional
-functional. Replacing its $1/L$ factor by $1/L_{\mathrm{eff}}^J$ is therefore
-a possible attention-conditioned refinement rather than a consequence of the
-KL identity. The empirical claims in this paper use the registered
-length-based operating rule.
+functional. Replacing its $1/L$ factor by $1/L_{\mathrm{eff}}^J$ defines a
+possible attention-conditioned refinement. The empirical claims in this paper
+use the registered length-based operating rule.
 
 \subsection{Pure-tether branch: Fisher-forcing coefficient and residual bound}
 \label{sec:pure-tether-bound}
@@ -531,7 +529,7 @@ and the CDF-level error is $\|F_{\mathrm{full}}-F_{\mathrm{EVQ}}\|_\infty \le \|
 \|\phi_{\mathrm{full}}-\phi_{\mathrm{EVQ}}\|_\infty \;\le\; \frac{\|\delta\rho_{F}\|_1}{\inf_\phi \rho_{\mathrm{full}}(\phi)}, \qquad \inf_\phi \rho_{\mathrm{EVQ}}(\phi) \;=\; \frac{\tau}{\sinh\tau},
 \label{eq:warp-bound}
 \end{equation}
-so, when the residual is small enough that $\rho_{\mathrm{full}}$ remains positive and comparable to $\rho_{\mathrm{EVQ}}$, CDF perturbations can be amplified at the scale $\sinh\tau/\tau$. The bound does not justify omitting the forcing branch at large $\tau$.
+so, when the residual is small enough that $\rho_{\mathrm{full}}$ remains positive and comparable to $\rho_{\mathrm{EVQ}}$, CDF perturbations can be amplified at the scale $\sinh\tau/\tau$. The forcing branch must therefore be retained when applying this bound at large $\tau$.
 
 \paragraph{Dimensionless diagnostic.} Using $\|\rho_{\mathrm{EVQ}}-1\|_2 = \tau^2/\sqrt{45}+O(\tau^4)$ and $\Gamma_b \coloneqq (\lambda_F\bar\eta_F/\alpha)\,s^2/(|s^2-\tau^2|\tau^2)$, the $L^2$-level ratio is
 \begin{equation}
@@ -559,11 +557,12 @@ so dropping the forcing term is $O(\gamma(b)^2)$: if $R_F\!\le\!r$, the missed c
 S(\rho) \;=\; \mathrm{Var}_{\phi\sim\rho\,d\phi}\!\left[\,\tfrac{1}{\rho(\phi)}\,\right] \;=\; \int_0^1 \frac{(1-\rho(\phi))^2}{\rho(\phi)}\,d\phi \;=\; S_{\chi^2}(\rho).
 \label{eq:chi2-load-identity}
 \end{equation}
-We treat this as a canonical motivated choice under the stated axioms, not a uniqueness claim.
+Under the stated axioms, this gives a canonical motivated choice; alternative
+axioms may select other stiffness functionals.
 
 \paragraph{Load-moment exponent.} Distinct from the weighted-$L^2$ family $S_p(\tau){=}\frac{1}{d_{\mathrm{head}}}\int(\rho_\tau{-}1)^2/\rho_\tau^p\,d\phi$ used in Table~\ref{tab:stiffness-sweep} (where Pearson $\chi^2$ is $p{=}1$), we also examine a load-moment family $S^{\mathrm{mom}}_p(\rho){=}\mathbb{E}_\rho[(1/\rho{-}1)^p]$. Substituting the \evq{} density and minimizing $S^{\mathrm{mom}}_p{-}\lambda U$ gives $\tau^{2(p-1)}\asymp d_{\mathrm{head}}^2/L_{\mathrm{eff}}^{J}$, hence $\tau^{*}\propto (L_{\mathrm{eff}}^{J})^{-1/(2p-2)}$; only $p{=}2$ yields the observed $L^{-1/2}$ exponent within this family. The two families parametrize different $f$-divergence neighborhoods and need not match on the finite-$\tau$ grid.
 
-\paragraph{$f$-divergences at finite $\tau$.} Smooth $f$-divergences (KL, Jeffreys, R\'enyi) are locally quadratic around $\rho{=}1$. Over the finite grid used in Table~\ref{tab:stiffness-sweep}, however, their fitted exponents range from $0.58$ to $0.81$. This is model sensitivity, not a trained-PPL comparison.
+\paragraph{$f$-divergences at finite $\tau$.} Smooth $f$-divergences (KL, Jeffreys, R\'enyi) are locally quadratic around $\rho{=}1$. Over the finite grid used in Table~\ref{tab:stiffness-sweep}, however, their fitted exponents range from $0.58$ to $0.81$. This spread records model sensitivity; trained PPL is evaluated in \S\ref{sec:experiments}.
 
 \subsection{Discrete-channel transport gap and the MLA channel-scarcity mechanism}
 \label{sec:discrete-continuous-gap}
@@ -607,7 +606,10 @@ and $K{=}32$; the MLA study has $d_{\mathrm{head}}{=}64$,
 $d_{\mathrm{rope}}{=}32$, $d_{\mathrm{nope}}{=}32$ and $K{=}16$. Halving
 $K$ scales the $K^{-2}$ component of the distortion bound by $4\times$ and
 the $K^{-1}$ component by $2\times$. The observed MLA gain
-(\S\ref{sec:mla-results}) is a test of the predicted direction, not a controlled
-quantitative test of either bound.
+(\S\ref{sec:mla-results}) supplies a trained-model test of the predicted
+direction.
 
-\paragraph{Caveat.} At large $\tau$, $m_\tau{=}\tau/\sinh\tau$ becomes small and the $1/(Km_\tau)$ factor grows. The transport bounds can therefore become vacuous in the same regime where the Fisher-residual analysis no longer guarantees a small warp error (\S\ref{sec:pure-tether-bound}).
+\paragraph{Large-$\tau$ regime.} At large $\tau$,
+$m_\tau{=}\tau/\sinh\tau$ becomes small and the $1/(Km_\tau)$ factor grows.
+The transport bounds are informative while this factor and the Fisher residual
+remain controlled (\S\ref{sec:pure-tether-bound}).

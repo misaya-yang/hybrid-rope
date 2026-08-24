@@ -1,10 +1,11 @@
 \section{Experiments}
 \label{sec:experiments}
 
-The fixed-support control first isolates allocation from support. We then ask
-whether the same intervention remains consequential when rotary channels are
-scarce, when range scaling is applied, and when models are obtained by
-continuation or adaptation. Each protocol retains its own metric and control.
+The experiments follow the theory's dependency chain. A fixed-support control
+identifies allocation; architecture and scale studies test the resulting table
+where the finite budget matters; mature-model protocols test whether the same
+design choice remains actionable and reaches remote content. Each comparison
+retains its own metric and control.
 
 %% =========================================================================
 \subsection{Identifying allocation at fixed support}
@@ -31,14 +32,19 @@ $-0.281/-0.176/-0.146$ at $512$/$1$K/$2$K
 once the sampled support is pinned: \emph{fixed support $+$ different $z$
 $\Rightarrow$ different trained-model behaviour.}
 
+The companion target-retargeted condition changes the preferred allocation,
+confirming that support and allocation are distinct but interacting coordinates
+(App.~\ref{sec:identification-details}).
+
 \paragraph{Cross-configuration and shape breadth.}
 A pre-specified $50.9$M factorial then spans two bases, two training lengths,
-three head dimensions, and three paired seeds. Across its $12$ structural
-configurations, anchored \evq{} at $1.25\times$ rule strength and a deformation-matched exponential favour
-non-uniform allocation in $10/12$ and $9/12$ cases
-(App.~Table~\ref{tab:m4}). The $151.9$M control supplies the replicated direct
-effect; the matched exponential shows that the direction is not tied to \evq{}
-alone. Full results appear in App.~\ref{sec:identification-details}.
+three head dimensions, and three paired seeds. A $1.25\times$ Cosh warp and a
+deformation-matched exponential favour non-uniform allocation in $10/12$ and
+$9/12$ structural configurations (App.~Table~\ref{tab:m4}). The $151.9$M
+control supplies the replicated direct effect; the factorial tests the broader
+prediction that reallocating finite support matters across analytic shapes.
+Full results, including the formula point and neighbouring multipliers, appear
+in App.~\ref{sec:identification-details}.
 
 %% =========================================================================
 \subsection{A finite budget survives architecture, range scaling, and scale}
@@ -53,13 +59,13 @@ $138.8/95.6$: a $31.1\%$ reduction, with every seed favouring \evq{}
 directly links the finite-$K$ view to a scarce-budget stress test.
 
 \paragraph{Range composition.}
-Allocation remains visible after applying the same range operator. In a $454$M
-three-seed MHA study, a fixed \rs{} operator raises $8$K teacher-forced
+The training-time table changes what the same range operator can recover. In a
+$454$M three-seed MHA study, a fixed \rs{} operator raises $8$K teacher-forced
 retrieval from $41\%$ to $61\%$ on Geo and from $53\%$ to $100\%$ on \evq{}
 (App.~Table~\ref{tab:evq-ramp}). The operator is identical; its leverage depends
 on the table that shaped the weights during training.
 
-\paragraph{Continuation and training-scale trend.}
+\paragraph{Continuation and full-parameter scale evidence.}
 The crossover also appears after full-parameter continuation. Starting both
 $750$M arms from a shared $2$K Geo checkpoint and continuing all parameters for
 $500$M tokens at $4$K gives Geo/\evq{} PPL $22.0/22.3$ at $4$K but
@@ -68,17 +74,26 @@ from $0\%$ to $77.5\%$ (App.~Table~\ref{tab:750m}). At $1.485$B, a
 same-initialisation, same-scientific-recipe from-initialisation comparison with
 a $2.097$B-token budget crosses in favour of \evq{} at $8$K and $16$K;
 $122/128$ and $126/128$ held-out documents favour it at those lengths. Exact
-PPL values and protocol details appear in App.~\ref{sec:mature-details}. This is
-the end of the full-parameter training-scale trend; the $8$B evidence below is
-adaptation.
+PPL values and protocol details appear in App.~\ref{sec:mature-details}. Both
+larger protocols exhibit the same effective-context crossover: Geo retains the
+lower in-window PPL, while \evq{} overtakes it at longer lengths. Together they
+carry the full-parameter scale evidence through $1.485$B.
+
+\paragraph{Frozen checkpoints.}
+\label{sec:exp-frozen-support}
+At fixed support and attention amplitude, changing only interior $z$ raises
+macro score from $0.56\%$ to $60.47\%$ on OLMo-2 at $16$K and from $57.75\%$
+to $66.50\%$ on Qwen2.5 at $64$K. These released-checkpoint interventions show
+that allocation remains actionable after pretraining
+(App.~\ref{sec:frozen-fixed-support}).
 
 %% =========================================================================
 \subsection{From effective context to remote-content use}
 \label{sec:exp-capability}
 
 \paragraph{$1.485$B real-document QA.}
-Starting from the two OLMo-2 Stage-A parents, both arms freeze inherited V/O
-LoRA and continue only Q/K for $300$ steps with identical data, order,
+Starting from protocol-matched Native and \evq{} OLMo-2 Stage-A parents, both
+arms freeze inherited V/O LoRA and continue only Q/K for $300$ steps with identical data, order,
 optimiser, trainable count, and $4$K/$8$K/$16$K phase exposure; physical
 sequences remain at most $4$K. On held-out 2WikiMultiHopQA, Native/\evq{}
 token-F1 is $25.99/24.84\%$ at $4$K, $0.07/21.48\%$ at $8$K, and
@@ -97,26 +112,13 @@ uses the same adaptation pipeline for Native and \evq{}. PPL is $6.82/10.07$,
 $108.96/24.07$, and $991.48/127.91$ at $8$/$16$/$32$K, with the long-range
 direction holding on all $24$ frozen natural-text packs and all three source
 domains. More importantly, at true $16$K, median target-block hit@16 rises
-from $18.75\%$ to $64.06\%$, and deleting the remote gold block changes NLL by
-$-0.0095/+1.5055$. The deletion intervention shows that the improved
-long-position probability depends on the remote source rather than a local
-readout artifact. The task-family continuation is reported in
-App.~\ref{sec:mature-details}.
+from $18.75\%$ to $64.06\%$. Blocking answer-side decode attention to the remote
+gold block in every head, while preserving all prompt tokens and rotary KV
+indices, changes NLL by $-0.0095/+1.5055$. This position-preserving intervention
+shows that the improved long-position probability depends on the remote source
+rather than a local readout artifact. The task-family continuation is reported
+in App.~\ref{sec:mature-details}.
 
 A two-seed $129.6$M video DiT also favours \evq{} on training, all-frame
 extrapolation, and far-frame MSE in both runs
 (App.~\ref{sec:video-dit}), extending the evidence to bidirectional 3D RoPE.
-
-%% =========================================================================
-\subsection{Beyond a single formula}
-\label{sec:exp-tau}
-
-Two controls separate the allocation effect from the particular \evq{} formula.
-A deformation-matched exponential improves in $9/12$ factorial configurations,
-while the three pre-specified \evq{} multipliers ($0.75\times$, $1.00\times$,
-$1.25\times$) all reduce aggregate weighted OOD NLL relative to Geo. Their
-ordering varies by configuration, so $c{=}1$ is used as a zero-search operating
-prior rather than a tuned point optimum. Non-uniform allocation supplies the
-empirical direction, and \evq{} supplies a closed-form member of that design
-space. Full multiplier, boundary, and matched-shape results appear in
-App.~\ref{sec:identification-details}.

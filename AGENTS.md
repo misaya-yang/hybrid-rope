@@ -73,52 +73,38 @@ Keep these stable distinctions:
 | RULER/NIAH | Task-family adaptation, not unseen-task transfer |
 | LeRoPE oracle | The unsigned structural-curvature `w^(1/3)` profile failed as a predictor of the published LeRoPE shape; internal only |
 
-### Failure-prevention rules
+### Reviewer-facing writing and failure prevention
 
-- A finite set of tested values is not a continuous interval. Never turn
-  discrete multipliers, selected neighbours, or extrema into a ``basin,''
-  upper/lower bounds, interpolation guarantee, or near-optimality claim unless
-  the canonical owner directly establishes that object.
-- Read the canonical/raw owner before adopting any number or interpretation
-  from a review, rebuttal playbook, historical audit, accepted-paper example,
-  or handoff. Those sources may guide presentation; they cannot upgrade the
-  evidence.
-- Correct appendix proofs and derivations are scientific assets. The appendix
-  is outside the nine-page body limit: do not delete sound theory merely to
-  reduce reviewer attack surface or total PDF length. Remove appendix material
-  only when it is false, duplicated, obsolete, or lower-value than a verified
-  replacement, after checking references and owner status.
-- Do not use variance, confidence intervals, or noise scales from another
-  protocol to call a comparison statistically indistinguishable. Statistical
-  language must use the same estimand, experimental unit, and matched owner.
-- Improve rhetoric by ordering discovery, problem, theory, and decisive
-  evidence. Do not convert internal audit language into manuscript prose, and
-  do not solve defensive writing by hiding evidence or weakening the proof
-  archive.
-
-Write for a busy reviewer:
-
-- Lead with one story, the strongest theorem, and the decisive result for each
-  causal layer. Explain the consequence of every theorem in plain language.
-- Use the allowed nine pages by replacing lower-leverage material, not stacking
-  additions. Do not claim unsupported SOTA, universality, significance, or
-  causality.
-- Internal owners/audits record all material negatives and uncertainty.
-  Outward text selects decision-relevant facts and narrows claims instead of
-  volunteering internal negatives, failed probes, future plans, or speculative
-  objections. Never hide requested evidence, misstate a protocol, or exceed an
-  owner's claim.
-- A decisive controlled single-seed result is usable when its owner records
-  seed scope. Do not advertise planned replication or demote completed evidence
-  merely because more seeds are planned. When replication finishes, update the
-  owner first; never splice incompatible protocols or relabel old evidence as
-  multi-seed.
-- The AI-use statement has author-confirmed factual coverage of the venue's
-  required and recommended categories. Do not shorten, narrow, or cosmetically
-  rewrite that coverage without renewed author confirmation and a current
-  policy check.
-- Apply external review advice only after verification and only when it affects
-  score ceiling, technical credibility, comprehension, or validity.
+- Tell one memorable story: counterintuitive observation, controlled
+  identification, exact mechanism/theory, minimal construction, then
+  consequences. Lead each causal layer with its decisive result and explain the
+  practical meaning of every theorem.
+- Read the canonical/raw owner before using any number or interpretation from a
+  review, rebuttal, audit, accepted-paper example, or handoff. These sources may
+  improve presentation; they cannot upgrade evidence.
+- State the strongest bounded claim the evidence supports. Do not volunteer
+  internal negatives, failed probes, plans, or speculative objections, but
+  never hide requested evidence, alter a protocol, or exceed the owner.
+- Judge defensive prose semantically. Keep strong contrasts such as ``not a
+  disguised base change'' and keep theorem/protocol scope beside the governed
+  claim; rewrite or remove only repetitive self-disqualification. Do not impose
+  a lexical ban or collect every boundary into a limitations inventory.
+- A finite multiplier grid establishes only its tested points. It does not
+  create a continuous basin, bounds, interpolation guarantee, near-optimality,
+  or a global optimum. Statistical language must use the same estimand,
+  experimental unit, and owner rather than borrowing uncertainty from another
+  protocol.
+- Correct appendix proofs are assets outside the nine-page body limit. Remove
+  them only when false, duplicated, obsolete, or replaced by verified stronger
+  material; never cut sound theory merely to reduce total pages or attack
+  surface.
+- Use the body budget by replacing low-leverage material, not stacking it. Do
+  not claim unsupported SOTA, universality, significance, or causality.
+- A controlled single-seed result remains usable when its scope is recorded.
+  Do not advertise planned replication or demote completed evidence; update the
+  owner first when replication finishes and never splice incompatible runs.
+- Preserve the author-confirmed AI-use statement unless renewed confirmation
+  and a current venue-policy check authorize a change.
 
 ### Locked nomenclature
 

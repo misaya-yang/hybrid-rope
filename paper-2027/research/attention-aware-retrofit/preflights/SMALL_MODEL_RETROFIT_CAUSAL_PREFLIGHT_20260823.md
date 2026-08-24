@@ -1,7 +1,9 @@
 # 151.9M weights-by-runtime-table retrofit audit
 
 - **Registered:** 2026-08-23 before GPU execution
-- **Status:** planned inference-only evaluation
+- **Status at registration:** planned inference-only evaluation
+- **Current status:** executed; superseded by
+  `../results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`
 - **Purpose:** extend the existing weights-by-table co-adaptation diagnosis to
   the raw-hash-receipted 151.9M exact-range checkpoints; supporting mechanism
   only, not a new paper pillar

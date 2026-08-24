@@ -2,6 +2,8 @@
 
 - **Date:** 2026-08-22
 - **Status:** CPU-only analysis complete; no checkpoint loaded, no GPU, no training
+- **Current routing:** historical mechanism analysis; its experiment suggestion
+  is superseded by the stop list in `../../README.md`
 - **Evidence role:** internal mechanism analysis and candidate-table screen.
   It is a frequency-table result under an isotropic content model, never a task,
   capability, or checkpoint result.
@@ -153,7 +155,7 @@ identity.
 - No claim here supersedes any canonical owner, and nothing in this note is
   manuscript evidence.
 
-## 7. Consequence for the next experiment
+## 7. Historical experiment consequence
 
 The registered ADaRoPE tournament
 (`../preflights/PHASE_ADAROPE_LORA_PREFLIGHT_20260822.md`)

@@ -380,10 +380,10 @@ theory on top of the old surrogate-heavy narrative.
 - Page budget: the body is already nine pages; every addition needs a named
   replacement.
 
-## 11. Next action
+## 11. Durable review boundary
 
-Keep the architecture fixed while independent AI cross-reviews are pending.
-When the user supplies them, treat them as adversarial hypotheses: verify each
+Current actions are owned only by `../HANDOFF.md`. Treat future independent AI
+cross-reviews as adversarial hypotheses: verify each
 alleged defect against the PDF, source, theorem, and owner; rank only verified
 issues by positive-reviewer score ceiling, technical-reviewer score ceiling,
 human readability, and submission validity. Make replacement-level changes

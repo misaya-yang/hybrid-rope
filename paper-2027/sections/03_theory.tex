@@ -112,9 +112,11 @@ $\omega L\le1$ occupy $46$ nominal dimensions but have block-whitened
 $r_2 = 2.00$. Thus more than one third of the rotary pairs spend $46$ nominal
 dimensions on approximately two effective positional dimensions. The channels
 may still carry content; the geometric redundancy tax is that many of them
-describe almost the same positional directions. Full-subspace geometry makes
-that tax phase invariant and applies directly to the $b{=}256$ exact-range
-control.
+describe almost the same positional directions. Proposition~\ref{prop:collapse}
+characterises the severe slow-band limit. The fixed-support identification also
+covers settings outside that asymptotic regime: in its $b{=}256$ control no
+sampled pair lies deep in the limit, and Theorem~\ref{thm:budget} measures
+overlap over the full table.
 
 \begin{figure}[tb]
   \centering
@@ -132,21 +134,22 @@ control.
 \subsection{The table is a training-time coordinate system}
 \label{sec:coordinate}
 
-Theorem~\ref{thm:budget} constrains what a table can express. It does not
-predict what a trained model does with one, and the gap is not small. In a
-frozen $50$M diagnostic ($L{=}512$, $b{=}5{\times}10^5$,
-$\tau_{\mathrm{EVQ}}{=}2.83$; no training, no gradient) we cross two trained
-weight sets with two runtime tables
+Theorem~\ref{thm:budget} measures the geometry available to a table; trained
+behaviour additionally depends on the coefficients learned in that basis. To
+separate the two, we cross two trained $50$M weight sets with two runtime
+tables at $L{=}512$, $b{=}5{\times}10^5$, and
+$\tau_{\mathrm{EVQ}}{=}2.83$. All parameters remain frozen throughout this
+diagnostic
 (Table~\ref{tab:coadapt}). Substituting \evq{} for the geometric table at
 inference \emph{raises} the block-whitened $r_2$ from $4.57$ to $12.54$
 while perplexity degrades from $7.14$ to $76.20$.
 
 \input{tables/table_coadapt}
 
-Two consequences discipline the rest of the paper. First, static criteria such
-as collision, effective rank, and log-determinant do not by themselves predict
-trained quality, so every task claim in \S\ref{sec:experiments} is made on
-trained models. Second, the two \emph{self-consistent} systems are essentially
+Two consequences discipline the rest of the paper. First, collision, effective
+rank, and log-determinant describe the table without its learned coefficients;
+the task claims in \S\ref{sec:experiments} are therefore established on trained
+models. Second, the two \emph{self-consistent} systems are essentially
 tied in-window ($7.14$ vs.\ $7.16$) while both mismatched cells collapse: on LM
 loss the table and weight main effects are $+0.599$ and $-0.597$, and their
 interaction contrast is $-3.537$ (configuration-level bootstrap
@@ -166,11 +169,10 @@ full equal-frequency invariant subspace.
 The proof is short: $\Delta{=}0$ gives $A^\top B = I$, so the relation becomes a
 similarity $A^\top R_{\Omega'}A^{-\top}=R_\Omega$; differentiating at zero makes
 the generators similar, and similarity preserves the spectrum $\{\pm i\omega_k\}$
-(App.~\ref{sec:proofs}). A nontrivial table change therefore cannot be absorbed
-exactly by this broad class of fixed linear Q/K compensation. Its scope is
-exact function preservation; the finite-distribution protocols of
-\S\ref{sec:exp-mature} directly measure the complementary case of repair by
-retraining Q/K or broader low-rank paths.
+(App.~\ref{sec:proofs}). The theorem therefore characterises exact function
+preservation by this broad class of fixed linear Q/K compensation. The
+finite-distribution protocols of \S\ref{sec:exp-mature} measure the complementary
+case in which Q/K or broader low-rank paths adapt to the new table.
 
 \subsection{A closed-form allocation}
 \label{sec:construction}
@@ -189,7 +191,13 @@ $\min(\phi,\psi)$ is the Green kernel of $-\partial_\phi^2$ and encodes a
 penalty for pairs of channels that are both slow, matching the direction of
 Prop.~\ref{prop:collapse}. The full geometry and the surrogate play distinct
 roles: the former measures redundancy, while the latter supplies an analytic
-allocation family.
+allocation family. The approximation is checked at the level needed for that
+construction: when the derived allocation is evaluated under the closed-form
+exact cosine-feature kernel, collision falls by $24$--$92\%$ and its Shannon
+effective rank rises in all $12$ tested configurations
+(App.~\ref{sec:surrogate-validation}). The trained controls in
+\S\ref{sec:experiments} then test the learning consequences of the same
+kernel-derived reallocation.
 
 \begin{theorem}[Closed-form optimum under the surrogate]
 \label{thm:ode}
@@ -219,10 +227,13 @@ The theorem selects the Cosh family exactly for \eqref{eq:Capp}; midpoint
 quantisation turns that density into a finite RoPE table. Because $\rho_\tau$
 decreases with $\phi$, it reallocates channels toward the fast end: at
 $K{=}64$ and $\tau{=}4$, $55$ midpoint quantiles lie in the fast half of the
-log-frequency span. Trained-model controls below evaluate the resulting table.
+log-frequency span. Cosh is therefore the exact analytic solution of the
+tractable surrogate, and the exact-kernel diagnostic preserves its predicted
+improvement direction. Shape-matched trained controls below show that the gain
+comes from non-uniform allocation rather than a curve-specific artifact.
 
-\paragraph{A one-line frequency table.} With $\deff$ the effective head
-dimension and $\Pi$ the training protocol,
+\paragraph{A one-line full-RoPE default.} With $\deff$ the effective
+head dimension and $\Pi$ the training protocol,
 \begin{equation}
 \label{eq:evq-practical}
 \tau = c(\Pi)\deff/\sqrt{\Ltr},\qquad
@@ -231,10 +242,13 @@ u_k = (k+\tfrac12)/K,\qquad
 \end{equation}
 Set $\tau$, evaluate \eqref{eq:warp}, replace the inverse frequencies: no
 auxiliary loss, no extra parameters, no declared deployment length. A
-$\deff/\sqrt{\Ltr}$ scaling ties its strength to architecture and training
-length; the main text protocols fix $c(\Pi){=}1$ before training. Supporting
-sweeps evaluate this zero-search operating prior against Geo and discrete
-neighbouring multipliers (\S\ref{sec:exp-tau}). The deployed midpoint table has
+$\deff/\sqrt{\Ltr}$ scaling supplies a reference family for standard full-RoPE
+text settings, with $\deff{=}d_{\mathrm{head}}$. We fix $c(\Pi){=}1$ before
+training as its zero-search default and evaluate it against Geo and neighbouring
+multipliers
+(App.~\ref{sec:identification-details}). Compressed rotary subspaces and
+bidirectional attention use pre-specified empirical $\tau$ values, testing the
+same allocation principle without invoking the full-RoPE rule. The deployed midpoint table has
 raw exponent positions
 $q_k=\phi_k(\tau)$. The exact-range diagnostic uses
 $z_k=(q_k-q_0)/(q_{K-1}-q_0)$ in

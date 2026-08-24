@@ -17,6 +17,41 @@
     "mature_evaluator": "c2612c0c111c509d20e6db8831ecab0a628f5bbcca964452fd2cf7d1d0c8d010",
     "small_model_evaluator": "64e510d2ae663363bf1e51b45f6e8fbeb33ab8f440c7a888dc382849eb639953"
   },
+  "mature_protocol_identity": {
+    "stage": "frozen-checkpoint runtime intervention; no checkpoint training",
+    "held_fixed_within_each_model": [
+      "checkpoint weights",
+      "64 rotary frequency pairs",
+      "fast and slow sampled endpoints",
+      "factor-four attention amplitude",
+      "evaluation rows and order",
+      "greedy decoder and official task scoring",
+      "BF16 precision and Flash-only attention runtime",
+      "hardware"
+    ],
+    "changed": "interior normalized exponent allocation z",
+    "attention_amplitude": 1.138629436111989,
+    "support": "fast endpoint equals Native; slow endpoint equals Native divided by four",
+    "olmo": {
+      "checkpoint": "OLMo-2-0425-1B-Instruct",
+      "checkpoint_weight_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f",
+      "native_context_length": 4096,
+      "evaluation": "RULER unseen-nine confirmation at 16384 tokens",
+      "data_manifest_sha256": "431ad942eead911da4693a4ab7428085fd04e63d6914fc8831c3d5b0cc88c239",
+      "rows_per_task": 20
+    },
+    "qwen": {
+      "checkpoint": "Qwen2.5-1.5B-Instruct",
+      "native_context_length": 32768,
+      "evaluation": "RULER core-four at 65536 tokens using the factor-four table and amplitude",
+      "data_manifest_sha256": "88c250401040c68e935ef5bbdb8159351292f043a32b247c5de30916873ede45",
+      "rows_per_task": 20
+    },
+    "nearest_movement_profile_ramp": {
+      "selection": "discrete YaRN-family linear ramp minimizing movement-profile MSE to the frozen derived profile",
+      "uses_task_labels": false
+    }
+  },
   "table_sha256_float32": {
     "olmo": {
       "derived": "a435d75441444bcea39b73d9cf530005249dc5afdc3cfb5a60fda10ef33312d3",
@@ -124,7 +159,7 @@
     "RULER is task-family adaptation, not unseen natural-task transfer",
     "row bootstraps condition on one fixed checkpoint and task set",
     "the 151.9M crossing has two training seeds on the available server",
-    "nearest ramp matches the detailed derived profile on both mature models",
+    "nearest movement-profile ramp matches the detailed derived profile on both mature models",
     "the mature result is not evidence that its installed z would train the best model"
   ]
 }

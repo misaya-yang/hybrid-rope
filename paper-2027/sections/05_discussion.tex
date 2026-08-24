@@ -19,22 +19,24 @@ allocation makes this finite-budget decision explicit and reproducible, while
 learned-frequency methods combine the table choice with an additional
 optimization problem.
 
-The same effective-context crossover survives realistic model-building paths.
-It appears under a shared \rs{} operator at $454$M, full-parameter continuation
-from a common checkpoint at $750$M, a from-initialisation comparison at
-$1.485$B, and low-rank adaptation of pretrained models. These protocols do not
-serve as substitutes for the fixed-support control; they show that the
-identified variable remains consequential across architecture, training stage,
-and scale. The $8$B evidence is adaptation rather than a pretraining-scale
-point, and its remote-block deletion result adds a causal capability endpoint:
-the improved long-position probability depends on the distant source.
+The construction remains consequential across realistic model-building paths.
+At $454$M, the same \rs{} operator has greater leverage on the \evq{} substrate;
+at $750$M and $1.485$B, Geo leads in-window before \evq{} overtakes it at longer
+lengths. Frozen interventions and low-rank adaptation extend the result to
+pretrained checkpoints. These protocols supply architecture, training-stage,
+and scale evidence around the fixed-support identification. At $8$B, blocking
+answer-side attention to the distant source while preserving prompt tokens and
+rotary indices adds a causal capability endpoint: the improved long-position
+probability depends on that source.
 
-Allocation must be present while the model learns how to use it. The $50$M
-weight--table crossing shows that a post-hoc table with better static rank can
-still destroy perplexity, and Theorem~\ref{thm:obstruction} identifies the exact
-obstruction: fixed invertible Q/K maps cannot preserve all relative-position
-logits across unequal frequency multisets. Training or adaptation is therefore
-part of the intervention, not an implementation nuisance.
+Static geometry and learned coefficients jointly determine how a frequency
+table behaves with fixed weights. The $50$M crossing makes the interaction
+visible: a table with better static rank can still destroy perplexity.
+Theorem~\ref{thm:obstruction} characterises its exact limit---fixed invertible
+Q/K maps preserve all relative-position logits only when the frequency
+multisets agree. The frozen OLMo/Qwen controls address the practical
+finite-distribution case: changing $z$ at fixed support and amplitude remains
+consequential after pretraining.
 
 Support selection and range transport remain complementary. The former chooses
 the sampled spectrum, allocation chooses its finite internal resolution, and a

@@ -2,6 +2,9 @@
 
 - **Registered:** 2026-08-23, before any same-support control GPU arm
 - **Status at registration:** Qwen 128K Native n=20 still running; no control arm launched
+- **Current status:** executed; superseded by
+  `../results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`. The registered
+  order below is retained as historical protocol evidence, not an action queue.
 - **Purpose:** discriminate numerical aliasing, support expansion, interior
   allocation, and YaRN-family split location without task-label tuning
 - **Evidence role:** internal preregistration; a completed result owner must

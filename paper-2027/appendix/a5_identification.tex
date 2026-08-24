@@ -112,6 +112,12 @@ configurations; $5$ schedules (Geo, anchored \evq{} at $0.75\times$, $1.00\times
 $3$ seeds. Main factorial $180/180$ completed, boundary-$\tau$ follow-up
 $12/12$ completed, covering the complete pre-specified matrix.
 
+The exponential control uses
+$z_\gamma(t)=(e^{\gamma t}-1)/(e^\gamma-1)$ on $t\in[0,1]$. Its $\gamma$ is
+chosen without task results so that the RMS node displacement from the uniform
+grid matches the formula-Cosh displacement, while the sampled endpoints and
+log-span remain identical across arms.
+
 \paragraph{Metric.} Weighted OOD NLL over $2L/4L/8L$,
 \[
 \bar N_{\mathrm{OOD}}
@@ -131,9 +137,9 @@ $1.00\times$ $6.202094$ ($493.78$); \evq{} $1.25\times$ $6.199873$ ($492.69$);
 matched exponential $6.201354$ ($493.42$).
 
 \paragraph{Boundary-$\tau$ arms.} At formula $\tau{=}1$ the $1.5\times$ arm is
-better; at formula $\tau{=}8$ the $0.75\times$ arm is. Optima move inward from
-the two tested extremes; these discrete arms do not locate continuous basin
-boundaries or yield a replacement closed-form rule.
+better; at formula $\tau{=}8$ the $0.75\times$ arm is. The improving direction
+points inward at both tested extremes; these discrete arms do not locate
+continuous basin boundaries or yield a replacement closed-form rule.
 
 \paragraph{Scope.} This is a short-budget $50.9$M mechanistic NLL control
 trained on a deterministically repeated WikiText-2 raw stream, a different

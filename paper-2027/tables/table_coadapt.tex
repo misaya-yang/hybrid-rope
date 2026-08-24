@@ -3,11 +3,12 @@
 \small
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{0.95}
-\caption{\textbf{Static geometry does not predict trained behaviour.} Two
+\caption{\textbf{Weights co-adapt to their training-time frequency table.} Two
 seed-$42$ $50$M models trained with the geometric and \evq{} tables, each
 evaluated under both runtime tables with all parameters frozen ($1{,}920$
-head--query observations). The worst cell is also the one whose static
-$r_2$ improves most.}
+head--query observations). The matched pairs remain near PPL $7$, whereas both
+cross-swaps fail; the worst cell is also the one whose static $r_2$ improves
+most.}
 \label{tab:coadapt}
 \begin{tabular}{@{}llcc@{}}
 \toprule

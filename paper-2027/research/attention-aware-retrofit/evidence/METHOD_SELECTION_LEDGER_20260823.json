@@ -1,0 +1,38 @@
+{
+  "date": "2026-08-23",
+  "status": "METHOD_SELECTION_LEDGER_COMPLETE",
+  "method_components": {
+    "movement_exponent": {
+      "value": 2,
+      "role": "selected on the four-task RULER development set before natural-task evaluation",
+      "selection_results_sha256": {
+        "8192": "df634b0dee59dc0bc971eb236d2751a095b1fbfeea96ab6cadd3c257e16c73e4",
+        "16384": "eeeb4722e960850ee4f9e0187097736bfdaa205634682be84cf3b5b0e6b0210c"
+      }
+    },
+    "long_factor": {
+      "value": 4,
+      "role": "declared 4x deployment profile; not selected on Qasper or 2Wiki"
+    },
+    "attention_coefficient": {
+      "value": 0.1,
+      "role": "inherited matched reference; not selected on Qasper or 2Wiki"
+    },
+    "session_policy": {
+      "value": "Native if observed prefill plus generation reserve fits the Native window; otherwise one frozen s4 profile for the complete KV-cache lifetime",
+      "frozen_commit": "4498d4c7a55f62751615077671b470157ec2ff45",
+      "frozen_commit_time": "2026-08-23T13:00:46-04:00"
+    }
+  },
+  "endpoint_roles": {
+    "ruler_core4": "method selection",
+    "ruler_unseen9": "post-freeze task-family confirmation",
+    "2wiki_full200": "exploratory bundled-policy evidence; the session-policy design path inspected 2Wiki",
+    "qasper_full200": "post-policy-freeze natural-task evaluation"
+  },
+  "prohibitions": [
+    "Do not call 2Wiki held-out confirmation for the final session policy.",
+    "Do not attribute Qasper or 2Wiki policy outcomes to interior allocation alone.",
+    "Do not use post-freeze coefficient sensitivity to relabel coefficient 0.10 as a natural-task selection."
+  ]
+}

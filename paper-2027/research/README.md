@@ -53,7 +53,7 @@ zero-training intervention contains a deterministic long table, a fixed
 attention amplitude, and a session-static Native/long route. Same-support and
 frequency-by-gain owners probe those components under their own matched
 protocols rather than forming one pooled factorial: fixed-support `z` remains
-consequential on OLMo and Qwen, while a nearest label-free ramp matches the
+consequential on OLMo and Qwen, while a nearest movement-profile ramp matches the
 detailed derived profile. The defensible novelty is fixed-support
 identification and its mature-checkpoint corollary, not merely producing a
 non-geometric table or a new YaRN family.
@@ -126,9 +126,10 @@ Additional durable theory/supporting files at research root:
 - Do not describe the mature profile as a new interpolation family or universal
   optimum.
 
-If the frozen case study is promoted, the highest-value missing external test
-is a preregistered same-support geometric/ramp/derived comparison on a natural
-OLMo task and a natural Qwen task. It is not currently authorized.
+The promoted frozen case study remains bounded to its stated protocols. Its
+highest-value missing external test is a preregistered same-support
+geometric/ramp/derived comparison on a natural OLMo task and a natural Qwen
+task; it is not currently authorized.
 
 ## Placement rules
 

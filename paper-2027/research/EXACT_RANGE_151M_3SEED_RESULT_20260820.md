@@ -198,15 +198,11 @@ For each new seed, initialization, row order, consumed train prefix,
 validation data, optimizer steps, token counts, protocol hash, and code hash
 match exactly across the two arms. Only the immutable frequency table differs.
 
-## 8. Next manuscript integration gate
+## 8. Completed manuscript integration receipt
 
-1. Use the companion JSON as the numeric owner.
-2. Replace the seed-42 headline in the abstract, introduction, main experiment,
-   identification figure, and appendix as one atomic manuscript change.
-3. Show per-seed points plus the three-seed mean; do not hide the 512-length
-   heterogeneity behind a bar alone.
-4. Keep the 1K/2K stability and the `3/3` direction visible.
-5. Update the appendix batch-geometry description for seed 42 versus the two
-   new runtime-equivalent seeds.
-6. Rebuild, package, and visually inspect only after the manuscript text and
-   figure agree with this owner.
+The companion JSON is the numeric owner. The 2026-08-20 integration atomically
+replaced the seed-42 headline in the abstract, introduction, main experiment,
+identification figure, and appendix; retained per-seed points, the three-seed
+mean, 512-length heterogeneity, and the `3/3` OOD direction; updated batch
+geometry; and completed rebuild, package, and visual checks. Current actions
+are owned only by `../HANDOFF.md`.

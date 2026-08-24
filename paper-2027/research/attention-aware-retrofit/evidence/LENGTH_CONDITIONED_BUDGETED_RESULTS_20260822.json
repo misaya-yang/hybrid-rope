@@ -73,7 +73,7 @@
   "longbench_2wiki": {
     "rows": 200,
     "method_selection": false,
-    "physical_budget_invariant": "Pending raw-row recheck that input_tokens+32<=nominal_length because the evaluated untruncated fast path checked raw prompt length before chat-template overhead.",
+    "physical_budget_invariant": "Verified on all completed raw rows: post-chat input_tokens+32<=nominal_length; see LONGBENCH_ROW_BUDGET_AUDIT_20260823.json.",
     "metric": "normalized token F1; normalized exact auxiliary",
     "results": {
       "native_4096": {"token_f1": 0.2655858206, "normalized_exact": 0.205, "truncated_rows": 175},
@@ -127,7 +127,7 @@
     "Zero RULER score for Native plus amplitude is an assay floor, not proof of unchanged logits.",
     "The inherited 0.10 coefficient is matched, not derived or measured for OLMo-2.",
     "No multi-checkpoint or cross-model generalization claim is supported.",
-    "The 2Wiki physical-budget invariant must be rechecked on raw rows before manuscript promotion; violating cells require rerun.",
+    "The 2Wiki physical-budget invariant was verified on raw rows in LONGBENCH_ROW_BUDGET_AUDIT_20260823.json.",
     "RULER-13 is incomplete and supplies no result yet."
   ]
 }

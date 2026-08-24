@@ -2,6 +2,11 @@
 
 **这份文档不进 PDF。** 它记录每个改动对应哪条审稿意见，以及每个数字的 owner 文件。
 
+> **Historical snapshot (2026-08-19).** 本文件保留迁移决策与当时的差异
+> 审计，不承担当前稿件状态、section locator、PDF hash 或 action queue。
+> 当前状态以 `HANDOFF.md` 为准，claim/evidence 路由以
+> `research/README.md` 为准。
+
 审稿结果：Dz6s **4**(conf 3) / 27bE **3**(conf 4) / zWsa **2**(conf 5) + AC `XLtL` metareview。
 
 ---
