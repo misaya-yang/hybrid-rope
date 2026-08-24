@@ -29,7 +29,8 @@
    不蕴含 extrapolation improvement。
 4. 50M 的 \(2\times2\) weights-by-table counterfactual 显示，LM loss 主要由
    table × weights interaction 决定，而不是 table 或 weights 的独立主效应。
-   单纯调整 base 能解释一大部分频谱移动，但不能解释全部 non-geometric
+   一个受限 scalar-base geometric control 能恢复一次 frozen mismatch 的很大
+   部分，但这不是训练期 effect attribution，也不能吸收全部 non-geometric
    allocation 与共适应。
 
 因此，下一版论文可建立在“finite spectral basis + training co-adaptation”上；
@@ -422,7 +423,20 @@ geometry intervention，而是破坏已形成的共适应。
 
 ---
 
-## 6. Base-only controls：scale 与 interior allocation 部分重叠
+## 6. Base-only controls：受限几何族，而不是第二个物理对象
+
+**2026-08-23 坐标澄清。** 对一个 realised frequency tensor，若 base 与
+exponent 都可任意变化，则二者存在重参数化自由度；这里的 `base-only` 不是说
+base 与 exponent 是两个可从 tensor 本身唯一恢复的物理量，而是指一个**受限因果
+干预族**：只允许改变 scalar base，同时保留标准 geometric exponent order。
+在 checkpoint 的 Native-base 坐标中，这些 control 都是 affine/geometric
+exponent curves。完整的当前解释见
+[`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md)。
+
+历史 EVQ table 同时不同于 Geo 的 support 与 interior allocation，因此本节只能
+回答“受限几何族能逼近多少 frozen compatibility”，不能把剩余 loss gap 归因为
+pure interior allocation。Pure `z` 的 owner 是三 seed exact-range，以及后续在
+成熟 OLMo/Qwen 上完成的 same-support geometric/ramp/derived controls。
 
 本轮没有按 loss 搜 base。三个 geometric controls 均由历史 EVQ 表解析确定：
 
@@ -448,11 +462,13 @@ geometry intervention，而是破坏已形成的共适应。
 
 - 对 Geo weights，轻量 span-match `500K→377.7K` 基本无损，但几乎不改变
   static rank。
-- 对 EVQ weights，`base=8.06K` 将 Geo-table PPL `23.05→9.63`，追回从
-  Geo table 到 EVQ table loss gap 的 `74.7%`。
-- 因此，EVQ 的一大部分作用与“整体抬高慢频率”这一 base axis 同向；剩余
-  `9.63→7.16` 才可能来自 non-geometric interior allocation、完整表差异和
-  共适应。
+- 对 EVQ weights，`base=8.06K` 的 LS-fit geometric table 将 Geo-table PPL
+  `23.05→9.63`，追回历史 Geo-table→EVQ-table loss gap 的 `74.7%`；这说明
+  一个受限几何曲线能恢复大量 frozen compatibility，但不是对 table effect 的
+  可加方差分解。
+- 剩余 `9.63→7.16` 仍混合 non-geometric interior allocation、历史 support
+  差异和 weights/table 共适应，不能称为 pure `z` effect。Pure fixed-support
+  解释必须路由到 exact-range 与 same-support owners。
 - 当前只是 frozen-checkpoint counterfactual。要证明 base-only training 能否
   达到相同结果，仍需要 matched from-scratch base arm。
 

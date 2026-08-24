@@ -9,6 +9,31 @@
 - **Not submission prose:** all numbers must still be checked against their
   canonical owner before entering the manuscript
 
+## 0. 2026-08-23 causal-coordinate clarification
+
+The current notation and narrative grammar are owned by
+[`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md).
+This clarification does not change the implemented manuscript or any result.
+
+Three rules now govern interpretation:
+
+1. the realised physical object is the ordered frequency tensor; fixing a
+   checkpoint's Native base gives an equivalent exponent curve, but the
+   algebraic reparameterisation freedom of base/exponent must not erase the
+   difference between restricted causal interventions;
+2. `x=a+Rz` is an exact experimental decomposition of one table, not a claim
+   that a method must implement support extension and interior allocation as
+   two sequential modules;
+3. the new zero-training replacement is a complete frozen-checkpoint
+   intervention containing a deterministic long table, attention amplitude,
+   and session route. Same-support, gain, crossing, and parity experiments
+   isolate its components without being pooled into the from-training
+   exact-range estimand.
+
+The paper's central training-time claim remains unchanged. The mature
+zero-training result is a possible empirical corollary, not a replacement for
+EVQ-Cosh, exact-range, or the systems evidence ladder.
+
 ## 1. Decision in one paragraph
 
 The paper should remain *RoPE Has a Spectral Budget*, but its theoretical

@@ -9,7 +9,9 @@
   unchanged and has been rebuilt successfully; the latest fixed-support
   mature-checkpoint controls, 151.9M crossing, full
   Qasper owner repair, code, and evidence receipts are complete and indexed but
-  have not been promoted into the manuscript. No GPU task is running or queued.
+  have not been promoted into the manuscript. The causal-variable and
+  zero-training retrofit foundation is now written and routed; no manuscript
+  source was changed. No GPU task is running or queued.
 - **Internal only:** exclude this file from the anonymous supplement.
 
 ## 1. Start here
@@ -21,7 +23,9 @@ Read in this order:
 2. This file — live state and the only action queue.
 3. [`README.md`](README.md) — stable manuscript/build layout.
 4. [`research/README.md`](research/README.md) — canonical claim/evidence routing.
-5. [`research/attention-aware-retrofit/README.md`](research/attention-aware-retrofit/README.md)
+5. [`research/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](research/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md)
+   — current causal-variable and zero-training method grammar.
+6. [`research/attention-aware-retrofit/README.md`](research/attention-aware-retrofit/README.md)
    — current retrofit result, evidence, analysis, theory, and preflight layers.
 
 Do not start from an external review, the newest date, an ignored result, or a
@@ -30,14 +34,24 @@ raw/hash receipt before changing a claim.
 
 ## 2. Current paper story
 
-The paper's central object is
+At implementation level, RoPE consumes one ordered frequency tensor. For
+causal analysis, the paper decomposes that same table as
 
 \[
 x_k=-\log\omega_k=a+Rz_k,
 \]
 
 where `(a,R)` is sampled spectral support and `z` is normalized interior
-allocation. The outward evidence chain is:
+allocation. Fixing a checkpoint's Native base also gives an equivalent
+exponent curve `e`, but base/exponent reparameterisation freedom does not erase
+the distinction between a restricted scalar-base intervention, a nonlinear
+training grid, a post-training vector transform, attention gain, and serving
+routing. The authoritative causal grammar is
+[`research/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](research/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md).
+
+The decomposition is an experimental accounting system, not a claim that the
+method executes support extension and allocation as two modules. The outward
+paper evidence chain remains:
 
 1. the raw-hash-receipted three-seed 151.9M exact-range experiment identifies
    `z` while holding support fixed;
@@ -48,14 +62,18 @@ allocation. The outward evidence chain is:
    454M, 750M, and 1.485B evidence retaining their actual protocol roles;
 4. matched 1.485B and separate 8B adaptation studies provide mature capability
    evidence, not pretraining-scale evidence;
-5. EVQ-Cosh remains one closed-form intervention on the allocation axis, not a
-   universal optimum.
+5. EVQ-Cosh remains one closed-form, zero-learned-parameter intervention on the
+   training-time allocation axis, not a universal optimum.
 
 The new frozen-checkpoint case study is compatible with this story but is not
-yet part of it. Its defensible claim is that fixed-support `z` remains
-consequential after pretraining and that a model-relative split can be derived
-without task labels. It does **not** establish a new interpolation family,
-universal best profile, or generic superiority to YaRN.
+yet part of the manuscript. Its complete practical intervention is a
+deterministic long table, a fixed attention amplitude, and a session-static
+Native/long route, all with zero checkpoint training. Same-support controls
+show that `z` remains consequential after pretraining; the gain 2x2 and route
+parity answer the other component questions under their own matched protocols.
+A nearest label-free ramp matches the
+detailed derived profile, so the case study does **not** establish a new
+interpolation family, universal best profile, or generic superiority to YaRN.
 
 Use locked nomenclature from `AGENTS.md`: `Geo`, `Native`, `FMRoPE`,
 `anchored EVQ-Cosh`, `YaRN-style`, cited `YaRN`, and `MLA wavelength-blend
@@ -65,6 +83,7 @@ operator` are not interchangeable.
 
 | Scientific question | Canonical owner | Claim ceiling |
 | --- | --- | --- |
+| Conceptual grammar and causal-variable separation | [`research/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](research/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md) | notation/stage/estimand routing only; no numerical ownership |
 | Current claim architecture | [`research/ICLR2027_RESEARCH_SYNTHESIS_20260819.md`](research/ICLR2027_RESEARCH_SYNTHESIS_20260819.md) | architecture and routing, not a replacement for raw owners |
 | Pure fixed-support training identification | [`research/EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](research/EXACT_RANGE_151M_3SEED_RESULT_20260820.md) and companion JSON | three training seeds; fixed support only |
 | Full-RoPE geometry and 50M co-adaptation | [`research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md) | static basis theory plus diagnostic crossing |
@@ -178,6 +197,8 @@ The research tree now has explicit layers:
 ```text
 paper-2027/research/
   README.md                         single research router
+  ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md
+                                    causal grammar and zero-training foundation
   attention-aware-retrofit/
     README.md                       retrofit router and current decision
     results/                        completed owners only
@@ -197,15 +218,18 @@ an obsolete private-path readiness receipt, a byte-duplicate verifier ZIP, and
 `generated-paper-build/` archive, and `.gitignore` now excludes those active
 paper build transients.
 
-Git snapshot at cleanup start:
+Git snapshot before the current foundation-document edit:
 
-- branch/upstream: `main_0726`, local and upstream both
-  `4498d4c7a55f62751615077671b470157ec2ff45`, ahead/behind `0/0`;
-- the worktree contains the current code, report, receipt, index, and handoff
-  changes described here;
+- branch/upstream: `main_0726`, local and `origin/main_0726` both
+  `b1e20ea4ac477798ffdb34cb8ac45f46373f4a99`, ahead/behind `0/0`;
+- commit `b1e20ea` already contains and publishes the same-support experiment,
+  zero-training owners/code/receipts, and the prior research-tree cleanup;
+- the current worktree has eleven documentation paths in scope: ten modified
+  Markdown routers/owners plus the new causal-foundation Markdown file;
+- no manuscript `.tex`, experiment code, receipt JSON, raw evidence, or
+  `paper/` path changed in this documentation pass;
 - no commit, push, pull, rebase, reset, stash, branch switch, or remote change
-  was performed because the user did not explicitly authorize Git mutation;
-- unrelated source data and `paper/` were preserved.
+  was performed because the user did not authorize Git publication here.
 
 Important implementation additions:
 
@@ -239,6 +263,19 @@ Final cleanup verification:
 - `paper/` remains unchanged at PDF SHA-256
   `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`.
 
+Current causal-foundation documentation pass:
+
+- all `121` local Markdown links under `paper-2027/` resolve (`0` missing);
+- the new 526-line foundation has `0` malformed Markdown table rows and SHA-256
+  `d98881254edf930c42463336506545b57b375a849de6cb752691d362838088b3`;
+- `git diff --check` passes, and the scoped private-path/credential-pattern scan
+  returns no hits;
+- no `.tex`, Python, JSON, `paper/`, or PDF file changed; the active and
+  immutable PDF hashes remain the values in Sections 5 and 7;
+- paper compilation, packaging, and Python tests were not rerun because this
+  pass changed only internal Markdown theory/routing documents. The preceding
+  build/test receipts above remain the latest executable validation.
+
 Local Conda `aidemo` is unavailable; do not misreport that environment
 limitation as a repository failure.
 
@@ -251,11 +288,16 @@ If yes, use it as a compact empirical corollary to the existing fixed-support
 claim, not as a standalone ``better YaRN'' method:
 
 1. replace lower-leverage body text rather than exceeding nine pages;
-2. expose the causal decomposition: support fixed, amplitude fixed, `z`
-   changed, nearest-ramp control, then weights/table crossing;
-3. add accurate recent related work, including Jet-Long;
-4. report the aliased Qwen correction and keep row-bootstrap scope explicit;
-5. give natural Qasper/2Wiki results their actual heterogeneous roles.
+2. lead with the qualitatively new asset: zero checkpoint training, zero
+   learned positional parameters, exact Native short route, and a standard
+   session-static long RoPE/KV path;
+3. immediately expose the causal decomposition: support fixed, amplitude
+   fixed, `z` changed, nearest-ramp control, gain interaction, then
+   weights/table crossing;
+4. add accurate recent related work, including Jet-Long, and distinguish its
+   dynamic bifocal operator from this static standard-attention path;
+5. report the aliased Qwen correction and keep row-bootstrap scope explicit;
+6. give natural Qasper/2Wiki results their actual heterogeneous roles.
 
 If the case study is not promoted, retain it as internal evidence and make no
 manuscript change.
@@ -286,8 +328,9 @@ natural Qwen task. It is not authorized or queued.
 
 ## 9. Known issues / current breakage
 
-- The organized worktree is intentionally uncommitted pending explicit Git
-  authorization.
+- Only the current causal-foundation and routing-document edits are
+  uncommitted pending explicit Git authorization; the preceding experiment and
+  workspace reorganisation are already committed and pushed at `b1e20ea`.
 - Raw GPU rows/checkpoints are outside the repository; compact hash receipts are
   tracked research artifacts.
 - Local Conda `aidemo` is unavailable; system-Python focused checks passed.

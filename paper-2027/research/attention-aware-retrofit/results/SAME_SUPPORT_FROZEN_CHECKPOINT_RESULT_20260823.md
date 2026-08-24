@@ -45,6 +45,14 @@ novel object is the explicit `x_k = a + R z_k` decomposition, fixed-support
 causal identification of `z`, and its connection to finite spectral
 redundancy.
 
+This statement distinguishes **restricted interventions**, not two uniquely
+recoverable textual parameters. A realised tensor can be re-expressed with a
+different base/exponent pair if both are free. The scalar-base control is still
+causally distinct because it is restricted to the geometric exponent family;
+the same-support experiment fixes everything that family can set at the two
+endpoints and changes the interior curve. The authoritative global grammar is
+[`../../ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](../../ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md).
+
 This distinction matters against recent work. MrRoPE constructs a
 training-free mixed-radix/progressive spectrum, CoPE soft-clips selected slow
 frequencies, and Jet-Long uses a tuning-free dynamic bifocal transform with an
@@ -76,6 +84,12 @@ change only the interior `z`:
 This makes the geometric-versus-non-geometric comparison a clean
 frozen-checkpoint intervention. It remains a different estimand from training
 two models with different `z`.
+
+The complete zero-training deployment owner is broader than this control: it
+combines one deterministic long table, a fixed long attention amplitude, and a
+Native/long session route. This section isolates the table's interior
+coordinate; it does not redefine the practical method as three sequential
+modules.
 
 The factor-four amplitude is fixed in every arm. The earlier mature-model
 frequency-by-amplitude 2x2 remains the owner of softmax interaction; this

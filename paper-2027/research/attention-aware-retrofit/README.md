@@ -4,6 +4,12 @@ This directory is the durable internal layer for attention-aware allocation and
 frozen-checkpoint retrofit. It is not manuscript prose. Start here instead of
 opening the newest dated file.
 
+The cross-project conceptual grammar is
+[`../ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](../ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md).
+It distinguishes the realised frequency tensor from the causal variables used
+to analyse it, and prevents training-time allocation, frozen-table effects,
+attention gain, and serving policy from being merged into one estimand.
+
 ## Current decision
 
 Two owners are live:
@@ -19,20 +25,28 @@ Two owners are live:
    window, one deployment-frozen long profile beyond it, fixed before prefill
    for the entire KV-cache lifetime.
 
+The second owner is the complete practical intervention: deterministic long
+frequency tensor, fixed long attention amplitude, and session route. The first
+owner and the frequency-by-gain 2x2 answer its component questions under
+separate matched protocols; they are not one pooled factorial. Do not describe
+the complete policy as a pure `z` experiment, and do not describe the controls
+as separate modules that must be deployed in sequence.
+
 Neither result is in the manuscript yet. No GPU experiment is currently
 queued. Another table, gain, rank, or RULER sweep is explicitly stopped.
 
 ## Read order
 
-1. The two live owners above.
-2. [`evidence/README.md`](evidence/README.md) for machine-path-free receipts.
-3. [`results/README.md`](results/README.md) for completed results and their
+1. The conceptual foundation linked above.
+2. The two live owners above.
+3. [`evidence/README.md`](evidence/README.md) for machine-path-free receipts.
+4. [`results/README.md`](results/README.md) for completed results and their
    claim ceilings.
-4. [`analysis/README.md`](analysis/README.md) for mechanism analyses and
+5. [`analysis/README.md`](analysis/README.md) for mechanism analyses and
    falsified design axes.
-5. [`preflights/README.md`](preflights/README.md) only when reconstructing a
+6. [`preflights/README.md`](preflights/README.md) only when reconstructing a
    protocol or checking what was registered before execution.
-6. [`theory/README.md`](theory/README.md) for the historical method agenda.
+7. [`theory/README.md`](theory/README.md) for the historical method agenda.
 
 ## Directory contract
 
@@ -52,9 +66,11 @@ queued. Another table, gain, rank, or RULER sweep is explicitly stopped.
 | Do weights learn the installed coordinate system? | `../FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md` plus the 151.9M crossing in the live same-support owner |
 | Does `z` still matter in a frozen mature checkpoint? | live same-support owner |
 | Is the detailed uniqueness curve required? | live same-support owner; current answer is no |
+| Does the frequency table interact with attention amplitude? | `results/JOINT_MECHANISM_REPORT_20260822.md`; current answer is yes in the tested cells |
 | Can deployment preserve the Native short path without training? | live session-binary owner |
 
-Keep these estimands separate. RULER is task-family adaptation, row bootstraps
+Keep these estimands separate. The complete replacement may combine variables
+that its controls isolate. RULER is task-family adaptation, row bootstraps
 condition on one checkpoint/task set, and a frozen-checkpoint intervention is
 not a from-training estimate.
 

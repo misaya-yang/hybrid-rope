@@ -10,20 +10,32 @@ which material is only a plan, audit, or external review.
    and workspace rules.
 2. [`../HANDOFF.md`](../HANDOFF.md) — live manuscript/worktree state and the
    only current action queue.
-3. [`ICLR2027_RESEARCH_SYNTHESIS_20260819.md`](ICLR2027_RESEARCH_SYNTHESIS_20260819.md)
+3. [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md)
+   — current conceptual grammar: physical table, causal variables, method
+   stages, and the role of the zero-training replacement.
+4. [`ICLR2027_RESEARCH_SYNTHESIS_20260819.md`](ICLR2027_RESEARCH_SYNTHESIS_20260819.md)
    — implemented claim architecture.
-4. [`EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](EXACT_RANGE_151M_3SEED_RESULT_20260820.md)
+5. [`EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](EXACT_RANGE_151M_3SEED_RESULT_20260820.md)
    — raw-hash-receipted three-training-seed fixed-support result.
-5. [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)
+6. [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)
    — canonical theory, finite-K counterexamples, and 50M crossing.
-6. [`attention-aware-retrofit/README.md`](attention-aware-retrofit/README.md)
+7. [`attention-aware-retrofit/README.md`](attention-aware-retrofit/README.md)
    — current mature-checkpoint retrofit results, negative routes, and receipts.
 
 Do not start from the newest date, an external review, or a preflight.
 
 ## Current scientific architecture
 
-The manuscript separates sampled support from normalized interior allocation:
+The realised RoPE object is the ordered frequency tensor `Omega`. For a mature
+checkpoint, fixing its Native base as a coordinate convention gives an
+equivalent exponent curve `e`; this is the honest implementation-level
+description of scalar-base, learned-table, and direct-tensor methods. It does
+not collapse their causal identities: what is permitted to change, what is
+held fixed, and whether the intervention occurs before training, after
+training, or at serving time remain decisive.
+
+For causal analysis, the manuscript separates sampled support from normalized
+interior allocation:
 
 \[
 x_k=-\log\omega_k=a+Rz_k.
@@ -32,20 +44,25 @@ x_k=-\log\omega_k=a+Rz_k.
 Its central claim is that `z` is a separately identifiable training-time
 variable even when `(a,R)` is fixed; it changes full sin/cos subspace geometry
 and trained behaviour, while model weights co-adapt to the table used during
-training. EVQ-Cosh is one closed-form intervention on this axis, not a universal
-optimum.
+training. This decomposition is an experimental accounting system, not a
+two-module implementation. EVQ-Cosh is one closed-form intervention on this
+axis, not a universal optimum.
 
-The new frozen-checkpoint case study is internal and does not change that
-claim. It shows that fixed-support `z` remains consequential on OLMo and Qwen,
-but a nearest label-free ramp matches the detailed derived profile. The
-defensible novelty is fixed-support identification and model-relative split
-derivation, not merely producing a non-geometric table or a new YaRN family.
+The new frozen-checkpoint case study remains a different estimand. Its complete
+zero-training intervention contains a deterministic long table, a fixed
+attention amplitude, and a session-static Native/long route. Same-support and
+frequency-by-gain owners probe those components under their own matched
+protocols rather than forming one pooled factorial: fixed-support `z` remains
+consequential on OLMo and Qwen, while a nearest label-free ramp matches the
+detailed derived profile. The defensible novelty is fixed-support
+identification and its mature-checkpoint corollary, not merely producing a
+non-geometric table or a new YaRN family.
 
 ## Directory map
 
 | Path | Role |
 | --- | --- |
-| research-root dated owners | central synthesis, exact-range owner, canonical theory, and early theory architecture |
+| research-root dated owners | conceptual foundation, central synthesis, exact-range owner, canonical theory, and early theory architecture |
 | [`attention-aware-retrofit/`](attention-aware-retrofit/) | mature retrofit results, receipts, analyses, theory, and preflights, each in a separate subdirectory |
 | [`audits/`](audits/) | internal manuscript/theory/evidence audits and falsified internal measures |
 | [`external-reviews/`](external-reviews/) | untrusted independent-model recomputations and proposals |
@@ -53,6 +70,8 @@ derivation, not merely producing a non-geometric table or a new YaRN family.
 
 Additional durable theory/supporting files at research root:
 
+- [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md)
+  — authoritative conceptual vocabulary and causal ledger; it owns no numbers;
 - [`ICLR2027_THEORY_ARCHITECTURE.md`](ICLR2027_THEORY_ARCHITECTURE.md) — early
   theory design exploration; current synthesis and canonical report win on
   conflict;
@@ -63,6 +82,7 @@ Additional durable theory/supporting files at research root:
 
 | Question | Canonical source | Maximum role |
 | --- | --- | --- |
+| Conceptual grammar and causal-variable separation | [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md) | notation and routing only; never a numerical owner |
 | Full sin/cos geometry, collision, stable-rank identity | [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md) | main theory; static basis, not LM-quality predictor |
 | Pure fixed-support interior-allocation identification | [`EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](EXACT_RANGE_151M_3SEED_RESULT_20260820.md) plus M4 historical owner | main causal experiment |
 | Exact frozen Q/K transplant obstruction | `../../rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md` | exact impossibility for fixed static maps, not all approximate adapters |
@@ -79,9 +99,14 @@ Additional durable theory/supporting files at research root:
 ## Protocol boundaries
 
 - Exact-range and M4 own pure interior-allocation identification.
+- A scalar-base rule and an exponent-allocation rule are distinguished by
+  their restricted intervention family and stage, even though a realised
+  tensor admits multiple textual base/exponent parameterisations.
 - The 50M and 151.9M crossings own co-adaptation diagnostics.
 - Mature frozen-checkpoint RULER is task-family adaptation, not unseen-task
   transfer or from-training evidence.
+- The zero-training session policy owns the complete table/gain/router
+  intervention; same-support and gain 2x2 owners identify its components.
 - NLL/PPL, teacher-forced NLL gap, strict generation, token F1, exact match,
   RULER, and causal source-use are distinct endpoints.
 - Row bootstraps condition on a fixed checkpoint and task set; they are not

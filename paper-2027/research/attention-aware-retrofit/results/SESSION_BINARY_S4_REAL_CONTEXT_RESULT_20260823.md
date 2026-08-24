@@ -7,6 +7,16 @@
 - **Model:** released OLMo-2-0425-1B-Instruct, 1.485B parameters
 - **Training:** zero learned parameters, zero training tokens
 
+**Causal scope.** This owner evaluates the complete practical intervention:
+one deterministic long frequency tensor, one fixed long attention amplitude,
+and one session-static Native/long route. It does not own a pure
+interior-allocation effect. That effect is isolated by
+[`SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md),
+while the frequency-by-gain interaction remains owned by
+[`JOINT_MECHANISM_REPORT_20260822.md`](JOINT_MECHANISM_REPORT_20260822.md).
+The global variable/stage grammar is
+[`../../ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](../../ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md).
+
 ## 1. Conclusion
 
 The practical deployment problem does not require the model to know an

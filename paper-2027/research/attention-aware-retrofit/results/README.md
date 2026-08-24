@@ -1,6 +1,10 @@
 # Completed retrofit results
 
 Read the decision column before opening a dated report.
+Interpret each owner's variables and stage through
+[`../../ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](../../ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md);
+the practical owner combines table, gain, and routing, while the causal owner
+isolates fixed-support allocation.
 
 | Owner | Status | Decision / maximum claim |
 | --- | --- | --- |
