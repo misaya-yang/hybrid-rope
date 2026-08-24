@@ -76,7 +76,9 @@ def tokenizer_digest(checkpoint: Path) -> str:
     ])
 
 
-def eval_row(ids: list[int], *, source_row: int, text_sha: str, multiplier: int) -> dict[str, Any]:
+def eval_row(
+    ids: list[int], *, source_index: int, source_row: int, text_sha: str, multiplier: int,
+) -> dict[str, Any]:
     length = 4096 * int(multiplier)
     selected = [int(value) for value in ids[:length]]
     target_tokens = 512
@@ -87,6 +89,7 @@ def eval_row(ids: list[int], *, source_row: int, text_sha: str, multiplier: int)
         "input_ids": selected,
         "nll_target_start": length - target_tokens,
         "nll_target_tokens": target_tokens,
+        "source_index": int(source_index),
         "source_row": int(source_row),
         "source_text_sha256": text_sha,
         "input_sha256": canonical_sha256(selected),
@@ -113,13 +116,52 @@ def main() -> int:
     checkpoint = args.checkpoint.expanduser().resolve()
     output = args.output.expanduser().resolve()
     output.mkdir(parents=True, exist_ok=True)
-    final_receipt = output / "receipt.json"
-    if final_receipt.is_file():
-        print(final_receipt.read_text(encoding="utf-8"), end="")
-        return 0
     observed_source_hashes = [sha256_file(source) for source in sources]
     if observed_source_hashes != expected_source_hashes:
         raise RuntimeError("new FineWeb-Edu source shard hash drift")
+    tokenizer_sha = tokenizer_digest(checkpoint)
+    final_receipt = output / "receipt.json"
+    if final_receipt.is_file():
+        receipt = json.loads(final_receipt.read_text(encoding="utf-8"))
+        expected_receipt = {
+            "status": STATUS,
+            "source_sha256": observed_source_hashes,
+            "checkpoint_tokenizer_sha256": tokenizer_sha,
+            "tokens": int(args.target_tokens),
+            "fresh_eval_documents": int(args.eval_documents),
+            "fresh_eval_row_schema": "fineweb_pg19_tail_nll_v1",
+            "fresh_eval_append_eos": False,
+        }
+        for key, value in expected_receipt.items():
+            if receipt.get(key) != value:
+                raise RuntimeError(f"existing final receipt identity drift for {key}")
+        artifact_receipts = {
+            "tokens_file_sha256": output / "tokens.i32.bin",
+            "offsets_file_sha256": output / "document_offsets.u64.bin",
+            "fresh_eval_rows_sha256": output / "fresh_eval_rows.jsonl",
+            "fresh_eval_manifest_sha256": output / "fresh_eval_manifest.json",
+        }
+        for key, path in artifact_receipts.items():
+            if not path.is_file() or sha256_file(path) != receipt.get(key):
+                raise RuntimeError(f"existing final artifact hash drift for {key}")
+        eval_manifest = json.loads(
+            artifact_receipts["fresh_eval_manifest_sha256"].read_text(encoding="utf-8")
+        )
+        expected_eval_manifest = {
+            "status": EVAL_STATUS,
+            "tokenizer_sha256": tokenizer_sha,
+            "source_shard_sha256": observed_source_hashes,
+            "eval_documents": int(args.eval_documents),
+            "eval_rows": int(args.eval_documents) * 2,
+            "eval_row_schema": "fineweb_pg19_tail_nll_v1",
+            "append_eos": False,
+            "rows_sha256": receipt["fresh_eval_rows_sha256"],
+        }
+        for key, value in expected_eval_manifest.items():
+            if eval_manifest.get(key) != value:
+                raise RuntimeError(f"existing fresh-eval manifest identity drift for {key}")
+        print(final_receipt.read_text(encoding="utf-8"), end="")
+        return 0
     tokenizer = AutoTokenizer.from_pretrained(
         checkpoint,
         local_files_only=True,
@@ -132,6 +174,14 @@ def main() -> int:
     offsets_path = output / "document_offsets.u64.bin"
     eval_rows_path = output / "fresh_eval_rows.jsonl"
     state_path = output / "progress.json"
+    state_identity = {
+        "source_sha256": observed_source_hashes,
+        "checkpoint_tokenizer_sha256": tokenizer_sha,
+        "target_tokens": int(args.target_tokens),
+        "eval_documents": int(args.eval_documents),
+        "eval_row_schema": "fineweb_pg19_tail_nll_v1",
+        "eval_append_eos": False,
+    }
     state = (
         json.loads(state_path.read_text(encoding="utf-8"))
         if state_path.is_file()
@@ -142,16 +192,56 @@ def main() -> int:
             "documents_written": 0,
             "rolling_document_sha256": "0" * 64,
             "eval_documents_written": 0,
+            **state_identity,
         }
     )
     state.setdefault("source_index", 0)
+    for key, value in state_identity.items():
+        if state.get(key) != value:
+            raise RuntimeError(f"tokenization resume identity drift for {key}")
     expected_token_bytes = int(state["tokens_written"]) * 4
     expected_offset_bytes = int(state["documents_written"]) * 8
-    if (
-        (tokens_path.stat().st_size if tokens_path.exists() else 0) != expected_token_bytes
-        or (offsets_path.stat().st_size if offsets_path.exists() else 0) != expected_offset_bytes
+    for path, expected_bytes in (
+        (tokens_path, expected_token_bytes), (offsets_path, expected_offset_bytes),
     ):
-        raise RuntimeError("tokenization resume identity drift")
+        observed_bytes = path.stat().st_size if path.exists() else 0
+        if observed_bytes < expected_bytes:
+            raise RuntimeError(f"tokenization resume file is shorter than committed state: {path}")
+        if observed_bytes > expected_bytes:
+            with path.open("r+b") as handle:
+                handle.truncate(expected_bytes)
+
+    complete_eval_hashes: set[str] = set()
+    if eval_rows_path.is_file():
+        parsed_rows = [
+            json.loads(line) for line in eval_rows_path.read_text().splitlines() if line.strip()
+        ]
+        by_document: dict[str, dict[int, dict[str, Any]]] = {}
+        for row in parsed_rows:
+            text_sha = str(row["source_text_sha256"])
+            multiplier = int(row["multiplier"])
+            if multiplier in by_document.setdefault(text_sha, {}):
+                raise RuntimeError("duplicate fresh-eval row identity during resume")
+            by_document[text_sha][multiplier] = row
+        complete = [
+            row
+            for text_sha, cells in by_document.items()
+            if set(cells) == {1, 2}
+            for row in (cells[1], cells[2])
+        ]
+        complete_eval_hashes = {
+            text_sha for text_sha, cells in by_document.items() if set(cells) == {1, 2}
+        }
+        with tempfile.NamedTemporaryFile(
+            dir=eval_rows_path.parent, prefix=eval_rows_path.name + ".",
+            suffix=".incomplete", mode="w", encoding="utf-8", delete=False,
+        ) as handle:
+            temporary = Path(handle.name)
+            for row in complete:
+                handle.write(json.dumps(row, sort_keys=True, ensure_ascii=False) + "\n")
+            handle.flush(); os.fsync(handle.fileno())
+        temporary.replace(eval_rows_path)
+    state["eval_documents_written"] = len(complete_eval_hashes)
 
     done = False
     with tokens_path.open("ab") as token_handle, offsets_path.open("ab") as offset_handle:
@@ -179,11 +269,23 @@ def main() -> int:
                     state["next_source_row"] = absolute_row + 1
                     if text_sha in EXCLUDED_TEXT_SHA256:
                         continue
-                    document_ids = [int(value) for value in ids] + [int(tokenizer.eos_token_id)]
-                    if int(state["eval_documents_written"]) < int(args.eval_documents) and len(document_ids) >= 8192:
-                        append_jsonl(eval_rows_path, eval_row(document_ids, source_row=absolute_row, text_sha=text_sha, multiplier=1))
-                        append_jsonl(eval_rows_path, eval_row(document_ids, source_row=absolute_row, text_sha=text_sha, multiplier=2))
+                    raw_ids = [int(value) for value in ids]
+                    if (
+                        int(state["eval_documents_written"]) < int(args.eval_documents)
+                        and text_sha not in complete_eval_hashes
+                        and len(raw_ids) >= 8192
+                    ):
+                        append_jsonl(eval_rows_path, eval_row(
+                            raw_ids, source_index=source_index,
+                            source_row=absolute_row, text_sha=text_sha, multiplier=1,
+                        ))
+                        append_jsonl(eval_rows_path, eval_row(
+                            raw_ids, source_index=source_index,
+                            source_row=absolute_row, text_sha=text_sha, multiplier=2,
+                        ))
+                        complete_eval_hashes.add(text_sha)
                         state["eval_documents_written"] = int(state["eval_documents_written"]) + 1
+                    document_ids = raw_ids + [int(tokenizer.eos_token_id)]
                     remaining = int(args.target_tokens) - int(state["tokens_written"])
                     if remaining <= 0:
                         done = True; break
@@ -201,18 +303,6 @@ def main() -> int:
                         atomic_json(state_path, state)
                     if int(state["tokens_written"]) >= int(args.target_tokens):
                         done = True; break
-                if int(state["eval_documents_written"]) >= int(args.eval_documents):
-                    eval_manifest = output / "fresh_eval_manifest.json"
-                    if not eval_manifest.exists():
-                        atomic_json(eval_manifest, {
-                            "status": EVAL_STATUS, "tokenization_executed": True,
-                            "native_context_length": 4096,
-                            "tokenizer_sha256": tokenizer_digest(checkpoint),
-                            "source_shard_sha256": observed_source_hashes[0],
-                            "source_shard_identity": "FineWeb-Edu sample/10BT/002_00000.parquet",
-                            "excluded_prior_text_sha256": sorted(EXCLUDED_TEXT_SHA256),
-                            "pg19": {"rows_path": eval_rows_path.name}, "longbench": {"cells": {}},
-                        })
                 if done:
                     break
             if done:
@@ -227,6 +317,31 @@ def main() -> int:
         raise RuntimeError("source shard ended before the 1B-token target")
     if int(state["eval_documents_written"]) != int(args.eval_documents):
         raise RuntimeError("insufficient fresh 8K evaluation documents")
+    eval_manifest = output / "fresh_eval_manifest.json"
+    eval_manifest_value = {
+        "status": EVAL_STATUS,
+        "tokenization_executed": True,
+        "native_context_length": 4096,
+        "tokenizer_sha256": tokenizer_sha,
+        "source_shard_sha256": observed_source_hashes,
+        "source_shard_identity": [
+            f"FineWeb-Edu sample/10BT/{source.name}" for source in sources
+        ],
+        "excluded_prior_text_sha256": sorted(EXCLUDED_TEXT_SHA256),
+        "eval_documents": int(args.eval_documents),
+        "eval_rows": int(args.eval_documents) * 2,
+        "eval_row_schema": "fineweb_pg19_tail_nll_v1",
+        "append_eos": False,
+        "rows_sha256": sha256_file(eval_rows_path),
+        "pg19": {"rows_path": eval_rows_path.name},
+        "longbench": {"cells": {}},
+    }
+    if eval_manifest.is_file():
+        existing_eval_manifest = json.loads(eval_manifest.read_text(encoding="utf-8"))
+        if existing_eval_manifest != eval_manifest_value:
+            raise RuntimeError("fresh-eval manifest identity drift")
+    else:
+        atomic_json(eval_manifest, eval_manifest_value)
     receipt = {
         "status": STATUS,
         "source_identity": [
@@ -236,13 +351,16 @@ def main() -> int:
         "source_bytes": [source.stat().st_size for source in sources],
         "distinct_from_existing_shards": ["000_00000", "001_00000", "004_00000"],
         "excluded_prior_text_sha256": sorted(EXCLUDED_TEXT_SHA256),
-        "checkpoint_tokenizer_sha256": tokenizer_digest(checkpoint),
+        "checkpoint_tokenizer_sha256": tokenizer_sha,
         "tokens": int(state["tokens_written"]),
         "documents": int(state["documents_written"]),
         "tokens_file_sha256": sha256_file(tokens_path),
         "offsets_file_sha256": sha256_file(offsets_path),
         "fresh_eval_rows_sha256": sha256_file(eval_rows_path),
-        "fresh_eval_manifest_sha256": sha256_file(output / "fresh_eval_manifest.json"),
+        "fresh_eval_manifest_sha256": sha256_file(eval_manifest),
+        "fresh_eval_documents": int(args.eval_documents),
+        "fresh_eval_row_schema": "fineweb_pg19_tail_nll_v1",
+        "fresh_eval_append_eos": False,
         "rolling_document_sha256": state["rolling_document_sha256"],
         "training_or_parameter_updates": False,
     }

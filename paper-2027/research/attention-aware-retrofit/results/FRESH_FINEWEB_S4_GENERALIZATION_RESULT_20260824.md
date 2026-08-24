@@ -2,8 +2,9 @@
 
 - **Date:** 2026-08-24/25
 - **Status:** completed fresh-distribution natural-NLL confirmation
-- **Decision:** retain the zero-training Native/s4 session policy; the simple
-  nearest ramp remains an adequate implementation of the long-table allocation
+- **Decision:** retain the zero-training Native/s4 session policy; treat the
+  third axis as a necessary coarse allocation degree of freedom at 4x, without
+  claiming that one detailed interior profile is uniquely responsible
 - **Data:** FineWeb-Edu `sample/10BT/002_00000.parquet`, absent from the prior
   local `000/001/004` shard set
 
@@ -16,13 +17,13 @@ behind the target-aware s2 oracle at 8K, and is the oracle at 16K by
 construction.
 
 This result also separates the roles of the method components on fresh natural
-text. A same-support geometric long table collapses at 16K, while the nearest
-YaRN-style ramp matches the derived allocation to within `0.001` NLL. Applying
-the same derived s4 table statically at 4K incurs a visible cost; the session
-route removes that cost exactly. The practical method is therefore:
+text. A same-support geometric long table collapses at 16K, while a coarse
+fixed-index ramp control matches the derived allocation to within `0.001` NLL.
+Applying the same derived s4 table statically at 4K incurs a visible cost; the
+session route removes that cost exactly. The practical method is therefore:
 
 > exact Native inside the model window, plus one zero-parameter, session-static
-> long profile whose useful interior allocation is captured by a simple ramp.
+> long profile with a non-geometric interior allocation.
 
 ## Data and protocol
 
@@ -80,16 +81,21 @@ The bootstrap resamples paired source documents 20,000 times with seed
 
 ## Allocation and routing controls
 
-This is the third-axis identification layer. All session controls preserve
-exact Native at 4K and use the same factor-four support, attention gain, route,
-checkpoint, rows, and runtime at long lengths. Only interior allocation `z`
-changes.
+This is the third-axis identification layer. In the paper's exact table
+decomposition
+
+\[
+x_k=-\log\omega_k=a+Rz_k,\qquad z_0=0,\ z_{K-1}=1,
+\]
+
+the controls hold sampled support `(a,R)`, attention gain, Native/long route,
+checkpoint, rows, and runtime fixed. Only interior allocation `z` changes.
 
 | Long allocation | 4K NLL | 8K NLL | 16K NLL |
 | --- | ---: | ---: | ---: |
 | geometric | `2.7538` | **`2.8316`** | `7.3189` |
 | derived s4 | `2.7538` | `2.8662` | **`2.7868`** |
-| nearest ramp | `2.7538` | `2.8663` | `2.7876` |
+| coarse fixed-index ramp | `2.7538` | `2.8663` | `2.7876` |
 
 Geometric allocation is locally competitive at 8K but catastrophically loses
 the 16K endpoint. The ramp-minus-derived differences are only `+0.00005` at 8K
@@ -106,8 +112,12 @@ survives farther extrapolation.
 
 On the same holdout-512 rows, ramp-minus-derived is `+0.00051` at 8K and
 `+0.00056` at 16K. Both paired intervals contain zero
-(`[-0.00028,+0.00131]` and `[-0.00020,+0.00133]`). The simple ramp matches the
-detailed profile on fresh natural text as well as in the earlier RULER owner.
+(`[-0.00028,+0.00131]` and `[-0.00020,+0.00133]`). The coarse ramp control
+matches the detailed profile on fresh natural text as well as in the earlier
+RULER owner. This is a profile-detail negative, not a reduction of our method
+to YaRN and not evidence that `z` is irrelevant: geometric versus
+non-geometric at 16K is the isolated third-axis effect, whereas ramp versus
+derived tests only fine-shape uniqueness.
 
 Applying derived s4 statically at every length gives 4K NLL `2.8774`, a
 `+0.1236` regression versus the exact-Native session route, while its 8K/16K

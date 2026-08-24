@@ -8,6 +8,17 @@
     "historical_shards_excluded": ["000_00000", "001_00000", "004_00000"],
     "holdout128_skip_eligible_documents": 32,
     "holdout512_skip_eligible_documents": 160,
+    "selected_document_sets": {
+      "hash_contract": "sha256(concatenated sorted source_text_sha256 strings)",
+      "fresh32": {"documents": 32, "sha256": "da6b5bf57c101964706844cc1f0d83fd7542b9679a239979a4fb48e1640b022a"},
+      "holdout128": {"documents": 128, "sha256": "a66902139434b57e892a094dbc9568702d152a5a1f48acaccdb4c75db1941dec"},
+      "holdout512": {"documents": 512, "sha256": "65fd8c96fdfb3ee8a72d9e6106250f351bb54520cfac79a23915d5a4d7d1ab72"}
+    },
+    "selected_document_intersections": {
+      "fresh32_holdout128": 0,
+      "fresh32_holdout512": 0,
+      "holdout128_holdout512": 0
+    },
     "tail_tokens_per_row": 1024,
     "one_billion_token_receipt_sha256": "8d4ca97bd85594771d8e755d6afbeaf9cad4e3843e6324bc1ee51938ae8c5ec4",
     "one_billion_tokens": 1000000000,
@@ -56,8 +67,8 @@
     "long_values_identical": true
   },
   "raw_sha256": {
-    "holdout128_summary": "c484e12007d3bf1fdcef94a149edd40b8f432edae350cefd5f14dd7109f5a5e5",
-    "holdout512_summary": "fd669aeab7787c0c5e3e8dc0723a4933f3f31a3322a0b57739f54717ddcc91a6",
+    "holdout128_summary_v3_protocol_validated": "2c57af14195ddf193d510dfb40c6c9d58f32ad510eac5ea2d097d66eba0545db",
+    "holdout512_summary_v3_protocol_validated": "b8d9cec26ddb26141f934f64bb27cb4fdbca82404c9135b5b5239926f7393f33",
     "holdout512_native": "25723a6ff6672c920af977c5b7a705fef08960162f3c0f994f93c9d2169ccfb7",
     "holdout512_session_s4": "4925d77cbcfdb9cd16fd7b93358e9070a92a7f3b9444ef5123f1ae52f0fcb650",
     "holdout512_geometric": "cd6fe33ce2b779e743cc4c9e3665f52cbe102ec1902da4853b03978e496d8297",
