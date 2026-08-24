@@ -3,12 +3,12 @@
 - **Updated:** 2026-08-24
 - **Target:** ICLR 2027
 - **Branch / upstream:** `main_0726` / `origin/main_0726`
-- **Published content commit:** `79aa93218154a959afc979476c4de004316f16bf`
 - **Active manuscript:** `paper-2027/`
 - **Immutable baseline:** `paper/`
-- **Status:** manuscript, owner repairs, reviewer-facing wording pass, PDF, and
-  anonymous supplement are validated, committed, and pushed. This is Git
-  publication only; no OpenReview upload, GPU run, or submission is implied.
+- **Status:** manuscript/package validation and the authorised 2026-08-24/25
+  retrofit experiment reports are committed and pushed. No OpenReview upload or
+  submission is implied. Verify live Git state instead of copying a commit SHA
+  into this mutable handoff.
 - **Internal only:** exclude this file from the anonymous supplement.
 
 ## 1. Cold-start order
@@ -103,35 +103,39 @@ The 2026-08-24 wording/package pass established:
 These checks establish build/package health, not scientific acceptance,
 OpenReview upload, or publication.
 
-### 2026-08-24/25 authorised GPU update
+### 2026-08-24/25 closed GPU experiment ledger
 
-The explicitly authorised RTX 5090 window completed three bounded internal
-studies without changing reviewer-facing manuscript source:
+These experiments are complete. Read the linked owner before proposing another
+run; a failed gate is a stop decision, not an unfinished queue.
 
-- a learned direct-`z` mature-checkpoint pilot failed its per-row held-out 2x
-  robustness gate and stopped before downstream tasks;
-- two zero-parameter, fixed-Native-support static tables improved PG-19 2x
-  directionally but failed the 1x no-harm gate, strengthening the need for an
-  exact-Native short route rather than rejecting training-time EVQ-Cosh;
-- the completed Native/s4 policy was confirmed on new FineWeb-Edu shard002.
-  On the disjoint 512-document set it is exactly Native on every 4K row and
-  improves every row at 8K/16K by mean `-4.0953/-4.4393` tail NLL. Matched
-  fixed-support controls show geometric is slightly better at 8K but worse by
-  `+4.4560` at 16K, while nearest-ramp minus derived is only
-  `+0.00051/+0.00056`, with paired intervals containing zero. A static/session
-  control separately attributes 4K retention to routing.
+| Question | Owner | Decision; do not repeat |
+| --- | --- | --- |
+| Can a two-document learned direct-`z` calibration robustly retrofit mature OLMo? | [`research/attention-aware-retrofit/results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md`](research/attention-aware-retrofit/results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md) | Mean 2x moved favourably but the per-row gate failed. Do not run its PG-19, RULER, LoRA, or full-task continuation. |
+| Can one analytic static table serve both 1x and 2x with frozen weights? | [`research/attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md`](research/attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md) | Both tested tables improved 2x directionally and failed 1x retention. Do not sweep `tau`, protected bands, gain, or another static table from this result. |
+| Does the already-frozen Native/s4 policy generalise to new natural text, and what owns each effect? | [`research/attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`](research/attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) | Closed positive confirmation on disjoint shard002 rows. Do not rerun PG-19/RULER to reconfirm it or turn the ramp control into the method claim. |
 
-Canonical reports and machine receipts are under
-`research/attention-aware-retrofit/{results,evidence}/`. Raw rows remain in
-the ignored external-result owner. A new system-disk corpus contains exactly
-`1,000,000,000` tokens from FineWeb-Edu shards002/003, which are absent from
-the historical local 000/001/004 shard set; its token file SHA-256 is
+The fresh result keeps four estimands separate:
+
+| Contrast | Held fixed | Changed | What it establishes |
+| --- | --- | --- | --- |
+| Native versus Native/s4 session policy | checkpoint and rows | table, gain, and route as one bundle | zero-training policy persistence only |
+| geometric versus derived/ramp at long lengths | sampled support `(a,R)`, gain, route, checkpoint, and rows | interior allocation `z` | third-axis effect; geometric is locally competitive at 8K and fails at 16K |
+| derived versus coarse ramp | support, gain, route, checkpoint, and rows | fine profile detail within tested allocations | tested profiles are indistinguishable at current precision; no uniqueness or continuous-basin claim |
+| static-s4 versus session-s4 | one frozen long table, gain, checkpoint, and rows | short-request routing | exact Native routing owns 4K retention |
+
+Target-aware s2 versus session-s4 changes support and table together; it is an
+operating-point comparison, never a pure `z` effect. Official YaRN is an
+external reference, never the mechanism owner.
+
+Canonical reports and compact machine receipts are under
+`research/attention-aware-retrofit/{results,evidence}/`; raw rows remain in an
+ignored external owner. The authorised window also produced exactly
+`1,000,000,000` CPU-tokenised FineWeb-Edu tokens from new shards002/003, absent
+from the historical 000/001/004 set. The token file SHA-256 is
 `223e466b1e829675e027e900fa4dbb8b0ff2e851f70d0c9ef301b1fec944b284`.
-
-The mechanism accounting remains strict: Native/session is bundled policy
-persistence; geometric/ramp/derived at fixed support, gain, and route owns the
-`z` contrast; derived/ramp owns profile detail; static/session with one long
-table owns routing. YaRN is an external reference, not the mechanism claim.
+This corpus is data readiness, not training evidence. It remains on the stopped
+instance's system disk; copy it to an explicitly chosen persistent owner before
+ever releasing that instance or using the corpus on another machine.
 
 ## 5. Workspace and ownership
 
@@ -177,10 +181,38 @@ Highest-leverage author actions:
 4. Keep future Git publication approval-gated and repeat the scoped
    staging/leak review.
 
+There is no active GPU queue. A future large-model retrofit run requires a new
+method-level hypothesis and explicit authorisation. It must preserve exact
+Native in-window behaviour and pass a smaller matched gate before LoRA or
+larger-model adaptation; neither the failed direct-`z` pilot nor the failed
+single-static-table arms are valid launch points.
+
+Future compute is not ready merely because a script or token corpus exists.
+Before opening a GPU, follow `../AGENTS.md` and additionally verify all of these
+task-specific gates:
+
+1. the question is absent from the closed ledger above and can change the paper;
+2. the exact estimand states support, `z`, gain, route, weights, endpoint, and
+   which of them change;
+3. checkpoint, data, table, code, output, stop condition, and shutdown plan have
+   frozen identities, and the raw data owner is portable or intentionally tied
+   to the selected instance;
+4. a smaller matched gate must pass before LoRA, a larger checkpoint, RULER, or
+   a broad task suite is allowed.
+
+A future run is not handed off as complete until its canonical report, compact
+receipt, result/evidence indices, this handoff, raw-owner location, Git state,
+and provider shutdown state agree. A plan, launch log, PID, output directory,
+or tracked receipt alone never closes the loop.
+
 Stop list:
 
 - no new table, gain, beta, rank, step-count, or RULER sweeps for the current
   submission;
+- no repetition of the shard002 Native/session confirmation or its 128/512-row
+  controls unless the estimand, checkpoint population, or task family changes;
+- no claim that coarse-ramp parity makes the method YaRN or makes `z`
+  irrelevant;
 - no revival of revoked source-selection or CE-only far-pass protocols;
 - no promotion of the old aliased Qwen `0.6175` result;
 - no merging of exact-range, co-adaptation, frozen retrofit, and mature
@@ -195,6 +227,12 @@ Stop list:
 - The current repair/manuscript/package set was published to `main_0726`.
 - Raw GPU artifacts remain external; compact tracked receipts own only their
   stated hashes and metrics.
+- Chrome showed the authorised A70/RTX 5090 instance as **已关机** on
+  2026-08-24. This is volatile provider state: recheck the UI before assuming
+  compute is running or before any release operation. The instance was stopped,
+  not released.
+- The 1B-token corpus is not in Git and is not yet a portable training-data
+  owner; its tracked research receipt must not be mistaken for the raw corpus.
 - No promoted scientific result is known incomplete. Remaining work is author
   review, live submission-policy verification, and explicitly authorized Git
   publication.

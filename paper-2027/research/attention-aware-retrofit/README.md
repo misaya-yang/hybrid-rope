@@ -12,18 +12,22 @@ attention gain, and serving policy from being merged into one estimand.
 
 ## Current decision
 
-Two owners are live:
+Two primary owners and one confirmation/attribution owner are live:
 
 1. [`results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md)
    owns the causal paper-upgrade case study. At fixed support and amplitude,
    interior exponent allocation `z` changes frozen OLMo and Qwen behaviour; a
-   nearest movement-profile ramp matches the detailed derived profile, so this is not
-   a new interpolation-family claim. Its 151.9M two-seed crossing supports
+   coarse fixed-index ramp control matches the detailed derived profile at the
+   tested points, so this is not a new interpolation-family claim. Its 151.9M two-seed crossing supports
    weights/table co-adaptation.
 2. [`results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`](results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md)
    owns the practical zero-training policy: exact Native inside the model's own
    window, one deployment-frozen long profile beyond it, fixed before prefill
    for the entire KV-cache lifetime.
+3. [`results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`](results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md)
+   confirms the bundled policy on a new FineWeb-Edu shard and separately owns
+   the fresh-natural-text fixed-support `z`, profile-detail, and routing
+   contrasts. It does not replace either primary owner.
 
 The second owner is the complete practical intervention: deterministic long
 frequency tensor, fixed long attention amplitude, and session route. The first
@@ -45,20 +49,28 @@ Its PG-19, RULER, LoRA, and full-task queue was not run.
 This branch-local stop does not supersede or block the completed zero-training
 Native/s4 policy above.
 
-A subsequent new-shard natural-NLL study separates the practical policy from
-its mechanisms; see
-[`results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`](results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md).
-The bundled Native/s4 policy persists on fresh FineWeb-Edu rows, while matched
-fixed-support controls attribute the 4x effect to interior allocation, show
-that a nearest ramp matches the derived profile, and identify exact Native
-session routing as the in-window retention mechanism. The failed analytic
-single-static-table gate is recorded separately and does not replace the
-session-policy owner.
+The failed analytic single-static-table gate is recorded separately and does
+not replace the session-policy owner. The one-billion-token corpus prepared in
+the same authorised window is data readiness, not a result or a reason to
+repeat the fresh evaluation.
+
+## Closed work and anti-repeat ledger
+
+| Route | State | Re-entry condition |
+| --- | --- | --- |
+| two-document learned direct-`z` | stopped by per-row held-out gate | a materially different identifiable objective and a new preflight; never resume its old downstream queue |
+| analytic fixed-support single static table | stopped by 1x retention gate | a new mechanism that addresses frozen-coordinate shock; no `tau`/band/gain sweep |
+| fresh shard002 Native/session confirmation | complete on disjoint 32/128/512 subsets | a different checkpoint population or task-family estimand, not more rows from the same shard |
+| geometric/derived/coarse-ramp controls | complete fixed-support `z` and profile-detail contrasts | a new causal question; do not use official YaRN as a substitute control |
+| static/session control | complete routing contrast | a new router or cache-lifetime contract |
+
+There is no active GPU queue. Before future compute, read the handoff, this
+ledger, the intended result owner, and the relevant preflight in that order.
 
 ## Read order
 
 1. The conceptual foundation linked above.
-2. The two live owners above.
+2. The three live owners above.
 3. [`evidence/README.md`](evidence/README.md) for machine-path-free receipts.
 4. [`results/README.md`](results/README.md) for completed results and their
    claim ceilings.
@@ -88,6 +100,7 @@ session-policy owner.
 | Is the detailed uniqueness curve required? | live same-support owner; current answer is no |
 | Does the frequency table interact with attention amplitude? | `results/JOINT_MECHANISM_REPORT_20260822.md`; current answer is yes in the tested cells |
 | Can deployment preserve the Native short path without training? | live session-binary owner |
+| Does the bundled policy persist on a previously unused evaluation shard, and which component owns 1x retention versus 4x survival? | fresh FineWeb confirmation/attribution owner |
 
 Keep these estimands separate. The complete replacement may combine variables
 that its controls isolate. RULER is task-family adaptation, row bootstraps
@@ -102,6 +115,12 @@ not a from-training estimate.
 - 151.9M crossing evaluator:
   `scripts/eval/evaluate_151m_same_support_retrofit.py`;
 - session policy and cache-safe RoPE: `scripts/lib/rope/`;
+- fresh FineWeb split preparation and 1B corpus tokenization:
+  `scripts/data/prepare_fineweb_fresh_long_eval.py` and
+  `scripts/data/tokenize_fineweb_edu_new_1b.py`;
+- protocol-bound fresh-result summarization:
+  `scripts/analysis/summarize_fresh_fineweb_s4.py`;
+- frozen direct-`z` pilot: `scripts/eval/optimize_olmo_fixed_support_z.py`;
 - focused regression tests: `tests/test_same_support_rope_controls.py`,
   `tests/test_length_conditioned_budgeted_rope.py`,
   `tests/test_target_free_rope.py`, and

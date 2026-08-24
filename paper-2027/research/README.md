@@ -53,8 +53,8 @@ zero-training intervention contains a deterministic long table, a fixed
 attention amplitude, and a session-static Native/long route. Same-support and
 frequency-by-gain owners probe those components under their own matched
 protocols rather than forming one pooled factorial: fixed-support `z` remains
-consequential on OLMo and Qwen, while a nearest movement-profile ramp matches the
-detailed derived profile. The defensible novelty is fixed-support
+consequential on OLMo and Qwen, while a coarse fixed-index ramp control matches
+the detailed derived profile at the tested points. The defensible novelty is fixed-support
 identification and its mature-checkpoint corollary, not merely producing a
 non-geometric table or a new YaRN family.
 
@@ -92,6 +92,8 @@ Additional durable theory/supporting files at research root:
 | Matched mature phase exposure | `../../rebuttal/rebuttal_0723/theory_results/OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729.md` | protocol-specific capability evidence |
 | Mature fixed-support `z` controls and 151.9M crossing | [`attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) | internal causal case study; not a new operator-family claim |
 | Zero-training practical session policy | [`attention-aware-retrofit/results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`](attention-aware-retrofit/results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md) | internal OLMo deployment/capability evidence |
+| Fresh natural-text policy persistence and mechanism controls | [`attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`](attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) | one-checkpoint, one-new-shard teacher-forced NLL; bundled policy, fixed-support `z`, profile detail, and routing remain separate estimands |
+| Failed mature direct-`z` calibration and analytic single-table routes | [`attention-aware-retrofit/results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md`](attention-aware-retrofit/results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md) and [`attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md`](attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md) | closed negative method gates; not incomplete downstream queues |
 | LeRoPE related-work facts | `../../rebuttal/rebuttal_0723/theory_results/LEROPE_CONCURRENT_WORK_NOTE_20260728.md` plus primary paper | positioning only |
 | Failed LeRoPE profile oracle | [`audits/LEROPE_PROFILE_ORACLE_AUDIT_20260820.md`](audits/LEROPE_PROFILE_ORACLE_AUDIT_20260820.md) | internal negative |
 | Failed attention-measure ordering gate | [`audits/KAPPA_ATTENTION_MEASURE_AUDIT_20260820.md`](audits/KAPPA_ATTENTION_MEASURE_AUDIT_20260820.md) | internal negative |
@@ -107,6 +109,9 @@ Additional durable theory/supporting files at research root:
   transfer or from-training evidence.
 - The zero-training session policy owns the complete table/gain/router
   intervention; same-support and gain 2x2 owners identify its components.
+- The fresh FineWeb owner closes the previously missing natural OLMo
+  geometric/ramp/derived test. Its target-aware comparison changes support and
+  table together and therefore owns no pure-allocation claim.
 - NLL/PPL, teacher-forced NLL gap, strict generation, token F1, exact match,
   RULER, and causal source-use are distinct endpoints.
 - Row bootstraps condition on a fixed checkpoint and task set; they are not
@@ -125,11 +130,15 @@ Additional durable theory/supporting files at research root:
   valid corrected 128K result is `0.5400`.
 - Do not describe the mature profile as a new interpolation family or universal
   optimum.
+- Do not restart the direct-`z` downstream queue or sweep another analytic
+  static table: both routes reached their registered stop gates.
+- Do not repeat the fresh shard002 Native/session or 128/512-row controls merely
+  to reproduce an already hash-bound result.
 
-The promoted frozen case study remains bounded to its stated protocols. Its
-highest-value missing external test is a preregistered same-support
-geometric/ramp/derived comparison on a natural OLMo task and a natural Qwen
-task; it is not currently authorized.
+The promoted frozen case study remains bounded to its stated protocols. The
+natural OLMo same-support comparison is now complete; natural Qwen and
+checkpoint-population generalisation remain unestablished, but neither is an
+active queue. Consult the handoff before proposing new compute.
 
 ## Placement rules
 

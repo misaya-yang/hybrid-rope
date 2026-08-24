@@ -45,7 +45,7 @@ bounded Qasper policy endpoint
 in Appendix F.2, while the same-support owner supplies the allocation corollary.
 
 `SAME_SUPPORT_FROZEN_CHECKPOINT_RESULTS_20260823.json` records the completed
-fixed-endpoint geometric/nearest-movement-profile-ramp/derived controls on OLMo and Qwen, the
+fixed-endpoint geometric/coarse-ramp/derived controls on OLMo and Qwen, the
 model-relative table identities, evaluation-row sensitivity intervals, the
 two-seed 151.9M weights-by-runtime-table crossing, and the corrected Qwen 128K
 extension. Its mature-checkpoint comparisons are fixed-checkpoint causal
@@ -65,6 +65,9 @@ not a rejection of training-time EVQ-Cosh.
 
 `FRESH_FINEWEB_S4_RESULTS_20260824.json` records the new-shard natural-NLL
 study and the separate bundled-policy, fixed-support allocation, profile-detail,
-and routing contrasts. Its 128- and 512-document subsets are disjoint, and the
-same run produced a hash-bound, system-disk corpus of exactly one billion new
-FineWeb-Edu tokens from shards absent from the historical local shard set.
+and routing contrasts. Its exploratory-32, holdout-128, and holdout-512
+document sets are pairwise disjoint. A parallel CPU preparation job in the same
+authorised window produced a hash-bound, system-disk corpus of exactly one
+billion new FineWeb-Edu tokens from shards absent from the historical local
+shard set. The compact receipt is not the raw corpus and is not training
+evidence.
