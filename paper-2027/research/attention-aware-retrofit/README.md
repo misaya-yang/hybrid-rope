@@ -57,6 +57,14 @@ allocation effect: nearly neutral held-out 4K NLL, better physical 8K/16K tail
 NLL, worse long full NLL, and no resolved full-200 2Wiki advantage. This is a
 mechanism result, not a replacement method or manuscript claim.
 
+Two follow-ups are also complete. The frozen allocation dose owner
+[`results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md`](results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md)
+shows a continuous full/tail response but no analytic Path-A point meeting the
+registered joint gate. The Native-4K owner
+[`results/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md`](results/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md)
+records the four task scores and rejects the proposed one-number
+capability-versus-position diagnostic because rows differ across lengths.
+
 The failed analytic single-static-table gate is recorded separately and does
 not replace the session-policy owner or close the single-table objective. The
 two-seed phase-chord result in
@@ -73,7 +81,7 @@ readiness, not a result or a reason to repeat the fresh evaluation.
 | two-document learned direct-`z` | stopped by per-row held-out gate | a materially different identifiable objective and a new preflight; never resume its old downstream queue |
 | two tested analytic fixed-support static tables | stopped by 1x retention gate | do not reopen; the next table comes from the phase-kernel/latest optimized theory owner, not another candidate search or `tau`/band/gain sweep |
 | fresh shard002 Native/session confirmation | complete on disjoint 32/128/512 subsets | a different checkpoint population or task-family estimand, not more rows from the same shard |
-| mature shared-allocation phase oracle and dense-natural recovery | stopped after registered shell failure and matched full/tail attribution | a materially different theory/objective that targets full-sequence and tail behavior jointly; not more shells, steps, seeds, or allocation-LR tuning |
+| mature shared-allocation phase oracle and dense-natural recovery | stopped after registered shell failure, matched full/tail attribution, and the completed frozen dose curve | a materially different theory/objective that targets full-sequence and tail behavior jointly; not more shells, steps, seeds, or allocation-LR tuning |
 | geometric/derived/coarse-ramp controls | complete fixed-support `z` and profile-detail contrasts | a new causal question; do not use official YaRN as a substitute control |
 | static/session control | complete routing contrast | a new router or cache-lifetime contract |
 
@@ -123,6 +131,7 @@ the current action route is repository `INDEX.md` §6.
 | Can deployment preserve the Native short path without training? | live session-binary owner |
 | Does the bundled policy persist on a previously unused evaluation shard, and which component owns 1x retention versus 4x survival? | fresh FineWeb confirmation/attribution owner |
 | Is a joint in-window/extrapolation allocation feasible? | internal phase-chord owner; current answer is yes descriptively, but not yet a promoted method claim |
+| Is the mature frozen effect graded between Native and the tested tables? | allocation dose owner; yes, but the analytic path misses its joint guard and static `r2` is not a selector |
 
 Keep these estimands separate. The complete replacement may combine variables
 that its controls isolate. RULER is task-family adaptation, row bootstraps

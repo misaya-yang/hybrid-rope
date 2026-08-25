@@ -1,7 +1,8 @@
 # ICLR 2027 submission narrative and experiment plan
 
 - **Date:** 2026-08-26
-- **Status:** plan; changes no number and no manuscript source by itself
+- **Status:** submission decision memo, updated after the completed dose and
+  Native-4K diagnostics
 - **Role:** decides what the paper's single claim is, which owned numbers carry
   it, which objection is pre-empted in the body, and what may and may not be
   run before submission
@@ -108,7 +109,7 @@ exactly one of them.
 | 2 Tool | `x = a + Rz` separates support from allocation — **this is the novelty**, it is what makes allocation separately manipulable | causal-variables owner |
 | 3 Cause | endpoints bitwise fixed, 30 interior frequencies move, 3/3 seeds improve every OOD length | exact-range three-seed |
 | 4 Construction | EVQ-Cosh, closed form, zero learned parameters | research synthesis |
-| 5 Consequence | scale and systems, then: on a released 1.5B at fixed support, `0.0056 -> 0.6047`, zero training, downstream QA preserved | MLA / 454M / 750M / 1.485B / 8B, then same-support + length-conditioned |
+| 5 Consequence | scale and systems, then: on a released 1.5B at fixed support, `0.0056 -> 0.6047` with frozen weights | MLA / 454M / 750M / 1.485B / 8B, then same-support owner |
 
 **Do not delete scale evidence — route it.** Nine evidence layers without a
 throughline read as a kitchen sink; the same nine with one sentence each saying
@@ -117,8 +118,9 @@ what that layer tests read as thorough. The fix is routing, not subtraction.
 **Zero-training is step 5, not an appendix.** It is the direct cash-out of the
 step-2 decomposition on a mature model. Filing it as an "engineering fallback"
 demotes the paper's strongest capability evidence. Per the mechanism analysis,
-the frozen-table form is *forced* by the co-adaptation result, so it belongs on
-the main line.
+the frozen-table form is *motivated* by the co-adaptation result and the
+transplant obstruction — not proven necessary by them — so it belongs on the
+main line as the lowest-cost route that leaves model weights untouched.
 
 ---
 
@@ -140,61 +142,48 @@ the main line.
 
 ## 6. Experiment plan
 
-### 6.1 Before submission — one experiment, thirty-five minutes
+### 6.1 Completed submission experiment
 
-**The dose-response curve.** Native → anchored EVQ-Cosh at fixed support, on
-the frozen released checkpoint, zero training. It is the figure that answers
-R4 ("the theorem is decorative") by showing the theory's axis predicts
-behaviour on a model we did not train.
+The 128-document fixed-support dose response is complete:
+[`attention-aware-retrofit/results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md`](attention-aware-retrofit/results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md).
+The registered analytic Path A shows an interior 16K-tail minimum but no point
+passes its joint `+0.01` 4K guard; the static-`r2` location prediction fails.
+The empirical oracle direction gives a graded tail effect at small 4K cost,
+but inherits one learned run and is mechanism evidence rather than a new
+zero-training method. The experiment stays internal and does not replace the
+stronger three-seed and same-support manuscript owners.
 
-Preregistration:
-[`attention-aware-retrofit/preflights/ALLOCATION_DOSE_RESPONSE_PREFLIGHT_20260826.md`](attention-aware-retrofit/preflights/ALLOCATION_DOSE_RESPONSE_PREFLIGHT_20260826.md).
-Code and the sixteen frozen tables are already staged and CPU-verified.
-
-```
-bash scripts/eval/run_allocation_dose_grid_5090.sh screen
-```
-
-Reporting, not gating: full NLL, tail NLL, and the per-1024-position-bin
-profile, per row. A flat in-window cost with a growing tail gain up to a knee
-is the figure; anything else is recorded and the construction changes. **This
-preflight carries no route-closing clause** — a marginal curve is a reason to
-change the construction, never to close the axis.
-
-Optional second cell, fifteen minutes: re-run the matched self-consistent
-comparison on the existing 128-document holdout instead of the four-document
-views, because that number is destined for the paper and the 128-row version
-lands directly beside the published Native row `2.7538 / 7.0023 / 7.2703`.
-
-### 6.2 Before submission — nothing else
+### 6.2 Before submission — no further compute
 
 No new seeds. No larger models. No `tau`, band, amplitude, `p`, or routing
-sweeps. No per-head arm. No capability re-runs.
+sweeps. No per-head arm. The dose and Native-4K diagnostic above close the
+authorised window; do not add capability runs from the same evaluation pool.
 
 The binding reason is not cost. **Tuning `p`, `c`, or the profile now, on
 evaluation sets that have already been read, converts a clean controlled result
 into a tuned one.** That is the only remaining way to damage the current
 position. In particular the measured `c=0.12` improvement stays unadopted.
 
-### 6.3 Immediately after submission — the gating diagnostic
+### 6.3 Completed diagnostic and corrected next question
 
-**Variable tracking at 4K, in-window, same checkpoint.** Ten minutes. It
-decides whether the remaining headroom is positional or is a model ceiling, and
-every later method choice depends on it. Rationale and the two readings:
-mechanism analysis §6.
+Native 4K core-four is `1.00/0.85/0.60/0.03`. Because each length uses
+different generated rows, and another frozen policy reaches VT `0.62` at 8K,
+the proposed one-number capability-versus-position decision is invalid. The
+result owner is
+[`attention-aware-retrofit/results/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md`](attention-aware-retrofit/results/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md).
 
-### 6.4 After that — headroom, conditional on §6.3
+### 6.4 After submission
 
-Ordered in the mechanism analysis §7: per-task profile optimisation, per-head /
-per-layer allocation (`0.89` versus `0.09` repairable fraction, code complete,
-never trained), position-profile repair, and only then the amplitude
-coefficient.
+The next clean experiment reuses identical prompt content and decoding while
+changing only position IDs/phase exposure. Only after that identification
+should per-task, per-head, or per-layer allocation be trained. Amplitude and
+profile values already inspected on the evaluation tasks remain frozen.
 
 ---
 
 ## 7. Answering the two questions this plan exists to settle
 
-**"Can we validate capability on industrial models?"** It is already done and
+**"Can we validate capability on released models?"** It is already done and
 under-claimed. OLMo-2-0425-1B-Instruct and Qwen2.5-1.5B are third-party
 releases; core-4 RULER and official LongBench 2Wiki are capability endpoints,
 not perplexity; the frozen operator scores `0.5825 / 0.4000` against Native
@@ -203,16 +192,14 @@ score. The gap is only that this is 1.5B rather than 70B, and no reviewer
 expects a 70B ablation from an academic paper. The work needed is promotion,
 not measurement.
 
-**"Is zero-training finished?"** For this paper, yes — the claim it supports is
-identification and construction, and that claim is fully evidenced. For the
-method, no: the per-task decomposition shows range is saturated while
-long-range resolution is not, and the headroom is concentrated in multikey-3
-and variable tracking. Those are §6.3 and §6.4, after submission.
+**"Is zero-training finished?"** The current evidence is sufficient for the
+paper's bounded identification and construction claim. The method frontier is
+not closed: the analytic dose misses its in-window gate, and per-task headroom
+cannot be localised without a matched-content phase intervention.
 
 ---
 
 ## Claim boundary
 
-This file contains no new measurement. Every number is quoted from the owner
-named beside it and inherits that owner's scope. It is a plan, and a plan is
-not a result.
+This file is not a numerical owner. Every number is quoted from the linked
+owner and inherits that owner's scope.

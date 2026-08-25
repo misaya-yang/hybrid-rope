@@ -632,7 +632,7 @@
       "families": [
         "shared_rope_and_training"
       ],
-      "sha256": "1c3ea3e3f5162c8a6b13e619c85a8d6ea0559518196a5b939d8cdf745753b6fb",
+      "sha256": "eac21090d72d5d8444ed65bbb5ed154eaed9fe8b5f0764489635e6dcb6ad8b86",
       "source": "scripts/lib/rope/__init__.py",
       "workspace_path": "code/scripts/lib/rope/__init__.py"
     },

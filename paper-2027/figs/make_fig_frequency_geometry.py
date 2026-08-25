@@ -25,7 +25,7 @@ GREEN = "#2A8C6A"
 INK = "#17212B"
 REDUNDANCY_CMAP = LinearSegmentedColormap.from_list(
     "redundancy_blue",
-    ["#F8FBFD", "#E3EFF7", "#AED2E5", "#6EA6CC", BLUE],
+    ["#FFFFFF", "#EDF5F9", "#D4E8F2", "#A8CDE1", "#5E96BD"],
 )
 REDUNDANCY_CMAP.set_bad("#FFFFFF")
 
@@ -96,11 +96,13 @@ slow_indices = np.flatnonzero(slow)
 assert len(slow_indices) == 23 and slow_indices[0] == 41
 
 ax = axes[1]
-image = ax.imshow(affinity, origin="lower", cmap=REDUNDANCY_CMAP, vmin=0, vmax=1,
+affinity_plot = affinity.copy()
+affinity_plot[np.tril_indices(pairs)] = np.nan
+image = ax.imshow(affinity_plot, origin="lower", cmap=REDUNDANCY_CMAP, vmin=0, vmax=1,
                   interpolation="nearest")
 ax.add_patch(Rectangle((40.5, 40.5), 23, 23, fill=False, edgecolor=ORANGE,
                        lw=1.4))
-ax.annotate("23 slow pairs\nshare ~2 dimensions", (51.5, 51.5),
+ax.annotate("23 slow pairs\n46 dims, $r_2=2.00$", (51.5, 51.5),
             xytext=(8, 53), color=INK, fontsize=7.0, weight="bold",
             bbox=dict(boxstyle="round,pad=0.20", facecolor="white",
                       edgecolor="none", alpha=0.9),

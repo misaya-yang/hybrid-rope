@@ -5,13 +5,12 @@
 - **Branch / upstream:** `main_0726` / `origin/main_0726`
 - **Active manuscript:** `paper-2027/`
 - **Immutable baseline:** `paper/`
-- **Status:** manuscript/package validation and the authorised 2026-08-24/25
-  retrofit experiment reports are committed and pushed. No OpenReview upload or
-  submission is implied. The 2026-08-25 repository-organization and
-  evidence-consistency cleanup is included in the current publication scope;
-  it changes no manuscript source. The later 2026-08-25 co-adaptive allocation
-  oracle owner is complete locally but not committed or pushed. Verify live Git
-  state instead of copying a commit SHA into this mutable handoff.
+- **Status:** the manuscript narrative rewrite, fixed-support dose owner, and
+  experiment code were committed and pushed by the active checkpoint loop. The
+  final figure polish, corrected mechanism interpretation, Native-4K diagnostic,
+  and refreshed package are local working-tree changes at this handoff. No
+  OpenReview upload or submission is implied. Verify live Git state rather than
+  copying a commit SHA into this mutable handoff.
 - **Internal only:** exclude this file from the anonymous supplement.
 
 ## 1. Cold-start order
@@ -83,11 +82,11 @@ not interchangeable.
 - Title: *RoPE Has a Spectral Budget*.
 - Main text ends on page 9; total PDF length is 31 US-Letter pages.
 - `paper-2027/main.pdf`
-  - SHA-256: `e6fa28feeebed65b7e47ade034d3ea9ea2b1e768d9ebc7e66e44529bbc71f564`
-  - size: `699603` bytes
+  - SHA-256: `4ed57501bf77ea345adced513c8c434e90bd5b5f64cecb775c687cbb5275bd69`
+  - size: `699680` bytes
 - `rope-spectral-budget-iclr2027-supplement.zip`
-  - SHA-256: `63144b104c727dcd45f1230eeeb782a7a44173177cdad08791ffbed9ea774fd9`
-  - size: `862842` bytes
+  - SHA-256: `6bc386fc2ad8fbfc0fdf242032ce9fc5ac0300589897462f2eeecf4d9a73cb04`
+  - size: `865169` bytes
 - Immutable `paper/main.pdf`
   - SHA-256: `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`
 
@@ -136,6 +135,23 @@ The later 2026-08-25 co-adaptive allocation-oracle closure additionally passed:
 No manuscript source changed in this experiment-only closure, so the paper was
 not recompiled.
 
+The 2026-08-25/26 submission rewrite and experiment closure additionally passed:
+
+- fixed-support dose screen and full-128 evaluation completed with frozen
+  prediction, grid, per-row, environment, runtime, and SHA-256 receipts;
+- Native 4K RULER core-four completed on 20 rows/task; the differing
+  cross-length rows prevent the originally proposed model-ceiling inference;
+- active paper compile passed at 9 body / 31 total pages with zero undefined
+  refs/cites, `0pt` overfull, anonymous Letter output, and embedded non-Type-3
+  fonts;
+- curated ZIP integrity, isolated package rebuild, and isolated `144/144`
+  CPU tests passed;
+- focused navigation, fixed-support, same-support, and target-free suite passed
+  `39/39`; a stale manifest hash found on the first run was corrected before
+  the passing rerun;
+- pages 1, 2, 6--9 and both regenerated overview/geometry figures were visually
+  inspected; `paper/` remained unchanged.
+
 ### 2026-08-24/25 closed GPU experiment ledger
 
 These experiments are complete. Read the linked owner before proposing another
@@ -153,6 +169,8 @@ proxy, or a candidate failure as the method conclusion.
 | Can either tested analytic static table serve both 1x and 2x with frozen weights? | [`research/attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md`](research/attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md) | No: both tested tables improved 2x directionally and failed 1x retention. Do not sweep `tau`, protected bands, or gain from this result; the broader single-table objective remains open. |
 | Does the already-frozen Native/s4 policy generalise to new natural text, and what owns each effect? | [`research/attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`](research/attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) | Closed positive confirmation on disjoint shard002 rows. Do not rerun PG-19/RULER to reconfirm it or turn the ramp control into the method claim. |
 | Can a mature fixed-Native-support table and Q/K coordinates jointly adapt without losing Native-window LM quality? | [`research/attention-aware-retrofit/results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md`](research/attention-aware-retrofit/results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md) | The registered phase-shell gate fails. Matched dense-natural controls retain a real 8K/16K tail effect at near-zero 4K marginal cost, but the learned table loses on long full NLL and ties the Native-table control on full-200 2Wiki. Stop this proxy and its shell/step/seed/LR extensions. |
+| Is the frozen allocation effect graded between Native and the tested tables? | [`research/attention-aware-retrofit/results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md`](research/attention-aware-retrofit/results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md) | Yes, but the analytic Cosh path has no point passing the registered joint 4K guard and static `r2` misses the useful dose. The learned direction is mechanism evidence, not a new method. |
+| Does Native VT at 4K alone decide capability ceiling versus position failure? | [`research/attention-aware-retrofit/results/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md`](research/attention-aware-retrofit/results/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md) | No. Native core-four is `1.00/0.85/0.60/0.03`, but different generated rows across lengths invalidate the proposed binary inference. |
 
 Separately, the 2026-08-24 local M4 Max (MPS, no cloud GPU) target-free
 allocation screens are complete and routed under
@@ -265,13 +283,12 @@ Highest-leverage author actions:
 4. Keep future Git publication approval-gated and repeat the scoped
    staging/leak review.
 
-There is no active GPU process. The fixed-support co-adaptive allocation oracle,
-its frozen attribution, two matched dense-natural recovery runs, physical
-8K/16K evaluation, and full-200 2Wiki confirmation are complete. The preflight
-and result owner are linked in the closed ledger above. No result was promoted
-to the manuscript. Future large-model work requires a materially different
-objective that can improve full-sequence and tail behavior jointly; the current
-phase proxy, extra seeds/shells/steps, and allocation-LR tuning are closed.
+There is no active GPU process. The co-adaptive oracle, matched recovery,
+full-128 dose response, and Native-4K task diagnostic are complete. The dose
+result was not promoted as a method because its analytic path missed the joint
+gate. Future capability-mechanism work must hold prompt content and decoding
+fixed while changing only phase/position exposure; more rows from the current
+length-specific RULER cells cannot answer that question.
 
 Future compute is not ready merely because a script or token corpus exists.
 Before opening a GPU, follow `../AGENTS.md` and additionally verify all of these

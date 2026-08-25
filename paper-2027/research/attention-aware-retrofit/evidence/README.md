@@ -4,6 +4,13 @@ Compact, machine-path-free receipt for the attention-aware allocation study.
 Checkpoints, raw evaluation records, token arrays, caches, and machine logs
 remain with their canonical owners outside this directory.
 
+`ALLOCATION_DOSE_RESPONSE_RESULTS_20260826.json` records the registered
+128-document fixed-support dose result, frozen prediction/manifest hashes, the
+failed analytic joint gate, and the graded empirical-direction full/tail
+redistribution. `NATIVE_4K_RULER_DIAGNOSTIC_20260826.json` records the four
+Native 4K task scores and the raw receipt hashes; it does not identify a
+cross-length capability ceiling because task rows differ by length.
+
 `RESULTS_20260821.json` records the R0 summaries, both completed training-seed
 results, protocol identities, stop gates, and SHA-256 receipts for the raw
 source artifacts. It is an internal navigation receipt, not a manuscript result.

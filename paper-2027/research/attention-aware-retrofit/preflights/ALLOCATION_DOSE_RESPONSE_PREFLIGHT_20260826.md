@@ -1,7 +1,8 @@
 # Fixed-support allocation dose response on a mature checkpoint
 
 - **Date:** 2026-08-26
-- **Status:** preregistration; code complete, CPU build verified, **no GPU run**
+- **Status:** frozen preregistration; execution complete, see
+  [`../results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md`](../results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md)
 - **Role:** submission experiment for reviewer objections R2 and R4, plus one
   method-development test (E3)
 - **Code:** `scripts/analysis/allocation_dose_grid.py`,

@@ -1,0 +1,21 @@
+{
+  "status": "NATIVE_4K_RULER_DIAGNOSTIC_COMPLETE",
+  "checkpoint_scope": "one released OLMo-2-0425-1B-Instruct checkpoint",
+  "nominal_length": 4096,
+  "rows_per_task": 20,
+  "method": "Native",
+  "scores": {
+    "niah_single_1": 1.0,
+    "niah_multikey_2": 0.85,
+    "niah_multikey_3": 0.6,
+    "vt": 0.030000000000000006,
+    "macro_core4": 0.62
+  },
+  "receipts": {
+    "core3_results_sha256": "7007bfbb035938e355bed8d9e238bcaa71a0a816bec165f15c59d800a86e3316",
+    "core3_examples_sha256": "8fb50b2ccd7d36570d8eb7a8af36b8cf13c5e84b9f61dd580155991bfca02599",
+    "vt_results_sha256": "08a2d4e394bba75486749b5175b8d5f05f37a0614bf89f16e8ccf4f5a48ba9b6",
+    "vt_examples_sha256": "23f905daba6a90da11c08c66f5125779f29e16385d4a23170bed96e59db3846a"
+  },
+  "claim_ceiling": "descriptive in-window cells; different generated rows across lengths prevent a capability-versus-position causal conclusion"
+}

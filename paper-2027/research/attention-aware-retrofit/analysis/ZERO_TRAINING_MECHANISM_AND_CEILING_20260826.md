@@ -1,11 +1,10 @@
-# Why zero-training is the necessary form, and where its ceiling is
+# Why a frozen table is the minimal zero-training intervention
 
 - **Date:** 2026-08-26
-- **Status:** internal mechanism analysis; no new experiment, no new number of
-  its own except the two derivations marked as computed here
-- **Role:** explains *why* the frozen-table route works, states the two hard
-  constraints any mature-checkpoint operator must satisfy, and locates the
-  remaining headroom by task rather than by macro score
+- **Status:** internal mechanism analysis, updated after the registered dose
+  response and Native-4K diagnostic
+- **Role:** explains why a frozen-table intervention is attractive, records
+  two design hypotheses, and separates measured headroom from speculation
 - **Not:** a manuscript claim, a method proposal, or an action queue
 
 Every number below is owned elsewhere and cited to its owner. The two
@@ -16,19 +15,17 @@ and carry their derivation inline.
 
 ## 0. Summary
 
-The frozen-table route is not a fallback that happened to work. It is the only
-form the intervention can take, and that follows from three facts the
-repository already owns. Section 1 derives it. Sections 2 and 3 state the two
-constraints that kill every operator which violates them, each with a measured
-counterexample. Section 4 shows, from the per-task RULER decomposition, that
-the current operator has bought **range** and has not bought **long-range
-resolution**, and that the remaining headroom is concentrated in exactly two
-tasks. Section 5 gives the one cheap diagnostic that decides whether that
-headroom is real or is a model-capability ceiling.
+The frozen-table route is the smallest zero-training intervention because it
+changes the positional code without changing model weights. Co-adaptation and
+the exact transplant obstruction motivate that choice but do not prove it is
+the only possible retrofit. Sections 2 and 3 therefore state design hypotheses,
+not universal constraints. The completed 4K diagnostic in Section 6 also shows
+that a cross-length task score cannot by itself separate model capability from
+position coding.
 
 ---
 
-## 1. Why the intervention must be a table change
+## 1. Why start with a table change
 
 For one head, the RoPE attention logit between query `i` and key `j` is
 
@@ -59,23 +56,33 @@ frequency multisets there is no fixed invertible Q/K map preserving all
 relative-position logits
 ([`../../../../rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md`](../../../../rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md)).
 
-Together these force the design. The failure is a property of `omega`, so it is
-repairable by changing `omega` or by changing `theta`. Changing `theta` means
-retraining, which by Fact 1 dissolves the co-adaptation the released checkpoint
-was built on, and by Fact 3 cannot be repaired exactly afterwards. Changing
-`omega` costs nothing and touches no weight. **Therefore the intervention must
-be a pure frequency-table change, and the method's shape is a consequence of
-the co-adaptation result, not an engineering convenience.**
+Together these **motivate** the design, and the strength of that word matters.
+The failure is a property of `omega`, so it is repairable by changing `omega`
+or by changing `theta`. Changing `theta` means retraining, which by Fact 1
+perturbs the co-adaptation the released checkpoint was built on, and by Fact 3
+cannot afterwards be repaired by any *fixed invertible linear* Q/K map.
+Changing `omega` costs nothing and touches no weight.
 
-This is also why NLL and capability dissociate under adaptation. NLL is a
-token-averaged smooth quantity that a small adapter restores quickly;
-multi-hop retrieval and instruction following live in the co-adapted structure
-and do not. The frozen route preserves capability *by construction* because it
-never perturbs that structure.
+**This is an argument for preferring the frozen-table route, not a proof that
+it is the only one.** Fact 3 obstructs exact post-hoc linear compensation for
+unequal frequency multisets; it says nothing against approximate retraining or
+against operators outside that family, and `AGENTS.md`'s frozen-retrofit claim
+ceiling states exactly that boundary. Any sentence of the form "the
+intervention *must* be a pure table change" exceeds the theorem and must not
+enter the manuscript. What the evidence supports is the weaker and still useful
+claim: the frozen-table route avoids modifying the learned weights, and no
+retraining route has yet established the same downstream-retention outcome at
+comparable cost on this checkpoint.
+
+This may help explain why NLL and capability dissociate under adaptation: NLL
+is token averaged, whereas multi-hop retrieval and instruction following can
+depend on narrow learned circuits. That is a mechanism hypothesis, not a
+consequence of the obstruction theorem, and a frozen table does not guarantee
+capability preservation.
 
 ---
 
-## 2. Constraint A — the relative code must stay translation invariant
+## 2. Design constraint A — preserve the relative-code symmetry
 
 `z_ij` depends on `i` and `j` only through `d = i - j`. The Q/K weights encode
 content phases that are meaningful only inside that relative code. An operator
@@ -94,27 +101,24 @@ data and harness (raw owners
 `iclr_next_runs/target_free_20260823/ruler_smoke_target_free_{8k,16k}` and
 `.../ruler_smoke_session_binary_s4_{8k,16k}`, read 2026-08-25).
 
-This is the sharpest negative in the mature-checkpoint line and it is currently
-unrouted. It belongs in the closed-route ledger: **position-dependent phase
-continuation on a frozen checkpoint is falsified, with a first-principles
-reason.**
+This falsifies the tested position-dependent continuation on this checkpoint
+and harness. Translation-symmetry breaking is a plausible mechanism, but one
+failed operator does not prove that every absolute-position-dependent operator
+must fail.
 
 ---
 
-## 3. Constraint B — the fast band must not move
+## 3. Design prior B — protect the fast band
 
-Pairs with `omega * L >> 2*pi` carry all in-window discrimination and are
-already phase-saturated; they have no aliasing problem to fix. Moving them buys
-nothing and costs the window. Pairs with `omega * L <= 1` are the redundant
+Pairs with `omega * L >> 2*pi` are phase-saturated inside the training window,
+while pairs with `omega * L <= 1` form the measured redundant
 block: 23 of 64 pairs occupy 46 nominal dimensions at block-whitened Renyi-2
 effective rank `2.00` ([`../../FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](../../FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)).
 
-Any admissible operator therefore has the same shape: **hold the fast endpoint,
-move only the redundant slow block, and move it just far enough not to alias
-out to the deployment horizon.** "Just far enough" needs the horizon, which is
-why a factor appears and why the request-length branch appears. That is
-information the operator genuinely requires; it is not a defect of the
-construction.
+This motivates holding the fast endpoint and spending most movement on slower
+bands. It does not prove that fast channels never move in an optimum, nor that
+the slow block carries no content. A deployment factor supplies one practical
+horizon; target-free construction remains an open objective.
 
 The measured decomposition confirms the shape is load-bearing on both parts:
 frequency-only scores `0.4000 / 0.1150` at 8K/16K, amplitude-only leaves Native
@@ -135,8 +139,9 @@ owner as above, 20 rows per task):
 
 Read this as three separate statements.
 
-1. **Range is solved.** Single-key retrieval is saturated at both lengths.
-   Nothing on the frequency axis can improve it.
+1. **Single-key retrieval is saturated on these rows.** It reaches `1.00` at
+   both tested lengths, so this task contributes no visible headroom to the
+   reported macro.
 2. **Long-range resolution is not.** multikey-3 collapses to `0.00` at 16K and
    variable tracking sits at `0.03` at 8K — *at the same length where
    single-key is perfect*. Finding one distant item works; discriminating among
@@ -152,17 +157,24 @@ profile detail is not identified. That conclusion is correct **for the macro**.
 It has never been tested per task, and the tasks where the operator actually
 fails are exactly the ones the macro dilutes.
 
-Given a support move, interior allocation is the variable that governs
-resolution: at fixed `(a, R)`, amplitude, checkpoint and rows, same-support
+Given a support move, interior allocation can strongly affect the resulting
+score: at fixed `(a, R)`, amplitude, checkpoint and rows, same-support
 geometric scores `0.0056` and the derived allocation `0.6047` at OLMo 16K,
 interval `[+0.5488, +0.6480]`
 ([`../results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](../results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) §3.2).
-So the remaining headroom is on the allocation axis, and it is located at
-multikey-3 and variable tracking.
+The macro contrast does not localise that effect to multikey-3 or variable
+tracking; a per-task fixed-support comparison would be required.
 
 ---
 
-## 5. The allocation effect is non-monotone in position **[computed 2026-08-26]**
+## 5. Historical four-document position decomposition
+
+The registered 128-document dose result now supersedes this four-document
+calculation for outward use; see
+[`../results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md`](../results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md).
+It confirms graded full-versus-tail redistribution but rejects static `r2` as
+a selector for the useful dose. The calculation below is retained only as the
+hypothesis that motivated per-position logging.
 
 The 2026-08-25 co-adaptive oracle gives a second, independent view of the same
 axis at a very small displacement (`max|dz| = 0.0012975`). Its matched
@@ -194,19 +206,17 @@ tail.** The phase-shell attribution shows the same non-monotonicity through a
 completely different protocol (table-only deltas `+0.078 / -0.213 / +0.273` at
 offsets `L / 3L / 15L`).
 
-Two protocols independently indicate that the allocation effect is a
-non-monotone function of lag. No owner currently measures that profile
-directly. The evaluator in
+Two protocols suggested that the allocation effect could be non-monotone in
+lag. The evaluator in
 [`../../../../scripts/eval/eval_allocation_dose_grid.py`](../../../../scripts/eval/eval_allocation_dose_grid.py)
-emits per-1024-position-bin NLL from the same forward pass, so the profile
-costs nothing beyond a run that is already planned.
+emits per-1024-position-bin NLL; the completed dose run owns those measurements.
 
 **Scope.** Four documents per length. Reproducible across runs is not the same
 as generalising across documents.
 
 ---
 
-## 6. The one diagnostic that decides whether the headroom is real
+## 6. Native 4K diagnostic: useful result, invalid binary test
 
 Variable tracking is `0.03` at 8K while single-key is `1.00`. Two readings are
 consistent with that:
@@ -218,16 +228,13 @@ consistent with that:
   No table will fix it, and the operator is closer to its ceiling than the
   macro suggests.
 
-These are separated by one number: **variable tracking at 4K, in-window, on the
-same checkpoint.** If it is also near `0.05`, the ceiling is the model. If it is
-`0.4+`, positional encoding is eating it.
-
-The RULER data already contains the `L4096` cell
-(`iclr_next_runs/far_pass_chord_20260821/data/ruler_eval_core4_v3_s20260822_n20/L4096/`).
-The smoke harness restricts `allowed_lengths` to `{2L, 4L}` and would need that
-restriction relaxed for the in-window cell. This is the cheapest decision-
-relevant measurement available on this line and it gates every later method
-choice.
+The diagnostic is complete. Native 4K scores are `1.00/0.85/0.60/0.03` for
+single-key, multikey-2, multikey-3, and variable tracking; see
+[`../results/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md`](../results/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md).
+Low VT at 4K does not prove a model ceiling: different nominal lengths use
+different generated rows, and an existing frozen policy reaches `0.62` on VT
+at 8K. The proposed one-number decision rule is therefore rejected. A clean
+test must hold token content fixed and change only phase/position exposure.
 
 ---
 
@@ -238,9 +245,9 @@ why none of it may be touched before then).
 
 | # | Direction | Why it might pay | Status |
 | --- | --- | --- | --- |
-| 1 | per-task profile optimisation | the macro is diluted by a saturated task; profile detail has only ever been tested on the macro | blocked on §6 |
-| 2 | per-head / per-layer allocation | `0.89` versus `0.09` repairable fraction at equal parameter count ([`RETROFIT_AXIS_FALSIFICATION_20260822.md`](RETROFIT_AXIS_FALSIFICATION_20260822.md) §5); code complete, never trained (`heterogeneous_rope_5090`) | never run |
-| 3 | position-profile repair | the `+0.09` near-OOD penalty band in §5 is unexamined; if the deployed operator has a similar band it is a concrete failure mode | new |
+| 1 | matched-content phase shift | identical prompts and decoding, only position IDs/phases change; this is the missing capability-versus-position identification | not yet designed |
+| 2 | per-task fixed-support comparison | tests whether the macro hides profile differences on multikey tasks | blocked on #1 |
+| 3 | per-head / per-layer allocation | `0.89` versus `0.09` repairable fraction at equal parameter count ([`RETROFIT_AXIS_FALSIFICATION_20260822.md`](RETROFIT_AXIS_FALSIFICATION_20260822.md) §5); code complete, never trained (`heterogeneous_rope_5090`) | never run |
 | 4 | amplitude coefficient | `c=0.12` measured better than the frozen `c=0.10` at both lengths (`0.5850/0.4275` versus `0.5825/0.4000`) | **must not be adopted** — see below |
 
 On #4: `c=0.10` was frozen as the matched reference value and was *not*
