@@ -1,4 +1,4 @@
-\begin{thebibliography}{39}
+\begin{thebibliography}{42}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -110,6 +110,16 @@ Petros Karypis, Sean O'Brien, Shreyas Kadekodi, Rui Zhu, and Julian McAuley.
 \newblock \emph{arXiv preprint arXiv:2607.10134}, 2026.
 \newblock URL \url{https://arxiv.org/abs/2607.10134}.
 
+\bibitem[Kazemnejad et~al.(2023)Kazemnejad, Padhi, Ramamurthy, Das, and
+  Reddy]{kazemnejad2023impact}
+Amirhossein Kazemnejad, Inkit Padhi, Karthikeyan~Natesan Ramamurthy, Payel Das,
+  and Siva Reddy.
+\newblock The impact of positional encoding on length generalization in
+  transformers.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~36, 2023.
+\newblock URL \url{https://openreview.net/forum?id=Drrl2gcjzl}.
+
 \bibitem[Li et~al.(2026{\natexlab{a}})Li, Ren, Yuille, and
   Wang]{li2026copeclipped}
 Haoran Li, Sucheng Ren, Alan Yuille, and Feng Wang.
@@ -132,6 +142,14 @@ Shanda Li, Chong You, Guru Guruganesh, Joshua Ainslie, Santiago Ontanon, Manzil
 \newblock Functional interpolation for relative positions improves long context
   transformers.
 \newblock In \emph{International Conference on Learning Representations}, 2024.
+
+\bibitem[Liu et~al.(2024)Liu, Lin, Hewitt, Paranjape, Bevilacqua, Petroni, and
+  Liang]{liu2024lost}
+Nelson~F. Liu, Kevin Lin, John Hewitt, Ashwin Paranjape, Michele Bevilacqua,
+  Fabio Petroni, and Percy Liang.
+\newblock Lost in the middle: How language models use long contexts.
+\newblock \emph{Transactions of the Association for Computational Linguistics},
+  12:\penalty0 157--173, 2024.
 
 \bibitem[Movahedi et~al.(2026)Movahedi, Carstensen, Afzal, Hutter, Orvieto, and
   Cevher]{movahedi2026selectiverope}
@@ -284,6 +302,15 @@ Yifan Zhang, Zixiang Chen, Yifeng Liu, Zhen Qin, Huizhuo Yuan, Kangping Xu,
   (ICLR)}, 2026.
 \newblock URL
   \url{https://proceedings.iclr.cc/paper_files/paper/2026/file/5cb58625f49ddf70fe2d527e9e4bbae5-Paper-Conference.pdf}.
+
+\bibitem[Zhang et~al.(2024)Zhang, Chen, Liu, Yao, Ruwase, Chen, Wu, and
+  Wang]{zhang2024found}
+Zhenyu Zhang, Runjin Chen, Shiwei Liu, Zhewei Yao, Olatunji Ruwase, Beidi Chen,
+  Xiaoxia Wu, and Zhangyang Wang.
+\newblock Found in the middle: How language models use long contexts better via
+  plug-and-play positional encoding.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~37, 2024.
 
 \bibitem[Zheng et~al.(2024)Zheng, Gao, Shi, Huang, Li, Xiong, Ren, Ng, Jiang,
   Li, and Li]{zheng2024dape}
