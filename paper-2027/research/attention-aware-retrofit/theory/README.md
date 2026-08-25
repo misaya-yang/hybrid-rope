@@ -12,6 +12,7 @@ for each component.
 preserves the full attention-aware allocation and additive-residual research
 agenda as it stood on 2026-08-22. It contains useful derivations, but its action
 queue and any conflicting method narrative are historical. The current
-decisions are owned by
-[`../README.md`](../README.md) and completed reports under
-[`../results/`](../results/).
+cross-experiment interpretation and problem-2 route are owned by
+[`../analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md`](../analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md);
+directory decisions and numeric owners remain in [`../README.md`](../README.md)
+and [`../results/`](../results/), respectively.

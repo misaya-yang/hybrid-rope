@@ -15,7 +15,7 @@ new inference-time operator family.
 1. At fixed frequency endpoints, amplitude, checkpoint, data, and decoder,
    the normalized exponent allocation `z` has a large causal effect in two
    mature checkpoints. The same-support geometric control nearly collapses on
-   OLMo at 16K (`0.0056`), whereas the non-geometric derived table scores
+   OLMo at 16K (`0.0056`), whereas the tested derived table scores
    `0.6047`. On Qwen at 64K, the corresponding scores are `0.5775` and
    `0.6650`.
 2. The detailed uniqueness profile is not identified as necessary. A
@@ -81,9 +81,11 @@ change only the interior `z`:
 - **derived:** phase-resolved conditional uniqueness with model-relative
   resolution and exact endpoint pinning.
 
-This makes the geometric-versus-non-geometric comparison a clean
-frozen-checkpoint intervention. It remains a different estimand from training
-two models with different `z`.
+This makes geometric versus the two specified alternative `z` values a clean
+frozen-checkpoint intervention. It does not turn geometric/non-geometric into
+a performance classifier: another non-geometric allocation may rank well
+in-window and fail under farther extrapolation. The intervention remains a
+different estimand from training two models with different `z`.
 
 The complete zero-training deployment owner is broader than this control: it
 combines one deterministic long table, a fixed long attention amplitude, and a
@@ -253,7 +255,7 @@ table rather than reconstructed from method names:
 | --- | --- | --- | --- |
 | Does interior allocation matter in training? | support, recipe, seed pairing | FMRoPE versus anchored Cosh `z` | 151.9M three-seed exact-range |
 | Do weights learn that coordinate system? | frozen weights/table factorial | cross weights and runtime table | 50M 2x2 plus this 151.9M replication |
-| Does `z` still matter after pretraining? | support, amplitude, checkpoint, rows | geometric versus non-geometric `z` | this OLMo/Qwen study |
+| Does `z` still matter after pretraining? | support, amplitude, checkpoint, rows | geometric versus the specified ramp/derived `z` values | this OLMo/Qwen study |
 | Is the detailed new curve necessary? | same controls | nearest movement-profile ramp versus full profile | this study; answer is no |
 
 The introduction should not rely on the phrase “non-geometric is new.” It

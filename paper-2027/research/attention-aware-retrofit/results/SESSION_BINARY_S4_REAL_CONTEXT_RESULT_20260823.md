@@ -21,8 +21,8 @@ The global variable/stage grammar is
 ## 1. Conclusion
 
 The practical deployment problem does not require the model to know an
-experimenter's `L_target`.  Freeze one maximum supported non-geometric profile
-when the model is deployed (`s=4` here), then choose once before prefill:
+experimenter's `L_target`. Freeze the specific long profile that passed the
+registered deployment gate (`s=4` here), then choose once before prefill:
 
 ```text
 required_tokens = prefill_tokens + max_new_tokens
@@ -269,8 +269,8 @@ The owner and manuscript were updated together on 2026-08-24. The outward
 claim ceiling remains:
 
 > A mature checkpoint can preserve its Native short-context path exactly while
-> using one frozen non-geometric long-context profile selected only by whether
-> the observed request exceeds the model's Native window.  On the tested OLMo-2
+> using one frozen, receipt-bound long-context profile selected only by whether
+> the observed request exceeds the model's Native window. On the tested OLMo-2
 > checkpoint this zero-training policy is stronger than a one-deployment YaRN
 > factor-four control on core-4 RULER and full Qasper, while full 2Wiki and the
 > smaller formal LongBench matrix show mixed task-level effects.

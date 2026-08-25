@@ -2,9 +2,9 @@
 
 - **Date:** 2026-08-24/25
 - **Status:** completed fresh-distribution natural-NLL confirmation
-- **Decision:** retain the zero-training Native/s4 session policy; treat the
-  third axis as a necessary coarse allocation degree of freedom at 4x, without
-  claiming that one detailed interior profile is uniquely responsible
+- **Decision:** retain the zero-training Native/s4 session policy; the tested
+  4x controls show that the third axis is consequential, but neither
+  non-geometricity nor in-window quality predicts extrapolation
 - **Data:** FineWeb-Edu `sample/10BT/002_00000.parquet`, absent from the prior
   local `000/001/004` shard set
 
@@ -23,7 +23,7 @@ Applying the same derived s4 table statically at 4K incurs a visible cost; the
 session route removes that cost exactly. The practical method is therefore:
 
 > exact Native inside the model window, plus one zero-parameter, session-static
-> long profile with a non-geometric interior allocation.
+> instance of the already-frozen s4 long profile.
 
 ## Data and protocol
 
@@ -106,18 +106,22 @@ The disjoint holdout-512 controls confirm both statements more sharply. At 8K,
 geometric-minus-derived is `-0.02882`, with paired interval
 `[-0.03217,-0.02550]`: geometric is slightly better locally. At 16K the sign
 reverses catastrophically to `+4.4560`, interval `[+4.3804,+4.5317]`, and
-geometric loses on all `512/512` rows. Allocation is therefore not a generic
-short-range quality bonus; it determines whether the fixed finite support
-survives farther extrapolation.
+geometric loses on all `512/512` rows. The allocation effect is therefore
+length-dependent: a `z` that is competitive at one evaluated length can fail
+at a farther length even when support is unchanged. This comparison does not
+make either geometric or non-geometric allocation a generally favorable class.
 
 On the same holdout-512 rows, ramp-minus-derived is `+0.00051` at 8K and
 `+0.00056` at 16K. Both paired intervals contain zero
 (`[-0.00028,+0.00131]` and `[-0.00020,+0.00133]`). The coarse ramp control
 matches the detailed profile on fresh natural text as well as in the earlier
 RULER owner. This is a profile-detail negative, not a reduction of our method
-to YaRN and not evidence that `z` is irrelevant: geometric versus
-non-geometric at 16K is the isolated third-axis effect, whereas ramp versus
-derived tests only fine-shape uniqueness.
+to YaRN and not evidence that `z` is irrelevant. Geometric versus the specific
+derived/ramp allocations at 16K isolates a contrast between tested `z` values;
+it does not partition allocation space into good geometric and good
+non-geometric classes. Other non-geometric allocations may preserve in-window
+quality and still extrapolate poorly. Ramp versus derived tests only
+fine-shape uniqueness for those two tested profiles.
 
 Applying derived s4 statically at every length gives 4K NLL `2.8774`, a
 `+0.1236` regression versus the exact-Native session route, while its 8K/16K

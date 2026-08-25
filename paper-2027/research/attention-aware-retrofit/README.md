@@ -50,22 +50,32 @@ This branch-local stop does not supersede or block the completed zero-training
 Native/s4 policy above.
 
 The failed analytic single-static-table gate is recorded separately and does
-not replace the session-policy owner. The one-billion-token corpus prepared in
-the same authorised window is data readiness, not a result or a reason to
-repeat the fresh evaluation.
+not replace the session-policy owner or close the single-table objective. The
+two-seed phase-chord result in
+[`results/EXPERIMENT_REPORT_20260821.md`](results/EXPERIMENT_REPORT_20260821.md)
+already provides internal near-parity-in-window plus all-length OOD feasibility
+evidence, although it is not promotable as a manuscript method result. The
+one-billion-token corpus prepared in the same authorised window is data
+readiness, not a result or a reason to repeat the fresh evaluation.
 
 ## Closed work and anti-repeat ledger
 
 | Route | State | Re-entry condition |
 | --- | --- | --- |
 | two-document learned direct-`z` | stopped by per-row held-out gate | a materially different identifiable objective and a new preflight; never resume its old downstream queue |
-| analytic fixed-support single static table | stopped by 1x retention gate | a new mechanism that addresses frozen-coordinate shock; no `tau`/band/gain sweep |
+| two tested analytic fixed-support static tables | stopped by 1x retention gate | a new allocation hypothesis or constrained objective that targets the joint Pareto goal; no `tau`/band/gain sweep of the failed candidates |
 | fresh shard002 Native/session confirmation | complete on disjoint 32/128/512 subsets | a different checkpoint population or task-family estimand, not more rows from the same shard |
 | geometric/derived/coarse-ramp controls | complete fixed-support `z` and profile-detail contrasts | a new causal question; do not use official YaRN as a substitute control |
 | static/session control | complete routing contrast | a new router or cache-lifetime contract |
 
 There is no active GPU queue. Before future compute, read the handoff, this
 ledger, the intended result owner, and the relevant preflight in that order.
+The ledger compares specified allocation tensors, not method classes:
+non-geometricity and in-window quality provide no extrapolation guarantee.
+The open objective is still one table that is good in-window and under
+extrapolation; routing is the current verified fallback, not a necessity claim.
+The authoritative retrospective and problem-2 route are in
+[`analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md`](analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md).
 
 ## Read order
 
@@ -75,7 +85,7 @@ ledger, the intended result owner, and the relevant preflight in that order.
 4. [`results/README.md`](results/README.md) for completed results and their
    claim ceilings.
 5. [`analysis/README.md`](analysis/README.md) for mechanism analyses and
-   falsified design axes.
+   the post-GPU problem-2 roadmap before any new method proposal.
 6. [`preflights/README.md`](preflights/README.md) only when reconstructing a
    protocol or checking what was registered before execution.
 7. [`theory/README.md`](theory/README.md) for the historical method agenda.
@@ -101,6 +111,7 @@ ledger, the intended result owner, and the relevant preflight in that order.
 | Does the frequency table interact with attention amplitude? | `results/JOINT_MECHANISM_REPORT_20260822.md`; current answer is yes in the tested cells |
 | Can deployment preserve the Native short path without training? | live session-binary owner |
 | Does the bundled policy persist on a previously unused evaluation shard, and which component owns 1x retention versus 4x survival? | fresh FineWeb confirmation/attribution owner |
+| Is a joint in-window/extrapolation allocation feasible? | internal phase-chord owner; current answer is yes descriptively, but not yet a promoted method claim |
 
 Keep these estimands separate. The complete replacement may combine variables
 that its controls isolate. RULER is task-family adaptation, row bootstraps

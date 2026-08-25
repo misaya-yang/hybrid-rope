@@ -60,8 +60,10 @@ or same-support causal owners.
 
 `ZERO_PARAMETER_SINGLE_TABLE_RESULTS_20260824.json` records the two analytic
 single-static-table PG-19 gates. Both improve 2x directionally and both fail
-the registered 1x retention gate; this negative supports Native/long routing,
-not a rejection of training-time EVQ-Cosh.
+the registered 1x retention gate. This is a candidate-specific negative, not a
+rejection of training-time EVQ-Cosh, the broader single-table objective, or
+joint in-window/extrapolation feasibility. Native/long routing remains the
+current verified fallback.
 
 `FRESH_FINEWEB_S4_RESULTS_20260824.json` records the new-shard natural-NLL
 study and the separate bundled-policy, fixed-support allocation, profile-detail,

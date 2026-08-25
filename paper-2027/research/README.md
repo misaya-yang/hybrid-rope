@@ -58,6 +58,14 @@ the detailed derived profile at the tested points. The defensible novelty is fix
 identification and its mature-checkpoint corollary, not merely producing a
 non-geometric table or a new YaRN family.
 
+Frozen-table in-window loss must not be promoted into an allocation
+impossibility. It contains both the intrinsic effect of the chosen allocation
+and table/weight co-adaptation mismatch. Co-adapted training owners, including
+the internal phase-chord Pareto result, show that one specified table can be
+near-parity in-window while improving all tested extrapolation lengths. The
+session route is a verified frozen-checkpoint deployment fallback, not the
+theoretical solution to the joint objective.
+
 ## Directory map
 
 | Path | Role |
@@ -94,6 +102,8 @@ Additional durable theory/supporting files at research root:
 | Zero-training practical session policy | [`attention-aware-retrofit/results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`](attention-aware-retrofit/results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md) | internal OLMo deployment/capability evidence |
 | Fresh natural-text policy persistence and mechanism controls | [`attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`](attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) | one-checkpoint, one-new-shard teacher-forced NLL; bundled policy, fixed-support `z`, profile detail, and routing remain separate estimands |
 | Failed mature direct-`z` calibration and analytic single-table routes | [`attention-aware-retrofit/results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md`](attention-aware-retrofit/results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md) and [`attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md`](attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md) | closed negative method gates; not incomplete downstream queues |
+| Internal joint in-window/extrapolation allocation feasibility | [`attention-aware-retrofit/results/EXPERIMENT_REPORT_20260821.md`](attention-aware-retrofit/results/EXPERIMENT_REPORT_20260821.md) | two-seed phase-chord Pareto evidence; establishes feasibility internally, but method selection and seed scope block manuscript promotion |
+| Post-GPU interpretation and problem-2 roadmap | [`attention-aware-retrofit/analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md`](attention-aware-retrofit/analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md) | cross-owner decision memo only; owns the constrained joint-Pareto → mechanism diagnostics → mature transfer ladder, not result numbers or a solved method |
 | LeRoPE related-work facts | `../../rebuttal/rebuttal_0723/theory_results/LEROPE_CONCURRENT_WORK_NOTE_20260728.md` plus primary paper | positioning only |
 | Failed LeRoPE profile oracle | [`audits/LEROPE_PROFILE_ORACLE_AUDIT_20260820.md`](audits/LEROPE_PROFILE_ORACLE_AUDIT_20260820.md) | internal negative |
 | Failed attention-measure ordering gate | [`audits/KAPPA_ATTENTION_MEASURE_AUDIT_20260820.md`](audits/KAPPA_ATTENTION_MEASURE_AUDIT_20260820.md) | internal negative |
@@ -112,6 +122,9 @@ Additional durable theory/supporting files at research root:
 - The fresh FineWeb owner closes the previously missing natural OLMo
   geometric/ramp/derived test. Its target-aware comparison changes support and
   table together and therefore owns no pure-allocation claim.
+- Fixed-support allocation effects are length- and checkpoint-conditional.
+  Neither geometric nor non-geometric membership predicts in-window or
+  extrapolation quality; owners compare specified `z` values only.
 - NLL/PPL, teacher-forced NLL gap, strict generation, token F1, exact match,
   RULER, and causal source-use are distinct endpoints.
 - Row bootstraps condition on a fixed checkpoint and task set; they are not
@@ -138,7 +151,9 @@ Additional durable theory/supporting files at research root:
 The promoted frozen case study remains bounded to its stated protocols. The
 natural OLMo same-support comparison is now complete; natural Qwen and
 checkpoint-population generalisation remain unestablished, but neither is an
-active queue. Consult the handoff before proposing new compute.
+active queue. Joint in-window/extrapolation allocation remains the method
+frontier and is not contradicted by the frozen-candidate failures. Consult the
+handoff before proposing new compute.
 
 ## Placement rules
 

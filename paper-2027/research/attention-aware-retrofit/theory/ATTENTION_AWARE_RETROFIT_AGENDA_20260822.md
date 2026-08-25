@@ -6,6 +6,14 @@
   to (i) a fixed table that improves both in-window and extrapolation behavior,
   and (ii) a mature-model adaptation that preserves Native capability.
 
+**Post-GPU supersession.** The 2026-08-24/25 cross-experiment interpretation
+and next research action are now owned by
+[`../analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md`](../analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md).
+This agenda remains useful derivation and failure-history context, but its
+superseding-update paragraphs and Section 9 action queue are historical. In
+particular, session routing is a verified deployment fallback, not the complete
+answer to the collision/OOD allocation problem.
+
 Executed results are summarized in
 [`../results/EXPERIMENT_REPORT_20260821.md`](../results/EXPERIMENT_REPORT_20260821.md); the compact
 machine-path-free receipt is indexed under [`../evidence/`](../evidence/). The
@@ -371,16 +379,18 @@ slice. Do not make 8B multi-seed the default.
   in-window coordinate system rather than forcing one static table to serve
   both roles.
 
-## 9. Decision
+## 9. Historical decision (superseded after the GPU window)
 
-Stop treating a trained adapter as a prerequisite. The current candidate has
+The 2026-08-23 decision was to stop treating a trained adapter as a
+prerequisite. At that time, the current candidate had
 zero learned parameters and zero training tokens: Native is preserved exactly
 inside each model's own window, while one deployment-frozen s4 table and
 matched amplitude handle every long request. The stateless boundary-slope
 operator and smallest-covering Native/s2/s4 router are stopped by completed
-negative results. Do not reopen table, gain, or routing selection on this OLMo
-checkpoint. The next method-level gate is the same binary policy on a second
-mature checkpoint with a different Native window, preferably 32K.
+negative results. The then-proposed next gate was the same binary policy on a
+second mature checkpoint with a different Native window, preferably 32K. That
+action and the old OLMo stop wording are now superseded by the post-GPU
+problem-2 roadmap linked at the top of this memo.
 
 The completed far-pass chord, headwise LoRA, transport-scalar, and CPU-axis
 studies remain internal negative or diagnostic evidence. Do not repeat them,

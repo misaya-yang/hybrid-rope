@@ -108,10 +108,15 @@ OpenReview upload, or publication.
 These experiments are complete. Read the linked owner before proposing another
 run; a failed gate is a stop decision, not an unfinished queue.
 
+Cross-experiment interpretation and the problem-2 research route are owned by
+[`research/attention-aware-retrofit/analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md`](research/attention-aware-retrofit/analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md).
+Read it before treating session routing, phase-chord, a collision proxy, or a
+candidate failure as the method conclusion.
+
 | Question | Owner | Decision; do not repeat |
 | --- | --- | --- |
 | Can a two-document learned direct-`z` calibration robustly retrofit mature OLMo? | [`research/attention-aware-retrofit/results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md`](research/attention-aware-retrofit/results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md) | Mean 2x moved favourably but the per-row gate failed. Do not run its PG-19, RULER, LoRA, or full-task continuation. |
-| Can one analytic static table serve both 1x and 2x with frozen weights? | [`research/attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md`](research/attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md) | Both tested tables improved 2x directionally and failed 1x retention. Do not sweep `tau`, protected bands, gain, or another static table from this result. |
+| Can either tested analytic static table serve both 1x and 2x with frozen weights? | [`research/attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md`](research/attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md) | No: both tested tables improved 2x directionally and failed 1x retention. Do not sweep `tau`, protected bands, or gain from this result; the broader single-table objective remains open. |
 | Does the already-frozen Native/s4 policy generalise to new natural text, and what owns each effect? | [`research/attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`](research/attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) | Closed positive confirmation on disjoint shard002 rows. Do not rerun PG-19/RULER to reconfirm it or turn the ramp control into the method claim. |
 
 The fresh result keeps four estimands separate:
@@ -119,13 +124,15 @@ The fresh result keeps four estimands separate:
 | Contrast | Held fixed | Changed | What it establishes |
 | --- | --- | --- | --- |
 | Native versus Native/s4 session policy | checkpoint and rows | table, gain, and route as one bundle | zero-training policy persistence only |
-| geometric versus derived/ramp at long lengths | sampled support `(a,R)`, gain, route, checkpoint, and rows | interior allocation `z` | third-axis effect; geometric is locally competitive at 8K and fails at 16K |
+| geometric versus derived/ramp at long lengths | sampled support `(a,R)`, gain, route, checkpoint, and rows | interior allocation `z` | length-dependent third-axis contrast among these tested `z` values; geometric is locally competitive at 8K and fails at 16K |
 | derived versus coarse ramp | support, gain, route, checkpoint, and rows | fine profile detail within tested allocations | tested profiles are indistinguishable at current precision; no uniqueness or continuous-basin claim |
 | static-s4 versus session-s4 | one frozen long table, gain, checkpoint, and rows | short-request routing | exact Native routing owns 4K retention |
 
 Target-aware s2 versus session-s4 changes support and table together; it is an
 operating-point comparison, never a pure `z` effect. Official YaRN is an
-external reference, never the mechanism owner.
+external reference, never the mechanism owner. Geometric/non-geometric is not
+a quality classifier: a non-geometric `z` may perform well in-window and fail
+under farther extrapolation.
 
 Canonical reports and compact machine receipts are under
 `research/attention-aware-retrofit/{results,evidence}/`; raw rows remain in an
@@ -136,6 +143,32 @@ from the historical 000/001/004 set. The token file SHA-256 is
 This corpus is data readiness, not training evidence. It remains on the stopped
 instance's system disk; copy it to an explicitly chosen persistent owner before
 ever releasing that instance or using the corpus on another machine.
+
+The core method frontier remains a single allocation that jointly preserves
+in-window performance and improves extrapolation. This is feasible, not ruled
+out: the internal two-seed phase-chord owner reports mean delta NLL
+`+0.00070/-0.16051/-0.15577/-0.20522` at `1x/2x/4x/8x` relative to FMRoPE.
+Its seed scope and selection history prevent manuscript promotion, but it
+already falsifies any narrative of an inherent one-table trade-off. The frozen
+session route is the current verified engineering fallback while this stronger
+allocation objective remains open. Feasibility is not method completion: the
+phase-chord prior, stable joint objective, collision/OOD explanation, and
+mature-model transfer are all still unresolved by that result.
+
+Do not infer the intrinsic in-window cost of allocation from a frozen-table
+swap. The governing decomposition is
+
+\[
+\Delta\mathcal L_{\rm in}
+=\Delta\mathcal L_{\rm alloc}
++\Delta\mathcal L_{\rm adapt},
+\]
+
+where the second term is table/weight co-adaptation mismatch. The 2026-08-24
+direct-`z`, analytic-table, and fresh same-support runs all freeze weights and
+therefore include this mismatch; they cannot establish a fundamental
+in-window/extrapolation trade-off. From-scratch exact-range, phase-chord, and
+same-initialisation training owners govern the co-adapted allocation frontier.
 
 ## 5. Workspace and ownership
 
@@ -182,10 +215,11 @@ Highest-leverage author actions:
    staging/leak review.
 
 There is no active GPU queue. A future large-model retrofit run requires a new
-method-level hypothesis and explicit authorisation. It must preserve exact
-Native in-window behaviour and pass a smaller matched gate before LoRA or
-larger-model adaptation; neither the failed direct-`z` pilot nor the failed
-single-static-table arms are valid launch points.
+method-level hypothesis and explicit authorisation. It must jointly pass a
+declared in-window retention gate and an extrapolation gate before LoRA or
+larger-model adaptation; neither the failed direct-`z` protocol nor the two
+failed analytic candidates are valid launch points, but the single-table
+objective itself remains live.
 
 Future compute is not ready merely because a script or token corpus exists.
 Before opening a GPU, follow `../AGENTS.md` and additionally verify all of these
@@ -205,6 +239,11 @@ receipt, result/evidence indices, this handoff, raw-owner location, Git state,
 and provider shutdown state agree. A plan, launch log, PID, output directory,
 or tracked receipt alone never closes the loop.
 
+The only active research implementation step is the report's J0 CPU/no-GPU
+joint-objective/preflight: freeze the 1x hard constraint, worst-OOD objective,
+phase-chord warm start, seed separation, and realised-table identity. Collision
+frontier is a parallel explanatory diagnostic, not the candidate selector.
+
 Stop list:
 
 - no new table, gain, beta, rank, step-count, or RULER sweeps for the current
@@ -213,6 +252,9 @@ Stop list:
   controls unless the estimand, checkpoint population, or task family changes;
 - no claim that coarse-ramp parity makes the method YaRN or makes `z`
   irrelevant;
+- no claim that one shared table is mathematically unable to serve in-window
+  and extrapolation regimes; this is neither proved nor supported by the
+  candidate-specific frozen failures;
 - no revival of revoked source-selection or CE-only far-pass protocols;
 - no promotion of the old aliased Qwen `0.6175` result;
 - no merging of exact-range, co-adaptation, frozen retrofit, and mature

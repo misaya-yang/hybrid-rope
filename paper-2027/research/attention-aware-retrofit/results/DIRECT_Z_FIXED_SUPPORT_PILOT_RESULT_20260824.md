@@ -18,8 +18,9 @@ stage.
 This is not evidence that the third axis is inert. It is evidence that a
 62-effective-degree table calibrated from two documents is not a sufficiently
 stable mature-checkpoint method, even though its mean 2x direction can be
-favorable. Another learning-rate, step-count, or seed sweep of this exact
-protocol is not justified.
+favorable. It is also not evidence that joint in-window/extrapolation
+optimization is infeasible. Another learning-rate, step-count, or seed sweep of
+this exact underdetermined protocol is not justified.
 
 ## Contract
 
@@ -89,10 +90,13 @@ zero-learned-positional-parameter training-time construction. This failed
 learned-oracle branch changes neither owner and does not block their evidence
 or the separate completed LoRA/adaptation studies.
 
-If a future study asks for a single static zero-parameter table that jointly
-serves 1x and 2x, the protected-band or pinned-scale analytic candidates require
-a new preflight. That is a new method question, not the automatic continuation
-of this failed 62-effective-degree calibration.
+The subsequent analytic single-table study tested anchored and protected-band
+candidates; both failed their 1x gate and are owned by
+[`ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md`](ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md).
+Those failures still do not close the joint single-table objective. A future
+study needs a new identifiable allocation hypothesis or constrained objective,
+not the automatic continuation of this failed 62-effective-degree calibration
+or a parameter sweep of the two failed analytic candidates.
 
 ## Claim boundary
 

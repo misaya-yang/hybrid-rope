@@ -2,8 +2,9 @@
 
 - **Date:** 2026-08-24
 - **Status:** completed negative gate; stopped before RULER/natural-task generation
-- **Decision:** retain the Native/long session route; reject both tested static
-  single-table candidates for mature OLMo
+- **Decision:** reject these two tested candidates; retain Native/long routing
+  only as the current verified fallback, not as evidence that one-table joint
+  in-window/extrapolation performance is impossible
 
 ## Question and contract
 
@@ -34,19 +35,24 @@ gate by a wide margin. No `tau`, band, gain, or learning-rate sweep followed.
 
 ## Interpretation
 
-The negative is specific and useful: analytic reallocation can improve OOD NLL
-with mature weights frozen, but one changed coordinate system cannot preserve
-the checkpoint's Native in-window function. Protecting seven `O(L_native)`
-pairs reduces the coordinate shock substantially but does not close it. This is
-consistent with the exact frozen-transplant obstruction and the completed
-weights-by-table crossings.
+The negative is candidate-specific: these two analytic reallocations improve
+2x NLL but do not preserve the checkpoint's Native in-window function.
+Protecting seven `O(L_native)` pairs reduces the coordinate shock substantially
+but does not close it for this construction. This is consistent with the exact
+frozen-transplant obstruction and the completed weights-by-table crossings,
+which diagnose post-hoc compatibility rather than an intrinsic allocation
+trade-off.
 
-It does not reject EVQ-Cosh as a training-time zero-parameter construction.
-It strengthens the practical reason for the completed zero-training session
-policy: exact Native inside the window, one already-frozen long table outside.
+It does not reject EVQ-Cosh as a training-time zero-parameter construction and
+does not close the single-table direction. From-scratch co-adapted studies and
+the two-seed phase-chord pilot already show that a specified allocation can be
+near-parity in-window while improving every tested extrapolation length. The
+completed session policy is therefore a verified engineering fallback for the
+current checkpoint, not the theoretical endpoint or a necessary solution.
 
 ## Claim boundary
 
 This is one checkpoint, one analytic constant, one protected-band definition,
 and PG-19 teacher-forced NLL. It is not capability evidence or a universal
-impossibility result for static tables.
+impossibility result for static tables. It provides no evidence for an inherent
+in-window/extrapolation trade-off.
