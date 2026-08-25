@@ -150,10 +150,10 @@ out: the internal two-seed phase-chord owner reports mean delta NLL
 `+0.00070/-0.16051/-0.15577/-0.20522` at `1x/2x/4x/8x` relative to FMRoPE.
 Its seed scope and selection history prevent manuscript promotion, but it
 already falsifies any narrative of an inherent one-table trade-off. The frozen
-session route is the current verified engineering fallback while this stronger
-allocation objective remains open. Feasibility is not method completion: the
-phase-chord prior, stable joint objective, collision/OOD explanation, and
-mature-model transfer are all still unresolved by that result.
+session route is the current verified engineering reference. The phase-kernel
+and optimized collision/resolution owners already supply the theoretical
+construction; the open evidence is whether that theory table realises an
+acceptable in-window/OOD Pareto as a zero-training hard swap on a mature model.
 
 Do not infer the intrinsic in-window cost of allocation from a frozen-table
 swap. The governing decomposition is
@@ -169,6 +169,8 @@ direct-`z`, analytic-table, and fresh same-support runs all freeze weights and
 therefore include this mismatch; they cannot establish a fundamental
 in-window/extrapolation trade-off. From-scratch exact-range, phase-chord, and
 same-initialisation training owners govern the co-adapted allocation frontier.
+This diagnosis does not create an adaptation fallback for the current
+zero-training theory-table route.
 
 ## 5. Workspace and ownership
 
@@ -216,10 +218,11 @@ Highest-leverage author actions:
 
 There is no active GPU queue. A future large-model retrofit run requires a new
 method-level hypothesis and explicit authorisation. It must jointly pass a
-declared in-window retention gate and an extrapolation gate before LoRA or
-larger-model adaptation; neither the failed direct-`z` protocol nor the two
-failed analytic candidates are valid launch points, but the single-table
-objective itself remains live.
+declared acceptable in-window-cost gate and an extrapolation gate before
+cross-model confirmation. The phase-kernel theory table is a zero-training
+hard-swap method; LoRA/continued adaptation is not its fallback. Neither the
+failed direct-`z` protocol nor the two failed analytic candidates are valid
+launch points.
 
 Future compute is not ready merely because a script or token corpus exists.
 Before opening a GPU, follow `../AGENTS.md` and additionally verify all of these
@@ -231,18 +234,19 @@ task-specific gates:
 3. checkpoint, data, table, code, output, stop condition, and shutdown plan have
    frozen identities, and the raw data owner is portable or intentionally tied
    to the selected instance;
-4. a smaller matched gate must pass before LoRA, a larger checkpoint, RULER, or
-   a broad task suite is allowed.
+4. the 1.485B zero-training gate must pass before a larger checkpoint, broad
+   capability suite, or cross-model confirmation is allowed.
 
 A future run is not handed off as complete until its canonical report, compact
 receipt, result/evidence indices, this handoff, raw-owner location, Git state,
 and provider shutdown state agree. A plan, launch log, PID, output directory,
 or tracked receipt alone never closes the loop.
 
-The only active research implementation step is the report's J0 CPU/no-GPU
-joint-objective/preflight: freeze the 1x hard constraint, worst-OOD objective,
-phase-chord warm start, seed separation, and realised-table identity. Collision
-frontier is a parallel explanatory diagnostic, not the candidate selector.
+The only active research implementation step is the report's M0 no-GPU table
+materialization: bind the latest phase-kernel/collision-resolution theory owner
+to one realised 1.485B table and a same-support Geo control, freeze identities,
+and prepare the M1 zero-training hard-swap protocol. There is no small-model
+search, 1× exact-parity requirement, or adaptation fallback.
 
 Stop list:
 

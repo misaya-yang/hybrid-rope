@@ -63,7 +63,7 @@ readiness, not a result or a reason to repeat the fresh evaluation.
 | Route | State | Re-entry condition |
 | --- | --- | --- |
 | two-document learned direct-`z` | stopped by per-row held-out gate | a materially different identifiable objective and a new preflight; never resume its old downstream queue |
-| two tested analytic fixed-support static tables | stopped by 1x retention gate | a new allocation hypothesis or constrained objective that targets the joint Pareto goal; no `tau`/band/gain sweep of the failed candidates |
+| two tested analytic fixed-support static tables | stopped by 1x retention gate | do not reopen; the next table comes from the phase-kernel/latest optimized theory owner, not another candidate search or `tau`/band/gain sweep |
 | fresh shard002 Native/session confirmation | complete on disjoint 32/128/512 subsets | a different checkpoint population or task-family estimand, not more rows from the same shard |
 | geometric/derived/coarse-ramp controls | complete fixed-support `z` and profile-detail contrasts | a new causal question; do not use official YaRN as a substitute control |
 | static/session control | complete routing contrast | a new router or cache-lifetime contract |
@@ -72,8 +72,9 @@ There is no active GPU queue. Before future compute, read the handoff, this
 ledger, the intended result owner, and the relevant preflight in that order.
 The ledger compares specified allocation tensors, not method classes:
 non-geometricity and in-window quality provide no extrapolation guarantee.
-The open objective is still one table that is good in-window and under
-extrapolation; routing is the current verified fallback, not a necessity claim.
+The open evidence is the phase-kernel theory table's zero-training mature-model
+Pareto, not discovery of another small-model table. Routing is an engineering
+reference, not a necessity claim.
 The authoritative retrospective and problem-2 route are in
 [`analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md`](analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md).
 
