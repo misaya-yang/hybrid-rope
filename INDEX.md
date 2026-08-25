@@ -323,30 +323,29 @@ phase-isotropy 类方法。
 
 | # | 动作 | 成本 | 为什么 |
 | --- | --- | --- | --- |
-| **A** | 用已有 owner 对照 phase-chord 与 phase-isotropy 的构造和训练响应，不再发明新静态 score | 0 GPU | 当前唯一近 Pareto 的表是 phase-chord；先解释其差异，避免继续做 score zoo |
-| **B** | 冻结现有 phase-chord schedule 后补 **seed 256** | ~47 min（5090，需显式授权） | 最小的独立复现；不再搜索方法或超参数，直接决定能否晋升为三 seed 结果 |
-| **C** | 为成熟 checkpoint 设计 partial-head / per-head coordinate migration 的最小 preflight | 0 GPU 设计；运行另行授权 | 现有 hard swap 失败与 per-head 可修复比例共同指向迁移结构，不支持整表静态替换或直接跳 8B |
+| **A** | 从 RoPE kernel 与真实 attention 解释 mature owner 的 **full/tail redistribution**，不再发明静态 score | 0 GPU | learned table 在 matched adaptation 下几乎不伤 4K、改善 8K/16K tail，却损伤 long full NLL；这是当前最直接的理论缺口 |
+| **B** | 只在得到能同时约束 full-sequence 与 tail/source-use 的新 objective 后，预注册一条 target-free mature-model run | 设计 0 GPU；运行另行授权 | 当前 phase proxy、dense-only recovery 和 factor-specific route 分别只解决一侧；新实验必须直接检验共同支配，而不是追加 shell/step/seed |
+| **C** | 1.485B matched Native control 上出现 full/tail/capability 优势后，才进入第二 checkpoint | — | 当前 full-200 2Wiki 近似打平，尚无扩大模型或复现实验的决策价值 |
 
 **方法层立即停止**（这三条是研究议程判断，属持久层；当前投稿的易变队列停止项
 在 [`paper-2027/HANDOFF.md`](paper-2027/HANDOFF.md) §6，不在这里重复）：
 
 - 任何新的「共享单表 + 静态 score」候选——§3.4 已九连败，且该类看不见 weights；
 - 50M M4 harness 上的 candidate-wide 方法判决；
+- 给 2026-08-25 co-adaptive oracle 增加 shell、step、seed 或 allocation-LR sweep；
+- 把 factor-four s4 路由或物理 8K 训练改写成不依赖目标 operating point 的解法；
 - 把 2026-08-24 的结果当作对 phase-isotropy 的否决。
 
-### 6.4 对现行 roadmap 的两处异议
+### 6.4 对旧 roadmap 的更新
 
-1. [`POST_GPU_REFLECTION_..._20260824`](paper-2027/research/attention-aware-retrofit/analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md)
-   停用了 151.9M harness（「小模型已完成 feasibility 角色」）。但那是仓库里
-   **唯一**在 fixed-support 主协议上完成三 seed identification 的装置，也是现有
-   phase-chord schedule 最自然的复现层级。冻结 schedule 后补一个 seed 不是新的
-   method search；若用户授权，它应保留为最小验证选项。
-2. 同一文件把 LoRA/continued adaptation 整体禁为 fallback。禁令的理由成立
-   （不能用适配掩盖 hard-swap 失败），但过宽：它同时禁掉了
-   [`RETROFIT_AXIS_FALSIFICATION_20260822`](paper-2027/research/attention-aware-retrofit/analysis/RETROFIT_AXIS_FALSIFICATION_20260822.md)
-   §5 里唯一带定量余量的存活发现——**同参数量下 per-head 块对角映射达到 0.89 的
-   可修复比例，现行 rank-64 共享只有 0.09**。注意 $D^*$ 已被证伪为**排序器**
-   （§3.4 第 7 项），所以这是容量陈述而非性能预测。
+1. 2026-08-25 mature owner 已把 whole-table co-adaptation 与 matched Native-table
+   continuation 正面对照。Dense-natural Q/K adaptation 能消除 hard-swap 的短窗代价，
+   但 learned table 相对 matched Native 只改善长尾、损伤 long full NLL，full-200
+   2Wiki 近似打平。LoRA 因而是可测的 co-adaptation 机制，不是把 zero-training
+   failure 改名为方法成功的 fallback。
+2. 151.9M/50M replication 不再是近期主线。小模型已拥有 fixed-support identification
+   和内部 feasibility；当前上限卡在 mature attention 下 full/tail/capability 的共同
+   objective。只有新理论明确需要小模型证伪时，才回到该 harness。
 
 ### 6.5 论文层面（与方法线分开）
 

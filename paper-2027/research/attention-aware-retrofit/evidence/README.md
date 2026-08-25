@@ -74,6 +74,13 @@ billion new FineWeb-Edu tokens from shards absent from the historical local
 shard set. The compact receipt is not the raw corpus and is not training
 evidence.
 
+`COADAPTIVE_ALLOCATION_ORACLE_RESULTS_20260825.json` records the registered
+1.485B shared-allocation/QK-LoRA result, frozen 128-row attribution, physical
+8K/16K natural-text checks, matched learned-table versus Native-table dense-LM
+recovery, and the full-200 2Wiki comparison. It preserves the failed registered
+shell gate and separates continued-adaptation gains from the table's identified
+full/tail redistribution.
+
 `PHASE_ISOTROPY_50M_M4_RECEIPT_20260824.json` and
 `PHASE_ALLOCATION_M4_EXTENDED_RECEIPT_20260824.json` record the 2026-08-24
 target-free allocation screens on the 50M/25M M4 harness. Both carry the

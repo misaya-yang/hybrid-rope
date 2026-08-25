@@ -1,20 +1,19 @@
-RoPE specifies rotations but not how a finite head should spend its frequency
-channels. We show that geometric spacing spends many slow pairs on nearly
-duplicate positional subspaces: in a representative $4$K setting, $46$
-nominal dimensions have R\'enyi-$2$ effective rank $2.00$. Writing
-$x_k=-\log\omega_k=a+Rz_k$ separates sampled support $(a,R)$ from interior
-allocation $z$. A three-seed fixed-support intervention moves only $30$
-interior frequencies and improves every evaluated OOD length in every seed,
-establishing $z$ as an independent training variable. Canonical correlations
-make the full sin/cos redundancy phase invariant. A tractable convex surrogate
-then yields \evq{}, its unique closed-form Cosh minimiser; the predicted
-reallocation reduces collision under the exact cosine-feature RoPE kernel in
-every tested configuration. A weight--table crossing and exact transplant
-obstruction explain co-adaptation. With only $16$ frequencies, three-seed
-$432$M MLA lowers $16$K PPL by $31.1\%$. Long-range gains persist under $454$M
-range composition, $750$M full-parameter continuation, and a $1.485$B
-from-initialisation comparison. Frozen fixed-support interventions on OLMo and
-Qwen show that allocation remains actionable after pretraining, while a
-separate $8$B position-preserving attention intervention establishes causal use
-of distant source content. Frequency allocation is therefore a first-class
-long-context design decision.
+RoPE gives each attention head a finite set of rotary frequencies, but
+geometric spacing conflates the sampled log-frequency range with how those
+channels are allocated inside it. In a representative $4$K head, $23$ slow
+pairs---$46$ nominal dimensions---span only $2.00$ block-whitened
+R\'enyi-$2$ effective positional dimensions. We write
+$x_k=-\log\omega_k=a+Rz_k$ to separate sampled support $(a,R)$ from interior
+allocation $z$. A paired three-seed fixed-support intervention moves only $30$
+interior frequencies; every seed improves OOD loss at $2\times$, $4\times$,
+and $8\times$, establishing $z$ as a consequential training variable.
+Phase-invariant canonical correlations yield an exact finite-basis
+effective-rank identity and characterize the slow-band collapse. A stated
+convex surrogate then gives \evq{}, a zero-learned-parameter analytic witness
+rather than a universal language-model optimum. The effect persists across
+architecture, continuation, and scale studies. Most strikingly, on a released
+$1.485$B OLMo checkpoint, with support, amplitude, data, decoder, and weights
+fixed, changing only $z$ raises $16$K RULER macro from $0.0056$ to $0.6047$
+(paired interval $[0.5488,0.6480]$ for the difference). A coarse ramp matches
+the detailed profile, showing that the identified allocation axis matters more
+than one particular curve.

@@ -41,9 +41,19 @@ fixed, can moving only the interior frequencies change what a model learns?
 It can. In a paired three-seed control, anchored \evq{} moves
 only $30$ interior frequencies relative to FMRoPE. Every seed favours
 the non-uniform allocation at every evaluated OOD length
-(\S\ref{sec:exp-identify}). Because the endpoints are identical, no scalar base
-can reproduce the intervention. Interior allocation $z$ is therefore a genuine
-training variable, not a disguised base change.
+(\S\ref{sec:exp-identify}). The arms share endpoints, initialisation, token
+order, optimiser, and training budget, so no scalar base can reproduce the
+intervention. Interior allocation $z$ is therefore a consequential training
+variable, not a disguised base change.
+
+The same coordinate produces the paper's largest frozen-model contrast. On a
+released $1.485$B OLMo checkpoint at $16$K, with support, attention amplitude,
+data, decoder, and weights fixed, replacing a same-support geometric allocation
+by the tested derived allocation raises RULER macro from $0.0056$ to $0.6047$;
+the paired difference is $0.5992$ with interval $[0.5488,0.6480]$
+(App.~\ref{sec:frozen-fixed-support}). A coarse projected ramp scores $0.6104$
+and is statistically indistinguishable from the detailed profile. The result
+identifies the allocation axis, not a uniquely privileged curve.
 
 We make the identified degree of freedom constructive with \evq{}. A convex
 variational surrogate of the collision geometry has a unique Cosh minimizer
@@ -59,35 +69,28 @@ adds no learned positional parameters.
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{fig_evidence_overview.pdf}
-  \caption{\textbf{Controlled identification and systems evidence.}
+  \caption{\textbf{Interior allocation is identifiable and consequential.}
   (a)~Moving only interior frequencies improves every OOD length in all three
-  $151.9$M training seeds. (b)~Training the complete \evq{} table with only
-  $K{=}16$ rotary frequencies reduces $16$K PPL by $31.1\%$ over three $432$M
-  MLA seeds. (c)~At $1.485$B, Q/K adaptation carries real-document QA beyond
-  the physical training window; the callout reports a separate $8$B adaptation
-  in which blocking answer-side attention to the distant gold block sharply
-  raises \evq{} NLL without moving any token or rotary index.}
+  $151.9$M training seeds. (b)~A frozen Native-to-Cosh dose path measures where
+  long-tail gain first appears relative to its in-window cost on released OLMo.
+  (c)~At fixed support, amplitude, checkpoint, data, and decoder, changing only
+  $z$ raises $16$K RULER macro from $0.0056$ to $0.6047$; a coarse ramp matches
+  the detailed profile.}
   \label{fig:evidence-overview}
 \end{figure}
 \FloatBarrier
 
-The controlled experiment identifies $z$; the remaining studies test the
-resulting table under realistic model-building paths. Under scarce-channel $432$M
-MLA, all three seeds favour \evq{} at $16$K. In a separate $454$M three-seed
-MHA study, the same fixed \rs{} operator reaches $100\%$ teacher-forced
-retrieval on an \evq{} substrate versus $61\%$ on Geo, showing that range
-transport inherits the table learned by the weights. Separately, the
-in-window-to-long-range crossover seen in MLA reappears after $750$M
-full-parameter continuation from a shared checkpoint and in a
-same-initialisation $1.485$B from-initialisation comparison. A frozen
-fixed-support intervention on mature OLMo and Qwen checkpoints then changes
-only $z$, showing that the same coordinate remains consequential after
-pretraining. Finally, matched adaptation carries multi-hop QA beyond the
-$1.485$B arm's physical training window, while an $8$B decode-attention
-intervention shows that the distant source is causally used with prompt tokens
-and rotary indices fixed. Together, these studies carry the fixed-support
-finding from full-parameter training through $1.485$B to mature-model
-adaptation at $8$B.
+The controlled experiment owns the causal training claim; the remaining
+studies test its relevance under different model-building paths. Three-seed
+$432$M MLA shows the effect with only $K{=}16$ rotary frequencies. A $454$M
+study tests composition with the same index-space range rule, while $750$M
+continuation and a same-initialisation $1.485$B from-initialisation comparison
+show the crossover under full-parameter training. Frozen OLMo/Qwen controls
+isolate $z$ after pretraining. Finally, a separate $8$B adapted-model
+intervention holds prompt tokens and rotary indices fixed while testing
+dependence on a distant source block. These protocols broaden architecture,
+training stage, scale, and capability scope; none replaces the matched
+three-seed identification.
 
 The theory explains why this pattern is coherent. Each rotary frequency is a
 two-dimensional sin/cos subspace. Canonical correlations expose overlap between
@@ -103,13 +106,11 @@ unequal frequency multisets cannot be absorbed by fixed,
 position-independent invertible Q/K maps.
 
 \paragraph{Contributions.}
-(i) We expose support and interior allocation as distinct coordinates and
-identify allocation with a three-seed fixed-support intervention.
-(ii) We characterize the resulting full-RoPE basis through a phase-invariant
-effective-rank identity, low-frequency collapse, and an exact frozen-transplant
+(i) We separate sampled support from interior allocation and identify the
+latter with a three-seed fixed-support training intervention.
+(ii) We characterize the full sin/cos basis through a phase-invariant
+effective-dimension identity, slow-frequency collapse, and a frozen-transplant
 obstruction.
-(iii) We derive the unique closed-form optimum of the allocation surrogate,
-verify its direction under the exact cosine-feature kernel, and show the
-construction's consequences across scarce-channel training, range composition,
-full-parameter continuation, training through $1.485$B, and mature-checkpoint
-interventions and adaptation.
+(iii) We derive \evq{} as the unique minimizer of a stated convex surrogate and
+test the resulting non-uniform allocation across configurations, architectures,
+training stages, and mature checkpoints.

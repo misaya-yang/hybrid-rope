@@ -5,6 +5,14 @@
 - **本次修订：** 取代本文件在 commit `bef08c2` 中错误的“小模型 joint-search / collision-frontier-first”方案
 - **数字边界：** 所有实验数字仍由链接的 result/evidence owner 持有
 
+**2026-08-25 supersession.** The mature co-adaptive allocation oracle, matched
+dense-natural controls, and full-200 2Wiki comparison are now owned by
+[`../results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md`](../results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md).
+They empirically separate continued adaptation from the table's full/tail
+redistribution. This memo remains historical interpretation; current action
+priority is owned by repository [`../../../../INDEX.md`](../../../../INDEX.md)
+§6.
+
 必读 owner：
 
 1. [`../../ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](../../ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md) — `x=a+Rz`、阶段和 zero-training 语义；

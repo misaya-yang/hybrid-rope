@@ -49,6 +49,14 @@ Its PG-19, RULER, LoRA, and full-task queue was not run.
 This branch-local stop does not supersede or block the completed zero-training
 Native/s4 policy above.
 
+The completed mature co-adaptive oracle is owned by
+[`results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md`](results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md).
+Its registered answer-only phase bundle fails one shell and is stopped. Matched
+dense-natural continuation isolates a small but repeatable fixed-support
+allocation effect: nearly neutral held-out 4K NLL, better physical 8K/16K tail
+NLL, worse long full NLL, and no resolved full-200 2Wiki advantage. This is a
+mechanism result, not a replacement method or manuscript claim.
+
 The failed analytic single-static-table gate is recorded separately and does
 not replace the session-policy owner or close the single-table objective. The
 two-seed phase-chord result in
@@ -65,6 +73,7 @@ readiness, not a result or a reason to repeat the fresh evaluation.
 | two-document learned direct-`z` | stopped by per-row held-out gate | a materially different identifiable objective and a new preflight; never resume its old downstream queue |
 | two tested analytic fixed-support static tables | stopped by 1x retention gate | do not reopen; the next table comes from the phase-kernel/latest optimized theory owner, not another candidate search or `tau`/band/gain sweep |
 | fresh shard002 Native/session confirmation | complete on disjoint 32/128/512 subsets | a different checkpoint population or task-family estimand, not more rows from the same shard |
+| mature shared-allocation phase oracle and dense-natural recovery | stopped after registered shell failure and matched full/tail attribution | a materially different theory/objective that targets full-sequence and tail behavior jointly; not more shells, steps, seeds, or allocation-LR tuning |
 | geometric/derived/coarse-ramp controls | complete fixed-support `z` and profile-detail contrasts | a new causal question; do not use official YaRN as a substitute control |
 | static/session control | complete routing contrast | a new router or cache-lifetime contract |
 
@@ -75,8 +84,9 @@ non-geometricity and in-window quality provide no extrapolation guarantee.
 The open evidence is the phase-kernel theory table's zero-training mature-model
 Pareto, not discovery of another small-model table. Routing is an engineering
 reference, not a necessity claim.
-The authoritative retrospective and problem-2 route are in
-[`analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md`](analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md).
+The historical retrospective is
+[`analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md`](analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md);
+the current action route is repository `INDEX.md` §6.
 
 ## Read order
 
@@ -133,6 +143,8 @@ not a from-training estimate.
 - protocol-bound fresh-result summarization:
   `scripts/analysis/summarize_fresh_fineweb_s4.py`;
 - frozen direct-`z` pilot: `scripts/eval/optimize_olmo_fixed_support_z.py`;
+- mature co-adaptive fixed-support oracle:
+  `rebuttal/rebuttal_0723/experiments/olmo2_allocation_oracle_5090/`;
 - focused regression tests: `tests/test_same_support_rope_controls.py`,
   `tests/test_length_conditioned_budgeted_rope.py`,
   `tests/test_target_free_rope.py`, and

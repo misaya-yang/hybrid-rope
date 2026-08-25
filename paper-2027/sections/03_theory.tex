@@ -86,7 +86,8 @@ r_2(R)=\frac{(\operatorname{tr}R)^2}{\operatorname{tr}(R^2)}
 \end{equation}
 \end{theorem}
 
-The denominator turns the spectral budget into an exact dimension count:
+The denominator turns the spectral budget into an exact R\'enyi-$2$
+effective-dimension identity:
 larger mean pairwise redundancy lowers $r_2$. Allocation changes the entire
 Gram spectrum, while block whitening removes per-channel energy and
 conditioning. The trained-model effect is then measured by the fixed-support
@@ -174,7 +175,7 @@ preservation by this broad class of fixed linear Q/K compensation. The
 finite-distribution protocols of \S\ref{sec:exp-mature} measure the complementary
 case in which Q/K or broader low-rank paths adapt to the new table.
 
-\subsection{A closed-form allocation}
+\subsection{An analytic non-uniform allocation family}
 \label{sec:construction}
 
 A positive density $\rho\in C^2([0,1])$ with $\int_0^1\rho=1$ induces a discrete
@@ -192,8 +193,8 @@ penalty for pairs of channels that are both slow, matching the direction of
 Prop.~\ref{prop:collapse}. The full geometry and the surrogate play distinct
 roles: the former measures redundancy, while the latter supplies an analytic
 allocation family. The approximation is checked at the level needed for that
-construction: when the derived allocation is evaluated under the closed-form
-exact cosine-feature kernel, collision falls by $24$--$92\%$ and its Shannon
+construction: when the derived allocation is evaluated under the
+cosine-feature kernel in closed form, collision falls by $24$--$92\%$ and its Shannon
 effective rank rises in all $12$ tested configurations
 (App.~\ref{sec:surrogate-validation}). The trained controls in
 \S\ref{sec:experiments} then test the learning consequences of the same
@@ -228,11 +229,11 @@ quantisation turns that density into a finite RoPE table. Because $\rho_\tau$
 decreases with $\phi$, it reallocates channels toward the fast end: at
 $K{=}64$ and $\tau{=}4$, $55$ midpoint quantiles lie in the fast half of the
 log-frequency span. Cosh is therefore the exact analytic solution of the
-tractable surrogate, and the exact-kernel diagnostic preserves its predicted
-improvement direction. Shape-matched trained controls below show that the gain
-comes from non-uniform allocation rather than a curve-specific artifact.
+tractable surrogate, and the closed-form kernel diagnostic preserves the
+surrogate-derived improvement direction. Shape-matched trained controls below
+support non-uniform allocation without identifying a uniquely preferred curve.
 
-\paragraph{A one-line full-RoPE default.} With $\deff$ the effective
+\paragraph{Empirical zero-search reference.} With $\deff$ the effective
 head dimension and $\Pi$ the training protocol,
 \begin{equation}
 \label{eq:evq-practical}
@@ -242,10 +243,10 @@ u_k = (k+\tfrac12)/K,\qquad
 \end{equation}
 Set $\tau$, evaluate \eqref{eq:warp}, replace the inverse frequencies: no
 auxiliary loss, no extra parameters, no declared deployment length. A
-$\deff/\sqrt{\Ltr}$ scaling supplies a reference family for standard full-RoPE
-text settings, with $\deff{=}d_{\mathrm{head}}$. We fix $c(\Pi){=}1$ before
-training as its zero-search default and evaluate it against Geo and neighbouring
-multipliers
+$\deff/\sqrt{\Ltr}$ supplies an empirical reference family for standard
+full-RoPE text settings, with $\deff{=}d_{\mathrm{head}}$. We fix
+$c(\Pi){=}1$ before training as a zero-search operating point and evaluate it
+against Geo and neighbouring multipliers
 (App.~\ref{sec:identification-details}). Compressed rotary subspaces and
 bidirectional attention use pre-specified empirical $\tau$ values, testing the
 same allocation principle without invoking the full-RoPE rule. The deployed midpoint table has

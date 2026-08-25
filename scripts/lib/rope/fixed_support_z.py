@@ -99,10 +99,11 @@ class FixedSupportZRotaryEmbedding(nn.Module):
             )
         )
         # Start from the exact released tensor while retaining a nonzero
-        # straight-through derivative for the first optimizer step.
-        if bool(torch.count_nonzero(self.gap_delta_logits.detach()).item() == 0):
-            return self.native_inv_freq + (computed - computed.detach())
-        return computed
+        # straight-through derivative for the first optimizer step.  Keep the
+        # decision in tensor space so this module remains fullgraph-compilable.
+        native_forward_with_grad = self.native_inv_freq + (computed - computed.detach())
+        at_native = torch.eq(self.gap_delta_logits, 0.0).all()
+        return torch.where(at_native, native_forward_with_grad, computed)
 
     def project_(self) -> None:
         with torch.no_grad():

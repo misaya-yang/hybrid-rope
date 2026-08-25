@@ -9,8 +9,9 @@
   retrofit experiment reports are committed and pushed. No OpenReview upload or
   submission is implied. The 2026-08-25 repository-organization and
   evidence-consistency cleanup is included in the current publication scope;
-  it changes no manuscript source. Verify live Git state instead of copying a
-  commit SHA into this mutable handoff.
+  it changes no manuscript source. The later 2026-08-25 co-adaptive allocation
+  oracle owner is complete locally but not committed or pushed. Verify live Git
+  state instead of copying a commit SHA into this mutable handoff.
 - **Internal only:** exclude this file from the anonymous supplement.
 
 ## 1. Cold-start order
@@ -124,21 +125,34 @@ The 2026-08-25 organization/accuracy cleanup additionally passed:
 No manuscript source changed, so the paper was not recompiled for this
 documentation/code-only pass.
 
+The later 2026-08-25 co-adaptive allocation-oracle closure additionally passed:
+
+- Python compilation for all seven oracle/training/evaluation modules;
+- `156/156` focused oracle, RoPE-core, and repository-navigation tests in
+  Conda `aidemo`;
+- compact receipt JSON parsing, `git diff --check`, immutable-`paper/` diff,
+  and private server/path scanning over the new owner/code scope.
+
+No manuscript source changed in this experiment-only closure, so the paper was
+not recompiled.
+
 ### 2026-08-24/25 closed GPU experiment ledger
 
 These experiments are complete. Read the linked owner before proposing another
 run; a failed gate is a stop decision, not an unfinished queue.
 
-Cross-experiment interpretation and the problem-2 research route are owned by
+The historical 2026-08-24 cross-experiment interpretation is
 [`research/attention-aware-retrofit/analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md`](research/attention-aware-retrofit/analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md).
-Read it before treating session routing, phase-chord, a collision proxy, or a
-candidate failure as the method conclusion.
+The 2026-08-25 mature result below and `../INDEX.md` §6 supersede its action
+route. Read all three before treating session routing, phase-chord, a collision
+proxy, or a candidate failure as the method conclusion.
 
 | Question | Owner | Decision; do not repeat |
 | --- | --- | --- |
 | Can a two-document learned direct-`z` calibration robustly retrofit mature OLMo? | [`research/attention-aware-retrofit/results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md`](research/attention-aware-retrofit/results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md) | Mean 2x moved favourably but the per-row gate failed. Do not run its PG-19, RULER, LoRA, or full-task continuation. |
 | Can either tested analytic static table serve both 1x and 2x with frozen weights? | [`research/attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md`](research/attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md) | No: both tested tables improved 2x directionally and failed 1x retention. Do not sweep `tau`, protected bands, or gain from this result; the broader single-table objective remains open. |
 | Does the already-frozen Native/s4 policy generalise to new natural text, and what owns each effect? | [`research/attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`](research/attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) | Closed positive confirmation on disjoint shard002 rows. Do not rerun PG-19/RULER to reconfirm it or turn the ramp control into the method claim. |
+| Can a mature fixed-Native-support table and Q/K coordinates jointly adapt without losing Native-window LM quality? | [`research/attention-aware-retrofit/results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md`](research/attention-aware-retrofit/results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md) | The registered phase-shell gate fails. Matched dense-natural controls retain a real 8K/16K tail effect at near-zero 4K marginal cost, but the learned table loses on long full NLL and ties the Native-table control on full-200 2Wiki. Stop this proxy and its shell/step/seed/LR extensions. |
 
 Separately, the 2026-08-24 local M4 Max (MPS, no cloud GPU) target-free
 allocation screens are complete and routed under
@@ -251,13 +265,13 @@ Highest-leverage author actions:
 4. Keep future Git publication approval-gated and repeat the scoped
    staging/leak review.
 
-There is no active GPU queue. A future large-model retrofit run requires a new
-method-level hypothesis and explicit authorisation. It must jointly pass a
-declared acceptable in-window-cost gate and an extrapolation gate before
-cross-model confirmation. The phase-kernel theory table is a zero-training
-hard-swap method; LoRA/continued adaptation is not its fallback. Neither the
-failed direct-`z` protocol nor the two failed analytic candidates are valid
-launch points.
+There is no active GPU process. The fixed-support co-adaptive allocation oracle,
+its frozen attribution, two matched dense-natural recovery runs, physical
+8K/16K evaluation, and full-200 2Wiki confirmation are complete. The preflight
+and result owner are linked in the closed ledger above. No result was promoted
+to the manuscript. Future large-model work requires a materially different
+objective that can improve full-sequence and tail behavior jointly; the current
+phase proxy, extra seeds/shells/steps, and allocation-LR tuning are closed.
 
 Future compute is not ready merely because a script or token corpus exists.
 Before opening a GPU, follow `../AGENTS.md` and additionally verify all of these
@@ -311,10 +325,10 @@ Stop list:
   on `SCREEN_UNRESOLVED` plus the Stage B `Geo` identity.
 - Raw GPU artifacts remain external; compact tracked receipts own only their
   stated hashes and metrics.
-- Chrome showed the authorised A70/RTX 5090 instance as **已关机** on
-  2026-08-24. This is volatile provider state: recheck the UI before assuming
-  compute is running or before any release operation. The instance was stopped,
-  not released.
+- The 2026-08-25 RTX 5090 instance remained reachable after all result files
+  were atomically written; no GPU process remained, and this task did not shut
+  down or release it. Provider state is volatile and must be rechecked before
+  any later compute or release action.
 - The 1B-token corpus is not in Git and is not yet a portable training-data
   owner; its tracked research receipt must not be mistaken for the raw corpus.
 - No promoted scientific result is known incomplete. Remaining work is author

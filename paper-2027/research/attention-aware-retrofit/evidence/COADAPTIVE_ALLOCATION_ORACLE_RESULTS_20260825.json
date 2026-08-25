@@ -1,0 +1,89 @@
+{
+  "status": "OLMO2_COADAPTIVE_ALLOCATION_ORACLE_STUDY_COMPLETE_V1",
+  "date": "2026-08-25",
+  "claim_boundary": "One released 1.485B checkpoint; one joint phase-oracle run, two matched dense-natural Q/K recovery runs, four physical 8K/16K documents per length, and one full-200 official 2Wiki comparison. Internal mechanism evidence, not a manuscript claim or population estimate.",
+  "registered_run": {
+    "rows": 32,
+    "retention_4k_delta_nll": 0.03313320875167847,
+    "phase_delta_nll": {
+      "0": -0.44100889563560486,
+      "4096": -0.15834516286849976,
+      "12288": 0.008373737335205078,
+      "61440": -0.04880690574645996
+    },
+    "maximum_normalized_coordinate_shift": 0.0012975253158715727,
+    "all_nonzero_shells_improve_gate": false
+  },
+  "attribution_128_delta_vs_native_table_lora_off": {
+    "learned_table_lora_off": {
+      "phase_0": 0.036654964089393616,
+      "phase_4096": 0.07789941132068634,
+      "phase_12288": -0.2132786214351654,
+      "phase_61440": 0.2731521278619766,
+      "dense_4k": 0.0012023746967315674
+    },
+    "native_table_lora_on": {
+      "phase_0": -0.45698172599077225,
+      "phase_4096": -0.1493961066007614,
+      "phase_12288": -0.01253606379032135,
+      "phase_61440": -0.21360647678375244,
+      "dense_4k": 0.03240072727203369
+    },
+    "learned_table_lora_on": {
+      "phase_0": -0.44952213764190674,
+      "phase_4096": -0.10327960550785065,
+      "phase_12288": -0.26050586998462677,
+      "phase_61440": -0.03721880912780762,
+      "dense_4k": 0.0337105393409729
+    }
+  },
+  "frozen_table_only_long_natural_delta_vs_native": {
+    "8192": {
+      "full_nll": 0.042560458183288574,
+      "tail512_nll": -0.05446362495422363
+    },
+    "16384": {
+      "full_nll": 0.01988208293914795,
+      "tail512_nll": -0.05868077278137207
+    }
+  },
+  "matched_self_consistent_learned_minus_native": {
+    "heldout_4k_full_nll": 0.000982507069905214,
+    "8192": {
+      "full_nll": 0.038437843322753906,
+      "tail512_nll": -0.038660407066345215
+    },
+    "16384": {
+      "full_nll": 0.021900057792663574,
+      "tail512_nll": -0.0876690149307251
+    }
+  },
+  "full_200_2wiki_learned_minus_native": {
+    "4096": {
+      "token_f1": -0.006539849323736802,
+      "normalized_exact": -0.0050000000000000044
+    },
+    "8192": {
+      "token_f1": 0.0012855020796197214,
+      "normalized_exact": 0.0049999999999999975
+    },
+    "16384": {
+      "token_f1": 0.0008855020796197238,
+      "normalized_exact": 0.0049999999999999975
+    }
+  },
+  "raw_result_sha256": {
+    "registered_full": "ec4381fe651f8693b543ecb04547ee6fbecc2979da9b136f26f5978606c8e1fb",
+    "attribution_128": "2fa3931f8ccedb1b70fb543ccf86ff55c7d9e66ec419b90fd7e36fc9e95282f6",
+    "long_natural_4grid": "7ea4ad4f2324df725ad71bfd71a23d5f82dea8f68472f9394000ca74551e2650",
+    "learned_table_recovery": "3d01de60ea1c33fe88ea912099b36a5dec8d8f6deb5f66a375d46bfc4240d84c",
+    "native_table_recovery": "57390e0d6e7b8eaf19f460ba565e3ae6ef90c7aa63c660d43dbd2e640676ebbf",
+    "2wiki_screen20": "1011e34cc0864e801c905aefe7246da1e5722f85b1ccd225f2aa765de85162b8",
+    "2wiki_full200": "42492421e5e571dac43b64ba62421db6486837a4461dbfee5bdb34df501fcb61"
+  },
+  "adapter_sha256": {
+    "joint_phase_oracle": "6a7f393b50ee8ba964c7defa200bbf87835f777ca3ba4fe71eecc66c09dd2546",
+    "learned_table_dense_recovery": "f3a167e8953b3bc542448ad73ef82d2d3181dae48df920d906a97c4a77c3edca",
+    "native_table_dense_control": "b6fc3288d97ddd2ff2d1930927b7988b86f43be562a5f68901256914c0fb7636"
+  }
+}
