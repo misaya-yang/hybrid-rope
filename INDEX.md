@@ -117,6 +117,8 @@ $\tau_*=\max(d_{\rm head}/\sqrt L,\;1.4)$ 是 operating prior 而非普适律（
 | 长度条件化 budgeted retrofit | [`LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822`](paper-2027/research/attention-aware-retrofit/results/LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md) | **RULER core-4：0.5825@8K / 0.4000@16K，对官方 YaRN 0.5375 / 0.0125；零学习参数** |
 | 联合 in-window/外推可行性 | [`EXPERIMENT_REPORT_20260821`](paper-2027/research/attention-aware-retrofit/results/EXPERIMENT_REPORT_20260821.md) | **phase-chord 两 seed Pareto：$+0.0007/-0.161/-0.156/-0.205$**；seed 范围阻止晋升 |
 | 跨 owner 决策备忘 | [`POST_GPU_REFLECTION_..._20260824`](paper-2027/research/attention-aware-retrofit/analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md) | 决策备忘，**其路线判断见 §6 的修订** |
+| 成熟 checkpoint 共适应 oracle | [`COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825`](paper-2027/research/attention-aware-retrofit/results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md) | 内部机制研究；phase 代理协议关闭，matched 自洽下 allocation 边际效应为 4K `+0.00098` / 8K·16K tail `−0.0387`·`−0.0877` |
+| 零训练为何是必然形式 + 天花板定位 | [`ZERO_TRAINING_MECHANISM_AND_CEILING_20260826`](paper-2027/research/attention-aware-retrofit/analysis/ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md) | 机制分析：相对码不变性约束（`target_free` 逐位置延拓 RULER `0.0000`，**新增 §3.4 关闭项**）、per-task 天花板、位置剖面变号 |
 
 ### 3.4 已证伪 / 已关闭（**不要重做**）
 
@@ -135,6 +137,7 @@ $\tau_*=\max(d_{\rm head}/\sqrt L,\;1.4)$ 是 operating prior 而非普适律（
 | 9 | phase risk（「已 wrap 过的通道安全」） | Spearman $0.000$ + `one_turn_floor_s2` 决定性反例 | 同上 |
 | 10 | direct-$z$ 两文档标定 | per-row gate 失败 | [`DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824`](paper-2027/research/attention-aware-retrofit/results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md) |
 | 11 | 两个解析静态单表候选 | 改善 2×、损伤 1× | [`ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824`](paper-2027/research/attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md) |
+| 12 | 逐位置相位延拓算子（`target_free.py`） | core-4 RULER macro `0.0000` @8K/16K，对照 routed frozen-table `0.7175/0.4075`；一阶原因是 `theta(i)-theta(j)` 不再只依赖 `i-j`，破坏冻结权重依赖的相对码平移不变性 | [`ZERO_TRAINING_MECHANISM_AND_CEILING_20260826`](paper-2027/research/attention-aware-retrofit/analysis/ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md) §2 |
 
 **结构性结论：** 第 1–11 项全部是**同一张共享一维表在假定 content model 下的标量
 泛函**。而 §3.1 的 2×2 显示 LM 结果由 table×weights **交互**主导（换表后 PPL
@@ -320,6 +323,11 @@ extended preflight 预先规定 anchored-Cosh reference 在该 regime 失去预�
 phase-isotropy 类方法。
 
 ### 6.3 下一步（按决策价值排序）
+
+> **投稿期路线由 [`ICLR2027_SUBMISSION_NARRATIVE_AND_EXPERIMENT_PLAN_20260826`](paper-2027/research/ICLR2027_SUBMISSION_NARRATIVE_AND_EXPERIMENT_PLAN_20260826.md)
+> 拥有**：唯一 claim、要前置的两个数字（`2.00` 有效秩、同 support `0.0056→0.6047`）、
+> R3 的正文前置化、投稿前只跑剂量曲线、以及投稿后才动的 headroom 清单。
+> 下表是持久研究议程，两者冲突时投稿期以该计划为准。
 
 | # | 动作 | 成本 | 为什么 |
 | --- | --- | --- | --- |

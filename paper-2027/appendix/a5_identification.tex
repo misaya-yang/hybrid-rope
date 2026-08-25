@@ -96,11 +96,11 @@ the $1$K/$2$K magnitudes are the most stable across seeds.
 
 \paragraph{Reading.} The \texttt{fixed} column identifies the optimisation
 variable: interior allocation is not reducible to scalar base/range selection.
-Retargeting support changes absolute phase coverage and therefore changes which
-interior allocation is preferred. This is the expected interaction between the
-two coordinates: target-specific support should be selected jointly with
-allocation, while the \texttt{fixed} column isolates allocation when one table
-serves multiple lengths (\S\ref{sec:exp-identify}).
+Under the tested target-retargeted policy, the ordering reverses. The two
+columns therefore establish that the fixed-support result is conditional on
+the selected range; they do not identify a support-by-allocation interaction
+law. The \texttt{fixed} column isolates allocation when one table serves
+multiple lengths (\S\ref{sec:exp-identify}).
 
 \subsection{Exact-range factorial at $50.9$M}
 
@@ -154,12 +154,11 @@ provides the effect size within its configuration. Scale is evaluated in
 Every arm marked $+\rs{}$ uses the repository's fixed-index operator,
 inspired by the NTK-by-parts/YaRN family \citep{peng2024yarn}:
 high-frequency channels are left nearly unchanged and lower-frequency channels
-receive progressively more range scaling. It is held
-\emph{identical} across the arms being compared --- same implementation, same
-fixed cut indices, same scale $s$ --- so that the only difference between
-$\mathrm{Geo}+\rs{}$ and $\evq{}+\rs{}$ is the training-time table each
-substrate presents to the same operator. It therefore measures
-substrate-dependent leverage at the fixed tested scale.
+receive progressively more range scaling. The implementation, cut indices,
+and scale $s$ are held fixed across the compared arms. Because the underlying
+frequencies differ, the realised phase movement is not matched channel by
+channel. The result is therefore a composition test of the same index-space
+rule on two training-time tables, not a movement-matched mechanism control.
 
 \paragraph{Implemented components.} For $K$ frequency channels, the scaler
 uses fixed channel-index cut points

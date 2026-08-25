@@ -425,7 +425,7 @@ def main() -> int:
     native_context_length = int(args.native_context_length)
     tasks = tuple(str(value) for value in args.tasks)
     lengths = tuple(sorted(int(value) for value in args.lengths))
-    allowed_lengths = {native_context_length * 2, native_context_length * 4}
+    allowed_lengths = {native_context_length, native_context_length * 2, native_context_length * 4}
     if not lengths or any(value not in allowed_lengths for value in lengths):
         raise ValueError(f"smoke lengths must be in {sorted(allowed_lengths)}")
     data_receipt, rows = _validate_data(

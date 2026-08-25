@@ -13,20 +13,21 @@ design variable rather than an alternative notation for base selection.
 The spectral-budget identity reveals the pressure behind this variable. Slow
 geometric pairs collapse onto nearly the same positional subspace, so nominal
 rotary dimension can substantially overstate effective positional dimension.
-The effect becomes most visible when channels are scarce: with $K{=}16$, the
-three-seed $432$M MLA comparison lowers $16$K PPL in every seed. A closed-form
-allocation makes this finite-budget decision explicit and reproducible, while
-learned-frequency methods combine the table choice with an additional
-optimization problem.
+With $K{=}16$, the three-seed $432$M MLA comparison shows that the construction
+remains effective in a compressed rotary subspace. The frozen OLMo comparison
+makes the axis especially visible: at the same support and amplitude, geometric
+and derived allocations score $0.0056$ and $0.6047$. The matched coarse ramp
+scores $0.6104$, so this result supports the allocation coordinate rather than
+the uniqueness of one detailed profile.
 
 The construction remains consequential across realistic model-building paths.
-At $454$M, the same \rs{} operator has greater leverage on the \evq{} substrate;
+At $454$M, the same index-space \rs{} rule has greater leverage on the \evq{} substrate;
 at $750$M and $1.485$B, Geo leads in-window before \evq{} overtakes it at longer
 lengths. Frozen interventions and low-rank adaptation extend the result to
 pretrained checkpoints. These protocols supply architecture, training-stage,
 and scale evidence around the fixed-support identification. At $8$B, blocking
 answer-side attention to the distant source while preserving prompt tokens and
-rotary indices adds a causal capability endpoint: the improved long-position
+rotary indices adds a causal source-use endpoint: the improved long-position
 probability depends on that source.
 
 Static geometry and learned coefficients jointly determine how a frequency
@@ -40,10 +41,10 @@ consequential after pretraining.
 
 Support selection and range transport remain complementary. The former chooses
 the sampled spectrum, allocation chooses its finite internal resolution, and a
-range operator redeploys the learned spectrum at a target length. The common
-\rs{} operator has greater leverage on the \evq{} substrate, while the
-target-retargeted control in App.~\ref{sec:identification-details} confirms that
-support and allocation interact when chosen jointly. LeRoPE supplies compatible
+range rule redeploys the learned spectrum at a target length. Under a different,
+target-retargeted support policy, the ordering changes
+(App.~\ref{sec:identification-details}); the fixed-support result therefore
+does not imply a support-independent ranking. LeRoPE supplies compatible
 evidence from optimization: a table learned in one run retains substantial
 value when frozen for a new training run \citep{karypis2026lerope}. Here, the
 closed-form construction removes that table-search stage and the fixed-support
@@ -52,5 +53,5 @@ experiment identifies what the table itself changes.
 RoPE has a spectral budget because every head has finitely many rotary pairs.
 Geometric spacing is one way to spend that budget, not a neutral consequence of
 the rotary operator. Once support and allocation are separated, the latter can
-be analyzed, controlled, and improved as a first-class part of long-context
-training.
+be analyzed and controlled as a consequential training-time RoPE design
+variable.

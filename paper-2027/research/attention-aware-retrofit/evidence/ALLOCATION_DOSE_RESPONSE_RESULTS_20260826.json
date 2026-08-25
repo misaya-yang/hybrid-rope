@@ -1,0 +1,61 @@
+{
+  "status": "ALLOCATION_DOSE_RESPONSE_COMPLETE",
+  "checkpoint_scope": "one released OLMo-2-0425-1B-Instruct checkpoint",
+  "documents_per_length": 128,
+  "lengths": [4096, 8192, 16384],
+  "frozen_weights": true,
+  "learned_parameters_during_evaluation": 0,
+  "attention_scaling": 1.0,
+  "control_full_nll": {
+    "4096": 2.7566504889582877,
+    "8192": 4.650030761297504,
+    "16384": 5.897587389345981
+  },
+  "control_tail_nll": {
+    "4096": 2.7539101039977156,
+    "8192": 7.002074910783659,
+    "16384": 7.270223059968842
+  },
+  "registered_outcomes": {
+    "P1_r2_monotone": "pass",
+    "P2_4k_full_nll_monotone": "pass",
+    "P3_16k_tail_interior_minimum": {"status": "pass", "lambda": 0.35},
+    "P4_minimum_closer_to_r2_argmax": "fail",
+    "primary_analytic_joint_gate": "fail",
+    "path_b_16k_tail_dose_through_1_4_16": "pass"
+  },
+  "key_deltas_vs_native": {
+    "cosh_tau4_lambda_0.02": {
+      "full_4k": 0.016883201571856785,
+      "full_4k_ci": [0.015276100866090806, 0.018527481736368364],
+      "tail_16k": -0.11528444942008775,
+      "tail_16k_ci": [-0.1337765378724601, -0.09655591338131586]
+    },
+    "learned_direction_lambda_1": {
+      "full_4k": 0.0008324305797020298,
+      "full_4k_ci": [0.0005965120757601192, 0.0010831858951838925],
+      "tail_16k": -0.045018343438883335,
+      "tail_16k_ci": [-0.053125113891470475, -0.036856670896712275]
+    },
+    "learned_direction_lambda_4": {
+      "full_4k": 0.006141805311279303,
+      "full_4k_ci": [0.00537525849388679, 0.006927047692270176],
+      "tail_16k": -0.11739547876221934,
+      "tail_16k_ci": [-0.13367489781990294, -0.10126912146996435]
+    },
+    "learned_direction_lambda_16": {
+      "full_4k": 0.5294412738036914,
+      "tail_16k": -0.15719977424732434,
+      "tail_16k_ci": [-0.18522578392238848, -0.1286976777679263]
+    }
+  },
+  "receipts": {
+    "full_result_sha256": "42c1c5ea09dc3c59b9682272cb2aae0854da204d41938a2e3924383e0f5d6279",
+    "per_row_sha256": "a8210bd8f41988a74cbfcabaf6fca0f7ae2903f0da59322454046d60c1d6bd21",
+    "prediction_sha256": "99a0e8f83e1d05534a5e2b8d62b24b4ebef21e96e0ab5e13adfe79c9cf7d5a1a",
+    "grid_manifest_sha256": "96ba385ebda82d353760df597f0b3db50d9ff229f228699cf82983f472b51384",
+    "runtime_seconds": 1368.8352303518914,
+    "peak_memory_allocated_bytes": 4002026496
+  },
+  "claim_ceiling": "one-checkpoint fixed-support dose evidence; not a table selector, universal construction, or checkpoint-population result"
+}
