@@ -1,25 +1,35 @@
 # ICLR 2027 active handoff
 
-- **Updated:** 2026-08-24
+- **Updated:** 2026-08-25
 - **Target:** ICLR 2027
 - **Branch / upstream:** `main_0726` / `origin/main_0726`
 - **Active manuscript:** `paper-2027/`
 - **Immutable baseline:** `paper/`
 - **Status:** manuscript/package validation and the authorised 2026-08-24/25
   retrofit experiment reports are committed and pushed. No OpenReview upload or
-  submission is implied. Verify live Git state instead of copying a commit SHA
-  into this mutable handoff.
+  submission is implied. The 2026-08-25 repository-organization and
+  evidence-consistency cleanup is included in the current publication scope;
+  it changes no manuscript source. Verify live Git state instead of copying a
+  commit SHA into this mutable handoff.
 - **Internal only:** exclude this file from the anonymous supplement.
 
 ## 1. Cold-start order
 
-1. [`../AGENTS.md`](../AGENTS.md) — stable scientific, safety, naming, compute,
-   Git, and delivery rules.
-2. This file — current manuscript, validation, worktree, and next actions.
-3. [`main.pdf`](main.pdf) and the corresponding `sections/`, `appendix/`, and
+1. [`../AGENTS.md`](../AGENTS.md) — **rules**: scientific, safety, naming,
+   compute, Git, and delivery.
+2. [`../INDEX.md`](../INDEX.md) — **index**. Go straight to §3.4 (closed
+   routes) before proposing anything, §6 for the agenda, §7 when switching
+   machines.
+3. This file — **state**: current manuscript, validation, worktree, machine
+   status, and author actions.
+4. [`main.pdf`](main.pdf) and the corresponding `sections/`, `appendix/`, and
    `tables/` sources — reviewer-visible truth.
-4. [`research/README.md`](research/README.md) — sole claim/evidence router.
-5. The canonical owner named there before changing any claim or number.
+5. [`research/README.md`](research/README.md) — claim/evidence router.
+6. The canonical owner named there before changing any claim or number.
+
+This file holds only volatile state. Durable theory, evidence maps, and the
+research agenda belong in `../INDEX.md`; permanent rules belong in
+`../AGENTS.md`. Do not restate either here.
 
 `CHANGES_FROM_NEURIPS2026.md` is a historical migration snapshot, not current
 state. External reviews, audits, historical handoffs, scripts, preflights, and
@@ -103,6 +113,17 @@ The 2026-08-24 wording/package pass established:
 These checks establish build/package health, not scientific acceptance,
 OpenReview upload, or publication.
 
+The 2026-08-25 organization/accuracy cleanup additionally passed:
+
+- `151/151` targeted repository-navigation and RoPE-core tests in Conda
+  `aidemo`;
+- Python compilation for the static-rank diagnostic and both M4 owner scripts;
+- JSON parsing for both M4 compact receipts;
+- `git diff --check` and a private-path scan over the new owners.
+
+No manuscript source changed, so the paper was not recompiled for this
+documentation/code-only pass.
+
 ### 2026-08-24/25 closed GPU experiment ledger
 
 These experiments are complete. Read the linked owner before proposing another
@@ -118,6 +139,17 @@ candidate failure as the method conclusion.
 | Can a two-document learned direct-`z` calibration robustly retrofit mature OLMo? | [`research/attention-aware-retrofit/results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md`](research/attention-aware-retrofit/results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md) | Mean 2x moved favourably but the per-row gate failed. Do not run its PG-19, RULER, LoRA, or full-task continuation. |
 | Can either tested analytic static table serve both 1x and 2x with frozen weights? | [`research/attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md`](research/attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md) | No: both tested tables improved 2x directionally and failed 1x retention. Do not sweep `tau`, protected bands, or gain from this result; the broader single-table objective remains open. |
 | Does the already-frozen Native/s4 policy generalise to new natural text, and what owns each effect? | [`research/attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`](research/attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) | Closed positive confirmation on disjoint shard002 rows. Do not rerun PG-19/RULER to reconfirm it or turn the ramp control into the method claim. |
+
+Separately, the 2026-08-24 local M4 Max (MPS, no cloud GPU) target-free
+allocation screens are complete and routed under
+`research/attention-aware-retrofit/{results,evidence,preflights}/`. They are
+**unresolved screens, not candidate verdicts**. Their preflight requires this
+label when the anchored-Cosh reference loses its expected direction in the
+small-model regime. That cross-protocol sign difference is regime evidence, not
+proof that the harness has no resolving power. The cross-owner analysis is
+[`../INDEX.md`](../INDEX.md) §6.2. Do not cite the generated
+`FAILED_50M_GATE` string as a candidate-wide rejection, and do not launch a
+follow-up score from it.
 
 The fresh result keeps four estimands separate:
 
@@ -150,10 +182,11 @@ out: the internal two-seed phase-chord owner reports mean delta NLL
 `+0.00070/-0.16051/-0.15577/-0.20522` at `1x/2x/4x/8x` relative to FMRoPE.
 Its seed scope and selection history prevent manuscript promotion, but it
 already falsifies any narrative of an inherent one-table trade-off. The frozen
-session route is the current verified engineering reference. The phase-kernel
-and optimized collision/resolution owners already supply the theoretical
-construction; the open evidence is whether that theory table realises an
-acceptable in-window/OOD Pareto as a zero-training hard swap on a mature model.
+session route is the current verified engineering reference. Phase-chord is the
+only current co-adapted candidate near the joint Pareto; its smallest missing
+test is one frozen-schedule replication seed. Mature-checkpoint work should
+next study partial-head or per-head coordinate migration rather than another
+whole-table hard swap.
 
 Do not infer the intrinsic in-window cost of allocation from a frozen-table
 swap. The governing decomposition is
@@ -209,7 +242,9 @@ results.
 Highest-leverage author actions:
 
 1. Read the final nine-page PDF as a fresh ICLR reviewer, especially the
-   abstract, Figure 1, pages 6--9, and the transition into Discussion.
+   abstract, Figure 1, pages 6--9, and the transition into Discussion. The
+   adversarial checklist for that read is the "Reviewer objections" table in
+   [`research/README.md`](research/README.md); R2 and R3 are the two open items.
 2. Recheck live ICLR policy, deadlines, dual-submission state, and author
    profile requirements immediately before submission.
 3. Confirm OpenReview title and abstract exactly match the final PDF.
@@ -242,11 +277,10 @@ receipt, result/evidence indices, this handoff, raw-owner location, Git state,
 and provider shutdown state agree. A plan, launch log, PID, output directory,
 or tracked receipt alone never closes the loop.
 
-The only active research implementation step is the report's M0 no-GPU table
-materialization: bind the latest phase-kernel/collision-resolution theory owner
-to one realised 1.485B table and a same-support Geo control, freeze identities,
-and prepare the M1 zero-training hard-swap protocol. There is no small-model
-search, 1× exact-parity requirement, or adaptation fallback.
+The research agenda is not state and is not restated here. It is owned by
+[`../INDEX.md`](../INDEX.md) §6. Where this file and the index disagree about
+what to do next, the index wins; where they disagree about a number, both defer
+to the canonical owner.
 
 Stop list:
 
@@ -271,6 +305,10 @@ Stop list:
 ## 7. Known open state
 
 - The current repair/manuscript/package set was published to `main_0726`.
+- The 2026-08-25 organization/accuracy cleanup retains the three-layer
+  navigation and byte-identical duplicate removal, demotes the static $r_2$
+  search to a best-found geometry diagnostic, and aligns the M4 screen owners
+  on `SCREEN_UNRESOLVED` plus the Stage B `Geo` identity.
 - Raw GPU artifacts remain external; compact tracked receipts own only their
   stated hashes and metrics.
 - Chrome showed the authorised A70/RTX 5090 instance as **已关机** on

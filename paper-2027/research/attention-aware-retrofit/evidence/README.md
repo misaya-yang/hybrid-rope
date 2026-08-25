@@ -73,3 +73,13 @@ authorised window produced a hash-bound, system-disk corpus of exactly one
 billion new FineWeb-Edu tokens from shards absent from the historical local
 shard set. The compact receipt is not the raw corpus and is not training
 evidence.
+
+`PHASE_ISOTROPY_50M_M4_RECEIPT_20260824.json` and
+`PHASE_ALLOCATION_M4_EXTENDED_RECEIPT_20260824.json` record the 2026-08-24
+target-free allocation screens on the 50M/25M M4 harness. Both carry the
+float32 table hashes, matched initialisation, anchors, and runtime receipts.
+The receipts preserve generated `FAILED_50M_GATE` strings, while the canonical
+reports apply the preregistered `SCREEN_UNRESOLVED` interpretation. The
+small-model regime differs from the 151.9M control, but that cross-protocol sign
+difference is not a noise-floor estimate or candidate rejection. Read
+`../../../../INDEX.md` §6.2 before citing either receipt.

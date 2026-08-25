@@ -1,3 +1,4 @@
+import re
 import unittest
 from pathlib import Path
 
@@ -10,7 +11,8 @@ class RepositoryNavigationTests(unittest.TestCase):
         for relative in (
             "AGENTS.md",
             "README.md",
-            "REPO_MAP.md",
+            "INDEX.md",
+            "paper-2027/HANDOFF.md",
             "rebuttal/README.md",
             "rebuttal/rebuttal_0723/README.md",
             "rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md",
@@ -28,7 +30,7 @@ class RepositoryNavigationTests(unittest.TestCase):
     def test_routing_docs_are_public_safe_and_point_to_authorities(self):
         routing_docs = (
             ROOT / "README.md",
-            ROOT / "REPO_MAP.md",
+            ROOT / "INDEX.md",
             ROOT / "AGENTS.md",
             ROOT / "rebuttal" / "README.md",
             ROOT / "rebuttal" / "rebuttal_0723" / "README.md",
@@ -36,7 +38,8 @@ class RepositoryNavigationTests(unittest.TestCase):
         text = "\n".join(path.read_text(encoding="utf-8") for path in routing_docs)
         for required in (
             "AGENTS.md",
-            "REPO_MAP.md",
+            "INDEX.md",
+            "paper-2027/HANDOFF.md",
             "rebuttal/rebuttal_0723/README.md",
             "rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md",
             "rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md",
@@ -100,6 +103,109 @@ class RepositoryNavigationTests(unittest.TestCase):
             self.assertTrue((ROOT / relative).exists(), relative)
         for relative in ("paper/build_aidemo", "paper/build_tectonic"):
             self.assertFalse((ROOT / relative).exists(), relative)
+
+    def test_exactly_three_navigation_authorities(self):
+        """Rules / index / state. A fourth root authority is a defect."""
+        for required in ("AGENTS.md", "INDEX.md", "paper-2027/HANDOFF.md"):
+            self.assertTrue((ROOT / required).is_file(), required)
+        for retired in (
+            "REPO_MAP.md",
+            "Agent.md",
+            "HANDOFF.md",
+            "ROADMAP.md",
+            "docs/INDEX.md",
+            "docs/REPO_MAP.md",
+            "docs/HANDOFF.md",
+            "docs/archive/INDEX.md",
+            "paper-2027/INDEX.md",
+            "paper-2027/REPO_MAP.md",
+        ):
+            self.assertFalse((ROOT / retired).exists(), retired)
+
+    def test_agents_defers_navigation_and_agenda_to_index(self):
+        agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        for required in ("INDEX.md", "paper-2027/HANDOFF.md"):
+            self.assertIn(required, agents)
+
+    def test_index_carries_the_closed_route_ledger(self):
+        """The falsified-route table is the repository's anti-repetition gate."""
+        index = (ROOT / "INDEX.md").read_text(encoding="utf-8")
+        for required in (
+            "KAPPA_ATTENTION_MEASURE_AUDIT_20260820.md",
+            "LEROPE_PROFILE_ORACLE_AUDIT_20260820.md",
+            "RETROFIT_AXIS_FALSIFICATION_20260822.md",
+            "DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md",
+            "ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md",
+            "EXACT_RANGE_151M_3SEED_RESULT_20260820.md",
+            "FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md",
+        ):
+            self.assertIn(required, index)
+
+    def test_static_rank_diagnostic_has_an_owner_script(self):
+        """Computed internal numbers need an owner and an honest search scope."""
+        owner = ROOT / "scripts" / "analysis" / "third_axis_ceiling.py"
+        self.assertTrue(owner.is_file(), "third-axis static-rank owner is missing")
+        index = (ROOT / "INDEX.md").read_text(encoding="utf-8")
+        self.assertIn("scripts/analysis/third_axis_ceiling.py", index)
+        source = owner.read_text(encoding="utf-8")
+        for required in ("LM-quality", "restarts", "algebraic", "not a global ceiling"):
+            self.assertTrue(required in source, f"static-rank owner must state: {required}")
+
+    def test_static_search_is_not_promoted_to_optimality_or_support_invariance(self):
+        agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        index = (ROOT / "INDEX.md").read_text(encoding="utf-8")
+        self.assertIn("best-found value", agents)
+        self.assertIn("不建立 support invariance", index)
+        self.assertNotIn("上限只由 $(K,L)$ 决定", index)
+
+    def test_m4_screen_owner_uses_locked_identity_and_verdict(self):
+        extended = (
+            ROOT
+            / "paper-2027/research/attention-aware-retrofit/results/PHASE_ALLOCATION_M4_EXTENDED_RESULT_20260824.md"
+        ).read_text(encoding="utf-8")
+        initial = (
+            ROOT
+            / "paper-2027/research/attention-aware-retrofit/results/PHASE_ISOTROPY_50M_M4_RESULT_20260824.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("Canonical verdict: **SCREEN_UNRESOLVED**", extended)
+        self.assertIn("Geo (raw key `FMRoPE`)", extended)
+        self.assertIn("Canonical verdict: **SCREEN_UNRESOLVED**", initial)
+
+    def test_reviewer_objection_ledger_exists_and_is_internal(self):
+        router = ROOT / "paper-2027" / "research" / "README.md"
+        text = router.read_text(encoding="utf-8")
+        self.assertIn("## Reviewer objections", text)
+        for tag in ("| R1 |", "| R2 |", "| R3 |", "| R4 |", "| R5 |", "| R6 |", "| R7 |"):
+            self.assertIn(tag, text)
+        # The ledger is an internal adversarial artifact, never manuscript text.
+        for section in (ROOT / "paper-2027" / "sections").glob("*.tex"):
+            self.assertNotIn("Reviewer objections", section.read_text(encoding="utf-8"))
+
+    def test_state_layer_does_not_restate_the_agenda(self):
+        """Rules > index > state: the handoff routes the agenda, never owns it."""
+        handoff = (ROOT / "paper-2027" / "HANDOFF.md").read_text(encoding="utf-8")
+        self.assertIn("The research agenda is not state", handoff)
+        self.assertNotIn("The only active research implementation step", handoff)
+
+    def test_root_routing_links_resolve(self):
+        pattern = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
+        for doc in (
+            ROOT / "README.md",
+            ROOT / "INDEX.md",
+            ROOT / "docs" / "README.md",
+            ROOT / "docs" / "tau_algor" / "README.md",
+            ROOT / "docs" / "archive" / "README.md",
+        ):
+            for target in pattern.findall(doc.read_text(encoding="utf-8")):
+                if target.startswith(("http://", "https://", "mailto:", "#")):
+                    continue
+                path = target.split("#")[0]
+                if not path:
+                    continue
+                self.assertTrue(
+                    (doc.parent / path).exists(),
+                    f"{doc.relative_to(ROOT)} -> {target}",
+                )
 
     def test_root_has_no_stale_provenance_duplicate(self):
         self.assertFalse((ROOT / "RESULT_PROVENANCE_MANIFEST.md").exists())

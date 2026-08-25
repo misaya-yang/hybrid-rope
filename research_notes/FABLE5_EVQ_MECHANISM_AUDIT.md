@@ -166,7 +166,7 @@ Ranked by evidential weight in this repository:
 - **H-competition** (R ≥ 0.5 but final gap dominated by locally-supported competitors): evidence survives; the answer loses a prior fight, consistent with the oracle-null; motivates decoding/readout-calibration analysis rather than more attention work.
 - Any outcome with Geo control violated → implementation audit, no interpretation.
 
-**Cost and environment.** CPU-only, ≈520MB of tensors, minutes of compute. Note: the system `python3` on this machine lacks `torch` (verified); use a project environment per `requirements.txt` (CPU torch suffices). Output goes to `results/readout_decomposition_s42_<date>/` (untracked) + a `docs/exp/` report, per `REPO_MAP.md` §§5,7.
+**Cost and environment.** CPU-only, ≈520MB of tensors, minutes of compute. Note: the system `python3` on this machine lacks `torch` (verified); use a project environment per `requirements.txt` (CPU torch suffices). Output goes to `results/readout_decomposition_s42_<date>/` (untracked) + a `docs/exp/` report, per `INDEX.md` §5.
 
 **Declared boundaries.** 5 paired cases, single seed, adapted-8B setting; both trace manifests carry `measurement_label: "oracle-diagnostic"` and `single_seed_supporting: true` — the analysis inherits those labels and cannot be promoted to a paper-level claim without expansion. Logit-lens basis sensitivity is mitigated (not eliminated) by the rank statistics and the paired-difference design.
 

@@ -1,25 +1,33 @@
-# ICLR 2027 research index
+# ICLR 2027 claim and evidence router
 
-This is the single durable routing layer for the active `paper-2027/`
-manuscript. It tells an agent what to read, which file owns each claim, and
-which material is only a plan, audit, or external review.
+This is the claim-level routing layer for the active `paper-2027/` manuscript.
+It tells an agent which file owns each claim and which material is only a plan,
+audit, or external review.
+
+## Scope
+
+This file is the **claim-level** router for `paper-2027/`: which owner holds
+each number and what its maximum role is. Repository-level navigation, the
+theory index, the closed-route ledger, and the research agenda live one level
+up in [`../../INDEX.md`](../../INDEX.md). Do not duplicate them here.
 
 ## Start here
 
 1. [`../../AGENTS.md`](../../AGENTS.md) — stable scientific, submission, safety,
    and workspace rules.
-2. [`../HANDOFF.md`](../HANDOFF.md) — live manuscript/worktree state and the
+2. [`../../INDEX.md`](../../INDEX.md) — theory/evidence/code index and agenda.
+3. [`../HANDOFF.md`](../HANDOFF.md) — live manuscript/worktree state and the
    only current action queue.
-3. [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md)
+4. [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md)
    — current conceptual grammar: physical table, causal variables, method
    stages, and the role of the zero-training replacement.
-4. [`ICLR2027_RESEARCH_SYNTHESIS_20260819.md`](ICLR2027_RESEARCH_SYNTHESIS_20260819.md)
+5. [`ICLR2027_RESEARCH_SYNTHESIS_20260819.md`](ICLR2027_RESEARCH_SYNTHESIS_20260819.md)
    — implemented claim architecture.
-5. [`EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](EXACT_RANGE_151M_3SEED_RESULT_20260820.md)
+6. [`EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](EXACT_RANGE_151M_3SEED_RESULT_20260820.md)
    — raw-hash-receipted three-training-seed fixed-support result.
-6. [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)
+7. [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)
    — canonical theory, finite-K counterexamples, and 50M crossing.
-7. [`attention-aware-retrofit/README.md`](attention-aware-retrofit/README.md)
+8. [`attention-aware-retrofit/README.md`](attention-aware-retrofit/README.md)
    — current mature-checkpoint retrofit results, negative routes, and receipts.
 
 Do not start from the newest date, an external review, or a preflight.
@@ -78,8 +86,6 @@ theoretical solution to the joint objective.
 
 Additional durable theory/supporting files at research root:
 
-- [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md)
-  — authoritative conceptual vocabulary and causal ledger; it owns no numbers;
 - [`ICLR2027_THEORY_ARCHITECTURE.md`](ICLR2027_THEORY_ARCHITECTURE.md) — early
   theory design exploration; current synthesis and canonical report win on
   conflict;
@@ -103,20 +109,49 @@ Additional durable theory/supporting files at research root:
 | Fresh natural-text policy persistence and mechanism controls | [`attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`](attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) | one-checkpoint, one-new-shard teacher-forced NLL; bundled policy, fixed-support `z`, profile detail, and routing remain separate estimands |
 | Failed mature direct-`z` calibration and analytic single-table routes | [`attention-aware-retrofit/results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md`](attention-aware-retrofit/results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md) and [`attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md`](attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md) | closed negative method gates; not incomplete downstream queues |
 | Internal joint in-window/extrapolation allocation feasibility | [`attention-aware-retrofit/results/EXPERIMENT_REPORT_20260821.md`](attention-aware-retrofit/results/EXPERIMENT_REPORT_20260821.md) | two-seed phase-chord Pareto evidence; establishes feasibility internally, but method selection and seed scope block manuscript promotion |
+| Target-free allocation screens on the M4 harness | [`attention-aware-retrofit/results/PHASE_ISOTROPY_50M_M4_RESULT_20260824.md`](attention-aware-retrofit/results/PHASE_ISOTROPY_50M_M4_RESULT_20260824.md) and [`attention-aware-retrofit/results/PHASE_ALLOCATION_M4_EXTENDED_RESULT_20260824.md`](attention-aware-retrofit/results/PHASE_ALLOCATION_M4_EXTENDED_RESULT_20260824.md) | `SCREEN_UNRESOLVED`; the small-model regime differs from the 151.9M control, but cross-protocol sign difference is not a noise-floor estimate or candidate rejection. See `../../INDEX.md` §6.2 |
 | Post-GPU interpretation and problem-2 roadmap | [`attention-aware-retrofit/analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md`](attention-aware-retrofit/analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md) | cross-owner decision memo only; owns theory-table materialization → 1.485B zero-training Pareto → cross-model confirmation, not result numbers or an adaptation fallback |
 | LeRoPE related-work facts | `../../rebuttal/rebuttal_0723/theory_results/LEROPE_CONCURRENT_WORK_NOTE_20260728.md` plus primary paper | positioning only |
 | Failed LeRoPE profile oracle | [`audits/LEROPE_PROFILE_ORACLE_AUDIT_20260820.md`](audits/LEROPE_PROFILE_ORACLE_AUDIT_20260820.md) | internal negative |
 | Failed attention-measure ordering gate | [`audits/KAPPA_ATTENTION_MEASURE_AUDIT_20260820.md`](audits/KAPPA_ATTENTION_MEASURE_AUDIT_20260820.md) | internal negative |
 
+## Reviewer objections
+
+Routing says who owns a number. This table says whether the number survives the
+strongest objection a reviewer can raise against it. It is an internal
+adversarial ledger: it is not a limitations inventory, and none of it belongs
+verbatim in reviewer-facing text.
+
+`defended` = an owner answers the objection on its own protocol. `partial` =
+answered, but the answer is not where a reviewer will look. `open` = the
+manuscript currently has no answer.
+
+| # | What a reviewer takes away | Strongest objection | Current defense | Status |
+| --- | --- | --- | --- | --- |
+| R1 | Interior allocation `z` is a real training variable | "This is a base or support change under another name." | Both endpoints held bitwise; only the 30 interior frequencies move; 3/3 seeds, `-0.281/-0.176/-0.146` at `2x/4x/8x`. `EXACT_RANGE_151M_3SEED_RESULT_20260820.md` | defended |
+| R2 | The proposed table is a good place on that axis | "Is \evq{} close to the best behavioural allocation, or merely one effective intervention?" | No behavioural ceiling is known. The static $r_2$ search in `../../scripts/analysis/third_axis_ceiling.py` is an internal geometry diagnostic and cannot answer this objection. The paper needs only the bounded construction claim it already makes. | open |
+| R3 | Allocation improves long-context behaviour | "Match the support to the target length and your method loses: `+0.060/+0.227/+0.460`, 0/3 seeds, monotone in length." | Same owner §4 reports it; App.~\ref{sec:identification-details} carries it; the claim is identification, not additive gain over range transport | partial |
+| R4 | The theory explains the effect | "You state that full-RoPE geometry does not predict LM quality, and your own 50M crossing (`7.14/76.20/23.05/7.16`) shows table-by-weights dominates. Then the theorem is decorative." | The identity is a budget account and the obstruction theorem is exact; neither is offered as a ranker. `AGENTS.md` claim ceilings; `../../INDEX.md` §3.4 | partial |
+| R5 | The result holds at scale | "Causal identification is 151.9M and 50M. Everything larger is a different estimand." | Roles are labelled rather than pooled; 1.485B same-initialisation is the stated pretraining ceiling | defended |
+| R6 | Closed form beats learning the table | "Why not learn it? LeRoPE does." | Closed form removes the table-search stage; LeRoPE is compatible evidence, and no matched comparator is claimed | partial |
+| R7 | Retrofit is competitive with deployed practice | "Your `YaRN-style` operator is not cited YaRN." | Locked nomenclature separates them; the RULER contrast is stated against the repository operator | defended |
+
+R2 is an open method-development question, not a defect in fixed-support
+identification. R3 is a measured support-allocation interaction. Static geometry
+does not turn either one into the other; `../../INDEX.md` §6 owns the research
+response.
+
 ## Protocol boundaries
 
-- Exact-range and M4 own pure interior-allocation identification.
+General claim ceilings, evidence-identity traps, and the "a plan/script/launch
+log is not a result" rule live in [`../../AGENTS.md`](../../AGENTS.md) §2–§3 and
+are not restated here. Below are only the boundaries specific to this
+manuscript's owners.
+
 - A scalar-base rule and an exponent-allocation rule are distinguished by
   their restricted intervention family and stage, even though a realised
   tensor admits multiple textual base/exponent parameterisations.
-- The 50M and 151.9M crossings own co-adaptation diagnostics.
-- Mature frozen-checkpoint RULER is task-family adaptation, not unseen-task
-  transfer or from-training evidence.
+- The 151.9M crossing joins the 50M crossing as a co-adaptation diagnostic.
 - The zero-training session policy owns the complete table/gain/router
   intervention; same-support and gain 2x2 owners identify its components.
 - The fresh FineWeb owner closes the previously missing natural OLMo
@@ -129,24 +164,18 @@ Additional durable theory/supporting files at research root:
   RULER, and causal source-use are distinct endpoints.
 - Row bootstraps condition on a fixed checkpoint and task set; they are not
   model-, task-population-, or training-seed uncertainty.
-- A preregistration, script, checkpoint inventory, command, or launch log is not
-  a result.
 
-## Current stop list
+## Stop conditions
 
-- Do not sweep another OLMo/Qwen table, gain, beta, rank, step count, or RULER
-  cell from the current results.
-- Do not resume the CE-only far-pass residual route.
-- Do not revive revoked source-selection protocols whose target is absent from
-  model input.
-- Do not promote the old aliased Qwen `0.6175` as the corrected profile; the
-  valid corrected 128K result is `0.5400`.
-- Do not describe the mature profile as a new interpolation family or universal
-  optimum.
-- Do not restart the direct-`z` downstream queue or sweep another analytic
-  static table: both routes reached their registered stop gates.
-- Do not repeat the fresh shard002 Native/session or 128/512-row controls merely
-  to reproduce an already hash-bound result.
+There is no stop list here. Stop conditions have two homes and one owner each:
+
+- **volatile queue stops** (what not to rerun for the current submission) —
+  [`../HANDOFF.md`](../HANDOFF.md) §6;
+- **permanently closed routes** (what has been falsified and must not be
+  reproposed) — [`../../INDEX.md`](../../INDEX.md) §3.4.
+
+The Qwen aliased-`0.6175` correction is now an evidence-identity trap in
+[`../../AGENTS.md`](../../AGENTS.md) §3.
 
 The promoted frozen case study remains bounded to its stated protocols. The
 natural OLMo same-support comparison is now complete; natural Qwen and

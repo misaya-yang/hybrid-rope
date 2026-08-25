@@ -1,64 +1,37 @@
-# Docs — 研究文档中心
+# docs/ — 历史文档层
 
-本目录同时包含当前维护文档和明确隔离的历史材料。是否能够支持 reviewer-facing claim，不由文件是否位于 `docs/` 决定，而由 `overview/RESULT_PROVENANCE_MANIFEST.md` 决定。
+**这个目录不是当前权威。** 当前入口是根级
+[`AGENTS.md`](../AGENTS.md)（规则）→ [`INDEX.md`](../INDEX.md)（索引）→
+[`paper-2027/HANDOFF.md`](../paper-2027/HANDOFF.md)（状态）。
 
----
+`docs/` 保存 NeurIPS-era 的 provenance、复现路径、历史实验报告和被取代的理论
+推导。它有用，但**不覆盖**当前 ICLR 路由。任何冲突以 `INDEX.md` §3 指向的
+canonical owner 为准。
 
-## 目录结构
+## 子目录
 
-```
-docs/
-├── overview/       当前 claims、provenance、复现指南与审计控制面
-├── exp/            实验报告 (YYYY-MM-DD_slug.md 格式)
-├── theory/         理论推导与数值验证
-├── tau_algor/      tau/scaling 的历史推导与诊断
-└── archive/        明确退役的文档
-```
+| 目录 | 内容 | 状态 |
+| --- | --- | --- |
+| `overview/` | provenance manifest、claims map、复现、数据准备、术语、Blackwell profile | **仍在维护**：provenance 与复现的 owner |
+| `exp/` | 历史实验报告，`YYYY-MM-DD_slug.md` | 归档层；claim 归属见 `INDEX.md` §3 |
+| `theory/` | 早期理论推导与数值验证 | 只读，已被 `INDEX.md` §2.1 取代 |
+| `tau_algor/` | τ scaling / habitable zone / softmax transport 原始推导（2026-03） | 只读；取代关系见 `INDEX.md` §2.3。由 `tau-theory-assistant` skill 使用，保留原位 |
+| `archive/` | 明确退役的 τ 理论文档 | 只读 |
 
----
-
-## 阅读顺序
-
-### 快速入门 (10 min)
-
-1. **`rebuttal/rebuttal_0723/README.md`** → 当前 rebuttal 状态和继续位置
-2. **`REPO_MAP.md`** → 目录职责与 source-of-truth
-3. **`overview/README.md`** → 当前 overview 权威顺序
-4. **`overview/PAPER_CLAIMS_MAP.md`** → 论文↔实验↔脚本↔结果导航
-5. **`overview/RESULT_PROVENANCE_MANIFEST.md`** → reviewer-safe artifact 与哈希
-
-### 深入了解 (30 min)
-
-6. **`overview/METHODOLOGY.md`** → EVQ-Cosh 方法论、评估协议（若与 audit stack 冲突则降级）
-7. **`overview/TERMS_AND_PROTOCOLS.md`** → 统一术语表和命名规范
-8. **`exp/README.md`** → 实验报告索引
-9. **`theory/THEORY_MATH_VALIDATION.md`** → 历史理论数值验证；rebuttal 数学以 `rebuttal/pre_rebuttal/THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md` 为准
-
-### 复现实验
-
-10. **`overview/DATA_PREPARATION.md`** → 数据来源
-11. **`overview/REPRODUCE.md`** → 核心结果复现路径
-
----
-
-## 关键文件速查
+## 这里仍然拥有的东西
 
 | 需求 | 文件 |
-|------|------|
-| 从 Figure/Table 找到生成脚本 | `overview/PAPER_CLAIMS_MAP.md` |
-| 判断一个结果是否可用于 reviewer/rebuttal | `overview/RESULT_PROVENANCE_MANIFEST.md` |
-| 复现论文结果 | `overview/REPRODUCE.md` |
-| 理解数据来源 | `overview/DATA_PREPARATION.md` |
-| 查看特定实验结果 | `exp/README.md` → 找到对应报告 |
-| 理解理论推导 | `theory/THEORY_MATH_VALIDATION.md` |
-| 统一术语 | `overview/TERMS_AND_PROTOCOLS.md` |
+| --- | --- |
+| 结果是否 reviewer-safe / 哈希 | `overview/RESULT_PROVENANCE_MANIFEST.md` |
+| 从 Figure/Table 找生成脚本 | `overview/PAPER_CLAIMS_MAP.md` |
+| 复现核心结果 | `overview/REPRODUCE.md` |
+| 数据来源与准备 | `overview/DATA_PREPARATION.md` |
+| 指标与协议词汇 | `overview/TERMS_AND_PROTOCOLS.md` |
+| RTX 5090 / Blackwell 运行时 | `overview/RTX5090_BLACKWELL_PROFILE.md` |
 
----
+## 维护规则
 
-## 文档维护规则
-
-- 实验报告使用 `YYYY-MM-DD_slug.md` 命名，放入 `exp/`
-- 理论文档放入 `theory/`
-- overview/ 的 README、provenance manifest、claims map 和 reproduce 文档是当前维护入口；其余 audit 文档按索引使用
-- 历史或已完成计划进入 `archive/` 或保持明确的 archived/superseded 状态
-- 缺 raw artifact 时只能写 report-backed / missing-artifact，不能用叙述文档升级证据
+- 新实验报告用 `YYYY-MM-DD_slug.md` 放进 `exp/`，并在 `INDEX.md` §3 登记 owner。
+- **不要**在 `docs/` 下新建 README、索引或 handoff。索引只有 `INDEX.md` 一份。
+- 缺 raw artifact 时只能写 report-backed / missing-artifact，不能用叙述文档升级
+  证据。

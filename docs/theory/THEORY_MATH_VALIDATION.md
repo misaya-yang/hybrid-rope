@@ -1,10 +1,16 @@
 # EVQ-Cosh 数学理论严格性审计（Paper-Ready）
 
+> **状态：历史文档。** 当前理论权威是根级 [`INDEX.md`](../../INDEX.md) §2.1–2.2。
+> 本文引用的 `CORE_THEORY.md` 原在 `docs/paperdraft/`，已删除。最接近的存世版本是
+> [`internal/paper_plans/CORE_THEORY.md`](../../internal/paper_plans/CORE_THEORY.md)
+> （内容已演进，非同一份）；逐字节原文从 Git 历史
+> `deae76e:docs/paperdraft/CORE_THEORY.md` 取回。
+
 > 目的：把论文所需的数学链条按“严格定理 / 条件命题 / 近似假设 / 猜想”分级，指出会被数学 reviewer 抓住的漏洞，并给出可直接修正到正文/附录的措辞与最小更改。
 >
-> 本审计以 [CORE_THEORY.md](./CORE_THEORY.md) 的“六步推导链”为主线，并对齐：
+> 本审计以 `CORE_THEORY.md`（已退役） 的“六步推导链”为主线，并对齐：
 > - [EVQ_COSH_THEORY.tex](./EVQ_COSH_THEORY.tex)（已整理的 theory-only 版本）
-> - `paper/main.tex`（当前匿名稿；同时承接了历史稿中用于排雷符号/推导错误的内容）
+> - `paper/main.tex`（当时的匿名稿；现为不可变 NeurIPS 2026 基线）
 
 ---
 
@@ -99,7 +105,7 @@
 2. 如果 `(α,β)` 来自“mid-band 拟合/经验校准”，那就只能说“effective coefficients”，不要说“最优投影”。
 
 当前修正：
-已在 [CORE_THEORY.md](./CORE_THEORY.md) 中把“不是经验拟合”改为“若以 HS 投影定义则成立；本文仅视为有效系数”。
+已在 `CORE_THEORY.md`（已退役） 中把“不是经验拟合”改为“若以 HS 投影定义则成立；本文仅视为有效系数”。
 
 ### 3.2 “残差 O(1/ln b)”的全域说法不成立（尤其 b=500K）
 
@@ -112,7 +118,7 @@
 2. 避免任何“pointwise residual 很小 / o(1)”的措辞。
 
 当前修正：
-已在 [CORE_THEORY.md](./CORE_THEORY.md) 删除 “O(1/ln b)” 的硬上界措辞，改成“有限宽度导致的 δ 近似误差”。
+已在 `CORE_THEORY.md`（已退役） 删除 “O(1/ln b)” 的硬上界措辞，改成“有限宽度导致的 δ 近似误差”。
 
 ### 3.3 “β·min 是余弦积分渐近精确解，残差 O(b^{-γ})”过强
 
@@ -121,21 +127,21 @@
 2. 剩余项规模通常是 `O(1/ln b)` 叠加 boundary 项，而不是 `O(b^{-γ})` 这种指数级衰减。
 
 当前修正：
-已在 [CORE_THEORY.md](./CORE_THEORY.md) 将该句改写为“bulk 主导项 + 残差 O(1/ln b)+边界项”的区域性结论。
+已在 `CORE_THEORY.md`（已退役） 将该句改写为“bulk 主导项 + 残差 O(1/ln b)+边界项”的区域性结论。
 
 ### 3.4 `τ*(L)=d_head/√L` 必须标 Conjecture
 
 这条 scaling law 目前是强实验支持，但推导依赖对 `α(L,b)` 的校准假设。
 
 当前修正：
-已在 [CORE_THEORY.md](./CORE_THEORY.md) 将“Geometric 严格次优性”明确改为条件式（依赖该 conjecture）。
+已在 `CORE_THEORY.md`（已退役） 将“Geometric 严格次优性”明确改为条件式（依赖该 conjecture）。
 
 ### 3.5 n-width / “99.9% 方差”应标为 sketch/经验
 
 `λ_k~k^{-2}` 是可证明的谱结论，但从此推导出 “N=32 的 ΔJ≈0.1% / cosh 捕获 99.9%” 需要更多具体假设与常数控制。
 
 当前修正：
-已在 [CORE_THEORY.md](./CORE_THEORY.md) 把该段标成 sketch，并移除“严格定理”的语气。
+已在 `CORE_THEORY.md`（已退役） 把该段标成 sketch，并移除“严格定理”的语气。
 
 ---
 

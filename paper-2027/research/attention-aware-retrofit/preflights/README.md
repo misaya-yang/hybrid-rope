@@ -5,6 +5,7 @@ an experiment ran.
 
 | Preflight | Final state |
 | --- | --- |
+| [`PHASE_ALLOCATION_M4_EXTENDED_PREFLIGHT_20260824.md`](PHASE_ALLOCATION_M4_EXTENDED_PREFLIGHT_20260824.md) | executed; its own decision rule ("label the regime as unresolved rather than attributing the result to the new score" when the anchored-Cosh control is neutral/negative at 50M base-256) is applied by the canonical report. See `../../../../INDEX.md` §6.2 |
 | [`ZERO_PARAMETER_PROTECTED_BAND_PREFLIGHT_20260824.md`](ZERO_PARAMETER_PROTECTED_BAND_PREFLIGHT_20260824.md) | executed; failed 1x PG-19 no-harm gate and stopped before capability evaluation |
 | [`ZERO_PARAMETER_SINGLE_TABLE_PREFLIGHT_20260824.md`](ZERO_PARAMETER_SINGLE_TABLE_PREFLIGHT_20260824.md) | executed; both static analytic tables stopped by `../results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md` |
 | [`DIRECT_Z_ZERO_WEIGHT_PREFLIGHT_20260824.md`](DIRECT_Z_ZERO_WEIGHT_PREFLIGHT_20260824.md) | executed; stopped by `../results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md` before downstream evaluation |
