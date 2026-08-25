@@ -47,6 +47,7 @@
 | 冻结 transplant 障碍 | 不等频率 multiset 下精确可逆 Q/K 补偿受阻 | [`OLMO2_POSTHOC_..._20260726`](rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md) |
 | EVQ-Cosh 构造 | 闭式、零学习参数；**仅**对所述凸 surrogate 唯一 | [`ICLR2027_RESEARCH_SYNTHESIS_20260819`](paper-2027/research/ICLR2027_RESEARCH_SYNTHESIS_20260819.md) |
 | claim 架构 | 实现版的 claim 结构与证据层级 | 同上 |
+| 下一代理论状态 | position-resolved、co-adaptation-aware 的缺口，matched-content phase 2x2 与方法进入条件 | [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826`](paper-2027/research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md) |
 
 ### 2.2 理论优化层（已闭合，尚未进正文）
 
@@ -219,155 +220,77 @@ provenance manifest、第二个 rebuttal control room、额外的投稿 PDF 入�
 
 ## 6. 研究议程与下一步
 
-> 本节是**研究判断**，不是 claim，也不是已授权的计算。任何 GPU 运行仍需
-> `AGENTS.md` §4 的显式授权与门禁。
+> 本节是持久研究判断，不是论文 claim、实验结果或计算授权。现行理论状态由
+> [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826`](paper-2027/research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
+> 拥有；实时工作状态只看 [`paper-2027/HANDOFF.md`](paper-2027/HANDOFF.md)。
 
-### 6.1 第三轴的静态几何诊断
+### 6.1 当前目标
 
-`r_2` 搜索回答一个受限问题：在声明的距离测度和固定 support 下，数值优化器能把
-块白化稳定秩推到哪里。它可以比较表的静态几何，但不能给行为第三轴定标，也不能
-回答哪个 $z$ 会获得更好的 LM 结果。
+当前投稿已经完成固定-support allocation 的识别、full-pair 静态几何和一个解析
+construction。下一方法目标是：
 
-| 级 | 对象 | 定义 | 现状 |
-| --- | --- | --- | --- |
-| L0 | 代数上界 | $r_2\le 2K$，当且仅当 $\bar c=0$ 取到 | 精确；uniform 距离测度下有显式构造 |
-| L1 | 静态搜索参考 | 固定 $(a,R)$ 后优化 $r_2$ | 已运行；只有 best-found value，无全局证书 |
-| L2 | 需求加权泛函 | $\mathcal J[z;\mu]$，$\mu$ 为实测注意力距离分布 | 理论对象；既有静态排序失败限制其用途 |
-| L3 | 结构异质性 | 共享表与逐层/逐头表的几何差 | 尚无行为结果 |
-| L4 | 行为搜索 | 在训练装置上比较冻结候选 $z$ | 未测；搜索本身会引入选择偏差，不是无成本上限 |
+> 在构造中不使用 `L_target`，通过 matched adaptation 同时保持 in-window、
+> 改善外推，并把收益落实到 capability，而不只是 tail NLL。
 
-**L1 数值参考。** Owner：[`scripts/analysis/third_axis_ceiling.py`](scripts/analysis/third_axis_ceiling.py)。
-约定必须随数字一起引用：因果三角测度 $p(d)\propto(L-d)$、端点精确锚定、
-$\tau=4$、Adam、固定 restart seeds。表中 `best-found` 是本次 optimizer 的最大观测
-值，只是未知 supremum 的下界。
+三个已知约束：
 
-| $K$ | $L$ | base | $\omega_{\min}L$ | 几何 | EVQ-Cosh | best-found $r_2$ | $2K$ | spread | EVQ 占 best-found 改善量 |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 32 | 256 | 256 | `1.19` | `12.892` | `45.719` | **`54.852`** | 64 | `0.019` | **`78.2%`** |
-| 32 | 256 | 10 000 | `3.4e-2` | `5.563` | `23.090` | **`54.846`** | 64 | `0.021` | `35.6%` |
-| 32 | 256 | 500 000 | `7.7e-4` | `3.973` | `13.065` | **`54.852`** | 64 | `0.036` | `17.9%` |
-| 32 | 1024 | 10 000 | `1.4e-1` | `9.400` | `43.360` | `63.206` | 64 | `0.022` | `63.1%` |
-| 32 | 2048 | 256 | `9.51` | `46.077` | `63.634` | `63.806` | 64 | `0.002` | `99.0%` |
-| 32 | 2048 | 10 000 | `2.7e-1` | `12.797` | `52.075` | `63.788` | 64 | `0.015` | `77.0%` |
-| 16 | 256 | 256 | `1.41` | `12.565` | `28.366` | `30.684` | 32 | `0.025` | `87.2%` |
-| 16 | 2048 | 10 000 | `3.6e-1` | `12.230` | `28.559` | `31.975` | 32 | `0.001` | `82.7%` |
+1. 静态几何说明 allocation 非平凡，但不能给训练后 LM 排序；50M crossing 是决定性
+   反例。
+2. mature co-adaptation 已把 hard-swap 的短窗代价与 allocation 本身分开，却同时观察到
+   far-tail 改善和 long-full 损伤。
+3. 不同长度的 RULER rows 不是配对数据；`VT@4K` 不能单独判定模型上限或位置失效。
 
-第一行是 §3.1 exact-range 151.9M 主因果实验的实际 support（$L=256$、base=256、
-$K=32$），$\omega_{\min}L=1.1892$ 与 §6.2 独立一致。
+### 6.2 缺失的识别桥
 
-**正确读法：**
+下一项有决策价值的协议是 **matched-content phase intervention**，而不是新增模型规模：
 
-1. 在三个已测的宽 support 上，$L=256$ 的 best-found 值都约为 `54.85`；这说明
-   这些约束在当前 optimizer 解附近近乎不绑定。它不建立 support invariance。同一
-   脚本在 $K=32,L=256$、base `1.1` 和 `2` 上分别只得到约 `7.70` 和 `32.25`，
-   因此 support 明确可以改变 best-found $r_2$。
-2. 块白化消除了每个 pair 的边际尺度，但 cross-pair collision 仍依赖频率所在的
-   support。它会减弱某些慢端幅度效应，不会把 support 的代价普遍“洗掉”。
-3. `78.2%/35.6%/17.9%` 是相对各行 geometric baseline 和各自 best-found point 的
-   静态改善比例；分母随 base 改变，不能跨行解释成方法利用率或行为 headroom。
-   `L=256, base=5e5` 还是一个诊断性 stress regime，不代表现代长上下文模型的完整
-   工作点。
+- 固定 checkpoint、token、顺序、causal mask、answer、decoder 和 rows；
+- 用 contiguous position IDs 与 virtual-gap IDs 改变相对相位；
+- 交叉 Native 与一个冻结候选表；
+- 同时报 task score 与 answer-token NLL。
 
-4. **静态度量显示几何分配没有充分利用新增 pair。** $L=256$ 下 $K$ 从 16 加到 32：
-   几何的 $r_2$ 只从 `12.565` 走到 `12.892`（`+2.6%`），而 best-found 值从 `30.684`
-   走到 `54.852`（`+79%`）。$L=2048$、base=10⁴ 同样：几何 `12.230`→`12.797`
-   （`+4.6%`），best-found 值 `31.975`→`63.788`（`+99%`）。这是静态 basis
-   utilization 的补充诊断；它不证明新增 pair 在训练后的模型中没有价值。
+只有同一内容的短条件成功、virtual gap 使 Native 退化且候选恢复时，才能把剩余
+headroom 归到 position/allocation。完整 2x2 和判决读法在
+[theory state](paper-2027/research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md) §4。
+这只是协议设计；GPU 仍需显式授权。
 
-5. **距离测度与 support 的数值比较。** 同一 $K=32$、$L=256$
-   （owner：`third_axis_ceiling.py --decompose`）：
+### 6.3 决策顺序
 
-   | 条件 | best-found $r_2$ | 观测结构 |
-   | --- | --- | --- |
-   | uniform 测度 + **自由** support | **`64.0000`** $=2K$，精确 | 落在同宇称格 $\omega_k=\pi a_k/L$，$a_k$ 与整数偏差 `0.0000` |
-   | 三角测度 + **自由** support | `54.9281` | 格被破坏，$a_k$ 偏离整数达 `0.4869` |
-   | 三角测度 + **钉住** support | `54.8519` | — |
+| 顺序 | 动作 | 进入条件 |
+| --- | --- | --- |
+| A | 当前 ICLR 稿按已验证版本投稿；不再增加 submission 实验 | 作者完成最终阅读与现场 policy/OpenReview 检查 |
+| B | 设计并预注册 matched-content phase 2x2 | 能冻结同一批内容与 position-map contract |
+| C | 若 B 识别出位置失效，先测 grouped per-layer allocation，再考虑 per-head | 保持 matched Native/adaptation 控制和同一 capability endpoint |
+| D | 1.485B 上同时改善 in-window、far-tail 和一个 capability endpoint 后再做多 seed | 小门禁通过 |
+| E | 多 seed 通过后才进入第二 checkpoint 或 8B | 明确算力与硬件授权 |
 
-   uniform 条件存在精确正交构造；其余两行只是相应 optimizer 的 best-found 值。
-   没有全局证书时，不能把两段数值差精确归因为测度成本和 support 成本。
+投稿期叙事决策的历史记录在
+[`ICLR2027_SUBMISSION_NARRATIVE_AND_EXPERIMENT_PLAN_20260826`](paper-2027/research/ICLR2027_SUBMISSION_NARRATIVE_AND_EXPERIMENT_PLAN_20260826.md)；
+它不是新的行动队列。
 
-**与 §3.4 的关系。** 这个脚本不是新的 LM 排序器；它只刻画声明指标的数值景观。
-因此它可以留作理论诊断，却不能据此选择候选表、估计剩余行为收益，或改变论文主张。
+### 6.4 静态诊断的保留边界
 
-**事实 / 推断 / 待验证：**
+[`scripts/analysis/third_axis_ceiling.py`](scripts/analysis/third_axis_ceiling.py)
+仍是固定 measure/support/optimizer/restarts 下 best-found `r_2` 的复现 owner。
+这些值：
 
-- **事实：** 上表是声明 optimizer 与 restart seeds 的 best-found 数字；uniform
-  条件的 parity lattice 精确取到 `2K`；宽 support 上若干值接近。
-- **反例：** 窄 support 的 base `1.1/2` 结果否定 support invariance。
-- **待验证：** 这些静态数值是否与任何训练后行为同向。既有反例说明不能默认同向。
-- **claim 纪律：** `78.2%` 只能写成“相对本次 best-found point 的静态改善比例”，
-  不能写成最优比例、频谱利用率、行为 headroom 或方法上限。
+- 是未知 supremum 的下界，不是全局或行为上限；
+- 明确**不建立 support invariance**；
+- 可解释静态 basis utilization，不能选择下一张 LM 表；
+- 不能把 `78.2%` 等比例写成方法利用率或行为 headroom。
 
-### 6.2 对 2026-08-24 M4 窗口的修订判断
+uniform 测度下存在精确正交格；三角测度、钉住 support 和训练后行为是不同问题。
+详细数值与反例由脚本、[`analysis/full_rope_audit/`](analysis/full_rope_audit/)
+和 Git 历史保留，不再把长表放在冷启动索引中。
 
-三条可核验的发现（表哈希已与 canonical owner 逐字节核对）：
+### 6.5 反重复与论文边界
 
-1. **该候选族是近乎零的干预。** base=256 下对 FMRoPE 的 $\max|\Delta z|$：
-   phase-isotropy `0.063`、min-eigenvalue `0.044`、pair-volume `0.026`；而
-   anchored EVQ-Cosh 是 `0.376`。三个「不同 score」彼此只差 $\le0.038$，
-   **比各自与 FMRoPE 的距离还小**——score ablation 在构造上没有分辨力。
-   块白化 $r_2$（满值 64，owner 见 §6.1）：FMRoPE `12.89`、三候选 `13.88`–`15.90`、
-   EVQ-Cosh `45.72`。这只说明候选在该静态指标上接近 FMRoPE，不能预测训练结果。
-2. **两个阶段不是 support×budget 因子实验。** base=256 时
-   $\omega_{\min}L=1.19$，isotropy 分数动态范围仅 `12.4×`；base=500 000 时
-   $\omega_{\min}L=7.7\times10^{-4}$，动态范围 `2.98e7×`，同一构造的 $\Delta z$
-   变成 `0.459`。但 Stage B 同时改变了 base 和每臂 token budget，所以只能视为另一
-   个训练 regime，不能从两阶段差异归因 support 或预算。
-3. **跨协议符号差不是 noise-floor 估计。** Stage A 的 anchored EVQ-Cosh 与
-   151.9M owner 使用相同频率表，却处于不同模型、数据量和训练预算；符号不同说明
-   结果具有 regime dependence。没有同协议重复或 null replicate 时，不能从不同
-   candidate arm 的摆动估计 harness noise floor。
-
-**结论：标为 `SCREEN_UNRESOLVED`。** 数值是该单 seed、小预算协议的有效结果，但
-extended preflight 预先规定 anchored-Cosh reference 在该 regime 失去预期方向时，
-不得把 gate failure 解释为 candidate-wide rejection。它既不是成功证据，也不关闭
-phase-isotropy 类方法。
-
-### 6.3 下一步（按决策价值排序）
-
-> **投稿期路线由 [`ICLR2027_SUBMISSION_NARRATIVE_AND_EXPERIMENT_PLAN_20260826`](paper-2027/research/ICLR2027_SUBMISSION_NARRATIVE_AND_EXPERIMENT_PLAN_20260826.md)
-> 拥有**：唯一 claim、要前置的两个数字（`2.00` 有效秩、同 support `0.0056→0.6047`）、
-> R3 的正文前置化、已完成剂量曲线的裁决、以及投稿后才动的 headroom 清单。
-> 下表是持久研究议程，两者冲突时投稿期以该计划为准。
-
-| # | 动作 | 成本 | 为什么 |
-| --- | --- | --- | --- |
-| **A** | 从 RoPE kernel 与真实 attention 解释 mature owner 的 **full/tail redistribution**，不再发明静态 score | 0 GPU | learned table 在 matched adaptation 下几乎不伤 4K、改善 8K/16K tail，却损伤 long full NLL；这是当前最直接的理论缺口 |
-| **B** | 只在得到能同时约束 full-sequence 与 tail/source-use 的新 objective 后，预注册一条 target-free mature-model run | 设计 0 GPU；运行另行授权 | 当前 phase proxy、dense-only recovery 和 factor-specific route 分别只解决一侧；新实验必须直接检验共同支配，而不是追加 shell/step/seed |
-| **C** | 1.485B matched Native control 上出现 full/tail/capability 优势后，才进入第二 checkpoint | — | 当前 full-200 2Wiki 近似打平，尚无扩大模型或复现实验的决策价值 |
-
-**方法层立即停止**（这三条是研究议程判断，属持久层；当前投稿的易变队列停止项
-在 [`paper-2027/HANDOFF.md`](paper-2027/HANDOFF.md) §6，不在这里重复）：
-
-- 任何新的「共享单表 + 静态 score」候选——§3.4 已九连败，且该类看不见 weights；
-- 50M M4 harness 上的 candidate-wide 方法判决；
-- 给 2026-08-25 co-adaptive oracle 增加 shell、step、seed 或 allocation-LR sweep；
-- 把 factor-four s4 路由或物理 8K 训练改写成不依赖目标 operating point 的解法；
-- 把 2026-08-24 的结果当作对 phase-isotropy 的否决。
-
-### 6.4 对旧 roadmap 的更新
-
-1. 2026-08-25 mature owner 已把 whole-table co-adaptation 与 matched Native-table
-   continuation 正面对照。Dense-natural Q/K adaptation 能消除 hard-swap 的短窗代价，
-   但 learned table 相对 matched Native 只改善长尾、损伤 long full NLL，full-200
-   2Wiki 近似打平。LoRA 因而是可测的 co-adaptation 机制，不是把 zero-training
-   failure 改名为方法成功的 fallback。
-2. 151.9M/50M replication 不再是近期主线。小模型已拥有 fixed-support identification
-   和内部 feasibility；当前上限卡在 mature attention 下 full/tail/capability 的共同
-   objective。只有新理论明确需要小模型证伪时，才回到该 harness。
-
-### 6.5 论文层面（与方法线分开）
-
-现稿核心识别结果成立，按时投。审稿人视角的完整对抗台账在
-[`paper-2027/research/README.md`](paper-2027/research/README.md)「Reviewer
-objections」，此处只记两条与研究议程耦合的：
-
-- **R2（EVQ-Cosh 在行为轴上处于什么位置）仍然开放。** §6.1 只有静态几何参考，
-  不能给行为轴定标，也不应进入正文作为方法 headroom。
-- **R3（target-matched 反转）** `+0.460`@8x 且随长度单调放大，目前在
-  appendix/discussion 边界。它支持 support 与 allocation 相互作用，不支持把
-  allocation 降格成 support 欠配时才存在的修正轴。
-
+- 新候选先过 §3.4；再提“共享单表 + 静态 scalar score”必须说明如何逃出已关闭类别。
+- 50M M4 phase-isotropy 结果保持 `SCREEN_UNRESOLVED`，不是成功或候选级否决。
+- 不给 co-adaptive oracle 追加 shell、step、seed 或 allocation-LR sweep。
+- R2（行为轴位置）仍是方法研究问题，不是当前 identification claim 的缺陷。
+- R3（target-retargeted 反转）说明 allocation 条件于 support；不支持可加性，也不把
+  allocation 降格成 support 修补项。
 ## 7. 双机协调（工作电脑 / 家里 PC）
 
 ### 7.1 什么在 Git 里，什么不在
@@ -378,7 +301,7 @@ objections」，此处只记两条与研究议程耦合的：
 | raw GPU rows、checkpoint、缓存、token 语料 | 仓库外 / ignored | ❌ **必须显式搬运** |
 | `results/` 下 tracked 的历史 | Git tracked | ✅ |
 | `results/` 下本地输出 | ignored | ❌ |
-| 1B token FineWeb-Edu 语料 | 已停机实例系统盘 | ❌ 见 HANDOFF §4 |
+| 1B token FineWeb-Edu 语料 | 曾为 machine-local；当前可用性未复核 | ❌ 见 HANDOFF §6 |
 
 **规则：** tracked receipt **不能**替代 raw artifact。当前 checkout 缺 artifact
 只说明这台机器没有，不能写成实验没跑过。

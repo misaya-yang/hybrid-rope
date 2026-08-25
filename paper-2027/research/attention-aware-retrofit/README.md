@@ -10,6 +10,11 @@ It distinguishes the realised frequency tensor from the causal variables used
 to analyse it, and prevents training-time allocation, frozen-table effects,
 attention gain, and serving policy from being merged into one estimand.
 
+The current theory continuation is owned one level up by
+[`../ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](../ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md).
+This directory owns mature-checkpoint results and receipts; it does not own a
+second research agenda.
+
 ## Current decision
 
 Two primary owners and one confirmation/attribution owner are live:

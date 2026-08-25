@@ -5,82 +5,84 @@
 - **Branch / upstream:** `main_0726` / `origin/main_0726`
 - **Active manuscript:** `paper-2027/`
 - **Immutable baseline:** `paper/`
-- **Status:** the final reviewer-path revision and its source/figure assets are
-  committed and pushed on `main_0726`: fixed-support identification is Section
-  2 before Related Work and Theory, FMRoPE is identified directly as the
-  published fixed-training-support rule, and the mature RULER headline uses
-  percentages throughout. The validated PDF/package remain local compilation
-  products. No OpenReview upload or submission is implied.
+- **Status:** final manuscript, theory/evidence owners, and PC-continuation
+  documentation are validated and published on `main_0726`. Recheck live Git
+  refs before pulling; no OpenReview upload or submission is implied.
 - **Internal only:** exclude this file from the anonymous supplement.
 
-## 1. Cold-start order
+## 1. PC cold start
 
-1. [`../AGENTS.md`](../AGENTS.md) — **rules**: scientific, safety, naming,
-   compute, Git, and delivery.
-2. [`../INDEX.md`](../INDEX.md) — **index**. Go straight to §3.4 (closed
-   routes) before proposing anything, §6 for the agenda, §7 when switching
-   machines.
-3. This file — **state**: current manuscript, validation, worktree, machine
-   status, and author actions.
-4. [`main.pdf`](main.pdf) and the corresponding `sections/`, `appendix/`, and
-   `tables/` sources — reviewer-visible truth.
-5. [`research/README.md`](research/README.md) — claim/evidence router.
-6. The canonical owner named there before changing any claim or number.
+From the repository root:
 
-This file holds only volatile state. Durable theory, evidence maps, and the
-research agenda belong in `../INDEX.md`; permanent rules belong in
-`../AGENTS.md`. Do not restate either here.
+```bash
+git fetch origin main_0726
+git status --short --branch
+git rev-list --left-right --count HEAD...origin/main_0726
+git log --oneline -5
+```
 
-`CHANGES_FROM_NEURIPS2026.md` is a historical migration snapshot, not current
-state. External reviews, audits, historical handoffs, scripts, preflights, and
-filenames may locate a question; they never supersede the current PDF/source or
-canonical owner.
+Do not pull over a dirty worktree. If the PC checkout is clean and only behind,
+use a fast-forward update; otherwise inspect ownership before changing Git
+state.
 
-## 2. Current paper contract
+Read in this order:
 
-The paper tells one story:
+1. [`../AGENTS.md`](../AGENTS.md) — rules and claim ceilings.
+2. [`../INDEX.md`](../INDEX.md) §2, §3.4, §6, §7 — theory, closed routes,
+   agenda, and cross-machine boundaries.
+3. This file — current manuscript, validation, and author actions.
+4. [`main.pdf`](main.pdf) and `sections/` — reviewer-visible truth after a
+   clean local build.
+5. [`research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
+   — post-submission theory continuation.
+6. The canonical numerical owner routed by
+   [`research/README.md`](research/README.md) before changing a claim.
 
-1. geometric RoPE spends a finite set of rotary pairs redundantly at the slow
-   end;
-2. `x_k=-log(omega_k)=a+Rz_k` separates sampled support `(a,R)` from interior
-   allocation `z`, and a three-seed fixed-support intervention identifies `z`;
-3. full sin/cos geometry, the exact effective-rank identity, the frozen
-   transplant obstruction, and the 50M weights-by-table crossing explain the
-   budget and co-adaptation;
-4. EVQ-Cosh is one closed-form, zero-learned-parameter construction on that
-   axis, with the Cosh family exact only for the stated convex surrogate and
-   its direction checked under the exact cosine-feature kernel;
-5. 432M MLA, 454M range composition, 750M continuation, and 1.485B
-   from-initialisation studies supply architecture, training-stage, and scale
-   consequences; 1.485B and 8B adaptation supply capability evidence.
+Build and test commands live only in [`../README.md`](../README.md)
+“Build and validate.” Python/PyTorch/pytest use Conda `aidemo`. Never compile
+`paper/`.
 
-Evidence roles remain distinct:
+## 2. Final manuscript contract
 
-- 151.9M exact-range and M4 own pure fixed-support allocation identification;
-- the 50M crossing owns weights/table co-adaptation;
-- 432M MLA is the scarce-channel systems flagship;
-- 454M owns substrate-dependent leverage of the same `YaRN-style` operator;
-- 750M and 1.485B own full-parameter persistence/crossover;
-- frozen OLMo/Qwen controls are a compact fixed-support corollary, not a second
-  method or proof of profile-detail uniqueness;
-- 1.485B/8B adaptation, QA, RULER, probability, and causal source use retain
-  their protocol-specific endpoint identities.
+Title: *RoPE Has a Spectral Budget*.
 
-The latest wording pass removed repetitive self-disqualification without
-weakening these boundaries. Negative constructions are judged semantically:
-strong distinctions such as “not a disguised base change” remain, while
-duplicated disclaimers are stated positively or removed. Theorem and protocol
-scope stays beside the claim it governs; no synthetic limitations inventory or
-lexical `not` ban is used.
+Reviewer path:
 
-Use the locked names in `AGENTS.md`: `Geo`, `Native`, `FMRoPE`, `anchored
-EVQ-Cosh`, `YaRN-style`, cited `YaRN`, and `MLA wavelength-blend operator` are
-not interchangeable.
+1. finite RoPE has sampled support and interior allocation;
+2. Section 2 identifies allocation at fixed support with three training seeds;
+3. Related Work positions that axis;
+4. full-pair geometry supplies the exact effective-dimension account and slow
+   collapse;
+5. EVQ-Cosh is one analytic, zero-learned-parameter witness;
+6. architecture, scale, frozen-checkpoint, and capability studies establish
+   relevance without replacing the identification owner.
+
+Locked identities:
+
+- `FMRoPE` is the published rule, instantiated at fixed training support in
+  the identification experiment; the target-retargeted policy is reported
+  separately.
+- `anchored EVQ-Cosh` changes only interior allocation at the same FMRoPE
+  extrema and log-span.
+- `Geo` is a geometric training baseline; `Native` is an unmodified
+  pretrained checkpoint.
+- `YaRN-style` is the repository fixed-index operator, not official YaRN.
+- EVQ-Cosh is unique only for its stated convex surrogate.
+
+Headline evidence:
+
+| Role | Result | Owner |
+| --- | --- | --- |
+| causal identification | `+0.026/-0.281/-0.176/-0.146`, every OOD length `3/3` seeds | [exact-range owner](research/EXACT_RANGE_151M_3SEED_RESULT_20260820.md) |
+| full-pair static geometry | 23 slow pairs / 46 nominal dimensions / `r2=2.00` under the stated prior | [full-RoPE owner](research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md) |
+| scarce-channel relevance | 432M MLA, `K=16`, 16K PPL `138.8 -> 95.6`, three seeds | [curated owner](../data/curated/table18_mla_3seed_aggregate.json) |
+| mature fixed-support consequence | OLMo 16K RULER `0.56% -> 60.47%`; coarse ramp `61.04%` | [same-support owner](research/attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) |
+| pretraining-scale ceiling | full-parameter evidence through 1.485B; 8B is adaptation/capability evidence | [research router](research/README.md) |
 
 ## 3. Current paper and package receipt
 
-- Title: *RoPE Has a Spectral Budget*.
-- Main text ends on page 9; total PDF length is 31 US-Letter pages.
+- Main text: 9 pages.
+- Total PDF: 31 US-Letter pages.
 - `paper-2027/main.pdf`
   - SHA-256: `5c5107126ae99d659c000fefd7b86fbd36178b4844a0b0b82e84bedd2db59c0e`
   - size: `697337` bytes
@@ -90,280 +92,86 @@ not interchangeable.
 - Immutable `paper/main.pdf`
   - SHA-256: `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`
 
-The AI-use statement has author-confirmed factual coverage. Do not shorten or
-cosmetically rewrite it without renewed author confirmation and a current venue
-policy check.
+Generated PDF, BBL, and supplement ZIP are local build products unless a later
+explicit publication includes them. A tracked source commit is not an
+OpenReview submission.
 
 ## 4. Latest validation
 
-The 2026-08-24 wording/package pass established:
+The final reviewer-path revision passed:
 
-- `./paper-2027/compile.sh`: body page 9, 31 total pages, zero undefined
-  references/citations, `0pt` worst overfull box, anonymous, Letter, no Type-3
-  or unembedded fonts;
-- curated supplement: ZIP integrity clean and isolated paper rebuild passed;
-- isolated packaged CPU suite: `144/144` tests passed in Conda `aidemo`;
-- repository navigation, downstream-helper, and same-support focused suite:
-  `22/22` tests passed;
-- pages affected by the wording pass (2, 6--9, 14, 18, 23, and 29--30) were
-  visually inspected;
-- `git diff --check` passed;
-- `paper/` remained unchanged at the hash above.
+- active and isolated-package builds: 9 body / 31 total pages;
+- zero undefined references or citations;
+- `0pt` worst overfull box;
+- anonymous Letter output, no Type-3 or unembedded fonts;
+- exact-range/FMRoPE, fixed-support, repository-navigation, and package
+  workspace suite: `28/28`;
+- isolated supplement CPU suite: `144/144`;
+- ZIP integrity and immutable-`paper/` checks;
+- visual review of pages 1--9, Section 2 on page 3, both main figures, and the
+  frozen-checkpoint table on page 29.
 
-These checks establish build/package health, not scientific acceptance,
-OpenReview upload, or publication.
+These receipts prove build/package health and the tested code paths. They do not
+prove acceptance, policy currency, OpenReview state, or unmeasured claims.
 
-The 2026-08-25 organization/accuracy cleanup additionally passed:
+## 5. Research continuation
 
-- `151/151` targeted repository-navigation and RoPE-core tests in Conda
-  `aidemo`;
-- Python compilation for the static-rank diagnostic and both M4 owner scripts;
-- JSON parsing for both M4 compact receipts;
-- `git diff --check` and a private-path scan over the new owners.
+The research agenda is not state. Its authority is [`../INDEX.md`](../INDEX.md)
+§6; the theoretical reasoning is in the
+[theory state](research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md).
 
-No manuscript source changed, so the paper was not recompiled for this
-documentation/code-only pass.
+Current missing bridge: a matched-content `table x virtual-gap position map`
+2x2 that keeps tokens, answer, decoder, and rows fixed. Different-length RULER
+rows cannot answer position failure versus model capability.
 
-The later 2026-08-25 co-adaptive allocation-oracle closure additionally passed:
+Do not start another shared-table static score, 50M candidate verdict, extra
+oracle shell/step/seed/LR sweep, larger checkpoint, or GPU run from this
+handoff. Any compute requires a new preflight and explicit user authorization.
 
-- Python compilation for all seven oracle/training/evaluation modules;
-- `156/156` focused oracle, RoPE-core, and repository-navigation tests in
-  Conda `aidemo`;
-- compact receipt JSON parsing, `git diff --check`, immutable-`paper/` diff,
-  and private server/path scanning over the new owner/code scope.
+## 6. What Git does not contain
 
-No manuscript source changed in this experiment-only closure, so the paper was
-not recompiled.
-
-The 2026-08-25/26 submission rewrite and experiment closure additionally passed:
-
-- fixed-support dose screen and full-128 evaluation completed with frozen
-  prediction, grid, per-row, environment, runtime, and SHA-256 receipts;
-- Native 4K RULER core-four completed on 20 rows/task; the differing
-  cross-length rows prevent the originally proposed model-ceiling inference;
-- active paper compile passed at 9 body / 31 total pages with zero undefined
-  refs/cites, `0pt` overfull, anonymous Letter output, and embedded non-Type-3
-  fonts;
-- curated ZIP integrity, isolated package rebuild, and isolated `144/144`
-  CPU tests passed;
-- focused navigation, fixed-support, same-support, and target-free suite passed
-  `39/39`; a stale manifest hash found on the first run was corrected before
-  the passing rerun;
-- pages 1, 2, 6--9 and both regenerated overview/geometry figures were visually
-  inspected; `paper/` remained unchanged.
-
-The final reviewer-path revision additionally passed:
-
-- source and test inspection confirms that the FMRoPE arm implements the
-  published rule directly: geometric exponents with
-  `theta_train=L_train=256`, and `theta_infer=L_target` only in the separately
-  reported target-retargeted condition;
-- active and isolated-package builds both pass at 9 body / 31 total pages, zero
-  undefined refs/cites, `0pt` overfull, anonymous Letter output, and embedded
-  non-Type-3 fonts;
-- exact-range/FMRoPE, fixed-support, repository-navigation, and package-workspace
-  suite passed `28/28`; isolated supplement suite passed `144/144`;
-- pages 1--9, the reordered Section 2 on page 3, both main figures, and the
-  percentage-normalized frozen-checkpoint table on page 29 were visually
-  inspected;
-- ZIP integrity, `git diff --check`, and immutable `paper/` checks passed.
-
-### 2026-08-24/25 closed GPU experiment ledger
-
-These experiments are complete. Read the linked owner before proposing another
-run; a failed gate is a stop decision, not an unfinished queue.
-
-The historical 2026-08-24 cross-experiment interpretation is
-[`research/attention-aware-retrofit/analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md`](research/attention-aware-retrofit/analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md).
-The 2026-08-25 mature result below and `../INDEX.md` §6 supersede its action
-route. Read all three before treating session routing, phase-chord, a collision
-proxy, or a candidate failure as the method conclusion.
-
-| Question | Owner | Decision; do not repeat |
+| Artifact | Git status | Consequence on the PC |
 | --- | --- | --- |
-| Can a two-document learned direct-`z` calibration robustly retrofit mature OLMo? | [`research/attention-aware-retrofit/results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md`](research/attention-aware-retrofit/results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md) | Mean 2x moved favourably but the per-row gate failed. Do not run its PG-19, RULER, LoRA, or full-task continuation. |
-| Can either tested analytic static table serve both 1x and 2x with frozen weights? | [`research/attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md`](research/attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md) | No: both tested tables improved 2x directionally and failed 1x retention. Do not sweep `tau`, protected bands, or gain from this result; the broader single-table objective remains open. |
-| Does the already-frozen Native/s4 policy generalise to new natural text, and what owns each effect? | [`research/attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`](research/attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) | Closed positive confirmation on disjoint shard002 rows. Do not rerun PG-19/RULER to reconfirm it or turn the ramp control into the method claim. |
-| Can a mature fixed-Native-support table and Q/K coordinates jointly adapt without losing Native-window LM quality? | [`research/attention-aware-retrofit/results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md`](research/attention-aware-retrofit/results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md) | The registered phase-shell gate fails. Matched dense-natural controls retain a real 8K/16K tail effect at near-zero 4K marginal cost, but the learned table loses on long full NLL and ties the Native-table control on full-200 2Wiki. Stop this proxy and its shell/step/seed/LR extensions. |
-| Is the frozen allocation effect graded between Native and the tested tables? | [`research/attention-aware-retrofit/results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md`](research/attention-aware-retrofit/results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md) | Yes, but the analytic Cosh path has no point passing the registered joint 4K guard and static `r2` misses the useful dose. The learned direction is mechanism evidence, not a new method. |
-| Does Native VT at 4K alone decide capability ceiling versus position failure? | [`research/attention-aware-retrofit/results/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md`](research/attention-aware-retrofit/results/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md) | No. Native core-four is `1.00/0.85/0.60/0.03`, but different generated rows across lengths invalidate the proposed binary inference. |
+| manuscript source, owners, compact receipts, code, tests | tracked | available after verified sync |
+| checkpoints and adapters | external | locate or transfer before evaluation |
+| raw GPU rows and per-example outputs | external/ignored | compact means are insufficient for new per-position analysis |
+| caches and token arrays | external/ignored | regenerate only from a pinned owner |
+| prepared one-billion-token FineWeb-Edu corpus | previously machine-local; portability unverified | do not assume it exists on the PC or a new server |
 
-Separately, the 2026-08-24 local M4 Max (MPS, no cloud GPU) target-free
-allocation screens are complete and routed under
-`research/attention-aware-retrofit/{results,evidence,preflights}/`. They are
-**unresolved screens, not candidate verdicts**. Their preflight requires this
-label when the anchored-Cosh reference loses its expected direction in the
-small-model regime. That cross-protocol sign difference is regime evidence, not
-proof that the harness has no resolving power. The cross-owner analysis is
-[`../INDEX.md`](../INDEX.md) §6.2. Do not cite the generated
-`FAILED_50M_GATE` string as a candidate-wide rejection, and do not launch a
-follow-up score from it.
+A compact receipt is provenance, not the raw artifact. Missing local raw files
+never mean the experiment did not run.
 
-The fresh result keeps four estimands separate:
+## 7. Author actions
 
-| Contrast | Held fixed | Changed | What it establishes |
-| --- | --- | --- | --- |
-| Native versus Native/s4 session policy | checkpoint and rows | table, gain, and route as one bundle | zero-training policy persistence only |
-| geometric versus derived/ramp at long lengths | sampled support `(a,R)`, gain, route, checkpoint, and rows | interior allocation `z` | length-dependent third-axis contrast among these tested `z` values; geometric is locally competitive at 8K and fails at 16K |
-| derived versus coarse ramp | support, gain, route, checkpoint, and rows | fine profile detail within tested allocations | tested profiles are indistinguishable at current precision; no uniqueness or continuous-basin claim |
-| static-s4 versus session-s4 | one frozen long table, gain, checkpoint, and rows | short-request routing | exact Native routing owns 4K retention |
+Submission:
 
-Target-aware s2 versus session-s4 changes support and table together; it is an
-operating-point comparison, never a pure `z` effect. Official YaRN is an
-external reference, never the mechanism owner. Geometric/non-geometric is not
-a quality classifier: a non-geometric `z` may perform well in-window and fail
-under farther extrapolation.
+1. On the PC, rebuild from source and read pages 1--4 and 8--9 at normal zoom.
+2. Confirm OpenReview title and abstract exactly match the PDF.
+3. Recheck current ICLR policy, deadlines, anonymity, author profiles, and
+   dual-submission state immediately before upload.
+4. Upload only the curated paper/package, never a repository-root archive.
 
-Canonical reports and compact machine receipts are under
-`research/attention-aware-retrofit/{results,evidence}/`; raw rows remain in an
-ignored external owner. The authorised window also produced exactly
-`1,000,000,000` CPU-tokenised FineWeb-Edu tokens from new shards002/003, absent
-from the historical 000/001/004 set. The token file SHA-256 is
-`223e466b1e829675e027e900fa4dbb8b0ff2e851f70d0c9ef301b1fec944b284`.
-This corpus is data readiness, not training evidence. It remains on the stopped
-instance's system disk; copy it to an explicitly chosen persistent owner before
-ever releasing that instance or using the corpus on another machine.
+Research after submission:
 
-The core method frontier remains a single allocation that jointly preserves
-in-window performance and improves extrapolation. This is feasible, not ruled
-out: the internal two-seed phase-chord owner reports mean delta NLL
-`+0.00070/-0.16051/-0.15577/-0.20522` at `1x/2x/4x/8x` relative to FMRoPE.
-Its seed scope and selection history prevent manuscript promotion, but it
-already falsifies any narrative of an inherent one-table trade-off. The frozen
-session route is the current verified engineering reference. Phase-chord is the
-only current co-adapted candidate near the joint Pareto; its smallest missing
-test is one frozen-schedule replication seed. Mature-checkpoint work should
-next study partial-head or per-head coordinate migration rather than another
-whole-table hard swap.
+1. Read the theory state and the complete closed-route ledger in INDEX §3.4.
+2. Write the matched-content phase preflight without selecting on long-context
+   results.
+3. Request explicit GPU authorization only after code/config/data/table/output
+   identities and a stop rule are frozen.
+4. Require a 1.485B matched in-window + far-tail + capability gate before
+   multi-seed or second-checkpoint expansion.
 
-Do not infer the intrinsic in-window cost of allocation from a frozen-table
-swap. The governing decomposition is
+## 8. Git boundary
 
-\[
-\Delta\mathcal L_{\rm in}
-=\Delta\mathcal L_{\rm alloc}
-+\Delta\mathcal L_{\rm adapt},
-\]
+At handoff, always report source publication and local build artifacts
+separately. Before any future commit/push:
 
-where the second term is table/weight co-adaptation mismatch. The 2026-08-24
-direct-`z`, analytic-table, and fresh same-support runs all freeze weights and
-therefore include this mismatch; they cannot establish a fundamental
-in-window/extrapolation trade-off. From-scratch exact-range, phase-chord, and
-same-initialisation training owners govern the co-adapted allocation frontier.
-This diagnosis does not create an adaptation fallback for the current
-zero-training theory-table route.
+- preserve `paper/`;
+- stage an explicit scope, never `git add -A`;
+- exclude credentials, machine paths, checkpoints, raw rows, caches, and
+  unrequested build products;
+- run `git diff --cached --check` and the relevant `aidemo` tests;
+- push `main_0726`, then compare local and remote SHA.
 
-## 5. Workspace and ownership
-
-The published set spans the manuscript, research owners/receipts, evaluator
-guard/tests, packager, curated supplement, and documentation cleanup. Preserve
-unrelated edits and inspect branch, upstream, and worktree live before any
-future Git operation; this file intentionally avoids a self-invalidating current
-HEAD field.
-
-The 2026-08-24 documentation cleanup removed the unreferenced tracked
-`DOCUMENT_TEXT_MAP.md`, which duplicated the LaTeX manuscript, and marked
-`CHANGES_FROM_NEURIPS2026.md` as a historical snapshot. Ignored LaTeX scratch
-files, `.DS_Store`, and the unreferenced stray page image were moved to the
-recoverable sibling archive `../hybrid-rope-cleanup-20260824/`. The stale,
-unreferenced root `REAL_CONTEXT_TARGET_FREE_PREFLIGHT_20260822.md` was removed;
-its historical content remains recoverable from Git.
-
-Durable placement:
-
-| Material | Owner |
-| --- | --- |
-| Current mutable state | this file only |
-| Claim/evidence routing | `research/README.md` |
-| Central paper-facing owners | research root files named by the router |
-| Mature retrofit results and receipts | `research/attention-aware-retrofit/` |
-| Internal theory/manuscript audits | `research/audits/` |
-| External-model reviews | `research/external-reviews/` |
-| Reviewer-facing source/package | `paper-2027/` and curated packager output |
-
-Raw checkpoints, GPU rows, caches, server details, and private paths remain
-outside the repository. Plans, scripts, commands, and preflights are not
-results.
-
-## 6. Next actions
-
-Highest-leverage author actions:
-
-1. Read the final nine-page PDF as a fresh ICLR reviewer, especially the
-   abstract, Figure 1, pages 6--9, and the transition into Discussion. The
-   adversarial checklist for that read is the "Reviewer objections" table in
-   [`research/README.md`](research/README.md); R2 and R3 are the two open items.
-2. Recheck live ICLR policy, deadlines, dual-submission state, and author
-   profile requirements immediately before submission.
-3. Confirm OpenReview title and abstract exactly match the final PDF.
-4. Keep future Git publication approval-gated and repeat the scoped
-   staging/leak review.
-
-There is no active GPU process. The co-adaptive oracle, matched recovery,
-full-128 dose response, and Native-4K task diagnostic are complete. The dose
-result was not promoted as a method because its analytic path missed the joint
-gate. Future capability-mechanism work must hold prompt content and decoding
-fixed while changing only phase/position exposure; more rows from the current
-length-specific RULER cells cannot answer that question.
-
-Future compute is not ready merely because a script or token corpus exists.
-Before opening a GPU, follow `../AGENTS.md` and additionally verify all of these
-task-specific gates:
-
-1. the question is absent from the closed ledger above and can change the paper;
-2. the exact estimand states support, `z`, gain, route, weights, endpoint, and
-   which of them change;
-3. checkpoint, data, table, code, output, stop condition, and shutdown plan have
-   frozen identities, and the raw data owner is portable or intentionally tied
-   to the selected instance;
-4. the 1.485B zero-training gate must pass before a larger checkpoint, broad
-   capability suite, or cross-model confirmation is allowed.
-
-A future run is not handed off as complete until its canonical report, compact
-receipt, result/evidence indices, this handoff, raw-owner location, Git state,
-and provider shutdown state agree. A plan, launch log, PID, output directory,
-or tracked receipt alone never closes the loop.
-
-The research agenda is not state and is not restated here. It is owned by
-[`../INDEX.md`](../INDEX.md) §6. Where this file and the index disagree about
-what to do next, the index wins; where they disagree about a number, both defer
-to the canonical owner.
-
-Stop list:
-
-- no new table, gain, beta, rank, step-count, or RULER sweeps for the current
-  submission;
-- no repetition of the shard002 Native/session confirmation or its 128/512-row
-  controls unless the estimand, checkpoint population, or task family changes;
-- no claim that coarse-ramp parity makes the method YaRN or makes `z`
-  irrelevant;
-- no claim that one shared table is mathematically unable to serve in-window
-  and extrapolation regimes; this is neither proved nor supported by the
-  candidate-specific frozen failures;
-- no revival of revoked source-selection or CE-only far-pass protocols;
-- no promotion of the old aliased Qwen `0.6175` result;
-- no merging of exact-range, co-adaptation, frozen retrofit, and mature
-  capability into one causal estimand;
-- no deletion of correct appendix theory to reduce total PDF length;
-- no edit, compile, move, or regeneration of `paper/`;
-- no GPU work, commit, push, branch operation, or upload without explicit user
-  authorization.
-
-## 7. Known open state
-
-- The current repair/manuscript/package set was published to `main_0726`.
-- The 2026-08-25 organization/accuracy cleanup retains the three-layer
-  navigation and byte-identical duplicate removal, demotes the static $r_2$
-  search to a best-found geometry diagnostic, and aligns the M4 screen owners
-  on `SCREEN_UNRESOLVED` plus the Stage B `Geo` identity.
-- Raw GPU artifacts remain external; compact tracked receipts own only their
-  stated hashes and metrics.
-- The 2026-08-25 RTX 5090 instance remained reachable after all result files
-  were atomically written; no GPU process remained, and this task did not shut
-  down or release it. Provider state is volatile and must be rechecked before
-  any later compute or release action.
-- The 1B-token corpus is not in Git and is not yet a portable training-data
-  owner; its tracked research receipt must not be mistaken for the raw corpus.
-- No promoted scientific result is known incomplete. Remaining work is author
-  review, live submission-policy verification, and explicitly authorized Git
-  publication.
+Historical experiment decisions remain reachable from INDEX §3. They are not
+duplicated here.

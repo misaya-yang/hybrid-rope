@@ -21,13 +21,16 @@ up in [`../../INDEX.md`](../../INDEX.md). Do not duplicate them here.
 4. [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md)
    — current conceptual grammar: physical table, causal variables, method
    stages, and the role of the zero-training replacement.
-5. [`ICLR2027_RESEARCH_SYNTHESIS_20260819.md`](ICLR2027_RESEARCH_SYNTHESIS_20260819.md)
+5. [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
+   — current post-submission theory state, empirical constraints, missing
+   identification bridge, and method-entry conditions.
+6. [`ICLR2027_RESEARCH_SYNTHESIS_20260819.md`](ICLR2027_RESEARCH_SYNTHESIS_20260819.md)
    — implemented claim architecture.
-6. [`EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](EXACT_RANGE_151M_3SEED_RESULT_20260820.md)
+7. [`EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](EXACT_RANGE_151M_3SEED_RESULT_20260820.md)
    — raw-hash-receipted three-training-seed fixed-support result.
-7. [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)
+8. [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)
    — canonical theory, finite-K counterexamples, and 50M crossing.
-8. [`attention-aware-retrofit/README.md`](attention-aware-retrofit/README.md)
+9. [`attention-aware-retrofit/README.md`](attention-aware-retrofit/README.md)
    — current mature-checkpoint retrofit results, negative routes, and receipts.
 
 Do not start from the newest date, an external review, or a preflight.
@@ -86,6 +89,9 @@ theoretical solution to the joint objective.
 
 Additional durable theory/supporting files at research root:
 
+- [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
+  — current continuation owner; it supersedes dated next-step reasoning without
+  superseding numerical result owners;
 - [`ICLR2027_THEORY_ARCHITECTURE.md`](ICLR2027_THEORY_ARCHITECTURE.md) — early
   theory design exploration; current synthesis and canonical report win on
   conflict;
@@ -97,6 +103,7 @@ Additional durable theory/supporting files at research root:
 | Question | Canonical source | Maximum role |
 | --- | --- | --- |
 | Conceptual grammar and causal-variable separation | [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md) | notation and routing only; never a numerical owner |
+| Post-submission theory state and missing bridge | [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md) | theory continuation and protocol design only; no new result or compute authorization |
 | Full sin/cos geometry, collision, stable-rank identity | [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md) | main theory; static basis, not LM-quality predictor |
 | Pure fixed-support interior-allocation identification | [`EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](EXACT_RANGE_151M_3SEED_RESULT_20260820.md) plus M4 historical owner | main causal experiment |
 | Exact frozen Q/K transplant obstruction | `../../rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md` | exact impossibility for fixed static maps, not all approximate adapters |
