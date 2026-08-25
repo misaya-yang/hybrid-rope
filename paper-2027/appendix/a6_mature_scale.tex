@@ -65,7 +65,7 @@ above.
 \centering
 \small
 \setlength{\tabcolsep}{4pt}
-\caption{\textbf{Frozen fixed-support intervention.} Macro score; higher
+\caption{\textbf{Frozen fixed-support intervention.} Macro score (\%); higher
 is better. Each row is a separate fixed-checkpoint comparison on its stated
 RULER task set.}
 \label{tab:frozen-fixed-support}
@@ -73,8 +73,8 @@ RULER task set.}
 \toprule
 Checkpoint & Endpoint & Geometric & Movement ramp & Frozen derived \\
 \midrule
-OLMo-2 1.485B & unseen-nine, 16K & 0.0056 & 0.6104 & 0.6047 \\
-Qwen2.5-1.5B & core-four, 64K & 0.5775 & 0.6400 & 0.6650 \\
+OLMo-2 1.485B & unseen-nine, 16K & 0.56 & 61.04 & 60.47 \\
+Qwen2.5-1.5B & core-four, 64K & 57.75 & 64.00 & 66.50 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -94,8 +94,8 @@ $20$ rows per task. Qwen2.5-1.5B-Instruct uses the four development RULER tasks
 at $64$K, also with $20$ rows per task; it evaluates a factor-four table at
 twice the Native context length. Row resampling conditions on each fixed
 checkpoint and task set. Both non-geometric allocations produce the large OLMo
-recovery. The derived-minus-geometric intervals are $[0.5488,0.6480]$ for
-OLMo and $[0.0025,0.1750]$ for Qwen; the paired derived-minus-ramp intervals
+recovery. The derived-minus-geometric intervals are $[54.88,64.80]$ points for
+OLMo and $[0.25,17.50]$ points for Qwen; the paired derived-minus-ramp intervals
 contain zero on both models. The control therefore attributes the effect to
 fixed-support reallocation while leaving profile-specific ordering unresolved.
 

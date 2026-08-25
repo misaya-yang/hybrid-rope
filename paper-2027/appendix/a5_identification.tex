@@ -33,9 +33,9 @@ $50{,}304$. Training uses the unshuffled FineWeb-Edu
 GPT-NeoX-20B tokenizer at revision
 \texttt{c292233c833e336628618a88a648727eb3dff0a7}.
 
-\paragraph{Arms.} \emph{Baseline:} a paper-faithful reimplementation of the
-uniform-in-log exponent grid specified in \S6.1 of \citet{oka2026fmrope}, at
-training base $256$. The baseline implements that published rule directly.
+\paragraph{Arms.} \emph{Baseline:} FMRoPE at fixed training support,
+implementing the uniform-in-log exponent grid specified in \S6.1 of
+\citet{oka2026fmrope} at training base $256$.
 \emph{Intervention:} anchored \evq{} at $\tau{=}4$. The anchored and
 deployed midpoint \evq{} tables are different support
 embeddings of the \emph{same normalised shape}: both use midpoint Cosh

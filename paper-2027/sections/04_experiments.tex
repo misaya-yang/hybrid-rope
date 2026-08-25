@@ -1,53 +1,13 @@
-\section{Experiments}
+\section{Consequences across Model-Building Regimes}
 \label{sec:experiments}
 
-The experiments follow the theory's dependency chain. A fixed-support control
-identifies allocation; architecture and scale studies test the resulting table
-where the finite budget matters; mature-model protocols test whether the same
-design choice remains actionable and reaches remote content. Each comparison
-retains its own metric and control.
+The fixed-support experiment identifies the variable. The studies below test
+whether it remains consequential under different architectures, training
+stages, scales, and pretrained checkpoints. Each comparison retains its own
+metric and control.
 
 %% =========================================================================
-\subsection{Identifying allocation at fixed support}
-\label{sec:exp-identify}
-
-\paragraph{Protocol.}
-Within each of three $151.9$M training seeds, the two arms share architecture,
-trainable initialisation, token order, optimiser, LR schedule, global batch, a
-$499{,}974{,}144$-token budget, and $32$ frozen evaluation anchors. The
-baseline implements the uniform-in-log rule of
-\citet[\S6.1]{oka2026fmrope} at training base $256$; the intervention uses
-anchored \evq{} with $\tau{=}4$, obtained by normalising its quantiles to the
-FMRoPE endpoints. Because their sampled extrema
-and log-frequency span coincide, only the $K{-}2=30$ interior frequencies
-move. Support normalisation also preserves the deployed Cosh table's $z$ in
-Eq.~\eqref{eq:table-decomposition}.
-
-\paragraph{Result.}
-Every training seed favours anchored \evq{} at every OOD length. The
-anchored \evq{} minus FMRoPE NLL difference is $+0.026$ at the
-$256$-token training length and
-$-0.281/-0.176/-0.146$ at $512$/$1$K/$2$K
-(Fig.~\ref{fig:evidence-overview}a). No geometric base can reproduce this intervention
-once the sampled support is pinned: \emph{fixed support $+$ different $z$
-$\Rightarrow$ different trained-model behaviour.}
-
-Under a target-retargeted support policy, the ordering changes
-(App.~\ref{sec:identification-details}). We therefore interpret the
-fixed-support result conditionally: support selects the operating range, and
-the useful interior allocation can depend on that choice.
-
-\paragraph{Cross-configuration and shape breadth.}
-A pre-specified $50.9$M factorial then spans two bases, two training lengths,
-three head dimensions, and three paired seeds. The $0.75\times$, formula, and
-$1.25\times$ Cosh points favour non-uniform allocation in $8/12$, $7/12$, and
-$10/12$ structural configurations; a deformation-matched exponential does so
-in $9/12$ (App.~Table~\ref{tab:m4}). The $151.9$M control supplies the
-replicated direct effect. The factorial supplies configuration and shape
-breadth, but does not identify a unique curve or universal strength.
-
-%% =========================================================================
-\subsection{A finite budget survives architecture, range scaling, and scale}
+\subsection{Architecture, range composition, and full-parameter scale}
 \label{sec:exp-mature}
 
 \paragraph{Scarce-channel MLA.}
@@ -83,10 +43,11 @@ carry the full-parameter scale evidence through $1.485$B.
 \paragraph{Frozen checkpoints.}
 \label{sec:exp-frozen-support}
 At fixed support, attention amplitude, checkpoint, data, and decoder, changing
-only interior $z$ raises OLMo-2 $16$K RULER macro from $0.0056$ to $0.6047$;
-the paired difference is $0.5992$ with interval $[0.5488,0.6480]$. A coarse
-projected ramp scores $0.6104$ and is indistinguishable from the detailed
-profile. On Qwen2.5 at $64$K ($2\times$ Native), it is $0.5775/0.6650$.
+only interior $z$ raises OLMo-2 $16$K RULER macro from $0.56\%$ to $60.47\%$;
+the paired difference is $59.92$ points with interval $[54.88,64.80]$. A coarse
+projected ramp scores $61.04\%$ and is indistinguishable from the detailed
+profile. On Qwen2.5 at $64$K ($2\times$ Native), it is
+$57.75\%/66.50\%$.
 These released-checkpoint interventions show that the
 allocation coordinate remains consequential after pretraining without claiming
 profile-detail uniqueness (App.~\ref{sec:frozen-fixed-support}).

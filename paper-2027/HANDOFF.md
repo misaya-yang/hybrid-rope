@@ -5,12 +5,12 @@
 - **Branch / upstream:** `main_0726` / `origin/main_0726`
 - **Active manuscript:** `paper-2027/`
 - **Immutable baseline:** `paper/`
-- **Status:** the manuscript narrative rewrite, fixed-support dose owner, and
-  experiment code were committed and pushed by the active checkpoint loop. The
-  final figure polish, corrected mechanism interpretation, Native-4K diagnostic,
-  and refreshed package are local working-tree changes at this handoff. No
-  OpenReview upload or submission is implied. Verify live Git state rather than
-  copying a commit SHA into this mutable handoff.
+- **Status:** the final reviewer-path revision and its source/figure assets are
+  committed and pushed on `main_0726`: fixed-support identification is Section
+  2 before Related Work and Theory, FMRoPE is identified directly as the
+  published fixed-training-support rule, and the mature RULER headline uses
+  percentages throughout. The validated PDF/package remain local compilation
+  products. No OpenReview upload or submission is implied.
 - **Internal only:** exclude this file from the anonymous supplement.
 
 ## 1. Cold-start order
@@ -82,11 +82,11 @@ not interchangeable.
 - Title: *RoPE Has a Spectral Budget*.
 - Main text ends on page 9; total PDF length is 31 US-Letter pages.
 - `paper-2027/main.pdf`
-  - SHA-256: `4ed57501bf77ea345adced513c8c434e90bd5b5f64cecb775c687cbb5275bd69`
-  - size: `699680` bytes
+  - SHA-256: `5c5107126ae99d659c000fefd7b86fbd36178b4844a0b0b82e84bedd2db59c0e`
+  - size: `697337` bytes
 - `rope-spectral-budget-iclr2027-supplement.zip`
-  - SHA-256: `6bc386fc2ad8fbfc0fdf242032ce9fc5ac0300589897462f2eeecf4d9a73cb04`
-  - size: `865169` bytes
+  - SHA-256: `f5587d994d9103d974f849930f2ff968b912386c5d6466ade6af4dd5831dc359`
+  - size: `865317` bytes
 - Immutable `paper/main.pdf`
   - SHA-256: `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`
 
@@ -151,6 +151,22 @@ The 2026-08-25/26 submission rewrite and experiment closure additionally passed:
   the passing rerun;
 - pages 1, 2, 6--9 and both regenerated overview/geometry figures were visually
   inspected; `paper/` remained unchanged.
+
+The final reviewer-path revision additionally passed:
+
+- source and test inspection confirms that the FMRoPE arm implements the
+  published rule directly: geometric exponents with
+  `theta_train=L_train=256`, and `theta_infer=L_target` only in the separately
+  reported target-retargeted condition;
+- active and isolated-package builds both pass at 9 body / 31 total pages, zero
+  undefined refs/cites, `0pt` overfull, anonymous Letter output, and embedded
+  non-Type-3 fonts;
+- exact-range/FMRoPE, fixed-support, repository-navigation, and package-workspace
+  suite passed `28/28`; isolated supplement suite passed `144/144`;
+- pages 1--9, the reordered Section 2 on page 3, both main figures, and the
+  percentage-normalized frozen-checkpoint table on page 29 were visually
+  inspected;
+- ZIP integrity, `git diff --check`, and immutable `paper/` checks passed.
 
 ### 2026-08-24/25 closed GPU experiment ledger
 

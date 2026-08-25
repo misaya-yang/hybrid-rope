@@ -47,7 +47,7 @@ distinguish additive and multiplicative positional encodings and study the
 resulting training bias \citep{gu2026deconstructing}. Our identification keeps
 the canonical planes, sampled endpoints, and log-span fixed, moves only finite
 interior frequencies, and pairs trained comparisons with an exact
-frozen-transplant obstruction (\S\ref{sec:exp-identify}).
+frozen-transplant obstruction (\S\ref{sec:coordinate}).
 
 CoPE softly clips slow rotations, while RoPE-ID applies high-frequency RoPE to
 a subset of channels for long-input robustness
@@ -87,12 +87,3 @@ methods can still operate on the resulting substrate. Alternatives that learn a 
 positional function, including DAPE, FIRE, FoPE, and content-dependent context
 re-positioning \citep{zheng2024dape,li2024fire,hua2025fope,li2026repo}, change a
 larger functional object than a fixed RoPE table.
-
-\paragraph{Evaluation.}
-Positional encoding choice materially affects length generalization
-\citep{kazemnejad2023impact}. Long-context evaluation spans retrieval
-diagnostics and task suites \citep{bai2024longbench,hsieh2024ruler}, and
-information can be lost despite
-being present in the prompt \citep{liu2024lost,zhang2024found}. We use
-PE-dominant diagnostics for mechanism and RULER for effective-context claims,
-labelling the reported RULER endpoint as task-family-adapted length transfer.

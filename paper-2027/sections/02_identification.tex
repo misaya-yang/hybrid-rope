@@ -1,0 +1,38 @@
+\section{Identifying the Allocation Axis}
+\label{sec:identification}
+
+\subsection{Fixed-support training intervention}
+\label{sec:exp-identify}
+
+\paragraph{Protocol.}
+Within each of three $151.9$M training seeds, both arms share architecture,
+initialisation, token order, optimiser, LR schedule, global batch, a
+$499{,}974{,}144$-token budget, and $32$ evaluation anchors. The baseline is
+FMRoPE at fixed training support, implementing \citet[\S6.1]{oka2026fmrope}
+with $\theta{=}L_{\mathrm{train}}{=}256$ and geometric exponents. Anchored
+\evq{} ($\tau{=}4$) normalises its quantiles to the same extrema and log-span,
+so only the $K{-}2=30$ interior frequencies move while retaining the deployed
+Cosh table's $z$.
+
+\paragraph{Result.}
+Every training seed favours anchored \evq{} at every OOD length. The anchored
+\evq{} minus FMRoPE NLL difference is $+0.026$ at the $256$-token training
+length and $-0.281/-0.176/-0.146$ at $512$/$1$K/$2$K
+(Fig.~\ref{fig:evidence-overview}a). No geometric base can reproduce this
+intervention once the sampled support is pinned: \emph{fixed support $+$
+different $z$ $\Rightarrow$ different trained-model behaviour.}
+
+The target-retargeted FMRoPE policy reverses the ordering
+(App.~\ref{sec:identification-details}), so the identified allocation effect is
+conditional on the selected support.
+
+\subsection{Cross-configuration and shape breadth}
+
+A pre-specified $50.9$M factorial spans two bases, two training lengths, three
+head dimensions, and three paired seeds. The $0.75\times$, formula, and
+$1.25\times$ Cosh points favour non-uniform allocation in $8/12$, $7/12$, and
+$10/12$ structural configurations; a deformation-matched exponential does so
+in $9/12$ (App.~Table~\ref{tab:m4}). Several non-uniform deformations thus show
+a modest aggregate OOD advantage across the tested configurations. The
+factorial supports the allocation axis without identifying a unique shape or
+strength.

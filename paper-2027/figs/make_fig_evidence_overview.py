@@ -110,7 +110,7 @@ ax.legend(frameon=False, loc="lower left", fontsize=5.9, handlelength=1.5)
 ax.grid(axis="y", color=GRID, lw=0.45)
 
 # (c) Released-model fixed-support intervention.
-frozen_scores = np.array([0.00555556, 0.60472222, 0.61041667])
+frozen_scores = np.array([0.555556, 60.472222, 61.041667])
 x = np.arange(len(frozen_scores))
 ax = axes[2]
 bars = ax.bar(
@@ -120,16 +120,16 @@ bars = ax.bar(
 )
 for bar, value, color in zip(bars, frozen_scores, [MUTED, BLUE, ORANGE]):
     ax.text(bar.get_x() + bar.get_width() / 2, value + 0.018,
-            f"{value:.3f}", ha="center", va="bottom", fontsize=6.2,
+            f"{value:.2f}", ha="center", va="bottom", fontsize=6.2,
             color=color, weight="bold")
-ax.plot([0, 0, 1, 1], [0.62, 0.65, 0.65, 0.62], color=BLUE, lw=0.7)
-ax.text(0.5, 0.665, r"$+0.599$  (95\% CI $[0.549,0.648]$)",
+ax.plot([0, 0, 1, 1], [62, 65, 65, 62], color=BLUE, lw=0.7)
+ax.text(0.5, 66.5, r"$+59.92$ points  (95\% CI $[54.88,64.80]$)",
         ha="center", va="bottom", color=BLUE, fontsize=5.6, weight="bold")
 ax.set_xticks(x, ["Geometric", "Derived", "Coarse\nramp"])
-ax.set_ylim(0, 0.72)
-ax.set_yticks([0, 0.3, 0.6])
+ax.set_ylim(0, 72)
+ax.set_yticks([0, 30, 60])
 ax.set_xlabel("interior allocation (same support)")
-ax.set_ylabel("RULER macro")
+ax.set_ylabel("RULER macro (%)")
 ax.set_title("(c) Frozen 1.485B OLMo, 16K", loc="left", weight="bold")
 ax.grid(axis="y", color=GRID, lw=0.45)
 
@@ -143,8 +143,8 @@ assert np.allclose(exact_mean, [0.026194061, -0.280727786,
 assert np.all(exact_seed[:, 1:] < 0)
 assert np.allclose(mla_mean, [0.93873862, -31.11944897], atol=1e-7)
 assert np.all(mla_relative[:, 1] < 0)
-assert np.isclose(frozen_scores[1] - frozen_scores[0], 0.59916666, atol=1e-8)
-assert np.isclose(frozen_scores[2] - frozen_scores[1], 0.00569445, atol=1e-8)
+assert np.isclose(frozen_scores[1] - frozen_scores[0], 59.916666, atol=1e-8)
+assert np.isclose(frozen_scores[2] - frozen_scores[1], 0.569445, atol=1e-8)
 
 fig.savefig(OUT, bbox_inches="tight", pad_inches=0.025)
 print(f"wrote {OUT}")
