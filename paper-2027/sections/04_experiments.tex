@@ -1,33 +1,35 @@
 \section{Consequences across Model-Building Regimes}
 \label{sec:experiments}
 
-The fixed-support experiment identifies the variable. The studies below test
-whether it remains consequential under different architectures, training
-stages, scales, and pretrained checkpoints. Each comparison retains its own
-metric and control.
+The fixed-support experiment identifies the variable. The studies below follow
+its consequences through architectures, training stages, scales, and pretrained
+checkpoints.
 
 %% =========================================================================
 \subsection{Architecture, range composition, and full-parameter scale}
 \label{sec:exp-mature}
 
 \paragraph{Scarce-channel MLA.}
-A $432$M MLA transformer trains from scratch over three seeds with only
-$d_{\mathrm{rope}}{=}32$, hence $K{=}16$ rotary frequencies. Geo/\evq{} PPL
+Interior allocation remains consequential when the rotary budget is only
+$K{=}16$: a $432$M MLA-style transformer \citep{deepseekv2} trains from scratch
+over three seeds with $d_{\mathrm{rope}}{=}32$. Geo/\evq{} PPL
 is $35.4/35.8$ at the $8$K training length. At $16$K, however, it is
 $138.8/95.6$: a $31.1\%$ reduction, with every seed favouring \evq{}
-(App.~Table~\ref{tab:mla}). The result shows that \evq{} is effective in this
-$K{=}16$ setting; it is not a controlled scaling law in $K$.
+(App.~Table~\ref{tab:mla}). This tested $K{=}16$ architecture makes every rotary
+pair scarce; the $16$K gap locates a regime where allocation pays off.
 
 \paragraph{Range composition.}
-The training-time table changes the outcome of the same index-space scaling
-rule. In a $454$M three-seed MHA study, a fixed \rs{} rule raises $8$K teacher-forced
+Holding the later index-space rule fixed reveals composition with the
+training-time allocation. In a $454$M three-seed MHA study, a fixed \rs{} rule
+raises $8$K teacher-forced
 retrieval from $41\%$ to $61\%$ on Geo and from $53\%$ to $100\%$ on \evq{}
 (App.~Table~\ref{tab:evq-ramp}). The code path, cut indices, and scaling formula
 are shared; because the underlying frequencies differ, this is a composition
-result rather than a movement-matched mechanism control.
+result: the same range operator acts on two learned spectral substrates.
 
 \paragraph{Continuation and full-parameter scale evidence.}
-The crossover also appears after full-parameter continuation. Starting both
+The in-window/long-length crossover persists through full-parameter continuation
+and same-initialisation pretraining at $1.485$B. Starting both
 $750$M arms from a shared $2$K Geo checkpoint and continuing all parameters for
 $500$M tokens at $4$K gives Geo/\evq{} PPL $22.0/22.3$ at $4$K but
 $45.1/24.4$ at $16$K; strict autoregressive exact retrieval at $8$K changes
@@ -35,45 +37,49 @@ from $0\%$ to $77.5\%$ (App.~Table~\ref{tab:750m}). At $1.485$B, a
 same-initialisation, same-scientific-recipe from-initialisation comparison with
 a $2.097$B-token budget crosses in favour of \evq{} at $8$K and $16$K;
 $122/128$ and $126/128$ held-out documents favour it at those lengths. Exact
-PPL values and protocol details appear in App.~\ref{sec:mature-details}. Both
+PPL values and protocol details appear in App.~Fig.~\ref{fig:olmo-scale-crossover}. Both
 larger protocols exhibit the same effective-context crossover: Geo retains the
 lower in-window PPL, while \evq{} overtakes it at longer lengths. Together they
 carry the full-parameter scale evidence through $1.485$B.
 
 \paragraph{Frozen checkpoints.}
 \label{sec:exp-frozen-support}
-At fixed support, attention amplitude, checkpoint, data, and decoder, changing
-only interior $z$ raises OLMo-2 $16$K RULER macro from $0.56\%$ to $60.47\%$;
-the paired difference is $59.92$ points with interval $[54.88,64.80]$. A coarse
-projected ramp scores $61.04\%$ and is indistinguishable from the detailed
-profile. On Qwen2.5 at $64$K ($2\times$ Native), it is
-$57.75\%/66.50\%$.
-These released-checkpoint interventions show that the
-allocation coordinate remains consequential after pretraining without claiming
-profile-detail uniqueness (App.~\ref{sec:frozen-fixed-support}).
+Frozen checkpoints isolate the same axis after pretraining. At fixed support, attention
+amplitude, checkpoint, data, and decoder, changing only interior $z$ raises
+OLMo-2 unseen-nine $16$K RULER macro (20 rows/task) from $0.56\%$ to $60.47\%$;
+the paired evaluation-row difference is $59.92$ points with interval
+$[54.88,64.80]$ on this fixed checkpoint and task set. A coarse projected ramp
+scores $61.04\%$; its paired evaluation-row interval against the derived
+profile includes zero under the same conditioning. The shared recovery ties the
+effect to the interior reallocation common to both profiles. On Qwen2.5 at $64$K
+($2\times$ Native), same-support geometric/derived is $57.75\%/66.50\%$.
+These released-checkpoint interventions show that the allocation coordinate
+remains consequential after pretraining (App.~\ref{sec:frozen-fixed-support}).
 
 %% =========================================================================
 \subsection{From effective context to remote-content use}
 \label{sec:exp-capability}
 
 \paragraph{$1.485$B task-family-adapted length transfer.}
+Matched Q/K adaptation asks whether remote answer overlap moves with the table.
 Starting from protocol-matched Native and \evq{} OLMo-2 Stage-A parents, both
 arms freeze inherited V/O LoRA and continue only Q/K for $300$ steps with identical data, order,
 optimiser, trainable count, and $4$K/$8$K/$16$K phase exposure; physical
 sequences remain at most $4$K. On held-out 2WikiMultiHopQA, Native/\evq{}
 token-F1 is $25.99/24.84\%$ at $4$K, $0.07/21.48\%$ at $8$K, and
 $0/8.57\%$ at $16$K
-\citep{bai2024longbench}. Thus Q/K adaptation keeps the in-window QA score
+\citep{ho2020twowiki,bai2024longbench}. Thus Q/K adaptation keeps the in-window QA score
 close to Native while only the \evq{} arm carries substantial answer overlap
-to $8$K in this task family. This is length transfer within the adapted family,
-not unseen-task generalization. An
+to $8$K in this task family. Training and test share task families but use
+disjoint rows, establishing task-family length transfer. An
 independent continuation over all $13$ RULER families shows the same $2\times$
 direction, with official macro $2.02/31.63\%$ at $8$K
 \citep{hsieh2024ruler}; all lengths and exact-match values appear in
 App.~\ref{sec:mature-details}.
 
 \paragraph{$8$B causal remote-source use.}
-On LLaMA-3-8B-Instruct \citep{grattafiori2024llama3}, rank-$64$ Q/K/V/O LoRA
+At $8$B, a source-block intervention tests whether long-context gains use the
+remote evidence rather than a local readout. On LLaMA-3-8B-Instruct \citep{grattafiori2024llama3}, rank-$64$ Q/K/V/O LoRA
 uses the same adaptation pipeline for Native and \evq{}. PPL is $6.82/10.07$,
 $108.96/24.07$, and $991.48/127.91$ at $8$/$16$/$32$K, with the long-range
 direction holding on all $24$ frozen natural-text packs and all three source
@@ -85,6 +91,7 @@ shows causal dependence on the remote source in the tested adapted model rather
 than a local readout artifact. The task-family continuation is reported
 in App.~\ref{sec:mature-details}.
 
-A two-seed $129.6$M video DiT also favours \evq{} on training, all-frame
+The allocation principle also appears under bidirectional $3$D RoPE: a two-seed
+$129.6$M video DiT favours \evq{} on training, all-frame
 extrapolation, and far-frame MSE in both runs
 (App.~\ref{sec:video-dit}), extending the evidence to bidirectional 3D RoPE.

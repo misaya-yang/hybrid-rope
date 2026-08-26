@@ -1,15 +1,8 @@
-\section{Supporting Experiments (from Main Text)}
-\label{sec:supporting-experiments}
-
-The following results record additional submitted protocols with their seed
-scope.
-
-\begin{table}[h]
-\caption{$L{=}256$ \rs{} composition study (125M, 3-seed mean PPL). Among the
-tested settings, $\tau{=}4.0$ has the lowest mean PPL at every reported
-extrapolation ratio.}
+\begin{center}
+\captionof{table}{$L{=}256$ \rs{} composition (125M, 3-seed mean PPL). The
+tested $\tau{=}4.0$ setting has the lowest mean at every reported ratio.}
 \label{tab:pe-yarn-l256}
-\centering\small
+\small
 \setlength{\tabcolsep}{6pt}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
@@ -20,10 +13,18 @@ Geo+\rs{} & 60.7 & 97.5 & 190.4 & 260.2 \\
 \evq{} ($\tau{=}4$)+\rs{} & \textbf{50.9} & \textbf{60.9} & \textbf{84.1} & \textbf{99.6} \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{center}
 
-\paragraph{Cross-modal scope.}
-In two 129.6M DiT shared-run comparisons, the \evq{} branch has lower denoising
-MSE on train, all extrapolation frames, and far extrapolation frames in both
-seeds. Full values and the one-seed base diagnostic are in
-\S\ref{sec:video-dit}.
+\begin{center}
+  \includegraphics[width=0.96\linewidth]{fig_range_composition_125m.pdf}
+  \captionof{figure}{\textbf{The composition gap widens with extrapolation.}
+  At 125M, the tested $\tau{=}4$ allocation remains lowest from $4\times$ to
+  $32\times$ under the same \rs{} rule.}
+  \label{fig:range-composition-125m}
+\end{center}
+
+\paragraph{Reading the composition.}
+The tested $\tau{=}4$ composition lowers PPL relative to Geo+\rs{} by
+$16\%/38\%/56\%/62\%$ at $4\times/8\times/16\times/32\times$. In this
+protocol, the same index-space rule produces different composition effects on
+the two learned spectral substrates.

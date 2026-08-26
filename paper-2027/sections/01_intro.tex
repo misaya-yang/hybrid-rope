@@ -14,10 +14,9 @@ x_k=-\log\omega_k=a+Rz_k,
 \end{equation}
 where $(a,R)$ is sampled support and $z$ is the normalised interior allocation.
 Standard geometric RoPE fixes $z_k=k/(K-1)$. Support says which frequencies are
-available; allocation says how a finite head spends them. The central question
-of this paper is whether $z$ changes trained behaviour when $(a,R)$ is held
-fixed; \evq{} is one constructive witness on that identified axis, not a claim
-of universal schedule optimality.
+available; allocation says how a finite head spends them. We ask whether the
+second choice changes trained behaviour when the first is held fixed, then turn
+the answer into a closed-form construction.
 
 This distinction matters because geometric spacing is highly redundant at the
 slow end. For $L{=}4096$, $b{=}5{\times}10^5$, and $K{=}64$, the $23$ pairs with
@@ -28,90 +27,78 @@ subspace. A geometric table therefore spends more than one third of its rotary
 pairs on near-duplicate slow positional directions. This is the spectral-budget
 problem studied here.
 
-Long-context methods already produce many non-geometric frequency tables, but
-they generally change support and interior placement together. Position
-interpolation rescales the entire spectrum; YaRN and LongRoPE transport
-channels toward a target range
-\citep{chen2024position,peng2024yarn,ding2024longrope,shang2025longrope2};
-FMRoPE changes scalar support while retaining a geometric exponent grid
-\citep{oka2026fmrope}. Learned methods such as LeRoPE and AdaRoPE optimize a
-broader table jointly with model weights
-\citep{karypis2026lerope,wang2026adarope}. Because support and interior
-placement change together, these comparisons do not isolate the effect of $z$
-at fixed support: if both sampled endpoints and the log-frequency span are
-fixed, can moving only the interior frequencies change what a model learns?
+Long-context methods can change realised phases, sampled support, or interior
+placement, often more than one at once. Section~\ref{sec:related} classifies
+range transport, scalar-base grids, learned tables, and broader positional
+operators under this decomposition. The control below instead pins both
+endpoints and the log-span before moving the interior frequencies.
 
-It can. In a paired three-seed control, anchored \evq{} moves
-only $30$ interior frequencies relative to FMRoPE instantiated at the fixed
-training support. Every seed favours
-the non-uniform allocation at every evaluated OOD length
-(\S\ref{sec:exp-identify}). The arms share endpoints, initialisation, token
+It can. In a paired three-seed control, anchored \evq{} moves only $30$
+interior frequencies relative to a geometric allocation at the fixed training
+support. Every seed favours the non-uniform allocation at every evaluated OOD
+length (\S\ref{sec:exp-identify}). The arms share endpoints, initialisation,
+token
 order, optimiser, and training budget, so no scalar base can reproduce the
 intervention. Interior allocation $z$ is therefore a consequential training
 variable, not a disguised base change.
 
-The same coordinate produces the paper's largest frozen-model contrast. On a
-released $1.485$B OLMo checkpoint at $16$K, with support, attention amplitude,
-data, decoder, and weights fixed, replacing a same-support geometric allocation
-by the tested derived allocation raises RULER macro from $0.56\%$ to $60.47\%$;
-the paired difference is $59.92$ points with interval $[54.88,64.80]$
+A mature-checkpoint control makes the same variable visible after pretraining.
+On a released $1.485$B OLMo checkpoint at $16$K, with support,
+attention amplitude, data, decoder, and weights fixed, replacing a same-support
+geometric allocation by the tested derived allocation raises nine-task RULER
+macro (20 rows/task) from $0.56\%$ to $60.47\%$; the paired evaluation-row
+difference is $59.92$ points with interval $[54.88,64.80]$
 (App.~\ref{sec:frozen-fixed-support}). The common support already extends the
-Native slow endpoint by a factor of four; the contrast is how its interior is
-spent, not whether range extension is allowed. A coarse projected ramp scores $61.04\%$
-and is statistically indistinguishable from the detailed profile. The result
-identifies the allocation axis, not a uniquely privileged curve.
+Native slow endpoint by a factor of four, so the contrast is how its interior
+is spent. A coarse projected ramp reaches $61.04\%$ and matches the derived
+profile within evaluation-row uncertainty. Two distinct reallocations recover
+the checkpoint, exposing the allocation axis directly; neither is the Cosh
+table used in the training experiments.
 
-We make the identified degree of freedom constructive with \evq{}. A convex
-variational surrogate of the collision geometry has a unique Cosh minimizer
-whose inverse CDF gives the frequency table in closed form. Evaluated under the
-closed-form cosine-feature kernel, the resulting allocations reduce collision
-and increase the kernel's Shannon effective rank in every tested configuration
-(App.~\ref{sec:surrogate-validation}). The solution concentrates samples toward
-phase-resolved fast frequencies: at $K{=}64$ and $\tau{=}4$, $55$ of the $64$
-midpoint quantiles lie in the fast half of the log-frequency span. The RoPE
-operator, architecture, and optimiser remain unchanged, and the construction
-adds no learned positional parameters.
+\evq{} turns the identified degree of freedom into a deployable table. The
+unique minimizer of a stated convex surrogate has a Cosh density, and its
+inverse CDF gives every frequency in closed form. The construction adds no
+learned positional parameters and leaves the RoPE operator, architecture, and
+optimiser unchanged.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{fig_evidence_overview.pdf}
-  \caption{\textbf{Interior allocation is identifiable and consequential.}
-  (a)~Moving only interior frequencies improves every OOD length in all three
-  $151.9$M training seeds. (b)~In a three-seed $432$M MLA setting with only
-  $K{=}16$ rotary pairs, the in-window cost is small and $16$K PPL falls by
-  $31.1\%$. (c)~At fixed support, amplitude, checkpoint, data, and decoder,
-  changing only $z$ raises released-model $16$K RULER macro from $0.56\%$ to
-  $60.47\%$; a coarse ramp matches the detailed profile.}
-  \label{fig:evidence-overview}
+  \caption{\textbf{One spectral range can encode different finite positional
+  bases.} (a)~At $K{=}32$, Geo and anchored \evq{} use the same sampled
+  endpoints and log-span but different interior allocation $z$.
+  (b)~For standard RoPE at $L{=}4096$, $b{=}5{\times}10^5$, and $K{=}64$,
+  the $23$ pairs with $\omega L\le1$ place more than $99.99\%$ of their
+  block-whitened trace in two eigendirections and have $r_2{=}2.00$ under the
+  stated uniform separation prior.
+  (c)~The paired training intervention holds support fixed and moves only the
+  $30$ interiors; all three seeds improve at every tested OOD length.}
+  \label{fig:spectral-budget-overview}
 \end{figure}
 \FloatBarrier
 
-Beyond identification, three-seed $432$M MLA, $454$M range composition,
-full-parameter $750$M/$1.485$B studies, frozen OLMo/Qwen controls, and an $8$B
-remote-source intervention broaden architecture, training stage, scale, and
-capability scope. None replaces the matched three-seed causal result.
+From-scratch MHA and MLA, full-parameter continuation, low-rank adaptation,
+frozen checkpoints, and a bidirectional $3$D video DiT then track this design
+variable across the model-building lifecycle.
 
-The geometry explains why allocation is a nontrivial finite-basis design
-variable; trained-model ordering comes from the controlled comparisons. Each
-rotary frequency is a two-dimensional sin/cos subspace. Canonical correlations
-expose overlap between these subspaces, and block whitening yields the exact
-finite-basis identity
-\[
-r_2(R)=\frac{2K}{1+(K-1)\bar c}.
-\]
-Slow frequencies collapse toward a common subspace, whereas a frozen
-weight--table crossing shows that improving static geometry after training can
-still destroy perplexity. The missing link is co-adaptation: the weights learn
-coefficients in the frequency basis they see during training. Consistently,
-unequal frequency multisets cannot be absorbed by fixed,
-position-independent invertible Q/K maps.
+The geometry makes the finite-basis constraint exact; trained-model ordering
+still comes from controlled comparisons. Each rotary frequency contributes a
+two-dimensional sin/cos subspace, and Theorem~\ref{thm:budget} converts their
+mean phase-invariant redundancy into effective dimension while
+Proposition~\ref{prop:collapse} characterises slow-frequency collapse.
+Table~\ref{tab:coadapt} then shows that higher static rank can accompany a
+catastrophic frozen mismatch, and Theorem~\ref{thm:obstruction} gives the exact
+limit of position-independent invertible Q/K compensation.
 
 \paragraph{Contributions.}
-(i) We separate sampled support from interior allocation and identify the
-latter with a three-seed fixed-support training intervention.
-(ii) We characterize the full sin/cos basis through a phase-invariant
-effective-dimension identity, slow-frequency collapse, and a frozen-transplant
-obstruction.
-(iii) We derive \evq{} as the unique minimizer of a stated convex surrogate and
-test the resulting non-uniform allocation across configurations, architectures,
-training stages, and mature checkpoints.
+(i) We identify interior allocation as a training variable with a paired
+three-seed intervention that fixes the sampled support and every scalar-base
+degree of freedom.
+(ii) We give a phase-invariant spectral-budget geometry for the full sin/cos
+basis: an exact effective-dimension identity, a slow-frequency collapse law,
+and a frozen-transplant obstruction.
+(iii) We derive \evq{} as the closed-form solution of a stated convex surrogate
+and show the consequences of its zero-parameter allocation across architectures,
+training stages, scales, and pretrained checkpoints.
+
+\newpage

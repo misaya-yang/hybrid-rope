@@ -27,10 +27,11 @@ scientific protocol.
 \paragraph{Model and data.} The model has $12$ layers, hidden size $768$,
 $12$ heads of dimension $64$, MLP width $3{,}072$, and vocabulary size
 $50{,}304$. Training uses the unshuffled FineWeb-Edu
+\citep{penedo2024fineweb}
 \texttt{sample/10BT/000\_00000.parquet} shard at pinned revision
 \texttt{87f09149ef4734204d70ed1d046ddc9ca3f2b8f9}; validation uses the disjoint
 \texttt{sample/10BT/004\_00000.parquet} shard. Both are tokenised with the
-GPT-NeoX-20B tokenizer at revision
+GPT-NeoX-20B tokenizer \citep{black2022gptneox} at revision
 \texttt{c292233c833e336628618a88a648727eb3dff0a7}.
 
 \paragraph{Arms.} \emph{Baseline:} FMRoPE at fixed training support,
@@ -89,6 +90,18 @@ $2{,}048$ & $-0.113$ & $-0.181$ & $-0.143$ & $-0.146\pm0.034$
 \end{tabular}}
 \end{table}
 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.96\linewidth]{fig_exact_range_control.pdf}
+  \caption{\textbf{Support and interior allocation are distinct design
+  coordinates.} Each thin line is one training seed and the heavy line is the
+  mean. At pinned training support, all three seeds favour anchored \evq{} at
+  every OOD length (a). Retargeting each arm's support reverses all three OOD
+  comparisons (b). The fixed-support panel isolates the allocation effect; the
+  tested target-matched policy reverses the preferred allocation.}
+  \label{fig:exact-range-control}
+\end{figure}
+
 Under \texttt{fixed}, anchored \evq{} is favoured by $3/3$ seeds at every OOD length;
 under \texttt{target-matched}, FMRoPE is favoured by $3/3$ seeds at
 every OOD length. The fixed-range sign agrees across all seeds and OOD lengths;
@@ -142,7 +155,8 @@ points inward at both tested extremes; these discrete arms do not locate
 continuous basin boundaries or yield a replacement closed-form rule.
 
 \paragraph{Scope.} This is a short-budget $50.9$M mechanistic NLL control
-trained on a deterministically repeated WikiText-2 raw stream, a different
+trained on a deterministically repeated WikiText-2 raw stream
+\citep{merity2017wikitext}, a different
 corpus from the $151.9$M control and from the mature-scale runs. The factorial
 establishes cross-configuration \emph{direction}, while the $151.9$M control
 provides the effect size within its configuration. Scale is evaluated in
@@ -189,7 +203,7 @@ under an identical zero-parameter operator in \S\ref{sec:exp-identify}.
 On method identity: DAPE \citep{zheng2024dape} is a learned positional
 \emph{operator}, whereas this comparator learns inverse frequencies directly
 and belongs to the learned-\emph{table} family later studied at scale by
-\citet{karypis2026lerope}. The distinction matters for what the row can be read
-as evidence for. Read as a learned-table comparison, its direction is
-consistent with the independent finding that learned tables degrade more
-sharply than standard RoPE under naive extrapolation.
+\citet{karypis2026lerope}. In this protocol, the learned table improves over
+Geo but remains weaker than \evq{}; the comparison does not identify whether
+the gap comes from the final table, optimization dynamics, or the
+positional-parameter learning rate.

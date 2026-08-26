@@ -1,6 +1,6 @@
 # ICLR 2027 submission checklist
 
-Official sources checked on 2026-08-19: the ICLR 2027 Author Guidelines and AI
+Official sources checked on 2026-08-26: the ICLR 2027 Author Guidelines and AI
 Policy for Authors. `./compile.sh` runs the mechanical gates; unchecked items
 require an author decision or final manual review.
 
@@ -56,7 +56,7 @@ require an author decision or final manual review.
 - [x] Anonymous code archive includes the frequency initializer, analysis
       scripts, evaluation contracts, and exact-range configs needed for claims.
       The `iclr2027` packager profile passed its leak scan, ZIP integrity test,
-      isolated paper build, and 144 packaged CPU tests on 2026-08-24.
+      isolated 9/29-page paper build, and 144 packaged CPU tests on 2026-08-26.
 
 ## Author actions before submission
 
@@ -64,6 +64,16 @@ require an author decision or final manual review.
       literally true for every required and recommended category it lists.
 - [x] Author confirmed on 2026-08-19 that all authors have current OpenReview
       profiles and satisfy the ICLR 2027 reciprocal-reviewing requirements.
+- [ ] Freeze the author roster by the abstract deadline; do not add an author
+      afterward. Author order may change only until the full-paper deadline.
+- [ ] Confirm that no author appears on more than 20 ICLR 2027 submissions.
+- [ ] Confirm that each author appears on at most one submission for which no
+      co-author is an eligible reciprocal reviewer.
+- [ ] Confirm that at least one qualified author is registered to review at
+      least three papers, unless the submission has the official exemption or
+      a program-chair exception.
+- [ ] Confirm that every non-exempt author appearing on three or more
+      submissions is registered to review at least six papers.
 - [x] Dual-submission timing and current-draft distinctness audited on
       2026-08-19. ICLR expressly permits an abstract while the NeurIPS decision
       is pending; NeurIPS notifies on Sep 24, before the ICLR full-paper

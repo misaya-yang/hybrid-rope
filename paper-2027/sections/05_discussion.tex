@@ -16,9 +16,8 @@ rotary dimension can substantially overstate effective positional dimension.
 With $K{=}16$, the three-seed $432$M MLA comparison shows that the construction
 remains effective in a compressed rotary subspace. The frozen OLMo comparison
 makes the axis especially visible: at the same support and amplitude, geometric
-and derived allocations score $0.56\%$ and $60.47\%$. The matched coarse ramp
-scores $61.04\%$, so this result supports the allocation coordinate rather than
-the uniqueness of one detailed profile.
+allocation scores $0.56\%$, while derived and coarse-ramp reallocations both
+cross $60\%$. The geometric interior fails; two distinct reallocations recover.
 
 The construction remains consequential across realistic model-building paths.
 At $454$M, the same index-space \rs{} rule has greater leverage on the \evq{} substrate;
@@ -39,16 +38,12 @@ multisets agree. The frozen OLMo/Qwen controls address the practical
 finite-distribution case: changing $z$ at fixed support and amplitude remains
 consequential after pretraining.
 
-Support selection and range transport remain complementary. The former chooses
-the sampled spectrum, allocation chooses its finite internal resolution, and a
-range rule redeploys the learned spectrum at a target length. Under a different,
-target-retargeted support policy, the ordering changes
-(App.~\ref{sec:identification-details}); the fixed-support result therefore
-does not imply a support-independent ranking. LeRoPE supplies compatible
-evidence from optimization: a table learned in one run retains substantial
-value when frozen for a new training run \citep{karypis2026lerope}. Here, the
-closed-form construction removes that table-search stage and the fixed-support
-experiment identifies what the table itself changes.
+Support selection, interior allocation, and range transport act at different
+stages of the same spectrum. The fixed-support experiment isolates allocation;
+target-aware support and post-training range rules choose complementary degrees
+of freedom. LeRoPE shows that a learned table retains value when frozen for a
+new training run \citep{karypis2026lerope}. \evq{} supplies such a table in
+closed form, and the paired intervention identifies what its allocation changes.
 
 RoPE has a spectral budget because every head has finitely many rotary pairs.
 Geometric spacing is one way to spend that budget, not a neutral consequence of

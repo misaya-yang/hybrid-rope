@@ -6,19 +6,8 @@ same positional subspace, so a finite table can spend many nominal dimensions
 without gaining comparable positional dimension. We first make this redundancy
 exact, then show why training binds the resulting basis to its weights, and
 finally derive a closed-form allocation that moves channels away from the
-collapse. Figure~\ref{fig:method-overview} summarizes the argument.
-
-\begin{center}
-  \centering
-  \includegraphics[width=\linewidth]{fig_method_overview.pdf}
-  \captionof{figure}{\textbf{Support does not determine allocation.}
-  (a)~Equation~\eqref{eq:table-decomposition} separates support $(a,R)$ from
-  normalised interior allocation $z$. (b)~Anchored \evq{} and deployed midpoint
-  \evq{} have exactly the same $z$ after support normalisation. (c)~The table
-  is learned with the weights: self-consistent pairs remain near PPL $7$,
-  while frozen post-hoc swaps fail.}
-  \label{fig:method-overview}
-\end{center}
+collapse. Figure~\ref{fig:spectral-budget-overview}a--b visualizes the finite
+allocation problem; the analysis below makes it exact.
 
 \subsection{A finite table is a set of two-dimensional subspaces}
 \label{sec:subspaces}

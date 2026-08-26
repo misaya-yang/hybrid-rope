@@ -3,11 +3,14 @@
 \subsection{Multi-head Latent Attention}
 \label{sec:mla-results}
 
-We test the finite-budget hypothesis in a 432M-parameter MLA transformer with
-24 layers, width 1024, 16 heads, and per-head width 64. Its decoupled rotary
+We test the finite-budget hypothesis in a 432M-parameter transformer following
+the MLA architectural pattern \citep{deepseekv2}, with 24 layers, width 1024,
+16 heads, and per-head width 64.
+Its decoupled rotary
 subspace has $d_{\mathrm{rope}}{=}32$ ($K{=}16$ frequencies); the remaining
 $d_{\mathrm{nope}}{=}32$ dimensions are non-rotary, and the shared KV latent
-rank is 256. The model trains from scratch on 500M FineWeb-Edu tokens at
+rank is 256. The model trains from scratch on 500M FineWeb-Edu tokens
+\citep{penedo2024fineweb} at
 $L_{\mathrm{train}}{=}8192$ and base $500\mathrm{K}$ over seeds 42, 43, and
 88. \evq{} uses the pre-specified empirical $\tau{=}1.414$ setting. Because
 the compressed rotary subspace does not instantiate the full-RoPE
@@ -51,3 +54,18 @@ ordering for this architecture and protocol.
 \subsection{Composition with \rs{}}
 \label{sec:ramp-results}
 \input{tables/table_evq_ramp}
+
+\begin{center}
+  \includegraphics[width=0.96\linewidth]{fig_range_composition_454m.pdf}
+  \captionof{figure}{\textbf{The same range operator has substrate-dependent
+  leverage in the tested protocol.} Three-seed PK@8K means, individual seeds,
+  and standard deviations: \rs{} raises Geo from $41\%$ to $61\%$ and \evq{}
+  from $53\%$ to $100\%$.}
+  \label{fig:range-composition-454m}
+\end{center}
+
+Applying the same \rs{} operator adds $20$ points on Geo and $47$ points on
+\evq{}, a $27$-point leverage difference under the shared code path, cut
+indices, scale, and evaluation rows.
+
+\FloatBarrier

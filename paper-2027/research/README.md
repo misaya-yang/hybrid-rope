@@ -18,9 +18,12 @@ up in [`../../INDEX.md`](../../INDEX.md). Do not duplicate them here.
 2. [`../../INDEX.md`](../../INDEX.md) — theory/evidence/code index and agenda.
 3. [`../HANDOFF.md`](../HANDOFF.md) — live manuscript/worktree state and the
    only current action queue.
-4. [`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md`](ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md)
-   — current pre-submission edit order and simulated-review decision; no
-   numerical ownership.
+4. [`ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md`](ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md)
+   — current Codex-facing 9-page narrative edit order; no numerical ownership.
+   The prior simulated-review memo is
+   [`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md`](ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md).
+   The related-work / novelty Codex patch is
+   [`ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md`](ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md).
 5. [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md)
    — current conceptual grammar: physical table, causal variables, method
    stages, and the role of the zero-training replacement.
@@ -105,7 +108,9 @@ Additional durable theory/supporting files at research root:
 
 | Question | Canonical source | Maximum role |
 | --- | --- | --- |
-| Current manuscript optimization and simulated-review decision | [`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md`](ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md) | edit ordering and reviewer-risk decision only; never a numerical owner |
+| Current manuscript narrative edit order | [`ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md`](ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md) | Codex-facing 9-page wording/layout only; never a numerical owner |
+| Related-work citation sufficiency and remaining novelty-attack papers | [`ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md`](ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md) | Codex-facing related-work / bib patch only; not an evidence owner; do not restore the NeurIPS PE zoo |
+| Prior simulated-review decision | [`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md`](ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md) | historical reviewer-risk record; most P0/P1 items are already in live TeX |
 | Conceptual grammar and causal-variable separation | [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md) | notation and routing only; never a numerical owner |
 | Post-submission theory state and missing bridge | [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md) | theory continuation and protocol design only; no new result or compute authorization |
 | Full sin/cos geometry, collision, stable-rank identity | [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md) | main theory; static basis, not LM-quality predictor |

@@ -167,6 +167,7 @@ $\tau_*=\max(d_{\rm head}/\sqrt L,\;1.4)$ 是 operating prior 而非普适律（
 | 注意力需求测量 | `scripts/analysis/attention_phase_demand.py` | 含 `layerwise_plan()` → `per_layer_inv_freq` |
 | 全 RoPE 碰撞审计 | `scripts/analysis/full_rope_collision_audit.py` | §2.1 的数值 owner |
 | **第三轴静态 $r_2$ 搜索诊断** | [`scripts/analysis/third_axis_ceiling.py`](scripts/analysis/third_axis_ceiling.py) | §6.1 数值的可复现脚本；纯 CPU；报告 optimizer 的 best-found value，不是全局或行为上限 |
+| signed-lag / gap / $k$-way identities | [`scripts/analysis/verify_signed_lag_kway_gap.py`](scripts/analysis/verify_signed_lag_kway_gap.py) | 纯 CPU 内部诊断；验证解析恒等式与静态反例，不是 checkpoint 结果或论文 claim owner |
 | 2026-08-19 全 RoPE 审计（有限 $K$、反例、正交格） | [`analysis/full_rope_audit/`](analysis/full_rope_audit/) | §2.1 正交格行与 §3.4 第 1–2 项的原始 owner；`finK_*`、`verify_small_models.py` |
 | supporting evaluator | [`scripts/supporting_eval/`](scripts/supporting_eval/) | endpoint 身份必须由 owner 确认 |
 | 独立规模实验包 | [`experiments/`](experiments/)、`rebuttal/rebuttal_0723/experiments/` | supporting，除非显式 promotion |
@@ -266,7 +267,11 @@ headroom 归到 position/allocation。完整 2x2 和判决读法在
 
 投稿期叙事决策的历史记录在
 [`ICLR2027_SUBMISSION_NARRATIVE_AND_EXPERIMENT_PLAN_20260826`](paper-2027/research/ICLR2027_SUBMISSION_NARRATIVE_AND_EXPERIMENT_PLAN_20260826.md)；
-它不是新的行动队列。
+它不是新的行动队列。当前九页行文的 Codex 执行单是
+[`ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826`](paper-2027/research/ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md)。
+Related-work / novelty 的 Codex 执行单是
+[`ICLR2027_CITATION_NOVELTY_AUDIT_20260826`](paper-2027/research/ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md)：
+NeurIPS `zWsa` 的 FMRoPE 漏引已在识别段闭合；剩余 originality-1 路径是 bib 中已有、PDF 未点名的 HoPE / CoPE / RoPE-ID / Xu / Wu / Chiang。它不是新的证据 owner，也不恢复 NeurIPS 的 PE zoo。
 
 ### 6.4 静态诊断的保留边界
 
@@ -285,9 +290,11 @@ uniform 测度下存在精确正交格；三角测度、钉住 support 和训练
 
 ### 6.5 反重复与论文边界
 
-当前投稿前逐文件优化顺序与模拟审稿判决由
-[`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826`](paper-2027/research/ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md)
-拥有；它不是数值 owner，也不替代本节的研究边界。其判决是：不再增加 submission
+当前投稿前九页行文的执行单由
+[`ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826`](paper-2027/research/ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md)
+拥有；它不是数值 owner，也不替代本节的研究边界。先前模拟审稿记录在
+[`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826`](paper-2027/research/ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md)。
+其共同判决是：不再增加 submission
 compute；先移除 Appendix A.11 已被 O3 取代的单幂律 / exponent-matched 诊断，
 把 target-retargeted 反转、统计单位和 EVQ-Cosh / mature-derived estimand 边界放到
 相应 claim 旁，然后完成构建、逐页复核和冻结。

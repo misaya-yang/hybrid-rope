@@ -5,12 +5,14 @@
 - **Branch / upstream:** `main_0726` / `origin/main_0726`
 - **Active manuscript:** `paper-2027/`
 - **Immutable baseline:** `paper/`
-- **Status:** the validated manuscript and the post-submission theory state are
-  published on `main_0726`. The current pre-submission edit order and simulated
-  reviewer decision are in
-  [`research/ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md`](research/ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md).
-  That report changes no manuscript source or scientific result; no OpenReview
-  upload or submission is implied.
+- **Status:** reviewer-path narrative, citation/novelty, and appendix-evidence
+  passes are implemented and locally validated. The paper now cites the direct
+  support/frequency neighbours, adds exact protocol provenance, and includes
+  appendix figures for the three-seed exact-range control, the 1.485B
+  full-parameter crossover, and range composition. Figure 1 now visualizes the
+  allocation coordinate, the exact slow-block spectrum, and its fixed-support
+  training identification rather than a multi-protocol result montage. No new
+  experiment or OpenReview upload is implied.
 - **Internal only:** exclude this file from the anonymous supplement.
 
 ## 1. PC cold start
@@ -36,11 +38,13 @@ Read in this order:
 3. This file — current manuscript, validation, and author actions.
 4. [`main.pdf`](main.pdf) and `sections/` — reviewer-visible truth after a
    clean local build.
-5. [`research/ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md`](research/ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md)
-   — pre-submission manuscript edits and simulated-review score movers.
-6. [`research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
+5. [`research/ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md`](research/ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md)
+   — current 9-page narrative edit order for Codex.
+6. [`research/ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md`](research/ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md)
+   — related-work / novelty Codex patch; do not restore the NeurIPS PE zoo.
+7. [`research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
    — post-submission theory continuation.
-7. The canonical numerical owner routed by
+8. The canonical numerical owner routed by
    [`research/README.md`](research/README.md) before changing a claim.
 
 Build and test commands live only in [`../README.md`](../README.md)
@@ -87,13 +91,13 @@ Headline evidence:
 ## 3. Current paper and package receipt
 
 - Main text: 9 pages.
-- Total PDF: 31 US-Letter pages.
+- Total PDF: 29 US-Letter pages.
 - `paper-2027/main.pdf`
-  - current tracked SHA-256: `e6fa28feeebed65b7e47ade034d3ea9ea2b1e768d9ebc7e66e44529bbc71f564`
-  - size: `699603` bytes
+  - current local SHA-256: `019bcac763be8f2b41e38299617e7a927badf25e3ef865a6d76c614419bc7cbb`
+  - size: `696391` bytes
 - `rope-spectral-budget-iclr2027-supplement.zip`
-  - current tracked SHA-256: `63144b104c727dcd45f1230eeeb782a7a44173177cdad08791ffbed9ea774fd9`
-  - size: `862842` bytes
+  - current local SHA-256: `890920524d849dd688ee551077f0bb72522353ea9b135436ece6f588ce3bd2e8`
+  - size: `912678` bytes
 - Immutable `paper/main.pdf`
   - SHA-256: `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`
 
@@ -103,23 +107,52 @@ OpenReview submission.
 
 ## 4. Latest validation
 
-The final reviewer-path revision passed:
+The bounded manuscript-optimization revision passed:
 
-- active and isolated-package builds: 9 body / 31 total pages;
+- active and isolated-package builds: 9 body / 29 total pages;
 - zero undefined references or citations;
 - `0pt` worst overfull box;
 - anonymous Letter output, no Type-3 or unembedded fonts;
-- exact-range/FMRoPE, fixed-support, repository-navigation, and package
-  workspace suite: `28/28`;
+- repository navigation, RoPE, exact-range, same-support, and package/evidence
+  tests in Conda `aidemo`: `186/186`;
+- signed-lag / gap / $k$-way CPU identity checks: `11/11`;
 - isolated supplement CPU suite: `144/144`;
-- ZIP integrity and immutable-`paper/` checks;
-- visual review of pages 1--9, Section 2 on page 3, both main figures, and the
-  frozen-checkpoint table on page 29.
+- isolated supplement build with the same 9/29 page and format receipt;
+- ZIP integrity and immutable-`paper/` SHA-256 check;
+- visual review of all 29 pages, including Section 2 on page 3, Theory on page
+  4, experiments/discussion on pages 7--9, the five appendix figures, and the
+  final two-page composition layout with no orphan table or float-only blank.
+
+The ICLR 2027 Author Guidelines were checked live on 2026-08-26; the unchecked
+author-roster, quota, and reciprocal-reviewing gates are recorded in
+[`SUBMISSION_CHECKLIST.md`](SUBMISSION_CHECKLIST.md).
 
 These receipts prove build/package health and the tested code paths. They do not
 prove acceptance, policy currency, OpenReview state, or unmeasured claims.
 
-## 5. Research continuation
+## 5. Next PC manuscript pass
+
+The current source is validated; the following items are an author-facing
+narrative choice, not missing evidence or a build blocker:
+
+1. Reframe the Section 2 headings positively while retaining the
+   target-matched FMRoPE reversal in the paragraph: allocation is identifiable
+   at fixed support; support and allocation interact; the coordinate remains
+   visible after pretraining.
+2. Consider moving the existing 1.485B crossover figure from Appendix F into
+   Section 4 as the single flagship scale consequence. Pay for it by shortening
+   the repeated Discussion, not by adding a summary montage or cutting theory.
+3. Keep the abstract centred on the `46 nominal dimensions -> 2.00 effective
+   dimensions` hook and the three-seed fixed-support result. Do not add the NLL
+   vector or frozen-checkpoint score ledger.
+4. Figure 1 already has the correct scientific object. A later polish may make
+   its title and arrows more poster-readable, but should not add protocols or
+   turn it back into an experiment montage.
+
+Freeze Related Work unless a citation is factually wrong. Do not add compute or
+fill the appendix toward the page ceiling.
+
+## 6. Research continuation
 
 The research agenda is not state. Its authority is [`../INDEX.md`](../INDEX.md)
 §6; the theoretical reasoning is in the
@@ -133,7 +166,7 @@ Do not start another shared-table static score, 50M candidate verdict, extra
 oracle shell/step/seed/LR sweep, larger checkpoint, or GPU run from this
 handoff. Any compute requires a new preflight and explicit user authorization.
 
-## 6. What Git does not contain
+## 7. What Git does not contain
 
 | Artifact | Git status | Consequence on the PC |
 | --- | --- | --- |
@@ -146,21 +179,14 @@ handoff. Any compute requires a new preflight and explicit user authorization.
 A compact receipt is provenance, not the raw artifact. Missing local raw files
 never mean the experiment did not run.
 
-## 7. Author actions
+## 8. Author actions
 
 Submission:
 
-1. Read the manuscript-optimization report and apply only its bounded source
-   changes: remove the stale Appendix A.11 single-power-law diagnostic; state
-   the target-retargeted boundary and statistical unit beside the claim;
-   separate EVQ-Cosh from the mature derived profile; repair the two identified
-   clarity sentences; add the live author quota/roster checks.
-2. Rebuild from source, run focused/package validation in Conda `aidemo`, and
-   read all nine body pages plus affected appendix pages at normal zoom.
-3. Confirm OpenReview title and abstract exactly match the PDF.
-4. Recheck current ICLR policy, deadlines, anonymity, author roster/quotas,
+1. Confirm OpenReview title and abstract exactly match the PDF.
+2. Recheck current ICLR policy, deadlines, anonymity, author roster/quotas,
    profiles, and dual-submission state immediately before upload.
-5. Upload only the curated paper/package, never a repository-root archive.
+3. Upload only the curated paper/package, never a repository-root archive.
 
 Research after submission:
 
@@ -172,7 +198,7 @@ Research after submission:
 4. Require a 1.485B matched in-window + far-tail + capability gate before
    multi-seed or second-checkpoint expansion.
 
-## 8. Git boundary
+## 9. Git boundary
 
 At handoff, always report source publication and local build artifacts
 separately. Before any future commit/push:

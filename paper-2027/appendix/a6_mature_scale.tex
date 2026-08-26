@@ -27,10 +27,16 @@ and in Table~\ref{tab:ruler}.
 To test a less intrusive mature-checkpoint adaptation, we start from the
 protocol-matched Native and \evq{} Stage-A parents, freeze every inherited V/O
 LoRA tensor within each arm (verified bitwise), and continue only the existing Q/K tensors for
-$300$ steps. Both arms use the same $1{:}1{:}2$ mixture of continuous-$4$K,
+$300$ steps. Each arm trains $8{,}388{,}608$ Q/K parameters while freezing the
+$8{,}388{,}608$ inherited V/O parameters, with global batch $8$, learning rate
+$5{\times}10^{-5}$, and $20$ warmup steps. The QA and RULER generators use
+seeds $20260728$ and $20260729$, respectively; the bundled Q/K
+\texttt{metrics.json} records the full protocol. Both arms use the same
+$1{:}1{:}2$ mixture of continuous-$4$K,
 target-$8$K, and target-$16$K phase exposure, complete answer-plus-EOS
 supervision, and physical sequences no longer than $4$K; long phases again use
-explicit position IDs. On $200$ held-out 2WikiMultiHopQA rows per length,
+explicit position IDs. On $200$ held-out 2WikiMultiHopQA rows per length
+\citep{ho2020twowiki},
 Native/\evq{} token-F1 is $25.99/24.84\%$ at $4$K, $0.07/21.48\%$ at $8$K,
 and $0/8.57\%$ at $16$K; exact match is $22.0/21.5\%$, $0/17.5\%$, and
 $0/4.0\%$, respectively. Prompts retain the official question and context and are
@@ -57,6 +63,18 @@ $122/128$ and $126/128$ held-out documents favouring \evq{} at $8$K and
 $16$K. This is one same-initialisation, same-scientific-recipe natural-text LM
 comparison; capability is evaluated by the separate autoregressive protocols
 above.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.88\linewidth]{fig_olmo_scale_crossover.pdf}
+  \caption{\textbf{Full-parameter scale evidence crosses beyond the training
+  window.} The $1.485$B Geo and \evq{} arms start from the same public
+  initialisation and follow the same scientific recipe for $2.097$B tokens.
+  Error bars are paired bootstrap intervals over the same $128$ held-out
+  documents, conditioned on this trained pair; the lower panel gives the
+  document count favouring \evq{} at each length.}
+  \label{fig:olmo-scale-crossover}
+\end{figure}
 
 \subsection{Frozen fixed-support allocation}
 \label{sec:frozen-fixed-support}
@@ -90,7 +108,7 @@ movement-profile MSE to the frozen derived table; its choice uses no task
 labels. The remaining arm installs the frozen derived interior allocation.
 
 OLMo-2-0425-1B-Instruct uses nine confirmation-only RULER tasks at $16$K,
-$20$ rows per task. Qwen2.5-1.5B-Instruct uses the four development RULER tasks
+$20$ rows per task. Qwen2.5-1.5B-Instruct \citep{qwen2024qwen25} uses the four development RULER tasks
 at $64$K, also with $20$ rows per task; it evaluates a factor-four table at
 twice the Native context length. Row resampling conditions on each fixed
 checkpoint and task set. Both non-geometric allocations produce the large OLMo
@@ -104,7 +122,7 @@ uses exact Native when observed prefill plus generation reserve fits the Native
 window and otherwise chooses one frozen factor-four table and amplitude before
 prefill, without changing the route during the KV-cache lifetime. It adds no
 learned parameters or training tokens. On a post-policy-freeze, full-$200$
-Qasper evaluation at $16$K, this policy obtains token F1 $24.57\%$ versus
+Qasper evaluation \citep{dasigi2021qasper} at $16$K, this policy obtains token F1 $24.57\%$ versus
 $18.03\%$ for official Transformers YaRN factor four. Both arms use identical
 rows, and every post-chat input plus its $128$-token generation reserve fits
 within $16$K. This row evaluates the complete deployment policy on natural

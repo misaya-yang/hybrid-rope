@@ -12,17 +12,29 @@ App.~\ref{sec:pe-dominant}.
 
 \subsection{Reproducibility snapshot}
 
+The evidence ladder separates causal identification from architecture, scale,
+adaptation, frozen-checkpoint, and cross-modal consequences. Scratch text runs
+use FineWeb-Edu \citep{penedo2024fineweb}.
+
 \begin{table}[ht]
-\caption{Compact reproducibility summary for supporting scratch-model experiments.}
+\caption{Evidence and protocol map. Every row retains its own intervention,
+experimental unit, and endpoint.}
+\label{tab:evidence-map}
 \centering
 \small
 \resizebox{\linewidth}{!}{%
-\begin{tabular}{@{}lllll@{}}
+\begin{tabular}{@{}llllll@{}}
 \toprule
-Setting & Train length & Scale & Seeds & Main datasets \\
+Role & Model/regime & Intervention & Unit & Endpoint & Appendix \\
 \midrule
-\evq{} ($\tau{=}1.414$)$\times$\rs{} & 2048 & 454M & 3 per substrate & FineWeb-Edu + 10\% passkey mix \\
-MLA & 8192 & 432M & 3 & FineWeb-Edu \\
+Allocation identification & 151.9M scratch & fixed support, $30$ interiors & 3 training seeds & tail NLL & C.1 \\
+Shape/configuration breadth & 50.9M factorial & fixed support, 5 allocations & 12 configs $\times$ 3 seeds & weighted OOD NLL & C.2 \\
+Scarce rotary budget & 432M MLA-style & Geo/\evq{}, $K{=}16$ & 3 training seeds & PPL & G.1 \\
+Range composition & 454M MHA & same \rs{} on Geo/\evq{} & 3 seeds/substrate & PK/PPL & G.2 \\
+Full-parameter scale & 750M/1.485B & continued/from-init Geo/\evq{} & one matched pair each & PPL/retrieval & B.3/F.1 \\
+Frozen allocation & OLMo/Qwen & same support and amplitude & 20 rows/task & RULER & F.2 \\
+Adaptation/source use & 1.485B/8B & matched LoRA/source block & one trained pair & QA/RULER/NLL & F.1/F.3 \\
+Cross-modal scope & 129.6M video DiT & temporal Geo/\evq{} & 2 training seeds & denoising MSE & B.5 \\
 \bottomrule
 \end{tabular}
 }
@@ -89,7 +101,9 @@ video configuration.
 \subsection{Cross-modal evidence: video DiT with bidirectional attention}
 \label{sec:video-dit}
 
-We evaluate a 129.6M video diffusion transformer with bidirectional attention
+VideoRoPE and RIFLEx make temporal-frequency allocation explicit in video
+models \citep{videorope2025,zhao2025riflex}. We test the same allocation
+principle in a $129.6$M video diffusion transformer with bidirectional attention
 and 3D RoPE on Oscillating Moving MNIST
 \citep{srivastava2015unsupervised}. Training uses 32 frames; evaluation uses
 128 frames ($4\times$) with temporal \rs{}. For each seed, the Geo and
