@@ -3,6 +3,7 @@
 - **Updated:** 2026-08-26
 - **Target:** ICLR 2027
 - **Branch / upstream:** `main_0726` / `origin/main_0726`
+- **Published manuscript checkpoint:** `06ad6262c1b3cacecc9f8f9b0d2c764c884eed26`
 - **Active manuscript:** `paper-2027/`
 - **Immutable baseline:** `paper/`
 - **Status:** reviewer-path narrative, citation/novelty, and appendix-evidence
@@ -27,8 +28,9 @@ git log --oneline -5
 ```
 
 Do not pull over a dirty worktree. If the PC checkout is clean and only behind,
-use a fast-forward update; otherwise inspect ownership before changing Git
-state.
+run `git pull --ff-only origin main_0726`; otherwise inspect ownership before
+changing Git state. After the update, `git rev-parse HEAD` must contain the
+published manuscript checkpoint above or a documented descendant.
 
 Read in this order:
 
@@ -101,9 +103,9 @@ Headline evidence:
 - Immutable `paper/main.pdf`
   - SHA-256: `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`
 
-Generated PDF, BBL, and supplement ZIP are local build products unless a later
-explicit publication includes them. A tracked source commit is not an
-OpenReview submission.
+Commit `06ad626` publishes the generated PDF, BBL, and curated supplement ZIP
+with their source so the PC starts from the exact reviewed artifact. This Git
+publication is not an OpenReview submission.
 
 ## 4. Latest validation
 
@@ -130,27 +132,98 @@ author-roster, quota, and reciprocal-reviewing gates are recorded in
 These receipts prove build/package health and the tested code paths. They do not
 prove acceptance, policy currency, OpenReview state, or unmeasured claims.
 
-## 5. Next PC manuscript pass
+## 5. Core PC continuation plan
 
-The current source is validated; the following items are an author-facing
-narrative choice, not missing evidence or a build blocker:
+### Objective
 
-1. Reframe the Section 2 headings positively while retaining the
-   target-matched FMRoPE reversal in the paragraph: allocation is identifiable
-   at fixed support; support and allocation interact; the coordinate remains
-   visible after pretraining.
-2. Consider moving the existing 1.485B crossover figure from Appendix F into
-   Section 4 as the single flagship scale consequence. Pay for it by shortening
-   the repeated Discussion, not by adding a summary montage or cutting theory.
-3. Keep the abstract centred on the `46 nominal dimensions -> 2.00 effective
-   dimensions` hook and the three-seed fixed-support result. Do not add the NLL
-   vector or frozen-checkpoint score ledger.
-4. Figure 1 already has the correct scientific object. A later polish may make
-   its title and arrows more poster-readable, but should not add protocols or
-   turn it back into an experiment montage.
+Raise the reviewer score ceiling by making the existing science resolve to one
+judgment: RoPE support does not determine how a finite head allocates its
+frequency budget. No new experiment is needed for this pass.
 
-Freeze Related Work unless a citation is factually wrong. Do not add compute or
-fill the appendix toward the page ceiling.
+The 30-second, 3-minute, and full-paper readings should all recover the same
+chain: fixed-support identification, exact full-pair geometry, one analytic
+construction, then scale and capability consequences.
+
+### Locked decisions
+
+- Keep the title and section order. Section 2 remains on page 3 and Theory
+  begins on page 4.
+- Keep Figure 1 as the allocation / collapse / fixed-support identification
+  figure. Do not restore the old multi-protocol montage or add frozen OLMo to
+  it.
+- Keep the abstract near its current length and retain only the central
+  `46 nominal dimensions -> 2.00 effective dimensions` numerical hook. Do not
+  add the exact-range NLL vector or frozen-checkpoint score ledger.
+- Freeze Related Work unless a citation or technical distinction is factually
+  wrong. The current classifier and direct-neighbour citations are sufficient.
+- Preserve every theorem, claim owner, completed scale result, and sound
+  appendix proof. The appendix budget is a ceiling, not a target.
+
+### Execution order
+
+1. **Section 2 framing — highest priority.** In
+   [`sections/02_identification.tex`](sections/02_identification.tex), replace
+   the two negative question headlines with positive scientific questions:
+   allocation is identifiable at fixed support; support and allocation
+   interact; the coordinate remains visible after pretraining. Retain the
+   target-matched `+0.060/+0.227/+0.460`, `0/3` reversal in the paragraph. Do
+   not hide or weaken it.
+2. **One flagship scale visual.** Move the existing
+   [`figs/fig_olmo_scale_crossover.pdf`](figs/fig_olmo_scale_crossover.pdf)
+   figure environment and label from Appendix F into the 1.485B paragraph of
+   [`sections/04_experiments.tex`](sections/04_experiments.tex). Keep detailed
+   protocol text in Appendix F and do not duplicate the figure.
+3. **Pay the page cost by removing repetition.** Shorten
+   [`sections/05_discussion.tex`](sections/05_discussion.tex), primarily its
+   repeated MLA, frozen, scale, and related-work recap. Preserve the synthesis:
+   geometry diagnoses the finite basis, training binds weights to that basis,
+   and allocation is a controllable design coordinate. Do not delete a claim
+   or number merely to fit the figure.
+4. **Final prose polish.** Reserve `consequential` and “not a disguised base
+   change” for one decisive use each. Remove repeated defensive formulations,
+   but keep the nearest material scope beside the governed claim. Figure 1 may
+   receive a shorter poster-readable title; its data and three-panel identity
+   stay fixed.
+
+### Scientific gates
+
+Before accepting any rewrite, verify all of the following:
+
+- exact-range remains the sole fixed-support training identification owner;
+- target-aware FMRoPE still wins its separate protocol;
+- frozen OLMo `derived` and `coarse ramp` are not called EVQ-Cosh;
+- static effective rank is not presented as an LM-quality predictor;
+- 1.485B is the full-parameter scale ceiling and 8B remains LoRA/adaptation;
+- RULER/2Wiki remain task-family adaptation, not unseen-task transfer;
+- EVQ-Cosh uniqueness remains conditional on the stated convex surrogate;
+- LeRoPE remains compatible evidence, not validation or a matched comparator.
+
+### Acceptance criteria
+
+- body remains 9 pages; Section 2 page 3; Theory starts no later than page 4;
+- the 1.485B crossover is visible in Section 4 and absent as a duplicate float
+  from Appendix F;
+- undefined references/citations `0`; worst overfull at target `0pt`, hard
+  ceiling `5pt`;
+- US Letter, anonymous, `\iclrfinalcopy` disabled, no Type-3 or unembedded
+  fonts;
+- visual read of body pages 1--9 confirms Figure 1 is one scientific argument,
+  the new scale figure is legible, and no float creates an orphan or large
+  blank region;
+- curated supplement rebuilds, passes its isolated CPU suite, and contains the
+  same source and figure identities;
+- `paper/` SHA-256 remains
+  `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`.
+
+### Explicit non-goals and stop conditions
+
+Do not add citations, experiments, seeds, scales, appendix filler, priority
+claims, new theory, or a second overview figure in this pass. Do not modify
+`paper/`, `main.tex`, venue style files, ethics, reproducibility, or AI-use
+statements. Stop and return to the numerical owner if a proposed wording needs
+a stronger claim, merges protocols, or changes a displayed result. GPU work,
+Git history changes, commit/push, and OpenReview upload each require fresh
+explicit authorization.
 
 ## 6. Research continuation
 
