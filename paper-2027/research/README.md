@@ -18,19 +18,22 @@ up in [`../../INDEX.md`](../../INDEX.md). Do not duplicate them here.
 2. [`../../INDEX.md`](../../INDEX.md) — theory/evidence/code index and agenda.
 3. [`../HANDOFF.md`](../HANDOFF.md) — live manuscript/worktree state and the
    only current action queue.
-4. [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md)
+4. [`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md`](ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md)
+   — current pre-submission edit order and simulated-review decision; no
+   numerical ownership.
+5. [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md)
    — current conceptual grammar: physical table, causal variables, method
    stages, and the role of the zero-training replacement.
-5. [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
+6. [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
    — current post-submission theory state, empirical constraints, missing
    identification bridge, and method-entry conditions.
-6. [`ICLR2027_RESEARCH_SYNTHESIS_20260819.md`](ICLR2027_RESEARCH_SYNTHESIS_20260819.md)
+7. [`ICLR2027_RESEARCH_SYNTHESIS_20260819.md`](ICLR2027_RESEARCH_SYNTHESIS_20260819.md)
    — implemented claim architecture.
-7. [`EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](EXACT_RANGE_151M_3SEED_RESULT_20260820.md)
+8. [`EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](EXACT_RANGE_151M_3SEED_RESULT_20260820.md)
    — raw-hash-receipted three-training-seed fixed-support result.
-8. [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)
+9. [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)
    — canonical theory, finite-K counterexamples, and 50M crossing.
-9. [`attention-aware-retrofit/README.md`](attention-aware-retrofit/README.md)
+10. [`attention-aware-retrofit/README.md`](attention-aware-retrofit/README.md)
    — current mature-checkpoint retrofit results, negative routes, and receipts.
 
 Do not start from the newest date, an external review, or a preflight.
@@ -102,6 +105,7 @@ Additional durable theory/supporting files at research root:
 
 | Question | Canonical source | Maximum role |
 | --- | --- | --- |
+| Current manuscript optimization and simulated-review decision | [`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md`](ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md) | edit ordering and reviewer-risk decision only; never a numerical owner |
 | Conceptual grammar and causal-variable separation | [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md) | notation and routing only; never a numerical owner |
 | Post-submission theory state and missing bridge | [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md) | theory continuation and protocol design only; no new result or compute authorization |
 | Full sin/cos geometry, collision, stable-rank identity | [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md) | main theory; static basis, not LM-quality predictor |

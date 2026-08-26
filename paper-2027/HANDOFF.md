@@ -1,13 +1,16 @@
 # ICLR 2027 active handoff
 
-- **Updated:** 2026-08-25
+- **Updated:** 2026-08-26
 - **Target:** ICLR 2027
 - **Branch / upstream:** `main_0726` / `origin/main_0726`
 - **Active manuscript:** `paper-2027/`
 - **Immutable baseline:** `paper/`
-- **Status:** final manuscript, theory/evidence owners, and PC-continuation
-  documentation are validated and published on `main_0726`. Recheck live Git
-  refs before pulling; no OpenReview upload or submission is implied.
+- **Status:** the validated manuscript and the post-submission theory state are
+  published on `main_0726`. The current pre-submission edit order and simulated
+  reviewer decision are in
+  [`research/ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md`](research/ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md).
+  That report changes no manuscript source or scientific result; no OpenReview
+  upload or submission is implied.
 - **Internal only:** exclude this file from the anonymous supplement.
 
 ## 1. PC cold start
@@ -33,9 +36,11 @@ Read in this order:
 3. This file — current manuscript, validation, and author actions.
 4. [`main.pdf`](main.pdf) and `sections/` — reviewer-visible truth after a
    clean local build.
-5. [`research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
+5. [`research/ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md`](research/ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md)
+   — pre-submission manuscript edits and simulated-review score movers.
+6. [`research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
    — post-submission theory continuation.
-6. The canonical numerical owner routed by
+7. The canonical numerical owner routed by
    [`research/README.md`](research/README.md) before changing a claim.
 
 Build and test commands live only in [`../README.md`](../README.md)
@@ -84,11 +89,11 @@ Headline evidence:
 - Main text: 9 pages.
 - Total PDF: 31 US-Letter pages.
 - `paper-2027/main.pdf`
-  - SHA-256: `5c5107126ae99d659c000fefd7b86fbd36178b4844a0b0b82e84bedd2db59c0e`
-  - size: `697337` bytes
+  - current tracked SHA-256: `e6fa28feeebed65b7e47ade034d3ea9ea2b1e768d9ebc7e66e44529bbc71f564`
+  - size: `699603` bytes
 - `rope-spectral-budget-iclr2027-supplement.zip`
-  - SHA-256: `f5587d994d9103d974f849930f2ff968b912386c5d6466ade6af4dd5831dc359`
-  - size: `865317` bytes
+  - current tracked SHA-256: `63144b104c727dcd45f1230eeeb782a7a44173177cdad08791ffbed9ea774fd9`
+  - size: `862842` bytes
 - Immutable `paper/main.pdf`
   - SHA-256: `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`
 
@@ -145,11 +150,17 @@ never mean the experiment did not run.
 
 Submission:
 
-1. On the PC, rebuild from source and read pages 1--4 and 8--9 at normal zoom.
-2. Confirm OpenReview title and abstract exactly match the PDF.
-3. Recheck current ICLR policy, deadlines, anonymity, author profiles, and
-   dual-submission state immediately before upload.
-4. Upload only the curated paper/package, never a repository-root archive.
+1. Read the manuscript-optimization report and apply only its bounded source
+   changes: remove the stale Appendix A.11 single-power-law diagnostic; state
+   the target-retargeted boundary and statistical unit beside the claim;
+   separate EVQ-Cosh from the mature derived profile; repair the two identified
+   clarity sentences; add the live author quota/roster checks.
+2. Rebuild from source, run focused/package validation in Conda `aidemo`, and
+   read all nine body pages plus affected appendix pages at normal zoom.
+3. Confirm OpenReview title and abstract exactly match the PDF.
+4. Recheck current ICLR policy, deadlines, anonymity, author roster/quotas,
+   profiles, and dual-submission state immediately before upload.
+5. Upload only the curated paper/package, never a repository-root archive.
 
 Research after submission:
 

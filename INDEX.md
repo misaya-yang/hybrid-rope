@@ -1,6 +1,6 @@
 # INDEX — 理论、证据、代码与下一步
 
-- **最后更新：** 2026-08-25
+- **最后更新：** 2026-08-26
 - **角色：** 本仓库唯一的**持久索引**。回答「已有什么、谁拥有它、下一步做什么」。
 - **不负责：** 硬性规则（见 [`AGENTS.md`](AGENTS.md)）、易变状态（见
   [`paper-2027/HANDOFF.md`](paper-2027/HANDOFF.md)）。
@@ -284,6 +284,13 @@ uniform 测度下存在精确正交格；三角测度、钉住 support 和训练
 和 Git 历史保留，不再把长表放在冷启动索引中。
 
 ### 6.5 反重复与论文边界
+
+当前投稿前逐文件优化顺序与模拟审稿判决由
+[`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826`](paper-2027/research/ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md)
+拥有；它不是数值 owner，也不替代本节的研究边界。其判决是：不再增加 submission
+compute；先移除 Appendix A.11 已被 O3 取代的单幂律 / exponent-matched 诊断，
+把 target-retargeted 反转、统计单位和 EVQ-Cosh / mature-derived estimand 边界放到
+相应 claim 旁，然后完成构建、逐页复核和冻结。
 
 - 新候选先过 §3.4；再提“共享单表 + 静态 scalar score”必须说明如何逃出已关闭类别。
 - 50M M4 phase-isotropy 结果保持 `SCREEN_UNRESOLVED`，不是成功或候选级否决。
