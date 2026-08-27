@@ -5,6 +5,8 @@ an experiment ran.
 
 | Preflight | Final state |
 | --- | --- |
+| [`PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md`](PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md) | frozen protocol design; separate new protected-simple-curve test; not executed; requires separate explicit compute authorization |
+| [`MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md`](MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md) | frozen protocol design; not executed; requires separate explicit compute authorization |
 | [`COADAPTIVE_ALLOCATION_ORACLE_PREFLIGHT_20260825.md`](COADAPTIVE_ALLOCATION_ORACLE_PREFLIGHT_20260825.md) | executed; registered shell gate failed; attribution and matched recovery are owned by `../results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md` |
 | [`PHASE_ALLOCATION_M4_EXTENDED_PREFLIGHT_20260824.md`](PHASE_ALLOCATION_M4_EXTENDED_PREFLIGHT_20260824.md) | executed; its own decision rule ("label the regime as unresolved rather than attributing the result to the new score" when the anchored-Cosh control is neutral/negative at 50M base-256) is applied by the canonical report. See `../../../../INDEX.md` §6.2 |
 | [`ZERO_PARAMETER_PROTECTED_BAND_PREFLIGHT_20260824.md`](ZERO_PARAMETER_PROTECTED_BAND_PREFLIGHT_20260824.md) | executed; failed 1x PG-19 no-harm gate and stopped before capability evaluation |

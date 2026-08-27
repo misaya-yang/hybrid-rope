@@ -29,7 +29,11 @@ up in [`../../INDEX.md`](../../INDEX.md). Do not duplicate them here.
    stages, and the role of the zero-training replacement.
 6. [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
    — current post-submission theory state, empirical constraints, missing
-   identification bridge, and method-entry conditions.
+   identification bridge, and method-entry conditions. The executable protocol
+   is [`attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md`](attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md).
+   Its separate protected-progressive companion is
+   [`attention-aware-retrofit/preflights/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md`](attention-aware-retrofit/preflights/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md);
+   both are design-only until separately authorized.
 7. [`ICLR2027_RESEARCH_SYNTHESIS_20260819.md`](ICLR2027_RESEARCH_SYNTHESIS_20260819.md)
    — implemented claim architecture.
 8. [`EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](EXACT_RANGE_151M_3SEED_RESULT_20260820.md)
@@ -113,6 +117,8 @@ Additional durable theory/supporting files at research root:
 | Prior simulated-review decision | [`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md`](ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md) | historical reviewer-risk record; most P0/P1 items are already in live TeX |
 | Conceptual grammar and causal-variable separation | [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md) | notation and routing only; never a numerical owner |
 | Post-submission theory state and missing bridge | [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md) | theory continuation and protocol design only; no new result or compute authorization |
+| Matched-content phase 2x2 bridge preflight | [`attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md`](attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md) | frozen protocol design only; separates table-by-phase interaction from gain, adaptation, and routing |
+| Protected progressive shift preflight | [`attention-aware-retrofit/preflights/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md`](attention-aware-retrofit/preflights/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md) | separate new protection test for the simple progressive curve; Stage 2 may invoke the matched-content bridge |
 | Full sin/cos geometry, collision, stable-rank identity | [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md) | main theory; static basis, not LM-quality predictor |
 | Pure fixed-support interior-allocation identification | [`EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](EXACT_RANGE_151M_3SEED_RESULT_20260820.md) plus M4 historical owner | main causal experiment |
 | Exact frozen Q/K transplant obstruction | `../../rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md` | exact impossibility for fixed static maps, not all approximate adapters |

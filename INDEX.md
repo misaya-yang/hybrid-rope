@@ -255,7 +255,11 @@ construction。下一方法目标是：
 
 只有同一内容的短条件成功、virtual gap 使 Native 退化且候选恢复时，才能把剩余
 headroom 归到 position/allocation。完整 2x2 和判决读法在
-[theory state](paper-2027/research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md) §4。
+[theory state](paper-2027/research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md) §4；
+可执行的冻结协议在
+[matched-content phase 2x2 preflight](paper-2027/research/attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md)。
+独立的 protected-progressive companion protocol 是
+[PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827](paper-2027/research/attention-aware-retrofit/preflights/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md)。
 这只是协议设计；GPU 仍需显式授权。
 
 ### 6.3 决策顺序
