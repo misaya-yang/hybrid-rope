@@ -3,7 +3,9 @@
 - **Updated:** 2026-08-26
 - **Target:** ICLR 2027
 - **Branch / upstream:** `main_0726` / `origin/main_0726`
-- **Repository HEAD before the final provenance patch:** `b8a4121b9e27b4a91fa5cc9896fae76b657e0b5d`
+- **Manuscript/provenance checkpoint:** `7a938d378399ad9daf5a6840f4a078a87136cd7c`
+  (`paper: finalize provenance and supplement evidence`); use `git rev-parse
+  HEAD` for the receipt-only commit that carries this handoff line.
 - **Active manuscript:** `paper-2027/`
 - **Immutable baseline:** `paper/`
 - **Status:** the whole-paper acceptance-first revision is locally validated
