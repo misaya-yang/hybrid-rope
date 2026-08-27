@@ -83,9 +83,7 @@ $67.72/54.40\%$ for the zero-training policy, which is higher on $12$ of $13$
 families at each length. On full-$200$ Qasper, the session policy raises
 token F1 from $18.03\%$ to $24.57\%$; on full-$200$ 2Wiki, applying the long
 profile to every row raises token F1 from $25.69\%$ to $27.74\%$ (the routed
-policy scores $26.66\%$). Across the six-task natural-context matrix, the
-routed method scores $28.58/24.97\%$ at $2/4\times$, versus
-$21.27/25.59\%$ for YaRN. Full protocols are in
+policy scores $26.66\%$). Full protocols are in
 App.~\ref{sec:frozen-fixed-support}.
 
 %% =========================================================================
@@ -142,8 +140,8 @@ $8/16$K (App.~Fig.~\ref{fig:olmo-scale-crossover}). Together these protocols
 repeat the in-window/long-length crossover through $1.485$B.
 
 \paragraph{Modal breadth.}
-On Oscillating Moving MNIST, two head-to-head seeds of a $129.6$M video DiT
-with bidirectional $3$D RoPE give mean Geo-to-\evq{} denoising-MSE deltas of
-$-26\%$ on train, $-16\%$ over all extrapolated frames, and $-33\%$ on far
+On Oscillating Moving MNIST, a seed-42 head-to-head comparison in a $129.6$M
+video DiT with bidirectional $3$D RoPE gives Geo-to-\evq{} denoising-MSE deltas
+of $-21\%$ on train, $-16\%$ over all extrapolated frames, and $-35\%$ on far
 extrapolated frames (App.~Table~\ref{tab:dit-h2h}), providing supporting
 modality breadth beyond autoregressive text.

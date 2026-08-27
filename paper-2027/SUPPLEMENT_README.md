@@ -46,12 +46,12 @@ python scripts/core_text_phases/phase16_exact_range_factorial_m4.py --help
 | 50.9M exact-range factorial | `rebuttal/rebuttal_0723/theory_results/m4_exact_range_factorial_evidence_20260726.json` |
 | 99-run zero-search operating-prior study | `data/curated/phase16_99run_manifest.csv`; `scripts/core_text_phases/phase16_formula_optimality_sweep.py` |
 | 432M three-seed MLA result | `data/curated/table18_mla_3seed_aggregate.json` |
-| 750M continued-training result | `paper-2027/tables/table6_750m_continue_supporting.tex`; protocol in `paper-2027/appendix/a2_experiment_details.tex` |
+| 750M continued-training result | `data/curated/phase15_750m_continue_result_20260306.json` |
 | Frozen OLMo/Qwen fixed-support controls and Qasper policy endpoint | `data/curated/frozen_fixed_support_mature_20260823.json` |
 | 1.485B adapted endpoints and exact Q/K protocol | `rebuttal/rebuttal_0723/theory_results/olmo2_qk_phase_adaptation_20260729/metrics.json` |
 | 8B probability and causal remote-source use | `data/curated/llama8b_causal_source_use_s42_20260714.json` |
 | 8B adapted RULER endpoint | `rebuttal/rebuttal_0723/theory_results/llama8b_matched_ruler_mix_20260726.json` |
-| 129.6M two-seed video-DiT result | `paper-2027/appendix/a2_experiment_details.tex` (`tab:dit-h2h`) |
+| 129.6M video-DiT head-to-head result | `data/curated/video_dit_seed42_head_to_head_20260826.json` |
 | Full sin/cos geometry and co-adaptation diagnostics | `scripts/analysis/` |
 
 The exact-range data preparation, protocol, model, and training scripts are in

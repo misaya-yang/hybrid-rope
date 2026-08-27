@@ -634,6 +634,25 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
             )
             self.assertEqual(artifact["training_seeds"], [42, 137, 256])
 
+        video = json.loads(
+            (ROOT / "data/curated/video_dit_seed42_head_to_head_20260826.json")
+            .read_text(encoding="utf-8")
+        )
+        self.assertEqual(video["seed"], 42)
+        self.assertEqual(video["shared_protocol"]["evaluation_videos"], 256)
+        self.assertAlmostEqual(video["arms"]["evq_cosh"]["far_extrap_mse"], 0.006387988571077585)
+
+        continuation = json.loads(
+            (ROOT / "data/curated/phase15_750m_continue_result_20260306.json")
+            .read_text(encoding="utf-8")
+        )
+        self.assertEqual(continuation["seed"], 42)
+        self.assertEqual(continuation["continuation_tokens"], 500000000)
+        self.assertEqual(
+            continuation["arms"]["evq_cosh_tau_1_5"]["passkey_8k_autoregressive_exact"],
+            0.775,
+        )
+
     def test_iclr_supplement_excludes_retired_range_composition(self):
         for retired_path in (
             "paper-2027/figs/fig_range_composition_454m.pdf",

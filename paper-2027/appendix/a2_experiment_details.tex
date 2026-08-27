@@ -32,7 +32,7 @@ Scarce rotary budget & 432M MLA-style & Geo/\evq{}, $K{=}16$ & 3 training seeds 
 Full-parameter scale & 750M/1.485B & continued/from-init Geo/\evq{} & one matched pair each & PPL/retrieval & \ref{sec:larger-scale-supporting}/\ref{sec:olmo2-1b} \\
 Frozen allocation & OLMo/Qwen & same support and amplitude & 20 rows/task & RULER & \ref{sec:frozen-fixed-support} \\
 Adaptation/source use & 1.485B/8B & matched LoRA/source block & one trained pair & QA/RULER/NLL & \ref{sec:olmo2-1b}/\ref{sec:llama8b} \\
-Cross-modal scope & 129.6M video DiT & temporal Geo/\evq{} & 2 training seeds & denoising MSE & \ref{sec:video-dit} \\
+Cross-modal scope & 129.6M video DiT & temporal Geo/\evq{} & 1 training seed & denoising MSE & \ref{sec:video-dit} \\
 \bottomrule
 \end{tabular}
 }
@@ -106,16 +106,16 @@ principle in a $129.6$M video diffusion transformer with bidirectional attention
 and 3D RoPE on Oscillating Moving MNIST
 \citep{srivastava2015unsupervised}. Training uses 32 frames; evaluation uses
 128 frames ($4\times$) under the same fixed temporal range transform in both
-arms. For each seed, the Geo and \evq{} ($\tau{=}1.5$) branches are trained in
-the same head-to-head run.
+arms. The seed-42 Geo and \evq{} ($\tau{=}1.5$) branches are trained in the
+same head-to-head run.
 
-Table~\ref{tab:dit-h2h} reports two independent seeds. The within-seed
-contrasts favour \evq{} on train, all-frame extrapolation, and far-frame
-extrapolation MSE in both runs; the two-seed mean deltas are $-26\%$, $-16\%$,
-and $-33\%$, extending the scope check to bidirectional 3D RoPE.
+Table~\ref{tab:dit-h2h} reports the matched comparison. \evq{} reduces
+denoising MSE by $21\%$ on training frames, $16\%$ over all extrapolated
+frames, and $35\%$ on far extrapolated frames, extending the scope check to
+bidirectional 3D RoPE.
 
 \begin{table}[ht]
-\caption{DiT head-to-head evaluation (129.6M, bidirectional attention, 3D RoPE). Each seed is one shared-run comparison; values are denoising MSE at $t{=}0.5$.}
+\caption{DiT head-to-head evaluation (129.6M, seed 42, bidirectional attention, 3D RoPE). Values are denoising MSE at $t{=}0.5$.}
 \label{tab:dit-h2h}
 \centering
 \small
@@ -126,41 +126,14 @@ Seed & Metric & Geo ($\tau{=}0$) & \evq{} ($\tau{=}1.5$) & $\Delta$ \\
 42 & Train MSE & 0.00911 & \textbf{0.00720} & $-21\%$ \\
 42 & All extrap & 0.00724 & \textbf{0.00606} & $-16\%$ \\
 42 & Far extrap & 0.00989 & \textbf{0.00639} & $-35\%$ \\
-\midrule
-137 & Train MSE & 0.01113 & \textbf{0.00761} & $-32\%$ \\
-137 & All extrap & 0.00713 & \textbf{0.00598} & $-16\%$ \\
-137 & Far extrap & 0.00856 & \textbf{0.00601} & $-30\%$ \\
-\midrule
-\multicolumn{2}{@{}l}{Mean $\Delta$} & & & $-26\%$ / $-16\%$ / $-33\%$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \paragraph{Low-phase-channel diagnostic.}
 At base${}=10{,}000$, six of the 16 temporal frequencies accumulate less than
-$0.1$ rad over the 32 training frames. In the pre-specified diagnostic,
-$\tau{=}1.2$ leaves 11/16 channels above this threshold (effective rank 9),
-whereas $\tau{=}1.5$ leaves 12/16 (rank 10). Repeating the head-to-head
-comparison at base${=}1{,}000$ places 13/16 geometric channels above the
-threshold. At seed 42, $\tau{=}1.2$ and $\tau{=}1.5$ differ by
-less than $0.4\%$ on the reported metrics and both improve far-frame MSE by
-about $48\%$ relative to Geo, supporting the same low-phase-channel diagnostic.
-
-\begin{table}[ht]
-\caption{Base${}=1{,}000$ DiT head-to-head (129.6M, seed 42, shared temporal range transform). The two \evq{} settings are within $0.4\%$ on the reported metrics in this run.}
-\label{tab:dit-base1000}
-\centering
-\small
-\begin{tabular}{@{}l r r r r@{}}
-\toprule
-$\tau$ & Train MSE & All extrap & Far extrap & $\Delta_\text{far}$ vs Geo \\
-\midrule
-0.0 (Geo) & 0.02037 & 0.01274 & 0.01646 & --- \\
-1.2 & \textbf{0.00933} & \textbf{0.00820} & \textbf{0.00859} & $-48\%$ \\
-1.5 & \textbf{0.00930} & 0.00822 & \textbf{0.00858} & $-48\%$ \\
-\bottomrule
-\end{tabular}
-\end{table}
+$0.1$ rad over the 32 training frames. This analytic count identifies the
+low-phase regime tested by the matched behavioural comparison above.
 
 \subsection{What the schedule concretely does}
 \label{sec:schedule-detail}

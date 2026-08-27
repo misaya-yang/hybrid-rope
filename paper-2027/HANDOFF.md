@@ -3,15 +3,15 @@
 - **Updated:** 2026-08-26
 - **Target:** ICLR 2027
 - **Branch / upstream:** `main_0726` / `origin/main_0726`
-- **Repository HEAD:** `de6aee99a3dce04051f87a2a8d9a2caa84fe0bd8`
+- **Repository HEAD before the final provenance patch:** `b8a4121b9e27b4a91fa5cc9896fae76b657e0b5d`
 - **Active manuscript:** `paper-2027/`
 - **Immutable baseline:** `paper/`
-- **Status:** an uncommitted whole-paper acceptance-first revision is active and
-  locally validated. It foregrounds the third finite-table allocation
+- **Status:** the whole-paper acceptance-first revision is locally validated
+  and the author has explicitly authorised commit and push. It foregrounds the third finite-table allocation
   coordinate, leads the empirical section with the mature zero-training
   pure-`z` intervention, separates likelihood from capability evidence, and
   removes the old repository-defined 454M/125M range-composition line from
-  reviewer-facing inputs. No commit, push, upload, or GPU work is authorised.
+  reviewer-facing inputs. No upload or GPU work is authorised.
 - **Internal only:** exclude this file, the narrative guide, revision plans, and
   the Codex/Claude review log from the anonymous supplement.
 
@@ -95,7 +95,7 @@ Locked scientific identities:
 | matched adaptation | 1.485B task-family transfer; 8B remote-source deletion changes NLL by `+1.5055` in the EVQ arm | [`OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729`](../rebuttal/rebuttal_0723/theory_results/OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729.md) and [`EVQ_8B_ADAPTATION_EVIDENCE_20260724`](../rebuttal/rebuttal_0723/theory_results/EVQ_8B_ADAPTATION_EVIDENCE_20260724.md) |
 | fixed-support training identification | `+0.026/-0.281/-0.176/-0.146` NLL; every OOD length favours the reallocation in `3/3` seeds | [`EXACT_RANGE_151M_3SEED_RESULT_20260820`](research/EXACT_RANGE_151M_3SEED_RESULT_20260820.md) |
 | full-pair static geometry | 23 slow pairs / 46 nominal dimensions / `r2=2.00` under the stated prior | [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819`](research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md) |
-| architecture / scale / modality breadth | 432M MLA three-seed, 750M continuation, 1.485B early-training crossover, and two-seed video DiT | [`research/README.md`](research/README.md) and its routed owners |
+| architecture / scale / modality breadth | 432M MLA three-seed, 750M continuation, 1.485B early-training crossover, and one matched video-DiT comparison | [`research/README.md`](research/README.md) and its routed owners |
 
 Keep likelihood and capability endpoints separate. Do not translate NLL/PPL
 changes into percentage capability claims. Do not pool uncertainty units across
@@ -107,10 +107,8 @@ matched trajectories.
 - Main body: 8 pages; references begin after the required statements.
 - Total PDF: 28 US-Letter pages.
 - `paper-2027/main.pdf`
-  - SHA-256: intentionally not frozen during alternating review; both reviewers
-    rebuild and the embedded build timestamp changes the bytes. Recompute after
-    the final pre-freeze build.
-  - latest observed size: `434101` bytes
+  - SHA-256: `93c9625b7898a11b94cc2ea53a9fc46535797ede05160cbabb1810cb0f199f31`
+  - final observed size: `432925` bytes
 - Immutable `paper/main.pdf`
   - SHA-256: `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`
 
@@ -125,8 +123,12 @@ Latest `./compile.sh` validation:
 - anonymous US-Letter output with `\iclrfinalcopy` disabled;
 - no Type-3 or unembedded fonts;
 - full body pages 1--8 visually inspected;
-- latest affected appendix pages 20 and 26 visually inspected after removal of
-  stale 125M/454M labels and promotion of the mature result table;
+- affected body pages 4, 5, and 8 and appendix pages 13, 14, 17, 18, and 20--22
+  visually inspected after the notation, reference, and evidence repairs;
+- targeted navigation, supplement-contract, RoPE-core, and same-support tests:
+  `181 passed` under the available system Python; this host has no Conda
+  executable or `aidemo` environment, so the mandated Conda invocation was not
+  available;
 - `git diff --check` passes;
 - immutable `paper/main.pdf` hash unchanged.
 
@@ -163,7 +165,12 @@ Implemented:
   not be relabelled as standard YaRN or restored without a new author decision.
 - The ICLR supplement allowlist also excludes the retired 454M/125M figures,
   generator, orphaned appendix/table source, and five obsolete curated
-  artifacts. The existing ZIP has not been rebuilt during this revision.
+  artifacts. The curated ZIP was rebuilt after the revision; SHA-256
+  `a820d98489948c23567959217549d72b63d61ca07356fce7d78a2f49ba958db8`.
+- The video-DiT breadth result is now the raw-backed seed-42 head-to-head only;
+  the unreceipted second-seed and base-1000 rows are absent from reviewer-facing
+  source. Its tracked JSON and canonical owner are routed by `INDEX.md` and the
+  supplement README.
 - The 1.485B early-training crossover figure remains once in Appendix E/F; it is
   not a body scale claim and must not be duplicated.
 
@@ -187,6 +194,9 @@ Both reviewers use
   corrections in the shared log.
 
 ## 7. Research continuation and stop conditions
+
+The research agenda is not state; it lives in [`../INDEX.md`](../INDEX.md) §6.
+This section records only the current stop boundary.
 
 The generic zero-parameter target-free operator was implemented and evaluated,
 but the tested continuous-boundary version did not produce a positive RULER
