@@ -13,18 +13,26 @@ take that operator as given and ask where its finite frequencies are placed.
 Position interpolation rescales positions, while YaRN and LongRoPE apply
 frequency-dependent or channel-wise range transport
 \citep{chen2024position,peng2024yarn,ding2024longrope,shang2025longrope2}.
-The geometric-family base bounds attainable context length and governs a
-distinct extrapolation regime \citep{xu2024base,liu2024scaling}. FMRoPE moves
-$(a,R)$ through that scalar base while retaining a uniform exponent grid
-\citep{oka2026fmrope}. MrRoPE gives a distinct training-free
-mixed-radix conversion of pretrained frequencies \citep{tian2026mrrope}.
-These comparisons change support or realised phases; our controlled question
-pins both endpoints and the log-span before moving $z$.
+The RoPE base bounds attainable context length in the geometric family
+\citep{xu2024base}, and scaling-law analyses identify a critical dimension for
+that bound \citep{liu2024scaling}. FMRoPE moves $(a,R)$ through a scalar base
+while retaining a uniform exponent grid \citep{oka2026fmrope}.
+\citet{wu2026datashapes} study learned \emph{usage} of that grid: query/key energy concentrates on
+frequencies matched to a data-induced dependency width $W$
+($\theta^\star\!\sim\!1/W$), and position interpolation acts as scale
+matching. That theory selects among supplied
+geometric channels; our intervention changes the supply of interior $z$.
+MrRoPE gives a distinct training-free mixed-radix conversion of pretrained
+frequencies \citep{tian2026mrrope}. Jet-Long dynamically remaps remote
+positions with a bifocal operator, making it range transport rather than a
+pinned-support allocation control \citep{tang2026jetlong}. These comparisons
+change support or realised phases; our controlled question pins both endpoints
+and the log-span before moving $z$.
 
 \paragraph{Frequency use and operator scope.}
 Trained RoPE uses its bands unevenly: query/key norms, data-induced dependency
 scales, and long-range retrieval expose different frequency structure
-\citep{barbero2025round,oka2026frequencyentropy,wu2026datashapes,chiang2025rotary}.
+\citep{barbero2025round,oka2026frequencyentropy,chiang2025rotary}.
 HoPE, CoPE, and RoPE-ID respectively replace, clip, or restrict selected
 rotations \citep{chen2025hope,li2026copeclipped,wertheimer2026frayed}. Our
 geometry instead measures the phase-invariant effective dimension of all $K$
@@ -37,11 +45,9 @@ and one session-static frequency table.
 \paragraph{Learning and constructing frequency tables.}
 LeRoPE learns one log-scale per frequency band, shared across layers and heads,
 and reports consistent non-geometric profiles on a 52M--2.5B model ladder
-\citep{karypis2026lerope}. In its 217M ablation, retraining with a frequency
-table frozen from an independent LeRoPE run retains $63.6\%$ of the full
-validation-perplexity gain over RoPE, compared with $10.4\%$ for partial RoPE.
-The frozen-table ablation locates substantial value in the table itself; our
-fixed-support intervention isolates the degree of freedom carrying that value.
+\citep{karypis2026lerope}. Its frozen-table ablation supports learned allocation
+as an in-window design direction. Our complementary route identifies $z$ at
+fixed support and derives a closed-form, zero-search table.
 AdaRoPE learns per-head and per-dimension
 frequencies together with length-dependent attention scaling
 \citep{wang2026adarope}. Resonance RoPE analytically snaps wavelengths to close

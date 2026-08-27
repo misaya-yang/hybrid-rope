@@ -4,7 +4,7 @@
 \subsection{Fixed-support training intervention}
 \label{sec:exp-identify}
 
-\paragraph{Q1: Does $z$ change trained behaviour at fixed $(a,R)$?}
+\paragraph{Allocation is identifiable at fixed support.}
 Within each of three $151.9$M training seeds, both arms share architecture,
 initialisation, token order, optimiser, LR schedule, global batch, a
 $499{,}974{,}144$-token budget, and $32$ evaluation anchors. The baseline is
@@ -18,27 +18,14 @@ Every training seed favours anchored \evq{} at every OOD length. The anchored
 length and $-0.281/-0.176/-0.146$ at $512$/$1$K/$2$K
 (Fig.~\ref{fig:spectral-budget-overview}c). No geometric base can reproduce this
 intervention once the sampled support is pinned: \emph{fixed support $+$
-different $z$ $\Rightarrow$ different trained-model behaviour.}
+different $z$ $\Rightarrow$ different trained-model behaviour.} Thus $z$ is a
+separately identifiable coordinate, not a disguised base change.
+Full protocol and per-seed contrasts are in
+App.~\ref{sec:identification-details}.
 
-\paragraph{Q2: Does this beat target-aware FMRoPE?}
-No. Under target-matched support, anchored \evq{} trails FMRoPE by
-$+0.060/+0.227/+0.460$ NLL at $2\times$/$4\times$/$8\times$, with FMRoPE
-favoured in all three seeds---$0/3$ for anchored \evq{}
-(App.~Fig.~\ref{fig:exact-range-control}). The
-fixed-support result therefore identifies allocation $z$; it does not establish
-an additive gain over target-aware support selection.
-
-\paragraph{Q3: Does support selection exhaust the design?}
-No. In a separate frozen-checkpoint protocol, support, attention amplitude,
-checkpoint, data, and decoder are fixed while only interior $z$ changes;
-same-support geometric, derived, and coarse-ramp allocations score
-$0.56\%/60.47\%/61.04\%$ on released-model nine-task $16$K RULER (20 rows/task;
-App.~\ref{sec:frozen-fixed-support}). This is
-neither the $151.9$M training protocol nor a test of the Cosh table.
-
-\subsection{Cross-configuration and shape breadth}
-
+\paragraph{Configuration and shape breadth.}
 A pre-specified $50.9$M factorial versus Geo spans two bases, two training
 lengths, three head dimensions, three paired seeds, scaled Cosh schedules, and
-a deformation-matched exponential; it supports the allocation axis without
-identifying a unique shape or strength (App.~Table~\ref{tab:m4}).
+a deformation-matched exponential (App.~Table~\ref{tab:m4}). It supplies
+configuration and shape breadth across twelve structural settings; model-scale
+persistence is tested separately in \S\ref{sec:exp-mature}.

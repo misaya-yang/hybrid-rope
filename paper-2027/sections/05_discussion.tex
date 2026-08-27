@@ -1,52 +1,46 @@
 \section{Discussion}
 \label{sec:discussion}
 
-The main finding is that a RoPE base does not exhaust the design of a finite
-frequency table. Support $(a,R)$ determines the sampled interval; allocation
-$z$ determines how many channels are spent in each part of it. A scalar-base
-sweep explores only the geometric path $z_k=k/(K{-}1)$, whereas the
-fixed-support intervention moves outside that path without changing either
-endpoint. The resulting change in trained behaviour makes allocation a real
-design variable rather than an alternative notation for base selection.
+Finite RoPE exposes three intervention levels: support selects the sampled
+interval, interior allocation $z$ places a fixed number of frequency samples
+inside it, and range transport changes how realised phases are used at longer
+lengths. These levels can interact, but they are not interchangeable. The
+fixed-support intervention therefore changes the effective positional basis at
+constant pair count, endpoints, and RoPE operator---a design move outside a
+scalar-base sweep.
 
-\paragraph{Why the discovery matters.}
-The spectral-budget identity reveals the pressure behind this variable. Slow
-geometric pairs collapse onto nearly the same positional subspace, so nominal
-rotary dimension can substantially overstate effective positional dimension.
-With $K{=}16$, the three-seed $432$M MLA comparison shows that the construction
-remains effective in a compressed rotary subspace. The frozen OLMo comparison
-makes the axis especially visible: at the same support and amplitude, geometric
-allocation scores $0.56\%$, while derived and coarse-ramp reallocations both
-cross $60\%$. The geometric interior fails; two distinct reallocations recover.
+The paper links that coordinate to behaviour in three epistemic steps. Exact
+full-subspace geometry diagnoses the positional basis available to a table.
+Paired fixed-support training identifies the behavioural effect of changing
+$z$. Protocol-separated studies then show that the control remains active after
+a zero-training frozen intervention, under matched low-rank adaptation, and
+when weights co-adapt from training. The weights-by-table crossing and transplant
+obstruction explain why intervention stage matters: a table defines a basis,
+and learned coefficients bind the model to it.
 
-The construction remains consequential across realistic model-building paths.
-At $454$M, the same index-space \rs{} rule has greater leverage on the \evq{} substrate;
-at $750$M and $1.485$B, Geo leads in-window before \evq{} overtakes it at longer
-lengths. Frozen interventions and low-rank adaptation extend the result to
-pretrained checkpoints. These protocols supply architecture, training-stage,
-and scale evidence around the fixed-support identification. At $8$B, blocking
-answer-side attention to the distant source while preserving prompt tokens and
-rotary indices adds a causal source-use endpoint: the improved long-position
-probability depends on that source.
+Across the autoregressive text protocols that evaluate both the original
+training or Native window and longer positions, the comparisons repeat a
+within-protocol crossover: the baseline is stronger near the original window,
+while the reallocated table overtakes it beyond that window. This is not a
+pooled effect across metrics or models; it is a recurring behavioural signature
+of reallocating a finite phase-resolution budget, and it
+directly motivates the Native/long session route. The video DiT instead improves
+both training-frame and extrapolated-frame MSE; its pre-specified diagnostic
+locates the different regime: six of sixteen temporal channels accumulate less
+than $0.1$ rad over the $32$ training frames, so reallocating them changes
+in-window phase coverage rather than imposing the text-model crossover.
 
-Static geometry and learned coefficients jointly determine how a frequency
-table behaves with fixed weights. The $50$M crossing makes the interaction
-visible: a table with better static rank can still destroy perplexity.
-Theorem~\ref{thm:obstruction} characterises its exact limit---fixed invertible
-Q/K maps preserve all relative-position logits only when the frequency
-multisets agree. The frozen OLMo/Qwen controls address the practical
-finite-distribution case: changing $z$ at fixed support and amplitude remains
-consequential after pretraining.
+This design space is broader than extrapolation. Different allocations place
+the finite samples over phase scales relevant within and beyond the training
+window. Learned-table work such as LeRoPE explores this coordinate through
+optimisation; our fixed-support geometry and closed-form construction provide
+complementary ways to analyse and instantiate it. A high-value next direction
+is to design allocation and co-adaptation jointly for explicit window
+objectives, rather than treating the geometric table as fixed infrastructure.
 
-Support selection, interior allocation, and range transport act at different
-stages of the same spectrum. The fixed-support experiment isolates allocation;
-target-aware support and post-training range rules choose complementary degrees
-of freedom. LeRoPE shows that a learned table retains value when frozen for a
-new training run \citep{karypis2026lerope}. \evq{} supplies such a table in
-closed form, and the paired intervention identifies what its allocation changes.
-
-RoPE has a spectral budget because every head has finitely many rotary pairs.
-Geometric spacing is one way to spend that budget, not a neutral consequence of
-the rotary operator. Once support and allocation are separated, the latter can
-be analyzed and controlled as a consequential training-time RoPE design
-variable.
+The field implication is direct: RoPE table allocation should be designed,
+measured, and controlled as a first-class coordinate across training,
+adaptation, and deployment. In the stated protocols, $z$ is an identifiable and
+controllable determinant of long-context behaviour: static geometry supplies
+the basis diagnosis, and controlled interventions establish behavioural
+consequences.

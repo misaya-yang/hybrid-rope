@@ -36,12 +36,12 @@ $c_{\omega\nu}$. The metric is consequently attached to the positional
 subspaces themselves, not to a chosen sine/cosine phase convention.
 
 \begin{proof}[Proof of Theorem~\ref{thm:budget}]
-$R$ is the block matrix with blocks $R_{ij}=Q_{\omega_i\omega_j}$ and
-$R_{ii}=I_2$. Hence $\operatorname{tr}R=\sum_{i=1}^K\operatorname{tr}I_2=2K$.
+$\Gamma$ is the block matrix with blocks $\Gamma_{ij}=Q_{\omega_i\omega_j}$ and
+$\Gamma_{ii}=I_2$. Hence $\operatorname{tr}\Gamma=\sum_{i=1}^K\operatorname{tr}I_2=2K$.
 For the second moment,
-$\operatorname{tr}(R^2)=\sum_{i,j}\operatorname{tr}(R_{ij}R_{ji})
+$\operatorname{tr}(\Gamma^2)=\sum_{i,j}\operatorname{tr}(\Gamma_{ij}\Gamma_{ji})
 =\sum_i\operatorname{tr}(I_2)+\sum_{i\neq j}\|Q_{\omega_i\omega_j}\|_F^2
-=2K+2K(K-1)\bar c$, using $R_{ji}=R_{ij}^\top$ and the definition
+=2K+2K(K-1)\bar c$, using $\Gamma_{ji}=\Gamma_{ij}^\top$ and the definition
 $\bar c=\frac{1}{K(K-1)}\sum_{i\neq j}c_{\omega_i\omega_j}$ with
 $\|Q_{ij}\|_F^2=2c_{ij}$. Dividing gives \eqref{eq:budget-identity}.
 \end{proof}
@@ -74,6 +74,19 @@ empirical protocol.
 
 \begin{figure}[ht]
   \centering
+  \includegraphics[width=0.94\linewidth]{fig_frequency_geometry.pdf}
+  \caption{\textbf{Where a finite frequency table spends its budget.}
+  (a)~At $K{=}32$, Cosh concentrates interior channels toward the fast end
+  while endpoint normalisation preserves sampled support; the deployed
+  midpoint table is shown separately.
+  (b)~For standard RoPE at $L{=}4096$, $b{=}5{\times}10^5$, and $K{=}64$,
+  phase-invariant full-subspace redundancy concentrates in the $23$ pairs with
+  $\omega L\le1$.}
+  \label{fig:frequency-geometry}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
   \includegraphics[width=0.96\linewidth]{fig_spectral_budget_scaling.pdf}
   \caption{\textbf{Spectral-budget anatomy across channel counts.}
   Panel (a) uses the endpoint-inclusive diagnostic grid at $L{=}4096$ and
@@ -99,8 +112,8 @@ scales. The distinction is already visible in an exact construction.
 \label{lem:fourier-alias}
 Let $n_1,\ldots,n_K$ be distinct positive integers and set
 $\omega_k=2\pi n_k/L$. Under $\Delta\sim\mathrm{Unif}[0,L]$, the block-whitened
-correlation Gram of the corresponding full sin/cos pairs is $R=I_{2K}$, hence
-$r_2(R)=2K$. Nevertheless the complete positional feature map satisfies
+correlation Gram of the corresponding full sin/cos pairs is $\Gamma=I_{2K}$, hence
+$r_2(\Gamma)=2K$. Nevertheless the complete positional feature map satisfies
 $\Phi(\Delta+L)=\Phi(\Delta)$ for every $\Delta$.
 \end{lemma}
 
@@ -124,11 +137,11 @@ learned coefficients must be kept with the basis that trained them.
 \label{sec:obstruction-proof}
 
 \begin{proof}[Proof of Theorem~\ref{thm:obstruction}]
-Both $R_\Omega$ and $R_{\Omega'}$ are block-diagonal with $2\times2$ rotation
-blocks, hence $R_\Omega(0)=R_{\Omega'}(0)=I$. Evaluating the hypothesis at
+Both $\mathcal R_\Omega$ and $\mathcal R_{\Omega'}$ are block-diagonal with $2\times2$ rotation
+blocks, hence $\mathcal R_\Omega(0)=\mathcal R_{\Omega'}(0)=I$. Evaluating the hypothesis at
 $\Delta{=}0$ gives $A^\top B=I$, so $B=A^{-\top}$ and the hypothesis becomes the
-similarity $A^\top R_{\Omega'}(\Delta)A^{-\top}=R_\Omega(\Delta)$ on an interval.
-Each side is the exponential of a constant generator, $R_\Omega(\Delta)=\exp(\Delta G_\Omega)$
+similarity $A^\top \mathcal R_{\Omega'}(\Delta)A^{-\top}=\mathcal R_\Omega(\Delta)$ on an interval.
+Each side is the exponential of a constant generator, $\mathcal R_\Omega(\Delta)=\exp(\Delta G_\Omega)$
 with $G_\Omega=\bigoplus_k \omega_k J$, $J=\left[\begin{smallmatrix}0&-1\\1&0\end{smallmatrix}\right]$.
 Differentiating at $\Delta{=}0$ gives $A^\top G_{\Omega'}A^{-\top}=G_\Omega$, so
 the generators are similar and share a spectrum. The spectrum of $G_\Omega$ is
@@ -137,8 +150,8 @@ up to sign and permutation. When a frequency is repeated, similarity may mix
 the entire equal-frequency invariant subspace; it need not preserve the original
 two-dimensional block decomposition. For integer positions the same argument
 is replaced by a one-step spectral argument: evaluating at $\Delta=0$ again
-gives $B=A^{-\top}$, while $\Delta=1$ makes $R_{\Omega'}(1)$ and
-$R_\Omega(1)$ similar. Their eigenvalue multisets
+gives $B=A^{-\top}$, while $\Delta=1$ makes $\mathcal R_{\Omega'}(1)$ and
+$\mathcal R_\Omega(1)$ similar. Their eigenvalue multisets
 $\{e^{\pm i\omega_k}\}$ therefore agree, which identifies frequencies up to
 sign, permutation, and the $2\pi$ alias.
 \end{proof}
@@ -199,23 +212,22 @@ Thus the stationary density obtained above is the unique constrained \emph{minim
 \paragraph{Why this branch.}
 The homogeneous Cosh solution has an analytically invertible CDF, turning the
 continuous optimum into an explicit finite table. The functional test below
-checks the resulting allocation against the exact oscillatory kernel, and the
+checks the resulting allocation against a closed-form cosine-feature slice, and the
 trained comparisons supply the behavioural test.
 
-\subsection{Surrogate quality: functional validation}
+\subsection{Cosine-slice diagnostic for the surrogate-derived table}
 \label{sec:surrogate-validation}
 
 The broadband surrogate $K_{\mathrm{app}} = \alpha\delta + \beta\min$ supplies
 the closed-form density. We validate its allocation functionally against the closed-form cosine-feature kernel
 $K_{\cos}(\phi_1,\phi_2) = \int D(\Delta)\cos(\omega(\phi_1)\Delta)\cos(\omega(\phi_2)\Delta)\,d\Delta$:
 does the derived allocation also reduce the collision objective under $K$? This
-directly tests whether the improvement direction survives the exact oscillatory
-kernel.
+tests whether the same direction holds for the declared cosine-feature slice.
 
-Table~\ref{tab:surrogate-validation} answers affirmatively. For a uniform distance prior $D(\Delta) = 1/L$ on $[0, L]$, we compute $K_{\cos}$ at the discrete allocation points for Geo and \evq{}, then evaluate the normalized collision score $C = \sum_{i<j} K_{ij}^2/(K_{ii}K_{jj})$ and Shannon effective rank (the exponential of the eigenvalue distribution's Shannon entropy). The inclusive grid $u_k=k/(K-1)$ exposes the complete diagnostic interval. This exact-kernel test complements the phase-invariant full sin/cos geometry of Theorem~\ref{thm:budget}; trained midpoint tables are evaluated in \S\ref{sec:experiments}. The $12$ reported configurations comprise a six-length text sweep at fixed $b{=}500$K and $K{=}32$, two additional text bases at $L{=}2048$, and four video bases at $L{=}32$ and $K{=}16$.
+Table~\ref{tab:surrogate-validation} answers affirmatively. For a uniform distance prior $D(\Delta) = 1/L$ on $[0, L]$, we compute $K_{\cos}$ at the discrete allocation points for Geo and \evq{}, then evaluate the normalized collision score $C = \sum_{i<j} K_{ij}^2/(K_{ii}K_{jj})$ and Shannon effective rank (the exponential of the cosine-feature Gram eigenvalue distribution). The inclusive grid $u_k=k/(K-1)$ exposes the complete diagnostic interval. This slice-level static diagnostic is separate from the phase-invariant full-subspace geometry of Theorem~\ref{thm:budget}; trained midpoint tables are evaluated in \S\ref{sec:experiments}. The $12$ reported configurations comprise a six-length text sweep at fixed $b{=}500$K and $K{=}32$, two additional text bases at $L{=}2048$, and four video bases at $L{=}32$ and $K{=}16$.
 
 \begin{table}[ht]
-\caption{Functional surrogate check on the inclusive $u_k{=}k/(K{-}1)$ diagnostic grid. \evq{} reduces collision and increases Shannon effective rank under the closed-form cosine-feature kernel $K_{\cos}$ in all 12 tested configurations. Theorem~\ref{thm:budget} supplies the complementary phase-invariant full-subspace geometry; \S\ref{sec:experiments} evaluates trained midpoint tables.}
+\caption{Cosine-slice surrogate check on the inclusive $u_k{=}k/(K{-}1)$ diagnostic grid. \evq{} reduces collision and increases Shannon effective rank of the cosine-feature Gram under the closed-form kernel $K_{\cos}$ in all 12 tested configurations. Theorem~\ref{thm:budget} supplies the separate phase-invariant full-subspace geometry; \S\ref{sec:experiments} evaluates trained midpoint tables.}
 \label{tab:surrogate-validation}
 \centering
 \small
@@ -331,27 +343,41 @@ evidence is supplied by \S\ref{sec:experiments}.
 \label{sec:lambda-cv}
 \label{sec:tau-scaling}
 
+The implementable reference used in standard full-RoPE text experiments is
+\begin{equation}
+\tau = c\,\dhd/\sqrt{\Ltr},\qquad
+u_k = (k+\tfrac12)/K,\qquad
+\omega_k^{\mathrm{EVQ}} = b^{-\phi_k(\tau)} .
+\label{eq:evq-practical}
+\end{equation}
+Here $\dhd$ is the full-RoPE head width and $c{=}1$ is fixed before training
+for the reported zero-search reference; realised $\tau$, grid, and endpoint
+conventions are recorded with each protocol.
+
 The post-softmax model uses
-$\mathcal{F}(\tau)=\tfrac12S_{\chi^2}(\tau)-\lambda U(\tau,L)$ with
+$\mathcal{F}(\tau)=\tfrac12S_{\chi^2}(\tau)-\lambda U(\tau,L)$, where
+$\lambda{>}0$ is a fixed trade-off weight, with
 $S_{\chi^2}(\tau)=\tau^4/(45d_{\mathrm{head}})+O(\tau^6)$ and
-$U(\tau,L)=(d_{\mathrm{head}}/L)[Q_0+\tau^2Q_1(L,b)+O(\tau^4)]$.
+$U(\tau,L)=(d_{\mathrm{head}}/L)[Q_0(L,b)+\tau^2Q_1(L,b)+O(\tau^4)]$.
 Its leading stationary balance is
 \begin{equation}
 \tau_*^2=45\lambda Q_1(L,b)\frac{d_{\mathrm{head}}^2}{L}.
 \label{eq:tau-leading-balance}
 \end{equation}
-Thus the model supplies the powers of $d_{\mathrm{head}}$ and $L$; the
-finite coefficient $c(\Pi)=\sqrt{45\lambda Q_1}$ depends on the chosen
-utility, base, and protocol. Setting $c{=}1$ is the deployed zero-search
-convention fixed before training; the finite coefficient remains
-protocol-dependent.
+Thus the model supplies the powers of $d_{\mathrm{head}}$ and $L$; its local
+coefficient $c_{\mathrm{loc}}(L,b,\lambda)=\sqrt{45\lambda Q_1(L,b)}$ depends
+on the chosen utility, base, and trade-off weight. Setting $c{=}1$ in
+Eq.~\eqref{eq:evq-practical} is the deployed zero-search convention fixed
+before training, rather than an estimate fitted to each configuration.
 
 Here
 \[
 q(x)=\tfrac12+\frac{\sin(2x)}{4x}-\left(\frac{\sin x}{x}\right)^2
 =\operatorname{Var}_{t\sim U[0,1]}[\cos(xt)]
 \]
-and $Q_1(L,b)=\int_0^1\eta(\phi)q(Lb^{-\phi})\,d\phi$. This specified
+and
+$Q_0(L,b)=\int_0^1q(Lb^{-\phi})\,d\phi$ and
+$Q_1(L,b)=\int_0^1\eta(\phi)q(Lb^{-\phi})\,d\phi$. This specified
 phase-variance utility supplies the scaling model; the exact oscillatory
 collision objective and trained-transformer loss are evaluated separately.
 
@@ -396,8 +422,8 @@ of $\mathcal{F}(\tau) = \tfrac12 S_{\chi^2}(\tau) - \lambda U(\tau,L)$ satisfies
 
 The explicit $\dhd/\sqrt{L}$ factor is modulated by $Q_1(L,b)$, so this is a
 scaling structure rather than a pure power law, and the prefactor
-$c(\Pi){=}\sqrt{45\lambda Q_1(L,b)}$ remains convention- and
-protocol-dependent. The proposition supplies a small-$\tau$ scaling model; the
+$c_{\mathrm{loc}}(L,b,\lambda){=}\sqrt{45\lambda Q_1(L,b)}$ remains
+convention- and protocol-dependent. The proposition supplies a small-$\tau$ scaling model; the
 deployed configurations near $\tau{=}4$ use the exact Cosh warp. The
 trained-model controls in App.~\ref{sec:identification-details} evaluate the
 independently fixed empirical default $c{=}1$.

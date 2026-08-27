@@ -1,16 +1,19 @@
-RoPE gives each attention head a finite frequency budget, yet geometric
-spacing couples the covered log-frequency range to one particular allocation
-within it; writing $x_k=-\log\omega_k=a+Rz_k$ separates sampled support from
-interior allocation. Under the stated uniform separation prior,
-phase-invariant canonical correlations yield an exact effective-dimension
-identity: over separations up to $4$K, $23$ slow pairs---$46$ nominal
-dimensions---have block-whitened effective dimension $2.00$. A paired
-three-seed intervention then holds sampled support and the training protocol
-fixed while moving only the interior frequencies; every seed improves at every
-tested out-of-distribution length, identifying allocation as consequential
-rather than a disguised base change. A convex surrogate has a unique continuous
-minimizer whose inverse CDF yields \evq{}, a closed-form table with no learned
-positional parameters. We test the consequences of this design axis in
-from-scratch and continued training, low-rank adaptation, frozen checkpoints,
-and a bidirectional video transformer, showing that RoPE's frequency budget is
-not determined by range alone: allocation is a separate, controllable axis.
+RoPE gives each attention head a finite frequency budget, but geometric spacing
+conflates support location and span with interior allocation. Writing
+$x_k=-\log\omega_k=a+Rz_k$ exposes $z$ as a third finite-table design
+coordinate. Under the stated uniform separation prior, $23$ slow pairs---$46$
+nominal dimensions---have block-whitened effective dimension $2.00$ over
+separations up to $4$K. Thus, at fixed support, $K$, and RoPE operator, $z$
+determines where phase resolution is placed and which effective positional
+basis the same nominal budget realises. On a frozen $1.485$B OLMo checkpoint,
+replacing a same-support log-linear grid by a checkpoint-derived allocation
+raises nine-task $16$K RULER from $0.56\%$ to $60.47\%$; a label-free
+movement-profile ramp reaches $61.04\%$ (official Transformers YaRN at factor
+four scores $7.94\%$ on the same rows), with no optimisation or learned
+positional parameters. A separate paired three-seed training intervention moves only the
+interior frequencies and improves every tested OOD length in every seed,
+causally identifying the same coordinate during co-adaptation. A stated convex
+surrogate yields \evq{}, a closed-form table unique for that surrogate. Across
+zero-training frozen, matched low-rank adaptation, and from-training routes,
+controlled interventions establish $z$ as an identifiable and actionable
+determinant of long-context behaviour in the tested settings.

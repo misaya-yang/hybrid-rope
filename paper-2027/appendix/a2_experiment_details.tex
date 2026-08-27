@@ -5,9 +5,8 @@
 
 The exact-range and mature-model protocols are documented separately in
 Apps.~\ref{sec:identification-details} and~\ref{sec:mature-details}. This
-section records the submitted scratch-model and cross-modal experiments that
-remain supporting evidence for the substrate--range and cross-modal scope
-claims. The learned-frequency comparator appears in
+section records the scratch-model and cross-modal experiments that remain
+supporting evidence. The learned-frequency comparator appears in
 App.~\ref{sec:pe-dominant}.
 
 \subsection{Reproducibility snapshot}
@@ -27,14 +26,13 @@ experimental unit, and endpoint.}
 \toprule
 Role & Model/regime & Intervention & Unit & Endpoint & Appendix \\
 \midrule
-Allocation identification & 151.9M scratch & fixed support, $30$ interiors & 3 training seeds & tail NLL & C.1 \\
-Shape/configuration breadth & 50.9M factorial & fixed support, 5 allocations & 12 configs $\times$ 3 seeds & weighted OOD NLL & C.2 \\
-Scarce rotary budget & 432M MLA-style & Geo/\evq{}, $K{=}16$ & 3 training seeds & PPL & G.1 \\
-Range composition & 454M MHA & same \rs{} on Geo/\evq{} & 3 seeds/substrate & PK/PPL & G.2 \\
-Full-parameter scale & 750M/1.485B & continued/from-init Geo/\evq{} & one matched pair each & PPL/retrieval & B.3/F.1 \\
-Frozen allocation & OLMo/Qwen & same support and amplitude & 20 rows/task & RULER & F.2 \\
-Adaptation/source use & 1.485B/8B & matched LoRA/source block & one trained pair & QA/RULER/NLL & F.1/F.3 \\
-Cross-modal scope & 129.6M video DiT & temporal Geo/\evq{} & 2 training seeds & denoising MSE & B.5 \\
+Allocation identification & 151.9M scratch & fixed support, $30$ interiors & 3 training seeds & tail NLL & \ref{sec:exact-range-control} \\
+Shape/configuration breadth & 50.9M factorial & fixed support, 5 allocations & 12 configs $\times$ 3 seeds & weighted OOD NLL & \ref{sec:exact-range-factorial} \\
+Scarce rotary budget & 432M MLA-style & Geo/\evq{}, $K{=}16$ & 3 training seeds & PPL & \ref{sec:mla-results} \\
+Full-parameter scale & 750M/1.485B & continued/from-init Geo/\evq{} & one matched pair each & PPL/retrieval & \ref{sec:larger-scale-supporting}/\ref{sec:olmo2-1b} \\
+Frozen allocation & OLMo/Qwen & same support and amplitude & 20 rows/task & RULER & \ref{sec:frozen-fixed-support} \\
+Adaptation/source use & 1.485B/8B & matched LoRA/source block & one trained pair & QA/RULER/NLL & \ref{sec:olmo2-1b}/\ref{sec:llama8b} \\
+Cross-modal scope & 129.6M video DiT & temporal Geo/\evq{} & 2 training seeds & denoising MSE & \ref{sec:video-dit} \\
 \bottomrule
 \end{tabular}
 }
@@ -52,10 +50,10 @@ the supporting text experiments.
 Parameter & Value \\
 \midrule
 Optimizer & AdamW ($\beta_1{=}0.9$, $\beta_2{=}0.95$, $\epsilon{=}10^{-8}$) \\
-Learning rate & $6{\times}10^{-4}$ (50M), $3{\times}10^{-4}$ (125M), $2{\times}10^{-4}$ (454M/MLA/750M) \\
+Learning rate & $6{\times}10^{-4}$ (50M), $2{\times}10^{-4}$ (MLA/750M) \\
 LR schedule & Cosine decay to $0.1\times$ peak LR \\
 Warmup & $2\%$ of total steps (linear) \\
-Batch size (seqs) & 32 (50M), 16 (125M), 2--4 (454M/750M), 6 (MLA) \\
+Batch size (seqs) & 32 (50M), 2--4 (750M), 6 (MLA) \\
 Weight decay & $0.1$ \\
 Gradient clipping & max-norm $1.0$ \\
 Dropout & $0.0$ \\
@@ -79,6 +77,7 @@ inverse-frequency table. The scratch-text experiments use base
 $b{=}500\mathrm{K}$ unless stated otherwise.
 
 \subsection{Larger-scale supporting evidence}
+\label{sec:larger-scale-supporting}
 
 The \(750\mathrm{M}\) `continue@4K' experiment starts both arms from the same
 2K Geo checkpoint and applies a 500M-token continuation with either the Geo or
@@ -106,8 +105,9 @@ models \citep{videorope2025,zhao2025riflex}. We test the same allocation
 principle in a $129.6$M video diffusion transformer with bidirectional attention
 and 3D RoPE on Oscillating Moving MNIST
 \citep{srivastava2015unsupervised}. Training uses 32 frames; evaluation uses
-128 frames ($4\times$) with temporal \rs{}. For each seed, the Geo and
-\evq{} ($\tau{=}1.5$) branches are trained in the same head-to-head run.
+128 frames ($4\times$) under the same fixed temporal range transform in both
+arms. For each seed, the Geo and \evq{} ($\tau{=}1.5$) branches are trained in
+the same head-to-head run.
 
 Table~\ref{tab:dit-h2h} reports two independent seeds. The within-seed
 contrasts favour \evq{} on train, all-frame extrapolation, and far-frame
@@ -121,7 +121,7 @@ and $-33\%$, extending the scope check to bidirectional 3D RoPE.
 \small
 \begin{tabular}{@{}l l r r r@{}}
 \toprule
-Seed & Metric (\rs{}) & Geo ($\tau{=}0$) & \evq{} ($\tau{=}1.5$) & $\Delta$ \\
+Seed & Metric & Geo ($\tau{=}0$) & \evq{} ($\tau{=}1.5$) & $\Delta$ \\
 \midrule
 42 & Train MSE & 0.00911 & \textbf{0.00720} & $-21\%$ \\
 42 & All extrap & 0.00724 & \textbf{0.00606} & $-16\%$ \\
@@ -147,7 +147,7 @@ less than $0.4\%$ on the reported metrics and both improve far-frame MSE by
 about $48\%$ relative to Geo, supporting the same low-phase-channel diagnostic.
 
 \begin{table}[ht]
-\caption{Base${}=1{,}000$ DiT head-to-head (129.6M, seed 42, \rs{}). The two \evq{} settings are within $0.4\%$ on the reported metrics in this run.}
+\caption{Base${}=1{,}000$ DiT head-to-head (129.6M, seed 42, shared temporal range transform). The two \evq{} settings are within $0.4\%$ on the reported metrics in this run.}
 \label{tab:dit-base1000}
 \centering
 \small

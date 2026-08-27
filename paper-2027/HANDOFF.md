@@ -3,285 +3,210 @@
 - **Updated:** 2026-08-26
 - **Target:** ICLR 2027
 - **Branch / upstream:** `main_0726` / `origin/main_0726`
-- **Published manuscript checkpoint:** `06ad6262c1b3cacecc9f8f9b0d2c764c884eed26`
+- **Repository HEAD:** `de6aee99a3dce04051f87a2a8d9a2caa84fe0bd8`
 - **Active manuscript:** `paper-2027/`
 - **Immutable baseline:** `paper/`
-- **Status:** reviewer-path narrative, citation/novelty, and appendix-evidence
-  passes are implemented and locally validated. The paper now cites the direct
-  support/frequency neighbours, adds exact protocol provenance, and includes
-  appendix figures for the three-seed exact-range control, the 1.485B
-  full-parameter crossover, and range composition. Figure 1 now visualizes the
-  allocation coordinate, the exact slow-block spectrum, and its fixed-support
-  training identification rather than a multi-protocol result montage. No new
-  experiment or OpenReview upload is implied.
-- **Internal only:** exclude this file from the anonymous supplement.
+- **Status:** an uncommitted whole-paper acceptance-first revision is active and
+  locally validated. It foregrounds the third finite-table allocation
+  coordinate, leads the empirical section with the mature zero-training
+  pure-`z` intervention, separates likelihood from capability evidence, and
+  removes the old repository-defined 454M/125M range-composition line from
+  reviewer-facing inputs. No commit, push, upload, or GPU work is authorised.
+- **Internal only:** exclude this file, the narrative guide, revision plans, and
+  the Codex/Claude review log from the anonymous supplement.
 
-## 1. PC cold start
+## 1. Cold start and authority
 
-From the repository root:
+From the repository root, inspect before changing Git state:
 
 ```bash
-git fetch origin main_0726
 git status --short --branch
 git rev-list --left-right --count HEAD...origin/main_0726
-git log --oneline -5
+git log -1 --oneline --decorate
 ```
 
-Do not pull over a dirty worktree. If the PC checkout is clean and only behind,
-run `git pull --ff-only origin main_0726`; otherwise inspect ownership before
-changing Git state. After the update, `git rev-parse HEAD` must contain the
-published manuscript checkpoint above or a documented descendant.
+Do not pull, clean, reset, stash, checkout, commit, or push over the current
+dirty worktree without explicit author direction.
 
 Read in this order:
 
-1. [`../AGENTS.md`](../AGENTS.md) — rules and claim ceilings.
-2. [`../INDEX.md`](../INDEX.md) §2, §3.4, §6, §7 — theory, closed routes,
-   agenda, and cross-machine boundaries.
-3. This file — current manuscript, validation, and author actions.
-4. [`main.pdf`](main.pdf) and `sections/` — reviewer-visible truth after a
-   clean local build.
-5. [`research/ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md`](research/ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md)
-   — current 9-page narrative edit order for Codex.
-6. [`research/ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md`](research/ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md)
-   — related-work / novelty Codex patch; do not restore the NeurIPS PE zoo.
-7. [`research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
-   — post-submission theory continuation.
-8. The canonical numerical owner routed by
-   [`research/README.md`](research/README.md) before changing a claim.
+1. [`../AGENTS.md`](../AGENTS.md) -- rules and claim ceilings.
+2. [`../INDEX.md`](../INDEX.md) -- canonical theory, evidence, and owner routing.
+3. [`NARRATIVE_GUIDE.md`](NARRATIVE_GUIDE.md) -- mandatory manuscript strategy
+   and revision guardrails; it is not a numerical owner.
+4. [`research/CODEX_CLAUDE_PAPER_REVIEW_LOG.md`](research/CODEX_CLAUDE_PAPER_REVIEW_LOG.md)
+   -- append-only alternating-review journal and author corrections.
+5. This file -- live manuscript state and validation receipt.
+6. [`main.pdf`](main.pdf) and `sections/` -- reviewer-visible truth after the
+   latest clean build.
+7. The canonical owner routed by [`research/README.md`](research/README.md)
+   before changing a fact, number, protocol identity, theorem, or claim ceiling.
 
-Build and test commands live only in [`../README.md`](../README.md)
-“Build and validate.” Python/PyTorch/pytest use Conda `aidemo`. Never compile
-`paper/`.
+Build and test commands live in [`../README.md`](../README.md), under "Build and
+validate." Never compile or modify `paper/`.
 
-## 2. Final manuscript contract
+## 2. Manuscript contract
 
 Title: *RoPE Has a Spectral Budget*.
 
-Reviewer path:
+Reviewer memory:
 
-1. finite RoPE has sampled support and interior allocation;
-2. Section 2 identifies allocation at fixed support with three training seeds;
-3. Related Work positions that axis;
-4. full-pair geometry supplies the exact effective-dimension account and slow
-   collapse;
-5. EVQ-Cosh is one analytic, zero-learned-parameter witness;
-6. architecture, scale, frozen-checkpoint, and capability studies establish
-   relevance without replacing the identification owner.
+> A finite RoPE table is not exhausted by base or range. At fixed sampled
+> support, its interior allocation `z` selects the effective positional basis
+> realised by a finite rotary budget and has large, controlled behavioural
+> consequences.
 
-Locked identities:
+Reader path:
 
-- `FMRoPE` is the published rule, instantiated at fixed training support in
-  the identification experiment; the target-retargeted policy is reported
-  separately.
-- `anchored EVQ-Cosh` changes only interior allocation at the same FMRoPE
-  extrema and log-span.
-- `Geo` is a geometric training baseline; `Native` is an unmodified
-  pretrained checkpoint.
-- `YaRN-style` is the repository fixed-index operator, not official YaRN.
-- EVQ-Cosh is unique only for its stated convex surrogate.
+1. write `x_k = a + R z_k` and expose support, span, and allocation as distinct
+   finite-table coordinates;
+2. show the spectral-budget phenomenon with full sin/cos geometry and the
+   `46 nominal dimensions -> r2=2.00` hook;
+3. identify `z` at fixed support with the paired 151.9M three-seed training
+   intervention;
+4. derive EVQ-Cosh as one closed-form witness for its stated convex surrogate;
+5. present consequences in the author-specified order: zero-training mature
+   checkpoint, matched low-rank adaptation, then from-training/co-adaptation;
+6. close on allocation as a broader RoPE design coordinate, not an
+   extrapolation-only recipe.
 
-Headline evidence:
+Locked scientific identities:
 
-| Role | Result | Owner |
+- `FMRoPE` is published related work and the paper-faithful fixed-support
+  training control. The target-matched policy remains in Appendix C as protocol
+  context and must not become the body narrative.
+- `anchored EVQ-Cosh` changes only interior allocation at the FMRoPE extrema and
+  log-span.
+- `Geo` is a geometric training baseline; `Native` is an unmodified pretrained
+  checkpoint.
+- The zero-training YaRN comparator is the verified Hugging Face Transformers
+  implementation at factor four.
+- The mature zero-training geometric/derived/coarse-ramp profiles follow the
+  movement-profile construction and are **not** EVQ-Cosh.
+- EVQ-Cosh is unique only for its stated convex surrogate. Static effective
+  rank diagnoses table geometry; it does not rank trained LM quality.
+
+## 3. Evidence order and claim ownership
+
+| Reviewer-facing role | Headline result | Owner |
 | --- | --- | --- |
-| causal identification | `+0.026/-0.281/-0.176/-0.146`, every OOD length `3/3` seeds | [exact-range owner](research/EXACT_RANGE_151M_3SEED_RESULT_20260820.md) |
-| full-pair static geometry | 23 slow pairs / 46 nominal dimensions / `r2=2.00` under the stated prior | [full-RoPE owner](research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md) |
-| scarce-channel relevance | 432M MLA, `K=16`, 16K PPL `138.8 -> 95.6`, three seeds | [curated owner](../data/curated/table18_mla_3seed_aggregate.json) |
-| mature fixed-support consequence | OLMo 16K RULER `0.56% -> 60.47%`; coarse ramp `61.04%` | [same-support owner](research/attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) |
-| pretraining-scale ceiling | full-parameter evidence through 1.485B; 8B is adaptation/capability evidence | [research router](research/README.md) |
+| mature pure-`z` consequence | OLMo 16K RULER `0.56% -> 60.47%`; coarse ramp `61.04%`; Qwen 64K `57.75% -> 66.50%`, all at matched support | [`SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823`](research/attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) |
+| zero-training deployment breadth | 4K FineWeb-Edu `+0.1236` NLL; PG-19 and RULER-13 at 8/16K; full-200 Qasper and 2Wiki task F1 | [`attention-aware-retrofit/README.md`](research/attention-aware-retrofit/README.md) and routed owners |
+| matched adaptation | 1.485B task-family transfer; 8B remote-source deletion changes NLL by `+1.5055` in the EVQ arm | [`OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729`](../rebuttal/rebuttal_0723/theory_results/OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729.md) and [`EVQ_8B_ADAPTATION_EVIDENCE_20260724`](../rebuttal/rebuttal_0723/theory_results/EVQ_8B_ADAPTATION_EVIDENCE_20260724.md) |
+| fixed-support training identification | `+0.026/-0.281/-0.176/-0.146` NLL; every OOD length favours the reallocation in `3/3` seeds | [`EXACT_RANGE_151M_3SEED_RESULT_20260820`](research/EXACT_RANGE_151M_3SEED_RESULT_20260820.md) |
+| full-pair static geometry | 23 slow pairs / 46 nominal dimensions / `r2=2.00` under the stated prior | [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819`](research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md) |
+| architecture / scale / modality breadth | 432M MLA three-seed, 750M continuation, 1.485B early-training crossover, and two-seed video DiT | [`research/README.md`](research/README.md) and its routed owners |
 
-## 3. Current paper and package receipt
+Keep likelihood and capability endpoints separate. Do not translate NLL/PPL
+changes into percentage capability claims. Do not pool uncertainty units across
+training seeds, evaluation rows, deterministic frozen interventions, or single
+matched trajectories.
 
-- Main text: 9 pages.
-- Total PDF: 29 US-Letter pages.
+## 4. Current source and PDF receipt
+
+- Main body: 8 pages; references begin after the required statements.
+- Total PDF: 28 US-Letter pages.
 - `paper-2027/main.pdf`
-  - current local SHA-256: `019bcac763be8f2b41e38299617e7a927badf25e3ef865a6d76c614419bc7cbb`
-  - size: `696391` bytes
-- `rope-spectral-budget-iclr2027-supplement.zip`
-  - current local SHA-256: `890920524d849dd688ee551077f0bb72522353ea9b135436ece6f588ce3bd2e8`
-  - size: `912678` bytes
+  - SHA-256: intentionally not frozen during alternating review; both reviewers
+    rebuild and the embedded build timestamp changes the bytes. Recompute after
+    the final pre-freeze build.
+  - latest observed size: `434101` bytes
 - Immutable `paper/main.pdf`
   - SHA-256: `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`
 
-Commit `06ad626` publishes the generated PDF, BBL, and curated supplement ZIP
-with their source so the PC starts from the exact reviewed artifact. This Git
-publication is not an OpenReview submission.
+The active PDF and source are uncommitted working-tree artifacts. Do not confuse
+this receipt with the older published checkpoint or curated supplement receipt.
 
-## 4. Latest validation
+Latest `./compile.sh` validation:
 
-The bounded manuscript-optimization revision passed:
-
-- active and isolated-package builds: 9 body / 29 total pages;
+- 8 body / 28 total pages;
 - zero undefined references or citations;
 - `0pt` worst overfull box;
-- anonymous Letter output, no Type-3 or unembedded fonts;
-- repository navigation, RoPE, exact-range, same-support, and package/evidence
-  tests in Conda `aidemo`: `186/186`;
-- signed-lag / gap / $k$-way CPU identity checks: `11/11`;
-- isolated supplement CPU suite: `144/144`;
-- isolated supplement build with the same 9/29 page and format receipt;
-- ZIP integrity and immutable-`paper/` SHA-256 check;
-- visual review of all 29 pages, including Section 2 on page 3, Theory on page
-  4, experiments/discussion on pages 7--9, the five appendix figures, and the
-  final two-page composition layout with no orphan table or float-only blank.
+- anonymous US-Letter output with `\iclrfinalcopy` disabled;
+- no Type-3 or unembedded fonts;
+- full body pages 1--8 visually inspected;
+- latest affected appendix pages 20 and 26 visually inspected after removal of
+  stale 125M/454M labels and promotion of the mature result table;
+- `git diff --check` passes;
+- immutable `paper/main.pdf` hash unchanged.
 
-The ICLR 2027 Author Guidelines were checked live on 2026-08-26; the unchecked
-author-roster, quota, and reciprocal-reviewing gates are recorded in
-[`SUBMISSION_CHECKLIST.md`](SUBMISSION_CHECKLIST.md).
+This receipt proves only current build/layout health. It does not import the
+older package's test counts, prove acceptance, or imply an OpenReview upload.
 
-These receipts prove build/package health and the tested code paths. They do not
-prove acceptance, policy currency, OpenReview state, or unmeasured claims.
+## 5. Current edit state
 
-## 5. Core PC continuation plan
+Implemented:
 
-### Objective
+- Abstract and Introduction lead with the third coordinate and the mature
+  same-support pure-`z` result.
+- Figure 1 carries allocation, exact geometry, and three-seed causal
+  identification; do not restore the old multi-protocol montage.
+- The forced page break after Introduction has been removed; Section 2 now
+  begins on page 2 instead of leaving a large blank region.
+- Identification has one body job: the 151.9M fixed-support causal owner, plus a
+  compact 50.9M configuration/shape breadth sentence.
+- Theory uses the full sin/cos positional object, the exact spectral-budget
+  identity, slow collapse, co-adaptation, transplant obstruction, and a bounded
+  Cosh surrogate. The movement-profile equation specifies mature derived/ramp
+  allocation separately.
+- Experiments are ordered zero training, matched adaptation, from training.
+  Mature likelihood and task capability are presented in separate paragraphs.
+- The body now includes one compact mature-checkpoint result table. It separates
+  Native/official Transformers YaRN references from the matched-support pure-`z`
+  block and carries the confirmation-only OLMo protocol.
+- Related Work now cites Jet-Long as bifocal range transport and distinguishes
+  learned use of a supplied geometric grid from changing interior allocation.
+- Discussion presents LeRoPE positively as a complementary learned route and
+  keeps `z` broader than extrapolation.
+- The old repository-defined 454M/125M range-composition material is absent
+  from compiled inputs. Its source evidence remains in the repository but must
+  not be relabelled as standard YaRN or restored without a new author decision.
+- The ICLR supplement allowlist also excludes the retired 454M/125M figures,
+  generator, orphaned appendix/table source, and five obsolete curated
+  artifacts. The existing ZIP has not been rebuilt during this revision.
+- The 1.485B early-training crossover figure remains once in Appendix E/F; it is
+  not a body scale claim and must not be duplicated.
 
-Raise the reviewer score ceiling by making the existing science resolve to one
-judgment: RoPE support does not determine how a finite head allocates its
-frequency budget. No new experiment is needed for this pass.
+No page filler, duplicate lifecycle figure/table, new experiment, or new theorem
+is needed merely to reach nine pages. Add material only when it closes a real
+scientific or reviewer-path gap.
 
-The 30-second, 3-minute, and full-paper readings should all recover the same
-chain: fixed-support identification, exact full-pair geometry, one analytic
-construction, then scale and capability consequences.
+## 6. Alternating Codex / Claude Code review
 
-### Locked decisions
+Both reviewers use
+[`research/CODEX_CLAUDE_PAPER_REVIEW_LOG.md`](research/CODEX_CLAUDE_PAPER_REVIEW_LOG.md).
 
-- Keep the title and section order. Section 2 remains on page 3 and Theory
-  begins on page 4.
-- Keep Figure 1 as the allocation / collapse / fixed-support identification
-  figure. Do not restore the old multi-protocol montage or add frozen OLMo to
-  it.
-- Keep the abstract near its current length and retain only the central
-  `46 nominal dimensions -> 2.00 effective dimensions` numerical hook. Do not
-  add the exact-range NLL vector or frozen-checkpoint score ledger.
-- Freeze Related Work unless a citation or technical distinction is factually
-  wrong. The current classifier and direct-neighbour citations are sufficient.
-- Preserve every theorem, claim owner, completed scale result, and sound
-  appendix proof. The appendix budget is a ceiling, not a target.
+- Read the entire shared log before editing.
+- Append, never overwrite, using `Codex:` or `Claude Code:`.
+- Record observation, evidence/owner, decision, changed files, verification,
+  and remaining question.
+- Adopt the other reviewer's point only after checking the current manuscript
+  and canonical owner. Explain disagreements in the same log.
+- After every manuscript change, compile and visually inspect affected pages.
+- Preserve the user's manuscript strategy and the documented Codex failure
+  corrections in the shared log.
 
-### Execution order
+## 7. Research continuation and stop conditions
 
-1. **Section 2 framing — highest priority.** In
-   [`sections/02_identification.tex`](sections/02_identification.tex), replace
-   the two negative question headlines with positive scientific questions:
-   allocation is identifiable at fixed support; support and allocation
-   interact; the coordinate remains visible after pretraining. Retain the
-   target-matched `+0.060/+0.227/+0.460`, `0/3` reversal in the paragraph. Do
-   not hide or weaken it.
-2. **One flagship scale visual.** Move the existing
-   [`figs/fig_olmo_scale_crossover.pdf`](figs/fig_olmo_scale_crossover.pdf)
-   figure environment and label from Appendix F into the 1.485B paragraph of
-   [`sections/04_experiments.tex`](sections/04_experiments.tex). Keep detailed
-   protocol text in Appendix F and do not duplicate the figure.
-3. **Pay the page cost by removing repetition.** Shorten
-   [`sections/05_discussion.tex`](sections/05_discussion.tex), primarily its
-   repeated MLA, frozen, scale, and related-work recap. Preserve the synthesis:
-   geometry diagnoses the finite basis, training binds weights to that basis,
-   and allocation is a controllable design coordinate. Do not delete a claim
-   or number merely to fit the figure.
-4. **Final prose polish.** Reserve `consequential` and “not a disguised base
-   change” for one decisive use each. Remove repeated defensive formulations,
-   but keep the nearest material scope beside the governed claim. Figure 1 may
-   receive a shorter poster-readable title; its data and three-panel identity
-   stay fixed.
+The generic zero-parameter target-free operator was implemented and evaluated,
+but the tested continuous-boundary version did not produce a positive RULER
+result. It is future research, not current manuscript evidence. Other
+post-submission theory and experiment routes remain governed by `INDEX.md` and
+their owners.
 
-### Scientific gates
+Do not start training, GPU evaluation, a new baseline, or a new target-free
+search without explicit author authorisation. Do not commit, push, upload, or
+alter Git history. Stop and return to the owner if a proposed edit changes a
+number, merges protocols, promotes unfinished evidence, or requires a stronger
+claim than the current owner supports.
 
-Before accepting any rewrite, verify all of the following:
+## 8. Git boundary
 
-- exact-range remains the sole fixed-support training identification owner;
-- target-aware FMRoPE still wins its separate protocol;
-- frozen OLMo `derived` and `coarse ramp` are not called EVQ-Cosh;
-- static effective rank is not presented as an LM-quality predictor;
-- 1.485B is the full-parameter scale ceiling and 8B remains LoRA/adaptation;
-- RULER/2Wiki remain task-family adaptation, not unseen-task transfer;
-- EVQ-Cosh uniqueness remains conditional on the stated convex surrogate;
-- LeRoPE remains compatible evidence, not validation or a matched comparator.
-
-### Acceptance criteria
-
-- body remains 9 pages; Section 2 page 3; Theory starts no later than page 4;
-- the 1.485B crossover is visible in Section 4 and absent as a duplicate float
-  from Appendix F;
-- undefined references/citations `0`; worst overfull at target `0pt`, hard
-  ceiling `5pt`;
-- US Letter, anonymous, `\iclrfinalcopy` disabled, no Type-3 or unembedded
-  fonts;
-- visual read of body pages 1--9 confirms Figure 1 is one scientific argument,
-  the new scale figure is legible, and no float creates an orphan or large
-  blank region;
-- curated supplement rebuilds, passes its isolated CPU suite, and contains the
-  same source and figure identities;
-- `paper/` SHA-256 remains
-  `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`.
-
-### Explicit non-goals and stop conditions
-
-Do not add citations, experiments, seeds, scales, appendix filler, priority
-claims, new theory, or a second overview figure in this pass. Do not modify
-`paper/`, `main.tex`, venue style files, ethics, reproducibility, or AI-use
-statements. Stop and return to the numerical owner if a proposed wording needs
-a stronger claim, merges protocols, or changes a displayed result. GPU work,
-Git history changes, commit/push, and OpenReview upload each require fresh
-explicit authorization.
-
-## 6. Research continuation
-
-The research agenda is not state. Its authority is [`../INDEX.md`](../INDEX.md)
-§6; the theoretical reasoning is in the
-[theory state](research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md).
-
-Current missing bridge: a matched-content `table x virtual-gap position map`
-2x2 that keeps tokens, answer, decoder, and rows fixed. Different-length RULER
-rows cannot answer position failure versus model capability.
-
-Do not start another shared-table static score, 50M candidate verdict, extra
-oracle shell/step/seed/LR sweep, larger checkpoint, or GPU run from this
-handoff. Any compute requires a new preflight and explicit user authorization.
-
-## 7. What Git does not contain
-
-| Artifact | Git status | Consequence on the PC |
-| --- | --- | --- |
-| manuscript source, owners, compact receipts, code, tests | tracked | available after verified sync |
-| checkpoints and adapters | external | locate or transfer before evaluation |
-| raw GPU rows and per-example outputs | external/ignored | compact means are insufficient for new per-position analysis |
-| caches and token arrays | external/ignored | regenerate only from a pinned owner |
-| prepared one-billion-token FineWeb-Edu corpus | previously machine-local; portability unverified | do not assume it exists on the PC or a new server |
-
-A compact receipt is provenance, not the raw artifact. Missing local raw files
-never mean the experiment did not run.
-
-## 8. Author actions
-
-Submission:
-
-1. Confirm OpenReview title and abstract exactly match the PDF.
-2. Recheck current ICLR policy, deadlines, anonymity, author roster/quotas,
-   profiles, and dual-submission state immediately before upload.
-3. Upload only the curated paper/package, never a repository-root archive.
-
-Research after submission:
-
-1. Read the theory state and the complete closed-route ledger in INDEX §3.4.
-2. Write the matched-content phase preflight without selecting on long-context
-   results.
-3. Request explicit GPU authorization only after code/config/data/table/output
-   identities and a stop rule are frozen.
-4. Require a 1.485B matched in-window + far-tail + capability gate before
-   multi-seed or second-checkpoint expansion.
-
-## 9. Git boundary
-
-At handoff, always report source publication and local build artifacts
-separately. Before any future commit/push:
+Before any future authorised commit/push:
 
 - preserve `paper/`;
-- stage an explicit scope, never `git add -A`;
+- stage explicit paths, never `git add -A`;
 - exclude credentials, machine paths, checkpoints, raw rows, caches, and
   unrequested build products;
-- run `git diff --cached --check` and the relevant `aidemo` tests;
-- push `main_0726`, then compare local and remote SHA.
-
-Historical experiment decisions remain reachable from INDEX §3. They are not
-duplicated here.
+- run cached-diff and sensitive-scope checks;
+- ordinary-push only, then compare local and remote SHA.

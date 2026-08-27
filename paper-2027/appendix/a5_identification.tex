@@ -2,6 +2,7 @@
 \label{sec:identification-details}
 
 \subsection{Exact-range control at $151.9$M}
+\label{sec:exact-range-control}
 
 \paragraph{What is pinned.} The control is designed so that every scalar
 quantity a base/range method can express is identical between arms. Within each
@@ -98,7 +99,7 @@ $2{,}048$ & $-0.113$ & $-0.181$ & $-0.143$ & $-0.146\pm0.034$
   mean. At pinned training support, all three seeds favour anchored \evq{} at
   every OOD length (a). Retargeting each arm's support reverses all three OOD
   comparisons (b). The fixed-support panel isolates the allocation effect; the
-  tested target-matched policy reverses the preferred allocation.}
+  tested target-matched policy reverses the ordering of the two tested policies.}
   \label{fig:exact-range-control}
 \end{figure}
 
@@ -109,13 +110,14 @@ the $1$K/$2$K magnitudes are the most stable across seeds.
 
 \paragraph{Reading.} The \texttt{fixed} column identifies the optimisation
 variable: interior allocation is not reducible to scalar base/range selection.
-Under the tested target-retargeted policy, the ordering reverses. The two
-columns therefore establish that the fixed-support result is conditional on
-the selected range; they do not identify a support-by-allocation interaction
-law. The \texttt{fixed} column isolates allocation when one table serves
+Under the tested target-retargeted policy, the ordering of the two tested
+policies reverses. The two columns therefore establish that the fixed-support
+result is conditional on the selected range; they do not identify a
+support-by-allocation interaction law. The \texttt{fixed} column isolates allocation when one table serves
 multiple lengths (\S\ref{sec:exp-identify}).
 
 \subsection{Exact-range factorial at $50.9$M}
+\label{sec:exact-range-factorial}
 
 \paragraph{Design.} The schedule arms, including the $1.25\times$ multiplier,
 were specified before any result was inspected. Grid: $2$ bases $\times$
@@ -161,31 +163,6 @@ corpus from the $151.9$M control and from the mature-scale runs. The factorial
 establishes cross-configuration \emph{direction}, while the $151.9$M control
 provides the effect size within its configuration. Scale is evaluated in
 \S\ref{sec:exp-mature}.
-
-\section{The \rs{} operator}
-\label{sec:ramp-scaler}
-
-Every arm marked $+\rs{}$ uses the repository's fixed-index operator,
-inspired by the NTK-by-parts/YaRN family \citep{peng2024yarn}:
-high-frequency channels are left nearly unchanged and lower-frequency channels
-receive progressively more range scaling. The implementation, cut indices,
-and scale $s$ are held fixed across the compared arms. Because the underlying
-frequencies differ, the realised phase movement is not matched channel by
-channel. The result is therefore a composition test of the same index-space
-rule on two training-time tables, not a movement-matched mechanism control.
-
-\paragraph{Implemented components.} For $K$ frequency channels, the scaler
-uses fixed channel-index cut points
-$k_{\mathrm{lo}}=\lfloor0.20K\rfloor$ and
-$k_{\mathrm{hi}}=\lfloor0.90K\rfloor$. Between them it applies the cubic
-smoothstep $r(x)=x^2(3-2x)$ and replaces each inverse frequency $\omega_k$ by
-\[
-\omega_k\big/\left(s^{r_k}t^{r_k/2}\right),
-\qquad t=1+0.07\log_2 s.
-\]
-Its boundaries are fixed by channel index; the factor $t$ is folded into
-frequency scaling. These implementation choices define \rs{} and distinguish
-it from the cited YaRN reference method.
 
 \section{Learned-frequency comparator}
 \label{sec:pe-dominant}

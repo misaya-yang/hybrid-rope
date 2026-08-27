@@ -24,9 +24,11 @@
 1. [`AGENTS.md`](AGENTS.md) — 规则。
 2. 本文件 §2–§4 — 已有什么。
 3. [`paper-2027/HANDOFF.md`](paper-2027/HANDOFF.md) — 现在在哪。
-4. [`paper-2027/main.pdf`](paper-2027/main.pdf) 与其 `sections/`、`appendix/` —
+4. **任何 `paper-2027/` 改稿前：** [`paper-2027/NARRATIVE_GUIDE.md`](paper-2027/NARRATIVE_GUIDE.md)
+   — 叙事与改稿纪律；不拥有数字、证据或易变状态。
+5. [`paper-2027/main.pdf`](paper-2027/main.pdf) 与其 `sections/`、`appendix/` —
    reviewer 看到的真相。
-5. 本文件 §6 — 下一步。
+6. 本文件 §6 — 下一步。
 
 动任何 claim 或数字之前，必须读到 §3 表格里那一行指向的 canonical owner。
 **不要**从最新日期、外部评审、preflight 或文件名开始。

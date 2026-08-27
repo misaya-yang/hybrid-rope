@@ -4,6 +4,7 @@
 \input{tables/table_ruler}
 
 \subsection{OLMo-2 $1.485$B}
+\label{sec:olmo2-1b}
 
 All OLMo-2 \evq{} arms use the endpoint grid $u_k{=}k/K$ with $\tau{=}2$ and
 base $500{,}000$; the frequency tensor is fixed throughout each continuation.
@@ -79,31 +80,15 @@ above.
 \subsection{Frozen fixed-support allocation}
 \label{sec:frozen-fixed-support}
 
-\begin{table}[ht]
-\centering
-\small
-\setlength{\tabcolsep}{4pt}
-\caption{\textbf{Frozen fixed-support intervention.} Macro score (\%); higher
-is better. Each row is a separate fixed-checkpoint comparison on its stated
-RULER task set.}
-\label{tab:frozen-fixed-support}
-\begin{tabular}{@{}llrrr@{}}
-\toprule
-Checkpoint & Endpoint & Geometric & Movement ramp & Frozen derived \\
-\midrule
-OLMo-2 1.485B & unseen-nine, 16K & 0.56 & 61.04 & 60.47 \\
-Qwen2.5-1.5B & core-four, 64K & 57.75 & 64.00 & 66.50 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
 The mature-checkpoint intervention in Table~\ref{tab:frozen-fixed-support}
-holds both models frozen. For each checkpoint, all three tables contain
-$64$ rotary pairs and share the Native fast endpoint and the Native slow
-endpoint divided by four. They also share the factor-four attention amplitude
+holds both models frozen. The three matched-support arms contain $64$ rotary
+pairs and share the Native fast endpoint and the Native slow endpoint divided
+by four. The two reference rows do not: Native retains the pretrained table,
+while official Transformers YaRN applies its frequency-dependent transport.
+The three matched-support arms also share the factor-four attention amplitude
 $1+0.1\ln4$, evaluation rows, greedy decoder, precision, and hardware. The
-same-support geometric arm is log-linear between the endpoints. The nearest
-movement-profile ramp is the discrete YaRN-family linear ramp minimising
+same-support log-linear arm is uniform in exponent space between the endpoints.
+The movement-profile ramp is the discrete YaRN-family linear ramp minimising
 movement-profile MSE to the frozen derived table; its choice uses no task
 labels. The remaining arm installs the frozen derived interior allocation.
 
@@ -111,25 +96,34 @@ OLMo-2-0425-1B-Instruct uses nine confirmation-only RULER tasks at $16$K,
 $20$ rows per task. Qwen2.5-1.5B-Instruct \citep{qwen2024qwen25} uses the four development RULER tasks
 at $64$K, also with $20$ rows per task; it evaluates a factor-four table at
 twice the Native context length. Row resampling conditions on each fixed
-checkpoint and task set. Both non-geometric allocations produce the large OLMo
-recovery. The derived-minus-geometric intervals are $[54.88,64.80]$ points for
-OLMo and $[0.25,17.50]$ points for Qwen; the paired derived-minus-ramp intervals
-contain zero on both models. The control therefore attributes the effect to
+checkpoint and task set. Both reallocated tables produce the large OLMo
+recovery. The derived-minus-log-linear intervals are $[54.88,64.80]$ points for
+OLMo and $[0.25,17.50]$ points for Qwen; the paired
+derived-minus-movement-profile-ramp intervals contain zero on both models. The
+control therefore attributes the effect to
 fixed-support reallocation while leaving profile-specific ordering unresolved.
 
 The complete OLMo deployment policy is a separate, bundled intervention: it
 uses exact Native when observed prefill plus generation reserve fits the Native
 window and otherwise chooses one frozen factor-four table and amplitude before
 prefill, without changing the route during the KV-cache lifetime. It adds no
-learned parameters or training tokens. On a post-policy-freeze, full-$200$
-Qasper evaluation \citep{dasigi2021qasper} at $16$K, this policy obtains token F1 $24.57\%$ versus
-$18.03\%$ for official Transformers YaRN factor four. Both arms use identical
-rows, and every post-chat input plus its $128$-token generation reserve fits
-within $16$K. This row evaluates the complete deployment policy on natural
-context; Table~\ref{tab:frozen-fixed-support} provides the allocation-only
-contrast.
+learned parameters or training tokens. On a disjoint $128$-document
+FineWeb-Edu evaluation, forcing the same long profile at $4$K gives final-$1024$
+NLL $2.8774$ versus Native $2.7538$, a difference of $+0.1236$ NLL; the
+session policy routes $4$K requests through Native. At $8/16$K, its PG-19 tail NLL is
+$3.1060/3.0977$, compared with $3.4404/3.7955$ for official Transformers YaRN
+factor four. On full-$200$ Qasper \citep{dasigi2021qasper} and 2Wiki
+\citep{ho2020twowiki}, the routed policy's token F1 is $24.57/26.66\%$, versus
+$18.03/25.69\%$ for YaRN; applying the long profile to all $200$ 2Wiki rows
+scores $27.74\%$. Across the six-task natural-context matrix, the routed method
+scores $28.58/24.97\%$ at $2/4\times$, compared with $21.27/25.59\%$ for YaRN.
+The QA arms use identical rows, and every post-chat
+input plus its generation reserve fits within $16$K. These rows evaluate the
+complete deployment policy on natural context; Table~\ref{tab:frozen-fixed-support}
+provides the allocation-only contrast.
 
 \subsection{LLaMA-3-8B-Instruct}
+\label{sec:llama8b}
 
 The \evq{} arm in both LLaMA protocols uses midpoint quantisation with
 $\tau{=}1.414$; Native retains the pretrained model's original frequency table.

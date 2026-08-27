@@ -79,14 +79,11 @@ ICLR2027_ALLOWLIST = [
     "paper-2027/figs/fig_evidence_overview.pdf",
     "paper-2027/figs/fig_frequency_geometry.pdf",
     "paper-2027/figs/fig_exact_range_control.pdf",
-    "paper-2027/figs/fig_range_composition_454m.pdf",
-    "paper-2027/figs/fig_range_composition_125m.pdf",
     "paper-2027/figs/fig_olmo_scale_crossover.pdf",
     "paper-2027/figs/fig_spectral_budget_scaling.pdf",
     "paper-2027/figs/make_fig_evidence_overview.py",
     "paper-2027/figs/make_fig_frequency_geometry.py",
     "paper-2027/figs/make_fig_exact_range_control.py",
-    "paper-2027/figs/make_fig_range_composition.py",
     "paper-2027/figs/make_fig_olmo_scale_crossover.py",
     "paper-2027/figs/make_fig_spectral_budget_scaling.py",
     "scripts/__init__.py",
@@ -123,6 +120,18 @@ ICLR2027_ALLOWLIST = [
 PROFILES = {
     "neurips2026": NEURIPS2026_ALLOWLIST,
     "iclr2027": ICLR2027_ALLOWLIST,
+}
+
+PROFILE_EXCLUDE_NAMES = {
+    "iclr2027": {
+        "a4_supporting_experiments.tex",
+        "table_evq_ramp.tex",
+        "primary1_evq_yarn_10pct_raw.json",
+        "mla_channel_count_125m_pilot.json",
+        "table2_evq_yarn_454m_passkey_10pct.json",
+        "phase11b_125m_l256_3seed.json",
+        "quality_454m_full_eval.json",
+    },
 }
 
 PROFILE_RENAMED_FILES = {
@@ -166,20 +175,32 @@ LEAK_PATTERNS = re.compile(
 )
 
 
-def should_skip(path: Path) -> bool:
-    if path.name in EXCLUDE_NAMES:
+def should_skip(path: Path, extra_exclude_names: set[str] | frozenset[str] = frozenset()) -> bool:
+    if path.name in EXCLUDE_NAMES or path.name in extra_exclude_names:
         return True
     text = path.name
     return any(text.endswith(suffix) for suffix in EXCLUDE_SUFFIXES)
 
 
-def copy_item(rel: str, stage: Path) -> None:
+def copy_item(
+    rel: str,
+    stage: Path,
+    extra_exclude_names: set[str] | frozenset[str] = frozenset(),
+) -> None:
     src = ROOT / rel
     if not src.exists():
         raise FileNotFoundError(f"allowlisted path does not exist: {rel}")
     dst = stage / rel
     if src.is_dir():
-        shutil.copytree(src, dst, ignore=lambda _d, names: [n for n in names if should_skip(Path(n))])
+        shutil.copytree(
+            src,
+            dst,
+            ignore=lambda _d, names: [
+                name
+                for name in names
+                if should_skip(Path(name), extra_exclude_names)
+            ],
+        )
     else:
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dst)
@@ -236,8 +257,9 @@ def main() -> None:
         shutil.rmtree(STAGE)
     STAGE.mkdir(parents=True)
 
+    profile_excludes = PROFILE_EXCLUDE_NAMES.get(args.profile, frozenset())
     for rel in PROFILES[args.profile]:
-        copy_item(rel, STAGE)
+        copy_item(rel, STAGE, profile_excludes)
     for src_rel, dst_rel in PROFILE_RENAMED_FILES.get(args.profile, {}).items():
         copy_renamed_file(src_rel, dst_rel, STAGE)
 

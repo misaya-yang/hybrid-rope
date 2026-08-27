@@ -634,6 +634,33 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
             )
             self.assertEqual(artifact["training_seeds"], [42, 137, 256])
 
+    def test_iclr_supplement_excludes_retired_range_composition(self):
+        for retired_path in (
+            "paper-2027/figs/fig_range_composition_454m.pdf",
+            "paper-2027/figs/fig_range_composition_125m.pdf",
+            "paper-2027/figs/make_fig_range_composition.py",
+        ):
+            self.assertNotIn(retired_path, package_supplement.ICLR2027_ALLOWLIST)
+
+        retired_names = {
+            "a4_supporting_experiments.tex",
+            "table_evq_ramp.tex",
+            "primary1_evq_yarn_10pct_raw.json",
+            "mla_channel_count_125m_pilot.json",
+            "table2_evq_yarn_454m_passkey_10pct.json",
+            "phase11b_125m_l256_3seed.json",
+            "quality_454m_full_eval.json",
+        }
+        profile_excludes = package_supplement.PROFILE_EXCLUDE_NAMES["iclr2027"]
+        self.assertTrue(retired_names.issubset(profile_excludes))
+        for retired_name in retired_names:
+            self.assertTrue(
+                package_supplement.should_skip(
+                    Path(retired_name),
+                    profile_excludes,
+                )
+            )
+
     def test_phase16_exporter_reconstructs_the_portable_99_row_schema(self):
         with tempfile.TemporaryDirectory() as tmp:
             source = Path(tmp) / "source"

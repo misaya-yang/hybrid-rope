@@ -14,7 +14,7 @@ rank is 256. The model trains from scratch on 500M FineWeb-Edu tokens
 $L_{\mathrm{train}}{=}8192$ and base $500\mathrm{K}$ over seeds 42, 43, and
 88. \evq{} uses the pre-specified empirical $\tau{=}1.414$ setting. Because
 the compressed rotary subspace does not instantiate the full-RoPE
-$\deff{=}d_{\mathrm{head}}$ convention in Eq.~\eqref{eq:evq-practical}, this
+$\drot{=}\dhd$ convention in Eq.~\eqref{eq:evq-practical}, this
 experiment tests frequency allocation at fixed architecture rather than the
 operating rule.
 
@@ -23,12 +23,12 @@ $t_k=\operatorname{clip}((\lambda_k-L_{\mathrm{train}})/(31L_{\mathrm{train}}),0
 The MLA wavelength-blend operator sets
 $\omega'_k=\omega_k/[1+t_k(s-1)]$: it preserves wavelengths below the training
 length, applies the full factor $s$ above $32L_{\mathrm{train}}$, and interpolates
-between them. This run-specific operator is distinct from \rs{}.
+between them.
 
 \begin{table}[ht]
 \caption{MLA validation (432M, $d_{\mathrm{rope}}{=}32$, 3-seed mean
 $\pm$ std). Rows marked ``MLA wavelength-blend'' use this run's wavelength-blend
-operator, which is distinct from \rs{}.}
+operator defined above.}
 \label{tab:mla}
 \centering
 \small
@@ -50,22 +50,5 @@ Geo + MLA wavelength-blend ($s=4$) & $35.5{\pm}0.9$ & $117.9{\pm}6.5$ & $204.9{\
 $+0.9\%$. All three training seeds favour \evq{} at 16K. The \evq{} plus MLA wavelength-blend
 row has the lowest mean PPL at 16K and beyond. These rows establish the tested
 ordering for this architecture and protocol.
-
-\subsection{Composition with \rs{}}
-\label{sec:ramp-results}
-\input{tables/table_evq_ramp}
-
-\begin{center}
-  \includegraphics[width=0.96\linewidth]{fig_range_composition_454m.pdf}
-  \captionof{figure}{\textbf{The same range operator has substrate-dependent
-  leverage in the tested protocol.} Three-seed PK@8K means, individual seeds,
-  and standard deviations: \rs{} raises Geo from $41\%$ to $61\%$ and \evq{}
-  from $53\%$ to $100\%$.}
-  \label{fig:range-composition-454m}
-\end{center}
-
-Applying the same \rs{} operator adds $20$ points on Geo and $47$ points on
-\evq{}, a $27$-point leverage difference under the shared code path, cut
-indices, scale, and evaluation rows.
 
 \FloatBarrier

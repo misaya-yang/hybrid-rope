@@ -1,13 +1,13 @@
 \section{Theory}
 \label{sec:theory}
 
-The central phenomenon is geometric: slow RoPE pairs collapse onto nearly the
-same positional subspace, so a finite table can spend many nominal dimensions
-without gaining comparable positional dimension. We first make this redundancy
-exact, then show why training binds the resulting basis to its weights, and
-finally derive a closed-form allocation that moves channels away from the
-collapse. Figure~\ref{fig:spectral-budget-overview}a--b visualizes the finite
-allocation problem; the analysis below makes it exact.
+Theory answers two separate questions. The exact question is which positional
+basis a finite allocation $z$ realises under fixed support and pair count; full
+sin/cos subspaces, phase-invariant redundancy, collapse, co-adaptation, and the
+transplant obstruction answer it. The bounded constructive question is which
+closed-form table follows from a stated convex surrogate; \evq{} supplies that
+witness. Figure~\ref{fig:spectral-budget-overview}a--b previews the diagnosis,
+while controlled interventions establish behaviour.
 
 \subsection{A finite table is a set of two-dimensional subspaces}
 \label{sec:subspaces}
@@ -30,6 +30,25 @@ $z_k=k/(K-1)$, so fixing $(a,R)$ fixes every channel. A second table with the
 same support and different interior $z$ therefore cannot be represented by a
 different scalar base. Quantities such as median wavelength or the number of
 channels completing a cycle are summaries of $z$, not omitted scalar controls.
+
+The frozen-checkpoint experiments instantiate this identity without using the
+Cosh family. Given Native frequencies $\omega_k$, an extension factor $s$, and
+a movement profile $m_k\in[0,1]$, they form
+\begin{equation}
+\widehat\omega_k=\omega_k\big[(1-m_k)+m_k/s\big],\qquad
+\widehat z_k=\frac{-\log\widehat\omega_k-\widehat a}{\widehat R},
+\label{eq:movement-allocation}
+\end{equation}
+with the fast and slow endpoints pinned, so
+$\widehat a=-\log\widehat\omega_0$ and
+$\widehat R=-\log\widehat\omega_{K-1}-\widehat a$. The same-support log-linear
+control sets $\widehat z_k=k/(K-1)$. For the derived arm,
+$\widetilde U_k$ is the normalised residual energy of the full sin/cos pair
+after projection onto all other pairs under the Native causal-distance measure;
+it sets $m_k=(1-\widetilde U_k)^2$, so less unique pairs move farther. A
+movement-profile ramp control projects that movement onto a piecewise-linear profile.
+The matched log-linear/derived/movement-profile-ramp contrast changes only interior allocation,
+providing a second construction on the same $z$ coordinate alongside \evq{}.
 
 A rotary pair contributes $f_\omega(\Delta) = C\cos(\omega\Delta) +
 D\sin(\omega\Delta)$ to the relative-position attention logit, with $C,D$ set by
@@ -61,26 +80,29 @@ form in $\sin t/t$ and $(1{-}\cos t)/t$ at $t=(\omega{\mp}\nu)L$
 \subsection{The spectral budget is an effective-dimension account}
 \label{sec:budget}
 
-Block-whitening every pair gives a global correlation Gram $R$ with diagonal
+Block-whitening every pair gives a global correlation Gram $\Gamma$ with diagonal
 blocks $I_2$. Write $\bar c$ for the mean of the $c_{ij}$.
 
 \begin{theorem}[Spectral budget identity]
 \label{thm:budget}
-$\operatorname{tr}R = 2K$ and $\operatorname{tr}(R^2)=2K[1+(K{-}1)\bar c]$, so the
+$\operatorname{tr}\Gamma = 2K$ and $\operatorname{tr}(\Gamma^2)=2K[1+(K{-}1)\bar c]$, so the
 Rényi-$2$ effective rank of the positional basis is exactly
 \begin{equation}
-r_2(R)=\frac{(\operatorname{tr}R)^2}{\operatorname{tr}(R^2)}
+r_2(\Gamma)=\frac{(\operatorname{tr}\Gamma)^2}{\operatorname{tr}(\Gamma^2)}
       =\frac{2K}{1+(K-1)\bar c}.
 \label{eq:budget-identity}
 \end{equation}
 \end{theorem}
 
 The denominator turns the spectral budget into an exact R\'enyi-$2$
-effective-dimension identity:
-larger mean pairwise redundancy lowers $r_2$. Allocation changes the entire
-Gram spectrum, while block whitening removes per-channel energy and
-conditioning. The trained-model effect is then measured by the fixed-support
-intervention of \S\ref{sec:exp-identify}.
+effective-dimension identity: larger mean pairwise redundancy lowers $r_2$.
+Fix $K$, sampled support $(a,R)$, and separation measure $\mu$. Substituting
+$\omega_k(z)=\exp[-(a+Rz_k)]$ into the full-pair block-whitened positional Gram
+$\Gamma_\mu(z)$ makes its spectrum, and hence the effective sin/cos basis realised by
+the nominal rotary budget, a function of interior allocation. Geometry diagnoses
+that basis; the fixed-support intervention of \S\ref{sec:exp-identify}
+establishes its behavioural consequence. Block whitening removes per-channel
+energy and conditioning from the diagnosis.
 
 The deflation is concentrated at the slow end.
 
@@ -106,20 +128,8 @@ describe almost the same positional directions. Proposition~\ref{prop:collapse}
 characterises the severe slow-band limit. The fixed-support identification also
 covers settings outside that asymptotic regime: in its $b{=}256$ control no
 sampled pair lies deep in the limit, and Theorem~\ref{thm:budget} measures
-overlap over the full table.
-
-\begin{figure}[tb]
-  \centering
-  \includegraphics[width=0.94\linewidth]{fig_frequency_geometry.pdf}
-  \caption{\textbf{Where a finite frequency table spends its budget.}
-  (a)~At $K{=}32$, Cosh concentrates interior channels toward the fast end
-  while endpoint normalisation preserves sampled support; the deployed
-  midpoint table is shown separately.
-  (b)~For standard RoPE at $L{=}4096$, $b{=}5{\times}10^5$, and $K{=}64$,
-  phase-invariant full-subspace redundancy concentrates in the $23$ pairs with
-  $\omega L\le1$.}
-  \label{fig:frequency-geometry}
-\end{figure}
+overlap over the full table. Additional allocation and redundancy views appear
+in App.~Fig.~\ref{fig:frequency-geometry}.
 
 \subsection{The table is a training-time coordinate system}
 \label{sec:coordinate}
@@ -148,20 +158,20 @@ training, with the weights learning coefficients in it.
 
 \begin{theorem}[Post-hoc transplant obstruction]
 \label{thm:obstruction}
-Let $R_\Omega(\Delta)$ be the block-rotation operator of a frequency multiset
+Let $\mathcal R_\Omega(\Delta)$ be the block-rotation operator of a frequency multiset
 $\Omega$. If position-independent invertible maps $A,B$ satisfy
-$A^\top R_{\Omega'}(\Delta)B = R_\Omega(\Delta)$ for all $\Delta$ in an open
+$A^\top \mathcal R_{\Omega'}(\Delta)B = \mathcal R_\Omega(\Delta)$ for all $\Delta$ in an open
 interval containing zero, then $\Omega'$ and $\Omega$ have the same frequency
 multiset, up to sign and permutation. Repeated frequencies may mix within their
 full equal-frequency invariant subspace.
 \end{theorem}
 
 The proof is short: $\Delta{=}0$ gives $A^\top B = I$, so the relation becomes a
-similarity $A^\top R_{\Omega'}A^{-\top}=R_\Omega$; differentiating at zero makes
+similarity $A^\top \mathcal R_{\Omega'}A^{-\top}=\mathcal R_\Omega$; differentiating at zero makes
 the generators similar, and similarity preserves the spectrum $\{\pm i\omega_k\}$
 (App.~\ref{sec:proofs}). The theorem therefore characterises exact function
 preservation by this broad class of fixed linear Q/K compensation. The
-finite-distribution protocols of \S\ref{sec:exp-mature} measure the complementary
+finite-distribution protocols of \S\ref{sec:exp-capability} measure the complementary
 case in which Q/K or broader low-rank paths adapt to the new table.
 
 \subsection{An analytic non-uniform allocation family}
@@ -170,24 +180,22 @@ case in which Q/K or broader low-rank paths adapt to the new table.
 A positive density $\rho\in C^2([0,1])$ with $\int_0^1\rho=1$ induces a discrete
 allocation by inverse-CDF quantisation, $\phi_k=F_\rho^{-1}(u_k)$; geometric RoPE
 is $\rho\equiv1$. The exact canonical-correlation objective is oscillatory. To
-obtain a closed-form construction, we use the convex modelling surrogate
+obtain a bounded closed-form witness, we use the convex modelling surrogate
 \begin{equation}
 \Capp[\rho]=\frac{\alpha}{2}\int_0^1\!\rho^2\,d\phi
  +\frac{\beta}{2}\iint_{[0,1]^2}\!\!\rho(\phi)\rho(\psi)\min(\phi,\psi)\,d\phi\,d\psi,
 \label{eq:Capp}
 \end{equation}
-with $\alpha,\beta>0$. The diagonal term penalises channel-load concentration;
+with $\alpha>0,\beta\geq0$. The diagonal term penalises channel-load concentration;
 $\min(\phi,\psi)$ is the Green kernel of $-\partial_\phi^2$ and encodes a
 penalty for pairs of channels that are both slow, matching the direction of
 Prop.~\ref{prop:collapse}. The full geometry and the surrogate play distinct
 roles: the former measures redundancy, while the latter supplies an analytic
-allocation family. The approximation is checked at the level needed for that
-construction: when the derived allocation is evaluated under the
-cosine-feature kernel in closed form, collision falls by $24$--$92\%$ and its Shannon
-effective rank rises in all $12$ tested configurations
-(App.~\ref{sec:surrogate-validation}). The trained controls in
-\S\ref{sec:experiments} then test the learning consequences of the same
-surrogate-derived schedule.
+allocation family. Its declared validation is a slice-level static diagnostic:
+under the closed-form cosine-feature kernel, the derived table lowers collision
+by $24$--$92\%$ and raises its cosine-Gram Shannon rank in all $12$ tested
+configurations (App.~\ref{sec:surrogate-validation}). Phase-invariant
+full-subspace geometry and trained interventions carry their separate claims.
 
 \begin{theorem}[Closed-form optimum under the surrogate]
 \label{thm:ode}
@@ -214,35 +222,9 @@ which tends to $u_k$ as $\tau\to0$, recovering the uniform-log midpoint grid.
 \end{corollary}
 
 The theorem selects the Cosh family exactly for \eqref{eq:Capp}; midpoint
-quantisation turns that density into a finite RoPE table. Because $\rho_\tau$
-decreases with $\phi$, it reallocates channels toward the fast end: at
-$K{=}64$ and $\tau{=}4$, $55$ midpoint quantiles lie in the fast half of the
-log-frequency span. Cosh is therefore the exact analytic solution of the
-tractable surrogate, and the closed-form kernel diagnostic preserves the
-surrogate-derived improvement direction. Shape-matched trained controls below
-support non-uniform allocation without identifying a uniquely preferred curve.
-
-\paragraph{Empirical zero-search reference.} With $\deff$ the effective
-head dimension and $\Pi$ the training protocol,
-\begin{equation}
-\label{eq:evq-practical}
-\tau = c(\Pi)\deff/\sqrt{\Ltr},\qquad
-u_k = (k+\tfrac12)/K,\qquad
-\omega_k^{\mathrm{EVQ}} = b^{-\phi_k(\tau)} .
-\end{equation}
-Set $\tau$, evaluate \eqref{eq:warp}, replace the inverse frequencies: no
-auxiliary loss, no extra parameters, no declared deployment length. A
-$\deff/\sqrt{\Ltr}$ supplies an empirical reference family for standard
-full-RoPE text settings, with $\deff{=}d_{\mathrm{head}}$. We fix
-$c(\Pi){=}1$ before training as a zero-search operating point and evaluate it
-against Geo and neighbouring multipliers
-(App.~\ref{sec:identification-details}). Compressed rotary subspaces and
-bidirectional attention use pre-specified empirical $\tau$ values, testing the
-same allocation principle without invoking the full-RoPE rule. The deployed midpoint table has
-raw exponent positions
-$q_k=\phi_k(\tau)$. The exact-range diagnostic uses
-$z_k=(q_k-q_0)/(q_{K-1}-q_0)$ in
-Eq.~\eqref{eq:table-decomposition}. It therefore preserves the deployed table's
-normalised Cosh shape exactly while replacing only its support embedding so that
-the sampled extrema match FMRoPE. This isolates $z$ without changing
-the construction used by the complete deployed table.
+quantisation turns that density into a finite RoPE table. Its uniqueness is
+conditional on the stated surrogate. The quantiles in \eqref{eq:warp} define
+the implementable zero-parameter witness; the pre-specified operating rule,
+finite multiplier evidence, and grid conventions are in
+App.~\ref{sec:tau-scaling}. The exact-range endpoint embedding is specified in
+App.~\ref{sec:identification-details}.

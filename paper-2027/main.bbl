@@ -1,4 +1,4 @@
-\begin{thebibliography}{40}
+\begin{thebibliography}{41}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -235,6 +235,13 @@ Nitish Srivastava, Elman Mansimov, and Ruslan Salakhutdinov.
 Jianlin Su, Murtadha Ahmed, Yu~Lu, Shengfeng Pan, Bo~Wen, and Yunfeng Liu.
 \newblock {RoFormer}: Enhanced transformer with rotary position embedding.
 \newblock \emph{Neurocomputing}, 568:\penalty0 127063, 2024.
+
+\bibitem[Tang et~al.(2026)Tang, Wang, Gu, Han, and Cai]{tang2026jetlong}
+Haozhan Tang, Zerui Wang, Yuxian Gu, Song Han, and Han Cai.
+\newblock {Jet-Long}: Efficient long-context extension with dynamic bifocal
+  {RoPE}.
+\newblock \emph{arXiv preprint arXiv:2607.07740}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2607.07740}.
 
 \bibitem[Tian et~al.(2026)Tian, Zhu, Liu, Wang, and Wang]{tian2026mrrope}
 Qingyuan Tian, Wenhong Zhu, Xiaoran Liu, Xiaofeng Wang, and Rui Wang.

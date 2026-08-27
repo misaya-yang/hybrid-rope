@@ -6,7 +6,8 @@
 \caption{\textbf{Weights co-adapt to their training-time frequency table.} Two
 seed-$42$ $50$M models trained with the geometric and \evq{} tables, each
 evaluated under both runtime tables with all parameters frozen ($1{,}920$
-head--query observations). The matched pairs remain near PPL $7$, whereas both
+head--query observations). Both runtime tables use the shared midpoint grid
+$u_k=(k+1/2)/K$ for this diagnostic. The matched pairs remain near PPL $7$, whereas both
 cross-swaps fail; the worst cell is also the one whose static $r_2$ improves
 most.}
 \label{tab:coadapt}
