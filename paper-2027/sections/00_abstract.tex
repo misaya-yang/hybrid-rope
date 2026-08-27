@@ -1,19 +1,17 @@
-RoPE gives each attention head a finite frequency budget, but geometric spacing
-conflates support location and span with interior allocation. Writing
-$x_k=-\log\omega_k=a+Rz_k$ exposes $z$ as a third finite-table design
-coordinate. Under the stated uniform separation prior, $23$ slow pairs---$46$
-nominal dimensions---have block-whitened effective dimension $2.00$ over
-separations up to $4$K. Thus, at fixed support, $K$, and RoPE operator, $z$
-determines where phase resolution is placed and which effective positional
-basis the same nominal budget realises. On a frozen $1.485$B OLMo checkpoint,
-replacing a same-support log-linear grid by a checkpoint-derived allocation
-raises nine-task $16$K RULER from $0.56\%$ to $60.47\%$; a label-free
-movement-profile ramp reaches $61.04\%$ (official Transformers YaRN at factor
-four scores $7.94\%$ on the same rows), with no optimisation or learned
-positional parameters. A separate paired three-seed training intervention moves only the
-interior frequencies and improves every tested OOD length in every seed,
-causally identifying the same coordinate during co-adaptation. A stated convex
-surrogate yields \evq{}, a closed-form table unique for that surrogate. Across
-zero-training frozen, matched low-rank adaptation, and from-training routes,
-controlled interventions establish $z$ as an identifiable and actionable
-determinant of long-context behaviour in the tested settings.
+RoPE optimisation is usually framed through its base, spectral range, or phase
+transport, while geometric spacing silently fixes how a finite set of rotary
+pairs is allocated inside that range. Writing
+$x_k=-\log\omega_k=a+Rz_k$ exposes interior allocation $z$ as a third
+finite-table design coordinate. Exact, phase-invariant sin/cos geometry shows
+that redundancy can collapse many nominal dimensions onto nearly the same
+two-dimensional positional basis. On a frozen billion-scale OLMo checkpoint,
+changing only $z$ at matched support raises nine-task $16$K RULER from
+$0.56\%$ to $60.47\%$; a coarse label-free allocation reproduces this recovery
+without task labels or parameter updates. A paired
+three-seed fixed-support training intervention independently improves every
+tested OOD length in every seed, identifying $z$ during co-adaptation. A stated
+convex surrogate then yields \evq{}, a closed-form zero-learned-parameter
+construction unique for that surrogate. Across fully frozen, matched low-rank
+adaptation, and from-training interventions, the same coordinate remains
+consequential throughout the model lifecycle. A finite RoPE table is jointly
+determined by its sampled support and how its spectral budget is allocated.

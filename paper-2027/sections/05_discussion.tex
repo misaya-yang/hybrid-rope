@@ -1,46 +1,44 @@
 \section{Discussion}
 \label{sec:discussion}
 
-Finite RoPE exposes three intervention levels: support selects the sampled
-interval, interior allocation $z$ places a fixed number of frequency samples
-inside it, and range transport changes how realised phases are used at longer
-lengths. These levels can interact, but they are not interchangeable. The
-fixed-support intervention therefore changes the effective positional basis at
-constant pair count, endpoints, and RoPE operator---a design move outside a
-scalar-base sweep.
+A finite RoPE table is specified by its sampled log-frequency support $(a,R)$
+and the interior allocation $z$ of its fixed $K$ pairs. Position rescaling or
+frequency-dependent transport may change the realised table as context grows,
+but does not remove this decomposition. Our fixed-support intervention holds
+$K$, both endpoints, and the RoPE operator constant and changes only $z$---a
+design move outside a scalar-base sweep.
 
-The paper links that coordinate to behaviour in three epistemic steps. Exact
-full-subspace geometry diagnoses the positional basis available to a table.
-Paired fixed-support training identifies the behavioural effect of changing
-$z$. Protocol-separated studies then show that the control remains active after
-a zero-training frozen intervention, under matched low-rank adaptation, and
-when weights co-adapt from training. The weights-by-table crossing and transplant
-obstruction explain why intervention stage matters: a table defines a basis,
-and learned coefficients bind the model to it.
+The three empirical routes intervene on this coordinate at different stages.
+With weights fully frozen, $z$ alone changes mature-model behaviour; under
+matched low-rank adaptation, pretrained representations learn to use a new
+basis; from training, the paired fixed-support control identifies weight--table
+co-adaptation. Exact full-subspace geometry explains how those tables differ as
+positional bases, while the weights-by-table crossing and transplant
+obstruction explain why the intervention stage matters.
 
 Across the autoregressive text protocols that evaluate both the original
-training or Native window and longer positions, the comparisons repeat a
+training or Native window and longer positions, the comparisons reveal a
 within-protocol crossover: the baseline is stronger near the original window,
-while the reallocated table overtakes it beyond that window. This is not a
-pooled effect across metrics or models; it is a recurring behavioural signature
-of reallocating a finite phase-resolution budget, and it
-directly motivates the Native/long session route. The video DiT instead improves
+while the reallocated table overtakes it beyond that window. This recurring
+behavioural signature of finite-budget reallocation directly motivates the
+Native/long session route. The video DiT instead improves
 both training-frame and extrapolated-frame MSE; its pre-specified diagnostic
 locates the different regime: six of sixteen temporal channels accumulate less
 than $0.1$ rad over the $32$ training frames, so reallocating them changes
 in-window phase coverage rather than imposing the text-model crossover.
 
-This design space is broader than extrapolation. Different allocations place
-the finite samples over phase scales relevant within and beyond the training
-window. Learned-table work such as LeRoPE explores this coordinate through
-optimisation; our fixed-support geometry and closed-form construction provide
-complementary ways to analyse and instantiate it. A high-value next direction
-is to design allocation and co-adaptation jointly for explicit window
-objectives, rather than treating the geometric table as fixed infrastructure.
+Extrapolation provides the sharpest present identification of $z$. The same
+coordinate also changes which phase scales are available inside the original
+window. LeRoPE reports in-window gains
+from learned non-geometric tables; our fixed-support geometry and closed-form
+construction provide complementary ways to analyse and instantiate the same
+broader design space. Together they make joint native-window and long-range
+allocation a natural next design objective.
 
-The field implication is direct: RoPE table allocation should be designed,
-measured, and controlled as a first-class coordinate across training,
-adaptation, and deployment. In the stated protocols, $z$ is an identifiable and
-controllable determinant of long-context behaviour: static geometry supplies
-the basis diagnosis, and controlled interventions establish behavioural
+The practical consequence is that a finite RoPE table should be specified by
+both its sampled support and its interior allocation. A shared base, endpoint,
+or pair count does not by itself define a matched finite table. Treating $z$ as
+an explicit design object makes allocation measurable and controllable across
+training, adaptation, and deployment; the exact geometry supplies the basis
+diagnosis, and the controlled interventions establish its behavioural
 consequences.

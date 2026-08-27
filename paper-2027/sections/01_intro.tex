@@ -1,17 +1,20 @@
 \section{Introduction}
 \label{sec:intro}
 
-RoPE specifies how frequencies rotate queries and keys, not where a finite head
-places phase resolution among its exactly $K=\drot/2$ rotary pairs. A scalar
-base determines the table only after assuming geometric spacing, coupling the
-spectral interval to one allocation rule. We separate the choices by writing
+Most RoPE optimisation is described through a scalar base, a spectral range,
+or a transform of the phases realised at longer positions. That framing leaves
+a separate finite-table choice implicit: where a head places phase resolution
+among its exactly $K=\drot/2$ rotary pairs. A scalar base determines the table
+only after geometric spacing has fixed this allocation. We separate the choices
+by writing
 \begin{equation}
 x_k=-\log\omega_k=a+Rz_k,
 \qquad z_0=0,\quad z_{K-1}=1,
 \label{eq:table-decomposition}
 \end{equation}
-where $a$ sets support location, $R$ its span, and $z$ the normalised interior
-allocation; geometric RoPE fixes $z_k=k/(K-1)$. The third coordinate $z$
+where $k$ indexes the fixed $K$ rotary pairs, $a$ sets support location, $R$
+its span, and $z$ the normalised interior allocation; geometric RoPE fixes
+$z_k=k/(K-1)$. The third coordinate $z$
 decides which phase scales the fixed $K$ samples occupy and where resolution is
 placed. We test it with support, $K$, and the RoPE operator fixed, then derive a
 closed-form construction.
@@ -26,14 +29,15 @@ pairs on near-duplicate slow positional directions. This is the spectral-budget
 problem studied here.
 
 Long-context methods can change realised phases, sampled support, or interior
-placement, often more than one at once. Section~\ref{sec:related} classifies
-range transport, scalar-base grids, learned tables, and broader positional
-operators under this decomposition. The control below instead pins both
-endpoints and the log-span before moving the interior frequencies.
+placement, often more than one at once. Learned-frequency methods also show
+that the geometric exponent sequence need not remain fixed. Section~\ref{sec:related}
+classifies these interventions under the decomposition above. We isolate the
+missing variable by pinning both endpoints and the log-span, then moving only
+the interior allocation.
 
 The strongest practical consequence appears after pretraining. At matched
 support, amplitude, checkpoint, rows, and decoder, changing only $z$ raises
-OLMo nine-task $16$K RULER from $0.56\%$ to $60.47\%$, with no optimisation
+OLMo nine-task $16$K RULER from $0.56\%$ to $60.47\%$, without parameter updates
 (\S\ref{sec:exp-frozen-support}). A separate fixed-support training control
 answers the causal question at model construction: across three paired
 $151.9$M seeds, moving only the $30$ interiors improves every tested OOD length
@@ -41,15 +45,16 @@ in every seed (\S\ref{sec:exp-identify}). Together these interventions show
 that $z$ is neither a disguised base change nor a coordinate that disappears
 once weights have been trained.
 
-\evq{} is the bounded constructive witness: inverse-CDF quantiles of a stated
-convex surrogate give a closed-form table with no learned positional parameters,
-unique for that surrogate.
+\emph{Exact Variational Quantization with a Cosh density} (\evq{}) turns the
+identified coordinate into a closed-form table. Its inverse-CDF quantiles follow
+from a stated convex surrogate, require no learned positional parameters, and
+are unique for that surrogate.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{fig_evidence_overview.pdf}
-  \caption{\textbf{A fixed nominal rotary budget can realise different
-  effective positional bases.} (a)~Geo and anchored \evq{} share $K{=}32$,
+  \caption{\textbf{Interior allocation is a causal coordinate of a finite
+  rotary budget.} (a)~Geo and anchored \evq{} share $K{=}32$,
   operator, endpoints, and log-span; $z$ changes the phase-scale density.
   (b)~Exact geometry: for standard RoPE at $L{=}4096$, $b{=}5{\times}10^5$,
   and $K{=}64$,
@@ -57,24 +62,29 @@ unique for that surrogate.
   block-whitened trace in two eigendirections and have $r_2{=}2.00$ under the
   stated uniform separation prior.
   (c)~Causal identification: moving only $30$ interiors at fixed support
-  improves every tested OOD length in all three seeds.}
+  improves every tested OOD length in all three seeds. The panels respectively
+  define the coordinate, expose its geometric consequence, and isolate its
+  training-time effect.}
   \label{fig:spectral-budget-overview}
 \end{figure}
 \FloatBarrier
 
-Three protocol-separated routes establish actionability after pretraining with
-zero optimisation, persistence through matched low-rank adaptation, and
-co-adaptation from training; a bidirectional $3$D video DiT adds modality breadth
-(\S\ref{sec:experiments}).
+We test the same coordinate in three complementary regimes: fully frozen
+checkpoints, pretrained models under matched low-rank adaptation, and
+from-initialisation or continued full-parameter training. They ask whether $z$
+acts without weight updates, can be exploited after limited adaptation, and is
+learned through weight--table co-adaptation, respectively. Full and scarce
+rotary budgets and a bidirectional $3$D video DiT extend these tests across
+architectures and beyond autoregressive text (\S\ref{sec:experiments}).
 
 \paragraph{Contributions.}
 (i) We expose $z$ as a third finite-RoPE coordinate---phase-resolution placement
-within fixed support and $K$---and causally identify its behavioural effect with
-a paired three-seed intervention fixing every scalar-base degree of freedom.
+within fixed support and $K$---and causally identify its effect in a paired
+three-seed training intervention; an independent frozen-checkpoint pure-$z$
+intervention shows that the same coordinate remains active after pretraining.
 (ii) We give an exact phase-invariant account of the full sin/cos basis: a
 spectral-budget identity, a slow-frequency collapse law, the weight--table
 co-adaptation boundary, and a frozen-transplant obstruction.
-(iii) We derive \evq{} as a closed-form, zero-learned-parameter witness for a
-stated convex surrogate and show across zero-training, matched-adaptation, and
-from-training routes that $z$ remains a controllable determinant of
-long-context behaviour in the tested protocols.
+(iii) We derive \evq{} as a closed-form, zero-learned-parameter construction for
+a stated convex surrogate and demonstrate control through fully frozen,
+matched-adaptation, and from-training interventions.

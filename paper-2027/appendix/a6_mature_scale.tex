@@ -3,7 +3,7 @@
 
 \input{tables/table_ruler}
 
-\subsection{OLMo-2 $1.485$B}
+\subsection{OLMo-2 \texorpdfstring{$1.485$B}{1.485B}}
 \label{sec:olmo2-1b}
 
 All OLMo-2 \evq{} arms use the endpoint grid $u_k{=}k/K$ with $\tau{=}2$ and
@@ -76,6 +76,7 @@ above.
   document count favouring \evq{} at each length.}
   \label{fig:olmo-scale-crossover}
 \end{figure}
+\FloatBarrier
 
 \subsection{Frozen fixed-support allocation}
 \label{sec:frozen-fixed-support}
@@ -87,9 +88,9 @@ by four. The two reference rows do not: Native retains the pretrained table,
 while official Transformers YaRN applies its frequency-dependent transport.
 The three matched-support arms also share the factor-four attention amplitude
 $1+0.1\ln4$, evaluation rows, greedy decoder, precision, and hardware. The
-same-support log-linear arm is uniform in exponent space between the endpoints.
-The movement-profile ramp is the discrete YaRN-family linear ramp minimising
-movement-profile MSE to the frozen derived table; its choice uses no task
+uniform-allocation arm is log-linear between the endpoints. The coarse control
+is the linear movement ramp with minimum displacement-space MSE to the frozen
+derived table over the registered discrete profiles; its choice uses no task
 labels. The remaining arm installs the frozen derived interior allocation.
 
 OLMo-2-0425-1B-Instruct uses nine confirmation-only RULER tasks at $16$K,
@@ -97,9 +98,9 @@ $20$ rows per task. Qwen2.5-1.5B-Instruct \citep{qwen2024qwen25} uses the four d
 at $64$K, also with $20$ rows per task; it evaluates a factor-four table at
 twice the Native context length. Row resampling conditions on each fixed
 checkpoint and task set. Both reallocated tables produce the large OLMo
-recovery. The derived-minus-log-linear intervals are $[54.88,64.80]$ points for
+recovery. The derived-minus-uniform-allocation intervals are $[54.88,64.80]$ points for
 OLMo and $[0.25,17.50]$ points for Qwen; the paired
-derived-minus-movement-profile-ramp intervals contain zero on both models. The
+derived-minus-coarse-control intervals contain zero on both models. The
 control therefore attributes the effect to
 fixed-support reallocation while leaving profile-specific ordering unresolved.
 

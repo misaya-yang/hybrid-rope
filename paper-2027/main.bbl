@@ -132,6 +132,16 @@ Petros Karypis, Sean O'Brien, Shreyas Kadekodi, Rui Zhu, and Julian McAuley.
 \newblock \emph{arXiv preprint arXiv:2607.10134}, 2026.
 \newblock URL \url{https://arxiv.org/abs/2607.10134}.
 
+\bibitem[Kazemnejad et~al.(2023)Kazemnejad, Padhi, Ramamurthy, Das, and
+  Reddy]{kazemnejad2023impact}
+Amirhossein Kazemnejad, Inkit Padhi, Karthikeyan~Natesan Ramamurthy, Payel Das,
+  and Siva Reddy.
+\newblock The impact of positional encoding on length generalization in
+  transformers.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~36, 2023.
+\newblock URL \url{https://openreview.net/forum?id=Drrl2gcjzl}.
+
 \bibitem[Li et~al.(2026{\natexlab{a}})Li, Ren, Yuille, and
   Wang]{li2026copeclipped}
 Haoran Li, Sucheng Ren, Alan Yuille, and Feng Wang.
@@ -230,11 +240,6 @@ Nitish Srivastava, Elman Mansimov, and Ruslan Salakhutdinov.
 \newblock Unsupervised learning of video representations using {LSTMs}.
 \newblock In \emph{Proceedings of the 32nd International Conference on Machine
   Learning}, volume~37 of \emph{PMLR}, pp.\  843--852, 2015.
-
-\bibitem[Su et~al.(2024)Su, Ahmed, Lu, Pan, Wen, and Liu]{su2024roformer}
-Jianlin Su, Murtadha Ahmed, Yu~Lu, Shengfeng Pan, Bo~Wen, and Yunfeng Liu.
-\newblock {RoFormer}: Enhanced transformer with rotary position embedding.
-\newblock \emph{Neurocomputing}, 568:\penalty0 127063, 2024.
 
 \bibitem[Tang et~al.(2026)Tang, Wang, Gu, Han, and Cai]{tang2026jetlong}
 Haozhan Tang, Zerui Wang, Yuxian Gu, Song Han, and Han Cai.

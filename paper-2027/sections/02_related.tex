@@ -1,58 +1,27 @@
 \section{Related Work}
 \label{sec:related}
 
-Write $x_k=-\log\omega_k=a+Rz_k$ as in
-Eq.~\eqref{eq:table-decomposition}. Prior work changes several, nonexclusive
-parts of this parameterisation: realised phases, support $(a,R)$, interior
-allocation $z$, or a larger positional operator. The coordinates are distinct
-but can interact.
+Positional encoding can determine whether a transformer generalises beyond its
+training length \citep{kazemnejad2023impact}. RoPE extensions rescale positions,
+change a scalar base, transport frequency bands, or remap remote phases
+\citep{chen2024position,peng2024yarn,ding2024longrope,shang2025longrope2,
+oka2026fmrope,tian2026mrrope,tang2026jetlong}. Frequency-dependent transport can
+realise a non-uniform $z$, but couples it to support or phase changes. Base
+analyses bound the geometric family's attainable context and identify a critical
+dimension \citep{xu2024base,liu2024scaling}; learned use of a supplied grid adds
+a data-dependent view \citep{wu2026datashapes}. We isolate $z$ directly: what
+changes when both endpoints and the log-span are pinned and only its interiors
+move?
 
-\paragraph{Range and support.}
-RoPE encodes relative displacement through rotation \citep{su2024roformer}; we
-take that operator as given and ask where its finite frequencies are placed.
-Position interpolation rescales positions, while YaRN and LongRoPE apply
-frequency-dependent or channel-wise range transport
-\citep{chen2024position,peng2024yarn,ding2024longrope,shang2025longrope2}.
-The RoPE base bounds attainable context length in the geometric family
-\citep{xu2024base}, and scaling-law analyses identify a critical dimension for
-that bound \citep{liu2024scaling}. FMRoPE moves $(a,R)$ through a scalar base
-while retaining a uniform exponent grid \citep{oka2026fmrope}.
-\citet{wu2026datashapes} study learned \emph{usage} of that grid: query/key energy concentrates on
-frequencies matched to a data-induced dependency width $W$
-($\theta^\star\!\sim\!1/W$), and position interpolation acts as scale
-matching. That theory selects among supplied
-geometric channels; our intervention changes the supply of interior $z$.
-MrRoPE gives a distinct training-free mixed-radix conversion of pretrained
-frequencies \citep{tian2026mrrope}. Jet-Long dynamically remaps remote
-positions with a bifocal operator, making it range transport rather than a
-pinned-support allocation control \citep{tang2026jetlong}. These comparisons
-change support or realised phases; our controlled question pins both endpoints
-and the log-span before moving $z$.
-
-\paragraph{Frequency use and operator scope.}
-Trained RoPE uses its bands unevenly: query/key norms, data-induced dependency
-scales, and long-range retrieval expose different frequency structure
-\citep{barbero2025round,oka2026frequencyentropy,chiang2025rotary}.
-HoPE, CoPE, and RoPE-ID respectively replace, clip, or restrict selected
-rotations \citep{chen2025hope,li2026copeclipped,wertheimer2026frayed}. Our
-geometry instead measures the phase-invariant effective dimension of all $K$
-two-dimensional pair subspaces, and the intervention reallocates those pairs
-without removing a plane. GRAPE generalises the planar group action and
-Selective RoPE learns input-dependent angles
-\citep{zhang2026grape,movahedi2026selectiverope}; we retain the canonical planes
-and one session-static frequency table.
-
-\paragraph{Learning and constructing frequency tables.}
-LeRoPE learns one log-scale per frequency band, shared across layers and heads,
-and reports consistent non-geometric profiles on a 52M--2.5B model ladder
-\citep{karypis2026lerope}. Its frozen-table ablation supports learned allocation
-as an in-window design direction. Our complementary route identifies $z$ at
-fixed support and derives a closed-form, zero-search table.
-AdaRoPE learns per-head and per-dimension
-frequencies together with length-dependent attention scaling
-\citep{wang2026adarope}. Resonance RoPE analytically snaps wavelengths to close
-phase gaps during interpolation \citep{wang2024resonance}; \evq{} instead
-obtains a shared fixed table from a stated convex surrogate and tests its
-interior allocation at fixed support. DAPE, FIRE, FoPE, and content-dependent
-re-positioning learn a larger positional function than a fixed RoPE table
-\citep{zheng2024dape,li2024fire,hua2025fope,li2026repo}.
+Other work measures unequal use of RoPE bands, removes or clips selected
+rotations, learns input-dependent angles or frequency tables, or replaces the
+fixed table with a larger positional function
+\citep{barbero2025round,oka2026frequencyentropy,chiang2025rotary,
+chen2025hope,li2026copeclipped,wertheimer2026frayed,zhang2026grape,
+movahedi2026selectiverope,wang2024resonance,zheng2024dape,li2024fire,
+hua2025fope,li2026repo}. LeRoPE and AdaRoPE make allocation explicit through
+learned non-geometric frequencies \citep{karypis2026lerope,wang2026adarope};
+LeRoPE's frozen-table ablation also makes the in-window value of allocation
+visible. We retain all $K$ canonical rotary planes, identify $z$ at fixed
+support, and derive a closed-form table without frequency search or learned
+positional parameters.

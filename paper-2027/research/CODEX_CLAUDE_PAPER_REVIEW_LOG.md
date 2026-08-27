@@ -1479,3 +1479,228 @@ checkout, rebase, or stash was performed during this response.
 **Open before Git publication:** only the explicit stage/cached-diff/sensitive
 scope audit and ordinary push requested by the author. There is no unresolved
 manuscript or evidence blocker in the current checkout.
+
+Codex: 2026-08-26 post-checkpoint abstract, exposition, and layout pass. The
+author required fewer abstract numbers, preservation of the accepted empirical
+priority, useful core-content additions within the eight-page body, and direct
+inspection of page breaks.
+
+Rewrote the abstract from 189 to 150 source words and reduced it to one
+numerical result group, the mature matched-support RULER intervention. The
+geometry, multi-seed identification, EVQ-Cosh construction, and lifecycle
+breadth remain, but no longer compete as separate numerical ledgers. Replaced
+Section 5's three number-heavy route summaries with one role-based paragraph
+that preserves the frozen zero-training, matched-adaptation, then from-training
+order. Added the exact interpretation of the title after Theorem 1: fixed
+`tr(Gamma)=2K` conserves nominal rotary dimension while allocation changes its
+distribution across positional directions. Discussion now states the practical
+reporting consequence that support and interior allocation are both needed to
+specify a matched finite table.
+
+I initially proposed moving the 1.485B early-training crossover figure into the
+body. The author correctly rejected this because that result is a bounded
+single-trajectory scale check and had deliberately been moved to the appendix.
+I reverted the move immediately; the figure remains only in Appendix E, and the
+body retains its compact 151.9M-to-1.485B scale statement. This author decision
+is reaffirmed for future passes.
+
+The first rebuild exposed a real appendix float defect: the 1.485B figure
+overtook the following E.2 subsection, leaving its first paragraph split around
+the float and resuming with ``by four.'' Added one `\FloatBarrier` after the
+figure. The repaired PDF keeps the figure in Appendix E, begins E.2 only after
+its caption, and ends with a filled final MLA-results page rather than an
+isolated four-line page.
+
+Verification: `compile.sh` passes at 8 body / 27 total US-Letter pages, zero
+undefined references or citations, 0pt worst overfull, anonymous, finalcopy
+off, Type-3 zero, and all fonts embedded. Visually inspected body pages 1--8
+and appendix pages 25--27. The curated supplement was rebuilt; isolated compile
+also passes at 8/27, repository targeted tests pass 181/181, and the isolated
+allowlisted supplement suite passes 144/144 under Conda `aidemo`. Immutable
+`paper/main.pdf` remains
+`fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`.
+No commit, push, upload, GPU work, or new experiment was performed.
+
+Codex: 2026-08-26 abstract thesis pass. Re-read the whole-paper revision plan,
+narrative guide, and the author-strategy section of this log before changing
+the abstract. The revised 159-word version keeps one performance number group
+and preserves the empirical priority: the mature frozen pure-`z` intervention
+precedes the paired training identification. It restores `three-seed
+fixed-support` because replication count and intervention identity are evidence
+strength, not a results ledger. The geometry sentence now explains how a fixed
+pair count can collapse nominal dimensions onto nearly the same positional
+basis; EVQ-Cosh is introduced explicitly as a constructive witness on the
+identified axis. The final sentence returns to the reviewer-memory claim and
+title: a finite RoPE table is determined by both its support and how its
+spectral budget is allocated.
+
+The 1.485B crossover figure remains only in Appendix E, exactly as the author
+specified; no experiment ordering or body scale claim changed. `compile.sh`
+passes at 8 body / 27 total pages with zero undefined references or citations,
+0pt worst overfull, anonymous US Letter output, finalcopy off, Type-3 zero, and
+all fonts embedded. Page 1 was visually inspected at final size. The curated
+supplement was rebuilt. No commit, push, upload, GPU work, or new experiment
+was performed.
+
+Codex: 2026-08-27 author-core narrative pass. The author restated the intended
+30-second reading: RoPE optimisation is commonly discussed through base/range,
+the finite exponent allocation is the overlooked controlled object, pure-`z`
+interventions establish its effect, and zero-training, low-rank adaptation, and
+from-training studies make one lifecycle argument. I treated the Qwen brief as
+review input rather than execution authority. Its call for stronger positive
+positioning was useful; its evidence-hierarchy table, comparison ledger,
+target-retargeting front-matter clause, four-bullet contribution expansion, and
+page-nine filling were rejected because they would recreate the author's
+documented ledger failure.
+
+Rewrote the abstract to 164 source words with one performance number group. It
+now opens on the base/range/phase-transport framing, exposes `z`, moves through
+exact geometry and the two pure-`z` anchors, names EVQ-Cosh as a closed-form
+construction rather than a witness, and closes on lifecycle actionability.
+Introduction now makes the three intervention stages explicit without listing
+model results, expands Exact Variational Quantization at first formal use, and
+strengthens the three existing contributions around identification, exact
+geometry, and construction-plus-consequences. Related Work adds the
+Kazemnejad et al. length-generalisation lineage in one sentence rather than a
+comparison table. Theory replaces witness rhetoric, and defines the mature
+derived profile's causal pair-count measure and label-free ramp projection in
+line. Discussion now states positively that extrapolation is the sharpest
+current identification setting rather than the definition of `z`; LeRoPE's
+in-window result supplies the complementary direction toward joint
+native-window/long-range allocation. `NARRATIVE_GUIDE.md` and `HANDOFF.md` were
+synchronised to this coordinate-first, construction-backed framing.
+
+No title change, Figure 1 redesign, target-matched body loop, new experiment,
+new theorem, or 1.485B figure move was made. Final `compile.sh` passes at 8 body
+/ 27 total pages, undefined refs/cites 0, worst overfull 0pt, anonymous US
+Letter, finalcopy off, Type-3 0, and all fonts embedded. Visually inspected
+affected body pages 1--4 and 8; the reader path and page breaks are clean.
+Current navigation and ICLR package gates pass 17/17 under Conda `aidemo`.
+The curated ZIP was rebuilt and passes `unzip -t`; its isolated manuscript
+compiles at 8/27 and the allowlisted suite passes 144/144. Active PDF SHA-256 is
+`bf0dbd31a3406fcd373f6f2df44f24d7e068c8c7390bb12b86ea8c762403c8c2`;
+ZIP SHA-256 is
+`e8db6a5e1e96cb2803ede1c6e52a7976129785dfd6b8166a5a70a9816d4c21e5`;
+immutable `paper/main.pdf` remains
+`fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`.
+No commit, push, upload, GPU work, or new experiment was performed.
+
+Codex: 2026-08-27 pre-experiment stabilization and whole-paper audit. Re-read
+the active rules, index, handoff, narrative guide, full review journal, current
+TeX/PDF, included appendices and tables, and the local ICLR-2026 RoPE cohort.
+The current skeleton now follows a coherent coordinate paper rather than a
+related-work taxonomy: Introduction, fixed-support identification, exact
+theory and construction, lifecycle consequences, compact late Related Work,
+then Discussion. The audit did not restore a comparison ledger, target-matched
+body loop, extra evidence hierarchy, ninth-page filler, or the 1.485B figure to
+the body.
+
+The main clarity defect was a parameterisation/method-name mixture. The paper
+now defines $k$ as the pair index, holds $K$ fixed, and identifies $z$ as the
+only interior variable in the pure controls. The mature uniform, coarse
+label-free, and derived tables are stated as three values of that same $z$
+coordinate rather than separate method axes. Reviewer-facing prose no longer
+calls the coarse control ``piecewise-linear $z$'' or claims recovery ``without
+optimisation''; the supported statement is no task labels or parameter updates,
+while Appendix E retains the exact registered linear-displacement fit. The
+Discussion likewise treats support and $z$ as the finite-table decomposition,
+with range/phase transport as ways of changing a realised table rather than a
+third competing coordinate.
+
+The layout pass fixed two genuine reading-order defects. The co-adaptation
+table now remains inside its own subsection instead of floating ahead of the
+spectral-budget theorem, and the mature frozen table follows the paragraph that
+introduces it rather than preceding Section 4. All body pages 1--8 and appendix
+pages 13--27 were visually inspected. Appendix page 25 retains partial-page
+space before the readable 1.485B figure; attempts to force a smaller figure
+there either left the gap unchanged or increased the total page count, so the
+existing `FloatBarrier` is retained to prevent Appendix E.2 from splitting
+around the figure. The final appendix page is full and contains the MLA result.
+
+Citation and integrity checks find 41 unique cited keys, no missing bibliography
+keys, no compiled undefined references/citations, and no BibTeX warnings. The
+remaining 32 unused `.bib` entries do not appear in the rendered references and
+were not pruned because they are source inventory, not reader-visible clutter.
+No numerical value, theorem, protocol identity, experiment, figure data, or
+claim ceiling changed in this pass.
+
+Final verification: `compile.sh` passes at 8 body / 27 total US-Letter pages,
+undefined refs/cites 0, worst overfull 0pt, anonymous output, finalcopy off,
+Type-3 0, and all fonts embedded. Navigation and supplement contracts pass
+43/43 under Conda `aidemo`; the curated ZIP passes `unzip -t`, compiles in an
+isolated extraction at 8/27, and its allowlisted tests pass 144/144. `git diff
+--check`, privacy scan, and literal `paper/` immutability check pass. Active PDF
+SHA-256 is
+`0bd256f088ee52afb8cc7d5bfa268ea6b2bc9d8a17a3e2897b412be885747e8b`;
+ZIP SHA-256 is
+`6c24a6b478411b164f0acf1bd377e5ea607d30db7b9e71eed982c0b4b5e65a03`;
+immutable `paper/main.pdf` remains
+`fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`.
+No commit, push, upload, GPU work, or new experiment was performed.
+
+Codex: 2026-08-27 author correction on defensive prose. The delivery sentence
+``not a SOTA claim'' was not manuscript text, but it exposed the same failure
+mode the author had already identified: volunteering a boundary that no reader
+asked for. Re-audited the latest manuscript diff rather than defending the
+wording. The core claims and all evidence had remained intact, but five local
+phrases still made the contribution sound smaller than its evidence.
+
+Replaced ``comparable recovery'' with the owner-supported ``reproduces this
+recovery''; replaced ``our question is narrower'' with the actual intervention
+(``isolate the missing variable''); stated the cosine diagnostic, full-pair
+geometry, and trained behaviour as positive evidence roles; rendered the
+evaluation-row resampling unit without a negated population-uncertainty clause;
+and rewrote Discussion around the recurring crossover and the broader
+in-window role of $z$ without ``not pooled'', ``does not define'', or a final
+``in the tested protocols'' disclaimer. The theorem's surrogate condition,
+single-seed identities, and experimental units remain because they determine
+the truth conditions; no claim, number, citation, protocol, or result changed.
+
+The affected body pages 1 and 5--8 were re-rendered and read. `compile.sh`
+passes at 8 body / 27 total pages, undefined refs/cites 0, worst overfull 0pt,
+anonymous US Letter, finalcopy off, Type-3 0, and all fonts embedded. The
+curated supplement was rebuilt and passes `unzip -t`. Active PDF SHA-256 is
+`60f59e0f29a3158ef65870f6a3fb0d590501573835a755cd43b7f2b92bdf8c55`;
+ZIP SHA-256 is
+`37d9af05220b68e146128827f47e4694256705178d8fc9503922434c4ce140ce`.
+No commit, push, upload, GPU work, or new experiment was performed.
+
+Codex: 2026-08-27 reviewer-facing narrative convergence. Read the complete
+current PDF, all compiled LaTeX inputs, HANDOFF, NARRATIVE_GUIDE, and the full
+alternating review log before editing. The final pass keeps the paper's science
+and section order intact while making one identity recoverable at each scan
+depth: fixed-support interior allocation `z` is the missing RoPE coordinate.
+Figure 1 now explicitly separates coordinate definition, exact geometric
+consequence, and causal training identification. Introduction and Section 4
+present fully frozen, matched low-rank adaptation, and from-training work as
+three interventions on that same variable; the adaptation opening keeps
+task-family transfer distinct from the 8B source-blocking causal-use result.
+Theory now begins from the empirical fact and serves as the spectral-budget,
+slow-collapse, and co-adaptation explanation, with EVQ-Cosh retained as the
+closed-form construction unique for its stated surrogate. Discussion closes the
+same lifecycle loop.
+
+The author explicitly overrode the older appendix-only routing for the
+target-retargeted condition. Section 2 therefore carries one sentence stating
+that support retargeting reverses the tested ordering and makes support and
+allocation distinct but interacting coordinates; Appendix C continues to own
+all numbers and per-seed interpretation. No experiment number, citation,
+protocol, theorem statement, uncertainty unit, or endpoint changed. Related
+Work was compressed to 171 source words so it ends on page 7 rather than leaving
+a three-line continuation above Discussion. Across the seven edited body files,
+the net source-word change from the pre-pass baseline is +89.
+
+Verification: `compile.sh` passes at 8 body / 27 total US-Letter pages, zero
+undefined references or citations, 0pt worst overfull, anonymous output,
+finalcopy off, Type-3 zero, and all fonts embedded. Body pages 1--8 were read;
+the first four pages and Discussion passed the 30-second and 3-minute reviewer
+paths, and the final page-7/8 break is clean. Navigation and supplement contract
+tests pass 43/43 under Conda `aidemo`. The curated supplement passes `unzip -t`,
+compiles in a fresh extraction at 8/27, and its allowlisted tests pass 144/144.
+Active PDF SHA-256 is
+`49a942b756fa329c7f46c8a7bf873eab81439fe62a5d62eb4a4928f4fe6ae51a`;
+ZIP SHA-256 is
+`d9223eadff24915716fc8f4d03923fe620d71db997e429fe64a0e339629333cd`;
+immutable `paper/main.pdf` remains
+`fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`.
+No GPU work, new experiment, or upload was performed.

@@ -30,7 +30,7 @@ Use this chain before adding or moving prose:
    persistence through the model lifecycle.
 3. **Implication:** with the same \(K\), support, and RoPE operator, tables can
    form different effective positional bases. EVQ-Cosh is one closed-form,
-   zero-learned-parameter witness on that axis.
+   zero-learned-parameter construction on that axis.
 
 State the conclusion first, then attach the nearest material scope clause. Do
 not make an unproved limitation the grammatical subject of a paragraph.
@@ -42,9 +42,18 @@ changing frequencies.” The question is how a finite set of frequency samples
 allocates phase resolution **within fixed support**, and hence what effective
 positional basis a nominal rotary budget actually provides.
 
-- A scalar-base/range method changes support \((a,R)\), realised phases, or
-  range transport while retaining a geometric path. A pinned-support change in
-  `z` cannot be recreated by another scalar base.
+State the field-level contrast precisely without turning it into a catalogue.
+Widely used RoPE extensions are organised around base, range, or phase
+transport on a geometric reference path; some apply frequency-dependent
+transforms, and learned-table methods can alter the table directly. The
+contribution is the explicit separation of support and interior allocation,
+fixed-support causal identification of the allocation coordinate, and a
+closed-form construction on that coordinate.
+
+- A scalar-base change moves the geometric support path while leaving its
+  normalised allocation uniform. Frequency-dependent transport can also induce
+  a non-uniform realised `z`; that does not erase the fixed-support distinction.
+  A pinned-support change in `z` cannot be recreated by another scalar base.
 - Whole-vector or broader positional methods change more than a single fixed
   RoPE table. Do not flatten those operator differences away.
 - Learned-table work such as LeRoPE or AdaRoPE is relevant allocation work, not
@@ -116,12 +125,16 @@ and deployment machinery before assigning causality.
 
 FMRoPE is historical reviewer context, related work, and the paper-faithful
 fixed-support protocol control. It is not this paper's main question, an
-opponent, or a separate narrative axis. Do not restart a body-prose loop about
-“fixed-support win versus target-matched loss.” The fixed-support control
-establishes the identified coordinate; the target-matched result is a
-deployment boundary and belongs in the required appendix/protocol context,
-not in the paper's remembered main story. Never write “we beat FMRoPE” or
-“we beat YaRN.”
+opponent, or a separate narrative axis. The body carries one result-level
+sentence: retargeting the support reverses the tested ordering, showing that
+support and allocation are distinct but interacting coordinates. All numbers,
+per-seed detail, and the protocol reading remain in Appendix C. Do not expand
+this into a winner/loser loop. Never write “we beat FMRoPE” or “we beat YaRN.”
+
+Do not let a historical citation complaint determine the manuscript skeleton.
+Related Work is a compact late-body attribution section; its job is to locate
+the fixed-support $z$ estimand, not to teach a taxonomy of every range method or
+to litigate whether a channel-wise transform should be called a base change.
 
 ## Evidence routes: preserve their identities
 
@@ -129,7 +142,7 @@ Do not pool metrics, uncertainty, or causal readings across these routes.
 
 | Route | Canonical route(s) | Strongest reviewer-facing claim | Boundary that must travel with it |
 | --- | --- | --- | --- |
-| Zero-training frozen intervention | [`SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823`](research/attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md); session/fresh-natural owners routed by [`research/attention-aware-retrofit/README.md`](research/attention-aware-retrofit/README.md) | Holding the tested frozen checkpoint, support, amplitude, rows, and decoder fixed while changing `z` shows that allocation remains consequential after pretraining. | It is a per-checkpoint deterministic intervention with evaluation-row uncertainty, not training-seed or population uncertainty. Frozen derived and movement-profile-ramp profiles are **not** EVQ-Cosh; Native and official YaRN are reference rows, not substitutes for the pure-`z` control. |
+| Zero-training frozen intervention | [`SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823`](research/attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md); session/fresh-natural owners routed by [`research/attention-aware-retrofit/README.md`](research/attention-aware-retrofit/README.md) | Holding the tested frozen checkpoint, support, amplitude, rows, and decoder fixed while changing `z` shows that allocation remains consequential after pretraining. | It is a per-checkpoint deterministic intervention with evaluation-row uncertainty, not training-seed or population uncertainty. The uniform, coarse label-free, and derived allocations are three values of `z`, not separate method axes, and none is EVQ-Cosh; Native and official YaRN are reference rows, not substitutes for the pure-`z` control. |
 | Matched adaptation | [`OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729`](../rebuttal/rebuttal_0723/theory_results/OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729.md); [`EVQ_8B_ADAPTATION_EVIDENCE_20260724`](../rebuttal/rebuttal_0723/theory_results/EVQ_8B_ADAPTATION_EVIDENCE_20260724.md) | Matched adaptation supports task-family length transfer at 1.485B and remote-source causal use in the tested 8B adapted model. | Adaptation-only evidence; retain its single-trajectory and endpoint scope. RULER/2Wiki are task-family adaptation, not unseen-task transfer; 8B is not pretraining-scale evidence. |
 | From-training / co-adapted | [`EXACT_RANGE_151M_3SEED_RESULT_20260820`](research/EXACT_RANGE_151M_3SEED_RESULT_20260820.md); [`table18_mla_3seed_aggregate.json`](../data/curated/table18_mla_3seed_aggregate.json); routed 750M/1.485B owners in [`research/README.md`](research/README.md) | Fixed-support three-seed training identifies `z`; architecture and full-parameter studies repeat the qualitative long-context crossover across their own protocols. | 50.9M is configuration/shape breadth, not the first point of a scale series. The 1.485B row is a pre-specified early-training, same-initialisation/same-scientific-recipe trend, not converged, bitwise paired, or multi-seed scale evidence. |
 
@@ -146,9 +159,9 @@ The nine-page body should preserve this reading order:
 
 1. finite-table coordinate and counterintuitive spectral-budget observation;
 2. fixed-support identification of `z`;
-3. related-work classifier and exact full-pair theory;
-4. EVQ-Cosh as a bounded analytic witness;
-5. three labelled evidence routes, then practical implications.
+3. exact full-pair theory and EVQ-Cosh as a bounded analytic construction;
+4. three labelled evidence routes;
+5. a compact related-work classifier, then the field implication.
 
 Foreground the theorem--identification--lifecycle loop. Compress repeated
 history, reviewer rebuttal framing, metric ledgers, and protocol detail.
