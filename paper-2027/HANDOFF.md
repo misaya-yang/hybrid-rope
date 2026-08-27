@@ -3,8 +3,8 @@
 - **Updated:** 2026-08-27
 - **Target:** ICLR 2027
 - **Branch / upstream:** `main_0726` / `origin/main_0726`
-- **Manuscript/provenance checkpoint:** `7a938d378399ad9daf5a6840f4a078a87136cd7c`
-  (`paper: finalize provenance and supplement evidence`); use `git rev-parse
+- **Manuscript/provenance checkpoint:** `001a900702c50a301c1970fe23b8f7aaa610732e`
+  (`paper: center ICLR narrative on allocation interventions`); use `git rev-parse
   HEAD` for the receipt-only commit that carries this handoff line.
 - **Active manuscript:** `paper-2027/`
 - **Immutable baseline:** `paper/`
@@ -15,9 +15,10 @@
   questions for fully frozen, low-rank-adapted, and from-training models.
   Theory explains the empirical thesis, and EVQ-Cosh remains the closed-form
   construction on the coordinate. The target-retargeted ordering reversal is
-  stated once in the body and fully documented in Appendix C. The revision is
-  locally validated and uncommitted; no commit, push, upload, or GPU work is
-  authorised.
+  stated once in the body and fully documented in Appendix C. The manuscript
+  is published by the checkpoint above; the receipt-only commit containing
+  this line is the final branch head. No upload, GPU work, or further Git
+  mutation is authorised.
 - **Internal only:** exclude this file, the narrative guide, revision plans, and
   the Codex/Claude review log from the anonymous supplement.
 - **Concurrent routing edits:** during the 2026-08-27 narrative pass, separate
@@ -126,8 +127,9 @@ matched trajectories.
 - Immutable `paper/main.pdf`
   - SHA-256: `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`
 
-The active PDF and source are uncommitted working-tree artifacts. Do not confuse
-this receipt with the older published checkpoint or curated supplement receipt.
+The active PDF, source, and curated supplement are tracked by the manuscript
+checkpoint above. The separate routing/review edits listed in the status block
+remain uncommitted and are not part of this publication.
 
 Latest `./compile.sh` validation:
 
