@@ -1704,3 +1704,159 @@ ZIP SHA-256 is
 immutable `paper/main.pdf` remains
 `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`.
 No GPU work, new experiment, or upload was performed.
+
+Codex: 2026-08-28 targeted Qwen-verdict absorption and accepted-paper
+calibration. Rechecked the current manuscript, the frozen-checkpoint owner and
+method-selection ledger, the 750M owner, and the local ICLR-2026 RoPE cohort
+before editing. The accepted papers do not label every supporting result as
+single-seed in body prose: Deconstructing foregrounds five-seed averaging
+because replication is part of its claim, while Selective RoPE places seed
+identities in appendix setup tables; RePo, GRAPE, and PPE do not repeat seed
+scope beside their main trained-model results. I therefore rejected the Qwen
+proposal to add "seed 42" to the 750M body sentence. Its Appendix Table 6
+caption already supplies that identity, while this paper's three-seed causal
+anchor remains appropriately prominent.
+
+Adopted three narrow improvements. Section 4 now points "model-relative split
+rule" to Appendix E. Appendix E defines the label-free ramp projection and its
+OLMo/Qwen transition-pair bounds, then records the core-four method-selection
+set and the post-freeze unseen-nine confirmation set without adding a per-task
+score ledger. The anonymous curated receipt carries the same provenance.
+Appendix A now cites Gray and Neuhoff (1998), DOI 10.1109/18.720541, for the
+Bennett-integral high-resolution quantisation expansion. No body result,
+number, theorem, method identity, or claim strength changed.
+
+Verification: `compile.sh` passes at 8 body / 27 total US-Letter pages, zero
+undefined refs/cites, 0pt worst overfull, anonymous output, finalcopy off,
+Type-3 zero, and all fonts embedded. Inspected affected body page 6, reference
+page 10, and appendix pages 19 and 26; the new prose is legible and causes no
+float or page-break regression. Navigation and supplement contract tests pass
+43/43 under Conda `aidemo`. The curated ZIP passes `unzip -t`, compiles in a
+fresh extraction at 8/27, and its allowlisted tests pass 144/144. Active PDF
+SHA-256 is
+`700dd0ec8d8836eb93267a399238ac875666211f1c673bb4f87430194c5f828b`;
+ZIP SHA-256 is
+`5ba1dbb5f26021ab54a54263fbfc6fd7296e020ff762e3d6976c1bd5557550a6`;
+immutable `paper/main.pdf` remains
+`fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`.
+No commit, push, upload, GPU work, or new experiment was performed.
+
+Codex: 2026-08-28 accepted-paper claim and experimental-narrative pass.
+Synthesised three Luna pair reviews of MrRoPE/RePo,
+Deconstructing/Decoupling, and Selective RoPE/PPE, then independently checked
+GRAPE against the current manuscript. The transferable pattern was positive
+claim first, decisive result first, and only the nearest boundary in body
+prose. I did not copy their unsupported SOTA, universal, robust, significant,
+or upper-bound language, their incomplete uncertainty reporting, or their
+habit of leaving weaker cells unexplained.
+
+Abstract and Introduction now present the convex construction actively while
+retaining surrogate-only uniqueness. The three Contributions remain intact
+but distinguish the closed-form EVQ-Cosh construction from evidence on the
+broader allocation coordinate. Section 4 now leads frozen likelihood, matched
+adaptation, 8B source use, scarce-channel MLA, and 750M continuation with the
+result that establishes each paragraph's scientific role. Every near-window
+cost and comparison value remains in the same paragraph, but follows rather
+than precedes the decisive long-context result. The video-DiT seed identity
+remains in its appendix protocol and caption instead of being repeated as a
+body warning. Discussion states the DiT outcome as a second measured regime
+rather than an exception. No theorem, number, citation, protocol, evidence
+role, table, figure, or section order changed.
+
+Across the four edited body TeX files, source-word count is net -2 relative
+to the published checkpoint. `compile.sh` passes at 8 body / 27 total
+US-Letter pages, zero undefined refs/cites, 0pt worst overfull, anonymous
+output, finalcopy off, Type-3 zero, and all fonts embedded. Visually inspected
+body pages 1 and 6--8 at final size; no float, orphan, clipping, or page-break
+regression was found. Navigation and supplement contract tests pass 43/43
+under Conda `aidemo`; the curated ZIP passes `unzip -t`, compiles in a fresh
+extraction at 8/27, and its allowlisted tests pass 144/144. Active PDF
+SHA-256 is
+`de58d955f46e449df6e2ff0a1b1cca6d9228992607f3173a8935b770cf1e87a0`;
+ZIP SHA-256 is
+`e92376d5167558a7fb0c7515a0bf7bc21a05ec33ccbd4e8c5fc4d72a36d41774`;
+immutable `paper/main.pdf` remains
+`fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`.
+No commit, push, upload, GPU work, or new experiment was performed.
+
+Codex: 2026-08-28 empirical-visual rebalancing and author correction on page
+use. Moved the frozen-checkpoint displacement equation and its model-specific
+construction out of Theory: Section 4.1 now defines the fixed-support map,
+Appendix E.2 owns the residual-energy and coarse-ramp details, and Theory keeps
+one interface sentence before entering the full sin/cos geometry. Replaced the
+body frozen table with a two-panel OLMo/Qwen figure. Grey reference rows and the
+shaded matched-support pure-`z` block remain distinct; the caption and Appendix
+retain exact values and evaluation-row intervals.
+
+The first layout response incorrectly treated the natural tail space on the
+last appendix page as a defect and began compressing Appendix E to recover a
+27-page total. The author corrected that criterion: a final scientific appendix
+page need not be filled. I restored the full construction paragraph and exact
+appendix table, and thereafter checked only float ownership, order, clipping,
+and readability. No content was cut to reduce total pages.
+
+The resulting body still fit in eight pages, but the experiment presentation
+remained visually asymmetric: adaptation and causal use were compressed into
+one dense paragraph while Theory occupied pages 3--5. Added one further
+owner-backed figure from the existing 8B matched-adaptation receipt. Its two
+panels show target-block routing and the position-preserving gold-block deletion
+within the same protocol; they do not pool metrics with the frozen or
+from-training routes. The final body now gives Figure 1(c) to fixed-support
+training identification, Figure 2 to the frozen pure-`z` intervention, and
+Figure 3 to adapted causal source use, while the 1.485B crossover remains only
+in Appendix E.
+
+`compile.sh` passes at 8 body / 28 total US-Letter pages, zero undefined
+refs/cites, 0pt worst overfull, anonymous output, finalcopy off, Type-3 zero,
+and all fonts embedded. Visually inspected body pages 3 and 5--8 and appendix
+pages 26--28; the two new figures are readable at final size, all floats remain
+with their owning subsections, and page 28 ends naturally after the MLA result.
+Navigation and supplement contract tests pass 43/43 under Conda `aidemo`; the
+curated ZIP passes `unzip -t`, compiles in a fresh extraction at 8/28, and its
+allowlisted tests pass 144/144. Active PDF SHA-256 is
+`441ebca2819dd42dd0d89249182643e9c22ad5b04bde3e0780ed57082e0c0bc2`;
+ZIP SHA-256 is
+`850417bf298d2ce47a2ea2cacf9c43051e3e5f7a3025ff53e6d3f396ee36661d`;
+immutable `paper/main.pdf` remains
+`fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`.
+No commit, push, upload, GPU work, or new experiment was performed.
+
+Codex: 2026-08-28 ninth-page empirical interpretation pass. The author rejected
+an eight-page body as unnecessary compression and required references to begin
+on page 10. Added 173 source words, all from completed owners. Section 2 now
+explains the $50.9$M factorial as a cross-configuration allocation-family
+result: three Cosh strengths and the deformation-matched exponential retain
+fixed support, with the strongest Cosh and exponential directions appearing in
+$10/12$ and $9/12$ configurations. The paragraph keeps the $151.9$M paired
+intervention as the effect-size owner and uses the factorial to separate the
+allocation-coordinate discovery from a single Cosh curve.
+
+Section 4.3 now states the scientific job of each previously compressed result.
+The $432$M MLA experiment is a scarce-rotary-budget test; the $750$M
+continuation connects long-text likelihood to strict autoregressive retrieval;
+the $1.485$B from-initialisation run supplies the largest tested natural-text
+scale crossover; and the video-DiT training-frame gain shows that allocation is
+not confined to autoregressive extrapolation. No result, protocol, seed scope,
+or numerical value changed.
+
+The added prose moved the body-end label to page 9. Required statements then
+left one line on page 10 and the existing forced bibliography page break pushed
+References to page 11. Removed only that `\clearpage`: statement text and order
+are unchanged, the final AI-responsibility sentence appears at the top of page
+10, and the References heading follows on the same page. The first reference
+therefore begins on page 10 as requested.
+
+`compile.sh` passes at 9 body / 28 total US-Letter pages, zero undefined
+refs/cites, 0pt worst overfull, anonymous output, finalcopy off, Type-3 zero,
+and all fonts embedded. Visually inspected body pages 2--3 and 7--9 plus
+reference page 10; Section 2 remains on page 2, Theory still begins on page 3,
+and the page 9--10 transition is clean. Navigation and supplement contract
+tests pass 43/43 under Conda `aidemo`; the curated ZIP passes `unzip -t`,
+compiles in a fresh extraction at 9/28, and its allowlisted tests pass 144/144.
+Active PDF SHA-256 is
+`ade3beb59eefca91b339ef4d6731cdda19fa8eb40f384d3eab60fd9c4df06f01`;
+ZIP SHA-256 is
+`a270d8f9a85184b0e6be57bf16e9054a7258cc3567302f9e6ee6319ee0e52e08`;
+immutable `paper/main.pdf` remains
+`fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`.
+No commit, push, upload, GPU work, or new experiment was performed.

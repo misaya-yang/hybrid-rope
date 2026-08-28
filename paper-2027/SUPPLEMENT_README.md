@@ -23,7 +23,9 @@ cd ..
 Regenerate every figure bundled with this paper:
 
 ```bash
+python paper-2027/figs/make_fig_8b_causal_source_use.py
 python paper-2027/figs/make_fig_evidence_overview.py
+python paper-2027/figs/make_fig_frozen_fixed_support.py
 python paper-2027/figs/make_fig_frequency_geometry.py
 python paper-2027/figs/make_fig_exact_range_control.py
 python paper-2027/figs/make_fig_olmo_scale_crossover.py

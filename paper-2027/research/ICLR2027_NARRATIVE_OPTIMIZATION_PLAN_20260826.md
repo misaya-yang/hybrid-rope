@@ -1,5 +1,9 @@
 # ICLR 2027 narrative optimization plan (Codex execution)
 
+> **SUPERSEDED (2026-08-27):** superseded as the Codex edit order by
+> [`REVISION_BRIEF.md`](../REVISION_BRIEF.md) v2 (five-seat-panel-grounded).
+> Retained for routing history; do not execute from this file.
+
 - **Date:** 2026-08-26
 - **For:** Codex implementing `paper-2027/` wording/layout only
 - **Not:** a numerical owner, a new experiment, a GPU authorization, or

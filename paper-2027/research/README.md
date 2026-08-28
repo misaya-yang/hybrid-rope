@@ -18,12 +18,20 @@ up in [`../../INDEX.md`](../../INDEX.md). Do not duplicate them here.
 2. [`../../INDEX.md`](../../INDEX.md) — theory/evidence/code index and agenda.
 3. [`../HANDOFF.md`](../HANDOFF.md) — live manuscript/worktree state and the
    only current action queue.
-4. [`ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md`](ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md)
-   — current Codex-facing 9-page narrative edit order; no numerical ownership.
-   The prior simulated-review memo is
-   [`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md`](ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md).
-   The related-work / novelty Codex patch is
-   [`ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md`](ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md).
+4. [`../REVISION_BRIEF.md`](../REVISION_BRIEF.md) — v2 (2026-08-27), grounded in
+   the five-seat panel; the current revision-cycle execution input for Codex,
+   superseding
+   [`ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md`](ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md)
+   and
+   [`ICLR2027_WHOLE_PAPER_REVISION_PLAN_20260826.md`](ICLR2027_WHOLE_PAPER_REVISION_PLAN_20260826.md)
+   as edit orders (both retained for routing history). The prior
+   simulated-review memo
+   ([`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md`](ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md))
+   is superseded by
+   [`external-reviews/qwen-panel-20260826/`](external-reviews/qwen-panel-20260826/)
+   (decision: Major Revision). The related-work / novelty Codex patch remains
+   [`ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md`](ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md)
+   (verify every number against a routed source before use).
 5. [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md)
    — current conceptual grammar: physical table, causal variables, method
    stages, and the role of the zero-training replacement.
@@ -112,9 +120,9 @@ Additional durable theory/supporting files at research root:
 
 | Question | Canonical source | Maximum role |
 | --- | --- | --- |
-| Current manuscript narrative edit order | [`ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md`](ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md) | Codex-facing 9-page wording/layout only; never a numerical owner |
+| Current revision-cycle execution input | [`../REVISION_BRIEF.md`](../REVISION_BRIEF.md) | v2, panel-grounded (2026-08-27); supersedes the narrative optimization plan as the Codex edit order; never a numerical owner |
 | Related-work citation sufficiency and remaining novelty-attack papers | [`ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md`](ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md) | Codex-facing related-work / bib patch only; not an evidence owner; do not restore the NeurIPS PE zoo |
-| Prior simulated-review decision | [`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md`](ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md) | historical reviewer-risk record; most P0/P1 items are already in live TeX |
+| Prior simulated-review decision | [`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md`](ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md) | historical reviewer-risk record; most P0/P1 items are already in live TeX; superseded by [`external-reviews/qwen-panel-20260826/`](external-reviews/qwen-panel-20260826/) (2026-08-27, Major Revision) |
 | Conceptual grammar and causal-variable separation | [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md) | notation and routing only; never a numerical owner |
 | Post-submission theory state and missing bridge | [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md) | theory continuation and protocol design only; no new result or compute authorization |
 | Matched-content phase 2x2 bridge preflight | [`attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md`](attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md) | frozen protocol design only; separates table-by-phase interaction from gain, adaptation, and routing |

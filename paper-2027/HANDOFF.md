@@ -1,6 +1,6 @@
 # ICLR 2027 active handoff
 
-- **Updated:** 2026-08-27
+- **Updated:** 2026-08-28
 - **Target:** ICLR 2027
 - **Branch / upstream:** `main_0726` / `origin/main_0726`
 - **Manuscript/provenance checkpoint:** `001a900702c50a301c1970fe23b8f7aaa610732e`
@@ -11,14 +11,23 @@
 - **Status:** the reviewer-facing narrative is converged around one paper
   identity: fixed-support interior allocation `z` is a causal RoPE design
   coordinate. Figure 1 carries definition, geometric consequence, and causal
-  identification; the empirical section poses three parallel intervention
-  questions for fully frozen, low-rank-adapted, and from-training models.
+  identification. Figure 2 makes the mature frozen pure-`z` intervention
+  visually immediate, and Figure 3 separates the 8B adaptation route's remote
+  routing and source-deletion endpoints. The empirical section poses three
+  parallel intervention questions for fully frozen, low-rank-adapted, and
+  from-training models.
   Theory explains the empirical thesis, and EVQ-Cosh remains the closed-form
   construction on the coordinate. The target-retargeted ordering reversal is
-  stated once in the body and fully documented in Appendix C. The manuscript
-  is published by the checkpoint above; the receipt-only commit containing
-  this line is the final branch head. No upload, GPU work, or further Git
-  mutation is authorised.
+  stated once in the body and fully documented in Appendix C. The checkpoint
+  above remains the latest published manuscript; the current worktree adds a
+  uncommitted provenance/citation patch plus a reviewer-facing narrative pass.
+  The latter strengthens active claim language and puts decisive long-context
+  results before their retained near-window costs without changing any value,
+  protocol, or evidence role. The body now uses the ninth-page budget for the
+  cross-configuration allocation-family result and for explicit interpretation
+  of the scarce-channel, 750M, 1.485B, and video-DiT evidence. References begin
+  on page 10. No upload, GPU work, commit, or push is
+  authorised by this pass.
 - **Internal only:** exclude this file, the narrative guide, revision plans, and
   the Codex/Claude review log from the anonymous supplement.
 - **Concurrent routing edits:** during the 2026-08-27 narrative pass, separate
@@ -119,35 +128,33 @@ matched trajectories.
 
 ## 4. Current source and PDF receipt
 
-- Main body: 8 pages; references begin after the required statements.
-- Total PDF: 27 US-Letter pages.
+- Main body: 9 pages; references begin on page 10 after the required statements.
+- Total PDF: 28 US-Letter pages.
 - `paper-2027/main.pdf`
-  - SHA-256: `49a942b756fa329c7f46c8a7bf873eab81439fe62a5d62eb4a4928f4fe6ae51a`
-  - final observed size: `652497` bytes
+  - SHA-256: `ade3beb59eefca91b339ef4d6731cdda19fa8eb40f384d3eab60fd9c4df06f01`
+  - final observed size: `757522` bytes
 - Immutable `paper/main.pdf`
   - SHA-256: `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`
 
-The active PDF, source, and curated supplement are tracked by the manuscript
-checkpoint above. The separate routing/review edits listed in the status block
-remain uncommitted and are not part of this publication.
+The active PDF, source, and curated supplement include the uncommitted patch
+described in the status block. The manuscript checkpoint above remains the
+latest Git-published version.
 
 Latest `./compile.sh` validation:
 
-- 8 body / 27 total pages;
+- 9 body / 28 total pages; References starts on page 10;
 - zero undefined references or citations;
 - `0pt` worst overfull box;
 - anonymous US-Letter output with `\iclrfinalcopy` disabled;
 - no Type-3 or unembedded fonts;
-- body pages 1--8 visually inspected after the final terminology and float pass;
-- appendix pages 13--27 visually inspected; the only intentional partial-page
-  space is before the Appendix E crossover figure, which keeps the following
-  subsection from being split around the float;
+- body pages 2--3 and 7--9, reference page 10, and appendix pages 26--28
+  visually inspected after the current patches;
 - current navigation and ICLR-supplement contract checks pass `43/43` under
   Conda `aidemo`; the earlier code/provenance suite remains `181/181`, with no
   code changed in this narrative pass;
 - curated supplement rebuilt, ZIP SHA-256
-  `d9223eadff24915716fc8f4d03923fe620d71db997e429fe64a0e339629333cd`;
-- isolated supplement compile passes at 8 body / 27 total pages, and its
+  `a270d8f9a85184b0e6be57bf16e9054a7258cc3567302f9e6ee6319ee0e52e08`;
+- isolated supplement compile passes at 9 body / 28 total pages, and its
   allowlisted test suite passes `144/144` under Conda `aidemo`;
 - `git diff --check` passes;
 - immutable `paper/main.pdf` hash unchanged.
@@ -159,6 +166,38 @@ older package's test counts, prove acceptance, or imply an OpenReview upload.
 
 Implemented:
 
+- Abstract and Introduction now state the construction actively: optimising
+  the convex allocation surrogate yields the closed-form EVQ-Cosh table, with
+  uniqueness scoped once to that surrogate. The abstract retains one
+  performance-number group and the Contributions remain three auditable claims.
+- Section 4 now leads each route with its decision-relevant long-context or
+  causal result. All near-window values remain in the same paragraph, but
+  follow the result they contextualise; Discussion owns the cross-protocol
+  crossover interpretation. Supporting single-seed identities remain in
+  appendix protocol/table captions rather than becoming body warnings.
+- Appendix E now defines the label-free model-relative ramp projection,
+  including the OLMo/Qwen transition-pair bounds, and records that the
+  nine-task OLMo set was evaluated only after core-four method selection was
+  frozen. The body adds only an appendix pointer; it does not expand the
+  protocol into a second results narrative. The anonymous curated receipt
+  carries the same split and task-selection provenance.
+- The mature frozen-table displacement equation and model-specific construction
+  now live where they are used: Section 4.1 gives the fixed-support map and
+  Appendix E.2 owns the residual-energy and coarse-ramp details. Theory keeps a
+  one-sentence interface before proceeding directly to the full sin/cos basis.
+- The former body Table 2 is now Figure 2, a compact OLMo/Qwen double panel.
+  Grey reference rows and the shaded matched-support pure-`z` block remain
+  visually and causally distinct; exact values and evaluation-row intervals
+  remain in the caption and Appendix E.2.
+- Figure 3 gives the other high-value empirical intervention that prose alone
+  obscured: the matched 8B LoRA model routes more strongly to the remote source,
+  and position-preserving deletion of that source changes its answer NLL. The
+  two panels share one protocol and do not pool metrics or uncertainty with the
+  frozen or from-training routes.
+- Appendix A cites Gray and Neuhoff's quantisation survey for the
+  Bennett-integral high-resolution expansion. The 750M single-seed identity
+  remains in Appendix Table 6 rather than being repeated in the body; the
+  three-seed causal anchor remains foregrounded.
 - The abstract is 164 source words and carries one numerical result group: the
   mature fixed-support RULER intervention. It opens with the field-level
   base/range/phase-transport framing and the allocation coordinate that this
@@ -173,24 +212,33 @@ Implemented:
   causal identification; its caption makes those evidence roles explicit.
 - The forced page break after Introduction has been removed; Section 2 now
   begins on page 2 instead of leaving a large blank region.
+- The forced page break before the bibliography is also removed. The required
+  statements retain their full text, the body-end label falls on page 9, and
+  the References heading follows them on page 10 instead of creating a
+  one-line statement page and delaying references to page 11.
 - Identification has one body job: the 151.9M fixed-support causal owner, plus a
-  compact 50.9M configuration/shape breadth sentence. One additional sentence
+  compact 50.9M configuration/shape breadth paragraph. It now explains why the
+  Cosh strengths and deformation-matched exponential support an allocation
+  family rather than a single privileged curve, while keeping the 151.9M
+  intervention as the effect-size owner. One additional sentence
   reports that support retargeting reverses the tested ordering, establishing
   support and allocation as distinct but interacting design coordinates.
 - Theory opens from the empirical result and uses the full sin/cos positional
   object, the exact spectral-budget identity, slow collapse, co-adaptation,
   transplant obstruction, and a bounded
-  Cosh surrogate. It defines the frozen derived profile's causal pair-count
-  measure and coarse label-free control in line, while stating that the
-  uniform/coarse/derived tables are values of the same `z` coordinate and are
-  separate from EVQ-Cosh. Theory now begins on page 3 and
+  Cosh surrogate. The frozen derived profile and coarse label-free control now
+  live in Section 4.1 and Appendix E.2, while Theory keeps only their interface
+  to the same `z` coordinate. Theory begins on page 3 and
   closes on page 5 by stating the full basis-allocation loop explicitly.
 - The empirical section is titled around the allocation coordinate and poses
   three parallel questions: whether `z` changes a fully frozen model, whether
   pretrained representations exploit it with limited adaptation, and whether
   weights learn it through from-training co-adaptation. Mature likelihood and
-  task capability remain separate.
-- The body now includes one compact mature-checkpoint result table. It separates
+  task capability remain separate. Its from-training route now states why the
+  432M MLA result is a scarce-budget test, distinguishes 750M capability
+  conversion from 1.485B natural-text scale persistence, and uses the video-DiT
+  in-window result to expose allocation beyond autoregressive extrapolation.
+- The body now includes a compact mature-checkpoint result figure. It separates
   Native/official Transformers YaRN references from the matched-support pure-`z`
   block, carries the confirmation-only OLMo protocol, and appears after its
   explanatory paragraph. The co-adaptation table likewise stays inside its own
@@ -209,7 +257,7 @@ Implemented:
 - The ICLR supplement allowlist also excludes the retired 454M/125M figures,
   generator, orphaned appendix/table source, and five obsolete curated
   artifacts. The curated ZIP was rebuilt after the revision; SHA-256
-  `d9223eadff24915716fc8f4d03923fe620d71db997e429fe64a0e339629333cd`.
+  `a270d8f9a85184b0e6be57bf16e9054a7258cc3567302f9e6ee6319ee0e52e08`.
 - The video-DiT breadth result is now the raw-backed seed-42 head-to-head only;
   the unreceipted second-seed and base-1000 rows are absent from reviewer-facing
   source. Its tracked JSON and canonical owner are routed by `INDEX.md` and the
@@ -224,10 +272,11 @@ Implemented:
   design.
 - A `FloatBarrier` after the Appendix E 1.485B figure prevents the following
   frozen-checkpoint subsection from overtaking the float. Page 26 now starts
-  that subsection after the complete figure; page 27 carries the final MLA
-  table and interpretation without an isolated four-line page.
+  that subsection after the complete figure; page 28 carries the final MLA
+  table and interpretation. Its remaining tail space is the natural end of the
+  scientific appendix, not a misplaced float or page-filling target.
 
-No page filler, duplicate lifecycle figure/table, new experiment, or new theorem
+No page filler, cross-protocol lifecycle ledger, new experiment, or new theorem
 is needed merely to reach nine pages. Add material only when it closes a real
 scientific or reviewer-path gap.
 

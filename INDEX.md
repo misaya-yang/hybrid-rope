@@ -274,8 +274,10 @@ headroom 归到 position/allocation。完整 2x2 和判决读法在
 
 投稿期叙事决策的历史记录在
 [`ICLR2027_SUBMISSION_NARRATIVE_AND_EXPERIMENT_PLAN_20260826`](paper-2027/research/ICLR2027_SUBMISSION_NARRATIVE_AND_EXPERIMENT_PLAN_20260826.md)；
-它不是新的行动队列。当前九页行文的 Codex 执行单是
-[`ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826`](paper-2027/research/ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md)。
+它不是新的行动队列。当前修订期的 Codex 执行单是
+[`REVISION_BRIEF.md`](paper-2027/REVISION_BRIEF.md)（v2，2026-08-27，五席评审团依据）；
+[`ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826`](paper-2027/research/ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md)
+已被其取代，仅保留路由历史价值。
 Related-work / novelty 的 Codex 执行单是
 [`ICLR2027_CITATION_NOVELTY_AUDIT_20260826`](paper-2027/research/ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md)：
 NeurIPS `zWsa` 的 FMRoPE 漏引已在识别段闭合；剩余 originality-1 路径是 bib 中已有、PDF 未点名的 HoPE / CoPE / RoPE-ID / Xu / Wu / Chiang。它不是新的证据 owner，也不恢复 NeurIPS 的 PE zoo。
@@ -297,10 +299,11 @@ uniform 测度下存在精确正交格；三角测度、钉住 support 和训练
 
 ### 6.5 反重复与论文边界
 
-当前投稿前九页行文的执行单由
-[`ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826`](paper-2027/research/ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md)
+当前修订期的执行单由
+[`REVISION_BRIEF.md`](paper-2027/REVISION_BRIEF.md)（v2，五席评审团依据）
 拥有；它不是数值 owner，也不替代本节的研究边界。先前模拟审稿记录在
-[`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826`](paper-2027/research/ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md)。
+[`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826`](paper-2027/research/ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md)，
+已被五席评审团 [`external-reviews/qwen-panel-20260826/`](paper-2027/research/external-reviews/qwen-panel-20260826/)（决议：Major Revision）取代。
 其共同判决是：不再增加 submission
 compute；先移除 Appendix A.11 已被 O3 取代的单幂律 / exponent-matched 诊断，
 把 target-retargeted 反转、统计单位和 EVQ-Cosh / mature-derived estimand 边界放到

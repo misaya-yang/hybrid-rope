@@ -9,9 +9,9 @@ changing only $z$ at matched support raises nine-task $16$K RULER from
 $0.56\%$ to $60.47\%$; a coarse label-free allocation reproduces this recovery
 without task labels or parameter updates. A paired
 three-seed fixed-support training intervention independently improves every
-tested OOD length in every seed, identifying $z$ during co-adaptation. A stated
-convex surrogate then yields \evq{}, a closed-form zero-learned-parameter
-construction unique for that surrogate. Across fully frozen, matched low-rank
-adaptation, and from-training interventions, the same coordinate remains
-consequential throughout the model lifecycle. A finite RoPE table is jointly
-determined by its sampled support and how its spectral budget is allocated.
+tested OOD length in every seed, identifying $z$ during co-adaptation.
+Optimising a convex surrogate over this coordinate yields \evq{}, a closed-form
+zero-learned-parameter allocation unique within that surrogate. Across fully
+frozen, matched low-rank adaptation, and from-training interventions, allocation
+changes model behaviour throughout the model lifecycle. A finite RoPE table is
+jointly determined by its sampled support and how its spectral budget is allocated.

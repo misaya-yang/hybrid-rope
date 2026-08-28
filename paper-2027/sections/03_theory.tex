@@ -31,25 +31,9 @@ same support and different interior $z$ therefore cannot be represented by a
 different scalar base. Quantities such as median wavelength or the number of
 channels completing a cycle are summaries of $z$, not omitted scalar controls.
 
-The frozen-checkpoint experiments instantiate this identity without using the
-Cosh family. Given Native frequencies $\omega_k$, an extension factor $s$, and
-channel-wise displacement weights $m_k\in[0,1]$, they form
-\begin{equation}
-\widehat\omega_k=\omega_k\big[(1-m_k)+m_k/s\big],\qquad
-\widehat z_k=\frac{-\log\widehat\omega_k-\widehat a}{\widehat R},
-\label{eq:movement-allocation}
-\end{equation}
-with the fast and slow endpoints pinned, so
-$\widehat a=-\log\widehat\omega_0$ and
-$\widehat R=-\log\widehat\omega_{K-1}-\widehat a$. The uniform-allocation
-control sets $\widehat z_k=k/(K-1)$. For the derived arm,
-$\widetilde U_k$ is the normalised residual-energy fraction left after the full
-sin/cos pair is projected onto all other pairs over Native separations weighted
-by their causal pair count, $p(\Delta)\propto L-\Delta$. It sets
-$m_k=(1-\widetilde U_k)^2$, so less unique pairs move farther. A coarse,
-label-free control fits a linear ramp to these displacements without using task
-labels. All three tables have the same $K$ and endpoints; after normalisation
-they are simply three values of the same interior coordinate $z$.
+The frozen-checkpoint protocols instantiate this identity without the Cosh
+family; \S\ref{sec:exp-frozen-support} defines their fixed-support displacement
+map, and App.~\ref{sec:frozen-fixed-support} specifies its controls.
 
 A rotary pair contributes $f_\omega(\Delta) = C\cos(\omega\Delta) +
 D\sin(\omega\Delta)$ to the relative-position attention logit, with $C,D$ set by

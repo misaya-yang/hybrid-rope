@@ -45,10 +45,10 @@ in every seed (\S\ref{sec:exp-identify}). Together these interventions show
 that $z$ is neither a disguised base change nor a coordinate that disappears
 once weights have been trained.
 
-\emph{Exact Variational Quantization with a Cosh density} (\evq{}) turns the
-identified coordinate into a closed-form table. Its inverse-CDF quantiles follow
-from a stated convex surrogate, require no learned positional parameters, and
-are unique for that surrogate.
+Optimising a convex surrogate over $z$ yields \emph{Exact Variational
+Quantization with a Cosh density} (\evq{}), a closed-form table whose
+inverse-CDF quantiles require no learned positional parameters. The solution is
+unique within that surrogate.
 
 \begin{figure}[t]
   \centering
@@ -85,6 +85,6 @@ intervention shows that the same coordinate remains active after pretraining.
 (ii) We give an exact phase-invariant account of the full sin/cos basis: a
 spectral-budget identity, a slow-frequency collapse law, the weight--table
 co-adaptation boundary, and a frozen-transplant obstruction.
-(iii) We derive \evq{} as a closed-form, zero-learned-parameter construction for
-a stated convex surrogate and demonstrate control through fully frozen,
-matched-adaptation, and from-training interventions.
+(iii) We solve a convex allocation surrogate in closed form to obtain \evq{}
+with no learned positional parameters, and demonstrate allocation control in
+fully frozen, matched-adaptation, and from-training interventions.

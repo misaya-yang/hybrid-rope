@@ -1,5 +1,10 @@
 # ICLR 2027 submission narrative and experiment plan
 
+> **PARTIALLY SUPERSEDED (2026-08-27):** positioning and the revision roadmap
+> are now owned by [`REVISION_BRIEF.md`](../REVISION_BRIEF.md) v2. This memo
+> remains the authority on what may and may not be run before submission and on
+> the post-submission headroom inventory.
+
 - **Date:** 2026-08-26
 - **Status:** submission decision memo, updated after the completed dose and
   Native-4K diagnostics

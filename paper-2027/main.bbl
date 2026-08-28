@@ -1,4 +1,4 @@
-\begin{thebibliography}{41}
+\begin{thebibliography}{42}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -91,6 +91,13 @@ Yiran Ding, Li~Lyna Zhang, Chengruidong Zhang, Yuanyuan Xu, Ning Shang, Jiahang
 Aaron Grattafiori, Abhimanyu Dubey, Abhinav Jauhri, et~al.
 \newblock The {Llama} 3 herd of models.
 \newblock \emph{arXiv preprint arXiv:2407.21783}, 2024.
+
+\bibitem[Gray \& Neuhoff(1998)Gray and Neuhoff]{gray1998quantization}
+Robert~M. Gray and David~L. Neuhoff.
+\newblock Quantization.
+\newblock \emph{IEEE Transactions on Information Theory}, 44\penalty0
+  (6):\penalty0 2325--2383, 1998.
+\newblock \doi{10.1109/18.720541}.
 
 \bibitem[Ho et~al.(2020)Ho, Duong~Nguyen, Sugawara, and Aizawa]{ho2020twowiki}
 Xanh Ho, Anh-Khoa Duong~Nguyen, Saku Sugawara, and Akiko Aizawa.

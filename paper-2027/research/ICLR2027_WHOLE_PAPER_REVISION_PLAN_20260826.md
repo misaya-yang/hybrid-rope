@@ -1,5 +1,9 @@
 # ICLR 2027 whole-paper revision plan
 
+> **SUPERSEDED (2026-08-27):** the revision roadmap moved to
+> [`REVISION_BRIEF.md`](../REVISION_BRIEF.md) v2 (five-seat-panel-grounded).
+> Retained for routing history; do not execute from this file.
+
 - **Date:** 2026-08-26
 - **Role:** internal execution plan for the current whole-paper writing pass
 - **Authority:** narrative and file-routing only; this file owns no fact,

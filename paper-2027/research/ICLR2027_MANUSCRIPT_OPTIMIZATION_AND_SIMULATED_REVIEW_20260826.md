@@ -1,5 +1,9 @@
 # ICLR 2027 manuscript optimization and simulated-review decision
 
+> **SUPERSEDED (2026-08-27):** superseded by the five-seat panel bundle
+> [`external-reviews/qwen-panel-20260826/`](external-reviews/qwen-panel-20260826/)
+> (decision: Major Revision). Retained as a historical reviewer-risk record.
+
 - **Date:** 2026-08-26
 - **Status:** current manuscript-edit decision owner; internal, not anonymous
   supplement content

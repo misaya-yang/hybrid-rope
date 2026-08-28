@@ -21,11 +21,11 @@ training or Native window and longer positions, the comparisons reveal a
 within-protocol crossover: the baseline is stronger near the original window,
 while the reallocated table overtakes it beyond that window. This recurring
 behavioural signature of finite-budget reallocation directly motivates the
-Native/long session route. The video DiT instead improves
-both training-frame and extrapolated-frame MSE; its pre-specified diagnostic
-locates the different regime: six of sixteen temporal channels accumulate less
-than $0.1$ rad over the $32$ training frames, so reallocating them changes
-in-window phase coverage rather than imposing the text-model crossover.
+Native/long session route. The video DiT shows another regime: both
+training-frame and extrapolated-frame MSE improve, and its pre-specified
+diagnostic explains why. Six of sixteen temporal channels accumulate less than
+$0.1$ rad over the $32$ training frames, so reallocating them changes in-window
+phase coverage rather than imposing the text-model crossover.
 
 Extrapolation provides the sharpest present identification of $z$. The same
 coordinate also changes which phase scales are available inside the original

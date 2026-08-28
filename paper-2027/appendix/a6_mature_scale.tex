@@ -81,7 +81,7 @@ above.
 \subsection{Frozen fixed-support allocation}
 \label{sec:frozen-fixed-support}
 
-The mature-checkpoint intervention in Table~\ref{tab:frozen-fixed-support}
+The mature-checkpoint intervention in Fig.~\ref{fig:frozen-fixed-support}
 holds both models frozen. The three matched-support arms contain $64$ rotary
 pairs and share the Native fast endpoint and the Native slow endpoint divided
 by four. The two reference rows do not: Native retains the pretrained table,
@@ -89,12 +89,45 @@ while official Transformers YaRN applies its frequency-dependent transport.
 The three matched-support arms also share the factor-four attention amplitude
 $1+0.1\ln4$, evaluation rows, greedy decoder, precision, and hardware. The
 uniform-allocation arm is log-linear between the endpoints. The coarse control
-is the linear movement ramp with minimum displacement-space MSE to the frozen
-derived table over the registered discrete profiles; its choice uses no task
-labels. The remaining arm installs the frozen derived interior allocation.
+is a label-free, model-relative projection of the frozen derived table: among
+the registered discrete linear ramps, it minimises displacement-space MSE,
+using transition pairs $20$--$22$ for OLMo and $28$--$31$ for Qwen. The
+remaining arm installs the frozen derived interior allocation. For that arm,
+$\widetilde U_k$ is the normalised residual-energy fraction left after the full
+sin/cos pair is projected onto all other pairs over Native separations weighted
+by their causal pair count, $p(\Delta)\propto L-\Delta$; it sets
+$m_k=(1-\widetilde U_k)^2$ in Eq.~\eqref{eq:movement-allocation}, so less unique
+pairs move farther.
 
-OLMo-2-0425-1B-Instruct uses nine confirmation-only RULER tasks at $16$K,
-$20$ rows per task. Qwen2.5-1.5B-Instruct \citep{qwen2024qwen25} uses the four development RULER tasks
+\begin{table}[ht]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\caption{\textbf{Exact frozen mature-checkpoint RULER macro (\%).} These are
+the values plotted in Fig.~\ref{fig:frozen-fixed-support}. Reference rows are
+separated from the fixed-support block; only the lower block changes interior
+$z$ while holding the stated checkpoint protocol fixed.}
+\label{tab:frozen-fixed-support}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Installed table & OLMo unseen-nine, 16K & Qwen core-four, 64K \\
+\midrule
+Native & 0.00 & 54.50 \\
+Official Transformers YaRN ($s{=}4$) & 7.94 & 60.25 \\
+\midrule
+Uniform allocation $z$ & 0.56 & 57.75 \\
+Coarse label-free $z$ & 61.04 & 64.00 \\
+Derived allocation $z$ & 60.47 & 66.50 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Method selection used the core-four tasks NIAH single-1, NIAH multikey-2/3,
+and variable tracking. After the table, amplitude, split rule, checkpoint, and
+metric were frozen, the remaining nine RULER families---NIAH single-2/3,
+multikey-1, multivalue, multiquery, CWE, FWE, and QA-1/2---formed the OLMo
+confirmation set at $16$K, with $20$ rows per task. Qwen2.5-1.5B-Instruct
+\citep{qwen2024qwen25} uses the four development RULER tasks
 at $64$K, also with $20$ rows per task; it evaluates a factor-four table at
 twice the Native context length. Row resampling conditions on each fixed
 checkpoint and task set. Both reallocated tables produce the large OLMo
@@ -120,7 +153,7 @@ scores $27.74\%$. Across the six-task natural-context matrix, the routed method
 scores $28.58/24.97\%$ at $2/4\times$, compared with $21.27/25.59\%$ for YaRN.
 The QA arms use identical rows, and every post-chat
 input plus its generation reserve fits within $16$K. These rows evaluate the
-complete deployment policy on natural context; Table~\ref{tab:frozen-fixed-support}
+complete deployment policy on natural context; Fig.~\ref{fig:frozen-fixed-support}
 provides the allocation-only contrast.
 
 \subsection{LLaMA-3-8B-Instruct}
