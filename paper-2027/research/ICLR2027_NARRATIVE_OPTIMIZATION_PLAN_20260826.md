@@ -32,8 +32,10 @@ Execute §§4–8 in order. Obey §2 locks and §3 forbiddens. Compile with
 
 This plan supersedes
 [`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md`](ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md)
-as the **current TeX edit order**. That memo remains the simulated-review
-record; most of its P0/P1 items are already in live TeX. Do not re-apply it.
+as the **current TeX edit order** at the time of writing (this file was itself
+superseded as the edit order on 2026-08-27 — see banner). That memo remains the
+simulated-review record; most of its P0/P1 items are already in live TeX. Do
+not re-apply it.
 
 ---
 

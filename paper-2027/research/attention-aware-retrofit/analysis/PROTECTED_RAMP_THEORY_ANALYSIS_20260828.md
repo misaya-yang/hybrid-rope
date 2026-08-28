@@ -72,7 +72,7 @@ existing simple progressive curve $m_{old}$), goal of pushing the static-s4
 ## 1. Derivable protection scales
 
 Setup: pair $k$ has $x_k=-\ln\omega_k = a + R z_k$
-(`../../sections/03_theory.tex` §1); shift rule
+(`../../../sections/03_theory.tex` §1); shift rule
 $\hat\omega_k=\omega_k[(1-m_k)+m_k/s]$ (eq. `movement-allocation`); native
 rotations $r_k = \omega_k L_{native}/2\pi$. OLMo-2-0425-1B-Instruct
 identity from
@@ -284,7 +284,7 @@ official-YaRN row is a pure-$z$ control.
 
 ## 5. Static geometry: the trade-off is flat where protection acts
 
-Implemented the cross-gram of `../../appendix/a1_proofs.tex` lines 9–18 and
+Implemented the cross-gram of `../../../appendix/a1_proofs.tex` lines 9–18 and
 budget identity (Thm 1, lines 38–47). Sanity: the 23 OLMo slow pairs give
 $r_2=2.000$, $\bar c=0.99993$ — exactly the frozen claim
 (`03_theory.tex` lines 127–129). Surrogate family

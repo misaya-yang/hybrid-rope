@@ -1,7 +1,8 @@
 # Direct fixed-support `z` zero-weight preflight (2026-08-24)
 
-Status: code prepared; no model load, GPU diagnostic, optimization, inference,
-or result has been run under this protocol.
+Status: executed; stopped by
+[`../results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md`](../results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md)
+before downstream evaluation.
 
 ## Decision this experiment can change
 

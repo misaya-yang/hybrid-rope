@@ -1,9 +1,39 @@
 # Author verdicts and execution amendment — ICLR 2027 revision cycle
 
 **Date:** 2026-08-28 · **Recorded by:** Claude Code, after a full-repository audit
-performed the same day · **Status:** author-directed execution input. The author
-gave the rulings in §3–§4 verbally on 2026-08-28; this document is the
-execution record Codex works from.
+performed the same day · **Status:** retired execution record — the revision
+cycle closed 2026-08-28 and was committed at 93d7eac. The author gave the
+rulings in §3–§4 verbally on 2026-08-28; the post-cycle status banner below
+records which rulings remain in force.
+
+> **Post-cycle status (appended 2026-08-28, after the cycle closed):** this
+> ledger was partially executed and partially superseded by the
+> author-directed 2026-08-28 Codex passes (four receipted entries in
+> `research/CODEX_CLAUDE_PAPER_REVIEW_LOG.md`). **Do not enforce it as a live
+> edit order**; use this key:
+>
+> - **Superseded — no longer binding:** R1, R4, R10. The author-directed
+>   narrative passes rewrote the abstract, contribution (iii), and the §2.1
+>   breadth paragraph (receipted: active-voice pass; ninth-page pass), every
+>   number traced to a routed owner. A4(i) (750M body seed label) was
+>   declined by the executor with a logged rationale (cohort precedent; the
+>   appendix table caption carries the seed).
+> - **Still in force:** R2, R3, R5–R9, R11 (no reversal/confession clause
+>   entered the manuscript), and all of §3 (paper identity, the
+>   negative-expression criterion, the two-logic map, "body once, appendix
+>   owns").
+> - **Accepted but never executed — all kept by author decision (2026-08-28);
+>   they await a new execution cycle:** A2 (NTK-aware
+>   paragraph), A7 (evidence-hierarchy table), A8 (zero-cost comparison
+>   table), A9 (C1/C2 CPU reruns), A12 (τ provenance), A13 (multiplicity
+>   note), A14 (E1–E4 hygiene; E1 abstract-EVQ expansion and E4 ICML-comment
+>   removal verified unexecuted), A15 (bib prune), and the Step-1 governance
+>   texts (§6.1 review-log entry, §6.2 NARRATIVE_GUIDE criterion section —
+>   the criterion itself remains binding while §3 stands).
+> - **Executed as recorded:** A3 (Gray–Neuhoff citation), A10/A11 (App. E
+>   protocol ownership, split-rule pointer, transition bounds). Remaining
+>   items (A1, A5, A6, A16): absorbed or moot — verify against the review
+>   log before reviving any of them.
 
 **Relation to other documents.** This amendment governs the current revision
 cycle together with `REVISION_BRIEF.md` v2 and **overrides the brief wherever

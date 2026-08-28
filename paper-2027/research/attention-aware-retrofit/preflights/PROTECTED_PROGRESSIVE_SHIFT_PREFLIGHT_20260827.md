@@ -1,6 +1,13 @@
 # Protected progressive frequency-shift preflight (2026-08-27)
 
 - **Status:** `FROZEN_PROTOCOL_DESIGN_NOT_EXECUTED`
+- **Direction status (2026-08-28):** the protected-ramp protection-formula
+  scanning direction this preflight serves was superseded as the active
+  investigation direction by the leave-one-band-out frequency-band causal
+  attribution design in
+  [`../analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md`](../analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md)
+  §9 (`DESIGN_NOT_EXECUTED`; requires a new preflight and explicit compute
+  authorization). This preflight remains `FROZEN_PROTOCOL_DESIGN_NOT_EXECUTED`.
 - **Role:** separate post-submission method-development preflight; not
   manuscript evidence, a result, or compute authorization
 - **Primary owner:** `INDEX.md` §6.2–§6.3 and the current zero-training

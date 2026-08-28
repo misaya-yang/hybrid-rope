@@ -5,8 +5,8 @@
 > (decision: Major Revision). Retained as a historical reviewer-risk record.
 
 - **Date:** 2026-08-26
-- **Status:** current manuscript-edit decision owner; internal, not anonymous
-  supplement content
+- **Status:** historical manuscript-edit decision record (superseded
+  2026-08-27, see banner); internal, not anonymous supplement content
 - **Role:** records the smallest pre-submission manuscript changes that can
   improve reviewer comprehension or technical credibility, and simulates the
   remaining ICLR review paths

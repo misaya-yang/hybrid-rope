@@ -1,4 +1,4 @@
-# REVISION BRIEF v2 — positioning upgrade + panel-response revision (execution input for Codex)
+# REVISION BRIEF v2 — positioning upgrade + panel-response revision (execution input for Codex — cycle closed 2026-08-28)
 
 **Date:** 2026-08-27 (v2, post-audit) · **Status:** author-commissioned; supersedes no authority —
 [`NARRATIVE_GUIDE.md`](NARRATIVE_GUIDE.md) still governs narrative discipline,
@@ -7,6 +7,8 @@
 decision: Major Revision, starred mandatory items in `06_editorial_decision.md` §5);
 (2) the ICLR-2026 RoPE cohort (`~/Downloads/RoPE_Papers/Markdown/`);
 (3) the author's restated core positioning (2026-08-27, recorded verbatim in §1 below).
+
+**Cycle closed (2026-08-28):** this brief drove the ICLR 2027 revision cycle to completion — executed in four receipted passes logged in [`research/CODEX_CLAUDE_PAPER_REVIEW_LOG.md`](research/CODEX_CLAUDE_PAPER_REVIEW_LOG.md), outcome committed at 93d7eac.
 
 This brief is a plan, not a manuscript. No science changes here; every number
 must still be sourced from the routed canonical owner.

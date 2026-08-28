@@ -1,6 +1,8 @@
 # Zero-parameter single-table mature-checkpoint gate (2026-08-24)
 
-Status: frozen before GPU execution.
+Status: frozen before GPU execution; executed — both static analytic tables
+stopped by the completed negative gate in
+[`../results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md`](../results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md).
 
 ## Question
 

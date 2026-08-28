@@ -3,9 +3,11 @@
 - **Updated:** 2026-08-28
 - **Target:** ICLR 2027
 - **Branch / upstream:** `main_0726` / `origin/main_0726`
-- **Manuscript/provenance checkpoint:** `001a900702c50a301c1970fe23b8f7aaa610732e`
-  (`paper: center ICLR narrative on allocation interventions`); use `git rev-parse
-  HEAD` for the receipt-only commit that carries this handoff line.
+- **Manuscript/provenance checkpoint:** `93d7eac941d45ed6877bcc17a5f73443f53dfdfb`
+  (`paper: complete ICLR 2027 revision cycle`), committed on `main_0726` and pushed
+  to `origin/main_0726`; the previous manuscript checkpoint was
+  `001a900702c50a301c1970fe23b8f7aaa610732e`
+  (`paper: center ICLR narrative on allocation interventions`).
 - **Active manuscript:** `paper-2027/`
 - **Immutable baseline:** `paper/`
 - **Status:** the reviewer-facing narrative is converged around one paper
@@ -18,10 +20,10 @@
   from-training models.
   Theory explains the empirical thesis, and EVQ-Cosh remains the closed-form
   construction on the coordinate. The target-retargeted ordering reversal is
-  stated once in the body and fully documented in Appendix C. The checkpoint
-  above remains the latest published manuscript; the current worktree adds a
-  uncommitted provenance/citation patch plus a reviewer-facing narrative pass.
-  The latter strengthens active claim language and puts decisive long-context
+  stated once in the body and fully documented in Appendix C. The revision
+  cycle — the provenance/citation patch plus the reviewer-facing narrative
+  pass — is committed and pushed as `93d7eac` on `main_0726` (`origin`).
+  The narrative pass strengthens active claim language and puts decisive long-context
   results before their retained near-window costs without changing any value,
   protocol, or evidence role. The body now uses the ninth-page budget for the
   cross-configuration allocation-family result and for explicit interpretation
@@ -31,9 +33,10 @@
 - **Internal only:** exclude this file, the narrative guide, revision plans, and
   the Codex/Claude review log from the anonymous supplement.
 - **Concurrent routing edits:** during the 2026-08-27 narrative pass, separate
-  uncommitted changes appeared in `INDEX.md` and several `research/` routing
+  changes appeared in `INDEX.md` and several `research/` routing
   documents that promote `REVISION_BRIEF.md` as an execution input. This pass
-  did not create or alter those changes. Under `AGENTS.md`, the Qwen bundle
+  did not create or alter those changes; they are committed as part of
+  `93d7eac`. Under `AGENTS.md`, the Qwen bundle
   remains external review input and this handoff remains the sole current
   action queue until the author reconciles that routing explicitly.
 
@@ -136,9 +139,14 @@ matched trajectories.
 - Immutable `paper/main.pdf`
   - SHA-256: `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`
 
-The active PDF, source, and curated supplement include the uncommitted patch
-described in the status block. The manuscript checkpoint above remains the
-latest Git-published version.
+The active PDF, source, and curated supplement include the patch and
+narrative pass described in the status block, committed and pushed at
+`93d7eac` on `main_0726` (`origin`); `001a900` was the previous Git-published
+manuscript checkpoint. Known source-versus-PDF drift: `sections/04_experiments.tex`
+received a one-token fix (restoring the missing backslash on the `\evq` macro
+in the `fig:8b-causal-source-use` caption) after the last recorded compile, so
+the committed source is one token ahead of the receipted PDF until the next
+rebuild.
 
 Latest `./compile.sh` validation:
 

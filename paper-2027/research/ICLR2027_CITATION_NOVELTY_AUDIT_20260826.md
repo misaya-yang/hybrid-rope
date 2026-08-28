@@ -2,6 +2,8 @@
 
 Verified 2026-08-26 against ACL Anthology, NeurIPS/ICLR proceedings, iclr.cc virtual 2026, arXiv abs pages, and live `paper-2027/` TeX. Not a numerical owner. Do not edit `paper/`. Do not flatten related work into a zoo. Compile with `paper-2027/compile.sh`.
 
+> **Status (2026-08-28):** historical Codex execution record — the revision cycle this served closed 2026-08-28, outcome committed at 93d7eac; the narrative plan it sequences after is itself superseded (see its banner). Do not execute from this file; the citation/novelty verifications below stand as of 2026-08-26.
+
 Companion: execute after
 [`ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md`](ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md).
 If that pass deletes a MUST cite below, put it back.

@@ -56,6 +56,8 @@ python scripts/core_text_phases/phase16_exact_range_factorial_m4.py --help
 | 129.6M video-DiT head-to-head result | `data/curated/video_dit_seed42_head_to_head_20260826.json` |
 | Full sin/cos geometry and co-adaptation diagnostics | `scripts/analysis/` |
 
-The exact-range data preparation, protocol, model, and training scripts are in
-`rebuttal/rebuttal_0723/experiments/fmrope_125m_l256_500m/`. The figure scripts
+The exact-range data preparation, protocol, and training scripts are in
+`rebuttal/rebuttal_0723/experiments/fmrope_125m_l256_500m/`; the model
+definition it trains is `experiments/native_rope_evq_150m/model.py`, also
+bundled here. The figure scripts
 contain frozen owner values and consistency assertions.

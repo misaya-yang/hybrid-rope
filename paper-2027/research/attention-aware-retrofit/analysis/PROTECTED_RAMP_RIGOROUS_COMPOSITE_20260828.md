@@ -52,7 +52,7 @@ $m^{new}_k=m^{old}_k\,h_k$; $h=0$ for $r\ge32$ (no shift), $h=1$ for $r\le1$
 
 **V1 — window-fundamental edge $r=1$.** DERIVED. $r_k=1 \iff \omega L=2\pi$:
 below it the pair completes no cycle in-window and its subspace collapses
-toward $\mathrm{span}\{1,\Delta\}$ (Prop. 2 of `../../sections/03_theory.tex`).
+toward $\mathrm{span}\{1,\Delta\}$ (Prop. 2 of `../../../sections/03_theory.tex`).
 Independent drift check: full shift accumulates
 $\Delta\phi = 2\pi\, m\, r_k(s-1)/s$ cycles of phase drift across the window;
 sub-cycle drift requires $r \le s/(s-1) = 1.333$ at $s=4$. The coverage edge
@@ -76,7 +76,7 @@ COMPUTED: OLMo exact $5.3942$ vs expansion $5.3943$; Qwen $5.1504$ vs
 $5.1505$. Origin: adjacent-pair rotation spacing is $r_k(1-b^{-1/K})$;
 neighboring subspaces become Fourier-distinct in-window when that spacing
 reaches one cycle (Lemma `fourier-alias` regime,
-`../../appendix/a1_proofs.tex`).
+`../../../appendix/a1_proofs.tex`).
 
 **V4 — spectral budget identity and collapse.** Independent reimplementation
 of the closed-form cross-Gram (Appendix A.1) reproduces:
@@ -360,7 +360,7 @@ Per-arm $r_2$ under $U[0,4096]$ and $U[0,16384]$ from Appendix A.1–A.2
 ### 9.4 Behavioral predictions — the 4K cost channel
 
 Two hypotheses on the source of the $+0.1236$ NLL (4K FineWeb-Edu, owner
-`../../appendix/a6_mature_scale.tex` deployment paragraph):
+`../../../appendix/a6_mature_scale.tex` deployment paragraph):
 
 - **H-cost-1 (slow-band displacement).** The 8/24 protected-band Cosh
   precedent (§5, Support 2) is executed evidence: protecting exactly
@@ -438,7 +438,7 @@ evaluation factor 2 in the preflight, not copied from OLMo.
   `../preflights/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md` (arm list,
   canonical hash gate `a435d754…`, gates and stop conditions, measurement
   protocol frozen from the deployment evaluation in
-  `../../appendix/a6_mature_scale.tex`); (2) explicit compute authorization;
+  `../../../appendix/a6_mature_scale.tex`); (2) explicit compute authorization;
   (3) numbers routed to a canonical owner. No reviewer-facing claim until
   executed.
 
@@ -457,7 +457,7 @@ $I_2$ diagonals: $\operatorname{tr}\Gamma=2K$,
 $\operatorname{tr}\Gamma^2=2K+2K(K-1)\bar c$, hence
 $r_2=(\operatorname{tr}\Gamma)^2/\operatorname{tr}\Gamma^2
 =2K/(1+(K-1)\bar c)$. (Proof re-checked line by line against
-`../../appendix/a1_proofs.tex` lines 38–47.)
+`../../../appendix/a1_proofs.tex` lines 38–47.)
 
 **A.3 Demand.** $\hat\lambda=\lambda/(1-m(s-1)/s)$;
 $\hat\lambda>L \iff m>s(r-1)/(r(s-1))=m_{min}(r)$; $m_{min}\le1\iff r\le s$.

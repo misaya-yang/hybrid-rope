@@ -1,6 +1,6 @@
 # INDEX — 理论、证据、代码与下一步
 
-- **最后更新：** 2026-08-26
+- **最后更新：** 2026-08-28
 - **角色：** 本仓库唯一的**持久索引**。回答「已有什么、谁拥有它、下一步做什么」。
 - **不负责：** 硬性规则（见 [`AGENTS.md`](AGENTS.md)）、易变状态（见
   [`paper-2027/HANDOFF.md`](paper-2027/HANDOFF.md)）。
@@ -125,6 +125,7 @@ $\tau_*=\max(d_{\rm head}/\sqrt L,\;1.4)$ 是 operating prior 而非普适律（
 | 成熟模型零训练机制假设 | [`ZERO_TRAINING_MECHANISM_AND_CEILING_20260826`](paper-2027/research/attention-aware-retrofit/analysis/ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md) | 内部分析：冻结表是最小干预而非唯一可能形式；相对码与快带保护是设计假设，不是通用定理 |
 | 固定 support 剂量响应 | [`ALLOCATION_DOSE_RESPONSE_RESULT_20260826`](paper-2027/research/attention-aware-retrofit/results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md) | 128 文档机制结果；解析 Path A 未通过联合 gate，learned direction 显示连续 full/tail 再分配，不是新方法 |
 | Native 4K RULER 诊断 | [`NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826`](paper-2027/research/attention-aware-retrofit/results/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md) | 描述性 core-four；跨长度不同 rows，不能单独判定模型上限或位置失效 |
+| Protected-ramp 理论分析与 band-attribution 设计 | [`PROTECTED_RAMP_THEORY_ANALYSIS_20260828`](paper-2027/research/attention-aware-retrofit/analysis/PROTECTED_RAMP_THEORY_ANALYSIS_20260828.md)、[`PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828`](paper-2027/research/attention-aware-retrofit/analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md) | 内部理论分析，**未执行**：composite 为五智能体综合的独立再推导，数字分歧以 composite 重算值为准；其 §9 leave-one-band-out 频带归因设计（`DESIGN_NOT_EXECUTED`）取代 protected-ramp 保护公式扫描，执行需新 preflight 与显式算力授权 |
 
 ### 3.4 已证伪 / 已关闭（**不要重做**）
 
@@ -260,7 +261,10 @@ headroom 归到 position/allocation。完整 2x2 和判决读法在
 [matched-content phase 2x2 preflight](paper-2027/research/attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md)。
 独立的 protected-progressive companion protocol 是
 [PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827](paper-2027/research/attention-aware-retrofit/preflights/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md)。
-这只是协议设计；GPU 仍需显式授权。
+这只是协议设计；GPU 仍需显式授权。理论侧，protected-ramp 保护公式扫描方向已被
+[PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828](paper-2027/research/attention-aware-retrofit/analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md)
+§9 的 leave-one-band-out 频带归因设计取代（`DESIGN_NOT_EXECUTED`，同样只是设计，
+执行需新 preflight 与显式算力授权）。
 
 ### 6.3 决策顺序
 
@@ -274,10 +278,15 @@ headroom 归到 position/allocation。完整 2x2 和判决读法在
 
 投稿期叙事决策的历史记录在
 [`ICLR2027_SUBMISSION_NARRATIVE_AND_EXPERIMENT_PLAN_20260826`](paper-2027/research/ICLR2027_SUBMISSION_NARRATIVE_AND_EXPERIMENT_PLAN_20260826.md)；
-它不是新的行动队列。当前修订期的 Codex 执行单是
-[`REVISION_BRIEF.md`](paper-2027/REVISION_BRIEF.md)（v2，2026-08-27，五席评审团依据）；
+它不是新的行动队列。2026-08-27/28 的修订周期已闭合并提交；该周期的 Codex
+执行单是 [`REVISION_BRIEF.md`](paper-2027/REVISION_BRIEF.md)（v2，2026-08-27，
+五席评审团依据），配套作者裁决台账
+[`AUTHOR_VERDICTS_20260828.md`](paper-2027/AUTHOR_VERDICTS_20260828.md)（已带
+post-cycle 状态横幅：部分被取代；已接受未执行项经作者 2026-08-28 决定全部保留，待新周期执行）；四次
+receipted Codex pass 记录在
+[`CODEX_CLAUDE_PAPER_REVIEW_LOG.md`](paper-2027/research/CODEX_CLAUDE_PAPER_REVIEW_LOG.md)。
 [`ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826`](paper-2027/research/ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md)
-已被其取代，仅保留路由历史价值。
+在周期内被取代，仅保留路由历史价值。
 Related-work / novelty 的 Codex 执行单是
 [`ICLR2027_CITATION_NOVELTY_AUDIT_20260826`](paper-2027/research/ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md)：
 NeurIPS `zWsa` 的 FMRoPE 漏引已在识别段闭合；剩余 originality-1 路径是 bib 中已有、PDF 未点名的 HoPE / CoPE / RoPE-ID / Xu / Wu / Chiang。它不是新的证据 owner，也不恢复 NeurIPS 的 PE zoo。
@@ -299,12 +308,14 @@ uniform 测度下存在精确正交格；三角测度、钉住 support 和训练
 
 ### 6.5 反重复与论文边界
 
-当前修订期的执行单由
+2026-08-27/28 的修订周期已闭合并提交；周期的执行输入由
 [`REVISION_BRIEF.md`](paper-2027/REVISION_BRIEF.md)（v2，五席评审团依据）
-拥有；它不是数值 owner，也不替代本节的研究边界。先前模拟审稿记录在
+与裁决台账 [`AUTHOR_VERDICTS_20260828.md`](paper-2027/AUTHOR_VERDICTS_20260828.md)
+（post-cycle 状态：部分被取代；已接受未执行项全部保留，待新周期执行）拥有；
+两者都不是数值 owner，也不替代本节的研究边界。先前模拟审稿记录在
 [`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826`](paper-2027/research/ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md)，
 已被五席评审团 [`external-reviews/qwen-panel-20260826/`](paper-2027/research/external-reviews/qwen-panel-20260826/)（决议：Major Revision）取代。
-其共同判决是：不再增加 submission
+其共同判决（已随周期闭合执行）是：不再增加 submission
 compute；先移除 Appendix A.11 已被 O3 取代的单幂律 / exponent-matched 诊断，
 把 target-retargeted 反转、统计单位和 EVQ-Cosh / mature-derived estimand 边界放到
 相应 claim 旁，然后完成构建、逐页复核和冻结。

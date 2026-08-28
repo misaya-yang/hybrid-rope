@@ -19,17 +19,24 @@ up in [`../../INDEX.md`](../../INDEX.md). Do not duplicate them here.
 3. [`../HANDOFF.md`](../HANDOFF.md) — live manuscript/worktree state and the
    only current action queue.
 4. [`../REVISION_BRIEF.md`](../REVISION_BRIEF.md) — v2 (2026-08-27), grounded in
-   the five-seat panel; the current revision-cycle execution input for Codex,
-   superseding
+   the five-seat panel; the revision-cycle execution input for Codex. The ICLR
+   2027 revision cycle it drove is closed and committed at `93d7eac`
+   (2026-08-28); the brief is retained for routing history. It superseded
    [`ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md`](ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md)
    and
    [`ICLR2027_WHOLE_PAPER_REVISION_PLAN_20260826.md`](ICLR2027_WHOLE_PAPER_REVISION_PLAN_20260826.md)
-   as edit orders (both retained for routing history). The prior
+   as edit orders (both retained for routing history). Its author-rulings
+   companion
+   [`../AUTHOR_VERDICTS_20260828.md`](../AUTHOR_VERDICTS_20260828.md) is a
+   retired verdict ledger carrying a post-cycle status banner (partially
+   superseded; all never-executed accepted items kept by author decision
+   2026-08-28, awaiting a new execution cycle).
+   The prior
    simulated-review memo
    ([`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md`](ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md))
    is superseded by
    [`external-reviews/qwen-panel-20260826/`](external-reviews/qwen-panel-20260826/)
-   (decision: Major Revision). The related-work / novelty Codex patch remains
+   (run 2026-08-26/27; decision: Major Revision). The related-work / novelty Codex patch remains
    [`ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md`](ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md)
    (verify every number against a routed source before use).
 5. [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md)
@@ -41,7 +48,13 @@ up in [`../../INDEX.md`](../../INDEX.md). Do not duplicate them here.
    is [`attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md`](attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md).
    Its separate protected-progressive companion is
    [`attention-aware-retrofit/preflights/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md`](attention-aware-retrofit/preflights/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md);
-   both are design-only until separately authorized.
+   both are design-only until separately authorized. The current theory
+   direction (design only, `DESIGN_NOT_EXECUTED`) is the leave-one-band-out
+   frequency-band attribution in §9 of
+   [`attention-aware-retrofit/analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md`](attention-aware-retrofit/analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md),
+   whose five-agent companion synthesis is
+   [`attention-aware-retrofit/analysis/PROTECTED_RAMP_THEORY_ANALYSIS_20260828.md`](attention-aware-retrofit/analysis/PROTECTED_RAMP_THEORY_ANALYSIS_20260828.md);
+   the band-attribution design supersedes protected-ramp scanning.
 7. [`ICLR2027_RESEARCH_SYNTHESIS_20260819.md`](ICLR2027_RESEARCH_SYNTHESIS_20260819.md)
    — implemented claim architecture.
 8. [`EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](EXACT_RANGE_151M_3SEED_RESULT_20260820.md)
@@ -120,13 +133,17 @@ Additional durable theory/supporting files at research root:
 
 | Question | Canonical source | Maximum role |
 | --- | --- | --- |
-| Current revision-cycle execution input | [`../REVISION_BRIEF.md`](../REVISION_BRIEF.md) | v2, panel-grounded (2026-08-27); supersedes the narrative optimization plan as the Codex edit order; never a numerical owner |
+| Revision-cycle execution input (cycle closed) | [`../REVISION_BRIEF.md`](../REVISION_BRIEF.md) | v2, panel-grounded (2026-08-27); drove the ICLR 2027 revision cycle now closed and committed at `93d7eac` (2026-08-28); retained for routing history; never a numerical owner |
+| Author rulings ledger for the closed cycle | [`../AUTHOR_VERDICTS_20260828.md`](../AUTHOR_VERDICTS_20260828.md) | retired verdict ledger; post-cycle banner marks it partially superseded with all never-executed accepted items kept by author decision 2026-08-28 (awaiting a new execution cycle); not a live edit order |
+| Five-seat panel review of the closed cycle | [`external-reviews/qwen-panel-20260826/`](external-reviews/qwen-panel-20260826/) | untrusted external-review input (decision: Major Revision; internal only, excluded from the anonymous supplement); reviewer-risk inventory, not an evidence owner |
 | Related-work citation sufficiency and remaining novelty-attack papers | [`ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md`](ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md) | Codex-facing related-work / bib patch only; not an evidence owner; do not restore the NeurIPS PE zoo |
-| Prior simulated-review decision | [`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md`](ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md) | historical reviewer-risk record; most P0/P1 items are already in live TeX; superseded by [`external-reviews/qwen-panel-20260826/`](external-reviews/qwen-panel-20260826/) (2026-08-27, Major Revision) |
+| Prior simulated-review decision | [`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md`](ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md) | historical reviewer-risk record; most P0/P1 items are already in live TeX; superseded by [`external-reviews/qwen-panel-20260826/`](external-reviews/qwen-panel-20260826/) (run 2026-08-26/27, Major Revision) |
 | Conceptual grammar and causal-variable separation | [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md) | notation and routing only; never a numerical owner |
 | Post-submission theory state and missing bridge | [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md) | theory continuation and protocol design only; no new result or compute authorization |
 | Matched-content phase 2x2 bridge preflight | [`attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md`](attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md) | frozen protocol design only; separates table-by-phase interaction from gain, adaptation, and routing |
-| Protected progressive shift preflight | [`attention-aware-retrofit/preflights/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md`](attention-aware-retrofit/preflights/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md) | separate new protection test for the simple progressive curve; Stage 2 may invoke the matched-content bridge |
+| Protected progressive shift preflight | [`attention-aware-retrofit/preflights/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md`](attention-aware-retrofit/preflights/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md) | separate new protection test for the simple progressive curve; Stage 2 may invoke the matched-content bridge; frozen, not executed — the ramp-scanning direction is superseded by the band-attribution design below |
+| Current theory direction: leave-one-band-out frequency-band attribution | [`attention-aware-retrofit/analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md`](attention-aware-retrofit/analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md) §9 | `DESIGN_NOT_EXECUTED`; which band's movement carries the short-window cost versus the long-range benefit; no arm constructed, no evaluation, no compute authorization; supersedes protected-ramp scanning |
+| Five-agent companion theory synthesis | [`attention-aware-retrofit/analysis/PROTECTED_RAMP_THEORY_ANALYSIS_20260828.md`](attention-aware-retrofit/analysis/PROTECTED_RAMP_THEORY_ANALYSIS_20260828.md) | `THEORY_ANALYSIS_NOT_EXECUTED`; ramp-scanning recommendations retired by the composite §9; boundary scales and mass arithmetic remain valid inputs; the composite's recomputed numbers govern on conflict |
 | Full sin/cos geometry, collision, stable-rank identity | [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md) | main theory; static basis, not LM-quality predictor |
 | Pure fixed-support interior-allocation identification | [`EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](EXACT_RANGE_151M_3SEED_RESULT_20260820.md) plus M4 historical owner | main causal experiment |
 | Exact frozen Q/K transplant obstruction | `../../rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md` | exact impossibility for fixed static maps, not all approximate adapters |

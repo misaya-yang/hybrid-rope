@@ -1,7 +1,9 @@
 # Zero-parameter protected-band mature-checkpoint gate (2026-08-24)
 
 Status: frozen while the independent anchored-EVQ PG-19 run was executing and
-before any of its metrics were read.
+before any of its metrics were read; executed — failed the 1x PG-19 no-harm
+gate and stopped before capability evaluation, owned by
+[`../results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md`](../results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md).
 
 ## Candidate
 

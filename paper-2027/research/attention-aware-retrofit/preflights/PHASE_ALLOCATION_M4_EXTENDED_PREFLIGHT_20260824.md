@@ -1,6 +1,8 @@
 # Extended target-free allocation preflight — M4 window (2026-08-24)
 
-Status: `AUTHORIZED_INTERNAL_PRELIMINARY_RUN`
+Status: `AUTHORIZED_INTERNAL_PRELIMINARY_RUN`; executed — its own decision
+rule is applied by the canonical report
+[`../results/PHASE_ALLOCATION_M4_EXTENDED_RESULT_20260824.md`](../results/PHASE_ALLOCATION_M4_EXTENDED_RESULT_20260824.md).
 
 This preflight records the follow-up matrix authorized after the completed
 `phase_isotropy_50m_m4_20260824` screen.  It is internal method selection, not

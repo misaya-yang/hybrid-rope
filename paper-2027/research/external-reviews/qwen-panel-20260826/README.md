@@ -18,6 +18,7 @@ from the anonymous supplement.
 | `03_perspective_review.md` | R3 — Perspective | 6/10; cross-disciplinary anchors, prior sensitivity, theory–behavior bridge |
 | `05_devils_advocate.md` | DA — Devil's Advocate | unscored; 3 CRITICAL / 7 MAJOR / 3 MINOR |
 | `06_editorial_decision.md` | Editorial synthesis | Decision: **Major Revision**; DA-CRITICAL adjudication; non-ranking revision roadmap |
+| `07_post_review_delta_note.md` | Editorial synthesizer | Post-review delta note: assesses Codex's post-checkpoint exposition passes against the panel roadmap |
 
 ## Editorial verification record (Phase 2)
 

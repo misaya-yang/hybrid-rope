@@ -5,7 +5,8 @@
 > Retained for routing history; do not execute from this file.
 
 - **Date:** 2026-08-26
-- **Role:** internal execution plan for the current whole-paper writing pass
+- **Role:** internal execution plan for the 2026-08 whole-paper writing pass
+  (revision cycle closed 2026-08-28)
 - **Authority:** narrative and file-routing only; this file owns no fact,
   number, protocol identity, evidence tier, or mutable manuscript state
 - **Objective:** maximise ICLR 2027 acceptance probability by making a reviewer
