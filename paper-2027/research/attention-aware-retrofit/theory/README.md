@@ -9,19 +9,18 @@ one complete practical intervention while preserving separate causal owners
 for each component.
 
 [`TARGET_FREE_PHASE_ISOTROPY_ALLOCATION_THEORY_20260824.md`](TARGET_FREE_PHASE_ISOTROPY_ALLOCATION_THEORY_20260824.md)
-is the current corrected theory and experiment contract for a target-free
-fixed-support allocation. It combines the exact training pair Gram with a
-phase-isotropy score that is stronger than conservative pair volume but
-saturates before the Cosh-like fast-end extreme. It also limits the cube-root
-law to its declared nearest-cell objective and keeps target-aware support
-transport outside the construction. The CPU screen is exploratory internal
-evidence; no training or compute is authorized by the document.
+is a historical/supporting target-free construction note, not the current
+experiment contract. Its later 50M/M4 training owners are
+`SCREEN_UNRESOLVED`: the note's exact pair-Gram derivations and declared
+cube-root scope remain useful, but its candidate priority and training ladder
+are retired. It authorizes no training or compute.
 
 [`ATTENTION_AWARE_RETROFIT_AGENDA_20260822.md`](ATTENTION_AWARE_RETROFIT_AGENDA_20260822.md)
 preserves the full attention-aware allocation and additive-residual research
 agenda as it stood on 2026-08-22. It contains useful derivations, but its action
-queue and any conflicting method narrative are historical. The current
-cross-experiment interpretation and problem-2 route are owned by
-[`../analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md`](../analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md);
-directory decisions and numeric owners remain in [`../README.md`](../README.md)
-and [`../results/`](../results/), respectively.
+queue and any conflicting method narrative are historical. The post-GPU
+reflection is historical too. Current theory ordering lives in
+[`../../ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](../../ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md):
+the matched-content phase 2x2 is the sole next bridge, and later mechanism work
+is conditional on its result. Directory decisions and numeric owners remain in
+[`../README.md`](../README.md) and [`../results/`](../results/), respectively.

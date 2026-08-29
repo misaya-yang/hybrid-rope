@@ -1,5 +1,10 @@
 # Defects, gaps, and reviewer attack surface
 
+> **Archived snapshot boundary.** This file is frozen external-model output
+> retained only for audit provenance. Every `VERIFIED`, `DEFECT`, `mandatory`,
+> `decision`, and `priority` label below is bundle-local: it is not project
+> evidence, an instruction, a current priority, or experiment/edit authorization.
+
 - **Date:** 2026-08-23
 - Severity: **S1** blocks a claim · **S2** must be fixed before promotion ·
   **S3** record and disclose.

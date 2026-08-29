@@ -1,31 +1,30 @@
 # Matched-content phase 2x2 bridge preflight (2026-08-27)
 
 - **Status:** `FROZEN_PROTOCOL_DESIGN_NOT_EXECUTED`
-- **Role:** post-submission method-development preflight; not manuscript
-  evidence, a result, or compute authorization
+- **Role:** post-deadline method-development preflight; not manuscript evidence,
+  a result, or compute authorization
+- **Scheduling gate:** research execution is ineligible before the 2026-09-25
+  manuscript deadline. After that date this remains only a design until a new
+  author decision confirms that the bridge still has priority.
 - **Decision owner:** `INDEX.md` §6.2 and
   [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](../../ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
   §4
 - **Primary implementation target:** the mature OLMo checkpoint and task
   contract already owned by
   [`SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](../results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md)
-- **Authorization:** every GPU or checkpoint evaluation stage requires a new
-  explicit author authorization. This document does not authorize a run.
+- **Authorization:** none. Every GPU or checkpoint evaluation stage requires a
+  new explicit author authorization after the scheduling gate. This document
+  does not authorize a run.
 
-This preflight is the next identification bridge, not another model-scale
+This preflight is the sole next identification bridge, not another model-scale
 sweep. It tests whether a controlled change in realized relative phase creates
 the failure that the candidate table is supposed to repair, on identical
 content and with no training, gain, or serving-policy intervention.
 
-The companion
-[`PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md`](PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md)
-may invoke this bridge as its Stage 2. In that invocation, the protected
-progressive profile is first re-embedded to Native support and Native amplitude
-under this document's pure-interior contract, and its tensor hash is frozen
-before Stage 2. The four cells, endpoints, gates, and interpretation below do
-not change. This document remains independently executable with the
-owner-derived candidate specified in §2.1; the two protocols are not one
-pooled experiment.
+The former protected-progressive companion route is historical and superseded;
+it cannot invoke this bridge as a stage. A positive completed bridge may later
+admit a separately preregistered leave-one-band-out mechanism design, but no
+such design is part of this protocol.
 
 ## 1. Causal question and estimand
 
@@ -255,7 +254,7 @@ based on the preregistered gates above.
 | N-G and C-G both degrade similarly | The gap effect is not rescued by the candidate; retain it as position sensitivity without candidate-specific allocation attribution. |
 | C-C violates the in-window non-inferiority gate | The candidate does not meet the joint objective; do not promote it as a target-free mature retrofit. |
 | Task score passes but answer NLL does not, or vice versa | Keep the endpoint-specific result; the bridge is partial, not jointly established. |
-| Both primary endpoints pass all gates | Position coding is a causal part of the remaining headroom under this contract. Proceed to grouped per-layer allocation, then matched adaptation, only under a new preflight and explicit compute authorization. |
+| Both primary endpoints pass all gates | Position coding is a causal part of the remaining headroom under this contract. Stop and write the owner first. Only then may a separately preregistered leave-one-band-out mechanism design be considered; grouped allocation or adaptation remains later and independently gated. |
 
 A positive bridge does not prove that the derived profile is optimal, that all
 checkpoints share the effect, or that amplitude, adaptation, or routing are

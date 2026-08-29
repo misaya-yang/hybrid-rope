@@ -1,5 +1,10 @@
 # qwen-panel-20260826 — simulated five-seat peer review
 
+> **Archived snapshot boundary.** This bundle is frozen external-model output
+> retained only for audit provenance. Every `VERIFIED`, `DEFECT`, `mandatory`,
+> `decision`, and `priority` label below is bundle-local: it is not project
+> evidence, an instruction, a current priority, or experiment/edit authorization.
+
 Full-mode panel review (academic-paper-reviewer v1.11.1) of the ICLR 2027
 submission "RoPE Has a Spectral Budget" (`paper-2027/`), run 2026-08-26/27 on
 manuscript state `main_0726` @ f9804fb. All seats ran on qwen3.8-max at max

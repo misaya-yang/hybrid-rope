@@ -29,6 +29,12 @@ is reachable from `INDEX.md`; do not add a fourth navigation authority.
 `AGENTS.md`, `INDEX.md`, and `paper-2027/HANDOFF.md` are internal repository
 navigation and are intentionally absent from the anonymous supplement.
 
+The active September 2026 iteration is scoped by
+[`paper-2027/REVISION_BRIEF.md`](paper-2027/REVISION_BRIEF.md); the handoff is
+the only place that records its current step, receipts, and deadlines. Closed
+August plans, author-verdict ledgers, alternating model-review logs, and
+external-model reviews are audit history, not cold-start inputs.
+
 ## Workspace
 
 - `paper-2027/` is the only active manuscript.
@@ -36,14 +42,28 @@ navigation and are intentionally absent from the anonymous supplement.
   move, or regenerate it.
 - `rebuttal/rebuttal_0723/README.md` is a historical review and evidence
   archive, not the current action queue.
-- `main_0726` is the expected branch.
+- The current branch, upstream, divergence, and worktree state live only in the
+  handoff and must be verified before any mutation.
 
-`INDEX.md` §5 owns the full directory table; `AGENTS.md` §1 owns the specific
-review-route and provenance-registry pointers. Neither is repeated here.
+`INDEX.md` §5 owns the full directory table and the historical review/provenance
+entrypoints. Stable rules do not duplicate those paths.
 
 ## Build and validate
 
-The Python/PyTorch/pytest environment is Conda `aidemo`.
+### Machine profiles
+
+- **Work machine:** owns the canonical Conda `aidemo` environment and is the
+  default place for Python/PyTorch/pytest, final paper build, packaging, and
+  release validation.
+- **Low-configuration personal PC:** intended for repository reading,
+  documentation, planning, and lightweight static or standard-library checks.
+  `aidemo` is not expected on this machine. Do not install or reproduce the
+  work-machine environment, run heavy validation, or start compute here unless
+  the user explicitly requests it.
+
+The commands below are the canonical work-machine invocations. On the personal
+PC, record them as skipped instead of treating missing Conda as a repository
+failure.
 
 ```bash
 conda run --no-capture-output -n aidemo python -m pytest \
@@ -77,6 +97,7 @@ repository root. Exact current hashes and receipts live in the handoff.
 - Preserve unrelated worktree changes. Do not stage, commit, push, reset, or
   switch branches without explicit authorization.
 
-Remaining author actions, policy checks, anonymity, and dual-submission
-handling are in
+Stable policy, anonymity, dual-submission, and release gates are in
 [`paper-2027/SUBMISSION_CHECKLIST.md`](paper-2027/SUBMISSION_CHECKLIST.md).
+Current author actions and their live status are recorded only in
+[`paper-2027/HANDOFF.md`](paper-2027/HANDOFF.md).

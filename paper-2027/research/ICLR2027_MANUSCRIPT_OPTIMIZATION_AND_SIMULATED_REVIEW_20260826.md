@@ -1,8 +1,10 @@
 # ICLR 2027 manuscript optimization and simulated-review decision
 
-> **SUPERSEDED (2026-08-27):** superseded by the five-seat panel bundle
-> [`external-reviews/qwen-panel-20260826/`](external-reviews/qwen-panel-20260826/)
-> (decision: Major Revision). Retained as a historical reviewer-risk record.
+> **ARCHIVED AUGUST 2026 CYCLE (2026-08-29):** this file records a closed
+> revision cycle. It has no current authority over the manuscript, narrative,
+> experiment priority, compute, or edit order. Do not execute or enforce it.
+> Current work follows `AGENTS.md` → `INDEX.md` → `paper-2027/HANDOFF.md` →
+> current TeX and the routed canonical owner.
 
 - **Date:** 2026-08-26
 - **Status:** historical manuscript-edit decision record (superseded
@@ -14,7 +16,7 @@
   prose to copy verbatim
 - **Objective:** freeze a scientifically correct, reviewer-legible submission;
   do not reopen method search
-- **Post-submission theory authority:**
+- **Historical theory pointer used by that cycle:**
   [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
 
 Every number below inherits the scope of its linked canonical owner. The active

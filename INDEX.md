@@ -1,6 +1,6 @@
 # INDEX — 理论、证据、代码与下一步
 
-- **最后更新：** 2026-08-28
+- **最后更新：** 2026-08-29
 - **角色：** 本仓库唯一的**持久索引**。回答「已有什么、谁拥有它、下一步做什么」。
 - **不负责：** 硬性规则（见 [`AGENTS.md`](AGENTS.md)）、易变状态（见
   [`paper-2027/HANDOFF.md`](paper-2027/HANDOFF.md)）。
@@ -51,24 +51,27 @@
 | claim 架构 | 实现版的 claim 结构与证据层级 | 同上 |
 | 下一代理论状态 | position-resolved、co-adaptation-aware 的缺口，matched-content phase 2x2 与方法进入条件 | [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826`](paper-2027/research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md) |
 
-### 2.2 理论优化层（已闭合，尚未进正文）
+### 2.2 支持性与历史理论推导（非行动队列）
 
 [`three_completions/optimization_notes.md`](paper-2027/research/three_completions/optimization_notes.md)
 把三处各自假设均匀先验的松散结构压成**单一可测先验 $\mu$** 的泛函链。
+其中部分恒等式和负结果仍有理论价值，但这组推导不拥有 9 月稿件路线或下一实验
+优先级。
 
 | 编号 | 内容 | 状态 |
 | --- | --- | --- |
-| O1 | $L_{\rm rng}$ 由 $\mu$ 导出，不是自由参数；$\omega_0L=2.0772$ | 已完成 |
-| O2 | $L_{\rm eff}^J=n\,\mathrm{Var}_{U_n}[G]/\mathrm{Var}_\mu[G]$ | 已完成，**但见 §3.4 的反证** |
-| O3 | $\gamma_{\rm eff}$ 闭式；$\tau_*(L)$ **不是幂律**，$p\approx0.85$ 诊断可撤 | 已完成 |
-| O4 | 统一泛函 $\mathcal J[\rho]$ 合并 collision（形状）与 resolution（尺度），给出闭式 **EVQ-Cosh-R**（cosh + $\varphi_*$ 处下跳 $\kappa$） | 已完成 |
-| O5 | arcsine 猜想**证伪**；剩余为第二类 Fredholm 方程，建议 Nyström | 已完成（结论为否） |
-| O6 | re-adaptation 秩界不可得，只有线性化替代 + 可测桥 O6′ | 需进一步研究 |
-| O7 | **共享频率表对头间异质 $\mu$ 是 Jensen 次优的**；per-head/分组 $\varphi_*$ 有理论依据 | 需进一步研究 → §6 |
-| O8 | $\Lambda(\mu)$ 的正则性缺口；朴素参与比**不是**上界 | 需进一步研究 |
+| O1 | $L_{\rm rng}$ 由 $\mu$ 导出，不是自由参数；$\omega_0L=2.0772$ | 已验证的支持性推导 |
+| O2 | $L_{\rm eff}^J=n\,\mathrm{Var}_{U_n}[G]/\mathrm{Var}_\mu[G]$ | 条件恒等式保留；经验机制解释未成立，见 §3.5 |
+| O3 | $\gamma_{\rm eff}$ 闭式；$\tau_*(L)$ **不是幂律**，$p\approx0.85$ 诊断可撤 | 已验证的纠错结论 |
+| O4 | 统一 surrogate 泛函 $\mathcal J[\rho]$ 与闭式 EVQ-Cosh-R | surrogate 数学构造；不是部署方法或 LM 排序器 |
+| O5 | arcsine 猜想**证伪**；数值自由优化只报告给定 optimizer/restarts 下的 best-found | 负结果保留 |
+| O6 | re-adaptation 秩界不可得，只有线性化替代 + 可测桥 O6′ | 开放、非当前优先级 |
+| O7 | 头/层异质分配可能有价值 | 待验证推论；不是已完成的 Jensen 行为结论 |
+| O8 | $\Lambda(\mu)$ 的正则性缺口；朴素参与比**不是**上界 | 开放、非当前优先级 |
 
-验证脚本：[`verify_optimizations.py`](paper-2027/research/three_completions/verify_optimizations.py)、
-[`verify_three_completions.py`](paper-2027/research/three_completions/verify_three_completions.py)（纯 CPU，~60 s）。
+历史验证脚本保留在
+[`three_completions/`](paper-2027/research/three_completions/)；运行环境与输入必须
+在使用前现场核验，脚本存在本身不构成当前结果或复现回执。
 
 ### 2.3 历史理论（已被取代，只读）
 
@@ -125,7 +128,7 @@ $\tau_*=\max(d_{\rm head}/\sqrt L,\;1.4)$ 是 operating prior 而非普适律（
 | 成熟模型零训练机制假设 | [`ZERO_TRAINING_MECHANISM_AND_CEILING_20260826`](paper-2027/research/attention-aware-retrofit/analysis/ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md) | 内部分析：冻结表是最小干预而非唯一可能形式；相对码与快带保护是设计假设，不是通用定理 |
 | 固定 support 剂量响应 | [`ALLOCATION_DOSE_RESPONSE_RESULT_20260826`](paper-2027/research/attention-aware-retrofit/results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md) | 128 文档机制结果；解析 Path A 未通过联合 gate，learned direction 显示连续 full/tail 再分配，不是新方法 |
 | Native 4K RULER 诊断 | [`NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826`](paper-2027/research/attention-aware-retrofit/results/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md) | 描述性 core-four；跨长度不同 rows，不能单独判定模型上限或位置失效 |
-| Protected-ramp 理论分析与 band-attribution 设计 | [`PROTECTED_RAMP_THEORY_ANALYSIS_20260828`](paper-2027/research/attention-aware-retrofit/analysis/PROTECTED_RAMP_THEORY_ANALYSIS_20260828.md)、[`PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828`](paper-2027/research/attention-aware-retrofit/analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md) | 内部理论分析，**未执行**：composite 为五智能体综合的独立再推导，数字分歧以 composite 重算值为准；其 §9 leave-one-band-out 频带归因设计（`DESIGN_NOT_EXECUTED`）取代 protected-ramp 保护公式扫描，执行需新 preflight 与显式算力授权 |
+| Protected-ramp 理论分析与 band-attribution 设计 | [`PROTECTED_RAMP_THEORY_ANALYSIS_20260828`](paper-2027/research/attention-aware-retrofit/analysis/PROTECTED_RAMP_THEORY_ANALYSIS_20260828.md)、[`PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828`](paper-2027/research/attention-aware-retrofit/analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md) | 历史内部分析，**未执行**；保护公式扫描已退役。§9 leave-one-band-out 仅是 matched-content bridge 之后的条件式机制设计，不是当前队列、结果或算力授权 |
 
 ### 3.4 已证伪 / 已关闭（**不要重做**）
 
@@ -144,11 +147,13 @@ $\tau_*=\max(d_{\rm head}/\sqrt L,\;1.4)$ 是 operating prior 而非普适律（
 | 9 | phase risk（「已 wrap 过的通道安全」） | Spearman $0.000$ + `one_turn_floor_s2` 决定性反例 | 同上 |
 | 10 | direct-$z$ 两文档标定 | per-row gate 失败 | [`DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824`](paper-2027/research/attention-aware-retrofit/results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md) |
 | 11 | 两个解析静态单表候选 | 改善 2×、损伤 1× | [`ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824`](paper-2027/research/attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md) |
+| 12 | target-free continuous-boundary-slope 具体实现 | 同一 harness 的 8K/16K core-4 RULER 均为 `0.0000` | [`ZERO_TRAINING_MECHANISM_AND_CEILING_20260826`](paper-2027/research/attention-aware-retrofit/analysis/ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md) §2；只关闭该实现，不关闭 target-free 目标 |
 
-**结构性结论：** 第 1–11 项全部是**同一张共享一维表在假定 content model 下的标量
-泛函**。而 §3.1 的 2×2 显示 LM 结果由 table×weights **交互**主导（换表后 PPL
-`7.14→76.20`）。看不见权重的泛函在预测一个非主导项。**再提第 12 个同类 score
-之前，必须先说明它如何逃出这一类。**
+**结构性结论：** 第 1–11 项中的静态 selector 路线属于**同一张共享一维表在假定
+content model 下的标量泛函**。而 §3.1 的 2×2 显示 LM 结果由 table×weights
+**交互**主导（换表后 PPL `7.14→76.20`）。看不见权重的泛函在预测一个非主导项。
+再提同类 score 前，必须先说明它如何逃出这一类。第 12 项关闭的是一个具体
+position-dependent operator，不把不同 target-free operator 一并判死。
 
 ### 3.5 未决（**不是**失败）
 
@@ -188,7 +193,7 @@ $\tau_*=\max(d_{\rm head}/\sqrt L,\;1.4)$ 是 operating prior 而非普适律（
 | `paper-2027/research/` | durable internal theory、审计、claim/evidence 决策 | 内部层，不直接复制进正文 |
 | `paper-2027/research/attention-aware-retrofit/` | 成熟 retrofit 的 `results` / `evidence` / `analysis` / `preflights` / `theory` | 各子目录职责见其 README |
 | `paper-2027/research/audits/` | 内部 theory/manuscript/evidence 审计 | 不建立第二 action queue |
-| `paper-2027/research/external-reviews/` | 外部模型独立复核 | untrusted input，必须回 owner 核验 |
+| `paper-2027/research/external-reviews/` | 8 月外部模型审计快照 | frozen history；不进冷启动、当前优先级或 evidence routing |
 | `paper/` | NeurIPS 2026 投稿基线 | **不可修改、不可编译、不可重生成** |
 | `rebuttal/rebuttal_0723/` | NeurIPS review、回复历史、成熟实验 owner | 历史证据层，**不是** action queue |
 | `scripts/` | 见 §4 | — |
@@ -203,6 +208,15 @@ $\tau_*=\max(d_{\rm head}/\sqrt L,\;1.4)$ 是 operating prior 而非普适律（
 | [`internal/`](internal/) | NeurIPS-era 工作归档（2026-03/04 记录、旧稿快照、计划、审计、skill 备份） | 只读历史层，不再接收新文件；不公开、不整体打包；见其 README |
 | `nonuniform-alloc/` | 私有工作层 | 未经明确请求不修改、不公开 |
 
+### 历史审计入口（按需读取，不进冷启动）
+
+| 需要追溯 | 入口 | 边界 |
+| --- | --- | --- |
+| NeurIPS 官方 review / AC metareview | [`00_REVIEWER_SCORES_AND_AC_METAREVIEW.md`](rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md) | author-supplied official-history capture；不是当前 ICLR 评分预测或行动队列 |
+| NeurIPS 历史回复策略 | [`01_REBUTTAL_PLAYBOOK.md`](rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md) | historical response artifact；不自动迁移任务 |
+| NeurIPS-era 结果 provenance | [`RESULT_PROVENANCE_MANIFEST.md`](docs/overview/RESULT_PROVENANCE_MANIFEST.md) | historical registry；当前 ICLR claim 走 §3 canonical owner |
+| paper experiment code view | [`paper_experiments/MANIFEST.json`](paper_experiments/MANIFEST.json) | schema-v1 code/symlink snapshot；不是 run、result 或 readiness receipt |
+
 ### 新文件放哪里
 
 | 类型 | 位置 |
@@ -214,7 +228,6 @@ $\tau_*=\max(d_{\rm head}/\sqrt L,\;1.4)$ 是 operating prior 而非普适律（
 | 机制分析 / 证伪 | `.../attention-aware-retrofit/analysis/` |
 | 预注册 / 已撤销协议 | `.../attention-aware-retrofit/preflights/` |
 | 紧凑 receipt | 对应 `evidence/` |
-| 外部模型评审 | `.../external-reviews/<source-date>/` |
 | 可复用分析代码 | `scripts/analysis/` |
 | 新主实验 runner | `scripts/core_text_phases/` |
 
@@ -223,132 +236,114 @@ provenance manifest、第二个 rebuttal control room、额外的投稿 PDF 入�
 
 ---
 
-## 6. 研究议程与下一步
+## 6. 9 月投稿与后续研究优先级
 
-> 本节是持久研究判断，不是论文 claim、实验结果或计算授权。现行理论状态由
-> [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826`](paper-2027/research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
-> 拥有；实时工作状态只看 [`paper-2027/HANDOFF.md`](paper-2027/HANDOFF.md)。
+> 本节只拥有持久的决策顺序，不拥有实时进度、投稿回执或计算授权。9 月里程碑与
+> 当前步骤见 [`paper-2027/HANDOFF.md`](paper-2027/HANDOFF.md)；本轮静态执行范围见
+> [`paper-2027/REVISION_BRIEF.md`](paper-2027/REVISION_BRIEF.md)。
 
-### 6.1 当前目标
+### 6.1 当前投稿目标
 
-当前投稿已经完成固定-support allocation 的识别、full-pair 静态几何和一个解析
-construction。下一方法目标是：
+当前稿已完成 fixed-support allocation 识别、full-pair 静态几何、bounded
+EVQ-Cosh construction，以及 frozen / matched-adaptation / from-training 三条分离的
+证据路线。9 月迭代从当前 TeX/PDF 出发，不从 8 月外部模型评审、旧 verdict、旧
+experiment plan 或旧 line number 继承任务。
 
-> 在构造中不使用 `L_target`，通过 matched adaptation 同时保持 in-window、
-> 改善外推，并把收益落实到 capability，而不只是 tail NLL。
+投稿前只保留三类高杠杆修改：
 
-三个已知约束：
+1. **novelty 可见性：** 让 fixed-support estimand、FMRoPE 的 control 身份和
+   support-retargeted 交互在 reviewer 路径中各出现一次，不恢复方法胜负叙事；
+2. **theory-to-evidence 接口：** 分开 exact identity、bounded surrogate、operating
+   prior 与 trained-model evidence，不把静态几何写成 LM 排序器；
+3. **证据角色：** frozen、adapted、from-training 各由自己的 owner、endpoint 与
+   uncertainty unit 承担，不做跨协议 ledger 或 pooled effect。
 
-1. 静态几何说明 allocation 非平凡，但不能给训练后 LM 排序；50M crossing 是决定性
-   反例。
-2. mature co-adaptation 已把 hard-swap 的短窗代价与 allocation 本身分开，却同时观察到
-   far-tail 改善和 long-full 损伤。
-3. 不同长度的 RULER rows 不是配对数据；`VT@4K` 不能单独判定模型上限或位置失效。
+当前计划不包含新的 submission compute。任何例外都必须先说明它如何在投稿前改变
+reviewer ceiling、现有证据缺什么、精确预算/owner/stop condition，并获得该次运行的
+显式授权。
 
-### 6.2 缺失的识别桥
+### 6.2 投稿后的第一识别桥
 
-下一项有决策价值的协议是 **matched-content phase intervention**，而不是新增模型规模：
+下一项有决策价值的研究协议只有 **matched-content phase 2x2**，不是新增模型规模：
 
 - 固定 checkpoint、token、顺序、causal mask、answer、decoder 和 rows；
 - 用 contiguous position IDs 与 virtual-gap IDs 改变相对相位；
-- 交叉 Native 与一个冻结候选表；
-- 同时报 task score 与 answer-token NLL。
+- 交叉 Native 与一个预先冻结的 same-support 候选表；
+- 在同一 rows 上同时报告 official task score 与 answer-token NLL。
 
-只有同一内容的短条件成功、virtual gap 使 Native 退化且候选恢复时，才能把剩余
-headroom 归到 position/allocation。完整 2x2 和判决读法在
-[theory state](paper-2027/research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md) §4；
-可执行的冻结协议在
-[matched-content phase 2x2 preflight](paper-2027/research/attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md)。
-独立的 protected-progressive companion protocol 是
-[PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827](paper-2027/research/attention-aware-retrofit/preflights/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md)。
-这只是协议设计；GPU 仍需显式授权。理论侧，protected-ramp 保护公式扫描方向已被
-[PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828](paper-2027/research/attention-aware-retrofit/analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md)
-§9 的 leave-one-band-out 频带归因设计取代（`DESIGN_NOT_EXECUTED`，同样只是设计，
-执行需新 preflight 与显式算力授权）。
+只有短条件成功、virtual gap 使 Native 退化、且候选同时恢复两个 endpoint 时，才能把
+剩余 headroom 归到 position/allocation。完整设计在
+[`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826`](paper-2027/research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
+§4 和
+[`MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827`](paper-2027/research/attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md)。
+它仍是 `FROZEN_PROTOCOL_DESIGN_NOT_EXECUTED`：当前 manifest 不含专用 runner，脚本或
+preflight 的存在不构成 readiness、结果或算力授权。
 
-### 6.3 决策顺序
+### 6.3 条件式研究顺序
 
-| 顺序 | 动作 | 进入条件 |
+| 顺序 | 动作 | 进入条件 / 停止条件 |
 | --- | --- | --- |
-| A | 当前 ICLR 稿按已验证版本投稿；不再增加 submission 实验 | 作者完成最终阅读与现场 policy/OpenReview 检查 |
-| B | 设计并预注册 matched-content phase 2x2 | 能冻结同一批内容与 position-map contract |
-| C | 若 B 识别出位置失效，先测 grouped per-layer allocation，再考虑 per-head | 保持 matched Native/adaptation 控制和同一 capability endpoint |
-| D | 1.485B 上同时改善 in-window、far-tail 和一个 capability endpoint 后再做多 seed | 小门禁通过 |
-| E | 多 seed 通过后才进入第二 checkpoint 或 8B | 明确算力与硬件授权 |
+| S0 | 9 月文档治理与 current-PDF audit | 不改变科学 owner；实时状态只写 handoff |
+| S1 | 完成摘要、正文、appendix、supplement 与 submission gates | 不以旧模型评审或新增 compute 扩张范围 |
+| R1 | matched-content phase 2x2 | 投稿后、新 preflight/runner CPU contract 通过、显式 GPU 授权；完成四格即停 |
+| R1b | leave-one-band-out 频带归因 | 仅当 R1 识别出 position failure 且频带归因会改变 R2 设计；否则不运行 |
+| R2 | grouped per-layer allocation；之后才考虑 per-head | R1 阳性，并保持 matched Native/adaptation 与同一 capability endpoint |
+| R3 | 1.485B 单 checkpoint 联合小门禁 | 同时改善 in-window、far-tail 和一个 capability endpoint 才扩多 seed |
+| R4 | 多 seed、第二 checkpoint 或 8B | 前一门禁通过且获得明确硬件/预算授权 |
 
-投稿期叙事决策的历史记录在
-[`ICLR2027_SUBMISSION_NARRATIVE_AND_EXPERIMENT_PLAN_20260826`](paper-2027/research/ICLR2027_SUBMISSION_NARRATIVE_AND_EXPERIMENT_PLAN_20260826.md)；
-它不是新的行动队列。2026-08-27/28 的修订周期已闭合并提交；该周期的 Codex
-执行单是 [`REVISION_BRIEF.md`](paper-2027/REVISION_BRIEF.md)（v2，2026-08-27，
-五席评审团依据），配套作者裁决台账
-[`AUTHOR_VERDICTS_20260828.md`](paper-2027/AUTHOR_VERDICTS_20260828.md)（已带
-post-cycle 状态横幅：部分被取代；已接受未执行项经作者 2026-08-28 决定全部保留，待新周期执行）；四次
-receipted Codex pass 记录在
-[`CODEX_CLAUDE_PAPER_REVIEW_LOG.md`](paper-2027/research/CODEX_CLAUDE_PAPER_REVIEW_LOG.md)。
-[`ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826`](paper-2027/research/ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md)
-在周期内被取代，仅保留路由历史价值。
-Related-work / novelty 的 Codex 执行单是
-[`ICLR2027_CITATION_NOVELTY_AUDIT_20260826`](paper-2027/research/ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md)：
-NeurIPS `zWsa` 的 FMRoPE 漏引已在识别段闭合；剩余 originality-1 路径是 bib 中已有、PDF 未点名的 HoPE / CoPE / RoPE-ID / Xu / Wu / Chiang。它不是新的证据 owner，也不恢复 NeurIPS 的 PE zoo。
+protected-progressive / protected-ramp 公式扫描已退役；其分析只保留历史算术与设计
+provenance。band-attribution 是 R1 之后的条件分支，不与 R1 并列为当前队列。
 
-### 6.4 静态诊断的保留边界
+### 6.4 生命周期与反重复
+
+- **Current owner：** 当前 TeX、handoff 标明同步状态的 PDF、§2–§3 的 canonical
+  owners、current theory state。
+- **Design only：** matched-content 2x2；R1 之后才可能进入的 band attribution、
+  grouped per-layer 与后续 scale gates。
+- **Superseded：** 8 月 narrative/revision plans、protected-ramp scanning、旧 post-GPU
+  roadmap、alternating model-review workflow。它们只按需用于审计，不进入冷启动。
+- **Closed negative：** §3.4 的 owner-backed 条目；不得通过改名恢复。
+- **Unresolved：** M4 phase-isotropy 仍是 `SCREEN_UNRESOLVED`，既不是成功也不是候选级
+  否决。
+
+8 月周期的旧 brief、author verdict ledger、模型 review bundles 与协作日志由 Git 和
+其原文件保留历史，不自动向 9 月迁移任务。新候选必须先过 §3.4；尤其“共享单表 +
+静态 scalar score”必须说明如何逃出已关闭类别。
+
+### 6.5 静态诊断的保留边界
 
 [`scripts/analysis/third_axis_ceiling.py`](scripts/analysis/third_axis_ceiling.py)
-仍是固定 measure/support/optimizer/restarts 下 best-found `r_2` 的复现 owner。
-这些值：
+仍是固定 measure/support/optimizer/restarts 下 best-found `r_2` 的复现 owner。这些值：
 
 - 是未知 supremum 的下界，不是全局或行为上限；
 - 明确**不建立 support invariance**；
 - 可解释静态 basis utilization，不能选择下一张 LM 表；
-- 不能把 `78.2%` 等比例写成方法利用率或行为 headroom。
+- 不能把某个比例写成方法利用率或行为 headroom。
 
-uniform 测度下存在精确正交格；三角测度、钉住 support 和训练后行为是不同问题。
-详细数值与反例由脚本、[`analysis/full_rope_audit/`](analysis/full_rope_audit/)
-和 Git 历史保留，不再把长表放在冷启动索引中。
+uniform 测度下的精确正交格、三角测度、钉住 support 和训练后行为是不同问题。
+详细数值与反例由脚本、[`analysis/full_rope_audit/`](analysis/full_rope_audit/) 与 Git
+历史保留。
 
-### 6.5 反重复与论文边界
-
-2026-08-27/28 的修订周期已闭合并提交；周期的执行输入由
-[`REVISION_BRIEF.md`](paper-2027/REVISION_BRIEF.md)（v2，五席评审团依据）
-与裁决台账 [`AUTHOR_VERDICTS_20260828.md`](paper-2027/AUTHOR_VERDICTS_20260828.md)
-（post-cycle 状态：部分被取代；已接受未执行项全部保留，待新周期执行）拥有；
-两者都不是数值 owner，也不替代本节的研究边界。先前模拟审稿记录在
-[`ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826`](paper-2027/research/ICLR2027_MANUSCRIPT_OPTIMIZATION_AND_SIMULATED_REVIEW_20260826.md)，
-已被五席评审团 [`external-reviews/qwen-panel-20260826/`](paper-2027/research/external-reviews/qwen-panel-20260826/)（决议：Major Revision）取代。
-其共同判决（已随周期闭合执行）是：不再增加 submission
-compute；先移除 Appendix A.11 已被 O3 取代的单幂律 / exponent-matched 诊断，
-把 target-retargeted 反转、统计单位和 EVQ-Cosh / mature-derived estimand 边界放到
-相应 claim 旁，然后完成构建、逐页复核和冻结。
-
-- 新候选先过 §3.4；再提“共享单表 + 静态 scalar score”必须说明如何逃出已关闭类别。
-- 50M M4 phase-isotropy 结果保持 `SCREEN_UNRESOLVED`，不是成功或候选级否决。
-- 不给 co-adaptive oracle 追加 shell、step、seed 或 allocation-LR sweep。
-- R2（行为轴位置）仍是方法研究问题，不是当前 identification claim 的缺陷。
-- R3（target-retargeted 反转）说明 allocation 条件于 support；不支持可加性，也不把
-  allocation 降格成 support 修补项。
 ## 7. 双机协调（工作电脑 / 家里 PC）
 
 ### 7.1 什么在 Git 里，什么不在
 
 | 类别 | 位置 | 跨机可用 |
 | --- | --- | --- |
-| 稿件、理论、证据 owner、receipt、代码、测试 | Git tracked | ✅ 直接 pull |
+| 稿件、理论、证据 owner、receipt、代码、测试 | Git tracked | ✅ 可经授权的 Git 同步获取 |
 | raw GPU rows、checkpoint、缓存、token 语料 | 仓库外 / ignored | ❌ **必须显式搬运** |
 | `results/` 下 tracked 的历史 | Git tracked | ✅ |
 | `results/` 下本地输出 | ignored | ❌ |
-| 1B token FineWeb-Edu 语料 | 曾为 machine-local；当前可用性未复核 | ❌ 见 HANDOFF §6 |
+| 1B token FineWeb-Edu 语料 | machine-local；可用性必须在未来 preflight 现场复核 | ❌ |
 
 **规则：** tracked receipt **不能**替代 raw artifact。当前 checkout 缺 artifact
 只说明这台机器没有，不能写成实验没跑过。
 
 ### 7.2 换机器时的固定动作
 
-```bash
-git fetch --all && git status --porcelain && git log --oneline -5
-```
-
-先看 branch / upstream / worktree，再动任何东西。所有 Git 变更操作都需要显式
-授权，禁令清单由 [`AGENTS.md`](AGENTS.md) §6 拥有，此处不重复。
+先用只读命令核对 branch / upstream / worktree / HEAD；当前值写入 handoff。`fetch`、
+`pull`、切换、提交或推送都需要对应的显式授权，禁令清单由
+[`AGENTS.md`](AGENTS.md) §6 拥有，此处不重复。
 
 ### 7.3 环境与构建
 
@@ -356,8 +351,14 @@ git fetch --all && git status --porcelain && git log --oneline -5
 「Build and validate」。这里不重复。约束条款在
 [`AGENTS.md`](AGENTS.md) §6。
 
-换机器时只需记住：Python/PyTorch/pytest 一律走 Conda `aidemo`；Blackwell 相关
-读 [`RTX5090_BLACKWELL_PROFILE.md`](docs/overview/RTX5090_BLACKWELL_PROFILE.md)。
+机器角色不可互换：
+
+- **工作机**拥有 Conda `aidemo`，负责 Python/PyTorch/pytest、最终论文构建、打包和
+  release validation；
+- **低配置个人 PC profile**负责阅读、文档、规划和轻量 static/stdlib 检查；缺少 Conda
+  是预期状态，不是 repository failure，不在此机补装工作机环境或跑重验证；
+- Blackwell 规则只在现场确认是对应 GPU 机器时才应用，见
+  [`RTX5090_BLACKWELL_PROFILE.md`](docs/overview/RTX5090_BLACKWELL_PROFILE.md)。
 
 ### 7.4 不要跨机泄漏
 

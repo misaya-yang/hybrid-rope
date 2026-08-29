@@ -1,88 +1,175 @@
-# ICLR 2027 submission checklist
+# ICLR 2027 submission gate specification
 
-Official sources checked on 2026-08-26: the ICLR 2027 Author Guidelines and AI
-Policy for Authors. `./compile.sh` runs the mechanical gates; unchecked items
-require an author decision or final manual review.
+> **Role.** This file defines stable release gates. It deliberately contains no
+> completion checkboxes, current hashes, current page receipt, or pass/fail state.
+> Record all live results, blockers, uploaded-state receipts, and author actions
+> only in [`HANDOFF.md`](HANDOFF.md).
+>
+> Canonical build, Python/PyTorch/pytest, packaging, and release checks run on
+> the work machine with its `aidemo` environment. The low-configuration
+> personal PC does not own those gates.
 
-## Format and build
+## Official sources and dates
 
-- [x] Official `iclr-2027-style-files.zip` files are byte-identical to the
-      copies used by this package.
-- [x] Anonymous submission uses `iclr2027_conference` and leaves
-      `\\iclrfinalcopy` commented.
-- [x] Main text is at most **9 pages**; bibliography and appendices follow the
-      exempt statements and do not count.
-- [x] AI use statement is present before the bibliography.
-- [x] Ethics and reproducibility statements are present before the bibliography.
-- [x] Undefined citations/references, overfull boxes above 5 pt, non-Letter
-      pages, Type 3 fonts, unembedded fonts, PDF size above 50 MiB, and obvious
-      anonymity leaks are hard failures in `compile.sh`.
-- [ ] Final submission-day build: clean temporary directory, both LaTeX passes,
-      BibTeX, source/PDF hash receipt, and visual review of all pages.
+Open these official sources at each relevant gate; the handoff records the
+latest live-check date and outcome:
 
-## Scientific consistency
+- [ICLR 2027 Author Guidelines](https://iclr.cc/Conferences/2027/AuthorGuidelines)
+- [ICLR 2027 Call for Papers](https://iclr.cc/Conferences/2027/CallForPapers)
+- [ICLR 2027 AI Policy for Authors](https://iclr.cc/Conferences/2027/AIPolicyForAuthors)
+- [official ICLR 2027 style files](https://media.iclr.cc/Conferences/ICLR2027/iclr-2027-style-files.zip)
 
-- [x] The central claim is fixed-range interior allocation as a separately
-      identifiable training-time variable; EVQ-Cosh is a closed-form
-      constructive instance, not a universal optimum.
-- [x] Static full-RoPE geometry is described as positional-basis geometry, not
-      an LM-quality or extrapolation predictor.
-- [x] Exact-range, M4, 50M table-by-weights, OLMo-2, and LLaMA protocols remain
-      separate; no cross-protocol averaging or seed splicing.
-- [x] Teacher-forced NLL/PPL, strict autoregressive exact, 2Wiki, RULER, and
-      causal source-use endpoints remain distinct.
-- [x] Exact-range uses the completed raw-hash-receipted three-training-seed
-      owner. Per-seed points remain visible; evaluation anchors are not counted
-      as independent seeds and no generic significance claim is made.
-- [x] The $1.485$B from-initialisation result is presented as a
-      same-initialisation/same-scientific-recipe comparison with different
-      trainer implementations; $8$B is labelled matched adaptation, not a
-      pretraining-scale trend.
-- [x] The transplant theorem is limited to exact, fixed,
-      position-independent invertible Q/K compensation.
-- [x] LeRoPE is positioned as learned/fixed-table evidence; no claim says it
-      validates EVQ, is approximated by EVQ, or is dominated by EVQ.
-- [x] LLaMA 32K RULER Native macro is not reported because three shards never
-      started.
-- [ ] Author reviews every number against the named owner one final time after
-      layout freezes.
+Submission milestones:
 
-## Anonymity and release package
+- **2026-09-17:** internal title, abstract, author-roster, and author-metadata
+  freeze;
+- **2026-09-18, 11:59 PM AoE:** official abstract deadline;
+- **2026-09-25:** official full-paper deadline.
 
-- [x] No author names, affiliations, acknowledgements, private machine paths,
-      host names, or identifying repository links appear in the manuscript.
-- [x] Anonymous code archive removes identities, credentials, private paths,
-      host names, checkpoints, caches, and ignored raw results.
-- [x] Anonymous code archive includes the frequency initializer, analysis
-      scripts, evaluation contracts, and exact-range configs needed for claims.
-      The `iclr2027` packager profile passed its leak scan, ZIP integrity test,
-      isolated 9/29-page paper build, and 144 packaged CPU tests on 2026-08-26.
+Policies and platform requirements can change. Reopen the official pages and
+recheck the live OpenReview form immediately before the 9/17 freeze, the 9/18
+abstract submission, and the 9/25 full-paper submission. A dated check in this
+file is not proof of current compliance.
 
-## Author actions before submission
+## Gate A — internal abstract and author-metadata freeze, 2026-09-17
 
-- [x] Author confirmed on 2026-08-19 that the AI use statement is complete and
-      literally true for every required and recommended category it lists.
-- [x] Author confirmed on 2026-08-19 that all authors have current OpenReview
-      profiles and satisfy the ICLR 2027 reciprocal-reviewing requirements.
-- [ ] Freeze the author roster by the abstract deadline; do not add an author
-      afterward. Author order may change only until the full-paper deadline.
-- [ ] Confirm that no author appears on more than 20 ICLR 2027 submissions.
-- [ ] Confirm that each author appears on at most one submission for which no
-      co-author is an eligible reciprocal reviewer.
-- [ ] Confirm that at least one qualified author is registered to review at
-      least three papers, unless the submission has the official exemption or
-      a program-chair exception.
-- [ ] Confirm that every non-exempt author appearing on three or more
-      submissions is registered to review at least six papers.
-- [x] Dual-submission timing and current-draft distinctness audited on
-      2026-08-19. ICLR expressly permits an abstract while the NeurIPS decision
-      is pending; NeurIPS notifies on Sep 24, before the ICLR full-paper
-      deadline on Sep 25. The current title, central theory, identification
-      controls, co-adaptation result, and mature-scale evidence are materially
-      different from `../paper/`; see `CHANGES_FROM_NEURIPS2026.md` §2.1.
-- [ ] If NeurIPS accepts, cite the accepted paper in third person and state the
-      old/new contribution boundary before the ICLR full-paper upload. No such
-      citation action is needed if NeurIPS rejects.
-- [x] Official deadlines checked on 2026-08-19: abstract Sep 18 and full paper
-      Sep 25, 2026 AoE. Recheck the live page immediately before submission.
-- [ ] OpenReview title and abstract exactly match the final PDF.
+The freeze is ready only when all of the following are true:
+
+- The title and abstract match the current manuscript's scientific claim,
+  evidence scope, terminology, and canonical owners.
+- The abstract contains no unsupported result, new protocol interpretation,
+  hidden submission experiment, or stale language from an archived review plan.
+- The author roster is final for the abstract deadline; author order and any
+  later permitted metadata change follow the live official policy.
+- Every author has the required OpenReview profile and satisfies the current
+  profile-completeness, reciprocal-reviewing, submission-count, and author-limit
+  rules.
+- Any required reviewer registration or official exemption is resolved rather
+  than assumed.
+- The AI-use statement and author confirmations remain literally accurate under
+  the current ICLR policy.
+- The dual-submission condition and the possible NeurIPS-decision branch are
+  understood by the authors.
+- The candidate OpenReview title and abstract exactly match the internally
+  frozen text.
+
+The live author confirmations and unresolved items are recorded in the handoff,
+not by editing this gate specification.
+
+## Gate B — official abstract submission, 2026-09-18
+
+Before 11:59 PM AoE:
+
+- Submit the frozen title, abstract, author roster, and required metadata through
+  the official OpenReview venue.
+- Confirm the platform accepted the submission and did not alter math, Unicode,
+  whitespace, or author metadata materially.
+- Compare the saved OpenReview record with the frozen source.
+- Record the submission identifier, timestamp, and exact frozen state only in
+  the handoff; do not place identifying submission data in the anonymous paper
+  or supplement.
+
+After the abstract deadline, treat the roster and other frozen fields according
+to the live official policy. Do not infer that a field remains editable merely
+because the interface exposes it.
+
+## Gate C — manuscript format and build
+
+The full-paper candidate must satisfy the current official format and the local
+mechanical gates:
+
+- Use the official `iclr2027_conference` style and leave `\iclrfinalcopy`
+  disabled for anonymous submission.
+- Keep the main text within the official nine-page limit; bibliography,
+  appendices, and exempt required statements must appear in the allowed order.
+- Include the required AI-use statement and the selected ethics and
+  reproducibility statements in policy-compliant form.
+- Produce anonymous US-Letter output with no undefined citations/references,
+  disallowed overfull boxes, Type-3 fonts, unembedded fonts, or oversized PDF.
+- Build from a clean temporary state using the documented repository command;
+  record source/PDF hashes and the exact receipt in the handoff.
+- Visually inspect every page at final size, including figures, tables,
+  footnotes, references, statements, and appendix transitions.
+
+Compilation establishes format and layout health only. It does not validate a
+scientific claim or prove that the uploaded artifact matches the local file.
+
+## Gate D — scientific and provenance consistency
+
+The final source/PDF passes only when:
+
+- Every reviewer-facing number, table cell, figure value, seed count,
+  uncertainty unit, and protocol interpretation resolves to its canonical owner.
+- Fixed-support identification, the 50M factorial, table-by-weights crossing,
+  mature frozen intervention, matched adaptation, scale studies, and video-DiT
+  evidence remain separate protocols with their actual causal roles.
+- Likelihood, perplexity, strict autoregressive exact, RULER, Qasper, 2Wiki, and
+  causal source-use endpoints are not translated into one another.
+- The exact-range claim uses the raw-hash-receipted three-training-seed owner;
+  evaluation rows or anchors are not counted as independent seeds.
+- The 1.485B from-initialisation comparison retains its
+  same-initialisation/same-scientific-recipe scope; the 8B result remains matched
+  adaptation, not pretraining-scale evidence.
+- Static full-RoPE geometry remains a positional-basis diagnosis, not an
+  LM-quality predictor.
+- EVQ-Cosh, anchored EVQ-Cosh, frozen derived/coarse allocations, `Geo`,
+  `Native`, FMRoPE, YaRN-style, and the MLA wavelength-blend operator retain
+  their locked identities.
+- The transplant theorem, finite-`tau` rule, LeRoPE relationship, and all other
+  claims remain within the ceilings in `AGENTS.md`.
+- One final author review checks every number against the named owner after
+  layout is frozen.
+
+## Gate E — anonymity and anonymous supplement
+
+The paper and release package pass only when:
+
+- No author names, affiliations, acknowledgements, private machine paths, host
+  names, credentials, identifying repository links, checkpoints, caches, or
+  ignored raw outputs leak into reviewer-visible artifacts.
+- Internal planning, handoff, review-log, external-review, and archived verdict
+  documents remain excluded.
+- The anonymous package contains the source, code, configuration, evaluator
+  contracts, and machine-readable evidence required by its curated profile.
+- Every supplement evidence-map entry routes to a genuine owner or receipt, not
+  back to manuscript prose as if the paper were its own evidence.
+- The curated packager, leak scan, archive-integrity check, isolated paper build,
+  and allowlisted tests complete successfully under the required environment.
+- The immutable `../paper/` baseline remains unchanged and is never compiled or
+  packaged as the active submission.
+
+## Gate F — dual-submission and NeurIPS-decision branch
+
+Before the full-paper upload:
+
+- Recheck the current ICLR and NeurIPS policies against the actual decision and
+  submission state; do not rely only on the August timing audit.
+- If the NeurIPS outcome requires a citation or contribution-boundary update,
+  cite the work in the permitted third-person form and state the old/new
+  contribution boundary accurately.
+- If no update is required, do not add speculative acceptance/rejection language
+  to the manuscript.
+- Use [`CHANGES_FROM_NEURIPS2026.md`](CHANGES_FROM_NEURIPS2026.md) as the durable
+  distinctness owner, not as a record of the current decision state.
+
+The actual outcome, author decision, and applied branch belong only in the
+handoff.
+
+## Gate G — final upload, 2026-09-25
+
+The submission is complete only when:
+
+- The final title and abstract match between OpenReview and the uploaded PDF.
+- The OpenReview AI-use disclosure matches the final mandatory manuscript
+  statement and the authors' confirmed research workflow.
+- The PDF, source package if requested, and anonymous supplement are the exact
+  locally verified artifacts.
+- The uploaded files are downloaded from the platform and inspected again for
+  corruption, wrong version, metadata drift, anonymity leaks, and rendering
+  changes.
+- All author-visible warnings and required platform fields are resolved.
+- Final local and platform receipts are recorded in the handoff, with passed,
+  failed, skipped, and unverified checks distinguished.
+
+This file remains unchanged when a gate passes. Only the handoff records that
+live fact.

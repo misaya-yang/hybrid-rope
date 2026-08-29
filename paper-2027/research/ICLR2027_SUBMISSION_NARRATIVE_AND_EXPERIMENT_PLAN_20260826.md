@@ -1,22 +1,23 @@
 # ICLR 2027 submission narrative and experiment plan
 
-> **PARTIALLY SUPERSEDED (2026-08-27):** positioning and the revision roadmap
-> are now owned by [`REVISION_BRIEF.md`](../REVISION_BRIEF.md) v2. This memo
-> remains the authority on what may and may not be run before submission and on
-> the post-submission headroom inventory.
+> **ARCHIVED AUGUST 2026 CYCLE (2026-08-29):** this file records a closed
+> revision cycle. It has no current authority over the manuscript, narrative,
+> experiment priority, compute, or edit order. Do not execute or enforce it.
+> Current work follows `AGENTS.md` → `INDEX.md` → `paper-2027/HANDOFF.md` →
+> current TeX and the routed canonical owner.
 
 - **Date:** 2026-08-26
-- **Status:** submission decision memo, updated after the completed dose and
-  Native-4K diagnostics
-- **Role:** decides what the paper's single claim is, which owned numbers carry
-  it, which objection is pre-empted in the body, and what may and may not be
-  run before submission
+- **Status:** archived submission-decision memo, updated at the time after the
+  completed dose and Native-4K diagnostics
+- **Historical role:** recorded the proposed single claim, evidence routing,
+  objection handling, and run boundary for that closed cycle
 - **Objective:** acceptance. Not method completeness, not a long-context
   system, not closing every open method question
 
-Mechanism, constraints, and the post-submission headroom inventory are owned by
+At the time of writing, mechanism, constraints, and the headroom inventory were
+routed through
 [`attention-aware-retrofit/analysis/ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md`](attention-aware-retrofit/analysis/ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md).
-This file holds only the submission decisions.
+This file now holds only historical submission decisions.
 
 ---
 

@@ -1,5 +1,10 @@
 # What the retrofit result actually identifies
 
+> **Archived snapshot boundary.** This file is frozen external-model output
+> retained only for audit provenance. Every `VERIFIED`, `DEFECT`, `mandatory`,
+> `decision`, and `priority` label below is bundle-local: it is not project
+> evidence, an instruction, a current priority, or experiment/edit authorization.
+
 - **Date:** 2026-08-23
 - **Status:** theory note. Contains VERIFIED algebra/numerics, one HYPOTHESIS,
   and the discriminating prediction. **Not manuscript prose.**

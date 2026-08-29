@@ -1,5 +1,12 @@
 # Protected-ramp theory analysis (2026-08-28)
 
+> **ARCHIVED LIFECYCLE NOTE (2026-08-29):** superseded as an active research
+> route. Preserve the boundary-scale derivations and mass arithmetic as
+> historical provenance, but do not execute the scan recommendations below.
+> The matched-content phase 2x2 is the sole next bridge; any later
+> leave-one-band-out work is conditional on a positive bridge and a new
+> authorized preflight.
+
 - **Status:** `THEORY_ANALYSIS_NOT_EXECUTED` — analysis only. Contains no new
   experiment, no compute authorization, and no reviewer-facing claim.
 - **Superseding check:** independently recomputed and refined (with five

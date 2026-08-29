@@ -1,5 +1,12 @@
 # Protected-ramp rigorous composite (2026-08-28)
 
+> **ARCHIVED LIFECYCLE NOTE (2026-08-29):** superseded as an active research
+> route. The matched-content phase 2x2 is the sole next identification bridge.
+> This document remains arithmetic and derivation provenance. Its §9
+> leave-one-band-out design is conditional on a positive completed bridge, a
+> new preflight, and explicit post-deadline compute authorization; it is not a
+> parallel queue.
+
 - **Status:** `THEORY_ANALYSIS_NOT_EXECUTED`. Independent author-side
   re-derivation and CPU-only recomputation of the five-agent synthesis in
   [`PROTECTED_RAMP_THEORY_ANALYSIS_20260828.md`](PROTECTED_RAMP_THEORY_ANALYSIS_20260828.md).

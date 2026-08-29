@@ -6,9 +6,13 @@ implementation-audit layer. It remains useful, but it is not the current ICLR
 
 For current work, read first:
 
-1. `../../AGENTS.md`
-2. `../../paper-2027/HANDOFF.md`
-3. `../../paper-2027/research/README.md`
+1. [`../../AGENTS.md`](../../AGENTS.md)
+2. [`../../INDEX.md`](../../INDEX.md)
+3. [`../../paper-2027/HANDOFF.md`](../../paper-2027/HANDOFF.md)
+4. [`../../paper-2027/NARRATIVE_GUIDE.md`](../../paper-2027/NARRATIVE_GUIDE.md)
+   for manuscript work, then
+   [`../../paper-2027/research/README.md`](../../paper-2027/research/README.md)
+   for the canonical owner.
 
 ## What this directory still owns
 

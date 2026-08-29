@@ -1,9 +1,12 @@
 # ICLR 2027 理论架构：从 attention 第一性原理到有限谱预算
 
-- **状态**：历史理论设计探索；当前 claim 与写作边界以
-  `ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`、
-  `ICLR2027_RESEARCH_SYNTHESIS_20260819.md` 和
-  `FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md` 为准
+> **ARCHIVED AUGUST 2026 CYCLE (2026-08-29):** this file records a closed
+> revision cycle. It has no current authority over the manuscript, narrative,
+> experiment priority, compute, or edit order. Do not execute or enforce it.
+> Current work follows `AGENTS.md` → `INDEX.md` → `paper-2027/HANDOFF.md` →
+> current TeX and the routed canonical owner.
+
+- **状态**：历史理论设计探索；不拥有当前 claim、写作边界或行动顺序
 - **日期**：2026-08-19
 - **回答的是用户提出的第 3、4 号问题**：
   - Q3 非几何分配的理论没完善——理论上应能做到 in-window 不输 LeRoPE、外推强于原始 RoPE；

@@ -1,5 +1,10 @@
 # Editorial Decision — "RoPE Has a Spectral Budget" (ICLR 2027 submission)
 
+> **Archived snapshot boundary.** This file is frozen external-model output
+> retained only for audit provenance. Every `VERIFIED`, `DEFECT`, `mandatory`,
+> `decision`, and `priority` label below is bundle-local: it is not project
+> evidence, an instruction, a current priority, or experiment/edit authorization.
+
 **Panel:** simulated five-seat peer review, full mode (academic-paper-reviewer v1.11.1)
 **Date:** 2026-08-27 · **Model:** qwen3.8-max (all seats and synthesis) · **Manuscript state:** `main_0726` @ f9804fb
 **Provenance:** Phase 0 field analysis configured four card-backed seats; the Devil's Advocate ran as the fixed fifth seat. All five seats read the full manuscript read-only and committed their reports without cross-referencing peer outputs. The editorial synthesis below traces every point to a Phase 1 report; where the editor independently recomputed a disputed fact, the recomputation is labeled EDITORIAL CHECK.

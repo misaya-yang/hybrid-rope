@@ -1,5 +1,17 @@
 # Codex / Claude Code paper review log
 
+> **ARCHIVED / FROZEN 2026-08-29.** This journal records the closed
+> 2026-08-26--28 alternating-review cycle. It is preserved verbatim below for
+> provenance; do not append September work, treat any embedded “current state”
+> or open list as live, or read the historical protocol as a present instruction.
+> Current manuscript state and actions live only in
+> [`../HANDOFF.md`](../HANDOFF.md); current narrative discipline lives in
+> [`../NARRATIVE_GUIDE.md`](../NARRATIVE_GUIDE.md); the September scope lives in
+> [`../REVISION_BRIEF.md`](../REVISION_BRIEF.md). Model reviews remain inputs to
+> verify against the current paper and canonical owners, never authorities.
+>
+> All entries after this banner are unchanged historical records.
+
 > **Role.** This is an append-only coordination journal for alternating
 > manuscript review. It is not a fourth repository authority, numerical owner,
 > or replacement for `AGENTS.md`, `INDEX.md`, `paper-2027/HANDOFF.md`, or the

@@ -1,5 +1,10 @@
 # Post-review delta note — Codex exposition pass vs. panel roadmap
 
+> **Archived snapshot boundary.** This file is frozen external-model output
+> retained only for audit provenance. Every `VERIFIED`, `DEFECT`, `mandatory`,
+> `decision`, and `priority` label below is bundle-local: it is not project
+> evidence, an instruction, a current priority, or experiment/edit authorization.
+
 **Date:** 2026-08-27 · **Editor:** editorial synthesizer of the qwen-panel-20260826 bundle
 **Scope assessed:** uncommitted working-tree changes vs `f9804fb` made by Codex in two post-checkpoint passes on 2026-08-26 22:48–23:37 (abstract thesis pass + exposition/layout pass), per `research/CODEX_CLAUDE_PAPER_REVIEW_LOG.md` entries and HANDOFF receipt.
 

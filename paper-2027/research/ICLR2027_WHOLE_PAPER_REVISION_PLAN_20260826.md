@@ -1,14 +1,17 @@
 # ICLR 2027 whole-paper revision plan
 
-> **SUPERSEDED (2026-08-27):** the revision roadmap moved to
-> [`REVISION_BRIEF.md`](../REVISION_BRIEF.md) v2 (five-seat-panel-grounded).
-> Retained for routing history; do not execute from this file.
+> **ARCHIVED AUGUST 2026 CYCLE (2026-08-29):** this file records a closed
+> revision cycle. It has no current authority over the manuscript, narrative,
+> experiment priority, compute, or edit order. Do not execute or enforce it.
+> Current work follows `AGENTS.md` → `INDEX.md` → `paper-2027/HANDOFF.md` →
+> current TeX and the routed canonical owner.
 
 - **Date:** 2026-08-26
 - **Role:** internal execution plan for the 2026-08 whole-paper writing pass
   (revision cycle closed 2026-08-28)
-- **Authority:** narrative and file-routing only; this file owns no fact,
-  number, protocol identity, evidence tier, or mutable manuscript state
+- **Historical scope:** narrative and file routing for the closed August pass;
+  this file owns no fact, number, protocol identity, evidence tier, or mutable
+  manuscript state
 - **Objective:** maximise ICLR 2027 acceptance probability by making a reviewer
   recover one claim--evidence--implication chain without reading the paper as a
   historical rebuttal

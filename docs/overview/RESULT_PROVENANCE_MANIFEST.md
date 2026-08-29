@@ -1,5 +1,12 @@
 # Result Provenance Manifest
 
+> **Authority boundary — NeurIPS-era historical registry.** This file preserves
+> NeurIPS 2026 provenance; it is not the current ICLR 2027 claim authority or an
+> action queue. Current ICLR evidence routing is `INDEX.md` §3 → the named
+> canonical/raw owner, while `paper-2027/HANDOFF.md` records volatile state only.
+> M1, M2, M4, and M5 below remain historical/supporting provenance and do not
+> govern the current ICLR headline claims.
+
 Purpose: reviewer-facing provenance ledger for the main EVQ-Cosh result claims.
 This file records what the compact repository can currently prove, which files
 hold the claim, and which artifact-level hashes are still missing. It does not
@@ -218,7 +225,7 @@ Packaged evidence:
 | `scripts/core_text_phases/audit_rope_checkpoint.py` | Offline checkpoint frequency audit helper | `9d974b58b44f8b664d9f250cbf6a4d5ec505f5077cb55d1120b4f638f9e53ad9` |
 | `scripts/core_text_phases/audit_training_artifacts.py` | Offline train-cache/token-count audit helper | `bb4a89d522557cc1878cfa37b16de9a7a97930228402a49e5fae6c1df5e6edd5` |
 | `scripts/core_text_phases/make_artifact_manifest.py` | Sanitized external artifact manifest helper | `38cb1f687cc08aa23e518a4da2399cece69754446292bd92cb6dee153c0f4099` |
-| `docs/overview/README.md` | Overview docs entrypoint and current reviewer-routing navigation | `436438d534470bc5afd5a77d8eeeaf11a3ff92c464978d27c56dcde10fc768ae` |
+| `docs/overview/README.md` | Overview docs entrypoint and current reviewer-routing navigation | `24ef5b27937cca17fbb752c66904be8ead88d6ca2de4941cd1ed5ff44116444c` |
 | `docs/overview/PAPER_CLAIMS_MAP.md` | Paper-to-experiment traceability map with explicit artifact gates | `fa8292819b940adedaeecbd59b9009aec95744dd080c7847f8be0d31a01f77e8` |
 
 Current compact-repo gaps:

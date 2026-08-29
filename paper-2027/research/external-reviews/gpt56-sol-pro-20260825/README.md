@@ -1,5 +1,10 @@
 # GPT-5.6 Sol Pro research memo
 
+> **Archived snapshot boundary.** This file is frozen external-model output
+> retained only for audit provenance. Every `VERIFIED`, `DEFECT`, `mandatory`,
+> `decision`, and `priority` label below is bundle-local: it is not project
+> evidence, an instruction, a current priority, or experiment/edit authorization.
+
 - **Date received:** 2026-08-25
 - **Status:** external, unverified research analysis
 - **Scope:** next-generation RoPE allocation and mature-checkpoint migration

@@ -1,3 +1,4 @@
+import hashlib
 import re
 import unittest
 from pathlib import Path
@@ -13,17 +14,12 @@ class RepositoryNavigationTests(unittest.TestCase):
             "README.md",
             "INDEX.md",
             "paper-2027/HANDOFF.md",
-            "rebuttal/README.md",
-            "rebuttal/rebuttal_0723/README.md",
-            "rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md",
-            "rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md",
-            "rebuttal/rebuttal_0723/02_RESPONSE_QUESTIONS_AND_OUTCOMES.md",
-            "rebuttal/rebuttal_0723/theory_results/EVQ_COSH_REBUTTAL_PRINCIPLES.md",
-            "rebuttal/rebuttal_0723/theory_results/REVIEWER_USABLE_EVIDENCE_LEDGER_20260726.md",
-            "rebuttal/pre_rebuttal/README.md",
-            "rebuttal/pre_rebuttal/seed42_lora_eval_20260713/REPORT.md",
-            "docs/overview/RESULT_PROVENANCE_MANIFEST.md",
-            "paper_experiments/MANIFEST.json",
+            "paper-2027/README.md",
+            "paper-2027/NARRATIVE_GUIDE.md",
+            "paper-2027/REVISION_BRIEF.md",
+            "paper-2027/SUBMISSION_CHECKLIST.md",
+            "paper-2027/research/README.md",
+            "paper-2027/main.tex",
         ):
             self.assertTrue((ROOT / relative).is_file(), relative)
 
@@ -32,36 +28,55 @@ class RepositoryNavigationTests(unittest.TestCase):
             ROOT / "README.md",
             ROOT / "INDEX.md",
             ROOT / "AGENTS.md",
-            ROOT / "rebuttal" / "README.md",
-            ROOT / "rebuttal" / "rebuttal_0723" / "README.md",
+            ROOT / "paper-2027" / "HANDOFF.md",
+            ROOT / "paper-2027" / "README.md",
+            ROOT / "paper-2027" / "NARRATIVE_GUIDE.md",
+            ROOT / "paper-2027" / "REVISION_BRIEF.md",
+            ROOT / "paper-2027" / "SUBMISSION_CHECKLIST.md",
+            ROOT / "paper-2027" / "research" / "README.md",
+            ROOT / "paper-2027" / "research" / "external-reviews" / "README.md",
+            ROOT / "paper_experiments" / "README.md",
+            ROOT / "docs" / "overview" / "README.md",
         )
         text = "\n".join(path.read_text(encoding="utf-8") for path in routing_docs)
         for required in (
             "AGENTS.md",
             "INDEX.md",
             "paper-2027/HANDOFF.md",
-            "rebuttal/rebuttal_0723/README.md",
-            "rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md",
-            "rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md",
-            "docs/overview/RESULT_PROVENANCE_MANIFEST.md",
+            "NARRATIVE_GUIDE.md",
+            "REVISION_BRIEF.md",
+            "EXACT_RANGE_151M_3SEED_RESULT_20260820.md",
+            "FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md",
             "paper/main.pdf",
-            "main_0726",
         ):
             self.assertIn(required, text)
 
         forbidden_markers = (
             "/" + "Users" + "/",
+            "/" + "root" + "/",
+            "/" + "home" + "/",
             "seeta" + "cloud",
             "ssh" + "pass",
+            "BEGIN " + "OPENSSH PRIVATE KEY",
+            "BEGIN " + "RSA PRIVATE KEY",
         )
         lower = text.lower()
         for marker in forbidden_markers:
             self.assertNotIn(marker.lower(), lower)
+        self.assertIsNone(re.search(r"(?<!\d)(?:\d{1,3}\.){3}\d{1,3}(?!\d)", text))
+        self.assertIsNone(re.search(r"\b(?:sk-[A-Za-z0-9_-]{16,}|AKIA[0-9A-Z]{16})\b", text))
 
     def test_only_one_rebuttal_control_room_exists(self):
         self.assertTrue((ROOT / "rebuttal").is_dir())
         self.assertTrue((ROOT / "rebuttal" / "pre_rebuttal").is_dir())
         self.assertTrue((ROOT / "rebuttal" / "rebuttal_0723").is_dir())
+        for relative in (
+            "rebuttal/rebuttal_0723/README.md",
+            "rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md",
+            "rebuttal/rebuttal_0723/01_REBUTTAL_PLAYBOOK.md",
+            "rebuttal/rebuttal_0723/02_RESPONSE_QUESTIONS_AND_OUTCOMES.md",
+        ):
+            self.assertTrue((ROOT / relative).is_file(), relative)
         self.assertFalse((ROOT / "rebuttal_7").exists())
         self.assertFalse((ROOT / "07 - rebuttal").exists())
         for retired_top_level in (
@@ -103,6 +118,10 @@ class RepositoryNavigationTests(unittest.TestCase):
             self.assertTrue((ROOT / relative).exists(), relative)
         for relative in ("paper/build_aidemo", "paper/build_tectonic"):
             self.assertFalse((ROOT / relative).exists(), relative)
+        self.assertEqual(
+            hashlib.sha256((ROOT / "paper" / "main.pdf").read_bytes()).hexdigest(),
+            "fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772",
+        )
 
     def test_exactly_three_navigation_authorities(self):
         """Rules / index / state. A fourth root authority is a defect."""
@@ -127,6 +146,35 @@ class RepositoryNavigationTests(unittest.TestCase):
         for required in ("INDEX.md", "paper-2027/HANDOFF.md"):
             self.assertIn(required, agents)
 
+    def test_secondary_entrypoints_preserve_cold_start_order(self):
+        for relative, needles in (
+            (
+                "paper-2027/README.md",
+                ("../AGENTS.md", "../INDEX.md", "HANDOFF.md"),
+            ),
+            (
+                "docs/overview/README.md",
+                ("../../AGENTS.md", "../../INDEX.md", "../../paper-2027/HANDOFF.md"),
+            ),
+        ):
+            text = (ROOT / relative).read_text(encoding="utf-8")
+            offsets = [text.index(needle) for needle in needles]
+            self.assertEqual(offsets, sorted(offsets), relative)
+
+    def test_machine_profiles_keep_aidemo_on_the_work_machine(self):
+        agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        handoff = (ROOT / "paper-2027" / "HANDOFF.md").read_text(encoding="utf-8")
+        for text in (agents, readme):
+            self.assertIn("work machine", text.lower())
+            self.assertIn("low-configuration personal pc", text.lower())
+            self.assertIn("`aidemo`", text)
+        self.assertIn("Do not install or recreate", agents)
+        self.assertIn("record them as skipped", readme)
+        self.assertIn("documentation/planning host", handoff)
+        self.assertIn("`aidemo` is not", handoff)
+        self.assertIn("expected here", handoff)
+
     def test_index_carries_the_closed_route_ledger(self):
         """The falsified-route table is the repository's anti-repetition gate."""
         index = (ROOT / "INDEX.md").read_text(encoding="utf-8")
@@ -136,10 +184,12 @@ class RepositoryNavigationTests(unittest.TestCase):
             "RETROFIT_AXIS_FALSIFICATION_20260822.md",
             "DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md",
             "ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md",
+            "ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md",
             "EXACT_RANGE_151M_3SEED_RESULT_20260820.md",
             "FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md",
         ):
             self.assertIn(required, index)
+        self.assertIn("只关闭该实现", index)
 
     def test_static_rank_diagnostic_has_an_owner_script(self):
         """Computed internal numbers need an owner and an honest search scope."""
@@ -171,28 +221,43 @@ class RepositoryNavigationTests(unittest.TestCase):
         self.assertIn("Geo (raw key `FMRoPE`)", extended)
         self.assertIn("Canonical verdict: **SCREEN_UNRESOLVED**", initial)
 
-    def test_reviewer_objection_ledger_exists_and_is_internal(self):
-        router = ROOT / "paper-2027" / "research" / "README.md"
-        text = router.read_text(encoding="utf-8")
-        self.assertIn("## Reviewer objections", text)
-        for tag in ("| R1 |", "| R2 |", "| R3 |", "| R4 |", "| R5 |", "| R6 |", "| R7 |"):
-            self.assertIn(tag, text)
-        # The ledger is an internal adversarial artifact, never manuscript text.
-        for section in (ROOT / "paper-2027" / "sections").glob("*.tex"):
-            self.assertNotIn("Reviewer objections", section.read_text(encoding="utf-8"))
+    def test_external_model_reviews_are_archived_not_active_routing(self):
+        router = (ROOT / "paper-2027" / "research" / "README.md").read_text(
+            encoding="utf-8"
+        )
+        archive = (
+            ROOT / "paper-2027" / "research" / "external-reviews" / "README.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("## Historical inputs", router)
+        self.assertNotIn("## Reviewer objections", router)
+        self.assertIn("Frozen audit archive", archive)
+        self.assertIn("Current use", archive)
 
     def test_state_layer_does_not_restate_the_agenda(self):
         """Rules > index > state: the handoff routes the agenda, never owns it."""
         handoff = (ROOT / "paper-2027" / "HANDOFF.md").read_text(encoding="utf-8")
-        self.assertIn("The research agenda is not state", handoff)
+        self.assertIn("This file is the only\nlive state and action queue", handoff)
+        self.assertIn("[`../INDEX.md`](../INDEX.md) §6", handoff)
+        self.assertNotIn("Native/candidate", handoff)
+        self.assertNotIn("leave-one-band-out", handoff)
         self.assertNotIn("The only active research implementation step", handoff)
 
     def test_root_routing_links_resolve(self):
         pattern = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
         for doc in (
             ROOT / "README.md",
+            ROOT / "AGENTS.md",
             ROOT / "INDEX.md",
+            ROOT / "paper-2027" / "HANDOFF.md",
+            ROOT / "paper-2027" / "README.md",
+            ROOT / "paper-2027" / "NARRATIVE_GUIDE.md",
+            ROOT / "paper-2027" / "REVISION_BRIEF.md",
+            ROOT / "paper-2027" / "SUBMISSION_CHECKLIST.md",
+            ROOT / "paper-2027" / "research" / "README.md",
+            ROOT / "paper-2027" / "research" / "external-reviews" / "README.md",
+            ROOT / "paper_experiments" / "README.md",
             ROOT / "docs" / "README.md",
+            ROOT / "docs" / "overview" / "README.md",
             ROOT / "docs" / "tau_algor" / "README.md",
             ROOT / "docs" / "archive" / "README.md",
         ):
@@ -209,9 +274,11 @@ class RepositoryNavigationTests(unittest.TestCase):
 
     def test_root_has_no_stale_provenance_duplicate(self):
         self.assertFalse((ROOT / "RESULT_PROVENANCE_MANIFEST.md").exists())
-        self.assertTrue(
-            (ROOT / "docs/overview/RESULT_PROVENANCE_MANIFEST.md").is_file()
-        )
+        manifest = ROOT / "docs/overview/RESULT_PROVENANCE_MANIFEST.md"
+        overview = ROOT / "docs/overview/README.md"
+        self.assertTrue(manifest.is_file())
+        overview_hash = hashlib.sha256(overview.read_bytes()).hexdigest()
+        self.assertIn(overview_hash, manifest.read_text(encoding="utf-8"))
 
     def test_primary_curated_assets_are_present(self):
         curated = ROOT / "data/curated"

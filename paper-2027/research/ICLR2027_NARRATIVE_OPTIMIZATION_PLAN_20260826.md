@@ -1,11 +1,13 @@
 # ICLR 2027 narrative optimization plan (Codex execution)
 
-> **SUPERSEDED (2026-08-27):** superseded as the Codex edit order by
-> [`REVISION_BRIEF.md`](../REVISION_BRIEF.md) v2 (five-seat-panel-grounded).
-> Retained for routing history; do not execute from this file.
+> **ARCHIVED AUGUST 2026 CYCLE (2026-08-29):** this file records a closed
+> revision cycle. It has no current authority over the manuscript, narrative,
+> experiment priority, compute, or edit order. Do not execute or enforce it.
+> Current work follows `AGENTS.md` → `INDEX.md` → `paper-2027/HANDOFF.md` →
+> current TeX and the routed canonical owner.
 
 - **Date:** 2026-08-26
-- **For:** Codex implementing `paper-2027/` wording/layout only
+- **Historical scope:** the Codex wording/layout pass planned on 2026-08-26
 - **Not:** a numerical owner, a new experiment, a GPU authorization, or
   manuscript prose to copy blindly when it conflicts with a canonical owner
 - **Objective:** maximize ICLR 2027 acceptance by making a 30-minute PE

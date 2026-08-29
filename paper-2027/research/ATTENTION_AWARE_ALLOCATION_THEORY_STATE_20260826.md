@@ -1,8 +1,11 @@
 # Attention-aware RoPE allocation: theory state
 
-- **Date:** 2026-08-26
-- **Role:** durable theory continuation owner for work after the current ICLR
-  submission
+- **Original date:** 2026-08-26
+- **Lifecycle update:** 2026-08-29
+- **Status:** active theory-continuation boundary for work after the current
+  September manuscript cycle; the matched-content phase 2x2 is the sole next
+  identification bridge
+- **Role:** durable theory continuation owner, not a parallel experiment plan
 - **Not:** a manuscript claim, experiment result, action queue, or compute
   authorization
 - **Agenda authority:** [`../../INDEX.md`](../../INDEX.md) §6
@@ -10,7 +13,10 @@
 
 This document answers one question for the next working session: what has the
 paper established, what has the later research ruled out, and which missing
-bridge must be identified before another method is trained?
+bridge must be identified before another method is trained? The research order
+is strict: run no method branch in parallel with the bridge. The
+leave-one-band-out design added on 2026-08-28 is conditional mechanism work
+after a positive bridge, not a companion or substitute for it.
 
 ## 1. Established theoretical core
 
@@ -58,10 +64,14 @@ Any new theory must explain all rows below without changing their estimands.
 | Matched co-adaptation: 4K full `+0.00098`, 8K/16K tail `-0.0387/-0.0877`, long full NLL worse | a small learned move can preserve the short window and improve the far tail while hurting intermediate/full averages | one scalar “better table” score captures all positions |
 | Registered dose curve | allocation produces a graded full/tail response; analytic Path A misses its joint guard; static `r2` misses the useful dose | static `r2` is a behavioural selector |
 | Native 4K core-four `1.00/0.85/0.60/0.03` | capability varies sharply by task | comparison with independently generated 8K/16K rows identifies a position failure or model ceiling |
+| Stateless continuous-boundary target-free candidate: core-four RULER `0.0000` at both 8K and 16K | this exact boundary-slope construction is a closed negative on the tested checkpoint and harness | every target-free or absolute-position-dependent operator must fail |
 
 The mature-result owners are indexed under
 [`attention-aware-retrofit/`](attention-aware-retrofit/README.md). The compact
 receipts preserve hashes; they do not replace raw per-row artifacts.
+The continuous-boundary negative is owned by
+[`ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md`](attention-aware-retrofit/analysis/ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md)
+§2 and must not be relaunched as the same candidate.
 
 ## 3. The missing object
 
@@ -92,8 +102,9 @@ definition.
 
 ## 4. Required identification bridge
 
-The next missing experiment is not another model scale or another RULER length.
-It is a matched-content phase intervention:
+The next missing experiment is not another model scale, another RULER length,
+or band-attribution sweep. The **sole next identification bridge** is a
+matched-content phase intervention:
 
 - freeze checkpoint, token content, token order, causal mask, answer, decoder,
   and evaluation rows;
@@ -119,19 +130,27 @@ must change relative separations.
 
 This is a protocol design only. No GPU run is authorized by this document.
 
-## 5. Method directions after the bridge
+## 5. Conditional method directions after the bridge
 
-1. **If the matched-content bridge is positive:** test grouped per-layer
-   allocation before per-head allocation. The O7 Jensen result supplies a
-   theoretical reason for heterogeneity; existing code is untrained evidence
-   only.
-2. **If full and tail still move in opposite directions:** optimize a
+1. **Only if the matched-content bridge is positive:** the next mechanism
+   design is the leave-one-band-out restoration in
+   [`PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md`](attention-aware-retrofit/analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md)
+   §9. It asks which frequency movement carries the short-window cost and the
+   long-range benefit. It remains `DESIGN_NOT_EXECUTED`, needs a new preflight,
+   and is not an active route before the bridge.
+2. **Only after that mechanism gate warrants heterogeneous allocation:** test
+   grouped per-layer allocation before per-head allocation. O7 contains a
+   hypothesis that head-dependent priors may favour heterogeneous tables; it is
+   not a proved Jensen result or a method-selection theorem. Existing code is
+   untrained evidence only.
+3. **If full and tail still move in opposite directions:** optimize a
    position-resolved matched-training objective, not another static table
    score. Preserve a Native-table matched-adaptation arm.
-3. **Only after one 1.485B matched pair improves in-window, far-tail, and one
+4. **Only after one 1.485B matched pair improves in-window, far-tail, and one
    capability endpoint:** run multiple seeds, then consider a second
    checkpoint.
-4. **Do not reopen:** cosine-only collision, static collision/logdet selectors,
+5. **Do not reopen:** the tested stateless continuous-boundary target-free
+   candidate, cosine-only collision, static collision/logdet selectors,
    `kappa_att` ordering, LeRoPE `w^(1/3)` oracle, direct distance mapping,
    coverage residual, phase-risk, two-document direct-`z`, or the two failed
    analytic static tables. The complete anti-repeat ledger is

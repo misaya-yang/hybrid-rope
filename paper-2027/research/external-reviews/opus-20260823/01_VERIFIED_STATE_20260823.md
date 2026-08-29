@@ -1,5 +1,10 @@
 # Verified state of the zero-training retrofit evidence
 
+> **Archived snapshot boundary.** This file is frozen external-model output
+> retained only for audit provenance. Every `VERIFIED`, `DEFECT`, `mandatory`,
+> `decision`, and `priority` label below is bundle-local: it is not project
+> evidence, an instruction, a current priority, or experiment/edit authorization.
+
 - **Date:** 2026-08-23
 - **Method:** every scalar below was recomputed from raw `examples.jsonl` rows or
   rebuilt from first principles. Values stored in `results.json` were *compared*,

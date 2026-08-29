@@ -1,9 +1,15 @@
 # `optimization_notes.md` — 对 `evq_three_completions.tex` 的审查与优化
 
+> **生命周期状态（2026-08-29）**：历史/支持性推导，不是当前方法路线或实验队列。
+> O1/O3 的条件推导与 O5 的负结果可保留；O2 的经验机制没有获得支持；O4 仅是
+> 指定 surrogate 下的数学构造；O6--O8 是非优先级开放问题。本文不授权计算。
+
 面向 *ROPE HAS A SPECTRAL BUDGET* + 推演笔记三部分。每条注明 **Part** 与状态。
 所有数值来自 `verify_three_completions.py` 与本文附的 `verify_optimizations.py`（纯 NumPy/SciPy，CPU ~60 s）。
 
-**一句话结论**：三个未闭合环节中，两个可以在现有框架内彻底闭合（$L_{\rm rng}$、对角/交叉分裂），一个只能给出线性化替代（re-adaptation 秩界）。闭合的代价是把"两个独立模型"换成"一个泛函 + 一个可测先验 $\mu$"。我原先提出的 arcsine 预测被数值**证伪**，正确的修正是**分辨率跃变**。
+**历史一句话结论**：这些笔记在指定假设与 surrogate 内整理了 $L_{\rm rng}$
+和对角/交叉项，并为 re-adaptation 只给出线性化替代。arcsine 预测被数值
+**证伪**；分辨率跃变是 surrogate 内的一个可行修正，不是已验证的方法结论。
 
 ---
 
@@ -38,7 +44,7 @@ $$\int_0^\infty\Big[q_\mu(\omega)-\tfrac12\mathbf 1\{\omega>\omega_0\}\Big]\frac
 
 ---
 
-## O2 — $L_{\rm eff}^J$ 与 $\mu$ 是同一个对象（Part I）· **已完成**
+## O2 — $L_{\rm eff}^J$ 与 $\mu$ 的条件关系（Part I）· **代数条件保留；经验机制未获支持**
 
 **问题**：Part I 把 $L_{\rm eff}^J$ 和 $\mu$ 当成两个独立输入，理论因此不自洽（同一份注意力被计了两次、口径不同）。
 
@@ -47,6 +53,11 @@ $$\int_0^\infty\Big[q_\mu(\omega)-\tfrac12\mathbf 1\{\omega>\omega_0\}\Big]\frac
 $$\boxed{\;L_{\rm eff}^J\;=\;n\cdot\frac{\operatorname{Var}_{U_n}[G]}{\operatorname{Var}_{\mu}[G]}\;\xrightarrow[\;G(r)\simeq\gamma r\;]{}\;n\cdot\frac{\operatorname{Var}_{U_n}[\Delta]}{\operatorname{Var}_{\mu}[\Delta]}\;}$$
 
 **命题 O2.** 由 $g_i(j)=O(r_{ij})$，注意力越局部 $\operatorname{Var}_\mu[\Delta]$ 越小，$L_{\rm eff}^J$ 越**大**。这解析地解释了 audit 的实测反直觉结果。
+
+**生命周期修正。** 上式依赖 $g_i(j)\approx G(r_{ij})$ 的距离主导假设。后续仓库内
+实测注意力距离分布没有支持下面反演出的局部尺度，因此 O2 不能继续标为已完成的
+机制解释；它只保留为带显式假设的代数关系。该负向校准不否定恒等式在满足假设的
+其他协议中成立。
 
 **反演出的可证伪预测**。把 audit 的 $\kappa_{\rm att}=4.6476\times10^{-4}$ 代回（probe 的 query 位置 $63,127,255,383,511$，$n=64\ldots512$）：
 
@@ -86,7 +97,7 @@ A.11 报的 $0.465$ 正落在精确解的 $b$ 依赖带内。**结论**：$\gamm
 
 ---
 
-## O4 — 用受迫 ODE 消灭"对角效用 vs 交叉项"的矛盾（Part III → Part I）· **已完成**
+## O4 — 用受迫 ODE 合并对角效用与交叉项（Part III → Part I）· **surrogate 推导完成；方法路线已退役**
 
 **问题（笔记 Prop 3.9 的诊断）**：A.9 的 collision 泛函 $\mathcal C_{\rm app}$ 只选**形状**，A.10 的 $\mathcal F$ 只选**尺度**，两者从未合并；A.10 的效用在通道指标上是对角的，看不见交叉冗余。而且 A.9 自己承认存在"两个都叫 $\tau$"的量（$\tau_{\rm surr}\sim\sqrt{d}L^{-0.11}$ vs 部署的 $\tau_*\propto d/\sqrt L$），这本身就是不自洽。
 
@@ -122,9 +133,14 @@ $$\rho''-\tau^2\rho=\frac{\lambda}{\alpha}q_\mu'' ,\qquad
 | 1.5 | 4.85 | 4.92 | 4.97 | **5.01** | **5.04** | **5.04** |
 | 2.0 | 3.67 | 3.68 | **3.69** | **3.69** | 3.67 | 3.65 |
 
-**每个先验下 $\kappa>0$ 都不劣于纯 cosh**，且 $\kappa^\*$ 随 $\alpha$ 增大而回落（与 Part III 的过载图像一致）。这条把 A.13 从"被丢掉的分支"变成**部署级构造**，同时让 $\tau$ 只剩一个含义（$\sqrt{\beta/\alpha}$），A.9 的"两个 $\tau$"问题消失。
+**在这些已测试的静态 surrogate 设置下，$\kappa>0$ 都不劣于纯 cosh**，且
+$\kappa^\*$ 随 $\alpha$ 增大而回落（与 Part III 的过载图像一致）。这给出一个
+**surrogate-level 闭式构造**，同时让 $\tau$ 在该泛函内只剩一个含义
+（$\sqrt{\beta/\alpha}$）。它不是部署级构造、LM 选择器或当前方法路线。
 
-**需进一步研究**：$\kappa=\lambda/(2\alpha)$ 仍含 $\lambda$。A.13 已给出可测代理 $\lambda\!\leftrightarrow\!\lambda_F\bar\eta_F$，$\bar\eta_F(\phi_k)=\frac{1}{2s_{\rm att}^2}\mathbb E[w|q^{\mathbb C}_{i,k}\overline{k^{\mathbb C}_{j,k}}|^2]$ 一次前向即可测。**建议把 $\kappa$ 从约定改成测量**，并做量纲一致性核对（$\alpha=1/d_{\rm rot}$）。
+**历史开放点（非当前优先级）**：$\kappa=\lambda/(2\alpha)$ 仍含 $\lambda$。A.13
+给出可测代理 $\lambda\!\leftrightarrow\!\lambda_F\bar\eta_F$；这不构成新的实验建议
+或行动队列。
 
 ---
 
@@ -134,23 +150,27 @@ $$\rho''-\tau^2\rho=\frac{\lambda}{\alpha}q_\mu'' ,\qquad
 
 设置：$K{=}16$，$L{=}512$，$b{=}10^3$，密度用 16 格分段常数参数化，约束 $S_{\chi^2}[\rho]\le S_{\chi^2}[\rho_{\tau=2}]=0.1803$，Powell + 3 次随机重启。
 
-| $\alpha$ | geo | cosh($\tau{=}2$) | **cosh-R**($\kappa^\*{=}1.3$) | 自由最优 |
+| $\alpha$ | geo | cosh($\tau{=}2$) | **cosh-R**($\kappa^\*{=}1.3$) | 自由密度 best-found（16 格，Powell，3 restarts） |
 |---|---|---|---|---|
 | 0.0 | 0.1157 | 0.0366 | **0.0115** | 0.0325 |
 | 1.0 | 0.2399 | 0.1548 | **0.1358** | 0.1516 |
 
-自由最优密度形状（16 格，$\alpha{=}1$）：`3.01 1.57 1.14 1.17 1.07 0.92 0.82 0.80 0.80 0.77 0.71 0.67 0.65 0.62 0.65 0.63` —— **单调下降 + 快端尖峰 + 尾部平台**，不是 U 型。argmax 在第 0 格；两端>中间为 False。
+best-found 自由密度形状（16 格，$\alpha{=}1$，Powell，3 restarts）：`3.01 1.57 1.14 1.17 1.07 0.92 0.82 0.80 0.80 0.77 0.71 0.67 0.65 0.62 0.65 0.63` —— **单调下降 + 快端尖峰 + 尾部平台**，不是 U 型。argmax 在第 0 格；两端>中间为 False。
 
 **结论**：
 1. **arcsine 预言证伪**。原因是我把 $c_{\omega\nu}$ 的对数核当成了 log-Riesz 能量，但把它写回 $\phi$ 坐标后领头项是 $\big(\tfrac{\log b}{\log L}\big)^2\min(\phi,\psi)^2$，而 $\min^2$ 并不是 $\partial_\phi^4$ 的 Green 函数（$\partial_\phi^4(K\rho)=-6\rho'-2\phi\rho''$，不闭合），所以"对数位势 ⇒ 平衡测度 ⇒ arcsine"这一步不成立。
-2. **正确的修正就是 O4 的分辨率跃变**：cosh-R 在两个先验下都**优于**同 stiffness 下的自由最优（自由最优受 16 格离散化与非凸性限制，说明 cosh-R 已接近该约束下的最优形状）。
+2. **O4 的分辨率跃变是一个可行修正**：cosh-R 在两个先验下都优于该次
+   16 格、Powell、3-restart 搜索得到的 best-found 自由密度。这只说明该数值搜索
+   没有给出上界；不建立连续最优、近最优或全局最优。
 3. 未闭合的仍是理论求解：$\alpha_0\rho+\beta_0 K_\mu\rho-\lambda q_\mu+\nu=0$ 是**第二类 Fredholm 方程**，核 $K_\mu(\phi,\psi)=|\psi_\mu(\omega(\phi)-\omega(\psi))|^2$ 正定但非 Green 型。**建议放弃闭式，改用 Nyström**：在 $K\le64$ 的真实通道网格上离散成 $K\times K$ 线性方程组解一次即可 —— 依然零训练搜索。
 
-**所需新工具**：正定非 Green 核上的约束二次规划（Nyström + 单纯形投影）。定性预测：解会在 $\varphi_*$ 附近保留跃变，并在快端出现 O4 未捕捉的**二次尖峰**（自由最优第 0 格 3.01 vs 第 1 格 1.57 已见端倪）。
+**历史开放工具（非当前优先级）**：正定非 Green 核上的约束二次规划（Nyström +
+单纯形投影）。关于 $\varphi_*$ 附近跃变和快端二次尖峰的判断保持猜想级，不是当前
+实验建议。
 
 ---
 
-## O6 — re-adaptation 秩界：线性化替代（Part II）· **需进一步研究（已给可测替代）**
+## O6 — re-adaptation 秩界：线性化替代（Part II）· **非优先级开放问题**
 
 **问题**：Part II 的所有秩界约束的是 **emulation**，而 LoRA 做的是 **re-adaptation**，两者不可互推。
 
@@ -178,9 +198,11 @@ $$\|E(\Delta)\|_2\;\ge\;\sigma_{\min}(W_Q)\,\sigma_{\min}(W_K)\,\big\|P_{W_Q\mat
 
 ---
 
-## O7 — 统一先验口径（Part I/II/III）· **已完成（规范）**
+## O7 — 统一先验口径（Part I/II/III）· **规范完成；异质性推论未验证且非优先级**
 
-目前 A.1（Gram）、A.10（效用）、Part II（秩界）各自默认 $\Delta\sim\mathrm{Unif}$。由 O1 与 O2，它们**都是同一个 $\mu$ 的泛函**：
+目前 A.1（Gram）、A.10（效用）、Part II（秩界）各自默认
+$\Delta\sim\mathrm{Unif}$。O1/O7 给出统一记号；O2 行仅在
+$g_i(j)\approx G(r_{ij})$ 的显式假设下成立：
 
 | 对象 | 定义 | 出现处 |
 |---|---|---|
@@ -190,13 +212,18 @@ $$\|E(\Delta)\|_2\;\ge\;\sigma_{\min}(W_Q)\,\sigma_{\min}(W_K)\,\big\|P_{W_Q\mat
 | $s_k=2(1-\operatorname{Re}\psi_\mu(\delta_k))$ | 移植失配 | Part II 秩界 |
 | $L_{\rm eff}^J=n\operatorname{Var}_{U_n}[G]/\operatorname{Var}_\mu[G]$ | 有效窗口 | A.12（O2） |
 
-**规范建议**：论文只测一次 $\mu$（注意力加权的相对距离分布，逐 layer/head 再按 $\|P_ig_i\|^2$ 聚合），全部下游量由它导出。这一步把三套彼此不一致的先验假设压成一个可测对象。
+**历史规范假设**：曾建议只测一次 $\mu$ 并由它导出全部下游量；O2 的后续负向
+校准说明该统一不能作为当前论文规则或部署处方。
 
-**头间异质性（需进一步研究）**：真实 $\mu=\sum_h\pi_h\mu_h$ 混合。$q_\mu$ 对 $\mu$ 非线性，但效用按头聚合时用的是 $\bar q=\mathbb E_h[q_{\mu_h}]$（线性），于是阈值被**抹平**，$Q_1$ 变小。推论：**共享频率表对头间异质 $\mu$ 是次优的**，per-head 或分组 $\varphi_*$ 是有理论依据的下一步（与"一半通道管近、一半管远"的直觉一致，但现在有了定量判据 $\varphi_*^{(h)}=\log(1/\omega_0(\mu_h))/\log b$）。
+**头间异质性（未验证、非当前优先级）**：真实 $\mu=\sum_h\pi_h\mu_h$ 混合。
+$q_\mu$ 对 $\mu$ 非线性，但效用按头聚合时用的是
+$\bar q=\mathbb E_h[q_{\mu_h}]$（线性），可能抹平阈值并减小 $Q_1$。这只提出
+“共享表可能对异质 $\mu_h$ 次优”的假设；它不是已证明的 Jensen 结果、方法选择
+定理或 per-head/grouped allocation 的执行依据。
 
 ---
 
-## O8 — 剩余的正则性缺口（Part III）· **需进一步研究**
+## O8 — 剩余的正则性缺口（Part III）· **非优先级开放问题**
 
 - **$\Lambda(\mu)=\operatorname{tr}(G_0^{-1}M)$ 要求 $m_6<\infty$**。$\mu_\alpha$ 在 $[1,L]$ 上恒有限，但 $L\to\infty$ 时 $\alpha<7$ 即发散，展开半径按 $m_6^{-1/6}$ 收缩。**正确表述**：$2-\|Q\|_F^2=\Lambda(\mu)(\omega^2-\nu^2)^2+O(\epsilon^6)$ 的有效范围是 $\max(\omega,\nu)\ll m_6^{-1/6}$，而非 $\ll 1/L$。
 - **先验侧天花板**：笔记 Lemma 3.8 给的 $(\sum M_{ii})^2/\sum M_{ii}^2$ 是有效上界（$\alpha{=}2$ 时 6.8–8.4 vs 实测 $r_2$ 3.3–3.8），但朴素参与比 $1/\sum\mu_i^2$ **不是**上界（$\alpha{=}2$ 给 2.5 < 3.8）。已在笔记中标注，此处重申：不要引用后者。
@@ -205,14 +232,17 @@ $$\|E(\Delta)\|_2\;\ge\;\sigma_{\min}(W_Q)\,\sigma_{\min}(W_K)\,\big\|P_{W_Q\mat
 
 ## 总结
 
-**理论体系因这些优化而闭合的部分**：
+**这些笔记保留下来的数学整理**：
 
-1. **一个先验、一套公式**。$L_{\rm rng}$、$\varphi_*$、$c_{\omega\nu}$、$s_k$、$L_{\rm eff}^J$ 全部还原为单一可测 $\mu$ 的泛函（O1、O2、O7）。原本"三处各自假设均匀先验"的松散结构变成一条可核对的链。
-2. **形状与尺度不再由两个模型分别决定**。受迫 ODE 把 A.9 的 collision 与 A.10 的效用合并，给出闭式 **EVQ-Cosh-R**：cosh 加一个位于分辨率阈值 $\varphi_*$ 的下跳 $\kappa$，质量约束自动满足、逆 CDF 仍闭式、$\kappa=0$ 退化为原式，且在所有测试先验下 $r_2$ 不劣于 cosh（O4）。A.9 的"两个 $\tau$"矛盾随之消失。
+1. **统一先验记号**。$L_{\rm rng}$、$\varphi_*$、$c_{\omega\nu}$ 与 $s_k$
+   可写成 $\mu$ 的泛函；$L_{\rm eff}^J$ 的同一化额外依赖 O2 的距离主导假设，
+   其经验机制未获支持。
+2. **surrogate 内合并形状与尺度**。受迫 ODE 在指定泛函中给出闭式
+   **EVQ-Cosh-R**；这保留为数学推导，不是部署表或当前方法候选。
 3. **A.11 的指数异常被解释掉**。$\gamma_{\rm eff}$ 的闭式说明 $\tau_*(L)$ 不是幂律，$p\approx0.85$ 诊断是拟合形式错误的产物，$\chi^2$ 的公理化选择反而更稳（O3）。
 4. **诚实的负结果**：arcsine 猜想证伪（O5）；re-adaptation 秩界在现有框架内不可得，只能给线性化替代 + 可测桥（O6）；一般 $W$ 下秩界要付 $\sigma_{\min}$ 代价（O6）。
 
-**必须靠实验判定的关键预测**（按性价比排序）：
+**历史预测清单（不构成当前实验队列；P1 已有负向校准）**：
 
 | # | 预测 | 成本 | 判定 |
 |---|---|---|---|
@@ -223,4 +253,5 @@ $$\|E(\Delta)\|_2\;\ge\;\sigma_{\min}(W_Q)\,\sigma_{\min}(W_K)\,\big\|P_{W_Q\mat
 | P5 | EVQ-Cosh-R（$\kappa\approx0.5$–$1.2$）优于纯 cosh | 一组小规模训练 | O4 定理的训练级验证 |
 | P6 | A.11 的 $\gamma$ 随 $b$ 按 $\gamma_{\rm eff}$ 移动 | 纯数值，$<1$ min | O3 |
 
-**工具/参考需求**：Nyström 离散化求解第二类 Fredholm 方程（O5 收尾）；秩受限 Fisher/NTK 容量界（O6 收尾，需 PL 或局部凸性假设）；混合先验下的 per-head 阈值分析（O7 延伸）。
+**历史工具需求（非当前优先级）**：Nyström 离散化、秩受限 Fisher/NTK
+容量界，以及混合先验下的 per-head 阈值分析。

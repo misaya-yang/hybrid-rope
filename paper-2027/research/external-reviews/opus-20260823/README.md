@@ -1,5 +1,10 @@
 # Opus 2026-08-23 independent review bundle
 
+> **Archived snapshot boundary.** This bundle is frozen external-model output
+> retained only for audit provenance. Every `VERIFIED`, `DEFECT`, `mandatory`,
+> `decision`, and `priority` label below is bundle-local: it is not project
+> evidence, an instruction, a current priority, or experiment/edit authorization.
+
 - **Author role:** independent read-only review of the 2026-08-22/23 zero-training
   retrofit line, commissioned 2026-08-23.
 - **Status:** internal working layer. **Not a canonical owner. Not manuscript prose.**

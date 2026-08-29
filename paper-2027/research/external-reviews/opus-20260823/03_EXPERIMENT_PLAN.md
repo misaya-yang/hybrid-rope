@@ -1,5 +1,10 @@
 # Experiment plan
 
+> **Archived snapshot boundary.** This file is frozen external-model output
+> retained only for audit provenance. Every `VERIFIED`, `DEFECT`, `mandatory`,
+> `decision`, and `priority` label below is bundle-local: it is not project
+> evidence, an instruction, a current priority, or experiment/edit authorization.
+
 - **Date:** 2026-08-23
 - **Status:** **PLAN. Nothing below has been run.** No GPU work is authorised by
   this file. Costs are measured, not guessed (§1).
