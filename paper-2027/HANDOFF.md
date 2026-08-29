@@ -10,22 +10,28 @@
   (checkpoint: prepare September paper iteration)
 - **Published manuscript/package checkpoint:**
   09876d5 (`checkpoint: upgrade ICLR paper and freeze narrative`)
+- **Current published HEAD before this framing repair:**
+  8bfaecf219e37003c272144ce62a6cc183c3ec41
 - **Verified divergence before edits:** 0 / 0
-- **Git publication state:** manuscript/package checkpoint `09876d5` is on
-  `origin/main_0726`; this handoff receipt is the only follow-up delta.
+- **Git publication state:** the paper-identity/framing repair is local and
+  uncommitted; no commit or push was authorised in this turn.
 
 ## 1. Current result
 
-The evidence-complete September manuscript rewrite is **locally complete**.
-Without adding an experiment, the paper now leads with the mature
-zero-training result, then separates three intervention routes:
+The evidence-complete September manuscript is **locally complete**. The latest
+framing repair makes the scientific identity explicit before any benchmark or
+method identity:
 
-1. frozen model-relative derived/coarse allocations establish large
-   zero-training extrapolation and downstream consequences;
-2. matched adaptation establishes task-family length transfer and causal
-   remote-source use;
-3. from-training evidence establishes weight--table co-adaptation and
-   architecture, scale, and modality breadth.
+1. $x_k=-\log\omega_k=a+Rz_k$ decomposes a finite table into sampled support
+   $(a,R)$ and interior allocation $z$;
+2. the paired fixed-support intervention identifies $z$, while target-aware
+   support retargeting reverses the ordering and identifies support as the
+   distinct interacting coordinate;
+3. exact phase-invariant geometry exposes the finite spectral budget and
+   slow-end redundancy;
+4. EVQ-Cosh is one analytic construction on this object;
+5. frozen, adapted, and from-training evidence establishes distinct
+   behavioural consequences without pooling estimands.
 
 Fixed-support FMRoPE versus anchored EVQ-Cosh owns the clean allocation
 identification. The target-aware reversal owns the support--allocation
@@ -83,18 +89,16 @@ Title: *RoPE Has a Spectral Budget*.
 
 The reviewer path is:
 
-1. a finite RoPE table has support $(a,R)$ and an independent interior
+1. a finite RoPE table has sampled support $(a,R)$ and an independent interior
    allocation $z$;
-2. on a frozen billion-scale OLMo checkpoint, changing the allocation produces
-   the immediate headline capability change;
-3. paired fixed-support training identifies allocation cleanly, while
-   target-aware retargeting reverses the ordering and identifies the second
-   coordinate;
-4. exact full-sin/cos geometry characterises the finite basis's
+2. paired fixed-support training identifies allocation cleanly, while
+   target-aware retargeting reverses the ordering and identifies support as the
+   second interacting coordinate;
+3. exact full-sin/cos geometry characterises the finite basis's
    Renyi-2 effective dimension, including the representative
    46-nominal-dimension to $r_2=2.00$ slow block;
-5. a convex surrogate yields the closed-form EVQ-Cosh construction;
-6. frozen, adaptation, and from-training results establish distinct practical
+4. a convex surrogate yields the closed-form EVQ-Cosh construction;
+5. frozen, adaptation, and from-training results establish distinct practical
    consequences without pooling their estimands.
 
 Claim boundaries remain those in [../AGENTS.md](../AGENTS.md). In particular,
@@ -109,8 +113,8 @@ Active PDF:
 
 - path: paper-2027/main.pdf
 - SHA-256:
-  0cb643b85c6c2821605f53b08b4a7729010db44f087feaf78600461eb1d6ac18
-- size: 552744 bytes
+  de458e2701a1a5aed85f9381b2205ffdac3e80d3aad4588a8545dfc863a4cd04
+- size: 552716 bytes
 - body: 9 pages
 - references begin: page 10
 - total: 31 pages
@@ -140,7 +144,11 @@ Immutable baseline:
 
 Passed locally on the personal PC:
 
-- paper-2027/compile.sh: all ICLR format gates passed;
+- paper-2027/compile.sh after the paper-identity repair: all ICLR format gates
+  passed;
+- title/abstract/Figure 1/Contributions reviewer smoke test: the first recovered
+  identity is the finite-table support--allocation decomposition and spectral
+  budget, not a frequency-reallocation method;
 - Figure 1 owner assertions and vector-PDF generation;
 - final visual review of the abstract/intro, Figure 1, zero-training table,
   body closure, the assumption-bound derivation, and the expanded appendix
@@ -165,14 +173,15 @@ rewrite; the final author number read-through remains a separate release gate.
 ## 7. Supplement state
 
 The tracked root archive
-rope-spectral-budget-iclr2027-supplement.zip was rebuilt from the current
+rope-spectral-budget-iclr2027-supplement.zip was rebuilt from the pre-repair
 allowlist and manuscript source on 2026-08-29:
 
 - SHA-256:
   6ea9fd61c12e9ed7d04926c03693a78e968644f00a2043f04dd96e60585b561b
 - size: 992809 bytes
-- status: local curated package, leak scan and isolated build passed; final
-  work-machine cross-environment receipt remains pending before OpenReview
+- status: its prior leak scan and isolated build passed, but the archive is no
+  longer source-synchronised after this framing repair; rebuild it before the
+  final work-machine cross-environment receipt and OpenReview upload
 
 The curated allowlist now includes the minimal reviewer-facing static-theory
 reproduction closure:
@@ -191,10 +200,11 @@ OpenReview upload.
 
 | Order | Action | Exit condition |
 | --- | --- | --- |
-| 1 | Scoped Git checkpoint publication | **completed:** manuscript/package commit `09876d5` pushed; this state receipt closes the handoff delta |
-| 2 | Work-machine validation | canonical aidemo changed-path tests and supplement cross-build pass or are explicitly dispositioned |
-| 3 | 9/17 abstract/metadata freeze | title, abstract, author roster, profiles, quotas, and AI statement confirmed |
-| 4 | 9/25 full-paper freeze | owner-by-owner number read-through, final PDF/supplement approval, upload and downloaded-platform readback |
+| 1 | Current framing-repair disposition | author reviews the local PDF; commit/push only under explicit authorisation |
+| 2 | Rebuild curated supplement | package contains the repaired source and passes leak/isolated-build checks |
+| 3 | Work-machine validation | canonical aidemo changed-path tests and supplement cross-build pass or are explicitly dispositioned |
+| 4 | 9/17 abstract/metadata freeze | title, abstract, author roster, profiles, quotas, and AI statement confirmed |
+| 5 | 9/25 full-paper freeze | owner-by-owner number read-through, final PDF/supplement approval, upload and downloaded-platform readback |
 
 The two new body table files,
 tables/table_zero_training_system.tex and

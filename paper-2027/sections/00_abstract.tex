@@ -1,20 +1,18 @@
-Structured reallocation of RoPE's finite rotary budget produces large
-long-context gains. On a frozen billion-scale OLMo checkpoint, a model-relative
-derived allocation, separate from our training-time \evq{} construction,
-raises nine-task $16$K RULER from $0.56\%$ to $60.47\%$
-(official Transformers YaRN: $7.94\%$ on the same rows); a coarse task-label-free
-allocation reproduces the recovery, with no training or parameter updates.
-Under continued $750$M training, \evq{} lowers $16$K PPL from $45.1$ to $24.4$
-and raises strict $8$K
-autoregressive exact retrieval from $0\%$ to $77.5\%$; matched $1.485$B and $8$B
-adaptations further yield task-family length transfer and causal remote-source
-use. Writing $x_k=-\log\omega_k=a+Rz_k$ separates sampled support $(a,R)$ from
-interior allocation $z$. A paired three-seed fixed-support intervention isolates
-the allocation effect; when a target-aware support policy may use
-$L_{\mathrm{target}}$, the FMRoPE control reverses the tested ordering, identifying
-support and allocation as distinct but interacting levers. Exact
-phase-invariant sin/cos geometry explains how a fixed nominal
-budget can collapse onto a much smaller positional basis, and a convex surrogate
-yields closed-form zero-learned-parameter \evq{}, unique within that surrogate.
-Across fully frozen, matched-adaptation, and from-training routes, structured
-allocation turns a finite spectral budget into usable context.
+A finite RoPE table contains two design coordinates. Writing
+$x_k=-\log\omega_k=a+Rz_k$ separates its sampled support $(a,R)$ from the
+interior allocation $z$ of a fixed number of rotary pairs. We ask whether $z$
+remains independently identifiable and behaviourally consequential when the
+pair count, sampled support, and RoPE operator are fixed. Exact phase-invariant
+sin/cos geometry characterises this finite spectral budget and shows how slow
+frequencies can collapse onto a much smaller positional basis. A paired
+three-seed fixed-support intervention then changes only the interiors and
+improves every tested OOD length in every seed; allowing the declared
+$L_{\mathrm{target}}$ to retarget support reverses the tested ordering. Thus
+support and allocation are distinct, interacting coordinates rather than two
+names for changing frequencies. On this design space, a convex surrogate yields
+closed-form zero-learned-parameter \evq{}, unique within that surrogate. Fully
+frozen, matched-adaptation, and from-training interventions further show that
+structured allocation changes extrapolation, downstream, retrieval, and
+in-window behaviour across the model lifecycle. The scientific object is the
+finite table's support--allocation decomposition; \evq{} is one analytic
+construction on that object.

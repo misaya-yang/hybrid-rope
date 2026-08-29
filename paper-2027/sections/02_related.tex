@@ -12,7 +12,9 @@ endpoints and log-span lets us change only the interiors. Frequency-dependent
 transport can likewise realise a non-uniform $z$ while moving support or phase.
 Base analyses bound the geometric family's attainable context
 \citep{xu2024base,liu2024scaling}, while learned use of a supplied grid adds a
-data-dependent view \citep{wu2026datashapes}.
+data-dependent view \citep{wu2026datashapes}. These methods establish that RoPE
+frequencies can be modified; our object is the coordinate being intervened on
+once pair count, sampled support, and operator are fixed.
 
 Other work measures unequal use of RoPE bands, removes or clips selected
 rotations, learns input-dependent angles or frequency tables, or replaces the
@@ -20,10 +22,13 @@ fixed table with a larger positional function
 \citep{barbero2025round,oka2026frequencyentropy,chiang2025rotary,
 chen2025hope,li2026copeclipped,wertheimer2026frayed,zhang2026grape,
 movahedi2026selectiverope,wang2024resonance,zheng2024dape,li2024fire,
-hua2025fope,li2026repo}. LeRoPE and AdaRoPE make allocation explicit through
-learned non-geometric frequencies \citep{karypis2026lerope,wang2026adarope};
-LeRoPE's in-window improvements provide convergent evidence that allocation
-matters beyond extrapolation. Its learned intervention complements our matched
-fixed-support controls, which retain all $K$ canonical rotary planes, identify
-$z$ causally, and derive a closed-form table without frequency search or learned
-positional parameters.
+hua2025fope,li2026repo}. LeRoPE learns RoPE frequency tables
+\citep{karypis2026lerope}; AdaRoPE further studies head heterogeneity through
+head-specific learned rotation frequencies combined with head-wise scaling
+\citep{wang2026adarope}. Together they show that a shared geometric schedule
+need not remain fixed, and LeRoPE's in-window improvements provide convergent
+evidence beyond extrapolation. Our question is different: after fixing the
+sampled support and RoPE operator, is interior placement itself an independently
+identifiable finite-table coordinate? The matched fixed-support controls answer
+that question; \evq{} is one analytic construction on the resulting design
+space, not a learned-versus-unlearned positioning claim.

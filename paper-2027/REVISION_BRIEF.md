@@ -47,18 +47,21 @@ technical credibility, or submission validity.
 
 The paper has one identity:
 
-> Structured, regime-matched reallocation of RoPE's interior frequencies can
-> convert a fixed rotary budget into usable context. Fixed-support identification
-> of `z` is the causal foundation; the center of the paper is the large
-> zero-training, extrapolation, and tested downstream gains delivered by three
-> distinct structured-allocation routes. Exact full-sin/cos geometry explains
-> why allocation matters, while EVQ-Cosh supplies a separate closed-form
-> zero-learned-parameter training/adaptation construction.
+> A finite RoPE table decomposes as
+> $x_k=-\log\omega_k=a+Rz_k$: sampled support $(a,R)$ and interior allocation
+> $z$ are distinct design coordinates. Fixed-support intervention identifies
+> $z$ as independently consequential, target-aware support retargeting identifies
+> the second interacting coordinate, and exact full-sin/cos geometry exposes the
+> finite spectral budget. EVQ-Cosh is one analytic construction on this object;
+> frozen, adapted, and from-training results establish its behavioural reach.
 
 Preserve the current evidence logic:
 
-- **fully frozen zero-training leads:** model-relative derived and coarse
-  allocations own the mature no-update result; neither is EVQ-Cosh;
+- **the decomposition leads:** support--allocation identification is the paper
+  identity, not another name for changing frequencies or for EVQ-Cosh;
+- **fully frozen zero-training remains the strongest practical consequence:**
+  model-relative derived and coarse allocations own the mature no-update result;
+  neither is EVQ-Cosh;
 - **matched adaptation follows:** EVQ-Cosh under matched low-rank adaptation owns
   protocol-specific length transfer, probability, routing, and causal source-use
   results;
@@ -98,17 +101,18 @@ Preserve the current evidence logic:
 
 ### P1 — reviewer path
 
-- Preserve the 30-second path: structured allocation problem → mature
-  zero-training result → fixed-support identification → exact geometry and
-  separate EVQ-Cosh construction → adaptation/from-training breadth → selected
-  in-window-positive regimes.
+- Preserve the 30-second path: support--allocation decomposition → fixed-support
+  identification and target-aware retargeting → exact spectral-budget geometry
+  → separate EVQ-Cosh construction → frozen/adaptation/from-training consequence.
 - Improve the title, abstract, first-page framing, figures, and paragraph order
   only when the current version leaves a material ambiguity or buries decisive
   evidence.
-- Lead with the result and attach the nearest scope needed for truth. Do not turn
-  the paper into a response ledger, method tournament, or limitations inventory.
-- Keep zero-training visibly primary. Do not present fully frozen, adapted, and
-  from-training routes as three equally weighted headline methods.
+- Lead with the scientific object and keep the strongest result visible with the
+  nearest scope needed for truth. Do not turn the paper into a response ledger,
+  method tournament, or limitations inventory.
+- Keep zero-training prominent as a practical consequence, not as the paper
+  identity. Do not present fully frozen, adapted, and from-training routes as
+  three equally weighted headline methods.
 - Replace lower-leverage material when space is needed; do not stack new prose or
   fill pages for their own sake.
 
@@ -123,8 +127,9 @@ Preserve the current evidence logic:
 
 - No wholesale section reorganisation without a defect in the current reviewer
   path.
-- No abstract, Figure 1, or contribution structure centred on “arbitrary `z`
-  matters,” a generic third-coordinate claim, or unrelated counterexamples.
+- No abstract, Figure 1, or contribution structure centred on a benchmark
+  leaderboard, “we also change frequencies,” EVQ-Cosh as the paper identity,
+  arbitrary `z`, or unrelated counterexamples.
 - No relabelling of the frozen derived/coarse allocations as EVQ-Cosh, and no
   statement that makes EVQ-Cosh the owner of the frozen zero-training result.
 - No portrayal of target-aware FMRoPE's use of `L_target` as an unfair baseline;

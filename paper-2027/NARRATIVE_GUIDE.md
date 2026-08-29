@@ -30,13 +30,16 @@ preferences that another review model may silently reverse.
    extrapolation, likelihood, downstream, retrieval, and in-window gains in
    their tested regimes. It is not trying to prove that every arbitrary change
    of $z$ helps every model.
-2. **Make the result visible before defending it.** The mature frozen gain is
-   the first empirical memory; fixed-support identification secures the causal
-   interpretation; exact theory explains the design object; adaptation and
-   from-training evidence establish breadth. Do not lead with a limitation,
-   failed route, or hypothetical objection.
+2. **Make the scientific object visible before its consequences.** The
+   support--allocation decomposition and the question it makes identifiable
+   must be the first memory. Fixed-support identification secures the causal
+   claim; exact theory explains the finite spectral budget; EVQ-Cosh is one
+   analytic construction; frozen, adaptation, and from-training evidence then
+   establishes behavioural consequence and breadth. Do not let a benchmark
+   number or method name define the paper before the object is clear.
 3. **Minimise reviewer reconstruction work.** A 30-second read must recover the
-   novelty and strongest consequence. A three-minute read must recover the
+   support--allocation decomposition, fixed-support identification, spectral
+   budget, and strongest consequence. A three-minute read must recover the
    causal control, theoretical mechanism, method identities, and empirical
    breadth. If the reviewer must combine distant caveats or tables to discover
    the claim, the writing has failed.
@@ -103,33 +106,39 @@ accidentally made that proposition.
 
 ## One reviewer memory
 
-> **Structured, regime-matched reallocation of RoPE's interior frequencies can
-> turn a fixed rotary budget into usable context. A model-relative zero-training
-> route produces large frozen-model extrapolation and downstream gains without
-> parameter updates; a separate closed-form EVQ-Cosh construction carries the
-> same design principle into adaptation and training, with in-window gains in
-> selected regimes.**
+> **A finite RoPE table decomposes into sampled support and interior allocation.
+> Fixed-support interventions identify allocation as an independent,
+> behaviourally consequential coordinate, while target-aware retargeting shows
+> that support is a distinct interacting coordinate. Exact phase-invariant
+> geometry exposes the finite spectral budget and slow-end redundancy;
+> EVQ-Cosh is one analytic construction on this object, whose consequences
+> persist across frozen, adapted, and from-training regimes.**
 
 This memory fixes the hierarchy:
 
-1. **Foundation — identify the variable.** The decomposition
+1. **Object — expose the two coordinates.** The decomposition
    $x_k=-\log\omega_k=a+Rz_k$ separates sampled support $(a,R)$ from interior
-   allocation $z$. Fixed-support controls establish that the reported gains
-   are not a disguised scalar-base change.
-2. **Center — design and evaluate structured reallocations.** The paper is not a
+   allocation $z$. This is the paper identity, not a notation for a particular
+   method.
+2. **Identification — intervene on one coordinate.** Fixed-support controls
+   establish that $z$ is independently consequential rather than a disguised
+   scalar-base change; target-aware reversal identifies support as the second,
+   interacting coordinate.
+3. **Explanation and construction — geometry before instantiation.** Exact
+   full-sin/cos geometry exposes slow-end positional redundancy. EVQ-Cosh is a
+   separate analytic construction on the resulting design space.
+4. **Consequence — evaluate structured reallocations.** The paper is not a
    claim that arbitrary `z` changes are useful. It studies specific,
    owner-defined structured schedules that deliver large long-context,
    zero-training, and tested downstream gains.
-3. **Explanation — finite spectral budget.** Exact full-sin/cos geometry explains
-   why the placement of a finite number of rotary pairs matters. It diagnoses
-   the positional basis; trained-model protocols establish behaviour.
-4. **Implication — regime dependence.** Text protocols often show an
+5. **Implication — regime dependence.** Text protocols often show an
    in-window/long-range crossover, while video-DiT shows that a structured
    reallocation can improve both training-frame and extrapolated performance.
    An in-window tax is therefore not the definition of allocation.
 
-The result leads; the identifying control and nearest scope follow. Do not make
-an old objection or an internal negative the grammatical subject of the paper.
+The scientific object leads; its strongest consequences remain prominent. Do
+not make an old objection, an internal negative, or an implementation name the
+grammatical subject of the paper.
 
 ## The three structured-allocation routes
 
@@ -274,20 +283,21 @@ or continuous optimum.
 
 Preserve this reading order:
 
-1. finite rotary budget and the missing structured-allocation design problem;
-2. the mature zero-training result and its no-update practical meaning;
-3. fixed-support controls that identify allocation rather than scalar support;
-4. exact basis geometry and the separate EVQ-Cosh analytic construction;
-5. matched-adaptation and from-training consequences, with their endpoint and
-   seed scopes;
+1. finite-table decomposition into sampled support and interior allocation;
+2. fixed-support identification of $z$ and target-aware retargeting of support;
+3. exact spectral-budget geometry and slow-frequency collapse;
+4. the separate EVQ-Cosh analytic construction;
+5. frozen, matched-adaptation, and from-training consequences, with their
+   endpoint and seed scopes;
 6. Related Work and Discussion: FMRoPE as support control, LeRoPE as
    learned-allocation in-window evidence, and regime-dependent allocation as the
    field implication.
 
-Do not organize the abstract, Figure 1, or Contributions around arbitrary `z`,
-old reviewer defences, an evidence ledger, or three routes presented as equally
-important. Zero-training leads; causal identification secures the claim; theory
-explains it; adaptation and from-training establish breadth.
+Do not organize the abstract, Figure 1, or Contributions around a benchmark
+leaderboard, EVQ-Cosh as a method identity, arbitrary `z`, old reviewer
+defences, or an evidence ledger. The decomposition leads; causal identification
+and exact geometry establish the finding; the analytic construction and
+lifecycle evidence show what follows from it.
 
 ## Edit workflow
 
@@ -302,8 +312,9 @@ explains it; adaptation and from-training establish breadth.
 
 ### After an edit
 
-- Does the 30-second reading recover structured allocation → zero-training gain
-  → fixed-support identification → theory/construction → regime breadth?
+- Does the 30-second reading recover support--allocation decomposition →
+  fixed-support identification and retargeting → spectral-budget geometry →
+  analytic construction → lifecycle consequence?
 - Are EVQ-Cosh, anchored EVQ-Cosh, frozen derived/coarse allocations, Geo,
   Native, FMRoPE, YaRN-style, and the MLA wavelength-blend operator distinct?
 - Are likelihood, capability, seed, row, checkpoint, and trajectory units kept
@@ -329,8 +340,8 @@ changes the durable reviewer memory or owner-supported narrative hierarchy.
 A future session is moving in the wrong direction if it does any of the
 following:
 
-- turns allocation identifiability into the headline while burying the actual
-  zero-training and downstream capability gains;
+- lets a benchmark result, frozen route, or EVQ-Cosh become the paper identity
+  before the support--allocation decomposition is clear;
 - replaces a specific positive claim with an argument about arbitrary or
   universal $z$;
 - describes completed evidence as merely protocol-limited without naming a
