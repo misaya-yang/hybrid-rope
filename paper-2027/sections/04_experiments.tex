@@ -1,41 +1,27 @@
 \section{The Allocation Coordinate across Model-Building Regimes}
 \label{sec:experiments}
 
-We intervene on $z$ at three stages of the model lifecycle. With a mature
-checkpoint fully frozen, only allocation changes; with matched low-rank
-adaptation, pretrained representations can learn to exploit a new basis; from
-training, weights learn that basis through co-adaptation. We present the three
-regimes in that order, beginning with the direct mature-model intervention.
+We intervene on the allocation rule at three stages of the model lifecycle.
+With a mature checkpoint fully frozen, only the installed allocation changes;
+under matched low-rank adaptation and from training, the resulting weight
+changes are responses to that allocation rather than separate method variants.
+We keep likelihood, capability, and uncertainty units separate throughout.
 
 %% =========================================================================
-\subsection{Fully frozen: zero-training intervention}
+\subsection{Frozen mature models: pure-\texorpdfstring{$z$}{z} zero-training intervention}
 \label{sec:exp-frozen-support}
 
 \paragraph{Allocation alone changes a mature model.}
-Given Native frequencies $\omega_k$, extension factor $s$, and displacement
-weights $m_k\in[0,1]$, the frozen intervention installs
-\begin{equation}
-\widehat\omega_k=\omega_k\big[(1-m_k)+m_k/s\big],\qquad
-\widehat z_k=\frac{-\log\widehat\omega_k-\widehat a}{\widehat R},
-\label{eq:movement-allocation}
-\end{equation}
-with the fast and slow endpoints pinned. After support normalisation, the
-uniform, coarse label-free, and derived tables are three values of the same
-interior coordinate $z$ (App.~\ref{sec:frozen-fixed-support}). Using $s{=}4$,
-all arms also share the checkpoint, attention amplitude, evaluation rows,
-decoder, precision, and hardware. The
-OLMo table, amplitude, model-relative split rule
-(App.~\ref{sec:frozen-fixed-support}), checkpoint, and metric were frozen before
-the nine confirmation tasks were evaluated. Figure~\ref{fig:frozen-fixed-support}
-separates standard references from the matched-support block. On OLMo, derived
-minus uniform allocation is $+59.92$ points ($[54.88,64.80]$), and
-derived minus official Transformers YaRN is $+52.54$ points
-($[46.99,57.95]$). The common amplitude $1+0.1\ln4$ is YaRN's default
-factor-four attention scaling. On Qwen at $64$K, derived reaches $66.50\%$ versus
-$57.75\%$ for uniform allocation and $60.25\%$ for YaRN. The model-relative
-derivation locates where the allocation should bend; a coarse label-free
-control fitted to it reproduces the OLMo recovery at $61.04\%$
-(App.~\ref{sec:frozen-fixed-support}).
+At matched support, amplitude, checkpoint, rows, decoder, precision, and
+hardware, changing only interior $z$ raises OLMo nine-task RULER at $16$K from
+$0.56\%$ to $60.47\%$; a coarse label-free allocation reaches $61.04\%$.
+On Qwen at $64$K, the corresponding fixed-support change raises core-four
+RULER from $57.75\%$ to $66.50\%$ (Fig.~\ref{fig:frozen-fixed-support}).
+The intervals for derived minus uniform allocation are $[54.88,64.80]$ and
+$[0.25,17.50]$ points, respectively. These uniform, coarse, and derived mature
+tables are three values of the same fixed-support coordinate; they are not
+\evq{} tables, and the coarse-versus-derived comparison does not identify a
+unique profile (App.~\ref{sec:frozen-fixed-support}).
 
 \begin{figure}[h]
   \centering
@@ -52,114 +38,94 @@ control fitted to it reproduces the OLMo recovery at $61.04\%$
   \label{fig:frozen-fixed-support}
 \end{figure}
 
-\paragraph{Zero-training deployment.}
-Building on the pure-$z$ effect, the zero-training method installs the
-reallocated long table with a fixed amplitude; a Native/long session route is
-also evaluated as a deployment option. The system adds no learned parameters or
-training tokens.
-
-\paragraph{Natural-text likelihood.}
-Against official Transformers YaRN at factor four, PG-19 tail NLL improves from
-$3.4404/3.7955$ to $3.1060/3.0977$ at $8/16$K. Forcing the same long profile
-at $4$K gives FineWeb-Edu NLL $2.8774$ versus $2.7538$ for Native; the session
-route retains Native inside its window ($+0.1236$ NLL).
-
-\paragraph{Task capability.}
-On $13$-family RULER at $8/16$K, macro is $0/0\%$ for Native,
-$23.82/5.88\%$ for official Transformers YaRN at factor four, and
-$67.72/54.40\%$ for the zero-training policy, which is higher on $12$ of $13$
-families at each length. On full-$200$ Qasper, the session policy raises
-token F1 from $18.03\%$ to $24.57\%$; on full-$200$ 2Wiki, applying the long
-profile to every row raises token F1 from $25.69\%$ to $27.74\%$ (the routed
-policy scores $26.66\%$). Full protocols are in
-App.~\ref{sec:frozen-fixed-support}.
+For implementation, given Native frequencies $\omega_k$, extension factor $s$,
+and fixed displacement weights $m_k\in[0,1]$, the mature intervention installs
+\begin{equation}
+\widehat\omega_k=\omega_k\big[(1-m_k)+m_k/s\big],\qquad
+\widehat z_k=\frac{-\log\widehat\omega_k-\widehat a}{\widehat R},
+\label{eq:movement-allocation}
+\end{equation}
+with the fast and slow endpoints pinned. Equation~\eqref{eq:movement-allocation}
+defines the pure-$z$ block above; the complete deployment policy below is a
+separate bundled intervention.
 
 %% =========================================================================
-\subsection{Pretrained representations: matched low-rank adaptation}
+\subsection{Zero-training downstream capability and native-window retention}
+\label{sec:exp-zero-training-system}
+
+Building on the pure-$z$ result, the zero-training system bundles one frozen
+factor-four long table, a fixed long attention amplitude, and a session-static
+Native/long route chosen before prefill. It adds no learned parameters or
+training tokens, but its combined gain must not be assigned to allocation
+alone. Table~\ref{tab:zero-training-system} separates its likelihood,
+capability, downstream, and routing endpoints; none of these metrics is pooled.
+
+\input{tables/table_zero_training_system}
+
+The route retains the exact Native path when a request fits the model window;
+otherwise it uses one deployment-frozen factor-four profile for the session.
+This practical policy is neither the pure-$z$ contrast in
+Fig.~\ref{fig:frozen-fixed-support} nor the \evq{} construction used in the
+adapted and from-training studies. Full task-level results, row identities, and
+the allocation-versus-routing controls are in App.~\ref{sec:frozen-fixed-support}.
+
+%% =========================================================================
+\subsection{Matched adaptation: length transfer and causal source use}
 \label{sec:exp-capability}
 
-Limited adaptation asks whether a mature pretrained model can learn to use a
-new allocation without full-parameter retraining. The $1.485$B studies measure
-task-family length transfer; the $8$B source-blocking intervention tests whether
-the adapted model causally uses remote evidence.
-
-\paragraph{$1.485$B task-family length transfer.}
-Starting from protocol-matched Native and \evq{} Stage-A parents, both OLMo-2
-arms freeze inherited V/O LoRA and continue only Q/K for $300$ steps with
-identical data, order, optimiser, trainable count, and phase exposure. On $200$
-held-out 2WikiMultiHopQA rows per length, Native/\evq{} token-F1 is
-$0.07/21.48\%$ and $0/8.57\%$ at $8/16$K, versus $25.99/24.84\%$ at $4$K
-\citep{ho2020twowiki,bai2024longbench}. An independent
-$13$-family RULER continuation shows the same crossover: Native/\evq{} macro is
+Matched adaptation asks whether pretrained representations can learn to use an
+\evq{} allocation. Starting from protocol-matched Native and \evq{} Stage-A
+parents, the $1.485$B selective-Q/K arms freeze inherited V/O LoRA and continue
+only Q/K for $300$ steps with identical data, order, optimiser, trainable count,
+and phase exposure. On $200$ held-out 2WikiMultiHopQA rows per length,
+Native/\evq{} token-F1 is $0.07/21.48\%$ and $0/8.57\%$ at $8/16$K, versus
+$25.99/24.84\%$ at $4$K \citep{ho2020twowiki,bai2024longbench}. An independent
+$13$-family RULER continuation gives the same task-family crossover:
 $2.02/31.63\%$ and $0.38/5.03\%$ at $8/16$K, versus $72.19/42.44\%$ at $4$K
-\citep{hsieh2024ruler}. Training and evaluation use disjoint rows from the same
-task families, establishing task-family-adapted length transfer
-(App.~\ref{sec:mature-details}).
+\citep{hsieh2024ruler}. Training and evaluation rows are disjoint within each
+task family (App.~\ref{sec:mature-details}).
 
-\paragraph{$8$B causal remote-source use.}
-On LLaMA-3-8B-Instruct \citep{grattafiori2024llama3}, matched rank-$64$ Q/K/V/O
-LoRA raises median target-block hit@16 from $18.75\%$ to $64.06\%$ at true
-$16$K; blocking decode attention to the remote gold block changes NLL by
-$-0.0095/+1.5055$. Across all $24$ frozen natural-text packs and three domains,
-Native/\evq{} PPL is $108.96/24.07$ and $991.48/127.91$ at $16/32$K, versus
-$6.82/10.07$ at $8$K. The blocking intervention establishes causal
-remote-source use
-(App.~\ref{sec:mature-details}).
+At $8$B, a single matched rank-$64$ Q/K/V/O LoRA pair provides a complementary
+causal endpoint. At true $16$K, the \evq{} arm raises median target-block
+hit@16 from $18.75\%$ to $64.06\%$; position-preserving removal of the remote
+gold block changes answer NLL by $-0.0095/+1.5055$
+(Fig.~\ref{fig:8b-causal-source-use}). Thus the adapted \evq{} model uses the
+remote source in these cases; this routing/probability result is distinct from
+autoregressive task accuracy.
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=\linewidth]{fig_8b_causal_source_use.pdf}
   \caption{\textbf{Matched adaptation converts the new basis into causal
-  remote-source use.} On ten frozen true-$16$K cases, (a) median target-block
-  hit@16 is measured over $32$ retrieval heads; (b) answer-side decode
-  attention to the remote gold block is then removed from every head while
-  preserving prompt tokens, rotary KV indices, and block geometry. The
-  $+1.5055$ NLL change shows that the adapted \evq{} model's answer probability
-  depends on that source, while the Native control is essentially unchanged.
-  These are routing and teacher-forced probability endpoints, distinct from
-  autoregressive task accuracy (App.~\ref{sec:llama8b}).}
+  remote-source use.} In one matched trained pair, ten frozen true-$16$K cases
+  measure (a) median target-block hit@16 over $32$ retrieval heads and (b) the
+  answer-NLL change after deleting decode attention to the remote gold block
+  from every head while preserving prompt tokens, rotary KV indices, and block
+  geometry. These are routing and teacher-forced probability endpoints, not
+  training replications or autoregressive accuracy
+  (App.~\ref{sec:llama8b}).}
   \label{fig:8b-causal-source-use}
 \end{figure}
-\FloatBarrier
 
 %% =========================================================================
-\subsection{From training: weight--table co-adaptation}
+\subsection{From training: co-adaptation, systems, and in-window behaviour}
 \label{sec:exp-mature}
 
-Installing $z$ before or during full-parameter training asks whether weights
-learn to exploit the resulting positional basis. The paired three-seed result
-in \S\ref{sec:exp-identify} supplies the fixed-support causal anchor; the
-experiments below test its persistence across architecture, scale, and
-modality.
+The paired three-seed intervention in \S\ref{sec:exp-identify} owns the
+fixed-support causal claim. The studies in
+Table~\ref{tab:allocation-routes} instead test whether an installed allocation
+rule remains consequential under scarce rotary channels, continued or
+from-initialisation full-parameter training, and bidirectional video. The
+fixed-support studies own causal attribution; these rows test stage-specific
+persistence, with each protocol's execution boundary retained in the table and
+appendix.
 
-\paragraph{Scarce-channel architecture.}
-Interior allocation remains consequential when the rotary budget is only
-$K{=}16$: a $432$M MLA-style transformer \citep{deepseekv2} trained from scratch
-over three seeds gives Geo/\evq{} PPL $138.8/95.6$ at $16$K, with every seed
-favouring \evq{}; at the $8$K training length it is $35.4/35.8$
-(App.~Table~\ref{tab:mla}). The near tie at the training window and the
-three-seed separation at $2\times$ make this a scarce-budget test: allocation
-remains actionable when the architecture provides only sixteen rotary pairs.
+\input{tables/table_allocation_routes}
 
-\paragraph{Full-parameter persistence and early-training scale.}
-Continuing all parameters of two $750$M arms from a shared $2$K Geo checkpoint
-for $500$M tokens at $4$K gives Geo/\evq{} PPL $45.1/24.4$ at $16$K and changes
-strict autoregressive exact retrieval at $8$K from $0\%$ to $77.5\%$; at $4$K,
-PPL is $22.0/22.3$ (App.~Table~\ref{tab:750m}). At $1.485$B, a pre-specified
-early-training comparison starts from the same public initialisation, follows
-the same scientific recipe, and uses a matched $2.097$B-token budget. \evq{}
-crosses by $8$K, with $122/128$ and $126/128$ held-out documents favouring it at
-$8/16$K (App.~Fig.~\ref{fig:olmo-scale-crossover}). Together these protocols
-repeat the in-window/long-length crossover through $1.485$B. They also provide
-different forms of scale evidence: the $750$M continuation links long-text PPL
-to strict autoregressive retrieval, while the $1.485$B run locates the same
-crossover in natural-text loss at the largest from-initialisation scale tested.
-
-\paragraph{Modal breadth.}
-On Oscillating Moving MNIST, a head-to-head comparison in a $129.6$M video DiT
-with bidirectional $3$D RoPE gives Geo-to-\evq{} denoising-MSE deltas of
-$-21\%$ on train, $-16\%$ over all extrapolated frames, and $-35\%$ on far
-extrapolated frames (App.~Table~\ref{tab:dit-h2h}), extending the evidence
-beyond autoregressive text. Its simultaneous training-frame improvement shows
-that reallocating $z$ is not intrinsically an autoregressive extrapolation-only
-operation.
+The text protocols exhibit a recurring in-window/long-range crossover, while
+the video-DiT comparison improves both training and extrapolated frames. These
+rows therefore establish architecture-, scale-, and modality-specific
+persistence, not a pooled effect or scaling law. Complete PPL trajectories,
+strict generation endpoints, and per-seed MLA values are in
+Apps.~\ref{sec:experiment-details}, \ref{sec:mature-details}, and
+\ref{sec:mla-results}.

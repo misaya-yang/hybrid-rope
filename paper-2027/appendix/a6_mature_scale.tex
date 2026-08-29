@@ -65,6 +65,16 @@ $16$K. This is one same-initialisation, same-scientific-recipe natural-text LM
 comparison; capability is evaluated by the separate autoregressive protocols
 above.
 
+The identity is scientific rather than bitwise trainer pairing. The \evq{}
+branch uses the reviewed Hugging Face single-GPU loop, whereas the released Geo
+checkpoint was produced by AI2's distributed OLMo trainer. Both start from the
+same public step-$0$ initialisation and match the pinned recipe, reconstructed
+seed-$6198$ data-order prefix, $512$-sequence global batch, $4$K context,
+$1{,}000$ optimizer steps, and $2{,}097{,}152{,}000$ counted input tokens.
+Different trainer stacks remain a residual implementation confound, so this is
+scale persistence from one same-initialisation/same-recipe pair, not a bitwise
+paired trajectory or a multi-seed causal estimate.
+
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.88\linewidth]{fig_olmo_scale_crossover.pdf}
@@ -137,34 +147,88 @@ derived-minus-coarse-control intervals contain zero on both models. The
 control therefore attributes the effect to
 fixed-support reallocation while leaving profile-specific ordering unresolved.
 
-The complete OLMo deployment policy is a separate, bundled intervention: it
-uses exact Native when observed prefill plus generation reserve fits the Native
-window and otherwise chooses one frozen factor-four table and amplitude before
-prefill, without changing the route during the KV-cache lifetime. It adds no
-learned parameters or training tokens. On a disjoint $128$-document
-FineWeb-Edu evaluation, forcing the same long profile at $4$K gives final-$1024$
-NLL $2.8774$ versus Native $2.7538$, a difference of $+0.1236$ NLL; the
-session policy routes $4$K requests through Native. At $8/16$K, its PG-19 tail NLL is
-$3.1060/3.0977$, compared with $3.4404/3.7955$ for official Transformers YaRN
-factor four. On full-$200$ Qasper \citep{dasigi2021qasper} and 2Wiki
-\citep{ho2020twowiki}, the routed policy's token F1 is $24.57/26.66\%$, versus
-$18.03/25.69\%$ for YaRN; applying the long profile to all $200$ 2Wiki rows
-scores $27.74\%$. Across the six-task natural-context matrix, the routed method
-scores $28.58/24.97\%$ at $2/4\times$, compared with $21.27/25.59\%$ for YaRN.
-The QA arms use identical rows, and every post-chat
-input plus its generation reserve fits within $16$K. These rows evaluate the
-complete deployment policy on natural context; Fig.~\ref{fig:frozen-fixed-support}
-provides the allocation-only contrast.
+\paragraph{Fresh-distribution allocation and routing controls.}
+On a disjoint $512$-document FineWeb-Edu holdout from a shard absent from the
+calibration data, the session policy is exactly Native on all $512/512$ $4$K
+rows. Table~\ref{tab:fresh-fineweb-controls} separates its routing contrast from
+the fixed-support allocation contrasts. For the latter, support, attention gain,
+Native/long route, checkpoint, rows, and runtime are fixed; only interior $z$
+changes. The coarse ramp again matches the detailed derived profile, whereas
+the same-support geometric allocation is slightly better at $8$K and fails on
+all $512$ rows at $16$K.
+
+\begin{table}[ht]
+\caption{Fresh FineWeb-Edu holdout-$512$ final-$1{,}024$-token NLL contrasts.
+The first row evaluates the complete session policy; the lower rows compare
+long allocations at fixed support, gain, and route. Negative favours the first
+named method.}
+\label{tab:fresh-fineweb-controls}
+\centering
+\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Contrast & 8K & 16K \\
+\midrule
+Session-s4 $-$ Native & $-4.0953$ & $-4.4393$ \\
+Geometric $-$ derived $z$ & $-0.0288$ & $+4.4560$ \\
+Coarse ramp $-$ derived $z$ & $+0.0005$ & $+0.0006$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The complete OLMo deployment policy is consequently a separate bundled
+intervention: exact Native is selected when observed prefill plus generation
+reserve fits the Native window; otherwise one frozen factor-four table and
+amplitude are selected before prefill and retained for the KV-cache lifetime.
+It adds no learned parameters or training tokens. Statically forcing the same
+long profile at $4$K regresses NLL from $2.7538$ to $2.8774$; routing, rather
+than the long allocation, is therefore the identified in-window retention
+mechanism.
+
+\begin{table}[ht]
+\caption{Compact zero-training deployment endpoints on the frozen OLMo
+checkpoint. These are complete-policy comparisons, not pure-$z$ effects.}
+\label{tab:zero-training-policy-endpoints}
+\centering
+\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Endpoint & Official YaRN ($s{=}4$) & Zero-training policy \\
+\midrule
+PG-19 tail NLL, 8K/16K & $3.4404/3.7955$ & $\mathbf{3.1060/3.0977}$ \\
+RULER-13 macro, 8K/16K (\%) & $23.82/5.88$ & $\mathbf{67.72/54.40}$ \\
+Qasper token F1, 16K ($n{=}200$, \%) & $18.03$ & $\mathbf{24.57}$ \\
+2Wiki token F1, 16K ($n{=}200$, \%) & $25.69$ & $\mathbf{26.66}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Applying the long profile to every 2Wiki row scores $27.74\%$; the routed policy
+pays that small difference to preserve the exact Native short path. Across the
+six-task natural-context matrix, routed/YaRN macro is $28.58/21.27\%$ at
+$2\times$ and $24.97/25.59\%$ at $4\times$, so the result is not universal
+task dominance. The QA arms use identical rows, and every post-chat input plus
+generation reserve fits within $16$K. Figure~\ref{fig:frozen-fixed-support}
+remains the allocation-only contrast.
 
 \subsection{LLaMA-3-8B-Instruct}
 \label{sec:llama8b}
 
-The \evq{} arm in both LLaMA protocols uses midpoint quantisation with
+The LLaMA-3-8B-Instruct checkpoint \citep{grattafiori2024llama3} is frozen
+apart from the stated adapters. The \evq{} arm in both LLaMA protocols uses midpoint quantisation with
 $\tau{=}1.414$; Native retains the pretrained model's original frequency table.
 The training objectives, adapters, and endpoints remain separate below.
 
 \paragraph{Probability and causal source use.}
-In the matched seed-$42$, $300$-step Q/K/V/O LoRA protocol, \evq{}-minus-Native
+The matched seed-$42$ protocol uses $300$ optimizer steps of BF16 rank-$64$,
+alpha-$128$ LoRA on Q/K/V/O, physical $8{,}192$-token sequences, and learning
+rate $10^{-4}$. Arms share model and tokenizer bytes, frozen training rows and
+order, seed, objective, optimizer, scheduler, batch/accumulation, LoRA capacity,
+checkpointing, compile mode, and evaluator. The contrast is therefore the
+end-to-end effect of assigning different frequency substrates under a matched
+adaptation pipeline; it does not isolate pure interior shape because the Native
+endpoint grid and midpoint-Cosh grid also differ in finite-grid embedding.
+Under this protocol, \evq{}-minus-Native
 NLL is $+0.390/-1.510/-2.048$ at $8$/$16$/$32$K. On ten frozen true-$16$K
 passkey cases, median target-block hit@16 over $32$ retrieval heads rises from
 $18.75\%$ to $64.06\%$. Blocking answer-side decode attention to the remote
@@ -176,9 +240,12 @@ accuracy is evaluated separately. Descriptive Native/\evq{} PPL is
 $6.817/10.068$, $108.958/24.068$, and $991.475/127.911$ at those lengths.
 
 \paragraph{RULER-family continuation.}
-A separate $516$-step continuation uses identical physical-$8$K supervision
-over all $13$ RULER families, with one seed per arm and disjoint generated
-training/evaluation rows. Evaluation uses $20$ examples per family and length.
+A separate seed-$20420726$ continuation uses $516$ steps, rank-$64$/alpha-$128$
+Q/K/V/O LoRA, global batch $8$ (micro batch $2$, accumulation $4$), BF16 and
+Flash-only attention. Its $1{,}376$ physical-$8$K training rows comprise $96$
+rows for each of $13$ RULER families plus $128$ natural-replay rows; it processes
+$33{,}816{,}576$ input tokens. Training and evaluation rows have zero exact
+overlap, and evaluation uses $20$ examples per family and length.
 At $16$K, Native/\evq{} official-scorer macro is
 $0.295/14.03\%$ and normalized exact is $0/1.54\%$. At $8$K,
 Table~\ref{tab:ruler} reports official scorer macro ($94.44/77.60\%$) and

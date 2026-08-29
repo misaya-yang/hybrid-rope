@@ -653,6 +653,31 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
             0.775,
         )
 
+    def test_iclr_supplement_includes_static_theory_reproduction_closure(self):
+        required = {
+            "analysis/full_rope_audit/verify_core.py",
+            "analysis/full_rope_audit/verify_small_models.py",
+            "scripts/analysis/third_axis_ceiling.py",
+            # Runtime imports of third_axis_ceiling.py that were already curated.
+            "scripts/analysis/full_rope_collision_audit.py",
+            "rebuttal/rebuttal_0723/experiments/geo_rope_contract.py",
+            "scripts/lib",
+        }
+        self.assertTrue(required.issubset(package_supplement.ICLR2027_ALLOWLIST))
+
+        # The directory also contains a historical log with a private absolute
+        # path.  Curate the executable closure file-by-file rather than copying
+        # the whole audit tree.
+        self.assertNotIn(
+            "analysis/full_rope_audit",
+            package_supplement.ICLR2027_ALLOWLIST,
+        )
+        self.assertTrue(package_supplement.should_skip(Path("finK_run.log")))
+
+        for rel in required - {"scripts/lib"}:
+            data = (ROOT / rel).read_bytes()
+            self.assertIsNone(package_supplement.LEAK_PATTERNS.search(data), rel)
+
     def test_iclr_supplement_excludes_retired_range_composition(self):
         for retired_path in (
             "paper-2027/figs/fig_range_composition_454m.pdf",

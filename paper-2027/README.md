@@ -43,9 +43,10 @@ handoff rather than recording them here.
 
 Canonical commands and machine assignments live only in
 [`../README.md`](../README.md) under “Build and validate.” The work machine owns
-the `aidemo` environment and final release validation. The low-configuration
-personal PC is for documentation, planning, and lightweight static/standard-
-library checks; do not infer a repository failure from missing Conda there.
+the `aidemo` environment, packaging, and final cross-environment validation.
+The low-configuration personal PC may run local LaTeX/Tectonic builds and visual
+PDF iteration alongside documentation, planning, and lightweight checks; do not
+infer a repository failure from missing Conda there.
 
 Compilation establishes layout/format health only. It does not validate
 scientific claims. Packaging must use the curated ICLR profile from the

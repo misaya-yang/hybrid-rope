@@ -1,20 +1,20 @@
 \section{Discussion}
 \label{sec:discussion}
 
-A finite RoPE table is specified by its sampled log-frequency support $(a,R)$
-and the interior allocation $z$ of its fixed $K$ pairs. Position rescaling or
-frequency-dependent transport may change the realised table as context grows,
-but does not remove this decomposition. Our fixed-support intervention holds
-$K$, both endpoints, and the RoPE operator constant and changes only $z$---a
-design move outside a scalar-base sweep.
+Designed interior allocations produce strong capability changes in fully frozen
+checkpoints, remain actionable under matched low-rank adaptation, and alter
+outcomes through training-time weight--table co-adaptation. These three
+intervention stages establish $z$ as a controllable RoPE design coordinate.
+Exact full-subspace geometry explains how allocations change the available
+positional basis; the weights-by-table crossing and transplant obstruction
+explain why the intervention stage matters.
 
-The three empirical routes intervene on this coordinate at different stages.
-With weights fully frozen, $z$ alone changes mature-model behaviour; under
-matched low-rank adaptation, pretrained representations learn to use a new
-basis; from training, the paired fixed-support control identifies weight--table
-co-adaptation. Exact full-subspace geometry explains how those tables differ as
-positional bases, while the weights-by-table crossing and transplant
-obstruction explain why the intervention stage matters.
+Support and allocation are complementary, interacting coordinates. The
+fixed-support controls hold $K$, both endpoints, and the RoPE operator constant
+to identify $z$ alone, while target-aware support retargeting reverses the tested
+ordering. A realised table therefore reflects both sampled support $(a,R)$ and
+the interior allocation $z$ of its fixed $K$ pairs; frequency transport may
+change both at once.
 
 Across the autoregressive text protocols that evaluate both the original
 training or Native window and longer positions, the comparisons reveal a
@@ -22,23 +22,15 @@ within-protocol crossover: the baseline is stronger near the original window,
 while the reallocated table overtakes it beyond that window. This recurring
 behavioural signature of finite-budget reallocation directly motivates the
 Native/long session route. The video DiT shows another regime: both
-training-frame and extrapolated-frame MSE improve, and its pre-specified
-diagnostic explains why. Six of sixteen temporal channels accumulate less than
-$0.1$ rad over the $32$ training frames, so reallocating them changes in-window
-phase coverage rather than imposing the text-model crossover.
-
-Extrapolation provides the sharpest present identification of $z$. The same
-coordinate also changes which phase scales are available inside the original
-window. LeRoPE reports in-window gains
-from learned non-geometric tables; our fixed-support geometry and closed-form
-construction provide complementary ways to analyse and instantiate the same
-broader design space. Together they make joint native-window and long-range
-allocation a natural next design objective.
+training-frame and extrapolated-frame MSE improve ($-21\%$ on training frames
+and $-35\%$ on far extrapolated frames), and its pre-specified diagnostic
+connects the gain to in-window phase coverage. Together with LeRoPE's learned
+in-window allocations, these results make a single zero-training allocation
+that itself improves Native-window and long-range capability---rather than
+preserving the former through routing---the natural next method direction.
 
 The practical consequence is that a finite RoPE table should be specified by
 both its sampled support and its interior allocation. A shared base, endpoint,
 or pair count does not by itself define a matched finite table. Treating $z$ as
 an explicit design object makes allocation measurable and controllable across
-training, adaptation, and deployment; the exact geometry supplies the basis
-diagnosis, and the controlled interventions establish its behavioural
-consequences.
+training, adaptation, and deployment.

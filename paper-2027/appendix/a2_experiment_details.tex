@@ -21,21 +21,25 @@ experimental unit, and endpoint.}
 \label{tab:evidence-map}
 \centering
 \small
-\resizebox{\linewidth}{!}{%
-\begin{tabular}{@{}llllll@{}}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{@{}
+  >{\raggedright\arraybackslash}p{0.19\linewidth}
+  >{\raggedright\arraybackslash}p{0.41\linewidth}
+  >{\raggedright\arraybackslash}p{0.30\linewidth}@{}}
 \toprule
-Role & Model/regime & Intervention & Unit & Endpoint & Appendix \\
+Role & Model/regime and intervention & Unit, endpoint, and appendix \\
 \midrule
-Allocation identification & 151.9M scratch & fixed support, $30$ interiors & 3 training seeds & tail NLL & \ref{sec:exact-range-control} \\
-Shape/configuration breadth & 50.9M factorial & fixed support, 5 allocations & 12 configs $\times$ 3 seeds & weighted OOD NLL & \ref{sec:exact-range-factorial} \\
-Scarce rotary budget & 432M MLA-style & Geo/\evq{}, $K{=}16$ & 3 training seeds & PPL & \ref{sec:mla-results} \\
-Full-parameter scale & 750M/1.485B & continued/from-init Geo/\evq{} & one matched pair each & PPL/retrieval & \ref{sec:larger-scale-supporting}/\ref{sec:olmo2-1b} \\
-Frozen allocation & OLMo/Qwen & same support and amplitude & 20 rows/task & RULER & \ref{sec:frozen-fixed-support} \\
-Adaptation/source use & 1.485B/8B & matched LoRA/source block & one trained pair & QA/RULER/NLL & \ref{sec:olmo2-1b}/\ref{sec:llama8b} \\
-Cross-modal scope & 129.6M video DiT & temporal Geo/\evq{} & 1 training seed & denoising MSE & \ref{sec:video-dit} \\
+Allocation identification & 151.9M scratch; fixed support, $30$ interiors & 3 training seeds; tail NLL; App.~\ref{sec:exact-range-control} \\
+Co-adaptation replication & 151.9M frozen crossing; weights $\times$ runtime table & 2 training seeds; tail NLL; App.~\ref{sec:crossing-151m} \\
+Shape/configuration breadth & 50.9M factorial; fixed support, 5 allocations & 12 configs $\times$ 3 seeds; weighted OOD NLL; App.~\ref{sec:exact-range-factorial} \\
+Scarce rotary budget & 432M MLA-style; Geo/\evq{}, $K{=}16$ & 3 training seeds; PPL; App.~\ref{sec:mla-results} \\
+Full-parameter scale & 750M/1.485B; continued/from-init Geo/\evq{} & one comparison each; PPL/retrieval; Apps.~\ref{sec:larger-scale-supporting}/\ref{sec:olmo2-1b} \\
+Frozen allocation & OLMo/Qwen; same support and amplitude & 20 rows/task; RULER; App.~\ref{sec:frozen-fixed-support} \\
+Zero-training deployment & OLMo; frozen long table, gain, session route & fixed checkpoint/rows; NLL/RULER/F1; App.~\ref{sec:frozen-fixed-support} \\
+Adaptation/source use & 1.485B/8B; matched LoRA/source block & one trained pair; QA/RULER/NLL; Apps.~\ref{sec:olmo2-1b}/\ref{sec:llama8b} \\
+Cross-modal scope & 129.6M video DiT; temporal Geo/\evq{} & 1 training seed; denoising MSE; App.~\ref{sec:video-dit} \\
 \bottomrule
 \end{tabular}
-}
 \end{table}
 
 Table~\ref{tab:hyperparams} lists the training hyperparameters shared across
@@ -106,8 +110,9 @@ principle in a $129.6$M video diffusion transformer with bidirectional attention
 and 3D RoPE on Oscillating Moving MNIST
 \citep{srivastava2015unsupervised}. Training uses 32 frames; evaluation uses
 128 frames ($4\times$) under the same fixed temporal range transform in both
-arms. The seed-42 Geo and \evq{} ($\tau{=}1.5$) branches are trained in the
-same head-to-head run.
+arms. The seed-42 Geo and \evq{} ($\tau{=}1.5$) branches are trained for
+$15{,}000$ steps in the same head-to-head run. The denoising endpoint uses
+noise level $t{=}0.5$ and the same $256$ evaluation videos for both arms.
 
 Table~\ref{tab:dit-h2h} reports the matched comparison. \evq{} reduces
 denoising MSE by $21\%$ on training frames, $16\%$ over all extrapolated
@@ -115,7 +120,9 @@ frames, and $35\%$ on far extrapolated frames, extending the scope check to
 bidirectional 3D RoPE.
 
 \begin{table}[ht]
-\caption{DiT head-to-head evaluation (129.6M, seed 42, bidirectional attention, 3D RoPE). Values are denoising MSE at $t{=}0.5$.}
+\caption{DiT head-to-head evaluation (129.6M, seed 42, $15{,}000$ steps,
+256 evaluation videos, bidirectional attention, 3D RoPE). Values are denoising
+MSE at $t{=}0.5$.}
 \label{tab:dit-h2h}
 \centering
 \small

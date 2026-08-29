@@ -242,6 +242,37 @@ class RepositoryNavigationTests(unittest.TestCase):
         self.assertNotIn("leave-one-band-out", handoff)
         self.assertNotIn("The only active research implementation step", handoff)
 
+    def test_manuscript_cold_start_preserves_author_doctrine(self):
+        narrative = (ROOT / "paper-2027" / "NARRATIVE_GUIDE.md").read_text(
+            encoding="utf-8"
+        )
+        for required in (
+            "## Non-negotiable author doctrine",
+            "## Claims we make—and questions the paper does not need to answer",
+            "## Future-session stop rules",
+            "every arbitrary non-geometric $z$",
+            "Treat controls as scientific instruments, not opponents",
+            "If it cannot answer all five",
+        ):
+            self.assertIn(required, narrative)
+
+        index = (ROOT / "INDEX.md").read_text(encoding="utf-8")
+        brief = (ROOT / "paper-2027" / "REVISION_BRIEF.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(
+            "### 6.2 投稿后的第一优先级：冻结 checkpoint 零训练优化",
+            index,
+        )
+        self.assertNotIn(
+            "下一项有决策价值的研究协议只有 **matched-content phase 2x2**",
+            index,
+        )
+        self.assertIn(
+            "zero-training allocation\noptimization first, matched LoRA research second",
+            brief,
+        )
+
     def test_root_routing_links_resolve(self):
         pattern = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
         for doc in (

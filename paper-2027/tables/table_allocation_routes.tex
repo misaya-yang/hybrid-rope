@@ -1,0 +1,34 @@
+\begin{table}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.0pt}
+\renewcommand{\arraystretch}{1.02}
+\caption{\textbf{From-training and system breadth.} Geo/\evq{} entries are
+reported within each protocol; $\Delta$NLL is \evq{} minus Geo. Rows have
+different experimental units and endpoints and are not pooled. The allocation
+rule is the intended scientific intervention; causal attribution is owned by
+the fixed-support studies, while these rows establish stage-specific
+persistence.}
+\label{tab:allocation-routes}
+\begin{tabular}{@{}p{0.18\linewidth}p{0.18\linewidth}p{0.40\linewidth}p{0.16\linewidth}@{}}
+\toprule
+Protocol (unit) & Original window & Longer positions / capability & Maximum role \\
+\midrule
+$432$M MLA, $K{=}16$ (3 seeds)
+  & PPL $35.4/35.8$ at $8$K
+  & PPL $138.8/95.6$ at $16$K & scarce-channel system \\
+$750$M continuation (1 pair, seed 42)
+  & PPL $22.0/22.3$ at $4$K
+  & PPL $45.1/24.4$ at $16$K; AR exact $0/77.5\%$ at $8$K
+  & persistence / capability \\
+$1.485$B from initialisation (1 same-init comparison)
+  & $\Delta$NLL $+0.0724/+0.0381$ at $2/4$K
+  & $\Delta$NLL $-0.0437/-0.1351$ at $8/16$K
+  & pretraining-scale persistence \\
+$129.6$M video DiT (seed 42)
+  & train-frame MSE $-21\%$
+  & all/far extrapolated MSE $-16\%/-35\%$
+  & cross-modal breadth \\
+\bottomrule
+\end{tabular}
+\end{table}

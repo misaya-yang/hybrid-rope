@@ -51,19 +51,64 @@ redundancy. Shannon effective rank and log-determinant retain higher-order
 multi-subspace dependence on the full spectrum.
 
 \begin{proof}[Proof of Proposition~\ref{prop:collapse}]
-With $t=\Delta/L$ and $x=\omega L$, $\cos(xt)=1-x^2t^2/2+O(x^4)$ and
-$\sin(xt)/x=t-x^2t^3/6+O(x^4)$, so after rescaling the second coordinate the
-basis of $V_\omega$ tends to $\{1,\Delta\}$. Substituting these expansions into
-\eqref{eq:cross-gram} and whitening, the leading deficit between two slow
-subspaces is $2-\|Q_{x,y}\|_F^2=\frac{19}{12600}(x^2-y^2)^2+O(\epsilon^6)$,
-where $\epsilon=\max\{|x|,|y|\}\to0$;
-numerically at $x{=}0.05,y{=}0.10$ the exact-to-leading ratio is $1.00058$. For
-the softmax metric with fixed $p$, $F=\operatorname{diag}(p)-pp^\top$ satisfies $F\mathbf1=0$,
-so constants are annihilated; centring by $\mathbb E_p$ and rescaling gives
-$\overline{\sin(\omega\Delta)}/\omega\to\Delta-\mathbb E_p\Delta$ and
-$-2\overline{\cos(\omega\Delta)}/\omega^2\to\Delta^2-\mathbb E_p\Delta^2$,
-which span the centred limit whenever $p$ has nondegenerate support on at least
-three distances.
+Put $t=\Delta/L$, $x=\omega L$, and use $\theta=x^2$ as the local parameter.
+The rescaled pair has the analytic basis
+\begin{align}
+u_1(\theta,t)&=\cos(\sqrt\theta\,t)
+ =1-\tfrac12\theta t^2+O(\theta^2),\\
+u_2(\theta,t)&=\frac{\sin(\sqrt\theta\,t)}{\sqrt\theta}
+ =t-\tfrac16\theta t^3+O(\theta^2).
+\label{eq:slow-basis-expansion}
+\end{align}
+Thus $V_\omega\to V_0=\operatorname{span}\{1,\Delta\}$.  The fourth-order
+coefficient follows by retaining the part of the first perturbation transverse
+to $V_0$, rather than comparing the unwhitened Taylor coefficients.  Under the
+uniform measure on $t\in[0,1]$,
+\begin{align}
+\Pi_0^\perp t^2&=p_2(t):=t^2-t+\tfrac16,\\
+\Pi_0^\perp t^3&=p_3(t):=t^3-\tfrac9{10}t+\tfrac15,
+\label{eq:slow-residual-polynomials}
+\end{align}
+where $\Pi_0^\perp$ is the $L_2[0,1]$ projection off
+$\operatorname{span}\{1,t\}$.  In the base $[1,t]$, its Gram and the residual
+perturbation Gram are
+\begin{equation}
+G_0=
+\begin{bmatrix}1&1/2\\[1pt]1/2&1/3\end{bmatrix},\qquad
+M=
+\begin{bmatrix}
+\langle-p_2/2,-p_2/2\rangle&\langle-p_2/2,-p_3/6\rangle\\
+\langle-p_3/6,-p_2/2\rangle&\langle-p_3/6,-p_3/6\rangle
+\end{bmatrix}
+=\begin{bmatrix}1/720&1/1440\\[1pt]1/1440&1/2800\end{bmatrix}.
+\label{eq:slow-residual-gram}
+\end{equation}
+The squared chordal distance between the two nearby planes is therefore
+\begin{equation}
+2-\lVert Q_{x,y}\rVert_F^2
+=(x^2-y^2)^2\operatorname{tr}(G_0^{-1}M)+O(\epsilon^6)
+=\frac{19}{12600}(x^2-y^2)^2+O(\epsilon^6),
+\label{eq:slow-collapse-expanded}
+\end{equation}
+with $\epsilon=\max\{|x|,|y|\}\to0$.  The exact coefficient is reproduced
+with rational polynomial inner products by
+\texttt{scripts/analysis/full\_rope\_collision\_audit.py}; at
+$x{=}0.05,y{=}0.10$ its analytic Gram gives exact/leading ratio $1.00058$.
+
+For the softmax metric with fixed $p$,
+$F=\operatorname{diag}(p)-pp^\top$ satisfies $F\mathbf1=0$, so the constant
+direction is annihilated before whitening.  Writing
+$\overline h=h-\mathbb E_p h$, the same expansion gives
+\begin{equation}
+\frac{\overline{\sin(\omega\Delta)}}{\omega}
+ \longrightarrow \Delta-\mathbb E_p\Delta,
+\qquad
+-\frac{2\overline{\cos(\omega\Delta)}}{\omega^2}
+ \longrightarrow \Delta^2-\mathbb E_p\Delta^2.
+\end{equation}
+These functions span the centred limit whenever $p$ has nondegenerate support
+on at least three distances.  This is a limit for a declared fixed measure; it
+does not identify which slow channels a trained model uses.
 \end{proof}
 
 The reported $r_2{=}2.00$ for the $23$ slow pairs uses the standard
@@ -106,32 +151,126 @@ empirical protocol.
 
 The budget identity is an exact account of positional dimension under its
 separation prior. A second requirement is where that dimension is placed across
-scales. The distinction is already visible in an exact construction.
+scales.  The distinction is already visible in an exact construction that also
+identifies the complete parity class omitted by the usual $2\pi/L$ Fourier
+description.
 
-\begin{lemma}[Full in-window rank can coexist with exact out-of-window aliasing]
-\label{lem:fourier-alias}
-Let $n_1,\ldots,n_K$ be distinct positive integers and set
-$\omega_k=2\pi n_k/L$. Under $\Delta\sim\mathrm{Unif}[0,L]$, the block-whitened
-correlation Gram of the corresponding full sin/cos pairs is $\Gamma=I_{2K}$, hence
-$r_2(\Gamma)=2K$. Nevertheless the complete positional feature map satisfies
-$\Phi(\Delta+L)=\Phi(\Delta)$ for every $\Delta$.
-\end{lemma}
+\begin{proposition}[Parity-lattice orthogonality and recurrence]
+\label{prop:parity-lattice}
+Let $a_1,\ldots,a_K$ be distinct positive integers of one parity and set
+\begin{equation}
+\omega_k=\frac{\pi a_k}{L}.
+\label{eq:parity-lattice}
+\end{equation}
+Under $\Delta\sim\mathrm{Unif}[0,L]$, the $K$ full sin/cos subspaces are
+exactly mutually orthogonal: their block-whitened Gram is
+$\Gamma=I_{2K}$ and $r_2(\Gamma)=2K$.  If support is free but restricted to
+$0<\omega\le1$, the largest same-parity class in this construction has
+\begin{equation}
+K_{\mathrm{par}}(L)
+=\left\lceil\frac{\lfloor L/\pi\rfloor}{2}\right\rceil
+\label{eq:parity-capacity}
+\end{equation}
+pairs.  The resulting feature map is recurrent: for even $a_k$,
+$\Phi_\Omega(\Delta+L)=\Phi_\Omega(\Delta)$; for odd $a_k$,
+$\Phi_\Omega(\Delta+L)=-\Phi_\Omega(\Delta)$ and hence
+$\Phi_\Omega(\Delta+2L)=\Phi_\Omega(\Delta)$.
+\end{proposition}
 
 \begin{proof}
-Fourier orthogonality on $[0,L]$ makes the sine and cosine functions at
-distinct integer harmonics mutually orthogonal, while each nonzero harmonic
-has self-Gram $\tfrac12 I_2$. Block whitening therefore produces the identity
-Gram and attains the full nominal rank. For every $k$,
-$e^{i\omega_k(\Delta+L)}=e^{i\omega_k\Delta}e^{i2\pi n_k}
-=e^{i\omega_k\Delta}$, proving the period-$L$ alias for all pairs jointly.
+For $i\ne j$, same parity makes both $a_i-a_j$ and $a_i+a_j$ nonzero even
+integers.  Consequently
+\begin{equation}
+(\omega_i\!\mp\!\omega_j)L=\pi(a_i\!\mp\!a_j)\in2\pi\mathbb Z,
+\end{equation}
+so every entry of the cross-Gram in~\eqref{eq:cross-gram} vanishes:
+$a((\omega_i\mp\omega_j)L)=0$ and
+$b_\star((\omega_i\mp\omega_j)L)=0$.  Likewise
+$2\omega_iL=2\pi a_i$ gives $S_{\omega_i}=\tfrac12I_2$.
+Thus the unwhitened Gram is $\tfrac12I_{2K}$ and block whitening gives
+$\Gamma=I_{2K}$.  Among the integers
+$1,\ldots,\lfloor L/\pi\rfloor$, the larger parity class has
+$\lceil\lfloor L/\pi\rfloor/2\rceil$ elements, proving
+\eqref{eq:parity-capacity} for this construction.  Finally,
+$e^{i\omega_k(\Delta+L)}=(-1)^{a_k}e^{i\omega_k\Delta}$; the common parity
+gives the stated period or antiperiod, and every antiperiodic table repeats
+after $2L$.
 \end{proof}
 
-Lemma~\ref{lem:fourier-alias} separates two design questions. Theorem~\ref{thm:budget}
-measures how many distinct positional directions a finite table supplies over
-the chosen interval; multiscale coverage is a separate criterion for how those
-directions span separations beyond one interval. The fixed-support experiments evaluate
-that allocation with trained models, while Table~\ref{tab:coadapt} shows why the
-learned coefficients must be kept with the basis that trained them.
+Proposition~\ref{prop:parity-lattice} attains the algebraic rank maximum on the
+declared interval while imposing an exact recurrence just outside it.  It does
+not say that $K_{\mathrm{par}}$ is a global capacity over arbitrary frequencies,
+nor does it survive a change of measure: the causal separation histogram is
+triangular rather than uniform and does not make the same lattice orthogonal.
+The exact parity construction and the small-model checks are reproduced by
+\texttt{analysis/full\_rope\_audit/verify\_small\_models.py}; the uniform-versus-causal
+measure comparison is exposed by
+\texttt{scripts/analysis/third\_axis\_ceiling.py --decompose}.  These are static
+basis statements, not LM-quality or extrapolation predictions.
+
+\subsection{Two static ordering counterexamples}
+\label{sec:static-counterexamples}
+
+Even within a fixed declared measure, a cheaper static proxy need not order
+tables like the full basis, and an ordering at one interval need not persist at
+another.  The following two finite tables are existence counterexamples; no
+claim of continuous global optimisation is needed.
+
+\paragraph{Cosine-only collision can choose the lower-rank table.}
+Use $L{=}4096$, $b{=}500{,}000$, $K{=}64$, continuous uniform
+$\Delta\in[0,L]$, and pin both physical endpoints to
+$[2{\times}10^{-6},1]$.  Let $A$ be the best-found schedule returned by the
+declared heuristic for cosine-only collision and $B$ the corresponding
+best-found schedule for full-subspace collision, using their distinct
+harmonic-augmented candidate pools.  The cosine proxy prefers $A$,
+\begin{equation}
+C_{\cos}(A)=2.62\times10^{-9}
+ < 1.44\times10^{-8}=C_{\cos}(B),
+\end{equation}
+but the phase-invariant block-whitened basis has the opposite order,
+\begin{equation}
+r_2(A)=64.48 < 128.00=r_2(B).
+\label{eq:cosine-order-counterexample}
+\end{equation}
+Here $C_{\cos}$ is the mean squared normalised cosine--cosine overlap.  The
+counterexample isolates why one phase slice cannot replace the full two-plane
+object: a small cosine overlap can hide redundancy in the sine and cross terms.
+
+\paragraph{Full-subspace collision can reverse across lengths.}
+Under the same base, endpoints, and training-interval convention, the tracked
+counterexample search emits two fixed $K{=}16$ tables $A$ and $B$.  Writing
+$C_M$ for their mean phase-invariant full-subspace collision when the uniform
+measure spans $[0,M]$, their ordering is
+\begin{align}
+C_L(A)&=0.45837 < 0.61695=C_L(B),\\
+C_{2L}(A)&=0.45834 > 0.41132=C_{2L}(B),\\
+C_{4L}(A)&=0.45830 > 0.24763=C_{4L}(B).
+\label{eq:length-order-counterexample}
+\end{align}
+Recomputing the same schedules on discrete uniform separations
+$\Delta=0,\ldots,M-1$ preserves the reversal.  Thus even the correct
+phase-invariant collision is conditional on the declared interval; minimising
+it at $L$ does not supply an extrapolation ordering at $2L$ or $4L$.
+
+\paragraph{Numerical owner and reproduction convention.}
+The digits in
+Eqs.~\eqref{eq:cosine-order-counterexample}--\eqref{eq:length-order-counterexample}
+are frozen outputs produced by
+\path{scripts/analysis/full_rope_collision_audit.py} with
+\texttt{--length 4096 --base 500000 --candidate-grid 1025
+--random-schedules 3000}; the counterexample RNG seed is $20260819$ and the
+JSON stores each schedule and its float64 hash.  These are best-found points
+returned by the declared greedy-plus-exchange heuristic in metric-specific
+candidate pools, not certified pool or continuous optima.  The first
+inequality is also reported with raw full entropy rank $93.44<120.03$; the
+stable-rank ordering above is the quantity governed by
+Theorem~\ref{thm:budget}.
+
+Together, the parity recurrence and the ordering reversals separate three
+questions: dimension over a declared interval, multiscale coverage outside it,
+and behaviour after training.  The fixed-support experiments evaluate the last
+question, while Table~\ref{tab:coadapt} shows why learned coefficients must stay
+with the basis that trained them.
 
 \subsection{Post-hoc transplant obstruction}
 \label{sec:obstruction-proof}
@@ -339,106 +478,75 @@ $\rho(0)=\tau\coth\tau$ into the theorem.
 The identity checks the two surrogate energy terms exactly; trained-loss
 evidence is supplied by \S\ref{sec:experiments}.
 
-\subsection{From scaling structure to an operating default}
+\subsection{Assumption-bound operating calculation and finite tested receipt}
 \label{sec:lambda-cv}
 \label{sec:tau-scaling}
 
-The implementable reference used in standard full-RoPE text experiments is
+The variational theorem selects the Cosh \emph{shape}; it does not select a
+finite strength for every model or protocol.  The implementable reference used
+in the standard full-RoPE text experiments is
 \begin{equation}
 \tau = c\,\dhd/\sqrt{\Ltr},\qquad
 u_k = (k+\tfrac12)/K,\qquad
 \omega_k^{\mathrm{EVQ}} = b^{-\phi_k(\tau)} .
 \label{eq:evq-practical}
 \end{equation}
-Here $\dhd$ is the full-RoPE head width and $c{=}1$ is fixed before training
-for the reported zero-search reference; realised $\tau$, grid, and endpoint
-conventions are recorded with each protocol.
+Here $c{=}1$ is the pre-training zero-search convention, not a fitted optimum;
+each protocol records its realised $\tau$, grid, support, and rotary width.
 
-The post-softmax model uses
-$\mathcal{F}(\tau)=\tfrac12S_{\chi^2}(\tau)-\lambda U(\tau,L)$, where
-$\lambda{>}0$ is a fixed trade-off weight, with
-$S_{\chi^2}(\tau)=\tau^4/(45d_{\mathrm{head}})+O(\tau^6)$ and
-$U(\tau,L)=(d_{\mathrm{head}}/L)[Q_0(L,b)+\tau^2Q_1(L,b)+O(\tau^4)]$.
-Its leading stationary balance is
+\paragraph{Assumption-bound calculation.}
+The scaling argument uses four explicit modelling assumptions: (i) the
+pure-tether Cosh family is varied only through $\tau$; (ii) full-RoPE MHA has
+$d_{\mathrm{rot}}=\dhd$; (iii) the reference post-softmax distribution is
+diffuse, $p_0=1/L$; and (iv) a fixed trade-off $\lambda>0$ compares a normalised
+channel-load stiffness with a specified phase-variance utility, with
+$Q_1(L,b)>0$.  Under those assumptions and at small $\tau$,
+\begin{align}
+S_{\chi^2}(\tau)
+&:=\frac1{\dhd}\int_0^1\frac{(1-\rho_\tau(\phi))^2}{\rho_\tau(\phi)}\,d\phi
+=\frac{\tau^4}{45\dhd}+O(\tau^6),\\
+U(\tau,L)
+&=\frac{\dhd}{L}\left[Q_0(L,b)+\tau^2Q_1(L,b)+O(\tau^4)\right],
+\end{align}
+where
 \begin{equation}
-\tau_*^2=45\lambda Q_1(L,b)\frac{d_{\mathrm{head}}^2}{L}.
+\begin{aligned}
+Q_0(L,b)&=\int_0^1 q(Lb^{-\phi})\,d\phi,\\
+Q_1(L,b)&=\int_0^1\!\left(\frac{(1-\phi)^2}{2}-\frac16\right)
+q(Lb^{-\phi})\,d\phi,\\
+q(x)&=\frac12+\frac{\sin(2x)}{4x}
+      -\left(\frac{\sin x}{x}\right)^2.
+\end{aligned}
+\end{equation}
+Stationarity of
+$\mathcal F(\tau)=\tfrac12S_{\chi^2}(\tau)-\lambda U(\tau,L)$ gives only the
+leading balance
+\begin{equation}
+\tau_*^2=45\lambda Q_1(L,b)\frac{\dhd^2}{L},
+\qquad
+c_{\mathrm{loc}}(L,b,\lambda)=\sqrt{45\lambda Q_1(L,b)}.
 \label{eq:tau-leading-balance}
 \end{equation}
-Thus the model supplies the powers of $d_{\mathrm{head}}$ and $L$; its local
-coefficient $c_{\mathrm{loc}}(L,b,\lambda)=\sqrt{45\lambda Q_1(L,b)}$ depends
-on the chosen utility, base, and trade-off weight. Setting $c{=}1$ in
-Eq.~\eqref{eq:evq-practical} is the deployed zero-search convention fixed
-before training, rather than an estimate fitted to each configuration.
+Thus $\dhd/\sqrt L$ is an assumption-bound scaling factor, while the
+coefficient remains utility-, base-, and convention-dependent.  The reported
+experiments use the exact Cosh warp, including where small-$\tau$ truncation is
+not accurate; Eq.~\eqref{eq:tau-leading-balance} is not a behavioural selector,
+a support-invariance statement, or a derivation of $c{=}1$.
 
-Here
-\[
-q(x)=\tfrac12+\frac{\sin(2x)}{4x}-\left(\frac{\sin x}{x}\right)^2
-=\operatorname{Var}_{t\sim U[0,1]}[\cos(xt)]
-\]
-and
-$Q_0(L,b)=\int_0^1q(Lb^{-\phi})\,d\phi$ and
-$Q_1(L,b)=\int_0^1\eta(\phi)q(Lb^{-\phi})\,d\phi$. This specified
-phase-variance utility supplies the scaling model; the exact oscillatory
-collision objective and trained-transformer loss are evaluated separately.
-
-The finite-$\tau$ evidence evaluates a configuration-independent zero-search
-prior. In a staged 99-run study, the
-default beats the midpoint-discretised Geo baseline in $7/9$ configuration
-means and $18/27$ seed pairs. The evaluated neighbours use the discrete ratios
-$0.75\times$, $1.25\times$, or $1.5\times$ of the formula; the independent
-exact-range factorial tests $0.75\times$, $1.00\times$, and $1.25\times$.
-Their ordering varies across configurations. These tested multipliers sample
-the formula point and its registered neighbours. The evidence supports $c{=}1$ as a useful
-zero-search prior relative to that Geo baseline. The full run matrix and
-statistical units are recorded in
-\texttt{data/curated/phase16\_99run\_manifest.csv}; the supplement includes the
-runner \texttt{scripts/core\_text\_phases/phase16\_formula\_optimality\_sweep.py}.
-This discrete design establishes the tested operating prior, not a continuous
-basin or per-configuration optimum.
-
-\subsection{Post-softmax operating-point model}
-\label{sec:softmax-transport}
-
-The shape surrogate and the operating-point model answer different questions.
-The surrogate selects the Cosh family; the proposition below gives the scaling
-structure used to set its finite strength.
-
-\begin{proposition}[Semi-analytic operating-point scaling]
-\label{prop:softmax-transport}
-On the pure-tether family, assuming $Q_1(L,b)>0$ and a diffuse post-softmax
-baseline $p_0{=}1/L$, the Pearson-$\chi^2$ channel-load stiffness and the
-post-softmax transport utility admit small-$\tau$ expansions
-$S_{\chi^2}(\tau) = c_S\tau^4/\dhd + O(\tau^6)$ with $c_S{=}\tfrac{1}{45}$, and
-$U(\tau,L) = (\dhd/L)[Q_0 + \tau^2 Q_1(L,b) + O(\tau^4)]$, where
-$Q_1(L,b) = \int_0^1 \eta(\phi)q(Lb^{-\phi})d\phi$,
-$\eta(\phi) = (1{-}\phi)^2/2 - 1/6$ and
-$q(x) = 1/2 + \sin(2x)/(4x) - (\sin x/x)^2$. The leading-order stationary point
-of $\mathcal{F}(\tau) = \tfrac12 S_{\chi^2}(\tau) - \lambda U(\tau,L)$ satisfies
-\[
-\tau_*^2 = 45\lambda Q_1(L,b)\cdot\frac{\dhd^2}{L},
-\qquad \tau_* \propto \frac{\dhd}{\sqrt{L}}.
-\]
-\end{proposition}
-
-The explicit $\dhd/\sqrt{L}$ factor is modulated by $Q_1(L,b)$, so this is a
-scaling structure rather than a pure power law, and the prefactor
-$c_{\mathrm{loc}}(L,b,\lambda){=}\sqrt{45\lambda Q_1(L,b)}$ remains
-convention- and protocol-dependent. The proposition supplies a small-$\tau$ scaling model; the
-deployed configurations near $\tau{=}4$ use the exact Cosh warp. The
-trained-model controls in App.~\ref{sec:identification-details} evaluate the
-independently fixed empirical default $c{=}1$.
-
-\subsection{Channel-load motivation for Pearson \texorpdfstring{$\chi^2$}{chi2}}
-\label{sec:chi2-load}
-
-\paragraph{Normalization convention.} Throughout this paper, $S_{\chi^2}(\tau)$ denotes the $d_{\mathrm{head}}$-normalized stiffness $S_{\chi^2}(\tau){:=}\frac{1}{d_{\mathrm{head}}}\!\int_0^1\!(1{-}\rho_\tau)^2/\rho_\tau\,d\phi$, with leading expansion $\tau^4/(45\,d_{\mathrm{head}}){+}O(\tau^6)$ consistent with Proposition~\ref{prop:softmax-transport}. Identities below that produce a bare $\tau^4/45$ leading coefficient apply to $d_{\mathrm{head}}\,S_{\chi^2}(\tau)$ (the un-normalized integral); the $d_{\mathrm{head}}$ factor enters via the surrogate diagonal $\alpha{=}1/d_{\mathrm{rot}}$ ($={}1/d_{\mathrm{head}}$ for MHA via \S\ref{sec:tau-scaling}; ${=}1/d_{\mathrm{rot}}$ for compressed-RoPE MLA via \S\ref{sec:mla-results}).
-
-\paragraph{Channel-load axioms.} Inverse-CDF quantization places channels with cell width $\ell(\phi){=}1/\rho(\phi)$ and samples channels according to $dP_\rho{=}\rho\,d\phi$. Under the modeling axioms (i)~channel-measure averaging, (ii)~load $\ell$ as the primitive local quantity, (iii)~second central moment, (iv)~uniform density has zero stiffness, (v)~local additivity, the canonical load-variance penalty is
-\begin{equation}
-S(\rho) \;=\; \mathrm{Var}_{\phi\sim\rho\,d\phi}\!\left[\,\tfrac{1}{\rho(\phi)}\,\right] \;=\; \int_0^1 \frac{(1-\rho(\phi))^2}{\rho(\phi)}\,d\phi \;=\; S_{\chi^2}(\rho).
-\label{eq:chi2-load-identity}
-\end{equation}
-Under the stated axioms, this is the canonical load-variance penalty.
+\paragraph{Finite tested receipt.}
+The staged study contains $99$ completed runs: the fixed $c{=}1$ reference
+beats the midpoint-discretised Geo baseline under runner-defined weighted
+extrapolation NLL in $7/9$ configuration means and $18/27$ paired seeds.  Its
+registered neighbours are finite multiplier arms
+at $0.75\times$, $1.25\times$, or $1.5\times$; the independent exact-range
+factorial tests $0.75\times$, $1.00\times$, and $1.25\times$, and their order
+varies by configuration.  The numeric owner is
+\texttt{data/curated/phase16\_99run\_manifest.csv}; the tracked reproduction
+entrypoint is
+\texttt{scripts/core\_text\_phases/phase16\_formula\_optimality\_sweep.py}.
+These finite points support a fallible zero-search operating prior relative to
+the tested Geo baseline.  They do not establish a continuous basin, basin
+bounds, interpolation guarantees, near-optimality, or a global optimum.
 
 \subsection{Discrete-channel transport gap under finite channel counts}
 \label{sec:discrete-continuous-gap}

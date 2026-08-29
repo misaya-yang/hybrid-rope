@@ -244,11 +244,13 @@ Exact invocations live in `README.md` and are not repeated here. The rules:
 
 - Machine profiles are distinct. The **work machine** owns the canonical Conda
   `aidemo` environment for Python/PyTorch/pytest and release validation. The
-  low-configuration personal PC is for reading, documentation, planning, and
-  lightweight static or standard-library checks; `aidemo` is not expected
-  there. Do not install or recreate the work-machine environment on the PC
-  without an explicit request. Mark canonical tests/builds skipped on that
-  machine rather than reporting the absent environment as a repository failure.
+  low-configuration personal PC may also run local LaTeX/Tectonic compilation,
+  format gates, and visual PDF iteration in addition to reading, documentation,
+  planning, and lightweight static or standard-library checks; `aidemo` is not
+  expected there. Do not install or recreate the work-machine environment on
+  the PC without an explicit request. Mark unavailable canonical tests,
+  packaging, or cross-environment validation skipped rather than reporting the
+  absent environment as a repository failure.
 - Run supplement packaging from the repository root, through the curated
   packager, never a repository-root archive.
 - `compile.sh` verifies format/build health only, not scientific evidence.

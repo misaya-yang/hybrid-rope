@@ -262,22 +262,33 @@ experiment plan 或旧 line number 继承任务。
 reviewer ceiling、现有证据缺什么、精确预算/owner/stop condition，并获得该次运行的
 显式授权。
 
-### 6.2 投稿后的第一识别桥
+### 6.2 投稿后的第一优先级：冻结 checkpoint 零训练优化
 
-下一项有决策价值的研究协议只有 **matched-content phase 2x2**，不是新增模型规模：
+作者的现行决定是：当前论文冻结后，不再以大改正文或扩大 from-scratch 训练为主；
+后续研究优先优化 **zero-training frozen-checkpoint allocation**，LoRA 排在其后。
 
-- 固定 checkpoint、token、顺序、causal mask、answer、decoder 和 rows；
-- 用 contiguous position IDs 与 virtual-gap IDs 改变相对相位；
-- 交叉 Native 与一个预先冻结的 same-support 候选表；
-- 在同一 rows 上同时报告 official task score 与 answer-token NLL。
+第一目标不是再证明 allocation “存在”，而是在冻结模型、零参数更新条件下找到更强、
+更简单、更可部署的 allocation：
 
-只有短条件成功、virtual gap 使 Native 退化、且候选同时恢复两个 endpoint 时，才能把
-剩余 headroom 归到 position/allocation。完整设计在
+- 当前 derived / coarse 表和 Native/long session policy 是已完成基线，不是假设；
+- 优先目标是单一 allocation 本身同时改善 Native-window 与 long-range，而不只是依赖
+  routing 保住前者；
+- pure-(z) 结论必须固定 support、operator、checkpoint、gain、routing、data 和
+  evaluation；若引入 gain 或 routing，必须另报 bundled-system 结果；
+- candidate 若使用 checkpoint-aware 信号，必须说明信号如何获得、是否 task-label-free，
+  以及如何避免把评测标签或目标长度泄漏进“通用部署”主张；
+- 新目标不得回到 §3.4 已关闭的“共享单表 + 静态 scalar score”类别；必须明确它如何
+  使用模型状态、matched behaviour 或其他新信息逃出该类；
+- 不通过训练新模型、扩大 from-scratch scale 或新增 pretraining seed 来解决该问题。
+
+matched-content phase 2x2 仍保留为**条件式诊断桥**：仅当一个 zero-training 候选的
+Native/long 行为无法区分 content failure 与 position/allocation failure，而且该判别会
+改变候选设计时才运行。它不再是自动的第一研究任务，也不是每个候选必须先支付的门票。
+其历史设计仍由
 [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826`](paper-2027/research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
 §4 和
-[`MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827`](paper-2027/research/attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md)。
-它仍是 `FROZEN_PROTOCOL_DESIGN_NOT_EXECUTED`：当前 manifest 不含专用 runner，脚本或
-preflight 的存在不构成 readiness、结果或算力授权。
+[`MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827`](paper-2027/research/attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md)
+拥有；design 文件不构成 readiness、结果或算力授权。
 
 ### 6.3 条件式研究顺序
 
@@ -285,21 +296,22 @@ preflight 的存在不构成 readiness、结果或算力授权。
 | --- | --- | --- |
 | S0 | 9 月文档治理与 current-PDF audit | 不改变科学 owner；实时状态只写 handoff |
 | S1 | 完成摘要、正文、appendix、supplement 与 submission gates | 不以旧模型评审或新增 compute 扩张范围 |
-| R1 | matched-content phase 2x2 | 投稿后、新 preflight/runner CPU contract 通过、显式 GPU 授权；完成四格即停 |
-| R1b | leave-one-band-out 频带归因 | 仅当 R1 识别出 position failure 且频带归因会改变 R2 设计；否则不运行 |
-| R2 | grouped per-layer allocation；之后才考虑 per-head | R1 阳性，并保持 matched Native/adaptation 与同一 capability endpoint |
-| R3 | 1.485B 单 checkpoint 联合小门禁 | 同时改善 in-window、far-tail 和一个 capability endpoint 才扩多 seed |
-| R4 | 多 seed、第二 checkpoint 或 8B | 前一门禁通过且获得明确硬件/预算授权 |
+| R1 | 冻结 zero-training 目标与 matched controls 冻结 | 明确 single-allocation、Native/long、likelihood/capability gates、owner 和 stop rule；不训练模型 |
+| R2 | 最小 frozen-checkpoint 候选筛选 | 先过同 rows 的 Native-window 与 far-tail likelihood；失败即停，不用下游分数救候选 |
+| R2d | matched-content phase 2x2 或 band attribution | 仅当判别会改变候选设计；不是默认前置任务 |
+| R3 | capability / downstream 确认与第二 checkpoint | 候选先通过 R2，再在冻结协议中确认至少一个 capability endpoint；扩张需单独授权 |
+| R4 | matched LoRA 深化 | 仅在 zero-training 结论稳定后进入；保持 matched adaptation，不新增 from-scratch program |
 
 protected-progressive / protected-ramp 公式扫描已退役；其分析只保留历史算术与设计
-provenance。band-attribution 是 R1 之后的条件分支，不与 R1 并列为当前队列。
+provenance。matched-content 与 band-attribution 都是 zero-training 优化中的条件式诊断，
+不与 zero-training 目标并列为独立主线。
 
 ### 6.4 生命周期与反重复
 
 - **Current owner：** 当前 TeX、handoff 标明同步状态的 PDF、§2–§3 的 canonical
   owners、current theory state。
-- **Design only：** matched-content 2x2；R1 之后才可能进入的 band attribution、
-  grouped per-layer 与后续 scale gates。
+- **Design only：** 新 zero-training candidate、matched-content 2x2，以及只有在候选
+  设计需要时才进入的 band attribution / grouped layer diagnostics。
 - **Superseded：** 8 月 narrative/revision plans、protected-ramp scanning、旧 post-GPU
   roadmap、alternating model-review workflow。它们只按需用于审计，不进入冷启动。
 - **Closed negative：** §3.4 的 owner-backed 条目；不得通过改名恢复。
@@ -353,10 +365,11 @@ uniform 测度下的精确正交格、三角测度、钉住 support 和训练后
 
 机器角色不可互换：
 
-- **工作机**拥有 Conda `aidemo`，负责 Python/PyTorch/pytest、最终论文构建、打包和
+- **工作机**拥有 Conda `aidemo`，负责 Python/PyTorch/pytest、打包和最终跨环境
   release validation；
-- **低配置个人 PC profile**负责阅读、文档、规划和轻量 static/stdlib 检查；缺少 Conda
-  是预期状态，不是 repository failure，不在此机补装工作机环境或跑重验证；
+- **低配置个人 PC profile**可负责阅读、文档、规划、LaTeX/Tectonic 本地编译、PDF
+  视觉迭代和轻量 static/stdlib 检查；缺少 Conda 是预期状态，不是 repository failure，
+  不在此机补装工作机环境、运行模型计算或用本地构建替代最终打包/跨环境回执；
 - Blackwell 规则只在现场确认是对应 GPU 机器时才应用，见
   [`RTX5090_BLACKWELL_PROFILE.md`](docs/overview/RTX5090_BLACKWELL_PROFILE.md)。
 

@@ -47,25 +47,42 @@ technical credibility, or submission validity.
 
 The paper has one identity:
 
-> A finite RoPE table has a separately identifiable interior-allocation
-> coordinate `z`. At fixed sampled support, changing `z` changes the effective
-> positional basis and trained-model behaviour; exact full-sin/cos geometry
-> explains the spectral-budget effect, and EVQ-Cosh is a closed-form
-> zero-learned-parameter construction on that coordinate.
+> Structured, regime-matched reallocation of RoPE's interior frequencies can
+> convert a fixed rotary budget into usable context. Fixed-support identification
+> of `z` is the causal foundation; the center of the paper is the large
+> zero-training, extrapolation, and tested downstream gains delivered by three
+> distinct structured-allocation routes. Exact full-sin/cos geometry explains
+> why allocation matters, while EVQ-Cosh supplies a separate closed-form
+> zero-learned-parameter training/adaptation construction.
 
 Preserve the current evidence logic:
 
-- fixed-support training and frozen-checkpoint pure-`z` interventions own the
-  causal identification;
-- fully frozen, matched-adaptation, and from-training routes are distinct
-  intervention stages and must not be pooled;
+- **fully frozen zero-training leads:** model-relative derived and coarse
+  allocations own the mature no-update result; neither is EVQ-Cosh;
+- **matched adaptation follows:** EVQ-Cosh under matched low-rank adaptation owns
+  protocol-specific length transfer, probability, routing, and causal source-use
+  results;
+- **from-training/co-adapted evidence closes the loop:** anchored EVQ-Cosh owns
+  the three-seed fixed-support identification, while MLA, 750M, the existing
+  1.485B comparison, and video-DiT retain their separate persistence, scale, and
+  modality roles;
+- the fixed-support interventions identify `z` as a real causal variable, but
+  the reviewer-facing claim concerns the tested structured schedules rather than
+  arbitrary `z` perturbations;
 - systems breadth and controlled identification are complementary, not competing
   narratives;
 - static geometry diagnoses the positional basis but does not rank trained-model
   quality;
 - EVQ-Cosh is unique only for its stated convex surrogate and is not the frozen
   derived or coarse allocation;
-- support and allocation are distinct but interacting coordinates.
+- support and allocation are distinct but interacting coordinates;
+- FMRoPE is the support-versus-allocation causal control and may use `L_target`
+  in its intended target-aware range-selection setting;
+- LeRoPE appears in Discussion as attributed learned-allocation evidence that
+  non-geometric allocation can improve in-window behaviour, not as a matched
+  comparator or validation of EVQ-Cosh;
+- the from-training evidence line stops at the completed 1.485B comparison; no
+  further from-scratch scale-up is planned.
 
 ## 3. September revision scope
 
@@ -81,13 +98,17 @@ Preserve the current evidence logic:
 
 ### P1 — reviewer path
 
-- Preserve the 30-second path: coordinate → exact geometry → controlled
-  identification → construction → consequences across intervention stages.
+- Preserve the 30-second path: structured allocation problem → mature
+  zero-training result → fixed-support identification → exact geometry and
+  separate EVQ-Cosh construction → adaptation/from-training breadth → selected
+  in-window-positive regimes.
 - Improve the title, abstract, first-page framing, figures, and paragraph order
   only when the current version leaves a material ambiguity or buries decisive
   evidence.
 - Lead with the result and attach the nearest scope needed for truth. Do not turn
   the paper into a response ledger, method tournament, or limitations inventory.
+- Keep zero-training visibly primary. Do not present fully frozen, adapted, and
+  from-training routes as three equally weighted headline methods.
 - Replace lower-leverage material when space is needed; do not stack new prose or
   fill pages for their own sake.
 
@@ -102,6 +123,15 @@ Preserve the current evidence logic:
 
 - No wholesale section reorganisation without a defect in the current reviewer
   path.
+- No abstract, Figure 1, or contribution structure centred on “arbitrary `z`
+  matters,” a generic third-coordinate claim, or unrelated counterexamples.
+- No relabelling of the frozen derived/coarse allocations as EVQ-Cosh, and no
+  statement that makes EVQ-Cosh the owner of the frozen zero-training result.
+- No portrayal of target-aware FMRoPE's use of `L_target` as an unfair baseline;
+  fixed-support identification and target-aware deployment are different
+  questions.
+- No use of LeRoPE as mechanism validation or a matched comparison; its role is
+  attributed learned-allocation evidence for in-window improvement.
 - No revival of old comparison tables, evidence-hierarchy ledgers, defensive
   clauses, stale section locators, or panel wording merely because they appeared
   in an earlier plan.
@@ -116,6 +146,13 @@ search, or paid experiment for this submission. Routine manuscript compilation,
 CPU tests, packaging, and static release checks are validation, not new
 experimental evidence.
 
+The from-training program is closed at the existing 1.485B
+same-initialisation/same-scientific-recipe comparison. Do not propose another
+from-scratch model, a larger from-initialisation scale, or extra from-scratch
+seeds as a submission or follow-up requirement. Reopening that boundary requires
+a new author decision, a durable agenda update, and explicit compute
+authorization.
+
 If a current-paper audit exposes an integrity problem that cannot be resolved
 without new experimental evidence, stop and surface it to the author. Do not
 quietly turn it into an experiment plan or weaken a different claim to conceal
@@ -126,6 +163,18 @@ it.
 Post-submission method development and follow-up experiments are not tasks in
 this brief and must not compete with the September freeze. Their durable agenda
 lives in [`../INDEX.md`](../INDEX.md) §6.
+
+Post-submission research may use separately authorized frozen-checkpoint or
+matched-adaptation protocols, but this brief does not admit a new from-scratch
+scale program. The completed 1.485B result remains the current from-training
+evidence ceiling.
+
+The author-ordered priority is frozen-checkpoint **zero-training allocation
+optimization first, matched LoRA research second**. The first target is a
+single allocation that itself improves Native-window and long-range behaviour,
+rather than preserving the former only through routing. The matched-content
+phase 2x2 and band-attribution designs are conditional diagnostics, not an
+automatic first task. [`../INDEX.md`](../INDEX.md) §6 owns the durable gates.
 
 Before any later experiment enters the research agenda, it must state:
 

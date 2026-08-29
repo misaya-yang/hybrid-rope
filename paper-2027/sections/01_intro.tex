@@ -1,12 +1,19 @@
 \section{Introduction}
 \label{sec:intro}
 
-Most RoPE optimisation is described through a scalar base, a spectral range,
-or a transform of the phases realised at longer positions. That framing leaves
-a separate finite-table choice implicit: where a head places phase resolution
-among its exactly $K=\drot/2$ rotary pairs. A scalar base determines the table
-only after geometric spacing has fixed this allocation. We separate the choices
-by writing
+A finite RoPE table has a spectral budget: its exactly $K=\drot/2$ rotary pairs
+must allocate phase resolution across scales. On a frozen billion-scale OLMo
+checkpoint, a model-relative derived
+allocation raises nine-task $16$K RULER from $0.56\%$ to $60.47\%$, while
+official Transformers YaRN scores $7.94\%$ on the same rows; a coarse
+task-label-free allocation reproduces the recovery without training or parameter
+updates. These model-relative frozen tables are separate from the \evq{}
+construction used in training and adaptation.
+
+Most RoPE optimisation is instead described through a scalar base, a spectral
+range, or a transform of the phases realised at longer positions. That framing
+leaves a separate finite-table choice implicit: where the fixed pairs place
+phase resolution inside their sampled range. We separate the choices by writing
 \begin{equation}
 x_k=-\log\omega_k=a+Rz_k,
 \qquad z_0=0,\quad z_{K-1}=1,
@@ -14,10 +21,49 @@ x_k=-\log\omega_k=a+Rz_k,
 \end{equation}
 where $k$ indexes the fixed $K$ rotary pairs, $a$ sets support location, $R$
 its span, and $z$ the normalised interior allocation; geometric RoPE fixes
-$z_k=k/(K-1)$. The third coordinate $z$
-decides which phase scales the fixed $K$ samples occupy and where resolution is
-placed. We test it with support, $K$, and the RoPE operator fixed, then derive a
-closed-form construction.
+$z_k=k/(K-1)$. Thus support $(a,R)$ and interior allocation $z$ are distinct
+coordinates: $z$ decides which phase scales the fixed samples occupy and where
+resolution is placed.
+
+We study structured allocation through three distinct intervention routes. A
+fully frozen route installs model-relative derived or coarse allocations with no
+parameter updates. Matched low-rank adaptation tests whether pretrained
+representations can exploit an \evq{} basis, yielding task-family length transfer
+at $1.485$B and causal remote-source use at $8$B. From training, weights co-adapt
+to the installed table: in a $750$M continuation, \evq{} lowers $16$K PPL from
+$45.1$ to $24.4$ and raises strict $8$K autoregressive exact retrieval from
+$0\%$ to $77.5\%$. These routes share a design principle; their estimands remain
+separate.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{fig_evidence_overview.pdf}
+  \caption{\textbf{A finite spectral budget is both identifiable and
+  actionable.} (a)~Support $(a,R)$ does not determine the interior allocation
+  $z$; the lower inset gives one representative standard-RoPE slow block, where
+  $23$ pairs ($46$ nominal dimensions) have block-whitened $r_2{=}2.00$ under
+  the stated uniform separation prior. (b)~Across three paired training seeds,
+  anchored \evq{} minus paper-faithful FMRoPE tail NLL is negative at every OOD
+  length when support is fixed and only the $30$ interiors move; allowing the
+  declared $L_{\mathrm{target}}$ to retarget support reverses every OOD sign.
+  The two conditions separate allocation from support rather than stage a
+  method race. (c)~On frozen OLMo and Qwen checkpoints, the coloured block holds
+  support, amplitude, checkpoint, rows, decoder, precision, and hardware fixed:
+  changing only $z$ produces the large zero-training RULER gains. Grey Native
+  (N) and official Transformers YaRN (Y) rows retain their own support or
+  transport identities.}
+  \label{fig:spectral-budget-overview}
+\end{figure}
+\FloatBarrier
+
+The causal foundation separates allocation from support selection. Across three
+paired $151.9$M seeds, anchored \evq{} and paper-faithful FMRoPE share sampled
+extrema and log-span while only the $30$ interiors move; every OOD length favours
+the reallocation in every seed. In a separate target-aware condition, the
+declared $L_{\mathrm{target}}$ may retarget support and the ordering reverses.
+Together the two conditions identify support and structured allocation as
+distinct but interacting controls of the same finite table
+(\S\ref{sec:exp-identify}).
 
 This distinction matters because geometric spacing is highly redundant at the
 slow end. For $L{=}4096$, $b{=}5{\times}10^5$, and $K{=}64$, the $23$ pairs with
@@ -28,63 +74,29 @@ subspace. A geometric table therefore spends more than one third of its rotary
 pairs on near-duplicate slow positional directions. This is the spectral-budget
 problem studied here.
 
-Long-context methods can change realised phases, sampled support, or interior
-placement, often more than one at once. Learned-frequency methods also show
-that the geometric exponent sequence need not remain fixed. Section~\ref{sec:related}
-classifies these interventions under the decomposition above. We isolate the
-missing variable by pinning both endpoints and the log-span, then moving only
-the interior allocation.
-
-The strongest practical consequence appears after pretraining. At matched
-support, amplitude, checkpoint, rows, and decoder, changing only $z$ raises
-OLMo nine-task $16$K RULER from $0.56\%$ to $60.47\%$, without parameter updates
-(\S\ref{sec:exp-frozen-support}). A separate fixed-support training control
-answers the causal question at model construction: across three paired
-$151.9$M seeds, moving only the $30$ interiors improves every tested OOD length
-in every seed (\S\ref{sec:exp-identify}). Together these interventions show
-that $z$ is neither a disguised base change nor a coordinate that disappears
-once weights have been trained.
-
 Optimising a convex surrogate over $z$ yields \emph{Exact Variational
 Quantization with a Cosh density} (\evq{}), a closed-form table whose
 inverse-CDF quantiles require no learned positional parameters. The solution is
 unique within that surrogate.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\linewidth]{fig_evidence_overview.pdf}
-  \caption{\textbf{Interior allocation is a causal coordinate of a finite
-  rotary budget.} (a)~Geo and anchored \evq{} share $K{=}32$,
-  operator, endpoints, and log-span; $z$ changes the phase-scale density.
-  (b)~Exact geometry: for standard RoPE at $L{=}4096$, $b{=}5{\times}10^5$,
-  and $K{=}64$,
-  the $23$ pairs with $\omega L\le1$ place more than $99.99\%$ of their
-  block-whitened trace in two eigendirections and have $r_2{=}2.00$ under the
-  stated uniform separation prior.
-  (c)~Causal identification: moving only $30$ interiors at fixed support
-  improves every tested OOD length in all three seeds. The panels respectively
-  define the coordinate, expose its geometric consequence, and isolate its
-  training-time effect.}
-  \label{fig:spectral-budget-overview}
-\end{figure}
-\FloatBarrier
-
-We test the same coordinate in three complementary regimes: fully frozen
-checkpoints, pretrained models under matched low-rank adaptation, and
-from-initialisation or continued full-parameter training. They ask whether $z$
-acts without weight updates, can be exploited after limited adaptation, and is
-learned through weight--table co-adaptation, respectively. Full and scarce
-rotary budgets and a bidirectional $3$D video DiT extend these tests across
-architectures and beyond autoregressive text (\S\ref{sec:experiments}).
+Figure~\ref{fig:spectral-budget-overview} defines the design object, separates
+the support and allocation interventions, and shows the mature zero-training
+consequence. The experiments then follow the practical order above---fully
+frozen, matched adaptation, and from training---across full and scarce rotary
+budgets and a bidirectional $3$D video DiT (\S\ref{sec:experiments}).
 
 \paragraph{Contributions.}
-(i) We expose $z$ as a third finite-RoPE coordinate---phase-resolution placement
-within fixed support and $K$---and causally identify its effect in a paired
-three-seed training intervention; an independent frozen-checkpoint pure-$z$
-intervention shows that the same coordinate remains active after pretraining.
-(ii) We give an exact phase-invariant account of the full sin/cos basis: a
+(i) We demonstrate structured allocation across three model-building stages,
+led by a zero-training mature-checkpoint intervention and supported by strong
+long-context likelihood, downstream, retrieval, and causal source-use results.
+(ii) We separate support $(a,R)$ from interior allocation $z$: a paired
+three-seed fixed-support intervention identifies allocation, while target-aware
+support retargeting reverses the tested ordering and establishes their
+interaction.
+(iii) We give an exact phase-invariant account of the full sin/cos basis: a
 spectral-budget identity, a slow-frequency collapse law, the weight--table
 co-adaptation boundary, and a frozen-transplant obstruction.
-(iii) We solve a convex allocation surrogate in closed form to obtain \evq{}
-with no learned positional parameters, and demonstrate allocation control in
-fully frozen, matched-adaptation, and from-training interventions.
+(iv) We solve a convex allocation surrogate in closed form to obtain \evq{}
+with no learned positional parameters, and test that construction across
+training and matched-adaptation regimes while keeping the separate frozen route
+explicit.

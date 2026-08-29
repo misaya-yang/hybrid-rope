@@ -1,39 +1,30 @@
 \section{Theory}
 \label{sec:theory}
 
-The interventions establish that interior allocation changes model behaviour;
-theory explains how such a within-support change can matter. Exact geometry of
-the full sin/cos pairs shows how $z$ redistributes a fixed spectral budget and
-why geometric slow bands can collapse onto nearly the same positional basis.
-Weight--table co-adaptation and the transplant obstruction explain why the
-installation stage matters. A stated convex surrogate then yields \evq{} as an
-analytic construction on the same coordinate.
+Finite RoPE design is a constrained basis-allocation problem. With pair count
+and sampled support fixed, a table chooses where to place phase resolution. We
+first account for that finite budget exactly, then locate the slow-end
+redundancy of geometric sampling and derive \evq{} as a closed-form
+reallocation. Finally, we connect the designed basis to the stage at which
+weights exploit it; capability is established by the controlled interventions,
+not inferred from static geometry.
 
-\subsection{A finite table is a set of two-dimensional subspaces}
+\subsection{A finite spectral budget is a design problem}
 \label{sec:subspaces}
+\label{sec:budget}
 
-Let $\phi \in [0,1]$ parameterise log-frequency, $\omega(\phi) = b^{-\phi}$, let
-$\drot$ be the number of rotated dimensions and $K = \drot/2$ the number of
+Let $\phi \in [0,1]$ parameterise log-frequency, $\omega(\phi) = b^{-\phi}$,
+let $\drot$ be the number of rotated dimensions and $K = \drot/2$ the number of
 rotary pairs ($\drot{=}\dhd$ for standard MHA, smaller for compressed-RoPE
 architectures such as MLA).
 
 We reserve $z$ for the support-normalised coordinate in
-Eq.~\eqref{eq:table-decomposition}. Standard implementations use raw geometric
-exponents $u_k=k/K$, while deployed \evq{} uses midpoint quantiles
-$u_k=(k+1/2)/K$; endpoint-inclusive grids used for static diagnostics are
-labelled explicitly. Normalising the sampled geometric endpoints gives
-$z_k=k/(K-1)$.
-
-Equation~\eqref{eq:table-decomposition} is a coordinate identity for any
-ordered positive table with nonzero span. In the geometric family
-$z_k=k/(K-1)$, so fixing $(a,R)$ fixes every channel. A second table with the
-same support and different interior $z$ therefore cannot be represented by a
-different scalar base. Quantities such as median wavelength or the number of
-channels completing a cycle are summaries of $z$, not omitted scalar controls.
-
-The frozen-checkpoint protocols instantiate this identity without the Cosh
-family; \S\ref{sec:exp-frozen-support} defines their fixed-support displacement
-map, and App.~\ref{sec:frozen-fixed-support} specifies its controls.
+Eq.~\eqref{eq:table-decomposition}. Normalising a sampled geometric table gives
+$z_k=k/(K-1)$, so fixing $(a,R)$ fixes the geometric family and a non-uniform
+interior allocation is a distinct fixed-support design. Standard
+implementations use raw exponents $u_k=k/K$, deployed \evq{} uses midpoint
+quantiles $u_k=(k+1/2)/K$, and endpoint-inclusive diagnostic grids are labelled
+explicitly.
 
 A rotary pair contributes $f_\omega(\Delta) = C\cos(\omega\Delta) +
 D\sin(\omega\Delta)$ to the relative-position attention logit, with $C,D$ set by
@@ -62,11 +53,9 @@ either subspace. For $\Delta\sim\mathrm{Unif}[0,L]$, $H_{\omega\nu}$ has a close
 form in $\sin t/t$ and $(1{-}\cos t)/t$ at $t=(\omega{\mp}\nu)L$
 (App.~\ref{sec:proofs}).
 
-\subsection{The spectral budget is an effective-dimension account}
-\label{sec:budget}
-
 Block-whitening every pair gives a global correlation Gram $\Gamma$ with diagonal
-blocks $I_2$. Write $\bar c$ for the mean of the $c_{ij}$.
+blocks $I_2$. Write
+$\bar c=[K(K-1)]^{-1}\sum_{i\ne j}c_{ij}$.
 
 \begin{theorem}[Spectral budget identity]
 \label{thm:budget}
@@ -79,21 +68,16 @@ r_2(\Gamma)=\frac{(\operatorname{tr}\Gamma)^2}{\operatorname{tr}(\Gamma^2)}
 \end{equation}
 \end{theorem}
 
-The denominator turns the spectral budget into an exact R\'enyi-$2$
-effective-dimension identity: larger mean pairwise redundancy lowers $r_2$.
-Because $\operatorname{tr}\Gamma=2K$ is fixed, allocation cannot create nominal
-rotary dimension; it changes how evenly that fixed budget is distributed across
-positional directions. This is the precise sense in which a finite RoPE table
-has a spectral budget.
-Fix $K$, sampled support $(a,R)$, and separation measure $\mu$. Substituting
-$\omega_k(z)=\exp[-(a+Rz_k)]$ into the full-pair block-whitened positional Gram
-$\Gamma_\mu(z)$ makes its spectrum, and hence the effective sin/cos basis realised by
-the nominal rotary budget, a function of interior allocation. Geometry diagnoses
-that basis; the fixed-support intervention of \S\ref{sec:exp-identify}
-establishes its behavioural consequence. Block whitening removes per-channel
-energy and conditioning from the diagnosis.
+Practically, this identity exposes the design budget. For fixed $K$, sampled
+support $(a,R)$, and separation measure $\mu$, substituting
+$\omega_k(z)=\exp[-(a+Rz_k)]$ into the block-whitened Gram $\Gamma_\mu(z)$
+changes how the same trace $2K$ is distributed across positional directions.
+Block whitening removes per-channel energy and conditioning: the theorem
+characterises the basis's R\'enyi-$2$ effective dimension, while trained-model
+protocols establish what
+that basis enables.
 
-The deflation is concentrated at the slow end.
+\subsection{Slow-end redundancy gives a design direction}
 
 \begin{proposition}[Low-frequency collapse]
 \label{prop:collapse}
@@ -108,82 +92,31 @@ and the centred limit is
 $\operatorname{span}\{\Delta-\mathbb E_p\Delta,\ \Delta^2-\mathbb E_p\Delta^2\}$.
 \end{proposition}
 
-Concretely, at $L{=}4096$, $b{=}5{\times}10^5$, $K{=}64$ the $23$ pairs with
+Practically, geometric slow-end sampling provides diminishing new positional
+directions. This motivates thinning that region while preserving support and
+multiscale coverage; the channels may still carry content, and the static rank
+is not a behavioural selector. As a representative severe-regime instance, at
+$L{=}4096$, $b{=}5{\times}10^5$, and $K{=}64$, the $23$ standard-grid pairs with
 $\omega L\le1$ occupy $46$ nominal dimensions but have block-whitened
-$r_2 = 2.00$. Thus more than one third of the rotary pairs spend $46$ nominal
-dimensions on approximately two effective positional dimensions. The channels
-may still carry content; the geometric redundancy tax is that many of them
-describe almost the same positional directions. Proposition~\ref{prop:collapse}
-characterises the severe slow-band limit. The fixed-support identification also
-covers settings outside that asymptotic regime: in its $b{=}256$ control no
-sampled pair lies deep in the limit, and Theorem~\ref{thm:budget} measures
-overlap over the full table. Additional allocation and redundancy views appear
-in App.~Fig.~\ref{fig:frequency-geometry}.
+$r_2{=}2.00$ under the uniform separation prior. The full-table identity also
+applies outside this asymptotic regime; additional views appear in
+App.~Fig.~\ref{fig:frequency-geometry}.
 
-\subsection{The table is a training-time coordinate system}
-\label{sec:coordinate}
-
-Theorem~\ref{thm:budget} measures the geometry available to a table; trained
-behaviour additionally depends on the coefficients learned in that basis. To
-separate the two, we cross two trained $50$M weight sets with two runtime
-tables at $L{=}512$, $b{=}5{\times}10^5$, and
-$\tau_{\mathrm{EVQ}}{=}2.83$. All parameters remain frozen throughout this
-diagnostic
-(Table~\ref{tab:coadapt}). Substituting \evq{} for the geometric table at
-inference \emph{raises} the block-whitened $r_2$ from $4.57$ to $12.54$
-while perplexity degrades from $7.14$ to $76.20$.
-
-\input{tables/table_coadapt}
-
-Two consequences discipline the rest of the paper. First, collision, effective
-rank, and log-determinant describe the table without its learned coefficients;
-the task claims in \S\ref{sec:experiments} are therefore established on trained
-models. Second, the two \emph{self-consistent} systems are essentially
-tied in-window ($7.14$ vs.\ $7.16$) while both mismatched cells collapse: on LM
-loss the table and weight main effects are $+0.599$ and $-0.597$, and their
-interaction contrast is $-3.537$ (configuration-level bootstrap
-CI $[-5.17,-3.04]$). The table behaves as a coordinate system fixed before
-training, with the weights learning coefficients in it.
-
-\begin{theorem}[Post-hoc transplant obstruction]
-\label{thm:obstruction}
-Let $\mathcal R_\Omega(\Delta)$ be the block-rotation operator of a frequency multiset
-$\Omega$. If position-independent invertible maps $A,B$ satisfy
-$A^\top \mathcal R_{\Omega'}(\Delta)B = \mathcal R_\Omega(\Delta)$ for all $\Delta$ in an open
-interval containing zero, then $\Omega'$ and $\Omega$ have the same frequency
-multiset, up to sign and permutation. Repeated frequencies may mix within their
-full equal-frequency invariant subspace.
-\end{theorem}
-
-The proof is short: $\Delta{=}0$ gives $A^\top B = I$, so the relation becomes a
-similarity $A^\top \mathcal R_{\Omega'}A^{-\top}=\mathcal R_\Omega$; differentiating at zero makes
-the generators similar, and similarity preserves the spectrum $\{\pm i\omega_k\}$
-(App.~\ref{sec:proofs}). The theorem therefore characterises exact function
-preservation by this broad class of fixed linear Q/K compensation. The
-finite-distribution protocols of \S\ref{sec:exp-capability} measure the complementary
-case in which Q/K or broader low-rank paths adapt to the new table.
-
-\subsection{An analytic non-uniform allocation family}
+\subsection{A closed-form reallocation}
 \label{sec:construction}
 
-A positive density $\rho\in C^2([0,1])$ with $\int_0^1\rho=1$ induces a discrete
+A positive density $\rho\in C^2([0,1])$ with $\int_0^1\rho=1$ induces a finite
 allocation by inverse-CDF quantisation, $\phi_k=F_\rho^{-1}(u_k)$; geometric RoPE
-is $\rho\equiv1$. The exact canonical-correlation objective is oscillatory. To
-obtain a closed-form construction, we use the convex modelling surrogate
+is $\rho\equiv1$. The exact canonical-correlation objective is oscillatory, so
+we use the convex modelling surrogate
 \begin{equation}
 \Capp[\rho]=\frac{\alpha}{2}\int_0^1\!\rho^2\,d\phi
  +\frac{\beta}{2}\iint_{[0,1]^2}\!\!\rho(\phi)\rho(\psi)\min(\phi,\psi)\,d\phi\,d\psi,
 \label{eq:Capp}
 \end{equation}
-with $\alpha>0,\beta\geq0$. The diagonal term penalises channel-load concentration;
-$\min(\phi,\psi)$ is the Green kernel of $-\partial_\phi^2$ and encodes a
-penalty for pairs of channels that are both slow, matching the direction of
-Prop.~\ref{prop:collapse}. The surrogate supplies the analytic allocation;
-phase-invariant geometry measures the resulting basis. Under the closed-form
-cosine-feature kernel, the derived table lowers collision by $24$--$92\%$ and
-raises its cosine-Gram Shannon rank in all $12$ tested configurations
-(App.~\ref{sec:surrogate-validation}), while trained interventions establish
-the behavioural effect.
+with $\alpha>0,\beta\geq0$. The first term limits channel-load concentration;
+the Green kernel $\min(\phi,\psi)$ penalises pairs that are both slow, following
+the direction of Proposition~\ref{prop:collapse}.
 
 \begin{theorem}[Closed-form optimum under the surrogate]
 \label{thm:ode}
@@ -198,6 +131,10 @@ minimiser is
 at $\beta{=}0$ it is the $\tau{\to}0$ limit $\rho_0\equiv1$.
 \end{theorem}
 
+Practically, the theorem turns the slow-end design direction into an analytic
+allocation rather than a search problem. The following inverse CDF instantiates
+that continuous solution as a finite table.
+
 \begin{corollary}[Closed-form quantiles]
 \label{cor:quantiles}
 $F_\tau(\phi)=1-\sinh(\tau(1{-}\phi))/\sinh\tau$, so
@@ -209,23 +146,61 @@ $F_\tau(\phi)=1-\sinh(\tau(1{-}\phi))/\sinh\tau$, so
 which tends to $u_k$ as $\tau\to0$, recovering the uniform-log midpoint grid.
 \end{corollary}
 
-The theorem selects the Cosh family exactly for \eqref{eq:Capp}; midpoint
-quantisation turns that density into a finite RoPE table. For $\tau>0$,
-$\rho_\tau$ decreases across log-frequency: relative to the uniform grid it
-places more samples on the fast side and thins the redundant slow side, while
-$\tau\to0$ recovers the geometric allocation. The inverse CDF therefore
-discretises the continuous solution without search or learned positional
-parameters. Its uniqueness is conditional on the stated surrogate. The
-pre-specified operating rule, finite multiplier evidence, and grid conventions
-are in
-App.~\ref{sec:tau-scaling}. The exact-range endpoint embedding is specified in
-App.~\ref{sec:identification-details}.
+For $\tau>0$, $\rho_\tau$ decreases across log-frequency and crosses the uniform
+density once (Lemma~\ref{lem:budget-crossing}); the quantiles therefore
+place more samples on the fast side and thin the redundant slow side. This gives
+\evq{} explicitly, without learned positional parameters or numerical search.
+Its uniqueness is conditional on \eqref{eq:Capp}; the operating rule, finite
+multiplier evidence, grid conventions, and exact-range endpoint embedding are
+in Apps.~\ref{sec:tau-scaling} and~\ref{sec:identification-details}. The
+cosine-feature diagnostic is reported separately in
+App.~\ref{sec:surrogate-validation}; trained interventions establish behaviour.
 
-Viewed together, the theory turns finite RoPE design into a basis-allocation
-problem. The coordinate $z$ selects the basis available to training; the
-collapse law identifies where geometric sampling spends the finite budget
-redundantly; the crossing and obstruction show that learned coefficients bind
-to the installed basis; and the variational solution supplies a table before
-those coefficients are learned. Section~\ref{sec:experiments} tests the same
-coordinate with weights fully frozen, under matched low-rank adaptation, and
-through from-training co-adaptation.
+\subsection{A designed basis must be evaluated at its installation stage}
+\label{sec:coordinate}
+
+A designed table fixes the positional basis; model capability depends on the
+coefficients that exploit it. Controlled fixed-support protocols show that
+designed reallocations can strongly improve capability in the tested protocols. The training
+intervention in \S\ref{sec:exp-identify} evaluates anchored \evq{}, while the
+fully frozen study in \S\ref{sec:exp-frozen-support} evaluates separate derived
+and coarse profiles; they supply likelihood and capability evidence,
+respectively.
+
+The installation stage is visible in a frozen $50$M weights-by-table crossing
+(Table~\ref{tab:coadapt}). The self-consistent Geo and \evq{} systems have PPL
+$7.14$ and $7.16$, while both mismatched cells degrade. In particular, installing
+\evq{} under Geo-trained weights raises block-whitened $r_2$ from $4.57$ to
+$12.54$ but worsens PPL from $7.14$ to $76.20$; the loss interaction is $-3.537$
+(bootstrap CI $[-5.17,-3.04]$).
+
+\input{tables/table_coadapt}
+
+Thus static geometry diagnoses the designed basis but does not rank trained
+systems: weights learn coefficients in the basis installed during training or
+adaptation.
+
+\begin{theorem}[Post-hoc transplant obstruction]
+\label{thm:obstruction}
+Let $\mathcal R_\Omega(\Delta)$ be the block-rotation operator of a frequency multiset
+$\Omega$. If position-independent invertible maps $A,B$ satisfy
+$A^\top \mathcal R_{\Omega'}(\Delta)B = \mathcal R_\Omega(\Delta)$ for all $\Delta$ in an open
+interval containing zero, then $\Omega'$ and $\Omega$ have the same frequency
+multiset, up to sign and permutation. Repeated frequencies may mix within their
+full equal-frequency invariant subspace.
+\end{theorem}
+
+Practically, a nontrivial new table cannot be made exactly function-equivalent by
+fixed, position-independent invertible Q/K maps: the design must be evaluated
+with the weights, adapter, or operator that will use it. At $\Delta{=}0$ the
+hypothesis gives $A^\top B=I$; differentiating the resulting similarity at zero
+preserves the generator spectrum $\{\pm i\omega_k\}$ (App.~\ref{sec:proofs}). The
+theorem does not exclude approximate finite-data adaptation or broader paths,
+which are tested in \S\ref{sec:exp-capability}.
+
+Together, the budget identity defines what can be reallocated, the collapse law
+locates redundant slow-end sampling, and the variational theorem supplies a
+closed-form table before its coefficients are learned. The fixed-support and
+lifecycle experiments test designed allocations with weights fully frozen,
+under matched adaptation, and through from-training co-adaptation
+(\S\ref{sec:experiments}).

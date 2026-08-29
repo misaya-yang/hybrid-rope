@@ -1,0 +1,34 @@
+\begin{table}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.2pt}
+\renewcommand{\arraystretch}{1.02}
+\caption{\textbf{Zero-training system endpoints.} The bundled policy chooses
+one Native or frozen long route before prefill and retains it for the session.
+Rows use different metrics and experimental units and are not pooled. The
+policy is distinct from the pure-$z$ block in Fig.~\ref{fig:frozen-fixed-support}
+and from \evq{}.}
+\label{tab:zero-training-system}
+\begin{tabular}{@{}
+  >{\raggedright\arraybackslash}p{0.22\linewidth}
+  >{\raggedright\arraybackslash}p{0.27\linewidth}
+  >{\raggedright\arraybackslash}p{0.23\linewidth}
+  >{\raggedright\arraybackslash}p{0.17\linewidth}@{}}
+\toprule
+Endpoint & Reference & Bundled policy & Evidence role \\
+\midrule
+FineWeb-Edu final-$1{,}024$ tail NLL, $4$K ($n{=}128$)
+  & Native $2.7538$; static long $2.8774$
+  & $2.7538$ (Native route) & in-window routing \\
+PG-19 tail NLL, $8/16$K
+  & \mbox{official YaRN} $3.4404/3.7955$
+  & $3.1060/3.0977$ & natural likelihood \\
+RULER-13 macro, $8/16$K
+  & \mbox{official YaRN} $23.82/5.88\%$
+  & $67.72/54.40\%$ & task capability \\
+Qasper~\citep{dasigi2021qasper} / 2Wiki token-F1, full $200$
+  & \mbox{official YaRN} $18.03/25.69\%$
+  & $24.57/26.66\%$ & natural downstream \\
+\bottomrule
+\end{tabular}
+\end{table}

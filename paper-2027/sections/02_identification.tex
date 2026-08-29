@@ -1,10 +1,10 @@
-\section{Identifying the Allocation Axis}
+\section{Support--Allocation Causal Decomposition}
 \label{sec:identification}
 
-\subsection{Fixed-support training intervention}
+\subsection{Fixed support isolates structured allocation}
 \label{sec:exp-identify}
 
-\paragraph{Allocation is identifiable at fixed support.}
+\paragraph{A clean interior-allocation intervention.}
 Within each of three $151.9$M training seeds, both arms share architecture,
 initialisation, token order, optimiser, LR schedule, global batch, a
 $499{,}974{,}144$-token budget, and $32$ evaluation anchors. The baseline is
@@ -13,28 +13,37 @@ with $\theta{=}L_{\mathrm{train}}{=}256$ and geometric exponents. Anchored
 \evq{} ($\tau{=}4$) normalises its quantiles to the same extrema and log-span,
 so only the $K{-}2=30$ interior frequencies move while retaining the deployed
 Cosh table's $z$.
-Every training seed favours anchored \evq{} at every OOD length. The anchored
-\evq{} minus FMRoPE NLL difference is $+0.026$ at the $256$-token training
-length and $-0.281/-0.176/-0.146$ at $512$/$1$K/$2$K
+Every training seed favours anchored \evq{} at every OOD length. Anchored
+\evq{} minus FMRoPE NLL is $+0.026$ at the $256$-token training length and
+$-0.281/-0.176/-0.146$ at $512$/$1$K/$2$K
 (Fig.~\ref{fig:spectral-budget-overview}c). No geometric base can reproduce this
 intervention once the sampled support is pinned: \emph{fixed support $+$
 different $z$ $\Rightarrow$ different trained-model behaviour.} Thus $z$ is a
 separately identifiable coordinate, not a disguised base change.
-Retargeting the support reverses the tested ordering, showing that support and
-allocation are distinct but interacting design coordinates; the full protocol
-and per-seed contrasts are in App.~\ref{sec:identification-details}.
+
+\paragraph{Target-aware support identifies the second coordinate.}
+The second condition permits the declared $L_{\mathrm{target}}$ to retarget each
+arm's sampled support while preserving its normalised interior shape, giving the
+paper-faithful FMRoPE control its intended target-aware input. The ordering then
+reverses in all three seeds: anchored \evq{} minus FMRoPE NLL is
+$+0.060/+0.227/+0.460$ at $512$/$1$K/$2$K. The two conditions answer different
+causal questions. Fixed support isolates the effect of structured interior
+allocation; target-aware retargeting shows how support selection changes which
+allocation is effective.
+Their reversal establishes support and allocation as distinct but interacting
+coordinates of the same finite table. The full protocol, per-seed contrasts,
+and both support conditions are in App.~\ref{sec:identification-details}.
 
 \paragraph{Configuration and shape breadth.}
-The fixed-support direction is not confined to one base, head width, or one
-Cosh schedule. A pre-specified $50.9$M factorial crosses two bases, two training
-lengths, three head dimensions, and three paired seeds while pinning the sampled
+The fixed-support result is not confined to one base, head width, or Cosh
+strength. A pre-specified $50.9$M factorial crosses two bases, two training
+lengths, three head dimensions, and three paired seeds while pinning sampled
 endpoints and log-span in every arm. Three Cosh strengths and a
-deformation-matched exponential provide four distinct non-geometric interior
-curves. The strongest Cosh arm improves the weighted OOD objective in $10/12$
-structural configurations; the matched exponential does so in $9/12$ and
-closely tracks the formula-Cosh arm. The factorial therefore broadens the
-finding from one table to a family of interior reallocations: Cosh supplies the
-analytic construction, while $z$ is the consequential design coordinate. The
-$151.9$M intervention above remains the effect-size owner; the complete matrix
-is in App.~Table~\ref{tab:m4}, and model-scale persistence is tested separately
-in \S\ref{sec:exp-mature}.
+deformation-matched exponential provide four structured non-geometric curves.
+The strongest Cosh arm improves the weighted OOD objective in $10/12$
+configurations; the matched exponential does so in $9/12$ and closely tracks the
+formula-Cosh arm. This broadens the finding from one curve to a family of
+structured allocations: Cosh supplies the analytic construction, while the
+$151.9$M intervention above remains the effect-size owner. The complete matrix
+is in App.~Table~\ref{tab:m4}; model-scale persistence is tested separately in
+\S\ref{sec:exp-mature}.

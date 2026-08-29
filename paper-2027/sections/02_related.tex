@@ -5,13 +5,14 @@ Positional encoding can determine whether a transformer generalises beyond its
 training length \citep{kazemnejad2023impact}. RoPE extensions rescale positions,
 change a scalar base, transport frequency bands, or remap remote phases
 \citep{chen2024position,peng2024yarn,ding2024longrope,shang2025longrope2,
-oka2026fmrope,tian2026mrrope,tang2026jetlong}. Frequency-dependent transport can
-realise a non-uniform $z$, but couples it to support or phase changes. Base
-analyses bound the geometric family's attainable context and identify a critical
-dimension \citep{xu2024base,liu2024scaling}; learned use of a supplied grid adds
-a data-dependent view \citep{wu2026datashapes}. We isolate $z$ directly: what
-changes when both endpoints and the log-span are pinned and only its interiors
-move?
+tian2026mrrope,tang2026jetlong}. FMRoPE provides a target-aware support/base
+construction for a chosen length \citep{oka2026fmrope}. Its paper-faithful arm
+serves here as the geometric causal control, not a competing method: pinning its
+endpoints and log-span lets us change only the interiors. Frequency-dependent
+transport can likewise realise a non-uniform $z$ while moving support or phase.
+Base analyses bound the geometric family's attainable context
+\citep{xu2024base,liu2024scaling}, while learned use of a supplied grid adds a
+data-dependent view \citep{wu2026datashapes}.
 
 Other work measures unequal use of RoPE bands, removes or clips selected
 rotations, learns input-dependent angles or frequency tables, or replaces the
@@ -21,7 +22,8 @@ chen2025hope,li2026copeclipped,wertheimer2026frayed,zhang2026grape,
 movahedi2026selectiverope,wang2024resonance,zheng2024dape,li2024fire,
 hua2025fope,li2026repo}. LeRoPE and AdaRoPE make allocation explicit through
 learned non-geometric frequencies \citep{karypis2026lerope,wang2026adarope};
-LeRoPE's frozen-table ablation also makes the in-window value of allocation
-visible. We retain all $K$ canonical rotary planes, identify $z$ at fixed
-support, and derive a closed-form table without frequency search or learned
+LeRoPE's in-window improvements provide convergent evidence that allocation
+matters beyond extrapolation. Its learned intervention complements our matched
+fixed-support controls, which retain all $K$ canonical rotary planes, identify
+$z$ causally, and derive a closed-form table without frequency search or learned
 positional parameters.

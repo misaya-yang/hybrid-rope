@@ -35,6 +35,12 @@ the only place that records its current step, receipts, and deadlines. Closed
 August plans, author-verdict ledgers, alternating model-review logs, and
 external-model reviews are audit history, not cold-start inputs.
 
+Before changing reviewer-facing prose, also read
+[`paper-2027/NARRATIVE_GUIDE.md`](paper-2027/NARRATIVE_GUIDE.md). Its
+non-negotiable author doctrine, target/non-target propositions, and
+future-session stop rules are the durable guard against reverting to an
+arbitrary-$z$, caveat-first, method-race, or over-restrained paper.
+
 ## Workspace
 
 - `paper-2027/` is the only active manuscript.
@@ -53,17 +59,19 @@ entrypoints. Stable rules do not duplicate those paths.
 ### Machine profiles
 
 - **Work machine:** owns the canonical Conda `aidemo` environment and is the
-  default place for Python/PyTorch/pytest, final paper build, packaging, and
+  default place for Python/PyTorch/pytest, packaging, and final cross-environment
   release validation.
 - **Low-configuration personal PC:** intended for repository reading,
-  documentation, planning, and lightweight static or standard-library checks.
-  `aidemo` is not expected on this machine. Do not install or reproduce the
-  work-machine environment, run heavy validation, or start compute here unless
-  the user explicitly requests it.
+  documentation, planning, local LaTeX/Tectonic compilation, visual PDF
+  iteration, and lightweight static or standard-library checks. `aidemo` is not
+  expected on this machine. Do not install or reproduce the work-machine
+  environment, run model compute, or substitute the local build for the final
+  work-machine packaging/cross-environment receipt.
 
-The commands below are the canonical work-machine invocations. On the personal
-PC, record them as skipped instead of treating missing Conda as a repository
-failure.
+The Conda commands below are canonical work-machine invocations. On the personal
+PC, if those checks are unavailable, record them as skipped instead of treating
+missing Conda as a repository failure; `paper-2027/compile.sh` may run on either
+machine.
 
 ```bash
 conda run --no-capture-output -n aidemo python -m pytest \

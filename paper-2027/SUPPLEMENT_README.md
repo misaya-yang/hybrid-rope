@@ -56,6 +56,23 @@ python scripts/core_text_phases/phase16_exact_range_factorial_m4.py --help
 | 129.6M video-DiT head-to-head result | `data/curated/video_dit_seed42_head_to_head_20260826.json` |
 | Full sin/cos geometry and co-adaptation diagnostics | `scripts/analysis/` |
 
+The appendix also reports two completed extensions whose full raw payloads are
+not copied into this anonymous archive. The 151.9M two-seed weights-by-table
+crossing is reproduced as an aggregate table and protocol in
+`paper-2027/appendix/a5_identification.tex`; its canonical raw receipt has
+SHA-256 `9304752d885d73af38262958f033843c642f394a448e2306fbfb57a4e1996e22`.
+The fresh FineWeb-Edu holdout-512 allocation/routing controls and the compact
+PG-19/RULER-13/Qasper/2Wiki policy endpoints are reproduced in
+`paper-2027/appendix/a6_mature_scale.tex`. These aggregates preserve the
+allocation-only versus bundled-policy distinction; the policy gains are not
+relabeled as pure-`z` effects.
+
+Checkpoint bytes, raw generations, token arrays, caches, machine logs, and raw
+files containing private absolute paths are intentionally excluded. Their
+sanitized owners retain checkpoint, data, table, code, result, and example
+hashes. A reported aggregate or executable entrypoint is therefore not a claim
+that the corresponding private raw artifact is packaged here.
+
 The exact-range data preparation, protocol, and training scripts are in
 `rebuttal/rebuttal_0723/experiments/fmrope_125m_l256_500m/`; the model
 definition it trains is `experiments/native_rope_evq_150m/model.py`, also

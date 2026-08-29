@@ -116,16 +116,59 @@ result is conditional on the selected range; they do not identify a
 support-by-allocation interaction law. The \texttt{fixed} column isolates allocation when one table serves
 multiple lengths (\S\ref{sec:exp-identify}).
 
+\subsection{Weights-by-table co-adaptation at \texorpdfstring{$151.9$M}{151.9M}}
+\label{sec:crossing-151m}
+
+The three-seed experiment above identifies the training-time effect of $z$.
+A separate frozen crossing asks whether the learned weights remain compatible
+with the coordinate system on which they were trained. Seeds $137$ and $256$
+provide paired FMRoPE and anchored-\evq{} checkpoints whose training tables
+share exact endpoints. For each frozen checkpoint, we install the factor-four
+runtime table derived from either training coordinate, keep the checkpoint,
+amplitude, $32$ FineWeb-Edu validation anchors, and final-$128$-token NLL
+endpoint fixed, and evaluate at $512$ and $1{,}024$ tokens.
+
+\begin{table}[ht]
+\caption{Two-training-seed mean tail NLL at $1{,}024$ tokens for the
+$151.9$M weights-by-table crossing (lower is better). Each row freezes one
+trained weight set; each column installs one separately derived runtime table.}
+\label{tab:crossing-151m}
+\centering
+\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Frozen weights & FMRoPE-derived table & Anchored-\evq{}-derived table \\
+\midrule
+FMRoPE-trained & \textbf{3.426} & 5.776 \\
+Anchored-\evq{}-trained & 4.455 & \textbf{3.479} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+With
+$I=[L(W_F,T_C)-L(W_F,T_F)]-[L(W_C,T_C)-L(W_C,T_F)]$,
+the interaction is $3.400/3.251$ NLL for seeds $137/256$ at $1{,}024$
+tokens and $2.663/2.564$ at $512$. Training seed is the replication unit;
+the $32$ anchors are paired observations within a seed. This is a two-seed
+mechanism replication of weight--table co-adaptation, not a replacement for the
+three-seed exact-range effect and not evidence that either derived table is
+globally optimal.
+
 \subsection{Exact-range factorial at \texorpdfstring{$50.9$M}{50.9M}}
 \label{sec:exact-range-factorial}
 
-\paragraph{Design.} The schedule arms, including the $1.25\times$ multiplier,
-were specified before any result was inspected. Grid: $2$ bases $\times$
-$2$ training lengths $\times$ $3$ head dimensions $=12$ structural
-configurations; $5$ schedules (Geo, anchored \evq{} at $0.75\times$, $1.00\times$
-[the formula point], $1.25\times$, and a deformation-matched exponential);
-$3$ seeds. Main factorial $180/180$ completed, boundary-$\tau$ follow-up
-$12/12$ completed, covering the complete pre-specified matrix.
+\paragraph{Design.} The $50.9$M decoder has six layers, width $512$, MLP width
+$2{,}048$, and vocabulary size $50{,}304$. The structural grid is RoPE base
+$500$K/$1$M $\times$ training length $256/1{,}024$ $\times$ $4/8/16$ heads
+($d_{\rm head}{=}128/64/32$), giving $12$ configurations. Seeds are
+$42/137/256$. Every arm trains for $8{,}388{,}608$ tokens in $128$ optimizer
+steps ($65{,}536$ tokens per step) on the same deterministically repeated
+WikiText-2 raw stream with the same $1\%$ supervised passkey mix; execution is
+float32 on Apple M4 Max MPS. The schedule arms, including the $1.25\times$
+multiplier, were specified before any result was inspected: Geo, anchored
+\evq{} at $0.75\times$, $1.00\times$ (the formula point), $1.25\times$, and a
+deformation-matched exponential. Main factorial $180/180$ completed and the
+boundary-$\tau$ follow-up $12/12$ completed, covering the pre-specified matrix.
 
 The exponential control uses
 $z_\gamma(t)=(e^{\gamma t}-1)/(e^\gamma-1)$ on $t\in[0,1]$. Its $\gamma$ is
