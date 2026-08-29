@@ -2,174 +2,239 @@
 
 - **Updated:** 2026-08-29
 - **Target:** ICLR 2027
-- **Active manuscript:** `paper-2027/`
-- **Immutable baseline:** `paper/`
-- **Live branch / upstream at cycle start:** `main_0726` / `origin/main_0726`
-- **HEAD at cycle start:** `8bfcd3bdfe6b53335400d8be2503d124fbbc1e98`
-  (`docs: post-cycle documentation cleanup and routing refresh`)
-- **Observed divergence before local edits:** `0 / 0`
-- **Publication authorization:** on 2026-08-29 the author explicitly authorized
-  one scoped commit and ordinary push of this September documentation reset.
-  Resolve the final local/remote SHA live after publication.
-- **Current machine:** low-configuration personal PC. It is a
-  documentation/planning host, not the work machine; Conda `aidemo` is not
-  expected here.
+- **Active manuscript:** paper-2027/
+- **Immutable NeurIPS baseline:** paper/
+- **Branch / upstream:** main_0726 / origin/main_0726
+- **Published baseline before this iteration:**
+  40bde33a47e3a43d7c9afaf6a57b0f4fd9f68234
+  (checkpoint: prepare September paper iteration)
+- **Published manuscript/package checkpoint:**
+  09876d5 (`checkpoint: upgrade ICLR paper and freeze narrative`)
+- **Verified divergence before edits:** 0 / 0
+- **Git publication state:** manuscript/package checkpoint `09876d5` is on
+  `origin/main_0726`; this handoff receipt is the only follow-up delta.
 
-## 1. Current status
+## 1. Current result
 
-The author opened a new September iteration on 2026-08-29. The current
-`paper-2027/` manuscript is the only starting point. August revision plans,
-author-verdict ledgers, alternating model-review logs, and external-model review
-bundles are archived audit inputs and do not carry tasks into this cycle.
+The evidence-complete September manuscript rewrite is **locally complete**.
+Without adding an experiment, the paper now leads with the mature
+zero-training result, then separates three intervention routes:
 
-This first task is documentation governance only: remove stale routes and
-duplicated rules, replace the closed August brief with the September scope,
-separate current evidence owners from historical manifests, and leave one
-research decision order. No manuscript TeX, training, GPU evaluation, paid
-compute, upload, commit, or push is authorised by this task.
+1. frozen model-relative derived/coarse allocations establish large
+   zero-training extrapolation and downstream consequences;
+2. matched adaptation establishes task-family length transfer and causal
+   remote-source use;
+3. from-training evidence establishes weight--table co-adaptation and
+   architecture, scale, and modality breadth.
 
-The stable scope is [`REVISION_BRIEF.md`](REVISION_BRIEF.md). The manuscript
-strategy is [`NARRATIVE_GUIDE.md`](NARRATIVE_GUIDE.md). This file is the only
+Fixed-support FMRoPE versus anchored EVQ-Cosh owns the clean allocation
+identification. The target-aware reversal owns the support--allocation
+interaction. FMRoPE is therefore a causal control, not a competitor to
+handicap. LeRoPE is attributed convergent evidence that learned allocation can
+improve in-window behaviour; it is not a matched comparator or mechanism
+validation.
+
+The frozen model-relative tables are not EVQ-Cosh. EVQ-Cosh remains the
+closed-form training/adaptation construction. The bundled Native/long session
+policy remains distinct from the pure-$z$ frozen comparison.
+
+The stable scope is [REVISION_BRIEF.md](REVISION_BRIEF.md), and the sole
+narrative contract is [NARRATIVE_GUIDE.md](NARRATIVE_GUIDE.md).
+[../INDEX.md](../INDEX.md) and [research/README.md](research/README.md)
+route every numerical owner.
+
+The durable post-submission agenda remains [`../INDEX.md`](../INDEX.md) §6.
+This file is the only
 live state and action queue.
 
-## 2. Submission milestones
+## 2. Authorization and machine boundary
 
-Official ICLR sources were rechecked on 2026-08-29:
+Current authorization covers manuscript, appendix, figure, navigation
+documents, supplement allowlist closure, local LaTeX compilation, lightweight
+static tests, visual PDF review, curated supplement packaging, and a scoped
+ordinary commit/push of this complete change set.
 
-- [Author Guidelines](https://iclr.cc/Conferences/2027/AuthorGuidelines)
-- [Call for Papers](https://iclr.cc/Conferences/2027/CallForPapers)
-- [AI Policy for Authors](https://iclr.cc/Conferences/2027/AIPolicyForAuthors)
+It does **not** authorize new experiments, training, GPU inference/evaluation,
+paid compute, OpenReview upload, unrelated remote mutation, branch operations,
+force-push, or history rewriting.
 
-| Milestone | Role | Current state |
+The current low-configuration personal PC remains a documentation/planning host
+and is also a valid LaTeX/Tectonic and visual PDF host. It may run
+lightweight static or standard-library checks.
+The work machine remains the canonical host for Conda aidemo
+Python/PyTorch/pytest, the curated supplement build, isolated package build,
+and final cross-environment release receipt. `aidemo` is not expected here and
+must not be recreated merely to duplicate the work machine.
+
+## 3. Submission milestones
+
+| Milestone | Role | State |
 | --- | --- | --- |
-| **2026-09-17** | Internal title, abstract, author-roster, and author-metadata freeze | pending |
-| **2026-09-18, 11:59 PM AoE** | Official abstract deadline | pending; recheck live policy and OpenReview form |
-| **2026-09-25 AoE** | Official full-paper deadline | pending; recheck live policy and OpenReview form |
+| **2026-09-17** | Internal title, abstract, author-roster, and metadata freeze | pending author confirmation |
+| **2026-09-18, 11:59 PM AoE** | Official abstract deadline | pending live-policy/OpenReview recheck |
+| **2026-09-25 AoE** | Official full-paper deadline | pending final release validation and upload |
 
-The 9/17 date is an internal safety freeze, not the venue deadline. Stable gate
-definitions are in [`SUBMISSION_CHECKLIST.md`](SUBMISSION_CHECKLIST.md); their
-live pass/fail state belongs here.
+The 9/17 date is an internal safety freeze. Stable submission gates are in
+[SUBMISSION_CHECKLIST.md](SUBMISSION_CHECKLIST.md).
 
-## 3. Current action queue
-
-| Order | Action | State / exit condition |
-| --- | --- | --- |
-| 1 | September documentation reset | completed locally; scoped commit/push authorized; lightweight PC checks passed, canonical work-machine validation remains skipped |
-| 2 | Current-PDF/source audit | pending; start from current TeX and last-built PDF, then identify only score-, credibility-, comprehension-, or validity-changing deltas |
-| 3 | 9/17 abstract and metadata freeze | pending; owner-audited title/abstract and author-policy confirmations |
-| 4 | 9/25 full-paper closure | pending; owner-by-owner scientific audit, build, visual review, anonymous supplement, upload/readback |
-
-No old A/R item is pending by default. A new revision item enters this queue
-only after it passes the admission fields in `REVISION_BRIEF.md` §7.
-
-## 4. Manuscript contract
+## 4. Current manuscript contract
 
 Title: *RoPE Has a Spectral Budget*.
 
-The stable reviewer memory, reader path, causal contract, and body-allocation
-rules live only in [`NARRATIVE_GUIDE.md`](NARRATIVE_GUIDE.md). The current local
-delta is documentation governance only; no manuscript TeX has changed in this
-task. [`../INDEX.md`](../INDEX.md) §3 and
-[`research/README.md`](research/README.md) route evidence.
+The reviewer path is:
 
-## 5. Source, PDF, and release baseline
+1. a finite RoPE table has support $(a,R)$ and an independent interior
+   allocation $z$;
+2. on a frozen billion-scale OLMo checkpoint, changing the allocation produces
+   the immediate headline capability change;
+3. paired fixed-support training identifies allocation cleanly, while
+   target-aware retargeting reverses the ordering and identifies the second
+   coordinate;
+4. exact full-sin/cos geometry characterises the finite basis's
+   Renyi-2 effective dimension, including the representative
+   46-nominal-dimension to $r_2=2.00$ slow block;
+5. a convex surrogate yields the closed-form EVQ-Cosh construction;
+6. frozen, adaptation, and from-training results establish distinct practical
+   consequences without pooling their estimands.
 
-The last manuscript-changing checkpoint is
-`93d7eac941d45ed6877bcc17a5f73443f53dfdfb` (`paper: complete ICLR 2027
-revision cycle`). HEAD `8bfcd3b` adds documentation-only routing cleanup.
+Claim boundaries remain those in [../AGENTS.md](../AGENTS.md). In particular,
+the finite multiplier grid is not a continuous basin or optimum; static
+geometry is not an LM-quality predictor; mature studies keep their protocol
+identities; and the 1.485B from-initialisation comparison is same
+initialisation/same scientific recipe, not bitwise paired execution.
 
-Last-built active PDF:
+## 5. Current PDF and immutable baseline
 
-- `paper-2027/main.pdf`
-- SHA-256: `ade3beb59eefca91b339ef4d6731cdda19fa8eb40f384d3eab60fd9c4df06f01`
-- size: `757522` bytes
-- historical receipt: 9 body / 28 total pages, references beginning on page 10
+Active PDF:
+
+- path: paper-2027/main.pdf
+- SHA-256:
+  0cb643b85c6c2821605f53b08b4a7729010db44f087feaf78600461eb1d6ac18
+- size: 552744 bytes
+- body: 9 pages
+- references begin: page 10
+- total: 31 pages
+- page size: US Letter
+- undefined references/citations: 0
+- worst overfull box: 0 pt
+- PDF author metadata: none
+- Type 3 fonts: 0
+- unembedded fonts: 0
+
+Figure 1:
+
+- path: paper-2027/figs/fig_evidence_overview.pdf
+- SHA-256:
+  97f6e72a109250cc27742d8765e1c9e053e0925edc885e74fe2a5e4ec049fae7
+- size: 72764 bytes
 
 Immutable baseline:
 
-- `paper/main.pdf`
-- SHA-256: `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`
-- size: `1393787` bytes
+- path: paper/main.pdf
+- SHA-256:
+  fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772
+- size: 1393787 bytes
+- status: unchanged
 
-The committed source is one token ahead of the last-built PDF: after the last
-compile, `sections/04_experiments.tex` restored a missing backslash on the
-`\evq` macro in a caption. Therefore the historical PDF/build/supplement hashes
-are not a current-source build receipt. Resolve this drift only in the later
-authorised build stage; do not describe the last-built PDF as source-synchronised.
+## 6. Validation receipts
 
-Earlier `43/43`, `181/181`, and packaged `144/144` test counts remain historical
-receipts until rerun. They prove neither the current documentation tree nor the
-future submission artifact.
+Passed locally on the personal PC:
 
-## 6. Documentation reset receipt
+- paper-2027/compile.sh: all ICLR format gates passed;
+- Figure 1 owner assertions and vector-PDF generation;
+- final visual review of the abstract/intro, Figure 1, zero-training table,
+  body closure, the assumption-bound derivation, and the expanded appendix
+  evidence map;
+- 21/21 standard-library navigation/workspace tests;
+- supplement static-theory allowlist-closure regression: 1/1;
+- curated ICLR supplement packaging, leak scan, archive inspection, and
+  isolated 9-body/31-total-page compilation;
+- git diff --check;
+- source/PDF synchronization at the hashes above;
+- immutable paper/main.pdf hash unchanged.
 
-Changed scope is documentation and its navigation contract only. The reset:
+Skipped on this PC:
 
-- removes branch and current-state facts from stable rules;
-- replaces August `REVISION_BRIEF` v2 with September v3;
-- freezes the old author verdict and Codex/Claude review log as history;
-- removes external-model outputs from cold start, evidence routing, and current
-  priority;
-- rewrites `INDEX.md` §6 around the September paper and a single post-submission
-  research gate;
-- classifies preflights and theory notes as current owner, design-only,
-  superseded, closed negative, or historical provenance;
-- marks NeurIPS-era provenance/code manifests as historical/partial views, not
-  current ICLR authority.
+- canonical aidemo Python/PyTorch/pytest suites;
+- final cross-environment release receipt.
 
-Local low-configuration-PC validation:
+Compilation certifies format and source/PDF health, not scientific truth.
+Scientific quantities were checked against their canonical owners during the
+rewrite; the final author number read-through remains a separate release gate.
 
-- **Passed:** `git diff --check`;
-- **Passed:** local-relative-link check across all 40 modified Markdown files;
-- **Passed:** added-line scan for private absolute paths, private-key markers,
-  and common secret assignments;
-- **Passed (fallback only):** 20/20 pure standard-library `unittest` navigation
-  and paper-experiment-workspace checks with bytecode writes disabled;
-- **Skipped by machine profile:** canonical Conda `aidemo` pytest, paper build,
-  supplement packaging, isolated package tests, and visual PDF inspection;
-- **Unverified:** current-source/PDF synchronisation, current supplement hash,
-  full scientific owner audit, and final submission compliance.
+## 7. Supplement state
 
-The fallback tests are useful PC diagnostics but do not replace a work-machine
-`aidemo` receipt. No manuscript TeX or reviewer-facing numerical owner changed
-in this task.
+The tracked root archive
+rope-spectral-budget-iclr2027-supplement.zip was rebuilt from the current
+allowlist and manuscript source on 2026-08-29:
 
-## 7. Post-submission research boundary
+- SHA-256:
+  6ea9fd61c12e9ed7d04926c03693a78e968644f00a2043f04dd96e60585b561b
+- size: 992809 bytes
+- status: local curated package, leak scan and isolated build passed; final
+  work-machine cross-environment receipt remains pending before OpenReview
 
-No submission experiment is in the active queue. The durable post-submission
-research order lives only in [`../INDEX.md`](../INDEX.md) §6. The next routed
-design is currently `FROZEN_PROTOCOL_DESIGN_NOT_EXECUTED`, has no dedicated
-runner/readiness receipt, and has no GPU authorization. No later research branch
-is active on this PC or in this manuscript cycle.
+The curated allowlist now includes the minimal reviewer-facing static-theory
+reproduction closure:
 
-## 8. Author actions
+- analysis/full_rope_audit/verify_core.py
+- analysis/full_rope_audit/verify_small_models.py
+- scripts/analysis/third_axis_ceiling.py
+
+The whole audit directory is intentionally excluded because it contains
+non-reviewer historical material. The local package contains both new body
+tables and the minimal static-theory reproduction closure. Re-run the same
+curated packager and cross-environment checks on the work machine before final
+OpenReview upload.
+
+## 8. Remaining action queue
+
+| Order | Action | Exit condition |
+| --- | --- | --- |
+| 1 | Scoped Git checkpoint publication | **completed:** manuscript/package commit `09876d5` pushed; this state receipt closes the handoff delta |
+| 2 | Work-machine validation | canonical aidemo changed-path tests and supplement cross-build pass or are explicitly dispositioned |
+| 3 | 9/17 abstract/metadata freeze | title, abstract, author roster, profiles, quotas, and AI statement confirmed |
+| 4 | 9/25 full-paper freeze | owner-by-owner number read-through, final PDF/supplement approval, upload and downloaded-platform readback |
+
+The two new body table files,
+tables/table_zero_training_system.tex and
+tables/table_allocation_routes.tex, are required manuscript sources and are
+tracked in checkpoint `09876d5`; a clean-checkout build must never omit them.
+
+## 9. Research boundary
+
+No submission experiment is active, and the current manuscript is frozen
+against non-essential narrative redesign. Further from-scratch scaling is closed:
+the completed 1.485B same-initialisation/same-scientific-recipe comparison is
+the current from-training ceiling. No larger from-initialisation run or new
+seed program is planned or authorised.
+
+The author-ordered post-submission priority is frozen-checkpoint zero-training
+allocation optimization first and matched LoRA work second. The first target
+is a single allocation that itself improves both Native-window and long-range
+capability, rather than preserving the former only through routing.
+Matched-content phase 2x2 or band attribution is used only when the diagnostic
+would change the candidate design; it is not the automatic first task. These
+are research targets, not claims in the current manuscript, and require
+separate design, readiness, and compute authorization. Durable ordering lives
+in [`../INDEX.md`](../INDEX.md) §6.
+
+## 10. Author actions
 
 Before 9/17:
 
 - freeze the author roster and confirm current OpenReview profiles;
 - confirm author-count/submission quotas and reciprocal-review eligibility;
-- confirm that the AI-use statement remains literally complete under the live
-  policy;
-- confirm the exact title and abstract to enter in OpenReview.
+- confirm that the AI-use statement remains literally complete;
+- approve the exact title and abstract entered in OpenReview.
 
 Before 9/25:
 
 - decide the NeurIPS-outcome citation/distinctness branch using
-  [`CHANGES_FROM_NEURIPS2026.md`](CHANGES_FROM_NEURIPS2026.md);
-- perform the final owner-by-owner number review after layout freezes;
-- approve the final uploaded PDF/supplement and downloaded-platform readback.
+  [CHANGES_FROM_NEURIPS2026.md](CHANGES_FROM_NEURIPS2026.md);
+- complete the final owner-by-owner number review after layout freezes;
+- approve the uploaded PDF/supplement and downloaded-platform readback.
 
-## 9. Authorization and Git boundary
-
-Current authorization covers this documentation reset, its lightweight
-static/standard-library validation on the personal PC, one scoped Git commit,
-and one ordinary push to the existing upstream branch. Canonical
-Python/PyTorch/pytest, final build, and packaging remain skipped here and belong
-on the work machine's `aidemo` environment. Authorization does not cover
-installing that environment here, manuscript TeX edits, training, GPU
-inference/evaluation, paid compute, other remote mutation, upload, force-push,
-branch operations, or history rewriting.
-
-Before any later authorised Git publication, recheck branch, upstream,
-divergence, worktree, staged scope, sensitive content, and immutable `paper/`.
-Record the resulting local/remote SHA only after a successful ordinary push.
+Before any authorised Git publication, recheck branch, upstream, divergence,
+worktree, staged scope, sensitive content, and immutable paper/. Record
+local/remote SHAs only after a successful ordinary push.
