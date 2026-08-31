@@ -1,6 +1,6 @@
 # ICLR 2027 active handoff
 
-- **Updated:** 2026-08-29
+- **Updated:** 2026-08-30
 - **Target:** ICLR 2027
 - **Active manuscript:** paper-2027/
 - **Immutable NeurIPS baseline:** paper/
@@ -10,11 +10,13 @@
   (checkpoint: prepare September paper iteration)
 - **Published manuscript/package checkpoint:**
   09876d5 (`checkpoint: upgrade ICLR paper and freeze narrative`)
-- **Current published HEAD before this framing repair:**
-  8bfaecf219e37003c272144ce62a6cc183c3ec41
+- **Published HEAD at the start of this follow-up sprint:**
+  8e4d567 (`paper: reframe narrative around support-allocation decomposition`)
+- **Published research-preparation checkpoint:**
+  5a09464 (`checkpoint: prepare zero-training follow-up sprint`)
 - **Verified divergence before edits:** 0 / 0
-- **Git publication state:** the paper-identity/framing repair is local and
-  uncommitted; no commit or push was authorised in this turn.
+- **Git publication state:** the research-preparation checkpoint is on
+  `origin/main_0726`; this handoff update records its final state receipt.
 
 ## 1. Current result
 
@@ -55,10 +57,10 @@ live state and action queue.
 
 ## 2. Authorization and machine boundary
 
-Current authorization covers manuscript, appendix, figure, navigation
-documents, supplement allowlist closure, local LaTeX compilation, lightweight
-static tests, visual PDF review, curated supplement packaging, and a scoped
-ordinary commit/push of this complete change set.
+Current authorization covers independent ROI review of the supplied follow-up
+plan, zero-training protocol/document preparation, useful CPU-only analysis
+code, lightweight static tests, and an ordinary commit/push of the resulting
+current workspace.
 
 It does **not** authorize new experiments, training, GPU inference/evaluation,
 paid compute, OpenReview upload, unrelated remote mutation, branch operations,
@@ -153,13 +155,19 @@ Passed locally on the personal PC:
 - final visual review of the abstract/intro, Figure 1, zero-training table,
   body closure, the assumption-bound derivation, and the expanded appendix
   evidence map;
-- 21/21 standard-library navigation/workspace tests;
 - supplement static-theory allowlist-closure regression: 1/1;
 - curated ICLR supplement packaging, leak scan, archive inspection, and
   isolated 9-body/31-total-page compilation;
 - git diff --check;
 - source/PDF synchronization at the hashes above;
-- immutable paper/main.pdf hash unchanged.
+- immutable paper/main.pdf hash unchanged;
+- finite-K Cosh surrogate-regret audit: default
+  $K\in\{8,16,32,64,128\}$ and $\tau\in\{0.5,1,2,4\}$ grid passed; final
+  scaled-constant relative errors range from $1.66\times10^{-6}$ to
+  $2.51\times10^{-4}$ in magnitude and tail slopes are within $0.0011$ of
+  $-2$;
+- 22/22 lightweight standard-library tests covering repository navigation and
+  the new finite-K audit passed.
 
 Skipped on this PC:
 
@@ -200,11 +208,12 @@ OpenReview upload.
 
 | Order | Action | Exit condition |
 | --- | --- | --- |
-| 1 | Current framing-repair disposition | author reviews the local PDF; commit/push only under explicit authorisation |
-| 2 | Rebuild curated supplement | package contains the repaired source and passes leak/isolated-build checks |
-| 3 | Work-machine validation | canonical aidemo changed-path tests and supplement cross-build pass or are explicitly dispositioned |
-| 4 | 9/17 abstract/metadata freeze | title, abstract, author roster, profiles, quotas, and AI statement confirmed |
-| 5 | 9/25 full-paper freeze | owner-by-owner number read-through, final PDF/supplement approval, upload and downloaded-platform readback |
+| 1 | Publish current research-preparation checkpoint | **completed:** main checkpoint `5a09464` is on `origin/main_0726`; the follow-up handoff receipt closes publication state |
+| 2 | Freeze R1 candidate contract | candidate signal, closed-class escape, table hash, matched rows, joint gate, and stop rule are fixed before model scoring |
+| 3 | Work-machine validation | canonical aidemo changed-path tests and later supplement cross-build pass or are explicitly dispositioned |
+| 4 | Rebuild curated supplement | package contains the repaired manuscript source and passes leak/isolated-build checks |
+| 5 | 9/17 abstract/metadata freeze | title, abstract, author roster, profiles, quotas, and AI statement confirmed |
+| 6 | 9/25 full-paper freeze | owner-by-owner number read-through, final PDF/supplement approval, upload and downloaded-platform readback |
 
 The two new body table files,
 tables/table_zero_training_system.tex and
@@ -223,11 +232,15 @@ The author-ordered post-submission priority is frozen-checkpoint zero-training
 allocation optimization first and matched LoRA work second. The first target
 is a single allocation that itself improves both Native-window and long-range
 capability, rather than preserving the former only through routing.
-Matched-content phase 2x2 or band attribution is used only when the diagnostic
-would change the candidate design; it is not the automatic first task. These
-are research targets, not claims in the current manuscript, and require
-separate design, readiness, and compute authorization. Durable ordering lives
-in [`../INDEX.md`](../INDEX.md) §6.
+The 2026-08-30 ROI review is recorded in
+[`research/attention-aware-retrofit/preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](research/attention-aware-retrofit/preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md):
+R1 freezes the candidate contract and R2 performs the minimal matched
+Native-window/far-tail screen. Position-binned NLL follows only after a
+candidate passes; matched-content phase/gain cubes or band attribution enter
+only when the diagnostic would change candidate design. The finite-K audit is
+an independent surrogate certificate, not a candidate selector. These are
+research targets and protocol gates, not manuscript claims or compute
+authorization. Durable ordering lives in [`../INDEX.md`](../INDEX.md) §6.
 
 ## 10. Author actions
 
