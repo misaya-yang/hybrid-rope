@@ -21,6 +21,10 @@ agenda as it stood on 2026-08-22. It contains useful derivations, but its action
 queue and any conflicting method narrative are historical. The post-GPU
 reflection is historical too. Current theory ordering lives in
 [`../../ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](../../ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md):
-the matched-content phase 2x2 is the sole next bridge, and later mechanism work
-is conditional on its result. Directory decisions and numeric owners remain in
-[`../README.md`](../README.md) and [`../results/`](../results/), respectively.
+its derivations remain the continuation boundary, while its old "sole next
+bridge" scheduling statement is superseded by repository `INDEX.md` §6. The
+current R1/R2 protocol is
+[`../preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](../preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md);
+the matched-content bridge is conditional. Directory decisions and numeric
+owners remain in [`../README.md`](../README.md) and [`../results/`](../results/),
+respectively.

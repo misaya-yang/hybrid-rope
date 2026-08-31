@@ -3,6 +3,10 @@
 - **Status:** `FROZEN_PROTOCOL_DESIGN_NOT_EXECUTED`
 - **Role:** post-deadline method-development preflight; not manuscript evidence,
   a result, or compute authorization
+- **Lifecycle update (2026-08-30):** the protocol remains frozen, but its old
+  "sole next bridge" priority is superseded by `INDEX.md` §6 and
+  `ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`; it now enters only
+  after a valid R2 screen when the diagnosis would change candidate design
 - **Scheduling gate:** research execution is ineligible before the 2026-09-25
   manuscript deadline. After that date this remains only a design until a new
   author decision confirms that the bridge still has priority.
@@ -16,10 +20,11 @@
   new explicit author authorization after the scheduling gate. This document
   does not authorize a run.
 
-This preflight is the sole next identification bridge, not another model-scale
-sweep. It tests whether a controlled change in realized relative phase creates
-the failure that the candidate table is supposed to repair, on identical
-content and with no training, gain, or serving-policy intervention.
+This preflight is a conditional identification bridge, not another model-scale
+sweep or the default first GPU task. It tests whether a controlled change in
+realized relative phase creates the failure that the candidate table is
+supposed to repair, on identical content and with no training, gain, or
+serving-policy intervention.
 
 The former protected-progressive companion route is historical and superseded;
 it cannot invoke this bridge as a stage. A positive completed bridge may later

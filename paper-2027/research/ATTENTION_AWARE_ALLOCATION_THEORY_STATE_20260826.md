@@ -1,22 +1,22 @@
 # Attention-aware RoPE allocation: theory state
 
 - **Original date:** 2026-08-26
-- **Lifecycle update:** 2026-08-29
+- **Lifecycle update:** 2026-08-30
 - **Status:** active theory-continuation boundary for work after the current
-  September manuscript cycle; the matched-content phase 2x2 is the sole next
-  identification bridge
+  September manuscript cycle; experiment priority is superseded by the R1/R2
+  order in `INDEX.md` §6
 - **Role:** durable theory continuation owner, not a parallel experiment plan
 - **Not:** a manuscript claim, experiment result, action queue, or compute
   authorization
 - **Agenda authority:** [`../../INDEX.md`](../../INDEX.md) §6
 - **Live state:** [`../HANDOFF.md`](../HANDOFF.md)
 
-This document answers one question for the next working session: what has the
-paper established, what has the later research ruled out, and which missing
-bridge must be identified before another method is trained? The research order
-is strict: run no method branch in parallel with the bridge. The
-leave-one-band-out design added on 2026-08-28 is conditional mechanism work
-after a positive bridge, not a companion or substitute for it.
+This document answers what the paper established, what later research ruled
+out, and which mechanism bridge remains available. Its former scheduling
+priority is superseded: the current order freezes a candidate contract, runs the
+minimal Native-window/far-tail screen, and uses the matched-content bridge only
+when a valid result is mechanism-ambiguous and the answer changes candidate
+design. Leave-one-band-out remains conditional after a positive bridge.
 
 ## 1. Established theoretical core
 
@@ -92,19 +92,19 @@ another scalar functional of one shared table under assumed content weights.
 
 The target is deliberately target-free:
 
-> Find a fixed or grouped allocation, chosen without `L_target`, that preserves
-> in-window behaviour and improves extrapolation after a matched adaptation
-> protocol, then verify that the gain transfers to capability rather than only
-> teacher-forced tail NLL.
+> Find a fixed allocation, chosen without `L_target`, that preserves or improves
+> in-window behaviour and improves extrapolation on a frozen checkpoint; only
+> after that zero-training gate consider grouped allocation or matched
+> adaptation, and verify capability separately from teacher-forced tail NLL.
 
 Evaluation horizons may test the frozen construction. They must not enter its
 definition.
 
-## 4. Required identification bridge
+## 4. Available conditional identification bridge
 
-The next missing experiment is not another model scale, another RULER length,
-or band-attribution sweep. The **sole next identification bridge** is a
-matched-content phase intervention:
+When a valid R2 candidate result cannot distinguish content failure from
+position/allocation failure, and that distinction changes candidate design,
+the available identification bridge is a matched-content phase intervention:
 
 - freeze checkpoint, token content, token order, causal mask, answer, decoder,
   and evaluation rows;

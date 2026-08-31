@@ -77,12 +77,14 @@ The durable decision order lives only in [`../../INDEX.md`](../../INDEX.md)
 §6. Current lifecycle labels are:
 
 - **Next design gate:**
-  [`MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md`](attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md),
-  `FROZEN_PROTOCOL_DESIGN_NOT_EXECUTED`; no dedicated runner, result, or compute
+  [`ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](attention-aware-retrofit/preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md),
+  `R1_R2_PROTOCOL_ONLY`; no candidate, dedicated runner, result, or compute
   authorization is implied.
-- **Conditional after that gate:** grouped per-layer allocation and, only when
-  decision-relevant, leave-one-band-out attribution. Per-head, multi-seed,
-  second-checkpoint, and 8B work require earlier gates to pass.
+- **Conditional diagnostic:**
+  [`MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md`](attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md)
+  enters only when a valid candidate screen is mechanism-ambiguous and the
+  answer changes candidate design. Grouped allocation and leave-one-band-out
+  attribution remain later gates.
 - **Superseded:** protected-progressive/protected-ramp scanning, old post-GPU
   priority memos, and August narrative/experiment plans.
 - **Closed or unresolved:** use [`../../INDEX.md`](../../INDEX.md) §3.4–§3.5.

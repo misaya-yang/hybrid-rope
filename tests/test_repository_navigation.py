@@ -201,6 +201,26 @@ class RepositoryNavigationTests(unittest.TestCase):
         for required in ("LM-quality", "restarts", "algebraic", "not a global ceiling"):
             self.assertTrue(required in source, f"static-rank owner must state: {required}")
 
+    def test_followup_sprint_routes_zero_training_before_diagnostics(self):
+        index = (ROOT / "INDEX.md").read_text(encoding="utf-8")
+        preflight = (
+            ROOT
+            / "paper-2027/research/attention-aware-retrofit/preflights"
+            / "ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md"
+        )
+        audit = ROOT / "scripts/analysis/finite_k_cosh_regret_audit.py"
+        self.assertTrue(preflight.is_file())
+        self.assertTrue(audit.is_file())
+        self.assertIn(preflight.name, index)
+        self.assertIn("Native-window / far-tail", index)
+        source = audit.read_text(encoding="utf-8")
+        for boundary in ("not r2", "LM loss", "table selector"):
+            self.assertIn(boundary, source)
+        text = preflight.read_text(encoding="utf-8")
+        self.assertIn("P0: do first", text)
+        self.assertIn("P1 diagnostic, conditional", text)
+        self.assertIn("no GPU run authorized", text)
+
     def test_static_search_is_not_promoted_to_optimality_or_support_invariance(self):
         agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
         index = (ROOT / "INDEX.md").read_text(encoding="utf-8")

@@ -3,11 +3,17 @@
 A preflight records what was frozen before execution. It is never evidence that
 an experiment ran.
 
-## Sole next bridge
+## Current next protocol
 
 | Preflight | Lifecycle state |
 | --- | --- |
-| [`MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md`](MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md) | frozen protocol design; not executed; the sole next identification bridge after the 2026-09-25 manuscript deadline; every execution stage still requires new explicit author authorization |
+| [`ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md) | ROI decision plus R1/R2 protocol; no candidate selected, no runner certified, and no GPU authorization |
+
+## Conditional diagnostic bridge
+
+| Preflight | Lifecycle state |
+| --- | --- |
+| [`MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md`](MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md) | frozen protocol design; not executed; enter only after a valid R2 screen when the mechanism answer changes candidate design; every execution stage still requires new explicit author authorization |
 
 The leave-one-band-out design in
 [`../analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md`](../analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md)

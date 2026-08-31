@@ -1,6 +1,6 @@
 # INDEX — 理论、证据、代码与下一步
 
-- **最后更新：** 2026-08-29
+- **最后更新：** 2026-08-30
 - **角色：** 本仓库唯一的**持久索引**。回答「已有什么、谁拥有它、下一步做什么」。
 - **不负责：** 硬性规则（见 [`AGENTS.md`](AGENTS.md)）、易变状态（见
   [`paper-2027/HANDOFF.md`](paper-2027/HANDOFF.md)）。
@@ -176,6 +176,7 @@ position-dependent operator，不把不同 target-free operator 一并判死。
 | 注意力需求测量 | `scripts/analysis/attention_phase_demand.py` | 含 `layerwise_plan()` → `per_layer_inv_freq` |
 | 全 RoPE 碰撞审计 | `scripts/analysis/full_rope_collision_audit.py` | §2.1 的数值 owner |
 | **第三轴静态 $r_2$ 搜索诊断** | [`scripts/analysis/third_axis_ceiling.py`](scripts/analysis/third_axis_ceiling.py) | §6.1 数值的可复现脚本；纯 CPU；报告 optimizer 的 best-found value，不是全局或行为上限 |
+| 有限 $K$ Cosh surrogate-regret 审计 | [`scripts/analysis/finite_k_cosh_regret_audit.py`](scripts/analysis/finite_k_cosh_regret_audit.py) | equal-mass quantile histogram 的纯 CPU 数值证书；只验证所述 surrogate 值的 $K^{-2}$ 系数，不是 $r_2$、LM loss 或 table selector |
 | signed-lag / gap / $k$-way identities | [`scripts/analysis/verify_signed_lag_kway_gap.py`](scripts/analysis/verify_signed_lag_kway_gap.py) | 纯 CPU 内部诊断；验证解析恒等式与静态反例，不是 checkpoint 结果或论文 claim owner |
 | 2026-08-19 全 RoPE 审计（有限 $K$、反例、正交格） | [`analysis/full_rope_audit/`](analysis/full_rope_audit/) | §2.1 正交格行与 §3.4 第 1–2 项的原始 owner；`finK_*`、`verify_small_models.py` |
 | supporting evaluator | [`scripts/supporting_eval/`](scripts/supporting_eval/) | endpoint 身份必须由 owner 确认 |
@@ -290,13 +291,19 @@ Native/long 行为无法区分 content failure 与 position/allocation failure�
 [`MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827`](paper-2027/research/attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md)
 拥有；design 文件不构成 readiness、结果或算力授权。
 
+2026-08-30 的后续冲刺 ROI 判决与 R1/R2 协议由
+[`ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830`](paper-2027/research/attention-aware-retrofit/preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md)
+记录。先冻结 candidate contract，再做 Native-window / far-tail 的最小 matched
+screen；position-binned NLL 只在候选通过后复用同批文档；gain-expanded mechanism
+cube 仍是条件式诊断。有限 $K$ 数值审计是独立理论证书，不能选择下一张表。
+
 ### 6.3 条件式研究顺序
 
 | 顺序 | 动作 | 进入条件 / 停止条件 |
 | --- | --- | --- |
 | S0 | 9 月文档治理与 current-PDF audit | 不改变科学 owner；实时状态只写 handoff |
 | S1 | 完成摘要、正文、appendix、supplement 与 submission gates | 不以旧模型评审或新增 compute 扩张范围 |
-| R1 | 冻结 zero-training 目标与 matched controls 冻结 | 明确 single-allocation、Native/long、likelihood/capability gates、owner 和 stop rule；不训练模型 |
+| R1 | 冻结 zero-training 目标与 matched controls | 按 `ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830` 明确 single-allocation、Native/long、likelihood/capability gates、owner 和 stop rule；不训练模型 |
 | R2 | 最小 frozen-checkpoint 候选筛选 | 先过同 rows 的 Native-window 与 far-tail likelihood；失败即停，不用下游分数救候选 |
 | R2d | matched-content phase 2x2 或 band attribution | 仅当判别会改变候选设计；不是默认前置任务 |
 | R3 | capability / downstream 确认与第二 checkpoint | 候选先通过 R2，再在冻结协议中确认至少一个 capability endpoint；扩张需单独授权 |
@@ -310,8 +317,9 @@ provenance。matched-content 与 band-attribution 都是 zero-training 优化中
 
 - **Current owner：** 当前 TeX、handoff 标明同步状态的 PDF、§2–§3 的 canonical
   owners、current theory state。
-- **Design only：** 新 zero-training candidate、matched-content 2x2，以及只有在候选
-  设计需要时才进入的 band attribution / grouped layer diagnostics。
+- **Design only：** `ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830` 的 R1/R2
+  contract、新 zero-training candidate、matched-content 2x2，以及只有在候选设计需要
+  时才进入的 band attribution / grouped layer diagnostics。
 - **Superseded：** 8 月 narrative/revision plans、protected-ramp scanning、旧 post-GPU
   roadmap、alternating model-review workflow。它们只按需用于审计，不进入冷启动。
 - **Closed negative：** §3.4 的 owner-backed 条目；不得通过改名恢复。

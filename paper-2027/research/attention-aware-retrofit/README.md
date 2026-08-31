@@ -84,19 +84,24 @@ readiness, not a result or a reason to repeat the fresh evaluation.
 | Route | State | Re-entry condition |
 | --- | --- | --- |
 | two-document learned direct-`z` | stopped by per-row held-out gate | a materially different identifiable objective and a new preflight; never resume its old downstream queue |
-| two tested analytic fixed-support static tables | stopped by 1x retention gate | do not reopen; the next table comes from the phase-kernel/latest optimized theory owner, not another candidate search or `tau`/band/gain sweep |
+| two tested analytic fixed-support static tables | stopped by 1x retention gate | do not reopen; any new candidate must use checkpoint state or matched behaviour to escape the closed static-scalar class, not another `tau`/band/gain sweep |
 | fresh shard002 Native/session confirmation | complete on disjoint 32/128/512 subsets | a different checkpoint population or task-family estimand, not more rows from the same shard |
 | mature shared-allocation phase oracle and dense-natural recovery | stopped after registered shell failure, matched full/tail attribution, and the completed frozen dose curve | a materially different theory/objective that targets full-sequence and tail behavior jointly; not more shells, steps, seeds, or allocation-LR tuning |
 | geometric/derived/coarse-ramp controls | complete fixed-support `z` and profile-detail contrasts | a new causal question; do not use official YaRN as a substitute control |
 | static/session control | complete routing contrast | a new router or cache-lifetime contract |
 
-There is no active GPU queue. Before future compute, read the handoff, this
-ledger, the intended result owner, and the relevant preflight in that order.
+There is no active GPU queue. The current local preparation is the R1/R2
+zero-training protocol in
+[`preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md);
+it has no selected candidate, certified runner, result, or compute
+authorization. Before future compute, read the handoff, this ledger, the
+intended result owner, and the relevant preflight in that order.
 The ledger compares specified allocation tensors, not method classes:
 non-geometricity and in-window quality provide no extrapolation guarantee.
-The open evidence is the phase-kernel theory table's zero-training mature-model
-Pareto, not discovery of another small-model table. Routing is an engineering
-reference, not a necessity claim.
+The open problem is a checkpoint-aware or matched-behaviour candidate that
+escapes the closed static-scalar class and passes the joint Native-window /
+far-tail gate, not discovery of another small-model table. Routing is an
+engineering reference, not a necessity claim.
 The historical retrospective is
 [`analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md`](analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md);
 the current action route is repository `INDEX.md` §6.
