@@ -23,11 +23,14 @@
 - **Published W0/F1 CPU-readiness checkpoint:**
   f508eb1153392a1a8460152f33b09ab8d8681978
   (`experiment: prepare W0 and F1 anchor stages`)
-- **Verified divergence after the scoped W0/F1 push:** 0 / 0; local,
-  `origin/main_0726`, and the live remote ref all resolved to `f508eb1`
-- **Git publication state:** the W0/F1 code, root README invocation, index route,
-  and frozen-protocol state are published at `f508eb1`; this handoff records
-  that immutable code publication without changing experiment code
+- **Published zero-training execution and scale-law checkpoint:**
+  00fffa3a9298d1a62bb8a3ddd50a17330cf0af36
+  (`research: complete zero-training scale-law experiments`)
+- **Verified divergence after the result push:** 0 / 0; local,
+  `origin/main_0726`, and the live remote ref all resolved to `00fffa3`
+- **Git publication state:** the repaired tournament code, result owners,
+  scale-law audit, index routes, and validation tests are published at
+  `00fffa3`; this handoff records the completed execution and shutdown state
 
 ## 1. Current result
 
@@ -248,6 +251,84 @@ W0/F1 CPU-readiness validation for checkpoint `f508eb1`:
 These receipts establish CPU readiness and identity binding only. They are not
 W0 measurements, candidate results, backend parity, or GPU authorization.
 
+Post-receipt live audit and local repair:
+
+- exact token comparison found `D/S/T` overlap with the 1,024-row R0
+  construction owner of `0/0/1`; the old `T` split is invalid for confirmation,
+  while `D` remains admissible for W0/F1;
+- the local evaluator now scores W0 Native-prefix from standalone `1x` rows,
+  binds runtime checkpoint/config, candidate manifest, rows, and code hashes,
+  and disables unused KV caching;
+- the local F2 implementation corrects the negative-log-frequency direction;
+  the previous realization was exactly anti-aligned with its declared target;
+- F3/F4 now reset every initialization and support factor to the same Native
+  rotary module, require the frozen F1 winner initialization, free each
+  document's backward graph before the next, and nominate only a table that
+  improves far-tail mean while passing both development guards;
+- the split builder now accepts the hash-bound R0 token tensor as an exclusion
+  owner. Rebuilding `T` was deliberately stopped when the author stated that
+  the no-card server CPU was unavailable; no GPU/model row was opened.
+
+These repairs remain local and uncommitted, but their experiment-machine copies
+were used for the 2026-08-31 run. Current manifests/contracts were regenerated
+before GPU evaluation. The rebuilt split receipt records one excluded R0 match,
+and exact token comparison confirms current `D/S/T` R0-prefix overlap `0/0/0`.
+
+2026-08-31 RTX 5090 execution receipt:
+
+- W0 measured Native / frozen s4 / official YaRN-4 on D. Frozen s4 minus YaRN
+  is `-0.0699/-0.1700/-0.4735` prefix/dense/tail NLL; the first W0 branch
+  therefore uniquely implies `ABSOLUTE`. The implementation failed to serialize
+  this mode before F1; because F1 has zero feasible arms under either mode, the
+  omission does not change its verdict and is recorded rather than backdated;
+- Native 1x-versus-4x prefix parity was exact on the checked rows. Full F1
+  stopped: its smallest nonzero morph has deltas
+  `+0.0028/+0.0442/-0.1015`, so long-dense fails before Native-prefix;
+- the attention-informed segmented-z follow-up likewise stopped at
+  `+0.0018/+0.0457/-0.1050`; a bounded RULER screen then scored single-key
+  `0/20` at both 8K and 16K and was interrupted before lower-value cells;
+- the static s4 system replicated its advantage over official YaRN on S and T.
+  On T, s4 minus Native is `+0.1138/-3.0695/-4.5280`, while s4 minus YaRN is
+  `-0.0461/-0.1609/-0.4569`; all three s4-minus-YaRN paired 95% intervals are
+  strictly negative;
+- increasing the s4 gain coefficient to `0.12` reduced unseen-nine RULER from
+  the frozen c=0.10 baselines `0.6594/0.6047` to `0.6487/0.5846` at 8K/16K;
+  the gain route is stopped;
+- fixed s4 at 4K scored core-four `1.00/0.90/0.15/0.61`, macro `0.665`, versus
+  the existing Native diagnostic `1.00/0.85/0.60/0.03`, macro `0.620`. This is
+  a real task trade-off, not uniform no-harm. The profile was fixed before
+  prefill and used cached generation, so the simple one-profile deployment is
+  KV-cache safe; exact Native short behavior still requires prefill-time
+  routing between fixed profiles.
+- a scale-consistency follow-up froze the same `p=2` movement mask and replaced
+  arithmetic frequency interpolation with `omega'_k=omega_k*s^(-m_k)`. The
+  arithmetic normalized-movement maximum error grows from `0.0814` at s2 to
+  `0.2456` at s8, while the log law is exact to floating-point error;
+- fixed-gain log-L1 (`1+0.1 log(s)`) scored full RULER-13
+  `0.7101/0.6671/0.5486` at 4K/8K/16K for the s4 maximum profile, versus
+  `0.7036/0.6662/0.5442` for the current arithmetic s4 profile. Gain-free L0
+  failed its RULER guard, so gain cannot be deleted;
+- log interpolation materially improved the arithmetic s8 core-four curve,
+  but the full-task run stopped after single-key-3 scored
+  `0.00/0.20/0.25` at 4K/8K/16K. The frozen movement mask is therefore not an
+  s8 scale-general solution, and no new coefficient/ramp/band was opened.
+
+No GPU process remains active. Raw outputs and receipts remain on the experiment
+storage; sanitized conclusions are now in the practical and scale-law owners. These
+results do not modify the frozen manuscript or create a new submission claim.
+The experiment instance accepted a normal system shutdown after the final
+receipt was written; a subsequent remote-shell probe timed out. The provider
+console was then checked independently and displayed `已关机` with `开机` as the
+available action, so paid compute is no longer running.
+
+Final local changed-path validation on the personal PC passed `184/184` across
+`test_success_first_portfolio.py`, `test_repository_navigation.py`,
+`test_rope_core.py`, and `test_fixed_support_z.py`. All changed Python modules
+compiled, the stage driver passed `bash -n`, the scale-law audit produced both
+JSON and PNG outputs, and `git diff --check` passed. The canonical `aidemo`
+invocation was skipped because this shell has no `conda`, as permitted by the
+machine-profile rules.
+
 Compilation certifies format and source/PDF health, not scientific truth.
 Scientific quantities were checked against their canonical owners during the
 rewrite; the final author number read-through remains a separate release gate.
@@ -284,9 +365,9 @@ OpenReview upload.
 | Order | Action | Exit condition |
 | --- | --- | --- |
 | 1 | Publish W0/F1 CPU-readiness code and protocol | **completed:** scoped commit `f508eb1` is on `origin/main_0726`; remote SHA verified |
-| 2 | Freeze success-first CPU assets | **completed:** portfolio, D/S/T firewall, W0/F1 manifests, official YaRN-4 table/gain, and both CPU contracts are hash-bound; no model result exists |
-| 3 | Run W0 on the chosen machine | first verify the home-PC checkpoint/data/runtime/GPU/backend identities; evaluate only Native / official YaRN-4 / frozen `s4` on D and freeze `ABSOLUTE` or `ANCHORED` before reading F1 output |
-| 4 | Run F1 only after W0 | separately authorize and pass the Native 1x-vs-4x parity smoke, then evaluate the frozen phase-chord morph grid on D; do not open S or T |
+| 2 | Freeze success-first CPU assets | **completed:** current manifests/contracts regenerated; exact R0-prefix overlap is `D/S/T=0/0/0` |
+| 3 | Run W0 on the chosen machine | **completed:** first branch measured; `ABSOLUTE` is uniquely implied, with the missing serialized mode receipt retained as a limitation |
+| 4 | Run F1 and bounded practical follow-ups | **completed:** F1/segmented-z/query-gain/gain-dose stopped; static s4 likelihood confirmed on S/T and fixed-profile 4K RULER completed |
 | 5 | Rebuild curated supplement | package contains the repaired manuscript source and passes leak/isolated-build checks |
 | 6 | 9/17 abstract/metadata freeze | title, abstract, author roster, profiles, quotas, and AI statement confirmed |
 | 7 | 9/25 full-paper freeze | owner-by-owner number read-through, final PDF/supplement approval, upload and downloaded-platform readback |
