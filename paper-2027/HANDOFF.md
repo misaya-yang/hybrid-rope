@@ -1,6 +1,6 @@
 # ICLR 2027 active handoff
 
-- **Updated:** 2026-08-30
+- **Updated:** 2026-08-31
 - **Target:** ICLR 2027
 - **Active manuscript:** paper-2027/
 - **Immutable NeurIPS baseline:** paper/
@@ -118,10 +118,12 @@ Active PDF:
 
 - path: paper-2027/main.pdf
 - SHA-256:
-  de458e2701a1a5aed85f9381b2205ffdac3e80d3aad4588a8545dfc863a4cd04
-- size: 552716 bytes
+  37aa6402a65d68b21909b0b3479c4e8edd811079e3922c2c1be915ddeab167e4
+- size: 776774 bytes
 - body: 9 pages
 - references begin: page 10
+- references end: page 13
+- appendix begins: page 14
 - total: 31 pages
 - page size: US Letter
 - undefined references/citations: 0
@@ -151,6 +153,20 @@ Passed locally on the personal PC:
 
 - paper-2027/compile.sh after the paper-identity repair: all ICLR format gates
   passed;
+- citation-metadata hardening against the current 42-key TeX/BBL set: RULER
+  now cites the COLM 2024 record; ordinary author lists, published venue/pages,
+  applicable DOI fields, and canonical URLs were repaired; Llama 3 and Qwen2.5
+  retain explicitly documented large-author `and others` exceptions;
+- post-citation `paper-2027/compile.sh`: 9-page body, 31 total pages, 0 undefined
+  refs/cites, 0pt worst overfull hbox, anonymity PASS, 0 Type 3/unembedded fonts;
+  References pages 10--13 passed visual inspection and the appendix begins on
+  page 14; TeX cites and BBL bibitems match 42/42 with `main.blg warning$=0`;
+- post-citation hashes: `refs/references.bib`
+  `bd09952fa53d8b1acf955bc2aef57a8b282c09f2a0aef6f0e488967ae6736f14`,
+  `main.bbl`
+  `845224e8f2e7a8f5f61c1625629adff8100653d235bcb0d82fcced9eb1334a58`,
+  and `main.pdf`
+  `37aa6402a65d68b21909b0b3479c4e8edd811079e3922c2c1be915ddeab167e4`;
 - title/abstract/Figure 1/Contributions reviewer smoke test: the first recovered
   identity is the finite-table support--allocation decomposition and spectral
   budget, not a frequency-reallocation method;
@@ -181,6 +197,14 @@ Skipped on this PC:
 - canonical aidemo Python/PyTorch/pytest suites;
 - final cross-environment release receipt.
 
+Work-machine validation for the success-first tournament code (run under Conda
+`aidemo` on the host that owns it): `tests/test_success_first_portfolio.py`
+13/13, `tests/test_repository_navigation.py` + `tests/test_rope_core.py` +
+`tests/test_fixed_support_z.py` 160/160, all new Python modules bytecode-clean,
+the stage driver passes `bash -n`, and an end-to-end CPU
+freeze → candidate-assemble → contract chain passed on synthetic R0 data. No
+model, checkpoint, or GPU was loaded in any of these checks.
+
 Compilation certifies format and source/PDF health, not scientific truth.
 Scientific quantities were checked against their canonical owners during the
 rewrite; the final author number read-through remains a separate release gate.
@@ -195,8 +219,9 @@ allowlist and manuscript source on 2026-08-29:
   6ea9fd61c12e9ed7d04926c03693a78e968644f00a2043f04dd96e60585b561b
 - size: 992809 bytes
 - status: its prior leak scan and isolated build passed, but the archive is no
-  longer source-synchronised after this framing repair; rebuild it before the
-  final work-machine cross-environment receipt and OpenReview upload
+  longer source-synchronised after the framing and citation-metadata repairs;
+  rebuild it before the final work-machine cross-environment receipt and
+  OpenReview upload
 
 The curated allowlist now includes the minimal reviewer-facing static-theory
 reproduction closure:
@@ -216,7 +241,7 @@ OpenReview upload.
 | Order | Action | Exit condition |
 | --- | --- | --- |
 | 1 | Publish current research-preparation checkpoint | **completed:** main checkpoint `5a09464` is on `origin/main_0726`; the follow-up handoff receipt closes publication state |
-| 2 | Freeze success-first portfolio assets | R0/raw owners restored; four family grids/algorithms, data firewall, table hashes, runner contract, and selection rule frozen before model output |
+| 2 | Freeze success-first portfolio assets | Tournament code written and locally smoke-tested (freezer, single-4x evaluator, F2/F3/F4 development runner, selection rule, D/S/T split builder, stage driver, contract tests); R0/raw owners located on the data machine; the portfolio freeze, split materialisation, and every GPU stage still need data-machine execution and separate per-stage authorization before model output |
 | 3 | Request per-stage compute authorization | author separately authorizes development, selection, confirmation, capability, and checkpoint-transfer stages only after their live readiness receipt |
 | 4 | Work-machine validation | canonical aidemo changed-path tests and later supplement cross-build pass or are explicitly dispositioned |
 | 5 | Rebuild curated supplement | package contains the repaired manuscript source and passes leak/isolated-build checks |

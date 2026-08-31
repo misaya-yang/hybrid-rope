@@ -170,8 +170,15 @@ position-dependent operator，不把不同 target-free operator 一并判死。
 
 | 需要 | 位置 | 规则 |
 | --- | --- | --- |
-| **频率表实现权威** | [`scripts/lib/rope/`](scripts/lib/rope/) | `schedules.py`（EVQ-Cosh 分位）、`target_free.py`（target-free 相位延拓）、`fixed_support_z.py`（可微内点 $z$）、`official_yarn.py`、`learnable_evq.py` |
+| **频率表实现权威** | [`scripts/lib/rope/`](scripts/lib/rope/) | `schedules.py`（EVQ-Cosh 分位）、`target_free.py`（target-free 相位延拓）、`fixed_support_z.py`（可微内点 $z$）、`official_yarn.py`、`learnable_evq.py`、`knot_allocation.py`（F3/F4 七节点五自由度）、`hat_projection.py`（F2 五维 hat 基） |
 | 主实验链 runner | [`scripts/core_text_phases/`](scripts/core_text_phases/) | canonical runner；新主实验放这里 |
+| **零训练 success-first 组合冻结** | [`scripts/analysis/freeze_success_first_portfolio.py`](scripts/analysis/freeze_success_first_portfolio.py) | 纯 CPU；物化 F1 morph 网格、F2 投影、F3 初始化并冻结选择规则；不是结果 |
+| 候选清单组装 | [`scripts/analysis/build_candidate_manifest.py`](scripts/analysis/build_candidate_manifest.py) | 纯 CPU；把 portfolio + dev 产出转成评估器输入 |
+| **单 4x 前向评估** | [`scripts/eval/eval_zero_training_tournament.py`](scripts/eval/eval_zero_training_tournament.py) | contract/parity/evaluate 三模式；GPU 阶段需 `--authorize` + 环境门禁 |
+| F2/F3/F4 development | [`scripts/eval/develop_zero_training_family.py`](scripts/eval/develop_zero_training_family.py) | 只在 D split 上校准；每族至多产出一个冻结代表 |
+| 选择/确认规则 | [`scripts/eval/zero_training_selection.py`](scripts/eval/zero_training_selection.py) | 纯 CPU 词典序规则与确认判决，可单测；含 `ABSOLUTE`/`ANCHORED` 可行性模式与 `YARN_ANCHORED_PARETO`，锚定模式缺实测 YaRN 参照时直接报错 |
+| D/S/T 防火墙分片 | [`scripts/data/build_success_first_splits.py`](scripts/data/build_success_first_splits.py) | 64/64/128 三路互斥；语料不足即停，不复用已见 rows |
+| 阶段 driver | [`scripts/eval/run_zero_training_tournament_5090.sh`](scripts/eval/run_zero_training_tournament_5090.sh) | freeze/splits/manifest/contract/parity/dev/select/confirm/capability，逐阶段独立授权 |
 | 可复用 CPU 诊断 | [`scripts/analysis/`](scripts/analysis/) | 不自动成为 paper claim |
 | 注意力需求测量 | `scripts/analysis/attention_phase_demand.py` | 含 `layerwise_plan()` → `per_layer_inv_freq` |
 | 全 RoPE 碰撞审计 | `scripts/analysis/full_rope_collision_audit.py` | §2.1 的数值 owner |
@@ -305,6 +312,15 @@ matched-content phase 2x2 仍保留为**条件式诊断桥**：仅当确认候�
 bins；bins 从第一轮即保存，但在主 verdict 后解释。gain-expanded mechanism cube 仍是
 条件式诊断。有限 $K$ 数值审计是独立理论证书，不能选择下一张表。
 
+2026-08-31 作者定向的增补写回同一 preflight（§2、§5.1、§5.2、§6、§10、§11），不新增
+第二权威：单表在窗代价的参照不再只有「零损害」，另加一档 **YaRN 锚定判决**
+（`YARN_ANCHORED_PARETO`）与配套的 `ANCHORED` 可行性模式，二者都要求同 rows 同
+forward 内实测的官方 YaRN factor-four 臂；`W0` 预注册**已冻结 `s4` 表的在窗代价测量**
+（部署时 `1x` 一律路由回 Native，因此该代价从未被测过），其结果在读任何候选开发行之前
+锁定用 `ABSOLUTE` 还是 `ANCHORED` 模式。严格档始终先判，锚定档只能新增候选、不能改写
+已通过的判决。防火墙经只读核验后确认：现有三个 FineWeb-Edu 评估分片（32/128/512 篇）
+全部 outcome-seen，`D/S/T` 必须改用未供过评估行的替换 shard。
+
 旧 leave-one-band-out 设计已审计为不可执行：B0/B0°/B1/B2 的突变恢复会产生非单调
 frequency crossings，B0 还改变 support，B4 也不是 exact sham。未来若需要 band
 attribution，必须重新构造通过单调性/hash gate 的累计或平滑投影干预。
@@ -316,9 +332,10 @@ attribution，必须重新构造通过单调性/hash gate 的累计或平滑投�
 | S0 | 9 月文档治理与 current-PDF audit | 不改变科学 owner；实时状态只写 handoff |
 | S1 | 完成摘要、正文、appendix、supplement 与 submission gates | 不以旧模型评审或新增 compute 扩张范围 |
 | R0 | 工作机 owner/data/runner preflight | 恢复 R0 与 historical raw owners；冻结互斥 development/selection/confirmation splits、代码/config/table hashes；无 GPU 输出前完成 |
+| W0 | 已冻结 `s4` 表的在窗锚定测量 | 只用 `D` 的 rows，臂为 Native / 官方 YaRN-4 / 冻结 `s4`；产出实测在窗代价并锁定 `ABSOLUTE` 或 `ANCHORED` 可行性模式；不提名候选，且必须在任何 R1-D 行之前完成 |
 | R1-D | 四候选族 development | F1 phase-chord morph、F2 Native-retention projection、F3 五自由度行为分配、F4 fixed support--allocation；每族只产生一个冻结代表 |
 | R1-S | 独立 family selection | 在未参与开发的同 rows 上按 Native-prefix/long-dense guards 与 far-tail lexicographic rule 选一个全局赢家；不在 selection 后重调 |
-| R2 | 单次 final confirmation | 只评估全局赢家；给出 `JOINT_IMPROVEMENT`、`DEPLOYABLE_PARETO`、`MECHANISM_ONLY`、`FAIL` 或 `UNRESOLVED`；下游不能救失败 likelihood gate |
+| R2 | 单次 final confirmation | 只评估全局赢家；给出 `JOINT_IMPROVEMENT`、`DEPLOYABLE_PARETO`、`YARN_ANCHORED_PARETO`、`MECHANISM_ONLY`、`FAIL` 或 `UNRESOLVED`；下游不能救失败 likelihood gate |
 | R2d | 条件式 matched-content phase bridge | 仅当确认结果机制不明且答案改变方法；旧 gain cube 和 band-restoration 设计不可直接继承 |
 | R3 | capability confirmation | 冻结赢家后评估 unsaturated RULER、full-200 2Wiki 与必要 source ablation；与 likelihood 分开报告 |
 | R4 | 第二 checkpoint | OLMo likelihood 与至少一个 capability endpoint 通过后，将 construction algorithm 而非 OLMo tensor 应用于 Qwen |

@@ -1,6 +1,12 @@
 # Zero-training success-first portfolio and confirmation protocol
 
 - **Date:** 2026-08-30
+- **Revised:** 2026-08-31 — author-directed amendment. Three additions, no
+  deletions: a YaRN-anchored verdict tier (§2, §6), a preregistered `W0`
+  in-window anchor measurement of the already frozen `s4` table (§5.1), and the
+  verified corpus-provenance firewall with its replacement source shard (§5.2).
+  The original four-family tournament, its stops, and its lexicographic rule are
+  unchanged.
 - **State:** `SUCCESS_FIRST_PORTFOLIO_DESIGN_ONLY`; four candidate families are
   specified below, but no realised candidate tensor, runner certification, model
   result, or GPU authorization exists
@@ -65,10 +71,30 @@ The target verdicts are deliberately stronger than “something moved”:
   guard;
 - `DEPLOYABLE_PARETO`: Native-prefix and long dense NLL are non-inferior and the
   far tail improves, but Native-prefix improvement is not established;
+- `YARN_ANCHORED_PARETO`: the far tail improves and the candidate's in-window and
+  long-dense costs are no worse than the in-window and long-dense costs that
+  official YaRN factor four incurs on the same rows, but at least one absolute
+  no-harm guard above fails;
 - `MECHANISM_ONLY`: a valid table moves one endpoint but fails the joint
   deployment contract;
 - `FAIL` or `UNRESOLVED`: the registered direction fails or the assay does not
   resolve it.
+
+The YaRN-anchored tier is an author-directed 2026-08-31 addition. Its rationale
+is that a single-table deployment replaces a routed system whose closest
+published alternative also pays an in-window cost: on the completed session
+owner, official YaRN factor four moves the 1x task macro from `0.3424` to
+`0.3173` and PG-19 1x tail NLL from `2.9712` to `3.3880`. Requiring a candidate
+to be simultaneously long-range better and in-window free is therefore stricter
+than the deployed alternative it would replace.
+
+Three constraints keep the tier honest. It requires an official YaRN
+factor-four arm evaluated on the identical rows in the identical forwards, so
+the anchor is measured rather than quoted across protocols. It is strictly
+weaker than `JOINT_IMPROVEMENT` and `DEPLOYABLE_PARETO` and never renames a
+result that met one of them. And it is a comparative deployment verdict, not a
+claim that the in-window cost is negligible: the measured cost must be reported
+with the verdict.
 
 No downstream score may convert `MECHANISM_ONLY`, `FAIL`, or an invalid run into
 `JOINT_IMPROVEMENT`.
@@ -247,6 +273,99 @@ All arms within a split use identical token IDs, row order, precision, attention
 backend, decoder, loss masks, and code. Document/source is the paired sampling
 unit; tokens and position bins are not independent samples.
 
+### 5.1 `W0` in-window anchor measurement (preregistered 2026-08-31)
+
+The completed session policy always routed `1x` requests back to the exact
+Native rotary module, so the frozen long table's own in-window cost was never
+measured. `W0` measures it once, before any candidate family is developed,
+because the YaRN-anchored tier in §2 needs a measured anchor rather than a
+cross-protocol quotation.
+
+The table under test is the deployed long profile itself. Its float32 digest is
+`a435d75441444bcea39b73d9cf530005249dc5afdc3cfb5a60fda10ef33312d3`, which equals
+the frozen long-table tensor digest recorded in
+[`SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`](../results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md)
+§4.1. Recomputed against the Native OLMo table (`base=500000`, `K=64`, which
+reproduces the R0-recorded buffer to `4.16e-8`), it is strictly decreasing and
+has this structure:
+
+| Property | Value |
+| --- | --- |
+| fast endpoint | pinned exactly, ratio `1.000000` |
+| slow endpoint | extended exactly `4.000000x` |
+| log-frequency span `R` | `12.917326` to `14.303621`, ratio `1.107321` |
+| interior allocation | max `abs(z_k - k/(K-1)) = 0.0626` at pair `22` |
+| untouched fast pairs | `7` pairs with movement `< 1e-6` |
+| slow-band movement | saturates at `0.75`, that is `1 - 1/4` |
+
+This is therefore a **support-and-allocation** table in the §2 label taxonomy,
+not a pure-`z` intervention: it moves the slow endpoint as well as the interior
+curve. `W0` accordingly anchors a deployment cost; it does not attribute that
+cost to allocation. Its structure is also the segmented fast-preserving,
+slow-scaled shape of the YaRN family, with a derived rather than heuristic
+transition location; that similarity is a positioning fact, not a novelty claim.
+
+Protocol:
+
+- **rows:** development split `D` only, its `1x` rows for the in-window endpoint
+  and its `4x` rows for context. `W0` never reads `S` or `T`;
+- **arms:** Native, official YaRN factor four, and the frozen `s4` table, on
+  identical token IDs, row order, precision, backend, decoder, and loss masks;
+- **endpoints:** `native_prefix_nll` over targets `1..L_native-1`, plus the §6
+  long-dense and far-tail endpoints from the same physical forwards;
+- **statistics:** paired-document bootstrap on the same documents, reported as
+  candidate-minus-Native and candidate-minus-YaRN differences.
+
+The decision branches are frozen before the rows exist:
+
+| Measured `s4` in-window cost | Consequence |
+| --- | --- |
+| no worse than official YaRN factor four | the YaRN-anchored contract is already met by an existing frozen table; the tournament continues only to improve on it, and this becomes a reported result rather than a search target |
+| worse than YaRN but within the §6 long-dense margin | the tournament proceeds with the YaRN-anchored tier active alongside the absolute tiers |
+| materially worse than YaRN | the trade-off is steep; retain the original absolute guards as the primary gate and record the anchor as descriptive only |
+
+`W0` produces an anchor and a reported cost. It nominates no candidate, replaces
+no family development gate, and cannot by itself promote the frozen `s4` table to
+a manuscript claim: the existing owner's estimand and routing identity still
+apply.
+
+### 5.2 Verified corpus provenance and replacement source (2026-08-31)
+
+A read-only data-machine audit established that every existing FineWeb-Edu
+evaluation shard is outcome-seen, so none of them may supply `D`, `S`, or `T`:
+
+| Shard | Documents | Consumed by | Status |
+| --- | ---: | --- | --- |
+| `fresh_long32` | 32 | fresh-FineWeb `s4` generalization arms | outcome-seen |
+| `fresh_long128_holdout` | 128 | completed dose-response study, matched by rows digest `f9861012...` | outcome-seen |
+| `fresh_long512_holdout` | 512 | fresh-FineWeb `s4` generalization holdout summaries | outcome-seen |
+| function-morph views | 4 texts | direct-`z` pilot | already in the split builder's exclusion constant |
+
+All four are drawn from source shard
+`547ae182d132c9f06b6ce63149567208ea9f57630bfd9b1a2938e504f0c9ebd7`
+(`sample/10BT/002_00000.parquet`), which is consequently exhausted for selection
+purposes in its first `672` eligible documents.
+
+The replacement source is `sample/10BT/003_00000.parquet`, digest
+`22184e6eb25759ddd97783751ffc73e1705dfa2542e630dae1f2a8bac8ee6ddb`,
+`2152437524` bytes. It has never supplied an evaluation row. It is one of the two
+components of the prepared one-billion-token corpus, whose token-stream digest
+`223e466b...` was verified to appear in no run receipt, so that corpus has not
+been consumed either. The split builder must still receive all three shard
+manifests as prior exclusions, so any text duplicated across shards is removed by
+hash rather than by assumption.
+
+The co-adaptive and learned-direction views cannot overlap this source: they were
+materialised on 2026-08-21 and 2026-08-22, before the `002`/`003` shards were
+acquired on 2026-08-24, and the one-billion-token receipt records those earlier
+shards as `000_00000`, `001_00000`, and `004_00000`. Record this argument in the
+readiness receipt; do not treat it as a substitute for the builder's hash-level
+exclusion.
+
+If `003_00000.parquet` cannot supply `256` disjoint documents of at least
+`16384` tokens, stop and acquire a further owner-backed shard. Do not relax the
+length rule, reuse an outcome-seen shard, or shrink a split to fit the corpus.
+
 ## 6. Endpoints, selection, and final verdict
 
 For every document/table, write per-row numerators and denominators for:
@@ -270,6 +389,21 @@ scale; applying the same margin to long-dense NLL is a new decision rule frozen
 here before the new rows exist. Neither is an uncertainty interval or universal
 constant.
 
+**Anchored feasibility mode (2026-08-31).** Step 1 above has two modes, and
+`W0` selects which one is active. In `ABSOLUTE` mode the `+0.01` margins stand as
+written. In `ANCHORED` mode a candidate is also feasible when its Native-prefix
+and long-dense costs are each no worse than the official YaRN factor-four cost
+measured on the same rows, even if one exceeds `+0.01` against Native. `ANCHORED`
+mode is enabled only by the second `W0` branch in §5.1, is recorded with the `W0`
+receipt before any candidate row is evaluated, and is never switched afterwards.
+Step 2 and step 3 are unchanged in both modes; the strict tiers are always
+evaluated first, so anchored feasibility can only add candidates that absolute
+feasibility would have discarded, never relabel one that already passed.
+
+Every split therefore carries an official YaRN factor-four arm on the same rows
+in the same physical forwards. Without that arm the anchored mode has no measured
+reference and must not be used.
+
 On final confirmation, use paired-document bootstrap intervals and issue exactly
 one verdict:
 
@@ -278,6 +412,10 @@ one verdict:
 - `DEPLOYABLE_PARETO`: the upper endpoint is at most `+0.01` for Native-prefix
   and long-dense NLL and below zero for far-tail NLL, but Native-prefix does not
   meet the strict improvement rule;
+- `YARN_ANCHORED_PARETO`: the upper endpoint is below zero for far-tail NLL and
+  at most zero for both the candidate-minus-YaRN Native-prefix difference and the
+  candidate-minus-YaRN long-dense difference, while at least one absolute margin
+  above is exceeded; report the absolute costs alongside the anchored comparison;
 - `MECHANISM_ONLY`: far-tail improves but either no-harm guard fails;
 - `FAIL`: a primary direction is wrong;
 - `UNRESOLVED`: directions are favourable but the frozen confirmation does not
@@ -370,13 +508,24 @@ Before requesting any GPU stage, the work machine must:
    target manifest;
 2. locate the completed dose-run per-row position bins by their owner hash before
    deciding whether any historical analysis needs recomputation;
-3. materialise every family grid/table, validate strict order, endpoints,
+3. materialise `D`, `S`, and `T` from the §5.2 replacement source shard with all
+   three outcome-seen shard manifests passed as prior exclusions, and stop if the
+   shard cannot supply the required disjoint documents;
+4. materialise every family grid/table, validate strict order, endpoints,
    support, pair count, float32 hash, and construction-data firewall;
-4. adapt `scripts/eval/eval_allocation_dose_grid.py` to accept a generic candidate
+5. adapt `scripts/eval/eval_allocation_dose_grid.py` to accept a generic candidate
    manifest, emit Native-prefix/long-dense/far-tail/bin denominators, record
    checkpoint/config/code/data hashes, and support a no-GPU contract mode;
-5. run canonical `aidemo` no-GPU/contract tests;
-6. freeze new output paths, disk/shutdown plan, and the exact development,
+6. include an official YaRN factor-four arm in every split's candidate manifest,
+   because §6 anchored feasibility and the `YARN_ANCHORED_PARETO` verdict have no
+   measured reference without it;
+7. run canonical `aidemo` no-GPU/contract tests on the host that owns that
+   environment; a data machine without `aidemo` may run the same checks under its
+   own interpreter, and that substitution must be named in the receipt rather
+   than reported as an equivalent canonical pass;
+8. run the §5.1 `W0` anchor stage on `D` and freeze the resulting `ABSOLUTE` or
+   `ANCHORED` feasibility mode before any family development row is evaluated;
+9. freeze new output paths, disk/shutdown plan, and the exact development,
    selection, confirmation, and capability manifests.
 
 After the author separately authorizes the stage, run one real row as a
@@ -391,6 +540,10 @@ selection rule.
 
 - Do not open `T` until all four family development verdicts, every surviving
   representative, the selection result, and the selection rule are frozen.
+- Do not read any family development row until `W0` has completed and its
+  `ABSOLUTE` or `ANCHORED` feasibility mode is recorded in its receipt.
+- Do not enable `ANCHORED` mode after any candidate outcome is visible, and do not
+  reclassify a completed verdict into `YARN_ANCHORED_PARETO` retrospectively.
 - Do not replace the global winner after any `T` output is visible.
 - Do not run a fifth shared-table shape on `T` after failure.
 - If the four-family portfolio fails, record the bounded conclusion: under the
