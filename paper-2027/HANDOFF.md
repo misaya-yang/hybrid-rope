@@ -17,11 +17,17 @@
 - **Published state before the current success-first documentation pass:**
   22477ae006315a2afbc05b58dc29838d37cb7107
   (`checkpoint: record follow-up sprint state`)
-- **Verified divergence at the start of the success-first documentation pass:**
-  0 / 0; worktree was clean
-- **Git publication state:** the research-preparation checkpoint is on
-  `origin/main_0726`; the success-first portfolio documentation is local and is
-  not yet committed or pushed
+- **Published success-first workflow checkpoint:**
+  5af6d46f844c92b87a582e96feb0891cc2745e7d
+  (`Add zero-training tournament workflow`)
+- **Published W0/F1 CPU-readiness checkpoint:**
+  f508eb1153392a1a8460152f33b09ab8d8681978
+  (`experiment: prepare W0 and F1 anchor stages`)
+- **Verified divergence after the scoped W0/F1 push:** 0 / 0; local,
+  `origin/main_0726`, and the live remote ref all resolved to `f508eb1`
+- **Git publication state:** the W0/F1 code, root README invocation, index route,
+  and frozen-protocol state are published at `f508eb1`; this handoff records
+  that immutable code publication without changing experiment code
 
 ## 1. Current result
 
@@ -62,12 +68,15 @@ live state and action queue.
 
 ## 2. Authorization and machine boundary
 
-Current authorization covers success-first zero-training plan/document updates
-and lightweight static validation on this PC.
+The author authorized the scoped W0/F1 code and documentation commit/push; that
+publication completed at `f508eb1`. Lightweight static validation remains
+allowed on this PC.
 
 It does **not** authorize new experiments, training, GPU inference/evaluation,
-paid compute, remote access, Git commit/push, OpenReview upload, unrelated remote
-mutation, branch operations, force-push, or history rewriting.
+paid compute, OpenReview upload, unrelated remote mutation, branch operations,
+force-push, or history rewriting. The author intends to run the experiment on
+the home PC; its checkpoint/data/runtime/GPU readiness must still be verified
+live before any model row is opened.
 
 The current low-configuration personal PC remains a documentation/planning host
 and is also a valid LaTeX/Tectonic and visual PDF host. It may run
@@ -192,9 +201,9 @@ Passed locally on the personal PC:
   scan, sensitive-diff scan, and `git diff --check` passed for the current
   documentation pass.
 
-Skipped on this PC:
+Still skipped for this iteration:
 
-- canonical aidemo Python/PyTorch/pytest suites;
+- full-repository and final cross-environment validation of the new W0/F1 patch;
 - final cross-environment release receipt.
 
 Work-machine validation for the success-first tournament code (run under Conda
@@ -204,6 +213,40 @@ Work-machine validation for the success-first tournament code (run under Conda
 the stage driver passes `bash -n`, and an end-to-end CPU
 freeze → candidate-assemble → contract chain passed on synthetic R0 data. No
 model, checkpoint, or GPU was loaded in any of these checks.
+
+W0/F1 CPU-readiness validation for checkpoint `f508eb1`:
+
+- the installed current-PC `aidemo` suite passed `180/180` across
+  `test_success_first_portfolio.py`, `test_repository_navigation.py`,
+  `test_rope_core.py`, and `test_fixed_support_z.py`; this is changed-path
+  validation, not the final cross-environment release receipt;
+- Python bytecode compilation, stage-driver `bash -n`, `git diff --check`,
+  sensitive-marker/private-path scans, and immutable `paper/` checks passed;
+- the data-machine interpreter passed the focused tournament suite `20/20` with
+  CUDA hidden; no model or GPU row was opened;
+- the firewall split sizes are `D/S/T = 64/64/128`, pairwise disjoint, with
+  replacement-source digest
+  `22184e6eb25759ddd97783751ffc73e1705dfa2542e630dae1f2a8bac8ee6ddb`;
+- W0 contains exactly Native / frozen `s4` / official YaRN-4; its manifest file
+  digest is `7e7336734253706e67b63089e4165256539246c98cea115fcc578417f9fd0af0`;
+- F1 contains Native, six nonzero phase-chord morphs, and official YaRN-4; its
+  manifest file digest is
+  `6bc51248fe2e25b880fce7e067be3d9c4243be0dd5725c827af0153ecaf79899`;
+- both no-GPU contracts returned `ZERO_TRAINING_TOURNAMENT_CONTRACT_OK`, bound to
+  D-row digest `376ba06cd4d65addfea124331a5a1acfc2eb8231a2b3872e94135c96f7b45c37`,
+  with `model_loaded=false` and `cuda_initialised=false`;
+- checkpoint weight digest is
+  `36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f`;
+  the frozen `s4` tensor remains
+  `a435d75441444bcea39b73d9cf530005249dc5afdc3cfb5a60fda10ef33312d3`,
+  and the Transformers 5.15.1 official YaRN-4 float32 table is
+  `cc9da456982ffce5ca0558e9ea661abc4a880ec002179ce6b9149d45aa4a016c`
+  with gain `1.138629436111989`;
+- an unauthorised `W0` launch stopped at the stage gate with exit `3` and wrote
+  no W0 output.
+
+These receipts establish CPU readiness and identity binding only. They are not
+W0 measurements, candidate results, backend parity, or GPU authorization.
 
 Compilation certifies format and source/PDF health, not scientific truth.
 Scientific quantities were checked against their canonical owners during the
@@ -240,10 +283,10 @@ OpenReview upload.
 
 | Order | Action | Exit condition |
 | --- | --- | --- |
-| 1 | Publish current research-preparation checkpoint | **completed:** main checkpoint `5a09464` is on `origin/main_0726`; the follow-up handoff receipt closes publication state |
-| 2 | Freeze success-first portfolio assets | Tournament code written and locally smoke-tested (freezer, single-4x evaluator, F2/F3/F4 development runner, selection rule, D/S/T split builder, stage driver, contract tests); R0/raw owners located on the data machine; the portfolio freeze, split materialisation, and every GPU stage still need data-machine execution and separate per-stage authorization before model output |
-| 3 | Request per-stage compute authorization | author separately authorizes development, selection, confirmation, capability, and checkpoint-transfer stages only after their live readiness receipt |
-| 4 | Work-machine validation | canonical aidemo changed-path tests and later supplement cross-build pass or are explicitly dispositioned |
+| 1 | Publish W0/F1 CPU-readiness code and protocol | **completed:** scoped commit `f508eb1` is on `origin/main_0726`; remote SHA verified |
+| 2 | Freeze success-first CPU assets | **completed:** portfolio, D/S/T firewall, W0/F1 manifests, official YaRN-4 table/gain, and both CPU contracts are hash-bound; no model result exists |
+| 3 | Run W0 on the chosen machine | first verify the home-PC checkpoint/data/runtime/GPU/backend identities; evaluate only Native / official YaRN-4 / frozen `s4` on D and freeze `ABSOLUTE` or `ANCHORED` before reading F1 output |
+| 4 | Run F1 only after W0 | separately authorize and pass the Native 1x-vs-4x parity smoke, then evaluate the frozen phase-chord morph grid on D; do not open S or T |
 | 5 | Rebuild curated supplement | package contains the repaired manuscript source and passes leak/isolated-build checks |
 | 6 | 9/17 abstract/metadata freeze | title, abstract, author roster, profiles, quotas, and AI statement confirmed |
 | 7 | 9/25 full-paper freeze | owner-by-owner number read-through, final PDF/supplement approval, upload and downloaded-platform readback |
