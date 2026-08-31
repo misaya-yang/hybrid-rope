@@ -3,8 +3,8 @@
 - **Original date:** 2026-08-26
 - **Lifecycle update:** 2026-08-30
 - **Status:** active theory-continuation boundary for work after the current
-  September manuscript cycle; experiment priority is superseded by the R1/R2
-  order in `INDEX.md` §6
+  September manuscript cycle; experiment priority is superseded by the
+  success-first candidate portfolio in `INDEX.md` §6
 - **Role:** durable theory continuation owner, not a parallel experiment plan
 - **Not:** a manuscript claim, experiment result, action queue, or compute
   authorization
@@ -13,10 +13,12 @@
 
 This document answers what the paper established, what later research ruled
 out, and which mechanism bridge remains available. Its former scheduling
-priority is superseded: the current order freezes a candidate contract, runs the
-minimal Native-window/far-tail screen, and uses the matched-content bridge only
-when a valid result is mechanism-ambiguous and the answer changes candidate
-design. Leave-one-band-out remains conditional after a positive bridge.
+priority is superseded: the current order develops four candidate families,
+selects one on a disjoint split, and opens final confirmation once. The
+matched-content bridge enters only when a valid confirmed result is
+mechanism-ambiguous and the answer changes candidate design. The historical
+leave-one-band-out arms are invalid because several restorations break frequency
+ordering; they are not a conditional queue.
 
 ## 1. Established theoretical core
 
@@ -132,12 +134,14 @@ This is a protocol design only. No GPU run is authorized by this document.
 
 ## 5. Conditional method directions after the bridge
 
-1. **Only if the matched-content bridge is positive:** the next mechanism
-   design is the leave-one-band-out restoration in
+1. **Only if the matched-content bridge is positive:** a future mechanism study
+   may ask which frequency movement carries the short-window cost and the
+   long-range benefit. It cannot reuse the abrupt leave-one-band-out restoration
+   in
    [`PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md`](attention-aware-retrofit/analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md)
-   §9. It asks which frequency movement carries the short-window cost and the
-   long-range benefit. It remains `DESIGN_NOT_EXECUTED`, needs a new preflight,
-   and is not an active route before the bridge.
+   §9: B0/B0°/B1/B2 violate strict frequency ordering, B0 moves support, and B4
+   is not an exact sham. A new preflight must construct monotone cumulative or
+   smoothly projected interventions and keep support separate.
 2. **Only after that mechanism gate warrants heterogeneous allocation:** test
    grouped per-layer allocation before per-head allocation. O7 contains a
    hypothesis that head-dependent priors may favour heterogeneous tables; it is

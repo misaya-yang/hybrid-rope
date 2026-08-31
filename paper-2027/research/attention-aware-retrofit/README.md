@@ -90,18 +90,22 @@ readiness, not a result or a reason to repeat the fresh evaluation.
 | geometric/derived/coarse-ramp controls | complete fixed-support `z` and profile-detail contrasts | a new causal question; do not use official YaRN as a substitute control |
 | static/session control | complete routing contrast | a new router or cache-lifetime contract |
 
-There is no active GPU queue. The current local preparation is the R1/R2
-zero-training protocol in
+There is no active GPU queue. The current local preparation is the success-first
+zero-training portfolio in
 [`preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md);
-it has no selected candidate, certified runner, result, or compute
-authorization. Before future compute, read the handoff, this ledger, the
+it specifies four candidate families---phase-chord morph, Native-retention
+projection, five-degree behavioural allocation, and a final fixed
+support--allocation family---plus disjoint development, selection, and final
+confirmation splits. It has no realised candidate tensors, certified runner,
+result, or compute authorization. Before future compute, read the handoff, this ledger, the
 intended result owner, and the relevant preflight in that order.
 The ledger compares specified allocation tensors, not method classes:
 non-geometricity and in-window quality provide no extrapolation guarantee.
-The open problem is a checkpoint-aware or matched-behaviour candidate that
-escapes the closed static-scalar class and passes the joint Native-window /
-far-tail gate, not discovery of another small-model table. Routing is an
-engineering reference, not a necessity claim.
+The open problem is now a bounded four-family search for a checkpoint-aware or
+matched-behaviour table that escapes the closed static-scalar class and passes
+Native-prefix, long-dense, and far-tail gates. The confirmation set is opened
+only once for the globally selected candidate. Routing is an engineering
+reference, not a necessity claim.
 The historical retrospective is
 [`analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md`](analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md);
 the current action route is repository `INDEX.md` §6.

@@ -68,8 +68,9 @@ universal LM optimum, and static effective rank is not a behavioural ranker.
 - Training seeds, fixed-checkpoint row bootstraps, task rows, configurations,
   and single matched trajectories are different uncertainty units.
 - Fixed-support effects are length- and checkpoint-conditional. Target
-  retargeting identifies a support–allocation interaction; it does not make the
-  coordinates additive or erase the fixed-support estimand.
+  retargeting reverses the tested ordering and establishes support-policy
+  conditionality; it does not identify a general support-by-allocation law,
+  make the coordinates additive, or erase the fixed-support estimand.
 
 ## Research lifecycle
 
@@ -78,13 +79,15 @@ The durable decision order lives only in [`../../INDEX.md`](../../INDEX.md)
 
 - **Next design gate:**
   [`ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](attention-aware-retrofit/preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md),
-  `R1_R2_PROTOCOL_ONLY`; no candidate, dedicated runner, result, or compute
-  authorization is implied.
+  `SUCCESS_FIRST_PORTFOLIO_DESIGN_ONLY`; four candidate families and the
+  development/selection/confirmation firewall are specified, but no realised
+  candidate, certified runner, result, or compute authorization is implied.
 - **Conditional diagnostic:**
   [`MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md`](attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md)
   enters only when a valid candidate screen is mechanism-ambiguous and the
-  answer changes candidate design. Grouped allocation and leave-one-band-out
-  attribution remain later gates.
+  answer changes candidate design. The archived leave-one-band-out arms are
+  invalid because several restorations break frequency ordering; grouped or
+  band-level work requires a new monotonicity-checked design.
 - **Superseded:** protected-progressive/protected-ramp scanning, old post-GPU
   priority memos, and August narrative/experiment plans.
 - **Closed or unresolved:** use [`../../INDEX.md`](../../INDEX.md) §3.4–§3.5.

@@ -7,7 +7,7 @@ an experiment ran.
 
 | Preflight | Lifecycle state |
 | --- | --- |
-| [`ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md) | ROI decision plus R1/R2 protocol; no candidate selected, no runner certified, and no GPU authorization |
+| [`ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md) | success-first four-family portfolio plus disjoint development/selection/confirmation protocol; no realised candidate, certified runner, result, or GPU authorization |
 
 ## Conditional diagnostic bridge
 
@@ -17,8 +17,10 @@ an experiment ran.
 
 The leave-one-band-out design in
 [`../analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md`](../analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md)
-§9 is conditional mechanism work only after a positive bridge. It has no
-preflight and no execution authorization.
+§9 is invalid as written: several abrupt band restorations make the frequency
+table non-monotone, B0 changes support, and B4 is not an exact sham. It has no
+preflight or execution authorization and cannot be revived without a new
+monotonicity-checked construction.
 
 ## Executed protocols
 
@@ -38,8 +40,8 @@ preflight and no execution authorization.
 
 | Preflight | Final state |
 | --- | --- |
-| [`PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md`](PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md) | historical, not executed, and superseded as an active route; protected-ramp formula scanning was retired on 2026-08-28, and any later band-attribution work is conditional on a positive matched-content bridge plus a new preflight |
-| [`FUNCTION_MORPH_PREFLIGHT_20260821.md`](FUNCTION_MORPH_PREFLIGHT_20260821.md) | prepared but deprioritized; no result |
+| [`PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md`](PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md) | historical, not executed, and superseded as an active route; protected-ramp formula scanning was retired, and the later abrupt band-restoration design is invalid rather than conditionally runnable |
+| [`FUNCTION_MORPH_PREFLIGHT_20260821.md`](FUNCTION_MORPH_PREFLIGHT_20260821.md) | old 18-target audit remains deprioritized and unexecuted; its hash-bound mature R0 and phase-chord construction are inputs to F1/F2 of the current success-first portfolio, not a revived execution queue |
 | [`PHASE_CHORD_LORA_RETROFIT_PREFLIGHT_20260822.md`](PHASE_CHORD_LORA_RETROFIT_PREFLIGHT_20260822.md) | revoked before GPU because the target was not identifiable from model input |
 | [`PHASE_ADAROPE_LORA_PREFLIGHT_20260822.md`](PHASE_ADAROPE_LORA_PREFLIGHT_20260822.md) | prepared no-GPU protocol; not current queue and no result |
 

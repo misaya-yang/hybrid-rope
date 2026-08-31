@@ -1,11 +1,12 @@
 # Protected-ramp theory analysis (2026-08-28)
 
-> **ARCHIVED LIFECYCLE NOTE (2026-08-29):** superseded as an active research
+> **ARCHIVED LIFECYCLE NOTE (updated 2026-08-30):** superseded as an active research
 > route. Preserve the boundary-scale derivations and mass arithmetic as
 > historical provenance, but do not execute the scan recommendations below.
-> The matched-content phase 2x2 is the sole next bridge; any later
-> leave-one-band-out work is conditional on a positive bridge and a new
-> authorized preflight.
+> The matched-content phase 2x2 is only a conditional diagnostic under the
+> current success-first portfolio. The later leave-one-band-out arms in the
+> rigorous composite are invalid because several restorations break frequency
+> ordering; they cannot be revived by authorization alone.
 
 - **Status:** `THEORY_ANALYSIS_NOT_EXECUTED` — analysis only. Contains no new
   experiment, no compute authorization, and no reviewer-facing claim.
@@ -13,12 +14,10 @@
   corrections C1–C5) in
   [`PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md`](PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md);
   where the two disagree, the composite's recomputed numbers govern.
-- **Direction update (2026-08-28):** the protected-ramp scan direction below
-  is superseded by author directive — the composite's §9 now carries the
-  leave-one-band-out frequency-band attribution design (which band's movement
-  owns the 4K cost / the 16K benefit). The recommendations in this document
-  about scanning new protection formulas are retired; its boundary scales and
-  mass arithmetic remain valid inputs to that design.
+- **Direction update:** the protected-ramp scan recommendations are retired.
+  The composite's later §9 band-restoration design is retained only as an
+  auditable invalid design; boundary scales and mass arithmetic remain valid
+  historical inputs to any newly derived monotone intervention.
 - **Role:** internal theory study of the "protect fast bands, move slow bands"
   direction as a fixed-support interior-$z$ problem; companion analysis to
   [`../preflights/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md`](../preflights/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md)

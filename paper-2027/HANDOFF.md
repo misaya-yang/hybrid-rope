@@ -14,9 +14,14 @@
   8e4d567 (`paper: reframe narrative around support-allocation decomposition`)
 - **Published research-preparation checkpoint:**
   5a09464 (`checkpoint: prepare zero-training follow-up sprint`)
-- **Verified divergence before edits:** 0 / 0
+- **Published state before the current success-first documentation pass:**
+  22477ae006315a2afbc05b58dc29838d37cb7107
+  (`checkpoint: record follow-up sprint state`)
+- **Verified divergence at the start of the success-first documentation pass:**
+  0 / 0; worktree was clean
 - **Git publication state:** the research-preparation checkpoint is on
-  `origin/main_0726`; this handoff update records its final state receipt.
+  `origin/main_0726`; the success-first portfolio documentation is local and is
+  not yet committed or pushed
 
 ## 1. Current result
 
@@ -27,8 +32,8 @@ method identity:
 1. $x_k=-\log\omega_k=a+Rz_k$ decomposes a finite table into sampled support
    $(a,R)$ and interior allocation $z$;
 2. the paired fixed-support intervention identifies $z$, while target-aware
-   support retargeting reverses the ordering and identifies support as the
-   distinct interacting coordinate;
+   support retargeting reverses the tested ordering and establishes that the
+   allocation result is conditional on the selected support policy;
 3. exact phase-invariant geometry exposes the finite spectral budget and
    slow-end redundancy;
 4. EVQ-Cosh is one analytic construction on this object;
@@ -36,8 +41,8 @@ method identity:
    behavioural consequences without pooling estimands.
 
 Fixed-support FMRoPE versus anchored EVQ-Cosh owns the clean allocation
-identification. The target-aware reversal owns the support--allocation
-interaction. FMRoPE is therefore a causal control, not a competitor to
+identification. The target-aware reversal owns support-policy conditionality,
+not a general support-by-allocation factorial law. FMRoPE is therefore a causal control, not a competitor to
 handicap. LeRoPE is attributed convergent evidence that learned allocation can
 improve in-window behaviour; it is not a matched comparator or mechanism
 validation.
@@ -57,14 +62,12 @@ live state and action queue.
 
 ## 2. Authorization and machine boundary
 
-Current authorization covers independent ROI review of the supplied follow-up
-plan, zero-training protocol/document preparation, useful CPU-only analysis
-code, lightweight static tests, and an ordinary commit/push of the resulting
-current workspace.
+Current authorization covers success-first zero-training plan/document updates
+and lightweight static validation on this PC.
 
 It does **not** authorize new experiments, training, GPU inference/evaluation,
-paid compute, OpenReview upload, unrelated remote mutation, branch operations,
-force-push, or history rewriting.
+paid compute, remote access, Git commit/push, OpenReview upload, unrelated remote
+mutation, branch operations, force-push, or history rewriting.
 
 The current low-configuration personal PC remains a documentation/planning host
 and is also a valid LaTeX/Tectonic and visual PDF host. It may run
@@ -94,8 +97,8 @@ The reviewer path is:
 1. a finite RoPE table has sampled support $(a,R)$ and an independent interior
    allocation $z$;
 2. paired fixed-support training identifies allocation cleanly, while
-   target-aware retargeting reverses the ordering and identifies support as the
-   second interacting coordinate;
+   target-aware retargeting reverses the ordering and shows that the tested
+   allocation order is conditional on support policy;
 3. exact full-sin/cos geometry characterises the finite basis's
    Renyi-2 effective dimension, including the representative
    46-nominal-dimension to $r_2=2.00$ slow block;
@@ -166,8 +169,12 @@ Passed locally on the personal PC:
   scaled-constant relative errors range from $1.66\times10^{-6}$ to
   $2.51\times10^{-4}$ in magnitude and tail slopes are within $0.0011$ of
   $-2$;
-- 22/22 lightweight standard-library tests covering repository navigation and
-  the new finite-K audit passed.
+- 23/23 lightweight standard-library tests covering repository navigation,
+  success-first portfolio routing, invalid band-restoration retirement, and the
+  finite-K audit passed;
+- changed-Markdown local-link audit, Python bytecode compilation, protected-scope
+  scan, sensitive-diff scan, and `git diff --check` passed for the current
+  documentation pass.
 
 Skipped on this PC:
 
@@ -209,11 +216,12 @@ OpenReview upload.
 | Order | Action | Exit condition |
 | --- | --- | --- |
 | 1 | Publish current research-preparation checkpoint | **completed:** main checkpoint `5a09464` is on `origin/main_0726`; the follow-up handoff receipt closes publication state |
-| 2 | Freeze R1 candidate contract | candidate signal, closed-class escape, table hash, matched rows, joint gate, and stop rule are fixed before model scoring |
-| 3 | Work-machine validation | canonical aidemo changed-path tests and later supplement cross-build pass or are explicitly dispositioned |
-| 4 | Rebuild curated supplement | package contains the repaired manuscript source and passes leak/isolated-build checks |
-| 5 | 9/17 abstract/metadata freeze | title, abstract, author roster, profiles, quotas, and AI statement confirmed |
-| 6 | 9/25 full-paper freeze | owner-by-owner number read-through, final PDF/supplement approval, upload and downloaded-platform readback |
+| 2 | Freeze success-first portfolio assets | R0/raw owners restored; four family grids/algorithms, data firewall, table hashes, runner contract, and selection rule frozen before model output |
+| 3 | Request per-stage compute authorization | author separately authorizes development, selection, confirmation, capability, and checkpoint-transfer stages only after their live readiness receipt |
+| 4 | Work-machine validation | canonical aidemo changed-path tests and later supplement cross-build pass or are explicitly dispositioned |
+| 5 | Rebuild curated supplement | package contains the repaired manuscript source and passes leak/isolated-build checks |
+| 6 | 9/17 abstract/metadata freeze | title, abstract, author roster, profiles, quotas, and AI statement confirmed |
+| 7 | 9/25 full-paper freeze | owner-by-owner number read-through, final PDF/supplement approval, upload and downloaded-platform readback |
 
 The two new body table files,
 tables/table_zero_training_system.tex and
@@ -229,23 +237,35 @@ the current from-training ceiling. No larger from-initialisation run or new
 seed program is planned or authorised.
 
 The author-ordered post-submission priority is frozen-checkpoint zero-training
-allocation optimization first and matched LoRA work second. The first target
-is a single allocation that itself improves both Native-window and long-range
-capability, rather than preserving the former only through routing.
-The 2026-08-30 ROI review is recorded in
+allocation optimization first and matched LoRA work second. The first target is
+one static table that itself improves Native-window and long-range behaviour,
+rather than preserving the former only through routing. Compute thrift is not
+the primary optimization target: the current plan maximises the probability of
+finding a result within four scientifically distinct candidate families.
+
+The 2026-08-30 success-first portfolio is recorded in
 [`research/attention-aware-retrofit/preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](research/attention-aware-retrofit/preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md):
-R1 freezes the candidate contract and R2 performs the minimal matched
-Native-window/far-tail screen. Position-binned NLL follows only after a
-candidate passes; matched-content phase/gain cubes or band attribution enter
-only when the diagnostic would change candidate design. The finite-K audit is
-an independent surrogate certificate, not a candidate selector. These are
-research targets and protocol gates, not manuscript claims or compute
-authorization. Durable ordering lives in [`../INDEX.md`](../INDEX.md) §6.
+phase-chord morph, Native-retention projection, five-degree behavioural
+allocation, and one fixed support--allocation family each nominate one candidate
+on development data. A separate selection split chooses one global winner and a
+128-document confirmation split is opened once. Native-prefix, long-dense,
+far-tail, and position bins come from the same physical `4x` forwards.
+
+The archived abrupt band-restoration design is invalid because several arms
+break frequency ordering; it is no longer a conditional queue. Matched-content
+phase/gain work enters only when a confirmed winner has a mechanism ambiguity
+that changes design. The finite-K audit remains an independent surrogate
+certificate, not a candidate selector. These are research targets and protocol
+gates, not manuscript claims or compute authorization. Durable ordering lives in
+[`../INDEX.md`](../INDEX.md) §6.
 
 ## 10. Author actions
 
 Before 9/17:
 
+- align the abstract/introduction/contribution wording with the canonical
+  support-policy-conditional reversal, without claiming a general
+  support-by-allocation factorial law;
 - freeze the author roster and confirm current OpenReview profiles;
 - confirm author-count/submission quotas and reciprocal-review eligibility;
 - confirm that the AI-use statement remains literally complete;

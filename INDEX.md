@@ -65,7 +65,7 @@
 | O3 | $\gamma_{\rm eff}$ 闭式；$\tau_*(L)$ **不是幂律**，$p\approx0.85$ 诊断可撤 | 已验证的纠错结论 |
 | O4 | 统一 surrogate 泛函 $\mathcal J[\rho]$ 与闭式 EVQ-Cosh-R | surrogate 数学构造；不是部署方法或 LM 排序器 |
 | O5 | arcsine 猜想**证伪**；数值自由优化只报告给定 optimizer/restarts 下的 best-found | 负结果保留 |
-| O6 | re-adaptation 秩界不可得，只有线性化替代 + 可测桥 O6′ | 开放、非当前优先级 |
+| O6 | re-adaptation 秩界不可得；线性化单投影幅度比例是前 $r$ 奇异值能量占比的平方根，Q/K 联合预算与 O6′ 仍开放 | 2026-08-30 纠错已写回 owner；非当前优先级 |
 | O7 | 头/层异质分配可能有价值 | 待验证推论；不是已完成的 Jensen 行为结论 |
 | O8 | $\Lambda(\mu)$ 的正则性缺口；朴素参与比**不是**上界 | 开放、非当前优先级 |
 
@@ -253,7 +253,7 @@ experiment plan 或旧 line number 继承任务。
 投稿前只保留三类高杠杆修改：
 
 1. **novelty 可见性：** 让 fixed-support estimand、FMRoPE 的 control 身份和
-   support-retargeted 交互在 reviewer 路径中各出现一次，不恢复方法胜负叙事；
+   support-policy 条件化的排序反转在 reviewer 路径中各出现一次，不恢复方法胜负叙事；
 2. **theory-to-evidence 接口：** 分开 exact identity、bounded surrogate、operating
    prior 与 trained-model evidence，不把静态几何写成 LM 排序器；
 3. **证据角色：** frozen、adapted、from-training 各由自己的 owner、endpoint 与
@@ -268,34 +268,46 @@ reviewer ceiling、现有证据缺什么、精确预算/owner/stop condition，�
 作者的现行决定是：当前论文冻结后，不再以大改正文或扩大 from-scratch 训练为主；
 后续研究优先优化 **zero-training frozen-checkpoint allocation**，LoRA 排在其后。
 
-第一目标不是再证明 allocation “存在”，而是在冻结模型、零参数更新条件下找到更强、
-更简单、更可部署的 allocation：
+第一目标不是再证明 allocation “存在”，而是在冻结模型、零模型权重更新条件下找到
+真正同时改善 Native-window 与长程行为的静态表。现行策略不再以“最少 GPU cell”为
+首要目标，而以 **3--5 个最高先验候选族内找到成功方案的概率** 为首要目标；额外算力
+只有在增加决定性或成功概率时才有 ROI。
 
 - 当前 derived / coarse 表和 Native/long session policy 是已完成基线，不是假设；
-- 优先目标是单一 allocation 本身同时改善 Native-window 与 long-range，而不只是依赖
+- 优先目标是单一静态表本身同时改善 Native-window 与 long-range，而不只是依赖
   routing 保住前者；
 - pure-(z) 结论必须固定 support、operator、checkpoint、gain、routing、data 和
   evaluation；若引入 gain 或 routing，必须另报 bundled-system 结果；
 - candidate 若使用 checkpoint-aware 信号，必须说明信号如何获得、是否 task-label-free，
-  以及如何避免把评测标签或目标长度泄漏进“通用部署”主张；
+  以及是否读取 multiscale development outcomes。所有权重冻结的方案可称
+  zero-weight-update；只有未做 outcome selection 的方案可称 zero-search；
 - 新目标不得回到 §3.4 已关闭的“共享单表 + 静态 scalar score”类别；必须明确它如何
   使用模型状态、matched behaviour 或其他新信息逃出该类；
 - 不通过训练新模型、扩大 from-scratch scale 或新增 pretraining seed 来解决该问题。
 
-matched-content phase 2x2 仍保留为**条件式诊断桥**：仅当一个 zero-training 候选的
-Native/long 行为无法区分 content failure 与 position/allocation failure，而且该判别会
-改变候选设计时才运行。它不再是自动的第一研究任务，也不是每个候选必须先支付的门票。
+候选开发采用一个 success-first tournament：phase-chord morph、Native-retention
+projection、五自由度行为分配和固定 support--allocation 联合设计分别在 development
+split 内冻结一个代表；selection split 只选一个全局赢家；confirmation split 只打开一次。
+这允许充分使用算力，同时阻止在同一确认集上连续试错。
+
+matched-content phase 2x2 仍保留为**条件式诊断桥**：仅当确认候选的 Native/long 行为
+机制不明，而且该判别会改变后续方法时才运行。它不是候选族、不是默认第一研究任务，也
+不是每个候选必须先支付的门票。
 其历史设计仍由
 [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826`](paper-2027/research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
 §4 和
 [`MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827`](paper-2027/research/attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md)
 拥有；design 文件不构成 readiness、结果或算力授权。
 
-2026-08-30 的后续冲刺 ROI 判决与 R1/R2 协议由
+2026-08-30 的 success-first 候选组合、数据防火墙、选择规则与确认协议由
 [`ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830`](paper-2027/research/attention-aware-retrofit/preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md)
-记录。先冻结 candidate contract，再做 Native-window / far-tail 的最小 matched
-screen；position-binned NLL 只在候选通过后复用同批文档；gain-expanded mechanism
-cube 仍是条件式诊断。有限 $K$ 数值审计是独立理论证书，不能选择下一张表。
+记录。一个物理 `4x` forward 同时输出 Native-prefix、long-dense、far-tail 和 position
+bins；bins 从第一轮即保存，但在主 verdict 后解释。gain-expanded mechanism cube 仍是
+条件式诊断。有限 $K$ 数值审计是独立理论证书，不能选择下一张表。
+
+旧 leave-one-band-out 设计已审计为不可执行：B0/B0°/B1/B2 的突变恢复会产生非单调
+frequency crossings，B0 还改变 support，B4 也不是 exact sham。未来若需要 band
+attribution，必须重新构造通过单调性/hash gate 的累计或平滑投影干预。
 
 ### 6.3 条件式研究顺序
 
@@ -303,23 +315,26 @@ cube 仍是条件式诊断。有限 $K$ 数值审计是独立理论证书，不�
 | --- | --- | --- |
 | S0 | 9 月文档治理与 current-PDF audit | 不改变科学 owner；实时状态只写 handoff |
 | S1 | 完成摘要、正文、appendix、supplement 与 submission gates | 不以旧模型评审或新增 compute 扩张范围 |
-| R1 | 冻结 zero-training 目标与 matched controls | 按 `ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830` 明确 single-allocation、Native/long、likelihood/capability gates、owner 和 stop rule；不训练模型 |
-| R2 | 最小 frozen-checkpoint 候选筛选 | 先过同 rows 的 Native-window 与 far-tail likelihood；失败即停，不用下游分数救候选 |
-| R2d | matched-content phase 2x2 或 band attribution | 仅当判别会改变候选设计；不是默认前置任务 |
-| R3 | capability / downstream 确认与第二 checkpoint | 候选先通过 R2，再在冻结协议中确认至少一个 capability endpoint；扩张需单独授权 |
-| R4 | matched LoRA 深化 | 仅在 zero-training 结论稳定后进入；保持 matched adaptation，不新增 from-scratch program |
+| R0 | 工作机 owner/data/runner preflight | 恢复 R0 与 historical raw owners；冻结互斥 development/selection/confirmation splits、代码/config/table hashes；无 GPU 输出前完成 |
+| R1-D | 四候选族 development | F1 phase-chord morph、F2 Native-retention projection、F3 五自由度行为分配、F4 fixed support--allocation；每族只产生一个冻结代表 |
+| R1-S | 独立 family selection | 在未参与开发的同 rows 上按 Native-prefix/long-dense guards 与 far-tail lexicographic rule 选一个全局赢家；不在 selection 后重调 |
+| R2 | 单次 final confirmation | 只评估全局赢家；给出 `JOINT_IMPROVEMENT`、`DEPLOYABLE_PARETO`、`MECHANISM_ONLY`、`FAIL` 或 `UNRESOLVED`；下游不能救失败 likelihood gate |
+| R2d | 条件式 matched-content phase bridge | 仅当确认结果机制不明且答案改变方法；旧 gain cube 和 band-restoration 设计不可直接继承 |
+| R3 | capability confirmation | 冻结赢家后评估 unsaturated RULER、full-200 2Wiki 与必要 source ablation；与 likelihood 分开报告 |
+| R4 | 第二 checkpoint | OLMo likelihood 与至少一个 capability endpoint 通过后，将 construction algorithm 而非 OLMo tensor 应用于 Qwen |
+| R5 | matched LoRA 深化 | 仅在 zero-weight-update 结论稳定后进入；保持 matched adaptation，不新增 from-scratch program |
 
 protected-progressive / protected-ramp 公式扫描已退役；其分析只保留历史算术与设计
-provenance。matched-content 与 band-attribution 都是 zero-training 优化中的条件式诊断，
-不与 zero-training 目标并列为独立主线。
+provenance。matched-content 是条件式诊断；旧 band-restoration arms 因破坏频率顺序而
+失效，不得进入执行队列。
 
 ### 6.4 生命周期与反重复
 
 - **Current owner：** 当前 TeX、handoff 标明同步状态的 PDF、§2–§3 的 canonical
   owners、current theory state。
-- **Design only：** `ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830` 的 R1/R2
-  contract、新 zero-training candidate、matched-content 2x2，以及只有在候选设计需要
-  时才进入的 band attribution / grouped layer diagnostics。
+- **Design only：** `ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830` 的四候选族
+  tournament、development/selection/confirmation firewall、matched-content 2x2，以及
+  只有在共享静态表组合完成后才重新定义的 grouped/per-layer diagnostics。
 - **Superseded：** 8 月 narrative/revision plans、protected-ramp scanning、旧 post-GPU
   roadmap、alternating model-review workflow。它们只按需用于审计，不进入冷启动。
 - **Closed negative：** §3.4 的 owner-backed 条目；不得通过改名恢复。

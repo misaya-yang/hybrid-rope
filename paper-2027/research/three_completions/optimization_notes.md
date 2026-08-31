@@ -178,13 +178,20 @@ best-found 自由密度形状（16 格，$\alpha{=}1$，Powell，3 restarts）�
 
 $$|\delta\mathcal L|\;\le\;\epsilon\Big(\sqrt{\textstyle\sum_{j\le r}\sigma_j(G_Q)^2}+\sqrt{\textstyle\sum_{j\le r}\sigma_j(G_K)^2}\Big).$$
 
-> **命题 O6（线性化 re-adaptation 地板）** 秩 $r$ LoRA 至多保留满秩更新一阶下降量的比例
-> $$\rho_r=\frac{\sum_{j\le r}\sigma_j(G)^2}{\sum_j\sigma_j(G)^2},$$
-> 等号当且仅当更新对齐 $G$ 的前 $r$ 个奇异子空间。
+> **O6 纠错（2026-08-30；线性化单投影容量）** 在相同 Frobenius 范数预算下，秩
+> $r$ 更新相对满秩更新可取得的一阶下降**幅度比例**是
+> $$\eta_r=
+> \sqrt{\frac{\sum_{j\le r}\sigma_j(G)^2}{\sum_j\sigma_j(G)^2}},$$
+> 而不是根号内的能量比例本身。等号要求更新对齐 $G$ 的前 $r$ 个奇异子空间。
+> 若 Q/K 共享一个联合范数或参数预算，还必须先声明预算如何在两个投影间分配；不能
+> 把两个单投影比例直接相加。
 
-这与 Part II 的 emulation 界**形式同构**（都是"谱前 $m$ 项能量占比"），因此给出一条可判定的桥：
+根号内的能量比例仍可与 Part II 的 emulation 谱做描述性比较，但它不等于一阶损失
+下降幅度比例。因此这里只保留一条待验的谱形状桥：
 
-> **待验猜想 O6′**：$\rho_r\approx$ Part II 表 4 中 $s_k$ 谱的能量占比。若成立，emulation 界就是 re-adaptation 界的良好代理，Theorem 3 的定量化就能直接搬到实验上。
+> **待验猜想 O6′**：$\eta_r^2\approx$ Part II 表 4 中 $s_k$ 谱的能量占比。即使成立，
+> 也只支持局部谱形状代理；把 emulation 界搬到 re-adaptation 仍需要损失局部模型与
+> Q/K 联合预算假设。
 
 **验证方案（一次反向传播，不训练）**：在 8B 移植后的 checkpoint 上取 $\nabla_{W_Q}\mathcal L,\nabla_{W_K}\mathcal L$，做 SVD，画 $\rho_r$ 曲线，与 $s_k$ 曲线叠图。Part II 预测 knee 在 $r\approx20$；若 $\rho_r$ 的 knee 也在那里 → O6′ 成立。
 

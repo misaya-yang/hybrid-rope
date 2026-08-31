@@ -1,5 +1,13 @@
 # OLMo-2 finite function-morph preflight
 
+> **Lifecycle update (2026-08-30):** the old three-target × morph-grid ×
+> three-length audit remains deprioritized and unexecuted. Its hash-bound mature
+> R0 collection, phase-chord construction, and `t=0.05` historical reference are
+> inputs to F1/F2 of
+> [`ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md).
+> This does not revive the old runner, transfer authorization, or create a
+> result.
+
 - **Date:** 2026-08-21
 - **Status:** `DEPRIORITIZED_READY_NOT_NEXT_GATE`; code and inputs prepared on
   a no-GPU host; no model evaluation or training has run

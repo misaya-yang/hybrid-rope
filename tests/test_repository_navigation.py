@@ -201,7 +201,7 @@ class RepositoryNavigationTests(unittest.TestCase):
         for required in ("LM-quality", "restarts", "algebraic", "not a global ceiling"):
             self.assertTrue(required in source, f"static-rank owner must state: {required}")
 
-    def test_followup_sprint_routes_zero_training_before_diagnostics(self):
+    def test_followup_sprint_routes_success_first_portfolio_before_diagnostics(self):
         index = (ROOT / "INDEX.md").read_text(encoding="utf-8")
         preflight = (
             ROOT
@@ -212,14 +212,39 @@ class RepositoryNavigationTests(unittest.TestCase):
         self.assertTrue(preflight.is_file())
         self.assertTrue(audit.is_file())
         self.assertIn(preflight.name, index)
-        self.assertIn("Native-window / far-tail", index)
+        self.assertIn("Native-prefix/long-dense", index)
         source = audit.read_text(encoding="utf-8")
         for boundary in ("not r2", "LM loss", "table selector"):
             self.assertIn(boundary, source)
         text = preflight.read_text(encoding="utf-8")
-        self.assertIn("P0: do first", text)
-        self.assertIn("P1 diagnostic, conditional", text)
-        self.assertIn("no GPU run authorized", text)
+        for required in (
+            "success-first",
+            "four candidate families",
+            "PC-MORPH",
+            "PC-RETENTION-PROJECT",
+            "Z5-BEHAVIOUR",
+            "SR-Z5",
+            "final confirmation `T`",
+            "does not authorize inference",
+        ):
+            self.assertIn(required, text)
+
+    def test_invalid_band_restoration_is_not_routed_to_execution(self):
+        preflight = (
+            ROOT
+            / "paper-2027/research/attention-aware-retrofit/preflights"
+            / "ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md"
+        ).read_text(encoding="utf-8")
+        archive = (
+            ROOT
+            / "paper-2027/research/attention-aware-retrofit/analysis"
+            / "PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md"
+        ).read_text(encoding="utf-8")
+        for text in (preflight, archive):
+            self.assertIn("invalid as written", text)
+            self.assertIn("frequency", text)
+            self.assertIn("ordering", text)
+        self.assertIn("Do not execute", archive)
 
     def test_static_search_is_not_promoted_to_optimality_or_support_invariance(self):
         agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")

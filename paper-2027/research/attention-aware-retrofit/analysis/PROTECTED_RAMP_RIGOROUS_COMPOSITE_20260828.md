@@ -1,11 +1,13 @@
 # Protected-ramp rigorous composite (2026-08-28)
 
-> **ARCHIVED LIFECYCLE NOTE (2026-08-29):** superseded as an active research
-> route. The matched-content phase 2x2 is the sole next identification bridge.
-> This document remains arithmetic and derivation provenance. Its §9
-> leave-one-band-out design is conditional on a positive completed bridge, a
-> new preflight, and explicit post-deadline compute authorization; it is not a
-> parallel queue.
+> **ARCHIVED LIFECYCLE NOTE (updated 2026-08-30):** superseded as an active
+> research route. This document remains arithmetic and derivation provenance.
+> Its §9 leave-one-band-out design is **invalid as written**, not merely
+> conditional: abrupt restoration of B0/B0°/B1/B2 breaks strict frequency
+> ordering, B0 changes sampled support, and B4 is a small nonzero intervention
+> rather than an exact sham. No execution or new preflight may inherit those
+> arms. Future attribution needs a newly derived monotonicity-checked cumulative
+> or smoothly projected intervention.
 
 - **Status:** `THEORY_ANALYSIS_NOT_EXECUTED`. Independent author-side
   re-derivation and CPU-only recomputation of the five-agent synthesis in
@@ -295,7 +297,18 @@ arithmetic, one precedent-based) and agree.
    $r\le1/s$) complete, or does partial movement $m\in(0,1)$ create a third
    regime worth naming?
 
-## 9. Addendum — band attribution: leave-one-band-out restoration design
+## 9. Invalidated addendum — leave-one-band-out restoration design
+
+> **Do not execute.** The historical construction below is retained so the
+> failure is auditable. For a restored block beginning at pair `j`, the pair
+> immediately before the block remains scaled by
+> `[(1-m_{j-1})+m_{j-1}/s]`, while pair `j` jumps to its Native frequency.
+> Under the canonical OLMo `s=4` movement profile this violates the strict
+> decreasing-order assertion used by
+> `scripts/analysis/rope_transport/same_support_controls.py` for B0/B0°/B1/B2.
+> Thus “set one band's movement to zero” is not a legal RoPE allocation for
+> those arms. The endpoint and sham defects are separate and remain as recorded
+> below.
 
 **Directive.** External cross-analysis (GPT, 2026-08-28) endorsed §1–§8 and
 sharpened the next question; the author then redirected the line: since the
@@ -307,16 +320,19 @@ each band to Native one at a time, and observe (i) which restoration recovers
 the 4K loss, (ii) whose restoration destroys 16K extrapolation — producing the
 map `frequency band → (native cost, long-range benefit)`. YaRN's
 "protect fast bands" is at best a surface correlate; the missing object is the
-causal attribution of the transition band. This section formulates that
-experiment exactly and pre-computes its predictions from V1–V7 and N1. Status:
-`DESIGN_NOT_EXECUTED`.
+causal attribution of the transition band. This section records the historical
+attempt and its predictions from V1–V7 and N1. The arm construction was later
+invalidated before execution; status: `INVALID_DESIGN_NOT_EXECUTED`.
 
 ### 9.1 Arms and exact reachability
 
 Reference table: the canonical derived s=4 table (SHA `a435d754…`, owners in
-§3). The shift rule is pair-wise affine in $m_k$, so "restore band $b$" is
-exactly realizable: arm $B_b$ installs $m'_k = m^{old}_k\cdot\mathbb 1[k\notin b]$
-— no refit, no approximation; every arm is a legal fixed-support intervention.
+§3). The shift rule is pair-wise affine in $m_k$, so the historical construction
+can algebraically install
+$m'_k = m^{old}_k\cdot\mathbb 1[k\notin b]$ without a refit. The former inference
+that this makes every arm a legal fixed-support allocation is false: algebraic
+element-wise reachability does not preserve global frequency order, and B0 also
+moves an endpoint. The invalidation note above governs.
 Controls: $C^+ = D$ (restore nothing), $C^- =$ Native (restore everything —
 exactly the Native checkpoint).
 
@@ -360,9 +376,11 @@ Per-arm $r_2$ under $U[0,4096]$ and $U[0,16384]$ from Appendix A.1–A.2
   is co-adaptation, not basis size). The pre-screen can rank the 4K cost
   channel; it can never rank the 16K benefit channel. Behavioral readout is
   mandatory.
-- B4 doubles as reachability control: its table differs from $C^+$ by at most
-  the §3-listed displacements ($m\le0.02$ per pair); any measured behavioral
-  effect there invalidates the comparison (protocol noise).
+- Historical B4 control proposal: its table differs from $C^+$ by at most the
+  §3-listed displacements ($m\le0.02$ per pair). This is a real nonzero
+  intervention, not a sham; a nonzero behavioural effect would therefore not
+  invalidate the harness. A future design needs an exact duplicate determinism
+  control.
 
 ### 9.4 Behavioral predictions — the 4K cost channel
 
@@ -408,8 +426,9 @@ per-band displacement at all (§9.6).
   reproduces the successful curve's onset $\approx11$ / cliff $\approx7$–$9$.
   Practical consequence: the protection boundary is the cliff, not $r=s$, and
   not $r=32$ (= YaRN $\beta_{fast}$, V7 — heuristic, not derived).
-- **W3 (control failure).** B4 measurably differs from $C^+$ ⇒ protocol or
-  evaluation noise; stop and fix before interpreting any arm.
+- **W3 (historical control reading, invalid).** The former rule treated any B4
+  effect as protocol noise. Because B4 is not an exact duplicate, that inference
+  is unsupported and cannot govern a future experiment.
 
 The N1 cliff straddles the B2/B3 boundary (foot $k=22$, $r=7.16$; head
 $k=21$, $r=8.79$), so any non-null B2 or B3 effect triggers the pre-specified
@@ -441,13 +460,10 @@ evaluation factor 2 in the preflight, not copied from OLMo.
 - Supersedes the protected-ramp scan direction: §3's identity map already
   proved protection-formula scans near the verified curve are ≈identity;
   attribution is the missing causal layer.
-- Governance: execution requires (1) a new preflight in the format of
-  `../preflights/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md` (arm list,
-  canonical hash gate `a435d754…`, gates and stop conditions, measurement
-  protocol frozen from the deployment evaluation in
-  `../../../appendix/a6_mature_scale.tex`); (2) explicit compute authorization;
-  (3) numbers routed to a canonical owner. No reviewer-facing claim until
-  executed.
+- Governance: this archived arm list has no execution path. Any future band
+  study must start from a new monotonicity-checked construction and preflight,
+  obtain explicit compute authorization, and route completed numbers to a new
+  canonical owner. No reviewer-facing claim follows from this invalid design.
 
 ## Appendix A — closed forms used (for independent checking)
 
