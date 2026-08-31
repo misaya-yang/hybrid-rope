@@ -29,6 +29,7 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 import pyarrow.parquet as pq
 from transformers import AutoTokenizer
 
@@ -119,6 +120,44 @@ def load_extra_exclusions(files: list[Path]) -> set[str]:
     return hashes
 
 
+def token_prefix_sha256(value: Any) -> str:
+    array = np.ascontiguousarray(np.asarray(value, dtype="<i8").reshape(-1))
+    return hashlib.sha256(array.tobytes()).hexdigest()
+
+
+def load_token_prefix_exclusions(
+    files: list[Path], *, prefix_length: int = NATIVE_LENGTH
+) -> tuple[set[str], list[dict[str, Any]]]:
+    import torch
+
+    hashes: set[str] = set()
+    receipts = []
+    for path_arg in files:
+        path = path_arg.expanduser().resolve()
+        payload = torch.load(path, map_location="cpu", weights_only=True)
+        if isinstance(payload, dict):
+            tensors = [value for value in payload.values() if torch.is_tensor(value)]
+            if len(tensors) != 1:
+                raise RuntimeError(f"token exclusion owner is ambiguous: {path}")
+            payload = tensors[0]
+        tensor = torch.as_tensor(payload).detach().cpu()
+        if tensor.ndim != 2 or tensor.shape[1] < prefix_length:
+            raise RuntimeError(
+                f"token exclusion owner must be [rows, >= {prefix_length}]: {path}"
+            )
+        owner_hashes = {
+            token_prefix_sha256(row[:prefix_length].numpy()) for row in tensor
+        }
+        hashes.update(owner_hashes)
+        receipts.append({
+            "owner_sha256": sha256_file(path),
+            "rows": int(tensor.shape[0]),
+            "prefix_length": int(prefix_length),
+            "prefix_set_sha256": canonical_sha256(sorted(owner_hashes)),
+        })
+    return hashes, receipts
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", type=Path, required=True)
@@ -127,6 +166,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--prior-manifest", type=Path, action="append", default=[])
     parser.add_argument("--exclude-text-sha256-file", type=Path, action="append", default=[])
+    parser.add_argument("--exclude-token-prefix-tensor", type=Path, action="append", default=[])
     parser.add_argument("--skip-eligible-documents", type=int, default=0)
     return parser.parse_args()
 
@@ -167,6 +207,9 @@ def main() -> int:
 
     prior_hashes, prior_receipts = load_prior_hashes(args.prior_manifest)
     extra_hashes = load_extra_exclusions(args.exclude_text_sha256_file)
+    token_prefix_hashes, token_prefix_receipts = load_token_prefix_exclusions(
+        args.exclude_token_prefix_tensor
+    )
     tokenizer_sha = tokenizer_digest(checkpoint)
     tokenizer = AutoTokenizer.from_pretrained(
         checkpoint, local_files_only=True, trust_remote_code=False
@@ -178,6 +221,7 @@ def main() -> int:
     selected_hashes: set[str] = set()
     source_row = 0
     eligible_seen = 0
+    token_prefix_matches_excluded = 0
 
     for batch in pq.ParquetFile(source).iter_batches(batch_size=16, columns=["text"]):
         texts = [str(value) for value in batch.column(0).to_pylist()]
@@ -187,6 +231,9 @@ def main() -> int:
             row_index = source_row
             source_row += 1
             if text_sha in excluded or len(ids) < NATIVE_LENGTH * 4:
+                continue
+            if token_prefix_sha256(ids[:NATIVE_LENGTH]) in token_prefix_hashes:
+                token_prefix_matches_excluded += 1
                 continue
             if eligible_seen < int(args.skip_eligible_documents):
                 eligible_seen += 1
@@ -261,6 +308,8 @@ def main() -> int:
         "split_sizes": SPLIT_SIZES,
         "prior_split_receipts": prior_receipts,
         "extra_exclusion_hashes": len(extra_hashes),
+        "token_prefix_exclusion_receipts": token_prefix_receipts,
+        "token_prefix_matches_excluded": token_prefix_matches_excluded,
         "skip_eligible_documents": int(args.skip_eligible_documents),
         "splits": firewall,
         "pairwise_disjoint": True,

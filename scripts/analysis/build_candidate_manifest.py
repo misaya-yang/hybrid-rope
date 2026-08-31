@@ -33,6 +33,14 @@ USES_LONG_RANGE = {"F1_PC_MORPH": False, "F2_PC_RETENTION_PROJECT": False,
                    "F3_Z5_BEHAVIOUR": True, "F4_SR_Z5": True}
 W0_S4_SHA256 = "a435d75441444bcea39b73d9cf530005249dc5afdc3cfb5a60fda10ef33312d3"
 
+from scripts.eval.eval_zero_training_tournament import (  # noqa: E402
+    checkpoint_identity,
+    sha256_file,
+)
+from scripts.analysis.freeze_success_first_portfolio import (  # noqa: E402
+    reconstruct_phase_chord_target,
+)
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -45,6 +53,26 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--w0-s4-table", type=Path, default=None,
         help="emit the W0-only Native/official-YaRN-4/frozen-s4 manifest",
+    )
+    parser.add_argument(
+        "--w0-decompose-gain", action="store_true",
+        help="add Native+matched-gain and frozen-s4+unit-gain decomposition arms",
+    )
+    parser.add_argument(
+        "--s4-gain-coeff-grid", nargs="+", type=float, default=None,
+        help="with --w0-s4-table, add combined s4 table x attention-gain candidates",
+    )
+    parser.add_argument(
+        "--segmented-pc-cutoff", type=int, default=None,
+        help="protect Native pairs through this inclusive index and morph only the PC tail",
+    )
+    parser.add_argument(
+        "--segmented-pc-grid", nargs="+", type=float,
+        default=(0.05, 0.10, 0.20, 0.35),
+    )
+    parser.add_argument(
+        "--query-gain-coefficient", type=float, default=None,
+        help="with segmented PC, add the fixed post-boundary query-only gain factorial",
     )
     parser.add_argument(
         "--w0-s4-expected-sha256", default=W0_S4_SHA256,
@@ -156,19 +184,122 @@ def main() -> int:
             "support_factor": float(support),
         })
 
-    # Native control + F1 grid.
-    for entry in f1["tables"]:
-        if args.w0_s4_table is not None and not entry["is_bitwise_native"]:
-            continue
+    if args.segmented_pc_cutoff is not None:
+        if args.w0_s4_table is not None:
+            raise ValueError("segmented PC and W0 manifests are separate roles")
+        cutoff = int(args.segmented_pc_cutoff)
+        if not 0 < cutoff < pair_count - 1:
+            raise ValueError("segmented PC cutoff must leave protected and active interior pairs")
+        source = portfolio.get("source", {})
+        collection = Path(source["r0_collection"]).resolve()
+        if sha256_file(collection) != source["r0_collection_sha256"]:
+            raise RuntimeError("segmented PC R0 collection identity drift")
+        reconstructed_native, target, _ = reconstruct_phase_chord_target(collection)
+        if float32_sha256(reconstructed_native) != native_entry["inv_freq_float32_sha256"]:
+            raise RuntimeError("segmented PC Native reconstruction drift")
+        if float32_sha256(target) != portfolio["phase_chord_target"]["inv_freq_float32_sha256"]:
+            raise RuntimeError("segmented PC target reconstruction drift")
+
         add(
-            entry, "F1_PC_MORPH",
-            is_native=bool(entry["is_bitwise_native"]),
-            support=1.0,
-            path=entry["path"],
-            table_hash=entry["inv_freq_float32_sha256"],
-            dof=0 if entry["is_bitwise_native"] else TIEBREAK_DOF["F1_PC_MORPH"],
-            uses_long=USES_LONG_RANGE["F1_PC_MORPH"],
+            native_entry, "F1_SEGMENTED_PC_Z",
+            is_native=True, support=1.0, path=native_entry["path"],
+            table_hash=native_entry["inv_freq_float32_sha256"], dof=0, uses_long=False,
         )
+        query_gain_coefficient = args.query_gain_coefficient
+        if query_gain_coefficient is not None:
+            query_gain_coefficient = float(query_gain_coefficient)
+            if not math.isfinite(query_gain_coefficient) or query_gain_coefficient < 0.0:
+                raise ValueError("query gain coefficient must be finite and non-negative")
+            candidates.append({
+                "name": "native_post_boundary_query_gain",
+                "family": "REFERENCE_QUERY_GAIN_ONLY",
+                "path": native_entry["path"],
+                "table_sha256_float32": native_entry["inv_freq_float32_sha256"],
+                "pair_count": pair_count,
+                "is_bitwise_native": False,
+                "is_reference": True,
+                "is_combined_system": True,
+                "attention_scaling": 1.0,
+                "query_gain_coefficient": query_gain_coefficient,
+                "calibrated_dof": 0,
+                "used_long_range_in_construction": False,
+                "chord_displacement_rms": 0.0,
+                "support_factor": 1.0,
+            })
+        log_fast = math.log(float(reconstructed_native[0]))
+        span = math.log(float(reconstructed_native[0] / reconstructed_native[-1]))
+        native_z = (log_fast - np.log(reconstructed_native)) / span
+        target_z = (log_fast - np.log(target)) / span
+        tail_u = (target_z[cutoff:] - target_z[cutoff]) / (1.0 - target_z[cutoff])
+        segmented_target_z = native_z.copy()
+        segmented_target_z[cutoff:] = (
+            native_z[cutoff] + (1.0 - native_z[cutoff]) * tail_u
+        )
+        tables_dir = output.parent / "segmented_pc_tables"
+        tables_dir.mkdir(parents=True, exist_ok=True)
+        for amount in args.segmented_pc_grid:
+            t = float(amount)
+            if not math.isfinite(t) or not 0.0 < t <= 1.0:
+                raise ValueError("segmented PC morph amounts must lie in (0, 1]")
+            z = (1.0 - t) * native_z + t * segmented_target_z
+            table = np.exp(log_fast - span * z)
+            table[: cutoff + 1] = reconstructed_native[: cutoff + 1]
+            table[-1] = reconstructed_native[-1]
+            table = np.ascontiguousarray(table, dtype="<f4")
+            if not np.all(table[:-1] > table[1:]):
+                raise RuntimeError(f"segmented PC t={t:g} is not strictly decreasing")
+            name = f"segpc_c{cutoff}_t{t:g}".replace(".", "p")
+            table_path = tables_dir / f"{name}.npy"
+            np.save(table_path, table, allow_pickle=False)
+            candidates.append({
+                "name": name,
+                "family": "F1_SEGMENTED_PC_Z",
+                "path": str(table_path.resolve()),
+                "table_sha256_float32": float32_sha256(table),
+                "pair_count": pair_count,
+                "is_bitwise_native": False,
+                "is_reference": False,
+                "attention_scaling": 1.0,
+                "calibrated_dof": 1,
+                "used_long_range_in_construction": False,
+                "chord_displacement_rms": chord_rms(table_path, native_table),
+                "support_factor": 1.0,
+                "protected_through_pair": cutoff,
+                "morph_t": t,
+            })
+            if query_gain_coefficient is not None:
+                candidates.append({
+                    "name": f"{name}_post_query_gain",
+                    "family": "SEGMENTED_PC_Z_QUERY_GAIN",
+                    "path": str(table_path.resolve()),
+                    "table_sha256_float32": float32_sha256(table),
+                    "pair_count": pair_count,
+                    "is_bitwise_native": False,
+                    "is_reference": False,
+                    "is_combined_system": True,
+                    "attention_scaling": 1.0,
+                    "query_gain_coefficient": query_gain_coefficient,
+                    "calibrated_dof": 2,
+                    "used_long_range_in_construction": False,
+                    "chord_displacement_rms": chord_rms(table_path, native_table),
+                    "support_factor": 1.0,
+                    "protected_through_pair": cutoff,
+                    "morph_t": t,
+                })
+    else:
+        # Native control + F1 grid.
+        for entry in f1["tables"]:
+            if args.w0_s4_table is not None and not entry["is_bitwise_native"]:
+                continue
+            add(
+                entry, "F1_PC_MORPH",
+                is_native=bool(entry["is_bitwise_native"]),
+                support=1.0,
+                path=entry["path"],
+                table_hash=entry["inv_freq_float32_sha256"],
+                dof=0 if entry["is_bitwise_native"] else TIEBREAK_DOF["F1_PC_MORPH"],
+                uses_long=USES_LONG_RANGE["F1_PC_MORPH"],
+            )
 
     if args.w0_s4_table is not None:
         s4_path = args.w0_s4_table.resolve()
@@ -194,9 +325,66 @@ def main() -> int:
             "chord_displacement_rms": chord_rms(s4_path, native_table),
             "support_factor": 4.0,
         })
+        if args.w0_decompose_gain:
+            matched_gain = 1.0 + 0.1 * math.log(4.0)
+            candidates.extend([
+                {
+                    "name": "native_matched_gain",
+                    "family": "REFERENCE_GAIN_ONLY",
+                    "path": native_entry["path"],
+                    "table_sha256_float32": native_entry["inv_freq_float32_sha256"],
+                    "pair_count": pair_count,
+                    "is_bitwise_native": False,
+                    "is_reference": True,
+                    "attention_scaling": matched_gain,
+                    "calibrated_dof": 0,
+                    "used_long_range_in_construction": False,
+                    "chord_displacement_rms": 0.0,
+                    "support_factor": 1.0,
+                },
+                {
+                    "name": "frozen_s4_gain1",
+                    "family": "S4_UNIT_GAIN_DECOMPOSITION",
+                    "path": str(s4_path),
+                    "table_sha256_float32": s4_hash,
+                    "pair_count": pair_count,
+                    "is_bitwise_native": False,
+                    "is_reference": False,
+                    "attention_scaling": 1.0,
+                    "calibrated_dof": 0,
+                    "used_long_range_in_construction": False,
+                    "chord_displacement_rms": chord_rms(s4_path, native_table),
+                    "support_factor": 4.0,
+                },
+            ])
+        if args.s4_gain_coeff_grid:
+            for coefficient in args.s4_gain_coeff_grid:
+                c = float(coefficient)
+                if not math.isfinite(c) or c < 0.0:
+                    raise ValueError("s4 gain coefficients must be finite and non-negative")
+                name = f"frozen_s4_gain_c{c:g}".replace(".", "p")
+                candidates.append({
+                    "name": name,
+                    "family": "S4_Z_GAIN_CALIBRATION",
+                    "path": str(s4_path),
+                    "table_sha256_float32": s4_hash,
+                    "pair_count": pair_count,
+                    "is_bitwise_native": False,
+                    "is_reference": False,
+                    "is_combined_system": True,
+                    "attention_scaling": 1.0 + c * math.log(4.0),
+                    "attention_gain_coefficient": c,
+                    "calibrated_dof": 1,
+                    "used_long_range_in_construction": True,
+                    "chord_displacement_rms": chord_rms(s4_path, native_table),
+                    "support_factor": 4.0,
+                })
 
     # Development representatives (F2/F3/F4), when their receipts are supplied.
-    for receipt_path in ([] if args.w0_s4_table is not None else args.dev_receipt):
+    for receipt_path in (
+        [] if args.w0_s4_table is not None or args.segmented_pc_cutoff is not None
+        else args.dev_receipt
+    ):
         receipt = json.loads(receipt_path.expanduser().resolve().read_text(encoding="utf-8"))
         representative = receipt.get("representative")
         if not representative or receipt.get("family_stop"):
@@ -233,10 +421,25 @@ def main() -> int:
     payload = {
         "status": "SUCCESS_FIRST_CANDIDATES_ASSEMBLED_V1",
         "pair_count": pair_count,
-        "manifest_role": "W0_ANCHOR" if args.w0_s4_table is not None else "TOURNAMENT",
+        "manifest_role": (
+            "S4_GAIN_DEVELOPMENT" if args.s4_gain_coeff_grid
+            else "W0_ANCHOR" if args.w0_s4_table is not None
+            else "SEGMENTED_PC_DEVELOPMENT" if args.segmented_pc_cutoff is not None
+            else "TOURNAMENT"
+        ),
         "portfolio_content_sha256": portfolio.get("content_sha256"),
+        "checkpoint_identity": checkpoint_identity(args.checkpoint.resolve()),
         "candidates": candidates,
     }
+    if args.segmented_pc_cutoff is not None:
+        payload["segmented_pc"] = {
+            "protected_through_pair": int(args.segmented_pc_cutoff),
+            "morph_grid": [float(t) for t in args.segmented_pc_grid],
+            "support_factor": 1.0,
+            "attention_scaling": 1.0,
+            "query_gain_coefficient": args.query_gain_coefficient,
+            "construction": "Native z through cutoff; conditionally normalized phase-chord tail",
+        }
     payload["content_sha256"] = hashlib.sha256(
         json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
     ).hexdigest()

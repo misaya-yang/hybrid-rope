@@ -7,11 +7,12 @@
   verified corpus-provenance firewall with its replacement source shard (§5.2).
   The original four-family tournament, its stops, and its lexicographic rule are
   unchanged.
-- **State:** `PROTOCOL_FROZEN / CPU_CONTRACT_READY`; the four candidate families,
-  firewall splits, W0/F1 manifests, and no-GPU contract paths have been realised
-  and hash-checked. This is readiness only: no W0 measurement, candidate
-  likelihood, model result, or GPU authorization exists. Volatile receipts live
-  only in the handoff.
+- **State:** `EXECUTED_THROUGH_SCALE_LAW_FOLLOWUP / PURE_Z_FAMILIES_STOPPED`;
+  the rebuilt `D/S/T` splits have exact R0-prefix overlap `0/0/0`. W0, F1,
+  segmented-z, attention-gain interaction, static-s4 S/T likelihood, bounded
+  RULER follow-ups, and the later author-directed log-frequency scale-law test
+  are recorded by the practical and scale-law result owners. Volatile machine
+  receipts live only in the handoff.
 - **Agenda owner:** repository `INDEX.md` §6
 - **Purpose:** maximise the probability of finding a frozen-checkpoint table that
   improves Native-window and long-range behaviour within three to five
@@ -27,8 +28,8 @@ declared shared-static-table programme after a serious four-family search.
 The programme is therefore a **candidate tournament**, not one tiny candidate
 followed by improvised retries:
 
-1. four high-prior candidate families are developed on a common development
-   split;
+1. four candidate families with high prior are developed on a common
+   development split;
 2. each surviving family freezes at most one representative before a separate
    selection split is opened; a family that fails its development gate
    nominates none;
@@ -364,6 +365,13 @@ shards as `000_00000`, `001_00000`, and `004_00000`. Record this argument in the
 readiness receipt; do not treat it as a substitute for the builder's hash-level
 exclusion.
 
+A later exact-token audit found one `T` document whose first 4K tokens equal an
+R0 construction row; `D` and `S` had zero such matches. The earlier
+pairwise-split receipt therefore did not establish the required R0 firewall.
+Before `T` is opened, rebuild the splits with the hash-bound R0 token tensor
+passed as a token-prefix exclusion owner and require zero remaining R0 matches.
+This defect does not contaminate `D`, so it does not block W0 or F1 development.
+
 If `003_00000.parquet` cannot supply `256` disjoint documents of at least
 `16384` tokens, stop and acquire a further owner-backed shard. Do not relax the
 length rule, reuse an outcome-seen shard, or shrink a split to fit the corpus.
@@ -511,8 +519,9 @@ Before requesting any GPU stage, the work machine must:
 2. locate the completed dose-run per-row position bins by their owner hash before
    deciding whether any historical analysis needs recomputation;
 3. materialise `D`, `S`, and `T` from the §5.2 replacement source shard with all
-   three outcome-seen shard manifests passed as prior exclusions, and stop if the
-   shard cannot supply the required disjoint documents;
+   three outcome-seen shard manifests and the R0 token tensor passed as prior
+   exclusions; require zero R0-prefix matches and stop if the shard cannot supply
+   the required disjoint documents;
 4. materialise every family grid/table, validate strict order, endpoints,
    support, pair count, float32 hash, and construction-data firewall;
 5. adapt `scripts/eval/eval_allocation_dose_grid.py` to accept a generic candidate

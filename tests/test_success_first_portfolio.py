@@ -34,6 +34,18 @@ from scripts.eval.zero_training_selection import (  # noqa: E402
     is_feasible,
 )
 from scripts.eval.eval_zero_training_tournament import _install  # noqa: E402
+from scripts.eval.eval_zero_training_tournament import (  # noqa: E402
+    checkpoint_identity,
+    merge_standalone_native_prefix,
+    validate_checkpoint_identity,
+)
+from scripts.eval.develop_zero_training_family import (  # noqa: E402
+    install_z5_from_native,
+)
+from scripts.data.build_success_first_splits import (  # noqa: E402
+    load_token_prefix_exclusions,
+    token_prefix_sha256,
+)
 
 
 def native_table(pairs: int = 64) -> np.ndarray:
@@ -102,6 +114,50 @@ class HatBasisTests(unittest.TestCase):
         self.assertEqual(table[0], native[0].astype(np.float32))
         self.assertEqual(table[-1], native[-1].astype(np.float32))
         self.assertTrue(np.all(table[:-1] > table[1:]))
+        target_delta = np.log(target) - np.log(native)
+        realised_delta = np.log(table.astype(np.float64)) - np.log(native)
+        cosine = np.dot(target_delta, realised_delta) / (
+            np.linalg.norm(target_delta) * np.linalg.norm(realised_delta)
+        )
+        self.assertGreater(cosine, 0.99)
+
+
+class DevelopmentIsolationTests(unittest.TestCase):
+    def test_each_z5_install_starts_from_the_same_native_table(self):
+        import torch
+
+        class DummyModel(torch.nn.Module):
+            def __init__(self, native):
+                super().__init__()
+                self.model = torch.nn.Module()
+                rotary = torch.nn.Module()
+                rotary.register_buffer("inv_freq", torch.from_numpy(native.astype(np.float32)))
+                rotary.attention_scaling = 1.0
+                self.model.rotary_emb = rotary
+
+        native = native_table()
+        model = DummyModel(native)
+        native_rotary = model.model.rotary_emb
+        first, _ = install_z5_from_native(model, native_rotary, support_factor=1.0)
+        first.set_gap_logits_(torch.tensor([1.0, -1.0, 0.5, -0.5, 0.25, -0.25]))
+        self.assertFalse(torch.equal(first.inv_freq.cpu(), native_rotary.inv_freq.cpu()))
+
+        second, _ = install_z5_from_native(model, native_rotary, support_factor=1.25)
+        self.assertTrue(torch.equal(second.original_inv_freq.cpu(), native_rotary.inv_freq.cpu()))
+
+
+class FirewallTests(unittest.TestCase):
+    def test_r0_token_prefix_tensor_is_an_exclusion_owner(self):
+        import torch
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "r0_tokens.pt"
+            rows = torch.arange(3 * 8, dtype=torch.int64).reshape(3, 8)
+            torch.save(rows, path)
+            exclusions, receipts = load_token_prefix_exclusions([path], prefix_length=4)
+            self.assertEqual(len(exclusions), 3)
+            self.assertEqual(receipts[0]["rows"], 3)
+            self.assertIn(token_prefix_sha256(rows[1, :4].numpy()), exclusions)
 
 
 class SelectionRuleTests(unittest.TestCase):
@@ -264,6 +320,28 @@ class FreezerTests(unittest.TestCase):
 
 
 class EvaluatorContractTests(unittest.TestCase):
+    def test_standalone_1x_loss_owns_native_prefix(self):
+        summary = {
+            "native_prefix": {"numerator": 99.0, "denominator": 3, "nll": 33.0},
+            "long_dense": {"numerator": 10.0, "denominator": 7, "nll": 10.0 / 7.0},
+            "far_tail": {"numerator": 5.0, "denominator": 2, "nll": 2.5},
+        }
+        merged = merge_standalone_native_prefix(summary, np.array([1.0, 2.0, 3.0]))
+        self.assertEqual(merged["native_prefix"]["nll"], 2.0)
+        self.assertEqual(merged["long_dense"], summary["long_dense"])
+        self.assertEqual(merged["far_tail"], summary["far_tail"])
+
+    def test_checkpoint_identity_detects_weight_drift(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            checkpoint = Path(tmp)
+            (checkpoint / "config.json").write_text("{}\n")
+            (checkpoint / "model.safetensors").write_bytes(b"weights-v1")
+            expected = checkpoint_identity(checkpoint)
+            validate_checkpoint_identity(checkpoint, expected)
+            (checkpoint / "model.safetensors").write_bytes(b"weights-v2")
+            with self.assertRaises(RuntimeError):
+                validate_checkpoint_identity(checkpoint, expected)
+
     def test_table_install_switches_frequency_and_attention_scaling(self):
         import torch
 

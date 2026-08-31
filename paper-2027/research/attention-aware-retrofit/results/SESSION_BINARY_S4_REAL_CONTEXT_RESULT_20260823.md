@@ -244,6 +244,91 @@ Across all 13 tasks, binary versus YaRN wins/ties/losses are `12/0/1` at
 8K and `12/1/0` at 16K. This broadens the retrieval/task-family result; it
 does not turn RULER into evidence of unseen natural-task transfer.
 
+### 5.6 Static-profile and fresh-likelihood follow-up (2026-08-31)
+
+A later zero-training development run measured the same frozen `s4` table and
+gain as one request-static profile rather than routing 1x requests to Native.
+The table and gain remain those in §4.1. The FineWeb-Edu development,
+selection, and confirmation splits contain `64/64/128` documents and have
+exact R0-prefix overlap `0/0/0` after the R0 token owner excluded one matched
+source row.
+
+| Split | s4−Native prefix | s4−Native dense | s4−Native tail | s4−YaRN prefix | s4−YaRN dense | s4−YaRN tail |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| D | +0.1180 | −2.9921 | −4.3159 | −0.0699 | −0.1700 | −0.4735 |
+| S | +0.1137 | −3.0068 | −4.4311 | −0.0567 | −0.1838 | −0.4699 |
+| T | +0.1138 | −3.0695 | −4.5280 | −0.0461 | −0.1609 | −0.4569 |
+
+All T paired 95% intervals exclude zero: s4−YaRN is
+`[-0.0558,-0.0379]` for Native-prefix, `[-0.1743,-0.1476]` for long-dense,
+and `[-0.4891,-0.4247]` for far-tail NLL. Thus the fixed profile has a stable
+in-window NLL cost against Native, while improving all three likelihood
+endpoints against official YaRN-4 on three disjoint splits. This is a
+`YARN_ANCHORED_PARETO`-shaped system result, not absolute no-harm and not a
+pure-`z` attribution.
+
+The core-four RULER 4K run used the static s4 profile for the complete request
+and KV-cache lifetime:
+
+| Profile | single-key | multikey-2 | multikey-3 | variable tracking | macro |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Native (existing diagnostic) | 1.00 | 0.85 | 0.60 | 0.03 | 0.620 |
+| **static s4, gain c=0.10** | **1.00** | **0.90** | 0.15 | **0.61** | **0.665** |
+
+The higher macro does not mean uniform in-window improvement: multikey-3
+falls sharply while variable tracking rises sharply. It does establish that a
+single model-load-time table is an engineering-viable option rather than a
+generic 4K capability collapse. Because the table is installed before prefill
+and never changes, the run uses the standard stationary phase
+`omega*(q-k)` and normal cached generation; it does not switch coordinates
+under an existing KV cache. A deployment requiring exact Native short behavior
+should instead route before prefill between fixed Native and s4 profiles.
+
+A fresh 13-task, 20-row-per-cell matrix then evaluated one fixed profile at
+every length. Task macros at 4K/8K/16K were:
+
+| Profile | 4K | 8K | 16K | all-cell macro |
+| --- | ---: | ---: | ---: | ---: |
+| Native | **0.7131** | 0.0000 | 0.0038 | 0.2390 |
+| official YaRN-4 | 0.4314 | 0.2431 | 0.1056 | 0.2600 |
+| **static s4, gain c=0.10** | 0.7036 | **0.6662** | **0.5442** | **0.6380** |
+
+This independent generated-row matrix confirms that the static profile remains
+close to Native at 4K and broadly useful at 8K/16K. It still contains task-level
+losses and is RULER-family adaptation/capability evidence, not unseen natural
+task transfer.
+
+A protected local-gap redistribution (`rev28`) produced a smaller, workload-
+specific trade. On the targeted multikey-2/multikey-3/VT subset its macro moved
+from `0.4833` to `0.5011` on one seed and from `0.5378` to `0.5411` on a second.
+However, its full RULER-13 macro was `0.6339`, below the frozen s4 value
+`0.6380`. On D/T likelihood it worsened prefix and dense NLL by roughly
+`+0.004` while improving tail NLL by roughly `-0.004`. This closes the local-gap
+table as a default replacement; it is only evidence of a narrow task exchange.
+
+Two follow-up routes stopped:
+
+- a Native-support segmented phase-chord `z` candidate kept its 1x NLL cost to
+  `+0.0018` and improved far-tail NLL by `−0.1050`, but regressed long-dense
+  NLL by `+0.0457`; its RULER single-key screen scored `0/20` at both 8K and
+  16K, so the remaining cells were not opened;
+- increasing the s4 gain coefficient from `0.10` to `0.12` reduced unseen-nine
+  RULER macros from the frozen `0.6594/0.6047` to `0.6487/0.5846` at 8K/16K.
+  Larger coefficients also worsened the D likelihood endpoints, so scalar-gain
+  tuning is closed for this profile;
+- an exploratory factor-eight `p=1` table improved 32K core-four macro over the
+  arithmetic `p=2` table on two generated-row seeds (`0.3950` versus `0.2300`
+  and `0.3175` versus `0.2250`), but its 4K RULER-13 macro was only `0.3593`
+  versus Native `0.7131`. It is not an all-length static profile. The subsequent
+  scale-law experiment supersedes this route and is owned by
+  [`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md`](SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md).
+
+The W0 implementation did not serialize the feasibility-mode decision before
+F1 started. The measured first W0 branch uniquely implies `ABSOLUTE`, and F1
+has no feasible arm under either mode, so this receipt omission does not change
+the candidate verdict; it remains an implementation/provenance limitation and
+must not be backdated as a preregistered file.
+
 ## 6. Runtime and parity receipts
 
 - Binary 1x versus Native: exact generated outputs/NLL for `120/120` rows.

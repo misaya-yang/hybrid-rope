@@ -88,6 +88,13 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def install_z5_from_native(model: Any, native_rotary: Any, *, support_factor: float):
+    """Install one Z5 arm from the immutable Native rotary module."""
+
+    model.model.rotary_emb = native_rotary
+    return install_z5_knot(model, support_factor=support_factor)
+
+
 def endpoint_losses(model: Any, input_ids: Any, native_length: int) -> dict[str, Any]:
     """Differentiable mean NLL for the three guard/objective endpoints.
 
@@ -100,7 +107,9 @@ def endpoint_losses(model: Any, input_ids: Any, native_length: int) -> dict[str,
 
     length = int(input_ids.shape[1])
     position_ids = torch.arange(length, device=input_ids.device, dtype=torch.long).unsqueeze(0)
-    hidden = model.model(input_ids=input_ids, position_ids=position_ids).last_hidden_state[0]
+    hidden = model.model(
+        input_ids=input_ids, position_ids=position_ids, use_cache=False
+    ).last_hidden_state[0]
     targets = input_ids[0, 1:]
     total = length - 1
     logits = model.lm_head(hidden)
@@ -211,6 +220,15 @@ def develop_f2(args, portfolio, model, rows, environment) -> dict[str, Any]:
             break
 
     table = table_from_coefficients(hat.original_inv_freq, chosen_alpha * coefficients)
+    development = _evaluate_active_table_on_dev(model, rows, int(args.native_length))
+    development_delta = {
+        key: development[key] - native_reference[key] for key in development
+    }
+    family_stop = (
+        chosen_alpha == 0.0
+        or development_delta["long_dense"] > margin
+        or development_delta["far_tail"] >= 0.0
+    )
     return {
         "family": "F2_PC_RETENTION_PROJECT",
         "construction_label": "GRADIENT_CALIBRATED_Z",
@@ -219,10 +237,11 @@ def develop_f2(args, portfolio, model, rows, environment) -> dict[str, Any]:
         "alpha_scan": scan,
         "chosen_alpha": chosen_alpha,
         "chosen_mean_native_prefix_nll": chosen_mean,
+        "development_delta": development_delta,
         "mean_grad_norm": float(np.linalg.norm(mean_grad)),
         "install_receipt": install_receipt,
         "table": table,
-        "family_stop": chosen_alpha == 0.0,
+        "family_stop": family_stop,
     }
 
 
@@ -237,12 +256,15 @@ def develop_z5(args, portfolio, model, rows, environment, support_factor: float,
     batch_documents = int(args.batch_documents or budget["batch_documents"])
     native_length = int(args.native_length)
 
+    native_rotary = model.model.rotary_emb
     native_reference = _native_reference(model, rows, native_length)
     best: dict[str, Any] = {"table": None, "far_tail": float("inf"), "init": None}
     init_reports = {}
 
     for init_name, init_table in init_tables.items():
-        knot, install_receipt = install_z5_knot(model, support_factor=support_factor)
+        knot, install_receipt = install_z5_from_native(
+            model, native_rotary, support_factor=support_factor
+        )
         from scripts.lib.rope.knot_allocation import init_gap_logits_from_table
 
         knot.set_gap_logits_(init_gap_logits_from_table(init_table, knot.original_inv_freq, support_factor=support_factor))
@@ -250,21 +272,22 @@ def develop_z5(args, portfolio, model, rows, environment, support_factor: float,
         batch = rows[:batch_documents]
         for step in range(1, steps + 1):
             optimizer.zero_grad(set_to_none=True)
-            objective = 0.0
             for row in batch:
                 ids = torch.as_tensor(np.asarray(row["input_ids"], dtype=np.int64), device="cuda").unsqueeze(0)
                 losses = endpoint_losses(model, ids, native_length)
                 violation_prefix = torch.relu(losses["native_prefix"] - native_reference["native_prefix"] - margin)
                 violation_dense = torch.relu(losses["long_dense"] - native_reference["long_dense"] - margin)
-                objective = objective + losses["far_tail"] + 100.0 * (violation_prefix.square() + violation_dense.square())
+                objective = losses["far_tail"] + 100.0 * (
+                    violation_prefix.square() + violation_dense.square()
+                )
+                (objective / float(len(batch))).backward()
                 del ids
-            (objective / float(len(batch))).backward()
             torch.nn.utils.clip_grad_norm_([knot.gap_logits], 1.0)
             optimizer.step()
             knot.project_()
 
         table = knot.realized_inv_freq().detach().cpu().numpy().astype("<f4")
-        full = _evaluate_table_on_dev(model, table, rows, native_length)
+        full = _evaluate_active_table_on_dev(model, rows, native_length)
         init_reports[init_name] = {
             "final_far_tail": full["far_tail"],
             "final_native_prefix_delta": full["native_prefix"] - native_reference["native_prefix"],
@@ -273,10 +296,13 @@ def develop_z5(args, portfolio, model, rows, environment, support_factor: float,
         feasible = (
             full["native_prefix"] - native_reference["native_prefix"] <= margin
             and full["long_dense"] - native_reference["long_dense"] <= margin
+            and full["far_tail"] < native_reference["far_tail"]
         )
         if feasible and full["far_tail"] < best["far_tail"]:
             best = {"table": table, "far_tail": full["far_tail"], "init": init_name}
         del optimizer
+
+    model.model.rotary_emb = native_rotary
 
     return {
         "family": "F3_Z5_BEHAVIOUR" if support_factor == 1.0 else "F4_SR_Z5",
@@ -293,12 +319,10 @@ def develop_z5(args, portfolio, model, rows, environment, support_factor: float,
     }
 
 
-def _evaluate_table_on_dev(model: Any, table: np.ndarray, rows: list[dict[str, Any]], native_length: int) -> dict[str, float]:
+def _evaluate_active_table_on_dev(
+    model: Any, rows: list[dict[str, Any]], native_length: int
+) -> dict[str, float]:
     import torch
-
-    from scripts.lib.rope.inject import apply_inv_freq_inplace
-
-    apply_inv_freq_inplace(model, torch.as_tensor(table, dtype=torch.float64))
     means = {"native_prefix": [], "long_dense": [], "far_tail": []}
     with torch.inference_mode():
         for row in rows:
@@ -330,15 +354,16 @@ def main() -> int:
             for entry in portfolio["families"]["F1_PC_MORPH"]["tables"]
             if entry["is_bitwise_native"]
         )
+        if args.initialize_from is None:
+            raise ValueError("F3/F4 requires the frozen F1 winner initialization")
         init_tables["native"] = np.load(native_path, allow_pickle=False)
+        init_tables["f1_winner"] = np.load(args.initialize_from.resolve(), allow_pickle=False)
         init_tables["learned_teacher"] = np.load(
             f3["learned_teacher"]["source"], allow_pickle=False
         )
         init_tables["coarse_budgeted"] = np.load(
             f3["coarse_budgeted"]["source"], allow_pickle=False
         )
-        if args.initialize_from is not None:
-            init_tables["f1_winner"] = np.load(args.initialize_from.resolve(), allow_pickle=False)
         if args.family == "F3":
             report = develop_z5(args, portfolio, model, rows, environment, 1.0, init_tables)
         else:

@@ -57,14 +57,22 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--checkpoint", type=Path, default=None)
     parser.add_argument("--native-length", type=int, default=4096)
+    parser.add_argument(
+        "--evaluation-multiplier", type=int, choices=(2, 4), default=4
+    )
     parser.add_argument("--limit-rows", type=int, default=0)
     parser.add_argument("--tables", nargs="+", default=None)
     parser.add_argument("--parity-docs", type=int, default=4)
     parser.add_argument("--bootstrap-resamples", type=int, default=20_000)
     parser.add_argument("--bootstrap-seed", type=int, default=20_260_831)
+    parser.add_argument("--batch-documents", type=int, default=1)
     parser.add_argument("--contract", action="store_true")
     parser.add_argument("--parity-smoke", action="store_true")
     parser.add_argument("--evaluate", action="store_true")
+    parser.add_argument(
+        "--standalone-native-prefix", action="store_true",
+        help="score native_prefix from matched standalone 1x rows",
+    )
     parser.add_argument("--authorize", action="store_true")
     return parser.parse_args()
 
@@ -81,6 +89,28 @@ def float32_sha256(value: np.ndarray) -> str:
     return hashlib.sha256(
         np.ascontiguousarray(np.asarray(value, dtype="<f4")).tobytes()
     ).hexdigest()
+
+
+def checkpoint_identity(checkpoint: Path) -> dict[str, Any]:
+    root = checkpoint.resolve()
+    weights = sorted(root.glob("*.safetensors"))
+    config = root / "config.json"
+    if not weights or not config.is_file():
+        raise RuntimeError(f"checkpoint is missing config or safetensors weights: {root}")
+    return {
+        "config_sha256": sha256_file(config),
+        "weight_files": [
+            {"name": path.name, "bytes": path.stat().st_size, "sha256": sha256_file(path)}
+            for path in weights
+        ],
+    }
+
+
+def validate_checkpoint_identity(checkpoint: Path, expected: dict[str, Any]) -> dict[str, Any]:
+    observed = checkpoint_identity(checkpoint)
+    if observed != expected:
+        raise RuntimeError("runtime checkpoint identity drift")
+    return observed
 
 
 def load_candidates(path: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]:
@@ -124,8 +154,9 @@ def validate_arm_contract(entry: dict[str, Any], pair_count: int) -> None:
     """
 
     reference = bool(entry.get("is_reference"))
+    combined_system = bool(entry.get("is_combined_system"))
     scaling = float(entry.get("attention_scaling", 1.0))
-    if not reference:
+    if not reference and not combined_system:
         if is_config_arm(entry):
             raise RuntimeError(
                 f"{entry['name']}: hf_rope_scaling is only allowed on a reference arm"
@@ -134,8 +165,17 @@ def validate_arm_contract(entry: dict[str, Any], pair_count: int) -> None:
             raise RuntimeError(
                 f"{entry['name']}: candidate arms must keep attention_scaling 1, got {scaling}"
             )
+    if combined_system and is_config_arm(entry):
+        raise RuntimeError(
+            f"{entry['name']}: combined-system candidates must use the frozen table path"
+        )
     if not math.isfinite(scaling) or scaling <= 0.0:
         raise RuntimeError(f"{entry['name']}: invalid attention_scaling {scaling}")
+    query_gain_coefficient = float(entry.get("query_gain_coefficient", 0.0))
+    if not math.isfinite(query_gain_coefficient) or query_gain_coefficient < 0.0:
+        raise RuntimeError(f"{entry['name']}: invalid query_gain_coefficient")
+    if query_gain_coefficient != 0.0 and not combined_system:
+        raise RuntimeError(f"{entry['name']}: query gain requires combined-system identity")
     if is_config_arm(entry):
         if entry.get("path"):
             raise RuntimeError(
@@ -162,7 +202,7 @@ def validate_rows_schema(path: Path, native_length: int) -> dict[int, int]:
 
 
 def contract_check(args: argparse.Namespace) -> int:
-    candidates, _ = load_candidates(args.candidates.resolve())
+    candidates, manifest = load_candidates(args.candidates.resolve())
     pair_counts = {int(entry.get("pair_count", 0)) for entry in candidates}
     if len(pair_counts) != 1 or 0 in pair_counts:
         raise RuntimeError("all candidates must declare one common pair_count")
@@ -176,8 +216,14 @@ def contract_check(args: argparse.Namespace) -> int:
     for entry in candidates:
         validate_arm_contract(entry, pair_count)
     counts = validate_rows_schema(args.rows.resolve(), int(args.native_length))
-    if 4 not in counts:
-        raise RuntimeError("rows must contain multiplier-4 documents for the 4x forward")
+    evaluation_multiplier = int(args.evaluation_multiplier)
+    if evaluation_multiplier not in counts:
+        raise RuntimeError(
+            "rows must contain multiplier-"
+            f"{evaluation_multiplier} documents for evaluation"
+        )
+    if manifest.get("manifest_role") == "W0_ANCHOR" and 1 not in counts:
+        raise RuntimeError("W0 rows must contain standalone multiplier-1 documents")
     references = [entry["name"] for entry in candidates if entry.get("is_reference")]
     anchors = [entry["name"] for entry in candidates if entry.get("is_anchor")]
     if len(anchors) > 1:
@@ -194,6 +240,7 @@ def contract_check(args: argparse.Namespace) -> int:
         "candidate_sha256": sha256_file(args.candidates.resolve()),
         "rows_sha256": sha256_file(args.rows.resolve()),
         "rows_by_multiplier": counts,
+        "checkpoint_identity": manifest.get("checkpoint_identity"),
         "endpoint_contract": {
             "native_prefix": "positions 1..L_native-1",
             "position_bin_width": BIN_WIDTH,
@@ -274,27 +321,71 @@ def load_model(checkpoint: Path, max_positions: int, rope_scaling: dict[str, Any
     return model.to("cuda")
 
 
-def score_row(model: Any, input_ids: Any) -> np.ndarray:
+def score_batch(model: Any, input_ids: Any) -> np.ndarray:
     import torch
     import torch.nn.functional as F
 
     length = int(input_ids.shape[1])
-    position_ids = torch.arange(length, device="cuda", dtype=torch.long).unsqueeze(0)
+    batch = int(input_ids.shape[0])
+    position_ids = torch.arange(length, device="cuda", dtype=torch.long).unsqueeze(0).expand(batch, -1)
+    coefficient = float(getattr(model, "_zt_query_gain_coefficient", 0.0))
+    ratio = (position_ids.to(torch.float64) + 1.0) / float(
+        getattr(model, "_zt_query_gain_native_length", 4096)
+    )
+    model._zt_current_query_gain = (
+        1.0 + coefficient * torch.log(torch.clamp(ratio, min=1.0))
+    ).square().detach()
     with torch.inference_mode():
-        hidden = model.model(input_ids=input_ids, position_ids=position_ids).last_hidden_state[0]
-        targets = input_ids[0, 1:]
-        losses = torch.empty(length - 1, dtype=torch.float32, device="cuda")
+        hidden = model.model(
+            input_ids=input_ids, position_ids=position_ids, use_cache=False
+        ).last_hidden_state
+        targets = input_ids[:, 1:]
+        losses = torch.empty((batch, length - 1), dtype=torch.float32, device="cuda")
         for start in range(0, length - 1, LOGIT_CHUNK):
             stop = min(start + LOGIT_CHUNK, length - 1)
-            logits = model.lm_head(hidden[start:stop]).float()
-            losses[start:stop] = F.cross_entropy(logits, targets[start:stop], reduction="none")
+            logits = model.lm_head(hidden[:, start:stop]).float()
+            losses[:, start:stop] = F.cross_entropy(
+                logits.reshape(-1, logits.shape[-1]),
+                targets[:, start:stop].reshape(-1),
+                reduction="none",
+            ).reshape(batch, stop - start)
             del logits
     del hidden
     return losses.detach().cpu().numpy().astype(np.float64)
 
 
+def score_row(model: Any, input_ids: Any) -> np.ndarray:
+    return score_batch(model, input_ids)[0]
+
+
+def install_query_gain_hooks(model: Any, native_length: int) -> None:
+    import torch
+
+    model._zt_query_gain_coefficient = 0.0
+    model._zt_query_gain_native_length = int(native_length)
+    model._zt_current_query_gain = None
+
+    def query_gain_hook(_module: Any, _inputs: tuple[Any, ...], output: Any):
+        gain = model._zt_current_query_gain
+        if gain is None:
+            raise RuntimeError("query gain state was not prepared before q_norm")
+        if gain.shape[0] == 1 and output.shape[0] != 1:
+            gain = gain.expand(output.shape[0], -1)
+        if output.shape[:2] != gain.shape:
+            raise RuntimeError(
+                f"query/gain shape drift: output={tuple(output.shape)} gain={tuple(gain.shape)}"
+            )
+        return output * gain.to(device=output.device, dtype=output.dtype)[..., None]
+
+    handles = [
+        layer.self_attn.q_norm.register_forward_hook(query_gain_hook)
+        for layer in model.model.layers
+    ]
+    model._zt_query_gain_hook_handles = handles
+
+
 def endpoint_summary(losses: np.ndarray, native_length: int) -> dict[str, Any]:
-    """Numerator/denominator for each endpoint from one ``4x`` loss vector.
+    """Numerator/denominator for each endpoint from one long loss vector.
 
     ``losses[i]`` is the NLL of the token at absolute position ``i + 1``.
     """
@@ -330,6 +421,21 @@ def endpoint_summary(losses: np.ndarray, native_length: int) -> dict[str, Any]:
         "far_tail": endpoint(far_mask),
         "position_bins": bins,
     }
+
+
+def merge_standalone_native_prefix(
+    summary: dict[str, Any], standalone_losses: np.ndarray
+) -> dict[str, Any]:
+    losses = np.asarray(standalone_losses, dtype=np.float64).reshape(-1)
+    if losses.size == 0 or not np.isfinite(losses).all():
+        raise RuntimeError("standalone native-prefix losses are empty or non-finite")
+    merged = dict(summary)
+    merged["native_prefix"] = {
+        "numerator": float(losses.sum()),
+        "denominator": int(losses.size),
+        "nll": float(losses.mean()),
+    }
+    return merged
 
 
 def paired_bootstrap(treatment: np.ndarray, control: np.ndarray, *, resamples: int, seed: int) -> dict[str, float]:
@@ -388,7 +494,13 @@ def parity_smoke(args: argparse.Namespace) -> int:
     import torch
 
     _require_gpu_authorization(args)
-    candidates, _ = load_candidates(args.candidates.resolve())
+    candidates, manifest = load_candidates(args.candidates.resolve())
+    expected_checkpoint = manifest.get("checkpoint_identity")
+    if not expected_checkpoint:
+        raise RuntimeError("candidate manifest lacks checkpoint identity")
+    observed_checkpoint = validate_checkpoint_identity(
+        args.checkpoint.resolve(), expected_checkpoint
+    )
     native = next(e for e in candidates if e.get("is_bitwise_native"))
     pair_count = int(native["pair_count"])
     validate_table_identity(native, pair_count)
@@ -399,6 +511,7 @@ def parity_smoke(args: argparse.Namespace) -> int:
     environment = configure_flash_only()
     native_length = int(args.native_length)
     model = load_model(args.checkpoint.resolve(), native_length * 4)
+    install_query_gain_hooks(model, native_length)
     _install(model, np.load(Path(native["path"]).resolve(), allow_pickle=False))
 
     records = []
@@ -436,6 +549,10 @@ def parity_smoke(args: argparse.Namespace) -> int:
         "documents": len(records),
         "records": records,
         "environment": environment,
+        "candidate_sha256": sha256_file(args.candidates.resolve()),
+        "rows_sha256": sha256_file(args.rows.resolve()),
+        "checkpoint_identity": observed_checkpoint,
+        "native_table_sha256_float32": native["table_sha256_float32"],
         "script_sha256": sha256_file(Path(__file__).resolve()),
     }
     args.output.resolve().mkdir(parents=True, exist_ok=True)
@@ -450,7 +567,13 @@ def evaluate(args: argparse.Namespace) -> int:
     import torch
 
     _require_gpu_authorization(args)
-    candidates, _ = load_candidates(args.candidates.resolve())
+    candidates, manifest = load_candidates(args.candidates.resolve())
+    expected_checkpoint = manifest.get("checkpoint_identity")
+    if not expected_checkpoint:
+        raise RuntimeError("candidate manifest lacks checkpoint identity")
+    observed_checkpoint = validate_checkpoint_identity(
+        args.checkpoint.resolve(), expected_checkpoint
+    )
     pair_count = int(candidates[0]["pair_count"])
     selected = candidates
     if args.tables:
@@ -462,10 +585,20 @@ def evaluate(args: argparse.Namespace) -> int:
     for entry in selected:
         validate_arm_contract(entry, pair_count)
 
-    rows4 = _load_rows(args.rows.resolve(), 4, int(args.limit_rows))
+    evaluation_multiplier = int(args.evaluation_multiplier)
+    rows4 = _load_rows(
+        args.rows.resolve(), evaluation_multiplier, int(args.limit_rows)
+    )
+    rows1_by_source = None
+    if args.standalone_native_prefix:
+        rows1 = _load_rows(args.rows.resolve(), 1, int(args.limit_rows))
+        rows1_by_source = {int(row["source_row"]): row for row in rows1}
     native_length = int(args.native_length)
     environment = configure_flash_only()
-    model = load_model(args.checkpoint.resolve(), native_length * 4)
+    model = load_model(
+        args.checkpoint.resolve(), native_length * evaluation_multiplier
+    )
+    install_query_gain_hooks(model, native_length)
 
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
@@ -474,6 +607,9 @@ def evaluate(args: argparse.Namespace) -> int:
     control_name = next(e["name"] for e in selected if e.get("is_bitwise_native"))
     started = time.perf_counter()
     torch.cuda.reset_peak_memory_stats()
+    batch_documents = int(args.batch_documents)
+    if batch_documents < 1:
+        raise ValueError("--batch-documents must be positive")
 
     with per_row_path.open("w", encoding="utf-8") as sink:
         for entry in selected:
@@ -482,6 +618,7 @@ def evaluate(args: argparse.Namespace) -> int:
                 arm_model = load_model(
                     args.checkpoint.resolve(), native_length * 4, entry["hf_rope_scaling"]
                 )
+                install_query_gain_hooks(arm_model, native_length)
             else:
                 arm_model = model
                 table = np.load(Path(entry["path"]).resolve(), allow_pickle=False)
@@ -490,22 +627,56 @@ def evaluate(args: argparse.Namespace) -> int:
                     table,
                     float(entry.get("attention_scaling", 1.0)),
                 )
+            arm_model._zt_query_gain_coefficient = float(
+                entry.get("query_gain_coefficient", 0.0)
+            )
             summaries = []
-            for row in rows4:
+            for offset in range(0, len(rows4), batch_documents):
+                row_batch = rows4[offset : offset + batch_documents]
                 ids = torch.as_tensor(
-                    np.asarray(row["input_ids"], dtype=np.int64), device="cuda"
-                ).unsqueeze(0)
-                losses = score_row(arm_model, ids)
-                summary = endpoint_summary(losses, native_length)
-                summary.update(
-                    {
-                        "candidate": entry["name"],
-                        "source_row": int(row["source_row"]),
-                        "row_sha256": row.get("row_sha256"),
-                    }
+                    np.stack([
+                        np.asarray(row["input_ids"], dtype=np.int64)
+                        for row in row_batch
+                    ]),
+                    device="cuda",
                 )
-                sink.write(json.dumps(summary, sort_keys=True) + "\n")
-                summaries.append(summary)
+                losses_batch = score_batch(arm_model, ids)
+                standalone_batch = None
+                if rows1_by_source is not None:
+                    missing = [
+                        int(row["source_row"])
+                        for row in row_batch
+                        if int(row["source_row"]) not in rows1_by_source
+                    ]
+                    if missing:
+                        raise RuntimeError(f"missing standalone 1x rows for sources {missing}")
+                    ids1 = torch.as_tensor(
+                        np.stack([
+                            np.asarray(
+                                rows1_by_source[int(row["source_row"])]["input_ids"],
+                                dtype=np.int64,
+                            )
+                            for row in row_batch
+                        ]),
+                        device="cuda",
+                    )
+                    standalone_batch = score_batch(arm_model, ids1)
+                    del ids1
+                for index, row in enumerate(row_batch):
+                    summary = endpoint_summary(losses_batch[index], native_length)
+                    if standalone_batch is not None:
+                        summary = merge_standalone_native_prefix(
+                            summary, standalone_batch[index]
+                        )
+                    summary.update(
+                        {
+                            "candidate": entry["name"],
+                            "source_row": int(row["source_row"]),
+                            "row_sha256": row.get("row_sha256"),
+                        }
+                    )
+                    sink.write(json.dumps(summary, sort_keys=True) + "\n")
+                    summaries.append(summary)
                 del ids
             if config_arm:
                 del arm_model
@@ -552,9 +723,11 @@ def evaluate(args: argparse.Namespace) -> int:
         if name == control_name:
             native_prefix_delta = 0.0
             long_dense_delta = 0.0
+            far_tail_delta = 0.0
         else:
             native_prefix_delta = cell["mean_native_prefix_nll"] - control["mean_native_prefix_nll"]
             long_dense_delta = cell["mean_long_dense_nll"] - control["mean_long_dense_nll"]
+            far_tail_delta = cell["mean_far_tail_nll"] - control["mean_far_tail_nll"]
         entry = next(e for e in selected if e["name"] == name)
         row = {
             "name": name,
@@ -563,11 +736,14 @@ def evaluate(args: argparse.Namespace) -> int:
             "is_anchor": bool(entry.get("is_anchor")),
             "native_prefix_delta": native_prefix_delta,
             "long_dense_delta": long_dense_delta,
+            "far_tail_delta": far_tail_delta,
             "far_tail_nll": cell["mean_far_tail_nll"],
             "calibrated_dof": int(entry.get("calibrated_dof", 0)),
             "used_long_range_in_construction": bool(entry.get("used_long_range_in_construction", False)),
             "chord_displacement_rms": float(entry.get("chord_displacement_rms", 0.0)),
             "support_movement": float(math.log(float(entry.get("support_factor", 1.0)))),
+            "path": entry.get("path"),
+            "table_sha256_float32": entry.get("table_sha256_float32"),
         }
         if anchor_prefix_delta is not None:
             row["yarn_native_prefix_delta"] = float(anchor_prefix_delta)
@@ -594,20 +770,45 @@ def evaluate(args: argparse.Namespace) -> int:
                 for endpoint in ("native_prefix", "long_dense", "far_tail")
             }
 
+    selection_input = {
+        "candidates": [
+            row
+            for row in selection_rows
+            if not row["is_reference"] and row["far_tail_delta"] < 0.0
+        ]
+    }
+    selection_input_path = output / "selection_input.json"
+    selection_input_path.write_text(
+        json.dumps(selection_input, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+
     receipt = {
         "status": STATUS,
         "candidates": len(selected),
         "rows": len(rows4),
+        "batch_documents": batch_documents,
         "native_length": native_length,
+        "evaluation_multiplier": evaluation_multiplier,
         "control": control_name,
         "anchor": anchor_name,
         "environment": environment,
+        "candidate_sha256": sha256_file(args.candidates.resolve()),
+        "rows_sha256": sha256_file(args.rows.resolve()),
+        "checkpoint_identity": observed_checkpoint,
+        "native_prefix_realisation": (
+            "standalone_1x" if args.standalone_native_prefix else "prefix_of_4x"
+        ),
         "selection_rows": selection_rows,
+        "selection_input_sha256": sha256_file(selection_input_path),
         "paired_bootstrap_vs_control": bootstrap,
         "paired_bootstrap_vs_anchor": bootstrap_vs_anchor,
         "frozen_weights": True,
         "attention_scaling_by_arm": {
             name: cell["attention_scaling"] for name, cell in results.items()
+        },
+        "query_gain_coefficient_by_arm": {
+            entry["name"]: float(entry.get("query_gain_coefficient", 0.0))
+            for entry in selected
         },
         "realised_by_arm": {name: cell["realised_by"] for name, cell in results.items()},
         "runtime_seconds": time.perf_counter() - started,
@@ -617,7 +818,9 @@ def evaluate(args: argparse.Namespace) -> int:
     (output / "eval_summary.json").write_text(
         json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
-    print(f"\nwrote {output / 'eval_summary.json'} and {per_row_path}")
+    print(
+        f"\nwrote {output / 'eval_summary.json'}, {selection_input_path}, and {per_row_path}"
+    )
     return 0
 
 

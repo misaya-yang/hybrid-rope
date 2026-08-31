@@ -56,11 +56,13 @@ case "$MODE" in
     for m in ${EVQ_PRIOR_MANIFESTS:-}; do PRIOR_ARGS+=(--prior-manifest "$m"); done
     EXCL_ARGS=()
     for f in ${EVQ_EXCLUDE_FILES:-}; do EXCL_ARGS+=(--exclude-text-sha256-file "$f"); done
+    TOKEN_EXCL_ARGS=()
+    for f in ${EVQ_EXCLUDE_TOKEN_TENSORS:-}; do TOKEN_EXCL_ARGS+=(--exclude-token-prefix-tensor "$f"); done
     exec "$PYTHON" "$ROOT/scripts/data/build_success_first_splits.py" \
       --source "${EVQ_FINEWEB_SOURCE:?set EVQ_FINEWEB_SOURCE}" \
       --expected-source-sha256 "${EVQ_FINEWEB_SHA256:?set EVQ_FINEWEB_SHA256}" \
       --checkpoint "${EVQ_OLMO_CHECKPOINT:?set EVQ_OLMO_CHECKPOINT}" \
-      "${PRIOR_ARGS[@]}" "${EXCL_ARGS[@]}" \
+      "${PRIOR_ARGS[@]}" "${EXCL_ARGS[@]}" "${TOKEN_EXCL_ARGS[@]}" \
       ${EVQ_SKIP_ELIGIBLE:+--skip-eligible-documents "$EVQ_SKIP_ELIGIBLE"} \
       --output "$SPLITS"
     ;;
@@ -99,6 +101,7 @@ case "$MODE" in
       --candidates "$ZT_ROOT/candidates_w0.json" \
       --rows "$SPLITS/rows_D.jsonl" \
       --checkpoint "${EVQ_OLMO_CHECKPOINT:?set EVQ_OLMO_CHECKPOINT}" \
+      --standalone-native-prefix \
       --output "$ZT_ROOT/w0"
     ;;
 

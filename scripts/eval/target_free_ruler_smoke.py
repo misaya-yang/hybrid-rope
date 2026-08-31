@@ -128,7 +128,7 @@ def generic_weight_sha256(checkpoint: Path, expected: str | None) -> str:
     return digest
 
 
-def generic_yarn_config(config: Any, native_context_length: int) -> Any:
+def generic_yarn_config(config: Any, native_context_length: int, factor: float) -> Any:
     native_rope = dict(getattr(config, "rope_parameters", None) or {})
     native_theta = getattr(config, "rope_theta", None)
     if native_theta is None:
@@ -138,13 +138,13 @@ def generic_yarn_config(config: Any, native_context_length: int) -> Any:
     native_theta = float(native_theta)
     parameters = {
         "rope_type": "yarn",
-        "factor": 4.0,
+        "factor": float(factor),
         "original_max_position_embeddings": int(native_context_length),
         "rope_theta": native_theta,
     }
     config.rope_scaling = dict(parameters)
     config.rope_parameters = dict(parameters)
-    config.max_position_embeddings = int(native_context_length * 4)
+    config.max_position_embeddings = int(native_context_length * float(factor))
     return config
 
 
@@ -170,7 +170,11 @@ def load_cross_model_method(
     if int(config.max_position_embeddings) != int(native_context_length):
         raise RuntimeError("cross-model Native context length drift")
     if method == "official_yarn":
-        config = generic_yarn_config(config, native_context_length)
+        config = generic_yarn_config(
+            config,
+            native_context_length,
+            external_table_factor,
+        )
     model = AutoModelForCausalLM.from_pretrained(
         checkpoint,
         config=config,
@@ -192,7 +196,7 @@ def load_cross_model_method(
         if float(rotary.attention_scaling) != float(expected_scaling):
             raise RuntimeError("cross-model official YaRN scaling drift")
         receipt = {
-            "method": "official_transformers_yarn_factor4",
+            "method": f"official_transformers_yarn_factor{external_table_factor:g}",
             "model_type": str(config.model_type),
             "native_context_length": int(native_context_length),
             "active_sha256_float32": float32_sha256(realized.numpy()),
@@ -347,7 +351,9 @@ def load_cross_model_method(
             **control_receipt,
         }
     else:
-        model.config.max_position_embeddings = int(native_context_length * 4)
+        model.config.max_position_embeddings = int(
+            native_context_length * float(external_table_factor)
+        )
         receipt = {
             "method": "native",
             "model_type": str(config.model_type),
@@ -425,7 +431,12 @@ def main() -> int:
     native_context_length = int(args.native_context_length)
     tasks = tuple(str(value) for value in args.tasks)
     lengths = tuple(sorted(int(value) for value in args.lengths))
-    allowed_lengths = {native_context_length, native_context_length * 2, native_context_length * 4}
+    allowed_lengths = {
+        native_context_length,
+        native_context_length * 2,
+        native_context_length * 4,
+        native_context_length * 8,
+    }
     if not lengths or any(value not in allowed_lengths for value in lengths):
         raise ValueError(f"smoke lengths must be in {sorted(allowed_lengths)}")
     data_receipt, rows = _validate_data(

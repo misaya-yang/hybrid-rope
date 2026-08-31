@@ -75,13 +75,13 @@ def project_direction_onto_basis(direction: Any, basis: torch.Tensor) -> torch.T
 def phase_chord_direction(
     native: torch.Tensor, target: Any
 ) -> np.ndarray:
-    """Log-frequency displacement from Native to a phase-chord target table."""
+    """Negative-log-frequency displacement from Native to the target table."""
 
     native_t = torch.as_tensor(native, dtype=torch.float64).reshape(-1)
     target_t = torch.as_tensor(np.asarray(target, dtype=np.float64)).reshape(-1)
     if target_t.numel() != native_t.numel():
         raise ValueError("target table shape does not match Native")
-    return (target_t.log() - native_t.log()).numpy().astype(np.float64)
+    return (native_t.log() - target_t.log()).numpy().astype(np.float64)
 
 
 class HatBasisRotaryEmbedding(nn.Module):
