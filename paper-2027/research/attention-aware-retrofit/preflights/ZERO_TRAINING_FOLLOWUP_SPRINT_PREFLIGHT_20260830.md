@@ -7,9 +7,11 @@
   verified corpus-provenance firewall with its replacement source shard (§5.2).
   The original four-family tournament, its stops, and its lexicographic rule are
   unchanged.
-- **State:** `SUCCESS_FIRST_PORTFOLIO_DESIGN_ONLY`; four candidate families are
-  specified below, but no realised candidate tensor, runner certification, model
-  result, or GPU authorization exists
+- **State:** `PROTOCOL_FROZEN / CPU_CONTRACT_READY`; the four candidate families,
+  firewall splits, W0/F1 manifests, and no-GPU contract paths have been realised
+  and hash-checked. This is readiness only: no W0 measurement, candidate
+  likelihood, model result, or GPU authorization exists. Volatile receipts live
+  only in the handoff.
 - **Agenda owner:** repository `INDEX.md` §6
 - **Purpose:** maximise the probability of finding a frozen-checkpoint table that
   improves Native-window and long-range behaviour within three to five

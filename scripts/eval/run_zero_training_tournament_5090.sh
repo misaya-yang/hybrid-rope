@@ -4,6 +4,9 @@
 #   freeze     CPU: bind R0 + learned/budgeted tables, freeze the portfolio and
 #              the selection rule.  No authorization.
 #   splits     CPU/tokenizer: materialise the firewall-disjoint D/S/T splits.
+#   w0-manifest CPU: assemble Native/official-YaRN-4/frozen-s4 anchor manifest.
+#   w0-contract CPU: identity-check the W0 manifest and D rows.
+#   w0         GPU: measure the preregistered W0 anchor on D.
 #   manifest   CPU: assemble the evaluator candidate manifest (F1, plus any
 #              development representatives passed via DEV_RECEIPTS).
 #   contract   CPU: identity-check the candidate manifest, tables and rows.
@@ -67,9 +70,36 @@ case "$MODE" in
     for r in ${DEV_RECEIPTS:-}; do DEV_ARGS+=(--dev-receipt "$r"); done
     exec "$PYTHON" "$ROOT/scripts/analysis/build_candidate_manifest.py" \
       --portfolio-manifest "$PORTFOLIO/portfolio_manifest.json" \
+      --checkpoint "${EVQ_OLMO_CHECKPOINT:?set EVQ_OLMO_CHECKPOINT}" \
       "${DEV_ARGS[@]}" \
       ${MANIFEST_FAMILIES:+--families $MANIFEST_FAMILIES} \
       --output "${MANIFEST_OUT:-$ZT_ROOT/candidates.json}"
+    ;;
+
+  w0-manifest)
+    exec "$PYTHON" "$ROOT/scripts/analysis/build_candidate_manifest.py" \
+      --portfolio-manifest "$PORTFOLIO/portfolio_manifest.json" \
+      --checkpoint "${EVQ_OLMO_CHECKPOINT:?set EVQ_OLMO_CHECKPOINT}" \
+      --w0-s4-table "${EVQ_S4_TABLE:?set EVQ_S4_TABLE}" \
+      --output "$ZT_ROOT/candidates_w0.json"
+    ;;
+
+  w0-contract)
+    exec "$PYTHON" "$ROOT/scripts/eval/eval_zero_training_tournament.py" \
+      --contract \
+      --candidates "$ZT_ROOT/candidates_w0.json" \
+      --rows "$SPLITS/rows_D.jsonl" \
+      --output "$ZT_ROOT/contract_w0"
+    ;;
+
+  w0)
+    require_gpu_stage ZT_W0_AUTHORIZED
+    exec "$PYTHON" "$ROOT/scripts/eval/eval_zero_training_tournament.py" \
+      --evaluate --authorize \
+      --candidates "$ZT_ROOT/candidates_w0.json" \
+      --rows "$SPLITS/rows_D.jsonl" \
+      --checkpoint "${EVQ_OLMO_CHECKPOINT:?set EVQ_OLMO_CHECKPOINT}" \
+      --output "$ZT_ROOT/w0"
     ;;
 
   contract)
@@ -161,7 +191,7 @@ case "$MODE" in
     ;;
 
   *)
-    echo "usage: $0 {freeze|splits|manifest|contract|parity|dev|select|confirm|capability}" >&2
+    echo "usage: $0 {freeze|splits|w0-manifest|w0-contract|w0|manifest|contract|parity|dev|select|confirm|capability}" >&2
     exit 2
     ;;
 esac

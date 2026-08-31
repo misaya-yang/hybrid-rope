@@ -173,12 +173,12 @@ position-dependent operator，不把不同 target-free operator 一并判死。
 | **频率表实现权威** | [`scripts/lib/rope/`](scripts/lib/rope/) | `schedules.py`（EVQ-Cosh 分位）、`target_free.py`（target-free 相位延拓）、`fixed_support_z.py`（可微内点 $z$）、`official_yarn.py`、`learnable_evq.py`、`knot_allocation.py`（F3/F4 七节点五自由度）、`hat_projection.py`（F2 五维 hat 基） |
 | 主实验链 runner | [`scripts/core_text_phases/`](scripts/core_text_phases/) | canonical runner；新主实验放这里 |
 | **零训练 success-first 组合冻结** | [`scripts/analysis/freeze_success_first_portfolio.py`](scripts/analysis/freeze_success_first_portfolio.py) | 纯 CPU；物化 F1 morph 网格、F2 投影、F3 初始化并冻结选择规则；不是结果 |
-| 候选清单组装 | [`scripts/analysis/build_candidate_manifest.py`](scripts/analysis/build_candidate_manifest.py) | 纯 CPU；把 portfolio + dev 产出转成评估器输入 |
-| **单 4x 前向评估** | [`scripts/eval/eval_zero_training_tournament.py`](scripts/eval/eval_zero_training_tournament.py) | contract/parity/evaluate 三模式；GPU 阶段需 `--authorize` + 环境门禁 |
+| 候选清单组装 | [`scripts/analysis/build_candidate_manifest.py`](scripts/analysis/build_candidate_manifest.py) | 纯 CPU；组装 W0 三臂或 F1/dev 候选，并物化当前 Transformers 官方 YaRN-4 表与 gain |
+| **单 4x 前向评估** | [`scripts/eval/eval_zero_training_tournament.py`](scripts/eval/eval_zero_training_tournament.py) | contract/parity/evaluate 三个显式模式；同一模型切换 receipt-bound table/gain；GPU 阶段需 `--authorize` + 环境门禁 |
 | F2/F3/F4 development | [`scripts/eval/develop_zero_training_family.py`](scripts/eval/develop_zero_training_family.py) | 只在 D split 上校准；每族至多产出一个冻结代表 |
 | 选择/确认规则 | [`scripts/eval/zero_training_selection.py`](scripts/eval/zero_training_selection.py) | 纯 CPU 词典序规则与确认判决，可单测；含 `ABSOLUTE`/`ANCHORED` 可行性模式与 `YARN_ANCHORED_PARETO`，锚定模式缺实测 YaRN 参照时直接报错 |
 | D/S/T 防火墙分片 | [`scripts/data/build_success_first_splits.py`](scripts/data/build_success_first_splits.py) | 64/64/128 三路互斥；语料不足即停，不复用已见 rows |
-| 阶段 driver | [`scripts/eval/run_zero_training_tournament_5090.sh`](scripts/eval/run_zero_training_tournament_5090.sh) | freeze/splits/manifest/contract/parity/dev/select/confirm/capability，逐阶段独立授权 |
+| 阶段 driver | [`scripts/eval/run_zero_training_tournament_5090.sh`](scripts/eval/run_zero_training_tournament_5090.sh) | 含 W0 manifest/contract/run 与 F1 后续阶段；每个 GPU stage 独立授权，精确调用见根 README |
 | 可复用 CPU 诊断 | [`scripts/analysis/`](scripts/analysis/) | 不自动成为 paper claim |
 | 注意力需求测量 | `scripts/analysis/attention_phase_demand.py` | 含 `layerwise_plan()` → `per_layer_inv_freq` |
 | 全 RoPE 碰撞审计 | `scripts/analysis/full_rope_collision_audit.py` | §2.1 的数值 owner |

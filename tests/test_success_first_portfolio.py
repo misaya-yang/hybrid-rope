@@ -33,6 +33,7 @@ from scripts.eval.zero_training_selection import (  # noqa: E402
     confirmation_verdict,
     is_feasible,
 )
+from scripts.eval.eval_zero_training_tournament import _install  # noqa: E402
 
 
 def native_table(pairs: int = 64) -> np.ndarray:
@@ -263,6 +264,21 @@ class FreezerTests(unittest.TestCase):
 
 
 class EvaluatorContractTests(unittest.TestCase):
+    def test_table_install_switches_frequency_and_attention_scaling(self):
+        import torch
+
+        class RotaryModel(torch.nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.register_buffer("inv_freq", torch.ones(4))
+                self.attention_scaling = 1.0
+
+        model = RotaryModel()
+        table = np.array([1.0, 0.5, 0.25, 0.125], dtype=np.float32)
+        _install(model, table, 1.138629436111989)
+        self.assertTrue(torch.equal(model.inv_freq, torch.from_numpy(table)))
+        self.assertEqual(model.attention_scaling, 1.138629436111989)
+
     def test_contract_mode_validates_identity(self):
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)

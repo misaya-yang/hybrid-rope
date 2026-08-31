@@ -64,6 +64,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--bootstrap-seed", type=int, default=20_260_831)
     parser.add_argument("--contract", action="store_true")
     parser.add_argument("--parity-smoke", action="store_true")
+    parser.add_argument("--evaluate", action="store_true")
     parser.add_argument("--authorize", action="store_true")
     return parser.parse_args()
 
@@ -344,12 +345,19 @@ def paired_bootstrap(treatment: np.ndarray, control: np.ndarray, *, resamples: i
     }
 
 
-def _install(model: Any, table: np.ndarray) -> None:
+def _install(model: Any, table: np.ndarray, attention_scaling: float = 1.0) -> None:
     import torch
 
-    from scripts.lib.rope.inject import apply_inv_freq_inplace
+    from scripts.lib.rope.inject import (
+        apply_inv_freq_inplace,
+        find_rotary_modules_with_inv_freq,
+    )
 
     apply_inv_freq_inplace(model, torch.as_tensor(table, dtype=torch.float64))
+    for name, rotary in find_rotary_modules_with_inv_freq(model):
+        if not hasattr(rotary, "attention_scaling"):
+            raise RuntimeError(f"{name}: rotary module has no attention_scaling")
+        rotary.attention_scaling = float(attention_scaling)
 
 
 def _row_tensors(rows: list[dict[str, Any]]):
@@ -477,7 +485,11 @@ def evaluate(args: argparse.Namespace) -> int:
             else:
                 arm_model = model
                 table = np.load(Path(entry["path"]).resolve(), allow_pickle=False)
-                _install(arm_model, table)
+                _install(
+                    arm_model,
+                    table,
+                    float(entry.get("attention_scaling", 1.0)),
+                )
             summaries = []
             for row in rows4:
                 ids = torch.as_tensor(
@@ -623,6 +635,9 @@ def _require_gpu_authorization(args: argparse.Namespace) -> None:
 
 def main() -> int:
     args = parse_args()
+    modes = int(args.contract) + int(args.parity_smoke) + int(args.evaluate)
+    if modes != 1:
+        raise ValueError("choose exactly one of --contract, --parity-smoke, or --evaluate")
     if args.contract:
         return contract_check(args)
     if args.parity_smoke:

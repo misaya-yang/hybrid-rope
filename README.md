@@ -81,6 +81,58 @@ conda run --no-capture-output -n aidemo python -m pytest \
 Expand to the tests owned by the changed path; the handoff records the latest
 validated scope rather than implying that one command certifies the repository.
 
+### Zero-training W0 and F1
+
+The immediate frozen-checkpoint objective is one request-static table that
+improves Native-window and far-tail likelihood without materially regressing
+long-dense likelihood. `W0` is the mandatory first measurement: it evaluates
+Native, official YaRN factor four, and the already frozen `s4` reference on the
+development rows, then locks `ABSOLUTE` or `ANCHORED` feasibility before any F1
+development output is read. It does not nominate a candidate or establish a
+method result.
+
+Keep all paths below machine-local and untracked. The CPU preparation and
+contract stages do not load a model or initialize CUDA.
+
+```bash
+export EVQ_REPO_ROOT="$(pwd)"
+export EVQ_PYTHON="$(command -v python)"
+export EVQ_ZT_ROOT="${EVQ_ZT_ROOT:?set an untracked experiment output root}"
+export EVQ_OLMO_CHECKPOINT="${EVQ_OLMO_CHECKPOINT:?set the frozen OLMo checkpoint}"
+export EVQ_S4_TABLE="${EVQ_S4_TABLE:?set the receipt-bound frozen s4 table}"
+
+bash scripts/eval/run_zero_training_tournament_5090.sh w0-manifest
+bash scripts/eval/run_zero_training_tournament_5090.sh w0-contract
+
+MANIFEST_FAMILIES=F1_PC_MORPH \
+MANIFEST_OUT="$EVQ_ZT_ROOT/candidates_f1.json" \
+bash scripts/eval/run_zero_training_tournament_5090.sh manifest
+
+CANDIDATES="$EVQ_ZT_ROOT/candidates_f1.json" \
+OUT="$EVQ_ZT_ROOT/contract_f1" \
+bash scripts/eval/run_zero_training_tournament_5090.sh contract
+```
+
+Each GPU stage requires its own explicit authorization. Run `W0` first; do not
+open F1 development until its receipt has frozen the feasibility mode. A parity
+smoke does not authorize the remaining development rows.
+
+```bash
+ZT_W0_AUTHORIZED=YES \
+bash scripts/eval/run_zero_training_tournament_5090.sh w0
+
+CANDIDATES="$EVQ_ZT_ROOT/candidates_f1.json" \
+ZT_PARITY_AUTHORIZED=YES \
+bash scripts/eval/run_zero_training_tournament_5090.sh parity
+
+CANDIDATES="$EVQ_ZT_ROOT/candidates_f1.json" \
+ZT_DEV_AUTHORIZED=YES \
+bash scripts/eval/run_zero_training_tournament_5090.sh dev f1
+```
+
+Do not open `S` or `T`, retry a failed stage, or promote any output to a result
+without following the frozen protocol and updating the canonical owner first.
+
 ```bash
 cd paper-2027 && ./compile.sh
 ```
