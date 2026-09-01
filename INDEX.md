@@ -23,15 +23,31 @@
 
 ### 2026-09-01 — 当前决定
 
-- **新一轮归因（P0 已注册，非结果）：** stock-HF/自定义 Flash 同 token
-  对照之后，先用全新自然文本与独立能力双校准识别 Gemma 的 Native 参考长度；
-  校准/确认分离，双族不一致则 abstain，禁止由已有 RULER 反推 4K。
-  baseline GPU、selector 与 SOTA 扩展均后置；见
+- **P2 同代识别注册（非结果）：** P1 之后只补 Qwen K32/K64 的固定 YaRN-s2
+  与 K64 唯一 C2-s2 缺口；K64 的 physical/index 相同，不能当作 K 趋势证据。
+  见 [`QWEN_S2_SAME_FAMILY_IDENTIFICATION_PREFLIGHT_20260901`](paper-2027/research/attention-aware-retrofit/preflights/QWEN_S2_SAME_FAMILY_IDENTIFICATION_PREFLIGHT_20260901.md)。
+
+- **新一轮归因协议：** stock-HF/自定义 Flash 同 token 对照之后，用全新
+  自然文本与独立能力双校准识别 Gemma 的 Native 参考长度；校准/确认分离，
+  双族不一致则 abstain，禁止由已有 RULER 反推 4K。后续阶段按入口条件推进，
+  selector 与 SOTA 扩展仍后置；完成结果见下方 P0/P1 owner，原注册见
   [`COUPLING_NEGATIVE_ATTRIBUTION_PREFLIGHT_20260901`](paper-2027/research/attention-aware-retrofit/preflights/COUPLING_NEGATIVE_ATTRIBUTION_PREFLIGHT_20260901.md)。
 - **P0 首轮：** 新鲜同 suffix 自然文本 Native NLL 在 4K/8K 为
   `3.229847/11.427202`；两码 exact 能力探针短端自身未过门，故 v1
   `ABSTAIN`，没有选择 4K 或 2K。只注册一次新鲜单码测量修复，不重评旧分数；见
   [`NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901`](paper-2027/research/attention-aware-retrofit/results/NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901.md)。
+- **P1 条件注册：** P0 独立确认后，以已冻结 reference 直接计算 target/reference
+  的 s2，再条件打开 s4；不改 `G`、边界或 `c`，不打开 SOTA sweep。见
+  [`REFERENCE_CORRECTED_K128_PREFLIGHT_20260901`](paper-2027/research/attention-aware-retrofit/preflights/REFERENCE_CORRECTED_K128_PREFLIGHT_20260901.md)。
+- **P0 独立确认：** 单码替代探针的 128 个新样本在 4K/8K 为 `127/0`；64 篇新
+  文档 NLL 为 `3.196320/11.158831`，四个门均通过，冻结本协议 `L_ref=4096`。
+  [`confirmed reference receipt`](paper-2027/research/attention-aware-retrofit/evidence/GEMMA_NATIVE_REFERENCE_CONFIRMED_20260901.json)
+  只允许按 target/reference 构表，不等于更改训练长度或确认普适性。
+- **Reference-correct K128 s2：** 同一 physical 表在新 RULER 4K/8K 为
+  `.9650/.8600`，Native 为 `.8700/0`；独立自然 4K 只增加 `.025083` NLL，
+  8K 从 `10.548809` 降至 `3.163365`。physical/index 的 8K 差 `.0050`，
+  bootstrap 区间跨零；不识别坐标优越性，条件打开同一 frozen law 的 s4。
+  见 [`REFERENCE_CORRECTED_K128_RESULT_20260901`](paper-2027/research/attention-aware-retrofit/results/REFERENCE_CORRECTED_K128_RESULT_20260901.md)。
 - **当前结果：** `s4` scale-consistent exponent table
   `omega'_i=omega_i s^{-m_i}`，配合只由 1x PG-19 retention 选出的 `c=0.074`
   gain，通过 1x PPL/五任务双门，并在同一静态表上改善 2x/4x NLL 与自然任务；见

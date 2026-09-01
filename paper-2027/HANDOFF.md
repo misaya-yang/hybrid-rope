@@ -11,35 +11,35 @@ The current research timeline and agenda live in [`../INDEX.md`](../INDEX.md)
 
 ## 1. Research status pointer
 
-`MATCHED_K32_S2_COMPLETE / K128_SCREEN_UNRESOLVED_LONG_NEGATIVE /
-P0_NATIVE_REFERENCE_CALIBRATION_PREPARING`
+`P0_REFERENCE_INDEPENDENTLY_CONFIRMED / REFERENCE_CORRECTED_K128_S2_COMPLETE /
+S4_PAIRED_CURVE_RUNNING`
 
-The completed queue established four bounded results:
+Current canonical owners:
 
-- frozen two-parameter C2 preserves OLMo/Qwen long behavior but misses the
-  strict Native operating point;
-- the same frozen K64 law zero-refit from s4 to s2 passes OLMo 1x and remains
-  useful at 2x;
-- on K32 matched s2, physical `x` wins 64K while normalized index passes the
-  Native gate, establishing a Pareto crossing rather than uniform dominance;
-- two exact Gemma-1 K128 artifacts recover nonzero 8K behavior under frozen
-  tables but all Native/table 16K rows are zero and physical/index remain near
-  parity. Gemma-1.1 Native 4K is `.9050`; physical table without gain is
-  `.8350` at 8K; gain-only remains zero and Native/external canaries have exact
-  output parity. This is an unresolved cross-K screen with a validated,
-  replicated long negative—not a broken-model or wrong-artifact result.
+- [`Native reference calibration`](research/attention-aware-retrofit/results/NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901.md):
+  the original two-code instrument remains abstained; the single permitted
+  replacement independently confirms a protocol-specific 4K operating
+  reference without relabeling training length.
+- [`Reference-corrected K128`](research/attention-aware-retrofit/results/REFERENCE_CORRECTED_K128_RESULT_20260901.md):
+  s2 passes measured Native RULER/PPL gates and restores 8K; physical/index
+  remain statistically unresolved. Conditional s4 uses one frozen profile
+  at 4K/8K/16K, with a paired old-reference 16K control.
+- Historical K32 Pareto, K64 scale consistency, and the original K128 negative
+  remain routed by `INDEX.md`; none is silently replaced or pooled.
 
-P3 failed its CPU entrance gate; no `alpha` or GPU branch was created. The s8
-stretch gate also failed and no hierarchical table was designed.
+P3 cell-average remains rejected. No residual parameter, new curve, selector,
+SOTA sweep, or s8 branch has been opened.
 
 ## 2. Git state
 
 - Branch / upstream: `main_0726` / `origin/main_0726`
-- Published experiment/report commit:
-  `3a3da401b8935065acd096cd0a72f4e2a6cf0290`
-- Baseline divergence: `0/0`
-- Current experiment code, reports, and receipts: published
-- Git publication: complete on `origin/main_0726`
+- Last observed HEAD: `9948db166dd0ea50f3b995d8d59bbd00175a8b51`
+  (background hourly workspace checkpoint; not committed by this run).
+- Observed divergence against the existing upstream ref: `0/0`; no new
+  fetch or remote publication verification was performed.
+- Worktree: current P0/P1 code, reports, and receipts include modified and
+  untracked files. They are not all published.
+- This run has not staged, committed, pushed, pulled, rebased, or switched.
 
 Verify all volatile values live before Git operations.
 
@@ -65,10 +65,11 @@ repairs and must be rebuilt on the work machine before upload.
   verified. The user has now restarted the instance and explicitly authorized
   the new ordered attribution/calibration program; the prior shutdown plan is
   no longer active. Do not automatically shut down this session.
-- The current GPU is a 32 GiB RTX 4080 SUPER. Native implementation and phase
-  arithmetic diagnostics completed; fresh P0 inputs are being prepared. Disk
-  has sufficient space; no old model was deleted. The protected 1.485B asset
-  must remain untouched.
+- The current GPU is a 32 GiB RTX 4080 SUPER. P0 calibration/confirmation,
+  implementation controls, and P1 s2 are complete. P1 s4 RULER and independent
+  natural continuation are running concurrently; a recent live sample was
+  100% GPU utilization, not a claimed whole-run average. No old model was
+  deleted. The protected 1.485B asset must remain untouched.
 - Cell-average/P3 and s8 were rejected by their registered entrance gates.
 - No training or OpenReview upload is authorized.
 - The work machine owns canonical `aidemo` validation and final packaging.
@@ -80,26 +81,25 @@ repairs and must be rebuilt on the work machine before upload.
 
 Passed on the personal PC:
 
-- finite-K exact geometry audit reproduced without benchmark input;
-- `24/24` focused exporter, weight-identity, and repository-navigation tests;
-- `py_compile` for finite-K, cross-K exporter, identity helper, and runner;
-- `bash -n` for the K-transport launch wrapper;
-- compact JSON receipts parse successfully;
-- `git diff --check`;
-- `paper/` diff empty and immutable PDF SHA unchanged;
-- branch divergence against upstream: `0/0` at local HEAD `c2c657c9cc56`.
+- 39 focused reference-gated coupling/baseline exporter tests;
+- 43 Native calibration builder/decision/single-code tests;
+- 55 fresh-NLL and paired RULER/NLL summary tests in the latest combined run;
+- weight-identity and repository-navigation checks;
+- focused `py_compile`, launcher `bash -n`, compact JSON parsing and
+  `git diff --check` checks; no GPU validation is inferred from these.
 
-GPU receipts record the RTX 4080 SUPER runtime, frozen table/checkpoint/data
-hashes, completed K32 rows, completed OLMo s2 rows, and both K128 screens.
-Canonical `aidemo` test suites and manuscript compilation were not run.
+Remote GPU owners separately record completed P0 and P1 s2 raw rows, runtime,
+checkpoint/data/table identities, and finite loss. The stock/custom canaries
+and explicit chunked FP32-attention comparison are bounded diagnostics.
+The s4 result is not yet promoted. `paper/` has an empty diff; no manuscript
+compilation, canonical `aidemo` suite or supplement packaging was run.
 
 ## 6. Volatile action queue
 
-1. Execute the registered Native-only P0 calibration, freeze a common
-   reference length only if the natural/capability frontiers agree, and then
-   independently confirm or abstain. Never infer 4K from the old RULER scores.
-   P1--P5 are conditional later stages; no `G(x;K)`, residual, gain or boundary
-   search is authorized. The user reprioritized identification over SOTA.
+1. Finish the running P1 s4 paired length curve and old-reference control;
+   preserve raw evidence and update its owner before deciding P2. Prepare
+   same-family K triangulation on CPU only meanwhile. No `G(x;K)`, residual,
+   gain or boundary search is authorized; identification precedes SOTA.
 2. Rebuild and validate the curated supplement on the work machine before
    submission.
 3. Freeze author metadata and complete the final owner-by-owner number review.

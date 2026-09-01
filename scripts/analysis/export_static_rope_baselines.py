@@ -9,10 +9,12 @@ of equations is not bitwise identity or GPU runtime/attention parity.
 from __future__ import annotations
 
 import argparse
+import importlib
 import inspect
 import json
 import math
 from pathlib import Path
+import re
 import sys
 from typing import Any
 
@@ -29,6 +31,12 @@ from scripts.analysis.export_frozen_coupling_transport import (  # noqa: E402
 )
 
 PARITY_RTOL = 1e-6
+NATIVE_ROTARY_CLASSES = {
+    "gemma": "GemmaRotaryEmbedding",
+    "qwen2": "Qwen2RotaryEmbedding",
+    "olmo2": "Olmo2RotaryEmbedding",
+    "llama": "LlamaRotaryEmbedding",
+}
 
 
 def tensor_hash(table: np.ndarray) -> str:
@@ -80,7 +88,8 @@ def build_tables(identity: dict, native: np.ndarray, factor: float) -> tuple[dic
     if not math.isfinite(factor) or factor <= 1:
         raise ValueError("factor must be finite and exceed one")
     dim, pairs = identity["head_dim"], identity["pairs"]
-    base, length = identity["rope_theta"], identity["native_length"]
+    base = identity["rope_theta"]
+    length = identity.get("reference_length", identity["native_length"])
     slots = np.arange(pairs, dtype=np.float64)
     low = max(math.floor(dim * math.log(length / (32 * 2 * math.pi)) / (2 * math.log(base))), 0)
     high = min(math.ceil(dim * math.log(length / (2 * math.pi)) / (2 * math.log(base))), dim - 1)
@@ -101,6 +110,7 @@ def build_tables(identity: dict, native: np.ndarray, factor: float) -> tuple[dic
     metadata = {
         "official_equation_yarn": {
             "beta_fast": 32.0, "beta_slow": 1.0,
+            "original_max_position_embeddings": length,
             "low": low, "high": high, "ramp": "linear index ramp, floor/ceil bounds",
             "attention_scaling": 1 + 0.1 * math.log(factor),
             "gain_semantics": "cos/sin amplitude; QK logit multiplier is its square",
@@ -124,6 +134,55 @@ def build_tables(identity: dict, native: np.ndarray, factor: float) -> tuple[dic
     return tables, metadata
 
 
+def bind_reference(identity: dict, receipt_path: Path | None,
+                   target_length: int | None, factor: float | None) -> tuple[float, dict | None]:
+    """Bind a confirmed Native-only length without rewriting checkpoint geometry."""
+    reference = None
+    length = identity["native_length"]
+    if receipt_path is not None:
+        reference = json.loads(receipt_path.read_text())
+        if not isinstance(reference, dict) or reference.get("status") != "NATIVE_REFERENCE_CONFIRMED":
+            raise ValueError("reference receipt must be NATIVE_REFERENCE_CONFIRMED")
+        length = reference.get("reference_length")
+        if type(length) is not int or length <= 0 or length & (length - 1) or length > identity["native_length"]:
+            raise ValueError("reference_length must be a positive power of two <= config length")
+        for key in ("checkpoint_weight_sha256", "config_sha256", "native_sha256_float32",
+                    "confirmation_decision_sha256", "data_manifest_sha256"):
+            if not isinstance(reference.get(key), str) or not re.fullmatch(r"[0-9a-f]{64}", reference[key]):
+                raise ValueError(f"reference receipt requires {key}")
+        for key in ("config_sha256", "native_sha256_float32"):
+            if reference[key] != identity[key]:
+                raise ValueError(f"reference receipt {key} mismatch")
+        if type(target_length) is not int or target_length <= length:
+            raise ValueError("--target-length > reference_length is required with a reference receipt")
+        realized_factor = target_length / length
+        if factor is not None and float(factor) != realized_factor:
+            raise ValueError("factor must equal target_length / reference_length exactly")
+        factor = realized_factor
+        reference = {**reference, "receipt_sha256": sha256_file(receipt_path)}
+    elif target_length is not None:
+        raise ValueError("--target-length requires a confirmed --reference-receipt")
+    if factor is None or not math.isfinite(float(factor)) or float(factor) <= 1:
+        raise ValueError("factor must be finite and exceed one")
+    identity["reference_length"] = length
+    return float(factor), reference
+
+
+def resolve_native_initializer(registry: dict, model_type: str):
+    """HF 5.x moved default RoPE from the registry to model-specific static methods."""
+    if "default" in registry:
+        return registry["default"]
+    class_name = NATIVE_ROTARY_CLASSES.get(model_type)
+    if class_name is None:
+        raise ValueError(f"unverified model-specific Native initializer: {model_type}")
+    module = importlib.import_module(f"transformers.models.{model_type}.modeling_{model_type}")
+    rotary_class = getattr(module, class_name, None)
+    initializer = getattr(rotary_class, "compute_default_rope_parameters", None)
+    if not callable(initializer):
+        raise ValueError(f"{class_name} has no verified default RoPE initializer")
+    return initializer
+
+
 def compare_tables(actual: np.ndarray, expected: np.ndarray) -> dict:
     if actual.dtype != np.dtype("float32") or actual.shape != expected.shape:
         raise ValueError("HF initializer must return matching float32 tensor")
@@ -139,7 +198,8 @@ def compare_tables(actual: np.ndarray, expected: np.ndarray) -> dict:
 
 
 def verify_transformers(config_path: Path, native: np.ndarray, equation: np.ndarray,
-                        factor: float, gain: float) -> tuple[np.ndarray, dict]:
+                        factor: float, gain: float,
+                        reference_length: int | None = None) -> tuple[np.ndarray, dict]:
     """CPU-only, no model weights/network; fail closed on incompatible HF APIs."""
     import torch
     import transformers
@@ -149,13 +209,18 @@ def verify_transformers(config_path: Path, native: np.ndarray, equation: np.ndar
     raw = json.loads(config_path.read_text())
     model_type = raw.pop("model_type")
     native_config = AutoConfig.for_model(model_type, **raw)
-    default_inv, default_gain = ROPE_INIT_FUNCTIONS["default"](native_config, torch.device("cpu"))
+    native_initializer = resolve_native_initializer(ROPE_INIT_FUNCTIONS, model_type)
+    default_inv, default_gain = native_initializer(native_config, torch.device("cpu"))
     native_parity = compare_tables(default_inv.detach().cpu().numpy(), native)
+    if not native_parity["exact_tensor_hash_match"]:
+        raise ValueError("HF Native tensor hash drift")
     if float(default_gain) != 1.0:
         raise ValueError("HF Native amplitude must equal one")
     scaling = {"rope_type": "yarn", "factor": factor, "beta_fast": 32.0,
                "beta_slow": 1.0, "attention_factor": gain,
-               "original_max_position_embeddings": raw["max_position_embeddings"]}
+               "original_max_position_embeddings": (
+                   raw["max_position_embeddings"] if reference_length is None else reference_length
+               )}
     raw["rope_scaling"] = scaling
     base = raw.get("rope_theta", (raw.get("rope_parameters") or {}).get("rope_theta"))
     raw["rope_parameters"] = {**scaling, "rope_theta": base}
@@ -168,6 +233,9 @@ def verify_transformers(config_path: Path, native: np.ndarray, equation: np.ndar
         raise ValueError("HF YaRN amplitude parity failed")
     parity.update({
         "native_parity": native_parity,
+        "native_initializer": f"{native_initializer.__module__}.{native_initializer.__qualname__}",
+        "native_initializer_source_sha256": sha256_bytes(inspect.getsource(native_initializer).encode()),
+        "native_initializer_file_sha256": sha256_file(Path(inspect.getfile(native_initializer))),
         "transformers_version": transformers.__version__, "torch_version": torch.__version__,
         "initializer": f"{initializer.__module__}.{initializer.__name__}",
         "initializer_source_sha256": sha256_bytes(inspect.getsource(initializer).encode()),
@@ -180,12 +248,17 @@ def verify_transformers(config_path: Path, native: np.ndarray, equation: np.ndar
 
 def export(args: argparse.Namespace) -> dict[str, Any]:
     identity, native = load_inputs(args.config, args.native_inv)
-    tables, metadata = build_tables(identity, native, float(args.factor))
+    factor, reference = bind_reference(
+        identity, getattr(args, "reference_receipt", None),
+        getattr(args, "target_length", None), args.factor,
+    )
+    tables, metadata = build_tables(identity, native, factor)
     verification: dict[str, Any] = {"passed": False, "status": "NOT_RUN"}
     if args.verify_transformers:
         tables["official_equation_yarn"], verification = verify_transformers(
-            args.config, native, tables["official_equation_yarn"], float(args.factor),
+            args.config, native, tables["official_equation_yarn"], factor,
             metadata["official_equation_yarn"]["attention_scaling"],
+            reference_length=identity["reference_length"],
         )
         metadata["official_equation_yarn"]["table_source"] = "installed HF ROPE_INIT_FUNCTIONS yarn, CPU float32"
         metadata["official_equation_yarn"]["rounding"] = "actual installed-HF initializer float32 output; equation tolerance check passed"
@@ -193,10 +266,15 @@ def export(args: argparse.Namespace) -> dict[str, Any]:
         if not np.isfinite(table).all() or not (table > 0).all() or not np.all(table[:-1] > table[1:]):
             raise ValueError(f"invalid or crossing {name} table")
     receipt = {
-        "status": "STATIC_ROPE_BASELINES_EXPORTED", "benchmark_scores_used": False,
+        "status": "STATIC_ROPE_BASELINES_EXPORTED", "benchmark_scores_used": reference is not None,
+        "long_benchmark_scores_used": False,
+        "reference_receipt": reference,
+        "reference_length": identity["reference_length"],
+        "target_length": getattr(args, "target_length", None),
+        "weight_identity_verification": "not performed; no weights loaded; receipt binds declared identity only",
         "runtime_evaluation_status": "NOT_RUN",
-        "search_performed": False, "checkpoint": identity, "factor": float(args.factor),
-        "base_and_length_semantics": "checkpoint b and L fixed inputs; static NTK changes effective base; neither arm claims fixed-support pure-allocation identification",
+        "search_performed": False, "checkpoint": identity, "factor": factor,
+        "base_and_length_semantics": "checkpoint b and native_length remain config inputs; confirmed reference_length controls YaRN ramp and target/reference factor only; static NTK changes effective base; neither arm claims fixed-support pure-allocation identification",
         "numpy_version": np.__version__,
         "implementation_sha256": sha256_file(Path(__file__)),
         "config_identity_implementation_sha256": sha256_file(ROOT / "scripts/analysis/export_frozen_coupling_transport.py"),
@@ -206,7 +284,7 @@ def export(args: argparse.Namespace) -> dict[str, Any]:
     # Never overwrite an earlier frozen artifact, even at a different factor.
     args.output.mkdir(parents=True, exist_ok=False)
     for name, table in tables.items():
-        path = args.output / f"{name}_s{float(args.factor):g}.npy"
+        path = args.output / f"{name}_s{factor:g}.npy"
         np.save(path, table, allow_pickle=False)
         receipt["tables"][name] = {
             **metadata[name], "path": path.name, "shape": list(table.shape), "dtype": "<f4",
@@ -221,7 +299,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--native-inv", type=Path, required=True)
-    parser.add_argument("--factor", "--scale", type=float, required=True)
+    parser.add_argument("--factor", "--scale", type=float,
+                        help="required without a reference receipt; otherwise must equal target/reference")
+    parser.add_argument("--reference-receipt", type=Path)
+    parser.add_argument("--target-length", type=int,
+                        help="required with a confirmed reference receipt; fixes factor=target/reference")
     parser.add_argument("--verify-transformers", action="store_true")
     parser.add_argument("--output", type=Path, required=True, help="new output directory (must not exist)")
     print(json.dumps(export(parser.parse_args()), indent=2, sort_keys=True))

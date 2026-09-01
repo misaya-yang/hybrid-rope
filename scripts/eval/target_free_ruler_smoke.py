@@ -103,6 +103,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--lengths", type=int, nargs="+", default=(8192, 16384))
     parser.add_argument("--limit-per-cell", type=int, default=20)
     parser.add_argument("--native-context-length", type=int, default=4096)
+    parser.add_argument("--profile-target-length", type=int)
     parser.add_argument("--expected-weight-sha256")
     parser.add_argument("--expected-native-sha256")
     parser.add_argument("--expected-data-manifest-sha256")
@@ -168,6 +169,7 @@ def load_cross_model_method(
     external_table_factor: float = 4.0,
     external_attention_scaling: float | None = None,
     allow_order_crossings: bool = False,
+    profile_target_length: int | None = None,
 ) -> tuple[Any, dict[str, Any]]:
     if method not in {"native", "official_yarn", "session_binary_s4", *CONTROL_METHODS}:
         raise RuntimeError("unsupported generic RULER method")
@@ -390,6 +392,11 @@ def load_cross_model_method(
             "active_sha256_float32": native_hash,
             "attention_scaling": float(getattr(rotary, "attention_scaling", 1.0)),
         }
+    if profile_target_length is not None:
+        if int(profile_target_length) <= 0:
+            raise ValueError("profile target length must be positive")
+        model.config.max_position_embeddings = int(profile_target_length)
+        receipt["profile_target_length"] = int(profile_target_length)
     configure_ruler_flash_attention(model)
     model.config.use_cache = True
     model.eval().to("cuda")
@@ -471,6 +478,11 @@ def main() -> int:
     native_context_length = int(args.native_context_length)
     tasks = tuple(str(value) for value in args.tasks)
     lengths = tuple(sorted(int(value) for value in args.lengths))
+    if args.profile_target_length is not None:
+        if args.profile_target_length < max(lengths, default=0):
+            raise ValueError("evaluation length exceeds the declared maximum profile")
+        if is_olmo and args.method not in CONTROL_METHODS:
+            raise ValueError("explicit maximum profile requires the generic static-table loader")
     allowed_long_lengths = {
         native_context_length * 2,
         native_context_length * 4,
@@ -514,6 +526,7 @@ def main() -> int:
         "limit_per_cell": int(args.limit_per_cell),
         "model_type": str(config_probe.model_type),
         "native_context_length": native_context_length,
+        "profile_target_length": args.profile_target_length,
         "expected_active_sha256": args.expected_active_sha256,
         "expected_native_sha256": args.expected_native_sha256,
         "table_name": args.table_name,
@@ -558,6 +571,7 @@ def main() -> int:
             external_table_factor=float(args.table_factor),
             external_attention_scaling=args.long_attention_scaling,
             allow_order_crossings=bool(args.allow_order_crossings),
+            profile_target_length=args.profile_target_length,
         )
     )
     torch.cuda.reset_peak_memory_stats()
@@ -656,6 +670,10 @@ def main() -> int:
                 "nominal_length": length,
                 "local_index": local_index,
                 "prediction": prediction,
+                "generated_token_ids": output_ids[0].detach().cpu().tolist(),
+                "ended_with_eos": bool(output_ids[0, -1] == tokenizer.eos_token_id),
+                "prompt_tokens": int(input_ids.shape[1]),
+                "generation_budget": generation_tokens,
                 "references": references,
                 "official_metric": metric,
                 "official_task_score": score,

@@ -1,17 +1,21 @@
 """NumPy + standard-library CPU checks; no torch/transformers required."""
 
 import argparse
+import copy
 import json
 import math
 from pathlib import Path
+import sys
 import tempfile
+from types import ModuleType, SimpleNamespace
 import unittest
 from unittest.mock import patch
 
 import numpy as np
 
 from scripts.analysis.export_static_rope_baselines import (
-    build_tables, compare_tables, export, load_inputs, sha256_file, tensor_hash,
+    bind_reference, build_tables, compare_tables, export, load_inputs,
+    resolve_native_initializer, sha256_file, tensor_hash, verify_transformers,
 )
 
 
@@ -135,6 +139,156 @@ class TestStaticRopeBaselines(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "parity failed"):
                 export(self.args(verify=True))
         self.assertFalse((self.root / "out").exists())
+
+    def reference_receipt(self, **changes):
+        receipt = {
+            "status": "NATIVE_REFERENCE_CONFIRMED", "reference_length": 1024,
+            "checkpoint_weight_sha256": "a" * 64,
+            "config_sha256": sha256_file(self.config),
+            "native_sha256_float32": tensor_hash(self.native),
+            "confirmation_decision_sha256": "b" * 64,
+            "data_manifest_sha256": "c" * 64,
+        }
+        receipt.update(changes)
+        path = self.root / "reference.json"
+        path.write_text(json.dumps(receipt))
+        return path
+
+    def test_confirmed_reference_changes_yarn_ramp_not_native_or_ntk(self):
+        identity, native = load_inputs(self.config, self.native_path)
+        old_tables, old_meta = build_tables(identity, native, 2.0)
+        args = self.args()
+        args.reference_receipt = self.reference_receipt()
+        args.target_length = 2048
+        args.factor = None
+        config_hash = sha256_file(self.config)
+        native_hash = sha256_file(self.native_path)
+        receipt = export(args)
+        self.assertEqual(receipt["checkpoint"]["native_length"], 2048)
+        self.assertEqual(receipt["checkpoint"]["L"], 2048)
+        self.assertEqual(receipt["reference_length"], 1024)
+        self.assertEqual(receipt["factor"], 2.0)
+        self.assertEqual(receipt["target_length"], 2048)
+        self.assertEqual(receipt["reference_receipt"]["receipt_sha256"], sha256_file(args.reference_receipt))
+        self.assertTrue(receipt["benchmark_scores_used"])
+        self.assertFalse(receipt["long_benchmark_scores_used"])
+        yarn = receipt["tables"]["official_equation_yarn"]
+        self.assertEqual(yarn["original_max_position_embeddings"], 1024)
+        self.assertNotEqual((yarn["low"], yarn["high"]),
+                            (old_meta["official_equation_yarn"]["low"], old_meta["official_equation_yarn"]["high"]))
+        ntk_path = args.output / receipt["tables"]["static_ntk"]["path"]
+        np.testing.assert_array_equal(np.load(ntk_path), old_tables["static_ntk"])
+        self.assertEqual(sha256_file(self.config), config_hash)
+        self.assertEqual(sha256_file(self.native_path), native_hash)
+
+    def test_reference_rejects_unconfirmed_lengths_hashes_and_missing_evidence(self):
+        for change in (
+            {"status": "PROVISIONAL"}, {"reference_length": 0},
+            {"reference_length": 768}, {"reference_length": 4096},
+            {"reference_length": True}, {"reference_length": 1024.0},
+            {"config_sha256": "d" * 64}, {"native_sha256_float32": "d" * 64},
+            {"checkpoint_weight_sha256": None}, {"confirmation_decision_sha256": ""},
+            {"data_manifest_sha256": "not a hash"},
+        ):
+            with self.subTest(change=change):
+                args = self.args()
+                args.reference_receipt = self.reference_receipt(**change)
+                args.target_length, args.factor = 2048, 2.0
+                with self.assertRaises(ValueError):
+                    export(args)
+                self.assertFalse(args.output.exists())
+
+    def test_reference_target_and_factor_are_bound_exactly(self):
+        identity, _ = load_inputs(self.config, self.native_path)
+        path = self.reference_receipt()
+        for target, factor in ((None, 2), (1024, 1), (2048, 4),
+                               (2048, np.nextafter(2.0, 3.0)), (True, None)):
+            with self.subTest(target=target, factor=factor):
+                with self.assertRaises(ValueError):
+                    bind_reference(identity, path, target, factor)
+        factor, _ = bind_reference(identity, path, 2048, 2.0)
+        self.assertEqual(factor, 2.0)
+        with self.assertRaises(ValueError):
+            bind_reference(identity, None, 2048, 2.0)
+        with self.assertRaises(ValueError):
+            bind_reference(identity, None, None, None)
+
+    def test_native_initializer_legacy_and_fail_closed_unknown_api(self):
+        legacy = object()
+        with patch("scripts.analysis.export_static_rope_baselines.importlib.import_module") as importer:
+            self.assertIs(resolve_native_initializer({"default": legacy}, "gemma"), legacy)
+            importer.assert_not_called()
+            with self.assertRaisesRegex(ValueError, "unverified"):
+                resolve_native_initializer({}, "unknown")
+            importer.return_value = SimpleNamespace(GemmaRotaryEmbedding=object)
+            with self.assertRaisesRegex(ValueError, "no verified"):
+                resolve_native_initializer({}, "gemma")
+
+    def test_hf5_model_static_initializer_and_reference_keep_real_config(self):
+        self.raw["model_type"] = "gemma"
+        self.save_inputs()
+        identity, native = load_inputs(self.config, self.native_path)
+        identity["reference_length"] = 1024
+        tables, meta = build_tables(identity, native, 2.0)
+        equation = tables["official_equation_yarn"]
+        gain = meta["official_equation_yarn"]["attention_scaling"]
+        observed = {}
+
+        class Tensor:
+            def __init__(self, array):
+                self.array = array
+            def detach(self):
+                return self
+            def cpu(self):
+                return self
+            def numpy(self):
+                return self.array
+
+        class GemmaRotaryEmbedding:
+            def __init__(self, *args, **kwargs):
+                raise AssertionError("no rotary/full model instance may be constructed")
+
+            @staticmethod
+            def compute_default_rope_parameters(config, device):
+                observed["native"] = copy.deepcopy(config)
+                return Tensor(native), 1.0
+
+        def yarn(config, device):
+            observed["yarn"] = copy.deepcopy(config)
+            return Tensor(equation), gain
+
+        class AutoConfig:
+            @staticmethod
+            def for_model(model_type, **raw):
+                return SimpleNamespace(model_type=model_type, **copy.deepcopy(raw))
+
+        torch = ModuleType("torch")
+        torch.__version__, torch.device = "mock-cpu", lambda value: value
+        transformers = ModuleType("transformers")
+        transformers.__version__, transformers.AutoConfig = "5.15.1-mock", AutoConfig
+        rope_utils = ModuleType("transformers.modeling_rope_utils")
+        rope_utils.ROPE_INIT_FUNCTIONS = {"yarn": yarn}
+        modules = {"torch": torch, "transformers": transformers,
+                   "transformers.modeling_rope_utils": rope_utils}
+        model_module = SimpleNamespace(GemmaRotaryEmbedding=GemmaRotaryEmbedding)
+        config_hash = sha256_file(self.config)
+        with patch.dict(sys.modules, modules), patch(
+            "scripts.analysis.export_static_rope_baselines.importlib.import_module",
+            return_value=model_module,
+        ) as importer:
+            actual, receipt = verify_transformers(
+                self.config, native, equation, 2.0, gain, reference_length=1024,
+            )
+        importer.assert_called_once_with("transformers.models.gemma.modeling_gemma")
+        np.testing.assert_array_equal(actual, equation)
+        self.assertTrue(receipt["native_parity"]["exact_tensor_hash_match"])
+        self.assertIn("compute_default_rope_parameters", receipt["native_initializer"])
+        self.assertEqual(observed["native"].max_position_embeddings, 2048)
+        self.assertIsNone(observed["native"].rope_scaling)
+        self.assertEqual(observed["yarn"].max_position_embeddings, 2048)
+        self.assertEqual(observed["yarn"].rope_parameters["original_max_position_embeddings"], 1024)
+        self.assertEqual(observed["yarn"].rope_scaling["original_max_position_embeddings"], 1024)
+        self.assertEqual(sha256_file(self.config), config_hash)
 
 
 if __name__ == "__main__":

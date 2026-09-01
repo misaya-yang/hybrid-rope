@@ -17,7 +17,12 @@ REPO_ROOT="${REPO_ROOT:-$(cd "$(dirname "$0")/../.." && pwd)}"
 RUN_WRONG_CORTH="${RUN_WRONG_CORTH:-0}"
 GAIN_COEFFICIENT="${GAIN_COEFFICIENT:-0.074}"
 TASKS=(niah_single_1 niah_multikey_2 niah_multikey_3 vt)
-LONG_LENGTH=$((NATIVE_LENGTH * SCALE))
+REFERENCE_LENGTH="${REFERENCE_LENGTH:-$NATIVE_LENGTH}"
+LONG_LENGTH=$((REFERENCE_LENGTH * SCALE))
+EVAL_LENGTHS=("$REFERENCE_LENGTH" "$LONG_LENGTH")
+if [[ "$REFERENCE_LENGTH" != "$NATIVE_LENGTH" && "$SCALE" == 4 ]]; then
+  EVAL_LENGTHS=("$REFERENCE_LENGTH" "$((REFERENCE_LENGTH * 2))" "$LONG_LENGTH")
+fi
 SCALE_TAG=$(printf '%g' "$SCALE")
 MANIFEST="$TABLE_ROOT/manifest.json"
 
@@ -68,8 +73,9 @@ COMMON=(
   --expected-native-sha256 "$NATIVE_HASH"
   --expected-data-manifest-sha256 "$EXPECTED_DATA_MANIFEST_SHA256"
   --table-factor "$SCALE"
+  --profile-target-length "$LONG_LENGTH"
   --tasks "${TASKS[@]}"
-  --lengths "$NATIVE_LENGTH" "$LONG_LENGTH"
+  --lengths "${EVAL_LENGTHS[@]}"
   --limit-per-cell 20
 )
 
@@ -78,13 +84,14 @@ COMMON=(
   --data-root "$DATA_ROOT" \
   --method native \
   --tasks niah_single_1 \
-  --lengths "$NATIVE_LENGTH" \
+  --lengths "$REFERENCE_LENGTH" \
   --limit-per-cell 1 \
   --native-context-length "$NATIVE_LENGTH" \
   --expected-weight-sha256 "$EXPECTED_WEIGHT_SHA256" \
   --expected-native-sha256 "$NATIVE_HASH" \
   --expected-data-manifest-sha256 "$EXPECTED_DATA_MANIFEST_SHA256" \
   --table-factor "$SCALE" \
+  --profile-target-length "$LONG_LENGTH" \
   --output "$OUTPUT_ROOT/preflight_native"
 
 "$PYTHON_BIN" scripts/eval/target_free_ruler_smoke.py \

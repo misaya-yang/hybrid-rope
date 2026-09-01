@@ -4,6 +4,25 @@ Compact, machine-path-free receipt for the attention-aware allocation study.
 Checkpoints, raw evaluation records, token arrays, caches, and machine logs
 remain with their canonical owners outside this directory.
 
+[`GEMMA_NATIVE_REFERENCE_CONFIRMED_20260901.json`](GEMMA_NATIVE_REFERENCE_CONFIRMED_20260901.json)
+binds the independently confirmed 4096 operating reference from Native natural
+continuation and single-code exact/EOS probes. The original two-code probe
+remains abstained. The receipt permits reference-correct table construction,
+not a training-length relabeling or a claim that the new long tables work;
+see `../results/NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901.md`.
+
+[`REFERENCE_CORRECTED_K128_S2_RULER_RECEIPT_20260901.json`](REFERENCE_CORRECTED_K128_S2_RULER_RECEIPT_20260901.json)
+contains the completed four-arm paired s2 RULER curve, per-task results,
+stratified bootstrap intervals and raw hashes. It supports one-hop behavior
+with the confirmed reference, not a privileged coordinate or SOTA; see
+`../results/REFERENCE_CORRECTED_K128_RESULT_20260901.md`.
+
+[`REFERENCE_CORRECTED_K128_S2_NLL_RECEIPT_20260901.json`](REFERENCE_CORRECTED_K128_S2_NLL_RECEIPT_20260901.json)
+contains the separate 32-document natural continuation holdout, paired
+document-bootstrap intervals, Native PPL-retention gates and raw hashes.
+The same target suffix is scored across lengths and profiles; these are
+teacher-forced outcomes, not extra generation trials.
+
 `artifacts/coupling_law_cpu/` contains the CPU-only low-dimensional coupling-law
 audit: frozen OLMo-only fits, Qwen zero-refit geometry holdout, individual and
 combined candidate tables, slot residuals, plots, and a SHA-256 manifest. Its

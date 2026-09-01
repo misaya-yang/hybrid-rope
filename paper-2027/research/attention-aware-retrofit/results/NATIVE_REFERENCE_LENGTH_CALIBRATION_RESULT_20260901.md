@@ -2,7 +2,7 @@
 
 ## Passport and current decision
 
-- **Status:** `P0_V1_ABSTAIN / SINGLE_CODE_INSTRUMENT_REPAIR_REGISTERED`
+- **Status:** `P0_V1_ABSTAIN / SINGLE_CODE_REFERENCE_INDEPENDENTLY_CONFIRMED`
 - **Intervention:** none. Exact Gemma-1.1 checkpoint, Native frequencies,
   original config length 8192, amplitude one, zero model updates.
 - **Question:** can independent Native measurements identify an operating
@@ -16,7 +16,9 @@ The first P0 calibration does **not** identify a joint `L_ref`. Fresh natural
 continuation independently reproduces severe Native degradation at 8192,
 but the new two-code capability instrument fails its own short-context
 competence floor. Its exact formatting errors cannot be silently forgiven.
-The v1 verdict remains abstention; neither 4096 nor 2048 is selected.
+The v1 verdict remains abstention. The one registered single-code replacement
+subsequently selected 4096 and passed independent confirmation (§5), without
+reusing any final long holdout or changing `G`.
 
 ## 1. Training length is not the inferred quantity
 
@@ -136,7 +138,39 @@ explicitly specific to natural continuation plus single-code retrieval.
 If the new compact/1024 instrument fails, no additional prompt repair is
 registered. Existing natural calibration repeats are not new independent data.
 
-## 5. K-identification guardrail for the next stage
+## 5. Single-code calibration and independent confirmation
+
+The replacement compact/1024 controls are each `64/64`; its calibration
+1024/2048/4096/8192 exact counts are `64/64/63/0` out of 64. The natural and
+capability families therefore independently propose 4096. This decision was
+frozen before any confirmation model outcome.
+
+On the separate 64-document, 128-blueprint confirmation split:
+
+| Endpoint | 1024 | 4096 | 8192 |
+| --- | ---: | ---: | ---: |
+| mean natural suffix NLL | 3.427443 | 3.196320 | 11.158831 |
+| single-code exact + EOS | 128/128 | 127/128 | 0/128 |
+
+All four preregistered primary gates pass. The conservative 4096 capability
+retention lower bound is `.945268`, above `.875`; the 8192 upper bound is
+`.040446`. Natural 4096-minus-1024 NLL has paired-bootstrap 95% interval
+`[-.282463,-.184386]`, while 8192-minus-1024 is `[7.088818,8.442138]`.
+The next grid point fails both families as a secondary boundary check.
+
+The compact machine-path-free confirmed reference is
+[`GEMMA_NATIVE_REFERENCE_CONFIRMED_20260901.json`](../evidence/GEMMA_NATIVE_REFERENCE_CONFIRMED_20260901.json).
+The confirmed **operating reference** is 4096 for these two measurement
+families; this does not relabel training history or establish all-task Native
+capacity. P1 may now compute `s=target/4096` with frozen law parameters.
+
+A separate two-document FP32 attention reference also retains the 8K NLL
+failure. Across the four document/length cells, the largest mean-NLL
+disagreement with Flash is `.012370`, below the predeclared `.05` diagnostic
+bound. This was explicit 128-query chunked reference computation, not a
+silent full-matrix attention fallback.
+
+## 6. K-identification guardrail for the next stage
 
 The existing normalized-index control is not a fixed OLMo raw-index curve.
 [`export_frozen_coupling_transport.py`](../../../../scripts/analysis/export_frozen_coupling_transport.py)
@@ -159,4 +193,6 @@ own Native/YaRN resolver gates.
 The current data establish a large Native natural-text degradation between
 the tested 4K and 8K endpoints on this exact checkpoint. They do not identify
 `L_train=4K`, a task-independent scalar `L_ref`, causal K dependence, the
-failure of frozen `G`, or a successful replacement table. V1 remains abstained.
+failure of frozen `G`, or a successful replacement table. V1 remains abstained;
+the single-code replacement independently confirms a protocol-specific 4096
+operating reference only.

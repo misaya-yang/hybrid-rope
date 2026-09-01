@@ -15,6 +15,7 @@ import numpy as np
 
 DEFAULT_X_HIGH = 0.7382780681078285
 DEFAULT_X_LOW = 0.366403835112904
+DEFAULT_GAIN_COEFFICIENT = 0.074
 SOURCE_PAIRS = 64
 
 
@@ -109,6 +110,52 @@ def normalized_index_movement(
     return np.interp(target_z, source_z, source_m)
 
 
+def bind_reference_receipt(identity: dict[str, Any], args: argparse.Namespace) -> None:
+    """Admit a confirmed reference without changing the checkpoint's native length."""
+    path = getattr(args, "reference_receipt", None)
+    target = getattr(args, "target_length", None)
+    if path is None:
+        if target is not None:
+            raise ValueError("target_length requires reference_receipt")
+        return
+    if args.native_inv is None:
+        raise ValueError("reference_receipt requires runtime --native-inv")
+    if (float(args.x_high) != DEFAULT_X_HIGH or float(args.x_low) != DEFAULT_X_LOW
+            or float(args.gain_coefficient) != DEFAULT_GAIN_COEFFICIENT):
+        raise ValueError("reference_receipt locks x_high, x_low, and gain_coefficient to defaults")
+    confirmed = json.loads(path.read_text(encoding="utf-8"))
+    if confirmed.get("status") != "NATIVE_REFERENCE_CONFIRMED":
+        raise ValueError("reference receipt must have status NATIVE_REFERENCE_CONFIRMED")
+    reference = confirmed.get("reference_length")
+    if (type(reference) is not int or reference <= 0
+            or reference > int(identity["native_length"]) or reference & (reference - 1)):
+        raise ValueError("reference_length must be a positive power of two no greater than config length")
+    if type(target) is not int or target <= reference:
+        raise ValueError("reference_receipt requires integer target_length greater than reference_length")
+    if float(args.scale) != target / reference:
+        raise ValueError("scale must equal target_length / reference_length")
+    hashes = (
+        "checkpoint_weight_sha256", "config_sha256", "native_sha256_float32",
+        "confirmation_decision_sha256", "data_manifest_sha256",
+    )
+    for name in hashes:
+        value = confirmed.get(name)
+        if (not isinstance(value, str) or len(value) != 64
+                or any(char not in "0123456789abcdef" for char in value)):
+            raise ValueError(f"reference receipt requires a lowercase SHA-256 for {name}")
+    for name in ("config_sha256", "native_sha256_float32"):
+        if confirmed[name] != identity[name]:
+            raise ValueError(f"reference receipt {name} mismatch")
+    identity["reference_length"] = reference
+    # Copy only the portable identity fields, never arbitrary receipt paths.
+    identity["reference_calibration"] = {
+        "status": confirmed["status"], "reference_length": reference,
+        **{name: confirmed[name] for name in hashes},
+        "receipt_sha256": sha256_file(path),
+        "weight_identity_scope": "receipt-bound; exporter does not independently read checkpoint weights",
+    }
+
+
 def build_tables(
     identity: dict[str, Any],
     *,
@@ -121,10 +168,11 @@ def build_tables(
     if not math.isfinite(scale) or scale <= 1.0:
         raise ValueError("scale must exceed one")
     pairs = int(identity["pairs"])
+    coordinate_length = int(identity.get("reference_length", identity["native_length"]))
     omega, x, c_orth = grid_coordinate(
         pairs=pairs,
         rope_theta=float(identity["rope_theta"]),
-        native_length=int(identity["native_length"]),
+        native_length=coordinate_length,
     )
     if native_override is not None:
         omega = np.asarray(native_override, dtype=np.float64)
@@ -136,14 +184,14 @@ def build_tables(
         ):
             raise ValueError("runtime Native inverse-frequency tensor is invalid")
         x = np.log(
-            float(identity["native_length"]) * omega / (2.0 * math.pi * c_orth)
+            float(coordinate_length) * omega / (2.0 * math.pi * c_orth)
         )
     movement = {
         "dimensionless_x": clipped_affine(x, x_high=x_high, x_low=x_low),
         "normalized_raw_index": normalized_index_movement(
             pairs,
             rope_theta=float(identity["rope_theta"]),
-            native_length=int(identity["native_length"]),
+            native_length=coordinate_length,
             x_high=x_high,
             x_low=x_low,
         ),
@@ -153,10 +201,10 @@ def build_tables(
         _, _, source_c_orth = grid_coordinate(
             pairs=SOURCE_PAIRS,
             rope_theta=float(identity["rope_theta"]),
-            native_length=int(identity["native_length"]),
+            native_length=coordinate_length,
         )
         wrong_x = np.log(
-            float(identity["native_length"])
+            float(coordinate_length)
             * omega
             / (2.0 * math.pi * source_c_orth)
         )
@@ -196,6 +244,7 @@ def export(args: argparse.Namespace) -> dict[str, Any]:
     identity["formula_native_max_abs_difference"] = float(
         np.max(np.abs(native - formula_native))
     )
+    bind_reference_receipt(identity, args)
     tables, movements, c_orth = build_tables(
         identity,
         scale=float(args.scale),
@@ -230,6 +279,21 @@ def export(args: argparse.Namespace) -> dict[str, Any]:
         },
         "tables": {},
     }
+    if "reference_length" in identity:
+        receipt["reference_scope"] = {
+            "L_config": int(identity["native_length"]),
+            "L_ref": int(identity["reference_length"]),
+            "target_length": int(args.target_length),
+            "s": float(args.scale),
+            "scope": "confirmed Native-only reference calibrates every x coordinate; checkpoint config length remains unchanged",
+            "reference_length_calibrated": True,
+            "table_parameters_refit": False,
+        }
+        receipt["source_grid_for_normalized_index"].update({
+            "reference_length": int(identity["reference_length"]),
+            "coordinate_length": int(identity["reference_length"]),
+            "definition": "counterfactual K64 point samples at checkpoint base and confirmed reference length, transported by i/(K-1); native_length retains config identity",
+        })
     for name, table in tables.items():
         if not np.isfinite(table).all() or not (table > 0.0).all():
             raise RuntimeError(f"{name} table is non-finite or non-positive")
@@ -258,10 +322,14 @@ def main() -> None:
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--native-length", type=int)
     parser.add_argument("--native-inv", type=Path)
+    parser.add_argument("--reference-receipt", type=Path,
+                        help="confirmed Native calibration receipt; requires --native-inv and --target-length")
+    parser.add_argument("--target-length", type=int,
+                        help="with --reference-receipt, scale must equal target/reference length")
     parser.add_argument("--scale", type=float, required=True)
     parser.add_argument("--x-high", type=float, default=DEFAULT_X_HIGH)
     parser.add_argument("--x-low", type=float, default=DEFAULT_X_LOW)
-    parser.add_argument("--gain-coefficient", type=float, default=0.074)
+    parser.add_argument("--gain-coefficient", type=float, default=DEFAULT_GAIN_COEFFICIENT)
     parser.add_argument("--include-wrong-c-orth", action="store_true")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
