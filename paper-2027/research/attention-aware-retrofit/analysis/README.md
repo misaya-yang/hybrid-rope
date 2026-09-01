@@ -1,11 +1,10 @@
 # Retrofit mechanism analyses
 
 These are mechanism analyses, falsifications, and historical decision records.
-They do not own the active research order. `INDEX.md` §6 routes the current
-R1/R2 zero-training protocol through
-[`../preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](../preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md).
-The matched-content phase 2x2 is a conditional diagnostic, not the default next
-experiment. The theory continuation remains
+They do not own the active research order. `INDEX.md` §6 owns the current
+deterministic static pure-`z` question. The old success-first and
+matched-content preflights are retired history, not default experiments. The
+theory continuation remains
 [`../../ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](../../ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md).
 
 | Analysis | Durable conclusion |

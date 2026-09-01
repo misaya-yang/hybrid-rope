@@ -266,6 +266,7 @@ def greedy_generate(
             input_ids=input_ids,
             use_cache=True,
             return_dict=True,
+            logits_to_keep=1,
         )
         past = outputs.past_key_values
         next_token = outputs.logits[:, -1, :].argmax(dim=-1)
@@ -281,6 +282,7 @@ def greedy_generate(
                 past_key_values=past,
                 use_cache=True,
                 return_dict=True,
+                logits_to_keep=1,
             )
             past = outputs.past_key_values
             next_token = outputs.logits[:, -1, :].argmax(dim=-1)

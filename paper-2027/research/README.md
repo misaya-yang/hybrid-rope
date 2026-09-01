@@ -18,7 +18,7 @@ Read in this order:
 5. Current `main.pdf`/TeX, then the canonical owner below before changing a
    fact, number, theorem, protocol identity, or claim.
 
-Do not cold-start from an external-model review, historical reviewer package,
+Do not infer current priority from an external-model review, historical reviewer package,
 old revision plan, author-verdict ledger, preflight, or newest-dated file.
 
 ## Current paper identity
@@ -75,23 +75,13 @@ universal LM optimum, and static effective rank is not a behavioural ranker.
 ## Research lifecycle
 
 The durable decision order lives only in [`../../INDEX.md`](../../INDEX.md)
-§6. Current lifecycle labels are:
-
-- **Next design gate:**
-  [`ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](attention-aware-retrofit/preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md),
-  `SUCCESS_FIRST_PORTFOLIO_DESIGN_ONLY`; four candidate families and the
-  development/selection/confirmation firewall are specified, but no realised
-  candidate, certified runner, result, or compute authorization is implied.
-- **Conditional diagnostic:**
-  [`MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md`](attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md)
-  enters only when a valid candidate screen is mechanism-ambiguous and the
-  answer changes candidate design. The archived leave-one-band-out arms are
-  invalid because several restorations break frequency ordering; grouped or
-  band-level work requires a new monotonicity-checked design.
-- **Superseded:** protected-progressive/protected-ramp scanning, old post-GPU
-  priority memos, and August narrative/experiment plans.
-- **Closed or unresolved:** use [`../../INDEX.md`](../../INDEX.md) §3.4–§3.5.
-  `SCREEN_UNRESOLVED` is neither success nor a candidate-level rejection.
+§6. Current state is `RQ_LOCKED / CONSTRUCTION_NOT_DERIVED`: one deterministic
+non-affine `f(z)`, derived before LM evaluation and frozen without weight or
+frequency learning. Endpoint pinning is not a method requirement. The old
+success-first zero-training portfolio and matched-content bridge are historical
+protocols, not next steps. Open their preflights only to audit what was
+registered before execution. Closed or unresolved results remain routed by
+[`../../INDEX.md`](../../INDEX.md) §3.4–§3.5; neither creates an action queue.
 
 A preflight is a frozen design, not evidence that code exists or an experiment
 ran. A script manifest is a code view, not a result or readiness receipt.

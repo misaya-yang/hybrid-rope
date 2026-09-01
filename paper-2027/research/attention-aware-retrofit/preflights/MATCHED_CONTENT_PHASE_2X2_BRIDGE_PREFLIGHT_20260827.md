@@ -1,19 +1,16 @@
 # Matched-content phase 2x2 bridge preflight (2026-08-27)
 
-- **Status:** `FROZEN_PROTOCOL_DESIGN_NOT_EXECUTED`
+- **Status:** `RETIRED_PROTOCOL_DESIGN_NOT_EXECUTED`
 - **Role:** post-deadline method-development preflight; not manuscript evidence,
   a result, or compute authorization
-- **Lifecycle update (2026-08-30):** the protocol remains frozen, but its old
-  "sole next bridge" priority is superseded by `INDEX.md` §6 and
-  `ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`; it now enters only
-  after a valid R2 screen when the diagnosis would change candidate design
-- **Scheduling gate:** research execution is ineligible before the 2026-09-25
-  manuscript deadline. After that date this remains only a design until a new
-  author decision confirms that the bridge still has priority.
-- **Decision owner:** `INDEX.md` §6.2 and
+- **Lifecycle update (2026-08-31):** the protocol is retained for historical
+  audit only. It is not part of the deterministic static pure-`z` design,
+  or a conditional execution queue.
+- **Scheduling:** none; retirement removes this design from the execution queue.
+- **Historical decision owner:**
   [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](../../ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
-  §4
-- **Primary implementation target:** the mature OLMo checkpoint and task
+  §4; current priority lives only in `INDEX.md` §0 and §6
+- **Historical implementation target:** the mature OLMo checkpoint and task
   contract already owned by
   [`SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](../results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md)
 - **Authorization:** none. Every GPU or checkpoint evaluation stage requires a

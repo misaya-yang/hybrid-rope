@@ -1,178 +1,62 @@
-# Mature-checkpoint retrofit research index
+# Mature-checkpoint allocation research index
 
-This directory is the durable internal layer for attention-aware allocation and
-frozen-checkpoint retrofit. It is not manuscript prose. Start here instead of
-opening the newest dated file.
+This directory stores mature-checkpoint result owners, receipts, analyses, and
+historical preflights. It does not own a second research agenda. Current priority
+and order live only in [`../../../INDEX.md`](../../../INDEX.md) §0 and §6.
 
-The cross-project conceptual grammar is
-[`../ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](../ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md).
-It distinguishes the realised frequency tensor from the causal variables used
-to analyse it, and prevents training-time allocation, frozen-table effects,
-attention gain, and serving policy from being merged into one estimand.
+## Current question
 
-The current theory continuation is owned one level up by
-[`../ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](../ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md).
-This directory owns mature-checkpoint results and receipts; it does not own a
-second research agenda.
+`RQ_LOCKED / CONSTRUCTION_NOT_DERIVED / NO_GPU_AUTHORIZATION`
 
-## Current decision
+The active method question is one deterministic static pure-`z` table on a
+frozen checkpoint:
 
-Two primary owners and one confirmation/attribution owner are live:
+- derive a non-affine `f(z)` from joint phase-code geometry before observing LM
+  outcomes; do not learn or search `z`;
+- allow endpoint motion; fixed endpoints remain a historical causal control,
+  not a physical rule;
+- use one table at `1x`, `2x`, and `4x`, with a declared small `1x` cost budget;
+- open untouched downstream evaluation only after both long NLL endpoints pass.
 
-1. [`results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md)
-   owns the causal paper-upgrade case study. At fixed support and amplitude,
-   interior exponent allocation `z` changes frozen OLMo and Qwen behaviour; a
-   coarse fixed-index ramp control matches the detailed derived profile at the
-   tested points, so this is not a new interpolation-family claim. Its 151.9M two-seed crossing supports
-   weights/table co-adaptation.
-2. [`results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`](results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md)
-   owns the practical zero-training policy: exact Native inside the model's own
-   window, one deployment-frozen long profile beyond it, fixed before prefill
-   for the entire KV-cache lifetime.
-3. [`results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`](results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md)
-   confirms the bundled policy on a new FineWeb-Edu shard and separately owns
-   the fresh-natural-text fixed-support `z`, profile-detail, and routing
-   contrasts. It does not replace either primary owner.
+No candidate, executable preflight, or runner is active. Native/long routing,
+loss-calibrated frequency learning, and the former tournament are not the first
+zero-training method route.
 
-The second owner is the complete practical intervention: deterministic long
-frequency tensor, fixed long attention amplitude, and session route. The first
-owner and the frequency-by-gain 2x2 answer its component questions under
-separate matched protocols; they are not one pooled factorial. Do not describe
-the complete policy as a pure `z` experiment, and do not describe the controls
-as separate modules that must be deployed in sequence.
+## Evidence to open on demand
 
-The same-support result is routed as a compact frozen-checkpoint corollary in
-the body and Appendix F.2; the complete session policy owns the separate Qasper
-appendix endpoint. No GPU experiment is queued, and another table, gain, rank,
-or RULER sweep is explicitly stopped.
-
-The later direct-`z` calibration pilot is a completed negative method gate, not
-a third live owner. It improved mean held-out 2x tail NLL but violated its
-per-row robustness gate; see
-[`results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md`](results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md).
-Its PG-19, RULER, LoRA, and full-task queue was not run.
-This branch-local stop does not supersede or block the completed zero-training
-Native/s4 policy above.
-
-The completed mature co-adaptive oracle is owned by
-[`results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md`](results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md).
-Its registered answer-only phase bundle fails one shell and is stopped. Matched
-dense-natural continuation isolates a small but repeatable fixed-support
-allocation effect: nearly neutral held-out 4K NLL, better physical 8K/16K tail
-NLL, worse long full NLL, and no resolved full-200 2Wiki advantage. This is a
-mechanism result, not a replacement method or manuscript claim.
-
-Two follow-ups are also complete. The frozen allocation dose owner
-[`results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md`](results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md)
-shows a continuous full/tail response but no analytic Path-A point meeting the
-registered joint gate. The Native-4K owner
-[`results/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md`](results/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md)
-records the four task scores and rejects the proposed one-number
-capability-versus-position diagnostic because rows differ across lengths.
-
-The failed analytic single-static-table gate is recorded separately and does
-not replace the session-policy owner or close the single-table objective. The
-two-seed phase-chord result in
-[`results/EXPERIMENT_REPORT_20260821.md`](results/EXPERIMENT_REPORT_20260821.md)
-already provides internal near-parity-in-window plus all-length OOD feasibility
-evidence, although it is not promotable as a manuscript method result. The
-one-billion-token corpus prepared in the same authorised window is data
-readiness, not a result or a reason to repeat the fresh evaluation.
-
-## Closed work and anti-repeat ledger
-
-| Route | State | Re-entry condition |
+| Question | Owner | Boundary |
 | --- | --- | --- |
-| two-document learned direct-`z` | stopped by per-row held-out gate | a materially different identifiable objective and a new preflight; never resume its old downstream queue |
-| two tested analytic fixed-support static tables | stopped by 1x retention gate | do not reopen; any new candidate must use checkpoint state or matched behaviour to escape the closed static-scalar class, not another `tau`/band/gain sweep |
-| fresh shard002 Native/session confirmation | complete on disjoint 32/128/512 subsets | a different checkpoint population or task-family estimand, not more rows from the same shard |
-| mature shared-allocation phase oracle and dense-natural recovery | stopped after registered shell failure, matched full/tail attribution, and the completed frozen dose curve | a materially different theory/objective that targets full-sequence and tail behavior jointly; not more shells, steps, seeds, or allocation-LR tuning |
-| geometric/derived/coarse-ramp controls | complete fixed-support `z` and profile-detail contrasts | a new causal question; do not use official YaRN as a substitute control |
-| static/session control | complete routing contrast | a new router or cache-lifetime contract |
+| Does fixed-support `z` affect mature frozen checkpoints? | [`results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) | frozen sensitivity/capability, not a usable Native-support method |
+| Does the same axis change fresh natural-text NLL? | [`results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`](results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) | length-conditional fixed-support effect; detailed profile not separated from coarse ramp |
+| What did the complete zero-training system establish? | [`results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`](results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md) | table + gain + routing system; not pure `z` |
+| Why is adaptation expected? | [`results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md`](results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md) and the crossings routed by [`../../../INDEX.md`](../../../INDEX.md) §3 | weights/table co-adaptation; no current method winner |
+| Which frozen routes failed? | [`results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md`](results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md), [`results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md`](results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md), and [`results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md`](results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md) | historical failure/engineering boundaries only |
 
-There is no active GPU queue. The current local preparation is the success-first
-zero-training portfolio in
-[`preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md);
-it specifies four candidate families---phase-chord morph, Native-retention
-projection, five-degree behavioural allocation, and a final fixed
-support--allocation family---plus disjoint development, selection, and final
-confirmation splits. It has no realised candidate tensors, certified runner,
-result, or compute authorization. Before future compute, read the handoff, this ledger, the
-intended result owner, and the relevant preflight in that order.
-The ledger compares specified allocation tensors, not method classes:
-non-geometricity and in-window quality provide no extrapolation guarantee.
-The open problem is now a bounded four-family search for a checkpoint-aware or
-matched-behaviour table that escapes the closed static-scalar class and passes
-Native-prefix, long-dense, and far-tail gates. The confirmation set is opened
-only once for the globally selected candidate. Routing is an engineering
-reference, not a necessity claim.
-The historical retrospective is
-[`analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md`](analysis/POST_GPU_REFLECTION_AND_PROBLEM2_ROADMAP_20260824.md);
-the current action route is repository `INDEX.md` §6.
+## Retired work
 
-## Read order
+W0/F1 success-first, F2--F4, `ABSOLUTE/ANCHORED`, protected-ramp,
+band-restoration, local-gap, s8/log scaling, per-head frequency, dynamic gain,
+spectral flow, and routing-based rescue have no current action or authorization.
+Their files remain only because results and preregistrations must preserve
+scientific provenance.
 
-1. The conceptual foundation linked above.
-2. The three live owners above.
-3. [`evidence/README.md`](evidence/README.md) for machine-path-free receipts.
-4. [`results/README.md`](results/README.md) for completed results and their
-   claim ceilings.
-5. [`analysis/README.md`](analysis/README.md) for mechanism analyses and
-   the post-GPU problem-2 roadmap before any new method proposal.
-6. [`preflights/README.md`](preflights/README.md) only when reconstructing a
-   protocol or checking what was registered before execution.
-7. [`theory/README.md`](theory/README.md) for the historical method agenda.
+The old
+[`preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md)
+is a retired preregistration, not a next protocol. Historical code under
+`scripts/eval/` and `scripts/analysis/` must not be launched from this README.
 
-## Directory contract
+## Directory roles
 
-| Directory | Contains | Evidentiary status |
-| --- | --- | --- |
-| `results/` | completed experiment owners and decision reports | usable only within each owner's claim ceiling |
-| `evidence/` | compact JSON receipts and hashes | navigation receipts; raw outputs remain external |
-| `analysis/` | CPU/mechanism analyses and falsifications | internal support or negative evidence |
-| `preflights/` | preregistrations, revoked plans, and launch contracts | never a result |
-| `theory/` | dated agendas and exploratory derivations | historical reasoning, superseded by live owners where stated |
+- [`results/`](results/) — completed result owners and claim ceilings.
+- [`evidence/`](evidence/) — compact machine-path-free receipts.
+- [`analysis/`](analysis/) — mechanism interpretation and failed hypotheses;
+  never an action queue.
+- [`preflights/`](preflights/) — what was registered before past execution;
+  currently no active preflight.
+- [`theory/`](theory/) — historical method/theory work; current method boundary
+  is in `AGENTS.md` and `INDEX.md`.
 
-## Reviewer-facing causal ladder
-
-| Question | Primary owner |
-| --- | --- |
-| Does interior allocation matter during training at fixed support? | `../EXACT_RANGE_151M_3SEED_RESULT_20260820.md` |
-| Do weights learn the installed coordinate system? | `../FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md` plus the 151.9M crossing in the live same-support owner |
-| Does `z` still matter in a frozen mature checkpoint? | live same-support owner |
-| Is the detailed uniqueness curve required? | live same-support owner; current answer is no |
-| Does the frequency table interact with attention amplitude? | `results/JOINT_MECHANISM_REPORT_20260822.md`; current answer is yes in the tested cells |
-| Can deployment preserve the Native short path without training? | live session-binary owner |
-| Does the bundled policy persist on a previously unused evaluation shard, and which component owns 1x retention versus 4x survival? | fresh FineWeb confirmation/attribution owner |
-| Is a joint in-window/extrapolation allocation feasible? | internal phase-chord owner; current answer is yes descriptively, but not yet a promoted method claim |
-| Is the mature frozen effect graded between Native and the tested tables? | allocation dose owner; yes, but the analytic path misses its joint guard and static `r2` is not a selector |
-
-Keep these estimands separate. The complete replacement may combine variables
-that its controls isolate. RULER is task-family adaptation, row bootstraps
-condition on one checkpoint/task set, and a frozen-checkpoint intervention is
-not a from-training estimate.
-
-## Code routes
-
-- deterministic same-support tables:
-  `scripts/analysis/rope_transport/same_support_controls.py`;
-- mature RULER evaluator: `scripts/eval/target_free_ruler_smoke.py`;
-- 151.9M crossing evaluator:
-  `scripts/eval/evaluate_151m_same_support_retrofit.py`;
-- session policy and cache-safe RoPE: `scripts/lib/rope/`;
-- fresh FineWeb split preparation and 1B corpus tokenization:
-  `scripts/data/prepare_fineweb_fresh_long_eval.py` and
-  `scripts/data/tokenize_fineweb_edu_new_1b.py`;
-- protocol-bound fresh-result summarization:
-  `scripts/analysis/summarize_fresh_fineweb_s4.py`;
-- frozen direct-`z` pilot: `scripts/eval/optimize_olmo_fixed_support_z.py`;
-- mature co-adaptive fixed-support oracle:
-  `rebuttal/rebuttal_0723/experiments/olmo2_allocation_oracle_5090/`;
-- focused regression tests: `tests/test_same_support_rope_controls.py`,
-  `tests/test_length_conditioned_budgeted_rope.py`,
-  `tests/test_target_free_rope.py`, and
-  `tests/test_target_free_context_builder.py`.
-
-External-model reviews are indexed under
-[`../external-reviews/README.md`](../external-reviews/README.md). They may
-identify defects or suggest controls, but never supersede these owners.
+Before future compute, derive and freeze the deterministic `f(z)`, its controls,
+and its multi-length gate in the existing authority chain, then obtain explicit
+run authorization. A historical script or preflight never supplies missing
+protocol fields by implication.

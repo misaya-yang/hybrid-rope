@@ -91,6 +91,74 @@ def geometric_inv_freq(head_dim: int, base: float, dtype: torch.dtype = torch.fl
     return 1.0 / (float(base) ** (2.0 * idx / float(head_dim)))
 
 
+def maxent_dilation_factors(
+    pair_count: int,
+    *,
+    target_factor: float,
+    lambda_: float,
+    dtype: torch.dtype = torch.float64,
+) -> torch.Tensor:
+    """Midpoint quantiles of the MaxEnt density on log dilation.
+
+    With ``tau = log(r)`` on ``[0, log(target_factor)]``, the density relative
+    to Haar measure ``dr/r = d tau`` is proportional to ``exp(lambda * tau)``.
+    Its midpoint quantiles are
+
+    ``r_i = [1 + q_i (target_factor^lambda - 1)]^(1/lambda)``.
+
+    ``lambda = 0`` is the continuous log-uniform limit ``r_i = s^q_i``.
+    """
+
+    count = int(pair_count)
+    factor = float(target_factor)
+    tilt = float(lambda_)
+    if count < 2 or not math.isfinite(factor) or factor < 1.0:
+        raise ValueError("pair_count must be >= 2 and target_factor finite >= 1")
+    if not math.isfinite(tilt):
+        raise ValueError("lambda_ must be finite")
+
+    q = (torch.arange(count, dtype=torch.float64) + 0.5) / float(count)
+    log_s = math.log(factor)
+    if abs(tilt) < 1e-8:
+        log_r = q * log_s
+    else:
+        log_r = torch.log1p(q * math.expm1(tilt * log_s)) / tilt
+    return log_r.exp().to(dtype=dtype)
+
+
+def maxent_dilation_inv_freq(
+    native_inv_freq: torch.Tensor,
+    *,
+    target_factor: float,
+    lambda_: float,
+) -> torch.Tensor:
+    """Apply deterministic MaxEnt dilation factors to a Native RoPE table.
+
+    Larger dilation factors are paired with slower Native frequencies.  This
+    opposite-order coupling minimizes summed in-window phase displacement by
+    the rearrangement inequality.  No endpoint is pinned and no model outcome
+    enters table construction.
+    """
+
+    native = torch.as_tensor(native_inv_freq)
+    if (
+        native.ndim != 1
+        or native.numel() < 2
+        or not bool(torch.isfinite(native).all())
+        or not bool((native > 0).all())
+        or not bool((native[:-1] > native[1:]).all())
+    ):
+        raise ValueError("native_inv_freq must be finite, positive, and decreasing")
+
+    dilation = maxent_dilation_factors(
+        native.numel(),
+        target_factor=target_factor,
+        lambda_=lambda_,
+        dtype=torch.float64,
+    ).to(native.device)
+    return (native.to(torch.float64) / dilation).to(dtype=native.dtype)
+
+
 def evq_cosh_phi(
     n_freqs: int,
     tau: float,

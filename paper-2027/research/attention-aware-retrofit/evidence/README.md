@@ -4,6 +4,12 @@ Compact, machine-path-free receipt for the attention-aware allocation study.
 Checkpoints, raw evaluation records, token arrays, caches, and machine logs
 remain with their canonical owners outside this directory.
 
+`artifacts/coupling_law_cpu/` contains the CPU-only low-dimensional coupling-law
+audit: frozen OLMo-only fits, Qwen zero-refit geometry holdout, individual and
+combined candidate tables, slot residuals, plots, and a SHA-256 manifest. Its
+owner is `../results/CPU_LOW_DIM_COUPLING_LAW_20260901.md`; none of these files
+is a language-model evaluation result.
+
 `ALLOCATION_DOSE_RESPONSE_RESULTS_20260826.json` records the registered
 128-document fixed-support dose result, frozen prediction/manifest hashes, the
 failed analytic joint gate, and the graded empirical-direction full/tail

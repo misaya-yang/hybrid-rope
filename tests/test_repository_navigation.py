@@ -172,8 +172,7 @@ class RepositoryNavigationTests(unittest.TestCase):
         self.assertIn("Do not install or recreate", agents)
         self.assertIn("record them as skipped", readme)
         self.assertIn("documentation/planning host", handoff)
-        self.assertIn("`aidemo` is not", handoff)
-        self.assertIn("expected here", handoff)
+        self.assertIn("`aidemo` is not\n  expected here", handoff)
 
     def test_index_carries_the_closed_route_ledger(self):
         """The falsified-route table is the repository's anti-repetition gate."""
@@ -201,33 +200,40 @@ class RepositoryNavigationTests(unittest.TestCase):
         for required in ("LM-quality", "restarts", "algebraic", "not a global ceiling"):
             self.assertTrue(required in source, f"static-rank owner must state: {required}")
 
-    def test_followup_sprint_routes_success_first_portfolio_before_diagnostics(self):
+    def test_current_route_is_deterministic_static_z(self):
         index = (ROOT / "INDEX.md").read_text(encoding="utf-8")
-        preflight = (
+        retired_preflight = (
             ROOT
             / "paper-2027/research/attention-aware-retrofit/preflights"
             / "ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md"
         )
         audit = ROOT / "scripts/analysis/finite_k_cosh_regret_audit.py"
-        self.assertTrue(preflight.is_file())
+        self.assertTrue(retired_preflight.is_file())
         self.assertTrue(audit.is_file())
-        self.assertIn(preflight.name, index)
-        self.assertIn("Native-prefix/long-dense", index)
+        for required in (
+            "## 0. 当前两天研究时间线",
+            "frozen-checkpoint static pure-`z`",
+            "0.875302",
+            "SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831",
+            "deterministic non-affine `f`",
+            "endpoint movement 本身不是出线条件",
+            "W0/F1 success-first tournament",
+        ):
+            self.assertIn(required, index)
+        self.assertNotIn("### 6.2 投稿后的第一优先级：冻结 checkpoint 零训练优化", index)
         source = audit.read_text(encoding="utf-8")
         for boundary in ("not r2", "LM loss", "table selector"):
             self.assertIn(boundary, source)
-        text = preflight.read_text(encoding="utf-8")
+        text = retired_preflight.read_text(encoding="utf-8")
         for required in (
-            "success-first",
-            "four candidate families",
-            "PC-MORPH",
-            "PC-RETENTION-PROJECT",
-            "Z5-BEHAVIOUR",
-            "SR-Z5",
-            "final confirmation `T`",
-            "does not authorize inference",
+            "RETIRED 2026-08-31",
+            "not a current protocol",
+            "not a current protocol, runner",
         ):
             self.assertIn(required, text)
+        self.assertFalse(
+            (ROOT / "scripts/core_text_phases/optimize_static_z.py").exists()
+        )
 
     def test_invalid_band_restoration_is_not_routed_to_execution(self):
         preflight = (
@@ -281,11 +287,17 @@ class RepositoryNavigationTests(unittest.TestCase):
     def test_state_layer_does_not_restate_the_agenda(self):
         """Rules > index > state: the handoff routes the agenda, never owns it."""
         handoff = (ROOT / "paper-2027" / "HANDOFF.md").read_text(encoding="utf-8")
-        self.assertIn("This file is the only\nlive state and action queue", handoff)
-        self.assertIn("[`../INDEX.md`](../INDEX.md) §6", handoff)
-        self.assertNotIn("Native/candidate", handoff)
-        self.assertNotIn("leave-one-band-out", handoff)
-        self.assertNotIn("The only active research implementation step", handoff)
+        self.assertIn("state only", handoff)
+        self.assertIn("[`../INDEX.md`](../INDEX.md)", handoff)
+        self.assertIn("research/attention-aware-retrofit/", handoff)
+        for forbidden in (
+            "omega_k",
+            "z × adaptation",
+            "W0/F1",
+            "leave-one-band-out",
+            "The only active research implementation step",
+        ):
+            self.assertNotIn(forbidden, handoff)
 
     def test_manuscript_cold_start_preserves_author_doctrine(self):
         narrative = (ROOT / "paper-2027" / "NARRATIVE_GUIDE.md").read_text(
@@ -305,18 +317,13 @@ class RepositoryNavigationTests(unittest.TestCase):
         brief = (ROOT / "paper-2027" / "REVISION_BRIEF.md").read_text(
             encoding="utf-8"
         )
-        self.assertIn(
-            "### 6.2 投稿后的第一优先级：冻结 checkpoint 零训练优化",
-            index,
-        )
+        self.assertIn("### 6.2 第一研究目标：frozen-checkpoint static pure-`z`", index)
         self.assertNotIn(
             "下一项有决策价值的研究协议只有 **matched-content phase 2x2**",
             index,
         )
-        self.assertIn(
-            "zero-training allocation\noptimization first, matched LoRA research second",
-            brief,
-        )
+        self.assertIn("deterministic static pure-`z`", brief)
+        self.assertIn("without learning or loss-based frequency search", brief)
 
     def test_root_routing_links_resolve(self):
         pattern = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")

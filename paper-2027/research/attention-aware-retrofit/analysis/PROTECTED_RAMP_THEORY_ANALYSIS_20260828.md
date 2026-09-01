@@ -1,12 +1,12 @@
 # Protected-ramp theory analysis (2026-08-28)
 
-> **ARCHIVED LIFECYCLE NOTE (updated 2026-08-30):** superseded as an active research
+> **ARCHIVED LIFECYCLE NOTE (updated 2026-08-31):** superseded as an active research
 > route. Preserve the boundary-scale derivations and mass arithmetic as
 > historical provenance, but do not execute the scan recommendations below.
-> The matched-content phase 2x2 is only a conditional diagnostic under the
-> current success-first portfolio. The later leave-one-band-out arms in the
-> rigorous composite are invalid because several restorations break frequency
-> ordering; they cannot be revived by authorization alone.
+> The former success-first and matched-content queues are retired. The later
+> leave-one-band-out arms in the rigorous composite are invalid because several
+> restorations break frequency ordering; they cannot be revived by authorization
+> alone.
 
 - **Status:** `THEORY_ANALYSIS_NOT_EXECUTED` — analysis only. Contains no new
   experiment, no compute authorization, and no reviewer-facing claim.

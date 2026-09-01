@@ -3,17 +3,18 @@
 A preflight records what was frozen before execution. It is never evidence that
 an experiment ran.
 
-## Current next protocol
+## Current protocol status
+
+None. The deterministic static pure-`z` question is
+`RQ_LOCKED / CONSTRUCTION_NOT_DERIVED`; no formula, runner, or compute action is
+registered or authorized.
+
+## Retired recent protocols
 
 | Preflight | Lifecycle state |
 | --- | --- |
-| [`ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md) | success-first four-family portfolio plus disjoint development/selection/confirmation protocol; no realised candidate, certified runner, result, or GPU authorization |
-
-## Conditional diagnostic bridge
-
-| Preflight | Lifecycle state |
-| --- | --- |
-| [`MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md`](MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md) | frozen protocol design; not executed; enter only after a valid R2 screen when the mechanism answer changes candidate design; every execution stage still requires new explicit author authorization |
+| [`ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md) | retired after execution; preserves the old W0/F1 success-first registration only, with no current action |
+| [`MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md`](MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md) | retired conditional diagnostic; not part of the current deterministic zero-training design |
 
 The leave-one-band-out design in
 [`../analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md`](../analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md)
@@ -41,7 +42,7 @@ monotonicity-checked construction.
 | Preflight | Final state |
 | --- | --- |
 | [`PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md`](PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md) | historical, not executed, and superseded as an active route; protected-ramp formula scanning was retired, and the later abrupt band-restoration design is invalid rather than conditionally runnable |
-| [`FUNCTION_MORPH_PREFLIGHT_20260821.md`](FUNCTION_MORPH_PREFLIGHT_20260821.md) | old 18-target audit remains deprioritized and unexecuted; its hash-bound mature R0 and phase-chord construction are inputs to F1/F2 of the current success-first portfolio, not a revived execution queue |
+| [`FUNCTION_MORPH_PREFLIGHT_20260821.md`](FUNCTION_MORPH_PREFLIGHT_20260821.md) | old 18-target audit remains deprioritized and unexecuted; its former F1/F2 reuse path is retired and creates no execution queue |
 | [`PHASE_CHORD_LORA_RETROFIT_PREFLIGHT_20260822.md`](PHASE_CHORD_LORA_RETROFIT_PREFLIGHT_20260822.md) | revoked before GPU because the target was not identifiable from model input |
 | [`PHASE_ADAROPE_LORA_PREFLIGHT_20260822.md`](PHASE_ADAROPE_LORA_PREFLIGHT_20260822.md) | prepared no-GPU protocol; not current queue and no result |
 

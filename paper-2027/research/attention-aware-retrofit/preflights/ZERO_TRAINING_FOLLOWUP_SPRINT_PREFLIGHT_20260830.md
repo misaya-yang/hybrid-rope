@@ -1,5 +1,10 @@
 # Zero-training success-first portfolio and confirmation protocol
 
+> **RETIRED 2026-08-31.** This file preserves what was registered before the
+> completed W0/F1 programme. It is not a current protocol, runner, or
+> authorization. The active deterministic static pure-`z`
+> question lives only in repository `INDEX.md` §0 and §6.
+
 - **Date:** 2026-08-30
 - **Revised:** 2026-08-31 — author-directed amendment. Three additions, no
   deletions: a YaRN-anchored verdict tier (§2, §6), a preregistered `W0`

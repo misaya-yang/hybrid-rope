@@ -11,6 +11,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+import torch
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
@@ -20,7 +21,6 @@ from scripts.analysis.export_uniqueness_budgeted_tables import (
     causal_distance_measure,
     conditional_pair_uniqueness,
     float32_sha256,
-    native_endpoint_inv_freq,
 )
 
 
@@ -30,11 +30,18 @@ FACTORS = (2, 4, 8)
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--base", type=float, default=500_000.0)
+    parser.add_argument("--head-dim", type=int, default=128)
+    parser.add_argument("--native-length", type=int, default=4_096)
+    parser.add_argument("--allow-order-crossings", action="store_true")
     return parser.parse_args()
 
 
-def frozen_movement(native: np.ndarray) -> np.ndarray:
-    support, weight = causal_distance_measure()
+def frozen_movement(native: np.ndarray, native_length: int) -> np.ndarray:
+    support, weight = causal_distance_measure(
+        length=int(native_length),
+        max_points=2048,
+    )
     uniqueness = conditional_pair_uniqueness(native, support, weight)
     span = float(uniqueness.max()) - float(uniqueness.min())
     normalized = (uniqueness - float(uniqueness.min())) / span
@@ -63,10 +70,21 @@ def main() -> int:
     args = parse_args()
     output = args.output.expanduser().resolve()
     output.mkdir(parents=True, exist_ok=True)
-    native = native_endpoint_inv_freq().astype(np.float64)
-    movement = frozen_movement(native)
+    if args.head_dim < 8 or args.head_dim % 2 or args.base <= 1.0 or args.native_length < 2:
+        raise ValueError("base/head-dim/native-length identity is invalid")
+    indices = torch.arange(0, int(args.head_dim), 2, dtype=torch.float32)
+    base = torch.tensor(float(args.base), dtype=torch.float32)
+    native = (1.0 / torch.pow(base, indices / float(args.head_dim))).numpy().astype(
+        np.float64
+    )
+    movement = frozen_movement(native, int(args.native_length))
     receipt: dict[str, object] = {
         "status": "SCALE_CONSISTENT_LOG_INTERPOLATION_AUDIT_COMPLETE",
+        "base": float(args.base),
+        "head_dim": int(args.head_dim),
+        "native_length": int(args.native_length),
+        "allow_order_crossings": bool(args.allow_order_crossings),
+        "native_sha256_float32": float32_sha256(native),
         "factors": list(FACTORS),
         "movement_exponent": 2.0,
         "movement": movement.tolist(),
@@ -84,7 +102,10 @@ def main() -> int:
             ("logarithmic", logarithmic, "-"),
         ):
             table32 = np.ascontiguousarray(table, dtype="<f4")
-            if not np.all(table32[:-1] > table32[1:]):
+            if (
+                not args.allow_order_crossings
+                and not np.all(table32[:-1] > table32[1:])
+            ):
                 raise RuntimeError(f"{name} s{factor} is not strictly decreasing")
             np.save(output / f"{name}_s{factor}.npy", table32, allow_pickle=False)
             row = summarize(table, native, movement, factor)

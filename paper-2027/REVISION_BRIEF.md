@@ -174,12 +174,14 @@ matched-adaptation protocols, but this brief does not admit a new from-scratch
 scale program. The completed 1.485B result remains the current from-training
 evidence ceiling.
 
-The author-ordered priority is frozen-checkpoint **zero-training allocation
-optimization first, matched LoRA research second**. The first target is a
-single allocation that itself improves Native-window and long-range behaviour,
-rather than preserving the former only through routing. The matched-content
-phase 2x2 and band-attribution designs are conditional diagnostics, not an
-automatic first task. [`../INDEX.md`](../INDEX.md) §6 owns the durable gates.
+The author-ordered post-submission priority is a **deterministic static pure-`z`
+table on a frozen checkpoint**. The candidate must be derived before LM
+evaluation, without learning or loss-based frequency search. Endpoint movement
+is allowed; fixed endpoints remain a causal-control condition rather than a
+method rule. One table must stay within a declared small Native-window cost and
+improve `2x`/`4x` before untouched downstream evaluation. Weight adaptation is
+not part of this first gate.
+[`../INDEX.md`](../INDEX.md) §6 owns the durable gates.
 
 Before any later experiment enters the research agenda, it must state:
 

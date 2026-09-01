@@ -23,8 +23,8 @@ reflection is historical too. Current theory ordering lives in
 [`../../ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](../../ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md):
 its derivations remain the continuation boundary, while its old "sole next
 bridge" scheduling statement is superseded by repository `INDEX.md` §6. The
-current R1/R2 protocol is
-[`../preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](../preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md);
-the matched-content bridge is conditional. Directory decisions and numeric
-owners remain in [`../README.md`](../README.md) and [`../results/`](../results/),
-respectively.
+current deterministic candidate and its frozen Native double gate are
+[`MAXENT_DILATION_ALLOCATION_20260901.md`](MAXENT_DILATION_ALLOCATION_20260901.md).
+The older R1/R2 sprint is historical, not an execution route. Directory
+decisions and numeric owners remain in [`../README.md`](../README.md) and
+[`../results/`](../results/), respectively.

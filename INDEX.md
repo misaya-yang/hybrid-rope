@@ -1,6 +1,6 @@
 # INDEX — 理论、证据、代码与下一步
 
-- **最后更新：** 2026-08-30
+- **最后更新：** 2026-09-01
 - **角色：** 本仓库唯一的**持久索引**。回答「已有什么、谁拥有它、下一步做什么」。
 - **不负责：** 硬性规则（见 [`AGENTS.md`](AGENTS.md)）、易变状态（见
   [`paper-2027/HANDOFF.md`](paper-2027/HANDOFF.md)）。
@@ -19,19 +19,48 @@
 
 ---
 
-## 1. 冷启动读序
+## 0. 当前两天研究时间线
 
-1. [`AGENTS.md`](AGENTS.md) — 规则。
-2. 本文件 §2–§4 — 已有什么。
-3. [`paper-2027/HANDOFF.md`](paper-2027/HANDOFF.md) — 现在在哪。
-4. **任何 `paper-2027/` 改稿前：** [`paper-2027/NARRATIVE_GUIDE.md`](paper-2027/NARRATIVE_GUIDE.md)
-   — 叙事与改稿纪律；不拥有数字、证据或易变状态。
-5. [`paper-2027/main.pdf`](paper-2027/main.pdf) 与其 `sections/`、`appendix/` —
-   reviewer 看到的真相。
-6. 本文件 §6 — 下一步。
+### 2026-09-01 — 当前决定
 
-动任何 claim 或数字之前，必须读到 §3 表格里那一行指向的 canonical owner。
-**不要**从最新日期、外部评审、preflight 或文件名开始。
+- **当前结果：** `s4` scale-consistent exponent table
+  `omega'_i=omega_i s^{-m_i}`，配合只由 1x PG-19 retention 选出的 `c=0.074`
+  gain，通过 1x PPL/五任务双门，并在同一静态表上改善 2x/4x NLL 与自然任务；见
+  [`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831`](paper-2027/research/attention-aware-retrofit/results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md)。
+- **因果分叉：** 同一 dilation multiset 的 endpoint-preserving permutation 在
+  1x/2x/4x capability 上崩溃；Haar/MaxEnt ordered distribution 在 16K 为零。
+  后续保持最终 frequency multiset、端点与 gain 的 slot permutation 令 1x NLL 从
+  `3.10423` 升至 `6.86493`，建立 frozen readout 的 slot–frequency
+  non-exchangeability；不建立当前 law 的唯一性或最优性。
+- **证据边界：** 单 checkpoint、zero training、同表无 routing；4x natural macro
+  仍略低于 YaRN，16K core-4 低于 arithmetic `s4`。不称 SOTA、通用最优或跨模型规律。
+- **跨 checkpoint：** 同一 construction 无 Qwen 调参地得到 64K/128K core-4
+  `0.7000/0.5875`，高于 Native、YaRN 与旧 corrected-derived；这是 long capability
+  transfer，尚无 Qwen 1x PPL retention owner。保持 Qwen 最终 frequency multiset
+  只换 slot 后 64K 四任务全为零，non-exchangeability 跨 checkpoint 成立。
+- **weights×table：** Native-4K Q/K-LoRA 与 original weights 下，log-s4 都满足同权重
+  1x retention，并把 2x/4x NLL 从约 7.1--7.2 降到约 2.9--3.1；未观察到
+  readout-induced sign reversal，但单一 adapter 不证明 universal independence。
+- **低维 coupling：** 已评测的 OLMo→Qwen 64 点 transport 实际在
+  `u_i=L(omega_i-omega_{i+1})/(2pi)` 上线性插值；令
+  `x_i=ln u_i` 后，仅用 OLMo movement 拟合的 2 参数 clipped-affine `G_4(x)`
+  以 MAE `0.001223` 重建 OLMo，并以 MAE `0.002174` 重建该 Qwen transport。
+  这是 CPU 几何压缩，不是 LM 结果；见
+  [`CPU_LOW_DIM_COUPLING_LAW_20260901`](paper-2027/research/attention-aware-retrofit/results/CPU_LOW_DIM_COUPLING_LAW_20260901.md)。
+
+### 2026-08-31 — 已被次日取代
+
+- 当日收敛的 deterministic non-affine `f` 问题保留；“端点必须固定”、frequency learning、
+  matched LoRA first 均不再是当前方法规则。更早 W0/F1/F2--F4 portfolio 只保留历史 owner。
+
+当前底层研究目录是
+[`paper-2027/research/attention-aware-retrofit/`](paper-2027/research/attention-aware-retrofit/)：
+其 README 说明当前问题、完成证据、退役路线与子目录职责。`§2--§5` 保留完整历史索引，
+[`paper-2027/HANDOFF.md`](paper-2027/HANDOFF.md) 保留易变状态。
+
+## 1. 历史与证据导航边界
+
+§2--§5 是理论、证据、代码与目录的历史检索地图。
 
 ---
 
@@ -79,7 +108,7 @@
 habitable zone / softmax transport 的原始推导。**它们是当前理论的前身，不是当前
 权威。** 引用时必须标注为历史推导。
 
-冷启动只需记住两条：$\tau_*$ **不是幂律**（被 O3 解释掉，拟合形式本身错），且
+关键结论只有两条：$\tau_*$ **不是幂律**（被 O3 解释掉，拟合形式本身错），且
 $\tau_*=\max(d_{\rm head}/\sqrt L,\;1.4)$ 是 operating prior 而非普适律（见
 `AGENTS.md` claim 上限「Finite tau」）。**逐条取代关系由
 [`docs/tau_algor/README.md`](docs/tau_algor/README.md) 与
@@ -120,7 +149,8 @@ $\tau_*=\max(d_{\rm head}/\sqrt L,\;1.4)$ 是 operating prior 而非普适律（
 | --- | --- | --- |
 | 同 support 的 $z$ 控制 | [`SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823`](paper-2027/research/attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) | 内部因果案例 |
 | 零训练 session / 单静态 profile | [`SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823`](paper-2027/research/attention-aware-retrofit/results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md) | 部署/能力证据；2026-08-31 follow-up 记录 cache-safe static-s4 的 fresh RULER-13 长度曲线、D/S/T YaRN-anchored likelihood，以及 local-gap/s8 探索边界 |
-| 最大 profile 的尺度一致 log law | [`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831`](paper-2027/research/attention-aware-retrofit/results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md) | 冻结 movement mask 的公式审计与 `s=2/4/8` 实验；s4 正向、L0 与 s8 全任务门禁失败，不支持跨倍率通用性 |
+| `s4` 尺度一致 exponent-space 单表 | [`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831`](paper-2027/research/attention-aware-retrofit/results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md) | 当前零训练实用 owner：同一静态 `omega'=omega*s^(-m)` 表通过 1x PPL/自然任务双门，并改善 2x/4x；单 checkpoint、会改变 sampled support，不替代 fixed-support 因果 owner |
+| `G_4(x)` 低维压缩 | [`CPU_LOW_DIM_COUPLING_LAW_20260901`](paper-2027/research/attention-aware-retrofit/results/CPU_LOW_DIM_COUPLING_LAW_20260901.md) | CPU-only：2 参数 clipped-affine 重建 OLMo movement 并 zero-refit 接近 Qwen geometry；GPU retention/capability 尚未测试 |
 | 新数据上的持久性 | [`FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824`](paper-2027/research/attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) | 封闭正向确认 |
 | 长度条件化 budgeted retrofit | [`LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822`](paper-2027/research/attention-aware-retrofit/results/LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md) | **RULER core-4：0.5825@8K / 0.4000@16K，对官方 YaRN 0.5375 / 0.0125；零学习参数** |
 | 联合 in-window/外推可行性 | [`EXPERIMENT_REPORT_20260821`](paper-2027/research/attention-aware-retrofit/results/EXPERIMENT_REPORT_20260821.md) | **phase-chord 两 seed Pareto：$+0.0007/-0.161/-0.156/-0.205$**；seed 范围阻止晋升 |
@@ -160,10 +190,10 @@ position-dependent operator，不把不同 target-free operator 一并判死。
 
 | 对象 | 现状 | 为什么未决 |
 | --- | --- | --- |
-| phase-isotropy / pair-volume / min-eigenvalue | [`PHASE_ISOTROPY_50M_M4_RESULT_20260824`](paper-2027/research/attention-aware-retrofit/results/PHASE_ISOTROPY_50M_M4_RESULT_20260824.md)、[`PHASE_ALLOCATION_M4_EXTENDED_RESULT_20260824`](paper-2027/research/attention-aware-retrofit/results/PHASE_ALLOCATION_M4_EXTENDED_RESULT_20260824.md) 均为 `SCREEN_UNRESOLVED` | 50M regime 的 anchored-Cosh 方向与 151.9M owner 不同，触发其预注册 unresolved 分支。跨模型和 token budget 的符号差是 regime evidence，不是 noise-floor 估计或 candidate rejection。详见 §6.2 |
-| O2 的 $L_{\rm eff}^J$ 机制解释 | 反演出 $\mathrm{sd}_\mu\approx46$–$72$ | 仓库内唯一实测注意力距离分布（GPT-2 125M / WikiText-103，`results/m4_max_36gb/D_attention_*.npy`）给出 $\mathrm{sd}_\mu=295.5$，对 uniform 的 295.3，方差比 0.9985 → 修正仅 0.15%。**P1 仍是最便宜的判定** |
-| per-head / per-layer 分配 | 代码完成、**从未训练** | `heterogeneous_rope_5090`：`OFFLINE_CODE_COMPLETE / GPU_TRAINING_NOT_STARTED` |
-| per-head adapter 秩分配 | 同参数量下 0.89 vs 0.09 可修复比例 | 从未运行；被现行 roadmap 禁用，见 §6.3 |
+| phase-isotropy / pair-volume / min-eigenvalue | [`PHASE_ISOTROPY_50M_M4_RESULT_20260824`](paper-2027/research/attention-aware-retrofit/results/PHASE_ISOTROPY_50M_M4_RESULT_20260824.md)、[`PHASE_ALLOCATION_M4_EXTENDED_RESULT_20260824`](paper-2027/research/attention-aware-retrofit/results/PHASE_ALLOCATION_M4_EXTENDED_RESULT_20260824.md) 均为 `SCREEN_UNRESOLVED` | 历史 regime evidence；不是当前 candidate rejection 或 action |
+| O2 的 $L_{\rm eff}^J$ 机制解释 | 反演出 $\mathrm{sd}_\mu\approx46$–$72$ | 实测注意力距离方差不支持该经验解释；历史未决，不进入当前队列 |
+| per-head / per-layer frequency 分配 | 代码完成、**从未训练** | 改变 per-head frequency freedom，超出 Native-support pure-`z` 主线；无当前 action |
+| per-head adapter 秩分配 | 同参数量下 0.89 vs 0.09 可修复比例 | 历史未运行诊断；不是 §6 的 matched low-rank control，也无当前 action |
 
 ---
 
@@ -171,16 +201,13 @@ position-dependent operator，不把不同 target-free operator 一并判死。
 
 | 需要 | 位置 | 规则 |
 | --- | --- | --- |
-| **频率表实现权威** | [`scripts/lib/rope/`](scripts/lib/rope/) | `schedules.py`（EVQ-Cosh 分位）、`target_free.py`（target-free 相位延拓）、`fixed_support_z.py`（可微内点 $z$）、`official_yarn.py`、`learnable_evq.py`、`knot_allocation.py`（F3/F4 七节点五自由度）、`hat_projection.py`（F2 五维 hat 基） |
+| **频率表实现权威** | [`scripts/lib/rope/`](scripts/lib/rope/) | 固定端点是历史 causal control，不是未来方法硬约束；当前没有新方法实现 |
 | 主实验链 runner | [`scripts/core_text_phases/`](scripts/core_text_phases/) | canonical runner；新主实验放这里 |
-| **零训练 success-first 组合冻结** | [`scripts/analysis/freeze_success_first_portfolio.py`](scripts/analysis/freeze_success_first_portfolio.py) | 纯 CPU；物化 F1 morph 网格、F2 投影、F3 初始化并冻结选择规则；不是结果 |
-| 候选清单组装 | [`scripts/analysis/build_candidate_manifest.py`](scripts/analysis/build_candidate_manifest.py) | 纯 CPU；组装 W0 三臂或 F1/dev 候选，并物化当前 Transformers 官方 YaRN-4 表与 gain |
-| **单 4x 前向评估** | [`scripts/eval/eval_zero_training_tournament.py`](scripts/eval/eval_zero_training_tournament.py) | contract/parity/evaluate 三个显式模式；同一模型切换 receipt-bound table/gain；GPU 阶段需 `--authorize` + 环境门禁 |
-| F2/F3/F4 development | [`scripts/eval/develop_zero_training_family.py`](scripts/eval/develop_zero_training_family.py) | 只在 D split 上校准；每族至多产出一个冻结代表 |
-| 选择/确认规则 | [`scripts/eval/zero_training_selection.py`](scripts/eval/zero_training_selection.py) | 纯 CPU 词典序规则与确认判决，可单测；含 `ABSOLUTE`/`ANCHORED` 可行性模式与 `YARN_ANCHORED_PARETO`，锚定模式缺实测 YaRN 参照时直接报错 |
-| D/S/T 防火墙分片 | [`scripts/data/build_success_first_splits.py`](scripts/data/build_success_first_splits.py) | 64/64/128 三路互斥；语料不足即停，不复用已见 rows |
-| 阶段 driver | [`scripts/eval/run_zero_training_tournament_5090.sh`](scripts/eval/run_zero_training_tournament_5090.sh) | 含 W0 manifest/contract/run 与 F1 后续阶段；每个 GPU stage 独立授权，精确调用见根 README |
+| MaxEnt dilation table | [`scripts/lib/rope/schedules.py`](scripts/lib/rope/schedules.py)、[`scripts/analysis/maxent_dilation_allocation.py`](scripts/analysis/maxent_dilation_allocation.py) | deterministic CPU-verified construction；不是 LM result；GPU 未授权 |
+| Native-support `z`-adaptation 历史实现输入 | [`rebuttal/rebuttal_0723/experiments/olmo2_phase_chord_lora_retrofit_5090/`](rebuttal/rebuttal_0723/experiments/olmo2_phase_chord_lora_retrofit_5090/) | 可审计的 Q/K-LoRA、静态表与 receipt building blocks；不是当前 runner，复用前必须按 §6 重新冻结纯-`z` 身份与 matched control |
+| **退役 zero-training tournament tooling** | `scripts/analysis/freeze_success_first_portfolio.py`、`scripts/analysis/build_candidate_manifest.py`、`scripts/eval/eval_zero_training_tournament.py`、`scripts/eval/develop_zero_training_family.py`、`scripts/eval/zero_training_selection.py`、`scripts/data/build_success_first_splits.py`、`scripts/eval/run_zero_training_tournament_5090.sh` | 历史 W0/F1/success-first 代码；无当前 action queue、无 README 运行命令、不得作为新实验入口 |
 | 可复用 CPU 诊断 | [`scripts/analysis/`](scripts/analysis/) | 不自动成为 paper claim |
+| 低维 coupling 冻结与 holdout | [`scripts/analysis/compile_low_dim_coupling_law.py`](scripts/analysis/compile_low_dim_coupling_law.py) | CPU-only；只用 OLMo 拟合，冻结后读取 Qwen geometry，生成候选表/残差/哈希；不运行 LM |
 | 注意力需求测量 | `scripts/analysis/attention_phase_demand.py` | 含 `layerwise_plan()` → `per_layer_inv_freq` |
 | 全 RoPE 碰撞审计 | `scripts/analysis/full_rope_collision_audit.py` | §2.1 的数值 owner |
 | **第三轴静态 $r_2$ 搜索诊断** | [`scripts/analysis/third_axis_ceiling.py`](scripts/analysis/third_axis_ceiling.py) | §6.1 数值的可复现脚本；纯 CPU；报告 optimizer 的 best-found value，不是全局或行为上限 |
@@ -202,7 +229,7 @@ position-dependent operator，不把不同 target-free operator 一并判死。
 | `paper-2027/research/` | durable internal theory、审计、claim/evidence 决策 | 内部层，不直接复制进正文 |
 | `paper-2027/research/attention-aware-retrofit/` | 成熟 retrofit 的 `results` / `evidence` / `analysis` / `preflights` / `theory` | 各子目录职责见其 README |
 | `paper-2027/research/audits/` | 内部 theory/manuscript/evidence 审计 | 不建立第二 action queue |
-| `paper-2027/research/external-reviews/` | 8 月外部模型审计快照 | frozen history；不进冷启动、当前优先级或 evidence routing |
+| `paper-2027/research/external-reviews/` | 8 月外部模型审计快照 | frozen history；不进当前优先级或 evidence routing |
 | `paper/` | NeurIPS 2026 投稿基线 | **不可修改、不可编译、不可重生成** |
 | `rebuttal/rebuttal_0723/` | NeurIPS review、回复历史、成熟实验 owner | 历史证据层，**不是** action queue |
 | `scripts/` | 见 §4 | — |
@@ -217,7 +244,7 @@ position-dependent operator，不把不同 target-free operator 一并判死。
 | [`internal/`](internal/) | NeurIPS-era 工作归档（2026-03/04 记录、旧稿快照、计划、审计、skill 备份） | 只读历史层，不再接收新文件；不公开、不整体打包；见其 README |
 | `nonuniform-alloc/` | 私有工作层 | 未经明确请求不修改、不公开 |
 
-### 历史审计入口（按需读取，不进冷启动）
+### 历史审计入口
 
 | 需要追溯 | 入口 | 边界 |
 | --- | --- | --- |
@@ -271,99 +298,79 @@ experiment plan 或旧 line number 继承任务。
 reviewer ceiling、现有证据缺什么、精确预算/owner/stop condition，并获得该次运行的
 显式授权。
 
-### 6.2 投稿后的第一优先级：冻结 checkpoint 零训练优化
+### 6.2 第一研究目标：frozen-checkpoint static pure-`z`
 
-作者的现行决定是：当前论文冻结后，不再以大改正文或扩大 from-scratch 训练为主；
-后续研究优先优化 **zero-training frozen-checkpoint allocation**，LoRA 排在其后。
+当前目标不是继续证明 `z` 存在，也不是把 frequency learning 改名，而是直接回答：
 
-第一目标不是再证明 allocation “存在”，而是在冻结模型、零模型权重更新条件下找到
-真正同时改善 Native-window 与长程行为的静态表。现行策略不再以“最少 GPU cell”为
-首要目标，而以 **3--5 个最高先验候选族内找到成功方案的概率** 为首要目标；额外算力
-只有在增加决定性或成功概率时才有 ROI。
+> 一个 frozen checkpoint 能否只通过一张 static non-affine `z` 表，在预先声明的轻微
+> `1x` 代价内，同时改善 `2x` 和 `4x` natural-text NLL，并把同一张表交给 untouched
+> downstream 验证？
 
-- 当前 derived / coarse 表和 Native/long session policy 是已完成基线，不是假设；
-- 优先目标是单一静态表本身同时改善 Native-window 与 long-range，而不只是依赖
-  routing 保住前者；
-- pure-(z) 结论必须固定 support、operator、checkpoint、gain、routing、data 和
-  evaluation；若引入 gain 或 routing，必须另报 bundled-system 结果；
-- candidate 若使用 checkpoint-aware 信号，必须说明信号如何获得、是否 task-label-free，
-  以及是否读取 multiscale development outcomes。所有权重冻结的方案可称
-  zero-weight-update；只有未做 outcome selection 的方案可称 zero-search；
-- 新目标不得回到 §3.4 已关闭的“共享单表 + 静态 scalar score”类别；必须明确它如何
-  使用模型状态、matched behaviour 或其他新信息逃出该类；
-- 不通过训练新模型、扩大 from-scratch scale 或新增 pretraining seed 来解决该问题。
+以 checkpoint 的 Native base 作为坐标约定：
 
-候选开发采用一个 success-first tournament：phase-chord morph、Native-retention
-projection、五自由度行为分配和固定 support--allocation 联合设计分别在 development
-split 内冻结一个代表；selection split 只选一个全局赢家；confirmation split 只打开一次。
-这允许充分使用算力，同时阻止在同一确认集上连续试错。
+\[
+\omega_i=b_{\rm native}^{f(-2i/d)}.
+\]
 
-matched-content phase 2x2 仍保留为**条件式诊断桥**：仅当确认候选的 Native/long 行为
-机制不明，而且该判别会改变后续方法时才运行。它不是候选族、不是默认第一研究任务，也
-不是每个候选必须先支付的门票。
-其历史设计仍由
-[`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826`](paper-2027/research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
-§4 和
-[`MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827`](paper-2027/research/attention-aware-retrofit/preflights/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md)
-拥有；design 文件不构成 readiness、结果或算力授权。
+`f` 必须在查看目标 LM 结果前由理论给定，且在 sampled Native grid 上不是
+`a+cz`。它可以移动 endpoints；单个 endpoint 漂移不等于全局 scaling，慢端是否恰好达到
+某个倍率也不是物理公理。模型 weights 与 `f` 均不训练。任意 loss-calibrated、逐频率学习
+或 validation-selected table 属于另一研究问题，不进入第一 zero-training 方法。
 
-2026-08-30 的 success-first 候选组合、数据防火墙、选择规则与确认协议由
-[`ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830`](paper-2027/research/attention-aware-retrofit/preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md)
-记录。一个物理 `4x` forward 同时输出 Native-prefix、long-dense、far-tail 和 position
-bins；bins 从第一轮即保存，但在主 verdict 后解释。gain-expanded mechanism cube 仍是
-条件式诊断。有限 $K$ 数值审计是独立理论证书，不能选择下一张表。
+当前实用 owner 采用已经冻结的 checkpoint-derived coupling `m_i`，但在 exponent
+空间而不是 frequency 空间实现：
 
-2026-08-31 作者定向的增补写回同一 preflight（§2、§5.1、§5.2、§6、§10、§11），不新增
-第二权威：单表在窗代价的参照不再只有「零损害」，另加一档 **YaRN 锚定判决**
-（`YARN_ANCHORED_PARETO`）与配套的 `ANCHORED` 可行性模式，二者都要求同 rows 同
-forward 内实测的官方 YaRN factor-four 臂；`W0` 预注册**已冻结 `s4` 表的在窗代价测量**
-（部署时 `1x` 一律路由回 Native，因此该代价从未被测过），其结果在读任何候选开发行之前
-锁定用 `ABSOLUTE` 还是 `ANCHORED` 模式。严格档始终先判，锚定档只能新增候选、不能改写
-已通过的判决。防火墙经只读核验后确认：现有三个 FineWeb-Edu 评估分片（32/128/512 篇）
-全部 outcome-seen，`D/S/T` 必须改用未供过评估行的替换 shard。
+\[
+\omega_i'=\omega_i s^{-m_i},\qquad
+z_i'=z_i-m_i\log_b s.
+\]
 
-旧 leave-one-band-out 设计已审计为不可执行：B0/B0°/B1/B2 的突变恢复会产生非单调
-frequency crossings，B0 还改变 support，B4 也不是 exact sham。未来若需要 band
-attribution，必须重新构造通过单调性/hash gate 的累计或平滑投影干预。
+一张表在同一个模型加载与 KV-cache coordinate system 中覆盖所有长度；Native/long
+routing 不参与。Gain 是独立 attention interaction：`c=0.074` 只由 1x PG-19 retention
+边界选择，然后与表共同冻结。相同 gain 下，arithmetic frequency interpolation 不通过
+1x PPL 门，不能把当前结果归因成 gain-only。
 
-### 6.3 条件式研究顺序
+### 6.3 已完成门禁与下一证据缺口
 
-| 顺序 | 动作 | 进入条件 / 停止条件 |
-| --- | --- | --- |
-| S0 | 9 月文档治理与 current-PDF audit | 不改变科学 owner；实时状态只写 handoff |
-| S1 | 完成摘要、正文、appendix、supplement 与 submission gates | 不以旧模型评审或新增 compute 扩张范围 |
-| R0 | 工作机 owner/data/runner preflight | 恢复 R0 与 historical raw owners；冻结互斥 development/selection/confirmation splits、代码/config/table hashes；无 GPU 输出前完成 |
-| W0 | 已冻结 `s4` 表的在窗锚定测量 | 只用 `D` 的 rows，臂为 Native / 官方 YaRN-4 / 冻结 `s4`；产出实测在窗代价并锁定 `ABSOLUTE` 或 `ANCHORED` 可行性模式；不提名候选，且必须在任何 R1-D 行之前完成 |
-| R1-D | 四候选族 development | F1 phase-chord morph、F2 Native-retention projection、F3 五自由度行为分配、F4 fixed support--allocation；每族只产生一个冻结代表 |
-| R1-S | 独立 family selection | 在未参与开发的同 rows 上按 Native-prefix/long-dense guards 与 far-tail lexicographic rule 选一个全局赢家；不在 selection 后重调 |
-| R2 | 单次 final confirmation | 只评估全局赢家；给出 `JOINT_IMPROVEMENT`、`DEPLOYABLE_PARETO`、`YARN_ANCHORED_PARETO`、`MECHANISM_ONLY`、`FAIL` 或 `UNRESOLVED`；下游不能救失败 likelihood gate |
-| R2d | 条件式 matched-content phase bridge | 仅当确认结果机制不明且答案改变方法；旧 gain cube 和 band-restoration 设计不可直接继承 |
-| R3 | capability confirmation | 冻结赢家后评估 unsaturated RULER、full-200 2Wiki 与必要 source ablation；与 likelihood 分开报告 |
-| R4 | 第二 checkpoint | OLMo likelihood 与至少一个 capability endpoint 通过后，将 construction algorithm 而非 OLMo tensor 应用于 Qwen |
-| R5 | matched LoRA 深化 | 仅在 zero-weight-update 结论稳定后进入；保持 matched adaptation，不新增 from-scratch program |
+Formal manifest
+`74022bf36d444a1735baab72bda0312b9867dd38c9f85ece376049b5f35f66f3`
+上的两个 1x ratio 分别为 `0.875302`（PG-19 PPL）和 `0.915103`（五任务 macro），
+均通过 0.875 门。冻结后 2x/4x PG-19 NLL 为 `3.083278/3.081946`，六任务 macro
+为 `0.307614/0.260055`；完整 RULER-13 在 4K/8K/16K 为
+`0.71397/0.66705/0.49859`。
 
-protected-progressive / protected-ramp 公式扫描已退役；其分析只保留历史算术与设计
-provenance。matched-content 是条件式诊断；旧 band-restoration arms 因破坏频率顺序而
-失效，不得进入执行队列。
+同 gain arithmetic control 在全部 2x/4x natural endpoints 较差，但 RULER-13
+为 `0.69731/0.65429/0.50481`：log 改善 4K/8K，16K 小幅反转。故不保留
+“log law uniformly improves long capability”的 broad claim。
 
-### 6.4 生命周期与反重复
+Qwen long-capability construction transfer与 slot non-exchangeability 均已完成。CPU-only
+压缩进一步冻结了一个 OLMo-only 两参数 `G_4(x)`：它重建 OLMo movement，并在不重拟合
+时接近 Qwen self-profile 与现有 64 点 transport。当前缺口已收缩为：该几何压缩能否保持
+1x retention 与两 checkpoint 的 long capability。候选、表与首次 GPU 判定门见其 owner；
+新实验不得用 2x/4x outcome 反向选择 table/gain。
 
-- **Current owner：** 当前 TeX、handoff 标明同步状态的 PDF、§2–§3 的 canonical
-  owners、current theory state。
-- **Design only：** `ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830` 的四候选族
-  tournament、development/selection/confirmation firewall、matched-content 2x2，以及
-  只有在共享静态表组合完成后才重新定义的 grouped/per-layer diagnostics。
-- **Superseded：** 8 月 narrative/revision plans、protected-ramp scanning、旧 post-GPU
-  roadmap、alternating model-review workflow。它们只按需用于审计，不进入冷启动。
-- **Closed negative：** §3.4 的 owner-backed 条目；不得通过改名恢复。
-- **Unresolved：** M4 phase-isotropy 仍是 `SCREEN_UNRESOLVED`，既不是成功也不是候选级
-  否决。
+### 6.4 已退役路线
 
-8 月周期的旧 brief、author verdict ledger、模型 review bundles 与协作日志由 Git 和
-其原文件保留历史，不自动向 9 月迁移任务。新候选必须先过 §3.4；尤其“共享单表 +
-静态 scalar score”必须说明如何逃出已关闭类别。
+以下对象只保留历史 owner/代码 provenance，不再出现在 README 命令或 current action
+queue：W0/F1 success-first tournament、F2--F4 portfolio、`ABSOLUTE/ANCHORED` 选择模式、
+protected-ramp/band restoration、local-gap、s8 arithmetic/log scaling、per-head frequency、
+dynamic gain/spectral flow，以及把 dilation distribution 单独当充分对象的 MaxEnt 扫描。
+它们的结果仍可支持“frozen shock、gain interaction、失败边界”等已完成判断，但不能
+选择下一张 OLMo 表。
 
-### 6.5 静态诊断的保留边界
+重新进入主线的最低条件不是换名，而是满足本节 deterministic non-affine `f` 与同表多长度
+身份。用 routing 隐藏 `1x` 损伤或用 LM loss 学/搜 `f` 均不属于第一 zero-training 方法；
+endpoint movement 本身不是出线条件。
+
+### 6.5 生命周期与反重复
+
+- **Current:** 当前 TeX/PDF、§2--§3 canonical owners、`s4` exponent-space result owner。
+- **Next gate:** 已冻结两参数 `G_4(x)` 的首次 LM confirmation；任何新 GPU run 仍需按次授权。
+- **Historical:** zero-training tournament 与 scale-law owner；保留证据，不保留任务。
+- **Closed negative:** §3.4 的 owner-backed 条目；不得通过改名恢复。
+- **Unresolved:** M4 phase-isotropy 仍是 `SCREEN_UNRESOLVED`，不自动进入方法设计。
+
+### 6.6 静态诊断的保留边界
 
 [`scripts/analysis/third_axis_ceiling.py`](scripts/analysis/third_axis_ceiling.py)
 仍是固定 measure/support/optimizer/restarts 下 best-found `r_2` 的复现 owner。这些值：

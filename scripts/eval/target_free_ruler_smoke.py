@@ -104,13 +104,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--native-context-length", type=int, default=4096)
     parser.add_argument("--expected-weight-sha256")
     parser.add_argument("--expected-active-sha256")
+    parser.add_argument(
+        "--allow-order-crossings",
+        action="store_true",
+        help="Admit a positive external table whose rotary-pair frequencies cross.",
+    )
     parser.add_argument("--skip-checkpoint-rehash", action="store_true")
     parser.add_argument("--checkpoint-ready-receipt", type=Path)
     parser.add_argument("--table", type=Path)
     parser.add_argument("--table-name")
     parser.add_argument(
         "--table-support",
-        choices=("native", "native_div_factor"),
+        choices=("native", "native_div_factor", "explicit"),
     )
     parser.add_argument("--table-factor", type=float, default=4.0)
     parser.add_argument("--long-attention-scaling", type=float)
@@ -159,6 +164,7 @@ def load_cross_model_method(
     external_table_support: str | None = None,
     external_table_factor: float = 4.0,
     external_attention_scaling: float | None = None,
+    allow_order_crossings: bool = False,
 ) -> tuple[Any, dict[str, Any]]:
     if method not in {"native", "official_yarn", "session_binary_s4", *CONTROL_METHODS}:
         raise RuntimeError("unsupported generic RULER method")
@@ -263,25 +269,36 @@ def load_cross_model_method(
         if (
             external_table is None
             or not str(external_table_name or "").strip()
-            or external_table_support not in {"native", "native_div_factor"}
+            or external_table_support not in {"native", "native_div_factor", "explicit"}
             or external_attention_scaling is None
             or not math.isfinite(float(external_attention_scaling))
             or float(external_attention_scaling) <= 0.0
         ):
             raise RuntimeError("external table method has an incomplete identity")
         table = np.load(external_table.resolve(), allow_pickle=False)
-        expected_slow = (
-            np.float32(native[-1])
-            if external_table_support == "native"
-            else np.float32(np.float32(native[-1]) / float(external_table_factor))
-        )
+        expected_slow = None
+        if external_table_support != "explicit":
+            expected_slow = (
+                np.float32(native[-1])
+                if external_table_support == "native"
+                else np.float32(np.float32(native[-1]) / float(external_table_factor))
+            )
         if (
             table.dtype != np.dtype("float32")
             or table.shape != native.shape
             or not np.isfinite(table).all()
-            or not np.all(table[:-1] > table[1:])
-            or table[0] != np.float32(native[0])
-            or table[-1] != expected_slow
+            or not (table > 0.0).all()
+            or (
+                not allow_order_crossings
+                and not np.all(table[:-1] > table[1:])
+            )
+            or (
+                external_table_support != "explicit"
+                and (
+                    table[0] != np.float32(native[0])
+                    or table[-1] != expected_slow
+                )
+            )
         ):
             raise RuntimeError("external table has an invalid support identity")
         active_hash = float32_sha256(table)
@@ -322,6 +339,10 @@ def load_cross_model_method(
             "evaluation_parameter_updates": 0,
             "model_weight_updates": 0,
             "table_provenance": "receipt-bound external artifact",
+            "allow_order_crossings": bool(allow_order_crossings),
+            "order_crossing_indices": np.flatnonzero(
+                table[:-1] <= table[1:]
+            ).tolist(),
         }
     elif method in CONTROL_METHODS:
         controls = build_same_support_controls(
@@ -394,9 +415,13 @@ def main() -> int:
             external_probe.dtype != np.dtype("float32")
             or external_probe.shape != (64,)
             or not np.isfinite(external_probe).all()
-            or not np.all(external_probe[:-1] > external_probe[1:])
+            or not (external_probe > 0.0).all()
+            or (
+                not args.allow_order_crossings
+                and not np.all(external_probe[:-1] > external_probe[1:])
+            )
         ):
-            raise RuntimeError("external table must be finite decreasing float32")
+            raise RuntimeError("external table has an invalid float32 identity")
         external_hash = float32_sha256(external_probe)
         external_file_hash = sha256_file(args.table.expanduser().resolve())
         if (
@@ -468,6 +493,12 @@ def main() -> int:
         "table_sha256_float32": external_hash,
         "table_file_sha256": external_file_hash,
         "long_attention_scaling": args.long_attention_scaling,
+        "allow_order_crossings": bool(args.allow_order_crossings),
+        "order_crossing_indices": (
+            np.flatnonzero(external_probe[:-1] <= external_probe[1:]).tolist()
+            if external_probe is not None
+            else []
+        ),
         "script_sha256": sha256_file(Path(__file__).resolve()),
     }
     run_manifest_path = output / "run_manifest.json"
@@ -496,6 +527,7 @@ def main() -> int:
             external_table_support=args.table_support,
             external_table_factor=float(args.table_factor),
             external_attention_scaling=args.long_attention_scaling,
+            allow_order_crossings=bool(args.allow_order_crossings),
         )
     )
     torch.cuda.reset_peak_memory_stats()

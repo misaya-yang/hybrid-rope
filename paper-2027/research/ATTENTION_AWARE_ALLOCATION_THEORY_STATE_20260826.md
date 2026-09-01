@@ -1,18 +1,19 @@
 # Attention-aware RoPE allocation: theory state
 
 - **Original date:** 2026-08-26
-- **Lifecycle update:** 2026-08-30
+- **Lifecycle update:** 2026-08-31
 - **Status:** active theory-continuation boundary for work after the current
   September manuscript cycle; experiment priority is superseded by the
-  success-first candidate portfolio in `INDEX.md` §6
+  deterministic static pure-`z` programme in `INDEX.md` §6; the former
+  success-first candidate portfolio is retired history
 - **Role:** durable theory continuation owner, not a parallel experiment plan
 - **Not:** a manuscript claim, experiment result, action queue, or compute
   authorization
 - **Agenda authority:** [`../../INDEX.md`](../../INDEX.md) §6
 - **Live state:** [`../HANDOFF.md`](../HANDOFF.md)
 
-This document answers what the paper established, what later research ruled
-out, and which mechanism bridge remains available. Its former scheduling
+This document answers what the paper established and what later research ruled
+out. Its former scheduling
 priority is superseded: the current order develops four candidate families,
 selects one on a disjoint split, and opens final confirmation once. The
 matched-content bridge enters only when a valid confirmed result is

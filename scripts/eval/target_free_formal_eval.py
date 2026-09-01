@@ -17,6 +17,7 @@ from typing import Any, Iterable
 import numpy as np
 import torch
 import torch.nn.functional as F
+from peft import PeftModel
 from transformers import AutoTokenizer
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -72,6 +73,7 @@ METHODS = (
     "external_table_session",
 )
 BUCKET_TO_MULTIPLIER = {"retention": 1, "near": 2, "far": 4}
+TABLE_SUPPORTS = ("native", "native_div_factor", "explicit")
 
 
 def sha256_file(path: Path) -> str:
@@ -149,10 +151,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--table-name")
     parser.add_argument(
         "--table-support",
-        choices=("native", "native_div_factor"),
+        choices=TABLE_SUPPORTS,
     )
     parser.add_argument("--long-attention-scaling", type=float)
     parser.add_argument("--expected-active-sha256")
+    parser.add_argument("--adapter", type=Path)
+    parser.add_argument("--adapter-name")
+    parser.add_argument(
+        "--allow-order-crossings",
+        action="store_true",
+        help="Admit a positive external table whose rotary-pair frequencies cross.",
+    )
     parser.add_argument("--skip-checkpoint-rehash", action="store_true")
     parser.add_argument("--checkpoint-ready-receipt", type=Path)
     parser.add_argument("--output", type=Path, required=True)
@@ -187,6 +196,8 @@ def validate_args(args: argparse.Namespace) -> None:
         )
     if args.skip_checkpoint_rehash and args.checkpoint_ready_receipt is None:
         raise ValueError("--skip-checkpoint-rehash requires --checkpoint-ready-receipt")
+    if (args.adapter is None) != (not str(args.adapter_name or "").strip()):
+        raise ValueError("--adapter and --adapter-name must be provided together")
 
 
 def validate_checkpoint(checkpoint: Path) -> str:
@@ -197,6 +208,28 @@ def validate_checkpoint(checkpoint: Path) -> str:
     if digest != EXPECTED_CHECKPOINT_SHA256:
         raise RuntimeError("released OLMo checkpoint hash drift")
     return digest
+
+
+def validate_external_table_support(
+    external: np.ndarray,
+    native: np.ndarray,
+    *,
+    support: str,
+    factor: float,
+) -> None:
+    """Validate an external table without inventing endpoint constraints."""
+
+    if external.shape != native.shape:
+        raise RuntimeError("external table shape identity drift")
+    if support == "explicit":
+        return
+    expected_slow = (
+        np.float32(native[-1])
+        if support == "native"
+        else np.float32(np.float32(native[-1]) / factor)
+    )
+    if external[0] != np.float32(native[0]) or external[-1] != expected_slow:
+        raise RuntimeError("external table support identity drift")
 
 
 def selected_longbench_rows(
@@ -301,6 +334,7 @@ def load_method_model(
     method: str,
     *,
     native_context_length: int,
+    adapter: Path | None = None,
 ) -> tuple[Any, dict[str, Any]]:
     config = (
         official_yarn_config(
@@ -312,6 +346,12 @@ def load_method_model(
         else None
     )
     model = load_model(checkpoint, config=config)
+    if adapter is not None:
+        model = PeftModel.from_pretrained(
+            model,
+            adapter,
+            is_trainable=False,
+        ).merge_and_unload()
     configure_ruler_flash_attention(model)
     model.config.use_cache = True
     if method == "official_yarn":
@@ -443,6 +483,19 @@ def main() -> int:
             )
         )
     external_methods = {"external_table_static", "external_table_session"}
+    adapter_path = args.adapter.expanduser().resolve() if args.adapter else None
+    adapter_receipt = None
+    if adapter_path is not None:
+        adapter_model = adapter_path / "adapter_model.safetensors"
+        adapter_config = adapter_path / "adapter_config.json"
+        if not adapter_model.is_file() or not adapter_config.is_file():
+            raise FileNotFoundError("adapter requires config and safetensors files")
+        adapter_receipt = {
+            "name": str(args.adapter_name),
+            "model_sha256": sha256_file(adapter_model),
+            "config_sha256": sha256_file(adapter_config),
+            "merged_for_inference": True,
+        }
     external: np.ndarray | None = None
     external_hash: str | None = None
     external_file_hash: str | None = None
@@ -454,9 +507,13 @@ def main() -> int:
             external.dtype != np.dtype("float32")
             or external.shape != (64,)
             or not np.isfinite(external).all()
-            or not np.all(external[:-1] > external[1:])
+            or not (external > 0.0).all()
+            or (
+                not args.allow_order_crossings
+                and not np.all(external[:-1] > external[1:])
+            )
         ):
-            raise RuntimeError("external table must be finite decreasing float32")
+            raise RuntimeError("external table has an invalid float32 identity")
         external = np.ascontiguousarray(external, dtype="<f4")
         external_hash = float32_sha256(external)
         external_file_hash = sha256_file(table_path)
@@ -554,6 +611,13 @@ def main() -> int:
         "table_sha256_float32": external_hash,
         "table_file_sha256": external_file_hash,
         "long_attention_scaling": args.long_attention_scaling,
+        "weight_adapter": adapter_receipt,
+        "allow_order_crossings": bool(args.allow_order_crossings),
+        "order_crossing_indices": (
+            np.flatnonzero(external[:-1] <= external[1:]).tolist()
+            if external is not None
+            else []
+        ),
         "limit_per_cell": int(args.limit_per_cell),
         "script_sha256": sha256_file(Path(__file__).resolve()),
     }
@@ -570,7 +634,10 @@ def main() -> int:
         checkpoint,
         str(args.method),
         native_context_length=native_length,
+        adapter=adapter_path,
     )
+    if adapter_receipt is not None:
+        method_receipt["weight_adapter"] = adapter_receipt
     tokenizer = AutoTokenizer.from_pretrained(
         checkpoint,
         local_files_only=True,
@@ -585,17 +652,12 @@ def main() -> int:
         assert native_inv is not None
         assert external is not None and external_hash is not None
         native_array = native_inv.numpy()
-        expected_slow = (
-            np.float32(native_array[-1])
-            if args.table_support == "native"
-            else np.float32(np.float32(native_array[-1]) / float(args.factor))
+        validate_external_table_support(
+            external,
+            native_array,
+            support=str(args.table_support),
+            factor=float(args.factor),
         )
-        if (
-            external.shape != native_array.shape
-            or external[0] != np.float32(native_array[0])
-            or external[-1] != expected_slow
-        ):
-            raise RuntimeError("external table support identity drift")
         target_tables = {}
         method_receipt.update({
             "method": str(args.method),
