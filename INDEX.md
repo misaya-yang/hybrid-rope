@@ -23,6 +23,11 @@
 
 ### 2026-09-01 — 当前决定
 
+- **新一轮归因（已注册，非结果）：** 先用 stock-HF/自定义 Flash 的同 token
+  对照检查 Gemma 共享运行时，再补 deterministic static YaRN2/NTK2 resolver；
+  保持 frozen `G`、参考长度与已有模型不变，CPU 并行分解 K/网格和 Native
+  Q/K 响应。见
+  [`COUPLING_NEGATIVE_ATTRIBUTION_PREFLIGHT_20260901`](paper-2027/research/attention-aware-retrofit/preflights/COUPLING_NEGATIVE_ATTRIBUTION_PREFLIGHT_20260901.md)。
 - **当前结果：** `s4` scale-consistent exponent table
   `omega'_i=omega_i s^{-m_i}`，配合只由 1x PG-19 retention 选出的 `c=0.074`
   gain，通过 1x PPL/五任务双门，并在同一静态表上改善 2x/4x NLL 与自然任务；见
