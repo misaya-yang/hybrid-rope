@@ -81,9 +81,9 @@ Expand to the tests owned by the changed path; the handoff records the latest
 validated scope rather than implying that one command certifies the repository.
 
 The retired W0/F1 success-first tournament has no runnable command in this
-README. Its code and preflight remain historical provenance only. The current
-deterministic static-`z` question has no derived candidate, executable protocol,
-runner, or GPU authorization.
+README. Its code and preflight remain historical provenance only. The latest
+two-parameter static-`z` GPU result is mixed and has no active rescue candidate;
+current evidence and next-action status live in `INDEX.md` and the handoff.
 
 ```bash
 cd paper-2027 && ./compile.sh

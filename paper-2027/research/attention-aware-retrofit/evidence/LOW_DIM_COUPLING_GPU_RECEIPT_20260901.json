@@ -1,0 +1,100 @@
+{
+  "status": "COMPLETE_MIXED_PRACTICAL_NATIVE_GATE_FAILED_QWEN_LONG_BEHAVIOR_PASSED",
+  "date": "2026-09-01",
+  "method": {
+    "candidate": "C2_clipped_affine",
+    "factor": 4,
+    "gain_coefficient": 0.074,
+    "attention_scaling": 1.102585782722872,
+    "routing": false,
+    "single_static_table_per_checkpoint": true,
+    "model_weight_updates": 0,
+    "table_parameter_updates_after_gpu_outcomes": 0
+  },
+  "tables": {
+    "olmo": {
+      "float32_tensor_sha256": "113089f05b1e01e61bd9c78f06151ad96c1237b4602e0c380175c27d30562264",
+      "npy_file_sha256": "e9e16faad38091800ca09d457b6df848e5a16cc58ec4048dd73f05df002e3700"
+    },
+    "qwen": {
+      "float32_tensor_sha256": "e78a0b6a04e2ae39a6004eedf1c11ef5f2250998b3adf2b8d8166274c2d4f14e",
+      "npy_file_sha256": "36c9c1ce69be3bfa2426902ed2ae288f5e45dce6004c92c499b4c3e3542e4700"
+    }
+  },
+  "olmo_native_gate": {
+    "threshold": 0.875,
+    "native_pg19_nll": 2.9710474610328674,
+    "original_64d_pg19_nll": 3.104233813285828,
+    "c2_pg19_nll": 3.109194076061249,
+    "c2_ppl_retention": 0.8709709849484816,
+    "pg19_gate_passed": false,
+    "native_five_task_macro": 0.3451343073178597,
+    "original_64d_five_task_macro": 0.3158332874435654,
+    "c2_five_task_macro": 0.3123227143315461,
+    "c2_task_retention": 0.9049317492091365,
+    "task_gate_passed": true,
+    "double_gate_passed": false,
+    "olmo_long_opened_under_registered_gate": false,
+    "olmo_long_opened_later_as_post_gate_diagnostic": true,
+    "post_gate_2x_pg19_nll": 3.088092792034149,
+    "post_gate_2x_six_task_macro": 0.2998118428208222,
+    "post_gate_4x_pg19_nll": 3.08613840341568,
+    "post_gate_4x_six_task_macro": 0.2586400389158199,
+    "post_gate_ruler13_8k_macro": 0.6683974358974359,
+    "post_gate_ruler13_16k_macro": 0.5024358974358974
+  },
+  "qwen_post_gate_diagnostic": {
+    "long_data_manifest_sha256": "88c250401040c68e935ef5bbdb8159351292f043a32b247c5de30916873ede45",
+    "c2_64k_macro": 0.6775,
+    "c2_64k_floor": 0.6225,
+    "c2_64k_passed": true,
+    "c2_128k_macro": 0.5725,
+    "c2_128k_floor": 0.5375,
+    "c2_128k_passed": true,
+    "transport_64d_64k_macro": 0.6725,
+    "transport_64d_128k_macro": 0.545,
+    "native_32k_data_generated_after_long_result": true,
+    "native_32k_data_manifest_sha256": "a5fd30cf5e53be7a9e447dc6306eff50138771f4e12698510f365322fc97c98f",
+    "native_32k_macro": 0.82,
+    "c2_32k_macro": 0.7125,
+    "c2_32k_retention": 0.86890243902439,
+    "c2_32k_retention_passed": false,
+    "qwen_self_64d_32k_macro": 0.74,
+    "qwen_transport_64d_32k_macro": 0.7,
+    "qwen_monotone_self_32k_macro": 0.74,
+    "qwen_monotone_self_64k_macro": 0.6525,
+    "qwen_monotone_self_128k_macro": 0.5925
+  },
+  "result_sha256": {
+    "olmo_c2_pg19": "a3ee65276d958d490bb9555b727e8a032ea48d0bdd0079b523eca2d6523b694b",
+    "olmo_c2_five_task": "e2d99e14984a91d56e5260cba0d70f53b03e197210a3352245ecd39077520b36",
+    "qwen_c2_64k": "1a572c51f5effde8e131dccbb6600885ea2ba66fcaa3ebae80dc0b778ae77e47",
+    "qwen_c2_128k": "ac9e0d7343b0b3a50895d80326927db237e087976399cfb73b2ae4a4c3b34a8c",
+    "qwen_native_32k": "000231e81688772d4a6062cc570f92c1cc0157170d4c30badad97b826f3b4698",
+    "qwen_c2_32k": "41c959e0a3462213b4704ecbe32427a36394fa68dba7879b98c3cb2183a2e646",
+    "olmo_c2_long_natural": "44736ef2579be2023b4cc7203aedfbc597af6afbfdb75b7d628e38179f834030",
+    "olmo_c2_ruler_core4": "ef8e36b3b0213e35d6f8fe6c7dab83a36fd0f840d0af1c9692ee20f09c06a24f",
+    "olmo_c2_ruler_unseen9": "7662ab7fc0a6075797e8e735cd973c440166fb4b7032272ec9f2943913e592c1",
+    "qwen_self_64d_32k": "71fa83e0d2de58a7e5f49d9827b805884dd605d5d533ff28be05e613a2fc3458",
+    "qwen_transport_64d_32k": "b613f48d542e272215c9620c87ae9a9f87a2aaf4a8e040c9c74e1f186a4d80d3",
+    "qwen_monotone_self_32k": "a7183dbec160ceac4821c76adcebaa1dd409d42608e7c4a77e358356cee0cd89",
+    "qwen_monotone_self_64k_128k": "c979199bf5f852a9a7411919fe7ecfed02740adf5856e626cf69bec5dc2a5061"
+  },
+  "examples_sha256": {
+    "olmo_c2_pg19": "b66a20d4817039f9e89abc8df9f7fdc3da4c384209d5c224d8cb7f10d1a251e3",
+    "olmo_c2_five_task": "b4d3303bcbe0b73f186338266cb3908ac76ea605c6849223191a13e917eea08d",
+    "qwen_c2_64k": "68f19c6b2329dc2071cdb1b311e67bcf9fc0dd15230aef79a588c2dc8979fd24",
+    "qwen_c2_128k": "7c575e48420c18ad48cfbdbf7cde03df9fc7cc081394bc31818cb91dfca1310d",
+    "qwen_native_32k": "37313695e30a0bbf9bd65fe49eaf23e810e91044338821a8866834cd34881f41",
+    "qwen_c2_32k": "060d1f6012604b2e4763582ceb42c2ce3877dd2b204542d71dff54191d521ae9"
+  },
+  "runtime": {
+    "gpu": "NVIDIA GeForce RTX 4080 SUPER",
+    "torch": "2.8.0+cu128",
+    "olmo_peak_reserved_bytes": 4259315712,
+    "qwen_32k_peak_reserved_bytes": 6444548096,
+    "qwen_64k_peak_reserved_bytes": 9758048256,
+    "qwen_128k_peak_reserved_bytes": 16429088768
+  },
+  "claim_boundary": "The registered deployable-law gate failed. Qwen 64K and 128K are post-gate diagnostics supporting long-behavior preservation by the frozen two-parameter compression; they do not convert the method verdict into a pass. The Qwen 32K paired dataset was generated after the long result and is descriptive follow-up evidence."
+}

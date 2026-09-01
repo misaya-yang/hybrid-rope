@@ -1,0 +1,52 @@
+{
+  "status": "K32_FINITE_K_COUPLING_COMPLETE_MIXED",
+  "checkpoint": {
+    "model": "Qwen2.5-0.5B-Instruct",
+    "weight_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "K": 32,
+    "rope_theta": 1000000.0,
+    "native_length": 32768
+  },
+  "protocol": {
+    "factor": 4.0,
+    "evaluation_target_dilation": 2.0,
+    "construction_target_scale_matched": false,
+    "attention_scaling": 1.102585782722872,
+    "gain_coefficient": 0.074,
+    "ruler_commit": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+    "data_manifest_sha256": "231535101268c6798057fd458aa1891cd7632afe73aaae11f590801e01c28090",
+    "seed": 20260822,
+    "rows_per_task": 20,
+    "tasks": ["niah_single_1", "niah_multikey_2", "niah_multikey_3", "vt"]
+  },
+  "frozen_tables": {
+    "manifest_sha256": "7e8e82855094e350c779df3edb85bfee9dd3561c5c806af1d18abc7a7d7e19a1",
+    "physical_x_tensor_sha256": "0033d737ee0ea89068b877d0dae7f23964129217f8d2aa0ad9e186f11e57ebdc",
+    "normalized_index_tensor_sha256": "2a89c859d59a6daf802a66b86c038a8e1721906b00101eb16f81ddefe8902e79",
+    "monotone_self_tensor_sha256": "4e6be27e4e2e631381534acd720c8c4bf6590e6537f3b1be75c04b0c15a5ce43"
+  },
+  "results": {
+    "native_32k": {"task_scores": [1.0, 0.8, 0.25, 0.54], "macro": 0.6475},
+    "physical_x_32k": {"task_scores": [1.0, 0.4, 0.0, 0.65], "macro": 0.5125, "native_retention": 0.7915057915},
+    "normalized_index_32k": {"task_scores": [1.0, 0.65, 0.05, 0.44], "macro": 0.535, "native_retention": 0.8262548263},
+    "native_64k": {"task_scores": [0.75, 0.2, 0.0, 0.16], "macro": 0.2775},
+    "physical_x_64k": {"task_scores": [1.0, 0.3, 0.05, 0.39], "macro": 0.435},
+    "normalized_index_64k": {"task_scores": [1.0, 0.4, 0.0, 0.31], "macro": 0.4275},
+    "monotone_self_64k": {"task_scores": [1.0, 0.2, 0.0, 0.36], "macro": 0.39}
+  },
+  "raw_result_sha256": {
+    "native_32k": "1cdb1e6c046c6cf21a5641f424600f0514416e7ee274c65fc085255df8679699",
+    "physical_x_32k": "20be11fa3682f41c27c234fbb9373fb1e11b5bfdb41cf328ac2e6f3cb847a4de",
+    "normalized_index_32k": "9d78fffe49b5c78f32f4d2234f2855f3a9d822a00a7506e7e636e38b9a90ca07",
+    "native_64k": "61fa88b172b79ae7f7ac7135bcec831b88b5e860e6c537988c814e7be02a39fe",
+    "physical_x_64k": "80a49a162ff8b3b21e28c4bef0a9de3ae76275a0c1f274a5c0425fedf3038be1",
+    "normalized_index_64k": "2c49b9ffccc782039d5364604c206d617d38a84bb6559e7f11e7c1c4a00090d1",
+    "monotone_self_64k": "f15f6af921e4447d2c66d9bcdc18e764f479f055bd160b3463f5bfabaa2fd819"
+  },
+  "decision": {
+    "next_required_hypothesis": "H0_SCALE_MISMATCH",
+    "native_only_incompatibility_status": "PROVISIONAL_UNTIL_MATCHED_S2",
+    "cell_average_candidate_frozen": false,
+    "cell_average_gpu_run_authorized": false
+  }
+}

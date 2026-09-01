@@ -6,21 +6,31 @@ and order live only in [`../../../INDEX.md`](../../../INDEX.md) §0 and §6.
 
 ## Current question
 
-`RQ_LOCKED / CONSTRUCTION_NOT_DERIVED / NO_GPU_AUTHORIZATION`
+`K32_MATCHED_S_PARETO / K128_SCREEN_UNRESOLVED_LONG_NEGATIVE /
+P3_REJECTED`
 
-The active method question is one deterministic static pure-`z` table on a
-frozen checkpoint:
+The completed low-dimensional experiment now separates two effects:
 
-- derive a non-affine `f(z)` from joint phase-code geometry before observing LM
-  outcomes; do not learn or search `z`;
-- allow endpoint motion; fixed endpoints remain a historical causal control,
-  not a physical rule;
-- use one table at `1x`, `2x`, and `4x`, with a declared small `1x` cost budget;
-- open untouched downstream evaluation only after both long NLL endpoints pass.
+- a frozen two-parameter `G_4(x)` preserves OLMo and Qwen long behavior;
+- the same table misses the strict Native operating point by a small amount on
+  both checkpoints;
+- Qwen's self-profile, but not the transported OLMo 64-point residual, restores
+  Qwen 32K retention, locating the remaining problem in checkpoint-specific
+  Native compatibility rather than the transferable long backbone;
+- on the K32 holdout, physical `x` is the best 64K arm even though it fails the
+  32K Native gate, while the zero-parameter cell-average hypothesis fails its
+  CPU entrance condition;
+- matched K32 s2 closes the scale confound: physical `x` wins 64K while
+  normalized index passes Native, so neither uniformly dominates;
+- two K128 Gemma-1 screens recover nonzero 8K behavior under frozen tables but
+  remain zero at 16K. Native 4K and table-only/gain/loader controls prove this
+  is a real behavioral boundary rather than the wrong artifact or a broken
+  evaluator, while cross-K coordinate identification remains unresolved.
 
-No candidate, executable preflight, or runner is active. Native/long routing,
-loss-calibrated frequency learning, and the former tournament are not the first
-zero-training method route.
+No Native-correction or hierarchical candidate survives the current gates.
+The next evidence question is a matched deterministic static-baseline panel,
+not another fitted curve. Native/long routing and post-outcome gain rescue
+remain outside the target method.
 
 ## Evidence to open on demand
 
@@ -31,6 +41,9 @@ zero-training method route.
 | What did the complete zero-training system establish? | [`results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`](results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md) | table + gain + routing system; not pure `z` |
 | Why is adaptation expected? | [`results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md`](results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md) and the crossings routed by [`../../../INDEX.md`](../../../INDEX.md) §3 | weights/table co-adaptation; no current method winner |
 | Which frozen routes failed? | [`results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md`](results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md), [`results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md`](results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md), and [`results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md`](results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md) | historical failure/engineering boundaries only |
+| Does the two-parameter compression preserve LM behavior? | [`results/LOW_DIM_COUPLING_GPU_RESULT_20260901.md`](results/LOW_DIM_COUPLING_GPU_RESULT_20260901.md) | Qwen/OLMo long behavior yes; strict Native deployment gate no |
+| Does K32 failure come from finite-grid point sampling? | [`results/K32_FINITE_K_COUPLING_ANALYSIS_20260901.md`](results/K32_FINITE_K_COUPLING_ANALYSIS_20260901.md) | transition is under-resolved, but exact cell averaging does not match the residual and is not a GPU candidate; physical `x` still transports positively at 64K |
+| Does frozen `G(x)` transport at matched scale and K128? | [`results/FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901.md`](results/FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901.md) | K32 has a physical-long/index-Native Pareto crossing; K128 is unresolved with replicated zero 16K endpoints, so no universal or SOTA claim |
 
 ## Retired work
 

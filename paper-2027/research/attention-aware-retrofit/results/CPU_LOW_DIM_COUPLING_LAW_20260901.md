@@ -3,7 +3,8 @@
 ## Material Passport
 
 - **Type:** deterministic CPU reconstruction and cross-model geometry holdout
-- **Status:** `COMPLETE_CPU_ONLY`; no candidate GPU result exists
+- **Status:** `COMPLETE_CPU_ONLY`; the subsequent GPU test is owned by
+  [`LOW_DIM_COUPLING_GPU_RESULT_20260901.md`](LOW_DIM_COUPLING_GPU_RESULT_20260901.md)
 - **Verification:** five isolated CPU analyses plus one central deterministic rebuild
 - **Primary owner:** this report
 - **Machine artifact root:**
@@ -41,8 +42,9 @@ It also matches the Qwen self-profile about as closely as the 64-point transport
 MAE `0.014303` versus `0.013473`.
 
 This establishes a low-dimensional **geometric reconstruction** of the current
-coupling. It does not yet establish that the compressed table preserves language-
-model performance. The first GPU evaluation of the frozen table remains pending.
+coupling. It did not by itself establish language-model performance. The
+subsequent GPU owner records a mixed result: Qwen long behavior was preserved,
+while the registered Native-retention operating point failed.
 
 The selected primary is `C2_clipped_affine`. There is no selected challenger:
 the same-complexity logistic fit is slightly worse, and the adversarial audit did

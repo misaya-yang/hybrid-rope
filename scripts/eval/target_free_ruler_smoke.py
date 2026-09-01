@@ -58,6 +58,7 @@ from scripts.eval.target_free_formal_eval import (
     validate_checkpoint,
 )
 from scripts.lib.rope.length_conditioned_budgeted import matched_attention_scaling
+from scripts.lib.checkpoint_identity import safetensors_weight_set_sha256
 
 
 STATUS = "TARGET_FREE_RULER_SMOKE_COMPLETE"
@@ -103,6 +104,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--limit-per-cell", type=int, default=20)
     parser.add_argument("--native-context-length", type=int, default=4096)
     parser.add_argument("--expected-weight-sha256")
+    parser.add_argument("--expected-native-sha256")
+    parser.add_argument("--expected-data-manifest-sha256")
     parser.add_argument("--expected-active-sha256")
     parser.add_argument(
         "--allow-order-crossings",
@@ -124,12 +127,11 @@ def parse_args() -> argparse.Namespace:
 
 
 def generic_weight_sha256(checkpoint: Path, expected: str | None) -> str:
-    weight = checkpoint / "model.safetensors"
-    if not weight.is_file():
-        raise FileNotFoundError(weight)
-    digest = sha256_file(weight)
+    digest = safetensors_weight_set_sha256(checkpoint)
     if expected is None or digest != str(expected):
-        raise RuntimeError("cross-model checkpoint requires its exact expected weight SHA-256")
+        raise RuntimeError(
+            "cross-model checkpoint requires its exact expected weight-set SHA-256"
+        )
     return digest
 
 
@@ -158,6 +160,7 @@ def load_cross_model_method(
     method: str,
     *,
     native_context_length: int,
+    expected_native_sha256: str | None,
     expected_active_sha256: str | None,
     external_table: Path | None = None,
     external_table_name: str | None = None,
@@ -191,6 +194,11 @@ def load_cross_model_method(
     rotary = model.model.rotary_emb
     native = rotary.inv_freq.detach().cpu().float().numpy()
     native_hash = float32_sha256(native)
+    if (
+        expected_native_sha256 is not None
+        and native_hash != str(expected_native_sha256)
+    ):
+        raise RuntimeError("cross-model Native frequency hash drift")
     if method == "official_yarn":
         expected_inv, expected_scaling = ROPE_INIT_FUNCTIONS["yarn"](
             config,
@@ -413,7 +421,8 @@ def main() -> int:
         external_probe = np.load(args.table.expanduser().resolve(), allow_pickle=False)
         if (
             external_probe.dtype != np.dtype("float32")
-            or external_probe.shape != (64,)
+            or external_probe.ndim != 1
+            or external_probe.size == 0
             or not np.isfinite(external_probe).all()
             or not (external_probe > 0.0).all()
             or (
@@ -436,6 +445,12 @@ def main() -> int:
         local_files_only=True,
         trust_remote_code=False,
     )
+    if external_probe is not None:
+        hidden_size = int(config_probe.hidden_size)
+        attention_heads = int(config_probe.num_attention_heads)
+        head_dim = int(getattr(config_probe, "head_dim", hidden_size // attention_heads))
+        if head_dim <= 0 or head_dim % 2 or external_probe.shape != (head_dim // 2,):
+            raise RuntimeError("external table shape does not match checkpoint rotary pairs")
     is_olmo = str(config_probe.model_type) == "olmo2"
     checkpoint_ready_sha256 = None
     if is_olmo and args.skip_checkpoint_rehash:
@@ -456,14 +471,20 @@ def main() -> int:
     native_context_length = int(args.native_context_length)
     tasks = tuple(str(value) for value in args.tasks)
     lengths = tuple(sorted(int(value) for value in args.lengths))
-    allowed_lengths = {
-        native_context_length,
+    allowed_long_lengths = {
         native_context_length * 2,
         native_context_length * 4,
         native_context_length * 8,
     }
-    if not lengths or any(value not in allowed_lengths for value in lengths):
-        raise ValueError(f"smoke lengths must be in {sorted(allowed_lengths)}")
+    if not lengths or any(
+        value <= 0
+        or (value > native_context_length and value not in allowed_long_lengths)
+        for value in lengths
+    ):
+        raise ValueError(
+            "smoke lengths must be within Native or one of "
+            f"{sorted(allowed_long_lengths)}"
+        )
     data_receipt, rows = _validate_data(
         root=args.data_root.resolve(),
         checkpoint=checkpoint,
@@ -471,6 +492,12 @@ def main() -> int:
         requested_lengths=lengths,
         limit_per_cell=int(args.limit_per_cell),
     )
+    if (
+        args.expected_data_manifest_sha256 is not None
+        and data_receipt["manifest_sha256"]
+        != str(args.expected_data_manifest_sha256)
+    ):
+        raise RuntimeError("RULER data manifest hash drift")
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     examples_path = output / "examples.jsonl"
@@ -480,6 +507,7 @@ def main() -> int:
         "checkpoint_rehashed_this_run": checkpoint_rehashed,
         "checkpoint_ready_receipt_sha256": checkpoint_ready_sha256,
         "data_manifest_sha256": data_receipt["manifest_sha256"],
+        "expected_data_manifest_sha256": args.expected_data_manifest_sha256,
         "method": str(args.method),
         "tasks": list(tasks),
         "lengths": list(lengths),
@@ -487,6 +515,7 @@ def main() -> int:
         "model_type": str(config_probe.model_type),
         "native_context_length": native_context_length,
         "expected_active_sha256": args.expected_active_sha256,
+        "expected_native_sha256": args.expected_native_sha256,
         "table_name": args.table_name,
         "table_support": args.table_support,
         "table_factor": float(args.table_factor),
@@ -521,6 +550,7 @@ def main() -> int:
             checkpoint,
             str(args.method),
             native_context_length=native_context_length,
+            expected_native_sha256=args.expected_native_sha256,
             expected_active_sha256=args.expected_active_sha256,
             external_table=args.table,
             external_table_name=args.table_name,

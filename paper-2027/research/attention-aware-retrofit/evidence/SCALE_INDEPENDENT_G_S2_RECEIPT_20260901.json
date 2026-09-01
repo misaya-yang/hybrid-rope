@@ -1,0 +1,36 @@
+{
+  "status": "SCALE_INDEPENDENT_G_S2_OLMO_COMPLETE",
+  "construction": {
+    "formula": "omega_prime_i = omega_i * 2 ** (-G(x_i))",
+    "x_high": 0.7382780681078285,
+    "x_low": 0.366403835112904,
+    "scale": 2.0,
+    "gain_coefficient": 0.074,
+    "attention_scaling": 1.0512928913614359,
+    "scale_specific_refit": false,
+    "table_sha256_float32": "5a467a9ef538431b8aba6f93b314bd7926149365ec54ea58985a0122beef3634",
+    "table_file_sha256": "54aad0953dc44a3a13acdec0924fdca8ae4f41bebd471547d7ea899fda4f6d91",
+    "manifest_sha256": "e8d411a1577fd9db98ce9b2db1789b338c2ece6391e884f7ad1aa5012590c22f"
+  },
+  "olmo_1x": {
+    "pg19_tail_nll": 2.9871912717819216,
+    "native_pg19_tail_nll": 2.9710474610328674,
+    "ppl_retention": 0.9839858021443656,
+    "five_task_macro": 0.35936060682947957,
+    "native_five_task_macro": 0.3451343073178597,
+    "macro_retention": 1.041219604107678
+  },
+  "olmo_2x": {
+    "pg19_tail_nll": 2.970432794094086,
+    "six_task_natural_macro": 0.2603405711734347,
+    "ruler_core4_task_scores": [1.0, 0.7, 0.3, 0.06],
+    "ruler_core4_macro": 0.515
+  },
+  "raw_result_sha256": {
+    "olmo_1x_pg19": "906d3127f1a2d8edc506d6c4795e4b15b024867dd68c21ad25dc4a50fb0d0270",
+    "olmo_1x_five_tasks": "d8c49d70fbb1da8aab14d07be46440c8c0261e70df6934112eb59825f9c686a8",
+    "olmo_2x_natural": "87cf30258f999098ab5b8e21e0bdca389e83bd0619ed71e46548b1060829f4f9",
+    "olmo_2x_ruler_core4": "7ab620931c4d301af7813d604441f05a9d0305e77e1ecb49e0ea65c05aedc55d"
+  },
+  "claim_ceiling": "OLMo behavior scale consistency from s=4 to s=2; not arbitrary-s or cross-checkpoint universality"
+}

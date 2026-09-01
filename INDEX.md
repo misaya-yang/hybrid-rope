@@ -47,6 +47,38 @@
   以 MAE `0.001223` 重建 OLMo，并以 MAE `0.002174` 重建该 Qwen transport。
   这是 CPU 几何压缩，不是 LM 结果；见
   [`CPU_LOW_DIM_COUPLING_LAW_20260901`](paper-2027/research/attention-aware-retrofit/results/CPU_LOW_DIM_COUPLING_LAW_20260901.md)。
+- **低维 GPU 判决：** 冻结两参数 `G_4(x)` 在 Qwen 64K/128K core-4 得到
+  `0.6775/0.5725`，保留或超过 64 点 transport；但 OLMo 1x PPL retention
+  为 `0.870971`、Qwen 32K core-4 retention 为 `0.868902`，均略低于
+  `0.875`。因此它支持低维 long coupling，不晋级为当前 deployable
+  single-table law；见
+  [`LOW_DIM_COUPLING_GPU_RESULT_20260901`](paper-2027/research/attention-aware-retrofit/results/LOW_DIM_COUPLING_GPU_RESULT_20260901.md)。
+- **K32 finite-grid 判决：** K32 的 transition resolution 降至
+  `eta=0.86135`，但 exact cell-average 只改两个 kink cells，不能生成 OLMo
+  fast-side shoulder，故不晋级 GPU。K32 64K 上 frozen physical-`x` / index /
+  monotone-self / Native 为 `0.4350/0.4275/0.3900/0.2775`，而 physical-`x`
+  在 32K retention 仅 `0.7915`。matched s2 后，physical `x` 为
+  `.5225/.5050`、index 为 `.5775/.4375` @32K/64K：scale mismatch 不是
+  Native 失败的充分原因，physical 赢 long、index 过 Native gate，形成 Pareto
+  crossing。见
+  [`K32_FINITE_K_COUPLING_ANALYSIS_20260901`](paper-2027/research/attention-aware-retrofit/results/K32_FINITE_K_COUPLING_ANALYSIS_20260901.md)。
+- **s2 zero-refit confirmation：** 同一 K64 `G(x)` 边界从 s4 零重拟合降到
+  s2 后，OLMo 1x PPL/five-task retention 为 `0.98399/1.04122`；2x PG-19
+  NLL、六任务 macro、core-4 为 `2.97043/0.26034/0.5150`，均保持可用。
+  这支持 OLMo 上 s4→s2 的行为尺度一致性，不等于 arbitrary-s 或跨模型定理。
+- **K128 holdout：** 两个 hash-bound Gemma-1 K128 instruction artifacts 上，
+  Native core-4 在 8K/16K 均为零；Gemma-1.1 Native 4K 为 `.9050`，physical
+  table 在无 gain 时恢复 8K 到 `.8350`，证明模型、任务与 table effect 可解析；
+  但全部 16K 仍为零，且 physical 与 index 差异小于 `.05`。gain-only 与
+  loader-path controls 均被排除。因此记为
+  `SCREEN_UNRESOLVED / LONG_NEGATIVE`：不确认 cross-K universality，也不能因
+  K 与 checkpoint 共变而归因于 K。P3 CPU 门失败，s8 stretch 未打开；见
+  [`FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901`](paper-2027/research/attention-aware-retrofit/results/FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901.md)。
+- **下一通用性假设（未验证）：** 不强迫单一 coordinate 赢所有 checkpoint；冻结
+  `{Native, physical-x, index}`，仅用预注册 Native calibration 离线选择或 abstain，
+  最终仍输出一张 static KV-safe table。另须区分 `L_config/L_train/L_eff`；`L_eff`
+  只能由 long holdout 前的 natural+capability 双 calibration 冻结，不能按本轮 RULER
+  outcome 选择。该条是后续 protocol，不是完成方法或 SOTA claim。
 
 ### 2026-08-31 — 已被次日取代
 
@@ -149,8 +181,11 @@ $\tau_*=\max(d_{\rm head}/\sqrt L,\;1.4)$ 是 operating prior 而非普适律（
 | --- | --- | --- |
 | 同 support 的 $z$ 控制 | [`SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823`](paper-2027/research/attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) | 内部因果案例 |
 | 零训练 session / 单静态 profile | [`SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823`](paper-2027/research/attention-aware-retrofit/results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md) | 部署/能力证据；2026-08-31 follow-up 记录 cache-safe static-s4 的 fresh RULER-13 长度曲线、D/S/T YaRN-anchored likelihood，以及 local-gap/s8 探索边界 |
-| `s4` 尺度一致 exponent-space 单表 | [`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831`](paper-2027/research/attention-aware-retrofit/results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md) | 当前零训练实用 owner：同一静态 `omega'=omega*s^(-m)` 表通过 1x PPL/自然任务双门，并改善 2x/4x；单 checkpoint、会改变 sampled support，不替代 fixed-support 因果 owner |
+| 尺度一致 exponent-space 单表 | [`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831`](paper-2027/research/attention-aware-retrofit/results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md) | 当前零训练实用 owner：s4 同一静态 `omega'=omega*s^(-m)` 表通过 1x 双门并改善 2x/4x；冻结 `G(x)` 的 s2 zero-refit 也通过 1x 并在 2x 可用。单 checkpoint、会改变 sampled support，不替代 fixed-support 因果 owner |
 | `G_4(x)` 低维压缩 | [`CPU_LOW_DIM_COUPLING_LAW_20260901`](paper-2027/research/attention-aware-retrofit/results/CPU_LOW_DIM_COUPLING_LAW_20260901.md) | CPU-only：2 参数 clipped-affine 重建 OLMo movement 并 zero-refit 接近 Qwen geometry；GPU retention/capability 尚未测试 |
+| `G_4(x)` GPU confirmation | [`LOW_DIM_COUPLING_GPU_RESULT_20260901`](paper-2027/research/attention-aware-retrofit/results/LOW_DIM_COUPLING_GPU_RESULT_20260901.md) | mixed：Qwen 64K/128K long behavior 保留；OLMo PPL 与 Qwen 32K strict Native gate 失败，不是最终 deployable law |
+| K32 finite-grid / coupling holdout | [`K32_FINITE_K_COUPLING_ANALYSIS_20260901`](paper-2027/research/attention-aware-retrofit/results/K32_FINITE_K_COUPLING_ANALYSIS_20260901.md) | `eta<1` 但 cell-average 假设未获 CPU 支持；matched s2 physical/index 显示 long/Native Pareto crossing，不开启 corrected C2 |
+| Frozen 2D matched-s / K128 transport | [`FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901`](paper-2027/research/attention-aware-retrofit/results/FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901.md) | K32 scale confound closed；Gemma-1.1 Native 4K `.905`，table-only 8K `.835`，但两个 K128 screen 的16K全零且physical/index未分离。gain/loader controls闭环；P3 rejected，s8 not opened |
 | 新数据上的持久性 | [`FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824`](paper-2027/research/attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) | 封闭正向确认 |
 | 长度条件化 budgeted retrofit | [`LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822`](paper-2027/research/attention-aware-retrofit/results/LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md) | **RULER core-4：0.5825@8K / 0.4000@16K，对官方 YaRN 0.5375 / 0.0125；零学习参数** |
 | 联合 in-window/外推可行性 | [`EXPERIMENT_REPORT_20260821`](paper-2027/research/attention-aware-retrofit/results/EXPERIMENT_REPORT_20260821.md) | **phase-chord 两 seed Pareto：$+0.0007/-0.161/-0.156/-0.205$**；seed 范围阻止晋升 |
@@ -208,6 +243,7 @@ position-dependent operator，不把不同 target-free operator 一并判死。
 | **退役 zero-training tournament tooling** | `scripts/analysis/freeze_success_first_portfolio.py`、`scripts/analysis/build_candidate_manifest.py`、`scripts/eval/eval_zero_training_tournament.py`、`scripts/eval/develop_zero_training_family.py`、`scripts/eval/zero_training_selection.py`、`scripts/data/build_success_first_splits.py`、`scripts/eval/run_zero_training_tournament_5090.sh` | 历史 W0/F1/success-first 代码；无当前 action queue、无 README 运行命令、不得作为新实验入口 |
 | 可复用 CPU 诊断 | [`scripts/analysis/`](scripts/analysis/) | 不自动成为 paper claim |
 | 低维 coupling 冻结与 holdout | [`scripts/analysis/compile_low_dim_coupling_law.py`](scripts/analysis/compile_low_dim_coupling_law.py) | CPU-only；只用 OLMo 拟合，冻结后读取 Qwen geometry，生成候选表/残差/哈希；不运行 LM |
+| Frozen cross-K transport | [`scripts/analysis/export_frozen_coupling_transport.py`](scripts/analysis/export_frozen_coupling_transport.py)、[`scripts/eval/run_frozen_coupling_k_transport.sh`](scripts/eval/run_frozen_coupling_k_transport.sh) | 从 runtime Native tensor 导出 physical/index/wrong-c 静态表；launch fail-closed 绑定 config/K/weights/data/Native/table hashes；结果 owner 为 2026-09-01 K128 mixed report |
 | 注意力需求测量 | `scripts/analysis/attention_phase_demand.py` | 含 `layerwise_plan()` → `per_layer_inv_freq` |
 | 全 RoPE 碰撞审计 | `scripts/analysis/full_rope_collision_audit.py` | §2.1 的数值 owner |
 | **第三轴静态 $r_2$ 搜索诊断** | [`scripts/analysis/third_axis_ceiling.py`](scripts/analysis/third_axis_ceiling.py) | §6.1 数值的可复现脚本；纯 CPU；报告 optimizer 的 best-found value，不是全局或行为上限 |
@@ -343,11 +379,24 @@ Formal manifest
 为 `0.69731/0.65429/0.50481`：log 改善 4K/8K，16K 小幅反转。故不保留
 “log law uniformly improves long capability”的 broad claim。
 
-Qwen long-capability construction transfer与 slot non-exchangeability 均已完成。CPU-only
-压缩进一步冻结了一个 OLMo-only 两参数 `G_4(x)`：它重建 OLMo movement，并在不重拟合
-时接近 Qwen self-profile 与现有 64 点 transport。当前缺口已收缩为：该几何压缩能否保持
-1x retention 与两 checkpoint 的 long capability。候选、表与首次 GPU 判定门见其 owner；
-新实验不得用 2x/4x outcome 反向选择 table/gain。
+Qwen long-capability construction transfer与 slot non-exchangeability 均已完成。两参数
+`G_4(x)` 的 GPU 判定也已完成：它在 Qwen 64K/128K 保留 64 点 transport 的
+long behavior，但在 OLMo 1x PG-19 与 Qwen 32K core-task retention 上均略低于
+`0.875`。因此低维 coupling 获得行为支持，而当前 C2 practical law 关闭。不得用
+已读 outcome 反向调整 table、gain、boundary 或 width。
+
+不同 rotary budget 的 K32 holdout 进一步限制了结论：physical `x` 的 s4 表在 Native
+32K 严重失败，却在 64K 四臂中以 `0.4350` 领先 index `0.4275`、monotone-self
+`0.3900` 与 Native `0.2775`。因此当前不能称 `G(x)` 为跨 K deployable law，
+但 64K 只是该 checkpoint 的 2x target，matched s2 尚未运行。因此既不能把 K32
+Native 失败写成 physical coordinate 的 long failure，也不能先归因于 K。标准
+finite-cell projection 未满足 CPU entrance condition，已关闭而未上 GPU。
+
+Matched s2 已进一步关闭 scale mismatch：K32 physical `x` 的 32K/64K 为
+`.5225/.5050`，index 为 `.5775/.4375`。这支持 physical long backbone，但不是
+联合 operating-point 胜者。新的 K128 holdout 未确认通用性：两个同架构 Gemma-1
+artifact 上所有表在 16K 均为零，physical/index 在 8K 近 parity。不得据此拟合
+`G(x;K)`、声称 K 因果或开启 s8/hierarchical rescue。
 
 ### 6.4 已退役路线
 
@@ -365,7 +414,9 @@ endpoint movement 本身不是出线条件。
 ### 6.5 生命周期与反重复
 
 - **Current:** 当前 TeX/PDF、§2--§3 canonical owners、`s4` exponent-space result owner。
-- **Next gate:** 已冻结两参数 `G_4(x)` 的首次 LM confirmation；任何新 GPU run 仍需按次授权。
+- **Next gate:** C2 practical gate、cell-average correction 与本轮 K128 long gate
+  均未通过；后续若继续，先补 matched deterministic static baseline，而不是拟合
+  `G(x;K)`、Native scalar 或 hierarchical table。
 - **Historical:** zero-training tournament 与 scale-law owner；保留证据，不保留任务。
 - **Closed negative:** §3.4 的 owner-backed 条目；不得通过改名恢复。
 - **Unresolved:** M4 phase-isotropy 仍是 `SCREEN_UNRESOLVED`，不自动进入方法设计。

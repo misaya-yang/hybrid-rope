@@ -10,6 +10,25 @@ combined candidate tables, slot residuals, plots, and a SHA-256 manifest. Its
 owner is `../results/CPU_LOW_DIM_COUPLING_LAW_20260901.md`; none of these files
 is a language-model evaluation result.
 
+`LOW_DIM_COUPLING_GPU_RECEIPT_20260901.json` records the frozen C2 Native gates,
+Qwen and OLMo post-gate long diagnostics, Qwen self/transport controls, and raw
+result hashes. `K32_FINITE_K_COUPLING_GEOMETRY_20260901.json` is the
+benchmark-free exact finite-grid audit; its paired GPU holdout is compacted in
+`K32_FINITE_K_COUPLING_GPU_RECEIPT_20260901.json`. The geometry receipt does
+not turn cell averaging into a checkpoint mechanism or a GPU candidate.
+
+`SCALE_INDEPENDENT_G_S2_RECEIPT_20260901.json` records the OLMo zero-refit s2
+construction, 1x double gate, and completed 2x natural/core-four confirmation.
+It supports s4-to-s2 behavioral consistency on that checkpoint, not an
+arbitrary-scale or cross-checkpoint theorem.
+
+`K32_MATCHED_S2_RECEIPT_20260901.json` adds the matched physical/index Pareto
+crossing. `FROZEN_2D_COUPLING_TRANSPORT_RECEIPT_20260901.json` binds both K128
+checkpoint redistributions, runtime Native frequencies, tables, paired data,
+raw results, code, P3 rejection, and the un-opened s8 stretch. Its K128 status
+is an unresolved screen with a replicated long negative, not universal-law or
+SOTA evidence.
+
 `ALLOCATION_DOSE_RESPONSE_RESULTS_20260826.json` records the registered
 128-document fixed-support dose result, frozen prediction/manifest hashes, the
 failed analytic joint gate, and the graded empirical-direction full/tail

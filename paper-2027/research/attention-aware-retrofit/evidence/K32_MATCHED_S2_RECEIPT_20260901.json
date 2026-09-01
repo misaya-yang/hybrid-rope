@@ -1,0 +1,56 @@
+{
+  "status": "K32_MATCHED_S2_COMPLETE_NATIVE_FAILED_LONG_PASSED",
+  "construction": {
+    "formula": "omega_prime_i = omega_i * 2 ** (-G(x_i))",
+    "x_high": 0.7382780681078285,
+    "x_low": 0.366403835112904,
+    "scale": 2.0,
+    "gain_coefficient": 0.074,
+    "attention_scaling": 1.0512928913614359,
+    "benchmark_scores_used_to_construct": false,
+    "table_sha256_float32": "b61a58f3e84429e00eaac69a0d9ab43abf89bc193987b2bcbcd3ab3bccd455fb",
+    "table_file_sha256": "4b96d09b5317ee005e3b47a544ade67918df7db45eab272667607283505fe8cb",
+    "manifest_sha256": "900323a1ea926412ebab5e7dd408980cf79d6d6922f385297dceee4b5e5acb89"
+  },
+  "normalized_index_control": {
+    "table_sha256_float32": "8c19ab976f71d30c6409f78a661209a8535ef9f101e8bf42f5bfce6f7817dc5f",
+    "table_file_sha256": "36e09e014a86f8169296e6b5f2997ba7fea08ceb005b4e887085289d53db57a1",
+    "manifest_sha256": "ec63098a2663b140a71920165fc3442fe2ebdf0f266c7cfab5400dab9004df9a"
+  },
+  "results": {
+    "native_32k_macro": 0.6475,
+    "s4_physical_x_32k_macro": 0.5125,
+    "s2_physical_x_32k_task_scores": [1.0, 0.5, 0.15, 0.44],
+    "s2_physical_x_32k_macro": 0.5225,
+    "s2_native_retention": 0.8069498069498069,
+    "native_gate_floor": 0.5665625,
+    "native_gate_passed": false,
+    "native_64k_macro": 0.2775,
+    "s4_physical_x_64k_macro": 0.435,
+    "s2_physical_x_64k_task_scores": [1.0, 0.5, 0.05, 0.47],
+    "s2_physical_x_64k_macro": 0.505,
+    "long_above_native": true,
+    "s2_normalized_index_32k_task_scores": [1.0, 0.6, 0.25, 0.46],
+    "s2_normalized_index_32k_macro": 0.5775,
+    "s2_normalized_index_native_retention": 0.891891891891892,
+    "s2_normalized_index_native_gate_passed": true,
+    "s2_normalized_index_64k_task_scores": [1.0, 0.4, 0.0, 0.35],
+    "s2_normalized_index_64k_macro": 0.4375,
+    "physical_minus_index_64k": 0.0675
+  },
+  "raw_result_sha256": {
+    "s2_physical_x_32k": "060e94da458046e2ea86e24bface52814d3c4fc3cd213cff434fa7492a9dffb3",
+    "s2_physical_x_64k": "938ca99b87f9acb9b63e8da9dbfee09de684565e6fc094cde3ec893de5ef9fc9",
+    "s2_normalized_index_32k": "ecfe16d09af84fc8dd93377ef6d9f887aee51f7edad703f60098084c1a700663",
+    "s2_normalized_index_64k": "0af3e4ffcfc9fce077542a2428b3c7c3d8351a0fb7f1ff88dc38b079f97691ee"
+  },
+  "decision": {
+    "scale_mismatch_sufficient": false,
+    "long_backbone_supported": true,
+    "native_compatibility_failed": true,
+    "physical_coordinate_long_advantage_over_index": true,
+    "physical_coordinate_uniformly_dominates_index": false,
+    "G_x_K_long_law_authorized": false,
+    "native_correction_gpu_branch_authorized": false
+  }
+}

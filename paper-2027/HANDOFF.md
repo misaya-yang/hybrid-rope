@@ -11,21 +11,35 @@ The current research timeline and agenda live in [`../INDEX.md`](../INDEX.md)
 
 ## 1. Research status pointer
 
-`MAXENT_CANDIDATE_CPU_VERIFIED / NATIVE_DOUBLE_GATE_FROZEN / NO_GPU_AUTHORIZATION`
+`MATCHED_K32_S2_COMPLETE / K128_SCREEN_UNRESOLVED_LONG_NEGATIVE /
+REMOTE_SHUTDOWN_CONFIRMED`
 
-The deterministic MaxEnt family and its CPU audit are active. Stage A uses the
-existing formal evaluator on multiplier `1` only and requires both PG-19 PPL
-and five-task natural-downstream retention to reach `87.5%` of paired Native.
-This status does not authorize training, GPU evaluation, or paid compute.
+The completed queue established four bounded results:
+
+- frozen two-parameter C2 preserves OLMo/Qwen long behavior but misses the
+  strict Native operating point;
+- the same frozen K64 law zero-refit from s4 to s2 passes OLMo 1x and remains
+  useful at 2x;
+- on K32 matched s2, physical `x` wins 64K while normalized index passes the
+  Native gate, establishing a Pareto crossing rather than uniform dominance;
+- two exact Gemma-1 K128 artifacts recover nonzero 8K behavior under frozen
+  tables but all Native/table 16K rows are zero and physical/index remain near
+  parity. Gemma-1.1 Native 4K is `.9050`; physical table without gain is
+  `.8350` at 8K; gain-only remains zero and Native/external canaries have exact
+  output parity. This is an unresolved cross-K screen with a validated,
+  replicated long negative—not a broken-model or wrong-artifact result.
+
+P3 failed its CPU entrance gate; no `alpha` or GPU branch was created. The s8
+stretch gate also failed and no hierarchical table was designed.
 
 ## 2. Git state
 
 - Branch / upstream: `main_0726` / `origin/main_0726`
-- Published baseline before this documentation correction:
-  `e1611d4d936d233e3223e5124a30de941c93a62e`
+- Published baseline before the current local experiment documentation:
+  `c2c657c9cc56abd508a960d10b2bedb460c07db9`
 - Baseline divergence: `0/0`
-- Current documentation correction: local and uncommitted
-- Git publication: not authorized by this documentation request
+- Current experiment code, reports, and receipts: local and uncommitted
+- Git publication: explicitly authorized; pending validation and remote shutdown
 
 Verify all volatile values live before Git operations.
 
@@ -47,9 +61,12 @@ repairs and must be rebuilt on the work machine before upload.
 
 ## 4. Machine and authorization state
 
-- No GPU experiment is active.
-- No training, GPU inference/evaluation, paid compute, OpenReview upload, or
-  external mutation is authorized by this documentation update.
+- All authorized OLMo, K32, and K128 queues completed; no GPU process remains.
+- The compute instance accepted `shutdown -h now`; the SSH connection closed by
+  the remote host and a subsequent connection probe timed out. Browser control
+  was not needed. The protected 1.485B asset was neither moved nor deleted.
+- Cell-average/P3 and s8 were rejected by their registered entrance gates.
+- No training or OpenReview upload is authorized.
 - The work machine owns canonical `aidemo` validation and final packaging.
 - The low-configuration personal PC remains a documentation/planning host and
   may run static checks, LaTeX/Tectonic, and visual PDF work; `aidemo` is not
@@ -57,27 +74,32 @@ repairs and must be rebuilt on the work machine before upload.
 
 ## 5. Validation
 
-Passed locally in `aidemo`:
+Passed on the personal PC:
 
-- MaxEnt CPU audit: `MAXENT_DILATION_CPU_CONTRACT_OK`;
-- MaxEnt, RoPE-core, and repository-navigation tests: `160/160`;
+- finite-K exact geometry audit reproduced without benchmark input;
+- `24/24` focused exporter, weight-identity, and repository-navigation tests;
+- `py_compile` for finite-K, cross-K exporter, identity helper, and runner;
+- `bash -n` for the K-transport launch wrapper;
+- compact JSON receipts parse successfully;
 - `git diff --check`;
-- `paper/` diff empty;
-- branch divergence against upstream: `0/0` at local HEAD `e1611d4d936d`.
+- `paper/` diff empty and immutable PDF SHA unchanged;
+- branch divergence against upstream: `0/0` at local HEAD `c2c657c9cc56`.
 
-No GPU evaluation or manuscript compilation was run. The double gate is a
-frozen protocol, not an LM result.
+GPU receipts record the RTX 4080 SUPER runtime, frozen table/checkpoint/data
+hashes, completed K32 rows, completed OLMo s2 rows, and both K128 screens.
+Canonical `aidemo` test suites and manuscript compilation were not run.
 
 ## 6. Volatile action queue
 
-1. Bind the remote checkpoint, formal token manifest, generated table hashes,
-   output paths, free space, and shutdown receipt in no-card mode; do not start
-   GPU evaluation without explicit authorization.
+1. Do not fit `G(x;K)`, Native `alpha`, or hierarchical/s8 rescue from the K128
+   screen. Before another arbitrary model, preregister Native-only natural and
+   capability calibration to test whether config length differs from a
+   checkpoint-level behavioral reference length. The next method comparison is
+   then a matched deterministic static baseline panel such as Resonance-YaRN.
 2. Rebuild and validate the curated supplement on the work machine before
    submission.
 3. Freeze author metadata and complete the final owner-by-owner number review.
-4. Obtain explicit authorization before any Git publication, GPU stage, or
-   OpenReview upload.
+4. Obtain explicit authorization before any new GPU stage or OpenReview upload.
 
 Before Git publication, verify branch/upstream/divergence, staged scope,
 sensitive content, and unchanged `paper/`; record local/tracking/remote SHAs

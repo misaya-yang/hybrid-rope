@@ -279,7 +279,45 @@ The result SHA-256 is
 This establishes slot–frequency non-exchangeability for the frozen checkpoint;
 it does not identify a unique or optimal ordered law.
 
-## 7. Answers and boundary
+## 7. Zero-refit s=2 behavioral confirmation (2026-09-01)
+
+The scale follow-up kept the two C2 boundaries frozen from s=4 and changed only
+the analytic scale input:
+
+\[
+\omega_i'(2)=\omega_i2^{-G(x_i)}.
+\]
+
+It also reused the single coefficient `c=0.074`, giving attention scaling
+`1.0512928913614359`; there was no s=2 fit or search. The float32 table SHA-256
+is `5a467a9ef538431b8aba6f93b314bd7926149365ec54ea58985a0122beef3634`.
+The table was fixed before prefill at 1x and 2x.
+
+The same table passed both Native gates:
+
+| OLMo 1x endpoint | s2 profile | Native | Retention |
+| --- | ---: | ---: | ---: |
+| PG-19 tail NLL / PPL retention | `2.987191` | `2.971047` | `0.983986` |
+| five-task macro | `0.359361` | `0.345134` | `1.041220` |
+
+At its 2x horizon it remained useful rather than merely Native-compatible:
+
+| OLMo 2x endpoint | s2 profile | Native reference |
+| --- | ---: | ---: |
+| PG-19 tail NLL | `2.970433` | `7.100855` |
+| six-task natural macro | `0.260341` | `0.058883` |
+| RULER core-4 | `0.5150` | `0.0000` |
+
+The core-4 task vector was `1.00 / 0.70 / 0.30 / 0.06`. On the same 8K rows,
+the s4 C2 profile scored `0.7150`; hence zero-refit s2 supports a useful smooth
+scale reduction, not the stronger claim that the smallest maximum profile is
+optimal at each target length. This is OLMo-only behavioral scale evidence;
+Qwen s2 and a full RULER-13 s2 matrix were not run.
+
+The compact machine-path-free receipt is
+[`../evidence/SCALE_INDEPENDENT_G_S2_RECEIPT_20260901.json`](../evidence/SCALE_INDEPENDENT_G_S2_RECEIPT_20260901.json).
+
+## 8. Answers and boundary
 
 1. **Movement saturation exists.** It is localized mainly to the transition
    band and grows monotonically from `s2` to `s8`.
@@ -289,15 +327,16 @@ it does not identify a unique or optimal ordered law.
 3. **Gain cannot be deleted.** `L0` fails the registered RULER guard.  The
    current `c=0.074` operating point was selected on 1x PG-19 only and passes
    the separate five-task 1x gate.
-4. **One useful `s4` static profile was obtained.** It passes the registered 1x
-   double gate and strongly improves 2x/4x NLL and downstream tasks over
-   Native.  It is not universal dominance: 4x natural macro remains 0.00362
-   below YaRN-4, and 16K core-4 remains below the arithmetic profile.
+4. **Useful `s2` and `s4` static profiles were obtained without scale-specific
+   table fitting.** The zero-refit s2 profile passes the 1x double gate and is
+   useful at 2x; the s4 profile passes the same gate and strongly improves 2x/4x
+   over Native. This is not universal dominance or per-target optimality.
 5. **Slot identity is causal for the frozen readout.** The
    frequency-multiset-preserving permutation decisively rejects unordered
    physical-spectrum sufficiency.  This establishes non-exchangeability, not
    the uniqueness or optimality of the current ordered law, and does not
    authorize a 64-dimensional learned or outcome-searched table.
-6. **Scope:** this is a single-checkpoint, zero-training, support-changing
-   exponent intervention.  It is not fixed-support interior identification,
-   a universal optimum, or a cross-model transfer result.
+6. **Scope:** the s2 behavioral confirmation is a single-checkpoint,
+   zero-training, support-changing exponent intervention. It supports
+   `s=4 -> s=2` behavior-scale consistency on OLMo, not a universal optimum or
+   arbitrary-s theorem.

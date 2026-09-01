@@ -1,0 +1,121 @@
+{
+  "status": "P2_COMPLETE_P1_K128_SCREEN_UNRESOLVED_LONG_NEGATIVE_P3_REJECTED",
+  "frozen_method": {
+    "family": "clipped_affine",
+    "x_high": 0.7382780681078285,
+    "x_low": 0.366403835112904,
+    "scale": 2.0,
+    "gain_coefficient": 0.074,
+    "attention_scaling": 1.0512928913614359,
+    "model_weight_updates": 0,
+    "boundary_refits": 0,
+    "routing": false
+  },
+  "k32_matched_s2": {
+    "physical_x": {
+      "table_sha256_float32": "b61a58f3e84429e00eaac69a0d9ab43abf89bc193987b2bcbcd3ab3bccd455fb",
+      "macro_32k": 0.5225,
+      "macro_64k": 0.505,
+      "native_retention": 0.8069498069498069
+    },
+    "normalized_index": {
+      "table_sha256_float32": "8c19ab976f71d30c6409f78a661209a8535ef9f101e8bf42f5bfce6f7817dc5f",
+      "macro_32k": 0.5775,
+      "macro_64k": 0.4375,
+      "native_retention": 0.891891891891892
+    },
+    "native_macro_32k": 0.6475,
+    "native_macro_64k": 0.2775,
+    "physical_minus_index_64k": 0.0675,
+    "decision": "physical long advantage with Native/index Pareto crossing"
+  },
+  "k128_geometry": {
+    "pairs": 128,
+    "rope_theta": 10000.0,
+    "native_length": 8192,
+    "native_sha256_float32": "cc63341a0ac42a60b986ed638fd0d45b838b72fabeffec059c463eac4ed9ea15",
+    "physical_x_table_sha256_float32": "fbd2f80a462f3271e65a8cdc9f3acb81b46c4afcf79c3be73509c36ac1f0bf0b",
+    "normalized_index_table_sha256_float32": "90696c7d6d179120475e28a08e5dda79bf57fc2e234475aa5f8609abaedf63ec",
+    "wrong_c_orth_table_sha256_float32": "1b4834be902f9fc52de9275d82de9b974afe3881ccd526d4af35cd4cdd55806f",
+    "physical_nonbinary_slots": [53, 54, 55, 56, 57],
+    "index_nonbinary_slots": [61, 62, 63, 64, 65, 66, 67, 68],
+    "wrong_c_orth_nonbinary_slots": [62, 63, 64, 65, 66]
+  },
+  "k128_primary_checkpoint": {
+    "artifact": "unsloth/gemma-2b-it",
+    "revision": "5ae754dee0b5cbf7f7fb39a7731aefa6b7987c2d",
+    "weight_sha256": "8fdf067bdfd010c75d8c4c0508fe45f4567c6097f3193928501d63a05020e0e6",
+    "config_sha256": "90fd9a9035ea6cadd4fb7b3d2d0762fae249e492aa43f68b78645474c5987e88",
+    "data_manifest_sha256": "45c77d00778d59f83d75dfc25fd0e14d38a3a98f0b31083230b9ff53c47b3542",
+    "table_manifest_sha256": "c1dee17b1b05db8970b566913ad393ebe01d1c646efba43de73018bb788c716a",
+    "macros_8k": {"native": 0.0, "physical_x": 0.3925, "normalized_index": 0.3675, "wrong_c_orth": 0.395},
+    "macros_16k": {"native": 0.0, "physical_x": 0.0, "normalized_index": 0.0, "wrong_c_orth": 0.0},
+    "raw_result_sha256": {
+      "native": "d3991c9c0c8fc2a0113e2d9244452b9fee3a7ff01382124e8db788e8429cac09",
+      "physical_x": "66e546890c5edd54fa16302c3553d5282a466ce601cf681774109969345690d9",
+      "normalized_index": "84694b24faea4eff85308b384b92d7260c51b9f014079e34ae75483de590a4f7",
+      "wrong_c_orth": "fd453b8380f546cad2ebcdaeb3f4996111eb6dc0a8e6353838644bcec4bb6989"
+    }
+  },
+  "k128_followup_checkpoint": {
+    "artifact": "unsloth/gemma-1.1-2b-it",
+    "revision": "619e546640669a280738627cc623f4bd74a7b069",
+    "weight_sha256": "584d0f7d939d235ee14a4ba307b40dbc3f03d5483181b9381e9f10636b618933",
+    "config_sha256": "a2724d74fedba414a172b6e66524814ea699b925586f3d7825062e539c56c3c0",
+    "data_manifest_sha256": "549dc3bfefc56bfef72f90ceae853ba659c83b197f29beb0b4e33e84cda4d97f",
+    "table_manifest_sha256": "f59d75f68c8b22a50aa4da044010f087e0924120ec24c63ccb6329d26645c258",
+    "cell_hashes_identical_to_primary": true,
+    "macros_8k": {"native": 0.0, "physical_x": 0.8075, "normalized_index": 0.8225},
+    "macros_16k": {"native": 0.0, "physical_x": 0.0, "normalized_index": 0.0},
+    "raw_result_sha256": {
+      "native": "6ca440e722fe5e6ea6680b70abf8d447ecb812ae8635ced43dad8895de2a0af0",
+      "physical_x": "d9bf73ab984ec34cd6d700a942140c495becbe7bfd0a0ef7d8ea90b86bd54858",
+      "normalized_index": "56d1c69752d9b485da44ee0ec33372212beaa7309c9086162a3cae1dcb8bdb82"
+    },
+    "control_audit": {
+      "native_4k_task_scores": [1.0, 0.95, 0.85, 0.82],
+      "native_4k_macro": 0.905,
+      "native_same_gain_8k_macro": 0.0,
+      "native_same_gain_16k_macro": 0.0,
+      "physical_no_gain_8k_task_scores": [1.0, 1.0, 0.55, 0.79],
+      "physical_no_gain_8k_macro": 0.835,
+      "physical_no_gain_16k_macro": 0.0,
+      "registered_physical_8k_macro": 0.8075,
+      "native_external_identity_canary_rows": 8,
+      "native_external_identity_exact_prediction_parity": true,
+      "native_external_identity_exact_score_parity": true,
+      "data_4k_manifest_sha256": "92f3b3bc07bc88cf56d27062024a1bea199efe49b1d89d967fc9d2bf5df22390",
+      "raw_result_sha256": {
+        "native_4k": "3e82d877f9dbd43a60e8c495395bba2e8a1da929a10f9380bee9940f4a62d62a",
+        "native_same_gain": "9fee01fc67ede9bf3b33e94e5520b947942ad2efc542275c6aa5a3189793ad91",
+        "physical_no_gain": "5f6a101e98bafdf04191c93e0d2d1066db02b79727e6076ae009c8b2b580ecff",
+        "native_external_identity_canary": "8a5f184790db26808ff86096ec02c67f09487a42a1142496ded494435c587300"
+      },
+      "decision": "table geometry alone restores 8K; gain-only and loader-path explanations rejected; 16K remains zero"
+    }
+  },
+  "p3_native_correction": {
+    "status": "REJECT_P3",
+    "reason": "cell-average direction failed CPU entrance and no unique geometry-only long-null direction exists",
+    "alpha_defined": false,
+    "gpu_rows_run": 0
+  },
+  "stretch_s8": {
+    "status": "NOT_OPENED",
+    "reason": "K128 physical-x exact-2x entrance gate failed"
+  },
+  "runtime": {
+    "gpu": "NVIDIA GeForce RTX 4080 SUPER",
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "peak_memory_reserved_bytes": 9416212480
+  },
+  "code_sha256": {
+    "exporter": "2c767c3afb01659ae1a3598a0e9638345aacb69d1aa23cb46062821a1836b130",
+    "runner_k128_primary": "7b734f01b9dcd2d95bd68894ce64408f8b7a7b7695ca9440e2a114efeeca6e2b",
+    "runner_final": "0b8de8cbd69eea46f61c3f092c5a81f0f8f0b6783f8abf7a2fd00d04b53f97c2",
+    "launch_wrapper": "f6d009ac496ea5b5e36409c146a4606fea594b337a34702bb738bcd6e2071000",
+    "weight_identity_helper": "968a49a2d9635a2819563097d753044267cca0a3c10e7838fbbe82a19dd93e7a"
+  },
+  "claim_ceiling": "K32 matched-scale Pareto evidence plus K128 unresolved screen with replicated 16K negative; not universal cross-K, causal K, or SOTA"
+}
