@@ -35,11 +35,11 @@ stretch gate also failed and no hierarchical table was designed.
 ## 2. Git state
 
 - Branch / upstream: `main_0726` / `origin/main_0726`
-- Published baseline before the current local experiment documentation:
-  `c2c657c9cc56abd508a960d10b2bedb460c07db9`
+- Published experiment/report commit:
+  `3a3da401b8935065acd096cd0a72f4e2a6cf0290`
 - Baseline divergence: `0/0`
-- Current experiment code, reports, and receipts: local and uncommitted
-- Git publication: explicitly authorized; pending validation and remote shutdown
+- Current experiment code, reports, and receipts: published
+- Git publication: complete on `origin/main_0726`
 
 Verify all volatile values live before Git operations.
 
