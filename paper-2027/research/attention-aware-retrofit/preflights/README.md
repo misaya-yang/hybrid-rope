@@ -7,9 +7,18 @@ an experiment ran.
 
 [`COUPLING_NEGATIVE_ATTRIBUTION_PREFLIGHT_20260901.md`](COUPLING_NEGATIVE_ATTRIBUTION_PREFLIGHT_20260901.md)
 registers Native-only P0 reference-length calibration and independent
-confirmation. It adds no RoPE candidate or curve parameter. Conditional K128,
-K-triangulation, mechanism, selector and broad-baseline stages are not an
-immediate GPU queue. Current priority remains owned by `INDEX.md`.
+confirmation. It adds no RoPE candidate or curve parameter. The conditional
+[`reference-correct K128 protocol`](REFERENCE_CORRECTED_K128_PREFLIGHT_20260901.md)
+has completed s2 and s4. The
+[`same-generation Qwen s2 protocol`](QWEN_S2_SAME_FAMILY_IDENTIFICATION_PREFLIGHT_20260901.md)
+now admits only its fixed baseline-completion panel. Mechanism, selector and
+broad-baseline stages are still conditional. Current priority remains owned
+by `INDEX.md`.
+
+[`K32_PAIRED_CROSSING_CONFIRMATION_PREFLIGHT_20260901.md`](K32_PAIRED_CROSSING_CONFIRMATION_PREFLIGHT_20260901.md)
+registers a separate fresh-seed, 80-row/task confirmation of the unchanged
+Native/physical/index profiles. It responds to unresolved paired intervals,
+not to a request for a new curve or broader parameter search.
 
 ## Retired recent protocols
 

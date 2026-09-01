@@ -151,6 +151,10 @@
           -0.13249999999999995,
           -0.0025000000000000577
         ],
+        "bonferroni_length_family_sensitivity_ci95": [
+          -0.14500000000000002,
+          0.010000000000000009
+        ],
         "per_task_delta": {
           "niah_single_1": 0.0,
           "niah_multikey_2": 0.0,
@@ -164,6 +168,10 @@
           -0.0625,
           0.08000000000000007
         ],
+        "bonferroni_length_family_sensitivity_ci95": [
+          -0.07999999999999996,
+          0.09500000000000008
+        ],
         "per_task_delta": {
           "niah_single_1": 0.0,
           "niah_multikey_2": 0.05,
@@ -176,6 +184,10 @@
         "paired_stratified_ci95": [
           -0.08499999999999985,
           0.050000000000000044
+        ],
+        "bonferroni_length_family_sensitivity_ci95": [
+          -0.09999999999999998,
+          0.06668750000000272
         ],
         "per_task_delta": {
           "niah_single_1": 0.0,
@@ -192,6 +204,10 @@
           -0.13,
           -0.0050000000000000044
         ],
+        "bonferroni_length_family_sensitivity_ci95": [
+          -0.14249999999999996,
+          0.007500000000000137
+        ],
         "per_task_delta": {
           "niah_single_1": 0.0,
           "niah_multikey_2": 0.0,
@@ -205,6 +221,10 @@
           0.735,
           0.86
         ],
+        "bonferroni_length_family_sensitivity_ci95": [
+          0.72,
+          0.8700000000000001
+        ],
         "per_task_delta": {
           "niah_single_1": 1.0,
           "niah_multikey_2": 1.0,
@@ -217,6 +237,10 @@
         "paired_stratified_ci95": [
           -0.1100000000000001,
           0.027499999999999858
+        ],
+        "bonferroni_length_family_sensitivity_ci95": [
+          -0.12418749999999996,
+          0.04249999999999998
         ],
         "per_task_delta": {
           "niah_single_1": 0.0,
@@ -233,6 +257,10 @@
           -0.14249999999999985,
           -0.0025000000000001688
         ],
+        "bonferroni_length_family_sensitivity_ci95": [
+          -0.15749999999999997,
+          0.010000000000000009
+        ],
         "per_task_delta": {
           "niah_single_1": 0.0,
           "niah_multikey_2": -0.05,
@@ -245,6 +273,10 @@
         "paired_stratified_ci95": [
           0.66,
           0.7875000000000001
+        ],
+        "bonferroni_length_family_sensitivity_ci95": [
+          0.6475,
+          0.8
         ],
         "per_task_delta": {
           "niah_single_1": 1.0,
@@ -259,6 +291,10 @@
           -0.01749999999999996,
           0.15499999999999992
         ],
+        "bonferroni_length_family_sensitivity_ci95": [
+          -0.03499999999999992,
+          0.1725
+        ],
         "per_task_delta": {
           "niah_single_1": 0.05,
           "niah_multikey_2": 0.2,
@@ -269,7 +305,9 @@
     }
   },
   "stage2_entrance": {
-    "status": "PASS",
+    "status": "NOT_APPLICABLE",
+    "scope": "Registered s2-to-s4 entrance only; a completed s4 panel cannot authorize s8 or another stage",
+    "resolver_thresholds_met": true,
     "physical_single_score": 1.0,
     "single_success_equivalent": 20.0,
     "single_rows": 20,
@@ -306,6 +344,7 @@
     "confidence": 0.95,
     "unit": "paired rows resampled within each fixed task family; equal task-macro weights",
     "scope": "conditional on one checkpoint, fixed tasks, data and decoding; not checkpoint/training-seed uncertainty",
+    "multiplicity_sensitivity": "Post hoc Bonferroni over tested lengths within each fixed contrast; not a global correction over all contrasts or confirmatory selection rule",
     "small_difference_policy": "report point and interval together; no coordinate identification from .01-.03 differences"
   },
   "raw_hashes": {

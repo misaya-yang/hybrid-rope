@@ -62,3 +62,18 @@ Existing inputs/results are routed by `K32_MATCHED_S2_RECEIPT_20260901`,
 checkpoint/data/code/table hashes, memory and finite first-step receipts are
 recorded at launch. No shutdown is scheduled under the current user goal.
 The protected 1.485B checkpoint is untouched.
+
+## Bounded historical-execution replay amendment
+
+Before adding any new comparison claim, the source audit recovered the exact
+K64 historical runner and found no greedy/scorer change. The exact K32
+historical runner was not recovered; its 480 raw rows and scores were verified
+but cannot establish full source-level equality. Therefore register only
+24 diagnostic replays: Native/physical/index, both lengths, first row of each
+of the four tasks. Compare full decoded predictions and scores with the old
+rows, including old failures. Do not select easy/successful rows or tune after
+a mismatch. The total budget is now 480 panel generations plus 24 replays.
+Agreement is bounded decoded-output parity, not token-level parity (old IDs
+were not saved) or proof that all old execution paths were identical. A
+mismatch prevents upgrading historical results to a verified current-run
+comparator and requires attribution, not automatic profile modification.

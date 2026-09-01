@@ -108,6 +108,10 @@
           -0.0050000000000000044,
           0.0525000000000001
         ],
+        "bonferroni_length_family_sensitivity_ci95": [
+          -0.009999999999999898,
+          0.05999999999999994
+        ],
         "per_task_delta": {
           "niah_single_1": 0.0,
           "niah_multikey_2": 0.0,
@@ -121,6 +125,10 @@
           0.040000000000000036,
           0.15256249999999927
         ],
+        "bonferroni_length_family_sensitivity_ci95": [
+          0.032500000000000084,
+          0.16249999999999998
+        ],
         "per_task_delta": {
           "niah_single_1": 0.0,
           "niah_multikey_2": 0.05,
@@ -133,6 +141,10 @@
         "paired_stratified_ci95": [
           -0.010000000000000009,
           0.03749999999999998
+        ],
+        "bonferroni_length_family_sensitivity_ci95": [
+          -0.012499999999999956,
+          0.040000000000000036
         ],
         "per_task_delta": {
           "niah_single_1": 0.0,
@@ -149,6 +161,10 @@
           -0.03500000000000003,
           0.04749999999999999
         ],
+        "bonferroni_length_family_sensitivity_ci95": [
+          -0.040000000000000036,
+          0.05253125000000203
+        ],
         "per_task_delta": {
           "niah_single_1": 0.0,
           "niah_multikey_2": -0.05,
@@ -161,6 +177,10 @@
         "paired_stratified_ci95": [
           0.8075,
           0.905
+        ],
+        "bonferroni_length_family_sensitivity_ci95": [
+          0.8,
+          0.91
         ],
         "per_task_delta": {
           "niah_single_1": 1.0,
@@ -175,6 +195,10 @@
           -0.10250000000000004,
           0.029999999999999916
         ],
+        "bonferroni_length_family_sensitivity_ci95": [
+          -0.11250000000000004,
+          0.03749999999999998
+        ],
         "per_task_delta": {
           "niah_single_1": 0.0,
           "niah_multikey_2": -0.05,
@@ -186,6 +210,8 @@
   },
   "stage2_entrance": {
     "status": "PASS",
+    "scope": "Registered s2-to-s4 entrance only; a completed s4 panel cannot authorize s8 or another stage",
+    "resolver_thresholds_met": true,
     "physical_single_score": 1.0,
     "single_success_equivalent": 20.0,
     "single_rows": 20,
@@ -222,6 +248,7 @@
     "confidence": 0.95,
     "unit": "paired rows resampled within each fixed task family; equal task-macro weights",
     "scope": "conditional on one checkpoint, fixed tasks, data and decoding; not checkpoint/training-seed uncertainty",
+    "multiplicity_sensitivity": "Post hoc Bonferroni over tested lengths within each fixed contrast; not a global correction over all contrasts or confirmatory selection rule",
     "small_difference_policy": "report point and interval together; no coordinate identification from .01-.03 differences"
   },
   "raw_hashes": {

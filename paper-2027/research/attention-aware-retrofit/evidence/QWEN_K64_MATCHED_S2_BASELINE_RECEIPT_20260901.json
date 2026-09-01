@@ -1,0 +1,389 @@
+{
+  "arm_identities": {
+    "c2": {
+      "32768": {
+        "active_sha256_float32": "17a52b7c39ac1c39ce095f90f857804dff137b48cde6d163e8e662fc91269ea8",
+        "attention_scaling": 1.0512928913614359,
+        "checkpoint_weight_sha256": "dd924a11b4c220f385b51ffa522daea7c9f3d850e31b162bb5661df483c6d3ee",
+        "data_manifest_sha256": "a5fd30cf5e53be7a9e447dc6306eff50138771f4e12698510f365322fc97c98f",
+        "input_cell_sha256": {
+          "niah_multikey_2": "df7e77c1f0471474c06be65d666e6a3b598956d6f3fcabd4f2371228ed173242",
+          "niah_multikey_3": "f5c74febac07d84a0c18f60ca6d245fc13fafa4fba76dc568f7f5e74354e2b1d",
+          "niah_single_1": "3fd5152af7468c7478fb9b8268f5df992a92dbd8902dd47b4653c4dcbcd72b4a",
+          "vt": "366432b5547961e6039e4834f0f7fb2e9e96b5eeb0033eef403ce4b2432ccb50"
+        },
+        "native_context_length": 32768,
+        "native_sha256_float32": "138c99b109d7affbfba059e435670918fe4531bce4709b6e86f3f22f7ef80f6e",
+        "raw_hashes": {
+          "examples_sha256": "9c04ad40276fbd0421abd7a5f7e30a5ea7fab547ff0a075200902cd0c0066156",
+          "results_sha256": "dcdbee067959d448ed717f08d26c85aa687cb8f7972d3588a8f7feac19835973",
+          "run_manifest_sha256": "c7c4c74eb83d60cf98c649325cf34cea4d4b1a1d964a74f8e5a51240c1d7f734"
+        },
+        "runner_sha256": "ec514fad23a99a430290419c738a566ff7abff9313fbac99970bcee768a5dc8d",
+        "table_factor": 2.0,
+        "table_file_sha256": "601db55cf641b2cb4767b0a3b33589b5073f53bc35930c0a5263ca89a893eca3",
+        "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+      },
+      "65536": {
+        "active_sha256_float32": "17a52b7c39ac1c39ce095f90f857804dff137b48cde6d163e8e662fc91269ea8",
+        "attention_scaling": 1.0512928913614359,
+        "checkpoint_weight_sha256": "dd924a11b4c220f385b51ffa522daea7c9f3d850e31b162bb5661df483c6d3ee",
+        "data_manifest_sha256": "88c250401040c68e935ef5bbdb8159351292f043a32b247c5de30916873ede45",
+        "input_cell_sha256": {
+          "niah_multikey_2": "7cf8986c831769d98e92927a4d1d0c03c41400725d4175999ff2b44e53c9c094",
+          "niah_multikey_3": "89926986621de9ee9346b9f295dd1e76489f1af1375af36c14706be2a67f7039",
+          "niah_single_1": "a12e90b98065ed8e6baf9abc29468a0ddefddb1132f864235ef1a6f2416fde4d",
+          "vt": "70c42cbf15baf81bdf8cee598ad589e8fbf3bce6a16641f251c0dd2ecdcc1e3a"
+        },
+        "native_context_length": 32768,
+        "native_sha256_float32": "138c99b109d7affbfba059e435670918fe4531bce4709b6e86f3f22f7ef80f6e",
+        "raw_hashes": {
+          "examples_sha256": "b48fff8fd6a95e14a7622d4f70a83150a7c668ab88d1019efc4ee6465493a971",
+          "results_sha256": "1bea88d993d3e91cf08d1b2c2a6de33fce2985fef7a73b9174bdf671af155f4b",
+          "run_manifest_sha256": "6f3ecd92cdfb3b4f93957b84ec9c22fd4a6f5e7fbfdb549d8f07fb6047597add"
+        },
+        "runner_sha256": "ec514fad23a99a430290419c738a566ff7abff9313fbac99970bcee768a5dc8d",
+        "table_factor": 2.0,
+        "table_file_sha256": "601db55cf641b2cb4767b0a3b33589b5073f53bc35930c0a5263ca89a893eca3",
+        "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+      }
+    },
+    "native": {
+      "32768": {
+        "active_sha256_float32": "138c99b109d7affbfba059e435670918fe4531bce4709b6e86f3f22f7ef80f6e",
+        "attention_scaling": 1.0,
+        "checkpoint_weight_sha256": "dd924a11b4c220f385b51ffa522daea7c9f3d850e31b162bb5661df483c6d3ee",
+        "data_manifest_sha256": "a5fd30cf5e53be7a9e447dc6306eff50138771f4e12698510f365322fc97c98f",
+        "input_cell_sha256": {
+          "niah_multikey_2": "df7e77c1f0471474c06be65d666e6a3b598956d6f3fcabd4f2371228ed173242",
+          "niah_multikey_3": "f5c74febac07d84a0c18f60ca6d245fc13fafa4fba76dc568f7f5e74354e2b1d",
+          "niah_single_1": "3fd5152af7468c7478fb9b8268f5df992a92dbd8902dd47b4653c4dcbcd72b4a",
+          "vt": "366432b5547961e6039e4834f0f7fb2e9e96b5eeb0033eef403ce4b2432ccb50"
+        },
+        "native_context_length": 32768,
+        "native_sha256_float32": "138c99b109d7affbfba059e435670918fe4531bce4709b6e86f3f22f7ef80f6e",
+        "raw_hashes": {
+          "examples_sha256": "37313695e30a0bbf9bd65fe49eaf23e810e91044338821a8866834cd34881f41",
+          "results_sha256": "000231e81688772d4a6062cc570f92c1cc0157170d4c30badad97b826f3b4698",
+          "run_manifest_sha256": "620e899f8fbcf260f7bb7c9cd502fcea07628dc33e571d83aea642b74a467213"
+        },
+        "runner_sha256": "bbc8a41f1216e64aa38f9e4c07319c40388c34e30cf68b4f8c2ef6a7ca94e7b4",
+        "table_factor": null,
+        "table_file_sha256": null,
+        "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+      },
+      "65536": {
+        "active_sha256_float32": "138c99b109d7affbfba059e435670918fe4531bce4709b6e86f3f22f7ef80f6e",
+        "attention_scaling": 1.0,
+        "checkpoint_weight_sha256": "dd924a11b4c220f385b51ffa522daea7c9f3d850e31b162bb5661df483c6d3ee",
+        "data_manifest_sha256": "88c250401040c68e935ef5bbdb8159351292f043a32b247c5de30916873ede45",
+        "input_cell_sha256": {
+          "niah_multikey_2": "7cf8986c831769d98e92927a4d1d0c03c41400725d4175999ff2b44e53c9c094",
+          "niah_multikey_3": "89926986621de9ee9346b9f295dd1e76489f1af1375af36c14706be2a67f7039",
+          "niah_single_1": "a12e90b98065ed8e6baf9abc29468a0ddefddb1132f864235ef1a6f2416fde4d",
+          "vt": "70c42cbf15baf81bdf8cee598ad589e8fbf3bce6a16641f251c0dd2ecdcc1e3a"
+        },
+        "native_context_length": 32768,
+        "native_sha256_float32": "138c99b109d7affbfba059e435670918fe4531bce4709b6e86f3f22f7ef80f6e",
+        "raw_hashes": {
+          "examples_sha256": "bc57f213c0d07d0c59c9497b9c57ebffda5ed089d4eb7c9ee5af4b9c448f02e3",
+          "results_sha256": "6603e448df2b5f0ada076303cc5a0b3d95c5a1d1b6708c78d77121a17c28fc26",
+          "run_manifest_sha256": "bc678be7d402ea33a883cee9f4c90a493ad38780d952de3bd878050d945cad4e"
+        },
+        "runner_sha256": "d2e0a518c83af2a34eeaf25615f80818f9dff271d5ab59f508542d6bddd535d2",
+        "table_factor": null,
+        "table_file_sha256": null,
+        "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+      }
+    },
+    "official_yarn": {
+      "32768": {
+        "active_sha256_float32": "16b9e52619f0c2f67310d728e2c61379c4ec27814c21c3ed142ecbafb25bfba0",
+        "attention_scaling": 1.0693147180559945,
+        "checkpoint_weight_sha256": "dd924a11b4c220f385b51ffa522daea7c9f3d850e31b162bb5661df483c6d3ee",
+        "data_manifest_sha256": "a5fd30cf5e53be7a9e447dc6306eff50138771f4e12698510f365322fc97c98f",
+        "input_cell_sha256": {
+          "niah_multikey_2": "df7e77c1f0471474c06be65d666e6a3b598956d6f3fcabd4f2371228ed173242",
+          "niah_multikey_3": "f5c74febac07d84a0c18f60ca6d245fc13fafa4fba76dc568f7f5e74354e2b1d",
+          "niah_single_1": "3fd5152af7468c7478fb9b8268f5df992a92dbd8902dd47b4653c4dcbcd72b4a",
+          "vt": "366432b5547961e6039e4834f0f7fb2e9e96b5eeb0033eef403ce4b2432ccb50"
+        },
+        "native_context_length": 32768,
+        "native_sha256_float32": "138c99b109d7affbfba059e435670918fe4531bce4709b6e86f3f22f7ef80f6e",
+        "raw_hashes": {
+          "examples_sha256": "532bd0d4c2b068654fa2bf52fbe3f8b36f5f8049334e67e9d6dd820d55aa6f01",
+          "results_sha256": "38ed2752e3b674ca564b3d711eb8d714563c11572e8e784f707bb17ae6037269",
+          "run_manifest_sha256": "76e8dd408b771a5e435e5394f8634fa4f4fb6992b8178730a42672f2abe666b0"
+        },
+        "runner_sha256": "ec514fad23a99a430290419c738a566ff7abff9313fbac99970bcee768a5dc8d",
+        "table_factor": 2.0,
+        "table_file_sha256": "401ed89b74a225801f592ba0df8260512f04470202af0ca1d62c93c2f353a3c0",
+        "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+      },
+      "65536": {
+        "active_sha256_float32": "16b9e52619f0c2f67310d728e2c61379c4ec27814c21c3ed142ecbafb25bfba0",
+        "attention_scaling": 1.0693147180559945,
+        "checkpoint_weight_sha256": "dd924a11b4c220f385b51ffa522daea7c9f3d850e31b162bb5661df483c6d3ee",
+        "data_manifest_sha256": "88c250401040c68e935ef5bbdb8159351292f043a32b247c5de30916873ede45",
+        "input_cell_sha256": {
+          "niah_multikey_2": "7cf8986c831769d98e92927a4d1d0c03c41400725d4175999ff2b44e53c9c094",
+          "niah_multikey_3": "89926986621de9ee9346b9f295dd1e76489f1af1375af36c14706be2a67f7039",
+          "niah_single_1": "a12e90b98065ed8e6baf9abc29468a0ddefddb1132f864235ef1a6f2416fde4d",
+          "vt": "70c42cbf15baf81bdf8cee598ad589e8fbf3bce6a16641f251c0dd2ecdcc1e3a"
+        },
+        "native_context_length": 32768,
+        "native_sha256_float32": "138c99b109d7affbfba059e435670918fe4531bce4709b6e86f3f22f7ef80f6e",
+        "raw_hashes": {
+          "examples_sha256": "d147d9c13a8e30ee2849280157ac3eae41213843390366bd5ef084062fb821fb",
+          "results_sha256": "75087f63483b5819e059a0719783734b054211f97f75fd9b31950319fb78d73b",
+          "run_manifest_sha256": "ffd03bc6e08ab9e9acab2a534868b98967bb5d8ab44061e46bc485ac59dee531"
+        },
+        "runner_sha256": "ec514fad23a99a430290419c738a566ff7abff9313fbac99970bcee768a5dc8d",
+        "table_factor": 2.0,
+        "table_file_sha256": "401ed89b74a225801f592ba0df8260512f04470202af0ca1d62c93c2f353a3c0",
+        "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+      }
+    }
+  },
+  "arms": [
+    "native",
+    "c2",
+    "official_yarn"
+  ],
+  "bootstrap": {
+    "assumption": "rows exchangeable within fixed tasks; all arms share resampled row indices; no normality assumption",
+    "confidence": 0.95,
+    "missing_data_policy": "reject incomplete panels; no exclusions or outlier filtering",
+    "multiplicity": "two-length Bonferroni sensitivity within each fixed contrast: 97.5% marginal percentile intervals; not all-contrast familywise control or new-sample confirmation",
+    "numpy_version": "2.0.2",
+    "quantile_interpolation": "linear",
+    "replicates": 10000,
+    "scope": "conditional on checkpoint, input cells and recorded decoding; not training-seed/checkpoint uncertainty",
+    "seed": 202609025,
+    "unit": "paired rows within each fixed task; equal task-macro weights"
+  },
+  "coordinate_scope": "K32 physical-index is nondegenerate; K64 has one C2 arm, not an independent index arm",
+  "evidence_limits": "Official RULER scores, not strict full-string/EOS capability. No K causality, SOTA, new-sample confirmation, or natural-LM double gate. Point contrasts and intervals do not establish small-effect rankings.",
+  "execution_identity": "hash-bound historical matched-data comparison; K32 historical runner not fully recovered; no byte-identical execution claim",
+  "lengths": [
+    32768,
+    65536
+  ],
+  "model": "k64",
+  "native_reference_retention": {
+    "arms": {
+      "c2": {
+        "ratio": 0.9359756097560976,
+        "status": "PASS",
+        "threshold": 0.875
+      },
+      "native": {
+        "ratio": 1.0,
+        "status": "PASS",
+        "threshold": 0.875
+      },
+      "official_yarn": {
+        "ratio": 0.9359756097560976,
+        "status": "PASS",
+        "threshold": 0.875
+      }
+    },
+    "denominator": "Native macro at 1x",
+    "length": 32768
+  },
+  "paired_comparisons": {
+    "32768": {
+      "c2_minus_native": {
+        "bonferroni_two_lengths_sensitivity_ci95": [
+          -0.1399999999999999,
+          0.03249999999999997
+        ],
+        "delta": -0.052500000000000005,
+        "paired_stratified_ci95": [
+          -0.13,
+          0.022499999999999964
+        ],
+        "per_task_delta": [
+          0.0,
+          0.0,
+          -0.2,
+          -0.009999999999999998
+        ]
+      },
+      "c2_minus_official_yarn": {
+        "bonferroni_two_lengths_sensitivity_ci95": [
+          -0.08000000000000007,
+          0.08250000000000002
+        ],
+        "delta": 0.0,
+        "paired_stratified_ci95": [
+          -0.07000000000000006,
+          0.07000000000000006
+        ],
+        "per_task_delta": [
+          0.0,
+          0.2,
+          -0.2,
+          0.0
+        ]
+      }
+    },
+    "65536": {
+      "c2_minus_native": {
+        "bonferroni_two_lengths_sensitivity_ci95": [
+          -0.020031250000000098,
+          0.19250000000000012
+        ],
+        "delta": 0.0875,
+        "paired_stratified_ci95": [
+          -0.007499999999999951,
+          0.17999999999999994
+        ],
+        "per_task_delta": [
+          0.0,
+          0.35,
+          0.15,
+          -0.15000000000000002
+        ]
+      },
+      "c2_minus_official_yarn": {
+        "bonferroni_two_lengths_sensitivity_ci95": [
+          -0.17999999999999994,
+          0.04999999999999993
+        ],
+        "delta": -0.0625,
+        "paired_stratified_ci95": [
+          -0.1625000000000001,
+          0.03500000000000003
+        ],
+        "per_task_delta": [
+          0.0,
+          0.1,
+          -0.15,
+          -0.2
+        ]
+      }
+    }
+  },
+  "profile_selection_performed": false,
+  "resolver": {
+    "native_1x_macro": 0.8200000000000001,
+    "native_1x_nonzero": true,
+    "rule": "both registered control macros must be strictly positive; no ref/scale adjustment on failure",
+    "status": "PASS",
+    "yarn_2x_macro": 0.6950000000000001,
+    "yarn_2x_nonzero": true
+  },
+  "rows_per_task_length": 20,
+  "scale": 2.0,
+  "scores": {
+    "32768": {
+      "c2": {
+        "macro": 0.7675000000000001,
+        "per_task": {
+          "niah_multikey_2": 0.85,
+          "niah_multikey_3": 0.3,
+          "niah_single_1": 1.0,
+          "vt": 0.9200000000000002
+        },
+        "task_vector": [
+          1.0,
+          0.85,
+          0.3,
+          0.9200000000000002
+        ]
+      },
+      "native": {
+        "macro": 0.8200000000000001,
+        "per_task": {
+          "niah_multikey_2": 0.85,
+          "niah_multikey_3": 0.5,
+          "niah_single_1": 1.0,
+          "vt": 0.93
+        },
+        "task_vector": [
+          1.0,
+          0.85,
+          0.5,
+          0.93
+        ]
+      },
+      "official_yarn": {
+        "macro": 0.7675000000000001,
+        "per_task": {
+          "niah_multikey_2": 0.65,
+          "niah_multikey_3": 0.5,
+          "niah_single_1": 1.0,
+          "vt": 0.9200000000000002
+        },
+        "task_vector": [
+          1.0,
+          0.65,
+          0.5,
+          0.9200000000000002
+        ]
+      }
+    },
+    "65536": {
+      "c2": {
+        "macro": 0.6325,
+        "per_task": {
+          "niah_multikey_2": 0.65,
+          "niah_multikey_3": 0.15,
+          "niah_single_1": 1.0,
+          "vt": 0.73
+        },
+        "task_vector": [
+          1.0,
+          0.65,
+          0.15,
+          0.73
+        ]
+      },
+      "native": {
+        "macro": 0.545,
+        "per_task": {
+          "niah_multikey_2": 0.3,
+          "niah_multikey_3": 0.0,
+          "niah_single_1": 1.0,
+          "vt": 0.8800000000000001
+        },
+        "task_vector": [
+          1.0,
+          0.3,
+          0.0,
+          0.8800000000000001
+        ]
+      },
+      "official_yarn": {
+        "macro": 0.6950000000000001,
+        "per_task": {
+          "niah_multikey_2": 0.55,
+          "niah_multikey_3": 0.3,
+          "niah_single_1": 1.0,
+          "vt": 0.93
+        },
+        "task_vector": [
+          1.0,
+          0.55,
+          0.3,
+          0.93
+        ]
+      }
+    }
+  },
+  "status": "QWEN_S2_BASELINE_PANEL_COMPLETE",
+  "summary_script_sha256": "6759c13d6f5eb3b448200b7f4852ac43d28c0c3eb5b7aaff5c513810141a2b03",
+  "task_vector_order": [
+    "single1",
+    "mk2",
+    "mk3",
+    "vt"
+  ],
+  "tasks": [
+    "niah_single_1",
+    "niah_multikey_2",
+    "niah_multikey_3",
+    "vt"
+  ]
+}

@@ -161,12 +161,17 @@ def summarize_panel(panel: dict, reference_length: int = 4096, target_length: in
             index = ARMS.index(comparator)
             point = float((values[:, :, 1] - values[:, :, index]).mean())
             interval = [float(value) for value in np.quantile(draws[:, 1] - draws[:, index], [.025, .975])]
+            tail = .05 / (2 * len(protocol["lengths"]))
+            length_family = [float(value) for value in np.quantile(
+                draws[:, 1] - draws[:, index], [tail, 1 - tail])]
             comparisons[str(length)][name] = {"delta": point, "paired_stratified_ci95": interval,
+                "bonferroni_length_family_sensitivity_ci95": length_family,
                 "per_task_delta": {task: float((values[t, :, 1] - values[t, :, index]).mean()) for t, task in enumerate(TASKS)}}
     reference = scores[str(reference_length)]
     target = scores[str(target_length)]
     single = target["physical_x"]["per_task"]["niah_single_1"]
     macro_gain = target["physical_x"]["macro"] - target["native"]["macro"]
+    resolver_passed = at_least(single, .8) and at_least(macro_gain, .1)
     retention = {}
     for arm in ARMS:
         ratio = reference[arm]["macro"] / reference["native"]["macro"] if reference["native"]["macro"] > 0 else None
@@ -176,7 +181,10 @@ def summarize_panel(panel: dict, reference_length: int = 4096, target_length: in
         "target_length": target_length, "data_manifest_sha256": protocol["data_manifest_sha256"],
         "tasks": list(TASKS), "lengths": sorted(protocol["lengths"]), "rows_per_task": count,
         "scores": scores, "paired_comparisons": comparisons,
-        "stage2_entrance": {"status": "PASS" if at_least(single, .8) and at_least(macro_gain, .1) else "FAIL",
+        "stage2_entrance": {"status": ("PASS" if resolver_passed else "FAIL")
+            if target_length == 2 * reference_length else "NOT_APPLICABLE",
+            "scope": "Registered s2-to-s4 entrance only; a completed s4 panel cannot authorize s8 or another stage",
+            "resolver_thresholds_met": resolver_passed,
             "physical_single_score": single, "single_success_equivalent": single * count,
             "single_rows": count, "single_threshold": .8, "physical_macro_minus_native": macro_gain,
             "macro_gain_threshold": .1, "reference_retention_is_separate": True},
@@ -184,6 +192,7 @@ def summarize_panel(panel: dict, reference_length: int = 4096, target_length: in
         "bootstrap": {"seed": BOOTSTRAP_SEED, "replicates": BOOTSTRAP_SAMPLES, "confidence": .95,
             "unit": "paired rows resampled within each fixed task family; equal task-macro weights",
             "scope": "conditional on one checkpoint, fixed tasks, data and decoding; not checkpoint/training-seed uncertainty",
+            "multiplicity_sensitivity": "Post hoc Bonferroni over tested lengths within each fixed contrast; not a global correction over all contrasts or confirmatory selection rule",
             "small_difference_policy": "report point and interval together; no coordinate identification from .01-.03 differences"},
         "raw_hashes": {arm: panel[arm].get("hashes", {}) for arm in ARMS},
         "arm_protocols": protocols, "profile_selection_performed": False,

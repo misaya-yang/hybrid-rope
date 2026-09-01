@@ -36,6 +36,8 @@ def test_paired_summary_gates_and_intervals_are_reproducible():
     assert first["paired_comparisons"]["8192"]["physical_minus_index"]["delta"] == pytest.approx(.05)
     interval = first["paired_comparisons"]["8192"]["physical_minus_index"]["paired_stratified_ci95"]
     assert interval[0] <= .05 <= interval[1]
+    family_interval = first["paired_comparisons"]["8192"]["physical_minus_index"]["bonferroni_length_family_sensitivity_ci95"]
+    assert family_interval[0] <= interval[0] <= interval[1] <= family_interval[1]
     assert first["stage2_entrance"]["status"] == "PASS"
     assert first["reference_retention"]["physical_x"]["status"] == "PASS"
     assert first["bootstrap"]["seed"] == 202609024
@@ -50,6 +52,18 @@ def test_zero_native_reference_is_undefined_not_pass():
     result = summary.summarize_panel(data)
     assert result["stage2_entrance"]["status"] == "PASS"
     assert result["reference_retention"]["physical_x"] == {"ratio": None, "threshold": .875, "status": "UNDEFINED"}
+
+
+def test_s4_panel_does_not_automatically_authorize_another_scale():
+    data = panel()
+    for item in data.values():
+        item["result"]["protocol"].update(lengths=[4096, 16384], profile_target_length=16384, table_factor=4)
+        for row in item["rows"]:
+            if row["nominal_length"] == 8192:
+                row["nominal_length"] = 16384
+    result = summary.summarize_panel(data, reference_length=4096, target_length=16384)
+    assert result["stage2_entrance"]["status"] == "NOT_APPLICABLE"
+    assert result["stage2_entrance"]["resolver_thresholds_met"] is True
 
 
 def test_entrance_pass_does_not_hide_native_retention_failure():

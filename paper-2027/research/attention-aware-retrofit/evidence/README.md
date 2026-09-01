@@ -4,6 +4,20 @@ Compact, machine-path-free receipt for the attention-aware allocation study.
 Checkpoints, raw evaluation records, token arrays, caches, and machine logs
 remain with their canonical owners outside this directory.
 
+[`QWEN_K32_MATCHED_S2_BASELINE_RECEIPT_20260901.json`](QWEN_K32_MATCHED_S2_BASELINE_RECEIPT_20260901.json)
+adds the deterministic YaRN2 baseline to the hash-bound K32 historical
+paired inputs. Physical/index point estimates cross but their paired intervals
+include zero; the fresh-seed confirmation is a separate preregistration.
+[`K32_HISTORICAL_RULER_REPLAY_RECEIPT_20260901.json`](K32_HISTORICAL_RULER_REPLAY_RECEIPT_20260901.json)
+records exact decoded-prediction/official-score agreement on 24 fixed canaries,
+not token-level parity or full-matrix evaluator equivalence. Both are governed
+by `../preflights/QWEN_S2_SAME_FAMILY_IDENTIFICATION_PREFLIGHT_20260901.md`.
+
+[`QWEN_K64_MATCHED_S2_BASELINE_RECEIPT_20260901.json`](QWEN_K64_MATCHED_S2_BASELINE_RECEIPT_20260901.json)
+completes the K64 Native/C2-s2/YaRN2 curve without a redundant index arm.
+The same-family result and historical-execution limits are owned by
+`../results/QWEN_S2_SAME_FAMILY_IDENTIFICATION_RESULT_20260901.md`.
+
 [`GEMMA_NATIVE_REFERENCE_CONFIRMED_20260901.json`](GEMMA_NATIVE_REFERENCE_CONFIRMED_20260901.json)
 binds the independently confirmed 4096 operating reference from Native natural
 continuation and single-code exact/EOS probes. The original two-code probe
@@ -22,6 +36,13 @@ contains the separate 32-document natural continuation holdout, paired
 document-bootstrap intervals, Native PPL-retention gates and raw hashes.
 The same target suffix is scored across lengths and profiles; these are
 teacher-forced outcomes, not extra generation trials.
+
+[`REFERENCE_CORRECTED_K128_S4_RULER_RECEIPT_20260901.json`](REFERENCE_CORRECTED_K128_S4_RULER_RECEIPT_20260901.json)
+and [`REFERENCE_CORRECTED_K128_S4_NLL_RECEIPT_20260901.json`](REFERENCE_CORRECTED_K128_S4_NLL_RECEIPT_20260901.json)
+complete the fixed maximum-16K 4K/8K/16K curves. They record recovery of the
+old 16K negative and finite Native cost, not physical-coordinate superiority.
+The RULER receipts additionally expose a labeled post hoc, per-contrast
+length-family multiplicity sensitivity; it is not a new selection rule.
 
 `artifacts/coupling_law_cpu/` contains the CPU-only low-dimensional coupling-law
 audit: frozen OLMo-only fits, Qwen zero-refit geometry holdout, individual and
