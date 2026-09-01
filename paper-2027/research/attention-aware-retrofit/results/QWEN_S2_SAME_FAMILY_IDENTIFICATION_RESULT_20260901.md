@@ -2,17 +2,20 @@
 
 ## Decision
 
-**Status: `FIXED_BASELINE_PANEL_COMPLETE / COORDINATE_ORDER_UNRESOLVED`.**
+**Status: `FIXED_BASELINE_PANEL_COMPLETE / INDEPENDENT_CONFIRMATION_UNRESOLVED`.**
 
 Both checkpoint resolvers pass: Native at 32K and deterministic YaRN2 at
 64K are nonzero. The unchanged K64 C2-s2 profile passes the Native RULER
 point gate and remains useful at 64K, but is not shown superior to YaRN2.
-K32 retains the historical sample-level Native/long crossing; paired
-intervals do **not** yet establish its physical-versus-index ordering.
+K32 retained a historical sample-level Native/long crossing, but its paired
+intervals did not establish physical-versus-index ordering. The later
+independent N80 confirmation also fails to identify that ordering and does not
+reproduce the old physical long advantage.
 
 Thus this stage supports useful fixed-s2 behavior on the two Qwen checkpoints,
-not a causal K effect, a universal physical coordinate, or SOTA. The next
-registered experiment increases independent paired samples, not parameters.
+not a causal K effect, a universal physical coordinate, or SOTA. Its registered
+sample increase is now complete; the superseding interpretation is owned by
+[`K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901`](K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md).
 
 Owners:
 
@@ -130,11 +133,11 @@ Native retention improves relative to its previously failed s4 point gate.
 They do not establish arbitrary-scale generalization or isolate model size,
 training, attention-head structure and rotary budget from one another.
 
-The next owner is the
-[`K32 independent crossing confirmation`](../preflights/K32_PAIRED_CROSSING_CONFIRMATION_PREFLIGHT_20260901.md):
-new seed 202609026, 80 rows/task at 32K/64K, and only the existing
-Native/physical/index profiles. It does not pool this pilot, refit G, add
-G(x;K), revive the rejected cell-average correction, or launch SOTA search.
-Only after that ordering is attributed may Native-Q/K compatibility work be
-opened. A CPU numerical KL module being prepared is not an executed mechanism
-experiment or a validated performance predictor.
+The registered
+[`K32 independent crossing confirmation`](../preflights/K32_PAIRED_CROSSING_CONFIRMATION_PREFLIGHT_20260901.md)
+has completed on seed 202609026 with 80 rows/task. Physical/index 64K macros
+are `.46625/.46125`; physical-minus-index is `+.0050` with corrected interval
+`[-.038125,.048750]`. Normalized-index passes the 32K Native point gate while
+physical fails. The conditional Native-Q/K entrance therefore failed; the CPU
+KL module remains unused infrastructure, not an executed mechanism result or
+validated predictor.

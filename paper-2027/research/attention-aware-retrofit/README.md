@@ -6,34 +6,33 @@ and order live only in [`../../../INDEX.md`](../../../INDEX.md) §0 and §6.
 
 ## Current question
 
-`K32_MATCHED_S_PARETO / K128_SCREEN_UNRESOLVED_LONG_NEGATIVE /
-P3_REJECTED`
+`K32_N80_COORDINATE_UNRESOLVED / REFERENCE_CORRECT_K128_RECOVERED /
+P3_ENTRANCE_FAILED`
 
 The completed low-dimensional experiment now separates two effects:
 
 - a frozen two-parameter `G_4(x)` preserves OLMo and Qwen long behavior;
 - the same table misses the strict Native operating point by a small amount on
   both checkpoints;
-- Qwen's self-profile, but not the transported OLMo 64-point residual, restores
-  Qwen 32K retention, locating the remaining problem in checkpoint-specific
-  Native compatibility rather than the transferable long backbone;
-- on the K32 holdout, physical `x` is the best 64K arm even though it fails the
-  32K Native gate, while the zero-parameter cell-average hypothesis fails its
-  CPU entrance condition;
-- matched K32 s2 closes the scale confound: physical `x` wins 64K while
-  normalized index passes Native, so neither uniformly dominates;
-- two K128 Gemma-1 screens recover nonzero 8K behavior under frozen tables but
-  remain zero at 16K. Native 4K and table-only/gain/loader controls resolve
-  task capability and the loading-branch/gain confounds; they do not by
-  themselves exclude a shared runtime issue or identify a universal boundary.
-  Cross-K coordinate identification remains unresolved.
+- the independent K32 N80 confirmation does not reproduce the old physical-x
+  long advantage: physical/index are statistically unresolved at 64K, both
+  improve over Native by about `.22`, and index retains more 32K capability;
+- the zero-parameter cell-average hypothesis still fails its CPU entrance
+  condition and is not revived by the unresolved ordering;
+- Native-only calibration freezes a protocol-specific 4K operating reference
+  for the exact Gemma-1.1 artifact. Reference- and scale-correct s2/s4 tables
+  recover 8K/16K and pass measured 4K gates; the old config-reference table
+  remains zero on the paired 16K rows;
+- the earlier K128 sample scores favor index, but multiplicity sensitivity did
+  not identify the ordering. A new single-endpoint N80 confirmation is the
+  current identification gate.
 
 No Native-correction or hierarchical candidate survives the current gates.
-The next evidence question is Native-only reference-length identification,
-with fresh natural/capability calibration and independent confirmation; see
-the P0 preregistration routed by `INDEX.md`. Static baselines and selectors
-are conditional later stages. Native/long routing and post-outcome gain rescue
-remain outside the target method.
+The conditional Native-Q/K diagnostic was not executed because its required
+K32 crossing was not confirmed. The next evidence question is only whether the
+old K128 index tilt repeats on fresh rows. Static breadth/SOTA confirmation is
+conditional on closing that identification step. Native/long routing and
+post-outcome gain rescue remain outside the target method.
 
 ## Evidence to open on demand
 
@@ -47,6 +46,8 @@ remain outside the target method.
 | Does the two-parameter compression preserve LM behavior? | [`results/LOW_DIM_COUPLING_GPU_RESULT_20260901.md`](results/LOW_DIM_COUPLING_GPU_RESULT_20260901.md) | Qwen/OLMo long behavior yes; strict Native deployment gate no |
 | Does K32 failure come from finite-grid point sampling? | [`results/K32_FINITE_K_COUPLING_ANALYSIS_20260901.md`](results/K32_FINITE_K_COUPLING_ANALYSIS_20260901.md) | transition is under-resolved, but exact cell averaging does not match the residual and is not a GPU candidate; physical `x` still transports positively at 64K |
 | Does frozen `G(x)` transport at matched scale and K128? | [`results/FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901.md`](results/FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901.md) | K32 has a physical-long/index-Native Pareto crossing; K128 is unresolved with replicated zero 16K endpoints, so no universal or SOTA claim |
+| Does the K32 physical/index crossing replicate? | [`results/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md`](results/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md) | no identified ordering; both profiles give similar 64K improvement, index is more Native-compatible, and the conditional mechanism entrance fails |
+| Why did the old K128 16K screen fail? | [`results/NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901.md`](results/NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901.md) and [`results/REFERENCE_CORRECTED_K128_RESULT_20260901.md`](results/REFERENCE_CORRECTED_K128_RESULT_20260901.md) | operational reference/request scale jointly explain the recovery; physical-coordinate superiority and K causality remain unresolved |
 
 ## Retired work
 

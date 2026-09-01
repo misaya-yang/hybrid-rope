@@ -30,7 +30,9 @@ Current canonical owners:
   is running after its YaRN2 resolver. The
   [`independent K32 confirmation`](research/attention-aware-retrofit/preflights/K32_PAIRED_CROSSING_CONFIRMATION_PREFLIGHT_20260901.md)
   now freezes a new seed and 80 rows/task because physical/index intervals
-  in the 20-row panel span zero. Its inputs are being built on CPU.
+  in the 20-row panel span zero. Its three arms are running. Separately, a
+  conditional Native-Q/K 8/8 input split is frozen with no model outcomes;
+  P3 execution remains closed until the K32 result is attributed.
 - Historical K32 Pareto, K64 scale consistency, and the original K128 negative
   remain routed by `INDEX.md`; none is silently replaced or pooled.
 

@@ -23,16 +23,25 @@
 
 ### 2026-09-01 — 当前决定
 
+- **K32 独立 N80 结果：** 新 seed `202609026` 上，physical/index 的
+  64K macro 为 `.46625/.46125`，差 `+.0050`、校正区间
+  `[-.038125,.048750]`；两者相对 Native 均改善约 `.22`。32K Native
+  retention 为 `.859459/.923243`，只有 index 过 `.875` point gate。旧的
+  physical long 优势未复现，crossing 判定 `UNRESOLVED`；条件 P3 入口失败，
+  不运行 Native-Q/K KL。见
+  [`K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901`](paper-2027/research/attention-aware-retrofit/results/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md)。
+
 - **Qwen 同代 s2 panel 完成：** K32 YaRN2 32K/64K 为 `.5625/.4400`；
   K64 C2-s2 为 `.7675/.6325`，YaRN2 为 `.7675/.6950`。两模型 resolver 均
   通过，K64 C2 的 Native point retention `.935976`；K32 physical/index
   paired CI 仍跨零，不升级为坐标优势或 K 因果。见
   [`QWEN_S2_SAME_FAMILY_IDENTIFICATION_RESULT_20260901`](paper-2027/research/attention-aware-retrofit/results/QWEN_S2_SAME_FAMILY_IDENTIFICATION_RESULT_20260901.md)。
 
-- **K32 独立确认注册（非结果）：** 20-row physical/index 配对区间跨零，故先
-  冻结原表，用 seed `202609026`、80 rows/task、Native/physical/index 三臂
-  确认 32K/64K crossing；不据小样本排序新增机制。见
-  [`K32_PAIRED_CROSSING_CONFIRMATION_PREFLIGHT_20260901`](paper-2027/research/attention-aware-retrofit/preflights/K32_PAIRED_CROSSING_CONFIRMATION_PREFLIGHT_20260901.md)。
+- **下一坐标识别门（注册）：** 冻结 Gemma K128 的既有 physical/index s4
+  表，只在新 seed `202609028` 的 16K core-4、80 rows/task 上确认旧的
+  sample-level index 优势。区间继续跨零则关闭坐标优越性分支，不加样本、任务或
+  参数；见
+  [`K128_COORDINATE_RANKING_CONFIRMATION_PREFLIGHT_20260901`](paper-2027/research/attention-aware-retrofit/preflights/K128_COORDINATE_RANKING_CONFIRMATION_PREFLIGHT_20260901.md)。
 
 - **P2 同代识别注册（非结果）：** P1 之后只补 Qwen K32/K64 的固定 YaRN-s2
   与 K64 唯一 C2-s2 缺口；K64 的 physical/index 相同，不能当作 K 趋势证据。
@@ -101,8 +110,8 @@
   monotone-self / Native 为 `0.4350/0.4275/0.3900/0.2775`，而 physical-`x`
   在 32K retention 仅 `0.7915`。matched s2 后，physical `x` 为
   `.5225/.5050`、index 为 `.5775/.4375` @32K/64K：scale mismatch 不是
-  Native 失败的充分原因，physical 赢 long、index 过 Native gate，形成 Pareto
-  crossing。见
+  Native 失败的充分原因；但后续独立 N80 未复现 physical 的 long 优势，故这里的
+  pilot crossing 只保留为历史点估计。见
   [`K32_FINITE_K_COUPLING_ANALYSIS_20260901`](paper-2027/research/attention-aware-retrofit/results/K32_FINITE_K_COUPLING_ANALYSIS_20260901.md)。
 - **s2 zero-refit confirmation：** 同一 K64 `G(x)` 边界从 s4 零重拟合降到
   s2 后，OLMo 1x PPL/five-task retention 为 `0.98399/1.04122`；2x PG-19
@@ -286,7 +295,7 @@ position-dependent operator，不把不同 target-free operator 一并判死。
 | 可复用 CPU 诊断 | [`scripts/analysis/`](scripts/analysis/) | 不自动成为 paper claim |
 | 低维 coupling 冻结与 holdout | [`scripts/analysis/compile_low_dim_coupling_law.py`](scripts/analysis/compile_low_dim_coupling_law.py) | CPU-only；只用 OLMo 拟合，冻结后读取 Qwen geometry，生成候选表/残差/哈希；不运行 LM |
 | Frozen cross-K transport | [`scripts/analysis/export_frozen_coupling_transport.py`](scripts/analysis/export_frozen_coupling_transport.py)、[`scripts/eval/run_frozen_coupling_k_transport.sh`](scripts/eval/run_frozen_coupling_k_transport.sh) | 从 runtime Native tensor 导出 physical/index/wrong-c 静态表；launch fail-closed 绑定 config/K/weights/data/Native/table hashes；结果 owner 为 2026-09-01 K128 mixed report |
-| 条件 Native-Q/K 机制资产 | [`scripts/analysis/native_attention_kl.py`](scripts/analysis/native_attention_kl.py)、[`scripts/data/prepare_native_qk_calibration.py`](scripts/data/prepare_native_qk_calibration.py) | 纯 CPU 数学核与未运行输入 builder；测同一 Native Q/K 的有限 attention KL，不是已验证 predictor、selector 或新 profile；K32 独立确认归因前不得开 GPU |
+| 关闭的条件 Native-Q/K 机制资产 | [`scripts/analysis/native_attention_kl.py`](scripts/analysis/native_attention_kl.py)、[`scripts/data/prepare_native_qk_calibration.py`](scripts/data/prepare_native_qk_calibration.py)、[`input receipt`](paper-2027/research/attention-aware-retrofit/evidence/NATIVE_QK_CALIBRATION_DATA_RECEIPT_20260901.json)、[`conditional preflight`](paper-2027/research/attention-aware-retrofit/preflights/NATIVE_QK_FINITE_KL_PREFLIGHT_20260901.md) | 纯 CPU 数学核与已冻结的 8/8 Native-only 输入；K32 `CONFIRMED_CROSSING` 入口失败，故无模型结果。有限 attention KL 不是已验证 predictor、selector 或新 profile |
 | 注意力需求测量 | `scripts/analysis/attention_phase_demand.py` | 含 `layerwise_plan()` → `per_layer_inv_freq` |
 | 全 RoPE 碰撞审计 | `scripts/analysis/full_rope_collision_audit.py` | §2.1 的数值 owner |
 | **第三轴静态 $r_2$ 搜索诊断** | [`scripts/analysis/third_axis_ceiling.py`](scripts/analysis/third_axis_ceiling.py) | §6.1 数值的可复现脚本；纯 CPU；报告 optimizer 的 best-found value，不是全局或行为上限 |
@@ -430,18 +439,19 @@ Gemma-1.1 artifact 冻结 4K operating reference。同一 G 的 reference-correc
 表均过 4K RULER/PPL point gate，恢复 8K/16K；旧 reference 表在同批 16K 仍为零。
 因此原 K128 阴性不能继续作为 G 或 K128 的通用失败；见 §0 的 P0/P1 owner。
 
-K32 matched s2 point estimates仍为 physical `.5225/.5050`、index
-`.5775/.4375` @32K/64K；补齐 YaRN2 后为 `.5625/.4400`。physical 相对 Native
-在 Native/long 两端方向相反，但 physical/index 的 paired intervals 均跨零。
-因此不可把 20-row 点排序升级为 physical coordinate 优势；已冻结新 seed 的
-80-row/task 三臂确认，且不拼旧 pilot。标准 finite-cell projection 仍未满足 CPU
-entrance condition，不因该不确定性复活。
+K32 matched s2 pilot point estimates为 physical `.5225/.5050`、index
+`.5775/.4375` @32K/64K；补齐 YaRN2 后为 `.5625/.4400`。新 seed N80 三臂确认
+得到 physical/index `.496875/.533750` @32K 与 `.466250/.461250` @64K；64K
+差 `+.0050` 且校正区间跨零。两张表的 long 改善相同量级，index Native cost
+更小。故旧 20-row physical long 排序未复现，conditional Native-Q/K 入口失败；
+标准 finite-cell projection 仍未满足 CPU entrance condition，也不因结果复活。
 
 同代 K64 Qwen 的 C2-s2 为 `.7675/.6325`，YaRN2 为 `.7675/.6950` @32K/64K；
 C2 Native point retention `.935976` 通过，但 C2/YaRN 之差未解决。K64 上
 physical/index 在精确构造中退化为同一控制，不能提供第二个坐标差观测。因此当前
-结论是 **reference-correct、scale-correct 的 frozen low-dimensional law 有多模型
-可用性，但 coordinate privilege、因果 K 与 SOTA 均未识别**。不得反向调整
+结论是 **reference-correct、scale-correct 的 frozen low-dimensional profile
+family 有多模型可用性，但 physical coordinate privilege、因果 K 与 SOTA 均未
+识别**。下一识别门只复验 K128 16K 的 physical/index 排序；不得反向调整
 table/gain/boundary/width，不得拟合 `G(x;K)` 或开启 s8/hierarchical rescue。
 
 ### 6.4 已退役路线
@@ -460,9 +470,10 @@ endpoint movement 本身不是出线条件。
 ### 6.5 生命周期与反重复
 
 - **Current:** 当前 TeX/PDF、§2--§3 canonical owners、`s4` exponent-space result owner。
-- **Next gate:** matched deterministic s2 baselines 与 reference-correct K128 已完成；
-  先完成新 seed K32 coordinate confirmation。只有归因后才可执行已准备的 Native-Q/K
-  finite-KL 诊断；它不能产生 `G(x;K)`、Native scalar 或 hierarchical table。
+- **Next gate:** K32 new-seed confirmation 已完成且未确认 crossing，故 Native-Q/K
+  finite-KL 诊断关闭。只执行已冻结的 K128 16K N80 physical/index confirmation；
+  若仍 unresolved，关闭坐标优越性分支，再决定固定 engineering representative 的
+  新 holdout breadth/SOTA confirmation。
 - **Historical:** zero-training tournament 与 scale-law owner；保留证据，不保留任务。
 - **Closed negative:** §3.4 的 owner-backed 条目；不得通过改名恢复。
 - **Unresolved:** M4 phase-isotropy 仍是 `SCREEN_UNRESOLVED`，不自动进入方法设计。

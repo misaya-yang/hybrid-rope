@@ -1,0 +1,99 @@
+{
+  "bos": {
+    "source": "checkpoint_config.bos_token_id",
+    "token_id": 151643
+  },
+  "config_file": "config.json",
+  "config_sha256": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+  "disjointness": {
+    "calibration_confirmation_documents": true,
+    "historical_scope": "only source hashes in supplied natural-input JSONL; no claim about unsupplied historical data",
+    "selected_vs_explicit_exclusions": true
+  },
+  "exclusion_inputs": [
+    {
+      "ignored_non_natural_rows": 320,
+      "name": "calibration.jsonl",
+      "natural_input_rows": 128,
+      "sha256": "2ee4a7fa94093dd1ec23692d16cc0e20dca321598b42ecbde51b91e71c53dd75",
+      "source_set_sha256": "352b2dd1700b80d4b6b2938ec16cdd46d08d0a525fdb10ec278017be3761ee70",
+      "unique_source_documents": 32
+    },
+    {
+      "ignored_non_natural_rows": 640,
+      "name": "confirmation.jsonl",
+      "natural_input_rows": 256,
+      "sha256": "30c73298c88f45087447ac083f6834ba846bfab230bf7058d351cf6d066203d5",
+      "source_set_sha256": "e067b26aa749d15695e88525256d3ada8f71a44d8fbf5b195385df459725e9a1",
+      "unique_source_documents": 64
+    },
+    {
+      "ignored_non_natural_rows": 0,
+      "name": "holdout.jsonl",
+      "natural_input_rows": 96,
+      "sha256": "129ab7e9e0c4787af2c1f926c8e663083b8ceb1a80ef3771b7df767efc91dcb7",
+      "source_set_sha256": "2d44476fee37fc87a1786d7bbbc82a42398d23efacdcfcaff85971dba075d3ba",
+      "unique_source_documents": 32
+    }
+  ],
+  "files": {
+    "calibration": {
+      "path": "calibration.jsonl",
+      "rows": 8,
+      "sha256": "95cd322b4fd8a0722e3bc59a5b2ad75bb68bd163edd55a2f03b9f5e4e766cce9",
+      "source_document_set_sha256": "d76295ee35e0d5585a3da6cc8228efa0e554fe37c720666b650e809a55166862"
+    },
+    "confirmation": {
+      "path": "confirmation.jsonl",
+      "rows": 8,
+      "sha256": "cd52f2d27fe522b546e7b4374e03606b1fbba7e490e81818642b510ba93264aa",
+      "source_document_set_sha256": "8f08035861cfdbc56a1ff262c761f922732db128e99ef0de7f6392e5d9e4477b"
+    }
+  },
+  "input_ids_sha256_encoding": "contiguous little-endian signed int64 token bytes",
+  "model_evaluation_status": "NOT_RUN",
+  "model_type": "qwen2",
+  "native_length": 32768,
+  "p3_scope": "conditional asset; explicit P3 opening after K32 crossing confirmation is required before model execution",
+  "rope_tables_constructed": false,
+  "script_sha256": "e33e0bd365b6f6b6e710cfce45852a02503aec7d4920b4924a8366b8a5e9290a",
+  "selection": "first 16 unique nonexcluded documents with at least 32768 tokens in source order; first 8 calibration, next 8 confirmation; no loss or model-output filtering",
+  "source": {
+    "name": "000_00000.parquet",
+    "sha256": "b1ba7b2ce4cb5ea6ef42dca40263eabb85f37700d01693a68e9b30a31d78e871",
+    "start_row_inclusive_zero_based": 40000
+  },
+  "source_scan": {
+    "duplicate_selected_source_rows": 0,
+    "excluded_source_rows": 18,
+    "excluded_unique_source_documents_encountered": 18,
+    "selected_documents": 16,
+    "short_source_rows": 36850,
+    "source_rows_inspected": 36884
+  },
+  "status": "NATIVE_QK_CALIBRATION_DATA_READY_V1",
+  "target_tokens": 256,
+  "token_contract": "BOS plus first 32767 document tokens; final 256 tokens are targets; no chat template and no appended EOS",
+  "tokenizer_class": "Qwen2Tokenizer",
+  "tokenizer_files": [
+    {
+      "name": "merges.txt",
+      "sha256": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3"
+    },
+    {
+      "name": "tokenizer.json",
+      "sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+    },
+    {
+      "name": "tokenizer_config.json",
+      "sha256": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583"
+    },
+    {
+      "name": "vocab.json",
+      "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    }
+  ],
+  "tokenizer_files_sha256": "c5ab91ef97a3b070f598b39b3a5f3bf2d71e886d0c506b0ae5a35bbb9c815457",
+  "unique_excluded_source_documents": 128,
+  "utility_script_sha256": "708bb535f98651b5eaeb05b90d750b9926018b4590c89f4789f3fc69db87b32e"
+}

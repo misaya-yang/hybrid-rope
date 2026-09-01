@@ -1,0 +1,363 @@
+{
+  "arm_identities": {
+    "native": {
+      "active_sha256_float32": "6d1e10125bd0468a7cf91c6175a3af31c1bffca24592cf5630f0f8402a8746e3",
+      "attention_scaling": 1.0,
+      "checkpoint_weight_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "data_manifest_sha256": "8b6c2cacb14c22e8955ba676bfcbaed806a5dd0c49ce4ccc773ad3d8f77bd6af",
+      "input_cell_sha256": {
+        "niah_multikey_2": {
+          "32768": "7e1e919111a228e120a41f04ba6d6947f2945c5780dc6bbebbc59e797f35d618",
+          "65536": "8353b53abf36ddd59f7ca6dc0f479d6369ae9a3d4fce780be19cea01c2ac7aab"
+        },
+        "niah_multikey_3": {
+          "32768": "cdc0467092003e8b2c146f0549bc4401a05ab535bc2b091e90edd98c3fc8ad1d",
+          "65536": "8fd2c4df90e8343de210af0aeed415078de66d29a14b0e749e7982c741dc2588"
+        },
+        "niah_single_1": {
+          "32768": "078125d8bb96a6e3749abbb35d213ec1ed9c727bfc8db33fb11607296020d8c4",
+          "65536": "3b07062fad213982b5ee6b0f9c8a891184c42a577841b33ff12e9100e60b96f6"
+        },
+        "vt": {
+          "32768": "dc186de0d2f6e553931e7ac3e24821c106f09e5e9689a18568bbd54ef70b4324",
+          "65536": "309c25d3ecf0f4da4340dc6c2c938d9c2e051cbc17354d89cdcb9d12a130e9f5"
+        }
+      },
+      "native_sha256_float32": "6d1e10125bd0468a7cf91c6175a3af31c1bffca24592cf5630f0f8402a8746e3",
+      "raw_hashes": {
+        "examples_sha256": "15f146484296c9c351312f89302a4676b518301963c72d11e7b6f14ad098751a",
+        "results_sha256": "acc401f52123658670a289bf79a97b85dae5540c845a76bb5bd921fc4339af75",
+        "run_manifest_sha256": "d100b05f580330483ea1153a2c98b77e255e9232f15a904f8bee5238b0e29e23"
+      },
+      "ruler_commit": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+      "runner_sha256": "ec514fad23a99a430290419c738a566ff7abff9313fbac99970bcee768a5dc8d",
+      "seed": 202609026,
+      "table_factor": null,
+      "table_file_sha256": null,
+      "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+    },
+    "normalized_index": {
+      "active_sha256_float32": "8c19ab976f71d30c6409f78a661209a8535ef9f101e8bf42f5bfce6f7817dc5f",
+      "attention_scaling": 1.0512928913614359,
+      "checkpoint_weight_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "data_manifest_sha256": "8b6c2cacb14c22e8955ba676bfcbaed806a5dd0c49ce4ccc773ad3d8f77bd6af",
+      "input_cell_sha256": {
+        "niah_multikey_2": {
+          "32768": "7e1e919111a228e120a41f04ba6d6947f2945c5780dc6bbebbc59e797f35d618",
+          "65536": "8353b53abf36ddd59f7ca6dc0f479d6369ae9a3d4fce780be19cea01c2ac7aab"
+        },
+        "niah_multikey_3": {
+          "32768": "cdc0467092003e8b2c146f0549bc4401a05ab535bc2b091e90edd98c3fc8ad1d",
+          "65536": "8fd2c4df90e8343de210af0aeed415078de66d29a14b0e749e7982c741dc2588"
+        },
+        "niah_single_1": {
+          "32768": "078125d8bb96a6e3749abbb35d213ec1ed9c727bfc8db33fb11607296020d8c4",
+          "65536": "3b07062fad213982b5ee6b0f9c8a891184c42a577841b33ff12e9100e60b96f6"
+        },
+        "vt": {
+          "32768": "dc186de0d2f6e553931e7ac3e24821c106f09e5e9689a18568bbd54ef70b4324",
+          "65536": "309c25d3ecf0f4da4340dc6c2c938d9c2e051cbc17354d89cdcb9d12a130e9f5"
+        }
+      },
+      "native_sha256_float32": "6d1e10125bd0468a7cf91c6175a3af31c1bffca24592cf5630f0f8402a8746e3",
+      "raw_hashes": {
+        "examples_sha256": "7b298ca6e9c813669fcc12020e09fab3a38a742cccb2e236622b194545b49485",
+        "results_sha256": "ab021f376607b29eeae629e9f35bd4122cd5bb1053456afaaa51297b164d6703",
+        "run_manifest_sha256": "6190e0bdfc1171e997b92e354f62da65e47d912660add71980524be9dbe63939"
+      },
+      "ruler_commit": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+      "runner_sha256": "ec514fad23a99a430290419c738a566ff7abff9313fbac99970bcee768a5dc8d",
+      "seed": 202609026,
+      "table_factor": 2.0,
+      "table_file_sha256": "36e09e014a86f8169296e6b5f2997ba7fea08ceb005b4e887085289d53db57a1",
+      "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+    },
+    "physical_x": {
+      "active_sha256_float32": "b61a58f3e84429e00eaac69a0d9ab43abf89bc193987b2bcbcd3ab3bccd455fb",
+      "attention_scaling": 1.0512928913614359,
+      "checkpoint_weight_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "data_manifest_sha256": "8b6c2cacb14c22e8955ba676bfcbaed806a5dd0c49ce4ccc773ad3d8f77bd6af",
+      "input_cell_sha256": {
+        "niah_multikey_2": {
+          "32768": "7e1e919111a228e120a41f04ba6d6947f2945c5780dc6bbebbc59e797f35d618",
+          "65536": "8353b53abf36ddd59f7ca6dc0f479d6369ae9a3d4fce780be19cea01c2ac7aab"
+        },
+        "niah_multikey_3": {
+          "32768": "cdc0467092003e8b2c146f0549bc4401a05ab535bc2b091e90edd98c3fc8ad1d",
+          "65536": "8fd2c4df90e8343de210af0aeed415078de66d29a14b0e749e7982c741dc2588"
+        },
+        "niah_single_1": {
+          "32768": "078125d8bb96a6e3749abbb35d213ec1ed9c727bfc8db33fb11607296020d8c4",
+          "65536": "3b07062fad213982b5ee6b0f9c8a891184c42a577841b33ff12e9100e60b96f6"
+        },
+        "vt": {
+          "32768": "dc186de0d2f6e553931e7ac3e24821c106f09e5e9689a18568bbd54ef70b4324",
+          "65536": "309c25d3ecf0f4da4340dc6c2c938d9c2e051cbc17354d89cdcb9d12a130e9f5"
+        }
+      },
+      "native_sha256_float32": "6d1e10125bd0468a7cf91c6175a3af31c1bffca24592cf5630f0f8402a8746e3",
+      "raw_hashes": {
+        "examples_sha256": "41087913a33f441f965aabfb876ccd1d3d5f7f74c82a28113ae303125f406521",
+        "results_sha256": "1bf7677c1340f5d74306157f4bb203f6d38e13e0a2c24514baaa6ef9fe63b3be",
+        "run_manifest_sha256": "c3a4685851592fedfad82757979da912c7c68f2e8a583ac9538f2270dc9e72dc"
+      },
+      "ruler_commit": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+      "runner_sha256": "ec514fad23a99a430290419c738a566ff7abff9313fbac99970bcee768a5dc8d",
+      "seed": 202609026,
+      "table_factor": 2.0,
+      "table_file_sha256": "4b96d09b5317ee005e3b47a544ade67918df7db45eab272667607283505fe8cb",
+      "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+    }
+  },
+  "arms": [
+    "native",
+    "physical_x",
+    "normalized_index"
+  ],
+  "bootstrap": {
+    "assumptions": "exchangeable rows within fixed tasks; no normality assumption; no exclusions or optional stopping",
+    "numpy_version": "2.0.2",
+    "primary_family_alpha": 0.05,
+    "primary_marginal_confidence": 0.975,
+    "primary_multiplicity": "Bonferroni over two prespecified lengths; quantiles .0125/.9875",
+    "quantile_interpolation": "linear",
+    "replicates": 10000,
+    "secondary_confidence": 0.95,
+    "secondary_role": "descriptive, not multiplicity-corrected confirmatory claims",
+    "seed": 202609027,
+    "unit": "paired row resampling within each fixed task; equal task-macro weights"
+  },
+  "data_seed": 202609026,
+  "decision": "UNRESOLVED",
+  "decision_rule": "CONFIRMED_CROSSING requires corrected 32K interval wholly negative AND 64K wholly positive; REVERSED requires both opposite corrected signs; otherwise UNRESOLVED. Native 1x zero overrides as STOP_INSTRUMENT.",
+  "evidence_scope": "Independent-input confirmation at one frozen checkpoint, conditional on registered tasks/scorer. Not training-seed replication, K causality, SOTA, strict full-string/EOS capability, or validation of a Native KL selector.",
+  "input_hash_verification_scope": "raw results/examples/run manifests hashed locally; input-cell identities compared through bound terminal data receipts",
+  "lengths": [
+    32768,
+    65536
+  ],
+  "native_retention": {
+    "arms": {
+      "native": {
+        "ratio": 1.0,
+        "status": "PASS",
+        "threshold": 0.875
+      },
+      "normalized_index": {
+        "ratio": 0.9232432432432431,
+        "status": "PASS",
+        "threshold": 0.875
+      },
+      "physical_x": {
+        "ratio": 0.8594594594594593,
+        "status": "FAIL",
+        "threshold": 0.875
+      }
+    },
+    "length": 32768,
+    "role": "separate point-estimate gate, not the crossing decision"
+  },
+  "old_pilot_pooled": false,
+  "primary_physical_minus_index": {
+    "32768": {
+      "contrast": "physical_x_minus_normalized_index",
+      "delta": -0.036875000000000005,
+      "paired_stratified_ci975": [
+        -0.07749999999999996,
+        0.002507812500000511
+      ],
+      "per_task_delta": [
+        0.0,
+        -0.175,
+        0.0,
+        0.02749999999999999
+      ]
+    },
+    "65536": {
+      "contrast": "physical_x_minus_normalized_index",
+      "delta": 0.004999999999999999,
+      "paired_stratified_ci975": [
+        -0.03812500000000002,
+        0.04874999999999996
+      ],
+      "per_task_delta": [
+        0.0,
+        0.025,
+        0.0375,
+        -0.0425
+      ]
+    }
+  },
+  "profile_selection_performed": false,
+  "rows_per_arm": 640,
+  "rows_per_task_length": 80,
+  "scores": {
+    "32768": {
+      "native": {
+        "macro": 0.578125,
+        "per_task": {
+          "niah_multikey_2": 0.7375,
+          "niah_multikey_3": 0.1125,
+          "niah_single_1": 1.0,
+          "vt": 0.4625
+        },
+        "task_vector": [
+          1.0,
+          0.7375,
+          0.1125,
+          0.4625
+        ]
+      },
+      "normalized_index": {
+        "macro": 0.53375,
+        "per_task": {
+          "niah_multikey_2": 0.5625,
+          "niah_multikey_3": 0.075,
+          "niah_single_1": 1.0,
+          "vt": 0.49750000000000005
+        },
+        "task_vector": [
+          1.0,
+          0.5625,
+          0.075,
+          0.49750000000000005
+        ]
+      },
+      "physical_x": {
+        "macro": 0.49687499999999996,
+        "per_task": {
+          "niah_multikey_2": 0.3875,
+          "niah_multikey_3": 0.075,
+          "niah_single_1": 1.0,
+          "vt": 0.525
+        },
+        "task_vector": [
+          1.0,
+          0.3875,
+          0.075,
+          0.525
+        ]
+      }
+    },
+    "65536": {
+      "native": {
+        "macro": 0.245625,
+        "per_task": {
+          "niah_multikey_2": 0.0625,
+          "niah_multikey_3": 0.0,
+          "niah_single_1": 0.8,
+          "vt": 0.12000000000000002
+        },
+        "task_vector": [
+          0.8,
+          0.0625,
+          0.0,
+          0.12000000000000002
+        ]
+      },
+      "normalized_index": {
+        "macro": 0.46125000000000005,
+        "per_task": {
+          "niah_multikey_2": 0.4875,
+          "niah_multikey_3": 0.0625,
+          "niah_single_1": 1.0,
+          "vt": 0.29500000000000004
+        },
+        "task_vector": [
+          1.0,
+          0.4875,
+          0.0625,
+          0.29500000000000004
+        ]
+      },
+      "physical_x": {
+        "macro": 0.46625,
+        "per_task": {
+          "niah_multikey_2": 0.5125,
+          "niah_multikey_3": 0.1,
+          "niah_single_1": 1.0,
+          "vt": 0.2525
+        },
+        "task_vector": [
+          1.0,
+          0.5125,
+          0.1,
+          0.2525
+        ]
+      }
+    }
+  },
+  "secondary_vs_native": {
+    "32768": {
+      "normalized_index_minus_native": {
+        "delta": -0.044375,
+        "paired_stratified_ci95": [
+          -0.0881249999999999,
+          -0.0024999999999999467
+        ],
+        "per_task_delta": [
+          0.0,
+          -0.175,
+          -0.0375,
+          0.03500000000000001
+        ]
+      },
+      "physical_x_minus_native": {
+        "delta": -0.08125,
+        "paired_stratified_ci95": [
+          -0.125625,
+          -0.038125000000000075
+        ],
+        "per_task_delta": [
+          0.0,
+          -0.35,
+          -0.0375,
+          0.06250000000000001
+        ]
+      }
+    },
+    "65536": {
+      "normalized_index_minus_native": {
+        "delta": 0.215625,
+        "paired_stratified_ci95": [
+          0.17187499999999994,
+          0.2600156249999998
+        ],
+        "per_task_delta": [
+          0.2,
+          0.425,
+          0.0625,
+          0.175
+        ]
+      },
+      "physical_x_minus_native": {
+        "delta": 0.220625,
+        "paired_stratified_ci95": [
+          0.17437500000000003,
+          0.26749999999999996
+        ],
+        "per_task_delta": [
+          0.2,
+          0.45,
+          0.1,
+          0.1325
+        ]
+      }
+    }
+  },
+  "status": "K32_CROSSING_CONFIRMATION_COMPLETE",
+  "summary_script_sha256": "3ef7b857c04706d98a1fc735600fa619f08dfe5e03412ff0bc281adcd10e1609",
+  "task_vector_order": [
+    "single1",
+    "mk2",
+    "mk3",
+    "vt"
+  ],
+  "tasks": [
+    "niah_single_1",
+    "niah_multikey_2",
+    "niah_multikey_3",
+    "vt"
+  ],
+  "utility_script_sha256": "6759c13d6f5eb3b448200b7f4852ac43d28c0c3eb5b7aaff5c513810141a2b03"
+}

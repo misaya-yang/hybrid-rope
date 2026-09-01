@@ -4,6 +4,19 @@ Compact, machine-path-free receipt for the attention-aware allocation study.
 Checkpoints, raw evaluation records, token arrays, caches, and machine logs
 remain with their canonical owners outside this directory.
 
+[`K32_PAIRED_CROSSING_CONFIRMATION_RECEIPT_20260901.json`](K32_PAIRED_CROSSING_CONFIRMATION_RECEIPT_20260901.json)
+binds the independently seeded 80-row/task Native/physical/index confirmation.
+The old physical long advantage does not replicate: both profiles improve 64K
+similarly, normalized-index retains more 32K capability, and the registered
+crossing decision is unresolved. The result owner is
+`../results/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md`.
+
+[`NATIVE_QK_CALIBRATION_DATA_RECEIPT_20260901.json`](NATIVE_QK_CALIBRATION_DATA_RECEIPT_20260901.json)
+freezes the conditional Native-only 8/8 calibration/confirmation input split.
+It excludes 128 explicitly supplied natural-input document identities and
+contains no model outcomes or RoPE candidate. Its model-execution entrance
+failed with the unresolved K32 confirmation; it remains unused infrastructure.
+
 [`QWEN_K32_MATCHED_S2_BASELINE_RECEIPT_20260901.json`](QWEN_K32_MATCHED_S2_BASELINE_RECEIPT_20260901.json)
 adds the deterministic YaRN2 baseline to the hash-bound K32 historical
 paired inputs. Physical/index point estimates cross but their paired intervals

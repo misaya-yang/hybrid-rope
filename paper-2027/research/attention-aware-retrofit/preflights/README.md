@@ -16,9 +16,29 @@ broad-baseline stages are still conditional. Current priority remains owned
 by `INDEX.md`.
 
 [`K32_PAIRED_CROSSING_CONFIRMATION_PREFLIGHT_20260901.md`](K32_PAIRED_CROSSING_CONFIRMATION_PREFLIGHT_20260901.md)
-registers a separate fresh-seed, 80-row/task confirmation of the unchanged
-Native/physical/index profiles. It responds to unresolved paired intervals,
-not to a request for a new curve or broader parameter search.
+registered a separate fresh-seed, 80-row/task confirmation of the unchanged
+Native/physical/index profiles. It completed with an unresolved coordinate
+ordering; the result is owned by
+`../results/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md`.
+
+[`NATIVE_QK_FINITE_KL_PREFLIGHT_20260901.md`](NATIVE_QK_FINITE_KL_PREFLIGHT_20260901.md)
+froze a conditional P3 same-QK diagnostic, including all 256 NLL-aligned query
+positions and aggregation. Its `CONFIRMED_CROSSING` entrance failed, so no
+model execution or mechanism result exists.
+
+[`K32_FRESH_YARN_MATCHED_BASELINE_PREFLIGHT_20260901.md`](K32_FRESH_YARN_MATCHED_BASELINE_PREFLIGHT_20260901.md)
+registers one official-equation YaRN-s2 completion arm on the same fresh K32
+rows; it is a matched baseline completion, not a new method holdout.
+
+[`K128_COORDINATE_RANKING_CONFIRMATION_PREFLIGHT_20260901.md`](K128_COORDINATE_RANKING_CONFIRMATION_PREFLIGHT_20260901.md)
+freezes a new-seed, single-16K physical/index K128 confirmation. It tests the
+remaining coordinate-ordering claim without adding a length, baseline, or
+profile parameter.
+
+[`K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_PREFLIGHT_20260901.md`](K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_PREFLIGHT_20260901.md)
+freezes a later full-RULER confirmation boundary for the selected engineering
+representative. It remains pending and cannot bypass the current
+identification queue.
 
 ## Retired recent protocols
 
