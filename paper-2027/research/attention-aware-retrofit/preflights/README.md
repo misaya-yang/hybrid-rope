@@ -5,9 +5,11 @@ an experiment ran.
 
 ## Current protocol status
 
-None. The deterministic static pure-`z` question is
-`RQ_LOCKED / CONSTRUCTION_NOT_DERIVED`; no formula, runner, or compute action is
-registered or authorized.
+[`COUPLING_NEGATIVE_ATTRIBUTION_PREFLIGHT_20260901.md`](COUPLING_NEGATIVE_ATTRIBUTION_PREFLIGHT_20260901.md)
+registers Native-only P0 reference-length calibration and independent
+confirmation. It adds no RoPE candidate or curve parameter. Conditional K128,
+K-triangulation, mechanism, selector and broad-baseline stages are not an
+immediate GPU queue. Current priority remains owned by `INDEX.md`.
 
 ## Retired recent protocols
 

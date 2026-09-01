@@ -23,13 +23,16 @@ The completed low-dimensional experiment now separates two effects:
 - matched K32 s2 closes the scale confound: physical `x` wins 64K while
   normalized index passes Native, so neither uniformly dominates;
 - two K128 Gemma-1 screens recover nonzero 8K behavior under frozen tables but
-  remain zero at 16K. Native 4K and table-only/gain/loader controls prove this
-  is a real behavioral boundary rather than the wrong artifact or a broken
-  evaluator, while cross-K coordinate identification remains unresolved.
+  remain zero at 16K. Native 4K and table-only/gain/loader controls resolve
+  task capability and the loading-branch/gain confounds; they do not by
+  themselves exclude a shared runtime issue or identify a universal boundary.
+  Cross-K coordinate identification remains unresolved.
 
 No Native-correction or hierarchical candidate survives the current gates.
-The next evidence question is a matched deterministic static-baseline panel,
-not another fitted curve. Native/long routing and post-outcome gain rescue
+The next evidence question is Native-only reference-length identification,
+with fresh natural/capability calibration and independent confirmation; see
+the P0 preregistration routed by `INDEX.md`. Static baselines and selectors
+are conditional later stages. Native/long routing and post-outcome gain rescue
 remain outside the target method.
 
 ## Evidence to open on demand
@@ -65,7 +68,7 @@ is a retired preregistration, not a next protocol. Historical code under
 - [`analysis/`](analysis/) — mechanism interpretation and failed hypotheses;
   never an action queue.
 - [`preflights/`](preflights/) — what was registered before past execution;
-  currently no active preflight.
+  includes the newly authorized P0 Native-only calibration.
 - [`theory/`](theory/) — historical method/theory work; current method boundary
   is in `AGENTS.md` and `INDEX.md`.
 

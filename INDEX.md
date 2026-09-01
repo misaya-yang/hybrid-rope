@@ -23,11 +23,15 @@
 
 ### 2026-09-01 — 当前决定
 
-- **新一轮归因（已注册，非结果）：** 先用 stock-HF/自定义 Flash 的同 token
-  对照检查 Gemma 共享运行时，再补 deterministic static YaRN2/NTK2 resolver；
-  保持 frozen `G`、参考长度与已有模型不变，CPU 并行分解 K/网格和 Native
-  Q/K 响应。见
+- **新一轮归因（P0 已注册，非结果）：** stock-HF/自定义 Flash 同 token
+  对照之后，先用全新自然文本与独立能力双校准识别 Gemma 的 Native 参考长度；
+  校准/确认分离，双族不一致则 abstain，禁止由已有 RULER 反推 4K。
+  baseline GPU、selector 与 SOTA 扩展均后置；见
   [`COUPLING_NEGATIVE_ATTRIBUTION_PREFLIGHT_20260901`](paper-2027/research/attention-aware-retrofit/preflights/COUPLING_NEGATIVE_ATTRIBUTION_PREFLIGHT_20260901.md)。
+- **P0 首轮：** 新鲜同 suffix 自然文本 Native NLL 在 4K/8K 为
+  `3.229847/11.427202`；两码 exact 能力探针短端自身未过门，故 v1
+  `ABSTAIN`，没有选择 4K 或 2K。只注册一次新鲜单码测量修复，不重评旧分数；见
+  [`NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901`](paper-2027/research/attention-aware-retrofit/results/NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901.md)。
 - **当前结果：** `s4` scale-consistent exponent table
   `omega'_i=omega_i s^{-m_i}`，配合只由 1x PG-19 retention 选出的 `c=0.074`
   gain，通过 1x PPL/五任务双门，并在同一静态表上改善 2x/4x NLL 与自然任务；见

@@ -12,7 +12,7 @@ The current research timeline and agenda live in [`../INDEX.md`](../INDEX.md)
 ## 1. Research status pointer
 
 `MATCHED_K32_S2_COMPLETE / K128_SCREEN_UNRESOLVED_LONG_NEGATIVE /
-REMOTE_SHUTDOWN_CONFIRMED`
+P0_NATIVE_REFERENCE_CALIBRATION_PREPARING`
 
 The completed queue established four bounded results:
 
@@ -61,10 +61,14 @@ repairs and must be rebuilt on the work machine before upload.
 
 ## 4. Machine and authorization state
 
-- All authorized OLMo, K32, and K128 queues completed; no GPU process remains.
-- The compute instance accepted `shutdown -h now`; the SSH connection closed by
-  the remote host and a subsequent connection probe timed out. Browser control
-  was not needed. The protected 1.485B asset was neither moved nor deleted.
+- The earlier OLMo, K32, and K128 queues completed and their shutdown was
+  verified. The user has now restarted the instance and explicitly authorized
+  the new ordered attribution/calibration program; the prior shutdown plan is
+  no longer active. Do not automatically shut down this session.
+- The current GPU is a 32 GiB RTX 4080 SUPER. Native implementation and phase
+  arithmetic diagnostics completed; fresh P0 inputs are being prepared. Disk
+  has sufficient space; no old model was deleted. The protected 1.485B asset
+  must remain untouched.
 - Cell-average/P3 and s8 were rejected by their registered entrance gates.
 - No training or OpenReview upload is authorized.
 - The work machine owns canonical `aidemo` validation and final packaging.
@@ -91,15 +95,16 @@ Canonical `aidemo` test suites and manuscript compilation were not run.
 
 ## 6. Volatile action queue
 
-1. Do not fit `G(x;K)`, Native `alpha`, or hierarchical/s8 rescue from the K128
-   screen. Before another arbitrary model, preregister Native-only natural and
-   capability calibration to test whether config length differs from a
-   checkpoint-level behavioral reference length. The next method comparison is
-   then a matched deterministic static baseline panel such as Resonance-YaRN.
+1. Execute the registered Native-only P0 calibration, freeze a common
+   reference length only if the natural/capability frontiers agree, and then
+   independently confirm or abstain. Never infer 4K from the old RULER scores.
+   P1--P5 are conditional later stages; no `G(x;K)`, residual, gain or boundary
+   search is authorized. The user reprioritized identification over SOTA.
 2. Rebuild and validate the curated supplement on the work machine before
    submission.
 3. Freeze author metadata and complete the final owner-by-owner number review.
-4. Obtain explicit authorization before any new GPU stage or OpenReview upload.
+4. Stay within the user's currently authorized evidence-driven GPU program;
+   OpenReview upload and new Git publication are not authorized by that program.
 
 Before Git publication, verify branch/upstream/divergence, staged scope,
 sensitive content, and unchanged `paper/`; record local/tracking/remote SHAs
