@@ -61,6 +61,13 @@ Current canonical owners:
   bounded headwise scope ladder are summarized by the latest owner above.
 - Historical K32 Pareto, K64 scale consistency, and the original K128 negative
   remain routed by `INDEX.md`; none is silently replaced or pooled.
+- Theory-only: the first-principles retrofit synthesis memo
+  ([`FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902`](research/attention-aware-retrofit/theory/FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md))
+  is complete under THEORY-ONLY mode (three isolated derivations +
+  adversarial audit; no P0 findings). Verdict: partial structure with the
+  unidentifiable quantity named (task-weighted tolerance to off-Native-arc
+  joint phase configurations); no method, no experiment plan, no GPU queue.
+  Indexed in `INDEX.md` §0/§2.2.
 
 P3 cell-average remains rejected. Native-Q/K P3 is `ENTRANCE_FAILED /
 NOT_EXECUTED`. No residual parameter, new curve, selector, SOTA sweep, or s8

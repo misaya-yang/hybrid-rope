@@ -52,6 +52,13 @@
   \(M_\theta(x)\)。后续若重开，必须先在 CPU 上识别非平凡的跨尺度/
   off-orbit 预测，或一个跨 task/scale 同向的 short-capability transport 方向；
   不得从新 ramp、cutoff、gain 或 unrestricted per-frequency field 开始。
+- **THEORY-ONLY 第一性原理备忘录：** 三独立推导（精确代数/尺度延拓/任务电路）
+  + 对抗审计完成；结论为 partial structure：可证骨架（分数分解与不变量、
+  transplant rigidity、curve-level PI 唯一性、条件数恰为 S 的病态定理、
+  构造性 Native-blind/long-visible 不可辨识、半群空洞、三层分离与 per-task
+  半径 \(R_T\)），未可辨识量已命名为冻结网络对 off-Native-manifold 联合
+  相位配置的任务加权容忍度。无方法、无实验计划；见
+  [`FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902`](paper-2027/research/attention-aware-retrofit/theory/FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md)。
 - **生命周期：** `PURE_Z_LONG_SIGNAL_ESTABLISHED /
   NATURAL_QA_AND_NATIVE_LONG_JOINT_UNSOLVED / NO_SOTA /
   GPU_METHOD_DEVELOPMENT_STOPPED`。当前没有 GPU 方法开发队列；剩余工作是
@@ -225,6 +232,7 @@
 | shared-table ceiling | bounded per-head allocation/range 改善完整 Hotpot 与三任务 long Pareto，说明所有 layer/head 共享一表是真实约束 | log-start 仍失败 Native retention，Native-start 仍失败 long QA；[`HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902`](paper-2027/research/attention-aware-retrofit/results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md) |
 | normalized-index transport | 在已测 K32/K64/K128 中是当前最有证据的 frozen engineering rule；physical-\(x\) 没有跨 \(K\) 特权 | 未证明 normalized rank 唯一、canonical、checkpoint-independent 或 K-causal |
 | continuous scale-flow | \(x=-\log\omega,\tau=\log S\) 可作为多尺度坐标；当前 `log_s4` 是 constant-flow 特例 | ODE/半群本身不识别方法；s2/s4 不识别曲率，\(M_\theta(x)\) 尚未定义或验证 |
+| first-principles retrofit memo（THEORY-ONLY） | 三独立推导 + 对抗审计的交集：精确分数分解/不变量、transplant rigidity、curve-level PI 唯一性、compatibility modulus、条件数定理（Native→部署误差放大恰为 S）、构造性 Native-blind/long-visible 不可辨识、半群空洞性、三层分离与 per-task 半径 \(R_T\)；终审 = partial structure，未可辨识量已命名（冻结网络对 off-Native-manifold 联合相位配置的任务加权容忍度） | [`FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902`](paper-2027/research/attention-aware-retrofit/theory/FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md)；无方法、无实验计划；审计并部分取代 basin/barrier note |
 
 因此当前理论指导不是「再找一条更好的 ramp」，而是：任何后续方法都必须
 显式处理 checkpoint-conditioned ordered coupling，并在同一协议中连接 Native-compatible
