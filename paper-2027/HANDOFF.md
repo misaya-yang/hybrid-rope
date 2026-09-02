@@ -56,14 +56,13 @@ branch has been opened.
 ## 2. Git state
 
 - Branch / upstream: `main_0726` / `origin/main_0726`
-- Last observed HEAD: `3ddaa7e71a2a2913fcb7a9d6f0e8e47ab7bf715b`
-  (background hourly workspace checkpoint; not committed by this run).
-- Observed divergence against the existing upstream ref: `0/0`; no new
-  fetch or remote publication verification was performed.
-- Worktree: the final full-RULER owner, work-machine plan, packed-NLL data
-  receipt and final routing updates remain modified/untracked after the latest
-  observed background checkpoint.
-- This run has not staged, committed, pushed, pulled, rebased, or switched.
+- Published research-delivery commit:
+  `dd85086335efddfd3fc7c90675f1714e41236bf1`.
+- The ordinary push to `origin/main_0726` succeeded; the remote ref was
+  independently read back at the same SHA and divergence was `0/0`.
+- The worktree was clean immediately after that delivery. This handoff-only
+  refresh may advance HEAD once more; verify the final SHA live.
+- This run did not pull, rebase, switch, amend, force-push, or modify remotes.
 
 Verify all volatile values live before Git operations.
 
