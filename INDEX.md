@@ -1,6 +1,6 @@
 # INDEX — 理论、证据、代码与下一步
 
-- **最后更新：** 2026-09-01
+- **最后更新：** 2026-09-02
 - **角色：** 本仓库唯一的**持久索引**。回答「已有什么、谁拥有它、下一步做什么」。
 - **不负责：** 硬性规则（见 [`AGENTS.md`](AGENTS.md)）、易变状态（见
   [`paper-2027/HANDOFF.md`](paper-2027/HANDOFF.md)）。
@@ -21,7 +21,43 @@
 
 ## 0. 当前两天研究时间线
 
-### 2026-09-01 — 当前决定
+### 2026-09-02 — 当前决定
+
+- **理论对象收敛：** mature checkpoint 中的有效对象是 learned rotary
+  subspace 与 frequency/dilation 的**有序配对**，而不是无序频谱
+  \(\pi(\omega)\)。OLMo/Qwen 的 same-multiset permutation collapse 建立了
+  non-exchangeability；normalized-index 只是当前最有证据的跨 \(K\)
+  工程 transport，不是 canonical 或 universal law。
+- **zero-training 正证据：** 冻结 pure-\(z\) 静态表已在已测 OLMo/Qwen/Gemma
+  协议上改善 long NLL、RULER/NIAH 与远程 source-conditioned answer
+  likelihood；table×gain 对照显示自然 NLL 收益主要来自表，不是
+  gain-only。这些结果不建立自然生成 QA 或 SOTA。
+- **自然文本与 QA 已完成：** Qwen K32 normalized-index 在 32 条 paired
+  streams 的 64K NLL 为 `2.630842`，Native 为 `2.754945`，32K PPL
+  retention 约 `.9824`；30-row far-evidence QA macro 为
+  Native/index/YaRN `.13229/.10174/.11197`，index-minus-Native 区间跨零。
+  source-use 改善已进入正确答案 logits，但未稳定转化为 autoregressive
+  winner 与正确停止。该链的远端 raw JSON/JSONL 未回收，故只作内部
+  决策证据；见
+  [`ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902`](paper-2027/research/attention-aware-retrofit/results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md)。
+- **headwise 最终 scope ladder：** 两标量每头的 allocation+YaRN-range 表在
+  Hotpot/2Wiki/Qasper 上得到 `.23576` macro，official YaRN-4 为 `.23817`；
+  但其 4K PG-19 PPL retention 只有 `.77138`。从精确 Native 起点学习将
+  retention 提到 `1.04624`，却只有 `.02560` Hotpot F1。free head gain
+  显著降低训练 loss 但损害完整生成。因此 headwise specialization 是有效轴，
+  却未解决 Native--long joint objective；见
+  [`HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902`](paper-2027/research/attention-aware-retrofit/results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md)。
+- **理论指导：** continuous scale-flow 可作为 log-frequency 坐标与多尺度问题定义，
+  但 ODE/半群本身不缩小搜索空间，当前 s2/s4 也不识别曲率或
+  \(M_\theta(x)\)。后续若重开，必须先在 CPU 上识别非平凡的跨尺度/
+  off-orbit 预测，或一个跨 task/scale 同向的 short-capability transport 方向；
+  不得从新 ramp、cutoff、gain 或 unrestricted per-frequency field 开始。
+- **生命周期：** `PURE_Z_LONG_SIGNAL_ESTABLISHED /
+  NATURAL_QA_AND_NATIVE_LONG_JOINT_UNSOLVED / NO_SOTA /
+  GPU_METHOD_DEVELOPMENT_STOPPED`。当前没有 GPU 方法开发队列；剩余工作是
+  证据回收、稿件 claim 取舍、owner-by-owner 核数和 supplement 重建。
+
+### 2026-09-01 — 已完成的前序证据
 
 - **K32 独立 N80 结果：** 新 seed `202609026` 上，physical/index 的
   64K macro 为 `.46625/.46125`，差 `+.0050`、校正区间
@@ -54,9 +90,9 @@
   并非统一更优，故推进 work-machine natural NLL/QA，不称 SOTA。见
   [`K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901`](paper-2027/research/attention-aware-retrofit/results/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md)。
 
-- **本实例停止、工作机下一门：** packed-natural 32K/64K final-256 数据已 CPU
-  冻结，model status `NOT_RUN`。立即在工作机按已注册三臂做 NLL 双门；随后只有
-  NLL 通过才做 2Wiki/Qasper/Hotpot 与更广 static baselines。见
+- **历史 work-machine 入口（已完成，不再执行）：** packed-natural 32K/64K
+  final-256 三臂 NLL、far-evidence QA、table×gain、source bridge 与两个 readout
+  rescue 都已执行；结果由 2026-09-02 两日综合 owner 汇总。原注册见
   [`WORK_MACHINE_NEXT_EXPERIMENT_PLAN_20260901`](paper-2027/research/attention-aware-retrofit/WORK_MACHINE_NEXT_EXPERIMENT_PLAN_20260901.md)。
 
 - **P2 同代识别注册（非结果）：** P1 之后只补 Qwen K32/K64 的固定 YaRN-s2
@@ -179,7 +215,23 @@
 | claim 架构 | 实现版的 claim 结构与证据层级 | 同上 |
 | 下一代理论状态 | position-resolved、co-adaptation-aware 的缺口，matched-content phase 2x2 与方法进入条件 | [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826`](paper-2027/research/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md) |
 
-### 2.2 支持性与历史理论推导（非行动队列）
+### 2.2 mature-checkpoint 方法理论（内部，尚未全部进入论文）
+
+| 对象 | 当前最强结论 | 边界 / Owner |
+| --- | --- | --- |
+| ordered rotary coupling | 成熟权重读取的是 learned rotary subspace 与其 frequency/dilation 的有序配对；same-multiset permutation collapse 否定 unordered-spectrum sufficiency | [`SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823`](paper-2027/research/attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) 与 [`ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902`](paper-2027/research/attention-aware-retrofit/results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md)；不建立每个 raw slot 的跨模型固定语义 |
+| static pure-\(z\) 能力 | 一张静态表可以显著改善 long NLL、RULER/NIAH 和 source-conditioned answer likelihood | 不稳定改善自然生成 QA；不是统一胜过 YaRN 或 SOTA |
+| capability-conversion barrier | 远程 source 已能改变正确答案 likelihood，但未稳定改变 autoregressive top-1、完整答案与 EOS | 是旧 EVQ-LoRA 障碍的 zero-training 复现，不是新的首次发现；9 月 2 日 raw remote owner 未回收 |
+| shared-table ceiling | bounded per-head allocation/range 改善完整 Hotpot 与三任务 long Pareto，说明所有 layer/head 共享一表是真实约束 | log-start 仍失败 Native retention，Native-start 仍失败 long QA；[`HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902`](paper-2027/research/attention-aware-retrofit/results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md) |
+| normalized-index transport | 在已测 K32/K64/K128 中是当前最有证据的 frozen engineering rule；physical-\(x\) 没有跨 \(K\) 特权 | 未证明 normalized rank 唯一、canonical、checkpoint-independent 或 K-causal |
+| continuous scale-flow | \(x=-\log\omega,\tau=\log S\) 可作为多尺度坐标；当前 `log_s4` 是 constant-flow 特例 | ODE/半群本身不识别方法；s2/s4 不识别曲率，\(M_\theta(x)\) 尚未定义或验证 |
+
+因此当前理论指导不是「再找一条更好的 ramp」，而是：任何后续方法都必须
+显式处理 checkpoint-conditioned ordered coupling，并在同一协议中连接 Native-compatible
+与 long-capable 两个已观测盆地。新 geometry scalar、boundary、gain 或 movement RMSE
+不能单独充当功能距离。
+
+### 2.3 支持性与历史理论推导（非行动队列）
 
 [`three_completions/optimization_notes.md`](paper-2027/research/three_completions/optimization_notes.md)
 把三处各自假设均匀先验的松散结构压成**单一可测先验 $\mu$** 的泛函链。
@@ -194,14 +246,14 @@
 | O4 | 统一 surrogate 泛函 $\mathcal J[\rho]$ 与闭式 EVQ-Cosh-R | surrogate 数学构造；不是部署方法或 LM 排序器 |
 | O5 | arcsine 猜想**证伪**；数值自由优化只报告给定 optimizer/restarts 下的 best-found | 负结果保留 |
 | O6 | re-adaptation 秩界不可得；线性化单投影幅度比例是前 $r$ 奇异值能量占比的平方根，Q/K 联合预算与 O6′ 仍开放 | 2026-08-30 纠错已写回 owner；非当前优先级 |
-| O7 | 头/层异质分配可能有价值 | 待验证推论；不是已完成的 Jensen 行为结论 |
+| O7 | 头/层异质分配可能有价值 | 2026-09-02 bounded headwise scope ladder 给出正向但 mixed 证据；不建立 Jensen 定理、通用 head law 或 joint-objective 解 |
 | O8 | $\Lambda(\mu)$ 的正则性缺口；朴素参与比**不是**上界 | 开放、非当前优先级 |
 
 历史验证脚本保留在
 [`three_completions/`](paper-2027/research/three_completions/)；运行环境与输入必须
 在使用前现场核验，脚本存在本身不构成当前结果或复现回执。
 
-### 2.3 历史理论（已被取代，只读）
+### 2.4 历史理论（已被取代，只读）
 
 `docs/tau_algor/`（15 篇，2026-03）与 `docs/archive/`（4 篇）是 τ scaling /
 habitable zone / softmax transport 的原始推导。**它们是当前理论的前身，不是当前
@@ -249,9 +301,10 @@ $\tau_*=\max(d_{\rm head}/\sqrt L,\;1.4)$ 是 operating prior 而非普适律（
 | 同 support 的 $z$ 控制 | [`SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823`](paper-2027/research/attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) | 内部因果案例 |
 | 零训练 session / 单静态 profile | [`SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823`](paper-2027/research/attention-aware-retrofit/results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md) | 部署/能力证据；2026-08-31 follow-up 记录 cache-safe static-s4 的 fresh RULER-13 长度曲线、D/S/T YaRN-anchored likelihood，以及 local-gap/s8 探索边界 |
 | 尺度一致 exponent-space 单表 | [`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831`](paper-2027/research/attention-aware-retrofit/results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md) | 当前零训练实用 owner：s4 同一静态 `omega'=omega*s^(-m)` 表通过 1x 双门并改善 2x/4x；冻结 `G(x)` 的 s2 zero-refit 也通过 1x 并在 2x 可用。单 checkpoint、会改变 sampled support，不替代 fixed-support 因果 owner |
-| `G_4(x)` 低维压缩 | [`CPU_LOW_DIM_COUPLING_LAW_20260901`](paper-2027/research/attention-aware-retrofit/results/CPU_LOW_DIM_COUPLING_LAW_20260901.md) | CPU-only：2 参数 clipped-affine 重建 OLMo movement 并 zero-refit 接近 Qwen geometry；GPU retention/capability 尚未测试 |
+| `G_4(x)` 低维压缩 | [`CPU_LOW_DIM_COUPLING_LAW_20260901`](paper-2027/research/attention-aware-retrofit/results/CPU_LOW_DIM_COUPLING_LAW_20260901.md) | CPU-only：2 参数 clipped-affine 重建 OLMo movement 并 zero-refit 接近 Qwen geometry；GPU 行为由下一独立 owner 承担 |
 | `G_4(x)` GPU confirmation | [`LOW_DIM_COUPLING_GPU_RESULT_20260901`](paper-2027/research/attention-aware-retrofit/results/LOW_DIM_COUPLING_GPU_RESULT_20260901.md) | mixed：Qwen 64K/128K long behavior 保留；OLMo PPL 与 Qwen 32K strict Native gate 失败，不是最终 deployable law |
 | 2026-09-01—02 两日综合 | [`ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902`](paper-2027/research/attention-aware-retrofit/results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md) | 本地 owner 与 9/2 会话回执分层汇总：long NLL/RULER/source-use 正证据；自然生成 QA 重复历史 EVQ-LoRA capability-conversion barrier；9/2 新增 table/gain 归因与 source-to-logit 定位。raw remote owner 尚未导入，不可直接升级为论文证据 |
+| bounded headwise factorization | [`HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902`](paper-2027/research/attention-aware-retrofit/results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md) | 两标量每头改善 long QA Pareto 并接近 YaRN macro，但 log-start 失败 4K retention、Native-start 失败 long QA；free gain 为负，无 SOTA 或 nonlinear-flow 结论 |
 | K32 finite-grid / coupling holdout | [`K32_FINITE_K_COUPLING_ANALYSIS_20260901`](paper-2027/research/attention-aware-retrofit/results/K32_FINITE_K_COUPLING_ANALYSIS_20260901.md) | `eta<1` 但 cell-average 假设未获 CPU 支持；matched s2 physical/index 显示 long/Native Pareto crossing，不开启 corrected C2 |
 | Frozen 2D matched-s / K128 transport | [`FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901`](paper-2027/research/attention-aware-retrofit/results/FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901.md) | K32 scale confound closed；Gemma-1.1 Native 4K `.905`，table-only 8K `.835`，但两个 K128 screen 的16K全零且physical/index未分离。gain/loader controls闭环；P3 rejected，s8 not opened |
 | 新数据上的持久性 | [`FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824`](paper-2027/research/attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) | 封闭正向确认 |
@@ -295,7 +348,7 @@ position-dependent operator，不把不同 target-free operator 一并判死。
 | --- | --- | --- |
 | phase-isotropy / pair-volume / min-eigenvalue | [`PHASE_ISOTROPY_50M_M4_RESULT_20260824`](paper-2027/research/attention-aware-retrofit/results/PHASE_ISOTROPY_50M_M4_RESULT_20260824.md)、[`PHASE_ALLOCATION_M4_EXTENDED_RESULT_20260824`](paper-2027/research/attention-aware-retrofit/results/PHASE_ALLOCATION_M4_EXTENDED_RESULT_20260824.md) 均为 `SCREEN_UNRESOLVED` | 历史 regime evidence；不是当前 candidate rejection 或 action |
 | O2 的 $L_{\rm eff}^J$ 机制解释 | 反演出 $\mathrm{sd}_\mu\approx46$–$72$ | 实测注意力距离方差不支持该经验解释；历史未决，不进入当前队列 |
-| bounded per-head / per-layer frequency 分配 | 2026-09-02 scope ladder、three-task natural QA 与 4K retention 已完成 | [`HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902`](paper-2027/research/attention-aware-retrofit/results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md)：headwise allocation+range 改善 long Pareto，但 log-start retention 失败、Native-start long QA 失败；无 SOTA 或当前 action |
+| Native--long basin bridge | bounded headwise/per-layer scope ladder 已完成，log-start 与 Native-start 落在相反两侧 | 尚无一个 arm 同时通过 Native retention 与自然 long QA；这是当前唯一核心方法缺口，但没有已授权 action |
 | per-head adapter 秩分配 | 同参数量下 0.89 vs 0.09 可修复比例 | 历史未运行诊断；不是 §6 的 matched low-rank control，也无当前 action |
 
 ---
@@ -480,8 +533,11 @@ table/gain/boundary/width，不得拟合 `G(x;K)` 或开启 s8/hierarchical resc
 新 seed full RULER-13 又给出 index 32K retention `1.020711`，64K 相对 Native
 `+.294038 [.250192,.338271]`、相对 YaRN `+.060897 [.027627,.095835]`。
 这把 normalized-index 从 core-4 development signal 推进为 breadth-confirmed
-engineering candidate；但 index 在 64K VT 与两项 QA 均低于 YaRN，因此 natural
-NLL/QA 仍是必要门，不能从 macro 升级为 task-universal 或 SOTA claim。
+engineering candidate。随后 natural gate 已完成：32 条 paired streams 的 64K
+index-minus-Native NLL 为 `-0.1241 [-0.1479,-0.1029]`，而 30-row
+far-evidence QA index-minus-Native 为 `-.03055 [-.1168,+.0486]`。因此当前可升级的
+是 natural long-position NLL 内部证据，不是 task-universal、natural-QA 或 SOTA
+claim；且 9 月 2 日 raw owner 未回收，尚不得进入 reviewer-facing 数字。
 
 2026-09-02 bounded headwise scope ladder进一步放松“所有 layer/head 共享同表与 gain”假设。
 两标量每头的 allocation+YaRN-range arm在 Hotpot/2Wiki/Qasper 的 macro F1 为
@@ -510,11 +566,14 @@ endpoint movement 本身不是出线条件。
 ### 6.5 生命周期与反重复
 
 - **Current:** 当前 TeX/PDF、§2--§3 canonical owners、`s4` exponent-space result owner。
-- **Next gate:** no active GPU method-development queue. The 2026-09-02 bounded headwise owner
-  closes the current allocation/range screen with a mixed result and explicit no-SOTA verdict.
-  Future scale-flow work, if separately authorized, begins with a CPU identifiability gate rather
-  than another table, gain, or curvature GPU sweep. Native-Q/K P3、physical-x privilege、
-  `G(x;K)`、residual/gain/boundary search 均保持关闭。
+- **Next gate:** no active GPU method-development queue. The 2026-09-02 natural/source-use and
+  bounded-headwise owners close the current table/gain/readout/factorization round with a mixed
+  result and explicit no-SOTA verdict. The first outstanding work is evidence recovery and paper
+  adjudication. If method research is separately reopened, it must first identify on CPU either
+  a nontrivial off-orbit scale-flow prediction or one source-disjoint, cross-task/scale direction
+  that can bridge the Native-compatible and long-capable basins. Another table, gain, curvature,
+  boundary, residual or unrestricted per-frequency sweep is not an entrance condition.
+  Native-Q/K P3、physical-x privilege、`G(x;K)` 与 post-outcome rescue 均保持关闭。
 - **Historical:** zero-training tournament 与 scale-law owner；保留证据，不保留任务。
 - **Closed negative:** §3.4 的 owner-backed 条目；不得通过改名恢复。
 - **Unresolved:** M4 phase-isotropy 仍是 `SCREEN_UNRESOLVED`，不自动进入方法设计。

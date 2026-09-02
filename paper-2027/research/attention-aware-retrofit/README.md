@@ -6,15 +6,36 @@ and order live only in [`../../../INDEX.md`](../../../INDEX.md) §0 and §6.
 
 ## Current question
 
-`HEADWISE_FACTORIZATION_MIXED / NO_SOTA / GPU_METHOD_DEVELOPMENT_STOPPED`
+`PURE_Z_LONG_SIGNAL_ESTABLISHED / NATURAL_QA_AND_NATIVE_LONG_JOINT_UNSOLVED /
+NO_SOTA / GPU_METHOD_DEVELOPMENT_STOPPED`
 
-The latest completed owner is
-[`results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md`](results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md).
-A 512-scalar headwise allocation+range field reaches `0.23576` three-task natural-QA macro versus
-official YaRN-4 `0.23817`, but its 4K PG-19 PPL retention is only `0.77138`. Starting from exact
-Native improves 4K NLL over Native but collapses back to Native-like Hotpot behavior. This is a
-mixed factorization result, not a method winner. The accompanying audit keeps continuous
-scale-flow as an unverified low-dimensional constructor rather than a current theory result.
+The two latest owners answer different questions.
+
+- [`results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md`](results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md)
+  establishes the current zero-training boundary: normalized-index pure-`z`
+  improves long NLL, RULER/NIAH, and far-source-conditioned answer likelihood,
+  while natural autoregressive QA remains unresolved. Its 2026-09-02 remote raw
+  results were not recovered, so those session-receipt numbers remain internal.
+- [`results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md`](results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md)
+  tests whether the shared layer/head table is the main ceiling. A 512-scalar
+  headwise allocation+range field reaches `0.23576` three-task natural-QA macro
+  versus official YaRN-4 `0.23817`, but its 4K PG-19 PPL retention is only
+  `0.77138`. Exact-Native initialization improves Native NLL and fails long
+  Hotpot. The result is mixed, not a method winner.
+
+The current internal theory is therefore narrow and evidence-led:
+
+1. The mature-checkpoint object is the ordered pairing between learned rotary
+   subspaces and frequency/dilation, not an unordered spectrum.
+2. Normalized index is the best-supported tested cross-`K` transport rule, not
+   a canonical or universal coordinate.
+3. A static pure-`z` table can transport long-position information into answer
+   logits, but that does not guarantee autoregressive winner selection or EOS.
+4. Head-specific clocks are useful, yet the observed Native-compatible and
+   long-capable basins remain disconnected.
+5. Continuous scale-flow is only a coordinate/problem formulation: existing
+   data do not identify curvature, a canonical vector field, or arbitrary-scale
+   extension.
 
 The completed low-dimensional experiment now separates two effects:
 
@@ -36,20 +57,17 @@ The completed low-dimensional experiment now separates two effects:
 
 No Native-correction or hierarchical candidate survives the current gates.
 The conditional Native-Q/K diagnostic was not executed because its required
-K32 crossing was not confirmed. The physical-coordinate privilege branch is
-now closed. The new-seed full-RULER result confirms the already-frozen
-normalized-index engineering representative at 64K against Native and YaRN,
-while preserving the 32K macro. The next evidence question moves to the work
-machine: packed-natural NLL and natural QA were subsequently executed, followed by the bounded
-headwise scope ladder routed above. Method-development compute is now stopped; this paragraph is
-historical context, not an action queue. Native/long routing and post-outcome gain rescue remain
-outside the target method.
+K32 crossing was not confirmed. Physical-coordinate privilege is closed. The
+packed-natural NLL, natural QA, source-use/readout checks, and bounded headwise
+ladder have all completed. Method-development compute is stopped; no old plan
+or historical runner is a current action queue.
 
 ## Evidence to open on demand
 
 | Question | Owner | Boundary |
 | --- | --- | --- |
 | Does layer/head factorization solve the shared-table ceiling? | [`results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md`](results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md) | bounded headwise clocks and one frozen YaRN range direction improve the long-task Pareto but do not jointly pass Native retention; free head gain fails and scale-flow curvature is unproven |
+| Does pure-`z` transfer from synthetic capability to natural text and QA? | [`results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md`](results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md) | natural 64K NLL and source-conditioned answer likelihood improve; natural generation QA and two readout rescues do not pass. The 9/2 raw remote owner is missing, so its new numbers remain internal |
 | Does fixed-support `z` affect mature frozen checkpoints? | [`results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) | frozen sensitivity/capability, not a usable Native-support method |
 | Does the same axis change fresh natural-text NLL? | [`results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`](results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) | length-conditional fixed-support effect; detailed profile not separated from coarse ramp |
 | What did the complete zero-training system establish? | [`results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`](results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md) | table + gain + routing system; not pure `z` |
@@ -62,7 +80,7 @@ outside the target method.
 | Does the selected K32 representative match deterministic YaRN? | same K32 confirmation owner plus [`evidence/K32_FRESH_YARN_COMPLETION_RECEIPT_20260901.json`](evidence/K32_FRESH_YARN_COMPLETION_RECEIPT_20260901.json) | index ties YaRN at 32K and is higher at 64K on the matched core-4 rows; the arm was added after three-arm outcomes, so untouched breadth confirmation remains required |
 | Why did the old K128 16K screen fail? | [`results/NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901.md`](results/NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901.md) and [`results/REFERENCE_CORRECTED_K128_RESULT_20260901.md`](results/REFERENCE_CORRECTED_K128_RESULT_20260901.md) | operational reference/request scale jointly explain the recovery; physical-coordinate superiority and K causality remain unresolved |
 | Does the K128 index tilt replicate? | [`results/K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901.md`](results/K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901.md) | yes on the registered 16K N80 contrast; this rejects physical-coordinate privilege but does not establish index universality or K causality |
-| Does index beat YaRN on untouched full RULER-13? | [`results/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md`](results/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md) | yes at 64K macro with paired CI above zero and 32K retention pass; QA/VT are mixed, so natural-task and NLL claims remain open |
+| Does index beat YaRN on untouched full RULER-13? | [`results/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md`](results/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md) | yes at 64K macro with paired CI above zero and 32K retention pass; subsequent natural NLL passes against Native, while natural QA remains unresolved and is not a uniform YaRN win |
 
 ## Retired work
 
@@ -86,11 +104,12 @@ is a retired preregistration, not a next protocol. Historical code under
 - [`analysis/`](analysis/) — mechanism interpretation and failed hypotheses;
   never an action queue.
 - [`preflights/`](preflights/) — what was registered before past execution;
-  includes the newly authorized P0 Native-only calibration.
+  completed or retired protocols do not become current actions.
 - [`theory/`](theory/) — historical method/theory work; current method boundary
   is in `AGENTS.md` and `INDEX.md`.
 
-Before future compute, derive and freeze the deterministic `f(z)`, its controls,
-and its multi-length gate in the existing authority chain, then obtain explicit
-run authorization. A historical script or preflight never supplies missing
-protocol fields by implication.
+No future compute is currently queued. If research is separately reopened, the
+first gate must identify a nontrivial cross-scale or cross-task bridge between
+the observed Native-compatible and long-capable basins before any GPU run is
+authorized. A new ramp, gain, cutoff, residual, or historical preflight is not
+such a bridge.

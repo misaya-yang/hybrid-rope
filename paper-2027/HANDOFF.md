@@ -11,7 +11,8 @@ The current research timeline and agenda live in [`../INDEX.md`](../INDEX.md)
 
 ## 1. Research status pointer
 
-`HEADWISE_FACTORIZATION_MIXED / NO_SOTA / GPU_METHOD_DEVELOPMENT_STOPPED`
+`PURE_Z_LONG_SIGNAL_ESTABLISHED / NATURAL_QA_AND_NATIVE_LONG_JOINT_UNSOLVED /
+NO_SOTA / GPU_METHOD_DEVELOPMENT_STOPPED`
 
 Current canonical owners:
 
@@ -21,6 +22,13 @@ Current canonical owners:
   retention gate. Exact-Native initialization improves 4K NLL over Native and
   fails long Hotpot. Free head gain is a protocol-specific negative. There is
   no SOTA or nonlinear scale-flow claim.
+- [`Zero-training two-day synthesis`](research/attention-aware-retrofit/results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md):
+  frozen normalized-index improves Qwen K32 64K packed-natural NLL and
+  far-source-conditioned answer likelihood, while the natural-generation QA
+  gate, source-contrast decoding, and existing-candidate reranking do not
+  recover a positive QA result. This local synthesis cleanly separates
+  canonical 2026-09-01 owners from 2026-09-02 session receipts; the latter
+  remain internal because their remote raw JSON/JSONL were not recovered.
 - [`Native reference calibration`](research/attention-aware-retrofit/results/NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901.md):
   the original two-code instrument remains abstained; the single permitted
   replacement independently confirms a protocol-specific 4K operating
@@ -61,12 +69,17 @@ branch is active.
 ## 2. Git state
 
 - Branch / upstream: `main_0726` / `origin/main_0726`
-- Published research-delivery commit:
-  `dd85086335efddfd3fc7c90675f1714e41236bf1`.
-- The ordinary push to `origin/main_0726` succeeded; the remote ref was
-  independently read back at the same SHA and divergence was `0/0`.
-- The worktree was clean immediately after that delivery. This handoff-only
-  refresh may advance HEAD once more; verify the final SHA live.
+- Research-delivery baseline before this documentation refresh:
+  `bbadf352e0bcdeb4d40131df864ab24bbee4a94d`.
+- Local HEAD, `origin/main_0726`, and the live remote ref were independently
+  read back at that SHA with divergence `0/0` before this documentation edit.
+- This handoff is part of the documentation refresh and therefore does not
+  embed its own final commit id; verify the final branch SHA live. Unrelated
+  pre-existing worktree changes remain under `.agents/`, and
+  two untracked analysis artifacts remain at
+  `research/attention-aware-retrofit/analysis/h_n_diagonal_verification.json`
+  and `research/attention-aware-retrofit/analysis/minimax_qp_phase1_results.json`.
+  They were not modified or staged by this refresh.
 - This run did not pull, rebase, switch, amend, force-push, or modify remotes.
 
 Verify all volatile values live before Git operations.
@@ -97,9 +110,12 @@ repairs and must be rebuilt on the work machine before upload.
   are complete. The raw/state/script bundle is archived locally outside Git;
   only the report and result-defining hashes remain in the repository.
 - P0, P1 s2/s4, Qwen P2, K32 N80, matched K32 YaRN, K128 N80 and the K32
-  full-RULER-13 confirmation are complete. Packed-natural data preparation is
-  CPU-only and model status remains `NOT_RUN`. No old model was deleted; the
-  protected 1.485B asset remains untouched.
+  full-RULER-13 confirmation are complete. The subsequent Qwen K32
+  packed-natural NLL, far-evidence QA, table×gain, evidence-position bridge,
+  source-contrast decode, and existing-candidate rerank also completed. Their
+  aggregate statistics are recorded in the two-day synthesis, but their remote
+  raw result owners were not recovered before shutdown. No old model was
+  deleted; the protected 1.485B asset remains untouched.
 - Cell-average, conditional Native-Q/K P3, and s8 were rejected by their
   registered entrance gates.
 - No training or OpenReview upload is authorized.
@@ -129,6 +145,11 @@ and explicit chunked FP32-attention comparison are bounded diagnostics.
 The s4 result is promoted only in its internal owner. `paper/` has an empty diff; no manuscript
 compilation, canonical `aidemo` suite or supplement packaging was run.
 
+The 2026-09-02 Qwen natural-NLL/QA/source-use chain has local code and parent-hash
+bindings but no recovered remote raw JSON/JSONL. Its statistics are internal
+decision evidence only until a raw owner is recovered and validated; no rerun
+is implied by this handoff.
+
 The 2026-09-02 local-only archive contains 42 files. All six state/log/receipt
 triplets match their embedded hashes, all evaluation raw rows match their result
 JSON hashes, and all receipt script hashes resolve to archived exact scripts.
@@ -137,14 +158,20 @@ parity before training.
 
 ## 6. Volatile action queue
 
-1. No GPU method-development experiment is active or authorized. If scale-flow
-   is revisited, first run a CPU-only matched-anchor/off-orbit identifiability
-   gate; do not begin with another frequency, gain, or curvature sweep.
-2. Rebuild and validate the curated supplement on the work machine before
+1. No GPU method-development experiment is active or authorized. First decide
+   whether the latest mature-checkpoint chain changes the manuscript claim set.
+2. Recover and validate the missing 2026-09-02 Qwen raw results if another
+   surviving copy exists. If not, keep those numbers internal; do not silently
+   rerun or promote them.
+3. If method research is separately reopened, require a CPU-identifiable
+   bridge between the observed Native-compatible and long-capable basins. Do
+   not begin with another frequency curve, gain, cutoff, curvature, or
+   unrestricted per-frequency sweep.
+4. Rebuild and validate the curated supplement on the work machine before
    submission.
-3. Freeze author metadata and complete the final owner-by-owner number review.
-4. Stay within the user's currently authorized evidence-driven GPU program;
-   OpenReview upload and new Git publication are not authorized by that program.
+5. Freeze author metadata and complete the final owner-by-owner number review.
+6. Treat any new GPU run, OpenReview upload, commit, or push as a separate
+   authorization; this handoff does not authorize them.
 
 Before Git publication, verify branch/upstream/divergence, staged scope,
 sensitive content, and unchanged `paper/`; record local/tracking/remote SHAs
