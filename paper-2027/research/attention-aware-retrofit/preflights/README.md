@@ -27,18 +27,20 @@ positions and aggregation. Its `CONFIRMED_CROSSING` entrance failed, so no
 model execution or mechanism result exists.
 
 [`K32_FRESH_YARN_MATCHED_BASELINE_PREFLIGHT_20260901.md`](K32_FRESH_YARN_MATCHED_BASELINE_PREFLIGHT_20260901.md)
-registers one official-equation YaRN-s2 completion arm on the same fresh K32
-rows; it is a matched baseline completion, not a new method holdout.
+registered one official-equation YaRN-s2 completion arm on the same fresh K32
+rows. It completed with index favored at 64K; this remains a matched baseline
+completion, not a new method holdout. The result shares the K32 confirmation
+owner.
 
 [`K128_COORDINATE_RANKING_CONFIRMATION_PREFLIGHT_20260901.md`](K128_COORDINATE_RANKING_CONFIRMATION_PREFLIGHT_20260901.md)
-freezes a new-seed, single-16K physical/index K128 confirmation. It tests the
-remaining coordinate-ordering claim without adding a length, baseline, or
-profile parameter.
+froze a new-seed, single-16K physical/index K128 confirmation. It completed
+with index favored; the result has its own canonical owner and does not add a
+length, baseline, or profile parameter.
 
 [`K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_PREFLIGHT_20260901.md`](K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_PREFLIGHT_20260901.md)
-freezes a later full-RULER confirmation boundary for the selected engineering
-representative. It remains pending and cannot bypass the current
-identification queue.
+freezes a full-RULER confirmation boundary for the selected engineering
+representative. Its identification entrance has now passed; execution remains
+limited to the three registered arms and new seed.
 
 ## Retired recent protocols
 

@@ -11,6 +11,20 @@ similarly, normalized-index retains more 32K capability, and the registered
 crossing decision is unresolved. The result owner is
 `../results/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md`.
 
+[`K32_FRESH_YARN_COMPLETION_RECEIPT_20260901.json`](K32_FRESH_YARN_COMPLETION_RECEIPT_20260901.json)
+adds one fixed official-equation YaRN-s2 arm on the same N80 rows. Index and
+YaRN tie at 32K; index is higher by `.064375` at 64K with paired 95% interval
+`[.0275,.102516]`. Because the first three arm outcomes were already known,
+this is matched baseline completion evidence rather than an untouched final
+method-selection holdout.
+
+[`K128_COORDINATE_CONFIRMATION_RECEIPT_20260901.json`](K128_COORDINATE_CONFIRMATION_RECEIPT_20260901.json)
+binds the independent Gemma K128 16K N80 physical/index confirmation. Index
+exceeds physical by `.061875`, paired 95% interval `[.028109,.096250]`, with
+complete row-level prediction/token/EOS score reproduction. This rejects the
+strong physical-coordinate privilege claim; it does not prove index
+universality or K causality.
+
 [`NATIVE_QK_CALIBRATION_DATA_RECEIPT_20260901.json`](NATIVE_QK_CALIBRATION_DATA_RECEIPT_20260901.json)
 freezes the conditional Native-only 8/8 calibration/confirmation input split.
 It excludes 128 explicitly supplied natural-input document identities and

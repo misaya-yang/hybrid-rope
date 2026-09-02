@@ -2,13 +2,20 @@
 
 ## Decision
 
-**Status: `COMPLETE / CROSSING_UNRESOLVED / P3_ENTRANCE_FAILED`.**
+**Status: `COMPLETE / CROSSING_UNRESOLVED / INDEX_FAVORED_VS_YARN /
+P3_ENTRANCE_FAILED`.**
 
 The independent 80-row-per-task confirmation does **not** reproduce the old
 physical-x long advantage over normalized-index.  At 64K the difference is
 only `+.0050`, with the preregistered two-length-corrected interval spanning
 zero.  Both fixed profiles improve 64K macro by about `.22` over Native, while
 normalized-index is materially more Native-compatible at 32K.
+
+A separately preregistered official-equation YaRN-s2 completion arm on the
+same rows scores exactly the same 32K macro as normalized-index, but is lower
+at 64K by `.064375`; the paired 95% interval is wholly positive for index.
+This makes normalized-index the current engineering representative for a new
+untouched breadth confirmation. It is not yet a SOTA or universal-law result.
 
 This weakens the strongest physical-coordinate claim.  It does not erase the
 useful frozen-profile result: both static tables recover substantial 64K
@@ -20,6 +27,7 @@ Owners:
 - [Preregistration](../preflights/K32_PAIRED_CROSSING_CONFIRMATION_PREFLIGHT_20260901.md)
 - [Hash-bound receipt](../evidence/K32_PAIRED_CROSSING_CONFIRMATION_RECEIPT_20260901.json)
 - [Reproducer](../../../../scripts/analysis/summarize_k32_crossing_confirmation.py)
+- [Matched YaRN completion receipt](../evidence/K32_FRESH_YARN_COMPLETION_RECEIPT_20260901.json)
 
 ## Frozen protocol
 
@@ -45,9 +53,10 @@ Task-vector order is single / mk2 / mk3 / VT.
 | Native | `1/.7375/.1125/.4625` | `.578125` | `.80/.0625/0/.12` | `.245625` | `1.000000` |
 | physical-x | `1/.3875/.075/.525` | `.496875` | `1/.5125/.10/.2525` | `.466250` | `.859459` |
 | normalized-index | `1/.5625/.075/.4975` | `.533750` | `1/.4875/.0625/.295` | `.461250` | `.923243` |
+| official YaRN-s2 | `1/.525/.125/.485` | `.533750` | `1/.2625/.0375/.2875` | `.396875` | `.923243` |
 
-The `.875` Native point gate fails physical-x and passes normalized-index.
-This is a RULER capability ratio, not a Qwen natural-PPL gate.
+The `.875` Native point gate fails physical-x and passes normalized-index and
+YaRN. This is a RULER capability ratio, not a Qwen natural-PPL gate.
 
 ## Paired inference
 
@@ -74,6 +83,24 @@ Thus the robust update is not a physical/index long ranking.  It is that the
 two profiles produce essentially the same long improvement on this panel,
 while normalized-index pays the smaller measured Native cost.
 
+## Matched official-YaRN completion
+
+The YaRN arm was frozen after the three candidate arms completed, so this is a
+same-row baseline completion rather than an untouched method-selection
+holdout. It uses the installed-HF official-equation factor-two tensor and
+published amplitude, with no search. The original physical/index crossing
+decision remains unchanged.
+
+| Contrast | 32K delta [95% CI] | 64K delta [95% CI] |
+| --- | --- | --- |
+| normalized-index − YaRN | `.000000 [-.042500,.041875]` | `+.064375 [.027500,.102516]` |
+
+The 64K interval is wholly above zero under the preregistered paired
+task-stratified bootstrap. The gain is concentrated in numeric multi-key
+retrieval (`+.225`); single-key is tied, UUID multi-key is `+.025`, and VT is
+`+.0075`. Therefore this panel supports a bounded index-over-YaRN core-4 result,
+not uniform per-task dominance.
+
 ## Consequence for the research sequence
 
 The conditional
@@ -83,14 +110,17 @@ model forward, KL result, compatibility predictor, selector, or P4 method is
 authorized by that preregistration.  Its already-prepared CPU input receipt is
 preserved as unused infrastructure rather than relabeled evidence.
 
-The next identification test keeps both tables frozen and uses an independent
-K128 16K endpoint to determine whether the earlier sample-level index advantage
-repeats.  Broad SOTA or parameter search remains outside this owner.
+The next identification test keeps both coupling tables frozen and uses an
+independent K128 16K endpoint to determine whether the earlier sample-level
+index advantage repeats. If that branch closes, a separately frozen new-seed
+full-RULER confirmation can test normalized-index against Native and YaRN
+without reusing these development rows. Broad parameter search remains outside
+this owner.
 
 ## Claim ceiling
 
 This is one checkpoint, one new data seed, four fixed RULER tasks and one
-decoder/scorer contract.  It supports useful K32 static s2 extension and rejects
-a strong claim from the old physical/index point difference.  It does not prove
-index universality, K causality, equivalence of the profiles, natural-text
-quality, arbitrary-scale consistency, or SOTA.
+decoder/scorer contract. It supports useful K32 static s2 extension, rejects a
+strong claim from the old physical/index point difference, and identifies a
+same-row index advantage over YaRN at 64K. It does not prove index universality,
+K causality, natural-text quality, arbitrary-scale consistency, or SOTA.

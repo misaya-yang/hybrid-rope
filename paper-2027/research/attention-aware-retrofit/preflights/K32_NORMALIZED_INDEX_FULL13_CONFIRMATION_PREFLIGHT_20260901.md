@@ -1,6 +1,10 @@
 # K32 normalized-index full-RULER confirmation — preregistration
 
-**Status:** `FROZEN_PENDING_IDENTIFICATION`
+**Status:** `EXECUTING`
+
+The K128 identification entrance completed with a positive frozen-index
+contrast. Data generation and the exact three registered arms are now running;
+the protocol below remains unchanged.
 
 ## Hypothesis
 

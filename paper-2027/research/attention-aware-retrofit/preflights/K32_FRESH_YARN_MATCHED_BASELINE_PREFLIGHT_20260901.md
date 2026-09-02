@@ -1,6 +1,10 @@
 # K32 fresh YaRN matched-baseline completion — preregistration
 
-**Status:** `FROZEN_FOR_EXECUTION`
+**Status:** `EXECUTED / RESULT_OWNED`
+
+The terminal result is integrated into
+[`K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901`](../results/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md)
+and its machine-path-free completion receipt.
 
 ## Question and hypothesis
 

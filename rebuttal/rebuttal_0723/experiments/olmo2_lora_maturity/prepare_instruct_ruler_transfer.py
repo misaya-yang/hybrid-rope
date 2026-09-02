@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 import subprocess
@@ -200,6 +201,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--samples-per-cell", type=int, default=100)
     parser.add_argument("--seed", type=int, default=20_260_727)
     parser.add_argument(
+        "--workers",
+        type=int,
+        default=1,
+        help="Independent task-length generator subprocesses; default preserves serial execution.",
+    )
+    parser.add_argument(
         "--data-status",
         choices=(DATA_STATUS, GENERIC_DATA_STATUS),
         default=DATA_STATUS,
@@ -300,6 +307,8 @@ def main() -> None:
         raise RuntimeError(f"supported transfer lengths are {SUPPORTED_LENGTHS}")
     if not 1 <= int(args.samples_per_cell) <= 500:
         raise RuntimeError("samples-per-cell must be in [1, 500]")
+    if not 1 <= int(args.workers) <= 32:
+        raise RuntimeError("workers must be in [1, 32]")
     if output.exists():
         raise FileExistsError(output)
 
@@ -338,7 +347,7 @@ def main() -> None:
 
     assets = verify_external_assets(synthetic, tasks)
     output.mkdir(parents=True)
-    cells: dict[str, dict[str, Any]] = {}
+    jobs: list[list[str]] = []
     for task in tasks:
         config = TASK_CONFIGS[task]
         base_task = str(config["base_task"])
@@ -349,10 +358,9 @@ def main() -> None:
         generator = synthetic / f"{base_task}.py"
         if not generator.is_file():
             raise FileNotFoundError(generator)
-        cells[task] = {}
         for nominal_length in lengths:
             save_dir = output / f"L{nominal_length}"
-            command = _generator_command(
+            jobs.append(_generator_command(
                 python=sys.executable,
                 generator=generator,
                 save_dir=save_dir,
@@ -364,8 +372,19 @@ def main() -> None:
                 seed=int(args.seed),
                 template=task_template,
                 config=config,
-            )
-            subprocess.run(command, check=True)
+            ))
+
+    with ThreadPoolExecutor(max_workers=int(args.workers)) as executor:
+        futures = [executor.submit(subprocess.run, command, check=True) for command in jobs]
+        for future in futures:
+            future.result()
+
+    cells: dict[str, dict[str, Any]] = {}
+    for task in tasks:
+        config = TASK_CONFIGS[task]
+        cells[task] = {}
+        for nominal_length in lengths:
+            save_dir = output / f"L{nominal_length}"
             path = save_dir / task / "test.jsonl"
             rows = [
                 json.loads(line)

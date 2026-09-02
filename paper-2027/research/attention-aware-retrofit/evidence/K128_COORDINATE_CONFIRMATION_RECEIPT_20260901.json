@@ -1,0 +1,139 @@
+{
+  "arm_identities": {
+    "normalized_index": {
+      "active_sha256_float32": "1b908f90aebccc006521b3840b5662c217caa040d173c974527d33c7ea9e9849",
+      "attention_scaling": 1.102585782722872,
+      "checkpoint_weight_sha256": "584d0f7d939d235ee14a4ba307b40dbc3f03d5483181b9381e9f10636b618933",
+      "cuda": "12.8",
+      "data_manifest_sha256": "244a5ccd27633ab813eaa6cd0db5d405ee38e827979dbec4b9472f473055b6ff",
+      "input_cell_sha256": {
+        "niah_multikey_2": "f7678c689864cd66e4056fd3d1635c1efaa55c0d072cf9672e20a76fa5c7635c",
+        "niah_multikey_3": "985781972fedd369867189f319fd166de46d2e9d3014adeb00139b515a586c5b",
+        "niah_single_1": "1fdbe8baee5798a254b01abd551cce56eb9ab9cd32bb32c9a140b99a0670dcee",
+        "vt": "754edbe971ac893ae11cbac4e19877692c649c86dafde9fa903e6ad667a653fd"
+      },
+      "native_sha256_float32": "cc63341a0ac42a60b986ed638fd0d45b838b72fabeffec059c463eac4ed9ea15",
+      "raw_hashes": {
+        "examples_sha256": "b1daf2d8289d2f41072de511bd9e9622382214f9483299ba4bc0fcdd603bdb62",
+        "results_sha256": "6129a8a0ec3b6d69e1d8f17ed400ba97f00a271de0540f6c63977fb7200d9e5d",
+        "run_manifest_sha256": "dc3a1c0c3294fedc685bc7b8c6c4a881cbd280b7504f6d23fbbf41d4a5e60ad2"
+      },
+      "ruler_commit": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+      "runner_sha256": "ec514fad23a99a430290419c738a566ff7abff9313fbac99970bcee768a5dc8d",
+      "seed": 202609028,
+      "table_file_sha256": "1f6797e02246f8ebd44e277da39fa561b679ab7a74949dc2b0b057c19dc4f787",
+      "tokenizer_sha256": "7da53ca29fb16f6b2489482fc0bc6a394162cdab14d12764a1755ebc583fea79",
+      "torch": "2.8.0+cu128"
+    },
+    "physical_x": {
+      "active_sha256_float32": "be5c2b3b4ce01d7fe6020cb01d9041e10aad93b9cdb03e989e64b8fa17561423",
+      "attention_scaling": 1.102585782722872,
+      "checkpoint_weight_sha256": "584d0f7d939d235ee14a4ba307b40dbc3f03d5483181b9381e9f10636b618933",
+      "cuda": "12.8",
+      "data_manifest_sha256": "244a5ccd27633ab813eaa6cd0db5d405ee38e827979dbec4b9472f473055b6ff",
+      "input_cell_sha256": {
+        "niah_multikey_2": "f7678c689864cd66e4056fd3d1635c1efaa55c0d072cf9672e20a76fa5c7635c",
+        "niah_multikey_3": "985781972fedd369867189f319fd166de46d2e9d3014adeb00139b515a586c5b",
+        "niah_single_1": "1fdbe8baee5798a254b01abd551cce56eb9ab9cd32bb32c9a140b99a0670dcee",
+        "vt": "754edbe971ac893ae11cbac4e19877692c649c86dafde9fa903e6ad667a653fd"
+      },
+      "native_sha256_float32": "cc63341a0ac42a60b986ed638fd0d45b838b72fabeffec059c463eac4ed9ea15",
+      "raw_hashes": {
+        "examples_sha256": "b606b4d1875f713a9fdede9306d10311c8ccf9464999b92962e247091893ec97",
+        "results_sha256": "147087eb792cd8b8f75a49ec097ac001aa663f3bd700388749d5dd609190cbe2",
+        "run_manifest_sha256": "51048907b459349ae8f719c4ae2f11c817263cd35069664e89e88aa6e4419967"
+      },
+      "ruler_commit": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+      "runner_sha256": "ec514fad23a99a430290419c738a566ff7abff9313fbac99970bcee768a5dc8d",
+      "seed": 202609028,
+      "table_file_sha256": "e4a67fc87d066a4942be6b2b5dcb63753a7edaeadc567a13c856be95a8107b7b",
+      "tokenizer_sha256": "7da53ca29fb16f6b2489482fc0bc6a394162cdab14d12764a1755ebc583fea79",
+      "torch": "2.8.0+cu128"
+    }
+  },
+  "arms": [
+    "physical_x",
+    "normalized_index"
+  ],
+  "bootstrap": {
+    "assumptions": "exchangeable rows within task; no exclusions, pooling, optional stopping, or normality assumption",
+    "confidence": 0.95,
+    "numpy_version": "2.0.2",
+    "quantile_interpolation": "linear",
+    "quantiles": [
+      0.025,
+      0.975
+    ],
+    "replicates": 10000,
+    "seed": 202609029,
+    "unit": "paired local_index resampling within each fixed task; equal task weights"
+  },
+  "data_seed": 202609028,
+  "decision": "ABOVE_ZERO",
+  "decision_rule": "ABOVE_ZERO iff the 95% interval is wholly above zero; BELOW_ZERO iff wholly below zero; otherwise UNRESOLVED.",
+  "evidence_scope": "Independent-input Gemma K128 16K ordering for two frozen tables only; not K causality, universality, natural-text quality, SOTA, or token-level equality between arms.",
+  "length": 16384,
+  "old_pilot_pooled": false,
+  "primary_index_minus_physical": {
+    "delta": 0.061875,
+    "paired_task_stratified_ci95": [
+      0.028109374999999867,
+      0.09624999999999984
+    ],
+    "per_task_delta": [
+      0.0,
+      0.0,
+      0.2,
+      0.047499999999999994
+    ]
+  },
+  "profile_selection_performed": false,
+  "rows_per_arm": 320,
+  "rows_per_task": 80,
+  "scores": {
+    "normalized_index": {
+      "macro": 0.7899999999999998,
+      "per_task": {
+        "niah_multikey_2": 0.8875,
+        "niah_multikey_3": 0.4,
+        "niah_single_1": 1.0,
+        "vt": 0.8724999999999994
+      },
+      "task_vector": [
+        1.0,
+        0.8875,
+        0.4,
+        0.8724999999999994
+      ]
+    },
+    "physical_x": {
+      "macro": 0.7281249999999998,
+      "per_task": {
+        "niah_multikey_2": 0.8875,
+        "niah_multikey_3": 0.2,
+        "niah_single_1": 1.0,
+        "vt": 0.8249999999999993
+      },
+      "task_vector": [
+        1.0,
+        0.8875,
+        0.2,
+        0.8249999999999993
+      ]
+    }
+  },
+  "status": "GEMMA_K128_COORDINATE_CONFIRMATION_COMPLETE",
+  "summary_script_sha256": "19c9b365b18c25c008e641f3122a87db0c9ff5f91c6266c1f60b68748f1cf3e3",
+  "task_vector_order": [
+    "niah_single_1",
+    "niah_multikey_2",
+    "niah_multikey_3",
+    "vt"
+  ],
+  "tasks": [
+    "niah_single_1",
+    "niah_multikey_2",
+    "niah_multikey_3",
+    "vt"
+  ]
+}

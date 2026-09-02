@@ -6,7 +6,7 @@ and order live only in [`../../../INDEX.md`](../../../INDEX.md) §0 and §6.
 
 ## Current question
 
-`K32_N80_COORDINATE_UNRESOLVED / REFERENCE_CORRECT_K128_RECOVERED /
+`PHYSICAL_COORDINATE_PRIVILEGE_REJECTED / NORMALIZED_INDEX_BREADTH_RUNNING /
 P3_ENTRANCE_FAILED`
 
 The completed low-dimensional experiment now separates two effects:
@@ -23,16 +23,17 @@ The completed low-dimensional experiment now separates two effects:
   for the exact Gemma-1.1 artifact. Reference- and scale-correct s2/s4 tables
   recover 8K/16K and pass measured 4K gates; the old config-reference table
   remains zero on the paired 16K rows;
-- the earlier K128 sample scores favor index, but multiplicity sensitivity did
-  not identify the ordering. A new single-endpoint N80 confirmation is the
-  current identification gate.
+- the earlier K128 sample scores favored index; a new single-endpoint N80
+  confirmation now resolves index-minus-physical at `+.061875`, 95% interval
+  `[.028109,.096250]`.
 
 No Native-correction or hierarchical candidate survives the current gates.
 The conditional Native-Q/K diagnostic was not executed because its required
-K32 crossing was not confirmed. The next evidence question is only whether the
-old K128 index tilt repeats on fresh rows. Static breadth/SOTA confirmation is
-conditional on closing that identification step. Native/long routing and
-post-outcome gain rescue remain outside the target method.
+K32 crossing was not confirmed. The physical-coordinate privilege branch is
+now closed. The current evidence question is whether the already-frozen
+normalized-index engineering representative retains its Native/long advantage
+against YaRN on a new full-RULER seed. Native/long routing and post-outcome gain
+rescue remain outside the target method.
 
 ## Evidence to open on demand
 
@@ -47,7 +48,9 @@ post-outcome gain rescue remain outside the target method.
 | Does K32 failure come from finite-grid point sampling? | [`results/K32_FINITE_K_COUPLING_ANALYSIS_20260901.md`](results/K32_FINITE_K_COUPLING_ANALYSIS_20260901.md) | transition is under-resolved, but exact cell averaging does not match the residual and is not a GPU candidate; physical `x` still transports positively at 64K |
 | Does frozen `G(x)` transport at matched scale and K128? | [`results/FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901.md`](results/FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901.md) | K32 has a physical-long/index-Native Pareto crossing; K128 is unresolved with replicated zero 16K endpoints, so no universal or SOTA claim |
 | Does the K32 physical/index crossing replicate? | [`results/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md`](results/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md) | no identified ordering; both profiles give similar 64K improvement, index is more Native-compatible, and the conditional mechanism entrance fails |
+| Does the selected K32 representative match deterministic YaRN? | same K32 confirmation owner plus [`evidence/K32_FRESH_YARN_COMPLETION_RECEIPT_20260901.json`](evidence/K32_FRESH_YARN_COMPLETION_RECEIPT_20260901.json) | index ties YaRN at 32K and is higher at 64K on the matched core-4 rows; the arm was added after three-arm outcomes, so untouched breadth confirmation remains required |
 | Why did the old K128 16K screen fail? | [`results/NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901.md`](results/NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901.md) and [`results/REFERENCE_CORRECTED_K128_RESULT_20260901.md`](results/REFERENCE_CORRECTED_K128_RESULT_20260901.md) | operational reference/request scale jointly explain the recovery; physical-coordinate superiority and K causality remain unresolved |
+| Does the K128 index tilt replicate? | [`results/K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901.md`](results/K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901.md) | yes on the registered 16K N80 contrast; this rejects physical-coordinate privilege but does not establish index universality or K causality |
 
 ## Retired work
 

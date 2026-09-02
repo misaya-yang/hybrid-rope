@@ -28,7 +28,10 @@
   `[-.038125,.048750]`；两者相对 Native 均改善约 `.22`。32K Native
   retention 为 `.859459/.923243`，只有 index 过 `.875` point gate。旧的
   physical long 优势未复现，crossing 判定 `UNRESOLVED`；条件 P3 入口失败，
-  不运行 Native-Q/K KL。见
+  不运行 Native-Q/K KL。随后固定 YaRN-s2 在同批 32K/64K 为
+  `.53375/.396875`；index 与其 32K 打平，64K 高 `+.064375`，paired 95% CI
+  `[.0275,.102516]`。这是 matched baseline completion，不是 untouched SOTA
+  holdout。见
   [`K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901`](paper-2027/research/attention-aware-retrofit/results/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md)。
 
 - **Qwen 同代 s2 panel 完成：** K32 YaRN2 32K/64K 为 `.5625/.4400`；
@@ -37,11 +40,17 @@
   paired CI 仍跨零，不升级为坐标优势或 K 因果。见
   [`QWEN_S2_SAME_FAMILY_IDENTIFICATION_RESULT_20260901`](paper-2027/research/attention-aware-retrofit/results/QWEN_S2_SAME_FAMILY_IDENTIFICATION_RESULT_20260901.md)。
 
-- **下一坐标识别门（注册）：** 冻结 Gemma K128 的既有 physical/index s4
-  表，只在新 seed `202609028` 的 16K core-4、80 rows/task 上确认旧的
-  sample-level index 优势。区间继续跨零则关闭坐标优越性分支，不加样本、任务或
-  参数；见
-  [`K128_COORDINATE_RANKING_CONFIRMATION_PREFLIGHT_20260901`](paper-2027/research/attention-aware-retrofit/preflights/K128_COORDINATE_RANKING_CONFIRMATION_PREFLIGHT_20260901.md)。
+- **K128 坐标确认完成：** 冻结 Gemma K128 physical/index s4 表在新 seed
+  `202609028` 的 16K N80 为 `.728125/.790000`；index-minus-physical
+  `+.061875`，paired 95% CI `[.028109,.096250]`。旧的 index 倾向独立复现，
+  因此关闭 physical-`x` 作为跨 K 特权坐标的强主张；index 只作为工程代表进入
+  新 seed breadth confirmation，不升级为 universal law。见
+  [`K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901`](paper-2027/research/attention-aware-retrofit/results/K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901.md)。
+
+- **当前 GPU 门：** 固定 K32 normalized-index、Native、官方 YaRN-s2，在 seed
+  `202609027` 的完整 RULER-13、32K/64K、20 rows/task 上一次确认；不重新加入
+  physical，不改表、gain 或 scale。见
+  [`K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_PREFLIGHT_20260901`](paper-2027/research/attention-aware-retrofit/preflights/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_PREFLIGHT_20260901.md)。
 
 - **P2 同代识别注册（非结果）：** P1 之后只补 Qwen K32/K64 的固定 YaRN-s2
   与 K64 唯一 C2-s2 缺口；K64 的 physical/index 相同，不能当作 K 趋势证据。
@@ -443,15 +452,19 @@ K32 matched s2 pilot point estimates为 physical `.5225/.5050`、index
 `.5775/.4375` @32K/64K；补齐 YaRN2 后为 `.5625/.4400`。新 seed N80 三臂确认
 得到 physical/index `.496875/.533750` @32K 与 `.466250/.461250` @64K；64K
 差 `+.0050` 且校正区间跨零。两张表的 long 改善相同量级，index Native cost
-更小。故旧 20-row physical long 排序未复现，conditional Native-Q/K 入口失败；
-标准 finite-cell projection 仍未满足 CPU entrance condition，也不因结果复活。
+更小。同批 YaRN 为 `.533750/.396875`，index 的 64K paired 优势为
+`+.064375 [.027500,.102516]`，但三臂结果先于 YaRN 补臂已知。故旧 20-row
+physical long 排序未复现，conditional Native-Q/K 入口失败；标准 finite-cell
+projection 仍未满足 CPU entrance condition，也不因结果复活。
 
 同代 K64 Qwen 的 C2-s2 为 `.7675/.6325`，YaRN2 为 `.7675/.6950` @32K/64K；
 C2 Native point retention `.935976` 通过，但 C2/YaRN 之差未解决。K64 上
 physical/index 在精确构造中退化为同一控制，不能提供第二个坐标差观测。因此当前
-结论是 **reference-correct、scale-correct 的 frozen low-dimensional profile
-family 有多模型可用性，但 physical coordinate privilege、因果 K 与 SOTA 均未
-识别**。下一识别门只复验 K128 16K 的 physical/index 排序；不得反向调整
+K128 新 seed N80 又给出 index-minus-physical `+.061875`、95% CI
+`[.028109,.096250]`。结合 K32 的相同 long/更低 Native cost 与 K64 的构造退化，
+当前结论是 **reference-correct、scale-correct 的 frozen profile family 有多模型
+可用性，但 physical coordinate privilege 被证据反驳；normalized-index 只是当前
+工程代表，因果 K、universality 与 SOTA 仍未识别**。不得反向调整
 table/gain/boundary/width，不得拟合 `G(x;K)` 或开启 s8/hierarchical rescue。
 
 ### 6.4 已退役路线
@@ -470,10 +483,10 @@ endpoint movement 本身不是出线条件。
 ### 6.5 生命周期与反重复
 
 - **Current:** 当前 TeX/PDF、§2--§3 canonical owners、`s4` exponent-space result owner。
-- **Next gate:** K32 new-seed confirmation 已完成且未确认 crossing，故 Native-Q/K
-  finite-KL 诊断关闭。只执行已冻结的 K128 16K N80 physical/index confirmation；
-  若仍 unresolved，关闭坐标优越性分支，再决定固定 engineering representative 的
-  新 holdout breadth/SOTA confirmation。
+- **Next gate:** K32 crossing 未确认，Native-Q/K finite-KL 诊断关闭；K128 N80
+  又确认 index 优势，physical-coordinate privilege 分支关闭。当前只执行已冻结的
+  K32 new-seed full-RULER Native/index/YaRN confirmation；其结果之后才决定 natural
+  NLL 与更广 deterministic baselines，禁止新增 profile 参数。
 - **Historical:** zero-training tournament 与 scale-law owner；保留证据，不保留任务。
 - **Closed negative:** §3.4 的 owner-backed 条目；不得通过改名恢复。
 - **Unresolved:** M4 phase-isotropy 仍是 `SCREEN_UNRESOLVED`，不自动进入方法设计。

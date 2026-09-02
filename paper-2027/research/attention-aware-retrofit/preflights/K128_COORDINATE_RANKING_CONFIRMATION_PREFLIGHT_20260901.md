@@ -1,6 +1,9 @@
 # K128 physical-vs-index coordinate confirmation — preregistration
 
-**Status:** `FROZEN_PENDING_EXECUTION`
+**Status:** `EXECUTED / RESULT_OWNED`
+
+The terminal result is owned by
+[`K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901`](../results/K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901.md).
 
 ## Hypothesis and purpose
 
