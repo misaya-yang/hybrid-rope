@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 GRID = (32768, 65536)
 DOCUMENTS = 32
 TARGET_TOKENS = 256
-STATUS = "QWEN_K32_PACKED_NATURAL_NLL_DATA_READY_V1"
+STATUS = "QWEN_K32_PACKED_NATURAL_NLL_DATA_READY_V2"
 
 
 def sha256_file(path: Path) -> str:
@@ -62,6 +62,9 @@ def pack_streams(rows: Iterable[tuple[int, str]], tokenizer: Any) -> list[dict]:
         raise ValueError("Qwen tokenizer must provide EOS for document packing")
     eos = int(tokenizer.eos_token_id)
     streams: list[dict] = []
+    minimum_final_document_tokens = 2 * TARGET_TOKENS
+    if GRID[-1] < minimum_final_document_tokens:
+        raise ValueError("packed stream is shorter than the boundary-safe target neighborhood")
     current: list[int] = []
     sources: list[dict] = []
     seen: set[str] = set()
@@ -75,6 +78,8 @@ def pack_streams(rows: Iterable[tuple[int, str]], tokenizer: Any) -> list[dict]:
             continue
         remaining = GRID[-1] - len(current)
         complete_document = len(encoded) + 1 <= remaining
+        if complete_document and remaining - (len(encoded) + 1) < minimum_final_document_tokens:
+            continue
         contribution = len(encoded) if complete_document else remaining
         current.extend(encoded[:contribution])
         if complete_document:
@@ -83,6 +88,9 @@ def pack_streams(rows: Iterable[tuple[int, str]], tokenizer: Any) -> list[dict]:
                         "document_tokens_used": contribution, "document_tokens_available": len(encoded),
                         "truncated_to_finish_stream": not complete_document})
         if len(current) == GRID[-1]:
+            if (not sources[-1]["truncated_to_finish_stream"]
+                    or sources[-1]["document_tokens_used"] < minimum_final_document_tokens):
+                raise AssertionError("packed stream lacks a boundary-safe final document")
             streams.append({"input_ids": current, "sources": sources})
             current, sources = [], []
             if len(streams) == DOCUMENTS:
@@ -157,9 +165,10 @@ def prepare(args: argparse.Namespace) -> dict:
         "source_document_set_sha256": canonical_hash(sorted(item["source_text_sha256"]
                                                               for item in all_sources)),
         "packing_contract": (
-            "source-order unique documents; insert one EOS between complete documents; truncate only "
-            "the last document to finish each 65536-token stream and discard its unused suffix; never "
-            "reuse a source document; 32768 is the suffix of the paired 65536 stream"
+            "source-order unique documents; insert one EOS between complete documents; skip a document "
+            "when consuming it completely would leave fewer than 512 tokens for the final document; "
+            "truncate only the last document to finish each 65536-token stream and discard its unused "
+            "suffix; never reuse a source document; 32768 is the suffix of the paired 65536 stream"
         ),
         "stream_receipts": [{"sample_id": f"qwen-k32-natural-{index:03d}",
                              "source_row_range": [items[0]["source_row"], items[-1]["source_row"]],
@@ -168,7 +177,10 @@ def prepare(args: argparse.Namespace) -> dict:
                                                                    for item in items]),
                              "long_ids_sha256": ids_hash(stream["input_ids"])}
                             for index, stream in enumerate(streams) for items in [stream["sources"]]],
-        "selection": "first 32 complete packed streams from the fixed source row; no model scores",
+        "selection": (
+            "first 32 boundary-safe complete packed streams from the fixed source row; deterministic "
+            "near-boundary skip rule; no model scores"
+        ),
         "script_sha256": sha256_file(Path(__file__)),
     }
     (args.output / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")

@@ -1,8 +1,10 @@
 # Work-machine next experiment plan (2026-09-01)
 
-This is an execution handoff subordinate to `INDEX.md` §6, not a second
-research agenda. The current GPU instance is stopped after the completed
-full-RULER result; no outcome below has been run.
+This is the frozen execution handoff subordinate to `INDEX.md` §6, not a
+second research agenda. The tree was reported complete on the work machine on
+2026-09-02; its raw remote receipts have not been imported into this checkout.
+The two-day synthesis records the session-level outcomes. The commands below
+are retained for provenance and are no longer a current action queue.
 
 ## 1. Frozen conclusion entering the work machine
 
@@ -62,27 +64,20 @@ python scripts/data/prepare_qwen_k32_natural_nll.py \
   --output "$NLL_ROOT/data"
 ```
 
-Verify its manifest/rows hashes match the values above, then run exactly one
-three-profile process:
+Verify its manifest/rows hashes match the values above, then run the frozen
+budgeted tree:
 
 ```bash
-python -u scripts/eval/eval_qwen_k32_natural_nll.py \
-  --checkpoint "$QWEN_K32_CHECKPOINT" \
-  --data-root "$NLL_ROOT/data" \
-  --index-table "$INDEX_S2_TABLE" \
-  --yarn-table "$YARN_S2_TABLE" \
-  --output "$NLL_ROOT/eval"
-
-python scripts/analysis/summarize_qwen_k32_natural_nll.py \
-  --root "$NLL_ROOT/eval" \
-  --output "$REPO/paper-2027/research/attention-aware-retrofit/evidence/\
-K32_PACKED_NATURAL_NLL_RECEIPT_20260901.json"
+scripts/eval/run_qwen_k32_experiment_tree.sh
 ```
 
-The evaluator hard-binds checkpoint/config/Native/index/YaRN table hashes and
-gains, uses `use_cache=False`, and keeps one static table for every complete
-forward. Do not change batch shape, target positions, source start, or arms
-after seeing an outcome.
+The runner first audits target boundaries, executes a metric-blind timing
+canary and refuses the primary if the 20%-buffered worst-case NLL cost exceeds
+eight RMB. Stage A is Native/index only. The same frozen YaRN arm runs next as
+the planned comparator when Stage A passes, or as a non-rescuing positive
+control when it fails. The evaluator hard-binds checkpoint/config/table hashes
+and gains, uses `use_cache=False`, and keeps one static table for every complete
+forward.
 
 Decision:
 
@@ -92,25 +87,47 @@ Decision:
    below zero, YaRN-favored only if its lower endpoint is above zero, otherwise
    unresolved.
 
-If either gate 1 or 2 fails, stop this method stage. Do not draw another split,
-change the gain, or rescue the profile.
+If either gate 1 or 2 fails, record whether YaRN passes the same two gates and
+stop. `INDEX_SPECIFIC_FAILURE` means YaRN resolves the protocol while index
+does not; `SHARED_OR_UNRESOLVED_NATURAL_FAILURE` means it does not. Neither
+outcome permits another split, gain, physical-x rescue, or profile change.
 
 ## 3. Conditional natural-task confirmation
 
-Open only if the packed-natural resolver passes. Freeze a new task-row owner
-before inference and compare exactly `{Native, normalized-index, official
-YaRN}` on existing natural long-context endpoints:
+Open only if the packed-natural resolver passes and index is not NLL-dominated
+by YaRN. Compare exactly `{Native, normalized-index, official YaRN}` on a
+model-free, deterministic 30-row far-evidence panel:
 
 - 2WikiMultihopQA;
 - Qasper;
-- HotpotQA or the existing natural-document Hotpot owner.
+- HotpotQA.
+
+For each task, take the first ten admissible official LongBench rows in
+canonical source-row-hash order. Put the complete released context before
+token 28,672, insert unrelated natural packed text, and put the query suffix
+near 64K. The evidence-to-query lower bound is at least 32,768 tokens; inserted
+filler is rejected when it contains a normalized reference answer. Qasper
+yes/no/unanswerable rows are excluded because random filler cannot provide a
+meaningful answer-leak check. This is a derived far-evidence test with
+official-style token F1, not official LongBench.
+
+The frozen LongBench main/data archive hashes are respectively
+`3824b6dae9738eb70f7c89cf1a1e13d37cb626b7dab779780d1a96f393c2280a`
+and `cb45b11a4133c6bc1d6a44b0f8e701335ff1e543195db1103472e575857f7f64`.
+
+Run a two-row metric-blind generation canary covering the 32- and 128-token
+decode budgets. The buffered NLL estimate plus buffered QA estimate must be at
+most ten RMB; otherwise QA does not start. A positive utilization result
+requires the paired task-stratified index-minus-Native macro interval lower
+endpoint above zero and positive point deltas on at least two of three tasks.
+Report index-minus-YaRN separately.
 
 Use the repository's complete answer/F1 contract and fixed context budgets;
 do not select examples, prompts, truncation, or decoding from RULER or NLL
 outcomes. Report per-task F1/exact rows and paired uncertainty. RULER's two QA
 rows already warn that a macro retrieval gain may not transfer to natural QA.
 
-Stop if index is materially below YaRN across natural QA even when NLL passes.
+Stop if this gate fails or index is materially below YaRN across natural QA.
 That outcome means the method is a synthetic-retrieval operating point, not a
 general deployment profile.
 

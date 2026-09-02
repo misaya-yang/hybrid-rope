@@ -1,10 +1,30 @@
 # K32 packed-natural NLL confirmation — preregistration
 
-**Status:** `FROZEN_FOR_WORK_MACHINE / DATA_READY / MODEL_NOT_RUN`
+**Status:** `FROZEN_PROTOCOL / REMOTE_RUN_REPORTED / RAW_RECEIPTS_NOT_IMPORTED`
+
+## Pre-run budget amendment
+
+Before any model forward, the user requested a hard ten-RMB experiment tree.
+The three frozen scientific arms, rows, metrics, gains and primary decision
+remain unchanged, but execution is staged:
+
+1. a metric-blind two-forward timing canary;
+2. Native plus normalized-index as the 128-forward primary gate;
+3. the 64-forward YaRN arm after the primary result.
+
+If the primary passes, YaRN is the planned competitiveness comparison. If it
+fails, the identical YaRN arm is only a positive-control diagnosis: it may
+separate index-specific failure from a shared/unresolved natural failure, but
+cannot rescue the index method or authorize QA. The worst-case scientific
+matrix is still exactly the original three arms. A 20% buffered cost estimate
+must be at most eight RMB before the primary starts. The packed rows must also
+pass the exact-suffix and final-512-without-EOS boundary audit before the
+canary. Neither canary exposes NLL.
 
 The full-RULER entrance completed as `CLEAR_ADVANCE`. The model-free packed
-input is hash-bound, but user instruction stops this GPU instance before model
-evaluation. Execute only on the work machine under the unchanged protocol.
+input was hash-bound before execution. The work-machine run was reported
+complete on 2026-09-02, but its raw receipts are not present in this checkout;
+this preregistration therefore remains the protocol owner, not a result owner.
 
 ## Question
 
@@ -80,3 +100,7 @@ Resample the same 32 stream indices jointly across all arms and lengths with
 Report all mean NLL/PPL values and both intervals. This endpoint is paired
 final-256 teacher-forced continuation, not dense NLL, generated exact match,
 natural QA, K causality, or a broad SOTA claim.
+
+If either primary gate fails, finish only the frozen YaRN positive-control
+diagnosis and stop. Do not draw another split, change the gain, test physical-x
+as a rescue, or alter the profile.

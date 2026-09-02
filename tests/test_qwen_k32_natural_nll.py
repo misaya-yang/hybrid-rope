@@ -30,7 +30,10 @@ def small_contract(monkeypatch):
 
 
 def test_packing_is_source_ordered_nonoverlapping_and_suffix_paired(small_contract):
-    rows = [(100 + index, chr(65 + index) * 3) for index in range(20)]
+    rows = [
+        (100, "A" * 3), (101, "B" * 3), (102, "C" * 3), (103, "D" * 20),
+        (104, "E" * 3), (105, "F" * 3), (106, "G" * 3), (107, "H" * 20),
+    ]
     streams = builder.pack_streams(rows, FakeTokenizer())
     assert len(streams) == 2
     assert all(len(stream["input_ids"]) == 16 for stream in streams)
@@ -45,6 +48,8 @@ def test_packing_is_source_ordered_nonoverlapping_and_suffix_paired(small_contra
         assert short["input_ids"] == long["input_ids"][-8:]
         assert short["target_ids_sha256"] == long["target_ids_sha256"]
     assert streams[0]["input_ids"].count(FakeTokenizer.eos_token_id) >= 1
+    assert all(stream["sources"][-1]["document_tokens_used"] >= 8 for stream in streams)
+    assert all(stream["sources"][-1]["truncated_to_finish_stream"] for stream in streams)
 
 
 def test_last_document_is_truncated_without_reuse(small_contract):

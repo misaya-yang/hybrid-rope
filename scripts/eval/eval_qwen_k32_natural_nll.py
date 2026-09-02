@@ -22,6 +22,20 @@ from scripts.data.prepare_qwen_k32_natural_nll import (
 )
 
 ARM_ORDER = ("Native", "normalized_raw_index", "official_equation_yarn")
+STAGE_ARMS = {
+    "full": ARM_ORDER,
+    "canary": ARM_ORDER[:1],
+    "primary": ARM_ORDER[:2],
+    "baseline": ARM_ORDER[2:],
+    "control": ARM_ORDER[2:],
+}
+STAGE_RESULT_STATUS = {
+    "full": "QWEN_K32_PACKED_NATURAL_NLL_COMPLETE",
+    "canary": "QWEN_K32_PACKED_NATURAL_NLL_CANARY_COMPLETE",
+    "primary": "QWEN_K32_PACKED_NATURAL_NLL_PRIMARY_COMPLETE",
+    "baseline": "QWEN_K32_PACKED_NATURAL_NLL_BASELINE_COMPLETE",
+    "control": "QWEN_K32_PACKED_NATURAL_NLL_CONTROL_COMPLETE",
+}
 EXPECTED_WEIGHT_SHA256 = "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe"
 EXPECTED_CONFIG_SHA256 = "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45"
 EXPECTED_NATIVE_SHA256 = "6d1e10125bd0468a7cf91c6175a3af31c1bffca24592cf5630f0f8402a8746e3"
@@ -31,6 +45,7 @@ EXPECTED_YARN_SHA256 = "d9eb5ac0185e84f2afa85997f10e4c51de97e3a2f937325769dd45ff
 EXPECTED_YARN_FILE_SHA256 = "980d8d16b84d792fb7b50d42941747a881985ef0fa246e7fa0f0964a9b79ca03"
 INDEX_GAIN = 1 + .074 * math.log(2)
 YARN_GAIN = 1 + .1 * math.log(2)
+BOUNDARY_STATUS = "QWEN_K32_PACKED_NATURAL_TARGET_BOUNDARY_SAFE_V1"
 
 
 def tensor_hash(values: np.ndarray) -> str:
@@ -115,13 +130,63 @@ def aligned_suffix(logits, ids):
     return logits[:, :-1], ids[:, -TARGET_TOKENS:]
 
 
+def validate_primary_receipt(path: Path, weights: str, data: dict, profiles: list[dict],
+                             boundary_receipt_sha256: str, *, authorized: bool) -> dict:
+    receipt = json.loads(path.read_text())
+    identity = receipt.get("identity")
+    expected_profiles = {
+        profile["name"]: {
+            "tensor_sha256": profile["tensor_sha256"],
+            "file_sha256": profile["file_sha256"],
+            "attention_scaling": profile["attention_scaling"],
+        }
+        for profile in profiles
+    }
+    if (
+        receipt.get("status") != "QWEN_K32_PACKED_NATURAL_NLL_PRIMARY_SUMMARIZED"
+        or receipt.get("stage_b_authorized") is not authorized
+        or receipt.get("classification", {}).get("resolver") != (
+            "PASS" if authorized else "NOT_PASS")
+        or not isinstance(identity, dict)
+        or identity.get("checkpoint_weight_sha256") != weights
+        or identity.get("config_sha256") != data["config_sha256"]
+        or identity.get("data_manifest_sha256") != data["manifest_sha256"]
+        or identity.get("data_rows_sha256") != data["file"]["sha256"]
+        or identity.get("boundary_receipt_sha256") != boundary_receipt_sha256
+        or identity.get("profiles") != expected_profiles
+    ):
+        raise ValueError("primary receipt does not authorize the frozen baseline stage")
+    return receipt
+
+
+def validate_boundary_receipt(path: Path, data: dict) -> dict:
+    receipt = json.loads(path.read_text())
+    if (
+        receipt.get("status") != BOUNDARY_STATUS
+        or receipt.get("model_evaluation_status") != "NOT_RUN"
+        or receipt.get("streams") != DOCUMENTS
+        or receipt.get("paired_lengths") != list(GRID)
+        or receipt.get("target_tokens") != TARGET_TOKENS
+        or receipt.get("safe_streams") != DOCUMENTS
+        or receipt.get("unsafe_streams") != []
+        or receipt.get("data_manifest_sha256") != data["manifest_sha256"]
+        or receipt.get("data_rows_sha256") != data["file"]["sha256"]
+    ):
+        raise ValueError("packed-natural boundary receipt is absent, unsafe, or mismatched")
+    return receipt
+
+
 def main() -> int:
+    process_started = time.perf_counter()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--data-root", type=Path, required=True)
     parser.add_argument("--index-table", type=Path, required=True)
     parser.add_argument("--yarn-table", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--boundary-receipt", type=Path, required=True)
+    parser.add_argument("--stage", choices=tuple(STAGE_ARMS), default="full")
+    parser.add_argument("--primary-receipt", type=Path)
     args = parser.parse_args()
     if args.output.exists():
         raise FileExistsError("evaluation output directory must be fresh")
@@ -142,6 +207,17 @@ def main() -> int:
         raise ValueError("Qwen K32 checkpoint weight SHA-256 mismatch")
     data, rows = load_data(args.data_root, args.checkpoint)
     profiles = load_profiles(args.index_table, args.yarn_table)
+    boundary_receipt = validate_boundary_receipt(args.boundary_receipt, data)
+    comparison_stages = {"baseline", "control"}
+    if args.stage in comparison_stages and args.primary_receipt is None:
+        raise ValueError("comparison stage requires --primary-receipt")
+    if args.stage not in comparison_stages and args.primary_receipt is not None:
+        raise ValueError("--primary-receipt is valid only for a comparison stage")
+    primary_receipt = None
+    if args.stage in comparison_stages:
+        primary_receipt = validate_primary_receipt(
+            args.primary_receipt, weights, data, profiles, sha256_file(args.boundary_receipt),
+            authorized=args.stage == "baseline")
     import torch
     import torch.nn.functional as F
     import transformers
@@ -167,14 +243,21 @@ def main() -> int:
     for profile in profiles:
         profile["active"] = torch.from_numpy(profile["values"]).to(
             device=rotary.inv_freq.device, dtype=rotary.inv_freq.dtype)
+    active_names = STAGE_ARMS[args.stage]
+    active_profiles = [profile for profile in profiles if profile["name"] in active_names]
+    active_rows = (rows if args.stage != "canary" else
+                   [row for row in rows if row["sample_id"] == "qwen-k32-natural-000"])
     args.output.mkdir(parents=True, exist_ok=False)
     run_manifest = {
         "status": "QWEN_K32_PACKED_NATURAL_NLL_FROZEN", "checkpoint_weight_sha256": weights,
         "config_sha256": data["config_sha256"], "data_manifest_sha256": data["manifest_sha256"],
         "data_rows_sha256": data["file"]["sha256"], "source": data["source"],
         "tokenizer_files": data["tokenizer_files"], "packing_contract": data["packing_contract"],
-        "lengths": list(GRID), "natural_streams": DOCUMENTS, "target_tokens": TARGET_TOKENS,
-        "arm_order": list(ARM_ORDER),
+        "lengths": list(GRID), "natural_streams": DOCUMENTS,
+        "executed_streams": 1 if args.stage == "canary" else DOCUMENTS,
+        "target_tokens": TARGET_TOKENS,
+        "stage": args.stage, "arm_order": list(active_names),
+        "declared_arm_order": list(ARM_ORDER),
         "profiles": [{key: value for key, value in profile.items() if key not in {"values", "active"}}
                      for profile in profiles],
         "script_sha256": sha256_file(Path(__file__)),
@@ -183,58 +266,93 @@ def main() -> int:
         "torch": torch.__version__, "transformers": transformers.__version__,
         "gpu": torch.cuda.get_device_name(), "use_cache": False, "compile": False,
         "model_updates": 0, "profile_selection": False, "all_profiles_loaded_before_inference": True,
+        "boundary_receipt_sha256": sha256_file(args.boundary_receipt),
+        "boundary_receipt_status": boundary_receipt["status"],
+        "primary_receipt_sha256": (
+            sha256_file(args.primary_receipt) if args.primary_receipt is not None else None
+        ),
+        "primary_receipt_status": (
+            primary_receipt["status"] if primary_receipt is not None else None
+        ),
     }
     (args.output / "run_manifest.json").write_text(json.dumps(run_manifest, indent=2) + "\n")
     examples = args.output / "examples.jsonl"
     results, started = [], time.perf_counter()
     torch.cuda.reset_peak_memory_stats()
     with examples.open("x") as handle:
-        for profile in profiles:
+        for profile in active_profiles:
             with torch.no_grad():
                 rotary.inv_freq.copy_(profile["active"])
                 if hasattr(rotary, "original_inv_freq"):
                     rotary.original_inv_freq = rotary.inv_freq.detach().clone()
                 rotary.attention_scaling = profile["attention_scaling"]
-            for row in rows:
+            for row in active_rows:
                 ids = torch.tensor([row["input_ids"]], dtype=torch.long, device="cuda")
                 batch_started = time.perf_counter()
                 with torch.inference_mode(), torch.autocast("cuda", dtype=torch.bfloat16):
                     raw = model(input_ids=ids, use_cache=False, logits_to_keep=257).logits
                     logits, targets = aligned_suffix(raw, ids)
-                    losses = torch.cat([
+                    losses = None if args.stage == "canary" else torch.cat([
                         F.cross_entropy(logits[:, left:left + 64].float().transpose(1, 2),
                                         targets[:, left:left + 64], reduction="none")
                         for left in range(0, TARGET_TOKENS, 64)
                     ], dim=1).mean(dim=1)
-                if not bool(torch.isfinite(losses).all()):
+                if not bool(torch.isfinite(logits).all()):
+                    raise RuntimeError("nonfinite packed-natural logits")
+                if losses is not None and not bool(torch.isfinite(losses).all()):
                     raise RuntimeError("nonfinite packed-natural NLL")
                 if (not torch.equal(rotary.inv_freq, profile["active"])
                         or float(rotary.attention_scaling) != profile["attention_scaling"]):
                     raise RuntimeError("static profile mutated during a full forward")
                 torch.cuda.synchronize()
                 record = {key: value for key, value in row.items() if key != "input_ids"}
-                record.update(arm=profile["name"], nll=float(losses.item()),
-                              table_sha256_float32=profile["tensor_sha256"],
+                record.update(arm=profile["name"], table_sha256_float32=profile["tensor_sha256"],
                               attention_scaling=profile["attention_scaling"],
                               batch_seconds=time.perf_counter() - batch_started)
+                if losses is None:
+                    record["finite_logits"] = True
+                else:
+                    record["nll"] = float(losses.item())
                 results.append(record)
                 handle.write(json.dumps(record) + "\n"); handle.flush()
+                if len(results) == 1 or len(results) % 8 == 0:
+                    print(f"{args.stage}: {len(results)}/{len(active_profiles) * len(active_rows)}", flush=True)
                 del ids, raw, logits, targets, losses
         os.fsync(handle.fileno())
+    if args.stage == "canary":
+        timings = {str(length): next(
+            row["batch_seconds"] for row in results if row["length"] == length)
+            for length in GRID}
+        result = {"status": STAGE_RESULT_STATUS[args.stage], "stage": args.stage,
+                  "rows": len(results), "batch_seconds": timings,
+                  "elapsed_seconds": time.perf_counter() - started,
+                  "process_elapsed_seconds": time.perf_counter() - process_started,
+                  "peak_reserved_bytes": torch.cuda.max_memory_reserved(),
+                  "examples_sha256": sha256_file(examples),
+                  "run_manifest_sha256": sha256_file(args.output / "run_manifest.json"),
+                  "metrics_exposed": False,
+                  "evidence_limit": "Execution timing/finite/identity canary only; no NLL is stored."}
+        (args.output / "results.json").write_text(json.dumps(result, indent=2) + "\n")
+        print(json.dumps(result), flush=True)
+        return 0
     native = {(row["sample_id"], row["length"]): row["nll"]
               for row in results if row["arm"] == "Native"}
     curves = {}
-    for arm in ARM_ORDER:
+    for arm in active_names:
         curves[arm] = {}
         for length in GRID:
             cell = [row for row in results if row["arm"] == arm and row["length"] == length]
+            paired_delta = (float(np.mean([
+                row["nll"] - native[row["sample_id"], length] for row in cell
+            ])) if native else None)
             curves[arm][str(length)] = {
                 "streams": len(cell), "mean_tail_nll": float(np.mean([row["nll"] for row in cell])),
-                "mean_paired_delta_vs_native": float(np.mean([
-                    row["nll"] - native[row["sample_id"], length] for row in cell])),
+                "mean_paired_delta_vs_native": paired_delta,
             }
-    result = {"status": "QWEN_K32_PACKED_NATURAL_NLL_COMPLETE", "curves": curves,
+    result = {"status": STAGE_RESULT_STATUS[args.stage], "stage": args.stage,
+              "curves": curves,
               "rows": len(results), "elapsed_seconds": time.perf_counter() - started,
+              "process_elapsed_seconds": time.perf_counter() - process_started,
               "peak_reserved_bytes": torch.cuda.max_memory_reserved(),
               "examples_sha256": sha256_file(examples),
               "run_manifest_sha256": sha256_file(args.output / "run_manifest.json"),

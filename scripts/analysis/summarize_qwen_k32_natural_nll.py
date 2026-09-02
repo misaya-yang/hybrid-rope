@@ -30,9 +30,10 @@ PROFILE = {
                                1 + .1 * math.log(2)),
 }
 PACKING_CONTRACT = (
-    "source-order unique documents; insert one EOS between complete documents; truncate only "
-    "the last document to finish each 65536-token stream and discard its unused suffix; never "
-    "reuse a source document; 32768 is the suffix of the paired 65536 stream"
+    "source-order unique documents; insert one EOS between complete documents; skip a document "
+    "when consuming it completely would leave fewer than 512 tokens for the final document; "
+    "truncate only the last document to finish each 65536-token stream and discard its unused "
+    "suffix; never reuse a source document; 32768 is the suffix of the paired 65536 stream"
 )
 TERMINAL_STATUS = "QWEN_K32_PACKED_NATURAL_NLL_COMPLETE"
 FROZEN_STATUS = "QWEN_K32_PACKED_NATURAL_NLL_FROZEN"
