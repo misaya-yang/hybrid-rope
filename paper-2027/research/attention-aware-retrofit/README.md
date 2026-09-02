@@ -6,8 +6,15 @@ and order live only in [`../../../INDEX.md`](../../../INDEX.md) §0 and §6.
 
 ## Current question
 
-`PHYSICAL_COORDINATE_PRIVILEGE_REJECTED / NORMALIZED_INDEX_FULL13_CLEAR_ADVANCE /
-WORK_MACHINE_NLL_NEXT`
+`HEADWISE_FACTORIZATION_MIXED / NO_SOTA / GPU_METHOD_DEVELOPMENT_STOPPED`
+
+The latest completed owner is
+[`results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md`](results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md).
+A 512-scalar headwise allocation+range field reaches `0.23576` three-task natural-QA macro versus
+official YaRN-4 `0.23817`, but its 4K PG-19 PPL retention is only `0.77138`. Starting from exact
+Native improves 4K NLL over Native but collapses back to Native-like Hotpot behavior. This is a
+mixed factorization result, not a method winner. The accompanying audit keeps continuous
+scale-flow as an unverified low-dimensional constructor rather than a current theory result.
 
 The completed low-dimensional experiment now separates two effects:
 
@@ -33,14 +40,16 @@ K32 crossing was not confirmed. The physical-coordinate privilege branch is
 now closed. The new-seed full-RULER result confirms the already-frozen
 normalized-index engineering representative at 64K against Native and YaRN,
 while preserving the 32K macro. The next evidence question moves to the work
-machine: packed-natural NLL, then natural QA only if the likelihood gate passes.
-Native/long routing and post-outcome gain rescue remain outside the target
-method.
+machine: packed-natural NLL and natural QA were subsequently executed, followed by the bounded
+headwise scope ladder routed above. Method-development compute is now stopped; this paragraph is
+historical context, not an action queue. Native/long routing and post-outcome gain rescue remain
+outside the target method.
 
 ## Evidence to open on demand
 
 | Question | Owner | Boundary |
 | --- | --- | --- |
+| Does layer/head factorization solve the shared-table ceiling? | [`results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md`](results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md) | bounded headwise clocks and one frozen YaRN range direction improve the long-task Pareto but do not jointly pass Native retention; free head gain fails and scale-flow curvature is unproven |
 | Does fixed-support `z` affect mature frozen checkpoints? | [`results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) | frozen sensitivity/capability, not a usable Native-support method |
 | Does the same axis change fresh natural-text NLL? | [`results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`](results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) | length-conditional fixed-support effect; detailed profile not separated from coarse ramp |
 | What did the complete zero-training system establish? | [`results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`](results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md) | table + gain + routing system; not pure `z` |
@@ -58,8 +67,10 @@ method.
 ## Retired work
 
 W0/F1 success-first, F2--F4, `ABSOLUTE/ANCHORED`, protected-ramp,
-band-restoration, local-gap, s8/log scaling, per-head frequency, dynamic gain,
-spectral flow, and routing-based rescue have no current action or authorization.
+band-restoration, local-gap, s8/log scaling, arbitrary per-head/per-frequency tensors, free or
+dynamic gain, unrestricted spectral flow, and routing-based rescue have no current action or
+authorization. The bounded one/two-scalar-per-head screen has a completed mixed owner above; it
+does not reopen those larger classes.
 Their files remain only because results and preregistrations must preserve
 scientific provenance.
 

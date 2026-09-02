@@ -1,6 +1,6 @@
 # ICLR 2027 active handoff
 
-- **Updated:** 2026-09-01
+- **Updated:** 2026-09-02
 - **Role:** volatile Git/PDF/build/machine/compute/author-action state only
 - **Active manuscript:** `paper-2027/`
 - **Immutable baseline:** `paper/`
@@ -11,12 +11,16 @@ The current research timeline and agenda live in [`../INDEX.md`](../INDEX.md)
 
 ## 1. Research status pointer
 
-`P0_REFERENCE_INDEPENDENTLY_CONFIRMED / K32_N80_COMPLETE /
-K128_COORDINATE_CONFIRMATION_COMPLETE / K32_FULL13_CLEAR_ADVANCE /
-WORK_MACHINE_NLL_NEXT`
+`HEADWISE_FACTORIZATION_MIXED / NO_SOTA / GPU_METHOD_DEVELOPMENT_STOPPED`
 
 Current canonical owners:
 
+- [`Headwise factorization and scale-flow result`](research/attention-aware-retrofit/results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md):
+  a 512-scalar headwise allocation+range field reaches `.23576` three-task
+  natural-QA macro versus official YaRN-4 `.23817`, but fails the 4K PG-19
+  retention gate. Exact-Native initialization improves 4K NLL over Native and
+  fails long Hotpot. Free head gain is a protocol-specific negative. There is
+  no SOTA or nonlinear scale-flow claim.
 - [`Native reference calibration`](research/attention-aware-retrofit/results/NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901.md):
   the original two-code instrument remains abstained; the single permitted
   replacement independently confirms a protocol-specific 4K operating
@@ -43,15 +47,16 @@ Current canonical owners:
   `.220513/.514551/.453654`; index-minus-YaRN is `+.060897`, paired 95% CI
   `[.027627,.095835]`, while the 32K index retention gate passes. QA and VT are
   mixed, so the result is not a task-universal or SOTA claim.
-- [`Work-machine plan`](research/attention-aware-retrofit/WORK_MACHINE_NEXT_EXPERIMENT_PLAN_20260901.md)
-  freezes packed-natural NLL as the immediate next gate. Its model-free data
-  receipt is ready, but model evaluation status remains `NOT_RUN`.
+- The historical
+  [`work-machine plan`](research/attention-aware-retrofit/WORK_MACHINE_NEXT_EXPERIMENT_PLAN_20260901.md)
+  is no longer the action queue. Its natural-NLL/QA stage and the subsequent
+  bounded headwise scope ladder are summarized by the latest owner above.
 - Historical K32 Pareto, K64 scale consistency, and the original K128 negative
   remain routed by `INDEX.md`; none is silently replaced or pooled.
 
 P3 cell-average remains rejected. Native-Q/K P3 is `ENTRANCE_FAILED /
 NOT_EXECUTED`. No residual parameter, new curve, selector, SOTA sweep, or s8
-branch has been opened.
+branch is active.
 
 ## 2. Git state
 
@@ -85,8 +90,12 @@ repairs and must be rebuilt on the work machine before upload.
 ## 4. Machine and authorization state
 
 - The 32 GiB RTX 4080 SUPER queue completed and was idle (`0%`, `0 MiB`) before
-  shutdown. `shutdown -h now` returned success; the follow-up SSH check timed
-  out during banner exchange, confirming the instance is no longer reachable.
+  shutdown. `shutdown -h now` returned exit code `0`; the follow-up SSH probe
+  was immediately closed, confirming that the instance is no longer reachable.
+- The 2026-09-02 headwise scope ladder, two-axis arm, three official natural-QA
+  tasks, two 4K PG-19 retention panels, and corrected Native-start counterexample
+  are complete. The raw/state/script bundle is archived locally outside Git;
+  only the report and result-defining hashes remain in the repository.
 - P0, P1 s2/s4, Qwen P2, K32 N80, matched K32 YaRN, K128 N80 and the K32
   full-RULER-13 confirmation are complete. Packed-natural data preparation is
   CPU-only and model status remains `NOT_RUN`. No old model was deleted; the
@@ -120,13 +129,17 @@ and explicit chunked FP32-attention comparison are bounded diagnostics.
 The s4 result is promoted only in its internal owner. `paper/` has an empty diff; no manuscript
 compilation, canonical `aidemo` suite or supplement packaging was run.
 
+The 2026-09-02 local-only archive contains 42 files. All six state/log/receipt
+triplets match their embedded hashes, all evaluation raw rows match their result
+JSON hashes, and all receipt script hashes resolve to archived exact scripts.
+Both corrected factorized baselines passed six-cell full-vocabulary bit-exact
+parity before training.
+
 ## 6. Volatile action queue
 
-1. On the work machine, execute only the frozen packed-natural
-   Native/index/YaRN NLL gate. If it passes, preregister natural 2Wiki/Qasper/
-   Hotpot confirmation, then matched static PI/NTK/Resonance baselines. Keep
-   Native-Q/K P3, physical-x privilege, `G(x;K)`, residual, gain and boundary
-   search closed.
+1. No GPU method-development experiment is active or authorized. If scale-flow
+   is revisited, first run a CPU-only matched-anchor/off-orbit identifiability
+   gate; do not begin with another frequency, gain, or curvature sweep.
 2. Rebuild and validate the curated supplement on the work machine before
    submission.
 3. Freeze author metadata and complete the final owner-by-owner number review.

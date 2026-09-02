@@ -295,7 +295,7 @@ position-dependent operator，不把不同 target-free operator 一并判死。
 | --- | --- | --- |
 | phase-isotropy / pair-volume / min-eigenvalue | [`PHASE_ISOTROPY_50M_M4_RESULT_20260824`](paper-2027/research/attention-aware-retrofit/results/PHASE_ISOTROPY_50M_M4_RESULT_20260824.md)、[`PHASE_ALLOCATION_M4_EXTENDED_RESULT_20260824`](paper-2027/research/attention-aware-retrofit/results/PHASE_ALLOCATION_M4_EXTENDED_RESULT_20260824.md) 均为 `SCREEN_UNRESOLVED` | 历史 regime evidence；不是当前 candidate rejection 或 action |
 | O2 的 $L_{\rm eff}^J$ 机制解释 | 反演出 $\mathrm{sd}_\mu\approx46$–$72$ | 实测注意力距离方差不支持该经验解释；历史未决，不进入当前队列 |
-| per-head / per-layer frequency 分配 | 代码完成、**从未训练** | 改变 per-head frequency freedom，超出 Native-support pure-`z` 主线；无当前 action |
+| bounded per-head / per-layer frequency 分配 | 2026-09-02 scope ladder、three-task natural QA 与 4K retention 已完成 | [`HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902`](paper-2027/research/attention-aware-retrofit/results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md)：headwise allocation+range 改善 long Pareto，但 log-start retention 失败、Native-start long QA 失败；无 SOTA 或当前 action |
 | per-head adapter 秩分配 | 同参数量下 0.89 vs 0.09 可修复比例 | 历史未运行诊断；不是 §6 的 matched low-rank control，也无当前 action |
 
 ---
@@ -483,12 +483,23 @@ table/gain/boundary/width，不得拟合 `G(x;K)` 或开启 s8/hierarchical resc
 engineering candidate；但 index 在 64K VT 与两项 QA 均低于 YaRN，因此 natural
 NLL/QA 仍是必要门，不能从 macro 升级为 task-universal 或 SOTA claim。
 
+2026-09-02 bounded headwise scope ladder进一步放松“所有 layer/head 共享同表与 gain”假设。
+两标量每头的 allocation+YaRN-range arm在 Hotpot/2Wiki/Qasper 的 macro F1 为
+`.23576`，official YaRN-4 为 `.23817`；差 `-.00241 [-.03372,.02885]`。该 arm 的
+4K PG-19 PPL retention 仅 `.77138`。精确 Native 起点把 retention 提到 `1.04624`，
+但 Hotpot F1 仅 `.02560`。因此 headwise factorization 是有用的新轴，但没有解决
+Native--long joint objective；free head gain 与 unrestricted scale-flow 均不由本结果晋级。
+完整 owner 与 raw/hash-backed evidence 见
+[`HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902`](paper-2027/research/attention-aware-retrofit/results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md)。
+
 ### 6.4 已退役路线
 
 以下对象只保留历史 owner/代码 provenance，不再出现在 README 命令或 current action
 queue：W0/F1 success-first tournament、F2--F4 portfolio、`ABSOLUTE/ANCHORED` 选择模式、
-protected-ramp/band restoration、local-gap、s8 arithmetic/log scaling、per-head frequency、
-dynamic gain/spectral flow，以及把 dilation distribution 单独当充分对象的 MaxEnt 扫描。
+protected-ramp/band restoration、local-gap、s8 arithmetic/log scaling、任意 64D
+per-head/per-frequency tensor、free/dynamic gain、unrestricted spectral flow，以及把
+dilation distribution 单独当充分对象的 MaxEnt 扫描。bounded one/two-scalar-per-head
+screen 已有 2026-09-02 mixed owner，不据此重开更大自由度。
 它们的结果仍可支持“frozen shock、gain interaction、失败边界”等已完成判断，但不能
 选择下一张 OLMo 表。
 
@@ -499,10 +510,11 @@ endpoint movement 本身不是出线条件。
 ### 6.5 生命周期与反重复
 
 - **Current:** 当前 TeX/PDF、§2--§3 canonical owners、`s4` exponent-space result owner。
-- **Next gate:** K32 full RULER-13 已 `CLEAR_ADVANCE`，本 GPU 实例按用户要求停止。
-  工作机只执行已冻结 packed-natural Native/index/YaRN NLL；通过后才开放
-  2Wiki/Qasper/Hotpot 与 static PI/NTK/Resonance 等 matched baseline。Native-Q/K
-  P3、physical-x privilege、`G(x;K)`、residual/gain/boundary search 均保持关闭。
+- **Next gate:** no active GPU method-development queue. The 2026-09-02 bounded headwise owner
+  closes the current allocation/range screen with a mixed result and explicit no-SOTA verdict.
+  Future scale-flow work, if separately authorized, begins with a CPU identifiability gate rather
+  than another table, gain, or curvature GPU sweep. Native-Q/K P3、physical-x privilege、
+  `G(x;K)`、residual/gain/boundary search 均保持关闭。
 - **Historical:** zero-training tournament 与 scale-law owner；保留证据，不保留任务。
 - **Closed negative:** §3.4 的 owner-backed 条目；不得通过改名恢复。
 - **Unresolved:** M4 phase-isotropy 仍是 `SCREEN_UNRESOLVED`，不自动进入方法设计。
