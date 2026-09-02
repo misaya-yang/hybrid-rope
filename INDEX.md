@@ -47,10 +47,17 @@
   新 seed breadth confirmation，不升级为 universal law。见
   [`K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901`](paper-2027/research/attention-aware-retrofit/results/K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901.md)。
 
-- **当前 GPU 门：** 固定 K32 normalized-index、Native、官方 YaRN-s2，在 seed
-  `202609027` 的完整 RULER-13、32K/64K、20 rows/task 上一次确认；不重新加入
-  physical，不改表、gain 或 scale。见
-  [`K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_PREFLIGHT_20260901`](paper-2027/research/attention-aware-retrofit/preflights/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_PREFLIGHT_20260901.md)。
+- **K32 full RULER-13 `CLEAR_ADVANCE`：** seed `202609027` 上，Native/index/
+  YaRN 的 32K macro 为 `.547821/.559167/.559423`，64K 为
+  `.220513/.514551/.453654`。index 32K retention `1.020711`；64K
+  index-minus-YaRN `+.060897`，paired 95% CI `[.027627,.095835]`。QA/VT
+  并非统一更优，故推进 work-machine natural NLL/QA，不称 SOTA。见
+  [`K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901`](paper-2027/research/attention-aware-retrofit/results/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md)。
+
+- **本实例停止、工作机下一门：** packed-natural 32K/64K final-256 数据已 CPU
+  冻结，model status `NOT_RUN`。立即在工作机按已注册三臂做 NLL 双门；随后只有
+  NLL 通过才做 2Wiki/Qasper/Hotpot 与更广 static baselines。见
+  [`WORK_MACHINE_NEXT_EXPERIMENT_PLAN_20260901`](paper-2027/research/attention-aware-retrofit/WORK_MACHINE_NEXT_EXPERIMENT_PLAN_20260901.md)。
 
 - **P2 同代识别注册（非结果）：** P1 之后只补 Qwen K32/K64 的固定 YaRN-s2
   与 K64 唯一 C2-s2 缺口；K64 的 physical/index 相同，不能当作 K 趋势证据。
@@ -304,6 +311,8 @@ position-dependent operator，不把不同 target-free operator 一并判死。
 | 可复用 CPU 诊断 | [`scripts/analysis/`](scripts/analysis/) | 不自动成为 paper claim |
 | 低维 coupling 冻结与 holdout | [`scripts/analysis/compile_low_dim_coupling_law.py`](scripts/analysis/compile_low_dim_coupling_law.py) | CPU-only；只用 OLMo 拟合，冻结后读取 Qwen geometry，生成候选表/残差/哈希；不运行 LM |
 | Frozen cross-K transport | [`scripts/analysis/export_frozen_coupling_transport.py`](scripts/analysis/export_frozen_coupling_transport.py)、[`scripts/eval/run_frozen_coupling_k_transport.sh`](scripts/eval/run_frozen_coupling_k_transport.sh) | 从 runtime Native tensor 导出 physical/index/wrong-c 静态表；launch fail-closed 绑定 config/K/weights/data/Native/table hashes；结果 owner 为 2026-09-01 K128 mixed report |
+| Frozen index confirmation | [`scripts/eval/run_k128_coordinate_confirmation.sh`](scripts/eval/run_k128_coordinate_confirmation.sh)、[`scripts/analysis/summarize_gemma_k128_coordinate_confirmation.py`](scripts/analysis/summarize_gemma_k128_coordinate_confirmation.py)、[`scripts/eval/run_k32_normalized_index_full13_confirmation.sh`](scripts/eval/run_k32_normalized_index_full13_confirmation.sh)、[`scripts/analysis/summarize_k32_full13_confirmation.py`](scripts/analysis/summarize_k32_full13_confirmation.py) | K128 coordinate ranking and K32 new-seed full-RULER owners; fixed tables only, no search |
+| Work-machine packed-natural NLL | [`scripts/data/prepare_qwen_k32_natural_nll.py`](scripts/data/prepare_qwen_k32_natural_nll.py)、[`scripts/eval/eval_qwen_k32_natural_nll.py`](scripts/eval/eval_qwen_k32_natural_nll.py)、[`scripts/analysis/summarize_qwen_k32_natural_nll.py`](scripts/analysis/summarize_qwen_k32_natural_nll.py) | 32 paired packed streams、Native/index/YaRN 三臂；input ready，model `NOT_RUN`；执行 owner 为 work-machine plan |
 | 关闭的条件 Native-Q/K 机制资产 | [`scripts/analysis/native_attention_kl.py`](scripts/analysis/native_attention_kl.py)、[`scripts/data/prepare_native_qk_calibration.py`](scripts/data/prepare_native_qk_calibration.py)、[`input receipt`](paper-2027/research/attention-aware-retrofit/evidence/NATIVE_QK_CALIBRATION_DATA_RECEIPT_20260901.json)、[`conditional preflight`](paper-2027/research/attention-aware-retrofit/preflights/NATIVE_QK_FINITE_KL_PREFLIGHT_20260901.md) | 纯 CPU 数学核与已冻结的 8/8 Native-only 输入；K32 `CONFIRMED_CROSSING` 入口失败，故无模型结果。有限 attention KL 不是已验证 predictor、selector 或新 profile |
 | 注意力需求测量 | `scripts/analysis/attention_phase_demand.py` | 含 `layerwise_plan()` → `per_layer_inv_freq` |
 | 全 RoPE 碰撞审计 | `scripts/analysis/full_rope_collision_audit.py` | §2.1 的数值 owner |
@@ -467,6 +476,12 @@ K128 新 seed N80 又给出 index-minus-physical `+.061875`、95% CI
 工程代表，因果 K、universality 与 SOTA 仍未识别**。不得反向调整
 table/gain/boundary/width，不得拟合 `G(x;K)` 或开启 s8/hierarchical rescue。
 
+新 seed full RULER-13 又给出 index 32K retention `1.020711`，64K 相对 Native
+`+.294038 [.250192,.338271]`、相对 YaRN `+.060897 [.027627,.095835]`。
+这把 normalized-index 从 core-4 development signal 推进为 breadth-confirmed
+engineering candidate；但 index 在 64K VT 与两项 QA 均低于 YaRN，因此 natural
+NLL/QA 仍是必要门，不能从 macro 升级为 task-universal 或 SOTA claim。
+
 ### 6.4 已退役路线
 
 以下对象只保留历史 owner/代码 provenance，不再出现在 README 命令或 current action
@@ -483,10 +498,10 @@ endpoint movement 本身不是出线条件。
 ### 6.5 生命周期与反重复
 
 - **Current:** 当前 TeX/PDF、§2--§3 canonical owners、`s4` exponent-space result owner。
-- **Next gate:** K32 crossing 未确认，Native-Q/K finite-KL 诊断关闭；K128 N80
-  又确认 index 优势，physical-coordinate privilege 分支关闭。当前只执行已冻结的
-  K32 new-seed full-RULER Native/index/YaRN confirmation；其结果之后才决定 natural
-  NLL 与更广 deterministic baselines，禁止新增 profile 参数。
+- **Next gate:** K32 full RULER-13 已 `CLEAR_ADVANCE`，本 GPU 实例按用户要求停止。
+  工作机只执行已冻结 packed-natural Native/index/YaRN NLL；通过后才开放
+  2Wiki/Qasper/Hotpot 与 static PI/NTK/Resonance 等 matched baseline。Native-Q/K
+  P3、physical-x privilege、`G(x;K)`、residual/gain/boundary search 均保持关闭。
 - **Historical:** zero-training tournament 与 scale-law owner；保留证据，不保留任务。
 - **Closed negative:** §3.4 的 owner-backed 条目；不得通过改名恢复。
 - **Unresolved:** M4 phase-isotropy 仍是 `SCREEN_UNRESOLVED`，不自动进入方法设计。

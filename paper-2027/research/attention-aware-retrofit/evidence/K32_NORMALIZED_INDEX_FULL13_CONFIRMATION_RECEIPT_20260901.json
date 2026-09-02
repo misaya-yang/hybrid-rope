@@ -1,0 +1,594 @@
+{
+  "arm_identities": {
+    "native": {
+      "active_sha256_float32": "6d1e10125bd0468a7cf91c6175a3af31c1bffca24592cf5630f0f8402a8746e3",
+      "attention_scaling": 1.0,
+      "checkpoint_weight_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "data_manifest_sha256": "808eb4c2935bdcdc27b94b44f9e417dd4280c75cda01196ad187576d29f1f93e",
+      "data_seed": 202609027,
+      "input_cell_sha256": {
+        "cwe": {
+          "32768": "ff43b65b8b4cd8884d46a665638567ac2d48be4a229285bda866758aad04919e",
+          "65536": "a3c0d20ed19d8960f5a089f4d107b6eddae706972821e642717a143b64098f10"
+        },
+        "fwe": {
+          "32768": "60ed879feac1773e1ab0a4b9f0553ba0c3bad8800fed97e800de41ce25c2e951",
+          "65536": "6da5c8f5950370d663d80cfbbe4ef5dc7f16d2fba2b31bc72a921e070436916b"
+        },
+        "niah_multikey_1": {
+          "32768": "bd477d7330eff68cfc30392b60bbdbb8b35e8bc86defecc54eb15753d9697b2b",
+          "65536": "a53d2b3997743b55339d8b6b2d1377bb442b51268c47b8dc645a6179e88f90c2"
+        },
+        "niah_multikey_2": {
+          "32768": "d87a78de00f23470b5189593add46a2275c4adbe9a86e7e4aef64f6411f818db",
+          "65536": "79af8a24ce27856f8bc798b77e03898c9ba30839bbeca22a33b5a2a3d3fb04c0"
+        },
+        "niah_multikey_3": {
+          "32768": "2945ead6716f79ddd8c22289885cd3d79c7502892e49d3f19486c7f6365777b2",
+          "65536": "229297876288b898aeffa3cc7e2318fd9496f12cc1f393230245fe68a2ccb88a"
+        },
+        "niah_multiquery": {
+          "32768": "806f0d325ae144b226f0793c12edbd5d74e8e33f3dc73d90fc260521973e57d4",
+          "65536": "13228aabf221bc1102f86b6e298cfd34b3a3cc178fa03d772d19c1184e507916"
+        },
+        "niah_multivalue": {
+          "32768": "0d5e63de40fcf37afdebc2a5912233379283fe6403e357078743c3972bbb0c6a",
+          "65536": "27c62fb16e02fb7104da2775196a48e4b09ac335f1760e46d513e34451845633"
+        },
+        "niah_single_1": {
+          "32768": "17a59fc5ecbe58c9fb759832ae7b09087813a42e82753aa673406e786ebb90cb",
+          "65536": "6e7030b4ac5aeb0337a6a8d7b26861ed389e7b26dcd06f60ae1216d27a39e1b7"
+        },
+        "niah_single_2": {
+          "32768": "2e1a94516a715a82898314f660b10c5708d19cbbf90f5f856d16a1ac3ea5460f",
+          "65536": "5541dadf023d8ebfe1e334c0ffe46cd3e19861d16f13f5b0cb1dd70fa33230da"
+        },
+        "niah_single_3": {
+          "32768": "9c553e8512967c6efa455af0685cc9e4b3b898e0fbe9d245f93359ce0b2b7c94",
+          "65536": "6c2837371e5fcb64368791be95315595d2c932e643fc85c9b700bd1afd421587"
+        },
+        "qa_1": {
+          "32768": "be11619ba66fbb94db9319d658b00230aa9393459bd490ee8039e1c90c0db443",
+          "65536": "59bc2f3f0522b44fe605ab1f52cd9cdce81229d549df6cdb87438f6af6b1207a"
+        },
+        "qa_2": {
+          "32768": "4cd10af3dc2f21c91323be301b35e7545c9361d7b63eca465c91121859ce97ea",
+          "65536": "3cd5e3669a02b4f395e7b7a651e2e119f338e798b5ad1d3b0dd51a49bac9430a"
+        },
+        "vt": {
+          "32768": "4bcaa6b735e7a76d70bfd7d70a3e80be0d0e92fa35943f9edf0bfb352de1cbe7",
+          "65536": "944194addedc0d9eb2d2d4aed7cd0dc800cbb57c51125b2d0a8c28c9dc41ec98"
+        }
+      },
+      "native_sha256_float32": "6d1e10125bd0468a7cf91c6175a3af31c1bffca24592cf5630f0f8402a8746e3",
+      "raw_hashes": {
+        "examples_sha256": "c987b1eb174e019ff942e4604d7a8f23999536925951b2eab4385832d2a46f9e",
+        "results_sha256": "6d5fe5e6c793836004a4b7cf0ad2efbad9dfb31d4a07c622c36145de16828185",
+        "run_manifest_sha256": "d287ad63f6e7327c121021ae88c89c3ca2d52ce38fab2ce11973ba836192ae01"
+      },
+      "ruler_commit": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+      "runner_sha256": "ec514fad23a99a430290419c738a566ff7abff9313fbac99970bcee768a5dc8d",
+      "table_file_sha256": null,
+      "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+    },
+    "normalized_index": {
+      "active_sha256_float32": "8c19ab976f71d30c6409f78a661209a8535ef9f101e8bf42f5bfce6f7817dc5f",
+      "attention_scaling": 1.0512928913614359,
+      "checkpoint_weight_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "data_manifest_sha256": "808eb4c2935bdcdc27b94b44f9e417dd4280c75cda01196ad187576d29f1f93e",
+      "data_seed": 202609027,
+      "input_cell_sha256": {
+        "cwe": {
+          "32768": "ff43b65b8b4cd8884d46a665638567ac2d48be4a229285bda866758aad04919e",
+          "65536": "a3c0d20ed19d8960f5a089f4d107b6eddae706972821e642717a143b64098f10"
+        },
+        "fwe": {
+          "32768": "60ed879feac1773e1ab0a4b9f0553ba0c3bad8800fed97e800de41ce25c2e951",
+          "65536": "6da5c8f5950370d663d80cfbbe4ef5dc7f16d2fba2b31bc72a921e070436916b"
+        },
+        "niah_multikey_1": {
+          "32768": "bd477d7330eff68cfc30392b60bbdbb8b35e8bc86defecc54eb15753d9697b2b",
+          "65536": "a53d2b3997743b55339d8b6b2d1377bb442b51268c47b8dc645a6179e88f90c2"
+        },
+        "niah_multikey_2": {
+          "32768": "d87a78de00f23470b5189593add46a2275c4adbe9a86e7e4aef64f6411f818db",
+          "65536": "79af8a24ce27856f8bc798b77e03898c9ba30839bbeca22a33b5a2a3d3fb04c0"
+        },
+        "niah_multikey_3": {
+          "32768": "2945ead6716f79ddd8c22289885cd3d79c7502892e49d3f19486c7f6365777b2",
+          "65536": "229297876288b898aeffa3cc7e2318fd9496f12cc1f393230245fe68a2ccb88a"
+        },
+        "niah_multiquery": {
+          "32768": "806f0d325ae144b226f0793c12edbd5d74e8e33f3dc73d90fc260521973e57d4",
+          "65536": "13228aabf221bc1102f86b6e298cfd34b3a3cc178fa03d772d19c1184e507916"
+        },
+        "niah_multivalue": {
+          "32768": "0d5e63de40fcf37afdebc2a5912233379283fe6403e357078743c3972bbb0c6a",
+          "65536": "27c62fb16e02fb7104da2775196a48e4b09ac335f1760e46d513e34451845633"
+        },
+        "niah_single_1": {
+          "32768": "17a59fc5ecbe58c9fb759832ae7b09087813a42e82753aa673406e786ebb90cb",
+          "65536": "6e7030b4ac5aeb0337a6a8d7b26861ed389e7b26dcd06f60ae1216d27a39e1b7"
+        },
+        "niah_single_2": {
+          "32768": "2e1a94516a715a82898314f660b10c5708d19cbbf90f5f856d16a1ac3ea5460f",
+          "65536": "5541dadf023d8ebfe1e334c0ffe46cd3e19861d16f13f5b0cb1dd70fa33230da"
+        },
+        "niah_single_3": {
+          "32768": "9c553e8512967c6efa455af0685cc9e4b3b898e0fbe9d245f93359ce0b2b7c94",
+          "65536": "6c2837371e5fcb64368791be95315595d2c932e643fc85c9b700bd1afd421587"
+        },
+        "qa_1": {
+          "32768": "be11619ba66fbb94db9319d658b00230aa9393459bd490ee8039e1c90c0db443",
+          "65536": "59bc2f3f0522b44fe605ab1f52cd9cdce81229d549df6cdb87438f6af6b1207a"
+        },
+        "qa_2": {
+          "32768": "4cd10af3dc2f21c91323be301b35e7545c9361d7b63eca465c91121859ce97ea",
+          "65536": "3cd5e3669a02b4f395e7b7a651e2e119f338e798b5ad1d3b0dd51a49bac9430a"
+        },
+        "vt": {
+          "32768": "4bcaa6b735e7a76d70bfd7d70a3e80be0d0e92fa35943f9edf0bfb352de1cbe7",
+          "65536": "944194addedc0d9eb2d2d4aed7cd0dc800cbb57c51125b2d0a8c28c9dc41ec98"
+        }
+      },
+      "native_sha256_float32": "6d1e10125bd0468a7cf91c6175a3af31c1bffca24592cf5630f0f8402a8746e3",
+      "raw_hashes": {
+        "examples_sha256": "dc6138064a5614055159db1e178fbe4d831b884513f33d8f787fdae891ddafc1",
+        "results_sha256": "3d6dc94f63cc00f93bfd4fe2530cfd28770ce7c2f7105f97309fd06e74b545ed",
+        "run_manifest_sha256": "f37578c4e25b71bc490c33b542a48e260cf0ff6ee203f70045160e8f9ffd7231"
+      },
+      "ruler_commit": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+      "runner_sha256": "ec514fad23a99a430290419c738a566ff7abff9313fbac99970bcee768a5dc8d",
+      "table_file_sha256": "36e09e014a86f8169296e6b5f2997ba7fea08ceb005b4e887085289d53db57a1",
+      "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+    },
+    "official_yarn": {
+      "active_sha256_float32": "d9eb5ac0185e84f2afa85997f10e4c51de97e3a2f937325769dd45ff86a0ea59",
+      "attention_scaling": 1.0693147180559945,
+      "checkpoint_weight_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "data_manifest_sha256": "808eb4c2935bdcdc27b94b44f9e417dd4280c75cda01196ad187576d29f1f93e",
+      "data_seed": 202609027,
+      "input_cell_sha256": {
+        "cwe": {
+          "32768": "ff43b65b8b4cd8884d46a665638567ac2d48be4a229285bda866758aad04919e",
+          "65536": "a3c0d20ed19d8960f5a089f4d107b6eddae706972821e642717a143b64098f10"
+        },
+        "fwe": {
+          "32768": "60ed879feac1773e1ab0a4b9f0553ba0c3bad8800fed97e800de41ce25c2e951",
+          "65536": "6da5c8f5950370d663d80cfbbe4ef5dc7f16d2fba2b31bc72a921e070436916b"
+        },
+        "niah_multikey_1": {
+          "32768": "bd477d7330eff68cfc30392b60bbdbb8b35e8bc86defecc54eb15753d9697b2b",
+          "65536": "a53d2b3997743b55339d8b6b2d1377bb442b51268c47b8dc645a6179e88f90c2"
+        },
+        "niah_multikey_2": {
+          "32768": "d87a78de00f23470b5189593add46a2275c4adbe9a86e7e4aef64f6411f818db",
+          "65536": "79af8a24ce27856f8bc798b77e03898c9ba30839bbeca22a33b5a2a3d3fb04c0"
+        },
+        "niah_multikey_3": {
+          "32768": "2945ead6716f79ddd8c22289885cd3d79c7502892e49d3f19486c7f6365777b2",
+          "65536": "229297876288b898aeffa3cc7e2318fd9496f12cc1f393230245fe68a2ccb88a"
+        },
+        "niah_multiquery": {
+          "32768": "806f0d325ae144b226f0793c12edbd5d74e8e33f3dc73d90fc260521973e57d4",
+          "65536": "13228aabf221bc1102f86b6e298cfd34b3a3cc178fa03d772d19c1184e507916"
+        },
+        "niah_multivalue": {
+          "32768": "0d5e63de40fcf37afdebc2a5912233379283fe6403e357078743c3972bbb0c6a",
+          "65536": "27c62fb16e02fb7104da2775196a48e4b09ac335f1760e46d513e34451845633"
+        },
+        "niah_single_1": {
+          "32768": "17a59fc5ecbe58c9fb759832ae7b09087813a42e82753aa673406e786ebb90cb",
+          "65536": "6e7030b4ac5aeb0337a6a8d7b26861ed389e7b26dcd06f60ae1216d27a39e1b7"
+        },
+        "niah_single_2": {
+          "32768": "2e1a94516a715a82898314f660b10c5708d19cbbf90f5f856d16a1ac3ea5460f",
+          "65536": "5541dadf023d8ebfe1e334c0ffe46cd3e19861d16f13f5b0cb1dd70fa33230da"
+        },
+        "niah_single_3": {
+          "32768": "9c553e8512967c6efa455af0685cc9e4b3b898e0fbe9d245f93359ce0b2b7c94",
+          "65536": "6c2837371e5fcb64368791be95315595d2c932e643fc85c9b700bd1afd421587"
+        },
+        "qa_1": {
+          "32768": "be11619ba66fbb94db9319d658b00230aa9393459bd490ee8039e1c90c0db443",
+          "65536": "59bc2f3f0522b44fe605ab1f52cd9cdce81229d549df6cdb87438f6af6b1207a"
+        },
+        "qa_2": {
+          "32768": "4cd10af3dc2f21c91323be301b35e7545c9361d7b63eca465c91121859ce97ea",
+          "65536": "3cd5e3669a02b4f395e7b7a651e2e119f338e798b5ad1d3b0dd51a49bac9430a"
+        },
+        "vt": {
+          "32768": "4bcaa6b735e7a76d70bfd7d70a3e80be0d0e92fa35943f9edf0bfb352de1cbe7",
+          "65536": "944194addedc0d9eb2d2d4aed7cd0dc800cbb57c51125b2d0a8c28c9dc41ec98"
+        }
+      },
+      "native_sha256_float32": "6d1e10125bd0468a7cf91c6175a3af31c1bffca24592cf5630f0f8402a8746e3",
+      "raw_hashes": {
+        "examples_sha256": "96c09b8c3f6f559d2db617ffaf3881d3a5ea04e26ac55214492b910fd35668e2",
+        "results_sha256": "22f17d7cb682e48c63532eae142cae352682b43b0877916c42bb7be3695003c0",
+        "run_manifest_sha256": "dd03c4cb19686a279cca281d82e52aadb53337fe69e68a8f298d8db27710e794"
+      },
+      "ruler_commit": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+      "runner_sha256": "ec514fad23a99a430290419c738a566ff7abff9313fbac99970bcee768a5dc8d",
+      "table_file_sha256": "980d8d16b84d792fb7b50d42941747a881985ef0fa246e7fa0f0964a9b79ca03",
+      "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+    }
+  },
+  "arms": [
+    "native",
+    "normalized_index",
+    "official_yarn"
+  ],
+  "baseline_contrast": {
+    "ci95": [
+      0.02762660256410246,
+      0.09583493589743597
+    ],
+    "contrast": "normalized_index_minus_official_yarn",
+    "length": 65536
+  },
+  "bootstrap": {
+    "confidence": 0.95,
+    "replicates": 10000,
+    "scope": "conditional on one checkpoint/new seed/task suite; not training-seed or checkpoint uncertainty",
+    "seed": 202609028,
+    "unit": "paired row resampling within each of 13 fixed tasks; equal task-macro weights"
+  },
+  "data_seed": 202609027,
+  "decision": "CLEAR_ADVANCE",
+  "decision_rule": "CLEAR_ADVANCE requires 32K retention pass and both 64K index-minus-Native/index-minus-YaRN CI95 wholly positive; COMPETITIVE_UNRESOLVED requires retention and resolver pass with index-minus-YaRN CI containing zero; otherwise BASELINE_LOSS.",
+  "evidence_scope": "Fresh full-13 confirmation of an outcome-selected engineering representative; no K causality, natural-LM, broad SOTA, or new profile claim",
+  "extension_resolver": {
+    "ci95": [
+      0.2501923076923077,
+      0.3382708333333333
+    ],
+    "contrast": "normalized_index_minus_native",
+    "length": 65536,
+    "status": "PASS"
+  },
+  "lengths": [
+    32768,
+    65536
+  ],
+  "native_retention": {
+    "arm": "normalized_index",
+    "length": 32768,
+    "ratio": 1.020711443950386,
+    "status": "PASS",
+    "threshold": 0.875
+  },
+  "official_metrics": {
+    "cwe": "string_match_all",
+    "fwe": "string_match_all",
+    "niah_multikey_1": "string_match_all",
+    "niah_multikey_2": "string_match_all",
+    "niah_multikey_3": "string_match_all",
+    "niah_multiquery": "string_match_all",
+    "niah_multivalue": "string_match_all",
+    "niah_single_1": "string_match_all",
+    "niah_single_2": "string_match_all",
+    "niah_single_3": "string_match_all",
+    "qa_1": "string_match_part",
+    "qa_2": "string_match_part",
+    "vt": "string_match_all"
+  },
+  "paired_comparisons": {
+    "32768": {
+      "normalized_index_minus_native": {
+        "delta": 0.011346153846153846,
+        "paired_stratified_ci95": [
+          -0.02198717948717943,
+          0.04410256410256419
+        ],
+        "per_task_delta": [
+          0.0,
+          0.0,
+          0.0,
+          0.05,
+          0.1,
+          -0.05,
+          0.1875,
+          0.175,
+          -0.06,
+          -0.005,
+          -0.15,
+          -0.1,
+          0.0
+        ]
+      },
+      "normalized_index_minus_official_yarn": {
+        "delta": -0.0002564102564102555,
+        "paired_stratified_ci95": [
+          -0.03262980769230764,
+          0.032179487179487154
+        ],
+        "per_task_delta": [
+          0.0,
+          0.0,
+          0.0,
+          0.05,
+          0.25,
+          -0.1,
+          0.0,
+          0.025,
+          -0.04000000000000001,
+          -0.005,
+          -0.03333333333333333,
+          -0.2,
+          0.05
+        ]
+      }
+    },
+    "65536": {
+      "normalized_index_minus_native": {
+        "delta": 0.2940384615384615,
+        "paired_stratified_ci95": [
+          0.2501923076923077,
+          0.3382708333333333
+        ],
+        "per_task_delta": [
+          0.25,
+          0.85,
+          0.7,
+          0.4,
+          0.4,
+          0.05,
+          0.4125,
+          0.425,
+          0.25000000000000006,
+          -0.065,
+          0.15,
+          0.1,
+          -0.1
+        ]
+      },
+      "normalized_index_minus_official_yarn": {
+        "delta": 0.060897435897435896,
+        "paired_stratified_ci95": [
+          0.02762660256410246,
+          0.09583493589743597
+        ],
+        "per_task_delta": [
+          0.0,
+          0.25,
+          0.05,
+          0.25,
+          0.15,
+          0.0,
+          0.05,
+          0.15,
+          -0.08000000000000003,
+          0.005,
+          0.06666666666666667,
+          -0.05,
+          -0.05
+        ]
+      }
+    }
+  },
+  "profile_selection_performed": false,
+  "rows_per_arm": 520,
+  "rows_per_task_length": 20,
+  "scores": {
+    "32768": {
+      "native": {
+        "macro": 0.5478205128205128,
+        "per_task": {
+          "cwe": 0.025,
+          "fwe": 0.4666666666666666,
+          "niah_multikey_1": 0.9,
+          "niah_multikey_2": 0.5,
+          "niah_multikey_3": 0.05,
+          "niah_multiquery": 0.625,
+          "niah_multivalue": 0.625,
+          "niah_single_1": 1.0,
+          "niah_single_2": 1.0,
+          "niah_single_3": 1.0,
+          "qa_1": 0.2,
+          "qa_2": 0.25,
+          "vt": 0.47999999999999987
+        },
+        "task_vector": [
+          1.0,
+          1.0,
+          1.0,
+          0.9,
+          0.5,
+          0.05,
+          0.625,
+          0.625,
+          0.47999999999999987,
+          0.025,
+          0.4666666666666666,
+          0.2,
+          0.25
+        ]
+      },
+      "normalized_index": {
+        "macro": 0.5591666666666666,
+        "per_task": {
+          "cwe": 0.02,
+          "fwe": 0.3166666666666667,
+          "niah_multikey_1": 0.95,
+          "niah_multikey_2": 0.6,
+          "niah_multikey_3": 0.0,
+          "niah_multiquery": 0.8,
+          "niah_multivalue": 0.8125,
+          "niah_single_1": 1.0,
+          "niah_single_2": 1.0,
+          "niah_single_3": 1.0,
+          "qa_1": 0.1,
+          "qa_2": 0.25,
+          "vt": 0.41999999999999993
+        },
+        "task_vector": [
+          1.0,
+          1.0,
+          1.0,
+          0.95,
+          0.6,
+          0.0,
+          0.8125,
+          0.8,
+          0.41999999999999993,
+          0.02,
+          0.3166666666666667,
+          0.1,
+          0.25
+        ]
+      },
+      "official_yarn": {
+        "macro": 0.5594230769230769,
+        "per_task": {
+          "cwe": 0.025,
+          "fwe": 0.35,
+          "niah_multikey_1": 0.9,
+          "niah_multikey_2": 0.35,
+          "niah_multikey_3": 0.1,
+          "niah_multiquery": 0.775,
+          "niah_multivalue": 0.8125,
+          "niah_single_1": 1.0,
+          "niah_single_2": 1.0,
+          "niah_single_3": 1.0,
+          "qa_1": 0.3,
+          "qa_2": 0.2,
+          "vt": 0.45999999999999996
+        },
+        "task_vector": [
+          1.0,
+          1.0,
+          1.0,
+          0.9,
+          0.35,
+          0.1,
+          0.8125,
+          0.775,
+          0.45999999999999996,
+          0.025,
+          0.35,
+          0.3,
+          0.2
+        ]
+      }
+    },
+    "65536": {
+      "native": {
+        "macro": 0.22051282051282048,
+        "per_task": {
+          "cwe": 0.07,
+          "fwe": 0.31666666666666665,
+          "niah_multikey_1": 0.5,
+          "niah_multikey_2": 0.0,
+          "niah_multikey_3": 0.0,
+          "niah_multiquery": 0.225,
+          "niah_multivalue": 0.225,
+          "niah_single_1": 0.75,
+          "niah_single_2": 0.15,
+          "niah_single_3": 0.3,
+          "qa_1": 0.05,
+          "qa_2": 0.25,
+          "vt": 0.030000000000000006
+        },
+        "task_vector": [
+          0.75,
+          0.15,
+          0.3,
+          0.5,
+          0.0,
+          0.0,
+          0.225,
+          0.225,
+          0.030000000000000006,
+          0.07,
+          0.31666666666666665,
+          0.05,
+          0.25
+        ]
+      },
+      "normalized_index": {
+        "macro": 0.5145512820512821,
+        "per_task": {
+          "cwe": 0.005,
+          "fwe": 0.4666666666666667,
+          "niah_multikey_1": 0.9,
+          "niah_multikey_2": 0.4,
+          "niah_multikey_3": 0.05,
+          "niah_multiquery": 0.65,
+          "niah_multivalue": 0.6375,
+          "niah_single_1": 1.0,
+          "niah_single_2": 1.0,
+          "niah_single_3": 1.0,
+          "qa_1": 0.15,
+          "qa_2": 0.15,
+          "vt": 0.28
+        },
+        "task_vector": [
+          1.0,
+          1.0,
+          1.0,
+          0.9,
+          0.4,
+          0.05,
+          0.6375,
+          0.65,
+          0.28,
+          0.005,
+          0.4666666666666667,
+          0.15,
+          0.15
+        ]
+      },
+      "official_yarn": {
+        "macro": 0.45365384615384624,
+        "per_task": {
+          "cwe": 0.0,
+          "fwe": 0.39999999999999997,
+          "niah_multikey_1": 0.65,
+          "niah_multikey_2": 0.25,
+          "niah_multikey_3": 0.05,
+          "niah_multiquery": 0.5,
+          "niah_multivalue": 0.5875,
+          "niah_single_1": 1.0,
+          "niah_single_2": 0.75,
+          "niah_single_3": 0.95,
+          "qa_1": 0.2,
+          "qa_2": 0.2,
+          "vt": 0.36
+        },
+        "task_vector": [
+          1.0,
+          0.75,
+          0.95,
+          0.65,
+          0.25,
+          0.05,
+          0.5875,
+          0.5,
+          0.36,
+          0.0,
+          0.39999999999999997,
+          0.2,
+          0.2
+        ]
+      }
+    }
+  },
+  "status": "K32_FULL13_CONFIRMATION_COMPLETE",
+  "summary_script_sha256": "c7db61735ec0c007a1b055953228e02a38db103459d3d7763671ad6d82c73d33",
+  "tasks": [
+    "niah_single_1",
+    "niah_single_2",
+    "niah_single_3",
+    "niah_multikey_1",
+    "niah_multikey_2",
+    "niah_multikey_3",
+    "niah_multivalue",
+    "niah_multiquery",
+    "vt",
+    "cwe",
+    "fwe",
+    "qa_1",
+    "qa_2"
+  ]
+}

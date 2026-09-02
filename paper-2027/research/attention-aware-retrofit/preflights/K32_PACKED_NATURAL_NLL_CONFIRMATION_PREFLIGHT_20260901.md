@@ -1,6 +1,10 @@
 # K32 packed-natural NLL confirmation — preregistration
 
-**Status:** `FROZEN_PENDING_FULL13_ENTRANCE`
+**Status:** `FROZEN_FOR_WORK_MACHINE / DATA_READY / MODEL_NOT_RUN`
+
+The full-RULER entrance completed as `CLEAR_ADVANCE`. The model-free packed
+input is hash-bound, but user instruction stops this GPU instance before model
+evaluation. Execute only on the work machine under the unchanged protocol.
 
 ## Question
 
@@ -27,6 +31,11 @@ or packing rule.
   so both lengths have identical final 256 targets;
 - write complete token IDs only to the external raw owner; compact receipts
   contain hashes and source-row ranges, not content.
+
+The shard is repository-known and has historical uses in other protocols.
+“New” here means these fixed packed rows and their outcomes were not used to
+select the current K32 profile; it does not mean the corpus is absent from all
+past training or from the external checkpoint's unknown pretraining mixture.
 
 ## Frozen arms and execution
 

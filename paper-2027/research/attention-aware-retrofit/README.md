@@ -6,8 +6,8 @@ and order live only in [`../../../INDEX.md`](../../../INDEX.md) §0 and §6.
 
 ## Current question
 
-`PHYSICAL_COORDINATE_PRIVILEGE_REJECTED / NORMALIZED_INDEX_BREADTH_RUNNING /
-P3_ENTRANCE_FAILED`
+`PHYSICAL_COORDINATE_PRIVILEGE_REJECTED / NORMALIZED_INDEX_FULL13_CLEAR_ADVANCE /
+WORK_MACHINE_NLL_NEXT`
 
 The completed low-dimensional experiment now separates two effects:
 
@@ -30,10 +30,12 @@ The completed low-dimensional experiment now separates two effects:
 No Native-correction or hierarchical candidate survives the current gates.
 The conditional Native-Q/K diagnostic was not executed because its required
 K32 crossing was not confirmed. The physical-coordinate privilege branch is
-now closed. The current evidence question is whether the already-frozen
-normalized-index engineering representative retains its Native/long advantage
-against YaRN on a new full-RULER seed. Native/long routing and post-outcome gain
-rescue remain outside the target method.
+now closed. The new-seed full-RULER result confirms the already-frozen
+normalized-index engineering representative at 64K against Native and YaRN,
+while preserving the 32K macro. The next evidence question moves to the work
+machine: packed-natural NLL, then natural QA only if the likelihood gate passes.
+Native/long routing and post-outcome gain rescue remain outside the target
+method.
 
 ## Evidence to open on demand
 
@@ -51,6 +53,7 @@ rescue remain outside the target method.
 | Does the selected K32 representative match deterministic YaRN? | same K32 confirmation owner plus [`evidence/K32_FRESH_YARN_COMPLETION_RECEIPT_20260901.json`](evidence/K32_FRESH_YARN_COMPLETION_RECEIPT_20260901.json) | index ties YaRN at 32K and is higher at 64K on the matched core-4 rows; the arm was added after three-arm outcomes, so untouched breadth confirmation remains required |
 | Why did the old K128 16K screen fail? | [`results/NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901.md`](results/NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901.md) and [`results/REFERENCE_CORRECTED_K128_RESULT_20260901.md`](results/REFERENCE_CORRECTED_K128_RESULT_20260901.md) | operational reference/request scale jointly explain the recovery; physical-coordinate superiority and K causality remain unresolved |
 | Does the K128 index tilt replicate? | [`results/K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901.md`](results/K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901.md) | yes on the registered 16K N80 contrast; this rejects physical-coordinate privilege but does not establish index universality or K causality |
+| Does index beat YaRN on untouched full RULER-13? | [`results/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md`](results/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md) | yes at 64K macro with paired CI above zero and 32K retention pass; QA/VT are mixed, so natural-task and NLL claims remain open |
 
 ## Retired work
 

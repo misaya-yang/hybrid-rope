@@ -4,6 +4,16 @@ Compact, machine-path-free receipt for the attention-aware allocation study.
 Checkpoints, raw evaluation records, token arrays, caches, and machine logs
 remain with their canonical owners outside this directory.
 
+[`K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RECEIPT_20260901.json`](K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RECEIPT_20260901.json)
+binds the new-seed Native/index/official-YaRN full RULER-13 panel. Index passes
+the 32K point gate and exceeds YaRN at 64K by `.060897`, paired 95% interval
+`[.027627,.095835]`; complete per-task results and raw identities are routed to
+the canonical result owner.
+
+[`K32_PACKED_NATURAL_NLL_DATA_RECEIPT_20260901.json`](K32_PACKED_NATURAL_NLL_DATA_RECEIPT_20260901.json)
+records the model-free 32-stream 32K/64K packed-natural input prepared for the
+work machine. Its status is `NOT_RUN`; it contains no NLL or ranking evidence.
+
 [`K32_PAIRED_CROSSING_CONFIRMATION_RECEIPT_20260901.json`](K32_PAIRED_CROSSING_CONFIRMATION_RECEIPT_20260901.json)
 binds the independently seeded 80-row/task Native/physical/index confirmation.
 The old physical long advantage does not replicate: both profiles improve 64K

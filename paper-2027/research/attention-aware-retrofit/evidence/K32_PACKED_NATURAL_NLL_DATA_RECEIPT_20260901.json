@@ -1,0 +1,35 @@
+{
+  "status": "QWEN_K32_PACKED_NATURAL_NLL_DATA_READY_V1",
+  "model_evaluation_status": "NOT_RUN",
+  "model_outcomes_read": false,
+  "grid": [32768, 65536],
+  "natural_streams": 32,
+  "rows": 64,
+  "target_tokens": 256,
+  "data_manifest_sha256": "d1970c519a3c1840cbda06daa30642f3a8dbc26d4fc00ef648dd330a3d1258ac",
+  "rows_sha256": "8be1fee7037968d02b6e1839ec69e33f4e512c9f9f10624d68f6acc857848487",
+  "config_sha256": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+  "tokenizer_files": [
+    {
+      "name": "tokenizer.json",
+      "sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "bytes": 7031645
+    },
+    {
+      "name": "tokenizer_config.json",
+      "sha256": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+      "bytes": 7305
+    }
+  ],
+  "tokenizer_eos_token_id": 151645,
+  "source": {
+    "name": "001_00000.parquet",
+    "sha256": "3fcf2dc69cd52503986276d3d2d26a8c356d0f2ea28a0de4fdbda8cf87755693",
+    "start_row": 650000,
+    "consumed_row_range": [650000, 652017],
+    "source_document_set_sha256": "3410bf6ce905ea202a9c1b0f44864f6cd88281916c68f083f8e4f845f79917ec"
+  },
+  "packing_contract": "source-order unique documents; insert one EOS between complete documents; truncate only the last document to finish each 65536-token stream and discard its unused suffix; never reuse a source document; 32768 is the suffix of the paired 65536 stream",
+  "preparer_script_sha256": "7fea805da4ebd9ecbc3d731fa13e3365309fe96c04faa49eed3de1efe7f817d8",
+  "evidence_limit": "Model-free input receipt only; no NLL, generation, candidate ranking, or work-machine execution result. The source shard is repository-known; these fixed packed rows were outcome-unseen for current profile selection."
+}

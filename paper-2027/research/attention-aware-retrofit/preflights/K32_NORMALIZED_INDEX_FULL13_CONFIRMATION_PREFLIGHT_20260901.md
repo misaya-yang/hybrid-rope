@@ -1,10 +1,9 @@
 # K32 normalized-index full-RULER confirmation — preregistration
 
-**Status:** `EXECUTING`
+**Status:** `EXECUTED / RESULT_OWNED`
 
-The K128 identification entrance completed with a positive frozen-index
-contrast. Data generation and the exact three registered arms are now running;
-the protocol below remains unchanged.
+The terminal result is owned by
+[`K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901`](../results/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md).
 
 ## Hypothesis
 

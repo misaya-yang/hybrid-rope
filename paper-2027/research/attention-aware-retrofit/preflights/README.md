@@ -38,9 +38,12 @@ with index favored; the result has its own canonical owner and does not add a
 length, baseline, or profile parameter.
 
 [`K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_PREFLIGHT_20260901.md`](K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_PREFLIGHT_20260901.md)
-freezes a full-RULER confirmation boundary for the selected engineering
-representative. Its identification entrance has now passed; execution remains
-limited to the three registered arms and new seed.
+froze the new-seed full-RULER confirmation for the selected engineering
+representative. It completed as `CLEAR_ADVANCE`; the result has its own owner.
+
+[`K32_PACKED_NATURAL_NLL_CONFIRMATION_PREFLIGHT_20260901.md`](K32_PACKED_NATURAL_NLL_CONFIRMATION_PREFLIGHT_20260901.md)
+freezes the immediate work-machine likelihood gate. Its model-free input is
+ready, but no model evaluation ran on the stopped GPU instance.
 
 ## Retired recent protocols
 

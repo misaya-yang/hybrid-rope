@@ -110,12 +110,11 @@ model forward, KL result, compatibility predictor, selector, or P4 method is
 authorized by that preregistration.  Its already-prepared CPU input receipt is
 preserved as unused infrastructure rather than relabeled evidence.
 
-The next identification test keeps both coupling tables frozen and uses an
-independent K128 16K endpoint to determine whether the earlier sample-level
-index advantage repeats. If that branch closes, a separately frozen new-seed
-full-RULER confirmation can test normalized-index against Native and YaRN
-without reusing these development rows. Broad parameter search remains outside
-this owner.
+The later independent K128 16K owner repeats the index advantage, and the
+separately frozen new-seed full-RULER owner confirms normalized-index against
+Native and YaRN without reusing these development rows. Those outcomes have
+their own canonical reports; broad parameter search remains outside this
+owner.
 
 ## Claim ceiling
 

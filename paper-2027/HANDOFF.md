@@ -12,7 +12,8 @@ The current research timeline and agenda live in [`../INDEX.md`](../INDEX.md)
 ## 1. Research status pointer
 
 `P0_REFERENCE_INDEPENDENTLY_CONFIRMED / K32_N80_COMPLETE /
-K128_COORDINATE_CONFIRMATION_COMPLETE / K32_FULL13_RUNNING`
+K128_COORDINATE_CONFIRMATION_COMPLETE / K32_FULL13_CLEAR_ADVANCE /
+WORK_MACHINE_NLL_NEXT`
 
 Current canonical owners:
 
@@ -37,9 +38,14 @@ Current canonical owners:
   paired difference `+.061875` with 95% interval `[.028109,.096250]`. This
   closes physical-coordinate privilege and advances index only as the frozen
   engineering representative.
-- The registered K32 new-seed full-RULER-13 Native/index/YaRN confirmation is
-  preparing/running. No partial outcome may change its three arms, seed, table,
-  gain, lengths, or decision rule.
+- [`K32 full-RULER confirmation`](research/attention-aware-retrofit/results/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md)
+  completes as `CLEAR_ADVANCE`: Native/index/YaRN 64K macros are
+  `.220513/.514551/.453654`; index-minus-YaRN is `+.060897`, paired 95% CI
+  `[.027627,.095835]`, while the 32K index retention gate passes. QA and VT are
+  mixed, so the result is not a task-universal or SOTA claim.
+- [`Work-machine plan`](research/attention-aware-retrofit/WORK_MACHINE_NEXT_EXPERIMENT_PLAN_20260901.md)
+  freezes packed-natural NLL as the immediate next gate. Its model-free data
+  receipt is ready, but model evaluation status remains `NOT_RUN`.
 - Historical K32 Pareto, K64 scale consistency, and the original K128 negative
   remain routed by `INDEX.md`; none is silently replaced or pooled.
 
@@ -50,12 +56,13 @@ branch has been opened.
 ## 2. Git state
 
 - Branch / upstream: `main_0726` / `origin/main_0726`
-- Last observed HEAD: `19850cd29cf57ee41f9ee72f2c0af9beded853c9`
+- Last observed HEAD: `3ddaa7e71a2a2913fcb7a9d6f0e8e47ab7bf715b`
   (background hourly workspace checkpoint; not committed by this run).
 - Observed divergence against the existing upstream ref: `0/0`; no new
   fetch or remote publication verification was performed.
-- Worktree: the latest K32 YaRN receipt/report update is modified/untracked and
-  not yet in the observed background checkpoint.
+- Worktree: the final full-RULER owner, work-machine plan, packed-NLL data
+  receipt and final routing updates remain modified/untracked after the latest
+  observed background checkpoint.
 - This run has not staged, committed, pushed, pulled, rebased, or switched.
 
 Verify all volatile values live before Git operations.
@@ -78,14 +85,13 @@ repairs and must be rebuilt on the work machine before upload.
 
 ## 4. Machine and authorization state
 
-- The earlier OLMo, K32, and K128 queues completed and their shutdown was
-  verified. The user has now restarted the instance and explicitly authorized
-  the new ordered attribution/calibration program; the prior shutdown plan is
-  no longer active. Do not automatically shut down this session.
-- The current GPU is a 32 GiB RTX 4080 SUPER. P0, P1 s2/s4, Qwen P2, K32 N80,
-  matched K32 YaRN, and K128 N80 are complete. The K32 full-RULER new-seed data
-  are being prepared and the three GPU arms are chained immediately after; no
-  old model was deleted. The protected 1.485B asset remains untouched.
+- The 32 GiB RTX 4080 SUPER queue completed and was idle (`0%`, `0 MiB`) before
+  shutdown. `shutdown -h now` returned success; the follow-up SSH check timed
+  out during banner exchange, confirming the instance is no longer reachable.
+- P0, P1 s2/s4, Qwen P2, K32 N80, matched K32 YaRN, K128 N80 and the K32
+  full-RULER-13 confirmation are complete. Packed-natural data preparation is
+  CPU-only and model status remains `NOT_RUN`. No old model was deleted; the
+  protected 1.485B asset remains untouched.
 - Cell-average, conditional Native-Q/K P3, and s8 were rejected by their
   registered entrance gates.
 - No training or OpenReview upload is authorized.
@@ -103,6 +109,8 @@ Passed on the personal PC:
 - 55 fresh-NLL and paired RULER/NLL summary tests in the latest combined run;
 - 29 same-family Qwen summary and 11 historical-replay synthetic tests;
 - 101 K32 fresh-YaRN and K128 coordinate-summary identity/statistical tests;
+- 37 full-RULER summary, 41 packed-natural data/evaluator/summary, and 6
+  parallel-data-preparation compatibility tests;
 - weight-identity and repository-navigation checks;
 - focused `py_compile`, launcher `bash -n`, compact JSON parsing and
   `git diff --check` checks; no GPU validation is inferred from these.
@@ -115,11 +123,11 @@ compilation, canonical `aidemo` suite or supplement packaging was run.
 
 ## 6. Volatile action queue
 
-1. Finish and attribute the running K32 new-seed full-RULER Native/index/YaRN
-   confirmation. Native-Q/K P3 and physical-coordinate superiority remain
-   closed. After the result, decide the next fixed natural-NLL/deterministic-
-   baseline confirmation; no `G(x;K)`, residual, gain or boundary search is
-   authorized.
+1. On the work machine, execute only the frozen packed-natural
+   Native/index/YaRN NLL gate. If it passes, preregister natural 2Wiki/Qasper/
+   Hotpot confirmation, then matched static PI/NTK/Resonance baselines. Keep
+   Native-Q/K P3, physical-x privilege, `G(x;K)`, residual, gain and boundary
+   search closed.
 2. Rebuild and validate the curated supplement on the work machine before
    submission.
 3. Freeze author metadata and complete the final owner-by-owner number review.
