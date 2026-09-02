@@ -379,6 +379,7 @@ position-dependent operator，不把不同 target-free operator 一并判死。
 | 注意力需求测量 | `scripts/analysis/attention_phase_demand.py` | 含 `layerwise_plan()` → `per_layer_inv_freq` |
 | 全 RoPE 碰撞审计 | `scripts/analysis/full_rope_collision_audit.py` | §2.1 的数值 owner |
 | **第三轴静态 $r_2$ 搜索诊断** | [`scripts/analysis/third_axis_ceiling.py`](scripts/analysis/third_axis_ceiling.py) | §6.1 数值的可复现脚本；纯 CPU；报告 optimizer 的 best-found value，不是全局或行为上限 |
+| **理论证伪 benchmark** | [`falsification_benchmark/`](falsification_benchmark/) | 16 个按真实执行时间排序的历史 episode；visible/hidden 分离、跨 episode leakage 硬门、四目标 CPU 确定性 evaluator 与 fresh-theorist 原子提交协议 |
 | 有限 $K$ Cosh surrogate-regret 审计 | [`scripts/analysis/finite_k_cosh_regret_audit.py`](scripts/analysis/finite_k_cosh_regret_audit.py) | equal-mass quantile histogram 的纯 CPU 数值证书；只验证所述 surrogate 值的 $K^{-2}$ 系数，不是 $r_2$、LM loss 或 table selector |
 | signed-lag / gap / $k$-way identities | [`scripts/analysis/verify_signed_lag_kway_gap.py`](scripts/analysis/verify_signed_lag_kway_gap.py) | 纯 CPU 内部诊断；验证解析恒等式与静态反例，不是 checkpoint 结果或论文 claim owner |
 | 2026-08-19 全 RoPE 审计（有限 $K$、反例、正交格） | [`analysis/full_rope_audit/`](analysis/full_rope_audit/) | §2.1 正交格行与 §3.4 第 1–2 项的原始 owner；`finK_*`、`verify_small_models.py` |
@@ -396,6 +397,7 @@ position-dependent operator，不把不同 target-free operator 一并判死。
 | `paper-2027/` | ICLR 2027 唯一活跃稿件、图表、构建、交接 | 所有 claim 先过 owner |
 | `paper-2027/research/` | durable internal theory、审计、claim/evidence 决策 | 内部层，不直接复制进正文 |
 | `paper-2027/research/attention-aware-retrofit/` | 成熟 retrofit 的 `results` / `evidence` / `analysis` / `preflights` / `theory` | 各子目录职责见其 README |
+| `falsification_benchmark/` | 16 个历史 episode 的理论证伪 benchmark（registry/visible/hidden/audit/evaluator） | 严格无泄露盲评 benchmark；见其 README |
 | `paper-2027/research/audits/` | 内部 theory/manuscript/evidence 审计 | 不建立第二 action queue |
 | `paper-2027/research/external-reviews/` | 8 月外部模型审计快照 | frozen history；不进当前优先级或 evidence routing |
 | `paper/` | NeurIPS 2026 投稿基线 | **不可修改、不可编译、不可重生成** |

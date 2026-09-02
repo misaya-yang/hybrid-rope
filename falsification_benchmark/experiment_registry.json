@@ -1,0 +1,199 @@
+{
+  "schema_version": "1.0",
+  "benchmark_id": "hybrid-rope-theory-falsification-v1",
+  "benchmark_version": "1.0.0",
+  "frozen_on": "2026-09-02",
+  "episode_count": 16,
+  "scope": "Completed historical experiments only; no new theory, method, experiment, inference, training, or GPU work.",
+  "chronology_policy": "Sort by the best-supported real execution start date. Preserve day precision when an exact launch timestamp did not survive. When two runs share a day, use a documented dependency as the tie-break.",
+  "information_policy": "A visible packet is a minimal, protocol-sufficient subset of facts available before its episode began, not an exhaustive history. This avoids later packets leaking earlier benchmark answers.",
+  "access_policy": {
+    "fresh_theorist": ["visible_packets/packets.json", "fresh_theorist_guide.md"],
+    "coordinator_only": ["experiment_registry.json", "experiment_registry.md", "hidden_answers/answers.json", "leakage_audit/", "evaluator/"],
+    "predictions_submitted_atomically": true,
+    "answers_released_only_after_submission": true
+  },
+  "temporal_evidence_grades": {
+    "A": "A pre-result preregistration or explicitly frozen protocol survives.",
+    "B": "A raw/hash-backed artifact preserves protocol identity, but no standalone pre-result document survives.",
+    "C": "Protocol-only retrospective reconstruction; all measurements, outcome language, and post-hoc interpretation were excluded."
+  },
+  "episodes": [
+    {
+      "episode_id": "TFB-001",
+      "execution_order": 1,
+      "execution_time": {"start": "2026-02-27", "precision": "day", "basis": "dated owner; exact launch time not retained"},
+      "title": "Eight-point tau sweep in a 50M decoder",
+      "coverage": {"model": "50.9M decoder-only", "task": "TinyStories PPL", "scale": "2K-16K", "discriminator": "non-monotone finite-grid response"},
+      "temporal_evidence_grade": "C",
+      "visible_basis": ["Protocol fields only from docs/exp/2026-02-27_evq_tau_sweep_results.md"],
+      "hidden_owner": ["docs/exp/2026-02-27_evq_tau_sweep_results.md"],
+      "result_commit": "04ac0921e9c0c3c19d378a0cde3841f00cb3527b"
+    },
+    {
+      "episode_id": "TFB-002",
+      "execution_order": 2,
+      "execution_time": {"start": "2026-03-03", "precision": "day", "basis": "dated queue/report; final overlay payload finished 2026-03-04"},
+      "title": "Matched passkey mixture crossed with a fixed scaling operator",
+      "coverage": {"model": "454.2M decoder-only", "task": "teacher-forced passkey NLL-gap and PPL", "scale": "2K-16K", "discriminator": "substrate-by-operator interaction"},
+      "temporal_evidence_grade": "B",
+      "visible_basis": ["Protocol fields in docs/exp/2026-03-03_passkey_mix_results.md and data/results_5090b/evq_yarn_10pct_allseeds.json; score fields excluded"],
+      "hidden_owner": ["docs/exp/2026-03-03_passkey_mix_results.md", "data/curated/table2_evq_yarn_454m_passkey_10pct.json"],
+      "result_commit": "6a97b4e743b416e04c2ce516048a83f225444c24"
+    },
+    {
+      "episode_id": "TFB-003",
+      "execution_order": 3,
+      "execution_time": {"start": "2026-03-05", "precision": "day", "basis": "dated report and raw-JSON-backed payload"},
+      "title": "Frequency table crossed with a Kerple-plus-MLP score operator",
+      "coverage": {"model": "125M decoder-only", "task": "natural-text PPL", "scale": "256-8192", "discriminator": "component effect may disappear under a stronger operator"},
+      "temporal_evidence_grade": "B",
+      "visible_basis": ["data/curated/phase11b_125m_l256_3seed.json protocol only; operator is Zheng-inspired, not an official DAPE reproduction"],
+      "hidden_owner": ["data/curated/phase11b_125m_l256_3seed.json", "rebuttal/pre_rebuttal/real_dape_compare/FINDINGS.md"],
+      "result_commit": "9fa83064d842e1e2e2b46b6f28aea654f8b2b690"
+    },
+    {
+      "episode_id": "TFB-004",
+      "execution_order": 4,
+      "execution_time": {"start": "2026-03-06", "precision": "day", "basis": "dated report and curated result payload"},
+      "title": "750M shared-checkpoint 2K-to-4K continuation",
+      "coverage": {"model": "750M decoder-only", "task": "PPL, passkey retrieval, autoregressive exact, multi-needle", "scale": "2K-16K", "discriminator": "retrieval ceiling versus exact generation"},
+      "temporal_evidence_grade": "B",
+      "visible_basis": ["Protocol and shared-start fields in data/curated/phase15_750m_continue_result_20260306.json"],
+      "hidden_owner": ["data/curated/phase15_750m_continue_result_20260306.json", "docs/exp/2026-03-06_phase15_750m_2k_to_4k_continue_results.md"],
+      "result_commit": "6681179aa9b92207b48070d34b011bc0d636266"
+    },
+    {
+      "episode_id": "TFB-005",
+      "execution_order": 5,
+      "execution_time": {"start": "2026-03-09", "precision": "day", "basis": "dated 99-run owner"},
+      "title": "Nine-configuration formula-centered sweep",
+      "coverage": {"model": "50.9M decoder-only", "task": "weighted OOD NLL/PPL", "scale": "nine length/head configurations", "discriminator": "exact optimum versus displaced basin"},
+      "temporal_evidence_grade": "B",
+      "visible_basis": ["data/curated/phase16_99run_manifest.meta.json and protocol fields from the dated owner; ranks and best points excluded"],
+      "hidden_owner": ["docs/exp/2026-03-09_phase16_formula_optimality_sweep_results.md", "data/curated/phase16_99run_manifest.meta.json"],
+      "result_commit": "fc631f67caba1df7efae02cef66e32a117f4b152"
+    },
+    {
+      "episode_id": "TFB-006",
+      "execution_order": 6,
+      "execution_time": {"start": "2026-03-16", "precision": "day", "basis": "all raw source paths are under results/video_dit/20260316_head2head; archive date is not used"},
+      "title": "Video-DiT temporal-frequency head-to-head",
+      "coverage": {"model": "129.6M Video-DiT", "task": "video denoising MSE", "scale": "32-to-128 frames", "discriminator": "cross-modal transfer"},
+      "temporal_evidence_grade": "B",
+      "visible_basis": ["Protocol fields and raw-source identities in data/curated/video_dit_seed42_head_to_head_20260826.json; arm metrics excluded"],
+      "hidden_owner": ["data/curated/video_dit_seed42_head_to_head_20260826.json", "paper-2027/research/VIDEO_DIT_HEAD_TO_HEAD_SEED42_RESULT_20260826.md"],
+      "result_commit": "7a938d378399ad9daf5a6840f4a078a87136cd7c"
+    },
+    {
+      "episode_id": "TFB-007",
+      "execution_order": 7,
+      "execution_time": {"start": "2026-03-20", "precision": "day", "basis": "dated experiment owner"},
+      "title": "GQA/MLA channel-scarcity ablation",
+      "coverage": {"model": "125M decoder-only", "task": "PPL and passkey NLL-gap", "scale": "MHA/GQA/MLA, 2K-16K", "discriminator": "extreme scarcity effect versus monotonic architecture trend"},
+      "temporal_evidence_grade": "C",
+      "visible_basis": ["Protocol fields in data/curated/mla_channel_count_125m_pilot.json and the dated report; measurement rows excluded"],
+      "hidden_owner": ["data/curated/mla_channel_count_125m_pilot.json", "docs/exp/2026-03-20_gqa_mla_125m_compression_ablation.md"],
+      "result_commit": "cafb0431e78ece55ac4a47d6c4af2b529f46433e"
+    },
+    {
+      "episode_id": "TFB-008",
+      "execution_order": 8,
+      "execution_time": {"start": "2026-07-12", "precision": "day", "basis": "temporal collections and result artifact finalized on 2026-07-12"},
+      "title": "LLaMA-3-8B LongAlpaca temporal holdout",
+      "coverage": {"model": "LLaMA-3-8B with LoRA", "task": "domain-disjoint teacher-forced NLL", "scale": "8K-32K", "discriminator": "short/long sign crossover"},
+      "temporal_evidence_grade": "B",
+      "visible_basis": ["Exact training/evaluation identity in rebuttal/pre_rebuttal/LORA_LONGALPACA_TEMPORAL_NLL_20260712.md; comparison values excluded"],
+      "hidden_owner": ["data/curated/lora_longalpaca_temporal_s42_20260712.json", "rebuttal/pre_rebuttal/LORA_LONGALPACA_TEMPORAL_NLL_20260712.md"],
+      "result_commit": "b035e764970018174972d7ef10fc96dc2dff6115"
+    },
+    {
+      "episode_id": "TFB-009",
+      "execution_order": 9,
+      "execution_time": {"start": "2026-07-25", "precision": "day", "basis": "earliest per-run completion receipts are on 2026-07-25; exact launch time not retained"},
+      "title": "M4 exact-range 192-run factorial",
+      "coverage": {"model": "50.9M decoder-only on M4", "task": "weighted OOD NLL", "scale": "12 structural cells by 3 seeds", "discriminator": "pure allocation effect and analytic-shape non-uniqueness"},
+      "temporal_evidence_grade": "B",
+      "visible_basis": ["Frozen protocol and run specifications in rebuttal/rebuttal_0723/theory_results/m4_exact_range_factorial_evidence_20260726.json; all metrics and ranks excluded"],
+      "hidden_owner": ["rebuttal/rebuttal_0723/theory_results/m4_exact_range_factorial_evidence_20260726.json", "rebuttal/rebuttal_0723/theory_results/M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md"],
+      "result_commit": "8c425f48cafe9bfd95524e5c752b149790c08d1a"
+    },
+    {
+      "episode_id": "TFB-010",
+      "execution_order": 10,
+      "execution_time": {"start": "2026-08-20", "precision": "day", "basis": "dated raw-hash-receipted owner"},
+      "title": "151.9M exact-range three-seed replication",
+      "coverage": {"model": "151.9M decoder-only", "task": "paired final-128-token NLL", "scale": "256-2048", "discriminator": "fixed support versus target-matched support"},
+      "temporal_evidence_grade": "B",
+      "visible_basis": ["Protocol and receipt identity in paper-2027/research/EXACT_RANGE_151M_3SEED_RESULT_20260820.json; all contrasts excluded"],
+      "hidden_owner": ["paper-2027/research/EXACT_RANGE_151M_3SEED_RESULT_20260820.json", "paper-2027/research/EXACT_RANGE_151M_3SEED_RESULT_20260820.md"],
+      "result_commit": "ffda873f3187ad7b01e30f336979d505ceaf2366"
+    },
+    {
+      "episode_id": "TFB-011",
+      "execution_order": 11,
+      "execution_time": {"start": "2026-08-21", "precision": "day", "basis": "schedule-frozen replication order recorded in the dated owner"},
+      "title": "Attention-measured phase-chord allocation replication",
+      "coverage": {"model": "151.9M decoder-only", "task": "paired final-128-token NLL", "scale": "256-2048", "discriminator": "selection-seed effect versus frozen-schedule replication"},
+      "temporal_evidence_grade": "A",
+      "visible_basis": ["The schedule was frozen before seed-42 training; protocol fields are in paper-2027/research/attention-aware-retrofit/evidence/RESULTS_20260821.json"],
+      "hidden_owner": ["paper-2027/research/attention-aware-retrofit/evidence/RESULTS_20260821.json", "paper-2027/research/attention-aware-retrofit/results/EXPERIMENT_REPORT_20260821.md"],
+      "result_commit": "3a493b8b8f696ebdf67d892c10abb7f44c00ce62"
+    },
+    {
+      "episode_id": "TFB-012",
+      "execution_order": 12,
+      "execution_time": {"start": "2026-08-23", "precision": "day", "basis": "pre-result registration and dated owner"},
+      "title": "Same-support frozen-checkpoint controls",
+      "coverage": {"model": "Qwen2.5-1.5B and OLMo-2-1.5B", "task": "RULER", "scale": "64K and 16K", "discriminator": "geometric contrast versus detailed-profile necessity"},
+      "temporal_evidence_grade": "A",
+      "visible_basis": ["paper-2027/research/attention-aware-retrofit/preflights/SAME_SUPPORT_CONTROL_PREFLIGHT_20260823.md at its pre-arm state"],
+      "hidden_owner": ["paper-2027/research/attention-aware-retrofit/evidence/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULTS_20260823.json", "paper-2027/research/attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md"],
+      "result_commit": "b1e20ea4ac477798ffdb34cb8ac45f46373f4a99"
+    },
+    {
+      "episode_id": "TFB-013",
+      "execution_order": 13,
+      "execution_time": {"start": "2026-08-24", "precision": "day", "basis": "preflight and dated result owner"},
+      "title": "Two static Native-support single-table gates",
+      "coverage": {"model": "released OLMo-2-1.5B", "task": "PG-19 tail NLL", "scale": "4K and 8K", "discriminator": "long gain versus Native-window retention"},
+      "temporal_evidence_grade": "A",
+      "visible_basis": ["ZERO_PARAMETER_SINGLE_TABLE_PREFLIGHT_20260824.md and ZERO_PARAMETER_PROTECTED_BAND_PREFLIGHT_20260824.md"],
+      "hidden_owner": ["paper-2027/research/attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md"],
+      "result_commit": "549cdc2be40115daa6587a99db22e11a97bac314"
+    },
+    {
+      "episode_id": "TFB-014",
+      "execution_order": 14,
+      "execution_time": {"start": "2026-08-25", "precision": "day", "basis": "matched recovery configuration and dated owner; exact launch time not retained"},
+      "title": "Matched dense-natural table/weights recovery",
+      "coverage": {"model": "released OLMo-2-1.5B", "task": "phase NLL, dense NLL, 2Wiki token F1/exact", "scale": "4K-16K", "discriminator": "tail/full-sequence and NLL/capability mismatch"},
+      "temporal_evidence_grade": "B",
+      "visible_basis": ["Protocol-only reconstruction of the two matched recovery arms from paper-2027/research/attention-aware-retrofit/results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md; every evaluation value and preliminary screen outcome excluded"],
+      "hidden_owner": ["paper-2027/research/attention-aware-retrofit/results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md", "paper-2027/research/attention-aware-retrofit/evidence/COADAPTIVE_ALLOCATION_ORACLE_RESULTS_20260825.json"],
+      "result_commit": "7a7efd9d5e1846dbe5eaaa77a697c77987a8893b"
+    },
+    {
+      "episode_id": "TFB-015",
+      "execution_order": 15,
+      "execution_time": {"start": "2026-08-31", "precision": "day", "basis": "pre-registered discriminator and dated result owner"},
+      "title": "Frequency-multiset-preserving slot permutation",
+      "coverage": {"model": "released OLMo-2-1.5B", "task": "PG-19 tail NLL first-stage gate", "scale": "4K", "discriminator": "unordered spectrum versus ordered slot-frequency coupling"},
+      "temporal_evidence_grade": "A",
+      "visible_basis": ["Pre-registered H1/H2 discriminator recorded in paper-2027/research/attention-aware-retrofit/results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md before the permutation arm"],
+      "hidden_owner": ["paper-2027/research/attention-aware-retrofit/results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md"],
+      "result_commit": "00fffa3a9298d1a62bb8a3ddd50a17330cf0af36"
+    },
+    {
+      "episode_id": "TFB-016",
+      "execution_order": 16,
+      "execution_time": {"start": "2026-09-01", "precision": "day", "basis": "dated result owner; exact launch time not retained"},
+      "title": "Gemma K128 frozen transport screen",
+      "coverage": {"model": "Gemma-1/1.1-2B-Instruct", "task": "RULER core-4", "scale": "4K-16K", "discriminator": "8K recovery versus 16K collapse"},
+      "temporal_evidence_grade": "B",
+      "visible_basis": ["Protocol-only reconstruction from paper-2027/research/attention-aware-retrofit/results/FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901.md; every K128 score and interpretation excluded"],
+      "hidden_owner": ["paper-2027/research/attention-aware-retrofit/results/FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901.md"],
+      "result_commit": "3a3da401b8935065acd096cd0a72f4e2a6cf0290"
+    }
+  ]
+}

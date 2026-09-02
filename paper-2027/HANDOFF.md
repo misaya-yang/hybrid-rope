@@ -68,6 +68,12 @@ Current canonical owners:
   unidentifiable quantity named (task-weighted tolerance to off-Native-arc
   joint phase configurations); no method, no experiment plan, no GPU queue.
   Indexed in `INDEX.md` §0/§2.2.
+- [`Theory falsification benchmark`](../falsification_benchmark/README.md) is
+  complete as a repository-only historical-evidence artifact: 16 episodes in
+  verified execution order, visible/hidden separation, a cross-episode
+  leakage gate, a deterministic four-component CPU evaluator, and a fresh-
+  theorist atomic-submission contract. The assembly session is explicitly
+  ineligible to predict; no method or experiment recommendation follows.
 
 P3 cell-average remains rejected. Native-Q/K P3 is `ENTRANCE_FAILED /
 NOT_EXECUTED`. No residual parameter, new curve, selector, SOTA sweep, or s8
@@ -76,18 +82,13 @@ branch is active.
 ## 2. Git state
 
 - Branch / upstream: `main_0726` / `origin/main_0726`
-- Research-delivery baseline before this documentation refresh:
-  `bbadf352e0bcdeb4d40131df864ab24bbee4a94d`.
-- Local HEAD, `origin/main_0726`, and the live remote ref were independently
-  read back at that SHA with divergence `0/0` before this documentation edit.
-- This handoff is part of the documentation refresh and therefore does not
-  embed its own final commit id; verify the final branch SHA live. Unrelated
-  pre-existing worktree changes remain under `.agents/`, and
-  two untracked analysis artifacts remain at
-  `research/attention-aware-retrofit/analysis/h_n_diagonal_verification.json`
-  and `research/attention-aware-retrofit/analysis/minimax_qp_phase1_results.json`.
-  They were not modified or staged by this refresh.
-- This run did not pull, rebase, switch, amend, force-push, or modify remotes.
+- Live local HEAD / tracking SHA at benchmark finalization:
+  `7ff4c6d94a4f1bf96a583afc62d33c2e9ccdca43`; ahead/behind `0/0`.
+- The benchmark delivery adds `falsification_benchmark/` and updates
+  `INDEX.md` plus this handoff. Concurrent `.agents/` preview artifacts remain
+  outside the deliverable and were preserved. Nothing was staged.
+- This run did not pull, rebase, switch, stage, commit, push, amend,
+  force-push, or modify remotes.
 
 Verify all volatile values live before Git operations.
 
@@ -135,6 +136,11 @@ repairs and must be rebuilt on the work machine before upload.
 
 Passed on the personal PC:
 
+- theory-falsification benchmark: JSON parse checks for registry/visible/
+  hidden artifacts; Python compilation; six synthetic evaluator tests
+  (perfect, inverted, uniform, partial-pattern, malformed-probability, and
+  wrong-order cases); 16-row template generation and validation; strict
+  cross-episode leakage audit `PASS` with `0` violations and `0` warnings;
 - 39 focused reference-gated coupling/baseline exporter tests;
 - 43 Native calibration builder/decision/single-code tests;
 - 55 fresh-NLL and paired RULER/NLL summary tests in the latest combined run;
@@ -162,6 +168,11 @@ triplets match their embedded hashes, all evaluation raw rows match their result
 JSON hashes, and all receipt script hashes resolve to archived exact scripts.
 Both corrected factorized baselines passed six-cell full-vocabulary bit-exact
 parity before training.
+
+The benchmark validation loaded no model, ran no inference or training, used no
+GPU, and did not compile either manuscript. `paper/` has an empty diff and
+`paper/main.pdf` remains
+`fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`.
 
 ## 6. Volatile action queue
 

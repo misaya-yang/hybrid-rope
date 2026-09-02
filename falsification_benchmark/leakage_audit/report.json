@@ -1,0 +1,198 @@
+{
+  "artifact_sha256": {
+    "evaluator/__main__.py": "5c2b17a3237c77a8c140f876510fb9795222b967798e1627fce868943f43224d",
+    "evaluator/core.py": "e46b97d227df643c7d20cd173a1135edceadbd49345c986c149bc10db220ed29",
+    "evaluator/test_evaluator.py": "56855d3a79d1bf4e6008b7860fa4f1562f87855be49d99285aca9bb20993c9a0",
+    "experiment_registry.json": "dec5513410c18a6384e8b23df0d6976ef8f67a29236f585aa3b123b9757f5e7c",
+    "fresh_theorist_guide.md": "79ecd1c98471d7192a06a6d32cfad3da426a60f1921146aae13983da83ef1ffa",
+    "hidden_answers/answers.json": "afb9a9aeaffe714330b979c89fa743f0c42ce00190e4d5d26d40421a56402f10",
+    "leakage_audit/audit.py": "8a0d1027cf0009ee35404f3f5dc75498500a21abf3c99c9fac15e2e6af696a29",
+    "visible_packets/packets.json": "ed0d06845e88b24e5edeb5f9833c6e00fe863baec56a0a54fbf0c4058ffb39f8"
+  },
+  "benchmark_id": "hybrid-rope-theory-falsification-v1",
+  "checks": {
+    "chronology": "PASS",
+    "cross_episode_protected_literals": "PASS",
+    "cross_episode_protected_phrases": "PASS",
+    "directional_language_outside_contract": "PASS",
+    "forbidden_visible_fields": "PASS",
+    "hidden_owner_paths": "PASS",
+    "identity_and_order": "PASS",
+    "post_start_timestamps": "PASS"
+  },
+  "episode_count": 16,
+  "episodes": [
+    {
+      "directional_language_scope": "PASS",
+      "episode_id": "TFB-001",
+      "manual_semantic_review": "PASS",
+      "owner_path_scan": "PASS",
+      "post_start_timestamp_scan": "PASS",
+      "protected_numeric_and_phrase_scan": "PASS",
+      "temporal_evidence_grade": "C",
+      "violations": []
+    },
+    {
+      "directional_language_scope": "PASS",
+      "episode_id": "TFB-002",
+      "manual_semantic_review": "PASS",
+      "owner_path_scan": "PASS",
+      "post_start_timestamp_scan": "PASS",
+      "protected_numeric_and_phrase_scan": "PASS",
+      "temporal_evidence_grade": "B",
+      "violations": []
+    },
+    {
+      "directional_language_scope": "PASS",
+      "episode_id": "TFB-003",
+      "manual_semantic_review": "PASS",
+      "owner_path_scan": "PASS",
+      "post_start_timestamp_scan": "PASS",
+      "protected_numeric_and_phrase_scan": "PASS",
+      "temporal_evidence_grade": "B",
+      "violations": []
+    },
+    {
+      "directional_language_scope": "PASS",
+      "episode_id": "TFB-004",
+      "manual_semantic_review": "PASS",
+      "owner_path_scan": "PASS",
+      "post_start_timestamp_scan": "PASS",
+      "protected_numeric_and_phrase_scan": "PASS",
+      "temporal_evidence_grade": "B",
+      "violations": []
+    },
+    {
+      "directional_language_scope": "PASS",
+      "episode_id": "TFB-005",
+      "manual_semantic_review": "PASS",
+      "owner_path_scan": "PASS",
+      "post_start_timestamp_scan": "PASS",
+      "protected_numeric_and_phrase_scan": "PASS",
+      "temporal_evidence_grade": "B",
+      "violations": []
+    },
+    {
+      "directional_language_scope": "PASS",
+      "episode_id": "TFB-006",
+      "manual_semantic_review": "PASS",
+      "owner_path_scan": "PASS",
+      "post_start_timestamp_scan": "PASS",
+      "protected_numeric_and_phrase_scan": "PASS",
+      "temporal_evidence_grade": "B",
+      "violations": []
+    },
+    {
+      "directional_language_scope": "PASS",
+      "episode_id": "TFB-007",
+      "manual_semantic_review": "PASS",
+      "owner_path_scan": "PASS",
+      "post_start_timestamp_scan": "PASS",
+      "protected_numeric_and_phrase_scan": "PASS",
+      "temporal_evidence_grade": "C",
+      "violations": []
+    },
+    {
+      "directional_language_scope": "PASS",
+      "episode_id": "TFB-008",
+      "manual_semantic_review": "PASS",
+      "owner_path_scan": "PASS",
+      "post_start_timestamp_scan": "PASS",
+      "protected_numeric_and_phrase_scan": "PASS",
+      "temporal_evidence_grade": "B",
+      "violations": []
+    },
+    {
+      "directional_language_scope": "PASS",
+      "episode_id": "TFB-009",
+      "manual_semantic_review": "PASS",
+      "owner_path_scan": "PASS",
+      "post_start_timestamp_scan": "PASS",
+      "protected_numeric_and_phrase_scan": "PASS",
+      "temporal_evidence_grade": "B",
+      "violations": []
+    },
+    {
+      "directional_language_scope": "PASS",
+      "episode_id": "TFB-010",
+      "manual_semantic_review": "PASS",
+      "owner_path_scan": "PASS",
+      "post_start_timestamp_scan": "PASS",
+      "protected_numeric_and_phrase_scan": "PASS",
+      "temporal_evidence_grade": "B",
+      "violations": []
+    },
+    {
+      "directional_language_scope": "PASS",
+      "episode_id": "TFB-011",
+      "manual_semantic_review": "PASS",
+      "owner_path_scan": "PASS",
+      "post_start_timestamp_scan": "PASS",
+      "protected_numeric_and_phrase_scan": "PASS",
+      "temporal_evidence_grade": "A",
+      "violations": []
+    },
+    {
+      "directional_language_scope": "PASS",
+      "episode_id": "TFB-012",
+      "manual_semantic_review": "PASS",
+      "owner_path_scan": "PASS",
+      "post_start_timestamp_scan": "PASS",
+      "protected_numeric_and_phrase_scan": "PASS",
+      "temporal_evidence_grade": "A",
+      "violations": []
+    },
+    {
+      "directional_language_scope": "PASS",
+      "episode_id": "TFB-013",
+      "manual_semantic_review": "PASS",
+      "owner_path_scan": "PASS",
+      "post_start_timestamp_scan": "PASS",
+      "protected_numeric_and_phrase_scan": "PASS",
+      "temporal_evidence_grade": "A",
+      "violations": []
+    },
+    {
+      "directional_language_scope": "PASS",
+      "episode_id": "TFB-014",
+      "manual_semantic_review": "PASS",
+      "owner_path_scan": "PASS",
+      "post_start_timestamp_scan": "PASS",
+      "protected_numeric_and_phrase_scan": "PASS",
+      "temporal_evidence_grade": "B",
+      "violations": []
+    },
+    {
+      "directional_language_scope": "PASS",
+      "episode_id": "TFB-015",
+      "manual_semantic_review": "PASS",
+      "owner_path_scan": "PASS",
+      "post_start_timestamp_scan": "PASS",
+      "protected_numeric_and_phrase_scan": "PASS",
+      "temporal_evidence_grade": "A",
+      "violations": []
+    },
+    {
+      "directional_language_scope": "PASS",
+      "episode_id": "TFB-016",
+      "manual_semantic_review": "PASS",
+      "owner_path_scan": "PASS",
+      "post_start_timestamp_scan": "PASS",
+      "protected_numeric_and_phrase_scan": "PASS",
+      "temporal_evidence_grade": "B",
+      "violations": []
+    }
+  ],
+  "manual_review_scope": [
+    "Each visible packet was compared with its canonical owner and hidden answer.",
+    "Only protocol-intrinsic fields or facts documented before the episode were retained.",
+    "Later packets omit earlier benchmark outcomes so the full visible bundle can be submitted atomically.",
+    "Temporal grades B/C describe provenance strength; they do not waive the zero-leakage gate."
+  ],
+  "schema_version": "1.0",
+  "status": "PASS",
+  "violation_count": 0,
+  "violations": [],
+  "warning_count": 0,
+  "warnings": []
+}
