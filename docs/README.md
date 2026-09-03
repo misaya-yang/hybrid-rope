@@ -5,7 +5,7 @@
 [`paper-2027/HANDOFF.md`](../paper-2027/HANDOFF.md)（状态）。
 
 `docs/` 保存 NeurIPS-era 的 provenance、复现路径、历史实验报告和被取代的理论
-推导。它有用，但**不覆盖**当前 ICLR 路由。任何冲突以 `INDEX.md` §3 指向的
+推导。它有用，但**不覆盖**当前 ICLR 路由。任何冲突以 `INDEX.md` §2 指向的
 canonical owner 为准。
 
 ## 子目录
@@ -13,9 +13,9 @@ canonical owner 为准。
 | 目录 | 内容 | 状态 |
 | --- | --- | --- |
 | `overview/` | provenance manifest、claims map、复现、数据准备、术语、Blackwell profile | **仍在维护**：provenance 与复现的 owner |
-| `exp/` | 历史实验报告，`YYYY-MM-DD_slug.md` | 归档层；claim 归属见 `INDEX.md` §3 |
-| `theory/` | 早期理论推导与数值验证 | 只读，已被 `INDEX.md` §2.1 取代 |
-| `tau_algor/` | τ scaling / habitable zone / softmax transport 原始推导（2026-03） | 只读；取代关系见 `INDEX.md` §2.3。由 `tau-theory-assistant` skill 使用，保留原位 |
+| `exp/` | 历史实验报告，按 `YYYY-MM/YYYY-MM-DD_slug.md` 分层 | 归档层；claim 归属见 `INDEX.md` §2 |
+| `theory/` | 早期理论推导与数值验证 | 只读，已被 `INDEX.md` §1 取代 |
+| `tau_algor/` | τ scaling / habitable zone / softmax transport 原始推导（2026-03） | 只读；当前边界见 `INDEX.md` §1。由 `tau-theory-assistant` skill 使用，保留原位 |
 | `archive/` | 明确退役的 τ 理论文档 | 只读 |
 
 ## 这里仍然拥有的东西
@@ -31,7 +31,7 @@ canonical owner 为准。
 
 ## 维护规则
 
-- 新实验报告用 `YYYY-MM-DD_slug.md` 放进 `exp/`，并在 `INDEX.md` §3 登记 owner。
+- 新历史实验报告放进 `exp/YYYY-MM/YYYY-MM-DD_slug.md`，并在 `INDEX.md` §2 登记 owner。
 - **不要**在 `docs/` 下新建 README、索引或 handoff。索引只有 `INDEX.md` 一份。
 - 缺 raw artifact 时只能写 report-backed / missing-artifact，不能用叙述文档升级
   证据。

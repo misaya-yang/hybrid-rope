@@ -16,15 +16,15 @@
 | `internal/paper_plans/TAU_HABITABLE_ZONE.md` | 宜居带理论：τ_floor ∝ 1/√K 的离散化下界 | **支持** τ≈1.5的普适性来自离散截断 |
 | `internal/paper_plans/CORE_THEORY.md` | 完整理论链路：D(Δ)→K→broadband→ODE→cosh | **支持** 函数族的唯一性 |
 | `internal/UNIFIED_RESULTS_TABLE.md` | 所有关键数字汇总 | 中性参考源 |
-| `docs/exp/2026-03-09_phase16_formula_optimality_sweep_results.md` | 99-run τ*验证 | **支持** d_head/√L在[256,1024]内有效 |
-| `docs/exp/2026-02-27_evq_tau_sweep_results.md` | 50M/125M τ sweep | **支持+反驳**: τ*依赖regime |
+| `docs/exp/2026-03/2026-03-09_phase16_formula_optimality_sweep_results.md` | 99-run τ*验证 | **支持** d_head/√L在[256,1024]内有效 |
+| `docs/exp/2026-02/2026-02-27_evq_tau_sweep_results.md` | 50M/125M τ sweep | **支持+反驳**: τ*依赖regime |
 | `results/PHASE18_YARN_FT_REPORT.md` | MLA 4K fully-trained: EVQ raw +11.1% | **反驳** EVQ在充分训练后raw表现更差 |
 | `results/PHASE18_YARN_FT_REPORT.md` | EVQ+YaRN+FT: -2.5% (13.6pp reversal) | **支持** 组合优势 |
-| `docs/exp/2026-03-20_gqa_mla_125m_compression_ablation.md` | GQA-2 passkey -10.7pp | **反驳** EVQ在GQA-2 passkey上更差 |
+| `docs/exp/2026-03/2026-03-20_gqa_mla_125m_compression_ablation.md` | GQA-2 passkey -10.7pp | **反驳** EVQ在GQA-2 passkey上更差 |
 | `results/video_dit/REPORT_FINAL.md` | DiT head-to-head: -21%/-35% | **支持** 跨模态有效性 |
 | `results/qwen_longbench_21task/` | Qwen LB-21: -0.35 pct regression | **反驳** 在Qwen+WikiText配置下无增益 |
 | `internal/paper_plans/PAPER_ERROR_CORRECTIONS.md` | LLaMA-3实验无意义需删除 | **中性**: 方法论警示 |
-| `docs/exp/2026-03-11_test3_broadband_r2_validation.md` | R²>0.99需L≥4096+D(Δ)∝1/Δ | **限定** broadband近似的适用域 |
+| `docs/exp/2026-03/2026-03-11_test3_broadband_r2_validation.md` | R²>0.99需L≥4096+D(Δ)∝1/Δ | **限定** broadband近似的适用域 |
 | `paper/sections/03_theory.tex` | 变分推导完整链路 | **支持** 理论内部一致性 |
 | `paper/appendix/a1_proofs.tex` | Theorem 1-2 证明 | **支持** 数学严谨性 |
 

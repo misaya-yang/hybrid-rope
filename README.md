@@ -1,115 +1,107 @@
 # RoPE Has a Spectral Budget
 
-Research code and the active ICLR 2027 submission package for finite RoPE
-spectral allocation, full sin/cos subspace geometry, and training
-co-adaptation.
+Research code, historical evidence, and the active ICLR 2027 submission for
+finite RoPE allocation, full sin/cos geometry, and training co-adaptation.
 
-The current paper's central claim is:
+## Cold start for an AI
 
-> Even at fixed sampled spectral support, the normalized interior allocation
-> of a finite RoPE table is a separately identifiable training-time variable.
-> It changes full sin/cos subspace geometry and trained behaviour, while model
-> weights co-adapt to the table used during training.
+Read exactly these files in order:
 
-## Start here
+1. [`AGENTS.md`](AGENTS.md) — rules, claim ceilings, terminology, compute and
+   Git safety.
+2. [`INDEX.md`](INDEX.md) — the only durable theory/evidence/code map, closed
+   routes, directory ownership, and research agenda.
+3. [`paper-2027/HANDOFF.md`](paper-2027/HANDOFF.md) — current Git/PDF/machine
+   state, validation receipts, known issues, and immediate actions.
 
-Three files, one authority each. Read them in this order.
+If historical context is needed, then read
+[`paper-2027/research/history/TIMELINE.md`](paper-2027/research/history/TIMELINE.md).
+The timeline is a ledger, not a fourth authority. On conflict:
+**rules > index > state > historical summary**.
 
-1. [`AGENTS.md`](AGENTS.md) — **rules**: objective, claim ceilings, locked
-   nomenclature, evidence identity, compute authorization, Git discipline.
-2. [`INDEX.md`](INDEX.md) — **index**: theory, evidence owners, code, directory
-   ownership, falsified routes, research agenda, two-machine workflow.
-3. [`paper-2027/HANDOFF.md`](paper-2027/HANDOFF.md) — **state**: current
-   manuscript, hashes, validation receipts, Git and machine status, author
-   actions.
+## Current snapshot
 
-On conflict, rules beat index beats state. Everything else in this repository
-is reachable from `INDEX.md`; do not add a fourth navigation authority.
+`PURE_Z_LONG_SIGNAL_ESTABLISHED / NATURAL_QA_AND_NATIVE_LONG_JOINT_UNSOLVED /
+NO_SOTA / GPU_METHOD_DEVELOPMENT_STOPPED`
 
-`AGENTS.md`, `INDEX.md`, and `paper-2027/HANDOFF.md` are internal repository
-navigation and are intentionally absent from the anonymous supplement.
+- Fixed-support interior allocation is causally active in the 151.9M
+  three-seed training study.
+- Frozen mature checkpoints are sensitive to the ordered pairing between
+  rotary subspaces and frequency/dilation; an unordered spectrum is
+  insufficient.
+- Static pure-`z` interventions improve several long NLL and capability
+  endpoints, but the tested Native-retention/natural-generation-QA joint
+  objective remains unsolved.
+- No new GPU run, OpenReview upload, commit, or push is implied by repository
+  state. Check the handoff for live authorization.
 
-The active September 2026 iteration is scoped by
-[`paper-2027/REVISION_BRIEF.md`](paper-2027/REVISION_BRIEF.md); the handoff is
-the only place that records its current step, receipts, and deadlines. Closed
-August plans, author-verdict ledgers, alternating model-review logs, and
-external-model reviews are audit history, not current state or action queues.
+## Repository layout
 
-[`paper-2027/NARRATIVE_GUIDE.md`](paper-2027/NARRATIVE_GUIDE.md) owns the
-non-negotiable author doctrine, target/non-target propositions, and
-future-session stop rules. Together they guard against reverting to an
-arbitrary-$z$, caveat-first, method-race, or over-restrained paper.
+| Path | What it contains | Status |
+| --- | --- | --- |
+| [`paper-2027/`](paper-2027/) | active ICLR manuscript, build, submission state | active |
+| [`paper-2027/NARRATIVE_GUIDE.md`](paper-2027/NARRATIVE_GUIDE.md) | reviewer-facing story and author doctrine | active manuscript guidance |
+| [`paper-2027/REVISION_BRIEF.md`](paper-2027/REVISION_BRIEF.md) | bounded revision contract | active manuscript guidance |
+| [`paper-2027/research/foundations/`](paper-2027/research/foundations/) | durable theory and causal-variable documents | canonical internal theory |
+| [`paper-2027/research/evidence/`](paper-2027/research/evidence/) | paper-level result owners outside mature retrofit | canonical evidence |
+| [`paper-2027/research/attention-aware-retrofit/`](paper-2027/research/attention-aware-retrofit/) | mature-checkpoint results, receipts, analyses, historical preflights, theory | canonical programme archive |
+| [`paper-2027/research/history/`](paper-2027/research/history/) | chronological summaries | non-authoritative ledger |
+| [`paper-2027/research/archive/`](paper-2027/research/archive/) | retired plans, simulated reviews, process logs | frozen history |
+| [`analysis/`](analysis/) | historical full-RoPE audit bundle and its raw static outputs | reproduction archive; current claims route elsewhere |
+| [`docs/`](docs/) | NeurIPS-era provenance, historical reports, and superseded theory | historical/infrastructure layer |
+| [`docs/exp/`](docs/exp/) | NeurIPS-era experiment reports grouped by month | historical reports |
+| [`experiments/`](experiments/) | standalone supporting model/protocol packages | code; no result by itself |
+| [`rebuttal/rebuttal_0723/`](rebuttal/rebuttal_0723/) | NeurIPS review/rebuttal and July mature-model owners | historical evidence layer |
+| [`data/curated/`](data/curated/) | small portable machine-readable evidence | tracked provenance |
+| [`scripts/`](scripts/) | reusable implementation, diagnostics, data/eval tools | code; not evidence by itself |
+| [`paper_experiments/`](paper_experiments/) | integrity-checked browsing view of historical paper code | generated workspace; not an owner |
+| [`research_notes/`](research_notes/) | legacy exploratory bundles | non-authoritative history |
+| [`nonuniform-alloc/`](nonuniform-alloc/) | protected legacy allocation study | closed historical branch; do not treat as queue |
+| [`falsification_benchmark/`](falsification_benchmark/) | 16-episode blind theory benchmark | completed repository tool |
+| [`paper/`](paper/) | NeurIPS 2026 baseline | immutable; never compile or edit |
+| `internal/`, `results/`, local caches | private/raw/archive layers | not navigation or automatic evidence |
 
-## Workspace
+The complete ownership table and placement rules are in `INDEX.md`.
 
-- `paper-2027/` is the only active manuscript.
-- `paper/main.pdf` is the immutable NeurIPS 2026 baseline: never edit, compile,
-  move, or regenerate it.
-- `rebuttal/rebuttal_0723/README.md` is a historical review and evidence
-  archive, not the current action queue.
-- The current branch, upstream, divergence, and worktree state live only in the
-  handoff and must be verified before any mutation.
+## Build and validation
 
-`INDEX.md` §5 owns the full directory table and the historical review/provenance
-entrypoints. Stable rules do not duplicate those paths.
+Machine profiles are intentionally distinct:
 
-## Build and validate
+- **Work machine:** owns the canonical Conda `aidemo` environment,
+  PyTorch/pytest validation, supplement packaging, and final release checks.
+- **Low-configuration personal PC:** reading, documentation, planning,
+  lightweight standard-library checks, and local LaTeX/Tectonic iteration.
+  `aidemo` is not expected here; record them as skipped when work-machine
+  checks are unavailable rather than recreating the environment.
 
-### Machine profiles
-
-- **Work machine:** owns the canonical Conda `aidemo` environment and is the
-  default place for Python/PyTorch/pytest, packaging, and final cross-environment
-  release validation.
-- **Low-configuration personal PC:** intended for repository reading,
-  documentation, planning, local LaTeX/Tectonic compilation, visual PDF
-  iteration, and lightweight static or standard-library checks. `aidemo` is not
-  expected on this machine. Do not install or reproduce the work-machine
-  environment, run model compute, or substitute the local build for the final
-  work-machine packaging/cross-environment receipt.
-
-The Conda commands below are canonical work-machine invocations. On the personal
-PC, if those checks are unavailable, record them as skipped instead of treating
-missing Conda as a repository failure; `paper-2027/compile.sh` may run on either
-machine.
+Canonical work-machine checks:
 
 ```bash
 conda run --no-capture-output -n aidemo python -m pytest \
   tests/test_repository_navigation.py tests/test_rope_core.py -q
 ```
 
-Expand to the tests owned by the changed path; the handoff records the latest
-validated scope rather than implying that one command certifies the repository.
-
-The retired W0/F1 success-first tournament has no runnable command in this
-README. Its code and preflight remain historical provenance only. The latest
-two-parameter static-`z` GPU result is mixed and has no active rescue candidate;
-current evidence and next-action status live in `INDEX.md` and the handoff.
-
 ```bash
 cd paper-2027 && ./compile.sh
 ```
 
 ```bash
-conda run --no-capture-output -n aidemo python scripts/package_supplement.py --profile iclr2027
+conda run --no-capture-output -n aidemo \
+  python scripts/package_supplement.py --profile iclr2027
 ```
 
-Run packaging from the repository root. `compile.sh` verifies format and build
-health only, not scientific evidence. Never compile `paper/` and never zip the
-repository root. Exact current hashes and receipts live in the handoff.
+Run packaging from the repository root. `compile.sh` proves format/build health,
+not scientific evidence. Never compile `paper/` and never archive the repository
+root as a supplement.
 
-## Ground rules
+## Non-negotiable operating rules
 
-- Every paper number resolves to a canonical owner with method, protocol,
-  endpoint, and seed identity. Plans, scripts, filenames, launch logs, and
-  external-model reports are not completed evidence.
-- AI cross-reviews are adversarial inputs. Verify alleged defects against the
-  PDF, source, proof, and owner before revising.
-- No GPU or paid experiment is authorized unless the user explicitly approves
-  that exact run.
-- Preserve unrelated worktree changes. Do not stage, commit, push, reset, or
-  switch branches without explicit authorization.
-
-Stable policy, anonymity, dual-submission, and release gates are in
-[`paper-2027/SUBMISSION_CHECKLIST.md`](paper-2027/SUBMISSION_CHECKLIST.md).
-Current author actions and their live status are recorded only in
-[`paper-2027/HANDOFF.md`](paper-2027/HANDOFF.md).
+- A plan, script, filename, checkpoint inventory, or launch log is not a
+  result. Follow `INDEX.md` to the canonical owner.
+- Keep NLL/PPL, teacher-forced retrieval, strict generation, RULER/NIAH, QA,
+  adaptation, and transfer as separate evidence tiers.
+- Preserve unrelated work. Do not pull, switch, stage, commit, push, reset,
+  stash, or start GPU/paid compute without explicit authorization.
+- Current submission validity gates are in
+  [`paper-2027/SUBMISSION_CHECKLIST.md`](paper-2027/SUBMISSION_CHECKLIST.md);
+  their live pass/fail state is only in the handoff.

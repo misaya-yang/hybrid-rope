@@ -1,6 +1,6 @@
 # archive/ — 已退役的 τ 理论文档
 
-**状态：只读。** 当前理论权威是 [`INDEX.md`](../../INDEX.md) §2.1–2.2；
+**状态：只读。** 当前理论权威是 [`INDEX.md`](../../INDEX.md) §1；
 τ 历史推导的索引与取代关系在 [`../tau_algor/README.md`](../tau_algor/README.md)。
 
 | 文件 | 退役原因 |

@@ -370,8 +370,8 @@ claim binary routing or exact short retention is unique.
 
 | Path | Role | State |
 | --- | --- | --- |
-| `paper-2027/research/EXACT_RANGE_151M_3SEED_RESULT_20260820.md` | training fixed-support owner | existing, unchanged |
-| `paper-2027/research/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md` | causal grammar | existing, committed |
+| `paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.md` | training fixed-support owner | existing, unchanged |
+| `paper-2027/research/foundations/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md` | causal grammar | existing, committed |
 | `paper-2027/research/attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md` | mature fixed-support and crossing owner | existing, committed |
 | `paper-2027/research/attention-aware-retrofit/results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md` | bundled policy owner | existing, committed |
 | `paper-2027/research/attention-aware-retrofit/results/JOINT_MECHANISM_REPORT_20260822.md` | table-by-gain owner | existing, committed |

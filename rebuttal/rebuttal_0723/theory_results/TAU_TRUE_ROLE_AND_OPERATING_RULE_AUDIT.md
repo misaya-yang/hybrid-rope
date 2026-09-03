@@ -448,11 +448,11 @@ d_{\rm head}^{0.931}L^{-0.393}
 | 证据族 | 原始位置 | 观察 | 对公式的含义 |
 | --- | --- | --- | --- |
 | 独立 selection/test anchors，`L=128,d=64,B=500K` | `rebuttal/rebuttal_0723/theory_results/EXPERIMENT_REPORT_20260724.md:59-80` | τ=5 selection 最佳；formula=5.657 很接近；τ=6、7 明显恶化 | 支持 bounded basin；反对 `1.25×` 通用化 |
-| 早期 Phase6，`L=128/1024` | `docs/exp/2026-02-26_full_experiment_report.md:150-220` | `L=128` 扫到 τ=5 仍单调改善、未 bracket；`L=1024` 只比较 0/2/2.5，τ=2 略好 | 提供长度依赖信号；标签不是精确 optimum |
-| Phase8D，`L=256/512` | `docs/exp/2026-02-26_full_experiment_report.md:408-433` | 两条曲线在测试上界 τ=5/4 仍改善，报告明确写 “no peak” | 不能验证预测的 τ=4/2.83；只能给单侧下界 |
-| Phase11，`L=256` 三 seed | `docs/exp/2026-03-04_phase11_L256_results.md:10-35` | 测试 τ=2 与 4，τ=4 更好，但没有两侧 bracket | 支持公式方向；不能定最优 |
+| 早期 Phase6，`L=128/1024` | `docs/exp/2026-02/2026-02-26_full_experiment_report.md:150-220` | `L=128` 扫到 τ=5 仍单调改善、未 bracket；`L=1024` 只比较 0/2/2.5，τ=2 略好 | 提供长度依赖信号；标签不是精确 optimum |
+| Phase8D，`L=256/512` | `docs/exp/2026-02/2026-02-26_full_experiment_report.md:408-433` | 两条曲线在测试上界 τ=5/4 仍改善，报告明确写 “no peak” | 不能验证预测的 τ=4/2.83；只能给单侧下界 |
+| Phase11，`L=256` 三 seed | `docs/exp/2026-03/2026-03-04_phase11_L256_results.md:10-35` | 测试 τ=2 与 4，τ=4 更好，但没有两侧 bracket | 支持公式方向；不能定最优 |
 | 早期 `L=2048` sweep | `results/legacy/paper_ready/evq_tau_sweep/evq_sweep_paper_table.csv:1-14` | 50M seed42 中 τ=1.5 是测试最佳；125M 仅稀疏 τ=0/0.2/1.5 | 与 formula≈1.414 相容；不能证明 `-1/2` exponent |
-| staged dynamic retarget | `docs/exp/2026-03-14_staged_diagnostic_report.md:150-217` | frozen τ=2.828 小 probe 优于 Geo；dynamic retarget 优于 frozen，但 Geo 又优于两者 | τ 与训练/部署变更交互，不是单向长程旋钮 |
+| staged dynamic retarget | `docs/exp/2026-03/2026-03-14_staged_diagnostic_report.md:150-217` | frozen τ=2.828 小 probe 优于 Geo；dynamic retarget 优于 frozen，但 Geo 又优于两者 | τ 与训练/部署变更交互，不是单向长程旋钮 |
 | Phase19 MLA，τ=1 对照 | `results/PHASE19_TAU1_vs_GEO_REPORT.md:34-70` | τ=1 的 500M run 远差于 τ=1.414 的 500M run；但与 Geo headline 混用了 1B budget | 是异常/优化失败证据；不能推出 universal floor |
 | MLA Phase22/23 | `results/PHASE22_23_MLA_TAU_SWEEP_REPORT.md` | 不同 K/base/model/budget 下曲线 jagged；Phase23 最佳测试 τ=2.5 | 单 seed、跨 protocol，不能拟合统一 rule |
 | Video DiT | `results/video_dit/TAU_SWEEP_REPORT.md:14-95` | τ=.7 灾难，τ=1.5 为测试最佳但上侧未 bracket；τ=0 重复有明显波动 | 跨模态说明 τ 敏感；不提供语言模型 scaling law |
@@ -465,7 +465,7 @@ formula 附近的 `6.0017` 恶化到 τ=7 的 `6.2328`。这是当前最直接�
 
 **[事实] Phase8D 没有验证旧公式。** `L=256` 的预测点 τ=4 后，τ=5 继续改善；
 `L=512` 的预测点 τ=2.83 后，τ=3.5、4 继续改善。原报告自己在
-`docs/exp/2026-02-26_full_experiment_report.md:433` 写明两条曲线都没有 peak，却又在
+`docs/exp/2026-02/2026-02-26_full_experiment_report.md:433` 写明两条曲线都没有 peak，却又在
 `:511-536` 把这些 censored labels 放进 `C/sqrt(L)` fit。把测试上界或未 bracket 点当
 作 observed optimum 会人为强化 scaling law。
 

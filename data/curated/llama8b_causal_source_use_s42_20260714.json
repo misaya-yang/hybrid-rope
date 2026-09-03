@@ -47,7 +47,7 @@
     }
   },
   "source_receipts": {
-    "canonical_owner_sha256": "5707667ef8d4fcc849599e47e4e5995c50c46f207f0a9949f2e0c2bec96d650c",
+    "canonical_owner_sha256": "fd4e26cfa2c593153b34e1df774666fb813b840b89aec7df93bee6774aa2f800",
     "temporal_aggregate_sha256": "0335415a2245e1fb31149705342e975a016ddddb557a79c364fc4a98c3f89001",
     "causal_routing_report_sha256": "5e05495ca8c8d295a4e3d3c4dc2c31bcbad81295a79947e7031010a08ad85a25"
   },

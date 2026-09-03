@@ -14,3 +14,7 @@ handoff or a source of upgraded claims.
 | [`DEPENDENCY_SPECTRUM_CLAUDE_AUDIT_20260819.md`](DEPENDENCY_SPECTRUM_CLAUDE_AUDIT_20260819.md) | Independent dependency-spectrum audit |
 | [`LEROPE_PROFILE_ORACLE_AUDIT_20260820.md`](LEROPE_PROFILE_ORACLE_AUDIT_20260820.md) | Failed profile-oracle hypothesis; internal negative |
 | [`KAPPA_ATTENTION_MEASURE_AUDIT_20260820.md`](KAPPA_ATTENTION_MEASURE_AUDIT_20260820.md) | Failed attention-measure ordering gate; internal negative |
+| [`ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md`](ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md) | Historical citation/novelty verification; current bibliography/source wins |
+
+Retired manuscript plans and simulated-review process logs are grouped under
+[`../archive/`](../archive/), not in this audit folder.

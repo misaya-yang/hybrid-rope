@@ -1,115 +1,74 @@
-# Mature-checkpoint allocation research index
+# Mature-checkpoint retrofit research
 
-This directory stores mature-checkpoint result owners, receipts, analyses, and
-historical preflights. It does not own a second research agenda. Current priority
-and order live only in [`../../../INDEX.md`](../../../INDEX.md) §0 and §6.
+This is the canonical programme archive for frozen/matched-adaptation
+mature-checkpoint work. It does not own a second agenda: durable priorities are
+in [`../../../INDEX.md`](../../../INDEX.md), live state/authorization in
+[`../../HANDOFF.md`](../../HANDOFF.md), and chronology in
+[`../history/TIMELINE.md`](../history/TIMELINE.md).
 
-## Current question
+## Current conclusion
 
 `PURE_Z_LONG_SIGNAL_ESTABLISHED / NATURAL_QA_AND_NATIVE_LONG_JOINT_UNSOLVED /
 NO_SOTA / GPU_METHOD_DEVELOPMENT_STOPPED`
 
-The two latest owners answer different questions.
+1. Same-support pure-`z` changes frozen OLMo/Qwen behaviour.
+2. The mature object is the ordered frequency/dilation-to-rotary-subspace
+   pairing; same-multiset slot permutations can collapse.
+3. Normalized pair index is the best-supported tested cross-`K` transport
+   coordinate, not a universal law.
+4. Static tables can improve long NLL, RULER/NIAH, and source-conditioned
+   answer likelihood without reliably converting into natural autoregressive
+   QA or correct EOS behaviour.
+5. Tested headwise clocks improve the long-task Pareto, but no arm jointly
+   passes Native retention and the natural long-QA objective.
 
-- [`results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md`](results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md)
-  establishes the current zero-training boundary: normalized-index pure-`z`
-  improves long NLL, RULER/NIAH, and far-source-conditioned answer likelihood,
-  while natural autoregressive QA remains unresolved. Its 2026-09-02 remote raw
-  results were not recovered, so those session-receipt numbers remain internal.
-- [`results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md`](results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md)
-  tests whether the shared layer/head table is the main ceiling. A 512-scalar
-  headwise allocation+range field reaches `0.23576` three-task natural-QA macro
-  versus official YaRN-4 `0.23817`, but its 4K PG-19 PPL retention is only
-  `0.77138`. Exact-Native initialization improves Native NLL and fails long
-  Hotpot. The result is mixed, not a method winner.
+No GPU method-development run is active or authorized.
 
-The current internal theory is therefore narrow and evidence-led:
-
-1. The mature-checkpoint object is the ordered pairing between learned rotary
-   subspaces and frequency/dilation, not an unordered spectrum.
-2. Normalized index is the best-supported tested cross-`K` transport rule, not
-   a canonical or universal coordinate.
-3. A static pure-`z` table can transport long-position information into answer
-   logits, but that does not guarantee autoregressive winner selection or EOS.
-4. Head-specific clocks are useful, yet the observed Native-compatible and
-   long-capable basins remain disconnected.
-5. Continuous scale-flow is only a coordinate/problem formulation: existing
-   data do not identify curvature, a canonical vector field, or arbitrary-scale
-   extension.
-
-The completed low-dimensional experiment now separates two effects:
-
-- a frozen two-parameter `G_4(x)` preserves OLMo and Qwen long behavior;
-- the same table misses the strict Native operating point by a small amount on
-  both checkpoints;
-- the independent K32 N80 confirmation does not reproduce the old physical-x
-  long advantage: physical/index are statistically unresolved at 64K, both
-  improve over Native by about `.22`, and index retains more 32K capability;
-- the zero-parameter cell-average hypothesis still fails its CPU entrance
-  condition and is not revived by the unresolved ordering;
-- Native-only calibration freezes a protocol-specific 4K operating reference
-  for the exact Gemma-1.1 artifact. Reference- and scale-correct s2/s4 tables
-  recover 8K/16K and pass measured 4K gates; the old config-reference table
-  remains zero on the paired 16K rows;
-- the earlier K128 sample scores favored index; a new single-endpoint N80
-  confirmation now resolves index-minus-physical at `+.061875`, 95% interval
-  `[.028109,.096250]`.
-
-No Native-correction or hierarchical candidate survives the current gates.
-The conditional Native-Q/K diagnostic was not executed because its required
-K32 crossing was not confirmed. Physical-coordinate privilege is closed. The
-packed-natural NLL, natural QA, source-use/readout checks, and bounded headwise
-ladder have all completed. Method-development compute is stopped; no old plan
-or historical runner is a current action queue.
-
-## Evidence to open on demand
+## Open these owners by question
 
 | Question | Owner | Boundary |
 | --- | --- | --- |
-| Does layer/head factorization solve the shared-table ceiling? | [`results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md`](results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md) | bounded headwise clocks and one frozen YaRN range direction improve the long-task Pareto but do not jointly pass Native retention; free head gain fails and scale-flow curvature is unproven |
-| Does pure-`z` transfer from synthetic capability to natural text and QA? | [`results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md`](results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md) | natural 64K NLL and source-conditioned answer likelihood improve; natural generation QA and two readout rescues do not pass. The 9/2 raw remote owner is missing, so its new numbers remain internal |
-| Does fixed-support `z` affect mature frozen checkpoints? | [`results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) | frozen sensitivity/capability, not a usable Native-support method |
-| Does the same axis change fresh natural-text NLL? | [`results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`](results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) | length-conditional fixed-support effect; detailed profile not separated from coarse ramp |
-| What did the complete zero-training system establish? | [`results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`](results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md) | table + gain + routing system; not pure `z` |
-| Why is adaptation expected? | [`results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md`](results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md) and the crossings routed by [`../../../INDEX.md`](../../../INDEX.md) §3 | weights/table co-adaptation; no current method winner |
-| Which frozen routes failed? | [`results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md`](results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md), [`results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md`](results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md), and [`results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md`](results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md) | historical failure/engineering boundaries only |
-| Does the two-parameter compression preserve LM behavior? | [`results/LOW_DIM_COUPLING_GPU_RESULT_20260901.md`](results/LOW_DIM_COUPLING_GPU_RESULT_20260901.md) | Qwen/OLMo long behavior yes; strict Native deployment gate no |
-| Does K32 failure come from finite-grid point sampling? | [`results/K32_FINITE_K_COUPLING_ANALYSIS_20260901.md`](results/K32_FINITE_K_COUPLING_ANALYSIS_20260901.md) | transition is under-resolved, but exact cell averaging does not match the residual and is not a GPU candidate; physical `x` still transports positively at 64K |
-| Does frozen `G(x)` transport at matched scale and K128? | [`results/FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901.md`](results/FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901.md) | K32 has a physical-long/index-Native Pareto crossing; K128 is unresolved with replicated zero 16K endpoints, so no universal or SOTA claim |
-| Does the K32 physical/index crossing replicate? | [`results/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md`](results/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md) | no identified ordering; both profiles give similar 64K improvement, index is more Native-compatible, and the conditional mechanism entrance fails |
-| Does the selected K32 representative match deterministic YaRN? | same K32 confirmation owner plus [`evidence/K32_FRESH_YARN_COMPLETION_RECEIPT_20260901.json`](evidence/K32_FRESH_YARN_COMPLETION_RECEIPT_20260901.json) | index ties YaRN at 32K and is higher at 64K on the matched core-4 rows; the arm was added after three-arm outcomes, so untouched breadth confirmation remains required |
-| Why did the old K128 16K screen fail? | [`results/NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901.md`](results/NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901.md) and [`results/REFERENCE_CORRECTED_K128_RESULT_20260901.md`](results/REFERENCE_CORRECTED_K128_RESULT_20260901.md) | operational reference/request scale jointly explain the recovery; physical-coordinate superiority and K causality remain unresolved |
-| Does the K128 index tilt replicate? | [`results/K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901.md`](results/K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901.md) | yes on the registered 16K N80 contrast; this rejects physical-coordinate privilege but does not establish index universality or K causality |
-| Does index beat YaRN on untouched full RULER-13? | [`results/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md`](results/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md) | yes at 64K macro with paired CI above zero and 32K retention pass; subsequent natural NLL passes against Native, while natural QA remains unresolved and is not a uniform YaRN win |
+| Does same-support `z` affect frozen checkpoints? | [`results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) | checkpoint-conditioned intervention; detailed profile often tied with nearest ramp |
+| Does the effect persist on fresh natural text? | [`results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`](results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) | length-conditional NLL, not universal ranking |
+| What did the complete early zero-training system establish? | [`results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`](results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md) | table+gain+routing system, not pure `z` |
+| What did co-adaptation reveal? | [`results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md`](results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md) | tail/full redistribution; no joint winner |
+| Which simple frozen routes failed? | [`results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md`](results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md), [`results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md`](results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md), [`results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md`](results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md) | historical negative/mechanism boundaries |
+| What is the strongest static-table owner? | [`results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md`](results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md) | tested OLMo/Qwen protocols; includes ordered-coupling discriminator |
+| Does two-parameter coupling preserve behaviour? | [`results/LOW_DIM_COUPLING_GPU_RESULT_20260901.md`](results/LOW_DIM_COUPLING_GPU_RESULT_20260901.md) | long behaviour yes; strict Native gate slightly missed |
+| Why did the old Gemma screen fail? | [`results/NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901.md`](results/NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901.md), [`results/REFERENCE_CORRECTED_K128_RESULT_20260901.md`](results/REFERENCE_CORRECTED_K128_RESULT_20260901.md) | reference/request-scale recovery; no K causality |
+| Did K32 physical/index ordering replicate? | [`results/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md`](results/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md) | no; both positive long, index more Native-compatible |
+| Did the K128 index tilt replicate? | [`results/K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901.md`](results/K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901.md) | yes for one registered N80 contrast; no universality |
+| Does K32 index retain full-task breadth? | [`results/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md`](results/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md) | 64K macro advance and 32K retention; task families mixed |
+| Does long signal convert to natural QA? | [`results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md`](results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md) | NLL/source-use positive; natural QA/EOS unresolved; new raw remote owner missing |
+| Do headwise clocks close the joint gap? | [`results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md`](results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md) | improved Pareto, no jointly passing tested arm |
+| What can first principles currently prove? | [`theory/FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md`](theory/FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md) | partial structure; no canonical flow/method |
 
-## Retired work
+## Folder roles
 
-W0/F1 success-first, F2--F4, `ABSOLUTE/ANCHORED`, protected-ramp,
-band-restoration, local-gap, s8/log scaling, arbitrary per-head/per-frequency tensors, free or
-dynamic gain, unrestricted spectral flow, and routing-based rescue have no current action or
-authorization. The bounded one/two-scalar-per-head screen has a completed mixed owner above; it
-does not reopen those larger classes.
-Their files remain only because results and preregistrations must preserve
-scientific provenance.
+| Folder | Contains | Rule |
+| --- | --- | --- |
+| [`results/`](results/) | completed result owners and claim ceilings | start here for outcomes |
+| [`evidence/`](evidence/) | compact machine-path-free receipts | identity/provenance, not narrative upgrade |
+| [`analysis/`](analysis/) | mechanism interpretation and falsified hypotheses | never an action queue |
+| [`preflights/`](preflights/) | historical preregistrations and completed plans | what was frozen, not what to run now |
+| [`theory/`](theory/) | mature-checkpoint theory history | current agenda remains in INDEX |
 
-The old
-[`preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md)
-is a retired preregistration, not a next protocol. Historical code under
-`scripts/eval/` and `scripts/analysis/` must not be launched from this README.
+## Retired routes
 
-## Directory roles
+W0/F1 success-first, F2–F4, protected-ramp, band restoration, direct-`z`
+two-document calibration, cell averaging, local-gap/s8 rescue, arbitrary
+per-head/per-frequency tensors, free/dynamic gain, unrestricted spectral flow,
+and routing-based rescue are historical. The bounded headwise ladder has a
+completed mixed owner; it does not reopen the larger classes.
 
-- [`results/`](results/) — completed result owners and claim ceilings.
-- [`evidence/`](evidence/) — compact machine-path-free receipts.
-- [`analysis/`](analysis/) — mechanism interpretation and failed hypotheses;
-  never an action queue.
-- [`preflights/`](preflights/) — what was registered before past execution;
-  completed or retired protocols do not become current actions.
-- [`theory/`](theory/) — historical method/theory work; current method boundary
-  is in `AGENTS.md` and `INDEX.md`.
+The completed work-machine plan now lives under
+[`preflights/WORK_MACHINE_NEXT_EXPERIMENT_PLAN_20260901.md`](preflights/WORK_MACHINE_NEXT_EXPERIMENT_PLAN_20260901.md)
+and is not an action queue.
 
-No future compute is currently queued. If research is separately reopened, the
-first gate must identify a nontrivial cross-scale or cross-task bridge between
-the observed Native-compatible and long-capable basins before any GPU run is
-authorized. A new ramp, gain, cutoff, residual, or historical preflight is not
-such a bridge.
+## If research is explicitly reopened
+
+Before any GPU run, require a CPU-identifiable cross-scale or cross-task
+prediction for a common Native-compatible and long-capable direction, explain
+how it escapes the closed scalar-selector class in `INDEX.md`, freeze exact
+code/data/checkpoint/table/endpoint identity, and define a stop condition. Do
+not begin from another ramp, cutoff, gain, or parameter sweep.

@@ -1,7 +1,7 @@
 {
   "source": [
-    "docs/exp/2026-02-24_128tok_baseline_report.md",
-    "docs/exp/2026-02-26_full_experiment_report.md",
+    "docs/exp/2026-02/2026-02-24_128tok_baseline_report.md",
+    "docs/exp/2026-02/2026-02-26_full_experiment_report.md",
     "paper/tables/table4_pe_dominant.tex"
   ],
   "protocol": "125M FineWeb-Edu, L_train=128. Geo, DAPE, and EVQ rows use seed 42; learnable tau reports mean/std over seeds 42/137/256.",

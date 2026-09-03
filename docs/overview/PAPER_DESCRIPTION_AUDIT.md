@@ -76,10 +76,10 @@ Do not use:
 Two historical progressive reports kept useful raw observations but used wording
 that was too broad for rebuttal reuse:
 
-- `docs/exp/2026-03-09_phase17_evq_yarn_overlay_results.md` now has an audit
+- `docs/exp/2026-03/2026-03-09_phase17_evq_yarn_overlay_results.md` now has an audit
   note scoping "practical recipe" language to that single supporting overlay
   run.
-- `docs/exp/2026-03-11_phase17c_2048_continue_results.md` now has an audit
+- `docs/exp/2026-03/2026-03-11_phase17c_2048_continue_results.md` now has an audit
   note scoping the 48K and AR-exact passkey observations to single-seed
   supporting evidence.
 

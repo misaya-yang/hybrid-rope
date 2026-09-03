@@ -7,7 +7,7 @@
     "sha256": "5fc3254cb7b44a918328056ccd505d01e5539dc596d4c06273c9914ec93e3caa",
     "local_source_policy": "ignored; sanitized aggregate promoted into this tracked snapshot"
   },
-  "source_report": "docs/exp/2026-03-12_phase21b_454m_full_eval_report.md",
+  "source_report": "docs/exp/2026-03/2026-03-12_phase21b_454m_full_eval_report.md",
   "protocol": {
     "model": "454M decoder-only transformer",
     "architecture": "24L/16H/1024d, head_dim=64",

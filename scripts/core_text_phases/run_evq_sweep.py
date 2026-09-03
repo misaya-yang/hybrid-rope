@@ -1325,7 +1325,7 @@ def main() -> None:
             print(f"    {rid}: short={sk:+.1f}%  long={lk:+.1f}%  waterbed={holds}")
 
     print("\n  Next: summarize the sweep with the curated report path:")
-    print("        docs/exp/2026-02-27_evq_tau_sweep_results.md")
+    print("        docs/exp/2026-02/2026-02-27_evq_tau_sweep_results.md")
 
 
 if __name__ == "__main__":

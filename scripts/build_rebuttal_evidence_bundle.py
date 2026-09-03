@@ -509,7 +509,7 @@ def build_quality_snapshot(source: Path) -> dict[str, Any]:
             "sha256": EXPECTED_SHA256["quality"],
             "local_source_policy": "ignored; sanitized aggregate promoted into this tracked snapshot",
         },
-        "source_report": "docs/exp/2026-03-12_phase21b_454m_full_eval_report.md",
+        "source_report": "docs/exp/2026-03/2026-03-12_phase21b_454m_full_eval_report.md",
         "protocol": {
             "model": "454M decoder-only transformer",
             "architecture": setup["architecture"],

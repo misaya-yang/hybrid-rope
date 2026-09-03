@@ -2,7 +2,7 @@
 
 - **Status:** `COMPLETE`
 - **Canonical machine-readable owner:**
-  [`../../data/curated/video_dit_seed42_head_to_head_20260826.json`](../../data/curated/video_dit_seed42_head_to_head_20260826.json)
+  [`../../../data/curated/video_dit_seed42_head_to_head_20260826.json`](../../../data/curated/video_dit_seed42_head_to_head_20260826.json)
 - **Role:** supporting cross-modal evidence for finite temporal-frequency
   allocation; not a fourth lifecycle route or a standalone video claim.
 

@@ -16,7 +16,7 @@
 
 At the time of writing, mechanism, constraints, and the headroom inventory were
 routed through
-[`attention-aware-retrofit/analysis/ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md`](attention-aware-retrofit/analysis/ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md).
+[`attention-aware-retrofit/analysis/ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md`](../../attention-aware-retrofit/analysis/ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md).
 This file now holds only historical submission decisions.
 
 ---
@@ -60,7 +60,7 @@ clause is:
 | nearest movement-profile ramp | `0.6104` |
 
 `derived - geometric = +0.5992`, paired row bootstrap `[+0.5488, +0.6480]`.
-Owner: [`attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) §3.2.
+Owner: [`attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](../../attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) §3.2.
 
 This is a hundredfold effect with a tight interval, on a third-party released
 checkpoint, zero training, zero learned parameters, and **both arms are our own
@@ -151,7 +151,7 @@ main line as the lowest-cost route that leaves model weights untouched.
 ### 6.1 Completed submission experiment
 
 The 128-document fixed-support dose response is complete:
-[`attention-aware-retrofit/results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md`](attention-aware-retrofit/results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md).
+[`attention-aware-retrofit/results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md`](../../attention-aware-retrofit/results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md).
 The registered analytic Path A shows an interior 16K-tail minimum but no point
 passes its joint `+0.01` 4K guard; the static-`r2` location prediction fails.
 The empirical oracle direction gives a graded tail effect at small 4K cost,
@@ -176,7 +176,7 @@ Native 4K core-four is `1.00/0.85/0.60/0.03`. Because each length uses
 different generated rows, and another frozen policy reaches VT `0.62` at 8K,
 the proposed one-number capability-versus-position decision is invalid. The
 result owner is
-[`attention-aware-retrofit/results/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md`](attention-aware-retrofit/results/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md).
+[`attention-aware-retrofit/results/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md`](../../attention-aware-retrofit/results/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md).
 
 ### 6.4 After submission
 

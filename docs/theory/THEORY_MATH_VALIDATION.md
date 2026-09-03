@@ -1,6 +1,6 @@
 # EVQ-Cosh 数学理论严格性审计（Paper-Ready）
 
-> **状态：历史文档。** 当前理论权威是根级 [`INDEX.md`](../../INDEX.md) §2.1–2.2。
+> **状态：历史文档。** 当前理论权威是根级 [`INDEX.md`](../../INDEX.md) §1。
 > 本文引用的 `CORE_THEORY.md` 原在 `docs/paperdraft/`，已删除。最接近的存世版本是
 > [`internal/paper_plans/CORE_THEORY.md`](../../internal/paper_plans/CORE_THEORY.md)
 > （内容已演进，非同一份）；逐字节原文从 Git 历史

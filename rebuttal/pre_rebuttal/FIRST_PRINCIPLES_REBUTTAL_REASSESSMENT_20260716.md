@@ -262,11 +262,11 @@ Reviewer-safe status:
 
 The current 8B evidence locates the failure:
 
-- runtime/adapter cross-swaps show that training-time co-adaptation dominates the runtime frequency tensor (`docs/exp/2026-07-14_lora_retrieval_conversion_probe.md:48-64`);
+- runtime/adapter cross-swaps show that training-time co-adaptation dominates the runtime frequency tensor (`docs/exp/2026-07/2026-07-14_lora_retrieval_conversion_probe.md:48-64`);
 - EVQ improves 16K target-block hit@16 (64.06% versus 18.75%) and removing the gold block on all heads worsens EVQ NLL by 1.5055 while barely affecting Geo (`:118-184`);
 - forced gold inclusion improves EVQ by only 0.0341 NLL, and the correct first token remains around rank 2,043 rather than top-1 (`:187-220`);
 - sparse selection helps Geo more and converts neither arm (`:135-156`);
-- on 303 QA examples, EVQ-LoRA is significantly worse overall, with the deficit concentrated at \(\le8\)K; all arms are near floor above 8K (`docs/exp/2026-07-15_lora_qa16k_three_arm_results.md:52-97`).
+- on 303 QA examples, EVQ-LoRA is significantly worse overall, with the deficit concentrated at \(\le8\)K; all arms are near floor above 8K (`docs/exp/2026-07/2026-07-15_lora_qa16k_three_arm_results.md:52-97`).
 
 Thus EVQ can improve a source-routing signal in this checkpoint while failing the readout gate. The present dense-dilution/sparse-conversion hypothesis is rejected for this setup.
 
@@ -347,8 +347,8 @@ The strongest honest rebuttal is not a larger pile of results. It is a precise s
 - Long mathematical audit: `THEORY_REBUTTAL_MATHEMATICAL_AUDIT_20260711.md`
 - Official-YaRN component follow-up: `EVQ_YARN_COMPONENT_ABLATION_20260714.md`
 - DAPE identity and DAPE-ish follow-up: `real_dape_compare/FINDINGS.md`
-- 8B retrieval, cross-swap, sparse, and causal readout diagnostics: `../docs/exp/2026-07-14_lora_retrieval_conversion_probe.md`
-- Registered 303-example QA result: `../docs/exp/2026-07-15_lora_qa16k_three_arm_results.md`
-- \(\tau\) historical sweeps: `../docs/exp/2026-02-26_full_experiment_report.md`, `../docs/exp/2026-02-27_evq_tau_sweep_results.md`
+- 8B retrieval, cross-swap, sparse, and causal readout diagnostics: `../docs/exp/2026-07/2026-07-14_lora_retrieval_conversion_probe.md`
+- Registered 303-example QA result: `../docs/exp/2026-07/2026-07-15_lora_qa16k_three_arm_results.md`
+- \(\tau\) historical sweeps: `../docs/exp/2026-02/2026-02-26_full_experiment_report.md`, `../docs/exp/2026-02/2026-02-27_evq_tau_sweep_results.md`
 - Canonical schedule implementation: `../scripts/lib/rope/schedules.py`
 - Submitted theory/proofs: `../paper/sections/03_theory.tex`, `../paper/appendix/a1_proofs.tex`

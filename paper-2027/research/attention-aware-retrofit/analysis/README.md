@@ -1,11 +1,11 @@
 # Retrofit mechanism analyses
 
 These are mechanism analyses, falsifications, and historical decision records.
-They do not own the active research order. `INDEX.md` §6 owns the current
-deterministic static pure-`z` question. The old success-first and
+They do not own the active research order. `INDEX.md` §5 owns the durable
+agenda; no GPU method-development experiment is active. The old success-first and
 matched-content preflights are retired history, not default experiments. The
 theory continuation remains
-[`../../ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](../../ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md).
+[`../../foundations/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](../../foundations/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md).
 
 | Analysis | Durable conclusion |
 | --- | --- |

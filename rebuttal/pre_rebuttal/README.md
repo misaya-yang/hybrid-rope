@@ -29,8 +29,8 @@
 
 8B 能力的后续真实边界还应联合查阅：
 
-- `docs/exp/2026-07-14_lora_retrieval_conversion_probe.md`
-- `docs/exp/2026-07-15_lora_qa16k_three_arm_results.md`
+- `docs/exp/2026-07/2026-07-14_lora_retrieval_conversion_probe.md`
+- `docs/exp/2026-07/2026-07-15_lora_qa16k_three_arm_results.md`
 
 后者的 registered QA negative 优先于本目录早期“可能转化为能力”的计划。
 

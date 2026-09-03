@@ -116,9 +116,9 @@ This closure is not a formal theorem, but it is mathematically aligned with the 
 
 The MHA evidence in the repo strongly supports this as a **near-optimal centerline**:
 
-- `docs/exp/2026-03-09_phase16_formula_optimality_sweep_results.md`
-- `docs/exp/2026-03-04_phase11_L256_results.md`
-- `docs/exp/2026-03-11_phase17c_2048_continue_results.md`
+- `docs/exp/2026-03/2026-03-09_phase16_formula_optimality_sweep_results.md`
+- `docs/exp/2026-03/2026-03-04_phase11_L256_results.md`
+- `docs/exp/2026-03/2026-03-11_phase17c_2048_continue_results.md`
 - `paper/tables/table1_multiscale_raw_ppl.tex`
 
 What is actually supported:

@@ -118,11 +118,11 @@ identification.
   SHA256
   `0335415a2245e1fb31149705342e975a016ddddb557a79c364fc4a98c3f89001`.
 - Routing, causal deletion, rank, and generation report:
-  `../../../docs/exp/2026-07-14_lora_retrieval_conversion_probe.md`,
+  `../../../docs/exp/2026-07/2026-07-14_lora_retrieval_conversion_probe.md`,
   SHA256
   `5e05495ca8c8d295a4e3d3c4dc2c31bcbad81295a79947e7031010a08ad85a25`.
 - Registered QA gate:
-  `../../../docs/exp/2026-07-15_lora_qa16k_three_arm_results.md`,
+  `../../../docs/exp/2026-07/2026-07-15_lora_qa16k_three_arm_results.md`,
   SHA256
   `024241e20eb30f99ad9f057a40683a69eb1b52a90f48e56481a45be8e1248bc0`.
 

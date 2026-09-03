@@ -23,7 +23,7 @@
 | 协议 | 125M，`L_train=128`，FineWeb-Edu，**15M tokens**，base=500K |
 | 行名 | 论文写 **DAPE**，extra params=**32** |
 | 实际方法 | **32 维可学 `inv_freq`**（独立频率，非 Kerple、非 attention-MLP） |
-| 证据 | `docs/exp/2026-02-24_128tok_baseline_report.md`；`data/curated/fig3_extreme_128.json` |
+| 证据 | `docs/exp/2026-02/2026-02-24_128tok_baseline_report.md`；`data/curated/fig3_extreme_128.json` |
 | Seed | Geo / 「DAPE」/ EVQ：**seed 42 only**（Learnable τ 为 3-seed） |
 
 ### 结果（PPL@8K，seed 42）
@@ -47,7 +47,7 @@
 | 协议 | 125M，`L_train=256`，FineWeb-Edu，**100M tokens**，3 seeds (42/137/256) |
 | 实现 | `scripts/core_text_phases/phase11b_125m_dape.py`：`KerpleBias` + `DAPERefine` MLP on pre-softmax scores |
 | 身份边界 | **Zheng-inspired DAPE-ish**，非官方 GPT-NeoX 仓库逐行复现；仍是 attention-score adaptive PE，**不是 free inv_freq** |
-| 证据 | `data/curated/phase11b_125m_l256_3seed.json`；`docs/exp/2026-03-05_phase11b_125m_results.md` |
+| 证据 | `data/curated/phase11b_125m_l256_3seed.json`；`docs/exp/2026-03/2026-03-05_phase11b_125m_results.md` |
 | 训练耗时 | plain ~900s/run；+DAPE ~1600s/run（原服务器日志） |
 
 ### 结果（3-seed mean PPL）
@@ -102,8 +102,8 @@
 ```
 data/curated/fig3_extreme_128.json
 data/curated/phase11b_125m_l256_3seed.json
-docs/exp/2026-02-24_128tok_baseline_report.md
-docs/exp/2026-03-05_phase11b_125m_results.md
+docs/exp/2026-02/2026-02-24_128tok_baseline_report.md
+docs/exp/2026-03/2026-03-05_phase11b_125m_results.md
 scripts/core_text_phases/phase11b_125m_dape.py
 README.md Claim 2 (explicit: not faithful DAPE)
 ```

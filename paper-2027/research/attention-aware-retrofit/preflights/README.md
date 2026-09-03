@@ -3,7 +3,12 @@
 A preflight records what was frozen before execution. It is never evidence that
 an experiment ran.
 
-## Current protocol status
+## September 1–2 protocol status (historical)
+
+Section-number references inside individual preflights record the `INDEX.md`
+layout that existed when they were frozen. Current evidence, closed routes, and
+agenda live in repository `INDEX.md` §§2, 3, and 5. Nothing in this directory is
+a current queue.
 
 [`COUPLING_NEGATIVE_ATTRIBUTION_PREFLIGHT_20260901.md`](COUPLING_NEGATIVE_ATTRIBUTION_PREFLIGHT_20260901.md)
 registers Native-only P0 reference-length calibration and independent
@@ -42,8 +47,11 @@ froze the new-seed full-RULER confirmation for the selected engineering
 representative. It completed as `CLEAR_ADVANCE`; the result has its own owner.
 
 [`K32_PACKED_NATURAL_NLL_CONFIRMATION_PREFLIGHT_20260901.md`](K32_PACKED_NATURAL_NLL_CONFIRMATION_PREFLIGHT_20260901.md)
-freezes the immediate work-machine likelihood gate. Its model-free input is
-ready, but no model evaluation ran on the stopped GPU instance.
+froze the packed-natural likelihood gate. The prior session completed the
+model evaluation and summarized it in
+[`../results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md`](../results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md),
+but its remote raw result files were not recovered; the statistics therefore
+remain internal.
 
 ## Retired recent protocols
 
@@ -65,7 +73,7 @@ monotonicity-checked construction.
 | --- | --- |
 | [`ALLOCATION_DOSE_RESPONSE_PREFLIGHT_20260826.md`](ALLOCATION_DOSE_RESPONSE_PREFLIGHT_20260826.md) | executed; registered primary construction failed the joint in-window/long-tail gate; result owned by `../results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md` |
 | [`COADAPTIVE_ALLOCATION_ORACLE_PREFLIGHT_20260825.md`](COADAPTIVE_ALLOCATION_ORACLE_PREFLIGHT_20260825.md) | executed; registered shell gate failed; attribution and matched recovery are owned by `../results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md` |
-| [`PHASE_ALLOCATION_M4_EXTENDED_PREFLIGHT_20260824.md`](PHASE_ALLOCATION_M4_EXTENDED_PREFLIGHT_20260824.md) | executed; its own decision rule ("label the regime as unresolved rather than attributing the result to the new score" when the anchored-Cosh control is neutral/negative at 50M base-256) is applied by the canonical report. See `../../../../INDEX.md` §3.5 |
+| [`PHASE_ALLOCATION_M4_EXTENDED_PREFLIGHT_20260824.md`](PHASE_ALLOCATION_M4_EXTENDED_PREFLIGHT_20260824.md) | executed; its own decision rule ("label the regime as unresolved rather than attributing the result to the new score" when the anchored-Cosh control is neutral/negative at 50M base-256) is applied by the canonical report. See `../../../../INDEX.md` §3.2 |
 | [`ZERO_PARAMETER_PROTECTED_BAND_PREFLIGHT_20260824.md`](ZERO_PARAMETER_PROTECTED_BAND_PREFLIGHT_20260824.md) | executed; failed 1x PG-19 no-harm gate and stopped before capability evaluation |
 | [`ZERO_PARAMETER_SINGLE_TABLE_PREFLIGHT_20260824.md`](ZERO_PARAMETER_SINGLE_TABLE_PREFLIGHT_20260824.md) | executed; both static analytic tables stopped by `../results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md` |
 | [`DIRECT_Z_ZERO_WEIGHT_PREFLIGHT_20260824.md`](DIRECT_Z_ZERO_WEIGHT_PREFLIGHT_20260824.md) | executed; stopped by `../results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md` before downstream evaluation |

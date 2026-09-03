@@ -5,7 +5,7 @@ Verified 2026-08-26 against ACL Anthology, NeurIPS/ICLR proceedings, iclr.cc vir
 > **Status (2026-08-28):** historical Codex execution record — the revision cycle this served closed 2026-08-28, outcome committed at 93d7eac; the narrative plan it sequences after is itself superseded (see its banner). Do not execute from this file; the citation/novelty verifications below stand as of 2026-08-26.
 
 Companion: execute after
-[`ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md`](ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md).
+[`ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md`](../archive/2026-08/ICLR2027_NARRATIVE_OPTIMIZATION_PLAN_20260826.md).
 If that pass deletes a MUST cite below, put it back.
 
 ---

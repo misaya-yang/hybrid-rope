@@ -167,7 +167,7 @@ it.
 
 Post-submission method development and follow-up experiments are not tasks in
 this brief and must not compete with the September freeze. Their durable agenda
-lives in [`../INDEX.md`](../INDEX.md) §6.
+lives in [`../INDEX.md`](../INDEX.md) §5.
 
 Post-submission research may use separately authorized frozen-checkpoint or
 matched-adaptation protocols, but this brief does not admit a new from-scratch
@@ -181,12 +181,12 @@ is allowed; fixed endpoints remain a causal-control condition rather than a
 method rule. One table must stay within a declared small Native-window cost and
 improve `2x`/`4x` before untouched downstream evaluation. Weight adaptation is
 not part of this first gate.
-[`../INDEX.md`](../INDEX.md) §6 owns the durable gates.
+[`../INDEX.md`](../INDEX.md) §5 owns the durable gates.
 
 Before any later experiment enters the research agenda, it must state:
 
 1. the falsifiable hypothesis and the existing evidence it does not duplicate;
-2. how it escapes the closed classes in `INDEX.md` §3.4;
+2. how it escapes the closed classes in `INDEX.md` §3.1;
 3. the exact intervention, controls, data, metric, budget, owner, and stop rule;
 4. the claim or decision the result could change;
 5. the required compute authorization and shutdown plan.

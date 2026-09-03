@@ -3,8 +3,8 @@
 > 日期: 2026-03-11
 > 状态: **COMPLETE** (含扩展 eval 到 48K + YaRN)
 > 前置报告:
->   - Phase 17 (`L=512`): `docs/exp/2026-03-09_phase17_evq_yarn_overlay_results.md`
->   - Phase 17b (`512→1024`): `docs/exp/2026-03-10_phase17b_1024_continue_vs_512_baseline.md`
+>   - Phase 17 (`L=512`): `docs/exp/2026-03/2026-03-09_phase17_evq_yarn_overlay_results.md`
+>   - Phase 17b (`512→1024`): `docs/exp/2026-03/2026-03-10_phase17b_1024_continue_vs_512_baseline.md`
 > 结果文件:
 >   - 初始 eval: `results/evq_phase17c_results/phase17c_summary.json`
 >   - 扩展 eval: `results/evq_phase17c_results/phase17c_extended_eval.json`

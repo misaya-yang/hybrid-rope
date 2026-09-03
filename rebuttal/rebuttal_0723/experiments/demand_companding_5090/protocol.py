@@ -13,7 +13,7 @@ from .schedule import DEFAULT_BASE, DEFAULT_K, LAMBDA_VALUES, sha256_file
 
 SEEDS: tuple[int, ...] = (42, 137, 256)
 CANONICAL_OWNER = Path(__file__).resolve().parents[4] / (
-    "paper-2027/research/EXACT_RANGE_151M_3SEED_RESULT_20260820.json"
+    "paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.json"
 )
 
 

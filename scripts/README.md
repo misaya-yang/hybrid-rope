@@ -1,124 +1,54 @@
-# Scripts — 实验与工具代码
+# `scripts/` — implementation and tooling map
 
-本目录包含 EVQ-Cosh 项目的所有实验脚本、出图脚本、数据准备工具和 RoPE 库。
+Code is not evidence and no script is an automatic action queue. Before using a
+runner, resolve the current owner and authorization through [`../INDEX.md`](../INDEX.md)
+and [`../paper-2027/HANDOFF.md`](../paper-2027/HANDOFF.md).
 
----
+## Directory roles
 
-## 目录结构
+| Path | Role | Status |
+| --- | --- | --- |
+| [`lib/rope/`](lib/rope/) | reusable frequency tables, injection, fixed-support and target-free primitives | implementation authority |
+| [`analysis/`](analysis/) | CPU diagnostics, summarizers, geometry/table builders | reusable; output needs an owner |
+| [`data/`](data/) | current data builders and receipts | active utilities |
+| [`data_prep/`](data_prep/) | NeurIPS/rebuttal-era data preparation | historical/supporting |
+| [`eval/`](eval/) | mature-checkpoint evaluators and launch wrappers | use only with a live frozen protocol |
+| [`core_text_phases/`](core_text_phases/) | February–March from-scratch phase chain | completed historical runners |
+| [`text_eval/`](text_eval/) | continued-pretraining/text evaluation | historical/supporting |
+| [`video_temporal/`](video_temporal/) | Video-DiT/temporal supporting code | historical/supporting |
+| [`figures/`](figures/) | NeurIPS-era figures | historical manuscript assets |
+| [`../paper-2027/figs/`](../paper-2027/figs/) | active ICLR figure generators | active manuscript assets |
+| [`supporting_eval/`](supporting_eval/) | shared supporting metrics | endpoint identity must be confirmed |
+| [`2026-04/`](2026-04/), [`2026-07/`](2026-07/) | dated launch/analysis helpers | archive; not current queue |
+| [`mac_train/`](mac_train/), [`m4_max_36gb/`](m4_max_36gb/) | M4 historical training/diagnostics | archive |
 
-```
-scripts/
-├── 2026-07/                    Rebuttal-time LoRA launchers（受控、按需运行）
-│   ├── 04_lora_longalpaca_paper_geo_s42.sh  Geo seed-42 shared driver
-│   ├── 05_lora_longalpaca_paper_evq_s42.sh  EVQ seed-42 thin wrapper
-│   └── 06_lora_temporal_three_arm_eval.sh   Frozen holdout three-arm gate
-├── train.py                    Legacy LoRA/Anchored-Sigmoid 入口 (not primary EVQ-Cosh)
-├── core_text_phases/           Phase 8–21 主实验链 ⭐
-│   ├── README.md               Phase Map + → Paper 映射
-│   ├── run_evq_sweep.py        核心 τ-sweep 实验 (50M/125M/350M)
-│   ├── phase11_L256_extrap.py  PE-dominant regime
-│   ├── phase11b_125m_dape.py   当前 DAPE-compatibility/supporting runner；不等同于论文旧行的完整复现
-│   ├── phase11c_454m_scaling.py  454M scaling
-│   ├── phase14c_multiscale_evq_yarn.py  supporting multiscale check；不是完整 454M Table 2 reproduction
-│   ├── phase15_750m_*.py       750M continued-pretrain
-│   ├── phase16_formula_optimality_sweep.py  99-run τ* validation
-│   ├── phase17b_*.py           454M Stage 2 (512→1024)
-│   ├── phase17c_*.py           454M Stage 3 (1024→2048) ⭐
-│   ├── phase21b_quality_eval_clean.py  QuALITY downstream eval
-│   ├── evq_analysis.py         τ-sweep 分析 + waterbed 绘图
-│   └── visualize_attention_distance.py  Attention 可视化
-├── figures/                    论文图表生成
-│   ├── fig1_neurips.py         Fig 1: Frequency dynamics
-│   ├── fig2_evq_yarn_orthogonality.py  Fig 2: EVQ×YaRN synergy
-│   └── fig3_pe_dominant_scaling.py  Fig 3: PE-dominant scaling
-├── data_prep/                  数据预处理
-│   ├── prepare_mixed_prior_dataset_v1.py  FineWeb-Edu tokenization
-│   ├── prepare_temporal_holdout_2026.py  Frozen 2026 temporal holdout packs
-│   ├── prepare_moving_mnist_video.py  Tokenized Moving MNIST video cache
-│   ├── prepare_videorope_assets.py  官方 VideoRoPE 轻量资产下载
-│   └── tokenize_synth.py       合成数据 tokenization
-├── supporting_eval/            辅助评估工具
-├── lib/rope/                   RoPE 实现库
-│   ├── schedules.py            EVQ-Cosh + Geometric 频率计算 + Progressive YaRN
-│   └── inject.py               RoPE 注入到 transformer
-├── video_temporal/             视频时序外推 (supporting)
-│   ├── run_video_temporal.py   早期视频时序外推脚本
-│   ├── run_video_temporal_allocation_sweep.py  VideoRoPE-style temporal allocation sweep
-│   ├── run_phase23_blackwell.sh  Blackwell 一键启动脚本
-│   ├── run_phase23_blackwell_10h.sh  Blackwell 10小时预算启动脚本
-│   └── summarize_videorope_official_results.py  官方 V-NIAH-D 基线汇总
-├── mac_train/                  M4 Max 本地实验 (legacy)
-└── m4_max_36gb/                M4 Max 36GB 实验
-```
+## Current source-of-truth routes
 
----
+| Need | Entry |
+| --- | --- |
+| construct or inspect RoPE tables | `scripts/lib/rope/` |
+| reproduce static full-RoPE diagnostics | `scripts/analysis/full_rope_collision_audit.py` |
+| reproduce finite-`K` surrogate audit | `scripts/analysis/finite_k_cosh_regret_audit.py` |
+| summarize/reference current frozen transport | the specific `scripts/analysis/*` or `scripts/eval/*` file linked by the result owner |
+| prepare current long-text inputs | `scripts/data/` |
+| build the anonymous supplement | `scripts/package_supplement.py --profile iclr2027` from repository root |
 
-## 核心脚本 → 论文映射
+The complete Figure/Table→code→data map is historical infrastructure under
+[`../docs/overview/PAPER_CLAIMS_MAP.md`](../docs/overview/PAPER_CLAIMS_MAP.md).
+Current ICLR claim routing is in `INDEX.md`, not in this README.
 
-| 脚本 | 论文 Figure/Table | 描述 |
-|------|------------------|------|
-| `run_evq_sweep.py` | Table 1 | 多尺度 τ-sweep (50M/125M/350M) |
-| `phase14c_multiscale_evq_yarn.py` | supporting for Table 2/Fig 2 | multiscale check；完整 454M aggregate 来自 curated artifact |
-| `phase11_L256_extrap.py` | Table 4-5, Fig 3 | PE-dominant regime |
-| `phase11b_125m_dape.py` | supporting compatibility path | 不得把当前 runner 自动等同于旧 Table 4 的 faithful DAPE reproduction |
-| `phase11c_454m_scaling.py` | Table 4 | 454M PE-dominant scaling |
-| `phase15_750m_*.py` | Table 6 | 750M continued-pretrain |
-| `phase16_formula_optimality_sweep.py` | Fig 6 | 99-run τ* formula validation |
-| `phase17c_*.py` | Fig 4 | 454M flagship (2K→48K) |
-| `phase21b_quality_eval_clean.py` | Fig 5 | QuALITY downstream eval |
-| `fig1_neurips.py` | Fig 1, Fig 7 | Frequency dynamics + waterbed |
-| `fig2_evq_yarn_orthogonality.py` | Fig 2 | EVQ×YaRN orthogonal synergy |
-| `fig3_pe_dominant_scaling.py` | Fig 3 | PE-dominant scaling law |
+## Safety and maintenance
 
-> 完整的 Figure/Table → Script → Data → Results 追溯地图见 `docs/overview/PAPER_CLAIMS_MAP.md`。
-
----
-
-## 快速开始
-
-### 环境
-
-```bash
-conda create -n evq python=3.10 && conda activate evq
-pip install -r requirements-lock.txt
-```
-
-### 运行核心实验
-
-```bash
-# 50M τ-sweep (~4 小时, 任意 GPU)
-python scripts/core_text_phases/run_evq_sweep.py --tier 50m --seeds 42 --strict_dataset --passkey_mix_ratio 0
-
-# 125M τ-sweep (~8 小时, 16GB+ GPU)
-python scripts/core_text_phases/run_evq_sweep.py --tier 125m --seeds 42,123,7 --strict_dataset --passkey_mix_ratio 0
-
-# 重新生成论文图表
-python scripts/figures/fig1_neurips.py
-python scripts/figures/fig2_evq_yarn_orthogonality.py
-python scripts/figures/fig3_pe_dominant_scaling.py
-```
-
-### RoPE 库使用
-
-```python
-from scripts.lib.rope.schedules import evq_cosh_inv_freq
-
-# 计算 EVQ-Cosh 频率 (head_dim=64, τ=1.4)
-inv_freq = evq_cosh_inv_freq(head_dim=64, tau=1.4, base=500000.0)
-
-# τ=0.0 是论文实验使用的 midpoint-discretized geometric grid；
-# scripts.lib.rope.schedules.geometric_inv_freq 保留标准 RoPE endpoint grid。
-inv_freq_geo = evq_cosh_inv_freq(head_dim=64, tau=0.0)
-```
-
----
-
-## 维护规则
-
-- 脚本必须能追溯到论文 Figure/Table 或下一步实验计划，否则不应留在本目录
-- `2026-07/` 的 LoRA / temporal holdout 脚本是 rebuttal-triggered supporting path；
-  未实际运行并完成 provenance 审核前，不得写成论文结果
-- 新实验脚本放入 `core_text_phases/`，命名为 `phase{N}_{desc}.py`
-- 出图脚本放入 `figures/`，命名为 `fig{N}_{desc}.py`
-- 结果输出到 `results/core_text/phase{N}/`
-- 实验报告写入 `docs/exp/YYYY-MM-DD_slug.md`
+- Never start training, model inference/evaluation, or paid compute without
+  explicit authorization for that exact run.
+- Before paid GPU work, read
+  [`../docs/overview/RTX5090_BLACKWELL_PROFILE.md`](../docs/overview/RTX5090_BLACKWELL_PROFILE.md)
+  and freeze code/config/data/checkpoint/table/output identities plus stop and
+  shutdown plans.
+- Put reusable diagnostics in `scripts/analysis/`, data builders in
+  `scripts/data/`, and endpoint evaluators in `scripts/eval/`.
+- Do not add another phase runner merely because an old preflight exists.
+- Historical experiment reports now live under
+  `docs/exp/YYYY-MM/YYYY-MM-DD_slug.md`.
+- A passing unit test proves only the code path it executed; it does not prove a
+  model result, scientific claim, or cross-environment release.

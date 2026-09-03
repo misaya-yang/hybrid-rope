@@ -131,7 +131,7 @@ Phase collision 最小值出现在 τ=1.5，与 PPL 最优点重合，验证了�
 
 | 数据 | 服务器路径 | 本地备份 |
 |------|-----------|---------|
-| Curated report | 本文件 | `docs/exp/2026-02-27_evq_tau_sweep_results.md` |
+| Curated report | 本文件 | `docs/exp/2026-02/2026-02-27_evq_tau_sweep_results.md` |
 | Curated sweep table | 由历史 sweep 汇总导出 | `results/legacy/paper_ready/evq_tau_sweep/evq_sweep_paper_table.csv` |
 | Historical paper-ready bundle | 旧仓库镜像保留 | `results/legacy/paper_ready/evq_tau_sweep/` |
 

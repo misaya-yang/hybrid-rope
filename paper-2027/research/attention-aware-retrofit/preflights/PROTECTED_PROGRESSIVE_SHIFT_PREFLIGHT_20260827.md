@@ -55,7 +55,7 @@ the pure interior-$z$ protection contrast. A complete practical policy may
 include support, allocation, and gain, but those variables are not to be
 described as one causal effect. Amplitude/gain, adaptation, and serving/routing
 remain separate estimands under the project’s
-[`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](../../ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md)
+[`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](../../foundations/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md)
 §2 grammar.
 
 ## 2. Exact protected-curve construction

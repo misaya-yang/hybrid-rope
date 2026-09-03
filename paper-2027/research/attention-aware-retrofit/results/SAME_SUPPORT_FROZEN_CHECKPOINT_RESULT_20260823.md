@@ -51,7 +51,7 @@ different base/exponent pair if both are free. The scalar-base control is still
 causally distinct because it is restricted to the geometric exponent family;
 the same-support experiment fixes everything that family can set at the two
 endpoints and changes the interior curve. The authoritative global grammar is
-[`../../ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](../../ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md).
+[`../../foundations/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](../../foundations/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md).
 
 This distinction matters against recent work. MrRoPE constructs a
 training-free mixed-radix/progressive spectrum, CoPE soft-clips selected slow

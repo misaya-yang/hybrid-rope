@@ -17,7 +17,7 @@
 - **Objective:** freeze a scientifically correct, reviewer-legible submission;
   do not reopen method search
 - **Historical theory pointer used by that cycle:**
-  [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
+  [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](../../foundations/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
 
 Every number below inherits the scope of its linked canonical owner. The active
 PDF and LaTeX remain the reviewer-visible truth until the edits in this report
@@ -121,7 +121,7 @@ load-moment/f-divergence paragraphs.
 The appendix currently fits `tau_*(L)` to a single `L^{-gamma}`, sets
 `gamma=0.5` as a target, and derives an exponent-matched `p approx 0.85`.
 The completed O3 derivation in
-[`three_completions/optimization_notes.md`](three_completions/optimization_notes.md)
+[`three_completions/optimization_notes.md`](../../three_completions/optimization_notes.md)
 shows that the model itself does not predict a single power law:
 
 \[
@@ -148,7 +148,7 @@ to the closed/static-score research boundary, not this submission.
 Discussion paragraph.
 
 Canonical owner:
-[`EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](EXACT_RANGE_151M_3SEED_RESULT_20260820.md)
+[`EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](../../evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.md)
 Sections 3-4.
 
 The body currently says only that target retargeting reverses the ordering.
@@ -190,7 +190,7 @@ This preserves both pillars without splicing their estimands.
 `sections/04_experiments.tex`, and Figure 1 text where necessary.
 
 Canonical owner:
-[`attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md).
+[`attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](../../attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md).
 
 The intervals condition on one fixed checkpoint and task set with evaluation
 rows resampled. They are not checkpoint-population, task-population, model, or

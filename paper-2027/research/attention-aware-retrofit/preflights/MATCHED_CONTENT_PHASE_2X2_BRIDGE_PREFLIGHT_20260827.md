@@ -8,7 +8,7 @@
   or a conditional execution queue.
 - **Scheduling:** none; retirement removes this design from the execution queue.
 - **Historical decision owner:**
-  [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](../../ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
+  [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](../../foundations/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
   §4; current priority lives only in `INDEX.md` §0 and §6
 - **Historical implementation target:** the mature OLMo checkpoint and task
   contract already owned by
@@ -54,7 +54,7 @@ This is a frozen-checkpoint estimand. It does not estimate the effect of
 training a model with the candidate table, the effect of attention amplitude,
 the effect of LoRA adaptation, or the effect of a Native/long serving route.
 Those remain separate owners under the causal grammar in
-[`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](../../ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md)
+[`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](../../foundations/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md)
 §2.
 
 ## 2. Pre-frozen table and position map
@@ -268,15 +268,15 @@ training identification or frozen mature pure-$z$ owners.
 - Current protocol boundary and decision order:
   [`INDEX.md`](../../../../INDEX.md) §6.2–§6.3
 - Missing identification bridge and decision readings:
-  [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](../../ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
+  [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](../../foundations/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
   §3–§5
 - Pure allocation and mature-checkpoint claim ceilings:
   [`SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](../results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md)
 - Training-stage fixed-support identification:
-  [`EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](../../EXACT_RANGE_151M_3SEED_RESULT_20260820.md)
+  [`EXACT_RANGE_151M_3SEED_RESULT_20260820.md`](../../evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.md)
 - Causal-variable definitions for support, allocation, gain, adaptation, and
   routing:
-  [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](../../ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md)
+  [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](../../foundations/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md)
 
 This document records a protocol only. It contains no experiment result,
 launch receipt, or authorization to use GPU, remote, or paid compute.

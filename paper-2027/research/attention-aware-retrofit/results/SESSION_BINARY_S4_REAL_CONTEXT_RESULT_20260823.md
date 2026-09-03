@@ -16,7 +16,7 @@ interior-allocation effect. That effect is isolated by
 while the frequency-by-gain interaction remains owned by
 [`JOINT_MECHANISM_REPORT_20260822.md`](JOINT_MECHANISM_REPORT_20260822.md).
 The global variable/stage grammar is
-[`../../ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](../../ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md).
+[`../../foundations/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](../../foundations/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md).
 
 ## 1. Conclusion
 

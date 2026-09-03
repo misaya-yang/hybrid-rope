@@ -15,7 +15,7 @@
         "selected_other_points_pct_vs_tau0": {"tau0p2": 27.0, "tau0p6": 14.0, "tau1p0": 12.2, "tau2p0": 7.0}
       },
       "qualitative_summary": "The finite grid is sharply non-monotone: several small-to-moderate tau points are adverse, the best tested point is interior, and the next larger point is again adverse.",
-      "owner_paths": ["docs/exp/2026-02-27_evq_tau_sweep_results.md"],
+      "owner_paths": ["docs/exp/2026-02/2026-02-27_evq_tau_sweep_results.md"],
       "protected_literals": ["33.316", "29.697", "-10.9%", "+27.0%"],
       "protected_phrases": ["tau=1.5 is the best tested point", "small tau is harmful before recovery"]
     },
@@ -31,7 +31,7 @@
         "ppl16k": {"geo_plus_operator": 157.7, "evq_plus_operator": 107.5}
       },
       "qualitative_summary": "The fixed operator has much larger leverage on the EVQ-Cosh-trained substrate, and the teacher-forced passkey endpoint saturates in every paired seed.",
-      "owner_paths": ["docs/exp/2026-03-03_passkey_mix_results.md", "data/curated/table2_evq_yarn_454m_passkey_10pct.json"],
+      "owner_paths": ["docs/exp/2026-03/2026-03-03_passkey_mix_results.md", "data/curated/table2_evq_yarn_454m_passkey_10pct.json"],
       "protected_literals": ["39.0 percentage points", "157.7", "107.5"],
       "protected_phrases": ["all three seeds reach the score ceiling", "substrate-dependent large gain"]
     },
@@ -62,7 +62,7 @@
         "passkey8k": {"geo_retrieval": 1.0, "evq_retrieval": 1.0, "geo_ar_exact": 0.0, "evq_ar_exact": 0.775}
       },
       "qualitative_summary": "A small in-window PPL cost crosses into a large OOD gain. Retrieval is saturated in both arms, while strict autoregressive reproduction sharply separates them.",
-      "owner_paths": ["data/curated/phase15_750m_continue_result_20260306.json", "docs/exp/2026-03-06_phase15_750m_2k_to_4k_continue_results.md"],
+      "owner_paths": ["data/curated/phase15_750m_continue_result_20260306.json", "docs/exp/2026-03/2026-03-06_phase15_750m_2k_to_4k_continue_results.md"],
       "protected_literals": ["45.136", "24.407", "-45.9%", "77.5pp"],
       "protected_phrases": ["retrieval is saturated while autoregressive exact separates", "small in-window cost and large ood gain"]
     },
@@ -79,7 +79,7 @@
         "right_shifted_best_configs": 6
       },
       "qualitative_summary": "The formula is usually locally competitive but is not an exact optimizer; empirical best points often sit on its larger-tau side.",
-      "owner_paths": ["docs/exp/2026-03-09_phase16_formula_optimality_sweep_results.md", "data/curated/phase16_99run_manifest.meta.json"],
+      "owner_paths": ["docs/exp/2026-03/2026-03-09_phase16_formula_optimality_sweep_results.md", "data/curated/phase16_99run_manifest.meta.json"],
       "protected_literals": ["7/9", "3/9", "0.7777777778"],
       "protected_phrases": ["near but not exact optimum", "empirical best points shift right"]
     },
@@ -94,7 +94,7 @@
         "relative_delta_pct": {"training_range": -20.9547194446, "all_extrapolation": -16.2923328792, "far_extrapolation": -35.4158196274}
       },
       "qualitative_summary": "The direction transfers to the video setting at both training and extrapolation ranges, with the largest relative change in the far segment.",
-      "owner_paths": ["data/curated/video_dit_seed42_head_to_head_20260826.json", "paper-2027/research/VIDEO_DIT_HEAD_TO_HEAD_SEED42_RESULT_20260826.md"],
+      "owner_paths": ["data/curated/video_dit_seed42_head_to_head_20260826.json", "paper-2027/research/evidence/VIDEO_DIT_HEAD_TO_HEAD_SEED42_RESULT_20260826.md"],
       "protected_literals": ["0.009890949353575706", "0.006387988571077585", "-35.4158196274"],
       "protected_phrases": ["the far relative gain is larger than the training-range gain", "same direction in training and far ranges"]
     },
@@ -109,7 +109,7 @@
         "passkey_delta_pp_by_cell": {"mha": 2.7, "gqa4": -2.6, "gqa2": -10.7, "mla_k16": -7.3, "mla_k8": 2.6}
       },
       "qualitative_summary": "The most pair-scarce MLA cell has the largest PPL change, but the intermediate attention cells break a monotone K trend and passkey does not track PPL.",
-      "owner_paths": ["data/curated/mla_channel_count_125m_pilot.json", "docs/exp/2026-03-20_gqa_mla_125m_compression_ablation.md"],
+      "owner_paths": ["data/curated/mla_channel_count_125m_pilot.json", "docs/exp/2026-03/2026-03-20_gqa_mla_125m_compression_ablation.md"],
       "protected_literals": ["245.5", "128.2", "-47.8%", "-6.3%"],
       "protected_phrases": ["extreme scarcity is largest but the global trend is non-monotone", "passkey diverges from ppl"]
     },
@@ -156,7 +156,7 @@
         "fixed_support_ood_seed_direction": "3 of 3 seeds favor anchored EVQ-Cosh at every OOD length"
       },
       "qualitative_summary": "The pure fixed-support comparison has a small in-window cost and consistent OOD gain, while target-matched support reverses the ordering.",
-      "owner_paths": ["paper-2027/research/EXACT_RANGE_151M_3SEED_RESULT_20260820.json", "paper-2027/research/EXACT_RANGE_151M_3SEED_RESULT_20260820.md"],
+      "owner_paths": ["paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.json", "paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.md"],
       "protected_literals": ["-0.17599", "-0.28073", "+0.22720", "+0.45959"],
       "protected_phrases": ["target matching reverses the ordering", "all three seeds favor anchored evq-cosh at every ood length"]
     },

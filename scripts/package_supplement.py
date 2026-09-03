@@ -144,7 +144,7 @@ PROFILE_EXCLUDE_NAMES = {
 PROFILE_RENAMED_FILES = {
     "iclr2027": {
         "paper-2027/SUPPLEMENT_README.md": "README.md",
-        "paper-2027/research/EXACT_RANGE_151M_3SEED_RESULT_20260820.json":
+        "paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.json":
             "data/curated/exact_range_151m_3seed_result.json",
     },
 }

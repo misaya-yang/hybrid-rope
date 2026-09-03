@@ -1,20 +1,23 @@
-# Standalone Experiments
+# `experiments/` — standalone supporting packages
 
-`experiments/` 保存不适合放入主 phase chain 的独立模型实验包。
+These packages sit outside the February–March phase chain because each has its
+own model, protocol, or rebuttal-specific lifecycle. Code or a prepared runner
+is not evidence that a run occurred.
 
-当前只有：
+| Package | Role | Evidence boundary |
+| --- | --- | --- |
+| [`lora_evq_v2/`](lora_evq_v2/) | LLaMA-3-8B LoRA, temporal evaluation, and provenance utilities | supporting adaptation; use the July canonical owner, not the package README, for results |
+| [`mla_yarn_short_s42/`](mla_yarn_short_s42/) | short-context MLA/YaRN operator package | protocol-specific supporting code; no generic YaRN identity |
+| [`native_rope_evq_150m/`](native_rope_evq_150m/) | 151.9M Native/EVQ control implementation | current exact-range evidence is owned under `paper-2027/research/evidence/` |
+| [`rebuttal_2026/`](rebuttal_2026/) | rebuttal-triggered SFT/distillation assets | prepared or supporting protocol unless a named result owner proves execution |
 
-- `lora_evq_v2/`：LLaMA-3-8B LoRA / evaluator / provenance utilities；其中
-  `eval_temporal_holdout_matched.py` 和 `eval_temporal_holdout_three_arm.py`
-  用于冻结 2026 temporal holdout 上的 matched-prefix 与三臂比较。
-- `rebuttal_2026/sft_distillation/`：程序持有 oracle、DeepSeek 仅做表面
-  naturalization 的短上下文 SFT 数据流水线；Paper-Geo/EVQ 共用同一份
-  messages 文件和顺序，pilot 受 100 条人工审计门禁约束。
+The historical main phase chain remains in
+[`../scripts/core_text_phases/`](../scripts/core_text_phases/); reusable RoPE
+implementation remains in [`../scripts/lib/rope/`](../scripts/lib/rope/).
+Current evidence and claim scope route through [`../INDEX.md`](../INDEX.md),
+and live compute authorization exists only in
+[`../paper-2027/HANDOFF.md`](../paper-2027/HANDOFF.md).
 
-该包属于 supporting 或 rebuttal-triggered evidence，不承担论文三个 primary anchors。历史 LoRA 与 fresh controls 的语料、runtime 和 evaluator 未形成 strict matched pair 时，不得计算 causal EVQ delta。
-
-主论文实验 runner 仍应放在 `scripts/core_text_phases/`；可复用 RoPE 实现在 `scripts/lib/rope/`。
-
-Temporal holdout 是 rebuttal-triggered evaluation path，不是论文已报告结果。数据由
-`scripts/data_prep/prepare_temporal_holdout_2026.py` 生成；提交的仓库只保存生成器、
-manifest 契约和测试，不保存下载语料、tokenized packs 或评估输出。
+Do not start a model run from this directory without an explicit current
+protocol and user authorization. Missing raw data, runtime identity, or matched
+controls cannot be repaired by proximity to a script.

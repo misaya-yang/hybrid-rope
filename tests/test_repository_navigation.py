@@ -19,6 +19,9 @@ class RepositoryNavigationTests(unittest.TestCase):
             "paper-2027/REVISION_BRIEF.md",
             "paper-2027/SUBMISSION_CHECKLIST.md",
             "paper-2027/research/README.md",
+            "paper-2027/research/history/TIMELINE.md",
+            "paper-2027/research/foundations/README.md",
+            "paper-2027/research/evidence/README.md",
             "paper-2027/main.tex",
         ):
             self.assertTrue((ROOT / relative).is_file(), relative)
@@ -188,7 +191,7 @@ class RepositoryNavigationTests(unittest.TestCase):
             "FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md",
         ):
             self.assertIn(required, index)
-        self.assertIn("只关闭该实现", index)
+        self.assertIn("only this implementation is closed", index)
 
     def test_static_rank_diagnostic_has_an_owner_script(self):
         """Computed internal numbers need an owner and an honest search scope."""
@@ -200,7 +203,7 @@ class RepositoryNavigationTests(unittest.TestCase):
         for required in ("LM-quality", "restarts", "algebraic", "not a global ceiling"):
             self.assertTrue(required in source, f"static-rank owner must state: {required}")
 
-    def test_current_route_is_deterministic_static_z(self):
+    def test_current_route_is_submission_first_and_gpu_stopped(self):
         index = (ROOT / "INDEX.md").read_text(encoding="utf-8")
         retired_preflight = (
             ROOT
@@ -211,16 +214,14 @@ class RepositoryNavigationTests(unittest.TestCase):
         self.assertTrue(retired_preflight.is_file())
         self.assertTrue(audit.is_file())
         for required in (
-            "## 0. 当前两天研究时间线",
-            "frozen-checkpoint static pure-`z`",
-            "0.875302",
+            "## 0. Cold-start snapshot",
+            "GPU_METHOD_DEVELOPMENT_STOPPED",
             "SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831",
-            "deterministic non-affine `f`",
-            "endpoint movement 本身不是出线条件",
-            "W0/F1 success-first tournament",
+            "## 5. Durable agenda",
+            "No GPU method-development experiment is active",
+            "paper-2027/research/history/TIMELINE.md",
         ):
             self.assertIn(required, index)
-        self.assertNotIn("### 6.2 投稿后的第一优先级：冻结 checkpoint 零训练优化", index)
         source = audit.read_text(encoding="utf-8")
         for boundary in ("not r2", "LM loss", "table selector"):
             self.assertIn(boundary, source)
@@ -256,8 +257,7 @@ class RepositoryNavigationTests(unittest.TestCase):
         agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
         index = (ROOT / "INDEX.md").read_text(encoding="utf-8")
         self.assertIn("best-found value", agents)
-        self.assertIn("不建立 support invariance", index)
-        self.assertNotIn("上限只由 $(K,L)$ 决定", index)
+        self.assertIn("not a global or behavioural ceiling", index)
 
     def test_m4_screen_owner_uses_locked_identity_and_verdict(self):
         extended = (
@@ -279,7 +279,8 @@ class RepositoryNavigationTests(unittest.TestCase):
         archive = (
             ROOT / "paper-2027" / "research" / "external-reviews" / "README.md"
         ).read_text(encoding="utf-8")
-        self.assertIn("## Historical inputs", router)
+        self.assertIn("external-reviews/", router)
+        self.assertIn("untrusted external-model review snapshots", router)
         self.assertNotIn("## Reviewer objections", router)
         self.assertIn("Frozen audit archive", archive)
         self.assertIn("Current use", archive)
@@ -317,7 +318,8 @@ class RepositoryNavigationTests(unittest.TestCase):
         brief = (ROOT / "paper-2027" / "REVISION_BRIEF.md").read_text(
             encoding="utf-8"
         )
-        self.assertIn("### 6.2 第一研究目标：frozen-checkpoint static pure-`z`", index)
+        self.assertIn("## 5. Durable agenda", index)
+        self.assertIn("GPU_METHOD_DEVELOPMENT_STOPPED", index)
         self.assertNotIn(
             "下一项有决策价值的研究协议只有 **matched-content phase 2x2**",
             index,
@@ -337,6 +339,10 @@ class RepositoryNavigationTests(unittest.TestCase):
             ROOT / "paper-2027" / "REVISION_BRIEF.md",
             ROOT / "paper-2027" / "SUBMISSION_CHECKLIST.md",
             ROOT / "paper-2027" / "research" / "README.md",
+            ROOT / "paper-2027" / "research" / "foundations" / "README.md",
+            ROOT / "paper-2027" / "research" / "evidence" / "README.md",
+            ROOT / "paper-2027" / "research" / "archive" / "README.md",
+            ROOT / "paper-2027" / "research" / "history" / "TIMELINE.md",
             ROOT / "paper-2027" / "research" / "external-reviews" / "README.md",
             ROOT / "paper_experiments" / "README.md",
             ROOT / "docs" / "README.md",
@@ -354,6 +360,30 @@ class RepositoryNavigationTests(unittest.TestCase):
                     (doc.parent / path).exists(),
                     f"{doc.relative_to(ROOT)} -> {target}",
                 )
+
+    def test_historical_reports_are_grouped_by_month(self):
+        exp = ROOT / "docs" / "exp"
+        for month in ("2026-02", "2026-03", "2026-04", "2026-07"):
+            self.assertTrue((exp / month).is_dir(), month)
+        self.assertEqual(list(exp.glob("2026-??-*.md")), [])
+        for report in exp.glob("2026-??/*.md"):
+            self.assertTrue(report.name.startswith(report.parent.name + "-"), report)
+
+    def test_research_root_separates_foundations_evidence_and_history(self):
+        research = ROOT / "paper-2027" / "research"
+        for relative in (
+            "foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md",
+            "evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.md",
+            "history/TIMELINE.md",
+            "archive/2026-08/CODEX_CLAUDE_PAPER_REVIEW_LOG.md",
+        ):
+            self.assertTrue((research / relative).is_file(), relative)
+        for retired_flat in (
+            "FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md",
+            "EXACT_RANGE_151M_3SEED_RESULT_20260820.md",
+            "CODEX_CLAUDE_PAPER_REVIEW_LOG.md",
+        ):
+            self.assertFalse((research / retired_flat).exists(), retired_flat)
 
     def test_root_has_no_stale_provenance_duplicate(self):
         self.assertFalse((ROOT / "RESULT_PROVENANCE_MANIFEST.md").exists())

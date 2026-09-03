@@ -743,7 +743,7 @@ identification → co-adaptation → mature persistence → constructive instanc
 
 | Path | Role | State |
 | --- | --- | --- |
-| `paper-2027/research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md` | canonical internal report | created |
+| `paper-2027/research/foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md` | canonical internal report | created |
 | `scripts/analysis/full_rope_collision_audit.py` | static theory/numerics | tracked canonical diagnostic |
 | `scripts/analysis/attention_fisher_50m_probe.py` | task-sensitive \(2\times2\) | tracked canonical diagnostic |
 | `scripts/analysis/base_only_50m_control.py` | base-only controls | tracked canonical diagnostic |

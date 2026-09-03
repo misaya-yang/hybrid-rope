@@ -6,7 +6,7 @@
     "note": "The tracked experiment report survives; exact checkpoint/result JSONs are not in the portable bundle."
   },
   "source": {
-    "report": "docs/exp/2026-03-20_gqa_mla_125m_compression_ablation.md",
+    "report": "docs/exp/2026-03/2026-03-20_gqa_mla_125m_compression_ablation.md",
     "script": "scripts/core_text_phases/run_gqa_evq_experiment.py",
     "launchers": [
       "scripts/core_text_phases/run_phases4to5.sh",

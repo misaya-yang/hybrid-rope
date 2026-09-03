@@ -75,7 +75,7 @@ complements.
 
 Source: `results/mla_yarn_short_s42_20260714/` (432M MLA, `d_rope=32`, `K=16`,
 seed 42, `L_train=512`, 100M tokens, base 500K). Report:
-`docs/exp/2026-07-14_mla_k16_short_context_yarn_ablation.md`. Eval lengths
+`docs/exp/2026-07/2026-07-14_mla_k16_short_context_yarn_ablation.md`. Eval lengths
 1K/2K/4K/8K correspond to YaRN scales 2/4/8/16.
 
 Substrate gap `NLL(Native) - NLL(EVQ)` (positive favors EVQ):
@@ -154,7 +154,7 @@ complementarity," and not "EVQ needs no inference scaling."
 ## 9. Provenance
 
 - MLA raw + attribution: `results/mla_yarn_short_s42_20260714/evaluation/raw_results.json`,
-  `.../analysis.json`; report `docs/exp/2026-07-14_mla_k16_short_context_yarn_ablation.md`;
+  `.../analysis.json`; report `docs/exp/2026-07/2026-07-14_mla_k16_short_context_yarn_ablation.md`;
   checkpoints on the experiment machine (SHA256 in the report).
 - MHA six-cell: `data/curated/native_rope_evq_150m_s42_500m_20260713.json`.
 - MHA four-operator (`freq_only`/`mscale_only`) decomposition: attach the curated

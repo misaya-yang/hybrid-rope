@@ -9,7 +9,7 @@
 
 | 协议 | 每 run 大约 wall-clock | 来源 |
 |------|------------------------|------|
-| L=128, 15M tok, plain（Geo/EVQ/free） | 整包 Phase1+2+3 ~**25 min**（多 run） | `docs/exp/2026-02-24_128tok_baseline_report.md` |
+| L=128, 15M tok, plain（Geo/EVQ/free） | 整包 Phase1+2+3 ~**25 min**（多 run） | `docs/exp/2026-02/2026-02-24_128tok_baseline_report.md` |
 | L=256, 100M tok, plain 125M | ~**15 min** (900s) | phase11b curated |
 | L=256, 100M tok, +DAPE manual attn | ~**27 min** (1600s) | phase11b curated |
 

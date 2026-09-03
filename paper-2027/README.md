@@ -54,10 +54,10 @@ repository root; never archive the repository root and never compile `../paper/`
 
 ## Evidence and research boundaries
 
-Every number or claim must resolve through [`../INDEX.md`](../INDEX.md) §3 and
+Every number or claim must resolve through [`../INDEX.md`](../INDEX.md) §2 and
 the named canonical/raw owner. A plan, preflight, script, code manifest, launch
 log, external-model review, or historical PDF receipt is not a result.
 
-The durable post-submission research order lives in `INDEX.md` §6. Current
+The durable post-submission research order lives in `INDEX.md` §5. Current
 authorization lives only in the handoff. No document in `research/` authorizes
 GPU work, paid compute, an upload, or Git publication by itself.

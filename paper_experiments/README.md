@@ -18,7 +18,7 @@ the current ICLR evidence router.
   current status and protocol boundaries must be read from
   [`../INDEX.md`](../INDEX.md) and the canonical owners/preflights it names.
 - Canonical code remains under `scripts/` and `experiments/`; canonical result
-  ownership is routed by [`../INDEX.md`](../INDEX.md) §3 and the corresponding
+  ownership is routed by [`../INDEX.md`](../INDEX.md) §2 and the corresponding
   research owners. [`../paper-2027/HANDOFF.md`](../paper-2027/HANDOFF.md)
   records volatile state rather than evidence ownership.
 

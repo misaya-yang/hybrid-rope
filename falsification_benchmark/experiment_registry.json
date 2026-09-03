@@ -26,8 +26,8 @@
       "title": "Eight-point tau sweep in a 50M decoder",
       "coverage": {"model": "50.9M decoder-only", "task": "TinyStories PPL", "scale": "2K-16K", "discriminator": "non-monotone finite-grid response"},
       "temporal_evidence_grade": "C",
-      "visible_basis": ["Protocol fields only from docs/exp/2026-02-27_evq_tau_sweep_results.md"],
-      "hidden_owner": ["docs/exp/2026-02-27_evq_tau_sweep_results.md"],
+      "visible_basis": ["Protocol fields only from docs/exp/2026-02/2026-02-27_evq_tau_sweep_results.md"],
+      "hidden_owner": ["docs/exp/2026-02/2026-02-27_evq_tau_sweep_results.md"],
       "result_commit": "04ac0921e9c0c3c19d378a0cde3841f00cb3527b"
     },
     {
@@ -37,8 +37,8 @@
       "title": "Matched passkey mixture crossed with a fixed scaling operator",
       "coverage": {"model": "454.2M decoder-only", "task": "teacher-forced passkey NLL-gap and PPL", "scale": "2K-16K", "discriminator": "substrate-by-operator interaction"},
       "temporal_evidence_grade": "B",
-      "visible_basis": ["Protocol fields in docs/exp/2026-03-03_passkey_mix_results.md and data/results_5090b/evq_yarn_10pct_allseeds.json; score fields excluded"],
-      "hidden_owner": ["docs/exp/2026-03-03_passkey_mix_results.md", "data/curated/table2_evq_yarn_454m_passkey_10pct.json"],
+      "visible_basis": ["Protocol fields in docs/exp/2026-03/2026-03-03_passkey_mix_results.md and data/results_5090b/evq_yarn_10pct_allseeds.json; score fields excluded"],
+      "hidden_owner": ["docs/exp/2026-03/2026-03-03_passkey_mix_results.md", "data/curated/table2_evq_yarn_454m_passkey_10pct.json"],
       "result_commit": "6a97b4e743b416e04c2ce516048a83f225444c24"
     },
     {
@@ -60,7 +60,7 @@
       "coverage": {"model": "750M decoder-only", "task": "PPL, passkey retrieval, autoregressive exact, multi-needle", "scale": "2K-16K", "discriminator": "retrieval ceiling versus exact generation"},
       "temporal_evidence_grade": "B",
       "visible_basis": ["Protocol and shared-start fields in data/curated/phase15_750m_continue_result_20260306.json"],
-      "hidden_owner": ["data/curated/phase15_750m_continue_result_20260306.json", "docs/exp/2026-03-06_phase15_750m_2k_to_4k_continue_results.md"],
+      "hidden_owner": ["data/curated/phase15_750m_continue_result_20260306.json", "docs/exp/2026-03/2026-03-06_phase15_750m_2k_to_4k_continue_results.md"],
       "result_commit": "6681179aa9b92207b48070d34b011bc0d636266"
     },
     {
@@ -71,7 +71,7 @@
       "coverage": {"model": "50.9M decoder-only", "task": "weighted OOD NLL/PPL", "scale": "nine length/head configurations", "discriminator": "exact optimum versus displaced basin"},
       "temporal_evidence_grade": "B",
       "visible_basis": ["data/curated/phase16_99run_manifest.meta.json and protocol fields from the dated owner; ranks and best points excluded"],
-      "hidden_owner": ["docs/exp/2026-03-09_phase16_formula_optimality_sweep_results.md", "data/curated/phase16_99run_manifest.meta.json"],
+      "hidden_owner": ["docs/exp/2026-03/2026-03-09_phase16_formula_optimality_sweep_results.md", "data/curated/phase16_99run_manifest.meta.json"],
       "result_commit": "fc631f67caba1df7efae02cef66e32a117f4b152"
     },
     {
@@ -82,7 +82,7 @@
       "coverage": {"model": "129.6M Video-DiT", "task": "video denoising MSE", "scale": "32-to-128 frames", "discriminator": "cross-modal transfer"},
       "temporal_evidence_grade": "B",
       "visible_basis": ["Protocol fields and raw-source identities in data/curated/video_dit_seed42_head_to_head_20260826.json; arm metrics excluded"],
-      "hidden_owner": ["data/curated/video_dit_seed42_head_to_head_20260826.json", "paper-2027/research/VIDEO_DIT_HEAD_TO_HEAD_SEED42_RESULT_20260826.md"],
+      "hidden_owner": ["data/curated/video_dit_seed42_head_to_head_20260826.json", "paper-2027/research/evidence/VIDEO_DIT_HEAD_TO_HEAD_SEED42_RESULT_20260826.md"],
       "result_commit": "7a938d378399ad9daf5a6840f4a078a87136cd7c"
     },
     {
@@ -93,7 +93,7 @@
       "coverage": {"model": "125M decoder-only", "task": "PPL and passkey NLL-gap", "scale": "MHA/GQA/MLA, 2K-16K", "discriminator": "extreme scarcity effect versus monotonic architecture trend"},
       "temporal_evidence_grade": "C",
       "visible_basis": ["Protocol fields in data/curated/mla_channel_count_125m_pilot.json and the dated report; measurement rows excluded"],
-      "hidden_owner": ["data/curated/mla_channel_count_125m_pilot.json", "docs/exp/2026-03-20_gqa_mla_125m_compression_ablation.md"],
+      "hidden_owner": ["data/curated/mla_channel_count_125m_pilot.json", "docs/exp/2026-03/2026-03-20_gqa_mla_125m_compression_ablation.md"],
       "result_commit": "cafb0431e78ece55ac4a47d6c4af2b529f46433e"
     },
     {
@@ -125,8 +125,8 @@
       "title": "151.9M exact-range three-seed replication",
       "coverage": {"model": "151.9M decoder-only", "task": "paired final-128-token NLL", "scale": "256-2048", "discriminator": "fixed support versus target-matched support"},
       "temporal_evidence_grade": "B",
-      "visible_basis": ["Protocol and receipt identity in paper-2027/research/EXACT_RANGE_151M_3SEED_RESULT_20260820.json; all contrasts excluded"],
-      "hidden_owner": ["paper-2027/research/EXACT_RANGE_151M_3SEED_RESULT_20260820.json", "paper-2027/research/EXACT_RANGE_151M_3SEED_RESULT_20260820.md"],
+      "visible_basis": ["Protocol and receipt identity in paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.json; all contrasts excluded"],
+      "hidden_owner": ["paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.json", "paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.md"],
       "result_commit": "ffda873f3187ad7b01e30f336979d505ceaf2366"
     },
     {

@@ -1122,7 +1122,7 @@ the allocation axis while rejecting Cosh uniqueness.
 - `theory_results/PHASE16_99RUN_RAW_REANALYSIS_20260724.md`
 - `theory_results/M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md`
 - `theory_results/m4_exact_range_factorial_evidence_20260726.json`
-- `docs/exp/2026-02-24_128tok_baseline_report.md`
+- `docs/exp/2026-02/2026-02-24_128tok_baseline_report.md`
 
 **Recommended English:**
 
@@ -1172,7 +1172,7 @@ exhaustively optimized Geo+YaRN or target-aware range search.
 
 ### 3.4.0 Which YaRN operator Table 3 uses — resolved, and it constrains the claim
 
-`docs/exp/2026-07-13_primary1_seed42_operator_diagnostic.md` settles this, and
+`docs/exp/2026-07/2026-07-13_primary1_seed42_operator_diagnostic.md` settles this, and
 not in the convenient direction. Its own summary:
 
 > "The much larger separation belongs to the repository's custom fixed-ramp

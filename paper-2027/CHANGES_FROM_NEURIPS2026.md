@@ -92,4 +92,4 @@ git show 79aa932:paper-2027/CHANGES_FROM_NEURIPS2026.md
 Do not revive an old experiment, unresolved item, or reviewer framing from that
 snapshot. New submission work starts from the current manuscript under
 [`REVISION_BRIEF.md`](REVISION_BRIEF.md); post-submission research is routed only
-through `INDEX.md` §6.
+through `INDEX.md` §5.

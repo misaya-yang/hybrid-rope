@@ -1,23 +1,18 @@
 # Attention-aware RoPE allocation: theory state
 
 - **Original date:** 2026-08-26
-- **Lifecycle update:** 2026-08-31
-- **Status:** active theory-continuation boundary for work after the current
-  September manuscript cycle; experiment priority is superseded by the
-  deterministic static pure-`z` programme in `INDEX.md` §6; the former
-  success-first candidate portfolio is retired history
+- **Lifecycle update:** 2026-09-02
+- **Status:** durable theory-continuation boundary; every experiment priority
+  in this document is historical and superseded by `INDEX.md` §5, which records
+  that GPU method development is stopped
 - **Role:** durable theory continuation owner, not a parallel experiment plan
 - **Not:** a manuscript claim, experiment result, action queue, or compute
   authorization
-- **Agenda authority:** [`../../INDEX.md`](../../INDEX.md) §6
-- **Live state:** [`../HANDOFF.md`](../HANDOFF.md)
+- **Agenda authority:** [`../../../INDEX.md`](../../../INDEX.md) §5
+- **Live state:** [`../../HANDOFF.md`](../../HANDOFF.md)
 
 This document answers what the paper established and what later research ruled
-out. Its former scheduling
-priority is superseded: the current order develops four candidate families,
-selects one on a disjoint split, and opens final confirmation once. The
-matched-content bridge enters only when a valid confirmed result is
-mechanism-ambiguous and the answer changes candidate design. The historical
+out. Its former scheduling priority is retired. The historical
 leave-one-band-out arms are invalid because several restorations break frequency
 ordering; they are not a conditional queue.
 
@@ -50,9 +45,9 @@ The current paper owns a complete first-generation result:
 Canonical owners are the
 [`full-RoPE report`](FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md),
 [`causal-variable grammar`](ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md),
-[`three-seed exact-range result`](EXACT_RANGE_151M_3SEED_RESULT_20260820.md),
+[`three-seed exact-range result`](../evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.md),
 and the
-[`transplant theorem`](../../rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md).
+[`transplant theorem`](../../../rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md).
 
 ## 2. Empirical constraints on a second-generation theory
 
@@ -70,10 +65,10 @@ Any new theory must explain all rows below without changing their estimands.
 | Stateless continuous-boundary target-free candidate: core-four RULER `0.0000` at both 8K and 16K | this exact boundary-slope construction is a closed negative on the tested checkpoint and harness | every target-free or absolute-position-dependent operator must fail |
 
 The mature-result owners are indexed under
-[`attention-aware-retrofit/`](attention-aware-retrofit/README.md). The compact
+[`attention-aware-retrofit/`](../attention-aware-retrofit/README.md). The compact
 receipts preserve hashes; they do not replace raw per-row artifacts.
 The continuous-boundary negative is owned by
-[`ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md`](attention-aware-retrofit/analysis/ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md)
+[`ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md`](../attention-aware-retrofit/analysis/ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md)
 §2 and must not be relaunched as the same candidate.
 
 ## 3. The missing object
@@ -139,7 +134,7 @@ This is a protocol design only. No GPU run is authorized by this document.
    may ask which frequency movement carries the short-window cost and the
    long-range benefit. It cannot reuse the abrupt leave-one-band-out restoration
    in
-   [`PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md`](attention-aware-retrofit/analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md)
+   [`PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md`](../attention-aware-retrofit/analysis/PROTECTED_RAMP_RIGOROUS_COMPOSITE_20260828.md)
    §9: B0/B0°/B1/B2 violate strict frequency ordering, B0 moves support, and B4
    is not an exact sham. A new preflight must construct monotone cumulative or
    smoothly projected interventions and keep support separate.
@@ -159,11 +154,11 @@ This is a protocol design only. No GPU run is authorized by this document.
    `kappa_att` ordering, LeRoPE `w^(1/3)` oracle, direct distance mapping,
    coverage residual, phase-risk, two-document direct-`z`, or the two failed
    analytic static tables. The complete anti-repeat ledger is
-   [`../../INDEX.md`](../../INDEX.md) §3.4.
+   [`../../../INDEX.md`](../../../INDEX.md) §3.1.
 
 ## 6. Static-rank diagnostics: retained scope
 
-[`third_axis_ceiling.py`](../../scripts/analysis/third_axis_ceiling.py) remains
+[`third_axis_ceiling.py`](../../../scripts/analysis/third_axis_ceiling.py) remains
 the reproducible owner for the best-found static `r2` landscape. Its numbers
 must always travel with measure, support, optimizer, and restart conventions.
 It establishes neither support invariance nor a global or behavioural ceiling.

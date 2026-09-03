@@ -2,7 +2,7 @@
 
 > **Authority boundary — NeurIPS-era historical registry.** This file preserves
 > NeurIPS 2026 provenance; it is not the current ICLR 2027 claim authority or an
-> action queue. Current ICLR evidence routing is `INDEX.md` §3 → the named
+> action queue. Current ICLR evidence routing is `INDEX.md` §2 → the named
 > canonical/raw owner, while `paper-2027/HANDOFF.md` records volatile state only.
 > M1, M2, M4, and M5 below remain historical/supporting provenance and do not
 > govern the current ICLR headline claims.
@@ -118,7 +118,7 @@ Branch audit note:
 
 - `backup/2026-03-06` contains archival Table-2-adjacent raw artifacts such as
   `data/results_5090b/evq_yarn_10pct_allseeds.json` and
-  `docs/exp/2026-03-03_passkey_mix_results.md`.
+  `docs/exp/2026-03/2026-03-03_passkey_mix_results.md`.
 - The exact six-run payload has now been promoted into the current reviewer
   path with its archival SHA256 identity preserved.
 - If reused, sanitize old "6 seed" shorthand: the primary 10% Table 2 row is 3

@@ -370,7 +370,7 @@ existing evidence that allocation is a causal training variable.
 ## Canonical routes
 
 - Full-RoPE geometry and counterexamples:
-  `../../FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`
+  `../../foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`
 - Three-seed fixed-support owner:
   `../../EXACT_RANGE_151M_3SEED_RESULT_20260820.md`
 - Completed phase-chord result:

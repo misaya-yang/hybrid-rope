@@ -39,7 +39,7 @@ table. Content lives in `theta`; position lives in `omega * d`.
 **Fact 1 — the weights are co-adapted to one specific table.** Swapping the
 table under frozen weights moves 50M PPL `7.14 -> 76.20`; the reverse cell is
 `23.05 -> 7.16`
-([`../../FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](../../FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)).
+([`../../foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](../../foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)).
 The 151.9M two-seed crossing replicates it: FMRoPE-trained weights prefer their
 own derived table `3.426` versus `5.776`, Cosh-trained weights prefer theirs
 `3.479` versus `4.455`
@@ -113,7 +113,7 @@ must fail.
 Pairs with `omega * L >> 2*pi` are phase-saturated inside the training window,
 while pairs with `omega * L <= 1` form the measured redundant
 block: 23 of 64 pairs occupy 46 nominal dimensions at block-whitened Renyi-2
-effective rank `2.00` ([`../../FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](../../FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)).
+effective rank `2.00` ([`../../foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](../../foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)).
 
 This motivates holding the fast endpoint and spending most movement on slower
 bands. It does not prove that fast channels never move in an optimum, nor that

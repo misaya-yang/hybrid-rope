@@ -20,7 +20,7 @@ If a number in this file disagrees with its canonical owner, **stop and
 report**. Do not average, round into a new display string, or splice protocols.
 
 Related-work names are owned by
-[`ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md`](ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md).
+[`ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md`](../../audits/ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md).
 Keep the three-paragraph classifier. Do not flatten it to four nouns, and do
 not delete Xu / Chen-HoPE / CoPE / Frayed / Chiang / Wu if that audit has
 already inserted them.

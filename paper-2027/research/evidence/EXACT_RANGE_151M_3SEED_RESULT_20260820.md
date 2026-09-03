@@ -8,7 +8,7 @@
   allocation `z`
 - **Supersedes for outward use:** the author-confirmed, locally unpromoted
   aggregate in
-  `../../rebuttal/rebuttal_0723/theory_results/MATCHED_RANGE_COSH_500M_3SEED_20260724.md`
+  `../../../rebuttal/rebuttal_0723/theory_results/MATCHED_RANGE_COSH_500M_3SEED_20260724.md`
 - **Paper integration:** the active manuscript uses this frozen three-seed
   result; this owner remains authoritative for future wording changes
 
@@ -205,4 +205,4 @@ replaced the seed-42 headline in the abstract, introduction, main experiment,
 identification figure, and appendix; retained per-seed points, the three-seed
 mean, 512-length heterogeneity, and the `3/3` OOD direction; updated batch
 geometry; and completed rebuild, package, and visual checks. Current actions
-are owned only by `../HANDOFF.md`.
+are owned only by `../../HANDOFF.md`.

@@ -8,7 +8,7 @@ evidence only. All GPU commands below are pending explicit approval and must
 load the matched step-300 Geo/EVQ adapters read-only.
 
 The binding labels and decision rules are those in
-`docs/exp/2026-07-15_lora_readout_conversion_plan.md:12-23`. In particular,
+`docs/exp/2026-07/2026-07-15_lora_readout_conversion_plan.md:12-23`. In particular,
 anything that uses the true gold block or true first gold token is
 `oracle-diagnostic`; choosing one global scalar or layer on dev is `ZT-cal`,
 not `ZT-0`.
@@ -123,7 +123,7 @@ EOS, and stops at `max_new_tokens`
 (`experiments/lora_evq_v2/eval_sparse_conversion.py:1890-1927`). Passkey rows
 set that cap to 32 (`experiments/lora_evq_v2/eval_sparse_conversion.py:2179-2191`).
 The probe's “full 32 tokens without EOS and began with the same token” is an
-observed outcome (`docs/exp/2026-07-14_lora_retrieval_conversion_probe.md:205-221`),
+observed outcome (`docs/exp/2026-07/2026-07-14_lora_retrieval_conversion_probe.md:205-221`),
 not a harness setting: current code neither disables EOS nor fixes the first
 generated token. Z0 therefore needs a separate, explicit gold-`g_1` forced
 branch; that branch is `oracle-diagnostic`.
@@ -368,18 +368,18 @@ This section points to the binding source plan and does not redesign it.
 
 | Gate | Next measurement | Label | Binding source |
 | --- | --- | --- | --- |
-| Z1 oracle-feasible and a mid-layer peak is visible | Z2 layer trajectory and three-layer/64-sample causal confirmation | `oracle-diagnostic` | `docs/exp/2026-07-15_lora_readout_conversion_plan.md:217-237` |
-| Z1 oracle-feasible; depth pattern warrants it | Z3 Part A fixed-length position stratification | `oracle-diagnostic` | `docs/exp/2026-07-15_lora_readout_conversion_plan.md:239-261` |
-| Z1 identity positive and a fixed candidate rule is frozen without dev selection | Z3 Part B fixed extractive/trie wrapper | `ZT-0` | `docs/exp/2026-07-15_lora_readout_conversion_plan.md:263-285` |
-| Same wrapper but one global layer/scalar is chosen on independent dev | Z3 Part B calibrated wrapper | `ZT-cal` | `docs/exp/2026-07-15_lora_readout_conversion_plan.md:263-285` |
-| Track Z stops | S1 three-arm length-distribution experiment; plan only, no launch | `supervised` | `docs/exp/2026-07-15_lora_readout_conversion_plan.md:287-325` |
-| S1 shows the source plan's margin/NLL branch condition | S2 one fixed loss contrast; no loss sweep | `supervised` | `docs/exp/2026-07-15_lora_readout_conversion_plan.md:327-350` |
-| Z1/Z2 locates the missing pathway | S3 one mechanism-selected adapter locus plus parameter-matched Q/K control | `supervised` | `docs/exp/2026-07-15_lora_readout_conversion_plan.md:352-376` |
-| One frozen recipe already has non-zero EM | S4 `{Geo,EVQ} x {8K,16K}` on three new seeds | `supervised` | `docs/exp/2026-07-15_lora_readout_conversion_plan.md:378-394` |
+| Z1 oracle-feasible and a mid-layer peak is visible | Z2 layer trajectory and three-layer/64-sample causal confirmation | `oracle-diagnostic` | `docs/exp/2026-07/2026-07-15_lora_readout_conversion_plan.md:217-237` |
+| Z1 oracle-feasible; depth pattern warrants it | Z3 Part A fixed-length position stratification | `oracle-diagnostic` | `docs/exp/2026-07/2026-07-15_lora_readout_conversion_plan.md:239-261` |
+| Z1 identity positive and a fixed candidate rule is frozen without dev selection | Z3 Part B fixed extractive/trie wrapper | `ZT-0` | `docs/exp/2026-07/2026-07-15_lora_readout_conversion_plan.md:263-285` |
+| Same wrapper but one global layer/scalar is chosen on independent dev | Z3 Part B calibrated wrapper | `ZT-cal` | `docs/exp/2026-07/2026-07-15_lora_readout_conversion_plan.md:263-285` |
+| Track Z stops | S1 three-arm length-distribution experiment; plan only, no launch | `supervised` | `docs/exp/2026-07/2026-07-15_lora_readout_conversion_plan.md:287-325` |
+| S1 shows the source plan's margin/NLL branch condition | S2 one fixed loss contrast; no loss sweep | `supervised` | `docs/exp/2026-07/2026-07-15_lora_readout_conversion_plan.md:327-350` |
+| Z1/Z2 locates the missing pathway | S3 one mechanism-selected adapter locus plus parameter-matched Q/K control | `supervised` | `docs/exp/2026-07/2026-07-15_lora_readout_conversion_plan.md:352-376` |
+| One frozen recipe already has non-zero EM | S4 `{Geo,EVQ} x {8K,16K}` on three new seeds | `supervised` | `docs/exp/2026-07/2026-07-15_lora_readout_conversion_plan.md:378-394` |
 
 No statement that “EVQ is more convertible” is allowed before the S4
 four-arm, three-new-seed interaction CI excludes zero
-(`docs/exp/2026-07-15_lora_readout_conversion_plan.md:384-394`).
+(`docs/exp/2026-07/2026-07-15_lora_readout_conversion_plan.md:384-394`).
 
 ## Runnable command skeletons (do not execute without approval)
 
@@ -436,7 +436,7 @@ python scripts/analysis/readout_conversion.py \
    The builder has five depths and 20 trials at each length, hence 100 rows at
    16K (`experiments/lora_evq_v2/prepare_seed42_capability_data.py:438-453`,
    `experiments/lora_evq_v2/prepare_seed42_capability_data.py:471-473`), versus
-   the source plan's 256 (`docs/exp/2026-07-15_lora_readout_conversion_plan.md:175-179`).
+   the source plan's 256 (`docs/exp/2026-07/2026-07-15_lora_readout_conversion_plan.md:175-179`).
    Do not alter the frozen file. Approval must choose either the 100-row frozen
    evaluation or a separate, newly versioned 156-row readout-only extension;
    the latter changes the artifact manifest but remains under the 256 cap.
@@ -447,7 +447,7 @@ python scripts/analysis/readout_conversion.py \
 4. **The Z1 heading's `ZT-0 diagnostic` conflicts with its gold-block
    intervention.** The binding label definition says true-gold-block use is
    `oracle-diagnostic`
-   (`docs/exp/2026-07-15_lora_readout_conversion_plan.md:15-20`). This
+   (`docs/exp/2026-07/2026-07-15_lora_readout_conversion_plan.md:15-20`). This
    implementation labels Z1-A and the linchpin causal delta
    `oracle-diagnostic`; only fixed selector `alpha=1` is `ZT-0`.
 5. **“Fixed first token, no EOS” is observational, not configured.** Current

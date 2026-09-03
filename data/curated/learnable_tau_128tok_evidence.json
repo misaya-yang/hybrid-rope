@@ -6,8 +6,8 @@
     "note": "Exact training logs/checkpoints were not recovered into the portable bundle."
   },
   "source": [
-    "docs/exp/2026-02-24_128tok_baseline_report.md",
-    "docs/exp/2026-02-26_full_experiment_report.md"
+    "docs/exp/2026-02/2026-02-24_128tok_baseline_report.md",
+    "docs/exp/2026-02/2026-02-26_full_experiment_report.md"
   ],
   "protocol": {
     "model": "125M decoder-only transformer",

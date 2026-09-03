@@ -27,7 +27,7 @@
   },
   "passkey_trials": 40,
   "canonical_owner": {
-    "path": "docs/exp/2026-03-06_phase15_750m_2k_to_4k_continue_results.md",
+    "path": "docs/exp/2026-03/2026-03-06_phase15_750m_2k_to_4k_continue_results.md",
     "sha256": "e93f4fea4162edb29f73912623bacf8226053ce9ca0f34fbadac9b1cce484902"
   },
   "claim_ceiling": "One seed-42 full-parameter continuation from a shared checkpoint; supporting training-stage persistence, not a multi-seed scale estimate."

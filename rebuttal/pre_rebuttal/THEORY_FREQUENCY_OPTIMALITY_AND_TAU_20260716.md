@@ -33,7 +33,7 @@ evidence ledgers 为准；ordinary-KL / transport proxy 长推导见
 | Inverse-CDF 与 midpoint 实现 | `paper/sections/03_theory.tex:50-65`；`scripts/lib/rope/schedules.py:94-140` |
 | 提交稿 \(\tau\) / KL / stiffness 原叙事 | `paper/sections/03_theory.tex:90-117`；`paper/appendix/a1_proofs.tex:297-403` |
 | 方法身份、`c_coll`、Phase16 与 provenance 边界 | `rebuttal/rebuttal_0723/theory_results/EVQ_COSH_REBUTTAL_PRINCIPLES.md` |
-| 早期 \(L=128/1024/2048\) sweep | `docs/exp/2026-02-26_full_experiment_report.md:150-220,511-552`；`docs/exp/2026-02-27_evq_tau_sweep_results.md:9-54` |
+| 早期 \(L=128/1024/2048\) sweep | `docs/exp/2026-02/2026-02-26_full_experiment_report.md:150-220,511-552`；`docs/exp/2026-02/2026-02-27_evq_tau_sweep_results.md:9-54` |
 
 ---
 
@@ -540,7 +540,7 @@ MLA 中 \(d_{\mathrm{eff}}=d_{\mathrm{head}}\) **不是**该推导的必然结�
 | 1024 | 同报告的 eval 8K 仅有 Geo、\(2.0\)、\(2.5\) 与一个 learnable 点；\(2.0\) 略好于 \(2.5\) | \(\tau\approx2\) 是可用邻域 | 稀疏网格与无方差不能给 precise optimum |
 | 2048 | 50M TinyStories eval 16K 的 8 点 dense sweep，seed 42 上 \(1.5\) 最好；125M 的两 seed 只验证 selected \(1.5\) 对 Geo（seed 42 另有 \(0.2\)） | \(1.5\) 是这三组中最强的 selected operating-point evidence | dense optimum 本身仍是 single-seed；两 seed 方向验证不等于两 seed 全谱选择 |
 
-来源：`docs/exp/2026-02-26_full_experiment_report.md:150-220,511-552`；`docs/exp/2026-02-27_evq_tau_sweep_results.md:9-54`。这些组还改变了 dataset、model size、training budget 与 extrapolation ratio（128→8K 是 \(64\times\)，1024→8K 与 2048→16K 是 \(8\times\)）。因而它们支持的最窄结论是：
+来源：`docs/exp/2026-02/2026-02-26_full_experiment_report.md:150-220,511-552`；`docs/exp/2026-02/2026-02-27_evq_tau_sweep_results.md:9-54`。这些组还改变了 dataset、model size、training budget 与 extrapolation ratio（128→8K 是 \(64\times\)，1024→8K 与 2048→16K 是 \(8\times\)）。因而它们支持的最窄结论是：
 
 > 在这些不同 protocol 中，有用的 \(\tau\) 随 \(L_{\mathrm{train}}\) 增大而下降；它们与 \(64/\sqrt L=(5.66,2.00,1.41)\) 在数值上 compatible，但没有验证指数 \(-1/2\)、线性 \(d\) 依赖或单位 prefactor。
 

@@ -88,7 +88,7 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
                 CURATED / "lora_longalpaca_temporal_s42_20260712.json"
             ),
             "causal_routing_report_sha256": (
-                ROOT / "docs/exp/2026-07-14_lora_retrieval_conversion_probe.md"
+                ROOT / "docs/exp/2026-07/2026-07-14_lora_retrieval_conversion_probe.md"
             ),
         }
         for receipt, source in sources.items():
@@ -618,7 +618,7 @@ class RebuttalEvidenceBundleTests(unittest.TestCase):
         self.assertEqual(renamed["paper-2027/SUPPLEMENT_README.md"], "README.md")
         self.assertEqual(
             renamed[
-                "paper-2027/research/EXACT_RANGE_151M_3SEED_RESULT_20260820.json"
+                "paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.json"
             ],
             "data/curated/exact_range_151m_3seed_result.json",
         )

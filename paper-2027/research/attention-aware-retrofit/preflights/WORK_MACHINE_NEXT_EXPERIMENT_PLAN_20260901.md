@@ -35,7 +35,7 @@ do not uniformly favor index, so natural-task confirmation is mandatory.
 ## 2. Immediate work-machine experiment: packed-natural NLL
 
 Owner:
-[`K32_PACKED_NATURAL_NLL_CONFIRMATION_PREFLIGHT_20260901`](preflights/K32_PACKED_NATURAL_NLL_CONFIRMATION_PREFLIGHT_20260901.md).
+[`K32_PACKED_NATURAL_NLL_CONFIRMATION_PREFLIGHT_20260901`](K32_PACKED_NATURAL_NLL_CONFIRMATION_PREFLIGHT_20260901.md).
 Its full-RULER entrance is satisfied; no protocol field may change.
 
 Prepared model-free data identity:

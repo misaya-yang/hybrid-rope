@@ -347,8 +347,8 @@ theory on top of the old surrogate-heavy narrative.
 | Path | Role | State |
 | --- | --- | --- |
 | `paper-2027/research/README.md` | durable research index | created |
-| `paper-2027/research/ICLR2027_RESEARCH_SYNTHESIS_20260819.md` | canonical rewrite decision memo | created |
-| `paper-2027/research/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md` | canonical technical report | existing |
+| `paper-2027/research/foundations/ICLR2027_RESEARCH_SYNTHESIS_20260819.md` | canonical rewrite decision memo | created |
+| `paper-2027/research/foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md` | canonical technical report | existing |
 | `paper-2027/research/audits/FULL_ROPE_CLAUDE_AUDIT_20260819.md` | independent-audit record | created |
 | `paper-2027/research/audits/DEPENDENCY_SPECTRUM_CLAUDE_AUDIT_20260819.md` | dependency-audit record | created |
 | `AGENTS.md` | project objective, routing, and claim boundaries | modified |

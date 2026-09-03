@@ -51,9 +51,9 @@
 
 | Artifact | SHA-256 |
 | --- | --- |
-| `experiment_registry.json` | `dec5513410c18a6384e8b23df0d6976ef8f67a29236f585aa3b123b9757f5e7c` |
+| `experiment_registry.json` | `07f07674052d5855b8dc3376e358e4f96caf6cfd35f5352e730a86cd8e4cd1b5` |
 | `visible_packets/packets.json` | `ed0d06845e88b24e5edeb5f9833c6e00fe863baec56a0a54fbf0c4058ffb39f8` |
-| `hidden_answers/answers.json` | `afb9a9aeaffe714330b979c89fa743f0c42ce00190e4d5d26d40421a56402f10` |
+| `hidden_answers/answers.json` | `213901664aa3f170988f28773d4e4fef02485c34834992fcb8626d619ca66abc` |
 | `fresh_theorist_guide.md` | `79ecd1c98471d7192a06a6d32cfad3da426a60f1921146aae13983da83ef1ffa` |
 | `evaluator/core.py` | `e46b97d227df643c7d20cd173a1135edceadbd49345c986c149bc10db220ed29` |
 | `evaluator/__main__.py` | `5c2b17a3237c77a8c140f876510fb9795222b967798e1627fce868943f43224d` |

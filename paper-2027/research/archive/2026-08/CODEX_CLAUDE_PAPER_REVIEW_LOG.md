@@ -5,9 +5,9 @@
 > provenance; do not append September work, treat any embedded “current state”
 > or open list as live, or read the historical protocol as a present instruction.
 > Current manuscript state and actions live only in
-> [`../HANDOFF.md`](../HANDOFF.md); current narrative discipline lives in
-> [`../NARRATIVE_GUIDE.md`](../NARRATIVE_GUIDE.md); the September scope lives in
-> [`../REVISION_BRIEF.md`](../REVISION_BRIEF.md). Model reviews remain inputs to
+> [`../../../HANDOFF.md`](../../../HANDOFF.md); current narrative discipline lives in
+> [`../../../NARRATIVE_GUIDE.md`](../../../NARRATIVE_GUIDE.md); the September scope lives in
+> [`../../../REVISION_BRIEF.md`](../../../REVISION_BRIEF.md). Model reviews remain inputs to
 > verify against the current paper and canonical owners, never authorities.
 >
 > All entries after this banner are unchanged historical records.
@@ -1410,7 +1410,7 @@ self-documenting evidence of the D19 gap rather than a fix for it — when asked
 to point at the DiT artifact, there was nothing to point at.
 
 The 750M row is the milder case: its numbers do reconcile against a tracked
-owner (`docs/exp/2026-03-06_phase15_750m_2k_to_4k_continue_results.md`, which I
+owner (`docs/exp/2026-03/2026-03-06_phase15_750m_2k_to_4k_continue_results.md`, which I
 verified line by line, including `21.955/22.282` at 4K), so the fix there is to
 route that owner or a curated extract of it rather than the `.tex`. The DiT row
 has no such fallback: there is no tracked owner to route.
