@@ -1,0 +1,216 @@
+{
+  "status": "COMPLETE_VALID_EXECUTION_EXACT_CANDIDATE_NEGATIVE",
+  "date": "2026-09-03",
+  "owner": "../results/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md",
+  "question": "Does the calibration-derived Selective-31 mask beat layer-matched fixed random and reverse masks under the exact OLMo MHA s=4 slots-[16,48) frozen intervention?",
+  "evidence_label": "Negative result at exact candidate and reused-development-panel scope",
+  "execution": {
+    "main_contract_sha256": "f8fffb4293ed41dde2ffed6be18ab8534d5da7e147e9b1a9b58c77c3bfbb0c12",
+    "runner_sha256": "debee5dda131b8891deb1b666b71309c5ae70d1fe56c45d4a6d71ec0569da35e",
+    "analysis_runner_sha256": "05e69bdf90dedc5e0fce74b502dab367cfecdc74f8f590a4e5f08f212f73bb4a",
+    "baseline_reuse_runner_sha256": "967fb8c85b7fcbd9a176af0d21a067e6a6003346ff59190c290c123a360142f8",
+    "long_identity_runner_sha256": "61b62eb5ad19c14623d58354f5c2d7844c720dede073a7481f7d537bec03b997",
+    "calibration_recovery_runner_sha256": "051571d34ea30c39bc0029d5c14f08232d73e0a54041511de0d4a7d3bb6e9a34",
+    "cells_expected": 300,
+    "cells_completed": 300,
+    "unique_cells": 300,
+    "nonfinite_cells": 0,
+    "exit_code": 0,
+    "failed_preexecution_attempt": {
+      "status": "NO_MODEL_FORWARD_NO_RESULT_CELL",
+      "reason": "An over-strict exact sm_89 arch-list check rejected a compatible Ada runtime.",
+      "old_runner_sha256": "0860d13638789ba3f227960ba7ef1c0d0c8f12b4ac32c2f9742589380086bb07",
+      "log_sha256": "2168988fc2c81bc18de5dd921182ed5a937409ac2c2cc5c16cbb7f9acddf4987"
+    }
+  },
+  "runtime": {
+    "gpu": "NVIDIA GeForce RTX 4080 SUPER",
+    "cuda_capability": [8, 9],
+    "torch": "2.8.0+cu128",
+    "transformers": "5.15.1",
+    "dtype": "bfloat16",
+    "attention_implementation": "sdpa",
+    "sdpa_backends": {
+      "flash": true,
+      "math": false,
+      "memory_efficient": false,
+      "cudnn": false
+    },
+    "maximum_observed_cell_peak_cuda_bytes": 6415811584,
+    "flash_16k_probe": {
+      "status": "PASS",
+      "shape": [1, 16, 16384, 128],
+      "finite": true,
+      "peak_allocated_bytes": 436207616
+    }
+  },
+  "assets": {
+    "model_config_sha256": "0d15ebb6cb8d998513b46ef337214176a6fd59fe5f16b30387c70d5f87795a9c",
+    "model_safetensors_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f",
+    "tokenizer_json_sha256": "73fd5254624f39a88e3faac6a8e11300fc3c735ed37880d4f4f08db898eaecca",
+    "tokenizer_config_sha256": "50c412c57d832057a3d5db42064c741f751e570f7c8788f037bfb0d2dd6e5f49",
+    "special_tokens_map_sha256": "78afb564e81264029b25f9caf24bda2521d5bdaeff5cd3fdbc01d3da2e8ce2f2",
+    "frozen_masks_sha256": "d7471bb37c242dbf2fa35e55bebf44fb2dea3d50e237d4e5a145cddc720ff78b",
+    "frozen_rows_sha256": "8ef77af04b068ced9cd250d8f4bdcdb8ef7fd42d1fa67f4bc86cc271cf46e575",
+    "official_longbench_main_zip_sha256": "3824b6dae9738eb70f7c89cf1a1e13d37cb626b7dab779780d1a96f393c2280a",
+    "official_longbench_data_zip_sha256": "cb45b11a4133c6bc1d6a44b0f8e701335ff1e543195db1103472e575857f7f64"
+  },
+  "realized_table_sha256_float32": {
+    "native": "9ffd843feaf93170483b4776c93fc84b9baacdc578f24e31d812e64f553bfef1",
+    "selective_31": "8ba90069b029a8910d664420d741c5ed42cd51bdaec380e741dd360315e62407",
+    "reverse_31": "28287ec4259204705b89505c1f33cd3aed450cbc6032f19ee914789f41632c40",
+    "random_seed_42": "f273a9ce611dfd5d101f89dc68f1cf9e4aaf70eca834b94190bbec0e0a5aa1e5",
+    "random_seed_123": "4bc8fccc8b7e855d7bfd974c7cc578de7e98c103695ecd3d7737f3906e80e35d",
+    "random_seed_999": "fa280504122a62106927254cd5da2917149dc96960c94b59c226228714ac710a",
+    "global_log_s4": "56ddfae2800d4bbf9e6bd2d20bae751edc9865dcbaf641c7c8c4f1d7f1c15e5b",
+    "official_yarn_4": "cc9da456982ffce5ca0558e9ea661abc4a880ec002179ce6b9149d45aa4a016c"
+  },
+  "protocol": {
+    "model_architecture": "OLMo-2 MHA: 16 layers, 16 Q heads, 16 K heads, d_head=128",
+    "weights": "fully frozen",
+    "primary_arms": [
+      "native",
+      "selective_31",
+      "reverse_31",
+      "random_seed_42",
+      "random_seed_123",
+      "random_seed_999"
+    ],
+    "intervention": "Divide Native inv_freq slots [16,48) by 4 for exactly 31 mask-selected layer/head identities.",
+    "generation": "greedy, maximum 32 new tokens",
+    "answer_nll": "teacher-forced NLL of first reference answer tokens",
+    "short_retention": "first <=4096 prompt tokens; full-vocabulary KL and Top-1 on final 100 logit positions",
+    "random_masks": "three fixed controls, not independent row replicates"
+  },
+  "panel": {
+    "status": "REUSED_DEVELOPMENT_PANEL_NOT_UNTOUCHED_CONFIRMATION",
+    "rows": 50,
+    "tasks": {
+      "hotpotqa": 25,
+      "2wikimqa": 25
+    },
+    "input_length_range": [1234, 16309],
+    "length_bins": {
+      "le4096": 3,
+      "4097_to_8191": 22,
+      "8192_to_16384": 25
+    },
+    "target_long_task_rows": {
+      "hotpotqa": 21,
+      "2wikimqa": 4
+    },
+    "calibration_disjoint": true,
+    "globally_untouched": false,
+    "reason": "Earlier adaptive headwise development evaluated the original 200-row HotpotQA and 2WikiMQA panels."
+  },
+  "analysis": {
+    "analysis_contract_sha256": "c2d58c4899b03df335ca1278fa588ed7b87dd318745fe82736c060ffc5714f5d",
+    "analysis_sha256": "ae25323680e57789ed8997c2c33c2d2c4a4de32b925d2002f205db4f18302d7d",
+    "bootstrap_replicates": 50000,
+    "bootstrap_seed": 20260903,
+    "uncertainty_unit": "paired registered row, resampled within task",
+    "aggregation": "mean within task, then equal task macro",
+    "co_primary_endpoints": [
+      "normalized_exact_match",
+      "normalized_gold_substring"
+    ]
+  },
+  "target_long_ge8192": {
+    "rows": 25,
+    "arm_task_macro": {
+      "native": {"em": 0.0, "substring": 0.0, "eos": 0.0, "answer_nll": 9.43282071165487, "short_kl": 0.0, "short_top1": 1.0},
+      "selective_31": {"em": 0.0, "substring": 0.0, "eos": 0.0, "answer_nll": 9.805530578100761, "short_kl": 0.10309780466680726, "short_top1": 0.8585118842976434},
+      "reverse_31": {"em": 0.0, "substring": 0.0, "eos": 0.0, "answer_nll": 9.123251518640929, "short_kl": 0.07853511086709443, "short_top1": 0.8594642629226048},
+      "random_seed_42": {"em": 0.0, "substring": 0.0, "eos": 0.0, "answer_nll": 9.368371124116202, "short_kl": 0.04208002954588405, "short_top1": 0.900357118674687},
+      "random_seed_123": {"em": 0.0, "substring": 0.0, "eos": 0.0, "answer_nll": 9.28216120023576, "short_kl": 0.04987984338021349, "short_top1": 0.8965475999173664},
+      "random_seed_999": {"em": 0.0, "substring": 0.0, "eos": 0.0, "answer_nll": 9.339204956074148, "short_kl": 0.033775538400125996, "short_top1": 0.910773784276985},
+      "random_mean": {"em": 0.0, "substring": 0.0, "eos": 0.0, "answer_nll": 9.329912426808704, "short_kl": 0.041911803775407847, "short_top1": 0.9025595009563462},
+      "global_log_s4": {"em": 0.07142857142857142, "substring": 0.07142857142857142, "eos": 0.8511904761904762},
+      "official_yarn_4": {"em": 0.22023809523809523, "substring": 0.22023809523809523, "eos": 1.0}
+    },
+    "selective_minus_random_mean": {
+      "em": {"estimate": 0.0, "ci95": [0.0, 0.0]},
+      "substring": {"estimate": 0.0, "ci95": [0.0, 0.0]},
+      "answer_nll_lower_is_better": {"estimate": -0.4756181512920586, "ci95": [-0.7506535945196363, -0.24497578572163667]},
+      "short_kl_lower_is_better": {"estimate": -0.0611860008913994, "ci95": [-0.07872317411182891, -0.046930888033562546]},
+      "short_top1": {"estimate": -0.04404761665870273, "ci95": [-0.0634523772176296, -0.023154754593731876]}
+    }
+  },
+  "all_50_registered_rows": {
+    "selective_31": {"em": 0.04, "substring": 0.04, "answer_nll": 8.195274395931335, "short_kl": 0.10933731496334076, "short_top1": 0.8485999798774719},
+    "random_mean": {"em": 0.06, "substring": 0.06, "answer_nll": 7.6458324455949995, "short_kl": 0.047457452254990734, "short_top1": 0.8932666468620301},
+    "reverse_31": {"em": 0.04, "substring": 0.04, "answer_nll": 7.63373115156378, "short_kl": 0.08185066640377045, "short_top1": 0.8585999786853791},
+    "global_log_s4": {"em": 0.2, "substring": 0.2, "eos": 0.96},
+    "official_yarn_4": {"em": 0.2, "substring": 0.22, "eos": 1.0},
+    "selective_minus_random_mean": {
+      "em": {"estimate": -0.02, "ci95": [-0.07333333333333333, 0.02666666666666667]},
+      "substring": {"estimate": -0.02, "ci95": [-0.07333333333333333, 0.02666666666666667]},
+      "answer_nll_lower_is_better": {"estimate": -0.5494419503363351, "ci95": [-1.0092360377564789, -0.1512160362852942]},
+      "short_kl_lower_is_better": {"estimate": -0.06187986270835002, "ci95": [-0.07776881727669388, -0.04838277927553281]},
+      "short_top1": {"estimate": -0.04466666698455811, "ci95": [-0.05486666719118753, -0.03419999758402506]}
+    }
+  },
+  "matched_baseline_completion": {
+    "status": "RESOLVING_CONTROLS_REUSED_EXACT_TRAJECTORY",
+    "rows": 100,
+    "current_historical_native_generated_token_trajectories_equal": "50/50",
+    "current_historical_input_ids_and_references_equal": "50/50",
+    "baseline_rows_sha256": "1fc074a5b66af379ab428af9d659ae42c9c418e9c654b1859b0124683ed79a0b",
+    "baseline_reuse_receipt_sha256": "88f7425ac063ac4b459cf4d2eb098c9e9544d368848f4e2dfdb2a48edfec718a"
+  },
+  "native_identity": {
+    "short_32_token_prefill_and_decode": "bitwise zero logit difference",
+    "long_16309_token_prefill_and_decode": "bitwise zero logit difference",
+    "long_identity_receipt_sha256": "2264b9043a8ab313a59a09780f43227ad86bb20cdd5c00e9442720d85f446139"
+  },
+  "calibration_provenance": {
+    "status": "REPRODUCED",
+    "original_calibration_script_sha256": "c3dd9f7e646dda69bfe3fdf3038834cb9e422056293a48df3bbd27a73676187b",
+    "recovery_receipt_sha256": "e902644a21f8d5ec89f13c2aa971eb084ae8d357c4e8a8deeefa371a4e34b40e",
+    "sensitivity_matrix_npy_sha256": "0578c0eb7745d9875aca1052b43c9b04ce8daf947014cb03a1bed71215ff618b",
+    "sensitivity_matrix_float64_raw_sha256": "36c0411406f4c4df0eb0e3fc47c184f43e18b333391bb102941124a4a70fb96a",
+    "mean_pairwise_spearman": 0.9736383815553102,
+    "minimum_pairwise_spearman": 0.9556427386129547,
+    "mean_low31_jaccard": 0.7040720111927543,
+    "minimum_low31_jaccard": 0.5897435897435898,
+    "rebuilt_mask_byte_equal": true,
+    "frozen_mask_unchanged": true,
+    "calibration_evaluation_identity_disjoint": true,
+    "score_definition": "Relative Frobenius displacement between endpoint-s4 and Native attention matrices from Native layer inputs.",
+    "score_classification": "EXACT_ENDPOINT_ATTENTION_MAP_DISPLACEMENT_NOT_LOSS_DERIVATIVE_OR_CHI_FUNC",
+    "utility_output_norm_matched_reverse": false
+  },
+  "post_run_validity_audit": {
+    "theory_owner": "../theory/LOCAL_FUNCTIONAL_COMPATIBILITY_AND_GAUGE_AUDIT_20260903.md",
+    "olmo_pair_layout": "split-half logical pairs (j,j+64)",
+    "custom_path_source_audit": "Per-layer/head phases duplicate each 64-entry frequency vector and use the same OLMo2 rotate_half operation.",
+    "nontrivial_joint_qk_frequency_relabel_executed": false,
+    "effect_on_result": "No invalidation. The fixed-mask candidate comparison remains valid; sensitivity mediation and task-agnostic compatibility are unsupported."
+  },
+  "artifact_hashes": {
+    "manifest_json": "8a370e29ce02c9bf3de4371bc0470f3114020061b102b39ba57df981de52b818",
+    "raw_jsonl": "6b39570b6255a2e17fff247a71c3abac2dccfed1cbaffb03dfd46d5e78eda2c9",
+    "summary_json": "d616024c309d1110a5f860c20ad9f36b426f0afe9de2e690d58eab85b9bebb0d",
+    "run_log": "b146444b6513907dbfff6c4a7d416712314e488afe648037d7d252ecd07247ae",
+    "flash_probe_json": "3b0a60badfbca2d7141355df999b94226a9778b370b756bb6a56db27d4b4567e",
+    "analysis_contract_json": "c2d58c4899b03df335ca1278fa588ed7b87dd318745fe82736c060ffc5714f5d",
+    "analysis_json": "ae25323680e57789ed8997c2c33c2d2c4a4de32b925d2002f205db4f18302d7d",
+    "baseline_reused_rows_jsonl": "1fc074a5b66af379ab428af9d659ae42c9c418e9c654b1859b0124683ed79a0b",
+    "baseline_reuse_receipt_json": "88f7425ac063ac4b459cf4d2eb098c9e9544d368848f4e2dfdb2a48edfec718a",
+    "long_native_identity_json": "2264b9043a8ab313a59a09780f43227ad86bb20cdd5c00e9442720d85f446139"
+  },
+  "supported_claims": [
+    "The exact Selective-31 candidate has no target-long generation advantage over the three fixed random masks or Reverse on this panel.",
+    "Its short KL, short Top-1, and first-reference answer-token NLL are worse than the three-fixed-random mean.",
+    "Global log_s4 and official YaRN-4 resolve the same prompts, so the six-arm long floor is candidate-specific rather than a universal assay failure.",
+    "The calibration matrix and frozen masks are reproducible for the fixed 12-prefix protocol."
+  ],
+  "unsupported_claims": [
+    "Untouched confirmation or formal causal-chain closure.",
+    "Geometric sensitivity as the unique mediator.",
+    "Calling the calibration score chi_func, loss sensitivity, or task-agnostic functional compatibility.",
+    "Universal head specialization, random-mask population inference, GQA compatibility, cross-checkpoint transfer, or SOTA.",
+    "Native non-inferiority or treating all 50 rows as 8K to 16K."
+  ],
+  "next_action": "Stop this exact candidate. Do not sweep head count, scale, slots, or selector from this result. A future different selector needs a new prospective owner and fresh source."
+}

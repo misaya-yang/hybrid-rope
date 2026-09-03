@@ -8,6 +8,25 @@ the session policy. In particular, it treats the zero-training replacement as
 one complete practical intervention while preserving separate causal owners
 for each component.
 
+[`NATIVE_ONLY_MOVEMENT_PROFILE_IDENTIFIABILITY_20260903.md`](NATIVE_ONLY_MOVEMENT_PROFILE_IDENTIFIABILITY_20260903.md)
+is the current theory owner for the checkpoint-only profile-identification
+question. It proves that ordering, log-frequency scale composition, and
+request-static installation do not uniquely determine `m`; universal exact
+  Native preservation instead leaves only the trivial table. Conditional on one
+  explicit squared Native-geometry surrogate, it derives the unique minimizer
+  `m = Iso(1-u)`. That formula is a prospective working hypothesis, not a
+  latent checkpoint profile. Its executed OLMo result is now owned by
+  [`NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md`](../results/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md):
+  a natural-likelihood/structured-task tradeoff with a fresh core-4 4K/8K
+  negative.
+
+[`LOCAL_FUNCTIONAL_COMPATIBILITY_AND_GAUGE_AUDIT_20260903.md`](LOCAL_FUNCTIONAL_COMPATIBILITY_AND_GAUGE_AUDIT_20260903.md)
+is the post-run theory and implementation audit for Selective-31. It separates
+exact attention-map displacement from objective-conditioned local functional
+sensitivity, derives the exact Q/K--frequency gauge identity, and explains why
+that null relabeling does not contradict fixed-Q/K frequency-permutation
+collapse. It authorizes no new selector or experiment.
+
 [`FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md`](FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md)
 is a **working, partially retracted THEORY-ONLY synthesis**, not a canonical
 proof owner. Its exact score identities, scoped PI statement, transplant

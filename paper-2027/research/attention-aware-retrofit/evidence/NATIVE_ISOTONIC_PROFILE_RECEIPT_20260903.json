@@ -1,0 +1,100 @@
+{
+  "status": "NATIVE_ISOTONIC_PROFILE_COMPLETE_NO_UNIFORM_DOMINANCE_FRESH_CORE4_NEGATIVE_4K_8K",
+  "date": "2026-09-03",
+  "model": {
+    "name": "OLMo-2-0425-1B-Instruct",
+    "weight_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f",
+    "config_sha256": "0d15ebb6cb8d998513b46ef337214176a6fd59fe5f16b30387c70d5f87795a9c",
+    "native_inv_freq_sha256_float32": "dde15c31724177356ae954d6e11fb337e6fccef56e4520a905cac3f0d9885b34",
+    "token_manifest_sha256": "74022bf36d444a1735baab72bda0312b9867dd38c9f85ece376049b5f35f66f3"
+  },
+  "construction": {
+    "builder_script_sha256": "60df30ab94956483eadd79491dab7eea6a33eadc7b974eedc264d2221c8f52ed",
+    "builder_receipt_sha256": "07265486e78241b2fc8e8519ad8661ca41ae809616a0c32dbd0670fda2494bee",
+    "dps_grid": [360, 440, 520],
+    "convergence_absolute_tolerance": 1e-12,
+    "last_two_u_max_abs_delta": 0.0,
+    "last_two_movement_max_abs_delta": 0.0,
+    "last_two_movement_byte_identical": true,
+    "point_mp_not_interval_arithmetic_proof": true,
+    "native_ulp_sensitivity": "All Native frequencies were moved simultaneously by one float32 ULP down and up.",
+    "native_ulp_max_movement_delta": 1.634e-7,
+    "candidate_vs_current_max_movement_delta": 0.9971,
+    "conditional_uniqueness_file_sha256": "e6efd2d4fa4b601149a56a137774a8c19aff5d004307def3217cc5cea4960e87",
+    "movement_file_sha256": "18d4d7399d9aff16429e7932ee5ddd2998c9e216df436aa8313ce970690bca7a",
+    "candidate_table_sha256_float32": "3266663596a113b0bf8edbf5e89f57254fd96d980eb353614b9c66ea65f25bfa",
+    "candidate_table_file_sha256": "cbb00bbbd34ffa3cea0bec526ec1dc5769fe8cb82ddd0cdd97395479ea024634",
+    "current_p2_table_sha256_float32": "56ddfae2800d4bbf9e6bd2d20bae751edc9865dcbaf641c7c8c4f1d7f1c15e5b",
+    "legacy_iso_table_sha256_float32": "d6c529b4cc72a37396f68ec6862af6e3060870ff5df0550a07a3c5c194733919",
+    "exact_p2_table_sha256_float32": "6a3cbf3901e3398aed2c2906da4e3bbfe413ee1cabe078430ca6e778a2ff7ba4",
+    "attention_scaling": 1.102585782722872
+  },
+  "runtime": {
+    "device": "NVIDIA GeForce RTX 4080 SUPER",
+    "torch": "2.8.0+cu128",
+    "formal_evaluator_sha256": "cfc3d7c2893e95cd88a160e728fae76d17e7e1f8be9ae2c9edcca6b28f9d2871",
+    "ruler_evaluator_sha256": "ec514fad23a99a430290419c738a566ff7abff9313fbac99970bcee768a5dc8d",
+    "all_stage_exit_codes_zero": true
+  },
+  "one_x": {
+    "native": {"pg19_nll": 2.971047461, "five_task_macro": 0.345134307},
+    "current_p2": {"pg19_nll": 3.104233813285828, "ppl_retention": 0.8753019623879644, "five_task_macro": 0.3158332874435654, "task_retention": 0.9151025587368382},
+    "legacy_iso": {"pg19_nll": 3.0930354595184326, "ppl_retention": 0.8851589916582027, "five_task_macro": 0.3210230116681844, "task_retention": 0.9301393838781273},
+    "exact_p2": {"pg19_nll": 3.108764278888702, "ppl_retention": 0.8713454062433931, "five_task_macro": 0.32925339487870087, "task_retention": 0.953986283602635},
+    "exact_iso": {"pg19_nll": 3.092470097541809, "ppl_retention": 0.8856595683855434, "five_task_macro": 0.3344608682845992, "task_retention": 0.9690745356259215, "double_gate_pass": true},
+    "native_gain": {"pg19_nll": 3.0859317541122437, "ppl_retention": 0.8914692870762666, "five_task_macro": 0.37821580575367775, "task_retention": 1.0958510877728471},
+    "exact_iso_minus_current_p2_paired": {
+      "pg19_nll": {"delta": -0.0117637157440187, "ci95": [-0.0250702, 0.0009371]},
+      "five_task_macro": {"delta": 0.0186275808410338, "ci95": [-0.0364068, 0.0739267]}
+    }
+  },
+  "natural_long": {
+    "current_p2": {"pg19_nll_2x": 3.0832775950431826, "pg19_nll_4x": 3.0819459199905395, "six_task_macro_2x": 0.30761355895299775, "six_task_macro_4x": 0.26005547859564554},
+    "exact_iso": {"pg19_nll_2x": 3.0563094854354858, "pg19_nll_4x": 3.0469364762306212, "six_task_macro_2x": 0.28190119353014426, "six_task_macro_4x": 0.26376081991244293},
+    "exact_iso_minus_current_p2_paired": {
+      "pg19_nll_2x": {"delta": -0.0269681, "ci95": [-0.0397053, -0.0154174]},
+      "pg19_nll_4x": {"delta": -0.0350094, "ci95": [-0.0515149, -0.0199292]},
+      "six_task_macro_2x": {"delta": -0.0257124, "ci95": [-0.0659733, 0.0123778]},
+      "six_task_macro_4x": {"delta": 0.00370534, "ci95": [-0.0373455, 0.0466146]}
+    }
+  },
+  "development_ruler13": {
+    "data_manifest_sha256": "d179ac82b2b85be3f652abeafd9bfdf510834ee8649fa1a6c17cfacb8096d88d",
+    "current_p2": {"4096": 0.7139743589743589, "8192": 0.6670512820512821, "16384": 0.49858974358974356},
+    "exact_iso": {"4096": 0.7057692307692307, "8192": 0.6796794871794872, "16384": 0.5033333333333333}
+  },
+  "fresh_core4": {
+    "seed": 202609037,
+    "tasks": ["single_key", "numeric_multikey", "uuid_multikey", "variable_tracking"],
+    "data_manifest_sha256": "0e184255f006c212c9fc1db08860800cc3018c9de434e69a0d1d6207665fdb31",
+    "rows_per_task_length": 20,
+    "bootstrap": {
+      "replicates": 10000,
+      "seed": 202609038,
+      "unit": "paired row resampled within each task",
+      "aggregation": "mean within task then equal-task macro",
+      "interval": "two-sided marginal 95% percentile",
+      "simultaneous_or_familywise_adjusted": false
+    },
+    "current_p2": {"4096": 0.8375, "8192": 0.7225, "16384": 0.4025},
+    "exact_iso": {"4096": 0.6925, "8192": 0.5475, "16384": 0.41000000000000003},
+    "paired_delta_ci95": {
+      "4096": {"delta": -0.14500000000000002, "ci": [-0.23500000000000001, -0.05499999999999999]},
+      "8192": {"delta": -0.175, "ci": [-0.26, -0.09249999999999999]},
+      "16384": {"delta": 0.0075000000000000015, "ci": [-0.065, 0.075]}
+    }
+  },
+  "artifact_sha256": {
+    "one_x_primary_pg19_results": "8cb88ed8685cc127c575c5a19c8728ca1060b3ad8a6186da8c2875bfdaf33336",
+    "one_x_primary_tasks_results": "15f57d33043be26e45f244b41f11d425e463167e7985e7210bd5d62ad3c2d4cd",
+    "natural_long_primary_pg19_results": "4d4f1f47ae89096411d3f57294c4ce5178ce17ac8963435107577d181c09860e",
+    "natural_long_primary_tasks_results": "260b7c138cd39eab6871fd069a434a93a5df0b38b8d69bc0832b19ef5a74a8ce",
+    "natural_long_current_pg19_results": "8ec250dc5edff0f2c5a30bd7c87e0968b59a0334fc3cf47bcad1d0d88b8a90a5",
+    "natural_long_current_tasks_results": "da2def1dad3486acde98bf04fff6eb057466b664b9d0da0a90d31d934a67cb51",
+    "development_ruler_primary_results": "372b6eeec8379b7a3590d3e1c7ba7c18ad0847dde57ff999f1ec074e91a3cb8b",
+    "development_ruler_current_results": "1d47e9646cdd4a7d3c67bbc35caa1d2672b4f0f40b786e99c8ef99ebe9f6f0c1",
+    "fresh_core4_primary_results": "111771f559d5d0d10541c7ea7e7c3cde609cdf5554c46997375a071c16a6da56",
+    "fresh_core4_current_results": "0fc9114d2e084f5cc870c522218223f8e3546cd8e3e08960d5c6ff3a454142e7"
+  },
+  "claim_limit": "One OLMo checkpoint; point-MP approximation to the exact full-lag object; squared-geometry composite with inherited gain; reused formal development panels plus one fresh RULER core-4 seed. No formal Pareto frontier or uniform replacement claim. Raw private artifacts remain outside the repository."
+}

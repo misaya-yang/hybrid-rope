@@ -3,6 +3,12 @@
 A preflight records what was frozen before execution. It is never evidence that
 an experiment ran.
 
+[`NATIVE_ISOTONIC_PROFILE_PREFLIGHT_20260903.md`](NATIVE_ISOTONIC_PROFILE_PREFLIGHT_20260903.md)
+freezes the exact-u/pinned-Iso composite, the legacy/exact-u by p2/Iso
+attribution table, inherited-gain controls, numerical entrance, formal 1x
+replay, cheap long diagnostic, conditional breadth, monitoring, evidence, and
+shutdown contract. It authorizes no parameter rescue or post-outcome sweep.
+
 ## September 1–2 protocol status (historical)
 
 Section-number references inside individual preflights record the `INDEX.md`

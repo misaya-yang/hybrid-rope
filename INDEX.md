@@ -1,8 +1,7 @@
 # INDEX — claim and owner router
 
 - **Updated:** 2026-09-03
-- **Evidence cut-off:** owners available through 2026-09-02; later material has
-  not been reconciled here.
+- **Evidence cut-off:** owners available through 2026-09-03.
 - **Role:** route an exact question to its current owner, correction, or scoped
   negative. This is not a report, timeline, or live handoff.
 
@@ -55,6 +54,9 @@ Open the full local catalogue only when needed:
 | What is supported across K32/K128? | Normalized pair index is the best-tested coordinate, not a law or K-causal result | [`K32 confirmation`](paper-2027/research/attention-aware-retrofit/results/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md), [`K128 confirmation`](paper-2027/research/attention-aware-retrofit/results/K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901.md), [`full RULER-13`](paper-2027/research/attention-aware-retrofit/results/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md) |
 | Does long signal convert to natural QA? | **Unresolved:** 9/2 raw owners missing; constructed 38-row assay invalid | [`ZERO_TRAINING_TWO_DAY...`](paper-2027/research/attention-aware-retrofit/results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md) |
 | Do headwise clocks solve the joint objective? | **Exploratory/report-only:** variable-length capped panel, adaptive row reuse, no tracked executed bundle | [`HEADWISE_FACTORIZED...`](paper-2027/research/attention-aware-retrofit/results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md) |
+| Does calibration-frozen attention-displacement Selective-31 beat layer-matched random/reverse masks? | **Negative at exact candidate/protocol scope:** target-long generation is floor-equal while short KL/Top-1 and answer-token NLL reverse the expected Selective advantage; matched global controls resolve the reused panel | [`HEAD_SELECTIVE_ZERO_TRAINING...`](paper-2027/research/attention-aware-retrofit/results/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md) |
+| Can Native checkpoint structure uniquely determine an ordered movement profile? | **No without an added preference.** The declared squared Native-geometry surrogate uniquely constructs `m = Iso(1-u)` and its executed OLMo arm improves natural retention/likelihood, but fresh core-4 is materially worse at 4K/8K; it exposes an endpoint-dependent tradeoff, not a latent law or current-p2 replacement. | [`theory`](paper-2027/research/attention-aware-retrofit/theory/NATIVE_ONLY_MOVEMENT_PROFILE_IDENTIFIABILITY_20260903.md), [`result`](paper-2027/research/attention-aware-retrofit/results/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md) |
+| Is the Selective-31 calibration score a universal functional sensitivity, and does joint Q/K--frequency relabeling invalidate the ordered-coupling results? | **No.** The score is exact endpoint attention-map displacement on a frozen calibration pack, not `chi_func`; exact joint relabeling is a gauge identity, while existing frequency-only permutations intentionally hold Q/K fixed. | [`LOCAL_FUNCTIONAL_COMPATIBILITY_AND_GAUGE_AUDIT_20260903`](paper-2027/research/attention-aware-retrofit/theory/LOCAL_FUNCTIONAL_COMPATIBILITY_AND_GAUGE_AUDIT_20260903.md) |
 | What can the 9/2 first-principles memo support? | Only explicitly retained identities under assumptions; T4/T5/T7 and behavioural generalizations are retracted/disputed | [`FIRST_PRINCIPLES...`](paper-2027/research/attention-aware-retrofit/theory/FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md) |
 
 Endpoint boundaries remain strict: NLL/PPL, answer-token NLL, teacher-forced
@@ -92,7 +94,7 @@ theorem. Passing or missing it does not create a scientific discontinuity.
 | continuous-boundary-slope operator | only this implementation is closed | [`ZERO_TRAINING_MECHANISM_AND_CEILING_20260826`](paper-2027/research/attention-aware-retrofit/analysis/ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md) |
 | phase-isotropy / pair-volume / min-eigenvalue | `SCREEN_UNRESOLVED`, not negative | [`PHASE_ISOTROPY...`](paper-2027/research/attention-aware-retrofit/results/PHASE_ISOTROPY_50M_M4_RESULT_20260824.md), [`PHASE_ALLOCATION...`](paper-2027/research/attention-aware-retrofit/results/PHASE_ALLOCATION_M4_EXTENDED_RESULT_20260824.md) |
 | Native-retention + natural long-QA/EOS assay | unresolved validity | §3 corrections; validity precedes method selection |
-| Native-compatible/long-capable intervention | no jointly passing valid arm; no impossibility theorem | tracked 9/1 owners + report-only 9/2 headwise work |
+| Native-compatible/long-capable intervention | one arm passes the reused natural 1x double gate and retains long likelihood/RULER, but fresh core-4 is negative at 4K/8K; no universal jointly passing law | [`NATIVE_ISOTONIC_PROFILE_RESULT_20260903`](paper-2027/research/attention-aware-retrofit/results/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md) |
 
 No content-blind static scalar score in this repository has prospectively
 ranked LM behaviour across the required regimes. A numerical static search is

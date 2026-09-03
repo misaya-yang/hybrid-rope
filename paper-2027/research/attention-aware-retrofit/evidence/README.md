@@ -4,6 +4,23 @@ Compact, machine-path-free receipt for the attention-aware allocation study.
 Checkpoints, raw evaluation records, token arrays, caches, and machine logs
 remain with their canonical owners outside this directory.
 
+[`NATIVE_ISOTONIC_PROFILE_RECEIPT_20260903.json`](NATIVE_ISOTONIC_PROFILE_RECEIPT_20260903.json)
+binds the full-lag high-precision `pinned-Iso(1-u)` construction, 2x2
+legacy/exact-u by p2/Iso attribution, inherited-gain control, formal 1x and
+2x/4x natural matrices, matched RULER-13, and fresh core-4 seed `202609037`.
+The result is an endpoint-dependent tradeoff with a fresh 4K/8K negative, not
+a formal Pareto frontier or universal profile law; see
+`../results/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md`.
+
+[`HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RECEIPT_20260903.json`](HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RECEIPT_20260903.json)
+binds the OLMo Selective-31, Reverse-31, and three layer-matched random-mask
+comparison: exact tables, 300 finite paired cells, Flash-only runtime, long
+Native identity, pre-outcome length amendment, paired bootstrap, and adaptive
+reuse of exact matched global `log_s4`/official-YaRN controls. It is a negative
+for the exact candidate on a reused development panel, not untouched
+confirmation or a head-selective method-class result; see
+`../results/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md`.
+
 [`K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RECEIPT_20260901.json`](K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RECEIPT_20260901.json)
 binds the new-seed Native/index/official-YaRN full RULER-13 panel. Index passes
 the 32K point gate and exceeds YaRN at 64K by `.060897`, paired 95% interval
