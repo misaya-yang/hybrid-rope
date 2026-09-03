@@ -26,6 +26,12 @@
 > and method-class conclusions—are superseded by this correction. Retain only
 > explicitly scoped exact identities and the exact transplant/compatibility
 > results after independently checking their assumptions.
+>
+> **T1 proof correction (2026-09-03):** its arc-length step treated a vector
+> of per-slot scalings as one scalar and did not prove uniformity. The
+> conclusion survives only after first equating the arcs' tangent rays and then
+> comparing their lengths. The corrected proof is owned by
+> [`ROPE_OPTIMALITY_IDENTIFIABILITY_AND_CONDITIONAL_EQUATIONS_20260903`](../../foundations/ROPE_OPTIMALITY_IDENTIFIABILITY_AND_CONDITIONAL_EQUATIONS_20260903.md#45-correction-to-the-historical-pi-arc-proof).
 
 ## 0. Inputs used at the time (not all remain valid)
 
@@ -192,21 +198,19 @@ relevant ranges (sufficient: one pair of frequencies with irrational ratio —
 holds for OLMo/Qwen adjacent slots; Qwen has distant relations
 `ω_{k+32} = ω_k/1000`, irrelevant here); finite arcs, not closures.
 *Claim:* `γ′([0, SL]) = γ([0, L])` as subsets of the torus iff `ρ ≡ 1/S`.
-*Proof:* both arcs are embedded (injective on compact domain) and the map
-`t ↦ tω` is a local isometry, so the subset determines its intrinsic arc
-length: `ρSL‖ω‖ = L‖ω‖` forces a uniform `ρ` once set-equality holds and
-`ρ = 1/S`. (The tangent-ray argument used in the invariants report is
-replaceable by this cleaner length argument; same conclusion.)
+*Corrected proof:* both arcs are embedded and share the origin. Set equality
+first makes their tangent rays there identical, so `ρ ⊙ ω = cω` for some
+`c>0`. Since every `ω_k>0`, `ρ_k=c` for all `k`. Only then may arc length be
+compared: `cSL‖ω‖=L‖ω‖`, hence `c=1/S`.
 *Edge cases:* (i) closure-equality instead of arc-equality is vacuous — with
 an irrational ratio both closures are the same subtorus for every ρ;
 (ii) rational spectra (e.g. integer bases with small K) lose uniqueness at
 finite arcs once `L` exceeds the common period; (iii) the set-equivalence has
 zero sup-norm robustness: an ε-arc perturbation can move ρ by O(ε)-relative
 amounts; (iv) operational form (attacker P2-4): the requirement for no new
-phase exposure is arc *containment* `γ′([0, SL]) ⊆ γ([0, L])`; under the
-injectivity assumption a straight arc from the origin is contained in another
-only when the directions are collinear, so containment forces a uniform
-`ρ ≤ 1/S` (arc-length comparison), and the theorem's equality `ρ = 1/S` is
+phase exposure is arc *containment* `γ′([0, SL]) ⊆ γ([0, L])`; the same
+origin-tangent argument first forces a uniform `ρ=c`, and endpoint/length
+comparison then gives `c ≤ 1/S`; the theorem's equality `ρ = 1/S` is
 the boundary case where the full deployed interval is used. Mod 2π creates no
 additional finite-arc equivalences under the injectivity assumption. *Attribution correction:* no Lindemann–Weierstrass is needed for the
 curve-level theorem; the operative number-theoretic condition elsewhere is

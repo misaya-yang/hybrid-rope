@@ -11,26 +11,24 @@ to resolve a specific scientific claim. This file owns no scientific verdict.
 
 ## Latest changes
 
-- Native-isotonic improves natural retention/PG but loses fresh core-4 at
-  4K/8K: an endpoint-dependent tradeoff, not a replacement or formal frontier:
+- A [`new optimality owner`](research/foundations/ROPE_OPTIMALITY_IDENTIFIABILITY_AND_CONDITIONAL_EQUATIONS_20260903.md) proves the distribution-free problem non-identifiable and derives conditional equations; the [`exact-no-harm/prefix note`](research/attention-aware-retrofit/theory/STATIC_NATIVE_NO_HARM_AND_PREFIX_HANDOFF_20260903.md) remains CPU-only and authorizes no execution.
+- Native-isotonic improves natural retention/PG but loses fresh core-4 at 4K/8K;
+  it is a tradeoff, not a replacement or formal frontier:
   [`result`](research/attention-aware-retrofit/results/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md),
   [`receipt`](research/attention-aware-retrofit/evidence/NATIVE_ISOTONIC_PROFILE_RECEIPT_20260903.json).
-- The frozen head-selective candidate is negative on the reused panel:
-  [`result`](research/attention-aware-retrofit/results/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md),
-  [`receipt`](research/attention-aware-retrofit/evidence/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RECEIPT_20260903.json).
-- The post-run audit classifies the selector score as attention displacement,
-  not `chi_func`, and separates frequency-only permutation from joint gauge:
-  [`audit`](research/attention-aware-retrofit/theory/LOCAL_FUNCTIONAL_COMPATIBILITY_AND_GAUGE_AUDIT_20260903.md).
-- No manuscript/training/adaptation/upload changed; the research bundle is
-  authorized for commit and push.
+- The frozen head-selective candidate is negative on the reused panel: [`result`](research/attention-aware-retrofit/results/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md), [`receipt`](research/attention-aware-retrofit/evidence/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RECEIPT_20260903.json).
+- The [`post-run audit`](research/attention-aware-retrofit/theory/LOCAL_FUNCTIONAL_COMPATIBILITY_AND_GAUGE_AUDIT_20260903.md)
+  calls the selector attention displacement, not `chi_func`, and separates
+  frequency-only permutation from joint gauge.
+- No manuscript/training/adaptation/upload changed. The new theory/checker
+  changes are local, unstaged, uncommitted, and unpushed.
 
 ## Git
 
 - Branch / upstream: `main_0726` / `origin/main_0726`.
-- Before publication, local HEAD and refreshed tracking SHA were both
-  `917dcc98313b5c76af9c2041c55971e59448ec7c`, ahead/behind `0/0`.
-- Publication scope is only the 9/3 owners, audit, receipts, builder, and
-  routers; verify final local/tracking/remote equality after push.
+- Baseline local/tracking SHA: `d67ee77cb617289bcb2ee8007a8d77537bc97c0f`,
+  ahead/behind `0/0`. Only this theory/checker/test/router update is dirty;
+  nothing is staged, committed, or pushed.
 
 ## Manuscript and PDF
 
@@ -60,6 +58,9 @@ Passed on the personal PC: repository navigation 25/25, scoped diff/public
 safety checks, corrected-theory CPU counterchecks, receipt JSON parsing, PDF
 hashes, and empty manuscript-source diffs.
 
+Prefix handoff adds 12/12 CPU algebra/cache tests: branch, rephasing, multi-layer,
+boundary-split GQA/MQA, and prefix/Native errors are `0`; this is not model validation.
+
 Work-machine passes: frozen asset/table hashes, BF16 Flash-only 16K probe,
 stock/custom Native bitwise identity at 32 and 16,309 tokens, `300/300` finite
 six-arm cells, paired bootstrap, exact matched controls, recovered `12x256`
@@ -76,4 +77,8 @@ path were audited only. Manuscripts were not compiled or packaged.
 2. Do not continue either exact candidate with a sweep. A future mechanism
    study first needs the nontrivial joint-relabel gate, a prospective owner,
    and a fresh source.
-3. Continue the existing submission audit and 2026-09-17/18/25 milestones.
+3. Treat exact no-harm from one non-Native static table as closed under the
+   stated assumptions. For exact short sessions, retain the completed binary
+   Native/s4 route. The prefix handoff remains a CPU-only hypothesis; no
+   continuation or model run is authorized.
+4. Continue the existing submission audit and 2026-09-17/18/25 milestones.

@@ -27,11 +27,22 @@ sensitivity, derives the exact Q/K--frequency gauge identity, and explains why
 that null relabeling does not contradict fixed-Q/K frequency-permutation
 collapse. It authorizes no new selector or experiment.
 
+[`STATIC_NATIVE_NO_HARM_AND_PREFIX_HANDOFF_20260903.md`](STATIC_NATIVE_NO_HARM_AND_PREFIX_HANDOFF_20260903.md)
+closes the universal exact-no-harm version of the one-static-table objective
+under standard stationary-RoPE assumptions. It routes the already-completed
+Native/s4 per-request policy as the behavioural solution for exact short
+sessions and derives a stronger prefix-preserving long-frame key handoff. The
+handoff has passed CPU rotary-algebra checks only; it has no transformer-quality
+evidence and authorizes no model or GPU execution.
+
 [`FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md`](FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md)
 is a **working, partially retracted THEORY-ONLY synthesis**, not a canonical
 proof owner. Its exact score identities, scoped PI statement, transplant
 rigidity, compatibility bound, and semigroup algebra may be reused only with
-their assumptions. Its former “conditioning exactly S” theorem divides upper
+their assumptions. The original T1 arc-length proof had a vector/scalar gap;
+its conclusion is retained only through the corrected tangent-ray proof in
+[`ROPE_OPTIMALITY_IDENTIFIABILITY_AND_CONDITIONAL_EQUATIONS_20260903`](../../foundations/ROPE_OPTIMALITY_IDENTIFIABILITY_AND_CONDITIONAL_EQUATIONS_20260903.md#45-correction-to-the-historical-pi-arc-proof).
+Its former “conditioning exactly S” theorem divides upper
 bounds and is invalid; its arbitrary-epsilon/off-arc non-identifiability claim
 and fixed-profile novelty theorem also fail audit. The user-supplied 38-row
 Hotpot Fact D is invalid for claim/gate use and has no recovered raw owner.
