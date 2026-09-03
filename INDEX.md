@@ -36,7 +36,7 @@ depth the task requires. Rules are in `AGENTS.md`; paper orientation is in
 | Does the effect persist across exact-range configurations? | Yes in M4; matched non-Cosh shape remains competitive | [`M4_EXACT_RANGE_FACTORIAL_RESULT_20260726`](rebuttal/rebuttal_0723/theory_results/M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md) |
 | What does full sin/cos geometry prove? | Redundancy/effective dimension and counterexamples; not LM ranking | [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819`](paper-2027/research/foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md) |
 | How are support and allocation separated? | `x_k = a + R z_k`; notation/intervention grammar, not a number owner | [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823`](paper-2027/research/foundations/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md) |
-| Can RoPE/attention structure alone determine optimal `z`, a frequency system, or mature-checkpoint movement? | **No, distribution-free behavioural optimality is non-identifiable.** The unique missing object is the declared training--deployment risk functional; once supplied, ordered KKT, exact signed spectral gradients, training hypergradients, and a conditional local closed-form direction follow. | [`ROPE_OPTIMALITY_IDENTIFIABILITY_AND_CONDITIONAL_EQUATIONS_20260903`](paper-2027/research/foundations/ROPE_OPTIMALITY_IDENTIFIABILITY_AND_CONDITIONAL_EQUATIONS_20260903.md) |
+| Can RoPE/attention structure alone determine optimal `z`, a frequency system, or mature-checkpoint movement? | **Boundary only:** distribution-free behavioural optimality is non-identifiable. This does not close repository-constrained selection from completed evidence. | [`ROPE_OPTIMALITY_IDENTIFIABILITY_AND_CONDITIONAL_EQUATIONS_20260903`](paper-2027/research/foundations/ROPE_OPTIMALITY_IDENTIFIABILITY_AND_CONDITIONAL_EQUATIONS_20260903.md) |
 | What is the exact frozen transplant boundary? | Position-independent invertible Q/K compensation requires matching multisets up to sign/permutation | [`OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726`](rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md) |
 | What is the bounded EVQ-Cosh theorem? | Unique only for its stated convex surrogate | [`03_theory.tex`](paper-2027/sections/03_theory.tex) + [`a1_proofs.tex`](paper-2027/appendix/a1_proofs.tex) |
 | What supports the matched-adaptation route? | Protocol-specific task-family length transfer at 1.485B and causal source use at 8B; not pure frozen-`z` or pretraining-scale evidence | [`OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729`](rebuttal/rebuttal_0723/theory_results/OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729.md), [`EVQ_8B_ADAPTATION_EVIDENCE_20260724`](rebuttal/rebuttal_0723/theory_results/EVQ_8B_ADAPTATION_EVIDENCE_20260724.md) |
@@ -52,6 +52,7 @@ Open the full local catalogue only when needed:
 | What is the strongest practical no-update result? | Fully frozen derived allocation changes OLMo 16K RULER from `0.0056` to `0.6047`; coarse label-free allocation reaches `0.6104`; pure-`z` and broader deployment claims remain separate | [`SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823`](paper-2027/research/attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) |
 | Does it persist on fresh natural text? | Length-conditional NLL effect; not universal ranking | [`FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824`](paper-2027/research/attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) |
 | What is the strongest tracked static-table result? | One OLMo table passes tested 1x gates and improves longer endpoints; ordered permutation can collapse | [`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831`](paper-2027/research/attention-aware-retrofit/results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md) |
+| Under one static table and one path, which completed form is retained, and what same-table LoRA follows? | The sequential OLMo stop tree retains the full 64-slot legacy-u p2 mask installed as log-s4 with fixed `c=.074`; this is a capability-first engineering incumbent among the named historical candidates, not a global optimum. Same-substrate Q/K LoRA is specified but unexecuted. | [`SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903`](paper-2027/research/attention-aware-retrofit/theory/SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md) |
 | What is supported across K32/K128? | Normalized pair index is the best-tested coordinate, not a law or K-causal result | [`K32 confirmation`](paper-2027/research/attention-aware-retrofit/results/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md), [`K128 confirmation`](paper-2027/research/attention-aware-retrofit/results/K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901.md), [`full RULER-13`](paper-2027/research/attention-aware-retrofit/results/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md) |
 | Does long signal convert to natural QA? | **Unresolved:** 9/2 raw owners missing; constructed 38-row assay invalid | [`ZERO_TRAINING_TWO_DAY...`](paper-2027/research/attention-aware-retrofit/results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md) |
 | Do headwise clocks solve the joint objective? | **Exploratory/report-only:** variable-length capped panel, adaptive row reuse, no tracked executed bundle | [`HEADWISE_FACTORIZED...`](paper-2027/research/attention-aware-retrofit/results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md) |
@@ -79,6 +80,7 @@ use, adaptation, and transfer are different evidence tiers.
 | Hotpot-200 headwise comparison | **Report-only exploratory** | variable length capped at 16K, adaptive reuse, executed/raw bundle untracked |
 | first-principles T4/T5/T7 and exact-conditioning claims | **Retracted/disputed** | invalid bound division, unrestricted torus claim, and novelty ratio |
 | first-principles T1 arc-length proof | **Corrected; conclusion retained under its injective finite-arc assumptions** | old proof did not establish uniform per-slot scaling; use the tangent-ray proof in [`ROPE_OPTIMALITY...` §4.5](paper-2027/research/foundations/ROPE_OPTIMALITY_IDENTIFIABILITY_AND_CONDITIONAL_EQUATIONS_20260903.md#45-correction-to-the-historical-pi-arc-proof) |
+| 9/3 optimality owner used as a terminal method verdict | **Corrected: supporting boundary only** | distribution-free impossibility does not answer the author-required single-static-table selection problem; that question remains active |
 | two-day synthesis “only allowed” route | **Superseded candidate negative** | holdout failure; not a queue or method-class result |
 
 An author-chosen threshold such as `0.875` is an operational tolerance, not a
@@ -124,21 +126,32 @@ global or behavioural ceiling.
 Exact live progress and authorization belong only in
 [`HANDOFF.md`](paper-2027/HANDOFF.md).
 
-### Post-submission research — separate and not authorized
+### Post-submission method work — historical single-table selection resolved
 
-The author-ordered first direction is a deterministic static pure-`z` table on
-a frozen checkpoint. Derive the candidate before LM evaluation without learning
-or loss-based frequency search. Endpoint movement is allowed; the first gate is
-a declared small Native-window cost plus improvement at `2x`/`4x`, followed by
-untouched downstream evaluation.
+The completed-history answer for the **deterministic static pure-`z` table**
+question is routed by
+[`SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903`](paper-2027/research/attention-aware-retrofit/theory/SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md).
+Under the paper's capability-first sequential replacement rules, the retained
+OLMo form is the full 64-slot legacy-u p2 movement installed as log-s4 with one
+fixed `c=.074` gain. It uses one table and one path at every length. It is not a
+formal optimum: Native-isotonic has better natural-likelihood/retention points
+but loses the fresh structured 4K/8K replacement contrast.
 
-“Small Native-window cost” is necessarily approximate in this one-table
-direction: universal exact Native short-function preservation forces the table
-back to Native under the current stationary-RoPE assumptions. Exact short
-sessions plus a nontrivial long table are already supplied, at OLMo scope, by
-the completed Native/s4 request-level policy. The prefix-preserving coordinate
-handoff is only a CPU-verified algebraic working hypothesis; it is not an
-authorized model run or a replacement research direction.
+This resolves the **completed-history deployment selection** only. It does not
+satisfy or close the separate README direction that asks for a new candidate
+derived prospectively before LM outcomes: p2 and `.074` retain their disclosed
+outcome-selection history.
+
+A request-level Native/long router, two tables, cache branching, frequency
+segmentation, or a length-time switch is not this answer. The Qwen result is
+long-capability construction transfer only; K32/K128 normalized-index results
+belong to a distinct C2-derived family.
+
+The declared LoRA follow-up freezes this same table/gain at every training and
+evaluation length and adapts Q/K only; it is an unexecuted same-substrate
+specification, not a transplanted Stage-A result. No new LoRA result, global
+training-free SOTA comparison, GPU method-development experiment, or model
+execution is currently authorized.
 
 Protocol/assay validity, controls, executed identity, raw-owner output, budget,
 and stop conditions must pass preflight before any authorized compute. These are

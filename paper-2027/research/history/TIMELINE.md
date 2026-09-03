@@ -172,3 +172,24 @@ table/weight co-adaptation -> mature-checkpoint natural-generation transport`.
 - **Lifecycle:** `FIXED_SUPPORT_TRAINING_CAUSAL_CORE_ESTABLISHED /
   STATIC_Z_NATIVE_TO_LONG_TRANSPORT_OPEN / ASSAY_PREFLIGHT_REQUIRED /
   NO_ACTIVE_GPU_RUN`.
+
+## 2026-09-03 — static-selector negatives and scope correction
+
+- **Did:** completed the Native-isotonic and Selective-31 owners and proved the
+  distribution-free and universal-static exact-no-harm boundaries.
+- **Observed:** Native-isotonic trades improved natural likelihood for worse
+  fresh core-4, while Selective-31 is negative at its matched scope. Neither
+  replaces the current 64-slot log profile.
+- **Corrected:** a request-level Native/long synthesis was briefly drafted as an
+  answer, but the author rejected that engineering premise. It was removed
+  before commit: two tables, cache branching, and length routing do not answer
+  the required single-static-table problem and own no new observation.
+- **Resolved completed-history selection:** under the sequential
+  capability-first replacement rules, retain the executed full 64-slot legacy-u
+  p2 mask with log-s4 and fixed `c=.074`. Native-isotonic has better natural
+  likelihood/retention but loses the fresh structured 4K/8K comparison, so the
+  result is an endpoint tradeoff rather than a formal optimum. The owner is
+  [`SINGLE_STATIC_LOG_P2...`](../attention-aware-retrofit/theory/SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md).
+- **LoRA boundary:** any follow-up is defined on that same static table/gain,
+  with Q/K adaptation and no routing. It has not been executed; no GPU or new
+  experiment is active.

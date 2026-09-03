@@ -11,24 +11,23 @@ to resolve a specific scientific claim. This file owns no scientific verdict.
 
 ## Latest changes
 
-- A [`new optimality owner`](research/foundations/ROPE_OPTIMALITY_IDENTIFIABILITY_AND_CONDITIONAL_EQUATIONS_20260903.md) proves the distribution-free problem non-identifiable and derives conditional equations; the [`exact-no-harm/prefix note`](research/attention-aware-retrofit/theory/STATIC_NATIVE_NO_HARM_AND_PREFIX_HANDOFF_20260903.md) remains CPU-only and authorizes no execution.
-- Native-isotonic improves natural retention/PG but loses fresh core-4 at 4K/8K;
-  it is a tradeoff, not a replacement or formal frontier:
-  [`result`](research/attention-aware-retrofit/results/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md),
-  [`receipt`](research/attention-aware-retrofit/evidence/NATIVE_ISOTONIC_PROFILE_RECEIPT_20260903.json).
-- The frozen head-selective candidate is negative on the reused panel: [`result`](research/attention-aware-retrofit/results/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md), [`receipt`](research/attention-aware-retrofit/evidence/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RECEIPT_20260903.json).
-- The [`post-run audit`](research/attention-aware-retrofit/theory/LOCAL_FUNCTIONAL_COMPATIBILITY_AND_GAUGE_AUDIT_20260903.md)
-  calls the selector attention displacement, not `chi_func`, and separates
-  frequency-only permutation from joint gauge.
-- No manuscript/training/adaptation/upload changed. The new theory/checker
-  changes are local, unstaged, uncommitted, and unpushed.
+- The [`distribution-free optimality owner`](research/foundations/ROPE_OPTIMALITY_IDENTIFIABILITY_AND_CONDITIONAL_EQUATIONS_20260903.md)
+  is corrected to a supporting boundary; it does not close repository-constrained
+  method selection.
+- The drafted Native/long routed answer was rejected and removed before commit.
+  The [`single-static selection owner`](research/attention-aware-retrofit/theory/SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md)
+  now retains full legacy-u p2 log-s4 with fixed `c=.074` under the historical
+  capability-first stop tree and specifies unexecuted same-substrate Q/K LoRA.
+- No manuscript source, model execution, training, GPU job, or upload changed.
+  Publication scope is limited to this owner and its index/timeline corrections.
 
 ## Git
 
 - Branch / upstream: `main_0726` / `origin/main_0726`.
-- Baseline local/tracking SHA: `d67ee77cb617289bcb2ee8007a8d77537bc97c0f`,
-  ahead/behind `0/0`. Only this theory/checker/test/router update is dirty;
-  nothing is staged, committed, or pushed.
+- Pre-publication local/tracking SHA:
+  `193c9d0f660573b667943881b6a9421048a22622`, ahead/behind `0/0`.
+- Verify final local/tracking/remote equality at delivery; this file does not
+  predict its own publication commit hash.
 
 ## Manuscript and PDF
 
@@ -58,6 +57,9 @@ Passed on the personal PC: repository navigation 25/25, scoped diff/public
 safety checks, corrected-theory CPU counterchecks, receipt JSON parsing, PDF
 hashes, and empty manuscript-source diffs.
 
+Single-static identity check reproduces the `56ddfae...` tensor with `m_0=0`,
+`m_63=1`, and strict order; the focused CPU/navigation suite passes `62/62`.
+
 Prefix handoff adds 12/12 CPU algebra/cache tests: branch, rephasing, multi-layer,
 boundary-split GQA/MQA, and prefix/Native errors are `0`; this is not model validation.
 
@@ -72,13 +74,10 @@ path were audited only. Manuscripts were not compiled or packaged.
 
 ## What to do now
 
-1. Keep both 9/3 results post-submission unless the author explicitly changes
-   manuscript scope.
-2. Do not continue either exact candidate with a sweep. A future mechanism
-   study first needs the nontrivial joint-relabel gate, a prospective owner,
-   and a fresh source.
-3. Treat exact no-harm from one non-Native static table as closed under the
-   stated assumptions. For exact short sessions, retain the completed binary
-   Native/s4 route. The prefix handoff remains a CPU-only hypothesis; no
-   continuation or model run is authorized.
-4. Continue the existing submission audit and 2026-09-17/18/25 milestones.
+1. Keep the single-static selection separate from the manuscript until the
+   author chooses whether to admit the completed-history synthesis.
+2. Do not substitute routing, two tables, segmentation, or cache switching.
+3. Keep later LoRA on the exact same log-p2 substrate; it remains unexecuted and
+   no new model comparison or GPU execution is authorized.
+4. Do not relabel this outcome-selected incumbent as the README's prospective
+   pre-outcome table; continue the submission audit and 2026-09-17/18/25 milestones.

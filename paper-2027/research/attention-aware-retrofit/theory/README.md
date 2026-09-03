@@ -8,6 +8,14 @@ the session policy. In particular, it treats the zero-training replacement as
 one complete practical intervention while preserving separate causal owners
 for each component.
 
+[`SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md`](SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md)
+is the current owner for the author-required one-table/one-path selection from
+completed evidence. It retains the executed full 64-slot legacy-u p2 log-s4
+table with fixed `c=.074` under the sequential capability-first replacement
+rules, explicitly records the Native-isotonic likelihood tradeoff, and defines
+same-substrate Q/K LoRA as an unexecuted working specification. It does not use
+request routing, frequency segmentation, or a transplanted adapter.
+
 [`NATIVE_ONLY_MOVEMENT_PROFILE_IDENTIFIABILITY_20260903.md`](NATIVE_ONLY_MOVEMENT_PROFILE_IDENTIFIABILITY_20260903.md)
 is the current theory owner for the checkpoint-only profile-identification
 question. It proves that ordering, log-frequency scale composition, and
@@ -33,7 +41,9 @@ under standard stationary-RoPE assumptions. It routes the already-completed
 Native/s4 per-request policy as the behavioural solution for exact short
 sessions and derives a stronger prefix-preserving long-frame key handoff. The
 handoff has passed CPU rotary-algebra checks only; it has no transformer-quality
-evidence and authorizes no model or GPU execution.
+evidence and authorizes no model or GPU execution. This boundary supports the
+single-static-table search only as a limitation; neither per-request routing nor
+the untested prefix handoff is the author-required engineering solution.
 
 [`FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md`](FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md)
 is a **working, partially retracted THEORY-ONLY synthesis**, not a canonical

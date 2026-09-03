@@ -20,6 +20,14 @@
   search, and deterministic CPU algebra only. No training, model inference,
   remote compute, GPU, paid compute, curve search, or new experiment.
 
+> **Scope correction (2026-09-03).** This report answers the distribution-free
+> question in its title. It does not answer which form is selected after the
+> completed repository experiments are admitted, and it must not be used to
+> close the zero-training or LoRA objective. In particular, request-level
+> Native/long routing does not answer the single-static-table question. The
+> completed-history selection and its same-substrate LoRA boundary are owned by
+> [`SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md`](../attention-aware-retrofit/theory/SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md).
+
 ## 1. Verdict
 
 There is no task-independent behavioural optimum for any of the three
