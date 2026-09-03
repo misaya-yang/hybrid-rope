@@ -1,21 +1,39 @@
 # Headwise factorization narrows the gap but does not solve the Native--long conflict
 
 - **Date:** 2026-09-02
-- **Status:** completed mixed result; **not SOTA and not a deployable method**
+- **Status:** completed exploratory development report; protocol/raw ownership
+  insufficient for confirmatory claim use; **not SOTA and not deployable**
 - **Model:** released `OLMo-2-0425-1B-Instruct`
 - **Intervention:** frozen Transformer weights; 1--512 learned layer/head scalars over frozen
   frequency directions
-- **Primary evidence:** local-only raw/state/script bundle, intentionally excluded from Git;
-  canonical hashes are recorded below
-- **Decision:** stop GPU development after this owner; preserve the positive headwise signal and
-  the two decisive failure modes
+- **Evidence grade:** report-only; a local session bundle was described but the
+  executed versions/raw rows are not tracked, so hashes below are forensic leads
+  rather than repository-canonical owners
+- **Historical session decision:** GPU development stopped; retain only the
+  exploratory headwise and retention/QA trade-off signals
+
+> **Post-run validity correction (2026-09-02):** this file is
+> **exploratory report-only evidence**, not a canonical result owner. The
+> Hotpot-200 evaluation used official variable-length rows capped at 16,384
+> input tokens (not exact-16K inputs); only a small subset was truncated, and
+> evidence distance/question placement was not an owned estimand. The two-axis
+> arm was introduced after inspecting the scope-ladder outcomes and reused the
+> same 200 rows, so its intervals are adaptive development summaries, not an
+> untouched confirmation. Executed evaluator versions, raw rows, and receipts
+> remain outside the tracked repository. The `0.875` retention threshold is an
+> operational tolerance, not a scientific discontinuity. Therefore the numbers
+> below may describe this development session, but they do not establish an
+> exact-16K Hotpot result, a disconnected Native--long basin, a universal
+> headwise advantage, or a method-class closure. This protocol is distinct from
+> the invalid 38-row constructed exact-length stress referenced by the later
+> theory memo; the two must never be combined.
 
 ## 1. Executive verdict
 
-This round establishes a useful but bounded result.
+This round reports a useful but exploratory development signal.
 
-1. The assumption that every layer and head must share one frequency table is a real source of
-   lost capacity. A 256-scalar headwise clock improves official HotpotQA-200 F1 from `0.21169`
+1. Under this adaptive panel, relaxing the shared-table constraint is associated
+   with a positive point estimate. A 256-scalar headwise clock changes official HotpotQA-200 F1 from `0.21169`
    for frozen `log_s4` to `0.24237`. Adding a second headwise range coordinate reaches `0.25223`.
 2. The improvement is not universal. On 2WikiMQA the two-axis arm reaches `0.26651`, but on
    Qasper it falls to `0.18853` versus `0.20095` for frozen `log_s4`.
@@ -31,8 +49,9 @@ This round establishes a useful but bounded result.
    training loss from `3.5612` to `2.3105`, yet reduces HotpotQA F1 from `0.24237` to `0.19439`
    and EOS termination from `178/200` to `108/200`.
 
-Therefore the round supports **head-specific allocation/range specialization as a useful method
-axis**, but it does not solve the joint Native/long objective and does not establish SOTA.
+Therefore the round motivates **head-specific allocation/range specialization
+as a hypothesis for a fresh protocol**, but it does not solve the joint
+Native/long objective, establish SOTA, or confirm the axis independently.
 
 ## 2. Registered model class
 
@@ -162,9 +181,10 @@ Task-stratified paired bootstrap, 50,000 resamples with seed `20260902`, gives:
 - two-axis minus `log_s4`: `+0.01418 [-0.00268, 0.03127]` macro F1;
 - two-axis minus YaRN: `-0.00241 [-0.03372, 0.02885]` macro F1.
 
-The two-axis arm therefore reaches the same observed three-task frontier as YaRN within sampling
-uncertainty, but moves the trade-off: it is lower on HotpotQA, approximately tied on 2WikiMQA,
-and higher on Qasper. This is not task-uniform superiority.
+On this reused development panel, the two-axis and YaRN macro point estimates
+are close while task-level trade-offs differ: the two-axis arm is lower on
+HotpotQA, approximately tied on 2WikiMQA, and higher on Qasper. This is neither
+an untouched comparison nor task-uniform superiority.
 
 ## 6. Native retention
 
@@ -180,25 +200,27 @@ The log-start arm is better than `log_s4` on all `20/20` documents, but fails th
 retention threshold. The Native-start arm is better than Native on all `20/20` documents; its
 paired NLL difference is `-0.04520 [-0.06238, -0.02993]`.
 
-The Native-start success is only short-side success. Its Hotpot result is essentially Native and
-its 16K training loss remains high. This directly exposes the unsolved conflict:
+The Native-start point is only a short-side development signal. Its Hotpot
+point estimate is essentially Native and its 16K training loss remains high.
+Together with the log-start point it records a protocol-specific trade-off:
 
-> Starting near the long solution yields useful long computation but unacceptable Native cost;
-> starting at exact Native preserves or improves Native likelihood but the current scalar-only
-> objective cannot bootstrap the long computation.
+> In these two tested starts, the long-oriented point has worse Native cost and
+> the Native-oriented point has worse long-task measurements. This does not
+> identify the landscape between them or prove a bootstrap barrier.
 
-## 7. What the result says about the shared-table hypothesis
+## 7. What the exploratory panel suggests about the shared-table hypothesis
 
-The result supports a weaker and more useful statement than “per-head tables solve the problem.”
+The point estimates motivate a weaker hypothesis than “per-head tables solve
+the problem.”
 
-- A single shared movement coefficient is too restrictive: the headwise and two-axis point
-  estimates improve complete natural QA.
-- Layer-level factorization is not enough under this protocol; its Hotpot F1 is almost identical
-  to the shared scalar.
-- Different tasks prefer different allocation/range mixtures. A single global table/gain remains
-  a compromise across task circuits.
-- Nevertheless, headwise clocks alone do not remove the Native--long conflict. Initialization
-  selects which side of the Pareto frontier the optimizer reaches.
+- A single shared movement coefficient may be restrictive: headwise and
+  two-axis point estimates are higher on parts of the panel.
+- This run did not separate layer-level from shared factorization on Hotpot;
+  that is a null development contrast, not a class negative.
+- Task point estimates differ across allocation/range mixtures; preference and
+  circuit mechanism require an independent panel.
+- The two tested initializations land at different retention/QA operating
+  points. They do not identify a Pareto frontier or disconnected basins.
 - The current evidence does not justify arbitrary per-head, per-frequency tensors. The positive
   result uses only two scalars per layer/head and frozen global directions.
 
@@ -242,22 +264,28 @@ or an unrestricted 64-dimensional vector field.
 
 ## 9. Claim table
 
-### Established in this protocol
+### Reported exploratory observations (not confirmatory)
 
 - Both corrected factorized implementations have exact zero-delta parity.
 - Per-head frequency clocks have a positive Hotpot point estimate over shared/layer scopes.
-- The headwise allocation+range arm significantly improves Hotpot F1 over frozen `log_s4`.
-- Free headwise gain significantly harms complete Hotpot generation despite much lower
-  teacher-forced loss.
-- Log-start and Native-start reach opposite sides of the Native--long frontier.
-- No tested arm simultaneously passes the 4K retention gate and produces useful Hotpot long QA.
+- On the reused development rows, the headwise allocation+range bootstrap
+  interval over frozen `log_s4` excludes zero; adaptive selection prevents a
+  confirmatory significance claim.
+- Free headwise gain has a lower Hotpot point estimate despite much lower
+  teacher-forced loss on the reused development rows.
+- Log-start and Native-start are two distinct tested operating points, not
+  identified sides of a frontier.
+- No arm in this exploratory, variable-length panel both crosses the chosen 4K
+  operational threshold and has the stronger Hotpot point estimate. This is not
+  an exact-16K or class-level impossibility result.
 
 ### Supported but not established
 
 - Learned task circuits may require different per-head dilation/range mixtures.
-- The all-layer/all-head shared table is one important ceiling, but not the only ceiling.
-- Cheap weight co-adaptation or a better structured training objective may be needed to connect
-  the two observed basins.
+- The all-layer/all-head shared table may be one restriction; no ceiling is
+  established by this adaptive panel.
+- Cheap weight co-adaptation or another structured objective remains a working
+  hypothesis for the two observed operating points, not a basin claim.
 
 ### Not supported
 
@@ -272,9 +300,10 @@ or an unrestricted 64-dimensional vector field.
 
 This round ends method development rather than opening another sweep.
 
-- Preserve the log-start two-axis arm as the strongest long-capability candidate and the
-  Native-start arm as the decisive retention/bootstrapping counterexample.
-- Keep free headwise gain closed under the tested teacher-forced objective.
+- Preserve the two starts only as development references for a future fresh
+  protocol; neither is a confirmatory candidate or decisive counterexample.
+- Close only this free-head-gain arm under this adaptive teacher-forced
+  protocol; do not close gain or headwise classes.
 - Do not promote scale-flow from framing to method without the CPU identifiability gate.
 - Do not claim SOTA. The best three-task macro is still the official YaRN-4 point estimate, and
   the closest headwise arm fails Native retention.

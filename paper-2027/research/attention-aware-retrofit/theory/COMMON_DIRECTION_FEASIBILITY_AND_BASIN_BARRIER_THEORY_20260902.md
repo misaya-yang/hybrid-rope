@@ -1,6 +1,14 @@
 # Common-direction feasibility, likelihood-to-winner barrier, and the Native--long basin structure
 
 - **Date:** 2026-09-02
+- **Controlling audit correction:** historical theory only. The 38-row Hotpot
+  Fact D used below is invalid for claim/gate use; the separate Hotpot-200
+  headwise panel is exploratory report-only. Therefore neither task-radius nor
+  bimodal/disconnected-basin conclusions are evidence-backed. The
+  margin-gradient route also failed its unopened holdout. Retain only the
+  convex-hull optimization algebra and the generic smooth-likelihood versus
+  argmax-boundary distinction; this file owns no current gate, method, or
+  frontier claim.
 - **Status:** PARTIALLY SUPERSEDED (same day, later fact update). The user-supplied
   latest fact state (2026-09-02, recorded in
   [`FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902`](FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md)
@@ -12,10 +20,9 @@
     algebra remains valid as mathematics, but its object (behavioral gradients) is
     no longer an authorized or promising measurement, and no conclusion here may
     be quoted as support for that route.
-  - **Challenged:** Pillar 3's bimodal-basin hypothesis modeled only the
-    Native-vs-long split and does not account for the task-dependent radius in the
-    latest natural QA facts (same `log_s4` strong on RULER 16K, weak on Hotpot 16K,
-    recovered at Hotpot 8K; fact D). It is retained only as an audited conjecture.
+  - **Invalidated as evidence:** the Hotpot Fact D used to challenge Pillar 3
+    comes from an invalid/unowned constructed stress. It neither supports nor
+    refutes a task-dependent radius. Pillar 3 remains an untested conjecture.
   - **Retained:** Pillar 2 (likelihood is smooth, generation is piecewise constant;
     gain preserves key argmax) is independent of the gradient route and remains
     compatible with the updated facts, subject to the new memo's review.
@@ -23,14 +30,14 @@
 - **Original status:** internal theory note. Establishes one derivation, one decomposition,
   and one labeled hypothesis. **Authorizes no compute, opens no queue, proposes no
   new allocation formula, gain, ramp, or boundary.**
-- **Scope:** mature-checkpoint static pure-`z` retrofit; addresses the two open
-  method gaps recorded in `INDEX.md` §3.5 — the Native--long basin bridge and the
-  capability-conversion barrier — and gives the registered §7.3 common-direction
+- **Scope:** mature-checkpoint static pure-`z` retrofit; historically addressed
+  a proposed Native--long bridge and capability-conversion explanation, and
+  gave the registered §7.3 common-direction
   candidate of
   [`ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902`](../results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md)
   a closed-form decision rule.
-- **Relation to closed classes:** this is not a static score functional of a shared
-  table (`INDEX.md` §3.4 items 1–11). Its objects are behavioral gradients measured
+- **Relation to prior negatives:** this is not a static score functional of a shared
+  table. Its objects are behavioral gradients measured
   on task cells, and its conclusion is a feasibility statement about directions, not
   a new content-blind predictor. Escape route is the one already registered in the
   two-day synthesis §7.4.
@@ -222,7 +229,11 @@ sufficient. EOS is one more visited state in the same condition: stopping
 requires the EOS token to beat all continuations at the induced stopping
 position.
 
-### 3.4 Why the three attempted fixes had to fail (postdiction)
+### 3.4 Superseded postdiction; no route closure
+
+The three 9/2 outcomes below lack recovered raw owners. Their original
+explanations are historical hypotheses, not reasons the candidates “had to”
+fail and not evidence against broader decoder/rerank/gain classes.
 
 - **Source-contrast decoding** \(\tilde\ell=(1+\alpha)\ell_{\rm index}
   -\alpha\ell_{\rm Native}\) can flip an argmax only at states where the two
@@ -235,33 +246,25 @@ position.
   be source-dependent and wrong or source-independent and right. The oracle
   macro `0.18656` shows the winner was in the set; the ranking statistic is
   simply not the winner-margin functional.
-- **Free headwise gain** scales attention scores \(s\mapsto cs\). For any
-  \(c>0\), \(\arg\max\) of the key softmax is unchanged: **gain provably cannot
-  alter which key is attended, only the concentration of the mixture around the
-  existing ranking.** Retrieval errors are ranking errors; gain cannot move
-  mass across keys. Teacher-forced loss rewards concentration whenever the
-  top key is already right (mostly true on short in-distribution data — the
-  observed `3.56→2.31`), which is a pure sharpening shortcut; at generation,
-  sharpening amplifies whatever leads, including wrong continuations, matching
-  the observed EOS collapse `178→108` and longer wrong answers.
+- **Free headwise gain** scales a fixed set of attention scores
+  \(s\mapsto cs\). For \(c>0\), that layer's score argmax is unchanged, while
+  softmax mass across keys does change. This local identity does not determine
+  later-layer rankings or generation. The reported loss/F1/EOS association is
+  exploratory and cannot establish a sharpening mechanism.
 
 ### 3.5 Consequence for objectives
 
-Any objective that reads only canonical-prefix likelihoods (natural NLL,
-teacher-forced CE, answer NLL, source-contrast likelihood) belongs to the
-smooth functional class of §3.1 and cannot, by construction, control the
-piecewise-constant generation map except through explicit margin and stopping
-terms on visited states. This retroactively justifies the margin-plus-EOS
-objective of the registered §7.3 candidate as the only consistent choice inside
-pure-`z`, and predicts in advance that any future gain/rerank/decoder variant
-that still does not touch internal winner margins will fail the same way.
+Canonical-prefix likelihoods and greedy generation are different functionals;
+improving one does not by itself guarantee the other. This does not prove that
+likelihood, gain, rerank, or decoder objectives cannot improve generation, and
+it does not privilege the failed margin-gradient route as an entry gate.
 
 ## 4. Pillar 3 — bimodal basin structure along dilation (labeled hypothesis)
 
 This section is a model-based hypothesis, not an established result. It exists
 to turn "the basins are disconnected" into falsifiable finite-difference
 predictions compatible with the CPU-identifiability entrance requirement of
-`INDEX.md` §6.5.
+`INDEX.md` §5.2.
 
 ### 4.1 Assumptions
 
@@ -341,7 +344,7 @@ Under A1–A3, along any shared coordinate \(d_k\equiv\delta\):
   point on retention.
 
 P1–P3 are CPU/cheap diagnostics in principle, but they are registered here, not
-authorized; running them is a separate decision under `INDEX.md` §6.5. If P1
+authorized; running them is a separate decision under `INDEX.md` §5.2. If P1
 fails (aliased slots carry usable gradient at Native), the bootstrapping-
 impossibility mechanism is wrong and the Native--long conflict must be
 re-attributed, even if the conflict itself remains.
@@ -382,16 +385,13 @@ re-attributed, even if the conflict itself remains.
 
 ## 6. Registration consequences
 
-- This note changes no lifecycle state: `PURE_Z_LONG_SIGNAL_ESTABLISHED /
-  NATURAL_QA_AND_NATIVE_LONG_JOINT_UNSOLVED / NO_SOTA /
-  GPU_METHOD_DEVELOPMENT_STOPPED` all stand.
-- If the method track is separately reopened under `INDEX.md` §6.5, the entry
-  gate now has a fixed decision rule: measure the behavioral gradients,
-  project the origin onto their convex hull, and report
-  \((\bar g^*,\gamma^*,\operatorname{supp}\mu^*)\). A result in either sign is
-  a conclusion; only the certificate content differs.
-- The hypothesis section supplies, in addition, a candidate first CPU
-  measurement (P1) of the kind §6.5 requires before any further method work —
-  registered, not authorized.
+- This historical note changes no lifecycle state:
+  `FIXED_SUPPORT_TRAINING_CAUSAL_CORE_ESTABLISHED /
+  STATIC_Z_NATIVE_TO_LONG_TRANSPORT_OPEN / ASSAY_PREFLIGHT_REQUIRED /
+  NO_ACTIVE_GPU_RUN` all stand.
+- The failed behavioral-gradient route is not a current entry gate. If research
+  is reopened, `INDEX.md` §5 requires a deterministic static pure-`z` candidate
+  derived before LM evaluation; protocol/assay validity is a mandatory
+  execution gate rather than a replacement direction.
 - Nothing here modifies the manuscript, `paper/`, any preflight, or any
   evidence owner.

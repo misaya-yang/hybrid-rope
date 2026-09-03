@@ -148,16 +148,27 @@ class RepositoryNavigationTests(unittest.TestCase):
         agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
         for required in ("INDEX.md", "paper-2027/HANDOFF.md"):
             self.assertIn(required, agents)
+        for required in (
+            "Every new or amended owner",
+            "supported and unsupported claims",
+            "A correction is complete only when",
+        ):
+            self.assertIn(required, agents)
 
     def test_secondary_entrypoints_preserve_cold_start_order(self):
         for relative, needles in (
             (
                 "paper-2027/README.md",
-                ("../AGENTS.md", "../INDEX.md", "HANDOFF.md"),
+                ("../AGENTS.md", "../README.md", "HANDOFF.md", "../INDEX.md"),
             ),
             (
                 "docs/overview/README.md",
-                ("../../AGENTS.md", "../../INDEX.md", "../../paper-2027/HANDOFF.md"),
+                (
+                    "../../AGENTS.md",
+                    "../../README.md",
+                    "../../paper-2027/HANDOFF.md",
+                    "../../INDEX.md",
+                ),
             ),
         ):
             text = (ROOT / relative).read_text(encoding="utf-8")
@@ -168,14 +179,29 @@ class RepositoryNavigationTests(unittest.TestCase):
         agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         handoff = (ROOT / "paper-2027" / "HANDOFF.md").read_text(encoding="utf-8")
-        for text in (agents, readme):
-            self.assertIn("work machine", text.lower())
-            self.assertIn("low-configuration personal pc", text.lower())
-            self.assertIn("`aidemo`", text)
-        self.assertIn("Do not install or recreate", agents)
-        self.assertIn("record them as skipped", readme)
+        self.assertIn("work machine", agents.lower())
+        self.assertIn("low-configuration personal pc", agents.lower())
+        self.assertIn("`aidemo`", agents)
+        self.assertIn(
+            "install or recreate the work-machine environment",
+            " ".join(agents.split()),
+        )
+        self.assertNotIn("`aidemo`", readme)
         self.assertIn("documentation/planning host", handoff)
-        self.assertIn("`aidemo` is not\n  expected here", handoff)
+        self.assertIn("Do not\n  install or recreate", handoff)
+
+    def test_default_cold_start_is_bounded_and_progressive(self):
+        agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        handoff = (ROOT / "paper-2027" / "HANDOFF.md").read_text(encoding="utf-8")
+        index = (ROOT / "INDEX.md").read_text(encoding="utf-8")
+        self.assertLessEqual(
+            sum(text.count("\n") + 1 for text in (agents, readme, handoff)),
+            320,
+        )
+        self.assertIn("Do not read the timeline", readme)
+        self.assertIn("Do not read every linked file", index)
+        self.assertIn("Do not\n   batch-read", agents)
 
     def test_index_carries_the_closed_route_ledger(self):
         """The falsified-route table is the repository's anti-repetition gate."""
@@ -193,6 +219,23 @@ class RepositoryNavigationTests(unittest.TestCase):
             self.assertIn(required, index)
         self.assertIn("only this implementation is closed", index)
 
+    def test_mature_result_router_prioritizes_paper_owners(self):
+        router = (
+            ROOT
+            / "paper-2027/research/attention-aware-retrofit/results/README.md"
+        ).read_text(encoding="utf-8")
+        headings = (
+            "## Paper-facing owners",
+            "## Post-submission transport evidence",
+            "## Correction-only 2026-09-02 materials",
+        )
+        offsets = [router.index(heading) for heading in headings]
+        self.assertEqual(offsets, sorted(offsets))
+        self.assertLess(
+            router.index("SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md"),
+            router.index("ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md"),
+        )
+
     def test_static_rank_diagnostic_has_an_owner_script(self):
         """Computed internal numbers need an owner and an honest search scope."""
         owner = ROOT / "scripts" / "analysis" / "third_axis_ceiling.py"
@@ -203,8 +246,9 @@ class RepositoryNavigationTests(unittest.TestCase):
         for required in ("LM-quality", "restarts", "algebraic", "not a global ceiling"):
             self.assertTrue(required in source, f"static-rank owner must state: {required}")
 
-    def test_current_route_is_submission_first_and_gpu_stopped(self):
+    def test_current_route_is_submission_first_and_research_separate(self):
         index = (ROOT / "INDEX.md").read_text(encoding="utf-8")
+        normalized_index = " ".join(index.split())
         retired_preflight = (
             ROOT
             / "paper-2027/research/attention-aware-retrofit/preflights"
@@ -214,14 +258,18 @@ class RepositoryNavigationTests(unittest.TestCase):
         self.assertTrue(retired_preflight.is_file())
         self.assertTrue(audit.is_file())
         for required in (
-            "## 0. Cold-start snapshot",
-            "GPU_METHOD_DEVELOPMENT_STOPPED",
+            "## 0. Current paper status",
+            "fully frozen model-relative structured",
             "SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831",
-            "## 5. Durable agenda",
-            "No GPU method-development experiment is active",
+            "## 5. What to do",
+            "deterministic static pure-`z` table",
+            "No GPU method-development experiment is currently active",
+            "2026-09-17",
+            "2026-09-18",
+            "2026-09-25",
             "paper-2027/research/history/TIMELINE.md",
         ):
-            self.assertIn(required, index)
+            self.assertIn(required, normalized_index)
         source = audit.read_text(encoding="utf-8")
         for boundary in ("not r2", "LM loss", "table selector"):
             self.assertIn(boundary, source)
@@ -257,7 +305,10 @@ class RepositoryNavigationTests(unittest.TestCase):
         agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
         index = (ROOT / "INDEX.md").read_text(encoding="utf-8")
         self.assertIn("best-found value", agents)
-        self.assertIn("not a global or behavioural ceiling", index)
+        self.assertIn(
+            "not a global or behavioural ceiling",
+            " ".join(index.split()),
+        )
 
     def test_m4_screen_owner_uses_locked_identity_and_verdict(self):
         extended = (
@@ -280,7 +331,7 @@ class RepositoryNavigationTests(unittest.TestCase):
             ROOT / "paper-2027" / "research" / "external-reviews" / "README.md"
         ).read_text(encoding="utf-8")
         self.assertIn("external-reviews/", router)
-        self.assertIn("untrusted external-model review snapshots", router)
+        self.assertIn("untrusted historical analysis", router)
         self.assertNotIn("## Reviewer objections", router)
         self.assertIn("Frozen audit archive", archive)
         self.assertIn("Current use", archive)
@@ -288,17 +339,26 @@ class RepositoryNavigationTests(unittest.TestCase):
     def test_state_layer_does_not_restate_the_agenda(self):
         """Rules > index > state: the handoff routes the agenda, never owns it."""
         handoff = (ROOT / "paper-2027" / "HANDOFF.md").read_text(encoding="utf-8")
-        self.assertIn("state only", handoff)
+        self.assertIn("This file owns no scientific verdict", handoff)
+        self.assertIn("## Latest changes", handoff)
         self.assertIn("[`../INDEX.md`](../INDEX.md)", handoff)
-        self.assertIn("research/attention-aware-retrofit/", handoff)
         for forbidden in (
             "omega_k",
             "z × adaptation",
             "W0/F1",
             "leave-one-band-out",
             "The only active research implementation step",
+            "38-row constructed exact-length Hotpot",
+            "T4 actual",
+            "T5 torus",
+            "T7 ratio",
         ):
             self.assertNotIn(forbidden, handoff)
+
+    def test_index_distinguishes_document_update_from_evidence_cutoff(self):
+        index = (ROOT / "INDEX.md").read_text(encoding="utf-8")
+        self.assertIn("**Updated:**", index)
+        self.assertIn("**Evidence cut-off:**", index)
 
     def test_manuscript_cold_start_preserves_author_doctrine(self):
         narrative = (ROOT / "paper-2027" / "NARRATIVE_GUIDE.md").read_text(
@@ -315,11 +375,22 @@ class RepositoryNavigationTests(unittest.TestCase):
             self.assertIn(required, narrative)
 
         index = (ROOT / "INDEX.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
         brief = (ROOT / "paper-2027" / "REVISION_BRIEF.md").read_text(
             encoding="utf-8"
         )
-        self.assertIn("## 5. Durable agenda", index)
-        self.assertIn("GPU_METHOD_DEVELOPMENT_STOPPED", index)
+        self.assertIn("## 5. What to do", index)
+        for required in (
+            "under-studied coordinate",
+            "## Evidence hierarchy",
+            "fully frozen zero-training",
+            "matched low-rank adaptation",
+            "from-training/co-adaptation",
+            "2026-09-17",
+            "2026-09-18",
+            "2026-09-25",
+        ):
+            self.assertIn(required, readme)
         self.assertNotIn(
             "下一项有决策价值的研究协议只有 **matched-content phase 2x2**",
             index,

@@ -1,8 +1,9 @@
 # docs/ — 历史文档层
 
-**这个目录不是当前权威。** 当前入口是根级
-[`AGENTS.md`](../AGENTS.md)（规则）→ [`INDEX.md`](../INDEX.md)（索引）→
-[`paper-2027/HANDOFF.md`](../paper-2027/HANDOFF.md)（状态）。
+**这个目录不是当前权威。** 默认入口是根级
+[`AGENTS.md`](../AGENTS.md)（规则）→ [`README.md`](../README.md)（论文核心）→
+[`paper-2027/HANDOFF.md`](../paper-2027/HANDOFF.md)（最新状态）。只有核对具体
+claim 时才搜索 [`INDEX.md`](../INDEX.md) 并打开它指向的 owner。
 
 `docs/` 保存 NeurIPS-era 的 provenance、复现路径、历史实验报告和被取代的理论
 推导。它有用，但**不覆盖**当前 ICLR 路由。任何冲突以 `INDEX.md` §2 指向的

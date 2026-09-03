@@ -1,8 +1,9 @@
 # First-principles theory memo: RoPE post-hoc extrapolation for mature frozen checkpoints
 
 - **Date:** 2026-09-02
-- **Status:** THEORY-ONLY synthesis memo; no experiments planned, no code, no
-  manuscript text. Supersedes no owner; audits and partially supersedes
+- **Status:** PARTIALLY RETRACTED THEORY-ONLY synthesis; working history, not a
+  proof owner; no experiments planned, no code, no manuscript text. Supersedes
+  no owner; historically audited
   [`COMMON_DIRECTION_FEASIBILITY_AND_BASIN_BARRIER_THEORY_20260902.md`](COMMON_DIRECTION_FEASIBILITY_AND_BASIN_BARRIER_THEORY_20260902.md)
   (see its PARTIALLY SUPERSEDED block and §G.13 here).
 - **Method:** three isolated first-principles derivations (exact algebra /
@@ -15,7 +16,18 @@
   scale `S` (deployment on `[0, SL]`), native geometric spectrum
   `ω_k = b^(−2k/d) = b^(−k/K)` (`K = d/2` slots, slot 0 fastest).
 
-## 0. Governing updated facts (override all older anchors)
+> **Controlling audit correction (2026-09-02):** this memo is working theory
+> history, not a canonical proof owner. Fact D (38-row “16K Hotpot”) is invalid
+> for claim/gate use and Fact E lacks a recovered raw owner. T4's “conditioning
+> exactly S” divides upper bounds and is false as stated; T5's arbitrary-epsilon
+> checkpoint construction and unrestricted off-arc intersection claim are not
+> proved; T7 contains an incorrect novelty ratio. Later sections that rely on
+> those items—including task radius, disconnected-basin, non-identifiability,
+> and method-class conclusions—are superseded by this correction. Retain only
+> explicitly scoped exact identities and the exact transplant/compatibility
+> results after independently checking their assumptions.
+
+## 0. Inputs used at the time (not all remain valid)
 
 **A — intervention validity.** Old custom-attention-wrapper gradient
 conclusions are void (failed z=0 parity). The current intervention replaces
@@ -32,22 +44,25 @@ Passes the 1x PG-19 retention gate at `0.875302`. (Terminological debt,
 flagged once: "pure-z" is the inherited wrapper-era name; the realized
 intervention is fact A's `inv_freq` replacement.)
 
-**D — task-dependent radius (HotpotQA, 38 Native-short-correct samples).**
+**D — INVALID assay input (constructed HotpotQA, 38 Native-short-correct
+samples; do not use).**
 8K EM/F1: Native `0/.002`, log_s4 `.605/.677`, YaRN-4 `.579/.656`
 (diff `+.0215`, CI `[−.161, .202]`, unresolved). 16K EM/F1: Native `0/0`,
 log_s4 `.079/.153`, YaRN-4 `.395/.500` (diff `−.3466`, CI `[−.496, −.198]`,
 log_s4 clearly loses). 16K correct-EOS: Native `0/38`, log_s4 `22/38`,
 YaRN `36/38`. The same log_s4 is strong on RULER-13 at 16K (`0.49859` vs
-official YaRN-4 `0.1056`) and beats YaRN there. "Coverage exhaustion" is not
-a sufficient explanation; the radius is task-dependent.
+official YaRN-4 `0.1056`) and beats YaRN there. These recorded numbers have no
+recovered raw owner and come from a short-correct, constructed-filler stress
+with a mechanical prompt-tail boundary. They establish no Hotpot benchmark,
+task radius, gate outcome, or comparison to RULER.
 
-**E — gain structure.** Gain sweep on log_s4 (Native-short F1 `.796`):
+**E — unverified gain-sweep input.** Gain sweep on log_s4 (Native-short F1 `.796`):
 `g=.9→.036`, `1.0→.588`, `1.05→.608`, `1.1026→.680`, `1.15→.692`,
 `1.2→.641`, `1.3→.439`. `g=1.15` frozen by 2Wiki short-only criterion fails
 Hotpot; unit gain is more reasonable on the joint evidence. Finite interior
-optimum; task/checkpoint instability. Do not elevate "no universal scalar
-gain" to a theorem without proof (the sweep proves only non-universality at
-the tested points).
+optimum; task/checkpoint instability. The raw owner was not recovered. These
+points may describe the session but cannot establish non-universality, a
+threshold event, or a gate until the executed protocol and rows are verified.
 
 **F — retired route.** The 18-sample → 64-D pure-z behavioral-gradient
 direction improved dev margins but failed the unopened holdout and is exited
@@ -220,69 +235,47 @@ tight over coefficient assignments of the given moduli (choose phases to align
 all terms). Softmax propagation with per-logit error ≤ ε:
 `‖p′ − p‖₁ ≤ e^{2ε} − 1` (derivation: `p′_i/p_i ∈ [e^{−2ε}, e^{2ε}]`; the
 invariants report's `2(e^{2ε} − 1)` is valid but slack).
-*Corollary (weight-blind vacuity):* any retrofit diagnostic that uses only
-`{|c_k|}` or `{|c_k|²}` (diagonal energies) cannot bound functional change:
+*Corollary (weight-blind limitation):* a retrofit diagnostic that uses only
+`{|c_k|}` or `{|c_k|²}` (diagonal energies) cannot determine the realized
+direction or provide a tight function-specific guarantee without the ordered
+coefficient/frequency pairing. A coarse worst-case modulus such as the bound
+above remains available. For example,
 at `K = 2`, `ω = (1, 2)`: pairings `c = (2, 1)` vs `c = (1, 2)` share all
 slot energies and the frequency multiset, yet `s(π)` flips sign (`−1` vs
 `+1`); and `c = (1, i)` vs `(1, −i)` share `|c_k|²` while `s₂(Δ) = s₁(−Δ)`.
 Compatibility is a property of the *paired* measure `(c_k, ω_k)`, i.e. of the
 checkpoint's embedding of frequencies into subspaces.
 
-**T4 — conditioning theorem (exact, tight).**
-Perturb the deployed table `ω′ → ω′ + δω′`. Score deviation at lag Δ is
-`≤ Σ|c_k|·|δω′_k|·Δ` (first order). Hence
-(deviation at horizon SL) / (worst deviation on Native `[0, L]`) ≤ S, with
-equality attainable by aligning the perturbation phases at the horizon.
-*Corollary:* Native-range behavior measured to precision ε determines
-deployed scores at scale S only to precision `Sε`. Extrapolation to scale S
-is therefore ill-posed with conditioning number exactly S in the score norm —
-not discontinuous at fixed S (scores depend continuously on the table; the
-invariants/continuation reports' "discontinuity" claim is corrected to this),
-but with a modulus that degrades linearly in S, and quadratically per dormant
-degree of freedom in T5.
+**T4 — pointwise horizon bound; former exact-conditioning theorem retracted.**
+For a table perturbation `ω′ → ω′ + δω′`, the valid first-order statement is
 
-**T5 — non-identifiability, two levels (corrected form).**
-Formalize admissible design rules as `F(θ) = G(O_L(θ), S)` where `O_L(θ)` is
-θ's behavior on inputs of length ≤ L only. (If G may simulate θ on long
-inputs, non-identifiability is void — but that is precisely "using
-long-task information", excluded by the problem statement; θ being fully
-known as weights does not change this, since simulating deployment-length
-inputs is deployment-regime measurement.)
+`|δs(Δ)| ≤ Δ Σ_k |c_k||δω′_k|`.
 
-*(i) Table level — purely quantitative.* **Exact** Native-range score
-agreement for all contents forces, by real-analyticity in Δ plus Fourier
-injectivity (A5), the same complex spectral measure, hence the same table,
-hence identical behavior at every scale. There is no table-level sleeping
-circuit: non-identifiability of tables is exactly the conditioning theorem
-T4 (amplification S, tight), nothing stronger.
+Thus the coefficient-budget Lipschitz upper bound grows at most linearly with
+the evaluated horizon. It is invalid to divide this upper bound at `SL` by a
+different upper bound on the actual Native-range deviation and conclude that
+their ratio is at most or exactly `S`; the Native denominator may vanish to
+higher order. For example, with one real cosine score at small `ω`, the actual
+sup-deviation ratio between `[0,4L]` and `[0,L]` approaches `16`, not `4`.
+No exact condition number in the realized score sup norm is established here.
 
-*(ii) Checkpoint level — model-class statement.* For every ε > 0 and S > 1
-there exist checkpoints θ₁, θ₂ with sup-norm output-distribution difference
-≤ ε on all inputs of length ≤ L and O(1) difference on some length-SL input.
-Construction sketch: add one dormant attention circuit whose score
-contribution is proportional to `h(Δ) = 1 − cos(ω_kΔ)` with `ω_k SL ≈ π`:
-`sup_{Δ≤L} h ≤ π²/(2S²)` while `h(SL) = 2` — `~S⁻²`-silent on the Native
-range, O(1)-active at the horizon (exact dormancy impossible with
-`2K ≪ L`, hence the quantitative form). Note this is a statement about the
-expressivity of the model class, not about a given θ, which may be rigid.
+**T5 — non-identifiability questions; former theorem package retracted.**
+At table level, exact score agreement for all contents on an interval can force
+the same complex spectral measure under the stated real-analyticity and Fourier
+injectivity assumptions. That scoped fact survives.
 
-*(iii) Retrofit-specific content — the off-arc statement.* For a non-uniform
-mask, the deployed arc `{(ω′_kΔ) : Δ ∈ (L, SL]}` is disjoint from the Native
-arc `{(ω_kΔ) : Δ ≤ L}` except at the origin (phase-exposure negative
-theorem: two distinct one-parameter subgroups of the torus intersect only at
-0). Deployment therefore queries the frozen network at joint phase
-configurations that Native-range behavior never visits; the network's values
-there are a separate piece of its weight structure, unconstrained by any
-Native-range behavioral datum under reading (ii). This, not a table
-perturbation, is the unidentifiable core for the actual retrofit problem.
-*Uniform-ρ exclusion:* for `ρ ≡ 1/S` (pure PI) the deployed arc is contained
-in the Native arc — no off-arc configurations are created, and PI's entire
-cost is Layer-II blur/resolution loss (consistent with T1). Off-arc novelty
-and its unidentifiable tolerance exist only for non-uniform masks.
+The checkpoint-level construction `h(Δ)=1-cos(ωΔ)` provides only an
+`O(S^-2)` Native-range bound for its selected `ω`; at fixed `S` it does not
+prove the former “for every ε>0” claim while retaining `O(1)` long difference.
+Likewise, distinct torus one-parameter subgroups need not intersect only at the
+origin. A counterexample is `ω=(1,3)`, non-uniform `ρ=(1,1/3)`: at `t=π` both
+arcs reach `(π,π)` modulo `2π`. Any off-arc claim therefore needs explicit
+arithmetic and finite-range assumptions checked for the concrete spectrum.
 
-Consequence: *no Native-only behavioral functional predicts long-task
-outcomes with uniform precision.* Fact D (two Native-only constructions,
-inverted long outcomes) is the empirical shadow.
+The current evidence motivates a working question—how the frozen checkpoint
+responds to ordered phase configurations outside its measured exposure—but it
+does not prove uniform Native-only non-identifiability or impossibility of a
+predictive functional.
 
 **T6 — semigroup vacuity.**
 Require `F(S₁S₂) = F(S₂) ∘ F(S₁)` with per-slot multiplicative action
@@ -303,60 +296,39 @@ behavioral property; it is a bookkeeping identity of the log parametrization.
 Its only residual design content — forbidding S-dependent refitting of the
 mask when a single table must serve a scale interval (requirement 6 of the
 problem) — is a *constraint of the problem statement*, not an optimality
-principle: the s8 ceiling (D6) shows the behaviorally valid mask is in fact
-S-dependent, which is precisely why single-table continuation has a finite
-radius. Composition as a normative optimality principle is empirically
-falsified; as a bookkeeping identity it survives.
+principle. The s8 result shows that composition is not sufficient for behavior;
+it neither proves a finite universal radius nor falsifies composition as a
+possible necessary design constraint. As a bookkeeping identity it survives.
 
-**T7 — budget divergence of fixed profiles (corrected formulas; descriptive).**
-Fix any mask m with at least one slot in (0,1). Continuing the frozen table to
-scale S: per-slot phase range grows linearly in S; novelty volume
-`N_k(S) = ω_kL(S·4^(−m_k) − 1)` (new phase range beyond Native) satisfies
-`N_k(2S)/N_k(S) = 2 + 1/(4^{1−m_k} − 1) > 2` for `m_k < 1` — super-doubling,
-diverging as `m_k → 1` while `N_k → 0`. (*Correction:* the continuation
-report's factor `2(1 + 2^{m_k−1}) ∈ (2,3]` is wrong; the exact factor is the
-one above, in `(2, ∞)`.) Meanwhile the PI-absorbed fraction `S^{m_k}` is the
-blur factor on Native-equivalent structure, unbounded for `m_k > 0`. With
-finitely many slots and monotone costs on both novelty and blur, no fixed
-profile keeps both bounded as `S → ∞`: every retrofit has a finite
-scale-dependent budget, and the budget accounting is exactly A6.
-*Boundary (attacker P1-5):* divergence of coordinate counts is descriptive,
-not behavioral — it does not by itself force failure; log_s4 already operates
-at 4x with novelty "unbounded" relative to Native. The super-doubling
-statement that survives is the inequality `N_k(2S) > 2N_k(S)` for
-`m_k ∈ (0,1)`, with excess growing in S. The continuation report's constant
-multiplier `2(1+2^{m−1})` is retracted on three independent grounds: it
-depends on S, it ranges in (3,4) contradicting its claimed range (2,3], and
-`N_k` is strictly concave in m (convex in S).
+**T7 — fixed-profile phase accounting (descriptive; former divergence theorem
+retracted).** For the memo's fixed 4x-installed table definition,
 
-**T8 — gain (with toy model falsified).**
-*What survives:* multiplying a head's scores by `g > 0` preserves every
-per-decision argmax (same sign structure) — exact; gain cannot repair a
-ranking error, it can only amplify margins and sharpen softmax.
-Non-universality at the tested points is fact E itself (gain optimum moves
-across tasks/checkpoints).
-*What is retracted (attacker P1-7):* the smooth toy balance
-`L(g) = e^{−gμ} + 2αεg` is **falsified by the sweep's shape**. The observed
-loss `1 − F1` has consecutive slopes `−5.5, −0.4, −1.4, −0.25, +1.0, +2.0` —
-a non-monotone derivative, violating convexity between `g = 1.0` and
-`1.05`, so no strictly convex two-parameter family can produce it; and the
-interior-optimum location carries zero predictive content (two free
-parameters, `g*` attains any positive value under reparametrization). The
-honest reading of fact E is a **threshold-like event near `g ≈ 1`** (F1 slope
-jumps `0.4 → 1.4` between 1.0 and 1.05, then flattens) plus gradual terms;
-the `~16x` collapse from `g = 1.0 → 0.9` (`F1 .588 → .036`) is too abrupt for
-a smooth `e^{−gμ}` leakage term and must come from a discrete event. Since
-the optimum sits at `g ≈ 1.1 > 1`, argmax-invariance also says what it
-cannot be doing: it is not fixing rankings anywhere in the sweep — it is
-fixing decisiveness/sharpness (less soft-mixture leakage downstream), until
-the threshold event destroys the operating point below `g = 1`. Repo
-corroboration of the sharpening-shortcut reading: the headwise free-gain arm
-drops teacher-forced loss `3.5612 → 2.3105` while Hotpot F1 drops
-`0.24237 → 0.19439` and EOS termination `178/200 → 108/200` — gain buys
-sharpening, and under teacher-forcing sharpening is a shortcut
-(`HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902`).
+`N_k(S)=ω_kL(S·4^(−m_k)-1)`,
 
-**T9 — three layers and the per-task radius.**
+the correct ratio, where the denominator is positive, is
+
+`N_k(2S)/N_k(S)=2+1/(S·4^(−m_k)-1)`.
+
+The excess above two decreases with `S`; the previous S-independent formula
+and “excess growing in S” claim are algebraically wrong. If the table is instead
+recomputed as `ω′=ωS^(−m)`, it is a different continuation and must be analyzed
+separately. Phase range and PI-style blur can still be recorded as descriptive
+coordinates, but neither proves a finite behavioural radius or failure of a
+method class.
+
+**T8 — gain (exact argmax identity plus unverified finite sweep).**
+*What survives:* multiplying one fixed set of attention scores by `g > 0`
+preserves that set's argmax and changes concentration. This local identity does
+not determine later-layer key mass, generation quality, or a gain method class.
+
+The unrecovered seven-point sweep was reported as inconsistent with one smooth
+convex toy balance. Conditional on protocol validity it would reject only that
+toy shape; it cannot identify a discrete threshold, portable optimum, or
+mechanism. The exploratory headwise report records lower teacher-forced loss
+with a lower Hotpot point estimate, an adaptive within-panel association rather
+than proof that gain causes a sharpening shortcut.
+
+**T9 — three-layer framing; former per-task-radius inference retracted.**
 I. *Representation capacity* — property of Ω alone: aliasing lattice
 (A8), separation/wrap structure of the phase map on `[0, SL]`.
 II. *Compatibility* — property of (θ, Ω′): the retention modulus of T3/T4,
@@ -368,21 +340,13 @@ III. *Circuit robustness* — property of (θ, Ω′, T):
                        budget (T3 chain through softmax/value/residual steps)
                        stays ≥ 0 }.
 
-A single task-independent maximum scale does not exist in general; fact D
-reads `R_RULER(log_s4) ≥ 4`, `R_Hotpot(log_s4) ∈ [2, 4)`,
-`R_Hotpot(YaRN) ≥ 4`, `R_RULER(YaRN) ≲ 2`. Layer II is neither necessary nor
-sufficient for Layer III on the current evidence — **within protocol**
-(attacker P1-9: the headwise protocol is the only one measuring both tables;
-cross-protocol comparison is invalid): retention `0.7171` (log_s4) vs
-`0.6588` (YaRN-4), while Hotpot F1 is `0.21169` vs `0.27644` — better
-retention loses QA (II not sufficient); the worst-retention table wins QA
-(II not necessary). Separately, in the 2026-08-31 PG-19 gate protocol,
-log_s4 passes at `0.875302` with 1x-selected gain; no YaRN number exists in
-that protocol, and the two gate numbers must never be compared against each
-other. The anti-correlation is structural, not accidental: retention prices
-Native-side damage (T3 on `[0,L]`); long-task success prices tolerance to
-novel joint phase configurations (T5), and the two currencies are different
-projections of the same table change.
+Fact D cannot define any task radius. In the separate exploratory headwise
+protocol, retention and variable-length Hotpot point estimates order two tables
+differently, so retention did not rank that QA panel. Without a validated
+binary task-success threshold this does not prove formal necessity or
+sufficiency. The 2026-08-31 `0.875302` gate belongs to a different PG-19
+protocol and must not be compared with headwise gate numbers. The three layers
+remain a useful bookkeeping framework, not an identified theory.
 
 ## C. Derived surrogate quantities (each with its approximation entry point)
 
@@ -420,9 +384,10 @@ projections of the same table change.
    empirically collapsed. Until margins are measured independently, the
    three-layer theory is an envelope/ceiling theory, not a quantitative
    account of the RULER/Hotpot split.
-8. **Novelty doubling factor `2 + 1/(4^{1−m_k} − 1)`** (T7): exact arithmetic
-   of the frozen-table continuation, but its *behavioral* weight (how much
-   novelty a task tolerates) is exactly the unidentifiable quantity.
+8. **Fixed-table phase-range ratio** (T7): for
+   `N_k(S)=ω_kL(S·4^(−m_k)−1)`, the exact ratio is
+   `2+1/(S·4^(−m_k)−1)` when defined. It is descriptive and has no established
+   behavioural weight.
 
 ## D. What the current data identify
 
@@ -430,64 +395,56 @@ projections of the same table change.
    a function of the unordered spectrum; the slot index is shared across
    content pairs, so the coupling lives in the checkpoint, not per content
    pair.
-2. **The log (exponent-space) law beats arithmetic at s4/s8** on the joint
-   gate/NLL/RULER evidence, and the mechanism is identified: arithmetic's
+2. **The log (exponent-space) law beats arithmetic in the tested s4/s8
+   protocols.** Arithmetic's
    effective exponent `q_k(S) = −log(ω′_k/ω_k)/log S` drifts below `m_k` with
    RMS error growing in S (`0.01099/0.02195/0.03200` at s=2/4/8, worst pair
-   k=21), it is not closed under rescaling, and it distorts geometric ratios;
-   matched-gain gate: arithmetic `0.869584` fail vs log `0.875302` pass.
+   k=21), it is not closed under rescaling, and it distorts geometric ratios.
+   The matched-gain operational gate is arithmetic `0.869584` vs log
+   `0.875302`; this identifies neither a universal mechanism nor a scientific
+   discontinuity at the threshold.
 3. **Movement closeness is continuity evidence, not equivalence** (attacker
    P1-8): the C2 two-parameter mask reproduces OLMo movement at MAE
    `0.001223` (max `0.044`) and lands retention `0.870971` vs `0.875302` for
    the original mask — a small behavioral difference straddling a knife-edge
    registered gate, while preserving Qwen long behavior (64K/128K core-4
-   `0.6775/0.5725`, gates pass) and missing the strict OLMo operating point. Behavior is thus **continuous but
-   ill-conditioned in S, pairing-sensitive, and knife-edge near registered
-   gates**; movement metrics certify geometry, not function. The only O(1)
+   `0.6775/0.5725`, gates pass) and missing the strict OLMo operating point.
+   Movement metrics certify geometry, not functional equivalence. The only O(1)
    jumps in the record are same-multiset permutation collapses — discrete
    rearrangements of the *pairing* coordinate, compatible with continuity in
-   movement distance. The only threshold-sensitive coordinate observed is
-   gain (T8/P1-7).
-4. **The task split of fact D** at one scale pair (8K/16K) for two tables
-   (log_s4, YaRN-4), with EOS decomposition (22/38 vs 36/38 correct-EOS at
-   16K): stopping margins are less content-sensitive than hop margins.
-5. **Finite gain optimum with task instability** (fact E).
+   movement distance.
+4. **Fact D is invalid for claim use.** It identifies no task radius or
+   stopping-vs-hop mechanism.
+5. **Fact E is unverified.** Its unrecovered finite sweep cannot establish a
+   portable optimum or gain class boundary.
 6. **Frozen s4 → s8 continuation ceiling** (NLL/RULER owners): continuing the
-   frozen mask to 8x does not preserve the 4x operating point; consistent
-   with T7's super-doubling of novelty volume.
+   frozen mask to 8x does not preserve the 4x operating point in those
+   protocols. T7 supplies no theorem explaining this outcome.
 7. **Coordinate relativity**: normalized-index vs physical-x relations vary
    with K and checkpoint (K32/K128 owners); `x` transfers across the two
    K=64 checkpoints, ordinal slot index is not established as equivalent.
 8. **z=0 parity** (fact A) validates the intervention surface itself: the
    retrofit path is causally clean.
 
-## E. What remains non-identifiable
+## E. What remains unidentified
 
-The single exact unidentifiable quantity: **the frozen network's
-task-weighted tolerance to novel joint phase configurations** — how the
-downstream circuit responds, at scale S, to phase tuples
-`(ω′_kΔ)_{k=1..K}` that never co-occur on the Native manifold
-`{(ω_kΔ) : Δ ≤ L}`. Every avatar is the same object:
-
-- the per-task radius `R_T(θ, Ω′)` of T9;
-- the curvature of the behaviorally optimal continuation (endpoint-only
-  installation makes flow structure unobservable, T6);
-- the interior-vs-corner choice of m beyond the calibration scale;
-- all behavior at unmeasured S (the s8 ceiling was discovered, not predicted).
-
-Not computable from Native data (list audited against the three reports):
-per-circuit decision margins on distractor ensembles; hop transmission
-factors and hop count of the deployed task; slot-usage weights of critical
-queries; aggregation slack between layers; the EOS margin profile on
-Ω′-induced generation paths. T4+T5 show this is not a measurement gap:
-conditioning degrades exactly S in score norm, and Native-blind long-visible
-checkpoint pairs exist constructively. Meanwhile what *is* computable:
-Layer-I aliasing ceilings (hard, Ω-only), the envelope B̂(Δ) of C5, the
-uniqueness budget A9, and the gain's argmax-invariance structure (T8) — i.e.
-necessary conditions and budgets, never sufficient predictions of long-task
+A useful working description of the missing mechanism is the frozen network's
+task- and checkpoint-conditioned response to ordered phase changes outside its
+measured training exposure. Current owners do not identify a per-task radius,
+behaviorally optimal continuation, circuit margins, hop transmission factors,
+slot-usage weights, aggregation slack, or EOS margins. T4/T5 do not prove that
+these quantities are inaccessible from Native data; they merely leave the
+question open. Geometry-only ceilings, envelopes, and gain argmax identities
+remain necessary-condition tools, not sufficient predictors of long-task
 success.
 
-## F. Candidate global theory
+## F. Superseded candidate global theory
+
+> **Entire section superseded.** It preserves the original fitted-family
+> reasoning for audit history, but relies on invalid Fact D and the retracted
+> T4/T5/T7 claims. Its behavioral “eliminations,” off-arc total-novelty,
+> task-radius, conditioning-metric, and global-theory answers are not current
+> conclusions. Use §H and `INDEX.md` instead.
 
 **The object.** An order-preserving, per-slot multiplicative endpoint map
 
@@ -574,6 +531,10 @@ novelty, multihop QA reads cross-distractor lag-coherence in the mid band and
 EOS chains that do not.
 
 ## G. Adversarial audit (attacker findings + synthesizer corrections)
+
+> **Superseded audit record:** the later repository audit found fatal defects in
+> T4/T5/T7 and invalidated Fact D. Statements below that say all P1 repairs were
+> complete or that no P0 remained describe the earlier session only.
 
 Protocol: three isolated builders + one attacker that saw only the reports
 and the fact sheet; every load-bearing item was re-derived or owner-checked
@@ -704,60 +665,13 @@ measurement; it records what a future theory would have to make identifiable.
 
 ## H. Final verdict
 
-**Option (2): partial structure, with the missing quantity named.**
-
-What survives the adversarial audit as proven and nontrivial — i.e. *not*
-the log_s4 curve in new notation (the renaming objection was conceded in §F;
-A6/T7/corner structure are bookkeeping, not identification):
-
-1. **Negative/structural theorems that constrain every future design
-   independently of log_s4:** transplant rigidity (T2); compatibility modulus
-   with weight-blind vacuity — no diagonal-energy functional can bound
-   function (T3); PI uniqueness at curve level with exact edge cases (T1);
-   the conditioning theorem with exact constant S (T4); the three-level
-   non-identifiability package, whose retrofit-specific content is the
-   off-arc statement (T5); semigroup vacuity as a no-go on flow structure
-   (T6); exact universal confusability structure (A8).
-2. **Two genuinely behavioral eliminations:** the arithmetic law (fails 1x
-   retention `0.869584 < 0.875` with quantified exponent drift) and the
-   YaRN corner profile on the RULER/retention axis (fails `0.6588`,
-   RULER-16K `0.1056`) — while YaRN wins Hotpot-16K, so eliminations are
-   axis-specific (fact D).
-3. **Corrected mechanism readings:** behavior is continuous but
-   ill-conditioned in S, pairing-sensitive, knife-edge near registered gates
-   (P1-8); the gain optimum is a threshold-like event near g=1 plus gradual
-   sharpening, and the smooth toy balance is falsified by the sweep's shape
-   (P1-7/T8); movement metrics certify geometry, not function (D3);
-   retention and long-task success are different projections of the same
-   table change, neither necessary nor sufficient for the other within
-   protocol (T9/P1-9).
-4. **The provenance split (§0.1):** object-level Native-only construction
-   (slot values, G_4, 1x-selected gain, blind s2 and Qwen-transport
-   successes) vs meta-level contamination (family selected against long
-   outcomes).
-
-What is not proven and cannot be with current facts: the tolerance functional
-of §E. It is not accessible from Native-range behavior (T4/T5 bound the
-access quantitatively — conditioning exactly S, off-arc queries never
-visited); it is task-indexed (fact D); and every candidate global object —
-including the endpoint map of §F — contains it as an uneliminated input once
-S passes the calibration point. The missing unidentifiable quantity is named
-exactly: **the frozen network's task-weighted response to joint phase
-configurations off the Native manifold.** Its avatars are the per-task
-radius R_T, the s8 ceiling, and the RULER/Hotpot split itself.
-
-Option (1) is not claimed: no theorem here predicts a single unmeasured
-behavior; the §F object is the fitted design family audited down to its two
-behavioral eliminations and its bookkeeping, not a derived law. Option (3)
-is not chosen because the surviving skeleton is strictly stronger than
-log_s4-as-curve: it proves impossibility and conditioning structure that
-log_s4 alone does not contain, explains completed failures (arithmetic
-defect, s8 ceiling, margin-gradient holdout collapse, weight-blind metric
-vacuity, gain-sweep shape), disciplines future claims (within-protocol
-comparison only; no movement-metric functional equivalence; no flow
-structure), and identifies exactly what any future theory must additionally
-supply — an independently measurable margin/tolerance account, without which
-the three-layer stack remains an envelope theory.
+> **Corrected verdict:** this memo retains scoped exact identities, T1/T2/T3
+> under their assumptions, and the T6 algebraic observation that composition is
+> not sufficient for behavior. T4, the checkpoint/off-arc parts of T5, and T7
+> are retracted; T8/T9 are bounded interpretations, not class theorems. Fact D
+> is invalid, Fact E is unverified, and the headwise panel is exploratory. The
+> memo neither proves a disconnected basin or universal non-identifiability nor
+> identifies a predictive mature-checkpoint theory.
 
 ## I. Number-to-owner registry (cited in this memo)
 
@@ -769,14 +683,14 @@ the three-layer stack remains an envelope theory.
 | YaRN-4 retention gate `0.6588` | `HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md` line ~175 |
 | G_4 boundaries, movement MAE `0.001223`, Qwen holdout MAEs | `CPU_LOW_DIM_COUPLING_LAW_20260901.md` §5–6 |
 | movement-mask construction (pair-count measure, leave-others-out uniqueness, exponent 2) | `scripts/analysis/export_uniqueness_budgeted_tables.py` (hash-pinned default tables) |
-| HotpotQA fact D numbers; gain sweep fact E | user-supplied governing facts, 2026-09-02 (this memo §0); not yet backed by a recovered raw owner — see HANDOFF raw-recovery action |
+| HotpotQA fact D numbers | **INVALID for claim/gate use**: constructed 38-row stress, no recovered raw owner; this memo §0 records but does not own them |
 | composition identity `ω(s₁s₂)=ω(s₁)s₂^(−m)` | `SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md` §2 (audit script hash-owned) |
 | Qwen self-construction transfer `0.7000` at 64K core-4 with realized crossings at pairs 1,18 | `SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md`, Qwen construction transfer section (SHA-256 `28093951…e61e49` recorded there) |
 | headwise-protocol retention: log_s4 `0.7171`, YaRN-4 `0.6588`; Hotpot F1 `0.21169` vs `0.27644`, EOS `178` vs `194` | `HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md` lines ~133–175 |
 | free head-gain shortcut: loss `3.5612→2.3105`, Hotpot F1 `0.24237→0.19439`, EOS `178/200→108/200` | same owner, lines ~31, ~117–137 |
 | C2 retention `0.870971` vs original mask `0.875302`; C2 Qwen 64K/128K core-4 `0.6775/0.5725` | `LOW_DIM_COUPLING_GPU_RESULT_20260901.md` lines ~57–58, ~111–112 |
 | p=2 selected against 8K RULER `0.5825` vs `0.5525` (p=1) | `LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md` lines ~42–44 |
-| gain sweep fact E values | user-supplied governing facts §0.E (no recovered raw owner yet) |
+| gain sweep fact E values | **UNVERIFIED** user-supplied session facts; no recovered raw owner |
 
 ## J. What this memo deliberately does not contain
 

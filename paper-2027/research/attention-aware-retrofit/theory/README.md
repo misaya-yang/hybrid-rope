@@ -9,16 +9,16 @@ one complete practical intervention while preserving separate causal owners
 for each component.
 
 [`FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md`](FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md)
-is the THEORY-ONLY first-principles synthesis for post-hoc extrapolation of
-mature frozen checkpoints: exact score decomposition and invariants, transplant
-rigidity, PI uniqueness at curve level, the compatibility modulus, an exact
-conditioning theorem (Native-to-deployment error amplification exactly S),
-constructive Native-blind/long-visible non-identifiability, semigroup vacuity,
-and the three-layer separation with the per-task effective radius. Its final
-verdict is partial structure with the missing quantity named (the frozen
-network's task-weighted tolerance to off-Native-manifold joint phase
-configurations). It contains no method proposals or experiment plans, and it
-audits and partially supersedes
+is a **working, partially retracted THEORY-ONLY synthesis**, not a canonical
+proof owner. Its exact score identities, scoped PI statement, transplant
+rigidity, compatibility bound, and semigroup algebra may be reused only with
+their assumptions. Its former “conditioning exactly S” theorem divides upper
+bounds and is invalid; its arbitrary-epsilon/off-arc non-identifiability claim
+and fixed-profile novelty theorem also fail audit. The user-supplied 38-row
+Hotpot Fact D is invalid for claim/gate use and has no recovered raw owner.
+Consequently the memo does not prove a per-task radius, disconnected basin,
+universal non-identifiability, canonical flow, or method. It contains no
+authorized experiment plan and historically audited
 [`COMMON_DIRECTION_FEASIBILITY_AND_BASIN_BARRIER_THEORY_20260902.md`](COMMON_DIRECTION_FEASIBILITY_AND_BASIN_BARRIER_THEORY_20260902.md).
 
 [`TARGET_FREE_PHASE_ISOTROPY_ALLOCATION_THEORY_20260824.md`](TARGET_FREE_PHASE_ISOTROPY_ALLOCATION_THEORY_20260824.md)

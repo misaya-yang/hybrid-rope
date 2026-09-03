@@ -225,7 +225,7 @@ Packaged evidence:
 | `scripts/core_text_phases/audit_rope_checkpoint.py` | Offline checkpoint frequency audit helper | `9d974b58b44f8b664d9f250cbf6a4d5ec505f5077cb55d1120b4f638f9e53ad9` |
 | `scripts/core_text_phases/audit_training_artifacts.py` | Offline train-cache/token-count audit helper | `bb4a89d522557cc1878cfa37b16de9a7a97930228402a49e5fae6c1df5e6edd5` |
 | `scripts/core_text_phases/make_artifact_manifest.py` | Sanitized external artifact manifest helper | `38cb1f687cc08aa23e518a4da2399cece69754446292bd92cb6dee153c0f4099` |
-| `docs/overview/README.md` | Overview docs entrypoint and current reviewer-routing navigation | `24ef5b27937cca17fbb752c66904be8ead88d6ca2de4941cd1ed5ff44116444c` |
+| `docs/overview/README.md` | Overview docs entrypoint and current reviewer-routing navigation | `416cc36d971a434eb80b9477276aa418e854d09b21783559de49f925264fadc5` |
 | `docs/overview/PAPER_CLAIMS_MAP.md` | Paper-to-experiment traceability map with explicit artifact gates | `fa8292819b940adedaeecbd59b9009aec95744dd080c7847f8be0d31a01f77e8` |
 
 Current compact-repo gaps:

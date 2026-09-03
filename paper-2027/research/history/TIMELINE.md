@@ -7,7 +7,15 @@ owner routing and durable agenda remain in [`../../../INDEX.md`](../../../INDEX.
 and volatile state remains in [`../../HANDOFF.md`](../../HANDOFF.md). Every
 number below defers to its linked owner.
 
-## 2026-02 — early finite-frequency evidence
+The original technical question was method-centric: can a closed-form,
+non-uniform finite RoPE allocation improve length extrapolation, and can a
+static rule select its `tau`? Three later question changes matter more than the
+experiment count:
+
+`tau/method search -> fixed-support allocation identification ->
+table/weight co-adaptation -> mature-checkpoint natural-generation transport`.
+
+## 2026-02-24 to 2026-03-02 — early finite-frequency evidence
 
 - **Did:** established short-context baselines, then ran 50M/125M finite
   EVQ-Cosh tau grids on from-scratch language modelling. Historical reports are
@@ -35,7 +43,7 @@ number below defers to its linked owner.
   cells.
 - **Changed our view:** systems breadth is valuable, but each endpoint and
   operator identity must remain protocol-specific. Formula-centred grids show
-  a tested basin, not near-optimality over a continuum.
+  tested finite points, not a continuous basin or near-optimality.
 - **Evidence status:** 750M persistence and 432M MLA breadth remain supporting
   owners; early claims and labels are bounded by current provenance audits.
 
@@ -61,6 +69,9 @@ number below defers to its linked owner.
   follow. Mature-model adaptation produced protocol-specific long capability.
   Exact position-independent invertible Q/K compensation is obstructed for
   unequal frequency multisets.
+- **Corrected:** 28 historical direct-hybrid zero-score receipts were produced
+  by an in-place Native/EVQ buffer alias. They are invalid evidence against
+  partial-pair, blend, or per-head hybrids; no corrected GPU rerun was made.
 - **Changed our view:** pure allocation identification, systems composition,
   mature adaptation, and frozen retrofit are separate estimands. EVQ-Cosh is a
   closed-form construction and intervention, not a universal optimum.
@@ -130,42 +141,34 @@ number below defers to its linked owner.
   Reference- and request-scale correction recovered Gemma 8K/16K, while the old
   reference control remained zero. K and checkpoint still co-vary, so no K
   causality follows.
+- **Corrected:** the earlier Gemma 16K zero used the configured 8K limit as the
+  operating reference; the validated 4K reference changes the requested scale
+  and supersedes that ceiling interpretation.
 - **Changed our view:** normalized index is the best-supported tested transport
   coordinate, not a canonical or universal one. Cell averaging and conditional
   Native-Q/K diagnostics failed their entrance gates.
 
-## 2026-09-02 — natural-text/QA closure, theory-only synthesis, benchmark
+## 2026-09-02 — natural-QA validity correction, exploratory headwise work, benchmark
 
-- **Did:** completed Qwen packed-natural NLL, far-evidence QA/source-use
-  diagnostics, a bounded headwise factorization ladder, and a first-principles
-  retrofit memo. We also froze a 16-episode
+- **Did:** recorded Qwen packed-natural NLL and far-evidence QA/source-use
+  session statistics, ran a headwise factorization development ladder, drafted
+  a first-principles retrofit memo, and froze a 16-episode
   [`theory falsification benchmark`](../../../falsification_benchmark/README.md).
-- **Observed:** static pure-`z` improves long NLL, RULER/NIAH, and
-  source-conditioned answer likelihood, but natural autoregressive QA and EOS
-  conversion remain unresolved. Headwise clocks improve the long-task Pareto,
-  yet tested log-start and Native-start arms remain on opposite sides of the
-  Native-retention/long-QA frontier. The newest Qwen natural/QA raw remote files
-  were not recovered, so those session-level numbers remain internal.
-- **Changed our view:** useful structure is proven only in parts; current data do
-  not identify a canonical nonlinear flow or a shared Native-compatible and
-  long-capable direction.
-- **Lifecycle:** `PURE_Z_LONG_SIGNAL_ESTABLISHED /
-  NATURAL_QA_AND_NATIVE_LONG_JOINT_UNSOLVED / NO_SOTA /
-  GPU_METHOD_DEVELOPMENT_STOPPED`.
-
-## What a new AI should retain
-
-1. **Established:** fixed-support allocation is causal during training; frozen
-   mature checkpoints are sensitive to ordered allocation; support policy,
-   table, gain/routing, adaptation, and endpoint are separate estimands.
-2. **Supporting breadth:** 432M MLA, 750M continuation, 1.485B from-initialisation
-   and adaptation, 8B adaptation, and Video-DiT each keep their own protocol
-   scope.
-3. **Not established:** universal optimum, SOTA, continuous basin bounds,
-   arbitrary-scale law, natural-generation QA conversion, or K causality.
-4. **Do not repeat:** closed routes remain listed in `INDEX.md`; historical
-   preflights and plans are not queues.
-5. **Current next actions:** read [`../../HANDOFF.md`](../../HANDOFF.md). At this
-   snapshot they are manuscript claim selection, missing-raw recovery if a copy
-   exists, supplement rebuild on the work machine, and owner-by-owner number
-   review—not new GPU method development.
+- **Validity audit:** the 38-row constructed “16K Hotpot” stress selected
+  short-correct rows, used a mechanical prompt-tail boundary and non-official
+  filler distribution, and has no recovered raw owner. It is invalid for
+  benchmark, gate, task-radius, or route-closure claims. The separate
+  Hotpot-200 headwise run used variable-length official rows capped at 16K,
+  reused the development rows adaptively, and lacks a tracked executed/raw
+  bundle; it is exploratory report-only, not exact-16K confirmation.
+- **Theory correction:** the first-principles memo's exact-conditioning T4,
+  unrestricted non-identifiability/off-arc T5, and novelty-ratio T7 do not
+  survive audit. It remains working theory history, not a canonical proof owner.
+- **Changed our view:** 9/2 did not establish QA closure, a disconnected basin,
+  or a new law. It made configuration and gate validity mandatory preconditions
+  for interpreting later mature-checkpoint outcomes; it did not replace the
+  author-ordered static pure-`z` transport question. Tracked 9/1 NLL/RULER
+  owners remain intact.
+- **Lifecycle:** `FIXED_SUPPORT_TRAINING_CAUSAL_CORE_ESTABLISHED /
+  STATIC_Z_NATIVE_TO_LONG_TRANSPORT_OPEN / ASSAY_PREFLIGHT_REQUIRED /
+  NO_ACTIVE_GPU_RUN`.

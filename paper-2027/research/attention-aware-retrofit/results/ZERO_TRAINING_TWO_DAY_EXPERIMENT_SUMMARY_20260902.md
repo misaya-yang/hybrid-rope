@@ -3,25 +3,31 @@
 - **日期：** 2026-09-02
 - **性质：** 内部两日综合报告；不是新的独立实验 owner
 - **范围：** mature-checkpoint、权重冻结、单张静态 RoPE 表、无长度 routing
-- **当前判决：** `LONG_POSITION_METHOD_ESTABLISHED / REPEATED_QA_CONVERSION_BARRIER_CONFIRMED`
+- **当前判决：** `TRACKED_9_1_SIGNALS_RETAINED /
+  9_2_NATURAL_QA_VALIDITY_UNRESOLVED / NOT_AN_EXPERIMENT_OWNER`
+
+> **审计修正（2026-09-02）：** §4 的 9/2 数字没有回收 raw owner，不能作为
+> observation。其 38-row exact-length Hotpot stress 使用 short-correct 条件筛选、
+> 机械的末 128-token 边界与非官方 filler，属于 **invalid claim/gate evidence**；
+> 不能用于 task-radius、QA barrier、方法调参或路线关闭。§7 的“唯一允许”
+> margin-gradient 候选随后在 unopened holdout 失败，已经退出主线。本文仅保留为
+> 当时的内部 synthesis；§3 链接的 9/1 owners 仍按各自协议有效。
 
 ## 1. 总结
 
 这两天没有得到“全面解决长上下文”的方法，但也绝不是没有结果。
 
-已经建立的是：成熟 checkpoint 中存在不可交换的 rotary
-subspace–frequency coupling；一张冻结的 normalized-index pure-`z` 表可以在
-OLMo、Qwen 和 Gemma 的已测协议上保留较高 Native 能力，并显著改善长程 NLL、
-RULER/NIAH 与远端 source likelihood。这个效果主要来自频率表，而不是 attention
-gain。
+由 9/1 tracked owners 建立的是：成熟 checkpoint 中存在不可交换的 rotary
+subspace–frequency coupling；冻结的 normalized-index pure-`z` 表在若干已测
+OLMo/Qwen/Gemma 协议上保留 Native 点并改善长程 NLL 或 RULER/NIAH。9/2 的
+source-likelihood 与 table×gain 统计没有 raw owner，不属于已建立事实。
 
 尚未建立的是：同一张表可以稳定改善自然生成 QA。2026-09-02 的 30-row
-far-evidence panel 中，index 的自然 QA point estimate 低于 Native，区间跨零；后续
-source-contrast decoding 和三候选 sequence reranking 也没有恢复生成分数。因此当前
-最准确的结论是：
+far-evidence、decoder 与 rerank 数字仅是未验证 session 记录，不能通过 gate 或关闭
+路线。因此当前最准确的结论是：
 
-> normalized-index pure-`z` 已经是有效的长位置语言建模与证据传输方法，但从
-> “远端证据进入 logits”到“正确答案成为 autoregressive top-1 并正确停止”仍有断点。
+> tracked owners 支持 protocol-specific 的长 NLL/RULER 信号；自然 QA、source-to-logit
+> 归因与正确 EOS 的联合 assay 仍需有效且可回收的 owner。
 
 这不支持“`z` 无用”，也不支持“自然 QA 已解决”。
 
@@ -51,10 +57,9 @@ source-contrast decoding 和三候选 sequence reranking 也没有恢复生成�
 - [`OLMO2_1B_OVERNIGHT_EXPERIMENT_SUMMARY_20260726`](../../../../rebuttal/rebuttal_0723/theory_results/OLMO2_1B_OVERNIGHT_EXPERIMENT_SUMMARY_20260726.md)
 - [`EVQ_COSH_REBUTTAL_PRINCIPLES`](../../../../rebuttal/rebuttal_0723/theory_results/EVQ_COSH_REBUTTAL_PRINCIPLES.md)
 
-所以 2026-09-02 不是首次发现 QA 问题。它新增的是：同一障碍在**零权重更新的
-normalized-index 静态表**上再次出现；table×gain 对照排除了 gain 主因；
-full/ablated bridge 又把断点缩小到“远端 source 已改变正确答案 likelihood，但没有
-稳定改变 autoregressive winner”。把它表述成一个全新的 QA 问题是不准确的。
+所以 2026-09-02 不是首次提出 QA 问题。它留下了零权重更新、table×gain 与
+full/ablated bridge 的 forensic leads，但由于 raw/config validity 缺口，没有新增可用的
+QA 障碍或 source-to-winner 机制事实。
 
 ## 2. 证据层级
 
@@ -62,9 +67,9 @@ full/ablated bridge 又把断点缩小到“远端 source 已改变正确答案 
 
 1. **本地 canonical owner：** 2026-09-01 的报告和 JSON receipt 已在仓库中，下面的
    数字可由链接 owner 核验。
-2. **2026-09-02 会话回执：** 远端运行完成后记录的统计量；本地脚本已绑定父结果
-   SHA-256，但远端 raw JSON/JSONL 尚未回收到本工作区。服务器现已不可连接，因此
-   这些数字可用于内部决策，不能在导入 raw owner 前升级为论文证据。
+2. **2026-09-02 会话记录：** 远端运行后抄录的统计量；raw JSON/JSONL 未回收，
+   且关键 Hotpot assay 已判 invalid。这些数字只能作为 forensic leads，不能用于
+   内部方法决策、gate、调参、路线关闭或论文证据。
 
 ## 3. 2026-09-01：静态 pure-`z` 方法与跨模型证据
 
@@ -136,12 +141,14 @@ Gemma K128 在修正 Native reference length 后，index s4 的 4K/8K/16K 为
 
 ## 4. 2026-09-02：自然文本、自然 QA 与断点定位
 
-本节是对既有 EVQ-LoRA capability-conversion 障碍的 zero-training 复现与机制收缩，
-不是新发现一个 QA 问题。自然 QA gate 本身仍有价值，因为它第一次在当前冻结
-normalized-index 表、自然 far-evidence prompts 和 matched Native/YaRN 下直接测试该
-问题；但 gate 失败后再继续做 decoder/rerank rescue 的信息增益很低，未应继续扩张。
+> **本节全部是未验证的历史 session 数字，不是 observation。** 原始 raw/receipt
+> 不在仓库，且 38-row exact-length Hotpot stress 的 protocol 无效。以下 “通过”、
+> “gate”、“归因”与“关闭”均为当时记录，现不具有科学裁决力。
 
-### 4.1 Packed-natural NLL：通过
+本节保留当时的 forensic 数字，不能称为对既有 capability-conversion 障碍的复现或
+机制收缩。
+
+### 4.1 Packed-natural NLL：session-reported，未验证
 
 固定 Qwen K32 normalized-index 表在 32 条 paired packed streams 上得到：
 
@@ -150,14 +157,14 @@ normalized-index 表、自然 far-evidence prompts 和 matched Native/YaRN 下�
 | 32K | `2.597666` | `2.615399` | PPL retention 约 `0.9824`，短程代价可接受 |
 | 64K | `2.754945` | `2.630842` | index-minus-Native `-0.1241`，95% CI `[-0.1479,-0.1029]` |
 
-64K 的 32/32 streams 均改善。index 与 YaRN 的 64K 差异未解决，因此该实验建立
-的是自然长位置 NLL 改善，不是对 YaRN 的统一优势。
+session 记录称 64K 的 32/32 streams 均改善；在 raw owner 回收并验证前，这不建立
+自然长位置 NLL 改善，也不支持与 YaRN 的比较。
 
 本地代码中的父回执绑定为
 `ba489f47070d2dd9058afe50fa7c9db1229f50eb2bc364445dfdb5c7815712a9`；raw
 receipt 尚待回收。
 
-### 4.2 Far-evidence natural QA：未通过正向门，但不是显著负效应
+### 4.2 Far-evidence natural QA：session-reported，gate 无效
 
 30-row 2WikiMultihopQA/Qasper/HotpotQA panel 的 macro 为：
 
@@ -167,19 +174,18 @@ receipt 尚待回收。
 | normalized-index | `0.10174` |
 | YaRN | `0.11197` |
 
-index-minus-Native 为 `-0.03055`，paired 95% CI `[-0.1168,+0.0486]`。因此正向
-QA gate 未通过，但区间也不支持“index 已被证明伤害自然 QA”。正确表述是自然 QA
-仍未解决。父回执 SHA-256 为
+session 记录的 index-minus-Native 为 `-0.03055`，paired 95% CI
+`[-0.1168,+0.0486]`。这些数字既不通过/失败当前 gate，也不证明伤害；自然 QA assay
+validity 与结果均未解决。父回执 SHA-256 为
 `6109434ea596b42706e5ce295a1348052ec4d01b22c0849529bf23f2dbef793c`。
 
-### 4.3 Table × gain 归因：NLL 主要来自表
+### 4.3 Table × gain：session-reported，不能归因
 
-Native/index table 与 unit/index gain 的 2×2 对照显示：index table + unit gain 保留
-了几乎全部长 NLL 收益；gain 不是自然 QA 断点的主要来源。当前自然 NLL 结果应归因
-于 exponent table 为主，而不是 gain-only。factorial result 的本地绑定 SHA-256 为
+session 记录称 index table + unit gain 保留了多数长 NLL 点差；缺少 raw owner 时，
+不能据此把自然 NLL 归因于 table 或排除 gain。factorial result 的本地绑定 SHA-256 为
 `5d6f2f2e7dc4cc8961e1d42d87931e03d3cf540a3af4a7b7d9c776d66b5a3d9b`。
 
-### 4.4 Evidence-position bridge：远端证据确实进入了答案 logits
+### 4.4 Evidence-position bridge：session-reported，未建立
 
 在 far/near/ablated 的 matched prompt bridge 中：
 
@@ -189,26 +195,25 @@ Native/index table 与 unit/index gain 的 2×2 对照显示：index table + uni
 - far 条件下 canonical answer NLL：index `3.695`，Native `5.123`；source ablation 后
   两者均约 `5.19`。
 
-这说明 index 的改善不只是“模型能在绝对位置 64K 继续做局部 LM”：远端 source
-对 canonical answer likelihood 的影响明显增强。但 near 条件受 instruction scope
-混杂，不能从该对照声称纯粹的 position penalty 已被分离。
+这些抄录值曾被解释为远端 source 改变 canonical answer likelihood；raw/config 未
+验证且 near 条件受 instruction scope 混杂，当前不建立 source use 或 position penalty。
 
-### 4.5 两条 readout rescue 均未成功
+### 4.5 两条 readout rescue：reported candidate failures
 
 1. **Source-contrast greedy decoding：** index contrast-minus-greedy 为
    `+0.00079 [-0.0271,0.0292]`，没有恢复分数；index 与 Native contrast 的点差约
-   `-0.0288`。该路线关闭，不做 contrast coefficient sweep。
+   `-0.0288`。这只是一条未验证 candidate 记录，不关闭 contrast 类。
 2. **现有三候选 sequence rerank：** rerank 相对 index 为
    `+0.0067 [-0.0173,0.0330]`，macro `0.1142`；相对 Native 仍低约 `-0.0181`。
    三候选 oracle macro 为 `0.18656`，说明候选中存在一定 headroom，但现有 source
-   score 无法可靠选择。该路线关闭，不做 beam/alpha/rerank sweep。
+   score 无法可靠选择。这只是一条未验证 candidate 记录，不关闭 rerank/beam 类。
 
-这些负结果定位的是 readout rescue，不是否定 pure-`z` 已建立的 NLL、RULER 与
-source-utilization 效果。
+这些 session 记录不定位 readout 机制。tracked 9/1 NLL/RULER owners 不受影响；
+9/2 source-utilization 尚未建立。
 
 ## 5. 两日后可以与不可以声称什么
 
-### 已建立
+### 由 tracked 9/1 owners 建立
 
 - 同一 frequency multiset 的 slot permutation 会崩溃；unordered spectrum 不充分。
 - mature checkpoint 的有效对象是 learned rotary subspace 与 dilation 的 ordered
@@ -217,10 +222,6 @@ source-utilization 效果。
   long-context capability，同时保留可接受的 Native 能力。
 - normalized-index 是目前最有证据的跨 K transport rule；physical-`x` 没有实证
   特权。
-- 在 Qwen K32，自然 64K NLL 与远端 source-conditioned answer likelihood 均明显改善。
-- gain 不是上述自然 NLL 收益的主要解释。
-- zero-training 表重复了历史 EVQ-LoRA 的 capability-conversion barrier；今天新增的是
-  更干净的 table/gain 归因和 source-to-logit 定位，不是 QA 障碍本身。
 
 ### 尚未建立
 
@@ -230,6 +231,8 @@ source-utilization 效果。
 - index 统一优于 YaRN、PI、NTK 或 Resonance；
 - source likelihood 改善必然转化为正确首 token、完整答案和停止行为；
 - C2 的低 movement RMSE 能保证功能等价。
+- 9/2 Qwen natural NLL、source use、table×gain 归因或 readout-rescue negative
+  已经通过有效 assay 建立。
 
 ## 6. 对下一步理论的约束
 
@@ -246,9 +249,12 @@ source-utilization 效果。
 等价。它主要识别全局 PI 模式，局部二阶近似不能凭空导出 non-affine allocation。
 这是一条代数结论，不是新的 GPU 结果。
 
-## 7. 从失败分叉推出的候选解
+## 7. 已失败并 superseded 的历史候选
 
-现有证据没有推出另一条解析 ramp；它推出的是一个更具体的选择问题：能否仅移动
+> 本节保留 9/2 当时的候选设计。该 margin-gradient 路线随后在 unopened holdout
+> 失败，不是当前建议、gate 或 action queue。
+
+当时的分析没有推出另一条解析 ramp；它提出了一个更具体的选择问题：能否仅移动
 `z`，把模型**已经具备的短程任务计算**运输到 target-range phases，同时不破坏
 Native computation。
 
@@ -265,7 +271,7 @@ Native computation。
 不是任意 QA 的绝对分数，而是候选表能否把已存在的 short capability 运输到 long
 layout；绝对 long QA 仍需作为冻结后的外部结果另报。
 
-### 7.2 唯一允许的干预
+### 7.2 当时拟议的干预
 
 从当前 normalized-index 表 \(m_0\) 出发，仍只允许
 

@@ -1,63 +1,34 @@
-# `paper-2027/` — active ICLR 2027 submission package
+# `paper-2027/` — active ICLR 2027 package
 
-This directory contains the only active manuscript. The NeurIPS 2026 baseline
-under `../paper/` is immutable and must never be edited, compiled, moved, or
-regenerated.
+This is the only active manuscript. `../paper/` is the immutable NeurIPS 2026
+baseline and must never be edited, compiled, moved, or regenerated.
 
-## Authority and cold start
+## Read for the task
 
-From the repository root, read:
+1. [`../AGENTS.md`](../AGENTS.md) and [`../README.md`](../README.md) — rules and
+   paper core.
+2. [`HANDOFF.md`](HANDOFF.md) — latest PDF/Git/authorization state and actions.
+3. Current `main.tex`/`main.pdf` — reviewer-visible wording.
+4. Search [`../INDEX.md`](../INDEX.md) and open one owner only when verifying or
+   changing a scientific claim.
 
-1. [`../AGENTS.md`](../AGENTS.md) — rules and claim ceilings;
-2. [`../INDEX.md`](../INDEX.md) — durable theory/evidence/code routing and
-   research priority;
-3. [`HANDOFF.md`](HANDOFF.md) — live state, current authorization, and receipts;
-4. [`NARRATIVE_GUIDE.md`](NARRATIVE_GUIDE.md) — stable manuscript strategy;
-5. current `main.tex`/`main.pdf`, then the canonical owner routed by
-   [`research/README.md`](research/README.md).
-
-Closed revision plans, the August author-verdict ledger, the old Codex/Claude
-review log, historical rebuttal material, and external-model bundles are not
+Use [`NARRATIVE_GUIDE.md`](NARRATIVE_GUIDE.md) for stable manuscript strategy,
+[`REVISION_BRIEF.md`](REVISION_BRIEF.md) for the bounded revision contract, and
+[`SUBMISSION_CHECKLIST.md`](SUBMISSION_CHECKLIST.md) for release gates. Historical
+reviews, closed plans, external-model bundles, and `research/` are not default
 cold-start inputs.
 
-## Stable package structure
+## Package contract
 
-- `main.tex` is the only manuscript entrypoint and declares the compiled
-  section/appendix order.
-- `sections/` and `appendix/` contain reviewer-facing source.
+- `main.tex` is the only manuscript entrypoint; `sections/` and `appendix/`
+  contain reviewer-facing source.
 - `figs/`, `tables/`, and `refs/` contain compiled assets and bibliography.
-- `compile.sh` / `build.mk` implement the paper-format checks.
-- [`SUBMISSION_CHECKLIST.md`](SUBMISSION_CHECKLIST.md) defines stable release
-  gates; live pass/fail state belongs only in the handoff.
-- [`CHANGES_FROM_NEURIPS2026.md`](CHANGES_FROM_NEURIPS2026.md) owns the durable
-  contribution-distinctness boundary.
-- `research/` contains internal owners, receipts, analyses, archived plans, and
-  preflights. It is not manuscript prose and is excluded from the anonymous
-  supplement except through an explicit curated allowlist.
+- `compile.sh`/`build.mk` check format. Compilation does not validate science.
+- `research/` contains internal owners, receipts, analyses, and history. It is
+  excluded from the anonymous supplement except by curated allowlist.
+- Packaging must use the curated ICLR profile from the repository root; never
+  archive the root or compile `../paper/`.
 
-Current PDF/source synchronisation, page counts, hashes, supplement receipts,
-policy checks, author actions, and worktree state are volatile; consult the
-handoff rather than recording them here.
-
-## Build, test, and packaging
-
-Canonical commands and machine assignments live only in
-[`../README.md`](../README.md) under “Build and validate.” The work machine owns
-the `aidemo` environment, packaging, and final cross-environment validation.
-The low-configuration personal PC may run local LaTeX/Tectonic builds and visual
-PDF iteration alongside documentation, planning, and lightweight checks; do not
-infer a repository failure from missing Conda there.
-
-Compilation establishes layout/format health only. It does not validate
-scientific claims. Packaging must use the curated ICLR profile from the
-repository root; never archive the repository root and never compile `../paper/`.
-
-## Evidence and research boundaries
-
-Every number or claim must resolve through [`../INDEX.md`](../INDEX.md) §2 and
-the named canonical/raw owner. A plan, preflight, script, code manifest, launch
-log, external-model review, or historical PDF receipt is not a result.
-
-The durable post-submission research order lives in `INDEX.md` §5. Current
-authorization lives only in the handoff. No document in `research/` authorizes
-GPU work, paid compute, an upload, or Git publication by itself.
+The handoff owns live checks and machine availability. Scientific claims route
+through `INDEX.md` to a direct owner. No plan, preflight, review, script, or
+document in this directory authorizes compute, Git publication, or upload.

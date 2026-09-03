@@ -1,115 +1,83 @@
 # ICLR 2027 active handoff
 
-- **Updated:** 2026-09-02
-- **Role:** volatile Git, PDF, machine, validation, and author-action state only
+- **Updated:** 2026-09-03
+- **Role:** live Git, PDF, validation, authorization, and author actions only
 - **Active manuscript:** `paper-2027/`
 - **Immutable baseline:** `paper/`
 
-Start with [`../AGENTS.md`](../AGENTS.md), then
-[`../INDEX.md`](../INDEX.md). The chronological record is
-[`research/history/TIMELINE.md`](research/history/TIMELINE.md); mature-checkpoint
-owners are under
-[`research/attention-aware-retrofit/`](research/attention-aware-retrofit/).
-Those files own rules, durable routing, and history respectively. This file
-does not restate the research agenda.
+Read [`../README.md`](../README.md) for the paper core and
+[`../AGENTS.md`](../AGENTS.md) for rules. Use [`../INDEX.md`](../INDEX.md) only
+to resolve a specific scientific claim. This file owns no scientific verdict.
 
-## 1. Current outcome
+## Latest changes
 
-- The repository navigation and historical evidence layout have been
-  reorganized by chronology and artifact role.
-- Historical experiment reports are grouped under `docs/exp/YYYY-MM/`.
-- Active research now separates `foundations/`, `evidence/`, `audits/`,
-  `history/`, and `archive/`; the mature intervention programme retains its
-  protocol-specific directory.
-- No scientific result, manuscript claim, experiment protocol, or model
-  artifact was intentionally changed by this reorganization.
-- No training, inference, paid compute, or GPU work was run.
+- The source-of-truth documentation audit is complete locally and uncommitted.
+- Root orientation was re-aligned with the current manuscript,
+  `NARRATIVE_GUIDE.md`, `REVISION_BRIEF.md`, and the author's stated hierarchy;
+  the 9/2 retrofit audit no longer defines the paper or submission priority.
+- Root routing, the existing timeline, affected retrofit status documents, and
+  the navigation test changed. No second index, chronology, handoff, map, or
+  action queue was created.
+- No manuscript source, experiment protocol, model artifact, training,
+  inference, paid compute, or GPU work changed or ran.
 
-## 2. Git state
+## Git
 
-- Branch / upstream before the reorganization:
-  `main_0726` / `origin/main_0726`.
-- Baseline local HEAD / tracking SHA:
-  `b50d5eba179cb8f22de9ac8feb110ec0f3233f41`; ahead/behind `0/0`.
-- The working tree is intentionally dirty with the documentation and path
-  reorganization. Nothing is staged, committed, or pushed.
-- No pull, fetch, rebase, switch, reset, stash, branch deletion, remote edit,
-  commit, or push was performed.
+- Branch / upstream: `main_0726` / `origin/main_0726`.
+- Local HEAD / tracking SHA before these uncommitted edits:
+  `891384fc38563f011d4cbc51e68fc86a22cae4a3` / same SHA.
+- Ahead/behind: `0/0`.
+- Nothing is staged, committed, or pushed.
+- Existing `.agents/` modifications and untracked teamwork artifacts are
+  unrelated and remain untouched.
 
-Verify branch, upstream, divergence, and worktree scope live before any later
-Git operation.
+Verify branch, upstream, divergence, remote ref, and worktree scope live before
+any Git operation.
 
-## 3. Manuscript and PDF state
+## Manuscript and PDF
 
 - Active PDF: `paper-2027/main.pdf`
 - Active PDF SHA-256:
   `37aa6402a65d68b21909b0b3479c4e8edd811079e3922c2c1be915ddeab167e4`
-- Active PDF body / total: 9 / 31 pages
-- Immutable [`../paper/main.pdf`](../paper/main.pdf) SHA-256:
+- Prior validated body / total: 9 / 31 pages; not rebuilt in this audit.
+- Immutable `paper/main.pdf` SHA-256:
   `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`
-- `paper/` and the active manuscript sources have no intentional changes from
-  this reorganization. Neither manuscript was compiled in this session.
-- The curated supplement remains to be source-synchronized and rebuilt on the
-  work machine before upload.
+- `paper/` and active manuscript source/assets have empty diffs. Neither
+  manuscript was compiled.
 
-## 4. Machine and authorization state
+## Authorization and machine
 
-- No GPU or paid-compute run is active or authorized.
-- The work machine owns canonical `aidemo` validation and final packaging.
-- The low-configuration personal PC remains a documentation/planning host;
-  `aidemo` is not
-  expected here and must not be installed or recreated for this change.
-- The previous remote compute instance was already shut down. No remote host
-  was contacted during this reorganization.
+- No GPU, paid-compute, remote-host, Git-publication, or submission action is
+  active or authorized.
+- The work machine owns canonical `aidemo`/PyTorch tests, supplement packaging,
+  and release validation.
+- The low-configuration personal PC is a documentation/planning host. Do not
+  install or recreate the work-machine environment here.
 
-## 5. Evidence limitations still open
+## Validation
 
-- The 2026-09-02 Qwen natural-NLL/QA/source-use statistics remain internal
-  because their remote raw JSON/JSONL owners were not recovered before the
-  prior shutdown. Recover a surviving copy if one exists; do not silently
-  rerun or promote those numbers.
-- Repository reports and manifests are evidence routers, not substitutes for
-  their raw owners. Preserve the claim ceilings in `AGENTS.md`.
-- The current submission has not been rewritten around the latest research
-  chain. Manuscript inclusion remains an author decision.
+Passed on the personal PC:
 
-## 6. Validation receipt
+- `python3 tests/test_repository_navigation.py`: 25/25;
+- scoped `git diff --check` for audit-modified documents;
+- routing links and public-safety checks through the navigation suite;
+- direct CPU counterchecks supporting the corrected theory-owner status;
+- active/immutable PDF hash checks and empty manuscript-source diffs.
 
-Passed on the low-configuration personal PC:
+Skipped here: canonical `aidemo`/PyTorch validation, supplement packaging, and
+manuscript compilation. Unrelated full-worktree `git diff --check` still finds
+the pre-existing `.agents/ORIGINAL_REQUEST.md` EOF whitespace.
 
-- 83 CPU/standard-library tests: 22 repository-navigation, 3 paper-workspace,
-  29 rebuttal-evidence, 23 rebuttal-protocol, and 6 falsification-evaluator
-  tests;
-- theory-falsification leakage audit: 16 episodes, `PASS`, 0 violations, 0
-  warnings, with regenerated artifact hashes after path migration;
-- all affected curated/benchmark/workspace JSON parsed successfully;
-- 70 modified or newly routed Markdown documents checked with 0 broken local
-  links;
-- affected Python entrypoints passed `py_compile`; `git diff --check` passed;
-- paper-code workspace source/hash validation passed, including refreshed
-  digests for the moved-path message and one pre-existing stale schedule entry;
-- `paper/`, active manuscript TeX/sections/appendix/figures/tables, `.agents/`,
-  and `internal/` have empty diffs. PDF hashes remain those in §3.
+## What to do now
 
-Skipped/unavailable here:
-
-- canonical `aidemo`/PyTorch/pytest validation and supplement packaging belong
-  to the work machine;
-- manuscript compilation was unnecessary because manuscript sources were not
-  changed;
-- no model, inference, training, remote host, paid compute, or GPU was used.
-
-## 7. Immediate author actions
-
-1. Decide which completed mature-checkpoint results, if any, change the active
-   manuscript claim set.
-2. Recover the missing 2026-09-02 raw owners only from an existing surviving
-   copy; absence does not authorize a rerun.
-3. Rebuild and validate the curated supplement on the work machine before
-   submission.
-4. Complete the final owner-by-owner number review and freeze author metadata.
-5. Treat any new experiment, GPU run, OpenReview upload, commit, or push as a
-   separate authorization.
-
-For durable research priorities and closed routes, use `INDEX.md`; do not turn
-this volatile checklist into a second agenda.
+1. Audit the 30-second reviewer path in the current title, abstract, first page,
+   Figure 1, and contribution order: `z` novelty → causal isolation → exact
+   theory → fully frozen / adaptation / from-training consequences.
+2. Complete the owner-level claim/number/method-identity audit and live policy,
+   author-profile, reciprocal-review, author-limit, and dual-submission checks.
+3. Freeze title, abstract, author roster, and author metadata on 2026-09-17;
+   submit the matching official abstract by 2026-09-18, 11:59 PM AoE.
+4. Rebuild the anonymous supplement, run final build/anonymity/visual checks,
+   and submit the verified full paper by 2026-09-25.
+5. Keep post-submission static-`z` research, raw-file forensics, experiments,
+   commit/push, and upload as separately authorized work.
