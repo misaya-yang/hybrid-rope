@@ -1,7 +1,7 @@
 # INDEX — claim and owner router
 
-- **Updated:** 2026-09-03
-- **Evidence cut-off:** owners available through 2026-09-03.
+- **Updated:** 2026-09-04
+- **Evidence cut-off:** owners available through 2026-09-04.
 - **Role:** route an exact question to its current owner, correction, or scoped
   negative. This is not a report, timeline, or live handoff.
 
@@ -23,8 +23,11 @@ depth the task requires. Rules are in `AGENTS.md`; paper orientation is in
   adaptation and from-training/co-adapted evidence supply distinct lifecycle
   consequences and breadth.
 - **Submission state:** the manuscript design is frozen around completed
-  evidence. No new submission experiment is planned; current work is the
-  September title/abstract/metadata and full-paper verification sequence.
+  evidence; later research enters it only after owner-backed validation and an
+  explicit author decision. Manuscript work does not prohibit active research.
+- **Active method theme:** one static table/gain under about `0.12` separate
+  Native NLL and downstream damage: maximize zero-training reach toward 8x,
+  then test small physical-2x/4x LoRA on untouched 8x/16x/32x capability.
 - **Not claimed:** arbitrary allocations always help, universal/unique optimum,
   SOTA, or static geometry as a trained-model quality predictor.
 
@@ -52,7 +55,7 @@ Open the full local catalogue only when needed:
 | What is the strongest practical no-update result? | Fully frozen derived allocation changes OLMo 16K RULER from `0.0056` to `0.6047`; coarse label-free allocation reaches `0.6104`; pure-`z` and broader deployment claims remain separate | [`SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823`](paper-2027/research/attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) |
 | Does it persist on fresh natural text? | Length-conditional NLL effect; not universal ranking | [`FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824`](paper-2027/research/attention-aware-retrofit/results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) |
 | What is the strongest tracked static-table result? | One OLMo table passes tested 1x gates and improves longer endpoints; ordered permutation can collapse | [`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831`](paper-2027/research/attention-aware-retrofit/results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md) |
-| Under one static table and one path, which completed form is retained, and what same-table LoRA follows? | The sequential OLMo stop tree retains the full 64-slot legacy-u p2 mask installed as log-s4 with fixed `c=.074`; this is a capability-first engineering incumbent among the named historical candidates, not a global optimum. Same-substrate Q/K LoRA is specified but unexecuted. | [`SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903`](paper-2027/research/attention-aware-retrofit/theory/SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md) |
+| Under one static table and one path, which completed form is retained, and what same-table LoRA follows? | The sequential OLMo stop tree retains the full 64-slot legacy-u p2 mask installed as log-s4 with fixed `c=.074`; this is a capability-first engineering incumbent among the named historical candidates, not a global optimum. The later exact Q/K-LoRA screen improves PG-19 but not measured generated capability. | [`selection/specification`](paper-2027/research/attention-aware-retrofit/theory/SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md), [`LoRA result`](paper-2027/research/attention-aware-retrofit/results/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md) |
 | What is supported across K32/K128? | Normalized pair index is the best-tested coordinate, not a law or K-causal result | [`K32 confirmation`](paper-2027/research/attention-aware-retrofit/results/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md), [`K128 confirmation`](paper-2027/research/attention-aware-retrofit/results/K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901.md), [`full RULER-13`](paper-2027/research/attention-aware-retrofit/results/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md) |
 | Does long signal convert to natural QA? | **Unresolved:** 9/2 raw owners missing; constructed 38-row assay invalid | [`ZERO_TRAINING_TWO_DAY...`](paper-2027/research/attention-aware-retrofit/results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md) |
 | Do headwise clocks solve the joint objective? | **Exploratory/report-only:** variable-length capped panel, adaptive row reuse, no tracked executed bundle | [`HEADWISE_FACTORIZED...`](paper-2027/research/attention-aware-retrofit/results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md) |
@@ -60,6 +63,12 @@ Open the full local catalogue only when needed:
 | Can Native checkpoint structure uniquely determine an ordered movement profile? | **No without an added preference.** The declared squared Native-geometry surrogate uniquely constructs `m = Iso(1-u)` and its executed OLMo arm improves natural retention/likelihood, but fresh core-4 is materially worse at 4K/8K; it exposes an endpoint-dependent tradeoff, not a latent law or current-p2 replacement. | [`theory`](paper-2027/research/attention-aware-retrofit/theory/NATIVE_ONLY_MOVEMENT_PROFILE_IDENTIFIABILITY_20260903.md), [`result`](paper-2027/research/attention-aware-retrofit/results/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md) |
 | Can one non-Native static table guarantee exact Native short behaviour and change long geometry? | **No under universal exact-preservation and standard stationary-RoPE assumptions.** The completed per-request Native/s4 policy is the existing behavioural escape. A prefix-preserving long-frame key handoff removes the old cross-boundary phase mismatch in CPU algebra, but has no model-quality evidence. | [`STATIC_NATIVE_NO_HARM_AND_PREFIX_HANDOFF_20260903`](paper-2027/research/attention-aware-retrofit/theory/STATIC_NATIVE_NO_HARM_AND_PREFIX_HANDOFF_20260903.md), [`session-policy result`](paper-2027/research/attention-aware-retrofit/results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md) |
 | Is the Selective-31 calibration score a universal functional sensitivity, and does joint Q/K--frequency relabeling invalidate the ordered-coupling results? | **No.** The score is exact endpoint attention-map displacement on a frozen calibration pack, not `chi_func`; exact joint relabeling is a gauge identity, while existing frequency-only permutations intentionally hold Q/K fixed. | [`LOCAL_FUNCTIONAL_COMPATIBILITY_AND_GAUGE_AUDIT_20260903`](paper-2027/research/attention-aware-retrofit/theory/LOCAL_FUNCTIONAL_COMPATIBILITY_AND_GAUGE_AUDIT_20260903.md) |
+| Do finite scale-orbit boundary and Fourier-rank quantities predict mature-model behaviour? | **Negative selector result.** Exact boundary count changes `6 -> 64` under a behaviourally invisible ULP perturbation; p2 and the failed exact chain share zero Gram lower bound and saturated operator error but have opposite 4x utility. A CPU follow-up finds old `D*` plus phase safety diagnose these extreme failures, but the earlier one-turn-floor counterexample still falsifies `D*` as a general selector. | [`result`](paper-2027/research/attention-aware-retrofit/results/SCALE_ORBIT_BOUNDARY_VALIDATION_RESULT_20260904.md), [`transport preflight`](paper-2027/research/attention-aware-retrofit/preflights/SCALE_ORBIT_TRANSPORT_RESIDUAL_PREFLIGHT_20260904.md), [`prior axis falsification`](paper-2027/research/attention-aware-retrofit/analysis/RETROFIT_AXIS_FALSIFICATION_20260822.md) |
+| What survives a proof, novelty, and tightness audit of the supplied finite scale-covariance derivation? | **The mathematics survives; the current empirical-tightness route does not.** Theorem 5 extends to continuous finite-dimensional real orthogonal RPE and has a dimension-free separation-order corollary. Exact obstruction/boundary leakage are prior art and novelty is not certified. A resolving synthetic control passes, but 45 bounded-condition trajectories select identity and saturate near error `2`; Ky-Fan is zero/tiny and non-ranking. Multilevel is stopped. | [`proof/novelty owner`](paper-2027/research/attention-aware-retrofit/theory/FINITE_SCALE_COVARIANCE_PROOF_NOVELTY_AND_TIGHTNESS_AUDIT_20260904.md), [`tightness result`](paper-2027/research/attention-aware-retrofit/results/SCALE_CONJUGACY_TIGHTNESS_RESULT_20260904.md), [`preflight`](paper-2027/research/attention-aware-retrofit/preflights/SCALE_CONJUGACY_TIGHTNESS_PREFLIGHT_20260904.md) |
+| Has same-substrate log-p2 Q/K LoRA already been executed? | **Yes, at unit gain and at the retained `c=.074`.** Both improve paired PG-19 NLL; neither establishes generated-task capability improvement. | [`LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904`](paper-2027/research/attention-aware-retrofit/results/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md) |
+| Does exact log-p2 plus `c=.074` benefit from matched Q/K-only adaptation? | **Likelihood only in the measured panel.** PG-19 improves at 1x/4x, five-task macros are slightly negative/unresolved, and fresh core-4 changes `-.0100/+.0025/-.0225` at 4K/8K/16K. | [`LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904`](paper-2027/research/attention-aware-retrofit/results/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md) |
+| What is the corrected next experiment for one-table zero-training and low-step adaptation? | **Prospective, not evidence.** Estimate the log-p2 factor/gain frontier under the approximate 0.12 Native-damage budget, then train only on physical 2x/4x identifiable source pairs and test unseen 8x/16x/32x capability. | [`CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904`](paper-2027/research/attention-aware-retrofit/preflights/CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md) |
+| Where is the corrected single-table problem, current evidence, conditional ceiling analysis, prepared code, and next execution order handed off? | **Research handoff, not a result.** It separates observations, derived conditional statements, working hypotheses, and unresolved questions for zero-training and 2x/4x-to-8x/16x/32x adaptation. | [`SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904`](paper-2027/research/attention-aware-retrofit/analysis/SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904.md) |
 | What can the 9/2 first-principles memo support? | Only explicitly retained identities under assumptions; T4/T5/T7 and behavioural generalizations are retracted/disputed | [`FIRST_PRINCIPLES...`](paper-2027/research/attention-aware-retrofit/theory/FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md) |
 
 Endpoint boundaries remain strict: NLL/PPL, answer-token NLL, teacher-forced
@@ -126,37 +135,36 @@ global or behavioural ceiling.
 Exact live progress and authorization belong only in
 [`HANDOFF.md`](paper-2027/HANDOFF.md).
 
-### Post-submission method work — historical single-table selection resolved
+### Active method work — two-track programme
 
-The completed-history answer for the **deterministic static pure-`z` table**
-question is routed by
-[`SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903`](paper-2027/research/attention-aware-retrofit/theory/SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md).
-Under the paper's capability-first sequential replacement rules, the retained
-OLMo form is the full 64-slot legacy-u p2 movement installed as log-s4 with one
-fixed `c=.074` gain. It uses one table and one path at every length. It is not a
-formal optimum: Native-isotonic has better natural-likelihood/retention points
-but loses the fresh structured 4K/8K replacement contrast.
+The target is not exact Native preservation or universal domination. It is one
+static table/gain with about `0.12` maximum damage separately on Native NLL and
+downstream tasks, followed by the largest useful extrapolation.
 
-This resolves the **completed-history deployment selection** only. It does not
-satisfy or close the separate README direction that asks for a new candidate
-derived prospectively before LM outcomes: p2 and `.074` retain their disclosed
-outcome-selection history.
+**Track Z — zero training.** The retained OLMo incumbent is full legacy-u p2
+installed as log-s4 with fixed `c=.074`. It uses one table/path at every length,
+passes the historical `0.875` double gate, and strongly improves 2x/4x over
+Native and repository YaRN. Its PG-19 retention `0.875302` is marginal under a
+literal `0.88` target. The tested s8 form fails robust capability; this closes
+that arm, not the 8x objective. The next question is the largest factor/gain in
+the 4-to-8 interval that passes both Native gates before long outcomes open.
 
-A request-level Native/long router, two tables, cache branching, frequency
-segmentation, or a length-time switch is not this answer. The Qwen result is
-long-capability construction transfer only; K32/K128 normalized-index results
-belong to a distinct C2-derived family.
+**Track F — low-cost adaptation.** Same-substrate Q/K LoRA has now executed at
+unit gain and `c=.074`; both improve PG-19 but not measured generation. The live
+problem is a small physical-2x/4x adaptation with route-explicit source credit,
+Native retention, and sealed 8x/16x/32x generated-task evaluation. QK runs
+before a parameter-matched QKVO escalation when routing succeeds but downstream
+transport/readout remains weak.
 
-The declared LoRA follow-up freezes this same table/gain at every training and
-evaluation length and adapts Q/K only; it is an unexecuted same-substrate
-specification, not a transplanted Stage-A result. No new LoRA result, global
-training-free SOTA comparison, GPU method-development experiment, or model
-execution is currently authorized.
+Routing, dual tables, cache switching, a unique `m_k`, and operator-bound LM
+selection are outside this programme. The scale-covariance proofs remain
+theory/limitation material; their completed operator bridge is non-ranking.
 
-Protocol/assay validity, controls, executed identity, raw-owner output, budget,
-and stop conditions must pass preflight before any authorized compute. These are
-execution gates, not a replacement research direction. No GPU method-development
-experiment is currently active or authorized.
+The canonical entrypoint is
+[`SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904`](paper-2027/research/attention-aware-retrofit/analysis/SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904.md),
+with the prospective execution contract in
+[`CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904`](paper-2027/research/attention-aware-retrofit/preflights/CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md).
+The author has shut the work machine down; no GPU run is active.
 
 ## 6. On-demand routes
 

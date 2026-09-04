@@ -1,5 +1,11 @@
 # Retrofit theory and agendas
 
+The active method theme is the Native-constrained one-table frontier and
+physical-2x/4x-to-8x/16x/32x adaptation, routed by
+[`../analysis/SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904.md`](../analysis/SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904.md).
+Theory supports or limits that programme; deriving a unique `m_k` or an LM
+selector from operator geometry is not the current objective.
+
 The current conceptual foundation is
 [`../../foundations/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](../../foundations/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md).
 It is authoritative for the distinction between the realised frequency table,
@@ -8,12 +14,22 @@ the session policy. In particular, it treats the zero-training replacement as
 one complete practical intervention while preserving separate causal owners
 for each component.
 
+[`FINITE_SCALE_COVARIANCE_PROOF_NOVELTY_AND_TIGHTNESS_AUDIT_20260904.md`](FINITE_SCALE_COVARIANCE_PROOF_NOVELTY_AND_TIGHTNESS_AUDIT_20260904.md)
+is the proof owner for the supplied Pro Sections 5--12. It derives the general
+real-orthogonal and dimension-free separation results, records the targeted
+primary-source novelty audit, and leaves operator-similarity tightness as the
+single load-bearing mathematical experiment. It does not derive `m_k` or an LM
+selector.
+
 [`SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md`](SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md)
 is the current owner for the author-required one-table/one-path selection from
 completed evidence. It retains the executed full 64-slot legacy-u p2 log-s4
 table with fixed `c=.074` under the sequential capability-first replacement
 rules, explicitly records the Native-isotonic likelihood tradeoff, and defines
-same-substrate Q/K LoRA as an unexecuted working specification. It does not use
+the pre-outcome same-substrate Q/K LoRA specification. Its later execution is
+negative on generated capability and is owned by
+[`LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md`](../results/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md).
+The selection owner does not use
 request routing, frequency segmentation, or a transplanted adapter.
 
 [`NATIVE_ONLY_MOVEMENT_PROFILE_IDENTIFIABILITY_20260903.md`](NATIVE_ONLY_MOVEMENT_PROFILE_IDENTIFIABILITY_20260903.md)
@@ -66,7 +82,7 @@ is a historical/supporting target-free construction note, not the current
 experiment contract. Its later 50M/M4 training owners are
 `SCREEN_UNRESOLVED`: the note's exact pair-Gram derivations and declared
 cube-root scope remain useful, but its candidate priority and training ladder
-are retired. It authorizes no training or compute.
+are retired. It is not an execution authorization.
 
 [`ATTENTION_AWARE_RETROFIT_AGENDA_20260822.md`](ATTENTION_AWARE_RETROFIT_AGENDA_20260822.md)
 preserves the full attention-aware allocation and additive-residual research
@@ -76,8 +92,8 @@ reflection is historical too. Current theory ordering lives in
 [`../../foundations/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](../../foundations/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md):
 its derivations remain the continuation boundary, while every scheduling
 statement inside it is historical. Repository `INDEX.md` §5 owns the durable
-agenda and records that GPU method development is stopped. The former
-deterministic candidate and Native double gate are preserved in
+agenda; the live handoff records current machine state and run authorization.
+The former deterministic candidate and Native double gate are preserved in
 [`MAXENT_DILATION_ALLOCATION_20260901.md`](MAXENT_DILATION_ALLOCATION_20260901.md)
 as theory/protocol history, not an execution route. Directory decisions and
 numeric owners remain in [`../README.md`](../README.md) and

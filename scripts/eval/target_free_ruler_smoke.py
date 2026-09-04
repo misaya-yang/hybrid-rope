@@ -15,6 +15,7 @@ from typing import Any
 
 import numpy as np
 import torch
+from peft import PeftModel
 from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer
 from transformers.modeling_rope_utils import ROPE_INIT_FUNCTIONS
 
@@ -123,6 +124,9 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--table-factor", type=float, default=4.0)
     parser.add_argument("--long-attention-scaling", type=float)
+    parser.add_argument("--adapter", type=Path)
+    parser.add_argument("--adapter-name")
+    parser.add_argument("--preflight-only", action="store_true")
     parser.add_argument("--output", type=Path, required=True)
     return parser.parse_args()
 
@@ -170,6 +174,7 @@ def load_cross_model_method(
     external_attention_scaling: float | None = None,
     allow_order_crossings: bool = False,
     profile_target_length: int | None = None,
+    adapter: Path | None = None,
 ) -> tuple[Any, dict[str, Any]]:
     if method not in {"native", "official_yarn", "session_binary_s4", *CONTROL_METHODS}:
         raise RuntimeError("unsupported generic RULER method")
@@ -193,6 +198,12 @@ def load_cross_model_method(
         trust_remote_code=False,
         dtype=torch.bfloat16,
     )
+    if adapter is not None:
+        model = PeftModel.from_pretrained(
+            model,
+            adapter,
+            is_trainable=False,
+        ).merge_and_unload()
     rotary = model.model.rotary_emb
     native = rotary.inv_freq.detach().cpu().float().numpy()
     native_hash = float32_sha256(native)
@@ -420,6 +431,21 @@ def main() -> int:
         raise ValueError("external table method has an incomplete identity")
     if args.skip_checkpoint_rehash and args.checkpoint_ready_receipt is None:
         raise ValueError("--skip-checkpoint-rehash requires --checkpoint-ready-receipt")
+    if (args.adapter is None) != (not str(args.adapter_name or "").strip()):
+        raise ValueError("--adapter and --adapter-name must be provided together")
+    adapter_path = args.adapter.expanduser().resolve() if args.adapter else None
+    adapter_receipt = None
+    if adapter_path is not None:
+        adapter_model = adapter_path / "adapter_model.safetensors"
+        adapter_config = adapter_path / "adapter_config.json"
+        if not adapter_model.is_file() or not adapter_config.is_file():
+            raise FileNotFoundError("adapter requires config and safetensors files")
+        adapter_receipt = {
+            "name": str(args.adapter_name),
+            "model_sha256": sha256_file(adapter_model),
+            "config_sha256": sha256_file(adapter_config),
+            "merged_for_inference": True,
+        }
     external_hash = None
     external_file_hash = None
     external_probe: np.ndarray | None = None
@@ -445,7 +471,6 @@ def main() -> int:
             and external_hash != str(args.expected_active_sha256)
         ):
             raise RuntimeError("external table hash drift")
-    configure_cuda()
     checkpoint = args.checkpoint.resolve()
     config_probe = AutoConfig.from_pretrained(
         checkpoint,
@@ -487,6 +512,8 @@ def main() -> int:
         native_context_length * 2,
         native_context_length * 4,
         native_context_length * 8,
+        native_context_length * 16,
+        native_context_length * 32,
     }
     if not lengths or any(
         value <= 0
@@ -510,6 +537,23 @@ def main() -> int:
         != str(args.expected_data_manifest_sha256)
     ):
         raise RuntimeError("RULER data manifest hash drift")
+    if args.preflight_only:
+        counts: dict[str, int] = {}
+        for row in rows:
+            key = f"{row['_task']}:L{row['_nominal_length']}"
+            counts[key] = counts.get(key, 0) + 1
+        print(json.dumps({
+            "status": "TARGET_FREE_RULER_PREFLIGHT_COMPLETE",
+            "rows": len(rows),
+            "cells": counts,
+            "checkpoint_loaded": False,
+            "cuda_initialized": False,
+            "data_manifest_sha256": data_receipt["manifest_sha256"],
+            "external_table_sha256_float32": external_hash,
+            "weight_adapter": adapter_receipt,
+        }, indent=2, sort_keys=True))
+        return 0
+    configure_cuda()
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     examples_path = output / "examples.jsonl"
@@ -535,6 +579,7 @@ def main() -> int:
         "table_sha256_float32": external_hash,
         "table_file_sha256": external_file_hash,
         "long_attention_scaling": args.long_attention_scaling,
+        "weight_adapter": adapter_receipt,
         "allow_order_crossings": bool(args.allow_order_crossings),
         "order_crossing_indices": (
             np.flatnonzero(external_probe[:-1] <= external_probe[1:]).tolist()
@@ -557,6 +602,7 @@ def main() -> int:
             checkpoint,
             str(args.method),
             native_context_length=native_context_length,
+            adapter=adapter_path,
         )
         if is_olmo and args.method not in CONTROL_METHODS
         else load_cross_model_method(
@@ -572,8 +618,11 @@ def main() -> int:
             external_attention_scaling=args.long_attention_scaling,
             allow_order_crossings=bool(args.allow_order_crossings),
             profile_target_length=args.profile_target_length,
+            adapter=adapter_path,
         )
     )
+    if adapter_receipt is not None:
+        method_receipt["weight_adapter"] = adapter_receipt
     torch.cuda.reset_peak_memory_stats()
     tokenizer = AutoTokenizer.from_pretrained(
         checkpoint,

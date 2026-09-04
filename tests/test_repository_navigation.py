@@ -226,7 +226,7 @@ class RepositoryNavigationTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         headings = (
             "## Paper-facing owners",
-            "## Post-submission transport evidence",
+            "## Active single-table transport evidence",
             "## Correction-only 2026-09-02 materials",
         )
         offsets = [router.index(heading) for heading in headings]
@@ -246,9 +246,19 @@ class RepositoryNavigationTests(unittest.TestCase):
         for required in ("LM-quality", "restarts", "algebraic", "not a global ceiling"):
             self.assertTrue(required in source, f"static-rank owner must state: {required}")
 
-    def test_current_route_is_submission_first_and_research_separate(self):
+    def test_current_route_keeps_research_active_and_evidence_separate(self):
         index = (ROOT / "INDEX.md").read_text(encoding="utf-8")
         normalized_index = " ".join(index.split())
+        current_routes = "\n".join(
+            path.read_text(encoding="utf-8")
+            for path in (
+                ROOT / "README.md",
+                ROOT / "INDEX.md",
+                ROOT / "paper-2027" / "HANDOFF.md",
+                ROOT
+                / "paper-2027/research/attention-aware-retrofit/theory/README.md",
+            )
+        )
         retired_preflight = (
             ROOT
             / "paper-2027/research/attention-aware-retrofit/preflights"
@@ -262,14 +272,22 @@ class RepositoryNavigationTests(unittest.TestCase):
             "fully frozen model-relative structured",
             "SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831",
             "## 5. What to do",
-            "deterministic static pure-`z` table",
-            "No GPU method-development experiment is currently active",
+            "one static table/gain",
+            "about `0.12` maximum damage",
+            "untouched 8x/16x/32x capability",
+            "no GPU run is active",
             "2026-09-17",
             "2026-09-18",
             "2026-09-25",
             "paper-2027/research/history/TIMELINE.md",
         ):
             self.assertIn(required, normalized_index)
+        for retired in (
+            "No new submission experiment is planned",
+            "No GPU method-development experiment is currently active",
+            "GPU method development is stopped",
+        ):
+            self.assertNotIn(retired, current_routes)
         source = audit.read_text(encoding="utf-8")
         for boundary in ("not r2", "LM loss", "table selector"):
             self.assertIn(boundary, source)
@@ -283,6 +301,19 @@ class RepositoryNavigationTests(unittest.TestCase):
         self.assertFalse(
             (ROOT / "scripts/core_text_phases/optimize_static_z.py").exists()
         )
+
+    def test_active_method_governance_uses_real_endpoints_and_hard_stops(self):
+        agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        for required in (
+            "only two routes",
+            "end-to-end generated-task",
+            "never capability selectors",
+            "zero primary long-generation score",
+            "Native damage",
+            "not the method class",
+            "Submission dates do not prohibit research",
+        ):
+            self.assertIn(required, agents)
 
     def test_invalid_band_restoration_is_not_routed_to_execution(self):
         preflight = (
@@ -395,8 +426,9 @@ class RepositoryNavigationTests(unittest.TestCase):
             "下一项有决策价值的研究协议只有 **matched-content phase 2x2**",
             index,
         )
-        self.assertIn("deterministic static pure-`z`", brief)
-        self.assertIn("without learning or loss-based frequency search", brief)
+        self.assertIn("does not prohibit new training", brief)
+        self.assertIn("## 5. Active single-table research programme", brief)
+        self.assertIn("one global request-static table/gain", brief)
 
     def test_root_routing_links_resolve(self):
         pattern = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")

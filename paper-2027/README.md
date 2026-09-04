@@ -13,7 +13,7 @@ baseline and must never be edited, compiled, moved, or regenerated.
    changing a scientific claim.
 
 Use [`NARRATIVE_GUIDE.md`](NARRATIVE_GUIDE.md) for stable manuscript strategy,
-[`REVISION_BRIEF.md`](REVISION_BRIEF.md) for the bounded revision contract, and
+[`REVISION_BRIEF.md`](REVISION_BRIEF.md) for manuscript/research coordination, and
 [`SUBMISSION_CHECKLIST.md`](SUBMISSION_CHECKLIST.md) for release gates. Historical
 reviews, closed plans, external-model bundles, and `research/` are not default
 cold-start inputs.

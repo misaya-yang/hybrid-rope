@@ -1,16 +1,16 @@
-# REVISION BRIEF v3 — September 2026 submission iteration
+# REVISION BRIEF v4 — September 2026 manuscript and research coordination
 
-**Issued:** 2026-08-29
+**Issued:** 2026-09-04
 **Milestones:** internal abstract and author-metadata freeze on 2026-09-17;
 official abstract deadline on 2026-09-18 at 11:59 PM AoE; full-paper deadline on
 2026-09-25. Recheck the official pages immediately before each submission.
 
 ## Role and authority
 
-This is the durable scope for the September manuscript iteration. It defines
-the intended outcome, the work that may be admitted **after current
-authorization permits it**, and the freeze gates. It does not itself authorize
-manuscript edits, validation, compute, Git operations, or upload. It intentionally does
+This is the durable scope for the September manuscript iteration and its
+coordination with active research. It defines the intended manuscript outcome,
+research-to-manuscript admission boundary, and freeze gates. It does not itself
+authorize manuscript edits, compute, Git operations, or upload. It intentionally does
 **not** record current hashes, pass/fail state, worktree state, completed tasks,
 or a live action queue.
 
@@ -24,7 +24,7 @@ or a live action queue.
 - Every fact, number, protocol identity, and uncertainty statement remains owned
   by the canonical source routed through the index.
 
-This v3 supersedes v2 as the September scope reference. The August A/R ledger, panel
+This v4 supersedes v3 as the September scope reference. The August A/R ledger, panel
 recommendations, simulated reviews, and model-review journal are historical
 inputs only. No item from them is inherited automatically.
 
@@ -84,8 +84,9 @@ Preserve the current evidence logic:
 - LeRoPE appears in Discussion as attributed learned-allocation evidence that
   non-geometric allocation can improve in-window behaviour, not as a matched
   comparator or validation of EVQ-Cosh;
-- the from-training evidence line stops at the completed 1.485B comparison; no
-  further from-scratch scale-up is planned.
+- the current manuscript's from-training evidence line stops at the completed
+  1.485B comparison; later research requires a new owner and author promotion
+  decision before it changes that claim.
 
 ## 3. September revision scope
 
@@ -143,45 +144,40 @@ Preserve the current evidence logic:
 - No change to a claim or number from a review memo without returning to the
   canonical owner.
 
-## 4. No submission compute
+## 4. Research and manuscript evidence boundary
 
-The September submission is based on completed evidence. Do not start a new
-training run, GPU evaluation, model-scale extension, baseline sweep, method
-search, or paid experiment for this submission. Routine manuscript compilation,
-CPU tests, packaging, and static release checks are validation, not new
-experimental evidence.
+The September manuscript currently uses completed evidence, but manuscript work
+does not prohibit new training, GPU evaluation, method search, or paid compute.
+Those actions require the exact user authorization, machine, budget, protocol,
+owner, and stop conditions in `AGENTS.md` and the live handoff.
 
-The from-training program is closed at the existing 1.485B
-same-initialisation/same-scientific-recipe comparison. Do not propose another
-from-scratch model, a larger from-initialisation scale, or extra from-scratch
-seeds as a submission or follow-up requirement. Reopening that boundary requires
-a new author decision, a durable agenda update, and explicit compute
-authorization.
+Running an experiment does not automatically make it submission evidence. A new
+result may change the manuscript only after its protocol and raw artifacts are
+validated, a durable owner is routed in `INDEX.md`, and the author explicitly
+admits the claim. An integrity problem that needs new evidence must be surfaced;
+it must not be hidden by weakening an unrelated claim.
 
-If a current-paper audit exposes an integrity problem that cannot be resolved
-without new experimental evidence, stop and surface it to the author. Do not
-quietly turn it into an experiment plan or weaken a different claim to conceal
-it.
+The current manuscript's from-training ceiling remains the existing 1.485B
+comparison until such a promotion occurs. This is an evidence statement, not a
+ban on later research.
 
-## 5. Post-submission research is separate
+## 5. Active single-table research programme
 
-Post-submission method development and follow-up experiments are not tasks in
-this brief and must not compete with the September freeze. Their durable agenda
-lives in [`../INDEX.md`](../INDEX.md) §5.
+The active method programme runs alongside manuscript work and is owned by
+[`../INDEX.md`](../INDEX.md) §5. It has two targets:
 
-Post-submission research may use separately authorized frozen-checkpoint or
-matched-adaptation protocols, but this brief does not admit a new from-scratch
-scale program. The completed 1.485B result remains the current from-training
-evidence ceiling.
+1. **Zero training:** one global request-static table/gain, frozen weights,
+   about `0.12` maximum damage separately on Native NLL and downstream tasks,
+   and the largest useful extrapolation toward 8x. The log-p2 s4/c=.074 arm is
+   the current OLMo incumbent; the 4-to-8 frontier remains open.
+2. **Low-cost adaptation:** small physical-2x/4x data and few LoRA steps, the
+   same Native limits, and untouched 8x/16x/32x generated capability. NLL or
+   attention improvement alone is not success.
 
-The author-ordered post-submission priority is a **deterministic static pure-`z`
-table on a frozen checkpoint**. The candidate must be derived before LM
-evaluation, without learning or loss-based frequency search. Endpoint movement
-is allowed; fixed endpoints remain a causal-control condition rather than a
-method rule. One table must stay within a declared small Native-window cost and
-improve `2x`/`4x` before untouched downstream evaluation. Weight adaptation is
-not part of this first gate.
-[`../INDEX.md`](../INDEX.md) §5 owns the durable gates.
+Routing, dual tables, cache switching, strict Native equivalence, a unique
+checkpoint-derived `m_k`, and operator geometry as an LM selector are not the
+programme. The canonical entrypoint is
+[`research/attention-aware-retrofit/analysis/SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904.md`](research/attention-aware-retrofit/analysis/SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904.md).
 
 Before any later experiment enters the research agenda, it must state:
 

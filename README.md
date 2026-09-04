@@ -42,24 +42,22 @@ The active manuscript is `paper-2027/`; `paper/` is immutable.
 5. **Related evidence:** LeRoPE supports the possibility of useful in-window
    allocation, but it is not our causal owner or matched comparator.
 
-## Current state and next action
+## Current research theme
 
-The manuscript design is frozen and uses completed evidence; no new submission
-experiment is planned. The immediate milestones are:
+The active method question is: **how far can one ordinary static RoPE table
+carry a mature checkpoint under an explicit Native-retention budget?**
 
-1. **2026-09-17:** freeze the title, abstract, author roster, and author metadata.
-2. **2026-09-18, 11:59 PM AoE:** submit the official abstract and metadata.
-3. **2026-09-25:** submit the fully verified paper and anonymous supplement.
+- **Zero training:** frozen weights, about `0.12` maximum damage separately on Native NLL and downstream tasks, and maximum useful extrapolation toward 8x.
+- **Low-cost adaptation:** few LoRA steps on physical 2x/4x examples, the same Native budget, and untouched 8x/16x/32x generated-task evaluation.
 
-The current priority is therefore an owner-by-owner audit of the title,
-abstract, first-page path, Figure 1, numbers, method identities, endpoint/seed
-scope, anonymity, author metadata, and live venue requirements. Build,
-packaging, and final visual review follow as submission gates.
+Both use one global request-static table/gain, not routing, dual tables, cache
+switching, strict Native equivalence, or a unique `m_k`. The OLMo log-p2
+s4/c=.074 arm is the 4x incumbent; 8x remains unresolved. See the
+[`single-table handoff`](paper-2027/research/attention-aware-retrofit/analysis/SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904.md).
 
-Post-submission research is separate. Its author-ordered first direction is a
-deterministic static pure-`z` table on a frozen checkpoint, derived before LM
-evaluation without learning or loss-based frequency search. Protocol and assay
-validity are mandatory execution gates; they do not replace that direction.
+## Submission state
+
+Deadlines remain 2026-09-17, 2026-09-18, and 2026-09-25; manuscript audit and method research proceed in parallel with separate evidence and authorization.
 
 ## Read only what the task needs
 

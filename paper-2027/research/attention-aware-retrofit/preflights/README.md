@@ -73,10 +73,22 @@ table non-monotone, B0 changes support, and B4 is not an exact sham. It has no
 preflight or execution authorization and cannot be revived without a new
 monotonicity-checked construction.
 
+## Prepared current protocol
+
+| Preflight | Current state |
+| --- | --- |
+| [`CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md`](CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md) | factor-frontier code and a LoRA prototype are prepared; the scientific LoRA gate still needs route-explicit scoring and a QK-first/parameter-matched-QKVO screen; 8x/16x/32x remain behind the evaluation firewall; the author shut the work machine down and no new run started |
+
 ## Executed protocols
 
 | Preflight | Final state |
 | --- | --- |
+| [`SCALE_CONJUGACY_TIGHTNESS_PREFLIGHT_20260904.md`](SCALE_CONJUGACY_TIGHTNESS_PREFLIGHT_20260904.md) | executed; synthetic nontrivial positive control passes, but all 45 primary trajectories select identity and sampled error saturates near `2`; multilevel stopped; result owned by `../results/SCALE_CONJUGACY_TIGHTNESS_RESULT_20260904.md` |
+| [`FINITE_SCALE_COVARIANCE_COMPLETE_VALIDATION_PREFLIGHT_20260904.md`](FINITE_SCALE_COVARIANCE_COMPLETE_VALIDATION_PREFLIGHT_20260904.md) | supplied Pro text is Sections 5--12 only; 21 theorem checks plus best-`D_j` optimizer prepared; local 102/102 and work-machine 24/24 suites plus both five-table no-card preflights pass; proofs/general extension are audited, while operator tightness, novelty certification, paper judgment, and Sections 1--4 remain unclaimed |
+| [`SCALE_ORBIT_BOUNDARY_VALIDATION_PREFLIGHT_20260903.md`](SCALE_ORBIT_BOUNDARY_VALIDATION_PREFLIGHT_20260903.md) | executed; exact-count/Gram/operator quantities fail as selectors, result owned by `../results/SCALE_ORBIT_BOUNDARY_VALIDATION_RESULT_20260904.md` |
+| [`SCALE_ORBIT_TRANSPORT_RESIDUAL_PREFLIGHT_20260904.md`](SCALE_ORBIT_TRANSPORT_RESIDUAL_PREFLIGHT_20260904.md) | executed CPU-only; diagnoses today's extreme failures but does not revive `D*` as a general selector; same result owner |
+| [`LOG_P2_UNIT_GAIN_QK_LORA_REPLAY_PREFLIGHT_20260903.md`](LOG_P2_UNIT_GAIN_QK_LORA_REPLAY_PREFLIGHT_20260903.md) | executed; unit-gain Q/K adapter improves PG-19 but generated tasks are heterogeneous, result owned by `../results/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md` |
+| [`LOG_P2_C074_QK_LORA_PREFLIGHT_20260904.md`](LOG_P2_C074_QK_LORA_PREFLIGHT_20260904.md) | executed; exact retained-gain adapter improves PG-19 but not natural-generation or fresh core-4 macros; same result owner |
 | [`ALLOCATION_DOSE_RESPONSE_PREFLIGHT_20260826.md`](ALLOCATION_DOSE_RESPONSE_PREFLIGHT_20260826.md) | executed; registered primary construction failed the joint in-window/long-tail gate; result owned by `../results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md` |
 | [`COADAPTIVE_ALLOCATION_ORACLE_PREFLIGHT_20260825.md`](COADAPTIVE_ALLOCATION_ORACLE_PREFLIGHT_20260825.md) | executed; registered shell gate failed; attribution and matched recovery are owned by `../results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md` |
 | [`PHASE_ALLOCATION_M4_EXTENDED_PREFLIGHT_20260824.md`](PHASE_ALLOCATION_M4_EXTENDED_PREFLIGHT_20260824.md) | executed; its own decision rule ("label the regime as unresolved rather than attributing the result to the new score" when the anchored-Cosh control is neutral/negative at 50M base-256) is applied by the canonical report. See `../../../../INDEX.md` §3.2 |
@@ -97,7 +109,7 @@ monotonicity-checked construction.
 | [`PHASE_ADAROPE_LORA_PREFLIGHT_20260822.md`](PHASE_ADAROPE_LORA_PREFLIGHT_20260822.md) | prepared no-GPU protocol; not current queue and no result |
 
 Do not launch anything from this directory without a new explicit user
-authorization and a live owner. A submission experiment must state how it can
-change the paper or reviewer ceiling; a method-development experiment must
-instead state its falsifiable hypothesis, the decision it can change, why the
-answer is not already known, and its stop rule.
+authorization and a live owner. Every experiment must state its falsifiable
+hypothesis, the decision it can change, why the answer is not already known,
+and its stop rule. Entering a result into the manuscript is a later, separate
+evidence decision.

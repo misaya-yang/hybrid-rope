@@ -2,12 +2,13 @@
 
 - **Date:** 2026-09-03
 - **Status:** `COMPLETE HISTORICAL-SELECTION SYNTHESIS / ZERO-TRAINING
-  NUMBERS OWNED BY EXISTING RESULTS / LORA WORKING SPECIFICATION / NO NEW
-  EXECUTION`
+  NUMBERS OWNED BY EXISTING RESULTS / LORA SPECIFICATION LATER EXECUTED`
 - **Evidence labels:** the candidate selection in Sections 2--5 is a synthesis
   of existing **Observations** under the paper's capability-first engineering
   contract. Equations are **Derived identities** of the already executed table.
-  Section 7 is an unexecuted **Working method** for later LoRA.
+  Section 7 preserves the pre-outcome **Working method**; its later execution
+  is owned by
+  [`LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md`](../results/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md).
 - **Exact question:** Under a single-table, single-attention-path deployment
   constraint, which completed zero-training form is retained by the repository's
   sequential Native-retention and capability replacement rules, and what LoRA
@@ -18,7 +19,8 @@
   piecewise/ramp operator.
 - **Execution:** repository reading and deterministic arithmetic only. No model
   load, inference, training, GPU, remote access, parameter search, or new
-  experiment.
+  experiment occurred in this 2026-09-03 owner. The later LoRA result is a
+  separate execution and does not retroactively make this synthesis prospective.
 - **Numerical owners:**
   [`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md`](../results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md)
   and
@@ -263,11 +265,12 @@ The same-substrate continuation is therefore:
   contract if task adaptation is later authorized;
 - evaluate the resulting adapter only with the same table/gain identity.
 
-This is a declared same-substrate engineering specification motivated by, but
-not validated by, the two separate lifecycle observations. It is not a
-completed log-p2 LoRA result. Rank, alpha, schedule, and budget
-remain protocol fields; the historical rank-64/alpha-128/300-step values are
-evidence from other substrates, not proven optima for log-p2.
+This paragraph records the declared specification as it existed before
+execution. The later rank-8/alpha-16/96-step matched run improved PG-19 NLL but
+did not improve the measured five-task or fresh core-4 macros; see the result
+owner linked above. Rank, alpha, schedule, and budget remain protocol fields,
+not proven optima, and that negative capability result does not alter the
+zero-training table decision in Sections 1--6.
 
 ## 8. Adversarial audit
 
@@ -280,7 +283,7 @@ evidence from other substrates, not proven optima for log-p2.
 | Coarse-ramp or C2 scores belong to full-p2 | False; they are different tensors and installation laws |
 | K32/K128 normalized-index confirms full-p2 | False; those are C2-derived assets |
 | Qwen proves short retention | False; no matched Qwen 1x PPL gate exists |
-| The LoRA recipe is already validated on log-p2 | False; only its two component evidence lines are completed |
+| The executed log-p2 LoRA solves long-context capability | False; paired PG-19 improved, but generated-task and fresh core-4 macros did not |
 | This is a formal Pareto frontier or global training-free SOTA | False/unresolved; no deployment utility or matched current-method comparison exists |
 
 ## 9. Manuscript increment and claim ceiling

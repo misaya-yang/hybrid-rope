@@ -17,6 +17,25 @@ here; keep scientific routing in `INDEX.md` and live state in
 Scientific claims follow the most direct **valid** owner of the exact estimand;
 recency, filenames, summaries, the index, and the timeline confer no authority.
 
+## Active research boundary
+
+The active programme has only two routes; older agendas cannot override them:
+
+1. **Zero training:** one global static table, frozen weights, separate Native
+   NLL/task damage about `<= 0.12`, and maximum useful reach from 4x toward 8x.
+2. **Light adaptation:** few steps on physical 2x/4x data, the same Native
+   budget, and blind 8x/16x/32x evaluation.
+
+Select or promote a method only with validated end-to-end generated-task
+scores, normal EOS completion, and Native retention. Matrix/operator norms,
+attention displacement, proxy losses, and NLL-only gains are diagnostics,
+never capability selectors.
+
+Once controls resolve, a zero primary long-generation score or Native damage
+above `0.12` stops that candidate and its remaining matrix. Save raw receipts
+and follow the declared shutdown plan; this closes the candidate/protocol, not the method class.
+Submission dates do not prohibit research; manuscript entry still needs owner-backed validation and an author decision.
+
 ## Evidence labels
 
 Classify every load-bearing statement before using it:
