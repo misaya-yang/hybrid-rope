@@ -15,32 +15,32 @@ particular, session routing is a verified deployment fallback, not the complete
 answer to the collision/OOD allocation problem.
 
 Executed results are summarized in
-[`../results/EXPERIMENT_REPORT_20260821.md`](../results/EXPERIMENT_REPORT_20260821.md); the compact
+[`../results/causal-mechanism/EXPERIMENT_REPORT_20260821.md`](../results/causal-mechanism/EXPERIMENT_REPORT_20260821.md); the compact
 machine-path-free receipt is indexed under [`../evidence/`](../evidence/). The
 prepared but unexecuted mature-model finite-path audit is owned by
-[`../preflights/FUNCTION_MORPH_PREFLIGHT_20260821.md`](../preflights/FUNCTION_MORPH_PREFLIGHT_20260821.md).
+[`../preflights/causal-mechanism/FUNCTION_MORPH_PREFLIGHT_20260821.md`](../preflights/causal-mechanism/FUNCTION_MORPH_PREFLIGHT_20260821.md).
 The current single-arm retrofit protocol is owned by
-[`../preflights/FAR_PASS_CHORD_RESIDUAL_PREFLIGHT_20260821.md`](../preflights/FAR_PASS_CHORD_RESIDUAL_PREFLIGHT_20260821.md).
+[`../preflights/adaptation-coadaptation/FAR_PASS_CHORD_RESIDUAL_PREFLIGHT_20260821.md`](../preflights/adaptation-coadaptation/FAR_PASS_CHORD_RESIDUAL_PREFLIGHT_20260821.md).
 Its completed ablation chain and stop decision are now owned by
-[`../results/FAR_PASS_CHORD_EXPERIMENT_REPORT_20260821.md`](../results/FAR_PASS_CHORD_EXPERIMENT_REPORT_20260821.md).
+[`../results/adaptation-coadaptation/FAR_PASS_CHORD_EXPERIMENT_REPORT_20260821.md`](../results/adaptation-coadaptation/FAR_PASS_CHORD_EXPERIMENT_REPORT_20260821.md).
 
 **Superseding mature-retrofit update.** The current practical candidate is the
 zero-training binary Native/s4 session policy owned by
-[`../results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`](../results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md).
+[`../results/zero-training-deployment/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`](../results/zero-training-deployment/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md).
 It calls exact Native when the observed request fits the model's own Native
 window and otherwise uses one deployment-frozen budgeted-s4 table and matched
 amplitude for the request's entire KV-cache lifetime. It does not receive an
   external `L_target`. Same-hardware core-4 RULER, a 386-row formal natural-context
   matrix, full 200-row 2Wiki/Qasper, and confirmation-only full RULER-13
   comparisons are complete. The earlier
-[`../results/LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md`](../results/LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md)
+[`../results/zero-training-deployment/LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md`](../results/zero-training-deployment/LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md)
 is the target-aware precursor, not the current deployment owner. The historical
 adapter agenda below remains useful for explaining prior failures, but it no
 longer owns the next action.
 
 **Fixed-support causal controls.** The completed geometric/nearest-ramp/derived
 comparison and the 151.9M two-seed weights-by-table crossing are owned by
-[`../results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](../results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md).
+[`../results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](../results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md).
 They establish that interior exponent allocation remains consequential in two
 frozen mature checkpoints and replicate strong coordinate co-adaptation, while
 also showing that the detailed mature-checkpoint profile is not separable from
@@ -195,7 +195,7 @@ first matrix.
 Implementation update: the full-table rotation-difference sketch below is
 historical motivation. The registered experiment uses the narrower
 `I-R(Delta)` far-pass chord operator and fixed 8-pair no-wrap band in
-`../preflights/FAR_PASS_CHORD_RESIDUAL_PREFLIGHT_20260821.md`; that owner supersedes the
+`../preflights/adaptation-coadaptation/FAR_PASS_CHORD_RESIDUAL_PREFLIGHT_20260821.md`; that owner supersedes the
 implementation details in this section.
 
 If the measured protected-subspace route still loses too much Native

@@ -43,7 +43,7 @@ table under frozen weights moves 50M PPL `7.14 -> 76.20`; the reverse cell is
 The 151.9M two-seed crossing replicates it: FMRoPE-trained weights prefer their
 own derived table `3.426` versus `5.776`, Cosh-trained weights prefer theirs
 `3.479` versus `4.455`
-([`../results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](../results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) §4).
+([`../results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](../results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) §4).
 
 **Fact 2 — beyond the training length two distinct failures start.** Pairs with
 `omega * L < 2*pi` never completed a turn during training and enter phases the
@@ -123,7 +123,7 @@ horizon; target-free construction remains an open objective.
 The measured decomposition confirms the shape is load-bearing on both parts:
 frequency-only scores `0.4000 / 0.1150` at 8K/16K, amplitude-only leaves Native
 at `0.0000 / 0.0000`, and the joint operator reaches `0.5825 / 0.4000`
-([`../results/LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md`](../results/LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md)).
+([`../results/zero-training-deployment/LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md`](../results/zero-training-deployment/LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md)).
 
 ---
 
@@ -161,7 +161,7 @@ Given a support move, interior allocation can strongly affect the resulting
 score: at fixed `(a, R)`, amplitude, checkpoint and rows, same-support
 geometric scores `0.0056` and the derived allocation `0.6047` at OLMo 16K,
 interval `[+0.5488, +0.6480]`
-([`../results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](../results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) §3.2).
+([`../results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](../results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) §3.2).
 The macro contrast does not localise that effect to multikey-3 or variable
 tracking; a per-task fixed-support comparison would be required.
 
@@ -171,7 +171,7 @@ tracking; a per-task fixed-support comparison would be required.
 
 The registered 128-document dose result now supersedes this four-document
 calculation for outward use; see
-[`../results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md`](../results/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md).
+[`../results/adaptation-coadaptation/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md`](../results/adaptation-coadaptation/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md).
 It confirms graded full-versus-tail redistribution but rejects static `r2` as
 a selector for the useful dose. The calculation below is retained only as the
 hypothesis that motivated per-position logging.
@@ -179,7 +179,7 @@ hypothesis that motivated per-position logging.
 The 2026-08-25 co-adaptive oracle gives a second, independent view of the same
 axis at a very small displacement (`max|dz| = 0.0012975`). Its matched
 self-consistent contrast is owned by
-[`../results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md`](../results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md):
+[`../results/adaptation-coadaptation/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md`](../results/adaptation-coadaptation/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md):
 `+0.00098` held-out 4K, `+0.03844 / -0.03866` at 8K full/tail, and
 `+0.02190 / -0.08767` at 16K full/tail.
 
@@ -230,7 +230,7 @@ consistent with that:
 
 The diagnostic is complete. Native 4K scores are `1.00/0.85/0.60/0.03` for
 single-key, multikey-2, multikey-3, and variable tracking; see
-[`../results/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md`](../results/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md).
+[`../results/zero-training-deployment/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md`](../results/zero-training-deployment/NATIVE_4K_RULER_DIAGNOSTIC_RESULT_20260826.md).
 Low VT at 4K does not prove a model ceiling: different nominal lengths use
 different generated rows, and an existing frozen policy reaches `0.62` on VT
 at 8K. The proposed one-number decision rule is therefore rejected. A clean

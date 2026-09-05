@@ -10,7 +10,7 @@ legacy/exact-u by p2/Iso attribution, inherited-gain control, formal 1x and
 2x/4x natural matrices, matched RULER-13, and fresh core-4 seed `202609037`.
 The result is an endpoint-dependent tradeoff with a fresh 4K/8K negative, not
 a formal Pareto frontier or universal profile law; see
-`../results/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md`.
+`../results/zero-training-deployment/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md`.
 
 [`HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RECEIPT_20260903.json`](HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RECEIPT_20260903.json)
 binds the OLMo Selective-31, Reverse-31, and three layer-matched random-mask
@@ -19,7 +19,7 @@ Native identity, pre-outcome length amendment, paired bootstrap, and adaptive
 reuse of exact matched global `log_s4`/official-YaRN controls. It is a negative
 for the exact candidate on a reused development panel, not untouched
 confirmation or a head-selective method-class result; see
-`../results/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md`.
+`../results/zero-training-deployment/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md`.
 
 [`K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RECEIPT_20260901.json`](K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RECEIPT_20260901.json)
 binds the new-seed Native/index/official-YaRN full RULER-13 panel. Index passes
@@ -36,7 +36,7 @@ binds the independently seeded 80-row/task Native/physical/index confirmation.
 The old physical long advantage does not replicate: both profiles improve 64K
 similarly, normalized-index retains more 32K capability, and the registered
 crossing decision is unresolved. The result owner is
-`../results/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md`.
+`../results/coupling-transfer/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md`.
 
 [`K32_FRESH_YARN_COMPLETION_RECEIPT_20260901.json`](K32_FRESH_YARN_COMPLETION_RECEIPT_20260901.json)
 adds one fixed official-equation YaRN-s2 arm on the same N80 rows. Index and
@@ -65,25 +65,25 @@ include zero; the fresh-seed confirmation is a separate preregistration.
 [`K32_HISTORICAL_RULER_REPLAY_RECEIPT_20260901.json`](K32_HISTORICAL_RULER_REPLAY_RECEIPT_20260901.json)
 records exact decoded-prediction/official-score agreement on 24 fixed canaries,
 not token-level parity or full-matrix evaluator equivalence. Both are governed
-by `../preflights/QWEN_S2_SAME_FAMILY_IDENTIFICATION_PREFLIGHT_20260901.md`.
+by `../preflights/coupling-transfer/QWEN_S2_SAME_FAMILY_IDENTIFICATION_PREFLIGHT_20260901.md`.
 
 [`QWEN_K64_MATCHED_S2_BASELINE_RECEIPT_20260901.json`](QWEN_K64_MATCHED_S2_BASELINE_RECEIPT_20260901.json)
 completes the K64 Native/C2-s2/YaRN2 curve without a redundant index arm.
 The same-family result and historical-execution limits are owned by
-`../results/QWEN_S2_SAME_FAMILY_IDENTIFICATION_RESULT_20260901.md`.
+`../results/coupling-transfer/QWEN_S2_SAME_FAMILY_IDENTIFICATION_RESULT_20260901.md`.
 
 [`GEMMA_NATIVE_REFERENCE_CONFIRMED_20260901.json`](GEMMA_NATIVE_REFERENCE_CONFIRMED_20260901.json)
 binds the independently confirmed 4096 operating reference from Native natural
 continuation and single-code exact/EOS probes. The original two-code probe
 remains abstained. The receipt permits reference-correct table construction,
 not a training-length relabeling or a claim that the new long tables work;
-see `../results/NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901.md`.
+see `../results/coupling-transfer/NATIVE_REFERENCE_LENGTH_CALIBRATION_RESULT_20260901.md`.
 
 [`REFERENCE_CORRECTED_K128_S2_RULER_RECEIPT_20260901.json`](REFERENCE_CORRECTED_K128_S2_RULER_RECEIPT_20260901.json)
 contains the completed four-arm paired s2 RULER curve, per-task results,
 stratified bootstrap intervals and raw hashes. It supports one-hop behavior
 with the confirmed reference, not a privileged coordinate or SOTA; see
-`../results/REFERENCE_CORRECTED_K128_RESULT_20260901.md`.
+`../results/coupling-transfer/REFERENCE_CORRECTED_K128_RESULT_20260901.md`.
 
 [`REFERENCE_CORRECTED_K128_S2_NLL_RECEIPT_20260901.json`](REFERENCE_CORRECTED_K128_S2_NLL_RECEIPT_20260901.json)
 contains the separate 32-document natural continuation holdout, paired
@@ -101,7 +101,7 @@ length-family multiplicity sensitivity; it is not a new selection rule.
 `artifacts/coupling_law_cpu/` contains the CPU-only low-dimensional coupling-law
 audit: frozen OLMo-only fits, Qwen zero-refit geometry holdout, individual and
 combined candidate tables, slot residuals, plots, and a SHA-256 manifest. Its
-owner is `../results/CPU_LOW_DIM_COUPLING_LAW_20260901.md`; none of these files
+owner is `../results/coupling-transfer/CPU_LOW_DIM_COUPLING_LAW_20260901.md`; none of these files
 is a language-model evaluation result.
 
 `LOW_DIM_COUPLING_GPU_RECEIPT_20260901.json` records the frozen C2 Native gates,

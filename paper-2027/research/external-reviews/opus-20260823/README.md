@@ -29,7 +29,7 @@ external-review bundle preserves three things:
    separate from evidence so neither contaminates the other.
 
 Nothing here supersedes a canonical owner. Where this directory disagrees with
-`../../attention-aware-retrofit/results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`, the disagreement is about
+`../../attention-aware-retrofit/results/zero-training-deployment/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`, the disagreement is about
 *framing and completeness*, not about the numbers: every scalar in that owner
 reproduced exactly.
 

@@ -502,11 +502,11 @@ claims from their canonical owners:
    for training-time fixed-support identification;
 2. [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md)
    for subspace theory, co-adaptation, base controls, and theorem routing;
-3. [`attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](../attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md)
+3. [`attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](../attention-aware-retrofit/results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md)
    for mature same-support controls and the 151.9M frozen crossing;
-4. [`attention-aware-retrofit/results/JOINT_MECHANISM_REPORT_20260822.md`](../attention-aware-retrofit/results/JOINT_MECHANISM_REPORT_20260822.md)
+4. [`attention-aware-retrofit/results/JOINT_MECHANISM_REPORT_20260822.md`](../attention-aware-retrofit/results/causal-mechanism/JOINT_MECHANISM_REPORT_20260822.md)
    for the frequency-by-gain 2x2 and its limitations;
-5. [`attention-aware-retrofit/results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`](../attention-aware-retrofit/results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md)
+5. [`attention-aware-retrofit/results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md`](../attention-aware-retrofit/results/zero-training-deployment/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md)
    for the practical zero-training policy and natural-context evidence;
 6. primary papers for related-work facts; external-model reviews remain
    non-canonical analysis inputs.

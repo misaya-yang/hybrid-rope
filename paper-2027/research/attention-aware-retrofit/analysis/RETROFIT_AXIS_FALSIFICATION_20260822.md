@@ -11,7 +11,7 @@
 
 > **Post-handoff update:** the axis falsification below still stands, but its
 > adapter-first next-step judgement is superseded by
-> `../results/LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md`. A matched GPU
+> `../results/zero-training-deployment/LENGTH_CONDITIONED_BUDGETED_RETROFIT_RESULT_20260822.md`. A matched GPU
 > crossing found that the frozen budgeted table plus deterministic length-only
 > attention scaling reaches 0.5825 at 8K and 0.4000 at 16K, while Native plus
 > the same scaling remains 0 at both lengths. The missing object was attention

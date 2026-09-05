@@ -20,7 +20,7 @@
   historical inputs to any newly derived monotone intervention.
 - **Role:** internal theory study of the "protect fast bands, move slow bands"
   direction as a fixed-support interior-$z$ problem; companion analysis to
-  [`../preflights/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md`](../preflights/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md)
+  [`../preflights/zero-training-deployment/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md`](../preflights/zero-training-deployment/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md)
   (frozen, not executed).
 - **Method note:** five independent parallel analyses (boundary theory;
   evidence archaeology; YaRN↔$z$ correspondence; exact-geometry quantification
@@ -82,7 +82,7 @@ Setup: pair $k$ has $x_k=-\ln\omega_k = a + R z_k$
 $\hat\omega_k=\omega_k[(1-m_k)+m_k/s]$ (eq. `movement-allocation`); native
 rotations $r_k = \omega_k L_{native}/2\pi$. OLMo-2-0425-1B-Instruct
 identity from
-`../results/JOINT_MECHANISM_REPORT_20260822.md` line 4 and
+`../results/causal-mechanism/JOINT_MECHANISM_REPORT_20260822.md` line 4 and
 `../analysis/TRANSPORT_RESIDUAL_ANALYSIS_20260822.md:52`: **$K=64$ pairs,
 base $5\times10^5$, $L_{native}=4096$, $s=4$, amplitude 1.13863**. (The
 $K=32$ appearing in `03_theory.tex`/`a1_proofs.tex` is the paper's generic
@@ -143,7 +143,7 @@ though the cutoffs are.
 the uniform window prior (registered default; O1 shows sensitivity). (A2)
 extension value = non-aliasing scale coverage — CONJECTURE-grade: consistent
 with the slope-only phase-preservation failure
-(`../results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md` lines 65–69)
+(`../results/zero-training-deployment/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md` lines 65–69)
 but contradicted in part by §6 below. (A3) frozen weights make basis-
 substitution cost monotone in $\widetilde U_k\cdot$drift (supported by the
 interaction contrast $-3.537$, `FULL_ROPE…REPORT` §5.3).
@@ -185,7 +185,7 @@ ramp_onset/full_interpolation values of
 | $r<1$ (sub-cycle) | 32, $k\ge32$ ($r_{32}=0.922$) | 24, $k\ge40$ |
 
 **Displacement anatomy.** The frozen s4 table (SHA `a435d7…`, derived
-allocation of `../results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`
+allocation of `../results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`
 §3.2) is built with $m_k=(1-\widetilde U_k)^2$; CPU reconstruction
 (shape-faithful; hash path owned by the export pipeline) gives
 $m_k\approx0$ for $k\le13$, rising $0.001\to0.671$ over $k=14..21$,
@@ -226,10 +226,10 @@ narrower than its framing.
 Existing evidence localizes cost by **position, not frequency**: co-adaptive
 oracle (+0.001 on 0–4K, **+0.092 mid-band at 8K**, $-0.039$ tail, at tiny
 displacement $\max|dz|=0.0013$, via `ZERO_TRAINING_MECHANISM_AND_CEILING`
-§5 and `../results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md`); mature
+§5 and `../results/adaptation-coadaptation/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md`); mature
 weights absorb the 4K hard-swap at full displacement ($+0.00098$). **No owner
 attributes the static-s4 $+0.1236$ 4K cost
-(`../results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`) to
+(`../results/causal-mechanism/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`) to
 frequency bands.** The preflight's position-stratified E-vs-D bins would be
 the first measurement — but per §2 they would measure a near-no-op.
 

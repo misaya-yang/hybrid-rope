@@ -117,9 +117,9 @@ table/weight co-adaptation -> mature-checkpoint natural-generation transport`.
 - **Did:** preregistered and closed a success-first portfolio, then evaluated a
   scale-consistent exponent-space table, gain controls, cross-checkpoint
   transport, and same-multiset permutations. The historical portfolio lives in
-  [`preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](../attention-aware-retrofit/preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md);
+  [`preflights/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md`](../attention-aware-retrofit/preflights/zero-training-deployment/ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md);
   the result owner is
-  [`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md`](../attention-aware-retrofit/results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md).
+  [`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md`](../attention-aware-retrofit/results/coupling-transfer/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md).
 - **Observed:** one static table could pass declared OLMo 1x gates and improve
   longer endpoints, and the construction transferred long capability to Qwen.
   Preserving the exact frequency multiset while permuting slot assignment

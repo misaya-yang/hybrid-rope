@@ -16,9 +16,9 @@
 - **Compute:** source inspection and algebra only. No training, GPU inference,
   new result row, or behavioural selection was performed.
 - **Owners affected:** this note narrows mechanism language in
-  [`HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md`](../results/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md).
+  [`HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md`](../results/zero-training-deployment/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md).
   It does not supersede that negative result or
-  [`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md`](../results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md).
+  [`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md`](../results/coupling-transfer/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md).
 
 ## 1. Decision
 

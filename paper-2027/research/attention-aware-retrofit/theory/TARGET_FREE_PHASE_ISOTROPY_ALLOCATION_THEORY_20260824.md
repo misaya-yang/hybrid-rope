@@ -374,7 +374,7 @@ existing evidence that allocation is a causal training variable.
 - Three-seed fixed-support owner:
   `../../EXACT_RANGE_151M_3SEED_RESULT_20260820.md`
 - Completed phase-chord result:
-  `../results/EXPERIMENT_REPORT_20260821.md`
+  `../results/causal-mechanism/EXPERIMENT_REPORT_20260821.md`
 - Failed attention-measure selector:
   `../../audits/KAPPA_ATTENTION_MEASURE_AUDIT_20260820.md`
 - Failed LeRoPE structural-curvature oracle:

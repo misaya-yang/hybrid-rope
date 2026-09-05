@@ -36,7 +36,7 @@
 
 OLMo-2-0425-1B-Instruct: $K=64$ pairs, base $b=5\times10^5$,
 $L_{native}=4096$, extension factor $s=4$, matched long gain $1.13863$
-(INHERITED: `../results/JOINT_MECHANISM_REPORT_20260822.md` line 4,
+(INHERITED: `../results/causal-mechanism/JOINT_MECHANISM_REPORT_20260822.md` line 4,
 `../analysis/TRANSPORT_RESIDUAL_ANALYSIS_20260822.md:52`). Native
 $\omega_k = b^{-k/64}$, $k=0..63$. Rotations in the native window
 $r_k=\omega_k L_{native}/2\pi$. Qwen2.5-1.5B: $K=64$, $b=10^6$,
@@ -52,7 +52,7 @@ Bands (COMPUTED, exact census):
 | collapse core $\omega L\le1$ | 23, $k\ge41$ | — |
 
 Rotation-count thresholds of the frozen protocol
-(`../preflights/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md` §2):
+(`../preflights/zero-training-deployment/PROTECTED_PROGRESSIVE_SHIFT_PREFLIGHT_20260827.md` §2):
 $h_k=\mathrm{smoothstep}(\mathrm{clip}((32-r_k)/31,0,1))$,
 $m^{new}_k=m^{old}_k\,h_k$; $h=0$ for $r\ge32$ (no shift), $h=1$ for $r\le1$
 (full shift).
@@ -115,7 +115,7 @@ in V1–V3 produces 32.
 ## 3. The protection transform on the realized curve (the identity-map result)
 
 The verified s=4 curve ("derived allocation", table SHA
-`a435d754…`, owner `../results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`
+`a435d754…`, owner `../results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`
 §3.2; construction owner `scripts/analysis/export_uniqueness_budgeted_tables.py`)
 is $m^{old}_k=(1-\widetilde U_k)^2$ with $\widetilde U_k$ the min-max
 normalised conditional residual energy of pair $k$ against all others under
@@ -203,7 +203,7 @@ approximately monotone in displacement predicts
 $N_E(4K)-N_A(4K)\approx N_D(4K)-N_A(4K)\approx+0.12 \gg +0.01$.
 
 **Support 2 (the 2026-08-24 protected-band Cosh precedent, sharpened here).**
-Owner: `../results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md`. That
+Owner: `../results/zero-training-deployment/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md`. That
 construction protected exactly the band $\lambda\in[L_{native},4L_{native}]$
 $= r\in[0.25,1]$ = pairs $k=32..38$ (COMPUTED: 7 pairs, verified from the
 census) and cut in-window damage from $+3.978$ (anchored full Cosh) to

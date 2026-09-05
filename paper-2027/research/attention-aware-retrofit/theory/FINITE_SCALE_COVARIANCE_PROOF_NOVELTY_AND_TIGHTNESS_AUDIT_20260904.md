@@ -24,7 +24,7 @@
   real-orthogonal extension was missing is superseded by Section 2 below.
   Its statement that an operator-similarity upper construction is missing
   remains current. The subsequent
-  [`tightness result`](../results/SCALE_CONJUGACY_TIGHTNESS_RESULT_20260904.md)
+  [`tightness result`](../results/operator-analysis/SCALE_CONJUGACY_TIGHTNESS_RESULT_20260904.md)
   passes a nontrivial positive control but finds only identity/error-two
   solutions in 45 primary trajectories; it stops multilevel without claiming
   global impossibility.

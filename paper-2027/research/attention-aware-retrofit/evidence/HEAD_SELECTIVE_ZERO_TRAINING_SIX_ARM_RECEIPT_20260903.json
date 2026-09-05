@@ -1,7 +1,7 @@
 {
   "status": "COMPLETE_VALID_EXECUTION_EXACT_CANDIDATE_NEGATIVE",
   "date": "2026-09-03",
-  "owner": "../results/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md",
+  "owner": "../results/zero-training-deployment/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md",
   "question": "Does the calibration-derived Selective-31 mask beat layer-matched fixed random and reverse masks under the exact OLMo MHA s=4 slots-[16,48) frozen intervention?",
   "evidence_label": "Negative result at exact candidate and reused-development-panel scope",
   "execution": {

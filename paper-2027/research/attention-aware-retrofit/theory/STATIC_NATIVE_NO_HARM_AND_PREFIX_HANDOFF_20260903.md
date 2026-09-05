@@ -117,7 +117,7 @@ stationary long table
 
 This vanishes only for an unchanged frequency or a key exactly at the
 boundary. It is the structural mismatch diagnosed by the completed
-[`Native/s4 owner`](../results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md),
+[`Native/s4 owner`](../results/zero-training-deployment/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md),
 whose boundary-slope arm scored zero in its stated core-4 protocol. The algebra
 explains the mismatch; it does not by itself explain the behavioural score.
 
@@ -218,9 +218,9 @@ finite-precision parity remain version-specific and unverified.
 
 | Object | Valid conclusion | Relation to this boundary |
 | --- | --- | --- |
-| [`Native/s4 session policy`](../results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md) | Exact Native short sessions plus protocol-specific long capability using a branch fixed before prefill | completed practical escape; entire long request uses the long table |
-| [`Native-isotonic`](../results/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md) | Better natural likelihood/retention point estimates, worse fresh core-4 at 4K/8K | demonstrates one approximate one-table tradeoff; not the impossibility proof |
-| [`Selective-31`](../results/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md) | exact fixed mask is negative against registered controls | different head/slot intervention; neither validates nor refutes a prefix handoff |
+| [`Native/s4 session policy`](../results/zero-training-deployment/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md) | Exact Native short sessions plus protocol-specific long capability using a branch fixed before prefill | completed practical escape; entire long request uses the long table |
+| [`Native-isotonic`](../results/zero-training-deployment/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md) | Better natural likelihood/retention point estimates, worse fresh core-4 at 4K/8K | demonstrates one approximate one-table tradeoff; not the impossibility proof |
+| [`Selective-31`](../results/zero-training-deployment/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md) | exact fixed mask is negative against registered controls | different head/slot intervention; neither validates nor refutes a prefix handoff |
 | failed boundary-slope arm | cross-boundary absolute-phase construction scored zero | prefix handoff removes its algebraic mismatch but has no behavioural evidence |
 
 ## 6. Decision table

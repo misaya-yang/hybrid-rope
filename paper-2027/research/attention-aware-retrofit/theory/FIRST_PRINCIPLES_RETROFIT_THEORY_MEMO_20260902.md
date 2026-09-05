@@ -681,7 +681,7 @@ measurement; it records what a future theory would have to make identifiable.
 
 | Number | Owner |
 | --- | --- |
-| log_s4 1x PG-19 retention `0.875302`, task retention `0.915103` | `results/CPU_LOW_DIM_COUPLING_LAW_20260901.md` §2 (numerical owner `SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md`) |
+| log_s4 1x PG-19 retention `0.875302`, task retention `0.915103` | `results/coupling-transfer/CPU_LOW_DIM_COUPLING_LAW_20260901.md` §2 (numerical owner `SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md`) |
 | arithmetic 1x retention `0.869584`; q-drift RMS `0.01099/0.02195/0.03200`, worst pair 21 | `SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md` §2 |
 | log_s4 RULER-13 `0.71397/0.66705/0.49859`; official YaRN-4 `0.4314/0.2431/0.1056` | `SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md` line ~293; `SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md` line ~110 (two matrices exist; cite per matrix) |
 | YaRN-4 retention gate `0.6588` | `HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md` line ~175 |

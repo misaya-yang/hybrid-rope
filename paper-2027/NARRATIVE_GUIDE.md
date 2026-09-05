@@ -326,10 +326,13 @@ lifecycle evidence show what follows from it.
 
 ## September boundary
 
-The September submission uses completed evidence. There is no new submission
-compute and no further from-scratch program; the completed 1.485B comparison is
-the current from-training ceiling. Do not admit an old panel item, theory
-exploration, or experiment design merely because it appears in an archive.
+The September manuscript currently uses completed evidence. Research remains
+active under the user's exact compute authorization; validated new results may
+enter only through an indexed owner and an explicit author promotion decision.
+The completed 1.485B comparison remains the current from-training evidence
+ceiling. This corrects the earlier blanket "no new submission compute" wording.
+Do not admit an old panel item, theory exploration, or experiment design merely
+because it appears in an archive.
 
 Current tasks, authorization, freeze progress, validation receipts, and author
 decisions belong only in `HANDOFF.md`. This guide changes only when the author

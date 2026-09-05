@@ -6,6 +6,15 @@ physical-2x/4x-to-8x/16x/32x adaptation, routed by
 Theory supports or limits that programme; deriving a unique `m_k` or an LM
 selector from operator geometry is not the current objective.
 
+## Topic guide
+
+| Topic | Owners and supporting notes |
+| --- | --- |
+| Active generation and adaptation contract | [`CONSTRAINED_GENERATION_FIRST_PRINCIPLES_20260904.md`](CONSTRAINED_GENERATION_FIRST_PRINCIPLES_20260904.md), [`SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md`](SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md) |
+| Native preservation and profile identification | [`STATIC_NATIVE_NO_HARM_AND_PREFIX_HANDOFF_20260903.md`](STATIC_NATIVE_NO_HARM_AND_PREFIX_HANDOFF_20260903.md), [`NATIVE_ONLY_MOVEMENT_PROFILE_IDENTIFIABILITY_20260903.md`](NATIVE_ONLY_MOVEMENT_PROFILE_IDENTIFIABILITY_20260903.md), [`LOCAL_FUNCTIONAL_COMPATIBILITY_AND_GAUGE_AUDIT_20260903.md`](LOCAL_FUNCTIONAL_COMPATIBILITY_AND_GAUGE_AUDIT_20260903.md) |
+| Scale covariance and coupling | [`FINITE_SCALE_COVARIANCE_PROOF_NOVELTY_AND_TIGHTNESS_AUDIT_20260904.md`](FINITE_SCALE_COVARIANCE_PROOF_NOVELTY_AND_TIGHTNESS_AUDIT_20260904.md), [`COMMON_DIRECTION_FEASIBILITY_AND_BASIN_BARRIER_THEORY_20260902.md`](COMMON_DIRECTION_FEASIBILITY_AND_BASIN_BARRIER_THEORY_20260902.md) |
+| Historical constructions and synthesis | [`MAXENT_DILATION_ALLOCATION_20260901.md`](MAXENT_DILATION_ALLOCATION_20260901.md), [`TARGET_FREE_PHASE_ISOTROPY_ALLOCATION_THEORY_20260824.md`](TARGET_FREE_PHASE_ISOTROPY_ALLOCATION_THEORY_20260824.md), [`FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md`](FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md), [`ATTENTION_AWARE_RETROFIT_AGENDA_20260822.md`](ATTENTION_AWARE_RETROFIT_AGENDA_20260822.md) |
+
 The current conceptual foundation is
 [`../../foundations/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](../../foundations/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md).
 It is authoritative for the distinction between the realised frequency table,
@@ -28,7 +37,7 @@ table with fixed `c=.074` under the sequential capability-first replacement
 rules, explicitly records the Native-isotonic likelihood tradeoff, and defines
 the pre-outcome same-substrate Q/K LoRA specification. Its later execution is
 negative on generated capability and is owned by
-[`LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md`](../results/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md).
+[`LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md`](../results/adaptation-coadaptation/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md).
 The selection owner does not use
 request routing, frequency segmentation, or a transplanted adapter.
 
@@ -40,7 +49,7 @@ request-static installation do not uniquely determine `m`; universal exact
   explicit squared Native-geometry surrogate, it derives the unique minimizer
   `m = Iso(1-u)`. That formula is a prospective working hypothesis, not a
   latent checkpoint profile. Its executed OLMo result is now owned by
-  [`NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md`](../results/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md):
+  [`NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md`](../results/zero-training-deployment/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md):
   a natural-likelihood/structured-task tradeoff with a fresh core-4 4K/8K
   negative.
 

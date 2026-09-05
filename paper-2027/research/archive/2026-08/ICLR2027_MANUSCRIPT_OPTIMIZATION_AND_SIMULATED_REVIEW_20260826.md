@@ -190,7 +190,7 @@ This preserves both pillars without splicing their estimands.
 `sections/04_experiments.tex`, and Figure 1 text where necessary.
 
 Canonical owner:
-[`attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](../../attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md).
+[`attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`](../../attention-aware-retrofit/results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md).
 
 The intervals condition on one fixed checkpoint and task set with evaluation
 rows resampled. They are not checkpoint-population, task-population, model, or

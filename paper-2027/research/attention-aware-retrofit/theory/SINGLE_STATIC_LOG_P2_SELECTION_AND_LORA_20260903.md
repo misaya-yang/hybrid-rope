@@ -8,7 +8,7 @@
   contract. Equations are **Derived identities** of the already executed table.
   Section 7 preserves the pre-outcome **Working method**; its later execution
   is owned by
-  [`LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md`](../results/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md).
+  [`LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md`](../results/adaptation-coadaptation/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md).
 - **Exact question:** Under a single-table, single-attention-path deployment
   constraint, which completed zero-training form is retained by the repository's
   sequential Native-retention and capability replacement rules, and what LoRA
@@ -22,9 +22,9 @@
   experiment occurred in this 2026-09-03 owner. The later LoRA result is a
   separate execution and does not retroactively make this synthesis prospective.
 - **Numerical owners:**
-  [`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md`](../results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md)
+  [`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md`](../results/coupling-transfer/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md)
   and
-  [`NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md`](../results/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md).
+  [`NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md`](../results/zero-training-deployment/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md).
 
 ## 1. Decision
 

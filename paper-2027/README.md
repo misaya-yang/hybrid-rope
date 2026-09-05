@@ -18,6 +18,18 @@ Use [`NARRATIVE_GUIDE.md`](NARRATIVE_GUIDE.md) for stable manuscript strategy,
 reviews, closed plans, external-model bundles, and `research/` are not default
 cold-start inputs.
 
+## Research layers
+
+- `research/attention-aware-retrofit/theory/`: derivations and assumptions.
+- `research/attention-aware-retrofit/analysis/`: interpretation, audits and research questions.
+- `research/attention-aware-retrofit/preflights/`: frozen experiment protocols, grouped by research topic.
+- `research/attention-aware-retrofit/results/`: execution reports, grouped by the same topics; the current report keeps its shared path.
+- `research/attention-aware-retrofit/evidence/`: curated receipts; `research/history/` and `research/archive/` preserve history.
+- `../scripts/`: executable experiments, training and evaluation. Figure builders in `figs/` and frozen verification helpers retain their existing build dependencies.
+
+Use the existing [INDEX](../INDEX.md) for the exact owner, rather than reading
+all files within one layer. Historical results retain their date-based filenames.
+
 ## Package contract
 
 - `main.tex` is the only manuscript entrypoint; `sections/` and `appendix/`

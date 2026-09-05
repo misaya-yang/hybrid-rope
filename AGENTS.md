@@ -19,12 +19,32 @@ recency, filenames, summaries, the index, and the timeline confer no authority.
 
 ## Active research boundary
 
+For GPT-6-led sessions, the model name is not scientific authority. Start with
+the two quantified questions and current independent protocol in `INDEX.md`;
+do not inherit an external model's verdict or a historical action list.
+The author requires maximum decision value per GPU hour: before an expensive
+arm, state the live alternatives, observable discriminator, and next action
+for each outcome. Historical training/evaluation code is an asset to validate,
+not a trusted assay merely because it ran before.
+
 The active programme has only two routes; older agendas cannot override them:
 
 1. **Zero training:** one global static table, frozen weights, separate Native
    NLL/task damage about `<= 0.12`, and maximum useful reach from 4x toward 8x.
 2. **Light adaptation:** few steps on physical 2x/4x data, the same Native
    budget, and blind 8x/16x/32x evaluation.
+
+Use strict retention `>=0.88` as the current primary gate; show historical
+`0.875` separately as marginal. Table factor is not measured useful reach.
+Before training, qualify complete-output/EOS scoring, Native-compact solvability,
+matched near/far source twins and deleted-source controls. Student replay must
+use its actual deployment table against the original-Native teacher. Synthetic diagnosis,
+official benchmarks and natural-task generalization remain separate endpoints.
+No positive control: unresolved assay, no candidate-selection or class verdict.
+Current work confirms the existing witness; no new curve/gain/scale search.
+Qualified natural data, not an invented synthetic success, owns transfer claims.
+FFN updates are a testable hypothesis; sampled KL/gradients never prove retention.
+Use the reviewed saved-step protocol and independent Native/full-generation gates.
 
 Select or promote a method only with validated end-to-end generated-task
 scores, normal EOS completion, and Native retention. Matrix/operator norms,
@@ -123,6 +143,9 @@ threshold is operational, not a scientific discontinuity.
   More seeds cannot repair a wrong configuration.
 - For Blackwell work, first read `docs/overview/RTX5090_BLACKWELL_PROFILE.md`;
   never silently fall back to quadratic math attention.
+- The current inventory is author-reported AutoDL 5090 32GB and 4080 Super
+  32GB. Verify actual memory, architecture, BF16 and Flash on each machine;
+  no hardware-name-based memory or throughput assumption qualifies a run.
 
 ## Project boundaries
 

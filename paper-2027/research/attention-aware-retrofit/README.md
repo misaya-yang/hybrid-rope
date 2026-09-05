@@ -1,7 +1,7 @@
 # Mature-checkpoint single-table program
 
 Enter here after [`../../../INDEX.md`](../../../INDEX.md) routes a mature-
-checkpoint question. The root index owns claim status; this directory owns the
+checkpoint question. The root index routes claim owners; this directory contains the
 current method evidence and protocol history.
 
 ## Theme and success conditions
@@ -25,10 +25,14 @@ head-specific clocks. Exact Native equivalence, a unique checkpoint-derived
 `m_k`, operator-conjugacy tightness, and a universal LM selector are not current
 success criteria.
 
-Current status:
+Historical entry snapshot (superseded for live execution):
 
 `S4_ZERO_TRAINING_INCUMBENT / S8_FRONTIER_OPEN /
 2X4X_TO_8X16X32X_LORA_OPEN / NO_ACTIVE_GPU_MACHINE`
+
+Current server outcomes are in the [execution report](results/SINGLE_TABLE_FFN_SERVER_EXECUTION_20260904.md);
+[HANDOFF](../../HANDOFF.md) owns live machine and next-action state.
+The historical snapshot above is not the current GPU status.
 
 Start with the
 [`research handoff`](analysis/SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904.md)
@@ -44,10 +48,13 @@ and the
 | Mechanism/falsification analysis | [`analysis/`](analysis/) |
 | Frozen historical protocols | [`preflights/`](preflights/) |
 | Current and retracted theory notes | [`theory/README.md`](theory/README.md) |
+| Executable experiment and analysis code | [`../../../scripts/`](../../../scripts/) |
 
 The root `INDEX.md` owns current claim status and scoped negatives. A result
 file owns only its exact protocol; an analysis or preflight is never an action
-queue.
+queue. Paper-local Python is limited to figure generation in `../../figs/` and
+the bounded historical checks in `../three_completions/`; active execution code
+remains in the repository `scripts/` tree.
 
 Before compute, validate the exact table/gain, checkpoint, physical lengths,
 train/evaluation firewall, Flash-only path, controls, scorer, raw-output

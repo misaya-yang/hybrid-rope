@@ -1,164 +1,466 @@
-# Constrained single-table frontier and 2x/4x LoRA transfer preflight
+# Fixed-witness confirmation and Native-constrained transfer — v3 reviewed
 
-- **Date:** 2026-09-04
-- **Status:** factor-frontier code prepared; LoRA implementation prototype
-  prepared but its route-explicit data/causal diagnostic gate remains open; no
-  new GPU result; the author shut the server down
-- **Questions:** (Z) how far can one static frozen table extrapolate while its
-  1x NLL and downstream damage remain about 0.12; (F) can small matched LoRA
-  exposure at physical 2x/4x transfer to unseen 8x/16x/32x without exceeding
-  the same 1x damage budget?
-- **Estimands:** largest feasible factor on the declared log-p2 factor/gain
-  family; adapted-minus-frozen and candidate-minus-Native capability at held-out
-  physical lengths
-- **Claim boundary:** this program estimates a checkpoint- and family-specific
-  frontier. It cannot prove a global RoPE upper bound or identify a unique
-  optimal table from finite arms.
+- **Date/status:** 2026-09-04; historical v3 design, amended during authorized
+  execution. Actual assets, runtime and results are in the
+  [execution owner](../results/SINGLE_TABLE_FFN_SERVER_EXECUTION_20260904.md).
+  Statements below about unavailable assets and segmented64-step resume are
+  superseded for the current Qwen branch; they describe the original preflight.
+- **Questions:** Z: what can the existing global static table do, and at what
+  Native cost? F: does fixed-table small adaptation transport an already-solvable
+  task into full long generation with separate Native retention?
+- **Theory and dossier decisions:** [first-principles owner](../theory/CONSTRAINED_GENERATION_FIRST_PRINCIPLES_20260904.md), especially §§6–8.
+- **Authority:** current user scope remains separate Native retention >=.88;
+  historical .875 is marginal. The dossier's .03-NLL/-2-point thresholds and
+  72 GPU-h proposal are NOT substituted for this target or compute authorization.
+- **Machines:** user-reported AutoDL 5090 32GB and 4080 Super 32GB. Detect actual
+  memory, BF16 and Flash. Neither device name nor available VRAM predicts runtime.
+- **Superseded before execution:** new frequency/gain sweeps, m^1.25 as next arm,
+  QK -> QKVO escalation, source-contrast training, and synthetic replay alone as
+  Native protection. No scientific result was produced by those prototypes.
 
-## Material Passport
+## Execution amendment — read before the historical commands
 
-- **Objective:** separate short-context compatibility, long-context geometry,
-  and learned capability conversion under one deployable table/path.
-- **Object:** released OLMo-2-0425-1B-Instruct, its exact Native inverse-frequency
-  tensor, and the exact retained legacy-u p2 log-s4 tensor.
-- **Decomposition dimensions:** table factor, fixed scalar gain, frozen versus
-  QKVO-LoRA weights, training exposure length, and evaluation length.
-- **Evaluation:** paired PG-19 tail NLL, five natural generation tasks, RULER
-  core-4, exact training receipts, and held-out physical 8x/16x/32x RULER.
-- **Evidence required:** checkpoint/config/table/data/code hashes, raw per-row
-  generations or NLLs, Flash-only runtime receipt, adapter bytes, failures, and
-  exclusions.
-- **Environment:** canonical work machine, BF16 CUDA, Flash SDPA enabled with
-  math and memory-efficient fallbacks disabled; 32 GiB GPU. CPU/RAM display is
-  not treated as a resource contract.
-- **Output:** machine-local raw bundles plus a compact repository result owner;
-  no private path, row, prediction, adapter, or server identity is committed.
+The active checkpoint is Qwen1.5B with true Native32K; train caps remain2K/8K/16K.
+The fixed K64 movement is transported onto its Native basis, with frozen gain;
+it is a new checkpoint-specific candidate, not the original OLMo tensor.
+All-linear r16 has18,464,768 parameters; attention-only budget match isr68
+(+0.31%), conditional on feasibility. OLMo r46 below is not the Qwen setting.
 
-## 1. Correction to the research target
+An identity-KL numerical defect invalidated the first N trajectory. Engine008
+fixes it with the exact first-order logit gradient. Resume parameter parity
+remains unresolved, so corrected runs use uninterrupted32R+96T with all saves,
+instead of inheriting the historical segmented-resume commands. This spends
+one fixed recipe before checkpoint evaluation; no additional optimization
+budget, table search or test-based selection is authorized by that amendment.
 
-The objective is not exact Native equivalence and not universal domination.
-There is one global static table and one fixed attention gain installed before
-prefill, no routing, boundary switch, dual table, cache handoff, or head-specific
-clock. A method is acceptable when both measured 1x retentions are near the
-author's 0.12-damage budget and longer capability is maximized.
+Original-Native validation subsequently found only4 compact-correct double-
+evidence groups, below the registered8. Z was stopped during restoration at26
+completed steps; this is an unresolved assay, not a negative method result.
+The completed N128 is evaluated diagnostically. No Y, seeds, attention-only
+ablation or farther matrix should run until controls resolve. A same64-group
+[source-only development guard](../../../../scripts/experiments/source_only_generation_guard.py)
+adds common-width source padding, exact near/far swaps and identical deleted
+worlds without changing old training/results. Deleted paired zero is structural;
+report single-world outputs and differences. A separate24-report Native guard
+covers up to32K. Preserve these companion protocols and their limits explicitly.
 
-The repository's historical threshold `retention >= 0.875` means damage at most
-0.125 and is kept for comparability. Every result must also report whether the
-stricter literal `retention >= 0.88` threshold passes; values between the two are
-labelled **marginal**, not silently rounded to 0.12.
+## 1. What is now fixed
 
-## 2. Existing observations and unresolved causes
+N = original checkpoint/table/gain. Z = exact full legacy-u p2 log-s4 tensor,
+rotary amplitude 1.102585782722872, all lengths and requests. G = geometric
+interior with exactly Z's sampled endpoints/K/gain. Y = official Transformers
+YaRN factor4, with its own recorded official amplitude. G/Z is the pure-z
+contrast; N/Y are practical references. Do not label G as FMRoPE.
 
-The retained log-p2 s4/c=.074 arm has PG-19 PPL retention `0.875302` and
-five-task retention `0.915103`, then strongly improves 2x/4x NLL and capability.
-It is marginal under the literal 0.88 NLL threshold and passes the historical
-0.875 gate. The old direct s8 log arm used the different analytic gain
-coefficient `.10`; its core-4 row improved over arithmetic s8 but the full-13
-run stopped after single-key-3 collapse. These facts do not identify a zero-
-training upper bound.
+The exporter copies the exact Z bytes and validates the Native config/tensor.
+No outcome picks a gain, scale, or movement. The old c=.10 and c=.074 RULER
+vectors belong to different protocols and remain separate, valid owner entries.
 
-A descriptive quadratic through the already measured Native, s2, and s4 PG-19
-points predicts the p2/c=.074 NLL boundary near factor `3.91` for retention
-0.88 and `4.01` for retention 0.875. This is a post-outcome local fit, not a
-theorem. It makes a blind factor sweep unattractive and motivates the gain/table
-discriminator below.
+E2's candidate is all-linear LoRA r16/alpha16 across Q/K/V/O and gate/up/down;
+base weights, norms, embeddings, output head and table/gain are frozen. This is
+12,058,624 parameters in the pinned OLMo shapes, a budget choice, not a theorem.
+Attention-only r46 is a parameter-matched explanatory control after feasibility.
 
-The LoRA conversion problem predates log-p2. Mature EVQ-Cosh adaptation improved
-long NLL and causal source use without reliable top-1 generation; the recent
-same-substrate log-p2 Q/K run again improved PG-19 but not generated capability.
-The new experiment therefore changes the learning signal and QKVO capacity,
-not merely rank, alpha, gain, or step count.
+Full answer/EOS CE plus .25 worst teacher-capped gold-prefix margin is the task
+loss. Each lawful counterfactual world gets its own correct target. Source
+contrast is measured diagnostically, not optimized. Four-stratum full-vocabulary
+Native teacher KL constrains the ACTUAL deployed student function; student
+never switches to Native RoPE during replay. KL target .02 is an optimization
+setting, not a replacement for final NLL/task/EOS retention checks.
 
-## 3. Stage Z: locate the zero-training bottleneck
+## 2. E0 tomorrow: qualify a cheap independent instrument
 
-The exact p2 movement encoded by the Native and retained log-s4 tensors is
-recovered as
+From the repo root on the existing work-machine environment:
 
-```text
-m_k = -log(omega_s4_k / omega_native_k) / log(4)
-omega_k(s) = omega_native_k * s ** (-m_k)
-gain(s,c) = 1 + c log(s)
+```bash
+export EVQ_PYTHON=python3
+export EVQ_CHECKPOINT=<exact-local-OLMo-checkpoint>
+export EVQ_WORK_DIR=<new-private-output-directory>
+export EVQ_NATIVE_TABLE=<exact-native-npy>
+export EVQ_LOG_P2_S4_TABLE=<exact-full-p2-s4-npy>
+export EVQ_RETENTION_MANIFEST=<existing-tokenized-Native-evaluation-manifest>
+export EVQ_ASSET_TOKENIZER_ROOT=<original-tokenizer-directory-for-that-manifest>
+export EVQ_MAX_SECONDS=3600
+bash scripts/eval/run_single_table_diagnosis.sh prepare
+bash scripts/eval/run_single_table_diagnosis.sh preflight
 ```
 
-The table exporter freezes factors `4,5,6,7,8` and gain coefficients
-`.05,.074,.10` before any new LM outcome. The reference s4 tensor is copied
-byte-for-byte rather than reconstructed.
+Replace placeholders. No download or GPU model operation occurs in these two
+stages. CPU Torch/Transformers on the work machine are needed for the official
+Y export and tokenizer. Do not recreate that environment on the personal PC.
 
-Execution is adaptive:
+After the author chooses machine/time budget:
 
-1. score all fifteen arms on a small PG-19 1x calibration subset;
-2. retain only the lowest-NLL gain at each factor;
-3. evaluate those five arms on the full 20-row PG-19 gate, five 1x natural
-   tasks, and 1x core-4;
-4. select the largest factor passing both NLL/PPL and downstream retention at
-   0.875, while separately marking strict-0.88 status;
-5. open 2x/4x/8x core-4 only for that factor. Do not evaluate factor 8 long
-   merely because it is the requested ceiling.
+```bash
+export SINGLE_TABLE_GPU_AUTHORIZED=YES
+bash scripts/eval/run_single_table_diagnosis.sh smoke
+bash scripts/eval/run_single_table_diagnosis.sh controls
+```
 
-This factorial distinguishes three useful failure classes:
+The 24-group synthetic instrument has compact (<=2K), full near, full far and
+source-deleted conditions. Near/far exchange exact token blocks; the background
+multiset, query position, answer and total length are unchanged. An independent
+text reader checks unique source-owned answers before model evaluation.
 
-- no gain passes 1x PG-19: the p2 table displacement itself exceeds the short
-  likelihood budget at that factor;
-- PG-19 passes but natural/core capability fails: frozen readout compatibility,
-  not likelihood alone, sets the observed boundary;
-- both 1x gates pass but 8x fails: the static geometry/gain does not convert to
-  long generated capability.
+Complete decoded raw output plus actual EOS is primary. No substring/first-number
+credit, no special-token stripping, no tokenizer cleanup. Equivalent tokenizations
+of an identical full string pass; canonical token equality is diagnostic only.
+Raw IDs remain the source of re-scoring. Official natural metrics are separate.
 
-It still estimates only the p2-family boundary. Calling it the global zero-
-parameter limit would be an overclaim.
+Smoke compares cached versus full-prefix greedy on the actual model. Controls
+also record all gold-prefix margins/ranks/logprobs, first canonical token
+mismatch, and same-target source intervention effects. Positive gold margins
+with a different cached path are an implementation/numerical alarm, not an
+exposure-bias diagnosis. Attention matrices are never materialized.
 
-## 4. Stage F: physical 2x/4x LoRA to unseen 8x/16x/32x
+Read `controls_native/summary.json` and raw rows. Compact failure prevents an
+existing-capability-transport interpretation. Compact succeeds but full near
+fails: background burden matters. Near succeeds but far fails: distance/layout
+interaction remains. Output probabilities following the source with wrong
+answers is not completed conversion. EOS failure is visible separately.
 
-The training substrate remains one static table and fixed gain. Training uses
-the already hash-bound identifiable natural pair views at physical 4K, 8K, and
-16K. Each correct/deranged variant changes both the source-owned answer span and
-its matching output label, so the two CE targets are not contradictory.
+These synthetic tests qualify infrastructure; they are not the natural E1/E2
+training or final benchmark. Do not fix them by teaching a special output format
+and then call that recovery of an originally existing Native capability.
 
-The current prototype loss applies, for each variant, answer-plus-EOS CE plus a same-target
-correct-source over corrupted-source log-probability margin. The corrupted view
-keeps the teacher-forced output tokens fixed and changes the remote source
-content. Unlike the failed recent Q/K screen, it updates standard PEFT Q/K/V/O
-LoRA (rank 64, alpha 128). The 300-step schedule is
-`2x,4x,2x,4x,1x replay`; no 8x/16x/32x row is visible to training or selection.
-Before a scientific run, add a route-explicit target (context-random source
-nonce, context-random answer nonce, immediate EOS) or otherwise accept that
-retrieval cannot be scored separately from answer generation. The minimum
-projection screen is frozen/QK/QKVO: QK runs first; QKVO opens only if causal
-routing succeeds but oracle-routed answer/EOS remains weak. Match actual
-trainable parameter counts, not nominal rank. The prepared runner currently
-launches the QKVO prototype and must not be treated as this completed screen.
+## 3. E1: confirm the witness, do not search
 
-The first table uses retained s4/c=.074 as a resolving positive-control
-substrate. Only after its one-step Flash smoke and finite run may the s8 table
-with its Stage-Z-selected gain run. A matched Native-table adapter is required
-if a non-Native candidate passes and causal table attribution is needed.
+```bash
+bash scripts/eval/run_single_table_diagnosis.sh native
+bash scripts/eval/run_single_table_diagnosis.sh nll-screen
+bash scripts/eval/run_single_table_diagnosis.sh retention
+bash scripts/eval/run_single_table_diagnosis.sh select
+```
 
-Evaluation order is mandatory:
+Default arm is Z. `EVQ_ARM=N`, `G` or `Y` runs the predeclared controls on the
+same data. G is an explanatory negative control, not a candidate to promote as
+Native-feasible. Do not open an unlimited long matrix for a failed candidate.
 
-1. 1x PG-19 plus five natural tasks and core-4; stop the candidate if either
-   retention is below 0.875 and report strict-0.88 status;
-2. held-out physical RULER core-4 at 8x, 16x, and 32x, 20 rows per cell;
-3. expand to RULER-13 and held-out natural QA only if core-4 is non-floor at 8x
-   and retains a nontrivial signal at 16x. A 32x floor does not erase a valid
-   8x/16x result.
+The imported Native pack is independently checked for tokenizer/file identity,
+source-group split, complete task cells and physical prompt+generation reserve.
+The five natural tasks are Qasper, MultiFieldQA-en, HotpotQA, 2WikiMQA, GovReport.
+It reports NLL/PPL, ordinary task macro, EOS-completed task macro and paired
+source-group intervals. Historical exposure of imported documents is not erased
+by splitting them; fresh confirmation still matters.
 
-Training-loss reduction, answer-token NLL, source margin, attention mass, and
-first-token rank are diagnostics. Only greedy generated-task endpoints establish
-capability transfer.
+A fixed Z that misses .88 can be reported as a costly working point, not a
+qualified joint point. This does not prohibit testing whether a separately
+registered adapter repairs it. Do not silently choose another c to improve the
+paper's number. Final Native confirmation uses
+`EVQ_RETENTION_FOLD=confirmation` with the corresponding Native baseline.
 
-## 5. Stop conditions and implementation
+A formal E1 natural C/N/F confirmation requires new source-locked natural worlds,
+not the synthetic pack. Reuse existing official benchmark ROWS only after
+verifying their identities, but independently recompute outputs/scores.
 
-Stop immediately on tensor/data/hash drift, train/eval length leakage, missing
-counterfactual target differences, non-finite loss or gradient, OOM, less than
-1 GiB measured headroom, any non-Flash attention fallback, adapter reload drift,
-or author stop. Preserve partial outputs and record exclusions.
+## 4. E2 required assets — a concrete preflight boundary
 
-Prepared code:
+The primary engine is
+[`train_single_table_native_constrained.py`](../../../../scripts/train/train_single_table_native_constrained.py).
+It is implemented but cannot execute science without the following assets.
 
-- `scripts/analysis/export_log_p2_factor_frontier.py`
-- `scripts/train/train_log_p2_phase_transfer_lora.py`
-- `scripts/eval/run_log_p2_frontier_and_transfer_4080.sh`
-- extended 16x/32x support in `scripts/eval/target_free_ruler_smoke.py`
+**A. Qualified natural task manifest** (`QUALIFIED_NATURAL_TRANSPORT_V1`):
 
-The runner has separate build, preflight, retention, smoke, train, adapted-
-retention, and far-evaluation actions. No stage launches the next automatically.
+```json
+{
+  "status": "QUALIFIED_NATURAL_TRANSPORT_V1",
+  "tokenizer_files": {"tokenizer.json": "SHA256", "tokenizer_config.json": "SHA256"},
+  "eos_token_id": 100257,
+  "views_path": "transport_views.jsonl", "views_sha256": "SHA256",
+  "qualification_path": "native_compact_qualification.json",
+  "qualification_sha256": "SHA256",
+  "evaluation_splits": {
+    "validation": {"groups": 64, "lengths": [2048, 16384]},
+    "test": {"groups": 256, "lengths": [2048, 16384, 32768, 65536]}
+  }
+}
+```
+
+Include exactly the actual tokenizer fingerprint files; placeholders are not
+valid hashes. Each view has `semantic_id`, `source_id`, `template_lineage`,
+`split` (train/validation/test), `world` (0/1), `family`
+(single_evidence/double_evidence/binding), `layout` (compact/near/far),
+`length_cap`, `prompt_ids`, and `target_ids` including the real EOS.
+
+Training is 128 semantic groups (64/32/32 by family), two worlds and physical
+caps 2048/8192/16384: 768 views once. Long views must actually occupy their physical
+length (within the 64-token reserve), not use virtual positions. Source/template/
+semantic lineages cannot cross splits. Near/far correctness and counterfactual
+fact consistency need source-backed validation, not a boolean invented by an LLM.
+
+Qualification JSON also requires a real `candidate_pool_path` and matching
+`candidate_pool_sha256`, `screened_candidates`
+(128–2000), `selection_rule="fixed_order_native_compact_both_worlds"`, and a
+`rejections` ledger. Do not fill quotas by Z performance or undocumented resampling.
+It identifies the original Native weight hash/table/gain and has
+one row per training world with `semantic_id`, `world`, `compact_prompt_ids`,
+truth-verified `target_ids`, actual `generated_ids`, `gold_margins`, and
+`truth_verified`. The actual Native compact output must match the truth-verified
+chosen target including EOS; every canonical gold margin must be positive.
+The compact training prompt must equal the qualified prompt exactly. Every
+validation/test semantic group has BOTH worlds: compact at 2048 and near/far
+at every declared long length. Validation is exactly 64 groups; test is at
+least 256 groups, including the predeclared 64 unseen-family examples. Optional
+131072 must be registered before training. The engine checks matrix completeness,
+token types/vocabulary, disjoint complete-answer aliases across worlds and
+generation reserve before GPU loading; the owner must
+also audit the unseen-family quota and semantic truth.
+The source-backed truth and rejection ledger must accompany this mechanical
+contract. Preflight checks the fields; it does not authenticate semantic truth.
+
+**B. Independent Native pool manifest** (`NATIVE_REPLAY_POOL_V1`): tokenizer
+fingerprint, `rows_path`, `rows_sha256`. Each row: `id`, `source_id`, `split`
+(train/calibration/validation/test), `group` (text/instruction/reasoning/
+position_format), `input_ids` <=4096, and fixed `prediction_positions` indexing
+hidden states that predict the NEXT token. Each group has exactly 128 train,
+32 calibration and 64 validation rows, with independent source ownership.
+Instruction trajectories include the verified answer/EOS prediction positions.
+Whole source groups stay together and do not overlap task data.
+For text validation/test rows, provide `text_domain`; prediction positions must
+have observed next tokens in `input_ids`. Validation spans at least two domains.
+For other validation/test strata, provide `prompt_ids`, a physical
+`generation_budget`, source-verified `accepted_full_answers`, and
+`truth_verified=true`. These fields enable independent FULL generation scoring;
+cached teacher distributions do not supply correctness labels. Formal Native
+test targets two text domains x128 and three generation strata x500; a smaller
+predeclared test must report unresolved precision, not relax retention bounds.
+
+These natural/Native assets have not been supplied locally. Missing files,
+insufficient qualification/quota, bad hashes, overlap or wrong physical lengths
+produce a concrete `BLOCKED_DATA_QUALIFICATION` / `BLOCKED_NATIVE_DATA` before
+CUDA loading. No synthetic rows are silently substituted to make preflight pass.
+
+## 5. E2 executable stages, after qualified assets exist
+
+```bash
+export TASK_MANIFEST=<qualified-natural-transport-manifest>
+export NATIVE_POOL=<independent-Native-pool-manifest>
+export TEACHER_CACHE=<new-private-cache-directory>
+"$EVQ_PYTHON" scripts/train/train_single_table_native_constrained.py preflight \
+  --checkpoint "$EVQ_CHECKPOINT" --tasks "$TASK_MANIFEST" \
+  --native-pool "$NATIVE_POOL" --output "$EVQ_WORK_DIR/e2_preflight"
+"$EVQ_PYTHON" scripts/train/train_single_table_native_constrained.py cache-native \
+  --checkpoint "$EVQ_CHECKPOINT" --native-pool "$NATIVE_POOL" \
+  --authorized --max-seconds 3600 --output "$TEACHER_CACHE"
+```
+
+Teacher is original Native, never Z or an adapter. Cache is full vocabulary,
+FP32 storage of the declared BF16-model forward logits, not top-k. The code
+checks cache disk capacity; final test rows are excluded. No teacher and student
+are kept resident together during training.
+
+For Z, one smoke exercises restoration plus a length-mixed task batch and Native
+constraint; output is explicitly nonscientific:
+
+```bash
+"$EVQ_PYTHON" scripts/train/train_single_table_native_constrained.py smoke \
+  --checkpoint "$EVQ_CHECKPOINT" --tasks "$TASK_MANIFEST" --native-pool "$NATIVE_POOL" \
+  --teacher-cache "$TEACHER_CACHE" --arm Z --table "$EVQ_WORK_DIR/fixed_controls/Z.npy" \
+  --gain 1.102585782722872 --authorized --max-seconds 600 --output "$EVQ_WORK_DIR/e2_smoke_Z"
+```
+
+The exact same arguments with action `train`, a fresh output directory and the
+chosen time cap START the fixed 32-step restoration + 96-step transfer protocol.
+The default first segment stops at global step64 (32 restoration +32 transfer).
+Review Native and natural generation before resuming to96/128. This is one
+frozen trajectory, not separate retuned models; remaining matrix can stop early.
+N omits `--table` and uses gain1; Y uses its frozen file and amplitude from the
+control manifest. Seed42 order is N/Z/Y, then conditional seeds43/44 follow the
+dossier's balanced order. No seed lottery or rank/loss sweep.
+
+Saved steps are 0/32/64/96/128. Optimizer resets between stages; all-linear
+r16/alpha16; LR1e-4, batch8 task views and 2 Native replay examples in transfer.
+Initial total Native KL is measured on a fixed calibration subset; zero
+restoration gradients on N are legitimate. Only observed Native strata update
+their dual multiplier. Full target-position LM-head projection avoids full-length
+vocabulary tensors. The stored completion receipt proves TRAINING ONLY.
+
+The engine's `native-evaluate` action measures held-out observed-token text NLL
+and full-answer/EOS Native generation on the separate pool. The old five-task
+evaluation remains a secondary historical comparison, not a substitute for this
+fresh gate. Its task macro and the new three-stratum generation macro are
+different endpoints and must be labelled separately.
+
+The engine's `evaluate` action reads the same frozen natural-view schema at
+`--split validation` or `test`, with `--adapter` pointing to a saved step.
+Evaluation rows require a predeclared `generation_budget` fitting their cap and
+may declare `accepted_full_answers`; outputs preserve raw IDs and full strings.
+It reports both-world exact+EOS by family/layout/length. Test requires
+`--frozen-selection` binding `table_sha256`, `gain`, `adapter_sha256`, and
+`adapter_config_sha256` and `task_manifest_sha256`; Native test also binds
+`native_pool_sha256`. Adapter weight hashes alone do not freeze alpha/scaling.
+No checkpoint is selected from test output.
+
+Independent Native validation and checkpoint selection remain separate gates.
+The reviewed trainer saves optimizer, Python/Torch/CUDA RNG, dual multipliers,
+exposure order and hashes. `--resume <step-directory>` requires the identical
+recipe/code/assets and a later `--stop-after-step`; use a fresh segment output.
+Cache preparation journals completed shards; `--resume-cache` verifies and
+reuses them. Neither retries nor checkpoints are scientific replication.
+The one-step smoke now has a nonzero LR; v2 accidentally decayed its only step
+to zero. No v2 GPU smoke or training was run. Saved/merged greedy parity is
+checked after releasing the training model/optimizer. GPU gradient, exact resume
+parity, actual memory and timing still require work-machine qualification.
+A training-complete file never authorizes a capability claim.
+The optional `--placement attention_matched` and `--compact-only` are restricted
+to Z/seed42 explanatory runs after main feasibility, not alternative candidates.
+
+## 6. Blind lengths, stop rules and ROI
+
+Freeze final methods/checkpoints before exposing 32K/64K. The original 128K
+(32x) objective is a conditional extension, not a first-batch requirement. A
+registered zero primary score or failed Native gate stops that candidate's
+remaining matrix. Unresolved controls stop interpretation, not the method class.
+Do not convert skipped longer cells into zeros or retune after a reveal.
+
+The E0/E1 driver retains seal/far stages for a qualified frozen witness, but do
+not open them while the adaptation design is still being changed. All claims
+must disclose which lengths influenced development. Early 16K success remains
+valuable even if farther evaluation fails.
+
+Cost priority: small valid diagnostic -> fixed witness confirmation -> one
+matched N/Z/Y training seed -> independent retention/task validation -> optional
+replication/longer lengths -> explanatory controls/second architecture. No 72
+GPU-h batch is authorized by this document. Each stage has a cap; a current
+forward may finish after the boundary. Save persistent receipts and configure
+the user's intended AutoDL external shutdown limit; the scripts do not power
+off the host. Do not consume paid idle time waiting for data construction.
+
+Prefer 5090 for main adaptation, the other measured-32GB device for teacher/
+Native evaluation if available. Match scientific conditions, record device and
+backend, and use actual throughput to allocate work. CPU syntax/schema tests do
+not qualify HF/PEFT, Flash gradients, 64K/128K memory or final publication.
+
+## 7. Reviewed first-boot sequence and result-driven continuation
+
+The [E2 stage driver](../../../../scripts/train/run_native_constrained_transfer.sh)
+runs ONE stage and ONE arm. Set the E0 variables above plus `TASK_MANIFEST`,
+`NATIVE_POOL`, and `TEACHER_CACHE`. No assets are downloaded or silently replaced.
+Use `preflight` while compute is off; missing source truth/qualification is the
+current blocker. Build these assets from verified source owners before renting
+an idle GPU. Preparing them is the next data task, not a reason to rerun old LoRA.
+
+```bash
+export E2_ARM=N E2_SEED=42 E2_LABEL=assets
+bash scripts/train/run_native_constrained_transfer.sh preflight
+# After qualified assets and chosen GPU/time cap exist:
+export SINGLE_TABLE_GPU_AUTHORIZED=YES
+unset E2_ADAPTER
+export E2_LABEL=native_original
+bash scripts/train/run_native_constrained_transfer.sh native
+bash scripts/train/run_native_constrained_transfer.sh evaluate
+export E2_NATIVE_BASELINE="$EVQ_WORK_DIR/e2_native_original_native"
+export E2_TASK_BASELINE="$EVQ_WORK_DIR/e2_native_original_validation"
+bash scripts/train/run_native_constrained_transfer.sh cache
+export E2_ARM=Z E2_LABEL=Z_s42_smoke EVQ_MAX_SECONDS=600
+bash scripts/train/run_native_constrained_transfer.sh smoke
+export E2_REFERENCE_RUN="$EVQ_WORK_DIR/e2_Z_s42_smoke"
+export E2_RESUME="$E2_REFERENCE_RUN/step_001" E2_LABEL=Z_s42_smoke_resumed
+bash scripts/train/run_native_constrained_transfer.sh smoke-resume
+export E2_RESUMED_RUN="$EVQ_WORK_DIR/e2_Z_s42_smoke_resumed"
+bash scripts/train/run_native_constrained_transfer.sh compare-smoke
+# Only after actual nonzero gradients, save/reload parity and measured cost pass:
+export E2_ARM=N E2_LABEL=N_s42_first EVQ_MAX_SECONDS=3600
+bash scripts/train/run_native_constrained_transfer.sh train
+export E2_ADAPTER="$EVQ_WORK_DIR/e2_N_s42_first/step_064"
+bash scripts/train/run_native_constrained_transfer.sh native
+bash scripts/train/run_native_constrained_transfer.sh evaluate
+bash scripts/train/run_native_constrained_transfer.sh review
+```
+
+Read `e2_N_s42_first_review.json`, checkpoint receipts and raw errors. The
+[CPU reviewer](../../../../scripts/analysis/review_native_constrained_transfer.py)
+re-scores raw full outputs, checks paired deployment/data identities, recomputes
+Native ratios and source-group intervals, and derives the same Native-compact
+cohort for near/far comparisons. It writes a next action; it does not launch,
+retune, seal, or promote claims. Retain unfiltered scores alongside the cohort.
+
+For a qualified continuation only: set a fresh `E2_LABEL=N_s42_to96`,
+`E2_RESUME` to the prior step064 and `E2_STOP_STEP=96`, then run `resume`.
+Repeat Native/evaluate/review with `E2_ADAPTER` set to the new step. Continue
+to128 only under the same rules. Z/Y use their frozen manifest amplitudes
+automatically; change `E2_ARM` and labels explicitly, never inherit an adapter
+into a new arm. Output directories refuse overwrite. Reuse original baselines
+and the teacher cache across arms. `cache-resume` repairs an interrupted cache;
+it does not regenerate successful shards. A time cap preserves the last complete
+optimizer boundary; a mid-step crash may require replay from the preceding
+saved boundary. No bitwise resume claim exists before the GPU parity check.
+`smoke-resume` repeats the transfer step from the original restoration checkpoint;
+`compare-smoke` compares final LoRA tensors on CPU at predeclared atol 1e-6 / rtol 1e-5.
+Both runs must independently pass saved/merged greedy parity. This qualifies that
+small boundary, not arbitrary future resumptions. Record actual max difference;
+drift is a runtime issue to resolve before the main matrix, not a method failure.
+
+| Review result | Next session's bounded task |
+| --- | --- |
+| Missing/mismatched source, cache, matrix or runtime parity | Repair that asset/implementation, preserve invalid receipts; do not spend on training |
+| `STOP_NATIVE_DAMAGE` | Close this checkpoint/candidate under this budget; inspect earlier feasible checkpoints and FFN/attention conflict logs; no farther cells/extra seeds |
+| `UNRESOLVED_CONTROLS` | Fix resolving power without selecting by candidate success |
+| `UNRESOLVED_LOCAL_OR_BACKGROUND` | Inspect compact/near full outputs: acquisition/format, forgetting or background burden; no distance-only conclusion |
+| `STOP_ZERO_LONG_GENERATION` with controls resolving | Close this candidate/protocol and remaining matrix; a class-wide impossibility is unsupported |
+| `RETENTION_INTERVAL_UNRESOLVED` | Use the predeclared independent confirmation pool/precision audit; do not call non-significance retention |
+| Valid nonzero generation and Native retention at64/96 | Review raw outputs and continue the same recipe to the next planned checkpoint |
+| Feasible completed128 | Select among predeclared feasible saves by 16K far task macro, then calibration KL, then earlier step; seal before blind32K/64K |
+| N/Z/Y gain similarly | Training recipe worked; no Z-specific advantage. Preserve support/allocation paper core and narrow transfer claim |
+| Z retains Native and beats matched N/Y | Replicate43/44, then blind reach; only afterwards run parameter-matched attention-only placement control |
+
+Use step32 as restoration-only evidence, not another training run. Always report
+step0/32/selected outcomes so restoration is not credited to long supervision.
+Validation observations can stop work; no outcome authorizes new hyperparameters.
+
+## 8. FFN review: learning and forgetting must both be observable
+
+The module hypothesis and derivation are in the [theory owner §9](../theory/CONSTRAINED_GENERATION_FIRST_PRINCIPLES_20260904.md#9-ffn-review-learning-under-a-native-constraint).
+At transfer steps33/64/96/128 the trainer records attention and FFN task-gradient
+norm, weighted-Native-gradient norm, ratio and cosine **before clipping**.
+It also records answer+EOS CE, the per-view minimum gold margin and EOS margin,
+then four-stratum held-out calibration KL/max-prefix-KL/argmax agreement at saves.
+These are diagnostic aggregates, not certificates or actual Adam update vectors.
+The smoke checks a real update; task gradients must reach FFN B matrices even
+though A gradients can be zero at zero-B initialization. Native zero-gradient
+restoration on N is valid. Frozen backbone/norm/head leakage is a runtime error.
+
+Healthy optimization requires task improvement AND Native retention. Large
+Native/task ratio with negative cosine and stagnant generation flags a possible
+constraint conflict; it does not by itself prove the .02 target infeasible.
+Small training loss with bad held-out C/N/F generation flags failed transfer,
+overfit or task validity; increasing rank/epochs is not the default response.
+Low replay KL with falling held-out Native generation is inadequate coverage,
+not successful preservation. No automatic KL relaxation, extra FFN LR, gradient
+surgery or regularizer sweep is hidden in this recipe.
+
+The full training recipe is at most 8,650,752 student input tokens before
+calibration, generation and runtime probes; the first 64-step segment is at most
+3,575,808 training input tokens (about 41% of the full recipe). Cache and baselines are shared. Estimate total cost from
+actual mixed-length smoke throughput, including cache, validation and restart
+overhead; do not transplant old QKVO tokens/s into an all-linear guarantee.
+The ROI is resolving alternatives with bounded spend, not a numeric probability
+of acceptance. Data qualification is currently the largest readiness risk.
+
+
+## 9. YaRN-inspired sampled-prefix companion — execution amendment
+
+This is a new prospective arm, not a rewrite of the completed N recipe. Exact
+switch: `--prefix-lm` on the constrained trainer. It fixes prefix CE weight0.1
+and at most128 uniformly sampled prompt next-token positions per view; answer
+CE/margin, Native KL, rank, data, optimizer and table remain unchanged. Its
+recipe stores the switch and sample-set hash; no resume into or out of the arm.
+
+```bash
+# Use the already verified private paths from the work-machine run bundle.
+# This invokes only the two-step test; it is not a formal training result.
+"$EVQ_PYTHON" scripts/train/train_single_table_native_constrained.py smoke   --checkpoint "$EVQ_CHECKPOINT" --checkpoint-contract "$CHECKPOINT_CONTRACT"   --tasks "$TASK_MANIFEST" --native-pool "$NATIVE_POOL"   --teacher-cache "$TEACHER_CACHE" --arm N --seed 42 --prefix-lm   --authorized --max-seconds 900 --output "$PREFIX_SMOKE_OUTPUT"
+```
+
+Work-machine CPU tests check sampled-gradient expectation and safe prefix indices,
+plus the exact-zero Native KL invariant. A GPU smoke must establish finite joint
+loss, actual attention/FFN updates, headroom and saved-model generation parity.
+Only after resolving natural controls may a fixed full recipe compare its
+complete generation and independent Native endpoints with answer-only training.
+If only format or NLL improves, do not label it semantic/RoPE transfer.
+
+The zero-training unit-amplitude companion is a separate two-point **component
+diagnostic**: exact Z and Y frequency bytes, gain fixed to Native1, original
+Native-selection rows and evaluator,1800s cap each. It is not a gain sweep or a
+new frequency fit. Original-amplitude failures remain valid; only a separately
+qualified new candidate may proceed to a farther matrix.

@@ -16,6 +16,14 @@ This document is an index and research brief, not a new result owner. Existing
 patterns and external-model arguments are treated as hypotheses until they
 match raw/hash-backed owners.
 
+> **2026-09-04 execution correction.** This brief is historical context for the
+> earlier prototype, not tomorrow's execution order. Use the
+> [independent first-principles owner](../theory/CONSTRAINED_GENERATION_FIRST_PRINCIPLES_20260904.md)
+> and [redesigned protocol](../preflights/CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md).
+> The author explicitly rejected assuming the old training/evaluation chain was
+> correct. The replacement independently tests source twins, local oracle,
+> deleted-source control, complete output and EOS before costly experiments.
+
 ## 1. Bottom line
 
 The original problem was previously misstated as exact Native preservation plus
@@ -108,7 +116,7 @@ stopped after single-key-3 collapse. This closes only that candidate/protocol.
 It does not establish that every static table must fail at 8x.
 
 Primary owner:
-[`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831`](../results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md).
+[`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831`](../results/coupling-transfer/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md).
 
 ### 3.2 LoRA evidence
 
@@ -132,7 +140,7 @@ Owners:
 
 - [`EVQ_8B_ADAPTATION_EVIDENCE_20260724`](../../../../rebuttal/rebuttal_0723/theory_results/EVQ_8B_ADAPTATION_EVIDENCE_20260724.md)
 - [`OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729`](../../../../rebuttal/rebuttal_0723/theory_results/OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729.md)
-- [`LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904`](../results/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md)
+- [`LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904`](../results/adaptation-coadaptation/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md)
 
 The stable conclusion is that the missing step is **conversion of remote
 positional signal into reliable generated output under a retention constraint**.
@@ -140,7 +148,14 @@ Likelihood alone is not the endpoint.
 
 ## 4. Why the zero-training ceiling is still unresolved
 
-### 4.1 A useful empirical prior, not a bound
+### 4.1 Superseded mixed-construction fit — not a same-path prediction
+
+**Correction 2026-09-04:** the cited s2 receipt uses compressed G(x)/C2,
+whereas the retained s4 tensor is full legacy-u p2. Their movement identity is
+not established. The fitted 3.91/4.01 values below must NOT select a factor,
+stop a run, or enter theory as a p2 ceiling. They are preserved to make the
+stale inference searchable. See the replacement first-principles owner.
+
 
 Using the already measured Native, s2, and s4 PG-19 points for the p2/c=.074
 path, fit
@@ -209,7 +224,15 @@ NLL curvature cannot certify downstream retention without an additional link
 between risks. Therefore the safe name is **Native sensitivity metric**, not
 “context bound.”
 
-### 4.3 Stronger conditional two-ceiling decomposition
+### 4.3 Unresolved conditional two-ceiling construction
+
+**Correction 2026-09-04:** the phase-cost lower-bound step below is not certified:
+actual displacements were not shown to belong to the box/isotonic surrogate,
+and coordinatewise clipping need not preserve a quadratic-form lower bound.
+Native stationarity and finite-region lower curvature also lack validation.
+Only the explicitly assumed log-sum-exp dilution identity is retained; this
+section does not establish a behavioural ceiling. See the replacement owner.
+
 
 A more informative working derivation separates phase/readout cost from
 softmax dilution:
@@ -404,7 +427,7 @@ Not verified:
 - 32K/64K/128K RULER data generation and evaluation;
 - any new NLL or task outcome.
 
-## 7. Minimal next execution order
+## 7. Superseded prototype execution order (historical only)
 
 Do not launch the entire matrix at once.
 
@@ -467,7 +490,7 @@ parameter budgets before interpreting placement. Keep native-final and
 all three long lengths together. Do not pretend the smallest pilot supplies
 this full factorial.
 
-## 8. Success and stop rules
+## 8. Historical prototype success and stop rules (use current preflight)
 
 ### Zero-training success
 
@@ -506,18 +529,18 @@ Start here:
 
 Current zero-training owners:
 
-- [`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831`](../results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md)
+- [`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831`](../results/coupling-transfer/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md)
 - [`SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903`](../theory/SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md)
-- [`NATIVE_ISOTONIC_PROFILE_RESULT_20260903`](../results/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md)
-- [`K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901`](../results/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md)
+- [`NATIVE_ISOTONIC_PROFILE_RESULT_20260903`](../results/zero-training-deployment/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md)
+- [`K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901`](../results/coupling-transfer/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md)
 
 Current LoRA/adaptation owners:
 
-- [`LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904`](../results/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md)
+- [`LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904`](../results/adaptation-coadaptation/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md)
 - [`OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729`](../../../../rebuttal/rebuttal_0723/theory_results/OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729.md)
 - [`EVQ_8B_ADAPTATION_EVIDENCE_20260724`](../../../../rebuttal/rebuttal_0723/theory_results/EVQ_8B_ADAPTATION_EVIDENCE_20260724.md)
-- [`FAR_PASS_CHORD_EXPERIMENT_REPORT_20260821`](../results/FAR_PASS_CHORD_EXPERIMENT_REPORT_20260821.md)
-- [`COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825`](../results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md)
+- [`FAR_PASS_CHORD_EXPERIMENT_REPORT_20260821`](../results/adaptation-coadaptation/FAR_PASS_CHORD_EXPERIMENT_REPORT_20260821.md)
+- [`COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825`](../results/adaptation-coadaptation/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md)
 
 Do not revive as selectors:
 

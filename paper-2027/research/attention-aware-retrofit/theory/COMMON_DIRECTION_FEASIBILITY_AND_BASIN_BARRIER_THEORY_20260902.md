@@ -34,7 +34,7 @@
   a proposed Native--long bridge and capability-conversion explanation, and
   gave the registered §7.3 common-direction
   candidate of
-  [`ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902`](../results/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md)
+  [`ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902`](../results/zero-training-deployment/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md)
   a closed-form decision rule.
 - **Relation to prior negatives:** this is not a static score functional of a shared
   table. Its objects are behavioral gradients measured
@@ -171,7 +171,7 @@ for \(j\) in the active set and \(\ge\) off it, hence
   increments the gradients become block vectors in \(\mathbb R^{KH}\) and the
   convex hull lives in a higher-dimensional space, where containing the origin
   is harder. This is consistent with
-  [`HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902`](../results/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md):
+  [`HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902`](../results/zero-training-deployment/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md):
   per-head coordinates improved long QA (cells escape the shared-table conflict)
   while the retention gate still failed, because the bounded two-axis
   construction applies the same frozen directions to every head and cannot
@@ -276,7 +276,7 @@ predictions compatible with the CPU-identifiability entrance requirement of
   stated here as a definition, not as new physics.
 - **A2 (smooth Native tax).** Q/K readouts are co-adapted to the Native phase
   velocities (the ordered-coupling object of
-  [`SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823`](../results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md)).
+  [`SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823`](../results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md)).
   Under per-slot log shift \(u_k=-(m_{0,k}+d_k)\log S\), retention loss grows
   smoothly — locally quadratically — in \(|u_k|\), weighted by learned usage of
   slot \(k\). Same-multiset permutation collapse rules out reassignment as a

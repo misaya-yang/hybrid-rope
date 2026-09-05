@@ -7,7 +7,7 @@
 
 **2026-08-25 supersession.** The mature co-adaptive allocation oracle, matched
 dense-natural controls, and full-200 2Wiki comparison are now owned by
-[`../results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md`](../results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md).
+[`../results/adaptation-coadaptation/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md`](../results/adaptation-coadaptation/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md).
 They empirically separate continued adaptation from the table's full/tail
 redistribution. This memo remains historical interpretation; current action
 priority is owned by repository [`../../../../INDEX.md`](../../../../INDEX.md)
@@ -18,8 +18,8 @@ priority is owned by repository [`../../../../INDEX.md`](../../../../INDEX.md)
 1. [`../../foundations/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md`](../../foundations/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md) — `x=a+Rz`、阶段和 zero-training 语义；
 2. [`../../foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`](../../foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md) — full sin/cos geometry、collision 反例、weights×table co-adaptation；
 3. [`../../three_completions/optimization_notes.md`](../../three_completions/optimization_notes.md) — 位置核、统一泛函、EVQ-Cosh-R 与 exact-kernel/Nyström 优化；
-4. [`../results/EXPERIMENT_REPORT_20260821.md`](../results/EXPERIMENT_REPORT_20260821.md) — phase-chord 两种子结果；
-5. [`../results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md`](../results/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md)、[`../results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md`](../results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md)、[`../results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`](../results/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) — 本次 GPU 窗口。
+4. [`../results/causal-mechanism/EXPERIMENT_REPORT_20260821.md`](../results/causal-mechanism/EXPERIMENT_REPORT_20260821.md) — phase-chord 两种子结果；
+5. [`../results/zero-training-deployment/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md`](../results/zero-training-deployment/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md)、[`../results/zero-training-deployment/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md`](../results/zero-training-deployment/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md)、[`../results/causal-mechanism/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md`](../results/causal-mechanism/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) — 本次 GPU 窗口。
 
 ## 0. 正确结论
 

@@ -137,7 +137,7 @@
       "coverage": {"model": "151.9M decoder-only", "task": "paired final-128-token NLL", "scale": "256-2048", "discriminator": "selection-seed effect versus frozen-schedule replication"},
       "temporal_evidence_grade": "A",
       "visible_basis": ["The schedule was frozen before seed-42 training; protocol fields are in paper-2027/research/attention-aware-retrofit/evidence/RESULTS_20260821.json"],
-      "hidden_owner": ["paper-2027/research/attention-aware-retrofit/evidence/RESULTS_20260821.json", "paper-2027/research/attention-aware-retrofit/results/EXPERIMENT_REPORT_20260821.md"],
+      "hidden_owner": ["paper-2027/research/attention-aware-retrofit/evidence/RESULTS_20260821.json", "paper-2027/research/attention-aware-retrofit/results/causal-mechanism/EXPERIMENT_REPORT_20260821.md"],
       "result_commit": "3a493b8b8f696ebdf67d892c10abb7f44c00ce62"
     },
     {
@@ -147,8 +147,8 @@
       "title": "Same-support frozen-checkpoint controls",
       "coverage": {"model": "Qwen2.5-1.5B and OLMo-2-1.5B", "task": "RULER", "scale": "64K and 16K", "discriminator": "geometric contrast versus detailed-profile necessity"},
       "temporal_evidence_grade": "A",
-      "visible_basis": ["paper-2027/research/attention-aware-retrofit/preflights/SAME_SUPPORT_CONTROL_PREFLIGHT_20260823.md at its pre-arm state"],
-      "hidden_owner": ["paper-2027/research/attention-aware-retrofit/evidence/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULTS_20260823.json", "paper-2027/research/attention-aware-retrofit/results/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md"],
+      "visible_basis": ["paper-2027/research/attention-aware-retrofit/preflights/causal-mechanism/SAME_SUPPORT_CONTROL_PREFLIGHT_20260823.md at its pre-arm state"],
+      "hidden_owner": ["paper-2027/research/attention-aware-retrofit/evidence/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULTS_20260823.json", "paper-2027/research/attention-aware-retrofit/results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md"],
       "result_commit": "b1e20ea4ac477798ffdb34cb8ac45f46373f4a99"
     },
     {
@@ -159,7 +159,7 @@
       "coverage": {"model": "released OLMo-2-1.5B", "task": "PG-19 tail NLL", "scale": "4K and 8K", "discriminator": "long gain versus Native-window retention"},
       "temporal_evidence_grade": "A",
       "visible_basis": ["ZERO_PARAMETER_SINGLE_TABLE_PREFLIGHT_20260824.md and ZERO_PARAMETER_PROTECTED_BAND_PREFLIGHT_20260824.md"],
-      "hidden_owner": ["paper-2027/research/attention-aware-retrofit/results/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md"],
+      "hidden_owner": ["paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md"],
       "result_commit": "549cdc2be40115daa6587a99db22e11a97bac314"
     },
     {
@@ -169,8 +169,8 @@
       "title": "Matched dense-natural table/weights recovery",
       "coverage": {"model": "released OLMo-2-1.5B", "task": "phase NLL, dense NLL, 2Wiki token F1/exact", "scale": "4K-16K", "discriminator": "tail/full-sequence and NLL/capability mismatch"},
       "temporal_evidence_grade": "B",
-      "visible_basis": ["Protocol-only reconstruction of the two matched recovery arms from paper-2027/research/attention-aware-retrofit/results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md; every evaluation value and preliminary screen outcome excluded"],
-      "hidden_owner": ["paper-2027/research/attention-aware-retrofit/results/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md", "paper-2027/research/attention-aware-retrofit/evidence/COADAPTIVE_ALLOCATION_ORACLE_RESULTS_20260825.json"],
+      "visible_basis": ["Protocol-only reconstruction of the two matched recovery arms from paper-2027/research/attention-aware-retrofit/results/adaptation-coadaptation/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md; every evaluation value and preliminary screen outcome excluded"],
+      "hidden_owner": ["paper-2027/research/attention-aware-retrofit/results/adaptation-coadaptation/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md", "paper-2027/research/attention-aware-retrofit/evidence/COADAPTIVE_ALLOCATION_ORACLE_RESULTS_20260825.json"],
       "result_commit": "7a7efd9d5e1846dbe5eaaa77a697c77987a8893b"
     },
     {
@@ -180,8 +180,8 @@
       "title": "Frequency-multiset-preserving slot permutation",
       "coverage": {"model": "released OLMo-2-1.5B", "task": "PG-19 tail NLL first-stage gate", "scale": "4K", "discriminator": "unordered spectrum versus ordered slot-frequency coupling"},
       "temporal_evidence_grade": "A",
-      "visible_basis": ["Pre-registered H1/H2 discriminator recorded in paper-2027/research/attention-aware-retrofit/results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md before the permutation arm"],
-      "hidden_owner": ["paper-2027/research/attention-aware-retrofit/results/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md"],
+      "visible_basis": ["Pre-registered H1/H2 discriminator recorded in paper-2027/research/attention-aware-retrofit/results/coupling-transfer/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md before the permutation arm"],
+      "hidden_owner": ["paper-2027/research/attention-aware-retrofit/results/coupling-transfer/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md"],
       "result_commit": "00fffa3a9298d1a62bb8a3ddd50a17330cf0af36"
     },
     {
@@ -191,8 +191,8 @@
       "title": "Gemma K128 frozen transport screen",
       "coverage": {"model": "Gemma-1/1.1-2B-Instruct", "task": "RULER core-4", "scale": "4K-16K", "discriminator": "8K recovery versus 16K collapse"},
       "temporal_evidence_grade": "B",
-      "visible_basis": ["Protocol-only reconstruction from paper-2027/research/attention-aware-retrofit/results/FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901.md; every K128 score and interpretation excluded"],
-      "hidden_owner": ["paper-2027/research/attention-aware-retrofit/results/FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901.md"],
+      "visible_basis": ["Protocol-only reconstruction from paper-2027/research/attention-aware-retrofit/results/coupling-transfer/FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901.md; every K128 score and interpretation excluded"],
+      "hidden_owner": ["paper-2027/research/attention-aware-retrofit/results/coupling-transfer/FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901.md"],
       "result_commit": "3a3da401b8935065acd096cd0a72f4e2a6cf0290"
     }
   ]

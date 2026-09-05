@@ -262,6 +262,7 @@ class RepositoryNavigationTests(unittest.TestCase):
         retired_preflight = (
             ROOT
             / "paper-2027/research/attention-aware-retrofit/preflights"
+            / "zero-training-deployment"
             / "ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md"
         )
         audit = ROOT / "scripts/analysis/finite_k_cosh_regret_audit.py"
@@ -319,6 +320,7 @@ class RepositoryNavigationTests(unittest.TestCase):
         preflight = (
             ROOT
             / "paper-2027/research/attention-aware-retrofit/preflights"
+            / "zero-training-deployment"
             / "ZERO_TRAINING_FOLLOWUP_SPRINT_PREFLIGHT_20260830.md"
         ).read_text(encoding="utf-8")
         archive = (

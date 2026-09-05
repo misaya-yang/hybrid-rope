@@ -147,7 +147,7 @@ The candidate grid is
 
 Stage A opens only multiplier `1` from the receipt-bound formal token manifest
 owned by
-[`SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823`](../results/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md)
+[`SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823`](../results/zero-training-deployment/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md)
 (`token_manifest_sha256=74022bf36d444a1735baab72bda0312b9867dd38c9f85ece376049b5f35f66f3`).
 It has two separate gates:
 

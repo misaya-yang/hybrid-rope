@@ -1,67 +1,62 @@
 # ICLR 2027 active handoff
 
-- **Updated:** 2026-09-04
-- **Role:** live Git, manuscript, machine, authorization, and next-action state
-- **Active manuscript:** `paper-2027/`
-- **Immutable baseline:** `paper/`
+- **Updated:** 2026-09-04; bounded GPU queue complete; N128 aggregate Native confirmation passes, format/indexing regresses; failed frozen candidates stopped.
+- **Role:** live Git, manuscript, machine, authorization, and next-action state.
+- **Active manuscript:** `paper-2027/`; **immutable baseline:** `paper/`.
 
-Read [`../README.md`](../README.md), [`../AGENTS.md`](../AGENTS.md), and search
-[`../INDEX.md`](../INDEX.md) only for the exact claim. This file owns no scientific verdict.
+Read [`../AGENTS.md`](../AGENTS.md), [`../README.md`](../README.md), then search
+[`../INDEX.md`](../INDEX.md). This file owns no scientific verdict.
 
 ## Latest changes
+The author authorized server execution, repairs and high-value follow-ups, plus
+justified cleanup/system-disk scratch placement and alternative small-model pilots.
+The earlier 1,734-line dossier was read. Its provenance and reviewed proposals
+are in the [first-principles owner §8](research/attention-aware-retrofit/theory/CONSTRAINED_GENERATION_FIRST_PRINCIPLES_20260904.md).
 
-- Current research has two routes only: a Native-constrained zero-training
-  static-table 4x-to-8x frontier, and few-step physical-2x/4x LoRA with blind
-  8x/16x/32x evaluation. Exact Native equality is not required.
-- Submission dates do not ban training or GPU work. Experiments and manuscript
-  evidence remain separately authorized and validated.
-- Operator-bound/scale-orbit quantities failed as LM selectors. Same-table Q/K
-  LoRA improved PG-19 NLL but not generated capability. These are scoped
-  negatives, not a static-table or adaptation impossibility result.
-- Current protocol:
-  [`CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904`](research/attention-aware-retrofit/preflights/CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md).
-  Evidence/problem handoff:
-  [`SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904`](research/attention-aware-retrofit/analysis/SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904.md).
+- Current [execution contract](research/attention-aware-retrofit/preflights/CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md): fixed N/Z/G/Y witness confirmation; no new table/gain sweep.
+- Independent E0/E1: `scripts/experiments/single_table_generation.py` and
+  `scripts/eval/run_single_table_diagnosis.sh`; compact/near/far, exact block
+  exchange, deleted-source controls, raw full-string/EOS, gold-prefix traces.
+- E2: `scripts/train/train_single_table_native_constrained.py`; all-linear r16,
+  qualified natural worlds, original-Native full-vocabulary cache, actual
+  student deployment table, uninterrupted 32R+96T and fresh Native endpoints; resume parity unresolved.
+- The first QK/source-contrast prototype was superseded before any GPU run.
+- Paper changes remain planned in [`REVISION_BRIEF.md` §9](REVISION_BRIEF.md#9-outcome-dependent-manuscript-edits-2026-09-04); current TeX is unchanged.
 
 ## Git and manuscript
 
-- Branch/upstream: `main_0726` / `origin/main_0726`; base SHA
-  `fb1e0206aa32831f37ca6b2b77401f957cf82cde` was synchronized `0/0` before this change.
-- Publication of the current documentation/research-code change is requested;
-  delivery must verify local/tracking/remote equality.
-- Active PDF SHA-256: `37aa6402a65d68b21909b0b3479c4e8edd811079e3922c2c1be915ddeab167e4`;
-  prior validated body/total is 9/31 pages. It was not rebuilt.
+- `main_0726` / `origin/main_0726`, HEAD `6789084`; initially clean, local/tracking
+  divergence `0/0`. Current work is uncommitted; tracking was not refreshed.
+- No local stage, commit, push, pull or branch change; isolated remote execution is active.
+- Active PDF SHA-256: `37aa6402a65d68b21909b0b3479c4e8edd811079e3922c2c1be915ddeab167e4`.
+  Prior body/total receipt: 9/31 pages; no rebuild or new visual QA.
 - Immutable `paper/main.pdf` SHA-256:
   `fa41499486e53c982bd2afae26fe4f532e02fe61c1b9b92e64299dff37d94772`.
-  `paper/` has no diff and neither manuscript was compiled.
+  `paper/` and active TeX/PDF have no diff and were not compiled.
 
 ## Machine and authorization
 
-- No GPU run is active; the author shut the work machine down after the prior session.
-- The work machine owns canonical PyTorch, Flash-attention, packaging, and GPU validation.
-  Private rows, predictions, adapters, logs, manifests, and sidecars stay there.
-- The low-configuration personal PC is a documentation/planning host. Do not
+- Verified server: RTX 4080 SUPER, 32760 MiB; Conda Torch2.8/cu128, HF5.15.1, PEFT0.20.
+  Runtime smoke, two diagnostics, Native evaluation/cache and four-model pilot completed.
+- Work machines own canonical PyTorch/PEFT, Flash, GPU and release validation.
+- Personal PC: documentation/planning host. Do not
   install or recreate the work-machine environment here.
-- A future run needs its exact machine/budget authorization and stop/shutdown
-  condition. Stopping the prior session creates no ban on a new authorized run.
+- Author authorized the supplied machine and outcome-driven execution; stages are capped.
+  New scratch/cache uses system disk; no historical evidence deleted or host shutdown.
 
-## Validation
+## Validation and next action
 
-- Current local navigation: `26/26`; scoped CPU suite: `69/69`; Python/Bash syntax,
-  changed-document links, diff checks, and secret scan pass.
-- Local Torch-dependent RULER tests and new work-machine asset/Flash smoke are skipped.
-- Prior work-machine evidence: scale-orbit preflights, unit-gain and `.074` Q/K
-  runs, 240/240 generated rows per arm, finite-scale `24/24`, and a resolving
-  positive control. The corresponding result owners retain exact receipts/hashes.
-- The previous session did not run the new factor frontier, route-explicit LoRA,
-  rank/gain sweeps, or full-13 expansion.
-
-## What to do now
-
-1. On an authorized work machine, run only no-GPU asset/table/data preflights first.
-2. Run the descending s8-to-s4 factor/gain retention gate; open long evaluation
-   only for the largest arm passing both separate Native limits.
-3. Complete route-explicit scoring and QK-first/parameter-matched-QKVO controls;
-   train on physical 2x/4x only, then gate 1x before blind 8x/16x/32x.
-4. Stop a validated candidate on zero primary long generation or Native damage
-   above `0.12`; preserve receipts and execute the declared shutdown plan.
+- Latest85 targeted tests pass; prefix-LM GPU smoke passes, not full training or science.
+- Read the [live execution report](research/attention-aware-retrofit/results/SINGLE_TABLE_FFN_SERVER_EXECUTION_20260904.md) for raw-receipt-backed results.
+- Synthetic instruments remain unresolved; do not reject methods or expand that toy matrix.
+- Fixed Z Native PPL/task/EOS retention88.50/80.85/70.30%; Y66.32/87.28/84.06%.
+  Both frozen candidates stop before farther matrices under the .88 gates.
+- Qwen1.5B was the strongest short pilot; its true Native window is32K, so do not
+  relabel16K scores extrapolation. Qwen is the active adaptation checkpoint.
+- Fresh Native pool/cache and128 two-world-qualified training groups are ready;
+  4,736 physical views passed the CPU source/layout audit.
+- N128 independent1756-row Native confirmation: macro retention98.06%,
+  CI94.35–101.65% passes; format/indexing77.05% regresses. No universal retention claim.
+- N128 far16K: single3→24/32, binding0→6/16, double0→3/16. Double compact4<8:
+  controls unresolved, Z stopped atR26. Next: fresh content/format-separated protocol; no blind task test.
+- Sol grouped62 historical documents; shared paths stay stable. Preserve raw/code receipts and evidence labels.
