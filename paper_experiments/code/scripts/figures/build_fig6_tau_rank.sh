@@ -1,1 +1,0 @@
-../../../../scripts/figures/build_fig6_tau_rank.sh

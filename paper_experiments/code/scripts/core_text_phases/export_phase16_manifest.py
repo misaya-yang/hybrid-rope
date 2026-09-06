@@ -1,1 +1,0 @@
-../../../../scripts/core_text_phases/export_phase16_manifest.py

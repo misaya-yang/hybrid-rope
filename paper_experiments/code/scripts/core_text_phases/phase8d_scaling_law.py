@@ -1,1 +1,0 @@
-../../../../scripts/core_text_phases/phase8d_scaling_law.py

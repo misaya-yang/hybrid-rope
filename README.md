@@ -6,9 +6,18 @@ allocation: `x_k = -log(omega_k) = a + R z_k`. Fixed-support interventions ident
 sin/cos geometry explains the finite positional budget. EVQ-Cosh is one analytic
 construction, distinct from the mature frozen derived/coarse/log-p2 tables.
 
-The active manuscript is `paper-2027/`; `paper/` is immutable. Completed frozen,
+The active manuscript is `paper-2027/`. Completed frozen,
 adaptation, and from-training studies keep their own estimands. The current
 paper does not depend on prospective 8x/32x success.
+
+**Repository layout (2026-09-06 slim).** The working branch `main_0726_09_06`
+keeps only the active manuscript and its live apparatus: `paper-2027/`,
+`docs/`, `scripts/`, `tests/`, this README, `INDEX.md`, `AGENTS.md`, and the
+supplement zip at `paper-2027/rope-spectral-budget-iclr2027-supplement.zip`.
+All historical trees (`paper/`, `rebuttal/`, `data/`, top-level `results/`,
+`internal/`, `experiments/`, `research_notes/`, `analysis/`, …) are archived
+unchanged on branch `main_0726` — read them there with `git show
+main_0726:<path>`; nothing scientific was deleted.
 
 ## Start here — GPT-6-led research sessions
 

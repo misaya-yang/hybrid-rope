@@ -1,1 +1,0 @@
-../../../../scripts/video_temporal/run_dit_temporal.py

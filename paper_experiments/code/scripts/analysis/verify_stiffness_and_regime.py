@@ -1,1 +1,0 @@
-../../../../scripts/analysis/verify_stiffness_and_regime.py

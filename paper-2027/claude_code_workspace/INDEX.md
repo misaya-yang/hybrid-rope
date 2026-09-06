@@ -63,6 +63,9 @@ HEAD 逐字节相同，纯冗余。
 
 `first_divergence_kl_diagnosis.py`（1A）、`output_requirement_cross.py`（1B）、
 `fixed_weight_support_shape_cross.py`（2）。各文件头已加 STATUS 行。
+注意：这三个脚本的运行期依赖（`rebuttal/rebuttal_0723/...` 协议模块与
+`data/data_manifest.json` 等）已随 2026-09-06 仓库瘦身移出工作分支，
+现仅存于完整状态分支 `main_0726`；本目录文件只作历史留档，不再可运行。
 
 ## runbooks/ — `BOOT_RUNBOOK_20260905.md`（已作废，见文件头状态栏）
 

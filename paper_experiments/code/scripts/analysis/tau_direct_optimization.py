@@ -1,1 +1,0 @@
-../../../../scripts/analysis/tau_direct_optimization.py

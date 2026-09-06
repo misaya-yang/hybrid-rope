@@ -104,6 +104,8 @@ tong-jincheng-skill/
 .codex_tmp/
 .claude/
 .qoder/
+.agents/
+.superpowers/
 
 # Local rebuttal/provenance raw evidence.
 # Keep raw logs and copied metadata local; the sanitized report is tracked.

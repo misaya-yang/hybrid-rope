@@ -1,1 +1,0 @@
-../../../../scripts/data_prep/tokenize_synth.py

@@ -1,1 +1,0 @@
-../../../../scripts/analysis/verify_c_coll.py

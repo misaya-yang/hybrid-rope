@@ -1,5 +1,14 @@
 # RoPE Has a Spectral Budget — anonymous supplement
 
+> **2026-09-06 repo slim:** the working branch `main_0726_09_06` keeps only
+> `paper-2027/`, `docs/`, `scripts/`, `tests/`, and the root routing files.
+> Build-source paths cited below outside that set (`data/curated/`,
+> `rebuttal/rebuttal_0723/`, `experiments/`) now exist only on branch
+> `main_0726` (full pre-slim state, unchanged). The supplement zip itself is
+> self-contained for reviewers; this note concerns repository provenance only.
+> The zip now lives at
+> `paper-2027/rope-spectral-budget-iclr2027-supplement.zip`.
+
 This archive contains the ICLR 2027 paper source, the EVQ-Cosh frequency
 implementation, the primary fixed-support training entrypoint, frozen figure
 generators, CPU diagnostics, tests, and sanitized machine-readable evidence.

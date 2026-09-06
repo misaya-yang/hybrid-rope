@@ -1,1 +1,0 @@
-../../../../scripts/analysis/verify_softmax_transport.py

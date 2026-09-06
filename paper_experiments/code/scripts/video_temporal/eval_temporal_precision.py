@@ -1,1 +1,0 @@
-../../../../scripts/video_temporal/eval_temporal_precision.py

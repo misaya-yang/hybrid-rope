@@ -1,9 +1,16 @@
 # INDEX — claim and owner router
 
-- **Updated:** 2026-09-04
+- **Updated:** 2026-09-06 (repository slim; scientific routing unchanged)
 - **Evidence cut-off:** owners available through 2026-09-04.
 - **Role:** route an exact question to its current owner, correction, or scoped
   negative. This is not a report, timeline, or live handoff.
+- **2026-09-06 repo slim:** the working branch `main_0726_09_06` keeps
+  `paper-2027/`, `docs/`, `scripts/`, `tests/`, and the root routing files.
+  Owners linked below under `rebuttal/`, `data/`, top-level `results/`,
+  `experiments/`, or `internal/` are archived on branch `main_0726`
+  (full pre-slim state, unchanged); read them there with
+  `git show main_0726:<path>`. Everything under `paper-2027/`, `docs/`,
+  `scripts/`, and `tests/` resolves in the working tree as linked.
 
 Do not read every linked file. Search this index for the question, open the
 smallest matching row, then read its owner and raw/receipt artifact only to the

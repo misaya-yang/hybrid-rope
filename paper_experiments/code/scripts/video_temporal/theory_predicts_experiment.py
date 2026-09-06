@@ -1,1 +1,0 @@
-../../../../scripts/video_temporal/theory_predicts_experiment.py

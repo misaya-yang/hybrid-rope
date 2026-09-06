@@ -1,1 +1,0 @@
-../../../../scripts/analysis/exp_tau_theory_verify.py
