@@ -166,3 +166,102 @@ Integrity mode: development
 ---
 *Next: when approved → delegate via invoke_subagent (see Delegation Protocol)*
 
+## 2026-09-06T12:15:02Z
+
+<USER_REQUEST>
+多代理并行完成 Hybrid-RoPE 论文与实验的全局深度整合与审计：
+1. 深入分析 `~/Downloads` 目录下最新生成且具长文件名的各大模型分析与实验规划 MD 文件，提取新颖理论视角并对照已知实证；
+2. 深度梳理 `paper-2027` 核心目录及 Claude Code 近两日的工作区实验与交接记录，标注真实证据等级；
+3. 只读连接远程服务器 `ssh -p 27741 root@connect.westc.seetacloud.com` 巡检当前任务与运行状态、检查输出与报告；
+4. 综合撰写一份不超过 5000 字、高度凝练、真实客观的《理论分析与实验综合报告》MD，直接保存至桌面。
+
+Working directory: /Users/yang/projects/hybrid-rope
+Integrity mode: development
+
+## Requirements
+
+### R1. 高级模型规划与理论整合 (~/Downloads 目录)
+检索并分析 `/Users/yang/Downloads` 中近期由高级大模型生成的长文件名 Markdown (`.md`) 文件。
+1. 提取各模型对本仓库架构、坐标分解 ($x_k = -\log(\omega_k) = a + R z_k$)、几何约束与外推能力的分析与假设；
+2. 对照当前仓库已执行的实验（如固定支持、EVQ-Cosh、几何基线、对偶与波长混合算子），明确：
+   - 哪些规划建议已被实际实验验证或证伪；
+   - 哪些新理论视角可被吸纳整合进当前统一几何框架；
+   - 哪些建议存在假设缺陷或已被实证淘汰。
+
+### R2. 近两日核心工作区与 Claude Code 实验审计 (paper-2027 深度梳理)
+系统审计 `paper-2027`（特别是 `research/attention-aware-retrofit/` 下的 preflights、results、analysis 及 Claude Code 工作区）：
+1. 重点复盘近两日的关键实验：OLMo 候选门控表现、Qwen N128 独立 Native 1756 行验证结果、format/indexing 回归、紧凑任务与多源对比；
+2. 遵循 `AGENTS.md` 规范，对所有关键实验发现严格标注证据标签（Observation, Derived result, Working hypothesis, Negative result, Unresolved, Superseded）；
+3. 明确目前阻碍 4x 到 8x/16x 推广的核心瓶颈与已知边界。
+
+### R3. 远程实验服务器只读巡检 (connect.westc.seetacloud.com:27741)
+通过本机免密 SSH 访问 `root@connect.westc.seetacloud.com:27741` 执行严格只读巡检（严禁任何写入、删除、中断或启动未授权任务操作）：
+1. 检查当前服务器硬件状态、GPU 利用率与活跃进程（`nvidia-smi`, `ps aux | grep python`）；
+2. 巡检实验目录下的已有成果，检查最近生成的结果文件、`review.json`、`execution.json` 及执行日志；
+3. 核对远程最新实验产出与本地记录的一致性，识别是否有尚未同步的有效运行数据。
+
+### R4. 理论分析与实验总结综合 MD 报告
+综合 R1、R2、R3 的所有信息，在 `/Users/yang/Desktop/THEORY_EXPERIMENT_SYNTHESIS.md` 生成最终报告：
+1. **结构与内容**：包含项目核心几何理论闭环、近期实验全景复盘与证据分类、远程服务器运行现状与数据对齐、大模型理论输入之取舍与整合、下一步最高决策价值行动路线；
+2. **严谨与真实**：严禁外部模型主观推测当作既成事实，每个核心数字和结论必须追溯至具体运行日志、哈希或实验报告；
+3. **篇幅约束**：总字数严格控制在 5000 字以内，确保语言高信息密度、高度简明扼要，拒绝泛泛套话。
+
+## Acceptance Criteria
+
+### 报告完整性与位置
+- [ ] 最终报告成功写入 `/Users/yang/Desktop/THEORY_EXPERIMENT_SYNTHESIS.md`。
+- [ ] 报告涵盖 R1（下载区模型理论）、R2（paper-2027 近期实验复盘）、R3（远程服务器巡检数据）、R4（整合结论与行动指南）。
+- [ ] 报告总字数严格在 5000 字以内（包含中英文字数与核心表格）。
+
+### 科学纪律与证据溯源 (AGENTS.md)
+- [ ] 明确标注各类结论的证据标签（Observation / Negative result / Unresolved 等）。
+- [ ] 清晰指出 Downloads 模型建议中哪些可行、哪些已被证伪（例如已被证明未能通过 Native 门控的方案）。
+
+### 基础设施与只读安全
+- [ ] 远程服务器所有指令均为无害只读查询（如 `ls`, `cat`, `head`, `tail`, `nvidia-smi`, `ps` 等），未变更任何远程或本地只读状态。
+</USER_REQUEST>
+
+## 2026-09-06T12:48:17Z
+
+<USER_REQUEST>
+全面审查并深度打磨位于 `/Users/yang/Desktop/THEORY_EXPERIMENT_SYNTHESIS.md` 的综合报告，直击更新该文件。严格核对事实准确性、查缺补漏关键实验、彻底剔除过渡套话与冗余清单，交付一份信息密度极高、文字极度简明扼要（严格控制在 5000 字以内）的终审版报告。
+
+Working directory: /Users/yang/projects/hybrid-rope
+Integrity mode: development
+
+## Requirements
+
+### R1. 事实准确性与数学严谨性核验 (Accuracy & Fact-Checking)
+对照仓库原始凭证（`paper-2027/`、`README.md`、`INDEX.md`、各 preflights 与运行 receipts）逐行核对：
+1. **数学公式与符号**：坐标分解 ($x_k = -\log(\omega_k) = a + R z_k$)、双线性相角核展开、贪心保持证书确界 $\kappa(p)$、规范联合置换对称性等推导是否数学严密、无符号倒置；
+2. **实测数据与置信区间**：核验 OLMo-1B Native 数据（PPL 3.319650、任务 80.85%、EOS 70.30%）、Qwen N128 1756 行 Native 数据（宏任务 98.06%、格式 77.05%、CI 区间）、Round 11 ZF vs ON 命中数（15/27 vs 0/27 等）；
+3. **证据标签合规**：严格依据 `AGENTS.md`，每个事实或结论必须带上精准证据标签（`[Observation]`, `[Derived result]`, `[Negative result]` 等），杜绝主观外推。
+
+### R2. 全面性与完整性覆盖 (Comprehensiveness)
+确保核心科学闭环无遗漏：
+1. 涵盖下载区高级模型规划之得失（采纳坐标分解因果性，证伪增益过门禁、李群轨道数、连续 MAE 等 4 大缺陷）；
+2. 涵盖本地 paper-2027 近两日核心实证（OLMo 静态单表关停、Qwen N128 宏指标过关但局部格式回归、首分歧 KL 翻转证明、物理暴露必要性二分）；
+3. 涵盖远程 RTX 4080 SUPER 32GB 实时运行（98% 计算利用率、32GB 显存实测、PID 41974 任务、Round 11 换表必要性证明、Round 12 注意力与表示漂移分解、9.9GB 磁盘红线警报）。
+
+### R3. 极致简明扼要与信息密度 (Extreme Conciseness)
+大刀阔斧重构文本，追求极致信息密度：
+1. **彻底剔除泛泛空话**：删除所有过渡套话、修饰性形容词与重复说明；
+2. **直奔结论与机制**：以高度凝练的因果句式、公式和紧凑对比表呈现，最大化每句话的学术与决策信息量；
+3. **不附加冗余清单**：正文直接展现最精纯的终审内容，不附加繁琐的修订对比列表；
+4. **字数严格受限**：全文严格控制在 5000 字以内（中英文+字符统一核算）。
+
+### R4. 直接原地更新 (Direct In-Place Desktop Update)
+直接覆写更新 `/Users/yang/Desktop/THEORY_EXPERIMENT_SYNTHESIS.md` 为终审精炼版本。
+
+## Acceptance Criteria
+
+### 终审质量与篇幅
+- [ ] `/Users/yang/Desktop/THEORY_EXPERIMENT_SYNTHESIS.md` 成功原地更新为精炼终审版。
+- [ ] 全文总字数严格控制在 5000 字以内（信息密度极高，无啰嗦冗余）。
+- [ ] 不包含多余的修订对比附录，正文直击核心。
+
+### 事实准确度 100% 闭环
+- [ ] 报告中的每个数值、置信区间、显存数字、进程号均与原始 log/receipt bitwise 吻合。
+- [ ] 证据标签（`AGENTS.md`）100% 严谨匹配。
+</USER_REQUEST>
+

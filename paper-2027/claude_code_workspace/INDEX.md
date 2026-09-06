@@ -51,10 +51,10 @@
 
 ## round10_20260905/ — §10 Qwen LoRA 轮（已取代）
 
-`RUNBOOK_ROUND10.md`（历史）；`analysis/cpu_power_analysis.py`（历史）；
-`package/` = 当时代码库完整快照（存档，勿改；含 2 个 figure .tex 与
-DeepSpeed 配置 `ds_zero2.json`，均为该时代原件）。本地回执/配置 JSON 已清理，
-服务器原件在 `/root/autodl-tmp/claude_round10_20260905/`。
+`RUNBOOK_ROUND10.md`（历史）；`analysis/cpu_power_analysis.py`（历史）。
+本地回执/配置 JSON 已清理，服务器原件在 `/root/autodl-tmp/claude_round10_20260905/`。
+`package/`（当时代码库快照，484 文件）已于 09-06 删除——经逐文件比对与仓库
+HEAD 逐字节相同，纯冗余。
 
 ## code/ — 两方向审计诊断脚本（已收官）
 
@@ -81,4 +81,5 @@ claude_audit_results.tgz）、`round10_20260905/receipts/` 与 `config/`、
 `round11_20260905_olmo/receipts/`、`configs/asset_paths_westc_20260905.json`
 （自带"不得提交"标注）、空 `logs/`、`.DS_Store`。
 保留的唯一 JSON = `round10_20260905/package/scripts/text_eval/ds_zero2.json`
-（存档代码包的 DeepSpeed 配置，非实验结果）。
+（存档代码包的 DeepSpeed 配置，非实验结果）——随后连同整个 `package/`
+（484 文件，与仓库 HEAD 逐字节相同的冗余副本）一并删除。

@@ -298,6 +298,9 @@ Native retention, or a new zero-training 8x result.
 
 ### Highest-ROI follow-up and resource order
 
+**2026-09-05 amendment:** The historical order below is superseded for the current experimental increment by [protocol §10](research/attention-aware-retrofit/preflights/CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md#10-开机后的固定比较轮次--2026-09-05-准备版): N_compact, then matched Qwen Z/Y. Its outcome-to-edit table governs prospective claims; current TeX remains unchanged. Report semantic/format/EOS separately and retain Native stratum regressions. No automatic claim of FFN necessity or zero-training success.
+
+
 1. Repair current truth/identity/abstract clarity using completed evidence.
 2. Qualify the independent diagnostic on a tiny real-model screen. An oracle or
    format failure should cost minutes, not a full long-context matrix.

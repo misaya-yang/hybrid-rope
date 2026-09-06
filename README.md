@@ -33,28 +33,26 @@ model's confidence and a previous run's completion are not assay validation.
 Table factor is not useful context length. NLL, attention scores and operator
 bounds are diagnostics, never capability selectors. The full-p2 s4/c=.074
 incumbent passes historical .875 retention but is marginal at strict .88.
-The old mixed C2-s2/p2-s4 fit is not a valid same-path ceiling. Confirm the existing
-Z witness; do not open a new scale/gain/curve search. The supplied GPT-6 Pro
+The old mixed C2-s2/p2-s4 fit is not a valid same-path ceiling. The latest fixed-witness candidates failed the declared joint Native gates;
+do not reopen their scale/gain/curve search. The supplied GPT-6 Pro
 dossier changed the adaptation design; the exact review is in the theory owner §8.
 
-## Tomorrow's entrypoint
+## Next execution entrypoint
+
+Read the [prepared round, protocol §10](paper-2027/research/attention-aware-retrofit/preflights/CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md#10-开机后的固定比较轮次--2026-09-05-准备版), then:
 
 ```bash
-bash scripts/eval/run_single_table_diagnosis.sh help
+python3 scripts/experiments/matched_transfer_round.py template
 ```
 
-The new diagnostic reader/scorer is independent of the historical pipeline. Start
-with CPU data preparation, actual cache/reference parity, and resolving controls;
-then spend GPU time only on informative arms. Author-reported machines are AutoDL
-5090 32GB and 4080 Super 32GB; measure actual memory/Flash capability. Local CPU
-checks do not establish work-machine readiness. See the protocol for environment
-variables, one-stage commands, budgets, failures and stop conditions. The separate
-Native-constrained training engine requires qualified natural-task and Native
-replay manifests. Assets and GPU runs now have an [execution owner](paper-2027/research/attention-aware-retrofit/results/SINGLE_TABLE_FFN_SERVER_EXECUTION_20260904.md).
-E2's reviewed [stage driver](scripts/train/run_native_constrained_transfer.sh)
-and [result reviewer](scripts/analysis/review_native_constrained_transfer.py)
-describe the original segmented plan; the execution amendment supersedes resume
-commands and records unresolved controls. Read it before choosing any new run.
+The next comparison is N_compact, then fixed-recipe Qwen Z/Y, using the archived
+N128 training engine. Preparation verifies assets and matched exposures on the
+work machine; GPU execution is a separate explicit action. No resume, prefix
+change or test opening is part of this round. Read the [execution report](paper-2027/research/attention-aware-retrofit/results/SINGLE_TABLE_FFN_SERVER_EXECUTION_20260904.md)
+for completed results: the OLMo frozen candidates failed their Native gates;
+N128 passed aggregate Native confirmation with a format/indexing regression.
+The original staged driver remains historical; its default step64 is not this
+round's uninterrupted step128 contract. Local checks do not establish GPU readiness.
 
 ## Evidence hierarchy
 

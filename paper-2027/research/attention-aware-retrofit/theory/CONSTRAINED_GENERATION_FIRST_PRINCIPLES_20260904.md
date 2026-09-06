@@ -1,5 +1,8 @@
 # Native-constrained generation: a first-principles experimental contract
 
+> **2026-09-05 decision amendment:** Read the [Pro audit reconciliation](../analysis/PRO_REPORT_AUDIT_RECONCILIATION_20260905.md) before acting on older priorities below. Double qualification limits that family, not all valid single-evidence/restoration comparisons; the old joint unresolved verdict remains. Next proposed training is matched N_compact, then fixed-recipe Qwen Z/Y, with no prefix change. Unit-amplitude diagnostics and N128 aggregate confirmation have completed; the latter passes with a format/indexing regression. Its exposed confirmation pool cannot tune or independently confirm new variants. No new GPU run was launched by this amendment.
+
+
 - **Date/status:** 2026-09-04 v3; prospective algebra/dossier review. Subsequent GPU observations and execution corrections belong to the [execution owner](../results/SINGLE_TABLE_FFN_SERVER_EXECUTION_20260904.md), not the predictions below.
 - **Current decision:** confirm the existing Z witness; no new table/gain search.
   Main adaptation is all-linear r16 with actual-deployment Native constraints,
@@ -477,7 +480,7 @@ string+EOS endpoint and its newly observed formatting failure mode.
    mean in expectation; the realized subset and optimization trajectory differ.
    One forward jointly projects answer and sampled-prefix logits, avoiding the
    full16K-by-vocabulary tensor. Work-machine CPU gradient/boundary tests passed;
-   an actual16K-containing two-step smoke is pending. No full training completion
+   an actual16K-containing two-step smoke subsequently passed (see execution owner). No full training completion
    or language/task improvement from this variant is claimed. NLL alone is insufficient.
 
 For the next manuscript increment, the author narrowed scope to2–3 benchmark

@@ -1,11 +1,10 @@
 # Retrofit mechanism analyses
 
 These are mechanism analyses, falsifications, and historical decision records.
-They do not own the active research order. `INDEX.md` §5 owns the programme;
-the author has shut the GPU machine down. The current entrypoint is
-[`SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904.md`](SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904.md).
-Older success-first, matched-content, and attention-aware agendas are historical
-unless that handoff explicitly reuses a result or protocol.
+They do not own live machine state. Read [HANDOFF](../../../HANDOFF.md), then
+use the root INDEX for exact scientific owners. Earlier shutdown and action-order
+statements are historical. The latest [Pro audit reconciliation](PRO_REPORT_AUDIT_RECONCILIATION_20260905.md)
+reviews the completed experiments and proposed compact-only / fixed-table comparisons.
 
 | Theme | Analysis | Durable conclusion |
 | --- | --- | --- |

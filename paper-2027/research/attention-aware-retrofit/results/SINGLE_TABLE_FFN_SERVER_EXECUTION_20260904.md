@@ -664,6 +664,8 @@ all85 targeted local checks pass.
 
 ### Next experiment: what this changes
 
+**2026-09-05 priority amendment:** The [Pro audit reconciliation](../analysis/PRO_REPORT_AUDIT_RECONCILIATION_20260905.md) supersedes the next-training order below: first matched N_compact, then old-recipe Qwen Z/Y. Double underqualification is family-local; the old joint verdict remains. Teacher-trajectory replay and prefix-LM remain conditional later hypotheses. No new run or result is implied.
+
 Do not expand the failed zero-training settings or restart the unresolved double
 matrix. For adaptation, distinguish two remaining questions before more training:
 (1) can supervised content use improve after removing the measured formatting

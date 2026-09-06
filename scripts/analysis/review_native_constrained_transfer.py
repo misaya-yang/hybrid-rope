@@ -8,12 +8,13 @@ from __future__ import annotations
 import argparse
 import ast
 import json
+import random
 import sys
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT))
-from scripts.experiments.single_table_generation import sha,rows,write_json,tokenizer_identity
+from scripts.experiments.single_table_generation import sha,canonical,rows,write_json,tokenizer_identity
 from scripts.lib.rope.generation_contract import paired_retention_intervals,retention_verdict
 
 
@@ -96,6 +97,105 @@ def decide(retention_pass,retention_confirmed,cells,step):
     return 'VALIDATION_CANDIDATE_NOT_FINAL_CLAIM','Compare only predeclared feasible saved steps using 16K far macro, then calibration KL and earlier step. Seal before blind test; author promotion still required.'
 
 
+def decide_v4(retention_pass, retention_confirmed, cells, step):
+    """Single-evidence system comparison; no retroactive change to legacy decide."""
+    if step != 128:
+        return 'DIAGNOSTIC_CHECKPOINT_ONLY', 'Only the frozen final step128 can enter this comparison; no checkpoint reselection or resume.'
+    if not retention_pass:
+        return 'STOP_NATIVE_DAMAGE', 'Close this candidate at the fixed budget. Keep its completed small-matrix outputs; no farther confirmation.'
+    primary = cells.get('single_evidence')
+    if not primary or primary['native_compact_groups'] < 8:
+        return 'UNRESOLVED_PRIMARY_FAMILY', 'Primary family resolving power is insufficient; retain other families and do not tune on their outcomes.'
+    if primary['far'] == 0:
+        return 'STOP_ZERO_PRIMARY_GENERATION', 'The qualified primary far score is zero; close this candidate and its farther matrix.'
+    if not retention_confirmed:
+        return 'POINT_FEASIBLE_CONFIRMATION_PENDING', 'Freeze the candidate and a fresh independent Native confirmation. The old N128 confirmation is exposed; no automatic test launch.'
+    return 'VALIDATION_FEASIBLE_CONFIRMATION_PENDING', 'Validation is encouraging, not semantic mechanism or blind transfer proof. Use a new frozen confirmation protocol; do not select earlier steps.'
+
+
+def validate_task_rows(data, tasks, tokenizer):
+    """Bind all raw validation rows to the declared prompts and truth aliases."""
+    manifest = json.loads(tasks.read_text())
+    source = tasks.parent / manifest['views_path']
+    if sha(source) != manifest['views_sha256']:
+        raise ValueError('task source bytes drift')
+    def key(r):
+        return (r['family'], r['semantic_id'], r['world'], r['layout'], r['length_cap'])
+    expected_rows = [r for r in rows(source) if r['split']=='validation' and r['length_cap'] in (2048,16384)]
+    expected = {key(r):r for r in expected_rows}
+    actual = {key(r):r for r in data}
+    if len(expected)!=len(expected_rows) or len(actual)!=len(data) or actual.keys()!=expected.keys():
+        raise ValueError('missing/duplicate/unregistered validation row')
+    if len({r['semantic_id'] for r in expected_rows})!=64 or len(expected_rows)!=384:
+        raise ValueError('require the entire original 64-group/384-row validation matrix')
+    sources = {}
+    for k, row in actual.items():
+        original = expected[k]
+        aliases = original.get('accepted_full_answers') or [tokenizer.decode(
+            original['target_ids'][:-1], skip_special_tokens=False, clean_up_tokenization_spaces=False)]
+        if (row['prompt_sha256']!=canonical(original['prompt_ids'])
+                or row['accepted_full_answers']!=aliases or row['eos_token_id']!=manifest['eos_token_id']
+                or len(row['generated_ids'])>original['generation_budget']):
+            raise ValueError('prompt/truth/EOS differs from frozen validation asset')
+        sid = row['semantic_id']
+        if sid in sources and sources[sid]!=original['source_id']:
+            raise ValueError('semantic group source identity changed')
+        sources[sid] = original['source_id']
+    return sources
+
+
+def family_comparisons(left, right, sources, resamples=1000):
+    """Paired source-cluster descriptive intervals, not training-seed uncertainty."""
+    result = {}
+    for family in sorted({k[0] for k in left}):
+        ids = sorted({k[1] for k in left if k[0]==family})
+        def score(table, sid, layout):
+            return int(table[(family,sid,layout,2048 if layout=='compact' else 16384)])
+        def summary(chosen):
+            delta = sum(score(right,i,'far')-score(left,i,'far') for i in chosen)/len(chosen)
+            interaction = sum((score(right,i,'far')-score(right,i,'near'))-
+                              (score(left,i,'far')-score(left,i,'near')) for i in chosen)/len(chosen)
+            return delta, interaction
+        groups = {}
+        for sid in ids: groups.setdefault(sources[sid],[]).append(sid)
+        rng = random.Random(20260905); draws = [[],[]]; clusters = sorted(groups)
+        for _ in range(resamples):
+            sample = [sid for _ in clusters for sid in groups[rng.choice(clusters)]]
+            for target,value in zip(draws,summary(sample)): target.append(value)
+        result[family] = {'semantic_groups':len(ids),'source_clusters':len(clusters),
+            'all_groups':{layout:{'baseline_correct':sum(score(left,i,layout) for i in ids),
+                'candidate_correct':sum(score(right,i,layout) for i in ids),
+                'lost':sum(score(left,i,layout) and not score(right,i,layout) for i in ids),
+                'gained':sum(not score(left,i,layout) and score(right,i,layout) for i in ids)}
+                for layout in ('compact','near','far')},
+            'far_delta':summary(ids)[0], 'near_far_interaction':summary(ids)[1],
+            'ci95':{name:[sorted(values)[int(.025*(resamples-1))],sorted(values)[int(.975*(resamples-1))]]
+                    for name,values in zip(('far_delta','near_far_interaction'),draws)}}
+        cohort = [i for i in ids if score(left,i,'compact') and score(left,i,'near')]
+        result[family]['Native_compact_and_near_cohort'] = {'n':len(cohort),
+            'candidate_far_correct':sum(score(right,i,'far') for i in cohort)}
+    return result
+
+
+def native_transitions(left, right):
+    a = {(r['task'],r['asset_sha256']):r for r in left}
+    b = {(r['task'],r['asset_sha256']):r for r in right}
+    if len(a)!=len(left) or len(b)!=len(right) or a.keys()!=b.keys():
+        raise ValueError('unpaired Native transition rows')
+    result = {}
+    for task in ('instruction','reasoning','position_format'):
+        keys = [k for k in a if k[0]==task]
+        before = sum(a[k]['score_eos'] for k in keys)
+        after = sum(b[k]['score_eos'] for k in keys)
+        lost = [a[k]['row_id'] for k in keys if a[k]['score_eos'] and not b[k]['score_eos']]
+        gained = [a[k]['row_id'] for k in keys if not a[k]['score_eos'] and b[k]['score_eos']]
+        result[task] = {'n':len(keys),'baseline_correct':before,'candidate_correct':after,
+            'score_retention':after/before if before else None,
+            'original_correct_preserved':(before-len(lost))/before if before else None,
+            'lost_ids':lost,'gained_ids':gained}
+    return result
+
+
 def review(args):
     from transformers import AutoTokenizer
     checkpoint=json.loads((args.adapter/'checkpoint.json').read_text())
@@ -125,7 +225,7 @@ def review(args):
     evaluation_equivalence=None
     engine_hashes={r['evaluation_engine_sha256'] for r in (bn,cn,bt,ct)}
     if len(engine_hashes)!=1:
-        current=ROOT/'scripts/train/train_single_table_native_constrained.py'
+        current=getattr(args,'candidate_engine_source',None) or ROOT/'scripts/train/train_single_table_native_constrained.py'
         if not getattr(args,'baseline_engine_source',None): raise ValueError('natural evaluator changed; supply exact baseline source for CPU equivalence audit')
         if engine_hashes!={sha(current),sha(args.baseline_engine_source)}: raise ValueError('unexpected evaluation code identity')
         evaluation_equivalence=equivalent_evaluation_sources(args.baseline_engine_source,current)
@@ -152,8 +252,27 @@ def review(args):
             values[layout]=sum(right[key] for key in keys)/len(keys) if keys else 0.
         cells[family]={'native_compact_groups':len(cohort),**values}
     passed=official['strict_088_pass'] and eos['strict_088_pass']
-    status,action=decide(passed,ci.get('all_lower_bounds_ge_088',False),cells,checkpoint['step'])
-    result={'status':status,'next_action':action,'checkpoint_step':checkpoint['step'],
+    protocol=getattr(args,'protocol','legacy_v3')
+    extra={}
+    if protocol=='single_evidence_v4':
+        if not getattr(args,'tasks',None) or sha(args.tasks)!=ct['task_manifest_sha256']:
+            raise ValueError('v4 requires the exact task manifest for row/provenance verification')
+        if (checkpoint['recipe']['seed']!=42 or checkpoint['recipe']['placement']!='all_linear'
+                or checkpoint['recipe'].get('prefix_lm',False)):
+            raise ValueError('v4 is the fixed seed42 all-linear prefix-off comparison')
+        sources=validate_task_rows(raw_bt,args.tasks,tokenizer)
+        if validate_task_rows(raw_ct,args.tasks,tokenizer)!=sources:
+            raise ValueError('source mapping drift')
+        extra={'protocol':protocol,'family_comparisons':family_comparisons(left,right,sources),
+               'Native_stratum_transitions':native_transitions(raw_bn,raw_cn),
+               'family_scope':{f:('QUALIFIED_COMPACT_COHORT' if c['native_compact_groups']>=8 else
+                                  'UNDERQUALIFIED_MECHANISM_COHORT_REPORT_ALL_GROUPS') for f,c in cells.items()},
+               'semantic_status':'NOT_MEASURED_BY_STRICT_SCORER; see separate blinded retrospective annotation',
+               'legacy_joint_verdict_unchanged':decide(passed,ci.get('all_lower_bounds_ge_088',False),cells,checkpoint['step'])[0]}
+        status,action=decide_v4(passed,ci.get('all_lower_bounds_ge_088',False),cells,checkpoint['step'])
+    else:
+        status,action=decide(passed,ci.get('all_lower_bounds_ge_088',False),cells,checkpoint['step'])
+    result={**extra,'status':status,'next_action':action,'checkpoint_step':checkpoint['step'],
             'evaluation_source_equivalence':evaluation_equivalence,
             'official_gate':official,'EOS_gate':eos,'paired_retention_uncertainty':ci,
             'Native_compact_qualified_cohort':cells,
@@ -172,6 +291,9 @@ if __name__=='__main__':
     for name in ('checkpoint','adapter','native-baseline','native-candidate','task-baseline','task-candidate','output'):
         p.add_argument('--'+name,type=Path,required=True)
     p.add_argument('--baseline-engine-source',type=Path)
+    p.add_argument('--candidate-engine-source',type=Path)
+    p.add_argument('--tasks',type=Path)
+    p.add_argument('--protocol',choices=('legacy_v3','single_evidence_v4'),default='legacy_v3')
     args=p.parse_args()
     try: review(args)
     except (ValueError,KeyError,FileNotFoundError) as error:

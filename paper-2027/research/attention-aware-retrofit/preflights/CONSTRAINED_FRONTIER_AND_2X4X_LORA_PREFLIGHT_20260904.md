@@ -1,5 +1,8 @@
 # Fixed-witness confirmation and Native-constrained transfer — v3 reviewed
 
+> **2026-09-05 decision amendment:** Read the [Pro audit reconciliation](../analysis/PRO_REPORT_AUDIT_RECONCILIATION_20260905.md) before acting on older priorities below. Double qualification limits that family, not all valid single-evidence/restoration comparisons; the old joint unresolved verdict remains. Next proposed training is matched N_compact, then fixed-recipe Qwen Z/Y, with no prefix change. Unit-amplitude diagnostics and N128 aggregate confirmation have completed; the latter passes with a format/indexing regression. Its exposed confirmation pool cannot tune or independently confirm new variants. No new GPU run was launched by this amendment.
+
+
 - **Date/status:** 2026-09-04; historical v3 design, amended during authorized
   execution. Actual assets, runtime and results are in the
   [execution owner](../results/SINGLE_TABLE_FFN_SERVER_EXECUTION_20260904.md).
@@ -464,3 +467,127 @@ diagnostic**: exact Z and Y frequency bytes, gain fixed to Native1, original
 Native-selection rows and evaluator,1800s cap each. It is not a gain sweep or a
 new frequency fit. Original-amplitude failures remain valid; only a separately
 qualified new candidate may proceed to a farther matrix.
+
+## 10. 开机后的固定比较轮次 — 2026-09-05 准备版
+
+**状态：** 本地代码与协议准备，GPU 未启动；canonical 资产／运行验证留在工作机。
+**问题：** N_compact 是否复制 N128；同模型固定 Z/Y 的旧配方能否产生 Native 可行的生成工作点。
+**owner：** 本节负责前瞻协议；[审查复核](../analysis/PRO_REPORT_AUDIT_RECONCILIATION_20260905.md)负责推理边界；旧结果仍由[执行报告](../results/SINGLE_TABLE_FFN_SERVER_EXECUTION_20260904.md)负责。
+**修正：** 本节取代上文默认 step64／resume、全任务族共同停止与立即 prefix 的执行顺序，不改旧结果、scorer 或旧 reviewer 默认判定。
+
+### 理论上需要分开的三个效应
+
+对固定任务／布局分数 S，以下差分回答不同问题：
+
+- `S(N128) − S(N_compact)`：匹配目标曝光与更新时，长输入 exposure 的增量；背景、位置及输入 tokens 同时改变，不是纯相位效应。
+- `S(Z128) − S(Z0)`：固定 Z 系统在这份适配配方下的增量；包括 restoration 与 transfer，不是 FFN 独立贡献。
+- `[S(Z128) − S(Z0)] − [S(N128) − S(N0)]`：系统与适配的描述性交互；必须同时看绝对分数，避免 floor/ceiling 误读。Z/Y 幅度不同，不能叫纯 allocation 因果效应。
+
+严格分数保持完整答案＋EOS。语义、形式和终止另外标注，不能用 substring 调高主指标。Native 平均 KL 与 argmax 决策保持是不同对象：有限平均值不限制未覆盖 teacher 轨迹上的小 margin 决策。全线性适配可同时改变 evidence transport 与 FFN 的非线性映射，但非零 FFN 梯度不识别其必要性。
+
+### 交付代码与固定参数
+
+- [受限轮次入口](../../../../scripts/experiments/matched_transfer_round.py)：`template / prepare / run`，prepare 不调用 CUDA。
+- [审阅器](../../../../scripts/analysis/review_native_constrained_transfer.py)：新增显式 `--protocol single_evidence_v4`；默认 legacy_v3 不变。
+- [盲化转换审计](../../../../scripts/analysis/audit_generation_transitions.py)：`export / summarize`，人工／独立审阅者标注实际断言，歧义保留上下界。
+- [边界测试](../../../../tests/test_matched_transfer_round.py)：曝光、阶段命令、停止范围、原正确保留率、语义歧义和超时退出。
+
+训练固定 all-linear r16/alpha16，seed42，KL预算 .02，32R+96T，最终 step128，prefix off。N_compact 从原始模型开始；每个 world 的 compact 输入重复三次，保留原三桶顺序键，不把 `length_cap` 标签改写成训练实际长度。实际输入 tokens 在 prepare 中另外计算；同日程不意味着 dual 数值相同。
+
+运行**原 N128 的 release008 引擎**，由原 `run.json` 的代码／runtime／KL hash 和已记录 training SHA 双重约束。新入口与 reviewer 放入新的代码目录，绝不覆盖旧 release。若旧目录丢失，先恢复其字节；不能顺手使用不同训练引擎。原引擎的 token 计数偏差保留在旧 complete.json，新计划准确给出 `P+G−1` 数量。
+
+### 开机操作：不需要重读历史文件
+
+本地准备包的当前源文件需复制到新的工作机代码目录；可从上次完整代码副本复制，再覆盖本轮三个实现文件及测试，旧 release008 保持原样。这里不使用 Git pull 或修改历史运行目录。
+
+工作机使用已有 Conda Python，先显式设置自己的路径：
+
+```bash
+# 以下变量均为工作机私有路径；不要把填好的 config 提交到仓库。
+export ROUND_PYTHON=/absolute/path/to/conda/bin/python
+export ROUND_CODE=/absolute/path/to/new/code/release
+export ROUND_CONFIG=/absolute/path/to/new/matched-round-config.json
+cd "$ROUND_CODE"
+"$ROUND_PYTHON" scripts/experiments/matched_transfer_round.py template
+```
+
+把 template 输出填入新的 JSON 文件。字段的含义和已有资产标签：
+
+| 字段 | 应指向的现有对象 |
+| --- | --- |
+| python / engine_root | Conda Python 可执行文件／原 `code_release_008` 根目录 |
+| baseline_run | 已完成的 `qwen_N_s42_fixed`，不是 invalid N 或 Z26 |
+| checkpoint / checkpoint_contract | Qwen2.5-1.5B-Instruct 权重目录／`qwen15_contract.json` |
+| tasks / native_pool | `qwen_tasks/manifest.json`／`qwen_native_pool_clean/manifest.json` |
+| teacher_cache | 原始 Native full-vocabulary cache 目录 |
+| controls | checkpoint_config hash 与 Qwen 匹配的固定 N/Z/G/Y manifest 目录，不能用 OLMo controls |
+| native_baseline / task_baseline | **validation** 的原始 Native 完成目录；Native 数值为 NLL2.26473431、task25.5208%，task 标签 `qwen_task_baseline` |
+| baseline_eval_engine | 对应原 baseline receipt 的 release007 trainer 源文件 |
+| output_root | 全新输出目录，至少 8 GiB 空闲；可放系统盘，不复制大权重／cache |
+
+不确定路径时在原 bundle 与 scratch 内按文件名和 receipt 查找；不要另下权重、另建训练集或全盘扫描。真正资产验证由 prepare 完成。模板不是已经填好的、可执行的配置。
+
+```bash
+"$ROUND_PYTHON" -m unittest tests.test_matched_transfer_round -v
+"$ROUND_PYTHON" scripts/experiments/matched_transfer_round.py prepare --config "$ROUND_CONFIG"
+# 将 ROUND_PLAN 指向 prepare 返回的 output_root/plan.json。
+export ROUND_PLAN=/absolute/path/to/new/output/plan.json
+# 用户开机并恢复实验后，以下命令才启动 GPU；这轮准备没有执行它。
+"$ROUND_PYTHON" scripts/experiments/matched_transfer_round.py run \
+  --plan "$ROUND_PLAN" --cases N_compact Z Y --authorized
+```
+
+可仅运行 `--cases N_compact`，读完其结果后用同一 plan 运行 `--cases Z Y`；已存在的 case 不会被覆盖或自动续训。若需要断开终端，让现有终端管理器保持运行即可；不要复制启动同一 plan 的第二个 GPU 进程。
+
+prepare 做一次完整 CPU 资产/tokenizer/cache 检查并冻结依赖 hashes；核对 768 个目标及曝光顺序、448 条 replay（R256/T192）与原 N128 receipt。它输出 `PREPARED_CPU_ONLY_GPU_PENDING`，不冒充 GPU ready。run 再核对代码／资产／命令未变与空闲 GPU。BF16、Flash-only 和数值检查由原验证过的 runtime 执行，5090 必须遵循 [Blackwell profile](../../../../docs/overview/RTX5090_BLACKWELL_PROFILE.md)。不开 math attention fallback，不重新扫执行参数。
+
+### 自动执行到哪里，以及如何结束
+
+- N_compact：训练128 → Native validation → 全384行自然 validation → CPU review。
+- Z/Y：训练128 → Z0/Y0 Native与自然 validation → R32 Native诊断 → final128 Native与自然 validation → CPU review。
+- 每个 GPU 训练阶段上限3600秒；Native阶段900秒；任务阶段1800秒。每个进程另有120秒清理余量。CPU review上限600秒。全排期这些是保守硬上限，不是预期总耗时；原N的28.7分钟不构成其他臂时长保证。
+- 一次只跑一个GPU进程；不自动启动后续 seed、prefix、8B、32K/64K或确认集；全轮结束后退出进程，不自动关闭主机。
+- 数值／数据／加载／hash／进程失败会保存日志及 `execution.json`，停止剩余队列。部分输出禁止当完成结果；已有 checkpoint 不自动 resume。
+- Native点值失败或主生成零分会由review标注，并关闭该候选的远端确认；已登记的小比较结果保留，其他候选可继续。Double不足不会让其他候选自动停止。
+- 如果磁盘不足，只更改尚未开始的 output_root 到有空间的位置并重新 prepare；不删旧原始证据。prepare失败留下的目录保留为诊断，换新目录重试。
+
+### 内容审计可以与 GPU 训练并行
+
+```bash
+"$ROUND_PYTHON" scripts/analysis/audit_generation_transitions.py export \
+  --checkpoint /absolute/path/to/qwen --tasks /absolute/path/to/tasks/manifest.json \
+  --baseline /absolute/path/to/N0_task_validation \
+  --candidate /absolute/path/to/N128_task_validation --output /absolute/path/to/new/audit
+```
+
+导出前重算原始token完整输出／EOS并绑定原prompt及truth。审阅者只接收 `rubric.json`、`prompts.json`、`cases.jsonl`；`private_mapping.json` 在标签冻结前不提供。复制 cases 到 annotations 文件，填完 semantic_correct、format_compliant 和理由后：
+
+```bash
+"$ROUND_PYTHON" scripts/analysis/audit_generation_transitions.py summarize \
+  --export /absolute/path/to/audit --annotations /absolute/path/to/annotations.jsonl \
+  --output /absolute/path/to/new/annotation-results
+```
+
+明确 exact 成功自动填已有真值标签；其余内容不由 substring 自动判分。该审计不必阻断 N_compact 的固定训练，但解释内容迁移必须等待标签完成。审阅者即使隐藏臂身份，也可能认识旧案例，所以只称回顾性盲化标注，不称独立确认。
+
+### 结果到后续工作的映射
+
+| 结果 | 下一步／论文修改 |
+| --- | --- |
+| N_compact 复现大部分严格提升，内容差分也无明确增量 | 接受低成本任务适配解释；报告配对差和区间，不将“不显著”写成等价；收缩长训练机制叙事 |
+| N128 有额外 far 内容增量且 compact 接近 | 保留长输入适配主张；仍不归因 FFN／RoPE 必要性 |
+| Z/Y 至少一臂 Native 与主生成点值可行 | 冻结最终128及新确认协议；先新Native确认，再预先冻结的 farther测试；旧N128 confirmation不能调参 |
+| Native CI 不够窄但点值合格 | 未确认；允许准备新独立确认，不再无限检查同一个pool或重选checkpoint |
+| 固定Z/Y预算都不满足 Native | 停本配方候选；针对真实teacher决策轨迹覆盖设计一个变化，不自动加训练步或扫KL |
+| Native可行而内容迁移仍不足 | 再登记 N/Z × prefix off/on；仅增加固定辅助LM目标，不同时改模型/rank/replay |
+| Y 不逊 Z | 如实报告系统对照；allocation理论贡献仍由原fixed-support研究支撑，不包装普通适配为特定Z突破 |
+
+Native逐任务 lost/gained 与原正确保留率必须与总体分数一起读。88%旧总体门槛保留；77.05%格式退化不被平均值抵消。新方法若主张“各项保持”，须在新确认之前另定逐项标准。Qwen64K也只等于配置Native32K的2×；这轮不会闭合原始物理Native2×/4×训练及8×/16×/32×外推路线。
+
+### 离线 review 与验证记录
+
+本轮检查了三条路径：配对曝光能否与原 receipt 核对；失败／中断是否保留产物并终止自有进程；审阅器是否在保留 legacy 判定的同时限制 double 的停止范围。额外检查了 Qwen controls 的 Native basis/config、旧 Native confirmation 不进入启动命令、训练最终128固定以及真实token预算与EOS。
+
+本地新增9项机械边界测试与既有24项训练协议、2项确认审阅测试通过；26项仓库导航检查通过，共61项。文档导航检查最初发现冷启动篇幅与旧入口措辞问题，已缩短HANDOFF并恢复明确的不可变文件／工作机边界，未放宽测试。CLI帮助、标准库导入和 `git diff --check` 通过。
+
+**仍待开机验证：** 原release008、真实模型／cache／manifest是否可访问且hash一致；工作机Python依赖；BF16/Flash、显存与磁盘；新case的实际完整训练及生成结果。语义审计工具已准备，真实标签尚未生成。本轮未安装环境、未SSH运行、未GPU计算、未改训练器或TeX/PDF、未提交推送。以上“准备完成”不表示端到端实验已通过。
