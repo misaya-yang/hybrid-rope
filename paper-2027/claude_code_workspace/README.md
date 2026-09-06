@@ -43,6 +43,7 @@ abstract 2026-09-18 / 全文 2026-09-25）中的工作区：实验代码、预�
 ## 关键入口
 
 - 结论与恢复清单：`round12_20260906/REPORT_ROUND12_20260906.md`
+- 踩坑记录：`LESSONS.md`（评测模式、对照忠实性、欠训练判定、工程纪律）
 - 本轮代码（与服务器 md5 一致，勿本地单方面改动）：`round12_20260906/code/`
 - 冻结表/任务/数据的清单与哈希：`round12_20260906/PREGLUCTION_ROUND12.md` +
   `PREGLUCTION_ROUND12_V2_ADDENDUM.md`
