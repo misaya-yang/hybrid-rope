@@ -1,4 +1,161 @@
-# REVISION BRIEF v4 — September 2026 manuscript and research coordination
+# ICLR 重构契约
+
+- **更新 / 状态：** 2026-09-07；当前研究方向与论文重构边界。实际结果由 indexed owner 管理，实时状态与恢复入口见 [HANDOFF](HANDOFF.md)。
+- **问题：** 结合 MrRoPE、CoPE 和本方工作，得到有实际价值的频率构造，再用结果决定论文贡献。
+- **来源：** 作者持续纠正、指定 9/6 cross-audit 和 9/7 scale-transport 提案；外部报告是设计输入，不是科学证据或运行授权。
+- **替代关系：** 下方旧 v5/v4 的阶段排序、对手微调默认、冻结日期和操作建议仅为历史，不是当前队列。另一实验的“v5”也不属于本项目当前运行规范。
+
+## Current reconstruction contract
+
+1. 优先本方方法与 GPU 决策价值；复用公开对手结果和已有有效证据，需要时才补最小比较。
+2. 从有效 MrRoPE 分配继续改进，吸收 CoPE 深尾机制与本方分配经验；不返回 Cosh 曲线搜索，不要求先完成通用最优理论。
+3. 长期覆盖冻结部署、轻量适配、从零训练；当前实际工作是 Qwen 冻结方法研究，不能把未做的阶段写成已有贡献。
+4. 论文以实际有效构造、能力结果和可检验解释为中心。小面板、词面 F1、算子界或缓存改善不足以单独支持 SOTA/Oral 主张。
+5. [当前研究主线](../docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md)定位方法关系；[实际协议与结果](../docs/research/ROPE_SCALE_TRANSPORT_PILOT_20260907.md)给出已完成范围与失败解释。由结果推进后续研究，不因一次小实验结束就重新交接。
+6. 本次文档整理没有重写 TeX/PDF。决定论文主张前再对齐有效 owner 和真实稿件；不要让旧阶段清单自动触发训练或补实验。
+
+## 原始设计历史
+
+以下内容保留早期决策背景与原有锚点，仅供追溯；当前使用上面的契约及 HANDOFF。
+
+<details>
+<summary>展开历史 v5 / v4 规划，不作为执行指令</summary>
+
+# REVISION BRIEF v5 — major reconstruction planning
+
+> **Latest scope correction, 2026-09-07:** do not fine-tune MrRoPE/YaRN by
+> default. They remain frozen references; adaptation is the project's own route.
+> The earlier E2 three-arm full-adaptation proposal is withdrawn. See the
+> [current experiment protocol](research/CROSS_AUDIT_EXPERIMENT_PROTOCOL_20260907.md).
+
+> **Author priority amendment, 2026-09-07:** the current objective is one
+> frequency-design method spanning from-scratch training, light adaptation and
+> zero-training deployment, challenging the appropriate strong baselines in
+> each regime. See the [unified plan](../docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md)
+> and [E0/E1 ROI review](../docs/research/ROPE_FREQUENCY_LUNA_ROI_20260907.md).
+> This replaces the earlier proposed stage priority, not completed evidence or
+> frozen execution contracts. No new training or queue change is authorized by
+> this amendment; Cosh is retained as historical evidence, not a new sweep target.
+
+- **Status/date:** 2026-09-06; author-requested documentation and planning reset.
+- **Question:** what reconstruction can establish useful finite RoPE allocation
+  under explicit training/deployment budgets and credible Native/long evaluation?
+- **Source:** [supplied cross-audit](research/external-reviews/ROPE_ICLR2027_CROSS_AUDIT_20260906.md),
+  SHA-256 `eade4043ca4481a0f2f7a59da9ec1f5e8172808ee39d3890c745273ff688824a`; imported byte-for-byte. Its attachments and server
+  receipts are not thereby verified.
+- **Supported use:** revision framing, work ordering and protocol-gap identification.
+  **Unsupported use:** new result claims, proof/novelty certification, or compute,
+  restart, publication and submission authorization.
+- **Supersession:** this amendment replaces v4's frozen-paper/default experiment
+  priorities. It does not supersede completed result owners. The prior v4 text is
+  retained below as history; its frozen design, automatic next steps and earlier
+  two-route restriction no longer control this author-requested reconstruction.
+
+## Reconstruction contract
+
+The project overview belongs in [README.md](../README.md), file routing in
+[INDEX.md](../INDEX.md), operational constraints in [AGENTS.md](../AGENTS.md),
+and live permissions/state in [HANDOFF.md](HANDOFF.md).
+
+The proposed paper should connect explicit pretraining/adaptation/deployment
+tables to a matched strong-baseline comparison, finite-budget explanations and
+actual generated-task/Native outcomes. Keep existing support/allocation controls
+and bounded Cosh derivations at their valid scope; do not assume they establish
+the revised novelty or system-level method advantage.
+
+## Evidence reconciliation before implementation
+
+| Input or issue | Available local lead | Required check / current boundary |
+| --- | --- | --- |
+| Supplied audit | Exact imported Markdown above | Recommendations only; audit P1/P2/P4 attachments are not byte-matched local owners |
+| Recent execution | [Round12 report](claude_code_workspace/round12_20260906/REPORT_ROUND12_20260906.md), [Round10/11 reports](claude_code_workspace/reports/) | Reported outcomes and pauses; raw server artifacts/process state unverified this turn |
+| YaRN identity | [Y2 builder](claude_code_workspace/round12_20260906/code/build_y2_canon.py), [pinned equation utility](../scripts/lib/rope/official_yarn.py), [parity tests](../tests/test_official_yarn_parity.py) | Different ramp/amplitude conventions are visible in code; qualify a specified implementation and compare executed tensors before claiming baseline fidelity |
+| Z/M/Native identities | [Round12 table builder](claude_code_workspace/round12_20260906/code/rope_tables.py) | Manifest/array/gain readback, pair layout, config and checkpoint identity; a familiar label is insufficient |
+| Existing scratch checkpoints | [fixed-support result and receipts](research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.md) | Locate exact weights and code on the work machine; the result document is not checkpoint availability proof |
+| Old versus strict scoring | [Round12 scorer](claude_code_workspace/round12_20260906/code/scoring.py), [generation contract](../scripts/lib/rope/generation_contract.py) | Compare saved outputs on identical prompts/tables/templates; keep official, semantic, full-answer/EOS and row/group endpoints separate |
+| Full adaptation versus LoRA | [Round12 trainer](claude_code_workspace/round12_20260906/code/track_b_train_v2.py), [registered constrained trainer](../scripts/train/train_single_table_native_constrained.py) | Inspect actual trainable parameters, loss/replay normalization, optimizer, token and time budgets; no code-equivalence assumption |
+| New CPU theory helpers | Audit §11.2 names `rope_codex_revision`, `verify_theory.py`, `select_allocation.py` | Not found in the searched checkout/adjacent Downloads names. Obtain the actual package and hash before reproducing its claimed checks |
+
+The supplied file's P2 synthesis is not a verified alias for the local Round12
+report. Record missing attachments and identity differences; do not fill them
+with inferred experiment history. Existing source code is a candidate apparatus,
+not an automatic valid assay.
+
+## Proposed stages and decision value
+
+These stages organize future exact protocols. None is a launch command or an
+approved allowance. Preserve a complete matched comparison and confirmation
+budget before broadening the matrix.
+
+| Stage | Comparison / discriminator | Outcome-to-action mapping |
+| --- | --- | --- |
+| E0 | Reconcile baseline arrays/gain, templates, scoring, controls, data and complete-step memory/throughput | Identity or control mismatch: repair and freeze protocol. Qualified setup: cost a matched comparison. GPU probes require separate approval |
+| E1 | Existing Geo/Cosh checkpoints under identity and specified strong transforms; mature frozen Native/credible YaRN/MrRoPE/current Z | Benefit survives: test learning/budget explanation. Benefit disappears or reverses: narrow the claim and choose an independent discriminator; do not assume new scratch training will rescue it |
+| E2 | Proposed mature-model full-parameter paired comparison against credible opponents | Complete the preregistered budget/repeat design. Candidate loses: candidate-scoped negative. Long improves but Native fails: consider a separately frozen Native-constraint increment |
+| E3 | Same-table/data/token-milestone LoRA bridge for the main pair | Compare achieved capability and cost; a failed low-rank recipe does not prove all-rank impossibility, and full adaptation is not guaranteed to succeed |
+| E4 | Conditional scratch/support-range strengthening or an independent predicted boundary | Purchase only the comparison justified by E1/theory gaps; preserve tuned geometric and applicable learned-frequency baselines with fair selection cost |
+| E5 | Independent exact model and task/document confirmation after selection freezes | Confirm only at the actual tested scope; exposed development instances cannot be relabelled as independent confirmation |
+
+The external audit proposes a total 100 GPU-hour allocation. It is neither
+measured runtime nor user authorization. Each launch needs actual machine
+capabilities, throughput including replay/save/evaluation, complete paired
+budgets, repetition reserve and stop/exit rules. Do not import a fixed large-token
+run or restart the old continuation chain merely because its script exists.
+
+The audit proposes a specific mature-model identity, physical training length,
+full-parameter regime and low-rank bridge. These must survive E0 asset, protocol
+and cost checks before becoming an exact run contract. No defaults are silently
+substituted and no missing loss/data mixture is guessed.
+
+## Theory and evaluation admission
+
+- Check prior-art scope against the actual cited versions before claiming novelty
+  over MrRoPE, LeRoPE, AdaRoPE, restoration distillation or data-scale work.
+- Treat finite-feature learning/deployment risk, decision-KL bounds and rank
+  repair as proposed analyses under their stated assumptions. They are not
+  already validated explanations of a full Transformer or guaranteed selectors.
+- New expensive curves need a prospective discriminator; existing strong-baseline
+  comparisons can answer the method-value question without first predicting a winner.
+- Define the final deployment table/gain and prefill/decode policy; run Native
+  evaluation under that same declared policy. Record physical and phase exposure,
+  evidence distance, distractors and model-native window separately.
+- Preserve historical Native thresholds with their old protocols. Freeze the
+  new confirmation margin before outcomes; do not inherit, loosen or replace it
+  silently. Report Native text, task, format and termination strata separately.
+- Keep complete-answer/EOS and official task metrics together; permit legitimate
+  answer variation under a frozen semantic scorer. Preserve paired document/
+  prompt/world groups and report training-seed variability separately.
+- Count selection, training, checkpoint selection and evaluation cost. Repurpose
+  neither selected maxima nor exposed confirmation pools as unbiased confirmation.
+
+## Manuscript reconstruction and acceptance
+
+The intended structure is: practical question and validated main comparison;
+training/deployment objects and closest work; bounded theory and explicit
+construction; matched experiments; analysis, failures and limitations.
+Move supporting breadth and auxiliary algebra according to their contribution
+to that argument. Rebuild the outline before rewriting sections.
+
+The resulting story is conditional: static-table method value, learning/budget
+value, or a narrower controlled/negative result if the strong comparisons do not
+support the first two. Choose from validated evidence, not the desired outcome.
+
+Before TeX changes, map each proposed claim/figure to an exact owner and identify
+what is retained, rewritten, moved or withdrawn. Before scientific promotion,
+resolve affected protocol/identity/uncertainty issues and obtain the author's
+claim decision. Before release, rebuild and inspect the actual PDF, validate
+anonymity/references and reconcile the curated package with archive-only inputs.
+Official submission dates require a live venue check before external action.
+
+---
+
+## Historical v4 — superseded planning and narrative defaults
+
+The text below preserves the 2026-09-04 brief and its original section anchors.
+Use it only to interpret that prior scope; the v5 amendment above governs the
+current reconstruction. Its result references retain their own evidence status.
+
+## REVISION BRIEF v4 — September 2026 manuscript and research coordination
 
 **Issued:** 2026-09-04
 **Milestones:** internal abstract and author-metadata freeze on 2026-09-17;
@@ -384,3 +541,5 @@ dataset and metric differences when discussing precedent. Today's NIAH strict
 The natural QA gains mix form and content and need the source-only companion.
 A measured transfer increment can enter after author review; a universal method,
 FFN necessity or oral-level result is not a current conclusion.
+
+</details>

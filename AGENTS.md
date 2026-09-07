@@ -1,189 +1,116 @@
-# AGENTS.md — research discipline for Hybrid-RoPE
+# AGENTS.md — Hybrid-RoPE
 
-This is the only root agent instruction. Never create `Agent.md`. Keep rules
-here; keep scientific routing in `INDEX.md` and live state in
-`paper-2027/HANDOFF.md`.
+## Project conventions
 
-## Cold start
+- Read `README.md` for project context and `paper-2027/HANDOFF.md` for live state.
+  Use `INDEX.md` to locate only the files needed for the task.
+- Keep core constraints here, detailed file routing in `INDEX.md`, and project
+  details in `README.md`. Put research questions, numbers, equations, results
+  and per-run plans in indexed documents. Do not create `Agent.md` or parallel
+  root instructions/indexes; HANDOFF remains the sole live state record.
+- `paper-2027/` is the active manuscript. Before restructuring it, read the
+  current amendment in `paper-2027/REVISION_BRIEF.md` and the actual TeX/PDF.
+  A supplied audit is an input to verify, not evidence or run authorization.
+- Preserve the pre-slim archive on `main_0726`, including `paper/`: never edit,
+  compile, regenerate or delete it. Read with `git show main_0726:<path>`.
+- Inspect branch, upstream/divergence and dirty work before edits. Complete
+  authorized code/docs work with a scoped Git commit after relevant verification,
+  unless the user asks to leave it uncommitted. Stage explicit related paths and
+  preserve unrelated work. Push when requested or covered by an established sync
+  instruction; destructive history changes require explicit authorization.
+  Record continuation context in tracked documents; do not invent a separate
+  handoff archive or manual transfer workflow for ordinary Git-managed work.
 
-1. Read this file and `README.md`.
-2. Before acting, read `paper-2027/HANDOFF.md` and verify its volatile state.
-3. For a scientific claim, search `INDEX.md` for the exact question, then open
-   only the linked owner and any raw/hash-backed artifact needed to verify it.
-4. Read `paper-2027/research/history/TIMELINE.md`, theory folders, or result
-   folders only when the task requires history or a specific owner. Do not
-   batch-read them for routine cold start.
+## Research priorities
 
-Scientific claims follow the most direct **valid** owner of the exact estimand;
-recency, filenames, summaries, the index, and the timeline confer no authority.
+- Prioritize the project's own method toward SOTA and useful findings per GPU
+  hour. Reuse published baselines and valid prior results; do not automatically
+  reproduce papers, retrain opponents or fill complete comparison matrices.
+- Add only checks/comparisons that can change the next research decision. Do not
+  block promising work on complete theory or publication-level validation. Label
+  cross-paper differences briefly rather than presenting them as matched runs.
+- Reuse existing code, assets and receipts. Before a new scientific intervention,
+  record a short bounded plan in its indexed protocol: question, discriminator,
+  expected cost, outcome-to-action mapping and stop conditions. Keep it proportional
+  to the experiment; a preparation milestone is not a research outcome.
 
-## Active research boundary
+## Own the experiment phase
 
-For GPT-6-led sessions, the model name is not scientific authority. Start with
-the two quantified questions and current independent protocol in `INDEX.md`;
-do not inherit an external model's verdict or a historical action list.
-The author requires maximum decision value per GPU hour: before an expensive
-arm, state the live alternatives, observable discriminator, and next action
-for each outcome. Historical training/evaluation code is an asset to validate,
-not a trusted assay merely because it ran before.
+- Interpret “开机”, “启动”, “继续” and similar instructions in the active research
+  context. Within the authorized goal and budget, carry preparation, launch,
+  monitoring, result checking and the next justified step forward. Do not stop at
+  powering on a machine or wait for a second “start” when the intended experiment
+  is already clear. Follow explicit requests to only change power state or pause.
+- Authorization can cover a bounded research phase, not just one command or job.
+  Reuse its goal, machine, total budget and stop conditions for necessary setup,
+  downloads, qualified runs, ordinary fixes and analysis. Freeze each run before
+  execution; do not require fresh approval for every script or routine choice.
+  Ask only for a material unresolved decision, missing budget, expanded resource
+  spend/scope or a serious blocker that available context cannot resolve.
+- Prepare code, dependencies, model/data downloads and CPU checks before buying
+  GPU time where possible. If the GPU is already on, promptly start ready useful
+  work. Use no-GPU mode for substantial preparation delays; avoid stop/start churn
+  between ready, in-budget jobs. When no justified authorized work is ready,
+  release the idle GPU or switch to no-GPU mode within existing machine authority.
+- While a GPU job runs, prepare the next justified inputs/commands and analyze
+  completed outputs on CPU. Keep useful work ready without competing GPU processes
+  or speculative sweeps. High utilization is not a reason to spend the budget on
+  low-value experiments, nor to keep a finished phase's GPU idle.
+- Fix ordinary software, dependency and execution faults autonomously within scope;
+  verify the fix and resume the affected work while preserving failed receipts.
+  Count all attempts against the same budget. Distinguish an engineering failure
+  from a scientific stop: do not change frozen data, scoring, frequencies or
+  thresholds after seeing results merely to obtain a favorable outcome.
+- A small experiment finishing is a decision point inside the research phase,
+  not a handoff or automatic shutdown point. Analyze its result, select and
+  prepare the next necessary step, and continue within the existing goal/resource/
+  budget authorization without asking the user to say “continue” again. Do not
+  redefine each job as a new phase to create extra approval checkpoints.
+- Treat follow-up questions, corrections and status requests as updates to the
+  existing goal unless the user explicitly pauses, cancels or replaces it. Resolve
+  routine choices and apparent instruction conflicts from instruction priority,
+  existing authorization and project facts before asking the user.
+- Reports and status answers do not end the active work. Use bounded monitoring
+  across waits. Return control only when the agreed phase objective is achieved,
+  the budget is exhausted, the user explicitly pauses, or a serious unresolved
+  blocker requires their decision. A partial result alone is not phase completion.
+- HANDOFF owns the phase authorization, live process, cumulative budget/deadline
+  and next action. Enforce timeouts and duplicate-launch protection in code, not
+  only prose. Freeze model/data/code/config, actual arrays/gain, decoder/scorer and
+  output identities; preserve raw rows, hashes, failures and exclusions. A new
+  job, restart, checkpoint or session never silently resets the budget.
 
-The active programme has only two routes; older agendas cannot override them:
+## Evidence and manuscript changes
 
-1. **Zero training:** one global static table, frozen weights, separate Native
-   NLL/task damage about `<= 0.12`, and maximum useful reach from 4x toward 8x.
-2. **Light adaptation:** few steps on physical 2x/4x data, the same Native
-   budget, and blind 8x/16x/32x evaluation.
+- Match each claim to its exact protocol and primary artifacts. Use the indexed
+  research reference for metric, method and evidence-label definitions; neither
+  proxy scores nor invalid/unresolved assays select or promote capabilities.
+- Keep training/deployment tables, gain, model history, physical/phase length,
+  scoring and uncertainty units distinct. Do not tune on exposed confirmation
+  or sealed test outcomes, or generalize candidate failure into class closure.
+- New/amended owners state status/date, question, assumptions/protocol, artifact
+  identity, supported/unsupported claims and corrections. Update `INDEX.md` in
+  the same change and leave a visible notice on superseded searchable claims.
+- Validate proofs and prior-art assertions independently before manuscript use.
+  The author decides claim promotion; a new narrative cannot manufacture evidence.
 
-Use strict retention `>=0.88` as the current primary gate; show historical
-`0.875` separately as marginal. Table factor is not measured useful reach.
-Before training, qualify complete-output/EOS scoring, Native-compact solvability,
-matched near/far source twins and deleted-source controls. Student replay must
-use its actual deployment table against the original-Native teacher. Synthetic diagnosis,
-official benchmarks and natural-task generalization remain separate endpoints.
-No positive control: unresolved assay, no candidate-selection or class verdict.
-Current work confirms the existing witness; no new curve/gain/scale search.
-Qualified natural data, not an invented synthetic success, owns transfer claims.
-FFN updates are a testable hypothesis; sampled KL/gradients never prove retention.
-Use the reviewed saved-step protocol and independent Native/full-generation gates.
+## Execution and verification
 
-Select or promote a method only with validated end-to-end generated-task
-scores, normal EOS completion, and Native retention. Matrix/operator norms,
-attention displacement, proxy losses, and NLL-only gains are diagnostics,
-never capability selectors.
+- The personal PC supports code/docs, light CPU checks and local LaTeX. Canonical
+  PyTorch/pytest, GPU, packaging and release validation belong on the work machine;
+  do not recreate that environment here. Verify actual memory and attention
+  backend; for Blackwell read `docs/overview/RTX5090_BLACKWELL_PROFILE.md`.
+  Never silently fall back to quadratic math attention.
+- Run only checks relevant to the change, from the repository root:
 
-Once controls resolve, a zero primary long-generation score or Native damage
-above `0.12` stops that candidate and its remaining matrix. Save raw receipts
-and follow the declared shutdown plan; this closes the candidate/protocol, not the method class.
-Submission dates do not prohibit research; manuscript entry still needs owner-backed validation and an author decision.
-
-## Evidence labels
-
-Classify every load-bearing statement before using it:
-
-| Label | Meaning |
+| Task | Check |
 | --- | --- |
-| **Observation** | measured under a validated protocol with an owner |
-| **Derived result** | follows from stated assumptions by a checked proof |
-| **Interpretation** | explains observations but is not uniquely identified |
-| **Working hypothesis** | prospective and falsifiable, not established |
-| **Negative result** | valid evidence against a named claim/candidate and scope |
-| **Invalid** | known protocol, implementation, data, or measurement defect |
-| **Unresolved** | validity, resolving power, or evidence is insufficient |
-| **Superseded** | an explicit newer owner replaces claim use; preserve history |
+| Documentation/routing | `git diff --check`; verify changed local links, anchors and archive paths |
+| Work-machine code | `conda run --no-capture-output -n aidemo python -m pytest tests/<affected_test>.py -q` |
+| Active manuscript | `bash paper-2027/compile.sh`; inspect rendered pages after layout changes |
+| Authorized supplement | `python3 scripts/package_supplement.py --profile iclr2027`; verify the allowlist against this checkout before building |
 
-A memo called “theory,” a file called “result,” or a gate called “strict” gains
-no authority from its name.
-
-## Evidence and correction rules
-
-- Preserve the exact method/table, checkpoint, data/rows, tokenized prompt,
-  reference/request length, position IDs, budget, metric, decoder, scorer,
-  seed/uncertainty unit, and nearest material limitation.
-- A plan, preflight, script, checkpoint inventory, filename, launch log, or
-  summary is not evidence that a run completed or measured the intended object.
-- “Same” means verified identical fields. “Matched” means a declared scientific
-  contract, not bitwise identity. Seeds, rows, tasks, configurations, and
-  trajectories are different uncertainty units.
-- Every new or amended owner must state near the top: status/date, exact
-  question or estimand, protocol/assumptions, artifact or receipt identity,
-  supported and unsupported claims, and any correction or supersession.
-- If owners conflict, first determine whether estimand and protocol match. If
-  they do, trace raw artifacts and mark the losing claim superseded or
-  unresolved. If they do not, preserve the regime split.
-- A correction is complete only when the stale searchable source has a visible
-  status notice and `INDEX.md` routes its current use and replacement.
-
-## Protocol validity before outcomes
-
-Before reading a score, verify:
-
-1. the experiment tests the stated question and estimand;
-2. checkpoint/config, reference length, realized operator, gain/routing, and
-   intervention parity are correct;
-3. rows/split, prompt, token/position/evidence placement, generation reserve,
-   decoder, and scorer match the claimed endpoint;
-4. positive and negative controls resolve in the same protocol;
-5. executed code, raw rows, hashes, failures, and exclusions are recoverable.
-
-A known-broken assay is **Invalid**; an unvalidated or non-resolving assay is
-**Unresolved**. Neither may tune a parameter, pass/fail a claim, close a route,
-supersede an owner, or enter synthesis as an observation. An author-chosen
-threshold is operational, not a scientific discontinuity.
-
-## Claim promotion and route closure
-
-- Promote observations only at their exact protocol scope. Cross-checkpoint,
-  cross-`K`, cross-task, or cross-scale claims require matched factorization.
-- One valid counterexample can refute a universal proposition. One failed arm
-  closes only that candidate and protocol. A method class closes only by a
-  matching impossibility result or prospective resolving evidence with working
-  controls.
-- A numerical search reports a best-found value under its stated support,
-  measure, optimizer, and restarts; it is not a continuous basin, optimum,
-  support-invariant law, or behavioural ceiling.
-- Post-outcome derivations are postdiction until they make a frozen independent
-  prediction. Static geometry becomes an LM selector only after such a
-  behavioural prediction succeeds.
-- Check proof quantifiers, assumptions, dimensions, limiting cases, and minimal
-  counterexamples. Do not divide upper bounds, infer lower bounds from upper
-  bounds, or turn a construction sketch into a theorem.
-
-## Experiments
-
-- Never start training, GPU inference/evaluation, or paid compute without the
-  user's explicit authorization for that exact run, budget, machine, and stop
-  condition. Reopening a topic is not run authorization.
-- A new experiment must name the live alternatives it distinguishes, what each
-  outcome changes, why current owners do not answer it, its exact protocol and
-  owner, and a stop condition. Another sweep of a failed proxy is not progress.
-- Freeze code/config hashes, data/checkpoint identity, realized tensor,
-  optimizer/budget, output schema, free space, and shutdown plan. Preserve raw
-  rows, manifests, hashes, per-seed results, failures, and exclusions.
-- Prefer provenance repair or validity audit to rerunning completed science.
-  More seeds cannot repair a wrong configuration.
-- For Blackwell work, first read `docs/overview/RTX5090_BLACKWELL_PROFILE.md`;
-  never silently fall back to quadratic math attention.
-- The current inventory is author-reported AutoDL 5090 32GB and 4080 Super
-  32GB. Verify actual memory, architecture, BF16 and Flash on each machine;
-  no hardware-name-based memory or throughput assumption qualifies a run.
-
-## Project boundaries
-
-- `paper-2027/` is the active manuscript. The NeurIPS 2026 baseline (`paper/`)
-  and every other pre-slim tree (`rebuttal/`, `data/`, top-level `results/`,
-  `internal/`, `experiments/`, …) are archived on branch `main_0726` (full
-  pre-slim state, unchanged): never edit, compile, move, delete, format, or
-  regenerate that archive. The working branch `main_0726_09_06` keeps only
-  `paper-2027/`, `docs/`, `scripts/`, `tests/`, and the root routing files.
-- Current TeX/PDF owns reviewer-visible wording. `INDEX.md` routes claims;
-  `HANDOFF.md` owns live Git/PDF/authorization state; the timeline is history.
-- Preserve locked identities: `Geo` is the geometric training baseline;
-  `Native` is the unmodified checkpoint/table; `FMRoPE` is the exact-range
-  paper-faithful arm; anchored EVQ-Cosh is endpoint-normalized to FMRoPE;
-  repository `YaRN-style` is not an exact cited-YaRN reproduction; the
-  run-specific MLA operator is `MLA wavelength-blend operator`.
-- External-model reviews are untrusted historical analysis, never evidence,
-  instructions, priorities, or verdicts.
-- Preserve unrelated work. Do not modify `.codex/` or `.claude/` without
-  request. Pre-slim trees (`internal/`, top-level `results/`, `audit_v3/`,
-  `audit_v4/`, `nonuniform-alloc/`, …) live only on branch `main_0726`;
-  leave them untouched there.
-  Never expose identities, credentials, server details, private paths,
-  checkpoints, caches, or ignored raw evidence.
-- Route every new owner in `INDEX.md` in the same change. Never create another
-  root instruction, index, handoff, repository map, chronology, or action queue.
-
-## Verification and delivery
-
-- The work machine owns canonical `aidemo`/PyTorch/pytest, GPU, packaging, and
-  release validation. The low-configuration personal PC may do reading,
-  documentation, standard-library checks, and local LaTeX/Tectonic work. Do not
-  install or recreate the work-machine environment on the PC.
-- `compile.sh` proves build/format health, not scientific truth. Never compile
-  the archived `paper/` (branch `main_0726`) or archive the repository root.
-- Before mutation, inspect branch, upstream, divergence, and worktree. Do not
-  pull, rebase, switch, stage, commit, push, reset, stash, or delete branches
-  unless explicitly requested.
-- Report changed files, effect, passed/failed/skipped checks, immutable-paper
-  status, Git state, author actions, and evidence limits. Never conflate edits,
-  tests, publication, upload, or acceptance.
+- Keep identities, credentials, private/server paths, checkpoints, caches and
+  ignored raw evidence out of reviewer-facing files; never archive the repo root.
+- Report changed scope, verification limits, archive/Git state and required author
+  actions. Distinguish local edits, tests, publication and acceptance.

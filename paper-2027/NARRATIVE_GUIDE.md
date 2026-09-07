@@ -1,5 +1,12 @@
 # ICLR 2027 narrative and revision guide
 
+> **2026-09-06 status: historical narrative contract.** The author has requested
+> major reconstruction. The decomposition-first and frozen-design requirements
+> below are superseded as current planning instructions by
+> [current reconstruction contract](REVISION_BRIEF.md#current-reconstruction-contract). Preserve their
+> historical meaning and existing evidence identities; use the new brief for
+> the next outline. This notice does not alter manuscript text or result owners.
+
 > **September 2026 author contract.** This is the sole durable manuscript
 > narrative guardrail for the 9/17 internal abstract freeze and 9/25 full-paper
 > submission. It does not own facts, numbers, evidence, research priority,

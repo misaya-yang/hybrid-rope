@@ -1,0 +1,139 @@
+{
+  "common_descent": {
+    "backtracks": 0,
+    "certificate": {
+      "descent_certified": true,
+      "direction": [
+        -0.038308236878570316,
+        -0.027303746417117265,
+        -0.008323215242441794,
+        -0.014090830040823758
+      ],
+      "dual_gap": 0.0,
+      "iterations": 1,
+      "norm_squared": 0.0024808429843662955,
+      "slopes": [
+        -0.0024808429843662955,
+        -0.01725092036249981
+      ],
+      "solver_converged": true,
+      "weights": [
+        1.0,
+        0.0
+      ]
+    },
+    "frequency_ratios": [
+      1.0390514575013774,
+      1.0276799094508848,
+      1.008357949498447,
+      1.0141905737262487
+    ],
+    "losses_after": [
+      1.1320992124497653,
+      1.1104258024882296
+    ],
+    "losses_before": [
+      1.1346238883847268,
+      1.1312755967400934
+    ],
+    "step_size": 1.0
+  },
+  "correlated_key_probabilities": [
+    0.7310585786300049,
+    0.2689414213699951
+  ],
+  "exact_rotary_gradient_max_error": 3.60756327588696e-10,
+  "isotropic_distribution_max_error": 2.7755575615628914e-16,
+  "limits": "Synthetic numeric checks only. No LM, tokenizer, benchmark, learned checkpoint or GPU was used. The solver is classical MGDA, not claimed novel.",
+  "opposing_gradients": {
+    "descent_certified": false,
+    "direction": [
+      -0.0,
+      -0.0
+    ],
+    "dual_gap": 0.0,
+    "iterations": 2,
+    "norm_squared": 0.0,
+    "slopes": [
+      0.0,
+      0.0
+    ],
+    "solver_converged": true,
+    "weights": [
+      0.5,
+      0.5
+    ]
+  },
+  "script_sha256": "052daffee4cd5396cd228334d3f9056c868984ac5743dad42a4438bc5ed0d613",
+  "status": "MATHEMATICAL_CHECKS_ONLY",
+  "two_clock": {
+    "limits": "Grid minima, not continuous global-optimum certificates or LM predictions.",
+    "low_phase_limit": 0.29411764705882354,
+    "olmo_geometry_order_crossing_indices": [
+      5,
+      7,
+      9,
+      11,
+      13,
+      16,
+      18,
+      20,
+      23,
+      26,
+      30
+    ],
+    "rows": [
+      {
+        "frequency_ratio": 0.29425,
+        "native_phase": 0.001,
+        "risk": 8.823534158874935e-08
+      },
+      {
+        "frequency_ratio": 0.29425,
+        "native_phase": 0.01,
+        "risk": 8.82351361930489e-06
+      },
+      {
+        "frequency_ratio": 0.29425,
+        "native_phase": 0.1,
+        "risk": 0.0008821459051522318
+      },
+      {
+        "frequency_ratio": 0.292,
+        "native_phase": 1.0,
+        "risk": 0.0861723031608238
+      },
+      {
+        "frequency_ratio": 0.266875,
+        "native_phase": 4.0,
+        "risk": 0.9413223624818948
+      },
+      {
+        "frequency_ratio": 1.0,
+        "native_phase": 8.0,
+        "risk": 1.037732431750276
+      },
+      {
+        "frequency_ratio": 0.983875,
+        "native_phase": 16.0,
+        "risk": 1.0077514980742652
+      },
+      {
+        "frequency_ratio": 0.999625,
+        "native_phase": 32.0,
+        "risk": 0.9896947497214831
+      },
+      {
+        "frequency_ratio": 0.998875,
+        "native_phase": 64.0,
+        "risk": 1.0012538312885457
+      },
+      {
+        "frequency_ratio": 0.25,
+        "native_phase": 128.0,
+        "risk": 0.9897542943183923
+      }
+    ],
+    "scale": 4.0
+  }
+}

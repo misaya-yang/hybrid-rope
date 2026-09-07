@@ -1,79 +1,41 @@
-# RoPE Has a Spectral Budget
+# Hybrid-RoPE：频率分配与长上下文研究
 
-This project isolates an under-studied coordinate by separating sampled support and interior
-allocation: `x_k = -log(omega_k) = a + R z_k`. Fixed-support interventions identify
-`z`; target-aware support retargeting demonstrates their interaction. Exact
-sin/cos geometry explains the finite positional budget. EVQ-Cosh is one analytic
-construction, distinct from the mature frozen derived/coarse/log-p2 tables.
+本项目研究 RoPE 的有限频率分配如何影响原生能力、长上下文生成及训练后的部署表现。活动论文是 `paper-2027/` 中的 **RoPE Has a Spectral Budget**，当前分支为 `main_0726_09_06`，正在进行 ICLR 方向的研究与论文重构。
 
-The active manuscript is `paper-2027/`. Completed frozen,
-adaptation, and from-training studies keep their own estimands. The current
-paper does not depend on prospective 8x/32x success.
+目标是从 MrRoPE、CoPE 和本方已有方法出发，找到更有效的中段分配、低频缩放与区域衔接，并检验同一构造在冻结部署、轻量适配和从零训练中的价值。SOTA 是研究目标，现有小型开发结果尚未达到这一结论。
 
-**Repository layout (2026-09-06 slim).** The working branch `main_0726_09_06`
-keeps only the active manuscript and its live apparatus: `paper-2027/`,
-`docs/`, `scripts/`, `tests/`, this README, `INDEX.md`, `AGENTS.md`, and the
-supplement zip at `paper-2027/rope-spectral-budget-iclr2027-supplement.zip`.
-All historical trees (`paper/`, `rebuttal/`, `data/`, top-level `results/`,
-`internal/`, `experiments/`, `research_notes/`, `analysis/`, …) are archived
-unchanged on branch `main_0726` — read them there with `git show
-main_0726:<path>`; nothing scientific was deleted.
+## 当前研究定位
 
-## Start here — GPT-6-led research sessions
+- **优先本方方法。** 初期复用论文与已有对手结果，不默认重跑完整基线、对手微调或笛卡尔积消融；比较条件不同处简要注明。
+- **从有效方法改进。** MrRoPE 提供累计 radix 与有效中段分配，CoPE 提供深尾稳定机制，本方已有 Z/分配结果提供候选与经验。Cosh 保留为历史证据，不继续优化它的曲线。
+- **三阶段目标保持。** 当前实际执行的是 Qwen2.5-3B 冻结权重试验；本方轻适配和从零训练属于后续证据面，不把三个阶段的不同方法成绩拼成一个方法。
+- **方法与输出一起判断。** 当前已有统计构造、原始提案及尾部组合的自然问答诊断，以及组合方法的 RULER 开发子集。简单长检索有结果，更难检索与变量追踪仍需诊断。细节、样本范围和解释修正在[结果 owner](docs/research/ROPE_SCALE_TRANSPORT_PILOT_20260907.md)。
 
-1. Read `AGENTS.md`, this README, and [`paper-2027/HANDOFF.md`](paper-2027/HANDOFF.md).
-2. Use [`INDEX.md`](INDEX.md) to open the exact question's current owner only.
-3. For the next experiment, read the [first-principles contract](paper-2027/research/attention-aware-retrofit/theory/CONSTRAINED_GENERATION_FIRST_PRINCIPLES_20260904.md)
-   and [staged work-machine protocol](paper-2027/research/attention-aware-retrofit/preflights/CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md).
-4. For paper changes, read the outcome-dependent edit plan in
-   [`REVISION_BRIEF.md`](paper-2027/REVISION_BRIEF.md), then current TeX and its owner.
+原有 support/allocation 表述、固定端点和统一符号本身不足以承担新颖性。论文重构应围绕真正有效的构造、可复现输出和有用的机制解释展开；完整理论不是开始有价值试验的门槛。
 
-Do not read the timeline, theory tree, failed plans, or external-model reviews
-wholesale. They are searchable history, not an inherited research queue. A
-model's confidence and a previous run's completion are not assay validation.
+## 阅读和文档职责
 
-## The two active questions
+| 文件 | 职责 |
+| --- | --- |
+| [AGENTS.md](AGENTS.md) | 核心约束、阶段内自主执行、GPU 资源管理和必要验证 |
+| [INDEX.md](INDEX.md) | 详细文件索引；区分当前结果、设计输入与历史材料 |
+| [paper-2027/HANDOFF.md](paper-2027/HANDOFF.md) | 当前暂停/运行状态、授权预算、资产位置和恢复工作入口 |
+| [研究主线](docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md) | 方法关系和当前研究方向 |
+| [本轮协议与结果](docs/research/ROPE_SCALE_TRANSPORT_PILOT_20260907.md) | 实际实验范围、结果、修正、原始回执身份 |
+| [REVISION_BRIEF](paper-2027/REVISION_BRIEF.md) | 论文重构契约；旧阶段排序只作历史 |
 
-| Route | Quantified target | Next decisive evidence |
-| --- | --- | --- |
-| Z: zero training | One global static table/gain; separate Native PPL and task retention >=.88; maximize measured physical reach from 4x toward 8x | Independent source twins + nearby oracle + deleted-source control, complete generation/EOS, and natural retention |
-| F: light adaptation | Qualified Native-compact natural tasks at physical <=16K; same Native limits; untouched farther capability | Fixed N/Z/Y all-linear r16, lawful-world full-trajectory supervision and actual-deployment Native teacher constraint |
+恢复工作先读 HANDOFF，再按 INDEX 打开相关 owner。不要批量阅读全部理论史，也不要把一个旧计划文件当作待执行队列。
 
-Table factor is not useful context length. NLL, attention scores and operator
-bounds are diagnostics, never capability selectors. The full-p2 s4/c=.074
-incumbent passes historical .875 retention but is marginal at strict .88.
-The old mixed C2-s2/p2-s4 fit is not a valid same-path ceiling. The latest fixed-witness candidates failed the declared joint Native gates;
-do not reopen their scale/gain/curve search. The supplied GPT-6 Pro
-dossier changed the adaptation design; the exact review is in the theory owner §8.
+## 代码与已有资产
 
-## Next execution entrypoint
+[scale_transport](scripts/experiments/scale_transport/)包含本轮统计、缓存重放、有限表构造、问答诊断和 RULER 子集入口。[cross_audit](scripts/experiments/cross_audit/)提供已验证的早期准备、冻结评估、训练探针及作业监督组件。脚本和结果的实际状态由协议/HANDOFF 区分，不能因文件存在就推定它已运行。
 
-Read the [prepared round, protocol §10](paper-2027/research/attention-aware-retrofit/preflights/CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md#10-开机后的固定比较轮次--2026-09-05-准备版), then:
+早期 OLMo E0/E1 与 scratch overlays 已完成，见 [ROI/结果核对](docs/research/ROPE_FREQUENCY_LUNA_ROI_20260907.md)。旧 Z 训练提议、三臂微调和 seed42 权重恢复均不是当前继续入口。已有来源和方法身份保留，新的候选收益需要自己的证据。
 
-```bash
-python3 scripts/experiments/matched_transfer_round.py template
-```
+## 仓库边界与本地工作
 
-The next comparison is N_compact, then fixed-recipe Qwen Z/Y, using the archived
-N128 training engine. Preparation verifies assets and matched exposures on the
-work machine; GPU execution is a separate explicit action. No resume, prefix
-change or test opening is part of this round. Read the [execution report](paper-2027/research/attention-aware-retrofit/results/SINGLE_TABLE_FFN_SERVER_EXECUTION_20260904.md)
-for completed results: the OLMo frozen candidates failed their Native gates;
-N128 passed aggregate Native confirmation with a format/indexing regression.
-The original staged driver remains historical; its default step64 is not this
-round's uninterrupted step128 contract. Local checks do not establish GPU readiness.
+活动分支保留 `paper-2027/`、`docs/`、`scripts/`、`tests/` 和根路由文件。`paper/`、`rebuttal/`、旧顶层 results 等 pre-slim 内容在 `main_0726` 历史分支；不恢复、修改或编译该归档来迁就旧脚本。
 
-## Evidence hierarchy
+个人电脑做阅读、代码/文档准备和轻量 CPU 检查；实际 PyTorch/GPU 验证沿用工作机环境，不在家用机重新搭建训练环境。只执行与变更相关的 AGENTS 验证入口。活动论文构建命令为 `bash paper-2027/compile.sh`，构建成功不代表科学结论成立。
 
-The paper's strongest causal owners remain the three-seed fixed-support study
-and the matched-support frozen study. A successful new single-table result is
-a separate deployment increment; do not relabel the earlier arithmetic/routed
-results. The fully frozen zero-training, matched low-rank adaptation, and
-from-training/co-adaptation routes retain their separate estimands.
-Submission milestones remain 2026-09-17, 2026-09-18 and 2026-09-25, with live policy checks.
-New research and manuscript verification proceed separately.
-
-Rules live in `AGENTS.md`, scientific routing in `INDEX.md`, live state only in
-`paper-2027/HANDOFF.md`. The low-configuration personal PC may implement and run
-light CPU checks; canonical GPU, packaging and release validation stay on the
-work machine. Do not install or recreate the work-machine environment here.
+模型、缓存、服务器私有回执和凭证不进入 reviewer-facing 包。当前 supplement allowlist 仍需与精简 checkout 对齐后才能发布。本地修改、Git 发布、服务器运行和论文提交是不同状态，具体身份见 HANDOFF。

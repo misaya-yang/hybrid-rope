@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Round 12 scorers: strict group scorer, RULER official substring scorer, QA EM/F1.
 
+HISTORICAL IMPLEMENTATION: strict_row grants prefix credit, and multi-key
+targets are not complete-answer aliases. Do not use this scorer for new runs.
+See scripts/experiments/cross_audit/contracts.py and the 2026-09-07 cross-audit
+protocol. Preserve this source to interpret existing saved receipts.
+
 All raw generation text is preserved in per-row receipts; scorers never edit it.
 Official scores and strict scores are BOTH recorded and reported side by side;
 neither replaces the other.

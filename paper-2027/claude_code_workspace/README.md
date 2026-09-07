@@ -1,5 +1,7 @@
 # claude_code_workspace — Claude 工作区（paper-2027 / RoPE 谱预算）
 
+> The 2026-09-06 author-requested major reconstruction is governed by [current REVISION_BRIEF](../REVISION_BRIEF.md). The state and restoration sequence below are dated records, not the current default queue or a restart authorization.
+
 本目录是 Claude 在 ICLR 2027 投稿项目（"RoPE Has a Spectral Budget"，
 abstract 2026-09-18 / 全文 2026-09-25）中的工作区：实验代码、预注册、运行手册、
 回执与报告。**论文 .tex 由 Codex 负责**；Claude 只做审稿、验证、实验与文档，

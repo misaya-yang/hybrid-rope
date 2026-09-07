@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """Build Y2: CANONICAL unfine-tuned YaRN s=4 for OLMo (L0=4096, base=500000).
 
+STATUS CORRECTION 2026-09-07: the historical title/explanation below is not a
+valid canonical-YaRN claim. Y2 differs from pinned upstream ramp and amplitude;
+the original saved Y agrees with upstream within float32 rounding. Preserve
+this builder only for historical identity. New cross-audit tables use the
+verified equation utility; see CROSS_AUDIT_EXPERIMENT_PROTOCOL_20260907.md.
+
 Two fidelity fixes relative to the frozen round-12 Y arm (which stays frozen):
  1. Piecewise interpolation uses the paper's rotation rule with a SMOOTHSTEP
     ramp in frequency space (HF convention): dims with wavelength < L0/beta_fast

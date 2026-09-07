@@ -1,0 +1,148 @@
+{
+  "status": "CPU_ANALYSIS_AND_UNTESTED_COMPOSITION",
+  "scope": "same eight-row development buckets; not new capability evidence",
+  "summary": [
+    {
+      "arm": "MrMiddleScaleTail",
+      "bucket": "long",
+      "rows": 8,
+      "unique_contexts": 5,
+      "f1": 0.225
+    },
+    {
+      "arm": "MrMiddleScaleTail",
+      "bucket": "native",
+      "rows": 8,
+      "unique_contexts": 5,
+      "f1": 0.5232142857142857
+    },
+    {
+      "arm": "Native",
+      "bucket": "native",
+      "rows": 8,
+      "unique_contexts": 5,
+      "f1": 0.4984649122807018
+    },
+    {
+      "arm": "ScaleTransportUnguarded",
+      "bucket": "long",
+      "rows": 8,
+      "unique_contexts": 5,
+      "f1": 0.2220238095238095
+    },
+    {
+      "arm": "ScaleTransportUnguarded",
+      "bucket": "native",
+      "rows": 8,
+      "unique_contexts": 5,
+      "f1": 0.425
+    }
+  ],
+  "tail_vs_native_short_contributions": [
+    {
+      "row_id": "narrativeqa_3",
+      "delta_f1": -0.08771929824561414,
+      "contribution_to_mean": -0.010964912280701768
+    },
+    {
+      "row_id": "narrativeqa_13",
+      "delta_f1": 0.28571428571428575,
+      "contribution_to_mean": 0.03571428571428572
+    }
+  ],
+  "raw_scale_contrast": {
+    "min": -1.537010649451124,
+    "max": 0.5412871766567453,
+    "slots_abs_above_half": 7,
+    "status": "diagnostic only; not adopted as a frequency rule"
+  },
+  "candidate": {
+    "name": "MR_SCALE_TAIL_COPE20",
+    "status": "UNTESTED",
+    "source_tail_tensor_sha256": "6a49b7e582f4043a76943e77ffc9512fb67f4a380db6aee888c64f1d631c2ac7",
+    "gain": 1.138629436111989,
+    "values_float32": [
+      1.0,
+      0.8058422207832336,
+      0.6493816375732422,
+      0.5232991576194763,
+      0.4216965138912201,
+      0.33982083201408386,
+      0.2738419771194458,
+      0.22067339718341827,
+      0.17782793939113617,
+      0.14330126345157623,
+      0.11547820270061493,
+      0.09305720031261444,
+      0.07498941570520401,
+      0.0604296438395977,
+      0.04869675263762474,
+      0.03924189880490303,
+      0.03162277862429619,
+      0.025482967495918274,
+      0.02053525112569332,
+      0.016548171639442444,
+      0.01333521492779255,
+      0.010746078565716743,
+      0.00865964312106371,
+      0.006978305988013744,
+      0.005572691094130278,
+      0.004410064313560724,
+      0.0034585162065923214,
+      0.0026878169737756252,
+      0.002070019952952862,
+      0.001579844276420772,
+      0.0011948656756430864,
+      0.0008955479715950787,
+      0.0006651560543105006,
+      0.000489579513669014,
+      0.0003570983826648444,
+      0.0002581175067462027,
+      0.00018488940258976072,
+      0.00013124161341693252,
+      9.232005686499178e-05,
+      6.435548857552931e-05,
+      4.752637687488459e-05,
+      4.19617717852816e-05,
+      3.649882273748517e-05,
+      3.649882273748517e-05,
+      1.8747356079984456e-05,
+      1.5442738003912382e-05,
+      1.5127532606129535e-05,
+      9.748652701091487e-06,
+      7.072198513924377e-06,
+      5.938545655226335e-06,
+      5.477089871419594e-06,
+      4.9628115448285826e-06,
+      2.834847691701725e-06,
+      1.663921466388274e-06,
+      9.930670330504654e-07,
+      6.841021331638331e-07,
+      5.424699338618666e-07,
+      3.3371415497640555e-07,
+      1.4731052999650274e-07,
+      7.756274555958953e-08,
+      3.644051105311519e-08,
+      1.502178825774081e-08,
+      2.6353610405038808e-09,
+      0.0
+    ],
+    "tensor_sha256": "a63fe2714b37a30b4387fff8af500c270b62770a5b90677302083569af9c2eb2",
+    "definition": "Existing Mr-middle/scale-tail array times last-20-slot cosine taper; no refit, no task-based parameter choice",
+    "numerical_convention": "Python float64 cosine, serialize IEEE float32; zero retained exactly",
+    "first_unchanged_slots": 44,
+    "zero_slots": [
+      63
+    ],
+    "equal_adjacent_slots": [
+      42
+    ],
+    "extra_rotation_operator_bounds": {
+      "32768": 0.06939995064448701,
+      "131072": 0.27676451815483344
+    },
+    "bound_scope": "continuous distance interval, ungained block-diagonal relative rotation against tested tail table; not LM output",
+    "supported_claim": "deterministic finite nonnegative nonincreasing array; first 44 slots unchanged",
+    "unsupported_claim": "quality gain, optimality, novelty or SOTA"
+  }
+}

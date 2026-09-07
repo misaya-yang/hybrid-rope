@@ -1,213 +1,185 @@
-# INDEX — claim and owner router
+# INDEX — file and evidence-source index
 
-- **Updated:** 2026-09-06 (repository slim; scientific routing unchanged)
-- **Evidence cut-off:** owners available through 2026-09-04.
-- **Role:** route an exact question to its current owner, correction, or scoped
-  negative. This is not a report, timeline, or live handoff.
-- **2026-09-06 repo slim:** the working branch `main_0726_09_06` keeps
-  `paper-2027/`, `docs/`, `scripts/`, `tests/`, and the root routing files.
-  Owners linked below under `rebuttal/`, `data/`, top-level `results/`,
-  `experiments/`, or `internal/` are archived on branch `main_0726`
-  (full pre-slim state, unchanged); read them there with
-  `git show main_0726:<path>`. Everything under `paper-2027/`, `docs/`,
-  `scripts/`, and `tests/` resolves in the working tree as linked.
+**Updated:** 2026-09-07; author-requested home continuation handoff. This file locates source
+files and their roles; it does not own numerical results, verdicts or live tasks.
+Project details are in `README.md`, constraints in `AGENTS.md`, and live state
+in `paper-2027/HANDOFF.md`. Read only the relevant entries.
 
-Do not read every linked file. Search this index for the question, open the
-smallest matching row, then read its owner and raw/receipt artifact only to the
-depth the task requires. Rules are in `AGENTS.md`; paper orientation is in
-`README.md`; live state is in `paper-2027/HANDOFF.md`.
+A local report is not automatically a validated result. Follow its status and
+raw receipts; new audit concerns are tracked in the revision brief. Paths marked
+`main_0726:<path>` exist on the immutable pre-slim branch, not in this checkout;
+inspect them with `git show main_0726:<path>`.
 
-## 0. Current paper status
+## 1. Project, manuscript and reconstruction
 
-- **Paper identity:** a finite RoPE table decomposes into sampled support
-  $(a,R)$ and interior allocation $z$; fixed-support interventions identify
-  $z$, target-aware retargeting shows interaction, and exact geometry exposes
-  the finite spectral budget.
-- **Analytic construction:** EVQ-Cosh is closed-form and zero-learned-parameter,
-  unique only within its stated convex surrogate.
-- **Strongest practical consequence:** fully frozen model-relative structured
-  allocations produce large no-update extrapolation/downstream gains. Matched
-  adaptation and from-training/co-adapted evidence supply distinct lifecycle
-  consequences and breadth.
-- **Submission state:** the manuscript design is frozen around completed
-  evidence; later research enters it only after owner-backed validation and an
-  explicit author decision. Manuscript work does not prohibit active research.
-- **Active method theme:** one static table/gain under about `0.12` separate
-  Native NLL and downstream damage: maximize zero-training reach toward 8x,
-  then test small physical-2x/4x LoRA on untouched 8x/16x/32x capability.
-- **Not claimed:** arbitrary allocations always help, universal/unique optimum,
-  SOTA, or static geometry as a trained-model quality predictor.
-
-## Start the next research session here
-
-Live server experiment outcomes and independent FFN review: [execution report](paper-2027/research/attention-aware-retrofit/results/SINGLE_TABLE_FFN_SERVER_EXECUTION_20260904.md). Read it before the historical preflight; it includes the [source-only control guard](scripts/experiments/source_only_generation_guard.py) [Native-window guard](scripts/experiments/native_window_guard.py), [NIAH retention canary](scripts/experiments/niah_retention_canary.py), and [simple capability canary](scripts/experiments/simple_capability_canary.py).
-
-| Intent | Read only this first | Deliverable |
-| --- | --- | --- |
-| Understand or improve the two core problems | [First-principles contract](paper-2027/research/attention-aware-retrofit/theory/CONSTRAINED_GENERATION_FIRST_PRINCIPLES_20260904.md) | Fixed witness, compact/near/far, actual Native constraints, reviewed dossier decisions |
-| Review the latest Pro audit and revised experiment order | [Audit reconciliation, 2026-09-05](paper-2027/research/attention-aware-retrofit/analysis/PRO_REPORT_AUDIT_RECONCILIATION_20260905.md) | Updated evidence; compact-only first; family-local controls; matched Qwen Z/Y; fresh confirmation |
-| Identify measured compute and available model assets | [Compute/model snapshot, 2026-09-04](docs/overview/CURRENT_RESEARCH_COMPUTE_AND_MODEL_ASSETS_20260904.md) | Actual parameter counts, Native windows, file identities and completed execution boundaries; recheck volatile state |
-| Start the prepared N_compact / Qwen Z/Y round | [Work-machine protocol §10](paper-2027/research/attention-aware-retrofit/preflights/CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md#10-开机后的固定比较轮次--2026-09-05-准备版), [bounded launcher](scripts/experiments/matched_transfer_round.py), [outcome annotation](scripts/analysis/audit_generation_transitions.py) | CPU freeze -> uninterrupted128 -> local-family validation -> report; no automatic test/prefix/resume |
-| Combine with YaRN and narrow the next paper increment | [YaRN correspondence and budget comparison](paper-2027/research/attention-aware-retrofit/theory/CONSTRAINED_GENERATION_FIRST_PRINCIPLES_20260904.md#10-yarn-correspondence-supervision-density-and-a-smaller-next-claim) | Static versus dynamic, dense LM versus answer supervision, three benchmark families; no automatic new sweep |
-| Review FFN learning/forgetting and choose the next task from results | [Mechanism review §9](paper-2027/research/attention-aware-retrofit/theory/CONSTRAINED_GENERATION_FIRST_PRINCIPLES_20260904.md#9-ffn-review-learning-under-a-native-constraint), [E2 stage driver](scripts/train/run_native_constrained_transfer.sh), [receipt reviewer](scripts/analysis/review_native_constrained_transfer.py), [contract tests](tests/test_native_constrained_transfer.py) | Fresh Native endpoints and paired C/N/F; execution amendment governs unresolved resume/controls; no proxy promotion |
-| Implement or audit the new assay | [Independent experiment](scripts/experiments/single_table_generation.py), [fixed controls](scripts/analysis/export_single_table_controls.py), [constrained trainer](scripts/train/train_single_table_native_constrained.py), [contracts](scripts/lib/rope/generation_contract.py), [tests](tests/test_single_table_generation.py) | Verify actual input/source placement, raw full output/EOS and controls |
-| Improve the manuscript | [Outcome-dependent revision plan](paper-2027/REVISION_BRIEF.md#9-outcome-dependent-manuscript-edits-2026-09-04) | A specific source change backed by an existing or newly admitted owner |
-| Investigate a previous failure | Search the correction/negative tables below | Explain exactly what failed and why a new test distinguishes a remaining alternative |
-
-GPT-6-led sessions follow the same evidence rules as any other model. Historical
-multi-model analyses are provenance, not authority or an automatic work queue.
-Do not return to the old runner merely because its scripts already exist.
-
-## 1. Paper-level owners
-
-| Question | Current answer | Owner |
-| --- | --- | --- |
-| Does allocation matter at fixed support during training? | Yes in the 151.9M three-seed protocol; retain support/seed scope | [`EXACT_RANGE_151M_3SEED_RESULT_20260820`](paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.md) + [JSON](paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.json) |
-| Does the effect persist across exact-range configurations? | Yes in M4; matched non-Cosh shape remains competitive | [`M4_EXACT_RANGE_FACTORIAL_RESULT_20260726`](rebuttal/rebuttal_0723/theory_results/M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md) |
-| What does full sin/cos geometry prove? | Redundancy/effective dimension and counterexamples; not LM ranking | [`FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819`](paper-2027/research/foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md) |
-| How are support and allocation separated? | `x_k = a + R z_k`; notation/intervention grammar, not a number owner | [`ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823`](paper-2027/research/foundations/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md) |
-| Can RoPE/attention structure alone determine optimal `z`, a frequency system, or mature-checkpoint movement? | **Boundary only:** distribution-free behavioural optimality is non-identifiable. This does not close repository-constrained selection from completed evidence. | [`ROPE_OPTIMALITY_IDENTIFIABILITY_AND_CONDITIONAL_EQUATIONS_20260903`](paper-2027/research/foundations/ROPE_OPTIMALITY_IDENTIFIABILITY_AND_CONDITIONAL_EQUATIONS_20260903.md) |
-| What is the exact frozen transplant boundary? | Position-independent invertible Q/K compensation requires matching multisets up to sign/permutation | [`OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726`](rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md) |
-| What is the bounded EVQ-Cosh theorem? | Unique only for its stated convex surrogate | [`03_theory.tex`](paper-2027/sections/03_theory.tex) + [`a1_proofs.tex`](paper-2027/appendix/a1_proofs.tex) |
-| What supports the matched-adaptation route? | Protocol-specific task-family length transfer at 1.485B and causal source use at 8B; not pure frozen-`z` or pretraining-scale evidence | [`OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729`](rebuttal/rebuttal_0723/theory_results/OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729.md), [`EVQ_8B_ADAPTATION_EVIDENCE_20260724`](rebuttal/rebuttal_0723/theory_results/EVQ_8B_ADAPTATION_EVIDENCE_20260724.md) |
-| What breadth supports the paper? | Protocol-specific 432M MLA, 750M continuation, existing 1.485B scale line, and Video-DiT | [`table18 MLA`](data/curated/table18_mla_3seed_aggregate.json), [`750M report`](docs/exp/2026-03/2026-03-06_phase15_750m_2k_to_4k_continue_results.md), [`OLMO2 1B`](rebuttal/rebuttal_0723/theory_results/OLMO2_1B_RELEASED_ROPE_BASELINE_20260725.md), [`Video-DiT`](paper-2027/research/evidence/VIDEO_DIT_HEAD_TO_HEAD_SEED42_RESULT_20260826.md) |
-
-## 2. Mature-checkpoint owners
-
-Open the full local catalogue only when needed:
-[`results/README.md`](paper-2027/research/attention-aware-retrofit/results/README.md).
-
-| Question | Current status | Owner |
-| --- | --- | --- |
-| What is the strongest practical no-update result? | Fully frozen derived allocation changes OLMo 16K RULER from `0.0056` to `0.6047`; coarse label-free allocation reaches `0.6104`; pure-`z` and broader deployment claims remain separate | [`SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823`](paper-2027/research/attention-aware-retrofit/results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) |
-| Does it persist on fresh natural text? | Length-conditional NLL effect; not universal ranking | [`FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824`](paper-2027/research/attention-aware-retrofit/results/causal-mechanism/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) |
-| What is the strongest tracked static-table result? | One OLMo table passes tested 1x gates and improves longer endpoints; ordered permutation can collapse | [`SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831`](paper-2027/research/attention-aware-retrofit/results/coupling-transfer/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md) |
-| Under one static table and one path, which completed form is retained, and what same-table LoRA follows? | The sequential OLMo stop tree retains the full 64-slot legacy-u p2 mask installed as log-s4 with fixed `c=.074`; this is a capability-first engineering incumbent among the named historical candidates, not a global optimum. The later exact Q/K-LoRA screen improves PG-19 but not measured generated capability. | [`selection/specification`](paper-2027/research/attention-aware-retrofit/theory/SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md), [`LoRA result`](paper-2027/research/attention-aware-retrofit/results/adaptation-coadaptation/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md) |
-| What is supported across K32/K128? | Normalized pair index is the best-tested coordinate, not a law or K-causal result | [`K32 confirmation`](paper-2027/research/attention-aware-retrofit/results/coupling-transfer/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md), [`K128 confirmation`](paper-2027/research/attention-aware-retrofit/results/coupling-transfer/K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901.md), [`full RULER-13`](paper-2027/research/attention-aware-retrofit/results/coupling-transfer/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md) |
-| Does long signal convert to natural QA? | **Unresolved:** 9/2 raw owners missing; constructed 38-row assay invalid | [`ZERO_TRAINING_TWO_DAY...`](paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md) |
-| Do headwise clocks solve the joint objective? | **Exploratory/report-only:** variable-length capped panel, adaptive row reuse, no tracked executed bundle | [`HEADWISE_FACTORIZED...`](paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md) |
-| Does calibration-frozen attention-displacement Selective-31 beat layer-matched random/reverse masks? | **Negative at exact candidate/protocol scope:** target-long generation is floor-equal while short KL/Top-1 and answer-token NLL reverse the expected Selective advantage; matched global controls resolve the reused panel | [`HEAD_SELECTIVE_ZERO_TRAINING...`](paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md) |
-| Can Native checkpoint structure uniquely determine an ordered movement profile? | **No without an added preference.** The declared squared Native-geometry surrogate uniquely constructs `m = Iso(1-u)` and its executed OLMo arm improves natural retention/likelihood, but fresh core-4 is materially worse at 4K/8K; it exposes an endpoint-dependent tradeoff, not a latent law or current-p2 replacement. | [`theory`](paper-2027/research/attention-aware-retrofit/theory/NATIVE_ONLY_MOVEMENT_PROFILE_IDENTIFIABILITY_20260903.md), [`result`](paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md) |
-| Can one non-Native static table guarantee exact Native short behaviour and change long geometry? | **No under universal exact-preservation and standard stationary-RoPE assumptions.** The completed per-request Native/s4 policy is the existing behavioural escape. A prefix-preserving long-frame key handoff removes the old cross-boundary phase mismatch in CPU algebra, but has no model-quality evidence. | [`STATIC_NATIVE_NO_HARM_AND_PREFIX_HANDOFF_20260903`](paper-2027/research/attention-aware-retrofit/theory/STATIC_NATIVE_NO_HARM_AND_PREFIX_HANDOFF_20260903.md), [`session-policy result`](paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md) |
-| Is the Selective-31 calibration score a universal functional sensitivity, and does joint Q/K--frequency relabeling invalidate the ordered-coupling results? | **No.** The score is exact endpoint attention-map displacement on a frozen calibration pack, not `chi_func`; exact joint relabeling is a gauge identity, while existing frequency-only permutations intentionally hold Q/K fixed. | [`LOCAL_FUNCTIONAL_COMPATIBILITY_AND_GAUGE_AUDIT_20260903`](paper-2027/research/attention-aware-retrofit/theory/LOCAL_FUNCTIONAL_COMPATIBILITY_AND_GAUGE_AUDIT_20260903.md) |
-| Do finite scale-orbit boundary and Fourier-rank quantities predict mature-model behaviour? | **Negative selector result.** Exact boundary count changes `6 -> 64` under a behaviourally invisible ULP perturbation; p2 and the failed exact chain share zero Gram lower bound and saturated operator error but have opposite 4x utility. A CPU follow-up finds old `D*` plus phase safety diagnose these extreme failures, but the earlier one-turn-floor counterexample still falsifies `D*` as a general selector. | [`result`](paper-2027/research/attention-aware-retrofit/results/operator-analysis/SCALE_ORBIT_BOUNDARY_VALIDATION_RESULT_20260904.md), [`transport preflight`](paper-2027/research/attention-aware-retrofit/preflights/operator-analysis/SCALE_ORBIT_TRANSPORT_RESIDUAL_PREFLIGHT_20260904.md), [`prior axis falsification`](paper-2027/research/attention-aware-retrofit/analysis/RETROFIT_AXIS_FALSIFICATION_20260822.md) |
-| What survives a proof, novelty, and tightness audit of the supplied finite scale-covariance derivation? | **The mathematics survives; the current empirical-tightness route does not.** Theorem 5 extends to continuous finite-dimensional real orthogonal RPE and has a dimension-free separation-order corollary. Exact obstruction/boundary leakage are prior art and novelty is not certified. A resolving synthetic control passes, but 45 bounded-condition trajectories select identity and saturate near error `2`; Ky-Fan is zero/tiny and non-ranking. Multilevel is stopped. | [`proof/novelty owner`](paper-2027/research/attention-aware-retrofit/theory/FINITE_SCALE_COVARIANCE_PROOF_NOVELTY_AND_TIGHTNESS_AUDIT_20260904.md), [`tightness result`](paper-2027/research/attention-aware-retrofit/results/operator-analysis/SCALE_CONJUGACY_TIGHTNESS_RESULT_20260904.md), [`preflight`](paper-2027/research/attention-aware-retrofit/preflights/operator-analysis/SCALE_CONJUGACY_TIGHTNESS_PREFLIGHT_20260904.md) |
-| Has same-substrate log-p2 Q/K LoRA already been executed? | **Yes, at unit gain and at the retained `c=.074`.** Both improve paired PG-19 NLL; neither establishes generated-task capability improvement. | [`LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904`](paper-2027/research/attention-aware-retrofit/results/adaptation-coadaptation/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md) |
-| Does exact log-p2 plus `c=.074` benefit from matched Q/K-only adaptation? | **Likelihood only in the measured panel.** PG-19 improves at 1x/4x, five-task macros are slightly negative/unresolved, and fresh core-4 changes `-.0100/+.0025/-.0225` at 4K/8K/16K. | [`LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904`](paper-2027/research/attention-aware-retrofit/results/adaptation-coadaptation/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md) |
-| What is the corrected next experiment for one-table zero-training and low-step adaptation? | **Prospective, independent redesign.** Qualify compact/near/far lawful worlds and exact EOS; confirm fixed N/Z/G/Y; use all-linear r16 with original-Native functional constraints on qualified natural data. Earlier QK/source-contrast prototype is superseded. | [`CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904`](paper-2027/research/attention-aware-retrofit/preflights/CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md) |
-| Where is the earlier single-table synthesis preserved? | **Historical research brief.** Mixed C2/p2 fitted ceiling and phase-cost lower-bound use are corrected; its prototype execution order is superseded by the independent protocol above. | [`SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904`](paper-2027/research/attention-aware-retrofit/analysis/SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904.md) |
-| What can the 9/2 first-principles memo support? | Only explicitly retained identities under assumptions; T4/T5/T7 and behavioural generalizations are retracted/disputed | [`FIRST_PRINCIPLES...`](paper-2027/research/attention-aware-retrofit/theory/FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md) |
-
-Endpoint boundaries remain strict: NLL/PPL, answer-token NLL, teacher-forced
-gap, strict generation, token F1, exact match, RULER/NIAH, QA, causal source
-use, adaptation, and transfer are different evidence tiers.
-
-## 3. Correction ledger
-
-| Search hit | Current use | Replacement or reason |
-| --- | --- | --- |
-| 28 direct-hybrid zero-score receipts (2026-07-26) | **Invalid method evidence** | Native/EVQ buffer alias; use [`OLMO2_POSTHOC...`](rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md) |
-| p2 Native boundary near 3.91/4.01 from s2/s4 quadratic | **Superseded as same-path prediction** | s2 is compressed C2/G(x), s4 is full-p2; no matched tensor path. [Correction and replacement](paper-2027/research/attention-aware-retrofit/theory/CONSTRAINED_GENERATION_FIRST_PRINCIPLES_20260904.md) |
-| phase-cost box/isotonic ceiling in the 9/4 brief | **Unresolved lower-bound step** | no certified feasible-set/domination argument or finite-region Native curvature; same replacement owner |
-| old factor-frontier / paired-view LoRA runner and first new QK/source-margin prototype | **Superseded execution plans** | use fixed-witness diagnostic and Native-constrained engine; no prototype run was executed |
-| old exact-range three-seed aggregate | **Superseded; never splice** | use raw-backed [`EXACT_RANGE...`](paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.md) |
-| Qwen 128K `0.6175` | **Invalid aliased value** | corrected result is `0.5400` in [`SAME_SUPPORT...`](paper-2027/research/attention-aware-retrofit/results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) |
-| generated `FAILED_50M_GATE` | **Superseded: `SCREEN_UNRESOLVED`** | positive control failed; use the two owners in §4 |
-| old Gemma 16K zero with 8K reference | **Superseded/confounded** | use [`REFERENCE_CORRECTED_K128_RESULT_20260901`](paper-2027/research/attention-aware-retrofit/results/coupling-transfer/REFERENCE_CORRECTED_K128_RESULT_20260901.md) |
-| 38-row “16K Hotpot” Fact D | **Invalid for claims/gates** | selected constructed stress, non-official filler, raw missing |
-| 9/2 gain-sweep session facts | **Unverified** | forensic lead only; no optimum, mechanism, or class conclusion |
-| Hotpot-200 headwise comparison | **Report-only exploratory** | variable length capped at 16K, adaptive reuse, executed/raw bundle untracked |
-| first-principles T4/T5/T7 and exact-conditioning claims | **Retracted/disputed** | invalid bound division, unrestricted torus claim, and novelty ratio |
-| first-principles T1 arc-length proof | **Corrected; conclusion retained under its injective finite-arc assumptions** | old proof did not establish uniform per-slot scaling; use the tangent-ray proof in [`ROPE_OPTIMALITY...` §4.5](paper-2027/research/foundations/ROPE_OPTIMALITY_IDENTIFIABILITY_AND_CONDITIONAL_EQUATIONS_20260903.md#45-correction-to-the-historical-pi-arc-proof) |
-| 9/3 optimality owner used as a terminal method verdict | **Corrected: supporting boundary only** | distribution-free impossibility does not answer the author-required single-static-table selection problem; that question remains active |
-| two-day synthesis “only allowed” route | **Superseded candidate negative** | holdout failure; not a queue or method-class result |
-
-An author-chosen threshold such as `0.875` is an operational tolerance, not a
-theorem. Passing or missing it does not create a scientific discontinuity.
-
-## 4. Scoped negatives and unresolved questions
-
-| Object | Exact status | Owner |
-| --- | --- | --- |
-| cosine-only collision / lower collision-logdet as behavioural rankers | universal sufficiency refuted; regularizer use remains open | [`FULL_ROPE...`](paper-2027/research/foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md) |
-| attention-Fisher `kappa_att` | tested ranker negative, not all attention-aware metrics | [`KAPPA_ATTENTION_MEASURE_AUDIT_20260820`](paper-2027/research/audits/KAPPA_ATTENTION_MEASURE_AUDIT_20260820.md) |
-| LeRoPE `w^(1/3)` oracle | published-shape operationalization negative, not the curvature class | [`LEROPE_PROFILE_ORACLE_AUDIT_20260820`](paper-2027/research/audits/LEROPE_PROFILE_ORACLE_AUDIT_20260820.md) |
-| `D*`, coverage residual, phase-risk selectors | tested selector negatives in the registered panel | [`RETROFIT_AXIS_FALSIFICATION_20260822`](paper-2027/research/attention-aware-retrofit/analysis/RETROFIT_AXIS_FALSIFICATION_20260822.md) |
-| direct-`z` two-document calibration | candidate/protocol negative | [`DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824`](paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md) |
-| two analytic Native-support tables | two candidates failed; no inherent trade-off theorem | [`ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824`](paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md) |
-| continuous-boundary-slope operator | only this implementation is closed | [`ZERO_TRAINING_MECHANISM_AND_CEILING_20260826`](paper-2027/research/attention-aware-retrofit/analysis/ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md) |
-| exact Native no-harm from one non-Native static table | class-level obstruction under universal content/short-position equality; approximate retention and nonstandard/dynamic operators remain open | [`STATIC_NATIVE_NO_HARM_AND_PREFIX_HANDOFF_20260903`](paper-2027/research/attention-aware-retrofit/theory/STATIC_NATIVE_NO_HARM_AND_PREFIX_HANDOFF_20260903.md) |
-| phase-isotropy / pair-volume / min-eigenvalue | `SCREEN_UNRESOLVED`, not negative | [`PHASE_ISOTROPY...`](paper-2027/research/attention-aware-retrofit/results/PHASE_ISOTROPY_50M_M4_RESULT_20260824.md), [`PHASE_ALLOCATION...`](paper-2027/research/attention-aware-retrofit/results/PHASE_ALLOCATION_M4_EXTENDED_RESULT_20260824.md) |
-| Native-retention + natural long-QA/EOS assay | unresolved validity | §3 corrections; validity precedes method selection |
-| Native-compatible/long-capable intervention | one arm passes the reused natural 1x double gate and retains long likelihood/RULER, but fresh core-4 is negative at 4K/8K; no universal jointly passing law | [`NATIVE_ISOTONIC_PROFILE_RESULT_20260903`](paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md) |
-
-No content-blind static scalar score in this repository has prospectively
-ranked LM behaviour across the required regimes. A numerical static search is
-only best-found under its stated support/measure/optimizer/restarts and is not a
-global or behavioural ceiling.
-
-## 5. What to do
-
-### Submission — active
-
-1. By 2026-09-17, freeze the title, abstract, author roster, and author metadata
-   after owner-level and live-policy checks.
-2. Submit the matching official abstract and metadata by 2026-09-18, 11:59 PM
-   AoE, and record the platform receipt in the handoff.
-3. Preserve the reviewer path: decomposition → identification/retargeting →
-   exact geometry → EVQ-Cosh construction → frozen/adaptation/from-training
-   consequences. Repair the title, abstract, first page, and Figure 1 only where
-   this path is unclear or scientifically wrong.
-4. Complete the owner-by-owner number/protocol audit, rebuild the curated
-   supplement, run final build/anonymity/policy/visual checks, and submit the
-   verified paper by 2026-09-25.
-
-Exact live progress and authorization belong only in
-[`HANDOFF.md`](paper-2027/HANDOFF.md).
-
-### Active method work — two-track programme
-
-The target is one static table/gain with about `0.12` maximum damage separately
-on Native PPL and downstream tasks. Use strict .88 retention; .875 is a labelled
-historical sensitivity. The retained full-p2 s4/c=.074 point remains a marginal
-incumbent, not an optimum or a proven 4x ceiling.
-
-**Z:** identify whether a frozen candidate's failure is already Native/local,
-source-distance dependent, or output/EOS dependent while confirming the existing
-witness. No new factor/gain/curve search. Table factor is not useful physical reach.
-
-**F:** physical <=16K task exposure; untouched 8x/16x/32x capability.
-The [Native-constrained engine](scripts/train/train_single_table_native_constrained.py)
-uses fixed all-linear r16 N/Z/Y arms, lawful-world complete-trajectory loss and
-original-Native teacher constraints. Qualified natural/replay assets are required;
-the earlier QK/source-contrast ladder is not the execution plan.
-All length renderings of a semantic group stay together. No sealed outcome may
-select an adapter, loss, table, gain or new early-stop rule.
-
-The [first-principles owner](paper-2027/research/attention-aware-retrofit/theory/CONSTRAINED_GENERATION_FIRST_PRINCIPLES_20260904.md)
-explains the derivations and alternative openings; the
-[execution contract](paper-2027/research/attention-aware-retrofit/preflights/CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md)
-defines tomorrow's commands and stop rules. The older
-[SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904](paper-2027/research/attention-aware-retrofit/analysis/SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904.md)
-is context only. Per the recorded handoff, the prior "no GPU run is active" state is superseded by author-authorized execution; see HANDOFF.md; verify live
-machine state before spending compute. No run is launched by documentation.
-
-Every result must change a named decision. A valid candidate failure closes
-that candidate/protocol, never the class. Unresolved controls close neither.
-
-## 6. On-demand routes
-
-| Need | Open |
+| File | Purpose / status |
 | --- | --- |
-| Why the question changed | [`TIMELINE.md`](paper-2027/research/history/TIMELINE.md) |
-| Paper-level theory/evidence | [`research/README.md`](paper-2027/research/README.md) |
-| Mature-result catalogue | [`results/README.md`](paper-2027/research/attention-aware-retrofit/results/README.md) |
-| Mature theory status | [`theory/README.md`](paper-2027/research/attention-aware-retrofit/theory/README.md) |
-| Historical reports | [`docs/exp/`](docs/exp/) |
-| July review/evidence | [`rebuttal/rebuttal_0723/README.md`](rebuttal/rebuttal_0723/README.md) |
-| Reusable RoPE code | [`scripts/lib/rope/`](scripts/lib/rope/) |
-| Static rank diagnostic | [`scripts/analysis/third_axis_ceiling.py`](scripts/analysis/third_axis_ceiling.py) — algebraic only, not an LM owner |
-| Current evaluation utilities | [`scripts/eval/`](scripts/eval/) — require live protocol and authorization |
+| [AGENTS.md](AGENTS.md) | Core constraints, plan-before-compute rules and checks |
+| [README.md](README.md) | Project question, reconstruction context, intended outcomes and layout |
+| [paper-2027/HANDOFF.md](paper-2027/HANDOFF.md) | Current local Git/PDF/authorization state; source-reported remote state is labelled |
+| [Unified frequency research plan](docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md) | Method-design history and current direction; old five/eight-table suggestions are superseded by own-method-first execution; results and next action have separate owners |
+| [Scale-transport proposal review](docs/research/ROPE_SCALE_TRANSPORT_REVIEW_20260907.md) | External-proposal review at its original scope; subsequent implementation/results routed to pilot owner |
+| [Pro scale-transport source](paper-2027/research/external-reviews/ROPE_SCALE_TRANSPORT_METHOD_AND_CODEX_20260907.md) | Exact author-supplied September 7 input; SHA in review; reported code/tests unverified, execution proposals are not authorization |
+| [Independent general-allocation derivation](docs/research/ROPE_GENERAL_ALLOCATION_DERIVATION_20260907.md) | Historical mathematical exploration; general-definition/MGDA route withdrawn by author correction; not an experiment prerequisite |
+| [General-allocation CPU checks](docs/research/ROPE_GENERAL_ALLOCATION_CPU_20260907.json), [verification program](scripts/analysis/verify_general_rope_allocation.py) | Reproducible standard-library numerical checks; no real model or GPU results |
+| [Pro research prompt](docs/research/ROPE_FREQUENCY_PRO_PROMPT_20260907.md) | Historical prompt already sent to Pro; preserve as an input artifact, not current instructions |
+| [Luna results and ROI review](docs/research/ROPE_FREQUENCY_LUNA_ROI_20260907.md) | Historical OLMo E0/E1 evidence and dated ROI suggestions; old Z-only training is not the continuation queue |
+| [paper-2027/REVISION_BRIEF.md](paper-2027/REVISION_BRIEF.md) | Current reconstruction contract; historical v5/v4 folded below and explicitly non-operative |
+| [paper-2027/NARRATIVE_GUIDE.md](paper-2027/NARRATIVE_GUIDE.md) | Historical narrative guide; current reconstruction contract supersedes former priorities |
+| [paper-2027/README.md](paper-2027/README.md) | Manuscript package layout and build conventions |
+| [paper-2027/main.tex](paper-2027/main.tex) | Actual manuscript entrypoint; wording has not yet been reconstructed |
+| [paper-2027/main.pdf](paper-2027/main.pdf) | Current rendered manuscript; verify identity in HANDOFF |
+| [paper-2027/sections/](paper-2027/sections/) | Main-text sources |
+| [paper-2027/appendix/](paper-2027/appendix/) | Proofs, extended experiments and limitations |
+| [paper-2027/tables/](paper-2027/tables/) | Reviewer-facing table inputs |
+| [paper-2027/figs/](paper-2027/figs/) | Figures and active generators |
+| [paper-2027/refs/](paper-2027/refs/) | Bibliography sources |
+| [paper-2027/compile.sh](paper-2027/compile.sh) | Active manuscript build and format gates |
+| [paper-2027/SUBMISSION_CHECKLIST.md](paper-2027/SUBMISSION_CHECKLIST.md) | Release checklist; venue details need live verification |
+| [paper-2027/research/RESEARCH_PROTOCOL_REFERENCE.md](paper-2027/research/RESEARCH_PROTOCOL_REFERENCE.md) | Metric conventions, evidence labels, method identities and prior root-index claim/correction annotations |
+| [paper-2027/research/external-reviews/ROPE_ICLR2027_CROSS_AUDIT_20260906.md](paper-2027/research/external-reviews/ROPE_ICLR2027_CROSS_AUDIT_20260906.md) | Exact supplied audit; planning input, not independently validated theory/model/CPU evidence |
+| [paper-2027/research/external-reviews/README.md](paper-2027/research/external-reviews/README.md) | External-source status and provenance boundaries |
 
-Do not copy credentials, private paths, raw checkpoints, caches, or ignored
-evidence into Git to bridge machines.
+## 2. Latest local round and implementation audit
+
+| File | Purpose / status |
+| --- | --- |
+| [Cross-audit experiment protocol](paper-2027/research/CROSS_AUDIT_EXPERIMENT_PROTOCOL_20260907.md) | Author-selected September 6 source; E0/E1 preparation, full/LoRA contract, CPU findings and conditional stages |
+| [Scale-transport two-hour pilot protocol](docs/research/ROPE_SCALE_TRANSPORT_PILOT_20260907.md) | Main current result owner: guard/QA diagnostics plus combination RULER; score interpretation corrections, skipped VT rows and raw identities |
+| [Pilot follow-up analysis and candidate](docs/research/ROPE_SCALE_TRANSPORT_FOLLOWUP_20260907.json), [analysis program](scripts/analysis/analyze_scale_transport_pilot.py) | Row-level score decomposition and one untested Mr-middle/scale-tail/CoPE composition; explanation and limits in pilot owner |
+| [Combination RULER preparation](scripts/experiments/scale_transport/ruler_prepare.py), [runner](scripts/experiments/scale_transport/ruler_run.py) | Executed combination RULER apparatus: 22 generated rows and 8 skipped VT rows; no active process; results in pilot owner |
+| [Scale-transport pilot code](scripts/experiments/scale_transport/), [math tests](tests/test_scale_transport_math.py) | Executed own-method pilot apparatus; four CPU tests and real model hook checks passed; guarded versus diagnostic variants remain distinct; results in pilot owner |
+| [Cross-audit apparatus](scripts/experiments/cross_audit/) | CPU freeze/rescore/input checks; mature/scratch evaluation, teacher, full/LoRA training, cost proposal, exact-job SSH supervision and receipt report |
+| [Contract tests](tests/test_cross_audit_contracts.py), [runtime tests](tests/test_cross_audit_runtime.py), [execution tests](tests/test_cross_audit_execution.py) | Complete answers/groups, cached decoding, CE/KL value/gradient parity, full/LoRA steps and job guards |
+| [paper-2027/claude_code_workspace/README.md](paper-2027/claude_code_workspace/README.md) | Local Round10–12 context; current reconstruction amendment takes precedence over old restart plans |
+| [paper-2027/claude_code_workspace/INDEX.md](paper-2027/claude_code_workspace/INDEX.md) | Detailed per-round file inventory |
+| [paper-2027/claude_code_workspace/LESSONS.md](paper-2027/claude_code_workspace/LESSONS.md) | Recorded implementation/evaluation pitfalls; verify applicability |
+| [paper-2027/claude_code_workspace/round12_20260906/REPORT_ROUND12_20260906.md](paper-2027/claude_code_workspace/round12_20260906/REPORT_ROUND12_20260906.md) | Reported results/stop state; baseline fidelity and score interpretation require reconciliation; recovery list is historical |
+| [paper-2027/claude_code_workspace/round12_20260906/PREGLUCTION_ROUND12.md](paper-2027/claude_code_workspace/round12_20260906/PREGLUCTION_ROUND12.md) | Frozen original table/task/scoring declaration |
+| [paper-2027/claude_code_workspace/round12_20260906/PREGLUCTION_ROUND12_V2_ADDENDUM.md](paper-2027/claude_code_workspace/round12_20260906/PREGLUCTION_ROUND12_V2_ADDENDUM.md) | Historical protocol amendment |
+| [paper-2027/claude_code_workspace/round12_20260906/RUNBOOK_ROUND12.md](paper-2027/claude_code_workspace/round12_20260906/RUNBOOK_ROUND12.md) | Historical execution instructions; no restart authority |
+| [paper-2027/claude_code_workspace/round12_20260906/PHASE0_INTERPRETIVE_MEMO.md](paper-2027/claude_code_workspace/round12_20260906/PHASE0_INTERPRETIVE_MEMO.md) | Interpretation requiring raw/source checks |
+| [paper-2027/claude_code_workspace/reports/ROUND10_LORA_RESULTS_20260905.md](paper-2027/claude_code_workspace/reports/ROUND10_LORA_RESULTS_20260905.md) | Earlier low-rank execution report |
+| [paper-2027/claude_code_workspace/reports/ROUND11_OLMO_RESULTS_20260905.md](paper-2027/claude_code_workspace/reports/ROUND11_OLMO_RESULTS_20260905.md) | Earlier OLMo execution report |
+| [paper-2027/claude_code_workspace/round12_20260906/code/rope_tables.py](paper-2027/claude_code_workspace/round12_20260906/code/rope_tables.py) | N/Z/Y/M array construction and identity/gain declarations |
+| [paper-2027/claude_code_workspace/round12_20260906/code/build_y2_canon.py](paper-2027/claude_code_workspace/round12_20260906/code/build_y2_canon.py) | Y2 builder; smoothstep/square-root convention under fidelity review |
+| [paper-2027/claude_code_workspace/round12_20260906/code/scoring.py](paper-2027/claude_code_workspace/round12_20260906/code/scoring.py) | Saved output scoring and row/group interpretation |
+| [paper-2027/claude_code_workspace/round12_20260906/code/track_a_eval.py](paper-2027/claude_code_workspace/round12_20260906/code/track_a_eval.py) | Frozen evaluation including chat-template path |
+| [paper-2027/claude_code_workspace/round12_20260906/code/track_b_train_v2.py](paper-2027/claude_code_workspace/round12_20260906/code/track_b_train_v2.py) | Existing continuation trainer; inspect actual trainable modules/losses before reuse |
+| [paper-2027/claude_code_workspace/round12_20260906/code/round11_harness_ref/](paper-2027/claude_code_workspace/round12_20260906/code/round11_harness_ref/) | Frozen reference code; preserve original execution identity |
+
+## 3. Theory and evidence owners
+
+| File | Locate when checking |
+| --- | --- |
+| [paper-2027/research/attention-aware-retrofit/theory/CONSTRAINED_GENERATION_FIRST_PRINCIPLES_20260904.md](paper-2027/research/attention-aware-retrofit/theory/CONSTRAINED_GENERATION_FIRST_PRINCIPLES_20260904.md) | Understand or improve the two core problems |
+| [paper-2027/research/attention-aware-retrofit/analysis/PRO_REPORT_AUDIT_RECONCILIATION_20260905.md](paper-2027/research/attention-aware-retrofit/analysis/PRO_REPORT_AUDIT_RECONCILIATION_20260905.md) | Review the latest Pro audit and revised experiment order |
+| [paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.md](paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.md) | Does allocation matter at fixed support during training? |
+| [paper-2027/research/foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md](paper-2027/research/foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md) | What does full sin/cos geometry prove? |
+| [paper-2027/research/foundations/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md](paper-2027/research/foundations/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md) | How are support and allocation separated? |
+| [paper-2027/research/foundations/ROPE_OPTIMALITY_IDENTIFIABILITY_AND_CONDITIONAL_EQUATIONS_20260903.md](paper-2027/research/foundations/ROPE_OPTIMALITY_IDENTIFIABILITY_AND_CONDITIONAL_EQUATIONS_20260903.md) | Can RoPE/attention structure alone determine optimal `z`, a frequency system, or mature-checkpoint movement? |
+| [paper-2027/research/evidence/VIDEO_DIT_HEAD_TO_HEAD_SEED42_RESULT_20260826.md](paper-2027/research/evidence/VIDEO_DIT_HEAD_TO_HEAD_SEED42_RESULT_20260826.md) | What breadth supports the paper? |
+| [paper-2027/research/attention-aware-retrofit/results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md](paper-2027/research/attention-aware-retrofit/results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md) | What is the strongest practical no-update result? |
+| [paper-2027/research/attention-aware-retrofit/results/causal-mechanism/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md](paper-2027/research/attention-aware-retrofit/results/causal-mechanism/FRESH_FINEWEB_S4_GENERALIZATION_RESULT_20260824.md) | Does it persist on fresh natural text? |
+| [paper-2027/research/attention-aware-retrofit/results/coupling-transfer/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md](paper-2027/research/attention-aware-retrofit/results/coupling-transfer/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md) | What is the strongest tracked static-table result? |
+| [paper-2027/research/attention-aware-retrofit/theory/SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md](paper-2027/research/attention-aware-retrofit/theory/SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md) | Under one static table and one path, which completed form is retained, and what same-table LoRA follows? |
+| [paper-2027/research/attention-aware-retrofit/results/adaptation-coadaptation/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md](paper-2027/research/attention-aware-retrofit/results/adaptation-coadaptation/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md) | Under one static table and one path, which completed form is retained, and what same-table LoRA follows? |
+| [paper-2027/research/attention-aware-retrofit/results/coupling-transfer/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md](paper-2027/research/attention-aware-retrofit/results/coupling-transfer/K32_PAIRED_CROSSING_CONFIRMATION_RESULT_20260901.md) | What is supported across K32/K128? |
+| [paper-2027/research/attention-aware-retrofit/results/coupling-transfer/K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901.md](paper-2027/research/attention-aware-retrofit/results/coupling-transfer/K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901.md) | What is supported across K32/K128? |
+| [paper-2027/research/attention-aware-retrofit/results/coupling-transfer/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md](paper-2027/research/attention-aware-retrofit/results/coupling-transfer/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md) | What is supported across K32/K128? |
+| [paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md](paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md) | Does long signal convert to natural QA? |
+| [paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md](paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md) | Do headwise clocks solve the joint objective? |
+| [paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md](paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md) | Does calibration-frozen attention-displacement Selective-31 beat layer-matched random/reverse masks? |
+| [paper-2027/research/attention-aware-retrofit/theory/NATIVE_ONLY_MOVEMENT_PROFILE_IDENTIFIABILITY_20260903.md](paper-2027/research/attention-aware-retrofit/theory/NATIVE_ONLY_MOVEMENT_PROFILE_IDENTIFIABILITY_20260903.md) | Can Native checkpoint structure uniquely determine an ordered movement profile? |
+| [paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md](paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/NATIVE_ISOTONIC_PROFILE_RESULT_20260903.md) | Can Native checkpoint structure uniquely determine an ordered movement profile? |
+| [paper-2027/research/attention-aware-retrofit/theory/STATIC_NATIVE_NO_HARM_AND_PREFIX_HANDOFF_20260903.md](paper-2027/research/attention-aware-retrofit/theory/STATIC_NATIVE_NO_HARM_AND_PREFIX_HANDOFF_20260903.md) | Can one non-Native static table guarantee exact Native short behaviour and change long geometry? |
+| [paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md](paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/SESSION_BINARY_S4_REAL_CONTEXT_RESULT_20260823.md) | Can one non-Native static table guarantee exact Native short behaviour and change long geometry? |
+| [paper-2027/research/attention-aware-retrofit/theory/LOCAL_FUNCTIONAL_COMPATIBILITY_AND_GAUGE_AUDIT_20260903.md](paper-2027/research/attention-aware-retrofit/theory/LOCAL_FUNCTIONAL_COMPATIBILITY_AND_GAUGE_AUDIT_20260903.md) | Is the Selective-31 calibration score a universal functional sensitivity, and does joint Q/K--frequency relabeling invalidate the ordered-coupling results? |
+| [paper-2027/research/attention-aware-retrofit/results/operator-analysis/SCALE_ORBIT_BOUNDARY_VALIDATION_RESULT_20260904.md](paper-2027/research/attention-aware-retrofit/results/operator-analysis/SCALE_ORBIT_BOUNDARY_VALIDATION_RESULT_20260904.md) | Do finite scale-orbit boundary and Fourier-rank quantities predict mature-model behaviour? |
+| [paper-2027/research/attention-aware-retrofit/analysis/RETROFIT_AXIS_FALSIFICATION_20260822.md](paper-2027/research/attention-aware-retrofit/analysis/RETROFIT_AXIS_FALSIFICATION_20260822.md) | Do finite scale-orbit boundary and Fourier-rank quantities predict mature-model behaviour? |
+| [paper-2027/research/attention-aware-retrofit/theory/FINITE_SCALE_COVARIANCE_PROOF_NOVELTY_AND_TIGHTNESS_AUDIT_20260904.md](paper-2027/research/attention-aware-retrofit/theory/FINITE_SCALE_COVARIANCE_PROOF_NOVELTY_AND_TIGHTNESS_AUDIT_20260904.md) | What survives a proof, novelty, and tightness audit of the supplied finite scale-covariance derivation? |
+| [paper-2027/research/attention-aware-retrofit/results/operator-analysis/SCALE_CONJUGACY_TIGHTNESS_RESULT_20260904.md](paper-2027/research/attention-aware-retrofit/results/operator-analysis/SCALE_CONJUGACY_TIGHTNESS_RESULT_20260904.md) | What survives a proof, novelty, and tightness audit of the supplied finite scale-covariance derivation? |
+| [paper-2027/research/attention-aware-retrofit/analysis/SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904.md](paper-2027/research/attention-aware-retrofit/analysis/SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904.md) | Where is the earlier single-table synthesis preserved? |
+| [paper-2027/research/attention-aware-retrofit/theory/FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md](paper-2027/research/attention-aware-retrofit/theory/FIRST_PRINCIPLES_RETROFIT_THEORY_MEMO_20260902.md) | What can the 9/2 first-principles memo support? |
+| [paper-2027/research/attention-aware-retrofit/results/coupling-transfer/REFERENCE_CORRECTED_K128_RESULT_20260901.md](paper-2027/research/attention-aware-retrofit/results/coupling-transfer/REFERENCE_CORRECTED_K128_RESULT_20260901.md) | old Gemma 16K zero with 8K reference |
+| [paper-2027/research/audits/KAPPA_ATTENTION_MEASURE_AUDIT_20260820.md](paper-2027/research/audits/KAPPA_ATTENTION_MEASURE_AUDIT_20260820.md) | attention-Fisher `kappa_att` |
+| [paper-2027/research/audits/LEROPE_PROFILE_ORACLE_AUDIT_20260820.md](paper-2027/research/audits/LEROPE_PROFILE_ORACLE_AUDIT_20260820.md) | LeRoPE `w^(1/3)` oracle |
+| [paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md](paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/DIRECT_Z_FIXED_SUPPORT_PILOT_RESULT_20260824.md) | direct-`z` two-document calibration |
+| [paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md](paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/ZERO_PARAMETER_SINGLE_TABLE_RESULT_20260824.md) | two analytic Native-support tables |
+| [paper-2027/research/attention-aware-retrofit/analysis/ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md](paper-2027/research/attention-aware-retrofit/analysis/ZERO_TRAINING_MECHANISM_AND_CEILING_20260826.md) | continuous-boundary-slope operator |
+| [paper-2027/research/attention-aware-retrofit/results/PHASE_ISOTROPY_50M_M4_RESULT_20260824.md](paper-2027/research/attention-aware-retrofit/results/PHASE_ISOTROPY_50M_M4_RESULT_20260824.md) | phase-isotropy / pair-volume / min-eigenvalue |
+| [paper-2027/research/attention-aware-retrofit/results/PHASE_ALLOCATION_M4_EXTENDED_RESULT_20260824.md](paper-2027/research/attention-aware-retrofit/results/PHASE_ALLOCATION_M4_EXTENDED_RESULT_20260824.md) | phase-isotropy / pair-volume / min-eigenvalue |
+| [paper-2027/research/attention-aware-retrofit/results/SINGLE_TABLE_FFN_SERVER_EXECUTION_20260904.md](paper-2027/research/attention-aware-retrofit/results/SINGLE_TABLE_FFN_SERVER_EXECUTION_20260904.md) | execution report |
+
+## 4. Protocols, code and checks
+
+| File | Locate when checking |
+| --- | --- |
+| [paper-2027/research/attention-aware-retrofit/preflights/CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md](paper-2027/research/attention-aware-retrofit/preflights/CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md) | Start the prepared N_compact / Qwen Z/Y round |
+| [scripts/experiments/matched_transfer_round.py](scripts/experiments/matched_transfer_round.py) | Earlier N_compact/Z/Y planner; not an implementation of new E0–E5 |
+| [scripts/analysis/audit_generation_transitions.py](scripts/analysis/audit_generation_transitions.py) | Start the prepared N_compact / Qwen Z/Y round |
+| [scripts/train/run_native_constrained_transfer.sh](scripts/train/run_native_constrained_transfer.sh) | Review FFN learning/forgetting and choose the next task from results |
+| [scripts/analysis/review_native_constrained_transfer.py](scripts/analysis/review_native_constrained_transfer.py) | Receipt review and protocol-specific stopping decisions |
+| [tests/test_native_constrained_transfer.py](tests/test_native_constrained_transfer.py) | Review FFN learning/forgetting and choose the next task from results |
+| [scripts/experiments/single_table_generation.py](scripts/experiments/single_table_generation.py) | Implement or audit the new assay |
+| [scripts/analysis/export_single_table_controls.py](scripts/analysis/export_single_table_controls.py) | Implement or audit the new assay |
+| [scripts/train/train_single_table_native_constrained.py](scripts/train/train_single_table_native_constrained.py) | Registered Native-constrained training apparatus |
+| [scripts/lib/rope/generation_contract.py](scripts/lib/rope/generation_contract.py) | Full-output/EOS, retention and paired uncertainty code |
+| [tests/test_single_table_generation.py](tests/test_single_table_generation.py) | Implement or audit the new assay |
+| [paper-2027/research/attention-aware-retrofit/preflights/operator-analysis/SCALE_ORBIT_TRANSPORT_RESIDUAL_PREFLIGHT_20260904.md](paper-2027/research/attention-aware-retrofit/preflights/operator-analysis/SCALE_ORBIT_TRANSPORT_RESIDUAL_PREFLIGHT_20260904.md) | Do finite scale-orbit boundary and Fourier-rank quantities predict mature-model behaviour? |
+| [paper-2027/research/attention-aware-retrofit/preflights/operator-analysis/SCALE_CONJUGACY_TIGHTNESS_PREFLIGHT_20260904.md](paper-2027/research/attention-aware-retrofit/preflights/operator-analysis/SCALE_CONJUGACY_TIGHTNESS_PREFLIGHT_20260904.md) | What survives a proof, novelty, and tightness audit of the supplied finite scale-covariance derivation? |
+| [scripts/lib/rope/](scripts/lib/rope/) | Reusable RoPE code |
+| [scripts/analysis/third_axis_ceiling.py](scripts/analysis/third_axis_ceiling.py) | Static rank diagnostic |
+| [scripts/eval/](scripts/eval/) | Current evaluation utilities |
+| [scripts/experiments/source_only_generation_guard.py](scripts/experiments/source_only_generation_guard.py) | source-only control guard |
+| [scripts/experiments/native_window_guard.py](scripts/experiments/native_window_guard.py) | Native-window guard |
+| [scripts/experiments/niah_retention_canary.py](scripts/experiments/niah_retention_canary.py) | NIAH retention canary |
+| [scripts/experiments/simple_capability_canary.py](scripts/experiments/simple_capability_canary.py) | simple capability canary |
+| [scripts/lib/rope/official_yarn.py](scripts/lib/rope/official_yarn.py) | Pinned official-equation operator and non-native-grid generalization boundary |
+| [tests/test_official_yarn_parity.py](tests/test_official_yarn_parity.py) | Operator parity checks; work-machine dependencies |
+| [tests/test_matched_transfer_round.py](tests/test_matched_transfer_round.py) | Prepared-round contracts; imports PyTorch through package initialization |
+| [scripts/package_supplement.py](scripts/package_supplement.py) | Curated ICLR packager; allowlist includes archive-only inputs requiring release reconciliation |
+| [scripts/README.md](scripts/README.md) | Implementation directory roles and supporting entrypoints |
+
+## 5. Supporting catalogues and history
+
+| File | Locate when checking |
+| --- | --- |
+| [docs/overview/SERVER_STORAGE_CLEANUP_20260907.md](docs/overview/SERVER_STORAGE_CLEANUP_20260907.md) | Completed no-GPU storage cleanup, retained assets, local evidence migration and the pre-existing seed42 checkpoint gap |
+| [docs/overview/CURRENT_RESEARCH_COMPUTE_AND_MODEL_ASSETS_20260904.md](docs/overview/CURRENT_RESEARCH_COMPUTE_AND_MODEL_ASSETS_20260904.md) | Identify measured compute and available model assets |
+| [paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.json](paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.json) | Does allocation matter at fixed support during training? |
+| [paper-2027/sections/03_theory.tex](paper-2027/sections/03_theory.tex) | What is the bounded EVQ-Cosh theorem? |
+| [paper-2027/appendix/a1_proofs.tex](paper-2027/appendix/a1_proofs.tex) | What is the bounded EVQ-Cosh theorem? |
+| [docs/exp/2026-03/2026-03-06_phase15_750m_2k_to_4k_continue_results.md](docs/exp/2026-03/2026-03-06_phase15_750m_2k_to_4k_continue_results.md) | What breadth supports the paper? |
+| [paper-2027/research/history/TIMELINE.md](paper-2027/research/history/TIMELINE.md) | Why the question changed |
+| [paper-2027/research/README.md](paper-2027/research/README.md) | Research-layer placement and local catalogue entrypoints |
+| [paper-2027/research/attention-aware-retrofit/results/README.md](paper-2027/research/attention-aware-retrofit/results/README.md) | Mature-result catalogue |
+| [paper-2027/research/attention-aware-retrofit/theory/README.md](paper-2027/research/attention-aware-retrofit/theory/README.md) | Mature theory status |
+| [docs/exp/](docs/exp/) | Historical reports |
+| [docs/overview/TERMS_AND_PROTOCOLS.md](docs/overview/TERMS_AND_PROTOCOLS.md) | Early historical terms/metrics; do not apply globally to current assays |
+| [docs/overview/METHODOLOGY.md](docs/overview/METHODOLOGY.md) | Early MHA/core-text methodology; protocol-specific historical reference |
+
+## 6. Archive-only sources
+
+| Git locator | Purpose / historical question |
+| --- | --- |
+| `main_0726:rebuttal/rebuttal_0723/theory_results/M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md` | Does the effect persist across exact-range configurations? |
+| `main_0726:rebuttal/rebuttal_0723/theory_results/OLMO2_POSTHOC_FREQUENCY_TRANSPLANT_OBSTRUCTION_20260726.md` | What is the exact frozen transplant boundary? |
+| `main_0726:rebuttal/rebuttal_0723/theory_results/OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729.md` | What supports the matched-adaptation route? |
+| `main_0726:rebuttal/rebuttal_0723/theory_results/EVQ_8B_ADAPTATION_EVIDENCE_20260724.md` | What supports the matched-adaptation route? |
+| `main_0726:data/curated/table18_mla_3seed_aggregate.json` | What breadth supports the paper? |
+| `main_0726:rebuttal/rebuttal_0723/theory_results/OLMO2_1B_RELEASED_ROPE_BASELINE_20260725.md` | What breadth supports the paper? |
+| `main_0726:rebuttal/rebuttal_0723/README.md` | July review/evidence |
+
+## 7. Referenced inputs not yet matched
+
+| External reference | Local verification status |
+| --- | --- |
+| Audit P1 manuscript attachment | Current main.pdf has not been byte-matched to the supplied-review attachment |
+| Audit P2 synthesis and P3/P4 attachments | Not located under their exact names in this checkout/adjacent Downloads lookup; do not alias them to another report |
+| `rope_codex_revision/verify_theory.py`, `select_allocation.py`, `verification_results.json` | Referenced external package not found in the searched locations; CPU checks not reproduced |
+| Exact trained weights, raw execution receipts and current server processes | Require work-machine verification; local code/manifests are only leads |
+
+Prior owner summaries, correction labels and scoped negative interpretations
+were moved to [research reference — prior routing annotations](paper-2027/research/RESEARCH_PROTOCOL_REFERENCE.md#prior-routing-annotations).
+Their raw-backed owners retain authority; the index itself makes no new verdict.

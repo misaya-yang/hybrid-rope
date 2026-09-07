@@ -1,14 +1,20 @@
 # External-model review archive
 
-> **Frozen audit archive. Current use: none.** These external-model snapshots are
-> retained only for historical provenance. Every `VERIFIED`, `DEFECT`,
-> `mandatory`, `decision`, and `priority` label under this directory is
-> bundle-local: it is not project evidence, an instruction, a current priority,
-> or experiment/edit authorization. Re-establish any point from the current
-> manuscript and its canonical owner before use.
+External reviews are source material, not validated research owners. Their
+`VERIFIED`, `mandatory`, `decision` or `priority` labels do not grant project
+scientific authority or execution permission. Recheck claims against source,
+code and raw receipts. Only author-adopted planning belongs in the current brief.
+
+The September 6 cross-audit and September 7 scale-transport proposal are inputs
+to the author-requested reconstruction; earlier bundles remain historical.
+Current scope follows the author amendments in [REVISION_BRIEF](../../REVISION_BRIEF.md)
+and the [current research plan](../../../docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md),
+not another experiment's v5 or an external instruction.
 
 | Review bundle | Scope | Current use |
 | --- | --- | --- |
+| [Scale transport, 2026-09-07](ROPE_SCALE_TRANSPORT_METHOD_AND_CODEX_20260907.md) | Exact supplied method proposal; source SHA and independent checks in the [review](../../../docs/research/ROPE_SCALE_TRANSPORT_REVIEW_20260907.md) | Conditional candidate input; no new GPU authorization, opponent fine-tuning not adopted; supplied-code tests not reproduced |
+| [Cross-audit, 2026-09-06](ROPE_ICLR2027_CROSS_AUDIT_20260906.md) | Theory, strong-baseline comparisons and proposed E0–E5 plan; exact source hash recorded in REVISION_BRIEF | Active planning input; claims and reported CPU/model results not revalidated |
 | [`opus-20260823/README.md`](opus-20260823/README.md) | Independent recomputation, theory reframing, experiment/manuscript plans, and defect list for the zero-training retrofit line | None — frozen audit provenance only |
 | [`gpt56-sol-pro-20260825/README.md`](gpt56-sol-pro-20260825/README.md) | Long-form research proposal on usage-conditioned phase codes, target-free risk, and mature-checkpoint coordinate migration | None — frozen audit provenance only |
 | [`qwen-panel-20260826/README.md`](qwen-panel-20260826/README.md) | Simulated five-seat peer review (full mode) of the ICLR 2027 submission, run 2026-08-26/27: 5 seat reports + editorial decision (Major Revision) with DA-CRITICAL adjudication and non-ranking revision roadmap, plus a 2026-08-27 post-review delta note assessing the Codex exposition passes against the roadmap | None — frozen audit provenance only |

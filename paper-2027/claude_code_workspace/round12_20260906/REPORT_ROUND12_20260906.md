@@ -1,5 +1,7 @@
 # Round 12 实验报告（2026-09-05 ~ 09-06，用户指令中止于 09-06）
 
+> **Review status, 2026-09-06:** the new cross-audit questions Y2 fidelity and several score/causal interpretations below. Local Y2 and pinned-equation code use different ramp/amplitude conventions; executed tensor/scorer parity and raw receipts still require reconciliation. Preserve these historical numbers as reported; do not treat the faithful-baseline/winner/ceiling labels as newly validated. The recovery list is historical; [current REVISION_BRIEF](../../REVISION_BRIEF.md) defines current planning and grants no restart authorization.
+
 机器：AutoDL westc 4080 SUPER 32GB。工作目录 `/root/autodl-tmp/claude_round12_20260906`（B12）。
 成功标准（用户定义，两次修正）：在各模型**自己的** 2×/4× 上赢未微调 YaRN（忠实版 = Y2 臂）。
 OLMo（4K 训练）→ 8K/16K；Qwen2.5（原生 32K）→ 64K/128K。flash attention 开。
