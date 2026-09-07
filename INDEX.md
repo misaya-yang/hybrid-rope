@@ -17,7 +17,7 @@ inspect them with `git show main_0726:<path>`.
 | [AGENTS.md](AGENTS.md) | Core constraints, plan-before-compute rules and checks |
 | [README.md](README.md) | Project question, reconstruction context, intended outcomes and layout |
 | [paper-2027/HANDOFF.md](paper-2027/HANDOFF.md) | Current local Git/PDF/authorization state; source-reported remote state is labelled |
-| [Research failure review](docs/research/ROPE_RESEARCH_FAILURE_REVIEW_20260907.md) | Evidence-backed diagnosis of the guess/fail loop and next-day research objective; no new GPU results |
+| [Research failure review](docs/research/ROPE_RESEARCH_FAILURE_REVIEW_20260907.md) | Diagnosis of the guess/fail loop; added phase, spacing and low-frequency coupling derivations around MrPro; no new GPU results |
 | [Final Pro decision request](docs/research/ROPE_PRO_DECISION_REQUEST_20260907.md) | Current self-contained prompt with actual failures; request one implementable method and a discriminating low-cost experiment |
 | [Unified frequency research plan](docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md) | Method-design history and current direction; old five/eight-table suggestions are superseded by own-method-first execution; results and next action have separate owners |
 | [Scale-transport proposal review](docs/research/ROPE_SCALE_TRANSPORT_REVIEW_20260907.md) | External-proposal review at its original scope; subsequent implementation/results routed to pilot owner |
