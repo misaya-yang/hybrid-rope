@@ -58,10 +58,11 @@ def main():
     if tensor_sha(native) != '138c99b109d7affbfba059e435670918fe4531bce4709b6e86f3f22f7ef80f6e':
         raise ValueError('original Qwen3B Native clock')
     generation = GenerationConfig(do_sample=False, num_beams=1, use_cache=True,
-        eos_token_id=tokenizer.eos_token_id,
+        eos_token_id=model.generation_config.eos_token_id,
         pad_token_id=tokenizer.pad_token_id if tokenizer.pad_token_id is not None else tokenizer.eos_token_id)
+    eos_ids = {generation.eos_token_id} if isinstance(generation.eos_token_id, int) else set(generation.eos_token_id)
     write(out/'contract.json', dict(plan=plan, plan_sha256=digest(args.plan), hardware=hardware,
-        model_revision=ready['revision'], table=table,
+        model_revision=ready['revision'], table=table, native_eos_token_ids=sorted(eos_ids),
         endpoints='non-text full decoded string after removing only terminal EOS and outer whitespace, with all other special tokens retained; text all-token causal NLL separately',
         limits='Historical development validation pool. Source groups are uncertainty units; no composite score mixing NLL and generated accuracy.'))
     records, adapter = [], None
@@ -96,8 +97,9 @@ def main():
                     result = model.generate(ids, generation_config=generation,
                         max_new_tokens=row['generation_budget'], logits_to_keep=1)
                     tokens = result[0, ids.shape[1]:].tolist()
-                    ended_eos = bool(tokens and tokens[-1] == tokenizer.eos_token_id)
-                    text = tokenizer.decode(tokens[:-1] if ended_eos else tokens, skip_special_tokens=False)
+                    ended_eos = bool(tokens and tokens[-1] in eos_ids)
+                    text = tokenizer.decode(tokens[:-1] if ended_eos else tokens,
+                        skip_special_tokens=False, clean_up_tokenization_spaces=False)
                     scored = score(dict(row, family='native_'+row['group']), text, ended_eos)
                     record.update(accepted_full_answers=row['accepted_full_answers'], generated_ids=tokens,
                         output_text=text, budget=row['generation_budget'],

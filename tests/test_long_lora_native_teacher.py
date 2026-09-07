@@ -13,9 +13,9 @@ import torch.nn.functional as F
 from peft import LoraConfig, get_peft_model
 from transformers import GenerationConfig, Qwen2Config, Qwen2ForCausalLM
 
-from scripts.experiments.cross_audit.training import causal_loss, native_kl
+from scripts.experiments.cross_audit.training import causal_loss
 from scripts.experiments.scale_transport.carrier_ruler_run import digest, install_signed, load_frozen_adapter
-from scripts.experiments.scale_transport.long_lora import MODULES, original_teacher
+from scripts.experiments.scale_transport.long_lora import MODULES, native_teacher_kl, original_teacher
 
 
 def setup_pair(rank=4):
@@ -63,8 +63,9 @@ def test_text_teacher_ignores_adapter_and_restores_student_clock():
     before = original_probabilities(student, ids, pos)
     expected = original_probabilities(original, ids, pos)
     assert not torch.allclose(before, expected, atol=1e-7, rtol=1e-6)
-    replay_ids, replay_pos, probabilities, trace = original_teacher(student, wrapped,
+    replay_ids, replay_pos, teacher_logits, trace = original_teacher(student, wrapped,
         SimpleNamespace(eos_token_id=2), row, native, table, generation)
+    probabilities = teacher_logits.softmax(-1)
     torch.testing.assert_close(probabilities, expected, atol=1e-7, rtol=1e-6)
     assert not probabilities.requires_grad
     np.testing.assert_array_equal(student.model.rotary_emb.inv_freq.numpy(), table['values_float32'])
@@ -72,14 +73,15 @@ def test_text_teacher_ignores_adapter_and_restores_student_clock():
     after = original_probabilities(student, ids, pos)
     torch.testing.assert_close(after, before, atol=1e-7, rtol=1e-6)
     ce, count = causal_loss(student, ids, ids, chunk_size=2)
-    kl, positions = native_kl(student, replay_ids, replay_pos, probabilities)
+    kl, positions = native_teacher_kl(student, replay_ids, replay_pos, teacher_logits)
     (ce+kl).backward()
     assert count == ids.shape[1]-1 and positions == 3
     assert any(p.grad is not None and torch.isfinite(p.grad).all() and torch.count_nonzero(p.grad)
                for name, p in student.named_parameters() if 'lora_' in name)
 
 
-def test_generation_teacher_uses_original_greedy_prefixes():
+@pytest.mark.parametrize('use_alternative_eos', [False, True])
+def test_generation_teacher_uses_original_greedy_prefixes(use_alternative_eos):
     original, student, wrapped, native, table, generation = setup_pair()
     row = {'id': 'instruction', 'source_id': 'source1', 'group': 'instruction',
         'prompt_ids': [1, 4, 6, 9], 'generation_budget': 4}
@@ -87,13 +89,22 @@ def test_generation_teacher_uses_original_greedy_prefixes():
         result = original.generate(torch.tensor([row['prompt_ids']]), generation_config=generation,
             max_new_tokens=4, logits_to_keep=1)
     expected_tokens = result[0, len(row['prompt_ids']):].tolist()
-    ids, pos, probabilities, trace = original_teacher(student, wrapped,
-        SimpleNamespace(eos_token_id=2), row, native, table, generation)
+    tokenizer = SimpleNamespace(eos_token_id=2)
+    if use_alternative_eos:
+        # The first genuine greedy token becomes an additional valid stop token.
+        # A distinct tokenizer EOS makes using only that singleton observable.
+        tokenizer.eos_token_id = (expected_tokens[0]+1) % 32
+        generation.eos_token_id = [tokenizer.eos_token_id, expected_tokens[0]]
+        expected_tokens = expected_tokens[:1]
+    ids, pos, teacher_logits, trace = original_teacher(student, wrapped,
+        tokenizer, row, native, table, generation)
     assert trace['generated_ids'] == expected_tokens
     assert ids[0].tolist() == row['prompt_ids']+expected_tokens[:-1]
     assert pos[-1] == ids.shape[1]-1
-    torch.testing.assert_close(probabilities, original_probabilities(original, ids, pos), atol=1e-7, rtol=1e-6)
+    torch.testing.assert_close(teacher_logits.softmax(-1), original_probabilities(original, ids, pos), atol=1e-7, rtol=1e-6)
     assert student.training
+    if use_alternative_eos:
+        assert trace['eos'] and len(trace['generated_ids']) == 1
 
 
 def test_frozen_adapter_roundtrip_preserves_unmerged_bf16_update(tmp_path):

@@ -37,9 +37,10 @@
 
 本方已有两种必须区分的结果：
 [OLMo Q/K-only](../../paper-2027/research/attention-aware-retrofit/results/adaptation-coadaptation/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md)
-改善NLL而不改善生成；[Qwen1.5B全线性LoRA](../../paper-2027/research/attention-aware-retrofit/results/SINGLE_TABLE_FFN_SERVER_EXECUTION_20260904.md)
+改善NLL而不改善生成；[Qwen1.5B原生表N128全线性LoRA](../../paper-2027/research/attention-aware-retrofit/results/SINGLE_TABLE_FFN_SERVER_EXECUTION_20260904.md)
 把受控单证据16K远端从3/32提高到24/32，但分项遗忘仍存在。后者确实有能力
-学习证据，不能因前者失败而排除LoRA；也不能把16K结果称作超过Qwen Native。
+学习证据，不能因前者失败而排除LoRA；也不能把16K结果称作超过Qwen Native，
+或把原生表N128的成功改称为旧p2/当前去载波表的适配成功。
 
 后续具体训练前需要的是可执行的物理64K完整更新成本、实际不同文本/答案token
 总量、固定最终checkpoint，以及同部署表的前后生成和短能力保留。复用分块LM
@@ -203,6 +204,46 @@ YaRN，压缩层使用压缩路径的base与YaRN参数。不能给所有路径�
 展开回token，和V4直接让core使用压缩KV并不等价。下一项推导应针对其中一个
 明确算子，避免从全attention下的频率几何直接跳到稀疏系统能力结论。
 
+### V4共享KV：频率还改变读出的value（固定选择下的算子恒等式）
+
+已进一步核对同revision的
+[kernel.py](https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro/blob/b5968e9190ef611bbf34a7229255be88a0e937c1/inference/kernel.py)，
+SHA `59b325083d7103975cba025bd0d60ea343bb82d8fff53088afb7c04bd380c0c2`。
+同一KV既用于QK得分，也用于加权输出；learned sink仅加入softmax分母，没有
+对应value。随后`model.py`在输出的RoPE维度施加query位置的逆旋转。
+
+固定已选集合S、归一化后的未旋转q和KV特征k，忽略量化和中间状态变化；令
+`D_omega(p)=I_NoPE ⊕ blockdiag R(omega_j p)`，`delta_b=p_q-p_b`。则
+
+`u_b=D_omega(-delta_b)k_b`，
+`a_b=exp(alpha q^T u_b)/(exp(beta_sink)+sum_{c in S} exp(alpha q^T u_c))`，
+`y=sum_{b in S} a_b u_b`。
+
+这是绝对位置的Q/K旋转、共享KV加权、再逆query旋转的精确改写。相对某个
+频率方向求导，`du_b`在每个旋转平面为`-delta_b domega_j J u_b`，NoPE部分为0；
+`dz_b=alpha q^T du_b`，`mu=sum a_b dz_b`（sink导数为0），因此
+
+`dy = sum a_b (dz_b-mu)u_b + sum a_b du_b`。
+
+第二项是value运输项。即使只有一个key且无sink，attention恒为1、第一项严格
+为0，第二项仍可非零。因此已有Qwen的固定V共享频率Jacobian不能直接用于V4，
+否则会漏掉完整输出变化。实际多head输出还需先拼接并通过输出投影，不能先
+平方每个head再相加替代其抵消。这没有提供频率更新方向，更没有重启行为梯度优化。
+
+同一固定算子还满足`y=grad_q Phi(q)`，其中
+`Phi=log(exp(beta_sink)+sum exp(alpha q^T u_b))/alpha`；其query坐标Jacobian是
+`alpha Cov(u)`，把sink当零向量即可。log-sum-exp与共享模式attention的关系已有
+[现代Hopfield网络研究](https://arxiv.org/html/2008.02217v3#S2)，不作为本方新理论。
+这里仅将它对应到V4的实际相对旋转算子；结论位于query归一化之后、输出投影
+之前，不是整个神经网络的单调性或稳定性证明。
+
+[独立NumPy核验](../../scripts/analysis/check_shared_kv_position_identity.py)比较了
+绝对旋转实现和相对形式（最大误差4.67e-15）、整体位置平移（9.00e-14）、频率
+方向有限差分（1.54e-10）、输出投影后导数（1.81e-10）及query Hessian-vector
+（2.10e-11）。单key例中routing导数为0、value运输范数1.92。均为小数组代数验算，
+没有下载V4权重、执行其BF16/量化kernel或模型实验。Top-k离散变化、压缩/归一化
+与跨层特征漂移仍未由此处理；尚无本方稀疏位置编码改进结论。
+
 
 LoRA文献的另一项限定：[LongLoRA Table2与§3.3](https://arxiv.org/html/2309.12307v2)
 发现扩大attention-only LoRA的rank并不能追上全参，开放embedding与norm后
@@ -262,11 +303,24 @@ YaRN论文，不将这项小预算实验升级为整个LoRA类别的上限；暂
 适配器推理采用独立BF16低秩权重，不并入BF16基座，以免合并时将微小更新舍去；
 这与训练AMP中的BF16 GEMM对应，但仍需真实128K运行核验内存及数值。加载器
 检查原模型revision、最终128步、频率表、adapter配置/权重/部署文件SHA。
-[CPU集成检查](../../tests/test_long_lora_native_teacher.py)已有3项通过：独立原始
-teacher概率、真实greedy前缀、保存/重载后BF16低秩更新一致性。最初一次收集失败
+[CPU集成检查](../../tests/test_long_lora_native_teacher.py)和既有稳定KL检查共6项通过
+（5.43秒）：独立原始teacher概率、真实greedy前缀及额外合法EOS、保存/重载后的
+BF16低秩更新、宽词表零梯度与float64梯度。最初一次收集失败
 来自独立代码根漏拷贝既有`cross_audit/training.py`，补齐依赖后通过；不是GPU实验。
 
 [Native评测器](../../scripts/experiments/scale_transport/native_lora_eval.py)预备在同一
 128行验证集比较原始Native、本表未训练父模型和固定最终adapter。非文本只删除
 末尾EOS后解码，保留其他特殊token，检验完整字符串与EOS；文本单独报告全部
 下一token位置NLL。该评测器仅通过CPU导入，尚未运行真实模型，不能称为已验证无遗忘。
+
+继续核对旧有效训练后，复用了既有
+[`stable_teacher_kl`](../../scripts/lib/rope/generation_contract.py)的解析一阶梯度，
+避免旧记录中“教师=学生时仍有舍入梯度、被Adam放大”的已知问题。教师保存完整
+FP32 logits及前缀，概率为其FP32 softmax；数学上的KL及权重不变，没有新增
+优化目标或采用旧模型logits。
+
+原始Qwen3B `generation_config.json`合法EOS为`[151645,151643]`，而tokenizer
+EOS是151645。预备的原始Native teacher和Native评测采用模型的完整EOS集合；
+当前RULER继续其已冻结的151645单EOS规则。已完成前7项350行均无151643，因此
+该配置差异不解释当前未结束现象，也不改变这些已完成行的停止位置或主分数。
+后续长任务adapter比较仍保持当前父模型的冻结decoder，并单独记录其规则。

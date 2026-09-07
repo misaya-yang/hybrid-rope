@@ -19,9 +19,10 @@ import torch.nn.functional as F
 from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig
 
 from scripts.experiments.cross_audit.runtime import cuda_runtime
-from scripts.experiments.cross_audit.training import causal_loss, native_kl
+from scripts.experiments.cross_audit.training import causal_loss
 from scripts.experiments.scale_transport.carrier import tensor_sha
 from scripts.experiments.scale_transport.carrier_ruler_run import digest, install_signed, write
+from scripts.lib.rope.generation_contract import stable_teacher_kl
 
 
 MODULES = ('q_proj', 'k_proj', 'v_proj', 'o_proj', 'gate_proj', 'up_proj', 'down_proj')
@@ -77,17 +78,30 @@ def original_teacher(model, wrapped, tokenizer, row, native, table, generation):
             ids = torch.tensor([source_ids], device=device)
             pos = torch.tensor(positions, device=device)
             hidden = model.model(input_ids=ids, use_cache=False).last_hidden_state[0, pos]
-            probabilities = F.linear(hidden, model.lm_head.weight).float().softmax(-1).detach()
-            if not torch.isfinite(probabilities).all():
-                raise ValueError('nonfinite original teacher distribution')
+            teacher_logits = F.linear(hidden, model.lm_head.weight).float().detach()
+            if not torch.isfinite(teacher_logits).all():
+                raise ValueError('nonfinite original teacher logits')
             trace = dict(id=row['id'], group=row['group'], source_id=row['source_id'],
                 input_ids=source_ids, positions=positions, generated_ids=generated,
                 prefix_scope=prefix_scope,
-                eos=bool(generated and generated[-1] == tokenizer.eos_token_id))
-            return ids, pos, probabilities, trace
+                eos=bool(generated and generated[-1] in (
+                    [generation.eos_token_id] if isinstance(generation.eos_token_id, int)
+                    else generation.eos_token_id)))
+            return ids, pos, teacher_logits, trace
     finally:
         install_signed(model, table['values_float32'], table['gain'])
         model.train()
+
+
+def native_teacher_kl(model, ids, positions, teacher_logits):
+    if positions.numel() == 0 or positions.min() < 0 or positions.max() >= ids.shape[1]:
+        raise ValueError('invalid Native prediction positions')
+    hidden = model.model(input_ids=ids, use_cache=False).last_hidden_state[0, positions]
+    student = F.linear(hidden, model.lm_head.weight).float()
+    teacher = teacher_logits.to(device=student.device, dtype=torch.float32)
+    if teacher.shape != student.shape or not torch.isfinite(teacher).all() or teacher.requires_grad:
+        raise ValueError('fixed full-vocabulary original teacher required')
+    return stable_teacher_kl(student, teacher), len(positions)
 
 
 def main():
@@ -150,7 +164,7 @@ def main():
     parameters = [p for _, p in named]
     optimizer = torch.optim.AdamW(parameters, lr=plan['lr'], betas=(.9, .95), weight_decay=0., fused=True)
     generation = GenerationConfig(do_sample=False, num_beams=1, use_cache=True,
-        eos_token_id=tokenizer.eos_token_id,
+        eos_token_id=model.generation_config.eos_token_id,
         pad_token_id=tokenizer.pad_token_id if tokenizer.pad_token_id is not None else tokenizer.eos_token_id)
     write(out/'contract.json', dict(plan=plan, plan_sha256=digest(args.plan), hardware=hardware,
         model_revision=ready['revision'], table=table, native_tensor_sha256=tensor_sha(native),
@@ -158,6 +172,8 @@ def main():
         book_order=book_order, native_order=[r['id'] for r in native_rows],
         teacher='original Qwen3B weights with adapters disabled and Native clock/gain1; actual greedy prefixes for non-text rows',
         loss='all-64K-token causal CE mean + vocabulary-summed, position-mean Native forward KL, coefficient1',
+        teacher_eos_token_ids=generation.eos_token_id,
+        native_kl_gradient='existing stable_teacher_kl analytic first-order gradient; exactly zero at identical logits',
         checkpoint_policy='fixed final update only; smoke discards its adapter; no generation-based checkpoint selection'))
     records = []
     gradient_totals = {m: 0. for m in MODULES}
@@ -169,12 +185,13 @@ def main():
             optimizer.zero_grad(set_to_none=True)
             torch.cuda.reset_peak_memory_stats()
             teacher_start = time.monotonic()
-            replay_ids, replay_pos, probs, trace = original_teacher(model, wrapped, tokenizer,
+            replay_ids, replay_pos, teacher_logits, trace = original_teacher(model, wrapped, tokenizer,
                 native_rows[step-1], native, table, generation)
             teacher_path = out/'teacher'/f'{step:03d}.npz'
-            np.savez(teacher_path, probabilities=probs.cpu().numpy(),
+            np.savez(teacher_path, logits=teacher_logits.cpu().numpy(),
                 input_ids=np.asarray(trace['input_ids'], dtype=np.int32), positions=np.asarray(trace['positions'], dtype=np.int32))
-            trace.update(probabilities_file=teacher_path.name, probabilities_file_sha256=digest(teacher_path))
+            trace.update(teacher_logits_file=teacher_path.name, teacher_logits_file_sha256=digest(teacher_path),
+                probability_definition='FP32 softmax of saved full-vocabulary teacher logits')
             write(out/'teacher'/f'{step:03d}.json', trace)
             teacher_seconds = time.monotonic()-teacher_start
             ids = torch.tensor(np.asarray(data[book_order[step-1]], dtype=np.int64)[None, :], device='cuda')
@@ -189,12 +206,12 @@ def main():
             ce_value = float(ce.detach())
             del ce, ids
             with torch.autocast('cuda', dtype=torch.bfloat16):
-                kl, kl_count = native_kl(model, replay_ids, replay_pos, probs)
+                kl, kl_count = native_teacher_kl(model, replay_ids, replay_pos, teacher_logits)
             if not torch.isfinite(kl):
                 raise ValueError('nonfinite Native KL')
             kl.backward()
             kl_value = float(kl.detach())
-            del kl, replay_ids, replay_pos, probs
+            del kl, replay_ids, replay_pos, teacher_logits
             if plan['mode'] == 'smoke':
                 for name, parameter in named:
                     if parameter.grad is not None:
