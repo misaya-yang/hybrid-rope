@@ -137,7 +137,7 @@ def main():
                 raise RuntimeError('static signed deployment drift')
             score = metric.string_match_part if row['task'].startswith('qa_') else metric.string_match_all
             record = {key: row[key] for key in ('row_id', 'task', 'length_cap', 'input_tokens', 'references', 'prompt_sha256')}
-            record.update(arm='Carrier', tensor_sha256=table['tensor_sha256'], gain=gain,
+            record.update(arm=plan.get('arm_name', 'Carrier'), tensor_sha256=table['tensor_sha256'], gain=gain,
                 budget=budget, source_budget=row['budget'], generated_ids=generated, output_text=text,
                 actual_total_tokens=len(row['ids'])+len(generated), eos=bool(generated and generated[-1] == eos),
                 official_score=score([official_postprocess(text)], [row['references']]),
@@ -156,7 +156,7 @@ def main():
             'official_score': score([official_postprocess(r['output_text']) for r in selected], [r['references'] for r in selected]),
             'source_budget_score': sum(r['source_budget_score'] for r in selected)/len(selected),
             'eos': sum(r['eos'] for r in selected)})
-    write(out/'manifest.json', {'status': 'COMPLETE', 'experiment_index': 2, 'scope': plan['scope'],
+    write(out/'manifest.json', {'status': 'COMPLETE', 'experiment_index': plan.get('experiment_index', 2), 'scope': plan['scope'],
         'rows': len(records), 'summary': summary, 'elapsed_seconds': time.monotonic()-started,
         'examples_sha256': digest(out/'examples.jsonl'), 'plan_sha256': digest(args.plan)})
 
