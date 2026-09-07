@@ -12,6 +12,60 @@
 
 下文用于解释方法关系和设计选择。涉及“未下载”“未实现”“首轮拟比较”等措辞，均指其形成时的状态；当前实施情况由实际 owner 覆盖，不作为重新下载或重跑基线的理由。
 
+## 作者临睡前的新顺序（2026-09-07，覆盖下方早期执行建议）
+
+1. 先零训练：执行作者提供的[低频去载波](ROPE_CARRIER_REMOVAL_PILOT_20260907.md)，
+   只运行本方固定候选，优先对照MrPro已公布的同模型/任务结果；必要开发比较
+   复用已保存Mr输出。当前20条开发行未显示收益，完整13项运行中，不能提前
+   宣称第一阶段通过。禁止根据这些答案扫描c、改中段或把统计下降当成功。
+2. 零训练得到有效结果后，研究LoRA的增益、真实长序列学习和遗忘；并不永久
+   排除训练。旧Qwen最长物理16K低于其Native32K，小数据结果不能代表64K/128K
+   适应的上限。CPU先分析数据/成本和已有有效训练材料；GPU阶段仍按顺序执行。
+3. 最后研究适配稀疏/压缩/混合注意力的位置编码，允许超出RoPE。先核查已公开
+   架构、可区分的问题及可实现机制；不在这张GPU上默认下载/训练旗舰模型。
+   三合一长期目标仍保留；oral/solid accept是作者目标，不是当前证据或承诺。
+
+### LoRA：核实后的事实与待解决量
+
+[YaRN §4.1–4.2](https://arxiv.org/html/2309.00071v2)对Llama2的正式训练使用
+64K PG19文本、global batch64；先400步，再在更高缩放下200步，后阶段仍是
+64K物理长度、测试到128K。按65536 token/段计算，累计约25.17亿token；
+不能写成“YaRN一定直接训练128K”，也不能与本方128个小语义组等同。
+官方训练为全参数；[MrRoPE §4.1与Appendix E](https://arxiv.org/html/2601.22181v1)
+明确无微调实验，没有公开的MrPro LoRA指标可直接借用。
+
+本方已有两种必须区分的结果：
+[OLMo Q/K-only](../../paper-2027/research/attention-aware-retrofit/results/adaptation-coadaptation/LOG_P2_QK_LORA_GAIN_MATCHED_RESULT_20260904.md)
+改善NLL而不改善生成；[Qwen1.5B全线性LoRA](../../paper-2027/research/attention-aware-retrofit/results/SINGLE_TABLE_FFN_SERVER_EXECUTION_20260904.md)
+把受控单证据16K远端从3/32提高到24/32，但分项遗忘仍存在。后者确实有能力
+学习证据，不能因前者失败而排除LoRA；也不能把16K结果称作超过Qwen Native。
+
+后续具体训练前需要的是可执行的物理64K完整更新成本、实际不同文本/答案token
+总量、固定最终checkpoint，以及同部署表的前后生成和短能力保留。复用分块LM
+head与梯度检查点实现，避免64K×vocabulary激活；不把虚拟位置跨度称为物理
+长上下文。训练目标需要覆盖上下文而不只盯末尾少量答案；Native replay/KL只
+是保留约束，短任务的丢失/获得才是直接功能证据。冻结基座权重不保证功能不忘。
+
+作者允许必要时清理不用且可重新下载的权重；保留当前模型、有效adapter、原始
+证据和回执。存储与运行状态只写HANDOFF，此处不是新队列或自动清理名单。
+
+### 稀疏注意力：先纠正架构前提
+
+“少用全注意力”不等于“不用RoPE”。Qwen3.8-Max公开基座的
+[模型卡](https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B/blob/207bd685a7e3696cfaff12ded7c6a7ea0f88c996/README.md)
+列出每四层三层Gated DeltaNet、一层Gated Attention，后者仍用64维RoPE；
+不能把稀疏MoE专家与稀疏attention混写。
+[Qwen3.8-Next论文](https://arxiv.org/html/2608.30320v1)中的QSA则在长度256K的
+继续训练引入压缩索引器：先池化4个token的key，再以块起点作partial RoPE，
+选中的块展开为真实token交给core attention。这让“索引器如何给一个块编码
+位置”和“core如何给一个token编码位置”成为不同问题。
+
+[DeepSeek-V4官方说明](https://deepseek.com/en/news/v4-preview/)采用token压缩与
+DSA；[GLM-5.3-Flash模型卡](https://huggingface.co/zai-org/GLM-5.3-Flash)描述稀疏与
+线性混合。具体位置算子仍须读其固定版本代码，不能从宣传名称推断已弃RoPE。
+Qwen3.8-Next还报告NoPE预训练相近、后训练后更易不终止：位置方法不能只按
+语言模型损失或几何稳定判胜。本节是已核查入口，尚无本方稀疏编码突破或新实验。
+
 ## 0. 收到尺度搬运提案后的当前修订
 
 已读作者提供的 [Pro 原文](../../paper-2027/research/external-reviews/ROPE_SCALE_TRANSPORT_METHOD_AND_CODEX_20260907.md)。[独立评议](ROPE_SCALE_TRANSPORT_REVIEW_20260907.md)保留其响应尺度估计和干扰诊断，补充可见窗口裁切控制；不采纳对手微调和改回 OLMo 地板终点的安排。公式可提供候选依据，尚无真实模型验证。

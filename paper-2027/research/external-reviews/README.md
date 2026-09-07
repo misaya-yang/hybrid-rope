@@ -13,6 +13,7 @@ not another experiment's v5 or an external instruction.
 
 | Review bundle | Scope | Current use |
 | --- | --- | --- |
+| [Low-frequency carrier removal, 2026-09-07](ROPE_LOWFREQ_CARRIER_METHOD_20260907.md) | Exact author-supplied Pro response, SHA `a1e2be302a31c04fc5653bd5f27680a389d4b8fbcefcfb3b383c70ac00915c8a`; linked sandbox ZIP unavailable locally | Author explicitly selected a zero-training trial; formulas independently checked and implemented under the [carrier protocol](../../../docs/research/ROPE_CARRIER_REMOVAL_PILOT_20260907.md); source-reported code/tests are not verified receipts |
 | [Scale transport, 2026-09-07](ROPE_SCALE_TRANSPORT_METHOD_AND_CODEX_20260907.md) | Exact supplied method proposal; source SHA and independent checks in the [review](../../../docs/research/ROPE_SCALE_TRANSPORT_REVIEW_20260907.md) | Conditional candidate input; no new GPU authorization, opponent fine-tuning not adopted; supplied-code tests not reproduced |
 | [Cross-audit, 2026-09-06](ROPE_ICLR2027_CROSS_AUDIT_20260906.md) | Theory, strong-baseline comparisons and proposed E0–E5 plan; exact source hash recorded in REVISION_BRIEF | Active planning input; claims and reported CPU/model results not revalidated |
 | [`opus-20260823/README.md`](opus-20260823/README.md) | Independent recomputation, theory reframing, experiment/manuscript plans, and defect list for the zero-training retrofit line | None — frozen audit provenance only |
