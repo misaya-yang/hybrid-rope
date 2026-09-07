@@ -102,5 +102,12 @@
     "frequency_clipped_score": 1.0,
     "amplitude_clipped_score": 0.0
   },
-  "limits": "No candidate generation, parameter fitting, model-quality prediction or new GPU evidence"
+  "limits": "No candidate generation, parameter fitting, model-quality prediction or new GPU evidence",
+  "shared_frequency_response_implementation": {
+    "status": "NUMPY_ALGEBRA_CHECKED_NO_MODEL_RUN",
+    "finite_difference_max_abs": 8.436567000558171e-10,
+    "zero_frequency_derivative_norm": 0.61672331258575,
+    "canceling_heads_shared_energy": 0.0,
+    "canceling_heads_individual_energy": 5.098658866711003
+  }
 }
