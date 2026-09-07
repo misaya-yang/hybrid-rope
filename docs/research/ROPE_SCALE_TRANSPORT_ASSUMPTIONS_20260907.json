@@ -1,0 +1,106 @@
+{
+  "status": "EXISTING_RECEIPT_AND_CPU_ALGEBRA_ONLY",
+  "source_proposal_sha256": "92ee9aef2799e77ea36cc97d13eae967a1b94ea975cce41582cdc5a57e296424",
+  "assumptions": "Qwen K64 base1e6 s4 Mr boundaries23/40; analytical Native grid, not runtime tensor identity",
+  "bands": {
+    "middle": {
+      "min_ratio_to_mr": 0.2820503228757594,
+      "max_ratio_to_mr": 0.8572440364260294,
+      "raw_beta_at_one": [
+        27,
+        29,
+        32,
+        33,
+        35,
+        38,
+        39
+      ]
+    },
+    "tail": {
+      "min_ratio_to_mr": 0.9999999259090305,
+      "max_ratio_to_mr": 1.7116466147202782,
+      "raw_beta_at_one": [
+        42,
+        44,
+        45,
+        48,
+        49,
+        54,
+        55,
+        58,
+        59
+      ]
+    }
+  },
+  "equal_adjacent_slots": [
+    [
+      27,
+      28
+    ],
+    [
+      29,
+      30
+    ],
+    [
+      33,
+      34
+    ],
+    [
+      42,
+      43
+    ],
+    [
+      45,
+      46
+    ],
+    [
+      49,
+      50
+    ],
+    [
+      50,
+      51
+    ],
+    [
+      55,
+      56
+    ]
+  ],
+  "distinct_frequencies": 56,
+  "high_middle_log_gap": {
+    "proposal": 1.4803724063432084,
+    "mr": 0.2249280999264917
+  },
+  "same_energy_different_response": [
+    {
+      "phase_derivatives": [
+        2.0,
+        -1.0
+      ],
+      "independent_phase_energy": [
+        4.0,
+        1.0
+      ],
+      "frequency_derivative": 0.0,
+      "finite_difference": 0.0
+    },
+    {
+      "phase_derivatives": [
+        2.0,
+        1.0
+      ],
+      "independent_phase_energy": [
+        4.0,
+        1.0
+      ],
+      "frequency_derivative": 4.0,
+      "finite_difference": 3.9999999999207336
+    }
+  ],
+  "clipping_counterexample": {
+    "distance": 0.0,
+    "frequency_clipped_score": 1.0,
+    "amplitude_clipped_score": 0.0
+  },
+  "limits": "No candidate generation, parameter fitting, model-quality prediction or new GPU evidence"
+}
