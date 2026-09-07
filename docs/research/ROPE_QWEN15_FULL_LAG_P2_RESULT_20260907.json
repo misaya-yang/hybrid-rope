@@ -1,0 +1,336 @@
+{
+  "status": "COMPLETED_PAIRED_LOCAL_64K_RESULT_NOT_FULL_RULER",
+  "date_utc": "2026-09-07",
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+  "candidate_file_sha256": "f5680e2f417db2791cee9c7fe5facaacd6701b0f42d35651be3e5f02f5651ce1",
+  "rows_total": 72,
+  "decoder": {
+    "do_sample": false,
+    "num_beams": 1,
+    "repetition_penalty": 1.1,
+    "eos_token_id": 151645,
+    "source_task_budgets": true
+  },
+  "summary": [
+    {
+      "task": "niah_multikey_2",
+      "rows_per_arm": 8,
+      "scores": {
+        "fulllagp2": 37.5,
+        "mrpro": 12.5,
+        "mrpromatchedgain": 25.0
+      },
+      "paired": {
+        "mrpro": {
+          "win": 3,
+          "tie": 4,
+          "loss": 1,
+          "differences_fraction": [
+            "0",
+            "-1",
+            "0",
+            "1",
+            "0",
+            "1",
+            "1",
+            "0"
+          ]
+        },
+        "mrpromatchedgain": {
+          "win": 3,
+          "tie": 3,
+          "loss": 2,
+          "differences_fraction": [
+            "0",
+            "-1",
+            "-1",
+            "1",
+            "0",
+            "1",
+            "1",
+            "0"
+          ]
+        }
+      },
+      "row_ids": [
+        "niah_multikey_2_65536_137_0",
+        "niah_multikey_2_65536_137_1",
+        "niah_multikey_2_65536_137_2",
+        "niah_multikey_2_65536_137_3",
+        "niah_multikey_2_65536_137_4",
+        "niah_multikey_2_65536_137_5",
+        "niah_multikey_2_65536_137_6",
+        "niah_multikey_2_65536_137_7"
+      ]
+    },
+    {
+      "task": "vt",
+      "rows_per_arm": 8,
+      "scores": {
+        "fulllagp2": 87.5,
+        "mrpro": 82.5,
+        "mrpromatchedgain": 77.5
+      },
+      "paired": {
+        "mrpro": {
+          "win": 1,
+          "tie": 6,
+          "loss": 1,
+          "differences_fraction": [
+            "-1/5",
+            "0",
+            "3/5",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "mrpromatchedgain": {
+          "win": 2,
+          "tie": 6,
+          "loss": 0,
+          "differences_fraction": [
+            "0",
+            "1/5",
+            "3/5",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ]
+        }
+      },
+      "row_ids": [
+        "vt_65536_137_0",
+        "vt_65536_137_1",
+        "vt_65536_137_2",
+        "vt_65536_137_3",
+        "vt_65536_137_4",
+        "vt_65536_137_5",
+        "vt_65536_137_6",
+        "vt_65536_137_7"
+      ]
+    },
+    {
+      "task": "fwe",
+      "rows_per_arm": 8,
+      "scores": {
+        "fulllagp2": 70.83333333333333,
+        "mrpro": 45.833333333333336,
+        "mrpromatchedgain": 45.833333333333336
+      },
+      "paired": {
+        "mrpro": {
+          "win": 5,
+          "tie": 3,
+          "loss": 0,
+          "differences_fraction": [
+            "0",
+            "1/3",
+            "0",
+            "1/3",
+            "1/3",
+            "2/3",
+            "1/3",
+            "0"
+          ]
+        },
+        "mrpromatchedgain": {
+          "win": 5,
+          "tie": 3,
+          "loss": 0,
+          "differences_fraction": [
+            "0",
+            "0",
+            "0",
+            "1/3",
+            "1/3",
+            "2/3",
+            "1/3",
+            "1/3"
+          ]
+        }
+      },
+      "row_ids": [
+        "fwe_65536_137_0",
+        "fwe_65536_137_1",
+        "fwe_65536_137_2",
+        "fwe_65536_137_3",
+        "fwe_65536_137_4",
+        "fwe_65536_137_5",
+        "fwe_65536_137_6",
+        "fwe_65536_137_7"
+      ]
+    }
+  ],
+  "raw_runs": {
+    "qwen15_probe_fulllagp2_01": {
+      "status": "COMPLETE",
+      "experiment_index": "QWEN15_FULL_LAG_P2_01",
+      "scope": "Fixed 1.5B 64K first MK2 probe; three predeclared deployments, no tuning.",
+      "rows": 1,
+      "summary": [
+        {
+          "task": "niah_multikey_2",
+          "length_cap": 65536,
+          "rows": 1,
+          "official_score": 0.0,
+          "source_budget_score": 0.0,
+          "eos": 1
+        }
+      ],
+      "elapsed_seconds": 28.065979450941086,
+      "examples_sha256": "2845126f7a3c5e30c0fdf44bf8eaee5f9225d39497bf750bb1abda158fbe4da4",
+      "plan_sha256": "06d6136c1823e0cd8bf1bc84f5e8a720e163c044d69a3eb9c2e5030b7ceb6715"
+    },
+    "qwen15_remaining_fulllagp2_01": {
+      "status": "COMPLETE",
+      "experiment_index": "QWEN15_FULL_LAG_P2_01",
+      "scope": "Remaining 23 of the previously fixed 24 inputs; reuse first probe. No tuning or expanded tasks.",
+      "rows": 23,
+      "summary": [
+        {
+          "task": "fwe",
+          "length_cap": 65536,
+          "rows": 8,
+          "official_score": 70.83,
+          "source_budget_score": 70.83,
+          "eos": 8
+        },
+        {
+          "task": "niah_multikey_2",
+          "length_cap": 65536,
+          "rows": 7,
+          "official_score": 42.86,
+          "source_budget_score": 42.86,
+          "eos": 7
+        },
+        {
+          "task": "vt",
+          "length_cap": 65536,
+          "rows": 8,
+          "official_score": 87.5,
+          "source_budget_score": 87.5,
+          "eos": 8
+        }
+      ],
+      "elapsed_seconds": 149.29288098588586,
+      "examples_sha256": "ef8d9ea99679b43c6979e8df6cca0236068a7c4f9e6f4eecfc9aa8c01018b053",
+      "plan_sha256": "287c5e14efcdb1c8f28c91901772b4e9e26889d9fe4eb3b3aa379308cc2c31dc"
+    },
+    "qwen15_probe_mrpro_01": {
+      "status": "COMPLETE",
+      "experiment_index": "QWEN15_FULL_LAG_P2_01",
+      "scope": "Fixed 1.5B 64K first MK2 probe; three predeclared deployments, no tuning.",
+      "rows": 1,
+      "summary": [
+        {
+          "task": "niah_multikey_2",
+          "length_cap": 65536,
+          "rows": 1,
+          "official_score": 0.0,
+          "source_budget_score": 0.0,
+          "eos": 1
+        }
+      ],
+      "elapsed_seconds": 17.023487333208323,
+      "examples_sha256": "348fd77f5690b0cfad827bed49288d39b46fa8b1619d0aa520e8854f1f69a28a",
+      "plan_sha256": "2635e252ce31a370b4dbd28862368201e80e28459c8f7e354652317db21d5c16"
+    },
+    "qwen15_remaining_mrpro_01": {
+      "status": "COMPLETE",
+      "experiment_index": "QWEN15_FULL_LAG_P2_01",
+      "scope": "Remaining 23 of the previously fixed 24 inputs; reuse first probe. No tuning or expanded tasks.",
+      "rows": 23,
+      "summary": [
+        {
+          "task": "fwe",
+          "length_cap": 65536,
+          "rows": 8,
+          "official_score": 45.83,
+          "source_budget_score": 45.83,
+          "eos": 8
+        },
+        {
+          "task": "niah_multikey_2",
+          "length_cap": 65536,
+          "rows": 7,
+          "official_score": 14.29,
+          "source_budget_score": 14.29,
+          "eos": 7
+        },
+        {
+          "task": "vt",
+          "length_cap": 65536,
+          "rows": 8,
+          "official_score": 82.5,
+          "source_budget_score": 82.5,
+          "eos": 8
+        }
+      ],
+      "elapsed_seconds": 149.75041683763266,
+      "examples_sha256": "473426c555788dfc56ed224b3d223439e86f43de34a9a6152cc4bc9ad8e1d39b",
+      "plan_sha256": "5af898a3536b60c8ce991782233ad820caa8bf6ea364eb907c4e9021dc37df43"
+    },
+    "qwen15_probe_mrpromatchedgain_01": {
+      "status": "COMPLETE",
+      "experiment_index": "QWEN15_FULL_LAG_P2_01",
+      "scope": "Fixed 1.5B 64K first MK2 probe; three predeclared deployments, no tuning.",
+      "rows": 1,
+      "summary": [
+        {
+          "task": "niah_multikey_2",
+          "length_cap": 65536,
+          "rows": 1,
+          "official_score": 0.0,
+          "source_budget_score": 0.0,
+          "eos": 1
+        }
+      ],
+      "elapsed_seconds": 27.996419068425894,
+      "examples_sha256": "b352b7b6f149bfc96458060d16aa65ca180e124c00d125f00d63cada8840b639",
+      "plan_sha256": "ca1d36b2eaabf235538deebf0f8ce51695754c794f01664d80bdb69c6dca425f"
+    },
+    "qwen15_remaining_mrpromatchedgain_01": {
+      "status": "COMPLETE",
+      "experiment_index": "QWEN15_FULL_LAG_P2_01",
+      "scope": "Remaining 23 of the previously fixed 24 inputs; reuse first probe. No tuning or expanded tasks.",
+      "rows": 23,
+      "summary": [
+        {
+          "task": "fwe",
+          "length_cap": 65536,
+          "rows": 8,
+          "official_score": 45.83,
+          "source_budget_score": 45.83,
+          "eos": 8
+        },
+        {
+          "task": "niah_multikey_2",
+          "length_cap": 65536,
+          "rows": 7,
+          "official_score": 28.57,
+          "source_budget_score": 28.57,
+          "eos": 7
+        },
+        {
+          "task": "vt",
+          "length_cap": 65536,
+          "rows": 8,
+          "official_score": 77.5,
+          "source_budget_score": 77.5,
+          "eos": 8
+        }
+      ],
+      "elapsed_seconds": 149.0878891274333,
+      "examples_sha256": "165e6fdd8ead05e7d80bd035e5f91a0f1f817df7aba7c7cee18c5d90cc2280b8",
+      "plan_sha256": "7c60a5981e169d242a0e69b01c659127fcb01848c54d26f52b009689b4209927"
+    }
+  },
+  "all_rows_ended_eos": true,
+  "limits": "Three predeclared tasks,8 prompts each. Prompt is the uncertainty unit; scores use all reference answers but these are not independent samples. Not full13-task RULER, published-paper replication, cross-model proof or SOTA."
+}

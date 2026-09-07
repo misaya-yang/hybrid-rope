@@ -43,7 +43,7 @@ def main():
         raise ValueError('four equal Native strata required')
     root, out = Path(plan['asset_root']), Path(plan['output'])
     candidate = json.loads(Path(plan['candidate_path']).read_text())
-    table = candidate['tables']['Carrier']
+    table = candidate['tables'][plan.get('table_key', 'Carrier')]
     if tensor_sha(table['values_float32']) != table['tensor_sha256']:
         raise ValueError('candidate frequency hash')
     ready = json.loads((root/'model_ready.json').read_text())
@@ -56,7 +56,7 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(root/'model', local_files_only=True)
     native = model.model.rotary_emb.inv_freq.float().cpu().numpy().copy()
     if tensor_sha(native) != '138c99b109d7affbfba059e435670918fe4531bce4709b6e86f3f22f7ef80f6e':
-        raise ValueError('original Qwen3B Native clock')
+        raise ValueError('original Qwen Native clock')
     generation = GenerationConfig(do_sample=False, num_beams=1, use_cache=True,
         eos_token_id=model.generation_config.eos_token_id,
         pad_token_id=tokenizer.pad_token_id if tokenizer.pad_token_id is not None else tokenizer.eos_token_id)

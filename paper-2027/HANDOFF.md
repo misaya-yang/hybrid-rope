@@ -1,8 +1,8 @@
 # Hybrid-RoPE 当前交接
 
-- **更新：** 2026-09-07 22:37 UTC；研究goal持续，作者最新要求第一性原理和1.5B最小验证。
+- **更新：** 2026-09-07 23:01 UTC；研究goal持续，作者最新要求第一性原理和1.5B最小验证。
 - **当前状态：** 3B完整RULER队列已停止于9项，未完成macro、未证明超过MrPro。
-  1.5B数据已冻结，三臂首条64K probe已完成，正按冻结规则补齐剩余23条。不得恢复旧13项或88行Mr建议。
+  1.5B数据已冻结，三臂首条64K probe已完成，固定24条三臂已全部完成，同表1.5B 128K长度检查已运行。不得恢复旧13项或88行Mr建议。
 - **入口：** [AGENTS](../AGENTS.md)、[INDEX](../INDEX.md)、
   [当前小模型协议](../docs/research/ROPE_QWEN15_MINIMAL_MECHANISM_20260907.md)、
   [统一研究计划](../docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md)。
@@ -38,7 +38,7 @@ smoke和正式生成累计，不重置。没有可继续的高价值工作或到
   24条并复用探针，扩展总硬上限900秒。详见协议的结果到行动映射，非完整macro。
 - 实际生成trace的微型CPU集成测试已通过：`test_long_lora_native_teacher.py`
   **5 passed，5.12秒**，包含新加的hook不改greedy输出/逐决策query测试；此前稳定
-  Native KL独立测试已有通过记录。首条三臂均0分并EOS；本方4792062，两Mr为7315917，参考8948515。普通生成约6秒，带trace约17秒，峰值9.323GB；正在补齐固定24条。
+  Native KL独立测试已有通过记录。首条三臂均0分并EOS；本方4792062，两Mr为7315917，参考8948515。普通生成约6秒，带trace约17秒，峰值9.323GB；三项均超过官方及同gain Mr：MK2 37.5/12.5/25、VT87.5/82.5/77.5、FWE70.83/45.83/45.83（本方/官方Mr/同gain Mr）。三臂各24条均EOS，局部小样本结果，不是完整macro。
 - CPU分析已证实旧p2高频尖峰主要来自16步lag抽样混叠；完整lag中段与旧有效表
   频率差至多0.01243%。旧有效表结果不能改名给新表，也不能由1.5B推定3B有效。
 - 载波只旋转低频复数包络；背景能量下降不等于正确/干扰log odds提升。旧3B缓存
@@ -66,7 +66,7 @@ smoke和正式生成累计，不重置。没有可继续的高价值工作或到
 ## 后续可复用资产
 
 - EVQ为RTX4080 SUPER、32760MiB；Torch2.8.0+cu128，Flash SDPA only，不能静默
-  回退math attention。个人PC只做轻CPU/code/docs。新作业前已确认旧队列无模型进程；当前由QWEN15_REMAINING_*监督器持锁执行。
+  回退math attention。个人PC只做轻CPU/code/docs。新作业前已确认旧队列无模型进程；QWEN15_128_FULLLAGP2_01正在运行，随后同输入Mr；控制器17730、子进程17735仅为本次快照。plan SHA `0bcc77e1a695e2e3e11ec8cf2d180a52cb174d8af544ec24af1f90559cfcb19f`，100%利用率，15889MiB。
   任务工作区仍为`rope_qwen_baseline_20260907`；GPU锁为`job_state/gpu.lock`。
   最新数据盘约11GB可用，双臂决策缓存预计约4GB，逐层CPU分析，不复制大缓存到个人PC。
 - `long64k_training_assets_01/prepared/train64k.npy`已准备：PG19 train128本不同书，
@@ -88,8 +88,18 @@ smoke和正式生成累计，不重置。没有可继续的高价值工作或到
 ## Git与论文
 
 分支`main_0726_09_06`已含40d1ad6，提交0a363f6、ba39875、2f8183f、9d04ddd、
-9acede6。相关验证后继续scoped commit，不自动push、保留无关工作。当前新trace/
-小模型协议尚待提交。作者Pro原文逐字节保留其两处尾空格；main_0726归档未操作。
+9acede6。相关验证后继续scoped commit，不自动push、保留无关工作。新trace/小模型协议已提交194fe71、8f17843。作者Pro原文逐字节保留其两处尾空格；main_0726归档未操作。
 活动TeX/PDF未修改或编译，PDF SHA
 `37aa6402a65d68b21909b0b3479c4e8edd811079e3922c2c1be915ddeab167e4`。
 没有已证实的SOTA、新方法最终胜利或论文接收结论。
+
+继续记录：首臂23条补齐监督器155.028秒。原交互SSH控制器在该臂完成后连接被
+远端关闭，两参照尚无attempt；已在相同plan SHA
+`57c56fe3c46375b4227ebc66b83605976d27b4777902d369cb4a1549141380f1`下恢复两参照，
+未重跑本方。控制器`qwen15_mechanism_phase_01/refs_controller_01.py`已脱离SSH，
+PID17348仅为当时记录；续接读实际job状态和controller_complete文件。累计预算不变。
+
+1.5B当前64K结果在ROPE_QWEN15_FULL_LAG_P2_RESULT_20260907.json，完整生成hash已
+核对；128K两臂各24，首8条来自原固定50条输入，不称盲确认。新LoRA代码根
+`code_qwen15_lora_01`只复制已有实现、接受table_key=FullLagP2和真实1.5B身份；
+超参数/训练输入未改，尚无LoRA GPU启动。不能将此准备里程碑当训练结果。

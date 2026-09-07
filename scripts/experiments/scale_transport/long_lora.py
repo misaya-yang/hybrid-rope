@@ -124,7 +124,7 @@ def main():
             raise ValueError(f'frozen training input drift: {path}')
     root, out = Path(plan['asset_root']), Path(plan['output'])
     candidate = json.loads(Path(plan['candidate_path']).read_text())
-    table = candidate['tables']['Carrier']
+    table = candidate['tables'][plan.get('table_key', 'Carrier')]
     if tensor_sha(table['values_float32']) != table['tensor_sha256']:
         raise ValueError('frequency identity')
     data = np.load(plan['cpt_path'], mmap_mode='r', allow_pickle=False)
@@ -170,7 +170,7 @@ def main():
         model_revision=ready['revision'], table=table, native_tensor_sha256=tensor_sha(native),
         trainable_parameters=sum(p.numel() for p in parameters), trainable_names=[name for name, _ in named],
         book_order=book_order, native_order=[r['id'] for r in native_rows],
-        teacher='original Qwen3B weights with adapters disabled and Native clock/gain1; actual greedy prefixes for non-text rows',
+        teacher=f"original {ready['model_id']} weights with adapters disabled and Native clock/gain1; actual greedy prefixes for non-text rows",
         loss='all-64K-token causal CE mean + vocabulary-summed, position-mean Native forward KL, coefficient1',
         teacher_eos_token_ids=generation.eos_token_id,
         native_kl_gradient='existing stable_teacher_kl analytic first-order gradient; exactly zero at identical logits',
