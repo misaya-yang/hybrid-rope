@@ -1,6 +1,6 @@
 # INDEX — file and evidence-source index
 
-**Updated:** 2026-09-07; author-requested home continuation handoff. This file locates source
+**Updated:** 2026-09-07; research failure review and final Pro decision request. This file locates source
 files and their roles; it does not own numerical results, verdicts or live tasks.
 Project details are in `README.md`, constraints in `AGENTS.md`, and live state
 in `paper-2027/HANDOFF.md`. Read only the relevant entries.
@@ -17,6 +17,8 @@ inspect them with `git show main_0726:<path>`.
 | [AGENTS.md](AGENTS.md) | Core constraints, plan-before-compute rules and checks |
 | [README.md](README.md) | Project question, reconstruction context, intended outcomes and layout |
 | [paper-2027/HANDOFF.md](paper-2027/HANDOFF.md) | Current local Git/PDF/authorization state; source-reported remote state is labelled |
+| [Research failure review](docs/research/ROPE_RESEARCH_FAILURE_REVIEW_20260907.md) | Evidence-backed diagnosis of the guess/fail loop and next-day research objective; no new GPU results |
+| [Final Pro decision request](docs/research/ROPE_PRO_DECISION_REQUEST_20260907.md) | Current self-contained prompt with actual failures; request one implementable method and a discriminating low-cost experiment |
 | [Unified frequency research plan](docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md) | Method-design history and current direction; old five/eight-table suggestions are superseded by own-method-first execution; results and next action have separate owners |
 | [Scale-transport proposal review](docs/research/ROPE_SCALE_TRANSPORT_REVIEW_20260907.md) | External-proposal review at its original scope; subsequent implementation/results routed to pilot owner |
 | [Pro scale-transport source](paper-2027/research/external-reviews/ROPE_SCALE_TRANSPORT_METHOD_AND_CODEX_20260907.md) | Exact author-supplied September 7 input; SHA in review; reported code/tests unverified, execution proposals are not authorization |
