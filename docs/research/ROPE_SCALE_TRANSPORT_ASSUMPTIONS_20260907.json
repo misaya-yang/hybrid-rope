@@ -105,9 +105,21 @@
   "limits": "No candidate generation, parameter fitting, model-quality prediction or new GPU evidence",
   "shared_frequency_response_implementation": {
     "status": "NUMPY_ALGEBRA_CHECKED_NO_MODEL_RUN",
-    "finite_difference_max_abs": 8.436567000558171e-10,
-    "zero_frequency_derivative_norm": 0.61672331258575,
+    "direct_rotation_max_abs": 1.4432899320127035e-15,
+    "finite_difference_max_abs": 1.1064855698350584e-09,
+    "zero_frequency_derivative_norm": 0.6355391418976334,
     "canceling_heads_shared_energy": 0.0,
-    "canceling_heads_individual_energy": 5.098658866711003
+    "canceling_heads_individual_energy": 12.267584396102805
+  },
+  "superseded_shared_frequency_self_check": {
+    "status": "SUPERSEDED_SINE_SIGN_ERROR",
+    "receipt": {
+      "status": "NUMPY_ALGEBRA_CHECKED_NO_MODEL_RUN",
+      "finite_difference_max_abs": 8.436567000558171e-10,
+      "zero_frequency_derivative_norm": 0.61672331258575,
+      "canceling_heads_shared_energy": 0.0,
+      "canceling_heads_individual_energy": 5.098658866711003
+    },
+    "correction": "Old self-differencing passed despite reversed split-half sine sign. Corrected with independent absolute-position rotation; historical Torch experiment replay was correct."
   }
 }
