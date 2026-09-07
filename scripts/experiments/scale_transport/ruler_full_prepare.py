@@ -97,7 +97,7 @@ def main():
         source_files={str(path.relative_to(args.upstream)): sha(path) for path in source_files+assets},
         min_max_input_tokens=[min(r['input_tokens'] for r in rows), max(r['input_tokens'] for r in rows)],
         template=template, generator_argv=argv,
-        limitations='Official task generator and original token budgets; 50 rows/task and pinned revision may differ from published MrRoPE sample/implementation. No comparison claim until all 13 tasks are complete.')
+        limitations='Official task generator and original token budgets; sample count and pinned revision may differ from published MrRoPE. Matched comparisons apply only to the frozen inputs and tasks; full RULER macro requires all 13 tasks.')
     (args.out/'manifest.json').write_text(json.dumps(manifest, indent=2)+'\n')
     print(json.dumps({key: manifest[key] for key in ('status', 'task', 'rows', 'rows_sha256', 'min_max_input_tokens')}), flush=True)
 

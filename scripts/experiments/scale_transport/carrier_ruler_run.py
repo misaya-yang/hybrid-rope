@@ -108,6 +108,55 @@ def qualify_signed(model, values, gain):
     return {'signed_hf_cos_sin_max_abs': error, 'finite_short_forward': True}
 
 
+def attach_decision_trace(model):
+    """Capture actual projected Q/K/V, including every generated decision query."""
+    config = model.config
+    heads, kv_heads = config.num_attention_heads, config.num_key_value_heads
+    dim = config.hidden_size//heads
+    buffers, handles = {}, []
+    for index, layer in enumerate(model.model.layers):
+        buffer = {'q': [], 'k': [], 'v': [], 'y_actual': [], 'key_lengths': []}
+        buffers[index] = buffer
+        def q_hook(module, inputs, output, buffer=buffer):
+            buffer['q'].append(output[0, -1:].reshape(1, heads, dim).transpose(0, 1).detach().cpu())
+        def k_hook(module, inputs, output, buffer=buffer):
+            length = output.shape[1]
+            buffer['key_lengths'].append(length)
+            buffer['k'].append(output[0].reshape(length, kv_heads, dim).transpose(0, 1).detach().cpu())
+        def v_hook(module, inputs, output, buffer=buffer):
+            buffer['v'].append(output[0].reshape(output.shape[1], kv_heads, dim).transpose(0, 1).detach().cpu())
+        def o_hook(module, inputs, output, buffer=buffer):
+            buffer['y_actual'].append(output[0, -1:].detach().cpu())
+        for module, hook in ((layer.self_attn.q_proj, q_hook), (layer.self_attn.k_proj, k_hook),
+                             (layer.self_attn.v_proj, v_hook), (layer.self_attn.o_proj, o_hook)):
+            handles.append(module.register_forward_hook(hook))
+    return buffers, handles
+
+
+def save_decision_trace(model, buffers, scores, generated, row, folder):
+    folder.mkdir(parents=True, exist_ok=False)
+    files = {}
+    for layer, parts in buffers.items():
+        lengths = parts['key_lengths']
+        if (len(parts['q']) != len(generated) or lengths[0] != row['input_tokens']
+                or any(x != 1 for x in lengths[1:])):
+            raise ValueError('trace must include prefill and each actual decoding decision')
+        q = torch.cat(parts['q'], dim=1)
+        k, v = torch.cat(parts['k'], dim=1), torch.cat(parts['v'], dim=1)
+        path = folder/f'layer_{layer}.pt'
+        torch.save(dict(q=q, k=k, v=v, pos=torch.tensor(np.cumsum(lengths)-1),
+            y_actual=torch.cat(parts['y_actual'], dim=0),
+            output_projection=model.model.layers[layer].self_attn.o_proj.weight.detach().cpu()), path)
+        files[path.name] = digest(path)
+    path = folder/'generation_scores.pt'
+    torch.save(torch.cat([s.detach().cpu() for s in scores], dim=0), path)
+    files[path.name] = digest(path)
+    write(folder/'manifest.json', dict(status='ACTUAL_GENERATION_DECISIONS_CAPTURED',
+        row_id=row['row_id'], prompt_sha256=row['prompt_sha256'],
+        input_tokens=row['input_tokens'], generated_ids=generated,
+        files_sha256=files, limits='Unrotated actual QKV and full processed LM scores. No teacher-forced substitute. Layer-local replay alone is not final-answer attribution.'))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--plan', type=Path, required=True)
@@ -120,7 +169,7 @@ def main():
         if digest(path) != expected:
             raise ValueError(f'frozen input drift: {path}')
     candidate = json.loads(Path(plan['candidate_path']).read_text())
-    table = candidate['tables']['Carrier']
+    table = candidate['tables'][plan.get('table_key', 'Carrier')]
     values, gain = table['values_float32'], table['gain']
     if tensor_sha(values) != table['tensor_sha256']:
         raise ValueError('frozen signed table hash')
@@ -140,8 +189,10 @@ def main():
     model = AutoModelForCausalLM.from_pretrained(root/'model', local_files_only=True,
         dtype=torch.bfloat16, device_map={'': 'cuda'}, attn_implementation='sdpa').eval()
     tok = AutoTokenizer.from_pretrained(root/'model', local_files_only=True)
-    if (model.config.num_hidden_layers, model.config.num_attention_heads, model.config.num_key_value_heads) != (36, 16, 2):
-        raise ValueError('qualified Qwen2.5-3B GQA architecture required')
+    if (model.config.num_hidden_layers, model.config.num_attention_heads, model.config.num_key_value_heads) != tuple(plan.get('expected_architecture', (36, 16, 2))):
+        raise ValueError('frozen Qwen GQA architecture required')
+    if plan.get('native_tensor_sha256') and tensor_sha(model.model.rotary_emb.inv_freq.cpu().numpy()) != plan['native_tensor_sha256']:
+        raise ValueError('frozen Native frequency identity')
     install_signed(model, values, gain)
     model, adapter = load_frozen_adapter(model, plan.get('adapter_path'), table,
         ready['revision'], plan['input_files'])
@@ -149,7 +200,7 @@ def main():
     eos = tok.eos_token_id
     generation = GenerationConfig(do_sample=False, num_beams=1, use_cache=True,
         eos_token_id=eos, pad_token_id=tok.pad_token_id if tok.pad_token_id is not None else eos)
-    write(out/'deployment.json', {'table': table, 'c': candidate['c'], 'model_revision': ready['revision'],
+    write(out/'deployment.json', {'table': table, 'c': candidate.get('c'), 'model_revision': ready['revision'],
         'plan_sha256': digest(args.plan), 'hardware': hardware, 'qualification': qualification,
         'adapter': adapter})
     records = []
@@ -169,8 +220,19 @@ def main():
             before = time.monotonic()
             torch.cuda.reset_peak_memory_stats()
             ids = torch.tensor(row['ids'], device='cuda')[None, :]
-            result = model.generate(ids, generation_config=generation, max_new_tokens=budget, logits_to_keep=1)
-            generated = result[0, ids.shape[1]:].tolist()
+            tracing = row['row_id'] in plan.get('trace_rows', [])
+            buffers, handles = attach_decision_trace(model) if tracing else (None, [])
+            try:
+                result = model.generate(ids, generation_config=generation, max_new_tokens=budget,
+                    logits_to_keep=1, return_dict_in_generate=tracing, output_scores=tracing)
+            finally:
+                for handle in handles:
+                    handle.remove()
+            sequence = result.sequences if tracing else result
+            generated = sequence[0, ids.shape[1]:].tolist()
+            if tracing:
+                save_decision_trace(model, buffers, result.scores, generated, row, out/'decision_trace'/row['row_id'])
+                del buffers
             text = tok.decode(generated, skip_special_tokens=True)
             prefix = tok.decode(generated[:row['budget']], skip_special_tokens=True)
             rotary = model.model.rotary_emb

@@ -14,7 +14,9 @@ from peft import LoraConfig, get_peft_model
 from transformers import GenerationConfig, Qwen2Config, Qwen2ForCausalLM
 
 from scripts.experiments.cross_audit.training import causal_loss
-from scripts.experiments.scale_transport.carrier_ruler_run import digest, install_signed, load_frozen_adapter
+from scripts.experiments.scale_transport.carrier_ruler_run import (
+    attach_decision_trace, digest, install_signed, load_frozen_adapter, save_decision_trace,
+)
 from scripts.experiments.scale_transport.long_lora import MODULES, native_teacher_kl, original_teacher
 
 
@@ -132,3 +134,32 @@ def test_frozen_adapter_roundtrip_preserves_unmerged_bf16_update(tmp_path):
     assert not torch.allclose(actual, before, atol=1e-7, rtol=1e-6)
     assert not receipt['merged'] and receipt['dtype'] == 'torch.bfloat16'
     assert all(p.dtype == torch.bfloat16 for name, p in loaded.named_parameters() if 'lora_' in name)
+
+
+def test_trace_keeps_each_actual_decoding_query_without_changing_generation(tmp_path):
+    original, _, _, _, _, generation = setup_pair()
+    prompt = torch.tensor([[1, 4, 6, 9]])
+    with torch.inference_mode():
+        expected = original.generate(prompt, generation_config=generation, max_new_tokens=4, logits_to_keep=1)
+        buffers, handles = attach_decision_trace(original)
+        try:
+            output = original.generate(prompt, generation_config=generation, max_new_tokens=4,
+                logits_to_keep=1, return_dict_in_generate=True, output_scores=True)
+        finally:
+            for handle in handles:
+                handle.remove()
+        torch.testing.assert_close(output.sequences, expected)
+        generated = output.sequences[0, len(prompt[0]):].tolist()
+        folder = tmp_path/'trace'
+        save_decision_trace(original, buffers, output.scores, generated,
+            dict(row_id='tiny', input_tokens=4, prompt_sha256='fixture'), folder)
+        saved = torch.load(folder/'layer_0.pt', map_location='cpu', weights_only=True)
+        assert saved['q'].shape == (1, len(generated), 128)
+        assert saved['k'].shape == (1, 4+len(generated)-1, 128)
+        assert saved['pos'].tolist() == list(range(3, 3+len(generated)))
+        teacher_input = output.sequences[:, :-1]
+        hidden = original.model.layers[0].input_layernorm(original.model.embed_tokens(teacher_input))
+        q = original.model.layers[0].self_attn.q_proj(hidden)[0, saved['pos']]
+        torch.testing.assert_close(saved['q'][0], q, atol=1e-6, rtol=1e-6)
+        scores = torch.load(folder/'generation_scores.pt', map_location='cpu', weights_only=True)
+        assert scores.argmax(-1).tolist() == generated
