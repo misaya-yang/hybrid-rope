@@ -2,6 +2,10 @@
 
 ## Project conventions
 
+- Keep process proportional to the task: retain only constraints that protect a
+  concrete project requirement. Do not invent approval gates, handoff artifacts
+  or extra validation without a decision-relevant purpose; simplify conflicting
+  or redundant local rules instead of passing their burden to the user.
 - Read `README.md` for project context and `paper-2027/HANDOFF.md` for live state.
   Use `INDEX.md` to locate only the files needed for the task.
 - Keep core constraints here, detailed file routing in `INDEX.md`, and project
