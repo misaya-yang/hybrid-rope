@@ -2,7 +2,7 @@
 
 - **更新：** 2026-09-07 23:01 UTC；研究goal持续，作者最新要求第一性原理和1.5B最小验证。
 - **当前状态：** 3B完整RULER队列已停止于9项，未完成macro、未证明超过MrPro。
-  1.5B数据已冻结，三臂首条64K probe已完成，固定24条三臂已全部完成，同表1.5B 128K长度检查已运行。不得恢复旧13项或88行Mr建议。
+  1.5B数据已冻结，三臂首条64K probe已完成，固定24条三臂已全部完成，同表1.5B 128K长度检查已完成，正在接续固定3B迁移小检查。不得恢复旧13项或88行Mr建议。
 - **入口：** [AGENTS](../AGENTS.md)、[INDEX](../INDEX.md)、
   [当前小模型协议](../docs/research/ROPE_QWEN15_MINIMAL_MECHANISM_20260907.md)、
   [统一研究计划](../docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md)。
@@ -103,3 +103,10 @@ PID17348仅为当时记录；续接读实际job状态和controller_complete文�
 核对；128K两臂各24，首8条来自原固定50条输入，不称盲确认。新LoRA代码根
 `code_qwen15_lora_01`只复制已有实现、接受table_key=FullLagP2和真实1.5B身份；
 超参数/训练输入未改，尚无LoRA GPU启动。不能将此准备里程碑当训练结果。
+
+23:16 UTC：1.5B128K本方/Mr为MK2 0/0、VT85/72.5、FWE50/50，均8条且EOS。
+没有三项全部保留优势；不恢复全矩阵。3B迁移12输入已冻结，目录
+`qwen3_transfer_phase_01`，plan SHA `0a2083eac4381342f491025643a28ec2e2e0356650d02220e7d99f6c26d70c68`，
+仅改模型身份、数组/gain不变。1.5B两步64K LoRA smoke只准备，目录
+`qwen15_lora_phase_01`，plan SHA `bf63b9eeb7b1d9d81e0b61c6429e7636306f53725a1e1829440a1654565f3eec`；
+未启动。相关teacher测试5 passed/4.61秒。LoRA接续的解释与限制见当前小模型协议。
