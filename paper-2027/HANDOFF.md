@@ -1,101 +1,121 @@
 # Hybrid-RoPE 当前交接
 
-- **更新：** 2026-09-07；家用 PC 已接替，已同步并核对 `40d1ad6`。作者后续明确允许 GPU 实验与 CPU/理论分析并行，替代本次接替最初的“不启动新实验”。
-- **状态：** 研究 goal 持续进行；EVQ 已由作者开启，实查为 RTX 4080 SUPER、32760 MiB。实验1与缓存分析已完成；当前推进作者选定的去载波单臂。旧自动监控仍暂停；本任务夜间心跳`hybrid-rope-2`已开启，每15分钟检查实质变化并接续。
-- **职责：** 这里只保留当前状态、授权、资产定位和下一步；规则在 [AGENTS](../AGENTS.md)，结果在对应 owner，项目介绍在 [README](../README.md)。
+- **更新：** 2026-09-07 19:51 UTC现场回读；家用PC已同步并核对`40d1ad6`，研究goal持续执行。
+- **当前状态：** 核心实验3已完成20条开发比较，正在运行同一固定候选的完整
+  13项RULER单臂；尚未证明超过MrPro，不提前进入权重训练。
+- **入口：** 规则在[AGENTS](../AGENTS.md)，路由在[INDEX](../INDEX.md)，研究问题和
+  方法沿革在[统一研究计划](../docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md)。
+  本文件只保留现场状态；旧交接记录在Git历史及各结果owner，不是新启动指令。
 
-## 回家后的继续入口
+## 作者的最新目标与授权
 
-### 当前续研状态（优先于下方历史记录）
+1. 先零训练，以作者给的低频去载波思路推进，优先只跑本方方法、对照MrPro
+   已公布的同模型同基准数据；复用已有Mr同输入输出，避免重跑对手矩阵。
+2. 有有效零训练结果后，研究LoRA能否继续提高、如何训练及避免遗忘。作者指出
+   旧Qwen仅16K物理训练、低于Native32K且数据太少；后续优先真实长序列和
+   足够数据，不能拿虚拟位置跨度冒充物理64K，也不能把小数据失败泛化到LoRA。
+3. 最后研究适配稀疏、压缩和混合attention的位置编码，允许非RoPE。先核实架构
+   和明确算子；不默认在这张GPU上下载/训练旗舰模型。三合一长期目标仍保留。
 
-- **最新下一项：** [逐槽原生相位约束去载波](../docs/research/ROPE_NATIVE_SECTOR_CARRIER_20260907.md)，
-  明确计为核心实验3。原Carrier使最深槽反转且到原生相位上限8.964倍；新约束
-  `0<=c<=min_B omega`对同一冻结背景二次目标给出唯一投影，c=1.2409377632138785e-6。
-  j0..46保持MrPro，j47..63为`(omega-c)/4`。这是新方案，不冒称原实验2成功或
-  单独证明旧方案失败原因；不修改旧代码根/计划。`NATIVE_SECTOR_DIAGNOSTIC_01`已提交启动；数据在`runs/native_sector_diagnostic_01`，
-  独立执行代码为`code_native_sector_01`，plan在`native_sector_phase_01/diagnostic_plan_01.json`。
-  需回读20条单臂结果，按owner判别；不自动扩大未验证候选。
-- 原实验2的后续12个50条分片已停止排队；当前`CARRIER_FULL128_NIAH_SINGLE_1`
-  已完整完成50条：分数32.0、EOS14/50、监督器1845.330秒。原20条长UUID/VT全零与逐槽几何审查表明继续
-  完整650条的收益不足；全部输出及停止记录保留，不能算成完整13项macro。
-- 已有13项×50条全部准备并校验，`carrier_phase_01/full_data_receipt.json`
-  持有身份。新实验直接复用；CWE原缺LFS对象的准备失败与修复回执均保留。
-- 最新顺序：**零训练Carrier超过MrPro → LoRA进一步提高并保留原能力 →
-  稀疏注意力位置编码（允许非RoPE）的理论/实现可行性研究**。作者已纠正
-  “今晚不进入LoRA”的误读；不能提前把训练排除出整个目标。
-- 当前唯一主方案：[低频去载波owner](../docs/research/ROPE_CARRIER_REMOVAL_PILOT_20260907.md)。
-  YaRN中高频，j47..63为`(omega_j-c)/4`，Native背景闭式c，允许负频率。
-  Pro全文已原样入库，ZIP不可用。不能静默改Mr底座、取绝对值或叠加CoPE。
-- 构造已完成：`CARRIER_NATIVE_MEANS_01`因原文本SHA/NPY SHA混淆在前向前失败；
-  `_02`完整采完8C全文六层Q/K均值。`runs/carrier_native_means_02/means.npz`
-  SHA `b6d5103b3b30d1a56472fd82fb635cb491c9f3a3e701a87bf725e56835bb0d30`。
-  `carrier_phase_01/candidate.json`已冻结`c=1.2365128835371404e-5`，未裁剪，
-  53..63槽为负。数值检查通过，不等于方法有效。
-- 核心效果实验1已经完成（P2Middle共44生成）；没有充分收益且短能力受损，
-  结果由[原owner](../docs/research/ROPE_SCALE_TRANSPORT_PILOT_20260907.md)持有。
-  同实验8次短状态前向、144块数值重放均完成。局部Jacobian不能外推整个
-  多弧度改动，冻结Q/K忽略了真实状态传播；不将诊断升级为新复杂优化器。
-- 实验2的Carrier单臂20条旧输入已完成（监督器615.109秒），直接复用已有Mr输出。CPU准备
-  上游全部13项RULER，128K每项50条，固定表分片生成并与Mr论文公开成绩比较；
-  不重复基线矩阵，不把小型任务子集分数与完整macro53.2直接比。
-- 作者授权EVQ整夜工作，3次是效率期待而非硬上限；无隐藏多候选扫描。
-  数值/smoke单列成本。沿用已告知作者的12小时安排，资源截止
-  **2026-09-08 02:17 UTC（1788833820）**。旧2小时/最多3次/禁止新实验限制
-  已被直接新指令覆盖；旧plan身份和历史预算保留。若确实无法解决可关机，
-  小实验/报告完成不是停工点。目标工具只能改完成/阻塞，旧卡片文字无法编辑。
-- 目前已知监督器累计约4601.217秒（包括原875.55秒、实验1、状态回读及
-  两次均值尝试）；这是作业时长，不冒充云账单。后续作业继续累计且执行硬截止。
-- 当前Git已有提交`ba39875`（原Carrier实现、原始Pro source及回执）；实验3新增修改尚未提交。TeX/PDF未修改。
-  全13项队列已实际开始，首个ID为`CARRIER_FULL128_NIAH_SINGLE_1`；原队列只持有本方法。旧20条结果尚未显示收益：128K UUID/VT均0，需完整核查而不能提前晋级LoRA。
-- 作者补充：后续LoRA应考虑旧Qwen仅16K物理训练、低于Native32K且数据太少的缺口。
-  若第二阶段需要空间，允许清理确认不用且可重新下载的模型权重；当前模型、
-  有效adapter、原始证据/回执仍保留。当前系统盘约16GB、数据盘约12GB空闲，尚无需删除。
-  下一步持续核对单臂结果和完整RULER生成，同时CPU准备真实64K训练的可行性与文献。
+作者允许EVQ整夜工作；**3次是效率期待，不是硬上限**。数值和smoke成本单列，
+效果实验如实累计，不隐藏候选扫描、不重启18样本/64维行为梯度路线。后续直接
+指令已覆盖最初“不启动实验、两小时、最多3次”的限制；旧计划身份不追溯改变。
+目标工具仅能改完成/阻塞，不能编辑活动目标卡片，旧文字以本节授权为准。
 
-### 接替时的背景记录
+沿用已告知作者的12小时安排，资源截止为 **2026-09-08 02:17 UTC
+（1788833820）**。所有尝试、失败和重启计入同一预算。作者允许确实无法解决时
+关机；小实验或报告完成不是停工点。没有可继续的有价值授权工作时释放GPU。
 
-从本文件继续，不需要作者重新说明背景。作者现要求结束“猜想—失败”循环，已形成 [研究复盘](../docs/research/ROPE_RESEARCH_FAILURE_REVIEW_20260907.md) 和 [交给 Pro 的最终问题](../docs/research/ROPE_PRO_DECISION_REQUEST_20260907.md)，目标是下一工作日取得有依据的方法改进与可解释结果。作者已自行发送最终提示词和复盘，Pro 无法访问仓库；本任务尚未收到本次回复；不重复改写早先已发送的提示词。先结合 Pro 新回复（若已到）选择主方案；没有回复时可继续基于现有材料研究，不把等待回复变成全局停工理由。再打开 [本轮协议、结果及解释修正](../docs/research/ROPE_SCALE_TRANSPORT_PILOT_20260907.md)，重点读末尾的组合 RULER 结果，再接着处理失败原因。
+作者允许必要时清理确认不用且可重新下载的权重，保留当前模型、有效adapter、
+原始证据和回执。最近实查系统盘约16GB、数据盘约12GB空闲，**尚未删除权重**。
 
-本阶段目标仍是改进本方RoPE方法；尚未解出有成功证据的新构造，不能把分析工具完成当作课题完成。家用PC接手后按下面的实际进度继续，不重新开始资料大扫查：
+## 当前实验3：逐槽原生相位约束去载波
 
-1. **先读复盘末节及 [已恢复的旧Qwen有效表](../docs/research/ROPE_RECOVERED_QWEN_P2_20260907.json)。** 三个数组哈希已核对；旧结果属于Qwen1.5B，频率几何与当前3B相同。与MrPro的主要分歧是中段后半程，低频同样接近`/4`；不要再把今天失败提案的低频当作已验证本方优势。
-2. **复用正确的共享频率响应入口。** [shared_frequency_response.py](../scripts/analysis/shared_frequency_response.py) 在NumPy构造数组上验证完整GQA、跨key/head抵消与零频率导数；尚未接上真实QKV缓存。SSH拒绝连接，AutoDL要求重新登录，已向作者请求无卡访问。只读缓存，不需要新模型前向。缓存分析仍不等于下游能力优化器；历史18样本/64维行为梯度路线已失败，勿原样重启。
-3. **方法先收敛，再考虑最多3次实验。** 有效Mr与旧p2是起点；解释其共有段/分歧段，结合真实响应决定中段、尾频、衔接怎么改。低频统一加carrier的恒等式只是未选定线索，不是待执行候选。结合Pro回复时核查它是否真正解决这些问题，不盲从，也不因回复未到停止独立研究。
-4. **保留现有生成诊断。** UUID短控也有错，不能把长格0分全归频率；VT短输出遗漏了一个变量后进入解释，不能认定只需增加token预算。旧长VT为未测。必要协议修复另存记录，暂不启动计算。
+- [协议与结果owner](../docs/research/ROPE_NATIVE_SECTOR_CARRIER_20260907.md)，
+  [完整数组](../docs/research/ROPE_NATIVE_SECTOR_CANDIDATE_20260907.json)。
+- 同一冻结Native背景二次目标，加入`0<=c<=min_B omega`，得到唯一投影
+  `c=1.2409377632138785e-6`；j0..46逐位保留MrPro，j47..63为`(omega-c)/4`。
+  最末槽为0，所有慢槽在目标窗口内保持自己的Native因果相位区间。没有扫描c。
+  这是新候选，不是原Carrier的原地改表，也不保证能力无损。
+- tensor SHA `5e51ee46d1bce4adf8b81e6e1594df233f97022ea2fb5ed13fcc658dbee6ec7f`，
+  gain=1.138629436111989。当前Qwen2.5-3B-Instruct官方revision
+  `aa8e72537993ba99e69dfaafa59ed015b17504d1`，未训练权重。
+- `NATIVE_SECTOR_DIAGNOSTIC_01`已完整完成，监督器590.086秒。128K UUID12.5
+  （Mr12.5）、VT70（Mr62.5），VT三条各+20、其余不变；前30-token VT为65
+  （Mr60）。短UUID仍50（Mr100）、短VT90（Mr90），不能宣布Native无损。
+- 为核对真实128K整段HF相位矩阵，已安排一次无权重/无答案的数值检查插在分片间。
+  检查期间队列主进程在分片间暂时暂停，GPU分片正常完成；driver取得同一
+  GPU锁完成数值核验后已自动恢复。检查已通过并自动恢复队列；Native及当前表在32K/128K整段sin/cos与逐元素FP32参考
+  全部误差0。`native_sector_phase_01/full_phase_precision_result.json`保存结果；原运行参数未改。
+- 已启动并实查RUNNING的完整单臂队列：`native_sector_phase_01/run_full_ruler.py`，
+  来源SHA `1217d3fe88411ea52c27bbb43db2fc9bed54615f16eac68d912bae10a3b18e4b`。
+  job前缀`NATIVE_SECTOR_FULL128_`；首项`NATIVE_SECTOR_FULL128_NIAH_SINGLE_1`。
+  输出前缀`runs/native_sector_full128_`，使用独立`code_native_sector_01`代码根。
+- 已准备并核验13项×50条128K数据，seed137；`carrier_phase_01/full_data_receipt.json`
+  记录650行身份。队列按原任务预算生成（VT30、NIAH128、CWE120、FWE50、QA32）。
+  完整13项之后才能计算macro，对照Mr论文53.2；这是跨报告比较，样本数、版本/
+  模板/精度差异要披露，不称为与论文配对复现。部分开发输入此前暴露，非盲确认。
+- 已完成6项共300行：single1=100、multikey2=30、multikey3=6、VT=60.8、CWE=7.2、
+  FWE=70。当前`NATIVE_SECTOR_FULL128_NIAH_SINGLE_2`为RUNNING，PID12020；GPU100%、
+  21961MiB。这里只是现场快照，继续时读取监督器，不能据旧PID启动/终止其他进程。
+- 监督器共用`job_state/gpu.lock`和唯一job ID，检查代码/输入SHA并执行硬超时。
+  不重复启动旧ID。当前phase下的plan在执行前写定，每项最多2400秒，仍服从全局截止。
 
-作者已将最终提示词和复盘发给Pro，对方不能访问仓库。本机未收到这次Pro回复。当前禁止新实验；先持续研究及已有数据分析，不逐个小发现请求“继续”。本机没有正在运行的后台计算需要家用PC接管。
+## 已完成且不得重开的分支
 
-## 当前方法与结果位置
+- 实验1：P2Middle与MrPro，共44生成。128K UUID0对12.5，VT65对62.5，短能力
+  受损；[原owner](../docs/research/ROPE_SCALE_TRANSPORT_PILOT_20260907.md)。
+  同实验状态采集/数值分解完成，不能把局部Jacobian当能力梯度。
+- 实验2：[作者原始Carrier](../docs/research/ROPE_CARRIER_REMOVAL_PILOT_20260907.md)，
+  YaRN中高频、Native估计c=1.2365128835371404e-5，53..63槽反向。20条开发长
+  UUID/VT均0；另50条数字检索32分、EOS14/50。后续12项停止排队，不能算完整macro。
+  原code根/plan/输出保留。背景统计改善73.85%不等于能力改善；逐槽相位违规也
+  尚未独立证明全部错误的因果归因。
+- 原8C全文Native均值的`_01`尝试因文本SHA/NPY SHA混淆在前向前失败，`_02`
+  完成；`runs/carrier_native_means_02/means.npz` SHA
+  `b6d5103b3b30d1a56472fd82fb635cb491c9f3a3e701a87bf725e56835bb0d30`。
+  两张Carrier均复用此资产，不重新拟合答案。CWE缺LFS、HTTP下载截断也已修复并保留失败。
+- 旧Qwen1.5B有效p2与当前3B Native几何相同、效果不能直接移植；
+  [恢复表](../docs/research/ROPE_RECOVERED_QWEN_P2_20260907.json)三哈希匹配。
+  不恢复旧Z-only1528步或另开对手训练。
 
-- 已完成 Qwen2.5-3B-Instruct 冻结试验，未进行新的权重训练。当前组合为 MrPro 中段、本方尾频与 CoPE 风格末 20 槽衰减；不是 Cosh，也不是微调 MrRoPE。
-- [主结果 owner](../docs/research/ROPE_SCALE_TRANSPORT_PILOT_20260907.md)：构造、两项自然问答诊断、组合 RULER 结果、逐行解释和原始回执哈希。普通数字检索在 128K 档通过，UUID 检索失败，VT 长格未测；尚无 SOTA 证据。
-- [数组及 CPU 分析](../docs/research/ROPE_SCALE_TRANSPORT_FOLLOWUP_20260907.json)保留构造时状态；后续已执行情况由主结果 owner 更新。组合 tensor SHA：`a63fe2714b37a30b4387fff8af500c270b62770a5b90677302083569af9c2eb2`。
-- [研究主线](../docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md)解释 MrRoPE / CoPE / 本方工作的关系；[Pro 方案评议](../docs/research/ROPE_SCALE_TRANSPORT_REVIEW_20260907.md)区分采用部分与未验证假设。
-- [OLMo E0/E1 owner](../docs/research/ROPE_FREQUENCY_LUNA_ROI_20260907.md)是已完成历史证据；旧 Z-only 1528-step 训练从未启动，不属于当前自动执行队列。禁止恢复 seed42 权重或自动回到旧三臂微调。
+## 资源、CPU并行工作和下一步
 
-## 执行资产与预算
+- EVQ实际为RTX4080 SUPER、32760MiB；Torch2.8.0+cu128，Flash SDPA only。
+  没有flash_attn包，不静默回退二次math attention，不在个人PC重建Torch环境。
+- 服务器工作区沿用本任务已有`rope_qwen_baseline_20260907`；`model/`和
+  `model_ready.json`有效。完整缓存和原始生成保留服务器，本地保留紧凑回读。
+- 已知已完成监督器累计约 **15483.141秒**：此前5191.304秒，加实验3完整基准
+  前6项10281.835秒及整段数值检查10.002秒。这包括初始875.55秒、此前实验/状态、
+  均值失败与恢复；是作业时长，不冒充云账单。第7项及后续继续累加，不重置截止。
+- CPU已准备来自官方PG19 **train** split的128篇不同长书，各取真实连续64K
+  窗口，作为可能的后续训练资产；本地下载目录`artifacts/external/pg19_train64k_sources`。
+  选择规则在下载前固定为目录首128篇至少500000字节的train书，共110304242字节，
+  按云端目录size/MD5校验。128篇已全部校验、传到服务器并完成token化，工作目录
+  `long64k_training_assets_01`；`prepared/manifest.json`记录shape[128,65537]、8388608预测token，
+  `train64k.npy` SHA `27fb63e425b7ff8eee85b63a646843ad1c5015c743333ced49aa2e4a99c9b918`。
+  尚未训练，不能使用PG19 test。
+- Native replay的128 train/128 validation行已准备，位于
+  `long64k_training_assets_01/native_rows`，四类各32且source IDs不交叉。训练行SHA
+  `103ba80663f21f0cb2a14a10e877ae184a69ad04a61dae91d4c728c94af5668e`；验证行SHA
+  `f26a560ba03a706351d3e03885a3c4aaf2395d0fc65920ff78701f5e1b0f4426`。
+  `long_lora.py`已通过独立原始小模型的teacher隔离/greedy前缀CPU测试，加上
+  未合并BF16 adapter保存/重载测试，共3 passed（4.67秒）；真实64K smoke尚未运行。
+  `native_lora_eval.py`完成CPU导入，尚未真实生成。独立`code_lora_01`代码根用于
+  这些实现，不改运行中的实验3代码。最初CPU测试因漏拷贝既有training.py未能收集，
+  已补齐依赖；后续日志在`long64k_training_assets_01/cpu_teacher_test_02.log`和`_03.log`。
+- 已核查YaRN正式训练的真实64K长度与约25.17亿token、MrPro不含微调实验、
+  LongLoRA的可训练范围区别，以及Qwen3.8/DeepSeekV4的RoPE与压缩接口。见统一计划。
+- 本任务心跳`hybrid-rope-2`为ACTIVE，每15分钟接续，只通知实质变化；其他旧心跳
+  仍PAUSED。阶段完成/预算结束后暂停本夜心跳，不让过期授权自动启动新GPU作业。
+- 下一步：持续核验实验3各分片，检查原始答案与EOS，完成完整macro后判断是否
+  达到零训练目标；期间准备真实64K训练的输入和成本估计。未证明获益前不提前训练。
 
-| 对象 | 已知位置/状态 |
-| --- | --- |
-| 服务器工作区 | 已有 EVQ 实例中的 `rope_qwen_baseline_20260907`；SSH/绝对路径沿用当前任务或私有回执，不更换实例 |
-| 模型 | `model/`、`model_ready.json`；Qwen 官方 revision `aa8e72537993ba99e69dfaafa59ed015b17504d1` 已下载且核验 |
-| 自然文本数据 | `prepared_v2/`；首版因聊天模板返回 BatchEncoding 而失败，修正版已运行 |
-| RULER 数据 | `ruler_prepared_01/`；30 条冻结行及源版本、哈希均在 manifest |
-| 已完成输出 | `runs/pilot_01`、`runs/unguarded_01`、`runs/tail_01`、`runs/combined_ruler_01` |
-| 执行代码 | [scale_transport](../scripts/experiments/scale_transport/)；监督器 [cross_audit/jobs.py](../scripts/experiments/cross_audit/jobs.py)；原执行代码版本与旧 plan 保留在服务器，不覆盖其身份 |
-| 本地紧凑回执 | 私有维护目录 `qwen_baseline_20260907/result_readback` 与 `combined_ruler_readback`；两份原始压缩包已校验 |
+## Git与论文
 
-作者后续要求最多用 **3 个实验** 完成方法验证及必要修正；不得用一个实验名隐藏多候选搜索或不断追加。这是新的实验次数约束，不是三次必成的已验证保证，也不重置原有GPU时间额度。当前新增的是复盘中的缓存统计与频率映射分析，尚未启动这三次实验。
-
-此前总额度为两小时；已记录作业耗时约 **875.55 秒**，不等于云端占卡/账单时间。旧 RULER plan 的绝对截止为 2026-09-07 13:15:15 UTC，属于已结束运行，不能直接复用。恢复时计入已有消耗、计算剩余额度并冻结新的运行截止，不因新会话/重启再自动获得两小时；需要扩大预算时才向作者提出明确缺口。
-
-已有验证：四个工作机 CPU 测试、真实 Qwen hook 与 Flash/BF16 路径、静态数组身份及回读评分。新诊断入口尚未实施，不能把已完成脚本原样重新启动当作继续研究。GPU 开启前尽可能完成 CPU 准备，已有运行期间并行准备下一步。
-
-## Local Git and manuscript identity
-
-- 工作分支 `main_0726_09_06`；本轮代码、规则、协议和结果说明通过 Git 提交保存。提交身份用 `git log -1` 核对，不在提交内容中硬编码自身 SHA。
-- 换电脑继续使用该分支的最新提交，先读本文件，再读主结果 owner；不需要另行制作或携带私有交接包。并发任务已同步过先前提交；最新可用状态以 `git status -sb` 与实际推送结果为准。
-- 作者原有八份 solver/attack 草稿已由其他并发 Git 操作归档（`07c7978`），本研究任务未修改其内容。模型与大型原始回执留在原服务器/私有存储，仓库保留结果、来源和哈希；需要复核时按对应 owner 定位。
-- 活动 PDF SHA：`37aa6402a65d68b21909b0b3479c4e8edd811079e3922c2c1be915ddeab167e4`；TeX/PDF 未改、未重新编译，`main_0726` 历史分支未操作。
-
-历史瞬时 PID、下载百分比、开关机过程及旧执行指令不再堆叠在本文件。对应科学结果、清理记录和外部原文仍由 INDEX 路由；整理前文档另有私有备份。
+- 分支`main_0726_09_06`，已含`40d1ad6`；此前提交`0a363f6`、`ba39875`、`2f8183f`。
+  当前现场结果/文献更新待验证后scoped commit；没有push，保留无关工作。
+- 作者提供Pro原文逐字节保留，含两处原有行尾空格；SHA与附件一致，其余diff检查通过。
+- `paper-2027` TeX/PDF未改、未编译；活动PDF SHA
+  `37aa6402a65d68b21909b0b3479c4e8edd811079e3922c2c1be915ddeab167e4`。
+  `main_0726`及其`paper/`归档未操作。没有已证实的SOTA或论文接收结论。

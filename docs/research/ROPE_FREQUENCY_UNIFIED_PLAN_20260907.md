@@ -16,8 +16,9 @@
 
 1. 先零训练：执行作者提供的[低频去载波](ROPE_CARRIER_REMOVAL_PILOT_20260907.md)，
    只运行本方固定候选，优先对照MrPro已公布的同模型/任务结果；必要开发比较
-   复用已保存Mr输出。当前20条开发行未显示收益，完整13项运行中，不能提前
-   宣称第一阶段通过。禁止根据这些答案扫描c、改中段或把统计下降当成功。
+   复用已保存Mr输出。原Carrier20条开发行未显示收益，额外50条数字检索也仅32分；剩余12项已停止。
+   [逐槽原生相位约束候选](ROPE_NATIVE_SECTOR_CARRIER_20260907.md)作为实验3执行中，
+   不能提前宣称第一阶段通过。禁止根据这些答案扫描c、改中段或把统计下降当成功。
 2. 零训练得到有效结果后，研究LoRA的增益、真实长序列学习和遗忘；并不永久
    排除训练。旧Qwen最长物理16K低于其Native32K，小数据结果不能代表64K/128K
    适应的上限。CPU先分析数据/成本和已有有效训练材料；GPU阶段仍按顺序执行。
@@ -184,3 +185,88 @@ Mr 的中段边增量为 2t/[n(n+1)]；M 的边增量为 (z_{l+t}−z_{l+t−1})
 - [指定 9/6 cross-audit](../../paper-2027/research/external-reviews/ROPE_ICLR2027_CROSS_AUDIT_20260906.md)：保留强基线和证据核对建议，阶段优先级按作者最新指令修正；不采用其他实验的 v5。
 
 本轮只做来源核查、标准库参数计算和文档修改。未下载模型、未训练/推理、未更改 Luna 任务、未修改 Pro 提示词或 TeX/PDF。实时状态见 [HANDOFF](../../paper-2027/HANDOFF.md)。
+
+
+## 稀疏接口的代码核查补充（GPU仍优先零训练）
+
+已读DeepSeek-V4-Pro官方
+[固定版本inference/model.py](https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro/blob/b5968e9190ef611bbf34a7229255be88a0e937c1/inference/model.py)，
+文件SHA `ce962f1face79d4f633d36436576214057a7e11443c9789935e1deb5c6cd1d71`。
+Compressor先做逐通道learned gated pooling和RMSNorm，再在末64维应用RoPE；
+ratio4还合并重叠窗口，所赋位置仍为当前块起点。Indexer使用独立压缩器、
+RoPE、量化旋转和ReLU分数；core同样保留RoPE。纯滑窗层使用另一base并禁用
+YaRN，压缩层使用压缩路径的base与YaRN参数。不能给所有路径盲目套一张“统一
+长上下文频率表”，也不能说该模型已弃用RoPE。这里只下载代码/配置，没有模型权重。
+
+因此第三阶段至少要分开三件事：位置变化影响索引器是否选到证据；压缩位置
+如何代表多个真实token；证据已选中时core的距离编码是否正确。QSA块选择后
+展开回token，和V4直接让core使用压缩KV并不等价。下一项推导应针对其中一个
+明确算子，避免从全attention下的频率几何直接跳到稀疏系统能力结论。
+
+
+LoRA文献的另一项限定：[LongLoRA Table2与§3.3](https://arxiv.org/html/2309.12307v2)
+发现扩大attention-only LoRA的rank并不能追上全参，开放embedding与norm后
+PPL差距显著缩小；这来自Llama2、特定数据和S²-Attn训练，不能直接认定Qwen3B
+同样需要全embedding训练。本方已成功学习过的Qwen all-linear LoRA包含FFN，
+并不等于该文的attention-only对照。64K实际更新和Native保持需要在本方真实
+训练范围下验证，不盲目增rank，也不把shifted sparse训练当稀疏推理编码已解决。
+
+
+## 真实64K训练资产的CPU准备
+
+候选训练源采用官方[PG19](https://github.com/google-deepmind/pg19)的train分区，
+先冻结目录前1000项中至少500000字节的前128篇不同书籍，合计110304242字节。
+全部按云目录声明的size和MD5核验，下载截断按Range补齐，原失败回执保留。
+没有使用PG19 validation/test，也没有按模型分数选择文本。
+
+[准备器](../../scripts/experiments/scale_transport/prepare_pg19_long.py)对每篇书选取
+由seed与source key确定的连续65537-token窗口（65536真实输入+下一token标签），
+不拼短文、不拉伸位置。预期一遍为8388608个预测token，明显低于YaRN论文
+训练量；此阶段仅准备资产，不承诺这点数据已经足够，不启动模型训练。
+
+当前频率候选最末槽为0，改变了频率support；不能把它的后续收益直接写成
+旧论文固定support下pure-z的因果证据。若有收益，应作为明确的冻结部署方法
+报告，再分别验证适配效果与原有从零训练证据之间的联系。
+
+
+## 后续LoRA的单一预案（尚未启动，先看零训练完整结果）
+
+预案在完整RULER分数揭晓前确定，避免按失败任务临时改训练配方：固定当前
+频率表/gain，复用已有有效Qwen全线性LoRA的七类线性层范围，r16/alpha16、
+无dropout/bias、不开放embedding/norm；AdamW lr2e-5、betas(.9,.95)、无weight
+decay、5% warmup与cosine。只保存固定最终128步adapter，不按中间生成挑权重。
+
+每步一篇不同书的真实64K上下文，全部65536个下一token位置做CE；再加权重1
+的Native全词表forward KL（先按词表求和，再按预测位置取平均）。Native replay
+使用既有源隔离pool的128个train行，四类各32；其tokenizer.json与当前Qwen3B
+逐字节相同。非文本行的teacher将来自原始Qwen3B的真实greedy轨迹，不能复用
+旧Qwen1.5B logits或用学生adapter冒充原始teacher。teacher执行时关闭adapter，
+使用原生频率/gain1；必须在学生建图前恢复部署表。
+
+[Native行准备器](../../scripts/experiments/scale_transport/prepare_native_replay.py)
+已完成CPU运行，另冻结128个validation行，source IDs与train不交叉；这仍是
+历史开发pool，不声称新盲确认。文本NLL与完整字符串/EOS分开报告，按source
+组处理不确定性，不把平均KL当作无遗忘证明。
+
+[训练实现](../../scripts/experiments/scale_transport/long_lora.py)复用已有分块
+LM-head CE/KL，避免64K×词表完整激活；新的teacher隔离逻辑已用独立原始小模型
+通过CPU集成对照。GPU在本方零训练完整比较过关后才安排两次完整64K更新的
+内存/耗时smoke。它不评价能力、不留下候选adapter；其成本计入本夜。
+实际smoke若内存不够，保留64K物理长度修复内存问题，不偷偷改回原生长度。
+
+正式训练只有在128步及后续生成验证能落入同一本夜预算时启动；同表训练前后
+在预先固定的RULER每项前10条做配对生成，Native128行也实际生成回读。它们是
+能力判别，训练loss、数组和smoke不决定晋级。当前一遍8.39M预测token远少于
+YaRN论文，不将这项小预算实验升级为整个LoRA类别的上限；暂不新增rank/lr扫描。
+
+适配器推理采用独立BF16低秩权重，不并入BF16基座，以免合并时将微小更新舍去；
+这与训练AMP中的BF16 GEMM对应，但仍需真实128K运行核验内存及数值。加载器
+检查原模型revision、最终128步、频率表、adapter配置/权重/部署文件SHA。
+[CPU集成检查](../../tests/test_long_lora_native_teacher.py)已有3项通过：独立原始
+teacher概率、真实greedy前缀、保存/重载后BF16低秩更新一致性。最初一次收集失败
+来自独立代码根漏拷贝既有`cross_audit/training.py`，补齐依赖后通过；不是GPU实验。
+
+[Native评测器](../../scripts/experiments/scale_transport/native_lora_eval.py)预备在同一
+128行验证集比较原始Native、本表未训练父模型和固定最终adapter。非文本只删除
+末尾EOS后解码，保留其他特殊token，检验完整字符串与EOS；文本单独报告全部
+下一token位置NLL。该评测器仅通过CPU导入，尚未运行真实模型，不能称为已验证无遗忘。

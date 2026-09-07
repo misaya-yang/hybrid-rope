@@ -1,6 +1,7 @@
-"""Single frozen signed-carrier table, qualified Flash SDPA, official RULER scoring.
+"""One frozen frequency table, qualified Flash SDPA, official RULER scoring.
 
-No training, reference model reruns, parameter search, or automatic resume.
+An optional fixed final LoRA adapter is loaded only from frozen input files.
+No training, parameter search, or automatic resume occurs in this evaluator.
 """
 from __future__ import annotations
 
@@ -46,9 +47,46 @@ def install_signed(model, values, gain):
     rotary = model.model.rotary_emb
     if rotary.rope_type != 'default':
         raise ValueError('static default RoPE source required')
-    rotary.inv_freq = torch.tensor(values, device='cuda', dtype=torch.float32)
+    rotary.inv_freq = torch.tensor(values, device=rotary.inv_freq.device, dtype=torch.float32)
     rotary.original_inv_freq = rotary.inv_freq.clone()
     rotary.attention_scaling = float(gain)
+
+
+def load_frozen_adapter(model, adapter_path, table, model_revision, input_files):
+    """Keep the low-rank update unmerged; use BF16 inference GEMMs as in AMP training."""
+    if adapter_path is None:
+        return model, None
+    folder = Path(adapter_path)
+    files = {}
+    for name in ('adapter_config.json', 'adapter_model.safetensors', 'deployment.json'):
+        path = folder/name
+        if str(path) not in input_files or digest(path) != input_files[str(path)]:
+            raise ValueError(f'adapter file absent from frozen inputs or changed: {name}')
+        files[name] = input_files[str(path)]
+    deployment = json.loads((folder/'deployment.json').read_text())
+    if (deployment['model_revision'] != model_revision or deployment['optimizer_steps'] != 128
+            or deployment['table'] != table):
+        raise ValueError('adapter must match the fixed final update, base model and deployment table')
+    config = json.loads((folder/'adapter_config.json').read_text())
+    expected_modules = {'q_proj', 'k_proj', 'v_proj', 'o_proj', 'gate_proj', 'up_proj', 'down_proj'}
+    if (config['peft_type'] != 'LORA' or config['r'] != 16 or config['lora_alpha'] != 16
+            or set(config['target_modules']) != expected_modules or config['bias'] != 'none'
+            or config.get('modules_to_save')):
+        raise ValueError('only the predeclared seven-module r16/alpha16 adapter is supported')
+    from peft import PeftModel
+    wrapped = PeftModel.from_pretrained(model, folder, is_trainable=False,
+        autocast_adapter_dtype=False)
+    model = wrapped.get_base_model().eval()
+    count = 0
+    with torch.no_grad():
+        for name, parameter in model.named_parameters():
+            if 'lora_' in name:
+                parameter.data = parameter.data.to(torch.bfloat16)
+                count += parameter.numel()
+    if not count or any(p.requires_grad for p in model.parameters()):
+        raise ValueError('frozen nonempty adapter required for evaluation')
+    return model, {'files_sha256': files, 'parameters': count, 'dtype': 'torch.bfloat16',
+        'merged': False, 'optimizer_steps': 128}
 
 
 def qualify_signed(model, values, gain):
@@ -105,12 +143,15 @@ def main():
     if (model.config.num_hidden_layers, model.config.num_attention_heads, model.config.num_key_value_heads) != (36, 16, 2):
         raise ValueError('qualified Qwen2.5-3B GQA architecture required')
     install_signed(model, values, gain)
+    model, adapter = load_frozen_adapter(model, plan.get('adapter_path'), table,
+        ready['revision'], plan['input_files'])
     qualification = qualify_signed(model, values, gain)
     eos = tok.eos_token_id
     generation = GenerationConfig(do_sample=False, num_beams=1, use_cache=True,
         eos_token_id=eos, pad_token_id=tok.pad_token_id if tok.pad_token_id is not None else eos)
     write(out/'deployment.json', {'table': table, 'c': candidate['c'], 'model_revision': ready['revision'],
-        'plan_sha256': digest(args.plan), 'hardware': hardware, 'qualification': qualification})
+        'plan_sha256': digest(args.plan), 'hardware': hardware, 'qualification': qualification,
+        'adapter': adapter})
     records = []
     with (out/'examples.jsonl').open('x') as output, torch.inference_mode():
         for row in rows:
@@ -139,6 +180,7 @@ def main():
             record = {key: row[key] for key in ('row_id', 'task', 'length_cap', 'input_tokens', 'references', 'prompt_sha256')}
             record.update(arm=plan.get('arm_name', 'Carrier'), tensor_sha256=table['tensor_sha256'], gain=gain,
                 budget=budget, source_budget=row['budget'], generated_ids=generated, output_text=text,
+                source_budget_text=prefix,
                 actual_total_tokens=len(row['ids'])+len(generated), eos=bool(generated and generated[-1] == eos),
                 official_score=score([official_postprocess(text)], [row['references']]),
                 source_budget_score=score([official_postprocess(prefix)], [row['references']]),
@@ -154,7 +196,7 @@ def main():
         score = metric.string_match_part if task.startswith('qa_') else metric.string_match_all
         summary.append({'task': task, 'length_cap': cap, 'rows': len(selected),
             'official_score': score([official_postprocess(r['output_text']) for r in selected], [r['references'] for r in selected]),
-            'source_budget_score': sum(r['source_budget_score'] for r in selected)/len(selected),
+            'source_budget_score': score([official_postprocess(r['source_budget_text']) for r in selected], [r['references'] for r in selected]),
             'eos': sum(r['eos'] for r in selected)})
     write(out/'manifest.json', {'status': 'COMPLETE', 'experiment_index': plan.get('experiment_index', 2), 'scope': plan['scope'],
         'rows': len(records), 'summary': summary, 'elapsed_seconds': time.monotonic()-started,
