@@ -37,12 +37,14 @@ def main():
     parser.add_argument('--short-cap', type=int, default=4096)
     parser.add_argument('--qa-offset', type=int, default=0)
     parser.add_argument('--reuse-nonqa', type=Path)
+    parser.add_argument('--tasks', nargs='+', default=list(TASKS))
     args = parser.parse_args()
-    if min(args.short_count, args.long_count) < 1:
-        parser.error('sample counts must be positive')
+    if args.short_count < 0 or args.long_count < 1:
+        parser.error('short count must be nonnegative and long count positive')
     if args.short_cap <= 0 or args.long_cap <= args.short_cap:
         parser.error('positive short cap and larger long cap required')
-    cells = ((args.short_cap, args.short_count), (args.long_cap, args.long_count))
+    cells = tuple((cap, count) for cap, count in
+        ((args.short_cap, args.short_count), (args.long_cap, args.long_count)) if count)
     if args.qa_offset < 0:
         parser.error('QA offset must be nonnegative')
     if args.reuse_nonqa:
@@ -66,12 +68,17 @@ def main():
     from transformers import AutoTokenizer
     tokenizer = AutoTokenizer.from_pretrained(model_path, local_files_only=True)
     definitions = yaml.safe_load((upstream/'scripts/synthetic.yaml').read_text())
+    tasks = args.tasks
+    if len(set(tasks)) != len(tasks) or not set(tasks) <= definitions.keys():
+        raise ValueError('unknown or duplicate RULER tasks')
+    families = {task: FAMILIES.get(task, 'retrieval' if task.startswith('niah_') else
+        'aggregation' if task in ('cwe', 'fwe') else 'qa') for task in tasks}
     constants = load_module('ruler_data_constants', upstream/'scripts/data/synthetic/constants.py')
     metrics = load_module('ruler_metrics', upstream/'scripts/eval/synthetic/constants.py')
     all_rows = []
     source_rows = []
     for cap, count in cells:
-        for task in TASKS:
+        for task in tasks:
             config = definitions[task]
             base = constants.TASKS[config['task']]
             budget = base['tokens_to_generate']
@@ -125,7 +132,7 @@ def main():
                 refs = raw['outputs']
                 if not refs or any(not isinstance(ref, str) or not ref.strip() for ref in refs):
                     raise ValueError('invalid reference answers')
-                row = dict(row_id=f'{task}_{cap}_{index}', task=task, family=FAMILIES[task],
+                row = dict(row_id=f'{task}_{cap}_{index}', task=task, family=families[task],
                     upstream_index=raw['index'], length_cap=cap, prompt_ids=ids,
                     prompt_sha256=digest(ids), input_tokens=len(ids), references=refs,
                     max_new_tokens=budget)
@@ -160,7 +167,8 @@ def main():
     source_assets = {name: sha_file(upstream/'scripts/data/synthetic/json'/name)
                      for name in ('PaulGrahamEssays.json', 'english_words.json', 'squad.json')}
     manifest.update(benchmark='ruler_mixed_v1', status='PREPARED_GPU_NOT_RUN',
-        physical_caps=[cap for cap, _ in cells], tasks=list(TASKS), families=FAMILIES,
+        physical_caps=[cap for cap, _ in cells], tasks=tasks, families=families,
+        use_stock_generation=True,
         seed=args.seed, qa_offset=args.qa_offset, samples_per_task_by_cap=dict(cells), screen_rows=len(all_rows), qualification_rows=0,
         reused_nonqa_manifest_sha256=sha_file(args.reuse_nonqa/'manifest.json') if args.reuse_nonqa else None,
         screen_input_tokens=sum(r['input_tokens'] for r in all_rows),
@@ -171,7 +179,7 @@ def main():
         scoring='Official RULER match-all, QA match-any; fractional per-row scores; equal task weights within each length.',
         qualification='No self-made Native gate. Report MrPro floor/ceiling cells and all selected tasks without outcome-based removal.',
         selection=f'Primary: {args.long_cap}-token-cap six-task macro gain; report {args.short_cap}-token cap separately. Positive long gain with nonnegative short change is a development win; short loss is a tradeoff.',
-        scope=f'Mixed six-task RULER subset, {6*args.short_count} rows at {args.short_cap}-token cap and {6*args.long_count} at {args.long_cap}-token cap; not full RULER. Development/confirmation role is declared in the experiment protocol.',
+        scope=f'RULER {len(tasks)}-task panel, {len(tasks)*args.short_count} rows at {args.short_cap}-token cap and {len(tasks)*args.long_count} at {args.long_cap}-token cap. Sample scope and confirmation role are declared in the experiment protocol.',
         gpu_execution='NOT_RUN; one MrPro baseline and one MrProBM comparison',
         code_files={name:sha_file(root/name) for name in dependencies})
     manifest['prepared_files'] = {name:sha_file(out/name) for name in

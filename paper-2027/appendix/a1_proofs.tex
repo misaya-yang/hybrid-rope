@@ -587,16 +587,13 @@ expansion \citep{gray1998quantization} is
 \mathcal{D}_K[\rho] \;=\; \frac{1}{12K^2}\int_0^1 \frac{w(\phi)}{\rho(\phi)^2}\,d\phi + O(K^{-3}).
 \label{eq:high-res-distortion}
 \end{equation}
-This is the finite-channel mechanism: a shaped $\rho$ can reduce the weighted inverse-density load $\int w/\rho^2$; the absolute benefit scales as $K^{-2}$ for smooth quantization error and as $K^{-1}$ for transport/kernel terms.
-
-\paragraph{Dependence of the bounds on channel count.} The
-standard MHA configuration has $d_{\mathrm{head}}{=}d_{\mathrm{rope}}{=}64$
-and $K{=}32$; the MLA study has $d_{\mathrm{head}}{=}64$,
-$d_{\mathrm{rope}}{=}32$, $d_{\mathrm{nope}}{=}32$ and $K{=}16$. Halving
-$K$ scales the $K^{-2}$ component of this distortion bound by $4\times$ and
-the $K^{-1}$ component by $2\times$. The MLA experiment
-(\S\ref{sec:mla-results}) supplies the corresponding trained-model test at
-$K{=}16$.
+This expansion describes a smooth quantization objective. Its powers of $K$
+do not imply that the benefit of EVQ in a trained model increases as rotary
+width decreases. Anchoring leaves no interior freedom at $K=2$, when the
+geometric and EVQ grids coincide. The MLA result at one fixed $K=16$ also
+cannot test a budget interaction. The finite-distance bounds in
+App.~\ref{sec:budget-proofs} and the registered factorial experiment keep
+these mathematical and empirical questions separate.
 
 \paragraph{Large-$\tau$ regime.} At large $\tau$,
 $m_\tau{=}\tau/\sinh\tau$ becomes small and the $1/(Km_\tau)$ factor grows.

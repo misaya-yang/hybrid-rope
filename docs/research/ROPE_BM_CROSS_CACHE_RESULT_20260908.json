@@ -1,0 +1,523 @@
+{
+  "status": "COMPLETE_MATCHED_COUNTEREXAMPLE_DIAGNOSTIC",
+  "runs": {
+    "cross_cache_run_01": {
+      "status": {
+        "status": "FAILED",
+        "error": "cached last-query replay differs from full prefill",
+        "traceback": "Traceback (most recent call last):\n  File \"/root/autodl-tmp/bm_transfer_20260908/code_cross_cache_01/scripts/experiments/olmo_fast_screen/cross_cache.py\", line 180, in main\n    work(args.prepared, args.baseline, args.out)\n  File \"/root/autodl-tmp/bm_transfer_20260908/code_cross_cache_01/scripts/experiments/olmo_fast_screen/cross_cache.py\", line 153, in work\n    raise ValueError('cached last-query replay differs from full prefill')\nValueError: cached last-query replay differs from full prefill\n"
+      },
+      "qualification": [
+        {
+          "row_id": "niah_multikey_2_131072_1",
+          "source": "MrPro",
+          "original_matches_saved": true,
+          "keys_bitwise_equal": true,
+          "diagonal_matches_original": true
+        },
+        {
+          "row_id": "niah_multikey_2_131072_1",
+          "source": "MrProBM",
+          "original_matches_saved": true,
+          "keys_bitwise_equal": true,
+          "diagonal_matches_original": true
+        }
+      ],
+      "files_sha256": {
+        "runtime.json": "9ccaef5ce3a2f57f975e719d612961c02b64fd65e867a092805454c01451be06",
+        "qualification.json": "2ee8ffd55562a2b5ef10062e6457a0663757f4ab8434d0269f2ccb725fd1b592",
+        "live.json": "d34abd6a90e4ba53a8dc6efe88b2c940ac99f3212abed3053ce819366f620b7f",
+        "results.json": "17049eabcbd0b2667a17a9c3933c75e5a4d5c7cab04edab51ed22c4eaf39a0e5",
+        "status.json": "cd9e18fc9ae807c4cfe644f95fbe586fe117cf441290e5c9158e2495eeff7d5a"
+      },
+      "runner_sha256": "a447f9fbada4cebf8bdecc77ab1bd2d4d21b60edd77a05413a2538795c79c5d5",
+      "generated_count": 8,
+      "generation_seconds": 106.07594111561775
+    },
+    "cross_cache_run_02": {
+      "status": {
+        "status": "COMPLETE",
+        "generations": 8,
+        "elapsed_seconds": 78.61897169426084,
+        "peak_memory_bytes": 24303820288
+      },
+      "qualification": [
+        {
+          "row_id": "vt_131072_1",
+          "source": "MrPro",
+          "original_matches_saved": true,
+          "keys_bitwise_equal": true,
+          "diagonal_matches_original": false,
+          "rebuilt_matches_cached_baseline": true
+        },
+        {
+          "row_id": "vt_131072_1",
+          "source": "MrProBM",
+          "original_matches_saved": true,
+          "keys_bitwise_equal": true,
+          "diagonal_matches_original": true,
+          "rebuilt_matches_cached_baseline": true
+        }
+      ],
+      "files_sha256": {
+        "runtime.json": "969b6b2e57d6b3f1ba31be530bd657f395ce299020e0192362d03be18e73df59",
+        "qualification.json": "645adece7fee644a7657600483bb0e45fecf5fa81aeca1403aabd45b524a77e0",
+        "live.json": "b8e35ac5cbef871f2cf20003d5f21e79be7d01dc5d5417b65ac2f3ca27a53d66",
+        "results.json": "798ee0e57ab7fc586c2d7b23b1e1758fe80007bc801527d77abcc196dc539c83",
+        "status.json": "599a034efbcb165eb25b0240438c007d7f5254301416c38f991431525196703d"
+      },
+      "runner_sha256": "db59bcd8d88863a11afd25c3015ea7d09d75c2e16de48e2dd6e59094340c95fd",
+      "generated_count": 8,
+      "generation_seconds": 73.00779519230127
+    }
+  },
+  "records": [
+    {
+      "generated_ids": [
+        220,
+        18,
+        24,
+        20,
+        19,
+        18,
+        16,
+        19,
+        13,
+        151645
+      ],
+      "ended_eos": true,
+      "row_id": "niah_multikey_2_131072_1",
+      "source": "MrPro",
+      "read": "MrPro",
+      "mode": "O",
+      "correct": 1.0,
+      "output_text": " 3954314.",
+      "references": [
+        "3954314"
+      ],
+      "elapsed_seconds": 34.52664713561535
+    },
+    {
+      "generated_ids": [
+        220,
+        18,
+        24,
+        20,
+        19,
+        18,
+        16,
+        19,
+        13,
+        151645
+      ],
+      "ended_eos": true,
+      "row_id": "niah_multikey_2_131072_1",
+      "source": "MrPro",
+      "read": "MrPro",
+      "mode": "same_table_cached_query",
+      "correct": 1.0,
+      "output_text": " 3954314.",
+      "references": [
+        "3954314"
+      ],
+      "elapsed_seconds": 0.3554605580866337
+    },
+    {
+      "generated_ids": [
+        220,
+        18,
+        24,
+        20,
+        19,
+        18,
+        16,
+        19,
+        13,
+        151645
+      ],
+      "ended_eos": true,
+      "row_id": "niah_multikey_2_131072_1",
+      "source": "MrPro",
+      "read": "MrProBM",
+      "mode": "cross_table_cached_query",
+      "correct": 1.0,
+      "output_text": " 3954314.",
+      "references": [
+        "3954314"
+      ],
+      "elapsed_seconds": 0.35640840977430344
+    },
+    {
+      "generated_ids": [
+        220,
+        24,
+        17,
+        23,
+        24,
+        16,
+        16,
+        19,
+        13,
+        151645
+      ],
+      "ended_eos": true,
+      "row_id": "niah_multikey_2_131072_1",
+      "source": "MrProBM",
+      "read": "MrProBM",
+      "mode": "O",
+      "correct": 0.0,
+      "output_text": " 9289114.",
+      "references": [
+        "3954314"
+      ],
+      "elapsed_seconds": 33.99083128198981
+    },
+    {
+      "generated_ids": [
+        220,
+        24,
+        17,
+        23,
+        24,
+        16,
+        16,
+        19,
+        13,
+        151645
+      ],
+      "ended_eos": true,
+      "row_id": "niah_multikey_2_131072_1",
+      "source": "MrProBM",
+      "read": "MrProBM",
+      "mode": "same_table_cached_query",
+      "correct": 0.0,
+      "output_text": " 9289114.",
+      "references": [
+        "3954314"
+      ],
+      "elapsed_seconds": 0.35644685849547386
+    },
+    {
+      "generated_ids": [
+        220,
+        24,
+        17,
+        23,
+        24,
+        16,
+        16,
+        19,
+        13,
+        151645
+      ],
+      "ended_eos": true,
+      "row_id": "niah_multikey_2_131072_1",
+      "source": "MrProBM",
+      "read": "MrPro",
+      "mode": "cross_table_cached_query",
+      "correct": 0.0,
+      "output_text": " 9289114.",
+      "references": [
+        "3954314"
+      ],
+      "elapsed_seconds": 0.35702434927225113
+    },
+    {
+      "generated_ids": [
+        1863,
+        46,
+        11698,
+        35,
+        1207,
+        40,
+        2545,
+        35,
+        356,
+        8412,
+        1637,
+        431,
+        6029,
+        3022,
+        63286,
+        15594,
+        57,
+        271,
+        9112,
+        25,
+        576,
+        897,
+        220,
+        17,
+        20,
+        15,
+        17,
+        18,
+        374,
+        12607
+      ],
+      "ended_eos": false,
+      "row_id": "vt_131072_1",
+      "source": "MrPro",
+      "read": "MrPro",
+      "mode": "O",
+      "correct": 1.0,
+      "output_text": " ZOFPD QIHTD CMBIS RAAAY EZBNZ\n\nNote: The value 25023 is assigned",
+      "references": [
+        "ZOFPD",
+        "QIHTD",
+        "CMBIS",
+        "RAAAY",
+        "EZBNZ"
+      ],
+      "elapsed_seconds": 35.293459706008434
+    },
+    {
+      "generated_ids": [
+        1863,
+        46,
+        11698,
+        35,
+        1207,
+        40,
+        2545,
+        35,
+        356,
+        8412,
+        1637,
+        431,
+        6029,
+        3022,
+        63286,
+        15594,
+        57,
+        271,
+        9112,
+        25,
+        576,
+        897,
+        220,
+        17,
+        20,
+        15,
+        17,
+        18,
+        374,
+        1172
+      ],
+      "ended_eos": false,
+      "row_id": "vt_131072_1",
+      "source": "MrPro",
+      "read": "MrPro",
+      "mode": "same_table_cached_query",
+      "correct": 1.0,
+      "output_text": " ZOFPD QIHTD CMBIS RAAAY EZBNZ\n\nNote: The value 25023 is only",
+      "references": [
+        "ZOFPD",
+        "QIHTD",
+        "CMBIS",
+        "RAAAY",
+        "EZBNZ"
+      ],
+      "elapsed_seconds": 1.0689646042883396
+    },
+    {
+      "generated_ids": [
+        1863,
+        46,
+        11698,
+        35,
+        1207,
+        40,
+        2545,
+        35,
+        356,
+        8412,
+        1637,
+        431,
+        6029,
+        3022,
+        63286,
+        15594,
+        57,
+        271,
+        9112,
+        25,
+        576,
+        897,
+        220,
+        17,
+        20,
+        15,
+        17,
+        18,
+        374,
+        1172
+      ],
+      "ended_eos": false,
+      "row_id": "vt_131072_1",
+      "source": "MrPro",
+      "read": "MrPro",
+      "mode": "same_table_rebuilt_query",
+      "correct": 1.0,
+      "output_text": " ZOFPD QIHTD CMBIS RAAAY EZBNZ\n\nNote: The value 25023 is only",
+      "references": [
+        "ZOFPD",
+        "QIHTD",
+        "CMBIS",
+        "RAAAY",
+        "EZBNZ"
+      ],
+      "elapsed_seconds": 1.0650948658585548
+    },
+    {
+      "generated_ids": [
+        1863,
+        46,
+        11698,
+        35,
+        1207,
+        40,
+        2545,
+        35,
+        356,
+        8412,
+        1637,
+        431,
+        6029,
+        3022,
+        63286,
+        15594,
+        57,
+        271,
+        11209,
+        11,
+        432,
+        4977,
+        1052,
+        374,
+        264,
+        16523,
+        304,
+        279,
+        1467,
+        13
+      ],
+      "ended_eos": false,
+      "row_id": "vt_131072_1",
+      "source": "MrPro",
+      "read": "MrProBM",
+      "mode": "cross_table_cached_query",
+      "correct": 1.0,
+      "output_text": " ZOFPD QIHTD CMBIS RAAAY EZBNZ\n\nHowever, it seems there is a mistake in the text.",
+      "references": [
+        "ZOFPD",
+        "QIHTD",
+        "CMBIS",
+        "RAAAY",
+        "EZBNZ"
+      ],
+      "elapsed_seconds": 1.0659094974398613
+    },
+    {
+      "generated_ids": [
+        1863,
+        46,
+        11698,
+        35,
+        13,
+        151645
+      ],
+      "ended_eos": true,
+      "row_id": "vt_131072_1",
+      "source": "MrProBM",
+      "read": "MrProBM",
+      "mode": "O",
+      "correct": 0.2,
+      "output_text": " ZOFPD.",
+      "references": [
+        "ZOFPD",
+        "QIHTD",
+        "CMBIS",
+        "RAAAY",
+        "EZBNZ"
+      ],
+      "elapsed_seconds": 33.8684087395668
+    },
+    {
+      "generated_ids": [
+        1863,
+        46,
+        11698,
+        35,
+        13,
+        151645
+      ],
+      "ended_eos": true,
+      "row_id": "vt_131072_1",
+      "source": "MrProBM",
+      "read": "MrProBM",
+      "mode": "same_table_cached_query",
+      "correct": 0.2,
+      "output_text": " ZOFPD.",
+      "references": [
+        "ZOFPD",
+        "QIHTD",
+        "CMBIS",
+        "RAAAY",
+        "EZBNZ"
+      ],
+      "elapsed_seconds": 0.21452779322862625
+    },
+    {
+      "generated_ids": [
+        1863,
+        46,
+        11698,
+        35,
+        13,
+        151645
+      ],
+      "ended_eos": true,
+      "row_id": "vt_131072_1",
+      "source": "MrProBM",
+      "read": "MrProBM",
+      "mode": "same_table_rebuilt_query",
+      "correct": 0.2,
+      "output_text": " ZOFPD.",
+      "references": [
+        "ZOFPD",
+        "QIHTD",
+        "CMBIS",
+        "RAAAY",
+        "EZBNZ"
+      ],
+      "elapsed_seconds": 0.21467511355876923
+    },
+    {
+      "generated_ids": [
+        1863,
+        46,
+        11698,
+        35,
+        13,
+        151645
+      ],
+      "ended_eos": true,
+      "row_id": "vt_131072_1",
+      "source": "MrProBM",
+      "read": "MrPro",
+      "mode": "cross_table_cached_query",
+      "correct": 0.2,
+      "output_text": " ZOFPD.",
+      "references": [
+        "ZOFPD",
+        "QIHTD",
+        "CMBIS",
+        "RAAAY",
+        "EZBNZ"
+      ],
+      "elapsed_seconds": 0.21675487235188484
+    }
+  ],
+  "scope": "Two retrospective cases. VT uses its qualified cached-query baseline; original full-prefill final token differs. Official recall is not full-string EOS exact."
+}

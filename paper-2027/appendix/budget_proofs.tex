@@ -1,0 +1,55 @@
+\section{Finite-Budget Bounds: Conditions and Proofs}
+\label{sec:budget-proofs}
+
+\paragraph{T1: a finite slow-pair bound.}
+Let $G_0$ be the Gram matrix of $[1,t]$ in $L^2(\mu)$,
+$\sigma_0=\sqrt{\lambda_{\min}(G_0)}>0$, and
+$h_\mu^2=\mathbb E_\mu[t^4/4+t^6/36]$.
+If $0<x\le\varepsilon$ and $\varepsilon^2h_\mu<\sigma_0$, then
+\begin{equation}
+e(x)\le\frac{x^4h_\mu^2}{(\sigma_0-\varepsilon^2h_\mu)^2}.
+\end{equation}
+Indeed, $|\cos(xt)-1|\le x^2t^2/2$ and
+$|\sin(xt)/x-t|\le x^2t^3/6$ give
+$\|v_x-v_0\|_{\mathrm{HS}}\le x^2h_\mu$.
+Singular-value perturbation gives
+$\sigma_{\min}(v_x)\ge\sigma_0-x^2h_\mu$.
+Since $(I-P_0)v_0=0$, orthonormalization bounds the residual by
+$x^2h_\mu/(\sigma_0-x^2h_\mu)$. Squaring and bounding the denominator
+proves the result. Exact weighted-QR residuals can be substantially sharper.
+
+\paragraph{T2 and T3.}
+The rank approximation in Proposition~\ref{prop:finite-budget} has residual
+squared norm $\eta$. The best rank-$r_0$ approximation cannot be worse, and the
+squared singular values of $A_\Omega$ are the eigenvalues of its Gram matrix.
+Moreover $(I-P_U)A_\Omega$ has operator norm at most $\sqrt\eta$.
+For any bounded $c$, project $b-A_\Omega c$ onto $U^\perp$ and apply the
+reverse triangle inequality. This yields the positive-part lower bound.
+For a declared threshold $\zeta>0$, at most $r_0+\eta/\zeta$ eigenvalues can
+exceed $\zeta$; this diagnostic depends on the chosen tolerance and is not
+model accuracy.
+
+\paragraph{T4: a nonlocal softmax bound.}
+Assume $\mu$ is a probability measure with positive support. Center $b$ and
+$f$ under $\mu$, with both bounded by $M$ in absolute value. Along
+$g_s=(1-s)b+sf$, the tilted probability satisfies $p_{g_s}\ge e^{-2M}\mu$.
+For $\delta=f-b$,
+\begin{equation}
+\operatorname{Var}_{p_{g_s}}(\delta)
+=\inf_c\mathbb E_{p_{g_s}}(\delta-c)^2
+\ge e^{-2M}\inf_c\mathbb E_\mu(\delta-c)^2
+=e^{-2M}\|\delta\|_\mu^2.
+\end{equation}
+The Hessian of log-partition is this variance. Integrating its quadratic form
+along the segment with weight $1-s$ gives
+$D_{\rm KL}(p_b\Vert p_f)\ge e^{-2M}\|b-f\|_\mu^2/2$.
+Because $U$ includes constants, centering leaves the projected residual
+unchanged. If the uncentered model response has coefficient norm at most $B$,
+T3 consequently gives
+\begin{equation}
+D_{\rm KL}(p_b\Vert p_f)\ge\frac{e^{-2M}}2
+(\|(I-P_U)b\|_\mu-B\sqrt\eta)_+^2.
+\end{equation}
+This is a bound for a specified controlled read. Independent values and a query
+that cannot access them are needed for a value-reading interpretation; it is
+not a lower bound on a Transformer language-model loss.

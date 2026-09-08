@@ -1,0 +1,17 @@
+The number of rotary channels does not uniquely determine the positional
+responses available to an attention head. We study whether frequency allocation
+can reduce the cost of a smaller rotary budget while keeping total query/key
+width, model size, and training resources fixed. A finite-distance analysis bounds
+the spectral tail contributed by nearly repeated slow-frequency subspaces.
+Under a bounded coefficient norm, this limits responses outside their shared
+span; a controlled softmax result states the additional conditions needed to
+turn that restriction into distributional error. These are conditional basis
+results, not language-model loss bounds. We instantiate the question with a
+fixed-support anchored EVQ-Cosh allocation and a six-arm factorial design:
+32 versus 16 rotary pairs, geometric versus analytic allocation, and two
+16-pair frequency-subset controls. Existing fixed-support training and single-budget
+MLA results motivate the experiment but do not identify a budget interaction.
+The new paired training study is in progress. Whether analytic allocation
+preserves long-context quality at half the rotary width, without impairing the
+training window or losing to simple subset selection, remains an empirical
+question.

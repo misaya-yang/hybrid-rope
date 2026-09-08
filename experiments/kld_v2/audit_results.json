@@ -1,0 +1,29 @@
+{
+  "status": "CPU_ALGEBRA_ONLY",
+  "errors": {
+    "derivative_max_abs": 1.3877787807814457e-16,
+    "chunk_s_max_abs": 4.614364446098307e-16,
+    "chunk_h_max_abs": 1.942890293094024e-16,
+    "nonzero_chunk_s": 3.391384395534658e-16,
+    "nonzero_chunk_h": 3.0531133177191805e-16,
+    "nonzero_derivative": 1.6653345369377348e-16
+  },
+  "finite_difference_errors": [
+    0.0051362229945985955,
+    0.0005141272967146951,
+    5.141777212355969e-05
+  ],
+  "linear_capacity": 3.9304255356400377,
+  "state_budget_bytes_per_sequence_fp32": 1048576,
+  "random_interference": {
+    "128": {
+      "S": 0.3664377159220373,
+      "H": 0.3693230522678801
+    },
+    "512": {
+      "S": 0.018030205213609263,
+      "H": 0.07268870133360585
+    }
+  },
+  "limitation": "No trained checkpoint, full-network generation, or GPU-kernel performance tested."
+}

@@ -1,0 +1,24 @@
+\section{One Fixed Analytic Allocation}
+\label{sec:budget-method}
+
+Set $d_h=64$, $K_{\rm ref}=32$, $a=0$, and
+$R=(31/32)\log(500000)$. For either $K=16$ or $32$, the geometric grid is
+$z_k^G=k/(K-1)$. The anchored EVQ grid is
+\begin{equation}
+u_k=\frac{k+1/2}{K},\quad
+q_k=1-\frac{\operatorname{asinh}[(1-u_k)\sinh\tau]}{\tau},\quad
+z_k^E=\frac{q_k-q_0}{q_{K-1}-q_0},\quad \tau=\sqrt2.
+\end{equation}
+The same strength is used at both budgets. It follows the existing full-head
+reference convention $64/\sqrt{2048}$, not a fitted strength or an optimum
+implied by Proposition~\ref{prop:finite-budget}. Previous variational
+optimality remains limited to its original surrogate
+(App.~\ref{sec:theory}).
+
+Every arm retains 32 frequency slots and split-half pairs $(j,j+32)$.
+The first $K$ slots use the active table; other slots have frequency zero.
+The full-head kernel and temperature $1/8$ are unchanged. P16 retains the
+fastest 16 G32 frequencies; U16 retains indices $0,2,\ldots,30$. These subset
+controls do not share the slow endpoint of the anchored G/E arms and therefore
+do not enter the pure-allocation estimand. They remain necessary practical
+baselines for whether the analytic construction adds value.

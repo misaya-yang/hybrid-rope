@@ -1,0 +1,87 @@
+\section{Finite-Distance Constraints on a Rotary Budget}
+\label{sec:budget-new}
+
+\paragraph{Fixed width and pair identities.}
+For total head width $d_h$, retain $K$ rotating pairs and $d_h-2K$ unrotated
+coordinates. The attention logit is
+\begin{equation}
+s_{ij}=\frac{1}{\sqrt{d_h}}\left[
+\sum_{k=1}^{K}(q_i^{(k)})^\top R_{\omega_k}(i-j)k_j^{(k)}
++(q_i^N)^\top k_j^N\right].
+\end{equation}
+All parameter shapes and the temperature remain fixed. We parameterize the
+active frequencies by
+\begin{equation}
+\omega_k=\exp[-(a+Rz_k)],\qquad z_0=0,\quad z_{K-1}=1.
+\label{eq:table-decomposition}
+\end{equation}
+Same-$K$ comparisons at fixed $(a,R)$ isolate allocation. Cross-$K$ comparisons
+change the division between rotating and nonrotating content coordinates.
+
+\paragraph{Stable finite-distance geometry.}
+Let $t=\Delta/L$ on $\Delta=0,\ldots,L-1$ with a declared positive distribution
+$\mu$. The main geometric diagnostic uses causal-pair weights
+$\mu(\Delta)\propto L-\Delta$ and also reports uniform weights. These weights
+are not learned attention probabilities. For $x=\omega L$, let
+$v_x=[\cos(xt),\sin(xt)/x]$, with $v_0=[1,t]$.
+Weighted QR yields an orthonormal basis $Q_x$ for each pair's subspace. Set
+$A_\Omega=[Q_{x_1},\ldots,Q_{x_K}]$ and
+$\Gamma_\Omega=A_\Omega^*A_\Omega$, so $\operatorname{tr}\Gamma_\Omega=2K$.
+Let $P_0$ project onto $U_0=\operatorname{span}\{1,t\}$ and define
+$e(x)=\|(I-P_0)Q_x\|_{\mathrm{HS}}^2$.
+
+\begin{proposition}[Finite budget and bounded-coefficient response]
+\label{prop:finite-budget}
+Suppose $m\ge1$ active pairs satisfy $x_k\le\varepsilon$. Let
+$\eta=\sum_{k:x_k\le\varepsilon}e(x_k)$ and $r_0=2(K-m+1)$.
+For the eigenvalues $\lambda_1\ge\cdots\ge\lambda_{2K}$ of $\Gamma_\Omega$,
+\begin{equation}
+\sum_{r>r_0}\lambda_r\le\eta.
+\label{eq:tail-budget}
+\end{equation}
+Let $U$ contain $U_0$ and all non-slow pair subspaces. Then, for every
+$\|c\|_2\le B$ and target response $b$,
+\begin{equation}
+\|(I-P_U)A_\Omega c\|_\mu\le B\sqrt\eta,\qquad
+\inf_{\|c\|_2\le B}\|b-A_\Omega c\|_\mu^2
+\ge(\|(I-P_U)b\|_\mu-B\sqrt\eta)_+^2.
+\label{eq:bounded-response}
+\end{equation}
+\end{proposition}
+
+Replace each slow block with $P_0Q_x$. The resulting matrix has rank at most
+$r_0$ and squared approximation error $\eta$, proving
+Eq.~\eqref{eq:tail-budget}. Projection, the operator-norm bound by the
+Hilbert--Schmidt norm, and the triangle inequality give
+Eq.~\eqref{eq:bounded-response}. When no pair is slow, the tail statement is
+vacuous with $r_0=2K$ and $\eta=0$.
+
+\paragraph{What the constraint means.}
+Several slow pairs occupy distinct coordinates while adding little energy
+outside a shared positional span. This does not make their content coefficients
+redundant. The bound becomes informative only if the target needs a direction
+outside $U$ and the available coefficient norm cannot compensate. In the
+normalized basis, raw coefficients $C\cos(xt)+D\sin(xt)$ become
+$c=R_x[C,xD]^\top$ when $v_x=Q_xR_x$. The factor $x$ is essential; the bound
+cannot simply assume the same $B$ from a shared Q/K norm across trained models.
+
+\paragraph{From logits to a controlled read.}
+For $p_f(d)\propto\mu(d)e^{f(d)}$, centered target and model logits bounded
+in magnitude by $M$ satisfy
+\begin{equation}
+D_{\rm KL}(p_b\Vert p_f)\ge\frac{e^{-2M}}{2}
+\|b-f\|_\mu^2.
+\end{equation}
+Together with Eq.~\eqref{eq:bounded-response}, this gives a conditional
+softmax fitting obstruction (App.~\ref{sec:budget-proofs}). Ordinary single-query
+attention uses uniform $\mu$ here; no $\log\mu$ bias is added to the Transformer.
+This theorem concerns a controlled position response, not the NLL of a deep
+model with varying content and alternative information paths.
+
+\paragraph{Falsifiable implication.}
+Reallocation can help only when the original basis lacks relevant directions
+and the trained model can exploit the new ones without larger content or
+optimization costs. A higher static rank alone is insufficient. The experiment
+therefore tests whether the budget loss is smaller under EVQ,
+$(\ell_{G16}-\ell_{G32})-(\ell_{E16}-\ell_{E32})>0$, without predicting
+monotonic gains over all $K$ or guaranteeing lossless halving.

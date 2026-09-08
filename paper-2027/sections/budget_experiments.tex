@@ -1,0 +1,97 @@
+\section{Prepared Budget Experiment}
+\label{sec:budget-experiment}
+
+\paragraph{Status.}
+The implementation and runtime probe are prepared; formal training is not
+currently scheduled while the central modern-attention question is being tested. Table~\ref{tab:budget-design}
+is a design table, not a results table. No newly trained budget-arm score is
+available in this revision.
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{lcl}
+\toprule Arm & Rotary pairs & Allocation \\
+\midrule
+G32 &32& Fixed-support geometric \\
+E32 &32& Same-support anchored EVQ \\
+G16 &16& Same-support resampled geometric \\
+E16 &16& Same-support anchored EVQ \\
+P16 &16& Fastest half of G32 \\
+U16 &16& Every second G32 frequency \\
+\bottomrule
+\end{tabular}
+\caption{Prepared six-arm comparison. All arms retain 12 heads of total
+width 64 and identical parameter shapes. Seeds 42, 137, and 256 would be paired if this comparison is activated.
+The six-arm queue is not the current research priority.
+No entries denote measured model quality.}
+\label{tab:budget-design}
+\end{table}
+
+\paragraph{Training.}
+We reuse the 12-layer, width-768 decoder with MLP width 3072 and vocabulary
+50304. The default is 7629 updates of 65536 input tokens each, or
+499,974,144 tokens per arm, at training length 2048. Initialization, token
+prefix, row order, optimizer, learning-rate schedule, and update count are
+paired within each seed. The optimizer is fused AdamW with
+$\beta=(0.9,0.95)$, weight decay 0.01, peak/minimum rates
+$6\times10^{-4}/6\times10^{-5}$, 762 warmup updates, and clipping 1.0.
+The final common budget is frozen from actual throughput and available resources
+before observing method comparisons. A shortened, unstable training run is
+reported as a pilot rather than a converged budget frontier.
+
+\paragraph{Same-target evaluation.}
+Before comparison, freeze 512 independent long documents from the held-out
+FineWeb-Edu shard. Each has at least 8193 tokens, permitting 8192 inputs and
+one shifted final label. Contexts of 512, 2048, 4096, and 8192 tokens predict
+the same final 256 targets. The primary metric is document-mean NLL at 4096;
+PPL is its exponential. Report 2048 same-target and whole-window NLL for
+retention, and 8192/512 as trends. Every evaluation uses the training table
+and unit gain, without test-time scaling or routing.
+
+\paragraph{Remote-context control.}
+For the 4096-token input, replace the first 3584 tokens with a fixed independent
+document's prefix while retaining the last 512 input tokens, labels, length,
+and position IDs. The same document derangement applies to all arms. Define
+$C_A=\ell_A^{\rm replaced}-\ell_A^{\rm intact}$ and
+$I_{\rm context}=C_{E16}-C_{G16}$. Greater sensitivity supports useful remote
+context only alongside lower intact NLL; sensitivity to a wrong prefix alone
+is not evidence of better use.
+
+\paragraph{Contrasts and decision.}
+At the primary length, report per-seed
+\begin{align}
+D_{16}&=\ell_{G16}-\ell_{E16},&D_{32}&=\ell_{G32}-\ell_{E32},&J&=D_{16}-D_{32},\\
+H&=\ell_{E16}-\ell_{G32},&P&=\ell_{P16}-\ell_{E16},&U&=\ell_{U16}-\ell_{E16}.
+\end{align}
+The practical and noninferiority margins are 0.02 nat/token. Half-budget
+preservation requires the interval for $H$ below the margin, native-window
+retention, and comparison with both subset baselines. A positive $J$ separately
+supports mitigation of budget loss. If G16 does not lose quality against G32,
+there is no observed bottleneck to recover. A recovery ratio is reported only
+when that denominator is stable and at least 0.02.
+
+Three training seeds are the replication units. Report all seed contrasts,
+their mean and standard deviation, and any Student-$t$ interval with the
+normality assumption and two degrees of freedom explicit. Document bootstraps
+condition on the trained checkpoints; documents are not training replications.
+The main plot will show both G/E budget points, individual seeds, and P16/U16,
+with native-window quality in a separate panel. Pending runs are not plotted
+as predicted scores.
+
+\section{Existing Evidence and Its Scope}
+\label{sec:budget-external}
+
+Prior fixed-support 151.9M training supports an allocation effect but used
+length 256 and does not supply a baseline for the new 2K experiment
+(App.~\ref{sec:exp-identify}). The older 50.9M factorial changes head count,
+head dimension, and shape strength; it does not isolate the present budget
+intervention.
+
+The existing 432M MLA-style study has $d_{\rm rope}=32$, hence $K=16$.
+Across three seeds, raw 16K PPL is 138.8 for geometric RoPE and 95.6 for EVQ;
+8K is 35.4 versus 35.8. Under its shared run-specific wavelength blend, 16K
+is 117.9 versus 71.1. This provides a relevant single-budget result and a
+reason to test native retention, but no allocation-by-budget interaction.
+Existing 750M training and retrieval results provide separate scale evidence.
+Their original protocols and evidence boundaries remain in the supporting
+appendices; neither is relabeled as a replication of the new experiment.

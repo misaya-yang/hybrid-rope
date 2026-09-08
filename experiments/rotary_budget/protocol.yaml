@@ -1,0 +1,85 @@
+schema_version: 1
+status: prepared_candidate_protocol_not_scheduled
+source: /Users/yang/Downloads/rotary_budget_theory_and_experiment_20260908.md
+question: Can allocation compensate for reducing rotary pairs at fixed total attention width?
+architecture:
+  existing_model: experiments.native_rope_evq_150m.model.GPT
+  layers: 12
+  hidden_size: 768
+  heads: 12
+  head_dim: 64
+  intermediate_size: 3072
+  vocab_size: 50304
+  expected_parameters: 151898880
+  pair_layout: split_half_fixed_pairs_j_j_plus_32
+  inv_freq_length: 32
+  inactive_frequency: 0.0
+  attention_scale: 0.125
+  attention_gain: 1.0
+arms:
+  G32: anchored_geometric_K32
+  E32: anchored_EVQ_Cosh_K32
+  G16: anchored_geometric_K16_then_16_zeros
+  E16: anchored_EVQ_Cosh_K16_then_16_zeros
+  P16: G32_indices_0_through_15_then_16_zeros
+  U16: G32_indices_0_2_4_through_30_then_16_zeros
+allocation:
+  reference_base: 500000
+  reference_K: 32
+  fixed_tau: 1.4142135623730951
+  log_span: 31_over_32_times_log_500000
+  GE_support_shared: true
+  P_U_support_shared: false
+training:
+  seeds: [42, 137, 256]
+  sequence_length: 2048
+  global_batch: 32
+  tokens_per_update: 65536
+  planned_updates: 7629
+  planned_input_tokens_per_arm: 499974144
+  prediction_tokens_per_row: 2047
+  budget_frozen_after: sustained_throughput_and_available_resources_before_method_results
+  optimizer: fused_AdamW
+  betas: [0.9, 0.95]
+  weight_decay: 0.01
+  peak_lr: 0.0006
+  minimum_lr: 0.00006
+  warmup_updates: 762
+  schedule: original_cosine
+  clipping: 1.0
+  dropout: 0.0
+  data: existing_FineWeb_Edu_shard000_exact_token_prefix
+  tokenizer: GPT_NeoX_revision_c292233c833e336628618a88a648727eb3dff0a7
+  paired: [initial_parameters, row_order, data, updates, schedule]
+  checkpoint: resumable_model_optimizer_rng_and_next_update
+  validation_milestones_updates: [762, 2048, 4096, 6144, 7629]
+evaluation:
+  source: independent_FineWeb_Edu_shard004_documents
+  documents: 512
+  minimum_tokens_with_shift: 8193
+  anchor: first_8193_tokens_each_eligible_document_in_source_order
+  target: last_256_tokens_of_8193_token_anchor
+  input_lengths: [512, 2048, 4096, 8192]
+  main_length: 4096
+  native_full_window_nll: true
+  remote_replaced: replace_first_3584_of_4096_input_tokens_keep_last_512_and_all_labels
+  derangement: next_document_modulo_512
+  gain: 1.0
+  test_time_scaling: false
+  metric: mean_document_mean_NLL
+  ppl: exp_mean_NLL
+statistics:
+  practical_margin_nat: 0.02
+  noninferiority_margin_nat: 0.02
+  training_unit: seed
+  evaluation_unit: paired_document
+  seed_interval: Student_t_df2_with_explicit_normality_assumption
+  document_bootstrap: conditional_on_checkpoints_only
+  contrasts: [D16, D32, J, H, P, U, C_A, I_context]
+  recovered_ratio_only_if_geo_budget_loss_at_least: 0.02
+execution:
+  first_stage: superseded_by_user_core_result_first_do_not_auto_launch
+  confirmation: seeds137_256_if_first_complete_stage_does_not_clearly_lose_to_subset_baselines
+  no_search: [tau, layer, head, alternate_curve, main_length]
+  resource_policy: measure_sustained_throughput_then_report_total_hours_no_invented_deadline
+  pilot_threshold_tokens_per_arm: 268000000

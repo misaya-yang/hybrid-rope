@@ -1,0 +1,17 @@
+\section{Scope and Limitations}
+\label{sec:discussion}
+
+The new claim to test is whether allocation reduces the long-context cost of a
+smaller rotary budget under exact architecture and training controls. The
+finite-distance results establish conditional restrictions on position
+responses. They neither rank all trained models nor guarantee that EVQ beats
+frequency-subset selection. A negative result against P16 or U16 must remain
+in the main comparison and change the interpretation of the construction.
+
+A successful experiment would establish representation efficiency for the
+specified decoder and evaluation range. It would not establish universal
+scaling with rotary width, superiority in zero-training extension, or an
+automatic halving of KV memory. Decoupled rotary keys in MLA may connect width
+to cache cost, but the present full-width MHA experiment does not measure that
+systems benefit. The separate KLD follow-up studies recurrent memory and does
+not form a second method or supporting result for this paper.

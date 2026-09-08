@@ -1,0 +1,45 @@
+\section{Frequency Allocation under a Fixed Rotary Budget}
+\label{sec:intro}
+
+An attention head can devote fewer dimensions to rotation without removing its
+content channels. Does the way those remaining frequencies are placed determine
+how much long-context quality is lost? We study this question at fixed total
+query/key width, head count, parameter count, and training budget. The resource
+is the number $K$ of rotating two-dimensional pairs; the remaining coordinates
+retain identity rotation. This is a representation-efficiency question. In
+ordinary multi-head attention it does not, by itself, reduce the KV tensor.
+
+The relevant comparison is stronger than showing that a new frequency table
+improves a geometric table at one width. A budget-specific claim requires an
+allocation-by-budget interaction. A practical half-budget claim additionally
+requires comparison with simple strategies that retain selected frequencies
+from the full table. We therefore retain both a high-frequency subset and a
+uniform subset as main controls. They may explain the entire benefit of reducing
+rotation, in which case a special advantage for EVQ would be unsupported.
+
+Slow rotary pairs offer a useful starting point for theory. With content
+coefficients fixed, their positional response subspaces approach the same
+span of a constant and a linear function of distance. We quantify the residual
+energy outside that span on a finite distance distribution, bound the spectral
+tail of the complete table, and impose a coefficient budget before discussing
+approximation error. A softmax bridge then applies to a controlled read with
+bounded centered logits. Content-dependent coefficients and communication
+through other layers remain outside that argument; only model experiments can
+determine whether the restriction is consequential in language modeling.
+
+Our sole analytic candidate is anchored \evq{}, with one fixed shape strength
+across budgets. Its previous surrogate derivation supplies a reproducible
+construction; it does not establish optimality for the new budget objective.
+Nor does an asymptotic quantization bound imply increasing gains as $K$ shrinks:
+when $K=2$ and both endpoints are fixed, EVQ and geometric tables coincide.
+
+\paragraph{Evidence and open test.}
+A prior three-seed fixed-support intervention establishes that interior
+allocation can change learning outcomes (App.~\ref{sec:exp-identify}). A
+separate three-seed MLA study provides positive long-range evidence at a single
+small rotary budget (\S\ref{sec:budget-external}). Neither establishes what
+happens when only rotary width changes. The new six-arm experiment isolates
+that question, with same-target long-document NLL, training-window retention,
+and a position-preserving remote-prefix control. Its results are pending; the
+current manuscript presents the theory and registered experiment without
+claiming half-budget preservation.

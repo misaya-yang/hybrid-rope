@@ -1,0 +1,31 @@
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{Partial rotation and frequency selection.}
+Slow RoPE bands can support content matching rather than distinct position
+responses \citep{barbero2025round}. MHA2MLA uses partial rotation and frequency
+selection as part of converting pretrained attention to a compressed latent
+architecture \citep{ji2025mha2mla}. Thus neither reducing rotary dimensions
+nor the importance of selection at a small width is a new observation here.
+Our proposed comparison holds the complete attention architecture fixed and
+asks whether an anchored analytic allocation improves on explicit high-frequency
+and uniform-subset baselines under the same training budget.
+
+\paragraph{Learned and data-dependent frequency use.}
+LeRoPE learns frequencies and compares them with geometric and partial RoPE
+\citep{karypis2026lerope}; frequency usage also depends on the data's dependency
+structure \citep{wu2026datashapes}. These results rule out treating a static
+spectral diagnostic as a universal utility metric. Our candidate uses one fixed
+analytic shape without a frequency search, but that distinction alone does not
+establish a practical advantage. The six-arm experiment must determine it.
+
+\paragraph{Context extension.}
+Position interpolation, YaRN, LongRoPE, and MrRoPE modify the treatment of
+positions or frequencies during extension
+\citep{chen2024position,peng2024yarn,ding2024longrope,tian2026mrrope}.
+MrRoPE studies mixed-radix transports of an existing table; the present
+experiment studies training-time allocation under changing rotary width.
+These mathematical design spaces can overlap. MrRoPE is relevant extension
+prior work rather than a substitute for the budget controls here. Any future
+zero-training superiority claim would require its own matched strong-baseline
+comparison.
