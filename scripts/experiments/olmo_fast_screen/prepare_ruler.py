@@ -11,7 +11,7 @@ import subprocess
 import sys
 
 from .bench import digest
-from .prepare import sha_file, write
+from .prepare import sha_file, write, verify_weight_stats
 from .ruler_bench import TASKS, FAMILIES, score
 
 UPSTREAM_REVISION = 'c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a'
@@ -34,14 +34,15 @@ def main():
     parser.add_argument('--short-count', type=int, default=2)
     parser.add_argument('--long-count', type=int, default=4)
     parser.add_argument('--long-cap', type=int, default=16384)
+    parser.add_argument('--short-cap', type=int, default=4096)
     parser.add_argument('--qa-offset', type=int, default=0)
     parser.add_argument('--reuse-nonqa', type=Path)
     args = parser.parse_args()
     if min(args.short_count, args.long_count) < 1:
         parser.error('sample counts must be positive')
-    if args.long_cap <= 4096:
-        parser.error('long cap must exceed 4096')
-    cells = ((4096, args.short_count), (args.long_cap, args.long_count))
+    if args.short_cap <= 0 or args.long_cap <= args.short_cap:
+        parser.error('positive short cap and larger long cap required')
+    cells = ((args.short_cap, args.short_count), (args.long_cap, args.long_count))
     if args.qa_offset < 0:
         parser.error('QA offset must be nonnegative')
     if args.reuse_nonqa:
@@ -51,9 +52,7 @@ def main():
     old, upstream, out = (p.resolve() for p in (args.reuse_prepared, args.upstream, args.out))
     manifest = json.loads((old/'manifest.json').read_text())
     model_path = Path(manifest['model_path'])
-    stat = (model_path/'model.safetensors').stat()
-    if manifest['weight_stat'] != dict(size=stat.st_size, mtime_ns=stat.st_mtime_ns):
-        raise ValueError('model changed since recorded preparation')
+    verify_weight_stats(manifest)
     for name, expected in manifest['model_files_sha256'].items():
         if sha_file(model_path/name) != expected:
             raise ValueError('model metadata changed: ' + name)
@@ -171,8 +170,8 @@ def main():
         inputs_reused_from_manifest_sha256=None,
         scoring='Official RULER match-all, QA match-any; fractional per-row scores; equal task weights within each length.',
         qualification='No self-made Native gate. Report MrPro floor/ceiling cells and all selected tasks without outcome-based removal.',
-        selection=f'Primary: {args.long_cap}-token-cap six-task macro gain; report 4K separately. Positive long gain with nonnegative 4K change is a development win; short loss is a tradeoff.',
-        scope=f'Mixed six-task RULER subset, {6*args.short_count} rows at 4K and {6*args.long_count} at {args.long_cap}-token cap; not full RULER. Development/confirmation role is declared in the experiment protocol.',
+        selection=f'Primary: {args.long_cap}-token-cap six-task macro gain; report {args.short_cap}-token cap separately. Positive long gain with nonnegative short change is a development win; short loss is a tradeoff.',
+        scope=f'Mixed six-task RULER subset, {6*args.short_count} rows at {args.short_cap}-token cap and {6*args.long_count} at {args.long_cap}-token cap; not full RULER. Development/confirmation role is declared in the experiment protocol.',
         gpu_execution='NOT_RUN; one MrPro baseline and one MrProBM comparison',
         code_files={name:sha_file(root/name) for name in dependencies})
     manifest['prepared_files'] = {name:sha_file(out/name) for name in

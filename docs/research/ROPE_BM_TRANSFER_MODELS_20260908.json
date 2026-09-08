@@ -1,0 +1,33 @@
+{
+  "qwen15": {
+    "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+    "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+    "model_path": "/root/autodl-tmp/qwen25_1p5b_32k",
+    "weight_files_sha256": {
+      "model.safetensors": "dd924a11b4c220f385b51ffa522daea7c9f3d850e31b162bb5661df483c6d3ee"
+    },
+    "metadata_sha256": {
+      "config.json": "98d2ff8cc47488d08a2b0b3acf4eb99ef210779b42bd48605f6b8e36acdbf670",
+      "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583"
+    },
+    "provenance": "Recorded model_asset_inventory_20260904.json plus ROPE_QWEN15_FULL_LAG_P2_RESULT_20260907.json revision; rehash cached files at this transfer boundary."
+  },
+  "qwen3": {
+    "model_id": "Qwen/Qwen2.5-3B-Instruct",
+    "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+    "model_path": "/root/autodl-tmp/rope_qwen_baseline_20260907/model",
+    "weight_files_sha256": {
+      "model-00001-of-00002.safetensors": "67347b23fb4165b652eb6611f5e1f2a06dfcddba8e909df1b2b0b1857bee06c2",
+      "model-00002-of-00002.safetensors": "a40d941d0e7e0b966ad8b62bb6d6b7c88cce1299197b599d9d0a4ce59aabfc1d"
+    },
+    "metadata_blob_sha1": {
+      "config.json": "51b83fbd4e2d363b60235b9c8d494046a83c1cbf",
+      "generation_config.json": "bf077f03dc569cfb8a90b3ec1ad20365a620bad6",
+      "tokenizer.json": "443909a61d429dff23010e5bddd28ff530edda00",
+      "tokenizer_config.json": "07bfe0640cb5a0037f9322287fbfc682806cf672",
+      "model.safetensors.index.json": "38047c6284a25427043f0ab040f623a2a20dd093"
+    },
+    "provenance": "Pinned official metadata in rope_qwen_baseline_20260907/model_expected.json and verified model_ready.json; rehash cached shards and check git blob metadata."
+  }
+}

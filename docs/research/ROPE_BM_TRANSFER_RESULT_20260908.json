@@ -1,0 +1,259 @@
+{
+  "status": "COMPLETE_PAIRED_ARMS_ONLY",
+  "models": {
+    "qwen3": {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+      "parameters": 3085938688,
+      "weight_files_sha256": {
+        "model-00001-of-00002.safetensors": "67347b23fb4165b652eb6611f5e1f2a06dfcddba8e909df1b2b0b1857bee06c2",
+        "model-00002-of-00002.safetensors": "a40d941d0e7e0b966ad8b62bb6d6b7c88cce1299197b599d9d0a4ce59aabfc1d"
+      },
+      "static_scale": 4,
+      "native_length": 32768,
+      "prepared_manifest_sha256": "def4270af546b9632baca3af727f6254f5b598e3308e839ae8117c29bde58d2a",
+      "prompt_collection_sha256": "2edc287e72d178101593c24ac85de21183709edf62a7dfff6b0e4e290f31df3b",
+      "runtime": {
+        "model_load_seconds": 4.7707031555473804,
+        "gpu": "NVIDIA GeForce RTX 4080 SUPER",
+        "gpu_memory": 33794359296,
+        "backend": "Flash SDPA only; no fallback enabled",
+        "software": {
+          "torch": "2.8.0+cu128",
+          "transformers": "5.15.1",
+          "numpy": "2.3.2"
+        },
+        "identity": "bb86e623d7597506706a7b7b6773b533516a020576fb29485ef35077b12da6e3",
+        "phase_deadline": null
+      },
+      "phase_seconds": 1766.5476577281952,
+      "arms": {
+        "MrPro": {
+          "raw_path": "results/bm_transfer_20260908/run_qwen3_01/MrPro.jsonl",
+          "raw_sha256": "e5dcf19a5748e7b0b987dcd2fd552f563228695aede1d6f8609f4eee9aaa2672",
+          "receipt_sha256": "c8f534ac0752fec3379d83fc168f32c351e340444ca1d7f9afc0f06b9450b4d1",
+          "table_identity": {
+            "tensor_sha256": "33cbe3a40994ac2a79126a14ce30282867bd6d49b74c1ada4d4cce8a7e76016f",
+            "gain": 1.138629436111989
+          },
+          "elapsed_seconds": 879.7535893842578,
+          "summary": {
+            "rows": 36,
+            "score_sum": 29.216666666666665,
+            "by_length": {
+              "32768": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 1.0,
+                  "niah_multiquery": 1.0,
+                  "vt": 0.9,
+                  "fwe": 0.8333333333333333,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.8722222222222222
+              },
+              "131072": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 0.75,
+                  "niah_multiquery": 0.9375,
+                  "vt": 0.75,
+                  "fwe": 0.75,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.78125
+              }
+            },
+            "eos_count": 24
+          }
+        },
+        "MrProBM": {
+          "raw_path": "results/bm_transfer_20260908/run_qwen3_01/MrProBM.jsonl",
+          "raw_sha256": "dd498dc25703e255a6ba29f48043a07d426915d760fd70cdd2ff8ab28ff5cc32",
+          "receipt_sha256": "542af8ba343ab64980f61c8cf96724b8e05fadc63511fc90c6e8649d7390d919",
+          "table_identity": {
+            "tensor_sha256": "e5833f770db56b21368002fa9fdc4040dfdec9590016218ff8ec6e8de7013193",
+            "gain": 1.138629436111989
+          },
+          "elapsed_seconds": 874.8244186900556,
+          "summary": {
+            "rows": 36,
+            "score_sum": 28.0,
+            "by_length": {
+              "32768": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 1.0,
+                  "niah_multiquery": 1.0,
+                  "vt": 1.0,
+                  "fwe": 1.0,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.9166666666666666
+              },
+              "131072": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 0.5,
+                  "niah_multiquery": 1.0,
+                  "vt": 0.75,
+                  "fwe": 0.75,
+                  "qa_1": 0.25
+                },
+                "macro_accuracy": 0.7083333333333334
+              }
+            },
+            "eos_count": 28
+          }
+        }
+      },
+      "comparison": {
+        "status": "NO_LONG_GAIN",
+        "macro_delta_by_length": {
+          "32768": 0.0444444444444444,
+          "131072": -0.07291666666666663
+        },
+        "candidate": {
+          "rows": 36,
+          "score_sum": 28.0,
+          "by_length": {
+            "32768": {
+              "task_accuracy": {
+                "niah_single_2": 1.0,
+                "niah_multikey_2": 1.0,
+                "niah_multiquery": 1.0,
+                "vt": 1.0,
+                "fwe": 1.0,
+                "qa_1": 0.5
+              },
+              "macro_accuracy": 0.9166666666666666
+            },
+            "131072": {
+              "task_accuracy": {
+                "niah_single_2": 1.0,
+                "niah_multikey_2": 0.5,
+                "niah_multiquery": 1.0,
+                "vt": 0.75,
+                "fwe": 0.75,
+                "qa_1": 0.25
+              },
+              "macro_accuracy": 0.7083333333333334
+            }
+          },
+          "eos_count": 28
+        },
+        "baseline": {
+          "rows": 36,
+          "score_sum": 29.216666666666665,
+          "by_length": {
+            "32768": {
+              "task_accuracy": {
+                "niah_single_2": 1.0,
+                "niah_multikey_2": 1.0,
+                "niah_multiquery": 1.0,
+                "vt": 0.9,
+                "fwe": 0.8333333333333333,
+                "qa_1": 0.5
+              },
+              "macro_accuracy": 0.8722222222222222
+            },
+            "131072": {
+              "task_accuracy": {
+                "niah_single_2": 1.0,
+                "niah_multikey_2": 0.75,
+                "niah_multiquery": 0.9375,
+                "vt": 0.75,
+                "fwe": 0.75,
+                "qa_1": 0.5
+              },
+              "macro_accuracy": 0.78125
+            }
+          },
+          "eos_count": 24
+        },
+        "paired_wins": 6,
+        "paired_losses": 4,
+        "baseline_extreme_cells": [
+          "32768/niah_single_2",
+          "32768/niah_multikey_2",
+          "32768/niah_multiquery",
+          "131072/niah_single_2"
+        ],
+        "evidence_scope": "Six-task RULER development subset; not full RULER or independent confirmation",
+        "paired_by_length": {
+          "32768": {
+            "wins": 2,
+            "ties": 10,
+            "losses": 0
+          },
+          "131072": {
+            "wins": 4,
+            "ties": 16,
+            "losses": 4
+          }
+        },
+        "loss_rows": [
+          {
+            "row_id": "niah_multikey_2_131072_1",
+            "references": [
+              "3954314"
+            ],
+            "baseline_score": 1.0,
+            "candidate_score": 0.0,
+            "baseline_text": " 3954314.",
+            "candidate_text": " 9289114."
+          },
+          {
+            "row_id": "vt_131072_1",
+            "references": [
+              "ZOFPD",
+              "QIHTD",
+              "CMBIS",
+              "RAAAY",
+              "EZBNZ"
+            ],
+            "baseline_score": 1.0,
+            "candidate_score": 0.2,
+            "baseline_text": " ZOFPD QIHTD CMBIS RAAAY EZBNZ\n\nNote: The value 25023 is assigned",
+            "candidate_text": " ZOFPD."
+          },
+          {
+            "row_id": "fwe_131072_3",
+            "references": [
+              "crenea",
+              "lgwizg",
+              "ftlltd"
+            ],
+            "baseline_score": 0.6666666666666666,
+            "candidate_score": 0.3333333333333333,
+            "baseline_text": " \n\n1. qaxgco\n2. lgwizg\n3. crenea",
+            "candidate_text": " \n\n1. qaxgco\n2. lgwizg\n3. euoavl"
+          },
+          {
+            "row_id": "qa_1_131072_3",
+            "references": [
+              "not equal",
+              "not equal",
+              "not equal"
+            ],
+            "baseline_score": 1.0,
+            "candidate_score": 0.0,
+            "baseline_text": " It is widely believed that P is not equal to co-NP",
+            "candidate_text": " P \u2286 NP \u2286 PP \u2286 PSPACE"
+          }
+        ]
+      }
+    }
+  },
+  "scope": "User-selected Qwen2.5-3B-Instruct, six-task RULER subset, fixed S4 formula. Not the full 13-task published score.",
+  "shared_prompt_collection": true,
+  "shared_decoding": true,
+  "completed_models": 1,
+  "user_cancelled_1p5b": {
+    "status": "STOPPED",
+    "complete_comparison": false,
+    "completed_baseline_rows": 19,
+    "phase_seconds": 177.42087578773499,
+    "reason": "User switched directly to the official-paper 3B checkpoint."
+  }
+}

@@ -1,0 +1,628 @@
+{
+  "status": {
+    "status": "COMPLETE",
+    "generations": 14,
+    "elapsed_seconds": 145.48028019815683
+  },
+  "qualification": {
+    "status": "PASS",
+    "hf_ids": [
+      220,
+      18,
+      24,
+      20,
+      19,
+      18,
+      16,
+      19,
+      13,
+      151645
+    ],
+    "manual_ids": [
+      220,
+      18,
+      24,
+      20,
+      19,
+      18,
+      16,
+      19,
+      13,
+      151645
+    ],
+    "late_ids": [
+      220,
+      18,
+      24,
+      20,
+      19,
+      18,
+      16,
+      19,
+      13,
+      151645
+    ]
+  },
+  "results": [
+    {
+      "generated_ids": [
+        220,
+        18,
+        24,
+        20,
+        19,
+        18,
+        16,
+        19,
+        13,
+        151645
+      ],
+      "ended_eos": true,
+      "mode": "C",
+      "arm": "MrPro",
+      "row_id": "niah_multikey_2_131072_1",
+      "references": [
+        "3954314"
+      ],
+      "correct": 1.0,
+      "output_text": " 3954314.",
+      "input_tokens": 134,
+      "last_position": 133,
+      "elapsed_seconds": 0.34622275829315186
+    },
+    {
+      "generated_ids": [
+        25,
+        220,
+        18,
+        24,
+        20,
+        19,
+        18,
+        16,
+        19,
+        13,
+        151645
+      ],
+      "ended_eos": true,
+      "mode": "P",
+      "arm": "MrPro",
+      "row_id": "niah_multikey_2_131072_1",
+      "references": [
+        "3954314"
+      ],
+      "correct": 1.0,
+      "output_text": ": 3954314.",
+      "input_tokens": 134,
+      "last_position": 130870,
+      "elapsed_seconds": 0.3056007996201515
+    },
+    {
+      "generated_ids": [
+        220,
+        18,
+        24,
+        20,
+        19,
+        18,
+        16,
+        19,
+        13,
+        151645
+      ],
+      "ended_eos": true,
+      "mode": "C",
+      "arm": "MrProBM",
+      "row_id": "niah_multikey_2_131072_1",
+      "references": [
+        "3954314"
+      ],
+      "correct": 1.0,
+      "output_text": " 3954314.",
+      "input_tokens": 134,
+      "last_position": 133,
+      "elapsed_seconds": 0.25636857002973557
+    },
+    {
+      "generated_ids": [
+        25,
+        220,
+        18,
+        24,
+        20,
+        19,
+        18,
+        16,
+        19,
+        13,
+        151645
+      ],
+      "ended_eos": true,
+      "mode": "P",
+      "arm": "MrProBM",
+      "row_id": "niah_multikey_2_131072_1",
+      "references": [
+        "3954314"
+      ],
+      "correct": 1.0,
+      "output_text": ": 3954314.",
+      "input_tokens": 134,
+      "last_position": 130870,
+      "elapsed_seconds": 0.2843731939792633
+    },
+    {
+      "generated_ids": [
+        1863,
+        46,
+        11698,
+        35,
+        11,
+        1207,
+        40,
+        2545,
+        35,
+        11,
+        356,
+        8412,
+        1637,
+        11,
+        431,
+        6029,
+        3022,
+        11,
+        323,
+        63286,
+        15594,
+        57,
+        382,
+        10061,
+        752,
+        1438,
+        1495,
+        279,
+        8781,
+        315
+      ],
+      "ended_eos": false,
+      "mode": "C",
+      "arm": "MrPro",
+      "row_id": "vt_131072_1",
+      "references": [
+        "ZOFPD",
+        "QIHTD",
+        "CMBIS",
+        "RAAAY",
+        "EZBNZ"
+      ],
+      "correct": 1.0,
+      "output_text": " ZOFPD, QIHTD, CMBIS, RAAAY, and EZBNZ.\n\nLet me break down the chain of",
+      "input_tokens": 676,
+      "last_position": 675,
+      "elapsed_seconds": 0.7828239686787128
+    },
+    {
+      "generated_ids": [
+        1863,
+        46,
+        11698,
+        35,
+        11,
+        1207,
+        40,
+        2545,
+        35,
+        11,
+        431,
+        6029,
+        3022,
+        11,
+        356,
+        8412,
+        1637,
+        11,
+        323,
+        63286,
+        15594,
+        57,
+        13,
+        4710,
+        10061,
+        752,
+        1438,
+        1495,
+        279,
+        8781
+      ],
+      "ended_eos": false,
+      "mode": "P",
+      "arm": "MrPro",
+      "row_id": "vt_131072_1",
+      "references": [
+        "ZOFPD",
+        "QIHTD",
+        "CMBIS",
+        "RAAAY",
+        "EZBNZ"
+      ],
+      "correct": 1.0,
+      "output_text": " ZOFPD, QIHTD, RAAAY, CMBIS, and EZBNZ. \n\nLet me break down the chain",
+      "input_tokens": 676,
+      "last_position": 131038,
+      "elapsed_seconds": 0.7772032730281353
+    },
+    {
+      "generated_ids": [
+        1863,
+        46,
+        11698,
+        35,
+        11,
+        1207,
+        40,
+        2545,
+        35,
+        11,
+        356,
+        8412,
+        1637,
+        11,
+        431,
+        6029,
+        3022,
+        11,
+        323,
+        63286,
+        15594,
+        57,
+        382,
+        10061,
+        752,
+        1438,
+        1495,
+        279,
+        8781,
+        315
+      ],
+      "ended_eos": false,
+      "mode": "C",
+      "arm": "MrProBM",
+      "row_id": "vt_131072_1",
+      "references": [
+        "ZOFPD",
+        "QIHTD",
+        "CMBIS",
+        "RAAAY",
+        "EZBNZ"
+      ],
+      "correct": 1.0,
+      "output_text": " ZOFPD, QIHTD, CMBIS, RAAAY, and EZBNZ.\n\nLet me break down the chain of",
+      "input_tokens": 676,
+      "last_position": 675,
+      "elapsed_seconds": 0.782150749117136
+    },
+    {
+      "generated_ids": [
+        1863,
+        46,
+        11698,
+        35,
+        11,
+        1207,
+        40,
+        2545,
+        35,
+        11,
+        431,
+        6029,
+        3022,
+        11,
+        63286,
+        15594,
+        57,
+        11,
+        323,
+        356,
+        8412,
+        1637,
+        13,
+        4710,
+        10061,
+        752,
+        10339,
+        279,
+        8781,
+        315
+      ],
+      "ended_eos": false,
+      "mode": "P",
+      "arm": "MrProBM",
+      "row_id": "vt_131072_1",
+      "references": [
+        "ZOFPD",
+        "QIHTD",
+        "CMBIS",
+        "RAAAY",
+        "EZBNZ"
+      ],
+      "correct": 1.0,
+      "output_text": " ZOFPD, QIHTD, RAAAY, EZBNZ, and CMBIS. \n\nLet me explain the chain of",
+      "input_tokens": 676,
+      "last_position": 131038,
+      "elapsed_seconds": 0.8015864863991737
+    },
+    {
+      "generated_ids": [
+        220,
+        24,
+        17,
+        23,
+        24,
+        16,
+        16,
+        19,
+        13,
+        151645
+      ],
+      "ended_eos": true,
+      "mode": "O",
+      "arm": "MrProBM",
+      "row_id": "niah_multikey_2_131072_1",
+      "references": [
+        "3954314"
+      ],
+      "correct": 0.0,
+      "output_text": " 9289114.",
+      "input_tokens": 130871,
+      "last_position": 130870,
+      "elapsed_seconds": 33.013765063136816,
+      "matches_saved_generated_ids": true
+    },
+    {
+      "generated_ids": [
+        220,
+        24,
+        17,
+        23,
+        24,
+        16,
+        16,
+        19,
+        13,
+        151645
+      ],
+      "ended_eos": true,
+      "mode": "L",
+      "arm": "MrProBM",
+      "row_id": "niah_multikey_2_131072_1",
+      "references": [
+        "3954314"
+      ],
+      "correct": 0.0,
+      "output_text": " 9289114.",
+      "input_tokens": 1,
+      "last_position": 130870,
+      "elapsed_seconds": 0.24943243712186813,
+      "original_replay_matches_saved": true
+    },
+    {
+      "generated_ids": [
+        1863,
+        46,
+        11698,
+        35,
+        13,
+        151645
+      ],
+      "ended_eos": true,
+      "mode": "O",
+      "arm": "MrProBM",
+      "row_id": "vt_131072_1",
+      "references": [
+        "ZOFPD",
+        "QIHTD",
+        "CMBIS",
+        "RAAAY",
+        "EZBNZ"
+      ],
+      "correct": 0.2,
+      "output_text": " ZOFPD.",
+      "input_tokens": 131039,
+      "last_position": 131038,
+      "elapsed_seconds": 33.128590904176235,
+      "matches_saved_generated_ids": true
+    },
+    {
+      "generated_ids": [
+        1863,
+        46,
+        11698,
+        35,
+        1207,
+        40,
+        2545,
+        35,
+        63286,
+        15594,
+        57,
+        151645
+      ],
+      "ended_eos": true,
+      "mode": "L",
+      "arm": "MrProBM",
+      "row_id": "vt_131072_1",
+      "references": [
+        "ZOFPD",
+        "QIHTD",
+        "CMBIS",
+        "RAAAY",
+        "EZBNZ"
+      ],
+      "correct": 0.6,
+      "output_text": " ZOFPD QIHTD EZBNZ",
+      "input_tokens": 1,
+      "last_position": 131038,
+      "elapsed_seconds": 0.2968704365193844,
+      "original_replay_matches_saved": true
+    },
+    {
+      "generated_ids": [
+        220,
+        18,
+        24,
+        20,
+        19,
+        18,
+        16,
+        19,
+        13,
+        151645
+      ],
+      "ended_eos": true,
+      "mode": "neutralize_confusable_key",
+      "arm": "MrPro",
+      "row_id": "niah_multikey_2_131072_1",
+      "references": [
+        "3954314"
+      ],
+      "correct": 1.0,
+      "output_text": " 3954314.",
+      "input_tokens": 130871,
+      "last_position": 130870,
+      "elapsed_seconds": 33.30008467659354
+    },
+    {
+      "generated_ids": [
+        220,
+        19,
+        15,
+        21,
+        23,
+        17,
+        15,
+        22,
+        13,
+        151645
+      ],
+      "ended_eos": true,
+      "mode": "neutralize_confusable_key",
+      "arm": "MrProBM",
+      "row_id": "niah_multikey_2_131072_1",
+      "references": [
+        "3954314"
+      ],
+      "correct": 0.0,
+      "output_text": " 4068207.",
+      "input_tokens": 130871,
+      "last_position": 130870,
+      "elapsed_seconds": 33.311013143509626
+    }
+  ],
+  "layouts": [
+    {
+      "row_id": "niah_multikey_2_131072_1",
+      "prompt_sha256": "cae57f43559a2fe4720e902bea009383c2d6e983b9810ab3593baed1d045a92e",
+      "retained_tokens": 134,
+      "original_tokens": 130871,
+      "details": {
+        "target_key": "bizarre-inhabitant",
+        "wrong_key": "bizarre-slime",
+        "wrong_value": "9289114",
+        "evidence_token_spans": [
+          [
+            35173,
+            35196
+          ],
+          [
+            74092,
+            74114
+          ]
+        ]
+      }
+    },
+    {
+      "row_id": "vt_131072_1",
+      "prompt_sha256": "45088839799f7e84d04d05ce3299fccf3e728ef49d1dbca22f759e34ad1c3849",
+      "retained_tokens": 676,
+      "original_tokens": 131039,
+      "details": {
+        "preserved_entire_icl": true,
+        "assignments": [
+          "VAR ZOFPD = 25023",
+          "VAR QIHTD = VAR ZOFPD",
+          "VAR CMBIS = VAR QIHTD",
+          "VAR RAAAY = VAR CMBIS",
+          "VAR EZBNZ = VAR RAAAY"
+        ],
+        "evidence_token_spans": [
+          [
+            3986,
+            3999
+          ],
+          [
+            80319,
+            80332
+          ],
+          [
+            91755,
+            91767
+          ],
+          [
+            95510,
+            95521
+          ],
+          [
+            116712,
+            116723
+          ]
+        ]
+      }
+    }
+  ],
+  "edits": [
+    {
+      "row_id": "niah_multikey_2_131072_1",
+      "variant": "neutralize_confusable_key",
+      "prompt_sha256": "4068d224eb966c560b11b86557043575f7bcb0666434fb216a88b2d5f4682965",
+      "changed_positions": [
+        74100
+      ],
+      "old_key": "bizarre-slime",
+      "new_key": "neutral-slime",
+      "unchanged_length": 130871,
+      "references": [
+        "3954314"
+      ]
+    }
+  ],
+  "runtime": {
+    "parent_manifest_sha256": "def4270af546b9632baca3af727f6254f5b598e3308e839ae8117c29bde58d2a",
+    "diagnostic_manifest_sha256": "dcc1d696f4ab985c391c28fff55395f99e508cdafcd7d545e8e8bae08fd02014",
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "code_files": {
+      "scripts/experiments/olmo_fast_screen/prepare_diagnosis.py": "c2d3d504e4f0b055d9e15cf794ab93743ffbfdd9c14af11e8b57f0345a35c073",
+      "scripts/experiments/olmo_fast_screen/runtime.py": "131b68bc058c14091b1bf5e1d99129827abe1ec7c61797eec92cf665117574a4",
+      "scripts/experiments/olmo_fast_screen/diagnose.py": "3ab713670852ec9c6bb0589c1e677f7ba4e7cbfefd4dbb5d18e300b05bffda49",
+      "scripts/experiments/olmo_fast_screen/prepare_ruler.py": "913c82f820704b9f74f6cad47d078f98bf3722a7cbf1ae9f95db65c90241df00",
+      "scripts/experiments/olmo_fast_screen/bench.py": "f5a37bfd481ac42f439b7e1aee51a34b4c10448f579650aff96dc843e7cbe221",
+      "scripts/experiments/olmo_fast_screen/prepare.py": "453b9adc023bdecea7148d6cdac94d46d4369565dfa8741bef9013d3d6a1dffe",
+      "scripts/lib/rope/boundary_matched.py": "4abb4db6afc012cd7fef741123253909c856a81e5db65cf86046e701b0e6001b",
+      "scripts/experiments/olmo_fast_screen/run.py": "14872760fe6ca8806a9e5c021ba7468c1f231f15384b109b875b0007cd8c1666",
+      "scripts/experiments/scale_transport/position_visibility.py": "f7242ef181e80ea7265954ae5a5ac94c61bd5d190baa4bd5925c3755129ae622",
+      "scripts/experiments/olmo_fast_screen/ruler_bench.py": "2c12dd09a5eba9f811d88c25e00c730a26f063fcfef34a73f7ba80ee63e44620",
+      "scripts/experiments/cross_audit/tables.py": "69c41af3a54d48bd0ca1be99ef0d55b9458cfd23208999d188b05359be1c32fa",
+      "scripts/experiments/olmo_fast_screen/supervise.py": "3eb03e20ac8b53ad7369571bf82aa33dc97fb11de6169226db3c29d704a0b39d",
+      "scripts/lib/rope/official_yarn.py": "61ffb97ebdd3e1575af308f04c517ef53b422e9fdef65cba552bfc8a7f4c4ef7",
+      "scripts/experiments/olmo_fast_screen/prepare_transfer.py": "4416591ce1198d2779aabc82832af4e99a8fe81c8788eb6d110f626e304a91e2"
+    },
+    "backend": "Flash SDPA only",
+    "scope": "Oracle diagnostic; not a task-score benchmark or deployment method"
+  },
+  "artifact_sha256": {
+    "diagnosis_run_02/results.json": "c651bbc515ed1a86fd750d3f6df9169d39ed81628e006558a41e145fff24470d",
+    "diagnosis_run_02/status.json": "7fe2c5a889a4f838f605fb354234a9a542cae67f33afa7710d683999f1b74f58",
+    "diagnosis_run_02/qualification.json": "6ee93ea63c6678d3b51628f926318b314191205212b1542988538863e13adc22",
+    "diagnosis_inputs_02/layouts.json": "7ed665db3696ed9c3bd31625660106ca0297c66ab2f9211b49b5448b77a1ef21",
+    "diagnosis_inputs_02/edits.json": "a2c3c09199aca62c5106b27c9ae681439f24f4662fc463a1d4721bcb660fce87"
+  },
+  "scope": "Two selected failure cases only; oracle diagnostics, not a deployable method or population claim."
+}

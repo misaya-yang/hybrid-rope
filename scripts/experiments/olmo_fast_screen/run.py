@@ -11,7 +11,7 @@ import subprocess
 import time
 
 from .bench import FAMILIES, digest, score, summarize, verdict
-from .prepare import sha_file
+from .prepare import sha_file, verify_weight_stats
 
 
 def atomic(path, value):
@@ -58,9 +58,7 @@ def worker(prepared, out, phase_deadline=None, baseline_only=False):
     if baseline_only:
         queue = []
     model_path = Path(manifest['model_path'])
-    weight_stat = (model_path/'model.safetensors').stat()
-    if {'size':weight_stat.st_size,'mtime_ns':weight_stat.st_mtime_ns} != manifest['weight_stat']:
-        raise ValueError('model file changed since preparation')
+    verify_weight_stats(manifest)
     for name, expected in manifest['model_files_sha256'].items():
         if sha_file(model_path/name) != expected:
             raise ValueError('model metadata/tokenizer drift: '+name)
@@ -120,6 +118,8 @@ def worker(prepared, out, phase_deadline=None, baseline_only=False):
     model = AutoModelForCausalLM.from_pretrained(model_path, local_files_only=True,
         dtype=torch.bfloat16, device_map={'':'cuda'}, attn_implementation='sdpa').eval()
     model.config.use_cache = True
+    if sum(parameter.numel() for parameter in model.parameters()) != manifest['actual_parameters']:
+        raise ValueError('loaded model parameter count differs from the prepared weight headers')
     tokenizer = AutoTokenizer.from_pretrained(model_path, local_files_only=True)
     decoding = GenerationConfig.from_dict(json.loads((prepared/'generation_config.json').read_text()))
     atomic(out/'runtime.json', dict(model_load_seconds=time.monotonic()-start,

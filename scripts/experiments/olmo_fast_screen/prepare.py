@@ -23,6 +23,16 @@ def write(path, value):
     Path(path).write_text(json.dumps(value, indent=2)+'\n')
 
 
+def verify_weight_stats(manifest):
+    """Reuse preparation-time digests for unchanged single-file or sharded weights."""
+    expected = manifest.get('weight_stats') or {'model.safetensors':manifest['weight_stat']}
+    model = Path(manifest['model_path'])
+    for name, recorded in expected.items():
+        stat = (model/name).stat()
+        if recorded != dict(size=stat.st_size,mtime_ns=stat.st_mtime_ns):
+            raise ValueError('model weight file changed since preparation: '+name)
+
+
 def reviewed_candidate(path, source):
     candidate = json.loads(Path(path).read_text())
     if (candidate['target_revision'],candidate['target_model']) != (source['revision'],source['model_id']):
