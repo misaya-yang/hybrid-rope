@@ -1,6 +1,6 @@
 # INDEX — file and evidence-source index
 
-**Updated:** 2026-09-08; remediation claims audited; sparse-memory pilot closed as assay-unqualified. This file locates source
+**Updated:** 2026-09-08; author refocused step one on training-free improvement over MrRoPE-Pro. This file locates source
 files and their roles; it does not own numerical results, verdicts or live tasks.
 Project details are in `README.md`, constraints in `AGENTS.md`, and live state
 in `paper-2027/HANDOFF.md`. Read only the relevant entries.
@@ -18,6 +18,7 @@ inspect them with `git show main_0726:<path>`.
 | [README.md](README.md) | Project question, reconstruction context, intended outcomes and layout |
 | [docs/README.md](docs/README.md) | Roles of current cross-phase research records, historical experiments and provenance documents |
 | [paper-2027/HANDOFF.md](paper-2027/HANDOFF.md) | Current local Git/PDF/authorization state; source-reported remote state is labelled |
+| [Training-free step one](docs/research/ROPE_ZERO_TRAINING_MRPRO_STEP1_20260908.md) | Author's current objective; empirical starting point and a proposed single-checkpoint, fixed-deployment confirmation against MrRoPE-Pro; no new run or superiority claim |
 | [Local failure synthesis](docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md), [source/claim/raw evidence](docs/research/ROPE_LOCAL_FAILURE_EVIDENCE_20260908.json) | Facts → specific rejected explanations → unresolved questions → discriminators; §6 audits the supplied remediation report, withdraws broad non-identifiability and unmeasured mechanisms; §7 replaces blanket vetoes with scoped decisions and review-first execution. JSON retains the earlier raw audit, not new model verification |
 | [Author-source coverage](docs/research/ROPE_SOURCE_COVERAGE_20260908.json), [preserved Pro materials](paper-2027/research/external-reviews/pro-materials-20260908/) | Ten RoPE documents fully reviewed; nine new verbatim sources, one reused; two other-topic inputs screened and excluded |
 | [Sparse-memory interface pilot](docs/research/SPARSE_MEMORY_INTERFACE_PILOT_20260908.md), [full results/identities](docs/research/SPARSE_MEMORY_INTERFACE_RESULTS_20260908.json), [implementation](scripts/experiments/sparse_memory/), [checks](tests/test_sparse_memory.py) | Closed 7-run synthetic pilot: V1 shortcut, V2 query/learning floors, 50M native qualification failed; no TP capability verdict. Protocol owns predictions/results, HANDOFF owns live resource state |
