@@ -21,6 +21,12 @@ owners in `evidence/`; mature retrofit material in the matching retrofit
 subfolder; retired material in a dated `archive/` folder. Every new or corrected
 owner must update `INDEX.md` in the same change.
 
+Cross-phase research plans, execution reviews and source-coverage ledgers are
+also maintained under [`../../docs/research/`](../../docs/research/), as routed
+by the root INDEX. Their existing paths remain stable; they do not become
+paper-level evidence merely by being indexed. External verbatim inputs stay
+in `external-reviews/`, separate from the project's verified conclusions.
+
 A preflight is not a result. External reviews, filenames, summaries, and compact
 receipts never supersede a valid direct owner. This directory authorizes no
 compute or publication.

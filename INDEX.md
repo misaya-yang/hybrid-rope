@@ -1,6 +1,6 @@
 # INDEX — file and evidence-source index
 
-**Updated:** 2026-09-08; overnight closeout and subsequent first-principles source review. This file locates source
+**Updated:** 2026-09-08; documentation routing normalized after company-PC handoff. This file locates source
 files and their roles; it does not own numerical results, verdicts or live tasks.
 Project details are in `README.md`, constraints in `AGENTS.md`, and live state
 in `paper-2027/HANDOFF.md`. Read only the relevant entries.
@@ -16,6 +16,7 @@ inspect them with `git show main_0726:<path>`.
 | --- | --- |
 | [AGENTS.md](AGENTS.md) | Core constraints, plan-before-compute rules and checks |
 | [README.md](README.md) | Project question, reconstruction context, intended outcomes and layout |
+| [docs/README.md](docs/README.md) | Roles of current cross-phase research records, historical experiments and provenance documents |
 | [paper-2027/HANDOFF.md](paper-2027/HANDOFF.md) | Current local Git/PDF/authorization state; source-reported remote state is labelled |
 | [Local failure synthesis](docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md), [source/claim/raw evidence](docs/research/ROPE_LOCAL_FAILURE_EVIDENCE_20260908.json) | Company-PC continuation: local failure lineages, recurring invalid premises, corrected ALS/LoRA interpretation, existing positive results; no new capability result |
 | [Author-source coverage](docs/research/ROPE_SOURCE_COVERAGE_20260908.json), [preserved Pro materials](paper-2027/research/external-reviews/pro-materials-20260908/) | Ten RoPE documents fully reviewed; nine new verbatim sources, one reused; two other-topic inputs screened and excluded |
@@ -27,7 +28,7 @@ inspect them with `git show main_0726:<path>`.
 | [Recovered historical Qwen log-p2 table](docs/research/ROPE_RECOVERED_QWEN_P2_20260907.json) | Exact Native/m/deployment arrays recovered and hash-checked from old Qwen 1.5B audit; same Native geometry as current 3B, not a new 3B result; comparison with MrPro |
 | [Shared-frequency output response](scripts/analysis/shared_frequency_response.py), [existing-cache analysis](scripts/analysis/analyze_cached_frequency_response.py) | Split-half sine-sign error corrected against independent absolute rotation; real Native-cache output parity checked; retains signed key/head response, not a loss optimizer |
 | [Scale-transport assumption calculations](docs/research/ROPE_SCALE_TRANSPORT_ASSUMPTIONS_20260907.json), [CPU analysis](scripts/analysis/diagnose_scale_transport_assumptions.py) | Existing-array changes and exact counterexamples for independent-phase energy versus shared-frequency response, and frequency clipping versus amplitude filtering; no new candidate or GPU run |
-| [Final Pro decision request](docs/research/ROPE_PRO_DECISION_REQUEST_20260907.md) | Current self-contained prompt with actual failures; request one implementable method and a discriminating low-cost experiment |
+| [Final Pro decision request](docs/research/ROPE_PRO_DECISION_REQUEST_20260907.md) | Preserved September 7 prompt; subsequent replies and local-failure review are routed above |
 | [Qwen 1.5B minimal mechanism comparison](docs/research/ROPE_QWEN15_MINIMAL_MECHANISM_20260907.md), [fixed tables](docs/research/ROPE_QWEN15_FULL_LAG_P2_CANDIDATE_20260907.json), [paired 64K/128K result](docs/research/ROPE_QWEN15_FULL_LAG_P2_RESULT_20260907.json), [full-lag audit](scripts/analysis/audit_qwen_p2_full_lag.py), [decision replay](scripts/analysis/compare_decision_traces.py) | Closed small-model protocol: full-lag repair, matched results, checkpoint transfer and interrupted LoRA; no automatic continuation |
 | [Unified frequency research plan](docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md) | Method-history and reference synthesis; GPU plans closed, subsequent source-driven CPU reasoning follows HANDOFF |
 | [Scale-transport proposal review](docs/research/ROPE_SCALE_TRANSPORT_REVIEW_20260907.md) | External-proposal review at its original scope; subsequent implementation/results routed to pilot owner |
@@ -52,12 +53,12 @@ inspect them with `git show main_0726:<path>`.
 | [paper-2027/research/external-reviews/ROPE_ICLR2027_CROSS_AUDIT_20260906.md](paper-2027/research/external-reviews/ROPE_ICLR2027_CROSS_AUDIT_20260906.md) | Exact supplied audit; planning input, not independently validated theory/model/CPU evidence |
 | [paper-2027/research/external-reviews/README.md](paper-2027/research/external-reviews/README.md) | External-source status and provenance boundaries |
 
-## 2. Latest local round and implementation audit
+## 2. Completed rounds and implementation audit
 
 | File | Purpose / status |
 | --- | --- |
 | [Cross-audit experiment protocol](paper-2027/research/CROSS_AUDIT_EXPERIMENT_PROTOCOL_20260907.md) | Historical E0/E1 and full/LoRA contract, baseline identity corrections; no automatic continuation |
-| [Scale-transport two-hour pilot protocol](docs/research/ROPE_SCALE_TRANSPORT_PILOT_20260907.md) | Main current result owner: guard/QA diagnostics plus combination RULER; score interpretation corrections, skipped VT rows and raw identities |
+| [Scale-transport two-hour pilot protocol](docs/research/ROPE_SCALE_TRANSPORT_PILOT_20260907.md) | Closed pilot result owner: guard/QA diagnostics plus combination RULER, score corrections, skipped VT rows and raw identities |
 | [Paired P2-middle/Mr experiment](scripts/experiments/scale_transport/paired_ruler_run.py), [state readback](scripts/experiments/scale_transport/capture_paired_states.py), [binding-state analysis](scripts/analysis/analyze_binding_states.py) | Continuation experiment 1 and numerical replay of the same conditions; current Qwen3B result and count owned by pilot/HANDOFF; no automatic candidate search |
 | [Pilot follow-up analysis and candidate](docs/research/ROPE_SCALE_TRANSPORT_FOLLOWUP_20260907.json), [analysis program](scripts/analysis/analyze_scale_transport_pilot.py) | Row-level score decomposition and one untested Mr-middle/scale-tail/CoPE composition; explanation and limits in pilot owner |
 | [Combination RULER preparation](scripts/experiments/scale_transport/ruler_prepare.py), [runner](scripts/experiments/scale_transport/ruler_run.py) | Executed combination RULER apparatus: 22 generated rows and 8 skipped VT rows; no active process; results in pilot owner |
@@ -75,7 +76,7 @@ inspect them with `git show main_0726:<path>`.
 | [paper-2027/claude_code_workspace/reports/ROUND10_LORA_RESULTS_20260905.md](paper-2027/claude_code_workspace/reports/ROUND10_LORA_RESULTS_20260905.md) | Earlier low-rank execution report |
 | [paper-2027/claude_code_workspace/reports/ROUND11_OLMO_RESULTS_20260905.md](paper-2027/claude_code_workspace/reports/ROUND11_OLMO_RESULTS_20260905.md) | Earlier OLMo execution report |
 | [paper-2027/claude_code_workspace/round12_20260906/code/rope_tables.py](paper-2027/claude_code_workspace/round12_20260906/code/rope_tables.py) | N/Z/Y/M array construction and identity/gain declarations |
-| [paper-2027/claude_code_workspace/round12_20260906/code/build_y2_canon.py](paper-2027/claude_code_workspace/round12_20260906/code/build_y2_canon.py) | Y2 builder; smoothstep/square-root convention under fidelity review |
+| [paper-2027/claude_code_workspace/round12_20260906/code/build_y2_canon.py](paper-2027/claude_code_workspace/round12_20260906/code/build_y2_canon.py) | Historical Y2 variant builder; smoothstep/square-root differs from pinned YaRN equations; original code retained for identity |
 | [paper-2027/claude_code_workspace/round12_20260906/code/scoring.py](paper-2027/claude_code_workspace/round12_20260906/code/scoring.py) | Saved output scoring and row/group interpretation |
 | [paper-2027/claude_code_workspace/round12_20260906/code/track_a_eval.py](paper-2027/claude_code_workspace/round12_20260906/code/track_a_eval.py) | Frozen evaluation including chat-template path |
 | [paper-2027/claude_code_workspace/round12_20260906/code/track_b_train_v2.py](paper-2027/claude_code_workspace/round12_20260906/code/track_b_train_v2.py) | Existing continuation trainer; inspect actual trainable modules/losses before reuse |
@@ -128,9 +129,9 @@ inspect them with `git show main_0726:<path>`.
 
 | File | Locate when checking |
 | --- | --- |
-| [paper-2027/research/attention-aware-retrofit/preflights/CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md](paper-2027/research/attention-aware-retrofit/preflights/CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md) | Start the prepared N_compact / Qwen Z/Y round |
+| [paper-2027/research/attention-aware-retrofit/preflights/CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md](paper-2027/research/attention-aware-retrofit/preflights/CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md) | Historical N_compact / Qwen Z/Y preflight; execution and corrected interpretation belong to Round10 and the local failure synthesis |
 | [scripts/experiments/matched_transfer_round.py](scripts/experiments/matched_transfer_round.py) | Earlier N_compact/Z/Y planner; not an implementation of new E0–E5 |
-| [scripts/analysis/audit_generation_transitions.py](scripts/analysis/audit_generation_transitions.py) | Start the prepared N_compact / Qwen Z/Y round |
+| [scripts/analysis/audit_generation_transitions.py](scripts/analysis/audit_generation_transitions.py) | Export and audit saved generation transitions; code entry, not a launch instruction |
 | [scripts/train/run_native_constrained_transfer.sh](scripts/train/run_native_constrained_transfer.sh) | Review FFN learning/forgetting and choose the next task from results |
 | [scripts/analysis/review_native_constrained_transfer.py](scripts/analysis/review_native_constrained_transfer.py) | Receipt review and protocol-specific stopping decisions |
 | [tests/test_native_constrained_transfer.py](tests/test_native_constrained_transfer.py) | Review FFN learning/forgetting and choose the next task from results |

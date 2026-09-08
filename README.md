@@ -8,17 +8,11 @@
 
 - **优先本方方法。** 初期复用论文与已有对手结果，不默认重跑完整基线、对手微调或笛卡尔积消融；比较条件不同处简要注明。
 - **从有效方法改进。** MrRoPE 提供累计 radix 与有效中段分配，CoPE 提供深尾稳定机制，本方已有 Z/分配结果提供候选与经验。Cosh 保留为历史证据，不继续优化它的曲线。
-- **当前进展按证据表述。** 本夜实验已收尾；1.5B64K有三个小样本任务的配对收益，
-  128K与3B存在平局、地板和退化，尚未解决原目标。LoRA在59/128步停止，无最终
-  adapter或训练后能力结论。详见[整夜实验报告](docs/research/ROPE_OVERNIGHT_EXPERIMENT_REVIEW_20260908.md)。
-- **当前工作是求解与准备。** 作者要求完整核对Pro材料、失败范式与成功论文，由
-  主代理和两位子代理推导可区分预测，研究注意力计算与频率分配的结合。旧GPU
-  队列不自动恢复；实际电源、授权和下一行动只看HANDOFF。
-- **公司PC接续入口。** 已完成本地失败谱系与两代理复核，见
-  [综合分析](docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md)。修复了旧ALS
-  首轮虚假收敛，纠正仍传播的LoRA容量、YaRN与统计判读错误；固定位置可见性
-  判别已有代码准备，真实模型验证尚未执行。作者要求本轮整理推送后收尾。
+- **按实际终点判断进展。** 区分CPU数学检查、真实模型验证、开发结果和能力
+  结论；研究已知失败及后续纠正，从已有有效方法推导可区分预测。
 
+公司PC接续先读[HANDOFF](paper-2027/HANDOFF.md)，其中维护阶段状态、资源与下一
+行动。具体实验结果、失败谱系和准备中的协议按下表读取，README不另维护作业状态。
 
 原有 support/allocation 表述、固定端点和统一符号本身不足以承担新颖性。论文重构应围绕真正有效的构造、可复现输出和有用的机制解释展开；完整理论不是开始有价值试验的门槛。
 
@@ -29,8 +23,11 @@
 | [AGENTS.md](AGENTS.md) | 核心约束、阶段内自主执行、GPU 资源管理和必要验证 |
 | [INDEX.md](INDEX.md) | 详细文件索引；区分当前结果、设计输入与历史材料 |
 | [paper-2027/HANDOFF.md](paper-2027/HANDOFF.md) | 当前暂停/运行状态、授权预算、资产位置和恢复工作入口 |
-| [研究主线](docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md) | 方法关系和当前研究方向 |
+| [研究主线](docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md) | 方法关系、文献核对和历史方案 |
 | [本夜实验报告](docs/research/ROPE_OVERNIGHT_EXPERIMENT_REVIEW_20260908.md) | 全部阶段结果、成本、局限、失误复盘及证据路由 |
+| [本地失败谱系](docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md) | 本地与归档错误前提、有效正负结果、代码修复及证据覆盖 |
+| [固定位置可见性协议](docs/research/ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md) | 待验证的因果判别、代码入口、资产条件与验证边界 |
+| [外部材料](paper-2027/research/external-reviews/README.md) | Pro原始输入、覆盖清单及来源身份 |
 | [REVISION_BRIEF](paper-2027/REVISION_BRIEF.md) | 论文重构契约；旧阶段排序只作历史 |
 
 恢复工作先读 HANDOFF，再按 INDEX 打开相关 owner。不要批量阅读全部理论史，也不要把一个旧计划文件当作待执行队列。

@@ -10,6 +10,8 @@ and [`../paper-2027/HANDOFF.md`](../paper-2027/HANDOFF.md).
 | --- | --- | --- |
 | [`lib/rope/`](lib/rope/) | reusable frequency tables, injection, fixed-support and target-free primitives | implementation authority |
 | [`analysis/`](analysis/) | CPU diagnostics, summarizers, geometry/table builders | reusable; output needs an owner |
+| [`experiments/scale_transport/`](experiments/scale_transport/) | frozen-table evaluation, cache response and visibility-replay preparation | executed and unqualified paths are distinguished by their indexed protocols |
+| [`experiments/cross_audit/`](experiments/cross_audit/) | input/contract validation, model evaluation, training and bounded job supervision | reuse the phase contract and existing receipts |
 | [`data/`](data/) | current data builders and receipts | active utilities |
 | [`data_prep/`](data_prep/) | NeurIPS/rebuttal-era data preparation | historical/supporting |
 | [`eval/`](eval/) | mature-checkpoint evaluators and launch wrappers | use only with a live frozen protocol |
@@ -39,14 +41,18 @@ Current ICLR claim routing is in `INDEX.md`, not in this README.
 
 ## Safety and maintenance
 
-- Never start training, model inference/evaluation, or paid compute without
-  explicit authorization for that exact run.
+- Follow the phase authorization and budget recorded in HANDOFF and root AGENTS.
+  A phase can authorize necessary preparation, runs and ordinary fixes; a script
+  or old plan alone never authorizes a launch. Preserve the same cumulative
+  budget across retries and follow explicit pause/closeout instructions.
 - Before paid GPU work, read
   [`../docs/overview/RTX5090_BLACKWELL_PROFILE.md`](../docs/overview/RTX5090_BLACKWELL_PROFILE.md)
   and freeze code/config/data/checkpoint/table/output identities plus stop and
   shutdown plans.
 - Put reusable diagnostics in `scripts/analysis/`, data builders in
-  `scripts/data/`, and endpoint evaluators in `scripts/eval/`.
+  `scripts/data/`, and standalone evaluators in `scripts/eval/`. Extend an
+  existing `scripts/experiments/` family for its related protocol rather than
+  creating a duplicate runner solely to match a folder label.
 - Do not add another phase runner merely because an old preflight exists.
 - Historical experiment reports now live under
   `docs/exp/YYYY-MM/YYYY-MM-DD_slug.md`.

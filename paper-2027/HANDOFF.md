@@ -1,13 +1,13 @@
 # Hybrid-RoPE 当前交接
 
-- **更新：2026-09-08。作者要求尽快整理、推送，转到公司PC继续研究。**
-  本任务在完成本轮提交推送后收尾；原科研目标未完成，不自动恢复GPU或旧队列。
+- **更新：2026-09-08。科研交付已推送，作者要求补充文档规范整理后转公司PC。**
+  本轮只统一目录职责、索引和交接状态；原科研目标未完成，不恢复GPU或旧队列。
 - **先读：** [本地失败谱系与综合分析](../docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md)，
   [逐源证据/原始数据复算](../docs/research/ROPE_LOCAL_FAILURE_EVIDENCE_20260908.json)，
   [下一项固定位置判别](../docs/research/ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md)。
   按INDEX定位原owner即可，不需要重新生成一批综述。
 
-## 本轮完成与限制
+## 最近科研交付与验证限制
 
 - 两位代理全文复核10份RoPE来源，共7310行；9份新来源已按原字节加入
   `research/external-reviews/pro-materials-20260908/`，1份scale来源复用。
@@ -72,8 +72,10 @@
 
 ## Git与论文
 
-上一批已推送收尾提交为`0b9b9b6179fcedf641a3590f5ba476c76b57b649`；本次CPU复核、
-修复、原始Pro来源和本HANDOFF由其后一个 scoped commit 一并交付，具体HEAD查看
-`git log -1`及origin tracking。原始来源尾空格为字节身份保留，新增分析按通常检查。
+整夜收尾提交为`0b9b9b6179fcedf641a3590f5ba476c76b57b649`；CPU失败谱系复核、ALS
+修复、原始Pro材料及可见性代码准备已由`ccf33c288289de94edfda7531235e9e374889fdf`
+提交并普通推送。本轮后续整理只改Markdown路由/职责/状态，未修改上述代码、
+结果、数组、机器可读证据或原始Pro材料，也未新增实验或重跑模型检查。最新文档
+提交查看`git log -1`和origin tracking。原始来源尾空格继续按字节身份保留。
 `main_0726`及其中paper归档未修改、编译或生成；活动TeX/PDF未变，PDF SHA仍为
 `37aa6402a65d68b21909b0b3479c4e8edd811079e3922c2c1be915ddeab167e4`。
