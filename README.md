@@ -3,8 +3,9 @@
 本项目研究 RoPE 的有限频率分配如何影响原生能力、长上下文生成及训练后的部署表现。活动论文是 `paper-2027/` 中的 **RoPE Has a Spectral Budget**，当前分支为 `main_0726_09_06`，正在进行 ICLR 方向的研究与论文重构。
 
 作者已将当前第一步收窄为：**冻结预训练权重，以本方方法零训练超过 MrRoPE-Pro。**
-当前停止方法设计与实现，只分析既有 P2/MrPro 数组及64K、128K、1.5B/3B结果能否
-识别与预测频率分配的作用；作者已取消等待外部审计，见[零训练第一步](docs/research/ROPE_ZERO_TRAINING_MRPRO_STEP1_20260908.md)。
+当前从 MrRoPE-Pro 的完整有效方案出发做增量改进。高频不变、低频`/s`、中频
+规则和分段边界都是可改设计，不是不可违反的条件；不再以解释全部旧结果作为
+改进的前置门槛，见[零训练第一步](docs/research/ROPE_ZERO_TRAINING_MRPRO_STEP1_20260908.md)。
 压缩记忆、LoRA 和从零训练不属于这一步。SOTA 是研究目标，现有小型开发结果尚未达到这一结论。
 
 ## 当前研究定位
@@ -31,7 +32,7 @@
 | [研究主线](docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md) | 方法关系、文献核对和历史方案 |
 | [本夜实验报告](docs/research/ROPE_OVERNIGHT_EXPERIMENT_REVIEW_20260908.md) | 全部阶段结果、成本、局限、失误复盘及证据路由 |
 | [本地失败谱系](docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md) | 已证事实、具体否证与未知；整改报告机制/定理复核及三项执行纠正 |
-| [零训练第一步](docs/research/ROPE_ZERO_TRAINING_MRPRO_STEP1_20260908.md) | 只保留数组与逐行结果分析；近邻/远程候选及13任务确认均已撤回，无待执行候选 |
+| [零训练第一步](docs/research/ROPE_ZERO_TRAINING_MRPRO_STEP1_20260908.md) | 从MrRoPE-Pro增量改进，各频段及边界可改；保留旧结果，近邻/远程候选及13任务确认仍撤回 |
 | [压缩记忆接口pilot](docs/research/SPARSE_MEMORY_INTERFACE_PILOT_20260908.md) | 已收尾开发实验：任务捷径与可学性未通过，无合格TP收益证据 |
 | [固定位置可见性协议](docs/research/ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md) | 有条件的单行判别、代码审核、一次必要检查、评分分支与停止条件 |
 | [外部材料](paper-2027/research/external-reviews/README.md) | Pro原始输入、覆盖清单及来源身份 |

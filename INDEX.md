@@ -1,6 +1,6 @@
 # INDEX — file and evidence-source index
 
-**Updated:** 2026-09-08; bifocal proposal withdrawn; existing-evidence analysis only, no active candidate. This file locates source
+**Updated:** 2026-09-08; incremental improvement from MrRoPE-Pro, with all frequency bands and boundaries open to revision; bifocal proposal remains withdrawn. This file locates source
 files and their roles; it does not own numerical results, verdicts or live tasks.
 Project details are in `README.md`, constraints in `AGENTS.md`, and live state
 in `paper-2027/HANDOFF.md`. Read only the relevant entries.
@@ -18,7 +18,7 @@ inspect them with `git show main_0726:<path>`.
 | [README.md](README.md) | Project question, reconstruction context, intended outcomes and layout |
 | [docs/README.md](docs/README.md) | Roles of current cross-phase research records, historical experiments and provenance documents |
 | [paper-2027/HANDOFF.md](paper-2027/HANDOFF.md) | Current local Git/PDF/authorization state; source-reported remote state is labelled |
-| [Training-free step one](docs/research/ROPE_ZERO_TRAINING_MRPRO_STEP1_20260908.md), [paired/geometry analysis](docs/research/ROPE_P2_TRANSFER_MECHANISM_ANALYSIS_20260908.json), [historical CPU reference](scripts/analysis/analyze_p2_transfer_mechanism.py) | Retained input-aligned results and exact array/gain differences; bifocal and finite-phase replay candidates withdrawn. Historical rotary identities are not mechanism or capability evidence. No implementation or GPU queue; external audit is not a prerequisite |
+| [Training-free step one](docs/research/ROPE_ZERO_TRAINING_MRPRO_STEP1_20260908.md), [paired/geometry analysis](docs/research/ROPE_P2_TRANSFER_MECHANISM_ANALYSIS_20260908.json), [historical CPU reference](scripts/analysis/analyze_p2_transfer_mechanism.py) | Current direction: improve the complete MrRoPE-Pro baseline without fixing its bands or requiring a complete explanation of old results first. Retained array/result analysis is historical evidence; bifocal and finite-phase replay candidates remain withdrawn. No GPU queue |
 | [Local failure synthesis](docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md), [source/claim/raw evidence](docs/research/ROPE_LOCAL_FAILURE_EVIDENCE_20260908.json) | Facts → specific rejected explanations → unresolved questions → discriminators; §6 audits the supplied remediation report, withdraws broad non-identifiability and unmeasured mechanisms; §7 replaces blanket vetoes with scoped decisions and review-first execution. JSON retains the earlier raw audit, not new model verification |
 | [Author-source coverage](docs/research/ROPE_SOURCE_COVERAGE_20260908.json), [preserved Pro materials](paper-2027/research/external-reviews/pro-materials-20260908/) | Ten RoPE documents fully reviewed; nine new verbatim sources, one reused; two other-topic inputs screened and excluded |
 | [Sparse-memory interface pilot](docs/research/SPARSE_MEMORY_INTERFACE_PILOT_20260908.md), [full results/identities](docs/research/SPARSE_MEMORY_INTERFACE_RESULTS_20260908.json), [implementation](scripts/experiments/sparse_memory/), [checks](tests/test_sparse_memory.py) | Closed 7-run synthetic pilot: V1 shortcut, V2 query/learning floors, 50M native qualification failed; no TP capability verdict. Protocol owns predictions/results, HANDOFF owns live resource state |
