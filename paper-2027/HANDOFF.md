@@ -1,3 +1,22 @@
+# Latest user correction — 2026-09-08
+
+Do not narrow the research objective, hop models after small negative diagnostics,
+or continue model downloads / environment work as a substitute for a solid core
+result. The user explicitly rejected this pattern. Independently reason through
+`/Users/yang/Downloads/native_sparse_position_research_plan_20260908.md`; correct
+or replace Pro's method with an actual mechanism if necessary. Do not mechanically
+maintain PSR or prematurely dismiss it from our incomplete P1/P2 coverage.
+
+All current GPU jobs and downloads have finished. MiniCPM dense_natural_02 completed
+24 outputs in 175.604s; all model assets and the native kernel are ready. No native
+sparse run, kernel qualification, normalizer intervention, or further model download
+is queued. Resume GPU only for a concrete mechanism-based key experiment using
+existing assets. The normalizer equation remains a hypothesis, not a selected core.
+The original broad research/paper objective remains active; this is not a pause of
+research or a completion signal. Latest automation prompt follows this correction.
+
+---
+
 # Active owner update — 2026-09-08, native selector diagnostics
 
 The active goal is `docs/research/ACTIVE_RESEARCH_GOAL.md`; continue research and

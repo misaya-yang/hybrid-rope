@@ -1,6 +1,11 @@
 # Current evidence and next discriminating test
 
 These are development experiments, not a completed method or a benchmark claim.
+User correction: this incomplete coverage does not justify rejecting PSR as a
+method, narrowing the research objective, or hopping models. The original plan
+requires conditional error-pair analysis and query-blind cached-prefix tests;
+our aggregated P1 snapshots and generic-template QA are insufficient for that
+method-level decision. Automatic model/sparse/normalizer queues are stopped.
 The September 2026 research question remains open.
 
 ## Phase summaries: negative first test
