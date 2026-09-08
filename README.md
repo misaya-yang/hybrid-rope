@@ -2,7 +2,7 @@
 
 本项目研究 RoPE 的有限频率分配如何影响原生能力、长上下文生成及训练后的部署表现。活动论文是 `paper-2027/` 中的 **RoPE Has a Spectral Budget**，当前分支为 `main_0726_09_06`，正在进行 ICLR 方向的研究与论文重构。
 
-目标是从 MrRoPE、CoPE 和本方已有方法出发，找到更有效的中段分配、低频缩放与区域衔接，并按当前顺序研究零训练改进、LoRA适配与能力保持、稀疏注意力中的位置编码。SOTA 是研究目标，现有小型开发结果尚未达到这一结论。
+目标是从 MrRoPE、CoPE 和本方已有方法出发，找到更有效的中段分配、低频缩放与区域衔接，当前优先研究压缩记忆中的窗口内关系保留：在同缓存预算下比较真实gate+APE聚合与来源位置绑定接口。静态表和适配成果保留为已有证据，不自动重启旧队列。SOTA 是研究目标，现有小型开发结果尚未达到这一结论。
 
 ## 当前研究定位
 
@@ -28,6 +28,7 @@
 | [研究主线](docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md) | 方法关系、文献核对和历史方案 |
 | [本夜实验报告](docs/research/ROPE_OVERNIGHT_EXPERIMENT_REVIEW_20260908.md) | 全部阶段结果、成本、局限、失误复盘及证据路由 |
 | [本地失败谱系](docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md) | 已证事实、具体否证与未知；整改报告机制/定理复核及三项执行纠正 |
+| [压缩记忆接口pilot](docs/research/SPARSE_MEMORY_INTERFACE_PILOT_20260908.md) | 当前自主开发实验：配对生成、任务捷径修正与可学性诊断 |
 | [固定位置可见性协议](docs/research/ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md) | 有条件的单行判别、代码审核、一次必要检查、评分分支与停止条件 |
 | [外部材料](paper-2027/research/external-reviews/README.md) | Pro原始输入、覆盖清单及来源身份 |
 | [REVISION_BRIEF](paper-2027/REVISION_BRIEF.md) | 论文重构契约；旧阶段排序只作历史 |

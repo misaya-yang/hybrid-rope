@@ -1,5 +1,14 @@
 # Hybrid-RoPE 当前交接
 
+## 当前授权阶段：压缩记忆来源绑定（2026-09-08）
+
+- 作者已授权约两小时全自主代码准备、审查、无卡关机/有卡启动、训练、分析与必要修复；Chrome可作内置浏览器备用。不逐项询问。
+- 阶段开始约03:40 UTC，硬截止05:40 UTC（2026-09-08）；最迟05:38停止新训练并收集，05:40释放GPU。所有attempt共享此期限，不继承旧过夜预算。
+- 当前：04:13 UTC V2 A/B各6000步完成，dev pair EM为8.594%/8.398%，均地板。按前瞻条款已启动单个不压缩的同配置可学性控制，监督器PID2918，计划`dense_control_plan.json`，`code_reviewed`，输出`runs/selective_dense_seed137`；日志`dense_control_supervisor.log`和`supervision/selective_dense_seed137.log`。原A/B监督器PID2245已完成，计划和原快照保留。无卡CPU4 passed、GPU专项1 passed，数据冻结。新主线按[接口pilot协议](../docs/research/SPARSE_MEMORY_INTERFACE_PILOT_20260908.md)；旧L/P、静态表和LoRA均非本轮队列。
+- 仅操作原EVQ实例 `c904489327-8b72fcf9`，SSH端口27741；不触碰GRPO实例。服务器阶段根`/root/autodl-tmp/sparse_memory_20260908`，解释器`/root/miniconda3/bin/python`，正式数据`data_v1`。
+- 首轮已完成监督器PID1523，计划`initial_plan.json`，日志`initial_supervisor.log`及`supervision/seed137_*.log`；run目录`runs/seed137_{baseline,tp}`。V1各3000步结果保留；当前入口`code_selective`/`data_selective`，config_selective.json压缩率64，8份摘要与原缓存预算一致。V2 A/B预定各6000步，只修一次任务捷径，按协议V2条款继续。Chrome已保存定时关机：页面服务器时间UTC-4，2026-09-08 01:40（即05:40 UTC），显示设置成功。训练截止05:38 UTC；提前结束时主动关机。停止单个run：SIGTERM其`supervision/<job>.json`记录的进程组；nonfinal快照不能当完成。
+- 下面为上一阶段历史状态；其中“仅文档/不启动/缺预算”等限制已被本次明确授权取代。
+
 - **更新：2026-09-08。按作者最新要求完善失败复盘、实验代码审核和判据。**
   本轮仅文档工作；不生成新表，不运行GPU，不恢复旧队列，原科研目标仍未完成。
 - **先读：** [本地失败谱系与综合分析](../docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md)，
