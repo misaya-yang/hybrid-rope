@@ -82,6 +82,19 @@ def test_dense_control_changes_visibility_without_future_or_summary_access():
     assert not mask[4, 5:12].any()
 
 
+def test_query_encoder_uses_only_prompt_fields_and_preserves_source_states():
+    cfg = Config(width=24, heads=2, head_dim=16, rotary_dim=8, layers=1,
+                 ratio=4, window=4, query_residual=True)
+    torch.manual_seed(93)
+    model = Model(cfg).eval()
+    x = torch.randint(0, 64, (2, 12)); other=x.clone(); other[:, -3]=(other[:, -3]+1)%64
+    a, b = model(x, True), model(other, True)
+    torch.testing.assert_close(a[:, :-4], b[:, :-4])
+    assert (a[:, -1]-b[:, -1]).abs().max() > .01
+    a[:, -1].square().mean().backward()
+    assert torch.isfinite(model.embed.weight.grad).all()
+
+
 @pytest.mark.skipif(not torch.cuda.is_available(), reason='GPU qualification after power-mode change')
 def test_cuda_backend_forward_backward_matches_cpu():
     cfg = Config(width=24, heads=2, head_dim=16, rotary_dim=8, layers=2, ratio=4, window=4)

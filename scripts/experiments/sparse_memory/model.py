@@ -26,6 +26,7 @@ class Config:
     local_theta: float = 10000.0
     compress_theta: float = 40000.0
     dense_control: bool = False
+    query_residual: bool = False
 
 
 def rotate(x, positions, frequency):
@@ -144,6 +145,12 @@ class Model(nn.Module):
 
     def forward(self, tokens, all_logits=False):
         x = self.embed(tokens)
+        if self.cfg.query_residual:
+            if tokens.shape[1] < 4: raise ValueError('query schema needs four prompt tokens')
+            # Structured-query assay: entity and task are already in the prompt.
+            # A parameter-free parser supplies both to the final reader token.
+            reader = x[:, -1]+x[:, -3]+x[:, -2]
+            x = torch.cat((x[:, :-1], reader.unsqueeze(1)), dim=1)
         mask = attention_mask(tokens.shape[1], self.cfg, tokens.device)
         for layer in self.layers:
             x = layer(x, mask)

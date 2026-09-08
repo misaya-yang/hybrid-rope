@@ -28,7 +28,7 @@
 | [研究主线](docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md) | 方法关系、文献核对和历史方案 |
 | [本夜实验报告](docs/research/ROPE_OVERNIGHT_EXPERIMENT_REVIEW_20260908.md) | 全部阶段结果、成本、局限、失误复盘及证据路由 |
 | [本地失败谱系](docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md) | 已证事实、具体否证与未知；整改报告机制/定理复核及三项执行纠正 |
-| [压缩记忆接口pilot](docs/research/SPARSE_MEMORY_INTERFACE_PILOT_20260908.md) | 当前自主开发实验：配对生成、任务捷径修正与可学性诊断 |
+| [压缩记忆接口pilot](docs/research/SPARSE_MEMORY_INTERFACE_PILOT_20260908.md) | 已收尾开发实验：任务捷径与可学性未通过，无合格TP收益证据 |
 | [固定位置可见性协议](docs/research/ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md) | 有条件的单行判别、代码审核、一次必要检查、评分分支与停止条件 |
 | [外部材料](paper-2027/research/external-reviews/README.md) | Pro原始输入、覆盖清单及来源身份 |
 | [REVISION_BRIEF](paper-2027/REVISION_BRIEF.md) | 论文重构契约；旧阶段排序只作历史 |

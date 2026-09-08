@@ -1,13 +1,31 @@
 # Hybrid-RoPE 当前交接
 
-## 当前授权阶段：压缩记忆来源绑定（2026-09-08）
+## 最近阶段：压缩记忆来源绑定（已收尾，2026-09-08 04:49 UTC）
 
-- 作者已授权约两小时全自主代码准备、审查、无卡关机/有卡启动、训练、分析与必要修复；Chrome可作内置浏览器备用。不逐项询问。
-- 阶段开始约03:40 UTC，硬截止05:40 UTC（2026-09-08）；最迟05:38停止新训练并收集，05:40释放GPU。所有attempt共享此期限，不继承旧过夜预算。
-- 当前：04:13 UTC V2 A/B各6000步完成，dev pair EM为8.594%/8.398%，均地板。按前瞻条款已启动单个不压缩的同配置可学性控制，监督器PID2918，计划`dense_control_plan.json`，`code_reviewed`，输出`runs/selective_dense_seed137`；日志`dense_control_supervisor.log`和`supervision/selective_dense_seed137.log`。原A/B监督器PID2245已完成，计划和原快照保留。无卡CPU4 passed、GPU专项1 passed，数据冻结。新主线按[接口pilot协议](../docs/research/SPARSE_MEMORY_INTERFACE_PILOT_20260908.md)；旧L/P、静态表和LoRA均非本轮队列。
-- 仅操作原EVQ实例 `c904489327-8b72fcf9`，SSH端口27741；不触碰GRPO实例。服务器阶段根`/root/autodl-tmp/sparse_memory_20260908`，解释器`/root/miniconda3/bin/python`，正式数据`data_v1`。
-- 首轮已完成监督器PID1523，计划`initial_plan.json`，日志`initial_supervisor.log`及`supervision/seed137_*.log`；run目录`runs/seed137_{baseline,tp}`。V1各3000步结果保留；当前入口`code_selective`/`data_selective`，config_selective.json压缩率64，8份摘要与原缓存预算一致。V2 A/B预定各6000步，只修一次任务捷径，按协议V2条款继续。Chrome已保存定时关机：页面服务器时间UTC-4，2026-09-08 01:40（即05:40 UTC），显示设置成功。训练截止05:38 UTC；提前结束时主动关机。停止单个run：SIGTERM其`supervision/<job>.json`记录的进程组；nonfinal快照不能当完成。
-- 下面为上一阶段历史状态；其中“仅文档/不启动/缺预算”等限制已被本次明确授权取代。
+- **状态：CLOSED / ASSAY_UNQUALIFIED。研究目标仍未完成，无TP有效或无效结论。**
+  7次训练和预定资格诊断均完成；按预先停止条件结束，未用满两小时授权。
+  先读[结果与完整协议](../docs/research/SPARSE_MEMORY_INTERFACE_PILOT_20260908.md)和
+  [每run身份/结果JSON](../docs/research/SPARSE_MEMORY_INTERFACE_RESULTS_20260908.json)。
+- 原EVQ `c904489327-8b72fcf9` 于03:56 UTC有卡启动，04:46提交关机，
+  04:47控制台确认已关机；04:48取消本轮05:40 UTC备用关机并显示成功。
+  关机前GPU为0%/0MiB、无CUDA进程。未克隆实例，未触碰GRPO实例。
+- 本次授权为03:40–05:40 UTC约两小时自主准备、审查、切电源、运行和分析；
+  不继承旧夜间预算。监督作业总时长2110.76秒；训练器记录2074.02秒，非云账单。
+  没有待运行监督器/训练队列；旧L/P、静态表和LoRA均非继续入口。
+- 原始数据、所有最终checkpoint及失败回执留在
+  `/root/autodl-tmp/sparse_memory_20260908`，仍是端口27741的原EVQ；
+  解释器`/root/miniconda3/bin/python`。V1=`data_v1`，V2及后续=`data_selective`；
+  各run源码快照/计划/状态/输出在该阶段根中按原名保留，不用新代码冒充旧回执。
+- 本地紧凑回执`artifacts/sparse_memory_20260908/final_summary.tar.gz`，SHA256
+  `c246763a567bbe3cae24235415bb905e0a844dfdb186537cbe59bc067ccd3166`。
+  reviewer-facing JSON已去除命令、PID和服务器路径，保留模型/数据/代码/权重SHA。
+- 下一项缺失量已明确：原token模型在固定异答案query对上的双答正确率Q。
+  1.6M和本次49.72M训练条件均未通过资格；先建立可用的查询条件读取工具，
+  才恢复TP比较。不得把地板、NLL改善或V1捷径满分晋级为方法证据。
+- 代码准备提交`4e2d042`；收尾结果提交以`git log -1`为准。本轮仅本地提交，
+  未推送。三个原有untracked诊断脚本保持原状；活动TeX/PDF及`main_0726`归档未动。
+
+## 上一阶段历史状态（非当前队列）
 
 - **更新：2026-09-08。按作者最新要求完善失败复盘、实验代码审核和判据。**
   本轮仅文档工作；不生成新表，不运行GPU，不恢复旧队列，原科研目标仍未完成。
