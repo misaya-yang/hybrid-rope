@@ -1,6 +1,6 @@
 # OLMo 混合 RULER 短评测
 
-2026-09-08：替换旧自造任务。状态：CPU 准备中，尚无本面板模型结果。
+2026-09-08：替换旧自造任务。状态：代码已准备并上传，数据生成已按作者要求停止，尚无本面板模型结果。
 
 ## 问题与设计
 
@@ -37,3 +37,27 @@
 - [针对性测试](../../tests/test_ruler_mixed_screen.py)：多答案比例、QA 别名、任务权重、配对身份及收益/退化区分；与原运行框架测试合计 20 项工作机 CPU 测试通过。
 
 旧自造任务输入仍保存在原 prepared 目录，仅作为历史准备，不用于本次 RULER 比较。
+
+## 下一 session 启动
+
+服务器代码目录：`/root/autodl-tmp/olmo_fast_screen_20260908/code`。先将 EVQ 切到有卡模式；无卡模式仅编辑代码和下载。原 `prepared_ruler_01` 至 `03` 为未完成尝试，保留但不用于评测。
+
+在服务器代码目录执行数据准备（不重新下载模型）：
+
+```bash
+NLTK_DATA=/root/autodl-tmp/nltk_data /root/miniconda3/bin/python -m scripts.experiments.olmo_fast_screen.prepare_ruler \
+  --reuse-prepared /root/autodl-tmp/olmo_fast_screen_20260908/prepared_bm_02 \
+  --upstream /root/autodl-tmp/rope_qwen_baseline_20260907/ruler_upstream/RULER-c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a \
+  --out /root/autodl-tmp/olmo_fast_screen_20260908/prepared_ruler_04
+```
+
+准备完成后运行：
+
+```bash
+/root/miniconda3/bin/python -m scripts.experiments.olmo_fast_screen.supervise \
+  --prepared /root/autodl-tmp/olmo_fast_screen_20260908/prepared_ruler_04 \
+  --out /root/autodl-tmp/olmo_fast_screen_20260908/run_ruler_01 \
+  --detach
+```
+
+作者拟在新 session 进行约一小时自主实验；该 session 启动时确认其指令并记下阶段起点。若按一小时执行，在上述监督器命令增加 `--phase-seconds` 和扣除已用时间后的剩余秒数，不在模型加载、重试或后续候选时重新计时。`run_ruler_01/STOP` 为停止入口；`phase.json`、`live.json`、逐方法 JSON/JSONL 为状态与结果。准备过程也由该 session 持续管理；本次未开卡、未启动这个小时。
