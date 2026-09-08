@@ -1,10 +1,22 @@
 # Transport residual: what a Q/K adapter can and cannot repair
 
+> **2026-09-08 数学与实现更正：** 本文“任意LoRA的上界／不可修复下界”、
+> “rank64÷16头=每头4 rank，因此只修复9%”及“真实低维内容只能更好”均不成立。
+> 一般LoRA能读取旧Q/K投影行空间之外的hidden特征，未必可写成旧q/k的固定映射；
+> 全局rank-r更新的每头切片仍可有rank-r（受行列维数限制）。各向同性平均误差
+> 也不是真实激活分布的最坏情形界。非凸求解的可行残差仅给该代理最小误差的
+> 上界，不能变成不可避免误差的下界。
+>
+> 同时发现`transport.py`的初始`previous=inf`使首轮`inf<=inf`直接报收敛，
+> 已修复并补非平凡多轮回归例：小例残差从2.848193降到2.836061（43轮）。
+> 这不意味着所有旧数值会改变；旧原始回执保留，但“已收敛”资格及基于它的
+> 修复能力推断撤回。实际LM实验不是该求解器的输出，不能据此宣布其失败已修复。
+
 - **Date:** 2026-08-22
 - **Status:** CPU-only analysis complete; no checkpoint loaded, no GPU, no training
 - **Current routing:** historical mechanism analysis; its experiment suggestion
   is superseded by the stop list in `../../README.md`
-- **Evidence role:** internal mechanism analysis and candidate-table screen.
+- **Evidence role:** historical surrogate analysis; capability/capacity inferences withdrawn above.
   It is a frequency-table result under an isotropic content model, never a task,
   capability, or checkpoint result.
 - **Implementation:** `scripts/analysis/rope_transport/`

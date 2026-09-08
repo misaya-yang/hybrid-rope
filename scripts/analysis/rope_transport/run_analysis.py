@@ -5,14 +5,14 @@ For every candidate frequency table this reports, without any model forward,
 optimizer step, or benchmark:
 
 * ``D0``  -- expected squared logit error of a hard table swap;
-* ``D*``  -- the same after the best fixed, position-independent Q/K content
-             maps, i.e. the exact operator class of the transplant obstruction
-             and a strict superset of any Q/K LoRA;
-* the minimum LoRA rank per head that reaches a given fraction of ``D*``;
-* which rotary pairs carry the unrepairable residual;
+* ``D*``  -- historical field name for a feasible projected-coordinate map
+             residual; an upper bound on this surrogate's minimum;
+* surrogate map ranks reaching a fraction of the best-found repair;
+* which rotary pairs carry that residual;
 * what the table can still resolve over the target range.
 
-Fail-closed: CUDA must not be visible. This module never loads a checkpoint.
+Not a general LoRA capacity bound or a capability selector. Fail-closed: CUDA
+must not be visible. This module never loads a checkpoint.
 """
 
 from __future__ import annotations

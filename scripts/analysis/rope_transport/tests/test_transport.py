@@ -89,6 +89,25 @@ def test_repair_never_worse_than_hard_swap_and_is_monotone():
     assert all(b <= a + 1e-9 for a, b in zip(values, values[1:]))
 
 
+def test_first_finite_objective_is_not_a_convergence_certificate():
+    """A rank-limited case still improves after the old inf <= inf stop."""
+    src = np.array([1.0, 0.4, 0.1])
+    dst = np.array([0.95, 0.16, 0.045])
+    support = np.arange(32, dtype=float)
+    weight = np.ones(32) / 32
+    first = transport.transport_residual(src, dst, support, weight, rank=3, max_iter=1)
+    later = transport.transport_residual(src, dst, support, weight, rank=3, max_iter=3)
+    assert first.iterations == 1
+    assert not first.converged
+    assert later.iterations == 3
+    assert later.repaired < first.repaired - 0.008
+    # Verify the returned objective against explicit rotations, independently
+    # of the half-step objective helper and its convergence bookkeeping.
+    error = later.query_map.T @ _dense(dst, support) @ later.key_map - _dense(src, support)
+    direct = float(np.sum(weight * np.sum(error ** 2, axis=(1, 2))))
+    assert later.repaired == pytest.approx(direct, abs=1e-10)
+
+
 def test_rank_constraint_is_monotone_in_rank():
     support, weight, _ = _support(length=512, max_points=512)
     src = np.array([0.9, 0.2, 0.03, 0.004, 0.0002, 0.00001])

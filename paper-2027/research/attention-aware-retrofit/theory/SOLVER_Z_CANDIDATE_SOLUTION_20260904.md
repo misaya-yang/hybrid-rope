@@ -1,5 +1,10 @@
 # Solver-Z candidate solution: the two-gate budget-window law for the zero-training ceiling
 
+> **2026-09-08 锚点身份更正**
+> 同一路损伤面所用s2锚点实际是C2，s4才是full legacy-p2，不能合称同一p2路径。
+> 其后续修正版也继承了这项身份混用，见[具体更正](SOLVER_Z_CANDIDATE_SOLUTION_V2_20260904.md)。
+> 原数字保留各自条件；混合拟合与据此推导的候选/天花板不作为继续依据。
+
 - **Date:** 2026-09-04
 - **Status:** solver candidate analysis (independent-solver round 1). Repository
   reading + deterministic arithmetic only. No run, no GPU, no new measurement.

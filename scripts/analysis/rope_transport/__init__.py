@@ -1,9 +1,8 @@
 """Zero-GPU RoPE table transportability analysis.
 
-Answers, without any model forward or training, how much of a mature model's
-in-window attention function survives a RoPE frequency-table change under the
-best possible static Q/K reparameterization -- the exact operator class of the
-post-hoc transplant obstruction and the strict superset of any Q/K LoRA.
+Computes feasible residuals for static maps of projected Q/K coordinates under
+an isotropic-content surrogate. It does not measure actual checkpoint function
+preservation, certify a global optimum, or bound arbitrary Q/K LoRA updates.
 """
 
 from __future__ import annotations

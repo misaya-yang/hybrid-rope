@@ -1,5 +1,12 @@
 # Protected-ramp rigorous composite (2026-08-28)
 
+> **2026-09-08 更正提示**
+> 本文件把Cosh的NLL成本3.978→.692定位到7个protected槽的强归因撤回。两份
+> 原始数组与receipt哈希一致，但它们除该7槽外还改了55个补集槽（总62/64），
+> 只支持整套分段构造的对比。非单调数组“不合法”的说法也仅适用于当时strict-order
+> 合同，不是RoPE数学限制。原记录不重写；详见
+> [本地复核](../../../../docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md)。
+
 > **ARCHIVED LIFECYCLE NOTE (updated 2026-08-30):** superseded as an active
 > research route. This document remains arithmetic and derivation provenance.
 > Its §9 leave-one-band-out design is **invalid as written**, not merely

@@ -53,6 +53,10 @@
   verify their assumptions against primary papers, code and artifacts. A source
   is input, not proof or execution authority. Preserve full model/table/gain/data/
   decoder identity when using a successful method as the starting point.
+- Check proposed mechanisms against local failed runs and later corrections,
+  including retained ignored receipts and archive owners. Deduplicate by actual
+  intervention and run identity, not report title. Put a visible correction on
+  superseded searchable claims; do not rebuild a rejected premise under new terms.
 - Freeze the prediction and outcome-to-action rule before scientific GPU work.
   Do not silently relax either after seeing outcomes. Label any justified new
   decision prospectively and keep the original verdict. Missing information must
@@ -85,6 +89,9 @@
   Count all attempts against the same budget. Distinguish an engineering failure
   from a scientific stop: do not change frozen data, scoring, frequencies or
   thresholds after seeing results merely to obtain a favorable outcome.
+  If a stale guard cannot express an authorized comparison, fix and verify the
+  guard while preserving the old receipt; substituting another arm changes the
+  scientific question and does not complete the requested comparison.
 - A small experiment finishing is a decision point inside the research phase,
   not a handoff or automatic shutdown point. Analyze its result, select and
   prepare the next necessary step, and continue within the existing goal/resource/
@@ -131,6 +138,10 @@
   backend; for Blackwell read `docs/overview/RTX5090_BLACKWELL_PROFILE.md`.
   Never silently fall back to quadratic math attention.
 - Run only checks relevant to the change, from the repository root:
+
+  Numerical solver checks must exercise a nontrivial improving case and compare
+  against an independent calculation. A vacuous monotonicity check, convergence
+  flag or self-consistent formula is not evidence of the claimed optimum.
 
 | Task | Check |
 | --- | --- |

@@ -1,5 +1,12 @@
 # Common-direction feasibility, likelihood-to-winner barrier, and the Native--long basin structure
 
+> **2026-09-08 更正提示**
+> 原文“contrast只能在两个系统leader不同处翻转argmax”不成立：A=[2,1]与
+> B=[100,0]的leader相同，2A−B=[−96,2]却翻转；需要检查差分margin。局部一阶
+> 可行性也不是有限改动改善的必要条件。正gain不改排序只对固定单头logits
+> 成立，不能推广到完整多层生成。原推导保留为历史，相关强断言撤回；见
+> [本地复核](../../../../docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md)。
+
 - **Date:** 2026-09-02
 - **Controlling audit correction:** historical theory only. The 38-row Hotpot
   Fact D used below is invalid for claim/gate use; the separate Hotpot-200

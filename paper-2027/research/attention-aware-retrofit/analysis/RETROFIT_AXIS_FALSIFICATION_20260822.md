@@ -1,5 +1,10 @@
 # Training-free retrofit: three candidate axes, all falsified
 
+> **2026-09-08 更正：** 本文继承的“D*约束任意LoRA”“rank64等于每头rank4／
+> 已跑适配仅达9%修复能力”撤回，见[原分析更正](TRANSPORT_RESIDUAL_ANALYSIS_20260822.md)。
+> 原ALS还存在首轮虚假收敛错误，现已修复；历史表值未重跑。所列实际RULER
+> 观察保留各自身份，不能用代理误差、相关性或该实现修复关闭／恢复整个方法类。
+
 - **Date:** 2026-08-22
 - **Status:** CPU analysis complete; GPU RULER points supplied by the parallel session
 - **Evidence role:** internal. Frequency-table analysis under an isotropic content

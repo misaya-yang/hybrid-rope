@@ -1,5 +1,17 @@
 # RoPE transport analysis — attention, allocation, and LoRA in one frame
 
+> **Correction, 2026-09-08:** the historical interpretation below is withdrawn.
+> These are isotropic projected-coordinate surrogate residuals, not checkpoint
+> function errors, unavoidable-error bounds or general LoRA capacity estimates.
+> LoRA can access directions outside the original Q/K row spaces; global rank
+> is not divided by the number of heads. A feasible ALS residual upper-bounds
+> the surrogate minimum, not the achievable repair. Phase safety and positional
+> redundancy do not imply capability or free movement. The original ALS loop
+> also falsely declared convergence on its first iteration (`inf <= inf`);
+> this is fixed and covered by a nontrivial regression. Old receipts are retained
+> without rerunning searches. The explanations below remain as historical context
+> only; see the corrected scope in `transport.py` and the dated research owners.
+
 - **Status:** CPU-only diagnostic; no checkpoint, no forward pass, no training
 - **Evidence role:** internal analysis. It is a statement about frequency
   tables under an isotropic content model, never a task or capability result.

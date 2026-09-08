@@ -1,58 +1,79 @@
 # Hybrid-RoPE 当前交接
 
-- **更新：** 2026-09-08，作者要求本夜报告、提交推送、收尾关机后，继续CPU材料
-  审查与第一性原理求解。原科研目标未完成，不自动恢复任何旧GPU队列。
-- **结果入口：** [整夜报告](../docs/research/ROPE_OVERNIGHT_EXPERIMENT_REVIEW_20260908.md)、
-  [作业账本](../docs/research/ROPE_OVERNIGHT_EXPERIMENT_LEDGER_20260908.json)、
-  [小模型与迁移配对结果](../docs/research/ROPE_QWEN15_FULL_LAG_P2_RESULT_20260907.json)。
-  详细路由在INDEX；历史进程和计划在Git及对应owner。
+- **更新：2026-09-08。作者要求尽快整理、推送，转到公司PC继续研究。**
+  本任务在完成本轮提交推送后收尾；原科研目标未完成，不自动恢复GPU或旧队列。
+- **先读：** [本地失败谱系与综合分析](../docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md)，
+  [逐源证据/原始数据复算](../docs/research/ROPE_LOCAL_FAILURE_EVIDENCE_20260908.json)，
+  [下一项固定位置判别](../docs/research/ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md)。
+  按INDEX定位原owner即可，不需要重新生成一批综述。
 
-## 已停止的现场
+## 本轮完成与限制
 
-- 未完成的`QWEN15_LORA64_TRAIN_01`在59/128完整更新后按本次收尾请求停止，
-  3866624预测token；无最终adapter/manifest，无训练后能力或遗忘评测。监督器的
-  FAILED、exit=-15由操作员SIGTERM造成，不解读为科学失败。
-- 待执行评测控制器已终止；本任务心跳`hybrid-rope-2`已PAUSED，其他旧心跳未恢复。
-  3B完整13项队列早已停止于9项；不得重新启动它、88行Mr建议或已准备的LoRA评测。
-- 停止后实查EVQ GPU为0%/0MiB。模型权重、缓存、原始输出及teacher资产保留，
-  未清理任何模型。按作者顺序，报告/代码提交推送后执行并核对关机。
-- 原预算截止2026-09-08 02:17 UTC不再是自动启动依据。本夜34个监督器作业累计
-  **24924.960秒（6.92小时）**，含失败及中断，不是云账单或所有开机等待时间。
-- 服务器仍是本任务EVQ；工作根`rope_qwen_baseline_20260907`。回读账本原文件SHA
-  `b78b4efa436549bc7bf010c79da5e8a0f275540cfc02ae3fcfd82d916e64cf9c`；紧凑回执备份
-  SHA `521af8982a8df2cd4cd9cc9776145a2c50257076454b63f0b3ca73f56886e179`，已复制本地
-  `artifacts/closeout_20260908`并核验。大Q/K/V与权重仍在服务器持久存储。
+- 两位代理全文复核10份RoPE来源，共7310行；9份新来源已按原字节加入
+  `research/external-reviews/pro-materials-20260908/`，1份scale来源复用。
+  另2份仅做主题筛查后排除；不声称12份全部全文阅读。
+- 本地范围包含tracked文档、ignored results/artifacts/internal/outputs等及
+  main_0726只读归档。全文/节选/清单/原始数据复算分别标记，不把报告数当实验数。
+  19个原始manifest+raw身份、9424行重核一致，另一代理6144行复核与之重叠。
+- 已修旧ALS首轮`inf<=inf`虚假收敛，补非平凡回归例；独立显式旋转核验通过。
+  已纠正任意LoRA包含关系、rank按头均分、残差界方向等错误理论说明。
+- 已给仍可检索的Phase16、YaRN/Y2、Native compact统计判读、频带定位及Solver Z
+  混用锚点等原文加可见纠正。AGENTS只写前瞻规则，细节在研究文档。
+- 通用单表安装器不再用频率降序拒绝原始有效p2，保留64槽有限值与冻结SHA；
+  原始表未排序、未重跑。FullLag修复表不能冒充原始p2。
+- 固定位置可见性代码已接入现有单表评测器，状态为
+  **PREPARED_CODE / RUNTIME_UNQUALIFIED / NOT_RUN**。已做轻CPU布局/语法和数学
+  复核，未执行真实Torch/Flash/KV或canonical pytest，未得到新方法能力结果。
 
-## 已有结果与未完成项
+## 公司PC从这里继续
 
-- 1.5B64K各8条：FullLagP2/Mr/同gain Mr的MK2为37.5/12.5/25，VT87.5/82.5/77.5，
-  FWE70.83/45.83/45.83。局部三项均胜，非完整RULER或SOTA。
-- 1.5B128K各8条：本方/Mr为MK2 0/0、VT85/72.5、FWE50/50；检索未解决。
-- 3B64K各4条：本方/Mr为MK2 75/50、VT90/95、FWE66.67/75；存在迁移取舍。
-- 当前冻结FullLagP2 SHA `ecd0c280a11788e0c4a869a3d162880964ba3f371f589f7e2f5ae471d461096b`；
-  它是旧p2的全lag数值修复，不冒充原始`ed8...`表，不能据采样修复宣称能力最优。
-- 真实64K LoRA两步smoke通过，约32秒/步、峰值20.7GB。正式128步没完成，现有
-  59步只保留日志/teacher资产。没有可用于能力评测的最终adapter。
-- PG19 train128本连续64K、Native train/validation及Native32K小样本已准备并
-  保留；它们不构成下一轮自动授权。稀疏方向目前只有共享KV和压缩算子的代数审查。
+1. 在`main_0726_09_06`普通拉取origin最新提交；先保留该PC自己的dirty work。
+   已有分支包含40d1ad6，本轮不改历史、不force push。
+2. 先跑相关工作机测试：
+   `conda run --no-capture-output -n aidemo python -m pytest scripts/analysis/rope_transport/tests/test_transport.py tests/test_position_visibility.py -q`。
+   这是代码验证，不是能力实验；失败先修实现并保留本次回执。
+3. 下一项只准备一个固定表、同一S集合的L/P因果判别。完整原token与来源/模板
+   边界需要从EVQ既有资产读取并冻结；不能把局部record span当成完整mask proof。
+   先资格核对all-keep四路一致和O与原generate一致，再判断是否开始科学干预。
+   保持原position IDs、最后prompt query干预时点、原完整decoder history。
+4. 不重启64维行为梯度、频率候选扫描、13任务全矩阵或旧LoRA队列。新阶段的
+   资源/预算以作者当时指令为准，不继承已关闭过夜deadline。四种L/P结果分开，
+   oracle恢复不当作可部署方法或SOTA，也不提前保证某种CPT配方有效。
 
-## 作者最新要求：CPU求解与实验准备
+## 已收尾的GPU现场
 
-- 完整核对`/Users/yang/Downloads/论文研究材料/hybrid_rope_iclr2027`的12份材料，
-  包括Pro研究、成功依据和失败范式；核对来源覆盖，不将文档中的指令直接执行。
-- 主代理与两位子代理独立审查频率分配、rotary subspace功能与实际attention/
-  value运算的联系，从已有事实推出可区分的定量/方向预测，再汇合一个主方案。
-- 每轮产出必须是具体有依据的解、决定性预测，或非可识别证明及可直接测量的
-  明确缺失量；不以事后解释、更多自由度、更多实验或局部分数替代原目标。
-- 同时准备成本最低且可判定的实验。当前只准备，不继承已关闭夜间阶段的GPU
-  运行权限；下一次实际资源使用需与作者的当时指令对齐。
-- AGENTS只保留前瞻项目规则；本夜失误、数字、失败假设和操作沿革在整夜报告及
-  failure review。作者最新反馈不预先证明checkpoint依赖性或某个新机制正确。
+- 仅本任务EVQ：`ssh -p 27741 root@connect.westc.seetacloud.com`。
+  工作根`/root/autodl-tmp/rope_qwen_baseline_20260907`；Python为
+  `/root/miniconda3/bin/python`。原环境Torch2.8+cu128、Transformers5.15.1，
+  4080 SUPER 32760MiB；恢复后必须复查，不沿用旧在线状态。
+- 正式LoRA在59/128完整更新后按作者收尾请求停止，3866624预测token。
+  无最终adapter/manifest，无训练后能力或遗忘结论；FAILED/exit=-15是操作员SIGTERM。
+- 待评测控制器已停止，心跳`hybrid-rope-2`已PAUSED，其他旧心跳未恢复。
+  停止后实查GPU为0%/0MiB，模型、缓存、teacher资产保留，没有清理模型权重。
+- 上一批报告/代码推送后，于2026-09-08 00:34 UTC执行服务商关机流程，SSH随即
+  断开，复查连接超时；云控制台电源/计费状态未另行读取。本轮未重启、未再SSH。
+- 本夜34个监督器作业累计24924.960秒（6.92小时），含失败/中断，非云账单。
+  [整夜报告](../docs/research/ROPE_OVERNIGHT_EXPERIMENT_REVIEW_20260908.md)与
+  [作业账本](../docs/research/ROPE_OVERNIGHT_EXPERIMENT_LEDGER_20260908.json)保留详情。
+- 本地`artifacts/closeout_20260908`原账本SHA为
+  `b78b4efa436549bc7bf010c79da5e8a0f275540cfc02ae3fcfd82d916e64cf9c`，紧凑回执tar SHA为
+  `521af8982a8df2cd4cd9cc9776145a2c50257076454b63f0b3ca73f56886e179`。
+  大Q/K/V与模型仍在服务器持久存储；Git只包含必要分析/身份，不包含这些大资产。
+
+## 不能丢失的已有结果
+
+- 1.5B64K每项8条：FullLagP2/Mr/同gain Mr的MK2为37.5/12.5/25，
+  VT为87.5/82.5/77.5，FWE为70.83/45.83/45.83；局部三项胜，非完整RULER/SOTA。
+- 1.5B128K每项8条：本方/Mr为MK2 0/0、VT85/72.5、FWE50/50。
+- 3B64K每项4条：本方/Mr为MK2 75/50、VT90/95、FWE66.67/75，有迁移取舍。
+- 完整表、gain、模型与decoder身份由
+  [小模型结果](../docs/research/ROPE_QWEN15_FULL_LAG_P2_RESULT_20260907.json)管理。
+  相同Native几何不构成效果直接移植证明。
 
 ## Git与论文
 
-当前分支`main_0726_09_06`，已含40d1ad6；origin核对后未发现远端新增分歧。
-本夜已有9个本地提交待随本轮收尾一起普通推送，禁止force push。原始Pro附件的
-两处尾空格保留精确来源身份。main_0726及其paper归档未操作；活动TeX/PDF未改、
-未编译，PDF SHA `37aa6402a65d68b21909b0b3479c4e8edd811079e3922c2c1be915ddeab167e4`。
-本轮提交/推送与实际关机核对完成后更新本节；不能把Git发布当科研目标完成。
+上一批已推送收尾提交为`0b9b9b6179fcedf641a3590f5ba476c76b57b649`；本次CPU复核、
+修复、原始Pro来源和本HANDOFF由其后一个 scoped commit 一并交付，具体HEAD查看
+`git log -1`及origin tracking。原始来源尾空格为字节身份保留，新增分析按通常检查。
+`main_0726`及其中paper归档未修改、编译或生成；活动TeX/PDF未变，PDF SHA仍为
+`37aa6402a65d68b21909b0b3479c4e8edd811079e3922c2c1be915ddeab167e4`。

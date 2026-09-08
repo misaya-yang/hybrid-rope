@@ -3,16 +3,13 @@
 
 Axes, both computed in closed form with no checkpoint and no GPU:
 
-* ``D*``   -- in-window logit energy that **no** fixed Q/K content map can
-              restore after the table swap (the transplant obstruction's own
-              operator class, a strict superset of any Q/K LoRA);
+* ``D*``   -- historical name for a feasible isotropic projected-coordinate
+              residual, not an unavoidable-error or general LoRA bound;
 * ``risk`` -- mean unseen phase per channel at the deployed length, in turns.
 
 Every published context-extension operator is a point in this plane. This
-script places them, sweeps one-parameter families through the same plane, and
-runs a derivative-free search for the frontier itself, so the question
-"is there a better non-geometric allocation" becomes a measurement rather
-than a preference.
+script places them and searches the surrogate plane. Its ordering is not a
+capability ordering; historical failed selections do not authorize a new sweep.
 
 CPU-only and fail-closed.
 """

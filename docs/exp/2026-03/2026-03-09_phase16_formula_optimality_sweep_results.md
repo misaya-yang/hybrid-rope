@@ -1,5 +1,12 @@
 # Phase16: Formula Optimality Sweep (`tau*=d_head/sqrt(L)`)
 
+> **失效结论提示（2026-09-08补齐路由）：** 下文“near-optimal scaling law”及
+> top-2/top-3排名已被2026-07-24同一99-run原始记录重分析纠正。旧排名混合了
+> 不同pilot/confirmation评分和种子数；共同NLL口径下公式对Geo赢7/9均值，
+> 对未参与选择的邻点只赢3/9配置、8/18配对，不支持近最优定律。
+> 原数字/原叙述保留为历史，不作为新方案依据。纠正owner只读入口：
+> `git show main_0726:rebuttal/rebuttal_0723/theory_results/PHASE16_99RUN_RAW_REANALYSIS_20260724.md`。
+
 > 日期: 2026-03-09
 > 状态: **COMPLETE**
 > 设备: `M4 Max 36GB / mps`

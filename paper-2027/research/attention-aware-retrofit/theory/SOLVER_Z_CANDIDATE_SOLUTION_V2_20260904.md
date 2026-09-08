@@ -1,5 +1,11 @@
 # SOLVER Z — Candidate Solution V2 (post-veto re-derivation)
 
+> **2026-09-08 锚点身份更正**
+> 原文把s2的2.987191/.359361与s4锚点拟作同一full-p2路径；实际s2是C2、s4是
+> full legacy-p2，movement不同。后续[原综合更正](../analysis/SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904.md)
+> 已撤回混合拟合。本页损伤面/天花板不能作为同路径实测推断继续使用，不能仅称
+> “噪声较大”而保留前提。详见[本地复核](../../../../docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md)。
+
 - **Date:** 2026-09-04. **Author:** Solver Z. **Status:** solver candidate, pending round-2 adjudication. Supersedes `SOLVER_Z_CANDIDATE_SOLUTION_20260904.md` (V1), which was vetoed.
 - **Trigger:** `ATTACK_2_ON_SOLVER_Z_20260904.md` adjudicated VETO UPHELD (team-lead). Every finding below is dispositioned.
 - **Method constraint honored:** no GPU, no model runs; only repo-recorded numbers plus local CPU arithmetic (python). All tables in §3 regenerated from a single canonical script this round to eliminate transcription risk (minor item 3).

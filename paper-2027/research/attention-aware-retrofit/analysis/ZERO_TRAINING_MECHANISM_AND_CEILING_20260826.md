@@ -1,5 +1,11 @@
 # Why a frozen table is the minimal zero-training intervention
 
+> **2026-09-08 更正提示**
+> §7中per-head方向以“0.89对0.09修复比例、相同参数量”为依据的容量推断撤回，
+> 它继承了把全局LoRA rank除以头数的错误。见
+> [transport原分析更正](TRANSPORT_RESIDUAL_ANALYSIS_20260822.md)。该候选方向不能
+> 凭这个代理比例重新启动；实际已有headwise结果应由对应结果owner判断。
+
 - **Date:** 2026-08-26
 - **Status:** internal mechanism analysis, updated after the registered dose
   response and Native-4K diagnostic

@@ -6,26 +6,28 @@ For one attention head with rotary table ``Omega`` the logit is
 
     l(q, k, D) = q^T R_Omega(D) k .
 
-Replacing the table by ``Omega'`` and granting the model arbitrary fixed,
-position-independent content maps ``M`` (queries) and ``N`` (keys) -- the exact
-operator class of the post-hoc transplant obstruction, and a strict superset of
-any Q/K LoRA of any rank including cross-pair mixing -- the best achievable
-in-window function preservation is
+Replacing the table by ``Omega'`` and granting arbitrary fixed maps of the
+already-projected query/key coordinates, ``M`` and ``N``, defines the surrogate
 
     D* = min_{M,N} E_{D~w} || M^T R_Omega'(D) N - R_Omega(D) ||_F^2 .
 
-For isotropic content, E_{q,k}[(q^T A k - q^T B k)^2] = ||A - B||_F^2 exactly,
+For independent q/k with unit second-moment matrices,
+E_{q,k}[(q^T A k - q^T B k)^2] = ||A - B||_F^2 exactly,
 so D* is the expected squared logit error of the best static repair, and the
 unrepaired value D0 (M = N = I) is the expected squared logit error of a hard
 table swap. Because ||R_Omega(D)||_F^2 = d for every D, dividing by d gives a
 dimensionless fraction of logit energy.
 
-The obstruction theorem states D* > 0 whenever the frequency multisets differ
-up to permutation/sign. It gives no upper bound on D*. This module measures it.
+The all-position obstruction theorem concerns exact operator equality. It does
+not give a positive lower bound for every finite support used here. Alternating
+least squares returns a feasible residual, an upper bound on the surrogate's
+minimum; convergence does not certify a global minimum or a model-loss bound.
 
-A LoRA of rank r on ``q_proj`` induces a content map with rank(M - I) <= r, and
-that rank budget is shared by every head in the layer. The reduced-rank solve
-here therefore reports, per head, the exact minimum rank a LoRA must spend.
+A general LoRA update may access hidden-state directions absent from the old
+Q/K row spaces and need not be representable by these content maps. Even when
+it is, a global projection update of rank r can have rank up to r in each head
+(subject to its dimensions); r divided by the head count is not an upper bound.
+The rank option constrains only the surrogate maps, not actual LoRA capacity.
 """
 
 from __future__ import annotations
@@ -285,7 +287,7 @@ def _run_als(
         if not np.isfinite(value):
             raise FloatingPointError("transport objective became non-finite")
         history.append({"iteration": used, "after_query": value_q, "after_key": value})
-        if abs(previous - value) <= tol * max(1.0, abs(previous)):
+        if np.isfinite(previous) and abs(previous - value) <= tol * max(1.0, abs(previous)):
             previous = value
             converged = True
             break
@@ -304,15 +306,15 @@ def transport_residual(
     tol: float = 1e-12,
     ridge: float = 1e-12,
 ) -> TransportResult:
-    """Alternating exact least squares for ``D*``.
+    """Alternating ridge-stabilized least squares for a feasible residual.
 
-    Each half-step is the closed-form (reduced-rank when ``rank`` is set)
-    minimizer, so the objective is monotone within a start. The bilinear problem
-    is not jointly convex and has a trivial ``M, N -> 0`` basin whose value is
+    Each half-step uses a closed-form reduced-rank solve with numerical ridge;
+    it is not a certificate for the jointly nonconvex problem. The bilinear
+    problem has a trivial ``M, N -> 0`` stationary point whose value is
     exactly ``d`` (a model that emits no positional signal at all), so the
     search runs from both the identity and the rank-matching permutation and
-    keeps the better result. ``D*`` is therefore always an upper bound on the
-    true optimum, never an underestimate of achievable repair.
+    keeps the better result. The returned residual upper-bounds the true minimum
+    in this surrogate class. It cannot lower-bound an unavoidable model error.
     """
     src = _validate_table(omega_src, "omega_src")
     dst = _validate_table(omega_dst, "omega_dst") if np.all(np.diff(omega_dst) < 0) else np.asarray(

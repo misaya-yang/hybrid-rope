@@ -1,5 +1,12 @@
 # 2026-03-14 Staged Continuation Diagnostic Report
 
+> **算子身份及归因提示（2026-09-08）：** 本报告的20%–90% smoothstep是仓库
+> 历史fixed-ramp算子，不能据“standard/真正YaRN”字样视为官方YaRN。
+> [固定上游实现](../../../scripts/lib/rope/official_yarn.py)和
+> [后续实际算子对照](../2026-07/2026-07-13_primary1_seed42_operator_diagnostic.md)
+> 给出区别。表内数值保留各自协议；dynamic优于frozen只否定本轮所测的
+> “不retarget即可修复”解释，不能唯一识别容量不足、路径依赖或混合目标为根因。
+
 > 日期: 2026-03-14
 > 状态: **COMPLETE**
 > 范围: 记录今日围绕 “为何 fixed-length EVQ 稳定成立，而 staged continuation 频繁出现异常” 的诊断实验、协议修正与综合判断

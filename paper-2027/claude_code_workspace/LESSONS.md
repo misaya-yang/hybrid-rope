@@ -1,23 +1,33 @@
 # LESSONS — Round 10-12 踩坑记录（2026-09-06 汇总）
 
+> **2026-09-08 纠正：** 本页原先把 Y2 错称忠实 YaRN，把统计不拒绝和
+> 未学成结果作了过强解释。以下已纠正；历史数字仍以各轮报告及实际回执为准。
+> 这里记录发生过的问题，前瞻执行规则只由根 AGENTS.md 管理。
+
 ## 评测与对照
-1. **raw completion 对 Instruct 模型无效**：Qwen2.5-Instruct 在原生 32K 也只会
-   复述背景 filler、不答题、无 EOS（0/8）；全部必须 chat-template 模式
-   （单 user 轮 + add_generation_prompt）。换家族/换模型先做评测模式审计——
-   OLMo 无崩溃但 chat 分数略低（模板信封 ~29 tok），方向保守。
-2. **对照组必须逐行对照官方实现**：冻结 Y 臂两处不忠实（硬截断无 ramp；
-   增益把 t 装进 cos/sin → logit×t²），不是真 YaRN；补 Y2（√t、论文版）才是。
-   HF 出货实现与论文不同：ramp 是 dim 索引空间线性斜坡（边界 [23,40]），
-   attention_factor 作用 cos/sin → logit×t²。
+1. **评测模式失配曾产生零分**：该轮 Qwen2.5-Instruct 的 Native32K raw
+   completion 控制复述 filler、不答题、无 EOS（0/8）。它否定该任务中的模式
+   资格，不证明所有 Instruct 模型的 raw completion 都无效。后续使用模型对应
+   chat template，且记录实际 token；OLMo 的模式对照不能代替 Qwen 的判断。
+2. **对照纠错本身也曾出错**：原条目把 cos/sin 幅度 `a=1+0.1*ln(s)`
+   误判为错误，并称 `sqrt(a)` 的 Y2 忠实。固定上游 YaRN 的确让 cos/sin 乘
+   `a`、QK logits 乘 `a²`，采用频率维索引的线性 ramp；Y2 的 smoothstep+
+   `sqrt(a)` 是另一算子。后续实际数组核对也未支持对原 Y/M 的整体否定。
+   依据：[固定实现](../../scripts/lib/rope/official_yarn.py)、
+   [实际身份核对](../research/CROSS_AUDIT_EXPERIMENT_PROTOCOL_20260907.md)。
 3. **成功标准必须锚定模型自己的原生上下文**：在各模型自己的 2×/4× 上比
-   （OLMo 4K→8K/16K；Qwen 32K→64K/128K）。对 Qwen 测 8K/16K 是分布内，无意义。
-4. **Qwen2.5 家族收官数字**（未微调官方配方上界）：1.5B+ 4× 81-97%，
-   0.5B 4× 掉到 38% → 谱预算随容量/训练量走。
+   （OLMo 4K→8K/16K；Qwen 32K→64K/128K）。Qwen8K/16K 可用于窗内能力和
+   适配分析，但不构成超过预训练长度的证据；原文“无意义”过度概括。
+4. **论文百分比不是本任务上界**：旧记录摘录的 Qwen1.5B+ 四倍长度
+   81–97%、0.5B 约38%来自特定公开任务/配方，不能当成本机合同下的上界、
+   保证收益，或容量/训练量的因果证明。比较须保留模型、任务、评分和训练条件。
 
 ## 训练
-5. **欠训练 ≠ 方法失败**：128 步（~10^7 tokens）判定 DID_NOT_LEARN
-   （worst_margin 仍负、质量回收了筛选没学会）；下"方法不行"结论前
-   先排除训练量/学习信号问题 → 7B+500M 主实验的动机。
+5. **未学成没有唯一归因**：128 步配方的 DID_NOT_LEARN 只报告该预算下
+   未达到终点；负 margin 不识别“增加到500M就能解决”。原生长度、物理训练
+   长度、监督内容、可训练模块和预算必须分开。Native compact 对照实际未跑，
+   Z compact 的20/32与完整输入23/32也不证明等效或“LoRA只修接口”。
+   [Round10纠正](reports/ROUND10_LORA_RESULTS_20260905.md)保留原判读以防重用。
 6. **小卡装大模型**：7B+LoRA+16K 于 32G 卡，KL 教师必须离线预缓存
    （512 行 prediction_positions 全固定 → 可预计算，训练不载教师）；
    先探针门控（显存 + 每 micro 墙钟）再开跑。
@@ -35,3 +45,8 @@
 10. **提交纪律（本次教训）**：存档目录提交前先与仓库现有内容逐文件比对——
     round10 package 484 文件与仓库 HEAD 逐字节相同，纯冗余；
     标注"不得提交"的机器私有配置一律不进仓库。
+
+11. **监督器停止状态不能代替科学判读**：09-07夜间LoRA在59/128更新后按作者
+    收尾要求停止，FAILED/exit=-15是SIGTERM，无最终adapter或训练后结果。
+    [整夜报告](../../docs/research/ROPE_OVERNIGHT_EXPERIMENT_REVIEW_20260908.md)
+    单独记录已消耗算力、工程错误、实际负结果和未完成项。

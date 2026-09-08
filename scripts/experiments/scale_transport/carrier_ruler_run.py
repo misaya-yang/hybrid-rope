@@ -40,8 +40,10 @@ def official_postprocess(text):
 
 def install_signed(model, values, gain):
     values = np.asarray(values, dtype=np.float32)
-    if values.shape != (64,) or not np.isfinite(values).all() or not np.all(np.diff(values) < 0):
-        raise ValueError('finite signed table in original decreasing slot order required')
+    if values.shape != (64,) or not np.isfinite(values).all():
+        raise ValueError('64 finite signed frequencies in frozen rotary-slot order required')
+    # Slot identity is fixed by the input/hash, not by sorting the frequencies.
+    # The recovered effective historical p2 table has crossings at slots 1/18.
     if not math.isfinite(gain) or gain <= 0:
         raise ValueError('positive finite gain required')
     rotary = model.model.rotary_emb
@@ -198,6 +200,17 @@ def main():
         ready['revision'], plan['input_files'])
     qualification = qualify_signed(model, values, gain)
     eos = tok.eos_token_id
+    visibility = plan.get('visibility_replay')
+    if visibility:
+        from scripts.experiments.scale_transport.position_visibility import check_decoder, replay
+        for key in ('layouts_path', 'generation_parameters_path'):
+            if visibility[key] not in plan['input_files']:
+                raise ValueError(f'visibility input not frozen: {key}')
+        layouts = json.loads(Path(visibility['layouts_path']).read_text())
+        decoder = json.loads(Path(visibility['generation_parameters_path']).read_text())['parameters']
+        check_decoder(decoder)
+        if decoder['eos_token_id'] != eos or plan.get('adapter_path') or plan.get('trace_rows'):
+            raise ValueError('visibility replay requires the zero-training parent and its frozen EOS; use its own score capture')
     generation = GenerationConfig(do_sample=False, num_beams=1, use_cache=True,
         eos_token_id=eos, pad_token_id=tok.pad_token_id if tok.pad_token_id is not None else eos)
     write(out/'deployment.json', {'table': table, 'c': candidate.get('c'), 'model_revision': ready['revision'],
@@ -222,14 +235,34 @@ def main():
             ids = torch.tensor(row['ids'], device='cuda')[None, :]
             tracing = row['row_id'] in plan.get('trace_rows', [])
             buffers, handles = attach_decision_trace(model) if tracing else (None, [])
+            visibility_record = None
             try:
-                result = model.generate(ids, generation_config=generation, max_new_tokens=budget,
-                    logits_to_keep=1, return_dict_in_generate=tracing, output_scores=tracing)
+                if visibility:
+                    selected = layouts[row['row_id']]
+                    ids_sha = hashlib.sha256(np.asarray(row['ids'], dtype='<i4').tobytes()).hexdigest()
+                    if selected['ids_sha256'] != ids_sha:
+                        raise ValueError('visibility mask is for a different token sequence')
+                    visibility_record = replay(model, row['ids'], selected['keep_positions'], visibility['mode'],
+                        max_new_tokens=budget, eos_token_id=eos,
+                        repetition_penalty=decoder['repetition_penalty'],
+                        absolute_deadline_unix=min(plan['absolute_deadline_unix'],
+                            time.time()+max(0, plan['run_budget_seconds']-(time.monotonic()-started))))
+                    score_file = out/f"visibility_scores_{len(records):04d}.npz"
+                    np.savez_compressed(score_file, processed_scores=visibility_record.pop('processed_scores'))
+                    generated = visibility_record.pop('generated_ids')
+                    visibility_record.update(scores_file=score_file.name, scores_sha256=digest(score_file),
+                        layouts_sha256=digest(visibility['layouts_path']),
+                        decoder_sha256=digest(visibility['generation_parameters_path']))
+                    result = None
+                else:
+                    result = model.generate(ids, generation_config=generation, max_new_tokens=budget,
+                        logits_to_keep=1, return_dict_in_generate=tracing, output_scores=tracing)
             finally:
                 for handle in handles:
                     handle.remove()
-            sequence = result.sequences if tracing else result
-            generated = sequence[0, ids.shape[1]:].tolist()
+            if not visibility:
+                sequence = result.sequences if tracing else result
+                generated = sequence[0, ids.shape[1]:].tolist()
             if tracing:
                 save_decision_trace(model, buffers, result.scores, generated, row, out/'decision_trace'/row['row_id'])
                 del buffers
@@ -248,6 +281,10 @@ def main():
                 source_budget_score=score([official_postprocess(prefix)], [row['references']]),
                 all_answers=all(ref.lower() in text.lower() for ref in row['references']),
                 seconds=time.monotonic()-before, peak_bytes=torch.cuda.max_memory_allocated())
+            if visibility_record:
+                record['visibility_replay'] = visibility_record
+                record['original_total_tokens'] = record['actual_total_tokens']
+                record['actual_total_tokens'] = visibility_record['prefill_tokens'] + 1 + len(generated)
             output.write(json.dumps(record)+'\n')
             output.flush()
             records.append(record)
@@ -261,6 +298,7 @@ def main():
             'source_budget_score': score([official_postprocess(r['source_budget_text']) for r in selected], [r['references'] for r in selected]),
             'eos': sum(r['eos'] for r in selected)})
     write(out/'manifest.json', {'status': 'COMPLETE', 'experiment_index': plan.get('experiment_index', 2), 'scope': plan['scope'],
+        'scientific_role': 'ORACLE_VISIBILITY_DIAGNOSTIC' if visibility else 'FROZEN_TABLE_EVALUATION',
         'rows': len(records), 'summary': summary, 'elapsed_seconds': time.monotonic()-started,
         'examples_sha256': digest(out/'examples.jsonl'), 'plan_sha256': digest(args.plan)})
 

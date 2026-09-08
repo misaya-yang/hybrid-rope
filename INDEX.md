@@ -17,6 +17,9 @@ inspect them with `git show main_0726:<path>`.
 | [AGENTS.md](AGENTS.md) | Core constraints, plan-before-compute rules and checks |
 | [README.md](README.md) | Project question, reconstruction context, intended outcomes and layout |
 | [paper-2027/HANDOFF.md](paper-2027/HANDOFF.md) | Current local Git/PDF/authorization state; source-reported remote state is labelled |
+| [Local failure synthesis](docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md), [source/claim/raw evidence](docs/research/ROPE_LOCAL_FAILURE_EVIDENCE_20260908.json) | Company-PC continuation: local failure lineages, recurring invalid premises, corrected ALS/LoRA interpretation, existing positive results; no new capability result |
+| [Author-source coverage](docs/research/ROPE_SOURCE_COVERAGE_20260908.json), [preserved Pro materials](paper-2027/research/external-reviews/pro-materials-20260908/) | Ten RoPE documents fully reviewed; nine new verbatim sources, one reused; two other-topic inputs screened and excluded |
+| [Fixed-position visibility protocol](docs/research/ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md), [implementation](scripts/experiments/scale_transport/position_visibility.py), [layout tests](tests/test_position_visibility.py) | Prepared O/L/P/C oracle discriminator using one fixed table; no model run, runtime unqualified, no auto-launch |
 | [Overnight experiment review](docs/research/ROPE_OVERNIGHT_EXPERIMENT_REVIEW_20260908.md), [job/artifact ledger](docs/research/ROPE_OVERNIGHT_EXPERIMENT_LEDGER_20260908.json) | Current result summary: unresolved objective, local gains and regressions,34 job receipts, interrupted LoRA, lessons and stopped queues |
 | [Research failure review](docs/research/ROPE_RESEARCH_FAILURE_REVIEW_20260907.md) | Historical diagnosis plus a link to the overnight outcome and decision-rule corrections |
 | [Native phase constrained carrier](docs/research/ROPE_NATIVE_SECTOR_CARRIER_20260907.md) | Core experiment 3 stopped after nine tasks; retained development/raw results, EOS and phase checks; incomplete RULER, no SOTA claim |
@@ -53,7 +56,7 @@ inspect them with `git show main_0726:<path>`.
 
 | File | Purpose / status |
 | --- | --- |
-| [Cross-audit experiment protocol](paper-2027/research/CROSS_AUDIT_EXPERIMENT_PROTOCOL_20260907.md) | Author-selected September 6 source; E0/E1 preparation, full/LoRA contract, CPU findings and conditional stages |
+| [Cross-audit experiment protocol](paper-2027/research/CROSS_AUDIT_EXPERIMENT_PROTOCOL_20260907.md) | Historical E0/E1 and full/LoRA contract, baseline identity corrections; no automatic continuation |
 | [Scale-transport two-hour pilot protocol](docs/research/ROPE_SCALE_TRANSPORT_PILOT_20260907.md) | Main current result owner: guard/QA diagnostics plus combination RULER; score interpretation corrections, skipped VT rows and raw identities |
 | [Paired P2-middle/Mr experiment](scripts/experiments/scale_transport/paired_ruler_run.py), [state readback](scripts/experiments/scale_transport/capture_paired_states.py), [binding-state analysis](scripts/analysis/analyze_binding_states.py) | Continuation experiment 1 and numerical replay of the same conditions; current Qwen3B result and count owned by pilot/HANDOFF; no automatic candidate search |
 | [Pilot follow-up analysis and candidate](docs/research/ROPE_SCALE_TRANSPORT_FOLLOWUP_20260907.json), [analysis program](scripts/analysis/analyze_scale_transport_pilot.py) | Row-level score decomposition and one untested Mr-middle/scale-tail/CoPE composition; explanation and limits in pilot owner |
