@@ -4,17 +4,22 @@
 
 - 作者明确先完成零训练阶段，并将对手从 RoPE 纠正为 MrRoPE；本阶段采用其强版本
   MrRoPE-Pro。冻结预训练权重；LoRA、scratch 训练和压缩记忆暂不进入这一阶段。
-- **状态：MECHANISM_HYPOTHESIS / CPU_REFERENCE_ONLY；目标尚未完成。**
-  作者纠正“先扩大评测”的思考方式；已撤回提交4528435的13任务确认建议。
-  [第一步设计](../docs/research/ROPE_ZERO_TRAINING_MRPRO_STEP1_20260908.md)现在记录
-  同前4条输入的1.5B/3B复算、真实数组/gain差异，以及近邻原生/远程P2相位范围
-  的具体候选。64K/128K/3B原因仍未被唯一识别，不把工作假说写成实验结论。
-- 下一个研究动作：围绕该具体改动判断与准备，不恢复旧矩阵、训练或TP资格队列。
-  CPU参照已验证位置核与共同softmax代数；生产attention路径、工作机资格、原输入/
-  完整decoder复用、执行计划及吞吐均未完成，不能使用单表安装器直接声称已实现。
-  上次03:40–05:40 UTC授权已结束，没有新的付费GPU预算或运行deadline。
-- 此次更新机制分析、既有结果复算、CPU算子参照与路由；没有开机、启动GPU、
-  修改原频率数组或模型权重。原13任务确认计划已撤回，没有新运行队列。
+- **状态：IMPLEMENTATION_STOPPED / EXISTING_EVIDENCE_ONLY / NO_ACTIVE_CANDIDATE。**
+  作者明确停止near-native/far-P2/length-dependent replay实现；该候选与有限相位
+  replay推断均撤回。此前提交4528435的13任务确认也保持撤回，不另换窗口或映射。
+  [研究记录](../docs/research/ROPE_ZERO_TRAINING_MRPRO_STEP1_20260908.md)保留同前4条
+  输入复算及数组/gain差异，明确相位恒等式不能识别64K成功机制。
+- 当前仅允许从既有证据分析作者所指31–40槽的解释/预测力；不提出新curve、window、
+  distance mapping或GPU candidate。统一槽位编号，保留其它槽位及gain差异的混杂。
+  计算不读取benchmark label，不等于选择过程真正事前；不能把事后挑中的统计量
+  包装成已验证预测器。作者随后取消等待Qwen审计；外部审计不再是前置条件，
+  但这不解除停止方法设计、实现及GPU候选的范围约束。
+- 作者曾授权到原EVQ无卡写代码，随后在实施前叫停。本次SSH仅只读环境/资产清单：
+  2026-09-08 07:11 UTC确认无GPU，Torch2.8.0+cu128、Transformers5.15.1、
+  `/root/miniconda3/bin/python`；没有向服务器写入此方法、安装依赖或启动实验。
+  现有模型与历史回执保留。服务器保持作者提供的无卡状态，未另操作电源。
+  上次付费GPU授权已结束，无新GPU预算/deadline或运行队列。
+- 此次只撤回方案与修正状态；已有CPU参考按历史记录保留，不作为当前候选。
   三个原有untracked诊断脚本保持原状；活动TeX/PDF及`main_0726`归档未动。
 
 ## 最近阶段：压缩记忆来源绑定（已收尾，2026-09-08 04:49 UTC）

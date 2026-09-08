@@ -1,7 +1,9 @@
-"""Audit existing P2 results and a proposed relative-position operator on CPU.
+"""Retained P2 result audit and WITHDRAWN historical operator reference.
 
 No model, new frequency table, training, or capability experiment is executed.
 Random vectors below check rotary/softmax algebra only; they are not task data.
+The near/far proposal was withdrawn by the author on 2026-09-08. Its historical
+functions remain for auditing the claim, not as an active research candidate.
 """
 from __future__ import annotations
 
@@ -159,7 +161,7 @@ def main():
                              p2_over_mr_frequency=wp / wm,
                              signed_p2_minus_mr_phase_at65536=(wp - wm) * 65536))
     output = dict(
-        status="EXISTING_RESULT_REANALYSIS_AND_CPU_OPERATOR_REFERENCE_NO_NEW_MODEL_RUN",
+        status="RETAINED_RESULT_ANALYSIS_WITH_WITHDRAWN_OPERATOR_REFERENCE",
         inputs={name: {"path": str(path.relative_to(ROOT)), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
                 for name, path in paths.items()},
         model=data["model"], model_revision=data["model_revision"],
@@ -168,7 +170,8 @@ def main():
         gains=dict(p2=p2["gain"], mr=mr["gain"],
                    p2_over_mr_logit_multiplier=(p2["gain"] / mr["gain"]) ** 2),
         tail40plus_arrays_equal=frequencies[40:] == mr["values_float32"][40:],
-        proposal=dict(local_window=WINDOW, reference_request_cap=REFERENCE_CAP,
+        proposal=dict(status="WITHDRAWN_BY_AUTHOR_NOT_FOR_IMPLEMENTATION_OR_EXPERIMENT",
+                      local_window=WINDOW, reference_request_cap=REFERENCE_CAP,
                       local="Native frequencies at original relative distance",
                       remote="Frozen P2 frequencies at distance / max(1, frozen_request_cap / 65536)",
                       gain=p2["gain"], one_common_softmax=True,

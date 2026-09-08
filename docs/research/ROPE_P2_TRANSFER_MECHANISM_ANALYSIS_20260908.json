@@ -1,5 +1,5 @@
 {
-  "status": "EXISTING_RESULT_REANALYSIS_AND_CPU_OPERATOR_REFERENCE_NO_NEW_MODEL_RUN",
+  "status": "RETAINED_RESULT_ANALYSIS_WITH_WITHDRAWN_OPERATOR_REFERENCE",
   "inputs": {
     "result": {
       "path": "docs/research/ROPE_QWEN15_FULL_LAG_P2_RESULT_20260907.json",
@@ -241,6 +241,7 @@
   },
   "tail40plus_arrays_equal": true,
   "proposal": {
+    "status": "WITHDRAWN_BY_AUTHOR_NOT_FOR_IMPLEMENTATION_OR_EXPERIMENT",
     "local_window": 512,
     "reference_request_cap": 65536,
     "local": "Native frequencies at original relative distance",
