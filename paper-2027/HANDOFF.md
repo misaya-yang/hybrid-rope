@@ -4,24 +4,39 @@
 
 - 作者明确先完成零训练阶段，并将对手从 RoPE 纠正为 MrRoPE；本阶段采用其强版本
   MrRoPE-Pro。冻结预训练权重；LoRA、scratch 训练和压缩记忆暂不进入这一阶段。
-- **状态：MRPRO_INCREMENTAL_IMPROVEMENT / NO_ACTIVE_RUN。** 作者最新要求从
-  MrRoPE-Pro的完整有效方法出发，争取实测增益；高频不变、低频`/s`、中频规则
-  及分段边界均不是必须保留的条件。恢复频率分配的改进工作，不再把统一解释
-  64K、128K与3B旧结果设为提出改动的前置门槛。旧失败用于避免重复具体干预，
-  不能变成整个频段不可改的结论。
-- near-native/far-P2/length-dependent replay及有限相位replay候选仍撤回；此前
-  提交4528435的13任务确认也未恢复。当前没有选定的新表或GPU执行队列。
-  [研究记录](../docs/research/ROPE_ZERO_TRAINING_MRPRO_STEP1_20260908.md)保留旧数组与
-  逐行结果，最新方向覆盖其中“只分析、停止所有方法设计”的历史范围。
-  不再等待外部审计；新科学运行仍按具体问题冻结预测与结果分支。
-- 作者曾授权到原EVQ无卡写代码，随后在实施前叫停。本次SSH仅只读环境/资产清单：
-  2026-09-08 07:11 UTC确认无GPU，Torch2.8.0+cu128、Transformers5.15.1、
-  `/root/miniconda3/bin/python`；没有向服务器写入此方法、安装依赖或启动实验。
-  现有模型与历史回执保留。服务器保持作者提供的无卡状态，未另操作电源。
-  上次付费GPU授权已结束，无新GPU预算/deadline或运行队列。
-- 此次核对MrRoPE原论文并更新研究方向；没有生成新候选表或运行模型。
-  已有CPU参考按撤回方案的历史记录保留，不作为当前候选。
-  三个原有untracked诊断脚本保持原状；活动TeX/PDF及`main_0726`归档未动。
+- **状态：MRPRO_BM_PREPARED / GPU_NOT_RUN。** 作者最新提供并选定
+  [MrPro-BM首项闭式](../docs/research/ROPE_MRPRO_BM_PROTOCOL_20260908.md)，要求按
+  该方案准备开机。作者后续明确总体仍要最多10个有理论依据并经反向审查的候选；
+  当前只有BM准备好，其他未完成，不能把附件中的“一个candidate”当成缩小范围的指令。
+  本项保留标准operator、MrPro高低频/端点/gain/base。原ψ投影a=2.1477690111869907已原样
+  冻结并反向审查，不推荐GPU；没有裁剪或调整系数。
+- 当前目标模型为OLMo-2-0425-1B-Instruct，实际1,484,916,736参数，Native4096、
+  base500000、l14/h32、s4；BM只改15–31槽，exponent∈[0,1]、频率严格递减。
+  [数组及检查](../docs/research/ROPE_MRPRO_BM_CANDIDATE_20260908.json)已冻结，
+  精确Laplacian独立求解和14项相关工作机CPU测试通过。无新能力分数。
+- [公共评测](../docs/research/ROPE_OLMO_FAST_SCREEN_20260908.md)已在原EVQ完成CPU
+  分词与冻结：四类×4K/8K/16K×两个反事实世界，共24行、228099输入tokens；
+  另8行Native compact资格检查。顺序为Native资格→一次MrPro→一次BM。
+  5分钟是每主评测的成本估计，超过估计正常完成并报告耗时，先从baseline得到
+  真实成本。已撤销自行添加的各arm硬时限和15分钟总上限；仅在作者给出真实
+  总预算时启用deadline，恢复不刷新该预算。本次只准备，尚未开机或计时。
+- 现场仍为`ssh -p 27741 root@connect.westc.seetacloud.com`，Python
+  `/root/miniconda3/bin/python`，Torch2.8.0+cu128、Transformers5.15.1；最后检查
+  `cuda_available=false`、device_count0。代码已在
+  `/root/autodl-tmp/olmo_fast_screen_20260908/code`，固定输入/单候选队列在
+  `/root/autodl-tmp/olmo_fast_screen_20260908/prepared_bm_02`。
+- 有卡后在上述code目录执行：
+  `/root/miniconda3/bin/python -m scripts.experiments.olmo_fast_screen.supervise --prepared /root/autodl-tmp/olmo_fast_screen_20260908/prepared_bm_02 --out /root/autodl-tmp/olmo_fast_screen_20260908/run_bm_01 --detach`。
+  监督结果为run目录`phase.json`、`live.json`、`decision.json`；创建`STOP`文件可停止。
+  正常开机后按既定目标继续，不再要求作者重复说开始；若资格失败，保留输出并先
+  处理任务/模型可用性，不继续浪费候选计算。胜出进入结果分析，未胜不调曲线救分。
+- 作者随后明确授权清理旧工作，已[删除2392个旧语料/分词/activation/teacher
+  缓存文件](../docs/overview/SERVER_STORAGE_CLEANUP_20260908.md)，释放约39.64GiB；
+  数据盘可用33.49GiB、系统盘27.73GiB。19个已清点权重及模型配置/分词器保留；
+  OLMo权重重新匹配canonical SHA。旧大缓存/部分旧输入已删除，不能再沿用下文
+  历史条目声称它们仍可重放；小回执和当前准备文件保留。未安装依赖或操作电源。
+- 近邻/远程及finite-phase replay、旧13项确认均未恢复。三个原有untracked诊断
+  脚本保持原状；活动TeX/PDF及`main_0726`归档未动。此次代码/文档仅本地提交，未推送。
 
 ## 最近阶段：压缩记忆来源绑定（已收尾，2026-09-08 04:49 UTC）
 
