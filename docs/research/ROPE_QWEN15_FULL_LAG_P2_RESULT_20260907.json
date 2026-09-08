@@ -503,5 +503,172 @@
         "fwe_131072_137_7"
       ]
     }
-  ]
+  ],
+  "checkpoint_transfer_3b64": {
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+    "rows_total": 24,
+    "summary": [
+      {
+        "task": "niah_multikey_2",
+        "rows_per_arm": 4,
+        "scores": {
+          "fulllagp2": 75.0,
+          "mrpro": 50.0
+        },
+        "eos": {
+          "fulllagp2": 4,
+          "mrpro": 4
+        },
+        "paired": {
+          "win": 1,
+          "tie": 3,
+          "loss": 0,
+          "differences_fraction": [
+            "0",
+            "1",
+            "0",
+            "0"
+          ]
+        },
+        "row_ids": [
+          "niah_multikey_2_65536_137_0",
+          "niah_multikey_2_65536_137_1",
+          "niah_multikey_2_65536_137_2",
+          "niah_multikey_2_65536_137_3"
+        ]
+      },
+      {
+        "task": "vt",
+        "rows_per_arm": 4,
+        "scores": {
+          "fulllagp2": 90.0,
+          "mrpro": 95.0
+        },
+        "eos": {
+          "fulllagp2": 0,
+          "mrpro": 1
+        },
+        "paired": {
+          "win": 0,
+          "tie": 3,
+          "loss": 1,
+          "differences_fraction": [
+            "-1/5",
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "row_ids": [
+          "vt_65536_137_0",
+          "vt_65536_137_1",
+          "vt_65536_137_2",
+          "vt_65536_137_3"
+        ]
+      },
+      {
+        "task": "fwe",
+        "rows_per_arm": 4,
+        "scores": {
+          "fulllagp2": 66.66666666666667,
+          "mrpro": 75.0
+        },
+        "eos": {
+          "fulllagp2": 4,
+          "mrpro": 4
+        },
+        "paired": {
+          "win": 0,
+          "tie": 3,
+          "loss": 1,
+          "differences_fraction": [
+            "0",
+            "0",
+            "-1/3",
+            "0"
+          ]
+        },
+        "row_ids": [
+          "fwe_65536_137_0",
+          "fwe_65536_137_1",
+          "fwe_65536_137_2",
+          "fwe_65536_137_3"
+        ]
+      }
+    ],
+    "raw_runs": {
+      "qwen3_64_fulllagp2_01": {
+        "status": "COMPLETE",
+        "experiment_index": "QWEN3_FULL_LAG_P2_TRANSFER_01",
+        "scope": "Same frozen full table on Qwen3B,64K first4 of three fixed tasks. Checkpoint transfer screen, no curve tuning.",
+        "rows": 12,
+        "summary": [
+          {
+            "task": "fwe",
+            "length_cap": 65536,
+            "rows": 4,
+            "official_score": 66.67,
+            "source_budget_score": 66.67,
+            "eos": 4
+          },
+          {
+            "task": "niah_multikey_2",
+            "length_cap": 65536,
+            "rows": 4,
+            "official_score": 75.0,
+            "source_budget_score": 75.0,
+            "eos": 4
+          },
+          {
+            "task": "vt",
+            "length_cap": 65536,
+            "rows": 4,
+            "official_score": 90.0,
+            "source_budget_score": 90.0,
+            "eos": 0
+          }
+        ],
+        "elapsed_seconds": 148.42133198305964,
+        "examples_sha256": "d683571d4f2f06b2737331b8db06cd613132943d98ae0f7a1daff037c325ef47",
+        "plan_sha256": "761dc38e3431c3665b4a4ab0b4a6632969e2b573d838889a3434998218c111f7"
+      },
+      "qwen3_64_mrpro_01": {
+        "status": "COMPLETE",
+        "experiment_index": "QWEN3_FULL_LAG_P2_TRANSFER_01",
+        "scope": "Same frozen full table on Qwen3B,64K first4 of three fixed tasks. Checkpoint transfer screen, no curve tuning.",
+        "rows": 12,
+        "summary": [
+          {
+            "task": "fwe",
+            "length_cap": 65536,
+            "rows": 4,
+            "official_score": 75.0,
+            "source_budget_score": 75.0,
+            "eos": 4
+          },
+          {
+            "task": "niah_multikey_2",
+            "length_cap": 65536,
+            "rows": 4,
+            "official_score": 50.0,
+            "source_budget_score": 50.0,
+            "eos": 4
+          },
+          {
+            "task": "vt",
+            "length_cap": 65536,
+            "rows": 4,
+            "official_score": 95.0,
+            "source_budget_score": 95.0,
+            "eos": 1
+          }
+        ],
+        "elapsed_seconds": 148.29746878892183,
+        "examples_sha256": "34f8cd7cfb9439e350b3499121eb8d999b322e5c26ab2527d5b08731381f4ba9",
+        "plan_sha256": "727abd73d9a3a8b71c9f159af08cf6d95de7b25a199f1ff41f06e473d4c29dce"
+      }
+    },
+    "limits": "Four fixed prompts per task. Retrieval gains, tracking and aggregation regress in aggregate; no across-checkpoint dominance. The same64K tokenizer/input prefix was reused, not chosen by outcomes."
+  }
 }

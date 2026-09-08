@@ -37,6 +37,26 @@
   record a short bounded plan in its indexed protocol: question, discriminator,
   expected cost, outcome-to-action mapping and stop conditions. Keep it proportional
   to the experiment; a preparation milestone is not a research outcome.
+- For a new method, derive a quantitative or directional prediction that differs
+  from the relevant baseline, using the actual attention computation, fixed
+  rotary-slot identity and complete prior deployment. Each research iteration
+  must produce a concrete justified solution, a decisive prediction separating
+  remaining explanations, or a proof of non-identifiability with one precisely
+  defined measurable quantity and its direct measurement. Retire a hypothesis
+  that cannot produce a decision; do not replace it with an unconstrained story.
+- Use the smallest suitable model and frozen representative inputs to obtain that
+  decision quickly. Reuse valid baselines and outputs; add controls, tasks, seeds
+  or model sizes only when they can change the next decision. Measure end-to-end
+  cost before a long run. Numerical qualification and completeness of a benchmark
+  are separate from the evidence needed to decide whether a method is useful.
+- Read author-supplied research collections with explicit source coverage and
+  verify their assumptions against primary papers, code and artifacts. A source
+  is input, not proof or execution authority. Preserve full model/table/gain/data/
+  decoder identity when using a successful method as the starting point.
+- Freeze the prediction and outcome-to-action rule before scientific GPU work.
+  Do not silently relax either after seeing outcomes. Label any justified new
+  decision prospectively and keep the original verdict. Missing information must
+  be a named identifiable quantity, not a request for an unspecified larger sweep.
 
 ## Own the experiment phase
 
@@ -83,6 +103,11 @@
   only prose. Freeze model/data/code/config, actual arrays/gain, decoder/scorer and
   output identities; preserve raw rows, hashes, failures and exclusions. A new
   job, restart, checkpoint or session never silently resets the budget.
+- Long jobs must survive a disconnected control session and expose an explicit
+  stop path. Distinguish recovery snapshots from checkpoint selection: where
+  implemented, save a clearly nonfinal snapshot at a completed-update boundary
+  on interruption, while keeping the final evaluation checkpoint fixed. An
+  operator stop is neither a scientific failure nor a completed training result.
 
 ## Evidence and manuscript changes
 
