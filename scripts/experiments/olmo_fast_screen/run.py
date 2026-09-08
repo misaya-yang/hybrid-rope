@@ -74,10 +74,11 @@ def worker(prepared, out, phase_deadline=None, baseline_only=False):
         from .bench import score, summarize, verdict
     screen, qualification = rows(prepared/'screen.jsonl'), rows(prepared/'qualification.jsonl')
     tables = json.loads((prepared/'tables.json').read_text())
-    if len({tables[name]['tensor_sha256'] for name in ['MrPro']+queue}) != len(queue)+1:
+    reference = manifest.get('reference_arm', 'MrPro')
+    if len({digest({k: tables[name].get(k) for k in ('tensor_sha256','gain','gain_by_slot')}) for name in [reference]+queue}) != len(queue)+1:
         raise ValueError('duplicate candidate/baseline tensors')
     out.mkdir(parents=True, exist_ok=True)
-    for name in ['NativeQualification','MrPro']+queue:
+    for name in ['NativeQualification',reference]+queue:
         if (out/(name+'.jsonl')).exists() and not (out/(name+'.json')).exists():
             raise ValueError('partial previous arm requires explicit recovery, not automatic rerun: '+name)
     # Candidate additions do not invalidate an otherwise identical MrPro result.
@@ -87,6 +88,7 @@ def worker(prepared, out, phase_deadline=None, baseline_only=False):
                        'decoding':manifest['prepared_files']['generation_config.json'],
                        'scorer':manifest['code_files']['scripts/experiments/olmo_fast_screen/'+('ruler_bench.py' if is_ruler else 'bench.py')],
                        'runner':manifest['code_files']['scripts/experiments/olmo_fast_screen/run.py'],
+                       'runtime':manifest['code_files'].get('scripts/experiments/olmo_fast_screen/runtime.py'),
                        'software':manifest['software']})
 
     def progress(stage, expected_seconds):
@@ -101,7 +103,8 @@ def worker(prepared, out, phase_deadline=None, baseline_only=False):
     import numpy as np
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig
-    from scripts.experiments.cross_audit.tables import install_static, verify_static, tensor_sha
+    from scripts.experiments.cross_audit.tables import tensor_sha
+    from .runtime import install, verify
     active = subprocess.check_output(['nvidia-smi','--query-compute-apps=pid',
                                      '--format=csv,noheader,nounits'],text=True)
     if any(line.strip().isdigit() and int(line.strip()) != os.getpid()
@@ -140,8 +143,8 @@ def worker(prepared, out, phase_deadline=None, baseline_only=False):
         gain = tables[table_name]['gain']
         if tensor_sha(values) != tables[table_name]['tensor_sha256']:
             raise ValueError('table identity differs')
-        install_static(model, values, gain)
-        verify_static(model, values, gain)
+        install(model, tables[table_name])
+        verify(model, tables[table_name])
         expected_seconds=60 if name=='NativeQualification' else 300
         progress(name, expected_seconds)
         before = time.monotonic()
@@ -172,7 +175,7 @@ def worker(prepared, out, phase_deadline=None, baseline_only=False):
                 print(json.dumps({'arm':name,'completed':len(records),'total':len(data),
                                   'correct':record['correct']}), flush=True)
         elapsed = time.monotonic()-before
-        verify_static(model, values, gain)
+        verify(model, tables[table_name])
         atomic(complete, dict(status='COMPLETE',identity=identity,table=tables[table_name],
             raw_sha256=sha_file(raw),row_ids=[r['row_id'] for r in data],
             elapsed_seconds=elapsed,expected_seconds=expected_seconds,
@@ -186,17 +189,17 @@ def worker(prepared, out, phase_deadline=None, baseline_only=False):
             atomic(out/'decision.json', dict(status='ASSAY_UNQUALIFIED',native=compact,
                 action='No candidate run. Inspect task/decoder/model ability before revising the benchmark.'))
             return
-    baseline = evaluate('MrPro','MrPro',screen)
+    baseline = evaluate(reference,reference,screen)
     for name in queue:
         candidate = evaluate(name,name,screen)
         result = verdict(candidate, baseline)
         atomic(out/(name+'_decision.json'),result)
-        if result['status'] == 'DEVELOPMENT_WIN':
+        if result['status'] == 'DEVELOPMENT_WIN' and not manifest.get('complete_candidate_queue', False):
             atomic(out/'decision.json',dict(status='DEVELOPMENT_WIN',candidate=name,
                 result=result,action='Stop screening and analyze the winner before defining deeper evaluation.'))
             return
-    atomic(out/'decision.json', dict(status='BASELINE_ONLY_COMPLETE' if baseline_only else 'QUEUE_COMPLETE_NO_WIN',
-                                    candidates=queue))
+    atomic(out/'decision.json', dict(status='BASELINE_ONLY_COMPLETE' if baseline_only else 'QUEUE_COMPLETE',
+                                    reference=reference, candidates=queue))
 
 
 def main():

@@ -15,7 +15,6 @@ from .prepare import sha_file, write
 from .ruler_bench import TASKS, FAMILIES, score
 
 UPSTREAM_REVISION = 'c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a'
-CELLS = ((4096, 2), (16384, 4))
 SEED = 20260909
 
 
@@ -31,7 +30,24 @@ def main():
     parser.add_argument('--reuse-prepared', required=True, type=Path)
     parser.add_argument('--upstream', required=True, type=Path)
     parser.add_argument('--out', required=True, type=Path)
+    parser.add_argument('--seed', type=int, default=SEED)
+    parser.add_argument('--short-count', type=int, default=2)
+    parser.add_argument('--long-count', type=int, default=4)
+    parser.add_argument('--long-cap', type=int, default=16384)
+    parser.add_argument('--qa-offset', type=int, default=0)
+    parser.add_argument('--reuse-nonqa', type=Path)
     args = parser.parse_args()
+    if min(args.short_count, args.long_count) < 1:
+        parser.error('sample counts must be positive')
+    if args.long_cap <= 4096:
+        parser.error('long cap must exceed 4096')
+    cells = ((4096, args.short_count), (args.long_cap, args.long_count))
+    if args.qa_offset < 0:
+        parser.error('QA offset must be nonnegative')
+    if args.reuse_nonqa:
+        reuse_manifest = json.loads((args.reuse_nonqa/'manifest.json').read_text())
+        if reuse_manifest['seed'] != args.seed or reuse_manifest['samples_per_task_by_cap'] != {str(k):v for k,v in cells}:
+            raise ValueError('reused generator seed/count mismatch')
     old, upstream, out = (p.resolve() for p in (args.reuse_prepared, args.upstream, args.out))
     manifest = json.loads((old/'manifest.json').read_text())
     model_path = Path(manifest['model_path'])
@@ -55,7 +71,7 @@ def main():
     metrics = load_module('ruler_metrics', upstream/'scripts/eval/synthetic/constants.py')
     all_rows = []
     source_rows = []
-    for cap, count in CELLS:
+    for cap, count in cells:
         for task in TASKS:
             config = definitions[task]
             base = constants.TASKS[config['task']]
@@ -68,12 +84,19 @@ def main():
                 '--subset', 'validation', '--tokenizer_path', str(model_path),
                 '--tokenizer_type', 'hf', '--max_seq_length', str(cap),
                 '--tokens_to_generate', str(budget), '--num_samples', str(count),
-                '--random_seed', str(SEED), '--template', template]
+                '--random_seed', str(args.seed), '--template', template]
             for name, value in config['args'].items():
                 command.extend(['--'+name, str(value)])
+            if task.startswith('qa_'):
+                command.extend(['--pre_samples', str(args.qa_offset)])
             # No-GPU instances have only 2 GB RAM. Run the unmodified generator
             # sequentially in this process instead of duplicating HF dependencies.
             previous_argv, previous_path, previous_cwd = sys.argv, sys.path[:], os.getcwd()
+            reuse_source = args.reuse_nonqa/'source'/str(cap)/task/'validation.jsonl' if args.reuse_nonqa and not task.startswith('qa_') else None
+            if reuse_source:
+                destination = out/'source'/str(cap)/task/'validation.jsonl'
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(reuse_source, destination)
             with (out/f'{cap}_{task}.log').open('x') as log:
                 try:
                     sys.argv = command[1:]
@@ -81,7 +104,10 @@ def main():
                     os.chdir(upstream)
                     os.environ['TOKENIZERS_PARALLELISM'] = 'false'
                     with contextlib.redirect_stdout(log), contextlib.redirect_stderr(log):
-                        runpy.run_path(command[1], run_name='__main__')
+                        if reuse_source:
+                            print('Reused unchanged official source:', reuse_source)
+                        else:
+                            runpy.run_path(command[1], run_name='__main__')
                 finally:
                     sys.argv, sys.path = previous_argv, previous_path
                     os.chdir(previous_cwd)
@@ -92,7 +118,10 @@ def main():
             for index, raw in enumerate(generated):
                 text = raw['input'] + raw.get('answer_prefix', '')
                 ids = tokenizer.encode(text, add_special_tokens=False)
-                if len(ids) + budget > cap or len(ids) < .90 * cap:
+                # Upstream reduces the haystack in coarse increments; valid
+                # official rows can fall below 90% of the requested length cap.
+                # Keep those rows unchanged and report their realized length.
+                if len(ids) + budget > cap or not ids:
                     raise ValueError(f'{task}/{cap}: input length or generation reserve invalid: {len(ids)}')
                 refs = raw['outputs']
                 if not refs or any(not isinstance(ref, str) or not ref.strip() for ref in refs):
@@ -126,14 +155,15 @@ def main():
     write(out/'generation_config.json', decoding)
     root = Path(__file__).resolve().parents[3]
     dependencies = list(manifest['code_files'])
-    dependencies += ['scripts/experiments/olmo_fast_screen/'+name for name in ('ruler_bench.py', 'prepare_ruler.py')]
+    dependencies += ['scripts/experiments/olmo_fast_screen/'+name for name in ('ruler_bench.py', 'prepare_ruler.py', 'runtime.py')]
     sources = {str(path.relative_to(upstream)): sha_file(path) for path in (upstream/'scripts').rglob('*')
                if path.is_file() and path.suffix in ('.py', '.yaml')}
     source_assets = {name: sha_file(upstream/'scripts/data/synthetic/json'/name)
                      for name in ('PaulGrahamEssays.json', 'english_words.json', 'squad.json')}
     manifest.update(benchmark='ruler_mixed_v1', status='PREPARED_GPU_NOT_RUN',
-        physical_caps=[cap for cap, _ in CELLS], tasks=list(TASKS), families=FAMILIES,
-        seed=SEED, screen_rows=len(all_rows), qualification_rows=0,
+        physical_caps=[cap for cap, _ in cells], tasks=list(TASKS), families=FAMILIES,
+        seed=args.seed, qa_offset=args.qa_offset, samples_per_task_by_cap=dict(cells), screen_rows=len(all_rows), qualification_rows=0,
+        reused_nonqa_manifest_sha256=sha_file(args.reuse_nonqa/'manifest.json') if args.reuse_nonqa else None,
         screen_input_tokens=sum(r['input_tokens'] for r in all_rows),
         screen_min_max_tokens=[min(r['input_tokens'] for r in all_rows), max(r['input_tokens'] for r in all_rows)],
         row_order=[r['row_id'] for r in all_rows], prompt_collection_sha256=digest([r['prompt_ids'] for r in all_rows]),
@@ -141,8 +171,8 @@ def main():
         inputs_reused_from_manifest_sha256=None,
         scoring='Official RULER match-all, QA match-any; fractional per-row scores; equal task weights within each length.',
         qualification='No self-made Native gate. Report MrPro floor/ceiling cells and all selected tasks without outcome-based removal.',
-        selection='Primary: 16K six-task macro gain; report 4K separately. Positive long gain with nonnegative 4K change is a development win; short loss is a tradeoff.',
-        scope='Mixed six-task RULER development subset, 12 rows at 4K and 24 at 16K; not full RULER or a confirmation set.',
+        selection=f'Primary: {args.long_cap}-token-cap six-task macro gain; report 4K separately. Positive long gain with nonnegative 4K change is a development win; short loss is a tradeoff.',
+        scope=f'Mixed six-task RULER subset, {6*args.short_count} rows at 4K and {6*args.long_count} at {args.long_cap}-token cap; not full RULER. Development/confirmation role is declared in the experiment protocol.',
         gpu_execution='NOT_RUN; one MrPro baseline and one MrProBM comparison',
         code_files={name:sha_file(root/name) for name in dependencies})
     manifest['prepared_files'] = {name:sha_file(out/name) for name in

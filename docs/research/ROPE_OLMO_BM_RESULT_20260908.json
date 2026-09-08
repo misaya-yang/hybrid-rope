@@ -1,0 +1,2549 @@
+{
+  "status": "RESCORED_COMPLETED_ARMS",
+  "experiments": {
+    "development": {
+      "arms": {
+        "MrPro": {
+          "raw_path": "results/olmo_fast_screen_20260908/run_ruler_01/MrPro.jsonl",
+          "raw_sha256": "c56cf031fcb15acc2685beeb526d8d39180d186c6c4cbabe4af0eb2101005c26",
+          "receipt_sha256": "996fa6931c05dc2e5109a8015db846905697b985fd6e43781923047f5a79d705",
+          "table_identity": {
+            "tensor_sha256": "ed0120e3ba436199c71d2e25e923d7665a1e9c264fe18135f61f310296b94069",
+            "gain": 1.138629436111989
+          },
+          "elapsed_seconds": 46.45991541072726,
+          "summary": {
+            "rows": 36,
+            "score_sum": 8.05,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 0.5,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.5,
+                  "vt": 0.4,
+                  "fwe": 0.3333333333333333,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.37222222222222223
+              },
+              "16384": {
+                "task_accuracy": {
+                  "niah_single_2": 0.0,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.0625,
+                  "vt": 0.0,
+                  "fwe": 0.3333333333333333,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.14930555555555555
+              }
+            },
+            "eos_count": 21
+          }
+        },
+        "MrProBM": {
+          "raw_path": "results/olmo_fast_screen_20260908/run_ruler_01/MrProBM.jsonl",
+          "raw_sha256": "e4d2bec01bdb7bd4b56ccbae1e4a5ca6307a4bb3855a6025109f9265aeb6dddd",
+          "receipt_sha256": "8c4e12ea358fc6026393ad72efc3af5d2f7d2ba68a0dbfe85bfa59767071e64d",
+          "table_identity": {
+            "tensor_sha256": "fc0f443b1c58601d51209adb7e2b26df7ba10058a9dbdf193eb1de49116d446a",
+            "gain": 1.138629436111989
+          },
+          "elapsed_seconds": 48.174516689032316,
+          "summary": {
+            "rows": 36,
+            "score_sum": 21.3,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 1.0,
+                  "niah_multiquery": 1.0,
+                  "vt": 0.6,
+                  "fwe": 0.6666666666666666,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.7944444444444444
+              },
+              "16384": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 0.25,
+                  "niah_multiquery": 0.625,
+                  "vt": 0.15000000000000002,
+                  "fwe": 0.41666666666666663,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.49027777777777776
+              }
+            },
+            "eos_count": 23
+          }
+        }
+      },
+      "reference": "MrPro",
+      "comparisons": {
+        "MrProBM": {
+          "status": "DEVELOPMENT_WIN",
+          "macro_delta_by_length": {
+            "4096": 0.42222222222222217,
+            "16384": 0.34097222222222223
+          },
+          "candidate": {
+            "rows": 36,
+            "score_sum": 21.3,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 1.0,
+                  "niah_multiquery": 1.0,
+                  "vt": 0.6,
+                  "fwe": 0.6666666666666666,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.7944444444444444
+              },
+              "16384": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 0.25,
+                  "niah_multiquery": 0.625,
+                  "vt": 0.15000000000000002,
+                  "fwe": 0.41666666666666663,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.49027777777777776
+              }
+            },
+            "eos_count": 23
+          },
+          "baseline": {
+            "rows": 36,
+            "score_sum": 8.05,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 0.5,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.5,
+                  "vt": 0.4,
+                  "fwe": 0.3333333333333333,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.37222222222222223
+              },
+              "16384": {
+                "task_accuracy": {
+                  "niah_single_2": 0.0,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.0625,
+                  "vt": 0.0,
+                  "fwe": 0.3333333333333333,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.14930555555555555
+              }
+            },
+            "eos_count": 21
+          },
+          "paired_wins": 24,
+          "paired_losses": 1,
+          "baseline_extreme_cells": [
+            "4096/niah_multikey_2",
+            "16384/niah_single_2",
+            "16384/niah_multikey_2",
+            "16384/vt"
+          ],
+          "evidence_scope": "Six-task RULER development subset; not full RULER or independent confirmation",
+          "paired_by_length": {
+            "4096": {
+              "wins": 9,
+              "ties": 3,
+              "losses": 0
+            },
+            "16384": {
+              "wins": 15,
+              "ties": 8,
+              "losses": 1
+            }
+          },
+          "loss_rows": [
+            {
+              "row_id": "fwe_16384_1",
+              "references": [
+                "pnenda",
+                "nrdsir",
+                "knshie"
+              ],
+              "baseline_score": 0.6666666666666666,
+              "candidate_score": 0.0,
+              "baseline_text": " pnenda, knshie, p ...nd ...",
+              "candidate_text": " pn, knsh, pn"
+            }
+          ]
+        }
+      }
+    },
+    "seed_replication": {
+      "arms": {
+        "MrPro": {
+          "raw_path": "results/olmo_fast_screen_20260908/run_holdout_01/MrPro.jsonl",
+          "raw_sha256": "f41180551a3f2494ba0f0db80302180c72cc9873d0f3204f49f29eb8619bb555",
+          "receipt_sha256": "144b9ba49a6b5cc40b7443676ce6aa79f79a6397cb8f3b2530612b58314081bf",
+          "table_identity": {
+            "tensor_sha256": "ed0120e3ba436199c71d2e25e923d7665a1e9c264fe18135f61f310296b94069",
+            "gain": 1.138629436111989
+          },
+          "elapsed_seconds": 98.86297557502985,
+          "summary": {
+            "rows": 72,
+            "score_sum": 10.416666666666666,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 0.75,
+                  "niah_multikey_2": 0.25,
+                  "niah_multiquery": 0.1875,
+                  "vt": 0.25,
+                  "fwe": 0.5833333333333333,
+                  "qa_1": 0.25
+                },
+                "macro_accuracy": 0.37847222222222215
+              },
+              "16384": {
+                "task_accuracy": {
+                  "niah_single_2": 0.0,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.0,
+                  "vt": 0.0,
+                  "fwe": 0.16666666666666666,
+                  "qa_1": 0.0
+                },
+                "macro_accuracy": 0.027777777777777776
+              }
+            },
+            "eos_count": 45
+          }
+        },
+        "MrProBM": {
+          "raw_path": "results/olmo_fast_screen_20260908/run_holdout_01/MrProBM.jsonl",
+          "raw_sha256": "467c99b4e7e2e214c5021ba2754d2d0145f6c2ca53c36c88a7d34d8d734f6696",
+          "receipt_sha256": "e4d54d39518c6700082ec231e55b25836928be1ea5ccf6058af8646d63fa0ba1",
+          "table_identity": {
+            "tensor_sha256": "fc0f443b1c58601d51209adb7e2b26df7ba10058a9dbdf193eb1de49116d446a",
+            "gain": 1.138629436111989
+          },
+          "elapsed_seconds": 95.10967320203781,
+          "summary": {
+            "rows": 72,
+            "score_sum": 44.266666666666666,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 1.0,
+                  "niah_multiquery": 0.875,
+                  "vt": 0.7,
+                  "fwe": 0.5833333333333333,
+                  "qa_1": 0.75
+                },
+                "macro_accuracy": 0.8180555555555555
+              },
+              "16384": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 0.375,
+                  "niah_multiquery": 0.4375,
+                  "vt": 0.1,
+                  "fwe": 0.41666666666666663,
+                  "qa_1": 0.75
+                },
+                "macro_accuracy": 0.5131944444444444
+              }
+            },
+            "eos_count": 45
+          }
+        }
+      },
+      "reference": "MrPro",
+      "comparisons": {
+        "MrProBM": {
+          "status": "DEVELOPMENT_WIN",
+          "macro_delta_by_length": {
+            "4096": 0.4395833333333334,
+            "16384": 0.4854166666666666
+          },
+          "candidate": {
+            "rows": 72,
+            "score_sum": 44.266666666666666,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 1.0,
+                  "niah_multiquery": 0.875,
+                  "vt": 0.7,
+                  "fwe": 0.5833333333333333,
+                  "qa_1": 0.75
+                },
+                "macro_accuracy": 0.8180555555555555
+              },
+              "16384": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 0.375,
+                  "niah_multiquery": 0.4375,
+                  "vt": 0.1,
+                  "fwe": 0.41666666666666663,
+                  "qa_1": 0.75
+                },
+                "macro_accuracy": 0.5131944444444444
+              }
+            },
+            "eos_count": 45
+          },
+          "baseline": {
+            "rows": 72,
+            "score_sum": 10.416666666666666,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 0.75,
+                  "niah_multikey_2": 0.25,
+                  "niah_multiquery": 0.1875,
+                  "vt": 0.25,
+                  "fwe": 0.5833333333333333,
+                  "qa_1": 0.25
+                },
+                "macro_accuracy": 0.37847222222222215
+              },
+              "16384": {
+                "task_accuracy": {
+                  "niah_single_2": 0.0,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.0,
+                  "vt": 0.0,
+                  "fwe": 0.16666666666666666,
+                  "qa_1": 0.0
+                },
+                "macro_accuracy": 0.027777777777777776
+              }
+            },
+            "eos_count": 45
+          },
+          "paired_wins": 44,
+          "paired_losses": 0,
+          "baseline_extreme_cells": [
+            "16384/niah_single_2",
+            "16384/niah_multikey_2",
+            "16384/niah_multiquery",
+            "16384/vt",
+            "16384/qa_1"
+          ],
+          "evidence_scope": "Six-task RULER development subset; not full RULER or independent confirmation",
+          "paired_by_length": {
+            "4096": {
+              "wins": 13,
+              "ties": 11,
+              "losses": 0
+            },
+            "16384": {
+              "wins": 31,
+              "ties": 17,
+              "losses": 0
+            }
+          },
+          "loss_rows": []
+        }
+      }
+    },
+    "gain_followup": {
+      "arms": {
+        "MrProBM": {
+          "raw_path": "results/olmo_fast_screen_20260908/run_gain_01/MrProBM.jsonl",
+          "raw_sha256": "2fdf54ca3322ae8d1a277c09df4c6409acd9115f7d24b771955a2cebfcf81c16",
+          "receipt_sha256": "e6fb4a3edeb155629d033800989b46bbcf32259bf48093b29e6283c4b2e450a2",
+          "table_identity": {
+            "tensor_sha256": "fc0f443b1c58601d51209adb7e2b26df7ba10058a9dbdf193eb1de49116d446a",
+            "gain": 1.138629436111989
+          },
+          "elapsed_seconds": 48.538812443614006,
+          "summary": {
+            "rows": 36,
+            "score_sum": 21.3,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 1.0,
+                  "niah_multiquery": 1.0,
+                  "vt": 0.6,
+                  "fwe": 0.6666666666666666,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.7944444444444444
+              },
+              "16384": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 0.25,
+                  "niah_multiquery": 0.625,
+                  "vt": 0.15000000000000002,
+                  "fwe": 0.41666666666666663,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.49027777777777776
+              }
+            },
+            "eos_count": 23
+          }
+        },
+        "BMSelectiveGain": {
+          "raw_path": "results/olmo_fast_screen_20260908/run_gain_01/BMSelectiveGain.jsonl",
+          "raw_sha256": "1b282b3986bad2385f6a7a289f1d9666fb0d9135bbb837e8f70e3542db67a8ad",
+          "receipt_sha256": "05a8a7e04cae004c5d860f27e7847f2dcb374c856eec79a05c334fd8d3cae5d6",
+          "table_identity": {
+            "tensor_sha256": "fc0f443b1c58601d51209adb7e2b26df7ba10058a9dbdf193eb1de49116d446a",
+            "gain": 1.138629436111989,
+            "gain_by_slot": [
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0023378740740954,
+              1.0067390466409218,
+              1.0129199147385788,
+              1.0205933588554648,
+              1.0294734269489394,
+              1.0392789842381454,
+              1.0497363799581891,
+              1.0605811686292104,
+              1.0715589094353857,
+              1.0824253171336782,
+              1.0929457994915226,
+              1.1028944623083723,
+              1.1120528143993629,
+              1.1202081014727765,
+              1.1271513809982936,
+              1.1326753690091642,
+              1.136571940292479,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989,
+              1.138629436111989
+            ]
+          },
+          "elapsed_seconds": 48.486604921519756,
+          "summary": {
+            "rows": 36,
+            "score_sum": 20.433333333333334,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 1.0,
+                  "niah_multiquery": 0.875,
+                  "vt": 0.8,
+                  "fwe": 0.6666666666666666,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.8069444444444445
+              },
+              "16384": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.6875,
+                  "vt": 0.0,
+                  "fwe": 0.5,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.4479166666666667
+              }
+            },
+            "eos_count": 22
+          }
+        },
+        "BMUniformMatchedGain": {
+          "raw_path": "results/olmo_fast_screen_20260908/run_gain_01/BMUniformMatchedGain.jsonl",
+          "raw_sha256": "36a2392745d424ab0c6ab64272003ae814b2835c694d1885840d548365cf144e",
+          "receipt_sha256": "11d7e53897f7c4f5e3324f3035e5f81afdf5f05853784ed344a8ece27c366377",
+          "table_identity": {
+            "tensor_sha256": "fc0f443b1c58601d51209adb7e2b26df7ba10058a9dbdf193eb1de49116d446a",
+            "gain": 1.0897772006360074
+          },
+          "elapsed_seconds": 45.329976212233305,
+          "summary": {
+            "rows": 36,
+            "score_sum": 20.15,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 1.0,
+                  "niah_multiquery": 1.0,
+                  "vt": 0.6,
+                  "fwe": 0.6666666666666666,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.7944444444444444
+              },
+              "16384": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.6875,
+                  "vt": 0.05,
+                  "fwe": 0.41666666666666663,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.44236111111111115
+              }
+            },
+            "eos_count": 24
+          }
+        }
+      },
+      "reference": "MrProBM",
+      "comparisons": {
+        "BMSelectiveGain": {
+          "status": "NO_LONG_GAIN",
+          "macro_delta_by_length": {
+            "4096": 0.012500000000000067,
+            "16384": -0.04236111111111107
+          },
+          "candidate": {
+            "rows": 36,
+            "score_sum": 20.433333333333334,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 1.0,
+                  "niah_multiquery": 0.875,
+                  "vt": 0.8,
+                  "fwe": 0.6666666666666666,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.8069444444444445
+              },
+              "16384": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.6875,
+                  "vt": 0.0,
+                  "fwe": 0.5,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.4479166666666667
+              }
+            },
+            "eos_count": 22
+          },
+          "baseline": {
+            "rows": 36,
+            "score_sum": 21.3,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 1.0,
+                  "niah_multiquery": 1.0,
+                  "vt": 0.6,
+                  "fwe": 0.6666666666666666,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.7944444444444444
+              },
+              "16384": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 0.25,
+                  "niah_multiquery": 0.625,
+                  "vt": 0.15000000000000002,
+                  "fwe": 0.41666666666666663,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.49027777777777776
+              }
+            },
+            "eos_count": 23
+          },
+          "paired_wins": 5,
+          "paired_losses": 8,
+          "baseline_extreme_cells": [
+            "4096/niah_single_2",
+            "4096/niah_multikey_2",
+            "4096/niah_multiquery",
+            "16384/niah_single_2"
+          ],
+          "evidence_scope": "Six-task RULER development subset; not full RULER or independent confirmation",
+          "paired_by_length": {
+            "4096": {
+              "wins": 2,
+              "ties": 7,
+              "losses": 3
+            },
+            "16384": {
+              "wins": 3,
+              "ties": 16,
+              "losses": 5
+            }
+          },
+          "loss_rows": [
+            {
+              "row_id": "niah_multiquery_4096_1",
+              "references": [
+                "7959915",
+                "7031185",
+                "6231605",
+                "8625150"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.75,
+              "baseline_text": ":\n\n- **7959915**: This is the magic number for the transition from tearful-subsidy to addiction, as seen in the transformation of opium into heroin.\n- **7031185**: This is a special magic number for the acceleration of technological progress in the Neolithic period.\n- **8625150**: This is a magic number related to the founders' overestimation of the need to hire more people to avoid the fatal pinch.\n- **6231605**: This is a magic number related to the founders' underestimation of the fundamental problem with their product, which is its moderate appeal and slow growth.\n-",
+              "candidate_text": ":\n\n1. 7959915 - This number represents a hypothetical scenario where technological progress leads to a significant increase in the efficiency of solar cells, making them more desirable, but unless the laws governing this progress are subject to different regulations than those for general technological progress, the world will become more addictive over the next 40 years.\n\n2. 7031185 - This number reflects Paleolithic technological progress evolving at a blistering pace in the Neolithic period, suggesting that unless a startup accelerates its growth, it risks defaulting to not making it to profitability.\n\n3. 8625150 - This is related to the founders' assumption"
+            },
+            {
+              "row_id": "vt_4096_0",
+              "references": [
+                "XCQAX",
+                "MZFOB",
+                "DWEUF",
+                "DCYVP",
+                "ESGXM"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.6,
+              "baseline_text": " XCQAX, MZFOB, DWEUF, ESGXM, and DCYVP.\n\nExplanation: \n- VAR XCQAX",
+              "candidate_text": " XCQAX, MZFOB, VAR DWEUF, VAR ESGM, and VAR SGM\n\nExplanation: The text follows the"
+            },
+            {
+              "row_id": "fwe_4096_1",
+              "references": [
+                "hqmlze",
+                "ydhppq",
+                "lvqhqz"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.6666666666666666,
+              "baseline_text": " hqmlze, ydhppq, and lvqhqz.",
+              "candidate_text": " hqmlze, ydhppq, and zljwta."
+            },
+            {
+              "row_id": "niah_multikey_2_16384_3",
+              "references": [
+                "1332115"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": ": 1332115. \n\nThis is derived from the context where \"puffy-field\" is mentioned in the text as a place mentioned for \"aberrant-virtue,\" suggesting a specific location or scenario where this term is used. The numbers provided are related to various aspects of the text and its characters, but \"1332115\" stands out as a unique magic number that fits the description given in the text.",
+              "candidate_text": ": 1332111."
+            },
+            {
+              "row_id": "niah_multiquery_16384_2",
+              "references": [
+                "5400527",
+                "2765145",
+                "7157223",
+                "2679278"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.25,
+              "baseline_text": ":\n\n1. **2679278**: This is the magic number for guests who are invited to a party and are expected to stay for a while, but who eventually decide to leave.\n\n2. **7157223**: The magic number for founders who need to impress investors by showcasing their ability to grow their business quickly, but this impulse can lead founders into making decisions that ultimately doom their startups.\n\n3. **5400527**: The magic number for startups that are all-consuming, representing the extent to which founders' lives are taken over by their startup, and the potential for this to be a dangerous thing.\n\n4. **2765145",
+              "candidate_text": " deeply rooted in the counterintuitive nature of starting a startup. Here's a breakdown of these concepts:\n\n1. **Counterintuitive Startup Success**: The notion that startups are inherently counterintuitive to the point where founders often make mistakes despite their best intentions. This is akin to skiing where the first instinct is to lean back, but the right counterintuitive move is to lean forward, suppressing the urge to fly off the hill.\n\n2. **Magic Number 7157223**: The idea that founders need to be surprised by advice, which is the essence of Y Combinator's philosophy. This number represents the realization that success isn"
+            },
+            {
+              "row_id": "vt_16384_0",
+              "references": [
+                "DCYVP",
+                "ESGXM",
+                "TDEKL",
+                "YFGRJ",
+                "SUARC"
+              ],
+              "baseline_score": 0.2,
+              "candidate_score": 0.0,
+              "baseline_text": " PVP, DCYVP, SPY, FHS, and HDT.",
+              "candidate_text": "25757, 330, 330, 330, 330, and 330."
+            },
+            {
+              "row_id": "vt_16384_1",
+              "references": [
+                "FDOBR",
+                "VLCZA",
+                "DBPQS",
+                "UHTWU",
+                "UJTZV"
+              ],
+              "baseline_score": 0.2,
+              "candidate_score": 0.0,
+              "baseline_text": " JMV, VLCZA, EKO, EPE, and VLCB.",
+              "candidate_text": "79338, 37150, 37100, 37150, 37100, and 37150."
+            },
+            {
+              "row_id": "vt_16384_3",
+              "references": [
+                "ETCMI",
+                "JZIDE",
+                "CBVOS",
+                "DUJHO",
+                "HLXIO"
+              ],
+              "baseline_score": 0.2,
+              "candidate_score": 0.0,
+              "baseline_text": " JZG, JSEEC, ZYG, WUB, and CBVOS.",
+              "candidate_text": "88669, EJG, EEC, ZYG, WUB."
+            }
+          ]
+        },
+        "BMUniformMatchedGain": {
+          "status": "NO_LONG_GAIN",
+          "macro_delta_by_length": {
+            "4096": 0.0,
+            "16384": -0.04791666666666661
+          },
+          "candidate": {
+            "rows": 36,
+            "score_sum": 20.15,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 1.0,
+                  "niah_multiquery": 1.0,
+                  "vt": 0.6,
+                  "fwe": 0.6666666666666666,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.7944444444444444
+              },
+              "16384": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.6875,
+                  "vt": 0.05,
+                  "fwe": 0.41666666666666663,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.44236111111111115
+              }
+            },
+            "eos_count": 24
+          },
+          "baseline": {
+            "rows": 36,
+            "score_sum": 21.3,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 1.0,
+                  "niah_multiquery": 1.0,
+                  "vt": 0.6,
+                  "fwe": 0.6666666666666666,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.7944444444444444
+              },
+              "16384": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 0.25,
+                  "niah_multiquery": 0.625,
+                  "vt": 0.15000000000000002,
+                  "fwe": 0.41666666666666663,
+                  "qa_1": 0.5
+                },
+                "macro_accuracy": 0.49027777777777776
+              }
+            },
+            "eos_count": 23
+          },
+          "paired_wins": 2,
+          "paired_losses": 5,
+          "baseline_extreme_cells": [
+            "4096/niah_single_2",
+            "4096/niah_multikey_2",
+            "4096/niah_multiquery",
+            "16384/niah_single_2"
+          ],
+          "evidence_scope": "Six-task RULER development subset; not full RULER or independent confirmation",
+          "paired_by_length": {
+            "4096": {
+              "wins": 1,
+              "ties": 10,
+              "losses": 1
+            },
+            "16384": {
+              "wins": 1,
+              "ties": 19,
+              "losses": 4
+            }
+          },
+          "loss_rows": [
+            {
+              "row_id": "fwe_4096_1",
+              "references": [
+                "hqmlze",
+                "ydhppq",
+                "lvqhqz"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.6666666666666666,
+              "baseline_text": " hqmlze, ydhppq, and lvqhqz.",
+              "candidate_text": " hqmlze, ydhppq, and zljwta."
+            },
+            {
+              "row_id": "niah_multikey_2_16384_3",
+              "references": [
+                "1332115"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": ": 1332115. \n\nThis is derived from the context where \"puffy-field\" is mentioned in the text as a place mentioned for \"aberrant-virtue,\" suggesting a specific location or scenario where this term is used. The numbers provided are related to various aspects of the text and its characters, but \"1332115\" stands out as a unique magic number that fits the description given in the text.",
+              "candidate_text": " 4537049."
+            },
+            {
+              "row_id": "niah_multiquery_16384_2",
+              "references": [
+                "5400527",
+                "2765145",
+                "7157223",
+                "2679278"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.75,
+              "baseline_text": ":\n\n1. **2679278**: This is the magic number for guests who are invited to a party and are expected to stay for a while, but who eventually decide to leave.\n\n2. **7157223**: The magic number for founders who need to impress investors by showcasing their ability to grow their business quickly, but this impulse can lead founders into making decisions that ultimately doom their startups.\n\n3. **5400527**: The magic number for startups that are all-consuming, representing the extent to which founders' lives are taken over by their startup, and the potential for this to be a dangerous thing.\n\n4. **2765145",
+              "candidate_text": ":\n\n1. **2765145** - This is a hypothetical magic number for a startup's financial health. It reflects the idea that startups need to be wary of their financial health and ensure they are not defaulting to \"default dead\" status too early.\n\n2. **7157223** - This is a magic number for founders to trust their instincts about potential partners, suggesting that founders should look for people who are not only impressive but also genuinely interested in the cause they're working on.\n\n3. **5400527** - A magic number for founders to recognize that startups are not just about following conventional wisdom but about doing what genuinely"
+            },
+            {
+              "row_id": "vt_16384_0",
+              "references": [
+                "DCYVP",
+                "ESGXM",
+                "TDEKL",
+                "YFGRJ",
+                "SUARC"
+              ],
+              "baseline_score": 0.2,
+              "candidate_score": 0.0,
+              "baseline_text": " PVP, DCYVP, SPY, FHS, and HDT.",
+              "candidate_text": "25757, 330, 330, 330, 330, and 330."
+            },
+            {
+              "row_id": "vt_16384_3",
+              "references": [
+                "ETCMI",
+                "JZIDE",
+                "CBVOS",
+                "DUJHO",
+                "HLXIO"
+              ],
+              "baseline_score": 0.2,
+              "candidate_score": 0.0,
+              "baseline_text": " JZG, JSEEC, ZYG, WUB, and CBVOS.",
+              "candidate_text": " JDK, EJG, EEC, ZYG, and WUB."
+            }
+          ]
+        }
+      }
+    },
+    "scale8": {
+      "arms": {
+        "MrPro": {
+          "raw_path": "results/olmo_fast_screen_20260908/run_s8_01/MrPro.jsonl",
+          "raw_sha256": "310fced8c35f50a8cf88bbd619534fa9e1427f8268e20a62876f738bf8896a6b",
+          "receipt_sha256": "40b2567bb3ed36efb671046fd0f68365c7d8d7d9e5b56e42ea09ab6af181aabd",
+          "table_identity": {
+            "tensor_sha256": "cef9ab0934a8505963484f28ed3b8fd257f14df765e94e9412fb78ef56ff16ea",
+            "gain": 1.2079441541679836
+          },
+          "elapsed_seconds": 187.84329588338733,
+          "summary": {
+            "rows": 72,
+            "score_sum": 1.3333333333333333,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 0.0,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.0,
+                  "vt": 0.0,
+                  "fwe": 0.0,
+                  "qa_1": 0.25
+                },
+                "macro_accuracy": 0.041666666666666664
+              },
+              "32768": {
+                "task_accuracy": {
+                  "niah_single_2": 0.0,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.0,
+                  "vt": 0.0,
+                  "fwe": 0.041666666666666664,
+                  "qa_1": 0.0
+                },
+                "macro_accuracy": 0.006944444444444444
+              }
+            },
+            "eos_count": 29
+          }
+        },
+        "MrProBM": {
+          "raw_path": "results/olmo_fast_screen_20260908/run_s8_01/MrProBM.jsonl",
+          "raw_sha256": "870e4a0e6339227d945a63a3f783d2ec84ce0d5efd8cd395ffdfbfc4d976d836",
+          "receipt_sha256": "3353ba14e133e7a9d6d4363b90e7f82b52ec1aca19d1a825ace91ce2759855ba",
+          "table_identity": {
+            "tensor_sha256": "e2da6812e600696fb859ca1c6d9402ae717f2989e8104105c3355e8b7c049bdf",
+            "gain": 1.2079441541679836
+          },
+          "elapsed_seconds": 182.1768868751824,
+          "summary": {
+            "rows": 72,
+            "score_sum": 9.066666666666666,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 0.0,
+                  "niah_multikey_2": 0.25,
+                  "niah_multiquery": 0.0,
+                  "vt": 0.35,
+                  "fwe": 0.5833333333333333,
+                  "qa_1": 0.25
+                },
+                "macro_accuracy": 0.23888888888888885
+              },
+              "32768": {
+                "task_accuracy": {
+                  "niah_single_2": 0.0,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.0,
+                  "vt": 0.0,
+                  "fwe": 0.16666666666666666,
+                  "qa_1": 0.25
+                },
+                "macro_accuracy": 0.06944444444444443
+              }
+            },
+            "eos_count": 31
+          }
+        }
+      },
+      "reference": "MrPro",
+      "comparisons": {
+        "MrProBM": {
+          "status": "DEVELOPMENT_WIN",
+          "macro_delta_by_length": {
+            "4096": 0.1972222222222222,
+            "32768": 0.062499999999999986
+          },
+          "candidate": {
+            "rows": 72,
+            "score_sum": 9.066666666666666,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 0.0,
+                  "niah_multikey_2": 0.25,
+                  "niah_multiquery": 0.0,
+                  "vt": 0.35,
+                  "fwe": 0.5833333333333333,
+                  "qa_1": 0.25
+                },
+                "macro_accuracy": 0.23888888888888885
+              },
+              "32768": {
+                "task_accuracy": {
+                  "niah_single_2": 0.0,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.0,
+                  "vt": 0.0,
+                  "fwe": 0.16666666666666666,
+                  "qa_1": 0.25
+                },
+                "macro_accuracy": 0.06944444444444443
+              }
+            },
+            "eos_count": 31
+          },
+          "baseline": {
+            "rows": 72,
+            "score_sum": 1.3333333333333333,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 0.0,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.0,
+                  "vt": 0.0,
+                  "fwe": 0.0,
+                  "qa_1": 0.25
+                },
+                "macro_accuracy": 0.041666666666666664
+              },
+              "32768": {
+                "task_accuracy": {
+                  "niah_single_2": 0.0,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.0,
+                  "vt": 0.0,
+                  "fwe": 0.041666666666666664,
+                  "qa_1": 0.0
+                },
+                "macro_accuracy": 0.006944444444444444
+              }
+            },
+            "eos_count": 29
+          },
+          "paired_wins": 14,
+          "paired_losses": 2,
+          "baseline_extreme_cells": [
+            "4096/niah_single_2",
+            "4096/niah_multikey_2",
+            "4096/niah_multiquery",
+            "4096/vt",
+            "4096/fwe",
+            "32768/niah_single_2",
+            "32768/niah_multikey_2",
+            "32768/niah_multiquery",
+            "32768/vt",
+            "32768/qa_1"
+          ],
+          "evidence_scope": "Six-task RULER development subset; not full RULER or independent confirmation",
+          "paired_by_length": {
+            "4096": {
+              "wins": 9,
+              "ties": 14,
+              "losses": 1
+            },
+            "32768": {
+              "wins": 5,
+              "ties": 42,
+              "losses": 1
+            }
+          },
+          "loss_rows": [
+            {
+              "row_id": "qa_1_4096_2",
+              "references": [
+                "a single output",
+                "single",
+                "single"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": " one\nExplanation: The statement that a function problem has a single output is expected for every input is equivalent to saying that a function always gives a specific result.",
+              "candidate_text": " 2"
+            },
+            {
+              "row_id": "fwe_32768_6",
+              "references": [
+                "ieyjfm",
+                "kbmdzy",
+                "udijfr"
+              ],
+              "baseline_score": 0.3333333333333333,
+              "candidate_score": 0.0,
+              "baseline_text": " \"g\" and \"kbmdzy\".",
+              "candidate_text": " \"gbtwt\" and \"eyj\"."
+            }
+          ]
+        }
+      }
+    },
+    "existing_controls": {
+      "arms": {
+        "MrUni": {
+          "raw_path": "results/olmo_fast_screen_20260908/run_controls_01/MrUni.jsonl",
+          "raw_sha256": "ae02be31e1815ecf129f23df5b0de32aa2c4257d4b02a216dd9f3d4a65adbcbf",
+          "receipt_sha256": "69831ed9168886981c0581464f5ff731cb10211622c4b07dd4cf6db81b02c457",
+          "table_identity": {
+            "gain": 1.138629436111989,
+            "tensor_sha256": "8faf7ceb1776d80aec13daed65bc4cc44b6ab0c0b0df149805b732847112701d"
+          },
+          "elapsed_seconds": 97.78183040395379,
+          "summary": {
+            "rows": 72,
+            "score_sum": 33.86666666666667,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 1.0,
+                  "niah_multiquery": 0.8125,
+                  "vt": 0.55,
+                  "fwe": 0.5,
+                  "qa_1": 0.75
+                },
+                "macro_accuracy": 0.7687499999999999
+              },
+              "16384": {
+                "task_accuracy": {
+                  "niah_single_2": 0.625,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.09375,
+                  "vt": 0.0,
+                  "fwe": 0.4583333333333333,
+                  "qa_1": 0.75
+                },
+                "macro_accuracy": 0.3211805555555555
+              }
+            },
+            "eos_count": 40
+          }
+        },
+        "OfficialYaRN": {
+          "raw_path": "results/olmo_fast_screen_20260908/run_controls_01/OfficialYaRN.jsonl",
+          "raw_sha256": "323dba266a254a8a6bab74d1731b7b55fd88f42c8ec072fa65737d4e11835f64",
+          "receipt_sha256": "1a2e7aa60f9329766113c899f3a917f05a0687b51c4b383191eb6c7ea187b82c",
+          "table_identity": {
+            "gain": 1.138629436111989,
+            "tensor_sha256": "4e4198c464045d524b560c856a49852dd1ccc6d7548abf7160ad7b179e226e44"
+          },
+          "elapsed_seconds": 100.93177593871951,
+          "summary": {
+            "rows": 72,
+            "score_sum": 16.383333333333333,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 0.25,
+                  "niah_multiquery": 0.5625,
+                  "vt": 0.2,
+                  "fwe": 0.5,
+                  "qa_1": 0.75
+                },
+                "macro_accuracy": 0.5437500000000001
+              },
+              "16384": {
+                "task_accuracy": {
+                  "niah_single_2": 0.0,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.0,
+                  "vt": 0.0,
+                  "fwe": 0.16666666666666666,
+                  "qa_1": 0.25
+                },
+                "macro_accuracy": 0.06944444444444443
+              }
+            },
+            "eos_count": 42
+          }
+        }
+      },
+      "reference": "MrUni",
+      "comparisons": {
+        "OfficialYaRN": {
+          "status": "NO_LONG_GAIN",
+          "macro_delta_by_length": {
+            "4096": -0.22499999999999987,
+            "16384": -0.2517361111111111
+          },
+          "candidate": {
+            "rows": 72,
+            "score_sum": 16.383333333333333,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 0.25,
+                  "niah_multiquery": 0.5625,
+                  "vt": 0.2,
+                  "fwe": 0.5,
+                  "qa_1": 0.75
+                },
+                "macro_accuracy": 0.5437500000000001
+              },
+              "16384": {
+                "task_accuracy": {
+                  "niah_single_2": 0.0,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.0,
+                  "vt": 0.0,
+                  "fwe": 0.16666666666666666,
+                  "qa_1": 0.25
+                },
+                "macro_accuracy": 0.06944444444444443
+              }
+            },
+            "eos_count": 42
+          },
+          "baseline": {
+            "rows": 72,
+            "score_sum": 33.86666666666667,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 1.0,
+                  "niah_multiquery": 0.8125,
+                  "vt": 0.55,
+                  "fwe": 0.5,
+                  "qa_1": 0.75
+                },
+                "macro_accuracy": 0.7687499999999999
+              },
+              "16384": {
+                "task_accuracy": {
+                  "niah_single_2": 0.625,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.09375,
+                  "vt": 0.0,
+                  "fwe": 0.4583333333333333,
+                  "qa_1": 0.75
+                },
+                "macro_accuracy": 0.3211805555555555
+              }
+            },
+            "eos_count": 40
+          },
+          "paired_wins": 2,
+          "paired_losses": 26,
+          "baseline_extreme_cells": [
+            "4096/niah_single_2",
+            "4096/niah_multikey_2",
+            "16384/niah_multikey_2",
+            "16384/vt"
+          ],
+          "evidence_scope": "Six-task RULER development subset; not full RULER or independent confirmation",
+          "paired_by_length": {
+            "4096": {
+              "wins": 1,
+              "ties": 15,
+              "losses": 8
+            },
+            "16384": {
+              "wins": 1,
+              "ties": 29,
+              "losses": 18
+            }
+          },
+          "loss_rows": [
+            {
+              "row_id": "niah_multikey_2_4096_0",
+              "references": [
+                "5581452"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": ": 5581452. \n\nSo, the special magic number for the quiz is: 5581452.",
+              "candidate_text": ": 588\n\nThe answer is: 588"
+            },
+            {
+              "row_id": "niah_multikey_2_4096_1",
+              "references": [
+                "8010227"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": ": 8010227.\n\nSo, the special magic number for the instinctive idea is 8010227.",
+              "candidate_text": ": 489956\n\nThe numbers listed are special magic numbers for various contexts, including ahead-utility, tame-impairment, abrupt-developer, demonic-story-telling, utopian-possible, disagreeable-toothbrush, creepy-version, exotic-reluctance, aspiring-barbecue, jumbled-physics, sticky-enjoyment, terrible-tea, crooked-waveform, loving-parallelogram, knowing-incarnation, abhorrent-terminology, harmonious-vanadyl, elegant, bloodied-ambulance, mindless-torso, aboriginal-logistics, jolly-combat, boring-co"
+            },
+            {
+              "row_id": "niah_multikey_2_4096_2",
+              "references": [
+                "5743144"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": ": 5743144.",
+              "candidate_text": ": 238\n\nThe numbers listed are not part of the original prompt but are special magic numbers for dramatic-tripod, idiotic-misunderstand, parched-subcomponent, ugliest-peony, square-clearance, arrogant-record, synonymous-selling, vague-sight, wrong-composer, narrow-dump truck, vengeful-ephemeris, oceanic-retrospective, substantial-deployment, abject, and maniacal-plow are not part of the original text but are part of the quiz. The correct special magic number for \"Gabby mentioned\" is 238."
+            },
+            {
+              "row_id": "niah_multiquery_4096_0",
+              "references": [
+                "2546877",
+                "3880293",
+                "3965263",
+                "1694782"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": ":\n\n1. **Volatile-bandwidth**: 2546877\n2. **Greedy-opportunity**: 3880293\n3. **Curved-shoestring**: 3965263\n4. **Special mention**: 1694782\n\nThese numbers reflect the text's observations on how certain products or services become more appealing or addictive as they grow, often due to rapid revenue growth, but sometimes because they become more concentrated forms of what we don't want to want (like heroin from opium), and the process of technological progress accelerates the creation of new addictive products. The special numbers here are indicative of trends in",
+              "candidate_text": " not explicitly listed as such in the text. However, we can infer their presence based on the broader themes and the context of the text.\n\n**Volatile-bandwidth:**\nThe term \"volatile-bandwidth\" doesn't directly appear in the text but fits the description of how technology can create addictive products. A \"volatile-bandwidth\" suggests a measure of how quickly a product can capture and retain attention, which is crucial for addictive qualities. The text hints at this by mentioning how new technologies like World of Warcraft and FarmVille have high levels of engagement and addictive qualities, which is directly related to their high bandwidth.\n\n**Gre"
+            },
+            {
+              "row_id": "niah_multiquery_4096_3",
+              "references": [
+                "3627002",
+                "9396248",
+                "1406279",
+                "4159543"
+              ],
+              "baseline_score": 0.75,
+              "candidate_score": 0.5,
+              "baseline_text": ":\n\n1. **4159543** - This is the magic number for concerned-tassel, indicating that the process of transforming less addictive predecessors into more addictive ones is accelerating.\n\n2. **1406279** - This is the magic number for light-consulate, suggesting that the process of making things we like too much has taken a long time, on the order of 100 years, to become a widespread issue.\n\n3. **9396248** - This is the magic number for internal-mukluk, indicating that startups that wait until after they've been funded by Y Combinator before hiring their first employee are more likely",
+              "candidate_text": ":\n\n**internal-mukluk:** 362700\n**light-consulate:** 9399543\n**concerned-tassel:** 1406279\n**holistic-seabass:** 4159543\n\nThese numbers reflect the points where certain products or services transition from being seen as desirable to becoming problematic or addictive. The internal-mukluk is a critical threshold for software development, where the sheer volume of development and the complexity of software make it less suited to a traditional publisher model. Light-consulate refers to the resurgence of evangelical Christianity as a reaction to the perceived overreach of new technologies and addictive substances,"
+            },
+            {
+              "row_id": "vt_4096_0",
+              "references": [
+                "XHQPB",
+                "ZVXSL",
+                "MDQXK",
+                "LDNLZ",
+                "DMPGU"
+              ],
+              "baseline_score": 0.8,
+              "candidate_score": 0.2,
+              "baseline_text": " XHQPB, MDQXK, LDNL, DMPGU, and LDNLZ\n\nExplanation: The text reveals a clear chain of",
+              "candidate_text": " XHQPB, LDQXK, MDQXSL, MDQN, and LDZ.\n\nExplanation: The text chain starts with X"
+            },
+            {
+              "row_id": "vt_4096_2",
+              "references": [
+                "HGMQE",
+                "UIIFD",
+                "BUWIR",
+                "DZXZF",
+                "OTNVP"
+              ],
+              "baseline_score": 0.8,
+              "candidate_score": 0.2,
+              "baseline_text": " HGMQE, UIIFD, DZXZF, DZXNE, and OTNVP\n\nExplanation: The text sequence reveals the following variable",
+              "candidate_text": " HGMQE, UIIF, UIFJX, THB, and WVX.\n\nExplanation: The text starts with the declaration of a variable"
+            },
+            {
+              "row_id": "vt_4096_3",
+              "references": [
+                "CSOCM",
+                "JNEDL",
+                "BBLQN",
+                "SHRLM",
+                "OPRKF"
+              ],
+              "baseline_score": 0.6,
+              "candidate_score": 0.4,
+              "baseline_text": " CSOCM, MTA, HYU, JNEDL, and BBLQN.\n\nExplanation: The text follows a consistent pattern where each",
+              "candidate_text": " CSOCM, HYU, BBLQN, BBLQ, and back.\n\nExplanation: The sequence of variable assignments starts with VAR CS"
+            },
+            {
+              "row_id": "niah_single_2_16384_1",
+              "references": [
+                "5718372"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": " 5718372. This number reflects the idea that in a startup, the founders need to focus on features that are genuinely appealing to their users, rather than those that are merely trendy or superficially appealing. It underscores the importance of deep understanding and innovation in the startup process, rather than superficial trends. The number 5718372 is a reminder that startups are not just about following the latest fad or technology, but about solving real problems that matter to the users. It suggests that founders should not be swayed by external pressures to adopt technologies or practices that are not aligned with the core mission and values of the company. This align",
+              "candidate_text": " not a single word but a concept or a heuristic that seems to guide many successful founders. The phrase \"the fatal pinch\" suggests a critical moment where the founders realize they are not just surviving but thriving in their chosen domain. This phrase hints at a process that accelerates the formation of startups, where founders are compelled to focus on one thing\u2014making something that works\u2014before they can even think about other things. The term \"fatal\" implies something that is unavoidable, yet crucial for startup success. The phrase \"fatal if they don't\" implies that the founders are at risk of losing something vital if they don't act decisively."
+            },
+            {
+              "row_id": "niah_single_2_16384_2",
+              "references": [
+                "6246064"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": " 6246064. This number encapsulates the essence of the article's advice regarding the power of macros (Lisp features) in software development and how they can be a double-edged sword for startups. Here's a breakdown of the significance of this number:\n\n-6246064 represents the power of macros in software development, which is a controversial yet powerful concept in Lisp and other high-level programming languages. It underscores the idea that macros can significantly expedite development, allowing a developer to write code that is more complex and abstract than lower-level languages like C or machine code, but still necessary for certain tasks.\n\n**Counterintuitive**",
+              "candidate_text": " 624. This number is derived from the hypothetical language Blub, where the founders of Viaweb found that their code was getting better and better without necessarily increasing its adoption or growing its user base. The founders were motivated by the idea that if they could just keep their code simple and avoid features that would attract competitors, they could maintain their edge. This magic number 624 is a placeholder for a hypothetical macro feature that is missing in Blub, and could potentially be the key to understanding why some startups succeed and others fail. The founders were advised by Eric Raymond to avoid discussing it publicly because it might give competitors an edge. However"
+            },
+            {
+              "row_id": "niah_single_2_16384_4",
+              "references": [
+                "4733547"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": " 4733547. This number is derived from the following reasoning:\n\n1. **Lisp** is recommended by Eric Raymond as a powerful language for hackers, but not widely used because it is \"too abstract\" for many programmers.\n\n2. **Lisp** macros (code that writes code) are unique and fundamental to the success of Viaweb, as they allowed the founders to build features faster than competitors.\n\n3. **Lisp** macros are not commonly used in other languages because they require a deep understanding of the language's data structures and syntax.\n\n4. **Lisp** macros are controversial and not part of the Bl",
+              "candidate_text": " 473. This number is derived from the hypothetical language Blub, where the founders of Viaweb found that their code was getting better and better without necessarily increasing its adoption or growing its user base. The founders were using it because they had to, not because they wanted to. This number is a nod to the idea that \"good\" programming languages are those that are not only powerful but also have a certain \"magic\" or \"essence\" that makes them irresistible to those who are already programming in them. The magic number 473, in this context, is a placeholder for a more nuanced understanding of language power that goes beyond"
+            },
+            {
+              "row_id": "niah_single_2_16384_5",
+              "references": [
+                "6909663"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": " 6909663. This number encapsulates a crucial insight into the nature of startups and the process of innovation within them. Let's break down why this number is significant:\n\n1. **Viaweb's Magic Number**: Viaweb was founded on the idea of writing software that would let end users build online stores. The founders named their company after it, Viaweb, because their software was revolutionary in its simplicity and power. The magic number 6909663 represents this revolutionary approach succinctly.\n\n2. **Lisp Magic**: The founders, Eric Raymond and Robert Morris, recommended Lisp as a language for hackers. Lisp's",
+              "candidate_text": " \"690.\" This number is derived from the following reasoning:\n\n1. **\"Technological progress is accelerating\"** (as famously stated by Y Combinator's founder, Eric R. **Lisp**.\n\n2. **Lisp** is a powerful language that many programmers don't use because it's considered \"weird\" or \"too abstract.\"\n\n3. **Lisp** is actually a crucial for rapid development in software.\n\n4. **Lisp** is not just a curiosity but a **necessary** for creating a startup that can scale and grow effectively.\n\n5. **690** is a number that represents the **fatal"
+            },
+            {
+              "row_id": "niah_single_2_16384_6",
+              "references": [
+                "6980227"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": " \"6980227.\" However, this number seems to be a fictional or hypothetical construct rather than a real-world metric used by Y Combinator or similar programs. The text suggests that Y Combinator's founders should not rely on their instincts alone but rather on understanding the domain they're venturing into, specifically in software development and startups, and making sure they're not just surviving but thriving in their chosen field. The magic number 6980227 doesn't appear to be a real-world metric or a specific to Y Combinator's program. It seems to be a placeholder or a representation of the founders' need for domain expertise",
+              "candidate_text": " not explicitly stated within the text. However, the context suggests that it pertains to the process of starting and growing a successful startup. The term \"daily\" implies that the process involves a routine or repetitive tasks that are not inherently interesting or valuable, yet are required for startup success. The term \"magic\" implies that there is something beyond the ordinary that is necessary for startup success. Combining these, we can infer that the magic number is related to the ability to recognize and act upon genuinely interesting problems that are not immediately obvious or require a leap of faith or a sudden change in perspective to see their significance. Given the context, it"
+            },
+            {
+              "row_id": "niah_multiquery_16384_0",
+              "references": [
+                "4725293",
+                "6128228",
+                "3307989",
+                "2450689"
+              ],
+              "baseline_score": 0.5,
+              "candidate_score": 0.0,
+              "baseline_text": ":\n\n1. **Y Combinator** (YC), which is derived from the 2450689. **Palm OS**, reflecting IBM's 4725293. **Google**, where they embraced **Don't be evil**, suggesting a shift from their previous, more secretive approach. 3. **Eric Raymond** suggests that **Lisp** is a powerful language that hackers should use, but hackers don't. 4. **Viaweb** (the original name of the software), where the founders had to walk by without noticing, because they were focused on building something appealing to users. 5. **Sam Alt",
+              "candidate_text": ":\n\n1. **domain expertise** - The founders need to understand their domain deeply and thoroughly before they can confidently say they're doing a great. This is crucial because domain expertise is the bedrock of a successful startup. \n2. **notion of **\"normal** - The notion that startups are just another kind of business, with the same constraints and opportunities as any other, is misleading. Startups are more than just another business; they are a unique and often unpredictable beast. \n3. **hazards of hiring too fast** - **founding** a startup by hiring too quickly can lead to a disastrous outcome."
+            },
+            {
+              "row_id": "niah_multiquery_16384_5",
+              "references": [
+                "6544469",
+                "6406345",
+                "2195380",
+                "2752289"
+              ],
+              "baseline_score": 0.25,
+              "candidate_score": 0.0,
+              "baseline_text": ":\n\n1. **6406345** - This number represents the hypothetical power of a Blub programming language, which is a middle ground between the most abstract high-level languages and the most concrete machine-level languages. It's a placeholder for the idea that as technology advances, personal habits (like programming languages) evolve more slowly than the technological landscape.\n\n2. **VCs' special interest in steep revenue growth** - Venture Capitalists (VCs) are interested in startups with rapid revenue growth, and are often willing to overlook less immediate signs of success, such as steady growth.\n\n3. **Lisp** - The language that was a",
+              "candidate_text": ":\n\n1. **Vi** (Lisp)\n2. **Y**o (YC, as a startup incubator)\n3. **2759** (magic numbers)\n4. **counters** (counterintuitive)\n5. **2289** (counterproductive)\n6. **suspicious** (startups take over their lives)\n7. **serendipity** (the fatal pinch)\n8. **adoption** (evangelical resurgence in the US)"
+            },
+            {
+              "row_id": "fwe_16384_0",
+              "references": [
+                "lntpkn",
+                "opnadi",
+                "gtvhba"
+              ],
+              "baseline_score": 0.6666666666666666,
+              "candidate_score": 0.0,
+              "baseline_text": " yamjsc, lntpkn, gtvhba.",
+              "candidate_text": " \"yam\" \"jsc\" \"g\""
+            },
+            {
+              "row_id": "fwe_16384_1",
+              "references": [
+                "mnftlh",
+                "pfnicv",
+                "haovvb"
+              ],
+              "baseline_score": 0.6666666666666666,
+              "candidate_score": 0.3333333333333333,
+              "baseline_text": " mnftlh, mnftlh, pfnicv.",
+              "candidate_text": " \"mnftlh\" and \"pfn\""
+            },
+            {
+              "row_id": "fwe_16384_2",
+              "references": [
+                "mvaabc",
+                "pcljcm",
+                "gpiatv"
+              ],
+              "baseline_score": 0.3333333333333333,
+              "candidate_score": 0.0,
+              "baseline_text": " momere, mvaabc, mvaabc.",
+              "candidate_text": " \"momere\" \"g\" \"m\""
+            },
+            {
+              "row_id": "fwe_16384_3",
+              "references": [
+                "mxmbkk",
+                "ouzrqe",
+                "hcdenj"
+              ],
+              "baseline_score": 0.3333333333333333,
+              "candidate_score": 0.0,
+              "baseline_text": " \"xygcqm\" \"hcdenj\" \"mxmb\"",
+              "candidate_text": " \"mxb\", \"mx\", and \"mx\"."
+            },
+            {
+              "row_id": "fwe_16384_4",
+              "references": [
+                "nhxwdv",
+                "pnbuyd",
+                "hepyiv"
+              ],
+              "baseline_score": 0.3333333333333333,
+              "candidate_score": 0.0,
+              "baseline_text": " hepyiv, hepyiv, hepyv",
+              "candidate_text": " he, he, he"
+            },
+            {
+              "row_id": "fwe_16384_6",
+              "references": [
+                "nzhxii",
+                "qjnmkw",
+                "ignceq"
+              ],
+              "baseline_score": 0.6666666666666666,
+              "candidate_score": 0.3333333333333333,
+              "baseline_text": " ignceq, qjnmkw, and scssaq.",
+              "candidate_text": " \"ignceq\" \"n\" \"q\" \""
+            },
+            {
+              "row_id": "qa_1_16384_0",
+              "references": [
+                "380 years",
+                "380 years",
+                "380 years"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": " 380 years.",
+              "candidate_text": " almost a century"
+            },
+            {
+              "row_id": "qa_1_16384_1",
+              "references": [
+                "a storm",
+                "a storm",
+                "a storm"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": " a storm dispersed his fleet.",
+              "candidate_text": " the siege of Antioch"
+            },
+            {
+              "row_id": "qa_1_16384_2",
+              "references": [
+                "Berengaria",
+                "Berengaria",
+                "Berengaria"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": " Berengaria of Morocco",
+              "candidate_text": " Emma of Normandy"
+            },
+            {
+              "row_id": "qa_1_16384_6",
+              "references": [
+                "silver",
+                "silver",
+                "silver"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": " silver",
+              "candidate_text": " The Norman language"
+            },
+            {
+              "row_id": "qa_1_16384_7",
+              "references": [
+                "Guy de Lusignan",
+                "Guy de Lusignan",
+                "Guy de Lusignan"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": " Guy de Lusignan",
+              "candidate_text": " Robert de Bailleul"
+            }
+          ]
+        }
+      }
+    },
+    "scale_cap": {
+      "arms": {
+        "BMCappedS4": {
+          "raw_path": "results/olmo_fast_screen_20260908/run_cap_01/BMCappedS4.jsonl",
+          "raw_sha256": "a9c94e6da6006f328c5b79b5f005a2dd23381421790654081e3d5f27c39727f7",
+          "receipt_sha256": "96b2495fdbed1ea57f18c1e2df00221cd5f09f0844a8ac2f6c58607e400088cf",
+          "table_identity": {
+            "tensor_sha256": "fc0f443b1c58601d51209adb7e2b26df7ba10058a9dbdf193eb1de49116d446a",
+            "gain": 1.138629436111989
+          },
+          "elapsed_seconds": 210.35831319913268,
+          "summary": {
+            "rows": 72,
+            "score_sum": 17.616666666666667,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 0.75,
+                  "niah_multiquery": 0.9375,
+                  "vt": 0.8,
+                  "fwe": 0.6666666666666666,
+                  "qa_1": 0.25
+                },
+                "macro_accuracy": 0.7340277777777778
+              },
+              "32768": {
+                "task_accuracy": {
+                  "niah_single_2": 0.0,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.0,
+                  "vt": 0.0,
+                  "fwe": 0.0,
+                  "qa_1": 0.0
+                },
+                "macro_accuracy": 0.0
+              }
+            },
+            "eos_count": 13
+          }
+        },
+        "BMFreq8Gain4": {
+          "raw_path": "results/olmo_fast_screen_20260908/run_cap_01/BMFreq8Gain4.jsonl",
+          "raw_sha256": "af544d67ae857eecf7294025e7409bcbcbfaffcb3e04f1d501642a85d8714403",
+          "receipt_sha256": "49353433304746926630477d4480b31455405e1484b487c68f1d50952c01025f",
+          "table_identity": {
+            "tensor_sha256": "e2da6812e600696fb859ca1c6d9402ae717f2989e8104105c3355e8b7c049bdf",
+            "gain": 1.138629436111989
+          },
+          "elapsed_seconds": 183.3609896749258,
+          "summary": {
+            "rows": 72,
+            "score_sum": 9.65,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 0.0,
+                  "niah_multikey_2": 0.25,
+                  "niah_multiquery": 0.3125,
+                  "vt": 0.35,
+                  "fwe": 0.5833333333333333,
+                  "qa_1": 0.25
+                },
+                "macro_accuracy": 0.2909722222222222
+              },
+              "32768": {
+                "task_accuracy": {
+                  "niah_single_2": 0.0,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.0,
+                  "vt": 0.0,
+                  "fwe": 0.20833333333333331,
+                  "qa_1": 0.125
+                },
+                "macro_accuracy": 0.05555555555555555
+              }
+            },
+            "eos_count": 30
+          }
+        }
+      },
+      "reference": "BMCappedS4",
+      "comparisons": {
+        "BMFreq8Gain4": {
+          "status": "TRADEOFF",
+          "macro_delta_by_length": {
+            "4096": -0.44305555555555565,
+            "32768": 0.05555555555555555
+          },
+          "candidate": {
+            "rows": 72,
+            "score_sum": 9.65,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 0.0,
+                  "niah_multikey_2": 0.25,
+                  "niah_multiquery": 0.3125,
+                  "vt": 0.35,
+                  "fwe": 0.5833333333333333,
+                  "qa_1": 0.25
+                },
+                "macro_accuracy": 0.2909722222222222
+              },
+              "32768": {
+                "task_accuracy": {
+                  "niah_single_2": 0.0,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.0,
+                  "vt": 0.0,
+                  "fwe": 0.20833333333333331,
+                  "qa_1": 0.125
+                },
+                "macro_accuracy": 0.05555555555555555
+              }
+            },
+            "eos_count": 30
+          },
+          "baseline": {
+            "rows": 72,
+            "score_sum": 17.616666666666667,
+            "by_length": {
+              "4096": {
+                "task_accuracy": {
+                  "niah_single_2": 1.0,
+                  "niah_multikey_2": 0.75,
+                  "niah_multiquery": 0.9375,
+                  "vt": 0.8,
+                  "fwe": 0.6666666666666666,
+                  "qa_1": 0.25
+                },
+                "macro_accuracy": 0.7340277777777778
+              },
+              "32768": {
+                "task_accuracy": {
+                  "niah_single_2": 0.0,
+                  "niah_multikey_2": 0.0,
+                  "niah_multiquery": 0.0,
+                  "vt": 0.0,
+                  "fwe": 0.0,
+                  "qa_1": 0.0
+                },
+                "macro_accuracy": 0.0
+              }
+            },
+            "eos_count": 13
+          },
+          "paired_wins": 7,
+          "paired_losses": 15,
+          "baseline_extreme_cells": [
+            "4096/niah_single_2",
+            "32768/niah_single_2",
+            "32768/niah_multikey_2",
+            "32768/niah_multiquery",
+            "32768/vt",
+            "32768/fwe",
+            "32768/qa_1"
+          ],
+          "evidence_scope": "Six-task RULER development subset; not full RULER or independent confirmation",
+          "paired_by_length": {
+            "4096": {
+              "wins": 1,
+              "ties": 8,
+              "losses": 15
+            },
+            "32768": {
+              "wins": 6,
+              "ties": 42,
+              "losses": 0
+            }
+          },
+          "loss_rows": [
+            {
+              "row_id": "niah_single_2_4096_0",
+              "references": [
+                "9786359"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": " 9786359. This number encapsulates the essence of what founders and investors need to be aware of when considering the future of a software company. It reflects the understanding that while Apple's approach of launching a limited number of high-quality, carefully curated apps might have been effective in the past, it is now a hindrance in the fast-evolving software landscape. The magic number 9786359, when applied to software, suggests that a company should aim for at least 6.35% usage growth per month to ensure a steady revenue stream, acknowledging that actual usage growth might be lower due to the nature of software development and consumption",
+              "candidate_text": " 6359.\n\nExplanation:\n- **\"Hard liquor, cigarettes, heroin, and crack** are mentioned as examples of things that are becoming more addictive as their concentration increases.\n- **Technological progress is accelerating**.\n- **social antibodies are developing**.\n- The statement implies that unless we mass produce social customs, **resurgence of evangelical Christianity** might be a reaction to drugs.\n- The founders don't know whether their startup is **default** or **dead**.\n- **Hiring** is often seen as a **kill** of startups.\n- **prematurely** hiring employees can **kill** startups.\n-"
+            },
+            {
+              "row_id": "niah_single_2_4096_1",
+              "references": [
+                "5134262"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": ": 5134262. This number reflects the idea that a significant number of startups that are killed by their own overexpenditure on hiring and development might have fared better if they had waited and focused on product-market fit before scaling up. The fatal pinch, as described by several founders, is often due to the founders not recognizing this early, leading to a rapid burn through resources and a lack of appeal or success once the company becomes large. The magic number 5134262 is not explicitly stated as a magic number for avoiding large-scale hiring and development pitfalls, but it encapsulates the concept of avoiding the \"fatal pinch\"",
+              "candidate_text": " 426. \n\nExplanation:\n- **fatal pinch** refers to a point where a startup is likely to default due to overspending or not being able to scale effectively due to poor economics.\n- **hire more** is often seen as a solution to the problem of hiring, but it's actually a problem for startups.\n- **overdesign** is mentioned as a potential killer, but **hire more** is actually a more common reason for founders to **overextend** their resources.\n- **Apple's fundamental issue is with software development, not understanding the **evolution** of the technology.\n- **Apple's attitude towards software development seems"
+            },
+            {
+              "row_id": "niah_single_2_4096_2",
+              "references": [
+                "2077821"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": " 2077821. This number encapsulates the idea that a significant number of startups that might have been successful if they had managed their resources more effectively (by not hiring too quickly or by redesigning their product to be more appealing) could have avoided the fatal pinch of overextending their resources and failing to achieve the special magic of 2077821 in their growth trajectory. This number suggests that startups need to recognize and resist the urge to hire excessively early or to scale up prematurely, as these actions can lead to a rapid depletion of resources and a decline in the company's appeal to investors, who are primarily interested in the growth potential",
+              "candidate_text": " 207. \n\nExplanation:\n- **The fatal pinch** refers to the point at which a startup is unable to raise more money due to its steep growth and poor economics. This is often because founders think hiring more people will solve their problems, but it frequently leads to bad decisions such as scaling up without sufficient market validation or fixing bad unit economics.\n- **Hiring too many people can be a killer, as noted by **Joe Gebbia. This is because they're not only overworked but also because they're not convinced that scaling up is necessary or sufficient to fix their problems.\n- **Jessica Livingston** suggests that **YC's"
+            },
+            {
+              "row_id": "niah_single_2_4096_3",
+              "references": [
+                "5140163"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": " 5140163. \n\nThis number encapsulates the essence of the problem with the App Store approval process for iPhone apps. The magic here lies in its significance as a reminder of the discrepancy between Apple's traditional approach to software development and the modern, rapid iteration and release model that has become the norm in the tech industry. The magic number 5140163 represents the threshold at which Apple's approval process becomes a bottleneck, significantly slowing down the pace of innovation and development in the app ecosystem. It's a reminder that while rapid development might seem like a good thing, it can also lead to a situation where apps are released too late,",
+              "candidate_text": " 514016.\n\nThe number 514016 seems to be a placeholder or a code that reflects a specific concern about the rate of change in software development and approval processes. It seems to be a reference to a specific issue that Apple faces in its App Store approval process, which is causing a significant problem for them. The number 5140 seems to be a code or a specific metric that reflects the founders' worries about the speed of development and approval processes. It appears as if Apple is concerned about maintaining a balance between rapid development and thorough approval, fearing that if they go too fast, they risk losing the appeal of their product to users"
+            },
+            {
+              "row_id": "niah_multikey_2_4096_0",
+              "references": [
+                "3139667"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": ": 3139667.",
+              "candidate_text": ": 313966.\n\nThe numbers listed are indeed special magic numbers for each respective game or concept mentioned in the text. The final number is 313966, which appears once in the text as part of the \"abundant-car\" series."
+            },
+            {
+              "row_id": "niah_multikey_2_4096_3",
+              "references": [
+                "6218682"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": ": 6218682.\n\nSo, the answer is 6218682.",
+              "candidate_text": ": 5183793.\n\nLet's verify the answer:\n\nThe numbers listed are indeed special and have been identified as such. The special magic number mentioned in the text is 5183793. \n\nTo ensure accuracy, I've cross-checked the list against the given in your query, and the provided text. The number 5183793 appears once in the list and twice in the query and text, fitting the criteria for being a \"special magic number\" as per the context of the question."
+            },
+            {
+              "row_id": "niah_multiquery_4096_0",
+              "references": [
+                "8817515",
+                "2953968",
+                "8430222",
+                "8759675"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.25,
+              "baseline_text": ":\n\n1. **2953968** - This is the magic number for agonizing-pigpen, which is a metaphor for addictive technologies.\n\n2. **8817515** - This is the magic number for the iPad, as it allows for bringing the Internet into places where a laptop would be conspicuous.\n\n3. **8430222** - This is the magic number for software, specifically for detailed-inscription, which is about refining and improving the specifics of a product or service.\n\n4. **8759675** - This is the magic number for lovely-wage, indicating that startups should be wary of the trap of overpaying",
+              "candidate_text": ":\n\n1. **2953968. This number reflects the acceleration of addiction to new technologies, especially in areas where the addictive nature is becoming more pronounced.\n\n2. **8815. This number indicates that as the world becomes more addictive, the need for new forms of engagement becomes more prevalent.\n\n3. **843. This number suggests that founders need to explicitly ask themselves whether their startup is thriving or struggling to avoid default.\n\n4. **8815. This number underscores the importance of understanding the fundamental issues with a startup's business model, rather than just focusing on growth.\n\n5. **967. This number reflects the founders' tendency to"
+            },
+            {
+              "row_id": "niah_multiquery_4096_1",
+              "references": [
+                "4172585",
+                "3852417",
+                "7882953",
+                "3668416"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.5,
+              "baseline_text": ":\n\n1. **7882953** - Gusty-sponsor\n2. **3852417** - Pleasant exile\n3. **4172585** - Palatial technology evolution during the Neolithic period\n4. **3668416** - Daffy-discount\n5. **7882953** - Likeable-recruit\n\nThese numbers reflect the nuanced understanding of how certain technologies and practices can become more addictive or lead to pleasant exile as opposed to being saved by technological progress or being killed by it. The text subtly shifts the conversation from immediate concerns to long-term implications, highlighting the importance of recognizing and managing the acceleration",
+              "candidate_text": ":\n\n1. **7882953** (assuming expenses remain constant and their revenue grows at a rate of 29.5. **417** (assuming they're counting on investors to save them.6. **366** (partly because founders have slow growth.7. **3852417** (partly because founders have overestimated.8. **841** (partly because they're counting on investors to be more interested in growth. **not** being profitable. **or** being saved by investment. The **366** (assuming the product is not appealing enough. **841** (partly because founders believe hiring"
+            },
+            {
+              "row_id": "niah_multiquery_4096_2",
+              "references": [
+                "5609527",
+                "1435166",
+                "6601742",
+                "7582386"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.25,
+              "baseline_text": ":\n\n1. 6601742 (for strange-lane)\n2. 1435166 (for long-switching)\n3. 7582386 (for long-switching)\n4. 5609527 (for lucky-locomotive)\n\nThese numbers seem to represent thresholds or conditions that startups or entities need to avoid or manage in order to thrive or avoid the pitfalls associated with rapid addiction to certain technologies or behaviors.",
+              "candidate_text": ":\n\n1. **6601742** - This magic number reflects the idea that as something becomes more addictive, its concentration of desirable things it says no to increases, leading to societal norms shifting away from it.\n\n2. **143** - This magic number underscores the importance of setting clear boundaries on technological progress, to prevent it from transforming desirable things into undesirable ones.\n\n3. **not** **1436** - This number indicates that unless there is a significant societal resistance to new addictive technologies, founders will find themselves in a precarious situation where they default to hoping for investor intervention to save their venture.\n\n4. **758** - This number"
+            },
+            {
+              "row_id": "niah_multiquery_4096_3",
+              "references": [
+                "5005612",
+                "6049191",
+                "1695752",
+                "4656635"
+              ],
+              "baseline_score": 0.75,
+              "candidate_score": 0.25,
+              "baseline_text": ":\n\n1. 6049191 - This number represents a nice-confidence magic number, indicating that while some things we consider desirable (like solar cells becoming more efficient) are indeed improvements, others (like opium becoming heroin) are detrimental due to their concentration and the transformation of less addictive substances into more addictive ones.\n\n2. 4656635 - This number is associated with dispensable-lifetime, suggesting that while founders might think they need to hire to grow, the reality is that hiring is often counterproductive at the start and can lead to the fatal pinch.\n\n3. 1695752 - This is the magic number for airbnb",
+              "candidate_text": ":\n\n1. **6049191** - The number 6049191 is a reminder of the importance of setting boundaries on technological progress to ensure that it doesn't become something we like too much.\n\n2. **465** - This number reflects the tendency for founders to err on the side of hiring, thinking it will boost growth.\n\n3. **169** - This number underscores the importance of focusing on the core functionality and not diluting it with non-essential features.\n\n4. **1695** - Reflects the founders' tendency to overestimate the need for growth, leading to premature scaling.\n\n5. **1692** -"
+            },
+            {
+              "row_id": "vt_4096_1",
+              "references": [
+                "HHVNR",
+                "ZQKHQ",
+                "IQMNG",
+                "RQOBE",
+                "XLNBP"
+              ],
+              "baseline_score": 0.6,
+              "candidate_score": 0.4,
+              "baseline_text": " HHVNR, LXM, IBJ, ZQKHQ, and XLNBP.\n\nExplanation: The text sequence reveals the following variable assignments",
+              "candidate_text": " HHV, ZQKH, RQOBE, IQMNG, RQOBE\n\nExplanation: The text contains multiple instances of the"
+            },
+            {
+              "row_id": "vt_4096_2",
+              "references": [
+                "MGRWU",
+                "ZWHYP",
+                "BZRDK",
+                "HDQXQ",
+                "UYSYM"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.2,
+              "baseline_text": " MGRWU, ZWHYP, BZRDK, HDQXQ, and UYSYM.\n\nExplanation: The variables are tracked in",
+              "candidate_text": " MGRWU, MGRWU, MGRD, MGR, MGR, MGRB\n\nExplanation: The text sequence reveals"
+            },
+            {
+              "row_id": "vt_4096_3",
+              "references": [
+                "EAVXX",
+                "CDSFR",
+                "KXYSL",
+                "VEJKN",
+                "WCIAO"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.2,
+              "baseline_text": " EAVXX, CDSFR, KXYSL, VEJKN, and WCIAO.\n\nExplanation: The text progressively assigns the value ",
+              "candidate_text": " EAVXX, EAV96, KXYLSK, KYSB, KDVY, SKYB, and KYSL\n\n"
+            },
+            {
+              "row_id": "fwe_4096_2",
+              "references": [
+                "abtkbh",
+                "chqrlb",
+                "exilqa"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.6666666666666666,
+              "baseline_text": " abtkbh, chqrlb, and exilqa.",
+              "candidate_text": " \"chqrlb\", \"chrlb\", and \"abtkbh\"."
+            },
+            {
+              "row_id": "qa_1_4096_1",
+              "references": [
+                "a computational problem",
+                "a computational problem",
+                "a computational problem"
+              ],
+              "baseline_score": 1.0,
+              "candidate_score": 0.0,
+              "baseline_text": " a computational problem where a single output (of a total function) is expected for every input",
+              "candidate_text": " decision problems"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "scope": "Small six-task RULER panels. Scores use official substring matching; no full RULER or cross-model claim.",
+  "inference_limits": [
+    "Prompts, not individual reference strings, are the units.",
+    "QA source questions can recur across lengths; lengths are reported separately.",
+    "Development-selected improvements require independent input confirmation.",
+    "Aggregate gain is not per-task or per-row native retention.",
+    "No geometric or gain mechanism is established by score differences alone."
+  ],
+  "bm_vs_existing_controls": {
+    "MrUni": {
+      "status": "DEVELOPMENT_WIN",
+      "macro_delta_by_length": {
+        "4096": 0.0493055555555556,
+        "16384": 0.19201388888888887
+      },
+      "candidate": {
+        "rows": 72,
+        "score_sum": 44.266666666666666,
+        "by_length": {
+          "4096": {
+            "task_accuracy": {
+              "niah_single_2": 1.0,
+              "niah_multikey_2": 1.0,
+              "niah_multiquery": 0.875,
+              "vt": 0.7,
+              "fwe": 0.5833333333333333,
+              "qa_1": 0.75
+            },
+            "macro_accuracy": 0.8180555555555555
+          },
+          "16384": {
+            "task_accuracy": {
+              "niah_single_2": 1.0,
+              "niah_multikey_2": 0.375,
+              "niah_multiquery": 0.4375,
+              "vt": 0.1,
+              "fwe": 0.41666666666666663,
+              "qa_1": 0.75
+            },
+            "macro_accuracy": 0.5131944444444444
+          }
+        },
+        "eos_count": 45
+      },
+      "baseline": {
+        "rows": 72,
+        "score_sum": 33.86666666666667,
+        "by_length": {
+          "4096": {
+            "task_accuracy": {
+              "niah_single_2": 1.0,
+              "niah_multikey_2": 1.0,
+              "niah_multiquery": 0.8125,
+              "vt": 0.55,
+              "fwe": 0.5,
+              "qa_1": 0.75
+            },
+            "macro_accuracy": 0.7687499999999999
+          },
+          "16384": {
+            "task_accuracy": {
+              "niah_single_2": 0.625,
+              "niah_multikey_2": 0.0,
+              "niah_multiquery": 0.09375,
+              "vt": 0.0,
+              "fwe": 0.4583333333333333,
+              "qa_1": 0.75
+            },
+            "macro_accuracy": 0.3211805555555555
+          }
+        },
+        "eos_count": 40
+      },
+      "paired_wins": 22,
+      "paired_losses": 6,
+      "baseline_extreme_cells": [
+        "4096/niah_single_2",
+        "4096/niah_multikey_2",
+        "16384/niah_multikey_2",
+        "16384/vt"
+      ],
+      "evidence_scope": "Six-task RULER development subset; not full RULER or independent confirmation",
+      "paired_by_length": {
+        "4096": {
+          "wins": 5,
+          "ties": 17,
+          "losses": 2
+        },
+        "16384": {
+          "wins": 17,
+          "ties": 27,
+          "losses": 4
+        }
+      },
+      "loss_rows": [
+        {
+          "row_id": "niah_multiquery_4096_0",
+          "references": [
+            "2546877",
+            "3880293",
+            "3965263",
+            "1694782"
+          ],
+          "baseline_score": 1.0,
+          "candidate_score": 0.75,
+          "baseline_text": ":\n\n1. **Volatile-bandwidth**: 2546877\n2. **Greedy-opportunity**: 3880293\n3. **Curved-shoestring**: 3965263\n4. **Special mention**: 1694782\n\nThese numbers reflect the text's observations on how certain products or services become more appealing or addictive as they grow, often due to rapid revenue growth, but sometimes because they become more concentrated forms of what we don't want to want (like heroin from opium), and the process of technological progress accelerates the creation of new addictive products. The special numbers here are indicative of trends in",
+          "candidate_text": ":\n\n1. **Volatile-bandwidth**: 2546877. This number suggests that steep revenue growth can be a signal for investors to be interested, but because of the fickle nature of venture capital, startups must demonstrate higher usage growth rates to impress investors.\n\n2. **Grande-Trajectory**: 3965263. This refers to the acceleration of technological progress leading to more addictive outcomes, and how societal responses to these changes are not always immediate or effective.\n\n3. **Comfortable-volunteer**: 1694782. This number indicates that startups focusing on a moderately appealing product with decent initial growth can avoid hiring too"
+        },
+        {
+          "row_id": "fwe_4096_0",
+          "references": [
+            "bvqijf",
+            "bocsdu",
+            "xmfbkk"
+          ],
+          "baseline_score": 0.6666666666666666,
+          "candidate_score": 0.3333333333333333,
+          "baseline_text": " bocsdu, bvqijf, and bvqijf.",
+          "candidate_text": " jxjdst, bvqijf, and smvbrj."
+        },
+        {
+          "row_id": "fwe_16384_0",
+          "references": [
+            "lntpkn",
+            "opnadi",
+            "gtvhba"
+          ],
+          "baseline_score": 0.6666666666666666,
+          "candidate_score": 0.3333333333333333,
+          "baseline_text": " yamjsc, lntpkn, gtvhba.",
+          "candidate_text": " yamjsc, gtvhba, lntpn."
+        },
+        {
+          "row_id": "fwe_16384_1",
+          "references": [
+            "mnftlh",
+            "pfnicv",
+            "haovvb"
+          ],
+          "baseline_score": 0.6666666666666666,
+          "candidate_score": 0.3333333333333333,
+          "baseline_text": " mnftlh, mnftlh, pfnicv.",
+          "candidate_text": " mnftlh, mnftlh, and pfn ..."
+        },
+        {
+          "row_id": "fwe_16384_6",
+          "references": [
+            "nzhxii",
+            "qjnmkw",
+            "ignceq"
+          ],
+          "baseline_score": 0.6666666666666666,
+          "candidate_score": 0.3333333333333333,
+          "baseline_text": " ignceq, qjnmkw, and scssaq.",
+          "candidate_text": " ignceq, scssaq, and scs ..."
+        },
+        {
+          "row_id": "qa_1_16384_2",
+          "references": [
+            "Berengaria",
+            "Berengaria",
+            "Berengaria"
+          ],
+          "baseline_score": 1.0,
+          "candidate_score": 0.0,
+          "baseline_text": " Berengaria of Morocco",
+          "candidate_text": " Emma, sister of Duke Richard II of Normandy"
+        }
+      ]
+    },
+    "OfficialYaRN": {
+      "status": "DEVELOPMENT_WIN",
+      "macro_delta_by_length": {
+        "4096": 0.27430555555555547,
+        "16384": 0.44375
+      },
+      "candidate": {
+        "rows": 72,
+        "score_sum": 44.266666666666666,
+        "by_length": {
+          "4096": {
+            "task_accuracy": {
+              "niah_single_2": 1.0,
+              "niah_multikey_2": 1.0,
+              "niah_multiquery": 0.875,
+              "vt": 0.7,
+              "fwe": 0.5833333333333333,
+              "qa_1": 0.75
+            },
+            "macro_accuracy": 0.8180555555555555
+          },
+          "16384": {
+            "task_accuracy": {
+              "niah_single_2": 1.0,
+              "niah_multikey_2": 0.375,
+              "niah_multiquery": 0.4375,
+              "vt": 0.1,
+              "fwe": 0.41666666666666663,
+              "qa_1": 0.75
+            },
+            "macro_accuracy": 0.5131944444444444
+          }
+        },
+        "eos_count": 45
+      },
+      "baseline": {
+        "rows": 72,
+        "score_sum": 16.383333333333333,
+        "by_length": {
+          "4096": {
+            "task_accuracy": {
+              "niah_single_2": 1.0,
+              "niah_multikey_2": 0.25,
+              "niah_multiquery": 0.5625,
+              "vt": 0.2,
+              "fwe": 0.5,
+              "qa_1": 0.75
+            },
+            "macro_accuracy": 0.5437500000000001
+          },
+          "16384": {
+            "task_accuracy": {
+              "niah_single_2": 0.0,
+              "niah_multikey_2": 0.0,
+              "niah_multiquery": 0.0,
+              "vt": 0.0,
+              "fwe": 0.16666666666666666,
+              "qa_1": 0.25
+            },
+            "macro_accuracy": 0.06944444444444443
+          }
+        },
+        "eos_count": 42
+      },
+      "paired_wins": 40,
+      "paired_losses": 2,
+      "baseline_extreme_cells": [
+        "4096/niah_single_2",
+        "16384/niah_single_2",
+        "16384/niah_multikey_2",
+        "16384/niah_multiquery",
+        "16384/vt"
+      ],
+      "evidence_scope": "Six-task RULER development subset; not full RULER or independent confirmation",
+      "paired_by_length": {
+        "4096": {
+          "wins": 10,
+          "ties": 13,
+          "losses": 1
+        },
+        "16384": {
+          "wins": 30,
+          "ties": 17,
+          "losses": 1
+        }
+      },
+      "loss_rows": [
+        {
+          "row_id": "fwe_4096_0",
+          "references": [
+            "bvqijf",
+            "bocsdu",
+            "xmfbkk"
+          ],
+          "baseline_score": 0.6666666666666666,
+          "candidate_score": 0.3333333333333333,
+          "baseline_text": " bocsdu, bvqijf, and bvqijf.",
+          "candidate_text": " jxjdst, bvqijf, and smvbrj."
+        },
+        {
+          "row_id": "qa_1_16384_4",
+          "references": [
+            "Isaac Komnenos",
+            "Isaac",
+            "Isaac Komnenos"
+          ],
+          "baseline_score": 1.0,
+          "candidate_score": 0.0,
+          "baseline_text": " Isaac Komnenos",
+          "candidate_text": " the Norman rulers"
+        }
+      ]
+    }
+  },
+  "scale_cap_vs_original_s8": {
+    "BMCappedS4": {
+      "status": "NO_LONG_GAIN",
+      "macro_delta_by_length": {
+        "4096": 0.495138888888889,
+        "32768": -0.06944444444444443
+      },
+      "candidate": {
+        "rows": 72,
+        "score_sum": 17.616666666666667,
+        "by_length": {
+          "4096": {
+            "task_accuracy": {
+              "niah_single_2": 1.0,
+              "niah_multikey_2": 0.75,
+              "niah_multiquery": 0.9375,
+              "vt": 0.8,
+              "fwe": 0.6666666666666666,
+              "qa_1": 0.25
+            },
+            "macro_accuracy": 0.7340277777777778
+          },
+          "32768": {
+            "task_accuracy": {
+              "niah_single_2": 0.0,
+              "niah_multikey_2": 0.0,
+              "niah_multiquery": 0.0,
+              "vt": 0.0,
+              "fwe": 0.0,
+              "qa_1": 0.0
+            },
+            "macro_accuracy": 0.0
+          }
+        },
+        "eos_count": 13
+      },
+      "baseline": {
+        "rows": 72,
+        "score_sum": 9.066666666666666,
+        "by_length": {
+          "4096": {
+            "task_accuracy": {
+              "niah_single_2": 0.0,
+              "niah_multikey_2": 0.25,
+              "niah_multiquery": 0.0,
+              "vt": 0.35,
+              "fwe": 0.5833333333333333,
+              "qa_1": 0.25
+            },
+            "macro_accuracy": 0.23888888888888885
+          },
+          "32768": {
+            "task_accuracy": {
+              "niah_single_2": 0.0,
+              "niah_multikey_2": 0.0,
+              "niah_multiquery": 0.0,
+              "vt": 0.0,
+              "fwe": 0.16666666666666666,
+              "qa_1": 0.25
+            },
+            "macro_accuracy": 0.06944444444444443
+          }
+        },
+        "eos_count": 31
+      },
+      "paired_wins": 15,
+      "paired_losses": 6,
+      "baseline_extreme_cells": [
+        "4096/niah_single_2",
+        "4096/niah_multiquery",
+        "32768/niah_single_2",
+        "32768/niah_multikey_2",
+        "32768/niah_multiquery",
+        "32768/vt"
+      ],
+      "evidence_scope": "Six-task RULER development subset; not full RULER or independent confirmation",
+      "paired_by_length": {
+        "4096": {
+          "wins": 15,
+          "ties": 8,
+          "losses": 1
+        },
+        "32768": {
+          "wins": 0,
+          "ties": 43,
+          "losses": 5
+        }
+      },
+      "loss_rows": [
+        {
+          "row_id": "qa_1_4096_0",
+          "references": [
+            "how graphs are encoded as binary strings",
+            "how graphs are encoded as binary strings",
+            "how graphs are encoded as binary strings"
+          ],
+          "baseline_score": 1.0,
+          "candidate_score": 0.0,
+          "baseline_text": " decide how graphs are encoded as binary strings",
+          "candidate_text": " the graph isomorphism problem is encoded as a binary string."
+        },
+        {
+          "row_id": "fwe_32768_3",
+          "references": [
+            "hzjkje",
+            "jsaoxq",
+            "ujqekj"
+          ],
+          "baseline_score": 0.3333333333333333,
+          "candidate_score": 0.0,
+          "baseline_text": " hzjk, jsaoxq, and hzt",
+          "candidate_text": " ...h ...h ...h ...h ... ...h ...je ...h ...je ... ... ...h ...h ...h ...h ... ...h ... ...h ...h ...h ...h ...h ... ...h ...h ...h ...h"
+        },
+        {
+          "row_id": "fwe_32768_4",
+          "references": [
+            "hyrhvm",
+            "jqzogx",
+            "ukxyng"
+          ],
+          "baseline_score": 0.6666666666666666,
+          "candidate_score": 0.0,
+          "baseline_text": " ytqlql, hyrhvm, and jqzogx.",
+          "candidate_text": " ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...z ... ... ... ... ... ... ... ... ... ... ... ... ... ... ..."
+        },
+        {
+          "row_id": "fwe_32768_7",
+          "references": [
+            "ibpcqo",
+            "jutfit",
+            "udzist"
+          ],
+          "baseline_score": 0.3333333333333333,
+          "candidate_score": 0.0,
+          "baseline_text": " yhvzpo, ibpcqo, ibpcqo.",
+          "candidate_text": " ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ..."
+        },
+        {
+          "row_id": "qa_1_32768_1",
+          "references": [
+            "a computational problem",
+            "a computational problem",
+            "a computational problem"
+          ],
+          "baseline_score": 1.0,
+          "candidate_score": 0.0,
+          "baseline_text": " A computational problem is an example of a function that admits an efficient algorithm. If the function is given, then it accepts the input of a solution and returns the",
+          "candidate_text": " \"O was originally was originally was originally was originally was originally was first was was originally was originally was originally was originally was was originally was was was originally was was"
+        },
+        {
+          "row_id": "qa_1_32768_4",
+          "references": [
+            "the integer factorization problem",
+            "integer factorization",
+            "integer factorization problem"
+          ],
+          "baseline_score": 1.0,
+          "candidate_score": 0.0,
+          "baseline_text": " the integer factorization problem.",
+          "candidate_text": " \"the was \"The was first was first was first was first was first was first was first was first was first was first was first was first was first was"
+        }
+      ]
+    },
+    "BMFreq8Gain4": {
+      "status": "NO_LONG_GAIN",
+      "macro_delta_by_length": {
+        "4096": 0.05208333333333334,
+        "32768": -0.013888888888888881
+      },
+      "candidate": {
+        "rows": 72,
+        "score_sum": 9.65,
+        "by_length": {
+          "4096": {
+            "task_accuracy": {
+              "niah_single_2": 0.0,
+              "niah_multikey_2": 0.25,
+              "niah_multiquery": 0.3125,
+              "vt": 0.35,
+              "fwe": 0.5833333333333333,
+              "qa_1": 0.25
+            },
+            "macro_accuracy": 0.2909722222222222
+          },
+          "32768": {
+            "task_accuracy": {
+              "niah_single_2": 0.0,
+              "niah_multikey_2": 0.0,
+              "niah_multiquery": 0.0,
+              "vt": 0.0,
+              "fwe": 0.20833333333333331,
+              "qa_1": 0.125
+            },
+            "macro_accuracy": 0.05555555555555555
+          }
+        },
+        "eos_count": 30
+      },
+      "baseline": {
+        "rows": 72,
+        "score_sum": 9.066666666666666,
+        "by_length": {
+          "4096": {
+            "task_accuracy": {
+              "niah_single_2": 0.0,
+              "niah_multikey_2": 0.25,
+              "niah_multiquery": 0.0,
+              "vt": 0.35,
+              "fwe": 0.5833333333333333,
+              "qa_1": 0.25
+            },
+            "macro_accuracy": 0.23888888888888885
+          },
+          "32768": {
+            "task_accuracy": {
+              "niah_single_2": 0.0,
+              "niah_multikey_2": 0.0,
+              "niah_multiquery": 0.0,
+              "vt": 0.0,
+              "fwe": 0.16666666666666666,
+              "qa_1": 0.25
+            },
+            "macro_accuracy": 0.06944444444444443
+          }
+        },
+        "eos_count": 31
+      },
+      "paired_wins": 8,
+      "paired_losses": 4,
+      "baseline_extreme_cells": [
+        "4096/niah_single_2",
+        "4096/niah_multiquery",
+        "32768/niah_single_2",
+        "32768/niah_multikey_2",
+        "32768/niah_multiquery",
+        "32768/vt"
+      ],
+      "evidence_scope": "Six-task RULER development subset; not full RULER or independent confirmation",
+      "paired_by_length": {
+        "4096": {
+          "wins": 5,
+          "ties": 18,
+          "losses": 1
+        },
+        "32768": {
+          "wins": 3,
+          "ties": 42,
+          "losses": 3
+        }
+      },
+      "loss_rows": [
+        {
+          "row_id": "vt_4096_3",
+          "references": [
+            "EAVXX",
+            "CDSFR",
+            "KXYSL",
+            "VEJKN",
+            "WCIAO"
+          ],
+          "baseline_score": 0.6,
+          "candidate_score": 0.2,
+          "baseline_text": " EAVXX, KXYSL, VEJKN, WCBA\n\nExplanation: The text sequence reveals the following variable assignments:\n- EAVXX",
+          "candidate_text": " EAVXX, EAV96, KXYLSK, KYSB, KDVY, SKYB, and KYSL\n\n"
+        },
+        {
+          "row_id": "fwe_32768_4",
+          "references": [
+            "hyrhvm",
+            "jqzogx",
+            "ukxyng"
+          ],
+          "baseline_score": 0.6666666666666666,
+          "candidate_score": 0.3333333333333333,
+          "baseline_text": " ytqlql, hyrhvm, and jqzogx.",
+          "candidate_text": " \"ytqlql, hyrhvm, hyvm\""
+        },
+        {
+          "row_id": "qa_1_32768_1",
+          "references": [
+            "a computational problem",
+            "a computational problem",
+            "a computational problem"
+          ],
+          "baseline_score": 1.0,
+          "candidate_score": 0.0,
+          "baseline_text": " A computational problem is an example of a function that admits an efficient algorithm. If the function is given, then it accepts the input of a solution and returns the",
+          "candidate_text": " NP-complete problems are not necessarily in P. If graph is an example of a problem that is NP-hard, then it is also in NP. The answer is"
+        },
+        {
+          "row_id": "qa_1_32768_4",
+          "references": [
+            "the integer factorization problem",
+            "integer factorization",
+            "integer factorization problem"
+          ],
+          "baseline_score": 1.0,
+          "candidate_score": 0.0,
+          "baseline_text": " the integer factorization problem.",
+          "candidate_text": " The Traveling Salesman problem is another example of a computational complexity class. The problem of finding the shortest possible route that visits each city exactly once and returns to"
+        }
+      ]
+    }
+  },
+  "native_short_reference": {
+    "raw_path": "results/olmo_fast_screen_20260908/run_native_01/Native.jsonl",
+    "raw_sha256": "64cbca3684a949e25ada4264da085e286756e6e6d3360a578f30c65b6a738222",
+    "receipt_sha256": "d1637a82232144e0a887c9cb7adfb7cb82d8e9182d957db5e86b2a4835036c10",
+    "table_identity": {
+      "tensor_sha256": "dde15c31724177356ae954d6e11fb337e6fccef56e4520a905cac3f0d9885b34",
+      "gain": 1.0
+    },
+    "elapsed_seconds": 15.324054032564163,
+    "summary": {
+      "rows": 24,
+      "score_sum": 18.15,
+      "by_length": {
+        "4096": {
+          "task_accuracy": {
+            "niah_single_2": 1.0,
+            "niah_multikey_2": 1.0,
+            "niah_multiquery": 0.9375,
+            "vt": 0.1,
+            "fwe": 0.5,
+            "qa_1": 1.0
+          },
+          "macro_accuracy": 0.75625
+        }
+      },
+      "eos_count": 20
+    }
+  },
+  "scalar_runtime_replay_exact": true
+}

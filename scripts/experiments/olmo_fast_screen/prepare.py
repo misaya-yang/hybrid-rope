@@ -67,7 +67,8 @@ def reuse_prepared(args):
         gpu_execution='NOT_RUN; BM ready, additional reviewed candidates unfinished',
         timing='Five minutes per main arm is an estimate. Complete all frozen rows and record actual cost; no automatic per-arm timeout or invented total deadline.')
     manifest['prepared_files']={name:sha_file(out/name) for name in manifest['prepared_files']}
-    manifest['code_files']={name:sha_file(root/name) for name in manifest['code_files']}
+    dependencies = set(manifest['code_files']) | {'scripts/experiments/olmo_fast_screen/runtime.py'}
+    manifest['code_files']={name:sha_file(root/name) for name in dependencies}
     for name in ('screen.jsonl','qualification.jsonl','generation_config.json'):
         if sha_file(out/name)!=sha_file(old/name):raise AssertionError('reused input/decoder changed')
     write(out/'manifest.json',manifest)
@@ -144,7 +145,7 @@ def main():
     write(out/'queue.json', queue)
     root = Path(__file__).resolve().parents[3]
     dependencies = [
-        'scripts/experiments/olmo_fast_screen/'+name for name in ('bench.py','prepare.py','run.py','supervise.py')]
+        'scripts/experiments/olmo_fast_screen/'+name for name in ('bench.py','prepare.py','run.py','supervise.py','runtime.py')]
     dependencies += ['scripts/experiments/cross_audit/tables.py',
                      'scripts/lib/rope/official_yarn.py']
     stat = weight.stat()

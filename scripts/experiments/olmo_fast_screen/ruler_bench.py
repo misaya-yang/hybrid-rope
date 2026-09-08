@@ -39,13 +39,14 @@ def verdict(candidate, baseline):
             if crows[key][field] != brows[key][field]:
                 raise ValueError('paired row identity differs: ' + key)
     c, b = summarize(candidate), summarize(baseline)
-    if set(c['by_length']) != {'4096', '16384'} or any(
+    caps = sorted(c['by_length'], key=int)
+    if len(caps) != 2 or caps[0] != '4096' or any(
             set(cell['task_accuracy']) != set(TASKS) for cell in c['by_length'].values()):
         raise ValueError('incomplete task/length panel')
     deltas = {cap: c['by_length'][cap]['macro_accuracy'] - b['by_length'][cap]['macro_accuracy']
               for cap in c['by_length']}
-    status = ('DEVELOPMENT_WIN' if deltas['16384'] > 0 and deltas['4096'] >= 0 else
-              'TRADEOFF' if deltas['16384'] > 0 else 'NO_LONG_GAIN')
+    status = ('DEVELOPMENT_WIN' if deltas[caps[-1]] > 0 and deltas['4096'] >= 0 else
+              'TRADEOFF' if deltas[caps[-1]] > 0 else 'NO_LONG_GAIN')
     return dict(status=status, macro_delta_by_length=deltas, candidate=c, baseline=b,
                 paired_wins=sum(crows[k]['correct'] > brows[k]['correct'] for k in crows),
                 paired_losses=sum(crows[k]['correct'] < brows[k]['correct'] for k in crows),

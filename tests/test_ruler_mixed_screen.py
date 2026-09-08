@@ -48,3 +48,13 @@ def test_duplicate_or_missing_task_rejected():
         verdict(baseline+[baseline[0]], baseline)
     with pytest.raises(ValueError, match='incomplete'):
         verdict(baseline[1:], baseline[1:])
+
+
+def test_predeclared_longer_cap_uses_its_actual_primary_endpoint():
+    candidate, baseline = panel(.75, .5), panel(.5, .5)
+    for rows in (candidate, baseline):
+        for row in rows:
+            if row['length_cap'] == 16384:row['length_cap'] = 32768
+    result = verdict(candidate, baseline)
+    assert result['status'] == 'DEVELOPMENT_WIN'
+    assert result['macro_delta_by_length'] == {'4096': 0, '32768': .25}
