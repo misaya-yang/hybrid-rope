@@ -1,0 +1,274 @@
+{
+  "status": "EXISTING_RESULT_REANALYSIS_AND_CPU_OPERATOR_REFERENCE_NO_NEW_MODEL_RUN",
+  "inputs": {
+    "result": {
+      "path": "docs/research/ROPE_QWEN15_FULL_LAG_P2_RESULT_20260907.json",
+      "sha256": "11ba16b8770bac1ec9cc5d47635629d67273006ac5a3e8ac9a3faad89b7f60cb"
+    },
+    "candidate": {
+      "path": "docs/research/ROPE_QWEN15_FULL_LAG_P2_CANDIDATE_20260907.json",
+      "sha256": "f5680e2f417db2791cee9c7fe5facaacd6701b0f42d35651be3e5f02f5651ce1"
+    },
+    "historical": {
+      "path": "docs/research/ROPE_RECOVERED_QWEN_P2_20260907.json",
+      "sha256": "3f064867ed612211308c989ded601d4bc5b83f133b6f3734f15e7e35fb557430"
+    }
+  },
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+  "alignment_scope": "Same row IDs in the retained paired owner; remote prompt tensors not reread in this CPU analysis",
+  "aligned_64k": [
+    {
+      "task": "niah_multikey_2",
+      "row_ids": [
+        "niah_multikey_2_65536_137_0",
+        "niah_multikey_2_65536_137_1",
+        "niah_multikey_2_65536_137_2",
+        "niah_multikey_2_65536_137_3"
+      ],
+      "p2_minus_mr_1p5b_pp": 0.0,
+      "p2_minus_mr_3b_pp": 25.0,
+      "differences_1p5b": [
+        "0",
+        "-1",
+        "0",
+        "1"
+      ],
+      "differences_3b": [
+        "0",
+        "1",
+        "0",
+        "0"
+      ]
+    },
+    {
+      "task": "vt",
+      "row_ids": [
+        "vt_65536_137_0",
+        "vt_65536_137_1",
+        "vt_65536_137_2",
+        "vt_65536_137_3"
+      ],
+      "p2_minus_mr_1p5b_pp": 10.0,
+      "p2_minus_mr_3b_pp": -5.0,
+      "differences_1p5b": [
+        "-1/5",
+        "0",
+        "3/5",
+        "0"
+      ],
+      "differences_3b": [
+        "-1/5",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    {
+      "task": "fwe",
+      "row_ids": [
+        "fwe_65536_137_0",
+        "fwe_65536_137_1",
+        "fwe_65536_137_2",
+        "fwe_65536_137_3"
+      ],
+      "p2_minus_mr_1p5b_pp": 16.666666666666668,
+      "p2_minus_mr_3b_pp": -8.333333333333334,
+      "differences_1p5b": [
+        "0",
+        "1/3",
+        "0",
+        "1/3"
+      ],
+      "differences_3b": [
+        "0",
+        "0",
+        "-1/3",
+        "0"
+      ]
+    }
+  ],
+  "geometry": [
+    {
+      "slot": 23,
+      "native_turns_at32768": 36.39318585016844,
+      "p2_exponent": 0.0005593577310363921,
+      "mr_exponent": 0.0,
+      "p2_over_mr_frequency": 0.9992248661032266,
+      "signed_p2_minus_mr_phase_at65536": -0.3544921875
+    },
+    {
+      "slot": 24,
+      "native_turns_at32768": 29.327163908493493,
+      "p2_exponent": 0.0013654150825676864,
+      "mr_exponent": 0.006535943298074508,
+      "p2_over_mr_frequency": 1.0071936248079447,
+      "signed_p2_minus_mr_phase_at65536": 2.627197265625
+    },
+    {
+      "slot": 25,
+      "native_turns_at32768": 23.63306651319375,
+      "p2_exponent": 0.0031497664503545952,
+      "mr_exponent": 0.019607826189602676,
+      "p2_over_mr_frequency": 1.0230779846684577,
+      "signed_p2_minus_mr_phase_at65536": 6.669952392578125
+    },
+    {
+      "slot": 26,
+      "native_turns_at32768": 19.044522357917987,
+      "p2_exponent": 0.00841115949220986,
+      "mr_exponent": 0.03921569863520241,
+      "p2_over_mr_frequency": 1.043629100806007,
+      "signed_p2_minus_mr_phase_at65536": 9.88885498046875
+    },
+    {
+      "slot": 27,
+      "native_turns_at32768": 15.34687893583823,
+      "p2_exponent": 0.021339287539872017,
+      "mr_exponent": 0.06535944746520171,
+      "p2_over_mr_frequency": 1.0629253801470293,
+      "signed_p2_minus_mr_phase_at65536": 11.084228515625
+    },
+    {
+      "slot": 28,
+      "native_turns_at32768": 12.367163072261738,
+      "p2_exponent": 0.0741308739457372,
+      "mr_exponent": 0.09803921534950834,
+      "p2_over_mr_frequency": 1.0336993800690792,
+      "signed_p2_minus_mr_phase_at65536": 4.571685791015625
+    },
+    {
+      "slot": 29,
+      "native_turns_at32768": 9.965980623839334,
+      "p2_exponent": 0.22114845601203462,
+      "mr_exponent": 0.13725491137051335,
+      "p2_over_mr_frequency": 0.8902070989544505,
+      "signed_p2_minus_mr_phase_at65536": -11.367591857910156
+    },
+    {
+      "slot": 30,
+      "native_turns_at32768": 8.031008067196288,
+      "p2_exponent": 0.850558755346035,
+      "mr_exponent": 0.18300653026844718,
+      "p2_over_mr_frequency": 0.3963633708236058,
+      "signed_p2_minus_mr_phase_at65536": -47.268802642822266
+    },
+    {
+      "slot": 31,
+      "native_turns_at32768": 6.471725664172326,
+      "p2_exponent": 0.9978501759875588,
+      "mr_exponent": 0.23529412380749823,
+      "p2_over_mr_frequency": 0.34745255517293444,
+      "signed_p2_minus_mr_phase_at65536": -38.29842185974121
+    },
+    {
+      "slot": 32,
+      "native_turns_at32768": 5.21518942294342,
+      "p2_exponent": 0.9999991602414913,
+      "mr_exponent": 0.2941176539797237,
+      "p2_over_mr_frequency": 0.37585210461899377,
+      "signed_p2_minus_mr_phase_at65536": -27.2076473236084
+    },
+    {
+      "slot": 33,
+      "native_turns_at32768": 4.2026196462043295,
+      "p2_exponent": 1.0,
+      "mr_exponent": 0.35947710584769504,
+      "p2_over_mr_frequency": 0.41149711232265895,
+      "signed_p2_minus_mr_phase_at65536": -18.882164001464844
+    },
+    {
+      "slot": 34,
+      "native_turns_at32768": 3.386648213151106,
+      "p2_exponent": 1.0,
+      "mr_exponent": 0.4313725221949293,
+      "p2_over_mr_frequency": 0.4546237768858141,
+      "signed_p2_minus_mr_phase_at65536": -12.763330459594727
+    },
+    {
+      "slot": 35,
+      "native_turns_at32768": 2.729103776806237,
+      "p2_exponent": 1.0,
+      "mr_exponent": 0.509803884709606,
+      "p2_over_mr_frequency": 0.5068419242630104,
+      "signed_p2_minus_mr_phase_at65536": -8.342256546020508
+    },
+    {
+      "slot": 36,
+      "native_turns_at32768": 2.1992269596975227,
+      "p2_exponent": 1.0,
+      "mr_exponent": 0.5947712356678594,
+      "p2_over_mr_frequency": 0.5702009987325964,
+      "signed_p2_minus_mr_phase_at65536": -5.207836627960205
+    },
+    {
+      "slot": 37,
+      "native_turns_at32768": 1.7722299428531163,
+      "p2_exponent": 1.0,
+      "mr_exponent": 0.6862745383350216,
+      "p2_over_mr_frequency": 0.6473191441707401,
+      "signed_p2_minus_mr_phase_at65536": -3.033425807952881
+    },
+    {
+      "slot": 38,
+      "native_turns_at32768": 1.428137610372343,
+      "p2_exponent": 1.0,
+      "mr_exponent": 0.7843137452154681,
+      "p2_over_mr_frequency": 0.7415559695128737,
+      "signed_p2_minus_mr_phase_at65536": -1.5636606216430664
+    },
+    {
+      "slot": 39,
+      "native_turns_at32768": 1.1508536348931877,
+      "p2_exponent": 1.0,
+      "mr_exponent": 0.8888888866645848,
+      "p2_over_mr_frequency": 0.8572439802097265,
+      "signed_p2_minus_mr_phase_at65536": -0.6020879745483398
+    },
+    {
+      "slot": 40,
+      "native_turns_at32768": 0.9274063488169347,
+      "p2_exponent": 1.0,
+      "mr_exponent": 1.0,
+      "p2_over_mr_frequency": 1.0,
+      "signed_p2_minus_mr_phase_at65536": 0.0
+    }
+  ],
+  "gains": {
+    "p2": 1.102585782722872,
+    "mr": 1.138629436111989,
+    "p2_over_mr_logit_multiplier": 0.9376914631205014
+  },
+  "tail40plus_arrays_equal": true,
+  "proposal": {
+    "local_window": 512,
+    "reference_request_cap": 65536,
+    "local": "Native frequencies at original relative distance",
+    "remote": "Frozen P2 frequencies at distance / max(1, frozen_request_cap / 65536)",
+    "gain": 1.102585782722872,
+    "one_common_softmax": true,
+    "phase_cap_is_development_informed": true,
+    "model_execution": "NOT_IMPLEMENTED_OR_RUN",
+    "weights": "FROZEN"
+  },
+  "algebra": {
+    "scope": "Float64 fixed-vector identities only; no model-quality evidence",
+    "seed": 20260908,
+    "max_abs_errors": {
+      "complex_vs_absolute": 4.440892098500626e-16,
+      "local_native_at_same_gain": 2.498001805406602e-16,
+      "remote64_original_p2": 4.440892098500626e-16,
+      "remote128_doubled_distance_to64": 4.440892098500626e-16,
+      "joint_translation": 4.440892098500626e-16,
+      "shared_softmax_merge": 2.220446049250313e-16
+    },
+    "nonzero_old_p2_vs_native_local_score_difference": 0.05044596425040426,
+    "incorrect_equal_branch_average_max_abs_error": 0.28733749354247695
+  },
+  "limits": [
+    "No uniquely identified cause of the model scores",
+    "Operator equality conditions on fixed Q/K; longer inputs change states and key count",
+    "Local Native angles do not imply whole-model Native behavior or Native gain",
+    "This does not estimate a probability of success or establish new prior art"
+  ]
+}
