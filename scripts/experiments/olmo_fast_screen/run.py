@@ -67,6 +67,11 @@ def worker(prepared, out, phase_deadline=None, baseline_only=False):
     for name, expected in manifest['software'].items():
         if importlib.metadata.version(name) != expected:
             raise ValueError('prepared software version changed: '+name)
+    is_ruler = manifest.get('benchmark') == 'ruler_mixed_v1'
+    if is_ruler:
+        from .ruler_bench import score, summarize, verdict
+    else:
+        from .bench import score, summarize, verdict
     screen, qualification = rows(prepared/'screen.jsonl'), rows(prepared/'qualification.jsonl')
     tables = json.loads((prepared/'tables.json').read_text())
     if len({tables[name]['tensor_sha256'] for name in ['MrPro']+queue}) != len(queue)+1:
@@ -80,7 +85,7 @@ def worker(prepared, out, phase_deadline=None, baseline_only=False):
                        'screen':manifest['prepared_files']['screen.jsonl'],
                        'qualification':manifest['prepared_files']['qualification.jsonl'],
                        'decoding':manifest['prepared_files']['generation_config.json'],
-                       'scorer':manifest['code_files']['scripts/experiments/olmo_fast_screen/bench.py'],
+                       'scorer':manifest['code_files']['scripts/experiments/olmo_fast_screen/'+('ruler_bench.py' if is_ruler else 'bench.py')],
                        'runner':manifest['code_files']['scripts/experiments/olmo_fast_screen/run.py'],
                        'software':manifest['software']})
 
@@ -155,7 +160,7 @@ def worker(prepared, out, phase_deadline=None, baseline_only=False):
                 eos = decoding.eos_token_id
                 ended = bool(new and new[-1] in (eos if isinstance(eos, list) else [eos]))
                 text = tokenizer.decode(new[:-1] if ended else new, skip_special_tokens=False)
-                record = {k:row[k] for k in ('row_id','group_id','family','length_cap','world','answer','prompt_sha256','input_tokens')}
+                record = {k:row[k] for k in ('row_id','group_id','family','length_cap','world','answer','prompt_sha256','input_tokens','task','references','max_new_tokens') if k in row}
                 record.update(correct=score(row,text), output_text=text, generated_ids=new,
                               ended_eos=ended, elapsed_seconds=time.monotonic()-started)
                 stream.write(json.dumps(record)+'\n'); stream.flush(); records.append(record)
@@ -174,12 +179,13 @@ def worker(prepared, out, phase_deadline=None, baseline_only=False):
             estimate_exceeded=elapsed>expected_seconds,summary=summarize(records)))
         return records
 
-    native = evaluate('NativeQualification','Native',qualification)
-    compact = summarize(native)
-    if compact['correct'] < 6 or any(compact['family_accuracy'].get(f,0) < .5 for f in FAMILIES):
-        atomic(out/'decision.json', dict(status='ASSAY_UNQUALIFIED',native=compact,
-            action='No candidate run. Inspect task/decoder/model ability before revising the benchmark.'))
-        return
+    if qualification:
+        native = evaluate('NativeQualification','Native',qualification)
+        compact = summarize(native)
+        if compact['correct'] < 6 or any(compact['family_accuracy'].get(f,0) < .5 for f in FAMILIES):
+            atomic(out/'decision.json', dict(status='ASSAY_UNQUALIFIED',native=compact,
+                action='No candidate run. Inspect task/decoder/model ability before revising the benchmark.'))
+            return
     baseline = evaluate('MrPro','MrPro',screen)
     for name in queue:
         candidate = evaluate(name,name,screen)
