@@ -39,11 +39,12 @@
   to the experiment; a preparation milestone is not a research outcome.
 - For a new method, derive a quantitative or directional prediction that differs
   from the relevant baseline, using the actual attention computation, fixed
-  rotary-slot identity and complete prior deployment. Each research iteration
-  must produce a concrete justified solution, a decisive prediction separating
-  remaining explanations, or a proof of non-identifiability with one precisely
-  defined measurable quantity and its direct measurement. Retire a hypothesis
-  that cannot produce a decision; do not replace it with an unconstrained story.
+  rotary-slot identity and complete prior deployment. A bounded mechanism argument
+  is enough; universal optimality or a complete theory is not a prerequisite.
+  Each iteration must produce a justified solution or a discriminator that changes
+  a named research decision. An insufficiency proof must name its statistic and
+  counterexample; it does not close all simple methods. Define any missing observable
+  and what measuring it would change. Retire claims that cannot produce a decision.
 - Use the smallest suitable model and frozen representative inputs to obtain that
   decision quickly. Reuse valid baselines and outputs; add controls, tasks, seeds
   or model sizes only when they can change the next decision. Measure end-to-end
@@ -61,6 +62,10 @@
   Do not silently relax either after seeing outcomes. Label any justified new
   decision prospectively and keep the original verdict. Missing information must
   be a named identifiable quantity, not a request for an unspecified larger sweep.
+- Keep scientific predictions, practical acceptance thresholds and runtime checks
+  separate. Distinguish a contradicted prediction from an untested condition, a
+  gate miss from capability collapse, and retrospective explanation from prediction.
+  Record effect sizes and mixed outcomes; retire only the contradicted claim.
 
 ## Own the experiment phase
 
@@ -132,6 +137,20 @@
 
 ## Execution and verification
 
+- Before scientific GPU work, review the actual experiment path: input construction,
+  model/operator intervention, decoding/scoring, and launch/stop logic. Check it
+  against the frozen question and an independent reference where needed. Resolve
+  material implementation errors before launch; record the reviewed code state and
+  remaining limits briefly in the existing protocol, not a new approval workflow.
+- Review code first; smoke tests are not a substitute. Use one minimal runtime
+  check for a new or changed execution path, then proceed to useful experiment rows.
+  Reuse valid reviews and checks for unchanged paths. Repeat only for a relevant
+  change, failure or unresolved concern; a checkpoint, arm or session change alone
+  does not justify another preparation cycle.
+- Record shared asset identities once in the existing manifest. Verify new,
+  changed or transferred artifacts where mix-up/corruption matters; do not repeatedly
+  hash unchanged models, data or receipts, or build parallel hash ledgers. Identity
+  checks establish which bytes ran, not whether the code or hypothesis is correct.
 - The personal PC supports code/docs, light CPU checks and local LaTeX. Canonical
   PyTorch/pytest, GPU, packaging and release validation belong on the work machine;
   do not recreate that environment here. Verify actual memory and attention
@@ -141,7 +160,9 @@
 
   Numerical solver checks must exercise a nontrivial improving case and compare
   against an independent calculation. A vacuous monotonicity check, convergence
-  flag or self-consistent formula is not evidence of the claimed optimum.
+  flag, hard-coded verdict or self-consistent formula is not evidence of the
+  claimed optimum or a model mechanism. Once relevant checks pass, stop checking
+  and continue the research decision; do not broaden testing without a concrete need.
 
 | Task | Check |
 | --- | --- |

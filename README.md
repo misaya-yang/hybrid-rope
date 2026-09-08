@@ -10,6 +10,8 @@
 - **从有效方法改进。** MrRoPE 提供累计 radix 与有效中段分配，CoPE 提供深尾稳定机制，本方已有 Z/分配结果提供候选与经验。Cosh 保留为历史证据，不继续优化它的曲线。
 - **按实际终点判断进展。** 区分CPU数学检查、真实模型验证、开发结果和能力
   结论；研究已知失败及后续纠正，从已有有效方法推导可区分预测。
+- **先审核实验代码，再做必要检查。** 复用稳定路径的验证与资产记录，避免反复
+  hash和smoke；科学预测、工程检查与实用验收分开，结果分支在运行前写清。
 
 公司PC接续先读[HANDOFF](paper-2027/HANDOFF.md)，其中维护阶段状态、资源与下一
 行动。具体实验结果、失败谱系和准备中的协议按下表读取，README不另维护作业状态。
@@ -25,8 +27,8 @@
 | [paper-2027/HANDOFF.md](paper-2027/HANDOFF.md) | 当前暂停/运行状态、授权预算、资产位置和恢复工作入口 |
 | [研究主线](docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md) | 方法关系、文献核对和历史方案 |
 | [本夜实验报告](docs/research/ROPE_OVERNIGHT_EXPERIMENT_REVIEW_20260908.md) | 全部阶段结果、成本、局限、失误复盘及证据路由 |
-| [本地失败谱系](docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md) | 本地与归档错误前提、有效正负结果、代码修复及证据覆盖 |
-| [固定位置可见性协议](docs/research/ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md) | 待验证的因果判别、代码入口、资产条件与验证边界 |
+| [本地失败谱系](docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md) | 已证事实、具体否证与未知；整改报告机制/定理复核及三项执行纠正 |
+| [固定位置可见性协议](docs/research/ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md) | 有条件的单行判别、代码审核、一次必要检查、评分分支与停止条件 |
 | [外部材料](paper-2027/research/external-reviews/README.md) | Pro原始输入、覆盖清单及来源身份 |
 | [REVISION_BRIEF](paper-2027/REVISION_BRIEF.md) | 论文重构契约；旧阶段排序只作历史 |
 

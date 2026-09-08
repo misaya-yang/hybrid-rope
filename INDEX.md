@@ -1,6 +1,6 @@
 # INDEX — file and evidence-source index
 
-**Updated:** 2026-09-08; documentation routing normalized after company-PC handoff. This file locates source
+**Updated:** 2026-09-08; remediation claims audited and experiment review/decision rules revised. This file locates source
 files and their roles; it does not own numerical results, verdicts or live tasks.
 Project details are in `README.md`, constraints in `AGENTS.md`, and live state
 in `paper-2027/HANDOFF.md`. Read only the relevant entries.
@@ -18,9 +18,9 @@ inspect them with `git show main_0726:<path>`.
 | [README.md](README.md) | Project question, reconstruction context, intended outcomes and layout |
 | [docs/README.md](docs/README.md) | Roles of current cross-phase research records, historical experiments and provenance documents |
 | [paper-2027/HANDOFF.md](paper-2027/HANDOFF.md) | Current local Git/PDF/authorization state; source-reported remote state is labelled |
-| [Local failure synthesis](docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md), [source/claim/raw evidence](docs/research/ROPE_LOCAL_FAILURE_EVIDENCE_20260908.json) | Company-PC continuation: local failure lineages, recurring invalid premises, corrected ALS/LoRA interpretation, existing positive results; no new capability result |
+| [Local failure synthesis](docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md), [source/claim/raw evidence](docs/research/ROPE_LOCAL_FAILURE_EVIDENCE_20260908.json) | Facts → specific rejected explanations → unresolved questions → discriminators; §6 audits the supplied remediation report, withdraws broad non-identifiability and unmeasured mechanisms; §7 replaces blanket vetoes with scoped decisions and review-first execution. JSON retains the earlier raw audit, not new model verification |
 | [Author-source coverage](docs/research/ROPE_SOURCE_COVERAGE_20260908.json), [preserved Pro materials](paper-2027/research/external-reviews/pro-materials-20260908/) | Ten RoPE documents fully reviewed; nine new verbatim sources, one reused; two other-topic inputs screened and excluded |
-| [Fixed-position visibility protocol](docs/research/ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md), [implementation](scripts/experiments/scale_transport/position_visibility.py), [layout tests](tests/test_position_visibility.py) | Prepared O/L/P/C oracle discriminator using one fixed table; no model run, runtime unqualified, no auto-launch |
+| [Fixed-position visibility protocol](docs/research/ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md), [implementation](scripts/experiments/scale_transport/position_visibility.py), [layout tests](tests/test_position_visibility.py) | Conditional one-row O/L/P/C diagnostic: decision, scoring/EOS, branch actions, source review, one minimal runtime check and stop conditions; no model run, runtime unqualified, no auto-launch or candidate queue |
 | [Overnight experiment review](docs/research/ROPE_OVERNIGHT_EXPERIMENT_REVIEW_20260908.md), [job/artifact ledger](docs/research/ROPE_OVERNIGHT_EXPERIMENT_LEDGER_20260908.json) | Current result summary: unresolved objective, local gains and regressions,34 job receipts, interrupted LoRA, lessons and stopped queues |
 | [Research failure review](docs/research/ROPE_RESEARCH_FAILURE_REVIEW_20260907.md) | Historical diagnosis plus a link to the overnight outcome and decision-rule corrections |
 | [Native phase constrained carrier](docs/research/ROPE_NATIVE_SECTOR_CARRIER_20260907.md) | Core experiment 3 stopped after nine tasks; retained development/raw results, EOS and phase checks; incomplete RULER, no SOTA claim |

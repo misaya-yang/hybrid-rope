@@ -1,14 +1,21 @@
 # Hybrid-RoPE 当前交接
 
-- **更新：2026-09-08。科研交付已推送，作者要求补充文档规范整理后转公司PC。**
-  本轮只统一目录职责、索引和交接状态；原科研目标未完成，不恢复GPU或旧队列。
+- **更新：2026-09-08。按作者最新要求完善失败复盘、实验代码审核和判据。**
+  本轮仅文档工作；不生成新表，不运行GPU，不恢复旧队列，原科研目标仍未完成。
 - **先读：** [本地失败谱系与综合分析](../docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md)，
   [逐源证据/原始数据复算](../docs/research/ROPE_LOCAL_FAILURE_EVIDENCE_20260908.json)，
-  [下一项固定位置判别](../docs/research/ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md)。
+  [有条件的固定位置判别](../docs/research/ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md)。
   按INDEX定位原owner即可，不需要重新生成一批综述。
 
 ## 最近科研交付与验证限制
 
+- 新审查：指定的Gemini整改报告已全文阅读；事实沿用各自原始owner，广义
+  Non-Identifiability Theorem和未经识别的机制不采纳。结论按“事实→排除的具体
+  解释→未知→下一项判别”整理于失败谱系§5–7。局部Taylor/Fisher在相应假设及
+  trust region内仍可用；路径积分、Gram重排不成为新能力selector。
+- 作者重点纠正：实验前先审核实际代码；稳定路径复用验证，不反复hash或smoke；
+  工程检查、科学预测、实用门槛分开。L/P补齐分支取舍、无效诊断和停止条件，
+  仍只是单行oracle诊断，不是方法验收或最优频率的答案。
 - 两位代理全文复核10份RoPE来源，共7310行；9份新来源已按原字节加入
   `research/external-reviews/pro-materials-20260908/`，1份scale来源复用。
   另2份仅做主题筛查后排除；不声称12份全部全文阅读。
@@ -29,16 +36,22 @@
 
 1. 在`main_0726_09_06`普通拉取origin最新提交；先保留该PC自己的dirty work。
    已有分支包含40d1ad6，本轮不改历史、不force push。
-2. 先跑相关工作机测试：
-   `conda run --no-capture-output -n aidemo python -m pytest scripts/analysis/rope_transport/tests/test_transport.py tests/test_position_visibility.py -q`。
-   这是代码验证，不是能力实验；失败先修实现并保留本次回执。
-3. 下一项只准备一个固定表、同一S集合的L/P因果判别。完整原token与来源/模板
-   边界需要从EVQ既有资产读取并冻结；不能把局部record span当成完整mask proof。
-   先资格核对all-keep四路一致和O与原generate一致，再判断是否开始科学干预。
-   保持原position IDs、最后prompt query干预时点、原完整decoder history。
+2. 先按L/P协议确认有哪个具体设计决定依赖它；若没有就搁置诊断，继续CPU研究。
+   若继续准备，先审核实际输入→干预/KV→decoder/scorer→监督器执行链，修实质
+   错误；在原协议简记审核代码状态，不能用hash匹配或测试次数替代代码审核。
+3. 只准备既定1.5B/FullLagP2单行、同一S集合，不新增表或两世界。完整原token
+   与来源/模板边界从既有资产读取并冻结一次，模型/数据/表manifest复用。
+   已通过且无相关变化的检查不重跑；未完成的相关工作机测试按协议一次补齐。
+   新KV路径仅做一次tiny all-keep联合检查，再用C及冻结L/P取得实际判别。
+   不同模式不各自重复准备；保持原位置、最后prompt query时点和完整decoder历史。
 4. 不重启64维行为梯度、频率候选扫描、13任务全矩阵或旧LoRA队列。新阶段的
    资源/预算以作者当时指令为准，不继承已关闭过夜deadline。四种L/P结果分开，
+   原分数、EOS、资格失败分开；部分收益不放宽原判据，不自动扩矩阵或转LoRA。
    oracle恢复不当作可部署方法或SOTA，也不提前保证某种CPT配方有效。
+
+当前仍缺：完整S输入、针对修订协议的执行链审核与新KV runtime验证，以及新
+付费阶段预算/deadline。文档已准备不等于这些工作已完成；本轮不为补齐它们开机。
+开始下一轮已有授权工作后，由执行者完成必要审核和一次检查，无须逐项再问作者。
 
 ## 已收尾的GPU现场
 
@@ -74,8 +87,10 @@
 
 整夜收尾提交为`0b9b9b6179fcedf641a3590f5ba476c76b57b649`；CPU失败谱系复核、ALS
 修复、原始Pro材料及可见性代码准备已由`ccf33c288289de94edfda7531235e9e374889fdf`
-提交并普通推送。本轮后续整理只改Markdown路由/职责/状态，未修改上述代码、
-结果、数组、机器可读证据或原始Pro材料，也未新增实验或重跑模型检查。最新文档
+提交并普通推送。其后`a8b3be3`统一文档路由。本轮只改Markdown规则、失败解释、
+协议及接续状态；未修改代码、结果、数组或原始Pro材料，未新增实验或重跑模型
+检查。指定ignored整改报告原正文保留并加纠正提示；三个已有untracked诊断脚本
+保持原状，不纳入本次提交或称作canonical验证。最新文档
 提交查看`git log -1`和origin tracking。原始来源尾空格继续按字节身份保留。
 `main_0726`及其中paper归档未修改、编译或生成；活动TeX/PDF未变，PDF SHA仍为
 `37aa6402a65d68b21909b0b3479c4e8edd811079e3922c2c1be915ddeab167e4`。
