@@ -36,3 +36,25 @@
 但 Pro 的方案不成立时必须独立推导和提出有依据的改进，不能机械执行或轻率放弃。
 下一项 GPU 实验须直接检验一个明确核心判断；不继续自动模型扩展队列，也不
 把新的归一化假说自动当成获准的论文主线。现有模型、数据、源码与结果优先复用。
+
+## Two-hour boundary and outcome, 2026-09-08
+
+The latest bounded window ends 2026-09-09 00:13:46 UTC, from the user's original
+22:13:46 UTC instruction. It does not reset with a new candidate or control.
+`experiments/native_sparse_position/RESULT_20260908.md` records the completed
+32-row comparisons: a real development repair and fixed-page improvements, but
+no established position-specific or quality-cost advantage over actual Quest32
+retrieval. The independent nearest-work review also found substantial overlap
+with existing clustering methods. The requested research/paper goal remains
+unachieved. Preserve all evidence, respect the deadline, and do not automatically
+expand experiments, change models, sweep parameters or claim the goal complete.
+
+## 2026-09-09: GPU-off research resumed by the user
+
+The user has closed the GPU and explicitly provided sufficient time to find useful
+methods. The preceding two-hour window remains the historical experiment budget,
+not a limit on the newly authorized local research. Pursue primary literature,
+actual operators, derivations, counterexamples and CPU tests without GPU access,
+model downloads or a predetermined winning representation. The broad modern
+positional-encoding question remains intact. Do not call a proposal a validated
+model improvement; do not remain blocked merely because GPU execution is absent.

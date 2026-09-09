@@ -2,6 +2,29 @@
 
 本文件属于纠错辅助任务，记录已经核验的事实与具体建议，不提出第二个GPU队列。主任务两小时窗口截至2026-09-09 00:13:46 UTC，起点不随方案修改重置。
 
+## 最新判决：本轮尚无通过晋级的论文方法
+
+32条冻结新输入的完整比较和强基线已经完成，主指标为未strip的整个原始答案串exact加真实终止EOS。
+
+| 方法 | 正确/32 |
+|---|---:|
+| Dense | 17 |
+| RoPEMean | 0 |
+| Quest，64-token读取页 | 3 |
+| QuestSplit32，两个32-token摘要但仍读64-token页 | 8 |
+| PostMetric4 | 10 |
+| PreMetric4 | 11 |
+| MatchedContiguous4 | 1 |
+| QuestFine32，实际读32-token页 | **13** |
+
+7臂原轮224条生成完成，759.493秒；outputs SHA256为`216ea464d40dc0aca0193251c767302d4e92d40b3499340650a8b8ef678ab8db`。独立复核了(row_id,method)唯一、32行全配对，以及同一行expected/prompt/prefix身份一致。QuestFine32追加32条完成、210.494秒，outputs SHA256为`a642b957a04671baf68db790cc8e55049b2bd31f90e9fe493496050570ff58d8`，input SHA与原轮一致。
+
+QuestFine32保持sink64、local2048、1024个远端token预算；缓存真实BF16输入的min/max端点，无损BF16回存及FP32分数逐位一致均在构建时检查。**正式32行试验的4均值实际为FP32缓存，QuestFine32约只需其一半摘要字节。** 例如首行首层分别为2,059,872与1,022,976字节。此前辅助建议沿用了早期BF16均值草稿的假设，现已根据正式build回执更正；未测试的BF16均值不能当作已完成结果。当前原型中FP32 Quest端点的额外成本不能视作基线不可消除的开销。
+
+PostMetric4对QuestFine32是3胜6负，PreMetric4为3胜5负；未校正的双侧配对sign-test p分别约.508与.727。这里不是统计上证明新方法普遍更差，**而是没有证据支持其质量—成本胜出**。对PostMetric4严格匹配组大小的连续控制有9胜0负，说明这项有限assay中联合key分组有实际恢复价值；PreMetric4只与该连续臂同容量，其具体组大小并不逐块匹配。Pre/Post之间为3胜2负，位置metric独有收益未建立。
+
+这32条是一个RULER生成的key/placement开发assay，不是完整RULER、自然文档总体或跨架构证明。结果应保留为有明确边界的实测进展，不能升格为solid-accept论文核心。已通知主任务不在最后阶段更换R、预算或模型寻找另一个赢点，并保持原授权时间边界。
+
 ## 已验证的生成证据
 
 1. `evidence_repair_qwen35_01`：4条生成完成，8.787秒；同预算强制证据块137/138后，完整generated_ids与Dense一致。原NoPEMean把Cornwall答成Great Britain；错误块134/135未恢复。全部EOS，但4臂的严格full_exact_and_eos均false，Dense/Repair为normalized_exact=true。原RoPEMean单均值、两种精确oracle也早已正确，故此例不是新方法胜过已有路径的证据。
@@ -61,3 +84,26 @@ CPU实算原二维例：A由±(1,1)构成，B为(.5,−.5)，q=(1,−1)。真max
 **2026-09-08 23:23 UTC代码修正复核：** 生成器已补回并断言`assistant\n`头；评分器只删除末尾实际EOS，使用`skip_special_tokens=False`解码，并将不strip的`text_exact/full_exact_and_eos`与trimmed字段分开。8条旧输入逐一验证：补回换行后的token IDs恰好等于原input IDs加其第一个generated token198。这定位了缺失结构分隔符，不构成新的模型能力结果；旧输出及其0/8原始字符串判决保留。
 
 同一时段，执行任务报告候选GPU摘要构建遇到CUDA小矩阵eigh错误，未产生方法生成结果。当前`pair_envelope.py`已改为解析对称2×2解：gap=hypot(a−c,2b)，angle=atan2(2b,a−c)/2，principal=(cos(angle),sin(angle))；退化情形仍由圆盘分支处理。该代数替换正确，实际GPU成功与生成收益仍须由后续回执验证，不能把这次构建失败写成方法负结果。
+
+## 首个RPEE真实生成结果及下一项决策
+
+`envelope_causal_02`已完成，5条输出、30.552秒；本地和远端outputs SHA256同为`d1a7cd94aab5d2ba7a50221632e920ea5744821e6c2af873c3b9cd6def511b90`。固定例是之前可由证据块oracle恢复的`niah_multiquery_32768_0`。
+
+- 正确数字序列为2608476、9403234、4105180、3192420。
+- RPEE生成`2608476 4102310 3192420 3192420`；Quest生成`26081234 94032010 4105180 3192420`；RandomPair生成`2608476 4105180 3192420 3192420`；QuestSplit32第二个数也错误；RoPEMean复现原错误`2608471`。
+- 全部EOS，严格字符串与完整数字内容都未恢复。不能将这次失败仅归因于逗号格式。
+- 同一RoPEMean失败轨迹的1200个相关源块诊断cell中，RPEE选中69、Quest55；竞争块上界膨胀均值约26.38对26.80。该局部差异不是独立答案胜场，也没有对应当前例的能力修复。
+
+在扩大矩阵或改轴／阈值前，应先用现成原始Q/K在同m16预算检验**精确block-max目标**与**精确block-logmass目标**的完整生成。如果连精确max都不能恢复，当前例就没有支持继续优化RPEE的max近似；不将一个例子的失败外推为所有任务不可能。
+
+**后续实际核验：** `oracle_target_01`已完成两条，12.159秒，精确block-max和logmass都恢复了该例全部4个正确数字及EOS，但输出为空格分隔，仍未通过旧逗号串的严格指标。`mixture_causal_01`随后16.750秒完成3臂：PostMetric4和PreMetric4同样恢复该完整内容，匹配连续分组仍有错误。这支持从独立pair极值切回保留联合key结构的有限试验，后续32条结果如本文件顶部；不把内容恢复与旧严格字符串通过混淆。
+
+可在同一次必要回放中计算明确的误差分解。令g为真实rotary pair（非旋转坐标作为单维组），U为各组有效包围上界之和，T=Σ_g max_j(q_g·k_jg)，M=max_j Σ_g(q_g·k_jg)。则严格有U−M=(U−T)+(T−M)，两项非负。U−T是组内包围松弛，T−M是不同组的极值来自不同token的错拼。**即便每个pair都使用完全精确的支持函数，后项仍在。** 只对源块及实际竞争块求值即可；不能凭平均上界下降就继续投入。
+
+另已指出汇总器`joined` key遗漏row_id，多个输入的相同(layer,position,head,block)可能覆盖。当前单例无影响；扩为多例前应加入输入身份，已有diagnostics只需重新汇总，不需GPU重跑。
+
+### 为什么跨pair错拼是表示能力限制
+
+取原生pair为(0,2)、(1,3)。块A包含32次(1,1,0,0)与32次(−1,−1,0,0)；块B包含32次(1,−1,0,0)与32次(−1,1,0,0)。**每个pair的完整投影多重集合在A/B完全相同**，所以任何只缓存彼此独立pair统计、丢掉跨pair token对应关系的表示都无法区分两块；增加每个pair内部的统计精度也不解决。
+
+对q=(1,−1,0,0)，A的真max=0、真logmass=log64；B的真max=2、真logmass=log(64 cosh2)。两者的逐pair精确max之和T均为2。上述值与多重集合相等性已CPU直接核对。这严格说明独立pair摘要可以丢失与全维分数有关的信息；**没有证明真实失败由这一项主导**。必须在前述同轨迹oracle中检查其实际占比和最终答案恢复，不能据这个构造再开启更大pair/gate/频率矩阵。

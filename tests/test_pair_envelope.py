@@ -209,3 +209,15 @@ def test_builder_does_not_call_linalg_eigh(monkeypatch):
     cache = build_pair_envelope(keys, K=4)
     bound, _ = score_pair_envelope(q, cache)
     assert bool((bound.double() >= exact_max(keys, q)).all())
+
+
+def test_native_pair_marginals_cannot_identify_full_token_maximum():
+    """Same complete pair marginals can encode distinct joint support functions."""
+    a=torch.tensor([[1.,1.,0.,0.],[-1.,-1.,0.,0.]]).repeat(32,1)
+    b=torch.tensor([[1.,-1.,0.,0.],[-1.,1.,0.,0.]]).repeat(32,1)
+    q=torch.tensor([[1.,-1.,0.,0.]])
+    ca=build_pair_envelope(a[None,None],K=2)
+    cb=build_pair_envelope(b[None,None],K=2)
+    assert torch.equal(score_pair_envelope(q,ca)[0],score_pair_envelope(q,cb)[0])
+    assert (a@q[0]).max().item()==0
+    assert (b@q[0]).max().item()==2

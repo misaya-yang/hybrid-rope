@@ -167,3 +167,29 @@ The induced shared fine-window distribution changes by TV .060 versus .053, whil
 its top-32 window overlap with exact normalization remains .956 versus .977.
 This is a small frozen-trajectory diagnostic; native-kernel parity and final task
 consequences remain untested. It is not sufficient to justify a performance claim.
+
+## Bounded final comparison, 2026-09-08 / 09
+
+The latest result owner is `RESULT_20260908.md`; the two-hour user boundary is
+2026-09-09 00:13:46 UTC. A same-prefix native Qwen3B 32K source repair is now
+reproduced by exact max/logmass selectors and PostMetric4/PreMetric4 mixtures,
+including complete Dense token+EOS identity. RPEE and matched random pairs do
+not recover the complete answer. The old comma formatting mismatch remains
+explicit; it is not silently redefined as strict success.
+
+All 32 frozen new-key/placement examples completed under a corrected native chat
+header and literal whole-body+EOS endpoint: Dense 17/32, Mean 0/32, Quest64 3/32,
+QuestSplit32 8/32, PostMetric4 10/32, PreMetric4 11/32, MatchedContiguous4 1/32.
+The control matches PostMetric4 counts only. The stronger actual Quest32-page
+baseline, with the same 1024 remote-token budget and lossless BF16 endpoint
+metadata, is 13/32; its descriptor bytes are roughly half those of FP32 mixtures.
+All 256 saved streams were re-decoded from raw token IDs and their exact/EOS
+metrics verified; every one of the 63 raw correct streams also matches canonical
+expected token IDs plus EOS. Two capped Mean streams remain explicit failures.
+
+This establishes some fixed-page adaptive-summary repairs, not a validated
+quality-cost improvement or a position-specific benefit. Post/Pre differ by
+only 3 versus 2 paired correct outcomes. Nearest work already covers the major
+clustering/centroid/count-weighting constructions. Do not claim a novel method,
+a completed paper, or a universal negative result from this bounded evidence.
+No new model, parameter sweep or GPU queue follows automatically.

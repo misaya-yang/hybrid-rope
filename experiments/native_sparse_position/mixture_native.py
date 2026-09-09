@@ -5,6 +5,7 @@ import argparse,copy,hashlib,json,os,time
 from pathlib import Path
 import torch
 import torch.nn.functional as F
+from pair_envelope import build_quest,score_quest
 from transformers import AutoModelForCausalLM,AutoTokenizer
 from transformers.modeling_utils import ALL_ATTENTION_FUNCTIONS
 from transformers.models.qwen2.modeling_qwen2 import apply_rotary_pos_emb as rotate_qwen2
@@ -15,7 +16,7 @@ class Oracle:
         self.block,self.local,self.topk=block,local,topk
         self.layers={m.layer_idx:m for m in model.modules() if m.__class__.__name__ in ('Qwen2Attention','Qwen3_5Attention')}
         self.rotate=rotate_qwen35 if model.config.model_type=='qwen3_5' else rotate_qwen2
-        self.prefix_post={};self.summary={};self.q={};self.prefix_raw={};self.raw={};self.pos=0;self.mode='prefix';self.cos={};self.hooks=[];self.calls=0
+        self.prefix_post={};self.summary={};self.ranges={};self.q={};self.prefix_raw={};self.raw={};self.pos=0;self.mode='prefix';self.cos={};self.hooks=[];self.calls=0
         for i,m in self.layers.items():
             def pre(mod,args,kwargs,i=i):self.cos[i]=kwargs['position_embeddings']
             def qhook(mod,args,out,i=i):self.q[i]=out.view(*out.shape[:2],-1,self.layers[i].head_dim).transpose(1,2)
@@ -44,12 +45,15 @@ class Oracle:
         if q.shape[2]!=1 or k.shape[2]!=self.pos+1:raise RuntimeError('Only one-token causal continuation qualified')
         self.calls+=1;N=k.shape[2];H=q.shape[1];KV=k.shape[1];D=q.shape[-1]
         qs=self.q[i][0,:,0].float() if self.mode=='NoPEMean' else q[0,:,0].float()
-        nb=self.summary[self.mode][i][0].shape[1] if self.mode in self.summary else N//self.block
+        nb=self.summary[self.mode][i][0].shape[1] if self.mode in self.summary else self.ranges[self.mode][i].minimum.shape[1]//(2 if self.mode=='QuestSplit32' else 1) if self.mode in self.ranges else N//self.block
         starts=torch.arange(nb,device=q.device)*self.block
         eligible=(starts>0)&(starts+self.block<=N-self.local)
         count=min(self.topk,int(eligible.sum()))
         if count:
-            if self.mode in self.summary:
+            if self.mode in self.ranges:
+                fm=score_quest(qs*float(module.scaling),self.ranges[self.mode][i])[0]
+                if self.mode=='QuestSplit32':fm=fm.reshape(H,nb,2).amax(-1)
+            elif self.mode in self.summary:
                 means,lc=self.summary[self.mode][i]
                 dots=torch.einsum('kgd,kbrd->kgbr',qs.reshape(KV,H//KV,D)*float(module.scaling),means.float())
                 fm=(dots+lc[:,None]).logsumexp(-1).reshape(H,nb)
@@ -88,14 +92,19 @@ def summarize(keys,labels,R=4):
     for r in range(R):
         mask=labels==r;count=mask.sum(-1);counts.append(count)
         means.append((keys*mask[:,:,None]).sum(1)/count[:,None].clamp_min(1))
-    return torch.stack(means,1).bfloat16(),torch.stack(counts,1)
+    return torch.stack(means,1),torch.stack(counts,1)
 
 def build(oracle):
     oracle.summary={m:{} for m in ('PostMetric4','PreMetric4','MatchedContiguous4')}
+    oracle.ranges={m:{} for m in ('Quest','QuestSplit32')}
+    oracle.build_info={}
     for i,k in oracle.prefix_post.items():
         KV,N,D=k.shape[1:];nb=N//oracle.block;B=oracle.block
         kr=k[0,:,:nb*B].reshape(KV*nb,B,D).float()
         kn=oracle.prefix_raw[i][0,:,:nb*B].reshape(KV*nb,B,D).float()
+        torch.cuda.synchronize();started=time.monotonic()
+        oracle.ranges['Quest'][i]=build_quest(kr.reshape(KV,nb,B,D))
+        oracle.ranges['QuestSplit32'][i]=build_quest(kr.reshape(KV,nb*2,B//2,D))
         post=labels_farthest(kr);pre=labels_farthest(kn)
         pm,counts=summarize(kr,post)
         contiguous=(torch.arange(B,device=k.device)[None,:,None]>=counts.cumsum(-1)[:,None,:-1]).sum(-1)
@@ -103,3 +112,6 @@ def build(oracle):
             means,ct=pair
             if not bool((ct.sum(-1)==B).all()) or not bool(torch.isfinite(means).all()):raise ValueError('Invalid cache summary')
             oracle.summary[method][i]=(means.reshape(KV,nb,4,D),ct.float().log().reshape(KV,nb,4))
+        torch.cuda.synchronize()
+        oracle.build_info[i]={'seconds_all_methods':time.monotonic()-started,'methods':{m:{'descriptor_bytes':sum(t.numel()*t.element_size() for t in layers[i]),'dtype':'float32','representatives':4} for m,layers in oracle.summary.items()}}
+        oracle.build_info[i]['methods'].update({m:layers[i].byte_info() for m,layers in oracle.ranges.items()})

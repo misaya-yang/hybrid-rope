@@ -23,7 +23,7 @@ def main():
       if not s.get('eligible'):continue
       d['eligible_source_pairs']+=1;d['source_selected']+=s['selected_remote'];d['source_max_rank_top16']+=s['true_max_rank_min']<=16
       if s['upper_bound_inflation'] is not None:d['inflations'].append(s['upper_bound_inflation'])
-      key=(record['layer'],record['position'],head['head'],s['block']);joined.setdefault(key,{})[method]=s
+      key=(record['row_id'],record['layer'],record['position'],head['head'],s['block']);joined.setdefault(key,{})[method]=s
      d['competitor_inflations'].extend(s['upper_bound_inflation'] for s in head['selected_competitors'] if s.get('eligible') and s['upper_bound_inflation'] is not None)
   for d in flat.values():
    for k in ('inflations','competitor_inflations'):

@@ -1,3 +1,58 @@
+# Current phase — GPU off, unrestricted-time local research, 2026-09-09
+
+The user explicitly resumed research after the bounded failure: GPU is now off,
+and there is sufficient time to find a useful method. This supersedes the old
+two-hour stopping condition for local research. Do not connect to, restart or use
+a GPU, and do not download another model. Continue from local evidence, primary
+literature, mathematical derivation and decision-sufficient CPU experiments.
+The original modern-position research scope remains broad; page-summary repair
+is a failed candidate family, not the permanent definition of the objective.
+
+The core goal is active and not achieved. Existing raw results and failed
+constructions remain evidence. Separate a useful, falsifiable method proposal
+from demonstrated full-model success. One existing independent method agent is
+examining the actual compressed shared-KV reader and its nearest positional work;
+the primary agent is independently examining sparse indexing and alternative
+mechanisms. No new GPU matrix, coefficients or model-switch queue is authorized.
+The old heartbeat stays paused; the active goal controls this research task.
+
+---
+
+# Current bounded result — 2026-09-08, final comparisons complete
+
+The user imposed a two-hour deadline at 2026-09-08 22:13:46 UTC, ending
+2026-09-09 00:13:46 UTC. Do not reset it or automatically restart GPU work after
+it. The broad research goal is **not complete**. No new models/downloads were
+started in this bounded window. All requested comparison jobs have now ended. The local heartbeat `rope` is
+PAUSED; the broader goal remains unachieved.
+
+Read `experiments/native_sparse_position/RESULT_20260908.md` for verified evidence.
+The fixed native 32K source repair was reproduced autonomously by exact-max,
+exact-logmass, PostMetric4 and PreMetric4, with complete Dense token+EOS identity.
+RPEE, random-pair and Quest development controls did not recover the complete
+answer. The fixed old comma-format contract still fails even for Dense; these
+are content/trajectory restorations, not strict successes under that old format.
+
+A frozen 32-row new-key/placement assay, with corrected native assistant header and
+raw full-string+EOS scoring, finished 224 outputs: Dense 17/32, RoPEMean 0/32, Quest64 3/32,
+QuestSplit32 8/32, PostMetric4 10/32, PreMetric4 11/32,
+MatchedContiguous4 1/32 correct.
+Post/Pre do not demonstrate a position-specific advantage. The stronger actual
+Quest32-page baseline finished 32 outputs at 13 correct, all EOS, using roughly
+half the candidate descriptor memory via lossless BF16 extrema. No quality-cost
+superiority or sufficiently novel algorithm was established. Do not relabel this
+as a solid-accept result or substitute this report for the requested finished paper.
+
+All raw streams, paired summaries, hashes and matching source snapshots are under
+`results/position_observability_20260908/`. Remote parent remains
+`/root/autodl-tmp/position_observability_20260908`, SSH port27741. Check actual status
+rather than stale PIDs. Preserve assets and failure receipts. No job queue,
+parameter sweep, model transfer, commit, push, deletion or server shutdown follows
+automatically. Main paper remains the provisional budget draft; no unsupported
+native sparse-position paper has been substituted for it.
+
+---
+
 # Latest user correction — 2026-09-08
 
 Do not narrow the research objective, hop models after small negative diagnostics,
