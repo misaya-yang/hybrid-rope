@@ -12,7 +12,7 @@ from pathlib import Path
 import torch
 from torch import Tensor
 
-from .operator import OperatorFactors, Shape, native_response
+from .operator import OperatorFactors, Shape, native_frequencies, native_response
 
 
 def digest(path: str | Path) -> str:
@@ -179,6 +179,8 @@ def fit_layer(factors: OperatorFactors, paths: list[Path], config: FitConfig, ou
         raise ValueError("at least one part of the method must be learnable")
     optimizer = torch.optim.Adam(groups)
     started = time.monotonic()
+    if (output / "fit.jsonl").exists():
+        (output / "fit.jsonl").replace(output / f"fit_previous_attempt_{time.time_ns()}.jsonl")
     with (output / "fit.jsonl").open("w") as log:
         for step in range(config.steps):
             path = paths[step % len(paths)] if step < len(paths) else rng.choice(paths)
@@ -218,8 +220,14 @@ def diagnose(factors: OperatorFactors, paths: list[Path], position_scale: float 
         item = {k: float(v) for k, v in squared_metrics(teacher, student).items()}
         static_teacher, static_student = responses(factors, record, 0.0)
         static_error = squared_metrics(static_teacher, static_student)["score_mse"]
+        teacher_change = ts - static_teacher[0]
+        student_change = ss - static_student[0]
+        position_error = student_change - teacher_change
+        position_mse = position_error[:, valid].square().mean()
         item.update(id=record["id"], source_id=record["source_id"], attention_kl=float(kl),
                     static_score_mse=float(static_error),
+                    position_response_mse=float(position_mse),
+                    relative_position_response_mse=float(position_mse / teacher_change[:, valid].square().mean().clamp_min(1e-8)),
                     log_mass_mae=float((ts.masked_fill(~valid[None], -torch.inf).logsumexp(-1) -
                                         ss.masked_fill(~valid[None], -torch.inf).logsumexp(-1)).abs().mean()))
         eligible = valid.sum(-1) >= 2
@@ -228,14 +236,42 @@ def diagnose(factors: OperatorFactors, paths: list[Path], position_scale: float 
             student_top = ss[:, eligible].gather(-1, top.indices)
             item["teacher_top2_margin_mae"] = float(((top.values[..., 0] - top.values[..., 1]) -
                                                      (student_top[..., 0] - student_top[..., 1])).abs().mean())
-        distance = (record["query_positions"][:, None] - record["key_positions"][None, :]).float() * position_scale
+        distance = (record["query_positions"].float() * position_scale).round()[:, None] - (record["key_positions"].float() * position_scale).round()[None, :]
         item["distance_bins"] = []
         for lo, hi in ((0, 256), (256, 2048), (2048, 4096), (4096, 16384), (16384, math.inf)):
             use = valid & (distance >= lo) & (distance < hi)
             if use.any():
                 item["distance_bins"].append({"min": lo, "max_exclusive": None if math.isinf(hi) else hi,
-                                               "pairs": int(use.sum()), "score_mse": float((ss - ts)[:, use].square().mean())})
+                                               "pairs": int(use.sum()), "score_mse": float((ss - ts)[:, use].square().mean()),
+                                               "position_response_mse": float(position_error[:, use].square().mean())})
         rows.append(item)
     scalar_keys = [key for key in rows[0] if isinstance(rows[0][key], (float, int))] if rows else []
     return {"position_scale": position_scale, "documents": len(rows), "rows": rows,
             "means": {key: sum(row[key] for row in rows if key in row) / sum(key in row for row in rows) for key in scalar_keys}}
+
+
+@torch.inference_mode()
+def generator_diagnostics(factors: OperatorFactors):
+    """Geometric mechanism measurements; these are not model-quality guarantees."""
+    s = factors.shape
+    frequencies = native_frequencies(s, device=factors.B.device, dtype=factors.B.dtype)
+    generator = torch.zeros(s.kv_width, s.kv_width, device=factors.B.device, dtype=factors.B.dtype)
+    pair = torch.arange(s.head_dim // 2, device=factors.B.device)
+    for head in range(s.kv_heads):
+        real, imag = head * s.head_dim + pair, head * s.head_dim + s.head_dim // 2 + pair
+        generator[real, imag], generator[imag, real] = -frequencies, frequencies
+    compressed = torch.zeros(s.rotary_dim, s.rotary_dim, device=generator.device, dtype=generator.dtype)
+    index = torch.arange(s.rotary_dim // 2, device=generator.device)
+    compressed[2 * index, 2 * index + 1] = -factors.frequencies
+    compressed[2 * index + 1, 2 * index] = factors.frequencies
+    residual = generator @ factors.B - factors.B @ compressed
+    basis, singular, _ = torch.linalg.svd(factors.B, full_matrices=False)
+    tolerance = torch.finfo(singular.dtype).eps * max(factors.B.shape) * singular[0]
+    rank = int((singular > tolerance).sum())
+    basis = basis[:, :rank]
+    leakage = generator @ basis - basis @ (basis.T @ generator @ basis)
+    return dict(key_projection_rank=rank, key_projection_norm=float(factors.B.norm()),
+                generator_intertwining_residual_frobenius=float(residual.norm()),
+                relative_generator_residual=float(residual.norm() / factors.B.norm().clamp_min(1e-12)),
+                subspace_leakage_frobenius=float(leakage.norm()),
+                subspace_leakage_spectral=float(torch.linalg.matrix_norm(leakage, ord=2)) if rank else 0.0)

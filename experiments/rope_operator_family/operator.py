@@ -91,7 +91,7 @@ def freqfold_rotation(keys: Tensor, shape: Shape, fold: int) -> Tensor:
     weight = weight.reshape(h, d // fold, fold // collapse, collapse, width)
     weight = weight.permute(3, 0, 2, 1, 4).reshape(h * fold, d // fold, width)
     weight = torch.einsum("dhc,hdw->cdw", u, weight)
-    weight = weight.reshape(collapse, h, d // fold // 2, fold // collapse, 2, width)
+    weight = weight.reshape(collapse, h, fold // collapse, 2, d // fold // 2, width)
     return weight.permute(0, 1, 4, 2, 3, 5).reshape(width, width)
 
 

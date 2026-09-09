@@ -1,0 +1,73 @@
+{
+  "verified_at_utc": "2026-09-09T08:58:01.469755+00:00",
+  "scope": "Single-method code preparation. Tiny random Qwen fixtures, not mature-model research results.",
+  "local": {
+    "python": "3.13.11",
+    "torch": "2.10.0",
+    "transformers": "5.2.0",
+    "device": "cpu",
+    "tests": 13,
+    "passed": true,
+    "fixture_test_seconds": 1.432
+  },
+  "remote": {
+    "ssh": "ssh -p 18164 root@connect.westd.seetacloud.com",
+    "directory": "/root/autodl-tmp/operator_family_prepare_20260909",
+    "python": "3.12.3",
+    "torch": "2.8.0+cu128",
+    "transformers": "4.57.6",
+    "device": "cpu",
+    "tests": 13,
+    "passed": true,
+    "fixture_test_seconds": 9.49
+  },
+  "coverage": [
+    "HF affine fusion with biases",
+    "full native GQA identity",
+    "same-frequency transformation",
+    "causality under phase intervention",
+    "projection/phase/content fit gradients",
+    "full static content preservation when only frequency changes",
+    "generator residual",
+    "padded prefill",
+    "incremental cached decode",
+    "FP32 and BF16",
+    "unique compact cache storage bytes",
+    "all CLI stages including report"
+  ],
+  "upstream_rotation_parity": {
+    "commit": "eaf4dde7a9b0592566166fd347959738e70ecefd",
+    "source": "TransMLA_NeurIPS_2025/transmla/partial_rope.py",
+    "checked_rotary_dim_and_fold": [
+      [
+        8,
+        1
+      ],
+      [
+        4,
+        2
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "maximum_absolute_error": 0.0
+  },
+  "source_sha256": {
+    "__init__.py": "65a5d613c82ba80638966b295a187741883fd57faec6dcc197ba1596462931c9",
+    "model.py": "1aac6066923e947effc705aff53bbd3e4a7767589320bbe0f7b850fe3089f008",
+    "operator.py": "7cfc551c0df6ed07f2eb6678cf97656f11907d444b500e14ca9cd78a176d6226",
+    "prepare.py": "b30615c7d3ed293a007d2520fde1593b4b9b4564a07b69cbe1d0a6f79b214e09",
+    "report.py": "7a83a633692390567ddece5ba0af6606576ee9ce41266365c41c5008072fd279",
+    "run.py": "64882d7598bc24ff8bdd561b74d56147fca3f50f928c5ae9beae4b7a1a277ce5",
+    "study.py": "171c3d0d54fc1ab997cd89cf4bb8a82e9d3863fe8438e0a16dbab6f52f58326d",
+    "test_operator.py": "bf8bb3af099b803526db4dfcbadb10b4af4ec4d7b15c6bba6df96cf9d027deb3"
+  },
+  "research_model_experiments": "not_started",
+  "representative_GPU_timing": "not_measured"
+}

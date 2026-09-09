@@ -1,5 +1,5 @@
 {
-  "status": "design_and_read_only_inventory_no_model_experiments",
+  "status": "single_method_code_prepared_and_tiny_model_verified",
   "checked_on": "2026-09-09",
   "scope": "Content-Weighted Compression of the RoPE Operator Family",
   "machine_snapshot": {
@@ -99,10 +99,10 @@
       "absolute_error": 0.9242412104390829,
       "kind": "independent scalar reconstruction of the supplied example; not an LM experiment"
     },
-    "model_adapter": "not_implemented",
-    "calibration_dataset_manifest": "not_prepared",
-    "model_experiments": "not_run",
-    "performance": "not_measured"
+    "model_adapter": "implemented; verified on tiny Qwen in local and remote environments",
+    "calibration_dataset_manifest": "preparation code verified; actual research corpus not prepared",
+    "model_experiments": "mature research model experiments not run",
+    "performance": "profile code verified on tiny fixtures; representative GPU performance not measured"
   },
   "inputs": {
     "selected_mainline": {
@@ -119,5 +119,18 @@
     }
   },
   "workspace_revision": "b8466ded3e878065fe8845d40fb9ae0f35b91613",
-  "design_sha256": "3826ac19e4f1bff7a85b48726dc55a57293d9f98d7ed323e4df68f2f3048631f"
+  "design_sha256": "ee2d19159303edc3877637209eef2eec304f574c2b1509dfc09d79ec2c949ed5",
+  "execution_scope": "method identification; one method configuration and one requested experiment per invocation",
+  "implementation_source_sha256": {
+    "__init__.py": "65a5d613c82ba80638966b295a187741883fd57faec6dcc197ba1596462931c9",
+    "model.py": "1aac6066923e947effc705aff53bbd3e4a7767589320bbe0f7b850fe3089f008",
+    "operator.py": "7cfc551c0df6ed07f2eb6678cf97656f11907d444b500e14ca9cd78a176d6226",
+    "prepare.py": "b30615c7d3ed293a007d2520fde1593b4b9b4564a07b69cbe1d0a6f79b214e09",
+    "report.py": "7a83a633692390567ddece5ba0af6606576ee9ce41266365c41c5008072fd279",
+    "run.py": "64882d7598bc24ff8bdd561b74d56147fca3f50f928c5ae9beae4b7a1a277ce5",
+    "study.py": "171c3d0d54fc1ab997cd89cf4bb8a82e9d3863fe8438e0a16dbab6f52f58326d",
+    "test_operator.py": "bf8bb3af099b803526db4dfcbadb10b4af4ec4d7b15c6bba6df96cf9d027deb3"
+  },
+  "validation_record": "validation.json",
+  "remote_code_directory": "/root/autodl-tmp/operator_family_prepare_20260909"
 }
