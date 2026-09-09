@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "remote_tests": 18,
+  "local_original_tests": 15,
+  "local_new_tests": 3,
+  "remote_log": "work/logs/followup_tests.log",
+  "source_sha256": {
+    "run.py": "4bbdd60e98f400db1872e3b89da1ae12763d12250b4636c47d2aff699164ad11",
+    "test_operator.py": "41afaf3ecbf7ee536caa3641bf5bdf9b76f41adcc2d9585230dd632dfc54f87a",
+    "operator.py": "29462fdeed0fb2448f6e7b4d96e32093a0a15d8b2a9fe436d2f450badbaf1d86",
+    "__init__.py": "65a5d613c82ba80638966b295a187741883fd57faec6dcc197ba1596462931c9",
+    "model.py": "1aac6066923e947effc705aff53bbd3e4a7767589320bbe0f7b850fe3089f008",
+    "progressive.py": "648ca742cf38a9ab38c82da91387dd9d596e3e0c7dfaccc1ff503443e97e1885",
+    "test_followups.py": "05ec3ef315b82f9ad1b2ee480c8ef39ea178c200dcae6ef0fd7fdb3e9c5f9dd2",
+    "report.py": "14e5cc6c7ecfee3a33084496ec05de692f81a43c9e1d97bc3aa091e494fdaa22",
+    "prepare.py": "b30615c7d3ed293a007d2520fde1593b4b9b4564a07b69cbe1d0a6f79b214e09",
+    "study.py": "dd027197c8523b8ae3144caf137cecb945bc06b9182d94f30ac14004ef871299"
+  },
+  "git_head_before_followups": "7f8a2764cbc777f29d0fa17a2c01e5dcc26ed3ce",
+  "protocol_sha256": "c22a54417bc979105d0897f108359620a48f740e1789061c5e7f16961e2e33cd",
+  "runtime": "Existing remote Torch 2.8.0+cu128 / Transformers 4.57.6; local aidemo Torch 2.10 / Transformers 5.2.0",
+  "note": "Code checks are not research outcomes; see separate run results."
+}

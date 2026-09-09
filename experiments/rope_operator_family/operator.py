@@ -120,7 +120,7 @@ class OperatorFactors(nn.Module):
         return {"shape": asdict(self.shape), "phase_scale": self.phase_scale}
 
     @classmethod
-    def from_freqfold(cls, keys: Tensor, values: Tensor, shape: Shape, fold: int | None = None):
+    def from_freqfold(cls, keys: Tensor, values: Tensor, shape: Shape, fold: int | None = None, balance_kv: bool = False):
         """Initialize one candidate. This is not a competing-method sweep."""
         if shape.content_rank > 2 * shape.kv_width - shape.rotary_dim:
             raise ValueError("content rank exceeds remaining K plus V width")
@@ -130,19 +130,26 @@ class OperatorFactors(nn.Module):
             j = freqfold_rotation(keys, shape, fold)
             selection = head_selection(shape, device=keys.device, dtype=keys.dtype)
             p, w = shape.rotary_dim, shape.kv_width
-            # No balancing is applied here: identical to upstream balance=None.
             remainder = keys @ j[p:].T
-            basis = principal_basis(torch.cat((remainder, values), dim=-1), shape.content_rank)
+            ratio = 1.0
+            if balance_kv:
+                # Balance mean per-channel L2 norms, then undo the K scaling in
+                # the decoder. All stored V channels participate in this layout.
+                kn, vn = remainder.norm(dim=0).mean(), values.norm(dim=0).mean()
+                if kn > 0 and vn > 0:
+                    ratio = float(kn / vn)
+            basis = principal_basis(torch.cat((remainder / ratio, values), dim=-1), shape.content_rank)
             result.B.copy_(j[:p].T)
             result.A.copy_(selection @ result.B)
             transform = torch.zeros(2 * w - p, 2 * w, device=keys.device, dtype=keys.dtype)
-            transform[:w - p, :w] = j[p:]
+            transform[:w - p, :w] = j[p:] / ratio
             transform[w - p:, w:] = torch.eye(w, device=keys.device, dtype=keys.dtype)
             result.C.copy_(transform.T @ basis)
-            result.P.copy_((selection @ j[p:].T) @ basis[:w - p])
+            result.P.copy_((selection @ j[p:].T) @ basis[:w - p] * ratio)
             result.U.copy_(basis[w - p:].T.unsqueeze(0) @ selection.transpose(-1, -2))
             collapse = shape.head_dim // p
             result.phase.copy_(native_frequencies(shape, device=keys.device, dtype=keys.dtype)[::collapse] * result.phase_scale)
+            result.initialization_balance = dict(enabled=balance_kv, key_divisor=ratio)
         return result
 
     @classmethod

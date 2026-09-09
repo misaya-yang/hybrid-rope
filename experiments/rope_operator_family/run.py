@@ -98,14 +98,19 @@ def fit_command(args):
                        phase_learning_rate=args.phase_learning_rate, max_position_scale=args.max_position_scale,
                        learn_projections=not args.freeze_projections, learn_frequency=not args.freeze_frequency,
                        learn_content=not args.freeze_content, value_weight=args.value_weight,
-                       output_weight=args.output_weight, seed=args.seed, score_weight=args.score_weight)
+                       output_weight=args.output_weight, seed=args.seed, score_weight=args.score_weight,
+                       attention_weight=args.attention_weight)
     if args.initialize_only:
         config.steps = 0
     specification = {"capture_sha256": digest(source / "manifest.json"), "shape": {**manifest["model_shape"],
                       "content_rank": args.content_rank, "rotary_dim": args.rotary_dim},
                       "fold": args.fold, "fit": asdict(config)}
+    if config.attention_weight == 0:
+        specification['fit'].pop('attention_weight')
     if args.initialize_only:
         specification["initialize_only"] = True
+        if args.balance_kv:
+            specification["balance_kv"] = True
     initialization = None
     if args.init_from:
         if args.initialize_only:
@@ -149,11 +154,12 @@ def fit_command(args):
                 keys.append(record["k"])
                 values.append(record["v"])
             shape = Shape(**specification["shape"])
-            factors = OperatorFactors.from_freqfold(torch.cat(keys).to(args.device), torch.cat(values).to(args.device), shape, args.fold)
+            factors = OperatorFactors.from_freqfold(torch.cat(keys).to(args.device), torch.cat(values).to(args.device), shape, args.fold, args.balance_kv)
             del keys, values
         try:
             if args.initialize_only:
-                fit_receipt = {"configuration": asdict(config), "optimizer_updates": 0, "checkpoint_role": "unoptimized_initialization"}
+                fit_receipt = {"configuration": asdict(config), "optimizer_updates": 0, "checkpoint_role": "unoptimized_initialization",
+                               "balance": getattr(factors, 'initialization_balance', None)}
             else:
                 fit_receipt = fit_layer(factors, paths, config, output / f"layer_{layer:03d}")
         except Exception as error:
@@ -364,6 +370,7 @@ def parser():
     c.add_argument("--content-rank", type=int, default=192); c.add_argument("--rotary-dim", type=int, default=64)
     c.add_argument("--fold", type=int)
     c.add_argument("--initialize-only", action="store_true", help="Save the same unoptimized initializer as one optional simple control; no optimizer runs")
+    c.add_argument("--balance-kv", action="store_true", help="Balance remaining K and V channel norms before initialization PCA")
     c.add_argument("--init-from", help="Use the exact saved unoptimized factors shared by the method and output-distillation control")
     c.add_argument("--steps", type=int, default=500)
     c.add_argument("--learning-rate", type=float, default=1e-3)
@@ -371,6 +378,7 @@ def parser():
     c.add_argument("--max-position-scale", type=float, default=8.0)
     c.add_argument("--score-weight", type=float, default=1.0, help="Operator-score objective weight; set 0 with --output-weight 1 for matched output distillation")
     c.add_argument("--value-weight", type=float, default=1.0); c.add_argument("--output-weight", type=float, default=0.0)
+    c.add_argument("--attention-weight", type=float, default=0.0, help="Teacher-to-student attention KL objective weight")
     c.add_argument("--freeze-projections", action="store_true"); c.add_argument("--freeze-frequency", action="store_true")
     c.add_argument("--freeze-content", action="store_true"); c.add_argument("--seed", type=int, default=42)
     c = command("diagnose", diagnose_command, device=True)

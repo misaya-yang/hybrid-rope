@@ -1,0 +1,20 @@
+{
+  "prepared_at_utc": "2026-09-09T10:45:46.845403+00:00",
+  "calibration_documents": 32,
+  "validation_documents": 8,
+  "capture_tokens_each": 2048,
+  "evaluation_tokens_each": 8193,
+  "core_input_tokens": 8189,
+  "core_records": 412,
+  "freeze_script_sha256": "2b0b21c7416e4e18397e56f15c24b88815071d5977b68da0a66f5b9bbf8b14a9",
+  "model_inference": "not_run",
+  "remote_work_directory": "/root/autodl-tmp/operator_family_prepare_20260909/work",
+  "source": "Official PG19 train bucket; 40 selected distinct books from 48 continuous-prefix candidates",
+  "documents_disjoint": true,
+  "manifests_sha256": {
+    "INPUTS_READY.json": "c4685c9f03a75fa573a0cdf457e0a606bb063cf73954d974561c13a360d778df",
+    "sources/manifest.json": "c2a1b0915cd0fe3c5bc4768e92f2b0d4b1a6f0282574dd2b0c1a273f4a85d5a6",
+    "data/manifest.json": "bb05e038284513f0ace44b48bc416f249ea34fd00665901f6477d02c0393cc2b",
+    "core/manifest.json": "f1eda4f9ff788b0a867723ef83f3d07d9c30a6247be604d252cfd4c208c28d3c"
+  }
+}

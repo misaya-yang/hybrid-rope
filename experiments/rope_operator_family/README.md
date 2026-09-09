@@ -6,6 +6,8 @@
 
 方法已经实现为不同的 A/B、可学习旋转频率和内容/value latent 的联合拟合。FreqFold/PCA 仅作初始化，默认不搜索其配置。模型接入保存共享 `c,k_R` 紧凑缓存；首个目标是现有 Qwen2.5-1.5B-Instruct。
 
+首次真实 GPU 运行已完成，见 [配对结果与原始证据](results/20260909_gpu/REPORT.md)：缓存减半；输出蒸馏的 NLL 为 3.94，score 拟合为 9.99，原模型为 2.65。两边均未恢复冻结检索题，当前不支持 score 目标的实际优势。
+
 ## 已准备的入口
 
 | 命令 | 这一种方法中研究/验证的内容 |
@@ -39,6 +41,8 @@ OPERATOR_MODEL=/root/autodl-tmp/qwen25_1p5b_32k
 模型代码支持标准 full-RoPE Qwen2/Llama 投影接口，目前验证的是 Qwen2。dynamic/scaled RoPE、Q/K normalization、sliding attention 需要相应的原始算子定义，不会被当成当前 Qwen 模型直接转换。
 
 ## 输入
+
+当前远端输入已经准备好，见 `input_readiness.json`：`work/data` 含32篇校准与8篇独立留出文档，来自官方PG19的不同书籍连续前缀，并用当前Qwen tokenizer编码；`work/core/prompt.txt` 是一个8189-token、412条记录的关联检索输入，答案为 `f83a9144`（另存 `work/core/answer.txt`）。来源、文档选择、tokenizer和文件哈希保存在 `work/sources/manifest.json`、`work/data/manifest.json` 和 `work/core/manifest.json`。首次 GPU 运行已完成；实际回答与留出 NLL 见上方结果链接。保留以下入口用于复现，已有 capture/初始化/拟合应复用。
 
 自然文本来源可以是 JSONL、单个 `.txt` 或包含多个 `.txt` 的目录。JSONL 每条为：
 
@@ -103,8 +107,8 @@ $OPERATOR_PYTHON -m experiments.rope_operator_family.run evaluate \
   --out work/nll.json --device cuda
 
 $OPERATOR_PYTHON -m experiments.rope_operator_family.run generate \
-  --model "$OPERATOR_MODEL" --factors work/operator --prompt prompt.txt --chat \
-  --max-new-tokens 128 --out work/answer.json --device cuda
+  --model "$OPERATOR_MODEL" --factors work/operator --prompt work/core/prompt.txt --chat \
+  --expected-answer f83a9144 --max-new-tokens 32 --out work/answer.json --device cuda
 ```
 
 `diagnose` 在一份已拟合模型上测真实 score、静态误差、相对位置响应误差 `position_response_mse`、距离分桶、top-key margin、attention KL、log-mass 与 value output。位置响应误差直接比较 `(ŝ_Δ−ŝ_0)−(s_Δ−s_0)`。它同时报告校准估计和留出观测；相位回放与真正长文本 NLL 分开解释。

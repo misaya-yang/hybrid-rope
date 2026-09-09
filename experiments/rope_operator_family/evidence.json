@@ -1,5 +1,5 @@
 {
-  "status": "single_method_code_prepared_and_tiny_model_verified",
+  "status": "first_matched_mature_model_gpu_run_complete",
   "checked_on": "2026-09-09",
   "scope": "Content-Weighted Compression of the RoPE Operator Family",
   "machine_snapshot": {
@@ -100,10 +100,11 @@
       "kind": "independent scalar reconstruction of the supplied example; not an LM experiment"
     },
     "model_adapter": "implemented; verified on tiny Qwen in local and remote environments",
-    "calibration_dataset_manifest": "preparation code verified; actual research corpus not prepared",
-    "model_experiments": "mature research model experiments not run",
-    "performance": "profile code verified on tiny fixtures; representative GPU performance not measured",
-    "objective_attribution": "Matched operator-score versus output-distillation pair implemented and tiny-model verified locally and remotely; no research-model run"
+    "calibration_dataset_manifest": "Prepared: 32 calibration and 8 disjoint validation PG19 books; actual Qwen tokenizer; input_readiness.json",
+    "model_experiments": "First mature Qwen2.5-1.5B matched pair completed; see first_gpu_run_20260909 and report.",
+    "performance": "Measured compact GPU cost and persistent KV bytes; no native speed comparison.",
+    "objective_attribution": "All 28 actual fitted-layer initial/data-schedule/update-count hashes match; score objective loses on full-model NLL.",
+    "core_input": "Frozen prompt evaluated: native and uncompressed identity adapter correct; both compact fitted checkpoints incorrect."
   },
   "inputs": {
     "selected_mainline": {
@@ -136,9 +137,29 @@
   "remote_code_directory": "/root/autodl-tmp/operator_family_prepare_20260909",
   "documents": {
     "DESIGN.md": "a2c29ee59851d2d8481a210e76a2c5c17b270d75e04bc37058fbc33eab2c5e1c",
-    "README.md": "d7fba5569735e485b4c40993a649a7240857c981bf868d30776e2f0d42a06bf1",
-    "EXPERIMENT_VALUE.md": "726eb810e8292ceef0a62e9bfd49d5d043b6c0a0f5b25e70fc4d03dbf8c434f5",
-    "RECENT_RESULTS_NOTE.md": "8b8d5d309be9e77fc9b176f7eefe4dc84e6e633bbbfe4dc01f6b32931901cf93"
+    "README.md": "e68f172dbbbcdedab4452d96064e53534ff27b7913c219be6e974f33173ba8d2",
+    "EXPERIMENT_VALUE.md": "5298423981de17795c2aa1197bd4e80253f7d6e65d3a14089cb2a524259a38b0",
+    "RECENT_RESULTS_NOTE.md": "8b8d5d309be9e77fc9b176f7eefe4dc84e6e633bbbfe4dc01f6b32931901cf93",
+    "results/20260909_gpu/REPORT.md": "f5cce68e5b5be599d4e74d74b6a32fa0531910b1886f7e034306205e8727f039"
   },
-  "project_agents_sha256": "97d482464761e2017825936b0e4a8bfee293c47cdc501d2371db321e55fc885a"
+  "project_agents_sha256": "97d482464761e2017825936b0e4a8bfee293c47cdc501d2371db321e55fc885a",
+  "input_readiness_record": "input_readiness.json",
+  "first_gpu_run_20260909": {
+    "status": "complete",
+    "report": "results/20260909_gpu/REPORT.md",
+    "artifacts": "results/20260909_gpu",
+    "native_nll": 2.6513874530792236,
+    "initialization_nll": 5.300756990909576,
+    "operator_nll": 9.989853024482727,
+    "output_kd_nll": 3.942716509103775,
+    "core_exact": {
+      "native": true,
+      "operator": false,
+      "output_kd": false
+    },
+    "matched_layers": 28,
+    "kv_bytes_8192": 117440512,
+    "decision": "Current score objective is worse for full-model behavior; output KD partially recovers initialization but does not restore core answer."
+  },
+  "machine_snapshot_note": "Historical no-GPU preparation snapshot; current GPU runtime is recorded in results/20260909_gpu/gpu_run_receipt.json."
 }

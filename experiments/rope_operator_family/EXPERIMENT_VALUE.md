@@ -214,16 +214,16 @@ $OPERATOR_PYTHON -m experiments.rope_operator_family.run fit \
 ```bash
 $OPERATOR_PYTHON -m experiments.rope_operator_family.run generate \
   --model "$OPERATOR_MODEL" --factors work/operator \
-  --prompt core_prompt.txt --chat --expected-answer blue \
+  --prompt work/core/prompt.txt --chat --expected-answer f83a9144 --max-new-tokens 32 \
   --out work/core_method.json --device cuda
 
 $OPERATOR_PYTHON -m experiments.rope_operator_family.run generate \
   --model "$OPERATOR_MODEL" --factors work/output_kd \
-  --prompt core_prompt.txt --chat --expected-answer blue \
+  --prompt work/core/prompt.txt --chat --expected-answer f83a9144 --max-new-tokens 32 \
   --out work/core_output_kd.json --device cuda
 ```
 
-`blue` 对应示例prompt中的已知答案，实际运行替换成真实参考。已有输出保留原始答案、严格exact-match、条件答案NLL以及模型、token输入和生成配置。下面以最后一层、同一留出记录的相同位置为例复用诊断；需要解释某个答案时，诊断对应其实际输入与query。
+上面使用已经冻结的真实实验输入：412条记录、8189个chat-template tokens、已知答案 `f83a9144`，不是前文的说明性 `blue` 示例。输入没有按模型回答挑选。已有输出保留原始答案、严格exact-match、条件答案NLL以及模型、token输入和生成配置。下面以最后一层、同一留出记录的相同位置为例复用诊断；需要解释某个答案时，诊断对应其实际输入与query。
 
 ```bash
 $OPERATOR_PYTHON -m experiments.rope_operator_family.run diagnose \

@@ -120,14 +120,21 @@ def load_record(path: str | Path, device="cpu"):
             if isinstance(v, Tensor) else v for k, v in record.items()}
 
 
-def responses(factors, record, position_scale=1.0):
+def responses(factors, record, position_scale=1.0, teacher_record=None):
     q, k, v = (record[name] for name in ("q", "k", "v"))
     original_qp, original_kp = record["query_positions"], record["key_positions"]
     # Causality belongs to token order, even if all phases are set to zero.
     valid = original_kp[None, :] <= original_qp[:, None]
     qp, kp = (original_qp.float() * position_scale).round(), (original_kp.float() * position_scale).round()
     with torch.no_grad():
-        teacher = native_response(q, k, v, qp, kp, factors.shape, valid)
+        if teacher_record is None:
+            teacher = native_response(q, k, v, qp, kp, factors.shape, valid)
+        else:
+            if record['id'] != teacher_record['id'] or any(not torch.equal(record[name], teacher_record[name])
+                    for name in ('query_positions', 'key_positions')):
+                raise ValueError('student and teacher must describe the same tokens and queries')
+            teacher = native_response(*(teacher_record[name] for name in ('q', 'k', 'v')),
+                                      qp, kp, factors.shape, valid)
     student = factors.response(q, k, v, qp, kp, valid)
     return teacher, student
 
@@ -139,9 +146,12 @@ def squared_metrics(teacher, student):
     score = error.square().mean()
     output = (so - to).square().mean()
     value = (sv - tv).square().mean()
+    tp = ts.masked_fill(~valid[None], -torch.inf).log_softmax(-1)
+    sp = ss.masked_fill(~valid[None], -torch.inf).log_softmax(-1)
+    kl = (tp.exp() * (tp.masked_fill(~valid[None], 0) - sp.masked_fill(~valid[None], 0))).sum(-1).mean()
     return dict(score_mse=score, relative_score_mse=score / reference.square().mean().clamp_min(1e-8),
                 output_mse=output, relative_output_mse=output / to.square().mean().clamp_min(1e-8),
-                value_mse=value, relative_value_mse=value / tv.square().mean().clamp_min(1e-8))
+                value_mse=value, relative_value_mse=value / tv.square().mean().clamp_min(1e-8), attention_kl=kl)
 
 
 @dataclass
@@ -157,24 +167,30 @@ class FitConfig:
     output_weight: float = 0.0
     seed: int = 42
     score_weight: float = 1.0
+    attention_weight: float = 0.0
 
 
 def fitting_loss(metrics, config: FitConfig):
     """Matched objectives on the same forward: operator scores or output KD."""
     terms = ((config.score_weight, "relative_score_mse"),
              (config.value_weight, "relative_value_mse"),
-             (config.output_weight, "relative_output_mse"))
+             (config.output_weight, "relative_output_mse"),
+             (config.attention_weight, "attention_kl"))
     if any(not math.isfinite(weight) or weight < 0 for weight, _ in terms) or not any(weight > 0 for weight, _ in terms):
         raise ValueError("loss weights must be finite, nonnegative, with at least one positive")
     return sum(weight * metrics[name] for weight, name in terms if weight > 0)
 
 
-def fit_layer(factors: OperatorFactors, paths: list[Path], config: FitConfig, output: str | Path):
+def fit_layer(factors: OperatorFactors, paths: list[Path], config: FitConfig, output: str | Path, teacher_paths=None):
     """One configuration, one optimization trajectory. No arm/search loop."""
     if not paths or config.steps < 1 or config.max_position_scale < 1:
         raise ValueError("fit needs calibration records, positive steps and a scale >= 1")
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
+    if teacher_paths is not None and len(teacher_paths) != len(paths):
+        raise ValueError('student/teacher record counts differ')
+    teachers = dict(zip(paths, teacher_paths)) if teacher_paths is not None else {}
+    teacher_schedule, teacher_hashes = hashlib.sha256(), {}
     rng = random.Random(config.seed)
     device = factors.A.device
     groups = []
@@ -203,12 +219,17 @@ def fit_layer(factors: OperatorFactors, paths: list[Path], config: FitConfig, ou
             path = paths[step % len(paths)] if step < len(paths) else rng.choice(paths)
             record = load_record(path, device)
             scale = 1.0 if step % 2 == 0 else math.exp(rng.uniform(0, math.log(config.max_position_scale)))
-            teacher, student = responses(factors, record, scale)
+            teacher_record = load_record(teachers[path], device) if teachers else None
+            teacher, student = responses(factors, record, scale, teacher_record)
             metrics = squared_metrics(teacher, student)
             loss = fitting_loss(metrics, config)
             if path not in record_hashes:
                 record_hashes[path] = digest(path)
             schedule.update(json.dumps([record_hashes[path], scale]).encode())
+            if teachers:
+                if path not in teacher_hashes:
+                    teacher_hashes[path] = digest(teachers[path])
+                teacher_schedule.update(json.dumps([teacher_hashes[path], scale]).encode())
             if not torch.isfinite(loss):
                 raise FloatingPointError(f"nonfinite loss at layer fit step {step}")
             optimizer.zero_grad(set_to_none=True)
@@ -224,6 +245,7 @@ def fit_layer(factors: OperatorFactors, paths: list[Path], config: FitConfig, ou
                 print(json.dumps({"stage": "fit", **item}), flush=True)
     return {"configuration": asdict(config), "seconds": time.monotonic() - started, "last": item,
             "initial_state_sha256": initial.hexdigest(), "data_position_schedule_sha256": schedule.hexdigest(),
+            "teacher_data_position_schedule_sha256": teacher_schedule.hexdigest() if teachers else schedule.hexdigest(),
             "optimizer_updates": config.steps}
 
 
