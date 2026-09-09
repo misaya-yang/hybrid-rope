@@ -35,6 +35,14 @@ orthogonal factors preserve the two canonical correlations and therefore
 $c_{\omega\nu}$. The metric is consequently attached to the positional
 subspaces themselves, not to a chosen sine/cosine phase convention.
 
+\begin{theorem}[Spectral budget identity]
+\label{thm:budget}
+For the block-whitened Gram matrix $\Gamma$ with diagonal blocks $I_2$,
+$\operatorname{tr}\Gamma=2K$ and
+$\operatorname{tr}(\Gamma^2)=2K[1+(K-1)\bar c]$. Hence its
+R\'enyi-$2$ effective rank is given by \eqref{eq:budget-identity}.
+\end{theorem}
+
 \begin{proof}[Proof of Theorem~\ref{thm:budget}]
 $\Gamma$ is the block matrix with blocks $\Gamma_{ij}=Q_{\omega_i\omega_j}$ and
 $\Gamma_{ii}=I_2$. Hence $\operatorname{tr}\Gamma=\sum_{i=1}^K\operatorname{tr}I_2=2K$.
@@ -274,6 +282,18 @@ with the basis that trained them.
 
 \subsection{Post-hoc transplant obstruction}
 \label{sec:obstruction-proof}
+
+\input{tables/table_coadapt}
+
+\begin{theorem}[Post-hoc transplant obstruction]
+\label{thm:obstruction}
+Let $\mathcal R_\Omega(\Delta)$ be the block-rotation operator of a frequency
+multiset $\Omega$. If position-independent invertible maps $A,B$ satisfy
+$A^\top\mathcal R_{\Omega'}(\Delta)B=\mathcal R_\Omega(\Delta)$ on an open
+interval containing zero, then $\Omega'$ and $\Omega$ have the same frequency
+multiset up to sign and permutation. Repeated frequencies may mix within their
+full equal-frequency invariant subspace.
+\end{theorem}
 
 \begin{proof}[Proof of Theorem~\ref{thm:obstruction}]
 Both $\mathcal R_\Omega$ and $\mathcal R_{\Omega'}$ are block-diagonal with $2\times2$ rotation
@@ -587,13 +607,9 @@ expansion \citep{gray1998quantization} is
 \mathcal{D}_K[\rho] \;=\; \frac{1}{12K^2}\int_0^1 \frac{w(\phi)}{\rho(\phi)^2}\,d\phi + O(K^{-3}).
 \label{eq:high-res-distortion}
 \end{equation}
-This expansion describes a smooth quantization objective. Its powers of $K$
-do not imply that the benefit of EVQ in a trained model increases as rotary
-width decreases. Anchoring leaves no interior freedom at $K=2$, when the
-geometric and EVQ grids coincide. The MLA result at one fixed $K=16$ also
-cannot test a budget interaction. The finite-distance bounds in
-App.~\ref{sec:budget-proofs} and the registered factorial experiment keep
-these mathematical and empirical questions separate.
+This expansion quantifies how finite exponent samples approximate a continuous
+allocation under a smooth distortion. For endpoint-anchored comparisons,
+$K=2$ leaves no interior entries and the geometric and Cosh grids coincide.
 
 \paragraph{Large-$\tau$ regime.} At large $\tau$,
 $m_\tau{=}\tau/\sinh\tau$ becomes small and the $1/(Km_\tau)$ factor grows.

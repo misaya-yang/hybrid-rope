@@ -1,36 +1,21 @@
 \section{Discussion}
 \label{sec:discussion}
 
-Designed interior allocations produce strong capability changes in fully frozen
-checkpoints, remain actionable under matched low-rank adaptation, and alter
-outcomes through training-time weight--table co-adaptation. These three
-intervention stages establish $z$ as a controllable RoPE design coordinate.
-Exact full-subspace geometry explains how allocations change the available
-positional basis; the weights-by-table crossing and transplant obstruction
-explain why the intervention stage matters.
+Exponent allocation connects a simple implementation choice to the positional
+basis a model learns to use. The fixed-range experiments show that reshaping
+the exponents changes length generalization; the subspace analysis explains
+how that reshaping changes the distribution of positional directions.
+\evq{} turns this view into a closed-form construction, with substantial
+long-context gains across the trained and adapted models.
 
-Support and allocation are complementary, interacting coordinates. The
-fixed-support controls hold $K$, both endpoints, and the RoPE operator constant
-to identify $z$ alone, while target-aware support retargeting reverses the tested
-ordering. A realised table therefore reflects both sampled support $(a,R)$ and
-the interior allocation $z$ of its fixed $K$ pairs; frequency transport may
-change both at once.
+The frozen-model results add a second perspective. Expressing a change as a
+displacement from the native exponents makes blends, log-frequency shifts, and
+mixed-radix rules directly comparable. Their different outcomes across
+checkpoints show that the original learned representation is part of the design
+problem. An exponent table should therefore be specified together with its
+sampled range and the way it is installed.
 
-Across the autoregressive text protocols that evaluate both the original
-training or Native window and longer positions, the comparisons reveal a
-within-protocol crossover: the baseline is stronger near the original window,
-while the reallocated table overtakes it beyond that window. This recurring
-behavioural signature of finite-budget reallocation directly motivates the
-Native/long session route. The video DiT shows another regime: both
-training-frame and extrapolated-frame MSE improve ($-21\%$ on training frames
-and $-35\%$ on far extrapolated frames), and its pre-specified diagnostic
-connects the gain to in-window phase coverage. Together with LeRoPE's learned
-in-window allocations, these results make a single zero-training allocation
-that itself improves Native-window and long-range capability---rather than
-preserving the former through routing---the natural next method direction.
-
-The practical consequence is that a finite RoPE table should be specified by
-both its sampled support and its interior allocation. A shared base, endpoint,
-or pair count does not by itself define a matched finite table. Treating $z$ as
-an explicit design object makes allocation measurable and controllable across
-training, adaptation, and deployment.
+A natural next step is to study exponent allocation under sparse attention.
+Selective access to tokens and compressed representations change which
+positional distinctions reach the reader. The framework developed here provides
+a way to ask how the exponent distribution should serve those architectures.

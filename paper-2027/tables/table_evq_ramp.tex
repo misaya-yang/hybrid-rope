@@ -1,22 +1,18 @@
-\begin{table}[!htb]
-\caption{\textbf{Substrate $\times$ range composition}
-($454$M, $\Ltr{=}2048$, $10\%$ passkey mix, $3$ seeds). $\rs{}$ is the
-repository's fixed-index operator (App.~\ref{sec:ramp-scaler}), applied at the
-\emph{same} fixed scale $s{=}8$ to both substrates. PK is teacher-forced
-NLL-gap retrieval; PK@$8$K is mean$\pm$std, other entries are $3$-seed means.}
-\label{tab:evq-ramp}
-\centering
-\small
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{0.95}
+\begin{table}[ht]
+\centering\small
+\caption{Matched fixed-ramp composition on the $454$M three-seed experiment.
+$\mathcal R_8$ is defined in Eq.~\eqref{eq:repo-range-scaler}.
+PPL uses full-sequence scoring; PK is teacher-forced NLL-gap retrieval.
+Entries are three-seed means; PK@$8$K also gives the standard deviation.}
+\label{tab:evq-repo-ramp}
 \begin{tabular}{@{}lccccc@{}}
 \toprule
-Method & PK@$8$K & PK@$12$K & PK@$16$K & PPL@$8$K & PPL@$16$K \\
+Table & PK@$8$K & PK@$12$K & PK@$16$K & PPL@$8$K & PPL@$16$K \\
 \midrule
-Geo & $41{\scriptstyle\pm5}$\% & 57\% & 51\% & 161.9 & 253.2 \\
-Geo$+\rs{}$ & $61{\scriptstyle\pm3}$\% & 59\% & 51\% & 82.9 & 157.7 \\
-\evq{} & $53{\scriptstyle\pm8}$\% & 63\% & 50\% & 150.3 & 229.5 \\
-\textbf{\evq{}$+\rs{}$} & $\mathbf{100{\scriptstyle\pm0}}$\textbf{\%} & \textbf{79\%} & \textbf{68\%} & \textbf{70.9} & \textbf{107.5} \\
+Geo & $41{\scriptstyle\pm5}\%$ & $57\%$ & $51\%$ & 161.9 & 253.2 \\
+Geo+$\mathcal R_8$ & $61{\scriptstyle\pm3}\%$ & $59\%$ & $51\%$ & 82.9 & 157.7 \\
+\evq{} & $53{\scriptstyle\pm8}\%$ & $63\%$ & $50\%$ & 150.3 & 229.5 \\
+\evq{}+$\mathcal R_8$ & $\mathbf{100}{\scriptstyle\pm0}\%$ & $\mathbf{79\%}$ & $\mathbf{68\%}$ & \textbf{70.9} & \textbf{107.5} \\
 \bottomrule
-\end{tabular}%
+\end{tabular}
 \end{table}

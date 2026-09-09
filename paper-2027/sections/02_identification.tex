@@ -1,49 +1,32 @@
-\section{Support--Allocation Causal Decomposition}
-\label{sec:identification}
-
-\subsection{Fixed support isolates structured allocation}
+\subsection{Does exponent shape matter at fixed range?}
 \label{sec:exp-identify}
 
-\paragraph{A clean interior-allocation intervention.}
-Within each of three $151.9$M training seeds, both arms share architecture,
-initialisation, token order, optimiser, LR schedule, global batch, a
-$499{,}974{,}144$-token budget, and $32$ evaluation anchors. The baseline is
-FMRoPE at fixed training support, implementing \citet[\S6.1]{oka2026fmrope}
-with $\theta{=}L_{\mathrm{train}}{=}256$ and geometric exponents. Anchored
-\evq{} ($\tau{=}4$) normalises its quantiles to the same extrema and log-span,
-so only the $K{-}2=30$ interior frequencies move while retaining the deployed
-Cosh table's $z$.
-Every training seed favours anchored \evq{} at every OOD length. Anchored
-\evq{} minus FMRoPE NLL is $+0.026$ at the $256$-token training length and
-$-0.281/-0.176/-0.146$ at $512$/$1$K/$2$K
-(Fig.~\ref{fig:spectral-budget-overview}b). No geometric base can reproduce this
-intervention once the sampled support is pinned: \emph{fixed support $+$
-different $z$ $\Rightarrow$ different trained-model behaviour.} Thus $z$ is a
-separately identifiable coordinate, not a disguised base change.
+We trained paired $151.9$M models at length $256$ with $K=32$ rotary pairs.
+Within each of three seeds, architecture, initialization, token order, optimizer,
+schedule, and the $499{,}974{,}144$-token budget are identical. The geometric
+arm follows the FMRoPE training-base rule $b=L_{\mathrm{train}}$
+\citep{oka2026fmrope}; the Cosh arm anchors its $\tau=4$ quantiles to the same
+two endpoints. Only the $30$ interior exponents differ.
 
-\paragraph{Target-aware support identifies the second coordinate.}
-The second condition permits the declared $L_{\mathrm{target}}$ to retarget each
-arm's sampled support while preserving its normalised interior shape, giving the
-paper-faithful FMRoPE control its intended target-aware input. The ordering then
-reverses in all three seeds: anchored \evq{} minus FMRoPE NLL is
-$+0.060/+0.227/+0.460$ at $512$/$1$K/$2$K. The two conditions answer different
-causal questions. Fixed support isolates the effect of structured interior
-allocation; target-aware retargeting shows how support selection changes which
-allocation is effective.
-Their reversal establishes support and allocation as distinct but interacting
-coordinates of the same finite table. The full protocol, per-seed contrasts,
-and both support conditions are in App.~\ref{sec:identification-details}.
+At the fixed training range, Cosh lowers tail NLL at $512$, $1$K, and $2$K in
+all three seeds (Fig.~\ref{fig:spectral-budget-overview}). The mean
+Cosh-minus-geometric differences at $256/512/1024/2048$ are
+$+0.026/-0.281/-0.176/-0.146$. Exponent shape therefore changes learned
+length generalization even when no scalar base change is available to explain
+the result.
 
-\paragraph{Configuration and shape breadth.}
-The fixed-support result is not confined to one base, head width, or Cosh
-strength. A pre-specified $50.9$M factorial crosses two bases, two training
-lengths, three head dimensions, and three paired seeds while pinning sampled
-endpoints and log-span in every arm. Three Cosh strengths and a
-deformation-matched exponential provide four structured non-geometric curves.
-The strongest Cosh arm improves the weighted OOD objective in $10/12$
-configurations; the matched exponential does so in $9/12$ and closely tracks the
-formula-Cosh arm. This broadens the finding from one curve to a family of
-structured allocations: Cosh supplies the analytic construction, while the
-$151.9$M intervention above remains the effect-size owner. The complete matrix
-is in App.~Table~\ref{tab:m4}; model-scale persistence is tested separately in
-\S\ref{sec:exp-mature}.
+A separate evaluation retargets each table's range to the declared test length
+while preserving its normalized exponent shape. This intervention favors the
+geometric arm, with Cosh-minus-geometric NLL
+$+0.060/+0.227/+0.460$ at $512/1$K/$2$K. Range selection and exponent
+allocation consequently need to be evaluated together when composing a
+deployment table. The complete paired curves and training details appear in
+Appendix~\ref{sec:identification-details}.
+
+A further $50.9$M factorial varies two bases, two training lengths, three head
+dimensions, and three paired seeds, with endpoints pinned in every comparison.
+It evaluates three Cosh strengths and a deformation-matched exponential.
+The strongest tested Cosh setting improves the weighted OOD objective in
+$10/12$ configurations, and the exponential in $9/12$
+(App.~Table~\ref{tab:m4}). The common benefit across these structured shapes
+extends the fixed-range result beyond a single curve.

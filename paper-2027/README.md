@@ -1,46 +1,20 @@
-# `paper-2027/` — active ICLR 2027 package
+# Beyond the Base: Exponent Allocation in RoPE
 
-This is the only active manuscript. `../paper/` is the immutable NeurIPS 2026
-baseline and must never be edited, compiled, moved, or regenerated.
+`main.tex` is the active ICLR 2027 manuscript. The paper studies exponent
+allocation through positional geometry, EVQ-Cosh construction, trained-model
+comparisons, and adjustments to frozen mature models.
 
-## Read for the task
+- Read the paper: [main.pdf](main.pdf) and [main.tex](main.tex).
+- Build the PDF: `bash paper-2027/compile.sh` from the repository root.
+- Rebuild the revision figures from recorded results:
+  `python3 paper-2027/figs/make_exponent_revision_figures.py`.
+- Package the active source and all TeX dependencies:
+  `python3 paper-2027/package_source.py`.
+- Current revision scope: [REVISION_BRIEF.md](REVISION_BRIEF.md).
+- Manuscript state and verification: [HANDOFF.md](HANDOFF.md).
+- Writing choices: [NARRATIVE_GUIDE.md](NARRATIVE_GUIDE.md).
 
-1. [`../AGENTS.md`](../AGENTS.md) and [`../README.md`](../README.md) — rules and
-   paper core.
-2. [`HANDOFF.md`](HANDOFF.md) — latest PDF/Git/authorization state and actions.
-3. Current `main.tex`/`main.pdf` — reviewer-visible wording.
-4. Search [`../INDEX.md`](../INDEX.md) and open one owner only when verifying or
-   changing a scientific claim.
-
-Use [`NARRATIVE_GUIDE.md`](NARRATIVE_GUIDE.md) for stable manuscript strategy,
-[`REVISION_BRIEF.md`](REVISION_BRIEF.md) for manuscript/research coordination, and
-[`SUBMISSION_CHECKLIST.md`](SUBMISSION_CHECKLIST.md) for release gates. Historical
-reviews, closed plans, external-model bundles, and `research/` are not default
-cold-start inputs.
-
-## Research layers
-
-- `research/attention-aware-retrofit/theory/`: derivations and assumptions.
-- `research/attention-aware-retrofit/analysis/`: interpretation, audits and research questions.
-- `research/attention-aware-retrofit/preflights/`: frozen experiment protocols, grouped by research topic.
-- `research/attention-aware-retrofit/results/`: execution reports, grouped by the same topics; the current report keeps its shared path.
-- `research/attention-aware-retrofit/evidence/`: curated receipts; `research/history/` and `research/archive/` preserve history.
-- `../scripts/`: executable experiments, training and evaluation. Figure builders in `figs/` and frozen verification helpers retain their existing build dependencies.
-
-Use the existing [INDEX](../INDEX.md) for the exact owner, rather than reading
-all files within one layer. Historical results retain their date-based filenames.
-
-## Package contract
-
-- `main.tex` is the only manuscript entrypoint; `sections/` and `appendix/`
-  contain reviewer-facing source.
-- `figs/`, `tables/`, and `refs/` contain compiled assets and bibliography.
-- `compile.sh`/`build.mk` check format. Compilation does not validate science.
-- `research/` contains internal owners, receipts, analyses, and history. It is
-  excluded from the anonymous supplement except by curated allowlist.
-- Packaging must use the curated ICLR profile from the repository root; never
-  archive the root or compile `../paper/`.
-
-The handoff owns live checks and machine availability. Scientific claims route
-through `INDEX.md` to a direct owner. No plan, preflight, review, script, or
-document in this directory authorizes compute, Git publication, or upload.
+The source archive is `exponent-allocation-source.zip`. Experimental result
+owners remain in the repository and are identified in the internal evidence
+map. The complete earlier manuscript is available at `main_0726`; the NeurIPS
+source in `../paper/` retains its historical identity.

@@ -1,0 +1,32 @@
+\begin{table}[ht]
+\centering\small
+\caption{All six-task BM/MrRoPE-Pro comparisons. Values are official RULER task scores (\%); model-specific sample counts are given in Table~\ref{tab:bm-models}.}
+\label{tab:bm-full-tasks}
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+& & \multicolumn{2}{c}{Short} & \multicolumn{2}{c}{Long}\\
+Model & Task & MrPro & BM & MrPro & BM\\
+\midrule
+OLMo-$1$B & Single-2 & 75.00 & 100.00 & 0.00 & 100.00 \\
+ & MultiKey-2 & 25.00 & 100.00 & 0.00 & 37.50 \\
+ & MultiQuery & 18.75 & 87.50 & 0.00 & 43.75 \\
+ & Variable tracking & 25.00 & 70.00 & 0.00 & 10.00 \\
+ & Frequent words & 58.33 & 58.33 & 16.67 & 41.67 \\
+ & QA-1 & 25.00 & 75.00 & 0.00 & 75.00 \\
+\midrule
+Qwen-$3$B & Single-2 & 100.00 & 100.00 & 100.00 & 100.00 \\
+ & MultiKey-2 & 100.00 & 100.00 & 75.00 & 50.00 \\
+ & MultiQuery & 100.00 & 100.00 & 93.75 & 100.00 \\
+ & Variable tracking & 90.00 & 100.00 & 75.00 & 75.00 \\
+ & Frequent words & 83.33 & 100.00 & 75.00 & 75.00 \\
+ & QA-1 & 50.00 & 50.00 & 50.00 & 25.00 \\
+\midrule
+Qwen-$7$B & Single-2 & 100.00 & 100.00 & 100.00 & 100.00 \\
+ & MultiKey-2 & 100.00 & 100.00 & 100.00 & 100.00 \\
+ & MultiQuery & 100.00 & 100.00 & 100.00 & 100.00 \\
+ & Variable tracking & 100.00 & 80.00 & 90.00 & 60.00 \\
+ & Frequent words & 100.00 & 100.00 & 66.67 & 66.67 \\
+ & QA-1 & 0.00 & 0.00 & 50.00 & 0.00 \\
+\bottomrule
+\end{tabular}
+\end{table}

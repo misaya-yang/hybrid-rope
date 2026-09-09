@@ -6,7 +6,7 @@
 \subsection{OLMo-2 \texorpdfstring{$1.485$B}{1.485B}}
 \label{sec:olmo2-1b}
 
-All OLMo-2 \evq{} arms use the endpoint grid $u_k{=}k/K$ with $\tau{=}2$ and
+All OLMo-2 \evq{} arms use the standard $u_k{=}k/K$ grid with $\tau{=}2$ and
 base $500{,}000$; the frequency tensor is fixed throughout each continuation.
 
 \paragraph{Matched routing conversion.}
@@ -91,7 +91,7 @@ paired trajectory or a multi-seed causal estimate.
 \subsection{Frozen fixed-support allocation}
 \label{sec:frozen-fixed-support}
 
-The mature-checkpoint intervention in Fig.~\ref{fig:frozen-fixed-support}
+The mature-checkpoint intervention in Table~\ref{tab:frozen-exponent-main}
 holds both models frozen. The three matched-support arms contain $64$ rotary
 pairs and share the Native fast endpoint and the Native slow endpoint divided
 by four. The two reference rows do not: Native retains the pretrained table,
@@ -106,7 +106,7 @@ remaining arm installs the frozen derived interior allocation. For that arm,
 $\widetilde U_k$ is the normalised residual-energy fraction left after the full
 sin/cos pair is projected onto all other pairs over Native separations weighted
 by their causal pair count, $p(\Delta)\propto L-\Delta$; it sets
-$m_k=(1-\widetilde U_k)^2$ in Eq.~\eqref{eq:movement-allocation}, so less unique
+$w_k=(1-\widetilde U_k)^2$ in the frequency blend of Eq.~\eqref{eq:adjustment-families}, so less unique
 pairs move farther.
 
 \begin{table}[ht]
@@ -114,7 +114,7 @@ pairs move farther.
 \small
 \setlength{\tabcolsep}{5pt}
 \caption{\textbf{Exact frozen mature-checkpoint RULER macro (\%).} These are
-the values plotted in Fig.~\ref{fig:frozen-fixed-support}. Reference rows are
+the values plotted in Table~\ref{tab:frozen-exponent-main}. Reference rows are
 separated from the fixed-support block; only the lower block changes interior
 $z$ while holding the stated checkpoint protocol fixed.}
 \label{tab:frozen-fixed-support}
@@ -206,10 +206,10 @@ Qasper token F1, 16K ($n{=}200$, \%) & $18.03$ & $\mathbf{24.57}$ \\
 Applying the long profile to every 2Wiki row scores $27.74\%$; the routed policy
 pays that small difference to preserve the exact Native short path. Across the
 six-task natural-context matrix, routed/YaRN macro is $28.58/21.27\%$ at
-$2\times$ and $24.97/25.59\%$ at $4\times$, so the result is not universal
-task dominance. The QA arms use identical rows, and every post-chat input plus
-generation reserve fits within $16$K. Figure~\ref{fig:frozen-fixed-support}
-remains the allocation-only contrast.
+$2\times$ and $24.97/25.59\%$ at $4\times$. The QA arms use identical rows,
+and every post-chat input plus generation reserve fits within $16$K.
+Table~\ref{tab:frozen-exponent-main} gives the corresponding
+allocation-only comparison.
 
 \subsection{LLaMA-3-8B-Instruct}
 \label{sec:llama8b}

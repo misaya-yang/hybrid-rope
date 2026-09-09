@@ -1,18 +1,16 @@
-A finite RoPE table contains two design coordinates. Writing
-$x_k=-\log\omega_k=a+Rz_k$ separates its sampled support $(a,R)$ from the
-interior allocation $z$ of a fixed number of rotary pairs. We ask whether $z$
-remains independently identifiable and behaviourally consequential when the
-pair count, sampled support, and RoPE operator are fixed. Exact phase-invariant
-sin/cos geometry characterises this finite spectral budget and shows how slow
-frequencies can collapse onto a much smaller positional basis. A paired
-three-seed fixed-support intervention then changes only the interiors and
-improves every tested OOD length in every seed; allowing the declared
-$L_{\mathrm{target}}$ to retarget support reverses the tested ordering. Thus
-support and allocation are distinct, interacting coordinates rather than two
-names for changing frequencies. On this design space, a convex surrogate yields
-closed-form zero-learned-parameter \evq{}, unique within that surrogate. Fully
-frozen, matched-adaptation, and from-training interventions further show that
-structured allocation changes extrapolation, downstream, retrieval, and
-in-window behaviour across the model lifecycle. The scientific object is the
-finite table's support--allocation decomposition; \evq{} is one analytic
-construction on that object.
+RoPE typically pairs a tunable base with an equally spaced exponent schedule.
+We study how reshaping that schedule changes positional representation and
+length generalization. A phase-invariant analysis of the
+full sine--cosine basis reveals how nearby slow frequencies converge to the same
+positional subspace. This motivates a convex surrogate allocation problem whose
+closed-form solution, \evq{}, redistributes exponents without adding learned
+positional parameters. In a three-seed fixed-range training experiment, changing
+only the interior exponents improves every evaluated out-of-distribution length
+in every seed. The construction also improves long-context modeling with scarce
+rotary channels and under matched adaptation: at $32$K, Llama-$3$-$8$B
+perplexity falls from $991.5$ to $127.9$. We then study exponent adjustments in
+frozen mature models, expressing frequency blends and mixed-radix transformations
+in a common displacement coordinate. On OLMo, an intermediate-band redistribution improves mean token F1
+from $21.62\%$ to $25.44\%$ across five natural-QA tasks. The two stages
+provide a geometric account, explicit constructions, and controlled model
+evidence for designing RoPE through its exponent distribution.

@@ -71,7 +71,7 @@
 \newcommand{\Ltr}{L_{\mathrm{train}}}
 \newcommand{\Capp}{\mathcal{C}_{\mathrm{app}}}
 
-\title{RoPE Has a Spectral Budget}
+\title{Beyond the Base: Exponent Allocation in RoPE}
 
 % Authors must not appear in the submitted version.
 \author{Anonymous authors\\Paper under double-blind review}
@@ -83,15 +83,16 @@
 \maketitle
 
 \begin{abstract}
-\input{sections/budget_abstract}
+\input{sections/00_abstract}
 \end{abstract}
 
-\input{sections/budget_intro}
-\input{sections/budget_theory}
-\input{sections/budget_method}
-\input{sections/budget_experiments}
-\input{sections/budget_related}
-\input{sections/budget_discussion}
+\input{sections/01_intro}
+\input{sections/02_exponents}
+\input{sections/03_theory}
+\input{sections/04_experiments}
+\input{sections/04_mature}
+\input{sections/02_related}
+\input{sections/05_discussion}
 
 %% ---- main text ends here; everything below is exempt from the page limit ----
 \label{page:bodyend}
@@ -111,25 +112,11 @@
 \newpage
 \appendix
 
-\input{appendix/budget_proofs}
-\section{Previously Reported Allocation Evidence}
-The following supporting material retains the original experiments and theoretical
-objects. It supplies no observations from the new six-arm budget experiment.
-\begin{figure}[h]
-\centering
-\includegraphics[width=\linewidth]{fig_evidence_overview.pdf}
-\caption{Previously reported allocation evidence, reproduced for reference.
-The fixed-support training and frozen-table panels do not intervene on rotary
-pair count and therefore cannot establish the new budget interaction.}
-\label{fig:spectral-budget-overview}
-\end{figure}
-\input{sections/02_identification}
-\input{sections/03_theory}
-\input{sections/04_experiments}
 \input{appendix/a1_proofs}
 \input{appendix/a2_experiment_details}
 \input{appendix/a5_identification}
 \input{appendix/a6_mature_scale}
+\input{appendix/a7_exponent_adjustments}
 \input{appendix/a3_supporting_results}
 
 \end{document}

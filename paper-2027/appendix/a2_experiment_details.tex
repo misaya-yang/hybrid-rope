@@ -80,6 +80,38 @@ training loop are fixed, and the only intervention is the initialized
 inverse-frequency table. The scratch-text experiments use base
 $b{=}500\mathrm{K}$ unless stated otherwise.
 
+\subsection{Composition with a fixed-index range operator}
+\label{sec:range-composition}
+
+The $454.2$M decoder has $24$ layers, width $1024$, $16$ heads,
+$d_{\rm head}=64$, and base $b=500{,}000$. Geo ($\tau=0$) and \evq{}
+($\tau=1.5$) use midpoint frequency grids and train from initialization
+for $100$M tokens per arm at length $2048$, using FineWeb-Edu with a
+$10\%$ synthetic-passkey mixture and seeds $42,123,7$.
+The same inference-time operator is then applied to both trained tables.
+
+For $k=0,\ldots,K-1$, define
+\[
+\ell=\lfloor0.20K\rfloor,\qquad h=\lfloor0.90K\rfloor,\qquad
+t_k=\operatorname{clip}\!\left(\frac{k-\ell}{h-\ell},0,1\right),\qquad
+r_k=t_k^2(3-2t_k).
+\]
+The repository's fixed-index, YaRN-style smooth-ramp operator installs
+\begin{equation}
+\mathcal R_s(\omega_k)=
+\frac{\omega_k}{s^{r_k}T(s)^{r_k/2}},
+\qquad T(s)=1+0.07\log_2s.
+\label{eq:repo-range-scaler}
+\end{equation}
+Here $K=32$ and $s=8$, giving $(\ell,h,T)=(6,28,1.21)$.
+The temperature factor is folded into the frequency divisor; cosine/sine
+amplitude stays at $g=1$. Equation~\eqref{eq:repo-range-scaler} specifies
+the operator used in this experiment, separately from the official-equation
+YaRN comparisons in \S\ref{sec:mature-adjustments}.
+Table~\ref{tab:evq-repo-ramp} reports the three-seed comparison.
+
+\input{tables/table_evq_ramp}
+
 \subsection{Larger-scale supporting evidence}
 \label{sec:larger-scale-supporting}
 

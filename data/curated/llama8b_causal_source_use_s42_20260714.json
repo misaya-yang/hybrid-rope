@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "provenance_status": "report-backed",
+  "paper_role": "mature_8b_probability_and_causal_remote_source_use",
+  "protocol": {
+    "base_model": "Meta-Llama-3-8B-Instruct",
+    "training_seed": 42,
+    "optimizer_steps": 300,
+    "adaptation": "rank-64 alpha-128 Q/K/V/O LoRA",
+    "physical_training_length": 8192,
+    "evq_table": "midpoint Cosh tau=1.414",
+    "native_table": "original pretrained endpoint grid"
+  },
+  "temporal_nll": {
+    "evaluation_pack_count": 24,
+    "domains": [
+      "arXiv",
+      "Federal Register",
+      "Stack Overflow"
+    ],
+    "8192": {
+      "native": 1.91947,
+      "evq": 2.30933,
+      "evq_minus_native": 0.38986
+    },
+    "16384": {
+      "native": 4.69096,
+      "evq": 3.18088,
+      "evq_minus_native": -1.51008
+    },
+    "32768": {
+      "native": 6.89919,
+      "evq": 4.85134,
+      "evq_minus_native": -2.04786
+    }
+  },
+  "true_16k_remote_source_use": {
+    "frozen_case_count": 10,
+    "retrieval_head_count": 32,
+    "median_target_block_hit_at_16": {
+      "native": 0.1875,
+      "evq": 0.6406
+    },
+    "nll_change_after_all_head_gold_block_deletion": {
+      "native": -0.0095,
+      "evq": 1.5055
+    }
+  },
+  "source_receipts": {
+    "canonical_owner_sha256": "fd4e26cfa2c593153b34e1df774666fb813b840b89aec7df93bee6774aa2f800",
+    "temporal_aggregate_sha256": "0335415a2245e1fb31149705342e975a016ddddb557a79c364fc4a98c3f89001",
+    "causal_routing_report_sha256": "5e05495ca8c8d295a4e3d3c4dc2c31bcbad81295a79947e7031010a08ad85a25"
+  },
+  "scope": "matched adaptation evidence; pure fixed-support allocation is identified by the 151.9M exact-range control"
+}

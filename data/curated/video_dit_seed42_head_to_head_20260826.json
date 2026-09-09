@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "status": "COMPLETE",
+  "provenance_status": "raw-backed-complete",
+  "experiment": "video_dit_temporal_head_to_head",
+  "model_parameters": 129600000,
+  "dataset": "Oscillating Moving MNIST",
+  "attention": "bidirectional",
+  "position_encoding": "3D RoPE",
+  "temporal_rope_base": 10000,
+  "training_frames": 32,
+  "evaluation_frames": 128,
+  "training_steps": 15000,
+  "seed": 42,
+  "shared_protocol": {
+    "temporal_range_transform": "same in both arms",
+    "denoising_noise_level": 0.5,
+    "evaluation_videos": 256
+  },
+  "arms": {
+    "geo": {
+      "tau": 0.0,
+      "train_mse": 0.00911327451467514,
+      "all_extrap_mse": 0.007243989035487175,
+      "far_extrap_mse": 0.009890949353575706
+    },
+    "evq_cosh": {
+      "tau": 1.5,
+      "train_mse": 0.00720361340790987,
+      "all_extrap_mse": 0.006063774228096008,
+      "far_extrap_mse": 0.006387988571077585
+    }
+  },
+  "evq_minus_geo_fraction": {
+    "train_mse": -0.20954719444587516,
+    "all_extrap_mse": -0.1629233287915647,
+    "far_extrap_mse": -0.3541581962738244
+  },
+  "raw_sources": [
+    {
+      "path": "results/video_dit/20260316_head2head/tau0.00_seed42_results.json",
+      "sha256": "fea7ef2bb0ca5f02cc6ef71ddd0af6b83cfcb091dba6dce5de4c06b04d63c725"
+    },
+    {
+      "path": "results/video_dit/20260316_head2head/tau1.50_seed42_results.json",
+      "sha256": "058f5752b558e727e7ae98c9377cb236e4edee916bb47c0545c3f313719c5efe"
+    },
+    {
+      "path": "results/video_dit/20260316_head2head/summary.json",
+      "sha256": "5c61cb5e258ae1a79eb05ebd7b6d0b445dfc9da6a49518790c53d2921f9be555"
+    }
+  ],
+  "claim_ceiling": "One seed-42 shared-protocol head-to-head comparison supporting cross-modal breadth; not population uncertainty, a universal tau rule, or a standalone video contribution."
+}

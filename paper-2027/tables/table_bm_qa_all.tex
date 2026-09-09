@@ -1,0 +1,21 @@
+\begin{table}[ht]
+\centering\small
+\caption{Natural QA under static $s=4$. Token F1 uses the whole generated response; EOS counts are recorded separately.}
+\label{tab:bm-qa-complete}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Input length & Task & $n$ & MrPro F1 (\%) & BM F1 (\%) & MrPro EOS & BM EOS\\
+\midrule
+$4$K--$16$K & HotpotQA & 166 & 28.63 & 33.54 & 160 & 163 \\
+ & 2WikiMQA & 173 & 21.55 & 25.43 & 169 & 171 \\
+ & Qasper & 119 & 13.94 & 19.06 & 119 & 119 \\
+ & NarrativeQA & 61 & 9.51 & 11.48 & 61 & 61 \\
+ & MultiFieldQA & 112 & 34.49 & 37.72 & 72 & 72 \\
+\midrule
+$\le4$K & HotpotQA & 5 & 58.33 & 51.67 & 5 & 5 \\
+ & 2WikiMQA & 26 & 34.62 & 44.98 & 26 & 26 \\
+ & Qasper & 78 & 26.16 & 28.14 & 78 & 78 \\
+ & MultiFieldQA & 38 & 50.94 & 53.27 & 35 & 33 \\
+\bottomrule
+\end{tabular}
+\end{table}

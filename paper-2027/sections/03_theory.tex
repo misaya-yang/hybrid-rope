@@ -1,206 +1,120 @@
-\section{Theory}
+\section{Geometry and a Closed-Form Allocation}
 \label{sec:theory}
 
-Finite RoPE design is a constrained basis-allocation problem. With pair count
-and sampled support fixed, a table chooses where to place phase resolution. We
-first account for that finite budget exactly, then locate the slow-end
-redundancy of geometric sampling and derive \evq{} as a closed-form
-reallocation. Finally, we connect the designed basis to the stage at which
-weights exploit it; capability is established by the controlled interventions,
-not inferred from static geometry.
-
-\subsection{A finite spectral budget is a design problem}
+\subsection{What different exponents represent}
 \label{sec:subspaces}
 \label{sec:budget}
 
-Let $\phi \in [0,1]$ parameterise log-frequency, $\omega(\phi) = b^{-\phi}$,
-let $\drot$ be the number of rotated dimensions and $K = \drot/2$ the number of
-rotary pairs ($\drot{=}\dhd$ for standard MHA, smaller for compressed-RoPE
-architectures such as MLA).
-
-We reserve $z$ for the support-normalised coordinate in
-Eq.~\eqref{eq:table-decomposition}. Normalising a sampled geometric table gives
-$z_k=k/(K-1)$, so fixing $(a,R)$ fixes the geometric family and a non-uniform
-interior allocation is a distinct fixed-support design. Standard
-implementations use raw exponents $u_k=k/K$, deployed \evq{} uses midpoint
-quantiles $u_k=(k+1/2)/K$, and endpoint-inclusive diagnostic grids are labelled
-explicitly.
-
-A rotary pair contributes $f_\omega(\Delta) = C\cos(\omega\Delta) +
-D\sin(\omega\Delta)$ to the relative-position attention logit, with $C,D$ set by
-content. The object attached to $\omega$ is therefore the two-dimensional
-subspace
+A rotary pair contributes
+$C\cos(\omega\Delta)+D\sin(\omega\Delta)$ to an attention logit, where
+$\Delta$ is the relative position and $C,D$ depend on query and key content.
+The positional object associated with its exponent is therefore the subspace
 \begin{equation}
-V_\omega=\operatorname{span}\{\cos(\omega\Delta),\ \sin(\omega\Delta)\},
+V_\omega=\operatorname{span}\{\cos(\omega\Delta),\sin(\omega\Delta)\}.
 \label{eq:subspace}
 \end{equation}
-not a cosine feature: an analysis that fixes one content phase sees a slice of
-$V_\omega$ and is not invariant to rotation inside the pair. Two channels are
-redundant to the extent that their subspaces are. With
-$x_\omega(\Delta)=[\cos(\omega\Delta)\ \ \sin(\omega\Delta)]$, Gram matrices
-$S_\omega=\mathbb E[x_\omega^\top x_\omega]$ and
-$H_{\omega\nu}=\mathbb E[x_\omega^\top x_\nu]$ over a separation prior, and the
-whitened cross-Gram $Q_{\omega\nu}=S_\omega^{-1/2}H_{\omega\nu}S_\nu^{-1/2}$
-whenever $S_\omega,S_\nu\succ0$,
-the singular values of $Q_{\omega\nu}$ are the canonical correlations between
-$V_\omega$ and $V_\nu$, and
+Comparing these two-dimensional spaces accounts for every content phase within
+a pair. Let $x_\omega(\Delta)=[\cos(\omega\Delta)\ \sin(\omega\Delta)]$,
+$S_\omega=\mathbb E[x_\omega^\top x_\omega]$, and
+$H_{\omega\nu}=\mathbb E[x_\omega^\top x_\nu]$ under a specified distribution
+of separations. For nonsingular $S_\omega,S_\nu$, the singular values of
+$Q_{\omega\nu}=S_\omega^{-1/2}H_{\omega\nu}S_\nu^{-1/2}$ are the canonical
+correlations of the two spaces. Their average squared correlation,
 \begin{equation}
-c_{\omega\nu}=\tfrac12\lVert Q_{\omega\nu}\rVert_F^2\in[0,1]
+c_{\omega\nu}=\tfrac12\|Q_{\omega\nu}\|_F^2\in[0,1],
 \label{eq:collision}
 \end{equation}
-is invariant to phase rotation inside a pair and to any change of basis of
-either subspace. For $\Delta\sim\mathrm{Unif}[0,L]$, $H_{\omega\nu}$ has a closed
-form in $\sin t/t$ and $(1{-}\cos t)/t$ at $t=(\omega{\mp}\nu)L$
-(App.~\ref{sec:proofs}).
+is unchanged by rotation of the phase inside either pair. It measures how
+much of the positional basis one frequency shares with another.
 
-Block-whitening every pair gives a global correlation Gram $\Gamma$ with diagonal
-blocks $I_2$. Write
-$\bar c=[K(K-1)]^{-1}\sum_{i\ne j}c_{ij}$.
-
-\begin{theorem}[Spectral budget identity]
-\label{thm:budget}
-$\operatorname{tr}\Gamma = 2K$ and $\operatorname{tr}(\Gamma^2)=2K[1+(K{-}1)\bar c]$, so the
-Rényi-$2$ effective rank of the positional basis is exactly
+Stacking all block-whitened pairs gives a Gram matrix $\Gamma$ with $I_2$
+on its diagonal blocks. If $\bar c$ is the mean of $c_{ij}$ over ordered
+distinct pairs, its R\'enyi-$2$ effective rank satisfies
 \begin{equation}
-r_2(\Gamma)=\frac{(\operatorname{tr}\Gamma)^2}{\operatorname{tr}(\Gamma^2)}
-      =\frac{2K}{1+(K-1)\bar c}.
+r_2(\Gamma)
+=\frac{(\operatorname{tr}\Gamma)^2}{\operatorname{tr}(\Gamma^2)}
+=\frac{2K}{1+(K-1)\bar c}.
 \label{eq:budget-identity}
 \end{equation}
-\end{theorem}
+At fixed $K$ and range, exponent allocation changes this basis through the
+off-diagonal correlations. For uniform separations on $[0,L]$, the cross-Gram
+has an exact trigonometric form, so both the correlations and effective rank
+can be computed directly (App.~\ref{sec:geometry-proofs}).
 
-Practically, this identity exposes the design budget. For fixed $K$, sampled
-support $(a,R)$, and separation measure $\mu$, substituting
-$\omega_k(z)=\exp[-(a+Rz_k)]$ into the block-whitened Gram $\Gamma_\mu(z)$
-changes how the same trace $2K$ is distributed across positional directions.
-Block whitening removes per-channel energy and conditioning: the theorem
-characterises the basis's R\'enyi-$2$ effective dimension, while trained-model
-protocols establish what
-that basis enables.
+\subsection{Why the slow end admits reallocation}
 
-\subsection{Slow-end redundancy gives a design direction}
-
-\begin{proposition}[Low-frequency collapse]
+\begin{proposition}[Shared slow-frequency subspace]
 \label{prop:collapse}
-As $\omega L\to0$, $V_\omega\to\operatorname{span}\{1,\Delta\}$. For slow
-channels $x{=}\omega L$, $y{=}\nu L$, and
-$\epsilon{=}\max\{|x|,|y|\}\to0$,
-$2-\lVert Q_{x,y}\rVert_F^2=\tfrac{19}{12600}(x^2{-}y^2)^2+O(\epsilon^6)$: slow
-subspaces approach a common two-dimensional limit at fourth order. Under the
-softmax metric for a fixed $p$ with nondegenerate support on at least three
-distances, $F=\operatorname{diag}(p)-pp^\top$ annihilates the constant direction,
-and the centred limit is
-$\operatorname{span}\{\Delta-\mathbb E_p\Delta,\ \Delta^2-\mathbb E_p\Delta^2\}$.
+Under the uniform measure on $[0,L]$, as $\omega L\to0$,
+$V_\omega$ approaches $\operatorname{span}\{1,\Delta\}$. If
+$\epsilon=\max\{|\omega L|,|\nu L|\}\to0$, then
+$2-\|Q_{\omega\nu}\|_F^2=O(\epsilon^4)$.
 \end{proposition}
 
-Practically, geometric slow-end sampling provides diminishing new positional
-directions. This motivates thinning that region while preserving support and
-multiscale coverage; the channels may still carry content, and the static rank
-is not a behavioural selector. As a representative severe-regime instance, at
-$L{=}4096$, $b{=}5{\times}10^5$, and $K{=}64$, the $23$ standard-grid pairs with
-$\omega L\le1$ occupy $46$ nominal dimensions but have block-whitened
-$r_2{=}2.00$ under the uniform separation prior. The full-table identity also
-applies outside this asymptotic regime; additional views appear in
-App.~Fig.~\ref{fig:frequency-geometry}.
+The limit follows from $\cos(\omega\Delta)\to1$ and
+$\sin(\omega\Delta)/\omega\to\Delta$; Appendix~\ref{sec:geometry-proofs}
+derives the leading fourth-order coefficient. Several slow pairs can thus
+supply many coordinate dimensions but very few distinct positional directions.
+For $b=500{,}000$, $K=64$, and $L=4096$, the $23$ standard-grid pairs with
+$\omega L\le1$ have $46$ nominal dimensions and $r_2=2.00013$ under this
+measure.
 
-\subsection{A closed-form reallocation}
+This suggests redistributing some exponent samples toward faster rotations
+while retaining coverage of the range. Frequency-use studies also show that
+slow pairs can carry semantic information
+\citep{barbero2025round,urrutia2026decoupling}; their positional similarity
+motivates a change in allocation, not deletion of their content coordinates.
+The learned weights determine how the resulting basis is used.
+
+\subsection{Constructing an exponent distribution}
 \label{sec:construction}
 
-A positive density $\rho\in C^2([0,1])$ with $\int_0^1\rho=1$ induces a finite
-allocation by inverse-CDF quantisation, $\phi_k=F_\rho^{-1}(u_k)$; geometric RoPE
-is $\rho\equiv1$. The exact canonical-correlation objective is oscillatory, so
-we use the convex modelling surrogate
+Let a positive density $\rho\in C^2([0,1])$, with $\int_0^1\rho=1$,
+allocate samples over the exponent interval. Uniform $\rho$ recovers geometric
+spacing. To balance concentration against redundant slow-end sampling, we
+choose the convex objective
 \begin{equation}
-\Capp[\rho]=\frac{\alpha}{2}\int_0^1\!\rho^2\,d\phi
- +\frac{\beta}{2}\iint_{[0,1]^2}\!\!\rho(\phi)\rho(\psi)\min(\phi,\psi)\,d\phi\,d\psi,
+\Capp[\rho]
+=\frac{\alpha}{2}\int_0^1\rho(\phi)^2\,d\phi
++\frac{\beta}{2}\iint_{[0,1]^2}
+\rho(\phi)\rho(\psi)\min(\phi,\psi)\,d\phi\,d\psi,
+\qquad \alpha>0,\ \beta\ge0.
 \label{eq:Capp}
 \end{equation}
-with $\alpha>0,\beta\geq0$. The first term limits channel-load concentration;
-the Green kernel $\min(\phi,\psi)$ penalises pairs that are both slow, following
-the direction of Proposition~\ref{prop:collapse}.
+The squared-density term discourages concentration in a narrow band.
+The interaction penalty grows when both exponents lie toward the slow end.
+This surrogate turns the preceding geometric observation into a tractable
+allocation problem.
 
-\begin{theorem}[Closed-form optimum under the surrogate]
+\begin{theorem}[Cosh allocation]
 \label{thm:ode}
-Under \eqref{eq:Capp} with $\alpha{>}0,\beta{\geq}0$ and constraints
-$\rho\in C^2([0,1])$, $\rho{>}0$, $\int_0^1\rho{=}1$, the unique constrained
-minimiser is
+The unique minimizer of \eqref{eq:Capp} over positive
+$\rho\in C^2([0,1])$ with unit integral is
 \begin{equation}
-\rho_\tau(\phi)=\frac{\tau\cosh(\tau(1{-}\phi))}{\sinh\tau},
-\qquad \tau=\sqrt{\beta/\alpha};
+\rho_\tau(\phi)=\frac{\tau\cosh(\tau(1-\phi))}{\sinh\tau},
+\qquad \tau=\sqrt{\beta/\alpha},
 \label{eq:rho-tau}
 \end{equation}
-at $\beta{=}0$ it is the $\tau{\to}0$ limit $\rho_0\equiv1$.
+with $\rho_0(\phi)=1$ obtained by continuity at $\beta=0$.
 \end{theorem}
 
-Practically, the theorem turns the slow-end design direction into an analytic
-allocation rather than a search problem. The following inverse CDF instantiates
-that continuous solution as a finite table.
-
-\begin{corollary}[Closed-form quantiles]
-\label{cor:quantiles}
-$F_\tau(\phi)=1-\sinh(\tau(1{-}\phi))/\sinh\tau$, so
+The Euler--Lagrange equation reduces to $\rho''=\tau^2\rho$ with
+$\rho'(1)=0$; normalization fixes its scale. Integrating and inverting the CDF
+gives the finite table
 \begin{equation}
-\phi_k(\tau)=1-\tfrac{1}{\tau}\operatorname{arcsinh}\!\left((1-u_k)\sinh\tau\right),
-\qquad u_k=\tfrac{k+1/2}{K},
+\phi_k(\tau)
+=1-\frac{1}{\tau}\operatorname{arcsinh}\!\left((1-u_k)\sinh\tau\right),
+\qquad u_k=\frac{k+1/2}{K}.
 \label{eq:warp}
 \end{equation}
-which tends to $u_k$ as $\tau\to0$, recovering the uniform-log midpoint grid.
-\end{corollary}
+We call this construction \evq{}. For $\tau>0$, its density decreases from the
+fast to the slow end, allocating more samples to faster positional variations.
+The limit $\tau\to0$ gives uniform-log midpoint quantiles.
 
-For $\tau>0$, $\rho_\tau$ decreases across log-frequency and crosses the uniform
-density once (Lemma~\ref{lem:budget-crossing}); the quantiles therefore
-place more samples on the fast side and thin the redundant slow side. This gives
-\evq{} explicitly, without learned positional parameters or numerical search.
-Its uniqueness is conditional on \eqref{eq:Capp}; the operating rule, finite
-multiplier evidence, grid conventions, and exact-range endpoint embedding are
-in Apps.~\ref{sec:tau-scaling} and~\ref{sec:identification-details}. The
-cosine-feature diagnostic is reported separately in
-App.~\ref{sec:surrogate-validation}; trained interventions establish behaviour.
-
-\subsection{A designed basis must be evaluated at its installation stage}
-\label{sec:coordinate}
-
-A designed table fixes the positional basis; model capability depends on the
-coefficients that exploit it. Controlled fixed-support protocols show that
-designed reallocations can strongly improve capability in the tested protocols. The training
-intervention in \S\ref{sec:exp-identify} evaluates anchored \evq{}, while the
-fully frozen study in \S\ref{sec:exp-frozen-support} evaluates separate derived
-and coarse profiles; they supply likelihood and capability evidence,
-respectively.
-
-The installation stage is visible in a frozen $50$M weights-by-table crossing
-(Table~\ref{tab:coadapt}). The self-consistent Geo and \evq{} systems have PPL
-$7.14$ and $7.16$, while both mismatched cells degrade. In particular, installing
-\evq{} under Geo-trained weights raises block-whitened $r_2$ from $4.57$ to
-$12.54$ but worsens PPL from $7.14$ to $76.20$; the loss interaction is $-3.537$
-(bootstrap CI $[-5.17,-3.04]$).
-
-\input{tables/table_coadapt}
-
-Thus static geometry diagnoses the designed basis but does not rank trained
-systems: weights learn coefficients in the basis installed during training or
-adaptation.
-
-\begin{theorem}[Post-hoc transplant obstruction]
-\label{thm:obstruction}
-Let $\mathcal R_\Omega(\Delta)$ be the block-rotation operator of a frequency multiset
-$\Omega$. If position-independent invertible maps $A,B$ satisfy
-$A^\top \mathcal R_{\Omega'}(\Delta)B = \mathcal R_\Omega(\Delta)$ for all $\Delta$ in an open
-interval containing zero, then $\Omega'$ and $\Omega$ have the same frequency
-multiset, up to sign and permutation. Repeated frequencies may mix within their
-full equal-frequency invariant subspace.
-\end{theorem}
-
-Practically, a nontrivial new table cannot be made exactly function-equivalent by
-fixed, position-independent invertible Q/K maps: the design must be evaluated
-with the weights, adapter, or operator that will use it. At $\Delta{=}0$ the
-hypothesis gives $A^\top B=I$; differentiating the resulting similarity at zero
-preserves the generator spectrum $\{\pm i\omega_k\}$ (App.~\ref{sec:proofs}). The
-theorem does not exclude approximate finite-data adaptation or broader paths,
-which are tested in \S\ref{sec:exp-capability}.
-
-Together, the budget identity defines what can be reallocated, the collapse law
-locates redundant slow-end sampling, and the variational theorem supplies a
-closed-form table before its coefficients are learned. The fixed-support and
-lifecycle experiments test designed allocations with weights fully frozen,
-under matched adaptation, and through from-training co-adaptation
-(\S\ref{sec:experiments}).
+Installation requires evaluating \eqref{eq:warp} once and setting
+$\omega_k=b^{-\phi_k}$. The frequency table stays fixed during training or
+adaptation, and the attention operator and trainable parameter count are unchanged.
+For the fixed-range experiment we normalize these quantiles using
+\eqref{eq:table-decomposition} and anchor them to the baseline endpoints.
+The grid conventions, values of $\tau$, and operating-rule studies are given
+in Apps.~\ref{sec:tau-scaling} and~\ref{sec:identification-details}.

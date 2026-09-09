@@ -1,0 +1,33 @@
+\section{Exponent Allocation}
+\label{sec:exponents}
+\label{sec:identification}
+
+Let $K=\drot/2\ge2$ be the number of rotary pairs and $b>1$ the base. Standard RoPE uses
+\begin{equation}
+\omega_k=b^{-\phi_k},\qquad \phi_k=\frac{k}{K},\qquad k=0,\ldots,K-1.
+\label{eq:exponent-rope}
+\end{equation}
+The base controls the spacing of this geometric frequency family. Allowing
+$\phi_k$ to follow a non-linear sequence also changes the density of samples
+across positional scales. To describe that shape without conflating it with
+an overall shift or stretch, take an ordered table $\omega_0>\cdots>\omega_{K-1}>0$ and write
+\begin{equation}
+x_k=-\log\omega_k=a+Rz_k,\qquad
+z_k=\frac{x_k-x_0}{x_{K-1}-x_0},\quad z_0=0,\quad z_{K-1}=1.
+\label{eq:table-decomposition}
+\end{equation}
+Here $a=x_0$ and $R=x_{K-1}-x_0$ specify the sampled log-frequency range.
+Geometric tables have $z_k=k/(K-1)$ at every base. Holding $(a,R)$ fixed while
+changing $z$ therefore changes only the normalized exponent allocation.
+
+This representation gives both a construction and an experimental control.
+A density over exponents generates a finite table through its quantiles. The
+same quantiles can either be installed directly or affinely mapped onto fixed
+endpoints to test the effect of their shape. We use the anchored version for
+fixed-range comparisons and state the installed grid in each model protocol.
+For a mature checkpoint, the corresponding variable is the displacement from
+its original exponents; \S\ref{sec:mature-adjustments} develops that form.
+
+The analysis below asks what positions these finitely many exponents can
+represent. The experiments then ask how models learn to use the resulting
+basis and how existing weights respond to a change in it.

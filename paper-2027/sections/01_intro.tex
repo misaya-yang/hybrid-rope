@@ -1,95 +1,68 @@
 \section{Introduction}
 \label{sec:intro}
 
-A finite RoPE table has a spectral budget: its exactly $K=\drot/2$ rotary pairs
-must allocate phase resolution across scales. Our question is not whether RoPE
-frequencies can be changed, but what independent degrees of freedom a finite
-frequency table contains. At the implementation level, changing a scalar base,
-moving a sampled range, and relocating interior frequencies all change the
-table. At the scientific level, they intervene on different coordinates. We
-make those coordinates explicit by writing
-\begin{equation}
-x_k=-\log\omega_k=a+Rz_k,
-\qquad z_0=0,\quad z_{K-1}=1,
-\label{eq:table-decomposition}
-\end{equation}
-where $k$ indexes the fixed $K$ rotary pairs, $a$ sets support location, $R$
-its span, and $z$ the normalised interior allocation; geometric RoPE fixes
-$z_k=k/(K-1)$. Thus support $(a,R)$ and interior allocation $z$ are distinct
-coordinates: $z$ decides which phase scales the fixed samples occupy and where
-resolution is placed.
+Rotary position embedding (RoPE) assigns a different rotation frequency to each
+pair of query and key coordinates \citep{su2024roformer}. In the usual
+parameterization, $\omega_k=b^{-\phi_k}$, a single base $b$ and an equally spaced
+exponent sequence $\phi_k$ determine the entire table. Changing the base is a
+well-established way to adjust the range of positional scales
+\citep{liu2024scaling,xu2024base,oka2026fmrope}. The exponents make another
+choice: how the available rotary pairs are distributed within that range.
+What changes when this distribution is designed explicitly?
 
-To identify allocation, three paired training seeds hold $K$, sampled support,
-the RoPE operator, sampled extrema, and log-span fixed while only the $30$
-interiors move; every OOD length favours the reallocation in every seed. In a
-separate condition, $L_{\mathrm{target}}$ retargets support and reverses the
-tested ordering. The reversal identifies support as a distinct, interacting
-coordinate of the same finite table (\S\ref{sec:exp-identify}).
+This question matters because each attention head has finitely many rotary
+pairs. Over a bounded context, several frequencies can produce almost the same
+positional response. For example, in a standard $64$-pair table with base
+$500{,}000$, the $23$ pairs that rotate by at most one radian over $4$K tokens
+have a block-whitened R\'enyi-$2$ effective rank of approximately two under uniform separations. Changing their
+spacing changes the basis available to the model while preserving the rotation
+operator. We study this allocation through its exponents, from their geometry
+to constructions that can be evaluated in language models.
 
-Exact phase-invariant geometry explains why interior placement can matter. In
-one representative table, $23$ slow pairs occupy $46$ nominal dimensions yet
-have block-whitened R\'enyi-$2$ effective rank $2.00$. These channels can still
-carry content, but as positional functions they converge toward the same
-two-dimensional subspace: geometric spacing spends more than one third of its
-pairs on near-duplicate slow positional directions.
-
-Optimising a convex surrogate over $z$ yields \emph{Exact Variational
-Quantization with a Cosh density} (\evq{}), a closed-form table with no learned
-positional parameters, unique within that surrogate. It is one construction on
-the support--allocation design space, not the identity of the paper.
+Our first step separates exponent shape from frequency range. Figure~\ref{fig:spectral-budget-overview}
+compares two tables with identical endpoints and pair count. One uses equally
+spaced exponents; the other redistributes the interiors using a Cosh density.
+Across three paired training seeds, the reallocation improves all three tested
+extrapolation lengths. The paired design exposes the contribution of exponent
+shape to length generalization.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{fig_evidence_overview.pdf}
-  \caption{\textbf{Support and allocation are distinct coordinates of a finite
-  spectral budget.} (a)~Support $(a,R)$ does not determine the interior allocation
-  $z$; the lower inset gives one representative standard-RoPE slow block, where
-  $23$ pairs ($46$ nominal dimensions) have block-whitened $r_2{=}2.00$ under
-  the stated uniform separation prior. (b)~Across three paired training seeds,
-  anchored \evq{} minus paper-faithful FMRoPE tail NLL is negative at every OOD
-  length when support is fixed and only the $30$ interiors move; allowing the
-  declared $L_{\mathrm{target}}$ to retarget support reverses every OOD sign.
-  The two conditions separate allocation from support rather than stage a
-  method race. (c)~On frozen OLMo and Qwen checkpoints, the coloured block holds
-  support, amplitude, checkpoint, rows, decoder, precision, and hardware fixed:
-  changing only $z$ produces the large zero-training RULER gains. Grey Native
-  (N) and official Transformers YaRN (Y) rows retain their own support or
-  transport identities.}
+  \caption{\textbf{Exponent allocation changes length generalization at fixed
+  frequency range.} Left: two allocations of the same $32$ rotary pairs, with
+  identical endpoints. Right: paired $151.9$M models trained at length $256$;
+  changing the $30$ interior exponents lowers extrapolation NLL in every seed.
+  Thin lines show the three training seeds and the heavy line their mean.}
   \label{fig:spectral-budget-overview}
 \end{figure}
-\FloatBarrier
 
-We test behavioural consequences through three distinct intervention routes.
-A fully frozen route installs model-relative derived or coarse allocations with
-no parameter updates: on a billion-scale OLMo checkpoint, the derived allocation
-raises nine-task $16$K RULER from $0.56\%$ to $60.47\%$, while official
-Transformers YaRN scores $7.94\%$ on the same rows, and a coarse task-label-free
-allocation reproduces the recovery. Matched low-rank adaptation tests whether
-pretrained representations can exploit an \evq{} basis, yielding task-family
-length transfer at $1.485$B and causal remote-source use at $8$B. From training,
-weights co-adapt to the installed table: in a $750$M continuation, \evq{} lowers
-$16$K PPL from $45.1$ to $24.4$ and raises strict $8$K autoregressive exact
-retrieval from $0\%$ to $77.5\%$. These routes intervene on the same scientific
-coordinate without forcing their methods or estimands to coincide.
+We develop the allocation in two stages. First, we analyze the full sine--cosine
+subspace associated with each frequency. The analysis identifies the shared
+slow-frequency limit and motivates a convex surrogate variational problem for distributing
+exponents. Its solution yields \evq{}, an analytic inverse-CDF construction
+that changes only the frequency table. We evaluate it through fixed-range
+controls, language-model training, and matched adaptation. With $16$ rotary
+pairs in a $432$M MLA model, it reduces $16$K perplexity by $31.1\%$. Under
+matched Llama-$3$-$8$B adaptation, $32$K perplexity falls from $991.5$ to
+$127.9$, with the full original-window and extrapolation curves reported together.
 
-Figure~\ref{fig:spectral-budget-overview} follows this scientific order: it
-defines the two coordinates, identifies them through fixed-support and
-support-retargeted interventions, and then shows a mature zero-training
-behavioural consequence. The remaining experiments retain separate fully
-frozen, matched-adaptation, and from-training estimands across full and scarce
-rotary budgets and a bidirectional $3$D video DiT (\S\ref{sec:experiments}).
+Second, we study how exponents can be adjusted in an already trained model.
+Such a model has learned to use its original table, so the adjustment is defined
+relative to that table. Existing methods provide useful constructions:
+YaRN blends frequencies across bands, MrRoPE distributes a cumulative scale
+through mixed-radix factors, and learned-frequency methods optimize the entries
+\citep{peng2024yarn,tian2026mrrope,karypis2026lerope,wang2026adarope}.
+We express these operations as exponent displacements and use matched experiments
+to compare their shapes. This stage includes a single static profile that
+improves Qwen's RULER score over YaRN at $64$K while retaining its $32$K score, and a
+boundary-matched redistribution with gains on five OLMo natural-QA tasks.
 
 \paragraph{Contributions.}
-(i) We decompose a finite RoPE table into support $(a,R)$ and interior
-allocation $z$, then causally identify $z$ with a paired three-seed
-fixed-support intervention; target-aware support retargeting reverses the tested
-ordering and establishes that the two coordinates interact.
-(ii) We give an exact phase-invariant account of the full sin/cos basis: a
-spectral-budget identity, a slow-frequency collapse law, the weight--table
-co-adaptation boundary, and a frozen-transplant obstruction.
-(iii) We solve a convex allocation surrogate in closed form to obtain \evq{}
-with no learned positional parameters, unique within the stated surrogate.
-(iv) We establish behavioural consequences across fully frozen,
-matched-adaptation, and from-training interventions, including long-context
-likelihood, downstream, retrieval, causal source-use, and in-window results,
-while keeping their methods and estimands separate.
+We (i) formulate exponent allocation independently of sampled range and analyze
+its phase-invariant positional geometry; (ii) derive a closed-form allocation
+and establish its effects through paired controls, training, and adaptation;
+and (iii) derive a boundary-matched adjustment for frozen models and evaluate
+structured displacement profiles through matched retrieval and natural-QA tests.
+The common object is the exponent distribution: the two stages examine how to
+construct it before learning and how to adjust it after weights have been learned.

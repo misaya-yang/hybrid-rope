@@ -1,0 +1,112 @@
+{
+  "inspected_at_server_utc": "2026-09-09T01:29:53.355660+00:00",
+  "root": "/root/autodl-tmp/position_observability_20260908",
+  "scope": "Read-only saved output and receipt audit; no model execution",
+  "runs": {
+    "primary_compact_01": {
+      "sha256": "378b08bcc302af2700f400df8712255df6545027b6f82133887fbacd118a2e7f",
+      "counts": {
+        "Dense": {
+          "rows": 8,
+          "raw_exact_eos": 0,
+          "trimmed_exact_eos": 4,
+          "saved_text_exact_disagrees_with_raw": 4
+        }
+      }
+    },
+    "primary_compact_02": {
+      "sha256": "ab34796eb75867ec2a5767fe06abc8e2944b3127f449ca279b0bdea0e8fc1f0e",
+      "counts": {
+        "Dense": {
+          "rows": 8,
+          "raw_exact_eos": 4,
+          "trimmed_exact_eos": 4,
+          "saved_text_exact_disagrees_with_raw": 0
+        }
+      }
+    },
+    "mixture_frozen_01": {
+      "sha256": "216ea464d40dc0aca0193251c767302d4e92d40b3499340650a8b8ef678ab8db",
+      "counts": {
+        "Dense": {
+          "rows": 32,
+          "raw_exact_eos": 17,
+          "trimmed_exact_eos": 17,
+          "saved_text_exact_disagrees_with_raw": 0
+        },
+        "RoPEMean": {
+          "rows": 32,
+          "raw_exact_eos": 0,
+          "trimmed_exact_eos": 0,
+          "saved_text_exact_disagrees_with_raw": 0
+        },
+        "Quest": {
+          "rows": 32,
+          "raw_exact_eos": 3,
+          "trimmed_exact_eos": 3,
+          "saved_text_exact_disagrees_with_raw": 0
+        },
+        "QuestSplit32": {
+          "rows": 32,
+          "raw_exact_eos": 8,
+          "trimmed_exact_eos": 8,
+          "saved_text_exact_disagrees_with_raw": 0
+        },
+        "PostMetric4": {
+          "rows": 32,
+          "raw_exact_eos": 10,
+          "trimmed_exact_eos": 10,
+          "saved_text_exact_disagrees_with_raw": 0
+        },
+        "PreMetric4": {
+          "rows": 32,
+          "raw_exact_eos": 11,
+          "trimmed_exact_eos": 11,
+          "saved_text_exact_disagrees_with_raw": 0
+        },
+        "MatchedContiguous4": {
+          "rows": 32,
+          "raw_exact_eos": 1,
+          "trimmed_exact_eos": 1,
+          "saved_text_exact_disagrees_with_raw": 0
+        }
+      }
+    },
+    "quest_fine_frozen_01": {
+      "sha256": "a642b957a04671baf68db790cc8e55049b2bd31f90e9fe493496050570ff58d8",
+      "counts": {
+        "QuestFine32": {
+          "rows": 32,
+          "raw_exact_eos": 13,
+          "trimmed_exact_eos": 13,
+          "saved_text_exact_disagrees_with_raw": 0
+        }
+      }
+    },
+    "oracle_continuation_01": {
+      "sha256": "25c20624d217503180a2064cba583366ab0712c2a5a597b0c07a643a11228c84",
+      "counts": {
+        "Dense": {
+          "rows": 16,
+          "raw_exact_eos": 0,
+          "trimmed_exact_eos": 0,
+          "saved_text_exact_disagrees_with_raw": 0
+        },
+        "RoPEOracle": {
+          "rows": 16,
+          "raw_exact_eos": 0,
+          "trimmed_exact_eos": 0,
+          "saved_text_exact_disagrees_with_raw": 0
+        },
+        "NoPEOracle": {
+          "rows": 16,
+          "raw_exact_eos": 0,
+          "trimmed_exact_eos": 0,
+          "saved_text_exact_disagrees_with_raw": 0
+        }
+      },
+      "identical_rope_nope_generated_ids": 15
+    }
+  },
+  "known_family_in_runtime_receipt": "Fixed m16 remote budget; cached FP32 positive 4-mean mixtures with group log-counts, actual-post-key centroid; post/pre metric and post-count-matched contiguous controls. Known clustering-family mechanism control, not claimed new algorithm"
+}

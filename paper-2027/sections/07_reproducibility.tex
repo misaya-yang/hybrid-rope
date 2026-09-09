@@ -1,11 +1,9 @@
-The new six-arm experiment is specified by a frozen protocol, full frequency
-tables, and same-target input construction. Implementation checks cover fixed
-pair identities, inactive coordinates, parameter initialization, temperature,
-causal label alignment, and remote-prefix replacement. Training records must
-include data and frequency hashes, paired row order, optimizer state, token
-budget, and resumable progress. The primary analysis reports training-seed and
-conditional document uncertainty separately. At this revision, CPU checks and
-the implementation are available; new model results remain pending. Previous
-experiments retain their own protocols and artifact-availability limitations
-in the supporting appendices. In particular, the single-budget MLA aggregate
-does not imply availability of its original training checkpoints.
+The appendices specify the installed frequency tables, exponent grids,
+attention amplitudes, training and adaptation recipes, datasets, and evaluation
+procedures. The fixed-range experiment reports three paired training seeds;
+the larger-model and frozen-model tables identify their comparison units and
+sample counts. Figure sources and numerical summaries are bound to recorded
+experiment artifacts; the appendices provide complete derivations of the
+closed-form construction and explicit exponent-adjustment formulas.
+Training, evaluation, and analysis records are kept with their corresponding
+protocols so that the reported tables and figures can be reconstructed.
