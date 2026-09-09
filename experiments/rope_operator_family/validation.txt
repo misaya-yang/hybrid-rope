@@ -12,10 +12,11 @@ test_exact_full_native_gqa_representation (experiments.rope_operator_family.test
 test_fitting_reduces_real_score_loss (experiments.rope_operator_family.test_operator.OperatorTests.test_fitting_reduces_real_score_loss) ... ok
 test_freqfold_orthogonality_and_same_frequency_identity (experiments.rope_operator_family.test_operator.OperatorTests.test_freqfold_orthogonality_and_same_frequency_identity) ... ok
 test_full_representation_has_zero_generator_residual (experiments.rope_operator_family.test_operator.OperatorTests.test_full_representation_has_zero_generator_residual) ... ok
+test_position_response_metric_removes_static_score_offset (experiments.rope_operator_family.test_operator.OperatorTests.test_position_response_metric_removes_static_score_offset) ... ok
 test_static_phase_intervention_keeps_causal_order (experiments.rope_operator_family.test_operator.OperatorTests.test_static_phase_intervention_keeps_causal_order) ... ok
 
 ----------------------------------------------------------------------
-Ran 13 tests in 1.432s
+Ran 14 tests in 1.960s
 
 OK
 
@@ -33,9 +34,39 @@ test_exact_full_native_gqa_representation (experiments.rope_operator_family.test
 test_fitting_reduces_real_score_loss (experiments.rope_operator_family.test_operator.OperatorTests.test_fitting_reduces_real_score_loss) ... ok
 test_freqfold_orthogonality_and_same_frequency_identity (experiments.rope_operator_family.test_operator.OperatorTests.test_freqfold_orthogonality_and_same_frequency_identity) ... ok
 test_full_representation_has_zero_generator_residual (experiments.rope_operator_family.test_operator.OperatorTests.test_full_representation_has_zero_generator_residual) ... ok
+test_position_response_metric_removes_static_score_offset (experiments.rope_operator_family.test_operator.OperatorTests.test_position_response_metric_removes_static_score_offset) ... ok
 test_static_phase_intervention_keeps_causal_order (experiments.rope_operator_family.test_operator.OperatorTests.test_static_phase_intervention_keeps_causal_order) ... ok
 
 ----------------------------------------------------------------------
-Ran 13 tests in 9.490s
+Ran 14 tests in 10.297s
+
+OK
+
+OBJECTIVE ATTRIBUTION UPDATE
+Local terminal result: Ran 15 tests in 2.463s; OK.
+Includes shared-initialization score fit/output KD, paired diagnostics and generation,
+rejection of unmatched token inputs and unoptimized attribution controls,
+and verification that output-only KD has no score-loss gradient.
+
+REMOTE CPU VALIDATION (current objective-attribution code)
+test_affine_fusion_matches_factor_response (experiments.rope_operator_family.test_operator.ModelTests.test_affine_fusion_matches_factor_response) ... ok
+test_bfloat16_model_path (experiments.rope_operator_family.test_operator.ModelTests.test_bfloat16_model_path) ... ok
+test_complete_single_method_cli_pipeline (experiments.rope_operator_family.test_operator.ModelTests.test_complete_single_method_cli_pipeline) ... `torch_dtype` is deprecated! Use `dtype` instead!
+ok
+test_padded_hf_model (experiments.rope_operator_family.test_operator.ModelTests.test_padded_hf_model) ... ok
+test_real_hf_forward_cached_decode_and_storage (experiments.rope_operator_family.test_operator.ModelTests.test_real_hf_forward_cached_decode_and_storage) ... ok
+test_all_masked_rows_are_finite (experiments.rope_operator_family.test_operator.OperatorTests.test_all_masked_rows_are_finite) ... ok
+test_changing_only_frequencies_preserves_static_content (experiments.rope_operator_family.test_operator.OperatorTests.test_changing_only_frequencies_preserves_static_content) ... ok
+test_chunked_matches_sdpa_with_cache_offset_and_padding (experiments.rope_operator_family.test_operator.OperatorTests.test_chunked_matches_sdpa_with_cache_offset_and_padding) ... ok
+test_exact_full_native_gqa_representation (experiments.rope_operator_family.test_operator.OperatorTests.test_exact_full_native_gqa_representation) ... ok
+test_fitting_reduces_real_score_loss (experiments.rope_operator_family.test_operator.OperatorTests.test_fitting_reduces_real_score_loss) ... ok
+test_freqfold_orthogonality_and_same_frequency_identity (experiments.rope_operator_family.test_operator.OperatorTests.test_freqfold_orthogonality_and_same_frequency_identity) ... ok
+test_full_representation_has_zero_generator_residual (experiments.rope_operator_family.test_operator.OperatorTests.test_full_representation_has_zero_generator_residual) ... ok
+test_output_control_excludes_score_loss_gradient (experiments.rope_operator_family.test_operator.OperatorTests.test_output_control_excludes_score_loss_gradient) ... ok
+test_position_response_metric_removes_static_score_offset (experiments.rope_operator_family.test_operator.OperatorTests.test_position_response_metric_removes_static_score_offset) ... ok
+test_static_phase_intervention_keeps_causal_order (experiments.rope_operator_family.test_operator.OperatorTests.test_static_phase_intervention_keeps_causal_order) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 11.389s
 
 OK

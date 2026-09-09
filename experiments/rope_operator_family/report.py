@@ -6,6 +6,79 @@ import statistics
 from pathlib import Path
 
 
+def compare_objectives(method, control, method_diagnostic=None, control_diagnostic=None,
+                       method_generation=None, control_generation=None):
+    """Compare one score-fit/output-KD pair; do not launch or select candidates."""
+    from .study import digest
+    roots = [Path(method), Path(control)]
+    manifests = [json.loads((root / "manifest.json").read_text()) for root in roots]
+    specs = [item["specification"] for item in manifests]
+    for item in manifests:
+        if item["status"] != "complete" or item.get("checkpoint_role") == "unoptimized_initialization":
+            raise ValueError("objective attribution needs two completed fitted checkpoints")
+    for field in ("base_model", "layers", "runtime"):
+        if manifests[0][field] != manifests[1][field]:
+            raise ValueError(f"unmatched {field}")
+    for field in ("capture_sha256", "shape", "fold", "initialization_sha256"):
+        if field not in specs[0] or specs[0][field] != specs[1].get(field):
+            raise ValueError(f"unmatched or missing {field}; fit from the same --init-from")
+    fits = [dict(spec["fit"]) for spec in specs]
+    for fit, expected in zip(fits, ((1.0, 0.0), (0.0, 1.0))):
+        weights = (fit.pop("score_weight"), fit.pop("output_weight"))
+        if weights != expected:
+            raise ValueError("expected score/value method versus output/value distillation")
+        if fit["steps"] < 1 or not all(fit[field] for field in ("learn_projections", "learn_frequency", "learn_content")):
+            raise ValueError("both objectives must train the same full parameter set")
+    if fits[0] != fits[1]:
+        raise ValueError("fit settings differ beyond score/output objective weights")
+    layers = []
+    for layer in range(manifests[0]["layers"]):
+        receipts = [json.loads((root / f"layer_{layer:03d}" / "result.json").read_text()) for root in roots]
+        for field in ("initial_state_sha256", "data_position_schedule_sha256", "optimizer_updates"):
+            if field not in receipts[0] or receipts[0][field] != receipts[1].get(field):
+                raise ValueError(f"layer {layer}: unmatched {field}")
+        layers.append({"layer": layer, **{field: receipts[0][field] for field in
+                       ("initial_state_sha256", "data_position_schedule_sha256", "optimizer_updates")},
+                       "method_fit_seconds": receipts[0]["seconds"], "control_fit_seconds": receipts[1]["seconds"]})
+    result = {"contrast": "operator-score fitting versus attention-output distillation; shared parameterization",
+              "delta_convention": "method minus control; lower errors/NLL are better", "matched_layers": layers,
+              "method_manifest_sha256": digest(roots[0] / "manifest.json"),
+              "control_manifest_sha256": digest(roots[1] / "manifest.json")}
+    if bool(method_diagnostic) != bool(control_diagnostic) or bool(method_generation) != bool(control_generation):
+        raise ValueError("provide both sides of each observation")
+    if method_diagnostic:
+        data = [json.loads(Path(path).read_text()) for path in (method_diagnostic, control_diagnostic)]
+        layer = data[0]["layer"]
+        for item, root in zip(data, roots):
+            if item["layer"] != layer or item["factor_sha256"] != digest(root / f"layer_{layer:03d}.pt"):
+                raise ValueError("diagnostic does not match the fitted layer")
+            if item["capture_sha256"] != specs[0]["capture_sha256"]:
+                raise ValueError("diagnostic capture differs from the shared capture")
+        held = [item["held_out_observation"] for item in data]
+        signatures = [[(row["id"], row["source_id"], row["record_sha256"]) for row in item["rows"]] for item in held]
+        if not signatures[0] or signatures[0] != signatures[1] or held[0]["position_scale"] != held[1]["position_scale"]:
+            raise ValueError("held-out documents or distances differ")
+        metrics = ("position_response_mse", "static_score_mse", "relative_output_mse", "relative_value_mse")
+        result["held_out"] = {"layer": layer, "position_scale": held[0]["position_scale"],
+                              "documents": len(signatures[0]), "deltas": {
+                                  key: held[0]["means"][key] - held[1]["means"][key] for key in metrics},
+                              "paired_rows": [{"id": a["id"], "source_id": a["source_id"],
+                                               **{key: a[key] - b[key] for key in metrics}}
+                                              for a, b in zip(held[0]["rows"], held[1]["rows"])]}
+    if method_generation:
+        data = [json.loads(Path(path).read_text()) for path in (method_generation, control_generation)]
+        for item, root in zip(data, roots):
+            if item["factors_sha256"] != digest(root / "manifest.json"):
+                raise ValueError("generation does not match the fitted checkpoint")
+        for field in ("base_model", "runtime", "prompt_sha256", "input_ids_sha256", "generation_settings", "expected_answer_ids"):
+            if field not in data[0] or data[0][field] != data[1].get(field):
+                raise ValueError(f"generation has unmatched {field}")
+        result["answer"] = {"answer_nll_delta": data[0]["answer_nll"] - data[1]["answer_nll"],
+                            "method_exact": data[0]["answer_exact"], "control_exact": data[1]["answer_exact"],
+                            "method_output": data[0]["output"], "control_output": data[1]["output"]}
+    return result
+
+
 def make_report(factors, output, diagnostic=None, evaluation=None, generation=None, profile=None):
     root = Path(factors)
     manifest = json.loads((root / "manifest.json").read_text())

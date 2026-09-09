@@ -98,7 +98,7 @@ def fit_command(args):
                        phase_learning_rate=args.phase_learning_rate, max_position_scale=args.max_position_scale,
                        learn_projections=not args.freeze_projections, learn_frequency=not args.freeze_frequency,
                        learn_content=not args.freeze_content, value_weight=args.value_weight,
-                       output_weight=args.output_weight, seed=args.seed)
+                       output_weight=args.output_weight, seed=args.seed, score_weight=args.score_weight)
     if args.initialize_only:
         config.steps = 0
     specification = {"capture_sha256": digest(source / "manifest.json"), "shape": {**manifest["model_shape"],
@@ -106,6 +106,19 @@ def fit_command(args):
                       "fold": args.fold, "fit": asdict(config)}
     if args.initialize_only:
         specification["initialize_only"] = True
+    initialization = None
+    if args.init_from:
+        if args.initialize_only:
+            raise ValueError("--init-from is for fitting from a shared initialization")
+        initialization = Path(args.init_from)
+        initial_manifest = json.loads((initialization / "manifest.json").read_text())
+        initial_spec = initial_manifest["specification"]
+        if initial_manifest["status"] != "complete" or initial_manifest.get("checkpoint_role") != "unoptimized_initialization":
+            raise ValueError("--init-from needs a completed unoptimized initialization")
+        if any(initial_spec[key] != specification[key] for key in ("capture_sha256", "shape", "fold")):
+            raise ValueError("shared initialization must match capture, shape and fold")
+        specification["initialization_sha256"] = {f"layer_{layer:03d}.pt": digest(initialization / f"layer_{layer:03d}.pt")
+                                                  for layer in range(manifest["layers"])}
     spec_hash = hashlib.sha256(json.dumps(specification, sort_keys=True).encode()).hexdigest()
     if (output / "manifest.json").exists():
         previous = json.loads((output / "manifest.json").read_text())
@@ -126,15 +139,18 @@ def fit_command(args):
         paths = records_for(source, layer, "calibration")
         if not paths:
             raise ValueError("no calibration records")
-        # One layer at a time; full-model activation stores are never loaded at once.
-        keys, values = [], []
-        for path in paths:
-            record = load_record(path)
-            keys.append(record["k"])
-            values.append(record["v"])
-        shape = Shape(**specification["shape"])
-        factors = OperatorFactors.from_freqfold(torch.cat(keys).to(args.device), torch.cat(values).to(args.device), shape, args.fold)
-        del keys, values
+        if initialization is not None:
+            factors = read_factors(initialization / f"layer_{layer:03d}.pt", args.device)
+        else:
+            # One layer at a time; full-model activation stores are never loaded at once.
+            keys, values = [], []
+            for path in paths:
+                record = load_record(path)
+                keys.append(record["k"])
+                values.append(record["v"])
+            shape = Shape(**specification["shape"])
+            factors = OperatorFactors.from_freqfold(torch.cat(keys).to(args.device), torch.cat(values).to(args.device), shape, args.fold)
+            del keys, values
         try:
             if args.initialize_only:
                 fit_receipt = {"configuration": asdict(config), "optimizer_updates": 0, "checkpoint_role": "unoptimized_initialization"}
@@ -162,6 +178,7 @@ def diagnose_command(args):
     prediction = diagnose(factors, records_for(args.capture, args.layer, "calibration"), args.position_scale)
     observed = diagnose(factors, records_for(args.capture, args.layer, "validation"), args.position_scale)
     write_json(args.out, {"layer": args.layer, "factor_sha256": digest(Path(args.factors) / f"layer_{args.layer:03d}.pt"),
+                          "capture_sha256": digest(Path(args.capture) / "manifest.json"),
                           "generator_diagnostics": generator_diagnostics(factors),
                           "calibration_prediction": prediction, "held_out_observation": observed})
     print(json.dumps({"calibration": prediction["means"], "held_out": observed["means"]}, indent=2))
@@ -246,6 +263,8 @@ def generate_command(args):
     result = dict(status="complete", method="operator_family", input_tokens=ids.shape[1],
                   generated_ids=answer_ids, output=tokenizer.decode(answer_ids, skip_special_tokens=True),
                   seconds=time.monotonic() - started, prompt_sha256=hashlib.sha256(text.encode()).hexdigest(),
+                  input_ids_sha256=hashlib.sha256(json.dumps(ids[0].tolist()).encode()).hexdigest(),
+                  generation_settings={"do_sample": False, "max_new_tokens": args.max_new_tokens, "backend": args.backend},
                   factors_sha256=digest(Path(args.factors) / "manifest.json"), base_model=identity, runtime=runtime_record(args))
     result["checkpoint_role"] = factor_metadata.get("checkpoint_role", "fitted_operator")
     if args.expected_answer is not None:
@@ -303,6 +322,15 @@ def report_command(args):
     make_report(args.factors, args.out, args.diagnostic, args.evaluation, args.generation, args.profile)
 
 
+def compare_objectives_command(args):
+    from .report import compare_objectives
+    result = compare_objectives(args.method, args.control,
+                                args.method_diagnostic, args.control_diagnostic,
+                                args.method_generation, args.control_generation)
+    write_json(args.out, result)
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+
+
 def parser():
     p = argparse.ArgumentParser(description=__doc__)
     commands = p.add_subparsers(dest="command", required=True)
@@ -336,10 +364,12 @@ def parser():
     c.add_argument("--content-rank", type=int, default=192); c.add_argument("--rotary-dim", type=int, default=64)
     c.add_argument("--fold", type=int)
     c.add_argument("--initialize-only", action="store_true", help="Save the same unoptimized initializer as one optional simple control; no optimizer runs")
+    c.add_argument("--init-from", help="Use the exact saved unoptimized factors shared by the method and output-distillation control")
     c.add_argument("--steps", type=int, default=500)
     c.add_argument("--learning-rate", type=float, default=1e-3)
     c.add_argument("--phase-learning-rate", type=float, default=0.01)
     c.add_argument("--max-position-scale", type=float, default=8.0)
+    c.add_argument("--score-weight", type=float, default=1.0, help="Operator-score objective weight; set 0 with --output-weight 1 for matched output distillation")
     c.add_argument("--value-weight", type=float, default=1.0); c.add_argument("--output-weight", type=float, default=0.0)
     c.add_argument("--freeze-projections", action="store_true"); c.add_argument("--freeze-frequency", action="store_true")
     c.add_argument("--freeze-content", action="store_true"); c.add_argument("--seed", type=int, default=42)
@@ -359,6 +389,11 @@ def parser():
     c.add_argument("--factors", required=True); c.add_argument("--out", required=True)
     c.add_argument("--diagnostic"); c.add_argument("--evaluation")
     c.add_argument("--generation"); c.add_argument("--profile")
+    c = command("compare-objectives", compare_objectives_command)
+    c.add_argument("--method", required=True); c.add_argument("--control", required=True)
+    c.add_argument("--method-diagnostic"); c.add_argument("--control-diagnostic")
+    c.add_argument("--method-generation"); c.add_argument("--control-generation")
+    c.add_argument("--out", required=True)
     return p
 
 

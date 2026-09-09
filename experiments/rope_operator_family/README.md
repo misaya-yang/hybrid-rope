@@ -1,6 +1,8 @@
 # 算子族压缩：方法定位代码
 
-当前只推进这一种方法。每次入口使用一份配置、一份输入，不自动运行其他方法、预算网格或多任务 benchmark。先把该方法跑完，再根据实际结果决定简单对照或下一个方法。
+当前推进这一种方法；归因对照为同架构、同初始化、同优化预算的 attention 输出蒸馏。每次入口使用一份配置、一份输入，不自动运行预算网格或多任务 benchmark。
+
+本轮的 [Core Experiment、各实验价值与失败处理](EXPERIMENT_VALUE.md) 已单独整理；核心是同KV预算下的远距离依赖修复，备选读数是同一问题的正确答案条件NLL。
 
 方法已经实现为不同的 A/B、可学习旋转频率和内容/value latent 的联合拟合。FreqFold/PCA 仅作初始化，默认不搜索其配置。模型接入保存共享 `c,k_R` 紧凑缓存；首个目标是现有 Qwen2.5-1.5B-Instruct。
 
@@ -16,6 +18,7 @@
 | `generate` | 一个用户指定 prompt 的真实逐 token 生成 |
 | `profile` | 当前配置的实际缓存、prefill/decode 成本 |
 | `report` | 汇总当前配置的原始结果，不自动判胜或选择方法 |
+| `compare-objectives` | 核对一对拟合的初态、实际文档/位置轨迹与评测输入，输出算子目标相对输出蒸馏的配对差值 |
 
 实现文件为 `operator.py`（方法）、`model.py`（实际模型/缓存）、`study.py`（拟合和机制观测）、`prepare.py`（数据）、`run.py`（入口）、`report.py`（结果）。`DESIGN.md` 保留较完整的研究背景；当前执行以这里的单方法流程为准。
 
@@ -66,7 +69,11 @@ $OPERATOR_PYTHON -m experiments.rope_operator_family.run capture \
 
 ```bash
 $OPERATOR_PYTHON -m experiments.rope_operator_family.run fit \
-  --capture work/capture --out work/operator \
+  --capture work/capture --out work/initialization \
+  --content-rank 192 --rotary-dim 64 --initialize-only --device cuda
+
+$OPERATOR_PYTHON -m experiments.rope_operator_family.run fit \
+  --capture work/capture --init-from work/initialization --out work/operator \
   --content-rank 192 --rotary-dim 64 --steps 500 \
   --max-position-scale 8 --device cuda
 ```
@@ -100,9 +107,11 @@ $OPERATOR_PYTHON -m experiments.rope_operator_family.run generate \
   --max-new-tokens 128 --out work/answer.json --device cuda
 ```
 
-`diagnose` 在一份已拟合模型上测真实 score、静态误差、距离分桶、top-key margin、attention KL、log-mass 与 value output。它同时报告校准估计和留出观测；相位回放与真正长文本 NLL 分开解释。
+`diagnose` 在一份已拟合模型上测真实 score、静态误差、相对位置响应误差 `position_response_mse`、距离分桶、top-key margin、attention KL、log-mass 与 value output。位置响应误差直接比较 `(ŝ_Δ−ŝ_0)−(s_Δ−s_0)`。它同时报告校准估计和留出观测；相位回放与真正长文本 NLL 分开解释。
 
 `evaluate` 在完整模型上预测每篇最后256个目标 token。`generate` 只生成指定的一条问题，保留原始回答和 token IDs，不自动铺开任务集。
+
+提供 `generate --expected-answer ...` 后，还会报告严格答案匹配及条件答案NLL。关键归因对照的完整命令见 [EXPERIMENT_VALUE 第6节](EXPERIMENT_VALUE.md#6-可直接执行的core入口)：先用 `--initialize-only` 保存共同起点，两边用 `--init-from` 加载；本方法用 `--score-weight 1 --output-weight 0`，普通输出蒸馏用 `--score-weight 0 --output-weight 1`，其余条件一致。初始化本身不作为这一归因比较的对照。
 
 ### 实测时间与缓存
 

@@ -35,5 +35,9 @@
    requires input or resources beyond the authorized scope. State any blocker
    precisely and continue independent work where possible.
 
+7. **Test the claim directly.**
+   Use direct evidence and the minimum informative comparison; keep both positive
+   and negative conclusions within what the experiment actually tested.
+
 Project-specific hypotheses, baselines, parameters, experiment plans, results,
 and failure records belong in project documents, not here.

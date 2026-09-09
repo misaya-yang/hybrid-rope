@@ -156,6 +156,17 @@ class FitConfig:
     value_weight: float = 1.0
     output_weight: float = 0.0
     seed: int = 42
+    score_weight: float = 1.0
+
+
+def fitting_loss(metrics, config: FitConfig):
+    """Matched objectives on the same forward: operator scores or output KD."""
+    terms = ((config.score_weight, "relative_score_mse"),
+             (config.value_weight, "relative_value_mse"),
+             (config.output_weight, "relative_output_mse"))
+    if any(not math.isfinite(weight) or weight < 0 for weight, _ in terms) or not any(weight > 0 for weight, _ in terms):
+        raise ValueError("loss weights must be finite, nonnegative, with at least one positive")
+    return sum(weight * metrics[name] for weight, name in terms if weight > 0)
 
 
 def fit_layer(factors: OperatorFactors, paths: list[Path], config: FitConfig, output: str | Path):
@@ -178,6 +189,12 @@ def fit_layer(factors: OperatorFactors, paths: list[Path], config: FitConfig, ou
     if not groups:
         raise ValueError("at least one part of the method must be learnable")
     optimizer = torch.optim.Adam(groups)
+    schedule = hashlib.sha256()
+    record_hashes = {}
+    initial = hashlib.sha256()
+    for name, tensor in sorted(factors.state_dict().items()):
+        initial.update(name.encode())
+        initial.update(tensor.detach().cpu().contiguous().numpy().tobytes())
     started = time.monotonic()
     if (output / "fit.jsonl").exists():
         (output / "fit.jsonl").replace(output / f"fit_previous_attempt_{time.time_ns()}.jsonl")
@@ -188,7 +205,10 @@ def fit_layer(factors: OperatorFactors, paths: list[Path], config: FitConfig, ou
             scale = 1.0 if step % 2 == 0 else math.exp(rng.uniform(0, math.log(config.max_position_scale)))
             teacher, student = responses(factors, record, scale)
             metrics = squared_metrics(teacher, student)
-            loss = metrics["relative_score_mse"] + config.value_weight * metrics["relative_value_mse"] + config.output_weight * metrics["relative_output_mse"]
+            loss = fitting_loss(metrics, config)
+            if path not in record_hashes:
+                record_hashes[path] = digest(path)
+            schedule.update(json.dumps([record_hashes[path], scale]).encode())
             if not torch.isfinite(loss):
                 raise FloatingPointError(f"nonfinite loss at layer fit step {step}")
             optimizer.zero_grad(set_to_none=True)
@@ -202,7 +222,9 @@ def fit_layer(factors: OperatorFactors, paths: list[Path], config: FitConfig, ou
             if step == 0 or (step + 1) % 50 == 0 or step + 1 == config.steps:
                 log.flush()
                 print(json.dumps({"stage": "fit", **item}), flush=True)
-    return {"configuration": asdict(config), "seconds": time.monotonic() - started, "last": item}
+    return {"configuration": asdict(config), "seconds": time.monotonic() - started, "last": item,
+            "initial_state_sha256": initial.hexdigest(), "data_position_schedule_sha256": schedule.hexdigest(),
+            "optimizer_updates": config.steps}
 
 
 @torch.inference_mode()
@@ -224,7 +246,7 @@ def diagnose(factors: OperatorFactors, paths: list[Path], position_scale: float 
         student_change = ss - static_student[0]
         position_error = student_change - teacher_change
         position_mse = position_error[:, valid].square().mean()
-        item.update(id=record["id"], source_id=record["source_id"], attention_kl=float(kl),
+        item.update(id=record["id"], source_id=record["source_id"], record_sha256=digest(path), attention_kl=float(kl),
                     static_score_mse=float(static_error),
                     position_response_mse=float(position_mse),
                     relative_position_response_mse=float(position_mse / teacher_change[:, valid].square().mean().clamp_min(1e-8)),

@@ -15,7 +15,7 @@ from .model import CompactAttention, cache_bytes, chunked_attention
 from .operator import OperatorFactors, Shape, freqfold_rotation, native_response, rotate, split_to_pairs
 from .prepare import prepare_text
 from .run import parser
-from .study import FitConfig, diagnose, fit_layer, generator_diagnostics, responses, squared_metrics
+from .study import FitConfig, diagnose, fit_layer, fitting_loss, generator_diagnostics, responses, squared_metrics
 
 
 class OperatorTests(unittest.TestCase):
@@ -115,6 +115,19 @@ class OperatorTests(unittest.TestCase):
         after = float(squared_metrics(*responses(factors, record))["relative_score_mse"].detach())
         self.assertLess(after, before * 0.7)
 
+    def test_output_control_excludes_score_loss_gradient(self):
+        score, value, output = [torch.tensor(x, requires_grad=True) for x in (7.0, 2.0, 3.0)]
+        loss = fitting_loss(dict(relative_score_mse=score, relative_value_mse=value,
+                                 relative_output_mse=output),
+                            FitConfig(score_weight=0, value_weight=1, output_weight=1))
+        loss.backward()
+        self.assertEqual(float(loss.detach()), 5)
+        self.assertIsNone(score.grad)
+        self.assertEqual(float(value.grad), 1)
+        self.assertEqual(float(output.grad), 1)
+        with self.assertRaises(ValueError):
+            fitting_loss({}, FitConfig(score_weight=0, value_weight=0, output_weight=0))
+
 
 def tiny_model():
     from transformers import Qwen2Config, Qwen2ForCausalLM
@@ -212,8 +225,6 @@ class ModelTests(unittest.TestCase):
                     "--calibration-length", 24, "--evaluation-length", 48])
             invoke(["capture", "--model", model_path, "--data", data, "--out", captured,
                     "--queries", 8, "--device", "cpu", "--dtype", "bfloat16"])
-            invoke(["fit", "--capture", captured, "--out", factors, "--content-rank", 12,
-                    "--rotary-dim", 4, "--steps", 3, "--max-position-scale", 2, "--device", "cpu"])
             initial = root / "initialization"
             invoke(["fit", "--capture", captured, "--out", initial, "--content-rank", 12,
                     "--rotary-dim", 4, "--initialize-only", "--device", "cpu"])
@@ -221,9 +232,17 @@ class ModelTests(unittest.TestCase):
             self.assertEqual(initial_manifest["checkpoint_role"], "unoptimized_initialization")
             self.assertEqual(initial_manifest["specification"]["fit"]["steps"], 0)
             self.assertFalse((initial / "layer_000" / "fit.jsonl").exists())
+            invoke(["fit", "--capture", captured, "--out", factors, "--content-rank", 12,
+                    "--rotary-dim", 4, "--steps", 3, "--max-position-scale", 2,
+                    "--init-from", initial, "--device", "cpu"])
+            control = root / "output_kd"
+            invoke(["fit", "--capture", captured, "--out", control, "--content-rank", 12,
+                    "--rotary-dim", 4, "--steps", 3, "--max-position-scale", 2,
+                    "--init-from", initial, "--score-weight", 0, "--output-weight", 1, "--device", "cpu"])
             # Finished layers can be reused; this must not run a second trajectory.
             invoke(["fit", "--capture", captured, "--out", factors, "--content-rank", 12,
-                    "--rotary-dim", 4, "--steps", 3, "--max-position-scale", 2, "--device", "cpu"])
+                    "--rotary-dim", 4, "--steps", 3, "--max-position-scale", 2,
+                    "--init-from", initial, "--device", "cpu"])
             invoke(["diagnose", "--capture", captured, "--factors", factors, "--layer", 0,
                     "--position-scale", 2, "--out", root / "diagnostic.json", "--device", "cpu"])
             invoke(["evaluate", "--model", model_path, "--data", data, "--factors", factors,
@@ -233,6 +252,28 @@ class ModelTests(unittest.TestCase):
             invoke(["generate", "--model", model_path, "--factors", factors, "--prompt", prompt,
                     "--expected-answer", "word7", "--out", root / "answer.json", "--max-new-tokens", 4,
                     "--device", "cpu", "--dtype", "bfloat16"])
+            invoke(["diagnose", "--capture", captured, "--factors", control, "--layer", 0,
+                    "--position-scale", 2, "--out", root / "control_diagnostic.json", "--device", "cpu"])
+            invoke(["generate", "--model", model_path, "--factors", control, "--prompt", prompt,
+                    "--expected-answer", "word7", "--out", root / "control_answer.json", "--max-new-tokens", 4,
+                    "--device", "cpu", "--dtype", "bfloat16"])
+            pair = ["compare-objectives", "--method", factors, "--control", control,
+                    "--method-diagnostic", root / "diagnostic.json", "--control-diagnostic", root / "control_diagnostic.json",
+                    "--method-generation", root / "answer.json", "--control-generation", root / "control_answer.json",
+                    "--out", root / "attribution.json"]
+            invoke(pair)
+            attribution = json.loads((root / "attribution.json").read_text())
+            self.assertEqual(len(attribution["matched_layers"]), 2)
+            self.assertEqual(attribution["matched_layers"][0]["optimizer_updates"], 3)
+            self.assertIn("answer_nll_delta", attribution["answer"])
+            self.assertEqual(len(attribution["held_out"]["paired_rows"]), 2)
+            answer = json.loads((root / "control_answer.json").read_text())
+            (root / "control_answer.json").write_text(json.dumps({**answer, "input_ids_sha256": "different-input"}))
+            with self.assertRaisesRegex(ValueError, "input_ids_sha256"):
+                invoke(pair)
+            (root / "control_answer.json").write_text(json.dumps(answer))
+            with self.assertRaisesRegex(ValueError, "fitted checkpoints"):
+                invoke(["compare-objectives", "--method", factors, "--control", initial, "--out", root / "invalid.json"])
             invoke(["profile", "--model", model_path, "--factors", factors, "--length", 8,
                     "--decode-tokens", 2, "--repeats", 1, "--out", root / "profile.json", "--device", "cpu", "--dtype", "bfloat16"])
             invoke(["report", "--factors", factors, "--diagnostic", root / "diagnostic.json",

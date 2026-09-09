@@ -1,14 +1,14 @@
 {
-  "verified_at_utc": "2026-09-09T08:58:01.469755+00:00",
+  "verified_at_utc": "2026-09-09T09:59:48.177186+00:00",
   "scope": "Single-method code preparation. Tiny random Qwen fixtures, not mature-model research results.",
   "local": {
     "python": "3.13.11",
     "torch": "2.10.0",
     "transformers": "5.2.0",
     "device": "cpu",
-    "tests": 13,
+    "tests": 15,
     "passed": true,
-    "fixture_test_seconds": 1.432
+    "fixture_test_seconds": 2.463
   },
   "remote": {
     "ssh": "ssh -p 18164 root@connect.westd.seetacloud.com",
@@ -17,9 +17,9 @@
     "torch": "2.8.0+cu128",
     "transformers": "4.57.6",
     "device": "cpu",
-    "tests": 13,
+    "tests": 15,
     "passed": true,
-    "fixture_test_seconds": 9.49
+    "fixture_test_seconds": 11.389
   },
   "coverage": [
     "HF affine fusion with biases",
@@ -33,7 +33,15 @@
     "incremental cached decode",
     "FP32 and BF16",
     "unique compact cache storage bytes",
-    "all CLI stages including report"
+    "all CLI stages including report",
+    "positional-response error excludes the static score branch",
+    "unoptimized initialization export without optimizer updates",
+    "known-answer conditional NLL in the single-prompt generator",
+    "Matched score-fit and output-distillation CLI pair from identical saved tensors",
+    "Actual per-layer initialization, data-position schedule and update-count matching",
+    "Paired held-out diagnostic and known-answer NLL reporting",
+    "Reject unmatched evaluation token IDs and unoptimized attribution controls",
+    "Output-only distillation excludes score-loss gradients"
   ],
   "upstream_rotation_parity": {
     "commit": "eaf4dde7a9b0592566166fd347959738e70ecefd",
@@ -63,10 +71,10 @@
     "model.py": "1aac6066923e947effc705aff53bbd3e4a7767589320bbe0f7b850fe3089f008",
     "operator.py": "7cfc551c0df6ed07f2eb6678cf97656f11907d444b500e14ca9cd78a176d6226",
     "prepare.py": "b30615c7d3ed293a007d2520fde1593b4b9b4564a07b69cbe1d0a6f79b214e09",
-    "report.py": "7a83a633692390567ddece5ba0af6606576ee9ce41266365c41c5008072fd279",
-    "run.py": "64882d7598bc24ff8bdd561b74d56147fca3f50f928c5ae9beae4b7a1a277ce5",
-    "study.py": "171c3d0d54fc1ab997cd89cf4bb8a82e9d3863fe8438e0a16dbab6f52f58326d",
-    "test_operator.py": "bf8bb3af099b803526db4dfcbadb10b4af4ec4d7b15c6bba6df96cf9d027deb3"
+    "report.py": "14e5cc6c7ecfee3a33084496ec05de692f81a43c9e1d97bc3aa091e494fdaa22",
+    "run.py": "2581da52f64eaa66905a51b22521b660867298ff5ae6d7e23c25ab03f703dd60",
+    "study.py": "8e10b7de9a9554cf9eb535b82c2fc20ebd00df6cf4832279f2e29e8d0c4710ec",
+    "test_operator.py": "41afaf3ecbf7ee536caa3641bf5bdf9b76f41adcc2d9585230dd632dfc54f87a"
   },
   "research_model_experiments": "not_started",
   "representative_GPU_timing": "not_measured"
