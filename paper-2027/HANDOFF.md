@@ -1,3 +1,15 @@
+# User stopped research — 2026-09-09
+
+Latest explicit instruction: submit and push the existing reports/code, and stop
+research. This supersedes the preceding GPU-off research continuation. Do not
+start further literature searches, CPU experiments, GPU work, model downloads or
+research follow-ups unless the user resumes them. The research goal remains
+unachieved; preserved reports and counterexamples are not a completed method.
+The authorized closeout is a scoped commit and ordinary push of existing work.
+The research heartbeat remains paused.
+
+---
+
 # Current phase — GPU off, unrestricted-time local research, 2026-09-09
 
 The user explicitly resumed research after the bounded failure: GPU is now off,

@@ -1,0 +1,90 @@
+{
+  "scope": "CPU algebra and counterexamples; no GPU, checkpoint or task result",
+  "group_logit_factorization_max_abs_error": 2.1094237467877974e-15,
+  "softmax_counterexample": {
+    "mean_of_attention": [
+      0.49997730106569555,
+      0.49997730106569555,
+      4.539786860886666e-05
+    ],
+    "attention_of_mean_logits": [
+      0.3333333333333333,
+      0.3333333333333333,
+      0.3333333333333333
+    ],
+    "total_variation": 0.33328793546472446
+  },
+  "same_moments_different_reader_mixtures": {
+    "address_probabilities": [
+      [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      [
+        0.0,
+        0.5,
+        0.0,
+        0.5
+      ]
+    ],
+    "moments_equal": true,
+    "reader_mixtures": [
+      [
+        0.49997730106569555,
+        0.49997730106569555,
+        4.539786860886666e-05
+      ],
+      [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ]
+    ]
+  },
+  "fixed_key_TAPE_style_operator_identity_error": 0.0,
+  "simplex_rank_counterexample": {
+    "rank_Phi": 2,
+    "sufficient_linear_sketch_dimension": 1,
+    "reconstructed_moment": [
+      0.37,
+      0.63
+    ],
+    "correct_general_dimension": "rank([ones_row; Phi]) - 1, with known unit mass and an affine decoder"
+  },
+  "zero_entropy_gate_cancellation": {
+    "reference_entropy": 0.0,
+    "g": 0.5,
+    "query_norm_ratio": 6.123233995736766e-17
+  },
+  "native_query_rebasing_counterexample": {
+    "current_position": 10,
+    "gold_anchor": 6,
+    "desired_offset": -1,
+    "native_argmax": 5,
+    "gold_reference_argmax": 1,
+    "interpretation": "Oracle rebasing failure need not mean reference information was absent"
+  },
+  "shift_reference_counterexample": {
+    "reference_positions": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "selected_positions": [
+      7,
+      7,
+      7,
+      7
+    ],
+    "slope": 0.0,
+    "interpretation": "Unit positional slope requires controlled/translated key content; group law alone is insufficient"
+  },
+  "nonlinear_residual_address_switch": {
+    "bounded_domain": "q in [-1,1]^2, two addresses encoded by z in {0,1}",
+    "max_abs_error": 2.220446049250313e-16,
+    "interpretation": "One affine-map impossibility is not an impossibility for ordinary MLP blocks"
+  }
+}

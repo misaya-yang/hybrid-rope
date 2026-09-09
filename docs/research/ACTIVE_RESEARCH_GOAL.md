@@ -58,3 +58,9 @@ actual operators, derivations, counterexamples and CPU tests without GPU access,
 model downloads or a predetermined winning representation. The broad modern
 positional-encoding question remains intact. Do not call a proposal a validated
 model improvement; do not remain blocked merely because GPU execution is absent.
+
+## 2026-09-09: 用户明确停止研究并要求提交推送
+
+用户最新指令为提交并推送已有报告与代码，停止继续寻找方法。该指令覆盖上面的
+GPU-off 继续研究安排。保留未达成的研究目标与全部证据；不自动继续文献检索、
+CPU/GPU 实验或模型下载。只有用户后续明确恢复研究时再继续。
