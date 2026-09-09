@@ -1,5 +1,5 @@
 {
-  "status": "first_matched_mature_model_gpu_run_complete",
+  "status": "three_followup_methods_and_retrieval_analysis_complete",
   "checked_on": "2026-09-09",
   "scope": "Content-Weighted Compression of the RoPE Operator Family",
   "machine_snapshot": {
@@ -121,26 +121,30 @@
     }
   },
   "workspace_revision": "b8466ded3e878065fe8845d40fb9ae0f35b91613",
-  "design_sha256": "a2c29ee59851d2d8481a210e76a2c5c17b270d75e04bc37058fbc33eab2c5e1c",
+  "design_sha256": "f616a568ed28fb33cb629f58b9c4103a9c41b6249104370fb9f74ceb397cdf7d",
   "execution_scope": "method identification; one method configuration and one requested experiment per invocation",
   "implementation_source_sha256": {
+    "run.py": "4bbdd60e98f400db1872e3b89da1ae12763d12250b4636c47d2aff699164ad11",
+    "test_operator.py": "41afaf3ecbf7ee536caa3641bf5bdf9b76f41adcc2d9585230dd632dfc54f87a",
+    "operator.py": "29462fdeed0fb2448f6e7b4d96e32093a0a15d8b2a9fe436d2f450badbaf1d86",
     "__init__.py": "65a5d613c82ba80638966b295a187741883fd57faec6dcc197ba1596462931c9",
     "model.py": "1aac6066923e947effc705aff53bbd3e4a7767589320bbe0f7b850fe3089f008",
-    "operator.py": "7cfc551c0df6ed07f2eb6678cf97656f11907d444b500e14ca9cd78a176d6226",
-    "prepare.py": "b30615c7d3ed293a007d2520fde1593b4b9b4564a07b69cbe1d0a6f79b214e09",
+    "progressive.py": "648ca742cf38a9ab38c82da91387dd9d596e3e0c7dfaccc1ff503443e97e1885",
+    "test_followups.py": "05ec3ef315b82f9ad1b2ee480c8ef39ea178c200dcae6ef0fd7fdb3e9c5f9dd2",
     "report.py": "14e5cc6c7ecfee3a33084496ec05de692f81a43c9e1d97bc3aa091e494fdaa22",
-    "run.py": "2581da52f64eaa66905a51b22521b660867298ff5ae6d7e23c25ab03f703dd60",
-    "study.py": "8e10b7de9a9554cf9eb535b82c2fc20ebd00df6cf4832279f2e29e8d0c4710ec",
-    "test_operator.py": "41afaf3ecbf7ee536caa3641bf5bdf9b76f41adcc2d9585230dd632dfc54f87a"
+    "prepare.py": "b30615c7d3ed293a007d2520fde1593b4b9b4564a07b69cbe1d0a6f79b214e09",
+    "study.py": "dd027197c8523b8ae3144caf137cecb945bc06b9182d94f30ac14004ef871299"
   },
-  "validation_record": "validation.json",
+  "validation_record": "followup_validation.json",
   "remote_code_directory": "/root/autodl-tmp/operator_family_prepare_20260909",
   "documents": {
-    "DESIGN.md": "a2c29ee59851d2d8481a210e76a2c5c17b270d75e04bc37058fbc33eab2c5e1c",
-    "README.md": "e68f172dbbbcdedab4452d96064e53534ff27b7913c219be6e974f33173ba8d2",
+    "DESIGN.md": "f616a568ed28fb33cb629f58b9c4103a9c41b6249104370fb9f74ceb397cdf7d",
+    "README.md": "d5a44e4dbfe446966498f06c460ab2b639c23dc1e06a4cb08173a3b7da33af25",
     "EXPERIMENT_VALUE.md": "5298423981de17795c2aa1197bd4e80253f7d6e65d3a14089cb2a524259a38b0",
     "RECENT_RESULTS_NOTE.md": "8b8d5d309be9e77fc9b176f7eefe4dc84e6e633bbbfe4dc01f6b32931901cf93",
-    "results/20260909_gpu/REPORT.md": "f5cce68e5b5be599d4e74d74b6a32fa0531910b1886f7e034306205e8727f039"
+    "results/20260909_gpu/REPORT.md": "f5cce68e5b5be599d4e74d74b6a32fa0531910b1886f7e034306205e8727f039",
+    "FOLLOWUPS_20260909.md": "c22a54417bc979105d0897f108359620a48f740e1789061c5e7f16961e2e33cd",
+    "FOLLOWUP_RESULTS_20260909.md": "6a6856ef5d2b6ea31bcb1d4d843dcbcbc10f0097be6c622a4a9ac82d02b35bac"
   },
   "project_agents_sha256": "97d482464761e2017825936b0e4a8bfee293c47cdc501d2371db321e55fc885a",
   "input_readiness_record": "input_readiness.json",
@@ -161,5 +165,36 @@
     "kv_bytes_8192": 117440512,
     "decision": "Current score objective is worse for full-model behavior; output KD partially recovers initialization but does not restore core answer."
   },
-  "machine_snapshot_note": "Historical no-GPU preparation snapshot; current GPU runtime is recorded in results/20260909_gpu/gpu_run_receipt.json."
+  "machine_snapshot_note": "Historical no-GPU preparation snapshot; current GPU runtime is recorded in results/20260909_gpu/gpu_run_receipt.json.",
+  "initial_implementation_source_sha256": {
+    "__init__.py": "65a5d613c82ba80638966b295a187741883fd57faec6dcc197ba1596462931c9",
+    "model.py": "1aac6066923e947effc705aff53bbd3e4a7767589320bbe0f7b850fe3089f008",
+    "operator.py": "7cfc551c0df6ed07f2eb6678cf97656f11907d444b500e14ca9cd78a176d6226",
+    "prepare.py": "b30615c7d3ed293a007d2520fde1593b4b9b4564a07b69cbe1d0a6f79b214e09",
+    "report.py": "14e5cc6c7ecfee3a33084496ec05de692f81a43c9e1d97bc3aa091e494fdaa22",
+    "run.py": "2581da52f64eaa66905a51b22521b660867298ff5ae6d7e23c25ab03f703dd60",
+    "study.py": "8e10b7de9a9554cf9eb535b82c2fc20ebd00df6cf4832279f2e29e8d0c4710ec",
+    "test_operator.py": "41afaf3ecbf7ee536caa3641bf5bdf9b76f41adcc2d9585230dd632dfc54f87a"
+  },
+  "initial_validation_record": "validation.json",
+  "followups_20260909": {
+    "status": "complete",
+    "report": "FOLLOWUP_RESULTS_20260909.md",
+    "artifacts": "results/20260909_followups",
+    "nll": {
+      "bkv_initialization": 4.150590419769287,
+      "bkv_kd": 4.992230832576752,
+      "attention_kd": 3.745051860809326,
+      "progressive_kd": 4.5678627490997314
+    },
+    "core_exact": {
+      "bkv_kd": false,
+      "attention_kd": false,
+      "progressive_kd": false
+    },
+    "native_repeat_exact_token_and_nll_match": true,
+    "agent_analysis": "retrieval_failure_analysis; read-only analysis reproduced in retrieval_failure_measurements.json",
+    "matched_layers_each": 28,
+    "kv_bytes_8192_each": 117440512
+  }
 }
