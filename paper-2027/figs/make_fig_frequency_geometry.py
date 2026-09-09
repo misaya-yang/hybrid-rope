@@ -44,15 +44,15 @@ plt.rcParams.update({
     "mathtext.fontset": "stix",
     "pdf.fonttype": 42,
     "ps.fonttype": 42,
-    "font.size": 7.5,
-    "axes.titlesize": 8.6,
-    "axes.labelsize": 7.6,
-    "xtick.labelsize": 6.8,
-    "ytick.labelsize": 6.8,
+    "font.size": 10,
+    "axes.titlesize": 10,
+    "axes.labelsize": 9,
+    "xtick.labelsize": 8.2,
+    "ytick.labelsize": 8.2,
 })
 
-fig, axes = plt.subplots(1, 2, figsize=(7.0, 2.45),
-                         gridspec_kw={"width_ratios": [1.18, 1.0]})
+fig, axes = plt.subplots(1, 2, figsize=(7.0, 3.15),
+                         gridspec_kw={"width_ratios": [1.10, 1.0]})
 
 # (a) Exact-range identification grid versus the deployed grid.
 pairs, tau = 32, 4.0
@@ -74,14 +74,14 @@ for index in [0, pairs - 1]:
     ax.scatter(index, geo[index], s=34, facecolor="white", edgecolor=GREEN,
                lw=1.2, zorder=5)
 ax.annotate("identical sampled endpoints", (pairs - 1, geo[-1]),
-            xytext=(17, 0.70), color=GREEN, fontsize=6.8,
+            xytext=(17, 0.70), color=GREEN, fontsize=8.4,
             arrowprops=dict(arrowstyle="->", color=GREEN, lw=0.8))
 ax.set_xlim(-0.8, pairs - 0.2)
 ax.set_ylim(-0.02, 1.02)
 ax.set_xlabel("frequency-pair index")
 ax.set_ylabel(r"$\phi_k=-\log(\omega_k)/\log b$")
-ax.set_title("(a) The allocation axis is not the range axis", weight="bold")
-ax.legend(frameon=False, loc="upper left", fontsize=6.7, handlelength=1.6)
+ax.set_title("(a) Fixed endpoints, different allocation", weight="bold")
+ax.legend(frameon=False, loc="upper left", fontsize=8.4, handlelength=1.6)
 ax.grid(color="#E4E8EB", lw=0.5)
 
 # (b) Canonical full-subspace redundancy on the standard RoPE grid.
@@ -103,16 +103,16 @@ image = ax.imshow(affinity_plot, origin="lower", cmap=REDUNDANCY_CMAP, vmin=0, v
 ax.add_patch(Rectangle((40.5, 40.5), 23, 23, fill=False, edgecolor=ORANGE,
                        lw=1.4))
 ax.annotate("23 slow pairs\n46 dims, $r_2=2.00$", (51.5, 51.5),
-            xytext=(8, 53), color=INK, fontsize=7.0, weight="bold",
+            xytext=(8, 53), color=INK, fontsize=9, weight="bold",
             bbox=dict(boxstyle="round,pad=0.20", facecolor="white",
                       edgecolor="none", alpha=0.9),
             arrowprops=dict(arrowstyle="->", color=ORANGE, lw=0.9))
 ax.set_xlabel("frequency-pair index")
 ax.set_ylabel("frequency-pair index")
-ax.set_title("(b) Phase-invariant subspace redundancy", weight="bold")
+ax.set_title("(b) Phase-invariant redundancy", weight="bold")
 colorbar = fig.colorbar(image, ax=ax, fraction=0.046, pad=0.035)
-colorbar.set_label(r"canonical redundancy $c_{ij}$", fontsize=7)
-colorbar.ax.tick_params(labelsize=6.5)
+colorbar.set_label(r"canonical redundancy $c_{ij}$", fontsize=8)
+colorbar.ax.tick_params(labelsize=8.2)
 
 fig.tight_layout(w_pad=1.2)
 fig.savefig(OUT, bbox_inches="tight", pad_inches=0.025)

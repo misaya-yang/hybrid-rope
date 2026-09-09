@@ -1,55 +1,55 @@
 {
   "sources": {
     "range": {
-      "path": "paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.json",
+      "file": "EXACT_RANGE_151M_3SEED_RESULT_20260820.json",
       "sha256": "4f0066d9652d92497dbda669788e60d9efca96d98506c560384ac279d198db07"
     },
     "llama": {
-      "path": "data/curated/llama8b_causal_source_use_s42_20260714.json",
+      "file": "llama8b_causal_source_use_s42_20260714.json",
       "sha256": "a5f67f1c74d8e5a2d8ba15ea31846c2dd832a4f35b003b3a22c1ba0cc5ada3d6"
     },
     "frozen": {
-      "path": "data/curated/frozen_fixed_support_mature_20260823.json",
+      "file": "frozen_fixed_support_mature_20260823.json",
       "sha256": "475bf89c8514300b69d09e4f6e7244d26129445e371e285bd70529161731d357"
     },
     "index": {
-      "path": "paper-2027/research/attention-aware-retrofit/evidence/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RECEIPT_20260901.json",
+      "file": "K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RECEIPT_20260901.json",
       "sha256": "c158eabb43d2eb026453e7f25b277f21352f9da2938d840e4d059567a103babf"
     },
     "qa": {
-      "path": "docs/research/ROPE_OLMO_BM_FIVE_QA_RESULT_20260908.json",
+      "file": "ROPE_OLMO_BM_FIVE_QA_RESULT_20260908.json",
       "sha256": "48232e004655dfe255071a88661c6907d05b14caac4263fe7539e4c3eeae7337"
     },
     "bm_definition": {
-      "path": "docs/research/ROPE_MRPRO_BM_CANDIDATE_20260908.json",
+      "file": "ROPE_MRPRO_BM_CANDIDATE_20260908.json",
       "sha256": "98bc7b1d99a3d5cda627e83f4f4298989a6834629301f6a6519dc812ca5f1b2f"
     },
     "olmo": {
-      "path": "docs/research/ROPE_OLMO_BM_RESULT_20260908.json",
+      "file": "ROPE_OLMO_BM_RESULT_20260908.json",
       "sha256": "4a362ffd2bcbb12afc28056b1c290fe2d583ccbaf2bcc11f2b401c2d367e5b7e"
     },
     "qwen3": {
-      "path": "docs/research/ROPE_BM_TRANSFER_RESULT_20260908.json",
+      "file": "ROPE_BM_TRANSFER_RESULT_20260908.json",
       "sha256": "acbb9fdffa28f3ecb10d0a657996852bc9228842e428878bf0459f1ac33e457f"
     },
     "qwen7": {
-      "path": "docs/research/ROPE_QWEN7_BM_RESULT_20260908.json",
+      "file": "ROPE_QWEN7_BM_RESULT_20260908.json",
       "sha256": "8e356b57186c10ab8ec17003a46552585352264d9588d116974d1b3d8147ba69"
     },
     "coadapt50": {
-      "path": "paper-2027/research/foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md",
+      "file": "FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md",
       "sha256": "2ee9fc25fc264a792dbcbef89c0b1ed5ed89379ea5272cbcfce6c3030497ca91"
     },
     "coadapt151": {
-      "path": "paper-2027/research/attention-aware-retrofit/evidence/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULTS_20260823.json",
+      "file": "SAME_SUPPORT_FROZEN_CHECKPOINT_RESULTS_20260823.json",
       "sha256": "13e81612564eb4780266a72abb567bd968b76ccf450fe38236dde3f687c8a9cb"
     },
     "coordinate128": {
-      "path": "paper-2027/research/attention-aware-retrofit/evidence/K128_COORDINATE_CONFIRMATION_RECEIPT_20260901.json",
+      "file": "K128_COORDINATE_CONFIRMATION_RECEIPT_20260901.json",
       "sha256": "715f67d95f4bc7fe0c0c92104516c6681441c0b9a575753b35f01645bdfb4942"
     },
     "coordinate32": {
-      "path": "paper-2027/research/attention-aware-retrofit/evidence/K32_PAIRED_CROSSING_CONFIRMATION_RECEIPT_20260901.json",
+      "file": "K32_PAIRED_CROSSING_CONFIRMATION_RECEIPT_20260901.json",
       "sha256": "8fa48b48ca782d46bf376f270de45341a8e383ae13eb13b138e1bc190cfc06cc"
     }
   },

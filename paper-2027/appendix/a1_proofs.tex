@@ -1,6 +1,7 @@
 \section{Proof Details}
 \label{sec:proofs}
 
+\FloatBarrier
 \subsection{Subspace geometry: cross-Gram, budget identity, and collapse}
 \label{sec:geometry-proofs}
 
@@ -119,6 +120,19 @@ on at least three distances.  This is a limit for a declared fixed measure; it
 does not identify which slow channels a trained model uses.
 \end{proof}
 
+\paragraph{Directional overlap and feature scale.}
+For the original, unwhitened pair on $[0,L]$, put $x=\omega L$.
+The self-Gram eigenvalues are
+\[
+\lambda_\pm(S_\omega)=\frac{1\pm|\operatorname{sinc}x|}{2},
+\qquad \lambda_-(S_\omega)\sim\frac{x^2}{12},\qquad
+\kappa(S_\omega)\sim\frac{12}{x^2}\quad(x\to0).
+\]
+Thus the slow pair has a poorly scaled second direction before normalization.
+Block whitening removes this within-pair scaling and measures overlap between
+positional directions. Raw feature energy, coefficient magnitude, and numerical
+precision determine how strongly those directions can contribute to a model.
+
 The reported $r_2{=}2.00$ for the $23$ slow pairs uses the standard
 $u_k{=}k/K$ grid and the uniform separation
 prior above. Other priors change that static numerical Gram. The fixed-range
@@ -154,6 +168,7 @@ empirical protocol.
   \label{fig:spectral-budget-scaling}
 \end{figure}
 
+\FloatBarrier
 \subsection{Effective dimension and multiscale coverage}
 \label{sec:rank-coverage}
 
@@ -216,6 +231,7 @@ measure comparison is exposed by
 \texttt{scripts/analysis/third\_axis\_ceiling.py --decompose}.  These are static
 basis statements, not LM-quality or extrapolation predictions.
 
+\FloatBarrier
 \subsection{Two static ordering counterexamples}
 \label{sec:static-counterexamples}
 
@@ -225,61 +241,50 @@ another.  The following two finite tables are existence counterexamples; no
 claim of continuous global optimisation is needed.
 
 \paragraph{Cosine-only collision can choose the lower-rank table.}
-Use $L{=}4096$, $b{=}500{,}000$, $K{=}64$, continuous uniform
-$\Delta\in[0,L]$, and pin both physical endpoints to
-$[2{\times}10^{-6},1]$.  Let $A$ be the best-found schedule returned by the
-declared heuristic for cosine-only collision and $B$ the corresponding
-best-found schedule for full-subspace collision, using their distinct
-harmonic-augmented candidate pools.  The cosine proxy prefers $A$,
-\begin{equation}
-C_{\cos}(A)=2.62\times10^{-9}
- < 1.44\times10^{-8}=C_{\cos}(B),
-\end{equation}
-but the phase-invariant block-whitened basis has the opposite order,
-\begin{equation}
-r_2(A)=64.48 < 128.00=r_2(B).
+Take $K=4$, $L=8\pi$, and the two descending frequency tables
+\[
+\Omega_A=(1,5/8,3/8,1/4),\qquad
+\Omega_B=(1,6.01/8,4.01/8,1/4).
+\]
+They share both endpoints. Define $C_{\cos}$ as the mean squared normalized
+cosine--cosine overlap over distinct pairs. For $\Omega_A$, every cosine is
+an integer harmonic on $[0,L]$, so $C_{\cos}(A)=0$ exactly. Mixed harmonic
+parities nevertheless produce nonzero sine--cosine cross terms. For
+$\Omega_B$, the small perturbation of an even-harmonic table gives
+\begin{align}
+C_{\cos}(A)&=0 < 1.38725\times10^{-5}=C_{\cos}(B),\\
+r_2(A)&=6.29478 < 7.99971=r_2(B).
 \label{eq:cosine-order-counterexample}
-\end{equation}
-Here $C_{\cos}$ is the mean squared normalised cosine--cosine overlap.  The
-counterexample isolates why one phase slice cannot replace the full two-plane
-object: a small cosine overlap can hide redundancy in the sine and cross terms.
+\end{align}
+Thus a strict cosine-only preference can have the opposite full-subspace
+rank ordering. Both values follow directly from Eq.~\eqref{eq:cross-gram}.
 
 \paragraph{Full-subspace collision can reverse across lengths.}
-Under the same base, endpoints, and training-interval convention, the tracked
-counterexample search emits two fixed $K{=}16$ tables $A$ and $B$.  Writing
-$C_M$ for their mean phase-invariant full-subspace collision when the uniform
-measure spans $[0,M]$, their ordering is
+Now use $K=4$, $L=2\pi$, and the fixed tables
+\[
+\Omega_A=(1,0.99,0.02,0.01),\qquad
+\Omega_B=(1,2/3,1/3,0.01).
+\]
+Again the endpoints agree. Writing $C_M$ for mean phase-invariant collision
+under the uniform measure on $[0,M]$, Eq.~\eqref{eq:cross-gram} gives
 \begin{align}
-C_L(A)&=0.45837 < 0.61695=C_L(B),\\
-C_{2L}(A)&=0.45834 > 0.41132=C_{2L}(B),\\
-C_{4L}(A)&=0.45830 > 0.24763=C_{4L}(B).
+C_L(A)&=0.538996 < 0.631721=C_L(B),\\
+C_{2L}(A)&=0.384445 > 0.204995=C_{2L}(B),\\
+C_{4L}(A)&=0.345188 > 0.033506=C_{4L}(B).
 \label{eq:length-order-counterexample}
 \end{align}
-Recomputing the same schedules on discrete uniform separations
-$\Delta=0,\ldots,M-1$ preserves the reversal.  Thus even the correct
-phase-invariant collision is conditional on the declared interval; minimising
-it at $L$ does not supply an extrapolation ordering at $2L$ or $4L$.
+The close pairs in $A$ retain high overlap as the interval grows, while the
+more evenly spread frequencies in $B$ become easier to distinguish. The
+example makes the interval dependence of the geometry explicit.
 
-\paragraph{Numerical owner and reproduction convention.}
-The digits in
-Eqs.~\eqref{eq:cosine-order-counterexample}--\eqref{eq:length-order-counterexample}
-are frozen outputs produced by
-\path{scripts/analysis/full_rope_collision_audit.py} with
-\texttt{--length 4096 --base 500000 --candidate-grid 1025
---random-schedules 3000}; the counterexample RNG seed is $20260819$ and the
-JSON stores each schedule and its float64 hash.  These are best-found points
-returned by the declared greedy-plus-exchange heuristic in metric-specific
-candidate pools, not certified pool or continuous optima.  The first
-inequality is also reported with raw full entropy rank $93.44<120.03$; the
-stable-rank ordering above is the quantity governed by
-Theorem~\ref{thm:budget}.
+All frequency entries and measures are specified above. The accompanying
+\path{figs/verify_explicit_geometry.py} evaluates the closed-form Gram and
+checks it against independent $128$-point Gauss--Legendre quadrature;
+the largest discrepancy in the displayed metrics is below $4\times10^{-14}$.
+These finite basis examples complement the trained allocation comparisons and
+the weight--table crossings.
 
-Together, the parity recurrence and the ordering reversals separate three
-questions: dimension over a declared interval, multiscale coverage outside it,
-and behaviour after training.  The fixed-support experiments evaluate the last
-question, while Table~\ref{tab:coadapt} shows why learned coefficients must stay
-with the basis that trained them.
-
+\FloatBarrier
 \subsection{Post-hoc transplant obstruction}
 \label{sec:obstruction-proof}
 
@@ -319,6 +324,7 @@ This exact statement covers \emph{fixed, position-independent, invertible}
 compensation. Approximate retraining on finite data, nonlinear maps, and changes
 to V/O or the residual path are separate intervention classes.
 
+\FloatBarrier
 \subsection{Proof of the closed-form variational optimum}
 
 This subsection proves Theorem~\ref{thm:ode} directly from the stated
@@ -370,55 +376,11 @@ Thus the stationary density obtained above is the unique constrained \emph{minim
 
 \paragraph{Why this branch.}
 The homogeneous Cosh solution has an analytically invertible CDF, turning the
-continuous optimum into an explicit finite table. The functional test below
-checks the resulting allocation against a closed-form cosine-feature slice, and the
-trained comparisons supply the behavioural test.
+continuous optimum into an explicit finite table. This construction is
+specified by its allocation criterion; the full-subspace geometry and trained
+comparisons evaluate distinct consequences of the resulting table.
 
-\subsection{Cosine-slice diagnostic for the surrogate-derived table}
-\label{sec:surrogate-validation}
-
-The broadband surrogate $K_{\mathrm{app}} = \alpha\delta + \beta\min$ supplies
-the closed-form density. We validate its allocation functionally against the closed-form cosine-feature kernel
-$K_{\cos}(\phi_1,\phi_2) = \int D(\Delta)\cos(\omega(\phi_1)\Delta)\cos(\omega(\phi_2)\Delta)\,d\Delta$:
-does the derived allocation also reduce the collision objective under $K$? This
-tests whether the same direction holds for the declared cosine-feature slice.
-
-Table~\ref{tab:surrogate-validation} answers affirmatively. For a uniform distance prior $D(\Delta) = 1/L$ on $[0, L]$, we compute $K_{\cos}$ at the discrete allocation points for Geo and \evq{}, then evaluate the normalized collision score $C = \sum_{i<j} K_{ij}^2/(K_{ii}K_{jj})$ and Shannon effective rank (the exponential of the cosine-feature Gram eigenvalue distribution). The inclusive grid $u_k=k/(K-1)$ exposes the complete diagnostic interval. This slice-level static diagnostic is separate from the phase-invariant full-subspace geometry of Theorem~\ref{thm:budget}; trained midpoint tables are evaluated in \S\ref{sec:experiments}. The $12$ reported configurations comprise a six-length text sweep at fixed $b{=}500$K and $K{=}32$, two additional text bases at $L{=}2048$, and four video bases at $L{=}32$ and $K{=}16$.
-
-\begin{table}[ht]
-\caption{Cosine-slice surrogate check on the inclusive $u_k{=}k/(K{-}1)$ diagnostic grid. \evq{} reduces collision and increases Shannon effective rank of the cosine-feature Gram under the closed-form kernel $K_{\cos}$ in all 12 tested configurations. Theorem~\ref{thm:budget} supplies the separate phase-invariant full-subspace geometry; \S\ref{sec:experiments} evaluates trained midpoint tables.}
-\label{tab:surrogate-validation}
-\centering
-\small
-\begin{tabular}{@{}l r r r r r@{}}
-\toprule
-& \multicolumn{2}{c}{Collision $C$} & & \multicolumn{2}{c}{Shannon rank} \\
-\cmidrule(lr){2-3} \cmidrule(lr){5-6}
-Configuration & Geo & \evq{} ($\Delta_C$) & & Geo & \evq{} \\
-\midrule
-\multicolumn{6}{@{}l}{\emph{Text: $K{=}32$, $b{=}500\mathrm{K}$, sweep $L$}} \\
-\quad $L{=}128$ & 226.3 & 17.7 ($-92\%$) & & 2.5 & 17.0 \\
-\quad $L{=}256$ & 192.6 & 27.6 ($-86\%$) & & 3.0 & 13.9 \\
-\quad $L{=}512$ & 163.2 & 43.3 ($-73\%$) & & 3.6 & 10.8 \\
-\quad $L{=}1024$ & 133.9 & 59.0 ($-56\%$) & & 4.4 & 8.8 \\
-\quad $L{=}2048$ & 109.0 & 67.5 ($-38\%$) & & 5.4 & 8.0 \\
-\quad $L{=}4096$ & 87.0 & 66.3 ($-24\%$) & & 6.6 & 8.1 \\
-\midrule
-\multicolumn{6}{@{}l}{\emph{Text: $K{=}32$, $L{=}2048$, sweep $b$}} \\
-\quad $b{=}10\mathrm{K}$ & 34.8 & 19.2 ($-45\%$) & & 13.0 & 17.3 \\
-\quad $b{=}100\mathrm{K}$ & 79.4 & 47.0 ($-41\%$) & & 7.1 & 10.4 \\
-\midrule
-\multicolumn{6}{@{}l}{\emph{Video: $K{=}16$, $L{=}32$, sweep $b$}} \\
-\quad $b{=}100$ & 22.6 & 14.2 ($-37\%$) & & 4.8 & 6.4 \\
-\quad $b{=}1\mathrm{K}$ & 42.3 & 28.0 ($-34\%$) & & 2.8 & 3.9 \\
-\quad $b{=}10\mathrm{K}$ & 55.4 & 39.8 ($-28\%$) & & 2.2 & 2.9 \\
-\quad $b{=}50\mathrm{K}$ & 63.3 & 47.2 ($-26\%$) & & 2.0 & 2.5 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\evq{} reduces collision under $K_{\cos}$ in all 12 configurations ($24\%$--$92\%$), and Shannon effective rank increases in every row. In the fixed-base text sweep, the relative reduction grows as $L$ shortens. The separate base sweeps remain positive but are not monotone in $b$.
-
+\FloatBarrier
 \subsection{Single-crossing budget shift}
 \label{sec:budget-crossing-proof}
 
@@ -447,11 +409,9 @@ $\rho_\tau(\phi_c)=1$ gives~\eqref{eq:budget-crossing}.  To bound it, expand
 where the coefficient-wise inequality is $3^n\ge2n+1$.  Monotonicity of
 $\operatorname{arcosh}$ yields
 $\operatorname{arcosh}(\sinh\tau/\tau)\ge\tau/\sqrt3$, proving the bound.
-The three-region masses follow directly from
-$F_\tau(\phi)=1-\sinh(\tau(1-\phi))/\sinh\tau$ at
-$\phi_L=\log(L/2\pi)/\log b$ and $\phi_M=\log(M/2\pi)/\log b$.
 \end{proof}
 
+\FloatBarrier
 \subsection{Surrogate self-consistency theorem}
 \label{sec:self-consistency}
 
@@ -498,6 +458,7 @@ $\rho(0)=\tau\coth\tau$ into the theorem.
 The identity checks the two surrogate energy terms exactly; trained-loss
 evidence is supplied by \S\ref{sec:experiments}.
 
+\FloatBarrier
 \subsection{Assumption-bound operating calculation and finite tested receipt}
 \label{sec:lambda-cv}
 \label{sec:tau-scaling}
@@ -568,6 +529,7 @@ These finite points support a fallible zero-search operating prior relative to
 the tested Geo baseline.  They do not establish a continuous basin, basin
 bounds, interpolation guarantees, near-optimality, or a global optimum.
 
+\FloatBarrier
 \subsection{Discrete-channel transport gap under finite channel counts}
 \label{sec:discrete-continuous-gap}
 

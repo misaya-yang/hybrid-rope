@@ -1,8 +1,9 @@
-\begin{table}[tb]
+\begin{table}[ht]
 \caption{$750$M continued-pretraining check (seed 42; $2$K$\rightarrow4$K;
 $500$M continuation tokens). Passkey retrieval is teacher-forced NLL-gap and
 is saturated at $8$K; AR exact is greedy autoregressive exact match over $40$
-trials.}
+trials per length. The pooled AR row combines $2$K, $4$K and $8$K
+($120$ trials: Geo $80/120$, \evq{} $111/120$).}
 \label{tab:750m}
 \centering
 \small
@@ -17,7 +18,7 @@ PPL@16K & $45.1$ & $\mathbf{24.4}$ \\
 \midrule
 NLL-gap retrieval @8K & $100\%$ & $100\%$ \\
 Strict AR exact @8K & $0\%$ & $\mathbf{77.5\%}$ \\
-Global strict AR exact & $66.67\%$ & $\mathbf{92.5\%}$ \\
+Pooled strict AR exact (2K/4K/8K) & $66.67\%$ & $\mathbf{92.5\%}$ \\
 \bottomrule
 \end{tabular}
 \end{table}

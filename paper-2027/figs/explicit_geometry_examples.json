@@ -1,0 +1,109 @@
+{
+  "computation": "Closed-form basis geometry, checked by independent quadrature.",
+  "cases": {
+    "phase_A": {
+      "frequencies": [
+        1,
+        0.625,
+        0.375,
+        0.25
+      ],
+      "uniform_interval_length": 25.132741228718345,
+      "cosine_collision": 9.51202999068875e-33,
+      "full_collision": 0.09029824997600437,
+      "renyi2_rank": 6.294777754375915,
+      "max_quadrature_discrepancy": 2.7533531010703882e-14
+    },
+    "phase_B": {
+      "frequencies": [
+        1,
+        0.75125,
+        0.50125,
+        0.25
+      ],
+      "uniform_interval_length": 25.132741228718345,
+      "cosine_collision": 1.38725039579151e-05,
+      "full_collision": 1.199701614072084e-05,
+      "renyi2_rank": 7.999712081975094,
+      "max_quadrature_discrepancy": 4.634117254428277e-17
+    },
+    "length_1_A": {
+      "frequencies": [
+        1,
+        0.99,
+        0.02,
+        0.01
+      ],
+      "uniform_interval_length": 6.283185307179586,
+      "cosine_collision": 0.33319368673837085,
+      "full_collision": 0.5389955558466881,
+      "renyi2_rank": 3.0569509960552845,
+      "max_quadrature_discrepancy": 2.3092638912203256e-14
+    },
+    "length_1_B": {
+      "frequencies": [
+        1,
+        0.6666666666666666,
+        0.3333333333333333,
+        0.01
+      ],
+      "uniform_interval_length": 6.283185307179586,
+      "cosine_collision": 0.13614780209867927,
+      "full_collision": 0.6317208412871492,
+      "renyi2_rank": 2.763230020444563,
+      "max_quadrature_discrepancy": 3.552713678800501e-14
+    },
+    "length_2_A": {
+      "frequencies": [
+        1,
+        0.99,
+        0.02,
+        0.01
+      ],
+      "uniform_interval_length": 12.566370614359172,
+      "cosine_collision": 0.3325144966573758,
+      "full_collision": 0.3844449934178922,
+      "renyi2_rank": 3.715167437189707,
+      "max_quadrature_discrepancy": 8.43769498715119e-15
+    },
+    "length_2_B": {
+      "frequencies": [
+        1,
+        0.6666666666666666,
+        0.3333333333333333,
+        0.01
+      ],
+      "uniform_interval_length": 12.566370614359172,
+      "cosine_collision": 0.02849130306972031,
+      "full_collision": 0.204994922047575,
+      "renyi2_rank": 4.953607097550168,
+      "max_quadrature_discrepancy": 2.3092638912203256e-14
+    },
+    "length_4_A": {
+      "frequencies": [
+        1,
+        0.99,
+        0.02,
+        0.01
+      ],
+      "uniform_interval_length": 25.132741228718345,
+      "cosine_collision": 0.3297192593678128,
+      "full_collision": 0.34518777861720773,
+      "renyi2_rank": 3.9301159826859537,
+      "max_quadrature_discrepancy": 0.0
+    },
+    "length_4_B": {
+      "frequencies": [
+        1,
+        0.6666666666666666,
+        0.3333333333333333,
+        0.01
+      ],
+      "uniform_interval_length": 25.132741228718345,
+      "cosine_collision": 0.007525049449552445,
+      "full_collision": 0.03350563822571598,
+      "renyi2_rank": 7.269311260288001,
+      "max_quadrature_discrepancy": 4.623038063478191e-16
+    }
+  }
+}

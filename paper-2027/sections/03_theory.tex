@@ -57,7 +57,9 @@ derives the leading fourth-order coefficient. Several slow pairs can thus
 supply many coordinate dimensions but very few distinct positional directions.
 For $b=500{,}000$, $K=64$, and $L=4096$, the $23$ standard-grid pairs with
 $\omega L\le1$ have $46$ nominal dimensions and $r_2=2.00013$ under this
-measure.
+measure. Block whitening normalizes each pair's energy and conditioning, so
+$r_2$ measures directional overlap; the raw feature scales are analyzed in
+Appendix~\ref{sec:geometry-proofs}.
 
 Exponent redistribution changes how many pairs occupy these shared directions
 and how many cover faster positional variations. Frequency-use studies also show that
@@ -108,14 +110,16 @@ gives the finite table
 \qquad u_k=\frac{k+1/2}{K}.
 \label{eq:warp}
 \end{equation}
-We call this construction \evq{}. For $\tau>0$, its density decreases from the
+We call this one-parameter inverse-CDF family \evq{}. For $\tau>0$, its density decreases from the
 fast to the slow end, allocating more samples to faster positional variations.
 The limit $\tau\to0$ gives uniform-log midpoint quantiles.
 
-Installation requires evaluating \eqref{eq:warp} once and setting
+After choosing $\tau$ and a grid, installation evaluates \eqref{eq:warp}
+once and sets
 $\omega_k=b^{-\phi_k}$. The frequency table stays fixed during training or
 adaptation, and the attention operator and trainable parameter count are unchanged.
 For the fixed-range experiment we normalize these quantiles using
 \eqref{eq:table-decomposition} and anchor them to the baseline endpoints.
-The grid conventions, values of $\tau$, and operating-rule studies are given
-in Apps.~\ref{sec:tau-scaling} and~\ref{sec:identification-details}.
+Table~\ref{tab:allocation-protocols} records each experiment's $\tau$, grid,
+and selection convention; the operating-rule study is in
+Appendix~\ref{sec:tau-scaling}.

@@ -14,9 +14,10 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[2]
-PAPER = ROOT / "paper-2027"
+PAPER = Path(__file__).resolve().parents[1]
+ROOT = PAPER.parent
 OUT = PAPER / "figs"
+PORTABLE_INPUTS = OUT / "figure_inputs.json"
 BLUE, ORANGE, INK, GRID = "#0072B2", "#D55E00", "#20262B", "#DFE4E8"
 TASK_NAMES = {
     "hotpotqa": "HotpotQA", "2wikimqa": "2WikiMQA", "qasper": "Qasper",
@@ -54,8 +55,11 @@ plt.rcParams.update({
 })
 
 def load_data():
-    data = {k: (json.loads((ROOT / v).read_text()) if v.endswith(".json")
-                else (ROOT / v).read_text()) for k, v in SOURCES.items()}
+    if all((ROOT / v).is_file() for v in SOURCES.values()):
+        data = {k: (json.loads((ROOT / v).read_text()) if v.endswith(".json")
+                    else (ROOT / v).read_text()) for k, v in SOURCES.items()}
+    else:
+        data = json.loads(PORTABLE_INPUTS.read_text())["data"]
     rows = data["qa"]["rows"]
     assert len(rows) == 778 == len({r["row_id"] for r in rows})
     for stratum, tasks in data["qa"]["by_stratum"].items():
@@ -73,6 +77,47 @@ def load_data():
         for arm, values in arms.items():
             assert abs(np.mean(list(values["per_task"].values())) - values["macro"]) < 1e-12
     return data
+
+def write_portable_inputs(data):
+    """Export only the numbers/identities consumed by this figure builder."""
+    if not all((ROOT / v).is_file() for v in SOURCES.values()):
+        return
+    keep = lambda value, keys: {k: value[k] for k in keys}
+    compact = {
+        "range": keep(data["range"], ["fixed_training_range"]),
+        "llama": data["llama"],
+        "index": keep(data["index"], ["tasks", "scores"]),
+        "qa": keep(data["qa"], ["by_stratum", "task_equal_macro"]),
+        "bm_definition": {},
+        "coadapt50": "\n".join(r for r in data["coadapt50"].splitlines()
+                                 if r.startswith("| Geo |") or r.startswith("| EVQ |")),
+        "coadapt151": {"small_model_crossing": keep(data["coadapt151"]["small_model_crossing"],
+            ["checkpoint_seeds", "anchors", "tail_tokens", "mean_tail_nll_two_seed_length1024"])},
+        "olmo": {"experiments": {"seed_replication": {"arms": {}}}},
+        "qwen3": {"models": {"qwen3": {"arms": {}}}},
+        "qwen7": {"result": keep(data["qwen7"]["result"], ["baseline", "candidate"])},
+    }
+    compact["qa"]["rows"] = [keep(r, ["row_id", "input_tokens", "baseline", "candidate"])
+                              for r in data["qa"]["rows"]]
+    for name in ["target_olmo", "source_qwen_comparison"]:
+        compact["bm_definition"][name] = keep(data["bm_definition"][name],
+            ["low", "high", "N", "scale", "gain", "exponents_intended", "radix_increments"])
+    for name, path in [("olmo", ["experiments", "seed_replication", "arms"]),
+                       ("qwen3", ["models", "qwen3", "arms"])]:
+        src, dst = data[name], compact[name]
+        for key in path: src, dst = src[key], dst[key]
+        for arm in ["MrPro", "MrProBM"]: dst[arm] = keep(src[arm], ["summary"])
+    for name, contrast in [("coordinate32", "primary_physical_minus_index"),
+                           ("coordinate128", "primary_index_minus_physical")]:
+        compact[name] = keep(data[name], ["scores", "profile_selection_performed", "old_pilot_pooled", contrast])
+        compact[name]["arm_identities"] = {
+            arm: keep(data[name]["arm_identities"][arm],
+                ["attention_scaling", "checkpoint_weight_sha256", "data_manifest_sha256",
+                 "input_cell_sha256", "native_sha256_float32", "runner_sha256", "tokenizer_sha256"])
+            for arm in ["physical_x", "normalized_index"]}
+    sources = {k: {"file": Path(v).name, "sha256": hashlib.sha256((ROOT/v).read_bytes()).hexdigest()}
+               for k,v in SOURCES.items()}
+    PORTABLE_INPUTS.write_text(json.dumps({"schema": 1, "sources": sources, "data": compact}, indent=2)+"\n")
 
 def build_coadaptation(data):
     loss50, ppl50 = np.zeros((2,2)), np.zeros((2,2))
@@ -178,7 +223,7 @@ def build_overview(data):
     ax.set(ylim=(-.55,.10),xticks=x,xticklabels=["256\n1x","512\n2x","1K\n4x","2K\n8x"],
            xlabel="Evaluation length / training length",
            ylabel="NLL difference\n(Cosh minus geometric)")
-    ax.set_title("(b) Every tested extrapolation improves",loc="left",pad=13)
+    ax.set_title("(b) All 9 OOD comparisons improve",loc="left",pad=13)
     ax.text(2.0,-.48,"9 / 9 seed–length comparisons",ha="center",fontsize=8.5,color=INK)
     axis_style(ax)
     fig.subplots_adjust(left=.04,right=.985,bottom=.24,top=.85,wspace=.46)
@@ -346,14 +391,14 @@ def write_tables(data):
 
 def main():
     data=load_data()
+    write_portable_inputs(data)
     build_overview(data)
     build_llama(data)
     build_qa(data)
     build_profiles(data)
     build_coadaptation(data)
     write_tables(data)
-    receipt={"sources":{k:{"path":v,"sha256":hashlib.sha256((ROOT/v).read_bytes()).hexdigest()}
-                         for k,v in SOURCES.items()},
+    receipt={"sources":json.loads(PORTABLE_INPUTS.read_text())["sources"],
              "checks":{"qa_rows":778,"qa_long_rows":631,"qa_short_rows":147,
                        "qa_aggregate_recomputed":True,"index_macro_recomputed":True,
                        "llama_ppl_nll_rounding_consistent":True,

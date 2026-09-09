@@ -1,6 +1,7 @@
 \section{Experimental Details}
 \label{sec:experiment-details}
 
+\FloatBarrier
 \subsection{Scope of this appendix}
 
 The exact-range and mature-model protocols are documented separately in
@@ -9,6 +10,7 @@ section records the scratch-model and cross-modal experiments that remain
 supporting evidence. The learned-frequency comparator appears in
 App.~\ref{sec:pe-dominant}.
 
+\FloatBarrier
 \subsection{Reproducibility snapshot}
 
 The evidence ladder separates causal identification from architecture, scale,
@@ -37,6 +39,10 @@ Full-parameter scale & 750M/1.485B; continued/from-init Geo/\evq{} & one compari
 Frozen allocation & OLMo/Qwen; same support and amplitude & 20 rows/task; RULER; App.~\ref{sec:frozen-fixed-support} \\
 Zero-training deployment & OLMo; frozen long table, gain, session route & fixed checkpoint/rows; NLL/RULER/F1; App.~\ref{sec:frozen-fixed-support} \\
 Adaptation/source use & 1.485B/8B; matched LoRA/source block & one trained pair; QA/RULER/NLL; Apps.~\ref{sec:olmo2-1b}/\ref{sec:llama8b} \\
+Static index profile & Qwen-$0.5$B; one table across lengths & 13 tasks, 20 rows/task/length; App.~\ref{sec:index-adjustment} \\
+Profile placement & Qwen/Gemma; direct gap versus normalized index & 4 tasks, 80 rows/task; App.~\ref{sec:coordinate-confirmation} \\
+Intermediate-band shape & OLMo/Qwen; matched BM/MrPro profiles & 6 tasks; Table~\ref{tab:bm-models}; App.~\ref{sec:bm-model-comparison} \\
+Natural-QA transfer & OLMo; matched static BM/MrPro profiles & 778 inputs, 631 long; token F1; App.~\ref{sec:bm-natural} \\
 Cross-modal scope & 129.6M video DiT; temporal Geo/\evq{} & 1 training seed; denoising MSE; App.~\ref{sec:video-dit} \\
 \bottomrule
 \end{tabular}
@@ -44,6 +50,7 @@ Cross-modal scope & 129.6M video DiT; temporal Geo/\evq{} & 1 training seed; den
 
 Table~\ref{tab:hyperparams} lists the training hyperparameters shared across
 the supporting text experiments.
+\input{tables/table_allocation_protocols}
 
 \begin{table}[ht]
 \caption{Training hyperparameters for the supporting scratch text experiments.}
@@ -57,7 +64,7 @@ Optimizer & AdamW ($\beta_1{=}0.9$, $\beta_2{=}0.95$, $\epsilon{=}10^{-8}$) \\
 Learning rate & $6{\times}10^{-4}$ (50M), $2{\times}10^{-4}$ (MLA/750M) \\
 LR schedule & Cosine decay to $0.1\times$ peak LR \\
 Warmup & $2\%$ of total steps (linear) \\
-Batch size (seqs) & 32 (50M), 2--4 (750M), 6 (MLA) \\
+Batch size (seqs) & 32 (50M), 14 (750M: micro 7, accumulation 2), 6 (MLA) \\
 Weight decay & $0.1$ \\
 Gradient clipping & max-norm $1.0$ \\
 Dropout & $0.0$ \\
@@ -80,6 +87,7 @@ training loop are fixed, and the only intervention is the initialized
 inverse-frequency table. The scratch-text experiments use base
 $b{=}500\mathrm{K}$ unless stated otherwise.
 
+\FloatBarrier
 \subsection{Composition with a fixed-index range operator}
 \label{sec:range-composition}
 
@@ -112,6 +120,7 @@ Table~\ref{tab:evq-repo-ramp} reports the three-seed comparison.
 
 \input{tables/table_evq_ramp}
 
+\FloatBarrier
 \subsection{Larger-scale supporting evidence}
 \label{sec:larger-scale-supporting}
 
@@ -119,12 +128,19 @@ The \(750\mathrm{M}\) `continue@4K' experiment starts both arms from the same
 2K Geo checkpoint and applies a 500M-token continuation with either the Geo or
 \evq{} table (seed 42). At 16K, PPL is \(45.1\) versus \(24.4\); on
 40 passkey trials at 8K, strict autoregressive exact match is \(0\%\) versus
-\(77.5\%\). The \evq{} continuation uses midpoint quantisation with
-$\tau{=}1.5$. Both arms are full-parameter continuations from the shared
-checkpoint.
+\(77.5\%\). The \evq{} continuation uses $\tau=1.5$, $K=32$, and the
+endpoint-inclusive quantiles $u_k=k/(K-1)$. Writing $q_\tau$ for the
+inverse CDF in Eq.~\eqref{eq:warp}, the installed frequencies are
+\[
+\omega_k=\exp\!\left[-\frac{K-1}{K}\log b\,
+q_{1.5}\!\left(\frac{k}{K-1}\right)\right],\qquad b=500{,}000.
+\]
+This retains the Geo endpoints. Both arms are full-parameter continuations
+from the shared checkpoint.
 
 \input{tables/table6_750m_continue_supporting}
 
+\FloatBarrier
 \subsection{Modality-dependent \texorpdfstring{$\tau$}{tau} correction for video DiT}
 \label{sec:tau-correction}
 
@@ -133,6 +149,7 @@ $\tau{=}K_t/\sqrt{T}=2.83$ for $K_t{=}16$ and $T{=}32$; the best tested
 Video DiT point is $\tau{=}1.5$ ($0.53\times$), which selects the supporting
 video configuration.
 
+\FloatBarrier
 \subsection{Cross-modal evidence: video DiT with bidirectional attention}
 \label{sec:video-dit}
 
@@ -174,6 +191,7 @@ At base${}=10{,}000$, six of the 16 temporal frequencies accumulate less than
 $0.1$ rad over the 32 training frames. This analytic count identifies the
 low-phase regime tested by the matched behavioural comparison above.
 
+\FloatBarrier
 \subsection{What the schedule concretely does}
 \label{sec:schedule-detail}
 

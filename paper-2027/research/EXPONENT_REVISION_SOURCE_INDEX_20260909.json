@@ -144,6 +144,12 @@
       "read_from": "working-tree",
       "sha256": "61ffb97ebdd3e1575af308f04c517ef53b422e9fdef65cba552bfc8a7f4c4ef7",
       "bytes": 16142
+    },
+    {
+      "path": "data/curated/lora_longalpaca_temporal_s42_20260712.json",
+      "read_from": "main_0726; restored unchanged",
+      "sha256": "0335415a2245e1fb31149705342e975a016ddddb557a79c364fc4a98c3f89001",
+      "bytes": 462521
     }
   ]
 }

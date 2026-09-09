@@ -1,6 +1,7 @@
 \section{Identification protocol and provenance}
 \label{sec:identification-details}
 
+\FloatBarrier
 \subsection{Exact-range control at \texorpdfstring{$151.9$M}{151.9M}}
 \label{sec:exact-range-control}
 
@@ -61,6 +62,16 @@ evaluation length while preserving each arm's normalised interior spacing.
 Metric is paired final-$128$-token teacher-forced NLL over the $32$ frozen
 anchors; reported PPL is $\exp(\mathrm{mean\ NLL})$.
 
+\paragraph{Exact range transformation.}
+\[
+R(L)=\frac{K-1}{K}\log L,\qquad
+\omega_k^{\rm target}(L)=\exp[-R(L)z_k].
+\]
+Here $z_k=k/(K-1)$ for FMRoPE and the anchored Cosh shape for its paired
+arm. The fixed condition uses $L=256$ at every evaluation length;
+the target-matched condition substitutes the declared evaluation length.
+Both conditions use amplitude one.
+
 \paragraph{Three-seed contrasts.}
 Negative values favour anchored \evq{}. The aggregation unit is the training seed;
 evaluation anchors remain paired observations within a seed.
@@ -116,6 +127,7 @@ result is conditional on the selected range; they do not identify a
 support-by-allocation interaction law. The \texttt{fixed} column isolates allocation when one table serves
 multiple lengths (\S\ref{sec:exp-identify}).
 
+\FloatBarrier
 \subsection{Weights-by-table co-adaptation at \texorpdfstring{$151.9$M}{151.9M}}
 \label{sec:crossing-151m}
 
@@ -127,6 +139,26 @@ share exact endpoints. For each frozen checkpoint, we install the factor-four
 runtime table derived from either training coordinate, keep the checkpoint,
 amplitude, $32$ FineWeb-Edu validation anchors, and final-$128$-token NLL
 endpoint fixed, and evaluate at $512$ and $1{,}024$ tokens.
+
+For each training table $\Omega$, the derived table uses the following
+label-free residual construction. Set $L_0=256$, $\Delta_j=2j$ for
+$j=0,\ldots,127$, and
+$p_j=(2L_0-4j-1)/(L_0(L_0+1)/2)$, the grouped causal-separation weights.
+Let $X_k$ have columns $\sqrt{p_j}\cos(\omega_k\Delta_j)$ and
+$\sqrt{p_j}\sin(\omega_k\Delta_j)$, and let $X_{-k}$ collect all other pairs.
+Define
+\[
+U_k=\frac{\|X_k-X_{-k}X_{-k}^{\dagger}X_k\|_F^2}{\|X_k\|_F^2},
+\qquad
+\bar U_k=\frac{U_k-\min_i U_i}{\max_i U_i-\min_i U_i},
+\qquad w_k=(1-\bar U_k)^2.
+\]
+The pseudoinverse uses relative singular-value cutoff $10^{-10}$; the
+zero-span convention is $\bar U_k=0$. The frequency blend is
+$\omega'_k=\omega_k(1-3w_k/4)$, cast to FP32 with its endpoints set exactly
+to $\omega'_0=\omega_0$ and $\omega'_{K-1}=\omega_{K-1}/4$.
+Both derived tables use $g=1+0.1\log4$ and remain unchanged across the
+$512$- and $1{,}024$-token evaluations.
 
 \begin{table}[ht]
 \caption{Two-training-seed mean tail NLL at $1{,}024$ tokens for the
@@ -154,6 +186,7 @@ mechanism replication of weight--table co-adaptation, not a replacement for the
 three-seed exact-range effect and not evidence that either derived table is
 globally optimal.
 
+\FloatBarrier
 \subsection{Exact-range factorial at \texorpdfstring{$50.9$M}{50.9M}}
 \label{sec:exact-range-factorial}
 

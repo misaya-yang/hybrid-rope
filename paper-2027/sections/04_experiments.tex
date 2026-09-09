@@ -4,7 +4,8 @@
 
 The Cosh construction gives a fixed exponent table that can be used in
 training or adaptation. We now examine its effects on language modeling,
-retrieval, and source use, following the controlled findings in
+retrieval, and source use under the stated complete-table interventions,
+following the fixed-endpoint controls in
 \S\ref{sec:controlled-findings}.
 
 \subsection{Language modeling and retrieval}
@@ -19,36 +20,35 @@ allocation in an architecture where only a small set of dimensions carries
 explicit rotation.
 
 \paragraph{Continued full-parameter training.}
-In the matched $750$M continuation, both arms train at length $4096$.
+In one matched $750$M continuation pair, both arms train at length $4096$.
 At $16$K, \evq{} reduces perplexity from $45.1$ to $24.4$, while the $4$K
 values remain close at $22.0$ and $22.3$. Across $40$ associated $8$K passkey
 trials, greedy autoregressive exact match rises from $0$ to $77.5\%$.
 The per-length results and generation protocol are in
 Appendix~\ref{sec:experiment-details}.
 
-\begin{table}[t]
+\begin{table}[ht]
 \centering
 \small
 \setlength{\tabcolsep}{5pt}
 \caption{\textbf{Model effects of the Cosh exponent table.}
-Each row compares Geo and \evq{} within one training protocol. Perplexity is
-lower-is-better; the MLA values aggregate three seeds, and the continuation
-uses one matched pair.}
+Each row compares Geo and \evq{} within one matched protocol. Entries are
+mean perplexities over the indicated training replications; lower is better.}
 \label{tab:training-models}
-\begin{tabular}{@{}lccrr@{}}
+\begin{tabular}{@{}lc@{\hspace{14pt}}ccrr@{}}
 \toprule
-Model & Training length & Evaluation & Geo & \evq{} \\
+Model & Seeds & Train length & Eval. length & Geo & \evq{} \\
 \midrule
-$432$M MLA & $8$K & $8$K & 35.4 & 35.8 \\
-           &      & $16$K & 138.8 & \textbf{95.6} \\
-$750$M continuation & $4$K & $4$K & 22.0 & 22.3 \\
-           &      & $16$K & 45.1 & \textbf{24.4} \\
+$432$M MLA & 3 & $8$K & $8$K & 35.4 & 35.8 \\
+           &   &   & $16$K & 138.8 & \textbf{95.6} \\
+$750$M continuation & 1 & $4$K & $4$K & 22.0 & 22.3 \\
+           &   &   & $16$K & 45.1 & \textbf{24.4} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \paragraph{Matched Llama-$3$-$8$B adaptation.}
-We compare Native and \evq{} under the same $300$-step rank-$64$ Q/K/V/O LoRA
+We compare one Native/\evq{} pair under the same $300$-step rank-$64$ Q/K/V/O LoRA
 adaptation, using physical $8$K sequences \citep{hu2022lora,grattafiori2024llama3}.
 The evaluation comprises $24$ frozen temporal text packs from three domains.
 Figure~\ref{fig:8b-length-curve} shows the full curve:
@@ -67,7 +67,7 @@ The long-context NLL improvement holds in every pack in both extended lengths.
 
 Source interventions help interpret this result. On ten true-$16$K passkey
 cases, median target-block hit@16 rises from $18.75\%$ to $64.06\%$.
-Removing decode attention to the remote gold block raises answer NLL by
+Removing decode attention to the remote gold block raises pooled answer-token NLL by
 $1.5055$ in the \evq{} arm, compared with $-0.0095$ in Native.
 Thus the adapted model's answer probability depends on the distant source.
 Appendix~\ref{sec:llama8b} reports this intervention and the separate

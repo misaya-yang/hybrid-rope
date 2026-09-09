@@ -1,0 +1,21 @@
+{
+  "status": "passed",
+  "stage": "round3 manuscript source archive",
+  "checks": {
+    "figs/fig_evidence_overview.png": true,
+    "figs/fig_8b_length_curve.png": true,
+    "figs/fig_bm_natural_qa.png": true,
+    "figs/fig_bm_exponent_profiles.png": true,
+    "figs/fig_weight_table_crossing.png": true,
+    "tables/table_index_full13.tex": true,
+    "tables/table_coordinate_confirmation.tex": true,
+    "tables/table_bm_tasks.tex": true,
+    "tables/table_bm_qa_all.tex": true,
+    "pdf_text_identical": true,
+    "finite_gram_json_identical": true
+  },
+  "dependencies": "pdflatex, bibtex, NumPy 2.4.1, Matplotlib 3.10.8",
+  "maximum_geometry_error": 3.552713678800501e-14,
+  "model_execution": false,
+  "source_archive_sha256": "2f33c4c1262120b419b9012d5fa21229272a896cd64d464c4efed8fbfa42e18d"
+}

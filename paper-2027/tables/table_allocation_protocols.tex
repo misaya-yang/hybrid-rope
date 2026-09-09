@@ -1,0 +1,23 @@
+\begin{table}[ht]
+\centering\small
+\caption{Cosh-family settings used in the reported experiments.
+Choosing $\tau$ and a grid specifies a fixed table. Midpoint means
+$u_k=(k+1/2)/K$; standard means $u_k=k/K$; anchoring fixes the sampled
+endpoints after evaluating the quantiles.}
+\label{tab:allocation-protocols}
+\begin{tabular}{@{}p{.25\linewidth}p{.14\linewidth}p{.20\linewidth}p{.32\linewidth}@{}}
+\toprule
+Protocol & $\tau$ & Grid & Setting convention \\
+\midrule
+151.9M fixed-range & $4$ & Anchored midpoint & Fixed $64/\sqrt{256}$ reference \\
+50.9M factorial & Varies & Anchored midpoint & Three preassigned multiples of $d_{\rm head}/\sqrt{L_{\rm train}}$ \\
+50M crossing & $2.83$ & Midpoint & Reported training-table setting \\
+432M MLA & $1.414$ & Midpoint & Pre-specified architecture-specific setting \\
+454M composition & $1.5$ & Midpoint & Reported training recipe \\
+750M continuation & $1.5$ & Anchored inclusive & Fixed continuation recipe; $u_k=k/(K-1)$ \\
+Llama-3-8B & $1.414$ & Midpoint & Fixed adaptation recipe; approximately $128/\sqrt{8192}$ \\
+OLMo-2 & $2$ & Standard & Fixed $128/\sqrt{4096}$ reference \\
+129.6M Video DiT & $1.5$ & Midpoint & Best tested value in the video sweep \\
+\bottomrule
+\end{tabular}
+\end{table}

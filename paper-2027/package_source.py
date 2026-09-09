@@ -33,7 +33,10 @@ def source_files() -> set[Path]:
                 add(PAPER / (part + ".bib"))
 
     add(PAPER / "main.tex")
-    for name in ["main.pdf", "main.bbl", "compile.sh", "package_source.py"]:
+    for name in ["main.pdf", "main.bbl", "compile.sh", "package_source.py",
+                 "figs/verify_explicit_geometry.py", "figs/explicit_geometry_examples.json",
+                 "figs/make_exponent_revision_figures.py", "figs/figure_inputs.json",
+                 "figs/exponent_revision_source_receipt.json", "figs/llama_temporal_summary.json"]:
         add(PAPER / name)
     for pattern in ["*.sty", "*.bst"]:
         for path in PAPER.glob(pattern):
@@ -59,6 +62,14 @@ def main() -> None:
             "local style files, plotted figures, and compiled manuscript PDF.\n"
             "Unzip into an empty directory and run: bash compile.sh\n"
             "Requirements: a TeX installation with pdflatex and bibtex.\n\n"
+            "Five revised figures and four result tables can be regenerated:\n"
+            "  python3 figs/make_exponent_revision_figures.py\n"
+            "This uses the bundled figs/figure_inputs.json, with original-source\n"
+            "SHA256 values and the 778 natural-QA row scores (no prompt/output text).\n"
+            "Python requirements: NumPy and Matplotlib. Regeneration performs no\n"
+            "model execution. The remaining historical figures are supplied as PDF.\n\n"
+            "Verify the two explicit finite-frequency examples:\n"
+            "  python3 figs/verify_explicit_geometry.py\n\n"
             "The appendix contains the mathematical derivations and experimental\n"
             "protocols. This is a manuscript source archive; model checkpoints\n"
             "and raw experiment streams are maintained separately.\n"

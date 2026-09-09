@@ -1,4 +1,4 @@
-\begin{thebibliography}{41}
+\begin{thebibliography}{42}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -41,11 +41,12 @@ Sidney Black, Stella Biderman, Eric Hallahan, Quentin Anthony, Leo Gao,
 \newblock \doi{10.18653/v1/2022.bigscience-1.9}.
 \newblock URL \url{https://aclanthology.org/2022.bigscience-1.9/}.
 
-\bibitem[Chen et~al.(2023)Chen, Wong, Chen, and Tian]{chen2024position}
+\bibitem[Chen et~al.(2023{\natexlab{a}})Chen, Wong, Chen, and
+  Tian]{chen2024position}
 Shouyuan Chen, Sherman Wong, Liangjian Chen, and Yuandong Tian.
 \newblock Extending context window of large language models via positional
   interpolation.
-\newblock \emph{arXiv preprint arXiv:2306.15595}, 2023.
+\newblock \emph{arXiv preprint arXiv:2306.15595}, 2023{\natexlab{a}}.
 \newblock \doi{10.48550/arXiv.2306.15595}.
 \newblock URL \url{https://arxiv.org/abs/2306.15595}.
 
@@ -58,6 +59,16 @@ Yuhan Chen, Ang Lv, Jian Luan, Bin Wang, and Wei Liu.
   2025.
 \newblock \doi{10.18653/v1/2025.acl-long.1123}.
 \newblock URL \url{https://aclanthology.org/2025.acl-long.1123/}.
+
+\bibitem[Chen et~al.(2023{\natexlab{b}})Chen, Qian, Tang, Lai, Liu, Han, and
+  Jia]{chen2023longlora}
+Yukang Chen, Shengju Qian, Haotian Tang, Xin Lai, Zhijian Liu, Song Han, and
+  Jiaya Jia.
+\newblock Longlora: Efficient fine-tuning of long-context large language
+  models.
+\newblock \emph{arXiv preprint arXiv:2309.12307}, 2023{\natexlab{b}}.
+\newblock \doi{10.48550/arXiv.2309.12307}.
+\newblock URL \url{https://arxiv.org/abs/2309.12307}.
 
 \bibitem[Chiang \& Yogatama(2025)Chiang and Yogatama]{chiang2025rotary}
 Ting-Rui Chiang and Dani Yogatama.

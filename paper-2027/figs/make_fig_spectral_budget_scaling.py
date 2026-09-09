@@ -57,7 +57,7 @@ def main() -> None:
         "pdf.fonttype": 42,
         "ps.fonttype": 42,
     })
-    fig, axes = plt.subplots(1, 2, figsize=(7.0, 2.75))
+    fig, axes = plt.subplots(1, 2, figsize=(7.0, 3.15))
 
     ax = axes[0]
     x = np.arange(len(pairs))
@@ -70,8 +70,8 @@ def main() -> None:
         ax.text(bar.get_x() + bar.get_width() / 2, value + 1.0, f"{value:.2f}", ha="center", fontsize=8, color="#9B2F23")
     ax.set_xticks(x, [f"K={value}" for value in pairs])
     ax.set_ylabel("dimensions")
-    ax.set_title("(a) Slow-band collapse", fontweight="bold")
-    ax.set_ylim(0, 54)
+    ax.set_title("(a) Slow-band collapse", fontweight="bold", pad=9)
+    ax.set_ylim(0, 62)
     ax.grid(axis="y", color="#D9D9D9", linewidth=0.55)
     ax.legend(frameon=False, loc="upper left")
     ax.spines[["top", "right"]].set_visible(False)
@@ -81,6 +81,7 @@ def main() -> None:
     ax.plot(pairs, cosh_rank, color="#D6604D", marker="s", linewidth=2.1, label="endpoint-anchored EVQ-Cosh")
     for xpos, value in zip(pairs, cosh_rank):
         ax.text(xpos, value + 0.65, f"{value:.2f}", ha="center", color="#9B2F23", fontsize=8)
+    ax.text(64, geo_rank[-1] - 1.1, f"Geo: {geo_rank[-1]:.2f}", ha="center", color="#2166AC", fontsize=8)
     ax.set_xticks(pairs, [str(value) for value in pairs])
     ax.set_xlabel("rotary pairs K")
     ax.set_ylabel("full-table block-whitened r2")

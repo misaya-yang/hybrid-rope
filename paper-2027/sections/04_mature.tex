@@ -73,15 +73,16 @@ gaps. On a new-seed Gemma-$1.1$-$2$B comparison with $128$ rotary pairs
 \citep{gemmateam2024gemma},
 normalized-index interpolation scores $79.00\%$ versus $72.81\%$ at $16$K.
 Both arms share the frequency endpoints, amplitude, and $320$ inputs;
-the paired improvement is $6.19$ points with interval $[2.81,9.63]$.
+the paired improvement is $6.19$ points with a $95\%$ bootstrap interval $[2.81,9.63]$.
 Appendix~\ref{sec:coordinate-confirmation} gives the two constructions and
 the corresponding $32$-pair comparison.
 
 On Qwen-$2.5$-$0.5$B, a new-seed $13$-task RULER evaluation uses $20$ examples
 per task at $32$K and $64$K. Every request uses the same $s=2$ table throughout
 prefill and decoding, including requests within the native window.
-Table~\ref{tab:static-index-main} shows a $6.09$-point advantage over YaRN at
-$64$K, with paired task-stratified bootstrap interval $[2.76,9.58]$ points.
+The installed table and amplitude together give the comparison in
+Table~\ref{tab:static-index-main}: $6.09$ points above YaRN at $64$K,
+with a $95\%$ paired task-stratified bootstrap interval $[2.76,9.58]$ points.
 At $32$K the two methods are nearly equal. Appendix~\ref{sec:index-adjustment}
 gives the frozen profile and the full task breakdown.
 
@@ -117,7 +118,7 @@ In an OLMo-$1$B six-task confirmation, BM improves the $16$K macro from
 $2.78\%$ for MrRoPE-Pro to $51.32\%$; MrRoPE-Uni scores $32.12\%$.
 The comparison extends to natural inputs: across $631$ eligible long examples
 from five QA tasks, the task-equal F1 rises from $21.62\%$ to $25.44\%$.
-The paired interval for the improvement is $[1.32,6.29]$ points.
+The $95\%$ paired bootstrap interval for the improvement is $[1.32,6.29]$ points.
 Every task has a positive mean difference
 (Fig.~\ref{fig:bm-natural-qa}). All methods use a fixed factor-four table;
 the input and decoding details are in Appendix~\ref{sec:bm-natural}.

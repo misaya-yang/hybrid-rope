@@ -7,11 +7,11 @@
 | 主张/构造 | 公式与位置 | 直接证据与核验 |
 |---|---|---|
 | 非均匀指数分配可与频率范围分开描述 | §2 `omega=b^(-phi)`；`x=a+Rz`，K≥2、b>1、严格有序正频率表 | 这是定义与控制工具；geometric的z始终等距。形状的行为后果由Top15 #1、#3识别。 |
-| 完整位置对象是sin/cos二维子空间 | §3.1 `Q=S_omega^(-1/2) H S_nu^(-1/2)`、`c=||Q||_F^2/2` | `appendix/a1_proofs.tex`给完整trigonometric Gram与相位不变性；foundation report §2保存数值检查。 |
-| 平均canonical collision关联有效rank | §3.1 `r2=2K/[1+(K-1)c_bar]` | 同一block-whitened Gram的trace恒等式，完整证明在A1；不是raw entropy rank或LM loss。 |
-| 慢频率共享位置子空间 | §3.2 `V_omega→span{1,Delta}`；`2-||Q||²=O(epsilon⁴)` | Uniform[0,L]下证明与展开；标准k/K网格K64,b500K,L4096有23慢pair、r2=2.00013。endpoint-normalized网格的24pair是另一配置。 |
-| Cosh是明确变分目标的闭式解 | §3.3平方密度+min(phi,psi) interaction；rho_tau、inverse CDF | alpha>0,beta≥0、正C²、单位积分；严格凸与边界条件导出cosh。正文一次说明surrogate，完整推导与tau规则在A1。 |
-| 成熟表的指数位移统一三种操作 | §5.1 `d=log(omega_N/omega')`；频率混合、log-shift、mixed-radix各自公式 | 频率混合是`-log(1-w+w/s)`，不能把w误当log-shift的m；radix乘积取log成为sum。 |
+| 完整位置对象是sin/cos二维子空间 | §4.1 `Q=S_omega^(-1/2) H S_nu^(-1/2)`、`c=||Q||_F^2/2` | `appendix/a1_proofs.tex`给完整trigonometric Gram与相位不变性；foundation report §2保存数值检查。 |
+| 平均canonical collision关联有效rank | §4.1 `r2=2K/[1+(K-1)c_bar]` | 同一block-whitened Gram的trace恒等式，完整证明在A1；不是raw entropy rank或LM loss。 |
+| 慢频率共享位置子空间 | §4.2 `V_omega→span{1,Delta}`；`2-||Q||²=O(epsilon⁴)` | Uniform[0,L]下证明与展开；标准k/K网格K64,b500K,L4096有23慢pair、r2=2.00013。endpoint-normalized网格的24pair是另一配置。 |
+| Cosh是明确变分目标的闭式解 | §4.3平方密度+min(phi,psi) interaction；rho_tau、inverse CDF | alpha>0,beta≥0、正C²、单位积分；严格凸与边界条件导出cosh。正文一次说明surrogate，完整推导与tau规则在A1。 |
+| 成熟表的指数位移统一三种操作 | §6.1 `d=log(omega_N/omega')`；频率混合、log-shift、mixed-radix各自公式 | 频率混合是`-log(1-w+w/s)`，不能把w误当log-shift的m；radix乘积取log成为sum。 |
 | BM平滑的是radix增量 | 附录A7，epsilon_q=6q(N+1-q)/[N(N+1)(N+2)]，累加得三次m_q | `ROPE_MRPRO_BM_CANDIDATE_20260908.json`保存OLMo N18、Qwen N17、逐项exponents；绘图代码逐项断言相等。 |
 | finite-grid profile placement有不同构造 | A7参考K64插值与target local-gap直接计算 | `export_frozen_coupling_transport.py`；K128/K32两份confirmation identity逐字段核对，gain在每一比较内一致。Gemma reference4K是operating reference。 |
 | 454M历史scaler的准确身份 | A2 `R_s(omega)=omega/[s^r T(s)^(r/2)]`, T=1+.07log2(s) | `official_yarn.py`中的legacy fixed-index operator；K32、cutoffs6/28、s8、T1.21、cos/sin gain1。与官方YaRN单独命名。 |
