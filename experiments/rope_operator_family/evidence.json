@@ -1,0 +1,123 @@
+{
+  "status": "design_and_read_only_inventory_no_model_experiments",
+  "checked_on": "2026-09-09",
+  "scope": "Content-Weighted Compression of the RoPE Operator Family",
+  "machine_snapshot": {
+    "checked_at_utc": "2026-09-09T07:46:06.521027+00:00",
+    "host": "autodl-container-p563jlduzy-85f33b6e",
+    "python": "3.12.3",
+    "model_path": "/root/autodl-tmp/qwen25_1p5b_32k",
+    "config": {
+      "architectures": [
+        "Qwen2ForCausalLM"
+      ],
+      "attention_dropout": 0,
+      "bos_token_id": 151643,
+      "eos_token_id": 151645,
+      "hidden_act": "silu",
+      "hidden_size": 1536,
+      "initializer_range": 0.02,
+      "intermediate_size": 8960,
+      "max_position_embeddings": 32768,
+      "max_window_layers": 21,
+      "model_type": "qwen2",
+      "num_attention_heads": 12,
+      "num_hidden_layers": 28,
+      "num_key_value_heads": 2,
+      "rms_norm_eps": 1e-06,
+      "rope_theta": 1000000,
+      "sliding_window": 32768,
+      "tie_word_embeddings": true,
+      "torch_dtype": "bfloat16",
+      "transformers_version": "4.43.1",
+      "use_cache": true,
+      "use_sliding_window": false,
+      "vocab_size": 151936
+    },
+    "cgroup": {
+      "cpu.max": null,
+      "memory.max": null
+    },
+    "packages": {
+      "torch": "2.8.0+cu128",
+      "transformers": "4.57.6",
+      "numpy": "2.3.2",
+      "safetensors": "0.7.0",
+      "accelerate": null,
+      "datasets": null,
+      "scipy": null,
+      "peft": null
+    },
+    "disk_bytes": {
+      "total": 53687091200,
+      "used": 34919993344,
+      "free": 18767097856
+    },
+    "nvidia_smi": {
+      "error": "[Errno 8] Exec format error: 'nvidia-smi'"
+    },
+    "nvidia_device_paths": []
+  },
+  "cgroup_v1_snapshot": {
+    "/sys/fs/cgroup/cpu/cpu.cfs_quota_us": "50000",
+    "/sys/fs/cgroup/cpu/cpu.cfs_period_us": "100000",
+    "/sys/fs/cgroup/memory/memory.limit_in_bytes": "2147483648"
+  },
+  "effective_limits": {
+    "cpu_cores": 0.5,
+    "memory_bytes": 2147483648
+  },
+  "model_identity": {
+    "id": "Qwen/Qwen2.5-1.5B-Instruct",
+    "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+    "weights_bytes": 3087467144,
+    "weights_sha256": "dd924a11b4c220f385b51ffa522daea7c9f3d850e31b162bb5661df483c6d3ee",
+    "verification": "Recorded from the earlier read-only model metadata and weight-hash inspection in this task"
+  },
+  "transmla_source": {
+    "repo": "https://github.com/MuLabPKU/TransArch",
+    "commit": "eaf4dde7a9b0592566166fd347959738e70ecefd",
+    "subdirectory": "TransMLA_NeurIPS_2025",
+    "verified_checkout_commit": "eaf4dde7a9b0592566166fd347959738e70ecefd",
+    "file_sha256": {
+      "transmla/converter.py": "807d6ee7134a21d41f73693efd0f67c2a2a4693401e717b40a70b5f0dce5408f",
+      "transmla/partial_rope.py": "e2f933adc7ae60257bd7df13edf2dcba61c81d6ec92386c1085fca56ee047624",
+      "transmla/lora_qkv.py": "5f3747b45878bb732b2649ec5d27dfffe1b56f0e2878c02bcd80ad62bf1ed537",
+      "transmla/transformers/mla.py": "c8d93204184163782889b49dfe662aa0143338a12130ff7f9e49fb8ff23023dc",
+      "transmla/vllm_registry/deepseek.py": "6b10852307241747f8aa1377c31a878b66e7cb1a547c76a2087b33bc935a3f2a"
+    }
+  },
+  "checks": {
+    "cache_payload_mib_at_16k_batch1_bf16_28layers": {
+      "native": 448,
+      "compact": 224,
+      "kind": "arithmetic_not_measured_GPU_memory"
+    },
+    "mc_kv_rare_needle": {
+      "original": 0.9942672626858334,
+      "compiled": 0.07002605224675051,
+      "absolute_error": 0.9242412104390829,
+      "kind": "independent scalar reconstruction of the supplied example; not an LM experiment"
+    },
+    "model_adapter": "not_implemented",
+    "calibration_dataset_manifest": "not_prepared",
+    "model_experiments": "not_run",
+    "performance": "not_measured"
+  },
+  "inputs": {
+    "selected_mainline": {
+      "path": "/Users/misaya.yanghejazfs.com.au/.codex/attachments/53656fcd-bfec-48eb-be1d-5595a021de70/pasted-text.txt",
+      "sha256": "cb24a790c5d4c1682e757d742443bd6dceaec4126e4cb66272a45749decb5abb"
+    },
+    "updated_cc_review": {
+      "path": "/Users/misaya.yanghejazfs.com.au/Downloads/CC_ROPE_REVIEW_AND_CODEX_PLAN_20260909.md",
+      "sha256": "25009065a1c63c81c3708bed86f9dd40632d31a57c95dbcdf1b0275b6edf8cbb"
+    },
+    "background_projected_generator_proposal": {
+      "path": "/Users/misaya.yanghejazfs.com.au/.codex/attachments/920d01c5-9bb4-499f-b5b0-ab59efc8d73b/pasted-text.txt",
+      "sha256": "aafd91105c986bcb6f1b154c822a2ed689ad2e207050b33425e8097cd560a04d"
+    }
+  },
+  "workspace_revision": "b8466ded3e878065fe8845d40fb9ae0f35b91613",
+  "design_sha256": "3826ac19e4f1bff7a85b48726dc55a57293d9f98d7ed323e4df68f2f3048631f"
+}
