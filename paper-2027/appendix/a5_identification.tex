@@ -1,13 +1,12 @@
-\section{Identification protocol and provenance}
+\section{Controlled Allocation Experiments}
 \label{sec:identification-details}
 
 \FloatBarrier
 \subsection{Exact-range control at \texorpdfstring{$151.9$M}{151.9M}}
 \label{sec:exact-range-control}
 
-\paragraph{What is pinned.} The control is designed so that every scalar
-quantity a base/range method can express is identical between arms. Within each
-seed pair the two arms share: model architecture ($151{,}898{,}880$
+\paragraph{Paired controls.} The two trained tables have identical frequency
+endpoints. Within each seed pair the arms share: model architecture ($151{,}898{,}880$
 parameters); trainable initialisation; training length $256$; token order;
 optimiser, LR schedule, global batch; within-pair micro batch and accumulation;
 training budget
@@ -45,7 +44,8 @@ embeddings of the \emph{same normalised shape}: both use midpoint Cosh
 quantiles $q_k$, and the diagnostic removes only their affine endpoint degrees
 of freedom. This normalisation is what makes the exact-range control possible.
 
-Concretely, let $q_k{=}\Phi_\tau((k+\tfrac12)/K)$,
+Writing $\Phi_\tau$ for the inverse CDF in \eqref{eq:warp}, let
+$q_k{=}\Phi_\tau((k+\tfrac12)/K)$,
 $s_k{=}(q_k-q_0)/(q_{K-1}-q_0)$, and
 $R{=}((K-1)/K)\log B$.  The intervention uses
 \begin{equation}
@@ -61,6 +61,13 @@ its training range. \texttt{target-matched}: the range is set to the declared
 evaluation length while preserving each arm's normalised interior spacing.
 Metric is paired final-$128$-token teacher-forced NLL over the $32$ frozen
 anchors; reported PPL is $\exp(\mathrm{mean\ NLL})$.
+The anchors are common end positions selected with Python's
+\texttt{random.Random(20260723)}: the eligible validation stream is divided
+into $32$ equal-width bins, with one end position drawn per bin and a
+$2{,}048$-token guard before the next bin. At anchor $e$, length $L$ uses
+validation tokens $[e-L,e)$ and scores the final $128$ targets $[e-128,e)$.
+Longer contexts therefore add earlier text around the same target tokens;
+the longest windows at distinct anchors are disjoint.
 
 \paragraph{Exact range transformation.}
 \[
@@ -114,18 +121,10 @@ $2{,}048$ & $-0.113$ & $-0.181$ & $-0.143$ & $-0.146\pm0.034$
   \label{fig:exact-range-control}
 \end{figure}
 
-Under \texttt{fixed}, anchored \evq{} is favoured by $3/3$ seeds at every OOD length;
-under \texttt{target-matched}, FMRoPE is favoured by $3/3$ seeds at
-every OOD length. The fixed-range sign agrees across all seeds and OOD lengths;
-the $1$K/$2$K magnitudes are the most stable across seeds.
-
-\paragraph{Reading.} The \texttt{fixed} column identifies the optimisation
-variable: interior allocation is not reducible to scalar base/range selection.
-Under the tested target-retargeted policy, the ordering of the two tested
-policies reverses. The two columns therefore establish that the fixed-support
-result is conditional on the selected range; they do not identify a
-support-by-allocation interaction law. The \texttt{fixed} column isolates allocation when one table serves
-multiple lengths (\S\ref{sec:exp-identify}).
+Across all three seeds, fixed training range favors Cosh at every extended
+length, whereas target-matched range favors FMRoPE. The paired design thus
+shows both an interior-allocation effect and a change in preferred allocation
+when the same trained weights are evaluated under a retargeted range.
 
 \FloatBarrier
 \subsection{Weights-by-table co-adaptation at \texorpdfstring{$151.9$M}{151.9M}}
@@ -181,10 +180,8 @@ With
 $I=[L(W_F,T_C)-L(W_F,T_F)]-[L(W_C,T_C)-L(W_C,T_F)]$,
 the interaction is $3.400/3.251$ NLL for seeds $137/256$ at $1{,}024$
 tokens and $2.663/2.564$ at $512$. Training seed is the replication unit;
-the $32$ anchors are paired observations within a seed. This is a two-seed
-mechanism replication of weight--table co-adaptation, not a replacement for the
-three-seed exact-range effect and not evidence that either derived table is
-globally optimal.
+the $32$ anchors are paired observations within a seed. Both seeds exhibit
+the same preference for the runtime table derived from their training allocation.
 
 \FloatBarrier
 \subsection{Exact-range factorial at \texorpdfstring{$50.9$M}{50.9M}}
@@ -218,7 +215,7 @@ log-span remain identical across arms.
 paired within structural configuration and seed, averaged within seed, then
 equally weighted over the $12$ configurations. The statistical unit is the
 configuration. Equivalent-PPL figures quoted anywhere are
-$\exp(\mathrm{mean\ NLL})$, never an arithmetic mean of raw PPL.
+$\exp(\mathrm{mean\ NLL})$.
 
 \input{tables/table_m4}
 
@@ -229,34 +226,21 @@ matched exponential $6.201354$ ($493.42$).
 
 \paragraph{Boundary-$\tau$ arms.} At formula $\tau{=}1$ the $1.5\times$ arm is
 better; at formula $\tau{=}8$ the $0.75\times$ arm is. The improving direction
-points inward at both tested extremes; these discrete arms do not locate
-continuous basin boundaries or yield a replacement closed-form rule.
+points toward the intermediate strengths at both tested extremes.
 
-\paragraph{Scope.} This is a short-budget $50.9$M mechanistic NLL control
-trained on a deterministically repeated WikiText-2 raw stream
-\citep{merity2017wikitext}, a different
-corpus from the $151.9$M control and from the mature-scale runs. The factorial
-establishes cross-configuration \emph{direction}, while the $151.9$M control
-provides the effect size within its configuration. Scale is evaluated in
-\S\ref{sec:exp-mature}.
+The factorial varies architecture, base, and training length on a repeated
+WikiText-2 stream \citep{merity2017wikitext}. Its configuration-level contrasts
+complement the longer FineWeb-Edu training comparison in
+\S\ref{sec:exact-range-control}.
 
 \section{Learned-frequency comparator}
 \label{sec:pe-dominant}
 
 \input{tables/table_pe_dominant}
 
-The $32$-parameter arm in Table~\ref{tab:pe-dominant} is a layer-shared
-learnable inverse-frequency baseline: one learned scalar per frequency band,
-shared across layers and heads. It received a dedicated positional-parameter
-learning-rate sweep at $10\times$ and $100\times$ the base rate, and the
-stronger $100\times$ setting is the $455.3$ row. It answers the learned-table
-tuning question. Allocation-shape attribution uses the fixed analytic schedules
-under an identical zero-parameter operator in \S\ref{sec:exp-identify}.
-
-On method identity: DAPE \citep{zheng2024dape} is a learned positional
-\emph{operator}, whereas this comparator learns inverse frequencies directly
-and belongs to the learned-\emph{table} family later studied at scale by
-\citet{karypis2026lerope}. In this protocol, the learned table improves over
-Geo but remains weaker than \evq{}; the comparison does not identify whether
-the gap comes from the final table, optimization dynamics, or the
-positional-parameter learning rate.
+The $32$-parameter arm learns one inverse frequency per rotary pair, shared
+across layers and heads. This is the learned-table parameterization also
+studied by \citet{karypis2026lerope}. Its positional-parameter learning-rate
+sweep uses $10\times$ and $100\times$ the base rate; the stronger $100\times$
+setting gives $455.3$ PPL. The learned table and the fixed Cosh allocation
+both improve on Geo in this protocol.

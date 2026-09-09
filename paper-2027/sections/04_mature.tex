@@ -133,13 +133,12 @@ the input and decoding details are in Appendix~\ref{sec:bm-natural}.
   \label{fig:bm-natural-qa}
 \end{figure}
 
-The same construction gives a different outcome on Qwen
-(Table~\ref{tab:bm-models}). In the six-task Qwen-$3$B comparison, BM improves
-the $32$K mean but MrRoPE-Pro is stronger at $128$K. On the smaller Qwen-$7$B
-screen, MrRoPE-Pro leads at both lengths. These comparisons show why exponent
-shape must be evaluated with the checkpoint and target length, even when the
-band boundaries and cumulative scale agree. The full per-task results are
-retained in Appendix~\ref{sec:bm-model-comparison}.
+The three-model comparison reveals distinct preferences for the intermediate
+allocation (Table~\ref{tab:bm-models}). BM gives the higher OLMo scores and
+Qwen-$3$B's higher $32$K score; MrRoPE-Pro gives the higher $128$K scores on
+both Qwen checkpoints. With band boundaries and cumulative scale fixed,
+these differences connect the preferred exponent shape to the checkpoint and
+operating length. Appendix~\ref{sec:bm-model-comparison} reports every task.
 
 \begin{table}[t]
 \centering

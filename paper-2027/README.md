@@ -1,8 +1,8 @@
 # Beyond the Base: Exponent Allocation in RoPE
 
 `main.tex` is the active ICLR 2027 manuscript. The paper studies exponent
-allocation through positional geometry, EVQ-Cosh construction, trained-model
-comparisons, and adjustments to frozen mature models.
+allocation through controlled fixed-range findings, weight-table compatibility,
+full-subspace geometry, analytic construction, and frozen-model adjustments.
 
 - Read the paper: [main.pdf](main.pdf) and [main.tex](main.tex).
 - Build the PDF: `bash paper-2027/compile.sh` from the repository root.
@@ -16,5 +16,6 @@ comparisons, and adjustments to frozen mature models.
 
 The source archive is `exponent-allocation-source.zip`. Experimental result
 owners remain in the repository and are identified in the internal evidence
-map. The complete earlier manuscript is available at `main_0726`; the NeurIPS
+map. The source archive includes the inputs needed to reconstruct the five
+revision figures and four result tables, plus the temporal pack-level summary. The complete earlier manuscript is available at `main_0726`; the NeurIPS
 source in `../paper/` retains its historical identity.

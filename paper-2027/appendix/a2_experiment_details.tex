@@ -2,20 +2,17 @@
 \label{sec:experiment-details}
 
 \FloatBarrier
-\subsection{Scope of this appendix}
+\subsection{Experiment organization}
 
-The exact-range and mature-model protocols are documented separately in
-Apps.~\ref{sec:identification-details} and~\ref{sec:mature-details}. This
-section records the scratch-model and cross-modal experiments that remain
-supporting evidence. The learned-frequency comparator appears in
-App.~\ref{sec:pe-dominant}.
+This section gives the training, continuation, and video protocols.
+Apps.~\ref{sec:identification-details} and~\ref{sec:mature-details} detail
+the fixed-range and mature-model experiments.
 
 \FloatBarrier
-\subsection{Reproducibility snapshot}
+\subsection{Models and training settings}
 
-The evidence ladder separates causal identification from architecture, scale,
-adaptation, frozen-checkpoint, and cross-modal consequences. Scratch text runs
-use FineWeb-Edu \citep{penedo2024fineweb}.
+Table~\ref{tab:evidence-map} collects the model settings and evaluation units.
+Scratch text runs use FineWeb-Edu \citep{penedo2024fineweb}.
 
 \begin{table}[ht]
 \caption{Evidence and protocol map. Every row retains its own intervention,
@@ -43,7 +40,7 @@ Static index profile & Qwen-$0.5$B; one table across lengths & 13 tasks, 20 rows
 Profile placement & Qwen/Gemma; direct gap versus normalized index & 4 tasks, 80 rows/task; App.~\ref{sec:coordinate-confirmation} \\
 Intermediate-band shape & OLMo/Qwen; matched BM/MrPro profiles & 6 tasks; Table~\ref{tab:bm-models}; App.~\ref{sec:bm-model-comparison} \\
 Natural-QA transfer & OLMo; matched static BM/MrPro profiles & 778 inputs, 631 long; token F1; App.~\ref{sec:bm-natural} \\
-Cross-modal scope & 129.6M video DiT; temporal Geo/\evq{} & 1 training seed; denoising MSE; App.~\ref{sec:video-dit} \\
+Video modeling & 129.6M video DiT; temporal Geo/\evq{} & 1 training seed; denoising MSE; App.~\ref{sec:video-dit} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -165,8 +162,7 @@ noise level $t{=}0.5$ and the same $256$ evaluation videos for both arms.
 
 Table~\ref{tab:dit-h2h} reports the matched comparison. \evq{} reduces
 denoising MSE by $21\%$ on training frames, $16\%$ over all extrapolated
-frames, and $35\%$ on far extrapolated frames, extending the scope check to
-bidirectional 3D RoPE.
+frames, and $35\%$ on far extrapolated frames under bidirectional 3D RoPE.
 
 \begin{table}[ht]
 \caption{DiT head-to-head evaluation (129.6M, seed 42, $15{,}000$ steps,

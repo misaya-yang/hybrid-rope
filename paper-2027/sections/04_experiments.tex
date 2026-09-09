@@ -2,11 +2,10 @@
 \label{sec:experiments}
 \label{sec:exp-mature}
 
-The Cosh construction gives a fixed exponent table that can be used in
-training or adaptation. We now examine its effects on language modeling,
-retrieval, and source use under the stated complete-table interventions,
-following the fixed-endpoint controls in
-\S\ref{sec:controlled-findings}.
+We apply Cosh quantiles in three settings: an MLA architecture with few
+rotary channels, continued full-parameter training, and adaptation of a
+pretrained language model. Together they test how an explicit allocation
+supports language modeling, retrieval, and source use.
 
 \subsection{Language modeling and retrieval}
 \label{sec:exp-capability}
@@ -20,7 +19,7 @@ allocation in an architecture where only a small set of dimensions carries
 explicit rotation.
 
 \paragraph{Continued full-parameter training.}
-In one matched $750$M continuation pair, both arms train at length $4096$.
+The matched $750$M continuation trains both arms at length $4096$.
 At $16$K, \evq{} reduces perplexity from $45.1$ to $24.4$, while the $4$K
 values remain close at $22.0$ and $22.3$. Across $40$ associated $8$K passkey
 trials, greedy autoregressive exact match rises from $0$ to $77.5\%$.
@@ -48,7 +47,7 @@ $750$M continuation & 1 & $4$K & $4$K & 22.0 & 22.3 \\
 \end{table}
 
 \paragraph{Matched Llama-$3$-$8$B adaptation.}
-We compare one Native/\evq{} pair under the same $300$-step rank-$64$ Q/K/V/O LoRA
+We compare Native and \evq{} under the same $300$-step rank-$64$ Q/K/V/O LoRA
 adaptation, using physical $8$K sequences \citep{hu2022lora,grattafiori2024llama3}.
 The evaluation comprises $24$ frozen temporal text packs from three domains.
 Figure~\ref{fig:8b-length-curve} shows the full curve:
@@ -61,7 +60,8 @@ The long-context NLL improvement holds in every pack in both extended lengths.
   \includegraphics[width=0.86\linewidth]{fig_8b_length_curve.pdf}
   \caption{\textbf{The Cosh construction improves extrapolation under matched adaptation.} Llama-$3$-$8$B arms share an $8$K, $300$-step LoRA protocol and
   are evaluated on the same $24$ text packs. The logarithmic PPL axis shows
-  all three evaluation lengths, including the original window.}
+  all three evaluation lengths. PPL is the exponential of the equal-domain
+  mean NLL.}
   \label{fig:8b-length-curve}
 \end{figure}
 
@@ -77,8 +77,9 @@ That continuation provides an autoregressive comparison: both arms receive
 the same $516$ additional steps on $13$ RULER families at physical length
 $8$K, then generate answers on new rows. At $16$K, the official RULER macro
 is $0.30\%$ for Native-LoRA and $14.03\%$ for \evq{}-LoRA; at $8$K it is
-$94.44/77.60\%$. This measures length transfer after matched task-family
-supervision.
+$94.44/77.60\%$. The official task metrics allow partial credit;
+normalized whole-response exact match at $16$K is $0/1.54\%$.
+These scores measure length transfer after matched task-family supervision.
 
 \paragraph{Composition with range extension.}
 In the $454$M three-seed experiment, applying the same fixed-index

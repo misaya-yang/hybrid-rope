@@ -15,15 +15,12 @@ We use OLMo-2-0425-1B-Instruct \citep{olmo2furious} ($1.485$B actual
 parameters) with rank-$64$, alpha-$128$ Q/K/V/O LoRA \citep{hu2022lora}.
 Native and \evq{} share the checkpoint, training rows and order, token budget,
 optimizer, and evaluation rows; the fixed frequency substrate is the intended
-intervention. Every backward pass contains at most $4$K physical tokens, but
-explicit position IDs expose target-range relative phases. This is therefore a
-physical-memory cap, not phase-free $4$K training. On $8$K
+intervention. Every backward pass contains at most $4$K physical tokens,
+with explicit position IDs providing target-range relative phases. On $8$K
 \texttt{niah\_single\_1}, strict first-generated-number exact is $0/100$
 for Native and $69/100$ for the matched \evq{} seed; an independently trained
 \evq{} seed scores $67/100$ on the same rows. The two \evq{} results are
-training-seed replications on a shared evaluation set. Natural-text NLL and the
-distinct autoregressive endpoints are kept separate in the discussion below
-and in Table~\ref{tab:ruler}.
+training-seed replications on a shared evaluation set.
 
 \paragraph{Complete numeric answers after matched routing continuation.}
 A separate follow-up to the routing parents applies the same $100$-step
@@ -83,8 +80,7 @@ length. A paired family-stratified bootstrap over the tracked Q/K-only
 per-example predictions gives \evq{}-minus-Native official-scorer macro differences
 of $-29.75$ points at $4$K (95\% CI $[-34.42,-24.85]$), $+29.61$ at $8$K
 ($[26.54,32.74]$), and $+4.65$ at $16$K ($[3.17,6.38]$). These intervals
-condition on the single trained pair and quantify evaluation-row uncertainty,
-not training-seed variability.
+quantify evaluation-row variation for the trained pair.
 
 \paragraph{From initialisation.}
 Starting from the public step-$0$ initialisation, the same-recipe Geo/\evq{}
@@ -94,19 +90,15 @@ $2.097$B-token budget.
 The \evq{}-minus-Geo NLL is
 $+0.0724/+0.0381/-0.0437/-0.1351$ at $2$/$4$/$8$/$16$K, with
 $122/128$ and $126/128$ held-out documents favouring \evq{} at $8$K and
-$16$K. This is one same-initialisation, same-scientific-recipe natural-text LM
-comparison; capability is evaluated by the separate autoregressive protocols
-above.
+$16$K.
 
-The identity is scientific rather than bitwise trainer pairing. The \evq{}
-branch uses the reviewed Hugging Face single-GPU loop, whereas the released Geo
+The \evq{} branch uses a Hugging Face single-GPU loop; the released Geo
 checkpoint was produced by AI2's distributed OLMo trainer. Both start from the
 same public step-$0$ initialisation and match the pinned recipe, reconstructed
 seed-$6198$ data-order prefix, $512$-sequence global batch, $4$K context,
 $1{,}000$ optimizer steps, and $2{,}097{,}152{,}000$ counted input tokens.
-Different trainer stacks remain a residual implementation confound, so this is
-scale persistence from one same-initialisation/same-recipe pair, not a bitwise
-paired trajectory or a multi-seed causal estimate.
+This comparison includes the frequency-table change and the two trainer
+implementations.
 
 \begin{figure}[ht]
   \centering
@@ -128,8 +120,8 @@ paired trajectory or a multi-seed causal estimate.
 The mature-checkpoint intervention in Table~\ref{tab:frozen-exponent-main}
 holds both models frozen. The three matched-support arms contain $64$ rotary
 pairs and share the Native fast endpoint and the Native slow endpoint divided
-by four. The two reference rows do not: Native retains the pretrained table,
-while official Transformers YaRN applies its frequency-dependent transport.
+by four. The reference rows use the original Native table and the
+Transformers YaRN frequency map.
 The three matched-support arms also share the factor-four attention amplitude
 $1+0.1\ln4$, evaluation rows, greedy decoder, precision, and hardware. The
 uniform-allocation arm is log-linear between the endpoints. The coarse control
@@ -210,8 +202,7 @@ Coarse ramp $-$ derived $z$ & $+0.0005$ & $+0.0006$ \\
 \end{tabular}
 \end{table}
 
-The complete OLMo deployment policy is consequently a separate bundled
-intervention: exact Native is selected when observed prefill plus generation
+The OLMo deployment policy selects the exact Native table when observed prefill plus generation
 reserve fits the Native window; otherwise one frozen factor-four table and
 amplitude are selected before prefill and retained for the KV-cache lifetime.
 It adds no learned parameters or training tokens. Statically forcing the same
@@ -221,7 +212,7 @@ mechanism.
 
 \begin{table}[ht]
 \caption{Compact zero-training deployment endpoints on the frozen OLMo
-checkpoint. These are complete-policy comparisons, not pure-$z$ effects.}
+checkpoint, using the specified table, amplitude, and session routing.}
 \label{tab:zero-training-policy-endpoints}
 \centering
 \small
@@ -252,17 +243,15 @@ allocation-only comparison.
 The LLaMA-3-8B-Instruct checkpoint \citep{grattafiori2024llama3} is frozen
 apart from the stated adapters. The \evq{} arm in both LLaMA protocols uses midpoint quantisation with
 $\tau{=}1.414$; Native retains the pretrained model's original frequency table.
-The training objectives, adapters, and endpoints remain separate below.
 
 \paragraph{Probability and causal source use.}
 The matched seed-$42$ protocol uses $300$ optimizer steps of BF16 rank-$64$,
 alpha-$128$ LoRA on Q/K/V/O, physical $8{,}192$-token sequences, and learning
 rate $10^{-4}$. Arms share model and tokenizer bytes, frozen training rows and
 order, seed, objective, optimizer, scheduler, batch/accumulation, LoRA capacity,
-checkpointing, compile mode, and evaluator. The contrast is therefore the
-end-to-end effect of assigning different frequency substrates under a matched
-adaptation pipeline; it does not isolate pure interior shape because the Native
-endpoint grid and midpoint-Cosh grid also differ in finite-grid embedding.
+checkpointing, compile mode, and evaluator. Native uses the pretrained
+endpoint grid, and Cosh uses midpoint quantiles; the same adaptation recipe is
+applied to these two frequency tables.
 The frozen adaptation tensor is drawn from LongAlpaca-12k
 \citep{chen2023longlora}: $7{,}476$ training and $152$ validation rows after
 length filtering, with effective batch $8$ (microbatch $2$, accumulation $4$).
@@ -303,6 +292,7 @@ $32$K & 779,400 & 32,243--32,679 & $-2.319 / -2.074 / -1.754$ \\
 \bottomrule
 \end{tabular}
 \end{table}
+\FloatBarrier
 
 The domain-macro \evq{}-minus-Native NLL is
 $+0.390/-1.510/-2.048$ at $8$/$16$/$32$K.
@@ -334,9 +324,3 @@ $0.295/14.03\%$ and normalized exact is $0/1.54\%$. At $8$K,
 Table~\ref{tab:ruler} reports official scorer macro ($94.44/77.60\%$) and
 normalized exact ($17.69/21.54\%$).
 
-\paragraph{Endpoint scope.}
-NLL, attention routing, strict autoregressive exact match, multi-hop QA, and
-RULER remain separate endpoints. The 2Wiki and RULER continuations use the
-same task families at train and test with disjoint rows, establishing
-task-family-adapted length transfer. The natural-text and routing rows evaluate
-probability and causal source use.

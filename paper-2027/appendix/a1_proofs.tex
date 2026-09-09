@@ -33,8 +33,8 @@ $U_j=S_j^{1/2}A_j(A_j^\top S_j A_j)^{-1/2}$ for $j\in\{\omega,\nu\}$. Then
 $U_j^\top U_j=I$, and the transformed whitened cross-Gram is
 $\widetilde Q_{\omega\nu}=U_\omega^\top Q_{\omega\nu}U_\nu$. Left and right
 orthogonal factors preserve the two canonical correlations and therefore
-$c_{\omega\nu}$. The metric is consequently attached to the positional
-subspaces themselves, not to a chosen sine/cosine phase convention.
+$c_{\omega\nu}$. Thus $c_{\omega\nu}$ is an intrinsic measure of overlap
+between the two positional subspaces.
 
 \begin{theorem}[Spectral budget identity]
 \label{thm:budget}
@@ -71,7 +71,7 @@ u_2(\theta,t)&=\frac{\sin(\sqrt\theta\,t)}{\sqrt\theta}
 \end{align}
 Thus $V_\omega\to V_0=\operatorname{span}\{1,\Delta\}$.  The fourth-order
 coefficient follows by retaining the part of the first perturbation transverse
-to $V_0$, rather than comparing the unwhitened Taylor coefficients.  Under the
+to $V_0$. Under the
 uniform measure on $t\in[0,1]$,
 \begin{align}
 \Pi_0^\perp t^2&=p_2(t):=t^2-t+\tfrac16,\\
@@ -116,13 +116,13 @@ $\overline h=h-\mathbb E_p h$, the same expansion gives
  \longrightarrow \Delta^2-\mathbb E_p\Delta^2.
 \end{equation}
 These functions span the centred limit whenever $p$ has nondegenerate support
-on at least three distances.  This is a limit for a declared fixed measure; it
-does not identify which slow channels a trained model uses.
+on at least three distances. The separation weights $p$ therefore determine
+which polynomial directions survive centering.
 \end{proof}
 
 \paragraph{Directional overlap and feature scale.}
-For the original, unwhitened pair on $[0,L]$, put $x=\omega L$.
-The self-Gram eigenvalues are
+For the original, unwhitened pair on $[0,L]$, put $x=\omega L$ and
+$\operatorname{sinc}x=\sin x/x$. The self-Gram eigenvalues are
 \[
 \lambda_\pm(S_\omega)=\frac{1\pm|\operatorname{sinc}x|}{2},
 \qquad \lambda_-(S_\omega)\sim\frac{x^2}{12},\qquad
@@ -133,11 +133,10 @@ Block whitening removes this within-pair scaling and measures overlap between
 positional directions. Raw feature energy, coefficient magnitude, and numerical
 precision determine how strongly those directions can contribute to a model.
 
-The reported $r_2{=}2.00$ for the $23$ slow pairs uses the standard
-$u_k{=}k/K$ grid and the uniform separation
-prior above. Other priors change that static numerical Gram. The fixed-range
-trained-model contrast of \S\ref{sec:exp-identify} instead follows its paired
-empirical protocol.
+The standard $u_k=k/K$ grid gives $23$ slow pairs in
+Figure~\ref{fig:frequency-geometry}; the endpoint-inclusive grid used in
+Figure~\ref{fig:spectral-budget-scaling} gives $24$ at $K=64$.
+Both figures use the uniform separation measure.
 
 \begin{figure}[ht]
   \centering
@@ -163,8 +162,7 @@ empirical protocol.
   fixed-endpoint table under the same uniform separation prior, using the
   zero-search reference $\tau{=}2K/\sqrt{L}$; anchored \evq{} spends
   progressively more of the available full-pair dimension than Geo as the
-  budget grows. These are static positional-basis diagnostics; the
-  trained effect is identified separately in App.~\ref{sec:identification-details}.}
+  budget grows.}
   \label{fig:spectral-budget-scaling}
 \end{figure}
 
@@ -220,25 +218,18 @@ gives the stated period or antiperiod, and every antiperiodic table repeats
 after $2L$.
 \end{proof}
 
-Proposition~\ref{prop:parity-lattice} attains the algebraic rank maximum on the
-declared interval while imposing an exact recurrence just outside it.  It does
-not say that $K_{\mathrm{par}}$ is a global capacity over arbitrary frequencies,
-nor does it survive a change of measure: the causal separation histogram is
-triangular rather than uniform and does not make the same lattice orthogonal.
-The exact parity construction and the small-model checks are reproduced by
-\texttt{analysis/full\_rope\_audit/verify\_small\_models.py}; the uniform-versus-causal
-measure comparison is exposed by
-\texttt{scripts/analysis/third\_axis\_ceiling.py --decompose}.  These are static
-basis statements, not LM-quality or extrapolation predictions.
+Proposition~\ref{prop:parity-lattice} couples maximal rank on $[0,L]$ with
+recurrence beyond that interval. Its orthogonality also depends on the
+separation measure: weighting the same lattice by the triangular causal
+histogram introduces off-diagonal Gram terms. Thus interval coverage and
+pairwise rank capture different features of a positional basis.
 
 \FloatBarrier
 \subsection{Two static ordering counterexamples}
 \label{sec:static-counterexamples}
 
-Even within a fixed declared measure, a cheaper static proxy need not order
-tables like the full basis, and an ordering at one interval need not persist at
-another.  The following two finite tables are existence counterexamples; no
-claim of continuous global optimisation is needed.
+Two explicit examples show how phase coupling and interval length change
+the ordering of frequency tables.
 
 \paragraph{Cosine-only collision can choose the lower-rank table.}
 Take $K=4$, $L=8\pi$, and the two descending frequency tables
@@ -311,18 +302,14 @@ Differentiating at $\Delta{=}0$ gives $A^\top G_{\Omega'}A^{-\top}=G_\Omega$, so
 the generators are similar and share a spectrum. The spectrum of $G_\Omega$ is
 $\{\pm i\omega_k\}_{k\le K}$ with multiplicity, so the frequency multisets agree
 up to sign and permutation. When a frequency is repeated, similarity may mix
-the entire equal-frequency invariant subspace; it need not preserve the original
-two-dimensional block decomposition. For integer positions the same argument
+the entire equal-frequency invariant subspace, including across its original
+two-dimensional blocks. For integer positions the same argument
 is replaced by a one-step spectral argument: evaluating at $\Delta=0$ again
 gives $B=A^{-\top}$, while $\Delta=1$ makes $\mathcal R_{\Omega'}(1)$ and
 $\mathcal R_\Omega(1)$ similar. Their eigenvalue multisets
 $\{e^{\pm i\omega_k}\}$ therefore agree, which identifies frequencies up to
 sign, permutation, and the $2\pi$ alias.
 \end{proof}
-
-This exact statement covers \emph{fixed, position-independent, invertible}
-compensation. Approximate retraining on finite data, nonlinear maps, and changes
-to V/O or the residual path are separate intervention classes.
 
 \FloatBarrier
 \subsection{Proof of the closed-form variational optimum}
@@ -332,7 +319,7 @@ variational objective. Starting from the kernel
 \begin{equation}
 K_{\mathrm{app}}(\phi,\psi)=\alpha\delta(\phi-\psi)+\beta\min(\phi,\psi),
 \end{equation}
-the main-text collision functional is~\eqref{eq:Capp}, which under the mass normalization $\int_0^1\rho=1$ with Lagrange multiplier $\nu$ has constrained first variation
+the allocation functional is~\eqref{eq:Capp}, which under the mass normalization $\int_0^1\rho=1$ with Lagrange multiplier $\nu$ has constrained first variation
 \begin{equation}
 \alpha\rho(\phi) + \beta\,g(\phi) + \nu = 0,\qquad
 g(\phi) = \int_0^1 \rho(\psi)\min(\phi,\psi)\,d\psi.
@@ -365,20 +352,19 @@ since differentiating $\alpha\rho(\phi)+\beta g(\phi)+\nu = 0$ once and evaluati
 \rho_\tau(\phi) \;=\; \frac{\tau\,\cosh(\tau(1-\phi))}{\sinh\tau},
 \label{eq:rho-tau-closed}
 \end{equation}
-which is main-text Theorem~\ref{thm:ode}. The mass constraint $\int\rho{=}1$ is not lost: it enters the boundary condition at $\phi{=}0$ via $g'(0){=}\int_0^1\rho{=}1$. Positivity holds on the closed interval since $\rho_\tau(\phi){\geq}\rho_\tau(1){=}\tau/\sinh\tau{>}0$ for $\tau{>}0$ (with $\rho_\tau(0){=}\tau\coth\tau{>}0$); the inequality constraint $\rho{>}0$ is therefore inactive throughout $[0,1]$ and the unconstrained Euler--Lagrange solution coincides with the KKT-constrained solution. For the degenerate case $\beta{=}0$ the ODE reduces to $\rho''{=}0$ with $\rho'(0){=}\rho'(1){=}0$ and $\int\rho{=}1$, forcing $\rho\equiv 1$, which is also the $\tau{\to}0$ limit of~\eqref{eq:rho-tau-closed}.
+which is main-text Theorem~\ref{thm:ode}. Mass normalization enters the
+boundary condition through $g'(0)=\int_0^1\rho=1$. Positivity holds on the closed interval since $\rho_\tau(\phi){\geq}\rho_\tau(1){=}\tau/\sinh\tau{>}0$ for $\tau{>}0$ (with $\rho_\tau(0){=}\tau\coth\tau{>}0$); the inequality constraint $\rho{>}0$ is therefore inactive throughout $[0,1]$ and the unconstrained Euler--Lagrange solution coincides with the KKT-constrained solution. For the degenerate case $\beta{=}0$ the ODE reduces to $\rho''{=}0$ with $\rho'(0){=}\rho'(1){=}0$ and $\int\rho{=}1$, forcing $\rho\equiv 1$, which is also the $\tau{\to}0$ limit of~\eqref{eq:rho-tau-closed}.
 
 \paragraph{Convexity / PSD of $\mathcal{C}_{\mathrm{app}}$.} For $\alpha{>}0$ and $\beta{\geq}0$, the surrogate is convex because both quadratic terms are positive semidefinite. The diagonal $\alpha{\int}\rho^2$ is manifestly PSD on $L^2$, and the Green-kernel cross term satisfies the identity
 \begin{equation}
 \iint_{[0,1]^2} f(\phi)\,f(\psi)\,\min(\phi,\psi)\,d\phi\,d\psi \;=\; \int_0^1 \!\left(\int_s^1 f(u)\,du\right)^{\!2}\!ds \;\geq\; 0.
 \label{eq:min-kernel-psd}
 \end{equation}
-Thus the stationary density obtained above is the unique constrained \emph{minimizer} (not merely a critical point), and the surrogate is well-defined as a quadratic functional on $L^2([0,1])\supset C^2([0,1])$ with no further regularity assumption needed for the $\delta$-component. Conditional on $\mathcal{C}_{\mathrm{app}}$, this derivation is exact.
+The strictly convex functional on $L^2([0,1])$ therefore has the displayed
+stationary density as its unique constrained minimizer.
 
-\paragraph{Why this branch.}
-The homogeneous Cosh solution has an analytically invertible CDF, turning the
-continuous optimum into an explicit finite table. This construction is
-specified by its allocation criterion; the full-subspace geometry and trained
-comparisons evaluate distinct consequences of the resulting table.
+The Cosh solution has an analytically invertible CDF, so its quantiles turn
+the continuous allocation directly into a finite frequency table.
 
 \FloatBarrier
 \subsection{Single-crossing budget shift}
@@ -455,27 +441,26 @@ This follows by substituting
 $T_1(\tau)=\tau^2(1+\sinh(2\tau)/(2\tau))/(2\sinh^2\tau)$ and
 $\rho(0)=\tau\coth\tau$ into the theorem.
 
-The identity checks the two surrogate energy terms exactly; trained-loss
-evidence is supplied by \S\ref{sec:experiments}.
+The identity provides a closed-form evaluation of the allocation energy.
 
 \FloatBarrier
-\subsection{Assumption-bound operating calculation and finite tested receipt}
+\subsection{Allocation strength and a reference rule}
 \label{sec:lambda-cv}
 \label{sec:tau-scaling}
 
-The variational theorem selects the Cosh \emph{shape}; it does not select a
-finite strength for every model or protocol.  The implementable reference used
-in the standard full-RoPE text experiments is
+The Cosh family varies with the strength $\tau$. A reference used in the
+full-RoPE text experiments relates this strength to head width and training
+length:
 \begin{equation}
 \tau = c\,\dhd/\sqrt{\Ltr},\qquad
 u_k = (k+\tfrac12)/K,\qquad
 \omega_k^{\mathrm{EVQ}} = b^{-\phi_k(\tau)} .
 \label{eq:evq-practical}
 \end{equation}
-Here $c{=}1$ is the pre-training zero-search convention, not a fitted optimum;
-each protocol records its realised $\tau$, grid, support, and rotary width.
+The reference sets $c=1$ before training. Table~\ref{tab:allocation-protocols}
+records the strength, grid, and setting procedure used in each experiment.
 
-\paragraph{Assumption-bound calculation.}
+\paragraph{Local scaling calculation.}
 The scaling argument uses four explicit modelling assumptions: (i) the
 pure-tether Cosh family is varied only through $\tau$; (ii) full-RoPE MHA has
 $d_{\mathrm{rot}}=\dhd$; (iii) the reference post-softmax distribution is
@@ -500,21 +485,19 @@ q(x)&=\frac12+\frac{\sin(2x)}{4x}
 \end{aligned}
 \end{equation}
 Stationarity of
-$\mathcal F(\tau)=\tfrac12S_{\chi^2}(\tau)-\lambda U(\tau,L)$ gives only the
-leading balance
+$\mathcal F(\tau)=\tfrac12S_{\chi^2}(\tau)-\lambda U(\tau,L)$ gives the
+leading small-$\tau$ balance
 \begin{equation}
 \tau_*^2=45\lambda Q_1(L,b)\frac{\dhd^2}{L},
 \qquad
 c_{\mathrm{loc}}(L,b,\lambda)=\sqrt{45\lambda Q_1(L,b)}.
 \label{eq:tau-leading-balance}
 \end{equation}
-Thus $\dhd/\sqrt L$ is an assumption-bound scaling factor, while the
-coefficient remains utility-, base-, and convention-dependent.  The reported
-experiments use the exact Cosh warp, including where small-$\tau$ truncation is
-not accurate; Eq.~\eqref{eq:tau-leading-balance} is not a behavioural selector,
-a support-invariance statement, or a derivation of $c{=}1$.
+This calculation yields the scaling factor $\dhd/\sqrt L$ with a local
+coefficient determined by $Q_1(L,b)$ and $\lambda$. The experiments evaluate
+the exact Cosh quantiles at the protocol's chosen strength.
 
-\paragraph{Finite tested receipt.}
+\paragraph{Reference and neighboring strengths.}
 The staged study contains $99$ completed runs: the fixed $c{=}1$ reference
 beats the midpoint-discretised Geo baseline under runner-defined weighted
 extrapolation NLL in $7/9$ configuration means and $18/27$ paired seeds.  Its
@@ -525,15 +508,15 @@ varies by configuration.  The numeric owner is
 \texttt{data/curated/phase16\_99run\_manifest.csv}; the tracked reproduction
 entrypoint is
 \texttt{scripts/core\_text\_phases/phase16\_formula\_optimality\_sweep.py}.
-These finite points support a fallible zero-search operating prior relative to
-the tested Geo baseline.  They do not establish a continuous basin, basin
-bounds, interpolation guarantees, near-optimality, or a global optimum.
+The reference and its neighboring strengths give a direct comparison of
+allocation intensity across the tested configurations.
 
 \FloatBarrier
 \subsection{Discrete-channel transport gap under finite channel counts}
 \label{sec:discrete-continuous-gap}
 
-\paragraph{Setup.} Inverse-CDF quantization replaces the continuous density $\rho$ by an atomic measure. Let $F(\phi){=}\int_0^\phi\rho$, $Q(u){=}F^{-1}(u)$, midpoint grid $u_k{=}(k{-}\tfrac{1}{2})/K$, and $\phi_k{=}Q(u_k)$. The empirical channel measure is $\mu_K{=}K^{-1}\sum_{k=1}^{K}\delta_{\phi_k}$. Direct $\|\rho_K-\rho\|$ is ill-posed: one cannot subtract an atomic measure from a density. We therefore work in Wasserstein distance for transport and in a quantile-cell histogram $\rho_K$ for density.
+\paragraph{Setup.} Inverse-CDF quantization replaces the continuous density $\rho$ by an atomic measure. Let $F(\phi){=}\int_0^\phi\rho$, $Q(u){=}F^{-1}(u)$, midpoint grid $u_k{=}(k{-}\tfrac{1}{2})/K$, and $\phi_k{=}Q(u_k)$. The empirical channel measure is $\mu_K{=}K^{-1}\sum_{k=1}^{K}\delta_{\phi_k}$. We compare the measures in Wasserstein distance and approximate the density
+with the associated quantile-cell histogram $\rho_K$.
 
 \paragraph{Transport bounds.} Assume $0<m\le\rho\le M$ and $\|\rho'\|_\infty\le B$; then $Q$ is $(1/m)$-Lipschitz. The midpoint quantization errors satisfy
 \begin{equation}

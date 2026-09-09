@@ -1,4 +1,4 @@
-\begin{thebibliography}{42}
+\begin{thebibliography}{41}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -378,16 +378,5 @@ Min Zhao, Guande He, Yixiao Chen, Hongzhou Zhu, Chongxuan Li, and Jun Zhu.
 \newblock In \emph{Proceedings of the 42nd International Conference on Machine
   Learning}, volume 267 of \emph{PMLR}, pp.\  77539--77557, 2025.
 \newblock URL \url{https://proceedings.mlr.press/v267/zhao25m.html}.
-
-\bibitem[Zheng et~al.(2024)Zheng, Gao, Shi, Huang, Li, Xiong, Ren, Ng, Jiang,
-  Li, and Li]{zheng2024dape}
-Chuanyang Zheng, Yihang Gao, Han Shi, Minbin Huang, Jingyao Li, Jing Xiong,
-  Xiaozhe Ren, Michael~K. Ng, Xin Jiang, Zhenguo Li, and Yu~Li.
-\newblock {DAPE}: Data-adaptive positional encoding for length extrapolation.
-\newblock In \emph{Advances in Neural Information Processing Systems},
-  volume~37, 2024.
-\newblock \doi{10.52202/079017-0838}.
-\newblock URL
-  \url{https://proceedings.neurips.cc/paper_files/paper/2024/hash/2f050fa9f0d898e3f265d515f50ae8f9-Abstract-Conference.html}.
 
 \end{thebibliography}

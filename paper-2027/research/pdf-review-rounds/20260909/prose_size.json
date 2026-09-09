@@ -1,0 +1,18 @@
+{
+  "method": "Approximate prose-token count from active TeX section sources; math and citation commands removed; table text included.",
+  "historical_branch": "main_0726",
+  "historical_main_sections": 3455,
+  "current_main_sections": 3542,
+  "current_sections": [
+    "00_abstract",
+    "01_intro",
+    "02_exponents",
+    "03_findings",
+    "02_identification",
+    "03_theory",
+    "04_experiments",
+    "04_mature",
+    "02_related",
+    "05_discussion"
+  ]
+}

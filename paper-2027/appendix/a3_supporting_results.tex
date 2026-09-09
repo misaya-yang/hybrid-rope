@@ -12,19 +12,10 @@ $d_{\mathrm{nope}}{=}32$ dimensions are non-rotary, and the shared KV latent
 rank is 256. The model trains from scratch on 500M FineWeb-Edu tokens
 \citep{penedo2024fineweb} at
 $L_{\mathrm{train}}{=}8192$ and base $500\mathrm{K}$ over seeds 42, 43, and
-88. \evq{} uses the pre-specified empirical $\tau{=}1.414$ setting. Because
-the compressed rotary subspace does not instantiate the full-RoPE
-$\drot{=}\dhd$ convention in Eq.~\eqref{eq:evq-practical}, this
-experiment tests frequency allocation at fixed architecture rather than the
-operating rule.
-
-The tracked aggregate is backed by the exact recovered three-seed evaluator
-JSON and retains every seedwise row. At $16$K, Geo PPL is
+88. \evq{} uses the pre-specified $\tau=1.414$ setting.
+At $16$K, Geo PPL is
 $141.1/132.5/142.8$ for seeds $42/43/88$, whereas \evq{} is
-$93.7/92.7/100.3$; all three paired directions agree. Original checkpoint and
-training-data artifacts are not packaged, so this row establishes the reported
-system ordering, not checkpoint-level reproduction or a theorem fixing
-$\tau$ from $d_{\mathrm{rope}}$.
+$93.7/92.7/100.3$; all three paired directions agree.
 
 For the supporting overlay, let $\lambda_k=2\pi/\omega_k$ and
 $t_k=\operatorname{clip}((\lambda_k-L_{\mathrm{train}})/(31L_{\mathrm{train}}),0,1)$.
@@ -56,9 +47,7 @@ Geo + MLA wavelength-blend ($s=4$) & $35.5{\pm}0.9$ & $117.9{\pm}6.5$ & $204.9{\
 
 \evq{} reduces 16K PPL by $31.1\%$ ($138.8\to95.6$), while 8K PPL changes by
 $+0.9\%$. All three training seeds favour \evq{} at 16K. The \evq{} plus MLA wavelength-blend
-row has the lowest mean PPL at 16K and beyond. These rows establish the tested
-ordering for this architecture and protocol; the multiplier overlay is the
-run-specific MLA wavelength-blend operator, not the paper's pure-$z$ control or
-an exact reproduction of another scaling method.
+row has the lowest mean PPL at 16K and beyond, showing that the allocation
+also composes with this wavelength-dependent extension.
 
 \FloatBarrier

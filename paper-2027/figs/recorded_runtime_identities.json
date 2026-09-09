@@ -1,0 +1,60 @@
+{
+  "records": {
+    "Qwen2.5-0.5B-Instruct": {
+      "checkpoint_weight_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "native_sha256_float32": "6d1e10125bd0468a7cf91c6175a3af31c1bffca24592cf5630f0f8402a8746e3",
+      "runner_sha256": "ec514fad23a99a430290419c738a566ff7abff9313fbac99970bcee768a5dc8d",
+      "ruler_commit": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a"
+    },
+    "Gemma-1.1-2B-Instruct": {
+      "artifact": "unsloth/gemma-1.1-2b-it",
+      "revision": "619e546640669a280738627cc623f4bd74a7b069",
+      "checkpoint_weight_sha256": "584d0f7d939d235ee14a4ba307b40dbc3f03d5483181b9381e9f10636b618933",
+      "tokenizer_sha256": "7da53ca29fb16f6b2489482fc0bc6a394162cdab14d12764a1755ebc583fea79",
+      "native_sha256_float32": "cc63341a0ac42a60b986ed638fd0d45b838b72fabeffec059c463eac4ed9ea15",
+      "runner_sha256": "ec514fad23a99a430290419c738a566ff7abff9313fbac99970bcee768a5dc8d",
+      "ruler_commit": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+      "torch": "2.8.0+cu128",
+      "cuda": "12.8"
+    },
+    "OLMo-BM-natural-QA": {
+      "model_id": "allenai/OLMo-2-0425-1B-Instruct",
+      "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+      "transformers_version": "5.15.1",
+      "frequency_tables_sha256": {
+        "Native": "9229ec6a6a7ce5c1750273bcdbee97895a74a9202722f14b6ca2328ece5ee98e",
+        "MrPro": "ec9c549777f7a94c73a1cc2db5f22fefbe202a7e083e454f2510034f2cec5dfb",
+        "MrProBM": "c80626f8f9280854577fd1e79443930009a6937065366adb8eee5f62ce7807a6"
+      }
+    },
+    "Qwen2.5-3B-BM": {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+      "runtime": {
+        "model_load_seconds": 4.7707031555473804,
+        "gpu": "NVIDIA GeForce RTX 4080 SUPER",
+        "gpu_memory": 33794359296,
+        "backend": "Flash SDPA only; no fallback enabled",
+        "software": {
+          "torch": "2.8.0+cu128",
+          "transformers": "5.15.1",
+          "numpy": "2.3.2"
+        },
+        "identity": "bb86e623d7597506706a7b7b6773b533516a020576fb29485ef35077b12da6e3",
+        "phase_deadline": null
+      }
+    },
+    "Qwen2.5-7B-BM": {
+      "model_id": "Qwen/Qwen2.5-7B-Instruct",
+      "revision": "a09a35458c702b33eeacc393d103063234e8bc28"
+    }
+  },
+  "sources": {
+    "K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RECEIPT_20260901.json": "c158eabb43d2eb026453e7f25b277f21352f9da2938d840e4d059567a103babf",
+    "K128_COORDINATE_CONFIRMATION_RECEIPT_20260901.json": "715f67d95f4bc7fe0c0c92104516c6681441c0b9a575753b35f01645bdfb4942",
+    "ROPE_OLMO_BM_FIVE_QA_RESULT_20260908.json": "48232e004655dfe255071a88661c6907d05b14caac4263fe7539e4c3eeae7337",
+    "ROPE_BM_TRANSFER_RESULT_20260908.json": "acbb9fdffa28f3ecb10d0a657996852bc9228842e428878bf0459f1ac33e457f",
+    "ROPE_QWEN7_BM_RESULT_20260908.json": "8e356b57186c10ab8ec17003a46552585352264d9588d116974d1b3d8147ba69"
+  }
+}

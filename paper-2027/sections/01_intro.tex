@@ -49,7 +49,7 @@ quantiles define a fixed table for training and adaptation. Its experiments
 cover scarce rotary channels, continued training, and matched $8$B adaptation.
 For frozen models, we instead construct displacements from the native
 exponents and compare their placement and intermediate-band shape.
-These comparisons include a static Qwen table that improves $64$K RULER over
+These comparisons include a static Qwen table--amplitude configuration that improves $64$K RULER over
 YaRN while retaining the $32$K score, and a boundary-matched adjustment with
 improvements on five OLMo natural-QA tasks. The tested Qwen checkpoints favor
 a different intermediate profile, making learned compatibility part of the

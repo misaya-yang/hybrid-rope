@@ -1,10 +1,11 @@
 # Manuscript narrative
 
 The central object is the RoPE exponent distribution. Define it, explain the
-positional geometry it changes, derive a concrete construction, and evaluate
-its effects before moving to adjustments of frozen models.
+controlled behavior it changes, then explain its positional geometry. Present
+Cosh as one explicit allocation construction, followed by adjustments of frozen
+models. The fixed-range finding and weight-table crossings organize the paper.
 
-1. Write the positive argument: question, analysis, construction, result,
+1. Write the positive argument: question, controlled finding, analysis, design,
    interpretation. Put actual experiment conditions next to the result.
 2. Use `x = a + R z` as a definition and a control for range. The contribution
    is the theory, construction, and controlled findings about exponent

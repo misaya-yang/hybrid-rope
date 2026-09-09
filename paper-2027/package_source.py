@@ -36,7 +36,7 @@ def source_files() -> set[Path]:
     for name in ["main.pdf", "main.bbl", "compile.sh", "package_source.py",
                  "figs/verify_explicit_geometry.py", "figs/explicit_geometry_examples.json",
                  "figs/make_exponent_revision_figures.py", "figs/figure_inputs.json",
-                 "figs/exponent_revision_source_receipt.json", "figs/llama_temporal_summary.json"]:
+                 "figs/exponent_revision_source_receipt.json", "figs/llama_temporal_summary.json", "figs/recorded_runtime_identities.json"]:
         add(PAPER / name)
     for pattern in ["*.sty", "*.bst"]:
         for path in PAPER.glob(pattern):

@@ -74,7 +74,7 @@ for index in [0, pairs - 1]:
     ax.scatter(index, geo[index], s=34, facecolor="white", edgecolor=GREEN,
                lw=1.2, zorder=5)
 ax.annotate("identical sampled endpoints", (pairs - 1, geo[-1]),
-            xytext=(17, 0.70), color=GREEN, fontsize=8.4,
+            xytext=(12, 0.70), color=GREEN, fontsize=8.4,
             arrowprops=dict(arrowstyle="->", color=GREEN, lw=0.8))
 ax.set_xlim(-0.8, pairs - 0.2)
 ax.set_ylim(-0.02, 1.02)
