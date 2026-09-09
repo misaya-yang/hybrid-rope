@@ -23,10 +23,15 @@ allocation consequently need to be evaluated together when composing a
 deployment table. The complete paired curves and training details appear in
 Appendix~\ref{sec:identification-details}.
 
-A further $50.9$M factorial varies two bases, two training lengths, three head
+\subsection{Different allocation shapes across configurations}
+
+A $50.9$M factorial varies two bases, two training lengths, three head
 dimensions, and three paired seeds, with endpoints pinned in every comparison.
 It evaluates three Cosh strengths and a deformation-matched exponential.
-The strongest tested Cosh setting improves the weighted OOD objective in
-$10/12$ configurations, and the exponential in $9/12$
-(App.~Table~\ref{tab:m4}). The common benefit across these structured shapes
-extends the fixed-range result beyond a single curve.
+At the reference Cosh strength, the weighted OOD objective improves in
+$7/12$ configurations; the preassigned $1.25\times$ strength improves
+$10/12$, and the matched exponential improves $9/12$.
+The reference-Cosh-minus-exponential mean difference is $+0.00074$ NLL,
+with interval $[-0.006,0.008]$ (App.~Table~\ref{tab:m4}).
+The useful intervention therefore extends across multiple nonuniform shapes,
+while the preferred redistribution strength varies with the configuration.

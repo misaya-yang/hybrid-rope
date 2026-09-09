@@ -1,13 +1,11 @@
-\section{Learning with Designed Exponents}
+\section{Model Effects of an Analytic Allocation}
 \label{sec:experiments}
 \label{sec:exp-mature}
 
-We first test exponent allocation with weights trained or adapted to the
-installed table. The paired fixed-range experiment isolates its shape;
-the larger-model studies measure language modeling and retrieval under their
-respective training protocols.
-
-\input{sections/02_identification}
+The Cosh construction gives a fixed exponent table that can be used in
+training or adaptation. We now examine its effects on language modeling,
+retrieval, and source use, following the controlled findings in
+\S\ref{sec:controlled-findings}.
 
 \subsection{Language modeling and retrieval}
 \label{sec:exp-capability}
@@ -32,7 +30,7 @@ Appendix~\ref{sec:experiment-details}.
 \centering
 \small
 \setlength{\tabcolsep}{5pt}
-\caption{\textbf{Exponent allocation in trained language models.}
+\caption{\textbf{Model effects of the Cosh exponent table.}
 Each row compares Geo and \evq{} within one training protocol. Perplexity is
 lower-is-better; the MLA values aggregate three seeds, and the continuation
 uses one matched pair.}
@@ -61,8 +59,7 @@ The long-context NLL improvement holds in every pack in both extended lengths.
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.86\linewidth]{fig_8b_length_curve.pdf}
-  \caption{\textbf{The effect of exponent allocation grows beyond the adaptation
-  window.} Llama-$3$-$8$B arms share an $8$K, $300$-step LoRA protocol and
+  \caption{\textbf{The Cosh construction improves extrapolation under matched adaptation.} Llama-$3$-$8$B arms share an $8$K, $300$-step LoRA protocol and
   are evaluated on the same $24$ text packs. The logarithmic PPL axis shows
   all three evaluation lengths, including the original window.}
   \label{fig:8b-length-curve}
@@ -92,9 +89,5 @@ Appendix~\ref{sec:range-composition} gives the operator, training protocol,
 and complete comparison.
 
 \paragraph{Further settings.}
-At $1.485$B parameters, OLMo models trained from the same public initialization
-for $2.097$B tokens give $16$K PPL of $182.73$ for Geo and $159.64$ for
-\evq{}, with lower NLL in $126/128$ held-out documents.
-The training implementations and full curves are in
-Appendix~\ref{sec:olmo2-1b}; video-DiT results are in
-Appendix~\ref{sec:video-dit}.
+The same-initialization OLMo scale check and video-DiT comparison are reported
+with their full protocols in Apps.~\ref{sec:olmo2-1b} and~\ref{sec:video-dit}.

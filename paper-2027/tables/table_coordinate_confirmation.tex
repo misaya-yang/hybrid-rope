@@ -1,0 +1,14 @@
+\begin{table}[ht]
+\centering\small
+\caption{Independent-input placement comparisons, $80$ examples per task and four tasks per panel. Intervals are for index minus direct-gap, in percentage points: $97.5\%$ for each Qwen length (Bonferroni over two lengths), $95\%$ for Gemma.}
+\label{tab:coordinate-confirmation}
+\begin{tabular}{@{}llrrl@{}}
+\toprule
+Model & Length & Direct-gap (\%) & Index (\%) & Difference interval\\
+\midrule
+Qwen-$0.5$B & $32$K & 49.69 & 53.37 & $[-0.25,+7.75]$ \\
+Qwen-$0.5$B & $64$K & 46.62 & 46.13 & $[-4.87,+3.81]$ \\
+Gemma-$2$B & $16$K & 72.81 & 79.00 & $[+2.81,+9.62]$ \\
+\bottomrule
+\end{tabular}
+\end{table}

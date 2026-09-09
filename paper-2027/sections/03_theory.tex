@@ -1,4 +1,4 @@
-\section{Geometry and a Closed-Form Allocation}
+\section{Positional Geometry of Exponent Distributions}
 \label{sec:theory}
 
 \subsection{What different exponents represent}
@@ -41,7 +41,7 @@ off-diagonal correlations. For uniform separations on $[0,L]$, the cross-Gram
 has an exact trigonometric form, so both the correlations and effective rank
 can be computed directly (App.~\ref{sec:geometry-proofs}).
 
-\subsection{Why the slow end admits reallocation}
+\subsection{How slow exponents share positional directions}
 
 \begin{proposition}[Shared slow-frequency subspace]
 \label{prop:collapse}
@@ -59,32 +59,33 @@ For $b=500{,}000$, $K=64$, and $L=4096$, the $23$ standard-grid pairs with
 $\omega L\le1$ have $46$ nominal dimensions and $r_2=2.00013$ under this
 measure.
 
-This suggests redistributing some exponent samples toward faster rotations
-while retaining coverage of the range. Frequency-use studies also show that
+Exponent redistribution changes how many pairs occupy these shared directions
+and how many cover faster positional variations. Frequency-use studies also show that
 slow pairs can carry semantic information
 \citep{barbero2025round,urrutia2026decoupling}; their positional similarity
 motivates a change in allocation, not deletion of their content coordinates.
 The learned weights determine how the resulting basis is used.
 
-\subsection{Constructing an exponent distribution}
+\subsection{An analytic allocation construction}
 \label{sec:construction}
 
-Let a positive density $\rho\in C^2([0,1])$, with $\int_0^1\rho=1$,
-allocate samples over the exponent interval. Uniform $\rho$ recovers geometric
-spacing. To balance concentration against redundant slow-end sampling, we
-choose the convex objective
+To construct a smooth exponent table, let a positive density
+$\rho\in C^2([0,1])$, with $\int_0^1\rho=1$, allocate samples over
+$[0,1]$. Uniform $\rho$ recovers geometric spacing. Define the cumulative
+slow-tail mass $S_\rho(t)=\int_t^1\rho(\phi)\,d\phi$ and choose the
+convex allocation criterion
 \begin{equation}
 \Capp[\rho]
 =\frac{\alpha}{2}\int_0^1\rho(\phi)^2\,d\phi
-+\frac{\beta}{2}\iint_{[0,1]^2}
-\rho(\phi)\rho(\psi)\min(\phi,\psi)\,d\phi\,d\psi,
++\frac{\beta}{2}\int_0^1 S_\rho(t)^2\,dt,
 \qquad \alpha>0,\ \beta\ge0.
 \label{eq:Capp}
 \end{equation}
-The squared-density term discourages concentration in a narrow band.
-The interaction penalty grows when both exponents lie toward the slow end.
-This surrogate turns the preceding geometric observation into a tractable
-allocation problem.
+The first term discourages concentration in a narrow band; the second
+penalizes the squared mass beyond each slow-end threshold. Equivalently,
+$\int S_\rho^2=\iint\rho(\phi)\rho(\psi)\min(\phi,\psi)\,d\phi\,d\psi$.
+These specified design preferences provide a tractable surrogate for
+constructing a nonuniform allocation.
 
 \begin{theorem}[Cosh allocation]
 \label{thm:ode}

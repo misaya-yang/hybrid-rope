@@ -1,21 +1,23 @@
 \section{Discussion}
 \label{sec:discussion}
 
-Exponent allocation connects a simple implementation choice to the positional
-basis a model learns to use. The fixed-range experiments show that reshaping
-the exponents changes length generalization; the subspace analysis explains
-how that reshaping changes the distribution of positional directions.
-\evq{} turns this view into a closed-form construction, with substantial
-long-context gains across the trained and adapted models.
+The exponent distribution determines how a finite RoPE table samples
+positional scales. Fixed-range training establishes a behavioral effect of
+its interior shape, while range retargeting and weights-by-table crossings
+show that this effect interacts with the installed range and learned
+coefficients. The full sine--cosine analysis makes the underlying positional
+basis explicit and explains why slow exponents can supply strongly
+correlated directions.
 
-The frozen-model results add a second perspective. Expressing a change as a
-displacement from the native exponents makes blends, log-frequency shifts, and
-mixed-radix rules directly comparable. Their different outcomes across
-checkpoints show that the original learned representation is part of the design
-problem. An exponent table should therefore be specified together with its
-sampled range and the way it is installed.
+These findings support two forms of design. Before or during learning, a
+specified allocation criterion can generate an explicit table, as illustrated
+by the Cosh construction and its trained-model results. After learning,
+adjustments relative to the native table provide a way to preserve its
+coordinate structure while reallocating the extension across pairs.
+The static-profile and boundary-matched experiments show practical gains,
+as well as checkpoint-dependent preferences for the adjustment shape.
 
 A natural next step is to study exponent allocation under sparse attention.
-Selective access to tokens and compressed representations change which
-positional distinctions reach the reader. The framework developed here provides
-a way to ask how the exponent distribution should serve those architectures.
+Selective token access and compressed representations change which positional
+distinctions reach the reader. The framework developed here supplies a way
+to examine which exponent distributions serve those architectures.

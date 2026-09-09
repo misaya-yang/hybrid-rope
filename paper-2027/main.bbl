@@ -1,4 +1,4 @@
-\begin{thebibliography}{40}
+\begin{thebibliography}{41}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -99,6 +99,12 @@ Yufeng Du, Phillip Harris, Minyang Tian, Eliu~A. Huerta, Srikanth Ronanki,
 \newblock \emph{arXiv preprint arXiv:2605.15514}, 2026.
 \newblock \doi{10.48550/arXiv.2605.15514}.
 \newblock URL \url{https://arxiv.org/abs/2605.15514}.
+
+\bibitem[{Gemma Team} et~al.(2024)]{gemmateam2024gemma}
+{Gemma Team} et~al.
+\newblock Gemma: Open models based on gemini research and technology.
+\newblock \emph{arXiv preprint arXiv:2403.08295}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2403.08295}.
 
 \bibitem[Grattafiori et~al.(2024)Grattafiori, Dubey, Jauhri,
   et~al.]{grattafiori2024llama3}

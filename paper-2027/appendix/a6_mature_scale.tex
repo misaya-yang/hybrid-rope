@@ -24,6 +24,38 @@ training-seed replications on a shared evaluation set. Natural-text NLL and the
 distinct autoregressive endpoints are kept separate in the discussion below
 and in Table~\ref{tab:ruler}.
 
+\paragraph{Complete numeric answers after matched routing continuation.}
+A separate follow-up to the routing parents applies the same $100$-step
+query-gap continuation and $32$-step answer-plus-EOS continuation to Native
+and \evq{} (training seed $20260728$). Every backward pass uses at most
+$4096$ physical tokens; explicit position IDs expose target-range phases,
+with maximum observed position ID $16{,}257$. Evaluation uses real contiguous
+prompts from the same numeric NIAH family and greedy decoding.
+The endpoint requires the complete expected answer string followed by
+observed terminal EOS, measured from generated token IDs.
+
+\begin{table}[ht]
+\centering\small
+\caption{Complete-answer-string plus terminal-EOS exact match after the
+matched routing follow-up, $100$ inputs per length and one trained pair.}
+\label{tab:complete-answer-eos}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Length & Native & \evq{} \\
+\midrule
+$4$K & $95/100$ & $100/100$ \\
+$8$K & $18/100$ & $98/100$ \\
+$16$K & $0/100$ & $60/100$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All final generations in both arms terminate with EOS. On the \evq{} subsets
+whose source--query gap exceeds the original training range, exact match is
+$48/50$ at $8$K and $31/66$ at $16$K. These outputs belong to the
+additional continuation above, separately from the earlier first-number
+retrieval comparison.
+
 \paragraph{Selective Q/K phase adaptation.}
 To test a less intrusive mature-checkpoint adaptation, we start from the
 protocol-matched Native and \evq{} Stage-A parents, freeze every inherited V/O

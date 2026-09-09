@@ -1,0 +1,33 @@
+\section{Controlled Effects of Exponent Allocation}
+\label{sec:controlled-findings}
+
+We begin with interventions that distinguish exponent shape, sampled range,
+and the weights learned under an allocation. The Cosh quantiles used here
+are constructed in \S\ref{sec:construction}; endpoint anchoring keeps their
+range fixed. An exponential deformation supplies a second nonuniform family.
+
+\input{sections/02_identification}
+
+\subsection{Weights learn to use their exponent basis}
+\label{sec:coadaptation-finding}
+
+A model trained with one exponent distribution has learned query and key
+coefficients in that basis. The weights-by-table crossing makes this dependence
+visible: in two $50$M models, replacing the Geo-trained model's table by Cosh
+changes PPL from $7.14$ to $76.20$; the reverse swap changes $7.16$ to $23.05$
+(Fig.~\ref{fig:weight-table-crossing}). A $151.9$M crossing replicates the
+preferred-table reversal in two training seeds. These crossings connect exponent design during learning with adjustments of
+a fixed checkpoint: the installed table acts together with learned coefficients.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_weight_table_crossing.pdf}
+\caption{\textbf{Weights co-adapt to their exponent allocation.}
+Each row freezes one trained weight set and changes only its runtime table.
+Left: the $50$M crossing reports PPL on eight windows.
+Right: the $151.9$M crossing reports mean tail NLL on $32$ anchors in each
+of two training seeds, using extensions derived from the two training tables.
+Shading shows the NLL increase relative to the matched diagonal cell.}
+\label{fig:weight-table-crossing}
+\end{figure}
+

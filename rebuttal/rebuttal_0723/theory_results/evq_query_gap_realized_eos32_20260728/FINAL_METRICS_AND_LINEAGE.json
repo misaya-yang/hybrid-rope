@@ -1,0 +1,354 @@
+{
+  "schema": "evq_query_gap_final_metrics_and_lineage_v1",
+  "status": "POST_SUB_RAW_HASH_BACKED",
+  "decision": "OUTCOME_2_SINGLE_AUTHORIZED_READOUT_CONTINUATION_COMPLETED",
+  "seed_scope": {
+    "training_seeds": [
+      20260728
+    ],
+    "evaluation_rows_per_length": 100,
+    "multi_seed_claim": false
+  },
+  "model": {
+    "identity": "OLMo-2-0425-1B-Instruct",
+    "parameter_count": 1484916736,
+    "checkpoint_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f"
+  },
+  "training_contract": {
+    "maximum_physical_tokens_per_backward_pass": 4096,
+    "explicit_target_range_position_ids": true,
+    "maximum_observed_position_id_in_final_32_step_data": 16257,
+    "accurate_short_description": "at most 4K physical tokens with target-range relative-phase exposure",
+    "query_gap_steps": 100,
+    "query_gap_routing_data_manifest_sha256": "83a745b25893a73749dd85ff66dea5b305be6e4e6dcf16a5d0e13cae935ec63b",
+    "query_gap_query_offset_stream_sha256": "1b1a42992948378f4f51b3a8f26d92320cf6fdbcefc2608ff45a82b33df76087",
+    "query_gap_realized_exposure_stream_sha256": "130823bfdce1e0234931c30aea69c8eaa9d77533b274163749ee89f4cb512e6c",
+    "query_gap_realized_position_stream_sha256": "f5a9d39bc3e67e57aac058a5b6c2c17caf868dcfefa816ae925f5a62fd283726",
+    "answer_plus_immediate_eos_steps": 32,
+    "answer_plus_immediate_eos_routing_data_manifest_sha256": "4a2d792fa6f1b6c4dfd6c4d24ad99069f81c3d5b9f8a7334ea6090cb25c52cac",
+    "answer_plus_immediate_eos_gap_target_stream_sha256": "92f4c3f504a3065a3cd78db580992fad22ee838c5f3b97998bf72302497f83cb",
+    "decoding": "greedy autoregressive",
+    "primary_endpoint": "literal complete expected-answer string exact plus observed terminal EOS"
+  },
+  "frequency_substrates": {
+    "evq_sha256": "917a52426b4ac986545c8ec73b115daae3c6515d6b9047f09d30c972ea1a4607",
+    "native_sha256": "dde15c31724177356ae954d6e11fb337e6fccef56e4520a905cac3f0d9885b34"
+  },
+  "lineage": {
+    "evq": {
+      "parent_300_step_adapter_sha256": "95ceeb70117c73233915760a9756b9b2a98416ec188b125054da8ced75cad16a",
+      "query_gap_100_adapter_sha256": "a0ccd2cf141300ba4489882dda1324b2f237e65444a9a71d687e8c5fad57ae8b",
+      "final_32_step_adapter_sha256": "2119c8c5683f2b244c3dd9a1f3b2587c50eeb81314a82ec0dacd47f2ec889550"
+    },
+    "native": {
+      "parent_300_step_adapter_sha256": "6570ab94aec68431dd4e261eb3ef342ef72253357aa65a0d37b0a018df2f3f8d",
+      "query_gap_100_adapter_sha256": "c140874fe00849fb9a51a8528dcf6f55215cc28f9e22f6bdf3f649f2ce421dbb",
+      "final_32_step_adapter_sha256": "8b8ffc577b09a146a8bff5699a81cd550a96f275c2ffc9d556f9a24ec6f6a929"
+    },
+    "matching_statement": "The +100 arms match trainer, frozen routing data, seed, step budget, optimizer and LR semantics, query-offset stream, and physical-token budget. The +32 arms match rebuilt routing data, seed, optimizer, answer-plus-EOS objective, realized gap, position and exposure streams, and step budget. The intended difference is the fixed frequency substrate and corresponding parent state."
+  },
+  "strict_autoregressive_full_string_plus_eos": {
+    "evq": {
+      "4096": {
+        "correct": 100,
+        "total": 100
+      },
+      "8192": {
+        "correct": 98,
+        "total": 100
+      },
+      "16384": {
+        "correct": 60,
+        "total": 100
+      },
+      "far_gap_8192": {
+        "correct": 48,
+        "total": 50
+      },
+      "far_gap_16384": {
+        "correct": 31,
+        "total": 66
+      },
+      "terminal_eos_rate_all_cells": 1.0
+    },
+    "native": {
+      "4096": {
+        "correct": 95,
+        "total": 100
+      },
+      "8192": {
+        "correct": 18,
+        "total": 100
+      },
+      "16384": {
+        "correct": 0,
+        "total": 100
+      },
+      "terminal_eos_rate_all_cells": 1.0
+    }
+  },
+  "failure_classification": {
+    "evq": {
+      "4096": {
+        "wrong_answer_retrieval": 0,
+        "incomplete_answer": 0,
+        "narrow_format_error": 0,
+        "eos_failure": 0
+      },
+      "8192": {
+        "wrong_answer_retrieval": 2,
+        "incomplete_answer": 0,
+        "narrow_format_error": 0,
+        "eos_failure": 0
+      },
+      "16384": {
+        "wrong_answer_retrieval": 40,
+        "incomplete_answer": 0,
+        "narrow_format_error": 0,
+        "eos_failure": 0
+      }
+    },
+    "native": {
+      "4096": {
+        "wrong_answer_retrieval": 0,
+        "incomplete_answer": 0,
+        "narrow_format_error": 5,
+        "eos_failure": 0,
+        "format_detail": "correct answer then token 13 (period) then EOS"
+      },
+      "8192": {
+        "wrong_answer_retrieval": 82,
+        "incomplete_answer": 0,
+        "narrow_format_error": 0,
+        "eos_failure": 0
+      },
+      "16384": {
+        "wrong_answer_retrieval": 100,
+        "incomplete_answer": 0,
+        "narrow_format_error": 0,
+        "eos_failure": 0
+      }
+    }
+  },
+  "isolated_final_32_step_control": {
+    "description": "Identical final 32-step continuation applied directly to the original 300-step parents; auxiliary rather than the primary full-lineage comparison.",
+    "evq": {
+      "4096": "100/100",
+      "8192": "79/100",
+      "16384": "18/100"
+    },
+    "native": {
+      "4096": "72/100",
+      "8192": "0/100",
+      "16384": "0/100"
+    }
+  },
+  "natural_text_nll_ppl_after_query_gap_100": {
+    "evq": {
+      "4096": {
+        "nll": 2.54411,
+        "ppl": 12.73
+      },
+      "8192": {
+        "nll": 2.69674,
+        "ppl": 14.83
+      },
+      "16384": {
+        "nll": 2.91416,
+        "ppl": 18.43
+      },
+      "final_32_step_4096_nll_delta": 0.001404
+    },
+    "native": {
+      "4096": {
+        "nll": 2.23777,
+        "ppl": 9.37
+      },
+      "8192": {
+        "nll": 3.70708,
+        "ppl": 40.73
+      },
+      "16384": {
+        "nll": 4.82004,
+        "ppl": 123.97
+      },
+      "final_32_step_4096_nll_delta": 0.001953
+    }
+  },
+  "ruler_4k_retention": {
+    "protocol": "13 task families, 20 fixed rows per task",
+    "evq": {
+      "direct_parent_macro": 0.278205,
+      "final_macro": 0.264423,
+      "delta": -0.013782,
+      "niah_family_delta": -0.0203125,
+      "operations_family_delta": -0.005555,
+      "qa_family_delta": 0.0,
+      "localized_boundary": "niah_single_2: 0.70 to 0.55",
+      "per_task_parent_candidate": {
+        "cwe": [
+          0.0,
+          0.0
+        ],
+        "fwe": [
+          0.36666666666666664,
+          0.35
+        ],
+        "niah_multikey_1": [
+          0.5,
+          0.5
+        ],
+        "niah_multikey_2": [
+          0.2,
+          0.25
+        ],
+        "niah_multikey_3": [
+          0.0,
+          0.0
+        ],
+        "niah_multiquery": [
+          0.1625,
+          0.1625
+        ],
+        "niah_multivalue": [
+          0.2375,
+          0.225
+        ],
+        "niah_single_1": [
+          1.0,
+          1.0
+        ],
+        "niah_single_2": [
+          0.7,
+          0.55
+        ],
+        "niah_single_3": [
+          0.15,
+          0.1
+        ],
+        "qa_1": [
+          0.1,
+          0.1
+        ],
+        "qa_2": [
+          0.2,
+          0.2
+        ],
+        "vt": [
+          0.0,
+          0.0
+        ]
+      },
+      "gate": "STOP_LOCALIZED_REGRESSION_NO_BROAD_COLLAPSE"
+    },
+    "native": {
+      "direct_parent_macro": 0.58141,
+      "final_macro": 0.582692,
+      "delta": 0.001282,
+      "niah_family_delta": 0.0,
+      "operations_family_delta": 0.005556,
+      "qa_family_delta": 0.0,
+      "largest_accepted_task_drop": "niah_multikey_2: 0.70 to 0.65",
+      "per_task_parent_candidate": {
+        "cwe": [
+          0.025,
+          0.025
+        ],
+        "fwe": [
+          0.3833333333333333,
+          0.4
+        ],
+        "niah_multikey_1": [
+          0.85,
+          0.9
+        ],
+        "niah_multikey_2": [
+          0.7,
+          0.65
+        ],
+        "niah_multikey_3": [
+          0.3,
+          0.3
+        ],
+        "niah_multiquery": [
+          0.775,
+          0.775
+        ],
+        "niah_multivalue": [
+          0.825,
+          0.825
+        ],
+        "niah_single_1": [
+          1.0,
+          1.0
+        ],
+        "niah_single_2": [
+          1.0,
+          1.0
+        ],
+        "niah_single_3": [
+          1.0,
+          1.0
+        ],
+        "qa_1": [
+          0.45,
+          0.45
+        ],
+        "qa_2": [
+          0.25,
+          0.25
+        ],
+        "vt": [
+          0.0,
+          0.0
+        ]
+      },
+      "gate": "PASS"
+    }
+  },
+  "short_context_mcqa_retention": {
+    "protocol": "100 revision-pinned MMLU rows plus 100 ARC-Challenge rows; zero-shot choice-string mean-logprob accuracy; prompt length 45 to 146 tokens",
+    "frozen_data_manifest_sha256": "313a16bc6852629bbfa6d0b4c0253862650c670d018d3d5b8282c908c6cae963",
+    "evq": {
+      "mmlu_parent": 0.34,
+      "mmlu_final": 0.34,
+      "arc_challenge_parent": 0.29,
+      "arc_challenge_final": 0.28,
+      "macro_delta": -0.005,
+      "gate": "PASS"
+    },
+    "native": {
+      "mmlu_parent": 0.27,
+      "mmlu_final": 0.25,
+      "arc_challenge_parent": 0.35,
+      "arc_challenge_final": 0.38,
+      "macro_delta": 0.005,
+      "gate": "PASS"
+    }
+  },
+  "dialogue_smoke": {
+    "status": "QUALITATIVE_ONLY",
+    "native_parent_to_final": "unchanged on all five fixed prompts",
+    "evq_conclusion": "no broad collapse on the same bounded smoke",
+    "boundary": "not a benchmark; the sequence answer is semantically correct but fails the registered literal-only format"
+  },
+  "claim_boundaries": [
+    "The result does not show training without exposure to long-range positions.",
+    "The endpoint is same-task-family numeric NIAH, not clean unseen-task transfer or general natural-language QA.",
+    "The 16K result remains distance-sensitive.",
+    "The evidence is single-seed and does not support statistical significance, universal dominance, SOTA, or no-forgetting claims.",
+    "The EVQ 4K retention matrix contains a localized niah_single_2 regression from 0.70 to 0.55."
+  ],
+  "artifact_sha256": {
+    "evq_final_32_step_training_result": "fb9002e29ba19198b88114b64b264573683bc1f72d238653a5990270711464e1",
+    "evq_strict_n100_result": "ab0c7521bcc2ee3f56006a3d8d9a90adeec76fc95b2e453d3ca07a882a3e921b",
+    "evq_strict_n100_raw_generations": "6fbde008d2732b8ca8d382b25a8719d854ae2d19dbf565bbda11ce2cfbe02dbd",
+    "evq_4k_retention_gate": "d24e68117d4255ff4699edd700a3b1052a777a956a1dd9a3bc72665755156124",
+    "native_query_gap_100_result": "1c196e3b7d773bce621debb22a34ace48f39e9dd028439beef1a9fd3683e9ab6",
+    "native_final_32_step_training_result": "5bb38d21bb45e20c8f351f9c1b80b5ea2d58a3e47518571c7e599619189ff747",
+    "native_strict_n100_result": "19d31d8660730cbd25702f3f6f7d95df8cbb4b695c6f980261bdc4ab222bb5b7",
+    "native_strict_n100_raw_generations": "d296085c2a48a0141fc5337f2e1a892d7069f80656a1d29522bf28a9f206aec9",
+    "native_4k_retention_gate": "0da606e6aa81515d05a0eea358e56fb02863cff3039d66bf0494fb28601fb563",
+    "mcqa_retention_gate": "f393fee131abbe0a52061990007e552fa83aca10dd67195437947450e498e5ef"
+  }
+}

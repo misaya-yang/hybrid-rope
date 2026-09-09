@@ -1,0 +1,149 @@
+{
+  "purpose": "Existing evidence sources checked for the manuscript revision. Raw availability and numerical reporting level remain source-specific.",
+  "sources": [
+    {
+      "path": "paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.json",
+      "read_from": "working-tree",
+      "sha256": "4f0066d9652d92497dbda669788e60d9efca96d98506c560384ac279d198db07",
+      "bytes": 7276
+    },
+    {
+      "path": "data/curated/llama8b_causal_source_use_s42_20260714.json",
+      "read_from": "working-tree",
+      "sha256": "a5f67f1c74d8e5a2d8ba15ea31846c2dd832a4f35b003b3a22c1ba0cc5ada3d6",
+      "bytes": 1648
+    },
+    {
+      "path": "data/curated/frozen_fixed_support_mature_20260823.json",
+      "read_from": "working-tree",
+      "sha256": "475bf89c8514300b69d09e4f6e7244d26129445e371e285bd70529161731d357",
+      "bytes": 4475
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/evidence/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULTS_20260823.json",
+      "read_from": "working-tree",
+      "sha256": "13e81612564eb4780266a72abb567bd968b76ccf450fe38236dde3f687c8a9cb",
+      "bytes": 9522
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/evidence/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RECEIPT_20260901.json",
+      "read_from": "working-tree",
+      "sha256": "c158eabb43d2eb026453e7f25b277f21352f9da2938d840e4d059567a103babf",
+      "bytes": 20743
+    },
+    {
+      "path": "data/curated/table18_mla_3seed_aggregate.json",
+      "read_from": "working-tree",
+      "sha256": "ad751a26fee43939f644a8ee12e5e50b0003d0d490f790ce1cd85971902ffe8d",
+      "bytes": 8948
+    },
+    {
+      "path": "docs/research/ROPE_OLMO_BM_FIVE_QA_RESULT_20260908.json",
+      "read_from": "working-tree",
+      "sha256": "48232e004655dfe255071a88661c6907d05b14caac4263fe7539e4c3eeae7337",
+      "bytes": 645972
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/theory_results/m4_exact_range_factorial_evidence_20260726.json",
+      "read_from": "working-tree",
+      "sha256": "858710ff52488a0b1d1e0a9a35af9f7658ed974d1b59ff59cc9c89fa2ce9abda",
+      "bytes": 349308
+    },
+    {
+      "path": "data/curated/phase15_750m_continue_result_20260306.json",
+      "read_from": "working-tree",
+      "sha256": "1f93a07d15c2f933273f584a9222b9565f300cbeb57bb44acd77454e57565fc6",
+      "bytes": 1068
+    },
+    {
+      "path": "paper-2027/research/foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md",
+      "read_from": "working-tree",
+      "sha256": "2ee9fc25fc264a792dbcbef89c0b1ed5ed89379ea5272cbcfce6c3030497ca91",
+      "bytes": 32207
+    },
+    {
+      "path": "data/curated/table2_evq_yarn_454m_passkey_10pct.json",
+      "read_from": "working-tree",
+      "sha256": "d2c37769a0a166830d022778bf517c0973eb2ea80a9a87aea3bbadf597cee4ac",
+      "bytes": 3900
+    },
+    {
+      "path": "docs/research/ROPE_OLMO_BM_RESULT_20260908.json",
+      "read_from": "working-tree",
+      "sha256": "4a362ffd2bcbb12afc28056b1c290fe2d583ccbaf2bcc11f2b401c2d367e5b7e",
+      "bytes": 111379
+    },
+    {
+      "path": "docs/research/ROPE_BM_TRANSFER_RESULT_20260908.json",
+      "read_from": "working-tree",
+      "sha256": "acbb9fdffa28f3ecb10d0a657996852bc9228842e428878bf0459f1ac33e457f",
+      "bytes": 8641
+    },
+    {
+      "path": "docs/research/ROPE_QWEN7_BM_RESULT_20260908.json",
+      "read_from": "working-tree",
+      "sha256": "8e356b57186c10ab8ec17003a46552585352264d9588d116974d1b3d8147ba69",
+      "bytes": 36818
+    },
+    {
+      "path": "docs/research/ROPE_MRPRO_BM_CANDIDATE_20260908.json",
+      "read_from": "working-tree",
+      "sha256": "98bc7b1d99a3d5cda627e83f4f4298989a6834629301f6a6519dc812ca5f1b2f",
+      "bytes": 94519
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/evidence/K128_COORDINATE_CONFIRMATION_RECEIPT_20260901.json",
+      "read_from": "working-tree",
+      "sha256": "715f67d95f4bc7fe0c0c92104516c6681441c0b9a575753b35f01645bdfb4942",
+      "bytes": 5523
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/evidence/K32_PAIRED_CROSSING_CONFIRMATION_RECEIPT_20260901.json",
+      "read_from": "working-tree",
+      "sha256": "8fa48b48ca782d46bf376f270de45341a8e383ae13eb13b138e1bc190cfc06cc",
+      "bytes": 12587
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/theory_results/OLMO2_1B_RELEASED_ROPE_BASELINE_20260725.md",
+      "read_from": "working-tree",
+      "sha256": "b6fe645332683cc30e96d9143484c3f2f93ae427502b240c389f35cc9d67b4bc",
+      "bytes": 11875
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/theory_results/olmo2_qk_phase_adaptation_20260729/metrics.json",
+      "read_from": "working-tree",
+      "sha256": "e83f8616adb867ab36a9a20dfba051cafa0992b419f2c3aff4d60fec7db37a1c",
+      "bytes": 11460
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/theory_results/llama8b_matched_ruler_mix_20260726.json",
+      "read_from": "working-tree",
+      "sha256": "4df2bfd639a6adf4b1f98070d51087144e85470b4a4001a7f51dfc3846730c59",
+      "bytes": 6612
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/theory_results/evq_query_gap_realized_eos32_20260728/FINAL_METRICS_AND_LINEAGE.json",
+      "read_from": "working-tree",
+      "sha256": "650cad33082396f4082f6a2b85b46dc3bc4b78912d712a41e7e4601f7f6f2e14",
+      "bytes": 11032
+    },
+    {
+      "path": "data/curated/video_dit_seed42_head_to_head_20260826.json",
+      "read_from": "working-tree",
+      "sha256": "95bdb30e3e7a3e4f968e00a4a9110cb8e564399cb7c3cbdc7356a4cc49a3baa5",
+      "bytes": 1808
+    },
+    {
+      "path": "scripts/analysis/export_frozen_coupling_transport.py",
+      "read_from": "working-tree",
+      "sha256": "a50b623846b23c444f26e4d722fa7cf4cca427c75bad8d7ffcf4372605e1df63",
+      "bytes": 14242
+    },
+    {
+      "path": "scripts/lib/rope/official_yarn.py",
+      "read_from": "working-tree",
+      "sha256": "61ffb97ebdd3e1575af308f04c517ef53b422e9fdef65cba552bfc8a7f4c4ef7",
+      "bytes": 16142
+    }
+  ]
+}

@@ -1,68 +1,63 @@
 \section{Introduction}
 \label{sec:intro}
 
-Rotary position embedding (RoPE) assigns a different rotation frequency to each
-pair of query and key coordinates \citep{su2024roformer}. In the usual
-parameterization, $\omega_k=b^{-\phi_k}$, a single base $b$ and an equally spaced
-exponent sequence $\phi_k$ determine the entire table. Changing the base is a
-well-established way to adjust the range of positional scales
-\citep{liu2024scaling,xu2024base,oka2026fmrope}. The exponents make another
-choice: how the available rotary pairs are distributed within that range.
-What changes when this distribution is designed explicitly?
+Rotary position embedding (RoPE) assigns a different frequency to each pair
+of query and key coordinates \citep{su2024roformer}. Its usual form,
+$\omega_k=b^{-\phi_k}$, combines a base $b$ with equally spaced exponents.
+Base-selection and context-scaling methods have established that the range of
+positional scales matters \citep{liu2024scaling,xu2024base,oka2026fmrope}.
+A finite table also makes a distributional choice: how its rotary pairs occupy
+that range. We study this choice through the exponent sequence.
 
-This question matters because each attention head has finitely many rotary
-pairs. Over a bounded context, several frequencies can produce almost the same
-positional response. For example, in a standard $64$-pair table with base
-$500{,}000$, the $23$ pairs that rotate by at most one radian over $4$K tokens
-have a block-whitened R\'enyi-$2$ effective rank of approximately two under uniform separations. Changing their
-spacing changes the basis available to the model while preserving the rotation
-operator. We study this allocation through its exponents, from their geometry
-to constructions that can be evaluated in language models.
+Three questions organize the study. What changes in the positional basis when
+exponents are redistributed? Does this redistribution affect learned behavior
+when the frequency range is fixed? And how does an already trained model
+respond to adjustments of its native exponents? These questions connect
+geometric analysis, controlled interventions, and practical table design.
 
-Our first step separates exponent shape from frequency range. Figure~\ref{fig:spectral-budget-overview}
-compares two tables with identical endpoints and pair count. One uses equally
-spaced exponents; the other redistributes the interiors using a Cosh density.
-Across three paired training seeds, the reallocation improves all three tested
-extrapolation lengths. The paired design exposes the contribution of exponent
-shape to length generalization.
+Figure~\ref{fig:spectral-budget-overview} shows the basic intervention.
+Two allocations share their endpoints and $32$ rotary pairs; only the $30$
+interior exponents differ. Across three paired training seeds, this change
+lowers NLL at each tested extrapolation length. A separate range-retargeted
+evaluation reverses the ordering. The weights-by-table crossings add another
+finding: the preferred runtime table depends strongly on which allocation
+trained the weights. Together, these controls make exponent shape observable
+while revealing its interaction with range and learned representation.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{fig_evidence_overview.pdf}
-  \caption{\textbf{Exponent allocation changes length generalization at fixed
-  frequency range.} Left: two allocations of the same $32$ rotary pairs, with
-  identical endpoints. Right: paired $151.9$M models trained at length $256$;
-  changing the $30$ interior exponents lowers extrapolation NLL in every seed.
+  \caption{\textbf{Interior exponents change learned behavior at fixed frequency
+  range.} Left: two allocations of the same $32$ rotary pairs with identical
+  endpoints. Right: paired $151.9$M models trained at length $256$; changing
+  the $30$ interior exponents lowers extrapolation NLL in every seed.
   Thin lines show the three training seeds and the heavy line their mean.}
   \label{fig:spectral-budget-overview}
 \end{figure}
 
-We develop the allocation in two stages. First, we analyze the full sine--cosine
-subspace associated with each frequency. The analysis identifies the shared
-slow-frequency limit and motivates a convex surrogate variational problem for distributing
-exponents. Its solution yields \evq{}, an analytic inverse-CDF construction
-that changes only the frequency table. We evaluate it through fixed-range
-controls, language-model training, and matched adaptation. With $16$ rotary
-pairs in a $432$M MLA model, it reduces $16$K perplexity by $31.1\%$. Under
-matched Llama-$3$-$8$B adaptation, $32$K perplexity falls from $991.5$ to
-$127.9$, with the full original-window and extrapolation curves reported together.
+The positional geometry provides a way to analyze these distributions.
+Each rotary pair supplies an entire sine--cosine subspace. Canonical
+correlations compare these subspaces without privileging a content phase,
+and expose the common low-frequency limit
+$\operatorname{span}\{1,\Delta\}$. Thus many slow pairs can supply few
+distinct positional directions over a bounded interval. The learned content
+coefficients determine how the model uses those directions.
 
-Second, we study how exponents can be adjusted in an already trained model.
-Such a model has learned to use its original table, so the adjustment is defined
-relative to that table. Existing methods provide useful constructions:
-YaRN blends frequencies across bands, MrRoPE distributes a cumulative scale
-through mixed-radix factors, and learned-frequency methods optimize the entries
-\citep{peng2024yarn,tian2026mrrope,karypis2026lerope,wang2026adarope}.
-We express these operations as exponent displacements and use matched experiments
-to compare their shapes. This stage includes a single static profile that
-improves Qwen's RULER score over YaRN at $64$K while retaining its $32$K score, and a
-boundary-matched redistribution with gains on five OLMo natural-QA tasks.
+We then study concrete exponent designs in two settings. A convex
+cumulative-tail criterion yields an analytic Cosh distribution, whose
+quantiles define a fixed table for training and adaptation. Its experiments
+cover scarce rotary channels, continued training, and matched $8$B adaptation.
+For frozen models, we instead construct displacements from the native
+exponents and compare their placement and intermediate-band shape.
+These comparisons include a static Qwen table that improves $64$K RULER over
+YaRN while retaining the $32$K score, and a boundary-matched adjustment with
+improvements on five OLMo natural-QA tasks. The tested Qwen checkpoints favor
+a different intermediate profile, making learned compatibility part of the
+exponent-design problem.
 
 \paragraph{Contributions.}
-We (i) formulate exponent allocation independently of sampled range and analyze
-its phase-invariant positional geometry; (ii) derive a closed-form allocation
-and establish its effects through paired controls, training, and adaptation;
-and (iii) derive a boundary-matched adjustment for frozen models and evaluate
-structured displacement profiles through matched retrieval and natural-QA tests.
-The common object is the exponent distribution: the two stages examine how to
-construct it before learning and how to adjust it after weights have been learned.
+We (i) define exponent allocation and analyze its full-subspace positional
+geometry; (ii) identify its effects through fixed-range, cross-shape, and
+weights-by-table controls, and evaluate a closed-form construction in trained
+models; and (iii) develop and test native-relative exponent adjustments in
+frozen models, including a boundary-matched intermediate-band rule.

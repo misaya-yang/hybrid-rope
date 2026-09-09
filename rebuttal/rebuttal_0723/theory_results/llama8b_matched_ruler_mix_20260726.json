@@ -1,0 +1,194 @@
+{
+  "schema": "evq_cosh.llama8b_matched_ruler_mix.v1",
+  "status": "complete_at_8k_16k_native_32k_partial_due_parallel_oom",
+  "date": "2026-07-26",
+  "reviewer_concerns": [
+    "R27bE.2",
+    "R27bE.5",
+    "AC.2"
+  ],
+  "model": "Meta-Llama-3-8B-Instruct",
+  "evidence_boundary": "single-seed matched 8K physical RULER-family supervised adaptation; not zero-shot, unseen-task, pure-Cosh, or 32K capability closure",
+  "protocol": {
+    "physical_training_length": 8192,
+    "virtual_position_ids": false,
+    "training_rows": 1376,
+    "ruler_training_rows_per_task": 96,
+    "natural_replay_rows": 128,
+    "epochs": 3,
+    "optimizer_steps": 516,
+    "processed_input_tokens": 33816576,
+    "global_batch_size": 8,
+    "micro_batch_size": 2,
+    "gradient_accumulation_steps": 4,
+    "seed": 20420726,
+    "lora_rank": 64,
+    "lora_alpha": 128,
+    "lora_targets": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj"
+    ],
+    "objective": "answer_only_ruler_family_plus_natural_replay",
+    "precision": "bf16_autocast",
+    "flash_only": true,
+    "compile_mode": "max-autotune-no-cudagraphs",
+    "loss_backend": "liger_fused_linear_cross_entropy",
+    "ruler_tasks": 13,
+    "ruler_rows_per_cell": 20,
+    "ruler_lengths": [
+      8192,
+      16384,
+      32768
+    ],
+    "ruler_decoding": "greedy",
+    "ruler_train_eval_exact_row_overlap": 0
+  },
+  "training": {
+    "native_lora": {
+      "method": "native_geo",
+      "frequency_sha256": "09fab0f4da1c96bf31cf5d54dd45a935dc63f1ef8d7b1669dd5361087e4bb794",
+      "adapter_sha256": "e4340f4ae658dddab11fbd360e096d48ce6258f9b642c48804546ff61ffb3ace",
+      "validation_initial_nll": 0.7805450700289716,
+      "validation_initial_ppl": 2.182661644767206,
+      "validation_final_nll": 0.38549149510293274,
+      "validation_final_ppl": 1.470336807217899,
+      "training_seconds": 4033.713048409205,
+      "tokens_per_second": 8383.485784477507
+    },
+    "evq_lora": {
+      "method": "evq_cosh",
+      "tau": 1.414,
+      "midpoint": true,
+      "frequency_sha256": "49b205926ae989cdf973ceaa612e0dab937bf21fd63f095f72485ba3d4a4bacf",
+      "adapter_sha256": "0e9ba717a7a20317c7a9074ffc3ada285de841c1f57f318f01a15abf28dce2b4",
+      "validation_initial_nll": 1.7884801229346057,
+      "validation_initial_ppl": 5.9803561493380775,
+      "validation_final_nll": 0.4091642947667521,
+      "validation_final_ppl": 1.5055590556409455,
+      "training_seconds": 4031.4167110752314,
+      "tokens_per_second": 8388.261106101501
+    }
+  },
+  "ruler": {
+    "metrics": [
+      "official_macro",
+      "normalized_exact_macro"
+    ],
+    "untouched_native": {
+      "8192": {
+        "tasks_complete": 13,
+        "official_macro": 0.9182051282051282,
+        "normalized_exact_macro": 0.057692307692307696
+      },
+      "16384": {
+        "tasks_complete": 13,
+        "official_macro": 0.0,
+        "normalized_exact_macro": 0.0
+      },
+      "32768": {
+        "tasks_complete": 13,
+        "official_macro": 0.0,
+        "normalized_exact_macro": 0.0
+      }
+    },
+    "native_lora": {
+      "8192": {
+        "tasks_complete": 13,
+        "official_macro": 0.9444230769230769,
+        "normalized_exact_macro": 0.1769230769230769,
+        "source": "per-example predictions from four shards"
+      },
+      "16384": {
+        "tasks_complete": 13,
+        "official_macro": 0.0029487179487179484,
+        "normalized_exact_macro": 0.0,
+        "source": "per-example predictions from four shards"
+      },
+      "32768": {
+        "tasks_complete": 10,
+        "tasks_missing": [
+          "niah_multivalue",
+          "niah_multikey_1",
+          "niah_single_3"
+        ],
+        "official_macro_over_completed_tasks": 0.0,
+        "normalized_exact_macro_over_completed_tasks": 0.0,
+        "source": "three completed shards; fourth shard failed before 32K"
+      }
+    },
+    "evq_lora": {
+      "8192": {
+        "tasks_complete": 13,
+        "official_macro": 0.776025641025641,
+        "normalized_exact_macro": 0.21538461538461537
+      },
+      "16384": {
+        "tasks_complete": 13,
+        "official_macro": 0.14025641025641025,
+        "normalized_exact_macro": 0.015384615384615385
+      },
+      "32768": {
+        "tasks_complete": 13,
+        "official_macro": 0.0,
+        "normalized_exact_macro": 0.0
+      }
+    }
+  },
+  "temporal_nll": {
+    "boundary": "complete external-domain comparison is EVQ-LoRA versus untouched Native only; matched Native-LoRA temporal evaluation did not run",
+    "domains": [
+      "arxiv_2026",
+      "federal_register_2026",
+      "stackoverflow_2026"
+    ],
+    "packs_per_domain": 8,
+    "evq_lora": {
+      "8192": {
+        "nll": 2.5067992146862665,
+        "ppl": 12.265607586057222
+      },
+      "16384": {
+        "nll": 3.4689048484614595,
+        "ppl": 32.10156710649965
+      },
+      "32768": {
+        "nll": 5.099428499745145,
+        "ppl": 163.92819551878213
+      }
+    },
+    "untouched_native": {
+      "8192": {
+        "nll": 2.072905292163296,
+        "ppl": 7.9478805223792
+      },
+      "16384": {
+        "nll": 5.0143874888138305,
+        "ppl": 150.56388645194136
+      },
+      "32768": {
+        "nll": 7.3088755466301905,
+        "ppl": 1493.4968770559728
+      }
+    }
+  },
+  "execution_incident": {
+    "type": "parallel_evaluation_oom",
+    "affected_arm": "native_lora",
+    "affected_scope": "three 32K task cells only",
+    "completed_before_failure": "all 13 tasks at 8K and 16K",
+    "interpretation": "evaluation orchestration failure from four concurrent 8B evaluators, not a training failure or model non-finite event"
+  },
+  "safe_claim": "Under the same physical-8K RULER-family adaptation, Native-LoRA has the stronger in-window official macro, while EVQ-LoRA retains non-zero 16K autoregressive capability that both untouched Native and matched Native-LoRA lose. Neither arm establishes usable 32K RULER capability.",
+  "provenance": {
+    "raw_files_hashed": 60,
+    "raw_sha256_manifest_sha256": "f470e5cf9efd0e4c05dfbae0c21cb6ce8ed5b01db54ed38a9323caa9dd015700",
+    "evq_ruler_result_sha256": "8975d8f5d66a8af25e8cc8ee658dfd0cc663cc86a5e491280a5f9dab988a6539",
+    "temporal_result_sha256": "2620c5954eab984184f6bd40d5c46ea268b2c573fb3690908ea68399b4f620cf",
+    "native_training_result_sha256": "cc9212018a1488b499200b1a0b0777f9519f50eed2c1f181c5517d5709cb61ee",
+    "evq_training_result_sha256": "df926874a286202d8fff00cd2938c7a6a65d3303a0b125a4bd9ada6622af0340",
+    "native_incomplete_shard_predictions_sha256": "34594dd136486b9c47da86091eb68ddae67e500325ac03f972146d4bf6878c73",
+    "key_remote_local_hashes_match": true
+  }
+}

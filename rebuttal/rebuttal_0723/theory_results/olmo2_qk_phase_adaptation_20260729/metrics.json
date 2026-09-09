@@ -1,0 +1,344 @@
+{
+  "status": "POST_SUB_RAW_HASH_BACKED",
+  "model": {
+    "name": "OLMo-2-0425-1B-Instruct",
+    "parameters_label": "1.485B",
+    "checkpoint_sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f"
+  },
+  "protocol": {
+    "adaptation": "Q/K-only continuation from a Q/K/V/O Stage-A LoRA parent",
+    "rank": 64,
+    "alpha": 128,
+    "trainable_qk_parameters": 8388608,
+    "frozen_inherited_vo_parameters": 8388608,
+    "frozen_inherited_vo_bitwise_unchanged": true,
+    "steps": 300,
+    "global_batch": 8,
+    "learning_rate": 0.00005,
+    "warmup_steps": 20,
+    "one_seed_per_arm": true,
+    "qa_seed": 20260728,
+    "ruler_seed": 20260729,
+    "family_schedule": [
+      "phase",
+      "phase",
+      "natural"
+    ],
+    "position_exposure_ratio": {
+      "continuous_4k": 1,
+      "phase_to_8k": 1,
+      "phase_to_16k": 2
+    },
+    "maximum_physical_training_length": 4096,
+    "virtual_position_exposure_through_16k": true,
+    "answer_plus_immediate_eos_supervision": true
+  },
+  "qa_2wiki": {
+    "boundary": "Held-out task-family protocol with deterministic answer-filtered 2Wiki distractor filling; not an unmodified LongBench leaderboard result.",
+    "examples_per_cell": 200,
+    "mean_input_tokens": {
+      "4096": 4063.955,
+      "8192": 8159.855,
+      "16384": 16351.86
+    },
+    "stage_a_parent": {
+      "native": {
+        "4096": {
+          "token_f1": 0.08726436503102943,
+          "normalized_exact": 0.0,
+          "terminal_eos": 0.09
+        },
+        "8192": {
+          "token_f1": 0.00163510101010101,
+          "normalized_exact": 0.0,
+          "terminal_eos": 0.0
+        },
+        "16384": {
+          "token_f1": 0.0029609048359048357,
+          "normalized_exact": 0.0,
+          "terminal_eos": 0.03
+        }
+      },
+      "evq": {
+        "4096": {
+          "token_f1": 0.08607154270233588,
+          "normalized_exact": 0.0,
+          "terminal_eos": 0.48
+        },
+        "8192": {
+          "token_f1": 0.07882438627703166,
+          "normalized_exact": 0.0,
+          "terminal_eos": 0.565
+        },
+        "16384": {
+          "token_f1": 0.009310701553348613,
+          "normalized_exact": 0.0,
+          "terminal_eos": 0.105
+        }
+      }
+    },
+    "qk_phase_adapted": {
+      "native": {
+        "4096": {
+          "token_f1": 0.2598636363636363,
+          "normalized_exact": 0.22,
+          "terminal_eos": 1.0,
+          "empty_prediction": 0.0
+        },
+        "8192": {
+          "token_f1": 0.0006666666666666666,
+          "normalized_exact": 0.0,
+          "terminal_eos": 0.61,
+          "empty_prediction": 0.59
+        },
+        "16384": {
+          "token_f1": 0.0,
+          "normalized_exact": 0.0,
+          "terminal_eos": 1.0,
+          "empty_prediction": 1.0
+        }
+      },
+      "evq": {
+        "4096": {
+          "token_f1": 0.24836111111111106,
+          "normalized_exact": 0.215,
+          "terminal_eos": 0.995,
+          "empty_prediction": 0.0
+        },
+        "8192": {
+          "token_f1": 0.21481024531024534,
+          "normalized_exact": 0.175,
+          "terminal_eos": 0.995,
+          "empty_prediction": 0.0
+        },
+        "16384": {
+          "token_f1": 0.08567322383498852,
+          "normalized_exact": 0.04,
+          "terminal_eos": 0.87,
+          "empty_prediction": 0.0
+        }
+      }
+    },
+    "teacher_forced_validation_nll": {
+      "native": {
+        "before": {
+          "4096": 3.311995784786679,
+          "8192": 8.519361128575057,
+          "16384": 7.904535981826484
+        },
+        "after": {
+          "4096": 0.3131605468504131,
+          "8192": 0.9384497059509158,
+          "16384": 2.0370243655059896
+        }
+      },
+      "evq": {
+        "before": {
+          "4096": 3.631145153194666,
+          "8192": 4.084183739498258,
+          "16384": 4.3231801353394985
+        },
+        "after": {
+          "4096": 0.3937958339229226,
+          "8192": 0.6067327287746593,
+          "16384": 0.9807953159324825
+        }
+      }
+    }
+  },
+  "ruler_13_family": {
+    "boundary": "Task-family-adapted length transfer, not clean unseen-task transfer.",
+    "examples_per_cell": 20,
+    "tasks": [
+      "niah_single_1",
+      "niah_single_2",
+      "niah_single_3",
+      "niah_multikey_1",
+      "niah_multikey_2",
+      "niah_multikey_3",
+      "niah_multivalue",
+      "niah_multiquery",
+      "vt",
+      "cwe",
+      "fwe",
+      "qa_1",
+      "qa_2"
+    ],
+    "stage_a_official_macro": {
+      "native": {
+        "4096": 0.5902564102564103,
+        "8192": 0.0,
+        "16384": 0.0
+      },
+      "evq": {
+        "4096": 0.11089743589743589,
+        "8192": 0.05737179487179487,
+        "16384": 0.02185897435897436
+      }
+    },
+    "qk_phase_adapted": {
+      "native": {
+        "official_macro": {
+          "4096": 0.7218589743589744,
+          "8192": 0.020192307692307693,
+          "16384": 0.0038461538461538464
+        },
+        "all_references_found_macro": {
+          "4096": 0.6115384615384616,
+          "8192": 0.0,
+          "16384": 0.0
+        },
+        "nonzero_families": {
+          "4096": 13,
+          "8192": 2,
+          "16384": 1
+        }
+      },
+      "evq": {
+        "official_macro": {
+          "4096": 0.42435897435897435,
+          "8192": 0.3162820512820513,
+          "16384": 0.05032051282051282
+        },
+        "all_references_found_macro": {
+          "4096": 0.2692307692307692,
+          "8192": 0.18076923076923077,
+          "16384": 0.015384615384615385
+        },
+        "nonzero_families": {
+          "4096": 11,
+          "8192": 11,
+          "16384": 5
+        }
+      }
+    },
+    "official_score_by_family": {
+      "native": {
+        "4096": {
+          "cwe": 0.29,
+          "fwe": 0.4666666666666667,
+          "niah_multikey_1": 0.9,
+          "niah_multikey_2": 0.95,
+          "niah_multikey_3": 0.5,
+          "niah_multiquery": 0.9,
+          "niah_multivalue": 0.9375,
+          "niah_single_1": 1.0,
+          "niah_single_2": 1.0,
+          "niah_single_3": 1.0,
+          "qa_1": 0.5,
+          "qa_2": 0.3,
+          "vt": 0.64
+        },
+        "8192": {
+          "cwe": 0.0,
+          "fwe": 0.25,
+          "niah_multikey_1": 0.0,
+          "niah_multikey_2": 0.0,
+          "niah_multikey_3": 0.0,
+          "niah_multiquery": 0.0125,
+          "niah_multivalue": 0.0,
+          "niah_single_1": 0.0,
+          "niah_single_2": 0.0,
+          "niah_single_3": 0.0,
+          "qa_1": 0.0,
+          "qa_2": 0.0,
+          "vt": 0.0
+        },
+        "16384": {
+          "cwe": 0.0,
+          "fwe": 0.05,
+          "niah_multikey_1": 0.0,
+          "niah_multikey_2": 0.0,
+          "niah_multikey_3": 0.0,
+          "niah_multiquery": 0.0,
+          "niah_multivalue": 0.0,
+          "niah_single_1": 0.0,
+          "niah_single_2": 0.0,
+          "niah_single_3": 0.0,
+          "qa_1": 0.0,
+          "qa_2": 0.0,
+          "vt": 0.0
+        }
+      },
+      "evq": {
+        "4096": {
+          "cwe": 0.085,
+          "fwe": 0.5666666666666667,
+          "niah_multikey_1": 0.25,
+          "niah_multikey_2": 0.0,
+          "niah_multikey_3": 0.0,
+          "niah_multiquery": 0.65,
+          "niah_multivalue": 0.675,
+          "niah_single_1": 0.95,
+          "niah_single_2": 1.0,
+          "niah_single_3": 0.4,
+          "qa_1": 0.15,
+          "qa_2": 0.2,
+          "vt": 0.59
+        },
+        "8192": {
+          "cwe": 0.14,
+          "fwe": 0.4666666666666667,
+          "niah_multikey_1": 0.15,
+          "niah_multikey_2": 0.0,
+          "niah_multikey_3": 0.0,
+          "niah_multiquery": 0.4375,
+          "niah_multivalue": 0.4875,
+          "niah_single_1": 0.9,
+          "niah_single_2": 0.9,
+          "niah_single_3": 0.05,
+          "qa_1": 0.1,
+          "qa_2": 0.2,
+          "vt": 0.28
+        },
+        "16384": {
+          "cwe": 0.0,
+          "fwe": 0.4166666666666667,
+          "niah_multikey_1": 0.0,
+          "niah_multikey_2": 0.0,
+          "niah_multikey_3": 0.0,
+          "niah_multiquery": 0.0,
+          "niah_multivalue": 0.0375,
+          "niah_single_1": 0.0,
+          "niah_single_2": 0.1,
+          "niah_single_3": 0.0,
+          "qa_1": 0.05,
+          "qa_2": 0.05,
+          "vt": 0.0
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "qa_training_view_manifest_sha256": "9abbc22bcf833762076fd895f9d26706f0cfbecdceb88a2867ced63bf2fdddf9",
+    "qa_evaluation_rows_sha256": "82e0f91dbe6e6cf57561d153f2e42baa6c4ffca1af46a521cab749bc925a3412",
+    "qa_native_parent_adapter_sha256": "f4bc6c471cd395eb0df25f6513d150d3d66a7133c2ac3a57406765708843574e",
+    "qa_evq_parent_adapter_sha256": "47e72c5e58be443a3f088787b58df415538f7cdb12e9f76d799dbb2b85155ee0",
+    "qa_native_final_adapter_sha256": "d0aeaf39a9508e36eed8e7e2bf4235db245326571cf18a82ebff45017d3a76c4",
+    "qa_evq_final_adapter_sha256": "2e0d47b456e691be7bc880deec9477b1fb2c4257ec73a73fc74a86ffa8ddcd2e",
+    "qa_native_training_result_sha256": "4570cb55c8b061724399d25aa348f6f0fa317b75cef7baf55517087860290e48",
+    "qa_evq_training_result_sha256": "6935ea1ce6d1419b4be85e7060dfcfbcf8369292b1f466cc71c8833876afe2ba",
+    "qa_native_evaluation_result_sha256": "b465fc7e811e3a2cb7b9885ac95bba3daed8703ef12b192ca5abca070bbd0e07",
+    "qa_evq_evaluation_result_sha256": "4f9ede71ad4b6e7e6c69bb0fe9de0d7763a080573216ac9290ad1951e0e44b93",
+    "qa_native_parent_evaluation_result_sha256": "51165529a7b765bba46af7d8be33b9e4d86a9169477e2fa771cd678896e7f8fd",
+    "qa_evq_parent_evaluation_result_sha256": "34f3fcf22cd71a29574d230aba3ce44d967bf2ffa5b3aca08e71e55f9285fe33",
+    "qa_native_examples_sha256": "f2b1a8e3cc4b498b39b6205cdabb95745756519f41ac0d13ff8fc59ce7751a93",
+    "qa_evq_examples_sha256": "434937ad0f52ff118c9299e57bd5a51b541079c990e618286b930b2745ee13e2",
+    "qa_native_parent_examples_sha256": "9fc0c8f089cc35daef0c80899ac7e383a438939975833b2bdc5073899da4bdd9",
+    "qa_evq_parent_examples_sha256": "03e6033d90396a94366168cdf47c95efb2950f16da5041393a8bed163753b034",
+    "qa_native_train_log_sha256": "cf68465adc3d736faa2be3140ebb48798b00c82579505a087cc06e4a4bb55239",
+    "qa_evq_train_log_sha256": "5b57ee74f157295544c78cc92cb9e29e40d8adf4a59787942692580573532204",
+    "ruler_training_view_manifest_sha256": "0bf1f2158340c7b6190c73c3b1aa0e07e8007e8c28f2da6f36b471528c361161",
+    "ruler_evaluation_manifest_sha256": "886d94731af31f30698204caa9f30045887c9333d6327e2e1c33555ed57da68c",
+    "ruler_native_final_adapter_sha256": "556db0a42d70944578ece2e51444bbce5565e83fcf6a799fb135c490578ddcde",
+    "ruler_evq_final_adapter_sha256": "f2d05a6ab572210bf29e628f47681a6456426d41eaab5ed6700528edfbb4b8c7",
+    "ruler_native_training_result_sha256": "e778a24a82af1c91a68c8bb54e7e5a1b565470873076d301eef69c2bef1bc76b",
+    "ruler_evq_training_result_sha256": "d2c1f1e39a1397be3b02a0e73e6205e889a316533f9ffd2b956300d399d34c20",
+    "ruler_native_evaluation_result_sha256": "8565a1297988e86db65917f2cd62e782737d43e74648f96cfa6c737eefddacfc",
+    "ruler_evq_evaluation_result_sha256": "57ec828b869c800f8ca5e5f55ddfab34ddad32b1646c5850336bd4511cd90d83",
+    "ruler_native_examples_sha256": "47724bdbd798c79acab156b415c1abbe855fa8c1cd25c79ccb053145fd1413cb",
+    "ruler_evq_examples_sha256": "6d9cc1f5a006b92ad90d1cd49b5f7e27846386adbd33e983031b5c273c2473c6",
+    "ruler_native_train_log_sha256": "aa699df73bfa44f8122836909a573a937a9c83b86cabfde3db80c03647a692e8",
+    "ruler_evq_train_log_sha256": "b1c7321e03db11d36ed9034437be0eb251559a6a8882b3b40641ada0e2e82f36"
+  }
+}

@@ -4,12 +4,10 @@
 \label{sec:exp-zero-training-system}
 \label{sec:coordinate}
 
-A model trained with one exponent distribution has learned query and key
-coefficients in that basis. The weights-by-table crossing makes this dependence
-visible: in two $50$M models, replacing the Geo-trained model's table by Cosh
-changes PPL from $7.14$ to $76.20$; the reverse swap changes $7.16$ to $23.05$
-(App.~Table~\ref{tab:coadapt}). For frozen-model extension, we therefore study
-adjustments relative to the native table.
+The frozen crossings in \S\ref{sec:coadaptation-finding} show that trained
+weights use a particular exponent basis. This motivates adjustments defined
+relative to the checkpoint's native table. We compare how these adjustments
+place the available exponent shifts within the existing rotary pairs.
 
 \subsection{A common coordinate for exponent adjustments}
 
@@ -71,7 +69,8 @@ Residual-guided & 60.47 & \textbf{66.50} \\
 A frozen normalized-index profile transfers a reference displacement curve
 onto the native slot grid and installs $\omega'_k=\omega_k^N s^{-m_k}$.
 Its placement can be compared with direct evaluation from local frequency
-gaps. On a new-seed Gemma-$1.1$-$2$B comparison with $128$ rotary pairs,
+gaps. On a new-seed Gemma-$1.1$-$2$B comparison with $128$ rotary pairs
+\citep{gemmateam2024gemma},
 normalized-index interpolation scores $79.00\%$ versus $72.81\%$ at $16$K.
 Both arms share the frequency endpoints, amplitude, and $320$ inputs;
 the paired improvement is $6.19$ points with interval $[2.81,9.63]$.
