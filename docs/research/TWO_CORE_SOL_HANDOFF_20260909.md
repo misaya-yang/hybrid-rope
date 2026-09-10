@@ -581,3 +581,24 @@ Completed without GPU on prose16 inputs 000/001. Model identity, tokenizer, froz
 R target key/value source-token retention is 31.71%/30.56% for 000 and 28.24%/33.73% for 001; complete target value is retained in only 2/72 and 3/72 layer/KV-head units. KeyDiff values are 82.41%/70.24%, with 48/72 and36/72 complete units. Across all16 records, R retains 37.45%/36.34% of source record tokens, versus KeyDiff71.75%/70.61%; all-record value tokens are38.82%/36.81% versus75.46%/73.68%. Thus this reconstruction adaptation also leaves low source coverage. It is not a demonstrated case of retaining the complete needed source and still failing, nor does source-token absence prove absence of information in all other hidden states.
 
 R generates `bdpcffuxnw` instead of `bdztcffuxnw` and `bddcrvbq` instead of `bddgcrvbmqg`; approximate lexical similarity is not strict success. The R intervention changes query source, max aggregation, scoring normalizers and other author semantics. Its fixed-per-head allocation is also distinct from the author's original cross-head/layer allocation, so this result is not a rejection of the full KVzip method or identification of one unique failure cause. The monitor received the complete two-input audit; no new queue or scorer change was made.
+
+
+### Target-record causal intervention — 2026-09-10T00:56:05.960972+00:00
+
+Executed the core READY_COMMAND unchanged for the two predetermined Full-correct prose256 DEV inputs 002/003. Original P was reused only after its contract/input/new keep hash matched. Four new generations (target-record oracle and same-removal/equal-insertion sham) completed in 16.046 seconds. Whole target Record spans were restored at the original per-head budget, with original sink/recent positions protected. This uses future-query target lookup and is privileged headroom-selected diagnosis, not a query-blind method or an unbiased population effect. All original outputs and intervention/keep receipts are synchronized locally under `results/position_overnight_20260909/pm_target_record_oracle_dev_v1/`.
+
+| Input | Expected value | Original P / sham | Target-record oracle | Mean swapped slots per layer/KV-head | Budget |
+|---|---|---|---|---:|---:|
+| 002 | bdqynkghuvn | bdbvavgebrv / bdbvavgebrv | bdqynkghuvn (correct) | 18.0278 | 1854 |
+| 003 | bdxudqajtgx | bdxwmetc / bdxwmetc | bdxxwmetc (wrong) | 14.2361 | 1851 |
+
+All six outputs terminate with EOS; only oracle002 becomes full-string correct. Both target spans contain 19 original prefix tokens, fully restored in all 72 layer/KV-head units. Swap counts range 11–19 for002 and 0–19 for003, with identical removals/counts in each corresponding sham. In003 the oracle output exactly copies the queried key `bdxxwmetc` rather than its value; this is a verified error category, not proof of a specific internal binding mechanism. Target-record loss causally matters for002, while source-span restoration alone is insufficient for003. Other lost contextual states, distractor effects and question-state changes remain competing explanations. Do not extrapolate the observed 1/2 repair rate beyond these selected DEV cases.
+
+
+### Independent follow-up: canonical KeyDiff completed — 2026-09-10T01:07:21.405765+00:00
+
+Following the user instruction to independently track existing experiments and stop messaging other chats, no further cross-chat messages were sent. The previously delivered canonical-KeyDiff configuration completed all 24 DEV inputs. All raw outputs and keep sets have finished synchronizing locally under `results/position_overnight_20260909/pm_canonical_keydiff_dev_v1/`; `paired_analysis.json` records exact paired wins/losses.
+
+Full / native post-RoPE KeyDiff / pre-RoPE-scored KeyDiff exact+EOS: repeat16 5/8, 3/8, 5/8; prose16 6/8, 8/8, 7/8; prose256 6/8, 0/8, 0/8. This is a condition-dependent tradeoff, not a universal advantage of removing RoPE from the score. The final reader still uses original post-RoPE KV and absolute positions. No unseen split was tested.
+
+The latest server check found no active GPU compute process and no newer prepared READY_COMMAND than this completed run. Existing old queues were not restarted. Further execution remains limited to a concrete, prepared experiment within the user's current tracking scope.

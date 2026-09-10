@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import asdict
+import hashlib
 import json
 from pathlib import Path
 import time
@@ -90,6 +91,13 @@ def cached_references(source, identity, row, config, dtype, post_keep_sha):
     version = BASELINE_VERSION + "_" + VERSION
     if manifest["model"] != identity or manifest["dtype"] != dtype or manifest["baseline_version"] != version:
         raise ValueError("fixed reference model/dtype/reader-scoring contract differs")
+    if (manifest.get("backend") != "native_HF_Qwen2_SDPA_original_position_cache_v1"
+            or manifest.get("decode") != "raw_greedy_argmax"):
+        raise ValueError("fixed reference native reader or decoding differs")
+    for name in ("adapter.py", "ops.py"):
+        actual = hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
+        if manifest.get("sources", {}).get(name) != actual:
+            raise ValueError("fixed reference native reader source differs: " + name)
     matches = [r for r in records(folder / "per_example.jsonl") if r["row_id"] == row["row_id"] and r["arm"] in ("F", "K")]
     if {r["arm"] for r in matches} != {"F", "K"}:
         raise ValueError("requested fixed F/K references absent; do not silently regenerate")
