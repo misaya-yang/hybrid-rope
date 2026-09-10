@@ -1,0 +1,156 @@
+
+===== [2026-09-09T05:08:23.979Z] <user> =====
+<recommended_plugins>
+Here is a list of plugins that are available but not installed.
+
+- Airtable (airtable@openai-curated-remote)
+- Alpaca (alpaca@openai-curated-remote)
+- Apollo.io (apollo@openai-curated-remote)
+- Spotify (app-68de829bf7648191acd70a907364c67c@openai-curated-remote)
+- AllTrails (app-68f1afc5a6008191a701eaaab428816c@openai-curated-remote)
+- Instacart (app-691eab1e001081919e57189f8b2f03bc@openai-curated-remote)
+- Apple Music (app-6938a94a61d881918ef32cb999ff937c@openai-curated-remote)
+- LONA Trading Assistant (app-694336b0c0948191a4ad234f9942885b@openai-curated-remote)
+- SciSpace (app-69439d715a7c8191aed9e2f6649e105f@openai-curated-remote)
+- Todoist: To Do List & Calendar (app-6943b73823548191a9f9216c6790c453@openai-curated-remote)
+- Consensus (app-6943e6f4a928819195962de16fb9ffe4@openai-curated-remote)
+- Sider Scholar (app-6948b485f5bc8191adb4df13f369cec7@openai-curated-remote)
+- True Sky (app-69490a4a06148191a0dd78606a3dbf1f@openai-curated-remote)
+- Bigdata.com (app-69491eceef3c8191beb70788b7840429@openai-curated-remote)
+- Gamma (app-698a098735908191989f5788d7ee317e@openai-curated-remote)
+- Tredict (app-69aef5b699a0819184512d57743fc1cd@openai-curated-remote)
+- Maersk (app-69b2b5a768d4819190d3a86c5f12e6d9@openai-curated-remote)
+- Dropbox (app-69b31dc2110c8191b8b47dc98fe5a052@openai-curated-remote)
+- Parqet (app-69b68652f0308191a27d7c7096cab4f6@openai-curated-remote)
+- Interactive Brokers (IBKR) (app-69bc11db874881918718abaca20b68ce@openai-curated-remote)
+- Financial Datasets (app-69cacd9394a88191ba6564e1bb0430fa@openai-curated-remote)
+- Fathom (app-69d88b99c5c481918e8da9225737e1e9@openai-curated-remote)
+- vidIQ (app-69dd11f3e50c8191b1ca48d03cf7e2ad@openai-curated-remote)
+- TickTick:To-Do List & Calendar (app-69ddbaba3fb48191a825f22c21b0599d@openai-curated-remote)
+- Plaud (app-69f3c30d68288191bbd428a394a78407@openai-curated-remote)
+- Wolfram (app-69fe0bf66c8481919c513d799406436e@openai-curated-remote)
+- Runway (app-6a05e3b201788191be12b590b43e6ce3@openai-curated-remote)
+- Caliber (app-6a05e8f22d408191b13ba3897157f6df@openai-curated-remote)
+- COROS (app-6a0694cbb2608191bbefb74ba810ab68@openai-curated-remote)
+- TradingCursor (app-6a0d835ff1dc8191972eeabd14967446@openai-curated-remote)
+- CoinMarketCap (app-6a172fe86f5481919f73cbc3bc3ad5bb@openai-curated-remote)
+- Trello (app-6a20b18a639081918c1b438f8381b27e@openai-curated-remote)
+- Longbridge (app-6a2baf2fad748191812393c3e00308ef@openai-curated-remote)
+- freddy (app-6a322b52a82c8191b7fb653f9e9f7891@openai-curated-remote)
+- Higgsfield (app-6a3293e129088191abf0875820e839da@openai-curated-remote)
+- Stocktwits (app-6a427a19b1f481919c5db13838af00c2@openai-curated-remote)
+- Webull (app-6a4b8801d1e8819182f624f012878a81@openai-curated-remote)
+- CoinGecko (app-6a4f02d735388191959c8328877e0bbd@openai-curated-remote)
+- Asana (asana@openai-curated-remote)
+- Atlassian Rovo (atlassian-rovo@openai-curated-remote)
+- Base44 (base44@openai-curated-remote)
+- Binance (binance@openai-curated-remote)
+- Box (box@openai-curated-remote)
+- Canva (canva@openai-curated-remote)
+- ClickUp (clickup@openai-curated-remote)
+- Cloudflare (cloudflare@openai-curated-remote)
+</recommended_plugins>
+# AGENTS.md instructions for /Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope
+
+<INSTRUCTIONS>
+- Ask when the request is unclear or conflicts with skills or project AGENTS.md.
+- Continue working toward the goal until complete or a serious blocker requires user input. Do not stop merely to report progress.
+- Make the smallest complete change needed. Avoid unnecessary refactoring and changes outside the task.
+
+--- project-doc ---
+
+# AGENTS.md
+
+1. **Preserve the objective.**
+   Do not replace the requested goal with an easier proxy, narrower task, or
+   intermediate milestone. Decomposition must advance the original objective.
+
+2. **Act without unnecessary gates.**
+   Within the authorized scope, proceed autonomously and resolve routine choices
+   using context and judgment. Keep checks proportional to concrete risks and
+   applicable requirements; do not invent time limits, approval steps, or workflow
+   constraints.
+
+3. **Reason from mechanism and evidence.**
+   Ground reasoning in the actual computation, mathematics, implementation, and
+   observed results. Challenge key assumptions with counterexamples and competing
+   explanations. Distinguish hypotheses and proxy improvements from demonstrated
+   outcomes; a complete theory is not a prerequisite for a useful experiment.
+
+4. **Use decision-sufficient experiments.**
+   Prefer the least costly experiment that can distinguish competing explanations
+   or determine the next decision. Reuse valid baselines and results. Do not reduce
+   an experiment below its diagnostic value or increase its scale without a reason.
+
+5. **Use history as evidence.**
+   Check relevant prior results, failures, and subsequent corrections before
+   repeating a direction. Do not repackage failed assumptions or generalize a
+   specific failure beyond its evidence. Successful methods are evidence, not
+   immutable constraints.
+
+6. **Finish the real task.**
+   Continue through the implementation, verification, analysis, and follow-up the
+   task requires. Planning, auditing, partial progress, or reporting are not
+   completion unless they are the requested deliverable. Stop when the requested
+   outcome is achieved, the user explicitly pauses or changes the objective, or progress
+   requires input or resources beyond the authorized scope. State any blocker
+   precisely and continue independent work where possible.
+
+Project-specific hypotheses, baselines, parameters, experiment plans, results,
+and failure records belong in project documents, not here.
+
+</INSTRUCTIONS>
+<environment_context>
+  <cwd>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
+  <shell>zsh</shell>
+  <current_date>2026-09-09</current_date>
+  <timezone>America/New_York</timezone>
+  <filesystem><workspace_roots><root>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/misaya.yanghejazfs.com.au/.codex/visualizations/2026/09/08/01a0806f-3df5-74b1-bc56-bf00d89d238e</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+</environment_context>
+
+===== [2026-09-09T05:08:23.988Z] <assistant(agent_message)> =====
+Message Type: NEW_TASK
+Task name: /root/pdf_review_r03
+Sender: /root
+Payload:
+
+
+===== [2026-09-09T05:08:32.852Z] <assistant> =====
+我会严格把证据范围限定在这一个 PDF 及其临时导出物，完整通读正文和附录，并渲染关键图表与含密集公式的页面核查成稿呈现。
+
+===== [2026-09-09T05:10:32.896Z] <assistant> =====
+正文与附录已通读一遍。当前正在复核两类最容易影响结论的问题：理论命题的精确适用域，以及大模型/冻结模型比较中“纯 allocation 效应”和整套方法差异是否被清楚区分；随后会用页面渲染检查图表标注与公式断行。
+
+===== [2026-09-09T05:18:10.079Z] <assistant> =====
+核心贡献：论文把 RoPE 的频率设计拆成“范围、区间内指数分配、与已训练权重的兼容性”三个坐标，并用固定端点训练对照、完整正余弦子空间分析、解析 Cosh 分配以及冻结模型的原生表相对调整，证明指数分配本身会改变长度外推行为。
+
+整体上，论文的理论推导较严谨，关键结论也大多主动限定在证据能够支持的范围内。固定范围、同初始化、同数据顺序的三种子训练实验是最有说服力的因果证据；目标范围重设后的反向排序和 weights-by-table crossing 也有效阻止了把结果简单归结为“某个分配始终更优”。我没有发现足以直接推翻主定理或固定范围实验的硬错误。以下问题按严重程度排序。
+
+1. **主要问题：摘要级的 Llama-3-8B PPL 结果缺少可复核的评测协议。**  
+   位置：PDF p.5，§5.1 “Matched Llama-3-8B adaptation”段；p.33–34，§E.3 “Probability and causal source use”。  
+   论文只说明评测由“三个域的 24 个 frozen temporal text packs”组成，附录补充了 LoRA 配置和三个 PPL 数字，却没有给出三个域及文本来源、pack 的构造与切分方法、8K/16K/32K 是否是嵌套前缀、哪些 token 参与计分、每个 pack 的有效 token 数，以及最终 PPL 是 pooled token NLL 的指数还是 pack-level PPL 的平均。该结果进入摘要和 Figure 3，是全篇最醒目的规模化结果之一，因此目前的描述不足以判断 991.5→127.9 的含义，也与 p.9 的 reproducibility statement 不完全相符。  
+   建议直接在 §E.3 增加一个协议表，列明数据源与版本、域、pack 数量和长度构造、与适配数据的去重关系、计分掩码、聚合公式及每个长度的有效 token 数；同时报告 24 个 pack 的配对 NLL 差摘要。现有运行记录应足以完成，无需新增训练。
+
+2. **主要概念问题：Cosh 构造没有由论文主推的 full-subspace geometry 推导或验证。**  
+   位置：p.4，§4.1–4.3；p.17，§A.3；p.19–20，§A.6/Table 6。  
+   Theorem 2 正确求解了作者指定的 \(\alpha\int\rho^2+\beta\int S_\rho^2\) 凸泛函，但该泛函并不是 canonical correlation 或 \(r_2(\Gamma)\) 的连续极限。随后 Table 6 用 cosine-only collision 支持 Cosh，而 §A.3 又明确构造了 cosine-only ordering 与 full-subspace rank ordering相反的例子。因此 Table 6 不能连接 Cosh 与全文较新颖的 phase-invariant geometry。论文确实称其为 surrogate，所以这不是定理错误，但当前叙事容易让读者以为几何分析导出了 Cosh。  
+   建议明确写出“Theorem 2 is a design construction, not an optimizer of \(c_{\omega\nu}\) or \(r_2\)”；最好用 Eq. (11) 对 Table 6 的同一批 Geo/Cosh 表补报 full-subspace \(c\) 或 \(r_2\)，并说明其与行为结果是否同向。只需解析重算，不需要训练实验。若结果不稳定，则应把几何分析和 Cosh 构造呈现为两个并列贡献。
+
+3. **中等问题：Qwen 的 normalized-index 对 YaRN 比较同时改变了 exponent profile 和 attention amplitude。**  
+   位置：p.7，Table 3 及其下方“One static table at both lengths”；p.34，§F.1。  
+   normalized-index 使用 \(g=1.0513\)，YaRN 使用 \(g=1.0693\)。因此 64K 的 +6.09 分支持的是完整 installed method 的比较，不能单独归因于 normalized-index displacement。表中给出了 \(g\)，但正文措辞仍容易产生纯 profile 归因。  
+   建议首次报告该结果时直接称为“bundled table-plus-gain comparison”，并把纯 placement 结论限定在 p.35 Table 23 的同 amplitude、同端点 direct-gap/index 对照。无需新增实验。
+
+4. **中等解释问题：block whitening 隐去了慢频率子空间的严重病态尺度。**  
+   位置：p.4，Proposition 1 前后；p.14，§A.1；p.15–16，Figures 5–6。  
+   当 \(\omega L\to0\) 时，原始 \(\sin(\omega\Delta)\) 的能量按 \(\omega^2\) 消失；\(S_\omega^{-1/2}\) 实际上把该方向按约 \(1/\omega\) 放大。因此 \(V_\omega\to\operatorname{span}\{1,\Delta\}\) 和慢频率 \(r_2\approx2\) 是关于“允许任意可逆基变换后的方向重合度”的结论，并不等于有限权重、有限精度下有两个同等可用的 positional degrees of freedom。正文虽说 learned coefficients 决定使用方式，但 “where the table spends its budget” 等措辞仍可能被理解为实际可用容量。  
+   建议在 Proposition 1 后明确区分 subspace redundancy、raw feature energy 和 conditioning；数值例子可同时给出慢频 \(S_\omega\) 的条件数或最小特征值。解析计算即可。
+
+5. **较小的结构与排版问题。**  
+   位置：p.15、p.19、p.25。  
+   多个附录页存在大面积空白，尤其 Table 11 被压到 p.25 底部，导致相关协议和结果相距较远，也使 38 页附录显得比实际内容更长。Figure 5 的热图文字在正常缩放下偏小。  
+   建议调整浮动体策略，将 Table 11 紧跟 B.4 正文，压缩空页，并放大 Figure 5(b) 或拆图。数学公式本身渲染清楚，未见公式越界或符号丢失。
+
+额外实验方面，按论文当前明确限定的主张，我不认为必须新增训练实验：三种子固定范围结果足以支持“分配会影响该协议下的长度泛化”，单种子大模型结果也被如实标为 one matched pair。若作者希望把 8B 结果提升为稳定、可推广的方法结论，而不再限定为单个训练对，则需要增加独立适配种子；当前写法下这不应作为默认录用门槛。
+
+**独立录用倾向：边界。信心：中高。** 理论主体和最关键的固定范围对照是扎实的，且论文对多数限制相当诚实；我的保留主要来自摘要级大模型结果的协议缺失，以及 full-subspace 理论与 Cosh 构造之间尚未闭合的论证链。两项首要问题都可主要通过重写和已有结果的解析补充解决。

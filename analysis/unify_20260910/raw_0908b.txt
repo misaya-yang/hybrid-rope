@@ -1,0 +1,153 @@
+[2026-09-09T02:49:05.609Z] <user>
+<recommended_plugins>
+Here is a list of plugins that are available but not installed.
+
+- Airtable (airtable@openai-curated-remote)
+- Alpaca (alpaca@openai-curated-remote)
+- Apollo.io (apollo@openai-curated-remote)
+- Spotify (app-68de829bf7648191acd70a907364c67c@openai-curated-remote)
+- AllTrails (app-68f1afc5a6008191a701eaaab428816c@openai-curated-remote)
+- Instacart (app-691eab1e001081919e57189f8b2f03bc@openai-curated-remote)
+- Apple Music (app-6938a94a61d881918ef32cb999ff937c@openai-curated-remote)
+- LONA Trading Assistant (app-694336b0c0948191a4ad234f9942885b@openai-curated-remote)
+- SciSpace (app-69439d715a7c8191aed9e2f6649e105f@openai-curated-remote)
+- Todoist: To Do List & Calendar (app-6943b73823548191a9f9216c6790c453@openai-curated-remote)
+- Consensus (app-6943e6f4a928819195962de16fb9ffe4@openai-curated-remote)
+- Sider Scholar (app-6948b485f5bc8191adb4df13f369cec7@openai-curated-remote)
+- True Sky (app-69490a4a06148191a0dd78606a3dbf1f@openai-curated-remote)
+- Bigdata.com (app-69491eceef3c8191beb70788b7840429@openai-curated-remote)
+- Gamma (app-698a098735908191989f5788d7ee317e@openai-curated-remote)
+- Tredict (app-69aef5b699a0819184512d57743fc1cd@openai-curated-remote)
+- Maersk (app-69b2b5a768d4819190d3a86c5f12e6d9@openai-curated-remote)
+- Dropbox (app-69b31dc2110c8191b8b47dc98fe5a052@openai-curated-remote)
+- Parqet (app-69b68652f0308191a27d7c7096cab4f6@openai-curated-remote)
+- Interactive Brokers (IBKR) (app-69bc11db874881918718abaca20b68ce@openai-curated-remote)
+- Financial Datasets (app-69cacd9394a88191ba6564e1bb0430fa@openai-curated-remote)
+- Fathom (app-69d88b99c5c481918e8da9225737e1e9@openai-curated-remote)
+- vidIQ (app-69dd11f3e50c8191b1ca48d03cf7e2ad@openai-curated-remote)
+- TickTick:To-Do List & Calendar (app-69ddbaba3fb48191a825f22c21b0599d@openai-curated-remote)
+- Plaud (app-69f3c30d68288191bbd428a394a78407@openai-curated-remote)
+- Wolfram (app-69fe0bf66c8481919c513d799406436e@openai-curated-remote)
+- Runway (app-6a05e3b201788191be12b590b43e6ce3@openai-curated-remote)
+- Caliber (app-6a05e8f22d408191b13ba3897157f6df@openai-curated-remote)
+- COROS (app-6a0694cbb2608191bbefb74ba810ab68@openai-curated-remote)
+- TradingCursor (app-6a0d835ff1dc8191972eeabd14967446@openai-curated-remote)
+- CoinMarketCap (app-6a172fe86f5481919f73cbc3bc3ad5bb@openai-curated-remote)
+- Trello (app-6a20b18a639081918c1b438f8381b27e@openai-curated-remote)
+- Longbridge (app-6a2baf2fad748191812393c3e00308ef@openai-curated-remote)
+- freddy (app-6a322b52a82c8191b7fb653f9e9f7891@openai-curated-remote)
+- Higgsfield (app-6a3293e129088191abf0875820e839da@openai-curated-remote)
+- Stocktwits (app-6a427a19b1f481919c5db13838af00c2@openai-curated-remote)
+- Webull (app-6a4b8801d1e8819182f624f012878a81@openai-curated-remote)
+- CoinGecko (app-6a4f02d735388191959c8328877e0bbd@openai-curated-remote)
+- Asana (asana@openai-curated-remote)
+- Atlassian Rovo (atlassian-rovo@openai-curated-remote)
+- Base44 (base44@openai-curated-remote)
+- Binance (binance@openai-curated-remote)
+- Box (box@openai-curated-remote)
+- Canva (canva@openai-curated-remote)
+- ClickUp (clickup@openai-curated-remote)
+- Cloudflare (cloudflare@openai-curated-remote)
+</recommended_plugins>
+# AGENTS.md instructions for /Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope
+
+<INSTRUCTIONS>
+- Ask when the request is unclear or conflicts with skills or project AGENTS.md.
+- Continue working toward the goal until complete or a serious blocker requires user input. Do not stop merely to report progress.
+- Make the smallest complete change needed. Avoid unnecessary refactoring and changes outside the task.
+
+--- project-doc ---
+
+# AGENTS.md
+
+1. **Preserve the objective.**
+   Do not replace the requested goal with an easier proxy, narrower task, or
+   intermediate milestone. Decomposition must advance the original objective.
+
+2. **Act without unnecessary gates.**
+   Within the authorized scope, proceed autonomously and resolve routine choices
+   using context and judgment. Keep checks proportional to concrete risks and
+   applicable requirements; do not invent time limits, approval steps, or workflow
+   constraints.
+
+3. **Reason from mechanism and evidence.**
+   Ground reasoning in the actual computation, mathematics, implementation, and
+   observed results. Challenge key assumptions with counterexamples and competing
+   explanations. Distinguish hypotheses and proxy improvements from demonstrated
+   outcomes; a complete theory is not a prerequisite for a useful experiment.
+
+4. **Use decision-sufficient experiments.**
+   Prefer the least costly experiment that can distinguish competing explanations
+   or determine the next decision. Reuse valid baselines and results. Do not reduce
+   an experiment below its diagnostic value or increase its scale without a reason.
+
+5. **Use history as evidence.**
+   Check relevant prior results, failures, and subsequent corrections before
+   repeating a direction. Do not repackage failed assumptions or generalize a
+   specific failure beyond its evidence. Successful methods are evidence, not
+   immutable constraints.
+
+6. **Finish the real task.**
+   Continue through the implementation, verification, analysis, and follow-up the
+   task requires. Planning, auditing, partial progress, or reporting are not
+   completion unless they are the requested deliverable. Stop when the requested
+   outcome is achieved, the user explicitly pauses or changes the objective, or progress
+   requires input or resources beyond the authorized scope. State any blocker
+   precisely and continue independent work where possible.
+
+Project-specific hypotheses, baselines, parameters, experiment plans, results,
+and failure records belong in project documents, not here.
+
+</INSTRUCTIONS>
+<environment_context>
+  <cwd>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
+  <shell>zsh</shell>
+  <current_date>2026-09-08</current_date>
+  <timezone>America/New_York</timezone>
+  <filesystem><workspace_roots><root>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/misaya.yanghejazfs.com.au/.codex/visualizations/2026/09/08/01a0806f-3df5-74b1-bc56-bf00d89d238e</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+</environment_context>
+
+[2026-09-09T02:49:13.146Z] <assistant>
+我会用 academic-research-suite 的引用核查流程，只读检查指定四个文件，并以原论文、arXiv/OpenReview 官方页面为准。重点只报会改变当前定位或公式表述的问题，不做泛化防御，也不改文件。
+
+[2026-09-09T02:50:14.561Z] <assistant>
+已锁定指定段落。现阶段最需要核对的是三类细节：YaRN 的插值公式是否确实等价于文中的“frequency blend”，MrRoPE 的 mixed-radix 累积方向与索引约定，以及 LeRoPE/AdaRoPE/DoPE 对“学习什么、是否共享到所有头”的准确描述。
+
+[2026-09-09T02:56:58.774Z] <assistant>
+只读核查完成；未改文件。没有发现作者、年份、题名或公式的硬错误，也没有遗漏指定的八项工作。
+
+唯一值得实改的机制定位是 [02_related.tex](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_related.tex:13) 对 LongRoPE 的概括。LongRoPE 不只搜索按维度的频率缩放，还使用 token-position threshold \(\hat n\)：阈值前保持原 RoPE，阈值后才应用 \(\lambda_k\)。因此它的维度缩放部分满足 \(d_k=\log\lambda_k\)，但完整方法不是单一静态 exponent table。[原论文 Eq. 3 与方法说明](https://arxiv.org/html/2402.13753)。最小修正可在第 13–15 行补一句：“LongRoPE additionally combines dimension-wise rescaling with a token-position threshold; its dimension-wise factors correspond to exponent displacements.” 这会避免把完整 LongRoPE 暗示为纯 exponent-only 方法。
+
+可选精确化：
+
+- [04_mature.tex](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex:34)：公式本身正确，但最好写成 “YaRN’s NTK-by-parts frequency map uses the first construction”。原文定义
+  \[
+  \omega'_k=\omega_k[(1-\gamma_k)/s+\gamma_k]
+  \]
+  与稿中
+  \[
+  d_k=-\log(1-w_k+w_k/s)
+  \]
+  在 \(w_k=1-\gamma_k\) 时完全一致；完整 YaRN 还包含 attention-temperature scaling，稿中后续表格的 \(g\) 已经体现。[YaRN Eq. 13、Definition 2](https://arxiv.org/html/2309.00071)。
+
+- [02_related.tex](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_related.tex:24)：LeRoPE 更无歧义的写法是 “learns one log-space scale per rotary pair, shared across layers and heads”。论文明确使用 \(\hat\theta_m=e^{\alpha_m}\theta_m\)，并报告 shared granularity 优于 per-layer/per-head 版本；fixed-frequency ablation 保留约 63% 增益，故稿中“table 和 joint training 都有贡献”正确。[LeRoPE](https://arxiv.org/html/2607.10134)。
+
+- [02_related.tex](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_related.tex:37)：DoPE 的当前句子不假，但过于模糊。更准确的是：它把低频成分与 over-aligned、low-rank attention 联系起来，用 truncated matrix entropy 选头，然后选择性抑制 positional encoding，并可用 isotropic Gaussian 重参数化 attention map。它不是普通的静态 exponent-table 调整。[DoPE](https://arxiv.org/html/2511.09146)。
+
+- [02_related.tex](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_related.tex:8)：FMRoPE 的表述正确；若想保留其最核心结论，可补出 \(b=L_{\text{train}}\) 和 interpolation–extrapolation trade-off。[ICLR 2026 官方页](https://proceedings.iclr.cc/paper_files/paper/2026/hash/993dbaec0418a6449090f1debbcb8844-Abstract-Conference.html)。
+
+- [02_related.tex](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_related.tex:52)：Du et al. 的 “positional and token confusion” 可换成论文术语 “position/token inversion and aliasing”，并可点明 base 增大会改善 token distinction、损害 position distinction。[Du et al.](https://arxiv.org/html/2605.15514)。
+
+已经正确的关键关系：
+
+- [02_exponents.tex](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_exponents.tex:7) 的 \(\omega_k=b^{-k/K}\) 与标准 RoPE 的 \(b^{-2k/d_{\rm rot}}\) 相同；固定 base 的几何表归一化后确有 \(z_k=k/(K-1)\)。
+- FMRoPE 改 base 只改变 log-frequency 范围，归一化 exponent spacing 仍均匀；稿中 fixed-range interior-allocation 区分成立。
+- [04_mature.tex](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex:29) 的 MrRoPE 映射完全正确：
+  \[
+  \omega'_k=\omega_k/\prod_{j<k}\lambda_j
+  \Rightarrow d_k=\sum_{j<k}\log\lambda_j.
+  \]
+  [MrRoPE v1 Eq. 10](https://arxiv.org/html/2601.22181v1)。
+- LeRoPE、AdaRoPE 学到的正频率都可重参数化为 exponent；稿件没有靠“他们改频率、我们改指数”制造假区别，而是把贡献放在 fixed-range allocation、闭式 density 和 controlled interventions 上，这一定位成立。
+- AdaRoPE 确实学习 per-head、per-block 频率和 head-specific length-aware attention scaling，也确实比较 Learned Base 参数化。[AdaRoPE](https://arxiv.org/html/2607.19363)。
+- [references.bib](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/refs/references.bib:51) 中八项工作的作者、题名、年份、会议/预印本状态均与官方来源一致；DoPE 用首次提交年 2025，AdaRoPE 标为 ICML 2026，均正确。

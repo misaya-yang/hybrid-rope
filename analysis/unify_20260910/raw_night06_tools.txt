@@ -1,0 +1,244 @@
+# TOOL-MESSAGE extraction night06 (send_message_to_thread contents) — source rollout-2026-09-08T23-15-30-01a08429-dbb3-7180-8b08-04175711d456.jsonl
+
+[09-08 23:21:42] <send_message_to_thread call>
+const prompt = `机制/竞争资产盘点已完成（只读；未跑模型/未下载）。先报重大遗漏：
+
+1) 当前稿已覆盖 full sin/cos 定义、低频 collapse、静态反例、151.9M exact-range、50M 2x2 co-adaptation crossing，但没有把“静态几何为何不能直接预测 LM、以及它与 task-sensitive attention/gradient 的关系”作为可见实证桥。最有价值的缺口是已存在的 CPU-only 50M attention-Fisher/LM-gradient probe 和 per-pair NoPE/swap causal spectrum；二者应作为机制边界/负结果短段或补图，不能写成训练前 selector。
+2) base-only frozen control 已有完整数值，但当前正文/附录基本不呈现；它是回答“EVQ gain 是否只是改 scalar base”的最直接 counterfactual，不过只能说恢复 frozen mismatch 的一部分，不能冒充从头 base-only 训练因果。
+3) 50M/151.9M 的权重×表 crossing 均有资产；当前稿正文只显式展示 50M table，151.9M 复核藏在 Appendix。若主图要把“geometry→training→co-adaptation”串起来，151.9M crossing 的 2-seed 数值是应补进一张 compact mechanism panel 的首选。
+4) sparse/PSR（2026-09-08）完成的是独立路线的失败/未定结果，不连接 Beyond the Base 的 exponent-allocation 主线：PSR 没有确证 position-specific advantage，也不是新算法。不要塞入主线主图；最多在独立研究记录中引用并明确“future/independent direction”。
+
+按“可写 claim / 数值与 experimental unit / 源 / 控制与混杂 / 当前稿落点 / 可视化 / 价值排序”清单：
+
+M1（Top，geometry→一图解释指数改变了什么；静态但不是漂亮示意图）
+- Claim ceiling：有限 RoPE table 是 K 个二维 full sin/cos 子空间；phase-invariant canonical collision 与 block-whitened Rén​​yi-2 rank 有严格关系；geometric 慢端名义维数发生实际 subspace collapse；静态 rank/collision 不能推出外推。
+- 数值：Uniform Δ∈[0,L], L=4096,b=500K,K={16,32,64}, endpoints [2e-6,1]；full collision/r2：Geo .2250/7.31, .2383/7.63, .2432/7.84；EVQ .2163/7.54, .1870/9.41, .1034/17.03；full-subspace optimum约1.98e-7/32,1.02e-7/64,5.17e-8/128，K=64 内部62点压成 φ≈[.0169,.0264] harmonic comb。慢频率 grid（endpoint-inclusive）K=16/32/64：slow pairs 6/12/24，名义维数12/24/48，r2=2.0001/2.0001/2.0002，raw entropy rank=1.056/1.072/1.079；标准 u=k/K 在K=64为23 pairs/46 dims/r2=2.00013。低频 symbolic coefficient 19/12600；x=.05,y=.10 exact/leading=1.00058。
+- 额外反例：cosine-only A/B：Ccos(A)=2.62e-9<1.44e-8=Ccos(B)，但 r2(A)=64.48<128=r2(B)；length reversal C_L(A)=.45837<.61695=C_L(B), C_2L=.45834>.41132, C_4L=.45830>.24763。解析 parity/Fourier grid可在[0,L]正交但 Δ+L recurrence/alias。
+- 源：当前 `paper-2027/sections/03_theory.tex`；`paper-2027/appendix/a1_proofs.tex` §§geometry/counterexamples；脚本 `scripts/analysis/full_rope_collision_audit.py`（git e869228a5ac2f995ec8e2e2776152e2396d1c91a）；完整历史数值/QR cross-check 在 git `8e4d567:analysis/full_rope_audit/{finK_final.md,counterexamples_results.md,verify_core.py,verify_counterexamples.py}`；canonical report `paper-2027/research/foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md`。
+- 控制/混杂：closed-form Gram与200,001-point quadrature max abs 1.51e-6；phase rotation invariance 7.44e-15；static uniform-distance prior，换 attention/task prior 会换 optimum；不含 weights/LM。
+- 稿落点：已进 Appendix A.1 的 `fig_frequency_geometry`、`fig_spectral_budget_scaling`、两个反例段；建议主图只保留“slow pairs名义48→r2≈2”+harmonic comb/alias小插图，否则不要再加。
+- 图：横轴 φ/频率，分 nominal dimension 与 r2；右侧画 cosine-opt vs full-rank-opt 的排序 reversal/length reversal。价值：主线科学对象最高，但必须加“static only”。
+
+M2（Top，pure training allocation owner，当前正文已覆盖）
+- Claim：固定 sampled endpoints、span、architecture、init、data/order/optimizer/token budget 后，只移动30个 interior exponents，allocation z 改变 learned length generalization；目标-retargeted support 会反转，支持 support×allocation interaction。
+- 数值/unit：151.9M，Ltrain=256,K=32，3 seeds {42,137,256}，499,974,144 tokens、7,629 steps、32 frozen anchors、final-128 teacher-forced tail NLL。Fixed Cosh−Geo：256 +.026±.008；512 −.281±.192；1024 −.176±.039；2048 −.146±.034，3/3 seeds每个OOD长度同方向。Target-matched：512 +.060±.007；1024 +.227±.102；2048 +.460±.218，3/3反向。
+- 源：`paper-2027/sections/02_identification.tex`; `paper-2027/appendix/a5_identification.tex` §§exact-range；figure source `paper-2027/figs/make_fig_exact_range_control.py`; table/figure current. Canonical evidence path is referenced in `paper-2027/research/history/TIMELINE.md`; old report at git `main_0726:rebuttal/rebuttal_0723/theory_results/EXPERIMENT_REPORT_20260724.md` §§12。
+- 控制/混杂：within-seed all scalar/base/range variables pinned incl extrema/span, exact data/tokenizer revisions; residuals are endpoint-normalized shape, three seeds; target-matched is a separate policy, not identification of a general interaction law。
+- 稿落点：当前正文+Appendix已经是主线核心；不要与 50M factorial/MLA 混成同一 estimand。
+- 图：当前 two-panel fixed vs target-matched curve是正确表达，建议保留；价值最高的训练因果 anchor。
+
+M3（Top，co-adaptation bridge；当前正文显示50M table但可增强）
+- Claim：weights/table 不是可加主效应；训练权重学习的是其 frequency coordinate system，post-hoc swap会崩；static r2方向可与 LM quality 完全相反。
+- 数值/unit：50M TinyStories L=512, base500K, seed42, 8 windows × query positions 63/127/255/383/511, 6 layers×8 heads=1,920 head-query obs，全部冻结。GeoW/GeoT loss1.9659 PPL7.14 r2=4.57；GeoW/EVQT 4.3333 PPL76.20 r2=12.54；EVQW/GeoT 3.1378 PPL23.05 r2=4.57；EVQW/EVQT 1.9685 PPL7.16 r2=12.54。LM factorial effects: table +.5991 (CI[+.331,+.956]), weights −.5965 (CI[−.896,−.175]), interaction −3.5367 (CI[−5.165,−3.039]), |interaction|约 main effect 5.9×。Structural bare-rank “improves” in worst mismatch yet PPL 7.14→76.20；log10 EF trace与LM loss Pearson bare/content/frequency=.991/.989/.994（描述性，因梯度已看过loss）。
+- 源：`paper-2027/tables/table_coadapt.tex`; canonical report `paper-2027/research/foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md` §§5.2–5.4；script `scripts/analysis/attention_fisher_50m_probe.py` git dadb0d5924263cb0d51cfd20f5bb7f4566613905。output JSON原记录写/tmp且未入匿名包（report记录 hash `32770ef1...`），故建议内部机制/附录而非新 headline quantitative claim。
+- 控制/混杂：同一 frozen model counterfactual，只有 runtime table，single seed；历史 Geo/EVQ同时改 support/span/shape，非pure-z；EF是观察后LM gradient，不是训练前ranker。
+- 稿落点：`paper-2027/appendix/a1_proofs.tex` §post-hoc transplant obstruction + `table_coadapt`；当前 `sections/04_mature.tex`开头已引PPL swap，但缺 interaction decomposition。可补一行数值及“structural rank反向”的警示。
+- 图：2×2 heatmap（PPL）旁标 r2；再画 interaction/main effects CI。能最清楚地接 geometry→model failure。价值极高。
+
+M4（Top，151.9M weights×table crossing replication，训练seed复核）
+- Claim：151.9M上换表偏好随训练表翻转，说明 co-adaptation不是50M单点偶然；不能由位置无关可逆补偿精确吸收非同频率表（理论定理另计）。
+- 数值/unit：2 independent training seeds {137,256}, frozen 32 FineWeb-Edu anchors, final-128 tail NLL, at 1K:
+ FMRoPE-trained W: FMRoPE table 3.426（best）vs anchored-Cosh 5.776；anchored-Cosh-trained W: FMRoPE table4.455 vs Cosh3.479（best）；interaction 3.400/3.251. At512 interaction 2.663/2.564. Same-support geometric controls in canonical report:3.429 on FMR W,4.177 on Cosh W.
+- 源：`paper-2027/appendix/a5_identification.tex` §crossing-151m + `tab:crossing-151m`（当前稿已有）；`paper-2027/research/attention-aware-retrofit/results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md` §Conclusion/§4；raw receipt `.../evidence/K32_PAIRED_CROSSING_CONFIRMATION_RECEIPT_20260901.json` or current report. Historical canonical report lines values also in `paper-2027/research/foundations/FULL_ROPE...` and current commit includes table.
+- 控制/混杂：same support endpoints for training tables; runtime tables separately derived; 2 seeds only；evaluation anchors are paired within seed but not training-population CI；no claim global table optimum。
+- 稿落点：Appendix currently has it; strongest compression is an expanded 2×2/compatibility panel alongside M3. Current main uses M3, so if space only one, M4 is stronger replication but smaller n.
+- 图：two heatmaps (50M and 151M) with diagonal minima highlighted; value: co-adaptation bridge high.
+
+M5（High，base-only compensation: answer base-vs-shape objection）
+- Claim ceiling：a restricted geometric-base family can recover much frozen mismatch, but cannot absorb full non-geometric allocation/co-adaptation; this does not establish base-only from-scratch equivalence.
+- Numeric/unit：same 50M frozen L=512 checkpoints, 8 windows, 1,920 obs, no training/base search. Geo weights: original Geo base500K PPL7.14; span-match base377.7K PPL7.16; endpoint-match base331.6K PPL7.30; LS-fit geometric base8.06K PPL45.63; full historical EVQ PPL76.20. EVQ weights: Geo500K PPL23.05; span-match377.7K PPL22.14; endpoint331.6K PPL21.69; LS-fit8.06K PPL9.63; historical EVQ PPL7.16. LS-fit recovers 74.7% of Geo-table→EVQ-table frozen loss gap (but remaining 9.63→7.16 mixes non-geometric shape, support, co-adaptation).
+- 源：`scripts/analysis/base_only_50m_control.py` git e869228...；canonical report `paper-2027/research/foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md` §6，output hash `dc3493...` (report records full hash)。
+- 控制/混杂：only scalar base changes within standard geometric exponent order; derived bases analytic, not loss-searched; still frozen checkpoint and historical tables change support/span/interior。
+- 稿落点：当前论文无显式数值段，是回答“是不是只是base”的最佳附录小图/一句话；若只能放一张机制图，和M3组合成 paired base-vs-shape panel。
+- 图：两行（GeoW/EVQW），x-axis base control→historical EVQ，PPL lines with static r2 secondary axis; mark “74.7% recovered, residual non-geometric+co-adaptation”。价值高但 single-seed/非pure shape，适合补充材料。
+
+M6（High，attention fidelity + gradient + slow residual，直接连接 geometry与实际使用；但不能升格 selector）
+- Claim ceiling：把 structural softmax Fisher `JᵀF_smJ`、content-weighted Jacobian、frequency Jacobian 与 LM empirical-gradient outer product `((Jᵀg_z)(Jᵀg_z)ᵀ)`分开；observed task-gradient 可检测 table/weight mismatch，bare geometry在 mismatch case 会给错误方向；低频 softmax quotient极限是 centered span{Δ,Δ²}，实证 slope约4。
+- Numeric/unit：同M3，Geo/EVQ两 frozen arms；bare geometry r2=4.57 vs12.54；bare softmax r2=14.86/25.51 (GeoW GeoT / GeoW EVQT), 16.94/21.91 (EVQW GeoT / EVQW EVQT)；content EF r2/trace:10.20/1.99e-8,1.48/2.93e-6,8.34/1.12e-7,12.65/1.69e-8；frequency EF r2/trace:1.79/8.80e-7,2.21/3.95e-3,1.04/5.63e-5,4.99/2.80e-7. Low-frequency canonical deficit log-log slope4.009–4.011 over four weights/table cells. Manual attention vs SDPA max abs1.25e-6; full LM parity4.77e-7; logω finite diff2.64e-6; 8-window/500 bootstrap deterministic.
+- 源：`scripts/analysis/attention_fisher_50m_probe.py`; canonical report §5.1–5.4；attention theory note `git 8e4d567:analysis/full_rope_audit/attention_interface.md`。
+- 控制/混杂：single seed/frozen, observed g_z means post-outcome; EF not full Fisher/expectation; low-frequency measure/probe support fixed。当前稿未呈现，最适合做 M3 heatmap右侧方法-validity strip。
+- 图：三条结构/EF spectrum（log trace vs loss，注明 descriptive）；或只画 “r2 static improves but PPL worsens” counterexample + slope4 inset。价值高于泛泛 attention visualization。
+
+M7（High，per-pair frequency/pair ablation；最有解释力的负结果）
+- Claim ceiling：pre-RoPE Q/K norm或phase covariance不能预测 held-out causal importance；same multiset frequency assignment仍改变 NLL，说明 learned channel semantics绑定slot/frequency；raw Geo/EVQ的长程问题更像 OOD phase interference，而不是一个单一 high-norm band。
+- Numeric/unit：seed42、same 3 frozen 500M-token checkpoints (Paper-Geo, EVQ-Cosh, FMRoPE), same validation/anchors; each of32 pairs independently set to NoPE, then equal-width selected subset from 16 selection anchors applied once to 32 disjoint test anchors. Across 12 checkpoint×length cells median Spearman Q/K norm vs causal delta −.167, phase utility vs delta −.045. 256→8K sign flips in deletion effect: Paper-Geo21/32, EVQ23/32, FMR only2/32; 256-vs-8K Spearman −.742/−.437/+0.108. Equal-width band swap preserving exact frequency multiset changes NLL by≥.05 in22/24 cells. Held-out selected-pruning ΔNLL (selected NoPE−full): Paper-Geo −.2959/−.2308/−.2802 at1K/4K/8K; EVQ −.5183/−.1718/−.1084; FMR 0/−.0694/−.0446. All nonzero test-anchor CIs exclude zero; at256 selects no pair, preserving in-domain exactly. Band predictor itself fails bridge: high-norm phase-predicted band largest only2/12 cells, and raw Geo/EVQ high-norm-band deletion improves 1K–8K.
+- 源（compact branch current未保留旧目录）：git `main_0726` or `8e4d567` path `rebuttal/rebuttal_0723/experiments/frequency_band_usage_5090.py`, `frequency_causal_spectrum_5090.py`, launcher scripts; canonical result `main_0726:rebuttal/rebuttal_0723/theory_results/EXPERIMENT_REPORT_20260724.md` §§10–11. Current foundation report §11/§10.2 also records conclusion and mechanism boundary; scripts were old GPU checkpoint-only (do not run).
+- 控制/混杂：same frozen weights/data; selection/test anchors disjoint; NoPE changes selected pair only, swaps preserve multiset; single seed, natural-text tail-NLL oracle, non-additive pair interventions, no downstream capability. Result explicitly `DOES_NOT_SUPPORT_BAND_BRIDGE` for norm-band proxy and `HELDOUT_PRUNING_SIGNAL` for interference interpretation.
+- 稿落点：完全遗漏于当前 TeX；建议只做 Appendix mechanism figure/Discussion boundary，不能写成 EVQ positive mechanism。
+- 图：12-cell heatmap (band/norm/phase proxy vs causal delta) + sign-flip arrows; or selected-pruning three curves. Value very high for preventing overclaim, medium for headline positive result.
+
+M8（High，shape competition / non-uniqueness；当前附录已有）
+- Claim：non-uniform allocation is the design axis; Cosh is a constructive instance, not unique. A deformation-matched exponential sometimes ties/beats Cosh; static/shape objective ranking is workload dependent.
+- Numeric/unit：50.9M exact-range factorial, bases500K/1M × train lengths256/1024 × heads4/8/16 (dhead128/64/32)=12 configs × seeds42/137/256; 8,388,608 tokens, 128 steps, deterministic repeated WikiText-2 +1% passkey; weighted OOD NLL over2/4/8×. Geo 6.211973 (PPL498.68); Cosh .75 6.202858, formula1.0 6.202094, 1.25 6.199873 (PPL492.69); matched exponential6.201354 (PPL493.42). 1.25 Cosh wins10/12, exp9/12; Cosh-vs-exp +.000740, CI[-.006,.008], sign-flip p=.836. Boundary τ=1 best1.5x; τ=8 best.75x.
+- 源：`paper-2027/appendix/a5_identification.tex` §§exact-range-factorial; `paper-2027/tables/table_m4.tex`; current figure/table. Historical owner `main_0726:rebuttal/rebuttal_0723/theory_results/M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md`.
+- 控制/混杂：endpoints/span shared; all arms pre-specified; short budget/different WikiText corpus vs 151.9M FineWeb; configuration is statistical unit, seeds averaged inside config; no Cosh uniqueness claim.
+- 稿落点：current Appendix and Section 02 identification already present; this is strongest competition paragraph to retain, especially formula Cosh vs matched Exp p=.836.
+- 图：effect-size dot plot by 12 configs with Cosh1.25/Exp vs Geo, formulaCosh−Exp CI; value high for anti-overclaim.
+
+M9（High practical competition/modern fixed-checkpoint shape effect；当前稿已有，stronger than old EVQ-only）
+- Claim：fixed support/endpoints/amplitude/checkpoint/rows/decoder下，normalized interior z is causally consequential in mature checkpoints; detailed residual-guided curve is not necessary because nearest label-free ramp matches. This is the strongest competition/control against “just range/amplitude” and connects geometry to real RULER/QA.
+- Numeric/unit：OLMo-2-0425-1B Native4K, 9 unseen RULER tasks×20 at16K: same-support Geo .0056, derived .6047, nearest ramp .6104, official YaRN .0794; derived−Geo +.5992 CI[+.5488,+.6480], derived−ramp −.0056 CI[−.0464,+.0345]. Qwen2.5-1.5B Native32K, core4×20 at64K: Geo .5775, ramp .6400, derived .6650, YaRN .6025; derived−Geo +.0875 CI[+.0025,+.1750], derived−ramp +.025 CI[−.0525,+.1000]. Qwen 128K corrected derived .5400 vs Geo .4550; old aliased .6175 is invalid. Amplitude fixed factor4 and support endpoints fixed.
+- 源：`paper-2027/sections/04_mature.tex` §§fixed-range/single-table; `paper-2027/appendix/a6_mature_scale.tex` §§frozen-fixed-support; canonical `paper-2027/research/attention-aware-retrofit/results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`; receipt `.../evidence/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULTS_20260823.json`.
+- 控制/混杂：single frozen checkpoint per model; row bootstrap conditions on rows, not model/task populations; detailed profile vs coarse ramp indistinguishable; this is frozen retrofit estimand separate from trained exact-range M2.
+- 稿落点：already current main Section 04 mature/Table frozen-exponent-main; if Top15 budgeting, keep because it is clearest modern competition and endpoint proof.
+- 图：OLMo/Qwen paired bars Geo/ramp/derived/YaRN with CI; include “derived vs ramp unresolved” marker. Value high.
+
+M10（Medium，dose-response negative/caveat；可补 Discussion，非主图）
+- Claim ceiling：allocation is a continuous behavioral dose axis, but analytic Cosh does not yield no-cost mature retrofit; static r2 maximizer is not behavioral optimum; full-vs-tail redistribution.
+- Numeric/unit：one frozen OLMo-2-0425-1B, 128 fresh FineWeb docs at4K/8K/16K, amplitude1, 20k paired doc bootstrap. Cosh tau4 λ=.02: 4K full +.0169 CI[+.0153,+.0185],16K tail −.1153 CI[−.1338,−.0966]; best tail λ=.35 but4K cost +3.2769. Learned oracle direction λ1/4/16 gives 4K full +.0008/.0061/.5294 and16K tail −.0450/−.1174/−.1572; primary joint gate fails every analytic arm.
+- 源：`paper-2027/research/attention-aware-retrofit/results/adaptation-coadaptation/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md` + evidence JSON.
+- 控制/混杂：one released checkpoint; frozen, no training; oracle direction learned from one checkpoint; no capability stage launched.
+- 稿落点：current TeX does not include; use only if reviewer asks why static geometry/analytic Cosh is not claimed as universal mature optimum.
+- 图：full-vs-tail Pareto curve with static-r2 axis; value medium/high as caveat.
+
+M11（Medium/independent, do not force mainline：sparse/PSR）
+- Claim ceiling: none for exponent-allocation paper. `experiments/native_sparse_position/RESULT_20260908.md` explicitly says no position-specific advantage or sufficient novelty; 32-row frozen synthetic summary: Dense17/32 exact+EOS, RoPEMean0/32, Quest3/32, PostMetric4 10/32, PreMetric4 11/32, MatchedContiguous4 1/32; stronger actual 32-token Quest 13/32 vs Post3 wins/6 losses, Pre3/5. The record says “failed quality-cost improvement claim”, and `CORE_DIAGNOSIS.md` says route remains open rather than rejected. This is a separate sparse-position question, not evidence for exponent allocation; omit from paper main figure and keep independent/future research.
+
+Suggested final Top15 ordering for mechanism/competition subset:
+1 M2 exact-range 151.9M; 2 M1 full geometry+collapse; 3 M3 50M crossing; 4 M4 151.9M crossing replication; 5 M9 mature same-support z; 6 M8 50M factorial/Exp competition; 7 M7 per-pair spectrum (negative mechanism); 8 M5 base-only; 9 M6 attention-Fisher/gradient/slope; 10 M10 dose response; then existing MLA/750M/OLMo/LLaMA/YaRN/BM scale assets from other inventory owners. If only one new mechanism figure: 2×2 heatmaps (M3+M4) with M1 slow-collapse inset and a small M7 “static proxy fails” strip.`;
+const r = await tools.mcp__codex_app__send_message_to_thread({threadId:"01a0806f-3df5-74b1-bc56-bf00d89d238e",hostId:"local",prompt});
+text(r);
+
+[09-08 23:23:17] <send_message_to_thread call>
+const prompt = String.raw`机制/竞争资产盘点已完成（只读；未跑模型/未下载）。先报重大遗漏：
+
+1) 当前稿已覆盖 full sin/cos 定义、低频 collapse、静态反例、151.9M exact-range、50M 2x2 crossing，但没有把“静态几何为何不能直接预测 LM、以及它与 task-sensitive attention/gradient 的关系”作为可见实证桥。已存在的 CPU-only 50M attention-Fisher/LM-gradient probe 和 per-pair NoPE/swap causal spectrum最值得补成机制边界/负结果短段或补图；不能写成训练前 selector。
+2) base-only frozen control 有完整数值，但当前正文/附录基本不呈现；它直接回答“是否只是 scalar base”，但只能说恢复 frozen mismatch 的一部分，不能冒充从头 base-only training 因果。
+3) 50M/151.9M 权重×表 crossing 都有资产；当前稿正文显式展示 50M table，151.9M 复核在 Appendix。若主图要串 geometry→training→co-adaptation，151.9M crossing 的 2-seed 数值应进入 compact mechanism panel。
+4) sparse/PSR（2026-09-08）是独立路线的失败/未定结果，不连接 Beyond the Base exponent-allocation 主线：没有确证 position-specific advantage，也不是新算法。不要塞入主线主图；独立研究记录可明确 future/independent direction。
+
+完整清单（claim / 数值与 unit / source / 控制混杂 / 当前落点 / 图 / 价值）：
+
+M1（Top：geometry→一图解释指数改变了什么）
+- Claim ceiling：有限 RoPE table 是 K 个二维 full sin/cos 子空间；phase-invariant canonical collision 与 block-whitened Renyi-2 rank 有严格关系；Geo 慢端发生 subspace collapse；静态 rank/collision 不能推出外推。
+- Numeric：Uniform Delta∈[0,L], L=4096,b=500K,K={16,32,64}, endpoints [2e-6,1]。full collision/r2：Geo .2250/7.31, .2383/7.63, .2432/7.84；EVQ .2163/7.54, .1870/9.41, .1034/17.03；full-subspace optimum约1.98e-7/32,1.02e-7/64,5.17e-8/128；K=64 内部62点压成 phi≈[.0169,.0264] harmonic comb。低频 endpoint-inclusive grid K=16/32/64：slow pairs 6/12/24，名义维数12/24/48，r2=2.0001/2.0001/2.0002，raw entropy=1.056/1.072/1.079；标准 u=k/K 在 K=64 为23 pairs/46 dims/r2=2.00013。低频 symbolic coefficient 19/12600；x=.05,y=.10 exact/leading=1.00058。反例：Ccos(A)=2.62e-9<1.44e-8=Ccos(B)，但 r2(A)=64.48<128=r2(B)；length reversal C_L A=.45837<.61695 B，C_2L A=.45834>.41132 B，C_4L A=.45830>.24763 B；parity/Fourier table 可在[0,L]正交却在 L 外 recurrence/alias。
+- Source：current paper-2027/sections/03_theory.tex；paper-2027/appendix/a1_proofs.tex geometry/counterexamples；script scripts/analysis/full_rope_collision_audit.py（git e869228a5ac2f995ec8e2e2776152e2396d1c91a）；old numeric/QR cross-check git 8e4d567:analysis/full_rope_audit/{finK_final.md,counterexamples_results.md,verify_core.py,verify_counterexamples.py}；canonical report paper-2027/research/foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md。
+- Controls/confounds：analytic Gram vs 200,001-point quadrature max abs 1.51e-6；phase rotation invariance 7.44e-15；uniform prior only，换 task/attention prior 会换 optimum；无 weights/LM。
+- Current manuscript：already Appendix A.1 figs fig_frequency_geometry, fig_spectral_budget_scaling and reversal text；主图可保留“slow nominal 48→r2约2”加 harmonic comb/alias inset，并标 static only。
+- Value：最高理论对象，但必须与 trained effect 分开。
+
+M2（Top：pure training allocation owner；当前正文已覆盖）
+- Claim：固定 sampled extrema/span/architecture/init/data/order/optimizer/token budget，仅移动30 interior exponents，allocation z 改变 learned length generalization；target-matched support reverses ordering，支持 support×allocation interaction。
+- Unit/numbers：151.9M，Ltrain=256,K=32，seeds {42,137,256}，499,974,144 tokens，7,629 steps，32 frozen anchors，final-128 tail NLL。Fixed Cosh−Geo：256 +.026±.008；512 −.281±.192；1024 −.176±.039；2048 −.146±.034，3/3 seeds每个 OOD 长度同方向。Target-matched：512 +.060±.007；1024 +.227±.102；2048 +.460±.218，3/3反向。
+- Source：paper-2027/sections/02_identification.tex；paper-2027/appendix/a5_identification.tex exact-range；paper-2027/figs/make_fig_exact_range_control.py；historical owner main_0726:rebuttal/rebuttal_0723/theory_results/EXPERIMENT_REPORT_20260724.md §12。
+- Controls：within seed pinned extrema/span, exact data/tokenizer revision, same recipe; target-matched is separate policy, not general interaction law。
+- Current：main+Appendix core anchor；two-panel fixed vs target curve is correct，别与 factorial/MLA 合并 estimand。
+- Value：最强训练因果 anchor。
+
+M3（Top：50M co-adaptation bridge；当前 table 有但 interaction 未展示）
+- Claim：weights/table 不是可加主效应；weights 学会 frequency coordinate system；post-hoc swap 崩溃；static r2 可与 LM quality 反向。
+- Unit/numbers：TinyStories L=512,b=500K,seed42，8 windows×positions 63/127/255/383/511，6 layers×8 heads=1,920 observations，全部冻结。GeoW/GeoT loss1.9659 PPL7.14 r2=4.57；GeoW/EVQT 4.3333 PPL76.20 r2=12.54；EVQW/GeoT 3.1378 PPL23.05 r2=4.57；EVQW/EVQT 1.9685 PPL7.16 r2=12.54。LM effects table +.5991 CI[+.331,+.956]，weights −.5965 CI[−.896,−.175]，interaction −3.5367 CI[−5.165,−3.039]，interaction约 main 5.9×；GeoW+EVQT structural r2 improves but PPL 7.14→76.20。
+- Source：paper-2027/tables/table_coadapt.tex；canonical report FULL_ROPE... §5.2–5.4；script scripts/analysis/attention_fisher_50m_probe.py git dadb0d5924263cb0d51cfd20f5bb7f4566613905。JSON原在 /tmp，未进 anonymous package，report hash 32770ef1...。
+- Controls/confounds：same frozen counterfactual，only runtime table，single seed；historical Geo/EVQ同时改 support/span/shape，非pure-z；EF看过 LM gradient，不是 training-free ranker。
+- Current：Appendix obstruction + table_coadapt，main sections/04_mature.tex仅引用 PPL swap；建议补 interaction 数值和 structural rank opposite warning。
+- Figure：2×2 PPL heatmap旁标 r2，再画 main/interaction CI；价值极高。
+
+M4（Top：151.9M crossing replication）
+- Claim：训练表不同，冻结 weights 的 preferred runtime table 翻转；是50M crossing的训练seed复核。
+- Unit/numbers：seeds137/256，32 FineWeb anchors，final-128 tail NLL。1K: FMR weights FMR table3.426 vs Cosh5.776；Cosh weights FMR4.455 vs Cosh3.479；interaction3.400/3.251。512 interaction2.663/2.564。Canonical report的 same-support geometric controls：3.429 on FMR weights，4.177 on Cosh weights。
+- Source：paper-2027/appendix/a5_identification.tex §crossing-151m + tab:crossing-151m；result paper-2027/research/attention-aware-retrofit/results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md；receipt evidence/K32_PAIRED_CROSSING_CONFIRMATION_RECEIPT_20260901.json；current FULL_ROPE report。
+- Controls/confounds：training tables share exact endpoints；runtime tables separately derived；2 seeds only，anchors paired within seed但非 population CI；无 global optimum。
+- Current：Appendix已有；若空间允许应与 M3 做 50M/151M 双 heatmap；单独看 M4 是更强 replication 但 n较小。
+- Value：co-adaptation bridge高。
+
+M5（High：base-only compensation）
+- Claim ceiling：restricted geometric-base family可恢复部分 frozen mismatch，但不能吸收 full non-geometric allocation/co-adaptation；不等于 from-scratch base-only equivalence。
+- Unit/numbers：同 M3 frozen 50M, L=512, 8 windows, no training/base search。Geo weights：base500K PPL7.14；span-match377.7K 7.16；endpoint-match331.6K 7.30；LS-fit8.06K 45.63；historical EVQ76.20。EVQ weights：Geo500K23.05；span377.7K22.14；endpoint331.6K21.69；LS-fit8.06K9.63；EVQ7.16。LS-fit追回 Geo-table→EVQ-table gap 74.7%，但9.63→7.16仍混合 shape/support/co-adaptation。
+- Source：scripts/analysis/base_only_50m_control.py git e869228...；FULL_ROPE report §6；output hash dc3493...。
+- Controls/confounds：只改变 scalar base且保留 geometric order；bases由历史 EVQ解析决定、非 loss search；frozen single seed且历史表同时改多坐标。
+- Current：TeX未显式呈现；适合 M3旁的两行 base-vs-shape appendix panel。
+- Value：回答“只是base”很直接，但只能 internal/supplement。
+
+M6（High：attention fidelity/gradient/slow residual）
+- Claim ceiling：严格区分 structural softmax Fisher JᵀF_smJ、content/frequency Jacobian与 LM empirical-gradient outer product；observed task gradient能识别 mismatch，但不能是训练前 selector；低频 softmax quotient limit centered span{Delta,Delta²}，slope约4。
+- Unit/numbers：同 M3，Geo/EVQ frozen arms；bare geometry r2=4.57/12.54；bare softmax r2=14.86/25.51（GeoW GeoT/GeoW EVQT），16.94/21.91（EVQW GeoT/EVQW EVQT）；content EF r2/trace=10.20/1.99e-8,1.48/2.93e-6,8.34/1.12e-7,12.65/1.69e-8；frequency EF=1.79/8.80e-7,2.21/3.95e-3,1.04/5.63e-5,4.99e-7（最后应以报告表 2.80e-7 为准）；low-frequency deficit log-log slope4.009–4.011。Parity: manual attention-SDPA1.25e-6，LM4.77e-7，logω finite diff2.64e-6，8-window/500-bootstrap deterministic。
+- Source：scripts/analysis/attention_fisher_50m_probe.py；FULL_ROPE report §5；theory note git 8e4d567:analysis/full_rope_audit/attention_interface.md。
+- Controls/confounds：single frozen seed；g_z is post-outcome；EF not full Fisher expectation；fixed softmax measure/support。
+- Current：未进入 TeX；建议做 M3 heatmap右侧 metric-validity strip，或只画 “static rank improves / PPL worsens” + slope4 inset。
+- Value：直接连接 geometry到实际使用，但只能作 boundary evidence。
+
+M7（High：per-pair frequency/pair ablation，解释力强的负结果）
+- Claim ceiling：Q/K norm或phase covariance不能预测 held-out causal importance；same multiset swap仍改变 NLL，说明 learned channel semantics绑定 frequency slot；Geo/EVQ长程问题更像 OOD phase interference，不是单一 high-norm band。
+- Unit/numbers：seed42，3 frozen 500M checkpoints (Paper-Geo, EVQ-Cosh, FMRoPE)，同 validation/anchors；每32 pair独立 NoPE，再从16 selection anchors按负 CI选子集，应用到32 disjoint test anchors。12 checkpoint×length cells median Spearman norm vs delta−.167，phase utility vs delta−.045。256→8K deletion sign flips：Geo21/32, EVQ23/32, FMR2/32；256-vs-8K Spearman−.742/−.437/+ .108。Equal-width band swap preserving exact multiset changes NLL≥.05 in22/24 cells。Selected pruning delta (NoPE−full)：Geo −.2959/−.2308/−.2802 at1K/4K/8K；EVQ −.5183/−.1718/−.1084；FMR 0/−.0694/−.0446；256 selects none。Band predictor largest only2/12 cells；raw Geo/EVQ high-norm deletion improves 1K–8K；decision DOES_NOT_SUPPORT_BAND_BRIDGE and HELDOUT_PRUNING_SIGNAL。
+- Source (current compact branch old dirs absent)：git main_0726 or 8e4d567 `rebuttal/rebuttal_0723/experiments/frequency_band_usage_5090.py`, `frequency_causal_spectrum_5090.py`, launcher scripts；canonical result main_0726 `rebuttal/rebuttal_0723/theory_results/EXPERIMENT_REPORT_20260724.md` §§10–11；current FULL_ROPE report §5/§10.2 records mechanism boundary。不要运行旧 GPU scripts。
+- Controls/confounds：same frozen weights/data，selection/test disjoint，NoPE pair-only，swap preserves multiset；single seed，tail-NLL oracle，non-additive interventions，无 capability。
+- Current：完全遗漏；建议 Appendix/Discussion mechanism figure，不能变 EVQ positive mechanism。
+- Figure：12-cell heatmap proxy vs causal delta + sign-flip arrows，或 selected-pruning curves。Value high for preventing overclaim。
+
+M8（High：shape competition/non-uniqueness；当前附录已有）
+- Claim：non-uniform allocation is useful axis，Cosh constructive not unique；matched exponential sometimes tie/beat，shape ranking workload-dependent。
+- Unit/numbers：50.9M factorial，base500K/1M × train256/1024 × heads4/8/16 (dhead128/64/32)=12 configs×seeds42/137/256；8,388,608 tokens,128 steps，repeated WikiText-2 +1% passkey；weighted OOD NLL 2/4/8×。Geo6.211973 (PPL498.68); Cosh .75=6.202858, rule=6.202094,1.25=6.199873 (492.69); Exp6.201354(493.42). 1.25 wins10/12, Exp9/12；rule−Exp +.000740 CI[-.006,.008], p=.836；tau1 best1.5x，tau8 best.75x。
+- Source：paper-2027/appendix/a5_identification.tex §exact-range-factorial；paper-2027/tables/table_m4.tex；historical main_0726 `rebuttal/rebuttal_0723/theory_results/M4_EXACT_RANGE_FACTORIAL_RESULT_20260726.md`。
+- Controls/confounds：endpoints/span shared，all arms pre-specified；short budget/different WikiText corpus vs151.9M FineWeb；configuration statistical unit；不支持 Cosh uniqueness。
+- Current：Appendix已有；competition paragraph应保留 rule vs Exp p=.836。
+- Figure：12-config effect dot plot + formula Cosh−Exp CI。Value high anti-overclaim.
+
+M9（High practical competition：mature same-support z）
+- Claim：fixed support/endpoints/amplitude/checkpoint/rows/decoder下，normalized interior z remains causal in mature checkpoints；detailed derived curve not necessary，nearest label-free ramp matches。
+- Unit/numbers：OLMo-2 1.485B Native4K，9 unseen RULER×20 at16K：Geo .0056, derived .6047, ramp .6104, YaRN .0794；derived−Geo +.5992 CI[+.5488,+.6480]；derived−ramp−.0056 CI[−.0464,+.0345]。Qwen2.5-1.5B Native32K core4×20 at64K：Geo .5775,ramp .6400,derived .6650,YaRN .6025；derived−Geo+.0875 CI[+.0025,+.1750]；derived−ramp+.025 CI[−.0525,+.1000]。Qwen corrected 128K derived .5400 vs Geo .4550；old aliased .6175 invalid。Amplitude fixed factor4/support fixed。
+- Source：paper-2027/sections/04_mature.tex；paper-2027/appendix/a6_mature_scale.tex frozen-fixed-support；result `paper-2027/research/attention-aware-retrofit/results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md`; receipt same evidence JSON。
+- Controls/confounds：one frozen checkpoint/model；bootstrap conditions on rows, not model/task population；derived vs ramp unresolved；frozen retrofit distinct from training M2。
+- Current：already main Section 04/Table frozen-exponent-main，clearest modern competition/control。Value high。
+
+M10（Medium/High caveat：dose response negative）
+- Claim ceiling：allocation is continuous behavioral dose axis；analytic Cosh mature retrofit has full-vs-tail tradeoff and static r2 max is not behavioral optimum。
+- Unit/numbers：one frozen OLMo 1.485B, 128 fresh FineWeb docs at4/8/16K, amplitude1, 20k doc bootstrap。Cosh tau4 lambda=.02:4K full +.0169 CI[+.0153,+.0185],16K tail−.1153 CI[−.1338,−.0966]；best tail lambda=.35 but4K cost+3.2769。Learned oracle lambda1/4/16 gives4K full+.0008/.0061/.5294 and16K tail−.0450/−.1174/−.1572；joint gate fails analytic arms。
+- Source：paper-2027/research/attention-aware-retrofit/results/adaptation-coadaptation/ALLOCATION_DOSE_RESPONSE_RESULT_20260826.md + evidence JSON。
+- Current：TeX未纳入；Discussion reviewer caveat only。Value medium/high。
+
+M11（Independent，do not force mainline：sparse/PSR）
+- `experiments/native_sparse_position/RESULT_20260908.md`明确未建立 position-specific advantage/novelty；32-row summary Dense17/32 exact+EOS, RoPEMean0/32, Quest3/32, PostMetric4 10/32, PreMetric4 11/32, MatchedContiguous4 1/32；stronger actual 32-token Quest13/32，Post3 wins/6 losses，Pre3/5。记录结论是 failed quality-cost improvement claim，CORE_DIAGNOSIS则说路线仍 open而非 rejected。与 exponent allocation主线断开，主图排除。
+
+建议我这边的机制/竞争 Top排序：
+1 M2 exact-range 151.9M；2 M1 full geometry+collapse；3 M3 50M crossing；4 M4 151.9M crossing replication；5 M9 mature same-support z；6 M8 factorial/Exp competition；7 M7 per-pair spectrum；8 M5 base-only；9 M6 attention-Fisher/gradient；10 M10 dose response。主图只有一个机制panel时，用 M3+M4 双 heatmap，M1 slow-collapse inset，M7 static-proxy-fails strip。`;
+const r = await tools.mcp__codex_app__send_message_to_thread({threadId:"01a0806f-3df5-74b1-bc56-bf00d89d238e",hostId:"local",prompt});
+text(r);
+
+[09-08 23:27:28] <send_message_to_thread call>
+const f=await tools.exec_command({cmd:"sed -n '1,260p' .asset_mechanisms_message.txt","workdir":"/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope","yield_time_ms":10000,max_output_tokens":20000});
+const p=f.output;
+const r=await tools.mcp__codex_app__send_message_to_thread({threadId:"01a0806f-3df5-74b1-bc56-bf00d89d238e",hostId:"local",prompt:p});
+text(r);
+
+[09-08 23:27:41] <send_message_to_thread call>
+const f = await tools.exec_command({cmd:"sed -n '1,260p' .asset_mechanisms_message.txt",workdir:"/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope",yield_time_ms:10000,max_output_tokens:20000});
+const p = f.output;
+const sent = await tools.mcp__codex_app__send_message_to_thread({threadId:"01a0806f-3df5-74b1-bc56-bf00d89d238e",hostId:"local",prompt:p});
+text(sent);
+
+[09-08 23:29:04] <send_message_to_thread call>
+const msg = String.raw`补充一个关键纠正：151.9M crossing 的 canonical raw receipt 不是 K32_PAIRED_CROSSING_CONFIRMATION_RECEIPT_20260901.json（后者是 2026-09 的 Qwen K32 crossing）。正确 owner 是：
+
+- 报告：paper-2027/research/attention-aware-retrofit/results/causal-mechanism/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULT_20260823.md，§4 “151.9M weights-by-table causal crossing”，尤其 lines 193–225。
+- canonical evidence JSON：paper-2027/research/attention-aware-retrofit/evidence/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULTS_20260823.json；JSON lines 120–148 的 small_model_crossing 对象。
+- receipt field：small_model_crossing.raw_receipt_sha256 = 9304752d885d73af38262958f033843c642f394a448e2306fbfb57a4e1996e22；完整 JSON lines 121–147 还给出 checkpoint seed、anchors、tail token、length、四个 NLL 单元格、interaction 和四个 checkpoint SHA。
+- protocol/preflight：paper-2027/research/attention-aware-retrofit/preflights/causal-mechanism/SMALL_MODEL_RETROFIT_CAUSAL_PREFLIGHT_20260823.md，lines 1–67；它明确这是 151.9M frozen weights×runtime-table audit，seed 137/256，32 anchors，length 512/1024，final-128 tail NLL，support/endpoints/row order等固定，且“supporting mechanism only, not a new paper pillar”。
+- manuscript aggregate：paper-2027/appendix/a5_identification.tex lines 119–155，tab:crossing-151m；paper-2027/SUPPLEMENT_README.md lines 68–83 也说明完整 raw 不进入匿名包、保留 aggregate/protocol，并重复这个 receipt hash。
+- stable provenance: evidence JSON and result report were last committed together in 7895c0f7b771a82e73acd5c1e450aed5ad45f4ea (research archive restructure); appendix owner current historical commit is 09876d55f41ae291a3e5e8cd78573d3e103ff29f; table_coadapt current owner is 001a900702c50a301c1970fe23b8f7aaa610732e。
+
+Exact values from canonical JSON (not rounded manuscript):
+length 1024:
+  FMRoPE-trained W + FMRoPE table = 3.4264323711395264 (best);
+  FMRoPE-trained W + Cosh table = 5.775900103151798;
+  same-support geometric = 3.4292640164494514;
+  anchored-Cosh-trained W + FMRoPE table = 4.454919379204512;
+  anchored-Cosh-trained W + Cosh table = 3.47904472053051 (best);
+  same-support geometric = 4.177154567092657.
+Interaction definition [L(WF,TC)-L(WF,TF)]-[L(WC,TC)-L(WC,TF)]; 512 = 2.6629523187875748 (seed137), 2.5642652809619904 (seed256); 1024 = 3.399742268025875, 3.250942513346672.
+Checkpoint hashes: seed137 FMR ae065557f4f14ee4f221b551a32b5b8e7c41c495c742005cd5dab9ef3db1cf9d; seed137 Cosh b99224608cfc1e3bb743e8ebfca6da38ec3affedd9dac640c410d31277405669; seed256 FMR 841724fafb21f2b4a4bfa8459ee78a7d4cdc5c495fb4aa1876adf237a93e802a; seed256 Cosh 1387f28fe2190a59d922f33a68743dac5c21ef7d670db78e1d38d96118f72c09.
+
+50M four-cell exact owner:
+- Table: paper-2027/tables/table_coadapt.tex (current git owner 001a90070250...).
+- Computational owner: scripts/analysis/attention_fisher_50m_probe.py (git dadb0d5924263cb0d51cfd20f5bb7f4566613905).
+- Canonical narrative: paper-2027/research/foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md lines 357–424; base-only lines 426–473.
+- RUN_ROOT in script is results/weekend_sweep/L512; arms are 50m_tau0.00_seed42 and 50m_tau2.83_seed42; validation is val_tinystories_5000000.pt. Probe outputs were intentionally written to /tmp and not copied into anonymous package; report output hash is 32770ef134a457de8f4878f6d669f499defedafd079f96da625503b2660bc2c9.
+- Four exact LM loss/PPL cells:
+  Geo W + Geo T: loss 1.9659, PPL 7.14, static r2 4.57.
+  Geo W + EVQ T: loss 4.3333, PPL 76.20, static r2 12.54.
+  EVQ W + Geo T: loss 3.1378, PPL 23.05, static r2 4.57.
+  EVQ W + EVQ T: loss 1.9685, PPL 7.16, static r2 12.54.
+This table is exactly what should populate the left 50M half of the proposed mechanism figure. The right 151.9M half should show the 2×2 matrix above, with per-seed interaction labels. Caption must state both are frozen runtime counterfactuals and do not estimate universal optimality.
+
+Do not call the 151.9M 20260901 K32 receipt its raw owner; it is a separate fresh Qwen crossing confirmation. The same-support JSON’s small_model_crossing object is the correct artifact for the requested 151.9M row.`;
+const r=await tools.mcp__codex_app__send_message_to_thread({threadId:"01a0806f-3df5-74b1-bc56-bf00d89d238e",hostId:"local",prompt:msg});
+text(r);

@@ -1,0 +1,352 @@
+# RAW night03 — source: /Users/misaya.yanghejazfs.com.au/.codex/sessions/2026/09/08/rollout-2026-09-08T23-14-33-01a08428-fc0c-7680-92d9-7abdc3b014b0.jsonl
+
+[09-08 23:14:33] <session_meta> id=01a08428-fc0c-7680-92d9-7abdc3b014b0 parent=01a0806f-3df5-74b1-bc56-bf00d89d238e agent_path=/root/asset_scale_architecture nick=Jason model=None
+
+[09-08 23:14:33] <task_started turn=01a08428-fc71-7a82-9c66-8e6bb7bd355d>
+
+[09-08 23:14:47] <user>
+<recommended_plugins>
+Here is a list of plugins that are available but not installed.
+
+- Airtable (airtable@openai-curated-remote)
+- Alpaca (alpaca@openai-curated-remote)
+- Apollo.io (apollo@openai-curated-remote)
+- Spotify (app-68de829bf7648191acd70a907364c67c@openai-curated-remote)
+- AllTrails (app-68f1afc5a6008191a701eaaab428816c@openai-curated-remote)
+- Instacart (app-691eab1e001081919e57189f8b2f03bc@openai-curated-remote)
+- Apple Music (app-6938a94a61d881918ef32cb999ff937c@openai-curated-remote)
+- LONA Trading Assistant (app-694336b0c0948191a4ad234f9942885b@openai-curated-remote)
+- SciSpace (app-69439d715a7c8191aed9e2f6649e105f@openai-curated-remote)
+- Todoist: To Do List & Calendar (app-6943b73823548191a9f9216c6790c453@openai-curated-remote)
+- Consensus (app-6943e6f4a928819195962de16fb9ffe4@openai-curated-remote)
+- Sider Scholar (app-6948b485f5bc8191adb4df13f369cec7@openai-curated-remote)
+- True Sky (app-69490a4a06148191a0dd78606a3dbf1f@openai-curated-remote)
+- Bigdata.com (app-69491eceef3c8191beb70788b7840429@openai-curated-remote)
+- Gamma (app-698a098735908191989f5788d7ee317e@openai-curated-remote)
+- Tredict (app-69aef5b699a0819184512d57743fc1cd@openai-curated-remote)
+- Maersk (app-69b2b5a768d4819190d3a86c5f12e6d9@openai-curated-remote)
+- Dropbox (app-69b31dc2110c8191b8b47dc98fe5a052@openai-curated-remote)
+- Parqet (app-69b68652f0308191a27d7c7096cab4f6@openai-curated-remote)
+- Interactive Brokers (IBKR) (app-69bc11db874881918718abaca20b68ce@openai-curated-remote)
+- Financial Datasets (app-69cacd9394a88191ba6564e1bb0430fa@openai-curated-remote)
+- Fathom (app-69d88b99c5c481918e8da9225737e1e9@openai-curated-remote)
+- vidIQ (app-69dd11f3e50c8191b1ca48d03cf7e2ad@openai-curated-remote)
+- TickTick:To-Do List & Calendar (app-69ddbaba3fb48191a825f22c21b0599d@openai-curated-remote)
+- Plaud (app-69f3c30d68288191bbd428a394a78407@openai-curated-remote)
+- Wolfram (app-69fe0bf66c8481919c513d799406436e@openai-curated-remote)
+- Runway (app-6a05e3b201788191be12b590b43e6ce3@openai-curated-remote)
+- Caliber (app-6a05e8f22d408191b13ba3897157f6df@openai-curated-remote)
+- COROS (app-6a0694cbb2608191bbefb74ba810ab68@openai-curated-remote)
+- TradingCursor (app-6a0d835ff1dc8191972eeabd14967446@openai-curated-remote)
+- CoinMarketCap (app-6a172fe86f5481919f73cbc3bc3ad5bb@openai-curated-remote)
+- Trello (app-6a20b18a639081918c1b438f8381b27e@openai-curated-remote)
+- Longbridge (app-6a2baf2fad748191812393c3e00308ef@openai-curated-remote)
+- freddy (app-6a322b52a82c8191b7fb653f9e9f7891@openai-curated-remote)
+- Higgsfield (app-6a3293e129088191abf0875820e839da@openai-curated-remote)
+- Stocktwits (app-6a427a19b1f481919c5db13838af00c2@openai-curated-remote)
+- Webull (app-6a4b8801d1e8819182f624f012878a81@openai-curated-remote)
+- CoinGecko (app-6a4f02d735388191959c8328877e0bbd@openai-curated-remote)
+- Asana (asana@openai-curated-remote)
+- Atlassian Rovo (atlassian-rovo@openai-curated-remote)
+- Base44 (base44@openai-curated-remote)
+- Binance (binance@openai-curated-remote)
+- Box (box@openai-curated-remote)
+- Canva (canva@openai-curated-remote)
+- ClickUp (clickup@openai-curated-remote)
+- Cloudflare (cloudflare@openai-curated-remote)
+</recommended_plugins>
+# AGENTS.md instructions for /Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope
+
+<INSTRUCTIONS>
+- Ask when the request is unclear or conflicts with skills or project AGENTS.md.
+- Continue working toward the goal until complete or a serious blocker requires user input. Do not stop merely to report progress.
+- Make the smallest complete change needed. Avoid unnecessary refactoring and changes outside the task.
+
+--- project-doc ---
+
+# AGENTS.md
+
+1. **Preserve the objective.**
+   Do not replace the requested goal with an easier proxy, narrower task, or
+   intermediate milestone. Decomposition must advance the original objective.
+
+2. **Act without unnecessary gates.**
+   Within the authorized scope, proceed autonomously and resolve routine choices
+   using context and judgment. Keep checks proportional to concrete risks and
+   applicable requirements; do not invent time limits, approval steps, or workflow
+   constraints.
+
+3. **Reason from mechanism and evidence.**
+   Ground reasoning in the actual computation, mathematics, implementation, and
+   observed results. Challenge key assumptions with counterexamples and competing
+   explanations. Distinguish hypotheses and proxy improvements from demonstrated
+   outcomes; a complete theory is not a prerequisite for a useful experiment.
+
+4. **Use decision-sufficient experiments.**
+   Prefer the least costly experiment that can distinguish competing explanations
+   or determine the next decision. Reuse valid baselines and results. Do not reduce
+   an experiment below its diagnostic value or increase its scale without a reason.
+
+5. **Use history as evidence.**
+   Check relevant prior results, failures, and subsequent corrections before
+   repeating a direction. Do not repackage failed assumptions or generalize a
+   specific failure beyond its evidence. Successful methods are evidence, not
+   immutable constraints.
+
+6. **Finish the real task.**
+   Continue through the implementation, verification, analysis, and follow-up the
+   task requires. Planning, auditing, partial progress, or reporting are not
+   completion unless they are the requested deliverable. Stop when the requested
+   outcome is achieved, the user explicitly pauses or changes the objective, or progress
+   requires input or resources beyond the authorized scope. State any blocker
+   precisely and continue independent work where possible.
+
+Project-specific hypotheses, baselines, parameters, experiment plans, results,
+and failure records belong in project documents, not here.
+
+</INSTRUCTIONS>
+<environment_context>
+  <cwd>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
+  <shell>zsh</shell>
+  <current_date>2026-09-08</current_date>
+  <timezone>America/New_York</timezone>
+  <filesystem><workspace_roots><root>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/misaya.yanghejazfs.com.au/.codex/visualizations/2026/09/08/01a0806f-3df5-74b1-bc56-bf00d89d238e</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+</environment_context>
+
+[09-08 23:14:47] <agent_message from=/root to=/root/asset_scale_architecture>
+Message Type: NEW_TASK
+Task name: /root/asset_scale_architecture
+Sender: /root
+Payload:
+
+[ENCRYPTED PAYLOAD ~2340 chars]
+
+[09-08 23:14:53] <assistant>
+我会先按项目约束核对当前正文、附录与历史冻结资产，再把可区分的规模/架构/模态实验按证据强度整理成可写 claim；只做读取与分析，不改文件、不跑模型。
+
+[09-08 23:15:17] <assistant>
+这属于已有实验的证据盘点与可复现性核验，我将按 academic-research-suite 的实验验证边界处理：区分已实施结果、代理指标和可写结论，不把缺少 raw artifact 自动等同于不存在。
+
+[09-08 23:22:02] <assistant>
+关键发现：目前最值得补进“年度资产盘点”的是 8 个彼此可区分的实验。最强的证据组合是：
+
+1. 454M 三 seed 的 EVQ×固定索引 scaler 四臂实验：已有完整 curated JSON，但当前正文完全漏掉。
+2. 432M MLA 三 seed：当前最干净的架构压力测试。
+3. 1.485B OLMo 从 step-0 初始化：唯一真正跨到约 1.5B 的训练规模证据。
+4. 750M continuation：有最直观的 AR exact gain，但只有单 pair 且从 Geo checkpoint 继续。
+5. 129.6M video DiT：跨模态 breadth，单 seed supporting。
+6. 454M staged continuation：48K PPL 结果很强，但单 seed、恢复训练、应严格 appendix-only。
+7. 125M GQA/MLA 压缩消融：覆盖 MHA/GQA/MLA，方向有价值但只有单 seed。
+8. 454M、\(L_{\rm train}=256\) 的 τ/范围组合实验：三 seed、多倍率，适合支持 τ* 与组合效应。
+
+## 完整清单
+
+### S1 — 454M EVQ × 固定索引 scaler 四臂实验
+
+- **可写 claim：** 在相同 \(s=8\) 固定索引 scaler 下，EVQ substrate 获得更高的长程收益；EVQ+scaler 在 8K teacher-forced passkey 达到 \(100\pm0\%\)，而 Geo+scaler 为 \(61\pm3\%\)。PPL@8K/16K 为 \(70.9/107.5\) 对 \(82.9/157.7\)。
+- **协议：** 454.2M，24L/16H/1024d，head dim 64；FineWeb-Edu，100M tokens，\(L_{\rm train}=2048\)，10% passkey mix；seeds 42/123/7。四臂为 Geo、Geo+\(\rs{}\)、EVQ、EVQ+\(\rs{}\)。
+- **关键结果：**
+
+  | 方法 | PK@8K | PK@12K | PK@16K | PPL@8K | PPL@16K |
+  |---|---:|---:|---:|---:|---:|
+  | Geo | 41±5 | 57 | 51 | 161.9 | 253.2 |
+  | Geo+\(\rs{}\) | 61±3 | 59 | 51 | 82.9 | 157.7 |
+  | EVQ | 53±8 | 63 | 50 | 150.3 | 229.5 |
+  | EVQ+\(\rs{}\) | **100±0** | **79** | **68** | **70.9** | **107.5** |
+
+- **证据源：** `main_0726:data/curated/table2_evq_yarn_454m_passkey_10pct.json`；`main_0726:docs/exp/2026-03/2026-03-03_passkey_mix_results.md`；代码 `scripts/core_text_phases/run_evq_sweep.py` 和 `scripts/supporting_eval/eval_passkey_scratch.py`。
+- **控制/混杂：** 模型、token budget、数据源、tokenizer、optimizer、seed 和 scaler 固定；但 passkey 是 teacher-forced NLL-gap，不是 AR exact。`\rs{}` 是仓库 fixed-index smoothstep operator，不能称 official YaRN；原始 checkpoint/data hash 未随 curated bundle 提供。
+- **当前覆盖：** `paper-2027/tables/table_evq_ramp.tex` 存在，但 `main.tex` 未引用；表 caption 还引用不存在的 `sec:ramp-scaler`。这是当前最大遗漏。
+- **建议：** 最适合加正文一张四臂小表或一张组合柱状图；完整 seedwise 数值进 appendix。正文 claim 只写“matched-scale complementarity”，不要写成优于所有 YaRN/scaler。
+
+### S2 — 432M MLA 三 seed scarce-channel 实验
+
+- **可写 claim：** 在 16 个 rotary pairs 的 MLA 架构中，EVQ 将 16K PPL 从 \(138.8\) 降至 \(95.6\)，下降 31.1%；8K PPL 仅从 \(35.4\) 变为 \(35.8\)，短程代价约 1%。
+- **协议：** 432M，24L，width 1024，16 heads，head dim 64；\(d_{\rm rope}=32\)、\(K=16\)，\(d_{\rm nope}=32\)，KV latent rank 256；FineWeb-Edu 500M tokens，\(L_{\rm train}=8192\)，seeds 42/43/88，EVQ \(\tau=1.414\)。
+- **结果：**  
+  8K Geo/EVQ \(35.4/35.8\)；16K \(138.8/95.6\)；24K \(241.5/204.9\)；32K \(323.7/291.6\)。三 seed 在 16K 均支持 EVQ。
+- **证据源：** `main_0726:data/curated/table18_mla_3seed_aggregate.json`，其原始 evaluator SHA256 为 `1e44d30bb880e4b7427ae55bd7034782989152bd2afca9217495f9b8ece30953`；正文 `paper-2027/sections/04_experiments.tex:15`；附录 `paper-2027/appendix/a3_supporting_results.tex:6`。
+- **控制/混杂：** 架构内 intervention 只改 inverse-frequency table；但原始 checkpoint/training data 未打包，不能声称 checkpoint-level reproduction。`\tau=1.414` 是该 MLA 设置的经验 convention，不是由 \(d_{\rm rope}\) 推出的定理。
+- **当前覆盖：** 正文和 appendix 已覆盖，属于当前最完整的一项。
+- **建议：** 保留正文 8K/16K 两点；附录放完整 24K/32K 表。wavelength-blend 行要明确是 run-specific MLA operator，不要和纯 EVQ 结果混为一个实验。
+
+### S3 — 1.485B OLMo 从 step-0 初始化
+
+- **可写 claim：** 在约 1.5B 参数、相同公开初始化和相同 scientific recipe 下，EVQ 在 8K/16K 越过 Geo：PPL 分别从 \(163.88/182.73\) 降至 \(156.87/159.64\)，对应 NLL 差为 \(-0.0437/-0.1351\)。
+- **协议：** OLMo-2 1B，实际 1,484,916,736 参数，full RoPE，\(d_{\rm head}=128\)，base 500K，4K training context；1000 optimizer steps，2.097B counted tokens，global batch 512，seed-6198 data-order prefix，128 个 document-disjoint PG-19 文档。
+- **结果：** 2K/4K EVQ 付出 \(+0.0724/+0.0381\) NLL；8K/16K EVQ 获得 \(-0.0437/-0.1351\)。122/128 文档在 8K、126/128 在 16K 支持 EVQ。
+- **证据源：** `main_0726:rebuttal/rebuttal_0723/theory_results/OLMO2_1B_RELEASED_ROPE_BASELINE_20260725.md`；当前 `paper-2027/appendix/a6_mature_scale.tex:56`；图 `paper-2027/figs/fig_olmo_scale_crossover.pdf`。
+- **控制/混杂：** same initialization/same recipe，但 Geo 来自 AI2 distributed OLMo trainer，EVQ 使用 Hugging Face single-GPU loop；不是 bitwise paired trajectory，也不是 multi-seed estimate。
+- **当前覆盖：** appendix 和 scale-breadth table 已有；正文只有间接引用。
+- **建议：** 正文用一句 scale-persistence 结果配现有 figure；把 trainer boundary 和 document-bootstrap scope 留在 appendix。不要把它和 750M/8B 结果合并成一个 pooled scaling estimate。
+
+### S4 — 750M full-parameter continuation
+
+- **可写 claim：** 在 750M continuation 中，EVQ 保持短程近似不变并改善真正长程：16K PPL \(45.1\to24.4\)，8K passkey AR exact \(0\%\to77.5\%\)。
+- **协议：** 750M，18L/24H/1536d/FFN6144；两臂从同一个 2K Geo checkpoint 开始，继续训练到 4K、500M tokens，seed 42，EVQ \(\tau=1.5\)，40 个 passkey trials。
+- **结果：** 2K/4K PPL \(25.922/21.955\) vs \(26.160/22.282\)；8K \(23.386\to19.607\)；16K \(45.136\to24.407\)。8K AR exact Geo/EVQ 为 \(0/31\)。
+- **证据源：** `main_0726:data/curated/phase15_750m_continue_result_20260306.json`；`main_0726:docs/exp/2026-03/2026-03-06_phase15_750m_2k_to_4k_continue_results.md`；当前 `paper-2027/appendix/a2_experiment_details.tex:83` 和 `tables/table6_750m_continue_supporting.tex`。
+- **控制/混杂：** 两臂共享 Geo checkpoint，因此 EVQ 不是纯 from-scratch training comparison，而是 table retrofit + full-parameter continuation；单 seed、单 pair。Passkey retrieval 已接近 ceiling，区分度主要来自 AR exact。
+- **当前覆盖：** 正文和 appendix 已有。
+- **建议：** 正文保留 16K PPL + 8K AR exact；appendix 放完整 per-length 表。不要把 downstream LongBench 失败的部分写成 EVQ 结果。
+
+### S5 — 129.6M video DiT cross-modal head-to-head
+
+- **可写 claim：** 在 bidirectional attention、3D RoPE 的 video DiT 中，EVQ-Cosh 在 128-frame extrapolation 上降低 denoising MSE，尤其远端帧下降 35.4%。
+- **协议：** 129.6M，Oscillating Moving MNIST，32 training frames、128 evaluation frames，15,000 steps，seed 42；temporal base 10,000，noise level \(t=0.5\)，256 evaluation videos；Geo \(\tau=0\) vs EVQ \(\tau=1.5\)。
+- **结果：** train MSE \(0.009113/0.007204\)（−20.95%）；all extrap \(0.007244/0.006064\)（−16.29%）；far extrap \(0.009891/0.006388\)（−35.42%）。
+- **证据源：** `main_0726:data/curated/video_dit_seed42_head_to_head_20260826.json`；`paper-2027/research/evidence/VIDEO_DIT_HEAD_TO_HEAD_SEED42_RESULT_20260826.md`；当前 appendix `paper-2027/appendix/a2_experiment_details.tex:104`。
+- **控制/混杂：** 双臂共享 temporal transform、数据、steps、eval videos；但只有一个训练 seed，且 \(\tau=1.5\) 是 sweep 后选择的最佳测试点，不能证明通用 video \(\tau\) 规则。
+- **当前覆盖：** appendix 已有；正文只保留一句 pointer。
+- **建议：** 作为 cross-modal breadth appendix 表或小图；正文最多一句“supports modality breadth”，不要写 standalone video contribution。
+
+### S6 — 454M staged continuation：512→1024→2048
+
+- **可写 claim：** 在单 seed staged continuation 中，EVQ raw PPL 在 16K 为 2.48，Geo 为 13.17；叠加测试的固定索引 range transform 后，EVQ 在 48K 为 2.63，Geo 为 14.22。
+- **协议：** 454M，三阶段 \(L_{\rm train}=512,1024,2048\)，token budget \(1B+1B+500M=2.5B\)，每阶段 \(\tau=64/\sqrt{L_{\rm train}}\)，最后阶段 seed 42；2K–48K raw 与 range-overlay 评估。
+- **结果：** 最后一阶段 raw 16K Geo/EVQ \(13.17/2.48\)；overlay 32K \(15.12/3.29\)，48K \(14.22/2.63\)。Passkey overlay 为 2K–16K 全部 100% teacher-forced retrieval，AR exact 95%。
+- **证据源：** `main_0726:docs/exp/2026-03/2026-03-11_phase17c_2048_continue_results.md`；代码 `scripts/core_text_phases/phase17c_454m_1024_to_2048_continue.py`、`phase17c_extended_eval.py`；现有 asset `paper-2027/figs/fig4_phase17c_flagship.pdf`。
+- **控制/混杂：** 单 seed；EVQ 训练中断后恢复；passkey 只在 2048 长度混入；长程评估约 10 chunks；历史报告把 scaler 称为 YaRN，但当前术语应改成 repo fixed-index operator。
+- **当前覆盖：** `docs/overview/PAPER_CLAIMS_MAP.md` 有映射，但 `main.tex` 未真正输入该图或对应 appendix 段落。
+- **建议：** appendix-only，展示 PPL curve；不要写“validated 48K capability”，只写“single-seed supporting PPL pattern”。
+
+### S7 — 125M MHA/GQA/MLA 压缩消融
+
+- **可写 claim：** 在同一 125M 设置下，最少 rotary channels 的 MLA-16（8 个频率）获得最大长程 PPL 改善：8K/16K 分别 −47.8%/−47.9%；但不同压缩结构不呈严格单调关系。
+- **协议：** 125M，12L/12H/768d，head dim 64；100M FineWeb-Edu tokens，\(L_{\rm train}=2048\)，seed 42，passkey 2%。五配置：MHA、GQA-4、GQA-2、MLA-32、MLA-16。
+- **结果：**  
+  MHA −14.4%/−13.2%；GQA-4 −10.3%/−14.9%；GQA-2 −23.9%/−21.5%；MLA-32 −6.3%/−9.1%；MLA-16 −47.8%/−47.9%（8K/16K）。
+- **证据源：** `main_0726:data/curated/mla_channel_count_125m_pilot.json`；`main_0726:docs/exp/2026-03/2026-03-20_gqa_mla_125m_compression_ablation.md`；脚本 `scripts/core_text_phases/run_gqa_evq_experiment.py`。
+- **控制/混杂：** 同 protocol 内比较，但结构、KV compression、rotary channel count 同时变化；只有单 seed；raw checkpoint/result JSON 不在 portable bundle。
+- **当前覆盖：** 当前 paper 没有这组表。
+- **建议：** appendix 放五配置横向表；claim 限定为“支持 scarce-channel direction”，不要写成严格的压缩单调定律，也不要替代 432M 三 seed MLA。
+
+### S8 — 454M、\(L_{\rm train}=256\) 的 τ/范围组合
+
+- **可写 claim：** 三 seed、多倍率实验中，\(\tau=4=64/\sqrt{256}\) 在 4×–32× raw 和 fixed-index range transform 下均优于 Geo；在 32× overlay PPL 为 99.6，对 Geo+scaler 的 260.2。
+- **协议：** 454M，100M FineWeb-Edu tokens，\(L_{\rm train}=256\)，seeds 42/137/256；Geo、EVQ \(\tau=2\)、EVQ \(\tau=4\)，评估 256–8192。
+- **结果：** fixed-index overlay 的 Geo/EVQ-\(\tau2\)/EVQ-\(\tau4\) PPL：4× \(60.7/51.6/50.9\)，8× \(97.5/66.7/60.9\)，16× \(190.4/107.9/84.1\)，32× \(260.2/141.7/99.6\)。
+- **证据源：** `main_0726:data/curated/phase11_l256_3seed_recovered.json`、`phase11b_125m_l256_3seed.json`；`main_0726:docs/exp/2026-03/2026-03-04_phase11_L256_results.md`；当前 appendix 草稿 `paper-2027/appendix/a4_supporting_experiments.tex`。
+- **控制/混杂：** 这是独立于 454M 10% passkey mix 的短训练长度 protocol，不能和 S1 合并成同一曲线；scaler 仍是仓库 fixed-index operator；τ sweep 只覆盖测试值，不是全局最优证明。
+- **当前覆盖：** `a4_supporting_experiments.tex` 和 `fig_range_composition_125m.pdf` 存在，但 `main.tex` 未 input。
+- **建议：** appendix figure/table；适合支持 \(\tau^*\) operating convention 和 range composition，不能放成新的 primary anchor。
+
+## 当前正文/附录的关键缺口
+
+- **已覆盖：** 432M MLA、750M continuation、1.485B OLMo、video DiT。
+- **完全漏掉：** 454M 四臂 EVQ×scaler，这是最值得补进正文的 missing asset。
+- **孤儿资产：** `table_evq_ramp.tex`、`a4_supporting_experiments.tex`、`fig4_phase17c_flagship.pdf`、`fig_range_composition_454m.pdf` 均存在但没有完整进入 `main.tex`。
+- **不要升级：** 125M GQA/MLA 单 seed、phase17c 单 seed、video 单 seed 都只能 supporting；454M QuALITY full-eval 只能作为 negative/downstream diagnostic，准确率接近 25% 随机基线，不能拿旧 n=200 pilot 的夸大 accuracy 作为 claim。
+- **规模叙事边界：** 1.485B 是 same-initialisation/same-recipe persistence；750M 是 shared-Geo-checkpoint continuation；两者都不能合并成 multi-seed scaling law。
+
+[09-08 23:22:03] <task_complete turn=01a08428-fc71-7a82-9c66-8e6bb7bd355d>
+关键发现：目前最值得补进“年度资产盘点”的是 8 个彼此可区分的实验。最强的证据组合是：
+
+1. 454M 三 seed 的 EVQ×固定索引 scaler 四臂实验：已有完整 curated JSON，但当前正文完全漏掉。
+2. 432M MLA 三 seed：当前最干净的架构压力测试。
+3. 1.485B OLMo 从 step-0 初始化：唯一真正跨到约 1.5B 的训练规模证据。
+4. 750M continuation：有最直观的 AR exact gain，但只有单 pair 且从 Geo checkpoint 继续。
+5. 129.6M video DiT：跨模态 breadth，单 seed supporting。
+6. 454M staged continuation：48K PPL 结果很强，但单 seed、恢复训练、应严格 appendix-only。
+7. 125M GQA/MLA 压缩消融：覆盖 MHA/GQA/MLA，方向有价值但只有单 seed。
+8. 454M、\(L_{\rm train}=256\) 的 τ/范围组合实验：三 seed、多倍率，适合支持 τ* 与组合效应。
+
+## 完整清单
+
+### S1 — 454M EVQ × 固定索引 scaler 四臂实验
+
+- **可写 claim：** 在相同 \(s=8\) 固定索引 scaler 下，EVQ substrate 获得更高的长程收益；EVQ+scaler 在 8K teacher-forced passkey 达到 \(100\pm0\%\)，而 Geo+scaler 为 \(61\pm3\%\)。PPL@8K/16K 为 \(70.9/107.5\) 对 \(82.9/157.7\)。
+- **协议：** 454.2M，24L/16H/1024d，head dim 64；FineWeb-Edu，100M tokens，\(L_{\rm train}=2048\)，10% passkey mix；seeds 42/123/7。四臂为 Geo、Geo+\(\rs{}\)、EVQ、EVQ+\(\rs{}\)。
+- **关键结果：**
+
+  | 方法 | PK@8K | PK@12K | PK@16K | PPL@8K | PPL@16K |
+  |---|---:|---:|---:|---:|---:|
+  | Geo | 41±5 | 57 | 51 | 161.9 | 253.2 |
+  | Geo+\(\rs{}\) | 61±3 | 59 | 51 | 82.9 | 157.7 |
+  | EVQ | 53±8 | 63 | 50 | 150.3 | 229.5 |
+  | EVQ+\(\rs{}\) | **100±0** | **79** | **68** | **70.9** | **107.5** |
+
+- **证据源：** `main_0726:data/curated/table2_evq_yarn_454m_passkey_10pct.json`；`main_0726:docs/exp/2026-03/2026-03-03_passkey_mix_results.md`；代码 `scripts/core_text_phases/run_evq_sweep.py` 和 `scripts/supporting_eval/eval_passkey_scratch.py`。
+- **控制/混杂：** 模型、token budget、数据源、tokenizer、optimizer、seed 和 scaler 固定；但 passkey 是 teacher-forced NLL-gap，不是 AR exact。`\rs{}` 是仓库 fixed-index smoothstep operator，不能称 official YaRN；原始 checkpoint/data hash 未随 curated bundle 提供。
+- **当前覆盖：** `paper-2027/tables/table_evq_ramp.tex` 存在，但 `main.tex` 未引用；表 caption 还引用不存在的 `sec:ramp-scaler`。这是当前最大遗漏。
+- **建议：** 最适合加正文一张四臂小表或一张组合柱状图；完整 seedwise 数值进 appendix。正文 claim 只写“matched-scale complementarity”，不要写成优于所有 YaRN/scaler。
+
+### S2 — 432M MLA 三 seed scarce-channel 实验
+
+- **可写 claim：** 在 16 个 rotary pairs 的 MLA 架构中，EVQ 将 16K PPL 从 \(138.8\) 降至 \(95.6\)，下降 31.1%；8K PPL 仅从 \(35.4\) 变为 \(35.8\)，短程代价约 1%。
+- **协议：** 432M，24L，width 1024，16 heads，head dim 64；\(d_{\rm rope}=32\)、\(K=16\)，\(d_{\rm nope}=32\)，KV latent rank 256；FineWeb-Edu 500M tokens，\(L_{\rm train}=8192\)，seeds 42/43/88，EVQ \(\tau=1.414\)。
+- **结果：**  
+  8K Geo/EVQ \(35.4/35.8\)；16K \(138.8/95.6\)；24K \(241.5/204.9\)；32K \(323.7/291.6\)。三 seed 在 16K 均支持 EVQ。
+- **证据源：** `main_0726:data/curated/table18_mla_3seed_aggregate.json`，其原始 evaluator SHA256 为 `1e44d30bb880e4b7427ae55bd7034782989152bd2afca9217495f9b8ece30953`；正文 `paper-2027/sections/04_experiments.tex:15`；附录 `paper-2027/appendix/a3_supporting_results.tex:6`。
+- **控制/混杂：** 架构内 intervention 只改 inverse-frequency table；但原始 checkpoint/training data 未打包，不能声称 checkpoint-level reproduction。`\tau=1.414` 是该 MLA 设置的经验 convention，不是由 \(d_{\rm rope}\) 推出的定理。
+- **当前覆盖：** 正文和 appendix 已覆盖，属于当前最完整的一项。
+- **建议：** 保留正文 8K/16K 两点；附录放完整 24K/32K 表。wavelength-blend 行要明确是 run-specific MLA operator，不要和纯 EVQ 结果混为一个实验。
+
+### S3 — 1.485B OLMo 从 step-0 初始化
+
+- **可写 claim：** 在约 1.5B 参数、相同公开初始化和相同 scientific recipe 下，EVQ 在 8K/16K 越过 Geo：PPL 分别从 \(163.88/182.73\) 降至 \(156.87/159.64\)，对应 NLL 差为 \(-0.0437/-0.1351\)。
+- **协议：** OLMo-2 1B，实际 1,484,916,736 参数，full RoPE，\(d_{\rm head}=128\)，base 500K，4K training context；1000 optimizer steps，2.097B counted tokens，global batch 512，seed-6198 data-order prefix，128 个 document-disjoint PG-19 文档。
+- **结果：** 2K/4K EVQ 付出 \(+0.0724/+0.0381\) NLL；8K/16K EVQ 获得 \(-0.0437/-0.1351\)。122/128 文档在 8K、126/128 在 16K 支持 EVQ。
+- **证据源：** `main_0726:rebuttal/rebuttal_0723/theory_results/OLMO2_1B_RELEASED_ROPE_BASELINE_20260725.md`；当前 `paper-2027/appendix/a6_mature_scale.tex:56`；图 `paper-2027/figs/fig_olmo_scale_crossover.pdf`。
+- **控制/混杂：** same initialization/same recipe，但 Geo 来自 AI2 distributed OLMo trainer，EVQ 使用 Hugging Face single-GPU loop；不是 bitwise paired trajectory，也不是 multi-seed estimate。
+- **当前覆盖：** appendix 和 scale-breadth table 已有；正文只有间接引用。
+- **建议：** 正文用一句 scale-persistence 结果配现有 figure；把 trainer boundary 和 document-bootstrap scope 留在 appendix。不要把它和 750M/8B 结果合并成一个 pooled scaling estimate。
+
+### S4 — 750M full-parameter continuation
+
+- **可写 claim：** 在 750M continuation 中，EVQ 保持短程近似不变并改善真正长程：16K PPL \(45.1\to24.4\)，8K passkey AR exact \(0\%\to77.5\%\)。
+- **协议：** 750M，18L/24H/1536d/FFN6144；两臂从同一个 2K Geo checkpoint 开始，继续训练到 4K、500M tokens，seed 42，EVQ \(\tau=1.5\)，40 个 passkey trials。
+- **结果：** 2K/4K PPL \(25.922/21.955\) vs \(26.160/22.282\)；8K \(23.386\to19.607\)；16K \(45.136\to24.407\)。8K AR exact Geo/EVQ 为 \(0/31\)。
+- **证据源：** `main_0726:data/curated/phase15_750m_continue_result_20260306.json`；`main_0726:docs/exp/2026-03/2026-03-06_phase15_750m_2k_to_4k_continue_results.md`；当前 `paper-2027/appendix/a2_experiment_details.tex:83` 和 `tables/table6_750m_continue_supporting.tex`。
+- **控制/混杂：** 两臂共享 Geo checkpoint，因此 EVQ 不是纯 from-scratch training comparison，而是 table retrofit + full-parameter continuation；单 seed、单 pair。Passkey retrieval 已接近 ceiling，区分度主要来自 AR exact。
+- **当前覆盖：** 正文和 appendix 已有。
+- **建议：** 正文保留 16K PPL + 8K AR exact；appendix 放完整 per-length 表。不要把 downstream LongBench 失败的部分写成 EVQ 结果。
+
+### S5 — 129.6M video DiT cross-modal head-to-head
+
+- **可写 claim：** 在 bidirectional attention、3D RoPE 的 video DiT 中，EVQ-Cosh 在 128-frame extrapolation 上降低 denoising MSE，尤其远端帧下降 35.4%。
+- **协议：** 129.6M，Oscillating Moving MNIST，32 training frames、128 evaluation frames，15,000 steps，seed 42；temporal base 10,000，noise level \(t=0.5\)，256 evaluation videos；Geo \(\tau=0\) vs EVQ \(\tau=1.5\)。
+- **结果：** train MSE \(0.009113/0.007204\)（−20.95%）；all extrap \(0.007244/0.006064\)（−16.29%）；far extrap \(0.009891/0.006388\)（−35.42%）。
+- **证据源：** `main_0726:data/curated/video_dit_seed42_head_to_head_20260826.json`；`paper-2027/research/evidence/VIDEO_DIT_HEAD_TO_HEAD_SEED42_RESULT_20260826.md`；当前 appendix `paper-2027/appendix/a2_experiment_details.tex:104`。
+- **控制/混杂：** 双臂共享 temporal transform、数据、steps、eval videos；但只有一个训练 seed，且 \(\tau=1.5\) 是 sweep 后选择的最佳测试点，不能证明通用 video \(\tau\) 规则。
+- **当前覆盖：** appendix 已有；正文只保留一句 pointer。
+- **建议：** 作为 cross-modal breadth appendix 表或小图；正文最多一句“supports modality breadth”，不要写 standalone video contribution。
+
+### S6 — 454M staged continuation：512→1024→2048
+
+- **可写 claim：** 在单 seed staged continuation 中，EVQ raw PPL 在 16K 为 2.48，Geo 为 13.17；叠加测试的固定索引 range transform 后，EVQ 在 48K 为 2.63，Geo 为 14.22。
+- **协议：** 454M，三阶段 \(L_{\rm train}=512,1024,2048\)，token budget \(1B+1B+500M=2.5B\)，每阶段 \(\tau=64/\sqrt{L_{\rm train}}\)，最后阶段 seed 42；2K–48K raw 与 range-overlay 评估。
+- **结果：** 最后一阶段 raw 16K Geo/EVQ \(13.17/2.48\)；overlay 32K \(15.12/3.29\)，48K \(14.22/2.63\)。Passkey overlay 为 2K–16K 全部 100% teacher-forced retrieval，AR exact 95%。
+- **证据源：** `main_0726:docs/exp/2026-03/2026-03-11_phase17c_2048_continue_results.md`；代码 `scripts/core_text_phases/phase17c_454m_1024_to_2048_continue.py`、`phase17c_extended_eval.py`；现有 asset `paper-2027/figs/fig4_phase17c_flagship.pdf`。
+- **控制/混杂：** 单 seed；EVQ 训练中断后恢复；passkey 只在 2048 长度混入；长程评估约 10 chunks；历史报告把 scaler 称为 YaRN，但当前术语应改成 repo fixed-index operator。
+- **当前覆盖：** `docs/overview/PAPER_CLAIMS_MAP.md` 有映射，但 `main.tex` 未真正输入该图或对应 appendix 段落。
+- **建议：** appendix-only，展示 PPL curve；不要写“validated 48K capability”，只写“single-seed supporting PPL pattern”。
+
+### S7 — 125M MHA/GQA/MLA 压缩消融
+
+- **可写 claim：** 在同一 125M 设置下，最少 rotary channels 的 MLA-16（8 个频率）获得最大长程 PPL 改善：8K/16K 分别 −47.8%/−47.9%；但不同压缩结构不呈严格单调关系。
+- **协议：** 125M，12L/12H/768d，head dim 64；100M FineWeb-Edu tokens，\(L_{\rm train}=2048\)，seed 42，passkey 2%。五配置：MHA、GQA-4、GQA-2、MLA-32、MLA-16。
+- **结果：**  
+  MHA −14.4%/−13.2%；GQA-4 −10.3%/−14.9%；GQA-2 −23.9%/−21.5%；MLA-32 −6.3%/−9.1%；MLA-16 −47.8%/−47.9%（8K/16K）。
+- **证据源：** `main_0726:data/curated/mla_channel_count_125m_pilot.json`；`main_0726:docs/exp/2026-03/2026-03-20_gqa_mla_125m_compression_ablation.md`；脚本 `scripts/core_text_phases/run_gqa_evq_experiment.py`。
+- **控制/混杂：** 同 protocol 内比较，但结构、KV compression、rotary channel count 同时变化；只有单 seed；raw checkpoint/result JSON 不在 portable bundle。
+- **当前覆盖：** 当前 paper 没有这组表。
+- **建议：** appendix 放五配置横向表；claim 限定为“支持 scarce-channel direction”，不要写成严格的压缩单调定律，也不要替代 432M 三 seed MLA。
+
+### S8 — 454M、\(L_{\rm train}=256\) 的 τ/范围组合
+
+- **可写 claim：** 三 seed、多倍率实验中，\(\tau=4=64/\sqrt{256}\) 在 4×–32× raw 和 fixed-index range transform 下均优于 Geo；在 32× overlay PPL 为 99.6，对 Geo+scaler 的 260.2。
+- **协议：** 454M，100M FineWeb-Edu tokens，\(L_{\rm train}=256\)，seeds 42/137/256；Geo、EVQ \(\tau=2\)、EVQ \(\tau=4\)，评估 256–8192。
+- **结果：** fixed-index overlay 的 Geo/EVQ-\(\tau2\)/EVQ-\(\tau4\) PPL：4× \(60.7/51.6/50.9\)，8× \(97.5/66.7/60.9\)，16× \(190.4/107.9/84.1\)，32× \(260.2/141.7/99.6\)。
+- **证据源：** `main_0726:data/curated/phase11_l256_3seed_recovered.json`、`phase11b_125m_l256_3seed.json`；`main_0726:docs/exp/2026-03/2026-03-04_phase11_L256_results.md`；当前 appendix 草稿 `paper-2027/appendix/a4_supporting_experiments.tex`。
+- **控制/混杂：** 这是独立于 454M 10% passkey mix 的短训练长度 protocol，不能和 S1 合并成同一曲线；scaler 仍是仓库 fixed-index operator；τ sweep 只覆盖测试值，不是全局最优证明。
+- **当前覆盖：** `a4_supporting_experiments.tex` 和 `fig_range_composition_125m.pdf` 存在，但 `main.tex` 未 input。
+- **建议：** appendix figure/table；适合支持 \(\tau^*\) operating convention 和 range composition，不能放成新的 primary anchor。
+
+## 当前正文/附录的关键缺口
+
+- **已覆盖：** 432M MLA、750M continuation、1.485B OLMo、video DiT。
+- **完全漏掉：** 454M 四臂 EVQ×scaler，这是最值得补进正文的 missing asset。
+- **孤儿资产：** `table_evq_ramp.tex`、`a4_supporting_experiments.tex`、`fig4_phase17c_flagship.pdf`、`fig_range_composition_454m.pdf` 均存在但没有完整进入 `main.tex`。
+- **不要升级：** 125M GQA/MLA 单 seed、phase17c 单 seed、video 单 seed 都只能 supporting；454M QuALITY full-eval 只能作为 negative/downstream diagnostic，准确率接近 25% 随机基线，不能拿旧 n=200 pilot 的夸大 accuracy 作为 claim。
+- **规模叙事边界：** 1.485B 是 same-initialisation/same-recipe persistence；750M 是 shared-Geo-checkpoint continuation；两者都不能合并成 multi-seed scaling law。

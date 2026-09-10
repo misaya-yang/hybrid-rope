@@ -1,0 +1,5 @@
+[注] 该 rollout 无 user/assistant 消息。全部内容如下（4 行 JSONL）：
+- session_meta 2026-08-20T02:42:50Z (UTC): session_id=01a01d0c-bfa9-73d3-aedc-7e82f11f65d7, cwd=/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope, originator=codex-tui, cli_version=0.142.0, thread_source=user
+- event_msg task_started turn_id=01a01d0c-d9a9-7041-8a29-ee9e4cadebb6, model_context_window=258400
+- response_item message role=developer: "<turn_aborted> The previous turn was interrupted on purpose. Any running unified exec processes may still be running in the background. If any tools/commands were aborted, they may have partially executed. </turn_aborted>"
+- event_msg turn_aborted reason=interrupted, duration_ms=482

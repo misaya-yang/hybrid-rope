@@ -1,0 +1,239 @@
+# RAW night08 — source: /Users/misaya.yanghejazfs.com.au/.codex/sessions/2026/09/08/rollout-2026-09-08T23-59-44-01a08452-5aa5-72c1-82db-6782801e388b.jsonl
+
+[09-08 23:59:44] <session_meta> id=01a08452-5aa5-72c1-82db-6782801e388b parent=01a0806f-3df5-74b1-bc56-bf00d89d238e agent_path=/root/pdf_review_r01 nick=Poincare model=None
+
+[09-08 23:59:44] <task_started turn=01a08452-5b10-7b40-b682-37088b1623d7>
+
+[09-08 23:59:59] <user>
+<recommended_plugins>
+Here is a list of plugins that are available but not installed.
+
+- Airtable (airtable@openai-curated-remote)
+- Alpaca (alpaca@openai-curated-remote)
+- Apollo.io (apollo@openai-curated-remote)
+- Spotify (app-68de829bf7648191acd70a907364c67c@openai-curated-remote)
+- AllTrails (app-68f1afc5a6008191a701eaaab428816c@openai-curated-remote)
+- Instacart (app-691eab1e001081919e57189f8b2f03bc@openai-curated-remote)
+- Apple Music (app-6938a94a61d881918ef32cb999ff937c@openai-curated-remote)
+- LONA Trading Assistant (app-694336b0c0948191a4ad234f9942885b@openai-curated-remote)
+- SciSpace (app-69439d715a7c8191aed9e2f6649e105f@openai-curated-remote)
+- Todoist: To Do List & Calendar (app-6943b73823548191a9f9216c6790c453@openai-curated-remote)
+- Consensus (app-6943e6f4a928819195962de16fb9ffe4@openai-curated-remote)
+- Sider Scholar (app-6948b485f5bc8191adb4df13f369cec7@openai-curated-remote)
+- True Sky (app-69490a4a06148191a0dd78606a3dbf1f@openai-curated-remote)
+- Bigdata.com (app-69491eceef3c8191beb70788b7840429@openai-curated-remote)
+- Gamma (app-698a098735908191989f5788d7ee317e@openai-curated-remote)
+- Tredict (app-69aef5b699a0819184512d57743fc1cd@openai-curated-remote)
+- Maersk (app-69b2b5a768d4819190d3a86c5f12e6d9@openai-curated-remote)
+- Dropbox (app-69b31dc2110c8191b8b47dc98fe5a052@openai-curated-remote)
+- Parqet (app-69b68652f0308191a27d7c7096cab4f6@openai-curated-remote)
+- Interactive Brokers (IBKR) (app-69bc11db874881918718abaca20b68ce@openai-curated-remote)
+- Financial Datasets (app-69cacd9394a88191ba6564e1bb0430fa@openai-curated-remote)
+- Fathom (app-69d88b99c5c481918e8da9225737e1e9@openai-curated-remote)
+- vidIQ (app-69dd11f3e50c8191b1ca48d03cf7e2ad@openai-curated-remote)
+- TickTick:To-Do List & Calendar (app-69ddbaba3fb48191a825f22c21b0599d@openai-curated-remote)
+- Plaud (app-69f3c30d68288191bbd428a394a78407@openai-curated-remote)
+- Wolfram (app-69fe0bf66c8481919c513d799406436e@openai-curated-remote)
+- Runway (app-6a05e3b201788191be12b590b43e6ce3@openai-curated-remote)
+- Caliber (app-6a05e8f22d408191b13ba3897157f6df@openai-curated-remote)
+- COROS (app-6a0694cbb2608191bbefb74ba810ab68@openai-curated-remote)
+- TradingCursor (app-6a0d835ff1dc8191972eeabd14967446@openai-curated-remote)
+- CoinMarketCap (app-6a172fe86f5481919f73cbc3bc3ad5bb@openai-curated-remote)
+- Trello (app-6a20b18a639081918c1b438f8381b27e@openai-curated-remote)
+- Longbridge (app-6a2baf2fad748191812393c3e00308ef@openai-curated-remote)
+- freddy (app-6a322b52a82c8191b7fb653f9e9f7891@openai-curated-remote)
+- Higgsfield (app-6a3293e129088191abf0875820e839da@openai-curated-remote)
+- Stocktwits (app-6a427a19b1f481919c5db13838af00c2@openai-curated-remote)
+- Webull (app-6a4b8801d1e8819182f624f012878a81@openai-curated-remote)
+- CoinGecko (app-6a4f02d735388191959c8328877e0bbd@openai-curated-remote)
+- Asana (asana@openai-curated-remote)
+- Atlassian Rovo (atlassian-rovo@openai-curated-remote)
+- Base44 (base44@openai-curated-remote)
+- Binance (binance@openai-curated-remote)
+- Box (box@openai-curated-remote)
+- Canva (canva@openai-curated-remote)
+- ClickUp (clickup@openai-curated-remote)
+- Cloudflare (cloudflare@openai-curated-remote)
+</recommended_plugins>
+# AGENTS.md instructions for /Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope
+
+<INSTRUCTIONS>
+- Ask when the request is unclear or conflicts with skills or project AGENTS.md.
+- Continue working toward the goal until complete or a serious blocker requires user input. Do not stop merely to report progress.
+- Make the smallest complete change needed. Avoid unnecessary refactoring and changes outside the task.
+
+--- project-doc ---
+
+# AGENTS.md
+
+1. **Preserve the objective.**
+   Do not replace the requested goal with an easier proxy, narrower task, or
+   intermediate milestone. Decomposition must advance the original objective.
+
+2. **Act without unnecessary gates.**
+   Within the authorized scope, proceed autonomously and resolve routine choices
+   using context and judgment. Keep checks proportional to concrete risks and
+   applicable requirements; do not invent time limits, approval steps, or workflow
+   constraints.
+
+3. **Reason from mechanism and evidence.**
+   Ground reasoning in the actual computation, mathematics, implementation, and
+   observed results. Challenge key assumptions with counterexamples and competing
+   explanations. Distinguish hypotheses and proxy improvements from demonstrated
+   outcomes; a complete theory is not a prerequisite for a useful experiment.
+
+4. **Use decision-sufficient experiments.**
+   Prefer the least costly experiment that can distinguish competing explanations
+   or determine the next decision. Reuse valid baselines and results. Do not reduce
+   an experiment below its diagnostic value or increase its scale without a reason.
+
+5. **Use history as evidence.**
+   Check relevant prior results, failures, and subsequent corrections before
+   repeating a direction. Do not repackage failed assumptions or generalize a
+   specific failure beyond its evidence. Successful methods are evidence, not
+   immutable constraints.
+
+6. **Finish the real task.**
+   Continue through the implementation, verification, analysis, and follow-up the
+   task requires. Planning, auditing, partial progress, or reporting are not
+   completion unless they are the requested deliverable. Stop when the requested
+   outcome is achieved, the user explicitly pauses or changes the objective, or progress
+   requires input or resources beyond the authorized scope. State any blocker
+   precisely and continue independent work where possible.
+
+Project-specific hypotheses, baselines, parameters, experiment plans, results,
+and failure records belong in project documents, not here.
+
+</INSTRUCTIONS>
+<environment_context>
+  <cwd>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
+  <shell>zsh</shell>
+  <current_date>2026-09-08</current_date>
+  <timezone>America/New_York</timezone>
+  <filesystem><workspace_roots><root>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/misaya.yanghejazfs.com.au/.codex/visualizations/2026/09/08/01a0806f-3df5-74b1-bc56-bf00d89d238e</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+</environment_context>
+
+[09-08 23:59:59] <agent_message from=/root to=/root/pdf_review_r01>
+Message Type: NEW_TASK
+Task name: /root/pdf_review_r01
+Sender: /root
+Payload:
+
+[ENCRYPTED PAYLOAD ~1932 chars]
+
+[09-09 00:00:16] <assistant>
+我会把这份 PDF 当作唯一证据源，完整读正文和附录，并渲染关键页面核对图表、公式与版式；先报告会影响主张成立性的硬问题，再整理按严重度排序、带页码和可执行修订建议的完整审稿意见。
+
+[09-09 00:00:22] <user>
+<environment_context>
+  <current_date>2026-09-09</current_date>
+  <timezone>America/New_York</timezone>
+  <filesystem><workspace_roots><root>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/misaya.yanghejazfs.com.au/.codex/visualizations/2026/09/08/01a0806f-3df5-74b1-bc56-bf00d89d238e</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+</environment_context>
+
+[09-09 00:01:30] <assistant>
+正文与附录的文字层已完整读完。现在重点核对两类高风险点：一是闭式 Cosh 推导与慢频子空间命题是否真的由公式推出，二是不同模型、不同训练/冻结协议的指标是否被正文叙述成了同一种证据；同时检查关键图表在成稿中的可读性与标签一致性。
+
+[09-09 00:09:50] <assistant>
+一句话概括：论文把 RoPE 设计从“选择一个 base/range”扩展为“在固定对数频率范围内分配有限指数预算”，给出完整正余弦子空间分析与 Cosh 解析分配族，并用配对训练和冻结模型实验说明指数形状、范围和已学习权重之间存在显著兼容性效应。
+
+整体上，数学主干是可信的：我逐式检查了 Proposition 1、Theorem 2/3/5 及附录证明，没有发现会推翻结论的公式硬错。固定端点的 151.9M 配对实验也是全文最有说服力的因果证据。不过，方法强度的选择、不同实验的证据等级，以及摘要对代价的呈现仍需明显收紧。
+
+1. **[主要] 解析推导只定义了带自由参数 \(\tau\) 的分配族，尚未定义一个统一、无需选择的部署方法。**  
+   位置：PDF p.4，Theorem 2；p.20–21，§A.9；p.24，§B.5–B.6；p.28、p.31、p.35 的模型协议。  
+   理由：变分目标给出 \(\tau=\sqrt{\beta/\alpha}\)，但没有从任务或模型确定 \(\beta/\alpha\)。§A.9 也明确承认定理“不为每个模型或协议选择有限强度”。实际实验混合使用了公式约定、预先指定的经验值和筛选后的最佳值：例如 Video DiT 的文本式参考值为 2.83，但报告的是 sweep 中最佳的 1.5；MLA 使用“pre-specified empirical”1.414；其他协议又使用 1.5、2、4。因而现有证据支持的是“一个解析形状族可以有效”，而非一个统一的 zero-search 规则。  
+   建议：正文和摘要统一称为“analytic Cosh family”；增加协议级表格，逐项列出 \(\tau\)、端点网格、是否按 Eq. (39) 得到、是否使用开发结果选择；把经过筛选的 Video DiT 等结果明确标为探索性支持证据。这样无需新增实验。
+
+2. **[主要] 8B headline 选择性突出 32K 改善，却省略同一适配协议的明显原窗口退化，并且该实验不能归因为纯 interior allocation。**  
+   位置：PDF p.1 摘要；p.5，§5.1 第三段及 Figure 3；p.31，§E.3 第一段。  
+   理由：同一 300-step 8B 协议中，32K PPL 从 991.48 降至 127.91，但 8K PPL 从 6.82 恶化至 10.07。附录还明确说明 Native 和 midpoint-Cosh 的有限网格端点也不同，因此这只能识别“更换完整频率表后进行匹配适配”的端到端效果，不能作为纯指数形状效应。另一个独立 RULER continuation 同样存在 8K official macro 94.44%→77.60%、16K 0.30%→14.03% 的权衡。  
+   建议：摘要在 32K headline 后并列报告 8K 代价；§5.1 将结论改为“matched end-to-end table/adaptation effect”，并明确指出纯 interior-shape 归因来自 §3.1 的固定端点实验。
+
+3. **[主要] 50.9M factorial 的文字结论强于表中统计证据。**  
+   位置：PDF p.3，§3.2；p.27，Table 14。  
+   理由：reference Cosh 对 Geo 只有 7/12 configurations，95% CI 为 \([-0.021,0.002]\)，exact sign-flip \(p=0.125\)；matched exponential 为 9/12，但 \(p=0.071\)。只有 1.25× Cosh 的未校正 \(p=0.027\)，而表中同时检验了多个 contrast。因此“useful intervention extends across multiple nonuniform shapes”应视为方向性、配置依赖证据，不能读成跨形状稳健成立。  
+   建议：改写为“多个预指定非均匀分配在平均值上呈改善方向，但 reference 与 exponential 的不确定区间/精确检验仍包含无效应”；同时说明 1.25× 的 \(p\) 未作多重比较校正。无需新增实验。
+
+4. **[中等] Cosh 变分目标是作者规定的设计偏好，并非由 canonical-correlation 几何或语言模型损失推出。**  
+   位置：PDF p.4，Eq. (6) 前后；p.15–16，Figures 5–6 和 §A.3；p.19，§A.6。  
+   理由：Theorem 2 正确证明了所选 \(C_{\mathrm{app}}\) 的唯一最优解，但没有证明该目标等价于最大化完整正余弦子空间有效秩，更没有推出 LM 泛化。§A.6 只检查 cosine slice，而 §A.3 自己证明 cosine-only ordering 可能与 full-subspace ordering 相反；完整子空间指标还会随区间/测度改变。论文已经多处作出局部限定，但主叙事仍容易让人把几何分析理解成 Cosh 成功的机制推导。  
+   建议：明确把 \(C_{\mathrm{app}}\) 称为规范性的、可解析设计先验；将“geometry behind the construction”改为“geometry motivating redistribution”，并说明行为效果由独立实验检验，而非由定理保证。
+
+5. **[中等] 多个结果的统计单位不同，正文中的“breadth/scale evidence”需要更醒目的证据等级。**  
+   位置：PDF p.5，§5；p.23，Table 7；p.24、p.29、p.31、p.35。  
+   理由：核心 151.9M 与 MLA 有三个训练种子，但 750M continuation、8B adaptation、1.485B from-init 和 Video DiT 多数只有一个训练对或一个种子；文档/样本 bootstrap 只量化条件于该训练对的评价行不确定性，不能代替训练随机性。附录诚实披露了这些限制，但主文把它们连续罗列，容易形成跨规模重复验证的印象。  
+   建议：在主表直接增加“training replications”和“inference scope”列；正文把单训练对结果称为 scale instance/case study，而非一般化 scale validation。对于固定端点核心实验，补充每臂绝对 NLL/PPL，避免只报差值。
+
+6. **[中等] 部分关键运行表的构造在 PDF 中仍不够精确，影响复现和解释 crossing。**  
+   位置：PDF p.25，§C.1 “target-matched”；p.26，§C.2；p.16，§A.3。  
+   理由：§C.1 只说把范围设为声明的测试长度，没有写出 \(R(L_{\mathrm{eval}})\) 的确切公式；§C.2 的“factor-four runtime table derived from either training coordinate”也没有明确给出离散构造，尤其同一张 factor-four 表是否同时用于 512 和 1024，应由公式消除歧义。§A.3 的数值反例没有列出实际频率表，只引用内部脚本/JSON，因此 PDF 本身无法检查这些存在性例子。  
+   建议：补充目标范围和 crossing runtime table 的显式公式；为两个反例附上频率向量或稳定哈希及机器可读补充材料位置。
+
+7. **[次要] 摘要和图注有几处可快速修正的表达问题。**  
+   位置：PDF p.1 摘要；p.2 Figure 1；p.7 §6.3；p.15 Figures 5–6。  
+   建议：
+   - 摘要明确 21.62%→25.44% 的比较对象是 MrRoPE-Pro。
+   - Figure 1(b) 改为“all 9 OOD seed–length comparisons improve”，因为图中还画了恶化的 1× 点。
+   - §6.3 的 interval 明写“95% paired bootstrap interval”。
+   - 首次出现时展开 EVQ 缩写。
+   - Figures 5–6 的字体过小，p.15 左下图的 “48” 与图例视觉拥挤；建议放大或拆图。
+
+只有在保留更强主张时，我认为新增实验才是必要的：
+
+- 若坚持 Eq. (39) 是跨架构的 zero-search 规则，应在一个未参与 \(\tau\) 选择的新模型/配置上预注册 \(c=1\)，用配对训练种子检验；否则将其表述为工作先验即可。
+- 若坚持 8B/750M 结果证明规模泛化，应增加独立适配或训练种子；若只主张“该匹配训练对中成立”，现有数据足够。
+- 若坚持完整子空间几何是行为改善机制，应预先给出多个固定端点 allocation 的几何排序，再检验其是否预测 OOD NLL；否则无需补实验，只需降低机制措辞。
+
+独立录用倾向：**边界**，略偏可接收；信心：**中高**。固定端点配对实验确实识别了一个新且有价值的 RoPE 设计自由度，数学主干也可靠。当前主要风险来自方法选择规则与 headline 的证据口径，而非理论被反例推翻；多数问题可以通过重写主张、补充协议表和公式修复。
+
+[09-09 00:09:51] <task_complete turn=01a08452-5b10-7b40-b682-37088b1623d7>
+一句话概括：论文把 RoPE 设计从“选择一个 base/range”扩展为“在固定对数频率范围内分配有限指数预算”，给出完整正余弦子空间分析与 Cosh 解析分配族，并用配对训练和冻结模型实验说明指数形状、范围和已学习权重之间存在显著兼容性效应。
+
+整体上，数学主干是可信的：我逐式检查了 Proposition 1、Theorem 2/3/5 及附录证明，没有发现会推翻结论的公式硬错。固定端点的 151.9M 配对实验也是全文最有说服力的因果证据。不过，方法强度的选择、不同实验的证据等级，以及摘要对代价的呈现仍需明显收紧。
+
+1. **[主要] 解析推导只定义了带自由参数 \(\tau\) 的分配族，尚未定义一个统一、无需选择的部署方法。**  
+   位置：PDF p.4，Theorem 2；p.20–21，§A.9；p.24，§B.5–B.6；p.28、p.31、p.35 的模型协议。  
+   理由：变分目标给出 \(\tau=\sqrt{\beta/\alpha}\)，但没有从任务或模型确定 \(\beta/\alpha\)。§A.9 也明确承认定理“不为每个模型或协议选择有限强度”。实际实验混合使用了公式约定、预先指定的经验值和筛选后的最佳值：例如 Video DiT 的文本式参考值为 2.83，但报告的是 sweep 中最佳的 1.5；MLA 使用“pre-specified empirical”1.414；其他协议又使用 1.5、2、4。因而现有证据支持的是“一个解析形状族可以有效”，而非一个统一的 zero-search 规则。  
+   建议：正文和摘要统一称为“analytic Cosh family”；增加协议级表格，逐项列出 \(\tau\)、端点网格、是否按 Eq. (39) 得到、是否使用开发结果选择；把经过筛选的 Video DiT 等结果明确标为探索性支持证据。这样无需新增实验。
+
+2. **[主要] 8B headline 选择性突出 32K 改善，却省略同一适配协议的明显原窗口退化，并且该实验不能归因为纯 interior allocation。**  
+   位置：PDF p.1 摘要；p.5，§5.1 第三段及 Figure 3；p.31，§E.3 第一段。  
+   理由：同一 300-step 8B 协议中，32K PPL 从 991.48 降至 127.91，但 8K PPL 从 6.82 恶化至 10.07。附录还明确说明 Native 和 midpoint-Cosh 的有限网格端点也不同，因此这只能识别“更换完整频率表后进行匹配适配”的端到端效果，不能作为纯指数形状效应。另一个独立 RULER continuation 同样存在 8K official macro 94.44%→77.60%、16K 0.30%→14.03% 的权衡。  
+   建议：摘要在 32K headline 后并列报告 8K 代价；§5.1 将结论改为“matched end-to-end table/adaptation effect”，并明确指出纯 interior-shape 归因来自 §3.1 的固定端点实验。
+
+3. **[主要] 50.9M factorial 的文字结论强于表中统计证据。**  
+   位置：PDF p.3，§3.2；p.27，Table 14。  
+   理由：reference Cosh 对 Geo 只有 7/12 configurations，95% CI 为 \([-0.021,0.002]\)，exact sign-flip \(p=0.125\)；matched exponential 为 9/12，但 \(p=0.071\)。只有 1.25× Cosh 的未校正 \(p=0.027\)，而表中同时检验了多个 contrast。因此“useful intervention extends across multiple nonuniform shapes”应视为方向性、配置依赖证据，不能读成跨形状稳健成立。  
+   建议：改写为“多个预指定非均匀分配在平均值上呈改善方向，但 reference 与 exponential 的不确定区间/精确检验仍包含无效应”；同时说明 1.25× 的 \(p\) 未作多重比较校正。无需新增实验。
+
+4. **[中等] Cosh 变分目标是作者规定的设计偏好，并非由 canonical-correlation 几何或语言模型损失推出。**  
+   位置：PDF p.4，Eq. (6) 前后；p.15–16，Figures 5–6 和 §A.3；p.19，§A.6。  
+   理由：Theorem 2 正确证明了所选 \(C_{\mathrm{app}}\) 的唯一最优解，但没有证明该目标等价于最大化完整正余弦子空间有效秩，更没有推出 LM 泛化。§A.6 只检查 cosine slice，而 §A.3 自己证明 cosine-only ordering 可能与 full-subspace ordering 相反；完整子空间指标还会随区间/测度改变。论文已经多处作出局部限定，但主叙事仍容易让人把几何分析理解成 Cosh 成功的机制推导。  
+   建议：明确把 \(C_{\mathrm{app}}\) 称为规范性的、可解析设计先验；将“geometry behind the construction”改为“geometry motivating redistribution”，并说明行为效果由独立实验检验，而非由定理保证。
+
+5. **[中等] 多个结果的统计单位不同，正文中的“breadth/scale evidence”需要更醒目的证据等级。**  
+   位置：PDF p.5，§5；p.23，Table 7；p.24、p.29、p.31、p.35。  
+   理由：核心 151.9M 与 MLA 有三个训练种子，但 750M continuation、8B adaptation、1.485B from-init 和 Video DiT 多数只有一个训练对或一个种子；文档/样本 bootstrap 只量化条件于该训练对的评价行不确定性，不能代替训练随机性。附录诚实披露了这些限制，但主文把它们连续罗列，容易形成跨规模重复验证的印象。  
+   建议：在主表直接增加“training replications”和“inference scope”列；正文把单训练对结果称为 scale instance/case study，而非一般化 scale validation。对于固定端点核心实验，补充每臂绝对 NLL/PPL，避免只报差值。
+
+6. **[中等] 部分关键运行表的构造在 PDF 中仍不够精确，影响复现和解释 crossing。**  
+   位置：PDF p.25，§C.1 “target-matched”；p.26，§C.2；p.16，§A.3。  
+   理由：§C.1 只说把范围设为声明的测试长度，没有写出 \(R(L_{\mathrm{eval}})\) 的确切公式；§C.2 的“factor-four runtime table derived from either training coordinate”也没有明确给出离散构造，尤其同一张 factor-four 表是否同时用于 512 和 1024，应由公式消除歧义。§A.3 的数值反例没有列出实际频率表，只引用内部脚本/JSON，因此 PDF 本身无法检查这些存在性例子。  
+   建议：补充目标范围和 crossing runtime table 的显式公式；为两个反例附上频率向量或稳定哈希及机器可读补充材料位置。
+
+7. **[次要] 摘要和图注有几处可快速修正的表达问题。**  
+   位置：PDF p.1 摘要；p.2 Figure 1；p.7 §6.3；p.15 Figures 5–6。  
+   建议：
+   - 摘要明确 21.62%→25.44% 的比较对象是 MrRoPE-Pro。
+   - Figure 1(b) 改为“all 9 OOD seed–length comparisons improve”，因为图中还画了恶化的 1× 点。
+   - §6.3 的 interval 明写“95% paired bootstrap interval”。
+   - 首次出现时展开 EVQ 缩写。
+   - Figures 5–6 的字体过小，p.15 左下图的 “48” 与图例视觉拥挤；建议放大或拆图。
+
+只有在保留更强主张时，我认为新增实验才是必要的：
+
+- 若坚持 Eq. (39) 是跨架构的 zero-search 规则，应在一个未参与 \(\tau\) 选择的新模型/配置上预注册 \(c=1\)，用配对训练种子检验；否则将其表述为工作先验即可。
+- 若坚持 8B/750M 结果证明规模泛化，应增加独立适配或训练种子；若只主张“该匹配训练对中成立”，现有数据足够。
+- 若坚持完整子空间几何是行为改善机制，应预先给出多个固定端点 allocation 的几何排序，再检验其是否预测 OOD NLL；否则无需补实验，只需降低机制措辞。
+
+独立录用倾向：**边界**，略偏可接收；信心：**中高**。固定端点配对实验确实识别了一个新且有价值的 RoPE 设计自由度，数学主干也可靠。当前主要风险来自方法选择规则与 headline 的证据口径，而非理论被反例推翻；多数问题可以通过重写主张、补充协议表和公式修复。

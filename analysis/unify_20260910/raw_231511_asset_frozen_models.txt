@@ -1,0 +1,206 @@
+# RAW extraction asset_frozen_models (Aristotle) — codex session starting 23-15-11 local
+# source: /Users/misaya.yanghejazfs.com.au/.codex/sessions/2026/09/08/rollout-2026-09-08T23-15-11-01a08429-8e12-7613-8897-98d51552fe91.jsonl
+# raw size: 4962195 bytes
+# timestamps converted to America/New_York (UTC-4)
+# NOTE: NEW_TASK payloads in inter-agent messages are encrypted; task identity inferred from agent_path, assistant text, tool calls, task_complete reports
+
+[09-08 23:15:11 ET] <task_started turn 01a08429-8e7>
+
+[09-08 23:15:23 ET] <user>
+<recommended_plugins>
+Here is a list of plugins that are available but not installed.
+
+- Airtable (airtable@openai-curated-remote)
+- Alpaca (alpaca@openai-curated-remote)
+- Apollo.io (apollo@openai-curated-remote)
+- Spotify (app-68de829bf7648191acd70a907364c67c@openai-curated-remote)
+- AllTrails (app-68f1afc5a6008191a701eaaab428816c@openai-curated-remote)
+- Instacart (app-691eab1e001081919e57189f8b2f03bc@openai-curated-remote)
+- Apple Music (app-6938a94a61d881918ef32cb999ff937c@openai-curated-remote)
+- LONA Trading Assistant (app-694336b0c0948191a4ad234f9942885b@openai-curated-remote)
+- SciSpace (app-69439d715a7c8191aed9e2f6649e105f@openai-curated-remote)
+- Todoist: To Do List & Calendar (app-6943b73823548191a9f9216c6790c453@openai-curated-remote)
+- Consensus (app-6943e6f4a928819195962de16fb9ffe4@openai-curated-remote)
+- Sider Scholar (app-6948b485f5bc8191adb4df13f369cec7@openai-curated-remote)
+- True Sky (app-69490a4a06148191a0dd78606a3dbf1f@openai-curated-remote)
+- Bigdata.com (app-69491eceef3c8191beb70788b7840429@openai-curated-remote)
+- Gamma (app-698a098735908191989f5788d7ee317e@openai-curated-remote)
+- Tredict (app-69aef5b699a0819184512d57743fc1cd@openai-curated-remote)
+- Maersk (app-69b2b5a768d4819190d3a86c5f12e6d9@openai-curated-remote)
+- Dropbox (app-69b31dc2110c8191b8b47dc98fe5a052@openai-curated-remote)
+- Parqet (app-69b68652f0308191a27d7c7096cab4f6@openai-curated-remote)
+- Interactive Brokers (IBKR) (app-69bc11db874881918718abaca20b68ce@openai-curated-remote)
+- Financial Datasets (app-69cacd9394a88191ba6564e1bb0430fa@openai-curated-remote)
+- Fathom (app-69d88b99c5c481918e8da9225737e1e9@openai-curated-remote)
+- vidIQ (app-69dd11f3e50c8191b1ca48d03cf7e2ad@openai-curated-remote)
+- TickTick:To-Do List & Calendar (app-69ddbaba3fb48191a825f22c21b0599d@openai-curated-remote)
+- Plaud (app-69f3c30d68288191bbd428a394a78407@openai-curated-remote)
+- Wolfram (app-69fe0bf66c8481919c513d799406436e@openai-curated-remote)
+- Runway (app-6a05e3b201788191be12b590b43e6ce3@openai-curated-remote)
+- Caliber (app-6a05e8f22d408191b13ba3897157f6df@openai-curated-remote)
+- COROS (app-6a0694cbb2608191bbefb74ba810ab68@openai-curated-remote)
+- TradingCursor (app-6a0d835ff1dc8191972eeabd14967446@openai-curated-remote)
+- CoinMarketCap (app-6a172fe86f5481919f73cbc3bc3ad5bb@openai-curated-remote)
+- Trello (app-6a20b18a639081918c1b438f8381b27e@openai-curated-remote)
+- Longbridge (app-6a2baf2fad748191812393c3e00308ef@openai-curated-remote)
+- freddy (app-6a322b52a82c8191b7fb653f9e9f7891@openai-curated-remote)
+- Higgsfield (app-6a3293e129088191abf0875820e839da@openai-curated-remote)
+- Stocktwits (app-6a427a19b1f481919c5db13838af00c2@openai-curated-remote)
+- Webull (app-6a4b8801d1e8819182f624f012878a81@openai-curated-remote)
+- CoinGecko (app-6a4f02d735388191959c8328877e0bbd@openai-curated-remote)
+- Asana (asana@openai-curated-remote)
+- Atlassian Rovo (atlassian-rovo@openai-curated-remote)
+- Base44 (base44@openai-curated-remote)
+- Binance (binance@openai-curated-remote)
+- Box (box@openai-curated-remote)
+- Canva (canva@openai-curated-remote)
+- ClickUp (clickup@openai-curated-remote)
+- Cloudflare (cloudflare@openai-curated-remote)
+</recommended_plugins># AGENTS.md instructions for /Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope
+
+<INSTRUCTIONS>
+- Ask when the request is unclear or conflicts with skills or project AGENTS.md.
+- Continue working toward the goal until complete or a serious blocker requires user input. Do not stop merely to report progress.
+- Make the smallest complete change needed. Avoid unnecessary refactoring and changes outside the task.
+
+--- project-doc ---
+
+# AGENTS.md
+
+1. **Preserve the objective.**
+   Do not replace the requested goal with an easier proxy, narrower task, or
+   intermediate milestone. Decomposition must advance the original objective.
+
+2. **Act without unnecessary gates.**
+   Within the authorized scope, proceed autonomously and resolve routine choices
+   using context and judgment. Keep checks proportional to concrete risks and
+   applicable requirements; do not invent time limits, approval steps, or workflow
+   constraints.
+
+3. **Reason from mechanism and evidence.**
+   Ground reasoning in the actual computation, mathematics, implementation, and
+   observed results. Challenge key assumptions with counterexamples and competing
+   explanations. Distinguish hypotheses and proxy improvements from demonstrated
+   outcomes; a complete theory is not a prerequisite for a useful experiment.
+
+4. **Use decision-sufficient experiments.**
+   Prefer the least costly experiment that can distinguish competing explanations
+   or determine the next decision. Reuse valid baselines and results. Do not reduce
+   an experiment below its diagnostic value or increase its scale without a reason.
+
+5. **Use history as evidence.**
+   Check relevant prior results, failures, and subsequent corrections before
+   repeating a direction. Do not repackage failed assumptions or generalize a
+   specific failure beyond its evidence. Successful methods are evidence, not
+   immutable constraints.
+
+6. **Finish the real task.**
+   Continue through the implementation, verification, analysis, and follow-up the
+   task requires. Planning, auditing, partial progress, or reporting are not
+   completion unless they are the requested deliverable. Stop when the requested
+   outcome is achieved, the user explicitly pauses or changes the objective, or progress
+   requires input or resources beyond the authorized scope. State any blocker
+   precisely and continue independent work where possible.
+
+Project-specific hypotheses, baselines, parameters, experiment plans, results,
+and failure records belong in project documents, not here.
+
+</INSTRUCTIONS><environment_context>
+  <cwd>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
+  <shell>zsh</shell>
+  <current_date>2026-09-08</current_date>
+  <timezone>America/New_York</timezone>
+  <filesystem><workspace_roots><root>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/misaya.yanghejazfs.com.au/.codex/visualizations/2026/09/08/01a0806f-3df5-74b1-bc56-bf00d89d238e</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+</environment_context>
+
+[09-08 23:15:23 ET] <inter-agent msg> /root -> /root/asset_frozen_models | Message Type: NEW_TASK
+Task name: /root/asset_frozen_models
+Sender: /root
+Payload: [payload encrypted]
+
+[09-08 23:15:29 ET] <assistant>
+我先按项目约束做只读证据盘点：先对照当前稿已使用的冻结模型材料，再扫描指定 curated/raw JSON 与 attention-aware 证据，去重同一 run 后输出至少 5 个可区分资产及其正文/图表建议。不会跑模型或下载。
+
+[09-08 23:15:32 ET] <tool write_file> {"path":"checkpoint.md","text":"gAAAAABqoM9V_gMqQUbmTuX5fQ-MPuUokNbx6Sjn2X9r1Fi1IOB-oTl1tPyL2yZad9XwGqLhKrCsS33DGUKV5MzwQBiInIoduKwoCc0brArSDTi1aBkou6F_lpIDEamhGnsdJgi3E1MEpp8JPQLCUwRVp2NBtQfVVFPMwlurEGb1Pok_8L5Rr2xJyar9X-qrjHr5ASLQkmroH2bZFwnkw4bfv0juZBXG16YN...
+[09-08 23:15:42 ET] <tool exec> const r = await tools.exec_command({cmd:"sed -n '1,240p' /Users/misaya.yanghejazfs.com.au/.codex/memories/MEMORY.md | rg -n -C 3 'hybrid-rope|GRPO|frozen|OLMo|Qwen|BM'","workdir":"/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope","yield_time_ms":1000...
+[09-08 23:15:46 ET] <tool exec> const r = await tools.exec_command({cmd:"sed -n '1,240p' /Users/misaya.yanghejazfs.com.au/.codex/skills/academic-research-suite/SKILL.md","workdir":"/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope","yield_time_ms":10000,"max_output_tokens":7000});
+t...
+[09-08 23:15:54 ET] <tool exec> const results = await Promise.allSettled([
+  tools.exec_command({cmd:"sed -n '1,280p' paper-2027/sections/04_mature.tex","workdir":"/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope","yield_time_ms":10000,"max_output_tokens":12000}),
+  tools.exec_comm...
+[09-08 23:15:59 ET] <tool exec> const r = await tools.exec_command({cmd:"nl -ba paper-2027/appendix/a6_mature_scale.tex | sed -n '1,180p'","workdir":"/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope","yield_time_ms":10000,"max_output_tokens":15000});
+text(r.output);
+
+[09-08 23:16:02 ET] <tool exec> const r = await tools.exec_command({cmd:"nl -ba paper-2027/appendix/a6_mature_scale.tex | sed -n '150,280p'; nl -ba paper-2027/appendix/a7_exponent_adjustments.tex | sed -n '1,260p'","workdir":"/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope","yield...
+[09-08 23:16:08 ET] <tool exec> const r = await tools.exec_command({cmd:"find . -type f \\( -iname '*BM*' -o -iname '*Mr*' -o -iname '*YaRN*' -o -iname '*.json' \\) | sort | sed -n '1,300p'","workdir":"/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope","yield_time_ms":10000,"max_out...
+[09-08 23:16:15 ET] <tool exec> const r = await tools.exec_command({cmd:"for f in docs/research/ROPE_*20260908.json paper-2027/research/attention-aware-retrofit/evidence/*.json data/curated/frozen_fixed_support_mature_20260823.json; do printf '\\n=== %s ===\\n' \"$f\"; jq -r 'if type==\"obje...
+[09-08 23:16:21 ET] <tool exec> const r = await tools.exec_command({cmd:"for f in data/curated/frozen_fixed_support_mature_20260823.json paper-2027/research/attention-aware-retrofit/evidence/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULTS_20260823.json paper-2027/research/attention-aware-retrofit/evi...
+[09-08 23:16:31 ET] <tool exec> const r = await tools.exec_command({cmd:"jq -r '\n\"status=\"+.status,\n\"lengths=\"+(.lengths|tostring),\n\"rows_per_arm=\"+(.rows_per_arm|tostring)+\" rows_per_task=\"+(.rows_per_task_length|tostring),\n\"decision=\"+(.decision|tostring),\n\"baseline=\"+(.ba...
+[09-08 23:16:40 ET] <tool exec> const r = await tools.exec_command({cmd:"for f in docs/research/ROPE_OLMO_BM_RESULT_20260908.json docs/research/ROPE_OLMO_BM_EXTRA_RULER_RESULT_20260908.json docs/research/ROPE_OLMO_BM_FIVE_QA_RESULT_20260908.json docs/research/ROPE_OLMO_BM_NATURAL_RESULT_2026...
+[09-08 23:16:48 ET] <tool exec> const r = await tools.exec_command({cmd:"for f in docs/research/ROPE_OLMO_BM_EXTRA_RULER_RESULT_20260908.json docs/research/ROPE_OLMO_BM_FIVE_QA_RESULT_20260908.json docs/research/ROPE_OLMO_BM_NATURAL_RESULT_20260908.json docs/research/ROPE_QWEN3_BM_NLL_RESULT...
+[09-08 23:16:56 ET] <tool exec> const r = await tools.exec_command({cmd:"jq -r '\n\"status=\"+.status,\n(.experiments|to_entries[] | \"EXP \"+.key+\"\\n\" + (if .value.arms then (.value.arms|to_entries[]|\"  \"+.key+\" rows=\"+(.value.summary.rows|tostring)+\" score_sum=\"+(.value.summary.sc...
+[09-08 23:17:03 ET] <tool exec> const r = await tools.exec_command({cmd:"jq -r '.experiments|to_entries[]|.key as $e | \"EXP \"+$e, (.value.arms // {} | to_entries[] | [\"  \"+.key, \"rows=\"+(.value.summary.rows|tostring), \"score_sum=\"+(.value.summary.score_sum|tostring), ((.value.summary...
+[09-08 23:17:10 ET] <tool exec> const r = await tools.exec_command({cmd:"jq -r '.experiments|keys[]' docs/research/ROPE_OLMO_BM_RESULT_20260908.json; jq -r '.experiments.development.comparisons|keys[]' docs/research/ROPE_OLMO_BM_RESULT_20260908.json; jq -r '.experiments.seed_replication.comp...
+[09-08 23:17:17 ET] <tool exec> const r = await tools.exec_command({cmd:"for p in development seed_replication gain_followup existing_controls scale8 scale_cap; do printf '\\n--%s--\\n' \"$p\"; jq -r --arg p \"$p\" '.experiments[$p] | {reference,arms:([.arms|to_entries[]?|{name:.key,rows:.va...
+[09-08 23:17:22 ET] <tool exec> const r = await tools.exec_command({cmd:"for f in docs/research/ROPE_BM_*.md docs/research/ROPE_OLMO_BM_*.md docs/research/ROPE_QWEN7_BM_TRANSFER_20260908.md; do printf '\\n=== %s ===\\n' \"$f\"; sed -n '1,220p' \"$f\"; done","workdir":"/Users/misaya.yanghejaz...
+[09-08 23:17:33 ET] <tool exec> const r = await tools.exec_command({cmd:"for key in 'FROZEN_2D' 'K128_' 'K32_' 'QWEN_K' 'REFERENCE_CORRECTED' 'SCALE_INDEPENDENT' 'ALLOCATION_DOSE' 'FRESH_FINEWEB' 'ZERO_PARAMETER' 'SESSION_BINARY' 'DIRECT_Z' 'FAR_PASS' 'HEAD_SELECTIVE' 'NATIVE_ISOTONIC' 'LOW_...
+[09-08 23:17:48 ET] <tool exec> const r = await tools.exec_command({cmd:"for f in paper-2027/research/attention-aware-retrofit/evidence/FROZEN_2D_COUPLING_TRANSPORT_RECEIPT_20260901.json paper-2027/research/attention-aware-retrofit/evidence/K128_COORDINATE_CONFIRMATION_RECEIPT_20260901.json ...
+[09-08 23:17:55 ET] <tool exec> const r = await tools.exec_command({cmd:"for f in paper-2027/research/attention-aware-retrofit/results/coupling-transfer/K128_COORDINATE_RANKING_CONFIRMATION_RESULT_20260901.md paper-2027/research/attention-aware-retrofit/results/coupling-transfer/K32_PAIRED_C...
+[09-08 23:18:02 ET] <tool exec> const r = await tools.exec_command({cmd:"rg -n -i 'K128|coordinate|physical.?x|normalized.?index|isotonic|dose|C2|coupling|frequency transport|cross.?model|7B|3B|natural QA|FineWeb|MrRoPE|MrPro|BM' paper-2027/sections paper-2027/appendix --glob '*.tex'","workd...
+[09-08 23:18:08 ET] <tool exec> const r = await tools.exec_command({cmd:"git status --short; git log -1 --oneline; nl -ba paper-2027/sections/04_mature.tex | sed -n '1,190p'; nl -ba paper-2027/appendix/a7_exponent_adjustments.tex | sed -n '1,160p'","workdir":"/Users/misaya.yanghejazfs.com.au...
+[09-08 23:18:20 ET] <tool exec> const hits = ALL_TOOLS.filter(x => /send_message|collaboration/.test(x.name));
+text(hits);
+
+[09-08 23:18:26 ET] <tool exec> const r = await tools.mcp__codex_app__list_threads({limit:50});
+text(r);
+
+[09-08 23:19:17 ET] <tool exec> const r = await tools.mcp__codex_app__send_message_to_thread({threadId:"01a0806f-3df5-74b1-bc56-bf00d89d238e",hostId:"local",prompt:"资产盘点重要发现（只读，未跑模型/下载）：当前 04_mature/a6/a7 已用：fixed-support OLMo-1B unseen9 16K n20 Native 0, YaRN .0794, same-support geometric ....
+[09-08 23:19:24 ET] <tool exec> const r = await tools.exec_command({cmd:"for f in paper-2027/research/attention-aware-retrofit/evidence/*.json; do printf '%-76s ' \"$(basename \"$f\")\"; jq -r '[.status, .decision, .claim_boundary // empty, .claim_ceiling // empty] | map(if type==\"string\" ...
+[09-08 23:19:31 ET] <tool exec> const r = await tools.exec_command({cmd:"rg -n '\\\\input|04_mature|04_experiments|a6|a7|sections/05|appendix' paper-2027/main.tex; nl -ba paper-2027/sections/04_experiments.tex | sed -n '1,280p'","workdir":"/Users/misaya.yanghejazfs.com.au/paper_project/hybri...
+[09-08 23:19:37 ET] <tool exec> const r = await tools.exec_command({cmd:"nl -ba paper-2027/research/attention-aware-retrofit/evidence/README.md | sed -n '1,260p'","workdir":"/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope","yield_time_ms":10000,"max_output_tokens":30000});
+text(r....
+[09-08 23:20:15 ET] <tool exec> const r = await tools.mcp__codex_app__send_message_to_thread({threadId:"01a0806f-3df5-74b1-bc56-bf00d89d238e",hostId:"local",prompt:"按“同一run不拆数”的完整建议排序（状态=正文已有/遗漏；每项均有machine receipt+canonical report）：\n1) OLMo/Qwen matched fixed-support residual-vs-ramp（已有，04...
+[09-08 23:20:16 ET] <inter-agent msg> /root -> /root/asset_frozen_models | Message Type: MESSAGE
+Task name: /root/asset_frozen_models
+Sender: /root
+Payload: [payload encrypted]
+
+[09-08 23:20:22 ET] <tool exec> const r = await tools.exec_command({cmd:"jq '{status,data_seed,decision,decision_rule,evidence_scope,length,old_pilot_pooled,rows_per_arm,rows_per_task,primary_index_minus_physical,profile_selection_performed,arm_identities,arms,scores}' paper-2027/research/at...
+[09-08 23:20:28 ET] <tool exec> const r = await tools.exec_command({cmd:"jq '{status,data_seed,lengths,rows_per_arm,rows_per_task_length,old_pilot_pooled,profile_selection_performed,native_retention,primary_physical_minus_index,arm_identities,arms,scores}' paper-2027/research/attention-aware...
+[09-08 23:20:36 ET] <tool exec> const r = await tools.exec_command({cmd:"rg -n -C 4 'physical.?x|normalized.?index|x_H|x_L|G\\(x\\)|reference|gain|attention_scaling|physical coordinate|index coordinate' paper-2027/research/attention-aware-retrofit/results/coupling-transfer/K128_COORDINATE_RA...
+[09-08 23:20:44 ET] <tool exec> const r = await tools.exec_command({cmd:"rg -n -i 'physical.?x|normalized.?index|x_high|x_low|reference_length|coordinate' scripts paper-2027/scripts paper-2027/research/attention-aware-retrofit -g '*.py' -g '*.md' | head -n 300","workdir":"/Users/misaya.yangh...
+[09-08 23:20:53 ET] <tool exec> const r = await tools.exec_command({cmd:"nl -ba paper-2027/research/attention-aware-retrofit/results/coupling-transfer/FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901.md | sed -n '1,120p'; nl -ba paper-2027/research/attention-aware-retrofit/results/coupling-trans...
+[09-08 23:21:02 ET] <tool exec> const r = await tools.exec_command({cmd:"for f in paper-2027/research/attention-aware-retrofit/evidence/REFERENCE_CORRECTED_K128_S4_RULER_RECEIPT_20260901.json paper-2027/research/attention-aware-retrofit/evidence/REFERENCE_CORRECTED_K128_S2_RULER_RECEIPT_2026...
+[09-08 23:21:08 ET] <tool exec> const r = await tools.exec_command({cmd:"for f in paper-2027/research/attention-aware-retrofit/evidence/REFERENCE_CORRECTED_K128_S4_RULER_RECEIPT_20260901.json paper-2027/research/attention-aware-retrofit/evidence/REFERENCE_CORRECTED_K128_S2_RULER_RECEIPT_2026...
+[09-08 23:21:38 ET] <tool exec> const r = await tools.mcp__codex_app__send_message_to_thread({threadId:"01a0806f-3df5-74b1-bc56-bf00d89d238e",hostId:"local",prompt:"已核实 K128/K32 identity 与确认关系：\n\nK128 `K128_COORDINATE_CONFIRMATION_RECEIPT_20260901.json` 两臂 arm_identities 完全 matched：同 checkp...
+[09-08 23:22:01 ET] <tool exec> const r = await tools.mcp__codex_app__send_message_to_thread({threadId:"01a0806f-3df5-74b1-bc56-bf00d89d238e",hostId:"local",prompt:"建议若升入正文（可占第9页）：一句主句即可：`On a fresh 16K Gemma-1.1-2B panel (80 examples/task, seed 202609028), the frozen normalized-index table ...
+[09-08 23:22:10 ET] <tool exec> const prompt = "建议若升入正文（可占第9页）：一句主句即可：On a fresh 16K Gemma-1.1-2B panel (80 examples/task, seed 202609028), the frozen normalized-index table scored 79.00% versus 72.81% for physical-x (paired +6.19 pp, 95% CI [+2.81,+9.63]); both arms used the same s=4 table ...
+[09-08 23:22:30 ET] <tool exec> const prompt = "补充精确对照：K32 crossing 的 physical/index 都是 same b=1e6, Lref/native=32768, target=65536, s=2, support native fast→native slow/2, g=1.0512928913614359, xH=.7382780681078285, xL=.366403835112904, c=.074；K128 Gemma confirmation physical/index 都是 b=100...
+[09-08 23:22:46 ET] <assistant>
+已核实并通过 `send_message_to_thread` 回报：
+
+- K128 physical/index 两臂完全匹配 checkpoint、输入、seed、decoder、support、reference、scale、gain；gain 均为 `1.102585782722872`。
+- K32 crossing 两臂 gain 均为 `1.0512928913614359`，其余比较条件也一致。
+- K128 是独立输入 confirmation：`80/task × 4 = 320/arm`，`old_pilot_pooled=false`，index `79.00%` vs physical `72.8125%`，差值 `+6.1875pp`，CI `[2.8109, 9.6250]`。
+- K128 新 confirmation 没有重跑 Native/YaRN；这些 baseline 来自不同 manifest 的 prior panel，不能混写成同一新 rows 的四臂比较。
+- 已给出物理构造公式、normalized-index 插值规则、K32/K128 reference/scale/gain 差异，以及可直接用于正文的限定表述。
+
+<oai-mem-citation>
+<citation_entries>
+MEMORY.md:61-87|note=[Hybrid-RoPE project scope and evidence-driven operating constraints]
+</citation_entries>
+<rollout_ids>
+</rollout_ids>
+</oai-mem-citation>
+
+[09-08 23:22:47 ET] <TASK_COMPLETE report>
+已核实并通过 `send_message_to_thread` 回报：
+
+- K128 physical/index 两臂完全匹配 checkpoint、输入、seed、decoder、support、reference、scale、gain；gain 均为 `1.102585782722872`。
+- K32 crossing 两臂 gain 均为 `1.0512928913614359`，其余比较条件也一致。
+- K128 是独立输入 confirmation：`80/task × 4 = 320/arm`，`old_pilot_pooled=false`，index `79.00%` vs physical `72.8125%`，差值 `+6.1875pp`，CI `[2.8109, 9.6250]`。
+- K128 新 confirmation 没有重跑 Native/YaRN；这些 baseline 来自不同 manifest 的 prior panel，不能混写成同一新 rows 的四臂比较。
+- 已给出物理构造公式、normalized-index 插值规则、K32/K128 reference/scale/gain 差异，以及可直接用于正文的限定表述。
+
+
+

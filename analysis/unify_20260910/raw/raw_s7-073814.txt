@@ -1,0 +1,225 @@
+
+===== [2026-09-09T11:38:14.131Z] <user> =====
+已经开机了，ssh -p 57109 root\@connect.westc.seetacloud.com 
+
+
+===== [2026-09-09T11:38:14.131Z] <assistant> =====
+已连接并完成首轮配对实验，**GPU 已空闲，可以关机**。
+
+| 配置 | 留出文本 NLL ↓ |
+|---|---:|
+| 原模型 | 2.65 |
+| 共同初始化 | 5.30 |
+| 分数拟合 | 9.99 |
+| 输出蒸馏 | 3.94 |
+
+两种压缩都节省 **50% KV 缓存**，但都未恢复原模型答对的 8K 检索题。当前分数目标没有实际优势；输出蒸馏恢复了部分能力。
+
+[完整结果与证据](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/experiments/rope_operator_family/results/20260909_gpu/REPORT.md) 已保存并同步远端。
+
+<oai-mem-citation>
+<citation_entries>
+MEMORY.md:78-78|note=[Continue authorized experiments through interpretable results]
+</citation_entries>
+<rollout_ids>
+</rollout_ids>
+</oai-mem-citation>
+
+===== [2026-09-09T11:38:14.131Z] <user> =====
+没有其他方法了吗？
+
+
+===== [2026-09-09T11:38:14.131Z] <assistant> =====
+**有。这次只测了同一种压缩结构的两种拟合目标，还没有穷尽方法。** 我上一条“可以关机”的表达太早，容易让人以为这条路线已经结束。
+
+现在有三个具体方向，按优先级排列：
+
+| 方法 | 为什么值得试 |
+|---|---|
+| **1. 平衡 K/V 后再初始化** | 当前代码明确使用 `balance=None`，直接对剩余 K 和 V 联合 PCA。若两者尺度悬殊，PCA 会偏向其中一支。TransMLA 原文专门用 **Balanced KV** 处理这个问题；我们尚未验证它在当前配置中的作用。 |
+| **2. 用 attention 分布与输出约束位置拟合** | 原始 score MSE 会惩罚 softmax 不敏感的整行平移，也可能忽略少数决定答案的竞争关系。可以拟合 attention KL／关键分数差，再约束完整输出，保留可学习位置算子。 |
+| **3. 在学生实际状态上逐层恢复** | 当前各层独立拟合原模型的 Q/K/V；全部替换后，后层接收到的输入已经改变。逐层或分块使用压缩模型实际 hidden states 做恢复，可以检验这种分布偏移是否是主要损失来源。 |
+
+第一项有明确的原始方法依据：论文报告，未平衡的联合 PCA 会偏向幅度较大的 K，损失 V 信息。[TransMLA 原文](https://proceedings.neurips.cc/paper_files/paper/2025/file/75d13a472f570755af2a4ae4ac3d6724-Paper-Conference.pdf)
+
+**我建议先做第一项。** 保持模型、数据和 50% 缓存预算不变，只比较平衡前后的初始化；若确实改善，再接已有输出蒸馏。它成本低，也能先排查共同起点的问题。第二、三项仍是待验证假设，不能提前承诺有效。
+
+===== [2026-09-09T11:38:14.131Z] <user> =====
+那你试，试完这三个看看，
+
+
+===== [2026-09-09T11:38:14.131Z] <user> =====
+检索题是不是概率问题，对模型太难了，原始模型也不一定此次答对，有没有可能？
+
+
+===== [2026-09-09T11:38:14.131Z] <user> =====
+为什么破坏了检索呢，你让一个子代理分析原因
+
+
+===== [2026-09-09T11:38:24.367Z] <user> =====
+# AGENTS.md instructions for /Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope
+
+<INSTRUCTIONS>
+These AGENTS.md instructions replace all previously provided AGENTS.md instructions.
+
+- Ask when the request is unclear or conflicts with skills or project AGENTS.md.
+- Continue working toward the goal until complete or a serious blocker requires user input. Do not stop merely to report progress.
+- Make the smallest complete change needed. Avoid unnecessary refactoring and changes outside the task.
+
+--- project-doc ---
+
+# AGENTS.md
+
+1. **Preserve the objective.**
+   Do not replace the requested goal with an easier proxy, narrower task, or
+   intermediate milestone. Decomposition must advance the original objective.
+
+2. **Act without unnecessary gates.**
+   Within the authorized scope, proceed autonomously and resolve routine choices
+   using context and judgment. Keep checks proportional to concrete risks and
+   applicable requirements; do not invent time limits, approval steps, or workflow
+   constraints.
+
+3. **Reason from mechanism and evidence.**
+   Ground reasoning in the actual computation, mathematics, implementation, and
+   observed results. Challenge key assumptions with counterexamples and competing
+   explanations. Distinguish hypotheses and proxy improvements from demonstrated
+   outcomes; a complete theory is not a prerequisite for a useful experiment.
+
+4. **Use decision-sufficient experiments.**
+   Prefer the least costly experiment that can distinguish competing explanations
+   or determine the next decision. Reuse valid baselines and results. Do not reduce
+   an experiment below its diagnostic value or increase its scale without a reason.
+
+5. **Use history as evidence.**
+   Check relevant prior results, failures, and subsequent corrections before
+   repeating a direction. Do not repackage failed assumptions or generalize a
+   specific failure beyond its evidence. Successful methods are evidence, not
+   immutable constraints.
+
+6. **Finish the real task.**
+   Continue through the implementation, verification, analysis, and follow-up the
+   task requires. Planning, auditing, partial progress, or reporting are not
+   completion unless they are the requested deliverable. Stop when the requested
+   outcome is achieved, the user explicitly pauses or changes the objective, or progress
+   requires input or resources beyond the authorized scope. State any blocker
+   precisely and continue independent work where possible.
+
+7. **Test the claim directly.**
+   Use direct evidence and the minimum informative comparison; keep both positive
+   and negative conclusions within what the experiment actually tested.
+
+Project-specific hypotheses, baselines, parameters, experiment plans, results,
+and failure records belong in project documents, not here.
+
+</INSTRUCTIONS>
+
+===== [2026-09-09T11:38:24.371Z] <assistant(agent_message)> =====
+Message Type: NEW_TASK
+Task name: /root/retrieval_failure_analysis
+Sender: /root
+Payload:
+
+
+===== [2026-09-09T11:40:52.755Z] <assistant(agent_message)> =====
+Message Type: MESSAGE
+Task name: /root/retrieval_failure_analysis
+Sender: /root
+Payload:
+
+
+===== [2026-09-09T11:42:25.498Z] <assistant> =====
+结论：**这条冻结题的失败已有“关键内容的 attention 权重与传回的 value 同时受损”的直接证据，不能归为随机没答对。但现有测量尚不能把最终错误唯一归因于某一层或某一种机制。**
+
+证据按强弱排序：
+
+1. **关键检索信息在单层替换时已经削弱，不需要多层输入漂移才能出现。**  
+   我重新读取真实 prompt，目标行是 `key=5c4cb02e, value=f83a9144`。在完整 chat 输入中，目标行覆盖 token **1033–1051**，答案字符重叠 token **1044–1051**（包含 `=f` 合并 token）。所有层/头采用 **从 0 开始的索引**。
+
+   固定原模型最后 query（8188）及其原生 Q/K/V，仅改变当前层因子：
+
+   | 因子 | layer20/head5 答案 attention mass | layer26/head1 答案 attention mass |
+   |---|---:|---:|
+   | 原生 | 0.500751 | 0.0483004 |
+   | 初始化 | 0.459702 | 0.0180841 |
+   | score | 0.352697 | 0.0484841 |
+   | output KD | **0.203389** | **0.000048458** |
+   | attention KL + KD | 0.211080 | 0.00394891 |
+
+   这两个 head 是在预先指定检查的层中，由**原生目标行 attention mass 最大**选出的，不能称为完整检索电路。layer20 的 output KD 仍把目标 token 放在 top1；失败不等于所有关键排名全部翻转。它的目标总质量下降，说明其余干扰项的总竞争也重要。
+
+2. **不只是“找错位置”，value 重建也损坏；不同层瓶颈不同。**  
+   原生状态下计算两个局部替换量：`student_attention @ native_value` 和 `native_attention @ student_value`，相对原生输出的 NMSE：
+
+   | output KD | 仅替换 attention | 仅替换 value | 两者替换 |
+   |---|---:|---:|---:|
+   | layer20 | 0.183092 | 0.239501 | 0.378011 |
+   | layer26 | 0.466273 | 0.071682 | 0.446137 |
+
+   这是**进入 o_proj 前、12 个头共同计算**的输出误差，不能相加当作最终错误占比；交叉项可以抵消。明确支持的是：layer20 即便使用原生 attention，value 路径仍有显著误差；layer26 则主要表现为局部 attention 路径损伤。
+
+3. **当前压缩同时改变了内容与位置表示，50% 缓存节省不是无损删除冗余。**  
+   原生为 2 个 KV heads × 128 维 K，加同宽 V，共 512 实数；现在为全 KV heads 共享的 64 维 rotary + 192 维 content，共 256。`operator.py:171–181` 的计算是：
+
+   `score = qP · ([k,v]C) + rotate(qA) · rotate(kB)`，`value = [k,v]CU`。
+
+   也就是原本 256 个 K 维度参与的位置关系，被压入共享 64 维动态支路，剩余信息经位置不变 content 项近似；V 与剩余 K 还竞争同一 192 维 latent。一般情形下不能精确保存全部原生响应，但**不能因此断言该预算必然无法保留检索**，真实数据可能存在足够冗余。代码依据为 `operator.py:107–113,133–151,171–181`。
+
+4. **2K 自然文本校准及位置重放与真实 8K 随机键值任务存在明确差异。**  
+   `study.py:82` 每篇只取 64 个等间隔 query，K/V 来自原生 2048-token PG19 前向。`study.py:123–138,221` 的位置放大只修改已有 Q/K/V 的 RoPE 相位，**没有重新生成真实长上下文 hidden states，也没有增加竞争 key 数量**。这能训练距离响应，却不能等同于真实 8K 上从 412 条随机记录中精确复制字符串。该差异是已证实的协议事实；它是否为主要瓶颈仍待直接干预验证。
+
+5. **损失确实可能奖励与检索无关的改善。**  
+   `study.py:145–178` 的 score 目标使用完整原始 score MSE，并除以原始 score 平方均值。softmax 对整行常数平移不变，这个归一化可能被大的行基线掩盖。我在 layer0 的 score 因子上测得：原始 relative score MSE 仅 **0.00001305**，去除行均值后 relative score MSE 却为 **0.48446**；已有 JSON 对应 attention KL 为 **7.196**。因此“小 relative score error”不能被解释成关键竞争关系已保存。KL 方法虽改善总体 NLL，仍未恢复该题；不能说换 KL 就解决了目标错配。
+
+6. **频率漂移与学生状态漂移均不能单独解释全部失败。**  
+   仅在内存里把 output KD 的 learned phase 换回初始化 phase：layer20 答案 mass 从 0.203389 升至 0.321101，仍低于原生 0.500751；layer26 仅从 0.000048458 升至 0.000081950。频率学习有局部影响，但不足以解释 layer26 的损伤。  
+   最新 `core_progressive_kd.json` 已读：仍错误，答案 NLL 3.747326，输出 `value 19/000000000000000000000000000`。这只说明**本次逐层恢复方案不充分**，不能据此否定状态漂移的存在或所有逐层恢复方法。
+
+概率问题的边界：原题两次 greedy 原生都正确且答案 NLL 极低，加上不压缩 CompactAttention 正确，已不支持“这次只是采样运气不好”。但单题仍不能估计原生或压缩模型在其他随机题上的准确率。
+
+最小下一步因果测量：在 output KD 整体模型中，将少量有证据的原生层恢复，比较同一答案条件 NLL 与实际生成；只有这种模型级干预才可判断局部损伤是否决定答案。真实 8K 校准和更宽表示是另外两条竞争解释，不应靠上面的局部 MSE直接判定。
+
+下面是关键 mass 和局部分解的可复现 CPU 核心（从远端项目根执行，不写文件）：
+
+```python
+import torch
+from pathlib import Path
+from transformers import AutoTokenizer
+from experiments.rope_operator_family.run import read_factors
+from experiments.rope_operator_family.study import load_record, responses
+
+torch.set_num_threads(2)
+tok = AutoTokenizer.from_pretrained("/root/autodl-tmp/qwen25_1p5b_32k")
+prompt = Path("work/core/prompt.txt").read_text()
+text = tok.apply_chat_template(
+    [{"role": "user", "content": prompt}],
+    tokenize=False, add_generation_prompt=True,
+)
+enc = tok(text, return_offsets_mapping=True)
+start = text.index("f83a9144")
+answer_span = [
+    i for i, (a, b) in enumerate(enc["offset_mapping"])
+    if b > start and a < start + len("f83a9144")
+]
+assert answer_span == list(range(1044, 1052))
+
+with torch.no_grad():
+    for layer, head in [(20, 5), (26, 1)]:
+        record = load_record(f"work/core_query_capture/layer_{layer:03d}.pt")
+        for arm in ["initialization", "operator", "output_kd", "attention_kd"]:
+            factors = read_factors(f"work/{arm}/layer_{layer:03d}.pt")
+            teacher, student = responses(factors, record)
+            ts, to, tv, _ = teacher
+            ss, so, sv, _ = student
+            tp, sp = ts.softmax(-1), ss.softmax(-1)
+            denom = to.square().mean()
+            print(layer, head, arm, {
+                "native_answer_mass": tp[head, 0, answer_span].sum().item(),
+                "student_answer_mass": sp[head, 0, answer_span].sum().item(),
+                "attention_only_nmse": ((sp @ tv - to).square().mean() / denom).item(),
+                "value_only_nmse": ((tp @ sv - to).square().mean() / denom).item(),
+                "both_nmse": ((so - to).square().mean() / denom).item(),
+            })
+```
+
+以上新增数值来自本次只读 CPU 计算，目前仅在工具输出中，未保存文件。
