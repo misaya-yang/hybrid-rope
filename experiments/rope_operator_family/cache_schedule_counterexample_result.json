@@ -1,0 +1,121 @@
+{
+  "kind": "untrained_cpu_counterexample",
+  "seed": 19,
+  "native_window": 4,
+  "length": 12,
+  "local_window": 1,
+  "partitions": [
+    [
+      12
+    ],
+    [
+      4,
+      8,
+      12
+    ],
+    [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    [
+      3,
+      7,
+      9,
+      12
+    ]
+  ],
+  "modes": {
+    "call": {
+      "last_hidden_errors_by_layer": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0006399384785207018
+        ],
+        [
+          0.0,
+          0.0006399384785207018
+        ],
+        [
+          0.0,
+          0.0009107043708782847
+        ]
+      ],
+      "max_all_hidden_errors": [
+        0.0,
+        0.04857455905166441,
+        0.04857455905166441,
+        0.0488266887880307
+      ]
+    },
+    "row": {
+      "last_hidden_errors_by_layer": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "max_all_hidden_errors": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "fixed": {
+      "last_hidden_errors_by_layer": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "max_all_hidden_errors": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "call_layer_1_value_cache_error": 0.0,
+  "call_layer_2_value_cache_error": 0.02849302445788865,
+  "call_prefix_extension_error": 0.0327161460322094,
+  "row_prefix_extension_error": 0.0
+}

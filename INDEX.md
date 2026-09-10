@@ -28,6 +28,7 @@
 | --- | --- |
 | [研究方案与结果](docs/research/) | 按主题和日期保存的协议、结果与分析 |
 | [失败复盘](docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md) | 历史失败、后续纠正及原始证据入口 |
+| [用户提示词与阶段纠正](docs/research/USER_INTENT_GUIDE_20260909.md) | 四个任务的95条用户消息、持续原则、后续修正及09_09分支速览 |
 | [论文研究材料](paper-2027/research/) | 理论、实验依据和审查材料 |
 | [外部原文](paper-2027/research/external-reviews/) | 作者提供的报告与外部分析 |
 | [早期实验](docs/exp/) | 按月份保存的历史报告 |

@@ -1,0 +1,67 @@
+{
+  "cores": [
+    "PC2",
+    "PM-Keep"
+  ],
+  "automatic_time_limit": null,
+  "automatic_shutdown": false,
+  "stop_owner": "user in the morning",
+  "baseline_policy": "Compute each fixed model/data/budget/decoding control once and reuse its saved generations.",
+  "primary_pc2": {
+    "model": "openbmb/NOSA-1B",
+    "length": 16384,
+    "topk_blocks": 64,
+    "block_size": 64,
+    "controls": [
+      "native",
+      "cobs_rank2",
+      "split2"
+    ],
+    "method": "pc2",
+    "execution": {
+      "chunk_size": 128,
+      "attention_query_chunk_size": 64,
+      "baseline_attention_query_chunk_size": 16,
+      "parity_receipt": "runs/chunk_probe_v1/results.json"
+    }
+  },
+  "primary_pm": {
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "prefix_target": 8192,
+    "keep_fraction": 0.25,
+    "samples": 256,
+    "horizon": 512,
+    "controls": [
+      "F",
+      "E",
+      "E_author_policy",
+      "C",
+      "U",
+      "K"
+    ],
+    "method": "P"
+  },
+  "prepared_improvements": [
+    {
+      "core": "PC2",
+      "name": "pc2_unweighted",
+      "reason": "CIS tilting may weaken query-specific recall; keep the actual CIS quota and reader unchanged."
+    },
+    {
+      "core": "PC2",
+      "name": "pc2_rank1",
+      "reason": "A missing cross-frequency covariance direction may dominate; preserve rank one plus pair covariance of the PSD residual."
+    },
+    {
+      "core": "PM-Keep",
+      "query_policy": "recent_prefix",
+      "reason": "The whole-prefix content proxy may differ from the most recent context; use the same M/H with recent native queries."
+    },
+    {
+      "core": "PM-Keep",
+      "horizon": 128,
+      "reason": "A shorter future-position prior may better fit the task; frequency table, KV and content samples remain fixed."
+    }
+  ],
+  "sol_work": "Continue improving these two methods using observed failures. Repair execution bugs and make mechanism-driven changes. Reuse controls, preserve raw generations, and change the candidate tag when code changes. Do not count tuning-data improvements as unseen-input generalization."
+}
