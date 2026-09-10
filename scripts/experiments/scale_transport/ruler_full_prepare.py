@@ -60,7 +60,7 @@ def main():
         subprocess.run(argv, stdout=log, stderr=subprocess.STDOUT, check=True, timeout=1800,
             env={**os.environ, 'CUDA_VISIBLE_DEVICES': '', 'TOKENIZERS_PARALLELISM': 'false',
                  'OMP_NUM_THREADS': '1', 'OPENBLAS_NUM_THREADS': '1',
-                 'NLTK_DATA': '/root/autodl-tmp/nltk_data'})
+                 'NLTK_DATA': os.environ.get('NLTK_DATA', '/root/autodl-tmp/nltk_data')})
     source_path = args.out/'source'/args.task/'validation.jsonl'
     source = [json.loads(line) for line in source_path.read_text().splitlines()]
     if len(source) != args.count:
