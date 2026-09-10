@@ -19,7 +19,14 @@ def main():
     folders=[root/'pc2_exact_mass_full_dev_v1']+sorted(root.glob('pc2_ten_v1_*'))
     records={};conflicts=[]
     for folder in folders:
-        if folder.name=='pc2_ten_v1_E01_retrieval_dev_v1' or not (folder/'generations.jsonl').exists():continue
+        # Failed execution configurations remain archived, but do not own the
+        # canonical row when a complete replacement run uses a smaller chunk.
+        superseded = {
+            'pc2_ten_v1_E01_retrieval_dev_v1',
+            'pc2_ten_v1_common48_e07_group_budget_v1',
+            'pc2_ten_v1_common48_e07_group_budget_e07retry1024_v1',
+        }
+        if folder.name in superseded or not (folder/'generations.jsonl').exists():continue
         for r in read_rows(folder/'generations.jsonl'):
             rid=r['row_id']
             if rid not in panel:continue
