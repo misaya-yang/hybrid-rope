@@ -2,7 +2,7 @@ import unittest
 
 import torch
 
-from experiments.nosa_position.nonlinear_gqa import improve_set, NonlinearGQASelector
+from experiments.nosa_position.nonlinear_gqa import improve_set, improve_sets_batched, NonlinearGQASelector
 from experiments.nosa_position.exact_probe import ExactBlockSelector
 from experiments.nosa_position.runtime import AttentionSettings, SelectionContext, mandatory_blocks
 
@@ -38,7 +38,7 @@ class NonlinearGQATests(unittest.TestCase):
                                torch.randn(2, 449, 8), torch.randn(2, 449),
                                torch.tensor([0, 127, 320, 448]), 0, settings, torch.ones(4), 1.)
         b0 = ExactBlockSelector("exact_mass")(ctx)
-        e02 = NonlinearGQASelector("exact_mass")
+        e02 = NonlinearGQASelector("e02_nonlinear")
         chosen = e02(ctx)
         torch.testing.assert_close((chosen >= 0).sum(-1), (b0 >= 0).sum(-1))
         anchors = mandatory_blocks(ctx, 8)
@@ -47,7 +47,7 @@ class NonlinearGQATests(unittest.TestCase):
                 valid = chosen[h, t][chosen[h, t] >= 0]
                 self.assertEqual(valid.numel(), valid.unique().numel())
                 self.assertTrue((valid <= ctx.query_positions[t] // 64).all())
-                self.assertTrue(torch.isin(torch.where(anchors[0, t])[0], valid).all())
+                self.assertTrue(torch.isin(torch.where(anchors[t])[0], valid).all())
         self.assertGreaterEqual(e02.metrics["e02_risk_reduction"], 0.)
 
 
