@@ -1,6 +1,8 @@
 """E04 empirical projected distributions; E09 shared frame covariance controls."""
 import math
 import os
+import hashlib
+from pathlib import Path
 
 import torch
 
@@ -8,7 +10,7 @@ from .exact_probe import ExactBlockSelector
 from .runtime import apply_rope, select_with_scores
 
 
-def exact_current_blocks(context, out):
+def exact_current_blocks(context, out, metrics=None):
     """Restore every current physical block's causal exact response in-place."""
     h, length, d = context.k.shape
     q = context.q.float().reshape(h, -1, context.q.shape[1], d) / math.sqrt(d)
@@ -18,6 +20,8 @@ def exact_current_blocks(context, out):
         rows = torch.where(current == block)[0]
         start, stop = block*size, min((block+1)*size, length)
         logits = q[:, :, rows] @ context.k[:, None, start:stop].float().transpose(-1, -2)
+        if metrics is not None:
+            metrics['exact_raw_key_scores'] += logits.numel()
         logits += context.cis[:, None, None, start:stop].float()
         visible = torch.arange(start, stop, device=q.device)[None] <= context.query_positions[rows, None]
         out[:, :, rows, block] = logits.masked_fill(~visible[None, None], -torch.inf).logsumexp(-1)
@@ -41,6 +45,8 @@ class ProjectedDistributionSelector(ExactBlockSelector):
             self.__class__.basis_file = path
         self.descriptors = {}
         self.bases = {}
+        self.metrics['calibration_basis_sha256'] = hashlib.sha256(Path(path).read_bytes()).hexdigest()
+        self.metrics['calibration_rows_sha256'] = self.basis_state['source_rows_sha256']
 
     def _basis(self, context):
         layer = context.layer_idx
@@ -112,7 +118,7 @@ class ProjectedDistributionSelector(ExactBlockSelector):
                     else:
                         response=.5*torch.einsum('hgqi,hbij,hgqj->hgqb',pq,cache['covariance'],pq)
                 out[:,:,start:stop,:full]=linear+response
-        return exact_current_blocks(context,out)
+        return exact_current_blocks(context,out,self.metrics)
 
     @torch.no_grad()
     def __call__(self, context):

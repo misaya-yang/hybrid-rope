@@ -105,6 +105,10 @@ class BoundedInt8Selector(ExactBlockSelector):
         padded = torch.nn.functional.pad(refine, (0, 0, 0, (-queries) % 16))
         raw_tiles = padded.reshape(h, -1, 16, blocks).any(2)
         raw_tiles[..., quant_blocks:] = True
+        tile_queries = (queries - torch.arange(raw_tiles.shape[1], device=q.device)*16).clamp(0, 16)
+        tile_keys = (length - torch.arange(blocks, device=q.device)*b).clamp(0, b)
+        exact_pairs = int((raw_tiles * tile_queries[None, :, None] * tile_keys[None, None]).sum()) * group
+        self.metrics['exact_raw_key_scores'] += exact_pairs
         raw = int(raw_tiles.sum()) * b * d * group
         self.metrics["e01_raw_k_tile_elements"] = self.metrics.get("e01_raw_k_tile_elements", 0) + raw
         self.metrics["e01_scoring_passes"] = self.metrics.get("e01_scoring_passes", 0) + 1
@@ -142,19 +146,22 @@ class BoundedInt8Selector(ExactBlockSelector):
             return select_with_scores(context, context.q.new_empty(0))
         index = self._build(context)
         h, queries = context.k.shape[0], context.q.shape[1]
-        flags = torch.zeros((h, queries, blocks), device=context.q.device, dtype=torch.bool)
+        protected = mandatory_blocks(context, blocks)[None].expand(h, -1, -1)
+        # The normalized interval assumes known mandatory mass. These keys are
+        # required by the reader anyway; do not widen their denominator mass.
+        flags = protected.clone()
         logmass, delta = self._score(context, index, flags)
         score, certified, ambiguous = self._decision(context, logmass, delta)
         initial = certified.clone()
         if not bool(certified.all()):
-            flags = ambiguous & ~certified[..., None]
+            flags = (ambiguous & ~certified[..., None]) | protected
             refined, error = self._score(context, index, flags)
             # Keep already certified states unchanged, including their intervals.
             logmass = torch.where(certified[:, None, :, None], logmass, refined)
             delta = torch.where(certified[:, None, :, None], delta, error)
             score, certified, _ = self._decision(context, logmass, delta)
         if not bool(certified.all()):
-            flags = (~certified)[..., None].expand(-1, -1, blocks)
+            flags = (~certified)[..., None].expand(-1, -1, blocks) | protected
             exact, _ = self._score(context, index, flags)
             logmass = torch.where(certified[:, None, :, None], logmass, exact)
             score = logmass.softmax(-1).sum(1)
