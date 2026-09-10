@@ -13,12 +13,15 @@
 
 运行：python3 analysis/unify_20260910/tables/rebuild_ground_truth_tables.py
 输出：同目录 ground_truth_tables.json
+
+〔更新 2026-09-10〕执行前须人工核对；会覆写 ground_truth_tables.json；
+sha 对账义务见 T2 R7（Stack/N16/N15 三表从未部署、无 sha 可对，重生成后须按
+tables/CANDIDATE_TABLES.json 机读基准复核数组）。
 """
 import hashlib
 import json
 import math
 import struct
-import sys
 from pathlib import Path
 
 import numpy as np
@@ -108,7 +111,9 @@ def metrics(nu):
         'sum_all_gap_increments_slots0_63': sum_all_incr,
         'expected_if_endpoints_fixed_ln4': LN_S,
         'endpoint_delta_m': {'m_23': float(m[23]), 'm_40': float(m[40]),
-                             'fast_band_bitwise_equal_native': bool(np.array_equal(f32(nu[:24]), f32(NATIVE))),
+                             # 〔更正 2026-09-10〕原式比较 24 元切片与 64 元全数组（shape 缺陷→恒 False）；
+                             # 修复后对 26/30 法判 True、对 HGL/HGM/P2/NTK 四臂判 False（V4 终审 §3-①）
+                             'fast_band_bitwise_equal_native': bool(np.array_equal(f32(nu[:24]), f32(NATIVE[:24]))),
                              'tail_m40to63_all_equal_MrPro': bool(np.array_equal(f32(nu[40:]), f32(MRPRO[40:])))},
         'hole_ratio_max_global': hole_max, 'hole_ratio_argmax_gap': hole_argmax,
         'hole_ratio_max_transition': hole_trans_max, 'hole_ratio_argmax_transition': hole_trans_argmax,
@@ -116,10 +121,6 @@ def metrics(nu):
         'sum_m_all_slots': float(np.nansum(m)),
         'changed_slots_vs_MrPro': [int(j) for j in np.flatnonzero(f32(nu) != f32(MRPRO))],
     }
-
-
-MISMATCHES = []
-METHODS = []  # provisional; replaced below after helpers
 
 
 def gain_of(sp):
@@ -235,14 +236,12 @@ smooth_nu, mruni_nu = f32(smooth_nu).astype(np.float64), f32(mruni_nu).astype(np
 periods_mr = 2 * np.pi / MRPRO
 lbs_slots = np.flatnonzero((periods_mr >= W) & (periods_mr <= 131072))
 step = 1.0 / 131072
-lbs_nu = f32(MRPRO.copy()[... ]).astype(np.float64)
 lbs_nu = f32(np.where(np.isin(np.arange(DR), lbs_slots), MRPRO - step, MRPRO)).astype(np.float64)
 fast_nu = f32(np.where(np.isin(np.arange(DR), lbs_slots), MRPRO + step, MRPRO)).astype(np.float64)
 
 # ---------------------------------------------------------------- HighGapToLong（移植 gap_budget_transfer.py）
 gaps_mr = np.log(MRPRO[:-1] / MRPRO[1:])
-donors = np.arange(23)                        # first_changed=24 → high_end=23? 代码: first_changed[0]-1=23? 见下验证
-first_changed = np.flatnonzero(MRPRO != NATIVE)
+first_changed = np.flatnonzero(MRPRO != NATIVE)   # =24 → donor gaps 0..22（ recipient 侧见下方 recip 与 chk）
 donors = np.arange(int(first_changed[0]) - 1) # gaps 0..22
 budget = float(gaps_mr[donors].mean())
 per = 2 * np.pi / MRPRO
@@ -283,8 +282,7 @@ e4_nu = f32(e4_nu).astype(np.float64)
 # ---------------------------------------------------------------- N'/Stack 公式重建
 n16_nu = f32(NATIVE * np.power(4.0, -radial_family_m(16))).astype(np.float64)
 n15_nu = f32(NATIVE * np.power(4.0, -radial_family_m(15))).astype(np.float64)
-stack_nu = pair_nu.copy()  # base = MrPro
-stack_nu = f32(MRPRO.copy()).astype(np.float64)
+stack_nu = f32(MRPRO.copy()).astype(np.float64)  # base = MrPro（〔更正 2026-09-10〕删除死赋值 stack_nu=pair_nu.copy()：被本行立即覆盖）
 stack_nu[28] = NATIVE[28] * 4 ** (-MR_M[27])
 for j in lbs_slots:
     stack_nu[j] = MRPRO[j] - step
@@ -351,11 +349,11 @@ add('Native', None, NATIVE, 'reference', 'reference',
 add('MrPro', mr_nu_formula, MRPRO, 'baseline-official', '36行 (87.2222/78.1250)',
     'MrRoPE-Pro：nu_j=omega_j*4^(-m_j)，m_j=q(q+1)/(N(N+1))，q=clip(j-23,0,17)，N=17（dl=23, dh=40，YaRN 式 alpha=32/beta=1 界；Eq.14 径向 λ 族 N=17 成员）；j>=40 m=1；gain=1+0.1*ln4=1.138629436111989',
     ['experiments/nongeometric_screen/reference_tables.json', 'docs/research/USER_PROMPT_TRANSCRIPT_20260909.md:214 (m_q公式)',
-     'scripts/analysis/build_boundary_matched_mrpro.py:59 (source_steps=2i/(n(n+1)))', 'docs/research/BUDGET_ALLOCATION_MODEL_AND_CANDIDATES_20260910.md:49 (公式vs部署≤4.3e-8)'], gain=GAIN, tol=1e-5)
+     'scripts/analysis/build_boundary_matched_mrpro.py:59 (source_steps=2i/(n(n+1)))', 'docs/research/BUDGET_ALLOCATION_MODEL_AND_CANDIDATES_20260910.md:53 (公式vs部署≤8.4e-8；旧版 :49 声称 ≤4.3e-8 已经验证修订更正)'], gain=GAIN, tol=1e-5)
 METHODS['MrPro']['panel_scores'] = {'score_32K_pct': 87.2222, 'score_128K_pct': 78.125,
     'source': 'results/nongeometric_screen_20260909/results/*/summary.json 各 baseline 字段；docs/research/ROPE_BM_TRANSFER_RESULT_20260908.json',
     'rows': 36}
-METHODS['MrPro']['formula_vs_deployed']['note'] = f'公式重建 vs 部署 max_rel={mr_err:.3e}（文档声称 ≤4.3e-8）'
+METHODS['MrPro']['formula_vs_deployed']['note'] = f'公式重建 vs 部署 max_rel={mr_err:.3e}（文档现声称 ≤8.4e-8，BUDGET:53；旧版 ≤4.3e-8）'
 
 add('MrProBM', bm_nu_formula, BM, 'panel-member (09-08 复用)', '36行 (91.6667/70.8333)',
     'BM：eps_i=6i(N+1-i)/(N(N+1)(N+2))，m_q=q(q+1)(3N+2-2q)/(N(N+1)(N+2))，N=17，界 23/40；gain 官方',
@@ -378,7 +376,8 @@ add('E1_pair28_29', pair_nu, deploy['E1_pair28_29'][0], 'panel-measured', '36行
     tol=1e-5, score_names=['E1_pair28_29'])
 
 add('E2_tail_more', e2_nu, deploy['E2_tail_more'][0], 'panel-measured', '12行 (100/54.7222)',
-    '槽40–63 频率 ×1e6^(-1/64) → 平台水平 4^{1.15572}≈÷4.931（违反 I2）',
+    '槽40–63 频率 ×1e6^(-1/64) → 平台水平 4^{1.1557154}≈÷4.9638=4·b^{1/64}（违反 I2）'
+    '〔更正 2026-09-10：原"÷4.931"为旧值残留；本席复算 4^m40=4.963751，同 V4 终审 §1-7〕',
     ['experiments/nongeometric_screen/select.py:87-89', deploy['E2_tail_more'][2]], tol=1e-5, score_names=['E2_tail_more'])
 
 add('E8_zero51', e8_nu, deploy['E8_zero51'][0], 'panel-measured', '12行 (100/50.5556)',
@@ -460,13 +459,13 @@ add('BM_ScaleTaper', taper_nu, ST, 'deferred (构造完成未测)', 'queued-neve
 
 add('StackFrontBack', stack_nu, None, 'queued 0446 未执行', 'queued-never',
     'MrPro ⊕ s28_less(槽28) ⊕ LBS(槽36–39 −1/131072)（公式重建，BUDGET §3 锚点 m28=.065、m36–39=.625/.729/.847/.980）',
-    ['docs/research/BUDGET_ALLOCATION_MODEL_AND_CANDIDATES_20260910.md:45'], gain=GAIN)
+    ['docs/research/BUDGET_ALLOCATION_MODEL_AND_CANDIDATES_20260910.md:48'], gain=GAIN)
 
 add('MrProN16', n16_nu, None, 'queued 0448 未执行', 'queued-never',
-    '径向族 N\'=16：m_q=q(q+1)/272，槽39完成 m=1', ['docs/research/BUDGET_ALLOCATION_MODEL_AND_CANDIDATES_20260910.md:46'], gain=GAIN)
+    '径向族 N\'=16：m_q=q(q+1)/272，槽39完成 m=1', ['docs/research/BUDGET_ALLOCATION_MODEL_AND_CANDIDATES_20260910.md:49'], gain=GAIN)
 
 add('MrProN15', n15_nu, None, 'queued 0449 未执行', 'queued-never',
-    '径向族 N\'=15：m_q=q(q+1)/240，槽38完成', ['docs/research/BUDGET_ALLOCATION_MODEL_AND_CANDIDATES_20260910.md:47'], gain=GAIN)
+    '径向族 N\'=15：m_q=q(q+1)/240，槽38完成', ['docs/research/BUDGET_ALLOCATION_MODEL_AND_CANDIDATES_20260910.md:50'], gain=GAIN)
 
 # 外部基线
 add('YaRN_linear_official', yarn_table(ramp='linear'), YARN_DEPLOYED, 'external-baseline', '非本屏（历史/官方）',
@@ -575,10 +574,10 @@ chk('Stack m28 = 0.065', 0.065, m['StackFrontBack'][28], 5e-4)
 chk('Stack D39 = 127.5K', 127473, D['StackFrontBack'][39], 130)
 for name, claim in [('StackFrontBack', 1.86), ('MrProN16', 1.76), ('MrProN15', 1.80)]:
     hole = METHODS[name]['hole_ratio_max_transition']
-    ok = chk(f'{name} max 洞（BUDGET:45-47 声称 {claim}×，按 UNIFIED §1-2 定义 ρ=T_{{g+1}}/T_g 重算）',
+    ok = chk(f'{name} max 洞（BUDGET 旧版 :45–47 声称 {claim}×〔现已由验证修订替换为重算值，此行留作历史稽核〕；按 UNIFIED §1-2 定义 ρ=T_{{g+1}}/T_g 重算）',
              claim, hole, 1e-2)
     if not ok:
-        MISMATCHES.append(f'{name}: 文档 max 洞 {claim}× 与重算 {hole:.4f}× 不符（§1-2 定义下；文档未给出其"洞"公式，需作者澄清定义或修正）')
+        MISMATCHES.append(f'{name}: 旧版文档 max 洞 {claim}× 与重算 {hole:.4f}× 不符（§1-2 定义下；BUDGET 2026-09-10 验证修订已以重算值替换，历史稽核）')
 CHECKS.append({'item': 'YaRN 公式重建 vs 部署（carrier json）tensor_sha256',
                'doc_claim': tensor_sha(YARN_DEPLOYED), 'recomputed': tensor_sha(yarn_table(ramp='linear')),
                'status': 'MATCH' if tensor_sha(YARN_DEPLOYED) == tensor_sha(yarn_table(ramp='linear')) else 'MISMATCH'})
