@@ -58,8 +58,9 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--data',required=True);parser.add_argument('--runs',nargs='+',required=True)
     parser.add_argument('--output',required=True)
+    parser.add_argument('--split',choices=('dev','test'),default='dev')
     args=parser.parse_args(); data=Path(args.data);sha=hashlib.sha256(data.read_bytes()).hexdigest()
-    rows={r['row_id']:r for r in map(json.loads,data.read_text().splitlines()) if r['task']=='niah_multiquery' and r['split']=='dev'}
+    rows={r['row_id']:r for r in map(json.loads,data.read_text().splitlines()) if r['task']=='niah_multiquery' and r['split']==args.split}
     found={};source_runs={}
     for run in map(Path,args.runs):
         contract=json.loads((run/'contract.json').read_text())
