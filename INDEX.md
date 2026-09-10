@@ -27,6 +27,8 @@
 | 入口 | 内容 |
 | --- | --- |
 | [研究方案与结果](docs/research/) | 按主题和日期保存的协议、结果与分析 |
+| [频率分配理论核心](docs/research/ROPE_ALLOCATION_THEORY_CORE_20260910.md) | 非均匀傅里叶频率分配的当前问题、已有数学工具与下一轮KKT推导起点 |
+| [30代理归档与已有进展](docs/research/ROPE_ALLOCATION_PROGRESS_20260910.md) | 28份原报告、2份回传整理、代码、证据状态与全部材料入口 |
 | [失败复盘](docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md) | 历史失败、后续纠正及原始证据入口 |
 | [用户提示词与阶段纠正](docs/research/USER_INTENT_GUIDE_20260909.md) | 四个任务的95条用户消息、持续原则、后续修正及09_09分支速览 |
 | [论文研究材料](paper-2027/research/) | 理论、实验依据和审查材料 |

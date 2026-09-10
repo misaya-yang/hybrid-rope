@@ -1,0 +1,29 @@
+{
+  "agent_id": "sol04",
+  "assignment": ".agents/rope_unification_20260910/assignments/sol04.md",
+  "full_ingestion": true,
+  "omissions": [],
+  "files": [
+    {
+      "path": "paper-2027/research/external-reviews/pro-materials-20260908/RoPE_Exponent_Allocation_Unified_Plan_20260905.md",
+      "lines": 897,
+      "bytes": 63679,
+      "ranges_read": ["1-300", "301-600", "601-897"],
+      "sha256": "90e42e833cd43e80e2ec4771c22caec9e006f88716d5114a4c5bde116a382ed9"
+    },
+    {
+      "path": "paper-2027/research/external-reviews/pro-materials-20260908/RoPE_ICLR2027_Research_Guidance_20260905.md",
+      "lines": 579,
+      "bytes": 50398,
+      "ranges_read": ["1-300", "301-579"],
+      "sha256": "4396cd1c709b27cb16f3d4851c1ff3750f233e84b7404fffbe270879dc6bcbdd"
+    },
+    {
+      "path": "paper-2027/research/external-reviews/pro-materials-20260908/SINGLE_TABLE_FFN_REPORT_AUDIT_AND_CODEX_GUIDANCE_20260904.md",
+      "lines": 699,
+      "bytes": 41061,
+      "ranges_read": ["1-300", "301-699"],
+      "sha256": "3bcd65db59d8faa8be52596d24af9cded128a6d16309fa1d7abfe32e1a9eee58"
+    }
+  ]
+}

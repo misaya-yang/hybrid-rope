@@ -1,0 +1,775 @@
+{
+  "agent_id": "sol11",
+  "assignment": ".agents/rope_unification_20260910/assignments/sol11.md",
+  "coverage_status": "complete",
+  "assigned_file_count": 117,
+  "assigned_bytes": 1323640,
+  "fully_read": [
+    ".agents/rope_unification_20260910/corpus/sol11_full_dialogue.jsonl",
+    ".agents/BRIEFING.md",
+    ".agents/auditor_2/BRIEFING.md",
+    ".agents/auditor_victory_1/BRIEFING.md",
+    ".agents/challenger_verifier/DISPATCH.md",
+    ".agents/critic_r1/handoff.md",
+    ".agents/explorer_survey_1/DISPATCH.md",
+    ".agents/reviewer_1/progress.md",
+    ".agents/reviewer_2/BRIEFING.md",
+    ".agents/worker_blueprint_r4/DISPATCH.md",
+    ".agents/worker_empirical_r3/BRIEFING.md",
+    ".agents/worker_empirical_r3/DISPATCH.md",
+    ".agents/worker_empirical_r3/progress.md",
+    ".agents/worker_remediation_1/DISPATCH.md",
+    ".agents/worker_theory_r2/BRIEFING.md",
+    ".agents/worker_theory_r2/handoff.md",
+    ".codex_tmp/eval_official_hotpot200.py",
+    "artifacts/sparse_memory_20260908/deepseek_v4_model.py",
+    "artifacts/sparse_memory_20260908/interim_summary.json",
+    "artifacts/sparse_memory_20260908/query_dense_plan.json",
+    "data/curated/frozen_fixed_support_mature_20260823.json",
+    "docs/archive/tau_star_paper_ready_v1.md",
+    "docs/exp/2026-02/2026-02-24_128tok_baseline_results.md",
+    "docs/exp/2026-03/2026-03-03_passkey_mix_results.md",
+    "docs/exp/2026-03/2026-03-14_video_temporal_blackwell_plan.md",
+    "docs/exp/2026-07/2026-07-15_lora_qa16k_three_arm_results.md",
+    "docs/exp/2026-07/2026-07-24_m4_exact_range_factorial_plan.md",
+    "docs/overview/PROJECT_OVERVIEW.md",
+    "docs/research/PC2_PM_FAILURE_QUESTION_AUDIT_20260910.md",
+    "docs/research/REFCARRY_INTERFACE_AUDIT_20260909.md",
+    "docs/research/ROPE_BM_SELECTIVE_GAIN_20260908.md",
+    "docs/research/ROPE_BM_TRANSFER_MODELS_20260908.json",
+    "docs/research/ROPE_BM_TRANSFER_RESULT_20260908.json",
+    "docs/research/ROPE_BM_TRANSFER_RESULT_20260908.md",
+    "docs/research/ROPE_FREQUENCY_PRO_PROMPT_20260907.md",
+    "docs/research/ROPE_OLMO_BM_RESULT_20260908.md",
+    "docs/research/ROPE_QWEN15_FULL_LAG_P2_CANDIDATE_20260907.json",
+    "docs/research/ROPE_QWEN15_MINIMAL_MECHANISM_20260907.md",
+    "docs/tau_algor/README.md",
+    "docs/tau_algor/TAU_SCALING_DERIVATION.md",
+    "docs/tau_algor/TAU_SOFTMAX_TRANSPORT_THEORY_2026-03-23.md",
+    "experiments/nosa_position/test_exact_probe.py",
+    "experiments/pm_keep/test_run.py",
+    "paper-2027/claude_code_workspace/code/fixed_weight_support_shape_cross.py",
+    "paper-2027/claude_code_workspace/round12_20260906/RUNBOOK_ROUND12.md",
+    "paper-2027/claude_code_workspace/round12_20260906/code/build_kl_cache.py",
+    "paper-2027/claude_code_workspace/round12_20260906/code/chain_500m_waiter.sh",
+    "paper-2027/claude_code_workspace/round12_20260906/code/chain_qwen_e1.sh",
+    "paper-2027/claude_code_workspace/round12_20260906/code/data_prep_cpt.py",
+    "paper-2027/claude_code_workspace/round12_20260906/code/diag_fork_eb.py",
+    "paper-2027/claude_code_workspace/round12_20260906/code/driver_phase0.sh",
+    "paper-2027/claude_code_workspace/round12_20260906/code/driver_phase0_wd2.sh",
+    "paper-2027/claude_code_workspace/round12_20260906/code/driver_qwen.sh",
+    "paper-2027/claude_code_workspace/round12_20260906/code/rope_tables.py",
+    "paper-2027/claude_code_workspace/round12_20260906/code/track_a_eval.py",
+    "paper-2027/claude_code_workspace/round12_20260906/code/track_b_train.py",
+    "paper-2027/claude_code_workspace/round12_20260906/code/track_b_train_v2.py",
+    "paper-2027/figs/make_fig_method_overview.py",
+    "paper-2027/research/EXPERIMENT_ASSETS_TOP15_20260909.md",
+    "paper-2027/research/EXPONENT_FOLLOWUP_QUESTIONS_20260909.md",
+    "paper-2027/research/EXPONENT_REVISION_SOURCE_INDEX_20260909.json",
+    "paper-2027/research/attention-aware-retrofit/analysis/SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904.md",
+    "paper-2027/research/attention-aware-retrofit/evidence/NATIVE_QK_CALIBRATION_DATA_RECEIPT_20260901.json",
+    "paper-2027/research/attention-aware-retrofit/evidence/PHASE_ALLOCATION_M4_EXTENDED_RECEIPT_20260824.json",
+    "paper-2027/research/attention-aware-retrofit/evidence/QWEN_K32_MATCHED_S2_BASELINE_RECEIPT_20260901.json",
+    "paper-2027/research/attention-aware-retrofit/evidence/REFERENCE_CORRECTED_K128_S2_RULER_RECEIPT_20260901.json",
+    "paper-2027/research/attention-aware-retrofit/evidence/REFERENCE_CORRECTED_K128_S4_RULER_RECEIPT_20260901.json",
+    "paper-2027/research/attention-aware-retrofit/preflights/adaptation-coadaptation/ALLOCATION_DOSE_RESPONSE_PREFLIGHT_20260826.md",
+    "paper-2027/research/attention-aware-retrofit/preflights/coupling-transfer/NATIVE_QK_FINITE_KL_PREFLIGHT_20260901.md",
+    "paper-2027/research/attention-aware-retrofit/preflights/coupling-transfer/REFERENCE_CORRECTED_K128_PREFLIGHT_20260901.md",
+    "paper-2027/research/attention-aware-retrofit/preflights/operator-analysis/SCALE_CONJUGACY_TIGHTNESS_PREFLIGHT_20260904.md",
+    "paper-2027/research/attention-aware-retrofit/results/PHASE_ISOTROPY_50M_M4_RESULT_20260824.md",
+    "paper-2027/research/attention-aware-retrofit/results/README.md",
+    "paper-2027/research/attention-aware-retrofit/results/adaptation-coadaptation/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md",
+    "paper-2027/research/attention-aware-retrofit/results/coupling-transfer/K32_FINITE_K_COUPLING_ANALYSIS_20260901.md",
+    "paper-2027/research/attention-aware-retrofit/results/coupling-transfer/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md",
+    "paper-2027/research/attention-aware-retrofit/results/coupling-transfer/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md",
+    "paper-2027/research/attention-aware-retrofit/theory/ATTACK_2_ON_SOLVER_Z_20260904.md",
+    "paper-2027/research/attention-aware-retrofit/theory/ATTACK_4_ON_SOLVER_F_V2_20260904.md",
+    "paper-2027/research/attention-aware-retrofit/theory/MAXENT_DILATION_ALLOCATION_20260901.md",
+    "paper-2027/research/pdf-review-rounds/20260909/r04/review.md",
+    "paper-2027/sections/budget_discussion.tex",
+    "paper-2027/tables/table6_750m_continue_supporting.tex",
+    "paper-2027/tables/table_bm_tasks.tex",
+    "scripts/2026-04/00_preflight.sh",
+    "scripts/2026-04/02_lora_gen_retrieval_data.sh",
+    "scripts/2026-04/04_lora_eval_ruler.sh",
+    "scripts/2026-07/01_lora_positional_distill_seed42.sh",
+    "scripts/__init__.py",
+    "scripts/build_rebuttal_evidence_bundle.py",
+    "scripts/core_text_phases/audit_rope_checkpoint.py",
+    "scripts/core_text_phases/fix_compile_mode.sh",
+    "scripts/core_text_phases/prepare_1b_4k_data_phase2.py",
+    "scripts/core_text_phases/prepare_2b_4k_combined.py",
+    "scripts/core_text_phases/run_350m_4k_1b.sh",
+    "scripts/eval/eval_qwen_k32_existing_candidate_rerank.py",
+    "scripts/eval/eval_reference_coupling_nll.py",
+    "scripts/eval/optimize_olmo_fixed_support_z.py",
+    "scripts/eval/run_zero_training_tournament_5090.sh",
+    "scripts/figures/fig5_downstream_qa_nll.tex",
+    "scripts/lib/rope/hat_projection.py",
+    "scripts/m4_max_36gb/analyze_weekend_sweep.py",
+    "scripts/text_eval/llama3_continued_pretrain.py",
+    "scripts/train/train_log_p2_phase_transfer_lora.py",
+    "scripts/video_temporal/eval_riflex.py",
+    "scripts/video_temporal/run_oscillating_fvd.sh",
+    "scripts/video_temporal/run_video_temporal.py",
+    "scripts/video_temporal/wan21_encode_eval_prompts.py",
+    "scripts/video_temporal/wan21_finetune_evq.py",
+    "tests/test_fixed_support_z.py",
+    "tests/test_historical_ruler_replay.py",
+    "tests/test_long_lora_native_teacher.py",
+    "tests/test_native_confirmation_review.py",
+    "tests/test_prefix_phase_handoff.py",
+    "tests/test_qwen_k32_natural_nll_staged.py",
+    "tests/test_sampled_prefix_lm.py",
+    "tests/test_training_artifact_audit.py"
+  ],
+  "file_receipts": [
+    {
+      "path": ".agents/rope_unification_20260910/corpus/sol11_full_dialogue.jsonl",
+      "bytes": 215969,
+      "sha256": "99815cc5895c43a4f54ce9875b3212c83621f2968e23453b2303d4382ace544d"
+    },
+    {
+      "path": ".agents/BRIEFING.md",
+      "bytes": 2452,
+      "sha256": "57c6e62aef03aebbc72ef8e2d521aabb11c47cc11115e1a9830645956e84e8be"
+    },
+    {
+      "path": ".agents/auditor_2/BRIEFING.md",
+      "bytes": 2915,
+      "sha256": "46e947b8d4f505784db1da640659c452b819ef15af667d60804c3df92f1cadc6"
+    },
+    {
+      "path": ".agents/auditor_victory_1/BRIEFING.md",
+      "bytes": 3118,
+      "sha256": "c0a3eaa3b80510adb82f93072b45f1894c179c142ccc6796cfe8f6e6258b074b"
+    },
+    {
+      "path": ".agents/challenger_verifier/DISPATCH.md",
+      "bytes": 2074,
+      "sha256": "ab0a5c8d594558a90363dbea7906abbe0bcf1ca0513e55dbb1e5effc9d74e456"
+    },
+    {
+      "path": ".agents/critic_r1/handoff.md",
+      "bytes": 8451,
+      "sha256": "0cbbf576c2e668336ce661188dafdc3eec0fb8a9e9b381406118654044f80ac7"
+    },
+    {
+      "path": ".agents/explorer_survey_1/DISPATCH.md",
+      "bytes": 1162,
+      "sha256": "ecb341e9cd249b3766b0102ebb30e3c6b017f9bc91fec8dae98f870f042299f9"
+    },
+    {
+      "path": ".agents/reviewer_1/progress.md",
+      "bytes": 221,
+      "sha256": "551a22dd3d3272eb0a520ceaadbbcca6dc73d4017fd295708a01e6a0327fa96d"
+    },
+    {
+      "path": ".agents/reviewer_2/BRIEFING.md",
+      "bytes": 4175,
+      "sha256": "107a394ea35db6cff14cabf4c9aaca94b3311ea861618ca056d2298519d3d4c1"
+    },
+    {
+      "path": ".agents/worker_blueprint_r4/DISPATCH.md",
+      "bytes": 2631,
+      "sha256": "094346d0360d524adb933b76a840e7fad6ab25084120986c0e36515966fb2c48"
+    },
+    {
+      "path": ".agents/worker_empirical_r3/BRIEFING.md",
+      "bytes": 3183,
+      "sha256": "e0c0e3dd7c37992d4119bf4eed2d50d0b58666c2cd481218f4f6cf14164431ea"
+    },
+    {
+      "path": ".agents/worker_empirical_r3/DISPATCH.md",
+      "bytes": 3265,
+      "sha256": "056ae98de8ed2d383c8995ce5de1f265a97ded70a51e4a7f300b253ea07257da"
+    },
+    {
+      "path": ".agents/worker_empirical_r3/progress.md",
+      "bytes": 1215,
+      "sha256": "8ba58e0dfe57ebb26123f112c5b8064453c558ece87cf08f6c2d681eb0235f7a"
+    },
+    {
+      "path": ".agents/worker_remediation_1/DISPATCH.md",
+      "bytes": 6208,
+      "sha256": "6dc80cc38bc87d34b42885b4ed68d6195c4df9c69b8f4d83a6174945b078a2e7"
+    },
+    {
+      "path": ".agents/worker_theory_r2/BRIEFING.md",
+      "bytes": 3895,
+      "sha256": "ee02dc3c291dfd65b050cfb05c559175d7a8b477cc7f764e3b37076a41c01678"
+    },
+    {
+      "path": ".agents/worker_theory_r2/handoff.md",
+      "bytes": 9628,
+      "sha256": "d974dcdfa945dca6cd364cca3e76f98837ae7e4b4643beb791a0f8efb642a993"
+    },
+    {
+      "path": ".codex_tmp/eval_official_hotpot200.py",
+      "bytes": 13732,
+      "sha256": "e28cf1a8ce8f94e85db552c072d1b767077729144d103556b4c071d5037033e8"
+    },
+    {
+      "path": "artifacts/sparse_memory_20260908/deepseek_v4_model.py",
+      "bytes": 38632,
+      "sha256": "ce962f1face79d4f633d36436576214057a7e11443c9789935e1deb5c6cd1d71"
+    },
+    {
+      "path": "artifacts/sparse_memory_20260908/interim_summary.json",
+      "bytes": 33081,
+      "sha256": "82462c872fd1c71217194d1c24bb560b634395be8210c7f0fb9134968bd76308"
+    },
+    {
+      "path": "artifacts/sparse_memory_20260908/query_dense_plan.json",
+      "bytes": 2055,
+      "sha256": "ed01da145916d327ccf63d0e9e3baf6a7dd174eabb8dde73906e9b7574c30d42"
+    },
+    {
+      "path": "data/curated/frozen_fixed_support_mature_20260823.json",
+      "bytes": 4475,
+      "sha256": "475bf89c8514300b69d09e4f6e7244d26129445e371e285bd70529161731d357"
+    },
+    {
+      "path": "docs/archive/tau_star_paper_ready_v1.md",
+      "bytes": 11383,
+      "sha256": "ec737f31ed1b96082225d9361d587d31b16ff1eb45b747779a509f89f2510a81"
+    },
+    {
+      "path": "docs/exp/2026-02/2026-02-24_128tok_baseline_results.md",
+      "bytes": 6353,
+      "sha256": "01f12dfed77e3d9cd6a7471f884681df0681b85edc2c5269d226310537d1f741"
+    },
+    {
+      "path": "docs/exp/2026-03/2026-03-03_passkey_mix_results.md",
+      "bytes": 13504,
+      "sha256": "c16cfac13270130b43137f87316c3ac717787b4bc7e8a78b41f3ef2a2ae3c127"
+    },
+    {
+      "path": "docs/exp/2026-03/2026-03-14_video_temporal_blackwell_plan.md",
+      "bytes": 7445,
+      "sha256": "003e94092c0f880429476f929e79db52ec5a4c431b9601adeaa17890be4d0b3f"
+    },
+    {
+      "path": "docs/exp/2026-07/2026-07-15_lora_qa16k_three_arm_results.md",
+      "bytes": 7688,
+      "sha256": "024241e20eb30f99ad9f057a40683a69eb1b52a90f48e56481a45be8e1248bc0"
+    },
+    {
+      "path": "docs/exp/2026-07/2026-07-24_m4_exact_range_factorial_plan.md",
+      "bytes": 3847,
+      "sha256": "680450ed1a442263b1b3f0fb0374b982ff27989eea00e7678d7d8d62c0df6d04"
+    },
+    {
+      "path": "docs/overview/PROJECT_OVERVIEW.md",
+      "bytes": 11994,
+      "sha256": "e3515390b9a4dd8396edc37645302550594dca2ad70d42b69a957d7e83035c1d"
+    },
+    {
+      "path": "docs/research/PC2_PM_FAILURE_QUESTION_AUDIT_20260910.md",
+      "bytes": 36013,
+      "sha256": "4335958e74ebd033c8eb2b8d27e717105171e6a4dd1c807fab15e26151c3c50f"
+    },
+    {
+      "path": "docs/research/REFCARRY_INTERFACE_AUDIT_20260909.md",
+      "bytes": 9784,
+      "sha256": "10d84cbeea0d2a8ece1a122a37eab7b24c63525b8425e3cfa6ebf47b9a92cd9e"
+    },
+    {
+      "path": "docs/research/ROPE_BM_SELECTIVE_GAIN_20260908.md",
+      "bytes": 3066,
+      "sha256": "4e471c85447b940b0be9a349c76169e5cecc03065d23a9c412a515b367bbf8bb"
+    },
+    {
+      "path": "docs/research/ROPE_BM_TRANSFER_MODELS_20260908.json",
+      "bytes": 1821,
+      "sha256": "10a2eba36bf52208321b5eeafd099326c855f643689f636f2741885101eacd9b"
+    },
+    {
+      "path": "docs/research/ROPE_BM_TRANSFER_RESULT_20260908.json",
+      "bytes": 8641,
+      "sha256": "acbb9fdffa28f3ecb10d0a657996852bc9228842e428878bf0459f1ac33e457f"
+    },
+    {
+      "path": "docs/research/ROPE_BM_TRANSFER_RESULT_20260908.md",
+      "bytes": 4736,
+      "sha256": "53126aeb3b3a3ceac77839e902e8b52ce0b7b4d3e1f35e16541daa61a039e89e"
+    },
+    {
+      "path": "docs/research/ROPE_FREQUENCY_PRO_PROMPT_20260907.md",
+      "bytes": 10008,
+      "sha256": "c5dba2c599b03c714def367f910d7464ca2389668d19118e2ebf4e2e70ad7b1f"
+    },
+    {
+      "path": "docs/research/ROPE_OLMO_BM_RESULT_20260908.md",
+      "bytes": 5488,
+      "sha256": "ca5f3723f62112058bc24159529e56d815c0ba18ee5eea453288b83c7a0229b8"
+    },
+    {
+      "path": "docs/research/ROPE_QWEN15_FULL_LAG_P2_CANDIDATE_20260907.json",
+      "bytes": 7169,
+      "sha256": "f5680e2f417db2791cee9c7fe5facaacd6701b0f42d35651be3e5f02f5651ce1"
+    },
+    {
+      "path": "docs/research/ROPE_QWEN15_MINIMAL_MECHANISM_20260907.md",
+      "bytes": 15883,
+      "sha256": "9e1a4f8dcce0adb7fc13f0a9b2dd96e214d39e3f9fb2ec6a0d8ba9650a1c095d"
+    },
+    {
+      "path": "docs/tau_algor/README.md",
+      "bytes": 3000,
+      "sha256": "d9cf2460678b91d01456bbe90009f6704d36738cd7d9ba914022577e98b9665e"
+    },
+    {
+      "path": "docs/tau_algor/TAU_SCALING_DERIVATION.md",
+      "bytes": 25135,
+      "sha256": "8b3588a0748063f8f3657fc9d60ea4bf4504d47a0550b93715c2878fd80c1ed4"
+    },
+    {
+      "path": "docs/tau_algor/TAU_SOFTMAX_TRANSPORT_THEORY_2026-03-23.md",
+      "bytes": 7778,
+      "sha256": "9e0f538f6e2b0244431aead56741b66f9fcf248d671f28f1d6f81bc81f461edc"
+    },
+    {
+      "path": "experiments/nosa_position/test_exact_probe.py",
+      "bytes": 1462,
+      "sha256": "ed8d77b545916b7bb6e81e9a96fcdf2c251212f7d84760c9d5e58bdd7e8c1dd4"
+    },
+    {
+      "path": "experiments/pm_keep/test_run.py",
+      "bytes": 1584,
+      "sha256": "93d5ef2c36a8df13a305d0a1b6769fcef938a8ccee01f4194392243dc0fb7342"
+    },
+    {
+      "path": "paper-2027/claude_code_workspace/code/fixed_weight_support_shape_cross.py",
+      "bytes": 18784,
+      "sha256": "8fe25a5b1f4c3405bd8868dfee0db8e03d45943abd73a983d2012024d8aa7c91"
+    },
+    {
+      "path": "paper-2027/claude_code_workspace/round12_20260906/RUNBOOK_ROUND12.md",
+      "bytes": 8209,
+      "sha256": "3e1c988d34f4905ce6a2fc314b9da4d8fb5ec3b55b2c2f2fa4d0e7f14c40299f"
+    },
+    {
+      "path": "paper-2027/claude_code_workspace/round12_20260906/code/build_kl_cache.py",
+      "bytes": 5186,
+      "sha256": "69b0e2127628f0176d8eb87302d080f18032fa918a9b106b342308ebbbfb2835"
+    },
+    {
+      "path": "paper-2027/claude_code_workspace/round12_20260906/code/chain_500m_waiter.sh",
+      "bytes": 743,
+      "sha256": "7e566e30091248af3462f27946397e7e689427d4a0b7e389cd0e6bccbcf6c720"
+    },
+    {
+      "path": "paper-2027/claude_code_workspace/round12_20260906/code/chain_qwen_e1.sh",
+      "bytes": 888,
+      "sha256": "4bc4b1e9f56c4c86685420c474509219f9a2dd9777b15d538054f1b1ae7ac280"
+    },
+    {
+      "path": "paper-2027/claude_code_workspace/round12_20260906/code/data_prep_cpt.py",
+      "bytes": 15528,
+      "sha256": "e917e740f96225cda57effc31ed71c3cb366a839dcff2dc1e271e9be376b3df8"
+    },
+    {
+      "path": "paper-2027/claude_code_workspace/round12_20260906/code/diag_fork_eb.py",
+      "bytes": 10531,
+      "sha256": "482b0b270d76791b802e284fbc5f2d5bc34be45c06f72829cf33592123ff5df6"
+    },
+    {
+      "path": "paper-2027/claude_code_workspace/round12_20260906/code/driver_phase0.sh",
+      "bytes": 4459,
+      "sha256": "a139693269f24b034284f270ceac031d1cbd0e1863692cbad95d647dd35abc1e"
+    },
+    {
+      "path": "paper-2027/claude_code_workspace/round12_20260906/code/driver_phase0_wd2.sh",
+      "bytes": 2338,
+      "sha256": "80adf604bbc7e567bc33755de973780a0c744d5bcc846a1ebc05d1b50e3ec2fa"
+    },
+    {
+      "path": "paper-2027/claude_code_workspace/round12_20260906/code/driver_qwen.sh",
+      "bytes": 3579,
+      "sha256": "90a2326ca9ba442aab3218ef6e255f3a738251c394059f57edd1df234cfb82d8"
+    },
+    {
+      "path": "paper-2027/claude_code_workspace/round12_20260906/code/rope_tables.py",
+      "bytes": 10982,
+      "sha256": "07d26c555a956642ee7ac7cd205dc7114e1e0f4dcee2c4c5a2f8cf088ee727a6"
+    },
+    {
+      "path": "paper-2027/claude_code_workspace/round12_20260906/code/track_a_eval.py",
+      "bytes": 10347,
+      "sha256": "ef15d7fd5a98194c9df5c1d60e7f4decfc00158bc13ae1d596983dda351b02f2"
+    },
+    {
+      "path": "paper-2027/claude_code_workspace/round12_20260906/code/track_b_train.py",
+      "bytes": 21225,
+      "sha256": "e506a02c9612ef405a6a9587eda5a5eb8e18376129846281b46e0326ad610db7"
+    },
+    {
+      "path": "paper-2027/claude_code_workspace/round12_20260906/code/track_b_train_v2.py",
+      "bytes": 23510,
+      "sha256": "052162f2f12ef4e4b583ff849328fd9a091d2a827e1a52f40808bba4c454286d"
+    },
+    {
+      "path": "paper-2027/figs/make_fig_method_overview.py",
+      "bytes": 5023,
+      "sha256": "64c3eab2d603ada2f8800e4f1bbf898914553efdeca343466efa4a9ae60ebcfb"
+    },
+    {
+      "path": "paper-2027/research/EXPERIMENT_ASSETS_TOP15_20260909.md",
+      "bytes": 11560,
+      "sha256": "c15ff567d8bf7f51c295f0f58c470c9fbaa1309796f682e51ef755fb519d8984"
+    },
+    {
+      "path": "paper-2027/research/EXPONENT_FOLLOWUP_QUESTIONS_20260909.md",
+      "bytes": 3361,
+      "sha256": "fee76c1831cdbe910e179a922749f80004e2685e936b659a774db75ae0c74099"
+    },
+    {
+      "path": "paper-2027/research/EXPONENT_REVISION_SOURCE_INDEX_20260909.json",
+      "bytes": 6199,
+      "sha256": "03f2bdf3afcfddf8049feae15c39f9519a80246d69b6aab3abda6d68d53984fa"
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/analysis/SINGLE_TABLE_ROPE_OPEN_PROBLEMS_HANDOFF_20260904.md",
+      "bytes": 26320,
+      "sha256": "1935c888ed0ebf8aee675798d545fc2536c84c0d29eff854f54e25c9c8696db4"
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/evidence/NATIVE_QK_CALIBRATION_DATA_RECEIPT_20260901.json",
+      "bytes": 4066,
+      "sha256": "4a3fdcdd037dc02b77b94d910f550dc93d5ce368215bf769c6a2b9bbbc4ae6ce"
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/evidence/PHASE_ALLOCATION_M4_EXTENDED_RECEIPT_20260824.json",
+      "bytes": 28850,
+      "sha256": "8a9bca75a433617a742bf8d3f3f0df1d0037d0d32767695154df59c597f1a739"
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/evidence/QWEN_K32_MATCHED_S2_BASELINE_RECEIPT_20260901.json",
+      "bytes": 20580,
+      "sha256": "383e3969b6c5d3256c6293540e0b52db0a7f0c7372c59fd6921c9bb08f299cba"
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/evidence/REFERENCE_CORRECTED_K128_S2_RULER_RECEIPT_20260901.json",
+      "bytes": 14191,
+      "sha256": "9d4933435a444477a63d4ac4e7b0377dafe0309b099a9b4c7f8a46ae76f1cd8f"
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/evidence/REFERENCE_CORRECTED_K128_S4_RULER_RECEIPT_20260901.json",
+      "bytes": 16721,
+      "sha256": "6672852e9a5f16fb041fb02d15575789666497323f9e7d1b40cbc6e395684e53"
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/preflights/adaptation-coadaptation/ALLOCATION_DOSE_RESPONSE_PREFLIGHT_20260826.md",
+      "bytes": 6930,
+      "sha256": "ccb8ff70c2f80eaefd0bcf0f4f8db96ea8f258c305c2f900680132c770fd5bb2"
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/preflights/coupling-transfer/NATIVE_QK_FINITE_KL_PREFLIGHT_20260901.md",
+      "bytes": 4966,
+      "sha256": "b1524ad21b5f7b6a97139c677b7f378397f5b84fa43bd245e7f26fe9afa8bd18"
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/preflights/coupling-transfer/REFERENCE_CORRECTED_K128_PREFLIGHT_20260901.md",
+      "bytes": 5147,
+      "sha256": "e408935c22ca1c4402e93af8e2dedd9f98b2e7db2387658346f68c51acf0b8cb"
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/preflights/operator-analysis/SCALE_CONJUGACY_TIGHTNESS_PREFLIGHT_20260904.md",
+      "bytes": 6029,
+      "sha256": "65a35048d41f351850ed1da67b9d63742e3c958c501a93375683df03cc57793c"
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/results/PHASE_ISOTROPY_50M_M4_RESULT_20260824.md",
+      "bytes": 5419,
+      "sha256": "0892d24067a0c3835b7a0c78ace6fca75e15731c67ee595aa19133230b45f50a"
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/results/README.md",
+      "bytes": 6800,
+      "sha256": "af287b0b3b07b4ccee397debda9fb4c79f5b4220154cef661951a867cc886dbc"
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/results/adaptation-coadaptation/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md",
+      "bytes": 5662,
+      "sha256": "ec424ccfcaa14924bb95e9540132af3aee266a9c65ff1c3c11125c306ce540b3"
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/results/coupling-transfer/K32_FINITE_K_COUPLING_ANALYSIS_20260901.md",
+      "bytes": 14412,
+      "sha256": "535c65c312d6dcf6d9f66066a783d7cb67c370928005879d12d861ea3e6f9209"
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/results/coupling-transfer/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md",
+      "bytes": 5825,
+      "sha256": "8631c19747bfa4d1f8a09ae95733074e107760fd168e64bfaf51f5656642ffa0"
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/results/coupling-transfer/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md",
+      "bytes": 17098,
+      "sha256": "cf03ed974502a0bc1068c23b254d51a0794a18d5294c427ed354428f22f49a1d"
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/theory/ATTACK_2_ON_SOLVER_Z_20260904.md",
+      "bytes": 19388,
+      "sha256": "c204ec1a4636f509ee73cb4ac4ed8f702378657c465813e9e0c3c284bbf56a3d"
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/theory/ATTACK_4_ON_SOLVER_F_V2_20260904.md",
+      "bytes": 33783,
+      "sha256": "2452791bf72a3c9af43ddd8832639013b74a99a5c428e4f7eddfc31017e30e57"
+    },
+    {
+      "path": "paper-2027/research/attention-aware-retrofit/theory/MAXENT_DILATION_ALLOCATION_20260901.md",
+      "bytes": 7262,
+      "sha256": "d7e2d806ee17f15d183a6844f0735b365c3543985d7e389d765bc8c4146bdd4d"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260909/r04/review.md",
+      "bytes": 3367,
+      "sha256": "d505de2cc29b2493047b98f4cef354629f73da5afb5d39c06a5049923efcf335"
+    },
+    {
+      "path": "paper-2027/sections/budget_discussion.tex",
+      "bytes": 1027,
+      "sha256": "1b4261680763315adb34ea1fa3cf06ba2aac5864eddc2935b4cbfececf8eb393"
+    },
+    {
+      "path": "paper-2027/tables/table6_750m_continue_supporting.tex",
+      "bytes": 811,
+      "sha256": "0524bb95ea5d4bfa3c5d58ed4f76ec559c174c86bbb57f5899db6d8da62dd0ef"
+    },
+    {
+      "path": "paper-2027/tables/table_bm_tasks.tex",
+      "bytes": 1367,
+      "sha256": "841cb01f51d85645a27899f89bff4f70c71bfb03f1f1fc225ef6ff3b3439e293"
+    },
+    {
+      "path": "scripts/2026-04/00_preflight.sh",
+      "bytes": 1250,
+      "sha256": "fee8e1940bee904c2ff0d8248ece11925a91fdf58a389534b049312405165338"
+    },
+    {
+      "path": "scripts/2026-04/02_lora_gen_retrieval_data.sh",
+      "bytes": 601,
+      "sha256": "07d0830642afbedf50edbd02b0fb5ee457acc8b1b2960390bf6e5bfa32ae29dd"
+    },
+    {
+      "path": "scripts/2026-04/04_lora_eval_ruler.sh",
+      "bytes": 2777,
+      "sha256": "99065ee6cae630fbc87b9decc313beb76760331f3817cc73899a7765c0151feb"
+    },
+    {
+      "path": "scripts/2026-07/01_lora_positional_distill_seed42.sh",
+      "bytes": 15118,
+      "sha256": "77304883ce82072d449d75c4d268b58bddad4b85489f981da95eb2bdc80eb86b"
+    },
+    {
+      "path": "scripts/__init__.py",
+      "bytes": 62,
+      "sha256": "caf9c86be5a5143b69e5ce68ecac33e2efb634e00481e251fab0942322e8d01e"
+    },
+    {
+      "path": "scripts/build_rebuttal_evidence_bundle.py",
+      "bytes": 29948,
+      "sha256": "7985fd32338f391b90e42259d133a5655c42d6f1bd0e71e8057026f01dfc15c9"
+    },
+    {
+      "path": "scripts/core_text_phases/audit_rope_checkpoint.py",
+      "bytes": 12162,
+      "sha256": "9d974b58b44f8b664d9f250cbf6a4d5ec505f5077cb55d1120b4f638f9e53ad9"
+    },
+    {
+      "path": "scripts/core_text_phases/fix_compile_mode.sh",
+      "bytes": 382,
+      "sha256": "12876c1e777e7aaa8aa9f7fe25f9569792392f7760946034612d52917d17400d"
+    },
+    {
+      "path": "scripts/core_text_phases/prepare_1b_4k_data_phase2.py",
+      "bytes": 6740,
+      "sha256": "9986ac53287180b3cad082bd920e3e6b56d2db367087027575a207ab1739a594"
+    },
+    {
+      "path": "scripts/core_text_phases/prepare_2b_4k_combined.py",
+      "bytes": 2250,
+      "sha256": "c3b6ebbb7a2ac56ebad00099a4b11a145c58c0f4e499a69bd5395c2a42b202cf"
+    },
+    {
+      "path": "scripts/core_text_phases/run_350m_4k_1b.sh",
+      "bytes": 1519,
+      "sha256": "0f59e5fa97ddcd4b3ef925e4e2097779e5e425e9a501257b7b11d5a5e3279c05"
+    },
+    {
+      "path": "scripts/eval/eval_qwen_k32_existing_candidate_rerank.py",
+      "bytes": 13028,
+      "sha256": "dbfcb88e2b31b3090f0e348104e499fe26376d8b2b28cdf60cccee84eba18971"
+    },
+    {
+      "path": "scripts/eval/eval_reference_coupling_nll.py",
+      "bytes": 17746,
+      "sha256": "7e51f4c641c20b7c642152949802cf6100b9915756610ade5fa42f3b743c84fd"
+    },
+    {
+      "path": "scripts/eval/optimize_olmo_fixed_support_z.py",
+      "bytes": 19765,
+      "sha256": "9a2be7a75d90e6c3edccf0a483e82856e4a72af66a272a38175a730d4db1c1a2"
+    },
+    {
+      "path": "scripts/eval/run_zero_training_tournament_5090.sh",
+      "bytes": 8073,
+      "sha256": "990d323377f5970e529e42fecb8fea1e1690a5403b4e84878c0b7587202f9f28"
+    },
+    {
+      "path": "scripts/figures/fig5_downstream_qa_nll.tex",
+      "bytes": 2551,
+      "sha256": "80d34fa926fdf366c4bc1f1561ae177d274d2d16fa79e5397b4eed2717e6d09f"
+    },
+    {
+      "path": "scripts/lib/rope/hat_projection.py",
+      "bytes": 9408,
+      "sha256": "0b656b2e1fb536c6918eecc49929e84ca26be16a37db21747fc4c586ca01ec65"
+    },
+    {
+      "path": "scripts/m4_max_36gb/analyze_weekend_sweep.py",
+      "bytes": 12517,
+      "sha256": "bb11423b5794427344b8d11d6e5b52edba539f25cdee1f2b7feb937bc56a8cab"
+    },
+    {
+      "path": "scripts/text_eval/llama3_continued_pretrain.py",
+      "bytes": 56483,
+      "sha256": "e4c4fc5b704bcb93de10d11b82a271562b00ec443de63e970e0a1bc3501474fb"
+    },
+    {
+      "path": "scripts/train/train_log_p2_phase_transfer_lora.py",
+      "bytes": 16125,
+      "sha256": "941d9b9e85962bce14365ed91b300ecfd704a5669d4c6d14af59b8d3f1667f8d"
+    },
+    {
+      "path": "scripts/video_temporal/eval_riflex.py",
+      "bytes": 10752,
+      "sha256": "2677c6dadb0bfc27f13c6d37feb0a731493f48f542bc7f5f3934d2ea7a6e8397"
+    },
+    {
+      "path": "scripts/video_temporal/run_oscillating_fvd.sh",
+      "bytes": 3538,
+      "sha256": "d14eaba63e18fe6742888909b38113a200ed6afd33f758767088879cf0d483aa"
+    },
+    {
+      "path": "scripts/video_temporal/run_video_temporal.py",
+      "bytes": 27511,
+      "sha256": "0ffd75d3784e220f67d1b0499cc4d66944e2e8315093c56cbceb4da000f66873"
+    },
+    {
+      "path": "scripts/video_temporal/wan21_encode_eval_prompts.py",
+      "bytes": 4310,
+      "sha256": "3871c6c8a8c5b8437a4402bf92ef4d0c32ea82cf6e5d8a8827a5a8cf8137ec5a"
+    },
+    {
+      "path": "scripts/video_temporal/wan21_finetune_evq.py",
+      "bytes": 18532,
+      "sha256": "11972ea61f7a11872bc46d60c6b4cc178d3288846b369ca7ae6dbcdc38ca1575"
+    },
+    {
+      "path": "tests/test_fixed_support_z.py",
+      "bytes": 2836,
+      "sha256": "5722985ed5e6ecd129f4cd141354991e44573a294b8cf58fa5a4129d844f855f"
+    },
+    {
+      "path": "tests/test_historical_ruler_replay.py",
+      "bytes": 10129,
+      "sha256": "ebedbe01ab074274ba97fe8500f72d04bd4ed974a00288d6ba2b84b6ac9a3cbc"
+    },
+    {
+      "path": "tests/test_long_lora_native_teacher.py",
+      "bytes": 8947,
+      "sha256": "3672decde6b59a2e65bb17faa435bcad28bddbc6893667a4f09df87cb2431333"
+    },
+    {
+      "path": "tests/test_native_confirmation_review.py",
+      "bytes": 1809,
+      "sha256": "2efb8bb20b466fd768e8801bfff344aada5b74d83ba7f3c44c51bab840019af2"
+    },
+    {
+      "path": "tests/test_prefix_phase_handoff.py",
+      "bytes": 9103,
+      "sha256": "c28d160fde6cdbd017d7aab702e538434ba889f99d19c8a238a7514de9306d02"
+    },
+    {
+      "path": "tests/test_qwen_k32_natural_nll_staged.py",
+      "bytes": 9296,
+      "sha256": "ebeb605caecf76b565d1ecf10a9cd1b550b028aee5cde4c98f20ad1d12dcac80"
+    },
+    {
+      "path": "tests/test_sampled_prefix_lm.py",
+      "bytes": 1660,
+      "sha256": "de51dfff82db46db1374b48cfed01c7c24aa94e025bd0031b609c8eda3aa2f06"
+    },
+    {
+      "path": "tests/test_training_artifact_audit.py",
+      "bytes": 1920,
+      "sha256": "640f8874c204d9f2964e164b71550b7582df6df7b21357631d09b4824730117e"
+    }
+  ],
+  "bounded_reads": {
+    ".agents/rope_unification_20260910/corpus/sol11_full_dialogue.jsonl": [
+      "1-55",
+      "56-85",
+      "86-110",
+      "111-140",
+      "141-142",
+      "143-153",
+      "154",
+      "155-180",
+      "181-216"
+    ],
+    "artifacts/sparse_memory_20260908/deepseek_v4_model.py": [
+      "1-300",
+      "301-600",
+      "601-827"
+    ],
+    "artifacts/sparse_memory_20260908/interim_summary.json": [
+      "1-300",
+      "301-600",
+      "601-805"
+    ],
+    "scripts/text_eval/llama3_continued_pretrain.py": [
+      "1-500",
+      "501-1000",
+      "1001-1398"
+    ]
+  },
+  "tool_output_records_fully_read": [
+    {
+      "path": ".agents/rope_unification_20260910/corpus/tool_outputs_055.jsonl",
+      "line": 103,
+      "sha256": "4a741914a8235b95a4a14c59967e9d103f74a9fa56be7bb4e92271e433f33a37",
+      "role": "Smooth(MrBudget) result"
+    },
+    {
+      "path": ".agents/rope_unification_20260910/corpus/tool_outputs_056.jsonl",
+      "line": 30,
+      "sha256": "97b16dc1d6cda9536d41235353aaa3e389d38a3fda03f147d47ce66bb93c23d4",
+      "role": "LongBridgeSlower result"
+    },
+    {
+      "path": ".agents/rope_unification_20260910/corpus/tool_outputs_056.jsonl",
+      "line": 91,
+      "sha256": "af9c10d156ef565ec2aa1eabf451485ada8bd455d66e0cf001afae31ed52dfe1",
+      "role": "FullLagP2 result"
+    },
+    {
+      "path": ".agents/rope_unification_20260910/corpus/tool_outputs_056.jsonl",
+      "line": 130,
+      "sha256": "b5cd06c82af25f98e8d30cd0298f8c506776d938cdac8f6af18704db9d740d7f",
+      "role": "HighGapToMid result"
+    }
+  ],
+  "omissions": [],
+  "archived_outputs_not_claimed_as_read": "All other tool_outputs_*.jsonl records",
+  "gpu_jobs_launched": 0,
+  "extra_agents_spawned": 0,
+  "files_written": [
+    ".agents/rope_unification_20260910/reports/sol11.md",
+    ".agents/rope_unification_20260910/reports/sol11_coverage.json"
+  ]
+}

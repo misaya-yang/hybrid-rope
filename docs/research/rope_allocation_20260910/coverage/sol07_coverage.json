@@ -1,0 +1,18 @@
+{
+  "agent_id": "sol07",
+  "assigned_files_total": 38,
+  "assigned_files_read_full": 38,
+  "omissions": [],
+  "additional_evidence": [
+    "results/nongeometric_screen_20260909/results/*/summary.json",
+    "results/nongeometric_screen_20260909/transfer/qwen7b/summary.json",
+    "results/nongeometric_screen_20260909/transfer/olmo1b/summary.json",
+    "results/nongeometric_screen_20260909/selection/selection.json",
+    "results/nongeometric_screen_20260909/selection/E7_precision_breakdown.json"
+  ],
+  "gpu_jobs_launched": 0,
+  "edited_paths": [
+    ".agents/rope_unification_20260910/reports/sol07.md",
+    ".agents/rope_unification_20260910/reports/sol07_coverage.json"
+  ]
+}

@@ -1,0 +1,765 @@
+{
+  "date": "2026-09-10",
+  "scope": "Verbatim archive of available30-agent outputs; corrected current research goal lives in ../ROPE_ALLOCATION_THEORY_CORE_20260910.md",
+  "requested_models": {
+    "gpt-5.6-sol": 20,
+    "gpt-6-astra": 10
+  },
+  "original_reports": 28,
+  "original_read_receipts": 27,
+  "missing_original_reports": [
+    "sol20",
+    "astra10"
+  ],
+  "missing_original_read_receipts": [
+    "sol18",
+    "sol20",
+    "astra10"
+  ],
+  "entries": [
+    {
+      "source": ".agents/rope_unification_20260910/reports/astra01.md",
+      "archive": "agents/astra01.md",
+      "kind": "original_agent_report",
+      "bytes": 22547,
+      "sha256": "f3fc2ae72512a3315b60c1ce9d69845488b8c11b3015445d7175a95ddd2cac86"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/astra02.md",
+      "archive": "agents/astra02.md",
+      "kind": "original_agent_report",
+      "bytes": 22812,
+      "sha256": "779fc9cf9f41f0026b2b1dd8ebdfeb3b6edaeb2abcf688eab0f74c480e987cc1"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/astra03.md",
+      "archive": "agents/astra03.md",
+      "kind": "original_agent_report",
+      "bytes": 24737,
+      "sha256": "b5b79bc5838fe2a7700a74f5a6933f7bb222f66202d1ab2eaec4ce124dcb6dda"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/astra04.md",
+      "archive": "agents/astra04.md",
+      "kind": "original_agent_report",
+      "bytes": 11691,
+      "sha256": "01f0dd5ba3cf324e61db4509a8cd116fcd4ee2277cde75f053199beccf5f2a73"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/astra05.md",
+      "archive": "agents/astra05.md",
+      "kind": "original_agent_report",
+      "bytes": 23762,
+      "sha256": "59167d7611403708cf7f3df72d1cf1eebfbe4e025fb1e2e456975445ae0a4783"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/astra06.md",
+      "archive": "agents/astra06.md",
+      "kind": "original_agent_report",
+      "bytes": 19414,
+      "sha256": "5ba7456583a548ea7e9c1cf7085515640fcacc904515323039de4a7320b63370"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/astra07.md",
+      "archive": "agents/astra07.md",
+      "kind": "original_agent_report",
+      "bytes": 25535,
+      "sha256": "a12f56bcec80e89ffa6c590a8bbd4f49600c79d527646bde12f445f57485fc54"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/astra08.md",
+      "archive": "agents/astra08.md",
+      "kind": "original_agent_report",
+      "bytes": 19879,
+      "sha256": "41444dc460bd45fe26397580565f48cdea62d66a9b1c971d6ea9317d7427fb84"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/astra09.md",
+      "archive": "agents/astra09.md",
+      "kind": "original_agent_report",
+      "bytes": 14468,
+      "sha256": "88347fc1d8783765422af5710147a89577dab63fd1b80174e95504796f76fb44"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol01.md",
+      "archive": "agents/sol01.md",
+      "kind": "original_agent_report",
+      "bytes": 13313,
+      "sha256": "be837b5d8f4dd4a4b46558a395b583cfe93c73874b613f21f50e63b282b5fb3c"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol02.md",
+      "archive": "agents/sol02.md",
+      "kind": "original_agent_report",
+      "bytes": 11427,
+      "sha256": "af47b15832b234c0ebd0d73123b3f5a715b004e256f43f03a61b041775ed1382"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol03.md",
+      "archive": "agents/sol03.md",
+      "kind": "original_agent_report",
+      "bytes": 12958,
+      "sha256": "25e94d2f8423f72748dbab856d6121f832b6c378f23f2a4a7ddccc5e4fec0ddd"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol04.md",
+      "archive": "agents/sol04.md",
+      "kind": "original_agent_report",
+      "bytes": 11385,
+      "sha256": "c7b8fb32df9c0c97e49a9f53004970bd0e08ff44573f2763bff44be3427798cd"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol05.md",
+      "archive": "agents/sol05.md",
+      "kind": "original_agent_report",
+      "bytes": 16474,
+      "sha256": "4231712a6aa2e24080937ca64a96494ad699adc93002d1bb6d767e419d5f3911"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol06.md",
+      "archive": "agents/sol06.md",
+      "kind": "original_agent_report",
+      "bytes": 11896,
+      "sha256": "be757b7d35e28166b87789f189eb8f8d5eb18e5d8d6d488ff23005b3ad852629"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol07.md",
+      "archive": "agents/sol07.md",
+      "kind": "original_agent_report",
+      "bytes": 10281,
+      "sha256": "539e8fc112e459210aae84fa27f7c0d4de4cde026f72e0fc183a701ecbf65c81"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol08.md",
+      "archive": "agents/sol08.md",
+      "kind": "original_agent_report",
+      "bytes": 12374,
+      "sha256": "1e9478ccc668d8065d5d7030effbc67941c3a20878f19602a1fb56fd1edd1392"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol09.md",
+      "archive": "agents/sol09.md",
+      "kind": "original_agent_report",
+      "bytes": 15565,
+      "sha256": "3884a808657ba951a977a2cb04864cf30ae65e00d05e961f7a0639ab7a77fc19"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol10.md",
+      "archive": "agents/sol10.md",
+      "kind": "original_agent_report",
+      "bytes": 21105,
+      "sha256": "ec6c105460d29865e794ee20a5612722ddd47ab765b13e3249946c1f8d8477fa"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol11.md",
+      "archive": "agents/sol11.md",
+      "kind": "original_agent_report",
+      "bytes": 17555,
+      "sha256": "0950c882e53662e13fe91b9a10fd7a7a3794ce6531a8744a2356d4fd6abfee17"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol12.md",
+      "archive": "agents/sol12.md",
+      "kind": "original_agent_report",
+      "bytes": 20927,
+      "sha256": "d8993d5baea3807fd08d09988490d544be0e800e073df9879f58eecf7dd29e7f"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol13.md",
+      "archive": "agents/sol13.md",
+      "kind": "original_agent_report",
+      "bytes": 14400,
+      "sha256": "6f069a9133569cd1115ea7f62a2f2d74856a756895ef2bd7b4d373fade7b733d"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol14.md",
+      "archive": "agents/sol14.md",
+      "kind": "original_agent_report",
+      "bytes": 13311,
+      "sha256": "7d7cb4375da8e92f47bd2ccd7df465aa986b8e94b9a4631bce89c09f97fae5bc"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol15.md",
+      "archive": "agents/sol15.md",
+      "kind": "original_agent_report",
+      "bytes": 18430,
+      "sha256": "36a48ec60c4be8dc538dec80dcca80769561569148fad3a40dad56d190890adb"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol16.md",
+      "archive": "agents/sol16.md",
+      "kind": "original_agent_report",
+      "bytes": 12692,
+      "sha256": "0326ed14f01dc2d85117f2a6c9d3559910d86d8ef7aafa6577a8bd86f6b9e149"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol17.md",
+      "archive": "agents/sol17.md",
+      "kind": "original_agent_report",
+      "bytes": 16749,
+      "sha256": "3f0278793a744530ab36a92b64aa9a9e8f32197a6e10fc51179aef9facc7d7f9"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol18.md",
+      "archive": "agents/sol18.md",
+      "kind": "original_agent_report",
+      "bytes": 15578,
+      "sha256": "11ef7e5bdaf5f9bbd137c5139e0bc3ef1c103ca5b58e3d5a1eeab484873cf271"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol19.md",
+      "archive": "agents/sol19.md",
+      "kind": "original_agent_report",
+      "bytes": 15518,
+      "sha256": "a393fd281aa055234c956ad479dd35633466ec935f638f4b886cd17053b73868"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/astra01_coverage.json",
+      "archive": "coverage/astra01_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 27435,
+      "sha256": "3df34b2f1f9a205c2df2872fdec90487e2aec0cd7a3a03a9a11f5a3d4853d60f"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/astra02_coverage.json",
+      "archive": "coverage/astra02_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 36568,
+      "sha256": "8bdf21982f4d427f813654c5fc03676ab679d88238e9e388e22c00b86748c1db"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/astra03_coverage.json",
+      "archive": "coverage/astra03_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 22059,
+      "sha256": "f9109f4b1e5f1aa0e5a05547d54a0c984c7e0edf60c03f1ec2ce90fe2b727d34"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/astra04_coverage.json",
+      "archive": "coverage/astra04_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 32221,
+      "sha256": "bff942f7d1cfe0de569c75cf691af39538d94ff52c363edddf07c79e7a07acdc"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/astra05_coverage.json",
+      "archive": "coverage/astra05_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 36067,
+      "sha256": "31efae88695ed803941c7f00a0965d0d6087bdfa6b40763d6bb006298b3b7d8e"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/astra06_coverage.json",
+      "archive": "coverage/astra06_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 12068,
+      "sha256": "2f40d81370014fdad692bf909c954caf2f9e1a4037269311098503165121351c"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/astra07_coverage.json",
+      "archive": "coverage/astra07_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 41536,
+      "sha256": "5719acf19ec40a6328dbd2fd94b82cb9b078a40ea66a516fff7c009c17b9daaa"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/astra08_coverage.json",
+      "archive": "coverage/astra08_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 36121,
+      "sha256": "474c3cfb3e8f84f72255a5e73758421d686187015cf0a680f28fb3bafe1fbda0"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/astra09_coverage.json",
+      "archive": "coverage/astra09_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 5221,
+      "sha256": "af51038e35e7edf877804b44ee2ae4fa809e9a8576cceb2a38b102e3f30208f0"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol01_coverage.json",
+      "archive": "coverage/sol01_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 2164,
+      "sha256": "27486e9b7ce86fbf4d3272f422b994f14ad972df983082924f5d971ace9bf28a"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol02_coverage.json",
+      "archive": "coverage/sol02_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 1380,
+      "sha256": "24f9b543c645e0a54a58b1d895458329c0fcd05a488f54d30d30a93941898625"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol03_coverage.json",
+      "archive": "coverage/sol03_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 1525,
+      "sha256": "6ba51246f30f475a23bb6a8c19b1dc437a0f63e684cd943ff169447e2e0bcc54"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol04_coverage.json",
+      "archive": "coverage/sol04_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 1102,
+      "sha256": "5690e23d0ae8d2f32e0d84206b64c780881a64a50f9923b414014e0e33da08f9"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol05_coverage.json",
+      "archive": "coverage/sol05_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 2383,
+      "sha256": "f2f753ed262d368786f50c6518c170b3270ad7a23c71ca14283afabc2793f97f"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol06_coverage.json",
+      "archive": "coverage/sol06_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 2041,
+      "sha256": "b35bc1b58dc1bb59b527d15ca7b73cad2c0936c1b6e17471b8bcdd8788de31e3"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol07_coverage.json",
+      "archive": "coverage/sol07_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 681,
+      "sha256": "0a1b7744436e424bfc80e5817e6c5556f66fa6062cc2a0c6f342dab218217896"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol08_coverage.json",
+      "archive": "coverage/sol08_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 2706,
+      "sha256": "3b2e8f205ad6628f137ac338e31d6f36ce81f9312f04f4512a3f2153836422ff"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol09_coverage.json",
+      "archive": "coverage/sol09_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 41303,
+      "sha256": "f4fd97f0ac10b10a9f5a668b37bef19583273dbd78ae6190ce44544fa3285be5"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol10_coverage.json",
+      "archive": "coverage/sol10_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 2076,
+      "sha256": "38981a8f422866b6abd67a1f4b3dbb3b063ba10d3d5111db107bbbc5dbdfe704"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol11_coverage.json",
+      "archive": "coverage/sol11_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 32301,
+      "sha256": "28cad99ceab0fa658687943fc1c62d6404bcc79af29814d4da901fad25c63494"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol12_coverage.json",
+      "archive": "coverage/sol12_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 56480,
+      "sha256": "b80459dde6854c029df018364adbcc78e897ba5fc8aaab618ca77fe8c3e4b83d"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol13_coverage.json",
+      "archive": "coverage/sol13_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 1325,
+      "sha256": "4ade38105c664b7eb6339e3a3e23803e84bb2a50c246ec3704e31eb567a2e301"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol14_coverage.json",
+      "archive": "coverage/sol14_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 40019,
+      "sha256": "2237759e2f2dc59fa976bd35a951ca1ca0e187144215244ddaa37612fe446d9d"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol15_coverage.json",
+      "archive": "coverage/sol15_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 2912,
+      "sha256": "a4f64db8e7a3eebf9ac0b7e42155462bc4d9d6111ac68fc1b993a296b4d12b12"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol16_coverage.json",
+      "archive": "coverage/sol16_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 3068,
+      "sha256": "fb3e95e568225a54c665cd60b265c5c1357f999a38b9d6f862bbdfb540083ba6"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol17_coverage.json",
+      "archive": "coverage/sol17_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 1919,
+      "sha256": "0934961c653e3b6d42803f53f44755628fe2473fc86e14efa552fb112263bc90"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/sol19_coverage.json",
+      "archive": "coverage/sol19_coverage.json",
+      "kind": "original_read_receipt",
+      "bytes": 10387,
+      "sha256": "88e742539afd9d816c4cd55416a97b2cabc598ff8a1dc6016f1ce031dc26d001"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/astra01.md",
+      "archive": "assignments/astra01.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 12415,
+      "sha256": "0b929794c8a71b1598e796fb5a74516a9e477cad32a45da7db8b0daa8a6c0678"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/astra02.md",
+      "archive": "assignments/astra02.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 13904,
+      "sha256": "a964eb232b5df62eec90b4701574e38d9a1c7d58feb7228e678dfcbfcd7ac9ec"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/astra03.md",
+      "archive": "assignments/astra03.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 6913,
+      "sha256": "571487f2c9d4049498ac2aea7843b84f930be23a7e15aeef0a31a42749f7f1fb"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/astra04.md",
+      "archive": "assignments/astra04.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 13403,
+      "sha256": "d88522a10a9e668c9ef8e395abb6c51354cf31113d5b48ec5b842ff5928c912e"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/astra05.md",
+      "archive": "assignments/astra05.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 14018,
+      "sha256": "61ad1c3b601839b2a999a33638624a4aeba55696611baae4565bf1c5c0fc6247"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/astra06.md",
+      "archive": "assignments/astra06.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 4140,
+      "sha256": "ce3c5500814caaa6bebee3a7b71d04dfba2074e4680bc6280e78c839d57690ac"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/astra07.md",
+      "archive": "assignments/astra07.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 13199,
+      "sha256": "797019aaa47d6cd79106fa66c715045c3009e09fc3ebbce646f98d29c89d8c44"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/astra08.md",
+      "archive": "assignments/astra08.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 13807,
+      "sha256": "de45c03496b044d3de81a77c59522804130c78c9df533f19cd5128ada2f0687e"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/astra09.md",
+      "archive": "assignments/astra09.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 2819,
+      "sha256": "3e19c8b427ff822d742b2ed7f5f206fbe0753a0ae8165e30155027c3587860a5"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/astra10.md",
+      "archive": "assignments/astra10.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 2840,
+      "sha256": "4771ad88d6f0a90ee3b89a42605e381b1e316305963492bba445e2ccc162d45c"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/sol01.md",
+      "archive": "assignments/sol01.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 2227,
+      "sha256": "6b5a7e32c05f7f6e517c10c7951e2e1db027bafaf1177d4f1666116e19fa1d34"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/sol02.md",
+      "archive": "assignments/sol02.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 2280,
+      "sha256": "d7a05f38872e14f9d471667d763a71c7b5acda6f60a14ddaedec25e27d29eaeb"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/sol03.md",
+      "archive": "assignments/sol03.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 2395,
+      "sha256": "db126bea7e9cb248da5dbad5e333984cb64af8175563097f3048a131cac1315c"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/sol04.md",
+      "archive": "assignments/sol04.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 2385,
+      "sha256": "996f50ec7dbab7db4f9b28b2e57f8cf2c0f5044b76ae1dc55155f3e152bf2912"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/sol05.md",
+      "archive": "assignments/sol05.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 2629,
+      "sha256": "284a39125ce2e594b8566070e8647ac41d75b5ee979851c90111e0f6906d945f"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/sol06.md",
+      "archive": "assignments/sol06.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 2785,
+      "sha256": "0c7a6928cd5a35036215a8904d6951eb71226447f7f1398d61e41bfc867a90f4"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/sol07.md",
+      "archive": "assignments/sol07.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 6127,
+      "sha256": "7ba0fe2fcf5819a0577223d960120116b3288c265745460eb47689f0b21b5af9"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/sol08.md",
+      "archive": "assignments/sol08.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 5153,
+      "sha256": "7f9463fb5fe7913cacc2cf46a5c0fc380b85337d4c3d43bf93c908f49fa418ff"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/sol09.md",
+      "archive": "assignments/sol09.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 16084,
+      "sha256": "f53724fcaa1fc85ec46a82c0767c9389e0e66a59e8c69c7529370cf182029646"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/sol10.md",
+      "archive": "assignments/sol10.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 16225,
+      "sha256": "579af4fcae5002285e5514cda1d480ccdb7b696b80562cb8b01da046fc76f6e9"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/sol11.md",
+      "archive": "assignments/sol11.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 16191,
+      "sha256": "f58b4d1e5625028526ee39a54c974262cd37521fa67f73500ae01d132a658ca4"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/sol12.md",
+      "archive": "assignments/sol12.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 16867,
+      "sha256": "be3299dd85f6996d839b139441011a596c5cd40fa1140468edea0f80944b78eb"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/sol13.md",
+      "archive": "assignments/sol13.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 16153,
+      "sha256": "7f0d78d68ad59a9fd56875b31994f938fa8908e76745231aea23a7216812286d"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/sol14.md",
+      "archive": "assignments/sol14.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 16595,
+      "sha256": "0c36bbf93b0d3f931c3169442cf9be8dd314ddb4a3faa8c17b7c0852164fd21c"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/sol15.md",
+      "archive": "assignments/sol15.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 7714,
+      "sha256": "b44c514f82a7e00ad8e64da2007e04dce4c908e81f3fd7e185f3778e5f7d6f42"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/sol16.md",
+      "archive": "assignments/sol16.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 3858,
+      "sha256": "098e76d9239878dea91794251e3c04a4262db7c12ab89cb43eb10cfd29044ad0"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/sol17.md",
+      "archive": "assignments/sol17.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 13253,
+      "sha256": "d9976730dfdb0356a1b1fe40093142d093ab3395584f943ab59062c6d567f462"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/sol18.md",
+      "archive": "assignments/sol18.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 13514,
+      "sha256": "6cf4bc9963dd8b81784e30d200e879a062b1a0de8e2ebc15ca641626d9cc7d27"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/sol19.md",
+      "archive": "assignments/sol19.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 4255,
+      "sha256": "6ada8dbceeddb18049b05a9602e55e92c0f0a07d7f180a6c9e4e84e08ec1dcc7"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/assignments/sol20.md",
+      "archive": "assignments/sol20.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 2368,
+      "sha256": "fb32c00ca7b4bc9fdef4fcdc03bad3abfdfe14eca28064dc2ad1091bc4187059"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/COMMON.md",
+      "archive": "assignments/COMMON.md",
+      "kind": "historical_assignment_not_current_goal",
+      "bytes": 1635,
+      "sha256": "6b3740fbbc9060cb00cad22cbde2cec36ea552abc78698d88bd4113728aacd21"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/code/astra07_lifecycle.py",
+      "archive": "code/astra07_lifecycle.py",
+      "kind": "reference_or_measurement_code",
+      "bytes": 5678,
+      "sha256": "115412668ae132e4eabc1c1da1ed346ff37dcd5c36dd193d591e5cd3bae7bc5b"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/code/full_model_response.py",
+      "archive": "code/full_model_response.py",
+      "kind": "reference_or_measurement_code",
+      "bytes": 3810,
+      "sha256": "94bee234a3684741d1d5adc2f320fcffba61d7eec22dd2f3fd18c829699cb2da"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/code/joint_mode_candidates.py",
+      "archive": "code/joint_mode_candidates.py",
+      "kind": "reference_or_measurement_code",
+      "bytes": 10458,
+      "sha256": "8d1f0a857aa9b97b4f396deabe01bd5d5c757da09b339f6b6e34e5c078365c44"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/code/sol16_frequency_calibration_reference.py",
+      "archive": "code/sol16_frequency_calibration_reference.py",
+      "kind": "reference_or_measurement_code",
+      "bytes": 6110,
+      "sha256": "f26aa9f03f2d44125e6d22aef5174176860e7cee3d1e214bee5d813b4a4c0a54"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/astra09_rule.py",
+      "archive": "code/astra09_rule.py",
+      "kind": "reference_code",
+      "bytes": 6793,
+      "sha256": "90f9dd72f415f3c80432b682523de2b1d0e4e8bfdc8c5f23e80994eb9276c9e9"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/joint_mode_candidates.json",
+      "archive": "evidence/joint_mode_candidates.json",
+      "kind": "cpu_candidates_only",
+      "bytes": 298810,
+      "sha256": "a0ae795ed71aa059bb8616ac934b6fd04cefc937e0696e614c92e5445828e4b5"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/full_model_response_native.jsonl",
+      "archive": "evidence/full_model_response_native.jsonl",
+      "kind": "completed_native_gradient_measurement",
+      "bytes": 8673,
+      "sha256": "d60072cdc96af9b773adf4199afe6b4860887cfb734bd69293ed1cc4c2fc67b6"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/team_plan.json",
+      "archive": "evidence/team_plan_original.json",
+      "kind": "stale_historical_dispatch_plan",
+      "bytes": 2877,
+      "sha256": "e423671dbe45aa6a0347cb975ef46452d881e71588bafb658132af634da592f6"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/corpus/CORPUS_SCOPE.json",
+      "archive": "evidence/CORPUS_SCOPE.json",
+      "kind": "input_inventory_not_read_proof",
+      "bytes": 752,
+      "sha256": "32064b7565891a9b58f75c403c5564ba9fa7e18497aa73779f7d21fd3466fa1a"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/corpus/session_inventory.json",
+      "archive": "evidence/session_inventory.json",
+      "kind": "input_inventory_not_read_proof",
+      "bytes": 8583,
+      "sha256": "8f5c10347d3941d8cd1d6c05fa81508cc3488525a041fa630fc29b987c761c07"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/corpus/project_fulltext_inventory.json",
+      "archive": "evidence/project_fulltext_inventory.json",
+      "kind": "input_inventory_not_read_proof",
+      "bytes": 324842,
+      "sha256": "b567aede2e92bae684601581a17027c3cf0fc7b2aa353db079bbd18e5584d7e3"
+    },
+    {
+      "source": "/Users/misaya.yanghejazfs.com.au/.codex/attachments/6f22c629-45a0-41e8-a383-4ad135436f7c/pasted-text.txt",
+      "archive": "source_inputs/mrrope_yarn_user_analysis.md",
+      "kind": "user_supplied_analysis",
+      "bytes": 16004,
+      "sha256": "5c285cab5d502aaf71811a1b62d41a5c69e2aa0d7dbb8bcbaf56f2b13f2fff8d"
+    },
+    {
+      "source": "/Users/misaya.yanghejazfs.com.au/.codex/attachments/178672bd-38b0-450b-9158-1729d7d6c801/pasted-text.txt",
+      "archive": "source_inputs/pro6_allocation_analysis.md",
+      "kind": "user_supplied_analysis",
+      "bytes": 27446,
+      "sha256": "0265b989117af0580690f5ec5454455e3b7dfc2c7aff12ccbb570b55a748bf95"
+    },
+    {
+      "source": "/Users/misaya.yanghejazfs.com.au/Desktop/Nongeometric_RoPE_Questions_for_GPT6Pro_20260910.md",
+      "archive": "source_inputs/Nongeometric_RoPE_Questions_for_GPT6Pro_20260910.md",
+      "kind": "historical_pro_question_attachment",
+      "bytes": 22427,
+      "sha256": "74873a85651f126d136f6eb832197ce901f3f734e28fc05a407a9745986ac61c"
+    },
+    {
+      "source": "/Users/misaya.yanghejazfs.com.au/Desktop/RoPE_Allocation_Theory_Questions_for_Pro_20260910.md",
+      "archive": "source_inputs/RoPE_Allocation_Theory_Questions_for_Pro_20260910.md",
+      "kind": "historical_pro_question_attachment",
+      "bytes": 26703,
+      "sha256": "bf89bfb871c117a41ecbed2dc881c104ef22b26b8cfb1305672f3049627ec4c6"
+    },
+    {
+      "source": "/Users/misaya.yanghejazfs.com.au/Desktop/RoPE_Allocation_Core_Problem_for_Pro_20260910.md",
+      "archive": "source_inputs/RoPE_Allocation_Core_Problem_for_Pro_20260910.md",
+      "kind": "historical_pro_question_attachment",
+      "bytes": 6765,
+      "sha256": "86a0bdced87fd82593689ddb587bd75e4ad514216acea7c387df9a4a2e007856"
+    },
+    {
+      "source": "Delivered agent communications plus explicitly cited existing artifacts",
+      "archive": "recovered/astra10.md",
+      "kind": "root_compiled_recovery_not_original_report",
+      "bytes": 2294,
+      "sha256": "5539fbb15a171d03785a7069e8cbb8fcb11821d9bb68326e65bd0c6cbb39e8c9"
+    },
+    {
+      "source": "Delivered agent communications plus explicitly cited existing artifacts",
+      "archive": "recovered/sol20.md",
+      "kind": "root_compiled_recovery_not_original_report",
+      "bytes": 1426,
+      "sha256": "c224dee3d28648f82ce32bddcd056d42b4b93cd3a595b5e89b07037a1379246e"
+    },
+    {
+      "source": ".agents/rope_unification_20260910/reports/astra09_pages.json",
+      "archive": "coverage/astra09_pages.json",
+      "kind": "original_auxiliary_page_receipt",
+      "bytes": 6675,
+      "sha256": "b63f23cfbbba28496a30ef19ed834f41846211c3ab68e17678a2ca561eb20f45"
+    }
+  ],
+  "notes": [
+    "Original reports and assignments are preserved byte-for-byte and do not set the current task.",
+    "Input inventory and filesystem loading do not prove model-context reading of every raw tool output.",
+    "Raw historical transcript tool-output shards remain in the local source corpus; they are not research deliverables newly committed here.",
+    "No new Qwen allocation was selected or validated from the29 CPU-created joint-mode tables.",
+    "No new inference, training or server inspection was performed for this archival task."
+  ],
+  "recovered_contribution_documents": 2,
+  "archive_status": "28_original_reports_plus_2_labeled_recoveries"
+}

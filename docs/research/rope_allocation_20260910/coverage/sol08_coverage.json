@@ -1,0 +1,50 @@
+{
+  "agent_id": "sol08",
+  "assignment": ".agents/rope_unification_20260910/assignments/sol08.md",
+  "coverage_status": "complete",
+  "assigned_file_count": 25,
+  "fully_read": [
+    "paper-2027/research/foundations/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md",
+    "paper-2027/research/foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md",
+    "paper-2027/research/foundations/ICLR2027_RESEARCH_SYNTHESIS_20260819.md",
+    "paper-2027/research/foundations/ICLR2027_THEORY_ARCHITECTURE.md",
+    "paper-2027/research/foundations/README.md",
+    "paper-2027/research/foundations/ROPE_CAUSAL_VARIABLES_AND_ZERO_TRAINING_RETROFIT_20260823.md",
+    "paper-2027/research/foundations/ROPE_OPTIMALITY_IDENTIFIABILITY_AND_CONDITIONAL_EQUATIONS_20260903.md",
+    "paper-2027/research/audits/DEPENDENCY_SPECTRUM_CLAUDE_AUDIT_20260819.md",
+    "paper-2027/research/audits/FULL_ROPE_CLAUDE_AUDIT_20260819.md",
+    "paper-2027/research/audits/ICLR2027_CITATION_NOVELTY_AUDIT_20260826.md",
+    "paper-2027/research/audits/ICLR2027_FULL_MANUSCRIPT_READONLY_REVIEW_20260822.md",
+    "paper-2027/research/audits/ICLR2027_NARRATIVE_REFLECTION_20260821.md",
+    "paper-2027/research/audits/ICLR2027_REVIEW_AND_EVIDENCE_AUDIT.md",
+    "paper-2027/research/audits/ICLR2027_SUBMISSION_ACTION_PLAN_20260822.md",
+    "paper-2027/research/audits/ICLR2027_SUBMISSION_COMPLIANCE_AND_CITATION_AUDIT_20260831.md",
+    "paper-2027/research/audits/KAPPA_ATTENTION_MEASURE_AUDIT_20260820.md",
+    "paper-2027/research/audits/LEROPE_PROFILE_ORACLE_AUDIT_20260820.md",
+    "paper-2027/research/audits/README.md",
+    "paper-2027/research/audits/SUNDAY_CAUSAL_AUDIT_AND_MANUSCRIPT_PLAN_20260823.md",
+    "paper-2027/research/three_completions/README.md",
+    "paper-2027/research/three_completions/evq_three_completions.tex",
+    "paper-2027/research/three_completions/optimization_notes.md",
+    "paper-2027/research/three_completions/verify_optimizations.py",
+    "paper-2027/research/three_completions/verify_three_completions.py",
+    "paper-2027/research/history/TIMELINE.md"
+  ],
+  "bounded_reads": {
+    "paper-2027/research/three_completions/evq_three_completions.tex": ["1-500", "501-1006"],
+    "paper-2027/research/audits/ICLR2027_REVIEW_AND_EVIDENCE_AUDIT.md": ["1-100", "101-200", "201-310", "311-415"]
+  },
+  "omissions": [],
+  "unassigned_not_claimed_as_read": [
+    "MrRoPE primary paper",
+    "Pro attachments",
+    "raw JSON or JSONL experiment owners",
+    "other agents' reports"
+  ],
+  "gpu_jobs_launched": 0,
+  "extra_agents_spawned": 0,
+  "files_written": [
+    ".agents/rope_unification_20260910/reports/sol08.md",
+    ".agents/rope_unification_20260910/reports/sol08_coverage.json"
+  ]
+}

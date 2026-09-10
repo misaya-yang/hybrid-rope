@@ -1,0 +1,159 @@
+{
+  "requested": {
+    "gpt-5.6-sol": 20,
+    "gpt-6-astra": 10
+  },
+  "concurrency_limit_subagents": 8,
+  "agents": [
+    {
+      "id": "sol01",
+      "model": "gpt-5.6-sol",
+      "state": "report_complete"
+    },
+    {
+      "id": "sol02",
+      "model": "gpt-5.6-sol",
+      "state": "report_complete"
+    },
+    {
+      "id": "sol03",
+      "model": "gpt-5.6-sol",
+      "state": "report_complete"
+    },
+    {
+      "id": "sol04",
+      "model": "gpt-5.6-sol",
+      "state": "report_complete"
+    },
+    {
+      "id": "sol05",
+      "model": "gpt-5.6-sol",
+      "state": "report_complete"
+    },
+    {
+      "id": "sol06",
+      "model": "gpt-5.6-sol",
+      "state": "report_complete"
+    },
+    {
+      "id": "sol07",
+      "model": "gpt-5.6-sol",
+      "state": "report_complete"
+    },
+    {
+      "id": "sol08",
+      "model": "gpt-5.6-sol",
+      "state": "report_complete"
+    },
+    {
+      "id": "sol09",
+      "model": "gpt-5.6-sol",
+      "state": "started"
+    },
+    {
+      "id": "sol10",
+      "model": "gpt-5.6-sol",
+      "state": "started"
+    },
+    {
+      "id": "sol11",
+      "model": "gpt-5.6-sol",
+      "state": "started"
+    },
+    {
+      "id": "sol12",
+      "model": "gpt-5.6-sol",
+      "state": "pending"
+    },
+    {
+      "id": "sol13",
+      "model": "gpt-5.6-sol",
+      "state": "pending"
+    },
+    {
+      "id": "sol14",
+      "model": "gpt-5.6-sol",
+      "state": "pending"
+    },
+    {
+      "id": "sol15",
+      "model": "gpt-5.6-sol",
+      "state": "pending"
+    },
+    {
+      "id": "sol16",
+      "model": "gpt-5.6-sol",
+      "state": "pending"
+    },
+    {
+      "id": "sol17",
+      "model": "gpt-5.6-sol",
+      "state": "pending"
+    },
+    {
+      "id": "sol18",
+      "model": "gpt-5.6-sol",
+      "state": "pending"
+    },
+    {
+      "id": "sol19",
+      "model": "gpt-5.6-sol",
+      "state": "pending"
+    },
+    {
+      "id": "sol20",
+      "model": "gpt-5.6-sol",
+      "state": "pending"
+    },
+    {
+      "id": "astra01",
+      "model": "gpt-6-astra",
+      "state": "started"
+    },
+    {
+      "id": "astra02",
+      "model": "gpt-6-astra",
+      "state": "started"
+    },
+    {
+      "id": "astra03",
+      "model": "gpt-6-astra",
+      "state": "started"
+    },
+    {
+      "id": "astra04",
+      "model": "gpt-6-astra",
+      "state": "started"
+    },
+    {
+      "id": "astra05",
+      "model": "gpt-6-astra",
+      "state": "started"
+    },
+    {
+      "id": "astra06",
+      "model": "gpt-6-astra",
+      "state": "pending"
+    },
+    {
+      "id": "astra07",
+      "model": "gpt-6-astra",
+      "state": "pending"
+    },
+    {
+      "id": "astra08",
+      "model": "gpt-6-astra",
+      "state": "pending"
+    },
+    {
+      "id": "astra09",
+      "model": "gpt-6-astra",
+      "state": "pending"
+    },
+    {
+      "id": "astra10",
+      "model": "gpt-6-astra",
+      "state": "pending"
+    }
+  ]
+}

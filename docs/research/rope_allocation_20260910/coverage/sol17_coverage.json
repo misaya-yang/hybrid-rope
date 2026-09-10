@@ -1,0 +1,32 @@
+{
+  "agent_id": "sol17",
+  "assignment": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/assignments/sol17.md",
+  "status": "complete",
+  "assigned_file_count": 100,
+  "assigned_bytes": 1107668,
+  "assigned_lines": 25077,
+  "ordered_path_sha256_manifest_sha256": "949cb056fe50d84b1cec7ee76726b1fc4273182b738324aae5c8796121194708",
+  "read_status": "all_assigned_full_text_ingested",
+  "method": "The ordered assigned files were concatenated with explicit file-boundary headers into a 1101078-character stream and emitted in contiguous 30000-character pages covering 0 through 1101078 without gaps. Initial oversized or parallel outputs that truncated were superseded and were not counted as coverage.",
+  "concatenated_character_coverage": {
+    "characters": 1101078,
+    "page_size": 30000,
+    "coverage_intervals": [[0, 1101078]],
+    "page_count": 37
+  },
+  "additional_full_texts": [
+    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/astra01.md",
+    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/astra02.md",
+    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/astra03.md",
+    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/astra04.md",
+    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/astra05.md",
+    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/astra06.md",
+    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_GLM_6PRO_REVIEW_AND_VALIDATION_20260910.md"
+  ],
+  "omissions": [],
+  "gpu_jobs": 0,
+  "model_jobs": 0,
+  "new_frequency_tables": 0,
+  "extra_agents": 0,
+  "paper_or_runtime_edits": 0
+}

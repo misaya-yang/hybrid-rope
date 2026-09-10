@@ -1,0 +1,294 @@
+{
+  "agent_id": "astra06",
+  "assignment": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/assignments/astra06.md",
+  "assigned_files": [
+    {
+      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/challenger_2/report.md",
+      "sha256": "1bcb7f6e859101fe3f27ea250e4c5ef8b31a1a5e4aa065a8426a9eb6656530fd",
+      "bytes": 20213,
+      "characters": 20046,
+      "lines": 200,
+      "read_status": "full_text_ingested",
+      "coverage_char_intervals": [
+        [
+          0,
+          20046
+        ]
+      ],
+      "method": "Complete cat output for short files or contiguous character pages of <=30000 characters; initial oversized truncated reads were superseded by complete bounded reads."
+    },
+    {
+      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/challenger_review_1/challenge_report.md",
+      "sha256": "2389316a460edb92e0e9a8ae0dd6cc36502804e60dd335329000260522670ef5",
+      "bytes": 23515,
+      "characters": 23242,
+      "lines": 193,
+      "read_status": "full_text_ingested",
+      "coverage_char_intervals": [
+        [
+          0,
+          23242
+        ]
+      ],
+      "method": "Complete cat output for short files or contiguous character pages of <=30000 characters; initial oversized truncated reads were superseded by complete bounded reads."
+    },
+    {
+      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/explorer_survey_1/report.md",
+      "sha256": "5563b3d0af528d8c0c950cad1e54e3e747905cf25470915953c94e9c37ee42a8",
+      "bytes": 26934,
+      "characters": 26934,
+      "lines": 315,
+      "read_status": "full_text_ingested",
+      "coverage_char_intervals": [
+        [
+          0,
+          26934
+        ]
+      ],
+      "method": "Complete cat output for short files or contiguous character pages of <=30000 characters; initial oversized truncated reads were superseded by complete bounded reads."
+    },
+    {
+      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/explorer_survey_2/report.md",
+      "sha256": "2e82e870581d357d9829e8c44e5e01bb54b971974358e7ce85bfd8b0196fe3da",
+      "bytes": 34947,
+      "characters": 34927,
+      "lines": 344,
+      "read_status": "full_text_ingested",
+      "coverage_char_intervals": [
+        [
+          0,
+          34927
+        ]
+      ],
+      "method": "Complete cat output for short files or contiguous character pages of <=30000 characters; initial oversized truncated reads were superseded by complete bounded reads."
+    },
+    {
+      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/explorer_survey_3/report.md",
+      "sha256": "5f23c760f4d69825f76c7323128c13da36f820519c2fcd55028e6806ea38fec6",
+      "bytes": 33578,
+      "characters": 33522,
+      "lines": 345,
+      "read_status": "full_text_ingested",
+      "coverage_char_intervals": [
+        [
+          0,
+          33522
+        ]
+      ],
+      "method": "Complete cat output for short files or contiguous character pages of <=30000 characters; initial oversized truncated reads were superseded by complete bounded reads."
+    },
+    {
+      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/reviewer_1/report.md",
+      "sha256": "9417f4e2f7c533e8d9041624db06ec4127a484057ffe839afa311f40a333b26c",
+      "bytes": 19926,
+      "characters": 19916,
+      "lines": 189,
+      "read_status": "full_text_ingested",
+      "coverage_char_intervals": [
+        [
+          0,
+          19916
+        ]
+      ],
+      "method": "Complete cat output for short files or contiguous character pages of <=30000 characters; initial oversized truncated reads were superseded by complete bounded reads."
+    },
+    {
+      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/synthesizer_1/DOCUMENT_REVIEW_REPORT.md",
+      "sha256": "c4fac53325caa623259ca992f206703cff631e4302446fcfd75203a76596c3a4",
+      "bytes": 226962,
+      "characters": 226893,
+      "lines": 1547,
+      "read_status": "full_text_ingested",
+      "coverage_char_intervals": [
+        [
+          0,
+          226893
+        ]
+      ],
+      "method": "Complete cat output for short files or contiguous character pages of <=30000 characters; initial oversized truncated reads were superseded by complete bounded reads."
+    },
+    {
+      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/synthesizer_1/generate_executive_synthesis.py",
+      "sha256": "cf1c0ededdf1a42af2d50dbcdda268ccb94fe6831c1d2d3afc73d2be9137ba64",
+      "bytes": 42635,
+      "characters": 42630,
+      "lines": 170,
+      "read_status": "full_text_ingested",
+      "coverage_char_intervals": [
+        [
+          0,
+          42630
+        ]
+      ],
+      "method": "Complete cat output for short files or contiguous character pages of <=30000 characters; initial oversized truncated reads were superseded by complete bounded reads."
+    },
+    {
+      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/synthesizer_1/sec_executive_synthesis.md",
+      "sha256": "df014ef5a11c751c34ec77ed5922cb6831477472e6b1693e3e8d7d66a713ccfc",
+      "bytes": 42044,
+      "characters": 42039,
+      "lines": 161,
+      "read_status": "full_text_ingested",
+      "coverage_char_intervals": [
+        [
+          0,
+          42039
+        ]
+      ],
+      "method": "Complete cat output for short files or contiguous character pages of <=30000 characters; initial oversized truncated reads were superseded by complete bounded reads."
+    },
+    {
+      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/worker_blueprint_r4/r4_remediation_blueprint.md",
+      "sha256": "b21622a98f93208e31805e8a869ef82e8f39a76e4e87fbf184cfeedf567d83e6",
+      "bytes": 70790,
+      "characters": 70759,
+      "lines": 1045,
+      "read_status": "full_text_ingested",
+      "coverage_char_intervals": [
+        [
+          0,
+          70759
+        ]
+      ],
+      "method": "Complete cat output for short files or contiguous character pages of <=30000 characters; initial oversized truncated reads were superseded by complete bounded reads."
+    },
+    {
+      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/worker_empirical_r3/r3_empirical_defense.md",
+      "sha256": "c72a22057e218dfb6603eb47966c7d8ed84677ecd1f3c0524f709e1e171ac958",
+      "bytes": 30937,
+      "characters": 30929,
+      "lines": 323,
+      "read_status": "full_text_ingested",
+      "coverage_char_intervals": [
+        [
+          0,
+          30929
+        ]
+      ],
+      "method": "Complete cat output for short files or contiguous character pages of <=30000 characters; initial oversized truncated reads were superseded by complete bounded reads."
+    },
+    {
+      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/worker_empirical_scaling_1/unit_report_empirical_evaluation_scaling.md",
+      "sha256": "d2e1c898f01231685c841b9dcc944b38cb1fe23635ed8a4ae9db779b833a16fc",
+      "bytes": 23454,
+      "characters": 23443,
+      "lines": 146,
+      "read_status": "full_text_ingested",
+      "coverage_char_intervals": [
+        [
+          0,
+          23443
+        ]
+      ],
+      "method": "Complete cat output for short files or contiguous character pages of <=30000 characters; initial oversized truncated reads were superseded by complete bounded reads."
+    },
+    {
+      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/worker_remediation_1/report.md",
+      "sha256": "cbf8d1f85a25314ef131527ac7e95fc7217ce436ce50f9d98cfac36ce6825590",
+      "bytes": 77345,
+      "characters": 76496,
+      "lines": 734,
+      "read_status": "full_text_ingested",
+      "coverage_char_intervals": [
+        [
+          0,
+          76496
+        ]
+      ],
+      "method": "Complete cat output for short files or contiguous character pages of <=30000 characters; initial oversized truncated reads were superseded by complete bounded reads."
+    },
+    {
+      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/worker_theoretical_rigor_1/unit_report_theoretical_rigor_geometry.md",
+      "sha256": "3944dad71b792d030ed196bb19dbbe1fad59d98573401425f2a77d488b59ca98",
+      "bytes": 31872,
+      "characters": 31844,
+      "lines": 255,
+      "read_status": "full_text_ingested",
+      "coverage_char_intervals": [
+        [
+          0,
+          31844
+        ]
+      ],
+      "method": "Complete cat output for short files or contiguous character pages of <=30000 characters; initial oversized truncated reads were superseded by complete bounded reads."
+    },
+    {
+      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.qoder/better-harness/2026-08-25/040755-hybrid-rope/canvas.json",
+      "sha256": "83d1c5940869ca0658cdb15b9c9372e2af1e90d445c0cbb185670df982e6aff4",
+      "bytes": 22208,
+      "characters": 22206,
+      "lines": 484,
+      "read_status": "full_text_ingested",
+      "coverage_char_intervals": [
+        [
+          0,
+          22206
+        ]
+      ],
+      "method": "Complete cat output for short files or contiguous character pages of <=30000 characters; initial oversized truncated reads were superseded by complete bounded reads."
+    },
+    {
+      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.qoder/better-harness-runs/2026-08-25-040755/evidence-bundle.json",
+      "sha256": "b8d9b47f54c37fa8498b8fc681c9c4cccd8b3b3b75d6b078ad692c7e8094e9f9",
+      "bytes": 195789,
+      "characters": 195233,
+      "lines": 5397,
+      "read_status": "full_text_ingested",
+      "coverage_char_intervals": [
+        [
+          0,
+          195233
+        ]
+      ],
+      "method": "Complete cat output for short files or contiguous character pages of <=30000 characters; initial oversized truncated reads were superseded by complete bounded reads."
+    },
+    {
+      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.qoder/better-harness-runs/2026-08-25-040755/project-digest.txt",
+      "sha256": "e399283e010b456c9cc0ddf038973ead605c0c46f0a8044e7cde1885a77e6c7e",
+      "bytes": 111526,
+      "characters": 111526,
+      "lines": 4203,
+      "read_status": "full_text_ingested",
+      "coverage_char_intervals": [
+        [
+          0,
+          111526
+        ]
+      ],
+      "method": "Complete cat output for short files or contiguous character pages of <=30000 characters; initial oversized truncated reads were superseded by complete bounded reads."
+    },
+    {
+      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.qoder/better-harness-runs/2026-08-25-040755/project-key.txt",
+      "sha256": "798f4ab44d9e8fb0c1a589f1eba6d93cb0886b0cc2b56e94ed339fbd35fd6d5d",
+      "bytes": 75853,
+      "characters": 75853,
+      "lines": 2972,
+      "read_status": "full_text_ingested",
+      "coverage_char_intervals": [
+        [
+          0,
+          75853
+        ]
+      ],
+      "method": "Complete cat output for short files or contiguous character pages of <=30000 characters; initial oversized truncated reads were superseded by complete bounded reads."
+    }
+  ],
+  "assigned_count": 18,
+  "assigned_bytes": 1110528,
+  "all_assigned_full_text_ingested": true,
+  "omissions": [],
+  "additional_full_texts": [
+    "docs/research/ROPE_ALLOCATION_SUBSPACE_DERIVATION_20260910.md",
+    "docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md",
+    "docs/research/ROPE_RESEARCH_FAILURE_REVIEW_20260907.md",
+    ".agents/rope_unification_20260910/reports/astra01.md",
+    ".agents/rope_unification_20260910/reports/astra02.md",
+    ".agents/rope_unification_20260910/reports/astra03.md",
+    ".agents/rope_unification_20260910/reports/astra05.md"
+  ],
+  "not_claimed": "Did not ingest all primary sources referenced by historical reports; did not rerun or re-audit their raw generation records. No current model/GPU validation.",
+  "outputs": [
+    "astra06.md",
+    "astra06_coverage.json"
+  ]
+}

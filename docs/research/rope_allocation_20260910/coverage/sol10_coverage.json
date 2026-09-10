@@ -1,0 +1,52 @@
+{
+  "agent_id": "sol10",
+  "assignment": ".agents/rope_unification_20260910/assignments/sol10.md",
+  "assignment_sha256": "579af4fcae5002285e5514cda1d480ccdb7b696b80562cb8b01da046fc76f6e9",
+  "coverage": {
+    "assigned_files": 116,
+    "assigned_bytes": 1451784,
+    "complete_files": 116,
+    "partial_files": 0,
+    "missing_files": 0,
+    "omissions": [],
+    "ordered_path_manifest_sha256": "9179fe6b425623936c7b75a3d43218682f56ec9a4f0b2463429247d64e8480cc"
+  },
+  "dialogue": {
+    "path": ".agents/rope_unification_20260910/corpus/sol10_full_dialogue.jsonl",
+    "sha256": "26612d6b16553a4b15d1f5fa467657809eff8ca4fd0f8efaaf22cb1b8fb656bc",
+    "records": 397,
+    "record_range_read": "1-397 contiguous",
+    "complete_user_and_assistant_text": true,
+    "complete_source_refs": true
+  },
+  "large_file_paging": {
+    "development_json": "original bytes 0-57277 read in contiguous bounded chunks; jq pretty pages were supplementary",
+    "qwen7_result": "lines 1-1000 and 1001-1978",
+    "video_dit": "lines 1-760",
+    "eval_niah_recall": "lines 1-500 and 501-992",
+    "all_other_assigned_files": "complete line-contiguous reads to EOF"
+  },
+  "relevant_tool_records_read": [
+    {
+      "sha256": "62570a5bc72e052efc9725cba74222d1cba68b68e672286b923a54332c37539f",
+      "source_session": "01a0806f-3df5-74b1-bc56-bf00d89d238e",
+      "source_line": 12870,
+      "purpose": "complete development result table including Smooth_MrBudget and E1"
+    },
+    {
+      "sha256": "1221a91c534bf28d45ad613257f11a0bf485cb679bb5437c482346b7bfda4ab4",
+      "source_session": "01a089e5-e681-75e1-819d-b3ffa379898c",
+      "source_line": 96,
+      "purpose": "complete E1 cross-cache token traces showing prefix/read interaction"
+    }
+  ],
+  "tool_archive_scope": {
+    "all_tool_output_records_read": false,
+    "claim": "Only complete relevant records needed to confirm quantitative failures were inspected; unviewed archived outputs are not claimed as read."
+  },
+  "execution": {
+    "gpu_jobs": 0,
+    "subagents_spawned": 0,
+    "source_or_paper_files_modified": 0
+  }
+}

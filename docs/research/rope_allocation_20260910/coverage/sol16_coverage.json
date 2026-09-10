@@ -1,0 +1,25 @@
+{
+  "agent_id": "sol16",
+  "status": "FULL_COVERAGE",
+  "assigned_files": [
+    {"path": ".agents/auditor_victory_document_2/progress.md", "lines": 7, "sha256": "21975754c14ebea4d08d088b3192428c6cd2927014927d5ca007ae30648b0e92", "fully_read": true},
+    {"path": ".agents/challenger_2/progress.md", "lines": 5, "sha256": "d16b4d23596ada32667d9d607a1e69f715eed386c0b0f669a17eff5402b3e26b", "fully_read": true},
+    {"path": "artifacts/sparse_memory_20260908/eval_v1_tp/rows.jsonl", "lines": 6144, "sha256": "c3f00bb43113abf68279a2594bacdc6806a1df1d4a65a60c0c814dd9cd0e95cc", "fully_read": true, "coverage": "contiguous lines 1-6144"},
+    {"path": "artifacts/sparse_memory_20260908/runs/seed137_tp/status.json", "lines": 18, "sha256": "4032fb6005e32ad8e564362c737a788258b86774976731e85358d4e57ccf6cf0", "fully_read": true},
+    {"path": "experiments/rope_operator_family/results/20260909_followups/source_snapshot/__init__.py", "lines": 1, "sha256": "65a5d613c82ba80638966b295a187741883fd57faec6dcc197ba1596462931c9", "fully_read": true},
+    {"path": "paper-2027/tables/table_coadapt.tex", "lines": 24, "sha256": "f74716acc805afac6ab591a4d0617384ab1a6fc6eceabdee1b652fcfe69a63e1", "fully_read": true},
+    {"path": "rebuttal/pre_rebuttal/seed42_lora_eval_20260713/raw/evq_lora_s42_ruler_niah_pilot/ruler_logprob_evq.json", "lines": 38, "sha256": "37cc33fde317f1d12ed2f4b9dadde662de9997a9dcf017e001eb94e15bb7870f", "fully_read": true},
+    {"path": "scripts/core_text_phases/fix_mla_assert.py", "lines": 14, "sha256": "dd1f75a849d7133c5de6e79ba967edd36daa8f36bcbc3d092cdd1d40403444e4", "fully_read": true},
+    {"path": "scripts/core_text_phases/phase16_phase_allocation_budget_matrix_m4.py", "lines": 377, "sha256": "f4d860cc7effe43465652a1d6396d16cf16b249d3a42903cc5aa9fd6499a37b2", "fully_read": true},
+    {"path": "scripts/core_text_phases/phase17f_progressive_tau_burden_probe.py", "lines": 593, "sha256": "b7561411d842596402af2b2fbe5c0194cbb7ae9a9c7b44d2c7c3053791e5b596", "fully_read": true},
+    {"path": "scripts/core_text_phases/phase18_base_generalization_sweep.py", "lines": 560, "sha256": "aef4005e9e317c0123ea058512a8b1e5002bbb34d33481667b5e0a953fe7927e", "fully_read": true},
+    {"path": "scripts/core_text_phases/phase8f_multi_seed.py", "lines": 531, "sha256": "51b7eba8d8425154ba40a4baaa47100d31b53f8c61d352794a2361c396437042", "fully_read": true},
+    {"path": "scripts/experiments/scale_transport/__init__.py", "lines": 1, "sha256": "d9dcbe482c50c0178ec1cfab123f9ded3cddf19202d8388cce21c1d6a24f884e", "fully_read": true},
+    {"path": "scripts/mac_train/exp1_progressive_chain.py", "lines": 499, "sha256": "9fd16c4b8ad52000c09325ae604ca971dd3bdf834368ca7947c0e8aec3431714", "fully_read": true},
+    {"path": "tests/test_success_first_portfolio.py", "lines": 403, "sha256": "c885bf16e80f73eb01780ad0a2d0eaf49f2603200c8a2ca9d1b4e81e1cc8afd6", "fully_read": true}
+  ],
+  "omissions": [],
+  "gpu_jobs_launched": 0,
+  "cpu_reference": ".agents/rope_unification_20260910/code/sol16_frequency_calibration_reference.py",
+  "cpu_reference_status": "PASS"
+}

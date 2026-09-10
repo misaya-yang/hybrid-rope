@@ -1,0 +1,20 @@
+{
+  "sessions": 38,
+  "raw_bytes": 313837981,
+  "unique_dialogue_records": 1530,
+  "unique_dialogue_characters": 553260,
+  "unique_tool_outputs": 3727,
+  "unique_tool_characters": 115038479,
+  "tool_parts": 87,
+  "excluded_from_dialogue": [
+    "duplicate event mirrors",
+    "system and developer scaffolding",
+    "private reasoning",
+    "binary or image payloads"
+  ],
+  "full_dialogue_ingestion_assigned_to": "sol09-sol14",
+  "tool_output_ingestion_status": "archived complete unique outputs, not yet model-ingested",
+  "historical_sessions": 30,
+  "current_team_sessions_in_snapshot": 8,
+  "snapshot_note": "Captured after first eight researchers started; current-team startup messages are included and are not independent historical evidence."
+}

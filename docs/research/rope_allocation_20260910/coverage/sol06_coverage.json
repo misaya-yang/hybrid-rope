@@ -1,0 +1,27 @@
+{
+  "agent_id": "sol06",
+  "task": "Full recent allocation math and failed theory review",
+  "status": "complete",
+  "files": [
+    {"path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_ALLOCATION_SUBSPACE_DERIVATION_20260910.md", "lines_read": "1-281", "complete": true},
+    {"path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_SOFTMAX_MIXED_FREQUENCY_DERIVATION_20260910.md", "lines_read": "1-197", "complete": true},
+    {"path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_GENERAL_ALLOCATION_DERIVATION_20260907.md", "lines_read": "1-151", "complete": true},
+    {"path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/UNIFIED_BUDGET_ALLOCATION_THEORY_20260910.md", "lines_read": "1-143", "complete": true},
+    {"path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/BUDGET_ALLOCATION_MODEL_AND_CANDIDATES_20260910.md", "lines_read": "1-63", "complete": true},
+    {"path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_EXTRAPOLATION_FAILURE_AND_LIMITS_20260910.md", "lines_read": "1-219", "complete": true},
+    {"path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/COSH_REDESIGN_EVIDENCE_REVIEW.md", "lines_read": "1-183", "complete": true}
+  ],
+  "omissions": [],
+  "deliverables": {
+    "constructive_rule": "Relation-targeted gap allocation via one constrained convex QP",
+    "regime_split": "EVQ representation regularizer for coadaptation; signed interaction compatibility for frozen deployment",
+    "counterexamples_checked": [
+      "Smooth MrBudget dominance on unweighted geometry but task loss",
+      "Smooth dominance on QK-weighted MSE and unresolved response",
+      "individual arc horizon is not a hard task boundary",
+      "mixed harmonic existence without measured amplitude",
+      "universal exact-local-preservation obstruction",
+      "Cosh functional and tau selection gaps"
+    ]
+  }
+}
