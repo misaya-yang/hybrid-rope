@@ -20,7 +20,7 @@ ACCEPTED={
  'e04_second':['pc2_ten_v1_E04_retrieval_dev_v1']}
 ORDER=['exact_mass','e02_nonlinear','e08_tail_value','e04_empirical','e04_second',
        'e03_temporal','e07_group_budget','e05_two_component','e05_contiguous','e05_rank4',
-       'e09_local','e10_cutoff','e06_residual_sampling']
+       'e09_global','e09_local','e10_cutoff','e06_residual_sampling']
 
 
 def live(pid):
@@ -51,6 +51,7 @@ def main():
     if args.wait_pid:
         while live(args.wait_pid):time.sleep(1)
     env={**os.environ,'PC2_QUERY_BASIS':str(stage/'calibration_v2/query_basis.pt'),
+         'PC2_KEY_BASIS':str(stage/'calibration_key_v1/key_basis.pt'),
          'PC2_CUTOFF_MODEL':str(stage/'cutoff_fit_v1/cutoff_model.pt')}
     # All stages are finite. A failed stage is retained as failed; independent
     # following stages proceed, while the owner repairs the concrete fault.
@@ -76,6 +77,9 @@ def main():
         write_json(queue_dir/'status.json',state)
         print(json.dumps(entry),flush=True)
     order=args.modes or ORDER
+    probe=[]
+    for family in ('retrieval','occurrence','multi_hop','natural_qa'):
+        probe.extend([r['row_id'] for r in panel if r['ten_family']==family][:2])
     for mode in order:
         done={}
         accepted=ACCEPTED.get(mode,[])+[f'pc2_ten_v1_common48_{mode}_{args.tag}']
@@ -96,9 +100,10 @@ def main():
         write_json(queue_dir/f'{mode}_reused.json',done)
         ids=[r['row_id'] for r in panel if r['row_id'] not in done]
         if ids:execute(mode,ids)
-    probe=[]
-    for family in ('retrieval','occurrence','multi_hop','natural_qa'):
-        probe.extend([r['row_id'] for r in panel if r['ten_family']==family][:2])
+        if mode=='e09_local':
+            diagnostic=root/'runs'/f'pc2_ten_v1_common48_e09_independent_{args.tag}'/'generations.jsonl'
+            completed={r['row_id'] for r in read_rows(diagnostic)} if diagnostic.exists() else set()
+            if not set(probe)<=completed:execute('e09_independent',probe)
     if 'e06_residual_sampling' in order:
         for seed in (20260911,20260912):execute('e06_residual_sampling',probe,'_seed'+str(seed),seed)
     state['status']='COMPLETE' if all(s['status']=='COMPLETE' for s in state['stages']) else 'COMPLETE_WITH_FAILURES'

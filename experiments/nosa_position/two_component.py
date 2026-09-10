@@ -9,7 +9,7 @@ from .runtime import select_with_scores
 
 
 class TwoComponentSelector(ExactBlockSelector):
-    modes=('e05_two_component','e05_contiguous','e05_rank4')
+    modes=('e05_two_component','e05_contiguous','e05_rank4','e09_independent')
 
     def __init__(self, mode='e05_two_component', **kwargs):
         self.variant=mode
@@ -26,12 +26,13 @@ class TwoComponentSelector(ExactBlockSelector):
         if full>done:
             x=context.k[:,done*size:full*size].float().reshape(h,full-done,size,d)
             bias=context.cis[:,done*size:full*size].float().reshape(h,full-done,size)
-            if self.variant=='e05_rank4':
+            if self.variant in ('e05_rank4','e09_independent'):
                 w=bias.softmax(-1);mean=(w[...,None]*x).sum(-2)
                 weighted=(x-mean[:,:,None])*w.sqrt()[...,None]
                 gram=weighted@weighted.transpose(-1,-2)
                 _,vectors=torch.linalg.eigh(gram)
-                factors=vectors[...,-4:].transpose(-1,-2)@weighted
+                rank=4 if self.variant=='e05_rank4' else 32
+                factors=vectors[...,-rank:].transpose(-1,-2)@weighted
                 fresh={'mean':mean,'logz':bias.logsumexp(-1),'factors':factors}
             else:
                 if self.variant=='e05_contiguous':
@@ -68,7 +69,7 @@ class TwoComponentSelector(ExactBlockSelector):
         cache,full=self._build(context)
         out=torch.full((*q.shape[:3],math.ceil(length/context.settings.block_size)),-torch.inf,device=q.device)
         if full:
-            if self.variant=='e05_rank4':
+            if self.variant in ('e05_rank4','e09_independent'):
                 linear=torch.einsum('hgqd,hbd->hgqb',q,cache['mean'])+cache['logz'][:,None,None]
                 projection=torch.einsum('hgqd,hbrd->hgqbr',q,cache['factors'])
                 out[...,:full]=linear+.5*projection.square().sum(-1)

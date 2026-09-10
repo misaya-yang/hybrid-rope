@@ -32,7 +32,7 @@ def exact_current_blocks(context, out, metrics=None):
 class ProjectedDistributionSelector(ExactBlockSelector):
     basis_file = None
     basis_state = None
-    modes = ('e04_empirical', 'e04_second', 'e09_local')
+    modes = ('e04_empirical', 'e04_second', 'e09_global', 'e09_local')
 
     def __init__(self, mode='e04_empirical', **kwargs):
         self.variant = mode
@@ -40,6 +40,8 @@ class ProjectedDistributionSelector(ExactBlockSelector):
         path = os.environ.get('PC2_QUERY_BASIS')
         if not path:
             raise ValueError('PC2_QUERY_BASIS must identify the frozen independent calibration')
+        if self.variant.startswith('e09_'):
+            path = os.environ.get('PC2_KEY_BASIS') or str(Path(path).parent.parent/'calibration_key_v1/key_basis.pt')
         if self.__class__.basis_file != path:
             self.__class__.basis_state = torch.load(path, map_location='cpu', weights_only=True)
             self.__class__.basis_file = path
