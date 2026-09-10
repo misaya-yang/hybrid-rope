@@ -9,6 +9,7 @@ def test_explicit_binding():
     assert good['all_bindings_correct_plus_eos'] is True
     assert wrong['correctly_asserted_key_count']==0 and len(wrong['wrong_explicit_claims'])==2
     assert unordered['all_bindings_correct'] is None
+    assert inspect_answer(row,{**result('12,34'),'ended_with_eos':False})['all_bindings_correct_plus_eos'] is False
     thousands=inspect_answer(row,result('12 and 1,234, respectively.'))
     extra=inspect_answer(row,result('12, 34 and 34, respectively.'))
     assert thousands['claims'][1]['value']=='1234' and len(thousands['wrong_explicit_claims'])==1

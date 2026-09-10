@@ -51,7 +51,7 @@ def inspect_answer(row,result):
         'claims':[{'key':key,'value':value} for key,value in claims],
         'correctly_asserted_key_count':len(correct_keys) if claims else None,
         'queried_key_count':len(keys),'wrong_explicit_claims':wrong,
-        'all_bindings_correct':complete,'all_bindings_correct_plus_eos':complete and result['ended_with_eos'] if complete is not None else None}
+        'all_bindings_correct':complete,'all_bindings_correct_plus_eos':complete if result['ended_with_eos'] else False}
 
 
 def main():

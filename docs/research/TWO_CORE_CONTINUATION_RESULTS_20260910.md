@@ -222,3 +222,40 @@ CUDA检查已完成：合成完整块分数最大绝对差9.54e-7；454个真实
 要判断的是：若001只有full历史能保持正确，单纯晚期修正不足；若COBS历史在full最终读取下能恢复，则最后阶段有直接修复空间；若两种交叉都失败或003被破坏，则存在历史/读取交互，不以平均分隐藏。旧COBS与新COBS同源控制若不同，先保留这项数值/执行差异，不继续将旧输出当成相同路径对照。完整对应和EOS、官方召回均分别记录，不将其混为同一结果。
 
 绑定审计另补了两个已观察格式：千位分隔数字（如10,000）作为一个数处理；明确说“respectively”却给出五个值对应四个对象，记为基数矛盾，不再只标unknown。纯无序、没有对应断言的输出仍unknown，未改变官方评分。新增小测试验证这两个边界。
+
+
+### 阶段交叉已完成：有效修复存在，但廉价最后-token替换没有稳定保住
+
+三项运行均已完成、原始输出全部同步：`pc2_binding_phase_cross_dev_v1` 六次生成263.039秒；`pc2_binding_late_full_two_dev_v1` 四次100.496秒；`pc2_binding_native_late_two_dev_v1` 四次87.815秒。合计14次新自由生成，仅两个预选DEV输入，不能当14个独立样本。每条核对了history query计数恰为(input_tokens−1)×28，answer query计数恰为generated_tokens×28，确认切换从最后prompt token开始、全部层一致。
+
+| 历史selector → 最后prompt/答案selector | 001 | 003 |
+|---|---|---|
+| full → full（复用） | 四项对应正确，EOS | 四项对应正确，EOS |
+| COBS → COBS（新同路径控制） | 四项全错，EOS | 四项对应正确，EOS |
+| full → COBS | 四项全错，EOS | 输出正确数字后继续无关数字，预算结束无EOS |
+| COBS → full | **四项对应正确，EOS** | **四项对应正确，EOS** |
+| PC2 → PC2 | 错误且未EOS | 仅一项对应正确，EOS |
+| PC2 → full | 仅一项对应正确，EOS | 五个值对应四个对象，EOS |
+| native规则参考 → native规则参考 | 错误且未EOS | 两项对应正确，EOS |
+| native规则参考 → full | **四项对应正确，EOS** | 五个值对应四个对象，EOS |
+
+新COBS→COBS的两条raw token均复现旧COBS结果，尽管旧合同为query chunk16、本轮为64。COBS→full的两条raw token均与原full完全相同。001因此给出具体的最终读取阶段修复证据，003保住正控制。但full→COBS在003反而失败，不能概括成历史状态无关；该方向还包含首次构建COBS摘要的不同批尺寸，本轮未证明摘要中间值bitwise一致。
+
+功能和成本必须合看。COBS→full的prefill约36.85/37.23秒，比原full记录约21.69/20.50秒慢。PC2→full约18.67/18.73秒却两条都未完整通过；native→full约15.99/16.02秒，但只保住001，003违反四对象对应四值的明确断言。native→full两条官方召回仍都是1，再次说明不能用集合召回批准这项替换。
+
+决策：保留COBS历史→full最终读取这一可复现、但昂贵的局部修复；停止本轮最后prompt-token边界的廉价历史替换，不继续枚举历史selector。此实验把正文和问题前部一起归入history，尚不能区分正文状态不足与问题状态形成不足；不能据此排除更早的语义阶段，也不能在没有新判别依据时继续扫token阈值。尚未得到可推广的低成本方案，未扩展TEST。
+
+最新汇总与逐条成本、raw身份、源gold审计位于 `pc2_binding_native_late_two_dev_v1/paired_phase_analysis.json` 及 `binding_audit.json`。审计已支持千位分隔和明确基数矛盾；无EOS时“完整对应且EOS”明确为false，即使对应解析未知。仅无序输出、没有明确对应断言的情况继续保留unknown。
+
+
+## 从实际问题开始使用full二阶：两例已通过，规则冻结后补齐其余DEV
+
+前一阶段把正文与问题前部一起交给廉价历史selector，不能区分哪一部分导致计数/对应失败。本轮只改变一个自然语义边界：native规则处理正文，从冻结输入中实际“ What are all the special magic numbers for … ”问题的首token起，使用full二阶处理整个问题和答案。不是按答案搜索任意token阈值，也没有改变问题文本或生成限制。
+
+`question_phase_full.py` 用原模型tokenizer的offset mapping核对完整prompt_ids逐项一致后定位唯一问题句。001在绝对token16165切换（后续86个prompt token），003在16164切换（84个prompt token），两处都在原最后一个128-token prefill块内；仍沿用相同context上的逐query路由与原reader。
+
+首次 `pc2_question_phase_two_dev_v1` 在结果封装时失败：runner的isinstance要求selector工厂为类，新入口误用了函数。失败回执保留，未形成有效生成记录，不能视为方法阴性。改为QuestionPhaseSelector类，并加入问题边界及工厂注册小测试后，在新目录 `pc2_question_phase_two_dev_v2` 完成两次生成。
+
+两条都完整对应正确且EOS，raw tokens均与原full相同；001保住正例，003不再出现最后-token切换的五值错误。Prefill分别16.081/15.562秒，接近此前native历史→full最后-token的15.992/16.020秒。这里说明在这两例中，把full覆盖前移到整个问题阶段具有实际功能效果；不从两例外推总体成功。
+
+规则保持不变，正在 `pc2_question_phase_remaining_dev_v1` 补齐其余六条既有16K multiquery DEV（000/002/004/005/006/007），不重复001/003，不扩展TEST。仅扩展输入白名单，question_boundary及QuestionPhaseSelector计算定义保持一致。一次模型路径拼写错误被模型身份检查在加载前拒绝，纠正后才开始实际运行。
