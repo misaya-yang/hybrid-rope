@@ -15,6 +15,7 @@ from .group_budget import GroupBudgetSelector
 from .two_component import TwoComponentSelector
 from .residual_sampling import ResidualSamplingSelector
 from .learned_cutoff import LearnedCutoffSelector
+from .cascade import CascadeSelector
 
 
 class TenSelector(NonlinearGQASelector):
@@ -35,6 +36,8 @@ class TenSelector(NonlinearGQASelector):
             self.index_impl = ResidualSamplingSelector(mode, **kwargs)
         if mode == 'e10_cutoff':
             self.index_impl = LearnedCutoffSelector(mode, **kwargs)
+        if mode in ('e04_cascade2', 'e04_cascade4'):
+            self.index_impl = CascadeSelector(multiplier=int(mode[-1]), **kwargs)
         super().__init__("exact_mass" if self.value_impl or self.index_impl else mode, **kwargs)
 
     def __call__(self, context):
@@ -75,7 +78,7 @@ def main():
     old_reader = runtime.selected_causal_attention
     qa_hash = hashlib.sha256(Path(qa_module.__file__).read_bytes()).hexdigest()
     def hashes():
-        names = ("ten_run.py", "nonlinear_gqa.py", "tail_value.py", "exact_probe.py", "bounded_int8.py", "projected_distribution.py", "temporal_response.py", "group_budget.py", "two_component.py", "residual_sampling.py", "learned_cutoff.py")
+        names = ("ten_run.py", "nonlinear_gqa.py", "tail_value.py", "exact_probe.py", "bounded_int8.py", "projected_distribution.py", "temporal_response.py", "group_budget.py", "two_component.py", "residual_sampling.py", "learned_cutoff.py", "cascade.py")
         return {**old_hashes(), **{n: hashlib.sha256(Path(__file__).with_name(n).read_bytes()).hexdigest() for n in names}}
     def score(row, generated, tokenizer, eos_ids):
         if row["score_contract"] == "longbench_qa_f1_context_first_v1":
@@ -96,7 +99,7 @@ def main():
     base.source_hashes, base.score_output = hashes, score
     base.generate = generate
     base.MODES = (*base.MODES, "e02_nonlinear", "e08_tail_value", "e01_int8", *ProjectedDistributionSelector.modes,
-                  'e03_temporal', 'e07_group_budget', *TwoComponentSelector.modes, 'e06_residual_sampling', 'e10_cutoff')
+                  'e03_temporal', 'e07_group_budget', *TwoComponentSelector.modes, 'e06_residual_sampling', 'e10_cutoff', 'e04_cascade2', 'e04_cascade4')
     base.BlockSummarySelector = TenSelector
     runtime.selected_causal_attention = reader
     base.main()
