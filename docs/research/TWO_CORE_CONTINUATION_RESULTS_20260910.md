@@ -67,3 +67,17 @@ PC2 同时审查只在排名无法确定时回退 exact 的可行性。需要对
 - KVzip 适配和最小匹配比较边界：`results/one_hour_decision_20260909/reconstruction_pm_comparison_review.md`。
 
 本轮未重启旧640项 TEST 或大矩阵，未改模型权重，未提交、推送或关闭服务器。运行由一个 GPU 负责人按完整配置接续；方法开发与对照审查在 CPU 并行进行。
+
+
+## 独立接续：问题 K/V 状态 × 固定支持集交叉（2026-09-10T01:32:46.003562+00:00）
+
+已独立实现 `experiments/pm_keep/question_state_cross.py`。新拼接接口经过实际 tiny Qwen CPU自回放：Full及压缩分支的最终logits和自由token均与各自原路径完全相同，原prefix张量不变。实际两输入完成4次新生成，复用4个旧单元，耗时6.221秒；原始输出/源代码/合同/张量哈希及长度回执已同步 `results/position_overnight_20260909/pm_question_state_cross_dev_v1/`。
+
+| 输入 | S_P，本分支问题状态 | S_P，Full此前问题状态 | S_O，本分支问题状态 | S_O，Full此前问题状态 |
+|---|---|---|---|---|
+| 002 | bdbvavgebrv（错） | future startup founders（错） | bdqynkghuvn（对） | bdqynkghuvn（对） |
+| 003 | bdxwmetc（错） | thin as well（错） | bdxxwmetc（错，query key） | bdxxwmetc（错，query key） |
+
+全部输出EOS；两个S_O分支的新旧完整token序列也相同。Full donor只读此前37个问题/模板token，不读最后prompt token、不生成答案；仅追加这37个位置的K/V。两个prefix预算1854/1851不变，答案入口物理长度1892/1889，逻辑下一位置7457/7442。最后prompt token在每个压缩分支重算；旧logits在拼接后显式置空，没有复制Full最后logits或Full prefix。Full此前问题处理成本约0.875/0.842秒，另计Full前缀与共存缓存，不能称同资源部署。
+
+结论与下一步：002已成功的目标补回控制被保住；003仍错，故停止这项Full问题状态替换，不再追加更多Q来源拼接。P支持下反而出现正文短语，表明存在状态/支持集交互，但不能把它解释成某个绑定机制已被唯一定位。接下来应在固定S_O内区分问题key、源记录key/value及其余保留信息的读取竞争，继续同时保留002正控制。当前没有启动下一项GPU实验，也未联系其他聊天。
