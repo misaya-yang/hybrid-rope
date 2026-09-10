@@ -110,7 +110,7 @@
 1. **标签化角色矩从未被测**（五审计一致的唯一阻塞证据）：需要 pre-RoPE Q/K 上按角色（native/far × source/hard-distractor）拆分的带符号均值/协方差/单位对数 MGF，含跨槽协方差，保 layer/head/relation/lag 标签；现有 6 份捕获缺角色标签（astra01 自然捕获=仅末查询、4 头采样、无问题/记录标签）。**预注册门槛先行**：统计量必须先正确否决 Smooth（slot-28 反转）、暴露 P2 的 +long/−short 权衡，失败即停并报告缺失因果层。
 2. **K6 四格实验 = 最高优先 GPU 判决**（零新参数，完整 prefill，五格最小充分校准）；128K 端先收 response 回执。
 3. **sol18 §3 模型级测试跑一次**：连续 128K 四格族、family-disjoint、一个冻结 CE 表 + equal-norm 镜像、10 个陷阱门（gain 恰好一次 g⁴ 陷阱；`@torch.no_grad` forward 静默断梯度是 #1 陷阱；fresh prefill per candidate；CE≠argmax）。桥接理论臂：Astra09 预测方向 vs 同族精确 CE 梯度，分歧则模型级目标获胜并诊断冻结态假设。
-4. 先行小项：max_new_tokens 顶层字段与实际行长核对（astra10 线索）；G1 地面真值表完成后验收（其脚本 342 行 Pyright 报 setitem 类型假阳性，等 G1 停止编辑后统一清）。
+4. 先行小项：**astra10 的 max_new_tokens 线索已结案**（`checks/max_new_tokens_reconciliation_20260910.md`）：五-QA 文件顶层 `max_new_tokens=16` 是 `_from_model_config` 回显、**有效 cap=64**（778 行 max=64，两臂各 45 行恰停 64，对称截断，自然 F1 分数仍可用；其 EOS 计数 725/728 与 OLMo RULER 的 119/197 属不同实验不得混引）；screen qualification 文件行级字段自洽。规则：生成分数引用前以行级长度分布核定有效 cap。G1 地面真值表 v1 已落盘（38 条目、18/18 bit-exact、126 锚点、10 条 mismatch 如实记录，含队列候选洞值修正 1.86/1.76/1.80→1.493/1.461/1.476）；脚本收尾等 G1 停笔后统一清。
 5. **文献占位**：LeRoPE（arXiv 2607.10134 §3.2）已做频率损失梯度+下游余切——本轮任何"梯度法"表述必须带此先行工作。
 
 ## 9. 交付三件套现状（对用户的诚实状态表）
