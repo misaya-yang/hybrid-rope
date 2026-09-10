@@ -1,6 +1,10 @@
 """Run the ten-direction candidates through the existing NOSA/QA runner."""
 import hashlib
+import argparse
+import os
 from pathlib import Path
+import shutil
+import sys
 
 from .nonlinear_gqa import NonlinearGQASelector
 from .tail_value import TailValueSelector
@@ -47,10 +51,27 @@ class TenSelector(NonlinearGQASelector):
 
 
 def main():
+    # Freeze each new process's import tree before loading the checkpoint.
+    # Later candidate repairs in the staging directory cannot change this job.
+    pre=argparse.ArgumentParser(add_help=False)
+    pre.add_argument('--output')
+    options,_=pre.parse_known_args()
+    if options.output and not os.environ.get('PC2_FROZEN_CODE'):
+        destination=Path(options.output).resolve()/'launch_code'
+        package=destination/'experiments'
+        if not package.exists():
+            destination.mkdir(parents=True,exist_ok=True)
+            shutil.copytree(Path(__file__).resolve().parents[1],package,
+                            ignore=shutil.ignore_patterns('__pycache__','*.pyc'))
+            (package/'__init__.py').touch(exist_ok=True)
+        os.environ['PC2_FROZEN_CODE']=str(destination)
+        os.chdir(destination)
+        command=getattr(sys,'orig_argv',[sys.executable,'-m','experiments.nosa_position.ten_run',*sys.argv[1:]])
+        os.execv(sys.executable,command)
     from . import run as base, runtime
     from experiments.pm_keep.run import score as qa_score
     import experiments.pm_keep.run as qa_module
-    old_hashes, old_score = base.source_hashes, base.score_output
+    old_hashes, old_score, old_generate = base.source_hashes, base.score_output, base.generate
     old_reader = runtime.selected_causal_attention
     qa_hash = hashlib.sha256(Path(qa_module.__file__).read_bytes()).hexdigest()
     def hashes():
@@ -65,7 +86,15 @@ def main():
         if active is not None and active.value_impl is not None:
             return active.value_impl.read(context, selected, old_reader)
         return old_reader(context, selected)
+    def generate(model,*args,**kwargs):
+        TenSelector.active=None
+        result=old_generate(model,*args,**kwargs)
+        implementation=getattr(model.selector,'index_impl',None)
+        if hasattr(implementation,'finalize_metrics'):
+            implementation.finalize_metrics()
+        return result
     base.source_hashes, base.score_output = hashes, score
+    base.generate = generate
     base.MODES = (*base.MODES, "e02_nonlinear", "e08_tail_value", "e01_int8", *ProjectedDistributionSelector.modes,
                   'e03_temporal', 'e07_group_budget', *TwoComponentSelector.modes, 'e06_residual_sampling', 'e10_cutoff')
     base.BlockSummarySelector = TenSelector
