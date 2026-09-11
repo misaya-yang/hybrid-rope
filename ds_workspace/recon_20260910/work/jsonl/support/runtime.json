@@ -1,0 +1,13 @@
+{
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "torch": "2.8.0+cu128",
+  "transformers": "5.15.1",
+  "gpu": "NVIDIA GeForce RTX 4080 SUPER",
+  "prepared_sha256": "def4270af546b9632baca3af727f6254f5b598e3308e839ae8117c29bde58d2a",
+  "nll_input_sha256": "4ff6fb4f47fb530348222978104e02c89216e8f0c83b600c31da41c9f4730a91",
+  "baseline_ruler_sha256": "e5dcf19a5748e7b0b987dcd2fd552f563228695aede1d6f8609f4eee9aaa2672",
+  "baseline_nll_sha256": "5917ce5a3dbe3122d3a398fd023b56c11652aa4dc341b266dadef527a255e4bf",
+  "worker_sha256": "f1cf19e68402f2444a9389696a5f51bd73e3ce9969b7d870f494d89d8a16bbe6",
+  "baseline_policy": "Reuse existing paired rows; one path check only; no model weight updates"
+}

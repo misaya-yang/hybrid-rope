@@ -1,0 +1,20 @@
+{
+ "status": "COMPLETE",
+ "model": "/root/autodl-tmp/olmo2_1b_longalign_assets/models/OLMo-2-0425-1B-Instruct",
+ "panel": "/root/autodl-tmp/olmo_fast_screen_20260908/prepared_ruler_newtasks_02/screen.jsonl",
+ "arms": [
+  "wide_b4p0"
+ ],
+ "endpoint_check": {
+  "b0_incr": 5.551115123125783e-17,
+  "b1_max_abs_err": 5.551115123125783e-17,
+  "sum_m_b0": 37.66666666666667,
+  "sum_m_b1": 40.5
+ },
+ "archived_endpoints": {
+  "MrPro": 350,
+  "MrProBM": 350
+ },
+ "mrpro_rerun": false,
+ "bm_rerun": false
+}

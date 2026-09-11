@@ -1,0 +1,25 @@
+{
+ "status": "COMPLETE",
+ "length": 16385,
+ "tail": 512,
+ "docs": 16,
+ "arms": [
+  "native",
+  "mrpro",
+  "beta_b0p25",
+  "turns_a0p5_b32",
+  "turns_a1_b16",
+  "beta_b0p5",
+  "beta_b1_BM",
+  "beta_b2",
+  "turns_a2_b32",
+  "turns_a1_b64",
+  "knife_taper",
+  "knife_leak",
+  "knife_both",
+  "ctl_C42",
+  "ctl_C42V24",
+  "step_hi25"
+ ],
+ "scope": "Teacher-forced next-token NLL over the last 512 positions of 16 held-out documents at a context of about 16384 tokens.  NOT RULER: continuous and high-resolution, but a different instrument -- report side by side, never as a substitute."
+}

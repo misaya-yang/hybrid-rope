@@ -1,0 +1,23 @@
+{
+ "arm": "beta_b0p5",
+ "n": 350,
+ "score_sum": 81.2,
+ "accuracy": 0.232,
+ "eos": 150,
+ "sum_m": 39.20911728829964,
+ "seconds": 1552.6988249905407,
+ "vs_MrPro": {
+  "mine": 0.232,
+  "theirs": 0.07085714285714285,
+  "wins": 90,
+  "losses": 9,
+  "ties": 251
+ },
+ "vs_MrProBM": {
+  "mine": 0.232,
+  "theirs": 0.4167142857142857,
+  "wins": 21,
+  "losses": 103,
+  "ties": 226
+ }
+}

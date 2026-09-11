@@ -1,0 +1,23 @@
+{
+ "arm": "ctl_C42V24",
+ "n": 350,
+ "score_sum": 190.4,
+ "accuracy": 0.544,
+ "eos": 120,
+ "sum_m": 42.0,
+ "seconds": 2577.337863110006,
+ "vs_MrPro": {
+  "mine": 0.544,
+  "theirs": 0.07085714285714285,
+  "wins": 201,
+  "losses": 4,
+  "ties": 145
+ },
+ "vs_MrProBM": {
+  "mine": 0.544,
+  "theirs": 0.4167142857142857,
+  "wins": 72,
+  "losses": 23,
+  "ties": 255
+ }
+}

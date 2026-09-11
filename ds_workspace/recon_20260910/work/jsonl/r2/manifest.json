@@ -1,0 +1,18 @@
+{
+ "status": "COMPLETE",
+ "arms": [
+  "beta_b0p25",
+  "beta_b0p5",
+  "beta_b2",
+  "yarn_lin"
+ ],
+ "lengths": [
+  32768,
+  131072
+ ],
+ "n_rows": 36,
+ "finished": "2026-09-11T04:19:00",
+ "mrpro_rerun": false,
+ "weights_updated": false,
+ "contraction_declared_before_round1": true
+}

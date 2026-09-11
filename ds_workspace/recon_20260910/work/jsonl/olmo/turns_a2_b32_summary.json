@@ -1,0 +1,23 @@
+{
+ "arm": "turns_a2_b32",
+ "n": 350,
+ "score_sum": 178.5,
+ "accuracy": 0.51,
+ "eos": 129,
+ "sum_m": 42.0,
+ "seconds": 1079.4256097599864,
+ "vs_MrPro": {
+  "mine": 0.51,
+  "theirs": 0.07085714285714285,
+  "wins": 192,
+  "losses": 7,
+  "ties": 151
+ },
+ "vs_MrProBM": {
+  "mine": 0.51,
+  "theirs": 0.4167142857142857,
+  "wins": 74,
+  "losses": 23,
+  "ties": 253
+ }
+}

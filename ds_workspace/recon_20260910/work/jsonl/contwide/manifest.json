@@ -1,0 +1,13 @@
+{
+ "status": "COMPLETE",
+ "length": 16385,
+ "tail": 512,
+ "docs": 16,
+ "arms": [
+  "beta_b1_BM",
+  "b2_wide",
+  "b3_wide",
+  "b4_wide"
+ ],
+ "scope": "Teacher-forced next-token NLL over the last 512 positions of 16 held-out documents at a context of about 16384 tokens.  NOT RULER: continuous and high-resolution, but a different instrument -- report side by side, never as a substitute."
+}

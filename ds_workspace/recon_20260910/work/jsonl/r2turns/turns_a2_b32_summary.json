@@ -1,0 +1,24 @@
+{
+ "status": "COMPLETE",
+ "arm": "turns_a2_b32",
+ "by_length": {
+  "32768": {
+   "n": 12,
+   "correct": 0.8958333333333334,
+   "mrpro": 0.8722222222222222,
+   "delta": 0.02361111111111111
+  },
+  "131072": {
+   "n": 24,
+   "correct": 0.7444444444444445,
+   "mrpro": 0.78125,
+   "delta": -0.03680555555555556
+  }
+ },
+ "n": 36,
+ "correct": 0.7949074074074074,
+ "mrpro": 0.8115740740740741,
+ "delta": -0.01666666666666667,
+ "sum_m": 33.5,
+ "scope": "6-task RULER development subset; MrRoPE columns are the archived baseline rows, not regenerated"
+}

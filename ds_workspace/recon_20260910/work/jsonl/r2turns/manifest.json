@@ -1,0 +1,18 @@
+{
+ "status": "COMPLETE",
+ "arms": [
+  "turns_a1_b16",
+  "turns_a1_b64",
+  "turns_a0p5_b32",
+  "turns_a2_b32"
+ ],
+ "lengths": [
+  32768,
+  131072
+ ],
+ "n_rows": 36,
+ "finished": "2026-09-11T06:15:06",
+ "mrpro_rerun": false,
+ "weights_updated": false,
+ "contraction_declared_before_round1": true
+}
