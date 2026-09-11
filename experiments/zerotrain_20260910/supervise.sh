@@ -66,18 +66,18 @@ case "$group" in
     stage nat_b3    391 natural_out/beta_b3p0.jsonl  natural_out "$NAT" "$EMPTY" --betas 3.0 --turns ""
     stage nat_a1b64 391 natural_out/wide_b1p0.jsonl  natural_out "$NAT" "$EMPTY" --wide-betas 1.0 --turns ""
     stage nat_b4w   391 natural_out/wide_b4p0.jsonl  natural_out "$NAT" "$EMPTY" --wide-betas 4.0 --turns ""
-    stage walkconf  391 natural_out/walk_a0p5.jsonl  natural_out "$NAT" "$EMPTY" --walk 0.5
+    stage walkconf  391 natural_out/walk_a0p5.jsonl  natural_out "$NAT" "$EMPTY" --walk 0.5 --turns ""
     ;;
   pro)
     # step42 out of sample (180 rows), then the native x gain 2x2 on two panels.
-    stage s42h       180 s42_out/pro_step42.jsonl   s42_out  "$HOLD" "$EMPTY" --pro-tables step42
-    stage ngain_h    180 olmo_ngain_h/gain_native_g1p138629436111989.jsonl olmo_ngain_h "$HOLD" "$ARCH" --gain-tables native --gains 1.0,1.138629436111989
-    stage ngain_newt 350 olmo_ngain/gain_native_g1p138629436111989.jsonl   olmo_ngain   "$NEWT" "$ARCH" --gain-tables native --gains 1.0,1.138629436111989
+    stage s42h       180 s42_out/pro_step42.jsonl   s42_out  "$HOLD" "$EMPTY" --pro-tables step42 --turns ""
+    stage ngain_h    180 olmo_ngain_h/gain_native_g1p138629436111989.jsonl olmo_ngain_h "$HOLD" "$EMPTY" --gain-tables native --gains 1.0,1.138629436111989 --turns ""
+    stage ngain_newt 350 olmo_ngain/gain_native_g1p138629436111989.jsonl   olmo_ngain   "$NEWT" "$ARCH" --gain-tables native --gains 1.0,1.138629436111989 --turns ""
     ;;
   gain)
     # Pro section 5's gain x table interaction: three tables at two gains.
     stage g2x2 350 olmo_gain2x2/gain_b3_g1p138629436111989.jsonl olmo_gain2x2 "$NEWT" "$ARCH" \
-        --gain-tables a1_b64,mrpro,b3 --gains 1.0,1.138629436111989
+        --gain-tables a1_b64,mrpro,b3 --gains 1.0,1.138629436111989 --turns ""
     ;;
   *)
     echo "unknown group $group" >&2; exit 2
