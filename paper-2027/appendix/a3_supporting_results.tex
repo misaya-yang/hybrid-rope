@@ -127,3 +127,25 @@ Normalized-index-$2$ & 1.0513 & 55.92 & \textbf{51.46} \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3.5pt}
+\caption{\textbf{Epistemic status of theoretical and empirical components.}
+Differentiating exact basis geometry, surrogate design criteria, heuristic operating rules, and downstream behavior.}
+\label{tab:epistemic-map}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}llll@{}}
+\toprule
+Tier & Component & Object & Epistemic Status \\
+\midrule
+1 & Positional Basis & Subspace overlap $c_{\omega\nu}$, rank $r_2$, limit $V_0$ & Exact operator geometry (Prop.~\ref{prop:collapse}) \\
+2 & Surrogate Functional & Variational objective $\mathcal{C}_{\mathrm{app}}[\rho]$ in \eqref{eq:Capp} & Explicit design prior; not downstream $\mathcal{L}_{\mathrm{CE}}$ \\
+3 & Operating Rule & Cosh density $\rho_\tau$ and finite quantile grid & Closed-form heuristic family; fixed $K$ grid \\
+4 & Downstream LM & Tail NLL, RULER-13, natural LongBench QA & Not predicted by static surrogates (Thm.~\ref{thm:non-identifiability}) \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
