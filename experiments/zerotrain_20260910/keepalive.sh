@@ -33,14 +33,24 @@ for i in $(seq 1 240); do
   fi
   if [ $alive -eq 0 ]; then echo "[$(date +%H:%M:%S)] === SSH BACK ==="; alive=1; fi
 
+  # GPU GATE.  The instance lost its GPU entirely at 16:38 (nvidia-smi: "No
+  # devices were found", /dev/nvidia0 gone, torch.cuda.device_count()==0).
+  # Restarting stages in that state only produces immediate CUDA errors, so
+  # check first and just report while the card is absent.
+  GPU=$($H "nvidia-smi -L 2>/dev/null | wc -l")
+  if [ "${GPU:-0}" -lt 1 ]; then
+    echo "[$(date +%H:%M:%S)] ssh up but NO GPU on the instance -- waiting"
+    alive=1; sleep 120; continue
+  fi
+
   $H "cd $D
 NP=\$(cat olmo_lb_h/nu_p6p104em05.jsonl 2>/dev/null | wc -l)
 NM=\$(cat olmo_lb_h/nu_m6p104em05.jsonl 2>/dev/null | wc -l)
-BM=\$(grep -c 'beta_b1_BM' qwen4x_power/rows.jsonl 2>/dev/null || echo 0)
+BM=\$(grep -c 'beta_b1_BM' qwen4x_power/rows.jsonl 2>/dev/null | head -1)
 GS=\$(cat olmo_gsweep/gain_bm_g1p20.jsonl 2>/dev/null | wc -l)
-PLB=\$(pgrep -fc 'nu-shift' || echo 0)
-PQW=\$(pgrep -fc 'qwen_longnll' || echo 0)
-PGS=\$(pgrep -fc 'g1p20' || echo 0)
+PLB=\$(pgrep -fc '^/root/miniconda3/bin/python .*olmo_beta.py' || echo 0)
+PQW=\$(pgrep -fc '^/root/miniconda3/bin/python .*qwen_longnll.py' || echo 0)
+PGS=\$(pgrep -fc '^/root/miniconda3/bin/python .*olmo_beta.py' || echo 0)
 echo \"lb_hold=\$NP/\$NM  qwenBM=\$BM  gsweep=\$GS  procs(lb,qw,gs)=\$PLB,\$PQW,\$PGS\"
 
 # --- lb_hold: the decisive held-out verdict -------------------------------
