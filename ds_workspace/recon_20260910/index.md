@@ -7,6 +7,18 @@
 
 ## ★ 先读五条
 
+### 0. 8× 全零 + 天花板理论（2026-09-11 夜新增）
+
+**s8 面板（4096+32768）32768 行：四个 m≤1 臂全部 0.0/48**（BM/b3/wide_b1/wide_b4
+——4× 上相差 +12~14pp 的形状在 8× 完全无差异）。4K 侧：0.734/0.657/0.740/0.759。
+**⟹ 绑定约束是 m 的盒子（覆盖上限 = 4W），不是带内形状。**
+[天花板/覆盖理论](COVERAGE_CEILING_THEORY_20260911.md)用两个常数解释整场战役
+（8× 塌零、EVQ 零、native/interp/step 失败、家族单调、holdout 长度分层），
+并给出下一代表：**振幅 = log4(目标/W) × 已验证剖面**（`scale8x_wide`，唯一无空洞
+的 8× 覆盖表，预注册 [P1–P5](COVERAGE_PREREG_20260911.md)，就绪命令在
+`code/patch_mfile.py`）。P3（condEVQ∈[0.40,0.55]）因先落地按纪律作废（实测 0.4380，
+落点在区间内不计分）；P2（step42 阶跃/空洞表 → 差）在跑。
+
 ### 1. held-out 测试推翻了"超过部署 BM"这个头条
 
 72 行、**6 个从未用于选择的任务**上，冠军 `b3_lo14` 与部署 BM **完全相同**
@@ -109,6 +121,12 @@ a1_b64 = m_incr_beta(1.0, n=21, low=11)   # 增量在 slot [12,32]，S = 42.0
 | 8b | **连续仪器 @16384 的排名与 held-out 一致，RULER 选择面板的不一致**（3 臂 1 次观察，待预注册检验） | ★ 待证 | `HOLDOUT_VERDICT` §三·终 |
 | 9 | **Qwen 两台仪器都判不了**：4× 上八个压缩臂跨 **0.0077 nats**（SE 0.030），覆盖 S=29.3–35.0 的整个三段式家族；归档 RULER 面板自判 `NO_LONG_GAIN`（6胜4负） | ★★ | `CROSS_MODEL_VERDICT` |
 | 10 | **12 个静态泛函全部出局** | ★★ 三类受控对 | `NO_STATIC_FUNCTIONAL` |
+| 11 | **EVQ 冻结替换全线死亡**：τ=0.5 与 τ=1.0 都是 acc **0.0**（比 MrRoPE 7.09% 还低，0胜/174负，eos 26–50/350）；预注册预测（加速时钟+全局 OOD）确认。EVQ 仅存路线 = 匹配训练 | ★★★ 预注册命中 | `EVQ_LONGRANGE_VERDICT` |
+| 12 | **Pro 的两张表连续仪器都差于部署 BM**（step42 +0.017 / condEVQ +0.036）；「var 落在已验证区间内」被证不是有效性证据；**五条「建模后解最优」推导全崩** | ★★ 16 篇配对 | `PRO_TABLES_RESULT` |
+| 13 | **180 行 held-out：pooled +2.57pp, t=+1.27 → 仍未决（预注册关闭，不加行）**；分层 4K −5.4pp / 16K +6.5pp；`b3_lo14` 显著差于 `wide_b4` | ★★ 预注册 | `HOLDOUT180_VERDICT` |
+| 14 | **8×（32768）上 m≤1 全家 = 0.0/48×4臂**；4K 侧 0.66–0.76 | ★★ 实测 | `COVERAGE_CEILING_THEORY` §2 |
+| 15 | **天花板/覆盖理论**：窗口律 m_j−min(κ_j,L)≤u≤m_j；n_int 排序全家族（rho +0.93）；频谱空洞分离 step 家族（7.8× vs ≤1.9×）；YaRN 均匀ε的 tiling = BM（未测预测）| ★★ 数值+结构 | `COVERAGE_CEILING_THEORY` |
+| 16 | condEVQ RULER 350 = **0.4380**（BM 平台内；连续侧 +0.036 差于 BM 依旧） | ★★ | `olmo_pro/` |
 
 ## 被证伪的（解空间收缩，成本已付）
 
@@ -157,19 +175,20 @@ a1_b64 = m_incr_beta(1.0, n=21, low=11)   # 增量在 slot [12,32]，S = 42.0
 > **共同点：都是「命令成功了但什么都没发生」或「发生了两次」这类静默失败。**
 > **⟹ 纪律：部署后立即核验产物存在且内容正确，不信 exit code。**
 
-## 未决 / 待跑
+## 未决 / 待跑（2026-09-11 11:00 更新）
 
 | 项 | 状态 | 命令 |
 |---|---|---|
-| `chain_s8`（32768 长度轴） | **跑中** | 见 §正在进行 |
-| `chain_walk`（前沿走线） | **排队**（等 s8） | 见 §正在进行 |
-| `--pro-tables condEVQ,step42`（Pro §8/§9.3） | **跑中**（`olmo_pro/`） | `RUNBOOK` §3 |
-| `--gain-tables` 2×2（Pro §5） | `chain_pro` 排队等 `chain_serial` | `RUNBOOK` §3 |
-| EVQ τ=0.5/1/2 首次长程 | **已出**：三档 acc 全 0.0000 | `EVQ_LONGRANGE_VERDICT` |
-| Pro §7 Qwen 传输表（S=33.47081679 已验证） | 表已构造，未接进 runner | `RUNBOOK` §5 |
-| **投影 Fisher**（修 SNR 的正路） | 未做。Pro §4 建议，子代理 A 建议**改靶测 R 的 Hessian** | `_reports/PRO_PLAN_VERIFY_A` |
-| Pro §6 的 `D_pattern` | 零 GPU，从现有 jsonl 可算 | `_reports/PRO_PLAN_VERIFY_B` |
-| **自然 QA 面板**（16384，778 行，5 个新任务族，从未跑过） | **未跑**——长程增益的泛化检验 | — |
+| `evq_shift_t2p0`（τ=2，S=−72.22） | **完成：acc 0.0**（三 τ 全零，EVQ 零训练替换全线死亡定案） | — |
+| `--pro-tables condEVQ,step42`（RULER 350） | condEVQ **完成 0.4380**；step42 276/350 跑中（理论 P2：预测 0.10–0.35） | `RUNBOOK` §3 |
+| gain 1.0 vs 1.1386（RULER 350） | 跑中（第一臂 ~278/350） | — |
+| `chain_walk`（a=0,.25,.5,.75,1，holdout_union） | **跑中**（a0 完成，a0p25 进行；理论 P4：近线性无拐点） | — |
+| `chain_natural`（natural_union 四臂） | 排队（walk 后） | — |
+| `h22` + `gain2x2` | `chain_pro` 排队（chain_serial 排空后接力） | `RUNBOOK` §3 |
+| **`scale8x_wide` / `shift8x_bm`（8× 面板）** | **就绪未排队**（本机 GPU 只读；表在 `code/tables/`，patch `code/patch_mfile.py`，判据 = 预注册 P1） | P1 |
+| `yarn_uniform`（P5：预测 ≈0.32–0.48） | 未排队（`m_turns(1,32,"linear")` 即近似） | P5 |
+| Pro §7 Qwen 传输表 | 表已构造，未接进 runner | `RUNBOOK` §5 |
+| **投影 Fisher** / Pro §6 `D_pattern` | 未做 / 零 GPU 可算 | `_reports/` |
 
 ## 三个子代理的报告（`_reports/`）
 
