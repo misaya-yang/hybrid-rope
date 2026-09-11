@@ -7,8 +7,18 @@ WHY -- this is the experiment that turns goal item 1 from an open direction into
 a measured rule.  The standing claim after today is:
 
     the optimal compression depends on how much rescue the base model needs
-    (OLMo 4x needs 4.35 nats -> BM's extra compression wins by 0.826;
-     Qwen 4x needs 0.18     -> MrRoPE's lighter compression wins)
+    (OLMo 4x needs 4.35 nats -> BM's extra compression wins by 0.826).
+
+!! CORRECTION 2026-09-11.  This docstring used to continue "...Qwen 4x needs 0.18
+-> MrRoPE's lighter compression wins".  That clause came from reading the SIGN of
+`BM - MrRoPE` backwards (NLL is lower-is-better).  Recomputed, Qwen 4x also
+favours BM (-0.0074, t=-3.34); there is no flip.  See CORRECTION_SIGN_20260911.md.
+
+So the rule is NOT "the optimum flips with the model".  What the dose family
+established is narrower and is what this instrument measures: the optimum sits at
+the maximum-compression END at every length tested on OLMo (a*(L) == 1).  The
+open question this patch serves is therefore the SHAPE of the curve, not which
+end wins.
 
 That is a DIRECTION, not a strategy.  To make it a strategy we need the optimum
 as a FUNCTION of length on one model, which is cheap on this instrument
@@ -17,13 +27,16 @@ as a FUNCTION of length on one model, which is cheap on this instrument
 THE FAMILY.  m(a) = (1-a)*m_MrRoPE + a*m_BM, a in {0,.25,.5,.75,1}.  Both
 endpoints already exist as measured arms (mrpro, beta_b1_BM), so every interior
 point is bracketed by two known tables rather than being a fresh guess -- and
-this is the one segment where the sign is known to flip between models, which is
-why it is the right segment for the question.
+this segment spans the two methods the project actually compares, so every
+interior point is bracketed by two measured endpoints rather than being a fresh
+guess.
 
-WHAT IT ANSWERS.  If a*(L) increases with length, "compress more when the base
-is more broken" becomes a measured rule and the adaptive strategy is concrete.
-If a*(L) is constant, the optimum does not move with length on this model and the
-leverage story needs re-examination on the length axis.
+WHAT IT ANSWERS.  Whether the curve's optimum MOVES with length.  Measured
+answer on OLMo at 1x/2x/4x: it does not (a*(L) == 1, interior points rejected at
+|t| >= 2.2) -- so this instrument's remaining use is to give the curve's SHAPE
+(a continuous NLL readout of all five dose levels), not to locate a moving
+optimum.  NOTE: it does NOT answer the cross-model question in the old title of
+this paragraph -- see the correction above.
 
 Idempotent; verified by an import check.
 """

@@ -6,8 +6,10 @@ RUN ON THE SERVER:
 
 THE QUESTION.  THE_ANSWER's leverage table has one underpowered row: on Qwen at
 4x, BM minus MrRoPE is -0.0074 with t=-3.34, but only 4 documents -- sign test
-4/4, p=0.125.  That is "direction right, power absent", and it is the one number
-holding the sign-flip claim open.
+4/4, p=0.125.  That is "direction right, power absent".  NLL is lower-is-better,
+so -0.0074 means BM is better; this row is the last underpowered cell in the
+leverage table, NOT (as this file previously said) something "holding the
+sign-flip claim open" -- that claim was withdrawn, the flip does not exist.
 
 THE FIX.  A fresh PG19 corpus: 30 books-worth of non-overlapping 131073-token
 segments from PG19 test, tokenised with Qwen's own tokenizer.  The instrument
@@ -19,9 +21,12 @@ THE STATISTIC.  Per-piece paired (BM - mrpro).  Two SEs are reported:
   * clustered by book (~18 clusters)   <- the pre-registered criterion
 Chunks of one book are not independent, so the clustered SE is the honest one.
 
-    |delta| >= 0.004 and |t| >= 3 (clustered) -> the sign is settled
-                                                 negative => MrRoPE genuinely
-                                                 wins on Qwen at 4x
+    |delta| >= 0.004 and |t| >= 3 (clustered) -> settled.  NLL is
+                                                 lower-is-better, so a NEGATIVE
+                                                 dd means BM wins on Qwen at 4x
+                                                 (the file used to say the
+                                                 opposite -- see the VERDICT
+                                                 block for the correction)
     |delta| <  0.002                          -> indistinguishable on Qwen 4x
     otherwise                                 -> unresolved; report and stop
 """
@@ -116,16 +121,31 @@ def main():
             idx = [i for i, x in enumerate(books) if x == b]
             print(f"    book {b:>3}  n={len(idx):<3} {dd[idx].mean():+.6f}")
 
+    # ------------------------------------------------------------------
+    # VERDICT.  SIGN CONVENTION, stated because this file previously had it
+    # BACKWARDS and would have printed the opposite conclusion automatically:
+    #   `dd` is BM - MrRoPE in NLL.  NLL is LOWER-IS-BETTER.
+    #   => dd < 0 means BM is better.
+    # The old text read a negative dd as "MrRoPE genuinely beats BM" -- that is
+    # the same sign error that produced the withdrawn "sign flip" claim (see
+    # CORRECTION_SIGN_20260911.md).  The verdict now names the winner outright
+    # instead of relying on the reader to interpret an algebraic sign.
+    # ------------------------------------------------------------------
     print("\n--- VERDICT (rule fixed in QWEN4X_POWER_PREREG_20260911.md) ---")
+    print("    convention: dd = BM - MrRoPE in NLL; LOWER IS BETTER; dd<0 => BM better")
     if abs(dd.mean()) >= 0.004 and abs(t_use) >= 3.0:
-        print(f"  SIGN SETTLED.  BM - MrRoPE = {dd.mean():+.6f} nats, t={t_use:+.2f}.")
+        winner = "BM" if dd.mean() < 0 else "MrRoPE"
+        print(f"  SETTLED.  BM - MrRoPE = {dd.mean():+.6f} nats, t={t_use:+.2f}"
+              f"  =>  {winner} is better.")
         if dd.mean() < 0:
-            print("  NEGATIVE: MrRoPE genuinely beats BM on Qwen at 4x.  Combined with")
-            print("  OLMo 4x (+0.826 the other way), the sign flip is established with")
-            print("  power and the 'rescue-dependent optimum' answer closes.")
+            print("  BM WINS ON QWEN TOO.  Same direction as OLMo (which favours BM by")
+            print("  0.826).  There is NO sign flip: the n=4 reading (-0.0074) is")
+            print("  CONFIRMED with power, and 'the optimum flips with the model' is dead.")
         else:
-            print("  POSITIVE: BM beats MrRoPE on Qwen too.  The n=4 reading was noise")
-            print("  and the leverage table's Qwen row must be rewritten.")
+            print("  MrRoPE WINS ON QWEN.  This would be a genuine model-dependent")
+            print("  reversal with power -- and it CONTRADICTS the n=4 point estimate")
+            print("  (which was negative => BM).  Report it as a reversal, and check")
+            print("  the two corpora do not differ in a way that explains it.")
     elif abs(dd.mean()) < 0.002:
         print(f"  INDISTINGUISHABLE on Qwen 4x (|delta|={abs(dd.mean()):.6f} < 0.002).")
         print("  The leverage table's Qwen row should read 'no difference'.")
