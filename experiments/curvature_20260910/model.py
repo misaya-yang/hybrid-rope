@@ -128,15 +128,17 @@ class FrozenRoPE:
         if self._grad_patched:
             return
 
-        def forward(self, x, position_ids):
-            inv = self.inv_freq[None, :, None].float().expand(position_ids.shape[0], -1, 1).to(x.device)
-            pos = position_ids[:, None, :].float()
-            freqs = (inv @ pos).transpose(1, 2)
-            emb = torch.cat((freqs, freqs), dim=-1)
-            cos = emb.cos() * self.attention_scaling
-            sin = emb.sin() * self.attention_scaling
-            return cos.to(dtype=x.dtype), sin.to(dtype=x.dtype)
-
+        # Remove only the outer no_grad decorator from the installed model's
+        # implementation. Reimplementing Qwen's arithmetic here used to cast
+        # OLMo2's FP32 cos/sin to BF16 and changed the model being differentiated.
+        # The stock body retains its model-specific dtype, disabled-autocast
+        # region and inner dynamic-rope wrapper (default RoPE is required above).
+        if type(self.rotary).__name__ not in ("Qwen2RotaryEmbedding", "Olmo2RotaryEmbedding"):
+            raise ValueError("gradient rotary is qualified only for Qwen2 and OLMo2")
+        stock = self.rotary.forward.__func__
+        forward = getattr(stock, "__wrapped__", None)
+        if forward is None:
+            raise RuntimeError("stock rotary lacks the expected outer no_grad wrapper")
         self.rotary.forward = types.MethodType(forward, self.rotary)
         self._grad_patched = True
 
@@ -173,8 +175,8 @@ class FrozenRoPE:
         self.install(self.native_inv_freq, 1.0, track_grad=False)
         v = self.install(self.rotary.inv_freq.detach().float().cpu().numpy(),
                          float(self.rotary.attention_scaling), track_grad=True)
-        lg = self.logits(ids, keep, want_grad=True)
-        loss = torch.nn.functional.cross_entropy(lg, ids[0, -keep:])
+        lg = self.logits(ids, keep + 1, want_grad=True)
+        loss = torch.nn.functional.cross_entropy(lg[:-1], ids[0, -keep:])
         g, = torch.autograd.grad(loss, v)
         return loss.detach().float().item(), g.detach().float().cpu().numpy()
 

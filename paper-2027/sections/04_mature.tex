@@ -4,21 +4,17 @@
 \label{sec:exp-zero-training-system}
 \label{sec:coordinate}
 
-The frozen crossings in \S\ref{sec:coadaptation-finding} show that trained
-weights use a particular exponent basis. This motivates adjustments defined
-relative to the checkpoint's native table. We compare how these adjustments
-place the available exponent shifts within the existing rotary pairs.
+The crossing experiments in \S\ref{sec:coadaptation-finding} show that trained weights are co-adapted to their specific exponent basis, motivating adjustments defined relative to native exponents.
 
 \subsection{A common coordinate for exponent adjustments}
 
-For native frequencies $\omega_k^N$ and an installed table $\omega'_k$, define
+For native frequencies $\omega_k^N$ and installed frequencies $\omega'_k$, define
 \begin{equation}
 d_k=\log\frac{\omega_k^N}{\omega'_k},\qquad
 \omega'_k=\omega_k^N e^{-d_k},\qquad
 \phi'_k-\phi_k^N=\frac{d_k}{\log b}.
 \label{eq:movement-allocation}
 \end{equation}
-Several familiar constructions then have explicit displacement profiles:
 \begin{equation}
 d_k=
 \begin{cases}
@@ -28,31 +24,19 @@ m_k\log s, & \text{log-frequency shift},\\
 \end{cases}
 \label{eq:adjustment-families}
 \end{equation}
-Here $s$ is the extension factor, $w_k$ is a blend weight, and $m_k$ is the
-normalized cumulative exponent shift. YaRN's NTK-by-parts frequency map uses the first construction;
-MrRoPE uses the third \citep{peng2024yarn,tian2026mrrope}.
-The coordinate lets us compare their realized exponent shapes directly.
+Static tables are installed before prefill and retained through decoding; amplitude $g$ scales both cosine and sine tables ($g^2$ on attention logits).
 
 \subsection{Fixed-range and single-table comparisons}
 
-\paragraph{Changing only the normalized exponent allocation.}
-On frozen OLMo-$2$-$1$B and Qwen-$2.5$-$1.5$B, we hold the endpoints, $64$
-pairs, attention amplitude, inputs, and decoder fixed. A geometric allocation,
-a residual-guided allocation, and its nearest coarse ramp give the results in
-Table~\ref{tab:frozen-exponent-main}. The residual-guided construction moves
-pairs according to their remaining energy after projection onto the other
-sine--cosine pairs; the ramp approximates that profile without task labels.
-Both structured profiles produce large gains over uniform exponents.
-Their definitions and reference Native/YaRN rows are in
-Appendix~\ref{sec:frozen-fixed-support}.
+\paragraph{Frozen fixed-support control.}
+On frozen OLMo-$2$-$1$B and Qwen-$2.5$-$1.5$B, we hold endpoints, $64$ pairs, attention amplitude, inputs, and decoder fixed. Geometric, coarse label-free ramp, and residual-guided allocations give the results in Table~\ref{tab:frozen-exponent-main}. Structured profiles produce large gains over uniform exponents (OLMo $16$K RULER: $0.56\%$ to $61.04\%$), with coarse controls capturing the bulk of the effect (Appendix~\ref{sec:frozen-fixed-support}).
 
 \begin{table}[t]
 \centering
 \small
 \caption{\textbf{Frozen-model RULER scores (\%) at matched exponent range.}
 OLMo uses a held-out nine-task confirmation at $16$K; Qwen uses a four-task
-development panel at $64$K, with $20$ rows per task.
-Within each model only the interior allocation changes.}
+development panel at $64$K ($20$ rows per task).}
 \label{tab:frozen-exponent-main}
 \begin{tabular}{@{}lrr@{}}
 \toprule
@@ -65,33 +49,14 @@ Residual-guided & 60.47 & \textbf{66.50} \\
 \end{tabular}
 \end{table}
 
-\paragraph{One static table at both lengths.}
-A frozen normalized-index profile transfers a reference displacement curve
-onto the native slot grid and installs $\omega'_k=\omega_k^N s^{-m_k}$.
-Its placement can be compared with direct evaluation from local frequency
-gaps. On a new-seed Gemma-$1.1$-$2$B comparison with $128$ rotary pairs
-\citep{gemmateam2024gemma},
-normalized-index interpolation scores $79.00\%$ versus $72.81\%$ at $16$K.
-Both arms share the frequency endpoints, amplitude, and $320$ inputs;
-the paired improvement is $6.19$ points with a $95\%$ bootstrap interval $[2.81,9.63]$.
-Appendix~\ref{sec:coordinate-confirmation} gives the two constructions and
-the corresponding $32$-pair comparison.
-
-On Qwen-$2.5$-$0.5$B, a new-seed $13$-task RULER evaluation uses $20$ examples
-per task at $32$K and $64$K. Every request uses the same $s=2$ table throughout
-prefill and decoding, including requests within the native window.
-The installed table and amplitude together give the comparison in
-Table~\ref{tab:static-index-main}: $6.09$ points above YaRN at $64$K,
-with a $95\%$ paired task-stratified bootstrap interval $[2.76,9.58]$ points.
-At $32$K the two methods are nearly equal. Appendix~\ref{sec:index-adjustment}
-gives the frozen profile and the full task breakdown.
+\paragraph{One static configuration across lengths.}
+A normalized-index profile transfers a reference displacement curve onto the target grid ($\omega'_k=\omega_k^N s^{-m_k}$). On Qwen-$2.5$-$0.5$B, the same factor-two table is evaluated at $32$K and $64$K across full RULER-13 ($20$ rows per task). With reported fixed amplitudes, Index achieves $55.92\%$ and $51.46\%$, compared with $55.94\%$ and $45.37\%$ for YaRN (Table~\ref{tab:static-index-main}). The $64$K improvement is $6.09$ points ($95\%$ bootstrap interval $[2.76, 9.58]$), while $32$K scores are near-equal. The gain is attributed to the complete static configuration (table $\times$ amplitude; Appendix~\ref{sec:index-adjustment}).
 
 \begin{table}[t]
 \centering
 \small
-\caption{\textbf{A static extension across the native and extended windows.}
-Qwen-$0.5$B RULER-13 macro (\%); $g$ is the fixed cosine/sine amplitude used by
-each method.}
+\caption{\textbf{Static extension across native and extended windows.}
+Qwen-$0.5$B RULER-13 macro (\%); $g$ is fixed amplitude.}
 \label{tab:static-index-main}
 \begin{tabular}{@{}lrrr@{}}
 \toprule
@@ -104,49 +69,37 @@ Normalized-index-$2$ & 1.0513 & 55.92 & \textbf{51.46} \\
 \end{tabular}
 \end{table}
 
+\paragraph{Finite-grid placement.}
+Comparing normalized-index interpolation against direct-gap evaluation on Gemma-$1.1$-$2$B ($128$ pairs; \citealt{gemmateam2024gemma}) yields $79.00\%$ versus $72.81\%$ at $16$K ($+6.19$ points, $[2.81, 9.63]$), identifying placement as an important implementation choice (Appendix~\ref{sec:coordinate-confirmation}).
+
 \subsection{Redistributing the intermediate-band shift}
 \label{sec:bm-main}
 
-MrRoPE-Pro progressively distributes the cumulative shift across an intermediate
-frequency band. We compare it with a boundary-matched (BM) profile, which keeps
-the same band endpoints and total scale while smoothing the per-slot radix
-increments toward the unmodified outer bands. Both are explicit constructions
-of $m_k$ in \eqref{eq:adjustment-families}; their exact discrete formulas are
-given in Appendix~\ref{sec:bm-construction}.
-
-In an OLMo-$1$B six-task confirmation, BM improves the $16$K macro from
-$2.78\%$ for MrRoPE-Pro to $51.32\%$; MrRoPE-Uni scores $32.12\%$.
-The comparison extends to natural inputs: across $631$ eligible long examples
-from five QA tasks, the task-equal F1 rises from $21.62\%$ to $25.44\%$.
-The $95\%$ paired bootstrap interval for the improvement is $[1.32,6.29]$ points.
-Every task has a positive mean difference
-(Fig.~\ref{fig:bm-natural-qa}). All methods use a fixed factor-four table;
-the input and decoding details are in Appendix~\ref{sec:bm-natural}.
+MrRoPE-Pro progressively distributes the cumulative exponent shift across an intermediate band $k\in[l,h]$ with $N=h-l$ and $q=\operatorname{clip}(k-l,0,N)$:
+\begin{equation}
+m_q^{\rm Pro}=\frac{q(q+1)}{N(N+1)},
+\qquad
+m_q^{\rm BM}=\frac{q(q+1)(3N+2-2q)}{N(N+1)(N+2)}.
+\label{eq:bm-formula}
+\end{equation}
+Boundary matching (BM) minimizes quadratic difference energy, smoothing radix transitions toward unmodified outer bands (Appendix~\ref{sec:bm-construction}).
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{fig_bm_natural_qa.pdf}
-  \caption{\textbf{An intermediate-band redistribution improves OLMo natural QA.}
-  Complete-output token F1 on untruncated long inputs, using the same $s=4$
-  configuration and decoder in both arms. Sample counts are shown by task;
-  the final row averages the five task means.}
+  \caption{\textbf{Intermediate-band redistribution improves OLMo natural QA.}
+  Complete-output token F1 on untruncated long inputs ($s=4$). Sample counts shown by task; final row averages task means.}
   \label{fig:bm-natural-qa}
 \end{figure}
 
-The three-model comparison reveals distinct preferences for the intermediate
-allocation (Table~\ref{tab:bm-models}). BM gives the higher OLMo scores and
-Qwen-$3$B's higher $32$K score; MrRoPE-Pro gives the higher $128$K scores on
-both Qwen checkpoints. With band boundaries and cumulative scale fixed,
-these differences connect the preferred exponent shape to the checkpoint and
-operating length. Appendix~\ref{sec:bm-model-comparison} reports every task.
+In the OLMo-$1$B confirmation, BM reaches $51.32\%$ at $16$K compared with $2.78\%$ for MrRoPE-Pro. Crucially, across $631$ untruncated LongBench prompts exceeding $4$K tokens across five tasks, BM raises task-equal complete-output token F1 from $21.62\%$ to $25.44\%$ (Fig.~\ref{fig:bm-natural-qa}; $95\%$ bootstrap interval $[1.32, 6.29]$, all task differences positive).
 
 \begin{table}[t]
 \centering
 \small
 \setlength{\tabcolsep}{4pt}
 \caption{\textbf{Matched six-task RULER comparisons (\%).}
-Each length column averages six task scores. Both methods use static $s=4$;
-the row counts refer to short/long prompts per arm.}
+Each length column averages six task scores ($s=4$; short/long prompt counts per arm).}
 \label{tab:bm-models}
 \begin{tabular}{@{}lclrrrr@{}}
 \toprule
@@ -159,3 +112,5 @@ Qwen-$7$B & $32/128$K & $6/12$ & 83.33 & 80.00 & 84.44 & 71.11 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+However, preferences differ across models (Table~\ref{tab:bm-models}): while OLMo favors BM, Qwen-$3$B and $7$B favor MrRoPE-Pro at $128$K ($78.13\%$ vs $70.83\%$ and $84.44\%$ vs $71.11\%$). With endpoints and total scale fixed, intermediate profile preferences are checkpoint- and length-dependent (Appendix~\ref{sec:bm-model-comparison}).

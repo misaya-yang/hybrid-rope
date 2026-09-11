@@ -36,7 +36,7 @@ fi
 echo "=================== BUILD REPORT (engine: $ENGINE) ==================="
 FAIL=0
 
-# --- 1. main-body page limit (refs, appendix, and the three statements are exempt)
+# --- 1. main-body page limit (main text + statements must end on <= 9)
 BODYEND=$(grep -o 'newlabel{page:bodyend}{{[^}]*}{[0-9]*}' $MAIN.aux \
           | grep -o '{[0-9]*}$' | tr -d '{}' || echo "?")
 echo -n "main body ends on page : $BODYEND   "
@@ -44,6 +44,17 @@ if [ "$BODYEND" != "?" ] && [ "$BODYEND" -le "$LIMIT" ]; then
   echo "[OK, limit $LIMIT]"
 else
   echo "[OVER LIMIT - CUT]"; FAIL=1
+fi
+
+BIBSTART=$(grep -o 'newlabel{page:bibstart}{{[^}]*}{[0-9]*}' $MAIN.aux \
+           | grep -o '{[0-9]*}$' | tr -d '{}' || echo "?")
+echo -n "references start on page: $BIBSTART   "
+if [ "$BIBSTART" != "?" ] && [ "$BIBSTART" -gt "$LIMIT" ]; then
+  echo "[OK, clean page break after main body]"
+elif [ "$BIBSTART" != "?" ] && [ "$BIBSTART" -le "$LIMIT" ]; then
+  echo "[OK, within page limit]"
+else
+  echo "[CHECK BIBSTART]"; FAIL=1
 fi
 
 # --- 2. required ICLR statements present ---

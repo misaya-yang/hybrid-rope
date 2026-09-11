@@ -8,16 +8,10 @@ range fixed. An exponential deformation supplies a second nonuniform family.
 
 \input{sections/02_identification}
 
-\subsection{Weights learn to use their exponent basis}
+\subsection{Weight compatibility and table crossings}
 \label{sec:coadaptation-finding}
 
-A model trained with one exponent distribution has learned query and key
-coefficients in that basis. The weights-by-table crossing makes this dependence
-visible: in two $50$M models, replacing the Geo-trained model's table by Cosh
-changes PPL from $7.14$ to $76.20$; the reverse swap changes $7.16$ to $23.05$
-(Fig.~\ref{fig:weight-table-crossing}). A $151.9$M crossing replicates the
-preferred-table reversal in two training seeds. These crossings connect exponent design during learning with adjustments of
-a fixed checkpoint: the installed table acts together with learned coefficients.
+The frequency table defines a basis in which query and key projections are learned. In a $50$M pair with perplexities near $7$, installing Cosh frequencies into Geo-trained weights raises PPL to $76.20$; the reverse swap raises it to $23.05$ (Fig.~\ref{fig:weight-table-crossing}). A separate crossing at $151.9$M repeats the effect across two training seeds using derived factor-four runtime tables: both frozen weight sets strictly prefer the table derived from their own training allocation. This distinguishes learned compatibility from static basis geometry without claiming that frequency modifications are universally harmful.
 
 \begin{figure}[t]
 \centering
@@ -31,4 +25,3 @@ FMR denotes the geometric table at the fixed training range.
 Shading shows the NLL increase relative to the matched diagonal cell.}
 \label{fig:weight-table-crossing}
 \end{figure}
-

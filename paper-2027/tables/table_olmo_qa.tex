@@ -1,0 +1,34 @@
+\begin{table}[ht]
+\centering
+\small
+\caption{\textbf{OLMo-2 Natural QA under static extension} ($s=4$, $L_0=4\text{K} \to 16\text{K}$, $g=1.1386$).
+Complete evaluation on \texttt{allenai/OLMo-2-0425-1B-Instruct} across $778$ frozen LongBench inputs (greedy decoding, untruncated prompts).
+Token F1 evaluates complete generated responses; EOS counts verify generation termination.
+\textbf{X2 Scope Note}: Boundary-Matched (BM, SHA-256 \texttt{c80626f8\dots}) outperforms MrRoPE-Pro (SHA-256 \texttt{ec9c5497\dots}) across all five extended tasks ($+3.82$ pp macro, $95\%$ bootstrap CI $[+1.32, +6.29]$) while preserving in-window accuracy ($+2.00$ pp).
+Comparison against official YaRN on this exact panel is registered as an ongoing baseline.}
+\label{tab:olmo-qa}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}llrrrrrc@{}}
+\toprule
+Context Stratum & Task & $n$ & MrPro F1 (\%) & BM F1 (\%) & $\Delta$ (pp) & Wins / Losses & EOS (MrPro / BM) \\
+\midrule
+\multirow{6}{*}{Extended ($4\text{K} \le L \le 16\text{K}$)}
+  & HotpotQA & 166 & 28.63 & $\mathbf{33.54}$ & $\mathbf{+4.91}$ & 37 / 24 & 160 / 163 \\
+  & 2WikiMultiHopQA & 173 & 21.55 & $\mathbf{25.43}$ & $\mathbf{+3.88}$ & 25 / 16 & 169 / 171 \\
+  & Qasper & 119 & 13.94 & $\mathbf{19.06}$ & $\mathbf{+5.11}$ & 28 / 15 & 119 / 119 \\
+  & NarrativeQA & 61 & 9.51 & $\mathbf{11.48}$ & $\mathbf{+1.96}$ & 13 / 11 & 61 / 61 \\
+  & MultiFieldQA-en & 112 & 34.49 & $\mathbf{37.72}$ & $\mathbf{+3.23}$ & 54 / 35 & 72 / 72 \\
+  \cmidrule(lr){2-8}
+  & \textbf{Task-Equal Macro} & \textbf{631} & 21.62 & $\mathbf{25.44}$ & $\mathbf{+3.82}$ & \textbf{157 / 101} & \textbf{581 / 586} \\
+\midrule
+\multirow{5}{*}{In-Window ($L \le 4\text{K}$)}
+  & HotpotQA & 5 & $\mathbf{58.33}$ & 51.67 & $-6.67$ & 0 / 1 & 5 / 5 \\
+  & 2WikiMultiHopQA & 26 & 34.62 & $\mathbf{44.98}$ & $\mathbf{+10.37}$ & 5 / 1 & 26 / 26 \\
+  & Qasper & 78 & 26.16 & $\mathbf{28.14}$ & $\mathbf{+1.98}$ & 15 / 13 & 78 / 78 \\
+  & MultiFieldQA-en & 38 & 50.94 & $\mathbf{53.27}$ & $\mathbf{+2.34}$ & 10 / 9 & 35 / 33 \\
+  \cmidrule(lr){2-8}
+  & \textbf{Task-Equal Macro} & \textbf{147} & 42.51 & $\mathbf{44.51}$ & $\mathbf{+2.00}$ & \textbf{30 / 24} & \textbf{144 / 142} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}

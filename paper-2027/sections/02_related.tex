@@ -1,50 +1,11 @@
 \section{Related Work}
 \label{sec:related}
 
-\paragraph{Range, scaling, and exponent shape.}
-RoPE's rotation operator \citep{su2024roformer} admits many frequency tables.
-Scaling-law and base-bound analyses study how the geometric family's range
-affects length generalization \citep{liu2024scaling,xu2024base}.
-FMRoPE relates the learned frequency band to the base and training length,
-and chooses a base accordingly \citep{oka2026fmrope}. In that family the
-normalized exponents remain equally spaced; our fixed-range comparisons vary
-their interior distribution.
-
-Position interpolation scales positions uniformly, while YaRN blends
-frequencies across bands \citep{chen2024position,peng2024yarn}.
-LongRoPE combines dimension-wise scaling with a token-position threshold
-\citep{ding2024longrope,shang2025longrope2}.
-MrRoPE gives uniform and progressive intermediate-band rules through
-mixed-radix conversion \citep{tian2026mrrope}.
-Equation~\eqref{eq:adjustment-families} expresses these frequency factors as
-exponent displacements. Our second stage compares their shapes; the first
-derives an exponent density and tests it at fixed frequency endpoints.
+\paragraph{Range and frequency allocation.}
+RoPE's rotation operator \citep{su2024roformer} admits many frequency choices. Scaling-law analyses study how geometric range affects length generalization \citep{liu2024scaling,xu2024base}. FMRoPE relates the learned band to base and training length \citep{oka2026fmrope}. In that family normalized exponents remain equally spaced; our fixed-range experiments isolate interior allocation. Position interpolation scales positions uniformly \citep{chen2024position}, while YaRN blends frequencies across bands \citep{peng2024yarn}. LongRoPE combines dimension-wise scaling with position thresholds \citep{ding2024longrope,shang2025longrope2}. MrRoPE parameterizes intermediate-band changes through mixed-radix conversion \citep{tian2026mrrope}. Equation~\eqref{eq:adjustment-families} casts these modifications as exponent displacements; our work separates their interior profile from sampled range.
 
 \paragraph{Learning and using frequency bands.}
-LeRoPE learns one log-space scale per pair, shared across layers and heads;
-AdaRoPE learns head-specific frequencies and attention scaling
-\citep{karypis2026lerope,wang2026adarope}. Both optimize entries that can
-be expressed as exponent changes. Our contribution lies in their allocation
-geometry, explicit density construction, and controlled separation from range.
-
-Frequency-use studies connect fast and slow bands to positional and symbolic
-attention, retrieval, and data-dependent scales
-\citep{barbero2025round,urrutia2026decoupling,chiang2025rotary,
-oka2026frequencyentropy,wu2026datashapes}.
-DoPE uses truncated matrix entropy to identify low-rank structures in rotated
-activations and selectively modifies positional encoding \citep{xiong2025dope}.
-Our canonical correlations instead describe the supplied sine--cosine
-subspaces as their exponents vary.
+LeRoPE learns shared per-channel scales, while AdaRoPE studies head-specific frequencies and attention scaling \citep{karypis2026lerope,wang2026adarope}. Frequency-use studies connect rotary coordinates to positional versus symbolic attention, retrieval, and data-dependent scales \citep{barbero2025round,urrutia2026decoupling,chiang2025rotary,oka2026frequencyentropy,wu2026datashapes}. \citet{urrutia2026decoupling} show that slow frequencies serve semantic representations rather than fine positional discrimination, consistent with our geometric collapse $\operatorname{span}\{1,\Delta\}$. DoPE uses truncated matrix entropy to selectively modify positional encodings \citep{xiong2025dope}. Our canonical correlations instead characterize supplied sine--cosine subspaces as exponents vary.
 
 \paragraph{Changing the positional operator.}
-FoPE introduces Fourier components, while HoPE and clipped encodings alter the
-treatment of slow rotations \citep{hua2025fope,chen2025hope,li2026copeclipped}.
-GRAPE generalizes positional transformations through group actions;
-Selective RoPE learns input-dependent rotations
-\citep{zhang2026grape,movahedi2026selectiverope}.
-RePo learns contextual token positions before applying the encoding
-\citep{li2026repo}. These works change the positional map or its dependence on
-content. Our construction retains the standard rotation and designs its
-exponent table. Recent analyses of long-context positional and token confusion
-further motivate studying the interaction between frequency choice and the
-representations it acts on \citep{du2026distinguishes}.
+FoPE introduces Fourier components \citep{hua2025fope}, while HoPE and clipped encodings alter slow rotations \citep{chen2025hope,li2026copeclipped}. Other variants explore group actions \citep{zhang2026grape}, input-dependent rotations \citep{movahedi2026selectiverope}, contextual token positions \citep{li2026repo}, and compression preservation \citep{huang2026ppe}. Long-context token confusion analyses further motivate studying frequency choices and learned representations \citep{gu2026deconstructing,du2026distinguishes}. While these methods alter the positional operator, our constructions retain the standard rotary map and isolate what is achievable within that space.

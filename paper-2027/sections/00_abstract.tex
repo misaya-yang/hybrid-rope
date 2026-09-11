@@ -1,16 +1,1 @@
-RoPE assigns its rotary pairs frequencies through a base and an exponent
-sequence. We study how the distribution of those exponents changes positional
-representation and length generalization. Paired training with identical
-frequency endpoints shows that changing only the interior exponents improves
-all three tested extrapolation lengths in all three seeds. Retargeting the
-range changes the ordering, and frozen weights prefer runtime tables derived
-from the allocation they trained with. A full sine--cosine subspace analysis
-characterizes how exponent allocation changes the positional basis, including
-the shared two-dimensional limit of slow frequencies. We also derive an analytic Cosh family
-from a specified convex allocation criterion and evaluate this explicit
-construction in language-model training and adaptation. After matched
-Llama-$3$-$8$B adaptation at $8$K, $32$K perplexity falls from $991.5$ to $127.9$.
-For frozen models, we study exponent displacements relative to the native table.
-A boundary-matched adjustment improves OLMo's mean token F1 over MrRoPE-Pro from $21.62\%$ to
-$25.44\%$ across five natural-QA tasks. The results connect exponent shape,
-sampled range, and learned compatibility as joint considerations in RoPE design.
+Rotary position embeddings specify both a frequency range and an allocation of a finite number of rotary pairs within that range. We study the second choice separately from range selection and from the weights that learn to use the resulting basis. In paired $151.9$M training runs with identical frequency endpoints, changing only the $30$ interior exponents lowers extrapolation NLL at every tested extended length in all three seeds. The ordering reverses under a specified runtime range-retargeting policy, and weights-by-table crossings show strong dependence on the training allocation. We characterize the supplied positional basis through full sine--cosine subspaces, establish their shared slow-frequency limit, and derive a Cosh allocation from an explicit convex design criterion. Matched training and adaptation evaluate this construction beyond the controlled setting. For frozen deployment, we study native-relative exponent adjustments: a boundary-matched profile raises task-equal F1 from $21.62\%$ to $25.44\%$ on five OLMo long-context QA tasks, while a static Qwen table--amplitude configuration improves $64$K RULER-13 by $6.09$ points over the tested YaRN configuration. Together, these results identify interior allocation as a consequential design choice whose benefits depend on sampled range and learned compatibility.

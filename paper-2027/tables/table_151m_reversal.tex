@@ -1,0 +1,23 @@
+\begin{table}[ht]
+\centering
+\small
+\caption{\textbf{Support-retargeting reversal in 151.9M paired training.}
+Tail NLL contrasts ($\Delta\text{NLL} = \text{Anchored EVQ} - \text{FMRoPE}$) across three independent training seeds (seeds 42, 137, 256) on FineWeb-Edu ($L_{\text{train}}=256$, base $256$, $500$M tokens).
+Negative values favor Anchored EVQ.
+Under fixed training support, interior allocation yields consistent tail-NLL advantages at all extended lengths across $3/3$ seeds.
+Under runtime target-matched support retargeting, non-uniform logarithmic dilation distorts learned harmonic coordinates, completely reversing the ranking across $3/3$ seeds.}
+\label{tab:151m-reversal}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}r rrr c rrr c c@{}}
+\toprule
+& \multicolumn{4}{c}{Fixed training range ($L_{\text{train}}=256$)} & \multicolumn{4}{c}{Target-matched range ($R(L)$ retargeted)} & Reversal \\
+Length & Seed 42 & Seed 137 & Seed 256 & Mean$\pm$SD & Seed 42 & Seed 137 & Seed 256 & Mean$\pm$SD & Net Shift \\
+\midrule
+$256$ & $+0.033$ & $+0.029$ & $+0.017$ & $+0.026\pm0.008$ & $+0.033$ & $+0.029$ & $+0.017$ & $+0.026\pm0.008$ & $0.000$ \\
+$512$ & $-0.478$ & $-0.271$ & $-0.094$ & $\mathbf{-0.281\pm0.192}$ & $+0.061$ & $+0.053$ & $+0.067$ & $+0.060\pm0.007$ & $\mathbf{+0.341}$ \\
+$1{,}024$ & $-0.205$ & $-0.191$ & $-0.132$ & $\mathbf{-0.176\pm0.039}$ & $+0.182$ & $+0.156$ & $+0.344$ & $+0.227\pm0.102$ & $\mathbf{+0.403}$ \\
+$2{,}048$ & $-0.113$ & $-0.181$ & $-0.143$ & $\mathbf{-0.146\pm0.034}$ & $+0.279$ & $+0.399$ & $+0.701$ & $+0.460\pm0.218$ & $\mathbf{+0.606}$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}

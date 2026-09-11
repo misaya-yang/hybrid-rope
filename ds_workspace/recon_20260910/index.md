@@ -12,10 +12,10 @@
 **s8 面板（4096+32768）32768 行：四个 m≤1 臂全部 0.0/48**（BM/b3/wide_b1/wide_b4
 ——4× 上相差 +12~14pp 的形状在 8× 完全无差异）。4K 侧：0.734/0.657/0.740/0.759。
 **⟹ 绑定约束是 m 的盒子（覆盖上限 = 4W），不是带内形状。**
-[天花板/覆盖理论](COVERAGE_CEILING_THEORY_20260911.md)用两个常数解释整场战役
+[天花板/覆盖理论](theory/COVERAGE_CEILING_THEORY_20260911.md)用两个常数解释整场战役
 （8× 塌零、EVQ 零、native/interp/step 失败、家族单调、holdout 长度分层），
 并给出下一代表：**振幅 = log4(目标/W) × 已验证剖面**（`scale8x_wide`，唯一无空洞
-的 8× 覆盖表，预注册 [P1–P5](COVERAGE_PREREG_20260911.md)，就绪命令在
+的 8× 覆盖表，预注册 [P1–P5](prereg_protocols/COVERAGE_PREREG_20260911.md)，就绪命令在
 `code/patch_mfile.py`）。P3（condEVQ∈[0.40,0.55]）因先落地按纪律作废（实测 0.4380，
 落点在区间内不计分）；P2（step42 阶跃/空洞表 → 差）在跑。
 

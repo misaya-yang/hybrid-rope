@@ -1,63 +1,22 @@
 \section{Introduction}
 \label{sec:intro}
 
-Rotary position embedding (RoPE) assigns a different frequency to each pair
-of query and key coordinates \citep{su2024roformer}. Its usual form,
-$\omega_k=b^{-\phi_k}$, combines a base $b$ with equally spaced exponents.
-Base-selection and context-scaling methods have established that the range of
-positional scales matters \citep{liu2024scaling,xu2024base,oka2026fmrope}.
-A finite table also makes a distributional choice: how its rotary pairs occupy
-that range. We study this choice through the exponent sequence.
+Rotary position embeddings (RoPE) assign a frequency to each two-dimensional query--key coordinate pair \citep{su2024roformer}. Its standard geometric table is parameterized by a base, controlling sampled positional scales \citep{liu2024scaling,xu2024base}. A finite table, however, makes another choice: how its rotary pairs occupy that range \citep{oka2026fmrope,tian2026mrrope}. What remains necessary is to distinguish the causal effect of interior allocation from range selection, from the learning process, and from the compatibility of an installed table with mature weights.
 
-Three questions organize the study. What changes in the positional basis when
-exponents are redistributed? Does this redistribution affect learned behavior
-when the frequency range is fixed? And how does an already trained model
-respond to adjustments of its native exponents? These questions connect
-geometric analysis, controlled interventions, and practical table design.
+Three questions organize the study. What changes in the positional basis when interior exponents are redistributed? Does this redistribution affect learned behavior when the frequency range is held strictly fixed? And how does an existing checkpoint respond to adjustments of its native exponents? These questions connect geometric analysis, controlled interventions, and practical table design.
 
-Figure~\ref{fig:spectral-budget-overview} shows the basic intervention.
-Two allocations share their endpoints and $32$ rotary pairs; only the $30$
-interior exponents differ. Across three paired training seeds, this change
-lowers NLL at each tested extrapolation length. A separate range-retargeted
-evaluation reverses the ordering. The weights-by-table crossings add another
-finding: the preferred runtime table depends strongly on which allocation
-trained the weights. Together, these controls make exponent shape observable
-while revealing its interaction with range and learned representation.
+Figure~\ref{fig:spectral-budget-overview} shows the basic intervention: decompose the log-frequency table into endpoints $(a,R)$ and normalized interior exponents $z$. In paired $151.9$M training runs ($L_{\mathrm{train}}=256, K=32$), holding endpoints identical while changing only the $30$ interior exponents lowers extrapolation NLL across all three seeds. However, retargeting the runtime range reverses this ordering, and frozen weights strongly prefer runtime tables derived from their training allocation. Together, these controls isolate interior allocation as an independent design variable while establishing its action boundaries with range and learned representations.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{fig_evidence_overview.pdf}
-  \caption{\textbf{Interior exponents change learned behavior at fixed frequency
-  range.} Left: two allocations of the same $32$ rotary pairs with identical
-  endpoints. Right: paired $151.9$M models trained at length $256$; changing
-  the $30$ interior exponents lowers extrapolation NLL in every seed.
-  Thin lines show the three training seeds and the heavy line their mean.}
+  \caption{\textbf{Interior exponents change learned behavior at fixed frequency range.} Left: two allocations of the same $32$ rotary pairs with identical endpoints. Right: paired $151.9$M models trained at length $256$; changing the $30$ interior exponents lowers extrapolation NLL in every seed. Thin lines show the three training seeds and the heavy line their mean.}
   \label{fig:spectral-budget-overview}
 \end{figure}
 
-The positional geometry provides a way to analyze these distributions.
-Each rotary pair supplies an entire sine--cosine subspace. Canonical
-correlations compare these subspaces without privileging a content phase,
-and expose the common low-frequency limit
-$\operatorname{span}\{1,\Delta\}$. Thus many slow pairs can supply few
-distinct positional directions over a bounded interval. The learned content
-coefficients determine how the model uses those directions.
+The positional geometry provides a way to analyze these distributions. Each rotary pair supplies an entire sine--cosine subspace. Canonical correlations compare these subspaces without privileging a content phase, exposing the common low-frequency limit $\operatorname{span}\{1,\Delta\}$. Thus many slow pairs supply few distinct positional directions over a bounded interval. The learned content coefficients determine how the model uses those directions.
 
-We then study concrete exponent designs in two settings. A convex
-cumulative-tail criterion yields an analytic Cosh distribution, whose
-quantiles define a fixed table for training and adaptation. Its experiments
-cover scarce rotary channels, continued training, and matched $8$B adaptation.
-For frozen models, we instead construct displacements from the native
-exponents and compare their placement and intermediate-band shape.
-These comparisons include a static Qwen table--amplitude configuration that improves $64$K RULER over
-YaRN while retaining the $32$K score, and a boundary-matched adjustment with
-improvements on five OLMo natural-QA tasks. The tested Qwen checkpoints favor
-a different intermediate profile, making learned compatibility part of the
-exponent-design problem.
+We evaluate concrete allocation designs in two regimes. Before or during learning, a convex design criterion produces an analytic Cosh family whose quantiles give a fixed table, evaluated in scarce rotary channels, continued training, and matched $8$B adaptation. For frozen checkpoints, we express modifications as displacements from native exponents. A static Qwen configuration improves $64$K RULER-13 by $6.09$ points over YaRN, and a boundary-matched adjustment raises OLMo mean token F1 from $21.62\%$ to $25.44\%$ across five natural-QA tasks ($631$ untruncated prompts). Checkpoint preferences differ across lengths, making learned compatibility central to allocation design.
 
 \paragraph{Contributions.}
-We (i) define exponent allocation and analyze its full-subspace positional
-geometry; (ii) identify its effects through fixed-range, cross-shape, and
-weights-by-table controls, and evaluate a closed-form construction in trained
-models; and (iii) develop and test native-relative exponent adjustments in
-frozen models, including a boundary-matched intermediate-band rule.
+We (i) isolate interior exponent allocation from sampled range using paired training and frozen-model interventions, showing behavioral effects that cannot be explained by scalar range changes alone; (ii) characterize full sine--cosine subspace geometry, establish their shared slow-frequency limit, and delimit static metrics via non-identifiability and compatibility boundaries; and (iii) evaluate explicit allocation designs (analytic Cosh and boundary-matched) under matched learning and static deployment with complete-generation and natural-QA endpoints.

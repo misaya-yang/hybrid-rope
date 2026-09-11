@@ -1,125 +1,93 @@
 \section{Positional Geometry of Exponent Distributions}
 \label{sec:theory}
 
-\subsection{What different exponents represent}
+\subsection{Full-pair geometry and effective rank identity}
 \label{sec:subspaces}
 \label{sec:budget}
 
-A rotary pair contributes
-$C\cos(\omega\Delta)+D\sin(\omega\Delta)$ to an attention logit, where
-$\Delta$ is the relative position and $C,D$ depend on query and key content.
-The positional object associated with its exponent is therefore the subspace
+For a fixed content pair, a rotary channel contributes $C\cos(\omega\Delta)+D\sin(\omega\Delta)$ to an attention logit, where $\Delta$ is relative token separation. Its positional object is therefore the two-dimensional function space
 \begin{equation}
 V_\omega=\operatorname{span}\{\cos(\omega\Delta),\sin(\omega\Delta)\}.
 \label{eq:subspace}
 \end{equation}
-Comparing these two-dimensional spaces accounts for every content phase within
-a pair. Let $x_\omega(\Delta)=[\cos(\omega\Delta)\ \sin(\omega\Delta)]$,
-$S_\omega=\mathbb E[x_\omega^\top x_\omega]$, and
-$H_{\omega\nu}=\mathbb E[x_\omega^\top x_\nu]$ under a specified distribution
-of separations. For nonsingular $S_\omega,S_\nu$, the singular values of
-$Q_{\omega\nu}=S_\omega^{-1/2}H_{\omega\nu}S_\nu^{-1/2}$ are the canonical
-correlations of the two spaces. Their average squared correlation,
+Let $x_\omega(\Delta)=[\cos(\omega\Delta),\sin(\omega\Delta)]$, and define self- and cross-Gram matrices $S_\omega=\mathbb E[x_\omega^\top x_\omega]$ and $H_{\omega\nu}=\mathbb E[x_\omega^\top x_\nu]$ under a declared separation measure. For nonsingular $S_\omega,S_\nu$, the singular values of whitened cross-Gram $Q_{\omega\nu}=S_\omega^{-1/2}H_{\omega\nu}S_\nu^{-1/2}$ are the canonical correlations of the two spaces. Their average squared value,
 \begin{equation}
 c_{\omega\nu}=\tfrac12\|Q_{\omega\nu}\|_F^2\in[0,1],
 \label{eq:collision}
 \end{equation}
-is unchanged by rotation of the phase inside either pair. It measures how
-much of the positional basis one frequency shares with another.
-
-Stacking all block-whitened pairs gives a Gram matrix $\Gamma$ with $I_2$
-on its diagonal blocks. If $\bar c$ is the mean of $c_{ij}$ over ordered
-distinct pairs, its R\'enyi-$2$ effective rank satisfies
+is invariant under invertible basis changes within either pair, measuring how much of the positional basis the frequencies share. Stacking all block-whitened pairs into $\Gamma$ (with identity diagonal blocks), if $\bar c$ is the mean pairwise squared canonical overlap, its R\'enyi-$2$ effective rank satisfies
 \begin{equation}
-r_2(\Gamma)
-=\frac{(\operatorname{tr}\Gamma)^2}{\operatorname{tr}(\Gamma^2)}
-=\frac{2K}{1+(K-1)\bar c}.
+r_2(\Gamma)=\frac{(\operatorname{tr}\Gamma)^2}{\operatorname{tr}(\Gamma^2)}=\frac{2K}{1+(K-1)\bar c}.
 \label{eq:budget-identity}
 \end{equation}
-At fixed $K$ and range, exponent allocation changes this basis through the
-off-diagonal correlations. For uniform separations on $[0,L]$, the cross-Gram
-has an exact trigonometric form, so both the correlations and effective rank
-can be computed directly (App.~\ref{sec:geometry-proofs}).
+This is an exact identity for the specified positional design matrix, not a downstream model accuracy bound.
 
-\subsection{How slow exponents share positional directions}
+\subsection{Shared slow-frequency limit}
+\label{sec:slow-limit}
 
 \begin{proposition}[Shared slow-frequency subspace]
 \label{prop:collapse}
-Under the uniform measure on $[0,L]$, as $\omega L\to0$ through $\omega>0$,
-the two-dimensional subspace $V_\omega$ approaches $\operatorname{span}\{1,\Delta\}$. If
-$\epsilon=\max\{|\omega L|,|\nu L|\}\to0$, then
-$2-\|Q_{\omega\nu}\|_F^2=O(\epsilon^4)$.
+Under uniform measure on $[0,L]$, let $x=\omega L$. As $x\to0$, $\cos(xt)\to 1$ and $\sin(xt)/x\to t$, so $V_\omega$ converges to $\operatorname{span}\{1,\Delta\}$. For frequencies with $\epsilon=\max\{|\omega L|,|\nu L|\}\to0$, squared chordal separation satisfies $2-\|Q_{\omega\nu}\|_F^2=\mathcal{O}(\epsilon^4)$.
 \end{proposition}
 
-The limit follows from $\cos(\omega\Delta)\to1$ and
-$\sin(\omega\Delta)/\omega\to\Delta$; Appendix~\ref{sec:geometry-proofs}
-derives the leading fourth-order coefficient. Several slow pairs can thus
-supply many coordinate dimensions but very few distinct positional directions.
-For $b=500{,}000$, $K=64$, and $L=4096$, the $23$ standard-grid pairs with
-$\omega L\le1$ have $46$ nominal dimensions and $r_2=2.00013$ under this
-measure. Block whitening normalizes each pair's energy and conditioning, so
-$r_2$ measures directional overlap; the raw feature scales are analyzed in
-Appendix~\ref{sec:geometry-proofs}.
+In standard grids ($b=500{,}000, K=64, L=4096$), the $23$ pairs with $\omega L\le1$ supply $46$ coordinate dimensions but a block-whitened rank $r_2=2.00013$. In raw unwhitened coordinates, the weak eigenvalue scales as $\lambda_-(S_\omega)\approx (\omega L)^2/12$. This motivates studying how tables distribute positional directions, though static rank does not guarantee downstream extrapolation.
 
-Exponent redistribution changes how many pairs occupy these shared directions
-and how many cover faster positional variations. Frequency-use studies also show that
-slow pairs can carry semantic information
-\citep{barbero2025round,urrutia2026decoupling}; their positional similarity
-motivates redistributing the rotary pairs while retaining their content
-coordinates. The learned weights determine how the resulting basis is used.
+\subsection{Non-identifiability and epistemic status}
+\label{sec:non-identifiability}
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3.5pt}
+\caption{\textbf{Epistemic status of theoretical and empirical components.}
+Differentiating exact basis geometry, surrogate design criteria, heuristic operating rules, and downstream behavior.}
+\label{tab:epistemic-map}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}llll@{}}
+\toprule
+Tier & Component & Object & Epistemic Status \\
+\midrule
+1 & Positional Basis & Subspace overlap $c_{\omega\nu}$, rank $r_2$, limit $V_0$ & Exact operator geometry (Prop.~\ref{prop:collapse}) \\
+2 & Surrogate Functional & Variational objective $\mathcal{C}_{\mathrm{app}}[\rho]$ in \eqref{eq:Capp} & Explicit design prior; not downstream $\mathcal{L}_{\mathrm{CE}}$ \\
+3 & Operating Rule & Cosh density $\rho_\tau$ and finite quantile grid & Closed-form heuristic family; fixed $K$ grid \\
+4 & Downstream LM & Tail NLL, RULER-13, natural LongBench QA & Non-identifiable from $\Phi(\Omega)$ (Thm.~\ref{thm:non-identifiability}) \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+The separation between basis geometry and downstream performance is formal:
+
+\begin{theorem}[Non-identifiability from static frequency metrics]
+\label{thm:non-identifiability}
+Let $\mathcal{M}$ have learned projection weights with slot-varying subspace norms. Downstream capability $\mathcal{R}(\Omega;\mathcal{M},\mathcal{D})$ is non-identifiable from low-dimensional frequency metrics $\Phi(\Omega)$ across three fibers: (i)~\textbf{permutation}: swapping slots preserves $\Phi$ but destroys projection co-adaptation ($1\times$ NLL doubles, $64$K RULER drops to $0.00$); (ii)~\textbf{discontinuity}: $1$-ULP jitter shifts discrete scale-orbit counts by $\Delta q=58$ with zero loss change ($\Delta\mathrm{NLL}=+10^{-5}$); and (iii)~\textbf{stiffness}: curvature ill-conditioning ($\kappa(F_N)\gg 10^4$) concentrates sensitivity at knee slot $19$, so $\mathrm{MAE}=0.0012$ coordinate error fails retention gates.
+\end{theorem}
+Table~\ref{tab:epistemic-map} summarizes these boundaries, isolating what the geometric theory proves from what requires downstream empirical validation.
 
 \subsection{An analytic allocation construction}
 \label{sec:construction}
 
-To construct a smooth exponent table, let a positive density
-$\rho\in C^2([0,1])$, with $\int_0^1\rho=1$, allocate samples over
-$[0,1]$. Uniform $\rho$ recovers geometric spacing. Define the cumulative
-slow-tail mass $S_\rho(t)=\int_t^1\rho(\phi)\,d\phi$ and choose the
-convex allocation criterion
+To allocate samples over normalized exponent space $[0,1]$, let $S_\rho(t)=\int_t^1\rho(\phi)\,d\phi$, and consider the convex design criterion
 \begin{equation}
-\Capp[\rho]
-=\frac{\alpha}{2}\int_0^1\rho(\phi)^2\,d\phi
-+\frac{\beta}{2}\int_0^1 S_\rho(t)^2\,dt,
-\qquad \alpha>0,\ \beta\ge0.
+\Capp[\rho]=\frac\alpha2\int_0^1\rho(\phi)^2\,d\phi+\frac\beta2\int_0^1S_\rho(t)^2\,dt,
+\qquad \text{s.t. } \int_0^1\rho=1,\ \rho\ge0.
 \label{eq:Capp}
 \end{equation}
-The first term discourages concentration in a narrow band; the second
-penalizes the squared mass beyond each slow-end threshold. Equivalently,
-$\int S_\rho^2=\iint\rho(\phi)\rho(\psi)\min(\phi,\psi)\,d\phi\,d\psi$.
-These specified design preferences provide a tractable surrogate for
-constructing a nonuniform allocation.
+The first term penalizes concentration; the second penalizes cumulative mass beyond slow-end thresholds. These are explicit design preferences; we do not identify this functional with complete trained-model loss.
 
 \begin{theorem}[Cosh allocation]
 \label{thm:ode}
-The unique minimizer of \eqref{eq:Capp} over positive
-$\rho\in C^2([0,1])$ with unit integral is
+For $\alpha>0$ and $\beta\ge0$, the unique minimizer of \eqref{eq:Capp} over positive $\rho\in C^2([0,1])$ with unit integral is
 \begin{equation}
-\rho_\tau(\phi)=\frac{\tau\cosh(\tau(1-\phi))}{\sinh\tau},
+\rho_\tau(\phi)=\frac{\tau\cosh[\tau(1-\phi)]}{\sinh\tau},
 \qquad \tau=\sqrt{\beta/\alpha},
 \label{eq:rho-tau}
 \end{equation}
-with $\rho_0(\phi)=1$ obtained by continuity at $\beta=0$.
-\end{theorem}
-
-The Euler--Lagrange equation reduces to $\rho''=\tau^2\rho$ with
-$\rho'(1)=0$; normalization fixes its scale. Integrating and inverting the CDF
-gives the finite table
+recovering uniform density as $\tau\to0$. Inverting the CDF yields the explicit quantile map
 \begin{equation}
-\phi_k(\tau)
-=1-\frac{1}{\tau}\operatorname{arcsinh}\!\left((1-u_k)\sinh\tau\right),
+\phi_k(\tau)=1-\frac{1}{\tau}\operatorname{arcsinh}\!\left((1-u_k)\sinh\tau\right),
 \qquad u_k=\frac{k+1/2}{K}.
 \label{eq:warp}
 \end{equation}
-We call this one-parameter inverse-CDF family \evq{}. For $\tau>0$, its density decreases from the
-fast to the slow end, allocating more samples to faster positional variations.
-The limit $\tau\to0$ gives uniform-log midpoint quantiles.
-
-After choosing $\tau$ and a grid, installation evaluates \eqref{eq:warp}
-once and sets
-$\omega_k=b^{-\phi_k}$. The frequency table stays fixed during training or
-adaptation, and the attention operator and trainable parameter count are unchanged.
-For the fixed-range experiment we normalize these quantiles using
-\eqref{eq:table-decomposition} and anchor them to the baseline endpoints.
-Table~\ref{tab:allocation-protocols} records each experiment's $\tau$, grid,
-and selection convention; the operating-rule study is in
-Appendix~\ref{sec:tau-scaling}.
+\end{theorem}
+We call this construction \evq{}. It is an analytic allocation family, not a claim of universal optimality. Once $\tau$, grid, and endpoint anchoring are specified, installation evaluates the table once without changing the rotary operator or trainable parameter count.

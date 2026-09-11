@@ -1,0 +1,28 @@
+\begin{table*}[t]
+\centering
+\small
+\caption{\textbf{Comprehensive forensic hash ledger and repository empirical receipts.}
+All interventions are anchored to byte-verified float32 frequency tensor SHA-256 digests and pre-registered JSON evaluation receipts.
+MrRoPE-Pro parameters follow $(l, h, n)$ discrete turn thresholds with attention scaling gain $g(s)=1+0.1\ln s$.
+FullLagP2 resolves the legacy p2 aliasing defect across all $32{,}768$ discrete integer lags.
+All reported metrics reflect verified execution outputs without unexecuted extrapolation.}
+\label{tab:empirical-anchors}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}llllp{7.2cm}@{}}
+\toprule
+Intervention Arm & Role / Classification & Architecture / Context & Primary Tensor Float32 SHA-256 & Key Empirical Receipts \& Status \\
+\midrule
+\textbf{MrRoPE-Pro} & Strong Positive Baseline & Qwen2.5-3B ($8$K--$128$K) & \texttt{33cbe3a40994ac2a79126a14\dots} & $l{=}23, h{=}40, n{=}17$; $128$K macro $53.2$ vs YaRN $50.1$ ($+3.1$ advantage); $64$K macro $70.4$ vs YaRN $63.2$ ($+7.2$ advantage). \\
+\textbf{FullLagP2} & Local Positive / Mixed & Qwen2.5-1.5B ($64$K, $128$K) & \texttt{ecd0c280a11788e0c4a869a3\dots} & All $32{,}768$ lags evaluated; $64$K: MK2 $37.50\%$ vs $12.50\%$ ($+25.0\%$), VT $87.50\%$ vs $82.50\%$ ($+5.0\%$), FWE $70.83\%$ vs $45.83\%$ ($+25.0\%$), paired record 9W/13T/2L; $128$K collapses to $0.00\%$; 3B transfer regresses (VT $-5.0\%$, FWE $-8.33\%$). \\
+\textbf{151.9M Fixed} & Controlled Training & 151.9M ($256 \to 2048$, 3 seeds) & (Trained weights, seeds 42/137/256) & Fixed training support: $\Delta\text{NLL} = -0.281, -0.176, -0.146$ nats across $512, 1024, 2048$ tokens (3/3 seeds favor EVQ). \\
+\textbf{151.9M Retargeted} & Operating Boundary & 151.9M ($256 \to 2048$, 3 seeds) & (Trained weights, seeds 42/137/256) & Runtime retargeted support: $\Delta\text{NLL} = +0.060, +0.227, +0.460$ nats (3/3 seeds reverse in favor of FMRoPE). \\
+\textbf{OLMo-2 BM QA} & Deployment Candidate & OLMo-2-1B ($4$K--$16$K, 631 prompts) & \texttt{c80626f8f9280854577fd1e7\dots} & $n{=}631$ extended prompts: task-equal token F1 $25.44\%$ vs $21.62\%$ ($+3.82$ pp, $95\%$ CI $[+1.32, +6.29]$, wins 5/5 tasks). In-window ($n{=}147$): $44.51\%$ vs $42.51\%$ ($+2.00$ pp). \\
+\textbf{Llama-3-8B LoRA} & Matched Adaptation & Meta-Llama-3-8B ($8$K--$32$K) & (300-step rank-64 LoRA, seed 42) & PPL $108.96 \to 24.07$ ($16$K), $991.48 \to 127.91$ ($32$K); in-window cost $6.82 \to 10.07$ ($+47.6\%$). Gold-block ablation: $\Delta\text{NLL} = +1.5055$ vs $-0.0095$ nats ($4.504\times$ drop). \\
+\textbf{C2 Clipped-Affine} & Structural Negative & OLMo-2-1B / Qwen-1.5B & \texttt{113089f05b1e01e61bd9c78f\dots} & Movement MAE $0.001223$ fails retention gate ($0.870971 < 0.875$); $81.2\%$ residual curvature concentrated at transition knee slot 19. \\
+\textbf{Scale-Orbit Exact} & Representation Negative & OLMo-2-1B ($1\times, 4\times$) & \texttt{6344df4df8a9b39c50fdcd97\dots} & $q{=}6, b{=}6$; $4\times$ NLL $7.2535$; $16$K core-4 macro $0.0000$; phase safety $59.4\%$. \\
+\textbf{Scale-Orbit Jitter} & Representation Discontinuity & OLMo-2-1B ($1\times, 4\times$) & \texttt{7896610d4dba6836233933eb\dots} & 1-ULP jitter jumps orbit count $q$ from $6 \to 64$ ($\Delta q{=}58$), yet $\Delta\text{NLL} = +0.000013$ ($p > 0.95$). \\
+\textbf{Same-Multiset Perm.} & Falsification Benchmark & OLMo-2-1B / Qwen-1.5B & (Permuted slot assignment) & Identical frequency multiset causes $1\times$ NLL to double ($3.104 \to 6.865$) and Qwen $64$K core-4 to drop from $0.70 \to 0.00$. \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}

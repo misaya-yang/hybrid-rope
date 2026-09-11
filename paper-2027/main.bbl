@@ -1,4 +1,4 @@
-\begin{thebibliography}{41}
+\begin{thebibliography}{43}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -132,6 +132,14 @@ Robert~M. Gray and David~L. Neuhoff.
   (6):\penalty0 2325--2383, 1998.
 \newblock \doi{10.1109/18.720541}.
 
+\bibitem[Gu et~al.(2026)Gu, Chen, Zhang, Zhang, and Hu]{gu2026deconstructing}
+Zihan Gu, Ruoyu Chen, Han Zhang, Hua Zhang, and Yue Hu.
+\newblock Deconstructing positional information: From attention logits to
+  training biases.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2026.
+\newblock URL \url{https://openreview.net/forum?id=D0u0glT060}.
+
 \bibitem[Ho et~al.(2020)Ho, Duong~Nguyen, Sugawara, and Aizawa]{ho2020twowiki}
 Xanh Ho, Anh-Khoa Duong~Nguyen, Saku Sugawara, and Akiko Aizawa.
 \newblock Constructing a multi-hop {QA} dataset for comprehensive evaluation of
@@ -159,6 +167,14 @@ Ermo Hua, Che Jiang, Xingtai Lv, Kaiyan Zhang, Youbang Sun, Yuchen Fan, Xuekai
 \newblock In \emph{Proceedings of the 42nd International Conference on Machine
   Learning}, volume 267 of \emph{PMLR}, pp.\  24932--24949, 2025.
 \newblock URL \url{https://proceedings.mlr.press/v267/hua25b.html}.
+
+\bibitem[Huang et~al.(2026)Huang, Jiang, Zheng, Hu, Han, and
+  Chen]{huang2026ppe}
+Mouxiao Huang, Borui Jiang, Dehua Zheng, Hailin Hu, Kai Han, and Xinghao Chen.
+\newblock {PPE}: Positional preservation embedding for token compression in
+  multimodal large language models.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2026.
 
 \bibitem[Karypis et~al.(2026)Karypis, O'Brien, Kadekodi, Zhu, and
   McAuley]{karypis2026lerope}

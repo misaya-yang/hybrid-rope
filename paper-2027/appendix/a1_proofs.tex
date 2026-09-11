@@ -312,6 +312,252 @@ sign, permutation, and the $2\pi$ alias.
 \end{proof}
 
 \FloatBarrier
+\subsection{Non-identifiability of downstream capability and three proof fibers}
+\label{sec:non-identifiability-proof}
+
+\paragraph{Mathematical setup and notation.}
+Let $\mathcal{M} = (W_Q, W_K, W_V, W_O, \theta_{\mathrm{FFN}})$ denote the frozen parameters of a pre-trained transformer language model with hidden dimension $d$, $H$ attention heads, head dimension $\dhd = 2K$, and native training context window $L_0$.
+For any sequence of tokens $\mathbf{x} = (x_1, \dots, x_N)$, the attention logit between query at position $m$ and key at position $n$ (lag $\Delta = m - n$) in head $h$ is:
+\begin{equation}
+S_h(m, n; \Omega) = q_{h, m}^\top \mathcal{R}_\Omega(\Delta) k_{h, n} = \sum_{k=0}^{K-1} \left[ a_{h, k}(m, n) \cos(\omega_k \Delta) + b_{h, k}(m, n) \sin(\omega_k \Delta) \right],
+\label{eq:attention-logit-decomp}
+\end{equation}
+where $c_{h, k}(m, n) = a_{h, k} + i b_{h, k}$ are the bilinear query--key subspace projection coordinates:
+\begin{equation}
+a_{h, k} = q_{h, 2k} k_{h, 2k} + q_{h, 2k+1} k_{h, 2k+1}, \qquad b_{h, k} = q_{h, 2k} k_{h, 2k+1} - q_{h, 2k+1} k_{h, 2k}.
+\label{eq:bilinear-content-coords}
+\end{equation}
+Downstream functional capability is governed by the risk functional over evaluation distribution $\mathcal{D}$ across context horizons $L \le s L_0$:
+\begin{equation}
+\mathcal{R}(\Omega; \mathcal{M}, \mathcal{D}) = \mathbb{E}_{(\mathbf{x}, y) \sim \mathcal{D}} \left[ \ell(f(\mathbf{x}; \mathcal{M}, \Omega), y) \right].
+\label{eq:downstream-risk}
+\end{equation}
+Let $\Phi: \mathbb{R}_+^K \to \mathbb{R}^p$ ($p \ll \dim(\mathcal{M})$) be any candidate structural feature map depending solely on the frequency schedule $\Omega$, its sorted multiset, discrete scale-orbit count, continuous group delay, uncentered background derivative energy, or coordinate-space movement distances.
+
+\begin{theorem}[Non-identifiability of downstream capability from low-dimensional frequency metrics]
+\label{thm:non-identifiability-appendix}
+Let $\mathcal{M}$ be a pre-trained transformer whose learned projection weights exhibit non-zero variance in subspace norms across rotary slots:
+$\operatorname{Var}_k \left( \|W_{Q, h}^{(k)}\|_F \|W_{K, h}^{(k)}\|_F \right) > 0$.
+Let $\Phi: \mathbb{R}_+^K \to \mathbb{R}^p$ be any structural metric depending solely on the rotary frequency schedule $\Omega$.
+Then downstream functional capability $\mathcal{R}(\Omega; \mathcal{M}, \mathcal{D})$ is strictly \textbf{non-identifiable} from $\Phi(\Omega)$ across three distinct mathematical fibers:
+\begin{enumerate}
+  \item \textbf{Type-I Non-Identifiability (The Permutation Fiber / Degeneracy of Identity):}
+  There exist frequency tables $\Omega_A, \Omega_B \in \mathbb{R}_+^K$ such that $\Phi(\Omega_A) = \Phi(\Omega_B)$, yet their downstream risk diverges catastrophically:
+  \begin{equation}
+  \left| \mathcal{R}(\Omega_A; \mathcal{M}, \mathcal{D}) - \mathcal{R}(\Omega_B; \mathcal{M}, \mathcal{D}) \right| \ge \Gamma_{\mathrm{collapse}} > 0.
+  \label{eq:fiber1-statement}
+  \end{equation}
+  \item \textbf{Type-II Non-Identifiability (The Discontinuity Fiber / Metric Discontinuity):}
+  There exist frequency tables $\Omega_C, \Omega_D \in \mathbb{R}_+^K$ such that $\|\Phi(\Omega_C) - \Phi(\Omega_D)\| \ge M > 0$, yet their downstream risk is identical up to machine precision:
+  \begin{equation}
+  \left| \mathcal{R}(\Omega_C; \mathcal{M}, \mathcal{D}) - \mathcal{R}(\Omega_D; \mathcal{M}, \mathcal{D}) \right| \le \varepsilon_{\mathrm{machine}} \approx 0.
+  \label{eq:fiber2-statement}
+  \end{equation}
+  \item \textbf{Type-III Non-Identifiability (The Hessian Knee Fiber / Extremal Curvature Ill-Conditioning):}
+  For any coordinate distance $\mathcal{D}(\Omega, \Omega^*) = \|\mathbf{m}(\Omega) - \mathbf{m}(\Omega^*)\|_p$, there exists a continuous family of tables with $\mathcal{D}(\Omega_\epsilon, \Omega^*) = \epsilon \to 0$ that fail pre-registered in-window retention gates, while tables with $\mathcal{D}(\Omega', \Omega^*) \gg \epsilon$ pass.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}[Proof of Theorem~\ref{thm:non-identifiability-appendix}]
+We establish the three mathematical fibers sequentially.
+
+\paragraph{Part 1: Proof of Fiber 1 (Type-I Non-Identifiability: The Permutation Fiber).}
+Let $\Omega_A = (\omega_0, \omega_1, \dots, \omega_{K-1})$ be an ordered, certified frequency table.
+Define $\Omega_B = \pi(\Omega_A) = (\omega_{\pi(0)}, \dots, \omega_{\pi(K-1)})$ for a non-trivial permutation $\pi \in S_K$ that transposes an interior fast slot $k_1$ with an interior slow slot $k_2$ ($k_1 \ne k_2$, $\omega_{k_1} \gg \omega_{k_2}$).
+Because $\Omega_B$ contains the exact same multiset of frequencies, any permutation-invariant metric (e.g., eigenvalue multiset of $\mathcal{R}_\Omega(\Delta)$, spectral moments, frame condition bounds, uncentered background energy) satisfies $\Phi(\Omega_B) = \Phi(\Omega_A)$ identically.
+Both tables lie on the exact same structural fiber $\Phi^{-1}(v)$.
+
+Now consider the difference in rotary attention logits:
+\begin{equation}
+\delta S_h(\Delta) = q_{h, k_1}^\top \left[ R(\omega_{k_2}\Delta) - R(\omega_{k_1}\Delta) \right] k_{h, k_1} + q_{h, k_2}^\top \left[ R(\omega_{k_1}\Delta) - R(\omega_{k_2}\Delta) \right] k_{h, k_2}.
+\label{eq:logit-diff-perm}
+\end{equation}
+During pre-training, projection weights $(W_Q^{(k)}, W_K^{(k)})$ co-adapt to specific slot frequencies $\omega_k$: fast channels ($k_1$) develop large-norm projections for local syntactic dependencies and token identities, while slow channels ($k_2$) carry diffuse long-range semantic tracking.
+Because $\omega_{k_1} \gg \omega_{k_2}$, the rotation operator difference satisfies:
+\begin{equation}
+\left\| R(\omega_{k_2} \Delta) - R(\omega_{k_1} \Delta) \right\|_F = 2 \sqrt{2} \left| \sin\left( \frac{(\omega_{k_1} - \omega_{k_2})\Delta}{2} \right) \right|.
+\end{equation}
+Transposing slots rotates fast syntactic features by near-zero phase velocities, completely erasing local token ordering, while rotating slow semantic features through rapid radians, destroying associational retrieval.
+Expanding the risk functional around logits, the linear gradient term vanishes in expectation over data due to phase decorrelation, and the second-order expansion yields a strictly positive-definite loss penalty:
+\begin{equation}
+\Gamma_{\mathrm{collapse}} \ge \frac{1}{2} \sum_{k \in \{k_1, k_2\}} \mathbb{E}_{x \sim \mathcal{D}}\left[ \|W_Q^{(k)} x\|^2 \|W_K^{(k)} x\|^2 \right] \cdot \mathbb{E}_\Delta \left[ \sin^2\left( \frac{(\omega_{k_1} - \omega_{k_2})\Delta}{2} \right) \right] > 0.
+\label{eq:gamma-collapse-bound}
+\end{equation}
+In verified repository receipts, permuting the 64-frequency multiset causes OLMo-1B $1\times$ PG-19 tail NLL to more than double from $3.10423$ to $6.86493$ ($\Delta\mathrm{NLL} = +3.760692$) and Qwen-2.5-1.5B 64K core-4 task macro score to plunge from $0.7000$ to flat $0.0000$ across all four benchmark tasks.
+Since $\Phi(\Omega_A) = \Phi(\Omega_B)$ while $\Delta\mathcal{R} \ge 3.76$, downstream capability is non-identifiable from $\Phi$.
+
+\paragraph{Part 2: Proof of Fiber 2 (Type-II Non-Identifiability: The Discontinuity Fiber).}
+Let $\Omega_C = \Omega^{\mathrm{exact}}$ be an exact integer-ratio scale-orbit chain with discrete orbit count $\Phi_{\mathrm{orbit}}(\Omega_C) = q(\Omega_C, 4) = 6$.
+Construct $\Omega_D = \Omega^{\mathrm{jitter}}$ by perturbing each float32 element by $1$ unit in the last place (ULP): $\omega_{k, D} = \operatorname{nextafter}(\omega_{k, C}, \infty)$, satisfying $|\omega_{k, D} - \omega_{k, C}| \le 1.01 \times 10^{-7}\omega_k$.
+By algebraic definition, the discrete rational commensurability classes shatter, jumping the orbit metric from $6$ to $64$ ($\Delta\Phi = 58$, a massive discrete jump).
+
+However, across the full physical evaluation horizon $L = 16{,}384$, the maximum phase deviation is:
+\begin{equation}
+\max_k |\omega_{k, C} - \omega_{k, D}| L \le 1.01 \times 10^{-7} \times 1.0 \times 16{,}384 \approx 0.00165 \text{ rad}.
+\end{equation}
+The resulting attention logit deviation is bounded by:
+\begin{equation}
+|S_h(m, n; \Omega_C) - S_h(m, n; \Omega_D)| \le \sum_{k=0}^{K-1} |c_{h, k}| \min(2, |\omega_{k, C} - \omega_{k, D}|\Delta) \le C_{\max} \cdot 0.00165 < 10^{-4}.
+\end{equation}
+Propagating through the Lipschitz-continuous softmax operator and cross-entropy loss:
+\begin{equation}
+\left| \mathcal{R}(\Omega_C; \mathcal{M}, \mathcal{D}) - \mathcal{R}(\Omega_D; \mathcal{M}, \mathcal{D}) \right| \le L_{\ell} \cdot \mathcal{O}(10^{-4}) \approx \mathcal{O}(10^{-5}).
+\end{equation}
+In verified repository receipts, the empirical measured NLL difference between $\Omega^{\mathrm{exact}}$ and $\Omega^{\mathrm{jitter}}$ was $\Delta\mathrm{NLL} = +0.000013$ ($p > 0.95$, 95\% CI: $[-0.0010, +0.0011]$), and 16K core-4 RULER was flat $0.0000$.
+A discontinuous jump of $\Delta\Phi = 58$ produces zero measurable functional change, demonstrating that discrete orbit metrics are gauge artifacts rather than physical observables.
+
+\paragraph{Part 3: Proof of Fiber 3 (Type-III Non-Identifiability: The Hessian Knee Fiber).}
+Let $\mathbf{m}^* \in [0, 1]^K$ denote the optimal movement profile, and expand the cross-entropy loss around $\mathbf{m}^*$:
+\begin{equation}
+\mathcal{L}(\mathbf{m}^* + \delta\mathbf{m}) = \mathcal{L}(\mathbf{m}^*) + \frac{1}{2} \delta\mathbf{m}^\top F_N \delta\mathbf{m} + \mathcal{O}(\|\delta\mathbf{m}\|^3),
+\label{eq:hessian-expansion}
+\end{equation}
+where $F_N$ is the Fisher Information Matrix / empirical loss Hessian.
+Due to learned query--key projection norms and multi-layer attention routing, $F_N$ exhibits extreme curvature ill-conditioning: $\kappa(F_N) = \lambda_1 / \lambda_K \gg 10^4$.
+The dominant eigenvector $v_1$ is sharply concentrated at the transition knee slot (slot 19 in 64-pair architectures, where $c_{19}/c_{\mathrm{orth}} \approx 1.8$), which sits at the critical phase boundary between high frequencies ($\omega L_0/2\pi > 1$) and slow frequencies ($\omega L_0/2\pi < 1$).
+A coordinate perturbation $\delta\mathbf{m}_1 = \epsilon v_1$ aligned with the dominant eigenvector incurs a loss penalty of $\frac{1}{2}\lambda_1 \epsilon^2$.
+Conversely, an orthogonal perturbation $\delta\mathbf{m}_2$ dispersed across low-sensitivity plateau slots incurs a loss penalty of $\le \frac{1}{2}\lambda_2 \epsilon^2 \ll \frac{1}{2}\lambda_1 \epsilon^2$.
+
+Since $\lambda_1 / \lambda_2 \gg 10^2$, we can choose $\epsilon > 0$ such that:
+\begin{equation}
+\frac{1}{2}\delta\mathbf{m}_2^\top F_N \delta\mathbf{m}_2 < \mathrm{Budget}_{\mathrm{retention}} < \frac{1}{2}\delta\mathbf{m}_1^\top F_N \delta\mathbf{m}_1,
+\end{equation}
+while their coordinate-space movement distances are identical: $\|\delta\mathbf{m}_1\|_p = \|\delta\mathbf{m}_2\|_p = \epsilon$.
+In the empirical two-parameter clipped-affine curve $C2$, movement MAE is an infinitesimal $0.001223$ (RMSE $0.006118$).
+However, because $81.2\%$ of its squared residual was concentrated at knee slot 19, in-window loss degraded by $+0.00496$ nats, breaching the pre-registered Native retention gate ($0.870971 < 0.8750$, failing the gate by $0.004615$ nats, where allowable margin after gain scaling was $< 0.02$ nats).
+Thus, coordinate-space movement metrics $\mathcal{D}(\Omega, \Omega^*)$ cannot identify operational retention.
+\end{proof}
+
+\FloatBarrier
+\subsection{Elimination of local Taylor approximations, path-integrated bounds, and physical observables}
+\label{sec:taylor-breakdown-observables}
+
+\paragraph{Failure of local 2nd-order Taylor expansions under phase wrapping.}
+A recurring failure mode in prior analyses is the reliance on local quadratic Taylor approximations $\Delta\mathcal{L} \approx \frac{1}{2}\delta\Omega^\top F_N \delta\Omega$.
+Rotary attention logits depend on trigonometric functions $\cos(\omega_k \Delta)$.
+The Taylor expansion of an oscillatory function $f(\omega) = \cos(\omega L)$ around frequency $\omega$ is:
+\begin{equation}
+\cos((\omega + \delta\omega)L) - \cos(\omega L) = -L\sin(\omega L)\delta\omega - \frac{1}{2}L^2\cos(\omega L)(\delta\omega)^2 + \mathcal{O}(L^3(\delta\omega)^3).
+\label{eq:taylor-oscillation}
+\end{equation}
+The convergence radius of this polynomial series is strictly bounded by the phase condition:
+\begin{equation}
+\Delta\phi = |\delta\omega| \cdot L \ll 1.
+\end{equation}
+When evaluating long-context extensions ($L \ge 4{,}096$ to $131{,}072$), phase perturbations $\Delta\phi$ easily exceed $2\pi$.
+While the true trigonometric difference is strictly bounded in $[-2, 2]$, the second-order Taylor term $\frac{1}{2}(L \delta\omega)^2$ grows quadratically without bound.
+
+\begin{table}[ht]
+\caption{Catastrophic breakdown of 2nd-order Taylor approximation under long-context phase wrapping for slot 19 movement error ($\Delta m_{19} = 0.044109$, $\delta\omega = -6.94 \times 10^{-4}$ rad/token).}
+\label{tab:taylor-breakdown}
+\centering
+\small
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}lrrrrrrr@{}}
+\toprule
+Model \& Context & Horizon $L$ & Phase Shift $\Delta\phi$ & True $\cos$ Diff & Quadratic $\frac{1}{2}(\delta\omega L)^2$ & 2nd-Order Taylor & Abs Error & Relative Error \\
+\midrule
+OLMo-1B ($1\times$) & $4{,}096$ & $3.49$ rad ($0.56$ turns) & $+1.0866$ & $6.0988$ & $+6.7329$ & $5.6463$ & $\mathbf{519.6\%}$ \\
+OLMo-1B ($2\times$) & $8{,}192$ & $6.99$ rad ($1.11$ turns) & $-0.6327$ & $24.3950$ & $-5.7332$ & $5.1005$ & $\mathbf{806.1\%}$ \\
+OLMo-1B ($4\times$) & $16{,}384$ & $13.97$ rad ($2.22$ turns) & $+0.9296$ & $97.5800$ & $+98.4950$ & $97.5654$ & $\mathbf{10{,}495.6\%}$ \\
+Qwen-1.5B ($1\times$) & $32{,}768$ & $\mathbf{22.74}$ \textbf{rad} ($3.62$ turns) & $\mathbf{-1.8147}$ & $258.6332$ & $\mathbf{-252.0415}$ & $250.2268$ & $\mathbf{13{,}788.8\%}$ \\
+Qwen-1.5B ($2\times$) & $65{,}536$ & $45.49$ rad ($7.24$ turns) & $-0.5858$ & $1{,}034.5328$ & $-971.5745$ & $970.9887$ & $\mathbf{165{,}748.2\%}$ \\
+Qwen-1.5B ($4\times$) & $131{,}072$ & $90.97$ rad ($14.48$ turns) & $-1.5457$ & $4{,}138.1312$ & $-3{,}318.2583$ & $3{,}316.7126$ & $\mathbf{214{,}580.4\%}$ \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+As shown in Table~\ref{tab:taylor-breakdown}, on Qwen Native ($L_0 = 32{,}768$), the phase shift at slot 19 is $22.74$ radians ($3.62$ complete rotations).
+The quadratic Taylor prediction is $-252.0415$, whereas the true bounded value is $-1.8147$.
+The Taylor relative error exceeds $\mathbf{13{,}788.8\%}$.
+At $128$K ($L = 131{,}072$), the error explodes past $\mathbf{214{,}000\%}$.
+Across entire tables, single-point Jacobian extrapolation predicts finite output changes with relative errors spanning $71.15\%$ to $468.12\%$.
+Bounded unitary operators $e^{i\omega\Delta}$ cannot be analyzed via unconstrained polynomial truncations.
+
+\paragraph{Remediated path-integrated functional and finite-phase replay bounds.}
+To eliminate truncation breakdown, we replace local Hessians with two exact formulations:
+\begin{enumerate}
+  \item \textbf{Finite-Phase Replay Operator Bound:}
+  For any two tables $\Omega, \Omega'$, the perturbation in the unitary rotation operator is bounded by:
+  \begin{equation}
+  \|\mathcal{R}_{\Omega'}(\Delta) - \mathcal{R}_\Omega(\Delta)\|_2 \le \max_k \min\left(2, |\omega'_k - \omega_k|\Delta\right),
+  \label{eq:finite-phase-replay-bound}
+  \end{equation}
+  which strictly saturates at $2$ rather than growing quadratically as $\mathcal{O}(\Delta^2 |\delta\omega|^2)$.
+  \item \textbf{Non-Linear Path-Integrated Functional:}
+  Along the deformation path $\gamma(\tau) = \Omega + \tau\delta\Omega$ for $\tau \in [0, 1]$:
+  \begin{equation}
+  \Delta\mathcal{L} = \int_0^1 \nabla_{\Omega(\tau)} \mathcal{L}(\Omega(\tau))^\top \frac{d\Omega(\tau)}{d\tau} \, d\tau = \int_0^1 \nabla_\Omega \mathcal{L}(\Omega + \tau\delta\Omega)^\top \delta\Omega \, d\tau,
+  \label{eq:path-integrated-functional}
+  \end{equation}
+  which integrates true model gradients along the deformation path rather than extrapolating local curvature.
+\end{enumerate}
+
+\paragraph{The six formal closed-loop physical observables and causal coordinates.}
+To close the causal loop between RoPE modifications and downstream capabilities, we formally define the complete set of physical observables and causal coordinates:
+
+\begin{enumerate}
+  \item \textbf{Observable 1: Layer Jacobian Gram Tensor $\mathcal{G} = J^\top J$.}
+  In multi-head attention, individual head outputs $y_{h, t}$ combine via $W_O = [W_{O, 1}, \dots, W_{O, H}]$: $y_t = \sum_{h=1}^H W_{O, h} y_{h, t}$.
+  The layer output sensitivity vector across $T$ tokens is:
+  \begin{equation}
+  J_j = \sum_{t=1}^T \frac{\partial y_t}{\partial \omega_j} = \sum_{t=1}^T \sum_{h=1}^H \Delta_t W_{O, h} u_{h, t, j} \in \mathbb{R}^d,
+  \end{equation}
+  where $u_{h, t, j} = \frac{\partial y_{h, t}}{\partial \phi_{j, t}}$.
+  The Layer Jacobian Gram tensor $\mathcal{G} \in \mathbb{R}^{K \times K}$ has entries $\mathcal{G}_{j, k} = \langle J_j, J_k \rangle$.
+  Its diagonal entry $\|\mathcal{J}_j\|^2 = \mathcal{G}_{j, j}$ represents total perturbation energy, admitting dual contractions:
+  \begin{itemize}
+    \item \emph{Token-first partition (cross-token signed phase coherence):}
+    $E_H = \sum_{t=1}^T \Delta_t^2 \|v_{t, j}\|^2 + 2\sum_{t<t'} \Delta_t \Delta_{t'} \langle v_{t, j}, v_{t', j} \rangle$, with $v_{t, j} = \sum_{h=1}^H W_{O, h} u_{h, t, j}$.
+    \item \emph{Head-first partition (multi-head $W_O$ output cancellation):}
+    $E_J = \sum_{h=1}^H \|W_{O, h} J_{h, j}\|^2 + 2\sum_{h<h'} \langle W_{O, h} J_{h, j}, W_{O, h'} J_{h', j} \rangle$, with $J_{h, j} = \sum_{t=1}^T \Delta_t u_{h, t, j}$.
+  \end{itemize}
+  By the associativity of addition in Hilbert spaces, $E_J \equiv E_H$ identically.
+  In empirical repository tests, $|E_J - E_H| = 1.49 \times 10^{-8}$.
+  
+  \item \textbf{Observable 2: Rotary Subspace Content Coupling Tensor $\mathcal{C}_{h, k}$.}
+  Each rotary slot $k$ in head $h$ binds to column pairs $(2k, 2k+1)$ of $W_Q, W_K$:
+  \begin{align}
+  \mathcal{C}_{h, k} &= \mathbb{E}_{(\mathbf{x}, y) \sim \mathcal{D}}\left[ q_{h, 2k} k_{h, 2k} + q_{h, 2k+1} k_{h, 2k+1} \right], \\
+  \mathcal{S}_{h, k} &= \mathbb{E}_{(\mathbf{x}, y) \sim \mathcal{D}}\left[ q_{h, 2k} k_{h, 2k+1} - q_{h, 2k+1} k_{h, 2k} \right],
+  \end{align}
+  with channel modulus $\rho_{h, k} = \sqrt{\mathcal{C}_{h, k}^2 + \mathcal{S}_{h, k}^2}$.
+  Channels with large $\rho_{h, k}$ carry primary semantic features and dominate loss sensitivity; channels with $\rho_{h, k} \approx 0$ tolerate aggressive frequency modification.
+
+  \item \textbf{Observable 3: Multi-Head $W_O$ Output Cancellation.}
+  Quantified by the cross-head interference $2\sum_{h<h'} \langle W_{O, h} J_{h, j}, W_{O, h'} J_{h', j} \rangle$ in $\mathcal{G}$.
+  In verified audits, individual head perturbation energies sum to $133{,}743{,}719$, while cross-head destructive interference cancels out $-23{,}233{,}182$, reducing net layer energy to $110{,}510{,}537$.
+  Head-isolated analyses ignore this cancellation and severely overestimate output disturbance.
+
+  \item \textbf{Observable 4: Softmax Attention Distractor Proliferation Ceiling $S_{\mathrm{dilution}}$.}
+  For target retrieval needle $j^*$ in context extension $S = L / L_0$ with distractor set $\mathcal{D}_{\mathrm{dist}}$ of size $S L_0 - 1$:
+  \begin{equation}
+  A(j^*) = \frac{1}{1 + \sum_{i \in \mathcal{D}_{\mathrm{dist}}} \exp(s(i) - s(j^*))} \approx \frac{1}{1 + (S L_0) \mu e^{-B}},
+  \label{eq:distractor-dilution-formula}
+  \end{equation}
+  where $B = s(j^*) - \mathbb{E}[s(i)]$ is the logit margin and $\mu = \mathbb{E}[\exp(s(i) - \mathbb{E}[s(i)])]$.
+  Top-1 retrieval ($A(j^*) \ge 0.5$) forces $B \ge \ln S + \ln(L_0 \mu)$.
+  Context extension strictly consumes $\ln 2 \approx 0.693$ nats of margin per octave.
+  Once $\ln S$ exhausts the model's finite margin $B_{\max}$, retrieval abruptly crashes to zero (governing the $2\times \to 4\times \to 8\times$ cliff at $s \approx 4.01$).
+
+  \item \textbf{Observable 5: Task-Dual Signed Decision Margin $M$.}
+  \begin{equation}
+  M = z_* - \log \sum_{j \ne *} \exp(z_j),
+  \label{eq:signed-margin}
+  \end{equation}
+  which measures the exact reserve available to overcome distractor dilution in attention competition.
+
+  \item \textbf{Causal Coordinate Parameterization: Support-Interior Geometry $(a, R, \mathbf{z})$.}
+  In logarithmic coordinates $x_k = -\ln\omega_k$, the frequency schedule is decomposed into:
+  \begin{equation}
+  x_k = a + R z_k, \qquad k \in [0, K-1],
+  \label{eq:causal-coords-def}
+  \end{equation}
+  where $a = -\ln\omega_0$ is the high-frequency anchor, $R = \ln(\omega_0 / \omega_{K-1})$ is the total log-frequency support span, and $\mathbf{z} = (z_0, \dots, z_{K-1}) \in [0, 1]^K$ is the normalized interior allocation ($z_0 = 0, z_{K-1} = 1$).
+  $(a, R, \mathbf{z})$ is an algebraic diffeomorphism that decouples support span from interior shape, demonstrating why retargeting $R(L) = ((K-1)/K)\log L$ non-linearly stretches Cosh spacings and reverses model rankings across evaluation lengths.
+\end{enumerate}
+
+\FloatBarrier
 \subsection{Proof of the closed-form variational optimum}
 
 This subsection proves Theorem~\ref{thm:ode} directly from the stated

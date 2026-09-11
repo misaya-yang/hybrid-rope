@@ -1,0 +1,37 @@
+\begin{table}[ht]
+\centering
+\small
+\caption{\textbf{Qwen-family baseline ablations and static deployment boundaries.}
+\textbf{Top (X1 Baseline)}: Qwen-0.5B RULER-13 macro scores (\%) at $32$K and $64$K under scale $s=2$.
+The comparison between Cell YH (official YaRN table with high gain $g_H = 1 + 0.1\ln 2 \approx 1.0693$) and Cell IL (normalized-index table with low gain $g_L = 1 + 0.074\ln 2 \approx 1.0513$) reflects a joint \emph{table--amplitude configuration}; off-diagonal cells (YL, IH) represent registered factorial controls.
+\textbf{Bottom}: FullLagP2 (evaluating all $32{,}768$ integer lags, SHA-256 \texttt{ecd0c280\dots}) vs MrRoPE-Pro (SHA-256 \texttt{33cbe3a4\dots}) on Qwen2.5-1.5B and Qwen2.5-3B.}
+\label{tab:qwen-ablation}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}llcccc@{}}
+\toprule
+\multicolumn{6}{@{}l}{\textbf{Part A: Qwen-0.5B Table $\times$ Gain Factorial Grid (RULER-13 Macro)}} \\
+Configuration & Table & Gain $g$ & $32$K Macro (\%) & $64$K Macro (\%) & Delta vs YaRN \\
+\midrule
+Native reference & Native & $1.0000$ & $54.78$ & $22.05$ & --- \\
+Cell YH & Official YaRN ($Y$) & $g_H = 1.0693$ & $55.94$ & $45.37$ & Reference \\
+Cell IL & Normalized-Index ($I$) & $g_L = 1.0513$ & $55.92$ & $\mathbf{51.46}$ & $\mathbf{+6.09}$ pp \\
+Cell YL (registered) & Official YaRN ($Y$) & $g_L = 1.0513$ & \multicolumn{3}{c}{\textit{Pre-registered factorial control}} \\
+Cell IH (registered) & Normalized-Index ($I$) & $g_H = 1.0693$ & \multicolumn{3}{c}{\textit{Pre-registered factorial control}} \\
+\midrule
+\multicolumn{6}{@{}l}{\textbf{Part B: FullLagP2 vs MrRoPE-Pro on Qwen2.5-1.5B and Qwen2.5-3B}} \\
+Evaluation Horizon & Task / Metric & MrRoPE-Pro & FullLagP2 & Advantage & Paired Record \\
+\midrule
+Qwen-1.5B ($64$K) & Multi-Key 2 Retrieval & $12.50\%$ & $\mathbf{37.50\%}$ & $\mathbf{+25.00\%}$ & 3W / 4T / 1L \\
+Qwen-1.5B ($64$K) & Variable Tracking (VT) & $82.50\%$ & $\mathbf{87.50\%}$ & $\mathbf{+5.00\%}$ & 1W / 6T / 1L \\
+Qwen-1.5B ($64$K) & Frequent Words Extraction & $45.83\%$ & $\mathbf{70.83\%}$ & $\mathbf{+25.00\%}$ & 5W / 3T / 0L \\
+Qwen-1.5B ($64$K) & \textbf{Total Paired Comparison} & 2 Wins & $\mathbf{9\text{ \textbf{Wins}}}$ & $\mathbf{+7\text{ \textbf{Net Wins}}}$ & \textbf{9W / 13T / 2L} \\
+\midrule
+Qwen-1.5B ($128$K) & Multi-Key 2 Retrieval & $0.00\%$ & $0.00\%$ & $0.00\%$ (collapse) & Tied (floor) \\
+Qwen-1.5B ($128$K) & Variable Tracking (VT) & $72.50\%$ & $\mathbf{85.00\%}$ & $+12.50\%$ & 4W / 3T / 1L \\
+\midrule
+Qwen-3B Transfer ($64$K) & Variable Tracking (VT) & $\mathbf{95.00\%}$ & $90.00\%$ & $\mathbf{-5.00\%}$ & 0W / 3T / 1L \\
+Qwen-3B Transfer ($64$K) & Frequent Words Extraction & $\mathbf{75.00\%}$ & $66.67\%$ & $\mathbf{-8.33\%}$ & 0W / 3T / 1L \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}

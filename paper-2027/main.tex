@@ -96,18 +96,20 @@
 \input{sections/02_related}
 \input{sections/05_discussion}
 
-%% ---- main text ends here; everything below is exempt from the page limit ----
-\label{page:bodyend}
-
-\subsection*{Ethics statement}
+\subsubsection*{Ethics statement}
 \input{sections/06_ethics}
 
-\subsection*{Reproducibility statement}
+\subsubsection*{Reproducibility statement}
 \input{sections/07_reproducibility}
 
-\subsection*{AI use statement}
+\subsubsection*{AI use statement}
 \input{sections/08_ai_use}
 
+%% ---- main text and exempt statements end here ----
+\label{page:bodyend}
+\clearpage
+
+\label{page:bibstart}
 \bibliographystyle{iclr2027_conference}
 \bibliography{refs/references}
 

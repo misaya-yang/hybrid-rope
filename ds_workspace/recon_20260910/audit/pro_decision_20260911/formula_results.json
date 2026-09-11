@@ -1,0 +1,52 @@
+{
+  "olmo": {
+    "yarn_index": {
+      "sum_m": 38.491760435648615,
+      "first_increment": 0.0307002709033852,
+      "last_increment": 0.11119617374442481,
+      "interior_increments_increasing": true
+    },
+    "yarn_turns_paper": {
+      "sum_m": 42.91174601092682,
+      "first_increment": 0.034049657312556575,
+      "last_increment": 0.00913740196634849,
+      "interior_increments_increasing": false
+    },
+    "mrpro": {
+      "sum_m": 37.66666672326488,
+      "first_increment": 0.005847951401435947,
+      "last_increment": 0.10526314228459621,
+      "interior_increments_increasing": true
+    },
+    "old_evq_vs_canonical": {
+      "min_ratio": 1.1079577589266678,
+      "max_ratio": 1.1079577589266683,
+      "expected_ratio": 1.107957758926668
+    }
+  },
+  "qwen": {
+    "yarn_index": {
+      "sum_m": 30.104186284551975,
+      "first_increment": 0.03254752878565816,
+      "last_increment": 0.11723262756714203,
+      "interior_increments_increasing": true
+    },
+    "yarn_turns_paper": {
+      "sum_m": 34.313874872998746,
+      "first_increment": 0.048222749991426915,
+      "last_increment": 0.0104546150633823,
+      "interior_increments_increasing": false
+    },
+    "mrpro": {
+      "sum_m": 29.333333041586947,
+      "first_increment": 0.006535957972790282,
+      "last_increment": 0.11111108009729664,
+      "interior_increments_increasing": true
+    },
+    "old_evq_vs_canonical": {
+      "min_ratio": 1.1139738599948021,
+      "max_ratio": 1.1139738599948026,
+      "expected_ratio": 1.1139738599948024
+    }
+  }
+}

@@ -8,6 +8,7 @@ per pair, shared across layers and heads.}
 \small
 \setlength{\tabcolsep}{5pt}
 \renewcommand{\arraystretch}{0.92}
+\resizebox{\linewidth}{!}{%
 \begin{tabular}{@{}lcccc@{}}
 \toprule
 Method ($128\!\rightarrow\!8$K) & Extra params & PPL@$128$ & PPL@$8$K & $\Delta$ vs Geo \\
@@ -18,5 +19,6 @@ Learned inv-freq ($100\times$ positional LR) & 32 & 183.6 & 455.3 & $-11.4\%$ \\
 \quad same, $10\times$ positional LR & 32 & --- & 477.7 & $-7.0\%$ \\
 \evq{} & 0 & 182.0 & \textbf{333.7} & $\mathbf{-35.0\%}$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
