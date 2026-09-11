@@ -119,6 +119,9 @@ a1_b64 = m_incr_beta(1.0, n=21, low=11)   # 增量在 slot [12,32]，S = 42.0
 | 18 | ★★★ **a\*(L) ≡ 1**：MrRoPE↔BM 剂量族在 1×/2×/4× 上单调、最优全在最大压缩端，内点全部显著更差（t ≥ +2.2）。**最优点是按模型的常数，跨长度只换幅度**（0.255→0.301→0.826） | ★★★ 16 篇配对 | `DOSE_RESULT` |
 | 19 | ★★ **gain 不是独立设计面**：同一标量在 BM 上值 +38.19pp、在 native 上值 **+0.10pp (t=0.08)**；同一张 BM 在 gain YaRN 下比 native 高 +18.4pp、在 gain 1.0 下低 −19.9pp（38pp 摆幅） | ★★ 350+180 行 | `GAIN_AXIS` |
 | 20 | **三个 out-of-sample 全阴**：step42 / 走线内点 / 平台三成员；且**同长度同表在三个仪器上给三个答案**（RULER +6.54pp / 自然 QA +0.04pp / NLL 改善） | ★★★ 预注册 | `OUT_OF_SAMPLE_ALL_NULL` |
+| 24 | **LongBridge held-out 翻负**：`slower vs 部署 BM` 选择面板 **+5.50pp (t=+3.23)** → held-out **−3.31pp (t=−1.47)**（@16384 −4.97pp）。**我写在读数之前的预测成立**（依据：同方向的 `step42` 已在 held-out 上显著为负）。⟹ 全库最后一条候选方向关闭 | ★★ 预注册 | `LONGBRIDGE_HOLDOUT` |
+| 25 | **"用选择面板挑表"第 4 次被否证**：平台成员(+14.20→−0.00)、`condEVQ`、`step42`(+7.26→−3.37)、LongBridge-slower(+5.50→−3.31)。**同一形状：选择面板正、held-out 零或负** | ★★★ | `LONGBRIDGE_HOLDOUT` §四 |
+| 26 | ⚠ **环境：GPU 从实例上消失**（`/dev/nvidia0` 不存在、`torch.cuda.device_count()=0`）。**单一根因解释了今天三次异常**（11:29 全进程被杀、16:0x SSH kex 被拒、16:38 进程再消失）。容器内无法修复 | — | `LONGBRIDGE_HOLDOUT` §五 |
 | 22 | ★★ **LongBridge 有符号对在 350 行上显著**：`slower > BM > faster`（+11.83pp t=+5.85；slower vs BM +5.50pp t=+3.23；faster vs BM −6.33pp t=−3.42）。**本项目唯一在低信噪比下有效的设计**（两臂只差一个符号 ⟹ 面板级偏置全部抵消）。⚠ 但 `niah_single_3` 占 65%，held-out 待判 | ★★ 有符号设计 | `LONGBRIDGE_RESULT` |
 | 23 | ★ **YaRN 的解析式经得起测量**：gain 扫描上测得最优**正是** `0.1·ln4+1 = 1.1386`（0.0371/0.2559/0.4104/0.4190）。⟹ YaRN 的两条**解析**成分（gain + 频带）都对；**唯一经验的部分（带内 ramp）就是全部问题所在** | ★★ 350 行 | `GSWEEP_RESULT` |
 | 21 | **历史里确有候选赢家**（`E1_s28_less` Qwen128K +5.21pp 等 4 个），但**全部 \|t\| ≤ 1.23**；且 campaign 的"镜像对照"与受测臂**逐行相同（SE=0.00）**，不是对照 | ★★ 逐行核实 | `HISTORY_HAS_CANDIDATES` |
