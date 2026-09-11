@@ -34,11 +34,24 @@ import os
 import numpy as np
 
 ROOT = "/root/autodl-tmp/phase1_20260910"
-BASE = "/root/autodl-tmp/olmo_fast_screen_20260908/run_ruler_newtasks_01/MrProBM.jsonl"
 ARMS = {"amp4x_1p13": 1.13, "amp4x_1p30": 1.30}      # arm name -> prescribed plateau
 REF_PLATEAU = 1.00
-PANEL = 350
 LONG, SHORT = 16384, 4096
+
+# Two panels, because the primary one cannot supply the mandatory 4096 report:
+# its caps are {16384: 350}.  See the prereg's amendment.  The held-out panel
+# carries 60 rows at 4096 and 120 at 16384, so it supplies BOTH the in-window
+# report and an out-of-sample replication of the primary claim.
+PANELS = {
+    "350": dict(
+        base="/root/autodl-tmp/olmo_fast_screen_20260908/run_ruler_newtasks_01/MrProBM.jsonl",
+        arms_dir=f"{ROOT}/olmo_amp4x", n_expect=350, primary=True,
+        title="350-row newtasks panel (all @16384) -- PRIMARY"),
+    "180": dict(
+        base=f"{ROOT}/holdout180/beta_b1p0.jsonl",
+        arms_dir=f"{ROOT}/olmo_amp4x_h", n_expect=180, primary=False,
+        title="180-row HELD-OUT panel (4096x60 + 16384x120)"),
+}
 
 
 def load(p):
@@ -71,7 +84,9 @@ def paired(arm, base, cap=None):
                 eos=float(np.mean([bool(arm[i].get("ended_eos")) for i in ids])))
 
 
-def main() -> int:
+def report(panel: str) -> int:
+    cfg = PANELS[panel]
+    BASE, ARM_DIR, PANEL = cfg["base"], cfg["arms_dir"], cfg["n_expect"]
     base = load(BASE)
     if not base:
         print(f"REFUSING: baseline missing at {BASE}")
@@ -82,7 +97,7 @@ def main() -> int:
 
     arms = {}
     for name in ARMS:
-        a = load(f"{ROOT}/olmo_amp4x/{name}.jsonl")
+        a = load(f"{ARM_DIR}/{name}.jsonl")
         if a:
             arms[name] = a
     if not arms:
@@ -90,7 +105,8 @@ def main() -> int:
         return 2
 
     print("=" * 78)
-    print(f"4x AMPLITUDE PRESCRIPTION   baseline = deployed table (m_p = {REF_PLATEAU})")
+    print(f"4x AMPLITUDE PRESCRIPTION   {cfg['title']}")
+    print(f"baseline = deployed table (m_p = {REF_PLATEAU})")
     print(f"panel: {len(base)} rows, caps {sorted({r.get('length_cap') for r in base.values()})}")
     print("convention: `correct` higher is better, so delta > 0 favours the ARM")
     print("=" * 78)
@@ -124,6 +140,9 @@ def main() -> int:
         r = res.get(name, {}).get(cap)
         return None if r is None else r
     print("\n" + "-" * 78)
+    if not cfg["primary"]:
+        print("secondary panel: numbers above; the primary verdict is issued on the 350-row panel.")
+        print("-" * 78); return 0
     if "amp4x_1p13" in res:
         r = d1("amp4x_1p13", LONG)
         if r is None:
@@ -152,6 +171,14 @@ def main() -> int:
     print("-" * 78)
     print("criteria: AMP4X_PRESCRIPTION_PREREG_20260911.md section 3")
     return 0
+
+
+def main() -> int:
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--panel", choices=sorted(PANELS), default="350")
+    a = ap.parse_args()
+    return report(a.panel)
 
 
 if __name__ == "__main__":
