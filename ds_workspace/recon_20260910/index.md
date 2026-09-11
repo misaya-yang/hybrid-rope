@@ -54,7 +54,7 @@
 | 7 | **`S` 不是操作变量**（同 S 差 10.73pp） | ★★ 受控对 | `HEADLINE` |
 | 8 | **held-out：`wide_b4` +6.94pp > `a1_b64` +4.40pp > `b3_lo14` −0.00pp；选择面板排名被完全推翻；合并 +3.78pp t=+1.22 不显著** | ★★ 72 行配对 | `HOLDOUT_VERDICT` |
 | 8b | **连续仪器 @16384 的排名与 held-out 一致，RULER 选择面板的不一致**（3 臂 1 次观察，待预注册检验） | ★ 待证 | `HOLDOUT_VERDICT` §三·终 |
-| 9 | Qwen 两台仪器都判不了（4× 表效应 0.006 nats；归档判 `NO_LONG_GAIN` 6胜4负） | ★★ | `CROSS_MODEL_VERDICT` |
+| 9 | **Qwen 两台仪器都判不了**：4× 上八个压缩臂跨 **0.0077 nats**（SE 0.030），覆盖 S=29.3–35.0 的整个三段式家族；归档 RULER 面板自判 `NO_LONG_GAIN`（6胜4负） | ★★ | `CROSS_MODEL_VERDICT` |
 | 10 | **12 个静态泛函全部出局** | ★★ 三类受控对 | `NO_STATIC_FUNCTIONAL` |
 
 ## 被证伪的（解空间收缩，成本已付）
