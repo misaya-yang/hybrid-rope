@@ -84,3 +84,35 @@ $L=1$ 且 $\delta=0.125$ 时降到 1.00（即"精确匹配"在那一角落才成
 4. **与 AMP8X 的关系**：AMP8X 判"$m>1$ 是否解锁 8×"；本预注册判"$m>1$ 是否在
    **已部署的 4×** 上就更好"。**后者更便宜、功效更高、且直接触及部署表本身**，
    优先级应高于 AMP8X。
+
+---
+
+## 五、就绪状态（非自动：看门狗已按作者指示停止，本预注册不自动发射）
+
+**表已落盘且通过运行器合法性检查**（$\nu_j=\theta^{-j/64}4^{-m_j}$ 严格递减）：
+
+```
+code/tables/amp4x_1p13.json   sum_m=47.46  max m=1.130
+code/tables/amp4x_1p30.json   sum_m=54.60  max m=1.300
+```
+
+**执行步骤**（GPU 恢复后）：
+
+1. 同步表到实例：`scp -P <port> code/tables/amp4x_*.json root@<host>:$D/tables/`
+   （**落盘后核验文件存在**，不要信任 scp 返回码——静默未写已让本战役付过代价）
+2. 确认运行器支持 `--m-file`：`grep -c '\-\-m-file' olmo_beta.py`；
+   若否，先跑 `patch_mfile.py`（幂等，自带合法性自检）
+3. 运行（面板 = 350 行新任务面板，**不是** s8 的 48 行面板）：
+   ```
+   PYTHONPATH=... setsid nohup $PY olmo_beta.py \
+     --root $D/olmo_amp4x \
+     --model .../OLMo-2-0425-1B-Instruct \
+     --panel .../prepared_ruler_newtasks_02/screen.jsonl \
+     --archive .../run_ruler_newtasks_01 --betas '' --turns '' \
+     --m-file $D/tables/amp4x_1p13.json:amp4x_1p13 \
+     --m-file $D/tables/amp4x_1p30.json:amp4x_1p30
+   ```
+4. 读数：两臂与已测 `BM`(0.4167) **逐 row_id 配对**，按本页 §三 的四行判据判。
+   **必须同时报 4096 行**（窗内代价），否则判据不完整。
+
+**与 AMP8X 的优先级**：本预注册**优先**——更便宜、350 行对 48 行、且直接触及部署表。
