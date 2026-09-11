@@ -15,6 +15,8 @@
 #   lb_hold      olmo_lb_h/nu_{p,m}*.jsonl      >= 180 rows each   -> run lb_read.py
 #   qwen4x_bm    qwen4x_power/rows.jsonl        has beta_b1_BM    -> run qwen4x_power_read.py
 #   gsweep       olmo_gsweep/gain_bm_g1p20.jsonl >= 350 rows      -> run gsweep_read.py
+#   amp8x        s8_amp8x/rows.jsonl            >= 288 rows       -> run amp8x_read.py
+#                (4 arms x 72; needs tables + reader copied first -- see the sync step)
 #
 # Usage:  nohup ./keepalive.sh > keepalive.log 2>&1 &
 set -u
@@ -25,6 +27,7 @@ MODEL=/root/autodl-tmp/olmo2_1b_longalign_assets/models/OLMo-2-0425-1B-Instruct
 HOLD=/root/autodl-tmp/olmo_fast_screen_20260908/prepared_holdout_union/screen.jsonl
 NEWT=/root/autodl-tmp/olmo_fast_screen_20260908/prepared_ruler_newtasks_02/screen.jsonl
 ARCH=/root/autodl-tmp/olmo_fast_screen_20260908/run_ruler_newtasks_01
+TBL=/Users/yang/projects/hybrid-rope/ds_workspace/recon_20260910/code/tables
 
 alive=0
 for i in $(seq 1 240); do
@@ -49,15 +52,35 @@ for i in $(seq 1 240); do
     alive=1; sleep 120; continue
   fi
 
+  # AMPLITUDE-SWEEP TABLES.  The four amp8x tables are literal m-arrays that the
+  # runner reaches only via --m-file, so they must exist on the instance before
+  # the stage can start.  Gate on a marker so this happens once per session, and
+  # verify the file landed rather than trusting scp's exit code (a silent
+  # no-write has already cost this campaign a day -- see index lesson 1).
+  if ! $H "test -f $D/tables/amp8x_s2p0.json" 2>/dev/null; then
+    $H "mkdir -p $D/tables" 2>/dev/null
+    scp -P 27741 -q "$TBL"/amp8x_s*.json \
+      root@connect.westc.seetacloud.com:"$D/tables/" 2>&1 | tail -2
+    scp -P 27741 -q "$(dirname "$TBL")/../../experiments/zerotrain_20260910/amp8x_read.py" \
+      root@connect.westc.seetacloud.com:"$D/" 2>&1 | tail -2
+    if $H "test -f $D/tables/amp8x_s2p0.json && test -f $D/amp8x_read.py" 2>/dev/null; then
+      echo "[$(date +%H:%M:%S)] amp8x tables + reader synced (verified on disk)"
+    else
+      echo "[$(date +%H:%M:%S)] amp8x table sync FAILED -- stage will refuse to start"
+    fi
+  fi
+
   $H "cd $D
 NP=\$(cat olmo_lb_h/nu_p6p104em05.jsonl 2>/dev/null | wc -l | tr -dc '0-9')
 NM=\$(cat olmo_lb_h/nu_m6p104em05.jsonl 2>/dev/null | wc -l | tr -dc '0-9')
 BM=\$(grep -c 'beta_b1_BM' qwen4x_power/rows.jsonl 2>/dev/null | head -1)
 GS=\$(cat olmo_gsweep/gain_bm_g1p20.jsonl 2>/dev/null | wc -l | tr -dc '0-9')
+AMP=\$(grep -c 'amp8x' s8_amp8x/rows.jsonl 2>/dev/null | head -1)
 PLB=\$(pgrep -fc '^/root/miniconda3/bin/python .*olmo_beta.py' || echo 0)
 PQW=\$(pgrep -fc '^/root/miniconda3/bin/python .*qwen_longnll.py' || echo 0)
 PGS=\$(pgrep -fc '^/root/miniconda3/bin/python .*olmo_beta.py' || echo 0)
-echo \"lb_hold=\$NP/\$NM  qwenBM=\$BM  gsweep=\$GS  procs(lb,qw,gs)=\$PLB,\$PQW,\$PGS\"
+PAMP=\$(pgrep -fc '^/root/miniconda3/bin/python .*olmo_beta.py.*s8_amp8x' || echo 0)
+echo \"lb_hold=\$NP/\$NM  qwenBM=\$BM  gsweep=\$GS  amp8x=\$AMP  procs(lb,qw,gs,amp)=\$PLB,\$PQW,\$PGS,\$PAMP\"
 
 # --- lb_hold: the decisive held-out verdict -------------------------------
 if [ \"\$NP\" -ge 180 ] && [ \"\$NM\" -ge 180 ]; then
@@ -100,11 +123,36 @@ elif [ \"\$PGS\" -eq 0 ]; then
     --archive $ARCH --betas '' --turns '' --gain-tables bm --gains 1.20 \
     >> gsweep2.log 2>&1 < /dev/null & disown
 fi
+
+# --- amp8x: the amplitude sweep (AMP8X_SWEEP_PREREG) ----------------------
+# Decides between three contradictory predictions about where the optimal
+# compression amplitude sits at 8x.  4 new arms x 72 rows; s=1.00 is the
+# already-measured anchor and is NOT re-run.
+if [ \"\$AMP\" -ge 288 ]; then
+  if [ ! -f s8_amp8x/.read ]; then
+    echo '=== AMP8X DONE ==='; AMP_ROOT=s8_amp8x $PY amp8x_read.py | tee s8_amp8x/read.txt; touch s8_amp8x/.read
+  fi
+elif [ \"\$PAMP\" -eq 0 ]; then
+  if [ ! -f tables/amp8x_s1p5.json ]; then
+    echo '=== AMP8X: tables missing in $D/tables -- sync step did not run ==='
+  else
+  echo '=== START amp8x (4 arms) ==='
+  PYTHONPATH=/root/autodl-tmp/nongeometric_screen_20260909/code:$D/repoharness:$D \
+  setsid nohup $PY olmo_beta.py --root $D/s8_amp8x --model $MODEL \
+    --panel /root/autodl-tmp/olmo_fast_screen_20260908/prepared_s8_01/screen.jsonl \
+    --archive $D/empty_archive --betas '' --turns '' \
+    --m-file $D/tables/amp8x_s1p25.json:amp8x_s1p25 \
+    --m-file $D/tables/amp8x_s1p5.json:amp8x_s1p5 \
+    --m-file $D/tables/amp8x_s1p75.json:amp8x_s1p75 \
+    --m-file $D/tables/amp8x_s2p0.json:amp8x_s2p0 \
+    >> amp8x.log 2>&1 < /dev/null & disown
+  fi
+fi
 " 2>&1 | grep -v '^$'
 
   # all three read -> stop
-  if $H "test -f $D/olmo_lb_h/.read && test -f $D/qwen4x_power/.read && test -f $D/olmo_gsweep/.read" 2>/dev/null; then
-    echo "[$(date +%H:%M:%S)] === ALL THREE READ, watch complete ==="; break
+  if $H "test -f $D/olmo_lb_h/.read && test -f $D/qwen4x_power/.read && test -f $D/olmo_gsweep/.read && test -f $D/s8_amp8x/.read" 2>/dev/null; then
+    echo "[$(date +%H:%M:%S)] === ALL FOUR READ, watch complete ==="; break
   fi
   sleep 120
 done
