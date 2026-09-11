@@ -63,8 +63,16 @@ for i in $(seq 1 240); do
       root@connect.westc.seetacloud.com:"$D/tables/" 2>&1 | tail -2
     scp -P 27741 -q "$(dirname "$TBL")/../../experiments/zerotrain_20260910/amp8x_read.py" \
       root@connect.westc.seetacloud.com:"$D/" 2>&1 | tail -2
-    if $H "test -f $D/tables/amp8x_s2p0.json && test -f $D/amp8x_read.py" 2>/dev/null; then
-      echo "[$(date +%H:%M:%S)] amp8x tables + reader synced (verified on disk)"
+    # The deployed qwen4x_power_read.py prints the OPPOSITE verdict: its negative
+    # branch says "MrRoPE genuinely beats BM" while dd<0 in NLL means BM is better.
+    # Verified by diffing against the frozen audit snapshot
+    # (audit/pro_decision_20260911/qwen4x_power_read.py), which differs from the
+    # fixed copy ONLY in the corrected lines -- so pushing this clobbers no other
+    # patch.  Without this, the watchdog auto-prints a wrong verdict.
+    scp -P 27741 -q "$(dirname "$TBL")/../../experiments/zerotrain_20260910/qwen4x_power_read.py" \
+      root@connect.westc.seetacloud.com:"$D/" 2>&1 | tail -2
+    if $H "test -f $D/tables/amp8x_s2p0.json && test -f $D/amp8x_read.py && grep -q 'LOWER IS BETTER' $D/qwen4x_power_read.py" 2>/dev/null; then
+      echo "[$(date +%H:%M:%S)] amp8x tables + readers synced (verified: marker line present)"
     else
       echo "[$(date +%H:%M:%S)] amp8x table sync FAILED -- stage will refuse to start"
     fi
