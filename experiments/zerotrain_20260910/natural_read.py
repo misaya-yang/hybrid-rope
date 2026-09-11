@@ -31,8 +31,12 @@ import numpy as np
 
 ROOT = "/root/autodl-tmp/phase1_20260910"
 NAT = f"{ROOT}/natural_out"
-BASE = "nat_bm"
-MEMBERS = [("b3_lo14", "nat_b3"), ("a1_b64", "nat_a1b64"), ("b4wide", "nat_b4w")]
+# Arm names come from the FLAGS the runner was given, not from stage labels:
+# --betas 1.0 -> beta_b1p0.jsonl, --betas 3.0 -> beta_b3p0.jsonl,
+# --wide-betas 1.0 -> wide_b1p0.jsonl, --wide-betas 4.0 -> wide_b4p0.jsonl.
+# Hardcoding stage labels here silently skipped the base arm once already.
+BASE = "beta_b1p0"
+MEMBERS = [("b3_lo14", "beta_b3p0"), ("a1_b64", "wide_b1p0"), ("b4wide", "wide_b4p0")]
 
 
 def load(name):
@@ -82,6 +86,21 @@ def main():
     for n, k in present:
         ids = [i for i in ids if i in load(k)]
     print(f"\n  common rows: {len(ids)}")
+
+    # COMPLETENESS GUARD.  The arms are written in panel order, so a partial run
+    # yields the FIRST families only -- and those are the ones with the highest
+    # BM accuracy (2wikimqa 0.25, hotpotqa 0.32 vs 0.016 for narrativeqa).  A
+    # verdict on that subset would be a verdict on the easiest two families.
+    # Refuse rather than report a biased number.
+    complete = len(base) >= 391 and all(len(load(k)) >= 391 for _, k in present)
+    if not complete:
+        print("  INCOMPLETE: base has "
+              f"{len(base)} rows, members "
+              f"{[len(load(k)) for _, k in present]}; need 391 each.")
+        print("  The intersection covers only the families that finished first,")
+        print("  which are the highest-accuracy ones.  NO VERDICT IS VALID HERE.")
+        print("  Re-run once every arm has 391 rows.")
+        return 4
 
     bm_acc = np.mean([base[i]["correct"] for i in ids])
     print(f"\n--- GATE: BM absolute accuracy = {bm_acc:.4f} "

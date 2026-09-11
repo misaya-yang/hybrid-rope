@@ -34,9 +34,9 @@ import numpy as np
 
 ROOT = "/root/autodl-tmp/phase1_20260910"
 NAT = f"{ROOT}/natural_out"
-BASE = "nat_bm"
+BASE = "beta_b1p0"
 TARGET = "walk_a0p5"
-MEMBERS = [("b3_lo14", "nat_b3"), ("a1_b64", "nat_a1b64"), ("b4wide", "nat_b4w")]
+MEMBERS = [("b3_lo14", "beta_b3p0"), ("a1_b64", "wide_b1p0"), ("b4wide", "wide_b4p0")]
 
 
 def load(name):
