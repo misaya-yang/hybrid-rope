@@ -24,7 +24,7 @@ m_k\log s, & \text{log-frequency shift},\\
 \end{cases}
 \label{eq:adjustment-families}
 \end{equation}
-Static tables are installed before prefill and retained through decoding, with a single amplitude $g$ scaling both the cosine and sine tables, so it enters the attention logits as $g^2$ (Appendix~\ref{sec:adjustment-details}). Throughout, $g$ takes the form $1+c\ln s$; the two coefficients that appear, $c=0.1$ (YaRN's default) and $c=0.074$ (the low-gain arm), are settings of one parameter rather than two conventions, and no result folds a temperature into the frequency table.
+Static tables are installed before prefill and retained through decoding, with a single amplitude $g$ scaling both tables, so it enters the attention logits as $g^2$ (Appendix~\ref{sec:adjustment-details}). Throughout, $g$ takes the form $1+c\ln s$, with $c=0.1$ (YaRN's default) and $c=0.074$ (the low-gain arm) as settings of one parameter rather than two conventions.
 
 \subsection{Fixed-range and single-table comparisons}
 

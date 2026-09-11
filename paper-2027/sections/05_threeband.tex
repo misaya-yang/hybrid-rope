@@ -10,10 +10,9 @@ target is fixed and leaves the other two as choices. Leaving the fast band nativ
 design constraint rather than a theorem: one scored intervention departs from it, and pays.
 
 \paragraph{Moving the fast band is expensive and buys little reach.}
-Cost tracks the slot, not the distance moved. Speeding the fast pairs up --- $m_j$ falling to
-$-0.156$ across slots $1$--$23$, the transport of a compressed schedule's savings into the fast
-band --- drops the Qwen-$2.5$-$3$B panel from $87.22/78.13$ to $70.14/67.36$ at $32$K/$128$K, and
-extending the plateau into high-turn slots costs the $128$K row a further $9.8$ points. On Qwen-$2.5$-$3$B's $32$K in-window NLL instrument, a shift applied to
+Cost tracks the slot, not the distance moved: speeding the fast pairs up ($m_j$ falling to $-0.156$
+across slots $1$--$23$) drops the Qwen-$2.5$-$3$B panel from $87.22/78.13$ to $70.14/67.36$ at
+$32$K/$128$K, and extending the plateau into high-turn slots costs the $128$K row $9.8$ more. On Qwen-$2.5$-$3$B's $32$K in-window NLL instrument, a shift applied to
 all $64$ pairs costs $+0.088$ nats although its largest displacement is $|m|=0.552$, smaller than
 in-band displacements that are indistinguishable from zero ($+0.017$ or less); a larger shift of
 the same kind costs $+3.17$ nats on that instrument and drives accuracy to $0.0000$ on a
@@ -54,8 +53,7 @@ $0.030$.
 whose reach ends at $4\times$ the training window: at $8\times$ four such arms, the deployed
 table included, each score $0/48$, and nothing with $\max_j m_j>1$ has been scored. The
 coverage ordering that organizes the OLMo-$1$B arms does not carry to the Qwen panels, so the
-account above is calibrated on one checkpoint family rather than stated as a general law. Two
-limits bound the fast-band paragraph: its edge is $\beta=32$, inherited from \citet{peng2024yarn}
-because it reproduces the deployed tables bit-exactly rather than because we derive it; and
-per-slot damage was measured only for slots $14$--$36$, where it is flat within paired errors and
-not monotone in $t_j$, with slots $0$--$13$ never singly perturbed.
+account above is calibrated on one checkpoint family rather than stated as a general law. Two limits bound it: its edge is $\beta=32$, inherited from \citet{peng2024yarn} because it
+reproduces the deployed tables bit-exactly rather than because we derive it; and per-slot damage was
+measured only for slots $14$--$36$ (flat within paired errors, not monotone in $t_j$), with slots
+$0$--$13$ never singly perturbed.
