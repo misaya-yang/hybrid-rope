@@ -37,17 +37,23 @@ for i in $(seq 1 240); do
   # devices were found", /dev/nvidia0 gone, torch.cuda.device_count()==0).
   # Restarting stages in that state only produces immediate CUDA errors, so
   # check first and just report while the card is absent.
-  GPU=$($H "nvidia-smi -L 2>/dev/null | wc -l")
-  if [ "${GPU:-0}" -lt 1 ]; then
+  # tr -dc keeps only digits: ssh can emit banners/warnings that would make the
+  # value non-numeric and trip `[: integer expression expected`.
+  # `nvidia-smi -L` prints "No devices found." on STDOUT (not stderr) when the
+  # card is gone, so `wc -l` returns 1 and a naive gate reports the GPU present.
+  # Count actual device lines instead.
+  GPU=$($H "nvidia-smi -L 2>/dev/null | grep -c '^GPU '" 2>/dev/null | tr -dc '0-9' | head -c 4)
+  [ -z "$GPU" ] && GPU=0
+  if [ "$GPU" -lt 1 ]; then
     echo "[$(date +%H:%M:%S)] ssh up but NO GPU on the instance -- waiting"
     alive=1; sleep 120; continue
   fi
 
   $H "cd $D
-NP=\$(cat olmo_lb_h/nu_p6p104em05.jsonl 2>/dev/null | wc -l)
-NM=\$(cat olmo_lb_h/nu_m6p104em05.jsonl 2>/dev/null | wc -l)
+NP=\$(cat olmo_lb_h/nu_p6p104em05.jsonl 2>/dev/null | wc -l | tr -dc '0-9')
+NM=\$(cat olmo_lb_h/nu_m6p104em05.jsonl 2>/dev/null | wc -l | tr -dc '0-9')
 BM=\$(grep -c 'beta_b1_BM' qwen4x_power/rows.jsonl 2>/dev/null | head -1)
-GS=\$(cat olmo_gsweep/gain_bm_g1p20.jsonl 2>/dev/null | wc -l)
+GS=\$(cat olmo_gsweep/gain_bm_g1p20.jsonl 2>/dev/null | wc -l | tr -dc '0-9')
 PLB=\$(pgrep -fc '^/root/miniconda3/bin/python .*olmo_beta.py' || echo 0)
 PQW=\$(pgrep -fc '^/root/miniconda3/bin/python .*qwen_longnll.py' || echo 0)
 PGS=\$(pgrep -fc '^/root/miniconda3/bin/python .*olmo_beta.py' || echo 0)
