@@ -1,0 +1,5288 @@
+
+===== [REASONING] line 103 =====
+**Implementing separate import runs**
+**Capturing raw GPU keys**
+
+===== [REASONING] line 104 =====
+**Implementing separate import runs**
+**Capturing raw GPU keys**
+
+===== [REASONING] line 388 =====
+**Planning two reciprocal hybrids**
+**Installing layer hooks**
+
+===== [REASONING] line 389 =====
+**Planning two reciprocal hybrids**
+**Installing layer hooks**
+
+===== [REASONING] line 390 =====
+**Planning two reciprocal hybrids**
+**Installing layer hooks**
+
+===== [REASONING] line 391 =====
+**Planning two reciprocal hybrids**
+**Installing layer hooks**
+
+===== [REASONING] line 405 =====
+**Preparing candidate screens**
+**Implementing screening flow**
+
+===== [REASONING] line 406 =====
+**Preparing candidate screens**
+**Implementing screening flow**
+
+===== [REASONING] line 457 =====
+**Stopping layer-screen run**
+**我正为远程任务写入停止标记**
+
+===== [REASONING] line 458 =====
+**Stopping layer-screen run**
+**我正为远程任务写入停止标记**
+
+===== [REASONING] line 481 =====
+**Defining method evaluation criteria**
+**Rerunning K/V swap cases**
+
+===== [REASONING] line 482 =====
+**Defining method evaluation criteria**
+**Rerunning K/V swap cases**
+
+===== [REASONING] line 483 =====
+**Defining method evaluation criteria**
+**Rerunning K/V swap cases**
+
+===== [REASONING] line 484 =====
+**Defining method evaluation criteria**
+**Rerunning K/V swap cases**
+
+===== [REASONING] line 485 =====
+**Defining method evaluation criteria**
+**Rerunning K/V swap cases**
+**Preparing CPU-offloaded K/V swaps**
+
+===== [REASONING] line 486 =====
+**Defining method evaluation criteria**
+**Rerunning K/V swap cases**
+**Preparing CPU-offloaded K/V swaps**
+
+===== [REASONING] line 505 =====
+**Implementing factorKV storage**
+**Extending factor-KV caching**
+
+===== [REASONING] line 506 =====
+**Implementing factorKV storage**
+**Extending factor-KV caching**
+
+===== [REASONING] line 507 =====
+**Implementing factorKV storage**
+**Extending factor-KV caching**
+
+===== [REASONING] line 508 =====
+**Implementing factorKV storage**
+**Extending factor-KV caching**
+
+===== [REASONING] line 519 =====
+**Requesting bounded theory audit**
+**Deriving local frequency constraints**
+
+===== [REASONING] line 520 =====
+**Requesting bounded theory audit**
+**Deriving local frequency constraints**
+
+===== [REASONING] line 521 =====
+**Requesting bounded theory audit**
+**Deriving local frequency constraints**
+**Evaluating adaptive position encoding**
+
+===== [REASONING] line 522 =====
+**Requesting bounded theory audit**
+**Deriving local frequency constraints**
+**Evaluating adaptive position encoding**
+
+===== [REASONING] line 523 =====
+**Requesting bounded theory audit**
+**Deriving local frequency constraints**
+**Evaluating adaptive position encoding**
+
+===== [REASONING] line 524 =====
+**Requesting bounded theory audit**
+**Deriving local frequency constraints**
+**Evaluating adaptive position encoding**
+
+===== [REASONING] line 562 =====
+**Clarifying the scaling gap**
+**Testing a frequency-shift formula**
+
+===== [REASONING] line 563 =====
+**Clarifying the scaling gap**
+**Testing a frequency-shift formula**
+
+===== [REASONING] line 569 =====
+**Comparing cyclic RoPE designs**
+**Checking phase-allocation rationale**
+
+===== [REASONING] line 570 =====
+**Comparing cyclic RoPE designs**
+**Checking phase-allocation rationale**
+
+===== [REASONING] line 571 =====
+**Comparing cyclic RoPE designs**
+**Checking phase-allocation rationale**
+
+===== [REASONING] line 572 =====
+**Comparing cyclic RoPE designs**
+**Checking phase-allocation rationale**
+
+===== [REASONING] line 573 =====
+**Comparing cyclic RoPE designs**
+**Checking phase-allocation rationale**
+**Checking native-phase bounds**
+
+===== [REASONING] line 574 =====
+**Comparing cyclic RoPE designs**
+**Checking phase-allocation rationale**
+**Checking native-phase bounds**
+
+===== [REASONING] line 575 =====
+**Comparing cyclic RoPE designs**
+**Checking phase-allocation rationale**
+**Checking native-phase bounds**
+
+===== [REASONING] line 576 =====
+**Comparing cyclic RoPE designs**
+**Checking phase-allocation rationale**
+**Checking native-phase bounds**
+
+===== [REASONING] line 585 =====
+**Computing LP cross-check**
+**Preparing candidate table input**
+
+===== [REASONING] line 586 =====
+**Computing LP cross-check**
+**Preparing candidate table input**
+
+===== [REASONING] line 657 =====
+**Deriving zero-training invariance**
+**Deriving phase-alignment formula**
+
+===== [REASONING] line 658 =====
+**Deriving zero-training invariance**
+**Deriving phase-alignment formula**
+
+===== [REASONING] line 659 =====
+**Deriving zero-training invariance**
+**Deriving phase-alignment formula**
+
+===== [REASONING] line 660 =====
+**Deriving zero-training invariance**
+**Deriving phase-alignment formula**
+
+===== [REASONING] line 668 =====
+**Running the verified baseline**
+**Analyzing phase scaling**
+
+===== [REASONING] line 669 =====
+**Running the verified baseline**
+**Analyzing phase scaling**
+
+===== [REASONING] line 670 =====
+**Running the verified baseline**
+**Analyzing phase scaling**
+
+===== [REASONING] line 671 =====
+**Running the verified baseline**
+**Analyzing phase scaling**
+
+===== [REASONING] line 672 =====
+**Running the verified baseline**
+**Analyzing phase scaling**
+**Deriving dual-regime RoPE**
+
+===== [REASONING] line 673 =====
+**Running the verified baseline**
+**Analyzing phase scaling**
+**Deriving dual-regime RoPE**
+
+===== [REASONING] line 674 =====
+**Running the verified baseline**
+**Analyzing phase scaling**
+**Deriving dual-regime RoPE**
+
+===== [REASONING] line 675 =====
+**Running the verified baseline**
+**Analyzing phase scaling**
+**Deriving dual-regime RoPE**
+
+===== [REASONING] line 676 =====
+**Running the verified baseline**
+**Analyzing phase scaling**
+**Deriving dual-regime RoPE**
+
+===== [REASONING] line 677 =====
+**Running the verified baseline**
+**Analyzing phase scaling**
+**Deriving dual-regime RoPE**
+
+===== [REASONING] line 695 =====
+**Defining the frequency boundary**
+**Deriving boundary phase continuity**
+
+===== [REASONING] line 696 =====
+**Defining the frequency boundary**
+**Deriving boundary phase continuity**
+
+===== [REASONING] line 697 =====
+**Defining the frequency boundary**
+**Deriving boundary phase continuity**
+
+===== [REASONING] line 698 =====
+**Defining the frequency boundary**
+**Deriving boundary phase continuity**
+
+===== [REASONING] line 699 =====
+**Defining the frequency boundary**
+**Deriving boundary phase continuity**
+
+===== [REASONING] line 700 =====
+**Defining the frequency boundary**
+**Deriving boundary phase continuity**
+
+===== [REASONING] line 716 =====
+**Checking candidate boundary**
+**Testing fractional endpoints**
+
+===== [REASONING] line 717 =====
+**Checking candidate boundary**
+**Testing fractional endpoints**
+
+===== [REASONING] line 718 =====
+**Checking candidate boundary**
+**Testing fractional endpoints**
+
+===== [REASONING] line 719 =====
+**Checking candidate boundary**
+**Testing fractional endpoints**
+
+===== [REASONING] line 720 =====
+**Checking candidate boundary**
+**Testing fractional endpoints**
+**Deriving mean-distance bounds**
+
+===== [REASONING] line 721 =====
+**Checking candidate boundary**
+**Testing fractional endpoints**
+**Deriving mean-distance bounds**
+
+===== [REASONING] line 722 =====
+**Checking candidate boundary**
+**Testing fractional endpoints**
+**Deriving mean-distance bounds**
+
+===== [REASONING] line 723 =====
+**Checking candidate boundary**
+**Testing fractional endpoints**
+**Deriving mean-distance bounds**
+
+===== [REASONING] line 742 =====
+**Implementing raw-baseline summarizer**
+**Preparing candidate summary inputs**
+
+===== [REASONING] line 743 =====
+**Implementing raw-baseline summarizer**
+**Preparing candidate summary inputs**
+
+===== [REASONING] line 780 =====
+**Waiting for final counts**
+**Refining length correction**
+
+===== [REASONING] line 781 =====
+**Waiting for final counts**
+**Refining length correction**
+
+===== [REASONING] line 782 =====
+**Waiting for final counts**
+**Refining length correction**
+
+===== [REASONING] line 783 =====
+**Waiting for final counts**
+**Refining length correction**
+
+===== [REASONING] line 784 =====
+**Waiting for final counts**
+**Refining length correction**
+
+===== [REASONING] line 785 =====
+**Waiting for final counts**
+**Refining length correction**
+
+===== [REASONING] line 804 =====
+**Preparing MrPro causal-gain test**
+**Reusing target-free gain branch**
+
+===== [REASONING] line 805 =====
+**Preparing MrPro causal-gain test**
+**Reusing target-free gain branch**
+
+===== [REASONING] line 806 =====
+**Preparing MrPro causal-gain test**
+**Reusing target-free gain branch**
+
+===== [REASONING] line 807 =====
+**Preparing MrPro causal-gain test**
+**Reusing target-free gain branch**
+
+===== [REASONING] line 847 =====
+**Preparing theory review**
+**Deriving causal invariants**
+
+===== [REASONING] line 848 =====
+**Preparing theory review**
+**Deriving causal invariants**
+
+===== [REASONING] line 849 =====
+**Preparing theory review**
+**Deriving causal invariants**
+
+===== [REASONING] line 850 =====
+**Preparing theory review**
+**Deriving causal invariants**
+
+===== [REASONING] line 851 =====
+**Preparing theory review**
+**Deriving causal invariants**
+**Analyzing cross-model constraints**
+
+===== [REASONING] line 852 =====
+**Preparing theory review**
+**Deriving causal invariants**
+**Analyzing cross-model constraints**
+
+===== [REASONING] line 853 =====
+**Preparing theory review**
+**Deriving causal invariants**
+**Analyzing cross-model constraints**
+
+===== [REASONING] line 854 =====
+**Preparing theory review**
+**Deriving causal invariants**
+**Analyzing cross-model constraints**
+
+===== [REASONING] line 855 =====
+**Preparing theory review**
+**Deriving causal invariants**
+**Analyzing cross-model constraints**
+
+===== [REASONING] line 856 =====
+**Preparing theory review**
+**Deriving causal invariants**
+**Analyzing cross-model constraints**
+
+===== [REASONING] line 879 =====
+**Assessing QA answer mismatch**
+**Diagnosing attention sink drift**
+
+===== [REASONING] line 880 =====
+**Assessing QA answer mismatch**
+**Diagnosing attention sink drift**
+
+===== [REASONING] line 881 =====
+**Assessing QA answer mismatch**
+**Diagnosing attention sink drift**
+
+===== [REASONING] line 882 =====
+**Assessing QA answer mismatch**
+**Diagnosing attention sink drift**
+
+===== [REASONING] line 883 =====
+**Assessing QA answer mismatch**
+**Diagnosing attention sink drift**
+**Constructing attention signature**
+
+===== [REASONING] line 884 =====
+**Assessing QA answer mismatch**
+**Diagnosing attention sink drift**
+**Constructing attention signature**
+
+===== [REASONING] line 885 =====
+**Assessing QA answer mismatch**
+**Diagnosing attention sink drift**
+**Constructing attention signature**
+
+===== [REASONING] line 886 =====
+**Assessing QA answer mismatch**
+**Diagnosing attention sink drift**
+**Constructing attention signature**
+
+===== [REASONING] line 887 =====
+**Assessing QA answer mismatch**
+**Diagnosing attention sink drift**
+**Constructing attention signature**
+**Computing QK operator Gram**
+
+===== [REASONING] line 888 =====
+**Assessing QA answer mismatch**
+**Diagnosing attention sink drift**
+**Constructing attention signature**
+**Computing QK operator Gram**
+
+===== [REASONING] line 897 =====
+**Continuing theory work**
+**Deriving MrRoPE’s Pareto bound**
+
+===== [REASONING] line 898 =====
+**Continuing theory work**
+**Deriving MrRoPE’s Pareto bound**
+
+===== [REASONING] line 899 =====
+**Continuing theory work**
+**Deriving MrRoPE’s Pareto bound**
+
+===== [REASONING] line 900 =====
+**Continuing theory work**
+**Deriving MrRoPE’s Pareto bound**
+
+===== [REASONING] line 901 =====
+**Continuing theory work**
+**Deriving MrRoPE’s Pareto bound**
+
+===== [REASONING] line 902 =====
+**Continuing theory work**
+**Deriving MrRoPE’s Pareto bound**
+
+===== [REASONING] line 911 =====
+**Reviewing archived outputs**
+**Rerunning prefix Q/K traces**
+
+===== [REASONING] line 912 =====
+**Reviewing archived outputs**
+**Rerunning prefix Q/K traces**
+
+===== [REASONING] line 913 =====
+**Reviewing archived outputs**
+**Rerunning prefix Q/K traces**
+
+===== [REASONING] line 914 =====
+**Reviewing archived outputs**
+**Rerunning prefix Q/K traces**
+
+===== [REASONING] line 915 =====
+**Reviewing archived outputs**
+**Rerunning prefix Q/K traces**
+**Defining same-token contrast**
+
+===== [REASONING] line 916 =====
+**Reviewing archived outputs**
+**Rerunning prefix Q/K traces**
+**Defining same-token contrast**
+
+===== [REASONING] line 917 =====
+**Reviewing archived outputs**
+**Rerunning prefix Q/K traces**
+**Defining same-token contrast**
+
+===== [REASONING] line 918 =====
+**Reviewing archived outputs**
+**Rerunning prefix Q/K traces**
+**Defining same-token contrast**
+
+===== [REASONING] line 919 =====
+**Reviewing archived outputs**
+**Rerunning prefix Q/K traces**
+**Defining same-token contrast**
+**Checking signed-contrast conditions**
+
+===== [REASONING] line 920 =====
+**Reviewing archived outputs**
+**Rerunning prefix Q/K traces**
+**Defining same-token contrast**
+**Checking signed-contrast conditions**
+
+===== [REASONING] line 921 =====
+**Reviewing archived outputs**
+**Rerunning prefix Q/K traces**
+**Defining same-token contrast**
+**Checking signed-contrast conditions**
+
+===== [REASONING] line 922 =====
+**Reviewing archived outputs**
+**Rerunning prefix Q/K traces**
+**Defining same-token contrast**
+**Checking signed-contrast conditions**
+
+===== [REASONING] line 923 =====
+**Reviewing archived outputs**
+**Rerunning prefix Q/K traces**
+**Defining same-token contrast**
+**Checking signed-contrast conditions**
+
+===== [REASONING] line 924 =====
+**Reviewing archived outputs**
+**Rerunning prefix Q/K traces**
+**Defining same-token contrast**
+**Checking signed-contrast conditions**
+
+===== [REASONING] line 945 =====
+**Preparing OLMo benchmark extension**
+**Preparing OLMo LongBench inputs**
+
+===== [REASONING] line 946 =====
+**Preparing OLMo benchmark extension**
+**Preparing OLMo LongBench inputs**
+
+===== [REASONING] line 1000 =====
+**Preparing runner scorer changes**
+**Preparing natural benchmark runner**
+
+===== [REASONING] line 1001 =====
+**Preparing runner scorer changes**
+**Preparing natural benchmark runner**
+
+===== [REASONING] line 1027 =====
+**Preparing reused benchmark rows**
+**Verifying benchmark input hashes**
+
+===== [REASONING] line 1028 =====
+**Preparing reused benchmark rows**
+**Verifying benchmark input hashes**
+
+===== [REASONING] line 1090 =====
+**Developing coupled calibration criterion**
+
+===== [REASONING] line 1091 =====
+**Developing coupled calibration criterion**
+
+===== [REASONING] line 1092 =====
+**Developing coupled calibration criterion**
+**Computing row-centered distortion**
+
+===== [REASONING] line 1093 =====
+**Developing coupled calibration criterion**
+**Computing row-centered distortion**
+
+===== [REASONING] line 1094 =====
+**Developing coupled calibration criterion**
+**Computing row-centered distortion**
+
+===== [REASONING] line 1095 =====
+**Developing coupled calibration criterion**
+**Computing row-centered distortion**
+
+===== [REASONING] line 1096 =====
+**Developing coupled calibration criterion**
+**Computing row-centered distortion**
+**Preparing shared-prefix traces**
+
+===== [REASONING] line 1097 =====
+**Developing coupled calibration criterion**
+**Computing row-centered distortion**
+**Preparing shared-prefix traces**
+
+===== [REASONING] line 1098 =====
+**Developing coupled calibration criterion**
+**Computing row-centered distortion**
+**Preparing shared-prefix traces**
+
+===== [REASONING] line 1099 =====
+**Developing coupled calibration criterion**
+**Computing row-centered distortion**
+**Preparing shared-prefix traces**
+
+===== [REASONING] line 1100 =====
+**Developing coupled calibration criterion**
+**Computing row-centered distortion**
+**Preparing shared-prefix traces**
+
+===== [REASONING] line 1101 =====
+**Developing coupled calibration criterion**
+**Computing row-centered distortion**
+**Preparing shared-prefix traces**
+
+===== [REASONING] line 1102 =====
+**Developing coupled calibration criterion**
+**Computing row-centered distortion**
+**Preparing shared-prefix traces**
+**Running full OLMo benchmark**
+
+===== [REASONING] line 1103 =====
+**Developing coupled calibration criterion**
+**Computing row-centered distortion**
+**Preparing shared-prefix traces**
+**Running full OLMo benchmark**
+
+===== [REASONING] line 1135 =====
+**Checking model assets**
+**Searching for model weights**
+
+===== [REASONING] line 1136 =====
+**Checking model assets**
+**Searching for model weights**
+
+===== [REASONING] line 1137 =====
+**Checking model assets**
+**Searching for model weights**
+
+===== [REASONING] line 1138 =====
+**Checking model assets**
+**Searching for model weights**
+
+===== [REASONING] line 1159 =====
+**Preparing full RULER support**
+**Checking 13-task RULER coverage**
+
+===== [REASONING] line 1160 =====
+**Preparing full RULER support**
+**Checking 13-task RULER coverage**
+
+===== [REASONING] line 1161 =====
+**Preparing full RULER support**
+**Checking 13-task RULER coverage**
+
+===== [REASONING] line 1162 =====
+**Preparing full RULER support**
+**Checking 13-task RULER coverage**
+
+===== [REASONING] line 1163 =====
+**Preparing full RULER support**
+**Checking 13-task RULER coverage**
+
+===== [REASONING] line 1164 =====
+**Preparing full RULER support**
+**Checking 13-task RULER coverage**
+
+===== [REASONING] line 1165 =====
+**Preparing full RULER support**
+**Checking 13-task RULER coverage**
+**Preparing Qwen 7B benchmark**
+
+===== [REASONING] line 1166 =====
+**Preparing full RULER support**
+**Checking 13-task RULER coverage**
+**Preparing Qwen 7B benchmark**
+
+===== [REASONING] line 1173 =====
+**Waiting for HF lookup**
+**Preparing dynamic ruler tasks**
+
+===== [REASONING] line 1174 =====
+**Waiting for HF lookup**
+**Preparing dynamic ruler tasks**
+
+===== [REASONING] line 1208 =====
+**Preparing full13 workspace**
+**Running prepared BM/Mr predictions**
+
+===== [REASONING] line 1209 =====
+**Preparing full13 workspace**
+**Running prepared BM/Mr predictions**
+
+===== [REASONING] line 1217 =====
+**Preparing worker wrapper**
+**Drafting bounded geometry proof**
+
+===== [REASONING] line 1218 =====
+**Preparing worker wrapper**
+**Drafting bounded geometry proof**
+
+===== [REASONING] line 1219 =====
+**Preparing worker wrapper**
+**Drafting bounded geometry proof**
+
+===== [REASONING] line 1220 =====
+**Preparing worker wrapper**
+**Drafting bounded geometry proof**
+
+===== [REASONING] line 1221 =====
+**Preparing worker wrapper**
+**Drafting bounded geometry proof**
+
+===== [REASONING] line 1222 =====
+**Preparing worker wrapper**
+**Drafting bounded geometry proof**
+
+===== [REASONING] line 1223 =====
+**Preparing worker wrapper**
+**Drafting bounded geometry proof**
+**Formulating centered bias**
+
+===== [REASONING] line 1224 =====
+**Preparing worker wrapper**
+**Drafting bounded geometry proof**
+**Formulating centered bias**
+
+===== [REASONING] line 1225 =====
+**Preparing worker wrapper**
+**Drafting bounded geometry proof**
+**Formulating centered bias**
+
+===== [REASONING] line 1226 =====
+**Preparing worker wrapper**
+**Drafting bounded geometry proof**
+**Formulating centered bias**
+
+===== [REASONING] line 1274 =====
+**Preparing Qwen7B metadata**
+**Checking Qwen7B endpoint**
+
+===== [REASONING] line 1275 =====
+**Preparing Qwen7B metadata**
+**Checking Qwen7B endpoint**
+
+===== [REASONING] line 1276 =====
+**Preparing Qwen7B metadata**
+**Checking Qwen7B endpoint**
+
+===== [REASONING] line 1277 =====
+**Preparing Qwen7B metadata**
+**Checking Qwen7B endpoint**
+
+===== [REASONING] line 1278 =====
+**Preparing Qwen7B metadata**
+**Checking Qwen7B endpoint**
+
+===== [REASONING] line 1279 =====
+**Preparing Qwen7B metadata**
+**Checking Qwen7B endpoint**
+
+===== [REASONING] line 1281 =====
+**Preparing Qwen7B metadata**
+**Checking Qwen7B endpoint**
+**Designing mean-bias correction**
+
+===== [REASONING] line 1282 =====
+**Preparing Qwen7B metadata**
+**Checking Qwen7B endpoint**
+**Designing mean-bias correction**
+
+===== [REASONING] line 1283 =====
+**Preparing Qwen7B metadata**
+**Checking Qwen7B endpoint**
+**Designing mean-bias correction**
+
+===== [REASONING] line 1284 =====
+**Preparing Qwen7B metadata**
+**Checking Qwen7B endpoint**
+**Designing mean-bias correction**
+
+===== [REASONING] line 1285 =====
+**Preparing Qwen7B metadata**
+**Checking Qwen7B endpoint**
+**Designing mean-bias correction**
+**Specifying RP-RoPE bands**
+
+===== [REASONING] line 1286 =====
+**Preparing Qwen7B metadata**
+**Checking Qwen7B endpoint**
+**Designing mean-bias correction**
+**Specifying RP-RoPE bands**
+
+===== [REASONING] line 1287 =====
+**Preparing Qwen7B metadata**
+**Checking Qwen7B endpoint**
+**Designing mean-bias correction**
+**Specifying RP-RoPE bands**
+
+===== [REASONING] line 1288 =====
+**Preparing Qwen7B metadata**
+**Checking Qwen7B endpoint**
+**Designing mean-bias correction**
+**Specifying RP-RoPE bands**
+
+===== [REASONING] line 1308 =====
+**Preparing QASPER cluster IDs**
+**Extracting QASPER metadata**
+
+===== [REASONING] line 1309 =====
+**Preparing QASPER cluster IDs**
+**Extracting QASPER metadata**
+
+===== [REASONING] line 1310 =====
+**Preparing QASPER cluster IDs**
+**Extracting QASPER metadata**
+
+===== [REASONING] line 1311 =====
+**Preparing QASPER cluster IDs**
+**Extracting QASPER metadata**
+
+===== [REASONING] line 1312 =====
+**Preparing QASPER cluster IDs**
+**Extracting QASPER metadata**
+
+===== [REASONING] line 1313 =====
+**Preparing QASPER cluster IDs**
+**Extracting QASPER metadata**
+
+===== [REASONING] line 1321 =====
+**Downloading via mirror**
+**Preparing metadata transfer**
+
+===== [REASONING] line 1322 =====
+**Downloading via mirror**
+**Preparing metadata transfer**
+
+===== [REASONING] line 1323 =====
+**Downloading via mirror**
+**Preparing metadata transfer**
+
+===== [REASONING] line 1324 =====
+**Downloading via mirror**
+**Preparing metadata transfer**
+
+===== [REASONING] line 1325 =====
+**Downloading via mirror**
+**Preparing metadata transfer**
+
+===== [REASONING] line 1326 =====
+**Downloading via mirror**
+**Preparing metadata transfer**
+
+===== [REASONING] line 1327 =====
+**Downloading via mirror**
+**Preparing metadata transfer**
+**Assessing MLP chunking**
+
+===== [REASONING] line 1328 =====
+**Downloading via mirror**
+**Preparing metadata transfer**
+**Assessing MLP chunking**
+
+===== [REASONING] line 1329 =====
+**Downloading via mirror**
+**Preparing metadata transfer**
+**Assessing MLP chunking**
+
+===== [REASONING] line 1330 =====
+**Downloading via mirror**
+**Preparing metadata transfer**
+**Assessing MLP chunking**
+
+===== [REASONING] line 1360 =====
+**Testing projected kernel**
+**Implementing rank-one projector**
+
+===== [REASONING] line 1361 =====
+**Testing projected kernel**
+**Implementing rank-one projector**
+
+===== [REASONING] line 1363 =====
+**Testing projected kernel**
+**Implementing rank-one projector**
+
+===== [REASONING] line 1364 =====
+**Testing projected kernel**
+**Implementing rank-one projector**
+
+===== [REASONING] line 1365 =====
+**Testing projected kernel**
+**Implementing rank-one projector**
+
+===== [REASONING] line 1366 =====
+**Testing projected kernel**
+**Implementing rank-one projector**
+
+===== [REASONING] line 1367 =====
+**Testing projected kernel**
+**Implementing rank-one projector**
+**Implementing mean-preserving projector**
+
+===== [REASONING] line 1368 =====
+**Testing projected kernel**
+**Implementing rank-one projector**
+**Implementing mean-preserving projector**
+
+===== [REASONING] line 1369 =====
+**Testing projected kernel**
+**Implementing rank-one projector**
+**Implementing mean-preserving projector**
+
+===== [REASONING] line 1370 =====
+**Testing projected kernel**
+**Implementing rank-one projector**
+**Implementing mean-preserving projector**
+
+===== [REASONING] line 1371 =====
+**Testing projected kernel**
+**Implementing rank-one projector**
+**Implementing mean-preserving projector**
+**Testing MPBM baseline parity**
+
+===== [REASONING] line 1372 =====
+**Testing projected kernel**
+**Implementing rank-one projector**
+**Implementing mean-preserving projector**
+**Testing MPBM baseline parity**
+
+===== [REASONING] line 1373 =====
+**Testing projected kernel**
+**Implementing rank-one projector**
+**Implementing mean-preserving projector**
+**Testing MPBM baseline parity**
+
+===== [REASONING] line 1374 =====
+**Testing projected kernel**
+**Implementing rank-one projector**
+**Implementing mean-preserving projector**
+**Testing MPBM baseline parity**
+
+===== [REASONING] line 1417 =====
+**Preparing asset receipt manifest**
+**Preparing reuse-assets identity**
+
+===== [REASONING] line 1418 =====
+**Preparing asset receipt manifest**
+**Preparing reuse-assets identity**
+
+===== [REASONING] line 1419 =====
+**Preparing asset receipt manifest**
+**Preparing reuse-assets identity**
+
+===== [REASONING] line 1420 =====
+**Preparing asset receipt manifest**
+**Preparing reuse-assets identity**
+
+===== [REASONING] line 1861 =====
+**Assessing NLL evidence**
+**Preparing long FineWeb inputs**
+
+===== [REASONING] line 1862 =====
+**Assessing NLL evidence**
+**Preparing long FineWeb inputs**
+
+===== [REASONING] line 1957 =====
+**Formalizing the frequency mechanism**
+**Gathering missing slot statistics**
+
+===== [REASONING] line 1958 =====
+**Formalizing the frequency mechanism**
+**Gathering missing slot statistics**
+
+===== [REASONING] line 2022 =====
+**Preparing expandable segments**
+**Retrying twelve baseline rows**
+
+===== [REASONING] line 2023 =====
+**Preparing expandable segments**
+**Retrying twelve baseline rows**
+
+===== [REASONING] line 2024 =====
+**Preparing expandable segments**
+**Retrying twelve baseline rows**
+
+===== [REASONING] line 2025 =====
+**Preparing expandable segments**
+**Retrying twelve baseline rows**
+
+===== [REASONING] line 2026 =====
+**Preparing expandable segments**
+**Retrying twelve baseline rows**
+
+===== [REASONING] line 2027 =====
+**Preparing expandable segments**
+**Retrying twelve baseline rows**
+
+===== [REASONING] line 2112 =====
+**Checking native-window bounds**
+**Reviewing prior constraints**
+
+===== [REASONING] line 2113 =====
+**Checking native-window bounds**
+**Reviewing prior constraints**
+
+===== [REASONING] line 2114 =====
+**Checking native-window bounds**
+**Reviewing prior constraints**
+
+===== [REASONING] line 2115 =====
+**Checking native-window bounds**
+**Reviewing prior constraints**
+
+===== [REASONING] line 2116 =====
+**Checking native-window bounds**
+**Reviewing prior constraints**
+
+===== [REASONING] line 2117 =====
+**Checking native-window bounds**
+**Reviewing prior constraints**
+
+===== [REASONING] line 2134 =====
+**Waiting for baseline run**
+**Extending the cache builder**
+
+===== [REASONING] line 2135 =====
+**Waiting for baseline run**
+**Extending the cache builder**
+
+===== [REASONING] line 2136 =====
+**Waiting for baseline run**
+**Extending the cache builder**
+
+===== [REASONING] line 2137 =====
+**Waiting for baseline run**
+**Extending the cache builder**
+
+===== [REASONING] line 2138 =====
+**Waiting for baseline run**
+**Extending the cache builder**
+**Awaiting diagnostic results**
+
+===== [REASONING] line 2139 =====
+**Waiting for baseline run**
+**Extending the cache builder**
+**Awaiting diagnostic results**
+
+===== [REASONING] line 2140 =====
+**Waiting for baseline run**
+**Extending the cache builder**
+**Awaiting diagnostic results**
+
+===== [REASONING] line 2141 =====
+**Waiting for baseline run**
+**Extending the cache builder**
+**Awaiting diagnostic results**
+
+===== [REASONING] line 2142 =====
+**Waiting for baseline run**
+**Extending the cache builder**
+**Awaiting diagnostic results**
+
+===== [REASONING] line 2143 =====
+**Waiting for baseline run**
+**Extending the cache builder**
+**Awaiting diagnostic results**
+
+===== [REASONING] line 2175 =====
+**Analyzing attention stability**
+**Refining attention-phase analysis**
+
+===== [REASONING] line 2176 =====
+**Analyzing attention stability**
+**Refining attention-phase analysis**
+
+===== [REASONING] line 2177 =====
+**Analyzing attention stability**
+**Refining attention-phase analysis**
+
+===== [REASONING] line 2178 =====
+**Analyzing attention stability**
+**Refining attention-phase analysis**
+
+===== [REASONING] line 2179 =====
+**Analyzing attention stability**
+**Refining attention-phase analysis**
+
+===== [REASONING] line 2180 =====
+**Analyzing attention stability**
+**Refining attention-phase analysis**
+
+===== [REASONING] line 2190 =====
+**正在补写 ROPE 阶段分离分析文档**
+**正在重读 RTX4080 配置文档**
+
+===== [REASONING] line 2191 =====
+**正在补写 ROPE 阶段分离分析文档**
+**正在重读 RTX4080 配置文档**
+
+===== [REASONING] line 2228 =====
+**Preparing KV cache fallback**
+**Preparing factor-read fallback**
+
+===== [REASONING] line 2229 =====
+**Preparing KV cache fallback**
+**Preparing factor-read fallback**
+
+===== [REASONING] line 2230 =====
+**Preparing KV cache fallback**
+**Preparing factor-read fallback**
+
+===== [REASONING] line 2231 =====
+**Preparing KV cache fallback**
+**Preparing factor-read fallback**
+
+===== [REASONING] line 2232 =====
+**Preparing KV cache fallback**
+**Preparing factor-read fallback**
+**Preparing factor-pair setup**
+
+===== [REASONING] line 2233 =====
+**Preparing KV cache fallback**
+**Preparing factor-read fallback**
+**Preparing factor-pair setup**
+
+===== [REASONING] line 2234 =====
+**Preparing KV cache fallback**
+**Preparing factor-read fallback**
+**Preparing factor-pair setup**
+
+===== [REASONING] line 2235 =====
+**Preparing KV cache fallback**
+**Preparing factor-read fallback**
+**Preparing factor-pair setup**
+
+===== [REASONING] line 2245 =====
+**Preparing remaining source cases**
+**Preparing NLL cache split**
+
+===== [REASONING] line 2246 =====
+**Preparing remaining source cases**
+**Preparing NLL cache split**
+
+===== [REASONING] line 2247 =====
+**Preparing remaining source cases**
+**Preparing NLL cache split**
+
+===== [REASONING] line 2248 =====
+**Preparing remaining source cases**
+**Preparing NLL cache split**
+
+===== [REASONING] line 2256 =====
+**Preparing first-row validation**
+**Designing cache-update wrapper**
+
+===== [REASONING] line 2257 =====
+**Preparing first-row validation**
+**Designing cache-update wrapper**
+
+===== [REASONING] line 2258 =====
+**Preparing first-row validation**
+**Designing cache-update wrapper**
+
+===== [REASONING] line 2259 =====
+**Preparing first-row validation**
+**Designing cache-update wrapper**
+
+===== [REASONING] line 2260 =====
+**Preparing first-row validation**
+**Designing cache-update wrapper**
+**Testing ReadoutCache prototype**
+
+===== [REASONING] line 2261 =====
+**Preparing first-row validation**
+**Designing cache-update wrapper**
+**Testing ReadoutCache prototype**
+
+===== [REASONING] line 2262 =====
+**Preparing first-row validation**
+**Designing cache-update wrapper**
+**Testing ReadoutCache prototype**
+
+===== [REASONING] line 2263 =====
+**Preparing first-row validation**
+**Designing cache-update wrapper**
+**Testing ReadoutCache prototype**
+
+===== [REASONING] line 2274 =====
+**Waiting for status completion**
+**Checking frozen-panel results**
+
+===== [REASONING] line 2275 =====
+**Waiting for status completion**
+**Checking frozen-panel results**
+
+===== [REASONING] line 2276 =====
+**Waiting for status completion**
+**Checking frozen-panel results**
+
+===== [REASONING] line 2277 =====
+**Waiting for status completion**
+**Checking frozen-panel results**
+
+===== [REASONING] line 2278 =====
+**Waiting for status completion**
+**Checking frozen-panel results**
+**Inspecting Qwen bias tensors**
+
+===== [REASONING] line 2279 =====
+**Waiting for status completion**
+**Checking frozen-panel results**
+**Inspecting Qwen bias tensors**
+
+===== [REASONING] line 2280 =====
+**Waiting for status completion**
+**Checking frozen-panel results**
+**Inspecting Qwen bias tensors**
+
+===== [REASONING] line 2281 =====
+**Waiting for status completion**
+**Checking frozen-panel results**
+**Inspecting Qwen bias tensors**
+
+===== [REASONING] line 2282 =====
+**Waiting for status completion**
+**Checking frozen-panel results**
+**Inspecting Qwen bias tensors**
+**Verifying Qwen bias values**
+
+===== [REASONING] line 2283 =====
+**Waiting for status completion**
+**Checking frozen-panel results**
+**Inspecting Qwen bias tensors**
+**Verifying Qwen bias values**
+
+===== [REASONING] line 2284 =====
+**Waiting for status completion**
+**Checking frozen-panel results**
+**Inspecting Qwen bias tensors**
+**Verifying Qwen bias values**
+
+===== [REASONING] line 2285 =====
+**Waiting for status completion**
+**Checking frozen-panel results**
+**Inspecting Qwen bias tensors**
+**Verifying Qwen bias values**
+
+===== [REASONING] line 2320 =====
+**Preparing attention wrapper**
+**Checking cache positions**
+
+===== [REASONING] line 2321 =====
+**Preparing attention wrapper**
+**Checking cache positions**
+
+===== [REASONING] line 2322 =====
+**Preparing attention wrapper**
+**Checking cache positions**
+
+===== [REASONING] line 2323 =====
+**Preparing attention wrapper**
+**Checking cache positions**
+
+===== [REASONING] line 2324 =====
+**Preparing attention wrapper**
+**Checking cache positions**
+
+===== [REASONING] line 2325 =====
+**Preparing attention wrapper**
+**Checking cache positions**
+
+===== [REASONING] line 2374 =====
+**Analyzing bias functions**
+**Running KV diagnostic**
+
+===== [REASONING] line 2375 =====
+**Analyzing bias functions**
+**Running KV diagnostic**
+
+===== [REASONING] line 2376 =====
+**Analyzing bias functions**
+**Running KV diagnostic**
+
+===== [REASONING] line 2377 =====
+**Analyzing bias functions**
+**Running KV diagnostic**
+
+===== [REASONING] line 2395 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+
+===== [REASONING] line 2396 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+
+===== [REASONING] line 2397 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+
+===== [REASONING] line 2398 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+
+===== [REASONING] line 2399 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+
+===== [REASONING] line 2400 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+
+===== [REASONING] line 2401 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+**Building full-K phase cache**
+
+===== [REASONING] line 2402 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+**Building full-K phase cache**
+
+===== [REASONING] line 2403 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+**Building full-K phase cache**
+
+===== [REASONING] line 2404 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+**Building full-K phase cache**
+
+===== [REASONING] line 2405 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+**Building full-K phase cache**
+**Preparing bias-term context**
+
+===== [REASONING] line 2406 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+**Building full-K phase cache**
+**Preparing bias-term context**
+
+===== [REASONING] line 2407 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+**Building full-K phase cache**
+**Preparing bias-term context**
+
+===== [REASONING] line 2408 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+**Building full-K phase cache**
+**Preparing bias-term context**
+
+===== [REASONING] line 2409 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+**Building full-K phase cache**
+**Preparing bias-term context**
+
+===== [REASONING] line 2410 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+**Building full-K phase cache**
+**Preparing bias-term context**
+
+===== [REASONING] line 2411 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+**Building full-K phase cache**
+**Preparing bias-term context**
+**Implementing BiasPositionTerm module**
+
+===== [REASONING] line 2412 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+**Building full-K phase cache**
+**Preparing bias-term context**
+**Implementing BiasPositionTerm module**
+
+===== [REASONING] line 2413 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+**Building full-K phase cache**
+**Preparing bias-term context**
+**Implementing BiasPositionTerm module**
+
+===== [REASONING] line 2414 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+**Building full-K phase cache**
+**Preparing bias-term context**
+**Implementing BiasPositionTerm module**
+
+===== [REASONING] line 2415 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+**Building full-K phase cache**
+**Preparing bias-term context**
+**Implementing BiasPositionTerm module**
+
+===== [REASONING] line 2416 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+**Building full-K phase cache**
+**Preparing bias-term context**
+**Implementing BiasPositionTerm module**
+
+===== [REASONING] line 2417 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+**Building full-K phase cache**
+**Preparing bias-term context**
+**Implementing BiasPositionTerm module**
+
+===== [REASONING] line 2418 =====
+**Preparing attention patch**
+**Preparing BiasAnchor checks**
+**Building full-K phase cache**
+**Preparing bias-term context**
+**Implementing BiasPositionTerm module**
+
+===== [REASONING] line 2428 =====
+**Preparing high-position tests**
+**Preparing reference logits**
+
+===== [REASONING] line 2429 =====
+**Preparing high-position tests**
+**Preparing reference logits**
+
+===== [REASONING] line 2440 =====
+**Adding layer runner spec**
+**Starting paired evaluation runs**
+
+===== [REASONING] line 2441 =====
+**Adding layer runner spec**
+**Starting paired evaluation runs**
+
+===== [REASONING] line 2442 =====
+**Adding layer runner spec**
+**Starting paired evaluation runs**
+
+===== [REASONING] line 2443 =====
+**Adding layer runner spec**
+**Starting paired evaluation runs**
+
+===== [REASONING] line 2454 =====
+**Testing verified fallback**
+**Verifying Qwen attention mapping**
+
+===== [REASONING] line 2455 =====
+**Testing verified fallback**
+**Verifying Qwen attention mapping**
+
+===== [REASONING] line 2456 =====
+**Testing verified fallback**
+**Verifying Qwen attention mapping**
+
+===== [REASONING] line 2457 =====
+**Testing verified fallback**
+**Verifying Qwen attention mapping**
+
+===== [REASONING] line 2472 =====
+**Defining conditional baseline padding**
+
+===== [REASONING] line 2473 =====
+**Defining conditional baseline padding**
+
+===== [REASONING] line 2474 =====
+**Defining conditional baseline padding**
+**Preparing split baseline runs**
+
+===== [REASONING] line 2475 =====
+**Defining conditional baseline padding**
+**Preparing split baseline runs**
+
+===== [REASONING] line 2476 =====
+**Defining conditional baseline padding**
+**Preparing split baseline runs**
+
+===== [REASONING] line 2477 =====
+**Defining conditional baseline padding**
+**Preparing split baseline runs**
+
+===== [REASONING] line 2488 =====
+**Checking attention bias behavior**
+**Checking attention mapping**
+
+===== [REASONING] line 2489 =====
+**Checking attention bias behavior**
+**Checking attention mapping**
+
+===== [REASONING] line 2490 =====
+**Checking attention bias behavior**
+**Checking attention mapping**
+
+===== [REASONING] line 2491 =====
+**Checking attention bias behavior**
+**Checking attention mapping**
+
+===== [REASONING] line 2492 =====
+**Checking attention bias behavior**
+**Checking attention mapping**
+
+===== [REASONING] line 2493 =====
+**Checking attention bias behavior**
+**Checking attention mapping**
+
+===== [REASONING] line 2509 =====
+**Capturing terminal bias statistics**
+**Checking global gain handling**
+
+===== [REASONING] line 2510 =====
+**Capturing terminal bias statistics**
+**Checking global gain handling**
+
+===== [REASONING] line 2511 =====
+**Capturing terminal bias statistics**
+**Checking global gain handling**
+
+===== [REASONING] line 2512 =====
+**Capturing terminal bias statistics**
+**Checking global gain handling**
+
+===== [REASONING] line 2513 =====
+**Capturing terminal bias statistics**
+**Checking global gain handling**
+
+===== [REASONING] line 2514 =====
+**Capturing terminal bias statistics**
+**Checking global gain handling**
+
+===== [REASONING] line 2515 =====
+**Capturing terminal bias statistics**
+**Checking global gain handling**
+**Validating bias-position handling**
+
+===== [REASONING] line 2516 =====
+**Capturing terminal bias statistics**
+**Checking global gain handling**
+**Validating bias-position handling**
+
+===== [REASONING] line 2546 =====
+**Preparing localized KV measurement**
+**Preparing full KV decomposition**
+
+===== [REASONING] line 2547 =====
+**Preparing localized KV measurement**
+**Preparing full KV decomposition**
+
+===== [REASONING] line 2548 =====
+**Preparing localized KV measurement**
+**Preparing full KV decomposition**
+
+===== [REASONING] line 2549 =====
+**Preparing localized KV measurement**
+**Preparing full KV decomposition**
+
+===== [REASONING] line 2550 =====
+**Preparing localized KV measurement**
+**Preparing full KV decomposition**
+**Running full KV decomposition**
+
+===== [REASONING] line 2551 =====
+**Preparing localized KV measurement**
+**Preparing full KV decomposition**
+**Running full KV decomposition**
+
+===== [REASONING] line 2566 =====
+**Testing joint QKV coupling**
+**Designing native-window prefill**
+
+===== [REASONING] line 2567 =====
+**Testing joint QKV coupling**
+**Designing native-window prefill**
+
+===== [REASONING] line 2568 =====
+**Testing joint QKV coupling**
+**Designing native-window prefill**
+
+===== [REASONING] line 2569 =====
+**Testing joint QKV coupling**
+**Designing native-window prefill**
+
+===== [REASONING] line 2570 =====
+**Testing joint QKV coupling**
+**Designing native-window prefill**
+
+===== [REASONING] line 2571 =====
+**Testing joint QKV coupling**
+**Designing native-window prefill**
+
+===== [REASONING] line 2572 =====
+**Testing joint QKV coupling**
+**Designing native-window prefill**
+**Formalizing native-window cache**
+
+===== [REASONING] line 2573 =====
+**Testing joint QKV coupling**
+**Designing native-window prefill**
+**Formalizing native-window cache**
+
+===== [REASONING] line 2574 =====
+**Testing joint QKV coupling**
+**Designing native-window prefill**
+**Formalizing native-window cache**
+
+===== [REASONING] line 2575 =====
+**Testing joint QKV coupling**
+**Designing native-window prefill**
+**Formalizing native-window cache**
+
+===== [REASONING] line 2576 =====
+**Testing joint QKV coupling**
+**Designing native-window prefill**
+**Formalizing native-window cache**
+**Building native-window prefill**
+
+===== [REASONING] line 2577 =====
+**Testing joint QKV coupling**
+**Designing native-window prefill**
+**Formalizing native-window cache**
+**Building native-window prefill**
+
+===== [REASONING] line 2578 =====
+**Testing joint QKV coupling**
+**Designing native-window prefill**
+**Formalizing native-window cache**
+**Building native-window prefill**
+
+===== [REASONING] line 2579 =====
+**Testing joint QKV coupling**
+**Designing native-window prefill**
+**Formalizing native-window cache**
+**Building native-window prefill**
+
+===== [REASONING] line 2580 =====
+**Testing joint QKV coupling**
+**Designing native-window prefill**
+**Formalizing native-window cache**
+**Building native-window prefill**
+
+===== [REASONING] line 2581 =====
+**Testing joint QKV coupling**
+**Designing native-window prefill**
+**Formalizing native-window cache**
+**Building native-window prefill**
+
+===== [REASONING] line 2582 =====
+**Testing joint QKV coupling**
+**Designing native-window prefill**
+**Formalizing native-window cache**
+**Building native-window prefill**
+**Searching prior chunk failures**
+
+===== [REASONING] line 2583 =====
+**Testing joint QKV coupling**
+**Designing native-window prefill**
+**Formalizing native-window cache**
+**Building native-window prefill**
+**Searching prior chunk failures**
+
+===== [REASONING] line 2584 =====
+**Testing joint QKV coupling**
+**Designing native-window prefill**
+**Formalizing native-window cache**
+**Building native-window prefill**
+**Searching prior chunk failures**
+
+===== [REASONING] line 2585 =====
+**Testing joint QKV coupling**
+**Designing native-window prefill**
+**Formalizing native-window cache**
+**Building native-window prefill**
+**Searching prior chunk failures**
+
+===== [REASONING] line 2609 =====
+**Preparing cache summary script**
+**Loading prepared records**
+
+===== [REASONING] line 2610 =====
+**Preparing cache summary script**
+**Loading prepared records**
+
+===== [REASONING] line 2611 =====
+**Preparing cache summary script**
+**Loading prepared records**
+
+===== [REASONING] line 2612 =====
+**Preparing cache summary script**
+**Loading prepared records**
+
+===== [REASONING] line 2613 =====
+**Preparing cache summary script**
+**Loading prepared records**
+
+===== [REASONING] line 2614 =====
+**Preparing cache summary script**
+**Loading prepared records**
+
+===== [REASONING] line 2615 =====
+**Preparing cache summary script**
+**Loading prepared records**
+**Preparing native-chunk candidate**
+
+===== [REASONING] line 2616 =====
+**Preparing cache summary script**
+**Loading prepared records**
+**Preparing native-chunk candidate**
+
+===== [REASONING] line 2617 =====
+**Preparing cache summary script**
+**Loading prepared records**
+**Preparing native-chunk candidate**
+
+===== [REASONING] line 2618 =====
+**Preparing cache summary script**
+**Loading prepared records**
+**Preparing native-chunk candidate**
+
+===== [REASONING] line 2619 =====
+**Preparing cache summary script**
+**Loading prepared records**
+**Preparing native-chunk candidate**
+
+===== [REASONING] line 2620 =====
+**Preparing cache summary script**
+**Loading prepared records**
+**Preparing native-chunk candidate**
+
+===== [REASONING] line 2621 =====
+**Preparing cache summary script**
+**Loading prepared records**
+**Preparing native-chunk candidate**
+**Waiting on cache-history check**
+
+===== [REASONING] line 2622 =====
+**Preparing cache summary script**
+**Loading prepared records**
+**Preparing native-chunk candidate**
+**Waiting on cache-history check**
+
+===== [REASONING] line 2623 =====
+**Preparing cache summary script**
+**Loading prepared records**
+**Preparing native-chunk candidate**
+**Waiting on cache-history check**
+
+===== [REASONING] line 2624 =====
+**Preparing cache summary script**
+**Loading prepared records**
+**Preparing native-chunk candidate**
+**Waiting on cache-history check**
+
+===== [REASONING] line 2632 =====
+**Implementing Native chunk baseline**
+**Preparing Native chunk driver**
+
+===== [REASONING] line 2633 =====
+**Implementing Native chunk baseline**
+**Preparing Native chunk driver**
+
+===== [REASONING] line 2634 =====
+**Implementing Native chunk baseline**
+**Preparing Native chunk driver**
+
+===== [REASONING] line 2635 =====
+**Implementing Native chunk baseline**
+**Preparing Native chunk driver**
+
+===== [REASONING] line 2636 =====
+**Implementing Native chunk baseline**
+**Preparing Native chunk driver**
+
+===== [REASONING] line 2637 =====
+**Implementing Native chunk baseline**
+**Preparing Native chunk driver**
+
+===== [REASONING] line 2638 =====
+**Implementing Native chunk baseline**
+**Preparing Native chunk driver**
+**Designing Native cache bank**
+
+===== [REASONING] line 2639 =====
+**Implementing Native chunk baseline**
+**Preparing Native chunk driver**
+**Designing Native cache bank**
+
+===== [REASONING] line 2640 =====
+**Implementing Native chunk baseline**
+**Preparing Native chunk driver**
+**Designing Native cache bank**
+
+===== [REASONING] line 2641 =====
+**Implementing Native chunk baseline**
+**Preparing Native chunk driver**
+**Designing Native cache bank**
+
+===== [REASONING] line 2642 =====
+**Implementing Native chunk baseline**
+**Preparing Native chunk driver**
+**Designing Native cache bank**
+
+===== [REASONING] line 2643 =====
+**Implementing Native chunk baseline**
+**Preparing Native chunk driver**
+**Designing Native cache bank**
+
+===== [REASONING] line 2644 =====
+**Implementing Native chunk baseline**
+**Preparing Native chunk driver**
+**Designing Native cache bank**
+**Coding Native window helper**
+
+===== [REASONING] line 2645 =====
+**Implementing Native chunk baseline**
+**Preparing Native chunk driver**
+**Designing Native cache bank**
+**Coding Native window helper**
+
+===== [REASONING] line 2646 =====
+**Implementing Native chunk baseline**
+**Preparing Native chunk driver**
+**Designing Native cache bank**
+**Coding Native window helper**
+
+===== [REASONING] line 2647 =====
+**Implementing Native chunk baseline**
+**Preparing Native chunk driver**
+**Designing Native cache bank**
+**Coding Native window helper**
+
+===== [REASONING] line 2649 =====
+**Implementing Native chunk baseline**
+**Preparing Native chunk driver**
+**Designing Native cache bank**
+**Coding Native window helper**
+**Building Native window driver**
+
+===== [REASONING] line 2650 =====
+**Implementing Native chunk baseline**
+**Preparing Native chunk driver**
+**Designing Native cache bank**
+**Coding Native window helper**
+**Building Native window driver**
+
+===== [REASONING] line 2672 =====
+**Checking the native chunk helper**
+**Preparing native-cache tests**
+
+===== [REASONING] line 2673 =====
+**Checking the native chunk helper**
+**Preparing native-cache tests**
+
+===== [REASONING] line 2674 =====
+**Checking the native chunk helper**
+**Preparing native-cache tests**
+
+===== [REASONING] line 2675 =====
+**Checking the native chunk helper**
+**Preparing native-cache tests**
+
+===== [REASONING] line 2676 =====
+**Checking the native chunk helper**
+**Preparing native-cache tests**
+
+===== [REASONING] line 2677 =====
+**Checking the native chunk helper**
+**Preparing native-cache tests**
+
+===== [REASONING] line 2687 =====
+**Adding dependency-removal tests**
+**Testing Native bank isolation**
+
+===== [REASONING] line 2688 =====
+**Adding dependency-removal tests**
+**Testing Native bank isolation**
+
+===== [REASONING] line 2689 =====
+**Adding dependency-removal tests**
+**Testing Native bank isolation**
+
+===== [REASONING] line 2690 =====
+**Adding dependency-removal tests**
+**Testing Native bank isolation**
+
+===== [REASONING] line 2698 =====
+**Checking native rotary outputs**
+**Preparing GPU bank checks**
+
+===== [REASONING] line 2699 =====
+**Checking native rotary outputs**
+**Preparing GPU bank checks**
+
+===== [REASONING] line 2700 =====
+**Checking native rotary outputs**
+**Preparing GPU bank checks**
+
+===== [REASONING] line 2701 =====
+**Checking native rotary outputs**
+**Preparing GPU bank checks**
+
+===== [REASONING] line 2702 =====
+**Checking native rotary outputs**
+**Preparing GPU bank checks**
+
+===== [REASONING] line 2703 =====
+**Checking native rotary outputs**
+**Preparing GPU bank checks**
+
+===== [REASONING] line 2704 =====
+**Checking native rotary outputs**
+**Preparing GPU bank checks**
+
+===== [REASONING] line 2705 =====
+**Checking native rotary outputs**
+**Preparing GPU bank checks**
+
+===== [REASONING] line 2714 =====
+**Checking cache memory ownership**
+**Checking runtime versions**
+
+===== [REASONING] line 2715 =====
+**Checking cache memory ownership**
+**Checking runtime versions**
+
+===== [REASONING] line 2716 =====
+**Checking cache memory ownership**
+**Checking runtime versions**
+
+===== [REASONING] line 2717 =====
+**Checking cache memory ownership**
+**Checking runtime versions**
+
+===== [REASONING] line 2718 =====
+**Checking cache memory ownership**
+**Checking runtime versions**
+
+===== [REASONING] line 2719 =====
+**Checking cache memory ownership**
+**Checking runtime versions**
+
+===== [REASONING] line 2720 =====
+**Checking cache memory ownership**
+**Checking runtime versions**
+**Configuring sequential model tests**
+
+===== [REASONING] line 2721 =====
+**Checking cache memory ownership**
+**Checking runtime versions**
+**Configuring sequential model tests**
+
+===== [REASONING] line 2729 =====
+**Tracing rotary cache state**
+**Preparing native-window test**
+
+===== [REASONING] line 2730 =====
+**Tracing rotary cache state**
+**Preparing native-window test**
+
+===== [REASONING] line 2731 =====
+**Tracing rotary cache state**
+**Preparing native-window test**
+
+===== [REASONING] line 2732 =====
+**Tracing rotary cache state**
+**Preparing native-window test**
+
+===== [REASONING] line 2742 =====
+**Checking query-key selection**
+**Checking header context**
+
+===== [REASONING] line 2743 =====
+**Checking query-key selection**
+**Checking header context**
+
+===== [REASONING] line 2744 =====
+**Checking query-key selection**
+**Checking header context**
+
+===== [REASONING] line 2745 =====
+**Checking query-key selection**
+**Checking header context**
+
+===== [REASONING] line 2752 =====
+**Running prepared full-matrix baseline**
+
+===== [REASONING] line 2753 =====
+**Running prepared full-matrix baseline**
+
+===== [REASONING] line 2754 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+
+===== [REASONING] line 2755 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+
+===== [REASONING] line 2756 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+
+===== [REASONING] line 2757 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+
+===== [REASONING] line 2758 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+
+===== [REASONING] line 2759 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+
+===== [REASONING] line 2760 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+
+===== [REASONING] line 2761 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+
+===== [REASONING] line 2762 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+
+===== [REASONING] line 2763 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+
+===== [REASONING] line 2764 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+
+===== [REASONING] line 2765 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+
+===== [REASONING] line 2766 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+**Preparing full-panel run**
+
+===== [REASONING] line 2767 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+**Preparing full-panel run**
+
+===== [REASONING] line 2768 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+**Preparing full-panel run**
+
+===== [REASONING] line 2769 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+**Preparing full-panel run**
+
+===== [REASONING] line 2770 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+**Preparing full-panel run**
+**Validating cache compatibility**
+
+===== [REASONING] line 2771 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+**Preparing full-panel run**
+**Validating cache compatibility**
+
+===== [REASONING] line 2772 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+**Preparing full-panel run**
+**Validating cache compatibility**
+
+===== [REASONING] line 2773 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+**Preparing full-panel run**
+**Validating cache compatibility**
+
+===== [REASONING] line 2774 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+**Preparing full-panel run**
+**Validating cache compatibility**
+
+===== [REASONING] line 2775 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+**Preparing full-panel run**
+**Validating cache compatibility**
+
+===== [REASONING] line 2776 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+**Preparing full-panel run**
+**Validating cache compatibility**
+**Validating cached records**
+
+===== [REASONING] line 2777 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+**Preparing full-panel run**
+**Validating cache compatibility**
+**Validating cached records**
+
+===== [REASONING] line 2778 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+**Preparing full-panel run**
+**Validating cache compatibility**
+**Validating cached records**
+
+===== [REASONING] line 2779 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+**Preparing full-panel run**
+**Validating cache compatibility**
+**Validating cached records**
+
+===== [REASONING] line 2780 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+**Preparing full-panel run**
+**Validating cache compatibility**
+**Validating cached records**
+
+===== [REASONING] line 2781 =====
+**Running prepared full-matrix baseline**
+**Running full-matrix baseline**
+**Validating cached pilot outputs**
+**Preparing full-panel run**
+**Validating cache compatibility**
+**Validating cached records**
+
+===== [REASONING] line 2791 =====
+**Preparing holdout row IDs**
+**Comparing baseline inputs**
+
+===== [REASONING] line 2792 =====
+**Preparing holdout row IDs**
+**Comparing baseline inputs**
+
+===== [REASONING] line 2793 =====
+**Preparing holdout row IDs**
+**Comparing baseline inputs**
+
+===== [REASONING] line 2794 =====
+**Preparing holdout row IDs**
+**Comparing baseline inputs**
+
+===== [REASONING] line 2795 =====
+**Preparing holdout row IDs**
+**Comparing baseline inputs**
+
+===== [REASONING] line 2796 =====
+**Preparing holdout row IDs**
+**Comparing baseline inputs**
+
+===== [REASONING] line 2797 =====
+**Preparing holdout row IDs**
+**Comparing baseline inputs**
+**Running full M-reader evaluation**
+
+===== [REASONING] line 2798 =====
+**Preparing holdout row IDs**
+**Comparing baseline inputs**
+**Running full M-reader evaluation**
+
+===== [REASONING] line 2799 =====
+**Preparing holdout row IDs**
+**Comparing baseline inputs**
+**Running full M-reader evaluation**
+
+===== [REASONING] line 2800 =====
+**Preparing holdout row IDs**
+**Comparing baseline inputs**
+**Running full M-reader evaluation**
+
+===== [REASONING] line 2801 =====
+**Preparing holdout row IDs**
+**Comparing baseline inputs**
+**Running full M-reader evaluation**
+
+===== [REASONING] line 2802 =====
+**Preparing holdout row IDs**
+**Comparing baseline inputs**
+**Running full M-reader evaluation**
+
+===== [REASONING] line 2829 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+
+===== [REASONING] line 2830 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+
+===== [REASONING] line 2831 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+
+===== [REASONING] line 2832 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+
+===== [REASONING] line 2833 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+
+===== [REASONING] line 2834 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+
+===== [REASONING] line 2835 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+
+===== [REASONING] line 2836 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+
+===== [REASONING] line 2837 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+
+===== [REASONING] line 2838 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+
+===== [REASONING] line 2839 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+
+===== [REASONING] line 2840 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+
+===== [REASONING] line 2841 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+
+===== [REASONING] line 2842 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+
+===== [REASONING] line 2843 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+
+===== [REASONING] line 2844 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+
+===== [REASONING] line 2845 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+
+===== [REASONING] line 2846 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+
+===== [REASONING] line 2847 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+
+===== [REASONING] line 2848 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+
+===== [REASONING] line 2849 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+
+===== [REASONING] line 2850 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+
+===== [REASONING] line 2851 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+**Testing local-attention support**
+
+===== [REASONING] line 2852 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+**Testing local-attention support**
+
+===== [REASONING] line 2853 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+**Testing local-attention support**
+
+===== [REASONING] line 2854 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+**Testing local-attention support**
+
+===== [REASONING] line 2855 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+**Testing local-attention support**
+**Preparing prefix handoff**
+
+===== [REASONING] line 2856 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+**Testing local-attention support**
+**Preparing prefix handoff**
+
+===== [REASONING] line 2857 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+**Testing local-attention support**
+**Preparing prefix handoff**
+
+===== [REASONING] line 2858 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+**Testing local-attention support**
+**Preparing prefix handoff**
+
+===== [REASONING] line 2859 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+**Testing local-attention support**
+**Preparing prefix handoff**
+
+===== [REASONING] line 2860 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+**Testing local-attention support**
+**Preparing prefix handoff**
+
+===== [REASONING] line 2861 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+**Testing local-attention support**
+**Preparing prefix handoff**
+**Formalizing prefix handoff**
+
+===== [REASONING] line 2862 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+**Testing local-attention support**
+**Preparing prefix handoff**
+**Formalizing prefix handoff**
+
+===== [REASONING] line 2863 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+**Testing local-attention support**
+**Preparing prefix handoff**
+**Formalizing prefix handoff**
+
+===== [REASONING] line 2864 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+**Testing local-attention support**
+**Preparing prefix handoff**
+**Formalizing prefix handoff**
+
+===== [REASONING] line 2865 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+**Testing local-attention support**
+**Preparing prefix handoff**
+**Formalizing prefix handoff**
+**Inspecting Flash kernel**
+
+===== [REASONING] line 2866 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+**Testing local-attention support**
+**Preparing prefix handoff**
+**Formalizing prefix handoff**
+**Inspecting Flash kernel**
+
+===== [REASONING] line 2867 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+**Testing local-attention support**
+**Preparing prefix handoff**
+**Formalizing prefix handoff**
+**Inspecting Flash kernel**
+
+===== [REASONING] line 2868 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+**Testing local-attention support**
+**Preparing prefix handoff**
+**Formalizing prefix handoff**
+**Inspecting Flash kernel**
+
+===== [REASONING] line 2869 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+**Testing local-attention support**
+**Preparing prefix handoff**
+**Formalizing prefix handoff**
+**Inspecting Flash kernel**
+
+===== [REASONING] line 2870 =====
+**Comparing native-window results**
+**Evaluating candidate performance**
+**Testing Qwen 7B candidate**
+**Preparing sliding attention**
+**Inspecting PyTorch window support**
+**Testing local-attention support**
+**Preparing prefix handoff**
+**Formalizing prefix handoff**
+**Inspecting Flash kernel**
+
+===== [REASONING] line 2880 =====
+**Checking Qwen mask interface**
+**Testing native Flash2 layout**
+
+===== [REASONING] line 2881 =====
+**Checking Qwen mask interface**
+**Testing native Flash2 layout**
+
+===== [REASONING] line 2891 =====
+**Comparing NativeWindowM results**
+**Compiling prefix conversion**
+
+===== [REASONING] line 2892 =====
+**Comparing NativeWindowM results**
+**Compiling prefix conversion**
+
+===== [REASONING] line 2893 =====
+**Comparing NativeWindowM results**
+**Compiling prefix conversion**
+
+===== [REASONING] line 2894 =====
+**Comparing NativeWindowM results**
+**Compiling prefix conversion**
+
+===== [REASONING] line 2895 =====
+**Comparing NativeWindowM results**
+**Compiling prefix conversion**
+**Validating Native prefix cache**
+
+===== [REASONING] line 2896 =====
+**Comparing NativeWindowM results**
+**Compiling prefix conversion**
+**Validating Native prefix cache**
+
+===== [REASONING] line 2897 =====
+**Comparing NativeWindowM results**
+**Compiling prefix conversion**
+**Validating Native prefix cache**
+
+===== [REASONING] line 2898 =====
+**Comparing NativeWindowM results**
+**Compiling prefix conversion**
+**Validating Native prefix cache**
+
+===== [REASONING] line 2908 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+
+===== [REASONING] line 2909 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+
+===== [REASONING] line 2910 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+
+===== [REASONING] line 2911 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+
+===== [REASONING] line 2912 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+
+===== [REASONING] line 2913 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+
+===== [REASONING] line 2914 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+
+===== [REASONING] line 2915 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+
+===== [REASONING] line 2916 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+
+===== [REASONING] line 2917 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+
+===== [REASONING] line 2918 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+
+===== [REASONING] line 2919 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+
+===== [REASONING] line 2920 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+
+===== [REASONING] line 2921 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+
+===== [REASONING] line 2922 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+
+===== [REASONING] line 2923 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+
+===== [REASONING] line 2924 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+
+===== [REASONING] line 2925 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+
+===== [REASONING] line 2926 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+
+===== [REASONING] line 2927 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+
+===== [REASONING] line 2928 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+
+===== [REASONING] line 2929 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+
+===== [REASONING] line 2930 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+
+===== [REASONING] line 2931 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+
+===== [REASONING] line 2932 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+
+===== [REASONING] line 2933 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+
+===== [REASONING] line 2934 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+
+===== [REASONING] line 2935 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+
+===== [REASONING] line 2936 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+
+===== [REASONING] line 2937 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+
+===== [REASONING] line 2938 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+
+===== [REASONING] line 2939 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+
+===== [REASONING] line 2940 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+
+===== [REASONING] line 2941 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+
+===== [REASONING] line 2942 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+
+===== [REASONING] line 2943 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+
+===== [REASONING] line 2944 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+
+===== [REASONING] line 2945 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+
+===== [REASONING] line 2946 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+
+===== [REASONING] line 2947 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+
+===== [REASONING] line 2948 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+**Implementing staged key rephasing**
+
+===== [REASONING] line 2949 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+**Implementing staged key rephasing**
+
+===== [REASONING] line 2950 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+**Implementing staged key rephasing**
+
+===== [REASONING] line 2951 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+**Implementing staged key rephasing**
+
+===== [REASONING] line 2952 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+**Implementing staged key rephasing**
+
+===== [REASONING] line 2953 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+**Implementing staged key rephasing**
+
+===== [REASONING] line 2954 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+**Implementing staged key rephasing**
+**Testing staged RoPE**
+
+===== [REASONING] line 2955 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+**Implementing staged key rephasing**
+**Testing staged RoPE**
+
+===== [REASONING] line 2956 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+**Implementing staged key rephasing**
+**Testing staged RoPE**
+
+===== [REASONING] line 2957 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+**Implementing staged key rephasing**
+**Testing staged RoPE**
+
+===== [REASONING] line 2958 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+**Implementing staged key rephasing**
+**Testing staged RoPE**
+
+===== [REASONING] line 2959 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+**Implementing staged key rephasing**
+**Testing staged RoPE**
+
+===== [REASONING] line 2960 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+**Implementing staged key rephasing**
+**Testing staged RoPE**
+**Checking raw-key rephasing**
+
+===== [REASONING] line 2961 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+**Implementing staged key rephasing**
+**Testing staged RoPE**
+**Checking raw-key rephasing**
+
+===== [REASONING] line 2962 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+**Implementing staged key rephasing**
+**Testing staged RoPE**
+**Checking raw-key rephasing**
+
+===== [REASONING] line 2963 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+**Implementing staged key rephasing**
+**Testing staged RoPE**
+**Checking raw-key rephasing**
+
+===== [REASONING] line 2964 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+**Implementing staged key rephasing**
+**Testing staged RoPE**
+**Checking raw-key rephasing**
+
+===== [REASONING] line 2965 =====
+**Diagnosing Native/M mismatch**
+**Analyzing per-source phases**
+**Evaluating PCW query placement**
+**Evaluating hybrid RoPE coordinates**
+**Testing NativePrefix handoff**
+**Preparing NativePrefix tests**
+**Preparing backend controls**
+**Implementing NativePrefix handoff**
+**Selecting progressive RoPE schedule**
+**Implementing staged key rephasing**
+**Testing staged RoPE**
+**Checking raw-key rephasing**
+
+===== [REASONING] line 2969 =====
+**Checking cap growth model**
+**Building causal attention module**
+
+===== [REASONING] line 2970 =====
+**Checking cap growth model**
+**Building causal attention module**
+
+===== [REASONING] line 2971 =====
+**Checking cap growth model**
+**Building causal attention module**
+
+===== [REASONING] line 2972 =====
+**Checking cap growth model**
+**Building causal attention module**
+
+===== [REASONING] line 2973 =====
+**Checking cap growth model**
+**Building causal attention module**
+
+===== [REASONING] line 2974 =====
+**Checking cap growth model**
+**Building causal attention module**
+
+===== [REASONING] line 2975 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+
+===== [REASONING] line 2976 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+
+===== [REASONING] line 2977 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+
+===== [REASONING] line 2978 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+
+===== [REASONING] line 2979 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+
+===== [REASONING] line 2980 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+
+===== [REASONING] line 2981 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+
+===== [REASONING] line 2982 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+
+===== [REASONING] line 2983 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+
+===== [REASONING] line 2984 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+
+===== [REASONING] line 2985 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+
+===== [REASONING] line 2986 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+
+===== [REASONING] line 2987 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+
+===== [REASONING] line 2988 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+
+===== [REASONING] line 2989 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+**Inspecting mask interfaces**
+
+===== [REASONING] line 2990 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+**Inspecting mask interfaces**
+
+===== [REASONING] line 2991 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+**Inspecting mask interfaces**
+
+===== [REASONING] line 2992 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+**Inspecting mask interfaces**
+
+===== [REASONING] line 2993 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+**Inspecting mask interfaces**
+**Registering causal mask callback**
+
+===== [REASONING] line 2994 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+**Inspecting mask interfaces**
+**Registering causal mask callback**
+
+===== [REASONING] line 2995 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+**Inspecting mask interfaces**
+**Registering causal mask callback**
+**Implementing Flash callback**
+
+===== [REASONING] line 2996 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+**Inspecting mask interfaces**
+**Registering causal mask callback**
+**Implementing Flash callback**
+
+===== [REASONING] line 2997 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+**Inspecting mask interfaces**
+**Registering causal mask callback**
+**Implementing Flash callback**
+
+===== [REASONING] line 2998 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+**Inspecting mask interfaces**
+**Registering causal mask callback**
+**Implementing Flash callback**
+
+===== [REASONING] line 2999 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+**Inspecting mask interfaces**
+**Registering causal mask callback**
+**Implementing Flash callback**
+
+===== [REASONING] line 3000 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+**Inspecting mask interfaces**
+**Registering causal mask callback**
+**Implementing Flash callback**
+
+===== [REASONING] line 3001 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+**Inspecting mask interfaces**
+**Registering causal mask callback**
+**Implementing Flash callback**
+**Building raw-key capture**
+
+===== [REASONING] line 3002 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+**Inspecting mask interfaces**
+**Registering causal mask callback**
+**Implementing Flash callback**
+**Building raw-key capture**
+
+===== [REASONING] line 3003 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+**Inspecting mask interfaces**
+**Registering causal mask callback**
+**Implementing Flash callback**
+**Building raw-key capture**
+
+===== [REASONING] line 3004 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+**Inspecting mask interfaces**
+**Registering causal mask callback**
+**Implementing Flash callback**
+**Building raw-key capture**
+
+===== [REASONING] line 3005 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+**Inspecting mask interfaces**
+**Registering causal mask callback**
+**Implementing Flash callback**
+**Building raw-key capture**
+
+===== [REASONING] line 3006 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+**Inspecting mask interfaces**
+**Registering causal mask callback**
+**Implementing Flash callback**
+**Building raw-key capture**
+
+===== [REASONING] line 3007 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+**Inspecting mask interfaces**
+**Registering causal mask callback**
+**Implementing Flash callback**
+**Building raw-key capture**
+**Delegating causal Flash helper**
+
+===== [REASONING] line 3008 =====
+**Checking cap growth model**
+**Building causal attention module**
+**Preparing stateful decoding**
+**Preparing progressive-scale tests**
+**Preparing Flash kernel probe**
+**Inspecting mask interfaces**
+**Registering causal mask callback**
+**Implementing Flash callback**
+**Building raw-key capture**
+**Delegating causal Flash helper**
+
+===== [REASONING] line 3023 =====
+**Preparing same-table key capture**
+**Checking raw key storage**
+
+===== [REASONING] line 3024 =====
+**Preparing same-table key capture**
+**Checking raw key storage**
+
+===== [REASONING] line 3025 =====
+**Preparing same-table key capture**
+**Checking raw key storage**
+
+===== [REASONING] line 3026 =====
+**Preparing same-table key capture**
+**Checking raw key storage**
+
+===== [REASONING] line 3027 =====
+**Preparing same-table key capture**
+**Checking raw key storage**
+
+===== [REASONING] line 3028 =====
+**Preparing same-table key capture**
+**Checking raw key storage**
+
+===== [REASONING] line 3029 =====
+**Preparing same-table key capture**
+**Checking raw key storage**
+**Designing staged raw capture**
+
+===== [REASONING] line 3030 =====
+**Preparing same-table key capture**
+**Checking raw key storage**
+**Designing staged raw capture**
+
+===== [REASONING] line 3031 =====
+**Preparing same-table key capture**
+**Checking raw key storage**
+**Designing staged raw capture**
+
+===== [REASONING] line 3032 =====
+**Preparing same-table key capture**
+**Checking raw key storage**
+**Designing staged raw capture**
+
+===== [REASONING] line 3033 =====
+**Preparing same-table key capture**
+**Checking raw key storage**
+**Designing staged raw capture**
+**Refining stage boundary handling**
+
+===== [REASONING] line 3034 =====
+**Preparing same-table key capture**
+**Checking raw key storage**
+**Designing staged raw capture**
+**Refining stage boundary handling**
+
+===== [REASONING] line 3040 =====
+**Clearing old CPU buffers**
+**Implementing progressive_mr.py**
+
+===== [REASONING] line 3041 =====
+**Clearing old CPU buffers**
+**Implementing progressive_mr.py**
+
+===== [REASONING] line 3042 =====
+**Clearing old CPU buffers**
+**Implementing progressive_mr.py**
+
+===== [REASONING] line 3043 =====
+**Clearing old CPU buffers**
+**Implementing progressive_mr.py**
+
+===== [REASONING] line 3044 =====
+**Clearing old CPU buffers**
+**Implementing progressive_mr.py**
+
+===== [REASONING] line 3045 =====
+**Clearing old CPU buffers**
+**Implementing progressive_mr.py**
+
+===== [REASONING] line 3360 =====
+**Verifying adapter normalization bounds**
+
+===== [REASONING] line 3361 =====
+**Verifying adapter normalization bounds**
+
+===== [REASONING] line 3381 =====
+**Reusing original learning-rate function**
+
+===== [REASONING] line 3382 =====
+**Reusing original learning-rate function**
+
+===== [REASONING] line 3412 =====
+**Collecting one full seed**
+**Adding nonzero-state checks**
+
+===== [REASONING] line 3413 =====
+**Collecting one full seed**
+**Adding nonzero-state checks**
+
+===== [REASONING] line 3494 =====
+**Checking primary results**
+**Refining order-observability theory**
+
+===== [REASONING] line 3495 =====
+**Checking primary results**
+**Refining order-observability theory**
+
+===== [REASONING] line 3504 =====
+**Preparing the first experiment**
+**Checking matched-model feasibility**
+
+===== [REASONING] line 3505 =====
+**Preparing the first experiment**
+**Checking matched-model feasibility**
+
+===== [REASONING] line 3506 =====
+**Preparing the first experiment**
+**Checking matched-model feasibility**
+
+===== [REASONING] line 3507 =====
+**Preparing the first experiment**
+**Checking matched-model feasibility**
+
+===== [REASONING] line 3508 =====
+**Preparing the first experiment**
+**Checking matched-model feasibility**
+**Deriving the decay-clock criterion**
+
+===== [REASONING] line 3509 =====
+**Preparing the first experiment**
+**Checking matched-model feasibility**
+**Deriving the decay-clock criterion**
+
+===== [REASONING] line 3510 =====
+**Preparing the first experiment**
+**Checking matched-model feasibility**
+**Deriving the decay-clock criterion**
+
+===== [REASONING] line 3511 =====
+**Preparing the first experiment**
+**Checking matched-model feasibility**
+**Deriving the decay-clock criterion**
+
+===== [REASONING] line 3512 =====
+**Preparing the first experiment**
+**Checking matched-model feasibility**
+**Deriving the decay-clock criterion**
+
+===== [REASONING] line 3513 =====
+**Preparing the first experiment**
+**Checking matched-model feasibility**
+**Deriving the decay-clock criterion**
+
+===== [REASONING] line 3558 =====
+**Selecting benchmark workloads**
+**Defining record-query tasks**
+
+===== [REASONING] line 3559 =====
+**Selecting benchmark workloads**
+**Defining record-query tasks**
+
+===== [REASONING] line 3560 =====
+**Selecting benchmark workloads**
+**Defining record-query tasks**
+
+===== [REASONING] line 3561 =====
+**Selecting benchmark workloads**
+**Defining record-query tasks**
+
+===== [REASONING] line 3569 =====
+**Freezing three hypotheses**
+**Preparing short-query dataset**
+
+===== [REASONING] line 3570 =====
+**Freezing three hypotheses**
+**Preparing short-query dataset**
+
+===== [REASONING] line 3571 =====
+**Freezing three hypotheses**
+**Preparing short-query dataset**
+
+===== [REASONING] line 3572 =====
+**Freezing three hypotheses**
+**Preparing short-query dataset**
+
+===== [REASONING] line 3636 =====
+**Reviewing training code**
+**Monitoring model download**
+
+===== [REASONING] line 3637 =====
+**Reviewing training code**
+**Monitoring model download**
+
+===== [REASONING] line 3761 =====
+**Preparing 32K smoke test**
+**Building validation loader**
+
+===== [REASONING] line 3762 =====
+**Preparing 32K smoke test**
+**Building validation loader**
+
+===== [REASONING] line 3763 =====
+**Preparing 32K smoke test**
+**Building validation loader**
+
+===== [REASONING] line 3764 =====
+**Preparing 32K smoke test**
+**Building validation loader**
+
+===== [REASONING] line 3780 =====
+**Testing dilution effects**
+**Refining the output protocol**
+
+===== [REASONING] line 3781 =====
+**Testing dilution effects**
+**Refining the output protocol**
+
+===== [REASONING] line 3822 =====
+**Hedging remaining ranges**
+**Building color parser**
+
+===== [REASONING] line 3823 =====
+**Hedging remaining ranges**
+**Building color parser**
+
+===== [REASONING] line 3824 =====
+**Hedging remaining ranges**
+**Building color parser**
+
+===== [REASONING] line 3825 =====
+**Hedging remaining ranges**
+**Building color parser**
+
+===== [REASONING] line 3832 =====
+**Preparing checkpoint notes**
+**Comparing head-specific indexers**
+
+===== [REASONING] line 3833 =====
+**Preparing checkpoint notes**
+**Comparing head-specific indexers**
+
+===== [REASONING] line 3834 =====
+**Preparing checkpoint notes**
+**Comparing head-specific indexers**
+
+===== [REASONING] line 3835 =====
+**Preparing checkpoint notes**
+**Comparing head-specific indexers**
+
+===== [REASONING] line 3836 =====
+**Preparing checkpoint notes**
+**Comparing head-specific indexers**
+**Deriving repeated-tail decay**
+
+===== [REASONING] line 3837 =====
+**Preparing checkpoint notes**
+**Comparing head-specific indexers**
+**Deriving repeated-tail decay**
+
+===== [REASONING] line 3838 =====
+**Preparing checkpoint notes**
+**Comparing head-specific indexers**
+**Deriving repeated-tail decay**
+
+===== [REASONING] line 3839 =====
+**Preparing checkpoint notes**
+**Comparing head-specific indexers**
+**Deriving repeated-tail decay**
+
+===== [REASONING] line 3864 =====
+**Preparing annotation parsing.**
+**Auditing history-order failures.**
+
+===== [REASONING] line 3865 =====
+**Preparing annotation parsing.**
+**Auditing history-order failures.**
+
+===== [REASONING] line 3866 =====
+**Preparing annotation parsing.**
+**Auditing history-order failures.**
+
+===== [REASONING] line 3867 =====
+**Preparing annotation parsing.**
+**Auditing history-order failures.**
+
+===== [REASONING] line 3868 =====
+**Preparing annotation parsing.**
+**Auditing history-order failures.**
+**Preparing raw-state diagnostics.**
+
+===== [REASONING] line 3869 =====
+**Preparing annotation parsing.**
+**Auditing history-order failures.**
+**Preparing raw-state diagnostics.**
+
+===== [REASONING] line 3870 =====
+**Preparing annotation parsing.**
+**Auditing history-order failures.**
+**Preparing raw-state diagnostics.**
+
+===== [REASONING] line 3871 =====
+**Preparing annotation parsing.**
+**Auditing history-order failures.**
+**Preparing raw-state diagnostics.**
+
+===== [REASONING] line 3891 =====
+**Running Qwen smoke test**
+**Checking MiniCPM storage**
+
+===== [REASONING] line 3892 =====
+**Running Qwen smoke test**
+**Checking MiniCPM storage**
+
+===== [REASONING] line 3893 =====
+**Running Qwen smoke test**
+**Checking MiniCPM storage**
+
+===== [REASONING] line 3894 =====
+**Running Qwen smoke test**
+**Checking MiniCPM storage**
+
+===== [REASONING] line 3895 =====
+**Running Qwen smoke test**
+**Checking MiniCPM storage**
+**Testing phase-group activations**
+
+===== [REASONING] line 3896 =====
+**Running Qwen smoke test**
+**Checking MiniCPM storage**
+**Testing phase-group activations**
+
+===== [REASONING] line 3897 =====
+**Running Qwen smoke test**
+**Checking MiniCPM storage**
+**Testing phase-group activations**
+
+===== [REASONING] line 3898 =====
+**Running Qwen smoke test**
+**Checking MiniCPM storage**
+**Testing phase-group activations**
+
+===== [REASONING] line 3899 =====
+**Running Qwen smoke test**
+**Checking MiniCPM storage**
+**Testing phase-group activations**
+
+===== [REASONING] line 3900 =====
+**Running Qwen smoke test**
+**Checking MiniCPM storage**
+**Testing phase-group activations**
+
+===== [REASONING] line 3999 =====
+**Waiting on document render**
+**Preparing attention audit**
+
+===== [REASONING] line 4000 =====
+**Waiting on document render**
+**Preparing attention audit**
+
+===== [REASONING] line 4001 =====
+**Waiting on document render**
+**Preparing attention audit**
+
+===== [REASONING] line 4002 =====
+**Waiting on document render**
+**Preparing attention audit**
+
+===== [REASONING] line 4003 =====
+**Waiting on document render**
+**Preparing attention audit**
+
+===== [REASONING] line 4004 =====
+**Waiting on document render**
+**Preparing attention audit**
+
+===== [REASONING] line 4077 =====
+**Implementing farthest-first selection**
+
+===== [REASONING] line 4078 =====
+**Implementing farthest-first selection**
+
+===== [REASONING] line 4079 =====
+**Implementing farthest-first selection**
+**Selecting text rotary modules**
+
+===== [REASONING] line 4080 =====
+**Implementing farthest-first selection**
+**Selecting text rotary modules**
+
+===== [REASONING] line 4081 =====
+**Implementing farthest-first selection**
+**Selecting text rotary modules**
+
+===== [REASONING] line 4082 =====
+**Implementing farthest-first selection**
+**Selecting text rotary modules**
+
+===== [REASONING] line 4083 =====
+**Implementing farthest-first selection**
+**Selecting text rotary modules**
+
+===== [REASONING] line 4084 =====
+**Implementing farthest-first selection**
+**Selecting text rotary modules**
+
+===== [REASONING] line 4085 =====
+**Implementing farthest-first selection**
+**Selecting text rotary modules**
+**Preparing phase-audit inputs**
+
+===== [REASONING] line 4086 =====
+**Implementing farthest-first selection**
+**Selecting text rotary modules**
+**Preparing phase-audit inputs**
+
+===== [REASONING] line 4101 =====
+**Checking score-capture setup**
+**Preparing per-group NPZ schema**
+
+===== [REASONING] line 4102 =====
+**Checking score-capture setup**
+**Preparing per-group NPZ schema**
+
+===== [REASONING] line 4103 =====
+**Checking score-capture setup**
+**Preparing per-group NPZ schema**
+
+===== [REASONING] line 4104 =====
+**Checking score-capture setup**
+**Preparing per-group NPZ schema**
+
+===== [REASONING] line 4105 =====
+**Checking score-capture setup**
+**Preparing per-group NPZ schema**
+
+===== [REASONING] line 4106 =====
+**Checking score-capture setup**
+**Preparing per-group NPZ schema**
+
+===== [REASONING] line 4132 =====
+**Preparing full raw captures**
+**Fetching compact native counts**
+
+===== [REASONING] line 4133 =====
+**Preparing full raw captures**
+**Fetching compact native counts**
+
+===== [REASONING] line 4134 =====
+**Preparing full raw captures**
+**Fetching compact native counts**
+
+===== [REASONING] line 4135 =====
+**Preparing full raw captures**
+**Fetching compact native counts**
+
+===== [REASONING] line 4136 =====
+**Preparing full raw captures**
+**Fetching compact native counts**
+
+===== [REASONING] line 4137 =====
+**Preparing full raw captures**
+**Fetching compact native counts**
+
+===== [REASONING] line 4138 =====
+**Preparing full raw captures**
+**Fetching compact native counts**
+**Extending adapter for Qwen2.5**
+
+===== [REASONING] line 4139 =====
+**Preparing full raw captures**
+**Fetching compact native counts**
+**Extending adapter for Qwen2.5**
+
+===== [REASONING] line 4140 =====
+**Preparing full raw captures**
+**Fetching compact native counts**
+**Extending adapter for Qwen2.5**
+
+===== [REASONING] line 4141 =====
+**Preparing full raw captures**
+**Fetching compact native counts**
+**Extending adapter for Qwen2.5**
+
+===== [REASONING] line 4151 =====
+**Checking PSR group assignments**
+**Preparing full-RoPE diagnostic**
+
+===== [REASONING] line 4152 =====
+**Checking PSR group assignments**
+**Preparing full-RoPE diagnostic**
+
+===== [REASONING] line 4174 =====
+**Evaluating NoPE rank margins**
+**Checking grouped-summary baselines**
+
+===== [REASONING] line 4175 =====
+**Evaluating NoPE rank margins**
+**Checking grouped-summary baselines**
+
+===== [REASONING] line 4176 =====
+**Evaluating NoPE rank margins**
+**Checking grouped-summary baselines**
+
+===== [REASONING] line 4177 =====
+**Evaluating NoPE rank margins**
+**Checking grouped-summary baselines**
+
+===== [REASONING] line 4178 =====
+**Evaluating NoPE rank margins**
+**Checking grouped-summary baselines**
+**Testing KV factorization**
+
+===== [REASONING] line 4179 =====
+**Evaluating NoPE rank margins**
+**Checking grouped-summary baselines**
+**Testing KV factorization**
+
+===== [REASONING] line 4180 =====
+**Evaluating NoPE rank margins**
+**Checking grouped-summary baselines**
+**Testing KV factorization**
+
+===== [REASONING] line 4181 =====
+**Evaluating NoPE rank margins**
+**Checking grouped-summary baselines**
+**Testing KV factorization**
+
+===== [REASONING] line 4182 =====
+**Evaluating NoPE rank margins**
+**Checking grouped-summary baselines**
+**Testing KV factorization**
+**Preparing MiniCPM evaluation**
+
+===== [REASONING] line 4183 =====
+**Evaluating NoPE rank margins**
+**Checking grouped-summary baselines**
+**Testing KV factorization**
+**Preparing MiniCPM evaluation**
+
+===== [REASONING] line 4193 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+
+===== [REASONING] line 4194 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+
+===== [REASONING] line 4195 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+
+===== [REASONING] line 4196 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+
+===== [REASONING] line 4197 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+
+===== [REASONING] line 4198 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+
+===== [REASONING] line 4199 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+
+===== [REASONING] line 4200 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+
+===== [REASONING] line 4201 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+
+===== [REASONING] line 4202 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+
+===== [REASONING] line 4203 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+**Testing paired RoPE/NoPE selectors**
+
+===== [REASONING] line 4204 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+**Testing paired RoPE/NoPE selectors**
+
+===== [REASONING] line 4205 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+**Testing paired RoPE/NoPE selectors**
+
+===== [REASONING] line 4206 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+**Testing paired RoPE/NoPE selectors**
+
+===== [REASONING] line 4207 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+**Testing paired RoPE/NoPE selectors**
+
+===== [REASONING] line 4208 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+**Testing paired RoPE/NoPE selectors**
+
+===== [REASONING] line 4209 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+**Testing paired RoPE/NoPE selectors**
+**Implementing exact RoPE/NoPE masks**
+
+===== [REASONING] line 4210 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+**Testing paired RoPE/NoPE selectors**
+**Implementing exact RoPE/NoPE masks**
+
+===== [REASONING] line 4211 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+**Testing paired RoPE/NoPE selectors**
+**Implementing exact RoPE/NoPE masks**
+
+===== [REASONING] line 4212 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+**Testing paired RoPE/NoPE selectors**
+**Implementing exact RoPE/NoPE masks**
+
+===== [REASONING] line 4213 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+**Testing paired RoPE/NoPE selectors**
+**Implementing exact RoPE/NoPE masks**
+**Capturing raw prefix keys**
+
+===== [REASONING] line 4214 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+**Testing paired RoPE/NoPE selectors**
+**Implementing exact RoPE/NoPE masks**
+**Capturing raw prefix keys**
+
+===== [REASONING] line 4215 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+**Testing paired RoPE/NoPE selectors**
+**Implementing exact RoPE/NoPE masks**
+**Capturing raw prefix keys**
+
+===== [REASONING] line 4216 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+**Testing paired RoPE/NoPE selectors**
+**Implementing exact RoPE/NoPE masks**
+**Capturing raw prefix keys**
+
+===== [REASONING] line 4217 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+**Testing paired RoPE/NoPE selectors**
+**Implementing exact RoPE/NoPE masks**
+**Capturing raw prefix keys**
+
+===== [REASONING] line 4218 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+**Testing paired RoPE/NoPE selectors**
+**Implementing exact RoPE/NoPE masks**
+**Capturing raw prefix keys**
+
+===== [REASONING] line 4219 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+**Testing paired RoPE/NoPE selectors**
+**Implementing exact RoPE/NoPE masks**
+**Capturing raw prefix keys**
+**Checking dense-gather parity**
+
+===== [REASONING] line 4220 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+**Testing paired RoPE/NoPE selectors**
+**Implementing exact RoPE/NoPE masks**
+**Capturing raw prefix keys**
+**Checking dense-gather parity**
+
+===== [REASONING] line 4221 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+**Testing paired RoPE/NoPE selectors**
+**Implementing exact RoPE/NoPE masks**
+**Capturing raw prefix keys**
+**Checking dense-gather parity**
+
+===== [REASONING] line 4222 =====
+**Checking NoPE answer loss**
+**Preparing full-model queries**
+**Running full-model queries**
+**Testing paired RoPE/NoPE selectors**
+**Implementing exact RoPE/NoPE masks**
+**Capturing raw prefix keys**
+**Checking dense-gather parity**
+
+===== [REASONING] line 4232 =====
+**Checking prefix state stability**
+**Checking dense-prefix parity**
+
+===== [REASONING] line 4233 =====
+**Checking prefix state stability**
+**Checking dense-prefix parity**
+
+===== [REASONING] line 4234 =====
+**Checking prefix state stability**
+**Checking dense-prefix parity**
+
+===== [REASONING] line 4235 =====
+**Checking prefix state stability**
+**Checking dense-prefix parity**
+
+===== [REASONING] line 4236 =====
+**Checking prefix state stability**
+**Checking dense-prefix parity**
+
+===== [REASONING] line 4237 =====
+**Checking prefix state stability**
+**Checking dense-prefix parity**
+
+===== [REASONING] line 4245 =====
+**Running remote validation**
+**Validating dense-mode outputs**
+
+===== [REASONING] line 4246 =====
+**Running remote validation**
+**Validating dense-mode outputs**
+
+===== [REASONING] line 4247 =====
+**Running remote validation**
+**Validating dense-mode outputs**
+
+===== [REASONING] line 4248 =====
+**Running remote validation**
+**Validating dense-mode outputs**
+
+===== [REASONING] line 4258 =====
+**Saving current notes**
+**Preparing Qwen task wording**
+
+===== [REASONING] line 4259 =====
+**Saving current notes**
+**Preparing Qwen task wording**
+
+===== [REASONING] line 4267 =====
+**Preparing m32 baseline**
+**Preparing natural QA test**
+
+===== [REASONING] line 4268 =====
+**Preparing m32 baseline**
+**Preparing natural QA test**
+
+===== [REASONING] line 4269 =====
+**Preparing m32 baseline**
+**Preparing natural QA test**
+
+===== [REASONING] line 4270 =====
+**Preparing m32 baseline**
+**Preparing natural QA test**
+
+===== [REASONING] line 4271 =====
+**Preparing m32 baseline**
+**Preparing natural QA test**
+
+===== [REASONING] line 4272 =====
+**Preparing m32 baseline**
+**Preparing natural QA test**
+
+===== [REASONING] line 4703 =====
+**Inspecting stage-one LSE equations**
+**Preparing exact-LSE probe**
+
+===== [REASONING] line 4704 =====
+**Inspecting stage-one LSE equations**
+**Preparing exact-LSE probe**
+
+===== [REASONING] line 4729 =====
+**Updating budget status**
+**Implementing normalization audit**
+
+===== [REASONING] line 4730 =====
+**Updating budget status**
+**Implementing normalization audit**
+
+===== [REASONING] line 4849 =====
+**Preparing CUDA model loading**
+**Preparing native kernel qualification**
+
+===== [REASONING] line 4850 =====
+**Preparing CUDA model loading**
+**Preparing native kernel qualification**
+
+===== [REASONING] line 4851 =====
+**Preparing CUDA model loading**
+**Preparing native kernel qualification**
+
+===== [REASONING] line 4852 =====
+**Preparing CUDA model loading**
+**Preparing native kernel qualification**
+
+===== [REASONING] line 4897 =====
+**Monitoring compilation progress**
+**Checking compiler progress**
+
+===== [REASONING] line 4898 =====
+**Monitoring compilation progress**
+**Checking compiler progress**
+
+===== [REASONING] line 4899 =====
+**Monitoring compilation progress**
+**Checking compiler progress**
+
+===== [REASONING] line 4900 =====
+**Monitoring compilation progress**
+**Checking compiler progress**
+
+===== [REASONING] line 4952 =====
+**Inspecting native outputs**
+**Applying official task prompts**
+
+===== [REASONING] line 4953 =====
+**Inspecting native outputs**
+**Applying official task prompts**
+
+===== [REASONING] line 5022 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+
+===== [REASONING] line 5023 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+
+===== [REASONING] line 5024 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+
+===== [REASONING] line 5025 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+
+===== [REASONING] line 5026 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+
+===== [REASONING] line 5027 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+
+===== [REASONING] line 5028 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+
+===== [REASONING] line 5029 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+
+===== [REASONING] line 5030 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+
+===== [REASONING] line 5031 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+
+===== [REASONING] line 5032 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+
+===== [REASONING] line 5033 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+
+===== [REASONING] line 5034 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+
+===== [REASONING] line 5035 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+
+===== [REASONING] line 5036 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+
+===== [REASONING] line 5037 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+
+===== [REASONING] line 5038 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+
+===== [REASONING] line 5039 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+
+===== [REASONING] line 5040 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+**Fitting phase coherence**
+
+===== [REASONING] line 5041 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+**Fitting phase coherence**
+
+===== [REASONING] line 5042 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+**Fitting phase coherence**
+
+===== [REASONING] line 5043 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+**Fitting phase coherence**
+
+===== [REASONING] line 5044 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+**Fitting phase coherence**
+
+===== [REASONING] line 5045 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+**Fitting phase coherence**
+
+===== [REASONING] line 5046 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+**Fitting phase coherence**
+**Formalizing phase-orbit proof**
+
+===== [REASONING] line 5047 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+**Fitting phase coherence**
+**Formalizing phase-orbit proof**
+
+===== [REASONING] line 5048 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+**Fitting phase coherence**
+**Formalizing phase-orbit proof**
+
+===== [REASONING] line 5049 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+**Fitting phase coherence**
+**Formalizing phase-orbit proof**
+
+===== [REASONING] line 5050 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+**Fitting phase coherence**
+**Formalizing phase-orbit proof**
+**Deriving normalized rotary basis**
+
+===== [REASONING] line 5051 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+**Fitting phase coherence**
+**Formalizing phase-orbit proof**
+**Deriving normalized rotary basis**
+
+===== [REASONING] line 5052 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+**Fitting phase coherence**
+**Formalizing phase-orbit proof**
+**Deriving normalized rotary basis**
+
+===== [REASONING] line 5053 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+**Fitting phase coherence**
+**Formalizing phase-orbit proof**
+**Deriving normalized rotary basis**
+
+===== [REASONING] line 5054 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+**Fitting phase coherence**
+**Formalizing phase-orbit proof**
+**Deriving normalized rotary basis**
+
+===== [REASONING] line 5055 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+**Fitting phase coherence**
+**Formalizing phase-orbit proof**
+**Deriving normalized rotary basis**
+
+===== [REASONING] line 5056 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+**Fitting phase coherence**
+**Formalizing phase-orbit proof**
+**Deriving normalized rotary basis**
+**Testing normalized rotary basis**
+
+===== [REASONING] line 5057 =====
+**Deriving query-adaptive summaries**
+**Checking clustering precedents**
+**Correcting the evaluation protocol**
+**Deriving causal block value**
+**Fitting phase coherence**
+**Formalizing phase-orbit proof**
+**Deriving normalized rotary basis**
+**Testing normalized rotary basis**
+
+===== [REASONING] line 5090 =====
+**Recording the two-hour deadline**
+**Preparing benchmark scoring**
+
+===== [REASONING] line 5091 =====
+**Recording the two-hour deadline**
+**Preparing benchmark scoring**
+
+===== [REASONING] line 5123 =====
+**Checking RoPE mean failures**
+**Preparing controlled RULER inputs**
+
+===== [REASONING] line 5124 =====
+**Checking RoPE mean failures**
+**Preparing controlled RULER inputs**
+
+===== [REASONING] line 5125 =====
+**Checking RoPE mean failures**
+**Preparing controlled RULER inputs**
+
+===== [REASONING] line 5126 =====
+**Checking RoPE mean failures**
+**Preparing controlled RULER inputs**
+
+===== [REASONING] line 5189 =====
+**Checking answer-prefix scoring**
+**Verifying prompt boundaries**
+
+===== [REASONING] line 5190 =====
+**Checking answer-prefix scoring**
+**Verifying prompt boundaries**
+
+===== [REASONING] line 5191 =====
+**Checking answer-prefix scoring**
+**Verifying prompt boundaries**
+
+===== [REASONING] line 5192 =====
+**Checking answer-prefix scoring**
+**Verifying prompt boundaries**
+
+===== [REASONING] line 5193 =====
+**Checking answer-prefix scoring**
+**Verifying prompt boundaries**
+
+===== [REASONING] line 5194 =====
+**Checking answer-prefix scoring**
+**Verifying prompt boundaries**
+
+===== [REASONING] line 5222 =====
+**Preparing native GQA oracle**
+**Preparing native 64k samples**
+
+===== [REASONING] line 5223 =====
+**Preparing native GQA oracle**
+**Preparing native 64k samples**
+
+===== [REASONING] line 5224 =====
+**Preparing native GQA oracle**
+**Preparing native 64k samples**
+
+===== [REASONING] line 5225 =====
+**Preparing native GQA oracle**
+**Preparing native 64k samples**
+
+===== [REASONING] line 5226 =====
+**Preparing native GQA oracle**
+**Preparing native 64k samples**
+
+===== [REASONING] line 5227 =====
+**Preparing native GQA oracle**
+**Preparing native 64k samples**
+
+===== [REASONING] line 5228 =====
+**Preparing native GQA oracle**
+**Preparing native 64k samples**
+**Enabling chunked 64k prefill**
+
+===== [REASONING] line 5229 =====
+**Preparing native GQA oracle**
+**Preparing native 64k samples**
+**Enabling chunked 64k prefill**
+
+===== [REASONING] line 5230 =====
+**Preparing native GQA oracle**
+**Preparing native 64k samples**
+**Enabling chunked 64k prefill**
+
+===== [REASONING] line 5231 =====
+**Preparing native GQA oracle**
+**Preparing native 64k samples**
+**Enabling chunked 64k prefill**
+
+===== [REASONING] line 5232 =====
+**Preparing native GQA oracle**
+**Preparing native 64k samples**
+**Enabling chunked 64k prefill**
+
+===== [REASONING] line 5233 =====
+**Preparing native GQA oracle**
+**Preparing native 64k samples**
+**Enabling chunked 64k prefill**
+
+===== [REASONING] line 5254 =====
+**Implement adaptive 4-means**
+**Implementing farthest-first groups**
+
+===== [REASONING] line 5255 =====
+**Implement adaptive 4-means**
+**Implementing farthest-first groups**
+
+===== [REASONING] line 5256 =====
+**Implement adaptive 4-means**
+**Implementing farthest-first groups**
+
+===== [REASONING] line 5257 =====
+**Implement adaptive 4-means**
+**Implementing farthest-first groups**
+
+===== [REASONING] line 5258 =====
+**Implement adaptive 4-means**
+**Implementing farthest-first groups**
+
+===== [REASONING] line 5259 =====
+**Implement adaptive 4-means**
+**Implementing farthest-first groups**
+
+===== [REASONING] line 5267 =====
+**Preparing counterfactual source swaps**
+
+===== [REASONING] line 5268 =====
+**Preparing counterfactual source swaps**
+
+===== [REASONING] line 5269 =====
+**Preparing counterfactual source swaps**
+
+===== [REASONING] line 5270 =====
+**Preparing counterfactual source swaps**
+
+===== [REASONING] line 5281 =====
+**Testing the preidentified case**
+**Building support-only benchmarks**
+
+===== [REASONING] line 5282 =====
+**Testing the preidentified case**
+**Building support-only benchmarks**
+
+===== [REASONING] line 5283 =====
+**Testing the preidentified case**
+**Building support-only benchmarks**
+
+===== [REASONING] line 5284 =====
+**Testing the preidentified case**
+**Building support-only benchmarks**
+
+===== [REASONING] line 5285 =====
+**Testing the preidentified case**
+**Building support-only benchmarks**
+**Implementing prefix summaries**
+
+===== [REASONING] line 5286 =====
+**Testing the preidentified case**
+**Building support-only benchmarks**
+**Implementing prefix summaries**
+
+===== [REASONING] line 5287 =====
+**Testing the preidentified case**
+**Building support-only benchmarks**
+**Implementing prefix summaries**
+
+===== [REASONING] line 5288 =====
+**Testing the preidentified case**
+**Building support-only benchmarks**
+**Implementing prefix summaries**
+
+===== [REASONING] line 5289 =====
+**Testing the preidentified case**
+**Building support-only benchmarks**
+**Implementing prefix summaries**
+
+===== [REASONING] line 5290 =====
+**Testing the preidentified case**
+**Building support-only benchmarks**
+**Implementing prefix summaries**
+
+===== [REASONING] line 5303 =====
+**Preparing RULER source adaptation**
+**Preparing native RULER prompts**
+
+===== [REASONING] line 5304 =====
+**Preparing RULER source adaptation**
+**Preparing native RULER prompts**
+
+===== [REASONING] line 5314 =====
+**Fixing the boundary gap.**
+**Adding coverage assertions**
+
+===== [REASONING] line 5315 =====
+**Fixing the boundary gap.**
+**Adding coverage assertions**
+
+===== [REASONING] line 5316 =====
+**Fixing the boundary gap.**
+**Adding coverage assertions**
+
+===== [REASONING] line 5317 =====
+**Fixing the boundary gap.**
+**Adding coverage assertions**
+
+===== [REASONING] line 5318 =====
+**Fixing the boundary gap.**
+**Adding coverage assertions**
+
+===== [REASONING] line 5319 =====
+**Fixing the boundary gap.**
+**Adding coverage assertions**
+
+===== [REASONING] line 5320 =====
+**Fixing the boundary gap.**
+**Adding coverage assertions**
+**Comparing rotational bounds**
+
+===== [REASONING] line 5321 =====
+**Fixing the boundary gap.**
+**Adding coverage assertions**
+**Comparing rotational bounds**
+
+===== [REASONING] line 5322 =====
+**Fixing the boundary gap.**
+**Adding coverage assertions**
+**Comparing rotational bounds**
+
+===== [REASONING] line 5323 =====
+**Fixing the boundary gap.**
+**Adding coverage assertions**
+**Comparing rotational bounds**
+
+===== [REASONING] line 5324 =====
+**Fixing the boundary gap.**
+**Adding coverage assertions**
+**Comparing rotational bounds**
+
+===== [REASONING] line 5325 =====
+**Fixing the boundary gap.**
+**Adding coverage assertions**
+**Comparing rotational bounds**
+
+===== [REASONING] line 5326 =====
+**Fixing the boundary gap.**
+**Adding coverage assertions**
+**Comparing rotational bounds**
+
+===== [REASONING] line 5327 =====
+**Fixing the boundary gap.**
+**Adding coverage assertions**
+**Comparing rotational bounds**
+
+===== [REASONING] line 5339 =====
+**Implementing RPEE CPU functions**
+**Running RULER oracle check**
+
+===== [REASONING] line 5340 =====
+**Implementing RPEE CPU functions**
+**Running RULER oracle check**
+
+===== [REASONING] line 5350 =====
+**Preparing strict support script**
+**Validating support coverage**
+
+===== [REASONING] line 5351 =====
+**Preparing strict support script**
+**Validating support coverage**
+
+===== [REASONING] line 5408 =====
+**Investigating key retrieval behavior**
+**Restoring original prompt template**
+
+===== [REASONING] line 5409 =====
+**Investigating key retrieval behavior**
+**Restoring original prompt template**
+
+===== [REASONING] line 5410 =====
+**Investigating key retrieval behavior**
+**Restoring original prompt template**
+
+===== [REASONING] line 5411 =====
+**Investigating key retrieval behavior**
+**Restoring original prompt template**
+
+===== [REASONING] line 5412 =====
+**Investigating key retrieval behavior**
+**Restoring original prompt template**
+
+===== [REASONING] line 5413 =====
+**Investigating key retrieval behavior**
+**Restoring original prompt template**
+
+===== [REASONING] line 5415 =====
+**Investigating key retrieval behavior**
+**Restoring original prompt template**
+**Testing native group support**
+
+===== [REASONING] line 5416 =====
+**Investigating key retrieval behavior**
+**Restoring original prompt template**
+**Testing native group support**
+
+===== [REASONING] line 5424 =====
+**Preparing the adapter test**
+**Checking source reconstruction**
+
+===== [REASONING] line 5425 =====
+**Preparing the adapter test**
+**Checking source reconstruction**
+
+===== [REASONING] line 5426 =====
+**Preparing the adapter test**
+**Checking source reconstruction**
+
+===== [REASONING] line 5427 =====
+**Preparing the adapter test**
+**Checking source reconstruction**
+
+===== [REASONING] line 5438 =====
+**Preserving original answer format**
+**Running prepared RPEE/Quest test**
+
+===== [REASONING] line 5439 =====
+**Preserving original answer format**
+**Running prepared RPEE/Quest test**
+
+===== [REASONING] line 5440 =====
+**Preserving original answer format**
+**Running prepared RPEE/Quest test**
+
+===== [REASONING] line 5441 =====
+**Preserving original answer format**
+**Running prepared RPEE/Quest test**
+
+===== [REASONING] line 5442 =====
+**Preserving original answer format**
+**Running prepared RPEE/Quest test**
+
+===== [REASONING] line 5443 =====
+**Preserving original answer format**
+**Running prepared RPEE/Quest test**
+
+===== [REASONING] line 5453 =====
+**Preparing four spaced prompts**
+**Checking upstream task definition**
+
+===== [REASONING] line 5454 =====
+**Preparing four spaced prompts**
+**Checking upstream task definition**
+
+===== [REASONING] line 5455 =====
+**Preparing four spaced prompts**
+**Checking upstream task definition**
+
+===== [REASONING] line 5456 =====
+**Preparing four spaced prompts**
+**Checking upstream task definition**
+
+===== [REASONING] line 5457 =====
+**Preparing four spaced prompts**
+**Checking upstream task definition**
+
+===== [REASONING] line 5458 =====
+**Preparing four spaced prompts**
+**Checking upstream task definition**
+
+===== [REASONING] line 5483 =====
+**Preparing score application plan**
+**Preparing dataset generation**
+
+===== [REASONING] line 5484 =====
+**Preparing score application plan**
+**Preparing dataset generation**
+
+===== [REASONING] line 5485 =====
+**Preparing score application plan**
+**Preparing dataset generation**
+
+===== [REASONING] line 5486 =====
+**Preparing score application plan**
+**Preparing dataset generation**
+
+===== [REASONING] line 5487 =====
+**Preparing score application plan**
+**Preparing dataset generation**
+
+===== [REASONING] line 5488 =====
+**Preparing score application plan**
+**Preparing dataset generation**
+
+===== [REASONING] line 5489 =====
+**Preparing score application plan**
+**Preparing dataset generation**
+
+===== [REASONING] line 5490 =====
+**Preparing score application plan**
+**Preparing dataset generation**
+
+===== [REASONING] line 5511 =====
+**Checking generation log**
+**Preparing baseline driver**
+
+===== [REASONING] line 5512 =====
+**Checking generation log**
+**Preparing baseline driver**
+
+===== [REASONING] line 5513 =====
+**Checking generation log**
+**Preparing baseline driver**
+
+===== [REASONING] line 5514 =====
+**Checking generation log**
+**Preparing baseline driver**
+
+===== [REASONING] line 5535 =====
+**Testing candidate cases**
+**Checking validation files**
+
+===== [REASONING] line 5536 =====
+**Testing candidate cases**
+**Checking validation files**
+
+===== [REASONING] line 5561 =====
+**Finishing the calibration wrapper**
+**Running RoPEMean ranking**
+
+===== [REASONING] line 5562 =====
+**Finishing the calibration wrapper**
+**Running RoPEMean ranking**
+
+===== [REASONING] line 5563 =====
+**Finishing the calibration wrapper**
+**Running RoPEMean ranking**
+
+===== [REASONING] line 5564 =====
+**Finishing the calibration wrapper**
+**Running RoPEMean ranking**
+
+===== [REASONING] line 5565 =====
+**Finishing the calibration wrapper**
+**Running RoPEMean ranking**
+
+===== [REASONING] line 5566 =====
+**Finishing the calibration wrapper**
+**Running RoPEMean ranking**
+
+===== [REASONING] line 5821 =====
+**Constructing correlated-coordinate bounds**
+
+===== [REASONING] line 5822 =====
+**Constructing correlated-coordinate bounds**
+
+===== [REASONING] line 5831 =====
+**Refining RPEE reconstruction**
+**Evaluating orbit-tube bounds**
+
+===== [REASONING] line 5832 =====
+**Refining RPEE reconstruction**
+**Evaluating orbit-tube bounds**
+
+===== [REASONING] line 5972 =====
+**Testing target-aligned k-center**
+**Awaiting 32K benchmark results**
+
+===== [REASONING] line 5973 =====
+**Testing target-aligned k-center**
+**Awaiting 32K benchmark results**
+
+===== [REASONING] line 5992 =====
+**Drafting paper from evidence**
+**Fixing failure-status wrapper**
+
+===== [REASONING] line 5993 =====
+**Drafting paper from evidence**
+**Fixing failure-status wrapper**
+
+===== [REASONING] line 5994 =====
+**Drafting paper from evidence**
+**Fixing failure-status wrapper**
+
+===== [REASONING] line 5995 =====
+**Drafting paper from evidence**
+**Fixing failure-status wrapper**
+
+===== [REASONING] line 5996 =====
+**Drafting paper from evidence**
+**Fixing failure-status wrapper**
+
+===== [REASONING] line 5997 =====
+**Drafting paper from evidence**
+**Fixing failure-status wrapper**
+
+===== [REASONING] line 6056 =====
+**Preparing the evidence draft**
+**Checking the run status**
+
+===== [REASONING] line 6057 =====
+**Preparing the evidence draft**
+**Checking the run status**
+
+===== [REASONING] line 6065 =====
+**Preparing paired summary**
+**Preparing exact validation**
+
+===== [REASONING] line 6066 =====
+**Preparing paired summary**
+**Preparing exact validation**
+
+===== [REASONING] line 6067 =====
+**Preparing paired summary**
+**Preparing exact validation**
+
+===== [REASONING] line 6068 =====
+**Preparing paired summary**
+**Preparing exact validation**
+
+===== [REASONING] line 6100 =====
+**Calculating per-record storage**
+**Documenting memory accounting**
+
+===== [REASONING] line 6101 =====
+**Calculating per-record storage**
+**Documenting memory accounting**
+
+===== [REASONING] line 6182 =====
+**Checking pinned model files**
+**Saving verified model hashes**
+
+===== [REASONING] line 6183 =====
+**Checking pinned model files**
+**Saving verified model hashes**
+
+===== [REASONING] line 6184 =====
+**Checking pinned model files**
+**Saving verified model hashes**
+
+===== [REASONING] line 6185 =====
+**Checking pinned model files**
+**Saving verified model hashes**
+
+===== [REASONING] line 6212 =====
+**Reading runtime metadata**
+**Updating experiment footnotes**
+
+===== [REASONING] line 6213 =====
+**Reading runtime metadata**
+**Updating experiment footnotes**
+
+===== [REASONING] line 6242 =====
+**Adding argmax provenance**
+**Formalizing witness lower bounds**
+
+===== [REASONING] line 6243 =====
+**Adding argmax provenance**
+**Formalizing witness lower bounds**
+
+===== [REASONING] line 6244 =====
+**Adding argmax provenance**
+**Formalizing witness lower bounds**
+
+===== [REASONING] line 6245 =====
+**Adding argmax provenance**
+**Formalizing witness lower bounds**
+
+===== [REASONING] line 6288 =====
+**Reviewing RULER controller imports**
+**Removing RULER imports**
+
+===== [REASONING] line 6289 =====
+**Reviewing RULER controller imports**
+**Removing RULER imports**
+
+===== [REASONING] line 6393 =====
+**Reconstructing the overnight timeline**
+
+===== [REASONING] line 6394 =====
+**Reconstructing the overnight timeline**
+
+===== [REASONING] line 6395 =====
+**Reconstructing the overnight timeline**
+
+===== [REASONING] line 6396 =====
+**Reconstructing the overnight timeline**
+
+===== [REASONING] line 6449 =====
+**Checking rank lower bound**
+**Fixing rank formula**
+
+===== [REASONING] line 6450 =====
+**Checking rank lower bound**
+**Fixing rank formula**
+
+===== [REASONING] line 6451 =====
+**Checking rank lower bound**
+**Fixing rank formula**
+
+===== [REASONING] line 6452 =====
+**Checking rank lower bound**
+**Fixing rank formula**
+
+===== [REASONING] line 6453 =====
+**Checking rank lower bound**
+**Fixing rank formula**
+
+===== [REASONING] line 6454 =====
+**Checking rank lower bound**
+**Fixing rank formula**
+
+===== [REASONING] line 6455 =====
+**Checking rank lower bound**
+**Fixing rank formula**
+**Revising information-barrier proof**
+
+===== [REASONING] line 6456 =====
+**Checking rank lower bound**
+**Fixing rank formula**
+**Revising information-barrier proof**
+
+===== [REASONING] line 6457 =====
+**Checking rank lower bound**
+**Fixing rank formula**
+**Revising information-barrier proof**
+
+===== [REASONING] line 6458 =====
+**Checking rank lower bound**
+**Fixing rank formula**
+**Revising information-barrier proof**
+
+===== [REASONING] line 6459 =====
+**Checking rank lower bound**
+**Fixing rank formula**
+**Revising information-barrier proof**
+**Verifying model configuration**
+
+===== [REASONING] line 6460 =====
+**Checking rank lower bound**
+**Fixing rank formula**
+**Revising information-barrier proof**
+**Verifying model configuration**
+
+===== [REASONING] line 6461 =====
+**Checking rank lower bound**
+**Fixing rank formula**
+**Revising information-barrier proof**
+**Verifying model configuration**
+
+===== [REASONING] line 6462 =====
+**Checking rank lower bound**
+**Fixing rank formula**
+**Revising information-barrier proof**
+**Verifying model configuration**
+
+===== [REASONING] line 6492 =====
+**Checking RoPE transpose convention**
+**Qualifying TAPE equivalence**
+
+===== [REASONING] line 6493 =====
+**Checking RoPE transpose convention**
+**Qualifying TAPE equivalence**
+
+===== [REASONING] line 6504 =====
+**正在等待地图差异确认，随机等价测试已完成**
+**正在校正最小状态定理，秩条件已核查**
+
+===== [REASONING] line 6505 =====
+**正在等待地图差异确认，随机等价测试已完成**
+**正在校正最小状态定理，秩条件已核查**
+
+===== [REASONING] line 6506 =====
+**正在等待地图差异确认，随机等价测试已完成**
+**正在校正最小状态定理，秩条件已核查**
+
+===== [REASONING] line 6507 =====
+**正在等待地图差异确认，随机等价测试已完成**
+**正在校正最小状态定理，秩条件已核查**
+
+===== [REASONING] line 6508 =====
+**正在等待地图差异确认，随机等价测试已完成**
+**正在校正最小状态定理，秩条件已核查**
+**正在核对混合位置状态的门控含义，乘积池化已推导**
+
+===== [REASONING] line 6509 =====
+**正在等待地图差异确认，随机等价测试已完成**
+**正在校正最小状态定理，秩条件已核查**
+**正在核对混合位置状态的门控含义，乘积池化已推导**
+
+===== [REASONING] line 6510 =====
+**正在等待地图差异确认，随机等价测试已完成**
+**正在校正最小状态定理，秩条件已核查**
+**正在核对混合位置状态的门控含义，乘积池化已推导**
+
+===== [REASONING] line 6511 =====
+**正在等待地图差异确认，随机等价测试已完成**
+**正在校正最小状态定理，秩条件已核查**
+**正在核对混合位置状态的门控含义，乘积池化已推导**
+
+===== [REASONING] line 6512 =====
+**正在等待地图差异确认，随机等价测试已完成**
+**正在校正最小状态定理，秩条件已核查**
+**正在核对混合位置状态的门控含义，乘积池化已推导**
+
+===== [REASONING] line 6513 =====
+**正在等待地图差异确认，随机等价测试已完成**
+**正在校正最小状态定理，秩条件已核查**
+**正在核对混合位置状态的门控含义，乘积池化已推导**
+
+===== [REASONING] line 6525 =====
+**Building RoPE counterexample**
+**Testing softmax moment example**
+
+===== [REASONING] line 6526 =====
+**Building RoPE counterexample**
+**Testing softmax moment example**
+
+===== [REASONING] line 6527 =====
+**Building RoPE counterexample**
+**Testing softmax moment example**
+
+===== [REASONING] line 6528 =====
+**Building RoPE counterexample**
+**Testing softmax moment example**
+
+===== [REASONING] line 6529 =====
+**Building RoPE counterexample**
+**Testing softmax moment example**
+**Drafting RoPE audit**
+
+===== [REASONING] line 6530 =====
+**Building RoPE counterexample**
+**Testing softmax moment example**
+**Drafting RoPE audit**
+
+===== [REASONING] line 6531 =====
+**Building RoPE counterexample**
+**Testing softmax moment example**
+**Drafting RoPE audit**
+
+===== [REASONING] line 6532 =====
+**Building RoPE counterexample**
+**Testing softmax moment example**
+**Drafting RoPE audit**
+
+===== [REASONING] line 6533 =====
+**Building RoPE counterexample**
+**Testing softmax moment example**
+**Drafting RoPE audit**
+**Formalizing audit controls**
+
+===== [REASONING] line 6534 =====
+**Building RoPE counterexample**
+**Testing softmax moment example**
+**Drafting RoPE audit**
+**Formalizing audit controls**
+
+===== [REASONING] line 6535 =====
+**Building RoPE counterexample**
+**Testing softmax moment example**
+**Drafting RoPE audit**
+**Formalizing audit controls**
+
+===== [REASONING] line 6536 =====
+**Building RoPE counterexample**
+**Testing softmax moment example**
+**Drafting RoPE audit**
+**Formalizing audit controls**
+
+===== [REASONING] line 6537 =====
+**Building RoPE counterexample**
+**Testing softmax moment example**
+**Drafting RoPE audit**
+**Formalizing audit controls**
+
+===== [REASONING] line 6538 =====
+**Building RoPE counterexample**
+**Testing softmax moment example**
+**Drafting RoPE audit**
+**Formalizing audit controls**
+
+===== [REASONING] line 6573 =====
+**Writing root-decision README**
+**Defining causal controls**
+
+===== [REASONING] line 6574 =====
+**Writing root-decision README**
+**Defining causal controls**

@@ -1,0 +1,304 @@
+
+===== [FILECHANGE] line 115 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/cross_cache.py": "add"
+}
+
+===== [FILECHANGE] line 122 =====
+{
+ "/Users/yang/projects/hybrid-rope/docs/research/ROPE_BM_CROSS_CACHE_20260908.md": "add",
+ "/Users/yang/projects/hybrid-rope/tests/test_cross_cache.py": "add"
+}
+
+===== [FILECHANGE] line 244 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/cross_cache.py": "update"
+}
+
+===== [FILECHANGE] line 252 =====
+{
+ "/Users/yang/projects/hybrid-rope/docs/research/ROPE_BM_CROSS_CACHE_20260908.md": "update"
+}
+
+===== [FILECHANGE] line 356 =====
+{
+ "/Users/yang/projects/hybrid-rope/paper-2027/HANDOFF.md": "update",
+ "/Users/yang/projects/hybrid-rope/docs/research/ROPE_BM_CROSS_CACHE_20260908.md": "update"
+}
+
+===== [FILECHANGE] line 393 =====
+{
+ "/Users/yang/projects/hybrid-rope/docs/research/ROPE_OVERNIGHT_RESEARCH_20260908.md": "add",
+ "/Users/yang/projects/hybrid-rope/paper-2027/HANDOFF.md": "update"
+}
+
+===== [FILECHANGE] line 408 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/layer_policy.py": "add",
+ "/Users/yang/projects/hybrid-rope/tests/test_layer_policy.py": "add"
+}
+
+===== [FILECHANGE] line 418 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/layer_screen.py": "add"
+}
+
+===== [FILECHANGE] line 489 =====
+{
+ "/Users/yang/projects/hybrid-rope/docs/research/ROPE_OVERNIGHT_RESEARCH_20260908.md": "update",
+ "/Users/yang/projects/hybrid-rope/paper-2027/HANDOFF.md": "update"
+}
+
+===== [FILECHANGE] line 510 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/cross_cache.py": "update"
+}
+
+===== [FILECHANGE] line 535 =====
+{
+ "/Users/yang/projects/hybrid-rope/paper-2027/HANDOFF.md": "update",
+ "/Users/yang/projects/hybrid-rope/docs/research/ROPE_OVERNIGHT_RESEARCH_20260908.md": "update"
+}
+
+===== [FILECHANGE] line 590 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/lib/rope/gap_capped.py": "add",
+ "/Users/yang/projects/hybrid-rope/tests/test_gap_capped.py": "add"
+}
+
+===== [FILECHANGE] line 598 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/layer_screen.py": "update"
+}
+
+===== [FILECHANGE] line 606 =====
+{
+ "/Users/yang/projects/hybrid-rope/docs/research/ROPE_GAP_CAPPED_PROTOCOL_20260908.md": "add"
+}
+
+===== [FILECHANGE] line 644 =====
+{
+ "/Users/yang/projects/hybrid-rope/paper-2027/HANDOFF.md": "update"
+}
+
+===== [FILECHANGE] line 736 =====
+{
+ "/Users/yang/projects/hybrid-rope/docs/research/ROPE_GAP_CAPPED_PROTOCOL_20260908.md": "update"
+}
+
+===== [FILECHANGE] line 745 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/analysis/summarize_candidate_screen.py": "add"
+}
+
+===== [FILECHANGE] line 827 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/causal_gain.py": "add",
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/layer_screen.py": "update",
+ "/Users/yang/projects/hybrid-rope/tests/test_causal_gain.py": "add"
+}
+
+===== [FILECHANGE] line 890 =====
+{
+ "/Users/yang/projects/hybrid-rope/docs/research/ROPE_GAP_CAPPED_RESULT_20260908.md": "add",
+ "/Users/yang/projects/hybrid-rope/paper-2027/HANDOFF.md": "update",
+ "/Users/yang/projects/hybrid-rope/docs/research/ROPE_GAP_CAPPED_PROTOCOL_20260908.md": "update"
+}
+
+===== [FILECHANGE] line 1032 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/layer_screen.py": "update",
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/prepare_natural.py": "add"
+}
+
+===== [FILECHANGE] line 1072 =====
+{
+ "/Users/yang/projects/hybrid-rope/paper-2027/HANDOFF.md": "update",
+ "/Users/yang/projects/hybrid-rope/docs/research/ROPE_OLMO_BM_NATURAL_TRANSFER_20260908.md": "add"
+}
+
+===== [FILECHANGE] line 1142 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/prepare_natural.py": "update"
+}
+
+===== [FILECHANGE] line 1176 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/layer_screen.py": "update",
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/prepare_ruler.py": "update"
+}
+
+===== [FILECHANGE] line 1341 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/analysis/summarize_natural_screen.py": "add"
+}
+
+===== [FILECHANGE] line 1352 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/download_qwen7b.py": "add"
+}
+
+===== [FILECHANGE] line 1435 =====
+{
+ "/Users/yang/projects/hybrid-rope/paper-2027/HANDOFF.md": "update"
+}
+
+===== [FILECHANGE] line 1633 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/analysis/summarize_candidate_screen.py": "update"
+}
+
+===== [FILECHANGE] line 1732 =====
+{
+ "/Users/yang/projects/hybrid-rope/paper-2027/HANDOFF.md": "update"
+}
+
+===== [FILECHANGE] line 1783 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/layer_screen.py": "update"
+}
+
+===== [FILECHANGE] line 1844 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/analysis/summarize_natural_screen.py": "update"
+}
+
+===== [FILECHANGE] line 1887 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/chunked_mlp.py": "update",
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/layer_screen.py": "update"
+}
+
+===== [FILECHANGE] line 2014 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/cross_cache.py": "update",
+ "/Users/yang/projects/hybrid-rope/paper-2027/HANDOFF.md": "update"
+}
+
+===== [FILECHANGE] line 2031 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/layer_screen.py": "update"
+}
+
+===== [FILECHANGE] line 2160 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/cross_cache.py": "update"
+}
+
+===== [FILECHANGE] line 2218 =====
+{
+ "/Users/yang/projects/hybrid-rope/paper-2027/HANDOFF.md": "update"
+}
+
+===== [FILECHANGE] line 2335 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/cross_cache.py": "update",
+ "/Users/yang/projects/hybrid-rope/tests/test_cross_cache.py": "update"
+}
+
+===== [FILECHANGE] line 2446 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/layer_screen.py": "update"
+}
+
+===== [FILECHANGE] line 2459 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/bias_position.py": "update",
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/layer_screen.py": "update"
+}
+
+===== [FILECHANGE] line 2460 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/layer_screen.py": "update"
+}
+
+===== [FILECHANGE] line 2587 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/cross_cache.py": "update"
+}
+
+===== [FILECHANGE] line 2783 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/native_windows.py": "update"
+}
+
+===== [FILECHANGE] line 2804 =====
+{
+ "/Users/yang/projects/hybrid-rope/scripts/experiments/olmo_fast_screen/native_windows.py": "update"
+}
+
+===== [FILECHANGE] line 4347 =====
+{
+ "/Users/yang/projects/hybrid-rope/experiments/native_sparse_position/prepare_natural.py": "add"
+}
+
+===== [FILECHANGE] line 4392 =====
+{
+ "/Users/yang/projects/hybrid-rope/experiments/native_sparse_position/CORE_DIAGNOSIS.md": "add"
+}
+
+===== [FILECHANGE] line 4432 =====
+{
+ "/Users/yang/projects/hybrid-rope/experiments/native_sparse_position/summarize_natural.py": "add"
+}
+
+===== [FILECHANGE] line 4464 =====
+{
+ "/Users/yang/projects/hybrid-rope/experiments/native_sparse_position/phase_content_audit.py": "add"
+}
+
+===== [FILECHANGE] line 4585 =====
+{
+ "/Users/yang/projects/hybrid-rope/experiments/native_sparse_position/download_pinned.py": "add"
+}
+
+===== [FILECHANGE] line 4732 =====
+{
+ "/Users/yang/projects/hybrid-rope/experiments/native_sparse_position/normalizer_audit.py": "add"
+}
+
+===== [FILECHANGE] line 4843 =====
+{
+ "/Users/yang/projects/hybrid-rope/experiments/native_sparse_position/minicpm_native.py": "add"
+}
+
+===== [FILECHANGE] line 4985 =====
+{
+ "/Users/yang/projects/hybrid-rope/experiments/native_sparse_position/qualify_minicpm_kernel.py": "add"
+}
+
+===== [FILECHANGE] line 5107 =====
+{
+ "/Users/yang/projects/hybrid-rope/tests/test_orbit_regression.py": "add",
+ "/Users/yang/projects/hybrid-rope/experiments/native_sparse_position/orbit_regression.py": "add"
+}
+
+===== [FILECHANGE] line 5155 =====
+{
+ "/Users/yang/projects/hybrid-rope/experiments/native_sparse_position/ORBIT_DERIVATION.md": "add"
+}
+
+===== [FILECHANGE] line 5204 =====
+{
+ "/Users/yang/projects/hybrid-rope/experiments/native_sparse_position/prepare_support_oracle.py": "add"
+}
+
+===== [FILECHANGE] line 5501 =====
+{
+ "/Users/yang/projects/hybrid-rope/experiments/native_sparse_position/generate_primary_ruler.py": "add"
+}
+
+===== [FILECHANGE] line 5687 =====
+{
+ "/Users/yang/projects/hybrid-rope/experiments/native_sparse_position/generate_primary_ruler.py": "update"
+}
+
+===== [FILECHANGE] line 6042 =====
+{
+ "/Users/yang/projects/hybrid-rope/experiments/native_sparse_position/quest_fine_native.py": "update"
+}
+
+===== [FILECHANGE] line 6070 =====
+{
+ "/Users/yang/projects/hybrid-rope/experiments/native_sparse_position/quest_fine_native.py": "update"
+}
