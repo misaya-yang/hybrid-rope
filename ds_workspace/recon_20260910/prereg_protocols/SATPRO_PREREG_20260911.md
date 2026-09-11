@@ -36,12 +36,16 @@ a1_b64 邻域 → true YaRN 在 OLMo 上按覆盖账预测应远高于 Pro 的 0
   holdout 上的 native 参照臂。此 guard 把 4K/16K trade 单方面定在
   "最多让 5pp 窗内"——这是价值选择，不是测量结果。
 
-## 2. P9 exact_yarn（补上"从未测过真 YaRN"的洞）
+## 2. P9 exact_yarn（补上"论文转数变体 YaRN 从未上过任务面板"的洞）
 
 - 盲预测（覆盖/面积账）：选择面板 ∈ [0.46, 0.60]，与 a1_b64 配对 |Δ| ≤ 4pp。
 - 判决含义：≥ BM → A_m 账在 OLMo 上成立，Pro 灾难是 Pro 特有（支持不足）；
   < 0.40 → 面积账对前置形状失效，order 有独立代价（前置伤害）。
-- 顺带关闭 erratum：FOUR_CORNERS 的"YaRN 顶点"= MrRoPE-Uni，本臂是首次真 YaRN。
+- **身份修正（2026-09-11 H1 审计后补）**：官方索引 YaRN 已测过且是灾难
+  （72 行复核 16K=6.94%；fresh_72=0.1406，与 MrRoPE-Pro 同级）；官方实现是
+  后置 ramp（sum_m 38.49），与本臂（论文 A.2.1 转数混合、前置、sum_m 42.91）
+  是**两个不同算子**。本臂补的洞仅是"论文变体从未上过任务面板"，
+  不再表述为"首次真 YaRN"。FOUR_CORNERS 的"YaRN 顶点"= MrRoPE-Uni 仍成立。
 
 ## 3. P10 reverse_pro（order 的最强探针，承认与 A 混杂）
 
