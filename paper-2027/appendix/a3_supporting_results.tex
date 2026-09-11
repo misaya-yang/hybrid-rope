@@ -149,3 +149,17 @@ Tier & Component & Object & Epistemic Status \\
 \end{tabular}%
 }
 \end{table}
+
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\linewidth]{fig_weight_table_crossing.pdf}
+\caption{\textbf{Weights co-adapt to their exponent allocation.}
+Each row freezes one trained weight set and changes only its runtime table.
+Left: $50$M crossing, PPL on eight windows. Right: $151.9$M crossing, mean
+tail NLL on $32$ anchors in each of two training seeds, using extensions
+derived from the two training tables. FMR is the geometric table at the fixed
+training range; shading shows the NLL increase relative to the matched
+diagonal cell.}
+\label{fig:weight-table-crossing}
+\end{figure}

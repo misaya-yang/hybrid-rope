@@ -59,4 +59,26 @@ In the OLMo-$1$B confirmation, BM reaches $51.32\%$ at $16$K against $2.78\%$ fo
 
 
 
-However, preferences differ across models (Table~\ref{tab:bm-models}): while OLMo favors BM, the two Qwen arms favor MrRoPE-Pro at $128$K. Those two comparisons are exploratory: $24$ and $12$ long-prompt rows, and an archived $36$-row tally of $6$ wins to $4$ losses at a paired standard error near $13$ points that does not separate the profiles. We read the contrast as direction only. With endpoints and total scale fixed, intermediate profile preferences are checkpoint- and length-dependent (Appendix~\ref{sec:bm-model-comparison}).
+Preferences differ across models (Table~\ref{tab:bm-models}): OLMo favors BM, the two Qwen arms favor MrRoPE-Pro at $128$K, but as an exploratory contrast only ($24$ and $12$ long-prompt rows; archived $36$-row tally $6$W/$4$L at paired SE $\approx13$ points, which does not separate them). The same panel separates the two factors (Table~\ref{tab:gain-factorial}): at matched amplitude the table contrast is $+1.67$ points at $32$K and $-5.35$ at $128$K, while lowering BM's amplitude alone to $g=1$ costs $12.01$ points at $128$K and improves its NLL. Short- and long-range ordering are thus carried by different factors.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\caption{\textbf{Table and amplitude separated on the Qwen-$2.5$-$3$B $36$-row panel (\%).}
+Matching the coefficient across tables makes the table contrast comparable; the
+last row varies amplitude alone at a fixed table.}
+\label{tab:gain-factorial}
+\begin{tabular}{@{}llrr@{}}
+\toprule
+Table & Coefficient $c$ in $g=1+c\ln s$ & $32$K & $128$K \\
+\midrule
+MrRoPE-Pro & $0.1$   & 87.22 & 78.13 \\
+BM         & $0.1$   & 91.67 & 70.83 \\
+MrRoPE-Pro & $0.074$ & 98.33 & 75.35 \\
+BM         & $0.074$ & 100.00 & 70.00 \\
+BM         & $g=1$   & 89.58 & 58.82 \\
+\bottomrule
+\end{tabular}
+\end{table}
+ With endpoints and total scale fixed, intermediate profile preferences are checkpoint- and length-dependent (Appendix~\ref{sec:bm-model-comparison}).
