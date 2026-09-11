@@ -32,7 +32,7 @@ Under uniform measure on $[0,L]$, let $x=\omega L$. As $x\to0$, $\cos(xt)\to 1$ 
 
 In standard grids ($b=500{,}000, K=64, L=4096$), the $23$ pairs with $\omega L\le1$ supply $46$ coordinate dimensions but a block-whitened rank $r_2=2.00013$. In raw unwhitened coordinates, the weak eigenvalue scales as $\lambda_-(S_\omega)\approx (\omega L)^2/12$. This motivates studying how tables distribute positional directions, though static rank does not guarantee downstream extrapolation.
 
-\subsection{Non-identifiability and epistemic status}
+\subsection{What a schedule-only summary can see}
 \label{sec:non-identifiability}
 
 \begin{table}[t]
@@ -50,7 +50,7 @@ Tier & Component & Object & Epistemic Status \\
 1 & Positional Basis & Subspace overlap $c_{\omega\nu}$, rank $r_2$, limit $V_0$ & Exact operator geometry (Prop.~\ref{prop:collapse}) \\
 2 & Surrogate Functional & Variational objective $\mathcal{C}_{\mathrm{app}}[\rho]$ in \eqref{eq:Capp} & Explicit design prior; not downstream $\mathcal{L}_{\mathrm{CE}}$ \\
 3 & Operating Rule & Cosh density $\rho_\tau$ and finite quantile grid & Closed-form heuristic family; fixed $K$ grid \\
-4 & Downstream LM & Tail NLL, RULER-13, natural LongBench QA & Non-identifiable from $\Phi(\Omega)$ (Thm.~\ref{thm:non-identifiability}) \\
+4 & Downstream LM & Tail NLL, RULER-13, natural LongBench QA & Not predicted by static surrogates (Thm.~\ref{thm:non-identifiability}) \\
 \bottomrule
 \end{tabular}%
 }
@@ -58,10 +58,15 @@ Tier & Component & Object & Epistemic Status \\
 
 The separation between basis geometry and downstream performance is formal:
 
-\begin{theorem}[Non-identifiability from static frequency metrics]
+\begin{theorem}[Static surrogates cannot rank allocations]
 \label{thm:non-identifiability}
-Let $\mathcal{M}$ have learned projection weights with slot-varying subspace norms. Downstream capability $\mathcal{R}(\Omega;\mathcal{M},\mathcal{D})$ is non-identifiable from low-dimensional frequency metrics $\Phi(\Omega)$ across three fibers: (i)~\textbf{permutation}: swapping slots preserves $\Phi$ but destroys projection co-adaptation ($1\times$ NLL doubles, $64$K RULER drops to $0.00$); (ii)~\textbf{discontinuity}: $1$-ULP jitter shifts discrete scale-orbit counts by $\Delta q=58$ with zero loss change ($\Delta\mathrm{NLL}=+10^{-5}$); and (iii)~\textbf{stiffness}: curvature ill-conditioning ($\kappa(F_N)\gg 10^4$) concentrates sensitivity at knee slot $19$, so $\mathrm{MAE}=0.0012$ coordinate error fails retention gates.
+Let $\Phi(\Omega)$ depend only on the frequency schedule and let $\mathcal{R}$ be measured downstream capability.
+\emph{(i) Permutation-invariant $\Phi$ cannot separate the two most behaviourally distant tables we can construct.} For any non-trivial permutation $\pi$, invariance gives $\Phi(\pi\Omega)=\Phi(\Omega)$, while by Theorem~\ref{thm:obstruction} $\Omega$ and $\pi\Omega$ admit \emph{no} position-independent invertible reparameterization. On the evaluated checkpoints the measured risk gap is large: $1\times$ tail NLL rises from $3.10423$ to $6.86493$ and $64$K macro accuracy falls from $0.7000$ to $0.0000$. So no such $\Phi$ is a standalone predictor of $\mathcal{R}$.
+\emph{(ii) The remaining schedule-only surrogates fail on named witnesses.} A discrete scale-orbit count shifts by $\Delta q=58$ under $1$-ULP jitter with $\Delta\mathrm{NLL}=+10^{-5}$; and curvature ill-conditioning ($\kappa(F_N)\gg10^4$) concentrates sensitivity at knee slot $19$, so an $\mathrm{MAE}=0.0012$ coordinate error fails pre-registered retention gates.
 \end{theorem}
+\begin{remark}
+Part (i) is structural, not anecdotal, and this is the point of coupling it to Theorem~\ref{thm:obstruction}: the schedule's only position-independent equivalence is permutation, and permutation is exactly the transformation the trained weights do not survive. A summary $\Phi$ must therefore be invariant to something; the only invariance the schedule offers is the fatal one. We do \emph{not} claim non-identifiability for every schedule-dependent $\Phi$---$\Phi(\Omega)=\Omega$ is injective---which is precisely why the useful question is not ``which metric is best'' but ``what can a schedule-only summary see at all''.
+\end{remark}
 Table~\ref{tab:epistemic-map} summarizes these boundaries, isolating what the geometric theory proves from what requires downstream empirical validation.
 
 \subsection{An analytic allocation construction}

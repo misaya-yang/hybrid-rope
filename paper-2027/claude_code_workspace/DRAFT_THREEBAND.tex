@@ -1,0 +1,67 @@
+% ===========================================================================
+% DRAFT --- the three-band chain.
+% Intended placement: immediately after \subsection{Redistributing the
+% intermediate-band shift} (\S\ref{sec:bm-main}) in sections/04_mature.tex,
+% or at the end of \S\ref{sec:theory} if the exposition is kept analytic.
+% No file \input by main.tex has been modified.  All \ref targets resolve.
+% ===========================================================================
+
+\subsection{Why the intermediate band carries the design freedom}
+\label{sec:three-band-chain}
+
+Three-band schedules share a skeleton. With $t_j(\Ltr)=\Ltr\omega_j/2\pi$ the turns pair $j$
+accumulates over the training window, a pair installed as $\omega'_j=\omega_j s^{-m_j}$
+reproduces at separation $\Delta$ the phase its native frequency would have had at
+$\Delta s^{-m_j}$, so it stays a calibrated readout exactly while $\Delta\le\Ltr s^{m_j}$. At
+$s=4$, $m_j=1$ is the smallest compression keeping all of $[0,4\Ltr]$ on the trained arc; that
+fixes the slow band once the target length is fixed and leaves the other two as choices. Leaving
+the fast band at native is a strong design constraint rather than a theorem: one scored
+intervention departs from it, and pays.
+
+\paragraph{Moving the fast band is expensive and buys little reach.}
+Cost tracks the slot, not the distance moved. Speeding the fast pairs up --- $m_j$ falling to
+$-0.156$ across slots $1$--$23$, the literal transport of a compressed schedule's savings into
+the fast band --- drops the Qwen-$2.5$-$3$B retrieval panel from $87.22/78.13$ to $70.14/67.36$
+at $32$K/$128$K, and extending the untouched plateau into high-turn slots costs the $128$K row a
+further $9.8$ points. On Qwen-$2.5$-$3$B's $32$K in-window NLL instrument, a shift applied to
+all $64$ pairs costs $+0.088$ nats although its largest displacement is $|m|=0.552$, smaller than
+in-band displacements that are indistinguishable from zero ($+0.017$ or less); a larger shift of
+the same kind costs $+3.17$ nats on that instrument and drives accuracy to $0.0000$ on a
+$350$-row OLMo-$1$B panel. A four-row gradient
+diagnostic at the native window agrees in ordering --- per-region mean $|\partial L/\partial m|$
+of $40.9$, $2.13$ and $0.040$ over slots $0$--$23$, $24$--$39$ and $40$--$63$, concentrated on
+slots $0$--$6$ --- but those four rows span an order of magnitude, so we treat it as a diagnostic
+rather than a capability measurement. The asymmetry is also analytic: at $m_j=0$ the drift
+accumulated at
+$D=4\Ltr$ is $4\,t_j(\Ltr)\ln4$ turns, spanning $707\times$ across live pairs, so entering the
+readable window at $4\times$ costs $m_j\gtrsim\log_4(t_j/4)$: $0.42$ at $j=22$ against $3.67$
+at $j=0$ ($7.16$ and $651.9$ native turns on OLMo-$1$B).
+
+\paragraph{The slow band's content is already degenerate.}
+Large compression there is harmless because the pairs hold little independent positional
+information. By Proposition~\ref{prop:collapse}, $23$ pairs with $\omega L\le1$ supply $46$
+coordinate dimensions at a block-whitened rank of $2.00013$. Pair-level measurement agrees:
+compressing the pair at $0.61$ native turns improves in-window NLL monotonically to $-0.046$
+nats at $m=1$, and over twelve interior pairs and six compression levels the marginal in-window
+damage stays within $10^{-3}$--$5\times10^{-2}$ nats and is not monotone in $t_j$. These are
+NLL statements: in-window mean NLL improves by $0.023$ nats while in-window task accuracy falls
+by $10.6$ points along the same schedule family, so both readouts must be quoted.
+
+\paragraph{The trajectory matters through thresholds, not slopes.}
+Of the $38$ tables we reconstructed, all but the native reference and one twelve-row probe are
+$m_j=0$ on $j\le23$ and $m_j=1$ on $j\ge40$, with all variation interior. Inside that family
+the interior separates outcomes by tens of points, but threshold-like rather than smoothly: on
+a $350$-row OLMo-$1$B panel at $16$K the readable-slot count $N$ gives
+$\operatorname{logit}(\mathrm{acc})=-20.45+1.19\,N$ with no paired ordering error across twelve
+arms, whereas the continuous band-edge crossing location misorders $54$ of $60$ pairs. The same
+schedule reverses sign across depths (pooled held-out deltas of $-5.37$ and $+6.54$ points at
+$4$K and $16$K), and the response is checkpoint-dependent by two orders of magnitude:
+family-spanning schedules move long-context NLL by $0.83$ nats between the OLMo-$1$B endpoints
+and by $0.0077$ nats over nine arms on Qwen-$2.5$-$1.5$B, at a per-arm standard error of
+$0.030$.
+
+\paragraph{Scope.} Every scored arm satisfies $\max_j m_j\le1$, so the chain covers schedules
+whose reach ends at $4\times$ the training window: at $8\times$ four such arms, the deployed
+table included, each score $0/48$, and nothing with $\max_j m_j>1$ has been scored. The
+coverage ordering that organizes the OLMo-$1$B arms does not carry to the Qwen panels, so the
+account above is calibrated on one checkpoint family rather than stated as a general law.

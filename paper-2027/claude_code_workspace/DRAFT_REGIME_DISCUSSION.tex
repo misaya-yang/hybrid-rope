@@ -1,0 +1,64 @@
+% DRAFT — discussion/theory insert implementing the "two regimes of one theory" framing
+% and the aggressive (non-defensive) statement of the paper's scientific position.
+% NOT \input anywhere yet. Apply only after the page budget is settled.
+%
+% Rationale for this framing, from the senior review:
+%   Cosh and the native-relative profile should NOT be two downgraded heuristics.
+%   They should be two INSTANCES of one theory, separated by whether M exists yet.
+%   The crossing experiment is the measured evidence for that boundary.
+
+\paragraph{Two regimes of one allocation problem.}
+The coordinate split $x_k = a + R z_k$ describes the supplied basis, but the
+objective that allocation must serve changes once weights exist. Before or during
+learning there is no compatible weight set to consult, so the only available signal
+is the geometry of the supplied basis itself; the Cosh family is the closed-form
+allocation that a stated convex criterion selects from that signal
+(\S\ref{sec:construction}). After learning, the checkpoint has already assigned
+roles to specific slots, and the allocation can only be moved relative to the
+coordinates those weights were trained against; the native-relative profiles
+of \S\ref{sec:mature-adjustments} are the corresponding construction. The two
+regimes are therefore not alternative heuristics but the same design problem posed
+with and without $M$.
+
+\paragraph{The regime boundary is measured, not assumed.}
+The weights-by-table crossings in Fig.~\ref{fig:weight-table-crossing} place the
+boundary empirically. Two weight sets trained under different interior allocations
+each perform best under the runtime table derived from their own training
+allocation, and a table that is favourable as a supplied basis can be catastrophic
+once installed: in the $50$M crossing, installing Cosh frequencies into
+Geo-trained weights raises PPL to $76.20$, while the reverse swap raises it to
+$23.05$. Symmetrically, the retargeting experiment shows the ordering of two
+allocations reversing after the operating range is changed. An allocation is
+therefore not a property of a table that can be evaluated before deciding where
+it will be used.
+
+% ---- aggressive position: this is the paragraph that must NOT be written defensively ----
+
+\paragraph{Why static table search is structurally incomplete.}
+A recurring programme seeks the best RoPE table by scoring candidate frequency
+schedules with a static geometric functional---entropy, effective rank, turn count,
+orbit structure, or a fixed profile---and then deploying the winner. Our results
+give a reason to expect that programme to underdetermine the answer, and the reason
+is not that the functionals are poorly chosen. By Theorem~\ref{thm:obstruction},
+the only equivalence that a schedule admits, up to position-independent
+reparameterization, is sign and permutation; permutation is precisely the
+transformation that a trained model does not survive
+(Theorem~\ref{thm:non-identifiability}). A schedule-only functional must therefore
+be invariant to something, and the invariances the schedule offers are either the
+fatal one or, as in the orbit-count and coordinate-distance witnesses, quantities
+that the measurements here dissociate from behaviour. What the functional cannot
+see is $M$: the roles that training assigned to individual slots. This is the sense
+in which the design space has three coordinates rather than one, and it is why
+ranking tables without the operating range and the compatible weight set is not
+merely difficult but ill-posed.
+
+% ---- scope, stated once and plainly, without hedging every clause above ----
+
+\paragraph{What this does and does not establish.}
+The identification result is strong where it is measured: paired $151.9$M training
+at strictly fixed range changes only the $30$ interior exponents, and the
+extrapolation ordering reverses under range retargeting in all three seeds. The
+crossings are measured on two scales. We do not claim that no schedule-only
+statistic can ever be useful, only that none of those tested is sufficient alone;
+and the constructions here are witnesses that the space yields real gains, not
+claims of a universal optimum.

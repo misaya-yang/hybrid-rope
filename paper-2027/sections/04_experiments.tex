@@ -2,23 +2,26 @@
 \label{sec:experiments}
 \label{sec:exp-mature}
 
-We evaluate the analytic construction in matched learning settings before turning to frozen deployment. Each comparison specifies its own training regime, finite grid, and evaluation endpoint.
+We evaluate the analytic construction in matched learning settings before turning to frozen deployment; each comparison specifies its own regime, grid, and endpoint.
 
 \subsection{Language modeling and retrieval}
 \label{sec:exp-capability}
 
 \paragraph{Scarce rotary channels.}
-A $432$M MLA-style model allocates only $16$ pairs to explicit rotation \citep{deepseekv2,deepseekv3}. Both arms train on $500$M tokens at length $8192$. Across three seeds, \evq{} reduces mean $16$K perplexity from $138.8$ to $95.6$, with $8$K perplexity at $35.4$ and $35.8$ (Table~\ref{tab:training-models}). This tests allocation when few coordinates carry explicit rotation.
+A $432$M MLA-style model allocates only $16$ pairs to explicit rotation \citep{deepseekv2,deepseekv3}, with both arms trained on $500$M tokens at length $8192$. Across three seeds \evq{} reduces mean $16$K perplexity from $138.8$ to $95.6$, with $8$K near-equal at $35.4$ versus $35.8$, testing allocation when few coordinates carry explicit rotation (Table~\ref{tab:training-models}). Plain-table gains hold at $2\times$ the training window; beyond it the training-free blend closes and then passes them (full curve in Appendix~\ref{sec:mla-results}).
 
 \paragraph{Continued full-parameter training.}
-The $750$M experiment continues training from a $2$K checkpoint for $500$M tokens at length $4096$. The Cosh arm preserves endpoints. At $16$K, perplexity falls from $45.1$ to $24.4$ ($4$K: $22.0$ vs $22.3$). Across $40$ associated $8$K passkey cases, greedy exact match rises from $0\%$ to $77.5\%$. The teacher-forced probe is saturated for both arms, separating probability-based retrieval from complete generation (Appendix~\ref{sec:experiment-details}).
+The $750$M experiment continues training from a $2$K checkpoint for $500$M tokens at length $4096$, the Cosh arm preserving endpoints. At $16$K perplexity falls from $45.1$ to $24.4$, with $4$K near-equal ($22.0$ vs $22.3$), and across $40$ associated $8$K passkey cases greedy exact match rises from $0\%$ to $77.5\%$, while the teacher-forced probe stays saturated for both arms, separating probability-based retrieval from complete generation (Table~\ref{tab:training-models}; Appendix~\ref{sec:experiment-details}).
 
 \begin{table}[ht]
 \centering
 \small
 \setlength{\tabcolsep}{5pt}
 \caption{\textbf{Model effects of the Cosh exponent table.}
-Mean perplexities within matched protocols; lower is better.}
+Mean perplexities within matched protocols, lower better.
+\emph{Geo} uses the midpoint grid $u_k=(k+\tfrac12)/K$; each pair shares grid,
+initialization, data order, optimizer and budget. Last row: training-free post-hoc
+frequency blend, applied to both arms at evaluation.}
 \label{tab:training-models}
 \begin{tabular}{@{}lc@{\hspace{14pt}}ccrr@{}}
 \toprule
@@ -26,6 +29,7 @@ Model & Seeds & Train length & Eval. length & Geo & \evq{} \\
 \midrule
 $432$M MLA & 3 & $8$K & $8$K & 35.4 & 35.8 \\
            &   &   & $16$K & 138.8 & \textbf{95.6} \\
+\hspace{4pt}+ wavelength blend & 3 & $8$K & $16$K & 117.9 & \textbf{71.1} \\
 $750$M continuation & 1 & $4$K & $4$K & 22.0 & 22.3 \\
            &   &   & $16$K & 45.1 & \textbf{24.4} \\
 \bottomrule
@@ -33,17 +37,12 @@ $750$M continuation & 1 & $4$K & $4$K & 22.0 & 22.3 \\
 \end{table}
 
 \paragraph{Matched Llama-$3$-$8$B adaptation.}
-We compare Native and \evq{} under the same $300$-step rank-$64$ LoRA adaptation at length $8$K \citep{hu2022lora,grattafiori2024llama3} across $24$ frozen temporal text packs. Figure~\ref{fig:8b-length-curve} shows the full curve: Native/\evq{} PPL is $6.82/10.07$ at $8$K, $108.96/24.07$ at $16$K, and $991.48/127.91$ at $32$K. We characterize this as an adaptation length-transfer trade-off rather than lossless extension, demonstrating that installed allocation changes extrapolation under matched adaptation budgets.
+We compare Native and \evq{} under the same $300$-step rank-$64$ LoRA adaptation at length $8$K \citep{hu2022lora,grattafiori2024llama3} across $24$ frozen temporal text packs. Native/\evq{} PPL is $6.82/10.07$ at $8$K, $108.96/24.07$ at $16$K, and $991.48/127.91$ at $32$K (Fig.~\ref{fig:8b-length-curve}). We characterize this as an adaptation length-transfer trade-off rather than lossless extension: installed allocation changes extrapolation under matched adaptation budgets.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.86\linewidth]{fig_8b_length_curve.pdf}
-  \caption{\textbf{Cosh allocation improves extrapolation under matched adaptation.} Llama-$3$-$8$B arms share an $8$K, $300$-step LoRA protocol on $24$ text packs. PPL is the exponential of equal-domain mean NLL.}
-  \label{fig:8b-length-curve}
-\end{figure}
+
 
 \paragraph{Source use and task-family continuation.}
-On ten true-$16$K passkey cases, removing decode attention to the remote gold block increases answer-token NLL by $1.5055$ in \evq{}, compared with $-0.0095$ in Native, confirming reliance on distant source access. A separate continuation trains both arms on RULER generator families at length $8$K and evaluates on new rows: at $16$K, official macro is $0.30\%$ for Native-LoRA and $14.03\%$ for \evq{}-LoRA (exact match $0\%$ vs $1.54\%$), while at $8$K it is $94.44/77.60\%$ (Appendix~\ref{sec:llama8b}).
+On ten true-$16$K passkey cases, removing decode attention to the remote gold block increases answer-token NLL by $1.5055$ in \evq{} versus $-0.0095$ in Native, confirming reliance on distant source access. A separate continuation trains both arms on RULER generator families at length $8$K and evaluates new rows: at $16$K official macro is $0.30\%$ for Native-LoRA and $14.03\%$ for \evq{}-LoRA (exact match $0\%$ vs $1.54\%$), while at $8$K it is $94.44/77.60\%$ (Appendix~\ref{sec:llama8b}).
 
 \paragraph{Composition and further settings.}
 In the $454$M three-seed experiment, applying the same index-based smooth-ramp scaler to both learned tables gives $16$K PPL of $157.7$ for Geo and $107.5$ for \evq{} (Appendix~\ref{sec:range-composition}). OLMo scale checks and video-DiT comparisons appear in Apps.~\ref{sec:olmo2-1b} and~\ref{sec:video-dit}.

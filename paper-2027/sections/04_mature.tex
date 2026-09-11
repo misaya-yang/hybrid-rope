@@ -4,7 +4,7 @@
 \label{sec:exp-zero-training-system}
 \label{sec:coordinate}
 
-The crossing experiments in \S\ref{sec:coadaptation-finding} show that trained weights are co-adapted to their specific exponent basis, motivating adjustments defined relative to native exponents.
+The crossings in \S\ref{sec:coadaptation-finding} show that trained weights are co-adapted to their exponent basis, motivating adjustments defined relative to native exponents.
 
 \subsection{A common coordinate for exponent adjustments}
 
@@ -24,53 +24,22 @@ m_k\log s, & \text{log-frequency shift},\\
 \end{cases}
 \label{eq:adjustment-families}
 \end{equation}
-Static tables are installed before prefill and retained through decoding; amplitude $g$ scales both cosine and sine tables ($g^2$ on attention logits).
+Static tables are installed before prefill and retained through decoding, with amplitude $g$ scaling both cosine and sine tables (Appendix~\ref{sec:adjustment-details}).
 
 \subsection{Fixed-range and single-table comparisons}
 
 \paragraph{Frozen fixed-support control.}
-On frozen OLMo-$2$-$1$B and Qwen-$2.5$-$1.5$B, we hold endpoints, $64$ pairs, attention amplitude, inputs, and decoder fixed. Geometric, coarse label-free ramp, and residual-guided allocations give the results in Table~\ref{tab:frozen-exponent-main}. Structured profiles produce large gains over uniform exponents (OLMo $16$K RULER: $0.56\%$ to $61.04\%$), with coarse controls capturing the bulk of the effect (Appendix~\ref{sec:frozen-fixed-support}).
+On frozen OLMo-$2$-$1$B and Qwen-$2.5$-$1.5$B we hold endpoints, $64$ pairs, attention amplitude, inputs, and decoder fixed. Both structured profiles produce large gains over uniform exponents (OLMo $16$K RULER: $0.56\%$ to $61.04\%$), with coarse controls capturing the bulk of the effect (Table~\ref{tab:frozen-exponent-main}; Appendix~\ref{sec:frozen-fixed-support}).
 
-\begin{table}[t]
-\centering
-\small
-\caption{\textbf{Frozen-model RULER scores (\%) at matched exponent range.}
-OLMo uses a held-out nine-task confirmation at $16$K; Qwen uses a four-task
-development panel at $64$K ($20$ rows per task).}
-\label{tab:frozen-exponent-main}
-\begin{tabular}{@{}lrr@{}}
-\toprule
-Exponent allocation & OLMo-$1$B & Qwen-$1.5$B \\
-\midrule
-Geometric & 0.56 & 57.75 \\
-Coarse ramp & \textbf{61.04} & 64.00 \\
-Residual-guided & 60.47 & \textbf{66.50} \\
-\bottomrule
-\end{tabular}
-\end{table}
+
 
 \paragraph{One static configuration across lengths.}
-A normalized-index profile transfers a reference displacement curve onto the target grid ($\omega'_k=\omega_k^N s^{-m_k}$). On Qwen-$2.5$-$0.5$B, the same factor-two table is evaluated at $32$K and $64$K across full RULER-13 ($20$ rows per task). With reported fixed amplitudes, Index achieves $55.92\%$ and $51.46\%$, compared with $55.94\%$ and $45.37\%$ for YaRN (Table~\ref{tab:static-index-main}). The $64$K improvement is $6.09$ points ($95\%$ bootstrap interval $[2.76, 9.58]$), while $32$K scores are near-equal. The gain is attributed to the complete static configuration (table $\times$ amplitude; Appendix~\ref{sec:index-adjustment}).
+A normalized-index profile transfers a reference displacement curve onto the target grid ($\omega'_k=\omega_k^N s^{-m_k}$). On Qwen-$2.5$-$0.5$B, the same factor-two table is evaluated at $32$K and $64$K across full RULER-13 ($20$ rows per task). At the reported fixed amplitudes it improves $64$K macro over YaRN by $6.09$ points ($95\%$ bootstrap interval $[2.76, 9.58]$), while $32$K scores are near-equal (Table~\ref{tab:static-index-main}); the gain is attributed to the complete static configuration (table $\times$ amplitude; Appendix~\ref{sec:index-adjustment}).
 
-\begin{table}[t]
-\centering
-\small
-\caption{\textbf{Static extension across native and extended windows.}
-Qwen-$0.5$B RULER-13 macro (\%); $g$ is fixed amplitude.}
-\label{tab:static-index-main}
-\begin{tabular}{@{}lrrr@{}}
-\toprule
-Installed table & $g$ & $32$K & $64$K \\
-\midrule
-Native & 1.0000 & 54.78 & 22.05 \\
-YaRN-$2$ & 1.0693 & 55.94 & 45.37 \\
-Normalized-index-$2$ & 1.0513 & 55.92 & \textbf{51.46} \\
-\bottomrule
-\end{tabular}
-\end{table}
+
 
 \paragraph{Finite-grid placement.}
-Comparing normalized-index interpolation against direct-gap evaluation on Gemma-$1.1$-$2$B ($128$ pairs; \citealt{gemmateam2024gemma}) yields $79.00\%$ versus $72.81\%$ at $16$K ($+6.19$ points, $[2.81, 9.63]$), identifying placement as an important implementation choice (Appendix~\ref{sec:coordinate-confirmation}).
+Comparing normalized-index interpolation against direct-gap evaluation on Gemma-$1.1$-$2$B ($128$ pairs; \citealt{gemmateam2024gemma}) yields $79.00\%$ versus $72.81\%$ at $16$K ($+6.19$ points, $[2.81, 9.63]$), making placement an important implementation choice (Appendix~\ref{sec:coordinate-confirmation}).
 
 \subsection{Redistributing the intermediate-band shift}
 \label{sec:bm-main}
@@ -84,33 +53,10 @@ m_q^{\rm BM}=\frac{q(q+1)(3N+2-2q)}{N(N+1)(N+2)}.
 \end{equation}
 Boundary matching (BM) minimizes quadratic difference energy, smoothing radix transitions toward unmodified outer bands (Appendix~\ref{sec:bm-construction}).
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\linewidth]{fig_bm_natural_qa.pdf}
-  \caption{\textbf{Intermediate-band redistribution improves OLMo natural QA.}
-  Complete-output token F1 on untruncated long inputs ($s=4$). Sample counts shown by task; final row averages task means.}
-  \label{fig:bm-natural-qa}
-\end{figure}
 
-In the OLMo-$1$B confirmation, BM reaches $51.32\%$ at $16$K compared with $2.78\%$ for MrRoPE-Pro. Crucially, across $631$ untruncated LongBench prompts exceeding $4$K tokens across five tasks, BM raises task-equal complete-output token F1 from $21.62\%$ to $25.44\%$ (Fig.~\ref{fig:bm-natural-qa}; $95\%$ bootstrap interval $[1.32, 6.29]$, all task differences positive).
 
-\begin{table}[t]
-\centering
-\small
-\setlength{\tabcolsep}{4pt}
-\caption{\textbf{Matched six-task RULER comparisons (\%).}
-Each length column averages six task scores ($s=4$; short/long prompt counts per arm).}
-\label{tab:bm-models}
-\begin{tabular}{@{}lclrrrr@{}}
-\toprule
-& & & \multicolumn{2}{c}{Short} & \multicolumn{2}{c}{Long}\\
-Model & Lengths & Rows & MrPro & BM & MrPro & BM \\
-\midrule
-OLMo-$1$B & $4/16$K & $24/48$ & 37.85 & 81.81 & 2.78 & 51.32 \\
-Qwen-$3$B & $32/128$K & $12/24$ & 87.22 & 91.67 & 78.13 & 70.83 \\
-Qwen-$7$B & $32/128$K & $6/12$ & 83.33 & 80.00 & 84.44 & 71.11 \\
-\bottomrule
-\end{tabular}
-\end{table}
+In the OLMo-$1$B confirmation, BM reaches $51.32\%$ at $16$K against $2.78\%$ for MrRoPE-Pro (Table~\ref{tab:bm-models}), and across $631$ untruncated LongBench prompts exceeding $4$K tokens over five tasks it raises task-equal complete-output token F1 from $21.62\%$ to $25.44\%$ (Fig.~\ref{fig:bm-natural-qa}; $95\%$ bootstrap interval $[1.32, 6.29]$, all task differences positive).
 
-However, preferences differ across models (Table~\ref{tab:bm-models}): while OLMo favors BM, Qwen-$3$B and $7$B favor MrRoPE-Pro at $128$K ($78.13\%$ vs $70.83\%$ and $84.44\%$ vs $71.11\%$). With endpoints and total scale fixed, intermediate profile preferences are checkpoint- and length-dependent (Appendix~\ref{sec:bm-model-comparison}).
+
+
+However, preferences differ across models (Table~\ref{tab:bm-models}): while OLMo favors BM, Qwen-$3$B and $7$B favor MrRoPE-Pro at $128$K. With endpoints and total scale fixed, intermediate profile preferences are checkpoint- and length-dependent (Appendix~\ref{sec:bm-model-comparison}).

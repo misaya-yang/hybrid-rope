@@ -1,0 +1,58 @@
+% DRAFT — why the three-band skeleton is what it is, derived from the paper's OWN Prop. 1.
+% NOT \input anywhere. Compare against the evidence-audited draft before merging.
+%
+% The chain, in one line:
+%   Prop.1 (V_w -> span{1,Delta})  =>  the supplied-basis rank of a slot is a FUNCTION OF wL
+%   =>  compressing changes wL by 4^-m, so compression MOVES a slot along the collapse curve
+%   =>  the three bands are the three regimes of that curve, and only the middle one is free.
+
+\subsection{Why the three-band family works}
+\label{sec:threeband}
+
+The constructions in \S\ref{sec:construction} are not the only allocations in use;
+practically every deployed long-context recipe --- position interpolation, YaRN, and
+the mixed-radix family of \citet{tian2026mrrope} --- keeps the fastest slots at their
+native frequencies, leaves the slowest slots maximally compressed, and treats the
+band between them as the design variable, with its edges fixed by a turn-count rule.
+Proposition~\ref{prop:collapse} explains why the three bands take the roles they do.
+
+A slot's positional content is governed by the product $\omega L$: its supplied
+subspace is $\operatorname{span}\{\cos(\omega\Delta),\sin(\omega\Delta)\}$ measured
+under a separation law on $[0,L]$, and as $\omega L\to0$ that subspace collapses onto
+$\operatorname{span}\{1,\Delta\}$. \emph{Compression moves a slot along this curve},
+because $m$ replaces $\omega$ by $\omega 4^{-m}$: the quantity that decides how much
+positional information a slot supplies is $\omega L 4^{-m}$, not $\omega$ alone. The
+three bands are the three regimes of that single curve.
+
+\paragraph{The fast band is not a design variable.} Slots with $\omega L\gg1$ are far
+from the collapsed limit, and their $\cos$/$\sin$ pairs supply distinguishable
+directions within the window. Because compression multiplies $\omega L$ by $4^{-m}$,
+moving such a slot by even one full compression pushes it toward the collapsed
+regime, where its contribution to within-window resolution shrinks. The measured
+consequence is the in-window cost that accompanies every allocation change in this
+paper, and it is why no method in this family touches the fast band.
+
+\paragraph{The slow band is where compression is nearly free.} Proposition~\ref{prop:collapse}
+is quantitative: in the standard configuration, the $23$ pairs with $\omega L\le1$
+supply $46$ coordinate dimensions but a block-whitened effective rank of
+$r_2=2.00013$, i.e. a mean pairwise squared canonical overlap of $\bar c=0.99993$.
+Those slots already carry almost no distinct positional information, so spending
+compression on them removes redundancy rather than resolution --- which is why the
+slow band can be driven to a full compression, and beyond, at little in-window cost.
+
+\paragraph{The middle band is the only free direction.} Between those regimes lies the
+band where $\omega L$ is of order one and the collapse is partial. This is the only
+region where compression can be exchanged against range without either discarding
+resolution (fast band) or reallocating directions that were already indistinguishable
+(slow band). Its edges are therefore set by the point at which a slot stops resolving
+the training window, which is what a turn-count rule estimates.
+
+\paragraph{Consequence for the interior shape.} If the middle band is where the
+collapse is gradual, then the interior profile decides \emph{how many slots sit at
+which point of the curve} --- a reallocation of supplied rank across depths. That is a
+real degree of freedom, and the experiments above show it changes learned behaviour at
+fixed range; but the same experiments show that which profile is preferable depends on
+the weights, which is why the shape cannot be ranked from the schedule alone
+(Theorem~\ref{thm:non-identifiability}). This is also the reason the amplitude of the
+compression is set by the target rather than fixed: extending the target lengthens $L$,
+which moves the whole curve, so the band edges and the plateau move with it.

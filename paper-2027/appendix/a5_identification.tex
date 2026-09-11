@@ -234,109 +234,107 @@ complement the longer FineWeb-Edu training comparison in
 \S\ref{sec:exact-range-control}.
 
 \FloatBarrier
-\subsection{First-principles physical mechanisms of the four counterintuitive facts}
+\subsection{Candidate mechanistic explanations of the four counterintuitive facts}
 \label{sec:four-facts-mechanisms}
 
-During the historical development and empirical auditing of RoPE length-extension schedules, four sharp counterintuitive phenomena were observed across multiple model families. Any physically sound theory of rotary embeddings must explain all four phenomena from first principles.
+During the historical development and empirical auditing of RoPE length-extension schedules, four sharp counterintuitive phenomena were observed across multiple model families. The four mechanisms below are candidate explanations consistent with those observations. They are hypotheses with measured support rather than first-principles derivations, and we do not claim that they are the only explanations compatible with the data.
 
 \paragraph{Fact 1: Tiny-MAE failure at transition knee slot 19.}
 \begin{itemize}
   \item \emph{Empirical phenomenon:} The two-parameter clipped-affine curve $C2$ fits the empirical coordinate movement vector $\mathbf{m}^*$ with mean absolute error $\mathrm{MAE} = 0.001223$ and root mean square error $\mathrm{RMSE} = 0.006118$. Despite this minuscule coordinate-level difference, $C2$ fails the pre-registered Native in-window retention gate on OLMo-1B ($0.870971 < 0.8750$, missing the floor by $0.004615$ nats) and on Qwen-2.5-1.5B ($0.868902 < 0.8750$), even while preserving long-context retrieval (Qwen 64K core-4 score $0.6775$, 128K score $0.5725$).
-  \item \emph{Physical mechanism:} Unweighted $L_1/L_2$ coordinate metrics treat all rotary slots symmetrically. However, because $C2$ minimized unweighted coordinate error, $81.2\%$ of its total squared residual was concentrated at \textbf{slot 19} (the knee of the transition curve; the top three transition slots account for $99.3\%$ of residual). Slot 19 sits precisely at the transition boundary between resolvable high frequencies ($\omega L_0 / 2\pi > 1$) with multiple full turns across native context $L_0$ and slow unresolvable frequencies ($\omega L_0 / 2\pi < 1$). Pre-trained projection matrices $W_Q, W_K$ place peak associative responsibility and maximum channel modulus $\rho_{h, 19}$ at this boundary. Furthermore, native retention allows at most $\approx 0.1335$ nats NLL degradation, and attention gain scaling ($g = 1 + 0.074\ln 4$) consumes $86\%$ of this budget, leaving $< 0.02$ nats of operational margin. Concentrating coordinate error on the stiffest Hessian eigenvector at slot 19 ($\Delta m_{19} = 0.044109$, $\delta\omega = -6.94 \times 10^{-4}$ rad/token) accumulates $22.74$ radians across $L_0 = 32{,}768$, exhausting the remaining $< 0.02$ nats margin.
+  \item \emph{Candidate mechanism:} Unweighted $L_1/L_2$ coordinate metrics treat all rotary slots symmetrically. However, because $C2$ minimized unweighted coordinate error, $81.2\%$ of its total squared residual was concentrated at \textbf{slot 19} (the knee of the transition curve; the top three transition slots account for $99.3\%$ of residual). Slot 19 sits precisely at the transition boundary between resolvable high frequencies ($\omega L_0 / 2\pi > 1$) with multiple full turns across native context $L_0$ and slow unresolvable frequencies ($\omega L_0 / 2\pi < 1$). Pre-trained projection matrices $W_Q, W_K$ place peak associative responsibility and maximum channel modulus $\rho_{h, 19}$ at this boundary. Furthermore, native retention allows at most $\approx 0.1335$ nats NLL degradation, and attention gain scaling ($g = 1 + 0.074\ln 4$) consumes $86\%$ of this budget, leaving $< 0.02$ nats of operational margin. Concentrating coordinate error on the stiffest Hessian eigenvector at slot 19 ($\Delta m_{19} = 0.044109$) exhausts the remaining $< 0.02$ nats margin. The phase drift implied by this slot-19 movement error is model- and window-specific rather than a single universal constant: on Qwen-2.5-1.5B at its native window $L_0 = 32{,}768$, $\delta\omega = -6.94 \times 10^{-4}$ rad/token, accumulating $22.74$ radians; on OLMo-1B, the slot-19 shift is $3.49$ radians across $L = 4{,}096$, i.e. $\delta\omega = 3.49/4{,}096 = 8.52 \times 10^{-4}$ rad/token. Each drift value applies to the checkpoint and window named with it.
 \end{itemize}
 
 \paragraph{Fact 2: Same-multiset permutation collapse.}
 \begin{itemize}
   \item \emph{Empirical phenomenon:} Retaining the exact multiset of 64 physical frequencies $\{\omega_k\}$ while randomly permuting their assignment to rotary slots causes catastrophic collapse: OLMo-1B $1\times$ PG-19 tail NLL more than doubles from $3.10423$ to $6.86493$ ($\Delta\mathrm{NLL} = +3.760692$) and Qwen-2.5-1.5B 64K core-4 task macro score plunges from $0.7000$ to flat $0.0000$ across all four benchmark tasks.
-  \item \emph{Physical mechanism:} Rotary attention logits are mediated by bilinear projections: $S_h(\Delta) = \sum_k q_{h, k}^\top R(\omega_k\Delta) k_{h, k}$. Transformers do not compute an invariant spectral integral; rather, training co-adapts specific row subspaces of $W_Q, W_K$ to specific slot frequencies $\omega_k$. Scrambling the assignment routes slow semantic projections through high-frequency channels (causing rapid trigonometric oscillations that erase long-range associative recall) and routes fast syntax detectors through near-zero channels (destroying local token ordering). This decisively proves that learned projection weights break frequency exchangeability.
+  \item \emph{Candidate mechanism:} Rotary attention logits are mediated by bilinear projections: $S_h(\Delta) = \sum_k q_{h, k}^\top R(\omega_k\Delta) k_{h, k}$. Transformers do not compute an invariant spectral integral; rather, training co-adapts specific row subspaces of $W_Q, W_K$ to specific slot frequencies $\omega_k$. Permuting the assignment moves each slot frequency away from the projection rows and subspaces that were trained against it, and the quantities the audit reports are the projection norms and subspace energies that change under the permutation. This is the measured basis for the claim that learned projection weights break frequency exchangeability. We do not assert here which linguistic role any given row or subspace carries; that attribution is made by \citet{urrutia2026decoupling}.
 \end{itemize}
 
 \paragraph{Fact 3: The $2\times \to 4\times \to 8\times$ cliff and distractor dilution margin exhaustion.}
 \begin{itemize}
-  \item \emph{Empirical phenomenon:} Static frequency tables maintain strong retention at $2\times$ extrapolation ($s=2$ NLL $\Delta = +0.016$, macro retention $1.041$), maintain narrow headroom at $4\times$ ($s=4$ headroom is only $0.000344$ nats, with the theoretical boundary at $s \approx 4.01$), but collapse abruptly at $8\times$ ($s=8$ core-4 drops to $0.3025$, single-key-3 retrieval collapses to $0.0000$, and effective retrieval radius is truncated at $47.8$K).
-  \item \emph{Physical mechanism:} In long-context needle retrieval, target needle attention probability is:
+  \item \emph{Empirical phenomenon:} Static frequency tables maintain strong retention at $2\times$ extrapolation ($s=2$ NLL $\Delta = +0.016$, macro retention $1.041$), maintain narrow headroom at $4\times$ ($s=4$ headroom is only $0.000344$ nats, against a checkpoint-specific empirical margin-exhaustion estimate of $s \approx 4.01$), but collapse abruptly at $8\times$ ($s=8$ core-4 drops to $0.3025$, single-key-3 retrieval collapses to $0.0000$, and effective retrieval radius is truncated at $47.8$K).
+  \item \emph{Candidate mechanism:} In long-context needle retrieval, define the exact attention margin of the target position $j^*$ against the distractor set $\mathcal{D}_{\mathrm{dist}}$:
   \begin{equation}
-  A(j^*) = \frac{1}{1 + \sum_{i \in \mathcal{D}_{\mathrm{dist}}} \exp(s(i) - s(j^*))} \approx \frac{1}{1 + (S L_0)\mu e^{-B}},
+  M_{\mathrm{att}} = s(j^*) - \log \sum_{i \in \mathcal{D}_{\mathrm{dist}}} e^{s(i)},
+  \qquad
+  A(j^*) = \sigma(M_{\mathrm{att}}),
   \end{equation}
-  where $B = s(j^*) - \mathbb{E}[s(i)]$ is the logit margin, $S$ is context extension factor, and $\mu = \mathbb{E}[\exp(s(i) - \mathbb{E}[s(i)])]$. Top-1 retrieval ($A(j^*) \ge 0.5$) strictly forces:
-  \begin{equation}
-  B \ge \ln S + \ln(L_0 \mu).
-  \end{equation}
-  Each context doubling ($4\times \to 8\times$) strictly subtracts $\ln 2 \approx 0.693$ nats from the available margin. Pre-trained models possess an intrinsic, finite logit margin $B_{\max}$. At $2\times$ and $4\times$, $B_{\max} > \ln S + \text{const}$. At $8\times$, the distractor dilution ceiling $S_{\mathrm{dilution}}$ exceeds $B_{\max}$, completely exhausting the decision margin at $s \approx 4.01$ and extinguishing target needle attention.
+  where $\sigma$ denotes the logistic function. This relation is exact and imposes no condition on the size of $A(j^*)$: top-1 retrieval requires only that $s(j^*)$ exceed each individual distractor logit, not that the target hold half of the total attention mass. Under the assumption that the distractor log-moment stays approximately stable as context grows, the distractor sum scales approximately as $S L_0 \mu$ with $\mu = \mathbb{E}[\exp(s(i) - \mathbb{E}[s(i)])]$, and extending context therefore introduces approximately a $\log S$ competition term in $M_{\mathrm{att}}$, where $S$ is the context extension factor. Each context doubling ($4\times \to 8\times$) then removes approximately $\ln 2 \approx 0.693$ nats from the available margin. Pre-trained models appear to possess an intrinsic, finite logit margin. At $2\times$ and $4\times$ the measured margin still exceeds the competition term; at $8\times$ the margin is exhausted at the checkpoint-specific empirical margin-exhaustion estimate of $s \approx 4.01$, and the observed collapse of target needle attention follows.
 \end{itemize}
 
 \paragraph{Fact 4: Support-retargeting reversal under non-separable coordinate dilation.}
 \begin{itemize}
   \item \emph{Empirical phenomenon:} Under fixed training support ($a, R$), Anchored \evq{} outperforms FMRoPE by $-0.281, -0.176, -0.146$ NLL at $2\times, 4\times, 8\times$ across all three seeds. However, retargeting support to match the evaluation length completely reverses the ranking across all three seeds ($+0.060, +0.227, +0.460$ NLL).
-  \item \emph{Physical mechanism:} Log-frequency coordinates decompose into $x_k = a + R z_k$. The support span $R$ and interior allocation $\mathbf{z}$ are coupled, interacting coordinates. EVQ-Cosh concentrates interior frequencies non-linearly to minimize a specific density surrogate under the training support $R_{\mathrm{train}}$. When $R$ is dilated to $R(L) = ((K-1)/K)\log L$, the non-linear Cosh profile undergoes non-uniform phase stretching, distorting the harmonic ratios to which projection weights $W_Q, W_K$ co-adapted during training. In contrast, uniform geometric spacing ($z_k = k/(K-1)$) expands scale-invariantly under logarithmic dilation, preserving harmonic ratios. Thus, interior allocation shape and support dilation cannot be optimized independently.
+  \item \emph{Candidate mechanism:} Log-frequency coordinates decompose into $x_k = a + R z_k$, so the support span $R$ and the interior allocation $\mathbf{z}$ are coupled coordinates; EVQ-Cosh concentrates interior frequencies non-linearly to minimize a specific density surrogate under the training support $R_{\mathrm{train}}$. When $R$ is dilated to $R(L) = ((K-1)/K)\log L$, each raw frequency $\omega_k = \exp(-R z_k)$ is displaced by an amount that depends on $z_k$, so the raw-frequency displacement of the runtime table relative to the training table is determined by the interior allocation shape. The projection weights $W_Q, W_K$ co-adapted to the training table under $R_{\mathrm{train}}$, so different interior allocations produce different compatibility loss after the same retargeting. This dependence is consistent with the measured reversal. Interior allocation shape and support dilation therefore cannot be treated as independent design coordinates when a trained checkpoint is evaluated under a retargeted support.
 \end{itemize}
 
 \FloatBarrier
-\subsection{Binary elimination of candidate pre-hoc structural conditions}
+\subsection{Stress-testing candidate standalone surrogates}
 \label{sec:binary-elimination}
 
-To determine whether downstream length-extension capability can be predicted before running expensive task benchmarks, eight candidate pre-hoc structural conditions ($C_1$ through $C_8$) were proposed. We evaluate each candidate against the four counterintuitive facts under a strict \textbf{binary veto rule}: any candidate condition that fails to correctly explain or predict any single fact pre-hoc is permanently eliminated.
+To determine whether downstream length-extension capability can be predicted before running expensive task benchmarks, eight candidate pre-hoc structural conditions ($C_1$ through $C_8$) were proposed. We evaluate each candidate against the four counterintuitive facts. A candidate is judged \emph{insufficient as a standalone predictor on these four cases} when it fails to explain or predict a case. Failure on one case shows that the quantity is not a sufficient predictor by itself; it does not show that the quantity carries no predictive value, nor that it cannot serve as a feature in a combined model.
 
-\paragraph{Candidate definitions and refutations.}
+\paragraph{Candidate definitions and per-case outcomes.}
 \begin{enumerate}
   \item \textbf{Condition $C_1$ (Coordinate-Space Movement Distance $\|\mathbf{m} - \mathbf{m}^*\|_p$):}
   Asserts that downstream performance is preserved if the coordinate-space movement vector $\mathbf{m}$ is close to an empirical reference $\mathbf{m}^*$.
-  \emph{Vetoed by Fact 1:} $C2$ achieved $\mathrm{MAE} = 0.001223$, yet failed Native retention because unweighted $L_p$ distance is blind to the fact that $81.2\%$ of the error concentrated on the stiffest Hessian eigenvector at slot 19. Also vetoed by Facts 2, 3, 4.
+  \emph{Insufficient on Fact 1:} $C2$ achieved $\mathrm{MAE} = 0.001223$, yet failed Native retention because unweighted $L_p$ distance is blind to the fact that $81.2\%$ of the error concentrated on the stiffest Hessian eigenvector at slot 19. Also insufficient on Facts 2, 3, 4.
   
   \item \textbf{Condition $C_2$ (Unordered Spectral Multiset $\mu_\Omega$):}
   Asserts that downstream capability depends on the multiset of physical frequencies $\{\omega_k\}$.
-  \emph{Vetoed by Fact 2:} Permuting slot assignments preserves the multiset identically ($\Phi(\Omega) = \Phi(\pi(\Omega))$), yet causes OLMo tail NLL to double ($\Delta = +3.76$) and Qwen 64K core-4 score to plunge from $0.7000$ to $0.0000$. Also vetoed by Facts 3, 4.
+  \emph{Insufficient on Fact 2:} Permuting slot assignments preserves the multiset identically ($\Phi(\Omega) = \Phi(\pi(\Omega))$), yet causes OLMo tail NLL to double ($\Delta = +3.76$) and Qwen 64K core-4 score to plunge from $0.7000$ to $0.0000$. Also insufficient on Facts 3, 4.
 
   \item \textbf{Condition $C_3$ (Discrete Scale-Orbit Symmetry Metric $q(\Omega, s)$):}
   Asserts that rational scale-orbit commensurability classes govern extrapolation.
-  \emph{Vetoed by Fact 3:} Perturbing exact chain $\Omega^{\mathrm{exact}}$ by a $1$-ULP float32 jitter shatters orbit classes, jumping $q$ from $6$ to $64$ ($\Delta q = 58$), yet produces zero measurable behavioral difference ($\Delta\mathrm{NLL} = +0.000013, p > 0.95$). Also vetoed by Facts 1, 2.
+  \emph{Insufficient on Fact 3:} Perturbing exact chain $\Omega^{\mathrm{exact}}$ by a $1$-ULP float32 jitter shatters orbit classes, jumping $q$ from $6$ to $64$ ($\Delta q = 58$), yet produces zero measurable behavioral difference ($\Delta\mathrm{NLL} = +0.000013, p > 0.95$). Also insufficient on Facts 1, 2.
 
   \item \textbf{Condition $C_4$ (Uncentered Background Derivative Energy Minimization $\mathcal{E}_{\mathrm{bg}}$):}
   Asserts that minimizing $\int |F'(u)|^2 du$ preserves long-context retrieval.
-  \emph{Vetoed by Fact 3:} The carrier intervention reduced background energy by $73.85\%$, but collapsed 128K retrieval to $0.00$ and caused severe EOS runaway, because scalar carrier shifts introduce first-order phase errors $\Delta\theta = c\Delta/s$ that rotate target signals out of alignment. Also vetoed by Facts 1, 2, 4.
+  \emph{Insufficient on Fact 3:} The carrier intervention reduced background energy by $73.85\%$, but collapsed 128K retrieval to $0.00$ and caused severe EOS runaway, because scalar carrier shifts introduce first-order phase errors $\Delta\theta = c\Delta/s$ that rotate target signals out of alignment. Also insufficient on Facts 1, 2, 4.
 
   \item \textbf{Condition $C_5$ (Monotonic Group Delay and Continuous Spacing):}
   Asserts that smooth, monotonic group delay $\tau_g > 0$ guarantees stable extrapolation.
-  \emph{Vetoed by Fact 1:} $C2$ has strictly monotonic group delay yet fails retention due to slot-19 error concentration.
-  \emph{Vetoed by Fact 4:} Both EVQ-Cosh and FMRoPE possess strictly monotonic group delay, which cannot predict why rankings completely reverse under support dilation.
+  \emph{Insufficient on Fact 1:} $C2$ has strictly monotonic group delay yet fails retention due to slot-19 error concentration.
+  \emph{Insufficient on Fact 4:} Both EVQ-Cosh and FMRoPE possess strictly monotonic group delay, which cannot predict why rankings completely reverse under support dilation.
 
   \item \textbf{Condition $C_6$ (Isolated Base Scaling / $S$-bound):}
   Asserts that length extension is governed purely by base dilation, treating interior allocation as an invariant geometric ladder.
-  \emph{Vetoed by Fact 4:} Anchored EVQ beats FMRoPE across $3/3$ seeds under identical base and endpoints, proving that interior allocation $z$ is an independent causal variable; base scaling cannot account for the retargeting reversal. Also vetoed by Facts 1, 2, 3.
+  \emph{Insufficient on Fact 4:} Anchored EVQ beats FMRoPE across $3/3$ seeds under identical base and endpoints, proving that interior allocation $z$ is an independent causal variable; base scaling cannot account for the retargeting reversal. Also insufficient on Facts 1, 2, 3.
 
   \item \textbf{Condition $C_7$ (Effective Resolution Cutoff Boundaries):}
   Asserts that obeying fast plateau ($m=0$ for $\text{turns} > 32$) and slow plateau ($m=1$ for $\text{turns} < 1$) boundaries suffices for retention.
-  \emph{Vetoed by Fact 1:} $C2$ strictly satisfies these cutoff boundaries but fails retention because the transition trajectory concentrated error at slot 19. Also vetoed by Fact 2.
+  \emph{Insufficient on Fact 1:} $C2$ strictly satisfies these cutoff boundaries but fails retention because the transition trajectory concentrated error at slot 19. Also insufficient on Fact 2.
 
   \item \textbf{Condition $C_8$ (Ordered Operator Norm Closeness $\|\mathcal{P}_\Omega - \mathcal{P}_{\Omega^*}\|_2$):}
   Asserts that bounding $\max_k |\omega_k - \omega_k^*|$ bounds loss degradation.
-  \emph{Vetoed by Fact 1:} In $C2$, maximum frequency error at slot 19 is $\le 3.2 \times 10^{-4}$ in operator norm, yet model sensitivity at slot 19 is orders of magnitude larger than at low-frequency slots due to learned content coupling weights.
-  \emph{Vetoed by Fact 3:} Operator norm difference is constant across lengths, yet performance collapses non-linearly between $2\times, 4\times, 8\times$ due to softmax distractor dilution.
+  \emph{Insufficient on Fact 1:} In $C2$, maximum frequency error at slot 19 is $\le 3.2 \times 10^{-4}$ in operator norm, yet model sensitivity at slot 19 is orders of magnitude larger than at low-frequency slots due to learned content coupling weights.
+  \emph{Insufficient on Fact 3:} Operator norm difference is constant across lengths, yet performance collapses non-linearly between $2\times, 4\times, 8\times$ due to softmax distractor dilution.
 \end{enumerate}
 
 \begin{table}[ht]
-\caption{\textbf{Binary elimination matrix of candidate pre-hoc structural conditions.} Under the strict binary veto rule, any candidate condition failing to explain any of the four counterintuitive historical facts is eliminated.}
+\caption{\textbf{Standalone-predictor stress test of candidate pre-hoc structural conditions.} Each candidate is scored on whether it alone explains or predicts each of the four counterintuitive historical facts. A failure marks the candidate as insufficient as a standalone predictor on that case; it does not show that the quantity carries no predictive value, nor rule it out as a feature in a combined model.}
 \label{tab:binary-elimination}
 \centering
 \small
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{@{}lcccccp{4.8cm}@{}}
 \toprule
-Candidate Pre-Hoc Condition & Fact 1: Tiny-MAE & Fact 2: Permutation & Fact 3: $2\times\to4\times$ & Fact 4: Retargeting & Final Status & Decisive Failure Reason \\
+Candidate Pre-Hoc Condition & Fact 1: Tiny-MAE & Fact 2: Permutation & Fact 3: $2\times\to4\times$ & Fact 4: Retargeting & Standalone Status & Observed Failure Reason \\
 \midrule
-$C_1$: Coordinate $L_p$ Movement & $\times$~\textbf{VETO} & $\times$~\textbf{VETO} & $\times$~\textbf{VETO} & $\times$~\textbf{VETO} & \textbf{ELIMINATED} & MAE $0.001223$ fails gate; blind to Hessian knee at slot 19. \\
-$C_2$: Unordered Spectral Multiset & ?~Inconclusive & $\times$~\textbf{VETO} & $\times$~\textbf{VETO} & $\times$~\textbf{VETO} & \textbf{ELIMINATED} & Identical multiset collapses NLL ($+3.76$) and RULER ($0.70 \to 0.00$). \\
-$C_3$: Discrete Scale-Orbit Metric & $\times$~\textbf{VETO} & $\times$~\textbf{VETO} & $\times$~\textbf{VETO} & ?~Inconclusive & \textbf{ELIMINATED} & 1-ULP jitter jumps $q$ from $6 \to 64$ with zero loss difference. \\
-$C_4$: Background Derivative Energy & $\times$~\textbf{VETO} & $\times$~\textbf{VETO} & $\times$~\textbf{VETO} & $\times$~\textbf{VETO} & \textbf{ELIMINATED} & $-73.8\%$ energy reduction produces $0.00$ retrieval and EOS runaway. \\
-$C_5$: Monotonic Group Delay & $\times$~\textbf{VETO} & $\times$~\textbf{VETO} & ?~Inconclusive & $\times$~\textbf{VETO} & \textbf{ELIMINATED} & Strictly monotone C2 fails gate; cannot explain reversal under retargeting. \\
-$C_6$: Isolated Base Scaling & $\times$~\textbf{VETO} & $\times$~\textbf{VETO} & $\times$~\textbf{VETO} & $\times$~\textbf{VETO} & \textbf{ELIMINATED} & Cannot explain why interior $z$ beats base scaling at fixed support. \\
-$C_7$: Turn Cutoff Boundaries & $\times$~\textbf{VETO} & $\times$~\textbf{VETO} & ?~Inconclusive & $\times$~\textbf{VETO} & \textbf{ELIMINATED} & C2 obeys turn cutoffs but fails gate due to transition knee error. \\
-$C_8$: Ordered Operator Norm & $\times$~\textbf{VETO} & ?~Passed & $\times$~\textbf{VETO} & $\times$~\textbf{VETO} & \textbf{ELIMINATED} & Tiny operator norm fails gate; blind to softmax distractor ceiling. \\
+$C_1$: Coordinate $L_p$ Movement & $\times$~insufficient & $\times$~insufficient & $\times$~insufficient & $\times$~insufficient & insufficient & MAE $0.001223$ fails gate; blind to Hessian knee at slot 19. \\
+$C_2$: Unordered Spectral Multiset & ?~not discriminative here & $\times$~insufficient & $\times$~insufficient & $\times$~insufficient & insufficient & Identical multiset collapses NLL ($+3.76$) and RULER ($0.70 \to 0.00$). \\
+$C_3$: Discrete Scale-Orbit Metric & $\times$~insufficient & $\times$~insufficient & $\times$~insufficient & ?~not discriminative here & insufficient & 1-ULP jitter jumps $q$ from $6 \to 64$ with zero loss difference. \\
+$C_4$: Background Derivative Energy & $\times$~insufficient & $\times$~insufficient & $\times$~insufficient & $\times$~insufficient & insufficient & $-73.8\%$ energy reduction produces $0.00$ retrieval and EOS runaway. \\
+$C_5$: Monotonic Group Delay & $\times$~insufficient & $\times$~insufficient & ?~not discriminative here & $\times$~insufficient & insufficient & Strictly monotone C2 fails gate; cannot explain reversal under retargeting. \\
+$C_6$: Isolated Base Scaling & $\times$~insufficient & $\times$~insufficient & $\times$~insufficient & $\times$~insufficient & insufficient & Cannot explain why interior $z$ beats base scaling at fixed support. \\
+$C_7$: Turn Cutoff Boundaries & $\times$~insufficient & $\times$~insufficient & ?~not discriminative here & $\times$~insufficient & insufficient & C2 obeys turn cutoffs but fails gate due to transition knee error. \\
+$C_8$: Ordered Operator Norm & $\times$~insufficient & ?~not evaluated & $\times$~insufficient & $\times$~insufficient & insufficient & Tiny operator norm fails gate; blind to softmax distractor ceiling. \\
 \bottomrule
 \end{tabular}}
 \end{table}
 
-As shown in Table~\ref{tab:binary-elimination}, \textbf{every proposed low-dimensional pre-hoc structural condition is eliminated}. Downstream capability cannot be identified without taking into account projection weights $W_Q, W_K$, layer output projections $W_O$, and softmax distractor margins.
+As shown in Table~\ref{tab:binary-elimination}, none of the tested low-dimensional conditions is sufficient on its own on these four cases. This does not preclude their use as features in a combined model; it shows that no single one of them identifies downstream capability without also taking into account projection weights $W_Q, W_K$, layer output projections $W_O$, and softmax distractor margins.
 
 \FloatBarrier
 \subsection{MrRoPE-Pro: Strict characterization as a satisficing design}
@@ -356,21 +354,21 @@ On the slow band ($k > h$, $\text{turns} < 1$), $m = 1 \implies \omega' = \omega
 \paragraph{Why MrRoPE-Pro is a robust satisficing design.}
 MrRoPE-Pro succeeds across diverse models (Qwen-2.5, OLMo-2) not because it is an analytic global optimum, but because it is an expertly engineered \textbf{satisficing design} that strictly respects universal physical boundary constraints:
 \begin{enumerate}
-  \item \emph{Zero fast compression:} By enforcing $\delta\omega_k = 0$ on all slots with $\text{turns} > 32$, it unconditionally avoids perturbing the highest-norm subspaces of $W_Q, W_K$ that govern short-range syntax and token recognition.
+  \item \emph{Zero fast compression:} By enforcing $\delta\omega_k = 0$ on all slots with $\text{turns} > 32$, it avoids perturbing the highest-norm subspaces of $W_Q, W_K$.
   \item \emph{Uniform slow scaling:} By scaling slow slots by $1/s$, the maximum accumulated phase across the extended context $s L_0$ is strictly bounded: $\phi_k^{\mathrm{ext}} = (\omega_k / s)(s L_0) = \omega_k L_0 < 2\pi$. On Qwen-2.5-1.5B at $128$K ($s=4$), the maximum phase across all slow slots is $5.8271$ rad ($< 2\pi = 6.2832$), completely preventing out-of-distribution phase wrapping.
   \item \emph{Convex quadratic delay:} The progression $q(q+1)/[N(N+1)]$ ensures that the earliest intermediate slots experience minimal phase disturbance, keeping cumulative error away from the sensitive knee slots.
 \end{enumerate}
 
-\paragraph{Definite empirical residuals: FullLagP2 and Boundary-Matched (BM).}
+\paragraph{Measured residual comparisons: FullLagP2 and Boundary-Matched (BM).}
 Because MrRoPE-Pro reads zero checkpoint weight matrices and evaluates zero activation covariances, it is not an unconstrained global optimum.
-This is definitively confirmed by two empirical residuals in the repository:
+Two empirical residuals support this reading:
 \begin{enumerate}
   \item \textbf{FullLagP2 on Qwen-2.5-1.5B at 64K Context:}
-  FullLagP2 adapted frequency movements to empirical subspace uniqueness $U_k$ across all $32{,}768$ integer lags. In paired head-to-head testing on Qwen-2.5-1.5B 64K, FullLagP2 decisively outperformed MrRoPE-Pro on Multi-Key 2 retrieval ($37.50\%$ vs $12.50\%$, a $+25.0\%$ win), Variable Tracking ($87.50\%$ vs $82.50\%$, $+5.0\%$), and Frequent Words Extraction ($70.83\%$ vs $45.83\%$, $+25.0\%$), achieving an overall paired record of 9 wins, 13 ties, and only 2 losses.
+  FullLagP2 adapted frequency movements to empirical subspace uniqueness $U_k$ across all $32{,}768$ integer lags. In paired head-to-head testing on Qwen-2.5-1.5B 64K, FullLagP2 outperformed MrRoPE-Pro in the tested setting on Multi-Key 2 retrieval ($37.50\%$ vs $12.50\%$, a $+25.0\%$ win), Variable Tracking ($87.50\%$ vs $82.50\%$, $+5.0\%$), and Frequent Words Extraction ($70.83\%$ vs $45.83\%$, $+25.0\%$), with an overall paired record of 9 wins, 13 ties, and 2 losses.
   \item \textbf{Boundary-Matched (BM) on OLMo-1B at 16K Context:}
   On OLMo-1B at 16K context, MrRoPE-Pro drops to $2.78\%$ on the 6-task confirmation panel and $21.62\%$ on 631 natural QA prompts, whereas Boundary-Matched (BM) achieves $51.32\%$ and $25.44\%$, respectively.
 \end{enumerate}
-These results establish that MrRoPE-Pro is a robust, physically constrained satisficing heuristic rather than an unconstrained global optimum.
+These results are consistent with the reading that MrRoPE-Pro is a robust, physically constrained satisficing heuristic rather than an unconstrained global optimum.
 
 \FloatBarrier
 \section{Learned-frequency comparator}

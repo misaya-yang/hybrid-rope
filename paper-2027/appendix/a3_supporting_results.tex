@@ -51,3 +51,79 @@ row has the lowest mean PPL at 16K and beyond, showing that the allocation
 also composes with this wavelength-dependent extension.
 
 \FloatBarrier
+
+
+\subsection{Figures and tables relocated from the main text}
+\label{sec:relocated-floats}
+The following floats support statements made in the main text; each is
+summarised there with its numbers, and is reproduced here in full.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.92\linewidth]{fig_bm_natural_qa.pdf}
+  \caption{\textbf{Intermediate-band redistribution improves OLMo natural QA.}
+  Complete-output token F1 on untruncated long inputs ($s=4$); sample counts shown by task, final row averages task means.}
+  \label{fig:bm-natural-qa}
+\end{figure}
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\caption{\textbf{Matched six-task RULER comparisons (\%).}
+Each column averages six tasks ($s=4$; short/long prompt counts per arm).}
+\label{tab:bm-models}
+\begin{tabular}{@{}lclrrrr@{}}
+\toprule
+& & & \multicolumn{2}{c}{Short} & \multicolumn{2}{c}{Long}\\
+Model & Lengths & Rows & MrPro & BM & MrPro & BM \\
+\midrule
+OLMo-$1$B & $4/16$K & $24/48$ & 37.85 & 81.81 & 2.78 & 51.32 \\
+Qwen-$3$B & $32/128$K & $12/24$ & 87.22 & 91.67 & 78.13 & 70.83 \\
+Qwen-$7$B & $32/128$K & $6/12$ & 83.33 & 80.00 & 84.44 & 71.11 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.80\linewidth]{fig_8b_length_curve.pdf}
+  \caption{\textbf{Cosh allocation improves extrapolation under matched adaptation.} PPL is the exponential of equal-domain mean NLL.}
+  \label{fig:8b-length-curve}
+\end{figure}
+
+
+\begin{table}[t]
+\centering
+\small
+\caption{\textbf{Frozen-model RULER scores (\%) at matched exponent range.}
+OLMo: held-out nine-task confirmation at $16$K. Qwen: four-task
+development panel at $64$K, $20$ rows/task.}
+\label{tab:frozen-exponent-main}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Exponent allocation & OLMo-$1$B & Qwen-$1.5$B \\
+\midrule
+Geometric & 0.56 & 57.75 \\
+Coarse ramp & \textbf{61.04} & 64.00 \\
+Residual-guided & 60.47 & \textbf{66.50} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering
+\small
+\caption{\textbf{Static extension across native and extended windows.}
+Qwen-$0.5$B RULER-13 macro (\%); $g$ is fixed amplitude.}
+\label{tab:static-index-main}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Installed table & $g$ & $32$K & $64$K \\
+\midrule
+Native & 1.0000 & 54.78 & 22.05 \\
+YaRN-$2$ & 1.0693 & 55.94 & 45.37 \\
+Normalized-index-$2$ & 1.0513 & 55.92 & \textbf{51.46} \\
+\bottomrule
+\end{tabular}
+\end{table}

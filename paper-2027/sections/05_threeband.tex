@@ -1,0 +1,65 @@
+\subsection{Why the intermediate band carries the design freedom}
+\label{sec:three-band-chain}
+
+Deployed long-context recipes keep the fastest slots native, drive the slowest to a
+full compression, and treat the band between them as the design variable, with edges
+set by a turn-count rule. Write $t_j(\Ltr)=\Ltr\omega_j/2\pi$ for the turns pair $j$
+accumulates over the training window. A pair installed as $\omega'_j=\omega_j s^{-m_j}$
+reproduces, at separation $\Delta$, the phase its native frequency would have had at
+$\Delta s^{-m_j}$; it therefore stays a calibrated position readout exactly while
+$\Delta\le\Ltr s^{m_j}$. With $s=4$, $m_j=1$ is the smallest compression that keeps all
+of $[0,4\Ltr]$ on the trained arc, which fixes the slow band once the target length is
+fixed. The fast and intermediate bands are what remain.
+
+\paragraph{The fast band is expensive to move and adds little reach.}
+Cost depends on \emph{where} a pair sits, not on how far it moves. A shift on all $64$ pairs
+costs $+0.088$ nats at $32$K although its largest displacement is $|m|=0.552$, smaller than
+in-band displacements that cost $\approx0$. Shifting further costs $+3.17$ nats in-window on
+Qwen-$2.5$-$3$B at $32$K and drives OLMo-$1$B to $0.0000$ accuracy on a $350$-row panel; a
+global companding costs $+0.067$; every arm that stays inside the band costs at most $+0.017$. A
+per-slot gradient diagnostic agrees --- on four rows at Qwen's native window, mean
+$|\partial L/\partial m|$ is $40.95$ on slots $0$--$23$, $2.13$ on $24$--$39$ and $0.040$ on
+$40$--$63$, with the largest values on slots $0$--$6$ --- but we report it as a weak
+instrument (row means span $6.7$--$77.7$, and the $128$K rows of the same probe are not yet
+receipted), not as a capability measurement. The same asymmetry is
+analytic: at $m_j=0$ the drift accumulated at $D=4\Ltr$ is $4\,t_j(\Ltr)\ln 4$ turns,
+spanning $707\times$ between fastest and slowest live pair; and buying reach at
+$4\times$ costs $m_j\gtrsim\log_4(t_j/4)$, i.e. $0.42$ at $j=22$, $1.01$ at $j=18$,
+$1.60$ at $j=14$ and $3.67$ at $j=0$. The intermediate band is the only region where the
+budget is both cheap and convertible into reach.
+
+\paragraph{The slow band's content is already degenerate.}
+Heavy compression is not destructive at the slow end because those pairs carry little
+independent positional information: Proposition~\ref{prop:collapse} gives $23$ pairs with
+$\omega L\le1$ supplying $46$ coordinate dimensions at block-whitened rank $2.00013$, so the
+slow band is near two-dimensional however it is scheduled. Consistently, the measured
+in-window marginal damage of compressing one interior pair over six compression levels is
+$10^{-3}$--$5\times10^{-2}$ nats, mostly within one to three paired standard errors and not
+monotone in $t_j$. The cost boundary lies outside the band, not inside.
+
+\paragraph{The trajectory matters through thresholds, not through shape.}
+Across the $38$ reconstructed tables, every schedule is $m_j=0$ on $j\le23$ and $m_j=1$
+on $j\ge40$ with all variation interior, and each of the eight generators we instantiated
+satisfies $\max_j m_j\le1$. Within that family the intermediate band still separates
+outcomes by tens of points, but threshold-like rather than smoothly: on a $350$-row
+OLMo-$1$B panel at $16$K the readable-slot count gives
+$\operatorname{logit}(\mathrm{acc})=-20.45+1.19\,N$ with no paired ordering error across
+twelve arms, while the continuous position at which a schedule crosses the band edge
+misorders $54$ of $60$ pairs. The threshold reading is not, however, established as a capability law: a separate release experiment raised the readable-slot count from $17$ to $24$--$26$ with no improvement, so the count orders this family without being a sufficient statistic for it. The same schedule reverses sign at a different target
+depth (pooled held-out $-5.37$ and $+6.54$ points at $4$K and $16$K, both beyond two
+standard errors), and the response is checkpoint-dependent by two orders of magnitude:
+nine schedules spanning the family move long-context NLL by $0.83$ nats on OLMo-$1$B and
+$0.0077$ nats on Qwen-$2.5$-$1.5$B against a per-arm standard error of $0.030$.
+
+\paragraph{Scope.} Every scored arm here satisfies $\max_j m_j\le1$, so this chain
+describes schedules whose coverage ends at $4\times$ the training window; at $8\times$
+four such arms, including the deployed table, each score $0/48$, and no table with
+$\max_j m_j>1$ has been scored. The coverage ordering that organises the OLMo-$1$B arms
+does not carry over to the Qwen panels, so the middle paragraphs are calibrated on one
+checkpoint family rather than being a model-independent law. Two limits on the fast-band paragraph:
+its edge is $\beta=32$, inherited from \citet{peng2024yarn} because it reproduces the
+deployed tables bit-exactly rather than because we derive it; and per-slot damage was
+measured only for slots $14$--$36$, where it is flat within paired errors and not monotone
+in $t_j$ (slots $24$ and $34$ \emph{improve} in-window NLL when compressed), with slots
+$0$--$13$ never singly perturbed. The fast band's immovability therefore rests on the
+out-of-band arms and the drift calculation, not on a measured per-slot cost gradient.
