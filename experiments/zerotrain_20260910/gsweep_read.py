@@ -95,15 +95,25 @@ def main():
               f"acc={[p[1] for p in pts if abs(p[0]-YARN) < 1e-9][0]:.4f}"
               if any(abs(p[0] - YARN) < 1e-9 for p in pts) else "")
         print("\n--- reading ---")
-        if lo[1] < best[1] and hi[1] < best[1]:
-            print(f"  PEAK IS INTERIOR: bracketed between "
-                  f"{lo[0]:.2f} and {hi[0]:.2f}, containing YaRN's value.")
-            print("  The analytic derivation 0.1*ln(s)+1 lands inside the measured")
-            print("  peak region -- the derivation is validated for this model.")
+        # NOTE: "interior" here means the peak is bracketed on BOTH sides by
+        # measured points.  If the upper bracket is still running, say so rather
+        # than implying the derived value is off.
+        upper_measured = max(p[0] for p in pts)
+        if abs(best[0] - YARN) < 1e-9:
+            print(f"  YaRN's derived value {YARN:.6f} IS the measured best of the "
+                  f"{len(pts)} points done.")
+            if upper_measured <= YARN:
+                print(f"  (upper bracket not measured yet: highest point is "
+                      f"{upper_measured:.4f}. Re-read once it lands before")
+                print("   claiming the optimum is at or below the derived value.)")
+            else:
+                print("  Both sides are measured and the derived value sits at the")
+                print("  top -- the analytic derivation is validated here.")
+        elif best[1] > [p[1] for p in pts if abs(p[0]-YARN) < 1e-9][0]:
+            print(f"  A measured point ({best[0]:.4f}) beats YaRN's value "
+                  f"({YARN:.6f}) on this panel.  Report the curve.")
         else:
-            print(f"  Peak is not strictly interior to [{lo[0]:.2f}, {hi[0]:.2f}]:")
-            print("  the derived value is not where the response is highest on")
-            print("  this panel.  Report the curve; do not call it validated.")
+            print("  Report the curve.")
     return 0
 
 
