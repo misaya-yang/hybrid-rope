@@ -108,6 +108,27 @@ def main():
     print(f"  pooled delta = {deltas.mean()*100:+.2f}pp   SE = {se*100:.2f}pp   "
           f"t = {tv:+.2f}")
 
+    # ---- reference-count split (the reason the RULER gain was partial credit)
+    print("\n--- split by reference count (1 ref = binary metric) ---")
+    for lo, hi, label in ((1, 1, "1 reference (binary)"),
+                          (2, 99, "2+ references (item recall)")):
+        sub = [i for i in ids if lo <= len(base[i].get("references") or [1]) <= hi]
+        if not sub:
+            continue
+        dd = np.mean([paired(load(k), base, sub)[0] for _, k in present], axis=0)
+        ss = dd.std(ddof=1) / math.sqrt(len(dd)) if len(dd) > 1 else float("nan")
+        bm = np.mean([base[i]["correct"] for i in sub])
+        print(f"  {label:<28} n={len(sub):<4} BM={bm:.3f}  pooled delta="
+              f"{dd.mean()*100:+.2f}pp  se={ss*100:.2f}pp")
+
+    print("\n--- BINARIZED (correct >= 0.999): whole-row right, supplementary ---")
+    dd = np.mean([[ (1.0 if load(k)[i]["correct"] >= 0.999 else 0.0)
+                    - (1.0 if base[i]["correct"] >= 0.999 else 0.0)
+                    for i in ids] for _, k in present], axis=0)
+    ss = dd.std(ddof=1) / math.sqrt(len(dd))
+    print(f"  pooled binarized delta = {dd.mean()*100:+.2f}pp  SE = {ss*100:.2f}pp  "
+          f"t = {(dd.mean()/ss if ss > 0 else 0):+.2f}")
+
     print("\n--- per task family (5 families; the pool can hide one moving) ---")
     print(f"  {'family':<20} {'n':>4} {'BM':>7} " +
           " ".join(f"{n:>9}" for n, _ in present))

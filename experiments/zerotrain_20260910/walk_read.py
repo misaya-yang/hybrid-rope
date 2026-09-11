@@ -128,6 +128,28 @@ def main():
               f"{row[4096][2]:>+6.2f} | {row[16384][0]*100:>+8.2f} "
               f"{row[16384][1]*100:>6.2f} {row[16384][2]:>+6.2f} | {rate:>7.2f}")
 
+    # ---- BINARIZED reading (supplementary, NOT the pre-registered statistic) --
+    # Added before any row of this run was read.  The 180-row decomposition
+    # (TRADEOFF_ASYMMETRY_20260911.md) showed the two readings can disagree in
+    # SIGN at long range, so a curve reported only in fractional scores could
+    # announce a gain that is really partial credit.  The pre-registered primary
+    # statistic above is unchanged; this is reported alongside it.
+    print("\n--- BINARIZED (correct >= 0.999): whole-row right, supplementary ---")
+    print(f"  {'a':>5} | {'d4096':>8} {'se':>6} {'t':>6} | {'d16384':>8} {'se':>6} {'t':>6}")
+    for nm in order:
+        a = aval(nm)
+        cells = []
+        for cap in CAPS:
+            sub = [i for i in ids if bm[i]["length_cap"] == cap]
+            d = np.array([(1.0 if arms[nm][i]["correct"] >= 0.999 else 0.0)
+                          - (1.0 if bm[i]["correct"] >= 0.999 else 0.0)
+                          for i in sub], float)
+            se = d.std(ddof=1) / math.sqrt(len(d))
+            cells.append((d.mean(), se, d.mean() / se if se > 0 else float("nan")))
+        print(f"  {a:>5.2f} | {cells[0][0]*100:>+8.2f} {cells[0][1]*100:>6.2f} "
+              f"{cells[0][2]:>+6.2f} | {cells[1][0]*100:>+8.2f} {cells[1][1]*100:>6.2f} "
+              f"{cells[1][2]:>+6.2f}")
+
     # ---- absolute accuracies (a big delta on a floor is not a capability) ---
     print("\n--- ABSOLUTE accuracy (BM is the a=0 row) ---")
     for cap in CAPS:
