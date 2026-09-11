@@ -88,9 +88,19 @@ def main():
           f"16384: {sum(1 for i in ids if bm[i]['length_cap']==16384)})")
 
     # ---- built-in endpoint controls ----------------------------------------
+    # The arm names come from the --walk string, so a=0 lands as "walk_a0" and
+    # a=1 as "walk_a1" (not "walk_a0p0").  Look them up by the parsed value so a
+    # naming change can never make the guard silently skip -- a skipped guard
+    # would let an unverified curve through, which is the whole point of it.
+    by_val = {aval(n): n for n in arms}
     print("\n--- CONTROLS: a=0 must BE the deployed BM, a=1 must BE a1_b64 ---")
-    for nm, ref, label in (("walk_a0p0", f"{REF}/beta_b1p0.jsonl", "deployed BM"),
-                           ("walk_a1p0", f"{REF}/wide_b1p0.jsonl", "turns_a1_b64")):
+    for want_a, ref, label in ((0.0, f"{REF}/beta_b1p0.jsonl", "deployed BM"),
+                               (1.0, f"{REF}/wide_b1p0.jsonl", "turns_a1_b64")):
+        nm = by_val.get(want_a)
+        if nm is None:
+            print(f"  a={want_a} MISSING from {sorted(by_val)} -- the guard "
+                  f"cannot run; refusing to interpret the curve")
+            return 3
         if nm not in arms:
             print(f"  {nm:<11} MISSING")
             continue
